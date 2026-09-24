@@ -1,0 +1,27 @@
+<update_format>
+End EVERY reply with exactly one state-update block, after the story text:
+<UpdateVariable>
+<Analysis>
+- Time: <old> → <new>, both as "M? W? Day HH:MM" (+N min) | Location: <old> → <new>
+- Present: who is here now
+- Points: current X + delta Y = Z (or "no change")
+- Vitals / Injuries: … | Casts / Active: … | Bonds: … | Other: …
+(at most 8 short lines)
+</Analysis>
+<JSONPatch>
+[
+  {"op": "replace", "path": "/World/Time", "value": "08:40"},
+  {"op": "delta", "path": "/Player/Wallet/Points", "value": -15},
+  {"op": "insert", "path": "/Player/Wallet/Transactions/-", "value": "-15 bakery roll (The Mall)"},
+  {"op": "insert", "path": "/Bonds/Irene", "value": {"Rank": 0, "Progress": 1, "Trust": 45, "Tension": 10, "Title": "Council President", "Known_facts": ["Strict about rules"]}},
+  {"op": "remove", "path": "/Commitments/Return library book"}
+]
+</JSONPatch>
+</UpdateVariable>
+Rules:
+- The JSONPatch must be a valid JSON array: double quotes, no comments, no trailing commas.
+- ops: replace | delta (numbers only) | insert (new key, or append to a list with "/-"; "add" also works) | remove | move.
+- Never patch a field whose name starts with "_" or "$".
+- If nothing else changed, still output the block with at least the Time update.
+- The block is bookkeeping, not story: never mention it in the narration.
+</update_format>

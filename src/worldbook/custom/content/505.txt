@@ -1,0 +1,131 @@
+<%_
+const W = getvar('stat_data.World') || {};
+const H = getvar('stat_data.Hidden') || {};
+const UI = getvar('stat_data.$ui') || {};
+const PR = getvar('stat_data.Player.Profile') || {};
+const OFF = UI.off || [];
+const on = id => (id === 'happenings' ? UI.happenings !== 'off' : id === 'weather' ? (UI.wxfx || 'full') !== 'off' : !OFF.includes(id));
+const WX = on('weather') && UI.wx && !UI.wx.away && UI.wx.now ? UI.wx : null;
+const FULL = !!WX && WX.mode === 'full';
+const REG = {"the warden's office":["Rei"],"warden's office":["Rei"],"wardens office":["Rei"],"founder's statue and park":["Caralynn","Lenna","Ruby","Saffi","Trixie"],"founders statue and park":["Caralynn","Lenna","Ruby","Saffi","Trixie"],"bell tower":["Aiden","Irene"],"lecture halls":["Ezrel","Kuroo","Layla","Milena","Yvette"],"seminar rooms":["Milena","Mimosa","Yvette"],"potion halls":["Mimosa","Royhan","Vera"],"combat grounds":["Florian","Gareth","Gavlan","Sophia"],"faculty offices":["Baelin","Gavlan","Kuroo","Yvette"],"staff room":["Baelin","Gavlan","Kuroo","Yvette"],"workshop":["Aiden","Bobby","Ezrel","Vera","Yvette","Zara"],"main library":["Etnie","Gareth","Irene","Layla","Zara"],"archive":["Castor","Layla"],"study rooms":["Gavlan","Irene","Royhan","Vera"],"common rooms":["Bobby","Etnie","Kanae","Lenna","Percival","Ruby"],"canteen":["Bobby","Etnie","Kanae","Lenna","Percival","Ruby"],"laundry":["Percival","Zara"],"bathhouse and washrooms":["Caralynn","Etnie","Saffi"],"storage and lockers":["Aiden","Castor"],"mall":["Aiden","Althair","Caralynn","Ruby","Trixie"],"the mall":["Aiden","Althair","Caralynn","Ruby","Trixie"],"club rooms":["Aiden","Bobby","Caralynn","Ezrel","Florian","Kanae","Kuroo","Ruby","Trixie"],"student council chamber":["Caspian","Irene"],"notice board":["Aiden","Castor","Irene"],"mail tower":["Castor","Royhan","Saffi"],"courtyards":["Althair","Trixie"],"sports field":["Percival","Saffi"],"gymnasium":["Percival","Saffi"],"swimming pool":["Percival","Saffi"],"archery range":["Percival","Saffi"],"grassy field and hills":["Saffi"],"forest":["Dante","Lenna","Vallie"],"boathouse and lake":["Aiden","Milena","Ottavio","Sophia"],"gardens":["Idris","Lenna","Royhan","Ruby","Zara"],"menagerie":["Lenna","Vallie"],"observation tower":["Gareth","Kanae"],"medical centre":["Percival","Sophia","Tilly","Vera"],"commissary":["Caralynn","Idris","Zara"],"groundskeeper's lodge":["Dante","Lenna"],"groundskeepers lodge":["Dante","Lenna"],"meditation rooms / spirit house":["Caspian","Royhan","Ruby"],"meditation rooms spirit house":["Caspian","Royhan","Ruby"],"dovecote":["Dante","Krieg","Milena"],"the dovecote":["Dante","Krieg","Milena"],"cathedral":["Caspian","Percival","Tristan"],"the cathedral":["Caspian","Percival","Tristan"],"noble houses liaison":["Caine","Caralynn","Caspian","Florian"],"noble houses' liaison":["Caine","Caralynn","Caspian","Florian"],"the noble houses' liaison":["Caine","Caralynn","Caspian","Florian"],"banking house":["Aiden","Caralynn","Royhan"],"the banking house":["Aiden","Caralynn","Royhan"],"forest clearing":["Baelin","Idris","Lenna","Royhan"],"rooftop":["Aiden","Alyssa","Rei","Zara"],"headmaster's office":["Althair","Baelin","Gavlan","Tristan"],"headmasters office":["Althair","Baelin","Gavlan","Tristan"],"staff quarters":["Gavlan","Layla","Mimosa","Sophia","Vallie","Yvette"],"fire dormitory":["Yvette"],"light dormitory":["Ezrel"],"sky dormitory":["Ottavio"],"viridian dormitory":["Kuroo"],"announcement room":["Caralynn","Castor","Ruby"],"sparring pavilion":["Caspian","Gavlan","Sophia"],"the sparring pavilion":["Caspian","Gavlan","Sophia"],"main courtyard":["Althair","Trixie"]};
+const place = String(W.Location || '').split(/\s+[—-]\s+/)[0].trim();
+const pk = place.toLowerCase().replace(/^the /, '');
+const regs0 = REG[place.toLowerCase()] || REG[pk] || [];
+const NST = getvar('stat_data.Campus_State.NPC_status') || {};
+const stOf = r => { const k = Object.keys(NST).find(x => x.toLowerCase() === r.toLowerCase() || x.toLowerCase().split(/\s+/)[0] === r.toLowerCase()); return k ? NST[k] : ''; };
+const GRAD = getvar('stat_data.Campus_State.Graduated') || [], ARR = {};
+const Y = Math.max(1, Number(W.Year) || 1);
+const here = r => !GRAD.includes(r) && (ARR[r] || 1) <= Y;   // 1.0.3: graduates left; incoming first-years not here yet
+// 1.1.0: class-aware presence (spec §1), weather and flu (spec §4.8)
+const STU = {"Aiden":[1,1,"Light"],"Alyssa":[1,1,"Sky"],"Caralynn":[1,1,"Fire"],"Caspian":[3,1,"Viridian"],"Castor":[1,1,"Viridian"],"Dante":[2,1,"Light"],"Etnie":[3,1,"Viridian"],"Florian":[2,1,"Sky"],"Gareth":[3,1,"Fire"],"Idris":[2,1,"Sky"],"Irene":[3,1,"Light"],"Kanae":[2,1,"Light"],"Lenna":[2,1,"Fire"],"Percival":[1,1,"Viridian"],"Royhan":[3,1,"Sky"],"Ruby":[3,1,"Sky"],"Saffi":[2,1,"Viridian"],"Sophia":[3,1,"Fire"],"Tilly":[2,1,"Fire"],"Trixie":[1,1,"Fire"],"Vera":[1,1,"Viridian"],"Zara":[1,1,"Sky"]}, TEACH = {"Ezrel":[["Magic Theory",2]],"Gavlan":[["Combat",1]],"Kuroo":[["Etiquette",1]],"Layla":[["History",1]],"Milena":[["Dark Magic Defense",0]],"Mimosa":[["Potion Crafting",1]],"Ottavio":[["Etiquette",3]],"Vallie":[["Creature Studies",1]],"Yvette":[["Magic Theory",1]]};
+const TT = {"Mon":[["Magic Theory","M",["lecture halls"],"class"],["History","M",["lecture halls"],"class"],["Combat","D",["combat grounds"],"class"]],"Tue":[["Dark Magic Defense","D",["lecture halls"],"class"],["Magic Theory","D",["lecture halls"],"class"],["Potion Crafting","M",["potion halls"],"class"]],"Wed":[["Etiquette","M",["lecture halls"],"class"],["Dark Magic Defense","M",["lecture halls"],"class"],["Creature Studies","M",["menagerie","forest"],"class"]],"Thu":[["History","M",["lecture halls"],"class"],["Magic Theory","D",["lecture halls"],"class"],["Combat","D",["combat grounds"],"class"]],"Fri":[["Magic Theory","M",["lecture halls"],"class"],["Etiquette","M",["lecture halls"],"class"],["Dark Magic Defense","D",["combat grounds","seminar rooms"],"class"]],"Sat":[["Etiquette","M",["lecture halls"],"class"],["Study Hall","",["main library"],"study"],["Clubs","",[],"clubs"]]};
+const CLUBV = {"announcement room":[["Academy Newspaper",["Castor"],false,false]],"potion halls":[["Alchemy Circle",["Royhan"],false,false],["Brewing Club",[],false,false]],"menagerie":[["Beast Handling Club",["Lenna"],true,false]],"club rooms":[["Board Game Club",["Gareth"],false,false],["Calligraphy Club",[],false,false],["Card Club",["Aiden"],false,false],["Divination Society",["Kanae"],false,false],["Drawing Club",["Alyssa"],false,false],["Music Club",["Caralynn","Ruby"],false,false],["Specialized Magic Club",[],false,false],["Tailoring Club",["Zara"],false,false],["Tea Club",["Florian"],false,false],["Theatre Troupe",["Trixie","Ezrel"],false,false]],"canteen":[["Cooking Club",[],false,false]],"combat grounds":[["Duelling Club",["Sophia"],false,false]],"sparring pavilion":[["Duelling Club",["Sophia"],false,false]],"student council chamber":[["Festival Committee",["Caspian"],false,false]],"boathouse and lake":[["Fishing Club",["Ottavio"],true,true]],"gardens":[["Gardening Club",["Idris"],true,false]],"groundskeeper's lodge":[["Groundskeeping",["Dante"],false,false]],"main library":[["Library Assistants",["Irene","Tilly"],false,false]],"medical centre":[["Medical Centre Volunteers",[],false,false]],"grassy field and hills":[["Running Club",["Saffi"],true,false],["Walking Club",[],true,false]],"workshop":[["Smithing Club",["Vera"],false,false]],"sports field":[["Soccer Club",["Percival"],true,false]],"seminar rooms":[["Warding Study Group",[],false,false]]}, OUTD = ["archery range","boathouse and lake","broken statue","combat grounds","courtyards","forest","forest clearing","founder's statue and park","founders statue and park","gardens","grassy field and hills","menagerie","observation tower","rooftop","sports field","swimming pool"], VN = {"seal chamber":"The Seal Chamber","warden's office":"The Warden's Office","arbiter hall":"The Arbiter Hall","ring dining hall":"The Ring Dining Hall","portrait hall":"Portrait Hall","founder's statue and park":"Founder's Statue and Park","bell tower":"Bell Tower","lecture halls":"Lecture Halls","seminar rooms":"Seminar Rooms","potion halls":"Potion Halls","combat grounds":"Combat Grounds","faculty offices":"Faculty Offices","staff room":"Staff Room","workshop":"Workshop","main library":"Main Library","restricted section":"Restricted Section","archive":"Archive","study rooms":"Study Rooms","common rooms":"Common Rooms","canteen":"Canteen","laundry":"Laundry","bathhouse and washrooms":"Bathhouse and Washrooms","storage and lockers":"Storage and Lockers","mall":"The Mall","club rooms":"Club Rooms","student council chamber":"Student Council Chamber","notice board":"Notice Board","mail tower":"Mail Tower","courtyards":"Courtyards","sports field":"Sports Field","gymnasium":"Gymnasium","swimming pool":"Swimming Pool","archery range":"Archery Range","grassy field and hills":"Grassy Field and Hills","forest":"Forest","boathouse and lake":"Boathouse and Lake","gardens":"Gardens","menagerie":"Menagerie","observation tower":"Observation Tower","medical centre":"Medical Centre","commissary":"Commissary","reception and gatehouse":"Reception and Gatehouse","groundskeeper's lodge":"Groundskeeper's Lodge","detention tower":"Detention Tower","meditation rooms / spirit house":"Meditation Rooms / Spirit House","dovecote":"The Dovecote","royal inspectorate":"The Royal Inspectorate","cathedral":"The Cathedral","noble houses' liaison":"The Noble Houses' Liaison","banking house":"The Banking House","forest clearing":"Forest Clearing","rooftop":"Rooftop","headmaster's office":"Headmaster's Office","staff quarters":"Staff Quarters","fire dormitory":"Fire Dormitory","light dormitory":"Light Dormitory","sky dormitory":"Sky Dormitory","viridian dormitory":"Viridian Dormitory","old hut":"Old Hut","announcement room":"Announcement Room","broken statue":"Broken Statue","sparring pavilion":"The Sparring Pavilion","nightwell":"Nightwell","merryhew's":"Merryhew's","snug":"The Snug"};
+const MOODS = [{"id":"Idris","lore":105,"cold":"Idris is cold-blooded: sluggish and short-tempered in this cold.","sunny":"Idris is cold-blooded and loves the sun: he is soaking it up, livelier than usual."}];
+const sick = FULL && WX.flu ? (WX.sick || []) : [];
+let regs1 = regs0.filter(r => here(r) && !sick.includes(r));
+const per = /^P([123]) /.exec(String(W._Period || '')), pIdx = per ? +per[1] - 1 : -1;
+const cls = on('class') && pIdx >= 0 && TT[W.Day] ? TT[W.Day][pIdx] : null;   // [subject, M|D, venues, class|study|clubs]
+const until = ['10:00', '12:00', '16:00'][pIdx];
+const pres = [];
+let clubs = [];
+if (cls && cls[3] === 'class') {
+  const atVenue = cls[2].includes(pk), teaching = r => (TEACH[r] || []).some(x => x[0] === cls[0]);
+  regs1 = regs1.filter(r => !STU[r] && (atVenue || !teaching(r)));
+  pres.push('Students are in class until ' + until + '.');
+} else if (cls && cls[3] === 'study') {
+  if (cls[2].includes(pk)) pres.push('Study Hall until 12:00: most students are here.');
+  else { regs1 = regs1.filter(r => !STU[r]); pres.push('Students are at Study Hall in the Main Library until 12:00.'); }
+} else if (cls) {
+  regs1 = regs1.filter(r => !STU[r]);
+  clubs = CLUBV[pk] || [];
+  if (!clubs.length) pres.push('Students are at their clubs until 16:00.');
+}
+const bad = FULL && (WX.now.sky === 'Rain' || WX.now.sky === 'Storm');
+let moved = [];
+if (bad && OUTD.includes(pk) && !(pk === 'boathouse and lake' && WX.now.sky === 'Rain')) { moved = regs1; regs1 = []; }   // the Fishing Club likes rain
+const clubLine = clubs.map(c => {
+  const m = c[1].filter(id => here(id) && !sick.includes(id) && !stOf(id));
+  return c[0] + (bad && c[2] && !c[3] ? ': practising indoors (Gymnasium) or cancelled in this weather' : ': meeting here until 16:00' + (m.length ? ' (members on record: ' + m.join(', ') + ')' : ''));
+}).join('; ');
+let classLine = '';
+if (cls && cls[3] === 'class' && cls[2].includes(pk)) {
+  const PY = Math.max(1, Math.min(3, Number(PR.Year) || 1)), dorm = PR.Dorm || 'Unsorted';
+  const tch = Object.keys(TEACH).find(id => TEACH[id].some(x => x[0] === cls[0] && (x[1] === PY || x[1] === 0)) && !stOf(id));
+  const mates = Object.keys(STU).filter(id => here(id) && STU[id][0] + Y - STU[id][1] === PY && !sick.includes(id) && !stOf(id)
+    && (cls[1] !== 'D' || dorm === 'Unsorted' || STU[id][2] === dorm)).slice(0, 8);
+  classLine = 'Your class now: ' + cls[0] + ' [' + cls[1] + '] (Year ' + PY + ', ' + (cls[1] === 'D' ? (dorm === 'Unsorted' ? 'dorm not yet sorted' : dorm + ' only') : 'all dorms')
+    + ') at ' + (VN[pk] || place) + ' — teacher ' + (tch || 'not on record') + '; classmates on record: ' + (mates.join(', ') || 'none');
+}
+const regs = regs1.filter(r => !stOf(r)), regSt = regs1.filter(r => stOf(r));
+const cur = String(W._Curfew || '');
+const due = on('planner') ? Object.entries(getvar('stat_data.Commitments') || {}).filter(([k, c]) => c && (c._Late || /^(today|tomorrow)/.test(String(c._When || '')))) : [];
+const mail = on('letters') ? Object.values(getvar('stat_data.Letters') || {}).filter(l => l && l.Status === 'waiting').length : 0;
+const HK = on('hooks') ? Object.entries(getvar('stat_data.Hooks') || {}).filter(([k, h]) => h) : [];
+const hDue = HK.filter(([k, h]) => h._State === 'due' || h._State === 'overdue'), hOld = HK.filter(([k, h]) => h._State === 'old' && h.Weight >= 2);
+const GS = on('gossip') ? (UI.gossip || []).slice(-5).reverse() : [];
+const PRES = Object.keys(getvar('stat_data.Scene.Present') || {});
+const moods = FULL ? MOODS.filter(m => PRES.includes(m.id)).map(m => (/cold|freezing/.test(WX.now.label) ? m.cold : WX.now.sky === 'Clear' && WX.block !== 2 && WX.now.temp >= 15 ? m.sunny : '')).filter(Boolean) : [];
+const BT = getvar('stat_data.Battle') || {};
+_%>
+<now>
+Month <%- W.Month %>, Week <%- W.Week %>, <%- W.Day %> <%- W.Time %> | <%- W._Period || 'free time' %> | at <%- W.Location %>
+<%_ if (W._Event_today) { _%>
+Today: <%- W._Event_today %>
+<%_ } _%>
+<%_ if (cur) { _%>
+Curfew: <%- cur %>
+<%_ } _%>
+<%_ if (W._Happening && on('happenings')) { _%>
+Around campus today (optional, use only if it fits): <%- W._Happening %>
+<%_ } _%>
+<%_ if (/CURFEW|LOCKDOWN/.test(cur)) { _%>
+Presence: after curfew students are in their own dorms; only staff, patrols and rule-breakers are out.
+<%_ } else { _%>
+<%_ if (pres.length) { _%>
+<%- pres.join(' ') %>
+<%_ } _%>
+Likely around <%- place || 'here' %> (habits, not certainty; an established scene overrides): <%- regs.length ? regs.join(', ') : 'no regulars on record' %>
+<%_ if (moved.length) { _%>
+Moved indoors in this weather (Gymnasium, Common Rooms): <%- moved.join(', ') %>
+<%_ } _%>
+<%_ if (clubLine) { _%>
+Club time: <%- clubLine %>
+<%_ } _%>
+<%_ if (regSt.length) { _%>
+Regulars here with a status on record (it overrides their habits): <%- regSt.map(r => r + ': ' + stOf(r)).join('; ') %>
+<%_ } _%>
+<%_ if (classLine) { _%>
+<%- classLine %>
+<%_ } _%>
+<%_ } _%>
+<%_ if (FULL && WX.flu) { _%>
+A cold is going around campus.<%- sick.length ? ' Off sick in their dorm today: ' + sick.join(', ') + '.' : '' %>
+<%_ } _%>
+<%_ for (const m of moods) { _%>
+<%- m %>
+<%_ } _%>
+<%_ if (FULL && BT.Active && WX.field && on('battle')) { _%>
+Battle field (outdoors): <%- WX.field %>.
+<%_ } _%>
+<%_ if (WX && WX.fc) { _%>
+Divination Society forecast on the Notice Board for <%- WX.fc.tomorrow ? 'tomorrow' : 'today' %>: <%- WX.fc.blocks.map((b, i) => ['morning', 'afternoon', 'night'][i] + ' ' + b.text + ' (' + b.label + ')').join(', ') %>
+<%_ } _%>
+<%_ if (due.length) { _%>
+Due soon: <%- due.map(([k, c]) => k + ' (' + (c._Late ? 'OVERDUE' : c._When) + (c.With ? ', with ' + c.With : '') + ')').join('; ') %>
+<%_ } _%>
+<%_ if (mail) { _%>
+Mail Tower: <%- mail %> letter<%- mail > 1 ? 's' : '' %> waiting for {{user}} to collect.
+<%_ } _%>
+<%_ if (hDue.length) { _%>
+Hooks due now: <%- hDue.map(([k, h]) => k + (h._State === 'overdue' ? ' (overdue)' : '') + ' (' + (h.Who ? h.Who + ': ' : '') + h.Note + ')').join('; ') %>
+<%_ } _%>
+<%_ if (hOld.length) { _%>
+Old hooks (pay off or drop): <%- hOld.map(([k]) => k).join('; ') %>
+<%_ } _%>
+<%_ if (GS.length) { _%>
+Rumours going around: <%- GS.map(g => '"' + g[0] + '" (' + g[1] + ', day ' + g[2] + ')').join('; ') %>
+<%_ } _%>
+<%_ if (H._True_magic) { _%>
+Hidden magic — Dove attention: <%- H._Stage %> (<%- H.Dove_attention %>/100)
+<%_ } _%>
+</now>

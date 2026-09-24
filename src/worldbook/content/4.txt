@@ -1,0 +1,5 @@
+[Ashvale Academy]
+Region: East
+Site name: unknown
+Site type: The Elixir
+Site description: An elixir that can heal any wound or sickness.

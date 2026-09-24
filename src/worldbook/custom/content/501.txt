@@ -1,0 +1,5 @@
+<current_state>
+The present moment of the story. Read it before writing; it is the source of truth.
+Fields starting with "_" are computed by the game engine: rely on them, never patch them.
+{{format_message_variable::stat_data}}
+</current_state>

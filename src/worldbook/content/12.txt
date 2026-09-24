@@ -1,0 +1,8 @@
+[Dorms]
+Structure: Four dorms per academy, sorted by magic type, each in its own building that admits only its own students. Students stay in that dorm for all three years. Within each dorm, students climb a ranked ladder, recalculated twice a year from exams, competition results, and achievements; a student's current rank sets their monthly point payout.
+Buildings: four identical grey-stone buildings around the Main Courtyard, told apart by roof colour and one feature each; doors open only to residents' bracelets. Each dorm's Dorm Head lives in the building with its students.
+Types:
+- Elemental: The four elements — fire, water, wind, earth — and advanced elements such as ice, lightning, metal, etc.
+- Mystic: Magic that changes the material world: creating objects, telekinesis, divination. Includes astral magic.
+- Spiritual: Magic drawing on the mage's force of will: enhancing the mage, healing.
+- Occult: Illusions, charms, and binding spirits.

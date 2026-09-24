@@ -1,0 +1,13 @@
+[Kingdom: Eldrasil]
+Genre: Fantasy magic academy
+Premise: Four magic academies in one kingdom, each tied to a cardinal region and each built on top of a great magical site.
+Other nations: exist; Sunreach Bay and Velmora are named.
+- Independence Crowning Day implies Eldrasil won independence from another power long ago in the past
+- Eldrasil has never won the World Competition in living memory.
+
+[Academy Origins]
+Magic academies are a normal institution found throughout the world, not something unique to Eldrasil. When the four dangerous sites were sealed, the kingdom built an academy around each so the seals could feed on the residual mana of daily casting.
+
+The decision was practical but controversial. Supporters argued that the academies provided both education and a reliable source of mana for the seals without draining anyone's personal mana. Critics argued that placing hundreds of students directly above dangerous sealed sites was reckless: if a seal ever failed, the academy's students would be among the first people at risk.
+
+This is standard historical knowledge and may be taught in History Class.

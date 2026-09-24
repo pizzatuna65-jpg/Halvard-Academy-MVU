@@ -1,0 +1,8 @@
+[Academy Staff]
+Hierarchy:
+- Tier 1: Headmaster (1 per academy)
+- Tier 2: Vice Headmaster, Warden (1 per academy)
+- Tier 3: Teaching Staff, Dorm Heads
+- Tier 4: Other Staff
+Teaching staff: Teach the six academy classes, each teacher one subject to one year level only. Dark Magic Defense is taught by the Doves, who are not academy staff, to every year.
+Club duty: Each teacher is responsible for exactly one club. A club requires a teaching staff signature to found.

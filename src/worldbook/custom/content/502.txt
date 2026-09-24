@@ -1,0 +1,107 @@
+<%_ const _U = getvar('stat_data.$ui') || {}, _OFF = _U.off || []; const on = id => (id === 'happenings' ? _U.happenings !== 'off' : id === 'weather' ? (_U.wxfx || 'full') !== 'off' : id === 'wxfull' ? (_U.wxfx || 'full') === 'full' : !_OFF.includes(id)); _%>
+<variable_update_rules>
+Update the state after every reply. Paths start at the root shown in <current_state> (e.g. /World/Time, /Player/Wallet/Points); never include "stat_data". Keys must not contain "." or "/".
+
+World
+- Time "HH:MM" (24h). Advance it every reply by the time that plausibly passed (a short conversation 5–15 min, a class period 2 h, a night's sleep 7–9 h). Never move time backwards. To pass into a new day set the new Day and Time. Sun → Mon means Week +1; Week 4 → Week 1 means Month +1; Month 12 → Month 1 means Year +1 (if you forget, the engine rolls the calendar forward to the Day you wrote). The engine computes _Period, _Curfew and _Event_today.
+- Month 1–12, Week 1–4, Day Mon–Sun. Year = campaign year.
+- Location: a place name exactly as written in the Campus Map ("Main Library", "The Mall", "Fire Dormitory", "Courtyards"); add " — detail" for a sub-spot ("Canteen — main kitchen", "Reception and Gatehouse — visiting parlour").
+
+Scene.Present
+- Every character physically present with {{user}} at the end of this reply, keyed by first name as in the NPC roster (Irene, Etnie, Bobby…); value {"Note": "doing / mood, max 12 words"}. Characters invented by the narrator use their full name as key.
+- When the scene changes, replace the whole object: {"op":"replace","path":"/Scene/Present","value":{...}}. Remove anyone who left.
+
+Player.Vitals
+- HP is an injury gauge (0–HP_max). Every HP loss MUST come with an entry in Player.Injuries naming the concrete injury. Bands: ≤90 Bruised, ≤70 Hurt, ≤50 Badly Injured, ≤30 unconscious/critical, 0 dead.
+- One event may remove at most 40 HP. Only a truly lethal blow may exceed that, and then set Lethal_flag to true in the same patch.
+- Stamina: physical exertion (running, fighting, hard training −5 to −30). 0 = collapse from exhaustion, not injury.
+- Mana: never deduct mana for {{user}}'s techniques yourself (see Magic). Change Mana directly only for non-technique causes (a mana draught, being drained by a ward).
+- Resting: set "rest" or "sleep" when {{user}} rested or slept during the elapsed time; the engine applies recovery and resets it.
+- Healing: the Medical Centre restores minor and moderate injuries fully (raise HP, remove the injury); serious ones are only stabilised.
+
+Player.Injuries: {"<injury>": {"Severity": "minor|moderate|serious|critical", "Body_part": "", "Effect": "what it impairs", "Heals_by": "M? W? or treatment"}}. Remove when healed.
+
+Player.Wallet
+- Points: use delta, and log every purchase or income by inserting a line into Transactions ("-15 bakery roll (The Mall)").
+- The monthly dorm-rank payout is automatic; never add it yourself.
+- Coin: real money. The Banking House exchanges points and coin 1:1; family money arrives as coin. Only coin works off campus (the capital, Sunreach Bay). Log coin spending in Transactions too.
+- Prices: follow the Price Guide; a price marked canon never changes.
+
+Player.Profile
+- Dorm is set once, by the Arbiter Stone sorting. The Stone reads only Magic._Affinity.Dominant (Elemental→Fire, Mystic→Light, Spiritual→Viridian, Occult→Sky); it cannot see subtypes, or whether magic is hidden or forbidden. Dorm_rank changes only at Results & Dorm Ranking (Month 5 W2 Fri, Month 11 W2 Fri).
+- The rest of Profile, and all of Magic._Techniques / _Affinity, come from the player's Student Builder; do not rewrite them.
+- Club: the club {{user}} has actually joined, by its name ("Duelling Club", "Theatre Troupe"); "" if none.
+- Reputation (Public, Dorm) −100..100: shift 1–5 for notable public acts.
+
+Player.Academics: Grades {"Magic Theory": "B+"}, Exams {"Midterm M3": "result"}.
+<%_ if (on('wxfull')) { _%>
+Player.Conditions: the engine sets and clears them from the weather. Remove one only when the story ends it (dry clothes; a hot bath or hot drink for Chilled; a cold drink or shade for Overheated; the Medical Centre for Head cold).
+<%_ } _%>
+
+Magic
+- _Techniques is {{user}}'s fixed technique list (read-only). When {{user}} uses one, insert {"Technique": "<exact key>", "Times": n} into /Magic/Casts/-. The engine charges the cost and empties Casts. For a hybrid technique that is running (in Active), each triggered use is also a Casts entry; the engine charges its trigger cost.
+- Sustained effects (summons, shields, lingering spells): when one starts, add /Magic/Active/<effect name> = {"Technique": "<key>", "Note": ""}; that entry is the cast (it pays the activation), so do not also add a Casts entry for starting it. Remove it when {{user}} ends it. The engine charges upkeep per in-world minute and ends the effect itself if mana runs out (reported in _Log).
+- Pacts (set by the Student Builder): when {{user}} summons a pact spirit, set /Magic/Pacts/<spirit>/Summoned true AND add /Magic/Active/<spirit> = {"Technique": "Summon <spirit>"}; each ability the spirit uses is a Casts entry for "Summon <spirit>". On dismissal set Summoned false and remove the Active entry. Channelling ("Channel <spirit>", Greater or Spirit Lord only) is a normal Casts entry.
+
+Hidden (only when Hidden._True_magic is not empty)
+- Dove_attention 0–100: +3 to +10 when the hidden magic is used where it could be noticed; +15 to +25 if witnessed or detected (e.g. a Dark Magic Defense drill); −1 per quiet week.
+- Known_by: add a name only when that character truly learns the secret.
+<%_ if (on('wxfull')) { _%>
+- Outdoors in fog or heavy weather the engine halves a rise; write the full amount.
+<%_ } _%>
+
+Bonds (one record per character {{user}} has actually met)
+- Progress 0–10 within the current rank: +1 for a meaningful interaction, +2 for a significant shared moment, 0 for small talk. The engine caps daily gains and sets _Event_ready at 10.
+- Rank 0–10: raise by exactly 1, and only when _Event_ready is true AND this reply contains a genuine milestone scene with that character (also insert a line into Milestones). Otherwise the engine reverts it. Betrayal or a breaking point may lower Rank.
+- Trust / Tension 0–100: trust follows reliability and drops with betrayal; tension follows conflict and unresolved friction.
+- Known_facts: insert a short fact whenever {{user}} learns something real about that character. You see the latest 10; older ones are kept by the game, so do not re-add them.
+- Title: a short label for the relationship ("Rival", "Study partner", "Self-declared big sister").
+
+Campus_State: the living world; it overrides the lorebook
+- Events {"<short title>": "one-line summary (M? W?)"}: only for events that change the campus. Update an existing key by summarising; never duplicate.
+- Rumours (list), Location_changes {"<location>": "what changed"}, NPC_status {"<name>": "injured / expelled / missing…"}, New_relations {"A→B": "relationship formed in play"}.
+- Graduated (list): students who have left campus. The engine adds each year's third-years the morning after Graduation. Remove a name only if the story keeps that student at Halvard (repeating the year, staying on as staff); a graduate may still visit.
+- Secrets_revealed: insert "<FirstName>.<topic>" (topic: magic, pact, backstory, goal, plan, identity, relationship, other) only when {{user}} actually uncovers a hidden truth in the story.
+
+<%_ if (on('planner')) { _%>
+Commitments: {"<title>": {"Desc": "", "Due": "M? W? Day HH:MM", "With": "", "Where": "place (optional)", "Type": "assignment|promise|appointment|club"}}. The engine fills _When and _Late. Remove when done; when _Late is true, resolve it in the story (late, excused or missed, with consequences), then remove it.
+<%_ } _%>
+
+<%_ if (on('notices')) { _%>
+Notices (the Notice Board, castle Floor 1 entrance hall): {"<title>": {"Text": "max 25 words", "By": "who posted it", "Until": "M? W? Day"}}. Only notices {{user}} has seen that matter: paid work, club recruitment, a warning, a dare, a lost item. Official calendar postings are shown automatically; never add them. The engine dates and expires notices.
+<%_ } _%>
+
+<%_ if (on('letters')) { _%>
+Letters (Mail Tower: birds carry them, numbered lockers hold them until collected): an arriving letter is {"<short title>": {"From": "", "To": "{{user}}", "Gist": "max 30 words", "Status": "waiting"}}; set "read" when {{user}} collects and reads it (write the letter in the story), "replied" once answered. When {{user}} sends one: {"From": "{{user}}", "To": "", "Gist": "", "Status": "sent"}. Letters take at least a day each way.
+<%_ } _%>
+
+Journal (list): insert one line, max 25 words, for each real turning point (a first, a fight, a discovery, a promise made or broken, a loss). Not routine events. Old chat is trimmed from your context, so the Journal is the story's long memory: write each line so it makes sense on its own (who, what, where). The engine adds the date and some entries itself.
+
+<%_ if (on('mystery')) { _%>
+Clues: when {{user}} notices something that points to a hidden truth, insert /Clues/<short title> = {"Thread": "<mystery name>", "Detail": "what was observed, max 25 words", "Where": "", "Links": ["<first names or places>"]}. Reuse an existing Thread name when it is the same mystery.
+Mysteries {"<thread>": {"Status": "open|solved|cold", "Summary": "what {{user}} has pieced together"}}: the engine creates the thread; update Summary as the picture forms; set solved when the truth is out (and add Secrets_revealed if it concerns a character).
+<%_ } _%>
+
+<%_ if (on('competition')) { _%>
+Competition: {"Tier": "Dorm|Academy|Kingdom|World", "Status": "entered|qualified|eliminated|champion|selected", "Placement": "e.g. 7th of 40", "Team": ["teammates' first names"], "Results": ["R1: beat X"]}. Update as rounds are fought. Winning the Kingdom Competition pays 5,000 points each; the engine pays {{user}}, never add it yourself.
+<%_ } _%>
+
+<%_ if (on('projects')) { _%>
+Projects: {"<name>": {"Kind": "potion|smithing|tailoring|enchantment|research|assignment|club|other", "Goal": "", "Progress": 0-100, "Needs": "what is still missing", "Where": "", "Due": "", "With": ""}}. Raise Progress only for real work shown in the story (+5 to +25 a session; setbacks may lower it). Remove it once handed in, used or abandoned.
+<%_ } _%>
+
+<%_ if (on('trip')) { _%>
+Trip: when {{user}} departs on a trip set {"Active": true, "Destination": "", "Companions": ["the group of four"], "Note": ""}; set Active false on return.
+<%_ } _%>
+
+<%_ if (on('battle')) { _%>
+Battle: for a fight or competition bout set Active true and track each opponent in Combatants {"<name>": {"HP": 100, "Stamina": 100, "Status": ""}}. When it ends, set Active false and replace Combatants with {}. Lasting results go to Injuries / NPC_status.
+<%_ } _%>
+<%_ if (on('inventory')) { _%>
+Inventory {"<item>": {"Qty": 1, "Kind": "food|drink|gear|gift|book|reagent|other", "Note": "", "Plan": ""}}: add what {{user}} buys, receives or finds and keeps; lower Qty when it is used, eaten, given away or lost. Plan only when {{user}} states one. Return Sunfizz bottles by lowering "Empty Sunfizz bottle"; the engine pays.
+<%_ } _%>
+
+<%_ if (on('hooks')) { _%>
+Hooks (your notes; hidden from the player) {"<title>": {"Note": "", "Who": "", "Kind": "promise|detail|threat|secret", "Weight": 1-3, "Due": "optional"}}: add one when an NPC promises something at a time or you plant a detail that should matter later (Weight 1 small, 3 major); at most one per reply. Remove it once paid off, broken or dropped.
+<%_ } _%>
+</variable_update_rules>

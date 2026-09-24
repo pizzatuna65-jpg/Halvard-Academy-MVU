@@ -1,0 +1,6 @@
+[Competitions]
+Four tiers, elimination. Losing at any tier ends your competitive year. The one exception is World selection, which is chosen rather than won.
+1. Dorm. Solo, open to the whole dorm, run as a ranking tournament so every entrant finishes with a placement. Top 16 per dorm qualify.
+2. Academy. Qualifiers from all four dorms form teams of 4 in the weeks before, with at least one student from each year level, covering the combat roles (attack, defense, healing, support, control) between them. Teams mix dorms and usually must, since no dorm covers every role well. Knockout bracket; the winning team represents the academy.
+3. Kingdom. One team per academy, four in total, knockout. Each member of the winning team earns 5,000 points.
+4. World (abroad). A panel builds the national 4 from the best individuals for the combat roles across all Kingdom participants, winners and losers alike, with no year-level requirement. Being picked off a losing team is a great honour. Eldrasil has never won in living memory.

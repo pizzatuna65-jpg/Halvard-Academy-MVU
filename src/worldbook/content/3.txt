@@ -1,0 +1,5 @@
+[Veyra Academy]
+Region: South
+Site name: unknown
+Site type: The Archmage's Rest
+Site description: The resting place of the Archmage, full of treasure and spellbooks.

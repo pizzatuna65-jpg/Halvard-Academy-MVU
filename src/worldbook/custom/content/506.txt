@@ -1,0 +1,37 @@
+[Price Guide] What things cost on campus, in points. Use these prices; items not listed cost what a comparable listed item costs.
+- Sunfizz: 8 pts (canon); Commissary, The Mall — store; 2 points back per returned bottle
+- Firetooth (tin): 12 pts (canon); Commissary; exam-week staple
+- Notebook: 5 pts; Commissary
+- Pen nibs and ink: 6 pts; Commissary
+- Printed class textbook: 45 pts; Commissary
+- Satchel: 70 pts; Commissary
+- Spare uniform set: 120 pts; Commissary
+- Common reagent bundle: 30 pts; Commissary; back shelves; enough for a few practicals
+- Basic practice focus: 250 pts; Commissary
+- Rare reagent: 350 pts (canon); Commissary; costs more than a bottom-band monthly payout
+- Special order: varies (canon); Commissary; price of the item plus a wait; specialised kit can eat a week of points
+- Bakery roll: 15 pts (canon); The Mall — bakery
+- Star Cookie: 8 pts (canon); The Mall — bakery; eaten whole before anything that matters; sells out by seven on exam mornings
+- Café drink and pastry: 25 pts; The Mall — cafés and tea houses
+- Restaurant meal: 45 pts; The Mall — restaurants
+- Private dining (second floor): 150 pts; The Mall — private dining
+- The Oracle Shell: 40 pts (canon); The Mall — store; yes, no, or ask again later
+- Quality focus: 4,000 pts (canon); The Mall — store; the top tier of magical equipment
+- Tailoring alteration: 40 pts; The Mall — services
+- Barber: 20 pts; The Mall — services
+- Laundry service (per load): 10 pts; The Mall — services; self-service laundry in the dorms is free
+- Practice studio or music room (per hour): 15 pts; The Mall — studios
+- Game hall (per hour): 10 pts; The Mall — game halls
+- The Vigil: 60 pts (canon); Nightwell; two days without sleep, paid for afterwards
+- Prank item: 25 pts; Merryhew's; itching charms, voice-changing sweets, illusion vermin; everything wears off
+- Private booth (per hour): 30 pts; The Snug; always a wait; staff hear nothing
+- Ardenne case: 1,500 pts (canon); Ardenne (special order); the cheapest Ardenne item; more than most monthly payouts
+- Ardenne focus: 4,000 pts (canon); Ardenne (special order); marks its owner instantly as wealthy
+- Umbrella: 25 pts; Commissary; keeps you dry unless the wind is up
+- Oilskin rain cloak: 90 pts; Commissary; waterproof in any weather; in season: Autumn, Winter, Spring
+- Wool scarf and mittens: 35 pts; The Mall — store; warm; in season: Autumn, Winter
+- Lined winter cloak: 120 pts; The Mall — store; warm; in season: Winter
+- Straw sun hat: 30 pts; The Mall — store; shade in summer heat; in season: Summer
+- Hot spiced tea: 12 pts; The Mall — cafés and tea houses; warms you through (clears a chill); in season: Autumn, Winter
+- Iced fruit cooler: 10 pts; The Mall — cafés and tea houses; cools you down (clears overheating); in season: Summer
+Paid work pays 20-40 points a shift. The Banking House changes points and coin 1:1. At the Academy Bazaar prices are whatever the trader says. Out-of-season items are not stocked.

@@ -1,0 +1,31 @@
+<%_ const _U = getvar('stat_data.$ui') || {}, _OFF = _U.off || []; const on = id => (id === 'happenings' ? _U.happenings !== 'off' : id === 'weather' ? (_U.wxfx || 'full') !== 'off' : id === 'wxfull' ? (_U.wxfx || 'full') === 'full' : !_OFF.includes(id)); _%>
+<campus_rules>
+- <current_state> is the present. Campus_State overrides the lorebook: if the lorebook says one thing and Campus_State records a change, the change is what is true now.
+- Only characters in Scene.Present may speak or act on-screen this reply; others can be mentioned, not voiced.
+- Cognitive isolation: characters know only what they witnessed or were told on-screen, plus their own lorebook knowledge. Nobody knows Hidden._True_magic unless listed in Hidden.Known_by; to everyone else {{user}}'s magic is Hidden.Cover_magic. <narrator_only> lore is for the narrator: characters act on it but never state it outright, and it is uncovered only through play.
+- The clock matters: _Period says where {{user}} is expected to be; _Event_today and _Curfew override the timetable. Skipping class or breaking curfew has consequences (the Council, the Warden, Dove patrols).
+- The body matters: follow Player.Vitals._Condition, _Fatigue and Injuries. Pain, impairment and exhaustion are real; unconscious means {{user}} cannot act. Nothing heals off-screen.
+- Magic has a cost: at low mana spells strain or fail. When _Log reports an effect ended by mana depletion, narrate it.
+- Bonds grow through scenes, not declarations. When a bond shows _Event_ready, look for (or set up) a fitting moment for a milestone scene with that character; never force it.
+- Read _Log every turn: it lists what the engine did (payouts, capped damage, ended effects, reverted ranks). Narrate its consequences when relevant; never contradict it.
+- Memory: only the latest part of the chat reaches you; older messages show as […]. <current_state> is the story's memory (Journal, Bonds' Known_facts and Milestones, Campus_State, Commitments, Clues, Letters). Trust it over your impression of earlier scenes and never contradict it. Recalled memories or summaries of past events (if a memory extension adds them) describe the past; where they differ from <current_state>, <current_state> is now.
+<%_ if (on('happenings')) { _%>
+- World._Happening is today's small campus happening. It is optional texture: use it when {{user}} is nearby or it fits the scene, never drag the story to it. If it grows into something that changes the campus, record it in Campus_State.Events.
+<%_ } _%>
+<%_ if (on('weather')) { _%>
+- Weather: World._Weather is the campus weather now (°C). Keep the prose consistent with it and let it colour scenes; never invent other campus weather. Away from campus it is yours to decide.
+<%_ if (on('wxfull')) { _%>
+- Player.Conditions show in how {{user}} feels and acts. In an outdoor fight use the field line in <now>; it changes no costs or HP.
+<%_ } _%>
+<%_ } _%>
+<%_ if (on('class')) { _%>
+- In a class period students are in class; <now> names {{user}}'s class, teacher and classmates. Skipping class is noticed.
+<%_ } _%>
+<%_ if (on('hooks')) { _%>
+- Hooks are debts the story owes: never announce them; pay them off through the world (someone returns, a message arrives, a detail resurfaces). NPCs may break promises too.
+<%_ } _%>
+<%_ if (on('gossip')) { _%>
+- Rumours spread: only people a rumour has reached (<now>) know it.
+<%_ } _%>
+- {{user}}'s power level is the player's choice. Never quietly weaken it; let the world react plausibly (attention, rivalry, suspicion).
+</campus_rules>
