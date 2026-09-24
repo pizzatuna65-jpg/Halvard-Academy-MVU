@@ -2,9 +2,9 @@
 
 **Read this file first.** It is the complete context for continuing this project in a fresh session with any AI assistant, from any vendor. It assumes nothing about which assistant or tools you have, only that you can read files and (ideally) run Python 3 and Node.js.
 
-Snapshot: card **v1.1.0**. All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3) and the world-systems release (v1.1.0: `docs/SPEC_v1_1_0_world_systems.md`, implemented; deviations listed in PROGRESS 1.1.0). The card has not yet been playtested inside SillyTavern by the owner.
+Snapshot: card **v1.2.0**. All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; PROGRESS 1.2.0).
 
-**Next task:** the owner's playtest (`docs/TEST_CHECKLIST_v1.1.md`, then `v1.0.3`), then tuning and fixes from what it finds.
+**Next task:** the owner continues the playtest (PROGRESS "Next" lists what 1.2.0 needs checked in ST), then tuning and fixes from what it finds.
 
 ---
 
@@ -96,9 +96,11 @@ tests/                     node suites test_*.cjs, qa_static.cjs, run_all.cjs, t
 
 **Rules the engine and prompts enforce**
 - **The Arbiter Stone reads only `Magic._Affinity.Dominant`** (D9 / A1). Elemental→Fire, Mystic→Light, Spiritual→Viridian, Occult→Sky.
-- **Power level is the player's choice** (D10). Never quietly nerf it.
+- **Power level is the player's choice** (D10). Never quietly nerf it. Since 1.2.0 there are no presets: the Builder sets `Mana_max` with a slider, and mana is private capacity (504), not a title.
 - **Technique costs are fixed** in the Builder and charged by the engine (D11).
 - **HP is injury, not a life bar** (D13). One event removes at most 40 HP unless `Lethal_flag` is set. HP 0 means death. Every HP loss names an injury.
+- **Builder scope** (1.2.0, owner): Combat_role is assigned by the Combat teacher at the first Combat class (rule 502), not chosen in the Builder. Known_by is left to the story. The true magic is a hidden technique (Notes `[true]`). Pacts carry a Kind; only Spirit is lawful (anything else is the forbidden art of Pacting). The Builder keeps `$ui.file`; the engine restores the Builder-only fields from it when they come back empty.
+- **Player-tool entries are hidden and carry no status placeholder** (1.2.0): Tavern Helper never renders iframes in hidden messages, so the bracelet stays on the last story message and reads the newest state.
 - **Player tools and `_` paths** (v1.0.3): the MVU zod helper drops every command whose path has a `_` segment, for everyone. The Builder therefore writes `/Magic` and `/Hidden` whole (`liftReadonly`), and the engine's read-only guard decides. Never send a `_` path from a player tool.
 - **Calendar change** (v1.0.3, owner decision): the World Competition is M11 W4 Wed–Sat (abroad, the national four) and Graduation is M11 W4 Sun, so a third-year picked for the World Competition competes before graduating. Month 12 is holiday only. Edited in `merge_lorebooks.py` (calendar months 11/12 and lore 248) and in the engine's `EVENTS`.
 - **Graduation** (v1.0.3): on M12 W1 Mon 07:00 (the morning after Graduation, first day of the holiday) the engine moves that year's Halvard third-years into `Campus_State.Graduated`. They stop being regulars and club members; their bonds and dossiers stay. The story may remove a name, and the engine never re-adds it.
@@ -127,7 +129,8 @@ tests/                     node suites test_*.cjs, qa_static.cjs, run_all.cjs, t
 
 **Map and UI**
 - **Map** (D5/D7/D8): pins use percent coordinates from `data/map_pins.json`. Card headers are crops of the map, with no illustrations. Location cards are structured.
-- **Modules appear only when relevant** (D16), via `$ui.unlocks`.
+- **Modules appear only when relevant** (D16), via `$ui.unlocks`. The Shop tab appears only at a shop (1.2.0).
+- **Map cards** (1.2.0, owner): every card has Walk (from where the player is), Access, Clubs here, Regulars (only NPCs met whose Haunts entry is unlocked), Connected to; one card at a time with arrows. Club venues follow the owner's map (Running at the Sports Field, Archery at the Archery Range, Swimming/Gymnastics/Basketball at the Gymnasium, Divination at the Observation Tower); the Fishing House and Willow Island are their own places.
 - **The status bar shows only on the latest message** (F22).
 
 **Assets and memory**
@@ -160,8 +163,8 @@ python3 tools/gen_engine.py          # engine.template.js, npcs, locations or ha
 python3 tools/gen_mvu_entries.py     # custom entries, locations regulars or shop prices changed
 python3 tools/gen_ui.py              # ui.template.js, ui/parts, statusbar.template.html or data changed
 python3 build/build_card.py          # always last -> dist/
-npm test                             # 9 suites + static QA on the built card (392 checks at v1.1.0)
-python3 tests/preview/smoke_all_panels.py   # optional: opens every panel/tab headless (492 views); expects "errors: none"
+npm test                             # 9 suites + static QA on the built card (428 checks at v1.2.0)
+python3 tests/preview/smoke_all_panels.py   # optional: opens every panel/tab headless (482 views at v1.2.0); expects "errors: none"
 node tests/token_audit.cjs           # optional: always-on prompt size (~8.3k tokens at start, ~13.2k mid-year; ~7.8k with the v1.1 features off)
 python3 presets/edit_preset.py       # regenerates the edited preset from presets/original/ (byte-identical today)
 ```
@@ -186,7 +189,7 @@ python3 presets/edit_preset.py       # regenerates the edited preset from preset
 - `data/field_overrides.json`, `focus_overrides.json`, `thumb_overrides.json`, `assets_manifest.json`
 - `data/features.json` (Features settings rows, parked paths, unlocks), `data/weather_moods.json` (canon NPC weather moods only)
 - `src/worldbook/custom/505.template.ejs` (the Now entry)
-- custom entries `500–504` and `507`
+- custom entries `500–504`, `507` and `508` (the birthday event, 1.2.0)
 - `src/regex/index.json`
 - `src/card/card.json`
 
@@ -242,6 +245,7 @@ python3 presets/edit_preset.py       # regenerates the edited preset from preset
 | Fact | Source checked |
 |---|---|
 | `{{format_message_variable}}` deep-omits every `$` key and renders YAML | Tavern Helper (JS-Slash-Runner) `src/function/macro_like.ts` (`omitDeepBy`) + CHANGELOG |
+| Tavern Helper never renders message iframes (the bracelet) in hidden (`is_system`) messages; `getVariables({type:'message'})` with `latest` skips hidden messages, an explicit id does not | JS-Slash-Runner `src/store/iframe_runtimes/message.ts`, `src/function/variables.ts` (checked for 1.2.0) |
 | The MVU zod helper (`registerMvuSchema`) drops any command whose path has a segment starting with `_` (`isReadonlyPath`), with no player-tool exception | StageDog tavern_resource `util/mvu_zod.ts` (checked for v1.0.3) |
 | `Mvu.parseMessage` → `updateVariables` → emits `VARIABLE_UPDATE_ENDED` (engine sees Builder/Settings patches) | MagVarUpdate `src/function/global/index.ts`, `update_variables.ts` |
 | Card config override = a **disabled** worldbook entry with comment `[config_override]` containing JSON; needs the card lorebook bound; MVU ≥ 2026-08-08 | MagVarUpdate `override_plan.md`, `src/function/character_override/schema.ts`, CHANGELOG |

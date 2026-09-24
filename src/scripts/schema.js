@@ -27,6 +27,7 @@ const n = (v, lo, hi, d) => { const x = Number(v); return _.clamp(Number.isFinit
 const b = (v, d = false) => (v === true || v === 'true' ? true : v === false || v === 'false' ? false : d);
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const PACT_TIERS = ['Lesser', 'Basic', 'Greater', 'Spirit Lord', 'Demon Lord', 'Grade IV', 'Grade III', 'Grade II', 'Grade I', 'Animal', 'Human'];
 
 // ---------- schema ----------
 export const Schema = z.object({
@@ -57,12 +58,14 @@ export const Schema = z.object({
       Race: Str('Human'),
       Beast_type: Str(''),
       Appearance: Str(''),
+      Personality: Str(''),   // 1.2.0 (Builder)
       Background: Str(''),
+      Birthday: Str(''),      // 1.2.0: "M3 W2 Thu" in the academy calendar (Builder); the engine lists it in _Event_today
       Year: Int(1, 3, 1),
       Dorm: Enum(['Unsorted', 'Fire', 'Light', 'Sky', 'Viridian'], 'Unsorted'),
       Dorm_rank: Int(0, 9999, 0),
       Club: Str(''),
-      Combat_role: Str(''),
+      Combat_role: Str(''),   // 1.2.0: set by the story at the first Combat class (the teacher assigns it), not by the Builder
       Goal: Str(''),
       Reputation: z.object({ Public: Int(-100, 100, 0), Dorm: Int(-100, 100, 0) }).prefault({}),
     }).prefault({}),
@@ -120,13 +123,18 @@ export const Schema = z.object({
       Types: StrList(4),
       Dominant: Str(''),
       Specialties: StrList(8),
-      Preset: Enum(['', 'Grounded', 'Gifted', 'Prodigy', 'Unbound'], ''),
+      Preset: Enum(['', 'Grounded', 'Gifted', 'Prodigy', 'Unbound'], ''),   // before 1.2.0 only; the Builder now writes ''
+      // 1.2.0: the student's own subtypes { "<name>": { Type, Forbidden } } (the catalogue lists are suggestions)
+      Custom: Rec(v => ({ Type: s(v.Type), Forbidden: b(v.Forbidden) }), 'Type'),
     }).prefault({}),
     Active: Rec(v => ({ Technique: s(v.Technique), Note: s(v.Note), $started: n(v.$started, -1, 1e9, -1), $settled: n(v.$settled, -1, 1e9, -1) }), 'Technique'),
     Casts: z.array(z.any().transform(v => (typeof v === 'object' && v !== null
       ? { Technique: s(v.Technique), Times: n(v.Times, 1, 99, 1) } : { Technique: s(v), Times: 1 }))).prefault([]).catch([]),
+    // 1.2.0: Kind = what the pact is with (only Spirit is lawful; the rest is the forbidden art of Pacting). Spirit = the partner's name.
+    // Presence: summoned = with {{user}} only while summoned | terms = lives and acts as the pact's terms say
     Pacts: Rec(v => ({
-      Spirit: s(v.Spirit), Tier: ['Lesser', 'Basic', 'Greater', 'Spirit Lord'].includes(v.Tier) ? v.Tier : 'Lesser',
+      Spirit: s(v.Spirit), Kind: ['Spirit', 'Demon', 'Monster', 'Animal', 'Human'].includes(v.Kind) ? v.Kind : 'Spirit',
+      Tier: PACT_TIERS.includes(v.Tier) ? v.Tier : 'Lesser', Presence: v.Presence === 'terms' ? 'terms' : 'summoned',
       Summoned: b(v.Summoned), Terms: s(v.Terms), Note: s(v.Note),
     }), 'Spirit'),
   }).prefault({}),
@@ -233,6 +241,9 @@ export const Schema = z.object({
     gossip: z.any().prefault([]).catch([]),                           // live rumours with reach [[text, reach, day]] (engine)
     off: StrList(20),                                                 // feature ids turned off in Features settings
     parked: z.record(z.string(), z.any()).prefault({}).catch({}),     // state of features that are off: { id: { path: value } }
+    // 1.2.0
+    file: z.any().prefault(null).catch(null),                         // the Builder's record of what it last wrote (self-heal, engine §0)
+    marks: z.record(z.string(), z.coerce.string()).prefault({}).catch({}),   // calendar notes the player wrote { "M1 W2 Wed": "text" }
   }).prefault({}),
 
   $eng: z.object({

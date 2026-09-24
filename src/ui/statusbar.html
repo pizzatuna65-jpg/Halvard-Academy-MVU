@@ -79,15 +79,25 @@ button.chip{font:inherit;font-size:12px;cursor:pointer}button.chip:hover{backgro
   const fmt = v => { const x = num(v, 0); return Math.abs(x - Math.round(x)) < 0.05 ? String(Math.round(x)) : x.toFixed(1); };
   let collapsed = false; try { collapsed = localStorage.getItem('eld.bar.collapsed') === '1'; } catch (e) {}
 
+  // 1.2.0: the bracelet on the latest story message shows the NEWEST state, which may live on a later entry: a player tool
+  // (Builder, Settings, calendar marks) writes a hidden entry, and hidden entries never render a bracelet of their own.
   function readState() {
-    try { const v = getVariables({ type: 'message', message_id: MID }); return v && v.stat_data && v.stat_data.World ? v.stat_data : null; }
-    catch (e) { return null; }
+    try {
+      const last = MID < 0 ? MID : getLastMessageId();
+      for (let i = last; i >= MID; i--) {
+        const v = getVariables({ type: 'message', message_id: i });
+        if (v && v.stat_data && v.stat_data.World) return v.stat_data;
+        if (i < 0) break;
+      }
+    } catch (e) { /* fall through */ }
+    return null;
   }
+  // stale only when a later VISIBLE message carries its own bracelet (older chats have hidden Builder entries with a placeholder)
   function isLatest() {
     try {
       const last = getLastMessageId();
       if (MID < 0 || MID >= last) return true;
-      return !getChatMessages(MID + 1 + '-' + last).some(m => String(m.message || '').includes(PH));
+      return !getChatMessages(MID + 1 + '-' + last).some(m => !m.is_hidden && String(m.message || '').includes(PH));
     } catch (e) { return true; }
   }
   function bar(label, cur, max, color, sub, cls) {
@@ -162,6 +172,8 @@ button.chip{font:inherit;font-size:12px;cursor:pointer}button.chip:hover{backgro
     if (unl.includes('letters') && mail && on('letters')) c.push(chip(mail === 1 ? 'Letter waiting' : mail + ' letters waiting', 'fa-envelope', 'glow', 'At the Mail Tower', 'notebook:letters'));
     const hap = ui.hap;   // 5.3 (F20): today's campus happening
     if (hap && hap.text && ui.happenings !== 'off') c.push(chip((hap.now ? 'Now: ' : hap.from + ':00 ') + (hap.where || 'Around campus'), 'fa-bullhorn', hap.now ? 'glow' : '', hap.text, 'notebook:planner'));
+    // 1.2.0: at a shop (Commissary, the Mall and its shops) a chip opens the Shop tab, which exists only there
+    if (/^(the\s+)?(commissary|mall|nightwell|merryhew'?s|snug)\b/i.test(String(W.Location || '').trim())) c.push(chip('Shop here', 'fa-basket-shopping', '', 'Open the shop list', 'activities:shop'));
     if (c.length) h += '<div class="chips">' + c.join('') + '</div>';
 
     const here = Object.entries((S.Scene || {}).Present || {});

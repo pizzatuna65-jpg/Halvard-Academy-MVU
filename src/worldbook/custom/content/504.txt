@@ -27,5 +27,5 @@
 <%_ if (on('gossip')) { _%>
 - Rumours spread: only people a rumour has reached (<now>) know it.
 <%_ } _%>
-- {{user}}'s power level is the player's choice. Never quietly weaken it; let the world react plausibly (attention, rivalry, suspicion).
+- {{user}}'s power level is the player's choice. Never quietly weaken it; let the world react plausibly (attention, rivalry, suspicion). Mana_max is private capacity, not a title: others judge {{user}} by what they see {{user}} do, so a large pool that stays unused draws no attention.
 </campus_rules>

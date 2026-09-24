@@ -359,7 +359,7 @@ function fillShape(o, shape) {
   }
 }
 const BOND0 = { Rank: 0, Progress: 0, Trust: 50, Tension: 0, Title: '', Romance: false, Known_facts: [], Milestones: [], Last_seen: '' };
-const ENGINE_VER = '1.1.0';
+const ENGINE_VER = '1.2.0';
 
 function runEngine(S, B, text, seedHint) {
   if (!S || !S.World) return;
@@ -377,7 +377,7 @@ function runEngine(S, B, text, seedHint) {
   // ---- 0. read-only fields: only a Student Builder patch (auth = 'builder') may change them ----
   const byBuilder = S.$eng.auth === 'builder';
   if (hasB && !byBuilder) {
-    const keep = [['Magic', '_Techniques'], ['Magic', '_Affinity'], ['Hidden', '_True_magic'], ['$ui', 'built']];
+    const keep = [['Magic', '_Techniques'], ['Magic', '_Affinity'], ['Hidden', '_True_magic'], ['$ui', 'built'], ['$ui', 'file']];
     for (const path of keep) {
       const was = _.get(B, path);
       if (was !== undefined && !_.isEqual(_.get(S, path), was)) { _.set(S, path, _.cloneDeep(was)); log.push(`${path.join('.')} is read-only; the change was reverted.`); }
@@ -385,6 +385,19 @@ function runEngine(S, B, text, seedHint) {
   }
   if (byBuilder) S.$ui.toasts.push('Student file updated');
   S.$eng.auth = '';
+  // 1.2.0 (owner playtest: a reload came back with the student's magic empty): the Builder keeps its own record in $ui.file.
+  // A built student whose Builder-only fields are all empty gets them back from that record. The Builder always writes both
+  // together, so an empty set next to a full record is a lost write, never a choice.
+  {
+    const F = S.$ui.file, M = S.Magic, A = M._Affinity || {};
+    if (S.$ui.built && F && typeof F === 'object' && _.isEmpty(M._Techniques) && !(A.Types || []).length
+      && (!_.isEmpty(F.Techniques) || ((F.Affinity || {}).Types || []).length)) {
+      M._Techniques = _.cloneDeep(F.Techniques || {}); M._Affinity = _.cloneDeep(F.Affinity || {});
+      if (F.Mana_max > 0) S.Player.Vitals.Mana_max = F.Mana_max;
+      if (F.True_magic && !S.Hidden._True_magic) S.Hidden._True_magic = F.True_magic;
+      log.push('The student file was restored from the Builder record (magic had come back empty).');
+    }
+  }
 
   // ---- 0b. 1.1.0 Features settings: a feature that is off has its state parked in $ui.parked (hidden from the AI) and is not processed.
   // Turning it back on restores it. A write the AI still makes into a parked module is merged into the parking, not dropped.
@@ -431,7 +444,10 @@ function runEngine(S, B, text, seedHint) {
   Object.assign(S.World, fromAbs(absA));
   const elapsed = hasB ? Math.max(0, absA - absB) : 0;
   const evs = eventsOn(S.World);
-  S.World._Event_today = evs.map(e => e.t).join('; ');
+  // 1.2.0: {{user}}'s birthday (Builder, Profile.Birthday "M? W? Day") joins the day's events; lore entry 508 says how it plays out
+  const bd = /^M(\d{1,2}) W([1-4]) (Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/.exec(String(S.Player.Profile.Birthday || '').trim());
+  const bday = bd && +bd[1] === S.World.Month && +bd[2] === S.World.Week && bd[3] === S.World.Day;
+  S.World._Event_today = [...evs.map(e => e.t), ...(bday ? [`${S.Player.Profile.Name || 'Your'}'s birthday`] : [])].join('; ');
   S.World._Period = periodOf(S.World, evs);
   S.World._Curfew = curfewOf(S.World, evs, S);
   // F20: today's happening (visible from the day's start until its window closes)

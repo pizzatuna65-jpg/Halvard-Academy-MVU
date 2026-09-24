@@ -166,7 +166,7 @@ ADJ = [('Reception and Gatehouse', 'Courtyards'), ('Reception and Gatehouse', "G
        ("Founder's Statue and Park", 'Gardens'), ("Founder's Statue and Park", 'Sports Field'), ('Sports Field', 'Gymnasium'),
        ('Sports Field', 'Archery Range'), ('Gymnasium', 'Swimming Pool'), ('Gardens', 'Menagerie'), ('Grassy Field and Hills', 'Observation Tower'),
        ('Grassy Field and Hills', 'Old Hut'), ('Combat Grounds', 'The Sparring Pavilion'), ('Gardens', 'Boathouse and Lake'),
-       ('Boathouse and Lake', 'Forest'), ('Grassy Field and Hills', 'Forest'), ('Forest', 'Forest Clearing'),
+       ('Boathouse and Lake', 'Forest'), ('Boathouse and Lake', 'Fishing House'), ('Boathouse and Lake', 'Willow Island'), ('Grassy Field and Hills', 'Forest'), ('Forest', 'Forest Clearing'),
        ('The Dovecote', 'The Cathedral'), ('The Dovecote', "The Noble Houses' Liaison"), ('The Cathedral', "The Noble Houses' Liaison"),
        ('Broken Statue', 'The Dovecote'), ('Broken Statue', 'Fire Dormitory'),
        *[(d, x) for d in ('Fire Dormitory', 'Light Dormitory', 'Sky Dormitory', 'Viridian Dormitory')
@@ -178,8 +178,8 @@ for a, b in ADJ:
     if a not in locs[b]['connections']: locs[b]['connections'].append(a)
 WALK = {5: ['The Mall', 'Medical Centre', 'Commissary', 'The Banking House', 'Meditation Rooms / Spirit House', "Founder's Statue and Park", 'Broken Statue', 'Mail Tower'],
         10: ['Combat Grounds', 'The Sparring Pavilion', 'Sports Field', 'Gymnasium', 'Swimming Pool', 'Archery Range'],
-        15: ['Gardens', 'Menagerie', 'Grassy Field and Hills', 'Observation Tower'], 20: ['Old Hut', 'Boathouse and Lake'],
-        25: ['Forest'], 40: ['Forest Clearing'], 0: ['Courtyards']}
+        15: ['Gardens', 'Menagerie', 'Grassy Field and Hills', 'Observation Tower'], 20: ['Old Hut', 'Boathouse and Lake', 'Fishing House'],
+        25: ['Forest', 'Willow Island'], 40: ['Forest Clearing'], 0: ['Courtyards']}
 FLOORS = {'Undercroft': ['Workshop', 'Archive', 'Restricted Section', 'Seal Chamber'],
           'Floor 1': ['Arbiter Hall', 'Ring Dining Hall', 'Canteen', 'Main Library', 'Club Rooms', 'Student Council Chamber', 'Announcement Room',
                       'Notice Board', "Warden's Office", 'The Royal Inspectorate', 'Detention Tower'],
@@ -200,7 +200,7 @@ ACCESS = {'Seal Chamber': 'Forbidden — the Warden only; magic near it is banne
           'Detention Tower': 'When assigned detention', 'Meditation Rooms / Spirit House': 'Students are not to go alone',
           'Reception and Gatehouse': 'The only way in or out', 'Forest': 'Far edge of the grounds; curfew applies after dark',
           'Combat Grounds': 'Dorm-separated training areas; duels only inside a warded ring', 'Staff Room': 'Staff only',
-          'Faculty Offices': 'Staff; students by visit'}
+          'Faculty Offices': 'Staff; students by visit', 'Willow Island': 'By boat from the boathouse; no bookings after dark'}
 for nm, a in ACCESS.items(): locs[need(L(nm))[0]]['access'] = a
 locs['rooftop']['discoverable'] = True
 # clubs from the Campus Map venue line
@@ -228,6 +228,7 @@ for lid, uids in LORE.items():
 def reg_targets(title):
     t = title.replace('Regulars — ', '')
     special = {'Sports Field and Gymnasium': ['sports_field', 'gymnasium', 'swimming_pool', 'archery_range'],
+               'Boathouse and Lake': ['boathouse_and_lake', 'fishing_house'],   # 1.2.0: "Fishing Club dock at dawn"
                'Faculty Offices and Staff Room': ['faculty_offices', 'staff_room'], 'Common Rooms and Canteen': ['common_rooms', 'canteen'],
                "Founder's Park": ['founders_statue_and_park'], 'Archive': ['archive'], 'Lecture Halls': ['lecture_halls']}
     return special.get(t, [L(t)])
@@ -259,7 +260,7 @@ PINS = {1: ('Castle', ['canteen', 'main_library', 'club_rooms', 'student_council
         23: ('Commissary', ['commissary']), 24: ('Medical Centre', ['medical_centre']), 25: ('Mail Tower', ['mail_tower']),
         26: ('Gatehouse', ['reception_and_gatehouse']), 27: ('Banking House', ['banking_house']), 28: ('The Dovecote', ['dovecote']),
         29: ('The Cathedral', ['cathedral']), 30: ("Noble Houses' Liaison", ['noble_houses_liaison']), 32: ('Spirit House', ['meditation_rooms_spirit_house']),
-        33: ('Broken Statue', ['broken_statue']), 34: ('Fishing House', ['boathouse_and_lake']), 35: ('Willow Island', ['boathouse_and_lake']),
+        33: ('Broken Statue', ['broken_statue']), 34: ('Fishing House', ['fishing_house']), 35: ('Willow Island', ['willow_island']),   # 1.2.0: own places
         36: ('Grassy Field and Hills', ['grassy_field_and_hills'])}
 XY = json.load(open(P('data/pins_pct.json')))
 pins = []

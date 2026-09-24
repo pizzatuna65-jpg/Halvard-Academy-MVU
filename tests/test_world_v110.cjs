@@ -295,7 +295,7 @@ console.log('Weather in the Now entry: indoor schedules, flu, moods, battle fiel
   ok(/Moved indoors in this weather \(Gymnasium, Common Rooms\): .*Percival/.test(sf) && /Likely around Sports Field[^:]*: no regulars/.test(sf), 'rain: regulars of outdoor places move indoors');
   const satRain = (() => { for (let d = 5; d < 3000; d += 7) { const D = E.wxDay(SEED, d); if (QUIET(d) && D.blocks[1].sky === 'Rain' && !D.blocks[1].snow) return d; } })();
   ok(/Soccer Club: practising indoors \(Gymnasium\) or cancelled/.test(render(505, at(S0, satRain, '14:00', 'Sports Field'))), 'Saturday clubs with only outdoor venues practise indoors or cancel');
-  ok(/Fishing Club: meeting here/.test(render(505, at(S0, satRain, '14:00', 'Boathouse and Lake'))), '...except the Fishing Club, which goes out in the rain');
+  ok(/Fishing Club: meeting here/.test(render(505, at(S0, satRain, '14:00', 'Fishing House'))), '...except the Fishing Club, which goes out in the rain (at its Fishing House, 1.2.0)');
   const fluD = (() => { for (let d = 3; d < 56; d++) if (E.fluOn(SEED, d) && QUIET(d)) return d; for (let d = 339; d < 392; d++) if (E.fluOn(SEED, d)) return d; })();
   const F = at(S0, fluD, '17:00', 'Main Library'), ft = render(505, F);
   ok(F.$ui.wx.flu && F.$ui.wx.sick.length >= 1 && /A cold is going around campus\. Off sick in their dorm today: /.test(ft), `flu wave: ${F.$ui.wx.sick.join(', ')} off sick`);
@@ -326,7 +326,7 @@ console.log('UI (Student file, Notebook, Activities)');
   h = U.PANELS.notebook.render(O); ok(!/data-nb="letters"/.test(h), 'Notebook: the Letters tab hides when letters are off');
   U.view.nb = 'notices'; h = U.PANELS.notebook.render(applyPatch(S, [{ op: 'replace', path: '/World/Location', value: 'Notice Board' }]));
   ok(/Divination Society — tomorrow's skies/.test(h) && /no responsibility for umbrellas/.test(h), 'Notice Board: the Divination Society forecast card');
-  U.view.act = 'shop'; U.view.shop = 'All'; h = U.PANELS.activities.render(S);
+  U.view.act = 'shop'; U.view.shop = 'All'; h = U.PANELS.activities.render(applyPatch(S, [{ op: 'replace', path: '/World/Location', value: 'The Mall' }]));
   ok(/Straw sun hat.*out of season/.test(h) && /Wool scarf and mittens/.test(h) && !/Wool scarf and mittens <span class="pill oos"/.test(h), 'Shop: off-season items greyed (winter: no sun hat), in-season ones normal');
   const T = at(applyPatch(S0, [{ op: 'replace', path: '/$ui/off', value: ['trip'] }]), 85, '10:00', 'Canteen');
   h = U.PANELS.activities.render(T); ok(!/data-actab="trip"/.test(h), 'Activities: the Trips tab hides when trips are off');
