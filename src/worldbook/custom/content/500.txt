@@ -42,7 +42,6 @@ Hidden:
 Bonds:
   Etnie:
     Rank: 3
-    Progress: 0
     Trust: 70
     Tension: 0
     Title: Self-declared big sister

@@ -50,7 +50,8 @@ for line in N[97]['content'].split('\n'):
     m = re.match(r'(Staff|Facilities|Cathedral|Doves|Liaison|Year \d):\s*(.*)', line)
     if not m: continue
     group = m.group(1)
-    for seg in re.split(r';\s*(?![^()]*\))', m.group(2).rstrip('.')):
+    # 1.3.0: the list ends at the first sentence after a closing bracket (the Staff line goes on: "). Dorm Heads: Yvette (Fire), ...")
+    for seg in re.split(r';\s*(?![^()]*\))', re.split(r'(?<=\))\.\s', m.group(2))[0].rstrip('.')):
         r = parse_attr_block(seg)
         if r:
             who, info = r; info['group'] = group
@@ -70,9 +71,12 @@ def split_fields(text):
     for line in text.split('\n')[1:]:
         line = line.strip()
         if not line: continue
-        m = re.match(r'^([A-Z][A-Za-z /]{1,24}):\s*(.+)$', line)
+        # 1.3.0: a qualified label ("Magic (public)", "Personality (daily)") unlocks at its field's rank. The dossier drops
+        # "(public)" / "(surface)", which would hint at a hidden side, and keeps the others ("Personality (in battle)").
+        m = re.match(r'^([A-Z][A-Za-z /]{1,24}?)(?:\s*\(([a-z ]{1,16})\))?:\s*(.+)$', line)
         if m and (m.group(1) in RANK or len(m.group(1).split()) <= 2):
-            fields.append([m.group(1), m.group(2).strip()])
+            q = m.group(2)
+            fields.append([m.group(1) if not q or q in ('public', 'surface') else f'{m.group(1)} ({q})', m.group(3).strip()])
         else:
             notes.append(line)
     if notes: fields.append(['Notes', ' '.join(notes)])
@@ -90,8 +94,9 @@ for u, e in sorted(N.items()):
     for label, val in split_fields(clean):
         val = re.sub(r'\s{2,}', ' ', val).strip()
         if not val: continue
-        rank = RANK.get(label, MIN_RANK_ANY)
-        if f'{nid}.{label}' in FOVR: rank = FOVR[f'{nid}.{label}']
+        base = re.sub(r"\s*\(.*\)$", "", label); rank = RANK.get(base, MIN_RANK_ANY)
+        for k in (f'{nid}.{base}', f'{nid}.{label}'):
+            if k in FOVR: rank = FOVR[k]
         fields.append({'label': label, 'text': val, 'rank': rank})
         for m in SENSITIVE.finditer(val):
             flags.append(f"{nid}.{label}: …{val[max(0, m.start()-50):m.end()+50]}…")
@@ -271,6 +276,44 @@ for n, (label, cluster) in PINS.items():
     for lid in cluster:
         if locs[lid]['pin'] is None: locs[lid]['pin'] = n
 json.dump(pins, open(P('data/map_pins.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+# ---------------- 1.2.1 walking times (owner playtest: follow the map) ----------------
+# Paths: the lore connections, plus straight walks between nearby open-air places and buildings (map distance <= 30 units;
+# x is scaled 1.5 because the map is 3:2), plus the castle stairs. A leg costs 0.22 min per unit (Gatehouse -> Mall = 6, owner).
+# Forest, Forest Clearing, Old Hut and Willow Island keep their lore times on their own legs (forest paths, the boat).
+# locs[id]['near'] = [[other, minutes], ...] (the UI runs the shortest path from where the player stands); walk_min = from the
+# Main Courtyard. The Campus Map walking-times line (merge_lorebooks.py) states these same numbers.
+import math, heapq
+WK, WR = 0.22, 30
+SLOW = {'forest': 25, 'forest_clearing': 40, 'old_hut': 20, 'willow_island': 25}
+LORE_T = {L(nm): mins for mins, names in WALK.items() for nm in names}
+multi = {i for i in locs if sum(i in p['cluster'] for p in pins) > 1}
+PXY = {p['pin']: (p['x'] * 1.5, p['y']) for p in pins}
+def _d(a, b): (x1, y1), (x2, y2) = PXY[locs[a]['pin']], PXY[locs[b]['pin']]; return math.hypot(x1 - x2, y1 - y2)
+def _fl(f): return 0 if not f or f == 'Undercroft' else int(f[-1]) if f.startswith('Floor') else 6
+def _w(a, b):
+    A, B = locs[a], locs[b]
+    if A['pin'] == B['pin'] and a not in SLOW and b not in SLOW: return 1 + abs(_fl(A['floor']) - _fl(B['floor']))
+    w = max(1, round(WK * _d(a, b)))
+    if a in SLOW or b in SLOW: w = max(w, abs(LORE_T.get(a, 0) - LORE_T.get(b, 0)))
+    if 'willow_island' in (a, b): w += 5
+    return w
+nbr = {i: set(l['connections']) for i, l in locs.items()}
+open_air = [i for i, l in locs.items() if l['pin'] and not l['floor'] and i not in multi and i not in SLOW and l['kind'] != 'shop']
+for a in open_air:
+    for b in open_air:
+        if a < b and locs[a]['pin'] != locs[b]['pin'] and _d(a, b) <= WR: nbr[a].add(b); nbr[b].add(a)
+for p in pins:
+    if p['tabs']:
+        for a in p['cluster']: nbr[a] |= set(p['cluster']) - {a}
+for i, l in locs.items(): l['near'] = sorted([b, _w(i, b)] for b in nbr[i] if b in locs and b != i)
+D, h = {'courtyards': 0}, [(0, 'courtyards')]
+while h:
+    c, u = heapq.heappop(h)
+    if c > D[u]: continue
+    for v, w in locs[u]['near']:
+        if c + w < D.get(v, 1e9): D[v] = c + w; heapq.heappush(h, (c + w, v))
+for i, l in locs.items(): l['walk_min'] = D.get(i)
+assert D['reception_and_gatehouse'] > D['mall'] and D['forest_clearing'] > D['forest'], 'walking times'
 json.dump(locs, open(P('data/locations.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 unpinned = [k for k, v in locs.items() if v['pin'] is None]
 print(f'npcs {len(npcs)} | locations {len(locs)} | pins {len(pins)}')

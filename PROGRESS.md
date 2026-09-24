@@ -308,14 +308,90 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   with ‹ › buttons. The Rooftop stays hidden until discovered (D21, unchanged).
   npm test 428 checks, smoke 482 views / 0 errors, token audit ~8.6k start / ~13.5k mid-game (+~300: rules 502/504, Campus Map lines).
 
+- 1.2.1 Owner playtest, round 2 (card 1.2.1). The bracelet shows above the narration: display regex "Bracelet above the narration"
+  moves the placeholder to the top before the bracelet regex renders it. Walking times follow the map (owner: from the Gatehouse
+  the Mall is 6 min, the Main Courtyard farther): curate_data.py builds legs (lore connections + straight walks between nearby
+  open-air places and buildings within 30 map units, x scaled 1.5; 0.22 min per unit; forest, Old Hut and boat legs keep their lore
+  times; castle stairs 1 + floors) into locations.json `near`; walk_min is the shortest path from the Main Courtyard; the UI runs
+  the shortest path from where the player stands (shared dorm rooms count as the player's dorm). Audit: no pair's path exceeds its
+  straight line by 5 min or more. The Campus Map "Walking times" line (lore 132) is rewritten with the same numbers (e.g. Gatehouse 9,
+  Fire Dormitory 8, Sports Field 15, Forest Clearing 43). Techniques: Apply technique folds a finished technique into one line
+  (UI only; loaded techniques start folded); a new technique, a type change and the true magic start with the student's specialty
+  for that type (the subtype list shows the student's specialties first; free text still allowed).
+  npm test 434 checks, smoke 482 views / 0 errors.
+
+- 1.2.2 Bond system revamp (owner design; replaces D14's Progress 0-10, daily cap 3, ready at 10). Single source
+  data/bond_rules.json (engine, UI and Now entry). The narrator reports /Interactions [{With, Kind: talk|hangout|gift|help,
+  Gift: loved|liked|neutral|disliked}]; the engine awards XP (talk 2 and hangout 3 once a day each, gifts 2 a week with loved x1.5
+  from Rank 3 and disliked +5 Tension, help 5 once a week, weather +1 once a day) into Bonds.<id>.$xp (hidden from the AI), capped at
+  the rank's need (xp_base 10..80 x pace: fast 0.25, brisk 0.5, standard 1, slow 2.5; Settings → Bonds). A full bar and the
+  cooldown ($cool, cool_base days x pace) set _Event_ready; Rank still rises by 1 only while ready (else reverted); the bar empties.
+  Events: data/bond_events.json (empty; tools/import_bond_events.py reads the owner's [Bond Event] lorebook, docs/BOND_EVENTS.md,
+  example docs/examples/bond_events_example.txt); the engine checks place/time/days/weather/prerequisites and writes $ui.bev
+  (ready, where/when for the hint, now, directions); without a scripted event the rank's default theme is used whenever the NPC is
+  present. Now entry: per present NPC what they share at their rank (data/bond_openness.json draft: open +2 / guarded -1 /
+  closed -2 on the first tiers; goals, views and past need the real rank; secrets never) and what the rank allows (perks); the
+  event block with directions. Romance: Settings (default Rank 8, any, off); the engine reverts an early flag. Migration: a
+  pre-1.2.2 save converts Progress to XP once ($eng.bondv); a Progress the AI still raises counts once as talk/hangout.
+  UI: XP bars (People, dossier), event hints, Settings → Bonds; bracelet chip "Bond event: <name> (<where>)".
+  Also: the Fishing House counts as the Fishing Club's rain-proof place in the Now entry.
+  npm test 470 checks (11 suites), smoke 482 views / 0 errors, token audit ~8.9k start / ~13.8k mid-game (+~300: rules, bond lines).
+
+- 1.3.0 Owner NPC brainstorm applied (handoff 2026-09-25, all approved by the owner; designs kept in docs/design/).
+  Lore: source_original/npc_lore_2026-09-25/ holds the approved full entries; merge_lorebooks.py lays them over v38 (34 NPCs changed:
+  Emotional tells for all 38 bonded NPCs, missing Loves/Hates/Goals/Backstory/Haunts filled, Etnie's backstory now a normal field,
+  Castor's father keeps the Mail Tower, Rei's coat, Vallie Goal -> Goals, Tristan "What he wants" -> Goals). Royhan's EJS date gate
+  is re-applied as before. Verified: every card entry equals the approved text. curate_data.py reads qualified labels ("Magic
+  (public)" at Magic's rank; the dossier drops "(public)"/"(surface)", keeps "(daily)"/"(in battle)"); Trauma stays optional (Irene
+  only). Roster parse bug fixed at the source: Rei's roster tags swallowed "Dorm Heads: ..." (UI data and the brief). The brief
+  generator (tools/make_npc_brief.py) now writes the approved brief (rewards, special models, reputation, known gaps).
+  Bond rewards (data/bond_rewards.json, parsed from the approved list): the 4->5 event gives the gift, 9->10 the Rank 10 benefit;
+  the engine adds the reward (and its narrator-only side) to that event's directions and records it in _Perks (AI-visible,
+  read-only) on the rank-up. Engine effects: training partners x1.5 (Saffi, Percival: Stamina; Sophia, Gareth: Mana pool), jumps
+  +10% (Gavlan gift: Mana pool; Vallie Rank 10: Stamina), reputation +1 level (Ruby: Student, Baelin: Academy), one-use tokens that
+  lift a negative level toward 0 (Kuroo: Academy, Milena: Doves), monthly points (Aiden, Tristan, Mimosa), one-use perks spent via
+  /Perk_use (Irene, Althair, Baelin, Mimosa, Bobby gifts). The rest is narrator-played (their Effect text in _Perks).
+  Mask -> truth (Castor, Kanae, Caine): 7->8 adds the nudge Fact; at Rank 8 the event is held until a "<Name>.<topic>" secret is in
+  Secrets_revealed (UI: "This bond has gone as far as it can for now."). Krieg: introduction ready at once; +14 XP each Monday
+  while Doves >= +1 (with hidden magic also Dove attention <= 39), else Tension +1; nothing from interactions. Rival teams: no bonds.
+  Reputation (data/reputation.json): Profile.Reputation {_Academy, _Student, _Doves} (levels, engine) + $xp (signed Rep XP);
+  /Rep_events {Rep, XP, Kind: repeat|event, Why}; repeat capped +5/week per reputation ($eng.repw), events and losses uncapped;
+  bond milestones Rank 5/10 (+5/+10: staff -> Academy, students -> Student, Milena -> Doves) only below +3; high Tension (70)
+  with a staff member or student -5; bond XP modifiers per talk/hangout; Academy +5 monthly bonus, Academy -5 halves the payout;
+  level changes toasted, journaled and logged with their effect; <now> lists non-zero levels with what they mean. Migration: old
+  Public/Dorm become Academy/Student XP once (x1.25, $eng.repv).
+  Training (data/training.json): /Training {Track}; +1% of the starting value per session x (1 + 0.5 per partner in the scene),
+  weekly 2.5%, lifetime 2x (Player.$Training per track: base, gain, week). Mana_max / Stamina_max: other writes reverted; a Builder
+  change (or the 1.2.0 self-heal) moves the base.
+  Rules: 502 (Training, Reputation triggers and values, _Perks / Perk_use), 504 (rewards are real, no endings), 503 example.
+  UI: Overview reputation bars with what the level means; Body shows training progress; new tab Gifts & perks (secrets stripped,
+  {{user}} as the student's name, one-use counts, used list); dossier hint for a held bond.
+  Tests: tests/test_rewards_v130.cjs (42 checks). npm test 512 checks (12 suites), smoke 550 views / 0 errors (new sample
+  tests/preview/sample_v130.json from make_sample_v130.cjs), token audit ~9.9k start / ~14.7k mid-game (+~920, mostly the
+  reputation trigger list in 502).
+  To confirm with the owner (numbers or mappings the brainstorm did not give): monthly amounts Aiden 200, Tristan 100, Mimosa 150,
+  Academy +5 bonus 300 points; "high Tension" = 70; pro-Dove NPCs "keep their distance" = -1 XP per talk/hangout at Doves <= -3;
+  Krieg's "suspicion low" = Dove attention <= 39 (Unnoticed / Rumoured); the mask gate opens on any revealed secret of that NPC;
+  Public/Dorm migration x1.25. Token cost +~920 always-on: reputation could become a Features toggle if that is too much.
+
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
+- Playtest v1.3.0 in ST: the narrator writing /Rep_events, /Training and /Perk_use; a 4->5 event with its gift; the Student file
+  (reputation, Body training, Gifts & perks); Krieg on a Monday; a Rank 8 mask bond before and after its secret comes out.
+- Still missing (owner, known): the [Bond Event] lorebook (no event is written yet); a Doves: field for Zara, Alyssa and Tilly.
 - Playtest v1.2.0 in ST: the Builder end to end (arrow keys, Techniques page, Register then reload, amend), the bracelet after a
   Builder save, calendar notes, the Shop at the Mall / Commissary, the birthday day.
 - Playtest v1.1.0 in ST with docs/TEST_CHECKLIST_v1.1.md (EJS in 502/504 first), together with v1.0.3's checklist.
 - Playtest in ST with docs/TEST_CHECKLIST_v1.0.3.md FIRST (the Builder vs the real MVU zod helper, F12), then v1.0 + v0.5.
   Then tune (see Tunables) and fix what the playtest finds.
+
+## Planned (owner decisions, not built yet; the owner sends the event lorebooks after the feature exists)
+- DONE in 1.2.2: bond XP system and the bond event framework. Waiting on the owner: the [Bond Event] lorebook, a review of
+  data/bond_openness.json (draft), and the NPC gaps listed in the 1.2.2 chat (missing Personality / Goals / Haunts…).
+- Perks the engine could enforce later (now told to the narrator only): team-up gate at Rank 4, introductions at Rank 6,
+  Dove attention cover at Rank 6, favours at Rank 7.
+- Scripted first-week classes (M1 W1 Tue-Sat, 14 sessions; per dorm for [D] classes; optional homework into Commitments).
 
 ## To verify in ST (could not be tested outside ST)
 - 1.1.0: the Prompt Template extension renders EJS in 502 / 504 (now gated per feature), also in MVU's extra-model mode if used.
@@ -328,6 +404,8 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 - 1.1.0: weather weights and rare-event rolls, FC_TRUE 75, condition thresholds (20/5/30/60 min, 0/8/28 °C) and clear times,
   Head cold odds, flu waves, sleep multipliers, bond +1 conditions, hook due window (-30 min / +3 h) and "old" age (14 days),
   rumour days (3 / 21), Bag cap 40, hooks cap 15.
+- 1.3.0: reputation thresholds / weekly cap / bond cap, monthly perk amounts and the Academy +5 bonus, high Tension 70, Krieg +14,
+  training percentages (data/reputation.json, bond_rewards.json, training.json).
 - Payout bands, bond daily cap (3), sleep/rest recovery rates, 40-HP cap, Dove attention increments (in 502 rules).
 - 5.3/5.4: happening rates (HAPPEN_RATE), trim depth 24 (regex minDepth), Journal window 30, FACTS_VISIBLE 10, Clues cap 40.
 

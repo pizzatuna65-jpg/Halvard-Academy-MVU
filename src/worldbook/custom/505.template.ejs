@@ -43,7 +43,7 @@ if (cls && cls[3] === 'class') {
 }
 const bad = FULL && (WX.now.sky === 'Rain' || WX.now.sky === 'Storm');
 let moved = [];
-if (bad && OUTD.includes(pk) && !(pk === 'boathouse and lake' && WX.now.sky === 'Rain')) { moved = regs1; regs1 = []; }   // the Fishing Club likes rain
+if (bad && OUTD.includes(pk) && !((pk === 'boathouse and lake' || pk === 'fishing house') && WX.now.sky === 'Rain')) { moved = regs1; regs1 = []; }   // the Fishing Club likes rain
 const clubLine = clubs.map(c => {
   const m = c[1].filter(id => here(id) && !sick.includes(id) && !stOf(id));
   return c[0] + (bad && c[2] && !c[3] ? ': practising indoors (Gymnasium) or cancelled in this weather' : ': meeting here until 16:00' + (m.length ? ' (members on record: ' + m.join(', ') + ')' : ''));
@@ -67,6 +67,24 @@ const GS = on('gossip') ? (UI.gossip || []).slice(-5).reverse() : [];
 const PRES = Object.keys(getvar('stat_data.Scene.Present') || {});
 const moods = FULL ? MOODS.filter(m => PRES.includes(m.id)).map(m => (/cold|freezing/.test(WX.now.label) ? m.cold : WX.now.sky === 'Clear' && WX.block !== 2 && WX.now.temp >= 15 ? m.sunny : '')).filter(Boolean) : [];
 const BT = getvar('stat_data.Battle') || {};
+// 1.2.2 bonds: for each present NPC, what they will talk about at this rank (openness shifts the early tiers; goals, views of others
+// and the past need the real rank; secrets never come from rank) and what the bond allows; plus a ready bond event's directions
+const BOND = /*@@BOND@@*/{};
+const BONDS = getvar('stat_data.Bonds') || {}, BEVS = UI.bev || {};
+const bondLines = PRES.filter(id => BONDS[id] && BOND.share).map(id => {
+  const r = Math.max(0, Math.min(10, Number(BONDS[id].Rank) || 0)), o = BOND.off[id] || 0;
+  const ok = BOND.share.filter(([t]) => (t < BOND.real ? t <= Math.max(0, r + o) : t <= r));
+  const next = BOND.share.find(([t]) => !ok.some(x => x[0] === t));
+  return id + ' (Rank ' + r + (BOND.tag[id] ? ', ' + BOND.tag[id] : '') + '): shares ' + ok.map(x => x[1]).join('; ')
+    + (next ? '. Not yet: ' + next[1] + ' and beyond; asked about it, deflects in character (pushing too soon adds Tension)' : '')
+    + (r > 0 && BOND.perks[String(r)] ? '. At this rank: ' + BOND.perks[String(r)] : '') + '.';
+});
+const bondEvents = Object.entries(BEVS).filter(([id, v]) => v && v.now && PRES.includes(id));
+// 1.3.0 reputation: what each non-zero level means for how staff, students and the Doves treat {{user}}
+const REPD = /*@@REP@@*/{};
+const RPN = PR.Reputation || {};
+const repLines = (REPD.reps || []).map(r => [r, Math.max(-5, Math.min(5, Number(RPN['_' + r]) || 0))]).filter(([, L]) => L)
+  .map(([r, L]) => r + ' ' + (L > 0 ? '+' : '') + L + ': ' + ((REPD.effects[r] || []).find(([a, c]) => L >= a && L <= c) || [0, 0, ''])[2]);
 _%>
 <now>
 Month <%- W.Month %>, Week <%- W.Week %>, <%- W.Day %> <%- W.Time %> | <%- W._Period || 'free time' %> | at <%- W.Location %>
@@ -125,6 +143,17 @@ Old hooks (pay off or drop): <%- hOld.map(([k]) => k).join('; ') %>
 <%_ } _%>
 <%_ if (GS.length) { _%>
 Rumours going around: <%- GS.map(g => '"' + g[0] + '" (' + g[1] + ', day ' + g[2] + ')').join('; ') %>
+<%_ } _%>
+<%_ for (const l of bondLines) { _%>
+Bond: <%- l %>
+<%_ } _%>
+<%_ for (const [id, v] of bondEvents) { _%>
+Bond event available with <%- id %> (Rank <%- v.r %> → <%- v.r + 1 %>): play it now if the scene allows it; never force it.
+<%- v.dir %>
+<%- v.s ? 'Follow these directions; lines marked Wajib / Must have to happen. ' : '' %>When it has played out: raise /Bonds/<%- id %>/Rank by 1, insert a line into its Milestones and add what {{user}} learned to Known_facts; the choices made may raise or lower Trust.
+<%_ } _%>
+<%_ for (const l of repLines) { _%>
+Reputation, <%- l %>
 <%_ } _%>
 <%_ if (H._True_magic) { _%>
 Hidden magic — Dove attention: <%- H._Stage %> (<%- H.Dove_attention %>/100)

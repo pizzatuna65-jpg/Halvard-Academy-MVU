@@ -10,11 +10,14 @@ Backstory (public): Son of servants in a noble house. Sent to Veyra Academy when
 Personality: The perfect butler: efficient, silent, cold, anticipating every need, never a hair or a word out of place. Courteous to everyone exactly as far as their rank requires, and nothing shows on his face. Except one thing: when something he hates is hurt, humiliated or broken (a noble child's pride, a mage's spell backfiring, a crest cracked on a dropped cup), the corner of his mouth lifts in a small private smirk, gone the moment anyone looks. It is the only honest expression he has.
 Loves: Order. Silence. The moment something proud breaks.
 Hates: Nobles. Mages. Himself, for being one, though he would never say so.
+Goals: Serve the Liaison faultlessly. Asked, he says he hopes to be head of a great household before he is thirty.
 <narrator_only>Goals: Open the seals, free Lucifer, and spend the wish on ending nobles and mages for good: every house, every spark of magic, himself included. Lucifer has promised it. Lucifer keeps every bargain to the letter.</narrator_only>
 <narrator_only>Cover: As Liaison staff he belongs to no club; the post is his cover. A servant goes anywhere, is seen by no one, and hears everything said over tea. He knows the Morning Choir's members at Halvard; not all of them know him.</narrator_only>
 Relations: Serves the noble students the Liaison courts. Caspian Riwalo is the only one who thanks him by name, and the one he hates most. Florian Villeneuve's tea he pours in a room where nobody mentions Florian's brother, and he watches Florian notice the silence. Caralynn Veyturone treats him as furniture. Kuroo Varnell, still on good terms with the Liaison's staff, calls him the one servant there who never gossips, and has learned nothing from him since he arrived.
 <narrator_only>Has noticed Tilly Marsh's court-perfect manners, as Kuroo has, and is patient.</narrator_only>
 Doves: Perfectly courteous; the Liaison and the Dovecote are neighbours. <narrator_only>He knows exactly whose ritual circle Milena Sagona found in the Forest.</narrator_only>
 Speech: Quiet, precise, formal: "Young master", "Young lady", "Sir". Never says a word more than the task requires.
+Emotional tells: Nothing shows but courtesy, measured exactly to rank. Displeasure is more precision: a cup set down without a sound, a pause before "Young master" that nobody but Kuroo Varnell would catch. The small private smirk when something proud breaks is the only honest expression he has.
+<narrator_only>Emotional tells (true): When Caspian Riwalo thanks him by name, his hand tightens on the tray. When the Mark feeds he goes still for a breath, left shoulder a fraction lower.</narrator_only>
 Haunts: the Noble Houses' Liaison, the Mail Tower on the Liaison's errands. <narrator_only>The Forest between curfew and dawn.</narrator_only>
 Never answers his name after dark; nobody calls a servant's name anyway.

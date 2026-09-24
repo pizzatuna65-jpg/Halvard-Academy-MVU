@@ -15,6 +15,7 @@ Player.Vitals
 - HP is an injury gauge (0–HP_max). Every HP loss MUST come with an entry in Player.Injuries naming the concrete injury. Bands: ≤90 Bruised, ≤70 Hurt, ≤50 Badly Injured, ≤30 unconscious/critical, 0 dead.
 - One event may remove at most 40 HP. Only a truly lethal blow may exceed that, and then set Lethal_flag to true in the same patch.
 - Stamina: physical exertion (running, fighting, hard training −5 to −30). 0 = collapse from exhaustion, not injury.
+- Training: when {{user}} spends a real session (about an hour or more) drilling to grow their mana pool or their stamina, insert {"Track": "mana"} or {"Track": "stamina"} into /Training/-. The engine raises Mana_max / Stamina_max (weekly and lifetime limits; a partner who gave a training gift and is in the scene helps). Never change Mana_max or Stamina_max yourself.
 - Mana: never deduct mana for {{user}}'s techniques yourself (see Magic). Change Mana directly only for non-technique causes (a mana draught, being drained by a ward).
 - Resting: set "rest" or "sleep" when {{user}} rested or slept during the elapsed time; the engine applies recovery and resets it.
 - Healing: the Medical Centre restores minor and moderate injuries fully (raise HP, remove the injury); serious ones are only stabilised.
@@ -32,7 +33,10 @@ Player.Profile
 - The rest of Profile, and all of Magic._Techniques / _Affinity, come from the player's Student Builder; do not rewrite them. Birthday is in the academy calendar ("M3 W2 Thu").
 - Combat_role: empty until {{user}}'s first Combat class. There the teacher watches {{user}} in drills and assigns one or two roles (Attack, Defense, Healing, Support, Control) that fit the techniques and how {{user}} actually fought; set it then (e.g. "Defense, Control"). Change it later only when a teacher reassigns it.
 - Club: the club {{user}} has actually joined, by its name ("Duelling Club", "Theatre Troupe"); "" if none.
-- Reputation (Public, Dorm) −100..100: shift 1–5 for notable public acts.
+- Reputation: _Academy (staff, the institution), _Student (the student body), _Doves (the Dovecote), −5..+5, engine-computed; <now> says what non-zero levels mean. When a deed earns or costs reputation, insert {"Rep": "Academy|Student|Doves", "XP": n, "Kind": "repeat|event", "Why": "max 8 words"} into /Rep_events/- (one per reputation; a deed can raise one and lower another). The engine caps repeat at +5 a week per reputation; event and losses are uncapped. Never report bond milestones or bond Tension (the engine counts them). Doves reputation is not Dove attention.
+  - Academy. repeat: staff job +1; a clean week (no skipped class, no curfew break) +2. event: exam top of the year +15, above average +8, passed +3; dorm rank up on Results day +5; Dorm Competition qualified +5, Academy win +15, Kingdom win +25; Fair or Showcase prize +8; real help in a crisis +5..+10. loss: skipped period −2; caught after curfew −5; detention −8, Detention Tower −15; lying to or defying staff −5; failed exam −8, several −15; property damage or fighting outside a warded ring −8..−15; public scandal −20.
+  - Student. repeat: a student's Notice Board request done +2; Saturday club time +1. event: club office, founding a club or a Club Festival win +8; a memorable performance or running something for everyone +5; standing up for a pushed-around student +5, against the Doves +10 (Doves −5); a famous prank +8 (Academy −5 if caught); covering for a classmate +5 (Academy −5 if found out). loss: request accepted and dropped −3; a public snub −5; reporting a student to staff −5 (Academy +3); quitting a club or team mid-season −8; bullying −8..−15; reporting a student to the Doves −12 (Doves +5); caught cheating −20.
+  - Doves. repeat: calm cooperation with a check +2; attentive in Dark Magic Defense +1. event: top Dark Magic Defense exam +8; helping on a Dove case +8..+15; reporting real forbidden magic with evidence +20. loss: a suspicious item on {{user}} −3; insulting or defying a Dove −5; the Forest after dark or the Restricted Section without leave −5; lying to the Doves −10; obstructing a search or hiding a suspect −15.
 
 Player.Academics: Grades {"Magic Theory": "B+"}, Exams {"Midterm M3": "result"}.
 <%_ if (on('wxfull')) { _%>
@@ -51,12 +55,16 @@ Hidden (only when Hidden._True_magic is not empty)
 - Outdoors in fog or heavy weather the engine halves a rise; write the full amount.
 <%_ } _%>
 
+Interactions: for each character {{user}} really spent time with in this reply, insert into /Interactions/- {"With": "<first name>", "Kind": "talk|hangout|gift|help"} (a gift also "Gift": "loved|liked|neutral|disliked", judged from what they love and hate). talk = a real conversation; hangout = time together on something (a meal, study, a club, sparring, a walk); gift = {{user}} gave them something; help = {{user}} really helped with their goal or did them a real favour. Small talk and passing greetings: nothing. The engine turns these into bond XP (limited per day and week) and empties the list. Never write XP or Progress yourself.
+
 Bonds (one record per character {{user}} has actually met)
-- Progress 0–10 within the current rank: +1 for a meaningful interaction, +2 for a significant shared moment, 0 for small talk. The engine caps daily gains and sets _Event_ready at 10.
-- Rank 0–10: raise by exactly 1, and only when _Event_ready is true AND this reply contains a genuine milestone scene with that character (also insert a line into Milestones). Otherwise the engine reverts it. Betrayal or a breaking point may lower Rank.
+- Rank 0–10: raise by exactly 1, and only when <now> offers that character's bond event and this reply played it (also insert a line into Milestones). Otherwise the engine reverts it. Betrayal or a breaking point may lower Rank.
+<%_ const _rr = Number.isFinite(+_U.romrank) ? +_U.romrank : 8; _%>
+- Romance: <%- _rr > 10 ? 'the player turned romance flags off; never set Romance true.' : _rr === 0 ? 'set true once the relationship truly becomes romantic.' : 'set true once the relationship truly becomes romantic, from Rank ' + _rr + ' (the player\'s setting); feelings may grow earlier in the story, the flag waits.' %>
 - Trust / Tension 0–100: trust follows reliability and drops with betrayal; tension follows conflict and unresolved friction.
 - Known_facts: insert a short fact whenever {{user}} learns something real about that character. You see the latest 10; older ones are kept by the game, so do not re-add them.
 - Title: a short label for the relationship ("Rival", "Study partner", "Self-declared big sister").
+- _Perks: the gifts (Rank 5) and Rank 10 benefits {{user}} holds; the engine records them when the rank rises (the event's directions in <now> say what it gives). They are real: honour each Effect in the story. When {{user}} spends a one-use perk (Uses 1), insert its exact key into /Perk_use/-; the engine applies it and removes it.
 
 Campus_State: the living world; it overrides the lorebook
 - Events {"<short title>": "one-line summary (M? W?)"}: only for events that change the campus. Update an existing key by summarising; never duplicate.

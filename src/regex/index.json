@@ -72,6 +72,23 @@
   "runOnEdit": true,
   "substituteRegex": 0,
   "minDepth": null,
+  "maxDepth": null,
+  "scriptName": "Eldrasil — Bracelet above the narration (display)",
+  "findRegex": "/^([\\s\\S]+?)\\s*<StatusPlaceHolderImpl\\/>/",
+  "replaceString": "<StatusPlaceHolderImpl/>\n\n$1",
+  "placement": [
+   1,
+   2
+  ],
+  "markdownOnly": true,
+  "promptOnly": false
+ },
+ {
+  "trimStrings": [],
+  "disabled": false,
+  "runOnEdit": true,
+  "substituteRegex": 0,
+  "minDepth": null,
   "maxDepth": 2,
   "scriptName": "Eldrasil — Bracelet status bar (display)",
   "findRegex": "/<StatusPlaceHolderImpl\\/>/g",

@@ -16,6 +16,29 @@ def rep(e, old, new):
 def template_from(e, **kw):
     t = copy.deepcopy(e); t.update(kw); return t
 
+# 1.3.0 NPC lore pass (owner brainstorm, approved 2026-09-25): full NPC entries in source_original/npc_lore_2026-09-25/lore_*.md
+# (one "## <id> — <Full Name>" heading + fenced entry each) replace the v38 text. They were written against the card's own text,
+# so Royhan's entry carries the card's EJS date gate; it is turned back into the v38 line here and re-applied below as before.
+NPC_LORE_DIR = P('source_original/npc_lore_2026-09-25')
+ROY_EJS = re.compile(r"<%_ const _rm = .*?\n<%_ \} _%>", re.S)
+def overlay_npc_lore(N):
+    byname = {e['comment'].replace('NPC — ', '').strip(): u for u, e in N.items() if e['comment'].startswith('NPC — ')}
+    changed = []
+    for f in sorted(os.listdir(NPC_LORE_DIR)):
+        if not f.endswith('.md'): continue
+        text = open(os.path.join(NPC_LORE_DIR, f), encoding='utf-8').read()
+        for m in re.finditer(r'^## (\S+) — (.+?)\n```\n(.*?)\n```', text, re.M | re.S):
+            full, body = m.group(2).strip(), m.group(3)
+            assert full in byname, f'{f}: no NPC entry "NPC — {full}"'
+            e = N[byname[full]]
+            if ROY_EJS.search(body):
+                old = re.search(r'Current trouble: This year, his last, he finally qualified[^\n]*', e['content']).group(0)
+                body = ROY_EJS.sub(lambda _: old, body)
+            if body.strip() != e['content'].strip():
+                e['content'] = body; changed.append(m.group(1))
+    return changed
+print('NPC lore pass 2026-09-25:', len(overlay_npc_lore(N)), 'entries updated')
+
 # v1.0.3 incoming cohorts (data/cohorts.json): an incoming NPC's card entry is empty until its campaign year (EJS gate);
 # the standalone v39 export has no EJS, so it gets a plain note instead.
 COH = json.load(open(P('data/cohorts.json'), encoding='utf-8'))
@@ -86,7 +109,16 @@ def apply_lore_edits(C, N):
     rep(m, "Fishing – Lake;", "Fishing – Fishing House (on the lake shore);")
     rep(m, "Music, Card, Board Game, Divination, Tailoring,", "Divination – Observation Tower; Music, Card, Board Game, Tailoring,")
     rep(m, "- Far edge: Gardens – Boathouse/Lake – Forest.", "- Far edge: Gardens – Boathouse/Lake – Forest. Boathouse/Lake – Fishing House (beside the boathouse), Willow Island (by boat only).")
-    rep(m, "Boathouse and Lake 20;", "Boathouse and Lake 20; Fishing House 20; Willow Island 25 (by boat);")
+    # 1.2.1 (owner playtest: the Gatehouse is nearer the Mall than the Main Courtyard): walking times follow the map. They are the
+    # shortest paths tools/curate_data.py computes (map distance, 0.22 min per unit; forest and boat legs keep their lore times).
+    old = re.search(r"castle core and dormitories under 5 min;.*?Forest Clearing 40\.", m['content'])
+    assert old, 'Campus Map walking-times line changed'
+    m['content'] = m['content'].replace(old.group(0),
+        "castle core 5-7 (more for the upper floors); Sky and Light Dormitories 4-5, Viridian 6, Fire 8; the Mall and Medical Centre 5-6, "
+        "Mail Tower 7, Cathedral 8, Commissary 8, Banking House 10; Founder's Park 7; Reception and Gatehouse 9 (the Mall is only 6 from the gate); "
+        "Gardens, Hills and Broken Statue 10; Archery Range, Spirit House and Groundskeeper's Lodge 11; Dovecote and Noble Houses' Liaison 12; "
+        "Menagerie and Observation Tower 13; Combat Grounds, Gymnasium, Swimming Pool, Boathouse and Lake, Fishing House 14; Sports Field and Old Hut 15; "
+        "Sparring Pavilion 17; Willow Island 24 (the last stretch by boat); Forest treeline 28; Forest Clearing 43.")
     rep(C[72], "[Sports Field] Soccer, running, and Sports Day in Month 6.",
         "[Sports Field] Soccer, running, and Sports Day in Month 6. A running track circles the soccer pitch: home ground of the Soccer Club and the Running Club.")
     rep(C[73], "[Gymnasium] Indoor training,", "[Gymnasium] Home of the Gymnastics and Basketball clubs, and of the Swimming Club, which trains in the outdoor pool beside it. Indoor training,")

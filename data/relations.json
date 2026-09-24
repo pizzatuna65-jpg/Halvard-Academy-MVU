@@ -151,6 +151,8 @@
    "knows"
   ],
   "notes": [
+   "Ezrel Marionne's non-reactions.",
+   "Get one real reaction out of Ezrel.",
    "Adores Ezrel Marionne, the Light Dorm Head, and has never once got a real reaction out of him; it is the best game on campus."
   ],
   "visibility": "rank:5",
@@ -199,9 +201,11 @@
    "knows"
   ],
   "notes": [
-   "Rei is immune to him, because she wants nothing."
+   "Make Rei want something.",
+   "Rei is immune to him, because she wants nothing.",
+   "Rei ignoring him is the highlight of his week."
   ],
-  "visibility": "rank:6",
+  "visibility": "rank:5",
   "type": "knows"
  },
  {
@@ -310,6 +314,7 @@
    "family"
   ],
   "notes": [
+   "His great-grandfather fought beside Gavlan Haverton in the War of Independence; family stories of \"the old soldier in the woods\" are how Baelin knew where to find him.",
    "Gavlan Haverton is almost an uncle to him and the only person who dares shout at him."
   ],
   "visibility": "public",
@@ -335,10 +340,11 @@
    "knows"
   ],
   "notes": [
+   "Krieg Valforth, though he will never say so.",
    "Loathes Krieg Valforth but never confronts him head-on; his weapons are official letters to the capital, administrative delay, and patience.",
    "Treats Milena Sagona as an unofficial channel for restraining Krieg."
   ],
-  "visibility": "rank:6",
+  "visibility": "rank:5",
   "type": "dislike"
  },
  {
@@ -396,6 +402,7 @@
    "knows"
   ],
   "notes": [
+   "Keep the crown from replacing Rei with someone easier to control and worse at the job.",
    "Has long since stopped trying to control Rei, the Acting Warden."
   ],
   "visibility": "rank:5",
@@ -662,9 +669,10 @@
    "knows"
   ],
   "notes": [
-   "Kuroo Varnell, still on good terms with the Liaison's staff, calls him the one servant there who never gossips, and has learned nothing from him since he arrived."
+   "Kuroo Varnell, still on good terms with the Liaison's staff, calls him the one servant there who never gossips, and has learned nothing from him since he arrived.",
+   "Displeasure is more precision: a cup set down without a sound, a pause before \"Young master\" that nobody but Kuroo Varnell would catch."
   ],
-  "visibility": "rank:6",
+  "visibility": "rank:5",
   "type": "knows"
  },
  {
@@ -783,6 +791,7 @@
    "knows"
   ],
   "notes": [
+   "Cruelty dressed up as procedure; Krieg Valforth's methods above all.",
    "Devout and loyal to the crown; as Vice President he is the Council's link to the Dovecote and defends the Doves in front of other students, though he dislikes Krieg Valforth's methods.",
    "Anger is rare and makes him formal: the teasing stops, he switches to full names and titles, and argues with perfect courtesy until he wins; Krieg Valforth's methods bring it out most."
   ],
@@ -1035,6 +1044,42 @@
  },
  {
   "from": "Etnie",
+  "to": "Baelin",
+  "types": [
+   "knows"
+  ],
+  "notes": [
+   "Headmaster Baelin Kalvor let her repeat her second year rather than expel her."
+  ],
+  "visibility": "rank:7",
+  "type": "knows"
+ },
+ {
+  "from": "Etnie",
+  "to": "Caspian",
+  "types": [
+   "knows"
+  ],
+  "notes": [
+   "Caspian Riwalo, her dorm-mate, keeps an eye on her the way he keeps an eye on everyone, and she tolerates it because he is nice to {{user}}."
+  ],
+  "visibility": "rank:6",
+  "type": "knows"
+ },
+ {
+  "from": "Etnie",
+  "to": "Kuroo",
+  "types": [
+   "knows"
+  ],
+  "notes": [
+   "Her Dorm Head, Kuroo Varnell, worked out that {{user}} is the only button she has, and has started pushing it to get her into class."
+  ],
+  "visibility": "rank:6",
+  "type": "knows"
+ },
+ {
+  "from": "Etnie",
   "to": "Ruby",
   "types": [
    "knows"
@@ -1042,7 +1087,7 @@
   "notes": [
    "Went to Ruby Bonbon first when she wanted to know everything about {{user}}."
   ],
-  "visibility": "rank:5",
+  "visibility": "rank:6",
   "type": "knows"
  },
  {
@@ -1261,7 +1306,7 @@
   "notes": [
    "Beat Gareth Valkaryn in front of everyone.",
    "Gareth Valkaryn is the one person he respects without qualification.",
-   "Books a Combat Grounds ring whenever Gareth has one, losing publicly rather than not be seen trying."
+   "Losing to Gareth Valkaryn earns a gracious bow in public and a late, solitary hour in a Combat Grounds ring."
   ],
   "visibility": "rank:5",
   "type": "respect"
@@ -1490,12 +1535,14 @@
   "from": "Idris",
   "to": "Percival",
   "types": [
-   "fear"
+   "fear",
+   "knows"
   ],
   "notes": [
-   "Percival Applethorne, a cheerful first-year, relentlessly tries to induct him into his Brotherhood as \"Sir Idris the Unsmiling\" and is the only student who isn't afraid of him; Idris has no idea how to react."
+   "Percival Applethorne, a cheerful first-year, relentlessly tries to induct him into his Brotherhood as \"Sir Idris the Unsmiling\" and is the only student who isn't afraid of him; Idris has no idea how to react.",
+   "Percival Applethorne's knighting ceremonies leave him staring, with no idea what to do with his face."
   ],
-  "visibility": "rank:6",
+  "visibility": "rank:5",
   "type": "fear"
  },
  {
@@ -1613,12 +1660,14 @@
   "from": "Irene",
   "to": "Caspian",
   "types": [
-   "dislike"
+   "dislike",
+   "knows"
   ],
   "notes": [
-   "Caspian Riwalo, her Vice President from the Viridian Dormitory: elected, not chosen by her; his rule-bending grates on her."
+   "Caspian Riwalo, her Vice President from the Viridian Dormitory: elected, not chosen by her; his rule-bending grates on her.",
+   "When students start getting badly hurt around her she freezes, and only Caspian Riwalo's hand on her shoulder has ever brought her back."
   ],
-  "visibility": "rank:6",
+  "visibility": "rank:5",
   "type": "dislike"
  },
  {
@@ -1695,14 +1744,51 @@
  },
  {
   "from": "Kanae",
+  "to": "Alyssa",
+  "types": [
+   "knows"
+  ],
+  "notes": [
+   "Keeps Alyssa Edelweiss at a polite distance."
+  ],
+  "visibility": "rank:6",
+  "type": "knows"
+ },
+ {
+  "from": "Kanae",
   "to": "Caralynn",
   "types": [
    "knows"
   ],
   "notes": [
-   "Caralynn Veyturone, who calls her readings fake."
+   "Caralynn Veyturone, who calls her readings fake.",
+   "Caralynn Veyturone calls the readings fake in public; Kanae smiles and says nothing, for now."
   ],
   "visibility": "rank:5",
+  "type": "knows"
+ },
+ {
+  "from": "Kanae",
+  "to": "Dante",
+  "types": [
+   "knows"
+  ],
+  "notes": [
+   "Dante Kleinn is a second-year in her dorm she considers pleasant and dull."
+  ],
+  "visibility": "rank:6",
+  "type": "knows"
+ },
+ {
+  "from": "Kanae",
+  "to": "Ezrel",
+  "types": [
+   "knows"
+  ],
+  "notes": [
+   "Ezrel Marionne is her Dorm Head."
+  ],
+  "visibility": "rank:6",
   "type": "knows"
  },
  {
@@ -1873,6 +1959,7 @@
    "knows"
   ],
   "notes": [
+   "Being out-played by Althair Veyne.",
    "Recognizes in Vice Headmaster Althair Veyne a fellow manipulator doing it far better than he can, and it irritates him."
   ],
   "visibility": "rank:5",
@@ -1945,20 +2032,24 @@
    "knows"
   ],
   "notes": [
+   "Needling Krieg Valforth.",
    "Needles Krieg Valforth with exquisitely polite sarcasm.",
    "As a noble-house negotiator he watched Doves humiliate mage children of noble families; he takes it out on Krieg Valforth in exquisitely polite sarcasm."
   ],
-  "visibility": "rank:6",
+  "visibility": "rank:5",
   "type": "knows"
  },
  {
   "from": "Kuroo",
   "to": "Mimosa",
   "types": [
-   "mentor"
+   "mentor",
+   "knows"
   ],
   "notes": [
-   "Assigned by Headmaster Baelin to mentor Mimosa; before she walks into a class, he quietly links with her and absorbs her anxiety, then spends the next hour nauseous."
+   "Get Mimosa Linden standing on her own before his mentorship ends.",
+   "Assigned by Headmaster Baelin to mentor Mimosa; before she walks into a class, he quietly links with her and absorbs her anxiety, then spends the next hour nauseous.",
+   "After linking with Mimosa he is pale and nauseous, and jokes about it."
   ],
   "visibility": "public",
   "type": "mentor"
@@ -2043,6 +2134,7 @@
    "knows"
   ],
   "notes": [
+   "Campus gossip with Bobby Becket.",
    "Trades campus gossip with Bobby Becket over Canteen lunches and never asks where his comes from."
   ],
   "visibility": "rank:5",
@@ -2067,9 +2159,10 @@
    "knows"
   ],
   "notes": [
+   "Get Gavlan's interview about the war before one of them runs out of time.",
    "Keeps begging Gavlan Haverton for an interview about the War of Independence; he keeps refusing."
   ],
-  "visibility": "rank:6",
+  "visibility": "rank:5",
   "type": "knows"
  },
  {
@@ -2129,7 +2222,8 @@
   ],
   "notes": [
    "In the same year as Yvette Fallaron at Halvard; best friends ever since.",
-   "Rest-day evenings of tea and theory with Yvette in Layla's own rooms in the Staff Quarters, since the Fire Dormitory, where Yvette lives as Dorm Head, admits only its own; she knows Yvette is bound by something, doesn't know what, and is dying to find out, but the Oath forbids Yvette from telling."
+   "Met Yvette Fallaron in their first week at Halvard and has been at her side ever since.",
+   "Rest-day tea and theory with Yvette."
   ],
   "visibility": "rank:5",
   "type": "friend"
@@ -2190,6 +2284,7 @@
    "knows"
   ],
   "notes": [
+   "Sent to Alyssa Edelweiss more than any other student.",
    "Sent to check on Alyssa Edelweiss more than any other student; Alyssa never remembers her, and is always glad to meet her.",
    "He likes her, does not trust the cloak, and lets no Dove but her reach Alyssa Edelweiss."
   ],
@@ -2210,6 +2305,19 @@
  },
  {
   "from": "Milena",
+  "to": "Idris",
+  "types": [
+   "knows"
+  ],
+  "notes": [
+   "Idris Ainsworth will not stay in a room with her; she has never apologised for the burn, because it was not hers to apologise for, and it bothers her anyway.",
+   "Idris Ainsworth leaving the room makes her look at the door a moment too long."
+  ],
+  "visibility": "rank:5",
+  "type": "knows"
+ },
+ {
+  "from": "Milena",
   "to": "Krieg",
   "types": [
    "knows"
@@ -2217,7 +2325,7 @@
   "notes": [
    "Krieg Valforth's second.",
    "Keep Krieg from driving the students to rebellion.",
-   "Role in the Doves: The carrot to Krieg's stick."
+   "Krieg Valforth is her commander; he finds her softness contemptible and uses it anyway, and she lets him, because it means she reaches students first."
   ],
   "visibility": "rank:5",
   "type": "knows"
@@ -2229,6 +2337,7 @@
    "knows"
   ],
   "notes": [
+   "Ottavio Bastiani is Salaffian like her; they talk dock dialect when no one is listening.",
    "Ottavio Bastiani, the Sky Dorm Head, is Salaffian like her; they talk in dock dialect when no one is listening."
   ],
   "visibility": "rank:5",
@@ -2238,10 +2347,12 @@
   "from": "Milena",
   "to": "Royhan",
   "types": [
-   "family"
+   "family",
+   "knows"
   ],
   "notes": [
-   "Dragonchess, learned from her father; she secretly plays Royhan Filanoman."
+   "Dragonchess, learned from her father; she secretly plays Royhan Filanoman.",
+   "Plays secret Dragonchess with Royhan Filanoman."
   ],
   "visibility": "public",
   "type": "family"
@@ -2253,6 +2364,7 @@
    "knows"
   ],
   "notes": [
+   "Ruby Bonbon's warmth moves her.",
    "Ruby Bonbon, a third-year Occultist, is as warm to the Doves as to anyone, which Milena finds oddly moving and her dorm-mates find baffling."
   ],
   "visibility": "rank:5",
@@ -2265,6 +2377,7 @@
    "knows"
   ],
   "notes": [
+   "Saffi Tamberlane challenges her to spar at every chance; she refuses on duty and is secretly delighted.",
    "Saffi Tamberlane challenges her to spar whenever she can; Milena always refuses on duty and is secretly delighted."
   ],
   "visibility": "rank:5",
@@ -2277,9 +2390,22 @@
    "knows"
   ],
   "notes": [
+   "Cannot decide whether Sophia Helfin is victim or threat.",
    "Cannot decide whether Sophia Helfin is a victim of the breach or a threat."
   ],
   "visibility": "rank:5",
+  "type": "knows"
+ },
+ {
+  "from": "Milena",
+  "to": "Vallie",
+  "types": [
+   "knows"
+  ],
+  "notes": [
+   "Vallie Goredust teases her about wanting to spar."
+  ],
+  "visibility": "rank:6",
   "type": "knows"
  },
  {
@@ -2301,9 +2427,10 @@
    "knows"
   ],
   "notes": [
+   "Ezrel Marionne's gaze.",
    "Ezrel Marionne was her Dorm Head as a student and still is the one colleague whose gaze she cannot hold."
   ],
-  "visibility": "rank:6",
+  "visibility": "rank:5",
   "type": "knows"
  },
  {
@@ -2340,9 +2467,10 @@
   ],
   "notes": [
    "Current third-years (Irene, Caspian, Royhan, Sophia) were in school with her and barely remember her.",
+   "Royhan Filanoman's work.",
    "Quietly considers Royhan Filanoman her favourite member of the Alchemy Circle, a fellow unnoticed alchemist."
   ],
-  "visibility": "rank:6",
+  "visibility": "rank:5",
   "type": "knows"
  },
  {
@@ -2926,9 +3054,10 @@
    "knows"
   ],
   "notes": [
+   "See Zara, Idris and Royhan settled enough to keep each other after she graduates.",
    "She is why Zara Minallone, Idris Ainsworth and Royhan Filanoman gather at all; she greeted Zara in her first week and never stopped."
   ],
-  "visibility": "rank:6",
+  "visibility": "rank:5",
   "type": "knows"
  },
  {
@@ -2950,9 +3079,10 @@
    "knows"
   ],
   "notes": [
+   "See Zara, Idris and Royhan settled enough to keep each other after she graduates.",
    "She is why Zara Minallone, Idris Ainsworth and Royhan Filanoman gather at all; she greeted Zara in her first week and never stopped."
   ],
-  "visibility": "rank:6",
+  "visibility": "rank:5",
   "type": "knows"
  },
  {
@@ -2974,9 +3104,10 @@
    "knows"
   ],
   "notes": [
+   "See Zara, Idris and Royhan settled enough to keep each other after she graduates.",
    "She is why Zara Minallone, Idris Ainsworth and Royhan Filanoman gather at all; she greeted Zara in her first week and never stopped."
   ],
-  "visibility": "rank:6",
+  "visibility": "rank:5",
   "type": "knows"
  },
  {
@@ -3064,9 +3195,9 @@
    "knows"
   ],
   "notes": [
+   "Losing to Gareth Valkaryn, and his graciousness afterwards even more.",
    "Beat Gareth Valkaryn, who has taken the Fire Dorm Competition from her two years running.",
-   "Gareth Valkaryn, her dorm-mate, is her obsession and the one person she cannot beat; his perfect manners make it worse.",
-   "Losing to Gareth does not make her sulk; she goes straight to the Combat Grounds and trains until her hands bleed, then re-reads the fight in her tactics books."
+   "Gareth Valkaryn, her dorm-mate, is her obsession and the one person she cannot beat; his perfect manners make it worse."
   ],
   "visibility": "rank:5",
   "type": "rival"
@@ -3381,12 +3512,14 @@
   "from": "Vallie",
   "to": "Gavlan",
   "types": [
-   "rival"
+   "rival",
+   "knows"
   ],
   "notes": [
+   "Beat Gavlan at arm-wrestling once before he dies of old age, which at this rate will be never.",
    "Gavlan Haverton is her arm-wrestling rival and drinking partner; she calls him \"Grandpa\"."
   ],
-  "visibility": "rank:6",
+  "visibility": "rank:5",
   "type": "rival"
  },
  {
@@ -3455,13 +3588,15 @@
   "from": "Vallie",
   "to": "Royhan",
   "types": [
+   "rival",
    "knows"
   ],
   "notes": [
+   "Get Royhan Filanoman onto a competition team, even if she has to headlock a captain.",
    "A horned, marked Beastkin nobody dares whisper about, she is a quiet role model to Royhan and Idris, and flattens anyone who mocks Royhan's horns in front of her."
   ],
-  "visibility": "rank:6",
-  "type": "knows"
+  "visibility": "rank:5",
+  "type": "rival"
  },
  {
   "from": "Vallie",
@@ -3479,12 +3614,14 @@
   "from": "Vallie",
   "to": "Sophia",
   "types": [
-   "rival"
+   "rival",
+   "knows"
   ],
   "notes": [
-   "Used Saffi Tamberlane as a demonstration opponent all last year and still drags her in when she can, is delighted by Lenna Greenwind's hidden strength in the Beast Handling Club, and sees a natural rival in Sophia Helfin."
+   "Used Saffi Tamberlane as a demonstration opponent all last year and still drags her in when she can, is delighted by Lenna Greenwind's hidden strength in the Beast Handling Club, and sees a natural rival in Sophia Helfin.",
+   "the Menagerie and her converted stables beside it, the Forest and the fields (wherever she has dragged her class), the Staff Quarters parlour on rest-day evenings, the Combat Grounds when Sophia Helfin wants a fight."
   ],
-  "visibility": "rank:6",
+  "visibility": "rank:5",
   "type": "rival"
  },
  {
@@ -3570,10 +3707,23 @@
   ],
   "notes": [
    "Convince Headmaster Baelin Kalvor to release her from the Oath early.",
+   "Headmaster Baelin Kalvor sympathises and still will not release her from the Oath.",
    "Headmaster Baelin sympathizes with her but refuses to release her from the Oath."
   ],
   "visibility": "rank:5",
   "type": "knows"
+ },
+ {
+  "from": "Yvette",
+  "to": "Caralynn",
+  "types": [
+   "fear"
+  ],
+  "notes": [
+   "In her own Fire Dormitory: Gareth Valkaryn and Sophia Helfin are the top two, and she dreads the Fire dorm final every year; Caralynn Veyturone tops the first-years and knows it; Tilly Marsh is the student she loses the most sleep over."
+  ],
+  "visibility": "rank:6",
+  "type": "fear"
  },
  {
   "from": "Yvette",
@@ -3582,10 +3732,23 @@
    "knows"
   ],
   "notes": [
+   "Shares Magic Theory with Ezrel Marionne and has not trusted him since she sat in his lectures.",
    "Shares Magic Theory with Ezrel Marionne, the Light Dorm Head: she takes the first-years, he keeps the second."
   ],
   "visibility": "rank:5",
   "type": "knows"
+ },
+ {
+  "from": "Yvette",
+  "to": "Gareth",
+  "types": [
+   "fear"
+  ],
+  "notes": [
+   "In her own Fire Dormitory: Gareth Valkaryn and Sophia Helfin are the top two, and she dreads the Fire dorm final every year; Caralynn Veyturone tops the first-years and knows it; Tilly Marsh is the student she loses the most sleep over."
+  ],
+  "visibility": "rank:6",
+  "type": "fear"
  },
  {
   "from": "Yvette",
@@ -3596,10 +3759,35 @@
   ],
   "notes": [
    "Long theory discussions with her friend Layla Palegleam, the History teacher.",
-   "The dormitory door opens only to its own, so her rest-day evenings with Layla are spent in Layla's rooms in the Staff Quarters, where her own teacup waits on the shelf."
+   "Layla Palegleam is her best friend since they were first-years together at Halvard.",
+   "Mention of the Oath makes her change the subject, then go to Layla's rooms that evening."
   ],
   "visibility": "rank:5",
   "type": "friend"
+ },
+ {
+  "from": "Yvette",
+  "to": "Sophia",
+  "types": [
+   "fear"
+  ],
+  "notes": [
+   "In her own Fire Dormitory: Gareth Valkaryn and Sophia Helfin are the top two, and she dreads the Fire dorm final every year; Caralynn Veyturone tops the first-years and knows it; Tilly Marsh is the student she loses the most sleep over."
+  ],
+  "visibility": "rank:6",
+  "type": "fear"
+ },
+ {
+  "from": "Yvette",
+  "to": "Tilly",
+  "types": [
+   "fear"
+  ],
+  "notes": [
+   "In her own Fire Dormitory: Gareth Valkaryn and Sophia Helfin are the top two, and she dreads the Fire dorm final every year; Caralynn Veyturone tops the first-years and knows it; Tilly Marsh is the student she loses the most sleep over."
+  ],
+  "visibility": "rank:6",
+  "type": "fear"
  },
  {
   "from": "Yvette",
@@ -3608,6 +3796,7 @@
    "knows"
   ],
   "notes": [
+   "Tristan Aurelle holds that Oath in his registry and is unfailingly kind to her.",
    "Tristan, the Cathedral steward, holds her Oath in his registry and knows its terms exactly."
   ],
   "visibility": "rank:5",
@@ -3620,6 +3809,7 @@
    "knows"
   ],
   "notes": [
+   "Vera Pulsar is the only student who out-questions her.",
    "Vera Pulsar is the Smithing Club's most relentless member and the only student who out-questions her."
   ],
   "visibility": "rank:5",

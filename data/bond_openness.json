@@ -1,0 +1,6 @@
+{
+ "_note": "1.2.2 DRAFT for the owner to review: how readily each NPC talks about themselves (open +2, normal 0, guarded -1, closed -2 ranks for what they share; goals, views of others and the past always need the real rank; secrets never come from rank). Anyone not listed is normal. Based on each lorebook Personality.",
+ "open": ["Trixie", "Etnie", "Percival", "Ruby", "Bobby", "Althair", "Layla", "Saffi", "Vera", "Tilly", "Dante", "Vallie", "Caralynn", "Aiden", "Florian"],
+ "guarded": ["Irene", "Idris", "Zara", "Lenna", "Castor", "Sophia", "Yvette", "Gavlan", "Rei", "Tristan", "Baelin", "Kanae"],
+ "closed": ["Krieg", "Ottavio", "Mimosa", "Caine", "Ines"]
+}
