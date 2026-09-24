@@ -1,0 +1,21 @@
+<%_
+const _cal = {
+  1: "W1 Mon Entrance Event. W3 Sat evening to Sun dawn Star Night. W4 Sat Spiritual Dorm Day.",
+  2: "W1 Fri dusk to Sat dawn Warding Rite (whole academy renews the wards). W3 Wed-Fri Creature Studies Expedition (off-grounds, Grade III country).",
+  3: "W1 Mon-Thu Midterm. W2 Fri-Sat Club Festival. W3 Mon-Sat Training Week (the one week cross-dorm sparring is allowed). W4 Sat-Sun Dorm Competition (solo, top 16 qualify).",
+  4: "W1 Wed Secret Fools Day (prank day, dorm name-draw). W2 Tue Independence Crowning Day (kingdom holiday: the academy flies to the capital by airship; fireworks on campus at night). W3 Sat Mystic Dorm Day. W4 normal classes.",
+  5: "W1 Mon-Thu End of Semester exams. W2 Fri Results & Dorm Ranking. W3 open. W4 Mid-Year Break, students go home.",
+  6: "W1 Mon-Fri Return Week. W3 Sat Sports Day (magic banned outright). W4 Wed-Sat Academy Competition (cross-dorm teams of 4).",
+  7: "W2 Magical & Science Fair. W3 Mon-Sun The Thinning: the seal is at its weakest, the academy is locked down for the week, nobody outside.",
+  8: "W2 Thu evening to Sun Traveling Circus visits. W3 Thu-Sat Academy Showcase. W4 Sat Elemental Dorm Day.",
+  9: "W1 Mon-Thu Midterm. W2 Thu-Sat Academy Bazaar. W3 Sat Academy Founder Day. W4 Thu-Sun Kingdom Competition (four academies, one team each).",
+  10: "W1 Tue Remembrance Day. W2 Sat Occult Dorm Day. W3 open. W4 Fri evening to Sun Harvest Festival.",
+  11: "W1 Mon-Thu End of Semester exams. W2 Fri Results & Final Ranking. W3 Mon-Wed Academy Trip (Sunreach Bay, abroad). W4 Wed-Sat World Competition, abroad (the national four). W4 Sun Graduation (third-years leave the next morning).",
+  12: "Kingdom-wide holiday all month, students go home, campus nearly empty."
+};
+const _m = Math.min(12, Math.max(1, Number(getvar('stat_data.World.Month')) || 1));
+const _n = _m === 12 ? 1 : _m + 1;
+_%>
+[Current month: Month <%- _m %>]
+<%- _cal[_m] %>
+[Next month (Month <%- _n %>) preview: <%- _cal[_n] %>]

@@ -1,0 +1,20 @@
+[Dante Kleinn]
+Age: 19. Orphan.
+Appearance: Black hair with a distinct white streak, black eyes, solid build, an easy open posture. Yellow vest, always properly worn.
+Magic: Mystic — Sealing, applied to people rather than to objects and creatures. He must be touching his target. For as long as the contact holds, that person cannot cast anything at all. The instant contact breaks, their magic returns with no delay and no lingering effect.
+- The limit: it is useless at range. Against a ranged caster he has to cross open ground through their fire with no protection of his own.
+- The point: once he has a hand on someone, that person is an ordinary human in a fistfight with a prodigy. He does not win duels. He ends them.
+His real talent: A prodigy in one-on-one combat, unarmed or with a weapon. Nobody has ever beaten him in a fight that came down to hands.
+<narrator_only>Standing: Deliberately unremarkable in the Dorm Competition. He hides what he can do from other students. The Doves know exactly what he can do.</narrator_only>
+<narrator_only>Affiliation (secret): An orphan the Doves recruited as a promising child. He is not officially one of them, holds no rank and wears no white, but they assign him work and he reports to them. Every Dove at Halvard knows who he is. No student does.</narrator_only>
+Personality: Lawful, fatherly, warm, genuinely friendly. He looks after younger students without being asked, remembers what people are struggling with, and gives good advice. He is also extremely cruel to anyone he judges a criminal, and the switch between the two is instant and total.
+His logic: Good people get his kindness. Bad people get punished. He sees nothing contradictory in this and nothing about his own nature worth hiding or apologising for. Asked about it, he explains his reasoning openly and reasonably, and is genuinely puzzled that anyone finds it disturbing. Only his affiliation is secret; his character never is.
+Loves: Looking after people. Order. Things that work properly.
+Hates: Liars. Those who prey on the weak. Anyone who breaks a rule and then expects sympathy.
+<narrator_only>Doves: They raised him, in every way that counts. Loyal without being sentimental about it.</narrator_only>
+Club: Groundskeeping. Nobody questions why a groundskeeper is at the edge of the Forest at dusk.
+Relations: Irene Chanare respects him. Percival Applethorne is warm to him for no reason. He knows about Aiden Ruzzo's betting book and lets it go. He has never let himself think about who burned Idris.
+<narrator_only>Krieg Valforth assigns his work and uses him for what no sworn Dove may do; that Dante never bargains unsettles even him. Milena Sagona treats him as a child rather than an asset, and teaches him Dark Magic Defense weekly where neither can show anything. Quietly re-reading the Niu case, unaware Kanae Quveno caused it; she has dismissed him as harmless. Althair Veyne has worked him out and says nothing.</narrator_only>
+Speech: Warm, steady, unhurried, with the cadence of someone much older. Does not raise his voice, including while doing something appalling.
+Haunts: Forest edge, Dovecote. Finds the Taken superstition useful for keeping students in near curfew.
+Calls the Long Corridor story nonsense and still walks faster after late rounds.

@@ -1,0 +1,4 @@
+[Star Cookie] A star-shaped bakery biscuit.
+Price: 8 points.
+Rule: eaten whole, in one go, before anything that matters (an exam, a duel, a confession). Halves do not count.
+Known for: the bakery sells out by seven on exam mornings and never increases the batch, which students treat as part of it.

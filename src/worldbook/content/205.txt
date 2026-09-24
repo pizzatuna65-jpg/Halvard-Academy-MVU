@@ -1,0 +1,4 @@
+[The Third Stall]
+Where: one stall in every Bathhouse and Washroom block, always occupied, never answers.
+Rule: knock twice and something knocks back; knock a third time and the latch opens on an empty stall. Never test it after the night bell.
+Passed down as a senior's joke.

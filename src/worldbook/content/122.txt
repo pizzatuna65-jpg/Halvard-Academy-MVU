@@ -1,0 +1,8 @@
+[Spirit Tiers]
+Spirits are ranked in four tiers. The highest tier a mage can bond, bind, or pact with marks their standing as a spirit user.
+1. Lesser spirits — common. Small, simple spirits, including the animal-shaped spirits most familiars are. Almost any Occult student can bond one.
+2. Basic spirits — the working spirits of a regular spirit user. Strong enough for real work: guarding a place, fighting alongside their mage, carrying messages.
+3. Greater spirits — rare. Old, powerful, and willful. Only experienced spirit users can bind or pact with one, and a failed attempt is dangerous.
+4. Spirit Lords — extremely rare. Vast, ancient spirits bound to an entire domain of the world. Only top-tier spirit users hold a pact with one, and most people go their whole lives without meeting such a person.
+Law: A Spirit Lord is still a spirit, so a pact with one is a lawful Spirit Pact, not forbidden Pacting.
+Note: Spirit Pact is the one subtype commonly held by many mages at once, because what decides a pact-holder's power is not the subtype but the spirit bound to them. Two pact-holders can be nothing alike.

@@ -1,0 +1,24 @@
+[NPC ROSTER — Halvard Academy. Human unless noted; B = Beastkin.]
+Staff: Baelin (Elf, M, ash-blond, patient, Headmaster); Althair (M, white, cheerful, Vice Headmaster); Gavlan (Elf, M, silver, stern, Combat Y1); Yvette (F, black, motherly, Magic Theory Y1, Fire Dorm Head); Layla (F, brown, chatty, History Y1); Vallie (ox B, F, red, jovial, Creature Studies Y1, ex-monster hunter, leads the Expedition); Kuroo (M, black, provocative, Etiquette Y1, Viridian Dorm Head); Mimosa (F, pink, anxious, Potion Crafting Y1); Ezrel (M, purple-green, apathetic, Magic Theory Y2, Light Dorm Head); Ottavio (M, bald, hard-boiled, Etiquette Y3, Sky Dorm Head, spirit Loki); Rei (F, black, cool, Acting Warden, the old Warden's apprentice). Dorm Heads: Yvette (Fire), Ezrel (Light), Ottavio (Sky), Kuroo (Viridian); they live in their own dormitories. Each teacher teaches one subject to one year level only; posts not named here (Magic Theory Y3, Etiquette Y2, History Y2-3, Combat Y2-3, Creature Studies Y2-3, Potion Crafting Y2-3) are unknown.
+Cathedral: Tristan (M, blond, whimsical, Cathedral Steward, oath registry).
+Doves: Krieg (M, silver, cruel, Dovecote Commander); Milena (F, silver, kind, Senior Dove, Krieg's second, Dark Magic Defense teacher for every year).
+Facilities: Bobby Becket (BB; M, chestnut hair, sociable, mischievous, non-mage maintenance worker).
+Liaison: Caine (owl B, M, grey, cold, butler of the Noble Houses' Liaison).
+<%_
+const _R = [["Gareth", 3, 1, "Gareth (Fire, Elf, M, red, kind, #1)"], ["Sophia", 3, 1, "Sophia (Fire, F, blue, violent, #2, Blood Saint)"], ["Irene", 3, 1, "Irene (Light, F, purple, strict, Council President)"], ["Caspian", 3, 1, "Caspian (Viridian, Elf, M, orange, affable, Council VP)"], ["Etnie", 3, 1, "Etnie (Viridian, dog B, F, brown, clingy, {{user}}'s \"big sister\")"], ["Royhan", 3, 1, "Royhan (Sky, goat B, M, black, reserved, alchemist)"], ["Ruby", 3, 1, "Ruby (Sky, rabbit B, F, pink, kind)"], ["Florian", 2, 1, "Florian (Sky, M, turquoise, arrogant, #3)"], ["Dante", 2, 1, "Dante (Light, M, black-white, fatherly)"], ["Lenna", 2, 1, "Lenna (Fire, Elf, F, green, lazy)"], ["Saffi", 2, 1, "Saffi (Viridian, cat B, F, red, excitable)"], ["Kanae", 2, 1, "Kanae (Light, Elf, F, black, sweet)"], ["Idris", 2, 1, "Idris (Sky, snake B, M, purple, sardonic)"], ["Tilly", 2, 1, "Tilly (Fire, F, purple-white, reckless)"], ["Trixie", 1, 1, "Trixie (Fire, fox B, F, platinum, hyperactive)"], ["Caralynn", 1, 1, "Caralynn (Fire, F, blonde, vain)"], ["Aiden", 1, 1, "Aiden (Light, M, brown, prankster)"], ["Zara", 1, 1, "Zara (Sky, Elf, F, silver, shy)"], ["Percival", 1, 1, "Percival (Viridian, M, blond, delusional knight)"], ["Vera", 1, 1, "Vera (Viridian, horse B, F, brown, eccentric)"], ["Castor", 1, 1, "Castor (Viridian, M, brown, forgettable)"], ["Alyssa", 1, 1, "Alyssa (Sky, F, burgundy, quiet)"]];
+const _Y = Math.max(1, Number(getvar('stat_data.World.Year')) || 1), _G = getvar('stat_data.Campus_State.Graduated') || [];
+const _by = { 1: [], 2: [], 3: [] }, _gone = [];
+for (const [id, y, a, seg] of _R) {
+  if (a > _Y) continue;
+  if (_G.includes(id)) { _gone.push(id); continue; }
+  const c = y + _Y - a;
+  _by[Math.min(3, Math.max(1, c))].push(c > 3 ? seg.replace(/\)\s*$/, ', repeating)') : seg);
+}
+_%>
+Year 3: <%- _by[3].join('; ') || 'none on record' %>.
+Year 2: <%- _by[2].join('; ') || 'none on record' %>.
+Year 1: <%- _by[1].join('; ') || 'none on record yet (the story may introduce new first-years)' %>.
+<%_ if (_gone.length) { _%>
+Graduated, no longer at Halvard: <%- _gone.join(', ') %>.
+<%_ } _%>
+Regulars entries list habits, not current locations; an established location always overrides. After curfew everyone is in their own dormitory.

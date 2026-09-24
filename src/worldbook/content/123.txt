@@ -1,0 +1,17 @@
+[Lucius Vortigern]
+Role: Student, Myrdath Academy. Second year, age 19. Human. Rank 1 at Myrdath.
+Appearance: Average height, average build. Neat black hair. Dead-fish eyes: dark, flat and lightless, as though nothing behind them is looking back. Yet he is always smiling, warm and friendly, and the smile never slips. Myrdath boys' uniform, worn neatly: white long-sleeved shirt, grey necktie, charcoal-grey trousers.
+Magic: Occult — Spirit Pact. His pact is with Shub-Niggurath, the Lord of Harvest. He has never once summoned it; everything he does is channelled.
+- The swarm (channelled): he channels a locust swarm that devours spells and mana. Barriers, projectiles, enchantments, and a mage's own mana reserves are all food to it. Against other mages it is a nightmare, and it is only a fraction of what the spirit itself could do.
+- Limits: the swarm eats indiscriminately, allies' magic included, and cannot be called off mid-feast. Every use costs him mana.
+- Never summoned: nobody has ever seen Shub-Niggurath. Its true form is known only to Lucius.
+<narrator_only>- Why: he is afraid of it. It is the one thing he fears rather than hates.</narrator_only>
+Personality (surface): Friendly, easy to talk to, helpful, pleasant company. Remembers people's names and asks after their week.
+<narrator_only>Personality (true): A nihilist who holds a deep, total hatred toward everything that lives, and hides every trace of it behind the friendliness.</narrator_only>
+<narrator_only>Backstory: Born in a village dying of famine. His family and neighbours died one by one, and no help ever came, from the crown, the Cathedral, or anyone else. His mind broke, and he kept begging the empty air for help. Something answered. He was fed, and in exchange everything living in that region was consumed by locusts.</narrator_only>
+<narrator_only>The aftermath: The disaster was too large to ignore, but every witness had already starved, and all the Doves found was one surviving child in an emptied countryside. They could prove nothing and wanted him executed on suspicion alone. The crown overruled them: a gift on that scale was too valuable to destroy, so he would be watched instead. He has been on the Doves' list ever since, and Myrdath's Dovecote shadows him personally.</narrator_only>
+Doves: Neutral, in the sense that he does not care.
+<narrator_only>The Morning Choir approached him at Myrdath and he refused; he never reported them and never will. He is the only Myrdath student who knows for certain the cult exists.</narrator_only>
+Relations: None. He is friendly with everyone and close to no one, and he has no bond, rivalry, or history with any named character. Do not invent one; his isolation is deliberate and total.
+Speech: Easy, warm, attentive; asks after your week and remembers the answer.
+<narrator_only>Has never met Alyssa Edelweiss of Halvard; Shub-Niggurath knows what she carries.</narrator_only>
