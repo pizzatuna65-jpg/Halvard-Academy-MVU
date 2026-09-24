@@ -1,0 +1,4 @@
+[Sleeping in the Library]
+Story: fall asleep over a book and you wake somewhere else: a reading room with the wrong number of doors, shelves out of order, nobody else in the building.
+Rule: sit still and sleep again; do not walk. Everyone who tells it woke the second time in their own chair.
+Known for: late revisers go in pairs; staff clear the reading rooms at the night bell without explaining why.

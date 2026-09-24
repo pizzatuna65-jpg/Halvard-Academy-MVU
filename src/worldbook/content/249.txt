@@ -1,0 +1,4 @@
+[Spirit Pact]
+A negotiated contract: both sides must agree, a spirit cannot be forced, and the terms can be anything the two settle on. Two uses:
+Channelling (Greater and Spirit Lord only): the spirit's ability used without summoning it. Costs mana per use and comes through far weaker than the spirit's own.
+Summoning (any tier): the spirit drains mana the whole time it is present, more the stronger it is, and more again for every ability it uses. Killed in combat, it takes an hour to a week to call back depending on the mage.

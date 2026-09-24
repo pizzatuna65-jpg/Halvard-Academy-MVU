@@ -1,0 +1,4 @@
+[Airships]
+Use: the kingdom's long-distance transport, hired by the academy for anything past a day's ride: the Expedition, the Academy Trip, the long breaks, travel to the Kingdom and World Competitions.
+Onboard: big enough to live on; glassed promenade, common room, canteen, washrooms and bathing stalls, one cabin per group of four; cargo, gear and beast pens below.
+Crew: hired, not academy staff. Teachers take the forward cabins and count passengers at boarding and landing. Nothing aboard records or sends anything.

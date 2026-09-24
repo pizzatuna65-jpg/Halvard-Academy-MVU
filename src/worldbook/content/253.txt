@@ -1,0 +1,7 @@
+[Combat Roles]
+Five roles used in Combat Class, exams and team competitions. A student may fill more than one.
+- Attack: deals the damage and finishes fights.
+- Defense: shields, blocks and holds the line for the team.
+- Healing: keeps allies standing mid-fight.
+- Support: strengthens allies and weakens enemies.
+- Control: restrains, disrupts and shapes the battlefield.
