@@ -86,7 +86,16 @@ def apply_lore_edits(C, N):
     rep(m, "Fishing – Lake;", "Fishing – Fishing House (on the lake shore);")
     rep(m, "Music, Card, Board Game, Divination, Tailoring,", "Divination – Observation Tower; Music, Card, Board Game, Tailoring,")
     rep(m, "- Far edge: Gardens – Boathouse/Lake – Forest.", "- Far edge: Gardens – Boathouse/Lake – Forest. Boathouse/Lake – Fishing House (beside the boathouse), Willow Island (by boat only).")
-    rep(m, "Boathouse and Lake 20;", "Boathouse and Lake 20; Fishing House 20; Willow Island 25 (by boat);")
+    # 1.2.1 (owner playtest: the Gatehouse is nearer the Mall than the Main Courtyard): walking times follow the map. They are the
+    # shortest paths tools/curate_data.py computes (map distance, 0.22 min per unit; forest and boat legs keep their lore times).
+    old = re.search(r"castle core and dormitories under 5 min;.*?Forest Clearing 40\.", m['content'])
+    assert old, 'Campus Map walking-times line changed'
+    m['content'] = m['content'].replace(old.group(0),
+        "castle core 5-7 (more for the upper floors); Sky and Light Dormitories 4-5, Viridian 6, Fire 8; the Mall and Medical Centre 5-6, "
+        "Mail Tower 7, Cathedral 8, Commissary 8, Banking House 10; Founder's Park 7; Reception and Gatehouse 9 (the Mall is only 6 from the gate); "
+        "Gardens, Hills and Broken Statue 10; Archery Range, Spirit House and Groundskeeper's Lodge 11; Dovecote and Noble Houses' Liaison 12; "
+        "Menagerie and Observation Tower 13; Combat Grounds, Gymnasium, Swimming Pool, Boathouse and Lake, Fishing House 14; Sports Field and Old Hut 15; "
+        "Sparring Pavilion 17; Willow Island 24 (the last stretch by boat); Forest treeline 28; Forest Clearing 43.")
     rep(C[72], "[Sports Field] Soccer, running, and Sports Day in Month 6.",
         "[Sports Field] Soccer, running, and Sports Day in Month 6. A running track circles the soccer pitch: home ground of the Soccer Club and the Running Club.")
     rep(C[73], "[Gymnasium] Indoor training,", "[Gymnasium] Home of the Gymnastics and Basketball clubs, and of the Swimming Club, which trains in the outdoor pool beside it. Indoor training,")

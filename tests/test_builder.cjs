@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
 global.window = { parent: { document: {} } };
 const src = fs.readFileSync(path.join(ROOT, 'src/scripts/ui.js'), 'utf8');
-const U = new Function(src + '\nreturn { TEMPLATES, blankDraft, draftFromState, buildOps, validate, techRecord, manaOf, costLine, subInfo, SUBTYPES, blankPact, blankTech, PACT_KINDS, trueMagicText };')();
+const U = new Function(src + '\nreturn { TEMPLATES, blankDraft, draftFromState, buildOps, validate, techRecord, manaOf, costLine, subInfo, SUBTYPES, blankPact, blankTech, PACT_KINDS, trueMagicText, firstSpec, techForm };')();
 console.log('Student Builder logic');
 ok(U.subInfo('Mystic', 'Unmaking').forbidden === true && U.subInfo('Elemental', 'Ice').forbidden === false, 'forbidden subtype detection from lore');
 const S0 = initState();
@@ -99,4 +99,19 @@ console.log('Student Builder 1.2.0');
   ok(dk.hidden.truth.name === 'Unmake' && dk.techs.every(t => t.name !== 'Unmake') && U.buildOps(dk, K).length === 2, 'round trip keeps the true magic out of the normal list and leaves Known_by to the story');
   d.hidden.truth.name = '';
   ok(U.validate(d, S0).E.hidden.some(e => /True magic: needs a name/.test(e)), 'true magic needs a name like any technique');
+}
+
+// ---- 1.2.1 (owner playtest) ----
+console.log('Student Builder 1.2.1');
+{
+  const d = Object.assign(U.blankDraft(), U.TEMPLATES[0].make()); d.name = 'X';
+  ok(U.firstSpec(d, 'Elemental') === 'Ice' && U.firstSpec(d, 'Mystic') === '', 'a new technique starts with the student\'s specialty for its type');
+  d.custom.push({ name: 'Glass shaping', type: 'Mystic', forbidden: false }); d.types.push('Mystic'); d.specs.push('Glass shaping');
+  ok(U.firstSpec(d, 'Mystic') === 'Glass shaping', '...including a custom subtype of that type');
+  const folded = U.techForm(d.techs[0], 'techs.0', d, 130, 'New technique');
+  ok(/class="item tc"/.test(folded) && /data-act="techopen"/.test(folded) && !/data-k="techs\.0\.effect"/.test(folded), 'an applied technique folds into one row');
+  d.techs[0].open = true;
+  const open = U.techForm(d.techs[0], 'techs.0', d, 130, 'New technique');
+  ok(/data-act="techapply"/.test(open) && /data-k="techs\.0\.effect"/.test(open) && /<option value="Ice">your specialty/.test(open), 'an open technique has Apply technique, and its subtype list starts with the student\'s specialties');
+  ok(U.buildOps(U.draftFromState(applyPatch(S0, U.buildOps(d, S0), { mvu: true })), applyPatch(S0, U.buildOps(d, S0), { mvu: true })).length === 2, 'folding is UI only (no change to the saved file)');
 }

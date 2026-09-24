@@ -308,6 +308,18 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   with ‹ › buttons. The Rooftop stays hidden until discovered (D21, unchanged).
   npm test 428 checks, smoke 482 views / 0 errors, token audit ~8.6k start / ~13.5k mid-game (+~300: rules 502/504, Campus Map lines).
 
+- 1.2.1 Owner playtest, round 2 (card 1.2.1). The bracelet shows above the narration: display regex "Bracelet above the narration"
+  moves the placeholder to the top before the bracelet regex renders it. Walking times follow the map (owner: from the Gatehouse
+  the Mall is 6 min, the Main Courtyard farther): curate_data.py builds legs (lore connections + straight walks between nearby
+  open-air places and buildings within 30 map units, x scaled 1.5; 0.22 min per unit; forest, Old Hut and boat legs keep their lore
+  times; castle stairs 1 + floors) into locations.json `near`; walk_min is the shortest path from the Main Courtyard; the UI runs
+  the shortest path from where the player stands (shared dorm rooms count as the player's dorm). Audit: no pair's path exceeds its
+  straight line by 5 min or more. The Campus Map "Walking times" line (lore 132) is rewritten with the same numbers (e.g. Gatehouse 9,
+  Fire Dormitory 8, Sports Field 15, Forest Clearing 43). Techniques: Apply technique folds a finished technique into one line
+  (UI only; loaded techniques start folded); a new technique, a type change and the true magic start with the student's specialty
+  for that type (the subtype list shows the student's specialties first; free text still allowed).
+  npm test 434 checks, smoke 482 views / 0 errors.
+
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
@@ -316,6 +328,15 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 - Playtest v1.1.0 in ST with docs/TEST_CHECKLIST_v1.1.md (EJS in 502/504 first), together with v1.0.3's checklist.
 - Playtest in ST with docs/TEST_CHECKLIST_v1.0.3.md FIRST (the Builder vs the real MVU zod helper, F12), then v1.0 + v0.5.
   Then tune (see Tunables) and fix what the playtest finds.
+
+## Planned (owner decisions, not built yet; the owner sends the event lorebooks after the feature exists)
+- Bond redesign: XP per interaction type with daily/weekly caps (engine awards, the AI only classifies); rising XP per rank;
+  the bar stops when full until the rank event; cooldown between ranks; notification "<NPC> event available: where / when".
+  Tempo is a setting (full rank from about a month to about a year; standard about one semester). No decay. Rank always rises
+  after the event; choices in the event can lower Trust. Romance opens at Rank 8 by default, adjustable in Settings.
+  Per-NPC openness (open / normal / guarded / closed) shifts what an NPC will tell (not secrets); real rank gives perks.
+- Scripted bond events (lorebook, deterministic conditions: place, time, day, weather, prerequisites; beats; choices; results).
+- Scripted first-week classes (M1 W1 Tue-Sat, 14 sessions; per dorm for [D] classes; optional homework into Commitments).
 
 ## To verify in ST (could not be tested outside ST)
 - 1.1.0: the Prompt Template extension renders EJS in 502 / 504 (now gated per feature), also in MVU's extra-model mode if used.

@@ -1,4 +1,4 @@
-# Eldrasil: Halvard Academy — Player Guide (card v1.2.0)
+# Eldrasil: Halvard Academy — Player Guide (card v1.2.1)
 
 You are a first-year at Halvard, one of four magic academies in the Kingdom of Eldrasil. A year of classes, dorm rivalries, clubs, competitions and festivals, with something old and sealed underneath the castle. The card tracks the world for you: the clock and calendar, seasons and weather, your body and mana, money and belongings, relationships, secrets, and what the campus remembers.
 
@@ -19,14 +19,14 @@ You are a first-year at Halvard, one of four magic academies in the Kingdom of E
 
 ## 3. Your first session
 
-The greeting ends with the **bracelet**, a status bar under the latest message. On a fresh chat it offers **Create your student**, which opens the Student Builder. You can also use the **Builder** button under the chat box.
+The greeting carries the **bracelet**, a status bar shown above the text of the latest message. On a fresh chat it offers **Create your student**, which opens the Student Builder. You can also use the **Builder** button under the chat box.
 
 The Builder walks through seven steps: a sample to start from, identity, power, techniques, pacts, hidden magic, and a review. A few choices matter later:
 
 - **Identity** has pronouns (a list, or your own), a **personality**, and an optional **birthday** in the academy calendar. The birthday goes on your calendar and the day plays out as your birthday. **Combat roles** are not chosen here: the Combat teacher assigns yours at your first Combat class, from how you fight.
 - **Mana capacity** is a slider (50 to 1,000; type a number for more). It is capacity, not a rank: nobody can read it off you, so a big pool can live a quiet life. Overpowered is allowed; the world reacts to what you show, never by quietly weakening you.
 - **Specialties**: the subtype lists are suggestions. Add your own subtype and say whether it is a forbidden art. A technique with a subtype of your own asks the same question.
-- **Techniques** have fixed costs: per use, sustained (upkeep per in-world minute), or hybrid. The engine charges them; the narrator never guesses.
+- **Techniques** start with your specialty for their type as the subtype (change it freely). **Apply technique** folds a finished one into a single line; tap it to edit. They have fixed costs: per use, sustained (upkeep per in-world minute), or hybrid. The engine charges them; the narrator never guesses.
 - **Pacts**: first choose what the pact is made with. Only a **spirit** pact is lawful; a pact with a demon, a monster (by bestiary grade), an animal or a person is the forbidden art of Pacting. Choose whether your partner is with you only while summoned or lives as the pact says. Press **Apply pact** and its Summon (and, for the two highest tiers, Channel) technique appears on the Techniques page.
 - **Dominant type** is what the Arbiter Stone reads at the Entrance Event. It picks your dorm (Elemental → Fire, Mystic → Light, Spiritual → Viridian, Occult → Sky). The Stone cannot see subtypes, or whether your magic is forbidden.
 - **Hidden magic** is optional: your **true magic, filled in like a technique** (it is charged like one), a cover story and how you conceal it. Who finds out is decided in the story. Using it where it can be noticed raises **Dove attention**.
@@ -35,7 +35,7 @@ Register, then write your first action. You can reopen the Builder later to amen
 
 ## 4. Playing
 
-Write actions in the chat as usual. Each reply ends with a folded "📜 State update" block that you can open to see exactly what changed. The bracelet under the latest reply shows the clock, period, location, points, vitals, and chips for whatever matters right now. Chips can be tapped to open the matching panel.
+Write actions in the chat as usual. Each reply ends with a folded "📜 State update" block that you can open to see exactly what changed. The bracelet above the latest reply shows the clock, period, location, points, vitals, and chips for whatever matters right now. Chips can be tapped to open the matching panel.
 
 **Panels** (bracelet buttons, or the buttons under the chat box):
 

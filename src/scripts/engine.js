@@ -359,7 +359,7 @@ function fillShape(o, shape) {
   }
 }
 const BOND0 = { Rank: 0, Progress: 0, Trust: 50, Tension: 0, Title: '', Romance: false, Known_facts: [], Milestones: [], Last_seen: '' };
-const ENGINE_VER = '1.2.0';
+const ENGINE_VER = '1.2.1';
 
 function runEngine(S, B, text, seedHint) {
   if (!S || !S.World) return;

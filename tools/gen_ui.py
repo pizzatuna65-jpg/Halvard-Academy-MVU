@@ -66,7 +66,7 @@ for e in json.load(open(P('data/relations.json'), encoding='utf-8')):
     DATA['rel'].append([e['from'], e['to'], e['type'], e['types'], e['visibility'], e['notes']])
 for lid, l in json.load(open(P('data/locations.json'), encoding='utf-8')).items():
     DATA['locs'][lid] = {k: l[k] for k in ('name', 'category', 'kind', 'description', 'vibe', 'regulars', 'connections', 'walk_min',
-                                         'clubs', 'access', 'lore', 'floor', 'pin', 'discoverable')}
+                                         'clubs', 'access', 'lore', 'floor', 'pin', 'discoverable', 'near')}
 # ---- Batch 5.2: clubs, shop, team roles ----
 import sys; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import load_clubs   # v1.1.0: club data shared with gen_mvu_entries.py (Saturday club time in the Now entry)

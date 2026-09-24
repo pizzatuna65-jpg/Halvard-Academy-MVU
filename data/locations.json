@@ -12,13 +12,103 @@
   "connections": [
    "wardens_office"
   ],
-  "walk_min": 4,
+  "walk_min": 7,
   "clubs": [],
   "access": "Forbidden — the Warden only; magic near it is banned",
   "lore": [],
   "floor": "Undercroft",
   "pin": 1,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "announcement_room",
+    2
+   ],
+   [
+    "archive",
+    1
+   ],
+   [
+    "bell_tower",
+    7
+   ],
+   [
+    "canteen",
+    2
+   ],
+   [
+    "club_rooms",
+    2
+   ],
+   [
+    "detention_tower",
+    2
+   ],
+   [
+    "faculty_offices",
+    6
+   ],
+   [
+    "headmasters_office",
+    6
+   ],
+   [
+    "lecture_halls",
+    3
+   ],
+   [
+    "main_library",
+    2
+   ],
+   [
+    "notice_board",
+    2
+   ],
+   [
+    "potion_halls",
+    5
+   ],
+   [
+    "restricted_section",
+    1
+   ],
+   [
+    "rooftop",
+    7
+   ],
+   [
+    "royal_inspectorate",
+    2
+   ],
+   [
+    "seminar_rooms",
+    4
+   ],
+   [
+    "staff_room",
+    6
+   ],
+   [
+    "storage_and_lockers",
+    3
+   ],
+   [
+    "student_council_chamber",
+    2
+   ],
+   [
+    "study_rooms",
+    3
+   ],
+   [
+    "wardens_office",
+    2
+   ],
+   [
+    "workshop",
+    1
+   ]
+  ]
  },
  "wardens_office": {
   "id": "wardens_office",
@@ -37,13 +127,103 @@
    "notice_board",
    "royal_inspectorate"
   ],
-  "walk_min": 4,
+  "walk_min": 6,
   "clubs": [],
   "access": "Staff only, when summoned",
   "lore": [],
   "floor": "Floor 1",
   "pin": 1,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "announcement_room",
+    1
+   ],
+   [
+    "archive",
+    2
+   ],
+   [
+    "bell_tower",
+    6
+   ],
+   [
+    "canteen",
+    1
+   ],
+   [
+    "club_rooms",
+    1
+   ],
+   [
+    "detention_tower",
+    1
+   ],
+   [
+    "faculty_offices",
+    5
+   ],
+   [
+    "headmasters_office",
+    5
+   ],
+   [
+    "lecture_halls",
+    2
+   ],
+   [
+    "main_library",
+    1
+   ],
+   [
+    "notice_board",
+    1
+   ],
+   [
+    "potion_halls",
+    4
+   ],
+   [
+    "restricted_section",
+    2
+   ],
+   [
+    "rooftop",
+    6
+   ],
+   [
+    "royal_inspectorate",
+    1
+   ],
+   [
+    "seal_chamber",
+    2
+   ],
+   [
+    "seminar_rooms",
+    3
+   ],
+   [
+    "staff_room",
+    5
+   ],
+   [
+    "storage_and_lockers",
+    2
+   ],
+   [
+    "student_council_chamber",
+    1
+   ],
+   [
+    "study_rooms",
+    2
+   ],
+   [
+    "workshop",
+    2
+   ]
+  ]
  },
  "arbiter_hall": {
   "id": "arbiter_hall",
@@ -60,13 +240,27 @@
    "ring_dining_hall",
    "portrait_hall"
   ],
-  "walk_min": 4,
+  "walk_min": 7,
   "clubs": [],
   "access": null,
   "lore": [],
   "floor": "Floor 1",
   "pin": 7,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "courtyards",
+    7
+   ],
+   [
+    "portrait_hall",
+    2
+   ],
+   [
+    "ring_dining_hall",
+    1
+   ]
+  ]
  },
  "ring_dining_hall": {
   "id": "ring_dining_hall",
@@ -81,13 +275,19 @@
   "connections": [
    "arbiter_hall"
   ],
-  "walk_min": 4,
+  "walk_min": 8,
   "clubs": [],
   "access": "Feasts after major events only",
   "lore": [],
   "floor": "Floor 1",
   "pin": 7,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "arbiter_hall",
+    1
+   ]
+  ]
  },
  "portrait_hall": {
   "id": "portrait_hall",
@@ -103,13 +303,23 @@
    "arbiter_hall",
    "bell_tower"
   ],
-  "walk_min": 4,
+  "walk_min": 9,
   "clubs": [],
   "access": null,
   "lore": [],
   "floor": "Floor 2",
   "pin": 7,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "arbiter_hall",
+    2
+   ],
+   [
+    "bell_tower",
+    6
+   ]
+  ]
  },
  "founders_statue_and_park": {
   "id": "founders_statue_and_park",
@@ -132,7 +342,7 @@
    "gardens",
    "sports_field"
   ],
-  "walk_min": 5,
+  "walk_min": 7,
   "clubs": [],
   "access": null,
   "lore": [
@@ -144,7 +354,49 @@
   ],
   "floor": null,
   "pin": 21,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "archery_range",
+    7
+   ],
+   [
+    "courtyards",
+    7
+   ],
+   [
+    "gardens",
+    9
+   ],
+   [
+    "groundskeepers_lodge",
+    4
+   ],
+   [
+    "light_dormitory",
+    3
+   ],
+   [
+    "mail_tower",
+    2
+   ],
+   [
+    "medical_centre",
+    3
+   ],
+   [
+    "reception_and_gatehouse",
+    6
+   ],
+   [
+    "sports_field",
+    9
+   ],
+   [
+    "viridian_dormitory",
+    6
+   ]
+  ]
  },
  "bell_tower": {
   "id": "bell_tower",
@@ -163,13 +415,107 @@
    "portrait_hall",
    "rooftop"
   ],
-  "walk_min": 4,
+  "walk_min": 7,
   "clubs": [],
   "access": null,
   "lore": [],
   "floor": "Towers & Roof",
   "pin": 1,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "announcement_room",
+    6
+   ],
+   [
+    "archive",
+    7
+   ],
+   [
+    "canteen",
+    6
+   ],
+   [
+    "club_rooms",
+    6
+   ],
+   [
+    "detention_tower",
+    6
+   ],
+   [
+    "faculty_offices",
+    2
+   ],
+   [
+    "headmasters_office",
+    2
+   ],
+   [
+    "lecture_halls",
+    5
+   ],
+   [
+    "main_library",
+    6
+   ],
+   [
+    "notice_board",
+    6
+   ],
+   [
+    "portrait_hall",
+    6
+   ],
+   [
+    "potion_halls",
+    3
+   ],
+   [
+    "restricted_section",
+    7
+   ],
+   [
+    "rooftop",
+    1
+   ],
+   [
+    "royal_inspectorate",
+    6
+   ],
+   [
+    "seal_chamber",
+    7
+   ],
+   [
+    "seminar_rooms",
+    4
+   ],
+   [
+    "staff_room",
+    2
+   ],
+   [
+    "storage_and_lockers",
+    5
+   ],
+   [
+    "student_council_chamber",
+    6
+   ],
+   [
+    "study_rooms",
+    5
+   ],
+   [
+    "wardens_office",
+    6
+   ],
+   [
+    "workshop",
+    7
+   ]
+  ]
  },
  "lecture_halls": {
   "id": "lecture_halls",
@@ -194,7 +540,7 @@
    "workshop",
    "storage_and_lockers"
   ],
-  "walk_min": 4,
+  "walk_min": 5,
   "clubs": [],
   "access": null,
   "lore": [
@@ -211,7 +557,101 @@
   ],
   "floor": "Floor 2",
   "pin": 1,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "announcement_room",
+    2
+   ],
+   [
+    "archive",
+    3
+   ],
+   [
+    "bell_tower",
+    5
+   ],
+   [
+    "canteen",
+    2
+   ],
+   [
+    "club_rooms",
+    2
+   ],
+   [
+    "courtyards",
+    5
+   ],
+   [
+    "detention_tower",
+    2
+   ],
+   [
+    "faculty_offices",
+    4
+   ],
+   [
+    "headmasters_office",
+    4
+   ],
+   [
+    "main_library",
+    2
+   ],
+   [
+    "notice_board",
+    2
+   ],
+   [
+    "potion_halls",
+    3
+   ],
+   [
+    "restricted_section",
+    3
+   ],
+   [
+    "rooftop",
+    5
+   ],
+   [
+    "royal_inspectorate",
+    2
+   ],
+   [
+    "seal_chamber",
+    3
+   ],
+   [
+    "seminar_rooms",
+    2
+   ],
+   [
+    "staff_room",
+    4
+   ],
+   [
+    "storage_and_lockers",
+    1
+   ],
+   [
+    "student_council_chamber",
+    2
+   ],
+   [
+    "study_rooms",
+    1
+   ],
+   [
+    "wardens_office",
+    2
+   ],
+   [
+    "workshop",
+    3
+   ]
+  ]
  },
  "seminar_rooms": {
   "id": "seminar_rooms",
@@ -230,7 +670,7 @@
   "connections": [
    "lecture_halls"
   ],
-  "walk_min": 4,
+  "walk_min": 7,
   "clubs": [
    "Warding Study"
   ],
@@ -238,7 +678,97 @@
   "lore": [],
   "floor": "Floor 3",
   "pin": 1,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "announcement_room",
+    3
+   ],
+   [
+    "archive",
+    4
+   ],
+   [
+    "bell_tower",
+    4
+   ],
+   [
+    "canteen",
+    3
+   ],
+   [
+    "club_rooms",
+    3
+   ],
+   [
+    "detention_tower",
+    3
+   ],
+   [
+    "faculty_offices",
+    3
+   ],
+   [
+    "headmasters_office",
+    3
+   ],
+   [
+    "lecture_halls",
+    2
+   ],
+   [
+    "main_library",
+    3
+   ],
+   [
+    "notice_board",
+    3
+   ],
+   [
+    "potion_halls",
+    2
+   ],
+   [
+    "restricted_section",
+    4
+   ],
+   [
+    "rooftop",
+    4
+   ],
+   [
+    "royal_inspectorate",
+    3
+   ],
+   [
+    "seal_chamber",
+    4
+   ],
+   [
+    "staff_room",
+    3
+   ],
+   [
+    "storage_and_lockers",
+    2
+   ],
+   [
+    "student_council_chamber",
+    3
+   ],
+   [
+    "study_rooms",
+    2
+   ],
+   [
+    "wardens_office",
+    3
+   ],
+   [
+    "workshop",
+    4
+   ]
+  ]
  },
  "potion_halls": {
   "id": "potion_halls",
@@ -257,7 +787,7 @@
   "connections": [
    "lecture_halls"
   ],
-  "walk_min": 4,
+  "walk_min": 7,
   "clubs": [
    "Alchemy",
    "Brewing"
@@ -266,7 +796,97 @@
   "lore": [],
   "floor": "Floor 4",
   "pin": 1,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "announcement_room",
+    4
+   ],
+   [
+    "archive",
+    5
+   ],
+   [
+    "bell_tower",
+    3
+   ],
+   [
+    "canteen",
+    4
+   ],
+   [
+    "club_rooms",
+    4
+   ],
+   [
+    "detention_tower",
+    4
+   ],
+   [
+    "faculty_offices",
+    2
+   ],
+   [
+    "headmasters_office",
+    2
+   ],
+   [
+    "lecture_halls",
+    3
+   ],
+   [
+    "main_library",
+    4
+   ],
+   [
+    "notice_board",
+    4
+   ],
+   [
+    "restricted_section",
+    5
+   ],
+   [
+    "rooftop",
+    3
+   ],
+   [
+    "royal_inspectorate",
+    4
+   ],
+   [
+    "seal_chamber",
+    5
+   ],
+   [
+    "seminar_rooms",
+    2
+   ],
+   [
+    "staff_room",
+    2
+   ],
+   [
+    "storage_and_lockers",
+    3
+   ],
+   [
+    "student_council_chamber",
+    4
+   ],
+   [
+    "study_rooms",
+    3
+   ],
+   [
+    "wardens_office",
+    4
+   ],
+   [
+    "workshop",
+    5
+   ]
+  ]
  },
  "combat_grounds": {
   "id": "combat_grounds",
@@ -287,7 +907,7 @@
    "courtyards",
    "sparring_pavilion"
   ],
-  "walk_min": 10,
+  "walk_min": 14,
   "clubs": [
    "Duelling"
   ],
@@ -295,7 +915,25 @@
   "lore": [],
   "floor": null,
   "pin": 18,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "courtyards",
+    14
+   ],
+   [
+    "groundskeepers_lodge",
+    5
+   ],
+   [
+    "sparring_pavilion",
+    3
+   ],
+   [
+    "sports_field",
+    5
+   ]
+  ]
  },
  "faculty_offices": {
   "id": "faculty_offices",
@@ -317,13 +955,107 @@
    "staff_room",
    "headmasters_office"
   ],
-  "walk_min": 4,
+  "walk_min": 5,
   "clubs": [],
   "access": "Staff; students by visit",
   "lore": [],
   "floor": "Floor 5",
   "pin": 1,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "announcement_room",
+    5
+   ],
+   [
+    "archive",
+    6
+   ],
+   [
+    "bell_tower",
+    2
+   ],
+   [
+    "canteen",
+    5
+   ],
+   [
+    "club_rooms",
+    5
+   ],
+   [
+    "courtyards",
+    5
+   ],
+   [
+    "detention_tower",
+    5
+   ],
+   [
+    "headmasters_office",
+    1
+   ],
+   [
+    "lecture_halls",
+    4
+   ],
+   [
+    "main_library",
+    5
+   ],
+   [
+    "notice_board",
+    5
+   ],
+   [
+    "potion_halls",
+    2
+   ],
+   [
+    "restricted_section",
+    6
+   ],
+   [
+    "rooftop",
+    2
+   ],
+   [
+    "royal_inspectorate",
+    5
+   ],
+   [
+    "seal_chamber",
+    6
+   ],
+   [
+    "seminar_rooms",
+    3
+   ],
+   [
+    "staff_room",
+    1
+   ],
+   [
+    "storage_and_lockers",
+    4
+   ],
+   [
+    "student_council_chamber",
+    5
+   ],
+   [
+    "study_rooms",
+    4
+   ],
+   [
+    "wardens_office",
+    5
+   ],
+   [
+    "workshop",
+    6
+   ]
+  ]
  },
  "staff_room": {
   "id": "staff_room",
@@ -343,13 +1075,103 @@
   "connections": [
    "faculty_offices"
   ],
-  "walk_min": 4,
+  "walk_min": 6,
   "clubs": [],
   "access": "Staff only",
   "lore": [],
   "floor": "Floor 5",
   "pin": 1,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "announcement_room",
+    5
+   ],
+   [
+    "archive",
+    6
+   ],
+   [
+    "bell_tower",
+    2
+   ],
+   [
+    "canteen",
+    5
+   ],
+   [
+    "club_rooms",
+    5
+   ],
+   [
+    "detention_tower",
+    5
+   ],
+   [
+    "faculty_offices",
+    1
+   ],
+   [
+    "headmasters_office",
+    1
+   ],
+   [
+    "lecture_halls",
+    4
+   ],
+   [
+    "main_library",
+    5
+   ],
+   [
+    "notice_board",
+    5
+   ],
+   [
+    "potion_halls",
+    2
+   ],
+   [
+    "restricted_section",
+    6
+   ],
+   [
+    "rooftop",
+    2
+   ],
+   [
+    "royal_inspectorate",
+    5
+   ],
+   [
+    "seal_chamber",
+    6
+   ],
+   [
+    "seminar_rooms",
+    3
+   ],
+   [
+    "storage_and_lockers",
+    4
+   ],
+   [
+    "student_council_chamber",
+    5
+   ],
+   [
+    "study_rooms",
+    4
+   ],
+   [
+    "wardens_office",
+    5
+   ],
+   [
+    "workshop",
+    6
+   ]
+  ]
  },
  "workshop": {
   "id": "workshop",
@@ -371,7 +1193,7 @@
   "connections": [
    "lecture_halls"
   ],
-  "walk_min": 4,
+  "walk_min": 7,
   "clubs": [
    "Smithing"
   ],
@@ -379,7 +1201,97 @@
   "lore": [],
   "floor": "Undercroft",
   "pin": 1,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "announcement_room",
+    2
+   ],
+   [
+    "archive",
+    1
+   ],
+   [
+    "bell_tower",
+    7
+   ],
+   [
+    "canteen",
+    2
+   ],
+   [
+    "club_rooms",
+    2
+   ],
+   [
+    "detention_tower",
+    2
+   ],
+   [
+    "faculty_offices",
+    6
+   ],
+   [
+    "headmasters_office",
+    6
+   ],
+   [
+    "lecture_halls",
+    3
+   ],
+   [
+    "main_library",
+    2
+   ],
+   [
+    "notice_board",
+    2
+   ],
+   [
+    "potion_halls",
+    5
+   ],
+   [
+    "restricted_section",
+    1
+   ],
+   [
+    "rooftop",
+    7
+   ],
+   [
+    "royal_inspectorate",
+    2
+   ],
+   [
+    "seal_chamber",
+    1
+   ],
+   [
+    "seminar_rooms",
+    4
+   ],
+   [
+    "staff_room",
+    6
+   ],
+   [
+    "storage_and_lockers",
+    3
+   ],
+   [
+    "student_council_chamber",
+    2
+   ],
+   [
+    "study_rooms",
+    3
+   ],
+   [
+    "wardens_office",
+    2
+   ]
+  ]
  },
  "main_library": {
   "id": "main_library",
@@ -402,7 +1314,7 @@
    "study_rooms",
    "archive"
   ],
-  "walk_min": 4,
+  "walk_min": 5,
   "clubs": [
    "Library Assistants"
   ],
@@ -416,7 +1328,101 @@
   ],
   "floor": "Floor 1",
   "pin": 1,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "announcement_room",
+    1
+   ],
+   [
+    "archive",
+    2
+   ],
+   [
+    "bell_tower",
+    6
+   ],
+   [
+    "canteen",
+    1
+   ],
+   [
+    "club_rooms",
+    1
+   ],
+   [
+    "courtyards",
+    5
+   ],
+   [
+    "detention_tower",
+    1
+   ],
+   [
+    "faculty_offices",
+    5
+   ],
+   [
+    "headmasters_office",
+    5
+   ],
+   [
+    "lecture_halls",
+    2
+   ],
+   [
+    "notice_board",
+    1
+   ],
+   [
+    "potion_halls",
+    4
+   ],
+   [
+    "restricted_section",
+    2
+   ],
+   [
+    "rooftop",
+    6
+   ],
+   [
+    "royal_inspectorate",
+    1
+   ],
+   [
+    "seal_chamber",
+    2
+   ],
+   [
+    "seminar_rooms",
+    3
+   ],
+   [
+    "staff_room",
+    5
+   ],
+   [
+    "storage_and_lockers",
+    2
+   ],
+   [
+    "student_council_chamber",
+    1
+   ],
+   [
+    "study_rooms",
+    2
+   ],
+   [
+    "wardens_office",
+    1
+   ],
+   [
+    "workshop",
+    2
+   ]
+  ]
  },
  "restricted_section": {
   "id": "restricted_section",
@@ -431,13 +1437,103 @@
   "connections": [
    "archive"
   ],
-  "walk_min": 4,
+  "walk_min": 7,
   "clubs": [],
   "access": "Restricted — permission required; being caught inside is serious",
   "lore": [],
   "floor": "Undercroft",
   "pin": 1,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "announcement_room",
+    2
+   ],
+   [
+    "archive",
+    1
+   ],
+   [
+    "bell_tower",
+    7
+   ],
+   [
+    "canteen",
+    2
+   ],
+   [
+    "club_rooms",
+    2
+   ],
+   [
+    "detention_tower",
+    2
+   ],
+   [
+    "faculty_offices",
+    6
+   ],
+   [
+    "headmasters_office",
+    6
+   ],
+   [
+    "lecture_halls",
+    3
+   ],
+   [
+    "main_library",
+    2
+   ],
+   [
+    "notice_board",
+    2
+   ],
+   [
+    "potion_halls",
+    5
+   ],
+   [
+    "rooftop",
+    7
+   ],
+   [
+    "royal_inspectorate",
+    2
+   ],
+   [
+    "seal_chamber",
+    1
+   ],
+   [
+    "seminar_rooms",
+    4
+   ],
+   [
+    "staff_room",
+    6
+   ],
+   [
+    "storage_and_lockers",
+    3
+   ],
+   [
+    "student_council_chamber",
+    2
+   ],
+   [
+    "study_rooms",
+    3
+   ],
+   [
+    "wardens_office",
+    2
+   ],
+   [
+    "workshop",
+    1
+   ]
+  ]
  },
  "archive": {
   "id": "archive",
@@ -456,13 +1552,103 @@
    "main_library",
    "restricted_section"
   ],
-  "walk_min": 4,
+  "walk_min": 7,
   "clubs": [],
   "access": null,
   "lore": [],
   "floor": "Undercroft",
   "pin": 1,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "announcement_room",
+    2
+   ],
+   [
+    "bell_tower",
+    7
+   ],
+   [
+    "canteen",
+    2
+   ],
+   [
+    "club_rooms",
+    2
+   ],
+   [
+    "detention_tower",
+    2
+   ],
+   [
+    "faculty_offices",
+    6
+   ],
+   [
+    "headmasters_office",
+    6
+   ],
+   [
+    "lecture_halls",
+    3
+   ],
+   [
+    "main_library",
+    2
+   ],
+   [
+    "notice_board",
+    2
+   ],
+   [
+    "potion_halls",
+    5
+   ],
+   [
+    "restricted_section",
+    1
+   ],
+   [
+    "rooftop",
+    7
+   ],
+   [
+    "royal_inspectorate",
+    2
+   ],
+   [
+    "seal_chamber",
+    1
+   ],
+   [
+    "seminar_rooms",
+    4
+   ],
+   [
+    "staff_room",
+    6
+   ],
+   [
+    "storage_and_lockers",
+    3
+   ],
+   [
+    "student_council_chamber",
+    2
+   ],
+   [
+    "study_rooms",
+    3
+   ],
+   [
+    "wardens_office",
+    2
+   ],
+   [
+    "workshop",
+    1
+   ]
+  ]
  },
  "study_rooms": {
   "id": "study_rooms",
@@ -482,13 +1668,103 @@
   "connections": [
    "main_library"
   ],
-  "walk_min": 4,
+  "walk_min": 6,
   "clubs": [],
   "access": null,
   "lore": [],
   "floor": "Floor 2",
   "pin": 1,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "announcement_room",
+    2
+   ],
+   [
+    "archive",
+    3
+   ],
+   [
+    "bell_tower",
+    5
+   ],
+   [
+    "canteen",
+    2
+   ],
+   [
+    "club_rooms",
+    2
+   ],
+   [
+    "detention_tower",
+    2
+   ],
+   [
+    "faculty_offices",
+    4
+   ],
+   [
+    "headmasters_office",
+    4
+   ],
+   [
+    "lecture_halls",
+    1
+   ],
+   [
+    "main_library",
+    2
+   ],
+   [
+    "notice_board",
+    2
+   ],
+   [
+    "potion_halls",
+    3
+   ],
+   [
+    "restricted_section",
+    3
+   ],
+   [
+    "rooftop",
+    5
+   ],
+   [
+    "royal_inspectorate",
+    2
+   ],
+   [
+    "seal_chamber",
+    3
+   ],
+   [
+    "seminar_rooms",
+    2
+   ],
+   [
+    "staff_room",
+    4
+   ],
+   [
+    "storage_and_lockers",
+    1
+   ],
+   [
+    "student_council_chamber",
+    2
+   ],
+   [
+    "wardens_office",
+    2
+   ],
+   [
+    "workshop",
+    3
+   ]
+  ]
  },
  "common_rooms": {
   "id": "common_rooms",
@@ -513,7 +1789,7 @@
    "sky_dormitory",
    "viridian_dormitory"
   ],
-  "walk_min": null,
+  "walk_min": 9,
   "clubs": [],
   "access": null,
   "lore": [
@@ -525,7 +1801,25 @@
   ],
   "floor": null,
   "pin": 3,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "fire_dormitory",
+    1
+   ],
+   [
+    "light_dormitory",
+    13
+   ],
+   [
+    "sky_dormitory",
+    5
+   ],
+   [
+    "viridian_dormitory",
+    13
+   ]
+  ]
  },
  "canteen": {
   "id": "canteen",
@@ -547,7 +1841,7 @@
   "connections": [
    "courtyards"
   ],
-  "walk_min": 4,
+  "walk_min": 5,
   "clubs": [
    "Cooking"
   ],
@@ -561,7 +1855,101 @@
   ],
   "floor": "Floor 1",
   "pin": 1,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "announcement_room",
+    1
+   ],
+   [
+    "archive",
+    2
+   ],
+   [
+    "bell_tower",
+    6
+   ],
+   [
+    "club_rooms",
+    1
+   ],
+   [
+    "courtyards",
+    5
+   ],
+   [
+    "detention_tower",
+    1
+   ],
+   [
+    "faculty_offices",
+    5
+   ],
+   [
+    "headmasters_office",
+    5
+   ],
+   [
+    "lecture_halls",
+    2
+   ],
+   [
+    "main_library",
+    1
+   ],
+   [
+    "notice_board",
+    1
+   ],
+   [
+    "potion_halls",
+    4
+   ],
+   [
+    "restricted_section",
+    2
+   ],
+   [
+    "rooftop",
+    6
+   ],
+   [
+    "royal_inspectorate",
+    1
+   ],
+   [
+    "seal_chamber",
+    2
+   ],
+   [
+    "seminar_rooms",
+    3
+   ],
+   [
+    "staff_room",
+    5
+   ],
+   [
+    "storage_and_lockers",
+    2
+   ],
+   [
+    "student_council_chamber",
+    1
+   ],
+   [
+    "study_rooms",
+    2
+   ],
+   [
+    "wardens_office",
+    1
+   ],
+   [
+    "workshop",
+    2
+   ]
+  ]
  },
  "laundry": {
   "id": "laundry",
@@ -582,13 +1970,31 @@
    "sky_dormitory",
    "viridian_dormitory"
   ],
-  "walk_min": null,
+  "walk_min": 9,
   "clubs": [],
   "access": null,
   "lore": [],
   "floor": null,
   "pin": 3,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "fire_dormitory",
+    1
+   ],
+   [
+    "light_dormitory",
+    13
+   ],
+   [
+    "sky_dormitory",
+    5
+   ],
+   [
+    "viridian_dormitory",
+    13
+   ]
+  ]
  },
  "bathhouse_and_washrooms": {
   "id": "bathhouse_and_washrooms",
@@ -610,7 +2016,7 @@
    "sky_dormitory",
    "viridian_dormitory"
   ],
-  "walk_min": null,
+  "walk_min": 9,
   "clubs": [],
   "access": null,
   "lore": [
@@ -622,7 +2028,25 @@
   ],
   "floor": null,
   "pin": 3,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "fire_dormitory",
+    1
+   ],
+   [
+    "light_dormitory",
+    13
+   ],
+   [
+    "sky_dormitory",
+    5
+   ],
+   [
+    "viridian_dormitory",
+    13
+   ]
+  ]
  },
  "storage_and_lockers": {
   "id": "storage_and_lockers",
@@ -640,13 +2064,103 @@
   "connections": [
    "lecture_halls"
   ],
-  "walk_min": 4,
+  "walk_min": 6,
   "clubs": [],
   "access": null,
   "lore": [],
   "floor": "Floor 2",
   "pin": 1,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "announcement_room",
+    2
+   ],
+   [
+    "archive",
+    3
+   ],
+   [
+    "bell_tower",
+    5
+   ],
+   [
+    "canteen",
+    2
+   ],
+   [
+    "club_rooms",
+    2
+   ],
+   [
+    "detention_tower",
+    2
+   ],
+   [
+    "faculty_offices",
+    4
+   ],
+   [
+    "headmasters_office",
+    4
+   ],
+   [
+    "lecture_halls",
+    1
+   ],
+   [
+    "main_library",
+    2
+   ],
+   [
+    "notice_board",
+    2
+   ],
+   [
+    "potion_halls",
+    3
+   ],
+   [
+    "restricted_section",
+    3
+   ],
+   [
+    "rooftop",
+    5
+   ],
+   [
+    "royal_inspectorate",
+    2
+   ],
+   [
+    "seal_chamber",
+    3
+   ],
+   [
+    "seminar_rooms",
+    2
+   ],
+   [
+    "staff_room",
+    4
+   ],
+   [
+    "student_council_chamber",
+    2
+   ],
+   [
+    "study_rooms",
+    1
+   ],
+   [
+    "wardens_office",
+    2
+   ],
+   [
+    "workshop",
+    3
+   ]
+  ]
  },
  "mall": {
   "id": "mall",
@@ -706,7 +2220,57 @@
   ],
   "floor": null,
   "pin": 22,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "banking_house",
+    5
+   ],
+   [
+    "cathedral",
+    5
+   ],
+   [
+    "commissary",
+    3
+   ],
+   [
+    "courtyards",
+    5
+   ],
+   [
+    "mail_tower",
+    6
+   ],
+   [
+    "medical_centre",
+    4
+   ],
+   [
+    "meditation_rooms_spirit_house",
+    6
+   ],
+   [
+    "merryhews",
+    1
+   ],
+   [
+    "nightwell",
+    1
+   ],
+   [
+    "reception_and_gatehouse",
+    6
+   ],
+   [
+    "sky_dormitory",
+    4
+   ],
+   [
+    "snug",
+    1
+   ]
+  ]
  },
  "club_rooms": {
   "id": "club_rooms",
@@ -733,7 +2297,7 @@
    "student_council_chamber",
    "announcement_room"
   ],
-  "walk_min": 4,
+  "walk_min": 5,
   "clubs": [
    "Theatre",
    "Music",
@@ -755,7 +2319,101 @@
   ],
   "floor": "Floor 1",
   "pin": 1,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "announcement_room",
+    1
+   ],
+   [
+    "archive",
+    2
+   ],
+   [
+    "bell_tower",
+    6
+   ],
+   [
+    "canteen",
+    1
+   ],
+   [
+    "courtyards",
+    5
+   ],
+   [
+    "detention_tower",
+    1
+   ],
+   [
+    "faculty_offices",
+    5
+   ],
+   [
+    "headmasters_office",
+    5
+   ],
+   [
+    "lecture_halls",
+    2
+   ],
+   [
+    "main_library",
+    1
+   ],
+   [
+    "notice_board",
+    1
+   ],
+   [
+    "potion_halls",
+    4
+   ],
+   [
+    "restricted_section",
+    2
+   ],
+   [
+    "rooftop",
+    6
+   ],
+   [
+    "royal_inspectorate",
+    1
+   ],
+   [
+    "seal_chamber",
+    2
+   ],
+   [
+    "seminar_rooms",
+    3
+   ],
+   [
+    "staff_room",
+    5
+   ],
+   [
+    "storage_and_lockers",
+    2
+   ],
+   [
+    "student_council_chamber",
+    1
+   ],
+   [
+    "study_rooms",
+    2
+   ],
+   [
+    "wardens_office",
+    1
+   ],
+   [
+    "workshop",
+    2
+   ]
+  ]
  },
  "student_council_chamber": {
   "id": "student_council_chamber",
@@ -773,7 +2431,7 @@
   "connections": [
    "club_rooms"
   ],
-  "walk_min": 4,
+  "walk_min": 6,
   "clubs": [
    "Festival Committee"
   ],
@@ -781,7 +2439,97 @@
   "lore": [],
   "floor": "Floor 1",
   "pin": 1,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "announcement_room",
+    1
+   ],
+   [
+    "archive",
+    2
+   ],
+   [
+    "bell_tower",
+    6
+   ],
+   [
+    "canteen",
+    1
+   ],
+   [
+    "club_rooms",
+    1
+   ],
+   [
+    "detention_tower",
+    1
+   ],
+   [
+    "faculty_offices",
+    5
+   ],
+   [
+    "headmasters_office",
+    5
+   ],
+   [
+    "lecture_halls",
+    2
+   ],
+   [
+    "main_library",
+    1
+   ],
+   [
+    "notice_board",
+    1
+   ],
+   [
+    "potion_halls",
+    4
+   ],
+   [
+    "restricted_section",
+    2
+   ],
+   [
+    "rooftop",
+    6
+   ],
+   [
+    "royal_inspectorate",
+    1
+   ],
+   [
+    "seal_chamber",
+    2
+   ],
+   [
+    "seminar_rooms",
+    3
+   ],
+   [
+    "staff_room",
+    5
+   ],
+   [
+    "storage_and_lockers",
+    2
+   ],
+   [
+    "study_rooms",
+    2
+   ],
+   [
+    "wardens_office",
+    1
+   ],
+   [
+    "workshop",
+    2
+   ]
+  ]
  },
  "notice_board": {
   "id": "notice_board",
@@ -804,13 +2552,111 @@
    "detention_tower",
    "staff_quarters"
   ],
-  "walk_min": 4,
+  "walk_min": 5,
   "clubs": [],
   "access": null,
   "lore": [],
   "floor": "Floor 1",
   "pin": 1,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "announcement_room",
+    1
+   ],
+   [
+    "archive",
+    2
+   ],
+   [
+    "bell_tower",
+    6
+   ],
+   [
+    "canteen",
+    1
+   ],
+   [
+    "club_rooms",
+    1
+   ],
+   [
+    "courtyards",
+    5
+   ],
+   [
+    "detention_tower",
+    1
+   ],
+   [
+    "faculty_offices",
+    5
+   ],
+   [
+    "headmasters_office",
+    5
+   ],
+   [
+    "lecture_halls",
+    2
+   ],
+   [
+    "main_library",
+    1
+   ],
+   [
+    "potion_halls",
+    4
+   ],
+   [
+    "restricted_section",
+    2
+   ],
+   [
+    "rooftop",
+    6
+   ],
+   [
+    "royal_inspectorate",
+    1
+   ],
+   [
+    "seal_chamber",
+    2
+   ],
+   [
+    "seminar_rooms",
+    3
+   ],
+   [
+    "staff_quarters",
+    9
+   ],
+   [
+    "staff_room",
+    5
+   ],
+   [
+    "storage_and_lockers",
+    2
+   ],
+   [
+    "student_council_chamber",
+    1
+   ],
+   [
+    "study_rooms",
+    2
+   ],
+   [
+    "wardens_office",
+    1
+   ],
+   [
+    "workshop",
+    2
+   ]
+  ]
  },
  "mail_tower": {
   "id": "mail_tower",
@@ -829,13 +2675,47 @@
   "connections": [
    "courtyards"
   ],
-  "walk_min": 5,
+  "walk_min": 7,
   "clubs": [],
   "access": null,
   "lore": [],
   "floor": null,
   "pin": 25,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "commissary",
+    5
+   ],
+   [
+    "courtyards",
+    7
+   ],
+   [
+    "founders_statue_and_park",
+    2
+   ],
+   [
+    "groundskeepers_lodge",
+    4
+   ],
+   [
+    "light_dormitory",
+    5
+   ],
+   [
+    "mall",
+    6
+   ],
+   [
+    "medical_centre",
+    2
+   ],
+   [
+    "reception_and_gatehouse",
+    3
+   ]
+  ]
  },
  "courtyards": {
   "id": "courtyards",
@@ -878,7 +2758,93 @@
   "lore": [],
   "floor": null,
   "pin": 2,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "arbiter_hall",
+    7
+   ],
+   [
+    "canteen",
+    5
+   ],
+   [
+    "club_rooms",
+    5
+   ],
+   [
+    "combat_grounds",
+    14
+   ],
+   [
+    "dovecote",
+    12
+   ],
+   [
+    "faculty_offices",
+    5
+   ],
+   [
+    "fire_dormitory",
+    8
+   ],
+   [
+    "founders_statue_and_park",
+    7
+   ],
+   [
+    "gardens",
+    10
+   ],
+   [
+    "grassy_field_and_hills",
+    10
+   ],
+   [
+    "lecture_halls",
+    5
+   ],
+   [
+    "light_dormitory",
+    5
+   ],
+   [
+    "mail_tower",
+    7
+   ],
+   [
+    "main_library",
+    5
+   ],
+   [
+    "mall",
+    5
+   ],
+   [
+    "medical_centre",
+    6
+   ],
+   [
+    "notice_board",
+    5
+   ],
+   [
+    "reception_and_gatehouse",
+    9
+   ],
+   [
+    "sky_dormitory",
+    4
+   ],
+   [
+    "sports_field",
+    15
+   ],
+   [
+    "viridian_dormitory",
+    6
+   ]
+  ]
  },
  "sports_field": {
   "id": "sports_field",
@@ -899,7 +2865,7 @@
    "gymnasium",
    "archery_range"
   ],
-  "walk_min": 10,
+  "walk_min": 15,
   "clubs": [
    "Soccer",
    "Running"
@@ -908,7 +2874,41 @@
   "lore": [],
   "floor": null,
   "pin": 17,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "archery_range",
+    5
+   ],
+   [
+    "combat_grounds",
+    5
+   ],
+   [
+    "courtyards",
+    15
+   ],
+   [
+    "founders_statue_and_park",
+    9
+   ],
+   [
+    "gymnasium",
+    3
+   ],
+   [
+    "menagerie",
+    6
+   ],
+   [
+    "sparring_pavilion",
+    5
+   ],
+   [
+    "swimming_pool",
+    3
+   ]
+  ]
  },
  "gymnasium": {
   "id": "gymnasium",
@@ -927,7 +2927,7 @@
    "sports_field",
    "swimming_pool"
   ],
-  "walk_min": 10,
+  "walk_min": 14,
   "clubs": [
    "Swimming",
    "Gymnastics",
@@ -937,7 +2937,33 @@
   "lore": [],
   "floor": null,
   "pin": 16,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "archery_range",
+    3
+   ],
+   [
+    "boathouse_and_lake",
+    5
+   ],
+   [
+    "gardens",
+    5
+   ],
+   [
+    "menagerie",
+    3
+   ],
+   [
+    "sports_field",
+    3
+   ],
+   [
+    "swimming_pool",
+    1
+   ]
+  ]
  },
  "swimming_pool": {
   "id": "swimming_pool",
@@ -955,7 +2981,7 @@
   "connections": [
    "gymnasium"
   ],
-  "walk_min": 10,
+  "walk_min": 14,
   "clubs": [
    "Swimming"
   ],
@@ -963,7 +2989,33 @@
   "lore": [],
   "floor": null,
   "pin": 16,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "archery_range",
+    3
+   ],
+   [
+    "boathouse_and_lake",
+    5
+   ],
+   [
+    "gardens",
+    5
+   ],
+   [
+    "gymnasium",
+    1
+   ],
+   [
+    "menagerie",
+    3
+   ],
+   [
+    "sports_field",
+    3
+   ]
+  ]
  },
  "archery_range": {
   "id": "archery_range",
@@ -981,7 +3033,7 @@
   "connections": [
    "sports_field"
   ],
-  "walk_min": 10,
+  "walk_min": 11,
   "clubs": [
    "Archery"
   ],
@@ -989,7 +3041,49 @@
   "lore": [],
   "floor": null,
   "pin": 15,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "boathouse_and_lake",
+    6
+   ],
+   [
+    "founders_statue_and_park",
+    7
+   ],
+   [
+    "gardens",
+    4
+   ],
+   [
+    "gymnasium",
+    3
+   ],
+   [
+    "light_dormitory",
+    6
+   ],
+   [
+    "menagerie",
+    4
+   ],
+   [
+    "sports_field",
+    5
+   ],
+   [
+    "staff_quarters",
+    6
+   ],
+   [
+    "swimming_pool",
+    3
+   ],
+   [
+    "viridian_dormitory",
+    6
+   ]
+  ]
  },
  "grassy_field_and_hills": {
   "id": "grassy_field_and_hills",
@@ -1009,7 +3103,7 @@
    "old_hut",
    "forest"
   ],
-  "walk_min": 15,
+  "walk_min": 10,
   "clubs": [
    "Walking"
   ],
@@ -1017,7 +3111,45 @@
   "lore": [],
   "floor": null,
   "pin": 36,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "boathouse_and_lake",
+    6
+   ],
+   [
+    "courtyards",
+    10
+   ],
+   [
+    "fishing_house",
+    4
+   ],
+   [
+    "forest",
+    18
+   ],
+   [
+    "gardens",
+    5
+   ],
+   [
+    "observation_tower",
+    3
+   ],
+   [
+    "old_hut",
+    5
+   ],
+   [
+    "staff_quarters",
+    2
+   ],
+   [
+    "viridian_dormitory",
+    6
+   ]
+  ]
  },
  "forest": {
   "id": "forest",
@@ -1038,7 +3170,7 @@
    "grassy_field_and_hills",
    "forest_clearing"
   ],
-  "walk_min": 25,
+  "walk_min": 28,
   "clubs": [],
   "access": "Far edge of the grounds; curfew applies after dark",
   "lore": [
@@ -1050,7 +3182,21 @@
   ],
   "floor": null,
   "pin": 11,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "boathouse_and_lake",
+    23
+   ],
+   [
+    "forest_clearing",
+    15
+   ],
+   [
+    "grassy_field_and_hills",
+    18
+   ]
+  ]
  },
  "boathouse_and_lake": {
   "id": "boathouse_and_lake",
@@ -1073,7 +3219,7 @@
    "fishing_house",
    "willow_island"
   ],
-  "walk_min": 20,
+  "walk_min": 14,
   "clubs": [],
   "access": null,
   "lore": [
@@ -1085,7 +3231,49 @@
   ],
   "floor": null,
   "pin": 12,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "archery_range",
+    6
+   ],
+   [
+    "fishing_house",
+    3
+   ],
+   [
+    "forest",
+    23
+   ],
+   [
+    "gardens",
+    4
+   ],
+   [
+    "grassy_field_and_hills",
+    6
+   ],
+   [
+    "gymnasium",
+    5
+   ],
+   [
+    "menagerie",
+    3
+   ],
+   [
+    "staff_quarters",
+    5
+   ],
+   [
+    "swimming_pool",
+    5
+   ],
+   [
+    "willow_island",
+    10
+   ]
+  ]
  },
  "gardens": {
   "id": "gardens",
@@ -1109,7 +3297,7 @@
    "menagerie",
    "boathouse_and_lake"
   ],
-  "walk_min": 15,
+  "walk_min": 10,
   "clubs": [
    "Gardening"
   ],
@@ -1117,7 +3305,57 @@
   "lore": [],
   "floor": null,
   "pin": 13,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "archery_range",
+    4
+   ],
+   [
+    "boathouse_and_lake",
+    4
+   ],
+   [
+    "courtyards",
+    10
+   ],
+   [
+    "fishing_house",
+    5
+   ],
+   [
+    "founders_statue_and_park",
+    9
+   ],
+   [
+    "grassy_field_and_hills",
+    5
+   ],
+   [
+    "gymnasium",
+    5
+   ],
+   [
+    "light_dormitory",
+    6
+   ],
+   [
+    "menagerie",
+    3
+   ],
+   [
+    "staff_quarters",
+    3
+   ],
+   [
+    "swimming_pool",
+    5
+   ],
+   [
+    "viridian_dormitory",
+    4
+   ]
+  ]
  },
  "menagerie": {
   "id": "menagerie",
@@ -1135,7 +3373,7 @@
   "connections": [
    "gardens"
   ],
-  "walk_min": 15,
+  "walk_min": 13,
   "clubs": [
    "Beast Handling"
   ],
@@ -1143,7 +3381,41 @@
   "lore": [],
   "floor": null,
   "pin": 14,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "archery_range",
+    4
+   ],
+   [
+    "boathouse_and_lake",
+    3
+   ],
+   [
+    "fishing_house",
+    5
+   ],
+   [
+    "gardens",
+    3
+   ],
+   [
+    "gymnasium",
+    3
+   ],
+   [
+    "sports_field",
+    6
+   ],
+   [
+    "staff_quarters",
+    6
+   ],
+   [
+    "swimming_pool",
+    3
+   ]
+  ]
  },
  "observation_tower": {
   "id": "observation_tower",
@@ -1161,7 +3433,7 @@
   "connections": [
    "grassy_field_and_hills"
   ],
-  "walk_min": 15,
+  "walk_min": 13,
   "clubs": [
    "Divination"
   ],
@@ -1169,7 +3441,21 @@
   "lore": [],
   "floor": null,
   "pin": 9,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "fishing_house",
+    6
+   ],
+   [
+    "grassy_field_and_hills",
+    3
+   ],
+   [
+    "staff_quarters",
+    5
+   ]
+  ]
  },
  "medical_centre": {
   "id": "medical_centre",
@@ -1189,7 +3475,7 @@
   "connections": [
    "mall"
   ],
-  "walk_min": 5,
+  "walk_min": 6,
   "clubs": [
    "Medical Centre Volunteers"
   ],
@@ -1197,7 +3483,41 @@
   "lore": [],
   "floor": null,
   "pin": 24,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "commissary",
+    4
+   ],
+   [
+    "courtyards",
+    6
+   ],
+   [
+    "founders_statue_and_park",
+    3
+   ],
+   [
+    "groundskeepers_lodge",
+    6
+   ],
+   [
+    "light_dormitory",
+    5
+   ],
+   [
+    "mail_tower",
+    2
+   ],
+   [
+    "mall",
+    4
+   ],
+   [
+    "reception_and_gatehouse",
+    4
+   ]
+  ]
  },
  "commissary": {
   "id": "commissary",
@@ -1216,7 +3536,7 @@
   "connections": [
    "mall"
   ],
-  "walk_min": 5,
+  "walk_min": 8,
   "clubs": [],
   "access": null,
   "lore": [
@@ -1233,7 +3553,37 @@
   ],
   "floor": null,
   "pin": 23,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "banking_house",
+    3
+   ],
+   [
+    "cathedral",
+    7
+   ],
+   [
+    "mail_tower",
+    5
+   ],
+   [
+    "mall",
+    3
+   ],
+   [
+    "medical_centre",
+    4
+   ],
+   [
+    "meditation_rooms_spirit_house",
+    6
+   ],
+   [
+    "reception_and_gatehouse",
+    3
+   ]
+  ]
  },
  "reception_and_gatehouse": {
   "id": "reception_and_gatehouse",
@@ -1249,13 +3599,47 @@
    "courtyards",
    "groundskeepers_lodge"
   ],
-  "walk_min": null,
+  "walk_min": 9,
   "clubs": [],
   "access": "The only way in or out",
   "lore": [],
   "floor": null,
   "pin": 26,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "banking_house",
+    6
+   ],
+   [
+    "commissary",
+    3
+   ],
+   [
+    "courtyards",
+    9
+   ],
+   [
+    "founders_statue_and_park",
+    6
+   ],
+   [
+    "groundskeepers_lodge",
+    5
+   ],
+   [
+    "mail_tower",
+    3
+   ],
+   [
+    "mall",
+    6
+   ],
+   [
+    "medical_centre",
+    4
+   ]
+  ]
  },
  "groundskeepers_lodge": {
   "id": "groundskeepers_lodge",
@@ -1273,7 +3657,7 @@
   "connections": [
    "reception_and_gatehouse"
   ],
-  "walk_min": null,
+  "walk_min": 11,
   "clubs": [
    "Groundskeeping"
   ],
@@ -1281,7 +3665,29 @@
   "lore": [],
   "floor": null,
   "pin": 20,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "combat_grounds",
+    5
+   ],
+   [
+    "founders_statue_and_park",
+    4
+   ],
+   [
+    "mail_tower",
+    4
+   ],
+   [
+    "medical_centre",
+    6
+   ],
+   [
+    "reception_and_gatehouse",
+    5
+   ]
+  ]
  },
  "detention_tower": {
   "id": "detention_tower",
@@ -1296,13 +3702,103 @@
   "connections": [
    "notice_board"
   ],
-  "walk_min": 4,
+  "walk_min": 6,
   "clubs": [],
   "access": "When assigned detention",
   "lore": [],
   "floor": "Floor 1",
   "pin": 1,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "announcement_room",
+    1
+   ],
+   [
+    "archive",
+    2
+   ],
+   [
+    "bell_tower",
+    6
+   ],
+   [
+    "canteen",
+    1
+   ],
+   [
+    "club_rooms",
+    1
+   ],
+   [
+    "faculty_offices",
+    5
+   ],
+   [
+    "headmasters_office",
+    5
+   ],
+   [
+    "lecture_halls",
+    2
+   ],
+   [
+    "main_library",
+    1
+   ],
+   [
+    "notice_board",
+    1
+   ],
+   [
+    "potion_halls",
+    4
+   ],
+   [
+    "restricted_section",
+    2
+   ],
+   [
+    "rooftop",
+    6
+   ],
+   [
+    "royal_inspectorate",
+    1
+   ],
+   [
+    "seal_chamber",
+    2
+   ],
+   [
+    "seminar_rooms",
+    3
+   ],
+   [
+    "staff_room",
+    5
+   ],
+   [
+    "storage_and_lockers",
+    2
+   ],
+   [
+    "student_council_chamber",
+    1
+   ],
+   [
+    "study_rooms",
+    2
+   ],
+   [
+    "wardens_office",
+    1
+   ],
+   [
+    "workshop",
+    2
+   ]
+  ]
  },
  "meditation_rooms_spirit_house": {
   "id": "meditation_rooms_spirit_house",
@@ -1321,13 +3817,43 @@
   "connections": [
    "mall"
   ],
-  "walk_min": 5,
+  "walk_min": 11,
   "clubs": [],
   "access": "Students are not to go alone",
   "lore": [],
   "floor": null,
   "pin": 32,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "banking_house",
+    4
+   ],
+   [
+    "broken_statue",
+    6
+   ],
+   [
+    "cathedral",
+    3
+   ],
+   [
+    "commissary",
+    6
+   ],
+   [
+    "dovecote",
+    6
+   ],
+   [
+    "mall",
+    6
+   ],
+   [
+    "noble_houses_liaison",
+    3
+   ]
+  ]
  },
  "dovecote": {
   "id": "dovecote",
@@ -1349,13 +3875,39 @@
    "noble_houses_liaison",
    "broken_statue"
   ],
-  "walk_min": null,
+  "walk_min": 12,
   "clubs": [],
   "access": "Crown ground — the Doves' compound",
   "lore": [],
   "floor": null,
   "pin": 28,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "broken_statue",
+    2
+   ],
+   [
+    "cathedral",
+    5
+   ],
+   [
+    "courtyards",
+    12
+   ],
+   [
+    "fire_dormitory",
+    6
+   ],
+   [
+    "meditation_rooms_spirit_house",
+    6
+   ],
+   [
+    "noble_houses_liaison",
+    3
+   ]
+  ]
  },
  "royal_inspectorate": {
   "id": "royal_inspectorate",
@@ -1371,13 +3923,103 @@
    "notice_board",
    "wardens_office"
   ],
-  "walk_min": 4,
+  "walk_min": 6,
   "clubs": [],
   "access": "Crown office — the Headmaster has no authority past the door",
   "lore": [],
   "floor": "Floor 1",
   "pin": 1,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "announcement_room",
+    1
+   ],
+   [
+    "archive",
+    2
+   ],
+   [
+    "bell_tower",
+    6
+   ],
+   [
+    "canteen",
+    1
+   ],
+   [
+    "club_rooms",
+    1
+   ],
+   [
+    "detention_tower",
+    1
+   ],
+   [
+    "faculty_offices",
+    5
+   ],
+   [
+    "headmasters_office",
+    5
+   ],
+   [
+    "lecture_halls",
+    2
+   ],
+   [
+    "main_library",
+    1
+   ],
+   [
+    "notice_board",
+    1
+   ],
+   [
+    "potion_halls",
+    4
+   ],
+   [
+    "restricted_section",
+    2
+   ],
+   [
+    "rooftop",
+    6
+   ],
+   [
+    "seal_chamber",
+    2
+   ],
+   [
+    "seminar_rooms",
+    3
+   ],
+   [
+    "staff_room",
+    5
+   ],
+   [
+    "storage_and_lockers",
+    2
+   ],
+   [
+    "student_council_chamber",
+    1
+   ],
+   [
+    "study_rooms",
+    2
+   ],
+   [
+    "wardens_office",
+    1
+   ],
+   [
+    "workshop",
+    2
+   ]
+  ]
  },
  "cathedral": {
   "id": "cathedral",
@@ -1397,13 +4039,51 @@
    "dovecote",
    "noble_houses_liaison"
   ],
-  "walk_min": null,
+  "walk_min": 8,
   "clubs": [],
   "access": null,
   "lore": [],
   "floor": null,
   "pin": 29,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "banking_house",
+    6
+   ],
+   [
+    "broken_statue",
+    4
+   ],
+   [
+    "commissary",
+    7
+   ],
+   [
+    "dovecote",
+    5
+   ],
+   [
+    "fire_dormitory",
+    6
+   ],
+   [
+    "mall",
+    5
+   ],
+   [
+    "meditation_rooms_spirit_house",
+    3
+   ],
+   [
+    "noble_houses_liaison",
+    4
+   ],
+   [
+    "sky_dormitory",
+    4
+   ]
+  ]
  },
  "noble_houses_liaison": {
   "id": "noble_houses_liaison",
@@ -1424,13 +4104,31 @@
    "dovecote",
    "cathedral"
   ],
-  "walk_min": null,
+  "walk_min": 12,
   "clubs": [],
   "access": "By invitation",
   "lore": [],
   "floor": null,
   "pin": 30,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "broken_statue",
+    4
+   ],
+   [
+    "cathedral",
+    4
+   ],
+   [
+    "dovecote",
+    3
+   ],
+   [
+    "meditation_rooms_spirit_house",
+    3
+   ]
+  ]
  },
  "banking_house": {
   "id": "banking_house",
@@ -1449,13 +4147,35 @@
   "connections": [
    "mall"
   ],
-  "walk_min": 5,
+  "walk_min": 10,
   "clubs": [],
   "access": null,
   "lore": [],
   "floor": null,
   "pin": 27,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "cathedral",
+    6
+   ],
+   [
+    "commissary",
+    3
+   ],
+   [
+    "mall",
+    5
+   ],
+   [
+    "meditation_rooms_spirit_house",
+    4
+   ],
+   [
+    "reception_and_gatehouse",
+    6
+   ]
+  ]
  },
  "forest_clearing": {
   "id": "forest_clearing",
@@ -1475,13 +4195,19 @@
   "connections": [
    "forest"
   ],
-  "walk_min": 40,
+  "walk_min": 43,
   "clubs": [],
   "access": null,
   "lore": [],
   "floor": null,
   "pin": 11,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "forest",
+    15
+   ]
+  ]
  },
  "rooftop": {
   "id": "rooftop",
@@ -1501,13 +4227,103 @@
   "connections": [
    "bell_tower"
   ],
-  "walk_min": 4,
+  "walk_min": 7,
   "clubs": [],
   "access": "Officially out of bounds",
   "lore": [],
   "floor": "Towers & Roof",
   "pin": 1,
-  "discoverable": true
+  "discoverable": true,
+  "near": [
+   [
+    "announcement_room",
+    6
+   ],
+   [
+    "archive",
+    7
+   ],
+   [
+    "bell_tower",
+    1
+   ],
+   [
+    "canteen",
+    6
+   ],
+   [
+    "club_rooms",
+    6
+   ],
+   [
+    "detention_tower",
+    6
+   ],
+   [
+    "faculty_offices",
+    2
+   ],
+   [
+    "headmasters_office",
+    2
+   ],
+   [
+    "lecture_halls",
+    5
+   ],
+   [
+    "main_library",
+    6
+   ],
+   [
+    "notice_board",
+    6
+   ],
+   [
+    "potion_halls",
+    3
+   ],
+   [
+    "restricted_section",
+    7
+   ],
+   [
+    "royal_inspectorate",
+    6
+   ],
+   [
+    "seal_chamber",
+    7
+   ],
+   [
+    "seminar_rooms",
+    4
+   ],
+   [
+    "staff_room",
+    2
+   ],
+   [
+    "storage_and_lockers",
+    5
+   ],
+   [
+    "student_council_chamber",
+    6
+   ],
+   [
+    "study_rooms",
+    5
+   ],
+   [
+    "wardens_office",
+    6
+   ],
+   [
+    "workshop",
+    7
+   ]
+  ]
  },
  "headmasters_office": {
   "id": "headmasters_office",
@@ -1527,13 +4343,103 @@
   "connections": [
    "faculty_offices"
   ],
-  "walk_min": 4,
+  "walk_min": 6,
   "clubs": [],
   "access": "When it matters: discipline, requests, bad news",
   "lore": [],
   "floor": "Floor 5",
   "pin": 1,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "announcement_room",
+    5
+   ],
+   [
+    "archive",
+    6
+   ],
+   [
+    "bell_tower",
+    2
+   ],
+   [
+    "canteen",
+    5
+   ],
+   [
+    "club_rooms",
+    5
+   ],
+   [
+    "detention_tower",
+    5
+   ],
+   [
+    "faculty_offices",
+    1
+   ],
+   [
+    "lecture_halls",
+    4
+   ],
+   [
+    "main_library",
+    5
+   ],
+   [
+    "notice_board",
+    5
+   ],
+   [
+    "potion_halls",
+    2
+   ],
+   [
+    "restricted_section",
+    6
+   ],
+   [
+    "rooftop",
+    2
+   ],
+   [
+    "royal_inspectorate",
+    5
+   ],
+   [
+    "seal_chamber",
+    6
+   ],
+   [
+    "seminar_rooms",
+    3
+   ],
+   [
+    "staff_room",
+    1
+   ],
+   [
+    "storage_and_lockers",
+    4
+   ],
+   [
+    "student_council_chamber",
+    5
+   ],
+   [
+    "study_rooms",
+    4
+   ],
+   [
+    "wardens_office",
+    5
+   ],
+   [
+    "workshop",
+    6
+   ]
+  ]
  },
  "staff_quarters": {
   "id": "staff_quarters",
@@ -1555,13 +4461,51 @@
   "connections": [
    "notice_board"
   ],
-  "walk_min": 4,
+  "walk_min": 10,
   "clubs": [],
   "access": "Staff residence",
   "lore": [],
   "floor": null,
   "pin": 8,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "archery_range",
+    6
+   ],
+   [
+    "boathouse_and_lake",
+    5
+   ],
+   [
+    "fishing_house",
+    4
+   ],
+   [
+    "gardens",
+    3
+   ],
+   [
+    "grassy_field_and_hills",
+    2
+   ],
+   [
+    "menagerie",
+    6
+   ],
+   [
+    "notice_board",
+    9
+   ],
+   [
+    "observation_tower",
+    5
+   ],
+   [
+    "viridian_dormitory",
+    4
+   ]
+  ]
  },
  "fire_dormitory": {
   "id": "fire_dormitory",
@@ -1582,7 +4526,7 @@
    "laundry",
    "bathhouse_and_washrooms"
   ],
-  "walk_min": 4,
+  "walk_min": 8,
   "clubs": [],
   "access": "Residents only (bracelet door)",
   "lore": [
@@ -1594,7 +4538,41 @@
   ],
   "floor": null,
   "pin": 3,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "bathhouse_and_washrooms",
+    1
+   ],
+   [
+    "broken_statue",
+    4
+   ],
+   [
+    "cathedral",
+    6
+   ],
+   [
+    "common_rooms",
+    1
+   ],
+   [
+    "courtyards",
+    8
+   ],
+   [
+    "dovecote",
+    6
+   ],
+   [
+    "laundry",
+    1
+   ],
+   [
+    "sky_dormitory",
+    5
+   ]
+  ]
  },
  "light_dormitory": {
   "id": "light_dormitory",
@@ -1614,7 +4592,7 @@
    "laundry",
    "bathhouse_and_washrooms"
   ],
-  "walk_min": 4,
+  "walk_min": 5,
   "clubs": [],
   "access": "Residents only (bracelet door)",
   "lore": [
@@ -1626,7 +4604,49 @@
   ],
   "floor": null,
   "pin": 6,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "archery_range",
+    6
+   ],
+   [
+    "bathhouse_and_washrooms",
+    13
+   ],
+   [
+    "common_rooms",
+    13
+   ],
+   [
+    "courtyards",
+    5
+   ],
+   [
+    "founders_statue_and_park",
+    3
+   ],
+   [
+    "gardens",
+    6
+   ],
+   [
+    "laundry",
+    13
+   ],
+   [
+    "mail_tower",
+    5
+   ],
+   [
+    "medical_centre",
+    5
+   ],
+   [
+    "viridian_dormitory",
+    3
+   ]
+  ]
  },
  "sky_dormitory": {
   "id": "sky_dormitory",
@@ -1658,7 +4678,41 @@
   ],
   "floor": null,
   "pin": 4,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "bathhouse_and_washrooms",
+    5
+   ],
+   [
+    "broken_statue",
+    6
+   ],
+   [
+    "cathedral",
+    4
+   ],
+   [
+    "common_rooms",
+    5
+   ],
+   [
+    "courtyards",
+    4
+   ],
+   [
+    "fire_dormitory",
+    5
+   ],
+   [
+    "laundry",
+    5
+   ],
+   [
+    "mall",
+    4
+   ]
+  ]
  },
  "viridian_dormitory": {
   "id": "viridian_dormitory",
@@ -1678,7 +4732,7 @@
    "laundry",
    "bathhouse_and_washrooms"
   ],
-  "walk_min": 4,
+  "walk_min": 6,
   "clubs": [],
   "access": "Residents only (bracelet door)",
   "lore": [
@@ -1690,7 +4744,49 @@
   ],
   "floor": null,
   "pin": 5,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "archery_range",
+    6
+   ],
+   [
+    "bathhouse_and_washrooms",
+    13
+   ],
+   [
+    "common_rooms",
+    13
+   ],
+   [
+    "courtyards",
+    6
+   ],
+   [
+    "founders_statue_and_park",
+    6
+   ],
+   [
+    "gardens",
+    4
+   ],
+   [
+    "grassy_field_and_hills",
+    6
+   ],
+   [
+    "laundry",
+    13
+   ],
+   [
+    "light_dormitory",
+    3
+   ],
+   [
+    "staff_quarters",
+    4
+   ]
+  ]
  },
  "old_hut": {
   "id": "old_hut",
@@ -1705,13 +4801,19 @@
   "connections": [
    "grassy_field_and_hills"
   ],
-  "walk_min": 20,
+  "walk_min": 15,
   "clubs": [],
   "access": null,
   "lore": [],
   "floor": null,
   "pin": 10,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "grassy_field_and_hills",
+    5
+   ]
+  ]
  },
  "announcement_room": {
   "id": "announcement_room",
@@ -1730,7 +4832,7 @@
   "connections": [
    "club_rooms"
   ],
-  "walk_min": 4,
+  "walk_min": 6,
   "clubs": [
    "Newspaper"
   ],
@@ -1738,7 +4840,97 @@
   "lore": [],
   "floor": "Floor 1",
   "pin": 1,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "archive",
+    2
+   ],
+   [
+    "bell_tower",
+    6
+   ],
+   [
+    "canteen",
+    1
+   ],
+   [
+    "club_rooms",
+    1
+   ],
+   [
+    "detention_tower",
+    1
+   ],
+   [
+    "faculty_offices",
+    5
+   ],
+   [
+    "headmasters_office",
+    5
+   ],
+   [
+    "lecture_halls",
+    2
+   ],
+   [
+    "main_library",
+    1
+   ],
+   [
+    "notice_board",
+    1
+   ],
+   [
+    "potion_halls",
+    4
+   ],
+   [
+    "restricted_section",
+    2
+   ],
+   [
+    "rooftop",
+    6
+   ],
+   [
+    "royal_inspectorate",
+    1
+   ],
+   [
+    "seal_chamber",
+    2
+   ],
+   [
+    "seminar_rooms",
+    3
+   ],
+   [
+    "staff_room",
+    5
+   ],
+   [
+    "storage_and_lockers",
+    2
+   ],
+   [
+    "student_council_chamber",
+    1
+   ],
+   [
+    "study_rooms",
+    2
+   ],
+   [
+    "wardens_office",
+    1
+   ],
+   [
+    "workshop",
+    2
+   ]
+  ]
  },
  "broken_statue": {
   "id": "broken_statue",
@@ -1754,13 +4946,39 @@
    "dovecote",
    "fire_dormitory"
   ],
-  "walk_min": 5,
+  "walk_min": 10,
   "clubs": [],
   "access": null,
   "lore": [],
   "floor": null,
   "pin": 33,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "cathedral",
+    4
+   ],
+   [
+    "dovecote",
+    2
+   ],
+   [
+    "fire_dormitory",
+    4
+   ],
+   [
+    "meditation_rooms_spirit_house",
+    6
+   ],
+   [
+    "noble_houses_liaison",
+    4
+   ],
+   [
+    "sky_dormitory",
+    6
+   ]
+  ]
  },
  "sparring_pavilion": {
   "id": "sparring_pavilion",
@@ -1779,7 +4997,7 @@
   "connections": [
    "combat_grounds"
   ],
-  "walk_min": 10,
+  "walk_min": 17,
   "clubs": [
    "Duelling (headquarters)"
   ],
@@ -1787,7 +5005,17 @@
   "lore": [],
   "floor": null,
   "pin": 19,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "combat_grounds",
+    3
+   ],
+   [
+    "sports_field",
+    5
+   ]
+  ]
  },
  "fishing_house": {
   "id": "fishing_house",
@@ -1807,7 +5035,7 @@
   "connections": [
    "boathouse_and_lake"
   ],
-  "walk_min": 20,
+  "walk_min": 14,
   "clubs": [
    "Fishing"
   ],
@@ -1815,7 +5043,33 @@
   "lore": [],
   "floor": null,
   "pin": 34,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "boathouse_and_lake",
+    3
+   ],
+   [
+    "gardens",
+    5
+   ],
+   [
+    "grassy_field_and_hills",
+    4
+   ],
+   [
+    "menagerie",
+    5
+   ],
+   [
+    "observation_tower",
+    6
+   ],
+   [
+    "staff_quarters",
+    4
+   ]
+  ]
  },
  "willow_island": {
   "id": "willow_island",
@@ -1830,13 +5084,19 @@
   "connections": [
    "boathouse_and_lake"
   ],
-  "walk_min": 25,
+  "walk_min": 24,
   "clubs": [],
   "access": "By boat from the boathouse; no bookings after dark",
   "lore": [],
   "floor": null,
   "pin": 35,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "boathouse_and_lake",
+    10
+   ]
+  ]
  },
  "nightwell": {
   "id": "nightwell",
@@ -1851,13 +5111,19 @@
   "connections": [
    "mall"
   ],
-  "walk_min": null,
+  "walk_min": 6,
   "clubs": [],
   "access": null,
   "lore": [],
   "floor": null,
   "pin": 22,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "mall",
+    1
+   ]
+  ]
  },
  "merryhews": {
   "id": "merryhews",
@@ -1872,13 +5138,19 @@
   "connections": [
    "mall"
   ],
-  "walk_min": null,
+  "walk_min": 6,
   "clubs": [],
   "access": null,
   "lore": [],
   "floor": null,
   "pin": 22,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "mall",
+    1
+   ]
+  ]
  },
  "snug": {
   "id": "snug",
@@ -1893,12 +5165,18 @@
   "connections": [
    "mall"
   ],
-  "walk_min": null,
+  "walk_min": 6,
   "clubs": [],
   "access": null,
   "lore": [],
   "floor": null,
   "pin": 22,
-  "discoverable": false
+  "discoverable": false,
+  "near": [
+   [
+    "mall",
+    1
+   ]
+  ]
  }
 }
