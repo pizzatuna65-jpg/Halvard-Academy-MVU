@@ -2,7 +2,7 @@
 
 **New session or another AI? Read `HANDOFF.md` first.**
 
-Source for the SillyTavern character card `dist/Eldrasil_Halvard.png` (v1.2.0). Players: see `docs/PLAYER_GUIDE.md`.
+Source for the SillyTavern character card `dist/Eldrasil_Halvard.png` (v1.2.2). Players: see `docs/PLAYER_GUIDE.md`.
 Design and decisions: `ELDRASIL_MVU_PLAN.md`. Build history, open items and tunables: `PROGRESS.md`.
 
 ## Layout
@@ -33,3 +33,6 @@ python3 tests/preview/smoke_all_panels.py                             # needs pl
 Portraits, thumbnails and the map are served from `github.com/pizzatuna65-jpg/eldrasil-assets` through jsDelivr, pinned to a commit
 (`data/assets_manifest.json` → `base_url`). After changing assets: push, then set `base_url` to the new commit (or a tag such as `@v1`)
 and rebuild. Never use `@main` in a release: jsDelivr caches it for days.
+
+## NPC brainstorming handoff
+`python3 tools/make_npc_brief.py` writes `docs/npc_brainstorm/`: a self-contained brief (world basics, bond system, event format, NPC roster, lore gaps) plus the full NPC lore split by group, for designing NPC info and bond events with another AI session without the whole project. Re-run after lore or bond-rule changes.

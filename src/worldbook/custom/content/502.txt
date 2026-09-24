@@ -51,9 +51,12 @@ Hidden (only when Hidden._True_magic is not empty)
 - Outdoors in fog or heavy weather the engine halves a rise; write the full amount.
 <%_ } _%>
 
+Interactions: for each character {{user}} really spent time with in this reply, insert into /Interactions/- {"With": "<first name>", "Kind": "talk|hangout|gift|help"} (a gift also "Gift": "loved|liked|neutral|disliked", judged from what they love and hate). talk = a real conversation; hangout = time together on something (a meal, study, a club, sparring, a walk); gift = {{user}} gave them something; help = {{user}} really helped with their goal or did them a real favour. Small talk and passing greetings: nothing. The engine turns these into bond XP (limited per day and week) and empties the list. Never write XP or Progress yourself.
+
 Bonds (one record per character {{user}} has actually met)
-- Progress 0–10 within the current rank: +1 for a meaningful interaction, +2 for a significant shared moment, 0 for small talk. The engine caps daily gains and sets _Event_ready at 10.
-- Rank 0–10: raise by exactly 1, and only when _Event_ready is true AND this reply contains a genuine milestone scene with that character (also insert a line into Milestones). Otherwise the engine reverts it. Betrayal or a breaking point may lower Rank.
+- Rank 0–10: raise by exactly 1, and only when <now> offers that character's bond event and this reply played it (also insert a line into Milestones). Otherwise the engine reverts it. Betrayal or a breaking point may lower Rank.
+<%_ const _rr = Number.isFinite(+_U.romrank) ? +_U.romrank : 8; _%>
+- Romance: <%- _rr > 10 ? 'the player turned romance flags off; never set Romance true.' : _rr === 0 ? 'set true once the relationship truly becomes romantic.' : 'set true once the relationship truly becomes romantic, from Rank ' + _rr + ' (the player\'s setting); feelings may grow earlier in the story, the flag waits.' %>
 - Trust / Tension 0–100: trust follows reliability and drops with betrayal; tension follows conflict and unresolved friction.
 - Known_facts: insert a short fact whenever {{user}} learns something real about that character. You see the latest 10; older ones are kept by the game, so do not re-add them.
 - Title: a short label for the relationship ("Rival", "Study partner", "Self-declared big sister").

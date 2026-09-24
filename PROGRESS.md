@@ -308,6 +308,35 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   with ‹ › buttons. The Rooftop stays hidden until discovered (D21, unchanged).
   npm test 428 checks, smoke 482 views / 0 errors, token audit ~8.6k start / ~13.5k mid-game (+~300: rules 502/504, Campus Map lines).
 
+- 1.2.1 Owner playtest, round 2 (card 1.2.1). The bracelet shows above the narration: display regex "Bracelet above the narration"
+  moves the placeholder to the top before the bracelet regex renders it. Walking times follow the map (owner: from the Gatehouse
+  the Mall is 6 min, the Main Courtyard farther): curate_data.py builds legs (lore connections + straight walks between nearby
+  open-air places and buildings within 30 map units, x scaled 1.5; 0.22 min per unit; forest, Old Hut and boat legs keep their lore
+  times; castle stairs 1 + floors) into locations.json `near`; walk_min is the shortest path from the Main Courtyard; the UI runs
+  the shortest path from where the player stands (shared dorm rooms count as the player's dorm). Audit: no pair's path exceeds its
+  straight line by 5 min or more. The Campus Map "Walking times" line (lore 132) is rewritten with the same numbers (e.g. Gatehouse 9,
+  Fire Dormitory 8, Sports Field 15, Forest Clearing 43). Techniques: Apply technique folds a finished technique into one line
+  (UI only; loaded techniques start folded); a new technique, a type change and the true magic start with the student's specialty
+  for that type (the subtype list shows the student's specialties first; free text still allowed).
+  npm test 434 checks, smoke 482 views / 0 errors.
+
+- 1.2.2 Bond system revamp (owner design; replaces D14's Progress 0-10, daily cap 3, ready at 10). Single source
+  data/bond_rules.json (engine, UI and Now entry). The narrator reports /Interactions [{With, Kind: talk|hangout|gift|help,
+  Gift: loved|liked|neutral|disliked}]; the engine awards XP (talk 2 and hangout 3 once a day each, gifts 2 a week with loved x1.5
+  from Rank 3 and disliked +5 Tension, help 5 once a week, weather +1 once a day) into Bonds.<id>.$xp (hidden from the AI), capped at
+  the rank's need (xp_base 10..80 x pace: fast 0.25, brisk 0.5, standard 1, slow 2.5; Settings → Bonds). A full bar and the
+  cooldown ($cool, cool_base days x pace) set _Event_ready; Rank still rises by 1 only while ready (else reverted); the bar empties.
+  Events: data/bond_events.json (empty; tools/import_bond_events.py reads the owner's [Bond Event] lorebook, docs/BOND_EVENTS.md,
+  example docs/examples/bond_events_example.txt); the engine checks place/time/days/weather/prerequisites and writes $ui.bev
+  (ready, where/when for the hint, now, directions); without a scripted event the rank's default theme is used whenever the NPC is
+  present. Now entry: per present NPC what they share at their rank (data/bond_openness.json draft: open +2 / guarded -1 /
+  closed -2 on the first tiers; goals, views and past need the real rank; secrets never) and what the rank allows (perks); the
+  event block with directions. Romance: Settings (default Rank 8, any, off); the engine reverts an early flag. Migration: a
+  pre-1.2.2 save converts Progress to XP once ($eng.bondv); a Progress the AI still raises counts once as talk/hangout.
+  UI: XP bars (People, dossier), event hints, Settings → Bonds; bracelet chip "Bond event: <name> (<where>)".
+  Also: the Fishing House counts as the Fishing Club's rain-proof place in the Now entry.
+  npm test 470 checks (11 suites), smoke 482 views / 0 errors, token audit ~8.9k start / ~13.8k mid-game (+~300: rules, bond lines).
+
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
@@ -316,6 +345,13 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 - Playtest v1.1.0 in ST with docs/TEST_CHECKLIST_v1.1.md (EJS in 502/504 first), together with v1.0.3's checklist.
 - Playtest in ST with docs/TEST_CHECKLIST_v1.0.3.md FIRST (the Builder vs the real MVU zod helper, F12), then v1.0 + v0.5.
   Then tune (see Tunables) and fix what the playtest finds.
+
+## Planned (owner decisions, not built yet; the owner sends the event lorebooks after the feature exists)
+- DONE in 1.2.2: bond XP system and the bond event framework. Waiting on the owner: the [Bond Event] lorebook, a review of
+  data/bond_openness.json (draft), and the NPC gaps listed in the 1.2.2 chat (missing Personality / Goals / Haunts…).
+- Perks the engine could enforce later (now told to the narrator only): team-up gate at Rank 4, introductions at Rank 6,
+  Dove attention cover at Rank 6, favours at Rank 7.
+- Scripted first-week classes (M1 W1 Tue-Sat, 14 sessions; per dorm for [D] classes; optional homework into Commitments).
 
 ## To verify in ST (could not be tested outside ST)
 - 1.1.0: the Prompt Template extension renders EJS in 502 / 504 (now gated per feature), also in MVU's extra-model mode if used.

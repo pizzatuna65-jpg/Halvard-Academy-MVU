@@ -54,9 +54,11 @@ ok(/data-loccard="reception_and_gatehouse"/.test(mh) && /You are here/.test(mh),
 // 1.2.0 (owner map review)
 {
   const W = U.walkFrom('fire_dormitory', S);
-  ok(W.courtyards === 4 && W.forest_clearing > W.forest && W.fishing_house >= 20 && W.willow_island > W.boathouse_and_lake, `walk from the Fire Dormitory: courtyard ${W.courtyards}, forest ${W.forest}, clearing ${W.forest_clearing}, fishing house ${W.fishing_house}`);
-  ok(/About \d+ min from here \(Fire Dormitory\)/.test(U.walkText('gardens', 'fire_dormitory', S)) && U.walkText('gardens', '', S) === 'About 15 min from the Main Courtyard', 'walk text is from where you are (Main Courtyard only off the map)');
+  ok(W.courtyards === 8 && W.forest_clearing > W.forest && W.fishing_house >= 14 && W.willow_island > W.boathouse_and_lake, `walk from the Fire Dormitory: courtyard ${W.courtyards}, forest ${W.forest}, clearing ${W.forest_clearing}, fishing house ${W.fishing_house}`);
+  ok(/About \d+ min from here \(Fire Dormitory\)/.test(U.walkText('gardens', 'fire_dormitory', S)) && U.walkText('gardens', '', S) === 'About 10 min from the Main Courtyard', 'walk text is from where you are (Main Courtyard only off the map)');
   ok(U.walkFrom('gardens', S).observation_tower !== U.walkFrom('fire_dormitory', S).observation_tower, 'walk differs by where you stand');
+  const G = U.walkFrom('reception_and_gatehouse', S);
+  ok(G.mall === 6 && G.courtyards > G.mall, `1.2.1: from the Gatehouse the Mall (${G.mall}) is nearer than the Main Courtyard (${G.courtyards})`);
   ok(U.pinOf('fishing_house').pin === 34 && U.pinOf('willow_island').pin === 35 && U.pinOf('boathouse_and_lake').pin === 12, 'Fishing House, Boathouse and Willow Island are separate map entries');
   const club = id => (U.DATA.clubs.find(c => c.key === id) || { venues: [] }).venues;
   ok(club('Running').includes('sports_field') && club('Archery').includes('archery_range') && ['Swimming', 'Gymnastics', 'Basketball'].every(c => club(c).includes('gymnasium')) && club('Divination').includes('observation_tower'), 'club venues follow the owner map');

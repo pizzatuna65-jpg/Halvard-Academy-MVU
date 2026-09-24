@@ -90,10 +90,12 @@ function latestState() {
 }
 
 // ---------------------------------------------------------------- draft model
-const blankTech = () => ({ name: '', type: '', subtype: '', effect: '', cannot: '', mode: 'per_use', scale: 'Standard', act: 12, up: 0, trig: 0, hidden: false, forb: '', notes: '' });
+const blankTech = () => ({ name: '', type: '', subtype: '', effect: '', cannot: '', mode: 'per_use', scale: 'Standard', act: 12, up: 0, trig: 0, hidden: false, forb: '', notes: '', open: true });
+// 1.2.1: the first of the student's specialties that belongs to this type (a new technique starts with it; still editable)
+const firstSpec = (d, type) => (d.specs || []).find(s => { const i = subInfo(type, s, d); return i && (!i.custom || (customOf(d, s) || {}).type === type); }) || '';
 function tech(name, type, subtype, effect, cannot, mode, scale, extra) {
   const c = SCALES[scale];
-  return Object.assign({ name, type, subtype, effect, cannot, mode, scale, act: mode === 'per_use' ? c.use : c.act, up: mode === 'per_use' ? 0 : c.up, trig: mode === 'hybrid' ? c.trig : 0, hidden: false, forb: '', notes: '' }, extra || {});
+  return Object.assign({ name, type, subtype, effect, cannot, mode, scale, act: mode === 'per_use' ? c.use : c.act, up: mode === 'per_use' ? 0 : c.up, trig: mode === 'hybrid' ? c.trig : 0, hidden: false, forb: '', notes: '', open: false }, extra || {});
 }
 const blankTrue = () => Object.assign(blankTech(), { scale: 'Major', act: SCALES.Major.use });
 const blankPact = () => Object.assign({ kind: '', name: '', tier: '', presence: 'summoned', terms: '', hidden: false, applied: false }, TIER_COST[0]);
@@ -156,7 +158,7 @@ function withFile(S) {
   return C;
 }
 const techOf = (k, t) => ({ name: k, type: t.Type, subtype: t.Subtype, effect: t.Effect, cannot: t.Cannot_do, mode: t.Cost_mode, scale: '',
-  act: t.Activation, up: t.Upkeep_per_min, trig: t.Trigger, hidden: !!t.Hidden, forb: t.Forbidden ? 'yes' : 'no', notes: String(t.Notes || '').replace(/^\[true\]\s*/, '') });
+  act: t.Activation, up: t.Upkeep_per_min, trig: t.Trigger, hidden: !!t.Hidden, forb: t.Forbidden ? 'yes' : 'no', notes: String(t.Notes || '').replace(/^\[true\]\s*/, ''), open: false });
 
 function draftFromState(S0) {
   const d = blankDraft();
@@ -398,6 +400,9 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid #
 .errl{font-size:13px;color:#f4b0a9;border-left:2px solid #e0645a;padding:4px 0 4px 10px;margin:8px 0}
 .stone{margin-top:12px;padding:10px 12px;border-radius:10px;background:rgba(0,0,0,.2);border:1px solid #474c55;font-size:14px}
 .stone b{color:var(--dc,#f0e2c4)}
+.item.tc{display:flex;align-items:center;gap:8px;padding:8px 12px;margin-bottom:8px}.tch{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:2px;font:inherit;text-align:left;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+.tch .t{font-weight:700;color:#f0e2c4}.tch .sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.tcp{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+@media (max-width:560px){.item.tc{flex-wrap:wrap}.tcp{width:100%;justify-content:flex-start}}
 .row3{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:8px}
 .mana{display:flex;gap:12px;align-items:center}.mana input[type=range]{flex:1;accent-color:#b39062;padding:0}.mana input[type=number]{width:110px;flex:0 0 auto}
 .chk{display:flex;align-items:center;gap:8px;font-size:14px;color:#dcd7cc;cursor:pointer}
@@ -443,6 +448,7 @@ th{color:#a9a69f;font-weight:500;font-size:13px}
 .pn{font-weight:700;color:#f0e2c4}
 .pb{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .rk{font-family:Cinzel,serif;font-size:13px;color:#e8d3a8;white-space:nowrap}
+.xpb{display:inline-block;width:70px;height:6px;border-radius:3px;background:rgba(0,0,0,.4);overflow:hidden;vertical-align:middle}.xpb i{display:block;height:100%;background:#b39062}
 .pips{display:inline-flex;gap:3px}.pips i{width:9px;height:6px;border-radius:2px;background:rgba(0,0,0,.4)}.pips i.on{background:#b39062}
 .mini{display:inline-block;width:54px;height:5px;border-radius:3px;background:rgba(0,0,0,.4);overflow:hidden;vertical-align:middle}.mini i{display:block;height:100%}
 .pill.w{border-color:#e0a24a;color:#f1cf95}.pill.r{border-color:#e07aa0;color:#f2b6cb}
@@ -702,14 +708,23 @@ function bPower(d, S, V) {
 }
 // one technique editor; base = "techs.3" or "hidden.truth"
 function techForm(t, base, d, max, head) {
-  const info = subInfo(t.type, t.subtype, d), subs = t.type ? allSubs(t.type, d) : [], id = base.replace(/\W/g, '-'), forb = isForbidden(t, d);
+  const info = subInfo(t.type, t.subtype, d), id = base.replace(/\W/g, '-'), forb = isForbidden(t, d);
+  const mine = t.type ? d.specs.filter(s => subInfo(t.type, s, d)) : [];
+  const subs = t.type ? [...mine, ...allSubs(t.type, d).map(x => x.replace(/\s*†$/, '')).filter(x => !mine.includes(x))] : [];
+  const listed = base.startsWith('techs.'), i = listed ? base.split('.')[1] : '';
+  if (listed && !t.open) {         // 1.2.1 (owner): an applied technique folds into one row; tap it to edit
+    return `<div class="item tc"><button class="tch" data-act="techopen" data-i="${i}" aria-expanded="false"><span class="t">${esc(t.name || head)}</span>
+      <span class="sub">${esc([t.type, t.subtype, MODES[t.mode]].filter(Boolean).join(' · '))} · ${esc(costLine(t, max))}</span></button>
+      <span class="tcp">${forb ? '<span class="pill f">forbidden</span>' : ''}${d.hidden.on && t.hidden ? '<span class="pill h">hidden</span>' : ''}
+      <button class="btn sm" data-act="techopen" data-i="${i}">Edit</button><button class="btn sm del" data-act="deltech" data-i="${i}">Remove</button></span></div>`;
+  }
   return `<div class="item"><div class="row"><span class="t">${esc(t.name || head)}</span>
     ${forb ? '<span class="pill f">forbidden art</span>' : ''}${(d.hidden.on && t.hidden) || base === 'hidden.truth' ? '<span class="pill h">hidden</span>' : ''}
-    ${base.startsWith('techs.') ? `<button class="btn sm del" data-act="deltech" data-i="${base.split('.')[1]}">Remove</button>` : ''}</div>
+    ${listed ? `<button class="btn sm del" data-act="deltech" data-i="${i}">Remove</button>` : ''}</div>
     <div class="grid">
       <label class="f">Name${inp(`${base}.name`, t.name)}</label>
       <label class="f">Type${sel(`${base}.type`, t.type, [['', 'Choose…'], ...TYPES], 'data-rr="1"')}</label>
-      <label class="f">Subtype${inp(`${base}.subtype`, t.subtype, `list="eld-sub-${id}" data-rr="1" placeholder="from the list, or your own"`)}<datalist id="eld-sub-${id}">${subs.map(s => `<option value="${esc(s.replace(/\s*†$/, ''))}">`).join('')}</datalist></label>
+      <label class="f">Subtype${inp(`${base}.subtype`, t.subtype, `list="eld-sub-${id}" data-rr="1" placeholder="your specialty, or type your own"`)}<datalist id="eld-sub-${id}">${subs.map(x => `<option value="${esc(x)}">${mine.includes(x) ? 'your specialty' : ''}</option>`).join('')}</datalist></label>
       <label class="f">Cost mode${sel(`${base}.mode`, t.mode, Object.entries(MODES), 'data-rr="1"')}</label>
       ${info && info.desc ? `<div class="hint full">${esc(t.subtype)}: ${esc(info.desc)}.</div>` : ''}
       ${t.subtype.trim() && !info ? `<label class="f">“${esc(t.subtype.trim())}” is your own subtype. Forbidden art?${sel(`${base}.forb`, t.forb === 'yes' ? 'yes' : 'no', [['no', 'No, it is lawful'], ['yes', 'Yes, forbidden']], 'data-rr="1"')}</label>` : ''}
@@ -720,7 +735,8 @@ function techForm(t, base, d, max, head) {
       ${t.mode !== 'per_use' ? `<label class="f">Upkeep per minute${inp(`${base}.up`, t.up, `type="number" min="0" step="0.05" data-num="1" data-custom="${base}"`)}</label>` : ''}
       ${t.mode === 'hybrid' ? `<label class="f">Each triggered use${inp(`${base}.trig`, t.trig, `type="number" min="0" step="0.5" data-num="1" data-custom="${base}"`)}</label>` : ''}
       ${d.hidden.on && base.startsWith('techs.') ? `<label class="chk full"><input type="checkbox" data-k="${base}.hidden" data-rr="1" ${t.hidden ? 'checked' : ''}> Part of my hidden magic</label>` : ''}
-    </div><div class="cost" data-cost="${base}">${esc(costLine(t, max))}</div></div>`;
+    </div><div class="cost" data-cost="${base}">${esc(costLine(t, max))}</div>
+    ${listed ? `<div class="meta"><button class="btn pri sm" data-act="techapply" data-i="${i}">Apply technique</button><span class="hint">Folds it into one line; tap it to edit again.</span></div>` : ''}</div>`;
 }
 function bTechs(d, S, V) {
   const max = manaOf(d);
@@ -821,6 +837,7 @@ function onChange(e) {
   } else if (el.type === 'checkbox' && el.dataset.k) {
     _.set(draft, el.dataset.k, el.checked);
     if (el.dataset.k === 'hidden.on' && el.checked && !draft.hidden.truth.type) draft.hidden.truth.type = draft.dominant || draft.types[0] || '';
+    if (el.dataset.k === 'hidden.on' && el.checked && !draft.hidden.truth.subtype.trim()) draft.hidden.truth.subtype = firstSpec(draft, draft.hidden.truth.type);
   }
   else if (el.tagName === 'SELECT' && el.dataset.k) _.set(draft, el.dataset.k, el.dataset.num ? num(el.value, 0) : el.value);
   if (el.dataset.act === 'scale') {
@@ -833,6 +850,8 @@ function onChange(e) {
     const t = _.get(draft, tm[1]);
     if (tm[2] === 'mode' && SCALES[t.scale]) { const c = SCALES[t.scale]; t.act = t.mode === 'per_use' ? c.use : c.act; t.up = t.mode === 'per_use' ? 0 : c.up; t.trig = t.mode === 'hybrid' ? c.trig : 0; }
     if (tm[2] === 'subtype' && !t.type) { const ty = typeOfSub(t.subtype, draft); if (ty) t.type = ty; }
+    // 1.2.1: a new type brings the student's specialty for it, unless the subtype already fits or was typed for this type
+    if (tm[2] === 'type' && (!t.subtype.trim() || (typeOfSub(t.subtype, draft) && !subInfo(t.type, t.subtype, draft)))) t.subtype = firstSpec(draft, t.type);
   }
   if (el.dataset.rr || el.tagName === 'SELECT' || el.type === 'checkbox') { const y = ov.querySelector('.bd').scrollTop; render(); ov.querySelector('.bd').scrollTop = y; }
 }
@@ -846,6 +865,10 @@ function onClick(e) {
   if (PANELS[view.panel]) { const st = latestState(); PANELS[view.panel].click(b, st && st.data.stat_data); return; }
   if (view.panel === 'profile') {
     if (b.dataset.tab) { view.tab = b.dataset.tab; render(); } if (a === 'tobuilder') open('builder');
+    if (a === 'bondset') {   // 1.2.2: bond pace / romance rank (Settings), written like every setting (D3)
+      const st = latestState(), S0 = st && st.data.stat_data, f = b.dataset.f, v = f === 'romrank' ? +b.dataset.v : b.dataset.v;
+      if (S0 && (S0.$ui || {})[f] !== v) commitSetting([{ op: 'replace', path: `/$ui/${f}`, value: v }], `⚙️ Setting: ${f === 'romrank' ? 'romance opens at ' + (v > 10 ? 'never (off)' : v ? 'Rank ' + v : 'any rank') : 'bond pace ' + v}.`);
+    }
     if (a === 'feat' || a === 'featlv') { const st = latestState(); const ops = featureOps(st && st.data.stat_data, b.dataset.f, b.dataset.v); if (ops) commitSetting(ops.ops, ops.head); }
     if (b.dataset.fill) fillChat(b.dataset.fill);   // 1.1.0: Bag buttons draft the action (D6)
     return;
@@ -877,7 +900,14 @@ function onClick(e) {
     draft.newsub = { name: '', type, forb: 'no' }; return rr();
   }
   if (a === 'delsub') { const c = draft.custom.splice(+b.dataset.i, 1)[0]; if (c) _.pull(draft.specs, c.name); return rr(); }
-  if (a === 'addtech') { const t = blankTech(); t.type = draft.dominant || draft.types[0] || ''; draft.techs.push(t); rr(); const it = ov.querySelectorAll('.item:not(.pt)'); if (it.length) scrollInto(it[it.length - 1], ov.querySelector('.bd'), true); return; }
+  if (a === 'techopen') { const t = draft.techs[+b.dataset.i]; if (t) t.open = true; return rr(); }
+  if (a === 'techapply') {
+    const t = draft.techs[+b.dataset.i]; if (!t) return;
+    const miss = [!keyOf(t.name) && 'a name', !TYPES.includes(t.type) && 'a type', !t.effect.trim() && 'what it does'].filter(Boolean);
+    if (miss.length) { toastr.warning(`Give it ${miss.join(', ')} first.`, 'Student Builder'); return; }
+    t.open = false; return rr();
+  }
+  if (a === 'addtech') { const t = blankTech(); t.type = draft.dominant || draft.types[0] || ''; t.subtype = firstSpec(draft, t.type); draft.techs.push(t); rr(); const it = ov.querySelectorAll('.item:not(.pt)'); if (it.length) scrollInto(it[it.length - 1], ov.querySelector('.bd'), true); return; }
   if (a === 'deltech') { draft.techs.splice(+b.dataset.i, 1); return rr(); }
   if (a === 'addpact') { draft.pacts.push(blankPact()); return rr(); }
   if (a === 'delpact') { draft.pacts.splice(+b.dataset.i, 1); return rr(); }
@@ -1080,6 +1110,12 @@ function pSettings(S) {
     <div class="sub tk">rules and state ≈${coreTok} · always-on lore ≈${FCOST.lore} tokens</div></div></div>
   <p class="tot">Estimated always-on total for this chat now: <b>≈${total.toLocaleString('en')}</b> tokens${saved ? ` · saved by features that are off: ≈${saved.toLocaleString('en')}` : ''}.</p>
   <p class="hint">The preset and the chat history come on top of this. Changing a setting adds a small hidden note to the chat (it is not sent to the narrator).</p>
+  <h3>Bonds</h3>
+  <p class="hint">How fast bonds grow (how much time together each rank needs), and from which rank a romance can become official.</p>
+  <div class="feat bset"><div class="fm"><b>Pace</b><div class="sub">XP needed for each rank and the wait between bond events.</div></div>
+    <div class="tog">${Object.keys((DATA.bond || {}).pace || {}).map(k => `<button data-act="bondset" data-f="bondpace" data-v="${k}" class="${((S.$ui || {}).bondpace || 'standard') === k ? 'on' : ''}" ${view.busy ? 'disabled' : ''}>${esc(((DATA.bond || {}).pace_labels || {})[k] || k)}</button>`).join('')}</div></div>
+  <div class="feat bset"><div class="fm"><b>Romance opens at</b><div class="sub">Feelings can grow earlier in the story; the romance flag waits for this rank.</div></div>
+    <div class="tog">${((DATA.bond || {}).romance_options || []).map(([v, l]) => `<button data-act="bondset" data-f="romrank" data-v="${v}" class="${num((S.$ui || {}).romrank, 8) === v ? 'on' : ''}" ${view.busy ? 'disabled' : ''}>${esc(l)}</button>`).join('')}</div></div>
   <h3>Story memory</h3>
   <p class="hint">The narrator reads only the latest 24 or so messages; older ones reach it as […]. What it remembers of the rest is the game state: the Journal (${J} of 30 lines; ${A} archived, still shown in your Notebook), bonds, campus news, commitments and clues.
   To change how much chat it reads, edit the Min Depth of the regex "Eldrasil — State-as-memory: trim far chat (prompt)" in the Regex extension; disable that regex to send the whole chat.</p>

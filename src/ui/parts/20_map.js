@@ -17,47 +17,31 @@ function cropStyle(pin) {
 }
 const goText = name => `I head to the ${String(name).replace(/^the\s+/i, '')}.`;
 
-// 1.2.0 (owner): walking time from where the player is now, not from the Main Courtyard. Shortest path over the campus
-// connections. An edge to or from the Main Courtyard takes the lore's time (Campus Map "Walking times"); any other edge takes the
-// larger of the map distance (≈0.15 min per map unit) and the difference of the two places' lore times; rooms of one building
-// are a minute apart (plus one per floor), and every castle room reaches every other by the stairs.
-const FLOOR_N = f => { const m = /Floor (\d)/.exec(f || ''); return m ? +m[1] : f === 'Undercroft' ? 0 : f ? 6 : 0; };
-function pinXY(id, S) {
-  const l = DATA.locs[id]; if (!l) return null;
-  let p = DATA.pins.find(x => x.pin === l.pin);
-  const own = S && S.Player && ({ Fire: 3, Sky: 4, Viridian: 5, Light: 6 })[S.Player.Profile.Dorm];   // shared dorm rooms: your own dorm
-  if (own && DATA.pins.some(x => x.pin === own && x.cluster.includes(id))) p = DATA.pins.find(x => x.pin === own);
-  return p ? [p.x * 1.5, p.y] : null;
-}
-function edgeMin(a, b, S) {
-  const A = DATA.locs[a], B = DATA.locs[b];
-  if (a === 'courtyards' || b === 'courtyards') return Math.max(1, num((a === 'courtyards' ? B : A).walk_min, 5));
-  const pa = pinXY(a, S), pb = pinXY(b, S);
-  const d = pa && pb ? Math.hypot(pa[0] - pb[0], pa[1] - pb[1]) : 20;
-  if (A.pin === B.pin) return Math.max(1 + Math.abs(FLOOR_N(A.floor) - FLOOR_N(B.floor)), Math.abs(num(A.walk_min, 0) - num(B.walk_min, 0)));
-  return Math.max(1, Math.round(d * 0.15), Math.abs(num(A.walk_min, 0) - num(B.walk_min, 0)));
-}
+// 1.2.0 / 1.2.1 (owner): walking time from where the player is now. The legs and their minutes come from tools/curate_data.py
+// (locs[id].near: map distance, lore times on forest and boat legs, castle stairs); this is the shortest path over them.
+// A room every dorm has (Common Rooms, Laundry, Bathhouse) counts as the player's own dorm.
+const DORM_ID = { Fire: 'fire_dormitory', Light: 'light_dormitory', Sky: 'sky_dormitory', Viridian: 'viridian_dormitory' };
 let _walkMemo = { key: '', dist: null };
 function walkFrom(from, S) {
-  const key = from + '|' + ((S.Player || {}).Profile || {}).Dorm;
-  if (_walkMemo.key === key) return _walkMemo.dist;
+  const own = DORM_ID[((S.Player || {}).Profile || {}).Dorm];
+  if (own && DATA.pins.filter(p => p.cluster.includes(from)).length > 1) from = own;
+  if (_walkMemo.key === from) return _walkMemo.dist;
   const dist = { [from]: 0 }, done = new Set();
   for (;;) {
     let u = null; for (const k in dist) if (!done.has(k) && (u === null || dist[k] < dist[u])) u = k;
     if (u === null) break; done.add(u);
-    const inside = DATA.locs[u] && DATA.locs[u].floor ? DATA.pins.filter(p => p.tabs && p.cluster.includes(u)).flatMap(p => p.cluster) : [];   // castle: stairs, not the courtyard
-    for (const v of new Set([...((DATA.locs[u] || {}).connections || []), ...inside])) {
-      if (v === u) continue;
+    for (const [v, w] of (DATA.locs[u] || {}).near || []) {
       if (!DATA.locs[v]) continue;
-      const nd = dist[u] + edgeMin(u, v, S); if (!(v in dist) || nd < dist[v]) dist[v] = nd;
+      const nd = dist[u] + w; if (!(v in dist) || nd < dist[v]) dist[v] = nd;
     }
   }
-  _walkMemo = { key, dist }; return dist;
+  _walkMemo = { key: from, dist }; return dist;
 }
 function walkText(id, cur, S) {
   const l = DATA.locs[id];
   if (id === cur) return 'You are here';
   const t = cur ? walkFrom(cur, S)[id] : undefined;
+  if (t === 0) return 'Right here';
   if (t != null) return `${t <= 2 ? 'A minute or two' : `About ${t} min`} from here (${DATA.locs[cur].name})`;
   return l.walk_min == null ? 'Unknown' : l.walk_min === 0 ? 'At the Main Courtyard' : `About ${Math.max(l.walk_min, 2)} min from the Main Courtyard`;
 }

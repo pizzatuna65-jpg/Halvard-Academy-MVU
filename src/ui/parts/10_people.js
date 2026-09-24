@@ -7,6 +7,12 @@ const EDGE = {
 view.ptab = 'bonds'; view.gtypes = new Set(Object.keys(EDGE).filter(k => k !== 'knows'));
 const YEARW = { 1: 'First-year', 2: 'Second-year', 3: 'Third-year' };
 const pips = (p, n = 10) => `<span class="pips" aria-label="${fmt(p)} of ${n}">${_.range(n).map(i => `<i class="${i < Math.floor(p) ? 'on' : ''}"></i>`).join('')}</span>`;
+// 1.2.2 bond XP (same formula as the engine, data/bond_rules.json)
+const BRU = DATA.bond || { xp_base: [], pace: {} };
+const bondNeed = (S, r) => (r >= 10 ? 0 : Math.max(3, Math.round(BRU.xp_base[r] * ((BRU.pace || {})[((S && S.$ui) || {}).bondpace] || 1))));
+const xpBar = (b, S) => { const need = bondNeed(S, b.Rank), x = Math.min(num(b.$xp), need);
+  return b.Rank >= 10 ? '<span class="sub">max rank</span>' : `<span class="xpb" title="${x} / ${need} XP to Rank ${b.Rank + 1}"><i style="width:${need ? x / need * 100 : 0}%"></i></span><span class="sub">${x}/${need} XP</span>`; };
+const bondEvt = (id, S) => (((S && S.$ui) || {}).bev || {})[id];
 const mini = (v, color) => `<span class="mini"><i style="width:${_.clamp(num(v), 0, 100)}%;background:${color}"></i></span>`;
 function whoLine(id, S) {
   const n = npcOf(id); if (!n) return '';
@@ -33,14 +39,14 @@ PANELS.people = {
 
 function peopleListHTML(S) {
   const B = S.Bonds || {}, here = Object.keys((S.Scene || {}).Present || {});
-  const ids = Object.keys(B).sort((a, b) => (here.includes(b) - here.includes(a)) || (B[b].Rank - B[a].Rank) || (B[b].Progress - B[a].Progress));
+  const ids = Object.keys(B).sort((a, b) => (here.includes(b) - here.includes(a)) || (B[b].Rank - B[a].Rank) || (num(B[b].$xp) - num(B[a].$xp)));
   if (!ids.length) return '<div class="empty">You have not met anyone yet.</div>';
-  return `<p class="lead">${ids.length} ${ids.length === 1 ? 'person' : 'people'} you have met. Bonds deepen through scenes; at a full bar the next rank needs a milestone scene.</p>` + ids.map(id => {
-    const b = B[id], n = npcOf(id);
-    const badges = [here.includes(id) ? '<span class="pill g">here now</span>' : '', b._Event_ready ? '<span class="pill w">bond event ready</span>' : '', b.Romance ? '<span class="pill r">romance</span>' : ''].join('');
+  return `<p class="lead">${ids.length} ${ids.length === 1 ? 'person' : 'people'} you have met. Time together fills the bond bar; a full bar opens the bond event that raises the rank.</p>` + ids.map(id => {
+    const b = B[id], n = npcOf(id), ev = bondEvt(id, S);
+    const badges = [here.includes(id) ? '<span class="pill g">here now</span>' : '', b._Event_ready ? `<span class="pill w">bond event ready${ev && ev.where ? ': ' + esc(ev.where) : ''}</span>` : ev && ev.in ? `<span class="pill">event in ${ev.in} day${ev.in > 1 ? 's' : ''}</span>` : '', b.Romance ? '<span class="pill r">romance</span>' : ''].join('');
     return `<button class="pr" data-open="npc:${esc(id)}">${avatar(id, S, 'av lg')}<span class="pm">
       <span class="pn">${esc(nameOf(id, S, true))}</span><span class="sub">${esc(b.Title || (n ? n.r || whoLine(id, S) : ''))}</span>
-      <span class="pb"><span class="rk">Rank ${b.Rank}</span>${pips(b.Progress)}<span class="sub">Trust</span>${mini(b.Trust, '#3f9f69')}<span class="sub">Tension</span>${mini(b.Tension, '#e0645a')}</span>
+      <span class="pb"><span class="rk">Rank ${b.Rank}</span>${xpBar(b, S)}<span class="sub">Trust</span>${mini(b.Trust, '#3f9f69')}<span class="sub">Tension</span>${mini(b.Tension, '#e0645a')}</span>
       <span>${badges}</span></span></button>`;
   }).join('');
 }
@@ -54,10 +60,12 @@ PANELS.npc = {
     const port = n ? `<img class="por" src="${esc(imgURL(n.p))}" alt="" style="object-position:${n.fc[0]}% ${n.fc[1]}%" data-fb="${esc(knowsName(id, S) ? initials(n.n) : '?')}" data-fbclass="por fb">` : `<span class="por fb">${esc(initials(id))}</span>`;
     let h = `<div class="dos">${port}<div><p class="name">${esc(title)}</p><div class="sub" style="margin:2px 0 8px">${esc([n && knowsName(id, S) && n.r, whoLine(id, S), graduated(S).has(id) && 'Graduated; has left campus'].filter(Boolean).join('. '))}</div>`;
     if (b) {
-      h += `<div class="bond"><div class="l"><span class="rk">Rank ${b.Rank}</span>${pips(b.Progress)}<span class="sub">${fmt(b.Progress)}/10</span></div>
+      const ev = bondEvt(id, S), who = esc(knowsName(id, S) ? id : 'them');
+      h += `<div class="bond"><div class="l"><span class="rk">Rank ${b.Rank}</span>${xpBar(b, S)}</div>
         ${b.Title ? `<div style="margin:4px 0">${esc(b.Title)}${b.Romance ? ' <span class="pill r">romance</span>' : ''}</div>` : ''}
         <div class="tt"><span class="sub">Trust ${b.Trust}</span>${mini(b.Trust, '#3f9f69')}<span class="sub">Tension ${b.Tension}</span>${mini(b.Tension, '#e0645a')}</div>
-        ${b._Event_ready ? `<div class="warn">The bond is ready for a milestone scene. Rank ${b.Rank + 1} comes from a meaningful moment with ${esc(knowsName(id, S) ? id : 'them')}, not from asking.</div>` : ''}
+        ${b._Event_ready ? `<div class="warn">Bond event ready: find ${who}${ev && ev.where ? ` (likely ${esc(ev.where)}${ev.when ? ', ' + esc(ev.when) : ''})` : ''} and spend time together; Rank ${b.Rank + 1} comes from that scene.</div>`
+          : ev ? `<div class="hint">The bar is full. The next bond event can start in ${ev.in} day${ev.in === 1 ? '' : 's'}.</div>` : b.Rank < 10 ? '<div class="hint">Talk, spend time together, give gifts they like, help with what they want: each fills the bar (a talk and a hangout count once a day, gifts twice a week).</div>' : ''}
         ${b.Last_seen ? `<div class="sub">Last seen ${esc(b.Last_seen)}</div>` : ''}</div>`;
     } else h += '<div class="sub">You have not met yet.</div>';
     h += '</div></div>';

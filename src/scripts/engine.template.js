@@ -59,7 +59,32 @@ const TIMETABLE = {
 };
 // monthly payout by dorm rank (lore: 300 bottom band ... 3,000 for rank 1). Bands between are tunable.
 const PAYOUT = [[1, 3000], [3, 2000], [10, 1200], [25, 800], [50, 500], [Infinity, 300]];
-const DAILY_BOND_CAP = 3;
+const DAILY_BOND_CAP = 3;   // before 1.2.2 only (Progress); the XP system reads data/bond_rules.json
+// 1.2.2 bond system (owner design): XP per kind of interaction with daily/weekly limits, rising XP per rank scaled by the pace
+// setting, a cooldown after each rank, a bond event to rank up (scripted in data/bond_events.json, else the rank's default theme).
+const BR = /*@@BOND_RULES@@*/{};
+const BEV = /*@@BOND_EVENTS@@*/[];
+const HAUNT = /*@@HAUNTS@@*/{};   // first line of each NPC's Haunts: where a bond event is likely when no scripted event says
+const paceOf = S => ((BR.pace || {})[(S.$ui || {}).bondpace] || 1);
+const needXP = (r, m) => (r >= 10 ? 0 : Math.max(3, Math.round(BR.xp_base[r] * m)));
+const coolDays = (r, m) => Math.round((BR.cool_base[Math.min(r, 9)] || 0) * m);
+const hm = t => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(t || '').trim()); return m ? +m[1] * 60 + +m[2] : null; };
+const normP = x => String(x || '').split(/\s+[—-]\s+/)[0].trim().toLowerCase().replace(/^the\s+/, '');
+// a scripted event's conditions (tools/import_bond_events.py): where, time window, days, skies it must not have, prerequisites
+function bondEventOk(e, S) {
+  const W = S.World, P = S.Player.Profile, now = hm(W.Time);
+  if (e.where && e.where.length && !e.where.some(w => normP(w) === normP(W.Location))) return false;
+  if (e.time && now != null) { const a = hm(e.time[0]), b = hm(e.time[1]); if (a != null && b != null && !(a <= b ? now >= a && now <= b : now >= a || now <= b)) return false; }
+  if (e.days && e.days.length && !e.days.includes(W.Day)) return false;
+  const sky = ((S.$ui.wx || {}).now || {}).sky;
+  if (e.not_sky && e.not_sky.length && sky && e.not_sky.some(x => x.toLowerCase() === String(sky).toLowerCase())) return false;
+  const R = e.requires || {};
+  if (R.club && !String(P.Club || '').toLowerCase().includes(String(R.club).toLowerCase())) return false;
+  if (R.dorm && P.Dorm !== R.dorm) return false;
+  if (R.month_from && (W.Month < R.month_from)) return false;
+  if (R.year_from && (W.Year < R.year_from)) return false;
+  return true;
+}
 // Batch 5.1: castle places (the Notice Board is in the Floor 1 entrance hall that every student crosses) and module caps
 const CASTLE = new Set(/*@@CASTLE@@*/[]);
 // v1.0.3 (F01): every campus place name (lowercase, with and without a leading "the"); anything else is off the grounds
@@ -109,6 +134,7 @@ const fromAbs = abs => {
 const stamp = W => `M${W.Month} W${W.Week} ${W.Day} ${W.Time}`;
 const eventsOn = W => EVENTS.filter(e => e.m === W.Month && e.w === W.Week && e.d.includes(W.Day));
 const pctOf = (v, max) => (max > 0 ? (v / max) * 100 : 0);
+const num = (v, d = 0) => { const x = Number(v); return Number.isFinite(x) ? x : d; };
 const dstamp = W => `M${W.Month} W${W.Week} ${W.Day}`;
 // Parses a due/until text written by the AI ("M2 W1 Tue 14:00", "Month 3 Week 2", "Fri 18:00", "tomorrow 9am", "M4") into an
 // absolute minute, relative to the current world time W. Missing parts: day -> Sunday of that week (or the next such weekday),
@@ -359,7 +385,7 @@ function fillShape(o, shape) {
   }
 }
 const BOND0 = { Rank: 0, Progress: 0, Trust: 50, Tension: 0, Title: '', Romance: false, Known_facts: [], Milestones: [], Last_seen: '' };
-const ENGINE_VER = '1.2.0';
+const ENGINE_VER = '1.2.2';
 
 function runEngine(S, B, text, seedHint) {
   if (!S || !S.World) return;
@@ -669,7 +695,7 @@ function runEngine(S, B, text, seedHint) {
     if (NPC_IDS.has(id) && !(id in S.Bonds) && (ARRIVES[id] || 1) > S.World.Year) {   // v1.0.3: incoming cohort, not here yet
       log.push(`${id} is not at Halvard yet (arrives as a first-year in Year ${ARRIVES[id]}); no bond was started. Check who this is.`);
     } else if (NPC_IDS.has(id) && !(id in S.Bonds)) {
-      S.Bonds[id] = { Rank: 0, Progress: 0, Trust: 50, Tension: 0, Title: '', Romance: false, Known_facts: [], Milestones: [], Last_seen: '', _Event_ready: false, $Known_old: [] };
+      S.Bonds[id] = { Rank: 0, Progress: 0, Trust: 50, Tension: 0, Title: '', Romance: false, Known_facts: [], Milestones: [], Last_seen: '', _Event_ready: false, $Known_old: [], $xp: 0, $cool: -1 };
       S.$ui.toasts.push(`New acquaintance: {npc:${id}}`);   // {npc:id}: the bar shows the name only once it is known (D14)
     }
     if (S.Bonds[id]) S.Bonds[id].Last_seen = seen;
@@ -680,35 +706,95 @@ function runEngine(S, B, text, seedHint) {
   const bondWx = !!wxNow && ((!isOutdoor(S.World.Location) && wxBad(wxNow))
     || (isOutdoor(S.World.Location) && (wxNow.sky === 'Clear' || wxNow.sky === 'Cloudy') && wxNow.temp >= 15 && wxNow.temp <= 27)
     || (evs.some(e => /^Star Night/.test(e.t)) && wxDay(seed, S.World.Day === 'Sun' ? dayNo - 1 : dayNo).blocks[2].sky === 'Clear'));
+  // 1.2.2: interactions the narrator reported this reply (/Interactions, emptied here); a raised Progress (pre-1.2.2 habit) with no
+  // Interactions entry still counts once, as a talk (+1) or a hangout (+2 or more)
+  const PACE = paceOf(S), weekNo = Math.floor(dayNo / 7), bweek = _.isPlainObject(S.$eng.bweek) ? S.$eng.bweek : {};
+  const romRank = Number.isFinite(+S.$ui.romrank) ? +S.$ui.romrank : BR.romance_default;
+  const byId = {};
+  for (const a of (Array.isArray(S.Interactions) ? S.Interactions : [])) {
+    const id = canon(a && a.With); if (id && S.Bonds[id]) (byId[id] = byId[id] || []).push(a);
+  }
+  S.Interactions = [];
+  const migrate = S.$eng.bondv !== 2, fresh = [];
   for (const [id, b] of Object.entries(S.Bonds)) {
     const b0 = BB[id];
-    if (!b0) { if (hasB && b.Rank > 0) { b.Rank = 0; } b.Progress = Math.min(b.Progress, 2); b._Event_ready = false; continue; }
-    b._Event_ready = b0._Event_ready;                       // AI cannot write "_" fields
-    if (b.Rank === b0.Rank) {
-      const gain = b.Progress - b0.Progress;
-      if (gain > 0) {
-        const d = daily[id] && daily[id].day === dayNo ? daily[id] : { day: dayNo, gained: 0 };
-        if (bondWx) d.wx = 1;
-        const allowed = Math.max(0, DAILY_BOND_CAP + (d.wx ? 1 : 0) - d.gained);
-        if (gain > allowed) { b.Progress = b0.Progress + allowed; log.push(`Bond progress with ${id} capped for today.`); }
-        d.gained += Math.min(gain, allowed); daily[id] = d;
-      }
-      if (b.Progress >= 10) {
-        b.Progress = 10;
-        if (!b._Event_ready) { b._Event_ready = true; log.push(`Bond with ${id} is ready for a milestone scene (Rank ${b.Rank} -> ${b.Rank + 1}).`); S.$ui.toasts.push(`Bond Event ready: {npc:${id}}`); }
-      }
-    } else if (b.Rank > b0.Rank) {
+    const g = num(b.Progress, 0) - num(b0 && b0.Progress, 0);
+    if (hasB && g > 0 && !byId[id]) byId[id] = [{ Kind: g >= 2 ? 'hangout' : 'talk' }];
+    // engine-owned fields come from the previous state; a record the AI (re)wrote cannot set them
+    let xp = b0 ? num(b0.$xp, 0) : (hasB ? 0 : num(b.$xp, 0));
+    if (migrate) { const p = num(b0 ? b0.Progress : b.Progress, 0); if (p > 0 && xp === 0) xp = Math.round(Math.min(p, 10) / 10 * needXP(b.Rank, PACE)); }
+    b.Progress = 0;
+    b._Event_ready = b0 ? !!b0._Event_ready : false;
+    b.$cool = b0 ? num(b0.$cool, -1) : num(b.$cool, -1);
+    if (!b0 && hasB && b.Rank > 0) b.Rank = 0;                // a new acquaintance starts at Rank 0
+    if (b0 && b.Rank > b0.Rank) {
       if (b0._Event_ready && b.Rank === b0.Rank + 1) {
-        b.Progress = 0; b._Event_ready = false;
+        xp = 0; b._Event_ready = false; b.$cool = dayNo + coolDays(b.Rank, PACE);
         S.$ui.toasts.push(`Bond with {npc:${id}} reached Rank ${b.Rank}: new profile info unlocked`);
         jnl.push(`Bond with ${id} deepened to Rank ${b.Rank}.`);
       } else {
-        log.push(`Rank change for ${id} reverted: ranks rise by 1 only after the bond is ready and a milestone scene happens.`);
-        b.Rank = b0.Rank; b.Progress = Math.min(b.Progress, 10);
+        log.push(`Rank change for ${id} reverted: a rank rises by 1 only through the bond event, once the bond is ready.`);
+        b.Rank = b0.Rank;
       }
-    } else {
+    } else if (b0 && b.Rank < b0.Rank) {
       b._Event_ready = false; log.push(`Bond with ${id} fell to Rank ${b.Rank}.`);
     }
+    const need = needXP(b.Rank, PACE);
+    // XP: talk and hangout once a day each, gifts and help a few times a week; a loved gift counts more from Rank 3
+    let gain = 0;
+    const d = daily[id] && daily[id].day === dayNo ? daily[id] : { day: dayNo }, w = bweek[id] && bweek[id].w === weekNo ? bweek[id] : { w: weekNo };
+    for (const a of byId[id] || []) {
+      const k = String((a && a.Kind) || '').trim().toLowerCase();
+      if (k === 'talk' || k === 'hangout') {
+        if ((d[k] || 0) >= BR.per_day[k]) continue;
+        d[k] = (d[k] || 0) + 1; gain += BR.kind_xp[k];
+      } else if (k === 'gift') {
+        if ((w.gift || 0) >= BR.per_week.gift) { log.push(`${id} already had ${BR.per_week.gift} gifts this week: no bond XP for another.`); continue; }
+        w.gift = (w.gift || 0) + 1;
+        const gk = String((a && a.Gift) || 'neutral').trim().toLowerCase();
+        let x = gk in BR.gift_xp ? BR.gift_xp[gk] : BR.gift_xp.neutral;
+        if (gk === 'loved' && b.Rank >= BR.gift_bonus_rank) x = Math.round(x * BR.gift_bonus_mult);
+        if (gk === 'disliked') b.Tension = _.clamp(num(b.Tension, 0) + BR.gift_disliked_tension, 0, 100);
+        gain += x;
+      } else if (k === 'help') {
+        if ((w.help || 0) >= BR.per_week.help) continue;
+        w.help = (w.help || 0) + 1; gain += BR.kind_xp.help;
+      }
+    }
+    // 1.1.0 weather bonus, kept: +1 once a day for time together indoors in bad weather, outdoors in fine weather, a clear Star Night
+    if (bondWx && !d.wx && (byId[id] || []).some(a => /^(talk|hangout)$/i.test(String((a && a.Kind) || '').trim()))) { d.wx = 1; gain += BR.weather_xp; }
+    if (Object.keys(d).length > 1) daily[id] = d;
+    if (Object.keys(w).length > 1) bweek[id] = w;
+    xp = b.Rank >= 10 ? 0 : Math.min(need, xp + gain);          // the bar stops when full, until the event
+    b.$xp = xp;
+    const ready = b.Rank < 10 && xp >= need && dayNo >= num(b.$cool, -1);
+    if (ready && !b._Event_ready) { b._Event_ready = true; fresh.push(id); }
+    else if (!ready) b._Event_ready = false;
+    // romance opens at the rank chosen in Settings (default 8); feelings can grow earlier in the story, the flag waits
+    if (hasB && b.Romance && !(b0 && b0.Romance) && (romRank > 10 || b.Rank < romRank)) {
+      b.Romance = false;
+      log.push(romRank > 10 ? `Romance flags are off (Settings); ${id}'s was not set.` : `Romance with ${id} opens at Rank ${romRank} (Settings); the flag was not set yet.`);
+    }
+  }
+  S.$eng.bondv = 2;
+  for (const k of Object.keys(bweek)) if (bweek[k].w !== weekNo) delete bweek[k];
+  S.$eng.bweek = bweek;
+  // what the UI and the Now entry show: bonds whose bar is full (event ready now, or after the cooldown)
+  const bev = {}, present = new Set(Object.keys(S.Scene.Present || {}));
+  for (const [id, b] of Object.entries(S.Bonds)) {
+    if (b.Rank >= 10 || num(b.$xp, 0) < needXP(b.Rank, PACE)) continue;
+    const e = BEV.find(x => x.npc === id && x.rank === b.Rank) || null;
+    const now = !!b._Event_ready && present.has(id) && (!e || bondEventOk(e, S));
+    bev[id] = { r: b.Rank, ready: !!b._Event_ready, in: Math.max(0, num(b.$cool, -1) - dayNo),
+      where: e && e.where && e.where.length ? e.where.join(' or ') : (HAUNT[id] || ''),
+      when: e ? [e.days && e.days.length ? e.days.join('/') : '', e.time ? e.time.join('–') : ''].filter(Boolean).join(', ') : '',
+      now, s: e ? 1 : 0, dir: now ? (e ? e.text : (BR.themes || {})[String(b.Rank)] || '') : '' };
+  }
+  S.$ui.bev = bev;
+  for (const id of fresh) {
+    const v = bev[id] || {};
+    log.push(`Bond with ${id} is ready for its Rank ${S.Bonds[id].Rank + 1} event${v.where ? ` (likely at ${v.where}${v.when ? ', ' + v.when : ''})` : ''}.`);
+    S.$ui.toasts.push(`Bond event ready: {npc:${id}}${v.where ? ` (${v.where}${v.when ? ', ' + v.when : ''})` : ''}`);
   }
   for (const b of Object.values(S.Bonds)) {
     if ((b.Known_facts || []).length > FACTS_VISIBLE) {
