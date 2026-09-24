@@ -1,0 +1,330 @@
+{
+ "_note": "Batch 5.3 (F20) seeded campus happenings. Single source: tools/gen_engine.py injects this into the engine. Each is small, NPC-free (the narrator picks who is involved) and grounded in lore. where = a location name from data/locations.json ('' = campus-wide). from/to = hours. days: weekday | weekend | any | list. months: [first, last] (optional). weeks: list (optional). weight: relative odds. v1.1.0: outdoor = true for items that happen out of doors (skipped when the day's morning or afternoon has heavy rain, a storm, a blizzard or hail; Weather effects Full only). weather = the item appears only in that weather (Full only): snow (snow last night or this morning), after_storm (a lightning storm or a gale yesterday), dense_fog (dense fog this morning), clear_night (tonight's sky is clear; applies whenever weather is on, because the text states the sky). after_storm_x3: weight x3 on the day after a storm or gale.",
+ "items": [
+  {
+   "id": "work_menagerie",
+   "text": "A paid-work opening is up on the Notice Board: Menagerie mucking out, 40 points a shift. It will be gone by tomorrow.",
+   "where": "Notice Board",
+   "from": 7,
+   "to": 20,
+   "days": "weekday",
+   "weight": 3
+  },
+  {
+   "id": "work_shelving",
+   "text": "The Main Library has posted a shelving shift on the Notice Board, the quiet kind that is rarely advertised twice.",
+   "where": "Notice Board",
+   "from": 7,
+   "to": 18,
+   "days": "weekday",
+   "weight": 2
+  },
+  {
+   "id": "tutoring_offer",
+   "text": "A second-year has pinned a tutoring offer to the Notice Board: combat footwork, paid in points or in favours.",
+   "where": "Notice Board",
+   "from": 7,
+   "to": 20,
+   "days": "any",
+   "weight": 2
+  },
+  {
+   "id": "lost_wand",
+   "text": "A lost-item note on the Notice Board: a silver-banded focus wand, last seen near the Lecture Halls. Reward offered.",
+   "where": "Notice Board",
+   "from": 7,
+   "to": 20,
+   "days": "any",
+   "weight": 2
+  },
+  {
+   "id": "dove_sweep",
+   "text": "Two Doves are walking the Courtyards slowly, watching faces. Students keep finding reasons to be somewhere else.",
+   "where": "Courtyards",
+   "from": 12,
+   "to": 16,
+   "days": "weekday",
+   "weight": 2,
+   "outdoor": true
+  },
+  {
+   "id": "menagerie_loose",
+   "text": "Something small has slipped its pen at the Menagerie; handlers are combing the Gardens with nets and treats.",
+   "where": "Gardens",
+   "from": 14,
+   "to": 18,
+   "days": "any",
+   "weight": 2,
+   "outdoor": true
+  },
+  {
+   "id": "lanterns_dim",
+   "text": "Month-end draw on the mana grid: the corridor lanterns burn noticeably dimmer tonight, and everyone complains about it like weather.",
+   "where": "",
+   "from": 17,
+   "to": 20,
+   "days": "any",
+   "weeks": [
+    4
+   ],
+   "weight": 4
+  },
+  {
+   "id": "canteen_short",
+   "text": "The Canteen kitchen is short-handed; the cook is offering an extra paid shift to whoever helps serve lunch.",
+   "where": "Canteen",
+   "from": 10,
+   "to": 13,
+   "days": "weekday",
+   "weight": 2
+  },
+  {
+   "id": "cooking_club",
+   "text": "The Cooking Club's ovens have run since dawn; the Canteen smells of honey bread and they are giving away the failures.",
+   "where": "Canteen",
+   "from": 10,
+   "to": 15,
+   "days": "any",
+   "weight": 2
+  },
+  {
+   "id": "duel_chalk",
+   "text": "A formal duel challenge is chalked on the board outside the Sparring Pavilion. Nobody has signed to accept it yet.",
+   "where": "The Sparring Pavilion",
+   "from": 8,
+   "to": 20,
+   "days": "any",
+   "weight": 2
+  },
+  {
+   "id": "club_tables",
+   "text": "Club recruiters have set up tables in the Courtyards, pressing leaflets on every first-year who slows down.",
+   "where": "Courtyards",
+   "from": 12,
+   "to": 17,
+   "days": "any",
+   "months": [
+    1,
+    2
+   ],
+   "weight": 4,
+   "outdoor": true
+  },
+  {
+   "id": "dragonchess",
+   "text": "A Dragonchess match in the Mall's game halls has run into its second day; a crowd is betting points on it.",
+   "where": "The Mall",
+   "from": 16,
+   "to": 20,
+   "days": "any",
+   "weight": 2
+  },
+  {
+   "id": "bakery_new",
+   "text": "The Mall bakery has a new pastry out and the queue curls out of the door.",
+   "where": "The Mall",
+   "from": 7,
+   "to": 11,
+   "days": "any",
+   "weight": 2
+  },
+  {
+   "id": "mail_sunday",
+   "text": "Sunday sorting at the Mail Tower is swamped; the sorting floor is asking anyone free to lend a hand.",
+   "where": "Mail Tower",
+   "from": 9,
+   "to": 15,
+   "days": [
+    "Sun"
+   ],
+   "weight": 5
+  },
+  {
+   "id": "parcel_cart",
+   "text": "A cart of heavy parcels has come in at the Mail Tower; locker tallies are going up all afternoon.",
+   "where": "Mail Tower",
+   "from": 13,
+   "to": 18,
+   "days": "weekday",
+   "weight": 2
+  },
+  {
+   "id": "boat_capsize",
+   "text": "A rowing boat capsized near the willow island; the crew came back soaked and furious, and the boathouse is buzzing.",
+   "where": "Boathouse and Lake",
+   "from": 15,
+   "to": 19,
+   "days": "any",
+   "weight": 1,
+   "outdoor": true
+  },
+  {
+   "id": "clear_dusk",
+   "text": "A clear, moonless dusk: the Observation Tower's instruments are already turning on their own, and the Divination Society has claimed the top deck.",
+   "where": "Observation Tower",
+   "from": 17,
+   "to": 20,
+   "days": "any",
+   "weight": 1,
+   "weather": "clear_night"
+  },
+  {
+   "id": "pickup_match",
+   "text": "An informal cross-dorm match has started on the Sports Field, and one side is a player short.",
+   "where": "Sports Field",
+   "from": 16,
+   "to": 19,
+   "days": "any",
+   "weight": 2,
+   "outdoor": true
+  },
+  {
+   "id": "workshop_sparks",
+   "text": "A misfired enchantment has left sparks hanging in the Workshop air for hours; the forges are shut until it settles.",
+   "where": "Workshop",
+   "from": 10,
+   "to": 18,
+   "days": "weekday",
+   "weight": 1
+  },
+  {
+   "id": "garden_overgrowth",
+   "text": "Something in the Gardens grew far too well overnight; the Gardening Club is cutting a path back to the herb beds.",
+   "where": "Gardens",
+   "from": 7,
+   "to": 17,
+   "days": "any",
+   "weight": 2,
+   "outdoor": true
+  },
+  {
+   "id": "council_inspection",
+   "text": "The Student Council is inspecting the dorm common rooms this evening: preservation lockers, quiet hours, the kettle rota.",
+   "where": "Common Rooms",
+   "from": 18,
+   "to": 20,
+   "days": "weekday",
+   "weight": 1
+  },
+  {
+   "id": "pillar_notice",
+   "text": "The Announcement Pillars glow between periods: a lost-property amnesty at Reception, today only.",
+   "where": "Reception and Gatehouse",
+   "from": 12,
+   "to": 16,
+   "days": "weekday",
+   "weight": 1
+  },
+  {
+   "id": "medical_queue",
+   "text": "After today's Combat lessons the Medical Centre has a queue out of the door: sprains, burns and one badly singed eyebrow.",
+   "where": "Medical Centre",
+   "from": 16,
+   "to": 18,
+   "days": [
+    "Mon",
+    "Thu"
+   ],
+   "weight": 3
+  },
+  {
+   "id": "airship_over",
+   "text": "An airship passes low over the grounds on its way to the capital; half the Courtyards stops to watch.",
+   "where": "Courtyards",
+   "from": 10,
+   "to": 17,
+   "days": "any",
+   "weight": 1,
+   "outdoor": true
+  },
+  {
+   "id": "rumour_knock",
+   "text": "Rumour in the common rooms: someone swears they counted four knocks at three o'clock last night.",
+   "where": "Common Rooms",
+   "from": 7,
+   "to": 10,
+   "days": "any",
+   "weight": 1
+  },
+  {
+   "id": "rumour_corridor",
+   "text": "Two late revisers are telling anyone who will listen that the main corridor ran long last night, after the night burn.",
+   "where": "Lecture Halls",
+   "from": 8,
+   "to": 12,
+   "days": "weekday",
+   "weight": 1
+  },
+  {
+   "id": "fallen_tree",
+   "text": "A cracked tree has come down at the Forest's edge; the Groundskeeper's Lodge wants volunteers with strong backs.",
+   "where": "Groundskeeper's Lodge",
+   "from": 8,
+   "to": 16,
+   "days": "any",
+   "weight": 1,
+   "outdoor": true,
+   "after_storm_x3": true
+  },
+  {
+   "id": "study_group",
+   "text": "A Magic Theory study group has taken over a Study Room and is selling copies of its notes for points.",
+   "where": "Study Rooms",
+   "from": 16,
+   "to": 20,
+   "days": "weekday",
+   "weight": 2
+  },
+  {
+   "id": "pool_runes",
+   "text": "The warming runes on the Swimming Pool rim have failed; the water is ice-cold and the swim clubs are outraged.",
+   "where": "Swimming Pool",
+   "from": 7,
+   "to": 18,
+   "days": "any",
+   "weight": 1
+  },
+  {
+   "id": "inspectorate_clerk",
+   "text": "A crown clerk from the Royal Inspectorate was seen carrying ledgers towards the Warden's Office. Nobody knows why.",
+   "where": "Courtyards",
+   "from": 9,
+   "to": 15,
+   "days": "weekday",
+   "weight": 1
+  },
+  {
+   "id": "snow_clearing",
+   "text": "Snow came down overnight and buried the paths; the Groundskeeper's Lodge is hiring a snow-clearing crew, 20 to 40 points a shift.",
+   "where": "Groundskeeper's Lodge",
+   "from": 7,
+   "to": 14,
+   "days": "any",
+   "weight": 6,
+   "outdoor": false,
+   "weather": "snow"
+  },
+  {
+   "id": "storm_cleanup",
+   "text": "Yesterday's storm left branches and slipped roof slates across the grounds; the Groundskeeper's Lodge is paying a clean-up crew by the shift.",
+   "where": "Groundskeeper's Lodge",
+   "from": 7,
+   "to": 16,
+   "days": "any",
+   "weight": 6,
+   "outdoor": false,
+   "weather": "after_storm"
+  },
+  {
+   "id": "dove_fog",
+   "text": "Dense fog lies over the grounds and the Doves have doubled their patrols, stopping anyone they cannot see clearly until it lifts.",
+   "where": "",
+   "from": 6,
+   "to": 12,
+   "days": "any",
+   "weight": 6,
+   "outdoor": false,
+   "weather": "dense_fog"
+  }
+ ]
+}

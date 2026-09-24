@@ -1,0 +1,345 @@
+{
+ "_note": "canon=true: price fixed by the lorebook. canon=false: guide price made for the card; edit freely, then re-run tools/gen_ui.py and tools/gen_mvu_entries.py. season: 'all' or a list of seasons (Winter, Spring, Summer, Autumn); v1.1.0 seasonal items are guide prices (canon false). Weather gear works through the Bag by item name (umbrella / oilskin, rain cloak = waterproof / wool, scarf, winter cloak, mittens = warm / sun hat, straw hat = sun).",
+ "items": [
+  {
+   "shop": "Commissary",
+   "loc": "commissary",
+   "item": "Sunfizz",
+   "price": 8,
+   "note": "2 points back per returned bottle",
+   "canon": true,
+   "season": "all"
+  },
+  {
+   "shop": "Commissary",
+   "loc": "commissary",
+   "item": "Firetooth (tin)",
+   "price": 12,
+   "note": "exam-week staple",
+   "canon": true,
+   "season": "all"
+  },
+  {
+   "shop": "Commissary",
+   "loc": "commissary",
+   "item": "Notebook",
+   "price": 5,
+   "note": "",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Commissary",
+   "loc": "commissary",
+   "item": "Pen nibs and ink",
+   "price": 6,
+   "note": "",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Commissary",
+   "loc": "commissary",
+   "item": "Printed class textbook",
+   "price": 45,
+   "note": "",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Commissary",
+   "loc": "commissary",
+   "item": "Satchel",
+   "price": 70,
+   "note": "",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Commissary",
+   "loc": "commissary",
+   "item": "Spare uniform set",
+   "price": 120,
+   "note": "",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Commissary",
+   "loc": "commissary",
+   "item": "Common reagent bundle",
+   "price": 30,
+   "note": "back shelves; enough for a few practicals",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Commissary",
+   "loc": "commissary",
+   "item": "Basic practice focus",
+   "price": 250,
+   "note": "",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Commissary",
+   "loc": "commissary",
+   "item": "Rare reagent",
+   "price": 350,
+   "note": "costs more than a bottom-band monthly payout",
+   "canon": true,
+   "season": "all"
+  },
+  {
+   "shop": "Commissary",
+   "loc": "commissary",
+   "item": "Special order",
+   "price": null,
+   "note": "price of the item plus a wait; specialised kit can eat a week of points",
+   "canon": true,
+   "season": "all"
+  },
+  {
+   "shop": "The Mall — bakery",
+   "loc": "mall",
+   "item": "Bakery roll",
+   "price": 15,
+   "note": "",
+   "canon": true,
+   "season": "all"
+  },
+  {
+   "shop": "The Mall — bakery",
+   "loc": "mall",
+   "item": "Star Cookie",
+   "price": 8,
+   "note": "eaten whole before anything that matters; sells out by seven on exam mornings",
+   "canon": true,
+   "season": "all"
+  },
+  {
+   "shop": "The Mall — cafés and tea houses",
+   "loc": "mall",
+   "item": "Café drink and pastry",
+   "price": 25,
+   "note": "",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "The Mall — restaurants",
+   "loc": "mall",
+   "item": "Restaurant meal",
+   "price": 45,
+   "note": "",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "The Mall — private dining",
+   "loc": "mall",
+   "item": "Private dining (second floor)",
+   "price": 150,
+   "note": "",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "The Mall — store",
+   "loc": "mall",
+   "item": "Sunfizz",
+   "price": 8,
+   "note": "2 points back per returned bottle",
+   "canon": true,
+   "season": "all"
+  },
+  {
+   "shop": "The Mall — store",
+   "loc": "mall",
+   "item": "The Oracle Shell",
+   "price": 40,
+   "note": "yes, no, or ask again later",
+   "canon": true,
+   "season": "all"
+  },
+  {
+   "shop": "The Mall — store",
+   "loc": "mall",
+   "item": "Quality focus",
+   "price": 4000,
+   "note": "the top tier of magical equipment",
+   "canon": true,
+   "season": "all"
+  },
+  {
+   "shop": "The Mall — services",
+   "loc": "mall",
+   "item": "Tailoring alteration",
+   "price": 40,
+   "note": "",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "The Mall — services",
+   "loc": "mall",
+   "item": "Barber",
+   "price": 20,
+   "note": "",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "The Mall — services",
+   "loc": "mall",
+   "item": "Laundry service (per load)",
+   "price": 10,
+   "note": "self-service laundry in the dorms is free",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "The Mall — studios",
+   "loc": "mall",
+   "item": "Practice studio or music room (per hour)",
+   "price": 15,
+   "note": "",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "The Mall — game halls",
+   "loc": "mall",
+   "item": "Game hall (per hour)",
+   "price": 10,
+   "note": "",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Nightwell",
+   "loc": "nightwell",
+   "item": "The Vigil",
+   "price": 60,
+   "note": "two days without sleep, paid for afterwards",
+   "canon": true,
+   "season": "all"
+  },
+  {
+   "shop": "Merryhew's",
+   "loc": "merryhews",
+   "item": "Prank item",
+   "price": 25,
+   "note": "itching charms, voice-changing sweets, illusion vermin; everything wears off",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "The Snug",
+   "loc": "snug",
+   "item": "Private booth (per hour)",
+   "price": 30,
+   "note": "always a wait; staff hear nothing",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Ardenne (special order)",
+   "loc": "commissary",
+   "item": "Ardenne case",
+   "price": 1500,
+   "note": "the cheapest Ardenne item; more than most monthly payouts",
+   "canon": true,
+   "season": "all"
+  },
+  {
+   "shop": "Ardenne (special order)",
+   "loc": "commissary",
+   "item": "Ardenne focus",
+   "price": 4000,
+   "note": "marks its owner instantly as wealthy",
+   "canon": true,
+   "season": "all"
+  },
+  {
+   "shop": "Commissary",
+   "loc": "commissary",
+   "item": "Umbrella",
+   "price": 25,
+   "note": "keeps you dry unless the wind is up",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Commissary",
+   "loc": "commissary",
+   "item": "Oilskin rain cloak",
+   "price": 90,
+   "note": "waterproof in any weather",
+   "canon": false,
+   "season": [
+    "Autumn",
+    "Winter",
+    "Spring"
+   ]
+  },
+  {
+   "shop": "The Mall — store",
+   "loc": "mall",
+   "item": "Wool scarf and mittens",
+   "price": 35,
+   "note": "warm",
+   "canon": false,
+   "season": [
+    "Autumn",
+    "Winter"
+   ]
+  },
+  {
+   "shop": "The Mall — store",
+   "loc": "mall",
+   "item": "Lined winter cloak",
+   "price": 120,
+   "note": "warm",
+   "canon": false,
+   "season": [
+    "Winter"
+   ]
+  },
+  {
+   "shop": "The Mall — store",
+   "loc": "mall",
+   "item": "Straw sun hat",
+   "price": 30,
+   "note": "shade in summer heat",
+   "canon": false,
+   "season": [
+    "Summer"
+   ]
+  },
+  {
+   "shop": "The Mall — cafés and tea houses",
+   "loc": "mall",
+   "item": "Hot spiced tea",
+   "price": 12,
+   "note": "warms you through (clears a chill)",
+   "canon": false,
+   "season": [
+    "Autumn",
+    "Winter"
+   ]
+  },
+  {
+   "shop": "The Mall — cafés and tea houses",
+   "loc": "mall",
+   "item": "Iced fruit cooler",
+   "price": 10,
+   "note": "cools you down (clears overheating)",
+   "canon": false,
+   "season": [
+    "Summer"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,6 @@
+{
+ "_note": "v1.1.0 NPC weather moods, canon only (hand-written from the lorebook; add an entry only when the lore says so). cold: shown when the temperature label is cold or freezing; sunny: shown under a clear sky by day at 15 °C or more. Source uid in 'lore'.",
+ "moods": [
+  {"id": "Idris", "lore": 105, "cold": "Idris is cold-blooded: sluggish and short-tempered in this cold.", "sunny": "Idris is cold-blooded and loves the sun: he is soaking it up, livelier than usual."}
+ ]
+}

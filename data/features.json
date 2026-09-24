@@ -1,0 +1,19 @@
+{
+ "_note": "v1.1.0 Features settings (single source). Engine: which state each feature parks when it is off (paths) and which unlock it gates. UI: rows of Student file > Settings > Features. tools/gen_mvu_entries.py measures each feature's rule text (EJS gates on(id) in 502/504/505) and writes data/feature_cost.json. control: toggle = on/off in $ui.off; levels = its own field in $ui (level 'off' counts as off).",
+ "features": [
+  {"id": "planner", "name": "Planner", "desc": "Commitments: promises, appointments and deadlines with due times and overdue reminders.", "control": "toggle", "paths": ["Commitments"], "unlock": "planner", "unit": "per commitment"},
+  {"id": "notices", "name": "Notice Board notices", "desc": "Story notices pinned on the board (paid work, recruitment, warnings). Official postings always show.", "control": "toggle", "paths": ["Notices"], "unlock": "notices", "unit": "per notice"},
+  {"id": "letters", "name": "Letters", "desc": "Mail Tower letters in and out, with waiting reminders.", "control": "toggle", "paths": ["Letters"], "unlock": "letters", "unit": "per letter"},
+  {"id": "mystery", "name": "Mystery Board", "desc": "Clues and mystery threads you piece together.", "control": "toggle", "paths": ["Clues", "Mysteries"], "unlock": "mystery", "unit": "per clue"},
+  {"id": "competition", "name": "Competition", "desc": "Your standing in the Dorm, Academy, Kingdom and World Competitions.", "control": "toggle", "paths": ["Competition"], "unlock": "competition", "unit": ""},
+  {"id": "projects", "name": "Projects", "desc": "Brewing, crafting, research and group work that takes more than one sitting.", "control": "toggle", "paths": ["Projects"], "unlock": "projects", "unit": "per project"},
+  {"id": "trip", "name": "Trips", "desc": "Crowning Day and the Academy Trip: who you travel with, where you are.", "control": "toggle", "paths": ["Trip"], "unlock": "trip", "unit": ""},
+  {"id": "battle", "name": "Battle tracking", "desc": "Opponents' health, stamina and status during a fight.", "control": "toggle", "paths": ["Battle"], "unlock": "battle", "unit": "per opponent"},
+  {"id": "inventory", "name": "Bag (inventory)", "desc": "Things you buy, receive or find and keep; weather gear counts from here.", "control": "toggle", "paths": ["Inventory"], "unlock": "inventory", "unit": "per item"},
+  {"id": "happenings", "name": "Campus happenings", "desc": "A small seeded happening on some days: paid work, a Dove sweep, a loose creature.", "control": "levels", "field": "happenings", "levels": [["off", "Off"], ["rare", "Rare"], ["normal", "Normal"], ["often", "Often"]], "unit": ""},
+  {"id": "weather", "name": "Weather", "desc": "Seasons, sky and °C per morning, afternoon and night; the Divination Society forecast. Full adds real effects: conditions, gear, sleep, bonds, who is outdoors.", "control": "levels", "field": "wxfx", "levels": [["off", "Off"], ["flavor", "Flavor"], ["full", "Full"]], "paths": ["Player.Conditions"], "unlock": "conditions", "unit": ""},
+  {"id": "class", "name": "Class-aware presence", "desc": "During lessons students are in class: the narrator knows your class, teacher and classmates.", "control": "toggle", "unit": "in class"},
+  {"id": "hooks", "name": "Story hooks", "desc": "The narrator's private notes on promises and planted details it owes a payoff. Never shown to you.", "control": "toggle", "paths": ["Hooks"], "unit": "per hook"},
+  {"id": "gossip", "name": "Gossip that spreads", "desc": "Rumours reach more people day by day, then fade or die out.", "control": "toggle", "unit": "per rumour"}
+ ]
+}

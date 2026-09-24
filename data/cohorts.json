@@ -1,0 +1,7 @@
+{
+ "_about": "v1.0.3: incoming student cohorts. Each key is the campaign year (World.Year) in which the listed NPC ids arrive at Halvard as first-years; before that they are inactive: their lore entry is empty (EJS gate), they are off the NPC roster, not regulars, not club members, not in the Connections graph, and the engine will not start a bond with them. Ids are first names, as in data/npcs.json. List them under 'Year 1:' in the lorebook's NPC Roster entry (uid 97). Then rebuild from tools/merge_lorebooks.py onward.",
+ "incoming": {
+  "2": [],
+  "3": []
+ }
+}

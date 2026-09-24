@@ -1,0 +1,25 @@
+{
+ "rules": {
+  "planner": 87,
+  "notices": 98,
+  "letters": 120,
+  "mystery": 152,
+  "competition": 95,
+  "projects": 97,
+  "trip": 44,
+  "battle": 72,
+  "inventory": 91,
+  "happenings": 68,
+  "weather": 180,
+  "class": 35,
+  "hooks": 145,
+  "gossip": 19
+ },
+ "core_rules": 3138,
+ "lore": 2991,
+ "price_guide": 825,
+ "live": {
+  "class": 40,
+  "weather": 25
+ }
+}

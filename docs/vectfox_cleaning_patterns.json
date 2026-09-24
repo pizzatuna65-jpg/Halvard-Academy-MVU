@@ -1,0 +1,37 @@
+[
+ {
+  "name": "Eldrasil: keep in-world time, drop the MVU update block",
+  "pattern": "<UpdateVariable>[\\s\\S]*?Time:[^\\n]*?→\\s*(M\\d{1,2} W\\d [A-Z][a-z]{2} \\d{1,2}:\\d{2})[^\\n]*?Location:[^\\n]*?→\\s*([^\\n]+?)\\s*\\n[\\s\\S]*?</UpdateVariable>",
+  "replacement": "[In-world time: $1, at $2]",
+  "flags": "g",
+  "enabled": true
+ },
+ {
+  "name": "Eldrasil: drop any remaining MVU update block",
+  "pattern": "<UpdateVariable>[\\s\\S]*?</UpdateVariable>",
+  "replacement": "",
+  "flags": "g",
+  "enabled": true
+ },
+ {
+  "name": "Eldrasil: drop the status bar placeholder",
+  "pattern": "<StatusPlaceHolderImpl\\s*/>",
+  "replacement": "",
+  "flags": "g",
+  "enabled": true
+ },
+ {
+  "name": "Eldrasil: drop colored-dialogue tags, keep the dialogue (preset Colored Dialogue 2.0)",
+  "pattern": "</?(?:cyan|pink|teal|orange|gold|violet|salmon|orchid|yellow|plum)(?::(?:shout|whisper|measured|tremble))?>",
+  "replacement": "",
+  "flags": "gi",
+  "enabled": true
+ },
+ {
+  "name": "Eldrasil: unwrap in-story graphics, keep their text (preset Pop in Graphics)",
+  "pattern": "<!--\\s*GFX_(?:START|END)\\s*-->|</?(?:div|span|p)\\b[^>]*>|<br\\s*/?>",
+  "replacement": "\n",
+  "flags": "gi",
+  "enabled": true
+ }
+]

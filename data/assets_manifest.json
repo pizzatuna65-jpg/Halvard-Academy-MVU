@@ -1,0 +1,610 @@
+{
+ "base_url": "https://cdn.jsdelivr.net/gh/pizzatuna65-jpg/eldrasil-assets@4b6a10d6b91bd5feaf1509e7876c13e09f88bc2f/",
+ "npcs": {
+  "Irene": {
+   "uid": 98,
+   "name": "Irene Chanare",
+   "portrait": "portraits/irene.webp",
+   "thumb": "thumbs/irene.webp",
+   "focus": [
+    52.1,
+    22.6
+   ],
+   "focus_source": "manual",
+   "source_file": "Irene_Chanare_Light,_Council_President.png"
+  },
+  "Caspian": {
+   "uid": 99,
+   "name": "Caspian Riwalo",
+   "portrait": "portraits/caspian.webp",
+   "thumb": "thumbs/caspian.webp",
+   "focus": [
+    54.1,
+    22.3
+   ],
+   "focus_source": "manual",
+   "source_file": "Caspian_Riwalo_Viridian,_Council_VP.png"
+  },
+  "Etnie": {
+   "uid": 100,
+   "name": "Etnie",
+   "portrait": "portraits/etnie.webp",
+   "thumb": "thumbs/etnie.webp",
+   "focus": [
+    57.9,
+    27.7
+   ],
+   "focus_source": "manual",
+   "source_file": "Etnie_Viridian.png"
+  },
+  "Royhan": {
+   "uid": 101,
+   "name": "Royhan Filanoman",
+   "portrait": "portraits/royhan.webp",
+   "thumb": "thumbs/royhan.webp",
+   "focus": [
+    50.7,
+    29.6
+   ],
+   "focus_source": "manual",
+   "source_file": "Royhan_'Roy'_Filanoman_Sky.png"
+  },
+  "Lenna": {
+   "uid": 102,
+   "name": "Lenna Greenwind",
+   "portrait": "portraits/lenna.webp",
+   "thumb": "thumbs/lenna.webp",
+   "focus": [
+    60.9,
+    26.1
+   ],
+   "focus_source": "manual",
+   "source_file": "Lenna_Greenwind_Fire.png"
+  },
+  "Saffi": {
+   "uid": 103,
+   "name": "Saffi Tamberlane",
+   "portrait": "portraits/saffi.webp",
+   "thumb": "thumbs/saffi.webp",
+   "focus": [
+    58.0,
+    21.0
+   ],
+   "focus_source": "manual",
+   "source_file": "Saffi_Tamberlane_Viridian.png"
+  },
+  "Kanae": {
+   "uid": 104,
+   "name": "Kanae Quveno",
+   "portrait": "portraits/kanae.webp",
+   "thumb": "thumbs/kanae.webp",
+   "focus": [
+    47.1,
+    20.6
+   ],
+   "focus_source": "manual",
+   "source_file": "Kanae_Quveno_Light.png"
+  },
+  "Idris": {
+   "uid": 105,
+   "name": "Idris Ainsworth",
+   "portrait": "portraits/idris.webp",
+   "thumb": "thumbs/idris.webp",
+   "focus": [
+    50.5,
+    22.1
+   ],
+   "focus_source": "manual",
+   "source_file": "Idris_Ainsworth_Sky.png"
+  },
+  "Aiden": {
+   "uid": 106,
+   "name": "Aiden Ruzzo",
+   "portrait": "portraits/aiden.webp",
+   "thumb": "thumbs/aiden.webp",
+   "focus": [
+    50.0,
+    13.0
+   ],
+   "focus_source": "manual",
+   "source_file": "Aiden_Ruzzo_Light.png"
+  },
+  "Caralynn": {
+   "uid": 107,
+   "name": "Caralynn Veyturone",
+   "portrait": "portraits/caralynn.webp",
+   "thumb": "thumbs/caralynn.webp",
+   "focus": [
+    51.0,
+    21.8
+   ],
+   "focus_source": "manual",
+   "source_file": "Caralynn_'Cara'_Veyturone_Fire.png"
+  },
+  "Zara": {
+   "uid": 108,
+   "name": "Zara Minallone",
+   "portrait": "portraits/zara.webp",
+   "thumb": "thumbs/zara.webp",
+   "focus": [
+    48.0,
+    17.0
+   ],
+   "focus_source": "manual",
+   "source_file": "Zara_Minallone_Sky.png"
+  },
+  "Gavlan": {
+   "uid": 109,
+   "name": "Gavlan Haverton",
+   "portrait": "portraits/gavlan.webp",
+   "thumb": "thumbs/gavlan.webp",
+   "focus": [
+    50.0,
+    8.5
+   ],
+   "focus_source": "manual",
+   "source_file": "Gavlan_Haverton_Combat.png"
+  },
+  "Yvette": {
+   "uid": 110,
+   "name": "Yvette Fallaron",
+   "portrait": "portraits/yvette.webp",
+   "thumb": "thumbs/yvette.webp",
+   "focus": [
+    53.2,
+    23.3
+   ],
+   "focus_source": "manual",
+   "source_file": "Yvette_Fallaron_Magic_Theory.png"
+  },
+  "Krieg": {
+   "uid": 111,
+   "name": "Krieg Valforth",
+   "portrait": "portraits/krieg.webp",
+   "thumb": "thumbs/krieg.webp",
+   "focus": [
+    50.0,
+    10.0
+   ],
+   "focus_source": "manual",
+   "source_file": "Krieg_Valforth_Dovecote_Commander.png"
+  },
+  "Milena": {
+   "uid": 112,
+   "name": "Milena Sagona",
+   "portrait": "portraits/milena.webp",
+   "thumb": "thumbs/milena.webp",
+   "focus": [
+    43.0,
+    27.0
+   ],
+   "focus_source": "manual",
+   "source_file": "Milena_Sagona_Senior_Dove.png"
+  },
+  "Baelin": {
+   "uid": 113,
+   "name": "Baelin Kalvor",
+   "portrait": "portraits/baelin.webp",
+   "thumb": "thumbs/baelin.webp",
+   "focus": [
+    49.8,
+    28.9
+   ],
+   "focus_source": "manual",
+   "source_file": "Baelin_Kalvor_Headmaster.png"
+  },
+  "Layla": {
+   "uid": 114,
+   "name": "Layla Palegleam",
+   "portrait": "portraits/layla.webp",
+   "thumb": "thumbs/layla.webp",
+   "focus": [
+    55.3,
+    29.8
+   ],
+   "focus_source": "manual",
+   "source_file": "Layla_Palegleam_History.png"
+  },
+  "Vallie": {
+   "uid": 115,
+   "name": "Vallie Goredust",
+   "portrait": "portraits/vallie.webp",
+   "thumb": "thumbs/vallie.webp",
+   "focus": [
+    53.6,
+    25.7
+   ],
+   "focus_source": "manual",
+   "source_file": "Vallie_Goredust_'Deathaxe'_Creature_Studies.png"
+  },
+  "Percival": {
+   "uid": 116,
+   "name": "Percival Applethorne",
+   "portrait": "portraits/percival.webp",
+   "thumb": "thumbs/percival.webp",
+   "focus": [
+    51.8,
+    26.7
+   ],
+   "focus_source": "manual",
+   "source_file": "Percival_Applethorne_Viridian.png"
+  },
+  "Sophia": {
+   "uid": 117,
+   "name": "Sophia Helfin",
+   "portrait": "portraits/sophia.webp",
+   "thumb": "thumbs/sophia.webp",
+   "focus": [
+    45.0,
+    30.0
+   ],
+   "focus_source": "manual",
+   "source_file": "Sophia_Helfin_'Blood_Saint'_Fire,_#2.png"
+  },
+  "Rei": {
+   "uid": 118,
+   "name": "Rei Kestrane",
+   "portrait": "portraits/rei.webp",
+   "thumb": "thumbs/rei.webp",
+   "focus": [
+    58.0,
+    11.0
+   ],
+   "focus_source": "manual",
+   "source_file": "Rei_Kestrane_Acting_Warden.png"
+  },
+  "Kuroo": {
+   "uid": 119,
+   "name": "Kuroo Varnell",
+   "portrait": "portraits/kuroo.webp",
+   "thumb": "thumbs/kuroo.webp",
+   "focus": [
+    53.1,
+    28.3
+   ],
+   "focus_source": "manual",
+   "source_file": "Kuroo_Varnell_Etiquette.png"
+  },
+  "Mimosa": {
+   "uid": 120,
+   "name": "Mimosa Linden",
+   "portrait": "portraits/mimosa.webp",
+   "thumb": "thumbs/mimosa.webp",
+   "focus": [
+    45.0,
+    36.8
+   ],
+   "focus_source": "manual",
+   "source_file": "Mimosa_Linden_Potion_Crafting.png"
+  },
+  "Gareth": {
+   "uid": 121,
+   "name": "Gareth Valkaryn",
+   "portrait": "portraits/gareth.webp",
+   "thumb": "thumbs/gareth.webp",
+   "focus": [
+    43.0,
+    38.5
+   ],
+   "focus_source": "manual",
+   "source_file": "Gareth_Valkaryn_Fire,_#1.png"
+  },
+  "Lucius": {
+   "uid": 123,
+   "name": "Lucius Vortigern",
+   "portrait": "portraits/lucius.webp",
+   "thumb": "thumbs/lucius.webp",
+   "focus": [
+    43.1,
+    38.3
+   ],
+   "focus_source": "manual",
+   "source_file": "Lucius_Vortigern_Control.png"
+  },
+  "Trixie": {
+   "uid": 124,
+   "name": "Trixie Confetti",
+   "portrait": "portraits/trixie.webp",
+   "thumb": "thumbs/trixie.webp",
+   "focus": [
+    48.8,
+    42.5
+   ],
+   "focus_source": "manual",
+   "source_file": "Trixie_Confetti_Fire.png"
+  },
+  "Vera": {
+   "uid": 125,
+   "name": "Vera Pulsar",
+   "portrait": "portraits/vera.webp",
+   "thumb": "thumbs/vera.webp",
+   "focus": [
+    49.3,
+    30.5
+   ],
+   "focus_source": "manual",
+   "source_file": "Vera_Pulsar_Viridian.png"
+  },
+  "Tristan": {
+   "uid": 126,
+   "name": "Tristan Aurelle",
+   "portrait": "portraits/tristan.webp",
+   "thumb": "thumbs/tristan.webp",
+   "focus": [
+    48.0,
+    25.0
+   ],
+   "focus_source": "manual",
+   "source_file": "Tristan_Aurelle_Cathedral_Steward.png"
+  },
+  "Althair": {
+   "uid": 127,
+   "name": "Althair Veyne",
+   "portrait": "portraits/althair.webp",
+   "thumb": "thumbs/althair.webp",
+   "focus": [
+    49.6,
+    24.7
+   ],
+   "focus_source": "manual",
+   "source_file": "Althair_Veyne_Vice_Headmaster.png"
+  },
+  "Dante": {
+   "uid": 128,
+   "name": "Dante Kleinn",
+   "portrait": "portraits/dante.webp",
+   "thumb": "thumbs/dante.webp",
+   "focus": [
+    55.0,
+    15.0
+   ],
+   "focus_source": "manual",
+   "source_file": "Dante_Kleinn_Light.png"
+  },
+  "Castor": {
+   "uid": 129,
+   "name": "Castor Moretti",
+   "portrait": "portraits/castor.webp",
+   "thumb": "thumbs/castor.webp",
+   "focus": [
+    38.0,
+    25.0
+   ],
+   "focus_source": "manual",
+   "source_file": "Castor_Moretti_Viridian.png"
+  },
+  "Ruby": {
+   "uid": 130,
+   "name": "Ruby Bonbon",
+   "portrait": "portraits/ruby.webp",
+   "thumb": "thumbs/ruby.webp",
+   "focus": [
+    50.6,
+    32.0
+   ],
+   "focus_source": "manual",
+   "source_file": "Ruby_Bonbon_Sky.png"
+  },
+  "Florian": {
+   "uid": 250,
+   "name": "Florian Villeneuve",
+   "portrait": "portraits/florian.webp",
+   "thumb": "thumbs/florian.webp",
+   "focus": [
+    46.0,
+    34.3
+   ],
+   "focus_source": "manual",
+   "source_file": "Florian_Villeneuve_Sky,_#3.png"
+  },
+  "Elion": {
+   "uid": 251,
+   "name": "Elion Villeneuve",
+   "portrait": "portraits/elion.webp",
+   "thumb": "thumbs/elion.webp",
+   "focus": [
+    51.5,
+    18.6
+   ],
+   "focus_source": "manual",
+   "source_file": "Elion_Villeneuve_Captain,_Attack.png"
+  },
+  "Bellatrix": {
+   "uid": 252,
+   "name": "Bellatrix Ardenne",
+   "portrait": "portraits/bellatrix.webp",
+   "thumb": "thumbs/bellatrix.webp",
+   "focus": [
+    42.0,
+    30.0
+   ],
+   "focus_source": "manual",
+   "source_file": "Bellatrix_Ardenne_Attack.png"
+  },
+  "Kira": {
+   "uid": 254,
+   "name": "Kira Brannock",
+   "portrait": "portraits/kira.webp",
+   "thumb": "thumbs/kira.webp",
+   "focus": [
+    50.0,
+    18.0
+   ],
+   "focus_source": "manual",
+   "source_file": "Kira_Brannock_Defense.png"
+  },
+  "Mirelle": {
+   "uid": 255,
+   "name": "Mirelle Lullwyn",
+   "portrait": "portraits/mirelle.webp",
+   "thumb": "thumbs/mirelle.webp",
+   "focus": [
+    50.0,
+    18.0
+   ],
+   "focus_source": "manual",
+   "source_file": "Mirelle_Lullwyn_Control.png"
+  },
+  "Theodore": {
+   "uid": 256,
+   "name": "Theodore Wrenfield",
+   "portrait": "portraits/theodore.webp",
+   "thumb": "thumbs/theodore.webp",
+   "focus": [
+    53.0,
+    14.0
+   ],
+   "focus_source": "manual",
+   "source_file": "Theodore_Wrenfield_Healing.png"
+  },
+  "Ines": {
+   "uid": 257,
+   "name": "Ines Vauclair",
+   "portrait": "portraits/ines.webp",
+   "thumb": "thumbs/ines.webp",
+   "focus": [
+    51.2,
+    23.0
+   ],
+   "focus_source": "manual",
+   "source_file": "Ines_Vauclair_Captain,_Attack.png"
+  },
+  "Bram": {
+   "uid": 258,
+   "name": "Bram Holloway",
+   "portrait": "portraits/bram.webp",
+   "thumb": "thumbs/bram.webp",
+   "focus": [
+    55.0,
+    17.0
+   ],
+   "focus_source": "manual",
+   "source_file": "Bram_Holloway_Defense.png"
+  },
+  "Dex": {
+   "uid": 259,
+   "name": "Dex Harlow",
+   "portrait": "portraits/dex.webp",
+   "thumb": "thumbs/dex.webp",
+   "focus": [
+    50.0,
+    27.0
+   ],
+   "focus_source": "manual",
+   "source_file": "Dex_Harlow_Healing.png"
+  },
+  "Cassius": {
+   "uid": 260,
+   "name": "Cassius Rhavel",
+   "portrait": "portraits/cassius.webp",
+   "thumb": "thumbs/cassius.webp",
+   "focus": [
+    52.8,
+    38.8
+   ],
+   "focus_source": "manual",
+   "source_file": "Cassius_Rhavel_Captain,_Control.png"
+  },
+  "Morgana": {
+   "uid": 261,
+   "name": "Morgana Vess",
+   "portrait": "portraits/morgana.webp",
+   "thumb": "thumbs/morgana.webp",
+   "focus": [
+    42.0,
+    20.0
+   ],
+   "focus_source": "manual",
+   "source_file": "Morgana_Vess_'Nocturne'_Support.png"
+  },
+  "Pip": {
+   "uid": 262,
+   "name": "Pip Althorne",
+   "portrait": "portraits/pip.webp",
+   "thumb": "thumbs/pip.webp",
+   "focus": [
+    47.1,
+    29.9
+   ],
+   "focus_source": "manual",
+   "source_file": "Pip_Althorne_Healing.png"
+  },
+  "Alyssa": {
+   "uid": 322,
+   "name": "Alyssa Edelweiss",
+   "portrait": "portraits/alyssa.webp",
+   "thumb": "thumbs/alyssa.webp",
+   "focus": [
+    53.0,
+    20.0
+   ],
+   "focus_source": "manual",
+   "source_file": "Alyssa_Edelweiss_Sky.png"
+  },
+  "Tilly": {
+   "uid": 323,
+   "name": "Tilly Marsh",
+   "portrait": "portraits/tilly.webp",
+   "thumb": "thumbs/tilly.webp",
+   "focus": [
+    49.5,
+    31.5
+   ],
+   "focus_source": "manual",
+   "source_file": "Tilly_Marsh_Fire.png"
+  },
+  "Ezrel": {
+   "uid": 324,
+   "name": "Ezrel Marionne",
+   "portrait": "portraits/ezrel.webp",
+   "thumb": "thumbs/ezrel.webp",
+   "focus": [
+    52.3,
+    21.7
+   ],
+   "focus_source": "manual",
+   "source_file": "Ezrel_Marionne_Light_Dorm_Head.png"
+  },
+  "Ottavio": {
+   "uid": 329,
+   "name": "Ottavio Bastiani",
+   "portrait": "portraits/ottavio.webp",
+   "thumb": "thumbs/ottavio.webp",
+   "focus": [
+    50.1,
+    25.3
+   ],
+   "focus_source": "manual",
+   "source_file": "Ottavio_Bastiani_Sky_Dorm_Head.png"
+  },
+  "Caine": {
+   "uid": 330,
+   "name": "Caine Strix",
+   "portrait": "portraits/caine.webp",
+   "thumb": "thumbs/caine.webp",
+   "focus": [
+    52.0,
+    17.0
+   ],
+   "focus_source": "manual",
+   "source_file": "Caine_Strix_Butler.png"
+  },
+  "Bobby": {
+   "uid": 331,
+   "name": "Bobby Becket",
+   "portrait": "portraits/bobby.webp",
+   "thumb": "thumbs/bobby.webp",
+   "focus": [
+    56.5,
+    31.0
+   ],
+   "focus_source": "manual",
+   "source_file": "Bobby_Becket_staff.png"
+  }
+ },
+ "map": "map/halvard_map.webp",
+ "map_size": [
+  1536,
+  1024
+ ]
+}

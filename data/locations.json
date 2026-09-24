@@ -1,0 +1,1846 @@
+{
+ "seal_chamber": {
+  "id": "seal_chamber",
+  "name": "The Seal Chamber",
+  "uid": 42,
+  "category": "The Site",
+  "kind": "location",
+  "description": "The sealed site itself, the reason the academy exists. Only the Warden enters, and the way in is watched. Contents differ by academy: a monster at Myrdath, a tomb at Veyra, an elixir at Ashvale, a crack at Halvard. Most students never see the door. Halvard: the corridor toward it runs colder, the lanterns burn unnaturally steady, and students who wander close feel pressure on their ears and turn back before the door.",
+  "vibe": "cold, still, oppressive.",
+  "has_secret": false,
+  "regulars": [],
+  "connections": [
+   "wardens_office"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": "Forbidden — the Warden only; magic near it is banned",
+  "lore": [],
+  "floor": "Undercroft",
+  "pin": 1,
+  "discoverable": false
+ },
+ "wardens_office": {
+  "id": "wardens_office",
+  "name": "The Warden's Office",
+  "uid": 43,
+  "category": "The Site",
+  "kind": "location",
+  "description": "A working room adjoining the site, not the academy, on Floor 1 down its own corridor, holding the only stair to the Seal Chamber. Mana consumption ledgers and the seal's condition are recorded here, and only the Warden can read them. Students have no reason to come; staff come only when summoned. Halvard: the Acting Warden refuses the Royal Inspectorate every time. The wall it shares with the site is always cold.",
+  "vibe": "cigarette smoke, old paper, one lamp.",
+  "has_secret": false,
+  "regulars": [
+   "Rei"
+  ],
+  "connections": [
+   "seal_chamber",
+   "notice_board",
+   "royal_inspectorate"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": "Staff only, when summoned",
+  "lore": [],
+  "floor": "Floor 1",
+  "pin": 1,
+  "discoverable": false
+ },
+ "arbiter_hall": {
+  "id": "arbiter_hall",
+  "name": "The Arbiter Hall",
+  "uid": 44,
+  "category": "Ceremonial",
+  "kind": "location",
+  "description": "The great hall, home to the Arbiter Stone. Entrance Event sorting once a year, general assembly the rest: announcements, Results and Dorm Ranking, Graduation. Students sit before the Stone constantly and touch it exactly once in their lives. The Stone is warm to the touch, warmer than it should be.",
+  "vibe": "vaulted, echoing, hushed.",
+  "has_secret": false,
+  "regulars": [],
+  "connections": [
+   "courtyards",
+   "ring_dining_hall",
+   "portrait_hall"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": null,
+  "lore": [],
+  "floor": "Floor 1",
+  "pin": 7,
+  "discoverable": false
+ },
+ "ring_dining_hall": {
+  "id": "ring_dining_hall",
+  "name": "The Ring Dining Hall",
+  "uid": 45,
+  "category": "Ceremonial",
+  "kind": "location",
+  "description": "Formal hall, tables in a ring around an open floor so all four dorms face each other across empty space. Musicians in the gallery, an illusion sky that turns a whole day's weather overhead, climate runes holding it windless and warm. Used only for the Entrance Feast and other full-academy meals. Empty most of the year and unsettling to walk alone.",
+  "vibe": "grand, too-perfect warmth, echoing footsteps.",
+  "has_secret": false,
+  "regulars": [],
+  "connections": [
+   "arbiter_hall"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": "Feasts after major events only",
+  "lore": [],
+  "floor": "Floor 1",
+  "pin": 7,
+  "discoverable": false
+ },
+ "portrait_hall": {
+  "id": "portrait_hall",
+  "name": "Portrait Hall",
+  "uid": 46,
+  "category": "Ceremonial",
+  "kind": "location",
+  "description": "A long corridor of past headmasters, past wardens, and each year's competition champions. Winning at any tier puts your face on the wall; losing means the wall skips your year. Halvard: the previous Warden's portrait (name unknown) hangs with a black ribbon, and every student slows in front of it.",
+  "vibe": "dim, solemn, watched.",
+  "has_secret": false,
+  "regulars": [],
+  "connections": [
+   "arbiter_hall",
+   "bell_tower"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": null,
+  "lore": [],
+  "floor": "Floor 2",
+  "pin": 7,
+  "discoverable": false
+ },
+ "founders_statue_and_park": {
+  "id": "founders_statue_and_park",
+  "name": "Founder's Statue and Park",
+  "uid": 47,
+  "category": "Ceremonial",
+  "kind": "location",
+  "description": "Open parkland with lawns, paths and benches; the main green space on campus and the nicest place to be outdoors between classes. Picnic blankets dot the lawns on any fair day, and weathered wooden picnic tables stand in the shade along the paths. Everyday use: sitting and talking, lunch on a blanket or at a picnic table, reading, napping, jogging the paths, couples finding somewhere semi-private. Busiest at lunch and on warm afternoons.\nThe Founder's Statue stands at its centre: bronze, the academy's founding warden, cold even in full sun, its outstretched hand polished bright by the Founder's Hand superstition, with a queue that snakes across the lawn on exam mornings. Focus of Academy Founder Day in Month 9.",
+  "vibe": "open, windy, grass, green bronze.",
+  "has_secret": false,
+  "regulars": [
+   "Caralynn",
+   "Lenna",
+   "Ruby",
+   "Saffi",
+   "Trixie"
+  ],
+  "connections": [
+   "courtyards",
+   "gardens",
+   "sports_field"
+  ],
+  "walk_min": 5,
+  "clubs": [],
+  "access": null,
+  "lore": [
+   {
+    "uid": 223,
+    "title": "The Founder's Hand",
+    "summary": "Rule: touch the Founder's Statue's outstretched hand before an exam, always the hand, always on the way out."
+   }
+  ],
+  "floor": null,
+  "pin": 21,
+  "discoverable": false
+ },
+ "bell_tower": {
+  "id": "bell_tower",
+  "name": "Bell Tower",
+  "uid": 48,
+  "category": "Ceremonial",
+  "kind": "location",
+  "description": "Marks class periods, meals, and curfew. Its pattern changes during The Thinning. The seven o'clock bell wakes the mana lanterns; the eight o'clock bell begins curfew. After it the lanterns drop to their night burn, each dormitory seals to its own students, and staff walk the courtyards for the first hour. Birds leave the roof just before it sounds.",
+  "vibe": "booming, felt through the floor.",
+  "has_secret": false,
+  "regulars": [
+   "Aiden",
+   "Irene"
+  ],
+  "connections": [
+   "portrait_hall",
+   "rooftop"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": null,
+  "lore": [],
+  "floor": "Towers & Roof",
+  "pin": 1,
+  "discoverable": false
+ },
+ "lecture_halls": {
+  "id": "lecture_halls",
+  "name": "Lecture Halls",
+  "uid": 49,
+  "category": "Academic",
+  "kind": "location",
+  "description": "Tiered rooms holding all four dorms at once, for the shared track: Magic Theory, History, Etiquette, Creature Studies. Each year level has its own floor: first-years on Floor 2, second-years on Floor 3, third-years on Floor 4. The only classrooms where students sit beside other types. Each class leaves its traces: chalk diagrams, old maps, polished desks, mud and straw after Creature Studies.",
+  "vibe": "tiered stone, crowded, metallic air.",
+  "has_secret": false,
+  "regulars": [
+   "Ezrel",
+   "Kuroo",
+   "Layla",
+   "Milena",
+   "Yvette"
+  ],
+  "connections": [
+   "courtyards",
+   "seminar_rooms",
+   "potion_halls",
+   "workshop",
+   "storage_and_lockers"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": null,
+  "lore": [
+   {
+    "uid": 206,
+    "title": "Ghost Story - The Long Corridor",
+    "summary": "Where: the castle's main corridor, walked alone after the night burn."
+   },
+   {
+    "uid": 209,
+    "title": "Ghost Story - The Night Student",
+    "summary": "Where: the Lecture Hall tier, after curfew."
+   }
+  ],
+  "floor": "Floor 2",
+  "pin": 1,
+  "discoverable": false
+ },
+ "seminar_rooms": {
+  "id": "seminar_rooms",
+  "name": "Seminar Rooms",
+  "uid": 50,
+  "category": "Academic",
+  "kind": "location",
+  "description": "On Floor 3, beside the second-year Lecture Halls; first-years climb up to them, third-years come down. Smaller rooms for dorm-specific teaching and discussion. Four of most things, since Combat, Potion Crafting and Dark Magic Defense are taught to each dorm separately. Small enough that a badly cast spell fills the whole room. Chalk circles ghost the floors.",
+  "vibe": "close, chalky.",
+  "has_secret": false,
+  "regulars": [
+   "Milena",
+   "Mimosa",
+   "Yvette"
+  ],
+  "connections": [
+   "lecture_halls"
+  ],
+  "walk_min": 4,
+  "clubs": [
+   "Warding Study"
+  ],
+  "access": null,
+  "lore": [],
+  "floor": "Floor 3",
+  "pin": 1,
+  "discoverable": false
+ },
+ "potion_halls": {
+  "id": "potion_halls",
+  "name": "Potion Halls",
+  "uid": 51,
+  "category": "Academic",
+  "kind": "location",
+  "description": "Four brewing halls on Floor 4, one per dorm at the base of each of four towers, each equipped differently because each type approaches the craft differently, doubling as ventilated laboratories. Disposal rules are strict. The line between legitimate Potion Crafting and forbidden poison magic is drawn here and watched closely. Four towers vent four colours of steam over the roofline.",
+  "vibe": "sweet, bitter, mineral.",
+  "has_secret": false,
+  "regulars": [
+   "Mimosa",
+   "Royhan",
+   "Vera"
+  ],
+  "connections": [
+   "lecture_halls"
+  ],
+  "walk_min": 4,
+  "clubs": [
+   "Alchemy",
+   "Brewing"
+  ],
+  "access": null,
+  "lore": [],
+  "floor": "Floor 4",
+  "pin": 1,
+  "discoverable": false
+ },
+ "combat_grounds": {
+  "id": "combat_grounds",
+  "name": "Combat Grounds",
+  "uid": 52,
+  "category": "Academic",
+  "kind": "location",
+  "description": "Four separate training areas so the dorms train apart, kept well away from buildings. Cross-dorm sparring only during Training Week, with the Duelling Club as the standing exception. Spent mana makes the air shiver at dusk. Beside the rings stands the Sparring Pavilion, the one building the four training areas share: equipment store, rest area, and the Duelling Club's headquarters.",
+  "vibe": "scarred earth, charged air.",
+  "has_secret": false,
+  "regulars": [
+   "Florian",
+   "Gareth",
+   "Gavlan",
+   "Sophia"
+  ],
+  "connections": [
+   "courtyards",
+   "sparring_pavilion"
+  ],
+  "walk_min": 10,
+  "clubs": [
+   "Duelling"
+  ],
+  "access": "Dorm-separated training areas; duels only inside a warded ring",
+  "lore": [],
+  "floor": null,
+  "pin": 18,
+  "discoverable": false
+ },
+ "faculty_offices": {
+  "id": "faculty_offices",
+  "name": "Faculty Offices",
+  "uid": 53,
+  "category": "Academic",
+  "kind": "location",
+  "description": "Records, consultations, and grade arguments. Every teacher runs a club, so half of these double as club offices. Students can often guess who was just there from what they left behind: marked essays, borrowed books, half-finished cups, unsigned club forms.",
+  "vibe": "mixed smells, busy corridor.",
+  "has_secret": false,
+  "regulars": [
+   "Baelin",
+   "Gavlan",
+   "Kuroo",
+   "Yvette"
+  ],
+  "connections": [
+   "courtyards",
+   "staff_room",
+   "headmasters_office"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": "Staff; students by visit",
+  "lore": [],
+  "floor": "Floor 5",
+  "pin": 1,
+  "discoverable": false
+ },
+ "staff_room": {
+  "id": "staff_room",
+  "name": "Staff Room",
+  "uid": 54,
+  "category": "Academic",
+  "kind": "location",
+  "description": "Teachers' territory; students knock and wait outside. What is said here about the ranking, the students and the Warden does not leave the room. Warded so heavily that no sound crosses the threshold.",
+  "vibe": "sealed, silent.",
+  "has_secret": false,
+  "regulars": [
+   "Baelin",
+   "Gavlan",
+   "Kuroo",
+   "Yvette"
+  ],
+  "connections": [
+   "faculty_offices"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": "Staff only",
+  "lore": [],
+  "floor": "Floor 5",
+  "pin": 1,
+  "discoverable": false
+ },
+ "workshop": {
+  "id": "workshop",
+  "name": "Workshop",
+  "uid": 55,
+  "category": "Academic",
+  "kind": "location",
+  "description": "Down in the castle's vaulted undercroft beneath the Lecture Halls, where thick stone keeps its noise off the classrooms above and flues carry forge smoke up through the walls. Crafting space for the Smithing, Tailoring and Brewing clubs, plus Creation practicals and equipment repair. Tools, forges, benches. Enchantment sparks hang in the air a moment too long.",
+  "vibe": "forge light, hammering, quenched metal.",
+  "has_secret": false,
+  "regulars": [
+   "Aiden",
+   "Bobby",
+   "Ezrel",
+   "Vera",
+   "Yvette",
+   "Zara"
+  ],
+  "connections": [
+   "lecture_halls"
+  ],
+  "walk_min": 4,
+  "clubs": [
+   "Smithing"
+  ],
+  "access": null,
+  "lore": [],
+  "floor": "Undercroft",
+  "pin": 1,
+  "discoverable": false
+ },
+ "main_library": {
+  "id": "main_library",
+  "name": "Main Library",
+  "uid": 56,
+  "category": "Library",
+  "kind": "location",
+  "description": "Reading rooms and general collections; the academy's working heart in exam weeks. Open to all four dorms, one of the few places students mix by choice rather than schedule. The upper shelves sit permanently in shadow and are a standard hiding place for students avoiding class. In exam weeks, Firetooth tins and Star Cookies cover the study tables.",
+  "vibe": "towering, shadowed, murmuring.",
+  "has_secret": false,
+  "regulars": [
+   "Etnie",
+   "Gareth",
+   "Irene",
+   "Layla",
+   "Zara"
+  ],
+  "connections": [
+   "courtyards",
+   "study_rooms",
+   "archive"
+  ],
+  "walk_min": 4,
+  "clubs": [
+   "Library Assistants"
+  ],
+  "access": null,
+  "lore": [
+   {
+    "uid": 224,
+    "title": "Sleeping in the Library",
+    "summary": "Story: fall asleep over a book and you wake somewhere else: a reading room with the wrong number of doors, shelves out of order, nobody else in the building."
+   }
+  ],
+  "floor": "Floor 1",
+  "pin": 1,
+  "discoverable": false
+ },
+ "restricted_section": {
+  "id": "restricted_section",
+  "name": "Restricted Section",
+  "uid": 57,
+  "category": "Library",
+  "kind": "location",
+  "description": "Below the Archive, the deepest room of the Library. Texts on the twenty forbidden arts, the only place the crimes are written down in detail. Access controlled; being caught inside without permission is serious. Students report the sense of being counted.",
+  "vibe": "dry, dead-silent.",
+  "has_secret": false,
+  "regulars": [],
+  "connections": [
+   "archive"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": "Restricted — permission required; being caught inside is serious",
+  "lore": [],
+  "floor": "Undercroft",
+  "pin": 1,
+  "discoverable": false
+ },
+ "archive": {
+  "id": "archive",
+  "name": "Archive",
+  "uid": 58,
+  "category": "Library",
+  "kind": "location",
+  "description": "Beneath the Library, reached by a stair behind the reading rooms. Academy records going back centuries: enrollment, sorting, exam marks, dorm rankings, competition brackets. Dry, exhaustive, and the only honest account of how each dorm has actually performed.",
+  "vibe": "dusty, cold, dark.",
+  "has_secret": false,
+  "regulars": [
+   "Castor",
+   "Layla"
+  ],
+  "connections": [
+   "main_library",
+   "restricted_section"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": null,
+  "lore": [],
+  "floor": "Undercroft",
+  "pin": 1,
+  "discoverable": false
+ },
+ "study_rooms": {
+  "id": "study_rooms",
+  "name": "Study Rooms",
+  "uid": 59,
+  "category": "Library",
+  "kind": "location",
+  "description": "Small bookable rooms, impossible to reserve before exam weeks. Fights over booking slots are permanent academy life. Soundproofed; late-night groups bring Nightwell's Vigil or Firetooth.",
+  "vibe": "small, warm, muffled.",
+  "has_secret": false,
+  "regulars": [
+   "Gavlan",
+   "Irene",
+   "Royhan",
+   "Vera"
+  ],
+  "connections": [
+   "main_library"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": null,
+  "lore": [],
+  "floor": "Floor 2",
+  "pin": 1,
+  "discoverable": false
+ },
+ "common_rooms": {
+  "id": "common_rooms",
+  "name": "Common Rooms",
+  "uid": 61,
+  "category": "Residential",
+  "kind": "location",
+  "description": "One per dorm, for study, arguments, and Dorm Day displays when the dormitory opens to visitors. Theirs alone the rest of the year. Free kettle and tea, against the mall's paid cafés. Every room has one good chair that unofficially belongs to someone, and a preservation locker beside the kettle where food from home is kept and shared.",
+  "vibe": "lamplit, worn, homely.",
+  "has_secret": false,
+  "regulars": [
+   "Bobby",
+   "Etnie",
+   "Kanae",
+   "Lenna",
+   "Percival",
+   "Ruby"
+  ],
+  "connections": [
+   "fire_dormitory",
+   "light_dormitory",
+   "sky_dormitory",
+   "viridian_dormitory"
+  ],
+  "walk_min": null,
+  "clubs": [],
+  "access": null,
+  "lore": [
+   {
+    "uid": 218,
+    "title": "Dragonchess",
+    "summary": "Play: starts as ordinary chess (drawn from chess and shogi) on floating checkered spheres over golden clockwork pedestals that materialise the pieces."
+   }
+  ],
+  "floor": null,
+  "pin": 3,
+  "discoverable": false
+ },
+ "canteen": {
+  "id": "canteen",
+  "name": "Canteen",
+  "uid": 62,
+  "category": "Residential",
+  "kind": "location",
+  "description": "A single canteen for all four dorms on the castle's ground floor, just off the Main Courtyard. Everyday eating, free, open at set hours. Casual and noisy, unlike the Ring Dining Hall, and where most social life happens for students who cannot afford the mall. Loudest at five past noon. The default when points are tight; lunch crowds sort by friendship more than dorm. The main kitchen lies behind the Canteen, supplying its daily meals and preparing the Ring Dining Hall's feasts on major occasions. A dedicated section with its own benches, ovens and ingredient cupboard serves as the Cooking Club's regular venue.",
+  "vibe": "loud, bread, steam.",
+  "has_secret": false,
+  "regulars": [
+   "Bobby",
+   "Etnie",
+   "Kanae",
+   "Lenna",
+   "Percival",
+   "Ruby"
+  ],
+  "connections": [
+   "courtyards"
+  ],
+  "walk_min": 4,
+  "clubs": [
+   "Cooking"
+  ],
+  "access": null,
+  "lore": [
+   {
+    "uid": 211,
+    "title": "The Lucky Roll",
+    "summary": "The Canteen's free filled roll, baked in batches, no two fillings alike, nothing written down."
+   }
+  ],
+  "floor": "Floor 1",
+  "pin": 1,
+  "discoverable": false
+ },
+ "laundry": {
+  "id": "laundry",
+  "name": "Laundry",
+  "uid": 63,
+  "category": "Residential",
+  "kind": "location",
+  "description": "One in each dormitory. Uniforms, bedding and linens, self-service and free against the mall's paid service. Students on detention often end up working here. The free rune tubs are slow and hard on fabric, which is why bottom-band uniforms wear out faster.",
+  "vibe": "damp heat, humming.",
+  "has_secret": false,
+  "regulars": [
+   "Percival",
+   "Zara"
+  ],
+  "connections": [
+   "fire_dormitory",
+   "light_dormitory",
+   "sky_dormitory",
+   "viridian_dormitory"
+  ],
+  "walk_min": null,
+  "clubs": [],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 3,
+  "discoverable": false
+ },
+ "bathhouse_and_washrooms": {
+  "id": "bathhouse_and_washrooms",
+  "name": "Bathhouse and Washrooms",
+  "uid": 64,
+  "category": "Residential",
+  "kind": "location",
+  "description": "One in each dormitory. Regional in character and one of the few genuinely relaxed spaces on campus. Dorm-segregated, and a natural place for conversations that would not happen elsewhere; running water covers talk better than a door. Rune heaters make it the one place on campus that is truly warm. Home of the Third Stall ghost story.",
+  "vibe": "steamy, echoing, warm.",
+  "has_secret": false,
+  "regulars": [
+   "Caralynn",
+   "Etnie",
+   "Saffi"
+  ],
+  "connections": [
+   "fire_dormitory",
+   "light_dormitory",
+   "sky_dormitory",
+   "viridian_dormitory"
+  ],
+  "walk_min": null,
+  "clubs": [],
+  "access": null,
+  "lore": [
+   {
+    "uid": 205,
+    "title": "Ghost Story - The Third Stall",
+    "summary": "Where: one stall in every Bathhouse and Washroom block, always occupied, never answers."
+   }
+  ],
+  "floor": null,
+  "pin": 3,
+  "discoverable": false
+ },
+ "storage_and_lockers": {
+  "id": "storage_and_lockers",
+  "name": "Storage and Lockers",
+  "uid": 65,
+  "category": "Residential",
+  "kind": "location",
+  "description": "Personal storage lining the corridors on every Lecture Hall floor of the castle; in the dorms, students simply keep things in their rooms. Each locker answers only to its owner's bracelet. Since Effigy curses work through a personal belonging, locker security is taken seriously.",
+  "vibe": "metal, clattering at period change.",
+  "has_secret": false,
+  "regulars": [
+   "Aiden",
+   "Castor"
+  ],
+  "connections": [
+   "lecture_halls"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": null,
+  "lore": [],
+  "floor": "Floor 2",
+  "pin": 1,
+  "discoverable": false
+ },
+ "mall": {
+  "id": "mall",
+  "name": "The Mall",
+  "uid": 66,
+  "category": "Student Life",
+  "kind": "location",
+  "description": "The most popular building on campus and where students spend most free time. Crown-funded, holding everything a student needs without leaving: tailor, barber, laundry service, restaurants, tea houses and cafés, bakery, music rooms, art studios, game halls, and a multipurpose store. Everything costs points, with a basic free version of each available in the dorms. Familiar names: Nightwell, Merryhew's, the Sunfizz counter, the bakery. Ground level is food, tailoring, and supplies. Second floor is private dining, tea shops, and gaming parlors. The top deck belongs to the practice studios and meditation nooks.",
+  "vibe": "warm, bright, loud.",
+  "has_secret": false,
+  "regulars": [
+   "Aiden",
+   "Althair",
+   "Caralynn",
+   "Ruby",
+   "Trixie"
+  ],
+  "connections": [
+   "courtyards",
+   "medical_centre",
+   "commissary",
+   "banking_house",
+   "meditation_rooms_spirit_house",
+   "nightwell",
+   "merryhews",
+   "snug"
+  ],
+  "walk_min": 5,
+  "clubs": [],
+  "access": null,
+  "lore": [
+   {
+    "uid": 210,
+    "title": "Sunfizz",
+    "summary": "The soda every student drinks, sold at the Commissary and the Mall store in heavy glass bottles."
+   },
+   {
+    "uid": 212,
+    "title": "Ardenne",
+    "summary": "The luxury marque in magical equipment: focuses, instruments, cases, measuring tools."
+   },
+   {
+    "uid": 213,
+    "title": "Firetooth",
+    "summary": "A tin of hard sweets hot enough to make the eyes water, sold everywhere."
+   },
+   {
+    "uid": 215,
+    "title": "The Oracle Shell",
+    "summary": "A palm-sized novelty shell from the Mall that answers any spoken question with yes, no, or ask again later."
+   },
+   {
+    "uid": 222,
+    "title": "Star Cookie",
+    "summary": "A star-shaped bakery biscuit."
+   }
+  ],
+  "floor": null,
+  "pin": 22,
+  "discoverable": false
+ },
+ "club_rooms": {
+  "id": "club_rooms",
+  "name": "Club Rooms",
+  "uid": 67,
+  "category": "Student Life",
+  "kind": "location",
+  "description": "Roughly thirty rooms of wildly uneven quality down one long corridor on the castle's Floor 1, opening off the Main Courtyard. Centuries-old clubs hold proper halls; a month-old club with five reluctant members gets a converted storeroom. Allocation is the Student Council's most bitterly contested duty. The Theatre Troupe keeps its own club room for meetings, read-throughs and rehearsals. For performances it uses an old indoor amphitheatre off the same corridor, no longer used for classes or assemblies: semicircular tiers of stone seats facing a sunken floor, with heavy curtains and portable scenery turning one end into a stage. It stands empty between productions; before a show, the corridor fills with costumes, scenery and performers waiting for their cue.",
+  "vibe": "mismatched, lived-in.",
+  "has_secret": false,
+  "regulars": [
+   "Aiden",
+   "Bobby",
+   "Caralynn",
+   "Ezrel",
+   "Florian",
+   "Kanae",
+   "Kuroo",
+   "Ruby",
+   "Trixie"
+  ],
+  "connections": [
+   "courtyards",
+   "student_council_chamber",
+   "announcement_room"
+  ],
+  "walk_min": 4,
+  "clubs": [
+   "Theatre",
+   "Music",
+   "Card",
+   "Board Game",
+   "Divination",
+   "Tailoring",
+   "Drawing",
+   "Calligraphy",
+   "Tea",
+   "Specialized Magic"
+  ],
+  "access": null,
+  "lore": [
+   {
+    "uid": 218,
+    "title": "Dragonchess",
+    "summary": "Play: starts as ordinary chess (drawn from chess and shogi) on floating checkered spheres over golden clockwork pedestals that materialise the pieces."
+   }
+  ],
+  "floor": "Floor 1",
+  "pin": 1,
+  "discoverable": false
+ },
+ "student_council_chamber": {
+  "id": "student_council_chamber",
+  "name": "Student Council Chamber",
+  "uid": 68,
+  "category": "Student Life",
+  "kind": "location",
+  "description": "A small room at the far end of the Club Rooms corridor on Floor 1, permanently buried in club paperwork. Six seats, president, vice president and one representative per dorm, in a room built for four.",
+  "vibe": "cramped, ink, cold tea.",
+  "has_secret": false,
+  "regulars": [
+   "Caspian",
+   "Irene"
+  ],
+  "connections": [
+   "club_rooms"
+  ],
+  "walk_min": 4,
+  "clubs": [
+   "Festival Committee"
+  ],
+  "access": null,
+  "lore": [],
+  "floor": "Floor 1",
+  "pin": 1,
+  "discoverable": false
+ },
+ "notice_board": {
+  "id": "notice_board",
+  "name": "Notice Board",
+  "uid": 69,
+  "category": "Student Life",
+  "kind": "location",
+  "description": "A long wall of boards in the castle's Floor 1 entrance hall, at the foot of the main stair, where every student passes on the way to class. Club recruitment, exam results, dorm rankings and competition brackets, posted publicly, alongside the student-run half: tutoring offers, study groups, festival posters, lost-item notes and small warnings. After results it is a crowd with elbows. Paid-work openings go within a day. Unofficial notices, dares and betting slips go up overnight and vanish by dawn. Lost items are listed here before they reach the Lost & Found counter at Reception.",
+  "vibe": "layered paper, crowded.",
+  "has_secret": false,
+  "regulars": [
+   "Aiden",
+   "Castor",
+   "Irene"
+  ],
+  "connections": [
+   "courtyards",
+   "wardens_office",
+   "royal_inspectorate",
+   "detention_tower",
+   "staff_quarters"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": null,
+  "lore": [],
+  "floor": "Floor 1",
+  "pin": 1,
+  "discoverable": false
+ },
+ "mail_tower": {
+  "id": "mail_tower",
+  "name": "Mail Tower",
+  "uid": 70,
+  "category": "Student Life",
+  "kind": "location",
+  "description": "The academy's only regular contact with outside: letters and parcels. The upper floors are the aviary where message birds are kept and flown; Creature Studies uses it for bird handling. A sorting floor below handles parcels, with numbered lockers and a tally token for collection; birds carry letters and light goods, heavy goods come slowly by cart. Sunday is the heaviest sorting day, and students on shifts learn everyone's family news first.",
+  "vibe": "feathers, birdcall, cold stairwell.",
+  "has_secret": false,
+  "regulars": [
+   "Castor",
+   "Royhan",
+   "Saffi"
+  ],
+  "connections": [
+   "courtyards"
+  ],
+  "walk_min": 5,
+  "clubs": [],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 25,
+  "discoverable": false
+ },
+ "courtyards": {
+  "id": "courtyards",
+  "name": "Courtyards",
+  "uid": 71,
+  "category": "Student Life",
+  "kind": "location",
+  "description": "Open spaces between buildings where students can hangout. Not designed for anything in particular, which is exactly why they work. Every flat edge worn smooth from centuries of sitting.",
+  "vibe": "open stone, sunny noon, windy dusk.",
+  "has_secret": false,
+  "regulars": [
+   "Althair",
+   "Trixie"
+  ],
+  "connections": [
+   "reception_and_gatehouse",
+   "arbiter_hall",
+   "canteen",
+   "club_rooms",
+   "main_library",
+   "notice_board",
+   "lecture_halls",
+   "faculty_offices",
+   "fire_dormitory",
+   "light_dormitory",
+   "sky_dormitory",
+   "viridian_dormitory",
+   "mall",
+   "mail_tower",
+   "founders_statue_and_park",
+   "combat_grounds",
+   "sports_field",
+   "gardens",
+   "grassy_field_and_hills",
+   "dovecote"
+  ],
+  "walk_min": 0,
+  "clubs": [],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 2,
+  "discoverable": false
+ },
+ "sports_field": {
+  "id": "sports_field",
+  "name": "Sports Field",
+  "uid": 72,
+  "category": "Sport and Grounds",
+  "kind": "location",
+  "description": "Soccer, running, and Sports Day in Month 6. Magic banned outright in play, so this is the one part of the academy where being a powerful mage counts for nothing.",
+  "vibe": "grass, mud, shouting.",
+  "has_secret": false,
+  "regulars": [
+   "Percival",
+   "Saffi"
+  ],
+  "connections": [
+   "courtyards",
+   "founders_statue_and_park",
+   "gymnasium",
+   "archery_range"
+  ],
+  "walk_min": 10,
+  "clubs": [
+   "Soccer"
+  ],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 17,
+  "discoverable": false
+ },
+ "gymnasium": {
+  "id": "gymnasium",
+  "name": "Gymnasium",
+  "uid": 73,
+  "category": "Sport and Grounds",
+  "kind": "location",
+  "description": "Indoor training, used heavily in bad weather and during The Thinning lockdown, when nobody is permitted outside for a week and the place never goes quiet.",
+  "vibe": "high roof, echoing.",
+  "has_secret": false,
+  "regulars": [
+   "Percival",
+   "Saffi"
+  ],
+  "connections": [
+   "sports_field",
+   "swimming_pool"
+  ],
+  "walk_min": 10,
+  "clubs": [],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 16,
+  "discoverable": false
+ },
+ "swimming_pool": {
+  "id": "swimming_pool",
+  "name": "Swimming Pool",
+  "uid": 74,
+  "category": "Sport and Grounds",
+  "kind": "location",
+  "description": "An outdoor pool beside the Gymnasium, its water kept warm by runes along the rim. Sport clubs and general recreation. Water-type students are banned from competing seriously, which they complain about constantly.",
+  "vibe": "sun on water, splashing, wet stone.",
+  "has_secret": false,
+  "regulars": [
+   "Percival",
+   "Saffi"
+  ],
+  "connections": [
+   "gymnasium"
+  ],
+  "walk_min": 10,
+  "clubs": [],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 16,
+  "discoverable": false
+ },
+ "archery_range": {
+  "id": "archery_range",
+  "name": "Archery Range",
+  "uid": 75,
+  "category": "Sport and Grounds",
+  "kind": "location",
+  "description": "Open range for the Archery Club. Magic banned in play like all sport clubs, so it comes down to the arm and the eye. One of the quietest places on the grounds.",
+  "vibe": "windy, open, quiet.",
+  "has_secret": false,
+  "regulars": [
+   "Percival",
+   "Saffi"
+  ],
+  "connections": [
+   "sports_field"
+  ],
+  "walk_min": 10,
+  "clubs": [],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 15,
+  "discoverable": false
+ },
+ "grassy_field_and_hills": {
+  "id": "grassy_field_and_hills",
+  "name": "Grassy Field and Hills",
+  "uid": 76,
+  "category": "Sport and Grounds",
+  "kind": "location",
+  "description": "Open rolling ground at the edge of campus, used for recreation year-round, with the castle small in the distance. On Star Night the hills fill with students in tents and bedrolls, and the campus below goes dark for the stars.",
+  "vibe": "open sky, breezy.",
+  "has_secret": false,
+  "regulars": [
+   "Saffi"
+  ],
+  "connections": [
+   "courtyards",
+   "observation_tower",
+   "old_hut",
+   "forest"
+  ],
+  "walk_min": 15,
+  "clubs": [
+   "Running",
+   "Walking"
+  ],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 36,
+  "discoverable": false
+ },
+ "forest": {
+  "id": "forest",
+  "name": "Forest",
+  "uid": 77,
+  "category": "Sport and Grounds",
+  "kind": "location",
+  "description": "Wooded ground bordering the hills. Creature Studies fieldwork, foraging, walking, and where students go when they want to not be found. Students leave a bite before eating there (Eating in the Forest superstition). Creature Studies teaches there and patrols watch its edge. A deer path leads to the Forest Clearing and its Elder Oak, the one bright place inside it.",
+  "vibe": "old growth, muffled, watched.",
+  "has_secret": false,
+  "regulars": [
+   "Dante",
+   "Lenna",
+   "Vallie"
+  ],
+  "connections": [
+   "boathouse_and_lake",
+   "grassy_field_and_hills",
+   "forest_clearing"
+  ],
+  "walk_min": 25,
+  "clubs": [],
+  "access": "Far edge of the grounds; curfew applies after dark",
+  "lore": [
+   {
+    "uid": 225,
+    "title": "Eating in the Forest",
+    "summary": "Rule: share first."
+   }
+  ],
+  "floor": null,
+  "pin": 11,
+  "discoverable": false
+ },
+ "boathouse_and_lake": {
+  "id": "boathouse_and_lake",
+  "name": "Boathouse and Lake",
+  "uid": 78,
+  "category": "Sport and Grounds",
+  "kind": "location",
+  "description": "Vast Open water for rowing, swimming and the Fishing Club. The boathouse stores the craft and doubles as a quiet place to sit. Beside the boathouse stands the Fishing Club's fishing house, a timber hut full of rods, nets and tackle, with its own long dock built for fishing rather than boats. Behind it, a stone-edged pond raises fish for the Canteen kitchen and the Fishing Club's breeding projects. Sound carries strangely across the water: a far-bank conversation arrives too clearly. Home of the Crying on the Water story; the boathouse refuses bookings after dark. A small island sits in the middle of the lake with a big willow tree on it; at night the tree glows in the distance from the many fireflies that inhabit the island.",
+  "vibe": "wet timber, cold water.",
+  "has_secret": false,
+  "regulars": [
+   "Aiden",
+   "Milena",
+   "Ottavio",
+   "Sophia"
+  ],
+  "connections": [
+   "gardens",
+   "forest"
+  ],
+  "walk_min": 20,
+  "clubs": [
+   "Fishing"
+  ],
+  "access": null,
+  "lore": [
+   {
+    "uid": 208,
+    "title": "Ghost Story - The Crying on the Water",
+    "summary": "Where: the Lake, after dark."
+   }
+  ],
+  "floor": null,
+  "pin": 12,
+  "discoverable": false
+ },
+ "gardens": {
+  "id": "gardens",
+  "name": "Gardens",
+  "uid": 79,
+  "category": "Sport and Grounds",
+  "kind": "location",
+  "description": "Cultivated grounds tended by students and staff, growing Potion Crafting reagents alongside ordinary plants. The Gardening Club effectively runs them, and students gather here before the Harvest Festival. Everything grows a little too well. Halvard: the Sky outcasts' meeting ground; the far end is a reliable place to skip class.",
+  "vibe": "turned earth, layered herb scents.",
+  "has_secret": false,
+  "regulars": [
+   "Idris",
+   "Lenna",
+   "Royhan",
+   "Ruby",
+   "Zara"
+  ],
+  "connections": [
+   "courtyards",
+   "founders_statue_and_park",
+   "menagerie",
+   "boathouse_and_lake"
+  ],
+  "walk_min": 15,
+  "clubs": [
+   "Gardening"
+  ],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 13,
+  "discoverable": false
+ },
+ "menagerie": {
+  "id": "menagerie",
+  "name": "Menagerie",
+  "uid": 80,
+  "category": "Sport and Grounds",
+  "kind": "location",
+  "description": "Live specimens for Creature Studies, housed and handled by students under supervision. Beast Handling Club territory. Halvard: the Creature Studies teacher lives beside it in converted stables. Mucking out is the highest-paying paid-work post because nobody volunteers. The animals sense weather changes before the handlers. Magical Beast lives here.",
+  "vibe": "straw, musk, strange calls.",
+  "has_secret": false,
+  "regulars": [
+   "Lenna",
+   "Vallie"
+  ],
+  "connections": [
+   "gardens"
+  ],
+  "walk_min": 15,
+  "clubs": [
+   "Beast Handling"
+  ],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 14,
+  "discoverable": false
+ },
+ "observation_tower": {
+  "id": "observation_tower",
+  "name": "Observation Tower",
+  "uid": 81,
+  "category": "Sport and Grounds",
+  "kind": "location",
+  "description": "A high tower for astral and celestial work, most important to Mystic students and the Divination Society. The most contested spot on campus on Star Night. Instruments turn by themselves at night.",
+  "vibe": "high, windy, deep dark.",
+  "has_secret": false,
+  "regulars": [
+   "Gareth",
+   "Kanae"
+  ],
+  "connections": [
+   "grassy_field_and_hills"
+  ],
+  "walk_min": 15,
+  "clubs": [],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 9,
+  "discoverable": false
+ },
+ "medical_centre": {
+  "id": "medical_centre",
+  "name": "Medical Centre",
+  "uid": 82,
+  "category": "Services",
+  "kind": "location",
+  "description": "A white-walled building of its own beside the Mall, with a herb garden along one side: more than an infirmary, less than a hospital. Treatment rooms, a small apothecary, and an inpatient ward where students stay overnight or for days under care. Staffed by Spiritual mages; busiest after Combat Class, in competition weeks, exam weeks, and after The Thinning. Nurses see injuries they must report and injuries they quietly do not. The attached Healing Ward is a teaching space where students practise on real patients under supervision. Staff can spot a Nightwell's Vigil overdose at a glance. Can heal any minor to mid injury to pristine; anything beyond is stabilised here and sent on to a proper hospital.",
+  "vibe": "clean linen, green healing scent, too quiet.",
+  "has_secret": false,
+  "regulars": [
+   "Percival",
+   "Sophia",
+   "Tilly",
+   "Vera"
+  ],
+  "connections": [
+   "mall"
+  ],
+  "walk_min": 5,
+  "clubs": [
+   "Medical Centre Volunteers"
+  ],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 24,
+  "discoverable": false
+ },
+ "commissary": {
+  "id": "commissary",
+  "name": "Commissary",
+  "uid": 83,
+  "category": "Services",
+  "kind": "location",
+  "description": "The academy shop, a big open-sided stall beside the Mall: one broad roof on timber posts, open on all four sides, its counters and shelves crammed to the rafters like a general store that sells a bit of everything. Supplies, uniforms, stationery, reagents, equipment, with special orders for anything not stocked. The cheap tier against the mall's store; specialised items can still eat a week of points. Sunfizz sells here for eight points, bottles returned for two. Everyday kit: notebooks, pencils, pen nibs and ink, folders, satchels, printed class textbooks; reagents and equipment on the back shelves.",
+  "vibe": "crowded shelves, new cloth, leather.",
+  "has_secret": false,
+  "regulars": [
+   "Caralynn",
+   "Idris",
+   "Zara"
+  ],
+  "connections": [
+   "mall"
+  ],
+  "walk_min": 5,
+  "clubs": [],
+  "access": null,
+  "lore": [
+   {
+    "uid": 210,
+    "title": "Sunfizz",
+    "summary": "The soda every student drinks, sold at the Commissary and the Mall store in heavy glass bottles."
+   },
+   {
+    "uid": 213,
+    "title": "Firetooth",
+    "summary": "A tin of hard sweets hot enough to make the eyes water, sold everywhere."
+   }
+  ],
+  "floor": null,
+  "pin": 23,
+  "discoverable": false
+ },
+ "reception_and_gatehouse": {
+  "id": "reception_and_gatehouse",
+  "name": "Reception and Gatehouse",
+  "uid": 84,
+  "category": "Services",
+  "kind": "location",
+  "description": "Where visitors are received and logged, and the formal boundary of the academy. Everyone entering or leaving passes through, which makes it the most watched building on campus. The boundary wards are felt as a change of pressure in the gateway. The Gatehouse includes a visiting parlour where students meet family and approved visitors during visiting hours, with worn armchairs, a tea table and windows facing the approach road. Visitors are logged at Reception before entering; meeting here does not give them access to the rest of the grounds.",
+  "vibe": "iron, registers, watched.",
+  "has_secret": false,
+  "regulars": [],
+  "connections": [
+   "courtyards",
+   "groundskeepers_lodge"
+  ],
+  "walk_min": null,
+  "clubs": [],
+  "access": "The only way in or out",
+  "lore": [],
+  "floor": null,
+  "pin": 26,
+  "discoverable": false
+ },
+ "groundskeepers_lodge": {
+  "id": "groundskeepers_lodge",
+  "name": "Groundskeeper's Lodge",
+  "uid": 85,
+  "category": "Services",
+  "kind": "location",
+  "description": "Small quarters at the edge of the grounds for staff who maintain the fields, gardens and walls. The Groundskeeping club reports here. The one building on campus where nothing is enchanted.",
+  "vibe": "cut grass, oil, old tools.",
+  "has_secret": false,
+  "regulars": [
+   "Dante",
+   "Lenna"
+  ],
+  "connections": [
+   "reception_and_gatehouse"
+  ],
+  "walk_min": null,
+  "clubs": [
+   "Groundskeeping"
+  ],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 20,
+  "discoverable": false
+ },
+ "detention_tower": {
+  "id": "detention_tower",
+  "name": "Detention Tower",
+  "uid": 86,
+  "category": "Services",
+  "kind": "location",
+  "description": "One of the castle core's towers, climbed by its own narrow spiral stair from Floor 1. Where punished students are sent after classes for menial work: copying, cleaning, sorting archive material. The academy's only visible enforcement, and a mild one, which raises the question of what happens to students who do something genuinely serious.",
+  "vibe": "endless stairs, scratching pens.",
+  "has_secret": false,
+  "regulars": [],
+  "connections": [
+   "notice_board"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": "When assigned detention",
+  "lore": [],
+  "floor": "Floor 1",
+  "pin": 1,
+  "discoverable": false
+ },
+ "meditation_rooms_spirit_house": {
+  "id": "meditation_rooms_spirit_house",
+  "name": "Meditation Rooms / Spirit House",
+  "uid": 87,
+  "category": "Services",
+  "kind": "location",
+  "description": "An old, weathered building built like a riad: blank outer walls with few windows, every room facing inward onto a shaded central courtyard. Moss and vines have taken its walls, and dense, leafy trees crowd close around it, swallowing the noise of the campus outside. Quiet dark rooms for will-focus training, and where bound spirits are kept between Occult lessons. The two functions share a building, which nobody finds reassuring. Students are not to go alone. On still nights the building makes sounds no one will explain.",
+  "vibe": "dark, silent, uneasy, moss and old stone.",
+  "has_secret": false,
+  "regulars": [
+   "Caspian",
+   "Royhan",
+   "Ruby"
+  ],
+  "connections": [
+   "mall"
+  ],
+  "walk_min": 5,
+  "clubs": [],
+  "access": "Students are not to go alone",
+  "lore": [],
+  "floor": null,
+  "pin": 32,
+  "discoverable": false
+ },
+ "dovecote": {
+  "id": "dovecote",
+  "name": "The Dovecote",
+  "uid": 88,
+  "category": "External Presence",
+  "kind": "location",
+  "description": "A compound on academy grounds but not of the academy, reporting to the crown; the Headmaster has no authority over anyone inside. Doves are permanent, rotated in from the capital, and not academy staff. They arrest for forbidden magic, investigate incidents, hold prisoners briefly, and send serious cases onward. Always in pure marble-white cloaks. Students call it the Coop or the Roost, and the Doves themselves Pigeons, and fear it regardless; they cross the courtyard in front of it faster than any other. Halvard: a Commander and a Senior Dove second (who also teaches Dark Magic Defense) are tracing an unregistered forbidden-magic group whose traces they have found, knowing nothing of its name, members or aims.",
+  "vibe": "blinding white, cold, feared.",
+  "has_secret": false,
+  "regulars": [
+   "Dante",
+   "Krieg",
+   "Milena"
+  ],
+  "connections": [
+   "courtyards",
+   "cathedral",
+   "noble_houses_liaison",
+   "broken_statue"
+  ],
+  "walk_min": null,
+  "clubs": [],
+  "access": "Crown ground — the Doves' compound",
+  "lore": [],
+  "floor": null,
+  "pin": 28,
+  "discoverable": false
+ },
+ "royal_inspectorate": {
+  "id": "royal_inspectorate",
+  "name": "The Royal Inspectorate",
+  "uid": 89,
+  "category": "External Presence",
+  "kind": "location",
+  "description": "A suite of offices on Castle Floor 1 behind a heavy door hung with the crown's banners: academy stone, crown ground. The Headmaster's authority stops at that door. Its wing is the same Floor 1 wing as the Warden's corridor, which neither side enjoys. A crown office auditing academic standards and mana output, answering to the capital. Where the Doves handle crime, the Inspectorate handles performance: exam results, ranking integrity, and how much the student body actually feeds the seal. That last duty puts them in the Warden's territory, since the Warden keeps the ledgers and the Inspectorate wants to read them. Halvard: they blame the breach on the Warden's office and press the Acting Warden, who refuses every time.",
+  "vibe": "ink, clicking counting frames, bureaucratic.",
+  "has_secret": false,
+  "regulars": [],
+  "connections": [
+   "notice_board",
+   "wardens_office"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": "Crown office — the Headmaster has no authority past the door",
+  "lore": [],
+  "floor": "Floor 1",
+  "pin": 1,
+  "discoverable": false
+ },
+ "cathedral": {
+  "id": "cathedral",
+  "name": "The Cathedral",
+  "uid": 90,
+  "category": "External Presence",
+  "kind": "location",
+  "description": "A house of worship for Asmoday, Goddess of Creation, on academy grounds but answerable to its own authority. Services open to all; its clergy are not academy employees and teach that Asmoday created magic and gifted it to mortals. That a goddess of creation holds ground at an institution built around sealing things away is a tension nobody discusses openly. It also runs orphanages across the kingdom, the Asmoday's Mercy houses. Halvard: run by a steward who keeps the registry of every oath sworn on academy grounds.",
+  "vibe": "stained-glass colour, incense, heavy stillness.",
+  "has_secret": false,
+  "regulars": [
+   "Caspian",
+   "Percival",
+   "Tristan"
+  ],
+  "connections": [
+   "dovecote",
+   "noble_houses_liaison"
+  ],
+  "walk_min": null,
+  "clubs": [],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 29,
+  "discoverable": false
+ },
+ "noble_houses_liaison": {
+  "id": "noble_houses_liaison",
+  "name": "The Noble Houses' Liaison",
+  "uid": 91,
+  "category": "External Presence",
+  "kind": "location",
+  "description": "A small elegant manor hung with the banners of the noble houses, standing near the Cathedral and the Dovecote. A standing office representing the noble houses' interests, and the reason noble conduct is a graded part of Etiquette rather than a courtesy. It tracks promising students long before Graduation in Month 11, keeps its own notes on who is worth approaching, and hosts house representatives. Students who do not catch its attention usually never learn it exists.",
+  "vibe": "carpeted, soft, deliberately comfortable.",
+  "has_secret": false,
+  "regulars": [
+   "Caine",
+   "Caralynn",
+   "Caspian",
+   "Florian"
+  ],
+  "connections": [
+   "dovecote",
+   "cathedral"
+  ],
+  "walk_min": null,
+  "clubs": [],
+  "access": "By invitation",
+  "lore": [],
+  "floor": null,
+  "pin": 30,
+  "discoverable": false
+ },
+ "banking_house": {
+  "id": "banking_house",
+  "name": "The Banking House",
+  "uid": 92,
+  "category": "External Presence",
+  "kind": "location",
+  "description": "A square stone building with a flat roof, heavy double doors, and a gilded coin emblem mounted above the entrance. The academy's only currency exchange, converting points to real money and back at 1:1 either way. It also moves real coin in and out of the grounds: family money, paid-work earnings and betting settlements all become coin here. It stands outside the mall, so a visit is a deliberate errand.",
+  "vibe": "polished counters, clinking coin.",
+  "has_secret": false,
+  "regulars": [
+   "Aiden",
+   "Caralynn",
+   "Royhan"
+  ],
+  "connections": [
+   "mall"
+  ],
+  "walk_min": 5,
+  "clubs": [],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 27,
+  "discoverable": false
+ },
+ "forest_clearing": {
+  "id": "forest_clearing",
+  "name": "Forest Clearing",
+  "uid": 254,
+  "category": "Sport and Grounds",
+  "kind": "location",
+  "description": "A single oak called the Elder Oak stands in an open clearing in the middle of the Forest, so broad a dozen students holding hands cannot circle it, and older than the castle by anyone's guess. The canopy opens above the clearing, so the oak stands in full sun while the woods around it stay dim; the muffled quiet of the Forest gives way to birdsong at its edge, and gold motes drift in the light even on grey days. Its roots pull the ground's mana into slow currents unlike anywhere else on campus, and a wild field of rare flowers has spread across the clearing around it, in colours found nowhere else. The Gardening Club has tried transplanting them; they wilt within a day of leaving the clearing. A deer path leads in from the treeline, about fifteen minutes' walk. Students come to read, nap between the roots, or be alone without feeling lost. The crust for Eating in the Forest goes on its roots. Patrols turn students back at dusk, and nobody answers their name out here after dark.",
+  "vibe": "sunlit, still, majestic, flower-scent and birdsong.",
+  "has_secret": false,
+  "regulars": [
+   "Baelin",
+   "Idris",
+   "Lenna",
+   "Royhan"
+  ],
+  "connections": [
+   "forest"
+  ],
+  "walk_min": 40,
+  "clubs": [],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 11,
+  "discoverable": false
+ },
+ "rooftop": {
+  "id": "rooftop",
+  "name": "Rooftop",
+  "uid": 255,
+  "category": "Student Life",
+  "kind": "location",
+  "description": "The flat lead roofs of the castle core, joined by parapet walks and short stairs between the gables. Officially out of bounds. The only way up is a small locked door off the Bell Tower stair, and the trick of opening it is passed from older students to younger ones, never written down; being shown the way up means someone has decided you belong. From the parapet the whole academy lies open: the courtyards, the four dormitories, the Hills, the Lake, the Forest's dark edge, the white roofs of the Dovecote. At night the mana lanterns spread below like a lit map, and at month end you can watch them dim together. The campus's quiet romantic secret: couples come up for sunset and the lantern view, and a hidden corner behind the eastern gable is where confessions happen. Nobody who has been brought up here tells, and the rule is to leave a corner free if someone is already in it. Birds lift off just before each bell, and the lead hums underfoot when it rings. Staff walk the courtyards after curfew, never the roof.",
+  "vibe": "wide sky, wind, sun-warm lead, a shared secret.",
+  "has_secret": false,
+  "regulars": [
+   "Aiden",
+   "Alyssa",
+   "Rei",
+   "Zara"
+  ],
+  "connections": [
+   "bell_tower"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": "Officially out of bounds",
+  "lore": [],
+  "floor": "Towers & Roof",
+  "pin": 1,
+  "discoverable": true
+ },
+ "headmasters_office": {
+  "id": "headmasters_office",
+  "name": "Headmaster's Office",
+  "uid": 256,
+  "category": "Academic",
+  "kind": "location",
+  "description": "At the end of the Faculty Offices corridor, a round room up a short stair, its tall windows over the Main Courtyard. Forty years of one Elf's tenure fill it: shelves layered deep with books, and letters and small gifts from graduates. In the window stands a sapling grown from the Elder Oak, forty years old and still knee-high. Students come only when it matters: serious discipline, a request to repeat a year, news no one wants to hear. The bench outside is where the real waiting happens. Visitors from the Royal Inspectorate and the Dovecote are received here, since the Headmaster has no authority inside the Dovecote's walls or past the Inspectorate's door. The door stands open whenever the Headmaster is in.",
+  "vibe": "old wood, ink, green leaves, patient quiet.",
+  "has_secret": false,
+  "regulars": [
+   "Althair",
+   "Baelin",
+   "Gavlan",
+   "Tristan"
+  ],
+  "connections": [
+   "faculty_offices"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": "When it matters: discipline, requests, bad news",
+  "lore": [],
+  "floor": "Floor 5",
+  "pin": 1,
+  "discoverable": false
+ },
+ "staff_quarters": {
+  "id": "staff_quarters",
+  "name": "Staff Quarters",
+  "uid": 258,
+  "category": "Residential",
+  "kind": "location",
+  "description": "A separate stone house for the resident teaching staff (Dorm Heads live in their own dormitories instead), standing on its own beside the castle and joined to the castle's ground floor by a short covered walk: private rooms upstairs, and downstairs a shared parlour with mismatched armchairs, a kettle that is never cold, and a porch facing the Gardens. Where the Staff Room keeps students out, the Staff Quarters let them in: students may knock until the eight o'clock bell, and nothing said in the parlour counts as a consultation or a referral. It is where students come for help they would not ask for in class, advice about home, a second opinion on a club, or just tea with a teacher they like. Teachers here are off duty and act like it. Every door says something about who lives behind it: forest air draughting under Gavlan's, two teacups and a stack of theory on Layla's, and notes slid under Mimosa's, answered by morning. Vallie Goredust lives out by the Menagerie but holds court in the parlour anyway.",
+  "vibe": "lamplight, tea, worn armchairs, lived-in.",
+  "has_secret": false,
+  "regulars": [
+   "Gavlan",
+   "Layla",
+   "Mimosa",
+   "Sophia",
+   "Vallie",
+   "Yvette"
+  ],
+  "connections": [
+   "notice_board"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": "Staff residence",
+  "lore": [],
+  "floor": null,
+  "pin": 8,
+  "discoverable": false
+ },
+ "fire_dormitory": {
+  "id": "fire_dormitory",
+  "name": "Fire Dormitory",
+  "uid": 259,
+  "category": "Residential",
+  "kind": "location",
+  "description": "Home of the Elementalists (red vest). Red-tiled roof and a red banner over the door. A great hearth burns in its common room day and night, and the broad chimney stack rising above the front of the building is always warm, even in winter. Inside: a common area and personal rooms. Creed: \"Through the Elements, Victory Is Ours.\"",
+  "vibe": "hearth warmth, woodsmoke, stone.",
+  "has_secret": false,
+  "regulars": [
+   "Yvette"
+  ],
+  "connections": [
+   "courtyards",
+   "broken_statue",
+   "common_rooms",
+   "laundry",
+   "bathhouse_and_washrooms"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": "Residents only (bracelet door)",
+  "lore": [
+   {
+    "uid": 207,
+    "title": "Ghost Story - The Three O'Clock Knock",
+    "summary": "Where: a dorm door, at three in the morning, in a dormitory that admits only its own students."
+   }
+  ],
+  "floor": null,
+  "pin": 3,
+  "discoverable": false
+ },
+ "light_dormitory": {
+  "id": "light_dormitory",
+  "name": "Light Dormitory",
+  "uid": 260,
+  "category": "Residential",
+  "kind": "location",
+  "description": "Home of the Mystics (yellow vest). Golden-tiled roof and a yellow banner over the door. Its inner court is roofed by a glass dome over the common area, which glows from within after dark. Inside: the glass dome common area plus personal rooms. Creed: \"The Third Eye Lights The Way.\"",
+  "vibe": "sunlight through glass, pale stone.",
+  "has_secret": false,
+  "regulars": [
+   "Ezrel"
+  ],
+  "connections": [
+   "courtyards",
+   "common_rooms",
+   "laundry",
+   "bathhouse_and_washrooms"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": "Residents only (bracelet door)",
+  "lore": [
+   {
+    "uid": 207,
+    "title": "Ghost Story - The Three O'Clock Knock",
+    "summary": "Where: a dorm door, at three in the morning, in a dormitory that admits only its own students."
+   }
+  ],
+  "floor": null,
+  "pin": 6,
+  "discoverable": false
+ },
+ "sky_dormitory": {
+  "id": "sky_dormitory",
+  "name": "Sky Dormitory",
+  "uid": 261,
+  "category": "Residential",
+  "kind": "location",
+  "description": "Home of the Occultists (blue vest). Deep-blue-tiled roof and a blue banner over the door. A single slender tower rises from one corner, and the building's enchanted walls let residents see the academy grounds from their rooms; from outside the windows shimmer faintly, like water. Inside: common area and personal rooms. Creed: \"Together We Are Strong.\"\nStigma: Occult carries a reputation no other type does. Outsiders associate it with blood magic, demon summoning, and spirits bound against their will, and cannot always tell legal Occult practice from forbidden work. The Doves watch Occultists more closely than any other dorm, and Sky students are often the first suspected when something goes wrong. The creed reflects this: Sky students close ranks because few others will stand with them.",
+  "vibe": "cool stone, shimmering windows.",
+  "has_secret": false,
+  "regulars": [
+   "Ottavio"
+  ],
+  "connections": [
+   "courtyards",
+   "common_rooms",
+   "laundry",
+   "bathhouse_and_washrooms"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": "Residents only (bracelet door)",
+  "lore": [
+   {
+    "uid": 207,
+    "title": "Ghost Story - The Three O'Clock Knock",
+    "summary": "Where: a dorm door, at three in the morning, in a dormitory that admits only its own students."
+   }
+  ],
+  "floor": null,
+  "pin": 4,
+  "discoverable": false
+ },
+ "viridian_dormitory": {
+  "id": "viridian_dormitory",
+  "name": "Viridian Dormitory",
+  "uid": 262,
+  "category": "Residential",
+  "kind": "location",
+  "description": "Home of the Spiritualists (green vest). Green-tiled roof and a green banner over the door. An old oak fills its inner court, its crown rising above the roofline, with meditation stones set among its roots. Inside: common area, meditation rooms, personal rooms. Creed: \"Know Thyself, Know Victory.\"",
+  "vibe": "oak shade, rustling leaves, stone.",
+  "has_secret": false,
+  "regulars": [
+   "Kuroo"
+  ],
+  "connections": [
+   "courtyards",
+   "common_rooms",
+   "laundry",
+   "bathhouse_and_washrooms"
+  ],
+  "walk_min": 4,
+  "clubs": [],
+  "access": "Residents only (bracelet door)",
+  "lore": [
+   {
+    "uid": 207,
+    "title": "Ghost Story - The Three O'Clock Knock",
+    "summary": "Where: a dorm door, at three in the morning, in a dormitory that admits only its own students."
+   }
+  ],
+  "floor": null,
+  "pin": 5,
+  "discoverable": false
+ },
+ "old_hut": {
+  "id": "old_hut",
+  "name": "Old Hut",
+  "uid": 263,
+  "category": "Sport and Grounds",
+  "kind": "location",
+  "description": "A one-room timber hut on the far slope of the Hills, where the grass runs out against the Forest treeline. Nobody remembers who built it or when; the Groundskeeper's Lodge lists it as disused and not worth repairing, and leaves it standing. The roof sags, the door hangs from one hinge, and the cold hearth still holds old ash. It is where students go to share secrets: far from every building and path, with nobody walking past, and by long student custom what is said inside the Old Hut stays there. Generations of confessions have left initials carved into the inside walls. It also serves as shelter from sudden rain, and on Star Night it is claimed before sunset. After dark nobody lingers, since it sits right on the Forest edge where patrols walk and names are not answered.",
+  "vibe": "weathered wood, wind through gaps, grass and pine.",
+  "has_secret": false,
+  "regulars": [],
+  "connections": [
+   "grassy_field_and_hills"
+  ],
+  "walk_min": 20,
+  "clubs": [],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 10,
+  "discoverable": false
+ },
+ "announcement_room": {
+  "id": "announcement_room",
+  "name": "Announcement Room",
+  "uid": 264,
+  "category": "Student Life",
+  "kind": "location",
+  "description": "A small booth-like room off the Club Rooms corridor on Floor 1, home of the Academy Newspaper club. A speaking rune set into the desk carries whatever is said into it, live, to the Announcement Pillars around the grounds; nothing is recorded. Students on duty open the day with a good-morning after the seven o'clock bell and give the noon, afternoon and evening greetings, the last just before the eight o'clock bell. In between they read out what staff, the Student Council and event organisers send down, plus whatever the student on duty decides is important, the most argued-about power any club holds. Outside class periods the Music Club plays live from the side room, and the whole campus hears it. Staff can take over the rune for anything urgent; during The Thinning lockdown it is how the academy speaks to everyone at once.",
+  "vibe": "cramped, warm lamplight, sheet music and newsprint.",
+  "has_secret": false,
+  "regulars": [
+   "Caralynn",
+   "Castor",
+   "Ruby"
+  ],
+  "connections": [
+   "club_rooms"
+  ],
+  "walk_min": 4,
+  "clubs": [
+   "Newspaper"
+  ],
+  "access": null,
+  "lore": [],
+  "floor": "Floor 1",
+  "pin": 1,
+  "discoverable": false
+ },
+ "broken_statue": {
+  "id": "broken_statue",
+  "name": "Broken Statue",
+  "uid": 266,
+  "category": "Sport and Grounds",
+  "kind": "location",
+  "description": "A white marble statue standing in a stand of old trees between the Fire Dormitory and the Dovecote, off the path students take when they would rather not walk past the Dovecote's front. The figure has lost its head and one arm; the arm lies half-sunk in the moss at its feet, and moss and lichen have crept over the rest until the white shows only in patches. The inscription on its plinth has worn smooth. Who it depicted is unknown, and nobody on staff claims to know; students have theories and none of them agree. Groundskeeping leaves it exactly as it is. Light comes through the leaves in pieces, and the place is quieter than it should be for somewhere so close to the courtyard.",
+  "vibe": "green shade, cold marble, moss, stillness.",
+  "has_secret": true,
+  "regulars": [],
+  "connections": [
+   "dovecote",
+   "fire_dormitory"
+  ],
+  "walk_min": 5,
+  "clubs": [],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 33,
+  "discoverable": false
+ },
+ "sparring_pavilion": {
+  "id": "sparring_pavilion",
+  "name": "The Sparring Pavilion",
+  "uid": 267,
+  "category": "Academic",
+  "kind": "location",
+  "description": "A small round pavilion with a domed roof at the far corner of the Combat Grounds, the one building all four dorm training areas share. Inside: racks of practice staves, ward-chalk and spare training gear signed out by bracelet; benches, a water pump and a basic first-aid chest for the walk back after a hard session; a board of duel challenges and club standings. It is the Duelling Club's headquarters, the standing exception to dorm separation, so it is the one place on the grounds where students of rival dorms share a bench. Gavlan Haverton, who advises the club, keeps a desk in the back. Unwritten rule: grudges from the rings are settled in the rings, never under the roof.",
+  "vibe": "sweat, liniment, chalk dust, tired laughter.",
+  "has_secret": false,
+  "regulars": [
+   "Caspian",
+   "Gavlan",
+   "Sophia"
+  ],
+  "connections": [
+   "combat_grounds"
+  ],
+  "walk_min": 10,
+  "clubs": [
+   "Duelling (headquarters)"
+  ],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 19,
+  "discoverable": false
+ },
+ "nightwell": {
+  "id": "nightwell",
+  "name": "Nightwell",
+  "uid": 214,
+  "category": "Mall shop",
+  "kind": "shop",
+  "description": "A small Mall coffee house with one famous order, the Vigil.\nPrice: 60 points.\nKnown for: two days without sleep, paid for afterwards; the Medical Centre sees the results a day and a half later. Exam-week staple.",
+  "vibe": null,
+  "has_secret": false,
+  "regulars": [],
+  "connections": [
+   "mall"
+  ],
+  "walk_min": null,
+  "clubs": [],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 22,
+  "discoverable": false
+ },
+ "merryhews": {
+  "id": "merryhews",
+  "name": "Merryhew's",
+  "uid": 216,
+  "category": "Mall shop",
+  "kind": "shop",
+  "description": "The Mall's joke shop: itching charms, voice-changing sweets, illusion vermin, screaming boxes, fake exam results convincing enough to be banned twice.\nRules: tolerated because everything wears off; keeps a secret list of students barred from buying.",
+  "vibe": null,
+  "has_secret": false,
+  "regulars": [],
+  "connections": [
+   "mall"
+  ],
+  "walk_min": null,
+  "clubs": [],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 22,
+  "discoverable": false
+ },
+ "snug": {
+  "id": "snug",
+  "name": "The Snug",
+  "uid": 217,
+  "category": "Mall shop",
+  "kind": "shop",
+  "description": "A Mall eating house where every table is a partitioned private booth.\nKnown for: ordinary food, real privacy. Point loans, betting settlements, club trades, apologies and quiet negotiations; staff hear nothing. Booths by the hour, always a wait.",
+  "vibe": null,
+  "has_secret": false,
+  "regulars": [],
+  "connections": [
+   "mall"
+  ],
+  "walk_min": null,
+  "clubs": [],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 22,
+  "discoverable": false
+ }
+}

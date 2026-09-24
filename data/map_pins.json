@@ -1,0 +1,401 @@
+[
+ {
+  "pin": 1,
+  "label": "Castle",
+  "x": 39.71,
+  "y": 24.41,
+  "cluster": [
+   "canteen",
+   "main_library",
+   "club_rooms",
+   "student_council_chamber",
+   "announcement_room",
+   "notice_board",
+   "wardens_office",
+   "royal_inspectorate",
+   "detention_tower",
+   "lecture_halls",
+   "study_rooms",
+   "storage_and_lockers",
+   "seminar_rooms",
+   "potion_halls",
+   "faculty_offices",
+   "staff_room",
+   "headmasters_office",
+   "bell_tower",
+   "rooftop",
+   "workshop",
+   "archive",
+   "restricted_section",
+   "seal_chamber"
+  ],
+  "tabs": [
+   "Undercroft",
+   "Floor 1",
+   "Floor 2",
+   "Floor 3",
+   "Floor 4",
+   "Floor 5",
+   "Towers & Roof"
+  ]
+ },
+ {
+  "pin": 2,
+  "label": "Main Courtyard",
+  "x": 42.32,
+  "y": 45.9,
+  "cluster": [
+   "courtyards"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 3,
+  "label": "Fire Dormitory",
+  "x": 19.53,
+  "y": 37.11,
+  "cluster": [
+   "fire_dormitory",
+   "common_rooms",
+   "laundry",
+   "bathhouse_and_washrooms"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 4,
+  "label": "Sky Dormitory",
+  "x": 30.6,
+  "y": 50.78,
+  "cluster": [
+   "sky_dormitory",
+   "common_rooms",
+   "laundry",
+   "bathhouse_and_washrooms"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 5,
+  "label": "Viridian Dormitory",
+  "x": 59.24,
+  "y": 39.06,
+  "cluster": [
+   "viridian_dormitory",
+   "common_rooms",
+   "laundry",
+   "bathhouse_and_washrooms"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 6,
+  "label": "Light Dormitory",
+  "x": 57.29,
+  "y": 54.69,
+  "cluster": [
+   "light_dormitory",
+   "common_rooms",
+   "laundry",
+   "bathhouse_and_washrooms"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 7,
+  "label": "Arbiter Hall",
+  "x": 57.29,
+  "y": 22.46,
+  "cluster": [
+   "arbiter_hall",
+   "ring_dining_hall",
+   "portrait_hall"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 8,
+  "label": "Staff Quarters",
+  "x": 67.06,
+  "y": 26.37,
+  "cluster": [
+   "staff_quarters"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 9,
+  "label": "Observation Tower",
+  "x": 61.2,
+  "y": 5.86,
+  "cluster": [
+   "observation_tower"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 10,
+  "label": "Old Hut",
+  "x": 52.08,
+  "y": 11.23,
+  "cluster": [
+   "old_hut"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 11,
+  "label": "Forest Clearing",
+  "x": 11.72,
+  "y": 11.72,
+  "cluster": [
+   "forest_clearing",
+   "forest"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 12,
+  "label": "Boathouse and Lake",
+  "x": 82.03,
+  "y": 26.37,
+  "cluster": [
+   "boathouse_and_lake"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 13,
+  "label": "Gardens",
+  "x": 71.61,
+  "y": 36.13,
+  "cluster": [
+   "gardens"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 14,
+  "label": "Menagerie",
+  "x": 81.38,
+  "y": 40.04,
+  "cluster": [
+   "menagerie"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 15,
+  "label": "Archery Range",
+  "x": 74.22,
+  "y": 52.73,
+  "cluster": [
+   "archery_range"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 16,
+  "label": "Gymnasium",
+  "x": 84.64,
+  "y": 50.78,
+  "cluster": [
+   "gymnasium",
+   "swimming_pool"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 17,
+  "label": "Sports Field",
+  "x": 85.29,
+  "y": 66.41,
+  "cluster": [
+   "sports_field"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 18,
+  "label": "Combat Grounds",
+  "x": 76.82,
+  "y": 83.98,
+  "cluster": [
+   "combat_grounds"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 19,
+  "label": "The Sparring Pavilion",
+  "x": 86.59,
+  "y": 87.89,
+  "cluster": [
+   "sparring_pavilion"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 20,
+  "label": "Groundskeeper's Lodge",
+  "x": 61.2,
+  "y": 86.72,
+  "cluster": [
+   "groundskeepers_lodge"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 21,
+  "label": "Founder's Park",
+  "x": 57.29,
+  "y": 68.36,
+  "cluster": [
+   "founders_statue_and_park"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 22,
+  "label": "The Mall",
+  "x": 35.16,
+  "y": 67.38,
+  "cluster": [
+   "mall",
+   "nightwell",
+   "merryhews",
+   "snug"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 23,
+  "label": "Commissary",
+  "x": 37.76,
+  "y": 81.25,
+  "cluster": [
+   "commissary"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 24,
+  "label": "Medical Centre",
+  "x": 47.53,
+  "y": 70.31,
+  "cluster": [
+   "medical_centre"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 25,
+  "label": "Mail Tower",
+  "x": 52.41,
+  "y": 75.2,
+  "cluster": [
+   "mail_tower"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 26,
+  "label": "Gatehouse",
+  "x": 46.88,
+  "y": 88.38,
+  "cluster": [
+   "reception_and_gatehouse"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 27,
+  "label": "Banking House",
+  "x": 29.95,
+  "y": 86.43,
+  "cluster": [
+   "banking_house"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 28,
+  "label": "The Dovecote",
+  "x": 7.81,
+  "y": 58.59,
+  "cluster": [
+   "dovecote"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 29,
+  "label": "The Cathedral",
+  "x": 21.48,
+  "y": 64.45,
+  "cluster": [
+   "cathedral"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 30,
+  "label": "Noble Houses' Liaison",
+  "x": 10.42,
+  "y": 69.82,
+  "cluster": [
+   "noble_houses_liaison"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 32,
+  "label": "Spirit House",
+  "x": 18.23,
+  "y": 79.1,
+  "cluster": [
+   "meditation_rooms_spirit_house"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 33,
+  "label": "Broken Statue",
+  "x": 13.35,
+  "y": 53.22,
+  "cluster": [
+   "broken_statue"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 34,
+  "label": "Fishing House",
+  "x": 78.12,
+  "y": 16.11,
+  "cluster": [
+   "boathouse_and_lake"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 35,
+  "label": "Willow Island",
+  "x": 94.4,
+  "y": 12.21,
+  "cluster": [
+   "boathouse_and_lake"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 36,
+  "label": "Grassy Field and Hills",
+  "x": 65.1,
+  "y": 15.62,
+  "cluster": [
+   "grassy_field_and_hills"
+  ],
+  "tabs": null
+ }
+]
