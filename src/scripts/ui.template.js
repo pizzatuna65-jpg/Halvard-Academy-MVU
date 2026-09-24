@@ -448,6 +448,7 @@ th{color:#a9a69f;font-weight:500;font-size:13px}
 .pn{font-weight:700;color:#f0e2c4}
 .pb{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .rk{font-family:Cinzel,serif;font-size:13px;color:#e8d3a8;white-space:nowrap}
+.xpb{display:inline-block;width:70px;height:6px;border-radius:3px;background:rgba(0,0,0,.4);overflow:hidden;vertical-align:middle}.xpb i{display:block;height:100%;background:#b39062}
 .pips{display:inline-flex;gap:3px}.pips i{width:9px;height:6px;border-radius:2px;background:rgba(0,0,0,.4)}.pips i.on{background:#b39062}
 .mini{display:inline-block;width:54px;height:5px;border-radius:3px;background:rgba(0,0,0,.4);overflow:hidden;vertical-align:middle}.mini i{display:block;height:100%}
 .pill.w{border-color:#e0a24a;color:#f1cf95}.pill.r{border-color:#e07aa0;color:#f2b6cb}
@@ -864,6 +865,10 @@ function onClick(e) {
   if (PANELS[view.panel]) { const st = latestState(); PANELS[view.panel].click(b, st && st.data.stat_data); return; }
   if (view.panel === 'profile') {
     if (b.dataset.tab) { view.tab = b.dataset.tab; render(); } if (a === 'tobuilder') open('builder');
+    if (a === 'bondset') {   // 1.2.2: bond pace / romance rank (Settings), written like every setting (D3)
+      const st = latestState(), S0 = st && st.data.stat_data, f = b.dataset.f, v = f === 'romrank' ? +b.dataset.v : b.dataset.v;
+      if (S0 && (S0.$ui || {})[f] !== v) commitSetting([{ op: 'replace', path: `/$ui/${f}`, value: v }], `⚙️ Setting: ${f === 'romrank' ? 'romance opens at ' + (v > 10 ? 'never (off)' : v ? 'Rank ' + v : 'any rank') : 'bond pace ' + v}.`);
+    }
     if (a === 'feat' || a === 'featlv') { const st = latestState(); const ops = featureOps(st && st.data.stat_data, b.dataset.f, b.dataset.v); if (ops) commitSetting(ops.ops, ops.head); }
     if (b.dataset.fill) fillChat(b.dataset.fill);   // 1.1.0: Bag buttons draft the action (D6)
     return;
@@ -1105,6 +1110,12 @@ function pSettings(S) {
     <div class="sub tk">rules and state ≈${coreTok} · always-on lore ≈${FCOST.lore} tokens</div></div></div>
   <p class="tot">Estimated always-on total for this chat now: <b>≈${total.toLocaleString('en')}</b> tokens${saved ? ` · saved by features that are off: ≈${saved.toLocaleString('en')}` : ''}.</p>
   <p class="hint">The preset and the chat history come on top of this. Changing a setting adds a small hidden note to the chat (it is not sent to the narrator).</p>
+  <h3>Bonds</h3>
+  <p class="hint">How fast bonds grow (how much time together each rank needs), and from which rank a romance can become official.</p>
+  <div class="feat bset"><div class="fm"><b>Pace</b><div class="sub">XP needed for each rank and the wait between bond events.</div></div>
+    <div class="tog">${Object.keys((DATA.bond || {}).pace || {}).map(k => `<button data-act="bondset" data-f="bondpace" data-v="${k}" class="${((S.$ui || {}).bondpace || 'standard') === k ? 'on' : ''}" ${view.busy ? 'disabled' : ''}>${esc(((DATA.bond || {}).pace_labels || {})[k] || k)}</button>`).join('')}</div></div>
+  <div class="feat bset"><div class="fm"><b>Romance opens at</b><div class="sub">Feelings can grow earlier in the story; the romance flag waits for this rank.</div></div>
+    <div class="tog">${((DATA.bond || {}).romance_options || []).map(([v, l]) => `<button data-act="bondset" data-f="romrank" data-v="${v}" class="${num((S.$ui || {}).romrank, 8) === v ? 'on' : ''}" ${view.busy ? 'disabled' : ''}>${esc(l)}</button>`).join('')}</div></div>
   <h3>Story memory</h3>
   <p class="hint">The narrator reads only the latest 24 or so messages; older ones reach it as […]. What it remembers of the rest is the game state: the Journal (${J} of 30 lines; ${A} archived, still shown in your Notebook), bonds, campus news, commitments and clues.
   To change how much chat it reads, edit the Min Depth of the regex "Eldrasil — State-as-memory: trim far chat (prompt)" in the Regex extension; disable that regex to send the whole chat.</p>

@@ -2,7 +2,7 @@
 
 **New session or another AI? Read `HANDOFF.md` first.**
 
-Source for the SillyTavern character card `dist/Eldrasil_Halvard.png` (v1.2.1). Players: see `docs/PLAYER_GUIDE.md`.
+Source for the SillyTavern character card `dist/Eldrasil_Halvard.png` (v1.2.2). Players: see `docs/PLAYER_GUIDE.md`.
 Design and decisions: `ELDRASIL_MVU_PLAN.md`. Build history, open items and tunables: `PROGRESS.md`.
 
 ## Layout

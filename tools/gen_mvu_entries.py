@@ -53,7 +53,14 @@ assert all(m['id'] in npcs for m in MOODS)
 J = lambda o: json.dumps(o, ensure_ascii=False, separators=(',', ':'))
 ejs = open(P('src/worldbook/custom/505.template.ejs'), encoding='utf-8').read()
 ejs = re.sub(r'^// Source of custom entry 505.*\n', '', ejs, flags=re.M)
-for k, v in {'REG': reg, 'ARR': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1}, 'STU': STU, 'TEACH': TEACH, 'TT': TT,
+# 1.2.2 bonds: what a present NPC shares at their rank (openness shifts the first tiers), what the rank allows, the event text
+BR = json.load(open(P('data/bond_rules.json'), encoding='utf-8'))
+OPN = json.load(open(P('data/bond_openness.json'), encoding='utf-8'))
+off = {nid: BR['openness'][tag] for tag in ('open', 'guarded', 'closed') for nid in OPN[tag]}
+assert all(nid in npcs for nid in off), [nid for nid in off if nid not in npcs]
+BOND = {'share': BR['share'], 'real': BR['share_real_from'], 'perks': BR['perks'], 'off': off,
+        'tag': {nid: tag for tag in ('open', 'guarded', 'closed') for nid in OPN[tag]}}
+for k, v in {'BOND': BOND, 'REG': reg, 'ARR': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1}, 'STU': STU, 'TEACH': TEACH, 'TT': TT,
              'CLUBV': CLUBV, 'OUTD': OUTD, 'VN': VN, 'MOODS': MOODS}.items():
     ph = '/*@@' + k + '@@*/' + ('[]' if isinstance(v, list) else '{}')
     assert ph in ejs, ph

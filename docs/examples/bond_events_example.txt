@@ -1,0 +1,18 @@
+[Bond Event] Trixie — Rank 4→5
+Syarat: Courtyards or Club Rooms | 16:00–20:00 | Mon–Fri | bukan hujan
+Prasyarat: month >= 2
+Arah:
+- Trixie practises a new trick alone and keeps failing; for once she is not cheerful.
+- She admits she is afraid her family will be disappointed when the circus comes in Month 8.
+- Wajib: she asks {{user}} to be her assistant in the show.
+Pilihan:
+- Say yes → Trust +5
+- Turn her down gently → Trust −5
+Hasil: Fact "afraid of disappointing her family"; Project "A show for the circus"; Perk: —
+
+[Bond Event] Irene — Rank 0→1
+Conditions: Main Library | 18:00–20:00 | weekdays
+Directions:
+- Irene is closing the library for the night and finds {{user}} still there.
+- Must: she tells {{user}} her name and that the library closes at eight, no exceptions.
+Results: Fact "keeps the library's closing time to the minute"

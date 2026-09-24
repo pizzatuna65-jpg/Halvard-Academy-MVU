@@ -148,6 +148,7 @@ export const Schema = z.object({
     _Stage: Str('Unnoticed'),
   }).prefault({}),
 
+  // 1.2.2: Progress is the pre-1.2.2 bond meter; the engine converts it once into $xp and keeps it 0 (a raised one counts as an interaction)
   Bonds: Rec(v => ({
     Rank: Math.round(n(v.Rank, 0, 10, 0)), Progress: n(v.Progress, 0, 10, 0),
     Trust: Math.round(n(v.Trust, 0, 100, 50)), Tension: Math.round(n(v.Tension, 0, 100, 0)),
@@ -155,6 +156,7 @@ export const Schema = z.object({
     Known_facts: Array.isArray(v.Known_facts) ? v.Known_facts.map(s).slice(-30) : [],
     Milestones: Array.isArray(v.Milestones) ? v.Milestones.map(s).slice(-20) : [],
     Last_seen: s(v.Last_seen), _Event_ready: b(v._Event_ready),
+    $xp: n(v.$xp, 0, 9999, 0), $cool: n(v.$cool, -1, 1e9, -1),   // 1.2.2: bond XP toward the next rank, first day the next event may start (engine)
     $Known_old: Array.isArray(v.$Known_old) ? v.$Known_old.map(s).slice(-40) : [],   // 5.4: older facts, hidden from the AI, shown in the dossier
   }), 'Title'),
 
@@ -222,6 +224,10 @@ export const Schema = z.object({
     $abs: n(v.$abs, -1, 1e9, -1), $born: n(v.$born, -1, 1e9, -1),
   }), 'Note'),
 
+  // 1.2.2: interactions this reply, reported by the narrator; the engine turns them into bond XP and empties the list
+  Interactions: z.array(z.any().transform(v => (typeof v === 'object' && v !== null
+    ? { With: s(v.With), Kind: s(v.Kind).trim().toLowerCase(), Gift: s(v.Gift).trim().toLowerCase() } : { With: s(v), Kind: 'talk', Gift: '' }))).prefault([]).catch([]),
+
   _Log: StrList(12),
 
   $ui: z.object({
@@ -244,6 +250,10 @@ export const Schema = z.object({
     // 1.2.0
     file: z.any().prefault(null).catch(null),                         // the Builder's record of what it last wrote (self-heal, engine §0)
     marks: z.record(z.string(), z.coerce.string()).prefault({}).catch({}),   // calendar notes the player wrote { "M1 W2 Wed": "text" }
+    // 1.2.2 bonds (Settings) and the engine's view of full bond bars (event ready now / after the cooldown)
+    bondpace: Enum(['standard', 'fast', 'brisk', 'slow'], 'standard'),
+    romrank: Int(0, 11, 8),                                            // romance opens at this rank (0 any, 11 off)
+    bev: z.any().prefault({}).catch({}),
   }).prefault({}),
 
   $eng: z.object({
@@ -257,6 +267,8 @@ export const Schema = z.object({
     ver: Str(''),          // 1.0.3: engine version that last wrote this state (for future save migrations)
     rum: z.record(z.string(), z.any()).prefault({}).catch({}),   // 1.1.0: rumour metadata { text: { born, fate } }
     wxs: z.any().prefault(null).catch(null),                     // 1.1.0: weather exposure counters and head-cold bookkeeping
+    bweek: z.record(z.string(), z.any()).prefault({}).catch({}),  // 1.2.2: gifts / help per bond this week
+    bondv: z.coerce.number().prefault(0).catch(0),                // 1.2.2: 2 once Progress was converted to XP
   }).prefault({}),
 }).prefault({});
 

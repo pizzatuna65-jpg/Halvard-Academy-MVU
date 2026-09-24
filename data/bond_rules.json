@@ -1,0 +1,53 @@
+{
+ "_note": "1.2.2 bond system, single source for the engine (tools/gen_engine.py), the UI (tools/gen_ui.py) and the Now entry (tools/gen_mvu_entries.py). Edit here, then rebuild. xp_base[r] = XP from Rank r to Rank r+1 at standard pace; cool_base[r] = days after reaching Rank r before its next bond event can start. pace multiplies both (full rank: fast ~1 month, brisk ~2 months, standard ~1 semester, slow ~1 year of diligent play).",
+ "xp_base": [10, 20, 30, 40, 50, 55, 60, 65, 70, 80],
+ "cool_base": [0, 1, 2, 3, 3, 4, 5, 6, 7, 7],
+ "pace": {"fast": 0.25, "brisk": 0.5, "standard": 1, "slow": 2.5},
+ "pace_labels": {"fast": "Fast (~1 month)", "brisk": "Brisk (~2 months)", "standard": "Standard (~1 semester)", "slow": "Slow (~1 year)"},
+ "kind_xp": {"talk": 2, "hangout": 3, "help": 5},
+ "per_day": {"talk": 1, "hangout": 1},
+ "per_week": {"gift": 2, "help": 1},
+ "gift_xp": {"loved": 4, "liked": 2, "neutral": 1, "disliked": 0},
+ "gift_disliked_tension": 5,
+ "gift_bonus_rank": 3,
+ "gift_bonus_mult": 1.5,
+ "weather_xp": 1,
+ "romance_default": 8,
+ "romance_options": [[0, "Any rank"], [4, "Rank 4"], [6, "Rank 6"], [8, "Rank 8"], [10, "Rank 10"], [11, "Off"]],
+ "openness": {"open": 2, "normal": 0, "guarded": -1, "closed": -2},
+ "share": [
+  [0, "how they look and their public role"],
+  [1, "their name, age, club and where they spend time"],
+  [2, "the magic and skills they use openly"],
+  [3, "likes, dislikes and hobbies"],
+  [4, "their personality and what shows when they are upset"],
+  [5, "their goals"],
+  [6, "what they think of other people and of the Doves"],
+  [7, "their past and family"]
+ ],
+ "share_real_from": 5,
+ "perks": {
+  "1": "greets {{user}} and can be found at their usual places",
+  "2": "accepts invitations (a meal, study, a walk)",
+  "3": "sometimes seeks {{user}} out; remembers the birthday",
+  "4": "will spar, study or team up (competition teams included)",
+  "5": "shares their goal and may ask for help with it",
+  "6": "introduces {{user}} to friends; keeps {{user}}'s secrets",
+  "7": "takes real risks for {{user}}: covers, lends points, backs {{user}} up with staff",
+  "8": "closest bond: best friend, romance or sworn rival (the rank 8 event decides)",
+  "9": "acts for {{user}} unasked; their secret begins to surface",
+  "10": "would sacrifice for {{user}}"
+ },
+ "themes": {
+  "0": "A first real conversation: past the small talk, {{user}} learns who they actually are.",
+  "1": "They show the magic or the skill they are proud of, or let {{user}} watch them work.",
+  "2": "A small moment reveals what they love or can't stand.",
+  "3": "{{user}} sees another side of them: a bad day, a crack in the usual face.",
+  "4": "They tell {{user}} what they want most, and a way to help appears.",
+  "5": "They speak honestly about the people around them, and about the Doves.",
+  "6": "They tell {{user}} about their past and their family.",
+  "7": "A turning point: the bond becomes best friends, romance or a sworn rivalry, and the event lets {{user}} choose.",
+  "8": "They start to let their guard down about what they hide; the story opens a way to the truth (never revealed by rank alone).",
+  "9": "The peak of the bond: a moment that proves it, and what they would give up for {{user}}."
+ }
+}

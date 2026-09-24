@@ -2,7 +2,7 @@
 
 **Read this file first.** It is the complete context for continuing this project in a fresh session with any AI assistant, from any vendor. It assumes nothing about which assistant or tools you have, only that you can read files and (ideally) run Python 3 and Node.js.
 
-Snapshot: card **v1.2.1**. All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; PROGRESS 1.2.0/1.2.1). A bond-system redesign is planned but not built (PROGRESS "Planned").
+Snapshot: card **v1.2.2**. All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; PROGRESS 1.2.0/1.2.1). v1.2.2 replaced the bond meter with an XP system and a bond event framework (docs/BOND_EVENTS.md).
 
 **Next task:** the owner continues the playtest (PROGRESS "Next" lists what 1.2.0 needs checked in ST), then tuning and fixes from what it finds.
 
@@ -105,7 +105,7 @@ tests/                     node suites test_*.cjs, qa_static.cjs, run_all.cjs, t
 - **Calendar change** (v1.0.3, owner decision): the World Competition is M11 W4 Wed–Sat (abroad, the national four) and Graduation is M11 W4 Sun, so a third-year picked for the World Competition competes before graduating. Month 12 is holiday only. Edited in `merge_lorebooks.py` (calendar months 11/12 and lore 248) and in the engine's `EVENTS`.
 - **Graduation** (v1.0.3): on M12 W1 Mon 07:00 (the morning after Graduation, first day of the holiday) the engine moves that year's Halvard third-years into `Campus_State.Graduated`. They stop being regulars and club members; their bonds and dossiers stay. The story may remove a name, and the engine never re-adds it.
 - **Cohorts** (v1.0.3): a student's school year = lorebook Year + campaign Year − the year they arrived. `data/cohorts.json` lists incoming first-years per campaign year (empty until the owner sends the new-first-years lorebook). Until their year an incoming NPC is inactive: its lore entry is empty (EJS gate), it is off the roster (uid 97, now year-aware EJS), not a regular or club member, not in the graph, and the engine starts no bond and records no name reveal. Arrival is journaled at the start of that campaign year.
-- **Bonds** (D14): Rank 0–10, progress is capped per day, and a rank rises by one only after `_Event_ready` plus a milestone scene.
+- **Bonds** (D14, reworked in 1.2.2 by the owner): Rank 0–10. XP comes from the narrator's `/Interactions` (talk, hangout, gift, help) with daily/weekly limits; each rank needs more XP (`data/bond_rules.json`, scaled by the Settings pace). A full bar plus the cooldown sets `_Event_ready`; the rank rises by one only through the bond event (scripted in `data/bond_events.json` via `tools/import_bond_events.py`, else the rank's default theme). Romance opens at a Settings rank (default 8). What an NPC shares follows rank and `data/bond_openness.json`.
   - Dossier info unlocks by rank.
   - `<narrator_only>` lore is never unlocked by rank, only through `Campus_State.Secrets_revealed`.
 
@@ -164,7 +164,7 @@ python3 tools/gen_engine.py          # engine.template.js, npcs, locations or ha
 python3 tools/gen_mvu_entries.py     # custom entries, locations regulars or shop prices changed
 python3 tools/gen_ui.py              # ui.template.js, ui/parts, statusbar.template.html or data changed
 python3 build/build_card.py          # always last -> dist/
-npm test                             # 9 suites + static QA on the built card (434 checks at v1.2.1)
+npm test                             # 9 suites + static QA on the built card (470 checks at v1.2.2)
 python3 tests/preview/smoke_all_panels.py   # optional: opens every panel/tab headless (482 views at v1.2.0); expects "errors: none"
 node tests/token_audit.cjs           # optional: always-on prompt size (~8.3k tokens at start, ~13.2k mid-year; ~7.8k with the v1.1 features off)
 python3 presets/edit_preset.py       # regenerates the edited preset from presets/original/ (byte-identical today)
@@ -268,7 +268,7 @@ python3 presets/edit_preset.py       # regenerates the edited preset from preset
 - The display regex `maxDepth` on hidden messages.
 
 **Tunables after playtest** (v1.1.0 adds the weather and condition numbers listed in PROGRESS)
-- Payout bands, bond daily cap (3), rest/sleep recovery, the 40-HP cap, Dove attention increments.
+- Payout bands, bond XP table and pace (data/bond_rules.json), rest/sleep recovery, the 40-HP cap, Dove attention increments.
 - Happening rates, trim depth (24), Journal window (30), `FACTS_VISIBLE` (10), Clues cap (40).
 
 **Not adapted yet**

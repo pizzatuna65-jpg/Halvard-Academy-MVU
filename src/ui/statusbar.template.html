@@ -161,8 +161,9 @@ button.chip{font:inherit;font-size:12px;cursor:pointer}button.chip:hover{backgro
     if (unl.includes('pacts') && summoned.length) c.push(chip(summoned.join(', ') + ' summoned', 'fa-feather', 'glow'));
     if (unl.includes('hidden') && H._True_magic) c.push(chip('Doves: ' + (H._Stage || 'Unnoticed'), 'fa-eye', num(H.Dove_attention, 0) >= 40 ? 'danger' : num(H.Dove_attention, 0) >= 20 ? 'warn' : '', 'Dove attention ' + num(H.Dove_attention, 0) + '/100'));
     if ((S.Battle || {}).Active && on('battle')) c.push(chip('In battle: ' + Object.keys(S.Battle.Combatants || {}).map(k => CAST[k] && !(((S.Bonds || {})[k] || {}).Rank >= 1 || (ui.names || []).includes(k)) ? CAST[k][1] : k).join(', '), 'fa-khanda', 'danger', 'Open the battle panel', 'battle'));
-    const ready = Object.entries(S.Bonds || {}).filter(([, b]) => b && b._Event_ready).map(([k]) => who(k));
-    if (ready.length) c.push(chip('Bond event ready: ' + ready.join(', '), 'fa-heart', 'warn'));
+    // 1.2.2: a full bond bar opens a bond event; the chip says where it is likely to happen
+    const bev = ui.bev || {}, ready = Object.entries(S.Bonds || {}).filter(([, b]) => b && b._Event_ready).map(([k]) => [who(k), (bev[k] || {}).where || '', (bev[k] || {}).when || '']);
+    if (ready.length) c.push(chip('Bond event: ' + ready.map(r => r[0] + (r[1] ? ' (' + r[1] + ')' : '')).join(', '), 'fa-heart', 'warn', ready.map(r => r[0] + ': ' + (r[1] || 'where they usually are') + (r[2] ? ', ' + r[2] : '')).join('\n'), 'people'));
     const com = on('planner') ? Object.entries(S.Commitments || {}) : [], late = com.filter(([, x]) => x && x._Late).map(([k]) => k);
     const soon = com.filter(([, x]) => x && !x._Late && /^today/.test(x._When || '')).map(([k]) => k);
     if (late.length) c.push(chip('Overdue: ' + late.join(', '), 'fa-triangle-exclamation', 'danger', 'Open the planner', 'notebook:planner'));

@@ -41,6 +41,14 @@ assert all(h.get('weather') in (None, *WX_KINDS) for h in hap), 'unknown happeni
 locnames = {l['name'] for l in locs.values()}
 assert all(h['where'] in locnames or h['where'] == '' for h in hap), [h['where'] for h in hap if h['where'] not in locnames]
 t = t.replace('/*@@HAPPENINGS@@*/[]', json.dumps(hap, ensure_ascii=False, separators=(',', ':')))
+# 1.2.2 bonds: rules, scripted events (tools/import_bond_events.py), and where each NPC is usually found (Haunts, first clause)
+t = t.replace('/*@@BOND_RULES@@*/{}', json.dumps(json.load(open(P('data/bond_rules.json'), encoding='utf-8')), ensure_ascii=False, separators=(',', ':')))
+t = t.replace('/*@@BOND_EVENTS@@*/[]', json.dumps(json.load(open(P('data/bond_events.json'), encoding='utf-8'))['events'], ensure_ascii=False, separators=(',', ':')))
+haunt = {}
+for nid, n in npcs.items():
+    f = next((f['text'] for f in n['fields'] if f['label'] == 'Haunts'), '')
+    if f: haunt[nid] = re.split(r'[;.]', f.replace('{{user}}', 'you'))[0].strip()[:80]
+t = t.replace('/*@@HAUNTS@@*/{}', json.dumps(haunt, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@NAME_FORMS@@*/{}', json.dumps(forms, ensure_ascii=False, separators=(',', ':')))
 open(P('src/scripts/engine.js'), 'w', encoding='utf-8').write(t.replace('/*@@NPC_ALIAS@@*/{}', json.dumps(alias, ensure_ascii=False, separators=(',', ':'))))
 assert '/*@@' not in open(P('src/scripts/engine.js'), encoding='utf-8').read(), 'unreplaced placeholder in engine.js'

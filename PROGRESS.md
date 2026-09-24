@@ -320,6 +320,23 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   for that type (the subtype list shows the student's specialties first; free text still allowed).
   npm test 434 checks, smoke 482 views / 0 errors.
 
+- 1.2.2 Bond system revamp (owner design; replaces D14's Progress 0-10, daily cap 3, ready at 10). Single source
+  data/bond_rules.json (engine, UI and Now entry). The narrator reports /Interactions [{With, Kind: talk|hangout|gift|help,
+  Gift: loved|liked|neutral|disliked}]; the engine awards XP (talk 2 and hangout 3 once a day each, gifts 2 a week with loved x1.5
+  from Rank 3 and disliked +5 Tension, help 5 once a week, weather +1 once a day) into Bonds.<id>.$xp (hidden from the AI), capped at
+  the rank's need (xp_base 10..80 x pace: fast 0.25, brisk 0.5, standard 1, slow 2.5; Settings → Bonds). A full bar and the
+  cooldown ($cool, cool_base days x pace) set _Event_ready; Rank still rises by 1 only while ready (else reverted); the bar empties.
+  Events: data/bond_events.json (empty; tools/import_bond_events.py reads the owner's [Bond Event] lorebook, docs/BOND_EVENTS.md,
+  example docs/examples/bond_events_example.txt); the engine checks place/time/days/weather/prerequisites and writes $ui.bev
+  (ready, where/when for the hint, now, directions); without a scripted event the rank's default theme is used whenever the NPC is
+  present. Now entry: per present NPC what they share at their rank (data/bond_openness.json draft: open +2 / guarded -1 /
+  closed -2 on the first tiers; goals, views and past need the real rank; secrets never) and what the rank allows (perks); the
+  event block with directions. Romance: Settings (default Rank 8, any, off); the engine reverts an early flag. Migration: a
+  pre-1.2.2 save converts Progress to XP once ($eng.bondv); a Progress the AI still raises counts once as talk/hangout.
+  UI: XP bars (People, dossier), event hints, Settings → Bonds; bracelet chip "Bond event: <name> (<where>)".
+  Also: the Fishing House counts as the Fishing Club's rain-proof place in the Now entry.
+  npm test 470 checks (11 suites), smoke 482 views / 0 errors, token audit ~8.9k start / ~13.8k mid-game (+~300: rules, bond lines).
+
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
@@ -330,12 +347,10 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   Then tune (see Tunables) and fix what the playtest finds.
 
 ## Planned (owner decisions, not built yet; the owner sends the event lorebooks after the feature exists)
-- Bond redesign: XP per interaction type with daily/weekly caps (engine awards, the AI only classifies); rising XP per rank;
-  the bar stops when full until the rank event; cooldown between ranks; notification "<NPC> event available: where / when".
-  Tempo is a setting (full rank from about a month to about a year; standard about one semester). No decay. Rank always rises
-  after the event; choices in the event can lower Trust. Romance opens at Rank 8 by default, adjustable in Settings.
-  Per-NPC openness (open / normal / guarded / closed) shifts what an NPC will tell (not secrets); real rank gives perks.
-- Scripted bond events (lorebook, deterministic conditions: place, time, day, weather, prerequisites; beats; choices; results).
+- DONE in 1.2.2: bond XP system and the bond event framework. Waiting on the owner: the [Bond Event] lorebook, a review of
+  data/bond_openness.json (draft), and the NPC gaps listed in the 1.2.2 chat (missing Personality / Goals / Haunts…).
+- Perks the engine could enforce later (now told to the narrator only): team-up gate at Rank 4, introductions at Rank 6,
+  Dove attention cover at Rank 6, favours at Rank 7.
 - Scripted first-week classes (M1 W1 Tue-Sat, 14 sessions; per dorm for [D] classes; optional homework into Commitments).
 
 ## To verify in ST (could not be tested outside ST)
