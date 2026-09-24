@@ -696,7 +696,7 @@
    {
     "uid": 215,
     "title": "The Oracle Shell",
-    "summary": "A palm-sized novelty shell from the Mall that answers any spoken question with yes, no, or ask again later."
+    "summary": "A palm-sized novelty shell sold at Merryhew's, the Mall's joke shop, that answers any spoken question with yes, no, or ask again later."
    },
    {
     "uid": 222,
@@ -739,7 +739,6 @@
    "Music",
    "Card",
    "Board Game",
-   "Divination",
    "Tailoring",
    "Drawing",
    "Calligraphy",
@@ -887,7 +886,7 @@
   "uid": 72,
   "category": "Sport and Grounds",
   "kind": "location",
-  "description": "Soccer, running, and Sports Day in Month 6. Magic banned outright in play, so this is the one part of the academy where being a powerful mage counts for nothing.",
+  "description": "Soccer, running, and Sports Day in Month 6. A running track circles the soccer pitch: home ground of the Soccer Club and the Running Club. Magic banned outright in play, so this is the one part of the academy where being a powerful mage counts for nothing.",
   "vibe": "grass, mud, shouting.",
   "has_secret": false,
   "regulars": [
@@ -902,7 +901,8 @@
   ],
   "walk_min": 10,
   "clubs": [
-   "Soccer"
+   "Soccer",
+   "Running"
   ],
   "access": null,
   "lore": [],
@@ -916,7 +916,7 @@
   "uid": 73,
   "category": "Sport and Grounds",
   "kind": "location",
-  "description": "Indoor training, used heavily in bad weather and during The Thinning lockdown, when nobody is permitted outside for a week and the place never goes quiet.",
+  "description": "Home of the Gymnastics and Basketball clubs, and of the Swimming Club, which trains in the outdoor pool beside it. Indoor training, used heavily in bad weather and during The Thinning lockdown, when nobody is permitted outside for a week and the place never goes quiet.",
   "vibe": "high roof, echoing.",
   "has_secret": false,
   "regulars": [
@@ -928,7 +928,11 @@
    "swimming_pool"
   ],
   "walk_min": 10,
-  "clubs": [],
+  "clubs": [
+   "Swimming",
+   "Gymnastics",
+   "Basketball"
+  ],
   "access": null,
   "lore": [],
   "floor": null,
@@ -952,7 +956,9 @@
    "gymnasium"
   ],
   "walk_min": 10,
-  "clubs": [],
+  "clubs": [
+   "Swimming"
+  ],
   "access": null,
   "lore": [],
   "floor": null,
@@ -976,7 +982,9 @@
    "sports_field"
   ],
   "walk_min": 10,
-  "clubs": [],
+  "clubs": [
+   "Archery"
+  ],
   "access": null,
   "lore": [],
   "floor": null,
@@ -1003,7 +1011,6 @@
   ],
   "walk_min": 15,
   "clubs": [
-   "Running",
    "Walking"
   ],
   "access": null,
@@ -1051,7 +1058,7 @@
   "uid": 78,
   "category": "Sport and Grounds",
   "kind": "location",
-  "description": "Vast Open water for rowing, swimming and the Fishing Club. The boathouse stores the craft and doubles as a quiet place to sit. Beside the boathouse stands the Fishing Club's fishing house, a timber hut full of rods, nets and tackle, with its own long dock built for fishing rather than boats. Behind it, a stone-edged pond raises fish for the Canteen kitchen and the Fishing Club's breeding projects. Sound carries strangely across the water: a far-bank conversation arrives too clearly. Home of the Crying on the Water story; the boathouse refuses bookings after dark. A small island sits in the middle of the lake with a big willow tree on it; at night the tree glows in the distance from the many fireflies that inhabit the island.",
+  "description": "Vast Open water for rowing, swimming and the Fishing Club. The boathouse stores the craft and doubles as a quiet place to sit. Beside the boathouse stands the Fishing Club's Fishing House, with its own dock. Sound carries strangely across the water: a far-bank conversation arrives too clearly. Home of the Crying on the Water story; the boathouse refuses bookings after dark. Willow Island sits in the middle of the lake, reached only by boat.",
   "vibe": "wet timber, cold water.",
   "has_secret": false,
   "regulars": [
@@ -1062,12 +1069,12 @@
   ],
   "connections": [
    "gardens",
-   "forest"
+   "forest",
+   "fishing_house",
+   "willow_island"
   ],
   "walk_min": 20,
-  "clubs": [
-   "Fishing"
-  ],
+  "clubs": [],
   "access": null,
   "lore": [
    {
@@ -1144,7 +1151,7 @@
   "uid": 81,
   "category": "Sport and Grounds",
   "kind": "location",
-  "description": "A high tower for astral and celestial work, most important to Mystic students and the Divination Society. The most contested spot on campus on Star Night. Instruments turn by themselves at night.",
+  "description": "A high tower for astral and celestial work, most important to Mystic students; the Divination Society meets here. The most contested spot on campus on Star Night. Instruments turn by themselves at night.",
   "vibe": "high, windy, deep dark.",
   "has_secret": false,
   "regulars": [
@@ -1155,7 +1162,9 @@
    "grassy_field_and_hills"
   ],
   "walk_min": 15,
-  "clubs": [],
+  "clubs": [
+   "Divination"
+  ],
   "access": null,
   "lore": [],
   "floor": null,
@@ -1778,6 +1787,55 @@
   "lore": [],
   "floor": null,
   "pin": 19,
+  "discoverable": false
+ },
+ "fishing_house": {
+  "id": "fishing_house",
+  "name": "Fishing House",
+  "uid": 268,
+  "category": "Sport and Grounds",
+  "kind": "location",
+  "description": "The Fishing Club's timber hut on the lake shore beside the boathouse, full of rods, nets and tackle, with its own long dock built for fishing rather than boats. Behind it, a stone-edged pond raises fish for the Canteen kitchen and the Fishing Club's breeding projects. The club meets here; the dock is busiest at dawn, and quiet enough that people come to sit on it without a rod.",
+  "vibe": "tar, wet rope, early mist on the water.",
+  "has_secret": false,
+  "regulars": [
+   "Aiden",
+   "Milena",
+   "Ottavio",
+   "Sophia"
+  ],
+  "connections": [
+   "boathouse_and_lake"
+  ],
+  "walk_min": 20,
+  "clubs": [
+   "Fishing"
+  ],
+  "access": null,
+  "lore": [],
+  "floor": null,
+  "pin": 34,
+  "discoverable": false
+ },
+ "willow_island": {
+  "id": "willow_island",
+  "name": "Willow Island",
+  "uid": 269,
+  "category": "Sport and Grounds",
+  "kind": "location",
+  "description": "A small island in the middle of the lake with one great willow tree on it, reached only by a boat from the boathouse, which refuses bookings after dark. At night the willow glows in the distance from the many fireflies that live on the island, so anyone out there after dark was either rowed out before sunset or took a boat without asking.",
+  "vibe": "still water, trailing leaves, firefly light.",
+  "has_secret": false,
+  "regulars": [],
+  "connections": [
+   "boathouse_and_lake"
+  ],
+  "walk_min": 25,
+  "clubs": [],
+  "access": "By boat from the boathouse; no bookings after dark",
+  "lore": [],
+  "floor": null,
+  "pin": 35,
   "discoverable": false
  },
  "nightwell": {

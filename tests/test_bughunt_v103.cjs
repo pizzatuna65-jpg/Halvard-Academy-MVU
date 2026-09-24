@@ -209,7 +209,9 @@ UIa.DATA.npcs.Testa = { n: 'Testa Example', g: 'Year 1', y: 1, a: 2, dm: 'Fire',
 const locId = Object.keys(UIa.DATA.locs).find(k => UIa.DATA.locs[k].name === 'Main Library');
 UIa.DATA.locs[locId].regulars.push('Testa');
 const Y1s = set(S0, {}), Y2s = set(S0, { Year: 2 });
-ok(!/a bold first-year|Testa/.test(UIa.locCard(locId, Y1s, '', { x: 50, y: 50 })) && /a bold first-year/.test(UIa.locCard(locId, Y2s, '', { x: 50, y: 50 })), 'map Regulars: hidden in Year 1, shown (as a descriptor) in Year 2');
+// 1.2.0: map regulars need a bond whose Haunts entry is open (Rank 1 without one): give her one in both years
+for (const X of [Y1s, Y2s]) X.Bonds.Testa = { Rank: 1, Progress: 0, Trust: 50, Tension: 0, Title: '', Romance: false, Known_facts: [], Milestones: [], Last_seen: '', _Event_ready: false, $Known_old: [] };
+ok(!/a bold first-year|Testa/.test(UIa.locCard(locId, Y1s, '', { x: 50, y: 50 })) && /Testa/.test(UIa.locCard(locId, Y2s, '', { x: 50, y: 50 })), 'map Regulars: hidden in Year 1, shown in Year 2 (once her Haunts are known, 1.2.0)');
 ok(/First-year/.test(UIa.whoLine('Testa', Y2s)) && /Second-year/.test(UIa.whoLine('Testa', set(S0, { Year: 3 }))), 'school year label moves with the campaign year');
 ok(/Second-year/.test(UIa.whoLine('Trixie', Y2s)) && /Former student/.test(UIa.whoLine('Gareth', Gd)), 'existing students move up too; graduates are former students');
 // roster (uid 97, EJS)

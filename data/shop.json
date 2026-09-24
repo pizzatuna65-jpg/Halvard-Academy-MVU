@@ -101,6 +101,28 @@
    "season": "all"
   },
   {
+   "shop": "Commissary",
+   "loc": "commissary",
+   "item": "Umbrella",
+   "price": 25,
+   "note": "keeps you dry unless the wind is up",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Commissary",
+   "loc": "commissary",
+   "item": "Oilskin rain cloak",
+   "price": 90,
+   "note": "waterproof in any weather",
+   "canon": false,
+   "season": [
+    "Autumn",
+    "Winter",
+    "Spring"
+   ]
+  },
+  {
    "shop": "The Mall — bakery",
    "loc": "mall",
    "item": "Bakery roll",
@@ -151,15 +173,6 @@
    "item": "Sunfizz",
    "price": 8,
    "note": "2 points back per returned bottle",
-   "canon": true,
-   "season": "all"
-  },
-  {
-   "shop": "The Mall — store",
-   "loc": "mall",
-   "item": "The Oracle Shell",
-   "price": 40,
-   "note": "yes, no, or ask again later",
    "canon": true,
    "season": "all"
   },
@@ -218,73 +231,6 @@
    "season": "all"
   },
   {
-   "shop": "Nightwell",
-   "loc": "nightwell",
-   "item": "The Vigil",
-   "price": 60,
-   "note": "two days without sleep, paid for afterwards",
-   "canon": true,
-   "season": "all"
-  },
-  {
-   "shop": "Merryhew's",
-   "loc": "merryhews",
-   "item": "Prank item",
-   "price": 25,
-   "note": "itching charms, voice-changing sweets, illusion vermin; everything wears off",
-   "canon": false,
-   "season": "all"
-  },
-  {
-   "shop": "The Snug",
-   "loc": "snug",
-   "item": "Private booth (per hour)",
-   "price": 30,
-   "note": "always a wait; staff hear nothing",
-   "canon": false,
-   "season": "all"
-  },
-  {
-   "shop": "Ardenne (special order)",
-   "loc": "commissary",
-   "item": "Ardenne case",
-   "price": 1500,
-   "note": "the cheapest Ardenne item; more than most monthly payouts",
-   "canon": true,
-   "season": "all"
-  },
-  {
-   "shop": "Ardenne (special order)",
-   "loc": "commissary",
-   "item": "Ardenne focus",
-   "price": 4000,
-   "note": "marks its owner instantly as wealthy",
-   "canon": true,
-   "season": "all"
-  },
-  {
-   "shop": "Commissary",
-   "loc": "commissary",
-   "item": "Umbrella",
-   "price": 25,
-   "note": "keeps you dry unless the wind is up",
-   "canon": false,
-   "season": "all"
-  },
-  {
-   "shop": "Commissary",
-   "loc": "commissary",
-   "item": "Oilskin rain cloak",
-   "price": 90,
-   "note": "waterproof in any weather",
-   "canon": false,
-   "season": [
-    "Autumn",
-    "Winter",
-    "Spring"
-   ]
-  },
-  {
    "shop": "The Mall — store",
    "loc": "mall",
    "item": "Wool scarf and mittens",
@@ -340,6 +286,245 @@
    "season": [
     "Summer"
    ]
+  },
+  {
+   "shop": "Nightwell",
+   "loc": "nightwell",
+   "item": "The Vigil",
+   "price": 60,
+   "note": "two days without sleep, paid for afterwards",
+   "canon": true,
+   "season": "all"
+  },
+  {
+   "shop": "Nightwell",
+   "loc": "nightwell",
+   "item": "House coffee",
+   "price": 12,
+   "note": "strong, bottomless until the pot runs out",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Nightwell",
+   "loc": "nightwell",
+   "item": "Honey cream coffee",
+   "price": 16,
+   "note": "",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Nightwell",
+   "loc": "nightwell",
+   "item": "Spiced milk tea",
+   "price": 14,
+   "note": "the non-coffee order",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Nightwell",
+   "loc": "nightwell",
+   "item": "Iced coffee",
+   "price": 14,
+   "note": "",
+   "canon": false,
+   "season": [
+    "Summer"
+   ]
+  },
+  {
+   "shop": "Nightwell",
+   "loc": "nightwell",
+   "item": "Hot chocolate with cream",
+   "price": 14,
+   "note": "",
+   "canon": false,
+   "season": [
+    "Autumn",
+    "Winter"
+   ]
+  },
+  {
+   "shop": "Nightwell",
+   "loc": "nightwell",
+   "item": "Late-night pastry",
+   "price": 10,
+   "note": "what is left after the evening rush",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Nightwell",
+   "loc": "nightwell",
+   "item": "Bag of Nightwell beans",
+   "price": 35,
+   "note": "for the common-room kettle and a long week",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Merryhew's",
+   "loc": "merryhews",
+   "item": "The Oracle Shell",
+   "price": 40,
+   "note": "yes, no, or ask again later",
+   "canon": true,
+   "season": "all"
+  },
+  {
+   "shop": "Merryhew's",
+   "loc": "merryhews",
+   "item": "Itching charm",
+   "price": 15,
+   "note": "pinned on someone, itches for an hour",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Merryhew's",
+   "loc": "merryhews",
+   "item": "Voice-changing sweets (bag)",
+   "price": 12,
+   "note": "squeaky, booming or croaking, ten minutes each",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Merryhew's",
+   "loc": "merryhews",
+   "item": "Illusion vermin (box)",
+   "price": 25,
+   "note": "a swarm of fake mice or spiders; vanishes when touched",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Merryhew's",
+   "loc": "merryhews",
+   "item": "Screaming box",
+   "price": 35,
+   "note": "screams when opened; the lid can be set to a name",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Merryhew's",
+   "loc": "merryhews",
+   "item": "Colour-change hair sweet",
+   "price": 18,
+   "note": "one day of an alarming colour",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Merryhew's",
+   "loc": "merryhews",
+   "item": "Confetti ambush card",
+   "price": 10,
+   "note": "bursts when unfolded",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Merryhew's",
+   "loc": "merryhews",
+   "item": "Secret Fools Day kit",
+   "price": 60,
+   "note": "the year's big sale is Month 4 Week 1",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "The Snug",
+   "loc": "snug",
+   "item": "Private booth (per hour)",
+   "price": 30,
+   "note": "always a wait; staff hear nothing",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "The Snug",
+   "loc": "snug",
+   "item": "Set meal",
+   "price": 30,
+   "note": "soup, a main and bread; ordinary and filling",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "The Snug",
+   "loc": "snug",
+   "item": "Pot of tea for the booth",
+   "price": 12,
+   "note": "",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "The Snug",
+   "loc": "snug",
+   "item": "Stew and fresh bread",
+   "price": 22,
+   "note": "",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "The Snug",
+   "loc": "snug",
+   "item": "Sweet course",
+   "price": 14,
+   "note": "",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "The Snug",
+   "loc": "snug",
+   "item": "Evening booth (18:00 to curfew)",
+   "price": 90,
+   "note": "book it days ahead",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Ardenne (special order)",
+   "loc": "commissary",
+   "item": "Ardenne case",
+   "price": 1500,
+   "note": "the cheapest Ardenne item; more than most monthly payouts",
+   "canon": true,
+   "season": "all"
+  },
+  {
+   "shop": "Ardenne (special order)",
+   "loc": "commissary",
+   "item": "Ardenne focus",
+   "price": 4000,
+   "note": "marks its owner instantly as wealthy",
+   "canon": true,
+   "season": "all"
+  },
+  {
+   "shop": "Ardenne (special order)",
+   "loc": "commissary",
+   "item": "Ardenne measuring set",
+   "price": 2200,
+   "note": "calipers, scales and a mana gauge in fitted velvet",
+   "canon": false,
+   "season": "all"
+  },
+  {
+   "shop": "Ardenne (special order)",
+   "loc": "commissary",
+   "item": "Ardenne tuning instrument",
+   "price": 2600,
+   "note": "for fine spellwork and warding practice",
+   "canon": false,
+   "season": "all"
   }
  ]
 }

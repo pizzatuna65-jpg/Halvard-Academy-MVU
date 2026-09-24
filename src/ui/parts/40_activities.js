@@ -20,7 +20,7 @@ PANELS.activities = {
   live: true,
   render(S) {
     if (view.arg && ACT_TABS.some(t => t[0] === view.arg)) { view.act = view.arg; view.arg = ''; }
-    const tabs = ACT_TABS.filter(t => unlockedTab(S, t));
+    const tabs = ACT_TABS.filter(t => unlockedTab(S, t) && (t[0] !== 'shop' || shopsHere(S).length));
     if (!tabs.some(t => t[0] === view.act)) view.act = 'clubs';
     const body = ({ clubs: acClubs, competition: acCompetition, shop: acShop, projects: acProjects, trip: acTrip })[view.act](S);
     return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>Activities</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
@@ -101,18 +101,33 @@ function acCompetition(S) {
 }
 
 // ---------------------------------------------------------------- shop
+// 1.2.0 (owner): the Shop tab appears only at a shop: the Commissary (with Ardenne's special orders), or the Mall and the
+// shops inside it. "The Mall — Nightwell" (or "Nightwell") opens on that shop.
+const MALL_SHOPS = ['mall', 'nightwell', 'merryhews', 'snug'];
+function shopsHere(S) {
+  const here = locIdOf(S.World.Location), group = MALL_SHOPS.includes(here) ? MALL_SHOPS : here === 'commissary' ? ['commissary'] : [];
+  return (DATA.shop || []).filter(i => group.includes(i.loc));
+}
+function shopFocus(S) {             // the shop named in the location ("The Mall — Merryhew's"), if any
+  const detail = String(S.World.Location || '').toLowerCase(), here = locIdOf(S.World.Location);
+  const sub = MALL_SHOPS.filter(x => x !== 'mall');
+  const hit = shopsHere(S).find(i => sub.includes(i.loc) && (i.loc === here || detail.includes(i.shop.replace(/^the /i, '').toLowerCase())));
+  return hit ? hit.shop.split(' — ')[0] : '';
+}
 function acShop(S) {
-  const W = S.Player.Wallet, items = DATA.shop || [];
+  const W = S.Player.Wallet, items = shopsHere(S);
   const shops = ['All', ...new Set(items.map(i => i.shop.split(' — ')[0]))];
+  if (view.shopAt !== S.World.Location) { view.shopAt = S.World.Location; view.shop = shopFocus(S) || 'All'; }
   if (!shops.includes(view.shop)) view.shop = 'All';
   const list = items.filter(i => view.shop === 'All' || i.shop.split(' — ')[0] === view.shop);
   const bazaar = eventDay(/^Academy Bazaar/), bn = bazaar ? daysTo(S, bazaar.di) : 99;
   const season = SEASON_OF(S.World.Month);   // 1.1.0 (spec §4.9): off-season items are greyed out
   const rows = list.map(i => {
-    const at = hereIs(S, i.loc), place = (DATA.locs[i.loc] || { name: i.shop }).name;
+    const at = hereIs(S, i.loc) || (i.loc === 'mall' && locIdOf(S.World.Location) === 'mall'), place = (DATA.locs[i.loc] || { name: i.shop }).name;
     const oos = Array.isArray(i.season) && !i.season.includes(season);
     const afford = !oos && (i.price == null || W.Points >= i.price);
-    const text = i.price == null ? `I ask at the ${place} about a special order: ` : at ? `I buy ${aan(i.item.replace(/^The /, 'the '))} for ${i.price} points.` : `I head to ${/^the /i.test(place) ? place : 'the ' + place} to buy ${aan(i.item.replace(/^The /, 'the '))} (${i.price} points).`;
+    const thing = /^The /.test(i.item) ? i.item.replace(/^The /, 'the ') : aan(i.item), to = /^the /i.test(place) || /'s$/.test(place) || MALL_SHOPS.includes(i.loc) ? place : 'the ' + place;
+    const text = i.price == null ? `I ask at ${to} about a special order: ` : at ? `I buy ${thing} for ${i.price} points.` : `I head to ${to} to buy ${thing} (${i.price} points).`;
     return `<tr${oos ? ' class="oos"' : ''}><td><b>${esc(i.item)}</b>${oos ? ` <span class="pill oos">out of season</span>` : Array.isArray(i.season) ? ` <span class="pill">${esc(i.season.join(', '))}</span>` : ''}${i.note ? `<div class="sub">${esc(i.note)}</div>` : ''}<div class="sub mw">${esc(i.shop)}</div></td><td class="sub">${esc(i.shop)}</td>
       <td class="pz">${i.price == null ? '—' : fmt(i.price)}${i.canon ? '' : '<span class="gp" title="Guide price">*</span>'}</td>
       <td><button class="btn sm" data-fill="${esc(text)}" ${afford ? '' : `disabled title="${oos ? 'Out of season' : 'Not enough points'}"`}>${at ? 'Buy' : 'Go buy'}</button></td></tr>`;
@@ -120,6 +135,7 @@ function acShop(S) {
   return `<div class="bal"><span><b>${fmt(W.Points)}</b> points</span><span><b>${fmt(W.Coin)}</b> coin</span><button class="btn sm" data-fill="I go to the Banking House to exchange points and coin: ">Banking House</button></div>
     <p class="hint">Points pay for everything on campus; coin is real money (1:1 at the Banking House) and the only money that works off campus. A free version of nearly everything exists: the canteen, the common-room kettle, the dorm laundry.</p>
     ${bn >= -2 && bn <= 14 ? `<div class="warn">Academy Bazaar ${bn < 0 ? 'is on now' : bn === 0 ? 'opens today' : `in ${bn} days`} (M9 W2, Thu–Sat): invited traders, prices are whatever they say, haggling expected.</div>` : ''}
+    <p class="hint">What is listed is a recommendation, not the whole stock: ask for anything a shop like this would sell.</p>
     <div class="tog" style="margin:10px 0">${shops.map(s => `<button data-shop="${esc(s)}" class="${view.shop === s ? 'on' : ''}">${esc(s)}</button>`).join('')}</div>
     <div class="scroll"><table class="shop"><tr><th>Item</th><th>Where</th><th>Points</th><th></th></tr>${rows}</table></div>
     <p class="hint">* Guide price; the narrator uses the same list. Buying only drafts the action into your message box.</p>`;

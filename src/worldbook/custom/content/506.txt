@@ -10,28 +10,48 @@
 - Basic practice focus: 250 pts; Commissary
 - Rare reagent: 350 pts (canon); Commissary; costs more than a bottom-band monthly payout
 - Special order: varies (canon); Commissary; price of the item plus a wait; specialised kit can eat a week of points
+- Umbrella: 25 pts; Commissary; keeps you dry unless the wind is up
+- Oilskin rain cloak: 90 pts; Commissary; waterproof in any weather; in season: Autumn, Winter, Spring
 - Bakery roll: 15 pts (canon); The Mall — bakery
 - Star Cookie: 8 pts (canon); The Mall — bakery; eaten whole before anything that matters; sells out by seven on exam mornings
 - Café drink and pastry: 25 pts; The Mall — cafés and tea houses
 - Restaurant meal: 45 pts; The Mall — restaurants
 - Private dining (second floor): 150 pts; The Mall — private dining
-- The Oracle Shell: 40 pts (canon); The Mall — store; yes, no, or ask again later
 - Quality focus: 4,000 pts (canon); The Mall — store; the top tier of magical equipment
 - Tailoring alteration: 40 pts; The Mall — services
 - Barber: 20 pts; The Mall — services
 - Laundry service (per load): 10 pts; The Mall — services; self-service laundry in the dorms is free
 - Practice studio or music room (per hour): 15 pts; The Mall — studios
 - Game hall (per hour): 10 pts; The Mall — game halls
-- The Vigil: 60 pts (canon); Nightwell; two days without sleep, paid for afterwards
-- Prank item: 25 pts; Merryhew's; itching charms, voice-changing sweets, illusion vermin; everything wears off
-- Private booth (per hour): 30 pts; The Snug; always a wait; staff hear nothing
-- Ardenne case: 1,500 pts (canon); Ardenne (special order); the cheapest Ardenne item; more than most monthly payouts
-- Ardenne focus: 4,000 pts (canon); Ardenne (special order); marks its owner instantly as wealthy
-- Umbrella: 25 pts; Commissary; keeps you dry unless the wind is up
-- Oilskin rain cloak: 90 pts; Commissary; waterproof in any weather; in season: Autumn, Winter, Spring
 - Wool scarf and mittens: 35 pts; The Mall — store; warm; in season: Autumn, Winter
 - Lined winter cloak: 120 pts; The Mall — store; warm; in season: Winter
 - Straw sun hat: 30 pts; The Mall — store; shade in summer heat; in season: Summer
 - Hot spiced tea: 12 pts; The Mall — cafés and tea houses; warms you through (clears a chill); in season: Autumn, Winter
 - Iced fruit cooler: 10 pts; The Mall — cafés and tea houses; cools you down (clears overheating); in season: Summer
+- The Vigil: 60 pts (canon); Nightwell; two days without sleep, paid for afterwards
+- House coffee: 12 pts; Nightwell; strong, bottomless until the pot runs out
+- Honey cream coffee: 16 pts; Nightwell
+- Spiced milk tea: 14 pts; Nightwell; the non-coffee order
+- Iced coffee: 14 pts; Nightwell; in season: Summer
+- Hot chocolate with cream: 14 pts; Nightwell; in season: Autumn, Winter
+- Late-night pastry: 10 pts; Nightwell; what is left after the evening rush
+- Bag of Nightwell beans: 35 pts; Nightwell; for the common-room kettle and a long week
+- The Oracle Shell: 40 pts (canon); Merryhew's; yes, no, or ask again later
+- Itching charm: 15 pts; Merryhew's; pinned on someone, itches for an hour
+- Voice-changing sweets (bag): 12 pts; Merryhew's; squeaky, booming or croaking, ten minutes each
+- Illusion vermin (box): 25 pts; Merryhew's; a swarm of fake mice or spiders; vanishes when touched
+- Screaming box: 35 pts; Merryhew's; screams when opened; the lid can be set to a name
+- Colour-change hair sweet: 18 pts; Merryhew's; one day of an alarming colour
+- Confetti ambush card: 10 pts; Merryhew's; bursts when unfolded
+- Secret Fools Day kit: 60 pts; Merryhew's; the year's big sale is Month 4 Week 1
+- Private booth (per hour): 30 pts; The Snug; always a wait; staff hear nothing
+- Set meal: 30 pts; The Snug; soup, a main and bread; ordinary and filling
+- Pot of tea for the booth: 12 pts; The Snug
+- Stew and fresh bread: 22 pts; The Snug
+- Sweet course: 14 pts; The Snug
+- Evening booth (18:00 to curfew): 90 pts; The Snug; book it days ahead
+- Ardenne case: 1,500 pts (canon); Ardenne (special order); the cheapest Ardenne item; more than most monthly payouts
+- Ardenne focus: 4,000 pts (canon); Ardenne (special order); marks its owner instantly as wealthy
+- Ardenne measuring set: 2,200 pts; Ardenne (special order); calipers, scales and a mana gauge in fitted velvet
+- Ardenne tuning instrument: 2,600 pts; Ardenne (special order); for fine spellwork and warding practice
 Paid work pays 20-40 points a shift. The Banking House changes points and coin 1:1. At the Academy Bazaar prices are whatever the trader says. Out-of-season items are not stocked.

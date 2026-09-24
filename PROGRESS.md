@@ -270,9 +270,49 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   npm test 392 checks (9 suites + static QA), smoke 492 views / 0 errors, token audit ~8.3k start / ~13.2k mid-game. Card 1.1.0.
   docs/TEST_CHECKLIST_v1.1.md, PLAYER_GUIDE (weather, conditions, gear, Bag, forecast, gossip, Features), TOKEN_AUDIT, ECOSYSTEM.
 
+- 1.2.0 Owner playtest fixes (the owner's first-session UI notes; card 1.2.0).
+  Bugs: (1) ArrowLeft/ArrowRight in a Builder field swiped the chat and closed the Builder: SillyTavern's document key handlers see the
+  shadow host, not our input; the overlay now stops key events. (2) Opening Techniques pushed SillyTavern's page up (scrollIntoView and
+  focus scroll overflow:hidden ancestors): scrolling is now done on our own boxes only and the page scroll is restored (keepPage).
+  (3) After Register/Save the bracelet vanished: Tavern Helper never renders iframes in hidden (is_system) messages (verified in
+  JS-Slash-Runner src/store/iframe_runtimes/message.ts), and the hidden entry carried the placeholder, so the old bracelet went stale.
+  Player-tool entries (Builder, Settings, calendar notes) no longer carry the placeholder; the bracelet reads the newest state from the
+  last message at or after its own, and ignores placeholders in hidden entries (old chats). (4) "After a refresh the Builder asked for
+  power and techniques again": the exact cause could not be reproduced outside ST. Defences: the entry is created with its variables
+  (createChatMessages data), written again through MVU and saved at once (SillyTavern.saveChat) instead of on a debounce; the Builder
+  keeps a record of what it wrote in $ui.file, and the engine (§0) and the Builder restore the Builder-only fields from it when a built
+  student comes back with them all empty (logged in _Log). $ui.file is read-only for the AI.
+  Builder: pronouns are a list (+ Other); Personality under Appearance; optional Birthday (M? W? Day) -> Profile.Birthday, the engine adds
+  "<Name>'s birthday" to _Event_today on the day and custom entry 508 (EJS, only on the day, written in the event-entry format) says how
+  it plays out. Combat roles removed from the Builder: rule 502 has the Combat teacher assign Combat_role at the first Combat class.
+  Power presets removed (D10 kept: still the player's choice): a mana slider 50-1000 plus an exact box up to 9999; 504 says Mana_max is
+  private capacity. Specialties: the lists are suggestions; custom subtypes with a forbidden yes/no (Magic._Affinity.Custom); a
+  technique with an unknown subtype asks too. Pacts: kind first (Spirit lawful; Demon Lesser..Demon Lord, Monster Grade IV..I,
+  Animal, Human = forbidden Pacting, lore 36), presence (only while summoned / as the pact says), Apply pact -> its Summon/Channel
+  techniques show on the Techniques page; an unapplied pact blocks registering. Magic.Pacts gains Kind and Presence. Hidden magic:
+  no "who already knows" (Known_by is left to the story); the true magic is filled in like a technique and saved as a hidden
+  technique (Notes "[true]"); _True_magic becomes its one-line summary. Older saves: the free-text true magic becomes the
+  description of a "True magic" technique to finish on the next amend.
+  Shop: the tab appears only at the Commissary or the Mall and its shops (Nightwell, Merryhew's, The Snug), opening on the shop named in
+  the location; a "Shop here" chip on the bracelet. More stock for Nightwell, Merryhew's, The Snug and Ardenne (guide prices, canon
+  prices untouched); every list says it is a recommendation. The Oracle Shell is sold at Merryhew's (lore 215 edited).
+  Clubs: members already appear under a club once their dossier Club entry unlocks (Rank 1); venues now follow the map (below).
+  Calendar: days are buttons; a day shows its events, dated state items (commitments, project due dates, notices' last day, the
+  birthday) and a note editor. Notes live in $ui.marks (hidden from the narrator), written like Settings (hidden entry).
+  Map (owner decisions, lore edited in merge_lorebooks.py): Soccer and Running Club at the Sports Field (running track round the pitch);
+  Archery Club at the Archery Range; Swimming, Gymnastics and Basketball clubs at the Gymnasium (Swimming also at the pool); the
+  Divination Society at the Observation Tower. New places with their own entries and pins: Fishing House (uid 268, pin 34, Fishing Club
+  venue) and Willow Island (uid 269, pin 35); lore 78 shortened to point at them. Location cards all show Walk, Access, Clubs here,
+  Regulars, Connected to. Walk is the shortest path from where you are (lore times on courtyard edges, map distance otherwise, stairs
+  inside the castle). Regulars show only NPCs you have met whose Haunts entry is unlocked (Rank 1 without one). One card at a time
+  with ‹ › buttons. The Rooftop stays hidden until discovered (D21, unchanged).
+  npm test 428 checks, smoke 482 views / 0 errors, token audit ~8.6k start / ~13.5k mid-game (+~300: rules 502/504, Campus Map lines).
+
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
+- Playtest v1.2.0 in ST: the Builder end to end (arrow keys, Techniques page, Register then reload, amend), the bracelet after a
+  Builder save, calendar notes, the Shop at the Mall / Commissary, the birthday day.
 - Playtest v1.1.0 in ST with docs/TEST_CHECKLIST_v1.1.md (EJS in 502/504 first), together with v1.0.3's checklist.
 - Playtest in ST with docs/TEST_CHECKLIST_v1.0.3.md FIRST (the Builder vs the real MVU zod helper, F12), then v1.0 + v0.5.
   Then tune (see Tunables) and fix what the playtest finds.
@@ -281,7 +321,8 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 - 1.1.0: the Prompt Template extension renders EJS in 502 / 504 (now gated per feature), also in MVU's extra-model mode if used.
 - 5.3: promptOnly regex minDepth trims the far chat as expected; [config_override] is picked up (MVU panel shows 'overriding');
   SillyTavern.chat[last].send_date is available to the Engine script when the seed is first set (fallback: world time + name).
-- Display regex maxDepth=2 is honoured for markdown; hidden (is_system) builder message still gets display regex + bar.
+- Display regex maxDepth=2 is honoured for markdown. (1.2.0: settled: hidden messages never render the bar, so tool entries carry none.)
+- 1.2.0: after a Builder save and a page reload the student file is intact (and whether $ui.file ever has to restore it: check _Log).
 
 ## Tunables to review after playtest
 - 1.1.0: weather weights and rare-event rolls, FC_TRUE 75, condition thresholds (20/5/30/60 min, 0/8/28 °C) and clear times,

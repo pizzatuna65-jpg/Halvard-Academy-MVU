@@ -90,6 +90,7 @@ idx = [
     mk(505, 'Now — Clock, Curfew & Presence (EJS)', True, False, 4, 1, 499),
     mk(506, '[mvu_plot] Price Guide', False, False, 1, 4, 503, keys=['buy', 'price', 'cost', 'afford', 'shop', 'Commissary', 'Mall', 'bakery', 'store', 'points for', 'how much', 'Banking House', 'coin', 'order']),
     mk(507, '[config_override]', False, True, 1, 4, 999),   # MVU card config override (5.3): disabled on purpose, read by MVU
+    mk(508, "[mvu_plot] Event — {{user}}'s Birthday (EJS, only on the day)", True, False, 1, 4, 85),   # 1.2.0: hand-written, gated on Profile.Birthday
 ]
 json.dump(idx, open(P('src/worldbook/custom/index.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 exec(open(P('tools/feature_cost.py'), encoding='utf-8').read())   # v1.1.0: writes data/feature_cost.json

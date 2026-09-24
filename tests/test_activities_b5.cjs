@@ -13,7 +13,7 @@ ok(U.clubOf(S) && U.clubOf(S).key === 'Duelling', 'Profile.Club matched to the d
 let h = U.PANELS.activities.render(S);
 ok(/your club/.test(h) && /followed you in/.test(h), 'your club card, Etnie follows you in');
 ok(!/data-nb|Ask to join/.test(h), 'no "Ask to join" once in a club');
-ok(!/data-actab="competition"/.test(h) && /data-actab="shop"/.test(h), 'tabs: competition locked, shop always');
+ok(!/data-actab="competition"/.test(h) && !/data-actab="shop"/.test(h), 'tabs: competition locked, no shop away from a shop (1.2.0)');
 // club members gated by the Club field (rank 1)
 const lib = U.DATA.clubs.find(c => c.key === 'Library Assistants');
 ok(lib.members.includes('Irene'), 'Irene listed in Library Assistants data');
@@ -46,10 +46,17 @@ S = applyPatch(S, [{ op: 'replace', path: '/Trip', value: { Active: true, Destin
 ok(/Set off for the capital/.test(S.Journal.join()), 'departure journaled');
 U.view.act = 'trip'; h = U.PANELS.activities.render(S); ok(/Travelling: the capital/.test(h) && /curfew moves to 22:00/.test(h), 'trip tab');
 // shop
-U.view.act = 'shop'; U.view.shop = 'All'; h = U.PANELS.activities.render(S);
-ok(/Quality focus/.test(h) && /data-fill="I head to the Commissary to buy a Sunfizz \(8 points\)\."/.test(h), 'shop row drafts a purchase');
-S.Player.Wallet.Points = 10; h = U.PANELS.activities.render(S);
-ok(/Satchel[\s\S]*?disabled title="Not enough points"/.test(h), 'unaffordable items disabled');
+// 1.2.0: the Shop tab exists only at a shop; the Mall lists its own shops, the Commissary its stock and Ardenne's orders
+const Sm = applyPatch(S, [{ op: 'replace', path: '/World/Location', value: 'The Mall' }]);
+U.view.act = 'shop'; U.view.shop = 'All'; h = U.PANELS.activities.render(Sm);
+ok(/data-actab="shop"/.test(h) && /Quality focus/.test(h) && /data-fill="I buy a Sunfizz for 8 points\."/.test(h) && /data-fill="I head to Merryhew&#39;s to buy the Oracle Shell \(40 points\)\."/.test(h), 'at the Mall: Mall shops listed, rows draft a purchase, Oracle Shell at Merryhew\'s');
+ok(!/Satchel/.test(h) && /not the whole stock/.test(h), 'the Mall does not list the Commissary; the list says it is a recommendation');
+const Sc = applyPatch(S, [{ op: 'replace', path: '/World/Location', value: 'Commissary' }]);
+Sc.Player.Wallet.Points = 10; h = U.PANELS.activities.render(Sc);
+ok(/Satchel[\s\S]*?disabled title="Not enough points"/.test(h) && /Ardenne case/.test(h) && !/Quality focus/.test(h), 'at the Commissary: its stock and Ardenne orders; unaffordable items disabled');
+const Sn = applyPatch(S, [{ op: 'replace', path: '/World/Location', value: 'The Mall — Nightwell' }]);
+U.view.shop = 'All'; h = U.PANELS.activities.render(Sn);
+ok(/data-shop="Nightwell" class="on"/.test(h) && /House coffee/.test(h), 'at "The Mall — Nightwell" the list opens on Nightwell');
 // battle
 S = applyPatch(S, [{ op: 'replace', path: '/Battle', value: { Active: true, Combatants: { sophia: { HP: 80, Stamina: 60, Status: 'guarding' } } } }]);
 ok(S.Battle.Combatants.Sophia && !S.Battle.Combatants.sophia, 'combatant keys canonicalised');

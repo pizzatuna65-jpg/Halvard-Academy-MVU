@@ -15,9 +15,9 @@
   "hooks": 145,
   "gossip": 19
  },
- "core_rules": 3138,
- "lore": 2991,
- "price_guide": 825,
+ "core_rules": 3352,
+ "lore": 3077,
+ "price_guide": 1219,
  "live": {
   "class": 40,
   "weather": 25

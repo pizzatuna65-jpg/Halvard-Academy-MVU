@@ -1,4 +1,4 @@
-# Eldrasil: Halvard Academy — Player Guide (card v1.1.0)
+# Eldrasil: Halvard Academy — Player Guide (card v1.2.0)
 
 You are a first-year at Halvard, one of four magic academies in the Kingdom of Eldrasil. A year of classes, dorm rivalries, clubs, competitions and festivals, with something old and sealed underneath the castle. The card tracks the world for you: the clock and calendar, seasons and weather, your body and mana, money and belongings, relationships, secrets, and what the campus remembers.
 
@@ -23,12 +23,15 @@ The greeting ends with the **bracelet**, a status bar under the latest message. 
 
 The Builder walks through seven steps: a sample to start from, identity, power, techniques, pacts, hidden magic, and a review. A few choices matter later:
 
-- **Power preset** (Grounded / Gifted / Prodigy / Unbound) sets your mana pool. Overpowered is allowed; the world reacts to it rather than quietly weakening you.
+- **Identity** has pronouns (a list, or your own), a **personality**, and an optional **birthday** in the academy calendar. The birthday goes on your calendar and the day plays out as your birthday. **Combat roles** are not chosen here: the Combat teacher assigns yours at your first Combat class, from how you fight.
+- **Mana capacity** is a slider (50 to 1,000; type a number for more). It is capacity, not a rank: nobody can read it off you, so a big pool can live a quiet life. Overpowered is allowed; the world reacts to what you show, never by quietly weakening you.
+- **Specialties**: the subtype lists are suggestions. Add your own subtype and say whether it is a forbidden art. A technique with a subtype of your own asks the same question.
 - **Techniques** have fixed costs: per use, sustained (upkeep per in-world minute), or hybrid. The engine charges them; the narrator never guesses.
+- **Pacts**: first choose what the pact is made with. Only a **spirit** pact is lawful; a pact with a demon, a monster (by bestiary grade), an animal or a person is the forbidden art of Pacting. Choose whether your partner is with you only while summoned or lives as the pact says. Press **Apply pact** and its Summon (and, for the two highest tiers, Channel) technique appears on the Techniques page.
 - **Dominant type** is what the Arbiter Stone reads at the Entrance Event. It picks your dorm (Elemental → Fire, Mystic → Light, Spiritual → Viridian, Occult → Sky). The Stone cannot see subtypes, or whether your magic is forbidden.
-- **Hidden magic** is optional: a true magic, a cover story, how you conceal it, and who already knows. Using it where it can be noticed raises **Dove attention**.
+- **Hidden magic** is optional: your **true magic, filled in like a technique** (it is charged like one), a cover story and how you conceal it. Who finds out is decided in the story. Using it where it can be noticed raises **Dove attention**.
 
-Register, then write your first action. You can reopen the Builder later to amend your file; techniques and affinity can only be changed there.
+Register, then write your first action. You can reopen the Builder later to amend your file; techniques and affinity can only be changed there. The Builder's entry in the chat is hidden, so the bracelet stays on the last story message and shows your new file there.
 
 ## 4. Playing
 
@@ -38,9 +41,9 @@ Write actions in the chat as usual. Each reply ends with a folded "📜 State up
 
 - **Student file**: profile, body (injuries and weather conditions), your **Bag**, wallet, studies, magic, hidden magic (once relevant), the engine log, and **Settings** (features and their token cost).
 - **People**: everyone you have met with their bond rank, dossiers that fill in as bonds deepen, and a connections diagram of who knows whom.
-- **Map**: the campus with clickable pins. Places you have not found stay hidden until you visit them.
-- **Notebook**: planner and calendar, journal, notice board, letters, mystery board. Tabs appear once they become relevant.
-- **Activities**: clubs, competition, shop, projects, trips. **Battle** opens from the "In battle" chip.
+- **Map**: the campus with clickable pins. Places you have not found stay hidden until you visit them. Each place card shows the walk from where you are now, access, clubs, regulars and connections; use ‹ › to step through the places at one pin. A regular is listed once you know them well enough to know where they hang out.
+- **Notebook**: planner and calendar, journal, notice board, letters, mystery board. Tabs appear once they become relevant. Tap a calendar day to see what is on it and write yourself a note ("ask Gareth to spar"); promises, appointments, project due dates, notices and your birthday land on their day by themselves. Notes are yours; the narrator does not read them.
+- **Activities**: clubs, competition, shop, projects, trips. The **Shop** tab appears only at a shop (the Commissary, the Mall and the shops inside it); a "Shop here" chip on the bracelet opens it. Its lists are recommendations, not the whole stock. **Battle** opens from the "In battle" chip.
 
 **Buttons never move the story on their own.** "Go here", "Buy", "Reply" and similar buttons write a suggested action into your chat box. Edit it if you like, then send it. This keeps every change in the chat, so swipes and deletions stay consistent.
 

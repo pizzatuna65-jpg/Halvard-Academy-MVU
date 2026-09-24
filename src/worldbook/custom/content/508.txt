@@ -1,0 +1,10 @@
+<%_ const _P = getvar('stat_data.Player.Profile') || {}, _W = getvar('stat_data.World') || {}; const _b = /^M(\d{1,2}) W([1-4]) (Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/.exec(String(_P.Birthday || '').trim()); if (_b && +_b[1] === +_W.Month && +_b[2] === +_W.Week && _b[3] === _W.Day) { _%>
+[{{user}}'s Birthday]
+When: today, <%- _P.Birthday %>, from midnight to midnight. Classes, curfew and any calendar event run as usual; the birthday sits on top of them.
+- Who knows: people {{user}} told, anyone with a Bonds Rank of 3 or more, dorm-mates, and whoever can read the enrolment ledger at Reception. Nobody else acts on it unless someone spreads the word, and word does spread by lunch.
+- Breakfast: dorm-mates who know sing in the Common Room, loudly and badly; the dorm's good chair is surrendered to {{user}} for the day.
+- Canteen: a Lucky Roll "baked for you", which promises nothing about the filling.
+- Star Cookie: one left on {{user}}'s desk or pillow by whoever knows them best, to be eaten whole, for luck in the year ahead.
+- Gifts: small and cheap between students (sweets, a Sunfizz, something handmade); a costly gift from a close bond means something and gets noticed. Kept gifts go in the Bag.
+- Tone: a good day, not a surprise-party script. Each character reacts in character: some forget, some overdo it, some pretend not to care and turn up anyway. Not everyone who should remember will.
+<%_ } _%>

@@ -57,6 +57,8 @@ def apply_lore_edits(C, N):
                  "the one place on the grounds where students of rival dorms share a bench. Gavlan Haverton, who advises the club, keeps a desk in the back. "
                  "Unwritten rule: grudges from the rings are settled in the rings, never under the roof.\n"
                  "Feel: sweat, liniment, chalk dust, tired laughter."))
+    # 1.2.0 (owner): the Oracle Shell is Merryhew's stock
+    rep(C[215], "A palm-sized novelty shell from the Mall that", "A palm-sized novelty shell sold at Merryhew's, the Mall's joke shop, that")
     rep(C[86], "[Detention Tower] Where punished students",
         "[Detention Tower] One of the castle core's towers, climbed by its own narrow spiral stair from Floor 1. Where punished students")
     rep(C[89], "A formal grey stone office building flying the crown's banners, standing near the Cathedral and the Dovecote.",
@@ -76,6 +78,36 @@ def apply_lore_edits(C, N):
     rep(m, "Sports Field – Gymnasium, Archery Range.", "Sports Field – Gymnasium, Archery Range. Combat Grounds – Sparring Pavilion.")
     rep(m, "Duelling – Combat Grounds;", "Duelling – Combat Grounds (headquarters: Sparring Pavilion);")
     rep(m, "Combat Grounds and Sports Field 10;", "Combat Grounds, Sparring Pavilion and Sports Field 10;")
+    # 1.2.0 (owner, map review): club venues follow the owner's map. The Sports Field has a running track round the pitch; the
+    # Archery Club uses the Archery Range; the Gymnasium houses the Swimming, Gymnastics and Basketball clubs; the Divination
+    # Society meets in the Observation Tower. The Fishing House and Willow Island get their own entries (and map pins).
+    rep(m, "Soccer – Sports Field; Running, Walking – Hills;",
+        "Soccer, Running – Sports Field (running track around the pitch); Archery – Archery Range; Swimming, Gymnastics, Basketball – Gymnasium; Swimming – Swimming Pool; Walking – Hills;")
+    rep(m, "Fishing – Lake;", "Fishing – Fishing House (on the lake shore);")
+    rep(m, "Music, Card, Board Game, Divination, Tailoring,", "Divination – Observation Tower; Music, Card, Board Game, Tailoring,")
+    rep(m, "- Far edge: Gardens – Boathouse/Lake – Forest.", "- Far edge: Gardens – Boathouse/Lake – Forest. Boathouse/Lake – Fishing House (beside the boathouse), Willow Island (by boat only).")
+    rep(m, "Boathouse and Lake 20;", "Boathouse and Lake 20; Fishing House 20; Willow Island 25 (by boat);")
+    rep(C[72], "[Sports Field] Soccer, running, and Sports Day in Month 6.",
+        "[Sports Field] Soccer, running, and Sports Day in Month 6. A running track circles the soccer pitch: home ground of the Soccer Club and the Running Club.")
+    rep(C[73], "[Gymnasium] Indoor training,", "[Gymnasium] Home of the Gymnastics and Basketball clubs, and of the Swimming Club, which trains in the outdoor pool beside it. Indoor training,")
+    rep(C[81], "most important to Mystic students and the Divination Society.", "most important to Mystic students; the Divination Society meets here.")
+    rep(C[78], " Beside the boathouse stands the Fishing Club's fishing house, a timber hut full of rods, nets and tackle, with its own long dock built for fishing rather than boats. Behind it, a stone-edged pond raises fish for the Canteen kitchen and the Fishing Club's breeding projects.",
+        " Beside the boathouse stands the Fishing Club's Fishing House, with its own dock.")
+    rep(C[78], " A small island sits in the middle of the lake with a big willow tree on it; at night the tree glows in the distance from the many fireflies that inhabit the island.",
+        " Willow Island sits in the middle of the lake, reached only by boat.")
+    for u in (268, 269): assert u not in C and u not in N
+    C[268] = template_from(C[78], uid=268, displayIndex=268, comment="Academy Location - Sport and Grounds - Fishing House",
+        key=["Fishing House", "fishing hut", "fishing dock", "Fishing Club", "fish pond", "the long dock"],
+        content=("[Fishing House] The Fishing Club's timber hut on the lake shore beside the boathouse, full of rods, nets and tackle, with its own long dock "
+                 "built for fishing rather than boats. Behind it, a stone-edged pond raises fish for the Canteen kitchen and the Fishing Club's breeding projects. "
+                 "The club meets here; the dock is busiest at dawn, and quiet enough that people come to sit on it without a rod.\n"
+                 "Feel: tar, wet rope, early mist on the water."))
+    C[269] = template_from(C[78], uid=269, displayIndex=269, comment="Academy Location - Sport and Grounds - Willow Island",
+        key=["Willow Island", "willow tree", "the island", "fireflies", "the willow"],
+        content=("[Willow Island] A small island in the middle of the lake with one great willow tree on it, reached only by a boat from the boathouse, "
+                 "which refuses bookings after dark. At night the willow glows in the distance from the many fireflies that live on the island, "
+                 "so anyone out there after dark was either rowed out before sunset or took a boat without asking.\n"
+                 "Feel: still water, trailing leaves, firefly light."))
     assert 332 not in N and 332 not in C
     N[332] = template_from(N[283], uid=332, displayIndex=332, comment="Regulars — The Sparring Pavilion",
         key=["Sparring Pavilion", "the pavilion", "Duelling Club headquarters"],

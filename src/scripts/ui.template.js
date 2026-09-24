@@ -15,14 +15,13 @@ const TYPE_TEXT = {
   Spiritual: 'Force of will turned on the body: healing, strength, speed, senses, calm.',
   Occult: 'Illusions, charms, luck, shadows, and the binding of spirits.',
 };
-const PRESETS = [
-  { id: 'Grounded', mana: 100, text: 'Ordinary talent. Hard work and cleverness carry you.' },
-  { id: 'Gifted', mana: 130, text: 'Clearly above average. Teachers notice, rivals too.' },
-  { id: 'Prodigy', mana: 180, text: 'Rare talent. Expectations, envy and attention follow you.' },
-  { id: 'Unbound', mana: 300, text: 'Power beyond the academy\'s measure. Set your own mana pool; the world reacts to it.' },
-];
-const ROLES = ['Attack', 'Defense', 'Healing', 'Support', 'Control'];
+// 1.2.0 (owner playtest): no power-level presets. The player sets a mana capacity with a slider; it is capacity, not a title,
+// so a big pool can still live quietly (D10: the player's choice, never quietly nerfed). The marks are reference points only.
+const MANA_MIN = 50, MANA_SLIDER = 1000, MANA_MAX = 9999;
+const MANA_MARKS = [[0, 'below an ordinary first-year'], [100, 'an ordinary first-year'], [130, 'clearly above average'], [180, 'a rare talent'], [300, "beyond the academy's usual measure"], [1000, 'far beyond anyone on campus']];
+const manaMark = m => (MANA_MARKS.filter(([v]) => m >= v).pop() || MANA_MARKS[0])[1];
 const RACES = ['Human', 'Elf', 'Beastkin'];
+const PRONOUNS = ['she/her', 'he/him', 'they/them'];
 const BACKGROUNDS = ['Commoner family', 'Merchant family', 'Minor noble house', 'Old noble house', 'Scholarship student', 'Foreign-born'];
 const MODES = { per_use: 'Per use', sustained: 'Sustained', hybrid: 'Hybrid' };
 const SCALES = {
@@ -31,13 +30,21 @@ const SCALES = {
   Major: { use: 25, act: 20, up: 0.8, trig: 12, hint: 'a big, draining effect' },
   Signature: { use: 45, act: 35, up: 1.5, trig: 20, hint: 'your strongest move' },
 };
-const PACT_COST = {
-  Lesser: { act: 5, up: 0.1, trig: 3, ch: 0 }, Basic: { act: 10, up: 0.3, trig: 6, ch: 0 },
-  Greater: { act: 20, up: 0.8, trig: 12, ch: 15 }, 'Spirit Lord': { act: 40, up: 2, trig: 25, ch: 30 },
+// 1.2.0: what the pact is made with, chosen first. Only a spirit pact is lawful (lore: Pacting† = a pact with anything other
+// than a spirit; Demon Summoning† too). Tiers: spirits (Spirit Tiers), demons (owner), monsters by bestiary grade (IV..I).
+const PACT_KINDS = {
+  Spirit: { tiers: ['Lesser', 'Basic', 'Greater', 'Spirit Lord'], sub: 'Spirit Pact', noun: "Spirit's name", text: 'A lawful Spirit Pact with one spirit.' },
+  Demon: { tiers: ['Lesser', 'Basic', 'Greater', 'Demon Lord'], sub: 'Pacting', noun: "Demon's name", text: 'Something from the demon world. Forbidden (Pacting, Demon Summoning).' },
+  Monster: { tiers: ['Grade IV', 'Grade III', 'Grade II', 'Grade I'], sub: 'Pacting', noun: "Creature's name", text: 'A magical beast, graded as in the bestiary (IV nuisance to I settlement-scale). Forbidden (Pacting).' },
+  Animal: { tiers: ['Animal'], sub: 'Pacting', noun: "Animal's name", text: 'An ordinary animal. Forbidden (Pacting).' },
+  Human: { tiers: ['Human'], sub: 'Pacting', noun: "Person's name", text: 'A person. Forbidden (Pacting).' },
 };
-const TIERS = Object.keys(PACT_COST);
+const TIER_COST = [{ act: 5, up: 0.1, trig: 3, ch: 0 }, { act: 10, up: 0.3, trig: 6, ch: 0 }, { act: 20, up: 0.8, trig: 12, ch: 15 }, { act: 40, up: 2, trig: 25, ch: 30 }];
+const tierLevel = (kind, tier) => kind === 'Human' ? 1 : Math.max(0, ((PACT_KINDS[kind] || PACT_KINDS.Spirit).tiers).indexOf(tier));
+const pactCost = (kind, tier) => TIER_COST[tierLevel(kind, tier)];
+const canChannel = (kind, tier) => tierLevel(kind, tier) >= 2 && kind !== 'Human';
+const PRESENCE = [['summoned', 'Only while summoned'], ['terms', 'As the pact says (it lives on its own)']];
 const STAGES = ['Unnoticed', 'Rumoured', 'Watched', 'Investigated', 'Exposed'];
-const PH = '<Status' + 'PlaceHolderImpl/>';
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 // ---------------------------------------------------------------- helpers
@@ -52,16 +59,25 @@ const fromAbs = abs => {
   const W = Math.floor(day / 7) + 1; day -= (W - 1) * 7;
   return `M${M} W${W} ${DAYS[day]} ${String(Math.floor(min / 60)).padStart(2, '0')}:${String(min % 60).padStart(2, '0')}`;
 };
-const subInfo = (type, sub) => {
-  const T = SUBTYPES[type]; if (!T || !sub) return null;
+// 1.2.0: the subtype lists are suggestions. A student may name their own subtype and say whether it is a forbidden art
+// (draft.custom / Magic._Affinity.Custom); custom entries win over the catalogue.
+const customOf = (d, sub) => (((d && d.custom) || []).find(c => c.name.toLowerCase() === String(sub || '').trim().toLowerCase()));
+const subInfo = (type, sub, d) => {
+  if (!sub) return null;
+  const c = customOf(d, sub); if (c && (!type || !c.type || c.type === type)) return { forbidden: !!c.forbidden, desc: '', custom: true };
+  const T = SUBTYPES[type]; if (!T) return null;
   const s = sub.trim().toLowerCase();
   const f = T.forbidden.find(x => x.name.toLowerCase() === s); if (f) return { forbidden: true, desc: f.desc };
   const n = T.notable.find(x => x.name.toLowerCase() === s); if (n) return { forbidden: false, desc: n.desc };
   if (T.standard.some(x => x.toLowerCase() === s)) return { forbidden: false, desc: '' };
   return null;
 };
-const allSubs = type => { const T = SUBTYPES[type]; return T ? [...T.standard, ...T.notable.map(x => x.name), ...T.forbidden.map(x => x.name + ' †')] : []; };
-const typeOfSub = sub => TYPES.find(t => subInfo(t, sub.replace(/\s*†$/, '')));
+const allSubs = (type, d) => {
+  const T = SUBTYPES[type], mine = ((d && d.custom) || []).filter(c => c.type === type).map(c => c.name + (c.forbidden ? ' †' : ''));
+  return T ? [...T.standard, ...T.notable.map(x => x.name), ...T.forbidden.map(x => x.name + ' †'), ...mine] : mine;
+};
+const typeOfSub = (sub, d) => { const c = customOf(d, sub); return c && c.type ? c.type : TYPES.find(t => subInfo(t, sub.replace(/\s*†$/, ''))); };
+const isForbidden = (t, d) => { const info = subInfo(t.type, t.subtype, d); return info ? info.forbidden : t.forb === 'yes'; };
 function personaName() { try { const n = substitudeMacros('{{user}}'); return n && !/\{\{/.test(n) ? n : ''; } catch (e) { return ''; } }
 
 function latestState() {
@@ -74,102 +90,134 @@ function latestState() {
 }
 
 // ---------------------------------------------------------------- draft model
-const blankTech = () => ({ name: '', type: '', subtype: '', effect: '', cannot: '', mode: 'per_use', scale: 'Standard', act: 12, up: 0, trig: 0, hidden: false, notes: '' });
+const blankTech = () => ({ name: '', type: '', subtype: '', effect: '', cannot: '', mode: 'per_use', scale: 'Standard', act: 12, up: 0, trig: 0, hidden: false, forb: '', notes: '' });
 function tech(name, type, subtype, effect, cannot, mode, scale, extra) {
   const c = SCALES[scale];
-  return Object.assign({ name, type, subtype, effect, cannot, mode, scale, act: mode === 'per_use' ? c.use : c.act, up: mode === 'per_use' ? 0 : c.up, trig: mode === 'hybrid' ? c.trig : 0, hidden: false, notes: '' }, extra || {});
+  return Object.assign({ name, type, subtype, effect, cannot, mode, scale, act: mode === 'per_use' ? c.use : c.act, up: mode === 'per_use' ? 0 : c.up, trig: mode === 'hybrid' ? c.trig : 0, hidden: false, forb: '', notes: '' }, extra || {});
 }
-const blankPact = () => Object.assign({ spirit: '', tier: 'Lesser', terms: '' }, PACT_COST.Lesser);
+const blankTrue = () => Object.assign(blankTech(), { scale: 'Major', act: SCALES.Major.use });
+const blankPact = () => Object.assign({ kind: '', name: '', tier: '', presence: 'summoned', terms: '', hidden: false, applied: false }, TIER_COST[0]);
 function blankDraft() {
   return {
-    name: personaName(), pronouns: '', age: 18, race: 'Human', beast: '', appearance: '', background: '', roles: [], goal: '',
-    preset: 'Grounded', mana: 100, types: [], dominant: '', specs: [], techs: [], pacts: [],
-    hidden: { on: false, truth: '', cover: '', cover_type: '', conceal: '', known: [] },
+    name: personaName(), pronouns: '', pronOther: false, age: 18, race: 'Human', beast: '', appearance: '', personality: '', background: '', goal: '',
+    bday: { m: 0, w: 1, d: 'Mon' }, mana: 100, types: [], dominant: '', specs: [], custom: [], techs: [], pacts: [],
+    hidden: { on: false, truth: blankTrue(), cover: '', cover_type: '', conceal: '' },
+    newsub: { name: '', type: '', forb: 'no' },
   };
 }
 const TEMPLATES = [
   { id: 'frost', title: 'Frost duelist', blurb: 'Elemental ice and wind. Quick, precise, built for the ring.', make: () => ({
-    race: 'Human', background: 'Commoner family', roles: ['Attack', 'Control'], goal: 'Qualify for the Dorm Competition.',
-    preset: 'Gifted', mana: 130, types: ['Elemental'], dominant: 'Elemental', specs: ['Ice', 'Wind'],
+    race: 'Human', background: 'Commoner family', goal: 'Qualify for the Dorm Competition.', personality: 'Competitive and precise; hates losing more than she likes winning.',
+    mana: 130, types: ['Elemental'], dominant: 'Elemental', specs: ['Ice', 'Wind'],
     techs: [
       tech('Frost Lance', 'Elemental', 'Ice', 'A spear of ice thrown at a target up to about twenty paces away.', 'Cannot curve around cover.', 'per_use', 'Standard'),
       tech('Ice Wall', 'Elemental', 'Ice', 'A waist-high wall of ice that blocks blows and spells; it can be reshaped while it stands (each reshape is a triggered use).', 'One wall at a time; strong fire melts it.', 'hybrid', 'Standard'),
       tech('Gale Step', 'Elemental', 'Wind', 'A burst of wind under the feet for a quick dash or a high jump.', 'Short bursts only; no flight.', 'per_use', 'Minor'),
     ] }) },
   { id: 'medic', title: 'Field medic', blurb: 'Spiritual healing and senses. The one your team leans on.', make: () => ({
-    race: 'Elf', background: 'Scholarship student', roles: ['Healing', 'Support'], goal: 'Become the healer my team can rely on.',
-    preset: 'Grounded', mana: 100, types: ['Spiritual'], dominant: 'Spiritual', specs: ['Healing', 'Lifesense'],
+    race: 'Elf', background: 'Scholarship student', goal: 'Become the healer my team can rely on.', personality: 'Calm, a little bossy with patients, bad at resting.',
+    mana: 100, types: ['Spiritual'], dominant: 'Spiritual', specs: ['Healing', 'Lifesense'],
     techs: [
       tech('Mend', 'Spiritual', 'Healing', 'Closes cuts and knits minor injuries by touch over a minute or two.', 'Cannot regrow what is lost or cure illness; serious wounds are only steadied.', 'per_use', 'Standard'),
       tech('Hold Fast', 'Spiritual', 'Stabilize', 'Keeps a badly hurt person from getting worse while contact is kept.', 'Does not heal; ends if contact breaks.', 'sustained', 'Minor'),
       tech('Lifesense', 'Spiritual', 'Lifesense', 'Senses living beings within about thirty paces.', 'Cannot tell who they are.', 'sustained', 'Minor'),
     ] }) },
   { id: 'spirit', title: 'Spirit-bound', blurb: 'Occult illusions and a pact with a fire spirit.', make: () => ({
-    race: 'Beastkin', beast: 'fox', background: 'Merchant family', roles: ['Support', 'Control'], goal: 'Earn a pact with a Greater spirit before graduation.',
-    preset: 'Gifted', mana: 130, types: ['Occult'], dominant: 'Occult', specs: ['Spirit Pact', 'Illusion'],
+    race: 'Beastkin', beast: 'fox', background: 'Merchant family', goal: 'Earn a pact with a Greater spirit before graduation.', personality: 'Charming, curious, keeps every promise to the letter.',
+    mana: 130, types: ['Occult'], dominant: 'Occult', specs: ['Spirit Pact', 'Illusion'],
     techs: [tech('Glamour Veil', 'Occult', 'Glamour', 'A light illusion over your own face and clothes.', 'Fools the eye only; touch and Spirit Sight see through it.', 'sustained', 'Minor')],
-    pacts: [Object.assign({ spirit: 'Ember', tier: 'Basic', terms: 'Ember lends her fire and her nose for danger; in return a candle is lit for her every night.' }, PACT_COST.Basic)],
+    pacts: [Object.assign(blankPact(), { kind: 'Spirit', name: 'Ember', tier: 'Basic', applied: true, terms: 'Ember lends her fire and her nose for danger; in return a candle is lit for her every night.' }, TIER_COST[1])],
   }) },
   { id: 'hidden', title: 'Secret unmaker', blurb: 'Hidden forbidden magic under a harmless cover. Keep the Doves away.', make: () => ({
-    race: 'Human', background: 'Commoner family', roles: ['Control'], goal: 'Get through three years without the Doves learning what I can do.',
-    preset: 'Prodigy', mana: 180, types: ['Mystic'], dominant: 'Mystic', specs: ['Telekinesis', 'Unmaking'],
+    race: 'Human', background: 'Commoner family', goal: 'Get through three years without the Doves learning what I can do.', personality: 'Quiet, watchful, laughs a beat too late.',
+    mana: 180, types: ['Mystic'], dominant: 'Mystic', specs: ['Telekinesis', 'Unmaking'],
     techs: [
       tech('Push and Pull', 'Mystic', 'Telekinesis', 'Moves objects up to the weight of a chair within sight.', 'Cannot lift people.', 'per_use', 'Minor'),
       tech('Quiet Hands', 'Mystic', 'Dispelling', 'Smooths away the residual mana your hidden magic leaves behind.', 'Takes concentration; slips if you are hurt or startled.', 'sustained', 'Minor', { hidden: true }),
-      tech('Unmake', 'Mystic', 'Unmaking', 'Erases a small object, or a hand-sized piece of something larger. What is unmade does not come back.', 'Nothing bigger than a chair; you have never tried it on anything alive.', 'per_use', 'Major', { hidden: true }),
     ],
-    hidden: { on: true, truth: 'Unmaking (Mystic, forbidden): deleting matter permanently.', cover: 'Telekinesis', cover_type: 'Mystic',
-      conceal: 'Unmaking leaves no light or sound; you pass slips off as clumsy telekinesis and keep Quiet Hands running when you use it.', known: [] },
+    hidden: { on: true, truth: tech('Unmake', 'Mystic', 'Unmaking', 'Erases a small object, or a hand-sized piece of something larger. What is unmade does not come back.', 'Nothing bigger than a chair; you have never tried it on anything alive.', 'per_use', 'Major'),
+      cover: 'Telekinesis', cover_type: 'Mystic', conceal: 'Unmaking leaves no light or sound; you pass slips off as clumsy telekinesis and keep Quiet Hands running when you use it.' },
   }) },
 ];
 
-function draftFromState(S) {
+const parseBday = s => { const m = String(s || '').match(/^M(\d{1,2}) W([1-4]) (Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/); return m ? { m: +m[1], w: +m[2], d: m[3] } : { m: 0, w: 1, d: 'Mon' }; };
+const bdayText = b => (b && b.m ? `M${b.m} W${b.w} ${b.d}` : '');
+// 1.2.0: the Builder's own record of what it last wrote ($ui.file). If a save ever comes back with the Builder-only fields
+// empty while the student is built, the record fills them (the engine does the same; see its section 0).
+function withFile(S) {
+  const F = S && S.$ui && S.$ui.file;
+  if (!S || !(S.$ui || {}).built || !F || typeof F !== 'object') return S;
+  const M = S.Magic || {}, A = M._Affinity || {};
+  if (!_.isEmpty(M._Techniques) || ((A.Types || []).length)) return S;
+  const C = _.cloneDeep(S);
+  C.Magic._Techniques = _.cloneDeep(F.Techniques || {}); C.Magic._Affinity = _.cloneDeep(F.Affinity || {});
+  if (F.Mana_max) C.Player.Vitals.Mana_max = F.Mana_max;
+  if (F.True_magic && !C.Hidden._True_magic) C.Hidden._True_magic = F.True_magic;
+  return C;
+}
+const techOf = (k, t) => ({ name: k, type: t.Type, subtype: t.Subtype, effect: t.Effect, cannot: t.Cannot_do, mode: t.Cost_mode, scale: '',
+  act: t.Activation, up: t.Upkeep_per_min, trig: t.Trigger, hidden: !!t.Hidden, forb: t.Forbidden ? 'yes' : 'no', notes: String(t.Notes || '').replace(/^\[true\]\s*/, '') });
+
+function draftFromState(S0) {
   const d = blankDraft();
-  if (!S || !(S.$ui || {}).built) return d;
+  if (!S0 || !(S0.$ui || {}).built) return d;
+  const S = withFile(S0);
   const P = S.Player.Profile || {}, A = S.Magic._Affinity || {}, T = S.Magic._Techniques || {}, H = S.Hidden || {};
   Object.assign(d, {
-    name: P.Name || d.name, pronouns: P.Pronouns || '', age: P.Age || 18, race: P.Race || 'Human', beast: P.Beast_type || '',
-    appearance: P.Appearance || '', background: P.Background || '', goal: P.Goal || '',
-    roles: String(P.Combat_role || '').split(/,\s*/).filter(r => ROLES.includes(r)),
-    preset: A.Preset || 'Grounded', mana: num(S.Player.Vitals.Mana_max, 100),
-    types: [...(A.Types || [])], dominant: A.Dominant || '', specs: [...(A.Specialties || [])],
+    name: P.Name || d.name, pronouns: P.Pronouns || '', pronOther: !!P.Pronouns && !PRONOUNS.includes(P.Pronouns), age: P.Age || 18, race: P.Race || 'Human', beast: P.Beast_type || '',
+    appearance: P.Appearance || '', personality: P.Personality || '', background: P.Background || '', goal: P.Goal || '', bday: parseBday(P.Birthday),
+    mana: num(S.Player.Vitals.Mana_max, 100), types: [...(A.Types || [])], dominant: A.Dominant || '', specs: [...(A.Specialties || [])],
+    custom: Object.entries(A.Custom || {}).map(([k, c]) => ({ name: k, type: c.Type || '', forbidden: !!c.Forbidden })),
   });
-  d.techs = Object.entries(T).filter(([, t]) => !/^\[pact\]/.test(t.Notes || '')).map(([k, t]) => ({
-    name: k, type: t.Type, subtype: t.Subtype, effect: t.Effect, cannot: t.Cannot_do, mode: t.Cost_mode, scale: '',
-    act: t.Activation, up: t.Upkeep_per_min, trig: t.Trigger, hidden: !!t.Hidden, notes: t.Notes || '',
-  }));
+  d.techs = Object.entries(T).filter(([, t]) => !/^\[(pact|true)\]/.test(t.Notes || '')).map(([k, t]) => techOf(k, t));
   d.pacts = Object.entries(S.Magic.Pacts || {}).map(([k, p]) => {
-    const s = T['Summon ' + k] || {}, c = T['Channel ' + k] || {}, def = PACT_COST[p.Tier] || PACT_COST.Lesser;
-    return { spirit: k, tier: p.Tier, terms: p.Terms || '', act: s.Activation ?? def.act, up: s.Upkeep_per_min ?? def.up, trig: s.Trigger ?? def.trig, ch: c.Activation ?? def.ch };
+    const kind = PACT_KINDS[p.Kind] ? p.Kind : 'Spirit', s = T['Summon ' + k] || {}, c = T['Channel ' + k] || {}, def = pactCost(kind, p.Tier);
+    return { kind, name: k, tier: p.Tier, presence: p.Presence === 'terms' ? 'terms' : 'summoned', terms: p.Terms || '', hidden: !!s.Hidden, applied: true,
+      act: s.Activation ?? def.act, up: s.Upkeep_per_min ?? def.up, trig: s.Trigger ?? def.trig, ch: c.Activation ?? def.ch };
   });
   const cm = String(H.Cover_magic || '').match(/^(.*?)\s*\((Elemental|Mystic|Spiritual|Occult)\)\s*$/);
-  d.hidden = { on: !!H._True_magic, truth: H._True_magic || '', cover: cm ? cm[1] : (H.Cover_magic || ''), cover_type: cm ? cm[2] : '',
-    conceal: H.Concealment || '', known: [...(H.Known_by || [])] };
+  const tk = Object.keys(T).find(k => /^\[true\]/.test(T[k].Notes || ''));
+  // saves from before 1.2.0 hold the true magic as free text only: it becomes the description of a technique to fill in
+  const truth = tk ? techOf(tk, T[tk]) : Object.assign(blankTrue(), { name: H._True_magic ? 'True magic' : '', type: A.Dominant || '', effect: H._True_magic || '' });
+  d.hidden = { on: !!H._True_magic, truth, cover: cm ? cm[1] : (H.Cover_magic || ''), cover_type: cm ? cm[2] : '', conceal: H.Concealment || '' };
   return d;
 }
 
-function techRecord(d) {
-  const R = {};
-  for (const t of d.techs) {
-    const k = keyOf(t.name); if (!k) continue;
-    const info = subInfo(t.type, t.subtype);
-    R[k] = { Type: t.type, Subtype: t.subtype.trim(), Effect: t.effect.trim(), Cannot_do: t.cannot.trim(), Cost_mode: t.mode,
-      Activation: num(t.act), Upkeep_per_min: t.mode === 'per_use' ? 0 : num(t.up), Trigger: t.mode === 'hybrid' ? num(t.trig) : 0,
-      Hidden: !!(d.hidden.on && t.hidden), Forbidden: !!(info && info.forbidden), Notes: t.notes.trim() };
-  }
-  for (const p of d.pacts) {
-    const k = keyOf(p.spirit); if (!k) continue;
-    R['Summon ' + k] = { Type: 'Occult', Subtype: 'Spirit Pact', Effect: `Summons ${k} (${p.tier} spirit). Each ability ${k} uses while present is a triggered use.`,
-      Cannot_do: 'A spirit killed in combat takes an hour to a week to call back.', Cost_mode: 'hybrid',
-      Activation: num(p.act), Upkeep_per_min: num(p.up), Trigger: num(p.trig), Hidden: false, Forbidden: false, Notes: `[pact] ${k}` };
-    if (p.tier === 'Greater' || p.tier === 'Spirit Lord') {
-      R['Channel ' + k] = { Type: 'Occult', Subtype: 'Spirit Pact', Effect: `Uses ${k}'s ability without summoning it, far weaker than ${k}'s own.`,
-        Cannot_do: '', Cost_mode: 'per_use', Activation: num(p.ch), Upkeep_per_min: 0, Trigger: 0, Hidden: false, Forbidden: false, Notes: `[pact] ${k}` };
-    }
+function techEntry(t, d, extra) {
+  return Object.assign({ Type: t.type, Subtype: t.subtype.trim(), Effect: t.effect.trim(), Cannot_do: t.cannot.trim(), Cost_mode: t.mode,
+    Activation: num(t.act), Upkeep_per_min: t.mode === 'per_use' ? 0 : num(t.up), Trigger: t.mode === 'hybrid' ? num(t.trig) : 0,
+    Hidden: !!(d.hidden.on && t.hidden), Forbidden: isForbidden(t, d), Notes: t.notes.trim() }, extra || {});
+}
+function pactTechs(p) {                 // the techniques a pact becomes (Summon / Channel)
+  const k = keyOf(p.name); if (!k || !PACT_KINDS[p.kind]) return {};
+  const K = PACT_KINDS[p.kind], lawful = p.kind === 'Spirit', R = {};
+  const pres = p.presence === 'terms' ? `${k} lives and acts as the pact's terms say; summoning calls it to your side.` : `${k} is with you only while summoned.`;
+  R['Summon ' + k] = { Type: 'Occult', Subtype: K.sub, Effect: `Summons ${k} (${p.kind.toLowerCase()} pact, ${p.tier}). ${pres} Each ability ${k} uses while present is a triggered use.`,
+    Cannot_do: lawful ? 'A spirit killed in combat takes an hour to a week to call back.' : `Killed or driven off, ${k} comes back only as the pact allows.`, Cost_mode: 'hybrid',
+    Activation: num(p.act), Upkeep_per_min: num(p.up), Trigger: num(p.trig), Hidden: false, Forbidden: !lawful, Notes: `[pact] ${k}` };
+  if (canChannel(p.kind, p.tier)) {
+    R['Channel ' + k] = { Type: 'Occult', Subtype: K.sub, Effect: `Uses ${k}'s ability without summoning it, far weaker than ${k}'s own.`,
+      Cannot_do: '', Cost_mode: 'per_use', Activation: num(p.ch), Upkeep_per_min: 0, Trigger: 0, Hidden: false, Forbidden: !lawful, Notes: `[pact] ${k}` };
   }
   return R;
 }
-const presetMana = d => d.preset === 'Unbound' ? _.clamp(Math.round(num(d.mana, 300)), 100, 9999) : (PRESETS.find(p => p.id === d.preset) || PRESETS[0]).mana;
+function techRecord(d) {
+  const R = {};
+  for (const t of d.techs) { const k = keyOf(t.name); if (k) R[k] = techEntry(t, d); }
+  if (d.hidden.on) { const t = d.hidden.truth, k = keyOf(t.name); if (k) R[k] = techEntry(t, d, { Hidden: true, Notes: ('[true] ' + t.notes.trim()).trim() }); }
+  for (const p of d.pacts) {
+    if (!p.applied) continue;
+    for (const [k, v] of Object.entries(pactTechs(p))) R[k] = Object.assign(v, { Hidden: !!(d.hidden.on && p.hidden) });
+  }
+  return R;
+}
+const trueMagicText = d => {
+  if (!d.hidden.on) return '';
+  const t = d.hidden.truth;
+  return `${t.name.trim()} (${[t.type, t.subtype.trim(), isForbidden(t, d) ? 'forbidden' : ''].filter(Boolean).join(', ')}): ${t.effect.trim()}`;
+};
+const manaOf = d => _.clamp(Math.round(num(d.mana, 100)), MANA_MIN, MANA_MAX);
+const customRecord = d => Object.fromEntries(d.custom.filter(c => keyOf(c.name)).map(c => [keyOf(c.name), { Type: c.type, Forbidden: !!c.forbidden }]));
 
 // Builder patch. diffOps = the fields that changed (also used for the "amended: …" line); buildOps = the patch actually sent.
 function buildOps(d, S) { return liftReadonly(diffOps(d, S), S); }
@@ -198,8 +246,8 @@ function builderMismatch(d, S) {
     || !same(got[k].Activation, t.Activation) || !same(got[k].Upkeep_per_min, t.Upkeep_per_min) || !same(got[k].Trigger, t.Trigger))) miss.push('techniques');
   if (A.Dominant !== d.dominant || !_.isEqual([...(A.Types || [])], [...d.types])) miss.push('magic types');
   if ((((S || {}).Player || {}).Profile || {}).Name !== d.name.trim()) miss.push('name');
-  if (num((((S || {}).Player || {}).Vitals || {}).Mana_max) !== presetMana(d)) miss.push('mana');
-  if (String(((S || {}).Hidden || {})._True_magic || '') !== (d.hidden.on ? d.hidden.truth.trim() : '')) miss.push('hidden magic');
+  if (num((((S || {}).Player || {}).Vitals || {}).Mana_max) !== manaOf(d)) miss.push('mana');
+  if (String(((S || {}).Hidden || {})._True_magic || '') !== trueMagicText(d)) miss.push('hidden magic');
   return miss;
 }
 
@@ -212,63 +260,72 @@ function diffOps(d, S) {
   const P = '/Player/Profile/';
   set(P + 'Name', d.name.trim()); set(P + 'Pronouns', d.pronouns.trim()); set(P + 'Age', Math.round(num(d.age, 18)));
   set(P + 'Race', d.race); set(P + 'Beast_type', d.race === 'Beastkin' ? d.beast.trim() : '');
-  set(P + 'Appearance', d.appearance.trim()); set(P + 'Background', d.background.trim());
-  set(P + 'Combat_role', d.roles.join(', ')); set(P + 'Goal', d.goal.trim());
-  const mana = presetMana(d);
+  set(P + 'Appearance', d.appearance.trim()); set(P + 'Personality', d.personality.trim()); set(P + 'Background', d.background.trim());
+  set(P + 'Birthday', bdayText(d.bday)); set(P + 'Goal', d.goal.trim());
+  // Combat_role is no longer chosen here (1.2.0): the Combat teacher assigns it at the first Combat class (rule 502)
+  const mana = manaOf(d);
   set('/Player/Vitals/Mana_max', mana);
   if (!(S.$ui || {}).built) set('/Player/Vitals/Mana', mana);
-  set('/Magic/_Affinity', { Types: d.types, Dominant: d.dominant, Specialties: d.specs, Preset: d.preset });
-  set('/Magic/_Techniques', techRecord(d));
+  const aff = { Types: d.types, Dominant: d.dominant, Specialties: d.specs, Preset: '', Custom: customRecord(d) };
+  set('/Magic/_Affinity', aff);
+  const T = techRecord(d);
+  set('/Magic/_Techniques', T);
   const oldP = S.Magic.Pacts || {}, pacts = {};
   for (const p of d.pacts) {
-    const k = keyOf(p.spirit); if (!k) continue;
-    pacts[k] = { Spirit: k, Tier: p.tier, Summoned: !!(oldP[k] && oldP[k].Summoned), Terms: p.terms.trim(), Note: (oldP[k] && oldP[k].Note) || '' };
+    const k = keyOf(p.name); if (!k || !p.applied) continue;
+    pacts[k] = { Spirit: k, Kind: p.kind, Tier: p.tier, Presence: p.presence, Summoned: !!(oldP[k] && oldP[k].Summoned), Terms: p.terms.trim(), Note: (oldP[k] && oldP[k].Note) || '' };
   }
   set('/Magic/Pacts', pacts);
   const H = d.hidden;
   if (H.on) {
-    set('/Hidden/_True_magic', H.truth.trim());
+    set('/Hidden/_True_magic', trueMagicText(d));
     set('/Hidden/Cover_magic', H.cover.trim() + (H.cover_type ? ` (${H.cover_type})` : ''));
     set('/Hidden/Concealment', H.conceal.trim());
-    set('/Hidden/Known_by', H.known);
   } else if ((S.Hidden || {})._True_magic) {
     set('/Hidden/_True_magic', ''); set('/Hidden/Cover_magic', ''); set('/Hidden/Concealment', '');
   }
+  set('/$ui/file', { Mana_max: mana, Affinity: aff, Techniques: T, True_magic: trueMagicText(d) });
   ops.push({ op: 'replace', path: '/$ui/built', value: true });
   ops.push({ op: 'replace', path: '/$eng/auth', value: 'builder' });
   return ops;
 }
 
+function techErrors(t, label, d, E, Wn, names) {
+  const k = keyOf(t.name).toLowerCase();
+  if (!k) E.push(`${label}: needs a name.`);
+  else if (names.has(k)) E.push(`${label}: another technique or pact already uses this name.`);
+  names.add(k);
+  if (!TYPES.includes(t.type)) E.push(`${label}: choose its magic type.`);
+  if (!t.effect.trim()) E.push(`${label}: describe what it does.`);
+  if ([t.act, t.up, t.trig].some(v => !(num(v, -1) >= 0))) E.push(`${label}: costs must be zero or more.`);
+  if (t.mode !== 'per_use' && !(num(t.up) > 0)) Wn.push(`${label} is ${MODES[t.mode].toLowerCase()} but has no upkeep, so it costs nothing while it runs.`);
+  if (t.type && d.types.length && !d.types.includes(t.type)) Wn.push(`${label} is ${t.type}, which is not one of your magic types.`);
+}
 function validate(d, S) {
   const E = { identity: [], power: [], techs: [], pacts: [], hidden: [] }, Wn = [];
   if (!d.name.trim()) E.identity.push('Give your student a name.');
   if (!(num(d.age, 0) >= 10)) E.identity.push('Age must be a number (first-years are usually 18).');
   if (!d.types.length) E.power.push('Choose at least one magic type.');
   if (d.types.length && !d.types.includes(d.dominant)) E.power.push('Choose which type is dominant; the Arbiter Stone reads only that one.');
-  if (d.preset === 'Unbound' && !(num(d.mana, 0) >= 100)) E.power.push('Unbound needs a mana pool of at least 100.');
+  if (!(num(d.mana, 0) >= MANA_MIN)) E.power.push(`Mana capacity must be at least ${MANA_MIN}.`);
   if (d.specs.length > 3) Wn.push('Most students specialise in 1–2 subtypes; you listed ' + d.specs.length + '.');
   const names = new Set(), pactNames = new Set();
   d.pacts.forEach((p, i) => {
-    const k = keyOf(p.spirit).toLowerCase();
-    if (!k) E.pacts.push(`Pact ${i + 1}: name the spirit.`);
-    else if (pactNames.has(k)) E.pacts.push(`Two pacts share the spirit name "${p.spirit}".`);
+    const k = keyOf(p.name).toLowerCase(), label = p.name.trim() || `Pact ${i + 1}`;
+    if (!PACT_KINDS[p.kind]) { E.pacts.push(`Pact ${i + 1}: choose what the pact is made with.`); return; }
+    if (!k) E.pacts.push(`${label}: give it a name.`);
+    else if (pactNames.has(k)) E.pacts.push(`Two pacts share the name "${p.name}".`);
+    else if (!p.applied) E.pacts.push(`${label}: press "Apply pact" (or remove it).`);
     pactNames.add(k); names.add('summon ' + k); names.add('channel ' + k);
+    if (p.kind !== 'Spirit' && !(d.hidden.on && p.hidden)) Wn.push(`${label} is a forbidden pact (Pacting). Known openly it means arrest; consider making it part of your hidden magic.`);
   });
   d.techs.forEach((t, i) => {
-    const label = t.name.trim() || `Technique ${i + 1}`, k = keyOf(t.name).toLowerCase();
-    if (!k) E.techs.push(`${label}: needs a name.`);
-    else if (names.has(k)) E.techs.push(`${label}: another technique or pact already uses this name.`);
-    names.add(k);
-    if (!TYPES.includes(t.type)) E.techs.push(`${label}: choose its magic type.`);
-    if (!t.effect.trim()) E.techs.push(`${label}: describe what it does.`);
-    if ([t.act, t.up, t.trig].some(v => !(num(v, -1) >= 0))) E.techs.push(`${label}: costs must be zero or more.`);
-    if (t.mode !== 'per_use' && !(num(t.up) > 0)) Wn.push(`${label} is ${MODES[t.mode].toLowerCase()} but has no upkeep, so it costs nothing while it runs.`);
-    const info = subInfo(t.type, t.subtype);
-    if (info && info.forbidden && !(d.hidden.on && t.hidden)) Wn.push(`${label} uses a forbidden art (${t.subtype}). Used openly it means arrest; consider marking it as hidden magic.`);
-    if (t.type && d.types.length && !d.types.includes(t.type)) Wn.push(`${label} is ${t.type}, which is not one of your magic types.`);
+    const label = t.name.trim() || `Technique ${i + 1}`;
+    techErrors(t, label, d, E.techs, Wn, names);
+    if (isForbidden(t, d) && !(d.hidden.on && t.hidden)) Wn.push(`${label} uses a forbidden art (${t.subtype}). Used openly it means arrest; consider marking it as hidden magic.`);
   });
   if (d.hidden.on) {
-    if (!d.hidden.truth.trim()) E.hidden.push('Describe your true magic.');
+    techErrors(d.hidden.truth, 'True magic', d, E.hidden, Wn, names);
     if (!d.hidden.cover.trim()) E.hidden.push('Describe the cover magic everyone else believes you have.');
     if (d.hidden.cover_type && d.dominant && d.hidden.cover_type !== d.dominant)
       Wn.push(`The Arbiter Stone reads your dominant type (${d.dominant} → ${DORM_OF[d.dominant]}), but your cover is ${d.hidden.cover_type}. The sorting will not match your cover story.`);
@@ -313,7 +370,7 @@ h3:first-child{margin-top:0}
 p.lead{margin:0 0 12px;color:#c9c5bc;max-width:64ch}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}
 .full{grid-column:1/-1}
-label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;color:#a9a69f}
+label.f,div.f{display:flex;flex-direction:column;gap:4px;font-size:13px;color:#a9a69f}
 input,select,textarea{font:inherit;font-size:14.5px;color:#eee9df;background:#1d2126;border:1px solid #474c55;border-radius:8px;padding:7px 9px;width:100%}
 textarea{min-height:64px;resize:vertical}
 input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid #b9eadf;outline-offset:1px}
@@ -341,6 +398,8 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid #
 .errl{font-size:13px;color:#f4b0a9;border-left:2px solid #e0645a;padding:4px 0 4px 10px;margin:8px 0}
 .stone{margin-top:12px;padding:10px 12px;border-radius:10px;background:rgba(0,0,0,.2);border:1px solid #474c55;font-size:14px}
 .stone b{color:var(--dc,#f0e2c4)}
+.row3{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:8px}
+.mana{display:flex;gap:12px;align-items:center}.mana input[type=range]{flex:1;accent-color:#b39062;padding:0}.mana input[type=number]{width:110px;flex:0 0 auto}
 .chk{display:flex;align-items:center;gap:8px;font-size:14px;color:#dcd7cc;cursor:pointer}
 .chk input{width:auto}
 .npcs{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:4px 10px;max-height:220px;overflow-y:auto;padding:8px;border:1px solid #474c55;border-radius:8px;background:#1d2126}
@@ -413,8 +472,8 @@ p.fv{margin:0 0 4px;max-width:70ch;color:#dcd7cc}
 .tog.fl{margin-bottom:10px}
 .mapwrap{display:grid;grid-template-columns:minmax(0,1fr);gap:4px}.mapwrap>*{min-width:0}
 @media (min-width:860px){.mapwrap{grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}.sheet h3{margin-top:0}}
-.car{display:flex;align-items:flex-start;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px;scrollbar-width:thin}
-.lc{flex:0 0 280px;width:280px;scroll-snap-align:start;border-radius:10px;overflow:hidden;border:1px solid #474c55;background:#2a2e34;display:flex;flex-direction:column}
+.car{display:block;padding-bottom:8px}.cnav{display:flex;align-items:center;gap:8px;margin-bottom:8px}.cnav .sub{flex:1;text-align:center}
+.lc{width:100%;max-width:420px;border-radius:10px;overflow:hidden;border:1px solid #474c55;background:#2a2e34;display:flex;flex-direction:column}
 .lc.here{border-color:#b9eadf}
 .crop{height:96px;flex:0 0 auto;position:relative;background-color:#1d2126;background-repeat:no-repeat}
 .crop::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(15,17,20,.85))}
@@ -450,6 +509,8 @@ h3.calh{display:flex;align-items:center;gap:8px}h3.calh span{margin-left:auto;di
 .wl{font-size:11px;color:#8e8a82;align-self:center}
 .cd{min-height:56px;border-radius:7px;background:#2a2e34;border:1px solid #3d424a;padding:3px 5px;display:flex;flex-direction:column;gap:2px;overflow:hidden;font-size:11.5px}
 .cd.has{border-color:rgba(179,144,98,.55)}.cd.today{border-color:#b9eadf;box-shadow:inset 0 0 0 1px #b9eadf}.cd.past{opacity:.5}
+.cd{font-family:inherit;text-align:left;color:inherit;cursor:pointer}.cd:hover{border-color:#b39062}.cd.sel{border-color:#f0e2c4;box-shadow:inset 0 0 0 1px #f0e2c4}
+.cd .cn{color:#f1cf95;line-height:1.15;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.calday{margin-top:10px}ul.up li.mine{color:#f1cf95}
 .cd .dn{color:#8e8a82;font-size:11px}.cd .ce{color:#e8d3a8;line-height:1.15;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.cd .cc{color:#b9eadf}
 h4{margin:14px 0 6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#a9a69f}
 ol.jt{list-style:none;margin:0;padding:0 0 0 14px;border-left:2px solid rgba(179,144,98,.4)}
@@ -522,7 +583,22 @@ function ensureHost() {
   root.innerHTML = `<style>${CSS}</style><div class="ov" hidden role="dialog" aria-modal="true"></div>`;
   ov = root.querySelector('.ov');
   ov.addEventListener('click', onClick); ov.addEventListener('input', onInput); ov.addEventListener('change', onChange);
-  ov.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  // 1.2.0: keys typed in the panels must not reach SillyTavern. Its document-level handlers see the shadow host, not our inputs,
+  // so ArrowLeft/ArrowRight in a text field swiped the chat (and closed the Builder).
+  ov.addEventListener('keydown', e => { if (e.key === 'Escape') close(); e.stopPropagation(); });
+  ov.addEventListener('keyup', e => e.stopPropagation()); ov.addEventListener('keypress', e => e.stopPropagation());
+}
+// 1.2.0: scrollIntoView / focus inside the overlay also scrolled SillyTavern's own page (overflow:hidden still scrolls
+// programmatically), pushing its top bar off screen. Keep the page where it was.
+function keepPage(fn) {
+  const els = [PD.scrollingElement, PD.documentElement, PD.body].filter(Boolean), at = els.map(e => [e.scrollTop, e.scrollLeft]);
+  try { return fn(); } finally { els.forEach((e, i) => { if (e.scrollTop !== at[i][0]) e.scrollTop = at[i][0]; if (e.scrollLeft !== at[i][1]) e.scrollLeft = at[i][1]; }); }
+}
+function scrollInto(el, box, top) {   // scroll only `box` (never the page) so `el` is visible
+  if (!el || !box) return;
+  const r = el.getBoundingClientRect(), b = box.getBoundingClientRect();
+  if (top) { box.scrollTop += r.top - b.top - 8; return; }
+  if (r.left < b.left) box.scrollLeft += r.left - b.left - 8; else if (r.right > b.right) box.scrollLeft += r.right - b.right + 8;
 }
 function open(target, { push = true } = {}) {
   ensureHost();
@@ -538,24 +614,25 @@ function open(target, { push = true } = {}) {
     view.step = draftBuilt ? 'identity' : 'start';
   }
   view.panel = panel; ov.hidden = false; render();
-  const d = ov.querySelector('.dlg'); if (d) d.focus();
+  const d = ov.querySelector('.dlg'); if (d) keepPage(() => d.focus({ preventScroll: true }));
 }
 function close() { if (ov) ov.hidden = true; view.panel = ''; view.stack = []; }
 function back() { const t = view.stack.pop(); if (t) open(t, { push: false }); else close(); }
-function render() {
+function render() { keepPage(render0); }
+function render0() {
   if (!ov || ov.hidden) return;
   const st = latestState(); const S = st && st.data.stat_data;
   ov.innerHTML = view.panel === 'builder' ? renderBuilder(S) : view.panel === 'profile' ? renderProfile(S) : PANELS[view.panel].render(S);
   ov.querySelectorAll('img[data-fb]').forEach(img => img.addEventListener('error', () => { img.replaceWith(Object.assign(PD.createElement('span'), { className: img.dataset.fbclass || 'fb', textContent: img.dataset.fb })); }, { once: true }));
   if (PANELS[view.panel] && PANELS[view.panel].after) PANELS[view.panel].after(S);
-  const on = ov.querySelector('.nav .on'); if (on) on.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  const on = ov.querySelector('.nav .on'); if (on) scrollInto(on, on.parentElement);
 }
 
 // ---------------------------------------------------------------- builder view
 const STEPS = [['start', 'Start'], ['identity', 'Identity'], ['power', 'Power'], ['techs', 'Techniques'], ['pacts', 'Pacts'], ['hidden', 'Hidden magic'], ['review', 'Review']];
 const inp = (k, v, attrs = '') => `<input data-k="${k}" value="${esc(v)}" ${attrs}>`;
 const txt = (k, v, ph = '') => `<textarea data-k="${k}" placeholder="${esc(ph)}">${esc(v)}</textarea>`;
-const sel = (k, v, opts, attrs = '') => `<select data-k="${k}" ${attrs}>${opts.map(o => { const [val, lab] = Array.isArray(o) ? o : [o, o]; return `<option value="${esc(val)}"${val === v ? ' selected' : ''}>${esc(lab)}</option>`; }).join('')}</select>`;
+const sel = (k, v, opts, attrs = '') => `<select data-k="${k}" ${attrs}>${opts.map(o => { const [val, lab] = Array.isArray(o) ? o : [o, o]; return `<option value="${esc(val)}"${String(val) === String(v) ? ' selected' : ''}>${esc(lab)}</option>`; }).join('')}</select>`;
 
 function renderBuilder(S) {
   const d = draft, V = validate(d, S);
@@ -582,137 +659,180 @@ function bStart() {
   <p class="hint" style="margin-top:14px">Your dorm is not chosen here. The Arbiter Stone sorts you at the Entrance Event by your dominant magic type.</p>`;
 }
 function bIdentity(d, S, V) {
+  const pv = d.pronOther ? 'other' : (PRONOUNS.includes(d.pronouns) ? d.pronouns : '');
+  const b = d.bday || { m: 0, w: 1, d: 'Mon' };
   return `${errs(V.E.identity)}<div class="grid">
   <label class="f">Name${inp('name', d.name)}</label>
-  <label class="f">Pronouns${inp('pronouns', d.pronouns, 'placeholder="she/her, he/him, they/them…"')}</label>
+  <label class="f">Pronouns${sel('pron', pv, [['', 'Choose…'], ...PRONOUNS, ['other', 'Other…']], 'data-act="pron" data-rr="1"')}</label>
+  ${d.pronOther ? `<label class="f full">Your pronouns${inp('pronouns', d.pronouns, 'placeholder="e.g. xe/xem"')}</label>` : ''}
   <label class="f">Age${inp('age', d.age, 'type="number" min="10" data-num="1"')}</label>
   <label class="f">Race${sel('race', d.race, RACES, 'data-rr="1"')}</label>
   ${d.race === 'Beastkin' ? `<label class="f full">Beast type${inp('beast', d.beast, 'placeholder="fox, wolf, cat, dog…"')}</label>` : ''}
+  <div class="f full"><span>Birthday (in the academy calendar: 12 months of 4 weeks)</span><div class="row3">
+    ${sel('bday.m', b.m, [[0, 'Month…'], ..._.range(1, 13).map(m => [m, 'Month ' + m])], 'data-num="1" data-rr="1" aria-label="Birthday month"')}
+    ${sel('bday.w', b.w, _.range(1, 5).map(w => [w, 'Week ' + w]), 'data-num="1" aria-label="Birthday week"')}
+    ${sel('bday.d', b.d, DAYS, 'aria-label="Birthday day"')}</div>
+    <span class="hint">Optional. It goes on your calendar, and the day plays out as your birthday.</span></div>
   <label class="f full">Appearance${txt('appearance', d.appearance, 'What people notice first: build, hair, eyes, how you carry yourself.')}</label>
-  <label class="f full">Background${inp('background', d.background, 'list="eld-bg"')}<datalist id="eld-bg">${BACKGROUNDS.map(b => `<option value="${esc(b)}">`).join('')}</datalist></label>
+  <label class="f full">Personality${txt('personality', d.personality, 'How you come across and what drives you: temper, habits, fears, what makes you laugh.')}</label>
+  <label class="f full">Background${inp('background', d.background, 'list="eld-bg"')}<datalist id="eld-bg">${BACKGROUNDS.map(x => `<option value="${esc(x)}">`).join('')}</datalist></label>
   <label class="f full">Goal for the year${inp('goal', d.goal, 'placeholder="What does your student want from Halvard?"')}</label>
-  <div class="full"><div class="sub" style="margin-bottom:6px">Combat roles (used in Combat class and team competitions)</div>
-  <div class="tog">${ROLES.map(r => `<button data-act="role" data-v="${r}" class="${d.roles.includes(r) ? 'on' : ''}" aria-pressed="${d.roles.includes(r)}">${r}</button>`).join('')}</div></div></div>`;
+  <div class="hint full">Combat roles are not chosen here: the Combat teacher assigns yours at your first Combat class, from how you fight.</div></div>`;
 }
 function bPower(d, S, V) {
-  const specOpts = d.types.flatMap(allSubs);
-  return `${errs(V.E.power)}<h3>Power level</h3><p class="lead">How strong your student is. The story treats every level honestly: stronger students draw more attention, not hidden penalties.</p>
-  <div class="cards">${PRESETS.map(p => `<button class="card ${d.preset === p.id ? 'on' : ''}" data-act="preset" data-v="${p.id}"><b>${p.id}</b><span>${esc(p.text)} Mana ${p.id === 'Unbound' ? 'of your choice' : p.mana}.</span></button>`).join('')}</div>
-  ${d.preset === 'Unbound' ? `<label class="f" style="margin-top:10px;max-width:220px">Mana pool${inp('mana', d.mana, 'type="number" min="100" max="9999" data-num="1" data-rr="1"')}</label>` : ''}
+  const specOpts = d.types.flatMap(t => allSubs(t, d)), m = manaOf(d), N = d.newsub;
+  return `${errs(V.E.power)}<h3>Mana capacity</h3><p class="lead">How much mana your student can hold. It is capacity, not a rank or a title: nobody can read it off you, and people judge you by what they see you do. A big pool can live a quiet life.</p>
+  <div class="mana"><input type="range" data-k="mana" data-num="1" min="${MANA_MIN}" max="${MANA_SLIDER}" step="5" value="${Math.min(m, MANA_SLIDER)}" aria-label="Mana capacity">
+  <input type="number" data-k="mana" data-num="1" min="${MANA_MIN}" max="${MANA_MAX}" value="${m}" aria-label="Mana capacity (exact)"></div>
+  <div class="hint"><b data-mana-mark>${esc(`${m} mana: ${manaMark(m)}.`)}</b> For reference: 100 ordinary, 130 above average, 180 rare, 300+ beyond the academy's usual measure.</div>
   <h3>Magic types</h3><p class="lead">You may have more than one type.</p>
   <div class="tog">${TYPES.map(t => `<button data-act="type" data-v="${t}" class="${d.types.includes(t) ? 'on' : ''}" aria-pressed="${d.types.includes(t)}" title="${esc(TYPE_TEXT[t])}">${t}</button>`).join('')}</div>
   ${d.types.map(t => `<div class="hint"><b style="color:#d9d3c7">${t}:</b> ${esc(TYPE_TEXT[t])}</div>`).join('')}
   ${d.types.length > 1 ? `<label class="f" style="margin-top:10px;max-width:260px">Dominant type${sel('dominant', d.dominant, [['', 'Choose…'], ...d.types], 'data-rr="1"')}</label>` : ''}
-  <h3>Specialties</h3><p class="lead">Most students specialise in one or two subtypes. † marks a forbidden art.</p>
-  ${d.types.length ? `<div class="tog">${specOpts.map(s => { const v = s.replace(/\s*†$/, ''); return `<button data-act="spec" data-v="${esc(v)}" class="${d.specs.includes(v) ? 'on' : ''}">${esc(s)}</button>`; }).join('')}</div>` : '<div class="empty">Choose a magic type first.</div>'}
+  <h3>Specialties</h3><p class="lead">Most students specialise in one or two subtypes. The list is only suggestions: add your own below. † marks a forbidden art.</p>
+  ${d.types.length ? `<div class="tog">${specOpts.map(s => { const v = s.replace(/\s*†$/, ''); return `<button data-act="spec" data-v="${esc(v)}" class="${d.specs.includes(v) ? 'on' : ''}">${esc(s)}</button>`; }).join('')}</div>
+  <div class="item" style="margin-top:12px"><div class="row"><span class="t">Your own subtype</span></div><div class="grid">
+    <label class="f">Name${inp('newsub.name', N.name, 'placeholder="e.g. Glass shaping"')}</label>
+    <label class="f">Type${sel('newsub.type', N.type || d.dominant || d.types[0], d.types)}</label>
+    <label class="f">Is it a forbidden art?${sel('newsub.forb', N.forb, [['no', 'No, it is lawful'], ['yes', 'Yes, forbidden']])}</label>
+    <div class="f" style="justify-content:flex-end"><button class="btn" data-act="addsub">Add subtype</button></div></div>
+    ${d.custom.length ? `<div class="meta">${d.custom.map((c, i) => `<span class="pill ${c.forbidden ? 'f' : ''}">${esc(c.name)} (${esc(c.type)}${c.forbidden ? ', forbidden' : ''}) <button class="lnk" data-act="delsub" data-i="${i}" aria-label="Remove">×</button></span>`).join('')}</div>` : ''}</div>`
+    : '<div class="empty">Choose a magic type first.</div>'}
   ${d.dominant ? `<div class="stone" style="--dc:${DORM_COLOR[DORM_OF[d.dominant]]}">At the Entrance Event the Arbiter Stone will read <b>${d.dominant}</b>, which means the <b>${DORM_OF[d.dominant]} Dormitory</b>. It sees only the type: not your subtypes, and not whether any of it is forbidden.</div>` : ''}`;
 }
+// one technique editor; base = "techs.3" or "hidden.truth"
+function techForm(t, base, d, max, head) {
+  const info = subInfo(t.type, t.subtype, d), subs = t.type ? allSubs(t.type, d) : [], id = base.replace(/\W/g, '-'), forb = isForbidden(t, d);
+  return `<div class="item"><div class="row"><span class="t">${esc(t.name || head)}</span>
+    ${forb ? '<span class="pill f">forbidden art</span>' : ''}${(d.hidden.on && t.hidden) || base === 'hidden.truth' ? '<span class="pill h">hidden</span>' : ''}
+    ${base.startsWith('techs.') ? `<button class="btn sm del" data-act="deltech" data-i="${base.split('.')[1]}">Remove</button>` : ''}</div>
+    <div class="grid">
+      <label class="f">Name${inp(`${base}.name`, t.name)}</label>
+      <label class="f">Type${sel(`${base}.type`, t.type, [['', 'Choose…'], ...TYPES], 'data-rr="1"')}</label>
+      <label class="f">Subtype${inp(`${base}.subtype`, t.subtype, `list="eld-sub-${id}" data-rr="1" placeholder="from the list, or your own"`)}<datalist id="eld-sub-${id}">${subs.map(s => `<option value="${esc(s.replace(/\s*†$/, ''))}">`).join('')}</datalist></label>
+      <label class="f">Cost mode${sel(`${base}.mode`, t.mode, Object.entries(MODES), 'data-rr="1"')}</label>
+      ${info && info.desc ? `<div class="hint full">${esc(t.subtype)}: ${esc(info.desc)}.</div>` : ''}
+      ${t.subtype.trim() && !info ? `<label class="f">“${esc(t.subtype.trim())}” is your own subtype. Forbidden art?${sel(`${base}.forb`, t.forb === 'yes' ? 'yes' : 'no', [['no', 'No, it is lawful'], ['yes', 'Yes, forbidden']], 'data-rr="1"')}</label>` : ''}
+      <label class="f full">What it does${txt(`${base}.effect`, t.effect, 'Range, size, duration, what it looks like.')}</label>
+      <label class="f full">What it cannot do${inp(`${base}.cannot`, t.cannot, 'placeholder="Limits keep the story interesting."')}</label>
+      <label class="f">Suggested cost${sel(`${base}.scale`, t.scale, [['', 'Custom'], ...Object.keys(SCALES).map(k => [k, `${k}: ${SCALES[k].hint}`])], `data-act="scale" data-base="${base}"`)}</label>
+      <label class="f">${t.mode === 'per_use' ? 'Mana per use' : 'Mana to start'}${inp(`${base}.act`, t.act, `type="number" min="0" step="0.5" data-num="1" data-custom="${base}"`)}</label>
+      ${t.mode !== 'per_use' ? `<label class="f">Upkeep per minute${inp(`${base}.up`, t.up, `type="number" min="0" step="0.05" data-num="1" data-custom="${base}"`)}</label>` : ''}
+      ${t.mode === 'hybrid' ? `<label class="f">Each triggered use${inp(`${base}.trig`, t.trig, `type="number" min="0" step="0.5" data-num="1" data-custom="${base}"`)}</label>` : ''}
+      ${d.hidden.on && base.startsWith('techs.') ? `<label class="chk full"><input type="checkbox" data-k="${base}.hidden" data-rr="1" ${t.hidden ? 'checked' : ''}> Part of my hidden magic</label>` : ''}
+    </div><div class="cost" data-cost="${base}">${esc(costLine(t, max))}</div></div>`;
+}
 function bTechs(d, S, V) {
-  const max = presetMana(d);
-  const list = d.techs.map((t, i) => {
-    const info = subInfo(t.type, t.subtype);
-    const subs = t.type ? allSubs(t.type) : [];
-    return `<div class="item"><div class="row"><span class="t">${esc(t.name || 'New technique')}</span>
-      ${info && info.forbidden ? '<span class="pill f">forbidden art</span>' : ''}${d.hidden.on && t.hidden ? '<span class="pill h">hidden</span>' : ''}
-      <button class="btn sm del" data-act="deltech" data-i="${i}">Remove</button></div>
-      <div class="grid">
-        <label class="f">Name${inp(`techs.${i}.name`, t.name)}</label>
-        <label class="f">Type${sel(`techs.${i}.type`, t.type, [['', 'Choose…'], ...TYPES], 'data-rr="1"')}</label>
-        <label class="f">Subtype${inp(`techs.${i}.subtype`, t.subtype, `list="eld-sub-${i}" data-rr="1"`)}<datalist id="eld-sub-${i}">${subs.map(s => `<option value="${esc(s.replace(/\s*†$/, ''))}">`).join('')}</datalist></label>
-        <label class="f">Cost mode${sel(`techs.${i}.mode`, t.mode, Object.entries(MODES), 'data-rr="1"')}</label>
-        ${info && info.desc ? `<div class="hint full">${esc(t.subtype)}: ${esc(info.desc)}.</div>` : ''}
-        <label class="f full">What it does${txt(`techs.${i}.effect`, t.effect, 'Range, size, duration, what it looks like.')}</label>
-        <label class="f full">What it cannot do${inp(`techs.${i}.cannot`, t.cannot, 'placeholder="Limits keep the story interesting."')}</label>
-        <label class="f">Suggested cost${sel(`techs.${i}.scale`, t.scale, [['', 'Custom'], ...Object.keys(SCALES).map(k => [k, `${k}: ${SCALES[k].hint}`])], 'data-act="scale" data-i="' + i + '"')}</label>
-        <label class="f">${t.mode === 'per_use' ? 'Mana per use' : 'Mana to start'}${inp(`techs.${i}.act`, t.act, 'type="number" min="0" step="0.5" data-num="1" data-custom="' + i + '"')}</label>
-        ${t.mode !== 'per_use' ? `<label class="f">Upkeep per minute${inp(`techs.${i}.up`, t.up, 'type="number" min="0" step="0.05" data-num="1" data-custom="' + i + '"')}</label>` : ''}
-        ${t.mode === 'hybrid' ? `<label class="f">Each triggered use${inp(`techs.${i}.trig`, t.trig, 'type="number" min="0" step="0.5" data-num="1" data-custom="' + i + '"')}</label>` : ''}
-        ${d.hidden.on ? `<label class="chk full"><input type="checkbox" data-k="techs.${i}.hidden" data-rr="1" ${t.hidden ? 'checked' : ''}> Part of my hidden magic</label>` : ''}
-      </div><div class="cost" data-cost="${i}">${esc(costLine(t, max))}</div></div>`;
-  }).join('');
-  return `${errs(V.E.techs)}<p class="lead">Techniques are the spells your student knows well. Costs are fixed here; during play the engine charges them, not the AI. Your mana pool is <b>${max}</b>.</p>
+  const max = manaOf(d);
+  const list = d.techs.map((t, i) => techForm(t, `techs.${i}`, d, max, 'New technique')).join('');
+  const fromPacts = d.pacts.filter(p => p.applied && keyOf(p.name));
+  const pactList = fromPacts.map(p => Object.entries(pactTechs(p)).map(([k, t]) => `<div class="item pt"><div class="row"><span class="t">${esc(k)}</span>
+    <span class="pill">${esc(p.kind)} pact</span>${t.Forbidden ? '<span class="pill f">forbidden</span>' : ''}${d.hidden.on && p.hidden ? '<span class="pill h">hidden</span>' : ''}<span class="pill">${esc(MODES[t.Cost_mode])}</span></div>
+    <div class="sub">${esc(t.Effect)}</div><div class="cost">${esc(costLine({ mode: t.Cost_mode, act: t.Activation, up: t.Upkeep_per_min, trig: t.Trigger }, max))}</div></div>`).join('')).join('');
+  return `${errs(V.E.techs)}<p class="lead">Techniques are the spells your student knows well. Costs are fixed here; during play the engine charges them, not the AI. Your mana capacity is <b>${max}</b>.</p>
   <div class="hint" style="margin-bottom:12px">Per use: pay each cast. Sustained: pay to start, then upkeep for every in-world minute it runs. Hybrid: sustained, plus a cost each time you trigger it while it runs.</div>
-  ${list || '<div class="empty">No techniques yet.</div>'}<button class="btn" data-act="addtech">Add technique</button>`;
+  ${list || '<div class="empty">No techniques yet.</div>'}<button class="btn" data-act="addtech">Add technique</button>
+  <h3>Pact techniques</h3>${pactList ? `<p class="hint">From your applied pacts. Change them on the Pacts page.</p>${pactList}` : `<div class="empty">None. A pact you apply on the Pacts page shows up here as its Summon${d.pacts.length ? '' : ' (and Channel)'} technique.</div>`}
+  ${d.hidden.on && keyOf(d.hidden.truth.name) ? `<p class="hint">Your true magic (${esc(d.hidden.truth.name)}) is set on the Hidden magic page.</p>` : ''}`;
 }
 function bPacts(d, S, V) {
-  const list = d.pacts.map((p, i) => `<div class="item"><div class="row"><span class="t">${esc(p.spirit || 'New pact')}</span><button class="btn sm del" data-act="delpact" data-i="${i}">Remove</button></div>
-    <div class="grid"><label class="f">Spirit's name${inp(`pacts.${i}.spirit`, p.spirit)}</label>
-    <label class="f">Tier${sel(`pacts.${i}.tier`, p.tier, TIERS, 'data-act="tier" data-i="' + i + '"')}</label>
-    <label class="f full">Terms of the pact${txt(`pacts.${i}.terms`, p.terms, 'What each side gives and promises.')}</label>
-    <label class="f">Summon: mana to call${inp(`pacts.${i}.act`, p.act, 'type="number" min="0" step="0.5" data-num="1"')}</label>
-    <label class="f">Summon: upkeep per minute${inp(`pacts.${i}.up`, p.up, 'type="number" min="0" step="0.05" data-num="1"')}</label>
-    <label class="f">Each ability it uses${inp(`pacts.${i}.trig`, p.trig, 'type="number" min="0" step="0.5" data-num="1"')}</label>
-    ${p.tier === 'Greater' || p.tier === 'Spirit Lord' ? `<label class="f">Channelling per use${inp(`pacts.${i}.ch`, p.ch, 'type="number" min="0" step="0.5" data-num="1"')}</label>` : '<div class="hint">Channelling needs a Greater spirit or a Spirit Lord.</div>'}
-    </div><div class="hint">Becomes the techniques “Summon ${esc(keyOf(p.spirit) || '…')}”${p.tier === 'Greater' || p.tier === 'Spirit Lord' ? ` and “Channel ${esc(keyOf(p.spirit) || '…')}”` : ''}.</div></div>`).join('');
-  return `${errs(V.E.pacts)}<p class="lead">A Spirit Pact is a negotiated contract with one spirit. Summoning drains mana the whole time the spirit is present, and more for each ability it uses. Most students have no pact; skip this page if yours doesn't.</p>
+  const list = d.pacts.map((p, i) => {
+    if (!PACT_KINDS[p.kind]) return `<div class="item"><div class="row"><span class="t">New pact: what is it made with?</span><button class="btn sm del" data-act="delpact" data-i="${i}">Remove</button></div>
+      <div class="cards">${Object.entries(PACT_KINDS).map(([k, K]) => `<button class="card" data-act="pkind" data-i="${i}" data-v="${k}"><b>${k}${k === 'Spirit' ? '' : ' †'}</b><span>${esc(K.text)}</span></button>`).join('')}</div></div>`;
+    const K = PACT_KINDS[p.kind], lawful = p.kind === 'Spirit', ch = canChannel(p.kind, p.tier), k = keyOf(p.name);
+    return `<div class="item"><div class="row"><span class="t">${esc(p.name || 'New pact')}</span><span class="pill">${esc(p.kind)}</span>${lawful ? '' : '<span class="pill f">forbidden: Pacting</span>'}
+      <button class="btn sm" data-act="pkind" data-i="${i}" data-v="">Change</button><button class="btn sm del" data-act="delpact" data-i="${i}">Remove</button></div>
+      <div class="grid"><label class="f">${esc(K.noun)}${inp(`pacts.${i}.name`, p.name)}</label>
+      ${K.tiers.length > 1 ? `<label class="f">${p.kind === 'Monster' ? 'Grade' : 'Tier'}${sel(`pacts.${i}.tier`, p.tier, K.tiers, `data-act="tier" data-i="${i}"`)}</label>` : '<div></div>'}
+      <label class="f full">When it is with you${sel(`pacts.${i}.presence`, p.presence, PRESENCE, 'data-rr="1"')}</label>
+      <label class="f full">Terms of the pact${txt(`pacts.${i}.terms`, p.terms, 'What each side gives and promises; when it may act on its own.')}</label>
+      <label class="f">Summon: mana to call${inp(`pacts.${i}.act`, p.act, 'type="number" min="0" step="0.5" data-num="1"')}</label>
+      <label class="f">Summon: upkeep per minute${inp(`pacts.${i}.up`, p.up, 'type="number" min="0" step="0.05" data-num="1"')}</label>
+      <label class="f">Each ability it uses${inp(`pacts.${i}.trig`, p.trig, 'type="number" min="0" step="0.5" data-num="1"')}</label>
+      ${ch ? `<label class="f">Channelling per use${inp(`pacts.${i}.ch`, p.ch, 'type="number" min="0" step="0.5" data-num="1"')}</label>` : '<div class="hint">Channelling needs the two highest tiers.</div>'}
+      ${d.hidden.on ? `<label class="chk full"><input type="checkbox" data-k="pacts.${i}.hidden" data-rr="1" ${p.hidden ? 'checked' : ''}> Part of my hidden magic</label>` : ''}
+      </div><div class="meta"><button class="btn ${p.applied ? '' : 'pri'}" data-act="applypact" data-i="${i}" ${k ? '' : 'disabled'}>${p.applied ? 'Applied ✓' : 'Apply pact'}</button>
+      <span class="hint">${p.applied ? `On your Techniques page as “Summon ${esc(k)}”${ch ? ` and “Channel ${esc(k)}”` : ''}.` : 'Apply it to add its techniques.'}</span></div></div>`;
+  }).join('');
+  return `${errs(V.E.pacts)}<p class="lead">A pact is a negotiated contract. Summoning drains mana the whole time your partner is present, and more for each ability it uses. Only a pact with a spirit is lawful; a pact with anything else is the forbidden art of Pacting. Most students have no pact; skip this page if yours doesn't.</p>
   ${list || '<div class="empty">No pacts.</div>'}<button class="btn" data-act="addpact">Add pact</button>`;
 }
 function bHidden(d, S, V) {
   const H = d.hidden;
-  return `${errs(V.E.hidden)}<p class="lead">Some students hide what they can really do. Other characters only know your cover magic unless you add them to “who knows”. Using hidden magic where it can be noticed draws the Doves' attention.</p>
+  return `${errs(V.E.hidden)}<p class="lead">Some students hide what they can really do. Everyone else only knows your cover magic. Using hidden magic where it can be noticed draws the Doves' attention; who finds out is decided in the story.</p>
   <label class="chk"><input type="checkbox" data-k="hidden.on" data-rr="1" ${H.on ? 'checked' : ''}> My student has hidden magic</label>
-  ${H.on ? `<div class="grid" style="margin-top:12px">
-    <label class="f full">True magic${txt('hidden.truth', H.truth, 'What you can really do, and why it must stay secret.')}</label>
+  ${H.on ? `<h3>True magic</h3><p class="hint" style="margin-top:0">Fill it in like a technique; it is saved as a hidden technique the engine charges.</p>${techForm(H.truth, 'hidden.truth', d, manaOf(d), 'True magic')}
+    <h3>Cover</h3><div class="grid">
     <label class="f">Cover magic${inp('hidden.cover', H.cover, 'placeholder="What everyone believes you use"')}</label>
     <label class="f">Cover's type${sel('hidden.cover_type', H.cover_type, [['', 'Choose…'], ...TYPES], 'data-rr="1"')}</label>
     <label class="f full">How you conceal it${txt('hidden.conceal', H.conceal, 'A natural disguise, a habit, or a suppression technique (add that as a hidden technique so its upkeep is charged).')}</label>
-    <div class="full"><div class="sub" style="margin-bottom:6px">Who already knows (${H.known.length})</div>
-    <div class="npcs">${NPCS.filter(n => (n.a || 1) <= curYear(S)).map(n => `<label><input type="checkbox" data-act="known" data-v="${esc(n.id)}" ${H.known.includes(n.id) ? 'checked' : ''}>${esc(n.name)}</label>`).join('')}</div></div>
   </div>${d.dominant ? `<div class="stone" style="--dc:${DORM_COLOR[DORM_OF[d.dominant]]}">The Arbiter Stone will show <b>${d.dominant}</b>. It cannot reveal subtypes or that anything is forbidden${H.cover_type && H.cover_type !== d.dominant ? `, but your cover is ${H.cover_type}: the sorting will contradict your story` : ', so a cover of the same type holds'}.</div>` : ''}` : ''}`;
 }
 function bReview(d, S, V) {
   const T = techRecord(d), ops = buildOps(d, S);
   const all = [...Object.values(V.E).flat()];
+  const pacts = d.pacts.filter(p => p.applied && keyOf(p.name));
   return `${all.length ? errs(all) : ''}${V.Wn.map(w => `<div class="warn">${esc(w)}</div>`).join('')}
   <h3>${esc(d.name || 'Unnamed student')}</h3><dl class="kv">
   <dt>Who</dt><dd>${esc([d.pronouns, d.age + ' years', d.race === 'Beastkin' && d.beast ? `Beastkin (${d.beast})` : d.race].filter(Boolean).join(', '))}</dd>
+  <dt>Birthday</dt><dd>${esc(bdayText(d.bday) || '—')}</dd>
+  <dt>Personality</dt><dd>${esc(d.personality || '—')}</dd>
   <dt>Background</dt><dd>${esc(d.background || '—')}</dd>
-  <dt>Roles</dt><dd>${esc(d.roles.join(', ') || '—')}</dd>
-  <dt>Power</dt><dd>${esc(d.preset)}, ${presetMana(d)} mana</dd>
+  <dt>Mana</dt><dd>${manaOf(d)}</dd>
   <dt>Magic</dt><dd>${esc(d.types.join(', ') || '—')}${d.dominant ? ` (dominant ${esc(d.dominant)} → ${DORM_OF[d.dominant]})` : ''}</dd>
   <dt>Specialties</dt><dd>${esc(d.specs.join(', ') || '—')}</dd>
   <dt>Techniques</dt><dd>${Object.keys(T).map(k => `<span class="pill ${T[k].Hidden ? 'h' : T[k].Forbidden ? 'f' : ''}">${esc(k)}</span>`).join('') || '—'}</dd>
-  ${d.hidden.on ? `<dt>Hidden</dt><dd>${esc(d.hidden.truth)}<br><span class="sub">Cover: ${esc(d.hidden.cover)}${d.hidden.cover_type ? ` (${esc(d.hidden.cover_type)})` : ''}${d.hidden.known.length ? '; known by ' + esc(d.hidden.known.join(', ')) : ''}</span></dd>` : ''}
+  ${pacts.length ? `<dt>Pacts</dt><dd>${esc(pacts.map(p => `${p.name} (${p.kind}, ${p.tier})`).join('; '))}</dd>` : ''}
+  ${d.hidden.on ? `<dt>Hidden</dt><dd>${esc(trueMagicText(d))}<br><span class="sub">Cover: ${esc(d.hidden.cover)}${d.hidden.cover_type ? ` (${esc(d.hidden.cover_type)})` : ''}</span></dd>` : ''}
   </dl>
   <p class="hint" style="margin-top:14px">${draftBuilt ? 'Saving adds a hidden entry to the chat with these changes. Delete that entry to undo them.' : 'Registering adds a hidden entry to the chat that sets up your student. The AI does not read that entry; it sees your student in the current state. Delete the entry to undo it.'}</p>
   <details><summary>Show the update (${ops.length - 2} change${ops.length - 2 === 1 ? '' : 's'})</summary><pre>${esc(JSON.stringify(ops, null, 1))}</pre></details>`;
 }
 
 // ---------------------------------------------------------------- builder events
+const TECH_BASE = /^(techs\.\d+|hidden\.truth)\./;
 function onInput(e) {
   if (PANELS[view.panel] && PANELS[view.panel].input) { PANELS[view.panel].input(e.target); return; }
-  const el = e.target; if (view.panel !== 'builder' || !el.dataset || !el.dataset.k || el.type === 'checkbox') return;
+  const el = e.target; if (view.panel !== 'builder' || !el.dataset || !el.dataset.k || el.type === 'checkbox' || el.tagName === 'SELECT') return;
   _.set(draft, el.dataset.k, el.dataset.num ? num(el.value, 0) : el.value);
-  if (el.dataset.custom !== undefined) { const t = draft.techs[+el.dataset.custom]; if (t) t.scale = ''; }
-  const m = el.dataset.k.match(/^techs\.(\d+)\./);
-  if (m) {
-    const c = ov.querySelector(`[data-cost="${m[1]}"]`); if (c) c.textContent = costLine(draft.techs[+m[1]], presetMana(draft));
-    const t = el.closest('.item') && el.closest('.item').querySelector('.t');
-    if (t && /\.name$/.test(el.dataset.k)) t.textContent = el.value || 'New technique';
+  if (el.dataset.custom) { const t = _.get(draft, el.dataset.custom); if (t) t.scale = ''; }
+  if (el.dataset.k === 'mana') {   // slider and box mirror each other
+    ov.querySelectorAll('[data-k="mana"]').forEach(x => { if (x !== el) x.value = x.type === 'range' ? Math.min(num(el.value), MANA_SLIDER) : el.value; });
+    const m = ov.querySelector('[data-mana-mark]'), v = num(el.value, 0);
+    if (m) m.textContent = `${v} mana: ${manaMark(v)}.`;
   }
-  const p = el.dataset.k.match(/^pacts\.(\d+)\.spirit$/);
-  if (p) { const t = el.closest('.item').querySelector('.t'); if (t) t.textContent = el.value || 'New pact'; }
+  const b = el.dataset.k.match(TECH_BASE);
+  if (b) {
+    const t = _.get(draft, b[1]), c = ov.querySelector(`[data-cost="${b[1]}"]`); if (c && t) c.textContent = costLine(t, manaOf(draft));
+    const tt = el.closest('.item') && el.closest('.item').querySelector('.t');
+    if (tt && /\.name$/.test(el.dataset.k)) tt.textContent = el.value || (b[1] === 'hidden.truth' ? 'True magic' : 'New technique');
+  }
+  const p = el.dataset.k.match(/^pacts\.(\d+)\.name$/);
+  if (p) {
+    const it = el.closest('.item'), t = it.querySelector('.t'); if (t) t.textContent = el.value || 'New pact';
+    const ap = it.querySelector('[data-act="applypact"]'); if (ap) ap.disabled = !keyOf(el.value);
+  }
 }
 function onChange(e) {
   const el = e.target; if (view.panel !== 'builder' || !el.dataset) return;
-  if (el.dataset.act === 'known') {
-    const k = draft.hidden.known, v = el.dataset.v;
-    if (el.checked && !k.includes(v)) k.push(v); if (!el.checked) _.pull(k, v);
-    const s = el.closest('.full').querySelector('.sub'); if (s) s.textContent = `Who already knows (${k.length})`;
-    return;
+  if (el.dataset.act === 'pron') {
+    if (el.value === 'other') { draft.pronOther = true; if (PRONOUNS.includes(draft.pronouns)) draft.pronouns = ''; }
+    else { draft.pronOther = false; draft.pronouns = el.value; }
+  } else if (el.type === 'checkbox' && el.dataset.k) {
+    _.set(draft, el.dataset.k, el.checked);
+    if (el.dataset.k === 'hidden.on' && el.checked && !draft.hidden.truth.type) draft.hidden.truth.type = draft.dominant || draft.types[0] || '';
   }
-  if (el.type === 'checkbox' && el.dataset.k) _.set(draft, el.dataset.k, el.checked);
-  else if (el.tagName === 'SELECT' && el.dataset.k) _.set(draft, el.dataset.k, el.value);
+  else if (el.tagName === 'SELECT' && el.dataset.k) _.set(draft, el.dataset.k, el.dataset.num ? num(el.value, 0) : el.value);
   if (el.dataset.act === 'scale') {
-    const t = draft.techs[+el.dataset.i], c = SCALES[t.scale];
+    const t = _.get(draft, el.dataset.base), c = t && SCALES[t.scale];
     if (c) { t.act = t.mode === 'per_use' ? c.use : c.act; t.up = t.mode === 'per_use' ? 0 : c.up; t.trig = t.mode === 'hybrid' ? c.trig : 0; }
   }
-  if (el.dataset.act === 'tier') Object.assign(draft.pacts[+el.dataset.i], PACT_COST[el.value]);
-  const tm = el.dataset.k && el.dataset.k.match(/^techs\.(\d+)\.(mode|type|subtype)$/);
+  if (el.dataset.act === 'tier') { const p = draft.pacts[+el.dataset.i]; Object.assign(p, pactCost(p.kind, el.value)); }
+  const tm = el.dataset.k && el.dataset.k.match(/^(techs\.\d+|hidden\.truth)\.(mode|type|subtype)$/);
   if (tm) {
-    const t = draft.techs[+tm[1]];
+    const t = _.get(draft, tm[1]);
     if (tm[2] === 'mode' && SCALES[t.scale]) { const c = SCALES[t.scale]; t.act = t.mode === 'per_use' ? c.use : c.act; t.up = t.mode === 'per_use' ? 0 : c.up; t.trig = t.mode === 'hybrid' ? c.trig : 0; }
-    if (tm[2] === 'subtype' && !t.type) { const ty = typeOfSub(t.subtype); if (ty) t.type = ty; }
+    if (tm[2] === 'subtype' && !t.type) { const ty = typeOfSub(t.subtype, draft); if (ty) t.type = ty; }
   }
   if (el.dataset.rr || el.tagName === 'SELECT' || el.type === 'checkbox') { const y = ov.querySelector('.bd').scrollTop; render(); ov.querySelector('.bd').scrollTop = y; }
 }
@@ -740,24 +860,46 @@ function onClick(e) {
     draft = base; view.step = 'identity'; render(); return;
   }
   const toggle = (arr, v) => { if (arr.includes(v)) _.pull(arr, v); else arr.push(v); };
-  if (a === 'role') { toggle(draft.roles, b.dataset.v); return rr(); }
-  if (a === 'preset') { draft.preset = b.dataset.v; if (b.dataset.v !== 'Unbound') draft.mana = presetMana(draft); return rr(); }
   if (a === 'type') {
     toggle(draft.types, b.dataset.v);
     draft.types.sort((x, y) => TYPES.indexOf(x) - TYPES.indexOf(y));
     if (!draft.types.includes(draft.dominant)) draft.dominant = draft.types.length === 1 ? draft.types[0] : '';
     if (draft.types.length === 1) draft.dominant = draft.types[0];
-    draft.specs = draft.specs.filter(s => draft.types.some(t => subInfo(t, s)));
+    draft.specs = draft.specs.filter(s => draft.types.some(t => subInfo(t, s, draft)));
     return rr();
   }
   if (a === 'spec') { toggle(draft.specs, b.dataset.v); return rr(); }
-  if (a === 'addtech') { const t = blankTech(); t.type = draft.dominant || draft.types[0] || ''; draft.techs.push(t); rr(); const it = ov.querySelectorAll('.item'); if (it.length) it[it.length - 1].scrollIntoView({ block: 'start' }); return; }
+  if (a === 'addsub') {
+    const N = draft.newsub, name = keyOf(N.name), type = N.type || draft.dominant || draft.types[0];
+    if (!name) { toastr.warning('Name your subtype first.', 'Student Builder'); return; }
+    if (customOf(draft, name) || draft.types.some(t => allSubs(t).some(s => s.replace(/\s*†$/, '').toLowerCase() === name.toLowerCase()))) { toastr.info('That subtype is already on the list; pick it there.', 'Student Builder'); return; }
+    draft.custom.push({ name, type, forbidden: N.forb === 'yes' }); if (!draft.specs.includes(name)) draft.specs.push(name);
+    draft.newsub = { name: '', type, forb: 'no' }; return rr();
+  }
+  if (a === 'delsub') { const c = draft.custom.splice(+b.dataset.i, 1)[0]; if (c) _.pull(draft.specs, c.name); return rr(); }
+  if (a === 'addtech') { const t = blankTech(); t.type = draft.dominant || draft.types[0] || ''; draft.techs.push(t); rr(); const it = ov.querySelectorAll('.item:not(.pt)'); if (it.length) scrollInto(it[it.length - 1], ov.querySelector('.bd'), true); return; }
   if (a === 'deltech') { draft.techs.splice(+b.dataset.i, 1); return rr(); }
   if (a === 'addpact') { draft.pacts.push(blankPact()); return rr(); }
   if (a === 'delpact') { draft.pacts.splice(+b.dataset.i, 1); return rr(); }
+  if (a === 'pkind') {
+    const p = draft.pacts[+b.dataset.i]; p.kind = b.dataset.v; p.applied = false;
+    if (PACT_KINDS[p.kind]) { p.tier = PACT_KINDS[p.kind].tiers[0]; Object.assign(p, pactCost(p.kind, p.tier)); }
+    return rr();
+  }
+  if (a === 'applypact') { const p = draft.pacts[+b.dataset.i]; if (p && keyOf(p.name)) p.applied = true; return rr(); }
   if (a === 'commit') commit();
 }
-
+// 1.2.0: a player-tool entry (Builder, Settings, calendar marks). It is hidden (is_system), and Tavern Helper never renders
+// iframes in hidden messages, so it carries no status placeholder: the bracelet stays on the last story message and reads the
+// newest state (statusbar isLatest/readState). The variables go in with the message itself (no window where the entry exists
+// without them), are written again through MVU, and the chat is saved at once instead of on a debounce.
+async function writeToolMessage(text, next) {
+  await createChatMessages([{ role: 'user', message: text, is_hidden: true, data: next }], { refresh: 'none' });
+  const id = getLastMessageId();
+  await Mvu.replaceMvuData(next, { type: 'message', message_id: id });
+  await setChatMessages([{ message_id: id }], { refresh: 'affected' });
+  try { if (SillyTavern && typeof SillyTavern.saveChat === 'function') await SillyTavern.saveChat(); } catch (e) { console.warn('[Eldrasil UI] save', e); }
+}
 async function commit() {
   if (view.busy) return;
   const st = latestState(); if (!st) return;
@@ -767,18 +909,15 @@ async function commit() {
   try {
     const first = !S.$ui.built, ops = buildOps(draft, S), changed = diffOps(draft, S), T = techRecord(draft);
     const head = first
-      ? `📘 **Student file registered**: ${draft.name.trim()}, ${draft.race === 'Beastkin' && draft.beast ? `Beastkin (${draft.beast.trim()})` : draft.race}; ${draft.types.join(' + ')}; ${draft.preset}, ${presetMana(draft)} mana; ${Object.keys(T).length} technique${Object.keys(T).length === 1 ? '' : 's'}.`
+      ? `📘 **Student file registered**: ${draft.name.trim()}, ${draft.race === 'Beastkin' && draft.beast ? `Beastkin (${draft.beast.trim()})` : draft.race}; ${draft.types.join(' + ')}; ${manaOf(draft)} mana; ${Object.keys(T).length} technique${Object.keys(T).length === 1 ? '' : 's'}.`
       : `📘 **Student file amended**: ${changed.filter(o => !/^\/\$/.test(o.path)).map(o => o.path.split('/').pop().replace(/^_/, '')).join(', ') || 'no changes'}.`;
-    const text = `${head}\n<UpdateVariable>\n<Analysis>Student Builder (player tool). Not part of the story.</Analysis>\n<JSONPatch>\n[\n${ops.map(o => JSON.stringify(o)).join(',\n')}\n]\n</JSONPatch>\n</UpdateVariable>\n\n${PH}`;
+    const text = `${head}\n<UpdateVariable>\n<Analysis>Student Builder (player tool). Not part of the story.</Analysis>\n<JSONPatch>\n[\n${ops.map(o => JSON.stringify(o)).join(',\n')}\n]\n</JSONPatch>\n</UpdateVariable>`;
     await waitGlobalInitialized('Mvu');
     const next = await Mvu.parseMessage(text, _.cloneDeep(st.data));
     if (!next || !next.stat_data || !next.stat_data.$ui || !next.stat_data.$ui.built) throw new Error('MVU did not apply the update. Check the browser console for [Eldrasil engine] or schema errors.');
     const miss = builderMismatch(draft, next.stat_data);   // v1.0.3 (F12): never report success for a partial save
     if (miss.length) throw new Error(`MVU did not apply: ${miss.join(', ')}. Nothing was saved. Check the MVU / Tavern Helper versions and the browser console.`);
-    await createChatMessages([{ role: 'user', message: text, is_hidden: true }], { refresh: 'none' });
-    const id = getLastMessageId();
-    await Mvu.replaceMvuData(next, { type: 'message', message_id: id });
-    await setChatMessages([{ message_id: id }], { refresh: 'affected' });
+    await writeToolMessage(text, next);
     toastr.success(first ? 'Student registered. Write your first action when you are ready.' : 'Student file saved.', 'Student Builder');
     draft = null; close();
     await eventEmit('eldrasil:state');
@@ -817,8 +956,9 @@ function pOverview(S) {
   <div class="sub" style="margin:2px 0 14px">Year ${P.Year}, <span style="color:var(--dc)">${esc(P.Dorm === 'Unsorted' ? 'not yet sorted' : P.Dorm + ' Dormitory')}</span>${P.Dorm_rank ? `, dorm rank ${P.Dorm_rank}` : ''}</div>
   <dl class="kv"><dt>Pronouns</dt><dd>${esc(P.Pronouns || '—')}</dd><dt>Age</dt><dd>${esc(P.Age)}</dd>
   <dt>Race</dt><dd>${esc(P.Race)}${P.Beast_type ? ` (${esc(P.Beast_type)})` : ''}</dd><dt>Background</dt><dd>${esc(P.Background || '—')}</dd>
-  <dt>Club</dt><dd>${esc(P.Club || 'none yet')}</dd><dt>Combat roles</dt><dd>${esc(P.Combat_role || '—')}</dd>
-  <dt>Goal</dt><dd>${esc(P.Goal || '—')}</dd><dt>Appearance</dt><dd>${esc(P.Appearance || '—')}</dd>
+  <dt>Birthday</dt><dd>${esc(P.Birthday || '—')}</dd>
+  <dt>Club</dt><dd>${esc(P.Club || 'none yet')}</dd><dt>Combat roles</dt><dd>${esc(P.Combat_role || 'assigned at your first Combat class')}</dd>
+  <dt>Goal</dt><dd>${esc(P.Goal || '—')}</dd><dt>Appearance</dt><dd>${esc(P.Appearance || '—')}</dd><dt>Personality</dt><dd>${esc(P.Personality || '—')}</dd>
   <dt>Now</dt><dd>${esc(`Month ${W.Month}, Week ${W.Week}, ${W.Day} ${W.Time}`)}, ${esc(W.Location)}</dd></dl>
   <h3>Reputation</h3>${rep('Across the academy', P.Reputation.Public)}${rep('Within your dorm', P.Reputation.Dorm)}`;
 }
@@ -867,12 +1007,12 @@ function pMagic(S) {
       ${t.Cannot_do ? `<div class="sub" style="margin-top:4px">Limits: ${esc(t.Cannot_do)}</div>` : ''}<div class="cost">${esc(cost)}</div></div>`;
   }).join('');
   const act = Object.entries(M.Active || {}).map(([k, e]) => `<tr><td>${esc(k)}</td><td>${esc(e.Technique)}</td><td>${e.$started >= 0 ? esc(fromAbs(e.$started)) : '—'}</td><td>${fmt((T[e.Technique] || {}).Upkeep_per_min || 0)}/min</td></tr>`).join('');
-  const pacts = Object.entries(M.Pacts || {}).map(([k, p]) => `<tr><td>${esc(k)}</td><td>${esc(p.Tier)}</td><td>${p.Summoned ? 'summoned' : 'resting'}</td><td>${esc(p.Terms || '')}</td></tr>`).join('');
+  const pacts = Object.entries(M.Pacts || {}).map(([k, p]) => `<tr><td>${esc(k)}${p.Kind && p.Kind !== 'Spirit' ? ' <span class="pill f">forbidden</span>' : ''}</td><td>${esc([p.Kind || 'Spirit', p.Tier].join(', '))}</td><td>${p.Summoned ? 'summoned' : 'resting'}</td><td>${esc(p.Terms || '')}</td></tr>`).join('');
   return `<dl class="kv"><dt>Types</dt><dd>${esc((A.Types || []).join(', ') || '—')}</dd><dt>Dominant</dt><dd>${esc(A.Dominant || '—')}${A.Dominant ? ` <span class="sub">(the Arbiter Stone reads this)</span>` : ''}</dd>
-  <dt>Specialties</dt><dd>${esc((A.Specialties || []).join(', ') || '—')}</dd><dt>Power</dt><dd>${esc(A.Preset || '—')}, mana ${fmt(V.Mana)} / ${fmt(V.Mana_max)}</dd></dl>
+  <dt>Specialties</dt><dd>${esc((A.Specialties || []).join(', ') || '—')}</dd><dt>Mana</dt><dd>${fmt(V.Mana)} / ${fmt(V.Mana_max)}</dd></dl>
   <h3>Active effects</h3>${act ? `<table><tr><th>Effect</th><th>Technique</th><th>Since</th><th>Upkeep</th></tr>${act}</table>` : '<div class="empty">Nothing running.</div>'}
   <h3>Techniques</h3>${tcards || '<div class="empty">No techniques yet. Add them in the Student Builder.</div>'}
-  ${pacts ? `<h3>Pacts</h3><table><tr><th>Spirit</th><th>Tier</th><th>Now</th><th>Terms</th></tr>${pacts}</table>` : ''}`;
+  ${pacts ? `<h3>Pacts</h3><table><tr><th>Partner</th><th>Kind, tier</th><th>Now</th><th>Terms</th></tr>${pacts}</table>` : ''}`;
 }
 function pHidden(S) {
   const H = S.Hidden, a = num(H.Dove_attention), idx = STAGES.indexOf(H._Stage);
@@ -951,14 +1091,11 @@ async function commitSetting(ops, head) {
   const st = latestState(); if (!st) return;
   view.busy = true; render();
   try {
-    const text = `${head}\n<UpdateVariable>\n<Analysis>Player setting (player tool). Not part of the story.</Analysis>\n<JSONPatch>\n${JSON.stringify(ops)}\n</JSONPatch>\n</UpdateVariable>\n\n${PH}`;
+    const text = `${head}\n<UpdateVariable>\n<Analysis>Player setting (player tool). Not part of the story.</Analysis>\n<JSONPatch>\n${JSON.stringify(ops)}\n</JSONPatch>\n</UpdateVariable>`;
     await waitGlobalInitialized('Mvu');
     const next = await Mvu.parseMessage(text, _.cloneDeep(st.data));
     if (!next || !next.stat_data) throw new Error('MVU did not apply the setting.');
-    await createChatMessages([{ role: 'user', message: text, is_hidden: true }], { refresh: 'none' });
-    const id = getLastMessageId();
-    await Mvu.replaceMvuData(next, { type: 'message', message_id: id });
-    await setChatMessages([{ message_id: id }], { refresh: 'affected' });
+    await writeToolMessage(text, next);
     toastr.success('Setting saved.', 'Eldrasil');
     await eventEmit('eldrasil:state');
   } catch (err) {

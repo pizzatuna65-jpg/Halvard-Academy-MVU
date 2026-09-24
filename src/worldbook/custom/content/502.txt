@@ -29,7 +29,8 @@ Player.Wallet
 
 Player.Profile
 - Dorm is set once, by the Arbiter Stone sorting. The Stone reads only Magic._Affinity.Dominant (Elemental→Fire, Mystic→Light, Spiritual→Viridian, Occult→Sky); it cannot see subtypes, or whether magic is hidden or forbidden. Dorm_rank changes only at Results & Dorm Ranking (Month 5 W2 Fri, Month 11 W2 Fri).
-- The rest of Profile, and all of Magic._Techniques / _Affinity, come from the player's Student Builder; do not rewrite them.
+- The rest of Profile, and all of Magic._Techniques / _Affinity, come from the player's Student Builder; do not rewrite them. Birthday is in the academy calendar ("M3 W2 Thu").
+- Combat_role: empty until {{user}}'s first Combat class. There the teacher watches {{user}} in drills and assigns one or two roles (Attack, Defense, Healing, Support, Control) that fit the techniques and how {{user}} actually fought; set it then (e.g. "Defense, Control"). Change it later only when a teacher reassigns it.
 - Club: the club {{user}} has actually joined, by its name ("Duelling Club", "Theatre Troupe"); "" if none.
 - Reputation (Public, Dorm) −100..100: shift 1–5 for notable public acts.
 
@@ -41,7 +42,7 @@ Player.Conditions: the engine sets and clears them from the weather. Remove one 
 Magic
 - _Techniques is {{user}}'s fixed technique list (read-only). When {{user}} uses one, insert {"Technique": "<exact key>", "Times": n} into /Magic/Casts/-. The engine charges the cost and empties Casts. For a hybrid technique that is running (in Active), each triggered use is also a Casts entry; the engine charges its trigger cost.
 - Sustained effects (summons, shields, lingering spells): when one starts, add /Magic/Active/<effect name> = {"Technique": "<key>", "Note": ""}; that entry is the cast (it pays the activation), so do not also add a Casts entry for starting it. Remove it when {{user}} ends it. The engine charges upkeep per in-world minute and ends the effect itself if mana runs out (reported in _Log).
-- Pacts (set by the Student Builder): when {{user}} summons a pact spirit, set /Magic/Pacts/<spirit>/Summoned true AND add /Magic/Active/<spirit> = {"Technique": "Summon <spirit>"}; each ability the spirit uses is a Casts entry for "Summon <spirit>". On dismissal set Summoned false and remove the Active entry. Channelling ("Channel <spirit>", Greater or Spirit Lord only) is a normal Casts entry.
+- Pacts (set by the Student Builder; key = the partner's name, Kind = Spirit, Demon, Monster, Animal or Human): when {{user}} summons a pact partner, set /Magic/Pacts/<name>/Summoned true AND add /Magic/Active/<name> = {"Technique": "Summon <name>"}; each ability it uses is a Casts entry for "Summon <name>". On dismissal set Summoned false and remove the Active entry. Channelling ("Channel <name>", the two highest tiers only) is a normal Casts entry. Presence "summoned": the partner exists at {{user}}'s side only while summoned; "terms": it lives and acts on its own as the Terms say. Any Kind but Spirit is the forbidden art of Pacting.
 
 Hidden (only when Hidden._True_magic is not empty)
 - Dove_attention 0–100: +3 to +10 when the hidden magic is used where it could be noticed; +15 to +25 if witnessed or detected (e.g. a Dark Magic Defense drill); −1 per quiet week.

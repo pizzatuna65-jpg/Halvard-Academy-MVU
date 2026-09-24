@@ -7,7 +7,8 @@ P = lambda *a: os.path.join(ROOT, *a)
 CLUB_NAME = {'Theatre': 'Theatre Troupe', 'Newspaper': 'Academy Newspaper', 'Divination': 'Divination Society', 'Alchemy': 'Alchemy Circle',
              'Festival Committee': 'Festival Committee', 'Library Assistants': 'Library Assistants', 'Groundskeeping': 'Groundskeeping',
              'Medical Centre Volunteers': 'Medical Centre Volunteers', 'Warding Study': 'Warding Study Group'}
-SPORT = {'Soccer', 'Running', 'Duelling'}   # practise informally after 16:00 (lore Clubs); magic is banned only in sport clubs (not Duelling)
+# 1.2.0: Archery, Swimming, Gymnastics and Basketball are sport clubs (owner map review; lore: sport clubs ban magic in play)
+SPORT = {'Soccer', 'Running', 'Duelling', 'Archery', 'Swimming', 'Gymnastics', 'Basketball'}   # practise informally after 16:00 (lore Clubs); magic is banned only in sport clubs (not Duelling)
 
 def load_clubs(npcs, locs):
     """Clubs from location club lists + NPC 'Club' fields (was inline in gen_ui.py, Batch 5.2)."""
