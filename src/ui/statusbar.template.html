@@ -1,0 +1,233 @@
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&family=Cinzel:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pewter:#3b3f46; --pewter-lo:#2a2d33; --brass:#b39062; --brass-lo:#7c6240;
+  --glass:#18292b; --glow:#b9eadf; --ink:#e6e3dc; --ink-dim:#a9a69f;
+  --hp:#c4504a; --st:#d39b37; --mp:#5b8fd4; --warn:#e0a24a; --danger:#e0645a;
+  --dorm:#9aa3ad;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Alegreya Sans",system-ui,sans-serif;color:var(--ink);font-size:14px;line-height:1.35}
+.band{position:relative;margin:6px 0 2px;border-radius:14px;padding:10px 12px 10px;
+  background:linear-gradient(180deg,#464a52 0%,var(--pewter) 38%,var(--pewter-lo) 100%);
+  border:1px solid var(--brass-lo);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 -1px 0 rgba(0,0,0,.35)}
+.band::before{content:"";position:absolute;left:14px;right:14px;top:0;height:3px;border-radius:0 0 3px 3px;background:var(--dorm);opacity:.85}
+.band.stale{display:none}
+.top{display:flex;gap:10px;align-items:stretch}
+.glass{flex:1 1 auto;min-width:0;border-radius:9px;padding:7px 10px;background:radial-gradient(120% 140% at 20% 0%,#21393b 0%,var(--glass) 60%);
+  border:1px solid #0e1718;box-shadow:inset 0 0 12px rgba(0,0,0,.55)}
+.clock{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.clock .t{font-size:22px;font-weight:700;color:var(--glow);font-variant-numeric:tabular-nums;letter-spacing:.02em;text-shadow:0 0 8px rgba(120,220,200,.45)}
+.clock .d{color:#8fbfb5;font-size:13px}
+.period{color:#cfe9e3;font-size:13px;margin-top:1px}
+.loc{color:var(--ink-dim);font-size:13px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.side{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;gap:6px}
+.pts{font-variant-numeric:tabular-nums;font-weight:700;font-size:18px;color:#f0e2c4}
+.pts small{font-weight:500;font-size:12px;color:var(--ink-dim);margin-left:3px}
+.dorm{font-family:Cinzel,serif;font-size:12px;letter-spacing:.04em;padding:2px 8px;border-radius:999px;border:1px solid var(--dorm);color:var(--dorm);white-space:nowrap}
+.vitals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:9px}
+.vit .row{display:flex;justify-content:space-between;gap:6px;font-size:12px;color:var(--ink-dim)}
+.vit .row b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.bar{height:6px;border-radius:4px;background:rgba(0,0,0,.35);overflow:hidden;margin-top:3px}
+.bar i{display:block;height:100%;border-radius:4px;transition:width .5s ease}
+.vit .sub{font-size:11.5px;color:var(--ink-dim);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vit .sub.bad{color:var(--danger)} .vit .sub.mid{color:var(--warn)}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+.chip{font-size:12px;padding:2px 8px;border-radius:999px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.08);color:var(--ink);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.chip.warn{border-color:rgba(224,162,74,.55);color:#f1cf95}
+.chip.danger{border-color:rgba(224,100,90,.6);color:#f4b0a9}
+.chip.glow{border-color:rgba(185,234,223,.45);color:var(--glow)}
+.chip i{margin-right:4px;opacity:.85}
+button.chip{font:inherit;font-size:12px;cursor:pointer}button.chip:hover{background:rgba(179,144,98,.18)}button.chip:focus-visible{outline:2px solid var(--glow);outline-offset:1px}
+.cast{display:flex;gap:8px;margin-top:9px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.cast button{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:2px;width:58px;background:none;border:0;padding:0;cursor:pointer;color:var(--ink);font:inherit}
+.cast .face{width:40px;height:40px;border-radius:50%;border:2px solid var(--dorm);object-fit:cover;background:#1d2126;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#cfcbc2}
+.cast .nm{font-size:11.5px;max-width:58px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink-dim)}
+.cast button:focus-visible .face{outline:2px solid var(--glow);outline-offset:1px}
+.news{margin-top:8px;font-size:12.5px;color:#f0e2c4;border-left:2px solid var(--brass);padding-left:8px}
+.news div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cta{margin-top:9px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 10px;border-radius:9px;background:rgba(179,144,98,.14);border:1px dashed var(--brass)}
+.cta span{flex:1 1 180px;font-size:13px}
+.actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;align-items:center}
+.btn{font:inherit;font-size:13px;cursor:pointer;border-radius:8px;padding:4px 10px;color:var(--ink);background:rgba(0,0,0,.25);border:1px solid rgba(179,144,98,.55)}
+.btn:hover{background:rgba(179,144,98,.18)}
+.btn:focus-visible{outline:2px solid var(--glow);outline-offset:1px}
+.btn.primary{background:var(--brass);color:#1d1a15;border-color:var(--brass);font-weight:700}
+.btn.ghost{border-color:transparent;background:none;color:var(--ink-dim);margin-left:auto}
+.band.collapsed .vitals,.band.collapsed .chips,.band.collapsed .cast,.band.collapsed .news,.band.collapsed .cta,.band.collapsed .actions .opt{display:none}
+.band.collapsed .actions{margin-top:6px}
+.waiting{padding:8px 2px;color:var(--ink-dim);font-size:13px}
+@media (max-width:460px){.vitals{gap:6px}.vit .row{font-size:11px}.vit .row span{overflow:hidden;text-overflow:ellipsis}.vit .sub{font-size:11px}.clock .t{font-size:20px}}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<div class="band" id="band"><div class="waiting">Syncing the bracelet…</div></div>
+<script>
+(function(){
+  const PH = '<Status' + 'PlaceHolderImpl/>';
+  const CAST = /*@@CAST@@*/{};   // id -> [thumb, rank-0 descriptor, first name, dorm colour]
+  const BASE = /*@@BASE@@*/"";
+  const DORM = { Fire:'#d0583f', Light:'#dcb342', Sky:'#4d86d6', Viridian:'#3f9f69', Unsorted:'#9aa3ad' };
+  const MID = typeof getCurrentMessageId === 'function' ? getCurrentMessageId() : -1;
+  const band = document.getElementById('band');
+  const esc = v => String(v == null ? '' : v).replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
+  const num = (v, d) => { const x = Number(v); return Number.isFinite(x) ? x : d; };
+  const fmt = v => { const x = num(v, 0); return Math.abs(x - Math.round(x)) < 0.05 ? String(Math.round(x)) : x.toFixed(1); };
+  let collapsed = false; try { collapsed = localStorage.getItem('eld.bar.collapsed') === '1'; } catch (e) {}
+
+  function readState() {
+    try { const v = getVariables({ type: 'message', message_id: MID }); return v && v.stat_data && v.stat_data.World ? v.stat_data : null; }
+    catch (e) { return null; }
+  }
+  function isLatest() {
+    try {
+      const last = getLastMessageId();
+      if (MID < 0 || MID >= last) return true;
+      return !getChatMessages(MID + 1 + '-' + last).some(m => String(m.message || '').includes(PH));
+    } catch (e) { return true; }
+  }
+  function bar(label, cur, max, color, sub, cls) {
+    const pct = max > 0 ? Math.max(0, Math.min(100, cur / max * 100)) : 0;
+    return '<div class="vit"><div class="row"><span>' + label + '</span><b>' + fmt(cur) + ' / ' + fmt(max) + '</b></div>'
+      + '<div class="bar"><i style="width:' + pct + '%;background:' + color + '"></i></div>'
+      + '<div class="sub ' + (cls || '') + '">' + esc(sub) + '</div></div>';
+  }
+  function chip(text, icon, cls, title, open) {   // open: panel target -> the chip becomes a button (5.1)
+    const tag = open ? 'button' : 'span';
+    return '<' + tag + ' class="chip ' + (cls || '') + '"' + (open ? ' data-open="' + esc(open) + '"' : '') + (title ? ' title="' + esc(title) + '"' : '') + '><i class="fa-solid ' + icon + '"></i>' + esc(text) + '</' + tag + '>';
+  }
+  const sevCls = c => /Dead|Unconscious|Critical|Badly/.test(c) ? 'bad' : /Hurt/.test(c) ? 'mid' : '';
+  const fatCls = f => /Collapsed|Exhausted/.test(f) ? 'bad' : /Tired/.test(f) ? 'mid' : '';
+
+  let who = id => id;
+  function render() {
+    if (!isLatest()) { band.className = 'band stale'; band.innerHTML = ''; return; }
+    const S = readState();
+    // v1.0.3 (A#5, D14): an NPC is named once Rank >= 1 or the story named them; before that, their descriptor
+    who = id => (CAST[id] ? ((((S || {}).Bonds || {})[id] || {}).Rank >= 1 || (((S || {}).$ui || {}).names || []).includes(id) ? CAST[id][2] : CAST[id][1]) : id);
+    if (!S) { band.className = 'band'; band.innerHTML = '<div class="waiting">Syncing the bracelet…</div>'; return; }
+    const W = S.World || {}, P = (S.Player || {}).Profile || {}, V = (S.Player || {}).Vitals || {};
+    const ui = S.$ui || {}, unl = ui.unlocks || [], M = S.Magic || {}, T = M._Techniques || {}, H = S.Hidden || {};
+    band.style.setProperty('--dorm', DORM[P.Dorm] || DORM.Unsorted);
+    const upkeep = Object.values(M.Active || {}).reduce((a, e) => a + num((T[e.Technique] || {}).Upkeep_per_min, 0), 0);
+
+    let h = '<div class="top"><div class="glass">'
+      + '<div class="clock"><span class="t">' + esc(W.Day) + ' ' + esc(W.Time) + '</span><span class="d">Month ' + esc(W.Month) + ', Week ' + esc(W.Week) + '</span></div>'
+      + '<div class="period">' + esc(W._Period || 'Free time') + '</div>'
+      + '<div class="loc"><i class="fa-solid fa-location-dot"></i> ' + esc(W.Location) + '</div>'
+      + '</div><div class="side"><div class="pts">' + fmt((S.Player.Wallet || {}).Points) + '<small>pts</small></div>'
+      + '<div class="dorm">' + esc(P.Dorm === 'Unsorted' || !P.Dorm ? 'Unsorted' : P.Dorm + (P.Dorm_rank ? ' #' + P.Dorm_rank : '')) + '</div></div></div>';
+
+    h += '<div class="vitals">'
+      + bar('Health', num(V.HP, 0), num(V.HP_max, 100), 'var(--hp)', V._Condition || '', sevCls(V._Condition || ''))
+      + bar('Stamina', num(V.Stamina, 0), num(V.Stamina_max, 100), 'var(--st)', V._Fatigue || '', fatCls(V._Fatigue || ''))
+      + bar('Mana', num(V.Mana, 0), num(V.Mana_max, 100), 'var(--mp)', upkeep > 0 ? 'Upkeep −' + fmt(upkeep) + '/min' : (Object.keys(T).length ? Object.keys(T).length + ' techniques' : 'No techniques yet'), upkeep > 0 ? 'mid' : '')
+      + '</div>';
+
+    const c = [];
+    // 1.1.0: features that are off hide their chips (Student file > Settings > Features)
+    const OFF = ui.off || [], on = id => !OFF.includes(id);
+    const wx = ui.wx, wxm = ui.wxfx || 'full';
+    if (wxm !== 'off' && wx && wx.now && !wx.away && W._Weather) {
+      const n = wx.now, ic = n.rare === 'lightning storm' ? 'fa-bolt' : n.sky === 'Storm' ? 'fa-cloud-bolt' : n.snow ? 'fa-snowflake' : n.sky === 'Rain' ? (n.rain === 'heavy' ? 'fa-cloud-showers-heavy' : 'fa-cloud-rain')
+        : n.sky === 'Fog' ? 'fa-smog' : n.sky === 'Overcast' ? 'fa-cloud' : n.sky === 'Cloudy' ? 'fa-cloud-sun' : n.wind ? 'fa-wind' : wx.block === 2 ? 'fa-moon' : 'fa-sun';
+      c.push(chip(n.temp + ' °C' + (n.wind ? ', ' + n.wind : '') + (n.rare ? ', ' + n.rare : ''), ic, n.rare ? 'warn' : '', W._Weather));
+    }
+    if (wxm === 'full' && unl.includes('conditions')) {
+      const CI = { Soaked: 'fa-droplet', Chilled: 'fa-temperature-low', Overheated: 'fa-temperature-high', 'Head cold': 'fa-head-side-cough' };
+      Object.entries((S.Player || {}).Conditions || {}).forEach(([k, v]) => c.push(chip(k, CI[k] || 'fa-circle-exclamation', 'warn', (v && v.Effect) || k, 'profile')));
+    }
+    if (W._Event_today) c.push(chip(W._Event_today.split(';')[0].split(' (')[0], 'fa-star', 'glow', W._Event_today));
+    if (W._Curfew) c.push(chip(/LOCKDOWN/.test(W._Curfew) ? 'Lockdown' : /Break/.test(W._Curfew) ? 'Break' : /^Away/.test(W._Curfew) ? 'Away' : 'Curfew', /^Away/.test(W._Curfew) ? 'fa-route' : 'fa-moon', /LOCKDOWN|CURFEW/.test(W._Curfew) ? 'danger' : 'warn', W._Curfew));
+    const inj = Object.keys((S.Player || {}).Injuries || {});
+    if (unl.includes('injuries') && inj.length) c.push(chip(inj.length === 1 ? inj[0] : inj.length + ' injuries', 'fa-bandage', 'danger', inj.join(', ')));
+    const act = Object.keys(M.Active || {});
+    if (act.length) c.push(chip(act.join(', '), 'fa-wand-sparkles', 'glow', 'Active effects'));
+    const summoned = Object.entries(M.Pacts || {}).filter(([, p]) => p.Summoned).map(([k]) => k);
+    if (unl.includes('pacts') && summoned.length) c.push(chip(summoned.join(', ') + ' summoned', 'fa-feather', 'glow'));
+    if (unl.includes('hidden') && H._True_magic) c.push(chip('Doves: ' + (H._Stage || 'Unnoticed'), 'fa-eye', num(H.Dove_attention, 0) >= 40 ? 'danger' : num(H.Dove_attention, 0) >= 20 ? 'warn' : '', 'Dove attention ' + num(H.Dove_attention, 0) + '/100'));
+    if ((S.Battle || {}).Active && on('battle')) c.push(chip('In battle: ' + Object.keys(S.Battle.Combatants || {}).map(k => CAST[k] && !(((S.Bonds || {})[k] || {}).Rank >= 1 || (ui.names || []).includes(k)) ? CAST[k][1] : k).join(', '), 'fa-khanda', 'danger', 'Open the battle panel', 'battle'));
+    const ready = Object.entries(S.Bonds || {}).filter(([, b]) => b && b._Event_ready).map(([k]) => who(k));
+    if (ready.length) c.push(chip('Bond event ready: ' + ready.join(', '), 'fa-heart', 'warn'));
+    const com = on('planner') ? Object.entries(S.Commitments || {}) : [], late = com.filter(([, x]) => x && x._Late).map(([k]) => k);
+    const soon = com.filter(([, x]) => x && !x._Late && /^today/.test(x._When || '')).map(([k]) => k);
+    if (late.length) c.push(chip('Overdue: ' + late.join(', '), 'fa-triangle-exclamation', 'danger', 'Open the planner', 'notebook:planner'));
+    else if (soon.length) c.push(chip('Due today: ' + soon.join(', '), 'fa-thumbtack', 'warn', 'Open the planner', 'notebook:planner'));
+    else if (unl.includes('planner') && com.length) c.push(chip(com.length + (com.length === 1 ? ' commitment' : ' commitments'), 'fa-thumbtack', '', com.map(([k]) => k).join(', '), 'notebook:planner'));
+    const mail = Object.values(S.Letters || {}).filter(l => l && l.Status === 'waiting').length;
+    if (unl.includes('letters') && mail && on('letters')) c.push(chip(mail === 1 ? 'Letter waiting' : mail + ' letters waiting', 'fa-envelope', 'glow', 'At the Mail Tower', 'notebook:letters'));
+    const hap = ui.hap;   // 5.3 (F20): today's campus happening
+    if (hap && hap.text && ui.happenings !== 'off') c.push(chip((hap.now ? 'Now: ' : hap.from + ':00 ') + (hap.where || 'Around campus'), 'fa-bullhorn', hap.now ? 'glow' : '', hap.text, 'notebook:planner'));
+    if (c.length) h += '<div class="chips">' + c.join('') + '</div>';
+
+    const here = Object.entries((S.Scene || {}).Present || {});
+    if (here.length) {
+      h += '<div class="cast" aria-label="Here with you">' + here.map(([id, v]) => {
+        const c = CAST[id], b = (S.Bonds || {})[id];
+        const known = c && ((b && b.Rank >= 1) || (ui.names || []).includes(id));
+        const label = c ? (known ? c[2] : c[1]) : id;
+        const tip = label + (v && v.Note ? ': ' + v.Note : '');
+        const face = c ? '<img class="face" style="border-color:' + c[3] + '" src="' + esc(BASE + c[0]) + '" alt="" data-fb="' + (known ? esc(c[2].slice(0, 2)) : '?') + '">'
+          : '<span class="face" style="border-color:#6f737b">' + esc(id.split(/\s+/).map(w => w[0]).join('').slice(0, 2)) + '</span>';
+        return '<button ' + (c ? 'data-open="npc:' + esc(id) + '"' : '') + ' title="' + esc(tip) + '">' + face + '<span class="nm">' + esc(known || !c ? (c ? c[2] : id) : '?') + '</span></button>';
+      }).join('') + '</div>';
+    }
+
+    const news = (ui.toasts || []).slice(-4).map(t => String(t).replace(/\{npc:([^}]+)\}/g, (_m, id) => who(id)));
+    if (news.length) h += '<div class="news">' + news.map(t => '<div>' + esc(t) + '</div>').join('') + '</div>';
+
+    if (!ui.built) h += '<div class="cta"><span>Your student file is empty. Set up your student before your first action.</span><button class="btn primary" data-open="builder">Create your student</button></div>';
+
+    h += '<div class="actions"><button class="btn" data-open="profile"><i class="fa-solid fa-id-card"></i> Student file</button>'
+      + '<button class="btn" data-open="people"><i class="fa-solid fa-users"></i> People</button>'
+      + '<button class="btn" data-open="map"><i class="fa-solid fa-map"></i> Map</button>'
+      + '<button class="btn" data-open="notebook"><i class="fa-solid fa-book"></i> Notebook</button>'
+      + '<button class="btn" data-open="activities"><i class="fa-solid fa-compass"></i> Activities</button>'
+      + '<button class="btn opt" data-open="builder"><i class="fa-solid fa-pen-nib"></i> Builder</button>'
+      + '<button class="btn ghost" data-toggle="1" aria-label="Collapse or expand" aria-expanded="' + (!collapsed) + '" title="' + (collapsed ? 'Expand' : 'Collapse') + '"><i class="fa-solid ' + (collapsed ? 'fa-chevron-down' : 'fa-chevron-up') + '"></i></button></div>';
+
+    band.className = 'band' + (collapsed ? ' collapsed' : '');
+    band.innerHTML = h;
+    band.querySelectorAll('img[data-fb]').forEach(img => img.addEventListener('error', () => {
+      const sp = document.createElement('span'); sp.className = 'face'; sp.style.borderColor = img.style.borderColor; sp.textContent = img.dataset.fb; img.replaceWith(sp);
+    }, { once: true }));
+    popToasts(news);
+  }
+
+  function popToasts(news) {
+    if (!news.length || typeof toastr === 'undefined') return;
+    let chat = ''; try { chat = SillyTavern.getCurrentChatId(); } catch (e) {}
+    const key = 'eld.toast.' + chat + '.' + MID + '.' + news.join('|').length + news.join('|').slice(0, 60);
+    try { if (sessionStorage.getItem(key)) return; sessionStorage.setItem(key, '1'); } catch (e) { return; }
+    news.forEach(t => toastr.info(t, 'Bracelet', { timeOut: 4500 }));
+  }
+
+  band.addEventListener('click', ev => {
+    const b = ev.target.closest('button'); if (!b) return;
+    if (b.dataset.toggle) { collapsed = !collapsed; try { localStorage.setItem('eld.bar.collapsed', collapsed ? '1' : '0'); } catch (e) {} render(); return; }
+    if (b.dataset.open) {
+      if (!window.parent.__eldrasilUI) { if (typeof toastr !== 'undefined') toastr.warning('Turn on the "Eldrasil UI" script in Tavern Helper → Scripts.', 'Eldrasil'); return; }
+      eventEmit('eldrasil:open', b.dataset.open);
+    }
+  });
+
+  const rerender = _.debounce(render, 250);
+  try {
+    ['MESSAGE_RECEIVED', 'MESSAGE_SENT', 'MESSAGE_DELETED', 'MESSAGE_SWIPED', 'MESSAGE_UPDATED', 'MESSAGE_EDITED', 'CHAT_CHANGED'].forEach(k => {
+      if (tavern_events[k]) eventOn(tavern_events[k], rerender);
+    });
+    eventOn('eldrasil:state', rerender);
+    waitGlobalInitialized('Mvu').then(() => {
+      eventOn(Mvu.events.VARIABLE_INITIALIZED, rerender);
+      eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, () => setTimeout(rerender, 400));
+    });
+  } catch (e) { console.warn('[Eldrasil bar]', e); }
+  render();
+  let tries = 0; const poll = setInterval(() => { if (readState() || ++tries > 20) { clearInterval(poll); render(); } }, 1000);
+})();
+</script>
+</body>
