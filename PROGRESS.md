@@ -337,9 +337,49 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   Also: the Fishing House counts as the Fishing Club's rain-proof place in the Now entry.
   npm test 470 checks (11 suites), smoke 482 views / 0 errors, token audit ~8.9k start / ~13.8k mid-game (+~300: rules, bond lines).
 
+- 1.3.0 Owner NPC brainstorm applied (handoff 2026-09-25, all approved by the owner; designs kept in docs/design/).
+  Lore: source_original/npc_lore_2026-09-25/ holds the approved full entries; merge_lorebooks.py lays them over v38 (34 NPCs changed:
+  Emotional tells for all 38 bonded NPCs, missing Loves/Hates/Goals/Backstory/Haunts filled, Etnie's backstory now a normal field,
+  Castor's father keeps the Mail Tower, Rei's coat, Vallie Goal -> Goals, Tristan "What he wants" -> Goals). Royhan's EJS date gate
+  is re-applied as before. Verified: every card entry equals the approved text. curate_data.py reads qualified labels ("Magic
+  (public)" at Magic's rank; the dossier drops "(public)"/"(surface)", keeps "(daily)"/"(in battle)"); Trauma stays optional (Irene
+  only). Roster parse bug fixed at the source: Rei's roster tags swallowed "Dorm Heads: ..." (UI data and the brief). The brief
+  generator (tools/make_npc_brief.py) now writes the approved brief (rewards, special models, reputation, known gaps).
+  Bond rewards (data/bond_rewards.json, parsed from the approved list): the 4->5 event gives the gift, 9->10 the Rank 10 benefit;
+  the engine adds the reward (and its narrator-only side) to that event's directions and records it in _Perks (AI-visible,
+  read-only) on the rank-up. Engine effects: training partners x1.5 (Saffi, Percival: Stamina; Sophia, Gareth: Mana pool), jumps
+  +10% (Gavlan gift: Mana pool; Vallie Rank 10: Stamina), reputation +1 level (Ruby: Student, Baelin: Academy), one-use tokens that
+  lift a negative level toward 0 (Kuroo: Academy, Milena: Doves), monthly points (Aiden, Tristan, Mimosa), one-use perks spent via
+  /Perk_use (Irene, Althair, Baelin, Mimosa, Bobby gifts). The rest is narrator-played (their Effect text in _Perks).
+  Mask -> truth (Castor, Kanae, Caine): 7->8 adds the nudge Fact; at Rank 8 the event is held until a "<Name>.<topic>" secret is in
+  Secrets_revealed (UI: "This bond has gone as far as it can for now."). Krieg: introduction ready at once; +14 XP each Monday
+  while Doves >= +1 (with hidden magic also Dove attention <= 39), else Tension +1; nothing from interactions. Rival teams: no bonds.
+  Reputation (data/reputation.json): Profile.Reputation {_Academy, _Student, _Doves} (levels, engine) + $xp (signed Rep XP);
+  /Rep_events {Rep, XP, Kind: repeat|event, Why}; repeat capped +5/week per reputation ($eng.repw), events and losses uncapped;
+  bond milestones Rank 5/10 (+5/+10: staff -> Academy, students -> Student, Milena -> Doves) only below +3; high Tension (70)
+  with a staff member or student -5; bond XP modifiers per talk/hangout; Academy +5 monthly bonus, Academy -5 halves the payout;
+  level changes toasted, journaled and logged with their effect; <now> lists non-zero levels with what they mean. Migration: old
+  Public/Dorm become Academy/Student XP once (x1.25, $eng.repv).
+  Training (data/training.json): /Training {Track}; +1% of the starting value per session x (1 + 0.5 per partner in the scene),
+  weekly 2.5%, lifetime 2x (Player.$Training per track: base, gain, week). Mana_max / Stamina_max: other writes reverted; a Builder
+  change (or the 1.2.0 self-heal) moves the base.
+  Rules: 502 (Training, Reputation triggers and values, _Perks / Perk_use), 504 (rewards are real, no endings), 503 example.
+  UI: Overview reputation bars with what the level means; Body shows training progress; new tab Gifts & perks (secrets stripped,
+  {{user}} as the student's name, one-use counts, used list); dossier hint for a held bond.
+  Tests: tests/test_rewards_v130.cjs (42 checks). npm test 512 checks (12 suites), smoke 550 views / 0 errors (new sample
+  tests/preview/sample_v130.json from make_sample_v130.cjs), token audit ~9.9k start / ~14.7k mid-game (+~920, mostly the
+  reputation trigger list in 502).
+  To confirm with the owner (numbers or mappings the brainstorm did not give): monthly amounts Aiden 200, Tristan 100, Mimosa 150,
+  Academy +5 bonus 300 points; "high Tension" = 70; pro-Dove NPCs "keep their distance" = -1 XP per talk/hangout at Doves <= -3;
+  Krieg's "suspicion low" = Dove attention <= 39 (Unnoticed / Rumoured); the mask gate opens on any revealed secret of that NPC;
+  Public/Dorm migration x1.25. Token cost +~920 always-on: reputation could become a Features toggle if that is too much.
+
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
+- Playtest v1.3.0 in ST: the narrator writing /Rep_events, /Training and /Perk_use; a 4->5 event with its gift; the Student file
+  (reputation, Body training, Gifts & perks); Krieg on a Monday; a Rank 8 mask bond before and after its secret comes out.
+- Still missing (owner, known): the [Bond Event] lorebook (no event is written yet); a Doves: field for Zara, Alyssa and Tilly.
 - Playtest v1.2.0 in ST: the Builder end to end (arrow keys, Techniques page, Register then reload, amend), the bracelet after a
   Builder save, calendar notes, the Shop at the Mall / Commissary, the birthday day.
 - Playtest v1.1.0 in ST with docs/TEST_CHECKLIST_v1.1.md (EJS in 502/504 first), together with v1.0.3's checklist.
@@ -364,6 +404,8 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 - 1.1.0: weather weights and rare-event rolls, FC_TRUE 75, condition thresholds (20/5/30/60 min, 0/8/28 °C) and clear times,
   Head cold odds, flu waves, sleep multipliers, bond +1 conditions, hook due window (-30 min / +3 h) and "old" age (14 days),
   rumour days (3 / 21), Bag cap 40, hooks cap 15.
+- 1.3.0: reputation thresholds / weekly cap / bond cap, monthly perk amounts and the Academy +5 bonus, high Tension 70, Krieg +14,
+  training percentages (data/reputation.json, bond_rewards.json, training.json).
 - Payout bands, bond daily cap (3), sleep/rest recovery rates, 40-HP cap, Dove attention increments (in 502 rules).
 - 5.3/5.4: happening rates (HAPPEN_RATE), trim depth 24 (regex minDepth), Journal window 30, FACTS_VISIBLE 10, Clues cap 40.
 

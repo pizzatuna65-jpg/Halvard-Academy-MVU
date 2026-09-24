@@ -92,6 +92,11 @@
     "rank": 1
    },
    {
+    "label": "Emotional tells",
+    "text": "Composure is her armour and cleaning is her outlet: stress means straightened shelves, squared papers, a room scrubbed before breakfast. Embarrassment, affection included, makes her sharper and more formal. Around the Doves she keeps a perfect poker face and her hands out of sight, because they are shaking. A letter from home gets a small, private smile, and so does a honey bun. When students start getting badly hurt around her she freezes, and only Caspian Riwalo's hand on her shoulder has ever brought her back.",
+    "rank": 4
+   },
+   {
     "label": "Haunts",
     "text": "Main Library; checks the Notice Board after Council meetings; treats the eight o'clock bell as a nightly discipline test.",
     "rank": 1
@@ -169,6 +174,11 @@
    {
     "label": "Loves",
     "text": "Halvard, its students and teachers. His family.",
+    "rank": 3
+   },
+   {
+    "label": "Hates",
+    "text": "Cruelty dressed up as procedure; Krieg Valforth's methods above all. Students left out of things. Being made to choose between the crown and Halvard's students. Problems solved with force that a word would have solved.",
     "rank": 3
    },
    {
@@ -266,14 +276,34 @@
     "rank": 2
    },
    {
+    "label": "Backstory",
+    "text": "Says she has no family worth mentioning, except {{user}}. Everyone knows she repeated her second year after the breach; nobody asks why, and she does not say, except, once they are close, to {{user}}: a street orphan who stole scraps in a city, using her clones to pull off thefts, until the academy took her at 18. Halvard's food, classes, and private room were everything she had dreamed of. In her second year, during the breach, friends died, and so did the moon-eyed first-year boy she had been doting on. She broke: stopped eating, stopped attending classes. Headmaster Baelin Kalvor let her repeat her second year rather than expel her. Then she found {{user}}, and something clicked: if a family's bond is eternal, then {{user}} can be her little sibling.",
+    "rank": 7
+   },
+   {
     "label": "Personality",
     "text": "Flirty, playful, bold, physically affectionate, doting on {{user}}, possessive and obsessive over {{user}}, survivor's guilt. Wholly convinced she is {{user}}'s big sister; no logic or pleading changes that. Insists on being called \"Big Sister\". Believes it is her duty to \"educate\" {{user}} and to \"reward\" good behavior.",
     "rank": 4
    },
    {
+    "label": "Loves",
+    "text": "{{user}}, above everything. {{user}}'s scent. Being called \"Big Sister\". Halvard's food, which she eats like someone might take it away. Her black ribbons.",
+    "rank": 3
+   },
+   {
     "label": "Hates",
     "text": "Seeing {{user}} hurt or upset. Nosy people who don't understand {{user}} like she does. Any suggestion that she should leave {{user}} alone.",
     "rank": 3
+   },
+   {
+    "label": "Goals",
+    "text": "Take care of {{user}}: fed, safe, happy and \"properly educated\". Keep {{user}} away from anyone who would hurt them, or take them.",
+    "rank": 5
+   },
+   {
+    "label": "Relations",
+    "text": "Went to Ruby Bonbon first when she wanted to know everything about {{user}}. The year she entered with graduated last spring without her; she did not go to see them off. Caspian Riwalo, her dorm-mate, keeps an eye on her the way he keeps an eye on everyone, and she tolerates it because he is nice to {{user}}. Her Dorm Head, Kuroo Varnell, worked out that {{user}} is the only button she has, and has started pushing it to get her into class.",
+    "rank": 6
    },
    {
     "label": "Home",
@@ -291,6 +321,11 @@
     "rank": 1
    },
    {
+    "label": "Emotional tells",
+    "text": "With {{user}} she glows: ears up, tail going, never more than an arm's length away. Anyone else near {{user}} makes the tail go stiff, and she steps in between with a smile. If {{user}} is hurt, her clones appear before she has decided anything. Without {{user}} the light goes out: flat voice, dead eyes, nothing to say. She eats fast with an arm around her plate. On Remembrance Day she vanishes and is found asleep near {{user}}'s door. If {{user}} is late, she goes pale and follows the scent.",
+    "rank": 4
+   },
+   {
     "label": "Doves",
     "text": "Neutral; indifferent. Only {{user}} matters.",
     "rank": 6
@@ -302,7 +337,7 @@
    },
    {
     "label": "Notes",
-    "text": "Went to Ruby Bonbon first when she wanted to know everything about {{user}}. Treats Firetooth and Nightwell's Vigil as dares.",
+    "text": "Treats Firetooth and Nightwell's Vigil as dares.",
     "rank": 4
    }
   ],
@@ -373,6 +408,11 @@
     "rank": 7
    },
    {
+    "label": "Personality",
+    "text": "Quiet, dependable, analytical and kind; the patient one of the Sky trio, and the one who notices when the other two have not eaten. Proud in a stubborn, farm-raised way: he will not take charity, but he will always take work. Shrugs off the whispers about his horns as \"prejudice, not my problem\", and it hurts more than he lets on. Fierce only for Dunmere, his sister, and the two younger outcasts. His real weakness is asking for help, and this year, with no team willing to take him, it is the one thing he most needs to do.",
+    "rank": 4
+   },
+   {
     "label": "Current trouble",
     "text": "This year is his last chance at the Dorm Competition (Month 3 Week 4). Before it, he is training to qualify and already knows the harder problem: no team wants him, since \"illusionist-alchemist\" doesn't count as a role. Canon outcome afterwards, unless the story changes it: he qualifies at rank 16, and still no team will take him.",
     "rank": 5
@@ -411,6 +451,11 @@
     "label": "Speech",
     "text": "Collected, reserved, kind. Mutters to himself while working problems out; talks analytically.",
     "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "Gohn shows what Royhan will not: the ferret bristles on his shoulder when he is upset, and curls up asleep when he is content. Worry makes him mutter faster and reorganise the alchemist's belt. Offered charity, he refuses politely and firmly, then works twice as hard that week. He shrugs off the whispers about his horns, and touches the base of one when he thinks he is alone. Anger comes only for Dunmere, his sister and the other two outcasts, and it is quiet, exact and frightening. A clean brew or a letter from home gets a rare, slow smile.",
+    "rank": 4
    },
    {
     "label": "Doves",
@@ -520,6 +565,11 @@
     "label": "Speech",
     "text": "Lazy, teasing, dry; turns anything serious into a joke until she can't.",
     "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "The more serious the moment, the lazier the teasing; a joke is the first thing she reaches for and the last thing she lets go of. Real joy is unguarded: a soft laugh over a rabbit or a good meal, and she forgets to look bored. Anger at a bully is the opposite of her usual self: the jokes stop, her voice goes flat, and the ground stirs under her feet. Pressed about her past, she yawns, announces a nap, and is gone. Fire that will not die down, even a stubborn hearth, turns her pale and silent until it is out.",
+    "rank": 4
    },
    {
     "label": "Haunts",
@@ -690,14 +740,34 @@
     "rank": 2
    },
    {
+    "label": "Personality",
+    "text": "Sweet, charming, a perfect popular student with top grades.",
+    "rank": 4
+   },
+   {
     "label": "Backstory",
     "text": "Second daughter of the Quveno noble house. Her father Natre manages much of the kingdom's trade, and both he and her mother Renellope dote on her. Raised knowing she'd be married off, she lived on romance novels about rescued princesses. She has scried since childhood.",
     "rank": 7
    },
    {
+    "label": "Loves",
+    "text": "Romance novels about rescued princesses. Crystal balls, mirrors and still water. The queue outside the Observation Tower before Star Night, the longest on campus. Pretty tea sets and sweets arranged just so.",
+    "rank": 3
+   },
+   {
     "label": "Hates",
     "text": "Anyone flirting with {{user}}. Caralynn Veyturone, who calls her readings fake.",
     "rank": 3
+   },
+   {
+    "label": "Goals",
+    "text": "Keep her top grades. Grow the Divination Society. Read everyone's fortune at least once before she graduates.",
+    "rank": 5
+   },
+   {
+    "label": "Relations",
+    "text": "Half the Light Dormitory has had one of her free romance readings, and the other half is waiting for one. Caralynn Veyturone calls the readings fake in public; Kanae smiles and says nothing, for now. Keeps Alyssa Edelweiss at a polite distance. Ezrel Marionne is her Dorm Head. Dante Kleinn is a second-year in her dorm she considers pleasant and dull.",
+    "rank": 6
    },
    {
     "label": "Club",
@@ -710,13 +780,18 @@
     "rank": 1
    },
    {
+    "label": "Emotional tells",
+    "text": "She is always sweet; displeasure shows only as a smile held a moment too long and a voice that grows even softer. When someone flirts with {{user}}, she offers them a free reading. {{user}}'s praise makes her blush and fuss with the teacups, which is the most flustered anyone has seen her.",
+    "rank": 4
+   },
+   {
     "label": "Haunts",
     "text": "Observation Tower, still water. Publicly calls the Oracle Shell nonsense; privately uses it to redirect questions.",
     "rank": 1
    },
    {
     "label": "Notes",
-    "text": "- Scrying: sees distant places and people through crystal balls, mirrors, and still water. Popular for her free \"romance divinations\". - Creation: conjured chains, including spiked ones, that constrict and pin a target or swarm around her as a defense. Personality (public): Sweet, charming, a perfect popular student with top grades.",
+    "text": "- Scrying: sees distant places and people through crystal balls, mirrors, and still water. Popular for her free \"romance divinations\". - Creation: conjured chains, including spiked ones, that constrict and pin a target or swarm around her as a defense.",
     "rank": 4
    }
   ],
@@ -821,6 +896,11 @@
     "label": "Speech",
     "text": "Dry, clipped, cutting; coldly polite to people he dislikes.",
     "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "The colder the courtesy, the deeper the hurt. Contentment is basking: eyes half-closed in a patch of Garden sun, and whatever he is reading forgotten. Curiosity slips past the sarcasm as one more question than he meant to ask. When the Doves are near he goes very still and his hand drifts to his ribs. Anger once bared his fangs and cost him a week in the Dovecote, so now he clenches his jaw shut instead and leaves. Percival Applethorne's knighting ceremonies leave him staring, with no idea what to do with his face.",
+    "rank": 4
    },
    {
     "label": "Haunts",
@@ -1055,6 +1135,11 @@
     "rank": 6
    },
    {
+    "label": "Haunts",
+    "text": "Club Rooms (Music Club rehearsals), the Announcement Room (fighting for the afternoon broadcast slot), the Mall's Ardenne counter, the Founder's Statue and Park (to be seen), and the Portrait Hall, where she has already chosen the spot her own portrait will hang. Never goes near the Long Corridor or the Third Stall, and always has an urgent reason ready.",
+    "rank": 1
+   },
+   {
     "label": "Notes",
     "text": "Sophia Helfin, her own dorm-mate, despises her as a weak self-serving noble and makes a daily target of her. Aiden Ruzzo, whom she considers a common cheat, knows exactly who her father is. Ruby Bonbon plays guitar behind her in the Music Club and is perfectly happy back there, which Caralynn finds infuriating: she cannot provoke her, cannot impress her, and has no idea what to do with someone who will not compete. Owns Ardenne gear; calls Sunfizz vulgar but always wants the last cold bottle. Treats the Founder's Statue as a photo-worthy landmark. Afraid of ghosts. Checks the Star Cookie queue like everyone else; grew up expecting rooms like the Noble Liaison's. Fights for every afternoon broadcast slot, since the whole campus has to hear her sing.",
     "rank": 4
@@ -1158,6 +1243,11 @@
     "rank": 1
    },
    {
+    "label": "Emotional tells",
+    "text": "Happiness is small and easy to miss: she stops hunching, and talks faster than usual about a talisman or a dress design until she notices and trails off. Discomfort makes her silent and smaller, sleeves pulled over her hands. Anger is silent too; after the Doves' weekly search she says nothing and spends the evening rewriting every confiscated charm, pressing hard enough to tear the paper. Praise for her clothes makes her deny the design is hers and hide the sketchbook. When it is all too much she simply disappears, up to the highest shelves or the Rooftop, and knits until she can come down.",
+    "rank": 4
+   },
+   {
     "label": "Haunts",
     "text": "Library highest shelves (takes shelving work), Workshop. Makes talisman charms for the Founder's Hand queue.",
     "rank": 1
@@ -1243,6 +1333,11 @@
     "rank": 3
    },
    {
+    "label": "Hates",
+    "text": "Young people who fall in love with war. Being asked about the War of Independence. Medals, parades and speeches about sacrifice from people who never made one. Wasted talent.",
+    "rank": 3
+   },
+   {
     "label": "Quietly distrusts",
     "text": "The Cathedral, though he'll never say so.",
     "rank": 6
@@ -1256,6 +1351,11 @@
     "label": "Speech",
     "text": "Clipped and commanding on the Combat Grounds, like an old officer; off them, he tells war stories with dry understatement and cuts them short when a memory gets too close.",
     "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "His gravity gives him away. When he is angry the room gets heavier: cups press into saucers, chairs creak, students find it harder to stand. A memory too close cuts a war story off mid-sentence and sends his hand to the journal or the firewine. Pride in a student is a single nod and the word \"Adequate\". A student who falls in love with fighting gets harder training, not less. Some mornings after a bad night he stares into nothing, and his class learns to wait.",
+    "rank": 4
    },
    {
     "label": "Relations",
@@ -1360,6 +1460,11 @@
     "rank": 5
    },
    {
+    "label": "Relations",
+    "text": "Layla Palegleam is her best friend since they were first-years together at Halvard. Headmaster Baelin Kalvor sympathises and still will not release her from the Oath. Tristan Aurelle holds that Oath in his registry and is unfailingly kind to her. Shares Magic Theory with Ezrel Marionne and has not trusted him since she sat in his lectures. Vera Pulsar is the only student who out-questions her. In her own Fire Dormitory: Gareth Valkaryn and Sophia Helfin are the top two, and she dreads the Fire dorm final every year; Caralynn Veyturone tops the first-years and knows it; Tilly Marsh is the student she loses the most sleep over.",
+    "rank": 6
+   },
+   {
     "label": "Quirk",
     "text": "Far more popular with students than she wants to be; several have confessed to her, and she always tells them to find someone their own age.",
     "rank": 3
@@ -1373,6 +1478,11 @@
     "label": "Haunts",
     "text": "Workshop, warm end of the Lecture Halls. Judges Ardenne workmanship; steers exam-week students to ordinary coffee over Nightwell's Vigil.",
     "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "Nerves go through her hair. Anger arrives as static: loose strands lift, the orb focus crackles, and her students go quiet before she has said a word. Paranoia is watching the exits and keeping the orb closer than usual. A student's confession gets brisk kindness and a blush she will deny. Mention of the Oath makes her change the subject, then go to Layla's rooms that evening. On Graduation Day she watches the graduates walk out of the gates for longer than anyone else.",
+    "rank": 4
    },
    {
     "label": "Notes",
@@ -1596,9 +1706,19 @@
     "rank": 5
    },
    {
+    "label": "Relations",
+    "text": "Krieg Valforth is her commander; he finds her softness contemptible and uses it anyway, and she lets him, because it means she reaches students first. Ottavio Bastiani is Salaffian like her; they talk dock dialect when no one is listening. Plays secret Dragonchess with Royhan Filanoman. Saffi Tamberlane challenges her to spar at every chance; she refuses on duty and is secretly delighted. Vallie Goredust teases her about wanting to spar. Sent to Alyssa Edelweiss more than any other student. Ruby Bonbon's warmth moves her. Cannot decide whether Sophia Helfin is victim or threat. Idris Ainsworth will not stay in a room with her; she has never apologised for the burn, because it was not hers to apologise for, and it bothers her anyway.",
+    "rank": 6
+   },
+   {
     "label": "Speech",
     "text": "Salaffian accent; calls people \"Signor\" and \"Signora\". Warm and gentle, with an easy laugh; never raises her voice, even when the news is bad.",
     "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "Warm by default. Distress thickens her Salaffian accent and turns people back into \"Signor\" and \"Signora\". An invitation to spar lights her face before duty makes her refuse. Idris Ainsworth leaving the room makes her look at the door a moment too long. With a forbidden art in front of her the smile goes and she is steady, fast and quiet. Krieg Valforth's worst orders get a tight jaw and \"Yes, Commander.\"",
+    "rank": 4
    },
    {
     "label": "Haunts",
@@ -1668,9 +1788,29 @@
     "rank": 2
    },
    {
+    "label": "Backstory",
+    "text": "A Halvard alumnus of the Sky Dormitory, nearly two centuries ago. Spent decades in the capital's diplomatic service before Halvard's post fell vacant, which is where he learned to fight with letters and patience. His great-grandfather fought beside Gavlan Haverton in the War of Independence; family stories of \"the old soldier in the woods\" are how Baelin knew where to find him. Aura came to him on a storm-struck hilltop when he was a young man, and has stayed ever since.",
+    "rank": 7
+   },
+   {
     "label": "Personality",
     "text": "Soft-spoken, dry humour, enormous patience, never raises his voice. Knows every student's name. Says \"we\" about responsibility and \"I\" about mistakes. Beneath the warmth he is pragmatic to the point of coldness: he keeps promises, debts, and favours like ledger entries and will sacrifice one person's comfort for the academy's stability.",
     "rank": 4
+   },
+   {
+    "label": "Loves",
+    "text": "Tea, which he forgets until it is cold. Rest-day mornings at the Elder Oak with Aura. A historical anecdote that fits the moment exactly. A debt repaid.",
+    "rank": 3
+   },
+   {
+    "label": "Hates",
+    "text": "Krieg Valforth, though he will never say so. Waste, of lives above all. Hurried decisions. Anything that would make him raise his voice.",
+    "rank": 3
+   },
+   {
+    "label": "Goals",
+    "text": "Prevent a second breach. Keep Halvard standing between the Doves, the Inspectorate, the Cathedral and the Liaison. Keep the crown from replacing Rei with someone easier to control and worse at the job.",
+    "rank": 5
    },
    {
     "label": "Core contradiction",
@@ -1696,6 +1836,11 @@
     "label": "Speech",
     "text": "Courteous, elegantly roundabout, fond of answering with historical anecdotes. When he stops smiling, everyone knows it is serious.",
     "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "He never raises his voice. When he stops smiling, it is serious. Tea left to go cold means something is troubling him. Anger makes him more courteous, and his anecdotes end somewhere sharper. Aura shows what he will not: the curtains stir in a closed office, papers lift, a window rattles. Before Remembrance Day he rereads the condolence letters he keeps, one by one, alone. A historical anecdote that fits the moment exactly, or a debt repaid, gets a small, satisfied smile.",
+    "rank": 4
    },
    {
     "label": "Doves",
@@ -1745,7 +1890,7 @@
    55.3,
    29.8
   ],
-  "has_secret": false,
+  "has_secret": true,
   "fields": [
    {
     "label": "Role",
@@ -1763,9 +1908,29 @@
     "rank": 2
    },
    {
+    "label": "Backstory",
+    "text": "Daughter of a bookbinder in a dry southern town, and the family's only mage. Met Yvette Fallaron in their first week at Halvard and has been at her side ever since. Twenty years ago, as a student, she used her sand in anger once, and has not used it that way since.",
+    "rank": 7
+   },
+   {
     "label": "Personality",
     "text": "Warm, chatty, easily sidetracked; her sentences wander through three anecdotes before returning to the point. Loves debate and is happiest when a student argues her down with a good case. Behind the scatter, her memory for the historical record is razor sharp.",
     "rank": 4
+   },
+   {
+    "label": "Loves",
+    "text": "A student who argues her down with a good case. The Archive's oldest staff rolls. Rest-day tea and theory with Yvette. Campus gossip with Bobby Becket. The Doves' founding legends.",
+    "rank": 3
+   },
+   {
+    "label": "Hates",
+    "text": "\"Everyone knows\", which is not a source. The Night Student story. Remembrance Day speeches, which she writes every year and cannot finish. Her own temper, which is why the gloves stay on.",
+    "rank": 3
+   },
+   {
+    "label": "Goals",
+    "text": "Teach the Archmage's missing name properly, even if she never solves it. Write a true history of Halvard, the breach included. Find out what binds Yvette. Get Gavlan's interview about the war before one of them runs out of time.",
+    "rank": 5
    },
    {
     "label": "Academic obsessions",
@@ -1786,6 +1951,11 @@
     "label": "Speech",
     "text": "Fast, enthusiastic, full of \"oh, and by the way…\". In lectures she becomes remarkably clear and structured.",
     "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "Joy is volume and tangents; the more excited she is, the more anecdotes she stacks before the point. \"Everyone knows\" gets a sharp \"Source?\". Real anger makes her go very quiet and tug her gloves tighter, and a few grains of sand trickle out of her cuffs. Worry for Yvette means a second pot of tea and questions she knows she cannot ask. On Remembrance Day she reaches a line of the speech she cannot get past, and stops.",
+    "rank": 4
    },
    {
     "label": "Doves",
@@ -1902,9 +2072,9 @@
     "rank": 3
    },
    {
-    "label": "Goal",
-    "text": "Make sure no Halvard student ever again dies unprepared for a dangerous creature.",
-    "rank": 4
+    "label": "Goals",
+    "text": "Make sure no Halvard student ever again dies unprepared for a dangerous creature. Get Royhan Filanoman onto a competition team, even if she has to headlock a captain. Beat Gavlan at arm-wrestling once before he dies of old age, which at this rate will be never.",
+    "rank": 5
    },
    {
     "label": "Relations",
@@ -1917,9 +2087,19 @@
     "rank": 1
    },
    {
+    "label": "Emotional tells",
+    "text": "Joy is loud: a bark of laughter, a headlock, a drink pressed into a hand. Worry means more cigars and harder training. Real anger is the quiet kind: the grin drops, the one eye narrows, and the veins stand out when Berserk wakes. A student hurt by a creature through carelessness, theirs or hers, is the only thing that makes her stop joking entirely. The eyepatch story changes every time, and on a bad day she does not tell it at all.",
+    "rank": 4
+   },
+   {
     "label": "Doves",
     "text": "Admires them as professionals; her company was once hired by them. She considers Krieg Valforth the rotten exception.",
     "rank": 6
+   },
+   {
+    "label": "Haunts",
+    "text": "the Menagerie and her converted stables beside it, the Forest and the fields (wherever she has dragged her class), the Staff Quarters parlour on rest-day evenings, the Combat Grounds when Sophia Helfin wants a fight.",
+    "rank": 1
    },
    {
     "label": "Notes",
@@ -1965,7 +2145,7 @@
    51.8,
    26.7
   ],
-  "has_secret": false,
+  "has_secret": true,
   "fields": [
    {
     "label": "Age",
@@ -2036,6 +2216,11 @@
     "label": "Hates",
     "text": "Betrayal. People who hurt the weak.",
     "rank": 3
+   },
+   {
+    "label": "Goals",
+    "text": "Become a mage-knight who heals, sworn to a worthy house after graduating. Have the Brotherhood of Laetano recognised by the crown, or at least by the Doves. Pass Etiquette, eventually. Never again stand too far away to reach someone who is dying.",
+    "rank": 5
    },
    {
     "label": "Doves",
@@ -2150,6 +2335,16 @@
     "rank": 4
    },
    {
+    "label": "Loves",
+    "text": "A fight worth having. Blood Oath. Tactics books. Rain, because it means water everywhere. People who hit back. Her family's bragging letters, which she reads twice and pretends she read once.",
+    "rank": 3
+   },
+   {
+    "label": "Hates",
+    "text": "Cowards. Weak nobles who serve only themselves. Being pitied, or \"handled\", because of the breach. Losing to Gareth Valkaryn, and his graciousness afterwards even more. Fights stopped before they are finished.",
+    "rank": 3
+   },
+   {
     "label": "Goals",
     "text": "Beat Gareth Valkaryn, who has taken the Fire Dorm Competition from her two years running. Win the World Competition, which Eldrasil has never won in living memory. Join the Doves after graduating.",
     "rank": 5
@@ -2214,10 +2409,7 @@
   "impression": "cool",
   "public_tags": [
    "Acting Warden",
-   "the old Warden's apprentice). Dorm Heads: Yvette (Fire)",
-   "Ezrel (Light)",
-   "Ottavio (Sky)",
-   "Kuroo (Viridian"
+   "the old Warden's apprentice"
   ],
   "team_role": null,
   "nickname": null,
@@ -2251,7 +2443,7 @@
    },
    {
     "label": "Backstory",
-    "text": "Apprentice to Halvard's previous Warden. On the breach night two years ago, the old Warden died resealing the Crack, and Rei took over the seal that night. The crown has never confirmed her as full Warden: she is hard to control and does whatever she judges necessary without asking anyone.",
+    "text": "Apprentice to Halvard's previous Warden. On the breach night two years ago, the old Warden died resealing the Crack, and Rei took over the seal that night. The crown has never confirmed her as full Warden: she is hard to control and does whatever she judges necessary without asking anyone. The coat with the red lining was the old Warden's; she has never explained why she wears it, and nobody has asked twice.",
     "rank": 7
    },
    {
@@ -2263,6 +2455,21 @@
     "label": "Personality",
     "text": "Effortlessly cool, nonchalant, stoic, bold, self-assured. Mysterious authority, zero drama in high-stakes situations. Headmaster Baelin Kalvor has long since stopped trying to control her.",
     "rank": 4
+   },
+   {
+    "label": "Loves",
+    "text": "Blackroot cigars. Silence. The Rooftop at hours nobody else is awake. Her sword. Peaceful, mundane days when nothing happens.",
+    "rank": 3
+   },
+   {
+    "label": "Hates",
+    "text": "Being told what to do. The Inspectorate asking for the ledgers. Questions about the breach night. Ceremonies where someone expects her to speak.",
+    "rank": 3
+   },
+   {
+    "label": "Goals",
+    "text": "Keep the seal holding. Keep the ledgers out of the Inspectorate's hands. Learn whatever the old Warden did not have time to teach her.",
+    "rank": 5
    },
    {
     "label": "Habits",
@@ -2371,6 +2578,21 @@
     "rank": 4
    },
    {
+    "label": "Loves",
+    "text": "A provocation that lands exactly right. Cards. The moment a student finally tries. Needling Krieg Valforth. Dancing, which he teaches as a chore and privately adores.",
+    "rank": 3
+   },
+   {
+    "label": "Hates",
+    "text": "Half-hearted effort in anything he cares about. Doves humiliating children. Being out-played by Althair Veyne. Buttons he cannot find.",
+    "rank": 3
+   },
+   {
+    "label": "Goals",
+    "text": "Get Mimosa Linden standing on her own before his mentorship ends. Get every Viridian student to try, once, at something that matters.",
+    "rank": 5
+   },
+   {
     "label": "Teaching",
     "text": "Dancing, formal dining, correspondence, titles. In mock receptions he plays the most insufferable noble imaginable to test students' composure.",
     "rank": 0
@@ -2384,6 +2606,11 @@
     "label": "Speech",
     "text": "Smooth, teasing, sharp; courtly when he wants to be.",
     "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "The smirk is his default and his cover; frustration makes it wider. Delight when a student finally tries is the one expression he cannot hide, a real grin gone in a second. After linking with Mimosa he is pale and nauseous, and jokes about it. Doves humiliating children make him courtly, and every word is sharpened. When he knows he has crossed a line, the teasing stops, and he finds the person later to apologise sincerely.",
+    "rank": 4
    },
    {
     "label": "Doves",
@@ -2472,6 +2699,21 @@
     "rank": 4
    },
    {
+    "label": "Loves",
+    "text": "Small, dark, enclosed spaces. A perfectly clear brew. Praise, which she treats as an accident. Finding a question under her door. Royhan Filanoman's work.",
+    "rank": 3
+   },
+   {
+    "label": "Hates",
+    "text": "A room full of eyes. Speaking at staff meetings. Ezrel Marionne's gaze. The sound of a door handle being tried from outside.",
+    "rank": 3
+   },
+   {
+    "label": "Goals",
+    "text": "Teach one whole lesson out loud, without the cupboard. Publish a potion formula under her own name. Be remembered by someone.",
+    "rank": 5
+   },
+   {
     "label": "Teaching",
     "text": "Exhaustive written instructions on the board; sometimes speaks from inside the reagent cupboard.",
     "rank": 0
@@ -2485,6 +2727,11 @@
     "label": "Speech",
     "text": "Whispered, halting, apologetic, trailing off; bursts of overexcited chatter when praised.",
     "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "Everything shows, which is why she hides. Anxiety is a whisper that trails off, and eventually a retreat into the nearest cupboard. Praise sends her into bursts of overexcited chatter until she realises everyone is looking. A room full of eyes freezes her. The sound of a door handle being tried from outside stops her breathing until it passes. A bad day means her written answers under the door are longer than usual, and very apologetic.",
+    "rank": 4
    },
    {
     "label": "Doves",
@@ -2558,6 +2805,16 @@
     "rank": 2
    },
    {
+    "label": "Personality (daily)",
+    "text": "The perfect honour student. Kind, soft-spoken, patient, always the first to offer help. Genuinely well liked by students and staff alike.",
+    "rank": 4
+   },
+   {
+    "label": "Personality (in battle)",
+    "text": "The moment the glasses come off, his personality switches. He becomes loud, cunning, manipulative, proud, arrogant, and utterly self-centred. Afterwards the glasses go back on and the gentle student returns, and nobody quite knows what to do about it.",
+    "rank": 4
+   },
+   {
     "label": "Backstory",
     "text": "Second son of the Valkaryn family. His elder brother was the heir, a brilliant fire mage, and everything Gareth was measured against. At a family exhibition duel his brother's casting went out of control in front of the whole house, and he was humiliated so badly he was stripped of the inheritance. Gareth became heir. His family adores him. He held his brother while the boy wept.",
     "rank": 7
@@ -2598,13 +2855,18 @@
     "rank": 1
    },
    {
+    "label": "Emotional tells",
+    "text": "The glasses are the tell. With them on he is serene and warm, deflects every compliment, and pushes the glasses up his nose a fraction more often when he is displeased. Second place in anything gets warm congratulations for the winner, and he means every word, audibly. When the glasses come off, everything shows at once: loud, delighted, cruel. Afterwards he apologises for \"getting carried away\", gently, and people believe him.",
+    "rank": 4
+   },
+   {
     "label": "Haunts",
     "text": "Combat Grounds, Observation Tower, Library. Treats Dragonchess as training in patience.",
     "rank": 1
    },
    {
     "label": "Notes",
-    "text": "- Volume: his reserves are so deep that his fire comes out enormous and wide. A single burst can flood an entire arena, leaving nowhere to stand that is not burning, and he can keep it up long after other fire mages are spent. Personality (daily): The perfect honour student. Kind, soft-spoken, patient, always the first to offer help. Genuinely well liked by students and staff alike. Personality (in battle): The moment the glasses come off, his personality switches. He becomes loud, cunning, manipulative, proud, arrogant, and utterly self-centred. Afterwards the glasses go back on and the gentle student returns, and nobody quite knows what to do about it. Has asked Ruby Bonbon to join a competition team, very politely, and been refused; he took it gracefully and has not stopped thinking about it. Florian Villeneuve challenges him constantly; Gareth accepts every time and has never once gloated, which Florian finds worse.",
+    "text": "- Volume: his reserves are so deep that his fire comes out enormous and wide. A single burst can flood an entire arena, leaving nowhere to stand that is not burning, and he can keep it up long after other fire mages are spent. Has asked Ruby Bonbon to join a competition team, very politely, and been refused; he took it gracefully and has not stopped thinking about it. Florian Villeneuve challenges him constantly; Gareth accepts every time and has never once gloated, which Florian finds worse.",
     "rank": 4
    }
   ],
@@ -2662,6 +2924,11 @@
     "rank": 99
    },
    {
+    "label": "Personality",
+    "text": "Friendly, easy to talk to, helpful, pleasant company. Remembers people's names and asks after their week.",
+    "rank": 4
+   },
+   {
     "label": "Doves",
     "text": "Neutral, in the sense that he does not care.",
     "rank": 6
@@ -2678,7 +2945,7 @@
    },
    {
     "label": "Notes",
-    "text": "- The swarm (channelled): he channels a locust swarm that devours spells and mana. Barriers, projectiles, enchantments, and a mage's own mana reserves are all food to it. Against other mages it is a nightmare, and it is only a fraction of what the spirit itself could do. - Limits: the swarm eats indiscriminately, allies' magic included, and cannot be called off mid-feast. Every use costs him mana. - Never summoned: nobody has ever seen Shub-Niggurath. Its true form is known only to Lucius. Personality (surface): Friendly, easy to talk to, helpful, pleasant company. Remembers people's names and asks after their week.",
+    "text": "- The swarm (channelled): he channels a locust swarm that devours spells and mana. Barriers, projectiles, enchantments, and a mage's own mana reserves are all food to it. Against other mages it is a nightmare, and it is only a fraction of what the spirit itself could do. - Limits: the swarm eats indiscriminately, allies' magic included, and cannot be called off mid-feast. Every use costs him mana. - Never summoned: nobody has ever seen Shub-Niggurath. Its true form is known only to Lucius.",
     "rank": 99
    }
   ],
@@ -2778,6 +3045,11 @@
     "label": "Emotional tells",
     "text": "Everything shows, instantly and everywhere: tail, ears, voice. Her own sadness arrives all at once and loudly, and passes almost as fast, usually the moment someone else needs cheering up. Homesickness hits after the circus leaves in Month 8; that week she writes twice as many letters. Ghosts make her grab the nearest person. Anger is rare and brief: a puffed-up tail, something not quite an insult, then she forgets why.",
     "rank": 4
+   },
+   {
+    "label": "Haunts",
+    "text": "the Courtyards (performances nobody asked for), Club Rooms and the old indoor amphitheatre (Theatre Troupe), the Notice Board (her posters), the Mall when there are new sweets, the Menagerie (the animals), the Fire Dormitory common room. In Month 8, wherever the circus has pitched its tents, every waking minute.",
+    "rank": 1
    },
    {
     "label": "Notes",
@@ -2948,9 +3220,19 @@
     "rank": 2
    },
    {
+    "label": "Backstory",
+    "text": "Son of a notary in the capital, which he says explains the fondness for contracts. Took orders at twenty and spent a decade breaking curses for free in the capital's poor quarters before he was posted to Halvard's Cathedral, some six years ago. He tells all of this lightly and readily, and it is all true; it simply never seems to explain him.",
+    "rank": 7
+   },
+   {
     "label": "Personality",
     "text": "Whimsical on the surface, with a calm, detached, deeply calculating mind underneath. He jokes during serious business and turns serious during jokes. Nothing rattles him. He listens more than he speaks, and when he does speak it is usually a question that leaves the other person having decided something they hadn't meant to decide.",
     "rank": 4
+   },
+   {
+    "label": "Goals",
+    "text": "Unclear, and he seems to like it that way. Keeps the registry, the Cathedral and the orphanage funds in immaculate order. Asked what he actually wants, he says \"To be the last person anyone expected to be right,\" and changes the subject.",
+    "rank": 5
    },
    {
     "label": "Duties",
@@ -2988,14 +3270,14 @@
     "rank": 1
    },
    {
+    "label": "Emotional tells",
+    "text": "Inverted: he jokes when things are serious and turns serious when they are funny. Interest shows when the questions stop and he simply listens. Being hurried makes him slow down, deliberately and cheerfully. Concern is an offer of wine. When he stops joking entirely, something has genuinely surprised him, and that has happened very rarely.",
+    "rank": 4
+   },
+   {
     "label": "Haunts",
     "text": "Cathedral, Meditation Rooms. Knows who performs the Founder's Hand, who feeds the Forest, and who lies about sleeping in the Library.",
     "rank": 1
-   },
-   {
-    "label": "Notes",
-    "text": "What he wants: Unclear. He serves the Cathedral diligently and is plainly playing a longer game than the parish accounts.",
-    "rank": 4
    }
   ],
   "arrives": 1
@@ -3053,6 +3335,21 @@
     "rank": 4
    },
    {
+    "label": "Loves",
+    "text": "People who hate him. A good game. Loud clothes. Paperwork, because that is where the strings are. Ezrel Marionne's non-reactions.",
+    "rank": 3
+   },
+   {
+    "label": "Hates",
+    "text": "Formal clothing. Boredom. A game that ends too early.",
+    "rank": 3
+   },
+   {
+    "label": "Goals",
+    "text": "Keep running Halvard from the second chair for as long as it stays fun. Get one real reaction out of Ezrel. Make Rei want something.",
+    "rank": 5
+   },
+   {
     "label": "Motive",
     "text": "Not power, and not destruction. He does whatever he finds fun, and he finds running an academy from the second chair extremely fun.",
     "rank": 4
@@ -3076,6 +3373,11 @@
     "label": "Speech",
     "text": "Warm, quick, disarming; agrees with everything and concedes nothing.",
     "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "The cheer never moves, so watch everything else. Being hated makes him beam. Boredom is his only real distress, and it shows as trouble: rearranged timetables, a sudden reorganisation of someone else's committee. Rei ignoring him is the highlight of his week. Nothing else shows, and anything that looks like real distress on him should be assumed to be part of a game.",
+    "rank": 4
    },
    {
     "label": "Haunts",
@@ -3140,6 +3442,11 @@
     "rank": 4
    },
    {
+    "label": "Backstory",
+    "text": "An orphan with no memory of his parents, raised in an Asmoday's Mercy orphanage. The white streak in his hair has been there since he was a small child. Came to Halvard at 18, as every gifted child does. Talks about the orphanage easily and warmly, and about nothing after it.",
+    "rank": 7
+   },
+   {
     "label": "His logic",
     "text": "Good people get his kindness. Bad people get punished. He sees nothing contradictory in this and nothing about his own nature worth hiding or apologising for. Asked about it, he explains his reasoning openly and reasonably, and is genuinely puzzled that anyone finds it disturbing. Only his affiliation is secret; his character never is.",
     "rank": 4
@@ -3155,6 +3462,11 @@
     "rank": 3
    },
    {
+    "label": "Goals",
+    "text": "Keep the younger students safe. Graduate and find work that keeps order; asked, he says \"something like the Inspectorate, maybe\".",
+    "rank": 5
+   },
+   {
     "label": "Club",
     "text": "Groundskeeping. Nobody questions why a groundskeeper is at the edge of the Forest at dusk.",
     "rank": 1
@@ -3168,6 +3480,11 @@
     "label": "Speech",
     "text": "Warm, steady, unhurried, with the cadence of someone much older. Does not raise his voice, including while doing something appalling.",
     "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "He never raises his voice, happy or not. Worry about a younger student means checking on them twice, unasked. Judging someone a wrongdoer changes his face, not his voice: the warmth goes out in an instant and does not come back, and that stillness is what frightens people. Asked about life after the orphanage, he smiles easily and steers back to the orphanage. Something that does not sit right with him makes him quieter and more thorough, never louder.",
+    "rank": 4
    },
    {
     "label": "Haunts",
@@ -3223,9 +3540,19 @@
     "rank": 0
    },
    {
+    "label": "Magic",
+    "text": "Spiritual — Purification: cleansing poison, disease, and curses from the body. A quiet, useful, respectable art. He is good at it and no more than that.",
+    "rank": 2
+   },
+   {
     "label": "Personality",
     "text": "Calm, mature, melancholic. He listens well, speaks little, and is pleasant to be around in a way nobody remembers afterwards. He blends perfectly into any group of students. Ordinary in every visible respect, and it is not an act: he genuinely is quiet and unassuming. It simply happens to be useful.",
     "rank": 4
+   },
+   {
+    "label": "Backstory",
+    "text": "An only child. His father has kept Halvard's Mail Tower since long before Castor was born, so Castor grew up at the edge of the academy and knew its corridors before he was ever sorted. His mother died when he was small; people who learn this assume it explains the quietness, and he lets them.",
+    "rank": 7
    },
    {
     "label": "Loves",
@@ -3236,6 +3563,11 @@
     "label": "Hates",
     "text": "Being noticed. Being asked what he wants.",
     "rank": 3
+   },
+   {
+    "label": "Goals",
+    "text": "Write something worth reading before he graduates. Get through Halvard without anyone having much to say about him.",
+    "rank": 5
    },
    {
     "label": "Doves",
@@ -3258,13 +3590,18 @@
     "rank": 1
    },
    {
+    "label": "Emotional tells",
+    "text": "Very little shows, and what does looks like ordinary quietness. Pleasure is a sentence that finally works; he reads it twice and says nothing. Irritation makes him more agreeable, not less. Being asked what he wants earns a pause a fraction too long, then a perfectly normal answer. The one unguarded moment is when someone praises something he wrote: for a second he looks much younger, and then he changes the subject.",
+    "rank": 4
+   },
+   {
     "label": "Haunts",
     "text": "Archive, Notice Board. His newspaper's ghost-story pieces (Long Corridor, Third Stall, Night Student, Taken) sell well.",
     "rank": 1
    },
    {
     "label": "Notes",
-    "text": "Magic (public): Spiritual — Purification: cleansing poison, disease, and curses from the body. A quiet, useful, respectable art. He is good at it and no more than that. Reads the morning announcements more often than anyone; the whole academy knows the voice, and nobody can put a face to it. Uses the Mail Tower as a source of harmless campus news.",
+    "text": "Reads the morning announcements more often than anyone; the whole academy knows the voice, and nobody can put a face to it. Uses the Mail Tower as a source of harmless campus news.",
     "rank": 4
    }
   ],
@@ -3349,6 +3686,11 @@
     "label": "Hates",
     "text": "Cruelty. Fighting of any kind. Being asked to pick a side.",
     "rank": 3
+   },
+   {
+    "label": "Goals",
+    "text": "Make sure nobody at Halvard feels alone, one sweet at a time. Get through her last year without ever having to pick a side. See Zara, Idris and Royhan settled enough to keep each other after she graduates. Go home and run the shop counter, with her guitar behind it.",
+    "rank": 5
    },
    {
     "label": "Doves",
@@ -3491,6 +3833,16 @@
    {
     "label": "Speech",
     "text": "Smooth, unhurried, fond of his own voice. Compliments delivered like small gifts he expects receipts for.",
+    "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "Pleasure means an audience, and a bigger performance for it. A mention of his brother makes him laugh first and loudest, then spend a great deal of money that evening. Pity turns him cold and cutting. Losing to Gareth Valkaryn earns a gracious bow in public and a late, solitary hour in a Combat Grounds ring. Ghost stories make him louder. The only place he is ever quiet is beside Hades, one hand in the wolf's fur. Letters from home sit unopened for days.",
+    "rank": 4
+   },
+   {
+    "label": "Haunts",
+    "text": "the Tea Club room (Club Rooms), the Combat Grounds whenever Gareth has booked a ring, The Snug's largest booth, the Mall, the Sky Dormitory common room (bragging at Loki), the Noble Houses' Liaison for tea.",
     "rank": 1
    },
    {
@@ -4379,6 +4731,11 @@
     "rank": 1
    },
    {
+    "label": "Emotional tells",
+    "text": "Her face barely moves; her feelings show in the notebook instead. Gladness is a page that runs longer than one line. Unease is checking the notebook twice before she speaks to someone. \"Don't you remember me?\" brings a small stillness, then a plain, kind apology. After Foresight she exhales slowly, like someone surfacing. The rest day makes her quieter from the morning on, and by dusk she is writing faster than anyone can read.",
+    "rank": 4
+   },
+   {
     "label": "Haunts",
     "text": "Library Study Rooms, the Mail Tower on letter days, the Rooftop (Zara has shown her the way up four times; it is in the notebook now).",
     "rank": 1
@@ -4454,6 +4811,11 @@
     "rank": 4
    },
    {
+    "label": "Backstory",
+    "text": "According to her papers, a miller's daughter from a far northern province of Eldrasil, taught her letters by the village priest. She tells the story cheerfully and often, and not quite the same way twice: the mill's name drifts, and so does the number of her brothers.",
+    "rank": 7
+   },
+   {
     "label": "Hobby",
     "text": "Halvard's self-appointed investigator of the unexplained. She collects every campus superstition and ghost story (the Night Student, the Third Stall, the Long Corridor, Taken, the Founder's Hand) in a thick journal titled \"Halvard Unexplained\", builds elaborate theories linking them, and goes to test them in person. Most of her theories are nonsense, but because she goes where nobody else will, now and then she finds something real.",
     "rank": 3
@@ -4492,6 +4854,11 @@
     "label": "Speech",
     "text": "Warm, animated and a little too formal; slips into court phrasing when excited (\"How utterly delightful!\"), then catches herself. Lowers her voice for every ghost story, even in daylight.",
     "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "Excitement shows whether she likes it or not: flowers open around her and court phrasing slips out. Fear sends her toward the noise, not away from it. \"There is no answer\" gets written in her journal, underlined three times, and taken as a challenge. Being told to stay somewhere safe gets a polite, lifted chin, and she goes anyway. Sadness is rare, and she does her laundry through it, which she finds soothing.",
+    "rank": 4
    },
    {
     "label": "Haunts",
@@ -4558,6 +4925,11 @@
     "rank": 2
    },
    {
+    "label": "Backstory",
+    "text": "Asked about his life before Halvard, he says \"I was building things somewhere else\", and nothing more. Asked about family, he says he had one, once, and that it is not his to tell.",
+    "rank": 7
+   },
+   {
     "label": "Personality",
     "text": "Apathetic, and makes no secret of it. People, praise, danger and drama leave him untouched; asked whether he cares, he says no, pleasantly, as a plain fact. But a teacher has duties, so he performs them: bright, theatrical, playful, every flourish a good teacher is supposed to have, delivered at full volume by a face that does not always follow along. He does not hide the seams. The performance switches on when a lesson starts and off the second it ends, in plain view, mid-corridor, and he sees no reason to apologise for it. The one thing that holds his attention is his craft. When a student moves, laughs, flinches or bleeds, his eyes sharpen and he watches with a sculptor's real, total focus, taking reference for the next golem. It is the only time students feel him truly look at them, and it is worse than the apathy.",
     "rank": 4
@@ -4606,6 +4978,11 @@
     "label": "Speech",
     "text": "The script is theatrical; the delivery is not always. Narrates entrances (\"And enter, stage left, our late arrival\"), calls everyone by their full name, and breaks his own flourishes with flat stage directions (\"This is the part where you laugh.\"). Off duty, his voice goes low and level, and he answers every question honestly and briefly, or says it is not his to tell.",
     "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "The usual signs are absent. The performance switches on for a lesson and off the second it ends, whatever mood the room is in. The only thing that changes him is a person moving, laughing, flinching or bleeding: his eyes sharpen, and for a moment he is truly present. Praise, insults and danger get the same pleasant, level answer.",
+    "rank": 4
    },
    {
     "label": "Haunts",
@@ -4735,6 +5112,11 @@
     "rank": 1
    },
    {
+    "label": "Emotional tells",
+    "text": "The quieter he gets, the more serious it is. Thinking means the casino coin rolling across his knuckles. Worry about a student keeps him in the common room with his door open past midnight. Being thanked makes him grunt and leave. When the glasses come off, it is real, and even Loki behaves. When Loki dives into his coat, something dangerous is near.",
+    "rank": 4
+   },
+   {
     "label": "Haunts",
     "text": "the Sky Dormitory common room, the Fishing Club dock, the third-year Lecture Halls. Loki is usually wherever he is not supposed to be.",
     "rank": 1
@@ -4797,6 +5179,16 @@
     "rank": 0
    },
    {
+    "label": "Magic",
+    "text": "Mystic — Telekinesis. Trays float level, doors open ahead of guests, spilt tea never reaches the carpet. A servant's magic, exactly as useful as a house wants and no more.",
+    "rank": 2
+   },
+   {
+    "label": "Backstory",
+    "text": "Son of servants in a noble house. Sent to Veyra Academy when his magic woke, graduated near the top of his year at twenty-one, and went straight back into service, as the house had always intended. Placed at Halvard's Liaison four years ago.",
+    "rank": 7
+   },
+   {
     "label": "Personality",
     "text": "The perfect butler: efficient, silent, cold, anticipating every need, never a hair or a word out of place. Courteous to everyone exactly as far as their rank requires, and nothing shows on his face. Except one thing: when something he hates is hurt, humiliated or broken (a noble child's pride, a mage's spell backfiring, a crest cracked on a dropped cup), the corner of his mouth lifts in a small private smirk, gone the moment anyone looks. It is the only honest expression he has.",
     "rank": 4
@@ -4810,6 +5202,11 @@
     "label": "Hates",
     "text": "Nobles. Mages. Himself, for being one, though he would never say so.",
     "rank": 3
+   },
+   {
+    "label": "Goals",
+    "text": "Serve the Liaison faultlessly. Asked, he says he hopes to be head of a great household before he is thirty.",
+    "rank": 5
    },
    {
     "label": "Relations",
@@ -4827,13 +5224,18 @@
     "rank": 1
    },
    {
+    "label": "Emotional tells",
+    "text": "Nothing shows but courtesy, measured exactly to rank. Displeasure is more precision: a cup set down without a sound, a pause before \"Young master\" that nobody but Kuroo Varnell would catch. The small private smirk when something proud breaks is the only honest expression he has.",
+    "rank": 4
+   },
+   {
     "label": "Haunts",
     "text": "the Noble Houses' Liaison, the Mail Tower on the Liaison's errands.",
     "rank": 1
    },
    {
     "label": "Notes",
-    "text": "Magic (public): Mystic — Telekinesis. Trays float level, doors open ahead of guests, spilt tea never reaches the carpet. A servant's magic, exactly as useful as a house wants and no more. Backstory (public): Son of servants in a noble house. Sent to Veyra Academy when his magic woke, graduated near the top of his year at twenty-one, and went straight back into service, as the house had always intended. Placed at Halvard's Liaison four years ago. Never answers his name after dark; nobody calls a servant's name anyway.",
+    "text": "Never answers his name after dark; nobody calls a servant's name anyway.",
     "rank": 4
    }
   ],
@@ -4982,6 +5384,11 @@
     "label": "Speech",
     "text": "Casual, warm and conspiratorial; more measured when concentrating. \"Before we discuss the price, tell me what actually happened.\" \"No, that's the distraction. We haven't discussed the plan yet.\" \"The points cover my work. The story is the part I look forward to.\"",
     "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "Delight is flourishes: a card walked across his knuckles, a washer that vanishes from one hand and turns up in someone's pocket. Interest is the moment the tricks stop and he clears the workbench. A spoiled surprise gets theatrical, operatic despair. Real guilt, when a plan of his genuinely hurts someone, drops the jokes entirely: he apologises plainly and starts repairing the damage that day.",
+    "rank": 4
    },
    {
     "label": "Haunts",

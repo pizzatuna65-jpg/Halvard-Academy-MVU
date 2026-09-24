@@ -32,13 +32,14 @@ GROUPS = [('year1', 'Halvard students — Year 1', lambda n: n['group'] == 'Year
 
 # ---- what each NPC is missing (fields absent from the lore, not the ones kept in <narrator_only>)
 KEY = ['Personality', 'Loves', 'Hates', 'Goals', 'Backstory', 'Haunts', 'Magic', 'Relations']
+BY_DESIGN = {('Althair', 'Backstory')}   # canon: never settle it
 def gaps(nid):
     t = LORE.get(nid, '')
     pub = re.sub(r'<narrator_only>[\s\S]*?</narrator_only>', '', t)
     nar = ' '.join(re.findall(r'<narrator_only>([\s\S]*?)</narrator_only>', t))
     miss, secret = [], []
     for k in KEY:
-        if re.search(r'^' + k + r'\s*:', pub, re.M): continue
+        if re.search(r'^' + k + r'(\s*\([a-z ]+\))?\s*:', pub, re.M) or (nid, k) in BY_DESIGN: continue
         (secret if re.search(r'(^|\s)' + k + r'\s*:', nar) else miss).append(k)
     return miss, secret
 first = lambda s: re.split(r'(?<=[.;])\s', s.strip())[0] if s else ''
@@ -107,17 +108,32 @@ w(f"""- Rank 0–10 per NPC. Time together fills an XP bar: a real talk ({BR['ki
   {BR['share_real_from']} need the real rank; secrets never):""")
 for t, s in BR['share']: w(f'  - Rank {t}: {s}')
 w('- **Dossier fields unlock by rank** (what the player reads): Appearance/Role 0 · Age, Speech, Club, Haunts 1 · Magic, Skills, Equipment 2 ·'
-  ' Loves, Hates, Hobby 3 · Personality, Emotional tells, Notes 4 · Goals, Current trouble 5 · Relations, Doves 6 · Backstory, Family, Home 7 · Trauma 8.'
+  ' Loves, Hates, Hobby 3 · Personality, Emotional tells, Notes 4 · Goals, Current trouble 5 · Relations, Doves 6 · Backstory, Family, Home 7 · Trauma 8 (optional; most NPCs have none).'
   ' So a rank-up event is the natural moment the player learns that rank\'s fields.')
 w('- **What the rank allows** (told to the narrator):')
 for r, s in BR['perks'].items(): w(f'  - Rank {r}: {s}')
 w('- **Default event theme per rank-up** (used when no event is written):')
 for r, s in BR['themes'].items(): w(f'  - {r}→{int(r) + 1}: {s}')
+# 1.3.0 (owner brainstorm 2026-09-25): rewards, special bond models, reputation
+BW = json.load(open(P('data/bond_rewards.json'), encoding='utf-8'))
+KR = BW['krieg']
+w("""- **Rewards (decided 2026-09-25; full list in `bond_rewards.md`):**
+  - Rank 1–4 events are pure story; no items or perks.
+  - The **4→5** event gives the NPC's **exclusive gift**: an item sold nowhere, and always useful, never just a memento.
+  - The **9→10** event gives the NPC's **unique Rank 10 benefit** (gameplay, QoL, points, reputation or story).
+  - There are no endings of any kind in this campaign; high ranks open information, never a "route".
+- **Special bond models** (details in `bond_rewards.md`):
+  - **Mask → truth** (""" + ', '.join(BW['mask']) + """): the 7→8 event gives a **nudge**, one Fact pointing at the NPC's arc. The 8→9
+    event can only run once their truth has come out in play; without that, the bond stays at Rank 8, and that is fine.
+  - **Krieg:** Rank 1 comes from his introduction. After that his bond gains **+""" + str(KR['weekly_xp']) + """ XP every Monday**, only while {{user}}'s
+    Doves reputation is **≥ +""" + str(KR['min_doves']) + """**; he gives no XP for talks, hangouts or gifts.
+- **Reputation** (Academy, Student, Doves; −5 to +5, tiered Rep XP; full rules in `reputation.md`) modifies bond XP: staff
+  NPCs at Academy ±3, student NPCs at Student ±3/+5, and anti-Dove NPCs react against high Doves reputation.""")
 w('')
 
 w('## 5. Bond event format\n')
 doc = open(P('docs/BOND_EVENTS.md'), encoding='utf-8').read()
-w(doc[doc.index('## Format'):doc.index('## Adding them to the card')].replace('## Format', '').strip() + '\n')
+w(doc[doc.index('## Format'):doc.index('## Rewards and special bonds')].replace('## Format', '').strip() + '\n')
 w('Existing scripted events: ' + (', '.join(f"{e['npc']} {e['rank']}→{e['rank'] + 1}" for e in EV) or 'none yet') + '.\n')
 
 w('## 6. NPC roster (one line each; full lore in the group files)\n')
@@ -135,16 +151,21 @@ for gid, gname, pred in GROUPS:
     w('')
 
 w('## 7. Known gaps (fields missing from the lore; secrets kept in <narrator_only> are not gaps)\n')
-w('Likely by design: rival academy teams and Doves are kept minimal; Bobby is a non-mage (no Magic); staff often lack Loves/Hates/Goals.\n')
-for gid, gname, pred in GROUPS:
-    rows = []
+rows = []
+for gid, gname, pred in GROUPS[:5]:          # rival academy teams have no bond system (owner, 2026-09-25): no gaps to fill
     for i, n in npcs.items():
         if not pred(n): continue
         miss, sec = gaps(i)
         if i == 'Bobby': miss = [x for x in miss if x != 'Magic']   # a non-mage by design
         if miss: rows.append(f"- {i}: missing {', '.join(miss)}" + (f" (in secrets: {', '.join(sec)})" if sec else ''))
-    if rows: w(f'**{gname}**\n' + '\n'.join(rows) + '\n')
-
+w(('Still missing:\n' + '\n'.join(rows) + '\n\n' if rows else 'The 2026-09 pass filled every gap for Halvard students, staff, Doves, Cathedral and Liaison. What remains:\n\n') + """- **Label only, not missing:** Castor `Magic (public)`, Kanae `Personality (public)`, Gareth `Personality (daily)`,
+  Caine `Backstory (public)` / `Magic (public)`, Lucius `Personality (surface)`. The fields exist under a qualified label.
+- **Althair:** Backstory stays empty on purpose (canon: never settle it).
+- **Etnie:** her past is now an ordinary `Backstory` field, so it unlocks at Rank 7 like everyone else's; only the plan to
+  fail her third year stays in `<narrator_only>`.
+- **Rival academy teams (Myrdath, Veyra, Ashvale):** kept minimal by design. They appear only in specific events and have
+  **no bond system**, so no bond events and no Loves/Hates/Goals/Haunts are needed for them.
+""")
 w('## 8. Group lore files (attach only what the discussion needs)\n')
 files = []
 for gid, gname, pred in GROUPS:
@@ -154,6 +175,10 @@ for gid, gname, pred in GROUPS:
     open(os.path.join(OUT, f'lore_{gid}.md'), 'w', encoding='utf-8').write(body)
     files.append((gid, gname, ids, body))
     w(f"- `lore_{gid}.md` — {gname}: {', '.join(ids)} ({tok(body)})")
+for f, d in (('bond_rewards.md', 'Rank 5 gift and Rank 10 benefit for every bonded NPC, plus the mask → truth and Krieg bond models'),
+             ('reputation.md', 'Academy / Student / Doves reputation: levels, Rep XP triggers, effects per level'),
+             ('training.md', 'Mana pool and Stamina training: capped gains (at most 2× the starting value in total, about one academic year to max), partner bonuses')):
+    w(f'- `{f}` — {d}')   # docs/design/ (Indonesian; attach with the brief)
 brief = '\n'.join(b) + '\n'
 open(os.path.join(OUT, 'NPC_BRAINSTORM_BRIEF.md'), 'w', encoding='utf-8').write(brief + f'\nThis brief: {tok(brief)}.\n')
 print('brief', tok(brief), '|', ', '.join(f'{g} {tok(bd)}' for g, _, _, bd in files))

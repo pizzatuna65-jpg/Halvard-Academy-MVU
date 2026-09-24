@@ -67,7 +67,13 @@ export const Schema = z.object({
       Club: Str(''),
       Combat_role: Str(''),   // 1.2.0: set by the story at the first Combat class (the teacher assigns it), not by the Builder
       Goal: Str(''),
-      Reputation: z.object({ Public: Int(-100, 100, 0), Dorm: Int(-100, 100, 0) }).prefault({}),
+      // 1.3.0 (owner): three reputations, level -5..+5 computed by the engine from signed Rep XP ($xp, clamped at +-125).
+      // The narrator reports what earned or cost reputation in /Rep_events. Public / Dorm are the pre-1.3.0 meters, read once for migration.
+      Reputation: z.object({
+        _Academy: Int(-5, 5, 0), _Student: Int(-5, 5, 0), _Doves: Int(-5, 5, 0),
+        $xp: z.object({ Academy: Int(-125, 125, 0), Student: Int(-125, 125, 0), Doves: Int(-125, 125, 0) }).prefault({}),
+        Public: z.any().optional(), Dorm: z.any().optional(),
+      }).prefault({}),
     }).prefault({}),
 
     Vitals: z.object({
@@ -105,6 +111,9 @@ export const Schema = z.object({
     }).prefault({}),
     // 1.1.0: weather conditions (Soaked, Chilled, Overheated, Head cold). The engine adds and clears them; the story may remove one.
     Conditions: Rec(v => ({ Effect: s(v.Effect), Since: s(v.Since) }), 'Effect'),
+    // 1.3.0 training (engine): per track the starting value (base), what training has added in total and this week
+    $Training: z.record(z.string(), z.any().transform(v => ({ base: n(v && v.base, 0, 99999, 0), gain: n(v && v.gain, 0, 99999, 0),
+      w: n(v && v.w, -1, 1e9, -1), wg: n(v && v.wg, 0, 99999, 0) }))).prefault({}).catch({}),
   }).prefault({}),
 
   Magic: z.object({
@@ -228,6 +237,15 @@ export const Schema = z.object({
   Interactions: z.array(z.any().transform(v => (typeof v === 'object' && v !== null
     ? { With: s(v.With), Kind: s(v.Kind).trim().toLowerCase(), Gift: s(v.Gift).trim().toLowerCase() } : { With: s(v), Kind: 'talk', Gift: '' }))).prefault([]).catch([]),
 
+  // 1.3.0: what earned or cost reputation this reply (narrator), training sessions (narrator), one-use perks spent (narrator);
+  // the engine applies them and empties the lists
+  Rep_events: z.array(z.any().transform(v => (typeof v === 'object' && v !== null
+    ? { Rep: s(v.Rep).trim(), XP: n(v.XP, -125, 125, 0), Kind: s(v.Kind).trim().toLowerCase(), Why: s(v.Why) } : { Rep: '', XP: 0, Kind: '', Why: s(v) }))).prefault([]).catch([]),
+  Training: z.array(z.any().transform(v => ({ Track: s(typeof v === 'object' && v !== null ? v.Track : v).trim().toLowerCase() }))).prefault([]).catch([]),
+  Perk_use: StrList(10),
+  // 1.3.0 bond rewards held (engine-written, read-only for the AI): { "<name>": { From, Kind: gift|rank10, Effect, Uses } }; Uses 0 = not limited
+  _Perks: Rec(v => ({ From: s(v.From), Kind: s(v.Kind) === 'rank10' ? 'rank10' : 'gift', Effect: s(v.Effect), Uses: Math.round(n(v.Uses, 0, 99, 0)) }), 'Effect'),
+
   _Log: StrList(12),
 
   $ui: z.object({
@@ -254,6 +272,7 @@ export const Schema = z.object({
     bondpace: Enum(['standard', 'fast', 'brisk', 'slow'], 'standard'),
     romrank: Int(0, 11, 8),                                            // romance opens at this rank (0 any, 11 off)
     bev: z.any().prefault({}).catch({}),
+    perks_used: StrList(60),                                          // 1.3.0: one-use perks already spent ("Council pardon (Irene), M3 W2 Tue")
   }).prefault({}),
 
   $eng: z.object({
@@ -265,6 +284,8 @@ export const Schema = z.object({
     grads: StrList(10),
     cohorts: StrList(10),  // 1.0.3: campaign years whose new first-years already arrived ("Y2")    // 1.0.3: campaign years whose graduates already left ("Y1")   // 1.0.3: competition prizes already paid ("Kingdom-Y1")
     ver: Str(''),          // 1.0.3: engine version that last wrote this state (for future save migrations)
+    repw: z.any().prefault(null).catch(null),                    // 1.3.0: repeatable Rep XP gained this week { w, Academy, Student, Doves }
+    repv: z.coerce.number().prefault(0).catch(0),                // 1.3.0: 1 once the pre-1.3.0 Public / Dorm meters were migrated
     rum: z.record(z.string(), z.any()).prefault({}).catch({}),   // 1.1.0: rumour metadata { text: { born, fate } }
     wxs: z.any().prefault(null).catch(null),                     // 1.1.0: weather exposure counters and head-cold bookkeeping
     bweek: z.record(z.string(), z.any()).prefault({}).catch({}),  // 1.2.2: gifts / help per bond this week

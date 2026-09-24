@@ -49,6 +49,20 @@ conditions are also the hint that tells the player where to go.
 
 Choices change **Trust** (or Tension); the rank always rises once the event has played out.
 
+## Rewards and special bonds (1.3.0)
+
+The rewards live in `data/bond_rewards.json` (approved list: `docs/design/bond_rewards.md`), not in the event text:
+
+- **4→5** gives the NPC's gift and **9→10** their Rank 10 benefit. The engine appends the reward (and its narrator-only side) to
+  that event's directions in `<now>`, scripted or default, and records it in `_Perks` when the rank rises (with any effect:
+  training bonus, one-time jump, reputation level, monthly points, one-use token). You may still name it in `Hasil:`.
+- **Mask → truth** (Castor, Kanae, Caine): the engine appends the nudge to the **7→8** event and adds its Fact when the rank
+  rises. The **8→9** event only opens once one of that NPC's secrets is in `Campus_State.Secrets_revealed` ("Castor.identity");
+  until then the bond stays at Rank 8.
+- **Krieg**: his 0→1 event (the introduction) is ready as soon as he appears; afterwards his bar fills only on Mondays, while
+  Doves reputation is +1 or better. Talks, hangouts and gifts give him nothing.
+- Rival academy teams have no bond system: do not write events for them.
+
 ## Adding them to the card
 
 1. Put the entries in a lorebook and export it as JSON (or write them in a `.txt`, each event starting with its

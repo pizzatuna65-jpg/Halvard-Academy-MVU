@@ -50,7 +50,8 @@ for line in N[97]['content'].split('\n'):
     m = re.match(r'(Staff|Facilities|Cathedral|Doves|Liaison|Year \d):\s*(.*)', line)
     if not m: continue
     group = m.group(1)
-    for seg in re.split(r';\s*(?![^()]*\))', m.group(2).rstrip('.')):
+    # 1.3.0: the list ends at the first sentence after a closing bracket (the Staff line goes on: "). Dorm Heads: Yvette (Fire), ...")
+    for seg in re.split(r';\s*(?![^()]*\))', re.split(r'(?<=\))\.\s', m.group(2))[0].rstrip('.')):
         r = parse_attr_block(seg)
         if r:
             who, info = r; info['group'] = group
@@ -70,9 +71,12 @@ def split_fields(text):
     for line in text.split('\n')[1:]:
         line = line.strip()
         if not line: continue
-        m = re.match(r'^([A-Z][A-Za-z /]{1,24}):\s*(.+)$', line)
+        # 1.3.0: a qualified label ("Magic (public)", "Personality (daily)") unlocks at its field's rank. The dossier drops
+        # "(public)" / "(surface)", which would hint at a hidden side, and keeps the others ("Personality (in battle)").
+        m = re.match(r'^([A-Z][A-Za-z /]{1,24}?)(?:\s*\(([a-z ]{1,16})\))?:\s*(.+)$', line)
         if m and (m.group(1) in RANK or len(m.group(1).split()) <= 2):
-            fields.append([m.group(1), m.group(2).strip()])
+            q = m.group(2)
+            fields.append([m.group(1) if not q or q in ('public', 'surface') else f'{m.group(1)} ({q})', m.group(3).strip()])
         else:
             notes.append(line)
     if notes: fields.append(['Notes', ' '.join(notes)])
@@ -90,8 +94,9 @@ for u, e in sorted(N.items()):
     for label, val in split_fields(clean):
         val = re.sub(r'\s{2,}', ' ', val).strip()
         if not val: continue
-        rank = RANK.get(label, MIN_RANK_ANY)
-        if f'{nid}.{label}' in FOVR: rank = FOVR[f'{nid}.{label}']
+        base = re.sub(r"\s*\(.*\)$", "", label); rank = RANK.get(base, MIN_RANK_ANY)
+        for k in (f'{nid}.{base}', f'{nid}.{label}'):
+            if k in FOVR: rank = FOVR[k]
         fields.append({'label': label, 'text': val, 'rank': rank})
         for m in SENSITIVE.finditer(val):
             flags.append(f"{nid}.{label}: …{val[max(0, m.start()-50):m.end()+50]}…")

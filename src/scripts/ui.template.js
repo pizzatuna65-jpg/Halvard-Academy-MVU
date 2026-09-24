@@ -962,18 +962,35 @@ function vbar(label, cur, max, color, sub) {
   const pct = max > 0 ? _.clamp(cur / max * 100, 0, 100) : 0;
   return `<div class="vit"><div class="l"><span>${label}</span><b>${fmt(cur)} / ${fmt(max)}</b></div><div class="bar"><i style="width:${pct}%;background:${color}"></i></div><div class="sub">${esc(sub)}</div></div>`;
 }
-function rep(label, v) {
-  v = _.clamp(num(v), -100, 100);
-  const l = v >= 0 ? 50 : 50 + v / 2, w = Math.abs(v) / 2;
-  return `<div class="l" style="display:flex;justify-content:space-between;font-size:14px"><span>${label}</span><b>${v > 0 ? '+' : ''}${v}</b></div><div class="rep"><i style="left:${l}%;width:${w}%;background:${v >= 0 ? '#3f9f69' : '#c4504a'}"></i></div>`;
+// 1.3.0 reputation: level -5..+5 on a centred bar, progress to the next level, what the level means (data/reputation.json)
+const REPD = DATA.rep || { reps: [], thresholds: [], effects: {}, about: {} };
+// lore-style text for the player: secrets removed, {{user}} as the student's first name
+const youText = (t, S) => { const nm = String((((S || {}).Player || {}).Profile || {}).Name || '').replace('{{user}}', '').trim().split(/\s+/)[0] || 'You';
+  return String(t || '').replace(/<narrator_only>[\s\S]*?<\/narrator_only>/g, '').replace(/\{\{user\}\}/g, nm).trim(); };
+function repRow(S, r) {
+  const R = (S.Player.Profile.Reputation || {}), L = _.clamp(num(R['_' + r]), -5, 5), x = num((R.$xp || {})[r]), T = REPD.thresholds;
+  const band = ((REPD.effects[r] || []).find(([a, c]) => L >= a && L <= c) || [0, 0, ''])[2];
+  // progress inside the level, away from 0 (thresholds are not shown to the player)
+  const lo = L > 0 ? T[L - 1] : L < 0 ? -T[-L - 1] : 0, far = x >= 0 ? (L < 5 ? T[L] : null) : (L > -5 ? -T[-L] : null);
+  const frac = far == null ? 1 : (x - lo) / (far - lo), toward = far == null ? 'at the end of the scale' : `toward ${x >= 0 ? '+' + (L + 1) : L - 1}`;
+  const l = L >= 0 ? 50 : 50 + L * 10, w = Math.abs(L) * 10;
+  return `<div class="l" style="display:flex;justify-content:space-between;font-size:14px"><span>${esc(r)} <span class="sub">(${esc(REPD.about[r] || '')})</span></span><b>${L > 0 ? '+' : ''}${L}</b></div>
+    <div class="rep"><i style="left:${l}%;width:${w}%;background:${L >= 0 ? '#3f9f69' : '#c4504a'}"></i></div><div class="l"><span class="xpb" title="${esc(toward)}"><i style="width:${_.clamp(frac, 0, 1) * 100}%;background:${x >= 0 ? '#3f9f69' : '#c4504a'}"></i></span><span class="sub">${esc(toward)}</span></div><div class="sub" style="margin-bottom:8px">${esc(youText(band, S))}</div>`;
+}
+// 1.3.0 training: what training has added to a track, of its limits (engine §6b)
+function trainLine(S, k) {
+  const T = ((S.Player || {}).$Training || {})[k], D = DATA.trn || {};
+  if (!T || !(T.base > 0) || !D.tracks) return '';
+  const cap = T.base * D.total_pct / 100, wk = T.base * D.weekly_pct / 100, wNow = T.w === Math.floor(num((S.$eng || {}).abs, 0) / 1440 / 7) ? num(T.wg) : 0;
+  return T.gain >= cap ? `Trained +${fmt(T.gain)}: at the limit (twice your starting ${fmt(T.base)})` : `Trained +${fmt(T.gain)} of +${fmt(cap)}; this week +${fmt(wNow)} of +${fmt(wk)}`;
 }
 function renderProfile(S) {
   if (!S) return `<div class="dlg"><div class="hd"><h2>Student file</h2><button class="x" data-act="close">×</button></div><div class="bd"><div class="empty">No state yet.</div></div></div>`;
   const unl = (S.$ui || {}).unlocks || [];
   const hiddenOn = !!(S.Hidden || {})._True_magic;
-  const tabs = [['overview', 'Overview'], ['body', 'Body'], ...(unl.includes('inventory') && featureOn(S, 'inventory') ? [['bag', 'Bag']] : []), ['wallet', 'Wallet'], ['studies', 'Studies'], ['magic', 'Magic'], ...(hiddenOn || unl.includes('hidden') ? [['hidden', 'Hidden']] : []), ['log', 'Log'], ['settings', 'Settings']];
+  const tabs = [['overview', 'Overview'], ['body', 'Body'], ...(unl.includes('inventory') && featureOn(S, 'inventory') ? [['bag', 'Bag']] : []), ['wallet', 'Wallet'], ['studies', 'Studies'], ['magic', 'Magic'], ...(hiddenOn || unl.includes('hidden') ? [['hidden', 'Hidden']] : []), ...(Object.keys(S._Perks || {}).length || ((S.$ui || {}).perks_used || []).length ? [['perks', 'Gifts & perks']] : []), ['log', 'Log'], ['settings', 'Settings']];
   if (!tabs.some(([id]) => id === view.tab)) view.tab = 'overview';
-  const body = ({ overview: pOverview, body: pBody, bag: pBag, wallet: pWallet, studies: pStudies, magic: pMagic, hidden: pHidden, log: pLog, settings: pSettings })[view.tab](S);
+  const body = ({ overview: pOverview, body: pBody, bag: pBag, wallet: pWallet, studies: pStudies, magic: pMagic, hidden: pHidden, perks: pPerks, log: pLog, settings: pSettings })[view.tab](S);
   const P = S.Player.Profile;
   return `<div class="dlg" tabindex="-1" style="--dc:${DORM_COLOR[P.Dorm] || DORM_COLOR.Unsorted}"><div class="hd"><h2>Student file</h2>
     <button class="btn sm" data-act="tobuilder">${(S.$ui || {}).built ? 'Amend' : 'Create your student'}</button><button class="x" data-act="close" aria-label="Close">×</button></div>
@@ -990,7 +1007,7 @@ function pOverview(S) {
   <dt>Club</dt><dd>${esc(P.Club || 'none yet')}</dd><dt>Combat roles</dt><dd>${esc(P.Combat_role || 'assigned at your first Combat class')}</dd>
   <dt>Goal</dt><dd>${esc(P.Goal || '—')}</dd><dt>Appearance</dt><dd>${esc(P.Appearance || '—')}</dd><dt>Personality</dt><dd>${esc(P.Personality || '—')}</dd>
   <dt>Now</dt><dd>${esc(`Month ${W.Month}, Week ${W.Week}, ${W.Day} ${W.Time}`)}, ${esc(W.Location)}</dd></dl>
-  <h3>Reputation</h3>${rep('Across the academy', P.Reputation.Public)}${rep('Within your dorm', P.Reputation.Dorm)}`;
+  <h3>Reputation</h3>${REPD.reps.map(r => repRow(S, r)).join('')}`;
 }
 function pBody(S) {
   const V = S.Player.Vitals, I = S.Player.Injuries || {};
@@ -998,8 +1015,16 @@ function pBody(S) {
   const wx = S.World._Weather && featureOn(S, 'weather') ? `<p class="hint"><i class="wxi">${esc(wxIcon((S.$ui || {}).wx))}</i> ${esc(S.World._Weather)}</p>` : '';
   const cond = ((S.$ui || {}).unlocks || []).includes('conditions') && (S.$ui || {}).wxfx === 'full'
     ? `<h3>Conditions</h3>${Cn.length ? Cn.map(([k, c]) => `<div class="item"><div class="row"><span class="t">${esc(k)}</span>${c.Since ? `<span class="sub">since ${esc(c.Since)}</span>` : ''}</div><div class="sub">${esc(c.Effect)}</div></div>`).join('') : '<div class="empty">Nothing from the weather right now.</div>'}` : '';
-  return `${wx}${vbar('Health', V.HP, V.HP_max, '#c4504a', V._Condition)}${vbar('Stamina', V.Stamina, V.Stamina_max, '#d39b37', V._Fatigue)}${vbar('Mana', V.Mana, V.Mana_max, '#5b8fd4', '')}
+  return `${wx}${vbar('Health', V.HP, V.HP_max, '#c4504a', V._Condition)}${vbar('Stamina', V.Stamina, V.Stamina_max, '#d39b37', [V._Fatigue, trainLine(S, 'stamina')].filter(Boolean).join(' · '))}${vbar('Mana', V.Mana, V.Mana_max, '#5b8fd4', trainLine(S, 'mana'))}
   <h3>Injuries</h3>${inj.length ? `<table><tr><th>Injury</th><th>Severity</th><th>Effect</th><th>Heals</th></tr>${inj.map(([k, i]) => `<tr><td>${esc(k)}${i.Body_part ? `<div class="sub">${esc(i.Body_part)}</div>` : ''}</td><td>${esc(i.Severity)}</td><td>${esc(i.Effect)}</td><td>${esc(i.Heals_by || '—')}</td></tr>`).join('')}</table>` : '<div class="empty">No injuries.</div>'}${cond}`;
+}
+// 1.3.0 bond rewards held: Rank 5 gifts and Rank 10 benefits (engine-written _Perks); one-use ones already spent
+function pPerks(S) {
+  const P = Object.entries(S._Perks || {}), used = (S.$ui || {}).perks_used || [];
+  const row = ([k, p]) => `<div class="item"><div class="row"><span class="t">${esc(k)}</span><span class="sub">${p.Kind === 'rank10' ? 'Rank 10' : 'gift'} · ${esc(nameOf(p.From, S))}${p.Uses > 0 ? ` · ${p.Uses} use${p.Uses > 1 ? 's' : ''} left` : ''}</span></div><div class="sub">${esc(youText(p.Effect, S))}</div></div>`;
+  return `<p class="lead">What your closest bonds have given you. Gifts are sold nowhere; a Rank 10 benefit is that person's alone.</p>
+    ${P.length ? ['gift', 'rank10'].map(kd => P.filter(([, p]) => p.Kind === kd)).filter(g => g.length).map((g, i) => `<h3>${g[0][1].Kind === 'rank10' ? 'Rank 10 benefits' : 'Gifts'}</h3>${g.map(row).join('')}`).join('') : '<div class="empty">Nothing held right now.</div>'}
+    ${used.length ? `<h3>Used</h3><ul class="log">${used.map(u => `<li>${esc(u)}</li>`).join('')}</ul>` : ''}`;
 }
 // 1.1.0 (spec §8) the Bag: items grouped by Kind; buttons only draft the action into the chat box (D6)
 const KINDS = [['food', 'Food'], ['drink', 'Drinks'], ['gear', 'Gear'], ['gift', 'Gifts'], ['book', 'Books'], ['reagent', 'Reagents'], ['other', 'Other']];

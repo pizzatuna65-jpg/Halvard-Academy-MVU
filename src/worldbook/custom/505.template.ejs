@@ -80,6 +80,11 @@ const bondLines = PRES.filter(id => BONDS[id] && BOND.share).map(id => {
     + (r > 0 && BOND.perks[String(r)] ? '. At this rank: ' + BOND.perks[String(r)] : '') + '.';
 });
 const bondEvents = Object.entries(BEVS).filter(([id, v]) => v && v.now && PRES.includes(id));
+// 1.3.0 reputation: what each non-zero level means for how staff, students and the Doves treat {{user}}
+const REPD = /*@@REP@@*/{};
+const RPN = PR.Reputation || {};
+const repLines = (REPD.reps || []).map(r => [r, Math.max(-5, Math.min(5, Number(RPN['_' + r]) || 0))]).filter(([, L]) => L)
+  .map(([r, L]) => r + ' ' + (L > 0 ? '+' : '') + L + ': ' + ((REPD.effects[r] || []).find(([a, c]) => L >= a && L <= c) || [0, 0, ''])[2]);
 _%>
 <now>
 Month <%- W.Month %>, Week <%- W.Week %>, <%- W.Day %> <%- W.Time %> | <%- W._Period || 'free time' %> | at <%- W.Location %>
@@ -146,6 +151,9 @@ Bond: <%- l %>
 Bond event available with <%- id %> (Rank <%- v.r %> → <%- v.r + 1 %>): play it now if the scene allows it; never force it.
 <%- v.dir %>
 <%- v.s ? 'Follow these directions; lines marked Wajib / Must have to happen. ' : '' %>When it has played out: raise /Bonds/<%- id %>/Rank by 1, insert a line into its Milestones and add what {{user}} learned to Known_facts; the choices made may raise or lower Trust.
+<%_ } _%>
+<%_ for (const l of repLines) { _%>
+Reputation, <%- l %>
 <%_ } _%>
 <%_ if (H._True_magic) { _%>
 Hidden magic — Dove attention: <%- H._Stage %> (<%- H.Dove_attention %>/100)

@@ -76,6 +76,9 @@ for nid, n in npcs.items():
     if n.get('team_role'): DATA['npcs'][nid]['tr'] = n['team_role']
 # v1.1.0 Features settings (spec §9): rows from data/features.json, rule costs measured by tools/feature_cost.py
 DATA['bond'] = {k: v for k, v in json.load(open(P('data/bond_rules.json'), encoding='utf-8')).items() if not k.startswith('_')}   # 1.2.2
+_rep = json.load(open(P('data/reputation.json'), encoding='utf-8'))   # 1.3.0
+DATA['rep'] = {k: _rep[k] for k in ('reps', 'about', 'thresholds', 'effects')}
+DATA['trn'] = {k: v for k, v in json.load(open(P('data/training.json'), encoding='utf-8')).items() if not k.startswith('_')}
 DATA['features'] = json.load(open(P('data/features.json'), encoding='utf-8'))['features']
 DATA['fcost'] = json.load(open(P('data/feature_cost.json'), encoding='utf-8'))
 bar = open(P('src/ui/statusbar.template.html'), encoding='utf-8').read()

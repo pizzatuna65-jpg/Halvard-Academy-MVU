@@ -1,0 +1,205 @@
+{
+ "_note": "1.3.0 reputation (owner brainstorm, approved 2026-09-25; docs/design/reputation.md). Replaces Public/Dorm (Dorm is scrapped; Student replaces it). Single source for the engine, the Now entry and the UI. Rep XP is signed and clamps at +-cap; the level is the number of thresholds reached (symmetric). Repeatable triggers give at most weekly_cap Rep XP a week per reputation; events and penalties are uncapped; bond milestones count only while the level is below bond_cap_level.",
+ "reps": [
+  "Academy",
+  "Student",
+  "Doves"
+ ],
+ "about": {
+  "Academy": "staff and the institution",
+  "Student": "the student body",
+  "Doves": "the Dovecote"
+ },
+ "thresholds": [
+  15,
+  35,
+  60,
+  90,
+  125
+ ],
+ "weekly_cap": 5,
+ "bond_cap_level": 3,
+ "bond_milestone_xp": {
+  "5": 5,
+  "10": 10
+ },
+ "tension_high": 70,
+ "tension_xp": -5,
+ "academy5_monthly": 300,
+ "anti_doves": [
+  "Lenna",
+  "Idris",
+  "Zara",
+  "Gavlan",
+  "Yvette",
+  "Kuroo",
+  "Ottavio"
+ ],
+ "pro_doves": [
+  "Saffi",
+  "Layla",
+  "Florian",
+  "Mimosa",
+  "Vallie",
+  "Ruby"
+ ],
+ "doves_bond": [
+  "Milena"
+ ],
+ "effects": {
+  "Academy": [
+   [
+    -5,
+    -5,
+    "Academic probation: a formal hearing before Baelin Kalvor, the monthly points payout halved, and one more serious offence means expulsion proceedings."
+   ],
+   [
+    -4,
+    -3,
+    "Staff assume the worst: minor offences earn detention instead of a warning; requests (club signatures, permits, schedule changes) are refused. Staff NPCs warm up more slowly."
+   ],
+   [
+    -2,
+    -1,
+    "{{user}} is \"one to watch\": teachers call on them to catch them out, and patrols stop them more often after curfew."
+   ],
+   [
+    0,
+    0,
+    "An ordinary student; staff treat {{user}} by the rules."
+   ],
+   [
+    1,
+    2,
+    "Teachers give {{user}} the benefit of the doubt: a first minor offence is a warning, and office-hour requests are welcome."
+   ],
+   [
+    3,
+    4,
+    "Staff trust {{user}} with responsibility: supervised access to restricted rooms, sign-off to found a club, invitations to staff-run events. Staff NPCs warm up faster."
+   ],
+   [
+    5,
+    5,
+    "{{user}}'s portrait hangs in the Portrait Hall among Halvard's honoured students, and the academy adds a monthly points bonus on top of the rank payout. Staff quietly overlook one serious offence per semester."
+   ]
+  ],
+  "Student": [
+   [
+    -5,
+    -5,
+    "{{user}} is shunned across the academy: nobody sits with them, their belongings go missing, and student NPCs below Rank 3 avoid them entirely."
+   ],
+   [
+    -4,
+    -3,
+    "Rooms go quiet when {{user}} walks in; nobody will team up, study together or cover for them. Student NPCs warm up more slowly."
+   ],
+   [
+    -2,
+    -1,
+    "Students are cool towards {{user}} and keep them out of the good gossip and the good seats."
+   ],
+   [
+    0,
+    0,
+    "{{user}} is one student among hundreds."
+   ],
+   [
+    1,
+    2,
+    "People save {{user}} a seat, share notes and gossip, and will cover for them once in a small way."
+   ],
+   [
+    3,
+    4,
+    "{{user}} is someone people rally behind: teams are easy to form, and students stand up for them. Student NPCs warm up faster."
+   ],
+   [
+    5,
+    5,
+    "{{user}} is Halvard's favourite: students take real risks for them (a false alibi, a shared punishment), and crowds turn out to cheer them at every competition."
+   ]
+  ],
+  "Doves": [
+   [
+    -5,
+    -5,
+    "{{user}} is taken to the Dovecote for a week of \"examination\", as Idris Ainsworth was; afterwards they are escorted between classes for the rest of the month. Anti-Dove NPCs warm to {{user}}; pro-Dove NPCs keep their distance."
+   ],
+   [
+    -4,
+    -3,
+    "Weekly searches of {{user}}'s room and belongings, a patrol that follows them after dark, and Krieg Valforth knows their name. Anti-Dove NPCs (Lenna, Idris, Zara, Gavlan, Yvette, Kuroo, Ottavio) warm to {{user}}; pro-Dove NPCs (Saffi, Layla, Florian, Mimosa, Vallie, Ruby) keep their distance."
+   ],
+   [
+    -2,
+    -1,
+    "Doves stop and question {{user}} more often, and any talisman, potion or odd item they carry is inspected."
+   ],
+   [
+    0,
+    0,
+    "{{user}} is one mage among hundreds; routine checks only."
+   ],
+   [
+    1,
+    2,
+    "Doves greet {{user}} by name, and routine checks end at a polite question."
+   ],
+   [
+    3,
+    4,
+    "{{user}} gets the benefit of the doubt: rumours about them are ignored, and Milena Sagona or another Dove will tip them off about coming searches. Anti-Dove NPCs (Lenna, Idris, Zara, Gavlan, Yvette, Kuroo, Ottavio) grow wary of {{user}}."
+   ],
+   [
+    5,
+    5,
+    "The Dovecote treats {{user}} as an ally: they are asked to help on cases, their word is trusted against anyone else's, and a recruitment offer waits for them after graduation. Anti-Dove NPCs call {{user}} \"one of the Doves\"."
+   ]
+  ]
+ },
+ "bond_mod": {
+  "_note": "extra bond XP per counted talk or hangout (never below 0 for one interaction); modifiers add up",
+  "staff": [
+   [
+    3,
+    1
+   ],
+   [
+    -3,
+    -1
+   ]
+  ],
+  "student": [
+   [
+    5,
+    2
+   ],
+   [
+    3,
+    1
+   ],
+   [
+    -3,
+    -1
+   ]
+  ],
+  "anti_doves": [
+   [
+    3,
+    -1
+   ],
+   [
+    -3,
+    1
+   ]
+  ],
+  "pro_doves": [
+   [
+    -3,
+    -1
+   ]
+  ]
+ }
+}

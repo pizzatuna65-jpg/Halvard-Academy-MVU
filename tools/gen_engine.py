@@ -48,6 +48,17 @@ haunt = {}
 for nid, n in npcs.items():
     f = next((f['text'] for f in n['fields'] if f['label'] == 'Haunts'), '')
     if f: haunt[nid] = re.split(r'[;.]', f.replace('{{user}}', 'you'))[0].strip()[:80]
+# 1.3.0 bond rewards, reputation, training (data/*.json single sources) and each NPC's group for them
+rew = json.load(open(P('data/bond_rewards.json'), encoding='utf-8'))
+assert all(nid in npcs for nid in rew['npcs']) and all(nid in npcs for nid in rew['mask'] + [rew['krieg']['id']]), 'bond_rewards.json: unknown NPC'
+rep = json.load(open(P('data/reputation.json'), encoding='utf-8'))
+assert all(nid in npcs for nid in rep['anti_doves'] + rep['pro_doves'] + rep['doves_bond']), 'reputation.json: unknown NPC'
+strip = lambda o: {k: v for k, v in o.items() if not k.startswith('_')}
+t = t.replace('/*@@BOND_REWARDS@@*/{}', json.dumps(strip(rew), ensure_ascii=False, separators=(',', ':')))
+t = t.replace('/*@@REPUTATION@@*/{}', json.dumps(strip(rep), ensure_ascii=False, separators=(',', ':')))
+t = t.replace('/*@@TRAINING@@*/{}', json.dumps(strip(json.load(open(P('data/training.json'), encoding='utf-8'))), ensure_ascii=False, separators=(',', ':')))
+grp = lambda n: 'rival' if (n.get('group') or '').endswith('team') else 'staff' if n.get('group') == 'Staff' else 'student' if re.match(r'^Year \d$', n.get('group') or '') else 'other'
+t = t.replace('/*@@NPC_GROUP@@*/{}', json.dumps({nid: grp(n) for nid, n in sorted(npcs.items())}, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@HAUNTS@@*/{}', json.dumps(haunt, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@NAME_FORMS@@*/{}', json.dumps(forms, ensure_ascii=False, separators=(',', ':')))
 open(P('src/scripts/engine.js'), 'w', encoding='utf-8').write(t.replace('/*@@NPC_ALIAS@@*/{}', json.dumps(alias, ensure_ascii=False, separators=(',', ':'))))

@@ -65,6 +65,7 @@ PANELS.npc = {
         ${b.Title ? `<div style="margin:4px 0">${esc(b.Title)}${b.Romance ? ' <span class="pill r">romance</span>' : ''}</div>` : ''}
         <div class="tt"><span class="sub">Trust ${b.Trust}</span>${mini(b.Trust, '#3f9f69')}<span class="sub">Tension ${b.Tension}</span>${mini(b.Tension, '#e0645a')}</div>
         ${b._Event_ready ? `<div class="warn">Bond event ready: find ${who}${ev && ev.where ? ` (likely ${esc(ev.where)}${ev.when ? ', ' + esc(ev.when) : ''})` : ''} and spend time together; Rank ${b.Rank + 1} comes from that scene.</div>`
+          : ev && ev.held ? '<div class="hint">This bond has gone as far as it can for now.</div>'
           : ev ? `<div class="hint">The bar is full. The next bond event can start in ${ev.in} day${ev.in === 1 ? '' : 's'}.</div>` : b.Rank < 10 ? '<div class="hint">Talk, spend time together, give gifts they like, help with what they want: each fills the bar (a talk and a hangout count once a day, gifts twice a week).</div>' : ''}
         ${b.Last_seen ? `<div class="sub">Last seen ${esc(b.Last_seen)}</div>` : ''}</div>`;
     } else h += '<div class="sub">You have not met yet.</div>';

@@ -2,7 +2,7 @@
 
 **Read this file first.** It is the complete context for continuing this project in a fresh session with any AI assistant, from any vendor. It assumes nothing about which assistant or tools you have, only that you can read files and (ideally) run Python 3 and Node.js.
 
-Snapshot: card **v1.2.2**. All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; PROGRESS 1.2.0/1.2.1). v1.2.2 replaced the bond meter with an XP system and a bond event framework (docs/BOND_EVENTS.md).
+Snapshot: card **v1.3.0**. All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; PROGRESS 1.2.0/1.2.1). v1.2.2 replaced the bond meter with an XP system and a bond event framework (docs/BOND_EVENTS.md). v1.3.0 applied the owner's NPC brainstorm (2026-09-25): new lore for 34 NPCs, bond rewards (Rank 5 gifts, Rank 10 benefits, mask → truth, Krieg), three reputations and training (`docs/design/`).
 
 **Next task:** the owner continues the playtest (PROGRESS "Next" lists what 1.2.0 needs checked in ST), then tuning and fixes from what it finds.
 
@@ -59,6 +59,7 @@ README.md                  short developer readme
 package.json               node test deps (zod@4, lodash, yaml, ejs, d3); `npm test`
 build/build_card.py        assembles dist/Eldrasil_Halvard.json (ccv3) + .png (chara + ccv3 chunks)
 source_original/           owner's lorebooks v37 and v38 (never modified; v38 is the pipeline input)
+  npc_lore_2026-09-25/     owner-approved full NPC entries (brainstorm 2026-09-25); merge_lorebooks.py lays them over v38
 tools/
   merge_lorebooks.py       v38 -> src/worldbook (card lore, uid<500) + dist/lorebook_v39 (standalone) + canon fixes D17/D18/D23-25
   curate_data.py           v39 -> data/npcs.json, locations.json, map_pins.json (+ calls build_relations.py -> relations.json)
@@ -79,7 +80,8 @@ data/                      curated single sources (see §5)
 dist/                      BUILT card: Eldrasil_Halvard.png/.json ; lorebook_v39/ standalone export
 presets/                   Realistic_Frankenstein_2_2_Eldrasil.json (generated) + edit_preset.py + original/ upload
 docs/                      PLAYER_GUIDE, ECOSYSTEM, VECTFOX (+ vectfox_cleaning_patterns.json), TOKEN_AUDIT, TEST_CHECKLIST_*,
-                           SPEC_v1_1_0_world_systems.md (approved next task)
+                           SPEC_v1_1_0_world_systems.md, BOND_EVENTS.md, npc_brainstorm/ (generated brief + group lore),
+                           design/ (approved 1.3.0 designs, Indonesian: bond_rewards, reputation, training)
 tests/                     node suites test_*.cjs, qa_static.cjs, run_all.cjs, token_audit.cjs, harness.cjs; preview/ (playwright)
 ```
 
@@ -108,6 +110,14 @@ tests/                     node suites test_*.cjs, qa_static.cjs, run_all.cjs, t
 - **Bonds** (D14, reworked in 1.2.2 by the owner): Rank 0–10. XP comes from the narrator's `/Interactions` (talk, hangout, gift, help) with daily/weekly limits; each rank needs more XP (`data/bond_rules.json`, scaled by the Settings pace). A full bar plus the cooldown sets `_Event_ready`; the rank rises by one only through the bond event (scripted in `data/bond_events.json` via `tools/import_bond_events.py`, else the rank's default theme). Romance opens at a Settings rank (default 8). What an NPC shares follows rank and `data/bond_openness.json`.
   - Dossier info unlocks by rank.
   - `<narrator_only>` lore is never unlocked by rank, only through `Campus_State.Secrets_revealed`.
+  - A qualified label (`Magic (public)`, `Personality (daily)`) unlocks at its field's rank; the dossier drops "(public)" / "(surface)". Trauma (Rank 8) is optional and only shows where it exists.
+
+**Bond rewards, reputation, training (v1.3.0, owner brainstorm 2026-09-25; `docs/design/`, data in `data/bond_rewards.json`, `reputation.json`, `training.json`)**
+- **Rewards**: Rank 1–4 events are pure story; the 4→5 event gives the NPC's gift, the 9→10 event their Rank 10 benefit. The engine appends the reward to that event's directions and records it in `_Perks` (AI-visible, read-only) when the rank rises; one-use perks are spent through `/Perk_use`. **No endings of any kind**: high ranks open information, never a route. Rival academy teams have **no bond system** (the engine starts no bond for them).
+- **Mask → truth** (Castor, Kanae, Caine): the 7→8 event adds a nudge Fact; the 8→9 event opens only once one of the NPC's secrets is in `Secrets_revealed`, else the bond stays at Rank 8. Rank 10 has one (truth) version.
+- **Krieg**: the 0→1 introduction is ready at once; then +14 XP every Monday while Doves reputation ≥ +1 (with hidden magic also Dove attention ≤ 39), else Tension +1; nothing from interactions.
+- **Reputation** replaces Public/Dorm (Dorm is scrapped): Academy, Student, Doves, −5..+5 from signed Rep XP (thresholds 15/35/60/90/125, clamp ±125). The narrator reports `/Rep_events`; repeatables capped +5/week per reputation, events and losses uncapped, bond milestones (engine) only below +3. Levels modify bond XP per talk/hangout (staff, students, anti-/pro-Dove NPCs). Academy +5 adds a monthly bonus, −5 halves the payout. Doves reputation is not Dove attention.
+- **Training**: Mana pool and Stamina, reported in `/Training`; one session +1% of the starting value × (1 + 0.5 per partner in the scene), weekly cap 2.5%, lifetime cap 2× the starting value; jumps (Gavlan gift, Vallie Rank 10) +10% outside the weekly cap. `Mana_max` / `Stamina_max` change only through training or the Builder (other changes are reverted; a Builder change moves the starting value).
 
 **World systems (v1.1.0, owner decisions in the spec)**
 - **Weather** is a pure function of (`$eng.seed`, day): northern seasons, sky per morning / afternoon / night, wind, rare weather, °C, metric everywhere (the preset's Bridge asks for metric prose; "Time and Place" stays OFF). Weather **never** changes technique costs (D11; weather attunement was rejected) and never removes HP by itself (D13).
@@ -164,9 +174,9 @@ python3 tools/gen_engine.py          # engine.template.js, npcs, locations or ha
 python3 tools/gen_mvu_entries.py     # custom entries, locations regulars or shop prices changed
 python3 tools/gen_ui.py              # ui.template.js, ui/parts, statusbar.template.html or data changed
 python3 build/build_card.py          # always last -> dist/
-npm test                             # 9 suites + static QA on the built card (470 checks at v1.2.2)
+npm test                             # 11 suites + static QA on the built card (512 checks at v1.3.0)
 python3 tests/preview/smoke_all_panels.py   # optional: opens every panel/tab headless (482 views at v1.2.0); expects "errors: none"
-node tests/token_audit.cjs           # optional: always-on prompt size (~8.3k tokens at start, ~13.2k mid-year; ~7.8k with the v1.1 features off)
+node tests/token_audit.cjs           # optional: always-on prompt size (~9.9k tokens at start, ~14.7k mid-year at v1.3.0)
 python3 presets/edit_preset.py       # regenerates the edited preset from presets/original/ (byte-identical today)
 ```
 
@@ -186,6 +196,8 @@ python3 presets/edit_preset.py       # regenerates the edited preset from preset
 
 **Hand-written single sources:**
 - `data/shop.json` (prices; canon prices are locked)
+- `data/bond_rewards.json`, `data/reputation.json`, `data/training.json` (1.3.0; from `docs/design/`), `data/bond_rules.json`, `data/bond_openness.json`
+- `source_original/npc_lore_2026-09-25/` (NPC entries that replace v38's; edit lore there or add a newer pass the same way)
 - `data/happenings.json` (seeded campus events; `where` must be a real location name)
 - `data/field_overrides.json`, `focus_overrides.json`, `thumb_overrides.json`, `assets_manifest.json`
 - `data/features.json` (Features settings rows, parked paths, unlocks), `data/weather_moods.json` (canon NPC weather moods only)

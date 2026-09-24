@@ -196,7 +196,7 @@ Club venues: Duelling – Combat Grounds (headquarters: Sparring Pavilion); Socc
   - Rank 5: their goals
   - Rank 6: what they think of other people and of the Doves
   - Rank 7: their past and family
-- **Dossier fields unlock by rank** (what the player reads): Appearance/Role 0 · Age, Speech, Club, Haunts 1 · Magic, Skills, Equipment 2 · Loves, Hates, Hobby 3 · Personality, Emotional tells, Notes 4 · Goals, Current trouble 5 · Relations, Doves 6 · Backstory, Family, Home 7 · Trauma 8. So a rank-up event is the natural moment the player learns that rank's fields.
+- **Dossier fields unlock by rank** (what the player reads): Appearance/Role 0 · Age, Speech, Club, Haunts 1 · Magic, Skills, Equipment 2 · Loves, Hates, Hobby 3 · Personality, Emotional tells, Notes 4 · Goals, Current trouble 5 · Relations, Doves 6 · Backstory, Family, Home 7 · Trauma 8 (optional; most NPCs have none). So a rank-up event is the natural moment the player learns that rank's fields.
 - **What the rank allows** (told to the narrator):
   - Rank 1: greets {{user}} and can be found at their usual places
   - Rank 2: accepts invitations (a meal, study, a walk)
@@ -219,6 +219,18 @@ Club venues: Duelling – Combat Grounds (headquarters: Sparring Pavilion); Socc
   - 7→8: A turning point: the bond becomes best friends, romance or a sworn rivalry, and the event lets {{user}} choose.
   - 8→9: They start to let their guard down about what they hide; the story opens a way to the truth (never revealed by rank alone).
   - 9→10: The peak of the bond: a moment that proves it, and what they would give up for {{user}}.
+- **Rewards (decided 2026-09-25; full list in `bond_rewards.md`):**
+  - Rank 1–4 events are pure story; no items or perks.
+  - The **4→5** event gives the NPC's **exclusive gift**: an item sold nowhere, and always useful, never just a memento.
+  - The **9→10** event gives the NPC's **unique Rank 10 benefit** (gameplay, QoL, points, reputation or story).
+  - There are no endings of any kind in this campaign; high ranks open information, never a "route".
+- **Special bond models** (details in `bond_rewards.md`):
+  - **Mask → truth** (Castor, Kanae, Caine): the 7→8 event gives a **nudge**, one Fact pointing at the NPC's arc. The 8→9
+    event can only run once their truth has come out in play; without that, the bond stays at Rank 8, and that is fine.
+  - **Krieg:** Rank 1 comes from his introduction. After that his bond gains **+14 XP every Monday**, only while {{user}}'s
+    Doves reputation is **≥ +1**; he gives no XP for talks, hangouts or gifts.
+- **Reputation** (Academy, Student, Doves; −5 to +5, tiered Rep XP; full rules in `reputation.md`) modifies bond XP: staff
+  NPCs at Academy ±3, student NPCs at Student ±3/+5, and anti-Dove NPCs react against high Doves reputation.
 
 ## 5. Bond event format
 
@@ -269,7 +281,7 @@ Columns: id — full name · group · dorm/race · role · club · openness · h
 - **Aiden** — Aiden Ruzzo · Year 1 · Light/Human · - · Card Club · open · no · A charming prankster and bookie.
 - **Caralynn** — Caralynn Veyturone · Year 1 · Fire/Human · - · Music Club, where she is the lead singer · open · no · Self-absorbed, proud, vain, witty, naive, superiority complex, and kind in her own mind.
 - **Zara** — Zara Minallone · Year 1 · Sky/Elf · - · Tailoring Club · guarded · yes · Low self-esteem, kind, generous, friendly once safe, awkward, shy.
-- **Percival** — Percival Applethorne · Year 1 · Viridian/Human · - · Soccer Club · open · no · Talkative, sunny, loyal, generous, and a legendary knight in his own head.
+- **Percival** — Percival Applethorne · Year 1 · Viridian/Human · - · Soccer Club · open · yes · Talkative, sunny, loyal, generous, and a legendary knight in his own head.
 - **Trixie** — Trixie Confetti · Year 1 · Fire/Beastkin (fox) · - · Theatre Troupe · open · no · Hyperactive, playful, cheerful, and an airhead who thrives on excitement and rarely takes herself too seriously.
 - **Vera** — Vera Pulsar · Year 1 · Viridian/Beastkin (horse) · - · Smithing Club · open · no · Brilliant, eccentric, enthusiastic, a mad scientist who is fundamentally kind.
 - **Castor** — Castor Moretti · Year 1 · Viridian/Human · - · Academy Newspaper · guarded · yes · Calm, mature, melancholic.
@@ -278,7 +290,7 @@ Columns: id — full name · group · dorm/race · role · club · openness · h
 **Halvard students — Year 2**
 - **Lenna** — Lenna Greenwind · Year 2 · Fire/Elf · - · Beast Handling Club · guarded · no · Easygoing, sleepy, dry-humoured, warm, courageous, intelligent.
 - **Saffi** — Saffi Tamberlane · Year 2 · Viridian/Beastkin (cat) · - · Running Club · open · no · Excitable, loyal, stubborn, physical, a bit of an airhead.
-- **Kanae** — Kanae Quveno · Year 2 · Light/Elf · - · Divination Society · guarded · yes · —
+- **Kanae** — Kanae Quveno · Year 2 · Light/Elf · - · Divination Society · guarded · yes · Sweet, charming, a perfect popular student with top grades.
 - **Idris** — Idris Ainsworth · Year 2 · Sky/Beastkin (snake) · - · Gardening Club · guarded · no · Cool, sardonic, sharp-tongued, intelligent, curious underneath.
 - **Dante** — Dante Kleinn · Year 2 · Light/Human · - · Groundskeeping · open · yes · Lawful, fatherly, warm, genuinely friendly.
 - **Florian** — Florian Villeneuve · Year 2 · Sky/Human · #3 · Tea Club (which he has turned into a room for entertaining women; · open · no · Arrogant, charming, relentlessly aware of the room.
@@ -288,7 +300,7 @@ Columns: id — full name · group · dorm/race · role · club · openness · h
 - **Irene** — Irene Chanare · Year 3 · Light/Human · Council President · Library Assistants · guarded · no · Collected, strict, by-the-book, professional, affable in public, an "ice queen" to admirers.
 - **Caspian** — Caspian Riwalo · Year 3 · Viridian/Elf · Council VP · Festival Committee · normal · no · Affable, witty, professional, polite, loyal, willful.
 - **Etnie** — Etnie · Year 3 · Viridian/Beastkin (dog) · {{user}}'s "big sister" · Whichever club {{user}} is in · open · yes · Flirty, playful, bold, physically affectionate, doting on {{user}}, possessive and obsessive over {{user}}, survivor's guilt.
-- **Royhan** — Royhan Filanoman · Year 3 · Sky/Beastkin (goat) · alchemist · Alchemy Circle (advised by Mimosa) · normal · no · —
+- **Royhan** — Royhan Filanoman · Year 3 · Sky/Beastkin (goat) · alchemist · Alchemy Circle (advised by Mimosa) · normal · no · Quiet, dependable, analytical and kind;
 - **Sophia** — Sophia Helfin · Year 3 · Fire/Human · #2, Blood Saint · Duelling Club · guarded · yes · Dominant, vulgar, violent, competitive, battle-hungry, narcissistic, sadistic in a duel.
 - **Gareth** — Gareth Valkaryn · Year 3 · Fire/Elf · #1 · Board Game Club, where he has never lost a match · normal · yes · —
 - **Ruby** — Ruby Bonbon · Year 3 · Sky/Beastkin (rabbit) · - · Music Club, where she plays guitar and is perfectly happy to stay at the back behind Caralynn Veyturone · open · no · Kind-hearted, benevolent, charismatic, pacifist.
@@ -297,9 +309,9 @@ Columns: id — full name · group · dorm/race · role · club · openness · h
 - **Gavlan** — Gavlan Haverton · Staff · -/Elf · Combat Y1 · - · guarded · no · Harsh but fair, kind, stern, protective, a mentor.
 - **Yvette** — Yvette Fallaron · Staff · -/Human · Magic Theory Y1, Fire Dorm Head · - · guarded · no · Kind, stern, motherly, hard-working, cautious, paranoid.
 - **Baelin** — Baelin Kalvor · Staff · -/Elf · Headmaster · - · guarded · yes · Soft-spoken, dry humour, enormous patience, never raises his voice.
-- **Layla** — Layla Palegleam · Staff · -/Human · History Y1 · - · open · no · Warm, chatty, easily sidetracked;
+- **Layla** — Layla Palegleam · Staff · -/Human · History Y1 · - · open · yes · Warm, chatty, easily sidetracked;
 - **Vallie** — Vallie Goredust · Staff · -/Beastkin (ox) · Creature Studies Y1, ex-monster hunter, leads the Expedition · - · open · no · Jovial, blunt, crass, passionate, genuine, loyal, always happy to test her strength.
-- **Rei** — Rei Kestrane · Staff · -/Human · Acting Warden, the old Warden's apprentice). Dorm Heads: Yvette (Fire), Ezrel (Light), Ottavio (Sky), Kuroo (Viridian · - · guarded · yes · Effortlessly cool, nonchalant, stoic, bold, self-assured.
+- **Rei** — Rei Kestrane · Staff · -/Human · Acting Warden, the old Warden's apprentice · - · guarded · yes · Effortlessly cool, nonchalant, stoic, bold, self-assured.
 - **Kuroo** — Kuroo Varnell · Staff · -/Human · Etiquette Y1, Viridian Dorm Head · - · normal · no · Laid-back yet scheming, a "provocation expert".
 - **Mimosa** — Mimosa Linden · Staff · -/Human · Potion Crafting Y1 · - · closed · no · Extremely introverted, with severe social anxiety;
 - **Althair** — Althair Veyne · Staff · -/Human · Vice Headmaster · - · open · yes · Relentlessly cheerful, friendly, and open, no matter what is happening.
@@ -314,7 +326,7 @@ Columns: id — full name · group · dorm/race · role · club · openness · h
 - **Bobby** — Bobby Becket · Facilities · -/Human · mischievous, non-mage maintenance worker · - · open · no · Friendly, mischievous, inquisitive and openly fond of gossip and card tricks.
 
 **Rival academy teams (Myrdath, Veyra, Ashvale)**
-- **Lucius** — Lucius Vortigern · Myrdath team · -/Human · friendly, Rank 1 · - · normal · yes · —
+- **Lucius** — Lucius Vortigern · Myrdath team · -/Human · friendly, Rank 1 · - · normal · yes · Friendly, easy to talk to, helpful, pleasant company.
 - **Elion** — Elion Villeneuve · Ashvale team · -/Human · Rank 1 · - · normal · no · Kind, compassionate, deeply empathetic, with unwavering conviction.
 - **Bellatrix** — Bellatrix Ardenne · Veyra team · -/Beastkin (rabbit) · Rank 1 · - · normal · no · Cruel, sadistic, unpredictable.
 - **Kira** — Kira Brannock · Ashvale team · -/Beastkin (panther) · Student, Ashvale Academy. · - · normal · no · Tomboy, rough, aggressive, short-tempered.
@@ -329,66 +341,26 @@ Columns: id — full name · group · dorm/race · role · club · openness · h
 
 ## 7. Known gaps (fields missing from the lore; secrets kept in <narrator_only> are not gaps)
 
-Likely by design: rival academy teams and Doves are kept minimal; Bobby is a non-mage (no Magic); staff often lack Loves/Hates/Goals.
+The 2026-09 pass filled every gap for Halvard students, staff, Doves, Cathedral and Liaison. What remains:
 
-**Halvard students — Year 1**
-- Caralynn: missing Haunts
-- Percival: missing Goals
-- Trixie: missing Haunts
-- Castor: missing Goals, Backstory, Magic
-
-**Halvard students — Year 2**
-- Kanae: missing Personality, Loves, Goals, Relations
-- Dante: missing Goals, Backstory
-- Florian: missing Haunts
-- Tilly: missing Backstory
-
-**Halvard students — Year 3**
-- Caspian: missing Hates
-- Etnie: missing Loves, Goals, Relations (in secrets: Backstory)
-- Royhan: missing Personality
-- Sophia: missing Loves, Hates
-- Gareth: missing Personality
-- Ruby: missing Goals
-
-**Teaching staff and dorm heads**
-- Gavlan: missing Hates
-- Yvette: missing Relations
-- Baelin: missing Loves, Hates, Goals, Backstory
-- Layla: missing Loves, Hates, Goals, Backstory
-- Vallie: missing Goals, Haunts
-- Rei: missing Loves, Hates, Goals
-- Kuroo: missing Loves, Hates, Goals
-- Mimosa: missing Loves, Hates, Goals
-- Althair: missing Loves, Hates, Goals (in secrets: Backstory)
-- Ezrel: missing Backstory
-
-**Doves, Cathedral, Liaison and facilities**
-- Milena: missing Relations
-- Tristan: missing Goals, Backstory
-- Caine: missing Backstory, Magic (in secrets: Goals)
-
-**Rival academy teams (Myrdath, Veyra, Ashvale)**
-- Lucius: missing Personality, Loves, Hates, Goals, Haunts (in secrets: Backstory)
-- Elion: missing Loves, Hates, Goals, Haunts
-- Bellatrix: missing Loves, Hates, Goals, Backstory, Haunts
-- Kira: missing Loves, Hates, Goals, Backstory, Haunts
-- Mirelle: missing Loves, Hates, Goals, Backstory, Haunts
-- Theodore: missing Loves, Hates, Goals, Backstory, Haunts
-- Ines: missing Loves, Hates, Goals, Backstory, Haunts
-- Bram: missing Loves, Hates, Goals, Backstory, Haunts
-- Dex: missing Loves, Hates, Goals, Backstory, Haunts
-- Cassius: missing Loves, Hates, Goals, Backstory, Haunts
-- Morgana: missing Loves, Hates, Goals, Backstory, Haunts
-- Pip: missing Loves, Hates, Goals, Backstory, Haunts
+- **Label only, not missing:** Castor `Magic (public)`, Kanae `Personality (public)`, Gareth `Personality (daily)`,
+  Caine `Backstory (public)` / `Magic (public)`, Lucius `Personality (surface)`. The fields exist under a qualified label.
+- **Althair:** Backstory stays empty on purpose (canon: never settle it).
+- **Etnie:** her past is now an ordinary `Backstory` field, so it unlocks at Rank 7 like everyone else's; only the plan to
+  fail her third year stays in `<narrator_only>`.
+- **Rival academy teams (Myrdath, Veyra, Ashvale):** kept minimal by design. They appear only in specific events and have
+  **no bond system**, so no bond events and no Loves/Hates/Goals/Haunts are needed for them.
 
 ## 8. Group lore files (attach only what the discussion needs)
 
-- `lore_year1.md` — Halvard students — Year 1: Aiden, Caralynn, Zara, Percival, Trixie, Vera, Castor, Alyssa (~7,700 tokens)
-- `lore_year2.md` — Halvard students — Year 2: Lenna, Saffi, Kanae, Idris, Dante, Florian, Tilly (~5,700 tokens)
-- `lore_year3.md` — Halvard students — Year 3: Irene, Caspian, Etnie, Royhan, Sophia, Gareth, Ruby (~6,400 tokens)
-- `lore_staff.md` — Teaching staff and dorm heads: Gavlan, Yvette, Baelin, Layla, Vallie, Rei, Kuroo, Mimosa, Althair, Ezrel, Ottavio (~11,000 tokens)
-- `lore_others.md` — Doves, Cathedral, Liaison and facilities: Krieg, Milena, Tristan, Caine, Bobby (~5,500 tokens)
+- `lore_year1.md` — Halvard students — Year 1: Aiden, Caralynn, Zara, Percival, Trixie, Vera, Castor, Alyssa (~8,700 tokens)
+- `lore_year2.md` — Halvard students — Year 2: Lenna, Saffi, Kanae, Idris, Dante, Florian, Tilly (~7,300 tokens)
+- `lore_year3.md` — Halvard students — Year 3: Irene, Caspian, Etnie, Royhan, Sophia, Gareth, Ruby (~7,600 tokens)
+- `lore_staff.md` — Teaching staff and dorm heads: Gavlan, Yvette, Baelin, Layla, Vallie, Rei, Kuroo, Mimosa, Althair, Ezrel, Ottavio (~13,600 tokens)
+- `lore_others.md` — Doves, Cathedral, Liaison and facilities: Krieg, Milena, Tristan, Caine, Bobby (~6,300 tokens)
 - `lore_rivals.md` — Rival academy teams (Myrdath, Veyra, Ashvale): Lucius, Elion, Bellatrix, Kira, Mirelle, Theodore, Ines, Bram, Dex, Cassius, Morgana, Pip (~5,400 tokens)
+- `bond_rewards.md` — Rank 5 gift and Rank 10 benefit for every bonded NPC, plus the mask → truth and Krieg bond models
+- `reputation.md` — Academy / Student / Doves reputation: levels, Rep XP triggers, effects per level
+- `training.md` — Mana pool and Stamina training: capped gains (at most 2× the starting value in total, about one academic year to max), partner bonuses
 
-This brief: ~7,800 tokens.
+This brief: ~8,000 tokens.

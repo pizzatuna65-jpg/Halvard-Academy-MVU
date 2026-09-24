@@ -60,7 +60,9 @@ off = {nid: BR['openness'][tag] for tag in ('open', 'guarded', 'closed') for nid
 assert all(nid in npcs for nid in off), [nid for nid in off if nid not in npcs]
 BOND = {'share': BR['share'], 'real': BR['share_real_from'], 'perks': BR['perks'], 'off': off,
         'tag': {nid: tag for tag in ('open', 'guarded', 'closed') for nid in OPN[tag]}}
-for k, v in {'BOND': BOND, 'REG': reg, 'ARR': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1}, 'STU': STU, 'TEACH': TEACH, 'TT': TT,
+REPD = json.load(open(P('data/reputation.json'), encoding='utf-8'))   # 1.3.0
+REPD = {'reps': REPD['reps'], 'effects': REPD['effects']}
+for k, v in {'REP': REPD, 'BOND': BOND, 'REG': reg, 'ARR': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1}, 'STU': STU, 'TEACH': TEACH, 'TT': TT,
              'CLUBV': CLUBV, 'OUTD': OUTD, 'VN': VN, 'MOODS': MOODS}.items():
     ph = '/*@@' + k + '@@*/' + ('[]' if isinstance(v, list) else '{}')
     assert ph in ejs, ph

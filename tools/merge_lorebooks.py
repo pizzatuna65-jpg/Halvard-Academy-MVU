@@ -16,6 +16,29 @@ def rep(e, old, new):
 def template_from(e, **kw):
     t = copy.deepcopy(e); t.update(kw); return t
 
+# 1.3.0 NPC lore pass (owner brainstorm, approved 2026-09-25): full NPC entries in source_original/npc_lore_2026-09-25/lore_*.md
+# (one "## <id> — <Full Name>" heading + fenced entry each) replace the v38 text. They were written against the card's own text,
+# so Royhan's entry carries the card's EJS date gate; it is turned back into the v38 line here and re-applied below as before.
+NPC_LORE_DIR = P('source_original/npc_lore_2026-09-25')
+ROY_EJS = re.compile(r"<%_ const _rm = .*?\n<%_ \} _%>", re.S)
+def overlay_npc_lore(N):
+    byname = {e['comment'].replace('NPC — ', '').strip(): u for u, e in N.items() if e['comment'].startswith('NPC — ')}
+    changed = []
+    for f in sorted(os.listdir(NPC_LORE_DIR)):
+        if not f.endswith('.md'): continue
+        text = open(os.path.join(NPC_LORE_DIR, f), encoding='utf-8').read()
+        for m in re.finditer(r'^## (\S+) — (.+?)\n```\n(.*?)\n```', text, re.M | re.S):
+            full, body = m.group(2).strip(), m.group(3)
+            assert full in byname, f'{f}: no NPC entry "NPC — {full}"'
+            e = N[byname[full]]
+            if ROY_EJS.search(body):
+                old = re.search(r'Current trouble: This year, his last, he finally qualified[^\n]*', e['content']).group(0)
+                body = ROY_EJS.sub(lambda _: old, body)
+            if body.strip() != e['content'].strip():
+                e['content'] = body; changed.append(m.group(1))
+    return changed
+print('NPC lore pass 2026-09-25:', len(overlay_npc_lore(N)), 'entries updated')
+
 # v1.0.3 incoming cohorts (data/cohorts.json): an incoming NPC's card entry is empty until its campaign year (EJS gate);
 # the standalone v39 export has no EJS, so it gets a plain note instead.
 COH = json.load(open(P('data/cohorts.json'), encoding='utf-8'))
