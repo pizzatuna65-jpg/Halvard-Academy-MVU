@@ -1,0 +1,187 @@
+#!/usr/bin/env python3
+"""Batch 1.2 — merge v38 (user)  Core + NPC lorebooks into the card worldbook (src/worldbook)
+and export standalone lorebooks (dist/lorebook_v39/). Re-runnable; source_original is never modified."""
+import json, os, re, copy
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+P = lambda *a: os.path.join(ROOT, *a)
+core = json.load(open(P('source_original/eldrasil_v38_Core.json'), encoding='utf-8'))
+npc = json.load(open(P('source_original/eldrasil_v38_NPC_Detailed.json'), encoding='utf-8'))
+C = {e['uid']: e for e in core['entries'].values()}
+N = {e['uid']: e for e in npc['entries'].values()}
+
+def rep(e, old, new):
+    assert old in e['content'], f"missing text in {e['uid']}: {old[:60]}"
+    e['content'] = e['content'].replace(old, new)
+
+def template_from(e, **kw):
+    t = copy.deepcopy(e); t.update(kw); return t
+
+# v1.0.3 incoming cohorts (data/cohorts.json): an incoming NPC's card entry is empty until its campaign year (EJS gate);
+# the standalone v39 export has no EJS, so it gets a plain note instead.
+COH = json.load(open(P('data/cohorts.json'), encoding='utf-8'))
+ARR = {nid: int(y) for y, ids in COH['incoming'].items() for nid in ids}
+def npc_id(e): return e['comment'].replace('NPC — ', '').strip().split()[0] if e['comment'].startswith('NPC') else None
+def gate_cohorts(D, ejs_gate):
+    found = set()
+    for u, e in D.items():
+        a = ARR.get(npc_id(e))
+        if not a: continue
+        found.add(npc_id(e))
+        e['content'] = (f"<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= {a}) {{ _%>\n{e['content']}\n<%_ }} _%>" if ejs_gate
+                        else f"(Arrives at Halvard as a first-year in campaign Year {a}; not on campus before that.)\n{e['content']}")
+    assert found == set(ARR), f'cohorts.json names without an NPC entry: {sorted(set(ARR) - found)}'
+
+# ---------- v1.0.3 calendar (owner decision): World Competition M11 W4 Wed-Sat (Graduation's old slot), Graduation M11 W4 Sun ----------
+# A third-year picked for the national four now competes before graduating; graduates leave on the first morning of the Month 12
+# holiday. Edited in C itself, so the card calendar (uid 134), the card lore and the standalone v39 export all agree.
+rep(C[144], "W4 Sat Graduation.", "W4 Wed-Sat World Competition, abroad (the national four). W4 Sun Graduation (third-years leave the next morning).")
+rep(C[145], "Kingdom-wide holiday all month, students go home, campus nearly empty. W4 Thu-Sun World Competition, abroad.",
+    "Kingdom-wide holiday all month, students go home, campus nearly empty.")
+rep(C[248], "When: Month 11 Week 4, Saturday. Third-years leave; everyone attends.",
+    "When: Month 11 Week 4, Sunday, the day after the World Competition ends (the national four fly home overnight). Third-years leave; everyone attends.")
+rep(C[248], "Evening: feast; graduates leave by airship the next morning.",
+    "Evening: feast; graduates leave by airship the next morning, the first day of the Kingdom-wide holiday.")
+
+# ---------- lore clarifications shared by card + v39 (D23-D25) ----------
+def apply_lore_edits(C, N):
+    rep(C[52], "Spent mana makes the air shiver at dusk.",
+        "Spent mana makes the air shiver at dusk. Beside the rings stands the Sparring Pavilion, the one building the four training areas share: equipment store, rest area, and the Duelling Club's headquarters.")
+    C[52]['key'] = C[52]['key'] + ['Sparring Pavilion']
+    C[267] = template_from(C[52], uid=267, displayIndex=267,
+        comment="Academy Location - Academic - The Sparring Pavilion",
+        key=["Sparring Pavilion", "the pavilion", "Duelling Club headquarters", "equipment store", "training gear"],
+        content=("[The Sparring Pavilion] A small round pavilion with a domed roof at the far corner of the Combat Grounds, "
+                 "the one building all four dorm training areas share. Inside: racks of practice staves, ward-chalk and spare training gear "
+                 "signed out by bracelet; benches, a water pump and a basic first-aid chest for the walk back after a hard session; a board of "
+                 "duel challenges and club standings. It is the Duelling Club's headquarters, the standing exception to dorm separation, so it is "
+                 "the one place on the grounds where students of rival dorms share a bench. Gavlan Haverton, who advises the club, keeps a desk in the back. "
+                 "Unwritten rule: grudges from the rings are settled in the rings, never under the roof.\n"
+                 "Feel: sweat, liniment, chalk dust, tired laughter."))
+    rep(C[86], "[Detention Tower] Where punished students",
+        "[Detention Tower] One of the castle core's towers, climbed by its own narrow spiral stair from Floor 1. Where punished students")
+    rep(C[89], "A formal grey stone office building flying the crown's banners, standing near the Cathedral and the Dovecote.",
+        "A suite of offices on Castle Floor 1 behind a heavy door hung with the crown's banners: academy stone, crown ground. The Headmaster's authority stops at that door. Its wing is the same Floor 1 wing as the Warden's corridor, which neither side enjoys.")
+    rep(C[89], "[Royal Inspectorate]", "[Royal Inspectorate]")
+    rep(C[256], "since the Headmaster has no authority inside their walls.",
+        "since the Headmaster has no authority inside the Dovecote's walls or past the Inspectorate's door.")
+    m = C[132]
+    rep(m, "Warden's Office (own corridor off Floor 1) – Seal Chamber.",
+        "Warden's Office (own corridor off Floor 1) – Seal Chamber. Royal Inspectorate (Floor 1 wing, near the Warden's corridor). Detention Tower (own spiral stair from Floor 1).")
+    rep(m, "the Warden's Office down its own corridor.",
+        "the Warden's Office down its own corridor; the Royal Inspectorate's bannered door in the same wing; the foot of the Detention Tower stair.")
+    rep(m, "Rooftop: flat lead roofs, the Bell Tower belfry, the Potion Hall tower tops.",
+        "Rooftop: flat lead roofs, the Bell Tower belfry, the Potion Hall tower tops, the top of the Detention Tower.")
+    rep(m, "the Dovecote, Cathedral, Royal Inspectorate and Noble Houses' Liaison stand together on one side of the grounds; between them and the Fire Dormitory, in the trees, stands the Broken Statue; the Detention Tower stands alone. All but the Detention Tower sit on academy land the academy does not control.",
+        "the Dovecote, Cathedral and Noble Houses' Liaison stand together on one side of the grounds; between them and the Fire Dormitory, in the trees, stands the Broken Statue. All three sit on academy land the academy does not control, as does the Royal Inspectorate's suite inside the castle (Floor 1).")
+    rep(m, "Sports Field – Gymnasium, Archery Range.", "Sports Field – Gymnasium, Archery Range. Combat Grounds – Sparring Pavilion.")
+    rep(m, "Duelling – Combat Grounds;", "Duelling – Combat Grounds (headquarters: Sparring Pavilion);")
+    rep(m, "Combat Grounds and Sports Field 10;", "Combat Grounds, Sparring Pavilion and Sports Field 10;")
+    assert 332 not in N and 332 not in C
+    N[332] = template_from(N[283], uid=332, displayIndex=332, comment="Regulars — The Sparring Pavilion",
+        key=["Sparring Pavilion", "the pavilion", "Duelling Club headquarters"],
+        content="[Regulars — The Sparring Pavilion] Gavlan, Sophia, Caspian (as a guest).")
+
+CAL_M4_OLD = "W2 Tue Independence Crowning Day (kingdom holiday, celebrated on campus)."
+CAL_M4_NEW = "W2 Tue Independence Crowning Day (kingdom holiday: the academy flies to the capital by airship; fireworks on campus at night)."
+ROY_OLD = re.compile(r'Current trouble: This year, his last, he finally qualified from the Dorm Competition at rank 16, but no team will take him, since "illusionist-alchemist" doesn\'t count as a role\.')
+
+# ================= v39 standalone =================
+C39, N39 = copy.deepcopy(C), copy.deepcopy(N)
+apply_lore_edits(C39, N39)
+gate_cohorts(N39, False)
+rep(C39[137], CAL_M4_OLD, CAL_M4_NEW)
+assert ROY_OLD.search(N39[101]['content'])
+N39[101]['content'] = ROY_OLD.sub(
+    'Current trouble: This year is his last chance at the Dorm Competition (Month 3 Week 4). Before it, he is training to qualify and already knows the harder problem: '
+    'no team wants him, since "illusionist-alchemist" doesn\'t count as a role. Canon outcome afterwards, unless the story changes it: he qualifies at rank 16, and still no team will take him.',
+    N39[101]['content'])
+os.makedirs(P('dist/lorebook_v39'), exist_ok=True)
+for name, src, D in (('Core', core, C39), ('NPC_Detailed', npc, N39)):
+    out = copy.deepcopy(src); out['entries'] = {str(u): D[u] for u in sorted(D)}
+    json.dump(out, open(P(f'dist/lorebook_v39/eldrasil_v39_{name}.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
+
+# ================= card worldbook =================
+Cc, Nc = copy.deepcopy(C), copy.deepcopy(N)
+apply_lore_edits(Cc, Nc)
+# D19: remap NPC uid collisions 254-262 -> 401-409
+REMAP = {u: 401 + i for i, u in enumerate(range(254, 263))}
+for old, new in REMAP.items():
+    e = Nc.pop(old); e['uid'] = new; e['displayIndex'] = new; Nc[new] = e
+# D18 Royhan — EJS date gate
+assert ROY_OLD.search(Nc[101]['content'])
+Nc[101]['content'] = ROY_OLD.sub(lambda _: (
+    "<%_ const _rm = Number(getvar('stat_data.World.Month')) || 1, _rw = Number(getvar('stat_data.World.Week')) || 1, _rd = String(getvar('stat_data.World.Day') || ''); _%>\n"
+    "<%_ if (_rm < 3 || (_rm === 3 && (_rw < 4 || !['Sat', 'Sun'].includes(_rd)))) { _%>\n"
+    'Current trouble: This year is his last chance. He is training to qualify from the Dorm Competition (Month 3 Week 4) and already knows the harder problem: even if he qualifies, no team wants him, since "illusionist-alchemist" doesn\'t count as a role.\n'
+    "<%_ } else if (_rm === 3) { _%>\n"
+    'Current trouble: This year is his last chance, and the Dorm Competition is being fought this weekend: he needs a top-16 finish. Even if he makes it, no team wants him, since "illusionist-alchemist" doesn\'t count as a role.\n'
+    "<%_ } else { _%>\n"
+    'Current trouble: This year, his last, he qualified from the Dorm Competition at rank 16, but no team will take him, since "illusionist-alchemist" doesn\'t count as a role. (Campus_State overrides this if the story played out differently.)\n'
+    "<%_ } _%>"), Nc[101]['content'])
+gate_cohorts(Nc, True)   # v1.0.3 incoming cohorts (defined at the top)
+# v1.0.3 NPC roster (uid 97, always on): the Year lines become year-aware. In campaign Year Y a student listed as Year y who arrived
+# in year a is now in year y + Y - a; incoming cohorts appear only once they arrive; Campus_State.Graduated moves students to a
+# "Graduated" line; a student the story kept back past Year 3 shows as repeating.
+def roster_ejs(text):
+    lines, studs, at = text.split('\n'), [], None
+    keep = []
+    for i, line in enumerate(lines):
+        m = re.match(r'Year ([123]):\s*(.*)', line)
+        if not m: keep.append(line); continue
+        if at is None: at = len(keep); keep.append('@@YEARS@@')
+        for seg in re.split(r';\s*(?![^()]*\))', m.group(2).strip().rstrip('.')):
+            seg = seg.strip()
+            if seg: studs.append([seg.split()[0], int(m.group(1)), ARR.get(seg.split()[0], 1), seg])
+    assert at is not None and studs, 'roster: no Year lines found'
+    block = ("<%_\nconst _R = " + json.dumps(studs, ensure_ascii=False) + ";\n"
+             "const _Y = Math.max(1, Number(getvar('stat_data.World.Year')) || 1), _G = getvar('stat_data.Campus_State.Graduated') || [];\n"
+             "const _by = { 1: [], 2: [], 3: [] }, _gone = [];\n"
+             "for (const [id, y, a, seg] of _R) {\n"
+             "  if (a > _Y) continue;\n"
+             "  if (_G.includes(id)) { _gone.push(id); continue; }\n"
+             "  const c = y + _Y - a;\n"
+             "  _by[Math.min(3, Math.max(1, c))].push(c > 3 ? seg.replace(/\\)\\s*$/, ', repeating)') : seg);\n"
+             "}\n_%>\n"
+             "Year 3: <%- _by[3].join('; ') || 'none on record' %>.\n"
+             "Year 2: <%- _by[2].join('; ') || 'none on record' %>.\n"
+             "Year 1: <%- _by[1].join('; ') || 'none on record yet (the story may introduce new first-years)' %>.\n"
+             "<%_ if (_gone.length) { _%>\nGraduated, no longer at Halvard: <%- _gone.join(', ') %>.\n<%_ } _%>")
+    keep[at] = block
+    return '\n'.join(keep)
+Nc[97]['content'] = roster_ejs(Nc[97]['content'])
+
+# D17 + calendar automation: 12 month entries -> one EJS entry (uid 134)
+months = {}
+for u in range(134, 146):
+    t = C[u]['content'].replace(CAL_M4_OLD, CAL_M4_NEW)
+    months[u - 133] = re.sub(r'^\[Current month: Month \d+\]\n?', '', t).strip()
+cal_js = ',\n'.join(f"  {k}: {json.dumps(v, ensure_ascii=False)}" for k, v in months.items())
+cal = copy.deepcopy(C[134])
+cal.update(disable=False, constant=True, comment='Calendar — Current Month (auto)', key=['calendar', 'this month', 'next month'],
+    content=("<%_\nconst _cal = {\n" + cal_js + "\n};\n"
+             "const _m = Math.min(12, Math.max(1, Number(getvar('stat_data.World.Month')) || 1));\n"
+             "const _n = _m === 12 ? 1 : _m + 1;\n_%>\n"
+             "[Current month: Month <%- _m %>]\n<%- _cal[_m] %>\n[Next month (Month <%- _n %>) preview: <%- _cal[_n] %>]"))
+for u in range(134, 146): Cc.pop(u)
+Cc[134] = cal
+# merge + tagging (D2): lore -> [mvu_plot]; shared state/navigation entries stay untagged (sent to both models)
+UNTAGGED_CORE = {0, 132, 134, 131, 20}
+UNTAGGED_NPC = {97}
+merged = []
+for src, untag in ((Cc, UNTAGGED_CORE), (Nc, UNTAGGED_NPC)):
+    for u, e in src.items():
+        e = copy.deepcopy(e)
+        if u not in untag and not e['comment'].startswith('[mvu_'):
+            e['comment'] = '[mvu_plot] ' + e['comment']
+        merged.append(e)
+merged.sort(key=lambda e: e['uid'])
+assert len({e['uid'] for e in merged}) == len(merged)
+cdir = P('src/worldbook/content'); os.makedirs(cdir, exist_ok=True)
+for f in os.listdir(cdir): os.remove(os.path.join(cdir, f))
+index = []
+for e in merged:
+    open(os.path.join(cdir, f"{e['uid']}.txt"), 'w', encoding='utf-8').write(e['content'])
+    index.append({k: v for k, v in e.items() if k != 'content'})
+json.dump(index, open(P('src/worldbook/index.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+json.dump({str(k): v for k, v in REMAP.items()}, open(P('data/uid_remap_npc.json'), 'w'), indent=1)
+print('card worldbook entries:', len(merged), '| v39 core', len(C39), 'npc', len(N39))
