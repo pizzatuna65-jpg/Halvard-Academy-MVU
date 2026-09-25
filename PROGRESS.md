@@ -751,11 +751,37 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   - To verify in ST: the Prompt Template extension renders the large 509 entry (~260 KB of EJS) without a noticeable delay,
     also in MVU's extra-model mode; getvar('stat_data.$ui.cast') inside the NPC keyword entries.
 
+- 1.6.0 Batch C: what each character carries of {{user}} (P4, N4 Next + Meanwhile, D6, N13, VectFox V1-V3). No new canon.
+  - Bonds gain narrator fields (in <current_state>, never in the player's dossier): Mind (how they feel about {{user}} now),
+    Knows (what they know about {{user}} and how; the engine dates each line and keeps 15, older ones in $Knows_old), Imprints
+    (a belief formed by a weight 5-10 experience; at most 5; over the cap the lightest goes only if the new one outweighs it, and
+    keeps what it replaced as Was; a "fixed" character is never rewritten), Next ({What, Where, Until}, Rank 3+).
+  - Engine: $Defining (a rank change, Trust ±15+, Tension +20+ or romance is kept for good, at most 5, smallest leaves first;
+    shown in the Cast Sheet and the dossier). Next: "Since you last saw X" once in <now> when they meet {{user}} again; a plan
+    that lapses unseen becomes an "(Off-screen)" row in $Recent; "May be here by their own plans" when {{user}} is where the plan
+    put them. Meanwhile: a Rank 7+ bond unseen for 7 days gets one Journal line a week about their own life (their Next, else
+    their haunt).
+  - N2 slot: data/npc_canon.json "change" (fixed | shaped | fluid), empty until the canon waves; the Cast Sheet prints the type's
+    sentence. (The plan named field_overrides.json; that file holds rank numbers only, so the slot got its own file.)
+  - N13 ages: <now> recent rows and the Cast Sheet's Knows, Imprints and defining moments carry their age in words ("yesterday",
+    "3 days ago", "last week", "2 months ago"); <now> adds the age of the newest Journal dates; rule 504 says to use those ages.
+  - Cast Sheet: full sheets add Mind, Knows, Imprints, defining moments and Change; brief sheets add Mind and Imprints.
+  - Rules: 502 explains Mind, Knows, Imprints, Next. 504: "Only an Imprint changes who a character is"; arrivals take the walk
+    time (D6); Next plans in the world sources; V1 (a recalled memory says what happened, not who knows it; the sheet beats it).
+  - VectFox (checked at 3623dc8, core/eventbase-workflow.js): EventBase and the summary share one injection setting; keep After
+    Main Prompt (default) or in-chat depth 2+, never 0-1 (V3). Summarizer Injection now recommended OFF (V2). docs/VECTFOX.md,
+    docs/ECOSYSTEM.md.
+  - Tests: test_memory_v160.cjs (29 checks, incl. a "fixed" character through a patched engine and the age bands at day, week,
+    month and year edges); test_recent_v145 accepts the age in the row; saves 1.4.6, 1.5.0, 1.5.1 load. npm test 924 checks;
+    stress passes. TEST card rebuilt.
+  - To confirm with the owner: Meanwhile lines use the character's haunt when they have no Next ("was seen around Main Library"),
+    which is generic; ages are within one campus year (an item from exactly a year ago reads as "earlier today").
+
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
-- Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 and 1.5.1 done; next 1.6.0 (Batch C, NPC memory), then
-  1.6.1, 1.6.2 and the G1 voice draft. The owner playtests once, after G1 is approved and applied; then run tools/audit_chat.py
+- Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0, 1.5.1 and 1.6.0 done; next 1.6.1 (Batch D, Extras),
+  then 1.6.2 and the G1 voice draft. The owner playtests once, after G1 is approved and applied; then run tools/audit_chat.py
   on the exported chat for the first MVU baseline.
 - Playtest v1.3.2 in ST: a pact with abilities (Builder → Pacts, Techniques page), summon it and have it use an ability
   (charged once, not charged when not summoned).

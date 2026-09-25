@@ -53,7 +53,7 @@ ST runs preset regexes before the card's, so the preset's display regexes cannot
 2. **EventBase:** ON.
 3. **Semantic Lorebook:** do not vectorize the card's lorebook.
 4. **Ghosting or the card's trim regex:** use one. With Summarizer Injection + Ghosting, disable the card regex "Eldrasil — State-as-memory".
-5. **Summarizer Injection:** optional. If used, set a budget of about 4,000 characters, since the card's Journal already covers turning points.
+5. **Summarizer Injection:** OFF since card 1.6.0 (the card keeps each character's memory of you; see `VECTFOX.md`). Injection position: After Main Prompt, or in-chat depth 2 or more, never 0–1.
 
 Bonus: the CoT's first reasoning line (`Now: …`) gives VectFox a second source for the in-world time. VectFox reads a message's stored reasoning for dates and places, when the API returns thoughts.
 

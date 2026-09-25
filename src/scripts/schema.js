@@ -188,6 +188,14 @@ export const Schema = z.object({
     $tlast: n(v.$tlast, 0, 100, 0),       // 1.4.4: size of that drop, for an 'understood' (engine)
     $tbrk: n(v.$tbrk, 0, 1, 0),           // 1.4.4: maximum Tension already broke a rank; re-armed below 70 (engine)
     $Recent: Array.isArray(v.$Recent) ? v.$Recent.filter(r => r && typeof r === 'object').map(r => ({ w: s(r.w), n: s(r.n), fx: s(r.fx) })).slice(-10) : [],   // 1.4.4: latest moments with {{user}} (engine)
+    // 1.6.0 (Batch C, P4/N4): the character's side, written by the narrator (not shown in the player's dossier)
+    Mind: s(v.Mind).slice(0, 400),                                                  // how they feel about {{user}} now, what is on their mind
+    Knows: Array.isArray(v.Knows) ? v.Knows.map(s).filter(Boolean).slice(-30) : [],   // what they know about {{user}}, and how (engine dates and trims to 15)
+    Imprints: Array.isArray(v.Imprints) ? v.Imprints.filter(x => x && typeof x === 'object').map(x => ({ Belief: s(x.Belief), Weight: n(x.Weight, 0, 10, 5), When: s(x.When), From: s(x.From), Was: s(x.Was) })).slice(-8) : [],
+    Next: v.Next && typeof v.Next === 'object' && !Array.isArray(v.Next) ? { What: s(v.Next.What), Where: s(v.Next.Where), Until: s(v.Next.Until) } : null,
+    $Knows_old: Array.isArray(v.$Knows_old) ? v.$Knows_old.map(s).slice(-40) : [],   // older Knows lines (engine)
+    $Defining: Array.isArray(v.$Defining) ? v.$Defining.filter(r => r && typeof r === 'object').map(r => ({ w: s(r.w), n: s(r.n), fx: s(r.fx), s: Number(r.s) || 0 })).slice(-5) : [],   // defining moments (engine)
+    $seen: n(v.$seen, -1, 1e9, -1), $mw: n(v.$mw, -1, 1e9, -1),   // last day present; week of the last "Meanwhile" line (engine)
   }), 'Title'),
 
   Campus_State: O({
@@ -294,6 +302,7 @@ export const Schema = z.object({
     romrank: Int(0, 11, 8),                                            // romance opens at this rank (0 any, 11 off)
     bev: z.any().prefault({}).catch({}),
     close: z.array(z.string()).prefault([]).catch([]),           // 1.5.0 (N3a): bonds close to their next rank (engine)
+    since: z.any().prefault([]).catch([]), maybe: z.any().prefault([]).catch([]),   // 1.6.0 (N4): Next plans met again / that may bring someone here (engine)
     cast: z.any().prefault({}).catch({}),                             // 1.5.1 (P1/P6): { full, brief, spoke, gone, ment } for the Cast Sheet (engine)
     perks_used: StrList(60),
     next: z.any().prefault(null).catch(null),                         // 1.3.4: the next thing on today's schedule (engine; bracelet)

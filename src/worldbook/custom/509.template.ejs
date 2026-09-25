@@ -16,11 +16,24 @@ const cHead = (id, full) => {
   const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
   return out.join('\n');
 };
-const cTail = id => {
+const cTail = id => {   // may be '' (then the sheet ends with the lore or cMem)
   const c = CD.npcs[id], got = CSECR.filter(x => x.toLowerCase().startsWith(id.toLowerCase() + '.'));
   if (!c.secret && !got.length) return '';
   return 'Secrets: the <narrator_only> parts above are for you alone. ' + c.first + ' never states them; they show only as hints and tells.'
     + (got.length ? ' {{user}} has uncovered: ' + got.map(x => x.slice(x.indexOf('.') + 1)).join(', ') + '. ' + c.first + ' knows {{user}} knows this and behaves accordingly.' : ' {{user}} has uncovered none of them.');
+};
+// 1.6.0 (Batch C): the character's side of the bond: Mind, Knows (dated, with their age), Imprints, defining moments, Change
+const CW = getvar('stat_data.World') || {};
+/*@@AGE@@*/
+const cAged = w => { const a = ageOf(w, CW); return a ? w + ', ' + a : w; };
+const cMem = (id, full) => {
+  const b = CB[id], out = [];
+  if (b && b.Mind) out.push('Their mind now: ' + b.Mind);
+  if (b && full && (b.Knows || []).length) out.push('What they know about {{user}} (nothing else, unless told or seen on-screen): ' + b.Knows.map(k => { const m = /^\[([^\]]+)\]\s*/.exec(k); return m ? '[' + cAged(m[1]) + '] ' + k.slice(m[0].length) : k; }).join(' | '));
+  if (b && (b.Imprints || []).length) out.push('Imprints (the only things that have changed who they are): ' + b.Imprints.map(x => '"' + x.Belief + '" (weight ' + x.Weight + (x.When ? ', ' + cAged(x.When) : '') + (x.From ? '; from ' + x.From : '') + (x.Was ? '; replaced "' + x.Was + '"' : '') + ')').join('; '));
+  if (b && full && (b.$Defining || []).length) out.push('Defining moments with {{user}}: ' + b.$Defining.map(r => '[' + cAged(r.w) + '] ' + r.n + (r.fx ? ' (' + r.fx + ')' : '')).join(' | '));
+  if ((CD.change || {})[id]) out.push('Change: ' + CD.change[id]);
+  return out.join('\n');
 };
 const HERE = [...FULL, ...BRIEF];
 const pairs = [];

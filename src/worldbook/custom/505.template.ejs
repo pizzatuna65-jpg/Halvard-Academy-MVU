@@ -69,6 +69,11 @@ const moods = FULL ? MOODS.filter(m => PRES.includes(m.id)).map(m => (/cold|free
 const BT = getvar('stat_data.Battle') || {};
 // 1.5.1 (P6): who spoke in the last reply without being in Scene.Present, and who was only mentioned (engine $ui.cast)
 const CAST = UI.cast || {}, PRON = /*@@PRON@@*/{};
+// 1.6.0 (N13): the age of dated lines in words; (N4) Next plans: met again, or may bring someone here now
+/*@@AGE@@*/
+const aged = w => { const a = ageOf(w, W); return a ? w + ', ' + a : w; };
+const SINCE = UI.since || [], MAYBE = UI.maybe || [];
+const JAGES = (getvar('stat_data.Journal') || []).slice(-5).reverse().map(l => (/^\[([^\]]+)\]/.exec(String(l)) || [])[1]).filter(w => w && ageOf(w, W));
 // 1.2.2 bonds: for each present NPC, what they will talk about at this rank (openness shifts the early tiers; goals, views of others
 // and the past need the real rank; secrets never come from rank) and what the bond allows; plus a ready bond event's directions
 const BOND = /*@@BOND@@*/{};
@@ -117,7 +122,7 @@ const tensionLines = PRES.filter(id => BONDS[id]).map(id => {
 }).filter(Boolean);
 // 1.4.4 (owner): each present character's latest moments with {{user}} (Bonds.<id>.$Recent, newest first) for consistency
 const recentLines = PRES.filter(id => BONDS[id] && (BONDS[id].$Recent || []).length).map(id => id + ' (newest first): ' + BONDS[id].$Recent.slice(-(BOND.recent_now || 5)).reverse()
-  .map(r => '[' + r.w + '] ' + r.n + (r.fx ? ' (' + r.fx + ')' : '')).join(' | '));
+  .map(r => '[' + aged(r.w) + '] ' + r.n + (r.fx ? ' (' + r.fx + ')' : '')).join(' | '));
 // 1.4.4 (owner): how each present character takes teasing and play-fighting (tension category or override: banter)
 const banterLine = PRES.filter(id => BONDS[id]).map(id => { const o = (TEN.overrides || {})[id], P = (o && o.banter) ? o : (TEN.categories || {})[(TEN.npcs || {})[id]]; return P && P.banter ? id + ' ' + P.banter : ''; }).filter(Boolean).join('; ');
 // 1.3.0 reputation: what each non-zero level means for how staff, students and the Doves treat {{user}}
@@ -189,6 +194,15 @@ Rumours going around: <%- GS.map(g => '"' + g[0] + '" (' + g[1] + ', day ' + g[2
 <%_ } _%>
 <%_ if ((CAST.ment || []).length) { _%>
 Mentioned, not here (they may not speak or act on-screen): <%- CAST.ment.map(id => id + ' (' + (PRON[id] || 'they/them') + ((CAST.where || {})[id] ? '; usually: ' + CAST.where[id] : '') + ')').join('; ') %>
+<%_ } _%>
+<%_ for (const [id, what, until] of SINCE) { _%>
+Since you last saw <%- id %>: <%- what %><%- until ? ' (planned until ' + until + ')' : '' %>. Let it show in a small trace, never as a report.
+<%_ } _%>
+<%_ if (MAYBE.length) { _%>
+May be here by their own plans (Next): <%- MAYBE.map(([id, what]) => id + ' (' + what + ')').join('; ') %>
+<%_ } _%>
+<%_ if (JAGES.length) { _%>
+Journal dates, newest first: <%- JAGES.map(w => w + ' = ' + ageOf(w, W)).join('; ') %>
 <%_ } _%>
 <%_ for (const l of bondLines) { _%>
 Bond: <%- l %>

@@ -90,6 +90,9 @@ PANELS.npc = {
     // 1.4.4 (owner): recent moments with you, newest first (engine: Bonds.<id>.$Recent; the narrator reads the same rows in <now>)
     const rec = b ? [...(b.$Recent || [])].reverse() : [];
     if (rec.length) h += `<h3>Recent with you</h3><div class="rtw"><table class="rt"><tr><th>When</th><th>What happened</th><th>Effect</th></tr>${rec.map(r => `<tr><td class="w">${esc(r.w)}</td><td>${esc(youText(r.n, S))}</td><td class="fx">${(r.fx || '').split(', ').filter(Boolean).map(x => `<span class="${/[+→]|romance|enjoyed|starts/.test(x) && !/Tension \+/.test(x) ? 'up' : /Tension −/.test(x) ? 'up' : 'dn'}">${esc(x)}</span>`).join('') || '<span class="sub">—</span>'}</td></tr>`).join('')}</table></div>`;
+    // 1.6.0 (P4): defining moments, kept for good (engine: Bonds.<id>.$Defining; the narrator reads them in the Cast Sheet)
+    const dm = b ? [...(b.$Defining || [])].reverse() : [];
+    if (dm.length) h += `<h3>Defining moments</h3><ul class="log">${dm.map(r => `<li><span class="sub">${esc(r.w)}</span> ${esc(youText(r.n, S))}${r.fx ? ` <span class="sub">(${esc(r.fx)})</span>` : ''}</li>`).join('')}</ul>`;
     if (n) {
       const open = n.fl.filter(f => fieldUnlocked(id, f, S) && !(/^(full )?name$/i.test(f[0]) && !knowsName(id, S)));
       h += open.map(f => `<h3>${esc(f[0])}${f[2] >= 99 ? ' <span class="pill f">uncovered</span>' : ''}</h3><p class="fv">${esc(f[1])}</p>`).join('');
