@@ -90,6 +90,8 @@ To send more chat, open the Regex extension and raise the **Min Depth** of "Eldr
 
 **Memory extensions.** VectFox works with this card as chat memory. Do not vectorize the card's own lorebook for semantic World Info, and use either VectFox ghosting or the card's trim regex, not both. Settings and ready-made cleaning patterns: `docs/VECTFOX.md` and `docs/vectfox_cleaning_patterns.json`. A compatible Gemini edit of the Realistic Frankenstein 2.2 preset and how the three fit together: `docs/ECOSYSTEM.md`.
 
+**Preset toggles that change how you play (Eldrasil preset, 1.5.0).** "🎮 Player Input Authority" is ON: you write what your student thinks, says and tries, and the world decides how others react and whether it works ("she agrees" in your message is a wish, not a fact). Turn it OFF if you want to direct the story yourself. "🌐 Output language" is OFF; turn it ON and change the language name in it to read the story in another language.
+
 ## 8. MVU mode
 
 The card asks MVU to update variables **together with the AI's reply**, one request per turn. You can switch to MVU's "extra model analysis" mode in the MVU panel under the current card's config; the card's entries are tagged for both modes. In the tool-call response format, names mentioned only in story prose will not unlock early in dossiers, because the update then arrives without the prose.

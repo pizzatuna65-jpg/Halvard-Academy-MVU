@@ -24,6 +24,8 @@
   7,
   7
  ],
+ "close_at": 0.8,
+ "_note_close_at": "1.5.0 (N3a): a bond is marked close in <now> once its XP reaches this share of the next rank's need (before the bar is full).",
  "pace": {
   "fast": 0.25,
   "brisk": 0.5,

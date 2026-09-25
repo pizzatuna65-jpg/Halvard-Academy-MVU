@@ -71,6 +71,7 @@ const BT = getvar('stat_data.Battle') || {};
 // and the past need the real rank; secrets never come from rank) and what the bond allows; plus a ready bond event's directions
 const BOND = /*@@BOND@@*/{};
 const BONDS = getvar('stat_data.Bonds') || {}, BEVS = UI.bev || {};
+const CLOSE = UI.close || [];   // 1.5.0 (N3a): bonds with XP at 80% or more of the next rank (engine)
 // 1.4.3 Trust shifts what they share (Doubtful -1, Trusting +1, Confidant +2 and the real tiers one rank early; Betrayed: nothing
 // new) and holds back the perks that need it (data/trust.json perk_gates)
 const TRUST = /*@@TRUST@@*/{};
@@ -84,7 +85,7 @@ const bondLines = PRES.filter(id => BONDS[id] && BOND.share).map(id => {
   const next = BOND.share.find(([t]) => !ok.some(x => x[0] === t));
   const og = trOver(id), gated = og && og.no_gates ? [] : Object.entries(TRUST.gates || {}).filter(([g, need]) => +g <= r && +g !== 8 && tr < need && BOND.perks[g]).map(([g, need]) => BOND.perks[g] + ' (needs Trust ' + need + ')');
   const susp = (UI.tsusp || []).filter(k => ((getvar('stat_data._Perks') || {})[k] || {}).From === id);
-  return id + ' (Rank ' + r + (BOND.tag[id] ? ', ' + BOND.tag[id] : '') + ', Trust ' + tr + ' ' + tb.toLowerCase() + '): '
+  return id + ' (Rank ' + r + (BOND.tag[id] ? ', ' + BOND.tag[id] : '') + ', Trust ' + tr + ' ' + tb.toLowerCase() + (CLOSE.includes(id) ? ', close' : '') + '): '
     + (sh === null ? 'shares nothing new with {{user}}; keeps to what {{user}} already knows' : 'shares ' + ok.map(x => x[1]).join('; ')
     + (next ? '. Not yet: ' + next[1] + ' and beyond; asked about it, deflects in character (pushing too soon adds Tension)' : ''))
     + (r > 0 && BOND.perks[String(r)] ? '. At this rank: ' + BOND.perks[String(r)] : '')
@@ -199,7 +200,7 @@ Teasing (how each present character takes it): <%- banterLine %>
 <%_ for (const [id, v] of bondEvents) { _%>
 Bond event available with <%- id %> (Rank <%- v.r %> → <%- v.r + 1 %>): play it now if the scene allows it; never force it.
 <%- v.dir %>
-<%- v.s ? 'Follow these directions; lines marked Wajib / Must have to happen. ' : '' %>When it has played out: raise /Bonds/<%- id %>/Rank by 1, insert a line into its Milestones and add what {{user}} learned to Known_facts; the choices made may lower Trust (the engine adds Trust for the rank itself).
+<%- v.s ? 'Follow these directions; lines marked Wajib / Must have to happen. ' : '' %>If the story has already changed what this event depends on (someone is hurt, away or told, or the place is closed), adapt it to the story as it is now; never replay it as if nothing happened. When it has played out: raise /Bonds/<%- id %>/Rank by 1, insert a line into its Milestones and add what {{user}} learned to Known_facts; the choices made may lower Trust (the engine adds Trust for the rank itself).
 <%_ } _%>
 <%_ for (const l of repLines) { _%>
 Reputation, <%- l %>
