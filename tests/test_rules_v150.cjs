@@ -13,10 +13,10 @@ let S = initState({ etnie: true });
 let t = render(r504, S);
 ok(/Canon over memory: the lorebook and character sheets outrank the chat's own earlier prose/.test(t), 'P8: canon over memory');
 ok(/Rank, Trust and Tension change how a character treats \{\{user\}\}, never who they are; closeness is not warmth/.test(t), 'P8: numbers change treatment, not identity');
-ok(/Where the world's own events come from: the calendar \(_Event_today\), World\._Happening, the location's regulars, open Commitments, Hooks and Mysteries/.test(t), 'World sources with every feature on');
+ok(/Where the world's own events come from: the calendar \(_Event_today\), World\._Happening, the location's regulars, the campus phase <now> names, open Commitments, Hooks and Mysteries, campus events <now> asks you to advance/.test(t), 'World sources with every feature on');
 const off = applyPatch(S, [{ op: 'replace', path: '/$ui/happenings', value: 'off' }, { op: 'replace', path: '/$ui/off', value: ['hooks'] }]);
 t = render(r504, off);
-ok(/Where the world's own events come from: the calendar \(_Event_today\), the location's regulars, open Commitments and Mysteries/.test(t), 'World sources drop happenings and hooks when those features are off');
+ok(/Where the world's own events come from: the calendar \(_Event_today\), the location's regulars, the campus phase <now> names, open Commitments and Mysteries/.test(t), 'World sources drop happenings and hooks when those features are off');
 ok(/marks a bond "close" to its next rank, let one small behaviour of the next rank slip out/.test(t), 'N3a rule in 504');
 
 // ---- N3a: the engine marks a bond close at 80% of the next rank's XP, before the bar is full

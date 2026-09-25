@@ -777,11 +777,40 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   - To confirm with the owner: Meanwhile lines use the character's haunt when they have no Next ("was seen around Main Library"),
     which is generic; ages are within one campus year (an item from exactly a year ago reads as "earlier today").
 
+- 1.6.1 Batch D: invented characters stay the same person (N5 Extras), the campus moves on (N4 Events), campus phases (N6
+  framework). No new canon.
+  - Extras (top-level record, in <current_state>): {"<Full Name>": {Who, Looks, Manner, Calls_user, Voice, Keep}}. The engine
+    counts each time an invented character enters Scene.Present ($eng.xs); from the second appearance the Cast Sheet asks for
+    their record until it exists, then shows it as their card whenever they are present. A first name or a different case is
+    the same person (merged into the recorded key, in Scene.Present too); a roster name is refused. At most 20 records: the
+    least recently seen leave first into a hidden archive ($ui.xold, 40), which gives the record back if they turn up again;
+    a kept or present one never leaves. The gate (510) fires with only invented characters present.
+  - Keep: in the bracelet's cast strip, tapping an invented character pins them (a thumbtack before the name) or lets them go,
+    through a hidden player-tool message like Settings. Pinning someone with no record creates it; <cast> then asks the narrator
+    to describe them (the "extract this character" path).
+  - Naming guide in 502, from the roster's own patterns (Human: English or continental family names; Elf: flowing given names,
+    soft or nature-made family names; Beastkin: playful or striking family names); no roster name reused.
+  - Campus_State.Events are now {Text, Updated}. A bare string (the AI's shorthand, and every event in an older save) becomes
+    the Text; the engine dates each change and, when an event has had no news for over 7 days, <now> asks for it to move on
+    (talk, rumour, notice, letter) or be removed. The notebook's Campus news shows the date.
+  - N6: data/campus_phases.json ({id, from, to, line}, every year) and a "Campus phase:" line in <now>. Empty: the phase lines
+    are canon and come with the canon waves after the owner approves them.
+  - World sources (504) now include the campus phase and the campus events <now> asks to advance.
+  - Size: 502 +~280 tokens (the plan estimated ~70; most of it is the example record and the naming guide), 505 +~40 only while
+    something is stale or a phase runs, ~40 tokens per invented character present.
+  - Tests: test_extras_v161.cjs (37 checks: first and second appearance, merge by first name and by case, roster names refused,
+    cap and archive, Keep and pin-without-record, 502 rules, Events stamping, stale and re-dated, the notebook, a 1.6.0 save's
+    string event, phases through a patched engine); save 1.6.0 added (saves 1.4.6 to 1.6.0 load). npm test 966 checks; stress
+    passes. Preset unchanged (built twice, byte-identical). TEST card rebuilt.
+  - To confirm with the owner: the naming guide is my reading of the roster (the lore has no naming rules); the stale-event
+    window (7 days) and the Extras cap (20) are the plan's numbers.
+  - To verify in ST: the cast-strip pin writes the hidden tool message (like Settings) and the thumbtack shows after it.
+
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
-- Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0, 1.5.1 and 1.6.0 done; next 1.6.1 (Batch D, Extras),
-  then 1.6.2 and the G1 voice draft. The owner playtests once, after G1 is approved and applied; then run tools/audit_chat.py
+- Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0, 1.5.1, 1.6.0 and 1.6.1 done; next 1.6.2 (Batch E2,
+  preset CoT), then the G1 voice draft. The owner playtests once, after G1 is approved and applied; then run tools/audit_chat.py
   on the exported chat for the first MVU baseline.
 - Playtest v1.3.2 in ST: a pact with abilities (Builder → Pacts, Techniques page), summon it and have it use an ability
   (charged once, not charged when not summoned).
@@ -805,6 +834,7 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 - Scripted first-week classes (M1 W1 Tue-Sat, 14 sessions; per dorm for [D] classes; optional homework into Commitments).
 
 ## To verify in ST (could not be tested outside ST)
+- 1.6.1: tapping an invented character in the cast strip pins them (hidden tool message; thumbtack after the re-render).
 - 1.5.1: the Cast Sheet (509, ~260 KB of EJS) renders without a noticeable delay, also in extra-model mode; NPC keyword entries
   read getvar('stat_data.$ui.cast') and go quiet while the NPC has a full sheet.
 - 1.5.0: the preset's {{lastUserMessage}} is filled on the Gemini endpoint; the depth-0 Player Input Authority prompt does not

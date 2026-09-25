@@ -236,7 +236,10 @@ button.chip{font:inherit;font-size:12px;cursor:pointer}button.chip:hover{backgro
         const tip = label + (v && v.Note ? ': ' + v.Note : '');
         const face = c ? '<img class="face" style="border-color:' + c[3] + '" src="' + esc(BASE + c[0]) + '" alt="" data-fb="' + (known ? esc(c[2].slice(0, 2)) : '?') + '">'
           : '<span class="face" style="border-color:#6f737b">' + esc(id.split(/\s+/).map(w => w[0]).join('').slice(0, 2)) + '</span>';
-        return '<button ' + (c ? 'data-open="npc:' + esc(id) + '"' : '') + ' title="' + esc(tip) + '">' + face + '<span class="nm">' + esc(known || !c ? (c ? c[2] : id) : '?') + '</span></button>';
+        // 1.6.1 (N5): an invented character's button pins them in the Extras record (Keep) or lets them go
+        const xr = !c ? ((S.Extras || {})[id] || null) : null, pin = xr && xr.Keep;
+        const xtip = !c ? (pin ? ' (kept: tap to let them go)' : ' (tap to keep them in the record of invented characters)') : '';
+        return '<button ' + (c ? 'data-open="npc:' + esc(id) + '"' : 'data-keep="' + esc(id) + '"') + ' title="' + esc(tip + xtip) + '">' + face + '<span class="nm">' + (pin ? '<i class="fa-solid fa-thumbtack"></i> ' : '') + esc(known || !c ? (c ? c[2] : id) : '?') + '</span></button>';
       }).join('') + '</div>';
     }
 
@@ -273,6 +276,10 @@ button.chip{font:inherit;font-size:12px;cursor:pointer}button.chip:hover{backgro
     const b = ev.target.closest('button'); if (!b) return;
     if (b.dataset.importlore) { importLore(); return; }
     if (b.dataset.toggle) { collapsed = !collapsed; try { localStorage.setItem('eld.bar.collapsed', collapsed ? '1' : '0'); } catch (e) {} render(); return; }
+    if (b.dataset.keep) {
+      if (!window.parent.__eldrasilUI) { if (typeof toastr !== 'undefined') toastr.warning('Turn on the "Eldrasil UI" script in Tavern Helper → Scripts.', 'Eldrasil'); return; }
+      eventEmit('eldrasil:keep', b.dataset.keep); return;
+    }
     if (b.dataset.open) {
       if (!window.parent.__eldrasilUI) { if (typeof toastr !== 'undefined') toastr.warning('Turn on the "Eldrasil UI" script in Tavern Helper → Scripts.', 'Eldrasil'); return; }
       eventEmit('eldrasil:open', b.dataset.open);

@@ -103,6 +103,10 @@ MENTION_DENY = ['Pip', 'Ruby']
 CANON = json.load(open(P('data/npc_canon.json'), encoding='utf-8'))
 assert all(k in npcs for k in CANON['change']) and set(CANON['change'].values()) <= {'fixed', 'shaped', 'fluid'}
 t = t.replace('/*@@CHANGE@@*/{}', json.dumps(CANON['change'], ensure_ascii=False))
+# 1.6.1 (N6): campus phases, one line each for <now> while the phase runs (empty until the canon waves)
+PH = json.load(open(P('data/campus_phases.json'), encoding='utf-8'))['phases']
+assert all({'id', 'from', 'to', 'line'} <= set(p) for p in PH), 'campus phase needs id, from, to, line'
+t = t.replace('/*@@PHASES@@*/[]', json.dumps(PH, ensure_ascii=False, separators=(',', ':')))
 assert all(x in npcs for x in MENTION_DENY)
 t = t.replace('/*@@MENTION_DENY@@*/[]', json.dumps(MENTION_DENY))
 open(P('src/scripts/engine.js'), 'w', encoding='utf-8').write(t.replace('/*@@NPC_ALIAS@@*/{}', json.dumps(alias, ensure_ascii=False, separators=(',', ':'))))

@@ -31,11 +31,13 @@ const cMem = (id, full) => {
   if ((CD.change || {})[id]) out.push('Change: ' + CD.change[id]);
   return out.join('\n');
 };
+const CX = getvar('stat_data.Extras') || {}, XHERE = (CS.extras || []).filter(x => CX[x]), XNEW = CS.xnew || [];
+const cExtra = x => { const r = CX[x]; return '[' + x + '] ' + r.Who + (r.Looks ? ' Looks: ' + r.Looks + '.' : '') + (r.Manner ? ' Manner: ' + r.Manner + '.' : '') + (r.Calls_user ? ' Calls {{user}} "' + r.Calls_user + '".' : '') + (r.Voice ? ' Voice: ' + r.Voice : ''); };
 const HERE = [...FULL, ...BRIEF];
 const pairs = [];
 for (const a of HERE) for (const b of HERE) if (a !== b && (CD.rel[a] || {})[b]) pairs.push(a + ' → ' + b + ': ' + CD.rel[a][b]);
 _%>
-<%_ if (HERE.length) { _%>
+<%_ if (HERE.length || XHERE.length || XNEW.length) { _%>
 <cast>
 Character sheets for the people present: the truth about each of them. They outrank the lorebook text and anything earlier in the chat. Rank, Trust and Tension change how a character treats {{user}}, never who they are.
 <%_ if (FULL.includes('Aiden')) { _%>
@@ -1384,6 +1386,15 @@ Between the people here (the truth, whether or not {{user}} knows it):
 <%_ for (const l of pairs) { _%>
 - <%- l %>
 <%_ } _%>
+<%_ } _%>
+<%_ if (XHERE.length) { _%>
+Invented characters here (their Extras record is their card: the same look, manner and voice every time):
+<%_ for (const x of XHERE) { _%>
+- <%- cExtra(x) %>
+<%_ } _%>
+<%_ } _%>
+<%_ if (XNEW.length) { _%>
+Seen before, with no Extras record yet: <%- XNEW.join(', ') %>. Add their record in this reply's update, true to how they were written before (Who, Looks, Manner, Calls_user, Voice).
 <%_ } _%>
 </cast>
 <%_ } _%>

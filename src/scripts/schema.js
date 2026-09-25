@@ -199,7 +199,9 @@ export const Schema = z.object({
   }), 'Title'),
 
   Campus_State: O({
-    Events: StrRec(),
+    // 1.6.1 (Batch D, N4): an event is { Text, Updated }; a bare string (the AI's shorthand, or a save from before 1.6.1) is its Text.
+    // The engine stamps Updated when the Text changes ($d: that day number) and flags events with no news for over a week.
+    Events: Rec(v => ({ Text: s(v.Text), Updated: s(v.Updated), $d: n(v.$d, -1, 1e9, -1) }), 'Text'),
     Rumours: StrList(15),
     Location_changes: StrRec(),
     NPC_status: StrRec(),
@@ -207,6 +209,13 @@ export const Schema = z.object({
     Secrets_revealed: StrList(80),
     Graduated: StrList(60),   // 1.0.3: students who have left campus after Graduation (engine adds the year's third-years)
   }),
+
+  // 1.6.1 (Batch D, N5): characters the narrator invented, recorded on their second appearance so they stay the same person.
+  // Keep is the player's (the cast strip's pin); the engine keeps EXTRAS_MAX, the least recently seen leave first ($seen, engine).
+  Extras: Rec(v => ({
+    Who: s(v.Who).slice(0, 160), Looks: s(v.Looks).slice(0, 200), Manner: s(v.Manner).slice(0, 200),
+    Calls_user: s(v.Calls_user).slice(0, 60), Voice: s(v.Voice).slice(0, 240), Keep: b(v.Keep), $seen: n(v.$seen, -1, 1e9, -1),
+  }), 'Who'),
 
   // Batch 5.1: Where (optional place, enables "Go here"); _When / _Late / $abs are computed by the engine from Due
   Commitments: Rec(v => ({ Desc: s(v.Desc), Due: s(v.Due), With: s(v.With), Type: s(v.Type), Where: s(v.Where),
@@ -303,6 +312,8 @@ export const Schema = z.object({
     bev: z.any().prefault({}).catch({}),
     close: z.array(z.string()).prefault([]).catch([]),           // 1.5.0 (N3a): bonds close to their next rank (engine)
     since: z.any().prefault([]).catch([]), maybe: z.any().prefault([]).catch([]),   // 1.6.0 (N4): Next plans met again / that may bring someone here (engine)
+    xold: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.6.1 (N5): Extras records that left the full list; given back if they return (engine)
+    stale: z.any().prefault([]).catch([]), phase: z.any().prefault(null).catch(null),   // 1.6.1: campus events with no news for a week; the campus phase (engine)
     cast: z.any().prefault({}).catch({}),                             // 1.5.1 (P1/P6): { full, brief, spoke, gone, ment } for the Cast Sheet (engine)
     perks_used: StrList(60),
     next: z.any().prefault(null).catch(null),                         // 1.3.4: the next thing on today's schedule (engine; bracelet)
@@ -327,6 +338,7 @@ export const Schema = z.object({
     bweek: z.record(z.string(), z.any()).prefault({}).catch({}),  // 1.2.2: gifts / help per bond this week
     bondv: z.coerce.number().prefault(0).catch(0),
     tenv: z.coerce.number().prefault(0).catch(0),                // 1.3.8: 1 once older bonds had their paid milestones recorded
+    xs: z.record(z.string(), z.any()).prefault({}).catch({}),     // 1.6.1 (N5): invented characters seen { lowercase name: { n: appearances, d: last day } }
     lore: Str(''),                                                // 1.3.4: the card version of the lorebook this chat started from ([initvar])                // 1.2.2: 2 once Progress was converted to XP
   }),
 }).prefault({});

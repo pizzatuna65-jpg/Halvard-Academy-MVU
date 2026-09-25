@@ -71,6 +71,8 @@ Write actions in the chat as usual. Each reply ends with a folded "📜 State up
 
 **Updating the card.** The card installs its own lorebook when it is missing, and when SillyTavern still holds an older version it asks whether to update it (that replaces the lorebook; start a new chat afterwards). You can also do it by hand: character panel → More… → **Import Card Lore**. Tavern Helper scripts must be allowed for this character. If you forget, the first reply of a new chat warns you ("Old lorebook"). If the lorebook is not attached at all, the bracelet says so instead of syncing, with a button that runs Import Card Lore for you.
 
+**People the narrator invents.** A shopkeeper or a senior the story makes up gets a short record the second time they appear, so they keep the same look, manner and voice. The record holds 20; the ones you have not seen for longest make room. In the bracelet's row of people present, tap an invented character to **keep** them (a pin shows before the name) so they never leave the record; tap again to let them go.
+
 The bracelet shows what comes **next** today: the next class, the next item of an event's plan ("Next 09:00 · Sorting at the Arbiter Stone in the Arbiter Hall") or curfew.
 
 **Student file → Settings → Appearance** changes the colours of the panels and the bracelet: Pewter (the default), Midnight (darker), Rosewood (warm dark), Parchment (light) and Frost (light, cool). The choice is kept in this browser and is not written to the chat.

@@ -73,6 +73,7 @@ const CAST = UI.cast || {}, PRON = /*@@PRON@@*/{};
 /*@@AGE@@*/
 const aged = w => { const a = ageOf(w, W); return a ? w + ', ' + a : w; };
 const SINCE = UI.since || [], MAYBE = UI.maybe || [];
+const STALE = UI.stale || [], PHASE = UI.phase || null;   // 1.6.1 (N4, N6): campus events with no news for a week; the campus phase (engine)
 const JAGES = (getvar('stat_data.Journal') || []).slice(-5).reverse().map(l => (/^\[([^\]]+)\]/.exec(String(l)) || [])[1]).filter(w => w && ageOf(w, W));
 // 1.2.2 bonds: for each present NPC, what they will talk about at this rank (openness shifts the early tiers; goals, views of others
 // and the past need the real rank; secrets never come from rank) and what the bond allows; plus a ready bond event's directions
@@ -139,6 +140,9 @@ Today: <%- W._Event_today %>
 <%_ if (cur) { _%>
 Curfew: <%- cur %>
 <%_ } _%>
+<%_ if (PHASE && PHASE.line) { _%>
+Campus phase: <%- PHASE.line %>
+<%_ } _%>
 <%_ if (W._Happening && on('happenings')) { _%>
 Around campus today (optional, use only if it fits): <%- W._Happening %>
 <%_ } _%>
@@ -188,6 +192,9 @@ Old hooks (pay off or drop): <%- hOld.map(([k]) => k).join('; ') %>
 <%_ } _%>
 <%_ if (GS.length) { _%>
 Rumours going around: <%- GS.map(g => '"' + g[0] + '" (' + g[1] + ', day ' + g[2] + ')').join('; ') %>
+<%_ } _%>
+<%_ if (STALE.length) { _%>
+Campus events with no news for over a week (the world moves on without {{user}}: advance each through talk, a rumour, a notice or a letter when it fits, or remove it once it is over): <%- STALE.map(([k, u]) => k + ' (last news ' + aged(u) + ')').join('; ') %>
 <%_ } _%>
 <%_ for (const id of (CAST.gone || [])) { _%>
 <%- id %> spoke in the last reply but is not in Scene.Present: add them if they are still here; otherwise they are gone and stay silent.

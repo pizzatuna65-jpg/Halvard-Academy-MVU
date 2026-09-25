@@ -73,10 +73,14 @@ Bonds (one record per character {{user}} has actually met)
 - _Perks: the gifts (Rank 5) and Rank 10 benefits {{user}} holds; the engine records them when the rank rises (the event's directions in <now> say what it gives). They are real: honour each Effect in the story. When {{user}} spends a one-use perk (Uses 1), insert its exact key into /Perk_use/-; the engine applies it and removes it.
 
 Campus_State: the living world; it overrides the lorebook
-- Events {"<short title>": "one-line summary (M? W?)"}: only for events that change the campus. Update an existing key by summarising; never duplicate.
+- Events {"<short title>": {"Text": "one-line summary"}}: only for events that change the campus. When there is news, rewrite its Text to the latest state (never a duplicate key); remove it once it is over. The engine dates each change (Updated) and <now> lists events with no news for over a week.
 - Rumours (list), Location_changes {"<location>": "what changed"}, NPC_status {"<name>": "injured / expelled / missing…"}, New_relations {"A→B": "relationship formed in play"}.
 - Graduated (list): students who have left campus. The engine adds each year's third-years the morning after Graduation. Remove a name only if the story keeps that student at Halvard (repeating the year, staying on as staff); a graduate may still visit.
 - Secrets_revealed: insert "<FirstName>.<topic>" (topic: magic, pact, backstory, goal, plan, identity, relationship, other) only when {{user}} actually uncovers a hidden truth in the story.
+
+Extras: characters you invented (not in the roster or the lorebook), keyed by full name, spelled the same every time
+- When <cast> asks (their second appearance), add their record: {"<Full Name>": {"Who": "role, age, race", "Looks": "what anyone notices first", "Manner": "how they act and talk", "Calls_user": "what they call {{user}}", "Voice": "one typical line"}}. <cast> then shows it whenever they are present. Change a field only when the story changes it. Never change Keep (the player's).
+- Naming (the roster's own patterns): Humans have a given name and a family name, English or continental (Percival Applethorne, Tilly Marsh, Castor Moretti, Florian Villeneuve); Elves have flowing given names and soft or nature-made family names (Lenna Greenwind, Mirelle Lullwyn, Kanae Quveno); Beastkin often carry a playful or striking family name (Ruby Bonbon, Trixie Confetti, Vallie Goredust). Never give a new character a roster character's first or family name.
 
 <%_ if (on('planner')) { _%>
 Commitments: {"<title>": {"Desc": "", "Due": "M? W? Day HH:MM", "With": "", "Where": "place (optional)", "Type": "assignment|promise|appointment|club"}}. The engine fills _When and _Late. Remove when done; when _Late is true, resolve it in the story (late, excused or missed, with consequences), then remove it.
