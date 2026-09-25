@@ -4,11 +4,27 @@ import { registerMvuSchema } from 'https://testingcf.jsdelivr.net/gh/StageDog/ta
 // Prefix rules: `_Name` = visible to the AI but read-only for it (engine/builder writes); `$name` = hidden from the AI.
 
 // ---------- helpers ----------
+const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+// A value that is not a number, or null where an object belongs, fails the schema; the MVU zod helper then drops only that
+// command and keeps the previous value (StageDog tavern_resource util/mvu_zod.ts, checked in 1.3.3), which beats a default.
 const Num = (lo, hi, d) =>
   z.coerce.number().transform(v => _.clamp(Number.isFinite(v) ? v : d, lo, hi)).prefault(d);
 const Int = (lo, hi, d) =>
   z.coerce.number().transform(v => Math.round(_.clamp(Number.isFinite(v) ? v : d, lo, hi))).prefault(d);
-const Str = (d = '') => z.coerce.string().prefault(d);
+// 1.3.3 (bug hunt): null is '' (it used to become the text "null"), an object is its JSON
+const Str = (d = '') => z.preprocess(v => (v == null ? d : typeof v === 'object' ? JSON.stringify(v) : v), z.coerce.string()).prefault(d);
+const O = shape => z.object(shape).prefault({});
+// World.Time and Day are read loosely ("7:5", "9.30", "7pm", "monday"); anything unreadable becomes '' and the engine keeps the
+// previous clock instead of jumping to a default (a typo used to become 08:00 or Monday, which moved the story a day or a week on)
+const clockOf = v => {
+  const s = String(v == null ? '' : v).trim().toLowerCase();
+  let m = /^(\d{1,2})\s*[:.h]\s*(\d{1,2})\s*(am|pm)?$/.exec(s) || /^(\d{1,2})()\s*(am|pm)$/.exec(s);
+  if (!m) return s === 'noon' ? '12:00' : s === 'midnight' ? '00:00' : '';
+  let h = +m[1]; const mi = +(m[2] || 0);
+  if (m[3]) { if (h < 1 || h > 12) return ''; h = h % 12 + (m[3] === 'pm' ? 12 : 0); }
+  return h > 23 || mi > 59 ? '' : `${String(h).padStart(2, '0')}:${String(mi).padStart(2, '0')}`;
+};
+const dayOf = v => { const k = String(v == null ? '' : v).trim().slice(0, 3).toLowerCase(); return DAYS.find(d => d.toLowerCase() === k) || ''; };
 const Bool = d =>
   z.preprocess(v => (v === 'true' ? true : v === 'false' ? false : v), z.boolean()).prefault(d).catch(d);
 const Enum = (vals, d = vals[0]) => z.enum(vals).prefault(d).catch(d);
@@ -26,17 +42,16 @@ const s = v => (v === undefined || v === null ? '' : String(v));
 const n = (v, lo, hi, d) => { const x = Number(v); return _.clamp(Number.isFinite(x) ? x : d, lo, hi); };
 const b = (v, d = false) => (v === true || v === 'true' ? true : v === false || v === 'false' ? false : d);
 
-const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const PACT_TIERS = ['Lesser', 'Basic', 'Greater', 'Spirit Lord', 'Demon Lord', 'Grade IV', 'Grade III', 'Grade II', 'Grade I', 'Animal', 'Human'];
 
 // ---------- schema ----------
 export const Schema = z.object({
-  World: z.object({
+  World: O({
     Year: Int(1, 99, 1),
     Month: Int(1, 12, 1),
     Week: Int(1, 4, 1),
-    Day: Enum(DAYS, 'Mon'),
-    Time: z.string().regex(/^\d{1,2}:\d{2}$/).prefault('08:00').catch('08:00'),
+    Day: z.preprocess(v => (v === undefined ? 'Mon' : dayOf(v)), z.string()).catch(''),         // '' = unreadable: the engine keeps the previous day
+    Time: z.preprocess(v => (v === undefined ? '08:00' : clockOf(v)), z.string()).catch(''),    // '' = unreadable: the engine keeps the previous time
     Location: Str('Reception and Gatehouse'),
     _Period: Str(''),
     _Curfew: Str(''),
@@ -44,14 +59,14 @@ export const Schema = z.object({
     _Happening: Str(''),   // 5.3 (F20): today's seeded campus happening, engine-written
     _Season: Str(''),      // 1.1.0: Winter | Spring | Summer | Autumn (engine; '' when Weather is Off)
     _Weather: Str(''),     // 1.1.0: "Afternoon, autumn: steady rain, windy, 9 °C (cool)" (engine; '' when Weather is Off)
-  }).prefault({}),
+  }),
 
-  Scene: z.object({
+  Scene: O({
     Present: Rec(v => ({ Note: s(v.Note) }), 'Note'),
-  }).prefault({}),
+  }),
 
-  Player: z.object({
-    Profile: z.object({
+  Player: O({
+    Profile: O({
       Name: Str('{{user}}'),
       Pronouns: Str(''),
       Age: Int(0, 999, 18),
@@ -69,14 +84,14 @@ export const Schema = z.object({
       Goal: Str(''),
       // 1.3.0 (owner): three reputations, level -5..+5 computed by the engine from signed Rep XP ($xp, clamped at +-125).
       // The narrator reports what earned or cost reputation in /Rep_events. Public / Dorm are the pre-1.3.0 meters, read once for migration.
-      Reputation: z.object({
+      Reputation: O({
         _Academy: Int(-5, 5, 0), _Student: Int(-5, 5, 0), _Doves: Int(-5, 5, 0),
-        $xp: z.object({ Academy: Int(-125, 125, 0), Student: Int(-125, 125, 0), Doves: Int(-125, 125, 0) }).prefault({}),
+        $xp: O({ Academy: Int(-125, 125, 0), Student: Int(-125, 125, 0), Doves: Int(-125, 125, 0) }),
         Public: z.any().optional(), Dorm: z.any().optional(),
-      }).prefault({}),
-    }).prefault({}),
+      }),
+    }),
 
-    Vitals: z.object({
+    Vitals: O({
       HP: Num(0, 999, 100),
       HP_max: Num(1, 999, 100),
       Stamina: Num(0, 999, 100),
@@ -87,7 +102,7 @@ export const Schema = z.object({
       Resting: Enum(['none', 'rest', 'sleep'], 'none'),
       _Condition: Str('Healthy'),
       _Fatigue: Str('Fresh'),
-    }).prefault({}).transform(o => ({
+    }).transform(o => ({
       ...o,
       HP: Math.min(o.HP, o.HP_max),
       Stamina: Math.min(o.Stamina, o.Stamina_max),
@@ -99,24 +114,24 @@ export const Schema = z.object({
       Body_part: s(v.Body_part), Effect: s(v.Effect), Heals_by: s(v.Heals_by),
     }), 'Effect'),
 
-    Wallet: z.object({
+    Wallet: O({
       Points: Int(0, 1e9, 0),
       Coin: Int(0, 1e9, 0),   // real money (Banking House 1:1); the only money that works off campus (Plan 4.1, added 5.2)
       Transactions: StrList(20),
-    }).prefault({}),
+    }),
 
-    Academics: z.object({
+    Academics: O({
       Grades: StrRec(),
       Exams: StrRec(),
-    }).prefault({}),
+    }),
     // 1.1.0: weather conditions (Soaked, Chilled, Overheated, Head cold). The engine adds and clears them; the story may remove one.
     Conditions: Rec(v => ({ Effect: s(v.Effect), Since: s(v.Since) }), 'Effect'),
     // 1.3.0 training (engine): per track the starting value (base), what training has added in total and this week
     $Training: z.record(z.string(), z.any().transform(v => ({ base: n(v && v.base, 0, 99999, 0), gain: n(v && v.gain, 0, 99999, 0),
       w: n(v && v.w, -1, 1e9, -1), wg: n(v && v.wg, 0, 99999, 0) }))).prefault({}).catch({}),
-  }).prefault({}),
+  }),
 
-  Magic: z.object({
+  Magic: O({
     // written by the Student Builder (Batch 3); read-only for the AI
     // Cost_mode: per_use = Activation per cast | sustained = Activation to start + upkeep per in-world minute
     // | hybrid = sustained + Trigger per triggered use while active (D11)
@@ -128,14 +143,14 @@ export const Schema = z.object({
       Hidden: b(v.Hidden), Forbidden: b(v.Forbidden), Notes: s(v.Notes),
     }), 'Effect'),
     // written by the Student Builder; the Arbiter Stone reads Dominant only (D9)
-    _Affinity: z.object({
+    _Affinity: O({
       Types: StrList(4),
       Dominant: Str(''),
       Specialties: StrList(8),
       Preset: Enum(['', 'Grounded', 'Gifted', 'Prodigy', 'Unbound'], ''),   // before 1.2.0 only; the Builder now writes ''
       // 1.2.0: the student's own subtypes { "<name>": { Type, Forbidden } } (the catalogue lists are suggestions)
       Custom: Rec(v => ({ Type: s(v.Type), Forbidden: b(v.Forbidden) }), 'Type'),
-    }).prefault({}),
+    }),
     Active: Rec(v => ({ Technique: s(v.Technique), Note: s(v.Note), $started: n(v.$started, -1, 1e9, -1), $settled: n(v.$settled, -1, 1e9, -1) }), 'Technique'),
     Casts: z.array(z.any().transform(v => (typeof v === 'object' && v !== null
       ? { Technique: s(v.Technique), Times: n(v.Times, 1, 99, 1) } : { Technique: s(v), Times: 1 }))).prefault([]).catch([]),
@@ -146,16 +161,16 @@ export const Schema = z.object({
       Tier: PACT_TIERS.includes(v.Tier) ? v.Tier : 'Lesser', Presence: v.Presence === 'terms' ? 'terms' : 'summoned',
       Summoned: b(v.Summoned), Terms: s(v.Terms), Note: s(v.Note),
     }), 'Spirit'),
-  }).prefault({}),
+  }),
 
-  Hidden: z.object({
+  Hidden: O({
     _True_magic: Str(''),
     Cover_magic: Str(''),
     Concealment: Str(''),
     Known_by: StrList(40),
     Dove_attention: Int(0, 100, 0),
     _Stage: Str('Unnoticed'),
-  }).prefault({}),
+  }),
 
   // 1.2.2: Progress is the pre-1.2.2 bond meter; the engine converts it once into $xp and keeps it 0 (a raised one counts as an interaction)
   Bonds: Rec(v => ({
@@ -167,9 +182,15 @@ export const Schema = z.object({
     Last_seen: s(v.Last_seen), _Event_ready: b(v._Event_ready),
     $xp: n(v.$xp, 0, 9999, 0), $cool: n(v.$cool, -1, 1e9, -1),   // 1.2.2: bond XP toward the next rank, first day the next event may start (engine)
     $Known_old: Array.isArray(v.$Known_old) ? v.$Known_old.map(s).slice(-40) : [],   // 5.4: older facts, hidden from the AI, shown in the dossier
+    $tf: n(v.$tf, 0, 100, 0),   // 1.3.8: Tension decay carried between days (engine)
+    $ms: Array.isArray(v.$ms) ? v.$ms.map(Number).filter(Number.isFinite).slice(-11) : [],   // 1.3.8: ranks whose reputation milestone was already paid
+    $tdrop: n(v.$tdrop, -99, 1e9, -99),   // 1.4.3: day of the last Trust drop (a quiet week recovers it; engine)
+    $tlast: n(v.$tlast, 0, 100, 0),       // 1.4.4: size of that drop, for an 'understood' (engine)
+    $tbrk: n(v.$tbrk, 0, 1, 0),           // 1.4.4: maximum Tension already broke a rank; re-armed below 70 (engine)
+    $Recent: Array.isArray(v.$Recent) ? v.$Recent.filter(r => r && typeof r === 'object').map(r => ({ w: s(r.w), n: s(r.n), fx: s(r.fx) })).slice(-10) : [],   // 1.4.4: latest moments with {{user}} (engine)
   }), 'Title'),
 
-  Campus_State: z.object({
+  Campus_State: O({
     Events: StrRec(),
     Rumours: StrList(15),
     Location_changes: StrRec(),
@@ -177,7 +198,7 @@ export const Schema = z.object({
     New_relations: StrRec(),
     Secrets_revealed: StrList(80),
     Graduated: StrList(60),   // 1.0.3: students who have left campus after Graduation (engine adds the year's third-years)
-  }).prefault({}),
+  }),
 
   // Batch 5.1: Where (optional place, enables "Go here"); _When / _Late / $abs are computed by the engine from Due
   Commitments: Rec(v => ({ Desc: s(v.Desc), Due: s(v.Due), With: s(v.With), Type: s(v.Type), Where: s(v.Where),
@@ -192,18 +213,18 @@ export const Schema = z.object({
     Status: ['waiting', 'read', 'replied', 'sent'].includes(s(v.Status).toLowerCase()) ? s(v.Status).toLowerCase() : 'waiting',
   }), 'Gist'),
   // ---- Batch 5.2 ----
-  Competition: z.object({
+  Competition: O({
     Tier: CIEnum(['', 'Dorm', 'Academy', 'Kingdom', 'World'], ''),
     Status: CIEnum(['', 'entered', 'qualified', 'eliminated', 'champion', 'selected'], ''),
     Placement: Str(''),
     Team: StrList(4),       // teammates (not {{user}})
     Results: StrList(12),
-  }).prefault({}),
+  }),
   Projects: Rec(v => ({
     Kind: s(v.Kind) || 'other', Goal: s(v.Goal), Progress: Math.round(n(v.Progress, 0, 100, 0)),
     Needs: s(v.Needs), Where: s(v.Where), Due: s(v.Due), With: s(v.With),
   }), 'Goal'),
-  Trip: z.object({ Active: Bool(false), Destination: Str(''), Companions: StrList(6), Note: Str('') }).prefault({}),
+  Trip: O({ Active: Bool(false), Destination: Str(''), Companions: StrList(6), Note: Str('') }),
   Journal: StrList(30),   // "[M1 W1 Mon] turning point" — long-term memory (used by state-as-memory in 5.3)
   Clues: Rec(v => ({
     Thread: s(v.Thread) || 'Unsorted clues', Detail: s(v.Detail), Where: s(v.Where), Found: s(v.Found),
@@ -213,10 +234,10 @@ export const Schema = z.object({
     Status: ['open', 'solved', 'cold'].includes(s(v.Status).toLowerCase()) ? s(v.Status).toLowerCase() : 'open', Summary: s(v.Summary),
   }), 'Summary'),
 
-  Battle: z.object({
+  Battle: O({
     Active: Bool(false),
     Combatants: Rec(v => ({ HP: n(v.HP, 0, 999, 100), Stamina: n(v.Stamina, 0, 999, 100), Status: s(v.Status) }), 'Status'),
-  }).prefault({}),
+  }),
 
   // ---- 1.1.0 ----
   // Bag: key = the item name as bought. Qty 0 (or less) = gone: the engine removes it (the schema keeps 0 so a delta to 0 is not clamped back to 1).
@@ -235,7 +256,7 @@ export const Schema = z.object({
 
   // 1.2.2: interactions this reply, reported by the narrator; the engine turns them into bond XP and empties the list
   Interactions: z.array(z.any().transform(v => (typeof v === 'object' && v !== null
-    ? { With: s(v.With), Kind: s(v.Kind).trim().toLowerCase(), Gift: s(v.Gift).trim().toLowerCase() } : { With: s(v), Kind: 'talk', Gift: '' }))).prefault([]).catch([]),
+    ? { With: s(v.With), Kind: s(v.Kind).trim().toLowerCase(), Gift: s(v.Gift).trim().toLowerCase(), Public: b(v.Public), Note: s(v.Note).slice(0, 200) } : { With: s(v), Kind: 'talk', Gift: '', Public: false, Note: '' }))).prefault([]).catch([]),   // 1.4.4: Note (one sentence, for the bond's recent history)   // 1.4.0: Public (an apology in front of others)
 
   // 1.3.0: what earned or cost reputation this reply (narrator), training sessions (narrator), one-use perks spent (narrator);
   // the engine applies them and empties the lists
@@ -248,7 +269,7 @@ export const Schema = z.object({
 
   _Log: StrList(12),
 
-  $ui: z.object({
+  $ui: O({
     unlocks: StrList(60),
     discovered: StrList(80),
     toasts: StrList(10),
@@ -272,10 +293,14 @@ export const Schema = z.object({
     bondpace: Enum(['standard', 'fast', 'brisk', 'slow'], 'standard'),
     romrank: Int(0, 11, 8),                                            // romance opens at this rank (0 any, 11 off)
     bev: z.any().prefault({}).catch({}),
-    perks_used: StrList(60),                                          // 1.3.0: one-use perks already spent ("Council pardon (Irene), M3 W2 Tue")
-  }).prefault({}),
+    perks_used: StrList(60),
+    next: z.any().prefault(null).catch(null),                         // 1.3.4: the next thing on today's schedule (engine; bracelet)
+    portrait: Str(''),                                                // 1.3.4: the student's picture (a SillyTavern user image path)                                          // 1.3.0: one-use perks already spent ("Council pardon (Irene), M3 W2 Tue")
+    tsusp: StrList(40),                                               // 1.4.3: Rank 10 benefits suspended by low Trust (engine)
+    tune: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.3.1: training / reputation settings { id: value } (data/tuning.json; the engine checks the values)
+  }),
 
-  $eng: z.object({
+  $eng: O({
     abs: z.coerce.number().prefault(-1).catch(-1),
     daily: z.record(z.string(), z.any()).prefault({}).catch({}),
     auth: Str(''),   // 'builder' only inside a Student Builder patch; lets it write the read-only fields once
@@ -289,8 +314,10 @@ export const Schema = z.object({
     rum: z.record(z.string(), z.any()).prefault({}).catch({}),   // 1.1.0: rumour metadata { text: { born, fate } }
     wxs: z.any().prefault(null).catch(null),                     // 1.1.0: weather exposure counters and head-cold bookkeeping
     bweek: z.record(z.string(), z.any()).prefault({}).catch({}),  // 1.2.2: gifts / help per bond this week
-    bondv: z.coerce.number().prefault(0).catch(0),                // 1.2.2: 2 once Progress was converted to XP
-  }).prefault({}),
+    bondv: z.coerce.number().prefault(0).catch(0),
+    tenv: z.coerce.number().prefault(0).catch(0),                // 1.3.8: 1 once older bonds had their paid milestones recorded
+    lore: Str(''),                                                // 1.3.4: the card version of the lorebook this chat started from ([initvar])                // 1.2.2: 2 once Progress was converted to XP
+  }),
 }).prefault({});
 
 $(() => {

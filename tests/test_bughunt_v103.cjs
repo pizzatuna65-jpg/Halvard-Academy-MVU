@@ -4,7 +4,7 @@ const fs = require('fs'), path = require('path'), ejs = require('ejs');
 const { Schema, runEngine, initState, applyPatch, ok, ROOT } = require('./harness.cjs');
 const W = S => `Y${S.World.Year} M${S.World.Month} W${S.World.Week} ${S.World.Day} ${S.World.Time}`;
 const set = (S, o, x) => applyPatch(S, Object.entries(o).map(([k, v]) => ({ op: 'replace', path: '/World/' + k, value: v })).concat(x || []));
-const S0 = initState();
+const S0 = initState({ etnie: true });
 const builder = (S, tech, extra = []) => applyPatch(S, [{ op: 'replace', path: '/Magic/_Techniques', value: tech },
   { op: 'replace', path: '/Player/Vitals/Mana', value: 100 }, { op: 'replace', path: '/$eng/auth', value: 'builder' }, ...extra]);
 
@@ -108,8 +108,8 @@ Q = set(Q, { Year: 2, Month: 9, Week: 4, Day: 'Sun' }); const p1 = Q.Player.Wall
 Q = comp(comp(Q, 'entered'), 'champion'); ok(Q.Player.Wallet.Points - p1 === 5000, 'a win the next year pays again');
 
 console.log('F09 alias keys merge into the canonical record');
-const AL = applyPatch(S0, [{ op: 'insert', path: '/Bonds/etnie', value: { Trust: 95 } }]);
-ok(!AL.Bonds.etnie && AL.Bonds.Etnie.Trust === 95 && AL.Bonds.Etnie.Rank === 3 && AL.Bonds.Etnie.Known_facts.length === 1, `Trust 95 kept, rank and facts intact (Trust ${AL.Bonds.Etnie.Trust}, Rank ${AL.Bonds.Etnie.Rank})`);
+const AL = applyPatch(S0, [{ op: 'insert', path: '/Bonds/etnie', value: { Trust: 60 } }]);   // 1.4.3: a drop (the narrator can no longer raise Trust)
+ok(!AL.Bonds.etnie && AL.Bonds.Etnie.Trust === 60 && AL.Bonds.Etnie.Rank === 3 && AL.Bonds.Etnie.Known_facts.length === 1, `Trust 60 kept, rank and facts intact (Trust ${AL.Bonds.Etnie.Trust}, Rank ${AL.Bonds.Etnie.Rank})`);
 const AP = applyPatch(applyPatch(S0, [{ op: 'replace', path: '/Scene/Present', value: { Etnie: { Note: 'old' } } }]), [{ op: 'insert', path: '/Scene/Present/etnie', value: { Note: 'waving' } }]);
 ok(AP.Scene.Present.Etnie.Note === 'waving' && !AP.Scene.Present.etnie, 'Scene.Present alias note merges');
 

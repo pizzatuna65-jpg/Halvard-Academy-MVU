@@ -1,0 +1,26 @@
+{
+ "_note": "1.3.1 (owner playtest): player settings for the 1.3.0 systems (Student file > Settings), stored in $ui.tune {id: value}. Single source for the engine (tools/gen_engine.py) and the UI (tools/gen_ui.py). def is the value used when nothing is set: gen_engine.py asserts it equals the number in data/training.json / reputation.json, so the default game is unchanged. A value must be one of opts; 0 means 'no limit' or 'off' where the label says so.",
+ "groups": [
+  {
+   "id": "training",
+   "name": "Training",
+   "hint": "How fast training grows your mana pool and stamina, in percent of the value you started with.",
+   "rows": [
+    {"id": "trn_session", "name": "Gain per session", "desc": "What one real session (an hour or more of drilling) adds, before partner bonuses.", "opts": [[0.5, "0.5%"], [1, "1%"], [2, "2%"], [3, "3%"]], "def": 1, "src": "training.session_pct"},
+    {"id": "trn_week", "name": "Weekly limit", "desc": "Most that training can add in one week. Gift and Rank 10 jumps ignore it.", "opts": [[1.5, "1.5%"], [2.5, "2.5%"], [5, "5%"], [0, "No limit"]], "def": 2.5, "src": "training.weekly_pct"},
+    {"id": "trn_total", "name": "Lifetime limit", "desc": "Most that training can ever add to a track.", "opts": [[50, "+50%"], [100, "+100% (twice the start)"], [200, "+200%"], [0, "No limit"]], "def": 100, "src": "training.total_pct"}
+   ]
+  },
+  {
+   "id": "reputation",
+   "name": "Reputation",
+   "hint": "How reputation (Academy, Student, Doves) moves.",
+   "rows": [
+    {"id": "rep_mult", "name": "Pace", "desc": "Multiplies every reputation gain and loss (deeds, bond milestones, tension).", "opts": [[0.5, "Slow (x0.5)"], [1, "Standard"], [1.5, "Fast (x1.5)"], [2, "Very fast (x2)"]], "def": 1, "src": ""},
+    {"id": "rep_week", "name": "Weekly limit for everyday deeds", "desc": "Repeatable good deeds count up to this much a week per reputation; events and losses have no limit.", "opts": [[3, "+3"], [5, "+5"], [10, "+10"], [0, "No limit"]], "def": 5, "src": "reputation.weekly_cap"},
+    {"id": "rep_bond", "name": "Bond milestones", "desc": "A bond reaching Rank 5 or Rank 10 raises the matching reputation (+5 / +10: staff Academy, students Student, Milena Doves).", "opts": [[1, "Until +3"], [2, "Always"], [0, "Off"]], "def": 1, "src": ""},
+    {"id": "rep_tension", "name": "Tension penalty", "desc": "A bond reaching high Tension (70) costs the matching reputation -5, maximum Tension (100) another -10.", "opts": [[1, "On"], [0, "Off"]], "def": 1, "src": ""}
+   ]
+  }
+ ]
+}

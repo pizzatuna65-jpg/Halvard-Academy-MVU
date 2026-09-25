@@ -1,7 +1,8 @@
 [Entrance Event]
 When: Month 1 Week 1 Monday
-- Sorting: new students place a hand on the Arbiter Stone to decide their dorm.
-- Tour: each new student is grouped with 3 other newcomers and 1 senior to tour the whole campus all day.
-- Club promotion: stands across the academy; registration closes at 5pm. Held on sorting day on purpose, so clubs recruit before dorm loyalty settles.
-- Seniors show new students their rooms inside the dorms.
-- Entrance Feast, 7pm, Ring Dining Hall head master and vice head master speech before dining.
+- 07:00-09:00 Arrival: new students check in at Reception and Gatehouse.
+- 09:00 Sorting, in the Arbiter Hall: new students place a hand on the Arbiter Stone to decide their dorm.
+- 10:00-18:00 Tour: each new student is grouped with 3 other newcomers and 1 senior to tour the whole campus all day.
+- Club promotion: stands across the academy, 10:00-18:00 on sorting day, then every afternoon after classes (16:00-18:00) until Friday; registration closes Friday at 18:00. It opens on sorting day on purpose, so clubs recruit before dorm loyalty settles.
+- Late afternoon: seniors show new students their rooms inside the dorms.
+- 19:00 Entrance Feast in the Ring Dining Hall: the Headmaster and the Vice Headmaster speak before dinner.

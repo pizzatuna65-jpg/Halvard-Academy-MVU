@@ -39,18 +39,7 @@ Magic:
 Hidden:
   Known_by: []
   Dove_attention: 0
-Bonds:
-  Etnie:
-    Rank: 3
-    Trust: 70
-    Tension: 0
-    Title: Self-declared big sister
-    Romance: false
-    Known_facts:
-      - Third-year, Viridian (dog beastkin); insists she is {{user}}'s big sister
-    Milestones:
-      - Etnie decided {{user}} is her little sibling
-    Last_seen: ""
+Bonds: {}
 Campus_State:
   Events: {}
   Rumours: []
@@ -73,3 +62,5 @@ Battle:
   Active: false
   Combatants: {}
 _Log: []
+$eng:
+  lore: "@@VERSION@@"

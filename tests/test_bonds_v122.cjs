@@ -10,7 +10,7 @@ console.log('Bonds 1.2.2');
 const IA = (With, Kind, Gift) => ({ op: 'insert', path: '/Interactions/-', value: Gift ? { With, Kind, Gift } : { With, Kind } });
 const T = (S, time, extra = []) => applyPatch(S, [{ op: 'replace', path: '/World/Time', value: time }, ...extra]);
 const nextDay = (S, day, extra = []) => applyPatch(S, [{ op: 'replace', path: '/World/Day', value: day }, { op: 'replace', path: '/World/Time', value: '12:00' }, ...extra]);
-let S = initState();
+let S = initState({ etnie: true });
 S = T(S, '12:00', [{ op: 'replace', path: '/World/Location', value: 'Courtyards' }, { op: 'replace', path: '/Scene/Present', value: { Trixie: { Note: 'juggling' } } }]);
 ok(S.Bonds.Trixie && S.Bonds.Trixie.Rank === 0 && S.Bonds.Trixie.$xp === 0 && S.$eng.bondv === 2, 'meeting starts a bond at Rank 0, XP 0');
 ok(S.Interactions.length === 0, 'Interactions start empty');
@@ -93,12 +93,12 @@ ok(!E3.$ui.bev.Trixie.now, 'scripted event: wrong day → not now');
 const now505 = fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/505.txt'), 'utf8');
 const gv = St => k => _.get({ stat_data: St }, k);
 const n1 = ejs.render(now505, { getvar: gv(R1) });
-ok(/Bond: Trixie \(Rank 1, open\): shares [^\n]*likes, dislikes and hobbies/.test(n1) && /Not yet: their personality/.test(n1) && /At this rank: greets/.test(n1), 'Now: an open NPC at Rank 1 shares up to Rank 3 topics; the next tier is deflected');
+ok(/Bond: Trixie \(Rank 1, open, Trust 63 neutral\): shares [^\n]*likes, dislikes and hobbies/.test(n1) && /Not yet: their personality/.test(n1) && /At this rank: greets/.test(n1), 'Now: an open NPC at Rank 1 shares up to Rank 3 topics; the next tier is deflected');
 const n0 = ejs.render(now505, { getvar: gv(A) });
 ok(/Bond event available with Trixie \(Rank 0 → 1\)/.test(n0) && n0.includes(BR.themes['0']) && /raise \/Bonds\/Trixie\/Rank by 1/.test(n0), 'Now: a ready event present in the scene gives its directions and how to close it');
 const Ir = T(S, '12:50', [{ op: 'replace', path: '/Scene/Present', value: { Irene: { Note: '' } } }]);
 const ni = ejs.render(now505, { getvar: gv(Ir) });
-ok(/Bond: Irene \(Rank 0, guarded\): shares how they look and their public role\. Not yet: their name/.test(ni), 'Now: a guarded NPC at Rank 0 shares only the public tier');
+ok(/Bond: Irene \(Rank 0, guarded, Trust 40 neutral\): shares how they look and their public role\. Not yet: their name/.test(ni), 'Now: a guarded NPC at Rank 0 shares only the public tier');
 
 // ---- UI
 U.view.ptab = 'bonds'; let h = U.PANELS.people.render(A);
@@ -109,7 +109,9 @@ U.view.tab = 'settings'; h = U.renderProfile(R1);
 ok(/data-act="bondset" data-f="bondpace" data-v="fast"/.test(h) && /data-f="romrank" data-v="8" class="on"/.test(h), 'Settings: bond pace and romance rank');
 
 // ---- the lorebook importer
-const out = execFileSync('python3', [path.join(ROOT, 'tools/import_bond_events.py'), '--check', path.join(ROOT, 'docs/examples/bond_events_example.txt')], { encoding: 'utf8' });
+const PY = process.platform === 'win32' ? 'python' : 'python3';
+process.env.PYTHONIOENCODING = 'utf-8';
+const out = execFileSync(PY, [path.join(ROOT, 'tools/import_bond_events.py'), '--check', path.join(ROOT, 'docs/examples/bond_events_example.txt')], { encoding: 'utf8' });
 ok(/2 bond events: Irene 0→1, Trixie 4→5/.test(out), 'importer parses the example lorebook');
-let bad = ''; try { execFileSync('python3', [path.join(ROOT, 'tools/import_bond_events.py'), '--check', '-'], { input: '', encoding: 'utf8', stdio: 'pipe' }); } catch (e) { bad = String(e.stderr || e.message); }
+let bad = ''; try { execFileSync(PY, [path.join(ROOT, 'tools/import_bond_events.py'), '--check', '-'], { input: '', encoding: 'utf8', stdio: 'pipe' }); } catch (e) { bad = String(e.stderr || e.message); }
 ok(!!bad, 'importer refuses a missing file');

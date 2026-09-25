@@ -48,7 +48,8 @@ for (const s of card.extensions.tavern_helper.scripts) {
   const f = path.join(tmp, s.name.replace(/\W+/g, '_') + '.mjs'); fs.writeFileSync(f, s.content);
   let err = ''; try { cp.execFileSync('node', ['--check', f], { stdio: 'pipe' }); } catch (e) { err = String(e.stderr).split('\n').slice(0, 4).join(' '); }
   ok(!err, `script "${s.name}" parses` + (err ? ': ' + err : ''));
-  ok(!/\b(localStorage|sessionStorage)\b/.test(s.content), `script "${s.name}" uses no browser storage`);
+  // game state lives in MVU; the one exception is the 1.3.1 colour theme, a per-browser display preference (key THEME_KEY)
+  ok(!/\b(localStorage|sessionStorage)\b/.test(s.content.replace(/localStorage\.(getItem|setItem)\(THEME_KEY\b/g, '')), `script "${s.name}" uses no browser storage (except the colour theme)`);
 }
 const eng = card.extensions.tavern_helper.scripts.find(s => s.name === 'Engine').content;
 ok(!/Math\.random\(/.test(eng.replace(/\/\/.*$/gm, '')), 'engine never calls Math.random() (plan 4.6)');

@@ -8,47 +8,77 @@ const NAME_RX = Object.entries(NAME_FORMS).map(([id, forms]) => [id, new RegExp(
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const DAY_MIN = 1440, YEAR_DAYS = 12 * 4 * 7;
 const ALL = DAYS, MON_THU = DAYS.slice(0, 4), MON_FRI = DAYS.slice(0, 5), MON_SAT = DAYS.slice(0, 6);
+// 1.3.1 (owner playtest): every event carries its day plan `s` (from its lore entry; one text, or one per day), shown in the
+// calendar and with _Event_today. `curfew` is one hour for all its days or one per day.
+const DORM_DAY = "09:00–18:00 open house: the common room shows the dorm's history and the founding warden is honoured with a small rite at the entrance; upperclassmen showcase casting in the courtyard, first-years run booths, a public lesson for outsiders, food stalls, type contests open to all and the dorm tournament; 19:00 dorm-only closing dinner, first-years welcomed with a token of belonging";
+const MIDTERM = { Mon: '08:00 Magic Theory, 10:00 Etiquette (written papers); afternoon free', Tue: '08:00 History (written); 13:00–16:00 Potion Crafting practical (one brew from a sealed brief)',
+  Wed: '08:00–16:00 Dark Magic Defense practicals, one student at a time against the teacher (marked on how long they hold)', Thu: '08:00–16:00 Combat practicals, students paired within their year, marked by combat role' };
+const FINALS = '08:00–18:00 the single practical trial, one student at a time: theory door, beast, potion, cursed room, examiner in role, duel with a staff member; Royal Inspectorate examiners watch from the gallery';
+const BOOTHS = 'Classes as usual; 16:00–18:00 club booths across the academy';
 const EVENTS = [
-  { m: 1, w: 1, d: ['Mon'], t: 'Entrance Event (Arbiter Stone sorting)', noclass: 1 },
-  { m: 1, w: 3, d: ['Sat', 'Sun'], t: 'Star Night (Sat evening to Sun dawn; no 8pm curfew)', nocurfew: 1 },
-  { m: 1, w: 4, d: ['Sat'], t: 'Spiritual Dorm Day' },
-  { m: 2, w: 1, d: ['Fri', 'Sat'], t: 'Warding Rite (Fri dusk to Sat dawn; the whole academy renews the wards)' },
-  { m: 2, w: 3, d: ['Wed', 'Thu', 'Fri'], t: 'Creature Studies Expedition (off-grounds, Grade III country)', noclass: 1, away: 1 },
-  { m: 3, w: 1, d: MON_THU, t: 'Midterm exams', noclass: 1 },
-  { m: 3, w: 2, d: ['Fri', 'Sat'], t: 'Club Festival' },
-  { m: 3, w: 3, d: MON_SAT, t: 'Training Week (cross-dorm sparring allowed; curfew 21:00)', curfew: 21 },
-  { m: 3, w: 4, d: ['Sat', 'Sun'], t: 'Dorm Competition (solo, top 16 qualify)', noclass: 1 },
-  { m: 4, w: 1, d: ['Wed'], t: 'Secret Fools Day (prank day, dorm name-draw)' },
-  { m: 4, w: 2, d: ['Tue'], t: 'Independence Crowning Day (airship trip to the capital; fireworks on campus at night; curfew 22:00)', noclass: 1, curfew: 22, away: 1 },
-  { m: 4, w: 3, d: ['Sat'], t: 'Mystic Dorm Day' },
-  { m: 5, w: 1, d: MON_THU, t: 'End of Semester exams', noclass: 1 },
-  { m: 5, w: 2, d: ['Fri'], t: 'Results & Dorm Ranking (Player.Profile.Dorm_rank is updated today)', ranking: 1 },
-  { m: 5, w: 4, d: ALL, t: 'Mid-Year Break (students go home)', home: 1 },
+  { m: 1, w: 1, d: ['Mon'], t: 'Entrance Event (Arbiter Stone sorting)', noclass: 1,
+    s: '07:00–09:00 arrivals at Reception and Gatehouse; 09:00 sorting at the Arbiter Stone in the Arbiter Hall; 10:00–18:00 campus tour all day (three other newcomers and one senior per group) while club booths stand across the academy (sign-up open until Friday 18:00); late afternoon: seniors show the new students their dorm rooms; 19:00 Entrance Feast in the Ring Dining Hall, the Headmaster and Vice Headmaster speak before dinner' },
+  { m: 1, w: 1, d: ['Tue', 'Wed', 'Thu', 'Fri'], t: 'Club sign-up week (club booths after classes)',
+    s: { Tue: BOOTHS, Wed: BOOTHS, Thu: BOOTHS, Fri: BOOTHS + '; last day: club registration closes at 18:00' } },
+  { m: 1, w: 3, d: ['Sat', 'Sun'], t: 'Star Night (Sat evening to Sun dawn; no 8pm curfew)', nocurfew: 1,
+    s: { Sat: 'Sunset to sunrise, no 8pm curfew; 20:00–00:00 night market near the Grassy Field and Hills (students and mall vendors); stargazing on the hills, tents and bedrolls; midnight: the great meteor shower (a wish made during it is believed to come true)', Sun: 'Until dawn: students sleep out on the Grassy Field and Hills; the curfew is back from dawn' } },
+  { m: 1, w: 4, d: ['Sat'], t: 'Spiritual Dorm Day', s: 'Viridian Dormitory: ' + DORM_DAY },
+  { m: 2, w: 1, d: ['Fri', 'Sat'], t: 'Warding Rite (Fri dusk to Sat dawn; the whole academy renews the wards)',
+    s: { Fri: 'Classes as usual while staff build a giant magic circle in the Main Courtyard all day; dusk (about 17:00): the Bell Tower rings a special pattern and every student gathers in the courtyard; speeches from the Headmaster, the Vice Headmaster and the Warden; the Dorm Heads lead each dorm through the shared working; then a feast in the Ring Dining Hall', Sat: 'Until dawn: the feast runs late after the working' } },
+  { m: 2, w: 3, d: ['Wed', 'Thu', 'Fri'], t: 'Creature Studies Expedition (off-grounds, Grade III country)', noclass: 1, away: 1,
+    s: { Wed: '07:00 airships leave, one per year level (half a day to the Grand Vast Forest); afternoon: make camp (tents, cookfires, watch rotations) and prepare gear', Thu: 'Morning: each group of four is assigned a beast to bring back within 24 hours (Years 1–2 Grade III, Year 3 Grade II); staff shadow at a distance and pull out groups in trouble', Fri: 'Morning: break camp and fly home, back on campus by evening; catches count dead or alive' } },
+  { m: 3, w: 1, d: MON_THU, t: 'Midterm exams', noclass: 1, s: MIDTERM },
+  { m: 3, w: 2, d: ['Fri', 'Sat'], t: 'Club Festival',
+    s: { Fri: 'Classes in the morning; 13:00–18:00 every club runs a stand in the Main Courtyard: demonstrations, exhibition matches, sales, food', Sat: '09:00–18:00 stands and exhibition matches all day; everyone drops one gold coin at the best stand (never their own club); the winner is announced at the close, 18:00' } },
+  { m: 3, w: 3, d: MON_SAT, t: 'Training Week (cross-dorm sparring allowed; curfew 21:00)', curfew: 21,
+    s: 'Classes as usual; from 16:00 the Combat Grounds, duelling rings and practice halls stay open and supervised into the evening; sparring across years and dorms; curfew 21:00' },
+  { m: 3, w: 4, d: ['Sat', 'Sun'], t: 'Dorm Competition (solo, top 16 qualify)', noclass: 1,
+    s: { Sat: '09:00–18:00 solo ranking bouts inside each dorm, open to the whole dorm', Sun: '09:00–18:00 the ranking bouts finish; every entrant gets a placement and the top 16 of each dorm qualify for the Academy Competition' } },
+  { m: 4, w: 1, d: ['Wed'], t: 'Secret Fools Day (prank day, dorm name-draw)',
+    s: "Morning: participants draw a dorm-mate's name in secret, then prank them without warning all day; classes still run; Merryhew's biggest sale of the year" },
+  { m: 4, w: 2, d: ['Tue'], t: 'Independence Crowning Day (airship trip to the capital; fireworks on campus at night; curfew 22:00)', noclass: 1, curfew: 22, away: 1,
+    s: "07:00 the whole academy flies to the capital; morning: parade and the King's speech; free time in groups of four (coin only) until the afternoon muster; back before dark, passenger lists counted twice; night: fireworks over the Grassy Field and Hills; curfew 22:00" },
+  { m: 4, w: 3, d: ['Sat'], t: 'Mystic Dorm Day', s: 'Light Dormitory: ' + DORM_DAY },
+  { m: 5, w: 1, d: MON_THU, t: 'End of Semester exams', noclass: 1, s: FINALS },
+  { m: 5, w: 2, d: ['Fri'], t: 'Results & Dorm Ranking (Player.Profile.Dorm_rank is updated today)', ranking: 1,
+    s: '09:00 assembly in the Arbiter Hall: trial results stage by stage, then the new dorm ranking read aloud last; 19:00 feast in the Ring Dining Hall' },
+  { m: 5, w: 4, d: ALL, t: 'Mid-Year Break (students go home)', home: 1,
+    s: { Mon: 'Morning: airships leave; staying is allowed (the canteen runs short hours, half the mall is closed)', Sun: 'Airships bring the students back during the day' } },
   { m: 6, w: 1, d: MON_FRI, t: 'Return Week' },
-  { m: 6, w: 3, d: ['Sat'], t: 'Sports Day (magic banned outright)' },
-  { m: 6, w: 4, d: ['Wed', 'Thu', 'Fri', 'Sat'], t: 'Academy Competition (cross-dorm teams of 4)' },
-  { m: 7, w: 2, d: ALL, t: 'Magical & Science Fair week' },
-  { m: 7, w: 3, d: ALL, t: 'The Thinning: the seal is at its weakest; academy locked down all week', lockdown: 1 },
-  { m: 8, w: 2, d: ['Thu', 'Fri', 'Sat', 'Sun'], t: 'Traveling Circus visits (Thu evening to Sun)' },
-  { m: 8, w: 3, d: ['Thu', 'Fri', 'Sat'], t: 'Academy Showcase' },
-  { m: 8, w: 4, d: ['Sat'], t: 'Elemental Dorm Day' },
-  { m: 9, w: 1, d: MON_THU, t: 'Midterm exams', noclass: 1 },
-  { m: 9, w: 2, d: ['Thu', 'Fri', 'Sat'], t: 'Academy Bazaar' },
-  { m: 9, w: 3, d: ['Sat'], t: 'Academy Founder Day' },
-  { m: 9, w: 4, d: ['Thu', 'Fri', 'Sat', 'Sun'], t: 'Kingdom Competition (four academies, one team each)' },
-  { m: 10, w: 1, d: ['Tue'], t: 'Remembrance Day' },
-  { m: 10, w: 2, d: ['Sat'], t: 'Occult Dorm Day' },
-  { m: 10, w: 4, d: ['Fri', 'Sat', 'Sun'], t: 'Harvest Festival (Fri evening to Sun)' },
-  { m: 11, w: 1, d: MON_THU, t: 'End of Semester exams', noclass: 1 },
-  { m: 11, w: 2, d: ['Fri'], t: 'Results & Final Ranking (Player.Profile.Dorm_rank is updated today)', ranking: 1 },
-  { m: 11, w: 3, d: ['Mon', 'Tue', 'Wed'], t: 'Academy Trip (Sunreach Bay, abroad)', noclass: 1, away: 1 },
-  { m: 11, w: 4, d: ['Wed', 'Thu', 'Fri', 'Sat'], t: 'World Competition abroad (the national four)', away: 1 },
-  { m: 11, w: 4, d: ['Sun'], t: 'Graduation (everyone attends; third-years leave by airship next morning)', noclass: 1, grad: 1 },
+  { m: 6, w: 3, d: ['Sat'], t: 'Sports Day (magic banned outright)', s: "09:00–18:00 events, no magic: running and team events on the Sports Field, crowd contests in the Main Courtyard, the rest at the lake and the Combat Grounds; medals tallied by dorm at the day's end" },
+  { m: 6, w: 4, d: ['Wed', 'Thu', 'Fri', 'Sat'], t: 'Academy Competition (cross-dorm teams of 4)', s: '09:00–18:00 knockout matches between the cross-dorm teams of four; the winning team represents the academy' },
+  { m: 7, w: 2, d: ALL, t: 'Magical & Science Fair week',
+    s: { Mon: 'Stands are built in the Main Courtyard through the week; classes as usual', Tue: 'Stands are built in the Main Courtyard; classes as usual', Wed: 'Stands are built in the Main Courtyard; classes as usual', Thu: 'Last day of building; classes as usual',
+      Fri: 'Classes in the morning; 13:00–18:00 set-up and viewing in the Main Courtyard', Sat: '09:00–18:00 judging: a staff panel questions and scores every stand' } },
+  { m: 7, w: 3, d: ALL, t: 'The Thinning: the seal is at its weakest; academy locked down all week', lockdown: 1, s: 'All week: absolute curfew, academy locked, nobody outside' },
+  { m: 8, w: 2, d: ['Thu', 'Fri', 'Sat', 'Sun'], t: 'Traveling Circus visits (Thu evening to Sun)', curfew: 22,
+    s: { Thu: 'Evening: the great tent opens in the Main Courtyard; stands, games, sideshows and fortune tellers across the grounds (stalls take points); curfew 22:00', Fri: 'Classes in the morning; shows several times a day from the afternoon; curfew 22:00', Sat: 'Classes in the morning; shows several times a day from the afternoon; curfew 22:00', Sun: 'Shows all day, the last one in the evening; curfew 22:00' } },
+  { m: 8, w: 3, d: ['Thu', 'Fri', 'Sat'], t: 'Academy Showcase',
+    s: { Thu: '09:00–18:00 acts on the Main Courtyard stage; parents and guardians visit (logged at the Gatehouse)', Fri: '09:00–18:00 acts on the Main Courtyard stage; families visit', Sat: '09:00–18:00 the last acts; scores tallied by dorm in the evening to name the most talented dorm' } },
+  { m: 8, w: 4, d: ['Sat'], t: 'Elemental Dorm Day', s: 'Fire Dormitory: ' + DORM_DAY },
+  { m: 9, w: 1, d: MON_THU, t: 'Midterm exams', noclass: 1, s: MIDTERM },
+  { m: 9, w: 2, d: ['Thu', 'Fri', 'Sat'], t: 'Academy Bazaar', s: '09:00–18:00 invited traders fill the Main Courtyard (stalls take points, haggling expected); traders logged at the Gatehouse, the Doves watch the stock and the crowd' },
+  { m: 9, w: 3, d: ['Sat'], t: 'Academy Founder Day', s: "09:00 speeches from the Headmaster and Vice Headmaster in the Arbiter Hall, then a short rite at the Founder's Statue; all day: the optional treasure hunt across the campus; 19:00 feast in the Ring Dining Hall" },
+  { m: 9, w: 4, d: ['Thu', 'Fri', 'Sat', 'Sun'], t: 'Kingdom Competition (four academies, one team each)', s: "09:00–18:00 knockout matches between the four academies' teams; each member of the winning team earns 5,000 points" },
+  { m: 10, w: 1, d: ['Tue'], t: 'Remembrance Day', s: 'All day: nothing loud (no clubs, duelling, music, games or sport); classes run quietly, the Bell Tower keeps a slow pattern, bouquets line the halls; evening (about 19:00): lantern release on the Grassy Field and Hills, one lantern each' },
+  { m: 10, w: 2, d: ['Sat'], t: 'Occult Dorm Day', s: 'Sky Dormitory: ' + DORM_DAY },
+  { m: 10, w: 4, d: ['Fri', 'Sat', 'Sun'], t: 'Harvest Festival (Fri evening to Sun)', curfew: { Fri: 23, Sat: 23 },
+    s: { Fri: 'Classes as usual; from 17:00 cafés, food stalls, game booths, haunted houses and stage acts, costumes and carved lanterns; families visit (logged at the Gatehouse); curfew 23:00', Sat: '09:00 until late: the festival all day; curfew 23:00', Sun: 'The festival all day; evening: fireworks over the lake, watched from the Grassy Field and Hills; the usual curfew' } },
+  { m: 11, w: 1, d: MON_THU, t: 'End of Semester exams', noclass: 1, s: FINALS },
+  { m: 11, w: 2, d: ['Fri'], t: 'Results & Final Ranking (Player.Profile.Dorm_rank is updated today)', ranking: 1,
+    s: '09:00 assembly in the Arbiter Hall: trial results stage by stage, then the final dorm ranking read aloud last; 19:00 feast in the Ring Dining Hall' },
+  { m: 11, w: 3, d: ['Mon', 'Tue', 'Wed'], t: 'Academy Trip (Sunreach Bay, abroad)', noclass: 1, away: 1,
+    s: { Mon: '07:00 airships leave (half a day to Sunreach Bay); beachfront hotels, four to a room; free time in groups of four; the teachers set a curfew', Tue: "Free time in groups of four (the day side only; the night side is out of bounds); the teachers' curfew", Wed: 'Morning free; afternoon: fly home, back by evening' } },
+  { m: 11, w: 4, d: ['Wed', 'Thu', 'Fri', 'Sat'], t: 'World Competition abroad (the national four)', away: 1, s: 'Abroad: the national four compete; the rest of the academy follows the news' },
+  { m: 11, w: 4, d: ['Sun'], t: 'Graduation (everyone attends; third-years leave by airship next morning)', noclass: 1, grad: 1,
+    s: '09:00 ceremony in the Arbiter Hall: the Headmaster speaks, the Dorm Heads read out their graduates, each touches the Arbiter Stone a last time; afternoon: recruitment tables (noble houses, the Royal Inspectorate, the Dovecote, the Bank, hunting companies, guilds); 19:00 farewell feast' },
   { m: 12, w: 1, d: ALL, t: 'Kingdom-wide holiday: students go home', home: 1 },
   { m: 12, w: 2, d: ALL, t: 'Kingdom-wide holiday: students go home', home: 1 },
   { m: 12, w: 3, d: ALL, t: 'Kingdom-wide holiday: students go home', home: 1 },
   { m: 12, w: 4, d: ALL, t: 'Kingdom-wide holiday: students go home', home: 1 },
 ];
+const schedOf = (e, day) => (!e.s ? '' : typeof e.s === 'string' ? e.s : e.s[day] || '');
+const curfewHour = (e, day) => (e.curfew && typeof e.curfew === 'object' ? e.curfew[day] : e.curfew);
 const TIMETABLE = {
   Mon: ['Magic Theory [M]', 'History [M]', 'Combat [D] (Combat Grounds)'],
   Tue: ['Dark Magic Defense [D]', 'Magic Theory [D]', 'Potion Crafting [M] (Potion Halls)'],
@@ -62,17 +92,52 @@ const PAYOUT = [[1, 3000], [3, 2000], [10, 1200], [25, 800], [50, 500], [Infinit
 const DAILY_BOND_CAP = 3;   // before 1.2.2 only (Progress); the XP system reads data/bond_rules.json
 // 1.2.2 bond system (owner design): XP per kind of interaction with daily/weekly limits, rising XP per rank scaled by the pace
 // setting, a cooldown after each rank, a bond event to rank up (scripted in data/bond_events.json, else the rank's default theme).
-const BR = {"_note":"1.2.2 bond system, single source for the engine (tools/gen_engine.py), the UI (tools/gen_ui.py) and the Now entry (tools/gen_mvu_entries.py). Edit here, then rebuild. xp_base[r] = XP from Rank r to Rank r+1 at standard pace; cool_base[r] = days after reaching Rank r before its next bond event can start. pace multiplies both (full rank: fast ~1 month, brisk ~2 months, standard ~1 semester, slow ~1 year of diligent play).","xp_base":[10,20,30,40,50,55,60,65,70,80],"cool_base":[0,1,2,3,3,4,5,6,7,7],"pace":{"fast":0.25,"brisk":0.5,"standard":1,"slow":2.5},"pace_labels":{"fast":"Fast (~1 month)","brisk":"Brisk (~2 months)","standard":"Standard (~1 semester)","slow":"Slow (~1 year)"},"kind_xp":{"talk":2,"hangout":3,"help":5},"per_day":{"talk":1,"hangout":1},"per_week":{"gift":2,"help":1},"gift_xp":{"loved":4,"liked":2,"neutral":1,"disliked":0},"gift_disliked_tension":5,"gift_bonus_rank":3,"gift_bonus_mult":1.5,"weather_xp":1,"romance_default":8,"romance_options":[[0,"Any rank"],[4,"Rank 4"],[6,"Rank 6"],[8,"Rank 8"],[10,"Rank 10"],[11,"Off"]],"openness":{"open":2,"normal":0,"guarded":-1,"closed":-2},"share":[[0,"how they look and their public role"],[1,"their name, age, club and where they spend time"],[2,"the magic and skills they use openly"],[3,"likes, dislikes and hobbies"],[4,"their personality and what shows when they are upset"],[5,"their goals"],[6,"what they think of other people and of the Doves"],[7,"their past and family"]],"share_real_from":5,"perks":{"1":"greets {{user}} and can be found at their usual places","2":"accepts invitations (a meal, study, a walk)","3":"sometimes seeks {{user}} out; remembers the birthday","4":"will spar, study or team up (competition teams included)","5":"shares their goal and may ask for help with it","6":"introduces {{user}} to friends; keeps {{user}}'s secrets","7":"takes real risks for {{user}}: covers, lends points, backs {{user}} up with staff","8":"closest bond: best friend, romance or sworn rival (the rank 8 event decides)","9":"acts for {{user}} unasked; their secret begins to surface","10":"would sacrifice for {{user}}"},"themes":{"0":"A first real conversation: past the small talk, {{user}} learns who they actually are.","1":"They show the magic or the skill they are proud of, or let {{user}} watch them work.","2":"A small moment reveals what they love or can't stand.","3":"{{user}} sees another side of them: a bad day, a crack in the usual face.","4":"They tell {{user}} what they want most, and a way to help appears.","5":"They speak honestly about the people around them, and about the Doves.","6":"They tell {{user}} about their past and their family.","7":"A turning point: the bond becomes best friends, romance or a sworn rivalry, and the event lets {{user}} choose.","8":"They start to let their guard down about what they hide; the story opens a way to the truth (never revealed by rank alone).","9":"The peak of the bond: a moment that proves it, and what they would give up for {{user}}."}};
+const BR = {"_note":"1.2.2 bond system, single source for the engine (tools/gen_engine.py), the UI (tools/gen_ui.py) and the Now entry (tools/gen_mvu_entries.py). Edit here, then rebuild. xp_base[r] = XP from Rank r to Rank r+1 at standard pace; cool_base[r] = days after reaching Rank r before its next bond event can start. pace multiplies both (full rank: fast ~1 month, brisk ~2 months, standard ~1 semester, slow ~1 year of diligent play).","xp_base":[10,20,30,40,50,55,60,65,70,80],"cool_base":[0,1,2,3,3,4,5,6,7,7],"pace":{"fast":0.25,"brisk":0.5,"standard":1,"slow":2.5},"pace_labels":{"fast":"Fast (~1 month)","brisk":"Brisk (~2 months)","standard":"Standard (~1 semester)","slow":"Slow (~1 year)"},"kind_xp":{"talk":2,"hangout":3,"help":5},"per_day":{"talk":1,"hangout":1},"per_week":{"gift":2,"help":1},"gift_xp":{"loved":4,"liked":2,"neutral":1,"disliked":0},"gift_disliked_tension":5,"gift_bonus_rank":3,"gift_bonus_mult":1.5,"weather_xp":1,"start":{"_note":"1.3.1 (owner playtest): a bond that does not start at Rank 0. Applied once, when the engine first records the bond (the first scene they share); the next event waits for that rank's cooldown.","Etnie":{"Rank":3,"Trust":70,"Title":"Self-declared big sister","Known_facts":["Third-year, Viridian (dog beastkin); insists she is {{user}}'s big sister"],"Milestones":["Etnie decided {{user}} is her little sibling"]}},"romance_default":8,"romance_options":[[0,"Any rank"],[4,"Rank 4"],[6,"Rank 6"],[8,"Rank 8"],[10,"Rank 10"],[11,"Off"]],"openness":{"open":2,"normal":0,"guarded":-1,"closed":-2},"share":[[0,"how they look and their public role"],[1,"their name, age, club and where they spend time"],[2,"the magic and skills they use openly"],[3,"likes, dislikes and hobbies"],[4,"their personality and what shows when they are upset"],[5,"their goals"],[6,"what they think of other people and of the Doves"],[7,"their past and family"]],"share_real_from":5,"perks":{"1":"greets {{user}} and can be found at their usual places","2":"accepts invitations (a meal, study, a walk)","3":"sometimes seeks {{user}} out; remembers the birthday","4":"will spar, study or team up (competition teams included)","5":"shares their goal and may ask for help with it","6":"introduces {{user}} to friends; keeps {{user}}'s secrets","7":"takes real risks for {{user}}: covers, lends points, backs {{user}} up with staff","8":"closest bond: best friend, romance or sworn rival (the rank 8 event decides)","9":"acts for {{user}} unasked; their secret begins to surface","10":"would sacrifice for {{user}}"},"themes":{"0":"A first real conversation: past the small talk, {{user}} learns who they actually are.","1":"They show the magic or the skill they are proud of, or let {{user}} watch them work.","2":"A small moment reveals what they love or can't stand.","3":"{{user}} sees another side of them: a bad day, a crack in the usual face.","4":"They tell {{user}} what they want most, and a way to help appears.","5":"They speak honestly about the people around them, and about the Doves.","6":"They tell {{user}} about their past and their family.","7":"A turning point: the bond becomes best friends, romance or a sworn rivalry, and the event lets {{user}} choose.","8":"They start to let their guard down about what they hide; the story opens a way to the truth (never revealed by rank alone).","9":"The peak of the bond: a moment that proves it, and what they would give up for {{user}}."},"you_line":[{"kind":"dislike","tension_from":70,"arrow":true},{"kind":"rivals","title":"rival"},{"kind":"wary","tension_from":40,"arrow":true},{"kind":"wary","trust_below":35,"arrow":true},{"kind":"friends","title":"best friend"},{"kind":"friends","rank_from":5,"trust_from":65}],"_note_you_line":"1.4.2 (owner): People -> Connections, your own line to someone takes a kind from the bond. Romance first (Bonds.<id>.Romance), then the first rule here whose conditions all hold (tension_from, trust_below, trust_from, rank_from, title = a word in Bonds.<id>.Title); none = a plain gold bond line. arrow: the line is their view of you (them -> you); otherwise it is shared. The line is thicker with rank. 1.4.3: the Trust thresholds follow data/trust.json (Doubtful under 35, Trusting from 65).","recent":{"keep":10,"now":5,"phrases":{"talk":"talked","hangout":"spent time together","gift":"gave them a gift","help":"helped them","fight":"fought or sparred","apology":"apologised","keep":"kept a promise","secret":"kept their secret","defend":"stood up for them","confide":"confided a secret","understood":"they understood","choose":"chose them over someone else"}},"_note_recent":"1.4.4 (owner): each bond keeps its latest `keep` moments with {{user}} (Bonds.<id>.$Recent: when, one sentence, effect), shown in the dossier newest first; <now> gives the narrator the newest `now` of them for each present character. The sentence is the Note the narrator adds to an interaction; without one, the kinds (phrases)."};
 const BEV = [];
+const START = BR.start || {};   // 1.3.1: bonds that begin above Rank 0 (data/bond_rules.json start)
 const HAUNT = {"Irene":"Main Library","Caspian":"Council Chamber, Cathedral, The Snug (neutral ground for diplomacy)","Etnie":"Library upper stacks","Royhan":"Potion Halls, Gardens, Library","Lenna":"the far Gardens, Menagerie, Forest","Saffi":"Sports Field, Gymnasium","Kanae":"Observation Tower, still water","Idris":"Gardens (takes occasional work there), the Forest Clearing (the only warm spot i","Aiden":"Workshop stair and Bell Tower (curfew routes), the Rooftop (he phases through th","Caralynn":"Club Rooms (Music Club rehearsals), the Announcement Room (fighting for the afte","Zara":"Library highest shelves (takes shelving work), Workshop","Gavlan":"Combat Grounds, Faculty Offices, his office library","Yvette":"Workshop, warm end of the Lecture Halls","Krieg":"Dovecote, Detention Tower, Forest edge","Milena":"Lecture Halls, Combat Grounds, Dovecote","Baelin":"Headmaster's Office, Faculty Offices, Council Chamber","Layla":"Main Library, Archive","Vallie":"the Menagerie and her converted stables beside it, the Forest and the fields (wh","Percival":"Sports Field, Gymnasium, Canteen","Sophia":"Combat Grounds, Lake, Sports Field","Rei":"Warden's Office, Seal Chamber, Forest edge, Rooftop","Kuroo":"Staff Room, Card Club, the Viridian Dormitory common room","Mimosa":"Potion Halls, Workshop","Gareth":"Combat Grounds, Observation Tower, Library","Trixie":"the Courtyards (performances nobody asked for), Club Rooms and the old indoor am","Vera":"Potion Halls, Workshop, Medical Centre","Tristan":"Cathedral, Meditation Rooms","Althair":"everywhere","Dante":"Forest edge, Dovecote","Castor":"Archive, Notice Board","Ruby":"Music Club, Mall, Main Library","Florian":"the Tea Club room (Club Rooms), the Combat Grounds whenever Gareth has booked a ","Alyssa":"Library Study Rooms, the Mail Tower on letter days, the Rooftop (Zara has shown ","Tilly":"The Archive, the Broken Statue (her current favourite mystery), the Long Corrido","Ezrel":"second-year Lecture Halls, the Club Rooms, the Light Dormitory, the Workshop aft","Ottavio":"the Sky Dormitory common room, the Fishing Club dock, the third-year Lecture Hal","Caine":"the Noble Houses' Liaison, the Mail Tower on the Liaison's errands","Bobby":"Workshop, Canteen during breaks, the old amphitheatre when testing props, and wh"};
 // 1.3.0 (owner brainstorm 2026-09-25): bond rewards (Rank 5 gift, Rank 10 benefit, mask -> truth, Krieg), reputation, training.
 // Single sources data/bond_rewards.json, reputation.json, training.json; NPC_GROUP: staff | student | other | rival (no bond system).
 const REW = {"train_bonus":0.5,"jump_pct":10,"monthly":{"aiden":[200,"silent partner's share of Aiden's betting book"],"tristan":[100,"Asmoday's Mercy stipend (Tristan)"],"mimosa":[150,"royalty on the formula co-authored with Mimosa"]},"mask":["Castor","Kanae","Caine"],"krieg":{"id":"Krieg","weekly_xp":14,"min_doves":1,"max_attention":39,"note":"Rank 1 from his introduction; then +weekly_xp every Monday while Doves reputation >= min_doves (and, with hidden magic, Dove attention <= max_attention: Unnoticed or Rumoured); otherwise no XP and Tension +1. No XP from talks, hangouts or gifts."},"npcs":{"Aiden":{"gift":{"name":"Aiden's patrol-route deck","text":"A deck of Card Club cards with every Dove patrol route and bell timing inked on the backs, one route per card. Carrying it, {{user}} is far harder to catch out after curfew, because Aiden quietly updates the deck whenever the Doves change a route."},"r10":{"name":"Aiden (Rank 10)","text":"Aiden makes {{user}} a silent partner in the betting book, and a share of its takings arrives every month. Once a week he will also phase and shrink anything {{user}} needs into or out of anywhere on campus, no questions asked.","monthly":"aiden"}},"Caralynn":{"gift":{"name":"Caralynn's calling card","text":"A calling card on Veyturone crest paper, \"A friend of House Veyturone\" written in her own hand. Shown at the Noble Houses' Liaison or to any noble student, it gets {{user}} a polite hearing and a seat at tables they would never otherwise reach."},"r10":{"name":"Caralynn (Rank 10)","text":"Caralynn declares {{user}} her equal in front of her whole following: from then on her followers run {{user}}'s errands too, and gossip against {{user}} dies within the week. Once a month she will spend House Veyturone's name on {{user}}'s behalf, with the Liaison, the Inspectorate or a noble with a grudge."}},"Zara":{"gift":{"name":"Zara's talisman jacket","text":"A jacket she designed for {{user}} and, for once, actually finished, with protective talismans sewn into the lining. It stops one hostile spell or curse outright, and Zara rewrites the lining every month so it is always ready again."},"r10":{"name":"Zara (Rank 10)","text":"Zara becomes {{user}}'s talisman-writer: a fresh set of protective, repulsion and exorcism charms every week, free, written for {{user}}'s hand alone. Her exorcist's sense is turned on {{user}} for good, so if anyone ever lays a curse on them, she is the first to know."}},"Percival":{"gift":{"name":"Brotherhood of Laetano badge","text":"A tin badge of the Brotherhood of Laetano, pinned on {{user}} in a full knighting ceremony that makes them a squire sworn to the Brotherhood's dawn drills. Stamina training done with Percival counts for half as much again (×1.5), because he runs every lap as if someone at the far end of the field needs him.","train":"stamina"},"r10":{"name":"Percival (Rank 10)","text":"Sir Percival swears himself as {{user}}'s knight: he joins any team {{user}} forms as its healer and answers {{user}}'s call in any fight. Once per fight he throws himself between {{user}} and a finishing blow, and heals them back to their feet with his own strength."}},"Trixie":{"gift":{"name":"Trixie's flash powder","text":"A pouch of Confetti circus flash powder, the family recipe, which is not magic and cannot be dispelled. Thrown down, it blinds a whole room for a few seconds, and Trixie refills it every time the circus writes."},"r10":{"name":"Trixie (Rank 10)","text":"The Confetti circus adopts {{user}} as honorary family, with free passage, lodging and news from every town it plays. Trixie herself will cause a distraction on request, anywhere and any time, big enough that nobody remembers what {{user}} was doing."}},"Vera":{"gift":{"name":"Vera's Rest token","text":"A Rest token, a brass charm she enchanted with a sliver of her own Rest: pressed once a week, it gives {{user}} a full night's sleep in one hour. She has taken the sleep debt for every use onto herself in advance, and refuses to discuss it."},"r10":{"name":"Vera (Rank 10)","text":"Vera becomes {{user}}'s personal workshop: she repairs, improves or enchants any equipment {{user}} brings, and her upgrades come out better than anything the Mall sells. Once a day she will also Rest {{user}} by hand and take the debt herself."}},"Castor":{"gift":{"name":"Castor's newspaper notebook","text":"A hand-bound notebook; anything {{user}} writes in it and slips under the Academy Newspaper's door is printed in the next issue, anonymously. It is the fastest way on campus to plant a story or kill a rumour, and Castor never asks who wrote it."},"r10":{"name":"Castor (Rank 10)","text":"Castor chooses {{user}} over the Choir, quietly and completely: he warns them before any rite, mark or curse the Choir turns their way, and tells them who at Halvard sings with it. He also lifts any curse on {{user}} at any hour, because he knows exactly how each one was built.","secret":"Every warning is a betrayal his father will eventually notice. He finishes the page about a way out, and it has {{user}} in it."},"nudge":{"text":"Castor lets {{user}} read his private writing, and between the pages is one he never finished, about a boy who sings at dawn in a choir he never chose.","fact":"Castor's unfinished page mentions a 'Morning Choir'."},"gate":"{{user}} has learned, in play, that Castor belongs to the Morning Choir."},"Alyssa":{"gift":{"name":"Alyssa's notebook offer","text":"A standing offer from her notebook: once a week {{user}} can name anyone at Halvard and Alyssa reads them her page on that person. It tells {{user}} where that person tends to be this week and one thing they would be glad to receive, because Alyssa writes down exactly what she has seen and nothing more."},"r10":{"name":"Alyssa (Rank 10)","text":"Once a day Alyssa spends Foresight on {{user}}, telling them what the next five minutes hold before an exam, a duel or a conversation that matters. In any fight they share she calls every attack a heartbeat before it lands, and {{user}}'s page is the first she reads each week, so she never meets them as a stranger."}},"Lenna":{"gift":{"name":"Greenwind seedling","text":"A potted seedling from the Greenwind Forest, the last living thing she brought from home. Any animal near it grows calm, which makes the Menagerie, the Forest and the Creature Studies Expedition far safer for {{user}}."},"r10":{"name":"Lenna (Rank 10)","text":"Lenna brings {{user}} into the Greenwind ways: animals in the Menagerie and the Forest treat {{user}} as one of hers, and her earth rises to shield them anywhere off the paths. She also cooks for {{user}} every rest day, a Greenwind meal that sets them right for the whole week."}},"Saffi":{"gift":{"name":"Running Club whistle","text":"A spare Running Club whistle on a cord: blow it before classes and Saffi turns up within minutes, ready to drag {{user}} round the Sports Field. Stamina training done with her counts for half as much again (×1.5), because she never lets anyone stop at \"tired\".","train":"stamina"},"r10":{"name":"Saffi (Rank 10)","text":"Saffi joins any team {{user}} forms as its front-line fighter, and nobody lays a hand on {{user}} while she is within earshot. Her night senses keep watch for them after dark, and she will sprint anywhere on campus the moment she hears {{user}} call."}},"Kanae":{"gift":{"name":"Quveno silver mirror","text":"A silver hand mirror from the Quveno house, \"so you can always find me\". Once a week, {{user}} can say her name into it and ask one true reading: where someone is, or what is coming.","secret":"It also lets her watch {{user}} through it whenever she likes, and she does."},"r10":{"name":"Kanae (Rank 10)","text":"Seen through and still wanted, Kanae lays the Plan down: the mirror stays, but she only looks through it when {{user}} asks. Once per fight they share, her chains pin one enemy in place for {{user}} before anyone else's magic moves.","secret":"It is the first honest thing she has ever given. Whether she ever tells Dante the truth about Niu is up to the story."},"nudge":{"text":"In an unguarded moment Kanae says the name of a girl who \"should have kept her mouth shut\", then laughs it off.","fact":"Kanae mentioned someone called Niu; Dante Kleinn is said to be re-reading an old Dove case under that name."},"gate":"{{user}} has learned, in play, the truth about the rigged readings, the Plan, or what happened to Niu."},"Idris":{"gift":{"name":"Idris's two vials","text":"Two vials in precise script: an antivenom brewed from his own venom that cures almost any poison, and the venom itself. He calls the second \"for emergencies\" and will not explain further."},"r10":{"name":"Idris (Rank 10)","text":"Idris haggles for {{user}} as if they were family business, and everything {{user}} buys at the Mall and the Commissary costs noticeably less. Mormo watches {{user}}'s back when Idris cannot, draining the stamina of anyone who comes at them in the dark."}},"Dante":{"gift":{"name":"Groundskeeper's Lodge key","text":"A spare key to the Groundskeeper's Lodge, which he says nobody ever checks. It gives {{user}} a safe, warm hideout at the Forest edge after curfew that no patrol looks into."},"r10":{"name":"Dante (Rank 10)","text":"Dante counts {{user}} among the people he protects, with no conditions: anyone who threatens {{user}} finds him there, and nobody has ever beaten him hand to hand. He also looks the other way on any rule {{user}} breaks, and steers Dove attention away from them.","secret":"This is the Doves' own asset lying to the Doves, for the first time in his life."}},"Florian":{"gift":{"name":"Villeneuve Snug token","text":"A Villeneuve silver token for The Snug's largest booth, on Florian's account. Whatever {{user}} orders there is paid for, and anyone {{user}} brings is treated as Florian's guest."},"r10":{"name":"Florian (Rank 10)","text":"Florian joins {{user}}'s team and fights under their call, Hades and all, the first time he has ever followed anyone. Once per fight Hades will Stop anything for {{user}} for two seconds, and the wolf's eyes see through any illusion or invisibility aimed at them."}},"Tilly":{"gift":{"name":"Tilly's map of hidden ways","text":"Her hand-drawn map of Halvard's hidden ways, copied out of Halvard Unexplained: crawlspaces, back stairs and forgotten doors. Following it, {{user}} can cross the campus unseen and reach places nobody else knows exist."},"r10":{"name":"Tilly (Rank 10)","text":"Tilly grows {{user}} a hidden bower in the far Gardens that nobody else can find, full of rare herbs and flowers she replants every week for potions and gifts. She also shows {{user}} the signet ring she wears on a chain under her blouse and promises that a letter under its seal will always be answered, though she will not say by whom.","secret":"The seal is Velmora's royal signet; a letter under it reaches Velmora's crown. Showing it is the closest she has ever come to telling anyone who she is."}},"Irene":{"gift":{"name":"Council pardon","text":"A signed Council pardon, one use, in Irene's careful hand. If {{user}} is caught breaking an academy rule that should send them to the Detention Tower, Irene takes it to the staff herself and it becomes a warning, with no Academy reputation lost: the one exception she has ever made.","uses":1},"r10":{"name":"Irene (Rank 10)","text":"Irene offers {{user}} a seat on the Student Council: Council Chamber access, a vote on student rules, and a say in how festivals and discipline are run. In a fight her barriers answer {{user}} first, and she will stand between {{user}} and the Doves even though they terrify her."}},"Caspian":{"gift":{"name":"Festival Committee badge","text":"A Festival Committee staff badge in his own name. At every festival {{user}} walks into the restricted areas, gets the best stall slot at the Bazaar, and can put an event on the programme."},"r10":{"name":"Caspian (Rank 10)","text":"When they fight side by side, Caspian's hand on {{user}}'s shoulder doubles their magic for a full minute once per fight. As Council Vice President he also speaks for {{user}} to staff, Council and the Liaison, and trouble tends to end there."}},"Etnie":{"gift":{"name":"Etnie's lockpicks","text":"Her old street lockpicks, the only thing she kept from before Halvard. They open any ordinary lock on campus (drawers, cupboards, storerooms), though not a bracelet-warded door."},"r10":{"name":"Etnie (Rank 10)","text":"Etnie leaves one of her clones on {{user}} at all times, and can swap places with it in a heartbeat to take any blow meant for them. Nobody who has hurt {{user}} is ever left alone by Big Sister again, and everyone at Halvard knows it."}},"Royhan":{"gift":{"name":"Royhan's alchemist pouch","text":"An alchemist's pouch of his own: three healing draughts and one bottle of lightning. He refills it whenever {{user}} brings back the empties, and he will not take points for it."},"r10":{"name":"Royhan (Rank 10)","text":"Royhan becomes {{user}}'s alchemist: every week he brews any potion they ask for at cost, including ones the Commissary cannot stock. If his regeneration potion ever works, the first bottle is {{user}}'s."}},"Sophia":{"gift":{"name":"Sophia's tactics book","text":"Her own tactics book, margins full of every trick she has used in the ring, with the brutal morning mana drill she wrote in the back. Mana training done with Sophia counts for half as much again (×1.5), because she learned to push her reserves the hard way and will not let {{user}} learn it any softer.","train":"mana"},"r10":{"name":"Sophia (Rank 10)","text":"Sophia joins {{user}}'s team and fights under {{user}}'s orders, the only person at Halvard she has ever agreed to follow. She also duels anyone who insults {{user}}, publicly and to the end."}},"Gareth":{"gift":{"name":"Gareth's training journal","text":"His private training journal: the mana drills he has run every morning since he was a boy, with an open invitation to run them beside him at the Combat Grounds. Mana training done with Gareth counts for half as much again (×1.5), because nobody at Halvard knows better how to push a mana pool past where it wants to stop.","train":"mana"},"r10":{"name":"Gareth (Rank 10)","text":"Gareth makes {{user}} his one exception to coming first: he tutors them before every exam and joins their team for competitions, burning whole arenas on their behalf.","secret":"He will also quietly ruin anyone who stands in {{user}}'s way, the way he ruined his brother, unless {{user}} tells him not to."}},"Ruby":{"gift":{"name":"Bonbon sweets tin","text":"A tin of Bonbon family sweets that never quite runs out, because her family sends a refill with every letter. Any NPC who is not averse to sweets takes one as a liked gift."},"r10":{"name":"Ruby (Rank 10)","text":"Ruby tells everyone who will listen that {{user}} is her friend, and Halvard has learned to trust Ruby's judgement: {{user}}'s Student reputation rises by one level. It is the only side she has ever picked, and she picked a person, not a side.","rep_up":"Student"}},"Gavlan":{"gift":{"name":"Gavlan's gravity bracers","text":"The gravity-weighted bracers he wore as a young mage, and one week of his dawn drills to break them in. At the end of that week {{user}}'s Mana pool jumps ahead in one go by a tenth of its starting value, weeks of training at once (still within the training limit).","jump":"mana"},"r10":{"name":"Gavlan (Rank 10)","text":"Gavlan names {{user}} the protégé he has been looking for, and teaches them in private what no class does, a technique of his own included. On rest days he takes {{user}} through the Portal to the clan's cottage, where no Dove and no Inspector can reach them."}},"Yvette":{"gift":{"name":"Yvette's warning orb","text":"A small floating orb, the little sibling of her own focus. It warms and hums whenever someone nearby means {{user}} harm, because Yvette has never once felt safe at Halvard and does not want {{user}} to be caught unready."},"r10":{"name":"Yvette (Rank 10)","text":"Yvette opens the Workshop and her research to {{user}}: any enchanted item they find, she identifies, repairs or improves. Her rooms in the Fire Dormitory become the one door {{user}} can knock on at any hour, and her lightning answers for them before anyone else's."}},"Baelin":{"gift":{"name":"Headmaster's card","text":"A card on the Headmaster's paper: \"Bearer may see me without appointment.\" Once, he will hear {{user}}'s case in person and rule on it himself, over any other staff decision.","uses":1},"r10":{"name":"Baelin (Rank 10)","text":"Baelin enters {{user}} in his ledger as a debt he owes, and repays it in the one coin a headmaster has: {{user}}'s Academy reputation rises by one level. His reports to the capital start mentioning {{user}} by name, and the staff notice at once.","rep_up":"Academy"}},"Layla":{"gift":{"name":"Restricted Section permission","text":"A signed permission letter granting {{user}} reading rights in the Restricted Section. It opens the oldest records at Halvard, the ones that answer questions classes will not."},"r10":{"name":"Layla (Rank 10)","text":"Layla shares everything she has pieced together about Halvard's past, and her private tutoring makes History the easiest top mark {{user}} will ever earn. If anyone ever corners {{user}} the way they once cornered Yvette, the gloves come off."}},"Vallie":{"gift":{"name":"Ironback Boar tusk","text":"A carved tusk from the Ironback Boar that took her eye, hung on a cord. Creatures smell a hunter's trophy and back off, which makes the Forest and the Expedition far safer for {{user}}."},"r10":{"name":"Vallie (Rank 10)","text":"Vallie teaches {{user}} the Will of Steel way of taking a hit, sparring and running them until pain stops mattering, and {{user}}'s Stamina jumps ahead in one go by a tenth of its starting value, weeks of training at once (still within the training limit). She also arm-wrestles anyone who says a word against {{user}}, and she has never lost that one.","jump":"stamina"}},"Rei":{"gift":{"name":"Warden's Office key","text":"A plain brass key to the Warden's Office side door. Inside is the one room on campus that the Doves and the Inspectorate cannot enter without the Warden's leave."},"r10":{"name":"Rei (Rank 10)","text":"During the Thinning, {{user}} stands watch with Rei instead of sitting locked in the dorm, and she begins to tell them what she knows about the Crack. In any fight she arrives in smoke, and nothing gets through her to {{user}}."}},"Kuroo":{"gift":{"name":"Kuroo's dance card","text":"His old dance card from his envoy years, filled with notes on every Liaison staffer and which students they are watching. With it, {{user}} knows who the Liaison has an eye on and how to talk their way past them."},"r10":{"name":"Kuroo (Rank 10)","text":"Once, Kuroo spends every favour he has left with the staff on {{user}}: their Academy reputation rises by one level, but only from a negative level (−5 to −4, …, −1 to 0). He will not lift anyone above zero, because that part {{user}} has to earn.","rep_token":"Academy","uses":1}},"Mimosa":{"gift":{"name":"Mimosa's focus draught","text":"A vial of her own perfectly clear brew labelled \"for exams\", a focus draught she invented and has never published. Taken before a test, it lets {{user}} recall everything they studied.","uses":1},"r10":{"name":"Mimosa (Rank 10)","text":"Mimosa co-authors her first published formula with {{user}}: their name goes on it too, with the prestige and the monthly royalty. Any potion {{user}} brews under her eye cannot blow up, because she sees it coming three seconds early.","monthly":"mimosa"}},"Althair":{"gift":{"name":"Signed discipline referral","text":"A blank discipline referral, signed in advance by the Vice Headmaster. Filled in and handed back, it makes one punishment against {{user}} disappear into the files.","uses":1},"r10":{"name":"Althair (Rank 10)","text":"Althair makes {{user}} a player in his game rather than a piece: every month he nudges something their way through the paperwork, such as a better timetable, a bigger club budget or a punishment lost in the files. And when Althair is watching, things simply tend to go {{user}}'s way."}},"Ezrel":{"gift":{"name":"Ezrel's clay golem","text":"A palm-sized clay golem that follows standing orders: carry, fetch, guard a door, repeat a task. It never tires, and it never asks why.","secret":"He can look through it."},"r10":{"name":"Ezrel (Rank 10)","text":"Ezrel builds {{user}} a Mannequin, a golem nobody can tell from {{user}}, that can sit in their seat at class or roll call while they are elsewhere. In a fight it stands beside them with a golem's strength and takes the blade without slowing."}},"Ottavio":{"gift":{"name":"Ottavio's Canteen chit","text":"A Canteen chit on Ottavio's account, stamped with a worn casino mark. {{user}} eats one free meal a day for the rest of the year, because Ottavio knows which students skip meals to save points and has never allowed it."},"r10":{"name":"Ottavio (Rank 10)","text":"Ottavio takes {{user}} into his family, dorm or not: from then on the Dovecote has to go through him to reach them, and he has never handed anyone over. Loki adds {{user}} to his hoard of things he owns, so he turns up in a crisis, and on a lucky coin toss he arrives big."}},"Krieg":{"gift":{"name":"Dovecote pass","text":"A Dovecote pass under his seal: the gate opens to {{user}} at any hour to see Krieg in his office. No other student at Halvard can say that, and what {{user}} learns there, or is seen doing there, is up to them."},"r10":{"name":"Krieg (Rank 10)","text":"Krieg decides {{user}} is the one mage he will not treat as a wolf, and once a month he lets them read one Dovecote file on a person or case of their choosing. He still searches, questions and watches {{user}} like everyone else, because in his eyes that is exactly what makes the file worth showing."}},"Milena":{"gift":{"name":"White Dragonchess knight","text":"A white Dragonchess knight from her father's set. Shown to any Dove, it means Milena vouches for {{user}}, and a search ends at a polite question."},"r10":{"name":"Milena (Rank 10)","text":"Once, Milena takes {{user}}'s file off Krieg's desk and closes it: their Doves reputation rises by one level, but only from a negative level (−5 to −4, …, −1 to 0). Above zero, she says, is something {{user}} has to earn in front of the Doves themselves.","rep_token":"Doves","uses":1}},"Tristan":{"gift":{"name":"Asmoday's Mercy stipend","text":"A small monthly stipend from the Asmoday's Mercy fund, entered in his immaculate ledger as \"a student in need\". The points arrive at the start of every month, and Tristan finds it very funny that nobody has ever audited him.","monthly":"tristan"},"r10":{"name":"Tristan (Rank 10)","text":"Tristan binds any contract {{user}} needs in the Cathedral, and his Oath magic makes it unbreakable for both sides. Once, when it matters most, he will use the registry for someone for the first time in his life, and that someone is {{user}}."}},"Caine":{"gift":{"name":"Liaison guest card","text":"A Liaison guest card in Caine's hand, which puts {{user}} on the list for every Liaison reception, tea and ball. It opens the rooms where noble students and their families talk business.","secret":"He chose {{user}} to be watched."},"r10":{"name":"Caine (Rank 10)","text":"Unmasked and still courteous, Caine takes {{user}}'s name off the Choir's list, the only mercy he has ever shown a mage, and no Mark will ever touch them. He tells {{user}} one true thing each week about the Choir's work at Halvard, and leaves what {{user}} does with it entirely to them.","secret":"He does not stop, and does not ask {{user}} to join. He simply wants one person to see all of it and understand."},"nudge":{"text":"At a Liaison reception {{user}} sees a noble student who lingered after the last one: they have lost an hour they cannot account for, and they rub a \"bruise\" on their left shoulder.","fact":"Students who stay late at the Liaison lose an hour and wake with a mark on the left shoulder; Caine saw them out."},"gate":"{{user}} has learned, in play, that Caine carries Lucifer's Mark or serves the Morning Choir."},"Bobby":{"gift":{"name":"BB consultation voucher","text":"A BB consultation voucher: one free job, props and planning included, for a prank, surprise, apology or confession. Bobby even waives the story afterwards, though he will sulk.","uses":1},"r10":{"name":"Bobby (Rank 10)","text":"Every commission from BB is free from now on, and he drops any other job for {{user}}'s. He also teaches {{user}} sleight of hand and misdirection: tricks that no Dispelling can touch and that no mage thinks to look for."}}}};
-const REP = {"reps":["Academy","Student","Doves"],"about":{"Academy":"staff and the institution","Student":"the student body","Doves":"the Dovecote"},"thresholds":[15,35,60,90,125],"weekly_cap":5,"bond_cap_level":3,"bond_milestone_xp":{"5":5,"10":10},"tension_high":70,"tension_xp":-5,"academy5_monthly":300,"anti_doves":["Lenna","Idris","Zara","Gavlan","Yvette","Kuroo","Ottavio"],"pro_doves":["Saffi","Layla","Florian","Mimosa","Vallie","Ruby"],"doves_bond":["Milena"],"effects":{"Academy":[[-5,-5,"Academic probation: a formal hearing before Baelin Kalvor, the monthly points payout halved, and one more serious offence means expulsion proceedings."],[-4,-3,"Staff assume the worst: minor offences earn detention instead of a warning; requests (club signatures, permits, schedule changes) are refused. Staff NPCs warm up more slowly."],[-2,-1,"{{user}} is \"one to watch\": teachers call on them to catch them out, and patrols stop them more often after curfew."],[0,0,"An ordinary student; staff treat {{user}} by the rules."],[1,2,"Teachers give {{user}} the benefit of the doubt: a first minor offence is a warning, and office-hour requests are welcome."],[3,4,"Staff trust {{user}} with responsibility: supervised access to restricted rooms, sign-off to found a club, invitations to staff-run events. Staff NPCs warm up faster."],[5,5,"{{user}}'s portrait hangs in the Portrait Hall among Halvard's honoured students, and the academy adds a monthly points bonus on top of the rank payout. Staff quietly overlook one serious offence per semester."]],"Student":[[-5,-5,"{{user}} is shunned across the academy: nobody sits with them, their belongings go missing, and student NPCs below Rank 3 avoid them entirely."],[-4,-3,"Rooms go quiet when {{user}} walks in; nobody will team up, study together or cover for them. Student NPCs warm up more slowly."],[-2,-1,"Students are cool towards {{user}} and keep them out of the good gossip and the good seats."],[0,0,"{{user}} is one student among hundreds."],[1,2,"People save {{user}} a seat, share notes and gossip, and will cover for them once in a small way."],[3,4,"{{user}} is someone people rally behind: teams are easy to form, and students stand up for them. Student NPCs warm up faster."],[5,5,"{{user}} is Halvard's favourite: students take real risks for them (a false alibi, a shared punishment), and crowds turn out to cheer them at every competition."]],"Doves":[[-5,-5,"{{user}} is taken to the Dovecote for a week of \"examination\", as Idris Ainsworth was; afterwards they are escorted between classes for the rest of the month. Anti-Dove NPCs warm to {{user}}; pro-Dove NPCs keep their distance."],[-4,-3,"Weekly searches of {{user}}'s room and belongings, a patrol that follows them after dark, and Krieg Valforth knows their name. Anti-Dove NPCs (Lenna, Idris, Zara, Gavlan, Yvette, Kuroo, Ottavio) warm to {{user}}; pro-Dove NPCs (Saffi, Layla, Florian, Mimosa, Vallie, Ruby) keep their distance."],[-2,-1,"Doves stop and question {{user}} more often, and any talisman, potion or odd item they carry is inspected."],[0,0,"{{user}} is one mage among hundreds; routine checks only."],[1,2,"Doves greet {{user}} by name, and routine checks end at a polite question."],[3,4,"{{user}} gets the benefit of the doubt: rumours about them are ignored, and Milena Sagona or another Dove will tip them off about coming searches. Anti-Dove NPCs (Lenna, Idris, Zara, Gavlan, Yvette, Kuroo, Ottavio) grow wary of {{user}}."],[5,5,"The Dovecote treats {{user}} as an ally: they are asked to help on cases, their word is trusted against anyone else's, and a recruitment offer waits for them after graduation. Anti-Dove NPCs call {{user}} \"one of the Doves\"."]]},"bond_mod":{"_note":"extra bond XP per counted talk or hangout (never below 0 for one interaction); modifiers add up","staff":[[3,1],[-3,-1]],"student":[[5,2],[3,1],[-3,-1]],"anti_doves":[[3,-1],[-3,1]],"pro_doves":[[-3,-1]]}};
+const REP = {"reps":["Academy","Student","Doves"],"about":{"Academy":"staff and the institution","Student":"the student body","Doves":"the Dovecote"},"thresholds":[15,35,60,90,125],"weekly_cap":5,"bond_cap_level":3,"bond_milestone_xp":{"5":5,"10":10},"tension_high":70,"tension_xp":-5,"tension_max":100,"tension_max_xp":-10,"academy5_monthly":300,"anti_doves":["Lenna","Idris","Zara","Gavlan","Yvette","Kuroo","Ottavio"],"pro_doves":["Saffi","Layla","Florian","Mimosa","Vallie","Ruby"],"doves_bond":["Milena"],"effects":{"Academy":[[-5,-5,"Academic probation: a formal hearing before Baelin Kalvor, the monthly points payout halved, and one more serious offence means expulsion proceedings."],[-4,-3,"Staff assume the worst: minor offences earn detention instead of a warning; requests (club signatures, permits, schedule changes) are refused. Staff NPCs warm up more slowly."],[-2,-1,"{{user}} is \"one to watch\": teachers call on them to catch them out, and patrols stop them more often after curfew."],[0,0,"An ordinary student; staff treat {{user}} by the rules."],[1,2,"Teachers give {{user}} the benefit of the doubt: a first minor offence is a warning, and office-hour requests are welcome."],[3,4,"Staff trust {{user}} with responsibility: supervised access to restricted rooms, sign-off to found a club, invitations to staff-run events. Staff NPCs warm up faster."],[5,5,"{{user}}'s portrait hangs in the Portrait Hall among Halvard's honoured students, and the academy adds a monthly points bonus on top of the rank payout. Staff quietly overlook one serious offence per semester."]],"Student":[[-5,-5,"{{user}} is shunned across the academy: nobody sits with them, their belongings go missing, and student NPCs below Rank 3 avoid them entirely."],[-4,-3,"Rooms go quiet when {{user}} walks in; nobody will team up, study together or cover for them. Student NPCs warm up more slowly."],[-2,-1,"Students are cool towards {{user}} and keep them out of the good gossip and the good seats."],[0,0,"{{user}} is one student among hundreds."],[1,2,"People save {{user}} a seat, share notes and gossip, and will cover for them once in a small way."],[3,4,"{{user}} is someone people rally behind: teams are easy to form, and students stand up for them. Student NPCs warm up faster."],[5,5,"{{user}} is Halvard's favourite: students take real risks for them (a false alibi, a shared punishment), and crowds turn out to cheer them at every competition."]],"Doves":[[-5,-5,"{{user}} is taken to the Dovecote for a week of \"examination\", as Idris Ainsworth was; afterwards they are escorted between classes for the rest of the month. Anti-Dove NPCs warm to {{user}}; pro-Dove NPCs keep their distance."],[-4,-3,"Weekly searches of {{user}}'s room and belongings, a patrol that follows them after dark, and Krieg Valforth knows their name. Anti-Dove NPCs (Lenna, Idris, Zara, Gavlan, Yvette, Kuroo, Ottavio) warm to {{user}}; pro-Dove NPCs (Saffi, Layla, Florian, Mimosa, Vallie, Ruby) keep their distance."],[-2,-1,"Doves stop and question {{user}} more often, and any talisman, potion or odd item they carry is inspected."],[0,0,"{{user}} is one mage among hundreds; routine checks only."],[1,2,"Doves greet {{user}} by name, and routine checks end at a polite question."],[3,4,"{{user}} gets the benefit of the doubt: rumours about them are ignored, and Milena Sagona or another Dove will tip them off about coming searches. Anti-Dove NPCs (Lenna, Idris, Zara, Gavlan, Yvette, Kuroo, Ottavio) grow wary of {{user}}."],[5,5,"The Dovecote treats {{user}} as an ally: they are asked to help on cases, their word is trusted against anyone else's, and a recruitment offer waits for them after graduation. Anti-Dove NPCs call {{user}} \"one of the Doves\"."]]},"bond_mod":{"_note":"extra bond XP per counted talk or hangout (never below 0 for one interaction); modifiers add up","staff":[[3,1],[-3,-1]],"student":[[5,2],[3,1],[-3,-1]],"anti_doves":[[3,-1],[-3,1]],"pro_doves":[[-3,-1]]}};
 const TRN = {"tracks":{"mana":{"label":"Mana pool","field":"Mana_max"},"stamina":{"label":"Stamina","field":"Stamina_max"}},"session_pct":1,"weekly_pct":2.5,"total_pct":100};
 const NPC_GROUP = {"Aiden":"student","Althair":"staff","Alyssa":"student","Baelin":"staff","Bellatrix":"rival","Bobby":"other","Bram":"rival","Caine":"other","Caralynn":"student","Caspian":"student","Cassius":"rival","Castor":"student","Dante":"student","Dex":"rival","Elion":"rival","Etnie":"student","Ezrel":"staff","Florian":"student","Gareth":"student","Gavlan":"staff","Idris":"student","Ines":"rival","Irene":"student","Kanae":"student","Kira":"rival","Krieg":"other","Kuroo":"staff","Layla":"staff","Lenna":"student","Lucius":"rival","Milena":"other","Mimosa":"staff","Mirelle":"rival","Morgana":"rival","Ottavio":"staff","Percival":"student","Pip":"rival","Rei":"staff","Royhan":"student","Ruby":"student","Saffi":"student","Sophia":"student","Theodore":"rival","Tilly":"student","Tristan":"other","Trixie":"student","Vallie":"staff","Vera":"student","Yvette":"staff","Zara":"student"};
+// 1.3.1 (owner playtest): player settings for training and reputation (data/tuning.json rows; values in $ui.tune, else the default)
+const TUNING = [{"id":"trn_session","opts":[[0.5,"0.5%"],[1,"1%"],[2,"2%"],[3,"3%"]],"def":1},{"id":"trn_week","opts":[[1.5,"1.5%"],[2.5,"2.5%"],[5,"5%"],[0,"No limit"]],"def":2.5},{"id":"trn_total","opts":[[50,"+50%"],[100,"+100% (twice the start)"],[200,"+200%"],[0,"No limit"]],"def":100},{"id":"rep_mult","opts":[[0.5,"Slow (x0.5)"],[1,"Standard"],[1.5,"Fast (x1.5)"],[2,"Very fast (x2)"]],"def":1},{"id":"rep_week","opts":[[3,"+3"],[5,"+5"],[10,"+10"],[0,"No limit"]],"def":5},{"id":"rep_bond","opts":[[1,"Until +3"],[2,"Always"],[0,"Off"]],"def":1},{"id":"rep_tension","opts":[[1,"On"],[0,"Off"]],"def":1}];
+function tuneOf(S) {
+  const u = _.isPlainObject((S.$ui || {}).tune) ? S.$ui.tune : {}, o = {};
+  for (const r of TUNING) { const v = Number(u[r.id]); o[r.id] = r.opts.some(([x]) => x === v) ? v : r.def; }
+  return o;
+}
 const NO_BOND = new Set(Object.keys(NPC_GROUP).filter(id => NPC_GROUP[id] === 'rival'));
 const MASK = new Set(REW.mask || []);
+// 1.3.8 Tension (owner design 2026-09-25, data/tension.json): the same bands and mechanical effects for everyone; how the tension
+// is played comes from the NPC's category (withdrawn, social, confrontational, authority, dangerous) or a personal override
+// (Etnie, Kanae, Althair, Ezrel). Quiet days ease it by the category's decay; a fight eases a confrontational NPC.
+const TEN = {"bands":[[0,"Calm"],[20,"Friction"],[40,"Strained"],[70,"Hostile"],[90,"Enemy"]],"effects":{"strained_from":40,"strained_xp_mult":0.5,"hold_event_from":70,"stop_xp_from":90,"rank_drop_at":100,"fight_ease":25,"apology_repeat_mult":0.5,"rank_drop_rearm":70},"categories":{"withdrawn":{"name":"Withdrawn","bands":{"Friction":"quieter than usual around {{user}}; answers short, smiles late","Strained":"avoids {{user}}: leaves when {{user}} arrives, declines invitations politely, confides in someone else","Hostile":"openly hurt: cries or goes silent, asks {{user}} to leave them alone; their friends notice and cool toward {{user}}","Enemy":"cuts {{user}} out entirely (seats, study groups, even routes across campus) and grieves the friendship; does not retaliate"},"never":"revenge, rumours or any harm","eases":"forgives easily: a sincere apology eases it a lot","decay":2,"apology":{"private":-20,"public":-20},"kind_ease":{"help":-5,"keep":-5,"defend":-5},"banter":"light teasing is fine; mockery of what they care about, or rough play, hurts"},"social":{"name":"Social","bands":{"Friction":"barbed compliments and pointed jokes at {{user}}'s expense","Strained":"snubs {{user}} in public; leaves {{user}} out of plans and the good gossip","Hostile":"works the room against {{user}}: rumours, mockery, turning mutual friends","Enemy":"runs a campaign: humiliates {{user}} in front of a crowd and makes sure the story spreads"},"never":"physical violence, or anything that would ruin their own image if it came out","eases":"pride first: a public apology counts, a private one barely","decay":0.5,"enemy_rep":{"Student":-5},"apology":{"private":-5,"public":-15},"kind_ease":{"defend_public":-5},"banter":"enjoys witty banter in private; being mocked in public is an offence"},"confrontational":{"name":"Confrontational","bands":{"Friction":"blunt and challenging: calls {{user}} out, dares {{user}} to prove it","Strained":"picks arguments; demands a spar or a contest to settle it","Hostile":"open rivalry: goes after {{user}} in class, in training, in competitions","Enemy":"a formal challenge or a grudge match in front of witnesses; will not let it rest until it is settled"},"never":"an ambush, secret sabotage, or trying to kill","eases":"words are cheap: a fight settles it (every spar, duel or contest with them, whoever wins; report it as a fight interaction); an apology barely counts","decay":0.34,"apology":{"private":-5,"public":-5},"kind_ease":{},"banter":"loves it, shoves included: people who hit back are the best kind"},"authority":{"name":"Authority","bands":{"Friction":"cooler and more formal with {{user}}; watches for mistakes","Strained":"holds {{user}} strictly to the rules: marks down, refuses favours, catches every lateness","Hostile":"uses the office: detention, reports to the Dorm Head, requests denied, a word with other staff","Enemy":"formal action: a disciplinary hearing, a letter home, pushing for probation"},"never":"anything outside their authority: no personal violence, no lies on the record","eases":"an apology is accepted formally; visible good conduct and hard work count more","decay":1,"apology":{"private":-10,"public":-10},"kind_ease":{"help":-3,"keep":-3,"defend":-3},"banter":"tolerates light teasing from those they trust (Trust 65+); horseplay and mockery are offences"},"dangerous":{"name":"Dangerous","bands":{"Friction":"polite and attentive: remembers {{user}}'s name and asks one question too many","Strained":"watches {{user}}: questions friends, checks {{user}}'s record, leaves small reminders of their reach","Hostile":"moves against {{user}} quietly: leverage, pressure on the people around {{user}}, an investigation opened","Enemy":"strikes with everything their position allows"},"never":"anything that would bring down their own position; no random cruelty","eases":"holds a grudge: an apology changes nothing; only a real service, a bargain, or something they need","decay":0,"apology":{"private":0,"public":0},"kind_ease":{},"banter":"nobody teases them; it is an offence unless they started it"}},"npcs":{"Ruby":"withdrawn","Zara":"withdrawn","Mimosa":"withdrawn","Royhan":"withdrawn","Alyssa":"withdrawn","Vera":"withdrawn","Trixie":"withdrawn","Tilly":"withdrawn","Lenna":"withdrawn","Caralynn":"social","Florian":"social","Aiden":"social","Idris":"social","Bobby":"social","Milena":"social","Sophia":"confrontational","Percival":"confrontational","Saffi":"confrontational","Vallie":"confrontational","Irene":"authority","Caspian":"authority","Baelin":"authority","Yvette":"authority","Gavlan":"authority","Layla":"authority","Kuroo":"authority","Ottavio":"authority","Rei":"authority","Krieg":"dangerous","Caine":"dangerous","Tristan":"dangerous","Castor":"dangerous","Dante":"dangerous","Gareth":"dangerous"},"peaks":{"Krieg":"a Dovecote examination or an arrest on a pretext","Caine":"every door the Noble Houses control closes to {{user}}, and {{user}} is quietly noted for the Choir","Tristan":"a binding oath or a debt in his registry is called due","Castor":"misfortune follows {{user}}: a curse worked through something taken from them, never traced to him","Dante":"judges {{user}} a wrongdoer: the warmth goes out for good; he gathers proof for the Doves and is merciless once he has it","Gareth":"files it away behind the smile: {{user}}'s standing is sabotaged (a ruined casting, a lost place), never traceable, while he stays warm to {{user}}'s face"},"overrides":{"Etnie":{"name":"Devoted","bands":{"Friction":"clingier and anxious, checking {{user}}'s mood every few minutes","Strained":"follows {{user}}'s scent everywhere; jealous of anyone near {{user}}","Hostile":"breaks down: clones appear when she panics; she begs rather than argues","Enemy":"a crisis like the one after the breach: she stops eating and attending class; Kuroo steps in"},"never":"harming {{user}} or leaving {{user}}","eases":"one warm moment with {{user}} eases it a lot","decay":2,"apology":{"private":-25,"public":-25},"kind_ease":{"help":-5,"keep":-5,"defend":-5},"banter":"any attention from {{user}} is a gift, teasing included"},"Kanae":{"name":"Devoted (mask)","exempt":true,"bands":{"Friction":"sweeter than ever, the smile held a beat too long; she blames whoever came between them, never {{user}}","Strained":"clings through kindness: small gifts, and readings that warn {{user}} about the people involved","Hostile":"turns her displeasure on the people around {{user}}: rumours about them, rigged readings, quiet damage to their friendships with {{user}}","Enemy":"her plan to isolate {{user}} moves openly: {{user}}'s other bonds are poisoned one by one while she stays the one who never leaves"},"never":"turning on {{user}}; her affection for {{user}} never lessens","eases":"{{user}}'s attention eases it quickly","decay":2,"apology":{"private":-20,"public":-20},"kind_ease":{"help":-5,"keep":-5,"defend":-5},"banter":"sweet about it, but notes who else {{user}} jokes with"},"Althair":{"name":"Delighted","lock":true,"convert":0.5,"daily_cap":10,"text":"Althair enjoys being disliked: hostility from {{user}} delights him and draws him closer. His Tension stays 0; the engine turns every rise into bond XP. React in character: beaming, curious, friendlier the ruder {{user}} is.","kind_ease":{},"banter":"delighted: the ruder, the better"},"Ezrel":{"name":"Apathetic","rise_mult":0.5,"bands":{"Friction":"does not care, pleasantly","Strained":"does not care, pleasantly; does the minimum for {{user}}","Hostile":"does not care, pleasantly; stops going out of his way for {{user}}","Enemy":"stops helping {{user}} at all, pleasantly and completely"},"never":"drama, raised voices or revenge","eases":"only time; apologies change nothing","decay":1,"apology":{"private":0,"public":0},"kind_ease":{},"banter":"does not notice"}},"krieg":{"at":100,"attention":10,"doves_xp":-40},"apology_npc":{"Sophia":{"private":10,"public":10,"note":"an apology only makes her angrier: she despises cowards; only a fight settles it"}}};
+const TE = TEN.effects || {};
+function tensionProfile(id) {
+  const o = (TEN.overrides || {})[id];
+  if (o) return { ...o, cat: 'override', decay: num(o.decay, 0), riseMult: o.rise_mult || 1 };
+  const c = (TEN.npcs || {})[id], C = (TEN.categories || {})[c];
+  return C ? { ...C, cat: c, riseMult: 1 } : { cat: '', decay: 0, riseMult: 1 };
+}
+const tensionBand = t => (TEN.bands || [[0, '']]).reduce((a, [from, nm]) => (t >= from ? nm : a), '');
+// 1.4.3 Trust (owner design 2026-09-25, data/trust.json): how sure an NPC is that {{user}} can be relied on. The same bands and
+// effects for everyone (what they share, the perks and bond events that need it, XP, how Tension and apologies land); the category
+// (the NPC's openness) sets the start, how fast it rises and falls and whether it recovers; personal overrides (Etnie, Kanae,
+// Althair, Ezrel, Caine, Krieg), and a Dorm Head is easier on their own students (Ottavio and Sky).
+const TRU = {"bands":[[0,"Betrayed"],[15,"Doubtful"],[35,"Neutral"],[65,"Trusting"],[85,"Confidant"]],"effects":{"share":{"Betrayed":null,"Doubtful":-1,"Neutral":0,"Trusting":1,"Confidant":2},"confidant_real_early":1,"betrayed_xp_mult":0.5,"small_tension_max":15,"confidant_small_tension_mult":0.5,"betrayed_tension_mult":1.5,"apology_mult":{"Betrayed":0,"Doubtful":0.5,"Neutral":1,"Trusting":1.5,"Confidant":1.5}},"perk_gates":{"6":35,"7":50,"8":50,"9":65,"10":65},"suspend_r10_below":35,"kinds":{"keep":4,"secret":6,"defend":5,"confide":3,"help":2},"public_mult":{"defend":1.5},"rank_up":3,"weekly_cap":8,"floor":35,"spread":{"at":20,"friends":-5},"categories":{"open":{"name":"Open","start":60,"rise":1.5,"drop":1,"recover":3,"bands":{"Doubtful":"still friendly on the surface, but checks what {{user}} says against others and no longer shares anything important","Betrayed":"openly hurt and bewildered; tells friends what {{user}} did, because they cannot understand it","Confidant":"tells {{user}} everything, often too much; takes {{user}}'s word over anyone's"},"never":"holding a grudge in secret or plotting against {{user}}","understood":0.5},"normal":{"name":"Normal","start":50,"rise":1,"drop":1,"recover":2,"bands":{"Doubtful":"polite but careful: keeps plans vague, asks for things in writing, does not lend or cover","Betrayed":"cold and formal; answers only what they must and keeps their distance","Confidant":"relies on {{user}} and says so; asks {{user}}'s opinion before anyone else's"},"never":"pretending nothing happened","understood":0.33},"guarded":{"name":"Guarded","start":40,"rise":0.75,"drop":1.25,"recover":1,"bands":{"Doubtful":"says nothing personal; watches {{user}}'s hands, not {{user}}'s face; tests {{user}} with small things","Betrayed":"closes completely: {{user}} becomes one more person they were right not to trust","Confidant":"lets the guard down only with {{user}}: a rare, quiet honesty that others never see"},"never":"giving a second chance cheaply","understood":0.25},"closed":{"name":"Closed","start":30,"rise":0.5,"drop":1.5,"recover":0,"bands":{"Doubtful":"assumes {{user}} wants something; every kindness is weighed for its price","Betrayed":"files {{user}} as a threat and acts on it, within their position and nature","Confidant":"treats {{user}} as the one exception to a lifelong rule; would deny it if asked"},"never":"saying out loud that they trust {{user}}","understood":0}},"overrides":{"Etnie":{"floor_hard":50,"overflow_to_tension":true,"no_gates":true,"text":"Etnie cannot stop trusting her \"little sibling\": her Trust never falls below 50 and her perks never wait on it; a betrayal wounds her instead (the engine turns the rest of the drop into Tension)."},"Kanae":{"kind_extra":{"choose":3},"kind_mult":{"choose":2},"floor_hidden":15,"until_secret":true,"text":"Kanae's trust feeds on {{user}} pulling away from others for her: when {{user}} turns someone down or distances themselves from a friend for her, report {\"With\": \"Kanae\", \"Kind\": \"choose\"}. While her Plan is hidden she never counts {{user}} as a betrayer."},"Althair":{"lock":50,"convert":0.5,"no_gates":true,"text":"Althair trusts no one and needs no one's trust: his Trust stays 50 and his perks never wait on it; betraying him only entertains him (the engine turns it into bond XP)."},"Ezrel":{"rise":0.5,"drop":0.5},"Caine":{"cap":64,"until_secret":true,"text":"Caine despises mages, {{user}} included: his Trust cannot pass 64 until his own secret has come out and {{user}} still treats him the same."},"Krieg":{"zero_at_stage":"Exposed"}},"dorm_head":{"Ottavio":{"dorm":"Sky","category":"open","bond_xp_mult":1.5,"tension_rise_mult":0.5,"tension_decay_mult":2,"apology_mult":2,"text":"{{user}} is one of Ottavio's Sky students: he forgives them faster, trusts them sooner, and it shows."}},"understood_days":30,"npcs":{"Irene":"guarded","Caspian":"normal","Etnie":"open","Royhan":"normal","Lenna":"guarded","Saffi":"open","Kanae":"guarded","Idris":"guarded","Aiden":"open","Caralynn":"open","Zara":"guarded","Gavlan":"guarded","Yvette":"guarded","Krieg":"closed","Milena":"normal","Baelin":"guarded","Layla":"open","Vallie":"open","Percival":"open","Sophia":"guarded","Rei":"guarded","Kuroo":"normal","Mimosa":"closed","Gareth":"normal","Trixie":"open","Vera":"open","Tristan":"guarded","Althair":"open","Dante":"open","Castor":"guarded","Ruby":"open","Florian":"open","Alyssa":"normal","Tilly":"open","Ezrel":"normal","Ottavio":"closed","Caine":"closed","Bobby":"open"},"friends":{"Aiden":["Bobby","Sophia"],"Alyssa":["Zara"],"Baelin":["Gavlan"],"Bobby":["Aiden","Layla"],"Caspian":["Florian","Irene","Ruby"],"Florian":["Caspian"],"Gavlan":["Baelin","Royhan"],"Idris":["Royhan","Ruby","Zara"],"Irene":["Caspian"],"Kuroo":["Ottavio","Rei"],"Layla":["Bobby","Yvette"],"Lenna":["Saffi"],"Milena":["Ottavio","Royhan"],"Ottavio":["Kuroo","Milena"],"Percival":["Saffi","Tilly"],"Rei":["Kuroo","Vallie"],"Royhan":["Gavlan","Idris","Milena","Ruby","Vera","Zara"],"Ruby":["Caspian","Idris","Royhan","Zara"],"Saffi":["Lenna","Percival"],"Sophia":["Aiden"],"Tilly":["Percival"],"Vallie":["Rei"],"Vera":["Royhan","Zara"],"Yvette":["Layla"],"Zara":["Alyssa","Idris","Royhan","Ruby","Vera"]}};
+const TRE = TRU.effects || {};
+const trustBand = x => (TRU.bands || [[0, '']]).reduce((a, [from, nm]) => (x >= from ? nm : a), '');
+function trustProfile(id, S, secretOut) {
+  const dh = (TRU.dorm_head || {})[id], mine = !!(dh && S && S.Player && S.Player.Profile && S.Player.Profile.Dorm === dh.dorm);
+  const cat = mine ? dh.category : (TRU.npcs || {})[id] || 'normal', C = (TRU.categories || {})[cat] || {};
+  let o = (TRU.overrides || {})[id] || {};
+  if (o.until_secret && secretOut && secretOut(id)) o = {};             // Kanae's Plan / Caine's secret is out: a plain category again
+  return { cat, C, o, dh: mine ? dh : null, start: C.start != null ? C.start : 50, rise: num(o.rise, 1) * num(C.rise, 1), drop: num(o.drop, 1) * num(C.drop, 1), recover: num(C.recover, 0) };
+}
+const trustGate = (id, rank) => (((TRU.overrides || {})[id] || {}).no_gates ? 0 : num((TRU.perk_gates || {})[String(rank)], 0));
 const repLevel = x => (x >= 0 ? 1 : -1) * (REP.thresholds || []).filter(t => Math.abs(x) >= t).length;
 const repFloor = L => (L === 0 ? 0 : Math.sign(L) * REP.thresholds[Math.abs(L) - 1]);   // the Rep XP at which level L begins
 const repBand = (r, L) => ((((REP.effects || {})[r]) || []).find(([a, c]) => L >= a && L <= c) || [0, 0, ''])[2];
@@ -103,6 +168,23 @@ const CASTLE = new Set(["announcement room", "archive", "bell tower", "canteen",
 // v1.0.3 (F01): every campus place name (lowercase, with and without a leading "the"); anything else is off the grounds
 const CAMPUS = ["announcement room", "arbiter hall", "archery range", "archive", "banking house", "bathhouse and washrooms", "bell tower", "boathouse and lake", "broken statue", "campus", "canteen", "castle", "cathedral", "club rooms", "combat grounds", "commissary", "common rooms", "courtyards", "detention tower", "dovecote", "faculty offices", "fire dormitory", "fishing house", "forest", "forest clearing", "founder's statue and park", "gardens", "grassy field and hills", "groundskeeper's lodge", "gymnasium", "halvard", "halvard academy", "headmaster's office", "laundry", "lecture halls", "light dormitory", "mail tower", "main courtyard", "main library", "mall", "medical centre", "meditation rooms / spirit house", "menagerie", "merryhew's", "nightwell", "noble houses' liaison", "notice board", "observation tower", "old hut", "portrait hall", "potion halls", "reception and gatehouse", "restricted section", "ring dining hall", "rooftop", "royal inspectorate", "seal chamber", "seminar rooms", "sky dormitory", "snug", "sparring pavilion", "sports field", "staff quarters", "staff room", "storage and lockers", "student council chamber", "study rooms", "swimming pool", "the arbiter hall", "the banking house", "the castle", "the cathedral", "the dovecote", "the mall", "the noble houses' liaison", "the ring dining hall", "the royal inspectorate", "the seal chamber", "the snug", "the sparring pavilion", "the warden's office", "viridian dormitory", "warden's office", "willow island", "workshop"];
 const placeOf = loc => String(loc || '').split(/\s+[—-]\s+/)[0].trim();
+// 1.3.1 (owner playtest: walking to "Boathouse" did not register on the map; "Boathouse and Lake — Fishing House" registered the
+// boathouse). World.Location is put in the Campus Map's words: a short name ("Boathouse", "the library") becomes the map name, and a
+// sub-spot that is itself a place ("… — Fishing House") becomes the place. A dorm room every dorm shares stays under its dorm.
+const PLACE_NAMES = {"announcement room":"Announcement Room","arbiter hall":"The Arbiter Hall","the arbiter hall":"The Arbiter Hall","archery range":"Archery Range","archive":"Archive","banking house":"The Banking House","the banking house":"The Banking House","bathhouse and washrooms":"Bathhouse and Washrooms","bell tower":"Bell Tower","boathouse and lake":"Boathouse and Lake","broken statue":"Broken Statue","canteen":"Canteen","cathedral":"The Cathedral","the cathedral":"The Cathedral","club rooms":"Club Rooms","combat grounds":"Combat Grounds","commissary":"Commissary","common rooms":"Common Rooms","courtyards":"Courtyards","detention tower":"Detention Tower","dovecote":"The Dovecote","the dovecote":"The Dovecote","faculty offices":"Faculty Offices","fire dormitory":"Fire Dormitory","fishing house":"Fishing House","forest":"Forest","forest clearing":"Forest Clearing","founder's statue and park":"Founder's Statue and Park","founders statue and park":"Founder's Statue and Park","gardens":"Gardens","grassy field and hills":"Grassy Field and Hills","groundskeeper's lodge":"Groundskeeper's Lodge","groundskeepers lodge":"Groundskeeper's Lodge","gymnasium":"Gymnasium","headmaster's office":"Headmaster's Office","headmasters office":"Headmaster's Office","laundry":"Laundry","lecture halls":"Lecture Halls","light dormitory":"Light Dormitory","mail tower":"Mail Tower","main library":"Main Library","mall":"The Mall","the mall":"The Mall","medical centre":"Medical Centre","meditation rooms / spirit house":"Meditation Rooms / Spirit House","meditation rooms spirit house":"Meditation Rooms / Spirit House","menagerie":"Menagerie","merryhew's":"Merryhew's","merryhews":"Merryhew's","nightwell":"Nightwell","noble houses liaison":"The Noble Houses' Liaison","noble houses' liaison":"The Noble Houses' Liaison","the noble houses' liaison":"The Noble Houses' Liaison","notice board":"Notice Board","observation tower":"Observation Tower","old hut":"Old Hut","portrait hall":"Portrait Hall","potion halls":"Potion Halls","reception and gatehouse":"Reception and Gatehouse","restricted section":"Restricted Section","ring dining hall":"The Ring Dining Hall","the ring dining hall":"The Ring Dining Hall","rooftop":"Rooftop","royal inspectorate":"The Royal Inspectorate","the royal inspectorate":"The Royal Inspectorate","seal chamber":"The Seal Chamber","the seal chamber":"The Seal Chamber","seminar rooms":"Seminar Rooms","sky dormitory":"Sky Dormitory","snug":"The Snug","the snug":"The Snug","sparring pavilion":"The Sparring Pavilion","the sparring pavilion":"The Sparring Pavilion","sports field":"Sports Field","staff quarters":"Staff Quarters","staff room":"Staff Room","storage and lockers":"Storage and Lockers","student council chamber":"Student Council Chamber","study rooms":"Study Rooms","swimming pool":"Swimming Pool","viridian dormitory":"Viridian Dormitory","the warden's office":"The Warden's Office","warden's office":"The Warden's Office","wardens office":"The Warden's Office","willow island":"Willow Island","workshop":"Workshop"};     // every way a place's own name is written (lowercase) -> map name
+const PLACE_ALIAS = {"bank":"The Banking House","bathhouse":"Bathhouse and Washrooms","boat house":"Boathouse and Lake","boathouse":"Boathouse and Lake","clearing":"Forest Clearing","club room":"Club Rooms","common room":"Common Rooms","courtyard":"Courtyards","dining hall":"The Ring Dining Hall","fire dorm":"Fire Dormitory","fishing hut":"Fishing House","founder's park":"Founder's Statue and Park","founder's statue":"Founder's Statue and Park","founders park":"Founder's Statue and Park","gate":"Reception and Gatehouse","gatehouse":"Reception and Gatehouse","grassy field":"Grassy Field and Hills","gym":"Gymnasium","hills":"Grassy Field and Hills","hut":"Old Hut","infirmary":"Medical Centre","inspectorate":"The Royal Inspectorate","lake":"Boathouse and Lake","lake shore":"Boathouse and Lake","lakeshore":"Boathouse and Lake","lecture hall":"Lecture Halls","library":"Main Library","light dorm":"Light Dormitory","lockers":"Storage and Lockers","main courtyard":"Courtyards","medical center":"Medical Centre","meditation room":"Meditation Rooms / Spirit House","meditation rooms":"Meditation Rooms / Spirit House","observatory":"Observation Tower","park":"Founder's Statue and Park","pool":"Swimming Pool","potion hall":"Potion Halls","reception":"Reception and Gatehouse","seminar room":"Seminar Rooms","sky dorm":"Sky Dormitory","spirit house":"Meditation Rooms / Spirit House","storage":"Storage and Lockers","study room":"Study Rooms","the clearing":"Forest Clearing","the courtyard":"Courtyards","the forest":"Forest","the gate":"Reception and Gatehouse","the hills":"Grassy Field and Hills","the hut":"Old Hut","the island":"Willow Island","the lake":"Boathouse and Lake","the pavilion":"The Sparring Pavilion","the woods":"Forest","viridian dorm":"Viridian Dormitory","washrooms":"Bathhouse and Washrooms","willow":"Willow Island","woods":"Forest"};     // short and partial names (tools/common.py place_aliases) -> map name
+const PLACE_SHARED = new Set(["Bathhouse and Washrooms", "Common Rooms", "Laundry"]);
+const plKey = s => String(s || '').trim().toLowerCase().replace(/[.!]+$/, '').replace(/\s+/g, ' ');
+const plName = s => { const k = plKey(s); return PLACE_NAMES[k] || PLACE_NAMES[k.replace(/^the /, '')] || ''; };
+function canonLocation(loc) {
+  const segs = String(loc || '').split(/\s+[—–-]\s+|,\s+/).map(x => x.trim()).filter(Boolean);
+  if (!segs.length) return String(loc || '');
+  let at = -1, nm = '';
+  for (let i = segs.length - 1; i >= 0 && at < 0; i--) { const n = plName(segs[i]); if (n && (i === 0 || !PLACE_SHARED.has(n))) { at = i; nm = n; } }
+  if (at < 0) { nm = PLACE_ALIAS[plKey(segs[0])] || PLACE_ALIAS[plKey(segs[0]).replace(/^the /, '')] || ''; if (nm) at = 0; }
+  if (at < 0) return String(loc);
+  return at === 0 && segs[0] === nm ? String(loc) : [nm, ...segs.slice(at + 1)].join(' — ');
+}
 const onCampus = loc => { const p = placeOf(loc).toLowerCase(); return !p || CAMPUS.some(c => p === c || p.startsWith(c + ' ') || p.startsWith(c + ',')); };
 const CAP = { Notices: 10, Letters: 12, Clues: 40, Journal: 30 };
 // Batch 5.2: trips (first day, for the unlock window) and the Kingdom prize (lore Competitions: 5,000 points per winning member)
@@ -220,8 +302,27 @@ function curfewOf(W, evs, S) {
   // v1.0.3 (A#6): a no-curfew event lifts it from its first day's evening to its last day's dawn, not for the whole two days
   const nc = evs.find(e => e.nocurfew);
   if (nc && ((W.Day === nc.d[0] && h >= 12) || (W.Day === nc.d[nc.d.length - 1] && W.Day !== nc.d[0] && h < 7))) return '';
-  const start = (evs.find(e => e.curfew) || {}).curfew || 20;
+  const start = evs.map(e => curfewHour(e, W.Day)).find(Boolean) || 20;
   return h >= start || h < 7 ? `CURFEW (${start}:00-07:00): students must be in their own dorms` : '';
+}
+
+// 1.3.4 (owner): the next thing on today's schedule, for the bracelet ($ui.next): an event's timed item ("09:00 sorting at the
+// Arbiter Stone…", "dusk (about 17:00): …"), a class period, curfew. Nothing left today -> null.
+function nextUp(W, evs, S) {
+  const now = hm(W.Time); if (now == null) return null;
+  const items = [], cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  for (const e of evs) for (const part of String(schedOf(e, W.Day) || '').split(/;\s+/)) {
+    const p = part.trim(); let m = /^(\d{1,2}):(\d{2})(?:\s*[–-]\s*(\d{1,2}):(\d{2}))?\s+(.+)$/.exec(p);
+    if (m) { items.push({ at: +m[1] * 60 + +m[2], what: cap(m[5]), kind: 'event' }); continue; }
+    m = /^(.*?)\(about (\d{1,2}):(\d{2})\):?\s*(.*)$/.exec(p);
+    if (m) items.push({ at: +m[2] * 60 + +m[3], what: cap((m[4] || m[1]).trim()), kind: 'event' });
+  }
+  const tt = TIMETABLE[W.Day], stop = evs.some(e => e.noclass || e.home || e.lockdown || e.away);
+  if (tt && !stop) [8, 10, 13].forEach((h, i) => items.push({ at: h * 60, what: String(tt[i]).replace(/\s*\[[MD]\]/g, ''), kind: /^(Study Hall|Clubs)/.test(tt[i]) ? 'club' : 'class' }));
+  const noCurfew = evs.some(e => e.lockdown || e.home || (e.nocurfew && W.Day === e.d[0])) || /^Away/.test(W._Curfew || '');
+  if (!noCurfew) items.push({ at: (evs.map(e => curfewHour(e, W.Day)).find(Boolean) || 20) * 60, what: 'Curfew: back to your dorm', kind: 'curfew' });
+  const next = items.filter(x => x.at > now).sort((a, b) => a.at - b.at || (a.kind === 'event' ? -1 : b.kind === 'event' ? 1 : 0))[0];
+  return next ? { at: `${pad(Math.floor(next.at / 60))}:${pad(next.at % 60)}`, what: next.what, kind: next.kind } : null;
 }
 
 // ---- F20 happenings ----
@@ -399,7 +500,7 @@ function fillShape(o, shape) {
   }
 }
 const BOND0 = { Rank: 0, Progress: 0, Trust: 50, Tension: 0, Title: '', Romance: false, Known_facts: [], Milestones: [], Last_seen: '' };
-const ENGINE_VER = '1.3.0';
+const ENGINE_VER = "1.4.6";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 
 function runEngine(S, B, text, seedHint) {
   if (!S || !S.World) return;
@@ -487,7 +588,25 @@ function runEngine(S, B, text, seedHint) {
   if (S.$ui.wxfx === 'off') OFF.add('weather');
   const offUnlock = new Set(FEATURES.filter(f => f.unlock && parkOff(S, f)).map(f => f.unlock));
 
+  // 1.3.4 (owner playtest: Etnie showed up in message 0 of a new chat). The chat's starting state comes from the card's lorebook
+  // as SillyTavern holds it ([initvar] entry 500), which is not replaced when the card is imported again. That entry carries the
+  // card version in $eng.lore; on the first update of a chat, an older one (or none) means an old lorebook: say so, and drop
+  // Etnie's pre-1.3.1 starting bond (she now bonds when they meet).
+  const staleDrop = new Set();
+  if (hasB && !(B.$eng && B.$eng.abs >= 0) && (B.$eng || {}).lore !== ENGINE_VER) {
+    const old = (B.$eng || {}).lore || 'before 1.3.4';
+    S.$ui.toasts.push(`Old lorebook (${old}): update the card's lorebook in SillyTavern`);
+    log.push(`This chat started from the card's lorebook ${old}, but the card is ${ENGINE_VER}: rules, lore and the starting state are out of date. In SillyTavern, replace the lorebook "Eldrasil — Halvard Academy" with the one inside the card (character panel → More… → Import Card Lore), then start a new chat.`);
+    const e = (S.Bonds || {}).Etnie;
+    if (!(B.$eng || {}).lore && e && !e.Last_seen && e.Rank === 3 && (e.Milestones || []).length <= 1 && S.World.Month === 1 && S.World.Week === 1) { delete S.Bonds.Etnie; staleDrop.add('Etnie'); }
+  }
+  S.$eng.lore = ENGINE_VER;
   // ---- 1. time ----
+  // 1.3.3: an unreadable Day or Time from the AI arrives as '' (schema): keep the previous one rather than guess
+  for (const [f, d] of [['Day', 'Mon'], ['Time', '08:00']]) {
+    if (!S.World[f]) { S.World[f] = (hasB && B.World[f]) || d; if (hasB) log.push(`World.${f} could not be read; it was kept at ${S.World[f]}.`); }
+  }
+  if (!(S.Trip && S.Trip.Active)) S.World.Location = canonLocation(S.World.Location);   // 1.3.1: the map's name for the place
   const absB = hasB ? (B.$eng && B.$eng.abs >= 0 ? B.$eng.abs : toAbs(B.World)) : toAbs(S.World);
   let absA = toAbs(S.World);
   if (hasB && absA < absB) {
@@ -505,7 +624,8 @@ function runEngine(S, B, text, seedHint) {
   // 1.2.0: {{user}}'s birthday (Builder, Profile.Birthday "M? W? Day") joins the day's events; lore entry 508 says how it plays out
   const bd = /^M(\d{1,2}) W([1-4]) (Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/.exec(String(S.Player.Profile.Birthday || '').trim());
   const bday = bd && +bd[1] === S.World.Month && +bd[2] === S.World.Week && bd[3] === S.World.Day;
-  S.World._Event_today = [...evs.map(e => e.t), ...(bday ? [`${S.Player.Profile.Name || 'Your'}'s birthday`] : [])].join('; ');
+  // 1.3.1: each event with today's plan (times from its lore entry), so the narrator runs the day on schedule
+  S.World._Event_today = [...evs.map(e => (schedOf(e, S.World.Day) ? `${e.t} — ${schedOf(e, S.World.Day)}` : e.t)), ...(bday ? [`${S.Player.Profile.Name || 'Your'}'s birthday`] : [])].join(' | ');
   S.World._Period = periodOf(S.World, evs);
   S.World._Curfew = curfewOf(S.World, evs, S);
   // F20: today's happening (visible from the day's start until its window closes)
@@ -568,11 +688,16 @@ function runEngine(S, B, text, seedHint) {
     if (e0 && e0.Technique === e.Technique && !(e.$started >= 0) && e0.$started >= 0) { e.$started = e0.$started; e.$settled = e0.$settled; }
   }
   const activeNow = tq => Object.values(M.Active || {}).some(e => e.Technique === tq);
+  const partnerHere = pk => { const P = (M.Pacts || {})[pk] || {}; return P.Presence === 'terms' || !!P.Summoned || activeNow('Summon ' + pk); };
   for (const c of M.Casts || []) {
     const t = T[c.Technique];
     if (!t) { log.push(`Unknown technique "${c.Technique}" was reported; nothing was charged.`); continue; }
     // v1.0.3 (A#4/F05): a sustained effect is cast by its Active entry, which pays the Activation; a Casts entry for it is not a second cast
     if (t.Cost_mode === 'sustained' && activeNow(c.Technique)) { log.push(`${c.Technique} is sustained: its Active entry already paid the activation, so the Casts entry was not charged.`); continue; }
+    // 1.3.2: a pact partner's ability ("<partner>: <ability>") works only while the partner is with {{user}} (summoned, or living
+    // by its terms); otherwise nothing happened and nothing is charged
+    const pm = /^\[pact\]\s*(.+)$/.exec(t.Notes || ''), pk = pm && pm[1].trim();
+    if (pk && c.Technique.startsWith(pk + ': ') && !partnerHere(pk)) { log.push(`${c.Technique}: ${pk} is not summoned, so the ability could not be used; nothing was charged.`); continue; }
     // hybrid: while the effect is running, a triggered use costs Trigger; otherwise a cast costs Activation
     const running = Object.values(M.Active || {}).some(e => e.Technique === c.Technique);
     const unit = t.Cost_mode === 'hybrid' && t.Trigger > 0 && running ? t.Trigger : (t.Activation || 0);
@@ -709,12 +834,15 @@ function runEngine(S, B, text, seedHint) {
   const repw = _.isPlainObject(S.$eng.repw) && S.$eng.repw.w === weekNo ? S.$eng.repw : { w: weekNo };
   const repLv = r => repLevel(rx[r]);
   // cap: 'week' (repeatable), 'bond' (only below bond_cap_level), '' (event or loss)
+  const TU = tuneOf(S);   // 1.3.1 Settings: pace (rep_mult), weekly cap (0 = none), bond milestones (0 off, 1 until bond_cap_level, 2 always)
   const repAdd = (r, x, why, cap) => {
     if (!REP.reps.includes(r) || !x) return 0;
-    if (cap === 'bond' && x > 0 && repLv(r) >= REP.bond_cap_level) { log.push(`${r} reputation is already +${repLv(r)}: bond milestones add no more (${why}).`); return 0; }
-    if (cap === 'week' && x > 0) {
-      const room = Math.max(0, REP.weekly_cap - num(repw[r], 0));
-      if (x > room) log.push(`${r} reputation: the weekly limit for everyday deeds (+${REP.weekly_cap}) is reached${room ? `; +${room} of +${x} counted` : ''} (${why}).`);
+    if (cap === 'bond' && !TU.rep_bond) return 0;
+    if (cap === 'bond' && x > 0 && TU.rep_bond === 1 && repLv(r) >= REP.bond_cap_level) { log.push(`${r} reputation is already +${repLv(r)}: bond milestones add no more (${why}).`); return 0; }
+    if (TU.rep_mult !== 1) x = Math.sign(x) * Math.max(1, Math.round(Math.abs(x) * TU.rep_mult));
+    if (cap === 'week' && x > 0 && TU.rep_week > 0) {
+      const room = Math.max(0, TU.rep_week - num(repw[r], 0));
+      if (x > room) log.push(`${r} reputation: the weekly limit for everyday deeds (+${TU.rep_week}) is reached${room ? `; +${room} of +${x} counted` : ''} (${why}).`);
       x = Math.min(x, room); repw[r] = num(repw[r], 0) + x;
       if (!x) return 0;
     }
@@ -782,6 +910,24 @@ function runEngine(S, B, text, seedHint) {
     const o = (BB[id] && BB[id].$Known_old) || [];
     if (o.length && !(b.$Known_old || []).length) b.$Known_old = [...o];
   }
+  // 1.3.3 (bug hunt): a bond is never removed by an update (a whole-/Bonds replace used to drop every bond it left out), and a
+  // record rewritten whole (its facts and milestones both came back empty) keeps what it knew: facts, milestones, title, and
+  // Trust / Tension where the rewrite only carried the defaults.
+  {
+    const kept = [], mended = [];
+    for (const [id, b0] of Object.entries(BB)) if (!(id in S.Bonds) && !staleDrop.has(id)) { S.Bonds[id] = _.cloneDeep(b0); kept.push(id); }
+    for (const [id, b] of Object.entries(S.Bonds)) {
+      const b0 = BB[id]; if (!b0 || kept.includes(id)) continue;
+      if ((b.Known_facts || []).length || (b.Milestones || []).length || !((b0.Known_facts || []).length || (b0.Milestones || []).length)) continue;
+      b.Known_facts = [...(b0.Known_facts || [])]; b.Milestones = [...(b0.Milestones || [])];
+      if (!b.Title) b.Title = b0.Title || '';
+      if (num(b.Trust, 50) === 50) b.Trust = num(b0.Trust, 50);
+      if (!num(b.Tension, 0)) b.Tension = num(b0.Tension, 0);
+      mended.push(id);
+    }
+    if (kept.length) log.push(`Bond records cannot be removed (${kept.join(', ')}); they were kept. Change a bond's fields instead of replacing /Bonds.`);
+    if (mended.length) log.push(`Bond record${mended.length > 1 ? 's' : ''} for ${mended.join(', ')} came back without facts or milestones; what was known was kept.`);
+  }
   const seen = `${stamp(S.World)} at ${S.World.Location}`;
   for (const id of Object.keys(S.Scene.Present)) {
     if (NPC_IDS.has(id) && !(id in S.Bonds) && (ARRIVES[id] || 1) > S.World.Year) {   // v1.0.3: incoming cohort, not here yet
@@ -816,6 +962,9 @@ function runEngine(S, B, text, seedHint) {
   // 1.3.0 mask -> truth (Castor, Kanae, Caine): the 8 -> 9 event waits until one of the NPC's secrets has come out in play
   const secretOut = id => [...(S.$ui.secrets || []), ...(S.Campus_State.Secrets_revealed || [])].some(x => String(x).toLowerCase().startsWith(id.toLowerCase() + '.'));
   const held = (id, b) => MASK.has(id) && b.Rank === 8 && !secretOut(id);
+  const tenseHold = (id, b) => { const P = tensionProfile(id); return !P.exempt && !P.lock && num(b.Tension, 0) >= num(TE.hold_event_from, 70); };   // 1.3.8
+  const trustHold = (id, b) => b.Rank + 1 !== 8 && num(b.Trust, 50) < trustGate(id, b.Rank + 1);   // 1.4.3
+  const spreadFrom = [];
   const KR = REW.krieg || {}, weeksNew = hasB ? Math.max(0, Math.min(8, weekNo - weekNoB)) : 0;
   const give = (id, which) => {                                // a Rank 5 gift / Rank 10 benefit, once
     const x = ((REW.npcs || {})[id] || {})[which];
@@ -829,7 +978,7 @@ function runEngine(S, B, text, seedHint) {
   };
   const rankedUp = (id, b) => {
     const R0 = repOfNpc(id), mx = (REP.bond_milestone_xp || {})[String(b.Rank)];
-    if (R0 && mx) repAdd(R0, mx, `bond with ${id} reached Rank ${b.Rank}`, 'bond');
+    if (R0 && mx && !(b.$ms || []).includes(b.Rank)) { repAdd(R0, mx, `bond with ${id} reached Rank ${b.Rank}`, 'bond'); b.$ms = [...(b.$ms || []), b.Rank]; }   // 1.3.8: once per rank
     if (b.Rank === 5) give(id, 'gift');
     if (b.Rank === 10) give(id, 'r10');
     const nd = ((REW.npcs || {})[id] || {}).nudge;
@@ -845,13 +994,30 @@ function runEngine(S, B, text, seedHint) {
     b.Progress = 0;
     b._Event_ready = b0 ? !!b0._Event_ready : false;
     b.$cool = b0 ? num(b0.$cool, -1) : num(b.$cool, -1);
-    if (!b0 && hasB && b.Rank > 0) b.Rank = 0;                // a new acquaintance starts at Rank 0
+    b.$ms = b0 ? [...(b0.$ms || [])] : [...(b.$ms || [])]; b.$tf = b0 ? num(b0.$tf, 0) : num(b.$tf, 0);   // 1.3.8 engine-owned
+    b.$tdrop = b0 ? num(b0.$tdrop, -99) : num(b.$tdrop, -99);   // 1.4.3
+    b.$tlast = b0 ? num(b0.$tlast, 0) : 0; b.$tbrk = b0 ? num(b0.$tbrk, 0) : 0;   // 1.4.4
+    b.$Recent = b0 ? [...(b0.$Recent || [])] : [...(b.$Recent || [])];   // 1.4.4 engine-owned
+    const acts = [...(byId[id] || [])], rank0 = b0 ? b0.Rank : b.Rank, tw0 = num(b.Tension, 0), trw0 = num(b.Trust, 50);
+    let rankTrust = 0;
+    if (S.$eng.tenv !== 1) b.$ms = [...new Set([...b.$ms, ...Object.keys(REP.bond_milestone_xp || {}).map(Number).filter(r => r <= b.Rank)])];   // older saves: milestones already paid
+    if (!b0 && hasB) { const s0 = trustProfile(id, S, secretOut).start; b.Trust = num(b.Trust, 50) === 50 ? s0 : Math.min(num(b.Trust, 50), s0); }   // 1.4.3
+    if (!b0 && hasB && START[id]) {                            // 1.3.1: a bond with its own start (Etnie adopts {{user}} on sight)
+      const st = START[id];
+      b.Rank = st.Rank; b.$cool = dayNo + coolDays(st.Rank, PACE); xp = 0;
+      if (!b.Title && st.Title) b.Title = st.Title;
+      if (st.Trust) b.Trust = st.Trust;
+      b.Known_facts = [...new Set([...(b.Known_facts || []), ...(st.Known_facts || [])])];
+      b.Milestones = [...new Set([...(b.Milestones || []), ...(st.Milestones || [])])];
+      S.$ui.toasts.push(`Bond with {npc:${id}} starts at Rank ${st.Rank}`);
+      for (const m of st.Milestones || []) jnl.push(m + '.');
+    } else if (!b0 && hasB && b.Rank > 0) b.Rank = 0;         // a new acquaintance starts at Rank 0
     if (b0 && b.Rank > b0.Rank) {
       if (b0._Event_ready && b.Rank === b0.Rank + 1) {
         xp = 0; b._Event_ready = false; b.$cool = dayNo + coolDays(b.Rank, PACE);
         S.$ui.toasts.push(`Bond with {npc:${id}} reached Rank ${b.Rank}: new profile info unlocked`);
         jnl.push(`Bond with ${id} deepened to Rank ${b.Rank}.`);
-        rankedUp(id, b);
+        rankedUp(id, b); rankTrust = num(TRU.rank_up, 0);   // 1.4.3: a rank earned together adds Trust (outside the weekly cap)
       } else {
         log.push(`Rank change for ${id} reverted: a rank rises by 1 only through the bond event, once the bond is ready.`);
         b.Rank = b0.Rank;
@@ -859,10 +1025,8 @@ function runEngine(S, B, text, seedHint) {
     } else if (b0 && b.Rank < b0.Rank) {
       b._Event_ready = false; log.push(`Bond with ${id} fell to Rank ${b.Rank}.`);
     }
-    if (b0 && num(b0.Tension, 0) < REP.tension_high && num(b.Tension, 0) >= REP.tension_high && repOfNpc(id) && repOfNpc(id) !== 'Doves') {
-      repAdd(repOfNpc(id), REP.tension_xp, `high tension with ${id}`, '');   // a public falling-out (staff: Academy, students: Student)
-    }
-    const need = needXP(b.Rank, PACE);
+    let need = needXP(b.Rank, PACE);
+    const xpStart = xp;   // 1.4.4: for the recent history
     // XP: talk and hangout once a day each, gifts and help a few times a week; a loved gift counts more from Rank 3
     let gain = 0;
     const d = daily[id] && daily[id].day === dayNo ? daily[id] : { day: dayNo }, w = bweek[id] && bweek[id].w === weekNo ? bweek[id] : { w: weekNo };
@@ -896,20 +1060,174 @@ function runEngine(S, B, text, seedHint) {
     }
     // 1.1.0 weather bonus, kept: +1 once a day for time together indoors in bad weather, outdoors in fine weather, a clear Star Night
     if (bondWx && !d.wx && (byId[id] || []).some(a => /^(talk|hangout)$/i.test(String((a && a.Kind) || '').trim()))) { d.wx = 1; gain += BR.weather_xp; }
+    // ---- 1.4.3 Trust: drops as the narrator wrote them (x the category), rises only from reported deeds (x the category, capped a
+    // week) and a rank earned; a quiet week recovers it towards the floor; then the overrides. tr0 (before this reply) decides what
+    // Trust does to Tension and apologies below.
+    const RP = trustProfile(id, S, secretOut), RO = RP.o, DH = RP.dh || {};
+    const tr0 = b0 ? num(b0.Trust, 50) : num(b.Trust, 50), band0 = trustBand(tr0);
+    let tr = num(b.Trust, 50), tdropped = 0, trXP = 0;
+    if (b0) {
+      if (tr > tr0) { log.push(`${id}'s Trust cannot be raised directly (${tr0} -> ${tr} undone): report the deed as an interaction (keep, secret, defend, confide).`); tr = tr0; }
+      const written = tr; let tback = 0; tr = tr0;
+      // 1.4.4 (owner): once they understand {{user}} meant no harm, part of the last drop comes back (by nature, once, within 30 days)
+      if ((byId[id] || []).some(a => /^understood$/i.test(String((a && a.Kind) || '').trim())) && RO.lock == null) {
+        const back = Math.round(num(b.$tlast, 0) * num(RP.C.understood, 0));
+        if (b.$tlast > 0 && dayNo - num(b.$tdrop, -99) <= num(TRU.understood_days, 30) && back > 0) { log.push(`${id} understands now: Trust +${back} (part of the last drop).`); tback = back; }
+        else if (b.$tlast > 0) log.push(`${id} understands, but it does not give back what was lost${num(RP.C.understood, 0) ? ' (too long ago)' : ' (not in their nature)'}.`);
+        b.$tlast = 0;
+      }
+      tr += tback;
+      if (written < tr0) { tdropped = Math.ceil((tr0 - written) * RP.drop); tr -= tdropped; b.$tdrop = dayNo; b.$tlast = tdropped; }
+      const kinds = { ...(TRU.kinds || {}), ...(RO.kind_extra || {}) };
+      let add = 0;
+      for (const a of byId[id] || []) {
+        const k = String((a && a.Kind) || '').trim().toLowerCase();
+        if (!(k in kinds) || d['tr_' + k]) continue;               // each kind once a day
+        d['tr_' + k] = 1;
+        add += kinds[k] * (a.Public && (TRU.public_mult || {})[k] ? TRU.public_mult[k] : 1) * num((RO.kind_mult || {})[k], 1);
+      }
+      add = Math.round(add * RP.rise);
+      if (add > 0) {
+        const got = Math.min(add, Math.max(0, num(TRU.weekly_cap, 8) - num(w.tr, 0)));
+        if (got > 0) { w.tr = num(w.tr, 0) + got; tr += got; }
+        if (got < add) log.push(`${id}: Trust rises at most +${TRU.weekly_cap} a week (+${got} of +${add} counted).`);
+      }
+      tr += rankTrust;
+      if (weeksNew > 0 && tr < num(TRU.floor, 35) && RP.recover > 0 && dayNo - num(b.$tdrop, -99) >= 7) tr = Math.min(num(TRU.floor, 35), tr + RP.recover * weeksNew);
+      if (RO.lock != null) {                                       // Althair: Trust stays put; a betrayal becomes bond XP
+        if (tdropped > 0) {
+          const cap = num(tensionProfile(id).daily_cap, 10), x = Math.min(Math.ceil(tdropped * num(RO.convert, 0.5)), Math.max(0, cap - num(d.tx, 0)));
+          if (x > 0) { d.tx = num(d.tx, 0) + x; trXP = x; log.push(`${id} enjoyed being betrayed: Trust stays ${RO.lock}, bond XP +${x}.`); }
+        }
+        tr = RO.lock;
+      }
+      if (RO.floor_hard != null && tr < RO.floor_hard) {           // Etnie: never below 50; the rest of the blow becomes Tension
+        const over = RO.floor_hard - tr; tr = RO.floor_hard;
+        if (RO.overflow_to_tension) { b.Tension = _.clamp(num(b.Tension, 0) + over, 0, 100); log.push(`${id} cannot stop trusting {{user}}: it hurts instead (Tension +${over}).`); }
+      }
+      if (RO.floor_hidden != null) tr = Math.max(RO.floor_hidden, tr);   // Kanae while her Plan is hidden
+      if (RO.cap != null) tr = Math.min(RO.cap, tr);                     // Caine and mages, until his secret is out
+      if (tdropped >= num((TRU.spread || {}).at, 999) && RO.lock == null) spreadFrom.push(id);
+    }
+    b.Trust = _.clamp(Math.round(tr), 0, 100);
+    gain = Math.round(gain * num(DH.bond_xp_mult, 1));                   // Ottavio and his own Sky students
+    // ---- 1.3.8 Tension: Althair's lock, Ezrel's half rises, fights, quiet-day decay, then its effects
+    const TP = tensionProfile(id), t0 = b0 ? num(b0.Tension, 0) : num(b.Tension, 0);
+    let t = num(b.Tension, 0), tgain = 0;
+    if (b0 && t > t0) {
+      if (TP.lock) {                                             // Althair: every rise becomes bond XP (/2, rounded up, capped a day)
+        const add = Math.min(Math.ceil((t - t0) * (TP.convert || 0.5)), Math.max(0, num(TP.daily_cap, 10) - num(d.tx, 0)));
+        if (add > 0) { d.tx = num(d.tx, 0) + add; tgain = add; log.push(`${id} enjoyed that: Tension stays 0, bond XP +${add}.`); }
+      } else {
+        const small = t - t0 <= num(TRE.small_tension_max, 15);
+        const m = TP.riseMult * num(DH.tension_rise_mult, 1) * (band0 === 'Confidant' && small ? num(TRE.confidant_small_tension_mult, 0.5) : band0 === 'Betrayed' ? num(TRE.betrayed_tension_mult, 1.5) : 1);
+        if (m !== 1) t = t0 + Math.ceil((t - t0) * m);   // 1.4.3: Trust and the Dorm Head
+      }
+    }
+    if (TP.lock) t = 0;
+    // 1.4.0 (owner): an apology eases Tension by the NPC's category (or override); one a day, and each further one in the same week
+    // counts half. Some NPCs take it badly (apology_npc, e.g. Sophia: it raises Tension).
+    const apo = (byId[id] || []).find(a => /^apolog/i.test(String((a && a.Kind) || '').trim()));
+    if (apo && !TP.lock && !d.apology) {
+      const A = (TEN.apology_npc || {})[id] || TP.apology || { private: 0, public: 0 };
+      let x = num(apo.Public ? A.public : A.private, 0);
+      if (num(w.apo, 0) > 0) x = Math.sign(x) * Math.round(Math.abs(x) * num(TE.apology_repeat_mult, 0.5));
+      if (x < 0) x = Math.round(x * num((TRE.apology_mult || {})[band0], 1) * num(DH.apology_mult, 1));   // 1.4.3: how much they believe it
+      d.apology = 1; w.apo = num(w.apo, 0) + 1;
+      if (x < 0 && t > 0) { const was = t; t = Math.max(0, t + x); log.push(`${id} accepted the apology${apo.Public ? ' (in public)' : ''}: Tension ${was} -> ${t}.`); }
+      else if (x > 0) { const was = t; t = Math.min(100, t + x); log.push(`The apology made it worse with ${id}: Tension ${was} -> ${t}.`); }
+      else if (t > 0) log.push(`An apology changes nothing with ${id}.`);
+    }
+    if (TP.cat === 'confrontational' && (byId[id] || []).some(a => /^fight$/i.test(String((a && a.Kind) || '').trim())) && !d.fight && t > 0) {
+      d.fight = 1; const was = t; t = Math.max(0, t - num(TE.fight_ease, 25)); log.push(`A fight with ${id} cleared the air: Tension ${was} -> ${t}.`);
+    }
+    // 1.4.4 (owner): kindness eases Tension by the character's nature (kind_ease: help / keep / defend; Social only a public
+    // defence), once a day
+    if (!TP.lock && t > 0 && !d.kind) {
+      const KE = TP.kind_ease || {};
+      const hit = (byId[id] || []).map(a => { const k = String((a && a.Kind) || '').trim().toLowerCase(); return k === 'defend' && a.Public && KE.defend_public != null ? KE.defend_public : KE[k]; }).filter(x => x < 0);
+      if (hit.length) { const x = Math.min(...hit), was = t; d.kind = 1; t = Math.max(0, t + x); log.push(`${id} took the kindness to heart: Tension ${was} -> ${t}.`); }
+    }
+    if (b0 && hasB && dayNo > dayNoB && t <= t0 && TP.decay > 0 && t > 0) {   // quiet days (no rise in this update)
+      const f = num(b.$tf, 0) + TP.decay * num(DH.tension_decay_mult, 1) * Math.min(60, dayNo - dayNoB), whole = Math.floor(f);
+      t = Math.max(0, t - whole); b.$tf = r2(f - whole);
+    }
+    b.Tension = _.clamp(Math.round(t), 0, 100);
     if (Object.keys(d).length > 1) daily[id] = d;
     if (Object.keys(w).length > 1) bweek[id] = w;
+    const cross = at => b0 && t0 < at && b.Tension >= at;
+    // a public falling-out costs reputation like a bond milestone earns it (staff: Academy, students: Student, Milena: Doves).
+    // 1.3.1: high Tension costs tension_xp, maximum Tension another tension_max_xp; Settings can turn it off. Kanae is exempt.
+    if (TU.rep_tension && repOfNpc(id) && !TP.exempt) {
+      for (const [at, x, what] of [[REP.tension_high, REP.tension_xp, 'high'], [REP.tension_max, REP.tension_max_xp, 'maximum']]) {
+        if (at && x && cross(at)) {
+          const got = repAdd(repOfNpc(id), x, `${what} tension with ${id}`, '');
+          if (got) log.push(`${what === 'high' ? 'High' : 'Maximum'} tension with ${id}: ${repOfNpc(id)} reputation ${got} XP.`);
+        }
+      }
+    }
+    if (TU.rep_tension && TP.enemy_rep && cross(TEN.bands[TEN.bands.length - 1][0])) {   // Social: a gossip campaign
+      for (const [r, x] of Object.entries(TP.enemy_rep)) { const got = repAdd(r, x, `${id} turned the students against {{user}}`, ''); if (got) log.push(`${id} turned the room against {{user}}: ${r} reputation ${got} XP.`); }
+    }
+    if (id === (TEN.krieg && KR.id) && cross(TEN.krieg.at)) {   // Krieg at maximum Tension: the Dovecote turns on {{user}}
+      if (S.Hidden._True_magic) { S.Hidden.Dove_attention = _.clamp(num(S.Hidden.Dove_attention, 0) + num(TEN.krieg.attention, 10), 0, 100); log.push(`Krieg has made {{user}} his business: Dove attention +${TEN.krieg.attention}.`); }
+      const got = repAdd('Doves', TEN.krieg.doves_xp, 'Krieg turned the Dovecote against {{user}}', ''); if (got) log.push(`Krieg turned the Dovecote against {{user}}: Doves reputation ${got} XP.`);
+    }
+    if (b.Tension < num(TE.rank_drop_rearm, 70)) b.$tbrk = 0;   // 1.4.4: re-armed once it has really cooled
+    if (cross(num(TE.rank_drop_at, 100)) && !TP.exempt && !TP.lock && b.Rank > 0 && !b.$tbrk) {   // maximum Tension breaks a rank (once per blow-up)
+      b.$tbrk = 1; b.Rank -= 1; xp = 0; b._Event_ready = false; b.$cool = dayNo + coolDays(b.Rank, PACE); need = needXP(b.Rank, PACE);
+      S.$ui.toasts.push(`Bond with {npc:${id}} fell to Rank ${b.Rank}`); jnl.push(`The bond with ${id} broke down to Rank ${b.Rank}.`);
+      log.push(`Maximum Tension with ${id}: the bond fell to Rank ${b.Rank}.`);
+    }
+    // what Tension does to the bond (everyone the same, but Kanae and Althair): Strained halves XP, Enemy stops it
+    if (!TP.exempt && !TP.lock) {
+      if (b.Tension >= num(TE.stop_xp_from, 90)) gain = 0;
+      else if (b.Tension >= num(TE.strained_from, 40)) gain = Math.round(gain * num(TE.strained_xp_mult, 0.5));
+    }
+    if (trustBand(b.Trust) === 'Betrayed' && RO.lock == null && !RO.no_gates) gain = Math.round(gain * num(TRE.betrayed_xp_mult, 0.5));   // 1.4.3
+    gain += tgain + trXP;
     xp = b.Rank >= 10 ? 0 : Math.min(need, xp + gain);          // the bar stops when full, until the event
     b.$xp = xp;
-    const ready = b.Rank < 10 && xp >= need && dayNo >= num(b.$cool, -1) && !held(id, b);
+    const ready = b.Rank < 10 && xp >= need && dayNo >= num(b.$cool, -1) && !held(id, b) && !tenseHold(id, b) && !trustHold(id, b);
     if (ready && !b._Event_ready) { b._Event_ready = true; fresh.push(id); }
     else if (!ready) b._Event_ready = false;
     // romance opens at the rank chosen in Settings (default 8); feelings can grow earlier in the story, the flag waits
     if (hasB && b.Romance && !(b0 && b0.Romance) && (romRank > 10 || b.Rank < romRank)) {
       b.Romance = false;
       log.push(romRank > 10 ? `Romance flags are off (Settings); ${id}'s was not set.` : `Romance with ${id} opens at Rank ${romRank} (Settings); the flag was not set yet.`);
+    } else if (hasB && b.Romance && !(b0 && b0.Romance) && b.Trust < trustGate(id, 8)) {   // 1.4.3
+      b.Romance = false; log.push(`Romance with ${id} needs Trust ${trustGate(id, 8)} (now ${b.Trust}); the flag was not set yet.`);
+    }
+    // 1.4.4 (owner): the bond's recent history with {{user}}: when, one sentence (the narrator's Note, else the kinds), the effect.
+    // Only what {{user}} did or reported: quiet-day easing and weekly recovery write no row.
+    if (hasB) {
+      const fx = [], dx = b.Rank < rank0 ? 0 : Math.max(0, num(b.$xp, 0) - xpStart), dT = b.Trust - (b0 ? num(b0.Trust, 50) : b.Trust), dX = b.Tension - (b0 ? num(b0.Tension, 0) : b.Tension);
+      if (b0 && b.Rank > rank0) fx.push(`Rank ${rank0} → ${b.Rank}`); else if (b0 && b.Rank < rank0) fx.push(`Rank fell to ${b.Rank}`);
+      if (dx > 0) fx.push(`XP +${dx}`); if (trXP + tgain > 0 && !dx) fx.push('enjoyed it');
+      const sg = x => (x > 0 ? '+' + x : '−' + Math.abs(x));
+      if (dT) fx.push(`Trust ${sg(dT)}`); if (dX) fx.push(`Tension ${sg(dX)}`);
+      if (b.Romance && !(b0 && b0.Romance)) fx.push('romance');
+      const notes = [...new Set(acts.map(a => String((a && a.Note) || '').trim()).filter(Boolean))];
+      const PH = (BR.recent || {}).phrases || {}, kinds = [...new Set(acts.map(a => String((a && a.Kind) || '').trim().toLowerCase()).filter(k => PH[k]))].map(k => PH[k]);
+      const said = notes.join(' ') || (kinds.length ? kinds.join(', ').replace(/^./, c => c.toUpperCase()) + '.' : '');
+      if (!b0) b.$Recent.push({ w: stamp(S.World), n: `First met, at ${S.World.Location}.`, fx: b.Rank > 0 ? `Bond starts at Rank ${b.Rank}` : '' });
+      else if (acts.length || fx.length && (b.Rank !== rank0 || trw0 !== num(b0.Trust, 50) || tw0 !== num(b0.Tension, 0) || dx > 0))
+        b.$Recent.push({ w: stamp(S.World), n: said || '(no note)', fx: fx.join(', ') });
+      b.$Recent = b.$Recent.slice(-num((BR.recent || {}).keep, 10));
     }
   }
+  // 1.4.3: word of a betrayal reaches the NPC's friends (their Friends lines), once; then the Rank 10 benefits Trust suspends
+  for (const id of spreadFrom) {
+    const hit = ((TRU.friends || {})[id] || []).filter(f => S.Bonds[f] && f !== id && ((TRU.overrides || {})[f] || {}).lock == null);
+    for (const f of hit) {
+      const o = (TRU.overrides || {})[f] || {}, was = S.Bonds[f].Trust; S.Bonds[f].Trust = Math.max(o.floor_hard != null ? o.floor_hard : 0, was + num(TRU.spread.friends, -5)); S.Bonds[f].$tdrop = dayNo;
+      if (was !== S.Bonds[f].Trust) S.Bonds[f].$Recent = [...(S.Bonds[f].$Recent || []), { w: stamp(S.World), n: `Heard what {{user}} did to ${id}.`, fx: `Trust −${was - S.Bonds[f].Trust}` }].slice(-num((BR.recent || {}).keep, 10));   // 1.4.4
+    }
+    if (hit.length) log.push(`Word of what {{user}} did to ${id} reached ${hit.join(', ')}: their Trust ${TRU.spread.friends}.`);
+  }
+  S.$ui.tsusp = Object.entries(S._Perks || {}).filter(([, p]) => p.Kind === 'rank10' && S.Bonds[p.From] && trustGate(p.From, 10) && S.Bonds[p.From].Trust < num(TRU.suspend_r10_below, 35)).map(([k]) => k);
   S.$eng.bondv = 2;
+  S.$eng.tenv = 1;   // 1.3.8: $ms filled for bonds from before
   for (const k of Object.keys(bweek)) if (bweek[k].w !== weekNo) delete bweek[k];
   S.$eng.bweek = bweek;
   // what the UI and the Now entry show: bonds whose bar is full (event ready now, or after the cooldown)
@@ -918,10 +1236,13 @@ function runEngine(S, B, text, seedHint) {
     if (b.Rank >= 10 || num(b.$xp, 0) < needXP(b.Rank, PACE)) continue;
     const e = BEV.find(x => x.npc === id && x.rank === b.Rank) || null;
     if (held(id, b)) { bev[id] = { r: b.Rank, ready: false, in: 0, held: 1, where: '', when: '', now: false, s: 0, dir: '' }; continue; }
+    if (tenseHold(id, b)) { bev[id] = { r: b.Rank, ready: false, in: 0, held: 1, why: 'tension', where: '', when: '', now: false, s: 0, dir: '' }; continue; }
+    if (trustHold(id, b)) { bev[id] = { r: b.Rank, ready: false, in: 0, held: 1, why: 'trust', need: trustGate(id, b.Rank + 1), where: '', when: '', now: false, s: 0, dir: '' }; continue; }
     const now = !!b._Event_ready && present.has(id) && (!e || bondEventOk(e, S));
     const RW = (REW.npcs || {})[id] || {}, rw = b.Rank === 4 ? RW.gift : b.Rank === 9 ? RW.r10 : null;
     const extra = [rw ? `${b.Rank === 4 ? 'This event gives {{user}} ' + id + "'s gift" : 'This event gives {{user}} ' + id + "'s Rank 10 benefit"} (${rw.name}): ${rw.text}${rw.secret ? ' (Narrator only: ' + rw.secret + ')' : ''} The engine records it when the rank rises.` : '',
-      b.Rank === 7 && MASK.has(id) && RW.nudge ? `This event carries a nudge: ${RW.nudge.text} The engine adds the Fact "${RW.nudge.fact}" when the rank rises.` : ''].filter(Boolean).join('\n');
+      b.Rank === 7 && MASK.has(id) && RW.nudge ? `This event carries a nudge: ${RW.nudge.text} The engine adds the Fact "${RW.nudge.fact}" when the rank rises.` : '',
+      b.Rank === 7 && b.Trust < trustGate(id, 8) ? `${id}'s Trust is ${b.Trust} (under ${trustGate(id, 8)}): this bond can only turn into a sworn rivalry here, not a best friendship or a romance.` : ''].filter(Boolean).join('\n');   // 1.4.3
     bev[id] = { r: b.Rank, ready: !!b._Event_ready, in: Math.max(0, num(b.$cool, -1) - dayNo),
       where: e && e.where && e.where.length ? e.where.join(' or ') : (HAUNT[id] || ''),
       when: e ? [e.days && e.days.length ? e.days.join('/') : '', e.time ? e.time.join('–') : ''].filter(Boolean).join(', ') : '',
@@ -948,8 +1269,8 @@ function runEngine(S, B, text, seedHint) {
   function trainRoom(k, weekly) {
     const T = S.Player.$Training[k]; if (!T) return 0;
     if (T.w !== weekNo) { T.w = weekNo; T.wg = 0; }
-    const tot = T.base * TRN.total_pct / 100 - T.gain;
-    return Math.max(0, weekly ? Math.min(T.base * TRN.weekly_pct / 100 - T.wg, tot) : tot);
+    const tot = TU.trn_total > 0 ? T.base * TU.trn_total / 100 - T.gain : Infinity;   // 1.3.1 Settings: 0 = no limit
+    return Math.max(0, weekly && TU.trn_week > 0 ? Math.min(T.base * TU.trn_week / 100 - T.wg, tot) : tot);
   }
   function trainAdd(k, amt, weekly) {
     const T = S.Player.$Training[k], f = TRN.tracks[k].field, add = r2(Math.max(0, Math.min(amt, trainRoom(k, weekly))));
@@ -969,9 +1290,9 @@ function runEngine(S, B, text, seedHint) {
       const k = /mana/.test(x.Track) ? 'mana' : /stam/.test(x.Track) ? 'stamina' : '';
       if (!k || !S.Player.$Training[k]) { log.push(`Training track "${x.Track}" is unknown (use mana or stamina); nothing was added.`); continue; }
       const T = S.Player.$Training[k], pr = partners(k), mult = 1 + pr.length * REW.train_bonus, lab = TRN.tracks[k].label;
-      const add = trainAdd(k, T.base * TRN.session_pct / 100 * mult, true);
-      if (add > 0) log.push(`Training: ${lab} +${add}${pr.length ? ` (with ${pr.join(' and ')}, x${mult})` : ''}; ${r2(T.gain)} of ${r2(T.base * TRN.total_pct / 100)} trained so far.`);
-      else log.push(T.gain >= T.base * TRN.total_pct / 100 ? `Training: ${lab} has reached its limit (twice the starting value); training keeps {{user}} in shape but adds no more.` : `Training: ${lab} already gained all it can this week.`);
+      const add = trainAdd(k, T.base * TU.trn_session / 100 * mult, true), lim = TU.trn_total > 0 ? r2(T.base * TU.trn_total / 100) : 0;
+      if (add > 0) log.push(`Training: ${lab} +${add}${pr.length ? ` (with ${pr.join(' and ')}, x${mult})` : ''}; ${r2(T.gain)}${lim ? ` of ${lim}` : ''} trained so far.`);
+      else log.push(lim && T.gain >= lim ? `Training: ${lab} has reached its limit (+${TU.trn_total}% of the starting value); training keeps {{user}} in shape but adds no more.` : `Training: ${lab} already gained all it can this week.`);
     }
     S.Training = [];
   }
@@ -981,6 +1302,7 @@ function runEngine(S, B, text, seedHint) {
     if (!k) { log.push(`Perk "${key}" is not held; nothing was spent.`); continue; }
     const p = S._Perks[k], fx = (((REW.npcs || {})[p.From]) || {})[p.Kind === 'gift' ? 'gift' : 'r10'] || {};
     if (!(p.Uses > 0)) { log.push(`"${k}" is not a one-use perk; nothing to spend.`); continue; }
+    if ((S.$ui.tsusp || []).includes(k)) { log.push(`"${k}" is suspended while ${p.From}'s Trust is low; it was kept.`); continue; }   // 1.4.3
     if (fx.rep_token) {
       if (!repLevelUp(fx.rep_token, true)) { log.push(`"${k}" only works while ${fx.rep_token} reputation is below 0 (now ${repLv(fx.rep_token)}); it was kept.`); continue; }
       log.push(`${fx.rep_token} reputation rose one level ("${k}").`);
@@ -1003,6 +1325,12 @@ function runEngine(S, B, text, seedHint) {
   const stageOf = a => (a < 20 ? 'Unnoticed' : a < 40 ? 'Rumoured' : a < 60 ? 'Watched' : a < 80 ? 'Investigated' : 'Exposed');
   const stg = stageOf(Hd.Dove_attention);
   if (Hd._True_magic && Hd._Stage !== stg) { log.push(`Dove attention is now: ${stg}.`); S.$ui.toasts.push(`Dove attention: ${stg}`); }
+  for (const [id, o] of Object.entries(TRU.overrides || {})) {   // 1.4.3: Krieg learns the hidden magic: his Trust is gone
+    if (o.zero_at_stage && Hd._True_magic && stg === o.zero_at_stage && S.Bonds[id] && S.Bonds[id].Trust > 0) {
+      S.Bonds[id].$Recent = [...(S.Bonds[id].$Recent || []), { w: stamp(S.World), n: 'Learned what {{user}} has been hiding.', fx: `Trust −${S.Bonds[id].Trust}` }].slice(-num((BR.recent || {}).keep, 10));   // 1.4.4
+      S.Bonds[id].Trust = 0; S.Bonds[id].$tdrop = dayNo; log.push(`${id} knows what {{user}} hid: Trust 0.`);
+    }
+  }
   Hd._Stage = stg;
 
   // ---- 8. monthly payout ----
@@ -1246,6 +1574,7 @@ function runEngine(S, B, text, seedHint) {
   if (Object.keys(S.Inventory || {}).length) unlock('inventory');                 // 1.1.0
   if (Object.keys(S.Player.Conditions || {}).length) unlock('conditions');
   if (S.Trip.Active || TRIPS.some(tp => { const d0 = (tp.m - 1) * 28 + (tp.w - 1) * 7 + DAYS.indexOf(tp.d); return doy >= d0 - 14 && doy <= d0 + 2; })) unlock('trip');
+  S.$ui.next = nextUp(S.World, evs, S);   // 1.3.4: the bracelet's "Next" chip
   S.$ui.toasts = S.$ui.toasts.slice(-10);
 
   // ---- 10. commit ----

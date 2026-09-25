@@ -54,6 +54,12 @@ def build():
                            ('src/worldbook/custom/index.json', 'src/worldbook/custom/content')):
         for e in load(P(idx_path), []):
             c = open(P(cdir, f"{e['uid']}.txt"), encoding='utf-8').read()
+            c = c.replace('@@VERSION@@', card.get('character_version', ''))   # 1.3.4: [initvar] 500 carries the card version ($eng.lore)
+            # 1.3.7 (owner playtest: "redeclaration of const _U"): the Prompt Template extension compiles entries that land in the
+            # same place as one template, so two entries' top-level consts collided (502 and 504 both declare _U / on). Each EJS
+            # entry gets its own block scope.
+            if '<%' in c:
+                c = '<%_ { _%>\n' + c.rstrip('\n') + '\n<%_ } _%>'
             entries.append(wi_to_book_entry(e, c))
     uids = [e['id'] for e in entries]
     assert len(uids) == len(set(uids)), 'duplicate worldbook uid!'

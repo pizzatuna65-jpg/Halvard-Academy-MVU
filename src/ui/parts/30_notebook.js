@@ -77,7 +77,7 @@ function nbPlanner(S) {
   const W = S.World, today = dayIdx(W.Month, W.Week, W.Day);
   const now = `<div class="now"><b>${esc(`${W.Day} ${W.Time}`)}</b> <span class="sub">Month ${W.Month}, Week ${W.Week}</span><div>${esc(W._Period || 'Free time')}</div>
     ${W._Weather && featureOn(S, 'weather') ? `<div class="sub">${esc(wxIcon((S.$ui || {}).wx))} ${esc(W._Weather)}</div>` : ''}
-    ${W._Event_today ? `<div class="ev">${esc(W._Event_today)}</div>` : ''}${W._Curfew ? `<div class="cf">${esc(W._Curfew)}</div>` : ''}${featureOn(S, 'happenings') ? hapCard(S) : ''}</div>`;
+    ${W._Event_today ? `<div class="ev">${esc(W._Event_today)}</div>` : ''}${(S.$ui || {}).next ? `<div class="nx">Next: ${esc(S.$ui.next.at)} · ${esc(S.$ui.next.what)}</div>` : ''}${W._Curfew ? `<div class="cf">${esc(W._Curfew)}</div>` : ''}${featureOn(S, 'happenings') ? hapCard(S) : ''}</div>`;
   // commitments
   const C = Object.entries(S.Commitments || {}).sort(([, a], [, b]) => ((a.$abs < 0) - (b.$abs < 0)) || (a.$abs - b.$abs));
   const com = C.length ? C.map(([k, c]) => {
@@ -113,7 +113,7 @@ function nbPlanner(S) {
     if (sm) {
       const evs = eventsOnDay(+sm, +sw, sd), its = (mine[view.calSel] || []).filter(x => x.k !== 'note'), cur = ((S.$ui || {}).marks || {})[view.calSel] || '';
       detail = `<div class="item calday"><div class="row"><span class="t">${esc(`Year ${sy}, Month ${sm}, Week ${sw}, ${sd}`)}</span><button class="btn sm" data-calday="${esc(view.calSel)}">Close</button></div>
-        ${evs.map(e => `<div class="ev">${esc(e.t)}</div>`).join('')}${its.map(x => `<div><span class="pill">${esc(x.k)}</span> ${esc(x.t)}</div>`).join('')}
+        ${evs.map(e => `<div class="ev">${esc(e.t.replace(/\s*\(Player\.Profile[^)]*\)/, ''))}</div>${CAL.schedOf(e, sd) ? `<div class="sub" style="margin:2px 0 6px">${esc(CAL.schedOf(e, sd))}</div>` : ''}`).join('')}${its.map(x => `<div><span class="pill">${esc(x.k)}</span> ${esc(x.t)}</div>`).join('')}
         ${!evs.length && !its.length ? '<div class="sub">Nothing on this day yet.</div>' : ''}
         <label class="f" style="margin-top:8px">Your note for this day<textarea data-mk="1" maxlength="200" placeholder="e.g. Ask Gareth to spar">${esc(view.markText)}</textarea></label>
         <div class="meta"><button class="btn sm pri" data-act="savemark" ${view.busy ? 'disabled' : ''}>Save note</button>${cur ? `<button class="btn sm del" data-act="delmark" ${view.busy ? 'disabled' : ''}>Remove note</button>` : ''}

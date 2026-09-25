@@ -1,29 +1,144 @@
 {
  "_note": "1.2.2 bond system, single source for the engine (tools/gen_engine.py), the UI (tools/gen_ui.py) and the Now entry (tools/gen_mvu_entries.py). Edit here, then rebuild. xp_base[r] = XP from Rank r to Rank r+1 at standard pace; cool_base[r] = days after reaching Rank r before its next bond event can start. pace multiplies both (full rank: fast ~1 month, brisk ~2 months, standard ~1 semester, slow ~1 year of diligent play).",
- "xp_base": [10, 20, 30, 40, 50, 55, 60, 65, 70, 80],
- "cool_base": [0, 1, 2, 3, 3, 4, 5, 6, 7, 7],
- "pace": {"fast": 0.25, "brisk": 0.5, "standard": 1, "slow": 2.5},
- "pace_labels": {"fast": "Fast (~1 month)", "brisk": "Brisk (~2 months)", "standard": "Standard (~1 semester)", "slow": "Slow (~1 year)"},
- "kind_xp": {"talk": 2, "hangout": 3, "help": 5},
- "per_day": {"talk": 1, "hangout": 1},
- "per_week": {"gift": 2, "help": 1},
- "gift_xp": {"loved": 4, "liked": 2, "neutral": 1, "disliked": 0},
+ "xp_base": [
+  10,
+  20,
+  30,
+  40,
+  50,
+  55,
+  60,
+  65,
+  70,
+  80
+ ],
+ "cool_base": [
+  0,
+  1,
+  2,
+  3,
+  3,
+  4,
+  5,
+  6,
+  7,
+  7
+ ],
+ "pace": {
+  "fast": 0.25,
+  "brisk": 0.5,
+  "standard": 1,
+  "slow": 2.5
+ },
+ "pace_labels": {
+  "fast": "Fast (~1 month)",
+  "brisk": "Brisk (~2 months)",
+  "standard": "Standard (~1 semester)",
+  "slow": "Slow (~1 year)"
+ },
+ "kind_xp": {
+  "talk": 2,
+  "hangout": 3,
+  "help": 5
+ },
+ "per_day": {
+  "talk": 1,
+  "hangout": 1
+ },
+ "per_week": {
+  "gift": 2,
+  "help": 1
+ },
+ "gift_xp": {
+  "loved": 4,
+  "liked": 2,
+  "neutral": 1,
+  "disliked": 0
+ },
  "gift_disliked_tension": 5,
  "gift_bonus_rank": 3,
  "gift_bonus_mult": 1.5,
  "weather_xp": 1,
+ "start": {
+  "_note": "1.3.1 (owner playtest): a bond that does not start at Rank 0. Applied once, when the engine first records the bond (the first scene they share); the next event waits for that rank's cooldown.",
+  "Etnie": {
+   "Rank": 3,
+   "Trust": 70,
+   "Title": "Self-declared big sister",
+   "Known_facts": [
+    "Third-year, Viridian (dog beastkin); insists she is {{user}}'s big sister"
+   ],
+   "Milestones": [
+    "Etnie decided {{user}} is her little sibling"
+   ]
+  }
+ },
  "romance_default": 8,
- "romance_options": [[0, "Any rank"], [4, "Rank 4"], [6, "Rank 6"], [8, "Rank 8"], [10, "Rank 10"], [11, "Off"]],
- "openness": {"open": 2, "normal": 0, "guarded": -1, "closed": -2},
+ "romance_options": [
+  [
+   0,
+   "Any rank"
+  ],
+  [
+   4,
+   "Rank 4"
+  ],
+  [
+   6,
+   "Rank 6"
+  ],
+  [
+   8,
+   "Rank 8"
+  ],
+  [
+   10,
+   "Rank 10"
+  ],
+  [
+   11,
+   "Off"
+  ]
+ ],
+ "openness": {
+  "open": 2,
+  "normal": 0,
+  "guarded": -1,
+  "closed": -2
+ },
  "share": [
-  [0, "how they look and their public role"],
-  [1, "their name, age, club and where they spend time"],
-  [2, "the magic and skills they use openly"],
-  [3, "likes, dislikes and hobbies"],
-  [4, "their personality and what shows when they are upset"],
-  [5, "their goals"],
-  [6, "what they think of other people and of the Doves"],
-  [7, "their past and family"]
+  [
+   0,
+   "how they look and their public role"
+  ],
+  [
+   1,
+   "their name, age, club and where they spend time"
+  ],
+  [
+   2,
+   "the magic and skills they use openly"
+  ],
+  [
+   3,
+   "likes, dislikes and hobbies"
+  ],
+  [
+   4,
+   "their personality and what shows when they are upset"
+  ],
+  [
+   5,
+   "their goals"
+  ],
+  [
+   6,
+   "what they think of other people and of the Doves"
+  ],
+  [
+   7,
+   "their past and family"
+  ]
  ],
  "share_real_from": 5,
  "perks": {
@@ -49,5 +164,55 @@
   "7": "A turning point: the bond becomes best friends, romance or a sworn rivalry, and the event lets {{user}} choose.",
   "8": "They start to let their guard down about what they hide; the story opens a way to the truth (never revealed by rank alone).",
   "9": "The peak of the bond: a moment that proves it, and what they would give up for {{user}}."
- }
+ },
+ "you_line": [
+  {
+   "kind": "dislike",
+   "tension_from": 70,
+   "arrow": true
+  },
+  {
+   "kind": "rivals",
+   "title": "rival"
+  },
+  {
+   "kind": "wary",
+   "tension_from": 40,
+   "arrow": true
+  },
+  {
+   "kind": "wary",
+   "trust_below": 35,
+   "arrow": true
+  },
+  {
+   "kind": "friends",
+   "title": "best friend"
+  },
+  {
+   "kind": "friends",
+   "rank_from": 5,
+   "trust_from": 65
+  }
+ ],
+ "_note_you_line": "1.4.2 (owner): People -> Connections, your own line to someone takes a kind from the bond. Romance first (Bonds.<id>.Romance), then the first rule here whose conditions all hold (tension_from, trust_below, trust_from, rank_from, title = a word in Bonds.<id>.Title); none = a plain gold bond line. arrow: the line is their view of you (them -> you); otherwise it is shared. The line is thicker with rank. 1.4.3: the Trust thresholds follow data/trust.json (Doubtful under 35, Trusting from 65).",
+ "recent": {
+  "keep": 10,
+  "now": 5,
+  "phrases": {
+   "talk": "talked",
+   "hangout": "spent time together",
+   "gift": "gave them a gift",
+   "help": "helped them",
+   "fight": "fought or sparred",
+   "apology": "apologised",
+   "keep": "kept a promise",
+   "secret": "kept their secret",
+   "defend": "stood up for them",
+   "confide": "confided a secret",
+   "understood": "they understood",
+   "choose": "chose them over someone else"
+  }
+ },
+ "_note_recent": "1.4.4 (owner): each bond keeps its latest `keep` moments with {{user}} (Bonds.<id>.$Recent: when, one sentence, effect), shown in the dossier newest first; <now> gives the narrator the newest `now` of them for each present character. The sentence is the Note the narrator adds to an interaction; without one, the kinds (phrases)."
 }

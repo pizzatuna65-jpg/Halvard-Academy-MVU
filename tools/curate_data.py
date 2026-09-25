@@ -257,7 +257,7 @@ PINS = {1: ('Castle', ['canteen', 'main_library', 'club_rooms', 'student_council
         5: ('Viridian Dormitory', ['viridian_dormitory', 'common_rooms', 'laundry', 'bathhouse_and_washrooms']),
         6: ('Light Dormitory', ['light_dormitory', 'common_rooms', 'laundry', 'bathhouse_and_washrooms']),
         7: ('Arbiter Hall', ['arbiter_hall', 'ring_dining_hall', 'portrait_hall']), 8: ('Staff Quarters', ['staff_quarters']),
-        9: ('Observation Tower', ['observation_tower']), 10: ('Old Hut', ['old_hut']), 11: ('Forest Clearing', ['forest_clearing', 'forest']),
+        9: ('Observation Tower', ['observation_tower']), 10: ('Old Hut', ['old_hut']), 11: ('Forest Clearing', ['forest_clearing']),
         12: ('Boathouse and Lake', ['boathouse_and_lake']), 13: ('Gardens', ['gardens']), 14: ('Menagerie', ['menagerie']),
         15: ('Archery Range', ['archery_range']), 16: ('Gymnasium', ['gymnasium', 'swimming_pool']), 17: ('Sports Field', ['sports_field']),
         18: ('Combat Grounds', ['combat_grounds']), 19: ('The Sparring Pavilion', ['sparring_pavilion']), 20: ("Groundskeeper's Lodge", ['groundskeepers_lodge']),
@@ -266,7 +266,8 @@ PINS = {1: ('Castle', ['canteen', 'main_library', 'club_rooms', 'student_council
         26: ('Gatehouse', ['reception_and_gatehouse']), 27: ('Banking House', ['banking_house']), 28: ('The Dovecote', ['dovecote']),
         29: ('The Cathedral', ['cathedral']), 30: ("Noble Houses' Liaison", ['noble_houses_liaison']), 32: ('Spirit House', ['meditation_rooms_spirit_house']),
         33: ('Broken Statue', ['broken_statue']), 34: ('Fishing House', ['fishing_house']), 35: ('Willow Island', ['willow_island']),   # 1.2.0: own places
-        36: ('Grassy Field and Hills', ['grassy_field_and_hills'])}
+        36: ('Grassy Field and Hills', ['grassy_field_and_hills']),
+        37: ('Forest', ['forest'])}   # 1.3.1 (owner): the Forest has its own pin, in the trees below the Forest Clearing near the Fire Dormitory
 XY = json.load(open(P('data/pins_pct.json')))
 pins = []
 for n, (label, cluster) in PINS.items():

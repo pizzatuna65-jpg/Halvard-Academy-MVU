@@ -855,7 +855,7 @@
         "sorting"
       ],
       "keysecondary": [],
-      "content": "[Entrance Event]\nWhen: Month 1 Week 1 Monday\n- Sorting: new students place a hand on the Arbiter Stone to decide their dorm.\n- Tour: each new student is grouped with 3 other newcomers and 1 senior to tour the whole campus all day.\n- Club promotion: stands across the academy; registration closes at 5pm. Held on sorting day on purpose, so clubs recruit before dorm loyalty settles.\n- Seniors show new students their rooms inside the dorms.\n- Entrance Feast, 7pm, Ring Dining Hall head master and vice head master speech before dining.",
+      "content": "[Entrance Event]\nWhen: Month 1 Week 1 Monday\n- 07:00-09:00 Arrival: new students check in at Reception and Gatehouse.\n- 09:00 Sorting, in the Arbiter Hall: new students place a hand on the Arbiter Stone to decide their dorm.\n- 10:00-18:00 Tour: each new student is grouped with 3 other newcomers and 1 senior to tour the whole campus all day.\n- Club promotion: stands across the academy, 10:00-18:00 on sorting day, then every afternoon after classes (16:00-18:00) until Friday; registration closes Friday at 18:00. It opens on sorting day on purpose, so clubs recruit before dorm loyalty settles.\n- Late afternoon: seniors show new students their rooms inside the dorms.\n- 19:00 Entrance Feast in the Ring Dining Hall: the Headmaster and the Vice Headmaster speak before dinner.",
       "constant": false,
       "vectorized": false,
       "selective": true,
@@ -4711,7 +4711,7 @@
         "M1"
       ],
       "keysecondary": [],
-      "content": "[Current month: Month 1]\nW1 Mon Entrance Event. W3 Sat evening to Sun dawn Star Night. W4 Sat Spiritual Dorm Day.",
+      "content": "[Current month: Month 1]\nW1 Mon Entrance Event (09:00 sorting, tour all day, 19:00 feast). W1 Tue-Fri club booths 16:00-18:00, club registration closes Fri 18:00. W3 Sat evening to Sun dawn Star Night. W4 Sat Spiritual Dorm Day.",
       "constant": true,
       "vectorized": false,
       "selective": true,

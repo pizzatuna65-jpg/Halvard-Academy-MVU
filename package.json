@@ -3,7 +3,8 @@
   "private": true,
   "description": "Build and test tooling for the Eldrasil / Halvard Academy MVU character card. See HANDOFF.md.",
   "scripts": {
-    "test": "node tests/run_all.cjs"
+    "test": "node tests/run_all.cjs",
+    "stress": "node tests/stress/fuzz.cjs 30 150 1 && node tests/stress/fuzz_builder.cjs 300 && node tests/stress/sim_year.cjs 380"
   },
   "devDependencies": {
     "d3": "^7.9.0",

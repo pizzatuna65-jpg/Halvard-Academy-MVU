@@ -58,12 +58,20 @@ BR = json.load(open(P('data/bond_rules.json'), encoding='utf-8'))
 OPN = json.load(open(P('data/bond_openness.json'), encoding='utf-8'))
 off = {nid: BR['openness'][tag] for tag in ('open', 'guarded', 'closed') for nid in OPN[tag]}
 assert all(nid in npcs for nid in off), [nid for nid in off if nid not in npcs]
-BOND = {'share': BR['share'], 'real': BR['share_real_from'], 'perks': BR['perks'], 'off': off,
+BOND = {'share': BR['share'], 'real': BR['share_real_from'], 'perks': BR['perks'], 'off': off, 'recent_now': BR['recent']['now'],
         'tag': {nid: tag for tag in ('open', 'guarded', 'closed') for nid in OPN[tag]}}
+# 1.4.3 Trust for the Now entry: bands, share shifts, perk gates, category texts (category = openness), personal rules, Dorm Heads
+_tru = json.load(open(P('data/trust.json'), encoding='utf-8'))
+TRUST = {'bands': _tru['bands'], 'share': _tru['effects']['share'], 'early': _tru['effects']['confidant_real_early'], 'gates': _tru['perk_gates'],
+         'susp': _tru['suspend_r10_below'], 'cats': {k: {'name': v['name'], 'bands': v['bands'], 'never': v['never']} for k, v in _tru['categories'].items()},
+         'npcs': {nid: tag for tag in ('open', 'guarded', 'closed') for nid in OPN[tag]},
+         'overrides': {k: {x: o[x] for x in ('text', 'until_secret', 'no_gates') if x in o} for k, o in _tru['overrides'].items() if o.get('text') or o.get('no_gates')},
+         'dorm_head': {k: {x: v[x] for x in ('dorm', 'category', 'text')} for k, v in _tru['dorm_head'].items()}}
 REPD = json.load(open(P('data/reputation.json'), encoding='utf-8'))   # 1.3.0
 REPD = {'reps': REPD['reps'], 'effects': REPD['effects']}
-for k, v in {'REP': REPD, 'BOND': BOND, 'REG': reg, 'ARR': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1}, 'STU': STU, 'TEACH': TEACH, 'TT': TT,
-             'CLUBV': CLUBV, 'OUTD': OUTD, 'VN': VN, 'MOODS': MOODS}.items():
+for k, v in {'REP': REPD, 'BOND': BOND, 'TRUST': TRUST, 'REG': reg, 'ARR': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1}, 'STU': STU, 'TEACH': TEACH, 'TT': TT,
+             'CLUBV': CLUBV, 'OUTD': OUTD, 'VN': VN, 'MOODS': MOODS,
+             'TENSION': {k: v for k, v in json.load(open(P('data/tension.json'), encoding='utf-8')).items() if k in ('bands', 'categories', 'npcs', 'peaks', 'overrides', 'apology_npc')}}.items():   # 1.3.8 (+1.4.0 apology_npc)
     ph = '/*@@' + k + '@@*/' + ('[]' if isinstance(v, list) else '{}')
     assert ph in ejs, ph
     ejs = ejs.replace(ph, J(v))

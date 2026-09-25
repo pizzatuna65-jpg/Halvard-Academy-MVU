@@ -1,8 +1,8 @@
 # Eldrasil / Halvard Academy — MVU card (project)
 
-**New session or another AI? Read `HANDOFF.md` first.**
+**New session or another AI? Read `CLAUDE.md`, then `HANDOFF.md`.** Plans and approved designs: `planning/`.
 
-Source for the SillyTavern character card `dist/Eldrasil_Halvard.png` (v1.3.0). Players: see `docs/PLAYER_GUIDE.md`.
+Source for the SillyTavern character card `dist/Eldrasil_Halvard.png`. Players: see `docs/PLAYER_GUIDE.md`.
 Design and decisions: `ELDRASIL_MVU_PLAN.md`. Build history, open items and tunables: `PROGRESS.md`.
 
 ## Layout

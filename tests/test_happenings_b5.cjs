@@ -69,7 +69,7 @@ const bad = applyPatch(S0, [{ op: 'replace', path: '/$ui/happenings', value: 'al
 ok(bad.$ui.happenings === 'normal', 'invalid setting falls back to normal');
 
 console.log('5.4 known-facts window');
-let K = initState();
+let K = initState({ etnie: true });
 for (let i = 0; i < 14; i++) K = applyPatch(K, [{ op: 'insert', path: '/Bonds/Etnie/Known_facts/-', value: `Etnie fact ${i}` }]);
 ok(K.Bonds.Etnie.Known_facts.length === 10 && K.Bonds.Etnie.Known_facts[9] === 'Etnie fact 13', 'AI sees the latest 10 facts');
 ok(K.Bonds.Etnie.$Known_old.length === 5 && /Third-year/.test(K.Bonds.Etnie.$Known_old[0]), 'older facts kept in $Known_old (hidden from the AI)');

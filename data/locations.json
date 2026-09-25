@@ -3181,12 +3181,12 @@
    }
   ],
   "floor": null,
-  "pin": 11,
+  "pin": 37,
   "discoverable": false,
   "near": [
    [
     "boathouse_and_lake",
-    23
+    24
    ],
    [
     "forest_clearing",
@@ -3243,7 +3243,7 @@
    ],
    [
     "forest",
-    23
+    24
    ],
    [
     "gardens",

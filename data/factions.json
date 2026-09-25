@@ -1,0 +1,57 @@
+{
+ "_note": "1.4.1 (owner, DRAFT_connections.md): factions shown as group labels in People → Connections. members: NPC ids; auto: every NPC of these npcs.json groups. secret: a faction nobody knows about; a member is shown in it only once one of their secrets on these topics is in Secrets_revealed.",
+ "factions": [
+  {
+   "id": "council",
+   "name": "Student Council",
+   "members": [
+    "Irene",
+    "Caspian"
+   ]
+  },
+  {
+   "id": "doves",
+   "name": "The Dovecote",
+   "members": [
+    "Krieg",
+    "Milena"
+   ]
+  },
+  {
+   "id": "staff",
+   "name": "Halvard staff",
+   "auto": [
+    "Staff",
+    "Facilities"
+   ]
+  },
+  {
+   "id": "cathedral",
+   "name": "The Cathedral",
+   "members": [
+    "Tristan"
+   ]
+  },
+  {
+   "id": "liaison",
+   "name": "Noble Houses' Liaison",
+   "members": [
+    "Caine"
+   ]
+  },
+  {
+   "id": "choir",
+   "name": "The Morning Choir",
+   "members": [
+    "Castor",
+    "Caine"
+   ],
+   "secret": [
+    "cult",
+    "choir",
+    "mark",
+    "identity"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,249 @@
+# Bond rewards — hadiah Rank 5 & keuntungan Rank 10 per NPC
+
+Status: **FINAL** (disetujui author 2026-09-25). Dipakai untuk menulis event bond Rank 4→5 dan 9→10.
+Aturan yang dipakai:
+- **Rank 1–4:** event murni cerita.
+- **Rank 5 (Gift):** barang eksklusif yang tidak dijual di mana pun. Kalimat 1 = barangnya; kalimat 2 = efek + lore di baliknya.
+- **Rank 10 (Keuntungan):** keuntungan unik NPC itu. 2 kalimat.
+- Teks dalam bahasa Inggris (siap masuk card). `<narrator_only>` = sisi rahasia dari hadiah itu, pemain tidak diberi tahu.
+
+### Aturan khusus (hasil diskusi, model Persona tanpa ending)
+
+Campaign ini tidak punya ending apa pun. Rank tinggi di NPC berkedok tidak membuka "jalur", hanya membuka **informasi** yang
+mendorong {{user}} ke arc-nya, dan pemain bebas mengabaikannya.
+
+**A. Model topeng → kebenaran** (Castor, Kanae, Caine)
+- **Rank 1–8:** bond normal dengan wajah publik NPC. Gift Rank 5 adalah versi "topeng".
+- **Nudge Rank 8:** event 7→8 memberi {{user}} satu Fact konkret yang mengarah ke arc NPC itu (Morning Choir, atau kasus
+  Niu untuk Kanae). Tidak ada penjelasan, hanya satu petunjuk yang bisa dikejar atau diabaikan.
+- **Gerbang Rank 9:** event 8→9 hanya bisa berjalan setelah kebenaran NPC itu **sudah terungkap lewat cerita** (misalnya Fact
+  "tahu Castor anggota Choir"), bukan hanya karena bar XP penuh. Kalau pemain tidak pernah mengejarnya, NPC berhenti di
+  Rank 8 selamanya, dan itu sah.
+- **Rank 10:** hanya ada satu versi, versi kebenaran, karena gerbang Rank 9 menjamin {{user}} sudah tahu.
+
+**B. Model Krieg** (auto-XP)
+- **Rank 1** otomatis lewat perkenalan pertama (event 0→1 = Krieg memperkenalkan diri, biasanya di minggu pertama).
+- **XP naik otomatis tiap minggu**, dan hanya kalau **reputasi Doves {{user}} ≥ +1** minggu itu (lihat
+  `reputation.md`; untuk {{user}} dengan sihir terlarang, kecurigaan juga harus rendah). Tidak ada XP dari talk,
+  hangout atau gift.
+- **Hitungan:** total XP Rank 1→10 = 470. Dengan **+14 XP tiap Senin**, bar penuh dalam ~34 minggu. Reputasi Doves +1
+  (15 Rep XP) paling cepat dicapai sekitar minggu ke-5 lewat pemicu mingguan, jadi pemain yang langsung bekerja sama
+  mencapai Rank 10 sekitar M10 W3. Pemain yang terlambat membangun reputasi Doves, atau sempat jatuh, melewati akhir tahun 1
+  (M11 W4).
+- **Kalau reputasi Doves 0 atau lebih rendah:** minggu itu tidak ada XP dan Tension +1. Karena semua mulai dari 0, {{user}}
+  harus aktif bekerja sama dengan Doves dulu sebelum bond Krieg bergerak. Karena ruangnya tipis,
+  beberapa minggu yang gagal sudah cukup untuk mendorong Rank 10 melewati akhir tahun 1.
+
+---
+
+## 1. Halvard — Year 1
+
+### Aiden
+- **Gift:** A deck of Card Club cards with every Dove patrol route and bell timing inked on the backs, one route per card. Carrying it, {{user}} is far harder to catch out after curfew, because Aiden quietly updates the deck whenever the Doves change a route.
+- **Rank 10:** Aiden makes {{user}} a silent partner in the betting book, and a share of its takings arrives every month. Once a week he will also phase and shrink anything {{user}} needs into or out of anywhere on campus, no questions asked.
+
+### Caralynn
+- **Gift:** A calling card on Veyturone crest paper, "A friend of House Veyturone" written in her own hand. Shown at the Noble Houses' Liaison or to any noble student, it gets {{user}} a polite hearing and a seat at tables they would never otherwise reach.
+- **Rank 10:** Caralynn declares {{user}} her equal in front of her whole following: from then on her followers run {{user}}'s errands too, and gossip against {{user}} dies within the week. Once a month she will spend House Veyturone's name on {{user}}'s behalf, with the Liaison, the Inspectorate or a noble with a grudge.
+
+### Zara
+- **Gift:** A jacket she designed for {{user}} and, for once, actually finished, with protective talismans sewn into the lining. It stops one hostile spell or curse outright, and Zara rewrites the lining every month so it is always ready again.
+- **Rank 10:** Zara becomes {{user}}'s talisman-writer: a fresh set of protective, repulsion and exorcism charms every week, free, written for {{user}}'s hand alone. Her exorcist's sense is turned on {{user}} for good, so if anyone ever lays a curse on them, she is the first to know.
+
+### Percival
+- **Gift:** A tin badge of the Brotherhood of Laetano, pinned on {{user}} in a full knighting ceremony that makes them a squire sworn to the Brotherhood's dawn drills. Stamina training done with Percival counts for half as much again (×1.5), because he runs every lap as if someone at the far end of the field needs him.
+- **Rank 10:** Sir Percival swears himself as {{user}}'s knight: he joins any team {{user}} forms as its healer and answers {{user}}'s call in any fight. Once per fight he throws himself between {{user}} and a finishing blow, and heals them back to their feet with his own strength.
+
+### Trixie
+- **Gift:** A pouch of Confetti circus flash powder, the family recipe, which is not magic and cannot be dispelled. Thrown down, it blinds a whole room for a few seconds, and Trixie refills it every time the circus writes.
+- **Rank 10:** The Confetti circus adopts {{user}} as honorary family, with free passage, lodging and news from every town it plays. Trixie herself will cause a distraction on request, anywhere and any time, big enough that nobody remembers what {{user}} was doing.
+
+### Vera
+- **Gift:** A Rest token, a brass charm she enchanted with a sliver of her own Rest: pressed once a week, it gives {{user}} a full night's sleep in one hour. She has taken the sleep debt for every use onto herself in advance, and refuses to discuss it.
+- **Rank 10:** Vera becomes {{user}}'s personal workshop: she repairs, improves or enchants any equipment {{user}} brings, and her upgrades come out better than anything the Mall sells. Once a day she will also Rest {{user}} by hand and take the debt herself.
+
+### Castor *(topeng → kebenaran)*
+- **Gift:** A hand-bound notebook; anything {{user}} writes in it and slips under the Academy Newspaper's door is printed in the next issue, anonymously. It is the fastest way on campus to plant a story or kill a rumour, and Castor never asks who wrote it.
+- **Nudge (Rank 8):** Castor lets {{user}} read his private writing, and between the pages is one he never finished, about a boy who sings at dawn in a choir he never chose. Fact: "Castor's unfinished page mentions a 'Morning Choir'."
+- **Gerbang Rank 9:** {{user}} has learned, in play, that Castor belongs to the Morning Choir.
+- **Rank 10:** Castor chooses {{user}} over the Choir, quietly and completely: he warns them before any rite, mark or curse the Choir turns their way, and tells them who at Halvard sings with it. He also lifts any curse on {{user}} at any hour, because he knows exactly how each one was built.
+  - <narrator_only>Every warning is a betrayal his father will eventually notice. He finishes the page about a way out, and it has {{user}} in it.</narrator_only>
+
+### Alyssa
+- **Gift:** A standing offer from her notebook: once a week {{user}} can name anyone at Halvard and Alyssa reads them her page on that person. It tells {{user}} where that person tends to be this week and one thing they would be glad to receive, because Alyssa writes down exactly what she has seen and nothing more.
+- **Rank 10:** Once a day Alyssa spends Foresight on {{user}}, telling them what the next five minutes hold before an exam, a duel or a conversation that matters. In any fight they share she calls every attack a heartbeat before it lands, and {{user}}'s page is the first she reads each week, so she never meets them as a stranger.
+
+---
+
+## 2. Halvard — Year 2
+
+### Lenna
+- **Gift:** A potted seedling from the Greenwind Forest, the last living thing she brought from home. Any animal near it grows calm, which makes the Menagerie, the Forest and the Creature Studies Expedition far safer for {{user}}.
+- **Rank 10:** Lenna brings {{user}} into the Greenwind ways: animals in the Menagerie and the Forest treat {{user}} as one of hers, and her earth rises to shield them anywhere off the paths. She also cooks for {{user}} every rest day, a Greenwind meal that sets them right for the whole week.
+
+### Saffi
+- **Gift:** A spare Running Club whistle on a cord: blow it before classes and Saffi turns up within minutes, ready to drag {{user}} round the Sports Field. Stamina training done with her counts for half as much again (×1.5), because she never lets anyone stop at "tired".
+- **Rank 10:** Saffi joins any team {{user}} forms as its front-line fighter, and nobody lays a hand on {{user}} while she is within earshot. Her night senses keep watch for them after dark, and she will sprint anywhere on campus the moment she hears {{user}} call.
+
+### Kanae *(topeng → kebenaran)*
+- **Gift:** A silver hand mirror from the Quveno house, "so you can always find me". Once a week, {{user}} can say her name into it and ask one true reading: where someone is, or what is coming.
+  - <narrator_only>It also lets her watch {{user}} through it whenever she likes, and she does.</narrator_only>
+- **Nudge (Rank 8):** In an unguarded moment Kanae says the name of a girl who "should have kept her mouth shut", then laughs it off. Fact: "Kanae mentioned someone called Niu; Dante Kleinn is said to be re-reading an old Dove case under that name."
+- **Gerbang Rank 9:** {{user}} has learned, in play, the truth about the rigged readings, the Plan, or what happened to Niu.
+- **Rank 10:** Seen through and still wanted, Kanae lays the Plan down: the mirror stays, but she only looks through it when {{user}} asks. Once per fight they share, her chains pin one enemy in place for {{user}} before anyone else's magic moves.
+  - <narrator_only>It is the first honest thing she has ever given. Whether she ever tells Dante the truth about Niu is up to the story.</narrator_only>
+
+### Idris
+- **Gift:** Two vials in precise script: an antivenom brewed from his own venom that cures almost any poison, and the venom itself. He calls the second "for emergencies" and will not explain further.
+- **Rank 10:** Idris haggles for {{user}} as if they were family business, and everything {{user}} buys at the Mall and the Commissary costs noticeably less. Mormo watches {{user}}'s back when Idris cannot, draining the stamina of anyone who comes at them in the dark.
+
+### Dante
+- **Gift:** A spare key to the Groundskeeper's Lodge, which he says nobody ever checks. It gives {{user}} a safe, warm hideout at the Forest edge after curfew that no patrol looks into.
+- **Rank 10:** Dante counts {{user}} among the people he protects, with no conditions: anyone who threatens {{user}} finds him there, and nobody has ever beaten him hand to hand. He also looks the other way on any rule {{user}} breaks, and steers Dove attention away from them.
+  - <narrator_only>This is the Doves' own asset lying to the Doves, for the first time in his life.</narrator_only>
+
+### Florian
+- **Gift:** A Villeneuve silver token for The Snug's largest booth, on Florian's account. Whatever {{user}} orders there is paid for, and anyone {{user}} brings is treated as Florian's guest.
+- **Rank 10:** Florian joins {{user}}'s team and fights under their call, Hades and all, the first time he has ever followed anyone. Once per fight Hades will Stop anything for {{user}} for two seconds, and the wolf's eyes see through any illusion or invisibility aimed at them.
+
+### Tilly
+- **Gift:** Her hand-drawn map of Halvard's hidden ways, copied out of Halvard Unexplained: crawlspaces, back stairs and forgotten doors. Following it, {{user}} can cross the campus unseen and reach places nobody else knows exist.
+- **Rank 10:** Tilly grows {{user}} a hidden bower in the far Gardens that nobody else can find, full of rare herbs and flowers she replants every week for potions and gifts. She also shows {{user}} the signet ring she wears on a chain under her blouse and promises that a letter under its seal will always be answered, though she will not say by whom.
+  - <narrator_only>The seal is Velmora's royal signet; a letter under it reaches Velmora's crown. Showing it is the closest she has ever come to telling anyone who she is.</narrator_only>
+
+---
+
+## 3. Halvard — Year 3
+
+### Irene
+- **Gift:** A signed Council pardon, one use, in Irene's careful hand. If {{user}} is caught breaking an academy rule that should send them to the Detention Tower, Irene takes it to the staff herself and it becomes a warning, with no Academy reputation lost: the one exception she has ever made.
+- **Rank 10:** Irene offers {{user}} a seat on the Student Council: Council Chamber access, a vote on student rules, and a say in how festivals and discipline are run. In a fight her barriers answer {{user}} first, and she will stand between {{user}} and the Doves even though they terrify her.
+
+### Caspian
+- **Gift:** A Festival Committee staff badge in his own name. At every festival {{user}} walks into the restricted areas, gets the best stall slot at the Bazaar, and can put an event on the programme.
+- **Rank 10:** When they fight side by side, Caspian's hand on {{user}}'s shoulder doubles their magic for a full minute once per fight. As Council Vice President he also speaks for {{user}} to staff, Council and the Liaison, and trouble tends to end there.
+
+### Etnie
+- **Gift:** Her old street lockpicks, the only thing she kept from before Halvard. They open any ordinary lock on campus (drawers, cupboards, storerooms), though not a bracelet-warded door.
+- **Rank 10:** Etnie leaves one of her clones on {{user}} at all times, and can swap places with it in a heartbeat to take any blow meant for them. Nobody who has hurt {{user}} is ever left alone by Big Sister again, and everyone at Halvard knows it.
+
+### Royhan
+- **Gift:** An alchemist's pouch of his own: three healing draughts and one bottle of lightning. He refills it whenever {{user}} brings back the empties, and he will not take points for it.
+- **Rank 10:** Royhan becomes {{user}}'s alchemist: every week he brews any potion they ask for at cost, including ones the Commissary cannot stock. If his regeneration potion ever works, the first bottle is {{user}}'s.
+
+### Sophia
+- **Gift:** Her own tactics book, margins full of every trick she has used in the ring, with the brutal morning mana drill she wrote in the back. Mana training done with Sophia counts for half as much again (×1.5), because she learned to push her reserves the hard way and will not let {{user}} learn it any softer.
+- **Rank 10:** Sophia joins {{user}}'s team and fights under {{user}}'s orders, the only person at Halvard she has ever agreed to follow. She also duels anyone who insults {{user}}, publicly and to the end.
+
+### Gareth
+- **Gift:** His private training journal: the mana drills he has run every morning since he was a boy, with an open invitation to run them beside him at the Combat Grounds. Mana training done with Gareth counts for half as much again (×1.5), because nobody at Halvard knows better how to push a mana pool past where it wants to stop.
+- **Rank 10:** Gareth makes {{user}} his one exception to coming first: he tutors them before every exam and joins their team for competitions, burning whole arenas on their behalf.
+  - <narrator_only>He will also quietly ruin anyone who stands in {{user}}'s way, the way he ruined his brother, unless {{user}} tells him not to.</narrator_only>
+
+### Ruby
+- **Gift:** A tin of Bonbon family sweets that never quite runs out, because her family sends a refill with every letter. Any NPC who is not averse to sweets takes one as a liked gift.
+- **Rank 10:** Ruby tells everyone who will listen that {{user}} is her friend, and Halvard has learned to trust Ruby's judgement: {{user}}'s Student reputation rises by one level. It is the only side she has ever picked, and she picked a person, not a side.
+
+---
+
+## 4. Staff & dorm heads
+
+### Gavlan
+- **Gift:** The gravity-weighted bracers he wore as a young mage, and one week of his dawn drills to break them in. At the end of that week {{user}}'s Mana pool jumps ahead in one go by a tenth of its starting value, weeks of training at once (still within the training limit).
+- **Rank 10:** Gavlan names {{user}} the protégé he has been looking for, and teaches them in private what no class does, a technique of his own included. On rest days he takes {{user}} through the Portal to the clan's cottage, where no Dove and no Inspector can reach them.
+
+### Yvette
+- **Gift:** A small floating orb, the little sibling of her own focus. It warms and hums whenever someone nearby means {{user}} harm, because Yvette has never once felt safe at Halvard and does not want {{user}} to be caught unready.
+- **Rank 10:** Yvette opens the Workshop and her research to {{user}}: any enchanted item they find, she identifies, repairs or improves. Her rooms in the Fire Dormitory become the one door {{user}} can knock on at any hour, and her lightning answers for them before anyone else's.
+
+### Baelin
+- **Gift:** A card on the Headmaster's paper: "Bearer may see me without appointment." Once, he will hear {{user}}'s case in person and rule on it himself, over any other staff decision.
+- **Rank 10:** Baelin enters {{user}} in his ledger as a debt he owes, and repays it in the one coin a headmaster has: {{user}}'s Academy reputation rises by one level. His reports to the capital start mentioning {{user}} by name, and the staff notice at once.
+
+### Layla
+- **Gift:** A signed permission letter granting {{user}} reading rights in the Restricted Section. It opens the oldest records at Halvard, the ones that answer questions classes will not.
+- **Rank 10:** Layla shares everything she has pieced together about Halvard's past, and her private tutoring makes History the easiest top mark {{user}} will ever earn. If anyone ever corners {{user}} the way they once cornered Yvette, the gloves come off.
+
+### Vallie
+- **Gift:** A carved tusk from the Ironback Boar that took her eye, hung on a cord. Creatures smell a hunter's trophy and back off, which makes the Forest and the Expedition far safer for {{user}}.
+- **Rank 10:** Vallie teaches {{user}} the Will of Steel way of taking a hit, sparring and running them until pain stops mattering, and {{user}}'s Stamina jumps ahead in one go by a tenth of its starting value, weeks of training at once (still within the training limit). She also arm-wrestles anyone who says a word against {{user}}, and she has never lost that one.
+
+### Rei
+- **Gift:** A plain brass key to the Warden's Office side door. Inside is the one room on campus that the Doves and the Inspectorate cannot enter without the Warden's leave.
+- **Rank 10:** During the Thinning, {{user}} stands watch with Rei instead of sitting locked in the dorm, and she begins to tell them what she knows about the Crack. In any fight she arrives in smoke, and nothing gets through her to {{user}}.
+
+### Kuroo
+- **Gift:** His old dance card from his envoy years, filled with notes on every Liaison staffer and which students they are watching. With it, {{user}} knows who the Liaison has an eye on and how to talk their way past them.
+- **Rank 10:** Once, Kuroo spends every favour he has left with the staff on {{user}}: their Academy reputation rises by one level, but only from a negative level (−5 to −4, …, −1 to 0). He will not lift anyone above zero, because that part {{user}} has to earn.
+
+### Mimosa
+- **Gift:** A vial of her own perfectly clear brew labelled "for exams", a focus draught she invented and has never published. Taken before a test, it lets {{user}} recall everything they studied.
+- **Rank 10:** Mimosa co-authors her first published formula with {{user}}: their name goes on it too, with the prestige and the monthly royalty. Any potion {{user}} brews under her eye cannot blow up, because she sees it coming three seconds early.
+
+### Althair
+- **Gift:** A blank discipline referral, signed in advance by the Vice Headmaster. Filled in and handed back, it makes one punishment against {{user}} disappear into the files.
+- **Rank 10:** Althair makes {{user}} a player in his game rather than a piece: every month he nudges something their way through the paperwork, such as a better timetable, a bigger club budget or a punishment lost in the files. And when Althair is watching, things simply tend to go {{user}}'s way.
+
+### Ezrel
+- **Gift:** A palm-sized clay golem that follows standing orders: carry, fetch, guard a door, repeat a task. It never tires, and it never asks why.
+  - <narrator_only>He can look through it.</narrator_only>
+- **Rank 10:** Ezrel builds {{user}} a Mannequin, a golem nobody can tell from {{user}}, that can sit in their seat at class or roll call while they are elsewhere. In a fight it stands beside them with a golem's strength and takes the blade without slowing.
+
+### Ottavio
+- **Gift:** A Canteen chit on Ottavio's account, stamped with a worn casino mark. {{user}} eats one free meal a day for the rest of the year, because Ottavio knows which students skip meals to save points and has never allowed it.
+- **Rank 10:** Ottavio takes {{user}} into his family, dorm or not: from then on the Dovecote has to go through him to reach them, and he has never handed anyone over. Loki adds {{user}} to his hoard of things he owns, so he turns up in a crisis, and on a lucky coin toss he arrives big.
+
+---
+
+## 5. Doves, Cathedral, Liaison, facilities
+
+### Krieg *(auto-XP, lihat aturan B)*
+- **Gift:** A Dovecote pass under his seal: the gate opens to {{user}} at any hour to see Krieg in his office. No other student at Halvard can say that, and what {{user}} learns there, or is seen doing there, is up to them.
+- **Rank 10:** Krieg decides {{user}} is the one mage he will not treat as a wolf, and once a month he lets them read one Dovecote file on a person or case of their choosing. He still searches, questions and watches {{user}} like everyone else, because in his eyes that is exactly what makes the file worth showing.
+
+### Milena
+- **Gift:** A white Dragonchess knight from her father's set. Shown to any Dove, it means Milena vouches for {{user}}, and a search ends at a polite question.
+- **Rank 10:** Once, Milena takes {{user}}'s file off Krieg's desk and closes it: their Doves reputation rises by one level, but only from a negative level (−5 to −4, …, −1 to 0). Above zero, she says, is something {{user}} has to earn in front of the Doves themselves.
+
+### Tristan
+- **Gift:** A small monthly stipend from the Asmoday's Mercy fund, entered in his immaculate ledger as "a student in need". The points arrive at the start of every month, and Tristan finds it very funny that nobody has ever audited him.
+- **Rank 10:** Tristan binds any contract {{user}} needs in the Cathedral, and his Oath magic makes it unbreakable for both sides. Once, when it matters most, he will use the registry for someone for the first time in his life, and that someone is {{user}}.
+
+### Caine *(topeng → kebenaran)*
+- **Gift:** A Liaison guest card in Caine's hand, which puts {{user}} on the list for every Liaison reception, tea and ball. It opens the rooms where noble students and their families talk business.
+  - <narrator_only>He chose {{user}} to be watched.</narrator_only>
+- **Nudge (Rank 8):** At a Liaison reception {{user}} sees a noble student who lingered after the last one: they have lost an hour they cannot account for, and they rub a "bruise" on their left shoulder. Fact: "Students who stay late at the Liaison lose an hour and wake with a mark on the left shoulder; Caine saw them out."
+- **Gerbang Rank 9:** {{user}} has learned, in play, that Caine carries Lucifer's Mark or serves the Morning Choir.
+- **Rank 10:** Unmasked and still courteous, Caine takes {{user}}'s name off the Choir's list, the only mercy he has ever shown a mage, and no Mark will ever touch them. He tells {{user}} one true thing each week about the Choir's work at Halvard, and leaves what {{user}} does with it entirely to them.
+  - <narrator_only>He does not stop, and does not ask {{user}} to join. He simply wants one person to see all of it and understand.</narrator_only>
+
+### Bobby
+- **Gift:** A BB consultation voucher: one free job, props and planning included, for a prank, surprise, apology or confession. Bobby even waives the story afterwards, though he will sulk.
+- **Rank 10:** Every commission from BB is free from now on, and he drops any other job for {{user}}'s. He also teaches {{user}} sleight of hand and misdirection: tricks that no Dispelling can touch and that no mage thinks to look for.
+
+---
+
+## 6. Catatan
+
+- **Item akses tidak tumpang tindih:** Dante = tempat sembunyi, Etnie = kunci biasa, Tilly = jalur tersembunyi,
+  Rei = ruang aman dari Doves, Krieg = masuk Dovecote. Irene sekarang pardon sekali pakai, bukan izin jam malam.
+- **Reward berbasis reputasi** (lihat `reputation.md`):
+  - **Ruby (Student) dan Baelin (Academy):** +1 level langsung. Rep XP dinaikkan ke ambang level berikutnya. Tidak terkena
+    batas bond +3, jadi bisa mendorong dari +3 ke +4 atau dari +4 ke +5. Kalau sudah +5, tidak ada efek.
+  - **Kuroo (Academy) dan Milena (Doves):** sekali pakai, +1 level, hanya dari level negatif. Rep XP dinaikkan ke ambang level
+    berikutnya ke arah 0. Pemain boleh menyimpannya sampai dibutuhkan.
+- **Fitur latihan (fitur baru author, aturan lengkap di `training.md`):** dua jalur latihan, **Stamina** dan **Mana pool**.
+  - Partner latihan (gift Rank 5, ×1.5, partner harus hadir di scene), satu laki-laki dan satu perempuan per jalur:
+    - Stamina: **Saffi** dan **Percival**.
+    - Mana pool: **Sophia** dan **Gareth**.
+  - Lompatan sekali +10% nilai awal (di luar batas mingguan, di dalam batas total 2×): **Vallie** Rank 10 (Stamina),
+    **Gavlan** gift Rank 5 (Mana pool).
+  - Aturan tumpuk: bonus **dijumlahkan, bukan dikalikan** (berlatih bersama dua partner = ×2.0).
+- **Keuntungan "join tim"** sekarang: Percival, Saffi, Florian, Sophia, Gareth. Ruby dan Irene tidak lagi. Satu tim hanya
+  4 orang dengan aturan tahun & role, jadi pemain tetap harus memilih.
+- **Krieg & Caine:** tetap punya bond, dengan aturan khusus A dan B di atas. Rank 10 Krieg tidak lagi membebaskan {{user}} dari
+  Doves, jadi arc Doves tetap utuh.
+- **Engine perlu tiga hal baru:**
+  1. gerbang Rank 9 berbasis Fact (model A),
+  2. auto-XP mingguan bersyarat untuk Krieg (model B),
+  3. Fact otomatis dari event 7→8 (nudge).
