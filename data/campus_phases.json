@@ -1,0 +1,4 @@
+{
+ "_note": "1.6.1 (Batch D, N6) campus phases: what the campus and its key people are busy with during a stretch of the year. Each phase is {\"id\", \"from\": \"M5 W1 Mon\", \"to\": \"M5 W2 Fri\", \"line\": \"one line for <now>\"}; every year, inclusive. The engine puts the active phase's line into <now>. The lines are new canon: they are written in the canon waves (Batch G) and applied only after the owner approves each one. Empty until then.",
+ "phases": []
+}

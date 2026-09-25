@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Layla')) { _%>
 [Layla Palegleam]
 Role: Teaches first-year History; advises the Library Assistants. Age 39. In the same year as Yvette Fallaron at Halvard; best friends ever since.
 Appearance: Short and plump, curly brown hair forever escaping its bun with a pencil stuck through it, half-moon glasses, ink-stained fingers, thin gloves she almost never removes. A wool vest with many pockets stuffed with small notes.
@@ -20,3 +21,4 @@ Hates the Night Student story, which resurfaces after her Remembrance Day speech
 Tilly Marsh argues her wildest theories in office hours; Layla enjoys it enormously.
 Has found the name Ezrel Marionne, Light Dorm Head, in every staff roll the Archive holds, back to the founding. She asked him once; he said yes, it was him. She still cannot decide whether he was joking, and has not dared ask again.
 Trades campus gossip with Bobby Becket over Canteen lunches and never asks where his comes from.
+<%_ } _%>

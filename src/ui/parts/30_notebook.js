@@ -162,7 +162,7 @@ function nbJournal(S) {
   // 1.1.0 (spec §3): how far each rumour has spread; rumours that died out stay, faded
   const gs = featureOn(S, 'gossip') ? Object.fromEntries(((S.$ui || {}).gossip || []).map(g => [g[0], g])) : {}, old = [...((S.$ui || {}).rumours_old || [])].reverse();
   return `<p class="lead">The turning points of your year, written as they happen. The narrator reads the latest 30 lines as the story's memory; older chat is trimmed from its context. Faded lines are archived: kept for you, no longer read by the narrator.</p>${tl}
-    <h3>Campus news</h3>${ev.length ? `<dl class="kv">${ev.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>` : '<div class="empty">Nothing has changed on campus yet.</div>'}
+    <h3>Campus news</h3>${ev.length ? `<dl class="kv">${ev.map(([k, v]) => { const o = v && typeof v === 'object' ? v : { Text: v }; return `<dt>${esc(k)}</dt><dd>${esc(o.Text || '')}${o.Updated ? `<span class="sub"> · ${esc(o.Updated)}</span>` : ''}</dd>`; }).join('')}</dl>` : '<div class="empty">Nothing has changed on campus yet.</div>'}
     ${ru.length || old.length ? `<h3>Rumours</h3><ul class="log">${ru.map(r => `<li>${esc(r)}${gs[r] ? `<span class="reach">${esc(gs[r][1])} · day ${gs[r][2]}</span>` : ''}</li>`).join('')}${old.map(r => `<li class="old" title="Died out">${esc(r)}</li>`).join('')}</ul>` : ''}`;
 }
 

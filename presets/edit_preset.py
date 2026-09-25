@@ -39,7 +39,9 @@ rep('main', 'e.g., off-screen actions, incoming calls, background movement; weav
 # ---- 3. BOLT CoT: reads and plans the card state instead of Internal States
 B = '634ecfec-1862-4ce0-821e-e31057acadfa'
 rep(B, "0. What is the game state? {{getvar::gmNotebookCoTGamestate}} What is the exact current character positioning in the scene? If an OOC command is present, I must immediately incorporate its commands into the scene. If <internal_dndsim> active (skip dnd sim if tag not present): {{getvar::dndSimCoTHQ1}} I will Never change DnDsim DC for narrative purposes once established. Dice is always right. I will *never* reconsider DC or make up/change rolls. I will calculate User and NPC rolls in a later task.",
-    "0. Game state (Eldrasil): my first reasoning line is exactly \"Now: M? W? Day HH:MM at <place>\", copied from <now>. Then, from <current_state>: _Period, _Event_today, _Curfew, World._Happening (optional texture), who is in Scene.Present, {{user}}'s Vitals._Condition and _Fatigue, injuries and active effects, any bond with _Event_ready, anything overdue, and every _Log line I must narrate. What is the exact current character positioning in the scene? If an OOC command is present, I must immediately incorporate its commands into the scene.")
+    # 1.6.2 (U2, V4): generic like steps 2, 7 and 11 (the card's own blocks say which fields matter); the "Now:" first line is
+    # unchanged, because VectFox reads the date and place from it
+    "0. Game state: my first reasoning line is exactly \"Now: M? W? Day HH:MM at <place>\", copied from <now>. Then, from the card's current state: the time of day and today's events, curfew, who is present, {{user}}'s condition, injuries and active effects, anything ready, due or overdue, and every engine log line the card asks me to narrate. If the card provides character sheets for the people present, I read them now. What is the exact current character positioning in the scene? If an OOC command is present, I must immediately incorporate its commands into the scene.")
 t = P[B]['content']; s = t.index('2. Internal States + No more reasoning rule'); e = t.index('3. Scope/Knowledge')
 # 1.4.6: generic on purpose. The preset points to the card's own update rules instead of copying them; the old copy
 # (bond Progress +0/+1/+2) went stale when the card moved to /Interactions, Trust and Tension (1.2.2-1.4.4).
@@ -49,7 +51,7 @@ rep(B, 'Then <anti_briefing_register>: does any', 'If <anti_briefing_register> i
 rep(B, 'If the tag is not present, skip and write a logical response length.',
     'If the tag is not present, skip and write a logical response length. Output order: the story (any gfx sits inline where it occurs), then, if <update_format> is present, exactly one <UpdateVariable> block as the very last thing. Nothing follows it, and I never emit <details>, internal-states or tracker HTML.')
 t = P[B]['content']; s = t.index('11. Plot Momentum:'); e = t.index('I am a GM creating an immersive simulation')
-P[B]['content'] = t[:s] + ("11. Plot Momentum: I come up with 3 very different potential ways the NPCs in the scene react based on VAD and instincts established. All three must fully answer whatever {{user}} just did or said; what differs is only what the world does on its own. On an ordinary turn with no pursuit open, one option must be a HOLD: NPCs respond completely to {{user}} while the world introduces nothing, resolves nothing and volunteers nothing unasked. World-side material comes only from the calendar (_Event_today), World._Happening, the location's regulars, off-screen people pursuing their own lorebook goals, open Commitments or Mysteries, and a bond marked _Event_ready; most turns the world stays quiet. I pick one and name why in a few words.\n\n") + t[e:]
+P[B]['content'] = t[:s] + ("11. Plot Momentum: I come up with 3 very different potential ways the NPCs in the scene react based on VAD and instincts established. All three must fully answer whatever {{user}} just did or said; what differs is only what the world does on its own. On an ordinary turn with no pursuit open, one option must be a HOLD: NPCs respond completely to {{user}} while the world introduces nothing, resolves nothing and volunteers nothing unasked. World-side material comes only from the sources the card allows; on most turns the world stays quiet. Nobody arrives without the time to get there from where they last were. I pick one and name why in a few words.\n\n") + t[e:]   # 1.6.2 (U10 + D6): the card lists the sources
 
 # ---- 4. other content edits
 rep('Instincts + VAD', 'There is no affection meter, no unlock, and no right sequence of moves:',
@@ -90,7 +92,8 @@ Division of labour:
 - Recalled memories or event summaries from a memory extension (such as <VectFoxSummarizer> or recalled events) are the past. Where they differ from <current_state>, <current_state> is now.
 
 A living world without trackers:
-- Off-screen people keep their own lives: classes, clubs, shifts, rivalries and the goals in their lorebook entries. They surface through the location's regulars, the timetable and chance meetings, not because {{user}} wants them there.
+- The <cast> block is the truth about every present character (their canon lore, invariants, what they know and feel about {{user}}): it outranks their lorebook entry text and anything earlier in the chat. Invented characters keep their Extras card.
+- Off-screen people keep their own lives: classes, clubs, shifts, rivalries, the goals in their lorebook entries and their Next plans. They surface through the location's regulars, the timetable, the campus phase, their plans and chance meetings, not because {{user}} wants them there. Someone who was last elsewhere needs the walk time to get here; nobody arrives because the scene wants them.
 - When something off-screen changes the campus, record it in Campus_State (Events, Rumours, NPC_status, New_relations) instead of keeping private notes.
 - Setups and payoffs: plant details and pay them off later. A detail {{user}} noticed that points to a hidden truth becomes a Clue; a promise or appointment becomes a Commitment; a turning point becomes a Journal line. Nothing is scheduled to happen merely because it was planted.
 
@@ -182,6 +185,22 @@ rep("Gemini, Don't Speak", 'CAP: one question mark per reply, maximum. Zero is t
 # optional (owner: yes): no fake specificity, no organ autonomy
 rep('Anti-Cliché Moves', 'Spoken dialogue = full sentences.\n</banned_constructs>',
     'Spoken dialogue = full sentences. No fake specificity: no invented exact numbers or durations that do nothing ("three seconds too long", "73%"). People act, not their body parts: never "his hand moved on its own".\n</banned_constructs>')
+
+# ---- 9. 1.6.2 (Batch E2): the CoT reads what the card now provides (character sheets, a record for invented characters). Generic
+# on purpose (planning/DRAFT_card_vs_preset.md): it points to the card and never names its fields; the Bridge (section 5) is the
+# one Eldrasil-specific prompt. U2 and U10 + D6 are in section 3 (steps 0 and 11); U8 + D6 in the Bridge text above.
+# U3 (P9 + P13 + D4): step 7 becomes a cast check that can actually be run, then the old slop review
+rep(B, "7. Slop Review: I will list <banned_vocabulary> here. If I had planned to use any banned words in the output, I must replace them here now. I will avoid meta-commentary. Is each NPC staying true to their personality, wants, and needs in the scene? Are the NPCs not acting like yes-men, as per the instructions of <abolish_yesman_behaviour>? How can I pivot if needed to make sure the NPC is reacting as they should based on their description?",
+    "7. Cast check and slop review: for each character who will act, from their character sheet or card: (a) what they know here (nothing without a source they witnessed or were told); (b) what pulls them (their feelings, recent history, their own goal, which is usually not {{user}}); (c) what their personality allows; (d) what they show versus what they intend; (e) what they carry from earlier scenes. I picture the loudest version of their reaction, then the way this person usually handles it, and write the second. Name-swap test: if another character's name could replace theirs and the line would still work, I rewrite it with something only they would say or do. Then I list <banned_vocabulary> and replace any banned word I had planned, avoid meta-commentary, and make sure no NPC acts like a yes-man (<abolish_yesman_behaviour>).")
+# U6: an invented character's card is the card's own record when it keeps one; its naming guide first
+rep('HQ NPC Genesis', 'Naming: Generate 5 setting-appropriate, culturally/religiously fitting names; select the 5th.',
+    "Naming: if the card gives a naming guide, follow it; otherwise generate 5 setting-appropriate, culturally/religiously fitting names and select the 5th.")
+rep('HQ NPC Genesis', 'Ethnicity: Randomly select a fitting race;', 'Ethnicity: Select a race and origin the setting has;')
+rep('HQ NPC Genesis', 'Card: For an NPC with no card or lorebook entry, everything defined here is their card',
+    "Card: If the card keeps a record for invented characters, that record is their card: write it when the card asks and follow it from then on. Otherwise, for an NPC with no card or lorebook entry, everything defined here is their card")
+# U7: the same in the Scene Engine's behaviour sources
+rep('Scene Engine', 'A character generated during the chat has no card, so what the chat log has established about them serves as one;',
+    "A character generated during the chat has the card's record for invented characters as their card when the card keeps one; until then, what the chat log has established about them serves as one;")
 
 json.dump(d, open(os.path.join(HERE, 'Realistic_Frankenstein_2_2_Eldrasil.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=4)
 for l in log: print(' | '.join(l))

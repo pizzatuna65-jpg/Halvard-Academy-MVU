@@ -66,6 +66,14 @@ const GS = on('gossip') ? (UI.gossip || []).slice(-5).reverse() : [];
 const PRES = Object.keys(getvar('stat_data.Scene.Present') || {});
 const moods = FULL ? MOODS.filter(m => PRES.includes(m.id)).map(m => (/cold|freezing/.test(WX.now.label) ? m.cold : WX.now.sky === 'Clear' && WX.block !== 2 && WX.now.temp >= 15 ? m.sunny : '')).filter(Boolean) : [];
 const BT = getvar('stat_data.Battle') || {};
+// 1.5.1 (P6): who spoke in the last reply without being in Scene.Present, and who was only mentioned (engine $ui.cast)
+const CAST = UI.cast || {}, PRON = {"Aiden":"he/him","Althair":"he/him","Alyssa":"she/her","Baelin":"he/him","Bellatrix":"she/her","Bobby":"he/him","Bram":"he/him","Caine":"he/him","Caralynn":"she/her","Caspian":"he/him","Cassius":"he/him","Castor":"he/him","Dante":"he/him","Dex":"he/him","Elion":"he/him","Etnie":"she/her","Ezrel":"he/him","Florian":"he/him","Gareth":"he/him","Gavlan":"he/him","Idris":"he/him","Ines":"she/her","Irene":"she/her","Kanae":"she/her","Kira":"she/her","Krieg":"he/him","Kuroo":"he/him","Layla":"she/her","Lenna":"she/her","Lucius":"he/him","Milena":"she/her","Mimosa":"she/her","Mirelle":"she/her","Morgana":"she/her","Ottavio":"he/him","Percival":"he/him","Pip":"he/him","Rei":"she/her","Royhan":"he/him","Ruby":"she/her","Saffi":"she/her","Sophia":"she/her","Theodore":"he/him","Tilly":"she/her","Tristan":"he/him","Trixie":"she/her","Vallie":"she/her","Vera":"she/her","Yvette":"she/her","Zara":"she/her"};
+// 1.6.0 (N13): the age of dated lines in words; (N4) Next plans: met again, or may bring someone here now
+const ageOf = (w, W) => { const m = /M(\d{1,2}) W([1-4])(?: (Mon|Tue|Wed|Thu|Fri|Sat|Sun))?/.exec(String(w || '')); if (!m || !W || !W.Month) return ''; const D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], di = Math.max(0, D.indexOf(W.Day)); if (!m[3]) { let k = ((W.Month - 1) * 4 + W.Week - 1) - ((+m[1] - 1) * 4 + +m[2] - 1); if (k < 0) k += 48; return k === 0 ? 'this week' : k === 1 ? 'last week' : k < 4 ? k + ' weeks ago' : k < 8 ? 'last month' : Math.floor(k / 4) + ' months ago'; } let d = ((W.Month - 1) * 28 + (W.Week - 1) * 7 + di) - ((+m[1] - 1) * 28 + (+m[2] - 1) * 7 + D.indexOf(m[3])); if (d < 0) d += 336; return d === 0 ? 'earlier today' : d === 1 ? 'yesterday' : d < 7 ? d + ' days ago' : d < 14 ? 'last week' : d < 28 ? Math.floor(d / 7) + ' weeks ago' : d < 56 ? 'last month' : Math.floor(d / 28) + ' months ago'; };
+const aged = w => { const a = ageOf(w, W); return a ? w + ', ' + a : w; };
+const SINCE = UI.since || [], MAYBE = UI.maybe || [];
+const STALE = UI.stale || [], PHASE = UI.phase || null;   // 1.6.1 (N4, N6): campus events with no news for a week; the campus phase (engine)
+const JAGES = (getvar('stat_data.Journal') || []).slice(-5).reverse().map(l => (/^\[([^\]]+)\]/.exec(String(l)) || [])[1]).filter(w => w && ageOf(w, W));
 // 1.2.2 bonds: for each present NPC, what they will talk about at this rank (openness shifts the early tiers; goals, views of others
 // and the past need the real rank; secrets never come from rank) and what the bond allows; plus a ready bond event's directions
 const BOND = {"share":[[0,"how they look and their public role"],[1,"their name, age, club and where they spend time"],[2,"the magic and skills they use openly"],[3,"likes, dislikes and hobbies"],[4,"their personality and what shows when they are upset"],[5,"their goals"],[6,"what they think of other people and of the Doves"],[7,"their past and family"]],"real":5,"perks":{"1":"greets {{user}} and can be found at their usual places","2":"accepts invitations (a meal, study, a walk)","3":"sometimes seeks {{user}} out; remembers the birthday","4":"will spar, study or team up (competition teams included)","5":"shares their goal and may ask for help with it","6":"introduces {{user}} to friends; keeps {{user}}'s secrets","7":"takes real risks for {{user}}: covers, lends points, backs {{user}} up with staff","8":"closest bond: best friend, romance or sworn rival (the rank 8 event decides)","9":"acts for {{user}} unasked; their secret begins to surface","10":"would sacrifice for {{user}}"},"off":{"Trixie":2,"Etnie":2,"Percival":2,"Ruby":2,"Bobby":2,"Althair":2,"Layla":2,"Saffi":2,"Vera":2,"Tilly":2,"Dante":2,"Vallie":2,"Caralynn":2,"Aiden":2,"Florian":2,"Irene":-1,"Idris":-1,"Zara":-1,"Lenna":-1,"Castor":-1,"Sophia":-1,"Yvette":-1,"Gavlan":-1,"Rei":-1,"Tristan":-1,"Baelin":-1,"Kanae":-1,"Krieg":-2,"Ottavio":-2,"Mimosa":-2,"Caine":-2,"Ines":-2},"recent_now":5,"tag":{"Trixie":"open","Etnie":"open","Percival":"open","Ruby":"open","Bobby":"open","Althair":"open","Layla":"open","Saffi":"open","Vera":"open","Tilly":"open","Dante":"open","Vallie":"open","Caralynn":"open","Aiden":"open","Florian":"open","Irene":"guarded","Idris":"guarded","Zara":"guarded","Lenna":"guarded","Castor":"guarded","Sophia":"guarded","Yvette":"guarded","Gavlan":"guarded","Rei":"guarded","Tristan":"guarded","Baelin":"guarded","Kanae":"guarded","Krieg":"closed","Ottavio":"closed","Mimosa":"closed","Caine":"closed","Ines":"closed"}};
@@ -114,7 +122,7 @@ const tensionLines = PRES.filter(id => BONDS[id]).map(id => {
 }).filter(Boolean);
 // 1.4.4 (owner): each present character's latest moments with {{user}} (Bonds.<id>.$Recent, newest first) for consistency
 const recentLines = PRES.filter(id => BONDS[id] && (BONDS[id].$Recent || []).length).map(id => id + ' (newest first): ' + BONDS[id].$Recent.slice(-(BOND.recent_now || 5)).reverse()
-  .map(r => '[' + r.w + '] ' + r.n + (r.fx ? ' (' + r.fx + ')' : '')).join(' | '));
+  .map(r => '[' + aged(r.w) + '] ' + r.n + (r.fx ? ' (' + r.fx + ')' : '')).join(' | '));
 // 1.4.4 (owner): how each present character takes teasing and play-fighting (tension category or override: banter)
 const banterLine = PRES.filter(id => BONDS[id]).map(id => { const o = (TEN.overrides || {})[id], P = (o && o.banter) ? o : (TEN.categories || {})[(TEN.npcs || {})[id]]; return P && P.banter ? id + ' ' + P.banter : ''; }).filter(Boolean).join('; ');
 // 1.3.0 reputation: what each non-zero level means for how staff, students and the Doves treat {{user}}
@@ -130,6 +138,9 @@ Today: <%- W._Event_today %>
 <%_ } _%>
 <%_ if (cur) { _%>
 Curfew: <%- cur %>
+<%_ } _%>
+<%_ if (PHASE && PHASE.line) { _%>
+Campus phase: <%- PHASE.line %>
 <%_ } _%>
 <%_ if (W._Happening && on('happenings')) { _%>
 Around campus today (optional, use only if it fits): <%- W._Happening %>
@@ -180,6 +191,24 @@ Old hooks (pay off or drop): <%- hOld.map(([k]) => k).join('; ') %>
 <%_ } _%>
 <%_ if (GS.length) { _%>
 Rumours going around: <%- GS.map(g => '"' + g[0] + '" (' + g[1] + ', day ' + g[2] + ')').join('; ') %>
+<%_ } _%>
+<%_ if (STALE.length) { _%>
+Campus events with no news for over a week (the world moves on without {{user}}: advance each through talk, a rumour, a notice or a letter when it fits, or remove it once it is over): <%- STALE.map(([k, u]) => k + ' (last news ' + aged(u) + ')').join('; ') %>
+<%_ } _%>
+<%_ for (const id of (CAST.gone || [])) { _%>
+<%- id %> spoke in the last reply but is not in Scene.Present: add them if they are still here; otherwise they are gone and stay silent.
+<%_ } _%>
+<%_ if ((CAST.ment || []).length) { _%>
+Mentioned, not here (they may not speak or act on-screen): <%- CAST.ment.map(id => id + ' (' + (PRON[id] || 'they/them') + ((CAST.where || {})[id] ? '; usually: ' + CAST.where[id] : '') + ')').join('; ') %>
+<%_ } _%>
+<%_ for (const [id, what, until] of SINCE) { _%>
+Since you last saw <%- id %>: <%- what %><%- until ? ' (planned until ' + until + ')' : '' %>. Let it show in a small trace, never as a report.
+<%_ } _%>
+<%_ if (MAYBE.length) { _%>
+May be here by their own plans (Next): <%- MAYBE.map(([id, what]) => id + ' (' + what + ')').join('; ') %>
+<%_ } _%>
+<%_ if (JAGES.length) { _%>
+Journal dates, newest first: <%- JAGES.map(w => w + ' = ' + ageOf(w, W)).join('; ') %>
 <%_ } _%>
 <%_ for (const l of bondLines) { _%>
 Bond: <%- l %>

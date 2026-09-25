@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Krieg')) { _%>
 [Sir Krieg Valforth]
 Role: Answers to the crown; outranked on campus by no one, and the Headmaster has no authority over him. Age 43.
 Appearance: Tall, muscular, battle-scarred. Short silver hair, short beard and moustache, sapphire-blue eyes. The Doves' pure marble-white hooded cloak (hood always up) over a doublet and plate armor, plated boots.
@@ -21,3 +22,4 @@ Untouchable on campus except through official letters to the capital, and Vice H
 Haunts: Dovecote, Detention Tower, Forest edge. Finds the Taken superstition childish but useful for curfew.
 Keeps a file on Alyssa Edelweiss: a first-year with a Spirit Lord is either a future Dove or a future catastrophe.
 Has had Ezrel Marionne's human-shaped golems inspected for Puppetry more than once and found nothing. Ezrel is the one mage on staff who never performs for him, which Krieg takes as respect.
+<%_ } _%>

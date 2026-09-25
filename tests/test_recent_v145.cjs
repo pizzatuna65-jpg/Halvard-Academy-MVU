@@ -40,7 +40,7 @@ ok(/format_message_variable::stat_data/.test(card) && Object.keys(S.Bonds.Ruby).
 const now505 = fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/505.txt'), 'utf8');
 const nw = ejs.render(now505, { getvar: k => require('lodash').get({ stat_data: S }, k) });
 const line = (nw.match(/Recent with \{\{user\}\}: Ruby[^\n]*/) || [''])[0];
-ok(/^Recent with \{\{user\}\}: Ruby \(newest first\): \[M1 W1 Thu 14:50\] Moment 12\./.test(line) && (line.match(/\[M1/g) || []).length === 5 && !/Moment 7\./.test(line), '<now>: the 5 newest, newest first');
+ok(/^Recent with \{\{user\}\}: Ruby \(newest first\): \[M1 W1 Thu 14:50(, [a-z0-9 ]+)?\] Moment 12\./.test(line) && (line.match(/\[M1/g) || []).length === 5 && !/Moment 7\./.test(line), '<now>: the 5 newest, newest first');
 ok(/Recent with \{\{user\}\}: Irene[^\n]*Told the Council about her late-night patrols\. \(Trust −15, Tension \+10\)/.test(nw), '<now>: the note and its effect');
 U.view.arg = 'Ruby';
 const dos = U.PANELS.npc.render(S);

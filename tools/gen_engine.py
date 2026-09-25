@@ -97,6 +97,18 @@ for e in json.load(open(P('data/relations.json'), encoding='utf-8')):
 tru['friends'] = {k: sorted(v) for k, v in sorted(fr.items())}
 t = t.replace('/*@@TRUST@@*/{}', json.dumps(tru, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@NAME_FORMS@@*/{}', json.dumps(forms, ensure_ascii=False, separators=(',', ':')))
+# 1.5.1 (P6): first names that are also ordinary words; a sentence-initial one is not counted as a mention
+MENTION_DENY = ['Pip', 'Ruby']
+# 1.6.0 (N2): stability type per NPC (owner canon; empty until the canon waves)
+CANON = json.load(open(P('data/npc_canon.json'), encoding='utf-8'))
+assert all(k in npcs for k in CANON['change']) and set(CANON['change'].values()) <= {'fixed', 'shaped', 'fluid'}
+t = t.replace('/*@@CHANGE@@*/{}', json.dumps(CANON['change'], ensure_ascii=False))
+# 1.6.1 (N6): campus phases, one line each for <now> while the phase runs (empty until the canon waves)
+PH = json.load(open(P('data/campus_phases.json'), encoding='utf-8'))['phases']
+assert all({'id', 'from', 'to', 'line'} <= set(p) for p in PH), 'campus phase needs id, from, to, line'
+t = t.replace('/*@@PHASES@@*/[]', json.dumps(PH, ensure_ascii=False, separators=(',', ':')))
+assert all(x in npcs for x in MENTION_DENY)
+t = t.replace('/*@@MENTION_DENY@@*/[]', json.dumps(MENTION_DENY))
 open(P('src/scripts/engine.js'), 'w', encoding='utf-8').write(t.replace('/*@@NPC_ALIAS@@*/{}', json.dumps(alias, ensure_ascii=False, separators=(',', ':'))))
 assert '/*@@' not in open(P('src/scripts/engine.js'), encoding='utf-8').read(), 'unreplaced placeholder in engine.js'
 print('aliases:', len(alias), '| outdoor names:', len(outdoor), '| features:', len(feats))

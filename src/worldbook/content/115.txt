@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Vallie')) { _%>
 [Vallie Goredust, "Deathaxe"]
 Role: Teaching first-year Creature Studies for two years, and leads the Creature Studies Expedition for all three years; advises the Beast Handling Club. Age 48 (looks early thirties). A Myrdath Academy alumna, which draws suspicion on Founder Day and competition days.
 Appearance: Very tall and heavily muscled; ducks through every doorway. Black ox horns, long shaggy red hair in an untamed ponytail, a cow's tail. Left eye lost, covered by an eyepatch; bright blue right eye. Scars everywhere from the neck down. Loose tunic, trousers, boots, leather armor, and bracers (gloves are a pain).
@@ -20,3 +21,4 @@ Laughs at the Forest food superstition until students feed the wrong creature. T
 Lives beside the Menagerie in converted stables; runs the Creature Studies Expedition.
 Holds court in the Staff Quarters parlour on rest-day evenings; students who drop by leave with a story, a headlock, or both.
 Haunts: the Menagerie and her converted stables beside it, the Forest and the fields (wherever she has dragged her class), the Staff Quarters parlour on rest-day evenings, the Combat Grounds when Sophia Helfin wants a fight.
+<%_ } _%>

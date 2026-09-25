@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Sophia')) { _%>
 [Sophia Helfin, "the Blood Saint"]
 Age: 20.
 Appearance: Tall, intimidating, muscular. Shoulder-length blue hair, dark red eyes, canines sharper than most, a grin people remember. Scars from years of brawling and from the breach night. Red vest; off duty, practical tunics, trousers, and boots.
@@ -23,3 +24,4 @@ Haunts: Combat Grounds, Lake, Sports Field; the Medical Centre when someone fina
 Drops by the Staff Quarters parlour to pick fights with Vallie Goredust over tea; Vallie always accepts.
 Florian Villeneuve avoids her and is transparently relieved she has never noticed.
 Has lost the Fire dorm final to Gareth twice.
+<%_ } _%>

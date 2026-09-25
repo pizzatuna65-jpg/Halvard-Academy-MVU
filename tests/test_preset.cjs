@@ -40,3 +40,29 @@ ok(/No fake specificity/.test(C('Anti-Cliché Moves')) && /never "his hand moved
 const E1 = [IA.content, C('Output language'), C('Realistic NPCs'), C('Scene Engine'), C('Instincts + VAD'), voice.content, C('Anti-Omniscient'), C("Don't Speak Like a Therapist")].join('\n');
 const CARD = /Eldrasil|Halvard|<now>|<cast>|Scene\.Present|Bonds|Campus_State|_Event|\b(Irene|Etnie|Aiden|Castor|Zara|Kanae|Rei|Caine)\b/;
 ok(!CARD.test(E1), 'E1 texts are generic (no card data or character names)' + (CARD.test(E1) ? ': ' + E1.match(CARD)[0] : ''));
+
+// ---- 1.6.2 E2: the CoT reads what the card now provides, and still names none of it (U2, U3, U6, U7, U8, U10, D4, D6, V4)
+const step = n => (bolt.match(new RegExp('\\n' + n + '\\. [\\s\\S]*?(?=\\n\\n\\d+\\. |\\n\\nI am a GM)')) || [''])[0];
+ok(step(0).includes('my first reasoning line is exactly "Now: M? W? Day HH:MM at <place>", copied from <now>.'), 'V4: the "Now:" first line is unchanged, first in step 0');
+ok(/If the card provides character sheets for the people present, I read them now\./.test(step(0)), 'U2: step 0 reads the character sheets');
+ok(/Cast check and slop review: for each character who will act, from their character sheet or card: \(a\) what they know here[\s\S]*\(e\) what they carry/.test(step(7)), 'U3: step 7 is a runnable cast check');
+ok(/the loudest version of their reaction, then the way this person usually handles it/.test(step(7)) && /Name-swap test/.test(step(7)), 'D4: the usual-version and name-swap tests');
+ok(/<banned_vocabulary>/.test(step(7)) && /<abolish_yesman_behaviour>/.test(step(7)), 'step 7 keeps the slop review');
+ok(/World-side material comes only from the sources the card allows; on most turns the world stays quiet\. Nobody arrives without the time to get there/.test(step(11)), 'U10 + D6: step 11 points to the card\'s sources');
+const boltRest = bolt.replace('"Now: M? W? Day HH:MM at <place>", copied from <now>', '');
+const FIELD = /Eldrasil|Halvard|<now>|<cast>|<current_state>|Scene\.Present|Bonds|Campus_State|Extras|_Event|_Period|_Curfew|_Happening|_Log|Vitals|Commitments|Mysteries|\b(Irene|Etnie|Aiden|Castor|Zara|Kanae|Rei|Caine)\b/;
+ok(!FIELD.test(boltRest), 'BOLT names no card field outside the "Now:" line' + (FIELD.test(boltRest) ? ': ' + boltRest.match(FIELD)[0] : ''));
+// every tag the CoT refers to exists in another preset prompt or in the card
+const cardText = JSON.parse(fs.readFileSync(path.join(ROOT, 'dist/Eldrasil_Halvard.json'), 'utf8')).data.character_book.entries.map(e => e.content).join('\n');
+const others = P.prompts.filter(p => p.identifier !== byName('BOLT Chain of Thought').identifier).map(p => p.content || '').join('\n');
+const tags = [...new Set([...bolt.matchAll(/<([A-Za-z_]+)>/g)].map(m => m[1]))].filter(x => !['place', 'details'].includes(x));
+const missing = tags.filter(x => !others.includes('<' + x + '>') && !cardText.includes('<' + x + '>') && !cardText.includes('<' + x + ' '));
+ok(!missing.length, 'every tag the CoT refers to exists in the preset or the card (' + tags.length + ')' + (missing.length ? ': missing ' + missing.join(', ') : ''));
+const gen = C('HQ NPC Genesis');
+ok(/if the card gives a naming guide, follow it/.test(gen) && /Banned Names: Elara, Vane, Seraphina/.test(gen) && /If the card keeps a record for invented characters, that record is their card/.test(gen), 'U6: the card\'s naming guide and record first; banned names stay');
+ok(/the card's record for invented characters as their card when the card keeps one/.test(C('Scene Engine')), 'U7: the Scene Engine\'s generated-character sentence');
+const E2 = [step(0).replace('"Now: M? W? Day HH:MM at <place>", copied from <now>', ''), step(7), step(11), gen].join('\n');
+ok(!CARD.test(E2), 'E2 texts are generic' + (CARD.test(E2) ? ': ' + E2.match(CARD)[0] : ''));
+const br = C('Eldrasil × MVU × VectFox Bridge');
+ok(/The <cast> block is the truth about every present character/.test(br) && /Invented characters keep their Extras card/.test(br) && /their Next plans/.test(br) && /needs the walk time to get here/.test(br), 'U8 + D6: the Bridge divides the work with the card\'s new blocks');
+ok(!/_Event_ready|_Period|World\._Happening/.test(br), 'the Bridge copies no field list either');

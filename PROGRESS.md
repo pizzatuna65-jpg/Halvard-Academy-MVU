@@ -725,11 +725,118 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
     stale events come with the releases that add them). The preset grew more than the draft's +650 estimate (~+1.4k), mostly
     the calibration block, the voice rules and the repeated player message.
 
+- 1.5.1 Batch B: the Cast Sheet (P1, P2 automatic part, P5, P6, P7, D1). No new canon. Changes the established "Lore activation →
+  keyword WI" for NPCs in Scene.Present (approved in the plan; HANDOFF §1 and §4 updated).
+  - Custom 509 "Cast Sheet" (@D1, order 498, just above <now>): for every NPC in Scene.Present, INVARIANTS (pronouns from gender,
+    first and full name and nickname, year / dorm / public role, bond Rank with Trust and Tension bands, the Never lines of their
+    Trust and Tension categories, up to 4 key ties from relations.json), a Status line from Campus_State.NPC_status, then their
+    whole canon lore (including <narrator_only>) and a Secrets line: never stated, hints only, and which topics {{user}} has
+    uncovered (Secrets_revealed). After the sheets, every curated line between two people present, both ways.
+  - Full lore for at most 4 (engine CAST_FULL): who spoke in the last reply first, then the highest bond rank; the others get a
+    brief sheet (invariants only) and keep their keyword entry. Every NPC keyword entry is wrapped (merge_lorebooks.py) so it
+    prints nothing while that NPC has a full sheet: the lore is never sent twice.
+  - Engine $ui.cast {full, brief, spoke, gone, ment, where}: speakers from the reply's prose (a name that opens the sentence
+    leading into a quote, or that directly follows a closing quote; names inside quotes are addressees), mentions (MENTION_DENY:
+    "Pip" and "Ruby" at a sentence start are ordinary words). An update without prose (player tools) keeps the last reading.
+  - <now> (505): "X spoke in the last reply but is not in Scene.Present: add them if they are still here; otherwise they are gone
+    and stay silent", and "Mentioned, not here (they may not speak or act on-screen): X (pronouns; usually: haunt)".
+  - Custom 510 "Last-mile cast gate" (@D0, order 899, before 503 so <UpdateVariable> stays last), only when someone is present.
+  - Size: ~1.2k tokens with one NPC present, ~5.4k with four, ~6.3k with eight (4 full + 4 brief); nothing when alone. The card
+    JSON grows by ~260 KB (509 holds every NPC's lore as EJS sections).
+  - Tests: test_castsheet_v151.cjs (21 checks: 1, 4+4 and 8 present, speaker-first order, brief sheets keep their keyword
+    entry, secrets none / one uncovered, P6 speaker and mention, deny list, invented names get no sheet, all EJS entries render
+    together, positions); test_saves loads the 1.4.6 and 1.5.0 saves. npm test 890 checks; stress passes. TEST card rebuilt.
+  - Not automatic yet: how each NPC addresses {{user}} (term_used) and DON'T FLATTEN / CARRIES; they come with the G1 canon.
+    Incoming cohorts are never in the cast before they arrive (engine check), untestable with the empty cohorts.json.
+  - To verify in ST: the Prompt Template extension renders the large 509 entry (~260 KB of EJS) without a noticeable delay,
+    also in MVU's extra-model mode; getvar('stat_data.$ui.cast') inside the NPC keyword entries.
+
+- 1.6.0 Batch C: what each character carries of {{user}} (P4, N4 Next + Meanwhile, D6, N13, VectFox V1-V3). No new canon.
+  - Bonds gain narrator fields (in <current_state>, never in the player's dossier): Mind (how they feel about {{user}} now),
+    Knows (what they know about {{user}} and how; the engine dates each line and keeps 15, older ones in $Knows_old), Imprints
+    (a belief formed by a weight 5-10 experience; at most 5; over the cap the lightest goes only if the new one outweighs it, and
+    keeps what it replaced as Was; a "fixed" character is never rewritten), Next ({What, Where, Until}, Rank 3+).
+  - Engine: $Defining (a rank change, Trust ±15+, Tension +20+ or romance is kept for good, at most 5, smallest leaves first;
+    shown in the Cast Sheet and the dossier). Next: "Since you last saw X" once in <now> when they meet {{user}} again; a plan
+    that lapses unseen becomes an "(Off-screen)" row in $Recent; "May be here by their own plans" when {{user}} is where the plan
+    put them. Meanwhile: a Rank 7+ bond unseen for 7 days gets one Journal line a week about their own life (their Next, else
+    their haunt).
+  - N2 slot: data/npc_canon.json "change" (fixed | shaped | fluid), empty until the canon waves; the Cast Sheet prints the type's
+    sentence. (The plan named field_overrides.json; that file holds rank numbers only, so the slot got its own file.)
+  - N13 ages: <now> recent rows and the Cast Sheet's Knows, Imprints and defining moments carry their age in words ("yesterday",
+    "3 days ago", "last week", "2 months ago"); <now> adds the age of the newest Journal dates; rule 504 says to use those ages.
+  - Cast Sheet: full sheets add Mind, Knows, Imprints, defining moments and Change; brief sheets add Mind and Imprints.
+  - Rules: 502 explains Mind, Knows, Imprints, Next. 504: "Only an Imprint changes who a character is"; arrivals take the walk
+    time (D6); Next plans in the world sources; V1 (a recalled memory says what happened, not who knows it; the sheet beats it).
+  - VectFox (checked at 3623dc8, core/eventbase-workflow.js): EventBase and the summary share one injection setting; keep After
+    Main Prompt (default) or in-chat depth 2+, never 0-1 (V3). Summarizer Injection now recommended OFF (V2). docs/VECTFOX.md,
+    docs/ECOSYSTEM.md.
+  - Tests: test_memory_v160.cjs (29 checks, incl. a "fixed" character through a patched engine and the age bands at day, week,
+    month and year edges); test_recent_v145 accepts the age in the row; saves 1.4.6, 1.5.0, 1.5.1 load. npm test 924 checks;
+    stress passes. TEST card rebuilt.
+  - To confirm with the owner: Meanwhile lines use the character's haunt when they have no Next ("was seen around Main Library"),
+    which is generic; ages are within one campus year (an item from exactly a year ago reads as "earlier today").
+
+- 1.6.1 Batch D: invented characters stay the same person (N5 Extras), the campus moves on (N4 Events), campus phases (N6
+  framework). No new canon.
+  - Extras (top-level record, in <current_state>): {"<Full Name>": {Who, Looks, Manner, Calls_user, Voice, Keep}}. The engine
+    counts each time an invented character enters Scene.Present ($eng.xs); from the second appearance the Cast Sheet asks for
+    their record until it exists, then shows it as their card whenever they are present. A first name or a different case is
+    the same person (merged into the recorded key, in Scene.Present too); a roster name is refused. At most 20 records: the
+    least recently seen leave first into a hidden archive ($ui.xold, 40), which gives the record back if they turn up again;
+    a kept or present one never leaves. The gate (510) fires with only invented characters present.
+  - Keep: in the bracelet's cast strip, tapping an invented character pins them (a thumbtack before the name) or lets them go,
+    through a hidden player-tool message like Settings. Pinning someone with no record creates it; <cast> then asks the narrator
+    to describe them (the "extract this character" path).
+  - Naming guide in 502, from the roster's own patterns (Human: English or continental family names; Elf: flowing given names,
+    soft or nature-made family names; Beastkin: playful or striking family names); no roster name reused.
+  - Campus_State.Events are now {Text, Updated}. A bare string (the AI's shorthand, and every event in an older save) becomes
+    the Text; the engine dates each change and, when an event has had no news for over 7 days, <now> asks for it to move on
+    (talk, rumour, notice, letter) or be removed. The notebook's Campus news shows the date.
+  - N6: data/campus_phases.json ({id, from, to, line}, every year) and a "Campus phase:" line in <now>. Empty: the phase lines
+    are canon and come with the canon waves after the owner approves them.
+  - World sources (504) now include the campus phase and the campus events <now> asks to advance.
+  - Size: 502 +~280 tokens (the plan estimated ~70; most of it is the example record and the naming guide), 505 +~40 only while
+    something is stale or a phase runs, ~40 tokens per invented character present.
+  - Tests: test_extras_v161.cjs (37 checks: first and second appearance, merge by first name and by case, roster names refused,
+    cap and archive, Keep and pin-without-record, 502 rules, Events stamping, stale and re-dated, the notebook, a 1.6.0 save's
+    string event, phases through a patched engine); save 1.6.0 added (saves 1.4.6 to 1.6.0 load). npm test 966 checks; stress
+    passes. Preset unchanged (built twice, byte-identical). TEST card rebuilt.
+  - To confirm with the owner: the naming guide is my reading of the roster (the lore has no naming rules); the stale-event
+    window (7 days) and the Extras cap (20) are the plan's numbers.
+  - To verify in ST: the cast-strip pin writes the hidden tool message (like Settings) and the thumbtack shows after it.
+
+- 1.6.2 Batch E2 (preset): the reasoning reads what the card now provides, without naming it. Card unchanged apart from the
+  version. No new canon.
+  - BOLT step 0 (U2, V4): the "Now: M? W? Day HH:MM at <place>" first line is unchanged (VectFox reads it); the list of card
+    fields after it is now generic ("the card's current state: the time of day and today's events, curfew, who is present…"),
+    plus "If the card provides character sheets for the people present, I read them now."
+  - Step 7 (U3 + D4): a cast check per character who acts, from their sheet or card (what they know and from where, what pulls
+    them, what their personality allows, shown versus meant, what they carry); the loudest reaction, then how this person
+    usually handles it; the name-swap test; then the old slop review.
+  - Step 11 (U10 + D6): world-side material only from the sources the card allows (504 lists them); nobody arrives without the
+    time to get there.
+  - HQ NPC Genesis (U6): the card's naming guide first (else the old five-names rule); race and origin from the setting; the
+    card's record for invented characters is their card. Banned names stay. Scene Engine (U7): the same for the "generated
+    character" sentence.
+  - Bridge (U8 + D6): the <cast> block is the truth about the people present and outranks their lorebook text and the chat;
+    invented characters keep their Extras card; off-screen people follow their Next plans and the campus phase; arrivals take
+    the walk time.
+  - Size: enabled preset prompts ~17.2k → ~17.5k tokens.
+  - Tests: test_preset.cjs +13 (step texts, "Now:" line first and unchanged, no card field anywhere in BOLT outside that line,
+    every tag the CoT refers to exists in the preset or the card, Genesis, Scene Engine, Bridge); save 1.6.1 added (saves 1.4.6
+    to 1.6.1 load). npm test 984 checks; stress passes; preset built twice, byte-identical. TEST card rebuilt.
+  - Decision touched (to confirm with the owner): the plan kept step 0's "Game state (Eldrasil)" line, and its final test asks
+    for no card field names in BOLT outside the "Now:" line. I kept the "Now:" line exactly and made the rest of step 0
+    generic, like steps 2, 7 and 11, so the CoT copies no card field list that could go stale.
+  - To verify in ST (U13): replies are not cut off before </UpdateVariable> (openai_max_tokens is 15000); the reasoning still
+    opens with the "Now:" line.
+
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
-- Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 done; next 1.5.1 (Batch B, Cast Sheet), then 1.6.0,
-  1.6.1, 1.6.2 and the G1 voice draft. The owner playtests once, after G1 is approved and applied; then run tools/audit_chat.py
+- Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 to 1.6.2 done; the G1 voice draft
+  (planning/DRAFT_voices.md) waits for the owner's approval, NPC by NPC. The owner playtests once, after G1 is approved and applied; then run tools/audit_chat.py
   on the exported chat for the first MVU baseline.
 - Playtest v1.3.2 in ST: a pact with abilities (Builder → Pacts, Techniques page), summon it and have it use an ability
   (charged once, not charged when not summoned).
@@ -753,6 +860,10 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 - Scripted first-week classes (M1 W1 Tue-Sat, 14 sessions; per dorm for [D] classes; optional homework into Commitments).
 
 ## To verify in ST (could not be tested outside ST)
+- 1.6.2 (U13): replies are not cut off before </UpdateVariable> (preset openai_max_tokens 15000); reasoning opens with "Now:".
+- 1.6.1: tapping an invented character in the cast strip pins them (hidden tool message; thumbtack after the re-render).
+- 1.5.1: the Cast Sheet (509, ~260 KB of EJS) renders without a noticeable delay, also in extra-model mode; NPC keyword entries
+  read getvar('stat_data.$ui.cast') and go quiet while the NPC has a full sheet.
 - 1.5.0: the preset's {{lastUserMessage}} is filled on the Gemini endpoint; the depth-0 Player Input Authority prompt does not
   move <UpdateVariable> from the end of the reply.
 - 1.1.0: the Prompt Template extension renders EJS in 502 / 504 (now gated per feature), also in MVU's extra-model mode if used.

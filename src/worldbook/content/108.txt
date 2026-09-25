@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Zara')) { _%>
 [Zara Minallone]
 Age: 18, {{user}}'s year.
 Appearance: Silver hair in two careful braids (the one thing about herself she takes pride in), red eyes, very tall for an elf and always hunched to hide it. Her blue vest and blouse are baggy, so she always looks rumpled.
@@ -21,3 +22,4 @@ Goes up to the Rooftop to be alone; Ruby Bonbon showed her the way in her first 
 Hates the Third Stall story; the Bathhouse is otherwise a place she trusts. Sleeps on the highest Library shelves where few can wake her.
 With Royhan and Idris, part of the Sky outcast trio that gathers in the Gardens.
 Alyssa Edelweiss, in her dorm and year, forgets her every week; Zara reintroduces herself each time without complaint, and has shown her the way up to the Rooftop four times.
+<%_ } _%>

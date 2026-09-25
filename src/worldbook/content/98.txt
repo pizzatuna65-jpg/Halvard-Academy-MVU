@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Irene')) { _%>
 [Irene Chanare]
 Age: 20.
 Appearance: Long purple hair in a neat ponytail, amethyst eyes, tall. Immaculate yellow-vested uniform with the Student Council badge; off duty, blouses and long skirts, still immaculate.
@@ -21,3 +22,4 @@ Touches the Founder's Hand before important papers; reminds Library Assistants t
 Keeps finding Library shelves rearranged into Tilly Marsh's "evidence piles".
 Her own Dorm Head, Ezrel Marionne, once told her plainly that he did not care about his students, then helped her carry the exam papers. She has avoided being alone with him since.
 Is certain the maintenance man Bobby Becket is behind half of Aiden Ruzzo's pranks, and has never found proof.
+<%_ } _%>

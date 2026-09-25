@@ -1389,6 +1389,18 @@ async function commitSetting(ops, head) {
   } finally { view.busy = false; render(); }
 }
 
+// 1.6.1 (Batch D, N5): the cast strip's pin for an invented character. Keep never lets them leave the Extras record; pinning one
+// with no record yet creates it, and <cast> then asks the narrator to describe them. A hidden player-tool message, like Settings.
+function keepOps(S, name) {
+  const rec = ((S && S.Extras) || {})[name];
+  return rec ? [{ op: 'replace', path: `/Extras/${name}/Keep`, value: !rec.Keep }] : [{ op: 'replace', path: `/Extras/${name}`, value: { Keep: true } }];
+}
+async function toggleKeep(name) {
+  const st = latestState(); if (!st || !name || /[/.~]/.test(name)) return;
+  const ops = keepOps(st.data.stat_data, name), keep = ops[0].value === true || (ops[0].value && ops[0].value.Keep);
+  await commitSetting(ops, keep ? `📌 ${name} is kept in the record of invented characters.` : `📌 ${name} is no longer kept: they may leave the record when it is full.`);
+}
+
 // 1.1.0 weather glyph for the UI (the bracelet uses Font Awesome icons)
 const wxIcon = wx => { const n = wx && wx.now; if (!n) return ''; return n.rare === 'lightning storm' || n.sky === 'Storm' ? '⛈' : n.snow ? '❄' : n.sky === 'Rain' ? '🌧' : n.sky === 'Fog' ? '🌫' : n.sky === 'Overcast' ? '☁' : n.sky === 'Cloudy' ? '⛅' : wx.block === 2 ? '☾' : '☀'; };
 const SEASON_OF = m => ['Winter', 'Winter', 'Spring', 'Spring', 'Spring', 'Summer', 'Summer', 'Summer', 'Autumn', 'Autumn', 'Autumn', 'Winter'][((num(m, 1) - 1) % 12 + 12) % 12];
@@ -1445,6 +1457,7 @@ if (typeof eventOn === 'function' && typeof getButtonEvent === 'function') {
   $(() => {
     window.parent.__eldrasilUI = true;
     eventOn('eldrasil:open', target => open(String(target || 'profile')));
+    eventOn('eldrasil:keep', name => toggleKeep(String(name || '')));   // 1.6.1: the cast strip's pin
     eventOn(getButtonEvent('Student file'), () => open('profile'));
     eventOn(getButtonEvent('Builder'), () => open('builder'));
     eventOn(getButtonEvent('People'), () => open('people'));

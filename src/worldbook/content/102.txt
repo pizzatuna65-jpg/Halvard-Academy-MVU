@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Lenna')) { _%>
 [Lenna Greenwind]
 Age: 19 (young even by elven standards).
 Appearance: Long green hair, ice-blue eyes, pointed ears, short and curvy. Red vest, skirt, white long-sleeved shirt, stockings. Off duty, simple t-shirts and shorts.
@@ -15,3 +16,4 @@ Emotional tells: The more serious the moment, the lazier the teasing; a joke is 
 Haunts: the far Gardens, Menagerie, Forest; naps between the Elder Oak's roots and calls it the calmest thing on campus. Leaves a bite for the Forest despite mocking the superstition.
 Likes the Gardens' quieter edge.
 Tilly Marsh, in her year and dorm, keeps getting into danger; Lenna keeps hauling her out, complaining the whole way, and has never once refused.
+<%_ } _%>

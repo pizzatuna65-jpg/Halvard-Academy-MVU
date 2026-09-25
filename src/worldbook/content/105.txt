@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Idris')) { _%>
 [Idris Ainsworth]
 Age: 19.
 Appearance: Fully humanoid. Shoulder-length purple hair tied back, emerald eyes with slit pupils, warm tan skin darkest where the sun reaches most, purple scales along his neck, collarbones, and forearms, retractable fangs, a toned build. A burn scar on his ribs he never explains. Blue vest, usually in the warmest spot available.
@@ -19,3 +20,4 @@ Ruby Bonbon is the warm centre the Sky outcasts orbit, and the only person in th
 Haunts: Gardens (takes occasional work there), the Forest Clearing (the only warm spot in the Forest; he studies the flowers the Gardening Club could not transplant), Commissary, Mall bargain shelves; the Notice Board for quiet paid work.
 Shares a year and a dorm with Florian Villeneuve and cannot stand him.
 Ottavio Bastiani, his Dorm Head, stood at the Dovecote gate every day of his week inside, and still walks over whenever the Doves come to "check" on him. Idris has never thanked him, which suits them both.
+<%_ } _%>

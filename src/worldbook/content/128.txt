@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Dante')) { _%>
 [Dante Kleinn]
 Age: 19. Orphan.
 Appearance: Black hair with a distinct white streak, black eyes, solid build, an easy open posture. Yellow vest, always properly worn.
@@ -24,3 +25,4 @@ Emotional tells: He never raises his voice, happy or not. Worry about a younger 
 <narrator_only>Emotional tells (true): Around sworn Doves he stands like a soldier awaiting orders without noticing he does it. He takes Krieg Valforth's orders without a flicker. Milena Sagona treating him as a child is the one thing that makes him look his age.</narrator_only>
 Haunts: Forest edge, Dovecote. Finds the Taken superstition useful for keeping students in near curfew.
 Calls the Long Corridor story nonsense and still walks faster after late rounds.
+<%_ } _%>

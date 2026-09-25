@@ -6,6 +6,42 @@ const NPC_IDS = new Set(Object.values(NPC_ALIAS));
 const NAME_FORMS = {"Irene":["Irene Chanare","Irene"],"Caspian":["Caspian Riwalo","Caspian"],"Etnie":["Etnie"],"Royhan":["Royhan Filanoman","Royhan"],"Lenna":["Lenna Greenwind","Lenna"],"Saffi":["Saffi Tamberlane","Saffi"],"Kanae":["Kanae Quveno","Kanae"],"Idris":["Idris Ainsworth","Idris"],"Aiden":["Aiden Ruzzo","Aiden"],"Caralynn":["Caralynn Veyturone","Caralynn"],"Zara":["Zara Minallone","Zara"],"Gavlan":["Gavlan Haverton","Gavlan"],"Yvette":["Yvette Fallaron","Yvette"],"Krieg":["Krieg Valforth","Krieg"],"Milena":["Milena Sagona","Milena"],"Baelin":["Baelin Kalvor","Baelin"],"Layla":["Layla Palegleam","Layla"],"Vallie":["Vallie Goredust","Vallie"],"Percival":["Percival Applethorne","Percival"],"Sophia":["Sophia Helfin","Sophia"],"Rei":["Rei Kestrane","Rei"],"Kuroo":["Kuroo Varnell","Kuroo"],"Mimosa":["Mimosa Linden","Mimosa"],"Gareth":["Gareth Valkaryn","Gareth"],"Lucius":["Lucius Vortigern","Lucius"],"Trixie":["Trixie Confetti","Trixie"],"Vera":["Vera Pulsar","Vera"],"Tristan":["Tristan Aurelle","Tristan"],"Althair":["Althair Veyne","Althair"],"Dante":["Dante Kleinn","Dante"],"Castor":["Castor Moretti","Castor"],"Ruby":["Ruby Bonbon","Ruby"],"Florian":["Florian Villeneuve","Florian"],"Elion":["Elion Villeneuve","Elion"],"Bellatrix":["Bellatrix Ardenne","Bellatrix"],"Kira":["Kira Brannock","Kira"],"Mirelle":["Mirelle Lullwyn","Mirelle"],"Theodore":["Theodore Wrenfield","Theodore"],"Ines":["Ines Vauclair","Ines"],"Bram":["Bram Holloway","Bram"],"Dex":["Dex Harlow","Dex"],"Cassius":["Cassius Rhavel","Cassius"],"Morgana":["Morgana Vess","Morgana"],"Pip":["Pip Althorne","Pip"],"Alyssa":["Alyssa Edelweiss","Alyssa"],"Tilly":["Tilly Marsh","Tilly"],"Ezrel":["Ezrel Marionne","Ezrel"],"Ottavio":["Ottavio Bastiani","Ottavio"],"Caine":["Caine Strix","Caine"],"Bobby":["Bobby Becket","Bobby","BB"]};
 const NAME_RX = Object.entries(NAME_FORMS).map(([id, forms]) => [id, new RegExp('(^|[^A-Za-z])(' + forms.map(f => f.replace(/[.*+?^()|[\]\\]/g, '\\$&')).join('|') + ')(?![A-Za-z])')]);
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+// 1.5.1 (P6): who spoke in a reply. A name counts as a speaker when it opens the sentence that leads into a quote
+// ("Irene looked up. "Curfew.") or directly follows a closing quote ("Curfew," Irene said / "…," said Irene). Names inside quotes
+// are people being talked to or about. MENTION_DENY: first names that are also ordinary words; at a sentence start they are no mention.
+const CAST_FULL = 4;
+const KNOWS_VISIBLE = 15, IMPRINT_MAX = 5, DEFINING_MAX = 5, NEXT_RANK = 3, MEANWHILE_RANK = 7;   // 1.6.0 (Batch C)
+const CHANGE = {};   // 1.6.0 (N2): fixed | shaped | fluid per NPC (data/npc_canon.json; empty until the canon waves)
+const MENTION_DENY = new Set(["Pip", "Ruby"]);
+const EXTRAS_MAX = 20, EXTRAS_ARCHIVE = 40, STALE_DAYS = 7;   // 1.6.1 (Batch D): invented characters kept; campus events without news
+const PHASES = [];   // 1.6.1 (N6): campus phases (data/campus_phases.json; empty until the canon waves)
+const QUOTE_RX = /["“][^"”]*["”]/g;
+function formRx(id) { return new RegExp('(^|[^A-Za-z])(' + NAME_FORMS[id].map(f => f.replace(/[.*+?^()|[\]\\]/g, '\\$&')).join('|') + ')(?![A-Za-z])', 'g'); }
+function speakersIn(prose) {
+  const out = [];
+  for (const para of String(prose).split(/\n+/)) {
+    if (!/["“”]/.test(para)) continue;
+    const qs = [...para.matchAll(QUOTE_RX)].map(m => [m.index, m.index + m[0].length]);
+    if (!qs.length) continue;
+    const inQuote = i => qs.some(([a, b]) => i >= a && i < b);
+    for (const id of Object.keys(NAME_FORMS)) {
+      for (const m of para.matchAll(formRx(id))) {
+        const at = m.index + m[1].length, end = at + m[2].length;
+        if (inQuote(at)) continue;
+        const after = qs.find(([a]) => a >= end), before = [...qs].reverse().find(([, b]) => b <= at);
+        const lead = para.slice(0, at), sentStart = /(^|[.!?]["”]?\s+)$/.test(lead) || !lead.trim();
+        const opens = sentStart && after && !/[.!?]\s+\S/.test(para.slice(end, after[0]).replace(/\b(Mr|Mrs|Ms|Dr|St)\.\s/g, '')) && after[0] - end < 160;
+        const tags = before && /^\s*[,;:]?\s*([a-z]+\s+){0,2}$/.test(para.slice(before[1], at)) && at - before[1] < 30;
+        if ((opens || tags) && !out.includes(id)) out.push(id);
+      }
+    }
+  }
+  return out;
+}
+function mentionIn(prose, id, rx) {
+  if (!MENTION_DENY.has(id)) return rx.test(prose);
+  return [...String(prose).matchAll(formRx(id))].some(m => m[2] !== id || !/(^|[.!?]["”]?\s+)$/.test(prose.slice(0, m.index + m[1].length)));
+}
 const DAY_MIN = 1440, YEAR_DAYS = 12 * 4 * 7;
 const ALL = DAYS, MON_THU = DAYS.slice(0, 4), MON_FRI = DAYS.slice(0, 5), MON_SAT = DAYS.slice(0, 6);
 // 1.3.1 (owner playtest): every event carries its day plan `s` (from its lore entry; one text, or one per day), shown in the
@@ -491,6 +527,7 @@ const SHAPE = {
   Competition: { Tier: '', Status: '', Placement: '', Team: [], Results: [] }, Projects: {},
   Trip: { Active: false, Destination: '', Companions: [], Note: '' }, Battle: { Active: false, Combatants: {} }, _Log: [],
   Inventory: {}, Hooks: {},   // 1.1.0
+  Extras: {},   // 1.6.1
   _Perks: {}, Rep_events: [], Training: [], Perk_use: [],   // 1.3.0
 };
 function fillShape(o, shape) {
@@ -500,7 +537,7 @@ function fillShape(o, shape) {
   }
 }
 const BOND0 = { Rank: 0, Progress: 0, Trust: 50, Tension: 0, Title: '', Romance: false, Known_facts: [], Milestones: [], Last_seen: '' };
-const ENGINE_VER = "1.5.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.6.2";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 
 function runEngine(S, B, text, seedHint) {
   if (!S || !S.World) return;
@@ -998,6 +1035,8 @@ function runEngine(S, B, text, seedHint) {
     b.$tdrop = b0 ? num(b0.$tdrop, -99) : num(b.$tdrop, -99);   // 1.4.3
     b.$tlast = b0 ? num(b0.$tlast, 0) : 0; b.$tbrk = b0 ? num(b0.$tbrk, 0) : 0;   // 1.4.4
     b.$Recent = b0 ? [...(b0.$Recent || [])] : [...(b.$Recent || [])];   // 1.4.4 engine-owned
+    b.$Defining = b0 ? [...(b0.$Defining || [])] : [...(b.$Defining || [])];   // 1.6.0 engine-owned
+    b.$Knows_old = b0 ? [...(b0.$Knows_old || [])] : [...(b.$Knows_old || [])]; b.$seen = b0 ? num(b0.$seen, -1) : num(b.$seen, -1); b.$mw = b0 ? num(b0.$mw, -1) : num(b.$mw, -1);
     const acts = [...(byId[id] || [])], rank0 = b0 ? b0.Rank : b.Rank, tw0 = num(b.Tension, 0), trw0 = num(b.Trust, 50);
     let rankTrust = 0;
     if (S.$eng.tenv !== 1) b.$ms = [...new Set([...b.$ms, ...Object.keys(REP.bond_milestone_xp || {}).map(Number).filter(r => r <= b.Rank)])];   // older saves: milestones already paid
@@ -1214,7 +1253,72 @@ function runEngine(S, B, text, seedHint) {
       else if (acts.length || fx.length && (b.Rank !== rank0 || trw0 !== num(b0.Trust, 50) || tw0 !== num(b0.Tension, 0) || dx > 0))
         b.$Recent.push({ w: stamp(S.World), n: said || '(no note)', fx: fx.join(', ') });
       b.$Recent = b.$Recent.slice(-num((BR.recent || {}).keep, 10));
+      // 1.6.0 (P4): defining moments. A big row (a rank changed, Trust moved 15+, Tension rose 20+, romance began) is also kept
+      // for good; at most DEFINING_MAX, the smallest leaves first (ties: the older one)
+      const big = (b0 && b.Rank !== rank0 ? 3 : 0) + (Math.abs(dT) >= 15 ? Math.abs(dT) / 5 : 0) + (dX >= 20 ? dX / 10 : 0) + (b.Romance && !(b0 && b0.Romance) ? 3 : 0);
+      if (b0 && big > 0) {
+        const r = b.$Recent[b.$Recent.length - 1];
+        b.$Defining = [...b.$Defining, { w: r.w, n: r.n, fx: r.fx, s: Math.round(big * 10) / 10 }];
+        while (b.$Defining.length > DEFINING_MAX) { let lo = 0; b.$Defining.forEach((x, i) => { if (x.s < b.$Defining[lo].s) lo = i; }); b.$Defining.splice(lo, 1); }
+      }
     }
+  }
+  // ---- 6c. 1.6.0 (Batch C, P4/N4): what each character carries of {{user}}. Knows: dated, the latest KNOWS_VISIBLE (older
+  // lines move to $Knows_old). Imprints: weight 5+, at most IMPRINT_MAX; over the cap the lightest goes, and the new one must
+  // outweigh it; a "fixed" character (data/npc_canon.json Change) is never rewritten, only deepened; a "shaped" or "fluid" one keeps
+  // what the belief replaced (Was). Next (Rank NEXT_RANK+): their own plan when they leave; brought back when they meet {{user}}
+  // again ("since you last saw them") or, once it lapses unseen, moved into $Recent. Meanwhile: Rank MEANWHILE_RANK+ bonds unseen
+  // for a week get one Journal line a week about their own life.
+  {
+    const presentIds = new Set(Object.keys(S.Scene.Present || {}));
+    const wasHere = new Set(Object.keys((hasB && B.Scene && B.Scene.Present) || {}));
+    const since = [], mayBe = [];
+    for (const [id, b] of Object.entries(S.Bonds)) {
+      const b0 = BB[id] || null;
+      b.Knows = (Array.isArray(b.Knows) ? b.Knows : []).map(k => String(k).trim()).filter(Boolean);
+      const old0 = new Set(b0 ? [...(b0.Knows || []), ...(b0.$Knows_old || [])] : []);
+      b.Knows = [...new Set(b.Knows)].map(k => (old0.has(k) || /^\[M\d{1,2} W[1-4]/.test(k) ? k : `[${dstamp(S.World)}] ${k}`));
+      if (b.Knows.length > KNOWS_VISIBLE) { b.$Knows_old = [...b.$Knows_old, ...b.Knows.slice(0, b.Knows.length - KNOWS_VISIBLE)].slice(-40); b.Knows = b.Knows.slice(-KNOWS_VISIBLE); }
+      // Imprints
+      const I0 = b0 ? (b0.Imprints || []) : [], key = x => String(x.Belief || '').trim().toLowerCase();
+      let I = (Array.isArray(b.Imprints) ? b.Imprints : []).filter(x => x && String(x.Belief || '').trim());
+      const fresh = I.filter(x => !I0.some(y => key(y) === key(x)));
+      for (const x of fresh) {
+        if (!x.When) x.When = dstamp(S.World);
+        if (num(x.Weight, 0) < 5) { I = I.filter(y => y !== x); log.push(`An Imprint for ${id} needs weight 5 or more (an experience that changes who they are); "${x.Belief}" was not kept. Record smaller moments as Known_facts or Knows.`); }
+      }
+      while (I.length > IMPRINT_MAX) {
+        const kept = I.filter(y => !fresh.includes(y)), x = fresh.find(y => I.includes(y));
+        if (!x) { I = I.slice(-IMPRINT_MAX); break; }
+        let lo = null; for (const y of kept) if (!lo || num(y.Weight, 0) < num(lo.Weight, 0)) lo = y;
+        const ch = CHANGE[id] || '';
+        if (ch === 'fixed' || !lo || num(x.Weight, 0) <= num(lo.Weight, 0)) {
+          I = I.filter(y => y !== x);
+          log.push(ch === 'fixed' ? `${id} does not change at the core (fixed): with ${IMPRINT_MAX} Imprints, a new one can only deepen a belief they hold (edit its Weight), not replace one. "${x.Belief}" was not kept.`
+            : `${id} already holds ${IMPRINT_MAX} Imprints; "${x.Belief}" (weight ${num(x.Weight, 0)}) does not outweigh the lightest one, so it was not kept.`);
+        } else { x.Was = lo.Belief; I = I.filter(y => y !== lo); log.push(`${id}'s Imprint "${lo.Belief}" gave way to "${x.Belief}".`); }
+      }
+      b.Imprints = I.map(x => ({ Belief: String(x.Belief).trim(), Weight: _.clamp(Math.round(num(x.Weight, 5)), 5, 10), When: String(x.When || ''), From: String(x.From || ''), Was: String(x.Was || '') }));
+      // Next
+      let nx = b.Next && typeof b.Next === 'object' && String(b.Next.What || '').trim() ? { What: String(b.Next.What).trim(), Where: String(b.Next.Where || '').trim(), Until: String(b.Next.Until || '').trim() } : null;
+      if (nx && b.Rank < NEXT_RANK) { if (!(b0 && b0.Next)) log.push(`Next plans are kept for bonds of Rank ${NEXT_RANK} or more; ${id}'s was not kept.`); nx = null; }
+      const until = nx ? parseWhen(nx.Until, S.World, absA) : -1;
+      if (nx && presentIds.has(id) && !wasHere.has(id) && b0 && b0.Next) {
+        since.push([id, nx.What + (nx.Where ? ' (' + nx.Where + ')' : ''), nx.Until]); nx = null;
+      } else if (nx && until >= 0 && until < absA && !presentIds.has(id)) {
+        b.$Recent = [...b.$Recent, { w: String(nx.Until || stamp(S.World)), n: `(Off-screen) ${nx.What}${nx.Where ? ' (' + nx.Where + ')' : ''}.`, fx: '' }].slice(-num((BR.recent || {}).keep, 10)); nx = null;
+      } else if (nx && !presentIds.has(id) && nx.Where && placeOf(canonLocation(nx.Where)).toLowerCase() === placeOf(S.World.Location).toLowerCase() && (until < 0 || absA <= until)) mayBe.push([id, nx.What]);
+      b.Next = nx;
+      // Meanwhile
+      if (presentIds.has(id)) b.$seen = dayNo;
+      const wk = Math.floor(dayNo / 7);
+      if (hasB && b.Rank >= MEANWHILE_RANK && !presentIds.has(id) && b.$seen >= 0 && dayNo - b.$seen >= 7 && b.$mw !== wk && !S.Trip.Active) {
+        b.$mw = wk;
+        const what = b.Next ? b.Next.What : (HAUNT[id] ? 'was seen around ' + HAUNT[id].split(/[;,]/)[0].trim() : 'kept to their own business');
+        jnl.push(`Meanwhile: ${id} ${b.Next ? 'is busy with ' + what.replace(/^./, c => c.toLowerCase()) : what}.`);
+      }
+    }
+    S.$ui.since = since; S.$ui.maybe = mayBe;
   }
   // 1.4.3: word of a betrayal reaches the NPC's friends (their Friends lines), once; then the Rank 10 benefits Trust suspends
   for (const id of spreadFrom) {
@@ -1556,6 +1660,110 @@ function runEngine(S, B, text, seedHint) {
     const have = new Set(arch);
     for (const l of B.Journal || []) if (!kept.has(l) && !have.has(l)) { arch.push(l); have.add(l); }
     S.$ui.archive = arch.slice(-JOURNAL_ARCHIVE);
+  }
+
+  // ---- 8j. 1.6.1 (Batch D, N4): campus events. Updated is stamped when an event's Text changes (a new event, or news about it);
+  // events with no news for STALE_DAYS are listed in <now> ($ui.stale), so the world moves them on or closes them. A bare string
+  // (the AI's shorthand, or a save from before 1.6.1) is the Text.
+  {
+    const E0 = (hasB && B.Campus_State && B.Campus_State.Events) || {}, stale = [];
+    const ev = x => (_.isPlainObject(x) ? x : x == null ? null : { Text: String(x) });
+    for (const k of Object.keys(S.Campus_State.Events || {})) {
+      const v = ev(S.Campus_State.Events[k]), p = ev(E0[k]), text = String(v.Text || '').trim();
+      if (!p || String(p.Text || '').trim() !== text || !(num(p.$d, -1) >= 0)) { v.Updated = dstamp(S.World); v.$d = dayNo; }
+      else { v.Updated = p.Updated || dstamp(S.World); v.$d = num(p.$d, dayNo); }
+      S.Campus_State.Events[k] = { Text: text, Updated: v.Updated, $d: v.$d };
+      if (text && dayNo - v.$d > STALE_DAYS) stale.push([k, v.Updated, v.$d]);
+    }
+    S.$ui.stale = stale.sort((a, b) => a[2] - b[2]).slice(0, 3).map(([k, u]) => [k, u]);
+  }
+  // N6: the campus phase today ({ id, from: "M5 W1 Mon", to: "M5 W2 Fri", line }, every year); the line goes into <now>
+  {
+    const doyOf = w => { const m = /^M(\d{1,2}) W([1-4]) (\w{3})/.exec(String(w || '')); return m && DAYS.includes(m[3]) ? (+m[1] - 1) * 28 + (+m[2] - 1) * 7 + DAYS.indexOf(m[3]) : -1; };
+    const d = dayNo % YEAR_DAYS;
+    const ph = PHASES.find(p => { const a = doyOf(p.from), z = doyOf(p.to); return a >= 0 && z >= 0 && (a <= z ? d >= a && d <= z : d >= a || d <= z); });
+    S.$ui.phase = ph ? { id: ph.id, line: ph.line } : null;
+  }
+
+  // ---- 8k. 1.6.1 (Batch D, N5): characters the narrator invented (Extras). A roster name is never an Extra. A key that differs
+  // only in case, or a first name that matches exactly one recorded full name, is the same person: it merges into the recorded
+  // key (in Scene.Present too). Every time one enters Scene.Present it is counted ($eng.xs); from the second appearance <cast>
+  // asks for their record until it exists. At most EXTRAS_MAX records: the least recently seen leave first (into a hidden
+  // archive, $ui.xold, which gives the record back if they turn up again), never one the player pinned (Keep) or one present.
+  let xHere = [], xNew = [];
+  {
+    const X = S.Extras = _.isPlainObject(S.Extras) ? S.Extras : {}, X0 = (hasB && _.isPlainObject(B.Extras) && B.Extras) || {};
+    const XF = ['Who', 'Looks', 'Manner', 'Calls_user', 'Voice'];
+    const first = k => String(k).trim().toLowerCase().split(/\s+/)[0];
+    const xMatch = (name, keys) => {
+      const l = String(name).trim().toLowerCase(), same = keys.find(k => k !== name && k.toLowerCase() === l);
+      if (same) return same;
+      if (/\s/.test(l)) return null;
+      const f = keys.filter(k => /\s/.test(k.trim()) && first(k) === l);
+      return f.length === 1 ? f[0] : null;
+    };
+    for (const k of Object.keys(X)) {
+      if (!_.isPlainObject(X[k])) X[k] = { Who: String(X[k] == null ? '' : X[k]) };
+      if (NPC_IDS.has(canon(k))) { delete X[k]; log.push(`${canon(k)} is a roster character (their sheet is in <cast>), not an invented one; the Extras record "${k}" was removed.`); }
+    }
+    for (const k of Object.keys(X)) {   // same person under two keys: keep the recorded (or the longer) key
+      if (!(k in X)) continue;
+      const t0 = xMatch(k, Object.keys(X)); if (!t0) continue;
+      const keep = t0.length !== k.length ? (t0.length > k.length ? t0 : k) : (t0 in X0 || !(k in X0) ? t0 : k), drop = keep === k ? t0 : k;
+      const a = X[keep], z = X[drop], fresh = !(drop in X0);
+      for (const f of XF) if (String(z[f] || '').trim() && (fresh || !String(a[f] || '').trim())) a[f] = z[f];
+      a.Keep = !!(a.Keep || z.Keep); a.$seen = Math.max(num(a.$seen, -1), num(z.$seen, -1));
+      delete X[drop];
+    }
+    const P = S.Scene.Present;
+    for (const id of Object.keys(P)) {
+      if (NPC_IDS.has(id)) continue;
+      const t0 = xMatch(id, Object.keys(X)); if (!t0 || t0 === id) continue;
+      if (!(t0 in P) || !String((P[t0] || {}).Note || '').trim()) P[t0] = P[id];
+      delete P[id];
+    }
+    const ext = Object.keys(P).filter(id => !NPC_IDS.has(id));
+    const XO = S.$ui.xold = _.isPlainObject(S.$ui.xold) ? S.$ui.xold : {};
+    for (const id of ext) if (!(id in X)) { const o = id in XO ? id : xMatch(id, Object.keys(XO)); if (o) { X[id] = XO[o]; delete XO[o]; } }
+    const bp = Object.keys((hasB && B.Scene && B.Scene.Present) || {}).filter(id => !NPC_IDS.has(id));
+    const wasL = new Set(bp.map(k => k.trim().toLowerCase())), wasF = new Set(bp.map(first));
+    const XS = S.$eng.xs = _.isPlainObject(S.$eng.xs) ? S.$eng.xs : {};
+    const xsKey = {};
+    for (const id of ext) {
+      const l = id.trim().toLowerCase();
+      let key = l in XS ? l : xMatch(l, Object.keys(XS));
+      if (key && key !== l && /\s/.test(l)) { XS[l] = XS[key]; delete XS[key]; key = l; }   // first name, then the full name: one person
+      const r = XS[key || l] || (XS[key || l] = { n: 0, d: dayNo });
+      if (!wasL.has(l) && !wasF.has(first(l))) r.n = num(r.n, 0) + 1;
+      r.d = dayNo; xsKey[id] = key || l;
+      if (id in X) X[id].$seen = absA;
+    }
+    for (const k of Object.keys(XS).sort((a, b) => num(XS[b].d, 0) - num(XS[a].d, 0)).slice(80)) delete XS[k];
+    for (const k of Object.keys(X)) if (num(X[k].$seen, -1) < 0) X[k].$seen = absA;   // written now: seen now
+    const out = Object.keys(X).filter(k => !X[k].Keep && !ext.includes(k)).sort((a, b) => num(X[a].$seen, -1) - num(X[b].$seen, -1));
+    for (const k of out.slice(0, Math.max(0, Object.keys(X).length - EXTRAS_MAX))) { XO[k] = X[k]; delete X[k]; }
+    for (const k of Object.keys(XO).sort((a, b) => num(XO[b].$seen, -1) - num(XO[a].$seen, -1)).slice(EXTRAS_ARCHIVE)) delete XO[k];
+    xHere = ext.filter(id => id in X && String(X[id].Who || '').trim());
+    xNew = ext.filter(id => (id in X && !String(X[id].Who || '').trim()) || (!(id in X) && num((XS[xsKey[id]] || {}).n, 0) >= 2));
+  }
+
+  // ---- 8i. 1.5.1 (Batch B, P1/P6): the cast. Who among the present gets their full canon sheet in the Cast Sheet (509; their
+  // keyword lore entry stays empty meanwhile): those who spoke in the last reply first, then the highest bond rank, at most
+  // CAST_FULL; the others get a brief sheet. From the reply's prose: who spoke without being in Scene.Present, who was mentioned.
+  {
+    const prev = _.isPlainObject(S.$ui.cast) ? S.$ui.cast : {};
+    const pres = Object.keys(S.Scene.Present || {}).filter(id => NPC_IDS.has(id) && (ARRIVES[id] || 1) <= S.World.Year);
+    let spoke = prev.spoke || [], gone = prev.gone || [], ment = prev.ment || [];
+    if (text) {
+      const prose = String(text).replace(/<UpdateVariable>[\s\S]*?<\/UpdateVariable>/g, '').replace(/<[^>]+>/g, ' ');
+      spoke = speakersIn(prose); const said = new Set(spoke);
+      gone = spoke.filter(id => !pres.includes(id));
+      ment = NAME_RX.filter(([id, rx]) => !pres.includes(id) && !said.has(id) && (ARRIVES[id] || 1) <= S.World.Year && mentionIn(prose, id, rx)).map(([id]) => id).slice(0, 4);
+    }
+    const rank = id => (S.Bonds[id] ? num(S.Bonds[id].Rank, 0) : -1);
+    const order = [...pres].sort((a, b) => (spoke.includes(b) - spoke.includes(a)) || (rank(b) - rank(a)) || (pres.indexOf(a) - pres.indexOf(b)));
+    S.$ui.cast = { full: order.slice(0, CAST_FULL), brief: order.slice(CAST_FULL), spoke: spoke.filter(id => pres.includes(id)), gone, ment,
+      where: Object.fromEntries(ment.filter(id => HAUNT[id]).map(id => [id, HAUNT[id]])), extras: xHere, xnew: xNew };
   }
 
   // ---- 9. UI bookkeeping ----

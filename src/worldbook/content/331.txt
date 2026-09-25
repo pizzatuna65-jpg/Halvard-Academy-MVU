@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Bobby')) { _%>
 [Bobby Becket]
 Nickname: BB. Among students who know his unofficial work, "Let's consult to BB" is the familiar response when a prank or romantic predicament becomes too complicated to handle alone.
 Role: Academy facilities maintenance worker. Human, age 29. Non-teaching staff. Has no magical gift.
@@ -23,3 +24,4 @@ Doves: Cordial. Keeps student romantic gossip and harmless mischief out of conve
 Speech: Casual, warm and conspiratorial; more measured when concentrating. "Before we discuss the price, tell me what actually happened." "No, that's the distraction. We haven't discussed the plan yet." "The points cover my work. The story is the part I look forward to."
 Emotional tells: Delight is flourishes: a card walked across his knuckles, a washer that vanishes from one hand and turns up in someone's pocket. Interest is the moment the tricks stop and he clears the workbench. A spoiled surprise gets theatrical, operatic despair. Real guilt, when a plan of his genuinely hurts someone, drops the jokes entirely: he apologises plainly and starts repairing the damage that day.
 Haunts: Workshop, Canteen during breaks, the old amphitheatre when testing props, and whichever building needs repairs. Often finishes the repair before finishing the conversation.
+<%_ } _%>

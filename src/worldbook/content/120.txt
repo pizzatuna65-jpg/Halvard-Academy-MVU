@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Mimosa')) { _%>
 [Mimosa Linden]
 Role: In her second year teaching; the youngest on staff. Advises the Alchemy Circle, almost entirely through written notes. Age 23. A Halvard alumna (Light Dormitory).
 Appearance: Natural fair skin, large turquoise-blue eyes, soft rounded features. Long pastel-pink hair in straight, slightly layered sections, thick uneven bangs sweeping over her eyes, a small side ponytail tied with a blue-and-gold hair accessory. A light pink zip-up jacket with a high collar.
@@ -18,3 +19,4 @@ Emotional tells: Everything shows, which is why she hides. Anxiety is a whisper 
 Doves: Admires them, as she admires anyone people look up to. Has secretly practised heroic Dove poses in front of a mirror.
 Haunts: Potion Halls, Workshop; leaves written notes rather than lecture.
 Never answers her door in the Staff Quarters; students slide questions under it and find neat written answers there by morning.
+<%_ } _%>

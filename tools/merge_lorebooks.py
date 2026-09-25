@@ -198,6 +198,11 @@ Nc[101]['content'] = ROY_OLD.sub(lambda _: (
     'Current trouble: This year, his last, he qualified from the Dorm Competition at rank 16, but no team will take him, since "illusionist-alchemist" doesn\'t count as a role. (Campus_State overrides this if the story played out differently.)\n'
     "<%_ } _%>"), Nc[101]['content'])
 gate_cohorts(Nc, True)   # v1.0.3 incoming cohorts (defined at the top)
+# 1.5.1 (Batch B, P1): while an NPC has a full sheet in the Cast Sheet (custom 509, engine $ui.cast.full) their keyword entry
+# prints nothing, so the lore is not sent twice. Mentioned but not present, or present beyond the cap: the keyword entry works as before.
+for u, e in Nc.items():
+    nid = npc_id(e)
+    if nid: e['content'] = f"<%_ if (!((getvar('stat_data.$ui.cast') || {{}}).full || []).includes('{nid}')) {{ _%>\n{e['content']}\n<%_ }} _%>"
 # v1.0.3 NPC roster (uid 97, always on): the Year lines become year-aware. In campaign Year Y a student listed as Year y who arrived
 # in year a is now in year y + Y - a; incoming cohorts appear only once they arrive; Campus_State.Graduated moves students to a
 # "Graduated" line; a student the story kept back past Year 3 shows as repeating.
