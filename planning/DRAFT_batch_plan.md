@@ -212,7 +212,7 @@ Catatan schema: `Events` berubah dari string menjadi objek `{Text, Updated}`. `f
 
 Sama seperti rencana v1: `DRAFT_voices.md` per gelombang (G1: 8 NPC kunci dengan Stages; G2 Year 1; G3 Year 2; G4 Year 3; G5 Staff dan lainnya; baris fase N6).
 
-Field per NPC: Scene examples + Never sounds like, `term_used`, `DON'T FLATTEN` + `CARRIES`, `Change`, Stages (G1), Anchor.
+Field per NPC: Scene examples + Never sounds like, `term_used`, `DON'T FLATTEN` + `CARRIES`, `Change`, Stages (G1), Anchor. (Owner 2026-09-25: Stages juga untuk G2, "tetap beri stages".)
 
 Setiap gelombang disetujui owner per NPC sebelum diterapkan (kanon tetap lewat alur draf, walaupun rencana ini sudah disetujui). `NPC_BRAINSTORM_BRIEF.md` diperbarui dengan field baru setelah G1.
 

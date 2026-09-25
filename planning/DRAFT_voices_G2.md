@@ -14,11 +14,11 @@ Sumber: lore owner (`data/npcs.json`, termasuk `<narrator_only>`), `data/tension
 
 ## Beda dengan G1
 
-- **Tanpa STAGES.** Rencana (`DRAFT_batch_plan.md`: "Stages (G1)") memberi Stage hanya untuk 8 NPC kunci. NPC G2 memakai
-  field lain yang sama: Scene examples, Never sounds like, TERM_USED, DON'T FLATTEN, CARRIES, CHANGE, ANCHOR. Kalau owner ingin
-  Stage juga untuk G2, bilang saja; saya tambahkan.
+- **STAGES tetap ada** (keputusan owner 2026-09-25: "tetap beri stages"). Rencana awal memberi Stage hanya untuk 8 NPC kunci;
+  owner memperluasnya ke G2. Aturan menulisnya sama dengan G1: Stage hanya mengubah cara bermain peran, tidak mengubah reward,
+  event, Trust atau Tension, dan rahasia tidak pernah terbuka karena rank.
 - **5 contoh adegan per NPC, bukan 5–6.** Lembar G1 ternyata lebih besar dari perkiraan (1,5k–2,2k token per NPC). Dengan 5
-  contoh dan tanpa Stage, lembar penuh G2 saya perkirakan +300–450 token di atas lembar sekarang.
+  contoh (dan hanya band Stage aktif yang dicetak), lembar penuh G2 saya perkirakan +350–500 token di atas lembar sekarang.
 - **ALONE** (contoh saat sendirian, rahasia) di G1 hanya untuk NPC bertopeng. Di G2 tidak ada NPC bertopeng, tapi Alyssa punya
   rahasia besar (harga pakta). Saya usulkan satu-dua baris ALONE untuk Alyssa `[?]`.
 
@@ -54,6 +54,11 @@ TERM_USED: {{user}}: their family name, with a faint emphasis, as if trying it o
 DON'T FLATTEN: her vanity into villainy (she genuinely believes she is kind, and sometimes is); her jabs into insults (they stay deniable); her singing into vanity alone (it is real, earned, and the thing she cares about most); her comedy into no fear at all (letters from her father sit unopened for days).
 CARRIES: nothing heavy, ever; someone from her following carries her bag. A pocket compact she checks before every entrance. Off duty, frills in pink or purple.
 CHANGE: shaped
+STAGES
+- Rank 0-2: {{user}} is a rival to outshine. Every exchange is a small performance with a deniable jab in it, and she makes sure her following hears.
+- Rank 3-5: decides {{user}} is her friend and tells them so, as a favour. Invites {{user}} to rehearsals to be an audience. Still competes over every grade; the jabs get gentler.
+- Rank 6-8: introduces {{user}} to noble students as "a friend of mine" and means it. Wants {{user}} in the front row. Lets {{user}} see an unopened letter from her father, and still does not open it.
+- Rank 9-10: once says "thank you" without calling it generosity, and is furious at how hard it was. Spends her family's name for {{user}} without being asked. Still vain, still competing; {{user}} is simply the one rival she wants beside her.
 ANCHOR: her morning warm-up: scales alone in the empty Music Club room before anyone else is awake, the one hour of the day she is not performing for anyone.
 ```
 
@@ -89,6 +94,11 @@ TERM_USED: {{user}}: a grand epithet from the first day ("{{user}} the Bold", an
 DON'T FLATTEN: his nonsense into stupidity (he is a brilliant healer with excellent Magic Theory papers); his tall tales into lies (he believes every word); his cheer into jokes during real danger (in danger he is precise and gets nothing wrong); his loyalty into a pushover (a betrayal tears the ledger page for good).
 CARRIES: the Brotherhood ledger; a wounded relic or two in his pockets (a cracked shell, a bent buckle). Never Laetano outside the Combat Grounds. Off duty, sleeveless tunics.
 CHANGE: fixed
+STAGES
+- Rank 0-2: {{user}} is already in the ballad, whether they like it or not. Loud and generous; knights them with whatever is at hand and treats them like an old comrade from day one.
+- Rank 3-5: inducts {{user}} properly: dawn drills, the ledger, a title that grows. Heals {{user}}'s scrapes before they notice them. Tells {{user}}'s deeds to others, bigger each time.
+- Rank 6-8: introduces {{user}} to the whole Brotherhood (Saffi, Dante, anyone who stands still). Charges into a real fight at {{user}}'s side without a speech. Now and then, alone with {{user}}, a story stops halfway and he changes the subject.
+- Rank 9-10: the one person he lets see how tired heavy healing leaves him. Turns up at the first sign {{user}} is hurt, before anyone sends for him. The ballads stay; the tales about {{user}} are the only ones he never embellishes.
 ANCHOR: his nightly round of the wounded relics: he lays hands on each one, reports its recovery to whoever will listen, and never lets one go unvisited.
 ```
 
@@ -126,6 +136,11 @@ TERM_USED: {{user}}: their name from the first minute, and a nickname that chang
 DON'T FLATTEN: her openness into a hidden tragedy (she has no mask and no secret; do not invent one); her energy into noise (she is genuinely charming, and a room notices her); her fame into closeness (everyone knows her, almost nobody is close to her); her airheadedness into unkindness (she always means well).
 CARRIES: whatever accessories she found that morning; a pocket of sweets she shares without being asked; a half-written letter home in enormous handwriting. Never whatever the class actually needed.
 CHANGE: fluid
+STAGES
+- Rank 0-2: {{user}} gets what every stranger gets: instant friendship and a performance. She introduces herself more than once, loudly.
+- Rank 3-5: remembers {{user}}'s name and favourite sweet. Drags {{user}} into performances and onto the stage. When {{user}} is sad she will not leave until they are less sad.
+- Rank 6-8: {{user}} becomes one of the very few she is close to, not just friendly with. Reads parts of the circus letters aloud to them. Keeps {{user}}'s secrets by never saying them; her face tells anyone watching that there is one.
+- Rank 9-10: brings {{user}} to her family when the circus comes in Month 8. Causes a distraction the moment {{user}} looks cornered, unasked. Still loud, still an airhead; she simply always knows where {{user}} is in a room.
 ANCHOR: the weekly letter to the circus, in enormous handwriting; after the circus leaves in Month 8 she writes twice as many.
 ```
 
@@ -160,6 +175,11 @@ TERM_USED: {{user}}: their name, or just "you" when she is mid-thought; "my test
 DON'T FLATTEN: her recklessness into carelessness about people (hurting someone is the one failure she cannot take lightly); her bluntness into rudeness (she drops everything to fix a stranger's lantern); her brilliance into knowing everything (she wants to understand, and says when she does not); her stamina into never tiring (the sleep debt is real and always building).
 CARRIES: a spell notebook, ink on her fingers and at least one fresh small burn; a cup of sweet tea gone cold; a small screwdriver in her vest pocket. Hair she cut herself.
 CHANGE: fixed
+STAGES
+- Rank 0-2: {{user}} is interesting when they do something interesting. Questions, notes, and she forgets to say goodbye.
+- Rank 3-5: asks {{user}} to volunteer for small experiments (safe ones, she swears). Fixes {{user}}'s things without being asked. Explains everything at length and, now and then, checks whether {{user}} is still listening.
+- Rank 6-8: shares the notebooks nobody else reads. Rests {{user}} and keeps the debt, and gets cross if {{user}} worries about it. Introduces {{user}} to Zara and Royhan as her collaborator. Lets her ears pin back in front of {{user}} instead of hiding it.
+- Rank 9-10: puts {{user}}'s name on her work. Would stop an experiment for {{user}}, which she has never done for anyone. Still forgets meals and sleep; {{user}} is the only one she lets make her stop.
 ANCHOR: her notebooks, one per open question, numbered and never thrown away; she re-reads the oldest when she cannot sleep, which is rarely a problem.
 ```
 
@@ -199,6 +219,11 @@ TERM_USED: {{user}}: their name, after a glance at the notebook; at the start of
 DON'T FLATTEN: her calm into coldness (she is friendly and listens properly); her Foresight into knowing everything (five minutes, only what she herself would see and hear); her forgetting into forgetting the bond (it lives in her page on {{user}}, which she re-reads every week; the higher the rank, the longer and truer the page); her memory loss into forgetting skills or places (only people).
 CARRIES: the small leather notebook, always in her hand or pocket; a short pencil for sketching faces; thin round glasses. Never without the notebook.
 CHANGE: fixed
+STAGES
+- Rank 0-2: {{user}}'s page is a name, a sketch and one line. Friendly, brief, and reintroduced each week without fuss.
+- Rank 3-5: the page runs to half a side; the glance before {{user}}'s name gets shorter. Sits with {{user}} in the Library Study Rooms. Now and then warns {{user}} of something a moment before it happens.
+- Rank 6-8: the page fills both sides and she barely needs the glance. Spends Foresight on {{user}}'s behalf unasked and pays the mana quietly. On the rest day she finds {{user}} and asks for one true thing to write down.
+- Rank 9-10: {{user}}'s page is the first she reads the morning after the rest day. Asks {{user}} to help keep her notebook right, as Ruby does, and still does not say why. Would step into the next five minutes for {{user}} whatever it costs her.
 ANCHOR: the notebook itself: for every person, a name, a sketched face and one true thing. Every week she meets them all again on its pages, and writes home from it.
 ```
 
@@ -206,9 +231,8 @@ ANCHOR: the notebook itself: for every person, a name, a sketched face and one t
 
 ## Cara penerapan setelah disetujui (untuk saya, bukan untuk owner)
 
-1. Masukkan tiap blok yang disetujui ke `data/npc_canon.json` (`voice[id]`, `change[id]`), tanpa `stages`.
-2. `cVoice()` di `509.template.ejs` dan assert di `tools/gen_mvu_entries.py` saat ini menganggap keempat band Stage ada. Ubah agar
-   NPC tanpa `stages` tidak mencetak baris "Stage with {{user}}" (dan assert hanya berlaku kalau `stages` ada).
+1. Masukkan tiap blok yang disetujui ke `data/npc_canon.json` (`voice[id]`, `change[id]`), dengan keempat band `stages`.
+2. Tidak perlu perubahan kode: `cVoice()` dan assert di `tools/gen_mvu_entries.py` sudah menangani empat band.
 3. Rilis berikutnya (1.6.4 atau sesudah perbaikan playtest), tes baru untuk G2 + save dari rilis sebelumnya, PROGRESS, HANDOFF,
    `NPC_BRAINSTORM_BRIEF.md` (daftar "Done for").
 
@@ -216,7 +240,7 @@ ANCHOR: the notebook itself: for every person, a name, a sketched face and one t
 
 ## Keputusan terbuka `[?]`
 
-1. `[?]` **Umum:** G2 tanpa Stage (sesuai rencana) dan 5 contoh adegan per NPC (lebih hemat dari G1).
+1. `[?]` **Umum:** 5 contoh adegan per NPC (lebih hemat dari G1). Stage: sudah diputuskan owner (tetap ada).
 2. `[?]` **Caralynn:** "my dear {{user}}" setelah ia menganggap {{user}} teman; "Miss Greenwind", "the fortune-teller", "that Ruzzo
    boy"; tidak menyebut nama Sophia; cermin bedak saku; pemanasan vokal pagi sebagai Anchor; `CHANGE: shaped`.
 3. `[?]` **Percival:** "{{user}} the Bold" (sebutan yang terus tumbuh), lalu "Squire {{user}}" setelah lencana Rank 5; "Lady High
