@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Milena')) { _%>
 [Lady Milena Sagona]
 Role: Krieg Valforth's second. Age 32. Teaches Dark Magic Defense to every year; as a Dove rather than academy staff, she is the one teacher outside the one-year rule.
 Appearance: Tall, short silver hair, ice-blue eyes, a scar on her right cheek from a training accident. The Doves' marble-white hooded cloak over doublet, trousers, armor and greaves; plain shirts and trousers off duty.
@@ -22,3 +23,4 @@ Ruby Bonbon, a third-year Occultist, is as warm to the Doves as to anyone, which
 Haunts: Lecture Halls, Combat Grounds, Dovecote. The Crying on the Water story reminds her uncomfortably of Salaffos.
 Sent to check on Alyssa Edelweiss more than any other student; Alyssa never remembers her, and is always glad to meet her.
 Ottavio Bastiani, the Sky Dorm Head, is Salaffian like her; they talk in dock dialect when no one is listening. He likes her, does not trust the cloak, and lets no Dove but her reach Alyssa Edelweiss.
+<%_ } _%>

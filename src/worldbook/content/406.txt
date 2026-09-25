@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Dex')) { _%>
 [Dex Harlow]
 Role: Student, Myrdath Academy. Second year, age 19. Human. Healing role on Myrdath's team.
 Appearance: Messy dark red hair, several piercings in each ear, bandaged knuckles, Myrdath boys' uniform worn badly: white shirt untucked and half-unbuttoned, grey necktie hanging loose, charcoal-grey trousers.
@@ -7,3 +8,4 @@ Personality: A delinquent in the open. Skips class, mouths off to teachers, argu
 Doves: Hates them, loudly and publicly.
 Relations: Ines Vauclair gives orders; he ignores them, and she has started planning around him, which annoys him more than being ordered. Bram Holloway thanks him every time he is healed, and Dex has no idea how to be rude to someone that sincere. Lucius Vortigern is the one teammate he does not insult. He cannot say why.
 Speech: Rough, loud, profane; every kindness disguised as a complaint.
+<%_ } _%>

@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Ruby')) { _%>
 [Ruby Bonbon]
 Age: 20.
 Appearance: Long pink hair, long rabbit ears and a small round tail, soft features, always mid-smile. Blue vest.
@@ -23,3 +24,4 @@ Knows every couple who has been taken up to the Rooftop, and has never told a so
 Knows which Lucky Roll fillings are circulating before lunch.
 Noticed before anyone that Alyssa Edelweiss forgets people, and quietly helps her keep her notebook right.
 Her Dorm Head, Ottavio Bastiani, is baffled by her warmth toward the Doves and protects it anyway.
+<%_ } _%>

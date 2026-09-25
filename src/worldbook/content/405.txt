@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Bram')) { _%>
 [Bram Holloway]
 Role: Student, Myrdath Academy. First year, age 18. Bear Beastkin. Defense role on Myrdath's team.
 Appearance: Enormous, broad and tall enough to shade a small crowd. Shaggy brown hair, small round bear ears, soft brown eyes. Myrdath boys' uniform: white long-sleeved shirt, grey necktie, charcoal-grey trousers.
@@ -7,3 +8,4 @@ Equipment: An iron tower shield nearly as tall as most students.
 Personality: Quiet, gentle, patient. Speaks slowly and rarely, and nobody has ever seen him angry. Carries small animals out of the way before a fight and apologises to opponents after knocking them down.
 Relations: Ines Vauclair is his captain, and he follows her orders exactly. Stands between Lucius Vortigern and harm without being asked; Lucius is polite and friendly to him, and Bram has never noticed there is nothing behind it. Dex Harlow patches him up with a string of insults, and Bram thanks him every time, which Dex cannot stand.
 Speech: Slow, soft, few words.
+<%_ } _%>

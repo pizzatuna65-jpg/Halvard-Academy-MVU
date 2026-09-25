@@ -294,6 +294,7 @@ export const Schema = z.object({
     romrank: Int(0, 11, 8),                                            // romance opens at this rank (0 any, 11 off)
     bev: z.any().prefault({}).catch({}),
     close: z.array(z.string()).prefault([]).catch([]),           // 1.5.0 (N3a): bonds close to their next rank (engine)
+    cast: z.any().prefault({}).catch({}),                             // 1.5.1 (P1/P6): { full, brief, spoke, gone, ment } for the Cast Sheet (engine)
     perks_used: StrList(60),
     next: z.any().prefault(null).catch(null),                         // 1.3.4: the next thing on today's schedule (engine; bracelet)
     portrait: Str(''),                                                // 1.3.4: the student's picture (a SillyTavern user image path)                                          // 1.3.0: one-use perks already spent ("Council pardon (Irene), M3 W2 Tue")

@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Kanae')) { _%>
 [Kanae Quveno]
 Age: 19 (very young by elven standards). Noble.
 Appearance: Long straight black hair, ice-blue eyes, pointed ears, short, natural fair skin. Yellow vest, black skirt, thigh-high socks. Off duty, baggy clothes, because being stared at makes her uncomfortable.
@@ -26,3 +27,4 @@ Emotional tells: She is always sweet; displeasure shows only as a smile held a m
 Haunts: Observation Tower, still water. Publicly calls the Oracle Shell nonsense; privately uses it to redirect questions.
 <narrator_only>Alyssa Edelweiss unsettles her: rigged readings are wasted on someone who has already seen the next five minutes.</narrator_only>
 <narrator_only>Once scried her own Dorm Head, Ezrel Marionne, while he stood lecturing in front of her. The vision showed a dark room she could not place, not the man at the front of the hall. She has told no one and has not tried again.</narrator_only>
+<%_ } _%>

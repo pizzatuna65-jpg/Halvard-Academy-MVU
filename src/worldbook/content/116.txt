@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Percival')) { _%>
 [Percival Applethorne]
 Age: 18, {{user}}'s year. Fourth son of the Applethornes, a minor baronial family that manages large orchards.
 Appearance: Short messy blond hair, dark blue eyes, tall, muscular, natural fair skin. Green vest that he keeps wishing he could cut the sleeves off, which is not allowed. Off duty, loose sleeveless tunics, since tight clothes "restrict bloodflow".
@@ -27,3 +28,4 @@ Afraid of ghosts.
 Insists a Star Cookie only works in one bite; takes paid shifts when he can; sleeps through Cathedral sermons.
 Tilly Marsh tells him ghost stories; he remembers encountering every one of them personally.
 Has identified Loki, the Sky Dorm Head's little green dragon spirit, as the dragon he wrestled in the family orchards; Loki has not recovered from the accusation.
+<%_ } _%>

@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Caine')) { _%>
 [Caine Strix]
 Role: Butler of the Noble Houses' Liaison: runs its household, serves its guests, keeps its rooms and its calendar. Not academy staff. Owl Beastkin. Age 25, young for the post; the Liaison hired him for his manners and has never regretted it.
 Appearance: Tall and spare. Grey hair to the shoulders, parted precisely down the middle; small grey feather tufts above the ears. Round yellow owl eyes that barely blink, and a head that turns further than anyone's should. Walks without a sound. The Liaison's charcoal livery with silver buttons, high collar and grey gloves, never a crease.
@@ -21,3 +22,4 @@ Emotional tells: Nothing shows but courtesy, measured exactly to rank. Displeasu
 <narrator_only>Emotional tells (true): When Caspian Riwalo thanks him by name, his hand tightens on the tray. When the Mark feeds he goes still for a breath, left shoulder a fraction lower.</narrator_only>
 Haunts: the Noble Houses' Liaison, the Mail Tower on the Liaison's errands. <narrator_only>The Forest between curfew and dawn.</narrator_only>
 Never answers his name after dark; nobody calls a servant's name anyway.
+<%_ } _%>

@@ -6,6 +6,38 @@ const NPC_IDS = new Set(Object.values(NPC_ALIAS));
 const NAME_FORMS = /*@@NAME_FORMS@@*/{};
 const NAME_RX = Object.entries(NAME_FORMS).map(([id, forms]) => [id, new RegExp('(^|[^A-Za-z])(' + forms.map(f => f.replace(/[.*+?^()|[\]\\]/g, '\\$&')).join('|') + ')(?![A-Za-z])')]);
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+// 1.5.1 (P6): who spoke in a reply. A name counts as a speaker when it opens the sentence that leads into a quote
+// ("Irene looked up. "Curfew.") or directly follows a closing quote ("Curfew," Irene said / "…," said Irene). Names inside quotes
+// are people being talked to or about. MENTION_DENY: first names that are also ordinary words; at a sentence start they are no mention.
+const CAST_FULL = 4;
+const MENTION_DENY = new Set(/*@@MENTION_DENY@@*/[]);
+const QUOTE_RX = /["“][^"”]*["”]/g;
+function formRx(id) { return new RegExp('(^|[^A-Za-z])(' + NAME_FORMS[id].map(f => f.replace(/[.*+?^()|[\]\\]/g, '\\$&')).join('|') + ')(?![A-Za-z])', 'g'); }
+function speakersIn(prose) {
+  const out = [];
+  for (const para of String(prose).split(/\n+/)) {
+    if (!/["“”]/.test(para)) continue;
+    const qs = [...para.matchAll(QUOTE_RX)].map(m => [m.index, m.index + m[0].length]);
+    if (!qs.length) continue;
+    const inQuote = i => qs.some(([a, b]) => i >= a && i < b);
+    for (const id of Object.keys(NAME_FORMS)) {
+      for (const m of para.matchAll(formRx(id))) {
+        const at = m.index + m[1].length, end = at + m[2].length;
+        if (inQuote(at)) continue;
+        const after = qs.find(([a]) => a >= end), before = [...qs].reverse().find(([, b]) => b <= at);
+        const lead = para.slice(0, at), sentStart = /(^|[.!?]["”]?\s+)$/.test(lead) || !lead.trim();
+        const opens = sentStart && after && !/[.!?]\s+\S/.test(para.slice(end, after[0]).replace(/\b(Mr|Mrs|Ms|Dr|St)\.\s/g, '')) && after[0] - end < 160;
+        const tags = before && /^\s*[,;:]?\s*([a-z]+\s+){0,2}$/.test(para.slice(before[1], at)) && at - before[1] < 30;
+        if ((opens || tags) && !out.includes(id)) out.push(id);
+      }
+    }
+  }
+  return out;
+}
+function mentionIn(prose, id, rx) {
+  if (!MENTION_DENY.has(id)) return rx.test(prose);
+  return [...String(prose).matchAll(formRx(id))].some(m => m[2] !== id || !/(^|[.!?]["”]?\s+)$/.test(prose.slice(0, m.index + m[1].length)));
+}
 const DAY_MIN = 1440, YEAR_DAYS = 12 * 4 * 7;
 const ALL = DAYS, MON_THU = DAYS.slice(0, 4), MON_FRI = DAYS.slice(0, 5), MON_SAT = DAYS.slice(0, 6);
 // 1.3.1 (owner playtest): every event carries its day plan `s` (from its lore entry; one text, or one per day), shown in the
@@ -1556,6 +1588,25 @@ function runEngine(S, B, text, seedHint) {
     const have = new Set(arch);
     for (const l of B.Journal || []) if (!kept.has(l) && !have.has(l)) { arch.push(l); have.add(l); }
     S.$ui.archive = arch.slice(-JOURNAL_ARCHIVE);
+  }
+
+  // ---- 8i. 1.5.1 (Batch B, P1/P6): the cast. Who among the present gets their full canon sheet in the Cast Sheet (509; their
+  // keyword lore entry stays empty meanwhile): those who spoke in the last reply first, then the highest bond rank, at most
+  // CAST_FULL; the others get a brief sheet. From the reply's prose: who spoke without being in Scene.Present, who was mentioned.
+  {
+    const prev = _.isPlainObject(S.$ui.cast) ? S.$ui.cast : {};
+    const pres = Object.keys(S.Scene.Present || {}).filter(id => NPC_IDS.has(id) && (ARRIVES[id] || 1) <= S.World.Year);
+    let spoke = prev.spoke || [], gone = prev.gone || [], ment = prev.ment || [];
+    if (text) {
+      const prose = String(text).replace(/<UpdateVariable>[\s\S]*?<\/UpdateVariable>/g, '').replace(/<[^>]+>/g, ' ');
+      spoke = speakersIn(prose); const said = new Set(spoke);
+      gone = spoke.filter(id => !pres.includes(id));
+      ment = NAME_RX.filter(([id, rx]) => !pres.includes(id) && !said.has(id) && (ARRIVES[id] || 1) <= S.World.Year && mentionIn(prose, id, rx)).map(([id]) => id).slice(0, 4);
+    }
+    const rank = id => (S.Bonds[id] ? num(S.Bonds[id].Rank, 0) : -1);
+    const order = [...pres].sort((a, b) => (spoke.includes(b) - spoke.includes(a)) || (rank(b) - rank(a)) || (pres.indexOf(a) - pres.indexOf(b)));
+    S.$ui.cast = { full: order.slice(0, CAST_FULL), brief: order.slice(CAST_FULL), spoke: spoke.filter(id => pres.includes(id)), gone, ment,
+      where: Object.fromEntries(ment.filter(id => HAUNT[id]).map(id => [id, HAUNT[id]])) };
   }
 
   // ---- 9. UI bookkeeping ----

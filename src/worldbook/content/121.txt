@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Gareth')) { _%>
 [Gareth Valkaryn]
 Age: 20 (very young by elven standards). Heir to the Valkaryn house.
 Appearance: Tall, long red hair, golden eyes, red vest. Day to day: glasses on, hair neat, uniform immaculate. In battle: glasses off, hair loose and messy.
@@ -20,3 +21,4 @@ Emotional tells: The glasses are the tell. With them on he is serene and warm, d
 Has asked Ruby Bonbon to join a competition team, very politely, and been refused; he took it gracefully and has not stopped thinking about it.
 Haunts: Combat Grounds, Observation Tower, Library. Treats Dragonchess as training in patience.
 Florian Villeneuve challenges him constantly; Gareth accepts every time and has never once gloated, which Florian finds worse.
+<%_ } _%>

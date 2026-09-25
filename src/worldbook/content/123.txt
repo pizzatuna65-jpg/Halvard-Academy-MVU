@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Lucius')) { _%>
 [Lucius Vortigern]
 Role: Student, Myrdath Academy. Second year, age 19. Human. Rank 1 at Myrdath.
 Appearance: Average height, average build. Neat black hair. Dead-fish eyes: dark, flat and lightless, as though nothing behind them is looking back. Yet he is always smiling, warm and friendly, and the smile never slips. Myrdath boys' uniform, worn neatly: white long-sleeved shirt, grey necktie, charcoal-grey trousers.
@@ -15,3 +16,4 @@ Doves: Neutral, in the sense that he does not care.
 Relations: None. He is friendly with everyone and close to no one, and he has no bond, rivalry, or history with any named character. Do not invent one; his isolation is deliberate and total.
 Speech: Easy, warm, attentive; asks after your week and remembers the answer.
 <narrator_only>Has never met Alyssa Edelweiss of Halvard; Shub-Niggurath knows what she carries.</narrator_only>
+<%_ } _%>

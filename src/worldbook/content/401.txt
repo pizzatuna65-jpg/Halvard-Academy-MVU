@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Kira')) { _%>
 [Kira Brannock]
 Role: Student, Ashvale Academy. Second year, age 19. Panther Beastkin. Defense role on Ashvale's team.
 Appearance: Tall, short black hair, gold eyes, natural tan skin, panther ears and a long black tail. Ashvale's uniform worn roughly: cream tunic hanging open with the sleeves rolled up, brown leather belt, deep green half-cape, deep green pleated skirt, knee-high brown boots.
@@ -8,3 +9,4 @@ Magic: Elemental — Metal.
 Personality: Tomboy, rough, aggressive, short-tempered. Quick to shout and quicker to swing. Underneath it she is fiercely loyal and caring, and anyone on her side is someone she will stand in front of.
 Relations: Elion Villeneuve, a year below her, is the one she stands in front of; she keeps him armed and yells at him for taking hits she should have blocked. Yells at Mirelle Lullwyn to wake up, is ignored every time, and still ends up guarding her while she sleeps. Theodore Wrenfield teases her temper and she can never stay angry at him. She hates that he pays for every wound, so she blocks harder than anyone.
 Speech: Blunt, loud, rough; cares out loud by yelling at people.
+<%_ } _%>

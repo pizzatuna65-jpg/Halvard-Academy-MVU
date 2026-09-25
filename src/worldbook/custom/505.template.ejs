@@ -67,6 +67,8 @@ const GS = on('gossip') ? (UI.gossip || []).slice(-5).reverse() : [];
 const PRES = Object.keys(getvar('stat_data.Scene.Present') || {});
 const moods = FULL ? MOODS.filter(m => PRES.includes(m.id)).map(m => (/cold|freezing/.test(WX.now.label) ? m.cold : WX.now.sky === 'Clear' && WX.block !== 2 && WX.now.temp >= 15 ? m.sunny : '')).filter(Boolean) : [];
 const BT = getvar('stat_data.Battle') || {};
+// 1.5.1 (P6): who spoke in the last reply without being in Scene.Present, and who was only mentioned (engine $ui.cast)
+const CAST = UI.cast || {}, PRON = /*@@PRON@@*/{};
 // 1.2.2 bonds: for each present NPC, what they will talk about at this rank (openness shifts the early tiers; goals, views of others
 // and the past need the real rank; secrets never come from rank) and what the bond allows; plus a ready bond event's directions
 const BOND = /*@@BOND@@*/{};
@@ -181,6 +183,12 @@ Old hooks (pay off or drop): <%- hOld.map(([k]) => k).join('; ') %>
 <%_ } _%>
 <%_ if (GS.length) { _%>
 Rumours going around: <%- GS.map(g => '"' + g[0] + '" (' + g[1] + ', day ' + g[2] + ')').join('; ') %>
+<%_ } _%>
+<%_ for (const id of (CAST.gone || [])) { _%>
+<%- id %> spoke in the last reply but is not in Scene.Present: add them if they are still here; otherwise they are gone and stay silent.
+<%_ } _%>
+<%_ if ((CAST.ment || []).length) { _%>
+Mentioned, not here (they may not speak or act on-screen): <%- CAST.ment.map(id => id + ' (' + (PRON[id] || 'they/them') + ((CAST.where || {})[id] ? '; usually: ' + CAST.where[id] : '') + ')').join('; ') %>
 <%_ } _%>
 <%_ for (const l of bondLines) { _%>
 Bond: <%- l %>

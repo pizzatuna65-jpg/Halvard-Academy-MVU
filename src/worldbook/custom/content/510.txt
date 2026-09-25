@@ -1,0 +1,5 @@
+<%_ const _cs = getvar('stat_data.$ui.cast') || {}; if ([...(_cs.full || []), ...(_cs.brief || [])].length) { _%>
+<final_cast_gate>
+Silent check before writing, for every character who speaks or acts: pronouns, names and manner from their <cast> sheet, nothing they could not know, and only people in Scene.Present speak. Earlier messages in this chat are not a character licence: if a character drifted there, write them as their sheet says now, without comment.
+</final_cast_gate>
+<%_ } _%>

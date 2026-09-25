@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Pip')) { _%>
 [Pip Althorne]
 Role: Student, Veyra Academy. First year, age 18. Dog Beastkin. Healing role on Veyra's team.
 Appearance: Small, messy light brown hair, floppy dog ears, a tail permanently tucked between his legs. Veyra's boys' uniform: navy blazer with white piping, gold Veyra crest on the breast pocket, white collared shirt, blue-violet ribbon tie, navy trousers.
@@ -6,3 +7,4 @@ Personality: A complete coward, and not a noble one. At the slightest threat he 
 The job: Bellatrix never needs his healing. His real work is keeping the other two alive through the damage she causes, which he only does because Cassius will not let him leave.
 Relations: Cassius Rhavel stops him every time he runs, usually by dropping a barrier cage around him on the spot; Pip heals from inside it, complaining the whole time. The instant Cassius's attention is elsewhere, Pip bolts. Bellatrix Ardenne terrifies him, and she enjoys it. Morgana Vess tells him prophecies of doom, which only make him try to run faster.
 Speech: Whiny, panicky, full of excuses and "can we go now?"
+<%_ } _%>

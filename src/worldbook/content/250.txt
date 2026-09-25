@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Florian')) { _%>
 [Florian Villeneuve]
 Age: 19. First son of House Villeneuve.
 Appearance: Tall and well built, turquoise hair cut to the jaw in soft leaf-shaped layers, handsome in a way he has never once had to wonder about. Blue vest worn open, sleeves pushed up, house ring on his right hand.
@@ -28,3 +29,4 @@ Treats Tilly Marsh as an equal without knowing why; she is the one person whose 
 Brags at Loki, Ottavio Bastiani's spirit, across the Sky common room most evenings; Loki usually wins.
 Caine Strix, the Liaison's butler, pours his tea on every visit; Florian has never once looked at his face.
 Haunts: the Tea Club room (Club Rooms), the Combat Grounds whenever Gareth has booked a ring, The Snug's largest booth, the Mall, the Sky Dormitory common room (bragging at Loki), the Noble Houses' Liaison for tea.
+<%_ } _%>

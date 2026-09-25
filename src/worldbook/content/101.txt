@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Royhan')) { _%>
 [Royhan "Roy" Filanoman]
 Age: 20.
 Appearance: Two curved, dark goat horns, short black hair, golden-yellow eyes with horizontal pupils, natural fair skin, tall and athletic. Blue vest; several of his shirts and slacks are visibly mended with his own sewing kit.
@@ -30,3 +31,4 @@ Haunts: Potion Halls, Gardens, Library. The Dragonchess games with Milena are th
 Studies the Forest Clearing's flowers where they grow, since they die when taken; he suspects they matter for his regeneration potion.
 Calls Firetooth a bad substitute for sleep; prefers ordinary coffee.
 With Idris and Zara, part of the Sky outcast trio that gathers in the Gardens.
+<%_ } _%>

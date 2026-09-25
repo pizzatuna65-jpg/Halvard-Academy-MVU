@@ -725,10 +725,36 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
     stale events come with the releases that add them). The preset grew more than the draft's +650 estimate (~+1.4k), mostly
     the calibration block, the voice rules and the repeated player message.
 
+- 1.5.1 Batch B: the Cast Sheet (P1, P2 automatic part, P5, P6, P7, D1). No new canon. Changes the established "Lore activation →
+  keyword WI" for NPCs in Scene.Present (approved in the plan; HANDOFF §1 and §4 updated).
+  - Custom 509 "Cast Sheet" (@D1, order 498, just above <now>): for every NPC in Scene.Present, INVARIANTS (pronouns from gender,
+    first and full name and nickname, year / dorm / public role, bond Rank with Trust and Tension bands, the Never lines of their
+    Trust and Tension categories, up to 4 key ties from relations.json), a Status line from Campus_State.NPC_status, then their
+    whole canon lore (including <narrator_only>) and a Secrets line: never stated, hints only, and which topics {{user}} has
+    uncovered (Secrets_revealed). After the sheets, every curated line between two people present, both ways.
+  - Full lore for at most 4 (engine CAST_FULL): who spoke in the last reply first, then the highest bond rank; the others get a
+    brief sheet (invariants only) and keep their keyword entry. Every NPC keyword entry is wrapped (merge_lorebooks.py) so it
+    prints nothing while that NPC has a full sheet: the lore is never sent twice.
+  - Engine $ui.cast {full, brief, spoke, gone, ment, where}: speakers from the reply's prose (a name that opens the sentence
+    leading into a quote, or that directly follows a closing quote; names inside quotes are addressees), mentions (MENTION_DENY:
+    "Pip" and "Ruby" at a sentence start are ordinary words). An update without prose (player tools) keeps the last reading.
+  - <now> (505): "X spoke in the last reply but is not in Scene.Present: add them if they are still here; otherwise they are gone
+    and stay silent", and "Mentioned, not here (they may not speak or act on-screen): X (pronouns; usually: haunt)".
+  - Custom 510 "Last-mile cast gate" (@D0, order 899, before 503 so <UpdateVariable> stays last), only when someone is present.
+  - Size: ~1.2k tokens with one NPC present, ~5.4k with four, ~6.3k with eight (4 full + 4 brief); nothing when alone. The card
+    JSON grows by ~260 KB (509 holds every NPC's lore as EJS sections).
+  - Tests: test_castsheet_v151.cjs (21 checks: 1, 4+4 and 8 present, speaker-first order, brief sheets keep their keyword
+    entry, secrets none / one uncovered, P6 speaker and mention, deny list, invented names get no sheet, all EJS entries render
+    together, positions); test_saves loads the 1.4.6 and 1.5.0 saves. npm test 890 checks; stress passes. TEST card rebuilt.
+  - Not automatic yet: how each NPC addresses {{user}} (term_used) and DON'T FLATTEN / CARRIES; they come with the G1 canon.
+    Incoming cohorts are never in the cast before they arrive (engine check), untestable with the empty cohorts.json.
+  - To verify in ST: the Prompt Template extension renders the large 509 entry (~260 KB of EJS) without a noticeable delay,
+    also in MVU's extra-model mode; getvar('stat_data.$ui.cast') inside the NPC keyword entries.
+
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
-- Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 done; next 1.5.1 (Batch B, Cast Sheet), then 1.6.0,
+- Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 and 1.5.1 done; next 1.6.0 (Batch C, NPC memory), then
   1.6.1, 1.6.2 and the G1 voice draft. The owner playtests once, after G1 is approved and applied; then run tools/audit_chat.py
   on the exported chat for the first MVU baseline.
 - Playtest v1.3.2 in ST: a pact with abilities (Builder → Pacts, Techniques page), summon it and have it use an ability
@@ -753,6 +779,8 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 - Scripted first-week classes (M1 W1 Tue-Sat, 14 sessions; per dorm for [D] classes; optional homework into Commitments).
 
 ## To verify in ST (could not be tested outside ST)
+- 1.5.1: the Cast Sheet (509, ~260 KB of EJS) renders without a noticeable delay, also in extra-model mode; NPC keyword entries
+  read getvar('stat_data.$ui.cast') and go quiet while the NPC has a full sheet.
 - 1.5.0: the preset's {{lastUserMessage}} is filled on the Gemini endpoint; the depth-0 Player Input Authority prompt does not
   move <UpdateVariable> from the end of the reply.
 - 1.1.0: the Prompt Template extension renders EJS in 502 / 504 (now gated per feature), also in MVU's extra-model mode if used.

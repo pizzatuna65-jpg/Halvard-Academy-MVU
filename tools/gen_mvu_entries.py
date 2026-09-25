@@ -70,13 +70,50 @@ TRUST = {'bands': _tru['bands'], 'share': _tru['effects']['share'], 'early': _tr
 REPD = json.load(open(P('data/reputation.json'), encoding='utf-8'))   # 1.3.0
 REPD = {'reps': REPD['reps'], 'effects': REPD['effects']}
 for k, v in {'REP': REPD, 'BOND': BOND, 'TRUST': TRUST, 'REG': reg, 'ARR': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1}, 'STU': STU, 'TEACH': TEACH, 'TT': TT,
-             'CLUBV': CLUBV, 'OUTD': OUTD, 'VN': VN, 'MOODS': MOODS,
+             'CLUBV': CLUBV, 'OUTD': OUTD, 'VN': VN, 'MOODS': MOODS, 'PRON': {nid: {'F': 'she/her', 'M': 'he/him'}.get(n.get('gender'), 'they/them') for nid, n in sorted(npcs.items())},
              'TENSION': {k: v for k, v in json.load(open(P('data/tension.json'), encoding='utf-8')).items() if k in ('bands', 'categories', 'npcs', 'peaks', 'overrides', 'apology_npc')}}.items():   # 1.3.8 (+1.4.0 apology_npc)
     ph = '/*@@' + k + '@@*/' + ('[]' if isinstance(v, list) else '{}')
     assert ph in ejs, ph
     ejs = ejs.replace(ph, J(v))
 assert '@@' not in ejs
 open(P('src/worldbook/custom/content/505.txt'), 'w', encoding='utf-8').write(ejs)
+# ---- 1.5.1 (Batch B): Cast Sheet (509) and the last-mile cast gate (510) ----
+rels = json.load(open(P('data/relations.json'), encoding='utf-8'))
+TIE_ORDER = ['friends', 'rivals', 'softspot', 'protective', 'respect', 'wary', 'dislike']
+ten_d = json.load(open(P('data/tension.json'), encoding='utf-8')); tru_d = json.load(open(P('data/trust.json'), encoding='utf-8'))
+OPEN_OF = {nid: tag for tag in ('open', 'guarded', 'closed') for nid in OPN[tag]}
+GATE_RX = re.compile(r"^<%_ if \(!\(\(getvar\('stat_data\.\$ui\.cast'\) \|\| \{\}\)\.full \|\| \[\]\)\.includes\('(\w+)'\)\) \{ _%>\n([\s\S]*)\n<%_ \} _%>$")
+def cast_npc(nid, n):
+    ties = sorted([r for r in rels if r['from'] == nid], key=lambda r: (TIE_ORDER.index(r['type']), r['to']))
+    ties = [r for r in ties if not (r['type'] == 'dislike' and r['to'] == 'Althair')][:4]   # everyone dislikes Althair one way (1.4.2)
+    o = ten_d['overrides'].get(nid) or {}
+    ten_never = o.get('never') or (ten_d['categories'].get(ten_d['npcs'].get(nid)) or {}).get('never')
+    tru_never = tru_d['categories'][OPEN_OF.get(nid, 'normal')]['never']
+    grp = n.get('group') or ''
+    who = (f"{grp} student" if grp.startswith('Year') else grp) + (f", {n['dorm']} dorm" if n.get('dorm') else '') + ('; ' + ', '.join(n['public_tags']) if n.get('public_tags') else '') + '.'
+    full = n['name']; sur = full.split()[-1] if len(full.split()) > 1 else ''
+    called = nid + (f"; full name {full}" if full != nid else '') + (f"; nickname {n['nickname']}" if n.get('nickname') else '')
+    return {'name': full, 'first': nid, 'pron': {'F': 'she/her', 'M': 'he/him'}.get(n.get('gender'), 'they/them'), 'called': called, 'who': who,
+            'never': '; '.join(x for x in [tru_never and tru_never + ' (Trust)', ten_never and ten_never + ' (when strained)'] if x),
+            'ties': ', '.join(f"{r['to']} ({r['type']})" for r in ties), 'secret': False, 'nobond': (grp.endswith('team'))}
+CAST = {'npcs': {}, 'rel': {}, 'trust_bands': tru_d['bands'], 'tension_bands': ten_d['bands']}
+sheets = []
+for nid, n in sorted(npcs.items()):
+    raw = open(P(f"src/worldbook/content/{n['uid_card']}.txt"), encoding='utf-8').read()
+    m = GATE_RX.match(raw); assert m and m.group(1) == nid, f'NPC entry {n["uid_card"]} ({nid}) has no Cast Sheet gate (merge_lorebooks.py)'
+    lore = re.sub(r'^\[[^\]\n]+\]\n', '', m.group(2).strip('\n'))
+    CAST['npcs'][nid] = cast_npc(nid, n); CAST['npcs'][nid]['secret'] = '<narrator_only>' in lore
+    sheets.append(f"<%_ if (FULL.includes('{nid}')) {{ _%>\n<%- cHead('{nid}', true) %>\n{lore}\n<%_ const _t{nid} = cTail('{nid}'); if (_t{nid}) {{ _%>\n<%- _t{nid} %>\n<%_ }} _%>\n"
+                  f"<%_ }} else if (BRIEF.includes('{nid}')) {{ _%>\n<%- cHead('{nid}', false) %>\n<%_ }} _%>")
+for r in rels:
+    if r['from'] in npcs and r['to'] in npcs:
+        CAST['rel'].setdefault(r['from'], {})[r['to']] = r['type'] + (('. ' + r['notes'][0]) if r.get('notes') else '')
+cs = open(P('src/worldbook/custom/509.template.ejs'), encoding='utf-8').read()
+cs = re.sub(r'^// .*\n', '', cs, flags=re.M)
+assert '/*@@CAST@@*/{}' in cs and '@@SHEETS@@' in cs
+cs = cs.replace('/*@@CAST@@*/{}', J(CAST)).replace('@@SHEETS@@', '\n'.join(sheets))
+assert '@@' not in cs
+open(P('src/worldbook/custom/content/509.txt'), 'w', encoding='utf-8').write(cs)
 shop = json.load(open(P('data/shop.json'), encoding='utf-8'))['items']
 lines, seen = [], set()
 for i in shop:
@@ -108,6 +145,8 @@ idx = [
     mk(506, '[mvu_plot] Price Guide', False, False, 1, 4, 503, keys=['buy', 'price', 'cost', 'afford', 'shop', 'Commissary', 'Mall', 'bakery', 'store', 'points for', 'how much', 'Banking House', 'coin', 'order']),
     mk(507, '[config_override]', False, True, 1, 4, 999),   # MVU card config override (5.3): disabled on purpose, read by MVU
     mk(508, "[mvu_plot] Event — {{user}}'s Birthday (EJS, only on the day)", True, False, 1, 4, 85),   # 1.2.0: hand-written, gated on Profile.Birthday
+    mk(509, '[mvu_plot] Cast Sheet — present characters (EJS)', True, False, 4, 1, 498),   # 1.5.1: generated from 509.template.ejs + lore
+    mk(510, '[mvu_plot] Last-mile cast gate (EJS, only with people present)', True, False, 4, 0, 899),   # 1.5.1 (D1): hand-written; before 503
 ]
 json.dump(idx, open(P('src/worldbook/custom/index.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 exec(open(P('tools/feature_cost.py'), encoding='utf-8').read())   # v1.1.0: writes data/feature_cost.json

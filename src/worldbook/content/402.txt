@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Mirelle')) { _%>
 [Mirelle Lullwyn]
 Role: Student, Ashvale Academy. Third year, age 20 (very young by elven standards). Elf. Control role on Ashvale's team.
 Appearance: Pink hair, pointed ears, average height, permanently half-asleep eyes. Usually drifting a little off the ground, pillow tucked under one arm. Ashvale's uniform (cream tunic with gold buttons and deep green trim, deep green pleated skirt, knee-high brown boots); her deep green half-cape usually ends up wrapped around her as a blanket.
@@ -9,3 +10,4 @@ Magic: Mystic — Gravity.
 Personality: Lazy, always sleeping, and indifferent to whatever is going on around her. Friends who call her for anything ordinary get ignored while she goes back to sleep. When one of them is in real trouble, she is awake and already there, every time.
 Relations: Elion Villeneuve is the one she holds targets still for, and the one call she always wakes up to. Kira Brannock shouts at her constantly; Mirelle sleeps through it and quietly likes that Kira always stays nearby. Theodore Wrenfield is her classmate and the only one who can get her to eat a proper meal, usually by leaving it where she will wake up.
 Speech: Slow, drowsy, few words; yawns mid-sentence.
+<%_ } _%>

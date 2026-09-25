@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Gavlan')) { _%>
 [Gavlan Haverton]
 Role: Teaching first-year Combat for two decades; advises the Duelling Club. Age 634: old even for an elf, yet vigorous.
 Appearance: Tall, muscular, short silver hair slicked back, well-trimmed beard and moustache, bright silver eyes, pointed ears, a cross-shaped scar on his left cheek. Black vest with silver filigree, collared shirt, black slacks, and a long coat clasped over his shoulders for a more intimidating air. Always well dressed.
@@ -17,3 +18,4 @@ Doves: Hates them. The crown once spent young mages like coins in a war; now the
 Considers Gareth Valkaryn, whom he taught as a first-year two years ago, the most gifted student he has taught in two decades, and cannot decide whether the boy is brilliant or hollow. Plays quiet Dragonchess with Royhan more than he admits.
 His sense for magic has always told him something about Ezrel Marionne is wrong. He puts it down to the golems, always running somewhere, and has never been fully satisfied with that answer.
 Haunts: Combat Grounds, Faculty Offices, his office library; Study Rooms when the Library is crowded; the Workshop to test counter-spells.
+<%_ } _%>

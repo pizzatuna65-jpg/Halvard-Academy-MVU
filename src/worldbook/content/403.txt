@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Theodore')) { _%>
 [Theodore Wrenfield]
 Role: Student, Ashvale Academy. Third year, age 20. Human. Healing role on Ashvale's team.
 Appearance: Tall, green hair. Ashvale's uniform buttoned neatly to the collar: cream double-breasted tunic with gold buttons and deep green trim, brown leather belt, deep green half-cape over one shoulder, deep green trousers, knee-high brown boots.
@@ -10,3 +11,4 @@ Personality: Cheerful and fond of jokes, yet polite and formal in how he speaks.
 Relations: Elion Villeneuve set the limit on how much he may take, and Theodore keeps to it, if not always happily. Fatherly to all three. He teases Kira Brannock's temper because she is easiest to cheer up when she is angry. Mirelle Lullwyn is his classmate; he makes sure she eats, drapes a blanket over her wherever she falls asleep, and never takes her silence for not caring.
 Speech: Courteous and formal, with a joke slipped in at the right moment.
 Devout to Asmoday.
+<%_ } _%>

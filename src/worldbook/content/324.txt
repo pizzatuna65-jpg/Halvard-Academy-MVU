@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Ezrel')) { _%>
 [Ezrel Marionne, Head of the Light Dormitory]
 Role: Head of the Light Dormitory and teacher of second-year Magic Theory; advises the Theatre Troupe. Human. Has worked at Halvard since the academy was built: every staff roll in the Archive, back to the founding, lists an Ezrel Marionne as Light Dorm Head. Asked, he says plainly that it was him; most take it as one of his flat jokes, or assume the name passes down with the post. Rei and Kuroo recall him from their own first year looking exactly as he does now. Gives his age as "thirty-something". Lives in the Light Dormitory with his students.
 Appearance: Tall and slim. Purple hair slicked back into hard spikes, each one tipped green. Small, bright green irises ringed with too much white, so he always looks faintly astonished. Handsome in a way that never quite settles: skin a little too even, a smile held a beat too long, a stillness too complete when he stops moving, and he blinks only when he remembers to. Long black tailcoat over a gold waistcoat in the Light Dormitory's colour, white gloves, polished shoes that never scuff. The same outfit every day, pressed like a costume.
@@ -26,3 +27,4 @@ Haunts: second-year Lecture Halls, the Club Rooms, the Light Dormitory, the Work
 Asked about the Night Student, says he has never seen it and has no opinion.
 Answers his name after dark, every time, without a flicker.
 Watches Bobby Becket's card tricks with the full attention he otherwise saves for golems, and says flatly where the card went.
+<%_ } _%>

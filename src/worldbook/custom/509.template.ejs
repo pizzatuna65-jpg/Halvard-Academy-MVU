@@ -1,0 +1,40 @@
+<%_
+// Source of custom entry 509 (Cast Sheet, 1.5.1 Batch B: P1, P2 automatic part, P5, P7). tools/gen_mvu_entries.py fills the
+// /*@@…@@*/ data and puts one section per NPC where @@SHEETS@@ stands (their lore text, so EJS inside lore still renders).
+// The engine decides who is present and who gets a full sheet ($ui.cast: full, at most 4, and brief). Edit this file, not 509.txt.
+const CS = getvar('stat_data.$ui.cast') || {}, FULL = CS.full || [], BRIEF = CS.brief || [];
+const CB = getvar('stat_data.Bonds') || {}, CST = getvar('stat_data.Campus_State') || {}, CUI = getvar('stat_data.$ui') || {};
+const CD = /*@@CAST@@*/{};
+const CSECR = [...new Set([...(CUI.secrets || []), ...(CST.Secrets_revealed || [])].map(x => String(x)))];
+const cBand = (bands, x) => (bands || [[0, '']]).reduce((a, [f, nm]) => (x >= f ? nm : a), '');
+const cStat = id => { const N = CST.NPC_status || {}; const k = Object.keys(N).find(x => x.toLowerCase() === id.toLowerCase() || x.toLowerCase().split(/\s+/)[0] === id.toLowerCase()); return k ? N[k] : ''; };
+const cHead = (id, full) => {
+  const c = CD.npcs[id], b = CB[id], out = [];
+  out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
+  const bond = b ? 'Bond with {{user}}: Rank ' + (Number(b.Rank) || 0) + ', Trust ' + (Number(b.Trust) || 0) + ' (' + cBand(CD.trust_bands, Number(b.Trust) || 0).toLowerCase() + '), Tension ' + (Number(b.Tension) || 0) + ' (' + cBand(CD.tension_bands, Number(b.Tension) || 0).toLowerCase() + ').' : (c.nobond ? 'No bond system (rival academy).' : 'Not bonded yet: a stranger to {{user}} unless the story says otherwise.');
+  out.push('INVARIANTS: ' + c.pron + '. Called ' + c.called + '. ' + c.who + ' ' + bond + (c.never ? ' Never: ' + c.never + '.' : '') + (c.ties ? ' Key ties: ' + c.ties + '.' : ''));
+  const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
+  return out.join('\n');
+};
+const cTail = id => {
+  const c = CD.npcs[id], got = CSECR.filter(x => x.toLowerCase().startsWith(id.toLowerCase() + '.'));
+  if (!c.secret && !got.length) return '';
+  return 'Secrets: the <narrator_only> parts above are for you alone. ' + c.first + ' never states them; they show only as hints and tells.'
+    + (got.length ? ' {{user}} has uncovered: ' + got.map(x => x.slice(x.indexOf('.') + 1)).join(', ') + '. ' + c.first + ' knows {{user}} knows this and behaves accordingly.' : ' {{user}} has uncovered none of them.');
+};
+const HERE = [...FULL, ...BRIEF];
+const pairs = [];
+for (const a of HERE) for (const b of HERE) if (a !== b && (CD.rel[a] || {})[b]) pairs.push(a + ' → ' + b + ': ' + CD.rel[a][b]);
+_%>
+<%_ if (HERE.length) { _%>
+<cast>
+Character sheets for the people present: the truth about each of them. They outrank the lorebook text and anything earlier in the chat. Rank, Trust and Tension change how a character treats {{user}}, never who they are.
+@@SHEETS@@
+<%_ if (pairs.length) { _%>
+Between the people here (the truth, whether or not {{user}} knows it):
+<%_ for (const l of pairs) { _%>
+- <%- l %>
+<%_ } _%>
+<%_ } _%>
+</cast>
+<%_ } _%>

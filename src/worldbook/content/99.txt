@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Caspian')) { _%>
 [Caspian Riwalo]
 Age: 20 (very young by elven standards). Noble.
 Appearance: Short orange hair, bright green eyes, pointed ears, glasses (badly near- and far-sighted without them), tall and toned from morning rapier practice. Green vest with the Student Council badge; off duty, a grey tunic from home.
@@ -19,3 +20,4 @@ Haunts: Council Chamber, Cathedral, The Snug (neutral ground for diplomacy).
 Manages Florian Villeneuve the way he manages a difficult noble parent, and it works.
 Will not say whether he has heard the Three O'Clock Knock.
 Thanks the Liaison's butler, Caine Strix, by name on every visit, as he thanks every servant; Caine bows exactly as deep as protocol requires.
+<%_ } _%>

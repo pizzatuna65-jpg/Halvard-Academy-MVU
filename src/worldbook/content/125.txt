@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Vera')) { _%>
 [Vera Pulsar]
 Age: 18, {{user}}'s year.
 Appearance: Short messy brown hair that has clearly been cut by her own hand, dark red eyes, horse ears and tail. Green vest with the sleeves shoved up, ink on her fingers, and at least one small burn mark somewhere.
@@ -18,3 +19,4 @@ Haunts: Potion Halls, Workshop, Medical Centre. Lives on Firetooth; calls Nightw
 Close behind Royhan in Potion Crafting.
 Asked Ezrel Marionne one question about his golems; he answered it exactly, then walked away in the middle of her second. She has a list of forty more.
 Tries to take apart Bobby Becket's mechanical props, sometimes before he has finished performing with them.
+<%_ } _%>

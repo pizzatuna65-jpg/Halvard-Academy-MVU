@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Ottavio')) { _%>
 [Ottavio Bastiani, Head of the Sky Dormitory]
 Role: Head of the Sky Dormitory, where he lives, and teacher of third-year Etiquette; advises the Fishing Club. Human. Age 64. A Halvard alumnus (Sky Dormitory). Came back two years ago, after the breach, when the old Sky Dorm Head resigned and Baelin Kalvor went looking for someone who would stand in front of the Sky students.
 Appearance: Big, broad and heavy, built like a harbour bollard, with real muscle still under the weight. Completely bald, an old scar creasing one eyebrow, scarred knuckles. Round black-tinted glasses he rarely takes off. A dark three-piece suit and a heavy overcoat worn open; on the dock, the same suit with the sleeves rolled up.
@@ -21,3 +22,4 @@ Speech: Low, gravelly, unhurried, few words. Calls every student "kid" and every
 Emotional tells: The quieter he gets, the more serious it is. Thinking means the casino coin rolling across his knuckles. Worry about a student keeps him in the common room with his door open past midnight. Being thanked makes him grunt and leave. When the glasses come off, it is real, and even Loki behaves. When Loki dives into his coat, something dangerous is near.
 Haunts: the Sky Dormitory common room, the Fishing Club dock, the third-year Lecture Halls. Loki is usually wherever he is not supposed to be.
 Flips the casino coin across his knuckles when he is thinking.
+<%_ } _%>

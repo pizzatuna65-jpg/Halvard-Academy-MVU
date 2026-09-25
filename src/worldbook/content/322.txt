@@ -1,3 +1,4 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Alyssa')) { _%>
 [Alyssa Edelweiss]
 Age: 18, {{user}}'s year.
 Appearance: Straight shoulder-length burgundy hair, neatly kept, pale gold eyes behind thin round glasses, natural fair skin, average height. Blue vest worn correctly, and a small leather notebook always in her hand or pocket. When she channels, her eyes flash a deep yellow for a moment.
@@ -20,3 +21,4 @@ Emotional tells: Her face barely moves; her feelings show in the notebook instea
 Haunts: Library Study Rooms, the Mail Tower on letter days, the Rooftop (Zara has shown her the way up four times; it is in the notebook now).
 <narrator_only>Hastur and Shub-Niggurath are old acquaintances. Lucius Vortigern of Myrdath made his pact when no help came; Alyssa made hers when it did. If the two ever meet, both spirits will know.</narrator_only>
 Her Dorm Head, Ottavio Bastiani, makes the Dovecote go through him to reach her, and lets only Milena past. His page in her notebook holds one true thing: "Kinder than his face."
+<%_ } _%>
