@@ -115,6 +115,7 @@ Year = 12 months × 4 weeks × 7 days (Mon–Sun). Dates are written "M3 W2 Thu"
 Academy calendar (fixed events):
 
 - M1 W1 Mon: Entrance Event (Arbiter Stone sorting)
+- M1 W1 Tue,Wed,Thu,Fri: Club sign-up week (club booths after classes)
 - M1 W3 Sat,Sun: Star Night (Sat evening to Sun dawn; no 8pm curfew)
 - M1 W4 Sat: Spiritual Dorm Day
 - M2 W1 Fri,Sat: Warding Rite (Fri dusk to Sat dawn; the whole academy renews the wards)
@@ -346,8 +347,12 @@ The 2026-09 pass filled every gap for Halvard students, staff, Doves, Cathedral 
 - **Label only, not missing:** Castor `Magic (public)`, Kanae `Personality (public)`, Gareth `Personality (daily)`,
   Caine `Backstory (public)` / `Magic (public)`, Lucius `Personality (surface)`. The fields exist under a qualified label.
 - **Althair:** Backstory stays empty on purpose (canon: never settle it).
+- **Tension (1.3.8, owner-approved):** every bonded NPC has a tension category in `data/tension.json` (withdrawn, social,
+  confrontational, authority, dangerous) or a personal override (Etnie, Kanae, Althair, Ezrel); a new NPC needs one.
 - **Etnie:** her past is now an ordinary `Backstory` field, so it unlocks at Rank 7 like everyone else's; only the plan to
   fail her third year stays in `<narrator_only>`.
+  Since 1.3.1 (owner playtest) she is not bonded in message 1: her bond starts at Rank 3 the first time she and {{user}} meet
+  (`data/bond_rules.json` `start`).
 - **Rival academy teams (Myrdath, Veyra, Ashvale):** kept minimal by design. They appear only in specific events and have
   **no bond system**, so no bond events and no Loves/Hates/Goals/Haunts are needed for them.
 
@@ -363,4 +368,4 @@ The 2026-09 pass filled every gap for Halvard students, staff, Doves, Cathedral 
 - `reputation.md` — Academy / Student / Doves reputation: levels, Rep XP triggers, effects per level
 - `training.md` — Mana pool and Stamina training: capped gains (at most 2× the starting value in total, about one academic year to max), partner bonuses
 
-This brief: ~8,000 tokens.
+This brief: ~8,100 tokens.

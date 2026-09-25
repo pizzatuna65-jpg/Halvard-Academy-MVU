@@ -65,6 +65,20 @@ rep(C[248], "When: Month 11 Week 4, Saturday. Third-years leave; everyone attend
 rep(C[248], "Evening: feast; graduates leave by airship the next morning.",
     "Evening: feast; graduates leave by airship the next morning, the first day of the Kingdom-wide holiday.")
 
+# ---------- 1.3.1 (owner playtest): the Entrance Event with its times; club sign-up runs all week and closes Friday 18:00 ----------
+# Same plan as the engine's EVENTS (calendar, _Event_today). Edited in C itself, so the card and the v39 export agree.
+rep(C[21], "- Sorting: new students place a hand on the Arbiter Stone to decide their dorm.",
+    "- 07:00-09:00 Arrival: new students check in at Reception and Gatehouse.\n"
+    "- 09:00 Sorting, in the Arbiter Hall: new students place a hand on the Arbiter Stone to decide their dorm.")
+rep(C[21], "- Tour: each new student is grouped with 3 other newcomers and 1 senior to tour the whole campus all day.",
+    "- 10:00-18:00 Tour: each new student is grouped with 3 other newcomers and 1 senior to tour the whole campus all day.")
+rep(C[21], "- Club promotion: stands across the academy; registration closes at 5pm. Held on sorting day on purpose, so clubs recruit before dorm loyalty settles.",
+    "- Club promotion: stands across the academy, 10:00-18:00 on sorting day, then every afternoon after classes (16:00-18:00) until Friday; registration closes Friday at 18:00. It opens on sorting day on purpose, so clubs recruit before dorm loyalty settles.")
+rep(C[21], "- Seniors show new students their rooms inside the dorms.", "- Late afternoon: seniors show new students their rooms inside the dorms.")
+rep(C[21], "- Entrance Feast, 7pm, Ring Dining Hall head master and vice head master speech before dining.",
+    "- 19:00 Entrance Feast in the Ring Dining Hall: the Headmaster and the Vice Headmaster speak before dinner.")
+rep(C[134], "W1 Mon Entrance Event.", "W1 Mon Entrance Event (09:00 sorting, tour all day, 19:00 feast). W1 Tue-Fri club booths 16:00-18:00, club registration closes Fri 18:00.")
+
 # ---------- lore clarifications shared by card + v39 (D23-D25) ----------
 def apply_lore_edits(C, N):
     rep(C[52], "Spent mana makes the air shiver at dusk.",

@@ -6,7 +6,7 @@ Card v1.0.2 · preset `Realistic_Frankenstein_2_2_Eldrasil.json` · VectFox (che
 | Job | Owner | Not done by |
 |---|---|---|
 | Game state: time, calendar, vitals, mana, money, bonds, secrets, campus changes, journal, commitments, clues | **Card** (MVU + engine) | preset trackers (all OFF) |
-| Prose style, POV, NPC voice and behaviour, anti-slop, reasoning (CoT) | **Preset** | card (its style line now defers to the preset) |
+| Prose style, POV, NPC voice and behaviour, anti-slop, reasoning (CoT) | **Preset** | card (since 1.4.6 the card sets no prose style, point of view, tense or length) |
 | Long-term memory of past scenes | **VectFox** (EventBase) | preset notebook / Chekhov (OFF); card keeps only the recent Journal |
 | Lorebook activation | **SillyTavern** (keywords) | VectFox semantic lorebook (do not use on this card) |
 | Status display | **Card** bracelet and panels | preset Internal States HTML (OFF) |
@@ -25,7 +25,7 @@ They keep a second game state in a hidden HTML block that must sit "at the absol
 - **Main:** removed the `<think>` wrapper, which the author says is only for Mimo via Crof. Random events are now recorded in the card state.
 - **BOLT CoT:**
   - Task 0 reads `<current_state>` and `<now>`, and starts reasoning with `Now: M? W? Day HH:MM at <place>`.
-  - Task 2 plans the MVU patch instead of Internal States.
+  - Task 2 plans the MVU patch instead of Internal States. Since 1.4.6 it points to the card's own update rules instead of copying them (the old copy taught the 1.0 bond rules).
   - Task 9 puts `<UpdateVariable>` last.
   - Task 11 draws world events from the calendar and happenings instead of Fate rolls.
   - The two Gemini-OFF checks are now conditional.
@@ -33,6 +33,8 @@ They keep a second game state in a hidden HTML block that must sit "at the absol
 - **Pop in Graphics:** letter, notice and page templates replace phone and terminal. The bracelet and stats are never drawn as graphics.
 - **Colored Dialogue 2.0:** never colours inside `<UpdateVariable>`.
 - **NPC Instincts:** bond records describe history and never force compliance. This replaces "there is no affection meter", which contradicted the card's bond ranks.
+
+**Length (1.4.6):** "📝 Total Output Length" is ON at roughly 3 to 6 paragraphs. The card used to carry this default; it now lives here so players can change it.
 
 **Regex:** "FF5 Delete / Catch - Untagged Thoughts" are OFF. They serve the Time-and-Place header, which is off, and they delete everything before any line starting with `[... Time`. Tested: a player message ending in `[Time skip: two hours later]` reached the model as only that bracket.
 ST runs preset regexes before the card's, so the preset's display regexes cannot touch the bracelet.

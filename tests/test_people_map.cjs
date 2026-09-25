@@ -31,11 +31,11 @@ const e5 = U.DATA.rel.find(e => e[0] === 'Irene' && e[4] === 'rank:6');
 ok(e5 && !U.edgeVisible(e5, S), 'Irene\'s views hidden at Rank 0');
 const S3 = JSON.parse(JSON.stringify(S)); S3.Bonds.Irene.Rank = 6;
 ok(U.edgeVisible(e5, S3), 'visible at Rank 6');
-U.view.gtypes = new Set(['rival', 'fear', 'dislike', 'friend', 'respect', 'mentor', 'family', 'romance', 'story']);
+U.view.gtypes = new Set(['friends', 'softspot', 'protective', 'respect', 'rivals', 'wary', 'dislike', 'story']);   // 1.4.1 kinds
 S3.Campus_State.New_relations = { 'Irene→Aiden': 'caught him at last' };
 const G = U.graphModel(S3);
 ok(G.nodes[0].you && G.links.some(l => l.type === 'bond' && l.target === 'Irene'), 'graph: you + bond links');
-ok(G.links.some(l => [l.source, l.target].includes('Sophia')), 'graph: Irene–Sophia (fear) appears at Rank 6');
+ok(G.links.some(l => [l.source, l.target].includes('Sophia')), 'graph: Irene–Sophia (wary: she fears her) appears at Rank 6');
 ok(G.links.some(l => l.types && l.types.includes('story')), 'graph: story relation from Campus_State.New_relations');
 ok(!G.links.some(l => l.type === 'knows'), 'graph: "acquainted" edges filtered by default');
 U.view.arg = 'Irene'; ok(/How they see others/.test(U.PANELS.npc.render(S3)), 'dossier lists their views at Rank 6');

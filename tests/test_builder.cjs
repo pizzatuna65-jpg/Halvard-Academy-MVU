@@ -22,7 +22,7 @@ for (const t of U.TEMPLATES) {
   ok(S.Player.Vitals.Mana_max === U.manaOf(d) && S.Player.Vitals.Mana === U.manaOf(d), `${t.id}: mana ${S.Player.Vitals.Mana}/${S.Player.Vitals.Mana_max}`);
   ok(_.isEqual(Object.keys(S.Magic._Techniques).sort(), Object.keys(U.techRecord(d)).sort()), `${t.id}: techniques ${Object.keys(S.Magic._Techniques).join(', ')}`);
   if (d.hidden.on) ok(S.Hidden._True_magic && S.Hidden.Cover_magic === 'Telekinesis (Mystic)' && S.$ui.unlocks.includes('hidden'), `${t.id}: hidden magic + unlock`);
-  if (d.pacts.length) ok(S.Magic.Pacts.Ember.Tier === 'Basic' && S.Magic._Techniques['Summon Ember'].Cost_mode === 'hybrid' && !S.Magic._Techniques['Channel Ember'], `${t.id}: pact → Summon technique (no Channel for Basic)`);
+  if (d.pacts.length) ok(S.Magic.Pacts.Ember.Tier === 'Basic' && S.Magic._Techniques['Summon Ember'].Cost_mode === 'sustained' && S.Magic._Techniques['Ember: Flame Lash'] && !S.Magic._Techniques['Channel Ember'], `${t.id}: pact → Summon + one technique per ability (no Channel for Basic)`);
   const d2 = U.draftFromState(S), ops2 = U.buildOps(d2, S);
   ok(ops2.length === 2, `${t.id}: round trip has no spurious changes (${ops2.length - 2} extra: ${ops2.slice(0, -2).map(o => o.path).join(', ')})`);
   // amend: add a technique, bump nothing else

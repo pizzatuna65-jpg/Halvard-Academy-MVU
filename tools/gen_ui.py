@@ -63,13 +63,29 @@ for nid, n in npcs.items():
         'fl': [[f['label'], f['text'], f['rank']] for f in n['fields']]}
     CAST[nid] = [n['thumb'], PUBLIC_ROLE.get(nid) or descriptor(nid, n), first, n.get('dorm_color') or '#6b6b7b']
 for e in json.load(open(P('data/relations.json'), encoding='utf-8')):
-    DATA['rel'].append([e['from'], e['to'], e['type'], e['types'], e['visibility'], e['notes']])
+    DATA['rel'].append([e['from'], e['to'], e['type'], e['types'], e['visibility'], e['notes']] + ([[e['rule'], e['rule_label']]] if e.get('rule') else []))   # 1.4.2 group-rule lines carry [id, label]
+DATA['rom1'] = {k: v for k, v in json.load(open(P('data/relations_curated.json'), encoding='utf-8')).get('romance_one_way', {}).items() if not k.startswith('_')}   # 1.4.2
 for lid, l in json.load(open(P('data/locations.json'), encoding='utf-8')).items():
     DATA['locs'][lid] = {k: l[k] for k in ('name', 'category', 'kind', 'description', 'vibe', 'regulars', 'connections', 'walk_min',
                                          'clubs', 'access', 'lore', 'floor', 'pin', 'discoverable', 'near')}
 # ---- Batch 5.2: clubs, shop, team roles ----
 import sys; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import load_clubs   # v1.1.0: club data shared with gen_mvu_entries.py (Saturday club time in the Now entry)
+from common import place_aliases   # 1.3.1: short place names -> location id (map "you are here")
+_byname = {l['name']: lid for lid, l in DATA['locs'].items()}
+DATA['palias'] = {re.sub(r'^the ', '', a): _byname[nm] for a, nm in place_aliases(json.load(open(P('data/locations.json'), encoding='utf-8'))).items()}
+DATA['tune'] = json.load(open(P('data/tuning.json'), encoding='utf-8'))['groups']   # 1.3.1 Settings rows
+# 1.4.1 factions for People → Connections (data/factions.json; 'auto' = every NPC of those groups)
+_fac = json.load(open(P('data/factions.json'), encoding='utf-8'))['factions']
+DATA['factions'] = [{'id': f['id'], 'name': f['name'], 'secret': f.get('secret', []),
+                     'members': sorted(set(f.get('members', [])) | {nid for nid, n in npcs.items() if (n.get('group') or '') in f.get('auto', [])})} for f in _fac]
+assert all(m in npcs for f in DATA['factions'] for m in f['members']), 'factions.json: unknown NPC'
+DATA['dormhead'] = {nid: m.group(1) for nid, n in npcs.items() for m in [re.search(r'\b(Fire|Light|Sky|Viridian) Dorm Head', ' '.join(n.get('public_tags') or []))] if m}   # 1.4.1
+_ten = json.load(open(P('data/tension.json'), encoding='utf-8'))   # 1.3.8: bands and who is exempt / locked (no behaviour texts: they are narrator-side)
+DATA['ten'] = {'bands': _ten['bands'], 'effects': _ten['effects'], 'exempt': [k for k, o in _ten['overrides'].items() if o.get('exempt')], 'lock': [k for k, o in _ten['overrides'].items() if o.get('lock')]}
+_tru = json.load(open(P('data/trust.json'), encoding='utf-8'))   # 1.4.3: bands, perk gates, who is exempt (texts are narrator-side)
+DATA['tru'] = {'bands': _tru['bands'], 'gates': _tru['perk_gates'], 'susp': _tru['suspend_r10_below'], 'effects': _tru['effects'],
+               'nogates': [k for k, o in _tru['overrides'].items() if o.get('no_gates')], 'lock': {k: o['lock'] for k, o in _tru['overrides'].items() if 'lock' in o}}
 DATA['clubs'] = load_clubs(npcs, json.load(open(P('data/locations.json'), encoding='utf-8')))
 DATA['shop'] = json.load(open(P('data/shop.json'), encoding='utf-8'))['items']
 for nid, n in npcs.items():
@@ -82,19 +98,24 @@ DATA['trn'] = {k: v for k, v in json.load(open(P('data/training.json'), encoding
 DATA['features'] = json.load(open(P('data/features.json'), encoding='utf-8'))['features']
 DATA['fcost'] = json.load(open(P('data/feature_cost.json'), encoding='utf-8'))
 bar = open(P('src/ui/statusbar.template.html'), encoding='utf-8').read()
+THEMES = json.load(open(P('data/themes.json'), encoding='utf-8')); THEMES.pop('_note', None)   # 1.3.1 colour themes (tools/make_themes.py)
+bar = bar.replace('/*@@THEMES@@*/{}', json.dumps(THEMES, ensure_ascii=False, separators=(',', ':')))
 bar = bar.replace('/*@@CAST@@*/{}', json.dumps(CAST, ensure_ascii=False, separators=(',', ':'))).replace('/*@@BASE@@*/""', json.dumps(man['base_url']))
-open(P('src/ui/statusbar.html'), 'w', encoding='utf-8').write(bar)
+assert '/*@@' not in bar, 'unreplaced placeholder in statusbar.html'
+open(P('src/ui/statusbar.html'), 'w', encoding='utf-8', newline='\n').write(bar)
 
 t = open(P('src/scripts/ui.template.js'), encoding='utf-8').read()
 parts = ''.join(open(P('src/ui/parts', f), encoding='utf-8').read() + '\n' for f in sorted(os.listdir(P('src/ui/parts'))) if f.endswith('.js'))
 t = t.replace('/*@@PARTS@@*/', parts)
 eng = open(P('src/scripts/engine.template.js'), encoding='utf-8').read()
 cal = re.search(r'(const ALL = DAYS.*?\n\};\n)(?=// monthly payout)', eng, re.S).group(1)   # EVENTS + TIMETABLE, single source of truth
-t = t.replace('/*@@CALENDAR@@*/{ EVENTS: [], TIMETABLE: {} }', '(() => {\n' + cal + 'return { EVENTS, TIMETABLE };\n})()')
+t = t.replace('/*@@CALENDAR@@*/{ EVENTS: [], TIMETABLE: {} }', '(() => {\n' + cal + 'return { EVENTS, TIMETABLE, schedOf };\n})()')
 assert '@@CALENDAR@@' not in t
+t = t.replace("/*@@THEMES@@*/{ default: 'pewter', order: [], themes: {} }", json.dumps(THEMES, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@DATA@@*/{}', json.dumps(DATA, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@SUBTYPES@@*/{}', json.dumps(SUB, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@NPCS@@*/[]', json.dumps(NPCS, ensure_ascii=False, separators=(',', ':')))
-open(P('src/scripts/ui.js'), 'w', encoding='utf-8').write(t)
+assert '/*@@' not in t, 'unreplaced placeholder in ui.js'
+open(P('src/scripts/ui.js'), 'w', encoding='utf-8', newline='\n').write(t)
 print('clubs:', len(DATA['clubs']), 'with members:', sum(1 for c in DATA['clubs'] if c['members']), '| shop items:', len(DATA['shop']))
 print('data KB:', len(json.dumps(DATA)) // 1024, '| subtypes:', {k: (len(v['standard']), len(v['notable']), len(v['forbidden'])) for k, v in SUB.items()}, '| npcs:', len(NPCS))

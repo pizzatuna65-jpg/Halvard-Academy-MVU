@@ -71,15 +71,52 @@ const BT = getvar('stat_data.Battle') || {};
 // and the past need the real rank; secrets never come from rank) and what the bond allows; plus a ready bond event's directions
 const BOND = /*@@BOND@@*/{};
 const BONDS = getvar('stat_data.Bonds') || {}, BEVS = UI.bev || {};
+// 1.4.3 Trust shifts what they share (Doubtful -1, Trusting +1, Confidant +2 and the real tiers one rank early; Betrayed: nothing
+// new) and holds back the perks that need it (data/trust.json perk_gates)
+const TRUST = /*@@TRUST@@*/{};
+const SECR = [...(UI.secrets || []), ...((getvar('stat_data.Campus_State') || {}).Secrets_revealed || [])].map(x => String(x).toLowerCase());
+const trBand = x => (TRUST.bands || [[0, '']]).reduce((a, [f, nm]) => (x >= f ? nm : a), '');
+const trOver = id => { const o = (TRUST.overrides || {})[id]; return o && !(o.until_secret && SECR.some(x => x.startsWith(id.toLowerCase() + '.'))) ? o : null; };
 const bondLines = PRES.filter(id => BONDS[id] && BOND.share).map(id => {
-  const r = Math.max(0, Math.min(10, Number(BONDS[id].Rank) || 0)), o = BOND.off[id] || 0;
-  const ok = BOND.share.filter(([t]) => (t < BOND.real ? t <= Math.max(0, r + o) : t <= r));
+  const r = Math.max(0, Math.min(10, Number(BONDS[id].Rank) || 0)), tr = Math.max(0, Math.min(100, Number(BONDS[id].Trust) || 0)), tb = trBand(tr);
+  const sh = (TRUST.share || {})[tb], early = tb === 'Confidant' ? TRUST.early || 0 : 0, o = (BOND.off[id] || 0) + (sh || 0);
+  const ok = BOND.share.filter(([t]) => (t < BOND.real ? t <= Math.max(0, r + o) : t <= r + early));
   const next = BOND.share.find(([t]) => !ok.some(x => x[0] === t));
-  return id + ' (Rank ' + r + (BOND.tag[id] ? ', ' + BOND.tag[id] : '') + '): shares ' + ok.map(x => x[1]).join('; ')
-    + (next ? '. Not yet: ' + next[1] + ' and beyond; asked about it, deflects in character (pushing too soon adds Tension)' : '')
-    + (r > 0 && BOND.perks[String(r)] ? '. At this rank: ' + BOND.perks[String(r)] : '') + '.';
+  const og = trOver(id), gated = og && og.no_gates ? [] : Object.entries(TRUST.gates || {}).filter(([g, need]) => +g <= r && +g !== 8 && tr < need && BOND.perks[g]).map(([g, need]) => BOND.perks[g] + ' (needs Trust ' + need + ')');
+  const susp = (UI.tsusp || []).filter(k => ((getvar('stat_data._Perks') || {})[k] || {}).From === id);
+  return id + ' (Rank ' + r + (BOND.tag[id] ? ', ' + BOND.tag[id] : '') + ', Trust ' + tr + ' ' + tb.toLowerCase() + '): '
+    + (sh === null ? 'shares nothing new with {{user}}; keeps to what {{user}} already knows' : 'shares ' + ok.map(x => x[1]).join('; ')
+    + (next ? '. Not yet: ' + next[1] + ' and beyond; asked about it, deflects in character (pushing too soon adds Tension)' : ''))
+    + (r > 0 && BOND.perks[String(r)] ? '. At this rank: ' + BOND.perks[String(r)] : '')
+    + (gated.length ? '. Held back by low Trust: ' + gated.join('; ') : '') + (susp.length ? '. Suspended until Trust ' + TRUST.susp + ': ' + susp.join(', ') : '') + '.';
 });
+// 1.4.3 how each present character carries their Trust: a personal rule (always), else only the telling bands
+const trustLines = PRES.filter(id => BONDS[id]).map(id => {
+  const og = trOver(id), dh = (TRUST.dorm_head || {})[id];
+  const mine = dh && PR.Dorm === dh.dorm, cat = mine ? dh.category : (TRUST.npcs || {})[id] || 'normal', C = (TRUST.cats || {})[cat];
+  const tr = Math.max(0, Math.min(100, Number(BONDS[id].Trust) || 0)), tb = trBand(tr);
+  const parts = [og && og.text, mine && dh.text, C && C.bands[tb] ? id + ' (Trust ' + tr + ', ' + tb.toLowerCase() + '; ' + C.name.toLowerCase() + '): ' + C.bands[tb] + '. Never: ' + C.never + '.' : ''].filter(Boolean);
+  return parts.join(' ');
+}).filter(Boolean);
 const bondEvents = Object.entries(BEVS).filter(([id, v]) => v && v.now && PRES.includes(id));
+// 1.3.8 Tension: how each present character carries it (data/tension.json: category or personal override), from Friction (20) up
+const TEN = /*@@TENSION@@*/{};
+const tensionLines = PRES.filter(id => BONDS[id]).map(id => {
+  const o = (TEN.overrides || {})[id], P = o || (TEN.categories || {})[(TEN.npcs || {})[id]];
+  if (!P) return '';
+  if (o && o.lock) return id + ': ' + o.text;
+  const t = Math.max(0, Math.min(100, Number(BONDS[id].Tension) || 0));
+  if (t < 20) return '';
+  const band = (TEN.bands || []).reduce((a, [f, nm]) => (t >= f ? nm : a), '');
+  const peak = band === 'Enemy' && (TEN.peaks || {})[id] ? ' (' + TEN.peaks[id] + ')' : '';
+  const an = (TEN.apology_npc || {})[id];
+  return id + ' (Tension ' + t + ', ' + band.toLowerCase() + '): ' + P.bands[band] + peak + '. Never: ' + P.never + '. Eases: ' + (an && an.note ? an.note : P.eases) + '.';
+}).filter(Boolean);
+// 1.4.4 (owner): each present character's latest moments with {{user}} (Bonds.<id>.$Recent, newest first) for consistency
+const recentLines = PRES.filter(id => BONDS[id] && (BONDS[id].$Recent || []).length).map(id => id + ' (newest first): ' + BONDS[id].$Recent.slice(-(BOND.recent_now || 5)).reverse()
+  .map(r => '[' + r.w + '] ' + r.n + (r.fx ? ' (' + r.fx + ')' : '')).join(' | '));
+// 1.4.4 (owner): how each present character takes teasing and play-fighting (tension category or override: banter)
+const banterLine = PRES.filter(id => BONDS[id]).map(id => { const o = (TEN.overrides || {})[id], P = (o && o.banter) ? o : (TEN.categories || {})[(TEN.npcs || {})[id]]; return P && P.banter ? id + ' ' + P.banter : ''; }).filter(Boolean).join('; ');
 // 1.3.0 reputation: what each non-zero level means for how staff, students and the Doves treat {{user}}
 const REPD = /*@@REP@@*/{};
 const RPN = PR.Reputation || {};
@@ -147,10 +184,22 @@ Rumours going around: <%- GS.map(g => '"' + g[0] + '" (' + g[1] + ', day ' + g[2
 <%_ for (const l of bondLines) { _%>
 Bond: <%- l %>
 <%_ } _%>
+<%_ for (const l of tensionLines) { _%>
+Tension: <%- l %>
+<%_ } _%>
+<%_ for (const l of trustLines) { _%>
+Trust: <%- l %>
+<%_ } _%>
+<%_ for (const l of recentLines) { _%>
+Recent with {{user}}: <%- l %>
+<%_ } _%>
+<%_ if (banterLine) { _%>
+Teasing (how each present character takes it): <%- banterLine %>
+<%_ } _%>
 <%_ for (const [id, v] of bondEvents) { _%>
 Bond event available with <%- id %> (Rank <%- v.r %> → <%- v.r + 1 %>): play it now if the scene allows it; never force it.
 <%- v.dir %>
-<%- v.s ? 'Follow these directions; lines marked Wajib / Must have to happen. ' : '' %>When it has played out: raise /Bonds/<%- id %>/Rank by 1, insert a line into its Milestones and add what {{user}} learned to Known_facts; the choices made may raise or lower Trust.
+<%- v.s ? 'Follow these directions; lines marked Wajib / Must have to happen. ' : '' %>When it has played out: raise /Bonds/<%- id %>/Rank by 1, insert a line into its Milestones and add what {{user}} learned to Known_facts; the choices made may lower Trust (the engine adds Trust for the rank itself).
 <%_ } _%>
 <%_ for (const l of repLines) { _%>
 Reputation, <%- l %>

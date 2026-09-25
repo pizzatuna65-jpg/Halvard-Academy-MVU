@@ -23,6 +23,11 @@ for frag in ['Staccato Chop Killswitch', 'Anti-Briefing Register 🤖', 'Last-Mi
 for frag in ["Gemini, Don't Speak Like a Therapist", 'NEW AI Studio Jailbreak', "'Really Did It' Restatement"]:
     log.append(('ON', toggle(frag, True), 'preset note: for Gemini (3.8 Flash)'))
 
+# 1.4.6: the card no longer sets a length (owner: taste belongs to preset toggles). This toggle carries the old default instead.
+log.append(('ON', toggle('Total Output Length', True), 'length now lives in the preset (card has no style rules since 1.4.6)'))
+rep('Total Output Length', 'Length: Your response must be roughly 4 to 8 paragraphs and 400 to 600 words (excluding headers and internal states).',
+    'Length: Your response must be roughly 3 to 6 paragraphs (excluding headers and the state-update block).')
+
 # ---- 2. Main prompt: drop the Mimo-only <think> wrapper (author: delete if not on Mimo/Crof); random events go to the card state
 m = P['main']
 m['content'] = m['content'].replace(m['content'].split('{{trim}}')[0], "{{// Eldrasil edit: the <think></think> wrapper (only needed for Mimo V2.5 Pro via Crof) is removed for Gemini.}}", 1)
@@ -36,7 +41,9 @@ B = '634ecfec-1862-4ce0-821e-e31057acadfa'
 rep(B, "0. What is the game state? {{getvar::gmNotebookCoTGamestate}} What is the exact current character positioning in the scene? If an OOC command is present, I must immediately incorporate its commands into the scene. If <internal_dndsim> active (skip dnd sim if tag not present): {{getvar::dndSimCoTHQ1}} I will Never change DnDsim DC for narrative purposes once established. Dice is always right. I will *never* reconsider DC or make up/change rolls. I will calculate User and NPC rolls in a later task.",
     "0. Game state (Eldrasil): my first reasoning line is exactly \"Now: M? W? Day HH:MM at <place>\", copied from <now>. Then, from <current_state>: _Period, _Event_today, _Curfew, World._Happening (optional texture), who is in Scene.Present, {{user}}'s Vitals._Condition and _Fatigue, injuries and active effects, any bond with _Event_ready, anything overdue, and every _Log line I must narrate. What is the exact current character positioning in the scene? If an OOC command is present, I must immediately incorporate its commands into the scene.")
 t = P[B]['content']; s = t.index('2. Internal States + No more reasoning rule'); e = t.index('3. Scope/Knowledge')
-P[B]['content'] = t[:s] + ("2. State update plan: if <update_format> is present, I list as terse bullets only what this turn changes for the <UpdateVariable> patch: minutes passed and the new time, location, Scene.Present, any HP loss with its named injury (at most 40 unless truly lethal), Stamina, technique uses for /Magic/Casts and effects started or ended, points spent or earned, bond Progress (+0 small talk, +1 meaningful, +2 significant; Rank only when _Event_ready and this turn holds the milestone scene), Known_facts, and any Journal, Commitments, Clues, Letters, Notices or Campus_State entry the scene earns. The engine computes costs, payouts, bands, caps and every \"_\" field; I never do. No other tracker, status or internal-states block exists in this chat.\n\n") + t[e:]
+# 1.4.6: generic on purpose. The preset points to the card's own update rules instead of copying them; the old copy
+# (bond Progress +0/+1/+2) went stale when the card moved to /Interactions, Trust and Tension (1.2.2-1.4.4).
+P[B]['content'] = t[:s] + ("2. State update plan: if <update_format> is present, I list as terse bullets only what this turn changes, following the card's own update rules exactly (they outrank anything I remember about them). I never compute what the card says its engine computes. No other tracker, status or internal-states block exists in this chat.\n\n") + t[e:]
 rep(B, 'Then I run the <staccato_chop_killswitch> check:', 'If <staccato_chop_killswitch> is present, I run its check:')
 rep(B, 'Then <anti_briefing_register>: does any', 'If <anti_briefing_register> is present: does any')
 rep(B, 'If the tag is not present, skip and write a logical response length.',

@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&family=Cinzel:wght@600&display=swap" rel="stylesheet">
-<style>
+<style id="eld-bar-css">
 :root{
   --pewter:#3b3f46; --pewter-lo:#2a2d33; --brass:#b39062; --brass-lo:#7c6240;
   --glass:#18292b; --glow:#b9eadf; --ink:#e6e3dc; --ink-dim:#a9a69f;
@@ -78,6 +78,25 @@ button.chip{font:inherit;font-size:12px;cursor:pointer}button.chip:hover{backgro
   const num = (v, d) => { const x = Number(v); return Number.isFinite(x) ? x : d; };
   const fmt = v => { const x = num(v, 0); return Math.abs(x - Math.round(x)) < 0.05 ? String(Math.round(x)) : x.toFixed(1); };
   let collapsed = false; try { collapsed = localStorage.getItem('eld.bar.collapsed') === '1'; } catch (e) {}
+  // 1.3.1 colour themes (owner playtest), palette only: data/themes.json, chosen in Student file > Settings (kept per browser in
+  // localStorage "eld.theme", the same key the panels use); the bracelet re-colours itself when it changes.
+  const THEMES = /*@@THEMES@@*/{};
+  const STYLE = document.getElementById('eld-bar-css'), CSS0 = STYLE ? STYLE.textContent : '';   // 1.3.4: by id: Tavern Helper adds its own <style> first
+  const rgbHex = s => '#' + s.split(',').map(x => (+x).toString(16).padStart(2, '0')).join('');
+  function applyTheme() {
+    let id = ''; try { id = localStorage.getItem('eld.theme') || ''; } catch (e) {}
+    const map = ((THEMES.themes || {})[id] || {}).map || {};
+    if (!STYLE) return;
+    STYLE.textContent = !Object.keys(map).length ? CSS0 : CSS0.replace(/(?:#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b|rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,[^)]*)?\))(?!\s*\/\*keep\*\/)/g, (m, hex, r, g, b, a) => {
+      if (hex) { const h = hex.length === 3 ? hex.replace(/./g, c => c + c) : hex, k = [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16)).join(','); return map[k] ? rgbHex(map[k]) : m; }
+      const k = r + ',' + g + ',' + b, v = map['a:' + k] || map[k];
+      if (!v) return m;
+      const q = v.split('*');   // "r,g,b*k": the alpha is scaled by k
+      return 'rgba(' + q[0] + (q[1] && a ? ',' + +(parseFloat(a.slice(1)) * q[1]).toFixed(3) : a || '') + ')';
+    });
+  }
+  applyTheme();
+  window.addEventListener('storage', e => { if (e.key === 'eld.theme') applyTheme(); });
 
   // 1.2.0: the bracelet on the latest story message shows the NEWEST state, which may live on a later entry: a player tool
   // (Builder, Settings, calendar marks) writes a hidden entry, and hidden entries never render a bracelet of their own.
@@ -112,6 +131,34 @@ button.chip{font:inherit;font-size:12px;cursor:pointer}button.chip:hover{backgro
   }
   const sevCls = c => /Dead|Unconscious|Critical|Badly/.test(c) ? 'bad' : /Hurt/.test(c) ? 'mid' : '';
   const fatCls = f => /Collapsed|Exhausted/.test(f) ? 'bad' : /Tired/.test(f) ? 'mid' : '';
+
+  // 1.3.5 (owner playtest: a card imported without its lorebook left "Syncing the bracelet…" forever). The starting state comes
+  // from the card's lorebook ([initvar]); without it MVU has nothing to show. After a few seconds with no state, say why and
+  // offer SillyTavern's own "Import Card Lore" (character panel → More…; it asks before overwriting and links the lorebook).
+  function lorebookStatus() {   // 'missing' | 'ok' | '' (cannot tell)
+    try {
+      const wb = getCharWorldbookNames('current'), names = getWorldbookNames();
+      return wb && wb.primary && names.includes(wb.primary) ? 'ok' : 'missing';
+    } catch (e) { return ''; }
+  }
+  function diagnose() {
+    const st = lorebookStatus();
+    const why = st === 'ok'
+      ? 'No game state in this chat. The card\'s lorebook is attached, so check that <b>MagVarUpdate</b> and <b>Tavern Helper</b> are enabled, then start a new chat.'
+      : 'No game state: the <b>card\'s lorebook is not attached</b> to this character' + (st ? '' : ' (or MagVarUpdate is not running)') + '. Import it (SillyTavern asks before overwriting), then start a <b>new chat</b>: the opening message takes its starting state from the lorebook.';
+    band.className = 'band';
+    band.innerHTML = '<div class="cta"><span>' + why + '</span>' + (st === 'ok' ? '' : '<button class="btn primary" data-importlore="1">Import the card\'s lorebook</button>') + '</div>';
+  }
+  function importLore() {   // SillyTavern: character panel → More… → Import Card Lore
+    try {
+      const pd = window.parent.document, sel = pd.getElementById('char-management-dropdown'), opt = pd.getElementById('import_character_info');
+      if (!sel || !opt) throw new Error('menu not found');
+      sel.selectedIndex = Array.from(sel.options).indexOf(opt);
+      sel.dispatchEvent(new Event('change', { bubbles: true }));
+    } catch (e) {
+      band.querySelector('.cta span').innerHTML += '<br>Open the character panel → <b>More…</b> → <b>Import Card Lore</b>.';
+    }
+  }
 
   let who = id => id;
   function render() {
@@ -151,7 +198,10 @@ button.chip{font:inherit;font-size:12px;cursor:pointer}button.chip:hover{backgro
       const CI = { Soaked: 'fa-droplet', Chilled: 'fa-temperature-low', Overheated: 'fa-temperature-high', 'Head cold': 'fa-head-side-cough' };
       Object.entries((S.Player || {}).Conditions || {}).forEach(([k, v]) => c.push(chip(k, CI[k] || 'fa-circle-exclamation', 'warn', (v && v.Effect) || k, 'profile')));
     }
-    if (W._Event_today) c.push(chip(W._Event_today.split(';')[0].split(' (')[0], 'fa-star', 'glow', W._Event_today));
+    if (W._Event_today) c.push(chip(W._Event_today.split(/ \| |;/)[0].split(' — ')[0].split(' (')[0], 'fa-star', 'glow', W._Event_today));
+    // 1.3.4 (owner): what comes next today (engine $ui.next): an event's timed item, a class, curfew
+    const nx = ui.next;
+    if (nx && nx.at) c.push(chip('Next ' + nx.at + ' · ' + nx.what, nx.kind === 'curfew' ? 'fa-moon' : nx.kind === 'class' ? 'fa-book-open' : 'fa-clock', nx.kind === 'event' ? 'glow' : '', 'Next today: ' + nx.at + ', ' + nx.what, 'notebook:planner'));
     if (W._Curfew) c.push(chip(/LOCKDOWN/.test(W._Curfew) ? 'Lockdown' : /Break/.test(W._Curfew) ? 'Break' : /^Away/.test(W._Curfew) ? 'Away' : 'Curfew', /^Away/.test(W._Curfew) ? 'fa-route' : 'fa-moon', /LOCKDOWN|CURFEW/.test(W._Curfew) ? 'danger' : 'warn', W._Curfew));
     const inj = Object.keys((S.Player || {}).Injuries || {});
     if (unl.includes('injuries') && inj.length) c.push(chip(inj.length === 1 ? inj[0] : inj.length + ' injuries', 'fa-bandage', 'danger', inj.join(', ')));
@@ -221,6 +271,7 @@ button.chip{font:inherit;font-size:12px;cursor:pointer}button.chip:hover{backgro
 
   band.addEventListener('click', ev => {
     const b = ev.target.closest('button'); if (!b) return;
+    if (b.dataset.importlore) { importLore(); return; }
     if (b.dataset.toggle) { collapsed = !collapsed; try { localStorage.setItem('eld.bar.collapsed', collapsed ? '1' : '0'); } catch (e) {} render(); return; }
     if (b.dataset.open) {
       if (!window.parent.__eldrasilUI) { if (typeof toastr !== 'undefined') toastr.warning('Turn on the "Eldrasil UI" script in Tavern Helper → Scripts.', 'Eldrasil'); return; }
@@ -240,7 +291,8 @@ button.chip{font:inherit;font-size:12px;cursor:pointer}button.chip:hover{backgro
     });
   } catch (e) { console.warn('[Eldrasil bar]', e); }
   render();
-  let tries = 0; const poll = setInterval(() => { if (readState() || ++tries > 20) { clearInterval(poll); render(); } }, 1000);
+  // keep looking for the state for a minute; after 4 s without one, explain why (it may still arrive: then the bracelet shows)
+  let tries = 0; const poll = setInterval(() => { if (readState()) { clearInterval(poll); render(); return; } if (++tries === 4) diagnose(); if (tries > 60) clearInterval(poll); }, 1000);
 })();
 </script>
 </body>

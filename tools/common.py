@@ -45,3 +45,36 @@ def outdoor_ids(locs):
 def place_keys(l, lid):
     """lowercase names a location can be written as (with and without a leading 'the', and its id with spaces)"""
     return sorted({l['name'].lower(), re.sub(r'^the ', '', l['name'].lower()), lid.replace('_', ' ')})
+
+# 1.3.1 (owner playtest: "Boathouse" was not recognised as the Boathouse and Lake, so the map missed the player). Other ways the
+# narrator writes a place -> its Campus Map name. Parts of an "X and Y" / "X / Y" name count when no other place claims them;
+# the extra forms below are common short names. Used by the engine (World.Location is normalised to the map name) and the UI map.
+PLACE_EXTRA = {'main courtyard': 'Courtyards', 'courtyard': 'Courtyards', 'the courtyard': 'Courtyards', 'library': 'Main Library',
+               'arbiter hall': 'The Arbiter Hall', 'dining hall': 'The Ring Dining Hall', 'ring dining hall': 'The Ring Dining Hall',
+               'common room': 'Common Rooms', 'lecture hall': 'Lecture Halls', 'seminar room': 'Seminar Rooms', 'study room': 'Study Rooms',
+               'club room': 'Club Rooms', 'potion hall': 'Potion Halls', 'meditation room': 'Meditation Rooms / Spirit House',
+               'pool': 'Swimming Pool', 'gym': 'Gymnasium', 'infirmary': 'Medical Centre', 'medical center': 'Medical Centre',
+               'the woods': 'Forest', 'woods': 'Forest', 'the forest': 'Forest', 'clearing': 'Forest Clearing', 'the clearing': 'Forest Clearing',
+               'fire dorm': 'Fire Dormitory', 'light dorm': 'Light Dormitory', 'sky dorm': 'Sky Dormitory', 'viridian dorm': 'Viridian Dormitory',
+               'sparring pavilion': 'The Sparring Pavilion', 'the pavilion': 'The Sparring Pavilion', 'founders park': "Founder's Statue and Park",
+               "founder's park": "Founder's Statue and Park", 'fishing hut': 'Fishing House', 'boat house': 'Boathouse and Lake',
+               'the lake': 'Boathouse and Lake', 'lakeshore': 'Boathouse and Lake', 'lake shore': 'Boathouse and Lake', 'the hills': 'Grassy Field and Hills',
+               'grassy field': 'Grassy Field and Hills', 'hills': 'Grassy Field and Hills', 'gate': 'Reception and Gatehouse', 'the gate': 'Reception and Gatehouse',
+               'mall': 'The Mall', 'dovecote': 'The Dovecote', 'cathedral': 'The Cathedral', 'banking house': 'The Banking House', 'bank': 'The Banking House',
+               'royal inspectorate': 'The Royal Inspectorate', 'inspectorate': 'The Royal Inspectorate', 'seal chamber': 'The Seal Chamber',
+               "warden's office": "The Warden's Office", "headmaster's office": "Headmaster's Office", 'observatory': 'Observation Tower',
+               'willow': 'Willow Island', 'the island': 'Willow Island', 'hut': 'Old Hut', 'the hut': 'Old Hut'}
+def place_aliases(locs):
+    """{alias (lowercase): Campus Map name} for names that are not a place's own name"""
+    names = {l['name'] for l in locs.values()}
+    own = {k for lid, l in locs.items() for k in place_keys(l, lid)}
+    part = {}
+    for l in locs.values():
+        for p in re.split(r'\s+and\s+|\s*/\s*', l['name']):
+            p = re.sub(r'^the ', '', p.strip().lower())
+            if p and p != l['name'].lower(): part.setdefault(p, set()).add(l['name'])
+    out = {p: next(iter(v)) for p, v in part.items() if len(v) == 1 and p not in own}
+    for a, nm in PLACE_EXTRA.items():
+        assert nm in names, f'PLACE_EXTRA: unknown place {nm}'
+        if a not in own: out[a] = nm
+    return dict(sorted(out.items()))

@@ -46,13 +46,53 @@ for nid, n in npcs.items():
             for t in mentions(sent) - {nid}:
                 typ = next((ty for ty, rx in TYPE_RULES if re.search(rx, sent, re.I)), 'knows')
                 vis = 'rank:99' if f['rank'] >= 99 else ('public' if typ in PUBLIC_T else f'rank:{max(f["rank"], 5)}')
-                e = edges.setdefault((nid, t), {'from': nid, 'to': t, 'types': [], 'notes': [], 'visibility': vis})
+                e = edges.setdefault((nid, t), {'from': nid, 'to': t, 'types': [], 'notes': [], 'visibility': vis, 'frank': f['rank']})
+                e['frank'] = min(e['frank'], f['rank'])
                 if typ not in e['types']: e['types'].append(typ)
                 if sent not in e['notes'] and len(e['notes']) < 3: e['notes'].append(sent)
                 rank = lambda v: 0 if v == 'public' else int(v.split(':')[1])
                 if rank(vis) < rank(e['visibility']): e['visibility'] = vis      # the most public mention wins
 for e in edges.values():
     e['types'].sort(key=ORDER.index); e['type'] = e['types'][0]
+# 1.4.1 (owner): the keyword guess above is only a starting point; the type of every line is curated by hand in
+# data/relations_curated.json ('drop' = no line). A line the lore gains later must be curated before the build passes.
+CUR = json.load(open(P('data/relations_curated.json'), encoding='utf-8'))
+new = [f"{a}>{b}" for (a, b) in edges if f"{a}>{b}" not in CUR['edges']]
+assert not new, f'relations_curated.json: lines without a curated type (add them): {new}'
+for key in list(edges):
+    e, k = edges[key], f"{key[0]}>{key[1]}"
+    typ = CUR['edges'][k]
+    if typ == 'drop': del edges[key]; continue
+    assert typ in CUR['types'], (key, typ)
+    e['types'] = [typ]; e['type'] = typ
+    e['visibility'] = 'rank:99' if e['frank'] >= 99 else ('public' if k in CUR['public'] else f"rank:{max(e['frank'], 5)}")
+for e in edges.values(): e.pop('frank', None)
+# 1.4.2 (owner): someone everyone at Halvard dislikes (one way): every Halvard person gets a dislike line to them (the lore note
+# when there is one, else the curated note, opening at Rank 5), and none of their own lines is a dislike
+for tgt, D in CUR.get('disliked_by_all', {}).items():
+    if tgt.startswith('_'): continue
+    for nid, n in npcs.items():
+        if nid == tgt or n.get('group', '').endswith('team') or nid in D.get('except', []): continue   # 'except' keeps their curated line
+        e = edges.setdefault((nid, tgt), {'from': nid, 'to': tgt, 'notes': [D['note']], 'visibility': 'rank:5'})
+        e['types'] = ['dislike']; e['type'] = 'dislike'
+    assert not [k for k, e in edges.items() if k[0] == tgt and e['type'] == 'dislike'], f'{tgt} dislikes no one (relations_curated.json)'
+# 1.4.2 (owner): group views (Caine hates mages; everyone's view of the Doves) become one-way lines to every member, opening at
+# the rank of the field that states them; a line already curated between the two people wins. 'rule' marks them for the UI.
+FAC = {f['id']: f for f in json.load(open(P('data/factions.json'), encoding='utf-8'))['factions']}
+def members(to):
+    if to == 'mages': return [nid for nid, n in npcs.items() if any(f['label'] == 'Magic' for f in n['fields'])]
+    f = FAC[to.split(':', 1)[1]]
+    return f.get('members') or [nid for nid, n in npcs.items() if n.get('group') in f.get('auto', [])]
+for R in CUR.get('group_rules', {}).get('rules', []):
+    for nid in (npcs if R['from'] == '*' else [R['from']]):
+        f = next((f for f in npcs[nid]['fields'] if f['label'] == R['field']), None)
+        typ = f and next((t for rx, t in R['match'].items() if re.search(rx, f['text'])), None)
+        if not typ: continue
+        assert typ in CUR['types'], (R['id'], typ)
+        for tgt in members(R['to']):
+            if tgt == nid or (nid, tgt) in edges: continue
+            edges[(nid, tgt)] = {'from': nid, 'to': tgt, 'types': [typ], 'type': typ, 'notes': [f"{R['field']}: {f['text']}"],
+                                 'visibility': 'rank:99' if f['rank'] >= 99 else f"rank:{f['rank']}", 'rule': R['id'], 'rule_label': R['label']}
 out = sorted(edges.values(), key=lambda e: (e['from'], e['to']))
 json.dump(out, open(P('data/relations.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 from collections import Counter

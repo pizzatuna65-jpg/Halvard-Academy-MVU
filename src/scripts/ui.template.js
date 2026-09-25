@@ -44,6 +44,15 @@ const tierLevel = (kind, tier) => kind === 'Human' ? 1 : Math.max(0, ((PACT_KIND
 const pactCost = (kind, tier) => TIER_COST[tierLevel(kind, tier)];
 const canChannel = (kind, tier) => tierLevel(kind, tier) >= 2 && kind !== 'Human';
 const PRESENCE = [['summoned', 'Only while summoned'], ['terms', 'As the pact says (it lives on its own)']];
+// 1.3.2 (owner): a pact partner has its own list of abilities, like a creature's moves. Each ability is its own technique
+// ("<partner>: <ability>") with its own cost; the Summon technique only pays for the partner being there. Strength scales the
+// tier's base cost (TIER_COST trig/up); MOVE_CAP is how many abilities a partner of that tier usually has (a warning, not a limit).
+const MOVE_SCALE = { Light: 0.5, Standard: 1, Heavy: 2, Ultimate: 3.5 };
+const MOVE_CAP = [2, 3, 4, 6];
+const moveCap = (kind, tier) => MOVE_CAP[tierLevel(kind, tier)];
+const moveCost = (p, m) => { const c = pactCost(p.kind, p.tier), f = MOVE_SCALE[m.scale] || 1;
+  return { act: Math.round(c.trig * f * 2) / 2, up: m.mode === 'sustained' ? Math.round(c.up * f * 100) / 100 : 0 }; };
+const moveKey = (p, m) => `${keyOf(p.name)}: ${keyOf(m.name)}`;
 const STAGES = ['Unnoticed', 'Rumoured', 'Watched', 'Investigated', 'Exposed'];
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -78,6 +87,12 @@ const allSubs = (type, d) => {
 };
 const typeOfSub = (sub, d) => { const c = customOf(d, sub); return c && c.type ? c.type : TYPES.find(t => subInfo(t, sub.replace(/\s*†$/, ''))); };
 const isForbidden = (t, d) => { const info = subInfo(t.type, t.subtype, d); return info ? info.forbidden : t.forb === 'yes'; };
+// 1.3.1: the student's first name for lore text ({{user}}): the Builder's name, else the SillyTavern persona, else "you"
+function userName(S) {
+  const n = String((((S || {}).Player || {}).Profile || {}).Name || '').trim();
+  return (n && !/\{\{/.test(n) ? n : personaName()).split(/\s+/)[0] || 'you';
+}
+const personal = (html, S) => { const n = esc(userName(S)); return String(html).replace(/\{\{user\}\}/gi, () => n); };
 function personaName() { try { const n = substitudeMacros('{{user}}'); return n && !/\{\{/.test(n) ? n : ''; } catch (e) { return ''; } }
 
 function latestState() {
@@ -98,7 +113,8 @@ function tech(name, type, subtype, effect, cannot, mode, scale, extra) {
   return Object.assign({ name, type, subtype, effect, cannot, mode, scale, act: mode === 'per_use' ? c.use : c.act, up: mode === 'per_use' ? 0 : c.up, trig: mode === 'hybrid' ? c.trig : 0, hidden: false, forb: '', notes: '', open: false }, extra || {});
 }
 const blankTrue = () => Object.assign(blankTech(), { scale: 'Major', act: SCALES.Major.use });
-const blankPact = () => Object.assign({ kind: '', name: '', tier: '', presence: 'summoned', terms: '', hidden: false, applied: false }, TIER_COST[0]);
+const blankPact = () => Object.assign({ kind: '', name: '', tier: '', presence: 'summoned', terms: '', hidden: false, applied: false, moves: [] }, TIER_COST[0]);
+const blankMove = p => Object.assign({ name: '', effect: '', cannot: '', mode: 'per_use', scale: 'Standard', open: true }, moveCost(p, { scale: 'Standard', mode: 'per_use' }));
 function blankDraft() {
   return {
     name: personaName(), pronouns: '', pronOther: false, age: 18, race: 'Human', beast: '', appearance: '', personality: '', background: '', goal: '',
@@ -128,7 +144,11 @@ const TEMPLATES = [
     race: 'Beastkin', beast: 'fox', background: 'Merchant family', goal: 'Earn a pact with a Greater spirit before graduation.', personality: 'Charming, curious, keeps every promise to the letter.',
     mana: 130, types: ['Occult'], dominant: 'Occult', specs: ['Spirit Pact', 'Illusion'],
     techs: [tech('Glamour Veil', 'Occult', 'Glamour', 'A light illusion over your own face and clothes.', 'Fools the eye only; touch and Spirit Sight see through it.', 'sustained', 'Minor')],
-    pacts: [Object.assign(blankPact(), { kind: 'Spirit', name: 'Ember', tier: 'Basic', applied: true, terms: 'Ember lends her fire and her nose for danger; in return a candle is lit for her every night.' }, TIER_COST[1])],
+    pacts: [Object.assign(blankPact(), { kind: 'Spirit', name: 'Ember', tier: 'Basic', applied: true, terms: 'Ember lends her fire and her nose for danger; in return a candle is lit for her every night.', moves: [
+      { name: 'Flame Lash', effect: 'A whip of fire from Ember, a few metres long; burns and drives back.', cannot: 'Nothing at range beyond about five metres.', mode: 'per_use', scale: 'Standard', act: 6, up: 0, open: false },
+      { name: 'Scent of Danger', effect: 'Ember sniffs out hostile intent, smoke or poison within about twenty metres and warns you.', cannot: 'Only a sense of danger, never who or why.', mode: 'per_use', scale: 'Light', act: 3, up: 0, open: false },
+      { name: 'Hearth Glow', effect: 'Ember gives off steady light and warmth around you (dries clothes, keeps off the cold).', cannot: 'Not enough heat to hurt anyone.', mode: 'sustained', scale: 'Light', act: 3, up: 0.15, open: false },
+    ] }, TIER_COST[1])],
   }) },
   { id: 'hidden', title: 'Secret unmaker', blurb: 'Hidden forbidden magic under a harmless cover. Keep the Doves away.', make: () => ({
     race: 'Human', background: 'Commoner family', goal: 'Get through three years without the Doves learning what I can do.', personality: 'Quiet, watchful, laughs a beat too late.',
@@ -174,8 +194,14 @@ function draftFromState(S0) {
   d.techs = Object.entries(T).filter(([, t]) => !/^\[(pact|true)\]/.test(t.Notes || '')).map(([k, t]) => techOf(k, t));
   d.pacts = Object.entries(S.Magic.Pacts || {}).map(([k, p]) => {
     const kind = PACT_KINDS[p.Kind] ? p.Kind : 'Spirit', s = T['Summon ' + k] || {}, c = T['Channel ' + k] || {}, def = pactCost(kind, p.Tier);
+    const P0 = { kind, tier: p.Tier };
+    const moves = Object.entries(T).filter(([n, x]) => n.startsWith(k + ': ') && String(x.Notes || '').trim() === `[pact] ${k}`).map(([n, x]) => {
+      const m = { name: n.slice(k.length + 2), effect: x.Effect || '', cannot: x.Cannot_do || '', mode: x.Cost_mode === 'sustained' ? 'sustained' : 'per_use', scale: '', act: num(x.Activation), up: num(x.Upkeep_per_min), open: false };
+      const sc = Object.keys(MOVE_SCALE).find(f => _.isEqual(moveCost(P0, { scale: f, mode: m.mode }), { act: m.act, up: m.up })); if (sc) m.scale = sc;
+      return m;
+    });
     return { kind, name: k, tier: p.Tier, presence: p.Presence === 'terms' ? 'terms' : 'summoned', terms: p.Terms || '', hidden: !!s.Hidden, applied: true,
-      act: s.Activation ?? def.act, up: s.Upkeep_per_min ?? def.up, trig: s.Trigger ?? def.trig, ch: c.Activation ?? def.ch };
+      act: s.Activation ?? def.act, up: s.Upkeep_per_min ?? def.up, trig: s.Trigger || def.trig, ch: c.Activation ?? def.ch, moves };
   });
   const cm = String(H.Cover_magic || '').match(/^(.*?)\s*\((Elemental|Mystic|Spiritual|Occult)\)\s*$/);
   const tk = Object.keys(T).find(k => /^\[true\]/.test(T[k].Notes || ''));
@@ -190,15 +216,22 @@ function techEntry(t, d, extra) {
     Activation: num(t.act), Upkeep_per_min: t.mode === 'per_use' ? 0 : num(t.up), Trigger: t.mode === 'hybrid' ? num(t.trig) : 0,
     Hidden: !!(d.hidden.on && t.hidden), Forbidden: isForbidden(t, d), Notes: t.notes.trim() }, extra || {});
 }
-function pactTechs(p) {                 // the techniques a pact becomes (Summon / Channel)
+function pactTechs(p) {                 // the techniques a pact becomes: Summon, one per ability (1.3.2), Channel
   const k = keyOf(p.name); if (!k || !PACT_KINDS[p.kind]) return {};
   const K = PACT_KINDS[p.kind], lawful = p.kind === 'Spirit', R = {};
+  const moves = (p.moves || []).filter(m => keyOf(m.name)), names = moves.map(m => keyOf(m.name));
   const pres = p.presence === 'terms' ? `${k} lives and acts as the pact's terms say; summoning calls it to your side.` : `${k} is with you only while summoned.`;
-  R['Summon ' + k] = { Type: 'Occult', Subtype: K.sub, Effect: `Summons ${k} (${p.kind.toLowerCase()} pact, ${p.tier}). ${pres} Each ability ${k} uses while present is a triggered use.`,
-    Cannot_do: lawful ? 'A spirit killed in combat takes an hour to a week to call back.' : `Killed or driven off, ${k} comes back only as the pact allows.`, Cost_mode: 'hybrid',
-    Activation: num(p.act), Upkeep_per_min: num(p.up), Trigger: num(p.trig), Hidden: false, Forbidden: !lawful, Notes: `[pact] ${k}` };
+  // with abilities listed, Summon only pays for the partner being there; a pact from before 1.3.2 without any keeps one generic trigger cost
+  R['Summon ' + k] = { Type: 'Occult', Subtype: K.sub, Cost_mode: moves.length ? 'sustained' : 'hybrid',
+    Effect: `Summons ${k} (${p.kind.toLowerCase()} pact, ${p.tier}). ${pres} ` + (moves.length ? `${k}'s abilities: ${names.join(', ')} (each its own technique).` : `Each ability ${k} uses while present is a triggered use.`),
+    Cannot_do: lawful ? 'A spirit killed in combat takes an hour to a week to call back.' : `Killed or driven off, ${k} comes back only as the pact allows.`,
+    Activation: num(p.act), Upkeep_per_min: num(p.up), Trigger: moves.length ? 0 : num(p.trig), Hidden: false, Forbidden: !lawful, Notes: `[pact] ${k}` };
+  for (const m of moves) {
+    R[moveKey(p, m)] = { Type: 'Occult', Subtype: K.sub, Effect: m.effect.trim(), Cannot_do: m.cannot.trim(), Cost_mode: m.mode === 'sustained' ? 'sustained' : 'per_use',
+      Activation: num(m.act), Upkeep_per_min: m.mode === 'sustained' ? num(m.up) : 0, Trigger: 0, Hidden: false, Forbidden: !lawful, Notes: `[pact] ${k}` };
+  }
   if (canChannel(p.kind, p.tier)) {
-    R['Channel ' + k] = { Type: 'Occult', Subtype: K.sub, Effect: `Uses ${k}'s ability without summoning it, far weaker than ${k}'s own.`,
+    R['Channel ' + k] = { Type: 'Occult', Subtype: K.sub, Effect: `Uses ${moves.length ? 'one of ' + k + "'s abilities (" + names.join(', ') + ')' : k + "'s ability"} without summoning it, far weaker than ${k}'s own.`,
       Cannot_do: '', Cost_mode: 'per_use', Activation: num(p.ch), Upkeep_per_min: 0, Trigger: 0, Hidden: false, Forbidden: !lawful, Notes: `[pact] ${k}` };
   }
   return R;
@@ -218,7 +251,7 @@ const trueMagicText = d => {
   const t = d.hidden.truth;
   return `${t.name.trim()} (${[t.type, t.subtype.trim(), isForbidden(t, d) ? 'forbidden' : ''].filter(Boolean).join(', ')}): ${t.effect.trim()}`;
 };
-const manaOf = d => _.clamp(Math.round(num(d.mana, 100)), MANA_MIN, MANA_MAX);
+const manaOf = d => _.clamp(Math.round(num(d.mana, 100) * 100) / 100, MANA_MIN, MANA_MAX);   // 1.3.3: training leaves fractions (102.5); an amend must not round them away
 const customRecord = d => Object.fromEntries(d.custom.filter(c => keyOf(c.name)).map(c => [keyOf(c.name), { Type: c.type, Forbidden: !!c.forbidden }]));
 
 // Builder patch. diffOps = the fields that changed (also used for the "amended: …" line); buildOps = the patch actually sent.
@@ -319,6 +352,17 @@ function validate(d, S) {
     else if (pactNames.has(k)) E.pacts.push(`Two pacts share the name "${p.name}".`);
     else if (!p.applied) E.pacts.push(`${label}: press "Apply pact" (or remove it).`);
     pactNames.add(k); names.add('summon ' + k); names.add('channel ' + k);
+    const mv = p.moves || [], seen = new Set();
+    mv.forEach((m, j) => {
+      const mk = keyOf(m.name).toLowerCase(), ml = `${label}, ability ${m.name.trim() || j + 1}`;
+      if (!mk) E.pacts.push(`${label}: ability ${j + 1} needs a name.`);
+      else if (seen.has(mk)) E.pacts.push(`${label}: two abilities are called "${m.name.trim()}".`);
+      seen.add(mk); names.add(`${k}: ${mk}`);
+      if (!m.effect.trim()) E.pacts.push(`${ml}: say what it does.`);
+      if ([m.act, m.up].some(v => !(num(v, -1) >= 0))) E.pacts.push(`${ml}: costs must be zero or more.`);
+    });
+    if (k && !mv.length) Wn.push(`${label} has no abilities listed yet: list what it can do on the Pacts page (like a creature's moves), each with its own cost.`);
+    if (mv.length > moveCap(p.kind, p.tier)) Wn.push(`${label} has ${mv.length} abilities; a ${p.tier} partner usually has at most ${moveCap(p.kind, p.tier)}.`);
     if (p.kind !== 'Spirit' && !(d.hidden.on && p.hidden)) Wn.push(`${label} is a forbidden pact (Pacting). Known openly it means arrest; consider making it part of your hidden magic.`);
   });
   d.techs.forEach((t, i) => {
@@ -425,6 +469,9 @@ summary{cursor:pointer;color:#a9a69f;font-size:13.5px}
 .rep::after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:#6f737b}
 .rep i{position:absolute;top:0;bottom:0;border-radius:5px}
 table{width:100%;border-collapse:collapse;font-size:14px}
+.rtw{overflow-x:auto}table.rt{font-size:13.5px}table.rt td.w{white-space:nowrap;color:#a9a69f;width:1%}table.rt td.fx{width:1%;white-space:nowrap}
+table.rt td.fx span{display:block}table.rt td.fx .up{color:#7fc2a8}table.rt td.fx .dn{color:#f4b0a9}
+@media (max-width:560px){table.rt td.w{white-space:normal;width:auto}table.rt td.fx{white-space:normal}}
 th,td{text-align:left;padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.07);vertical-align:top}
 th{color:#a9a69f;font-weight:500;font-size:13px}
 .pill{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;border:1px solid #535862;margin:0 4px 4px 0;color:#c9c5bc}
@@ -468,13 +515,14 @@ p.fv{margin:0 0 4px;max-width:70ch;color:#dcd7cc}
 .map{position:relative;width:100%;aspect-ratio:3/2;border-radius:10px;overflow:hidden;border:1px solid #474c55;background:#1d2126}
 .map img,.mapfb{width:100%;height:100%;display:block;object-fit:cover}
 .mapfb{background:repeating-linear-gradient(45deg,#23282e 0 12px,#20242a 12px 24px)}
-.pin{position:absolute;transform:translate(-50%,-50%);width:16px;height:16px;padding:0;border-radius:50%;border:2px solid #1d1a15;background:#b39062;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.6)}
+.pin{position:absolute;transform:translate(-50%,-50%);width:16px;height:16px;padding:0;border-radius:50%;border:2px solid #1d1a15/*keep*/;background:#b39062/*keep*/;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.6)/*keep*/}
 .pin::before{content:"";position:absolute;inset:-9px;border-radius:50%}
-.pin.sel{background:#f0e2c4;width:20px;height:20px}
-.pin.here{background:#b9eadf;animation:pulse 2.4s ease-out infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(185,234,223,.7)}70%{box-shadow:0 0 0 12px rgba(185,234,223,0)}100%{box-shadow:0 0 0 0 rgba(185,234,223,0)}}
-.plab{position:absolute;transform:translate(-50%,-190%);pointer-events:none;white-space:nowrap;font-size:12.5px;padding:1px 7px;border-radius:6px;background:rgba(20,22,26,.85);color:#f0e2c4;border:1px solid rgba(179,144,98,.6)}
-.plab.here{color:#b9eadf;border-color:rgba(185,234,223,.6)}
+/* 1.3.4 (owner): pins keep their colours in every theme: brass = a place, cream ring = the one you picked, mint with a white ring = you */
+.pin.sel{background:#fff4d8/*keep*/;width:22px;height:22px;border:3px solid #1d1a15/*keep*/;z-index:2}
+.pin.here{background:#35e0b0/*keep*/;width:22px;height:22px;border:3px solid #ffffff/*keep*/;z-index:3;animation:pulse 2.4s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(53,224,176,.8)/*keep*/}70%{box-shadow:0 0 0 14px rgba(53,224,176,0)/*keep*/}100%{box-shadow:0 0 0 0 rgba(53,224,176,0)/*keep*/}}
+.plab{position:absolute;transform:translate(-50%,-190%);pointer-events:none;white-space:nowrap;font-size:12.5px;padding:1px 7px;border-radius:6px;background:rgba(20,22,26,.9)/*keep*/;color:#f6ead0/*keep*/;border:1px solid rgba(179,144,98,.7)/*keep*/;z-index:4}
+.plab.here{color:#7ff5d6/*keep*/;border-color:rgba(53,224,176,.9)/*keep*/}
 .tog.fl{margin-bottom:10px}
 .mapwrap{display:grid;grid-template-columns:minmax(0,1fr);gap:4px}.mapwrap>*{min-width:0}
 @media (min-width:860px){.mapwrap{grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}.sheet h3{margin-top:0}}
@@ -482,9 +530,9 @@ p.fv{margin:0 0 4px;max-width:70ch;color:#dcd7cc}
 .lc{width:100%;max-width:420px;border-radius:10px;overflow:hidden;border:1px solid #474c55;background:#2a2e34;display:flex;flex-direction:column}
 .lc.here{border-color:#b9eadf}
 .crop{height:96px;flex:0 0 auto;position:relative;background-color:#1d2126;background-repeat:no-repeat}
-.crop::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(15,17,20,.85))}
-.crop b{position:absolute;left:10px;bottom:7px;z-index:1;font-family:Cinzel,serif;font-weight:600;color:#f6ead0;font-size:15px}
-.crop .you{position:absolute;right:8px;top:8px;z-index:1;font-size:12px;padding:1px 8px;border-radius:999px;background:rgba(15,17,20,.8);color:#b9eadf}
+.crop::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(15,17,20,.85)/*keep*/)}
+.crop b{position:absolute;left:10px;bottom:7px;z-index:1;font-family:Cinzel,serif;font-weight:600;color:#f6ead0/*keep*/;font-size:15px}
+.crop .you{position:absolute;right:8px;top:8px;z-index:1;font-size:12px;padding:1px 8px;border-radius:999px;background:rgba(15,17,20,.8)/*keep*/;color:#7ff5d6/*keep*/}
 .lc .in{padding:10px 12px 12px;font-size:14px;display:flex;flex-direction:column;gap:6px;flex:1}
 .vibe{margin:0;font-style:italic;color:#cfcbc2}
 .lc details p{margin:6px 0;font-size:13.5px;color:#cfcbc2}
@@ -499,7 +547,7 @@ button.who{cursor:pointer}button.who:hover{border-color:#b39062}
 span.who{padding-left:9px}
 .meta{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin-top:6px}
 .now{padding:10px 12px;border-radius:10px;background:radial-gradient(120% 140% at 20% 0%,#21393b 0%,#18292b 60%);border:1px solid #0e1718;color:#cfe9e3;margin-bottom:6px}
-.now b{font-size:20px;color:#b9eadf;font-variant-numeric:tabular-nums}.now .ev{color:#f0e2c4;margin-top:2px}.now .cf{color:#f4b0a9;margin-top:2px}
+.now b{font-size:20px;color:#b9eadf;font-variant-numeric:tabular-nums}.now .ev{color:#f0e2c4;margin-top:2px}.now .cf{color:#f4b0a9;margin-top:2px}.now .nx{color:#cfe9e3;margin-top:2px}
 .item.cm.late{border-color:rgba(224,100,90,.6)}
 .scroll{overflow-x:auto}
 table.tt{min-width:520px;font-size:13.5px}
@@ -553,7 +601,7 @@ table.shop{min-width:520px}table.shop b{color:#f0e2c4}table.shop .btn{white-spac
 .tq{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.07)}.tq.no{opacity:.55}.tq b{color:#f0e2c4}
 @media (max-width:560px){.cd{min-height:44px}.cd .ce{display:none}.cd.has .dn{color:#e8d3a8;font-weight:700}}
 @media (max-width:560px){.dos{grid-template-columns:1fr}.por{aspect-ratio:auto;height:240px}.graph{aspect-ratio:4/5}}
-@media (prefers-reduced-motion:reduce){.pin.here{animation:none;box-shadow:0 0 0 4px rgba(185,234,223,.35)}}
+@media (prefers-reduced-motion:reduce){.pin.here{animation:none;box-shadow:0 0 0 4px rgba(53,224,176,.45)/*keep*/}}
 @media (max-width:560px){.grid{grid-template-columns:1fr}.dlg{max-height:calc(100dvh - 12px)}.ov{padding:6px}.bd{padding:12px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 /* ---- 1.1.0: features, weather, bag, forecast ---- */
@@ -569,7 +617,39 @@ p.tot{margin:12px 0 4px;font-size:14.5px}p.tot b{color:#f0e2c4}
 tr.oos td{opacity:.5}.pill.oos{border-color:#8e8a82;color:#8e8a82}
 .log li.old{opacity:.5}.reach{font-size:11.5px;color:#b9eadf;margin-left:6px;white-space:nowrap}
 .fieldl{font-size:13px;color:#f1cf95;margin:4px 0 8px}
+/* ---- 1.3.4: the student's picture (Student file > Overview) ---- */
+.ovw{display:flex;gap:18px;align-items:flex-start}.ovw>.ovl{flex:1;min-width:0}
+.portrait{flex:0 0 200px;display:flex;flex-direction:column;gap:8px}
+.portrait img,.portrait .ph{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;border:1px solid #474c55;background:#1d2126}
+.portrait .ph{display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;color:#8e8a82;font-size:13px}
+.portrait .row{display:flex;gap:6px;flex-wrap:wrap}.portrait label.btn{text-align:center;flex:1}.portrait input[type=file]{display:none}
+@media (max-width:560px){.ovw{flex-direction:column-reverse}.portrait{flex:0 0 auto;width:170px}}
 `;
+
+// ---------------------------------------------------------------- 1.3.1 colour themes (owner playtest), palette only
+// data/themes.json maps colours of the default Pewter palette to each theme's own; the CSS and every rendered panel pass through
+// themed(). The choice is per browser (storage key "eld.theme", shared with the bracelet, which re-colours itself on change).
+const THEMES = /*@@THEMES@@*/{ default: 'pewter', order: [], themes: {} };
+const THEME_KEY = 'eld.theme';
+function themeId() { let v = ''; try { v = localStorage.getItem(THEME_KEY) || ''; } catch (e) { /* storage blocked: default */ } return THEMES.themes[v] ? v : THEMES.default; }
+const rgbHex = s => '#' + s.split(',').map(x => (+x).toString(16).padStart(2, '0')).join('');
+function recolor(str, map) {
+  if (!map || !Object.keys(map).length) return str;
+  return String(str).replace(/(?:#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b|rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,[^)]*)?\))(?!\s*\/\*keep\*\/)/g, (m, hex, r, g, b, a) => {   // 1.3.4: "/*keep*/" after a colour opts out
+    if (hex) { const h = hex.length === 3 ? hex.replace(/./g, c => c + c) : hex, k = [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16)).join(','); return map[k] ? rgbHex(map[k]) : m; }
+    const k = `${r},${g},${b}`, v = map['a:' + k] || map[k];
+    if (!v) return m;
+    const [rgb, f] = v.split('*');   // "r,g,b*k": the alpha is scaled by k (light themes soften dark overlays)
+    return `rgba(${rgb}${f && a ? ',' + +(parseFloat(a.slice(1)) * f).toFixed(3) : a || ''})`;
+  });
+}
+const themed = s => recolor(s, (THEMES.themes[themeId()] || {}).map);
+function setTheme(id) {
+  if (!THEMES.themes[id]) return;
+  try { localStorage.setItem(THEME_KEY, id); } catch (e) { toastr.warning('This browser does not allow saving the theme.', 'Eldrasil'); }
+  applyTheme();
+}
+function applyTheme() { const st = root && root.querySelector('style'); if (st) st.textContent = themed(CSS); render(); }
 
 // ---------------------------------------------------------------- host
 const PD = window.parent.document;
@@ -586,7 +666,7 @@ function ensureHost() {
   }
   host = PD.createElement('div'); host.id = 'eldrasil-ui-host'; PD.body.appendChild(host);
   root = host.attachShadow({ mode: 'open' });
-  root.innerHTML = `<style>${CSS}</style><div class="ov" hidden role="dialog" aria-modal="true"></div>`;
+  root.innerHTML = `<style>${themed(CSS)}</style><div class="ov" hidden role="dialog" aria-modal="true"></div>`;
   ov = root.querySelector('.ov');
   ov.addEventListener('click', onClick); ov.addEventListener('input', onInput); ov.addEventListener('change', onChange);
   // 1.2.0: keys typed in the panels must not reach SillyTavern. Its document-level handlers see the shadow host, not our inputs,
@@ -609,7 +689,7 @@ function scrollInto(el, box, top) {   // scroll only `box` (never the page) so `
 function open(target, { push = true } = {}) {
   ensureHost();
   const st = latestState();
-  if (!st) { toastr.warning('The bracelet has not synced yet. Wait for MVU to initialise this chat, then try again.', 'Eldrasil'); return; }
+  if (!st) { toastr.warning(lorebookMissing() ? "This chat has no game state: the card's lorebook is not attached. Character panel → More… → Import Card Lore, then start a new chat." : 'The bracelet has not synced yet. Wait for MVU to initialise this chat, then try again.', 'Eldrasil'); return; }
   const [panel, arg = ''] = String(target).split(/:(.*)/s);
   if (panel !== 'builder' && panel !== 'profile' && !PANELS[panel]) return;
   if (push && !ov.hidden && view.panel && (view.panel !== panel || view.arg !== arg)) view.stack.push(view.panel + (view.arg ? ':' + view.arg : ''));
@@ -622,13 +702,72 @@ function open(target, { push = true } = {}) {
   view.panel = panel; ov.hidden = false; render();
   const d = ov.querySelector('.dlg'); if (d) keepPage(() => d.focus({ preventScroll: true }));
 }
-function close() { if (ov) ov.hidden = true; view.panel = ''; view.stack = []; }
+// 1.3.5: the card's lorebook holds the starting state and the rules; without it nothing works (Tavern Helper worldbook API)
+function lorebookMissing() {
+  try {
+    if (!/^Eldrasil/.test(String(SillyTavern.name2 || ''))) return false;   // another character's chat: not ours to judge
+    const wb = getCharWorldbookNames('current'); return !(wb && wb.primary && getWorldbookNames().includes(wb.primary));
+  } catch (e) { return false; }
+}
+// 1.3.6 (owner: "it should attach by itself, like other cards"). SillyTavern offers a card's lorebook only once per character
+// file (accountStorage AlertWI_<avatar>, world-info.js checkEmbeddedWorld), so a card imported again, or whose lorebook was
+// deleted, is left without it. The card installs its own lorebook the way More… → Import Card Lore does (importEmbeddedWorldInfo:
+// convertCharacterBook + saveWorldInfo, then the character's world link), through SillyTavern.getContext(). Missing: installed
+// at once. An older version (its [initvar] entry carries the card version, see build_card.py): the player is asked first, since
+// updating replaces the lorebook and any edits made to it. MVU then initialises the chat from it (initCheck on chat load).
+const loreVerOf = entries => { const e = (entries || []).find(x => /^\[initvar\]/.test(String(x.comment || ''))); const m = e && /lore:\s*"([^"]+)"/.exec(String(e.content || '')); return m ? m[1] : ''; };
+let loreChecked = '';
+async function ensureLorebook() {
+  const ctx = typeof SillyTavern === 'object' ? SillyTavern : null;
+  if (!ctx || !ctx.characters || typeof ctx.saveWorldInfo !== 'function' || typeof ctx.convertCharacterBook !== 'function') return;
+  const chid = ctx.characterId, C = ctx.characters[chid];
+  if (!C || !C.data || !C.data.character_book || !/^Eldrasil/.test(String(C.name || ''))) return;
+  const book = C.data.character_book, name = (C.data.extensions && C.data.extensions.world) || book.name || C.name;
+  if (loreChecked === C.avatar + '|' + name) return;
+  loreChecked = C.avatar + '|' + name;
+  const names = typeof ctx.getWorldInfoNames === 'function' ? ctx.getWorldInfoNames() : [];
+  const cardVer = loreVerOf(book.entries);
+  const install = async () => {
+    await ctx.saveWorldInfo(name, ctx.convertCharacterBook(book), true);
+    if (typeof ctx.updateWorldInfoList === 'function') await ctx.updateWorldInfoList();
+    if (!(C.data.extensions && C.data.extensions.world) && typeof ctx.writeExtensionField === 'function') await ctx.writeExtensionField(chid, 'world', name);
+  };
+  try {
+    if (!names.includes(name)) {
+      await install();
+      const fresh = !latestState();
+      toastr.success(`The card's lorebook "${name}" was installed and attached.${fresh ? ' Loading this chat again so the story can start.' : ''}`, 'Eldrasil', { timeOut: 8000 });
+      if (fresh && typeof ctx.reloadCurrentChat === 'function') setTimeout(() => ctx.reloadCurrentChat(), 800);
+      return;
+    }
+    if (!cardVer || typeof ctx.loadWorldInfo !== 'function') return;
+    const wi = await ctx.loadWorldInfo(name), have = loreVerOf(Object.values((wi && wi.entries) || {}));
+    if (have === cardVer) return;
+    const msg = `<h3>Update the Eldrasil lorebook?</h3><p>SillyTavern holds the lorebook "${esc(name)}" ${have ? 'version ' + esc(have) : 'from an older version'}, but this card is ${esc(cardVer)}. The old rules and lore do not match the card.</p><p>Updating replaces that lorebook with the card's own (edits you made to it are lost). Start a new chat afterwards.</p>`;
+    const ok = typeof ctx.callGenericPopup === 'function' && ctx.POPUP_TYPE
+      ? await ctx.callGenericPopup(msg, ctx.POPUP_TYPE.CONFIRM, '', { okButton: 'Update', cancelButton: 'Not now' })
+      : window.parent.confirm(`Update the Eldrasil lorebook to ${cardVer}? It replaces "${name}".`);
+    if (!ok) return;
+    await install();
+    toastr.success(`The lorebook "${name}" was updated to ${cardVer}. Start a new chat to play with it.`, 'Eldrasil', { timeOut: 8000 });
+  } catch (err) {
+    console.error('[Eldrasil UI] lorebook', err);
+    toastr.warning("The card's lorebook could not be installed automatically. Character panel → More… → Import Card Lore.", 'Eldrasil');
+  }
+}
+function close() { if (ov) ov.hidden = true; view.panel = ''; view.stack = []; render0.key = ''; }
 function back() { const t = view.stack.pop(); if (t) open(t, { push: false }); else close(); }
 function render() { keepPage(render0); }
 function render0() {
   if (!ov || ov.hidden) return;
   const st = latestState(); const S = st && st.data.stat_data;
-  ov.innerHTML = view.panel === 'builder' ? renderBuilder(S) : view.panel === 'profile' ? renderProfile(S) : PANELS[view.panel].render(S);
+  const bd0 = ov.querySelector('.bd'), key = view.panel + '|' + view.arg, y = bd0 && render0.key === key ? bd0.scrollTop : 0;   // 1.3.4
+  const html = view.panel === 'builder' ? renderBuilder(S) : view.panel === 'profile' ? renderProfile(S) : PANELS[view.panel].render(S);
+  // 1.3.1 (owner playtest: Etnie's dossier mixed "{{user}}" with the persona name): lore text shows the student's name everywhere.
+  // The Builder is left alone: its fields hold what will be saved.
+  ov.innerHTML = themed(view.panel === 'builder' ? html : personal(html, S));
+  render0.key = view.panel + '|' + view.arg;
+  if (y) { const bd = ov.querySelector('.bd'); if (bd) bd.scrollTop = y; }
   ov.querySelectorAll('img[data-fb]').forEach(img => img.addEventListener('error', () => { img.replaceWith(Object.assign(PD.createElement('span'), { className: img.dataset.fbclass || 'fb', textContent: img.dataset.fb })); }, { once: true }));
   if (PANELS[view.panel] && PANELS[view.panel].after) PANELS[view.panel].after(S);
   const on = ov.querySelector('.nav .on'); if (on) scrollInto(on, on.parentElement);
@@ -742,14 +881,33 @@ function bTechs(d, S, V) {
   const max = manaOf(d);
   const list = d.techs.map((t, i) => techForm(t, `techs.${i}`, d, max, 'New technique')).join('');
   const fromPacts = d.pacts.filter(p => p.applied && keyOf(p.name));
-  const pactList = fromPacts.map(p => Object.entries(pactTechs(p)).map(([k, t]) => `<div class="item pt"><div class="row"><span class="t">${esc(k)}</span>
-    <span class="pill">${esc(p.kind)} pact</span>${t.Forbidden ? '<span class="pill f">forbidden</span>' : ''}${d.hidden.on && p.hidden ? '<span class="pill h">hidden</span>' : ''}<span class="pill">${esc(MODES[t.Cost_mode])}</span></div>
-    <div class="sub">${esc(t.Effect)}</div><div class="cost">${esc(costLine({ mode: t.Cost_mode, act: t.Activation, up: t.Upkeep_per_min, trig: t.Trigger }, max))}</div></div>`).join('')).join('');
+  const pactList = fromPacts.map(p => `<h4>${esc(keyOf(p.name))} <span class="sub">(${esc(p.kind)} pact, ${esc(p.tier)}; ${(p.moves || []).filter(m => keyOf(m.name)).length} abilit${(p.moves || []).filter(m => keyOf(m.name)).length === 1 ? 'y' : 'ies'})</span></h4>` + Object.entries(pactTechs(p)).map(([k, t]) => `<div class="item pt"><div class="row"><span class="t">${esc(k)}</span>
+    <span class="pill">${/^(Summon|Channel) /.test(k) ? esc(k.split(' ')[0].toLowerCase()) : 'ability'}</span>${t.Forbidden ? '<span class="pill f">forbidden</span>' : ''}${d.hidden.on && p.hidden ? '<span class="pill h">hidden</span>' : ''}<span class="pill">${esc(MODES[t.Cost_mode])}</span></div>
+    <div class="sub">${esc(t.Effect)}${t.Cannot_do && !/^(Summon|Channel) /.test(k) ? ` Cannot: ${esc(t.Cannot_do)}` : ''}</div><div class="cost">${esc(costLine({ mode: t.Cost_mode, act: t.Activation, up: t.Upkeep_per_min, trig: t.Trigger }, max))}</div></div>`).join('')
+    + `<button class="btn sm" data-step="pacts">Edit ${esc(keyOf(p.name))}'s abilities</button>`).join('');
   return `${errs(V.E.techs)}<p class="lead">Techniques are the spells your student knows well. Costs are fixed here; during play the engine charges them, not the AI. Your mana capacity is <b>${max}</b>.</p>
   <div class="hint" style="margin-bottom:12px">Per use: pay each cast. Sustained: pay to start, then upkeep for every in-world minute it runs. Hybrid: sustained, plus a cost each time you trigger it while it runs.</div>
   ${list || '<div class="empty">No techniques yet.</div>'}<button class="btn" data-act="addtech">Add technique</button>
-  <h3>Pact techniques</h3>${pactList ? `<p class="hint">From your applied pacts. Change them on the Pacts page.</p>${pactList}` : `<div class="empty">None. A pact you apply on the Pacts page shows up here as its Summon${d.pacts.length ? '' : ' (and Channel)'} technique.</div>`}
+  <h3>Pact techniques</h3>${pactList ? `<p class="hint">From your applied pacts: summoning the partner, then each of its abilities with its own cost (it can use only these). Change them on the Pacts page.</p>${pactList}` : `<div class="empty">None. A pact you apply on the Pacts page shows up here: its Summon technique and each ability you give the partner.</div>`}
   ${d.hidden.on && keyOf(d.hidden.truth.name) ? `<p class="hint">Your true magic (${esc(d.hidden.truth.name)}) is set on the Hidden magic page.</p>` : ''}`;
+}
+// 1.3.2: one ability of a pact partner (folds into one line like an applied technique; tap to edit)
+function moveForm(p, m, i, j, d) {
+  const base = `pacts.${i}.moves.${j}`, k = keyOf(p.name), cost = costLine({ mode: m.mode, act: m.act, up: m.up, trig: 0 }, manaOf(d));
+  if (!m.open) return `<div class="item tc"><button class="tch" data-act="moveopen" data-i="${i}" data-j="${j}"><span class="t">${esc(m.name || 'New ability')}</span>
+    <span class="sub">${esc([m.scale, MODES[m.mode]].filter(Boolean).join(' · '))} · ${esc(cost)}</span></button>
+    <span class="tcp"><button class="btn sm" data-act="moveopen" data-i="${i}" data-j="${j}">Edit</button><button class="btn sm del" data-act="delmove" data-i="${i}" data-j="${j}">Remove</button></span></div>`;
+  return `<div class="item"><div class="row"><span class="t">${esc(m.name || 'New ability')}</span><button class="btn sm del" data-act="delmove" data-i="${i}" data-j="${j}">Remove</button></div>
+    <div class="grid">
+      <label class="f">Name${inp(`${base}.name`, m.name, 'placeholder="e.g. Flame Lash"')}</label>
+      <label class="f">Kind${sel(`${base}.mode`, m.mode, [['per_use', 'Per use (a move)'], ['sustained', 'Lasting (upkeep while it runs)']], `data-act="movecost" data-i="${i}" data-j="${j}"`)}</label>
+      <label class="f full">What it does${txt(`${base}.effect`, m.effect, `What ${k || 'your partner'} does: range, size, what it looks like.`)}</label>
+      <label class="f full">What it cannot do${inp(`${base}.cannot`, m.cannot, 'placeholder="Limits keep the story interesting."')}</label>
+      <label class="f">Strength${sel(`${base}.scale`, m.scale, [['', 'Custom'], ...Object.keys(MOVE_SCALE).map(f => [f, `${f} (${moveCost(p, { scale: f, mode: m.mode }).act} mana)`])], `data-act="movecost" data-i="${i}" data-j="${j}"`)}</label>
+      <label class="f">${m.mode === 'sustained' ? 'Mana to start' : 'Mana per use'}${inp(`${base}.act`, m.act, `type="number" min="0" step="0.5" data-num="1" data-custom="${base}"`)}</label>
+      ${m.mode === 'sustained' ? `<label class="f">Upkeep per minute${inp(`${base}.up`, m.up, `type="number" min="0" step="0.05" data-num="1" data-custom="${base}"`)}</label>` : ''}
+    </div><div class="cost">${esc(cost)}</div>
+    <div class="meta"><button class="btn pri sm" data-act="moveapply" data-i="${i}" data-j="${j}">Done</button><span class="hint">Technique name: “${esc(k || '…')}: ${esc(keyOf(m.name) || '…')}”.</span></div></div>`;
 }
 function bPacts(d, S, V) {
   const list = d.pacts.map((p, i) => {
@@ -764,11 +922,16 @@ function bPacts(d, S, V) {
       <label class="f full">Terms of the pact${txt(`pacts.${i}.terms`, p.terms, 'What each side gives and promises; when it may act on its own.')}</label>
       <label class="f">Summon: mana to call${inp(`pacts.${i}.act`, p.act, 'type="number" min="0" step="0.5" data-num="1"')}</label>
       <label class="f">Summon: upkeep per minute${inp(`pacts.${i}.up`, p.up, 'type="number" min="0" step="0.05" data-num="1"')}</label>
-      <label class="f">Each ability it uses${inp(`pacts.${i}.trig`, p.trig, 'type="number" min="0" step="0.5" data-num="1"')}</label>
+      ${(p.moves || []).length ? '' : `<label class="f">Any ability it uses (until you list them)${inp(`pacts.${i}.trig`, p.trig, 'type="number" min="0" step="0.5" data-num="1"')}</label>`}
       ${ch ? `<label class="f">Channelling per use${inp(`pacts.${i}.ch`, p.ch, 'type="number" min="0" step="0.5" data-num="1"')}</label>` : '<div class="hint">Channelling needs the two highest tiers.</div>'}
       ${d.hidden.on ? `<label class="chk full"><input type="checkbox" data-k="pacts.${i}.hidden" data-rr="1" ${p.hidden ? 'checked' : ''}> Part of my hidden magic</label>` : ''}
-      </div><div class="meta"><button class="btn ${p.applied ? '' : 'pri'}" data-act="applypact" data-i="${i}" ${k ? '' : 'disabled'}>${p.applied ? 'Applied ✓' : 'Apply pact'}</button>
-      <span class="hint">${p.applied ? `On your Techniques page as “Summon ${esc(k)}”${ch ? ` and “Channel ${esc(k)}”` : ''}.` : 'Apply it to add its techniques.'}</span></div></div>`;
+      </div>
+      <h4>Abilities <span class="sub">(${(p.moves || []).length} of usually ${moveCap(p.kind, p.tier)} for ${esc(p.tier)})</span></h4>
+      <p class="hint" style="margin-top:0">What ${esc(k || 'your partner')} can do, like a creature's moves: each is its own technique with its own cost, used while it is with you. It can do nothing else.</p>
+      ${(p.moves || []).map((m, j) => moveForm(p, m, i, j, d)).join('')}
+      <button class="btn sm" data-act="addmove" data-i="${i}">Add ability</button>
+      <div class="meta"><button class="btn ${p.applied ? '' : 'pri'}" data-act="applypact" data-i="${i}" ${k ? '' : 'disabled'}>${p.applied ? 'Applied ✓' : 'Apply pact'}</button>
+      <span class="hint">${p.applied ? `On your Techniques page: “Summon ${esc(k)}”${(p.moves || []).length ? `, its ${(p.moves || []).length} abilit${(p.moves || []).length === 1 ? 'y' : 'ies'}` : ''}${ch ? ` and “Channel ${esc(k)}”` : ''}.` : 'Apply it to add its techniques.'}</span></div></div>`;
   }).join('');
   return `${errs(V.E.pacts)}<p class="lead">A pact is a negotiated contract. Summoning drains mana the whole time your partner is present, and more for each ability it uses. Only a pact with a spirit is lawful; a pact with anything else is the forbidden art of Pacting. Most students have no pact; skip this page if yours doesn't.</p>
   ${list || '<div class="empty">No pacts.</div>'}<button class="btn" data-act="addpact">Add pact</button>`;
@@ -798,7 +961,7 @@ function bReview(d, S, V) {
   <dt>Magic</dt><dd>${esc(d.types.join(', ') || '—')}${d.dominant ? ` (dominant ${esc(d.dominant)} → ${DORM_OF[d.dominant]})` : ''}</dd>
   <dt>Specialties</dt><dd>${esc(d.specs.join(', ') || '—')}</dd>
   <dt>Techniques</dt><dd>${Object.keys(T).map(k => `<span class="pill ${T[k].Hidden ? 'h' : T[k].Forbidden ? 'f' : ''}">${esc(k)}</span>`).join('') || '—'}</dd>
-  ${pacts.length ? `<dt>Pacts</dt><dd>${esc(pacts.map(p => `${p.name} (${p.kind}, ${p.tier})`).join('; '))}</dd>` : ''}
+  ${pacts.length ? `<dt>Pacts</dt><dd>${esc(pacts.map(p => `${p.name} (${p.kind}, ${p.tier})${(p.moves || []).length ? ': ' + p.moves.map(m => m.name.trim()).join(', ') : ''}`).join('; '))}</dd>` : ''}
   ${d.hidden.on ? `<dt>Hidden</dt><dd>${esc(trueMagicText(d))}<br><span class="sub">Cover: ${esc(d.hidden.cover)}${d.hidden.cover_type ? ` (${esc(d.hidden.cover_type)})` : ''}</span></dd>` : ''}
   </dl>
   <p class="hint" style="margin-top:14px">${draftBuilt ? 'Saving adds a hidden entry to the chat with these changes. Delete that entry to undo them.' : 'Registering adds a hidden entry to the chat that sets up your student. The AI does not read that entry; it sees your student in the current state. Delete the entry to undo it.'}</p>
@@ -823,6 +986,7 @@ function onInput(e) {
     const tt = el.closest('.item') && el.closest('.item').querySelector('.t');
     if (tt && /\.name$/.test(el.dataset.k)) tt.textContent = el.value || (b[1] === 'hidden.truth' ? 'True magic' : 'New technique');
   }
+  if (/^pacts\.\d+\.moves\.\d+\.name$/.test(el.dataset.k)) { const tt = el.closest('.item') && el.closest('.item').querySelector('.t'); if (tt) tt.textContent = el.value || 'New ability'; }
   const p = el.dataset.k.match(/^pacts\.(\d+)\.name$/);
   if (p) {
     const it = el.closest('.item'), t = it.querySelector('.t'); if (t) t.textContent = el.value || 'New pact';
@@ -830,7 +994,9 @@ function onInput(e) {
   }
 }
 function onChange(e) {
-  const el = e.target; if (view.panel !== 'builder' || !el.dataset) return;
+  const el = e.target;
+  if (el && el.dataset && el.dataset.act === 'portrait') { if (el.files && el.files[0]) uploadPortrait(el.files[0]); el.value = ''; return; }
+  if (view.panel !== 'builder' || !el.dataset) return;
   if (el.dataset.act === 'pron') {
     if (el.value === 'other') { draft.pronOther = true; if (PRONOUNS.includes(draft.pronouns)) draft.pronouns = ''; }
     else { draft.pronOther = false; draft.pronouns = el.value; }
@@ -844,7 +1010,11 @@ function onChange(e) {
     const t = _.get(draft, el.dataset.base), c = t && SCALES[t.scale];
     if (c) { t.act = t.mode === 'per_use' ? c.use : c.act; t.up = t.mode === 'per_use' ? 0 : c.up; t.trig = t.mode === 'hybrid' ? c.trig : 0; }
   }
-  if (el.dataset.act === 'tier') { const p = draft.pacts[+el.dataset.i]; Object.assign(p, pactCost(p.kind, el.value)); }
+  if (el.dataset.act === 'tier') {   // a new tier brings its costs; abilities with a strength follow it
+    const p = draft.pacts[+el.dataset.i]; Object.assign(p, pactCost(p.kind, el.value));
+    for (const m of p.moves || []) if (MOVE_SCALE[m.scale]) Object.assign(m, moveCost(p, m));
+  }
+  if (el.dataset.act === 'movecost') { const p = draft.pacts[+el.dataset.i], m = p && (p.moves || [])[+el.dataset.j]; if (m && MOVE_SCALE[m.scale]) Object.assign(m, moveCost(p, m)); else if (m && m.mode !== 'sustained') m.up = 0; }
   const tm = el.dataset.k && el.dataset.k.match(/^(techs\.\d+|hidden\.truth)\.(mode|type|subtype)$/);
   if (tm) {
     const t = _.get(draft, tm[1]);
@@ -868,6 +1038,12 @@ function onClick(e) {
     if (a === 'bondset') {   // 1.2.2: bond pace / romance rank (Settings), written like every setting (D3)
       const st = latestState(), S0 = st && st.data.stat_data, f = b.dataset.f, v = f === 'romrank' ? +b.dataset.v : b.dataset.v;
       if (S0 && (S0.$ui || {})[f] !== v) commitSetting([{ op: 'replace', path: `/$ui/${f}`, value: v }], `⚙️ Setting: ${f === 'romrank' ? 'romance opens at ' + (v > 10 ? 'never (off)' : v ? 'Rank ' + v : 'any rank') : 'bond pace ' + v}.`);
+    }
+    if (a === 'theme') { setTheme(b.dataset.v); return; }
+    if (a === 'portraitdel') { commitSetting([{ op: 'replace', path: '/$ui/portrait', value: '' }], '🖼️ Student picture removed.'); return; }   // 1.3.1: per browser, no chat entry
+    if (a === 'tune') {   // 1.3.1: training / reputation settings (data/tuning.json), written like every setting (D3)
+      const st = latestState(), S0 = st && st.data.stat_data, row = TUNE_ROWS.find(r => r.id === b.dataset.f), v = +b.dataset.v;
+      if (S0 && row && tuneVal(S0, row.id) !== v) commitSetting([{ op: 'replace', path: '/$ui/tune', value: { ...(((S0.$ui || {}).tune) || {}), [row.id]: v } }], `⚙️ Setting: ${row.name} → ${(row.opts.find(o => o[0] === v) || [0, v])[1]}.`);
     }
     if (a === 'feat' || a === 'featlv') { const st = latestState(); const ops = featureOps(st && st.data.stat_data, b.dataset.f, b.dataset.v); if (ops) commitSetting(ops.ops, ops.head); }
     if (b.dataset.fill) fillChat(b.dataset.fill);   // 1.1.0: Bag buttons draft the action (D6)
@@ -913,8 +1089,17 @@ function onClick(e) {
   if (a === 'delpact') { draft.pacts.splice(+b.dataset.i, 1); return rr(); }
   if (a === 'pkind') {
     const p = draft.pacts[+b.dataset.i]; p.kind = b.dataset.v; p.applied = false;
-    if (PACT_KINDS[p.kind]) { p.tier = PACT_KINDS[p.kind].tiers[0]; Object.assign(p, pactCost(p.kind, p.tier)); }
+    if (PACT_KINDS[p.kind]) { p.tier = PACT_KINDS[p.kind].tiers[0]; Object.assign(p, pactCost(p.kind, p.tier)); for (const m of p.moves || []) if (MOVE_SCALE[m.scale]) Object.assign(m, moveCost(p, m)); }
     return rr();
+  }
+  if (a === 'addmove') { const p = draft.pacts[+b.dataset.i]; if (p) { (p.moves = p.moves || []).forEach(m => { m.open = false; }); p.moves.push(blankMove(p)); } return rr(); }
+  if (a === 'delmove') { const p = draft.pacts[+b.dataset.i]; if (p) p.moves.splice(+b.dataset.j, 1); return rr(); }
+  if (a === 'moveopen') { const m = ((draft.pacts[+b.dataset.i] || {}).moves || [])[+b.dataset.j]; if (m) m.open = true; return rr(); }
+  if (a === 'moveapply') {
+    const m = ((draft.pacts[+b.dataset.i] || {}).moves || [])[+b.dataset.j]; if (!m) return;
+    const miss = [!keyOf(m.name) && 'a name', !m.effect.trim() && 'what it does'].filter(Boolean);
+    if (miss.length) { toastr.warning(`Give it ${miss.join(' and ')} first.`, 'Student Builder'); return; }
+    m.open = false; return rr();
   }
   if (a === 'applypact') { const p = draft.pacts[+b.dataset.i]; if (p && keyOf(p.name)) p.applied = true; return rr(); }
   if (a === 'commit') commit();
@@ -965,8 +1150,7 @@ function vbar(label, cur, max, color, sub) {
 // 1.3.0 reputation: level -5..+5 on a centred bar, progress to the next level, what the level means (data/reputation.json)
 const REPD = DATA.rep || { reps: [], thresholds: [], effects: {}, about: {} };
 // lore-style text for the player: secrets removed, {{user}} as the student's first name
-const youText = (t, S) => { const nm = String((((S || {}).Player || {}).Profile || {}).Name || '').replace('{{user}}', '').trim().split(/\s+/)[0] || 'You';
-  return String(t || '').replace(/<narrator_only>[\s\S]*?<\/narrator_only>/g, '').replace(/\{\{user\}\}/g, nm).trim(); };
+const youText = (t, S) => String(t || '').replace(/<narrator_only>[\s\S]*?<\/narrator_only>/g, '').replace(/\{\{user\}\}/gi, () => userName(S)).trim();
 function repRow(S, r) {
   const R = (S.Player.Profile.Reputation || {}), L = _.clamp(num(R['_' + r]), -5, 5), x = num((R.$xp || {})[r]), T = REPD.thresholds;
   const band = ((REPD.effects[r] || []).find(([a, c]) => L >= a && L <= c) || [0, 0, ''])[2];
@@ -981,8 +1165,10 @@ function repRow(S, r) {
 function trainLine(S, k) {
   const T = ((S.Player || {}).$Training || {})[k], D = DATA.trn || {};
   if (!T || !(T.base > 0) || !D.tracks) return '';
-  const cap = T.base * D.total_pct / 100, wk = T.base * D.weekly_pct / 100, wNow = T.w === Math.floor(num((S.$eng || {}).abs, 0) / 1440 / 7) ? num(T.wg) : 0;
-  return T.gain >= cap ? `Trained +${fmt(T.gain)}: at the limit (twice your starting ${fmt(T.base)})` : `Trained +${fmt(T.gain)} of +${fmt(cap)}; this week +${fmt(wNow)} of +${fmt(wk)}`;
+  const tot = tuneVal(S, 'trn_total'), wkp = tuneVal(S, 'trn_week');   // 1.3.1 Settings (0 = no limit)
+  const cap = tot > 0 ? T.base * tot / 100 : 0, wk = T.base * wkp / 100, wNow = T.w === Math.floor(num((S.$eng || {}).abs, 0) / 1440 / 7) ? num(T.wg) : 0;
+  if (cap && T.gain >= cap) return `Trained +${fmt(T.gain)}: at the limit (+${tot}% of your starting ${fmt(T.base)})`;
+  return `Trained +${fmt(T.gain)}${cap ? ` of +${fmt(cap)}` : ''}; this week +${fmt(wNow)}${wkp > 0 ? ` of +${fmt(wk)}` : ''}`;
 }
 function renderProfile(S) {
   if (!S) return `<div class="dlg"><div class="hd"><h2>Student file</h2><button class="x" data-act="close">×</button></div><div class="bd"><div class="empty">No state yet.</div></div></div>`;
@@ -999,14 +1185,17 @@ function renderProfile(S) {
 function pOverview(S) {
   const P = S.Player.Profile, W = S.World;
   if (!(S.$ui || {}).built) return `<p class="lead">This student file is still empty.</p><button class="btn pri" data-act="tobuilder">Create your student</button>`;
-  return `<p class="name">${esc(P.Name)}</p>
+  const pic = portraitURL(S);
+  return `<div class="ovw"><div class="ovl"><p class="name">${esc(P.Name)}</p>
   <div class="sub" style="margin:2px 0 14px">Year ${P.Year}, <span style="color:var(--dc)">${esc(P.Dorm === 'Unsorted' ? 'not yet sorted' : P.Dorm + ' Dormitory')}</span>${P.Dorm_rank ? `, dorm rank ${P.Dorm_rank}` : ''}</div>
   <dl class="kv"><dt>Pronouns</dt><dd>${esc(P.Pronouns || '—')}</dd><dt>Age</dt><dd>${esc(P.Age)}</dd>
   <dt>Race</dt><dd>${esc(P.Race)}${P.Beast_type ? ` (${esc(P.Beast_type)})` : ''}</dd><dt>Background</dt><dd>${esc(P.Background || '—')}</dd>
   <dt>Birthday</dt><dd>${esc(P.Birthday || '—')}</dd>
   <dt>Club</dt><dd>${esc(P.Club || 'none yet')}</dd><dt>Combat roles</dt><dd>${esc(P.Combat_role || 'assigned at your first Combat class')}</dd>
   <dt>Goal</dt><dd>${esc(P.Goal || '—')}</dd><dt>Appearance</dt><dd>${esc(P.Appearance || '—')}</dd><dt>Personality</dt><dd>${esc(P.Personality || '—')}</dd>
-  <dt>Now</dt><dd>${esc(`Month ${W.Month}, Week ${W.Week}, ${W.Day} ${W.Time}`)}, ${esc(W.Location)}</dd></dl>
+  <dt>Now</dt><dd>${esc(`Month ${W.Month}, Week ${W.Week}, ${W.Day} ${W.Time}`)}, ${esc(W.Location)}</dd></dl></div>
+  <div class="portrait">${pic ? `<img src="${esc(pic)}" alt="${esc(P.Name)}" data-fb="Picture not found" data-fbclass="ph">` : '<div class="ph">No picture yet</div>'}
+    <div class="row"><label class="btn sm">${pic ? 'Change picture' : 'Upload picture'}<input type="file" accept="image/*" data-act="portrait"></label>${pic ? `<button class="btn sm del" data-act="portraitdel" ${view.busy ? 'disabled' : ''}>Remove</button>` : ''}</div></div></div>
   <h3>Reputation</h3>${REPD.reps.map(r => repRow(S, r)).join('')}`;
 }
 function pBody(S) {
@@ -1021,7 +1210,7 @@ function pBody(S) {
 // 1.3.0 bond rewards held: Rank 5 gifts and Rank 10 benefits (engine-written _Perks); one-use ones already spent
 function pPerks(S) {
   const P = Object.entries(S._Perks || {}), used = (S.$ui || {}).perks_used || [];
-  const row = ([k, p]) => `<div class="item"><div class="row"><span class="t">${esc(k)}</span><span class="sub">${p.Kind === 'rank10' ? 'Rank 10' : 'gift'} · ${esc(nameOf(p.From, S))}${p.Uses > 0 ? ` · ${p.Uses} use${p.Uses > 1 ? 's' : ''} left` : ''}</span></div><div class="sub">${esc(youText(p.Effect, S))}</div></div>`;
+  const row = ([k, p]) => `<div class="item"><div class="row"><span class="t">${esc(k)}</span><span class="sub">${p.Kind === 'rank10' ? 'Rank 10' : 'gift'} · ${esc(nameOf(p.From, S))}${p.Uses > 0 ? ` · ${p.Uses} use${p.Uses > 1 ? 's' : ''} left` : ''}</span></div>${((S.$ui || {}).tsusp || []).includes(k) ? `<div class="warn">Suspended: ${esc(nameOf(p.From, S))} no longer trusts you enough (Trust ${esc(String((DATA.tru || {}).susp || 35))} brings it back).</div>` : ''}<div class="sub">${esc(youText(p.Effect, S))}</div></div>`;
   return `<p class="lead">What your closest bonds have given you. Gifts are sold nowhere; a Rank 10 benefit is that person's alone.</p>
     ${P.length ? ['gift', 'rank10'].map(kd => P.filter(([, p]) => p.Kind === kd)).filter(g => g.length).map((g, i) => `<h3>${g[0][1].Kind === 'rank10' ? 'Rank 10 benefits' : 'Gifts'}</h3>${g.map(row).join('')}`).join('') : '<div class="empty">Nothing held right now.</div>'}
     ${used.length ? `<h3>Used</h3><ul class="log">${used.map(u => `<li>${esc(u)}</li>`).join('')}</ul>` : ''}`;
@@ -1089,6 +1278,9 @@ function pLog(S) {
 // 5.3 / 1.1.0: player settings. Written like the Builder (D3): a hidden user message carrying an MVU patch, so swipes/deletes stay consistent.
 // 1.1.0 (spec §9): Features: one row per toggleable feature with its token estimate; turning one off parks its state (engine §0b).
 const FEATS = (DATA.features || []), FCOST = DATA.fcost || { rules: {}, live: {}, core_rules: 0, lore: 0 };
+// 1.3.1 (owner playtest): training and reputation settings (data/tuning.json; the engine reads $ui.tune the same way)
+const TUNE_GROUPS = DATA.tune || [], TUNE_ROWS = TUNE_GROUPS.flatMap(g => g.rows);
+function tuneVal(S, id) { const r = TUNE_ROWS.find(x => x.id === id); if (!r) return 0; const v = Number((((S || {}).$ui || {}).tune || {})[id]); return r.opts.some(([x]) => x === v) ? v : r.def; }
 const featureLevel = (S, f) => { const u = (S && S.$ui) || {}; return f.control === 'levels' ? (u[f.field] || (f.id === 'weather' ? 'full' : 'normal')) : ((u.off || []).includes(f.id) ? 'off' : 'on'); };
 function featureOn(S, id) { const f = FEATS.find(x => x.id === id); return !f || featureLevel(S, f) !== 'off'; }
 const omit$ = o => (Array.isArray(o) ? o.map(omit$) : o && typeof o === 'object' ? Object.fromEntries(Object.entries(o).filter(([k]) => !k.startsWith('$')).map(([k, v]) => [k, omit$(v)])) : o);
@@ -1128,7 +1320,11 @@ function pSettings(S) {
   const featPaths = FEATS.flatMap(f => f.paths || []);
   const core = omit$(S); for (const p of featPaths) _.unset(core, p);
   const coreTok = FCOST.core_rules + tokOf(core), total = coreTok + FCOST.lore + on;
-  return `<h3>Features</h3>
+  const th = themeId();
+  return `<h3>Appearance</h3>
+  <p class="hint">Colours of the panels and the bracelet. Kept in this browser only; nothing is written to the chat.</p>
+  <div class="tog">${(THEMES.order || []).map(k => `<button data-act="theme" data-v="${esc(k)}" class="${th === k ? 'on' : ''}" aria-pressed="${th === k}">${esc(THEMES.themes[k].name)}</button>`).join('')}</div>
+  <h3>Features</h3>
   <p class="hint">Turn off what you do not use to keep the prompt short. A feature that is off disappears from the narrator's state and rules, its tabs and chips hide, and whatever it held is kept aside (parked) until you turn it back on. Numbers are estimates (≈3.6 characters per token).</p>
   <div class="feats">${rows}</div>
   <div class="feat core"><div class="fm"><b>Core (always on)</b><div class="sub">Clock and calendar, body, magic, wallet, profile, bonds, journal, campus state, the output format, and the always-on lore (Campus Map, World Index, NPC Roster, Timetable, Calendar). Hidden magic is set by the Builder. The Price Guide is only sent when prices come up (≈${FCOST.price_guide}).</div>
@@ -1141,11 +1337,39 @@ function pSettings(S) {
     <div class="tog">${Object.keys((DATA.bond || {}).pace || {}).map(k => `<button data-act="bondset" data-f="bondpace" data-v="${k}" class="${((S.$ui || {}).bondpace || 'standard') === k ? 'on' : ''}" ${view.busy ? 'disabled' : ''}>${esc(((DATA.bond || {}).pace_labels || {})[k] || k)}</button>`).join('')}</div></div>
   <div class="feat bset"><div class="fm"><b>Romance opens at</b><div class="sub">Feelings can grow earlier in the story; the romance flag waits for this rank.</div></div>
     <div class="tog">${((DATA.bond || {}).romance_options || []).map(([v, l]) => `<button data-act="bondset" data-f="romrank" data-v="${v}" class="${num((S.$ui || {}).romrank, 8) === v ? 'on' : ''}" ${view.busy ? 'disabled' : ''}>${esc(l)}</button>`).join('')}</div></div>
+  ${TUNE_GROUPS.map(g => `<h3>${esc(g.name)}</h3><p class="hint">${esc(g.hint)}</p>${g.rows.map(r => `<div class="feat bset"><div class="fm"><b>${esc(r.name)}</b><div class="sub">${esc(r.desc)}</div></div>
+    <div class="tog">${r.opts.map(([v, l]) => `<button data-act="tune" data-f="${esc(r.id)}" data-v="${v}" class="${tuneVal(S, r.id) === v ? 'on' : ''}" aria-pressed="${tuneVal(S, r.id) === v}" ${view.busy ? 'disabled' : ''}>${esc(l)}${v === r.def ? ' ·' : ''}</button>`).join('')}</div></div>`).join('')}`).join('')}
+  <p class="hint">A dot (·) marks the standard value. Changes count from the next reply; what was already gained stays.</p>
   <h3>Story memory</h3>
   <p class="hint">The narrator reads only the latest 24 or so messages; older ones reach it as […]. What it remembers of the rest is the game state: the Journal (${J} of 30 lines; ${A} archived, still shown in your Notebook), bonds, campus news, commitments and clues.
   To change how much chat it reads, edit the Min Depth of the regex "Eldrasil — State-as-memory: trim far chat (prompt)" in the Regex extension; disable that regex to send the whole chat.</p>
   <h3>MVU mode</h3>
   <p class="hint">This card asks MVU to update variables together with the AI's reply (card config override). You can change it in the MVU panel under the current card's config.</p>`;
+}
+// 1.3.4 (owner): the student's picture. It is scaled down (640 px, JPEG) and saved as a SillyTavern user image (the same
+// /api/images/upload SillyTavern's own saveBase64AsFile uses), so it works on every device; the chat keeps only its path
+// ($ui.portrait, hidden from the narrator), never the picture itself (every message stores the variables).
+const portraitURL = S => { const p = String((((S || {}).$ui) || {}).portrait || ''); return !p ? '' : /^(https?:|data:|\/)/.test(p) ? p : '/' + p; };
+async function uploadPortrait(file) {
+  if (view.busy) return;
+  if (!/^image\//.test(file.type || '')) { toastr.warning('Choose an image file.', 'Eldrasil'); return; }
+  view.busy = true; render();
+  let path = '';
+  try {
+    const url = URL.createObjectURL(file);
+    const img = await new Promise((ok, bad) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => bad(new Error('The image could not be read.')); i.src = url; });
+    const k = Math.min(1, 640 / Math.max(img.naturalWidth, img.naturalHeight)), c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(img.naturalWidth * k)); c.height = Math.max(1, Math.round(img.naturalHeight * k));
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url);
+    const headers = SillyTavern && typeof SillyTavern.getRequestHeaders === 'function' ? SillyTavern.getRequestHeaders() : { 'Content-Type': 'application/json' };
+    const res = await fetch(PD.defaultView.location.origin + '/api/images/upload', { method: 'POST', headers,
+      body: JSON.stringify({ image: c.toDataURL('image/jpeg', 0.88).split(',')[1], format: 'jpg', ch_name: 'Eldrasil', filename: `student_${Date.now()}` }) });
+    if (!res.ok) throw new Error(`SillyTavern did not accept the picture (${res.status}).`);
+    path = (await res.json()).path || '';
+    if (!path) throw new Error('SillyTavern did not say where it saved the picture.');
+  } catch (err) { console.error('[Eldrasil UI]', err); toastr.error(String((err && err.message) || err), 'Eldrasil'); }
+  finally { view.busy = false; render(); }
+  if (path) await commitSetting([{ op: 'replace', path: '/$ui/portrait', value: path }], '🖼️ Student picture updated.');
 }
 async function commitSetting(ops, head) {
   if (view.busy) return;
@@ -1177,7 +1401,7 @@ const npcOf = id => DATA.npcs && DATA.npcs[id];
 const _edgeNames = new WeakMap();
 function namedByEdges(S) {
   if (!S || typeof S !== 'object') return new Set();
-  if (!_edgeNames.has(S)) _edgeNames.set(S, new Set((DATA.rel || []).filter(e => edgeVisible(e, S) && ((S.Bonds || {})[e[0]])).map(e => e[1])));
+  if (!_edgeNames.has(S)) _edgeNames.set(S, new Set((DATA.rel || []).filter(e => !e[6] && edgeVisible(e, S) && ((S.Bonds || {})[e[0]])).map(e => e[1])));   // 1.4.2: group-rule lines (e[6]) name no one
   return _edgeNames.get(S);
 }
 const knowsName = (id, S) => { const b = ((S && S.Bonds) || {})[id]; return !!((b && b.Rank >= 1) || ((S && S.$ui && S.$ui.names) || []).includes(id) || namedByEdges(S).has(id)); };
@@ -1229,7 +1453,9 @@ if (typeof eventOn === 'function' && typeof getButtonEvent === 'function') {
     eventOn(getButtonEvent('Activities'), () => open('activities'));
     const refresh = _.debounce(() => { if (view.panel === 'profile' || (PANELS[view.panel] && PANELS[view.panel].live)) render(); }, 300);
     ['MESSAGE_RECEIVED', 'MESSAGE_DELETED', 'MESSAGE_SWIPED', 'MESSAGE_UPDATED'].forEach(k => tavern_events[k] && eventOn(tavern_events[k], refresh));
-    eventOn(tavern_events.CHAT_CHANGED, () => { draft = null; close(); });
+    eventOn(tavern_events.CHAT_CHANGED, () => { draft = null; close(); loreChecked = ''; setTimeout(ensureLorebook, 1200); });
+    setTimeout(ensureLorebook, 1500);   // 1.3.6: the card installs or updates its own lorebook
+    window.addEventListener('storage', e => { if (e.key === THEME_KEY) applyTheme(); });   // 1.3.1: the theme changed in another tab
     waitGlobalInitialized('Mvu').then(() => eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, () => setTimeout(refresh, 400)));
     $(window).on('pagehide', () => { delete window.parent.__eldrasilUI; if (host) host.remove(); });
   });

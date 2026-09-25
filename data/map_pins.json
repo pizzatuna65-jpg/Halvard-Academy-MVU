@@ -149,8 +149,7 @@
   "x": 11.72,
   "y": 11.72,
   "cluster": [
-   "forest_clearing",
-   "forest"
+   "forest_clearing"
   ],
   "tabs": null
  },
@@ -395,6 +394,16 @@
   "y": 15.62,
   "cluster": [
    "grassy_field_and_hills"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 37,
+  "label": "Forest",
+  "x": 10.0,
+  "y": 27.5,
+  "cluster": [
+   "forest"
   ],
   "tabs": null
  }

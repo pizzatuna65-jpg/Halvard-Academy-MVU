@@ -374,9 +374,340 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   Krieg's "suspicion low" = Dove attention <= 39 (Unnoticed / Rumoured); the mask gate opens on any revealed secret of that NPC;
   Public/Dorm migration x1.25. Token cost +~920 always-on: reputation could become a Features toggle if that is too much.
 
+- 1.3.1 Owner playtest of card 1.3.0 (10 notes), all applied.
+  (1) Etnie is no longer bonded in message 1: initvar 500 has Bonds {}. data/bond_rules.json `start` gives a bond its own start;
+  the engine applies it once, when it first records the bond (the first scene they share, or a record the narrator writes): Etnie
+  Rank 3, Trust 70, Title "Self-declared big sister", her fact and milestone (journaled), the Rank 3 cooldown before her next event.
+  (2) {{user}} in lore text: the dossier printed raw NPC fields ({{user}}) next to state text MVU had already substituted (persona
+  name). Every panel but the Builder now shows the student's first name (userName: Profile.Name, else the ST persona, else "you").
+  (3) Map "you are here": "Boathouse" matched no place (the map name is "Boathouse and Lake"), and "Boathouse and Lake — Fishing House"
+  matched the boathouse. The engine now writes World.Location in the Campus Map's words (canonLocation, §1): a short or partial name
+  becomes the map name (tools/common.py place_aliases: parts of "X and Y" names plus common short names), a sub-spot that is its
+  own place wins (a dorm room every dorm shares stays under its dorm), off-campus text and trips are left alone. The UI map reads
+  locations the same way. Discovery, regulars, the Now entry, weather (outdoor) and bond-event places all see the map name.
+  (4) Connections graph: every dot sat in the middle. Cause (reproduced in a browser): Tavern Helper runs the UI script in a hidden
+  iframe, where requestAnimationFrame never fires, so d3's simulation timer never ticked and no node left (0, 0). The layout is now
+  computed at once (300 ticks) and dragging steps the simulation with SillyTavern's own page frames; no animated double-click zoom.
+  The lead text says which lines open when (NPC views on others at Rank 5–6, family/teachers public; unchanged design).
+  (5) Event day plans: every EVENTS entry carries `s` (one plan or one per day) from its lore entry, with times; _Event_today is
+  "<event> — <today's plan>", events separated by " | " (the bracelet chip still shows the short name); the calendar day view shows
+  the plan. Lore 21 (Entrance Event) and the Month 1 calendar line carry the times (merge_lorebooks.py). Curfews from the lore that
+  the engine missed: Traveling Circus 22:00, Harvest Festival Fri/Sat 23:00 (curfew per day).
+  (6) Club sign-up: new event M1 W1 Tue–Fri "Club sign-up week": booths 16:00–18:00 after classes, Monday 10:00–18:00 (Entrance
+  Event), registration closes Friday 18:00 (was 17:00 on sorting day; lore 21 edited).
+  (7) Colour themes, palette only: data/themes.json (from tools/make_themes.py: role -> colour per theme; "a:r,g,b" = rgba only;
+  "r,g,b*k" scales alpha): Pewter (default), Midnight, Rosewood, Parchment (light), Frost (light). Student file → Settings →
+  Appearance; kept per browser (storage key "eld.theme"), no chat entry; the panels re-colour their CSS and HTML, the bracelet
+  re-colours its CSS and follows changes live (storage event). qa_static allows browser storage for that one key only.
+  (8) Map: the Forest has its own pin 37 (10.0%, 27.5%: the trees below the Forest Clearing, near the Fire Dormitory); pin 11 is the
+  Forest Clearing alone. Walking times unchanged (forest legs keep their lore times).
+  (9) Tension penalty mirrors the bond milestones: Tension 70 costs -5 (as before) and Tension 100 (maximum) another -10
+  (data/reputation.json tension_max / tension_max_xp); staff -> Academy, students -> Student and now also Milena -> Doves.
+  (10) Settings for the 1.3.0 systems (data/tuning.json, $ui.tune, written like every setting): Training (gain per session, weekly
+  limit, lifetime limit; each with "No limit"), Reputation (pace x0.5–x2, weekly cap for everyday deeds incl. none, bond milestones
+  until +3 / always / off, tension penalty on/off). Defaults are today's numbers (gen_engine.py asserts them against training.json
+  and reputation.json). Rule 502 no longer states "+5 a week".
+  Tests: tests/test_playtest_v131.cjs (52 checks); harness initState({ etnie: true }) meets Etnie first for older suites; the bond
+  importer test runs `python` on Windows. npm test 564 checks (13 suites). Token audit ~10.0k start / ~14.6k mid-game (the Entrance
+  Event plan at the start; event days add their plan, ~40–100 tokens).
+  Windows build note: Python writes CRLF there. gen_ui.py and make_themes.py now write LF; the other generators' output was
+  normalised after the build (sed 's/\r$//'), so the zip has LF throughout as before.
+  To confirm with the owner: invented clock times where the lore gives none (Dorm Days 09:00–18:00 and 19:00 dinner, Warding Rite
+  dusk ~17:00, exams 08:00, assemblies 09:00, feasts 19:00, competition days 09:00–18:00, Remembrance lanterns ~19:00); the theme
+  palettes; Milena now counts for the Doves tension penalty.
+
+- 1.3.2 Owner: pact partners have several abilities, like a creature's moves (the owner also approved the 1.3.1 invented clock
+  times and Milena's Doves tension penalty). Builder → Pacts: each pact has an Abilities list (name, what it does / cannot do,
+  per use or lasting, strength Light x0.5 / Standard x1 / Heavy x2 / Ultimate x3.5 of the tier's base trigger cost, or a custom
+  cost); usual count per tier 2 / 3 / 4 / 6 (MOVE_CAP, a warning only). Each ability is its own technique "<partner>: <ability>"
+  (Occult, the pact's subtype, Notes "[pact] <partner>"); with abilities listed, Summon is sustained (it only pays for the partner
+  being there) and Channel names the abilities it can borrow. A pact without abilities (older saves) keeps Summon hybrid with the
+  one generic trigger cost; the Builder nudges to list them. Loading reads the abilities back from the techniques (strength
+  recognised when the cost matches). The Techniques page lists pact techniques grouped per partner. Engine §2: an ability cast is
+  charged only while the partner is here (Summoned, Active "Summon <partner>", or Presence "terms"); otherwise it is logged and
+  not charged. Rule 502 (Pacts) updated. The spirit template's Ember has three abilities (Flame Lash, Scent of Danger, Hearth Glow).
+  Tests: tests/test_pacts_v132.cjs (27 checks); test_builder expects the sustained Summon. npm test 591 checks (14 suites).
+  To confirm with the owner: the strength multipliers and the usual ability counts per tier.
+
+- 1.3.3 Bug hunt with new stress tests (tests/stress/, `npm run stress`, ~30 s): fuzz.cjs (random narrator updates, sensible
+  and broken, through schema + engine; invariants after every step; every panel, the Builder round trip and every EJS entry
+  rendered on the states), fuzz_builder.cjs (random Builder drafts with odd names, pacts with abilities, hidden magic: save,
+  load, save again, cast everything), sim_year.cjs (a diligent player for a year: bonds, events, training, reputation, pact
+  abilities; state growth). Also a browser pass: 60 fuzzed states through the bracelet, 20 through every panel in a hidden
+  script iframe (no errors, no "undefined"/"NaN", the graph never stacks).
+  Verified upstream first (StageDog tavern_resource util/mvu_zod.ts): MVU applies commands one by one and drops only a command
+  whose result fails the schema (with a toast), keeping the previous value. tests/harness.cjs now does the same
+  (applyPatch.dropped); numbers that are not numbers stay a schema failure (a default would reset e.g. Dove attention).
+  Fixed:
+  - World.Time / Day typos: "7:5", "9.30", "7pm", "noon", "tuesday" are read; an unreadable or impossible value ("later",
+    "25:61", "Funday") keeps the previous clock (logged). Before, it became 08:00 / Monday, which moved the story a day or a week.
+  - Bonds could be lost: a whole-/Bonds replace dropped every bond it left out (Etnie's Rank 3 included), and a record rewritten
+    whole lost its facts, milestones, title and trust. The engine keeps removed bonds and mends such a record (logged).
+  - Builder amend after training rounded a fractional Mana_max (102.5 -> 103, and moved the training base): manaOf keeps 2 decimals.
+  - null in a text field became the text "null"; it is now '' (or the field's default).
+  - A student name with "$&" broke {{user}} replacement in the panels (string replacement patterns).
+  - Changing a pact's kind now rescales the costs of abilities that have a strength (tier changes already did).
+  Checked, no bug: weekly/lifetime training limits (a steady student reaches +100% after ~45 weeks), monthly perk points and the
+  Academy +5 bonus (once a month each), rewards given once, Journal/archive/_Log caps, year rollover and a forgotten Year, big
+  time jumps (one payout per month), 6000+ fuzzed updates at ~1–4 ms each.
+  Observation for the owner (not changed): _Perks is AI-visible and grows to ~6 KB (~1,600 tokens) once many bonds reach Rank 5/10;
+  the Rank 10 texts could be shortened for the narrator if the prompt gets tight.
+  Tests: tests/test_bughunt_v133.cjs (12 checks). npm test 603 checks (15 suites).
+
+- 1.3.4 Owner playtest in ST (8 notes).
+  (1) Etnie in People at message 0: the card was right (Bonds {}), but SillyTavern still held the old lorebook; importing a card
+  again does not replace its lorebook. Fix for the owner: character panel → More… → Import Card Lore (it asks to overwrite the
+  lorebook of the same name; checked in SillyTavern world-info.js importEmbeddedWorldInfo), then a new chat. Detection: the
+  [initvar] entry now carries the card version ($eng.lore, filled in by build_card.py from card.json); on a chat's first update
+  an older or missing one gives a toast and a _Log line with those steps, and a pre-1.3.1 starting Etnie (Rank 3, never seen,
+  M1 W1) is dropped. ENGINE_VER now comes from card.json too (gen_engine.py): one version number to bump.
+  (2) The bracelet kept Pewter: Tavern Helper puts its own <style> first in every message iframe (checked: JS-Slash-Runner
+  src/panel/render/iframe.ts createSrcContent), so the first <style> was never ours. The bracelet's CSS has an id now.
+  (3–5) Map pins: the themes re-coloured them too (Rosewood: "you are here" close to the brass pins; Parchment: the picked
+  pin; Frost: both). Pins, labels and card crops sit on the map picture, so their colours are fixed in every theme: brass pins,
+  the picked one cream with a dark ring, "you are here" mint with a white ring and a pulse. A colour followed by /*keep*/ is
+  never re-coloured (panels and bracelet).
+  (6) The student's picture: Student file → Overview has a picture frame with Upload / Change / Remove. The image is scaled to
+  640 px (JPEG 0.88) and saved as a SillyTavern user image (POST /api/images/upload with the request headers, the same call as
+  SillyTavern's saveBase64AsFile; checked in utils.js and src/endpoints/images.js), folder "Eldrasil"; the chat keeps only the
+  path in $ui.portrait (hidden from the narrator), written like every setting. Only testable in ST: the upload itself.
+  (7) Calendar clicks scrolled to the top: every re-render replaced the panel. A re-render of the same panel now keeps the
+  scroll position; opening another panel still starts at the top.
+  (8) "Next" on the bracelet (and in Notebook → Planner's now box): the engine writes $ui.next = the next thing today from the
+  event plans (a timed item, or "dusk (about 17:00)"), the class periods (not on no-class, away or break days; Saturday clubs)
+  and curfew (none on lockdown, breaks, trips, Star Night). E.g. Entrance Event at 08:00 → "Next 09:00 · Sorting at the Arbiter
+  Stone in the Arbiter Hall"; an ordinary Tuesday 07:00 → "Next 08:00 · Dark Magic Defense".
+  Tests: tests/test_playtest_v134.cjs (25 checks). npm test 628 checks (16 suites); npm run stress clean. Browser check: map pins
+  in Frost, the bracelet re-colouring with a Tavern Helper style in front, the picture frame, the upload up to the request
+  (1600x2000 PNG -> 512x640 JPEG, 4 KB), calendar scroll kept.
+
+- 1.3.5 Owner: a card imported without its lorebook attached showed "Syncing the bracelet…" forever (no [initvar], so MVU had no
+  state). The bracelet keeps looking for a minute; after 4 s without state it says why (Tavern Helper getCharWorldbookNames /
+  getWorldbookNames: no primary lorebook, or one that no longer exists) and offers "Import the card's lorebook", which runs
+  SillyTavern's own More… → Import Card Lore (selects #import_character_info in #char-management-dropdown; checked in ST
+  script.js: importEmbeddedWorldInfo asks before overwriting and links the lorebook); then a new chat. With the lorebook
+  attached but still no state, it points at MagVarUpdate / Tavern Helper. The panels warn when a chat of this character opens
+  without the lorebook, and when opened without state. Browser check: the hint, the button firing the ST menu. npm test 631 checks.
+
+- 1.3.6 Owner: the lorebook should attach by itself, like other cards. Cause (checked in SillyTavern world-info.js
+  checkEmbeddedWorld): ST offers a card's embedded lorebook only once per character file (accountStorage "AlertWI_<avatar>"),
+  and not at all when power_user.world_import_dialog is off; a card imported again, or whose lorebook was deleted, is left
+  without it. The card now installs its own lorebook, the way More… → Import Card Lore does (importEmbeddedWorldInfo), through
+  SillyTavern.getContext(): convertCharacterBook + saveWorldInfo + updateWorldInfoList, and writeExtensionField 'world' if the
+  character is not linked. Missing: installed at once with a toast; a chat without state is loaded again (reloadCurrentChat), so
+  MVU initialises it from the new lorebook (MVU initCheck runs on chat load and tracks initialized_lorebooks; checked in
+  MagVarUpdate src/function/initvar). Older (its [initvar] carries an older or no version): a popup asks "Update the Eldrasil
+  lorebook?" (it replaces the lorebook and any edits to it); "Not now" leaves it. Checked once per chat; other characters are
+  never touched. Only verifiable in ST: the real calls. Tests: tests/test_lorebook_v136.cjs (10 checks, a mock of the context
+  with the card's real book). npm test 641 checks.
+
+- 1.3.7 Owner playtest in ST.
+  EJS error on every send ("redeclaration of const _U … while compiling ejs"): the Prompt Template extension compiles lorebook
+  entries that land in the same place as one template, and 502 and 504 both declared _U / _OFF / on at the top level (505 too:
+  on). The updates still landed, but the rules around the error did not render. build_card.py now wraps every EJS entry in its
+  own block (<%_ { _%> … <%_ } _%>), so an entry's consts never meet another's. Tests render all EJS entries as one template (and
+  the same entry twice); the unwrapped 502+504 reproduce the error. Every earlier test rendered entries one at a time.
+  Tension did not move after a punch and an insult: Trust / Tension are the narrator's to write (the engine only counts high and
+  maximum Tension against reputation), and the rules it reads were partly broken by the error above. Rule 502 now gives sizes: a
+  slight +3–5, an insult or broken promise +10–15, violence +20–30, betrayal Trust −15–30, amends −5–10.
+  Connections: someone never met (Ottavio, through Percival's public family line) appeared at Rank 0. A public line (family,
+  teacher) now shows only between two people you have met; someone you have not met appears only through a bond's views at Rank
+  5–6. Your own circle shows the student's picture when one was uploaded.
+  Theme on load: the choice is remembered per browser (the last one picked in Settings → Appearance); no change.
+  Tests: tests/test_playtest_v137.cjs (7 checks). npm test 648 checks; stress clean.
+
+- 1.3.8 Tension from 0 to 100 (owner design, planning/DRAFT_tension.md, approved 2026-09-25). data/tension.json is the
+  single source (engine, Now entry, UI). Bands for everyone: Calm 0, Friction 20, Strained 40 (talk/hangout/gift/help XP
+  halved), Hostile 70 (no bond event; −5 reputation as before), Enemy 90 (no bond XP; −10 reputation at 100 as before), and at
+  100 the bond loses a rank (bar emptied, toast, journal). How it is played comes from five categories, each with texts per
+  band, a hard limit ("never") and how it eases: Withdrawn (Ruby, Zara, Mimosa, Royhan, Alyssa, Vera, Trixie, Tilly, Lenna;
+  decay 2/day), Social (Caralynn, Florian, Aiden, Idris, Bobby, Milena; 0.5/day; at Enemy a gossip campaign costs Student −5
+  more), Confrontational (Sophia, Percival, Saffi, Vallie; 1 per 3 days; a fight with them eases 25, once a day: new
+  Interactions Kind "fight"), Authority (Irene, Caspian, Baelin, Yvette, Gavlan, Layla, Kuroo, Ottavio, Rei; 1/day), Dangerous
+  (Krieg, Caine, Tristan, Castor, Dante, Gareth; no decay; each has a peak line). Overrides: Etnie (devoted, never leaves),
+  Kanae (her affection never lessens: no XP cut, no event hold, no rank loss, no reputation cost; her displeasure goes to the
+  people around {{user}}), Althair (Tension locked at 0; every rise becomes bond XP /2 rounded up, at most +10 a day), Ezrel
+  (rises count half). Krieg at 100: Dove attention +10 with hidden magic, Doves reputation −40 Rep XP. Decay only on quiet
+  days (no rise in that update), fractions carried in $tf. The Now entry adds one line per present NPC at Tension ≥ 20 (and
+  Althair's note): band, behaviour, peak, never, how it eases; nothing when all is calm. Rule 502: Kind "fight" and what the
+  engine does at 40/70/90/100. UI: band name next to Tension (People, dossier), a warning of what it does to the bond, the
+  held-event hint, Althair's "Hostility only makes him fonder of you". Also: reputation milestones are paid once per rank ($ms;
+  older saves count ranks already reached as paid), and the tension reputation check now runs after gifts and Krieg move
+  Tension (a disliked gift crossing 70 never counted before). Tests: tests/test_tension_v138.cjs (28 checks); npm test 675.
+
+- 1.3.9 Owner: Tension has no limit like bond XP ("trust takes time; it is always easier to make enemies than friends"). The engine
+  never capped rises (only 0–100); rule 502 now says the sizes are not limits, offences in one reply add up, one bad day can make
+  an enemy, and mending is slower than harm. Only easing is limited (decay, one fight a day). Test added (npm test 676).
+
+- 1.4.0 Apologies by the NPC's nature (owner, DRAFT_tension.md addendum approved 2026-09-25). The narrator no longer lowers
+  Tension for an apology; it reports Interactions Kind "apology" ("Public": true in front of others) and the engine applies the
+  category's value (data/tension.json apology {private, public}): Withdrawn −20, Social −5 / public −15, Confrontational −5 (a fight
+  is −25), Authority −10, Dangerous 0 (grudge); Etnie −25, Kanae −20, Ezrel 0; Althair has nothing to ease. apology_npc: Sophia
+  +10 (she despises cowards; only a fight settles it). One apology a day per NPC; each further one in the same week counts half.
+  The Now entry's "Eases" says how an apology lands for each present tense NPC; rule 502 tells the narrator to report, not
+  lower. Tests: tests/test_apology_v140.cjs (10 checks). npm test 686 checks.
+
+- 1.4.0 test card (owner): tools/build_test_card.py [rank] builds dist/test/Eldrasil_TEST_Rank7.png from the built card: renamed
+  "Eldrasil — TEST Rank 7" with its own lorebook name (so the card's own lorebook install never touches the real one), every
+  bonded NPC (38) at Rank 7 in its starting state, a note in the first message. Checked: 38 bonds at 7 after the first update, no
+  old-lorebook warning, no reputation paid for the skipped milestones, Connections 39 people / 57 lines, readable in the browser.
+
+- 1.4.1 People → Connections rebuilt (owner, planning/DRAFT_connections.md, approved 2026-09-25). The line types were
+  guessed from keywords in the lore sentences (Gavlan → Sophia "romance" from "fall in love with war"; 197 of 278 lines fell to
+  "acquainted"). Every line is now curated by hand in data/relations_curated.json (key "From>To"; 'drop' = a passing fact, 77) in
+  seven kinds: Friends 49 (mutual, incl. working well together), Soft spot 39 (one-sided fondness, drawn dashed and fainter),
+  Protective 33 (incl. mentors), Respect 17, Rivals 17, Wary 52 (suspicion, fear, being used), Dislike 28 (incl. active
+  opposition); no acquainted, romance (only ever with {user}) or family lines; story lines (New_relations) stay. Public = the
+  12 official teacher / mentor ties (shown once both are met); the rest open at bond Rank 5-6. build_relations.py fails on a line
+  the lore gains that is not curated. Groups (off by default; chips "Dorms", "Clubs", "Factions"): label nodes on a ring at the
+  edge, dashed lines to the members you have met (and to you for your own dorm and club): dorms by student dorm plus Dorm Heads
+  (public tags), clubs from the club data (members and advisors), factions from data/factions.json (Student Council, Dovecote,
+  Halvard staff, Cathedral, Noble Houses' Liaison; the Morning Choir shows a member only once their secret on cult / choir / mark
+  / identity is revealed). Dragging (owner: "bounced back like rubber"): a dropped person stays where dropped (fx/fy kept,
+  remembered in view.gpos while the panel lives), double-click lets go, "Reset layout" clears; others barely move while dragging.
+  Browser-checked with the Rank 7 test card (39 people): drag stays, labels on the ring. Tests: tests/test_connections_v141.cjs
+  (14 checks); test_people_map / test_playtest_v137 moved to the new kinds. npm test 699 checks.
+- 1.4.2 People → Connections, owner requests (2026-09-25):
+  - Directed lines. A line is From → To (how From sees To) with an arrowhead in the line colour at To, stopping at the edge
+    of To's circle. When both sides hold the same view it is one plain line with no arrow; two different views of one pair
+    are two arrows that bow apart. Tapping a line says "A → B … (one way)" or "A and B … (both ways)". Lines are SVG paths now.
+  - Althair: everyone at Halvard dislikes him, one way; he dislikes no one (relations_curated.json `disliked_by_all`;
+    build_relations.py asserts it). Existing lines to him became dislike (lore notes kept); people with no lore line get the
+    curated note, opening at bond Rank 5. Althair>Krieg (was dislike) is dropped. Rival-academy teams are left out, and so
+    are Baelin (stays wary) and Ezrel (stays soft spot): owner, `except` in disliked_by_all.
+  - Romance (new chip, always listed, "(none yet)" and a tooltip with the rank from Settings while empty): your own line to
+    someone turns pink and thicker once Bonds.<id>.Romance is set (Rank 8 by default). Etnie and Kanae love {{user}} one way:
+    a pink arrow runs from them to you once it is out (Etnie: her Loves field, known from Rank 3; Kanae: a Secrets_revealed
+    topic matching plan/love/goal/feeling/obsess/reading/true), until you start a romance with them (then the shared line
+    replaces it). Config: relations_curated.json `romance_one_way`.
+  - Group-rule lines (relations_curated.json `group_rules`): a view of a whole group becomes one-way lines to every member,
+    opening at the rank of the field that states it. Caine's Hates ("Mages", Rank 3) → dislike to all 43 mages (everyone
+    but Bobby); the Doves field (Rank 6) → "Hates…" = dislike, "Admires…" = respect to the Dovecote (Krieg, Milena);
+    Neutral = nothing. A hand-curated line between the same two people wins (Vallie, Layla, Caspian keep disliking Krieg;
+    Caine keeps his wary Kuroo and Florian). Rule lines are drawn only to people you have met, never teach a name, and the
+    dossier lists them as one row ("Mages (43 people)").
+  - Your own line to each person takes a kind from the bond (data/bond_rules.json `you_line`, first rule that holds):
+    Romance flag → romance (shared); Tension 70+ → dislike, them → you; Title with "rival" → rivals (shared); Tension 40+
+    or Trust under 30 → wary, them → you; Title "best friend", or Rank 5+ with Trust 70+ → friends (shared); else the plain
+    gold bond line. Thickness still follows rank; tapping the line says why (rank, trust, Tension band, title). A kind whose
+    chip is off falls back to the gold line; your lines bring their chips even with no NPC line of that kind.
+  - Browser preview caught a bug before shipping: the arrow to you has no rank, which gave the layout NaN (Etnie and Kanae
+    vanished); fixed. Tests: tests/test_connections_v142.cjs (33 checks); test_connections_v141 moved to the new data.
+    npm test 732 checks. TEST card (dist/test, Rank 7) rebuilt at 1.4.2.
+  - To confirm with the owner: the invented notes (Althair "Does not like Vice Headmaster Althair Veyne, which only
+    entertains him."; Etnie "Loves you above everything, and is wholly convinced she is your big sister."; Kanae "Loves you,
+    and has planned for a long time to keep you for herself."); Etnie's arrow shows from the start (her Loves field is Rank 3, which is where her bond starts); Caine also hates nobles
+    (not drawn: there is no noble marker in the data yet); the you_line thresholds (70 / 40 Tension, Trust 30 / 70, Rank 5).
+- 1.4.3 Trust as a full system (owner design, planning/DRAFT_trust.md, approved 2026-09-25 in full, plus Ottavio).
+  Single source data/trust.json (engine via gen_engine.py, Now via gen_mvu_entries.py, UI via gen_ui.py).
+  - Bands, the same effects for everyone: Betrayed 0–14 (shares nothing new, bond XP halved, Tension rises x1.5, apologies do
+    nothing), Doubtful 15–34 (shares one tier less, apologies x0.5), Neutral 35–64, Trusting 65–84 (shares one tier more,
+    apologies x1.5), Confidant 85–100 (two tiers more and the real tiers one rank early; small Tension rises, up to +15 in a
+    reply, count half; apologies x1.5).
+  - Perk gates (perk_gates): Rank 6 perks need Trust 35, Rank 7 50, Rank 9–10 65; the bond event to that rank waits
+    (bev why 'trust', need), like Tension 70+. The Rank 8 event never waits, but under 50 its directions say it can only end in a
+    sworn rivalry, and the Romance flag is refused under 50. A Rank 10 benefit is suspended under 35 ($ui.tsusp; Perk_use
+    refuses it; the Perks panel says so). Rank never falls through Trust.
+  - Rises only from reported deeds: new interaction kinds keep +4, secret +6, defend +5 (x1.5 with "Public"), confide +3, and
+    help +2; x the category's rise; each kind once a day; at most +8 a week per NPC. A rank earned adds +3 (outside the cap).
+    The narrator can no longer raise Trust (the engine undoes it and says why); drops are written directly with the sizes in
+    rule 502 (−3–5, −10–15, −20, −25–40), x the category's drop, never capped. A drop of 20+ in one reply costs every Friends
+    line of that NPC −5 Trust. Below 35, a week without a new drop recovers the category's amount.
+  - Categories = openness (data/bond_openness.json; others normal): Open start 60, rise x1.5, drop x1, recover +3/week;
+    Normal 50, x1, x1, +2; Guarded 40, x0.75, x1.25, +1; Closed 30, x0.5, x1.5, none. Start applies to new bonds only.
+  - Overrides: Etnie (never below 50; the rest of a drop becomes Tension; no gates), Kanae (kind "choose" +3 x2; never below 15;
+    both only while none of her secrets is out), Althair (Trust fixed at 50, a betrayal becomes bond XP /2 within his daily
+    cap; no gates), Ezrel (x0.5 both ways), Caine (at most 64 until one of his secrets is out), Krieg (Trust 0 when the hidden
+    magic reaches Exposed).
+  - Owner addition: Ottavio and his Sky students (dorm_head): bond XP x1.5, Tension rises x0.5, eases x2, apologies x2, and
+    Trust as an Open NPC (start 60).
+  - Narrator: rule 502 (new Trust paragraph, interaction kinds); <now> Bond lines carry "Trust n band", the tiers it shifts,
+    "Held back by low Trust: …" and suspended benefits; new "Trust:" lines for present characters in a telling band (Betrayed,
+    Doubtful, Confidant) or with a personal rule; the bond-event close no longer invites raising Trust.
+  - UI: band next to Trust (dossier, bonds list tooltip, Connections line info); dossier warnings (Betrayed; perks held back
+    with rank and Trust needed); held-event hint; Althair "Trust fixed". you_line thresholds follow the bands (wary under 35,
+    friends from 65).
+  - Schema: Bonds.$tdrop (day of the last drop), $ui.tsusp. Tests: tests/test_trust_v143.cjs (41 checks); five older checks
+    moved to the new rules (apology x Trust, Now bond line format, alias merge uses a drop, Etnie's written Trust gives way to
+    her start, the Castor 8 -> 9 test sets Trust 70). npm test 773 checks; npm run stress passes; browser-checked dossier.
+  - To confirm with the owner: Kanae's "choose" kind is told to the narrator only in <now> while she is present; Krieg's
+    trigger is the Exposed stage (80+); Caine's cap lifts on any of his secrets; hooks-based promise tracking (draft point 12)
+    was not built.
+- 1.4.4 Grey areas (owner, planning/DRAFT_greyarea.md, approved 2026-09-25 in full). The owner's use cases (a genki
+  airhead who fails every plan and lets secrets slip, playful banter with shoves, a tsundere) were played through the engine
+  for four in-game weeks: read literally, rule 502 turned a harmless airhead into a betrayer for everyone (Betrayed, Tension up to
+  84), banter sent every bond to Rank 0, and a tsundere who helps and defends still lost Sophia and Irene to Rank 0.
+  - E1 (bug): maximum Tension broke a rank every time it touched 100 again (decay to 99, then +4 the next day: Rank 2 -> 0 in a
+    week). Now one rank per blow-up: Bonds.$tbrk, re-armed once Tension falls below effects.rank_drop_rearm (70).
+  - E2: kindness eases Tension by nature (tension.json kind_ease, once a day, only when Tension > 0): help / keep / defend
+    withdrawn −5, authority −3, social −5 only for a public defence, confrontational and dangerous 0; Etnie and Kanae −5, Althair
+    and Ezrel 0.
+  - E3: interaction "understood" (they finally understand {{user}} meant well) gives back the category's share of the last
+    Trust drop within 30 days (open 50%, normal 33%, guarded 25%, closed 0), once per drop (Bonds.$tlast); spread Trust does not
+    come back.
+  - Rule 502: new "Judging a deed" paragraph (intent over harm; careless failure −3, a slipped secret −8–10 and so no spread;
+    teasing both enjoy and harsh words from a trusted friend are no offence; only what they saw or learn counts; forced or
+    charmed = no Trust drop; a protective lie −0–3; quarrels between friends −3–5 at most; a consensual spar is a fight;
+    clashing promises −3–5 with warning; flirting in front of a partner +5–10 Tension); "understood" in the Interactions kinds.
+  - <now>: one "Teasing (how each present character takes it)" line from the tension categories / overrides (banter).
+  - Re-run with the new rules: the airhead ends at Rank 3 with everyone, Tension 0, trusted by the open (Ruby Trusting) and not
+    with secrets by the guarded (Doubtful); banter no longer hurts Ruby or Sophia, while Irene and Mimosa, who dislike daily
+    shoving, still strain; the tsundere loses Sophia one rank at most, Irene stays under 100, Ruby eases to 10.
+  - Tests: tests/test_greyarea_v144.cjs (14 checks). npm test 787 checks; stress passes; always-on prompt ~11.1k tokens at the
+    start (token_audit). TEST card rebuilt.
+- 1.4.5 Recent history per bond (owner): the dossier has a "Recent with you" table (When, What happened, Effect), the latest 10
+  moments with {{user}}, newest on top; the narrator reads the same rows for each present character in <now> ("Recent with
+  {{user}}: <name> (newest first): [when] sentence (effect) | …", the newest 5, data/bond_rules.json recent.now) to keep
+  characters consistent.
+  - Engine: Bonds.<id>.$Recent (engine-owned, a $ field, so not in <current_state>; kept 10, recent.keep). A row is written when
+    the narrator reported an interaction with that character, or wrote a Trust / Tension / Rank change, or XP was gained; its
+    effect is what this reply really did (Rank r → r+1 or fell, XP +n, Trust ±n, Tension ±n, romance). Quiet-day easing and
+    weekly recovery alone write no row. The first meeting is a row ("First met, at <place>."; Etnie: "Bond starts at Rank 3"),
+    and so are the spread of a betrayal ("Heard what {{user}} did to X.") and Krieg learning the hidden magic.
+  - Sentence: the interaction's new "Note" (schema, up to 200 characters; rule 502 asks for one short past-tense sentence on
+    every interaction, and a {"Kind": "other", "Note"} entry when a deed changes Trust or Tension and no other kind fits); without
+    a Note, the kinds in words (recent.phrases: "Talked, kept a promise."); a change with neither: "(no note)".
+  - UI: table.rt (effects green when good, red when bad), fits a phone width without scrolling (checked at 340px).
+  - Tests: tests/test_recent_v145.cjs (14 checks). npm test 801 checks; stress passes; always-on prompt ~11.2k tokens at start
+    (the rows cost only in <now>, about 25 tokens each, 5 per present character).
+  - To confirm with the owner: <now> gives the narrator the newest 5 rows (not 10) per present character, to save tokens when a
+    class is present; the dossier keeps 10. Change recent.now in data/bond_rules.json to 10 if wanted.
+
+- 1.4.6 Card vs preset split (owner, 2026-09-26; planning/DRAFT_card_vs_preset.md, approved with the whole
+  character-consistency plan in planning/DRAFT_batch_plan.md v2). Taste belongs to preset toggles, the card keeps world,
+  data and canon only (HANDOFF §1 already said so; the card description broke it).
+  - Card: the description no longer sets language, point of view, tense, length or "never {{user}}'s words"; it keeps the world,
+    the genre and the <UpdateVariable> duty (783 -> 497 characters, ~60 tokens less). Creator notes: version and one preset line.
+  - Preset (edit_preset.py): BOLT step 2 was still teaching the 1.0 bond rules (bond Progress +0/+1/+2) on every reply, against
+    rule 502 since 1.2.2. It now points to the card's own update rules instead of copying them. "Total Output Length" is ON at
+    roughly 3 to 6 paragraphs (the default the card used to carry). The "Now:" first reasoning line is unchanged (VectFox reads it).
+  - Tests: tests/test_split_v146.cjs (8 checks): no taste in the card description or rule entries (data-format wording such as
+    the past-tense Interactions Note is allowed), BOLT has no stale bond rules and keeps "Now:", length and POV are preset toggles.
+  - Docs: ECOSYSTEM (who owns what, preset changes), HANDOFF snapshot and division table.
+- Batch 0 (plan v2): tools/audit_chat.py, an offline drift audit for exported chats; nothing goes into the card.
+  - Checks: pronouns (only self-referring forms such as "X shook his head", "X ... herself", ", he said"), misspelt names (one letter
+    from a first name or surname, not a word the chat also writes in lower case), speakers not in Scene.Present, three or more
+    words found only in one NPC's <narrator_only> lore (skipped once that NPC has a Secrets_revealed entry), two or more words from
+    a dossier field the bond rank has not opened, and "never" voice patterns (data/voice_rules.json, empty until the canon waves).
+    State is read from the message variables (MVU) or, failing that, from the <UpdateVariable> patches in the text.
+  - Report: counts per check, a per-NPC table per 25-message window with the first finding, and every finding with a snippet.
+  - Baseline: the owner's two exported playtest chats (Downloads, 2026-09-16; the old non-MVU lorebook card, 285 and 215
+    messages) give 0 findings after tuning. A first version flagged 66, almost all "he" in Etnie's thoughts meaning {{user}}.
+    Those chats have no MVU state, so the present and locked checks could not run on them; the first MVU playtest
+    chat of 1.5.0 is the real baseline.
+  - Tests: tests/test_audit_tool.cjs (13 checks, a synthetic chat with one planted error per check; skipped without Python 3).
+    npm test 822 checks; stress passes.
+
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
+- Character-consistency plan (planning/DRAFT_batch_plan.md v2): next release is 1.5.0 (Batch A card rules + Batch E1
+  preset writing rules). After it, play in ST, export the chat and run tools/audit_chat.py for the first MVU baseline.
+- Playtest v1.3.2 in ST: a pact with abilities (Builder → Pacts, Techniques page), summon it and have it use an ability
+  (charged once, not charged when not summoned).
+- Playtest v1.3.1 in ST: meet Etnie (Rank 3 on the spot), Etnie's dossier (no "{{user}}"), walk to the Boathouse and the Fishing
+  House (map pin, "You are here"), People → Connections (spread out, draggable), Student file → Settings (Appearance themes: panels
+  and bracelet change at once and after a reload; Training / Reputation rows), the Entrance Event day plan and the club booths.
 - Playtest v1.3.0 in ST: the narrator writing /Rep_events, /Training and /Perk_use; a 4->5 event with its gift; the Student file
   (reputation, Body training, Gifts & perks); Krieg on a Monday; a Rank 8 mask bond before and after its secret comes out.
 - Still missing (owner, known): the [Bond Event] lorebook (no event is written yet); a Doves: field for Zara, Alyssa and Tilly.
@@ -406,6 +737,8 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   rumour days (3 / 21), Bag cap 40, hooks cap 15.
 - 1.3.0: reputation thresholds / weekly cap / bond cap, monthly perk amounts and the Academy +5 bonus, high Tension 70, Krieg +14,
   training percentages (data/reputation.json, bond_rewards.json, training.json).
+- 1.3.1: the player can now change training and most reputation numbers in Settings (data/tuning.json options); max-Tension -10;
+  Etnie's start (bond_rules.json start); event clock times (engine EVENTS `s`); theme palettes (tools/make_themes.py).
 - Payout bands, bond daily cap (3), sleep/rest recovery rates, 40-HP cap, Dove attention increments (in 502 rules).
 - 5.3/5.4: happening rates (HAPPEN_RATE), trim depth 24 (regex minDepth), Journal window 30, FACTS_VISIBLE 10, Clues cap 40.
 

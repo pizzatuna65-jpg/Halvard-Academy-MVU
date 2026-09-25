@@ -136,7 +136,7 @@ ok(K2.Bonds.Krieg.$xp === REW.krieg.weekly_xp, `a Monday with Doves +1: +${REW.k
 let MK = T(S, '12:00', [present(['Castor'])]);
 MK = rankUp(primed(MK, 'Castor', 7), 'Castor');
 ok(MK.Bonds.Castor.Rank === 8 && MK.Bonds.Castor.Known_facts.includes(REW.npcs.Castor.nudge.fact), 'the 7 -> 8 event adds the nudge Fact');
-let MH = clone(MK); MH.Bonds.Castor.$xp = 999; MH.Bonds.Castor.$cool = -1;
+let MH = clone(MK); MH.Bonds.Castor.$xp = 999; MH.Bonds.Castor.$cool = -1; MH.Bonds.Castor.Trust = 70;   // 1.4.3: the 8 -> 9 event also needs Trust 65
 MH = T(MH, '12:40');
 ok(!MH.Bonds.Castor._Event_ready && MH.$ui.bev.Castor && MH.$ui.bev.Castor.held, 'Rank 8 with a full bar stays held while the truth is not out');
 ok(rankUp(MH, 'Castor').Bonds.Castor.Rank === 8, 'the rank cannot rise while held');

@@ -1,0 +1,178 @@
+{
+ "_note": "1.4.3 Trust (owner design, approved 2026-09-25; planning/DRAFT_trust.md). Single source for the engine (tools/gen_engine.py), the Now entry (tools/gen_mvu_entries.py) and the UI (tools/gen_ui.py). Trust = how sure an NPC is that {{user}} can be relied on; it decides what they dare give (secrets, risks, perks). bands: [from, name]. Rises only through reported deeds (kinds, x the category's rise, at most weekly_cap a week per NPC; each kind once a day) and +rank_up when a bond event raises the rank; the narrator writes drops directly (x the category's drop, never capped). Below floor it recovers by the category's recover each quiet week (no drop for 7 days). Categories come from data/bond_openness.json (open / guarded / closed; anyone else normal). perk_gates: rank -> Trust needed for that rank's perk and for the bond event that reaches it (the Rank 8 event is never held: under 50 it can only end in a sworn rivalry, and the Romance flag waits). A Rank 10 benefit is suspended below suspend_r10_below. spread: a drop of spread.at or more in one reply costs every Friends line of that NPC spread.friends Trust. dorm_head: easier bond, Tension and Trust with {{user}} while {{user}} lives in their dorm. 1.4.4 (owner): 'understood' (an interaction: the character finally understands {{user}} meant no harm) gives back the category's share of the last Trust drop, if it was within understood_days; once per drop; spread Trust does not come back.",
+ "bands": [
+  [
+   0,
+   "Betrayed"
+  ],
+  [
+   15,
+   "Doubtful"
+  ],
+  [
+   35,
+   "Neutral"
+  ],
+  [
+   65,
+   "Trusting"
+  ],
+  [
+   85,
+   "Confidant"
+  ]
+ ],
+ "effects": {
+  "share": {
+   "Betrayed": null,
+   "Doubtful": -1,
+   "Neutral": 0,
+   "Trusting": 1,
+   "Confidant": 2
+  },
+  "confidant_real_early": 1,
+  "betrayed_xp_mult": 0.5,
+  "small_tension_max": 15,
+  "confidant_small_tension_mult": 0.5,
+  "betrayed_tension_mult": 1.5,
+  "apology_mult": {
+   "Betrayed": 0,
+   "Doubtful": 0.5,
+   "Neutral": 1,
+   "Trusting": 1.5,
+   "Confidant": 1.5
+  }
+ },
+ "perk_gates": {
+  "6": 35,
+  "7": 50,
+  "8": 50,
+  "9": 65,
+  "10": 65
+ },
+ "suspend_r10_below": 35,
+ "kinds": {
+  "keep": 4,
+  "secret": 6,
+  "defend": 5,
+  "confide": 3,
+  "help": 2
+ },
+ "public_mult": {
+  "defend": 1.5
+ },
+ "rank_up": 3,
+ "weekly_cap": 8,
+ "floor": 35,
+ "spread": {
+  "at": 20,
+  "friends": -5
+ },
+ "categories": {
+  "open": {
+   "name": "Open",
+   "start": 60,
+   "rise": 1.5,
+   "drop": 1,
+   "recover": 3,
+   "bands": {
+    "Doubtful": "still friendly on the surface, but checks what {{user}} says against others and no longer shares anything important",
+    "Betrayed": "openly hurt and bewildered; tells friends what {{user}} did, because they cannot understand it",
+    "Confidant": "tells {{user}} everything, often too much; takes {{user}}'s word over anyone's"
+   },
+   "never": "holding a grudge in secret or plotting against {{user}}",
+   "understood": 0.5
+  },
+  "normal": {
+   "name": "Normal",
+   "start": 50,
+   "rise": 1,
+   "drop": 1,
+   "recover": 2,
+   "bands": {
+    "Doubtful": "polite but careful: keeps plans vague, asks for things in writing, does not lend or cover",
+    "Betrayed": "cold and formal; answers only what they must and keeps their distance",
+    "Confidant": "relies on {{user}} and says so; asks {{user}}'s opinion before anyone else's"
+   },
+   "never": "pretending nothing happened",
+   "understood": 0.33
+  },
+  "guarded": {
+   "name": "Guarded",
+   "start": 40,
+   "rise": 0.75,
+   "drop": 1.25,
+   "recover": 1,
+   "bands": {
+    "Doubtful": "says nothing personal; watches {{user}}'s hands, not {{user}}'s face; tests {{user}} with small things",
+    "Betrayed": "closes completely: {{user}} becomes one more person they were right not to trust",
+    "Confidant": "lets the guard down only with {{user}}: a rare, quiet honesty that others never see"
+   },
+   "never": "giving a second chance cheaply",
+   "understood": 0.25
+  },
+  "closed": {
+   "name": "Closed",
+   "start": 30,
+   "rise": 0.5,
+   "drop": 1.5,
+   "recover": 0,
+   "bands": {
+    "Doubtful": "assumes {{user}} wants something; every kindness is weighed for its price",
+    "Betrayed": "files {{user}} as a threat and acts on it, within their position and nature",
+    "Confidant": "treats {{user}} as the one exception to a lifelong rule; would deny it if asked"
+   },
+   "never": "saying out loud that they trust {{user}}",
+   "understood": 0
+  }
+ },
+ "overrides": {
+  "Etnie": {
+   "floor_hard": 50,
+   "overflow_to_tension": true,
+   "no_gates": true,
+   "text": "Etnie cannot stop trusting her \"little sibling\": her Trust never falls below 50 and her perks never wait on it; a betrayal wounds her instead (the engine turns the rest of the drop into Tension)."
+  },
+  "Kanae": {
+   "kind_extra": {
+    "choose": 3
+   },
+   "kind_mult": {
+    "choose": 2
+   },
+   "floor_hidden": 15,
+   "until_secret": true,
+   "text": "Kanae's trust feeds on {{user}} pulling away from others for her: when {{user}} turns someone down or distances themselves from a friend for her, report {\"With\": \"Kanae\", \"Kind\": \"choose\"}. While her Plan is hidden she never counts {{user}} as a betrayer."
+  },
+  "Althair": {
+   "lock": 50,
+   "convert": 0.5,
+   "no_gates": true,
+   "text": "Althair trusts no one and needs no one's trust: his Trust stays 50 and his perks never wait on it; betraying him only entertains him (the engine turns it into bond XP)."
+  },
+  "Ezrel": {
+   "rise": 0.5,
+   "drop": 0.5
+  },
+  "Caine": {
+   "cap": 64,
+   "until_secret": true,
+   "text": "Caine despises mages, {{user}} included: his Trust cannot pass 64 until his own secret has come out and {{user}} still treats him the same."
+  },
+  "Krieg": {
+   "zero_at_stage": "Exposed"
+  }
+ },
+ "dorm_head": {
+  "Ottavio": {
+   "dorm": "Sky",
+   "category": "open",
+   "bond_xp_mult": 1.5,
+   "tension_rise_mult": 0.5,
+   "tension_decay_mult": 2,
+   "apology_mult": 2,
+   "text": "{{user}} is one of Ottavio's Sky students: he forgives them faster, trusts them sooner, and it shows."
+  }
+ },
+ "understood_days": 30
+}

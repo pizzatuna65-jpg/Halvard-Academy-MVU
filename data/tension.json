@@ -1,0 +1,271 @@
+{
+ "_note": "1.3.8 Tension (owner design, approved 2026-09-25; planning/DRAFT_tension.md). Single source for the engine (tools/gen_engine.py), the Now entry (tools/gen_mvu_entries.py) and the UI (tools/gen_ui.py). bands: [from, name]. The mechanical effects are the same for every NPC (effects); how the tension is played comes from the NPC's category (or its override). decay = Tension lost per quiet day (a day with no new rise). Texts go to the narrator; {{user}} is the player. 1.4.0 (owner): an apology (Interactions Kind \"apology\", \"Public\": true in front of others) eases Tension by the category's apology {private, public} (negative = eases; apology_npc overrides one NPC, positive = it makes things worse); one a day per NPC, and each further one in the same week counts half. 1.4.4 (owner, planning/DRAFT_greyarea.md): kind_ease = Tension eased by a reported help / keep / defend (defend_public: only a defence in front of others), once a day; banter = how the character takes teasing (<now>); effects.rank_drop_rearm: after maximum Tension breaks a rank, it cannot break another until Tension has fallen below this.",
+ "bands": [
+  [
+   0,
+   "Calm"
+  ],
+  [
+   20,
+   "Friction"
+  ],
+  [
+   40,
+   "Strained"
+  ],
+  [
+   70,
+   "Hostile"
+  ],
+  [
+   90,
+   "Enemy"
+  ]
+ ],
+ "effects": {
+  "strained_from": 40,
+  "strained_xp_mult": 0.5,
+  "hold_event_from": 70,
+  "stop_xp_from": 90,
+  "rank_drop_at": 100,
+  "fight_ease": 25,
+  "apology_repeat_mult": 0.5,
+  "rank_drop_rearm": 70
+ },
+ "categories": {
+  "withdrawn": {
+   "name": "Withdrawn",
+   "bands": {
+    "Friction": "quieter than usual around {{user}}; answers short, smiles late",
+    "Strained": "avoids {{user}}: leaves when {{user}} arrives, declines invitations politely, confides in someone else",
+    "Hostile": "openly hurt: cries or goes silent, asks {{user}} to leave them alone; their friends notice and cool toward {{user}}",
+    "Enemy": "cuts {{user}} out entirely (seats, study groups, even routes across campus) and grieves the friendship; does not retaliate"
+   },
+   "never": "revenge, rumours or any harm",
+   "eases": "forgives easily: a sincere apology eases it a lot",
+   "decay": 2,
+   "apology": {
+    "private": -20,
+    "public": -20
+   },
+   "kind_ease": {
+    "help": -5,
+    "keep": -5,
+    "defend": -5
+   },
+   "banter": "light teasing is fine; mockery of what they care about, or rough play, hurts"
+  },
+  "social": {
+   "name": "Social",
+   "bands": {
+    "Friction": "barbed compliments and pointed jokes at {{user}}'s expense",
+    "Strained": "snubs {{user}} in public; leaves {{user}} out of plans and the good gossip",
+    "Hostile": "works the room against {{user}}: rumours, mockery, turning mutual friends",
+    "Enemy": "runs a campaign: humiliates {{user}} in front of a crowd and makes sure the story spreads"
+   },
+   "never": "physical violence, or anything that would ruin their own image if it came out",
+   "eases": "pride first: a public apology counts, a private one barely",
+   "decay": 0.5,
+   "enemy_rep": {
+    "Student": -5
+   },
+   "apology": {
+    "private": -5,
+    "public": -15
+   },
+   "kind_ease": {
+    "defend_public": -5
+   },
+   "banter": "enjoys witty banter in private; being mocked in public is an offence"
+  },
+  "confrontational": {
+   "name": "Confrontational",
+   "bands": {
+    "Friction": "blunt and challenging: calls {{user}} out, dares {{user}} to prove it",
+    "Strained": "picks arguments; demands a spar or a contest to settle it",
+    "Hostile": "open rivalry: goes after {{user}} in class, in training, in competitions",
+    "Enemy": "a formal challenge or a grudge match in front of witnesses; will not let it rest until it is settled"
+   },
+   "never": "an ambush, secret sabotage, or trying to kill",
+   "eases": "words are cheap: a fight settles it (every spar, duel or contest with them, whoever wins; report it as a fight interaction); an apology barely counts",
+   "decay": 0.34,
+   "apology": {
+    "private": -5,
+    "public": -5
+   },
+   "kind_ease": {},
+   "banter": "loves it, shoves included: people who hit back are the best kind"
+  },
+  "authority": {
+   "name": "Authority",
+   "bands": {
+    "Friction": "cooler and more formal with {{user}}; watches for mistakes",
+    "Strained": "holds {{user}} strictly to the rules: marks down, refuses favours, catches every lateness",
+    "Hostile": "uses the office: detention, reports to the Dorm Head, requests denied, a word with other staff",
+    "Enemy": "formal action: a disciplinary hearing, a letter home, pushing for probation"
+   },
+   "never": "anything outside their authority: no personal violence, no lies on the record",
+   "eases": "an apology is accepted formally; visible good conduct and hard work count more",
+   "decay": 1,
+   "apology": {
+    "private": -10,
+    "public": -10
+   },
+   "kind_ease": {
+    "help": -3,
+    "keep": -3,
+    "defend": -3
+   },
+   "banter": "tolerates light teasing from those they trust (Trust 65+); horseplay and mockery are offences"
+  },
+  "dangerous": {
+   "name": "Dangerous",
+   "bands": {
+    "Friction": "polite and attentive: remembers {{user}}'s name and asks one question too many",
+    "Strained": "watches {{user}}: questions friends, checks {{user}}'s record, leaves small reminders of their reach",
+    "Hostile": "moves against {{user}} quietly: leverage, pressure on the people around {{user}}, an investigation opened",
+    "Enemy": "strikes with everything their position allows"
+   },
+   "never": "anything that would bring down their own position; no random cruelty",
+   "eases": "holds a grudge: an apology changes nothing; only a real service, a bargain, or something they need",
+   "decay": 0,
+   "apology": {
+    "private": 0,
+    "public": 0
+   },
+   "kind_ease": {},
+   "banter": "nobody teases them; it is an offence unless they started it"
+  }
+ },
+ "npcs": {
+  "Ruby": "withdrawn",
+  "Zara": "withdrawn",
+  "Mimosa": "withdrawn",
+  "Royhan": "withdrawn",
+  "Alyssa": "withdrawn",
+  "Vera": "withdrawn",
+  "Trixie": "withdrawn",
+  "Tilly": "withdrawn",
+  "Lenna": "withdrawn",
+  "Caralynn": "social",
+  "Florian": "social",
+  "Aiden": "social",
+  "Idris": "social",
+  "Bobby": "social",
+  "Milena": "social",
+  "Sophia": "confrontational",
+  "Percival": "confrontational",
+  "Saffi": "confrontational",
+  "Vallie": "confrontational",
+  "Irene": "authority",
+  "Caspian": "authority",
+  "Baelin": "authority",
+  "Yvette": "authority",
+  "Gavlan": "authority",
+  "Layla": "authority",
+  "Kuroo": "authority",
+  "Ottavio": "authority",
+  "Rei": "authority",
+  "Krieg": "dangerous",
+  "Caine": "dangerous",
+  "Tristan": "dangerous",
+  "Castor": "dangerous",
+  "Dante": "dangerous",
+  "Gareth": "dangerous"
+ },
+ "peaks": {
+  "Krieg": "a Dovecote examination or an arrest on a pretext",
+  "Caine": "every door the Noble Houses control closes to {{user}}, and {{user}} is quietly noted for the Choir",
+  "Tristan": "a binding oath or a debt in his registry is called due",
+  "Castor": "misfortune follows {{user}}: a curse worked through something taken from them, never traced to him",
+  "Dante": "judges {{user}} a wrongdoer: the warmth goes out for good; he gathers proof for the Doves and is merciless once he has it",
+  "Gareth": "files it away behind the smile: {{user}}'s standing is sabotaged (a ruined casting, a lost place), never traceable, while he stays warm to {{user}}'s face"
+ },
+ "overrides": {
+  "Etnie": {
+   "name": "Devoted",
+   "bands": {
+    "Friction": "clingier and anxious, checking {{user}}'s mood every few minutes",
+    "Strained": "follows {{user}}'s scent everywhere; jealous of anyone near {{user}}",
+    "Hostile": "breaks down: clones appear when she panics; she begs rather than argues",
+    "Enemy": "a crisis like the one after the breach: she stops eating and attending class; Kuroo steps in"
+   },
+   "never": "harming {{user}} or leaving {{user}}",
+   "eases": "one warm moment with {{user}} eases it a lot",
+   "decay": 2,
+   "apology": {
+    "private": -25,
+    "public": -25
+   },
+   "kind_ease": {
+    "help": -5,
+    "keep": -5,
+    "defend": -5
+   },
+   "banter": "any attention from {{user}} is a gift, teasing included"
+  },
+  "Kanae": {
+   "name": "Devoted (mask)",
+   "exempt": true,
+   "bands": {
+    "Friction": "sweeter than ever, the smile held a beat too long; she blames whoever came between them, never {{user}}",
+    "Strained": "clings through kindness: small gifts, and readings that warn {{user}} about the people involved",
+    "Hostile": "turns her displeasure on the people around {{user}}: rumours about them, rigged readings, quiet damage to their friendships with {{user}}",
+    "Enemy": "her plan to isolate {{user}} moves openly: {{user}}'s other bonds are poisoned one by one while she stays the one who never leaves"
+   },
+   "never": "turning on {{user}}; her affection for {{user}} never lessens",
+   "eases": "{{user}}'s attention eases it quickly",
+   "decay": 2,
+   "apology": {
+    "private": -20,
+    "public": -20
+   },
+   "kind_ease": {
+    "help": -5,
+    "keep": -5,
+    "defend": -5
+   },
+   "banter": "sweet about it, but notes who else {{user}} jokes with"
+  },
+  "Althair": {
+   "name": "Delighted",
+   "lock": true,
+   "convert": 0.5,
+   "daily_cap": 10,
+   "text": "Althair enjoys being disliked: hostility from {{user}} delights him and draws him closer. His Tension stays 0; the engine turns every rise into bond XP. React in character: beaming, curious, friendlier the ruder {{user}} is.",
+   "kind_ease": {},
+   "banter": "delighted: the ruder, the better"
+  },
+  "Ezrel": {
+   "name": "Apathetic",
+   "rise_mult": 0.5,
+   "bands": {
+    "Friction": "does not care, pleasantly",
+    "Strained": "does not care, pleasantly; does the minimum for {{user}}",
+    "Hostile": "does not care, pleasantly; stops going out of his way for {{user}}",
+    "Enemy": "stops helping {{user}} at all, pleasantly and completely"
+   },
+   "never": "drama, raised voices or revenge",
+   "eases": "only time; apologies change nothing",
+   "decay": 1,
+   "apology": {
+    "private": 0,
+    "public": 0
+   },
+   "kind_ease": {},
+   "banter": "does not notice"
+  }
+ },
+ "krieg": {
+  "at": 100,
+  "attention": 10,
+  "doves_xp": -40
+ },
+ "apology_npc": {
+  "Sophia": {
+   "private": 10,
+   "public": 10,
+   "note": "an apology only makes her angrier: she despises cowards; only a fight settles it"
+  }
+ }
+}

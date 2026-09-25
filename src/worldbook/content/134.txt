@@ -1,6 +1,6 @@
 <%_
 const _cal = {
-  1: "W1 Mon Entrance Event. W3 Sat evening to Sun dawn Star Night. W4 Sat Spiritual Dorm Day.",
+  1: "W1 Mon Entrance Event (09:00 sorting, tour all day, 19:00 feast). W1 Tue-Fri club booths 16:00-18:00, club registration closes Fri 18:00. W3 Sat evening to Sun dawn Star Night. W4 Sat Spiritual Dorm Day.",
   2: "W1 Fri dusk to Sat dawn Warding Rite (whole academy renews the wards). W3 Wed-Fri Creature Studies Expedition (off-grounds, Grade III country).",
   3: "W1 Mon-Thu Midterm. W2 Fri-Sat Club Festival. W3 Mon-Sat Training Week (the one week cross-dorm sparring is allowed). W4 Sat-Sun Dorm Competition (solo, top 16 qualify).",
   4: "W1 Wed Secret Fools Day (prank day, dorm name-draw). W2 Tue Independence Crowning Day (kingdom holiday: the academy flies to the capital by airship; fireworks on campus at night). W3 Sat Mystic Dorm Day. W4 normal classes.",

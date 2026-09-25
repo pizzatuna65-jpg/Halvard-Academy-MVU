@@ -2,11 +2,16 @@
 view.pin = null; view.floor = ''; view.focusLoc = ''; view.card = 0;
 const CARD_W = 280, CROP_H = 96, CROP_SCALE = 4;
 const normPlace = s => String(s || '').split(/\s+[—-]\s+/)[0].trim().toLowerCase().replace(/^the\s+/, '');
-const PLACE_ALIAS = { 'main courtyard': 'courtyards', 'courtyard': 'courtyards', 'gatehouse': 'reception_and_gatehouse', 'reception': 'reception_and_gatehouse' };
+// 1.3.1 (owner playtest): the same reading of World.Location as the engine (canonLocation): short names ("Boathouse", "the
+// library") via DATA.palias (tools/common.py place_aliases), and a sub-spot that is itself a place wins ("… — Fishing House").
+const plSegs = s => String(s || '').split(/\s+[—–-]\s+|,\s+/).map(x => x.trim().toLowerCase().replace(/[.!]+$/, '').replace(/^the\s+/, '')).filter(Boolean);
+const sharedLoc = id => DATA.pins.filter(p => p.cluster.includes(id)).length > 1;
 function locIdOf(place) {
-  const p = normPlace(place); if (!p) return '';
-  if (PLACE_ALIAS[p] && DATA.locs[PLACE_ALIAS[p]]) return PLACE_ALIAS[p];
-  return Object.keys(DATA.locs).find(id => normPlace(DATA.locs[id].name) === p) || Object.keys(DATA.locs).find(id => id.replace(/_/g, ' ') === p) || '';
+  const segs = plSegs(place); if (!segs.length) return '';
+  const exact = p => Object.keys(DATA.locs).find(id => normPlace(DATA.locs[id].name) === p) || Object.keys(DATA.locs).find(id => id.replace(/_/g, ' ') === p) || '';
+  for (let i = segs.length - 1; i >= 0; i--) { const id = exact(segs[i]); if (id && (i === 0 || !sharedLoc(id))) return id; }
+  const a = (DATA.palias || {})[segs[0]];
+  return a && DATA.locs[a] ? a : '';
 }
 const discovered = (S, l) => !l.discoverable || ((S.$ui || {}).discovered || []).some(d => normPlace(d) === normPlace(l.name));
 const pinOf = id => DATA.pins.find(p => p.cluster.includes(id) && p.pin === (DATA.locs[id] || {}).pin) || DATA.pins.find(p => p.cluster.includes(id));

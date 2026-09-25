@@ -14,7 +14,7 @@ const seasonOf = d => ['Winter', 'Winter', 'Spring', 'Spring', 'Spring', 'Summer
 
 // a fresh game with a fixed seed, moved (forward) to minute `m` of day `d` at `loc`
 const SEED = 424242;
-const S0 = applyPatch(initState(), [{ op: 'replace', path: '/$eng/seed', value: SEED }]);
+const S0 = applyPatch(initState({ etnie: true }), [{ op: 'replace', path: '/$eng/seed', value: SEED }]);
 function at(S, d, hhmm, loc, extra = []) {
   const [h, mi] = hhmm.split(':').map(Number), T = E.fromAbs(d * DAY + h * 60 + mi);
   return applyPatch(S, [...['Year', 'Month', 'Week', 'Day', 'Time'].map(k => ({ op: 'replace', path: '/World/' + k, value: T[k] })),

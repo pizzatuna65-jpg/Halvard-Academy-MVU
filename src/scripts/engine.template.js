@@ -8,47 +8,77 @@ const NAME_RX = Object.entries(NAME_FORMS).map(([id, forms]) => [id, new RegExp(
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const DAY_MIN = 1440, YEAR_DAYS = 12 * 4 * 7;
 const ALL = DAYS, MON_THU = DAYS.slice(0, 4), MON_FRI = DAYS.slice(0, 5), MON_SAT = DAYS.slice(0, 6);
+// 1.3.1 (owner playtest): every event carries its day plan `s` (from its lore entry; one text, or one per day), shown in the
+// calendar and with _Event_today. `curfew` is one hour for all its days or one per day.
+const DORM_DAY = "09:00–18:00 open house: the common room shows the dorm's history and the founding warden is honoured with a small rite at the entrance; upperclassmen showcase casting in the courtyard, first-years run booths, a public lesson for outsiders, food stalls, type contests open to all and the dorm tournament; 19:00 dorm-only closing dinner, first-years welcomed with a token of belonging";
+const MIDTERM = { Mon: '08:00 Magic Theory, 10:00 Etiquette (written papers); afternoon free', Tue: '08:00 History (written); 13:00–16:00 Potion Crafting practical (one brew from a sealed brief)',
+  Wed: '08:00–16:00 Dark Magic Defense practicals, one student at a time against the teacher (marked on how long they hold)', Thu: '08:00–16:00 Combat practicals, students paired within their year, marked by combat role' };
+const FINALS = '08:00–18:00 the single practical trial, one student at a time: theory door, beast, potion, cursed room, examiner in role, duel with a staff member; Royal Inspectorate examiners watch from the gallery';
+const BOOTHS = 'Classes as usual; 16:00–18:00 club booths across the academy';
 const EVENTS = [
-  { m: 1, w: 1, d: ['Mon'], t: 'Entrance Event (Arbiter Stone sorting)', noclass: 1 },
-  { m: 1, w: 3, d: ['Sat', 'Sun'], t: 'Star Night (Sat evening to Sun dawn; no 8pm curfew)', nocurfew: 1 },
-  { m: 1, w: 4, d: ['Sat'], t: 'Spiritual Dorm Day' },
-  { m: 2, w: 1, d: ['Fri', 'Sat'], t: 'Warding Rite (Fri dusk to Sat dawn; the whole academy renews the wards)' },
-  { m: 2, w: 3, d: ['Wed', 'Thu', 'Fri'], t: 'Creature Studies Expedition (off-grounds, Grade III country)', noclass: 1, away: 1 },
-  { m: 3, w: 1, d: MON_THU, t: 'Midterm exams', noclass: 1 },
-  { m: 3, w: 2, d: ['Fri', 'Sat'], t: 'Club Festival' },
-  { m: 3, w: 3, d: MON_SAT, t: 'Training Week (cross-dorm sparring allowed; curfew 21:00)', curfew: 21 },
-  { m: 3, w: 4, d: ['Sat', 'Sun'], t: 'Dorm Competition (solo, top 16 qualify)', noclass: 1 },
-  { m: 4, w: 1, d: ['Wed'], t: 'Secret Fools Day (prank day, dorm name-draw)' },
-  { m: 4, w: 2, d: ['Tue'], t: 'Independence Crowning Day (airship trip to the capital; fireworks on campus at night; curfew 22:00)', noclass: 1, curfew: 22, away: 1 },
-  { m: 4, w: 3, d: ['Sat'], t: 'Mystic Dorm Day' },
-  { m: 5, w: 1, d: MON_THU, t: 'End of Semester exams', noclass: 1 },
-  { m: 5, w: 2, d: ['Fri'], t: 'Results & Dorm Ranking (Player.Profile.Dorm_rank is updated today)', ranking: 1 },
-  { m: 5, w: 4, d: ALL, t: 'Mid-Year Break (students go home)', home: 1 },
+  { m: 1, w: 1, d: ['Mon'], t: 'Entrance Event (Arbiter Stone sorting)', noclass: 1,
+    s: '07:00–09:00 arrivals at Reception and Gatehouse; 09:00 sorting at the Arbiter Stone in the Arbiter Hall; 10:00–18:00 campus tour all day (three other newcomers and one senior per group) while club booths stand across the academy (sign-up open until Friday 18:00); late afternoon: seniors show the new students their dorm rooms; 19:00 Entrance Feast in the Ring Dining Hall, the Headmaster and Vice Headmaster speak before dinner' },
+  { m: 1, w: 1, d: ['Tue', 'Wed', 'Thu', 'Fri'], t: 'Club sign-up week (club booths after classes)',
+    s: { Tue: BOOTHS, Wed: BOOTHS, Thu: BOOTHS, Fri: BOOTHS + '; last day: club registration closes at 18:00' } },
+  { m: 1, w: 3, d: ['Sat', 'Sun'], t: 'Star Night (Sat evening to Sun dawn; no 8pm curfew)', nocurfew: 1,
+    s: { Sat: 'Sunset to sunrise, no 8pm curfew; 20:00–00:00 night market near the Grassy Field and Hills (students and mall vendors); stargazing on the hills, tents and bedrolls; midnight: the great meteor shower (a wish made during it is believed to come true)', Sun: 'Until dawn: students sleep out on the Grassy Field and Hills; the curfew is back from dawn' } },
+  { m: 1, w: 4, d: ['Sat'], t: 'Spiritual Dorm Day', s: 'Viridian Dormitory: ' + DORM_DAY },
+  { m: 2, w: 1, d: ['Fri', 'Sat'], t: 'Warding Rite (Fri dusk to Sat dawn; the whole academy renews the wards)',
+    s: { Fri: 'Classes as usual while staff build a giant magic circle in the Main Courtyard all day; dusk (about 17:00): the Bell Tower rings a special pattern and every student gathers in the courtyard; speeches from the Headmaster, the Vice Headmaster and the Warden; the Dorm Heads lead each dorm through the shared working; then a feast in the Ring Dining Hall', Sat: 'Until dawn: the feast runs late after the working' } },
+  { m: 2, w: 3, d: ['Wed', 'Thu', 'Fri'], t: 'Creature Studies Expedition (off-grounds, Grade III country)', noclass: 1, away: 1,
+    s: { Wed: '07:00 airships leave, one per year level (half a day to the Grand Vast Forest); afternoon: make camp (tents, cookfires, watch rotations) and prepare gear', Thu: 'Morning: each group of four is assigned a beast to bring back within 24 hours (Years 1–2 Grade III, Year 3 Grade II); staff shadow at a distance and pull out groups in trouble', Fri: 'Morning: break camp and fly home, back on campus by evening; catches count dead or alive' } },
+  { m: 3, w: 1, d: MON_THU, t: 'Midterm exams', noclass: 1, s: MIDTERM },
+  { m: 3, w: 2, d: ['Fri', 'Sat'], t: 'Club Festival',
+    s: { Fri: 'Classes in the morning; 13:00–18:00 every club runs a stand in the Main Courtyard: demonstrations, exhibition matches, sales, food', Sat: '09:00–18:00 stands and exhibition matches all day; everyone drops one gold coin at the best stand (never their own club); the winner is announced at the close, 18:00' } },
+  { m: 3, w: 3, d: MON_SAT, t: 'Training Week (cross-dorm sparring allowed; curfew 21:00)', curfew: 21,
+    s: 'Classes as usual; from 16:00 the Combat Grounds, duelling rings and practice halls stay open and supervised into the evening; sparring across years and dorms; curfew 21:00' },
+  { m: 3, w: 4, d: ['Sat', 'Sun'], t: 'Dorm Competition (solo, top 16 qualify)', noclass: 1,
+    s: { Sat: '09:00–18:00 solo ranking bouts inside each dorm, open to the whole dorm', Sun: '09:00–18:00 the ranking bouts finish; every entrant gets a placement and the top 16 of each dorm qualify for the Academy Competition' } },
+  { m: 4, w: 1, d: ['Wed'], t: 'Secret Fools Day (prank day, dorm name-draw)',
+    s: "Morning: participants draw a dorm-mate's name in secret, then prank them without warning all day; classes still run; Merryhew's biggest sale of the year" },
+  { m: 4, w: 2, d: ['Tue'], t: 'Independence Crowning Day (airship trip to the capital; fireworks on campus at night; curfew 22:00)', noclass: 1, curfew: 22, away: 1,
+    s: "07:00 the whole academy flies to the capital; morning: parade and the King's speech; free time in groups of four (coin only) until the afternoon muster; back before dark, passenger lists counted twice; night: fireworks over the Grassy Field and Hills; curfew 22:00" },
+  { m: 4, w: 3, d: ['Sat'], t: 'Mystic Dorm Day', s: 'Light Dormitory: ' + DORM_DAY },
+  { m: 5, w: 1, d: MON_THU, t: 'End of Semester exams', noclass: 1, s: FINALS },
+  { m: 5, w: 2, d: ['Fri'], t: 'Results & Dorm Ranking (Player.Profile.Dorm_rank is updated today)', ranking: 1,
+    s: '09:00 assembly in the Arbiter Hall: trial results stage by stage, then the new dorm ranking read aloud last; 19:00 feast in the Ring Dining Hall' },
+  { m: 5, w: 4, d: ALL, t: 'Mid-Year Break (students go home)', home: 1,
+    s: { Mon: 'Morning: airships leave; staying is allowed (the canteen runs short hours, half the mall is closed)', Sun: 'Airships bring the students back during the day' } },
   { m: 6, w: 1, d: MON_FRI, t: 'Return Week' },
-  { m: 6, w: 3, d: ['Sat'], t: 'Sports Day (magic banned outright)' },
-  { m: 6, w: 4, d: ['Wed', 'Thu', 'Fri', 'Sat'], t: 'Academy Competition (cross-dorm teams of 4)' },
-  { m: 7, w: 2, d: ALL, t: 'Magical & Science Fair week' },
-  { m: 7, w: 3, d: ALL, t: 'The Thinning: the seal is at its weakest; academy locked down all week', lockdown: 1 },
-  { m: 8, w: 2, d: ['Thu', 'Fri', 'Sat', 'Sun'], t: 'Traveling Circus visits (Thu evening to Sun)' },
-  { m: 8, w: 3, d: ['Thu', 'Fri', 'Sat'], t: 'Academy Showcase' },
-  { m: 8, w: 4, d: ['Sat'], t: 'Elemental Dorm Day' },
-  { m: 9, w: 1, d: MON_THU, t: 'Midterm exams', noclass: 1 },
-  { m: 9, w: 2, d: ['Thu', 'Fri', 'Sat'], t: 'Academy Bazaar' },
-  { m: 9, w: 3, d: ['Sat'], t: 'Academy Founder Day' },
-  { m: 9, w: 4, d: ['Thu', 'Fri', 'Sat', 'Sun'], t: 'Kingdom Competition (four academies, one team each)' },
-  { m: 10, w: 1, d: ['Tue'], t: 'Remembrance Day' },
-  { m: 10, w: 2, d: ['Sat'], t: 'Occult Dorm Day' },
-  { m: 10, w: 4, d: ['Fri', 'Sat', 'Sun'], t: 'Harvest Festival (Fri evening to Sun)' },
-  { m: 11, w: 1, d: MON_THU, t: 'End of Semester exams', noclass: 1 },
-  { m: 11, w: 2, d: ['Fri'], t: 'Results & Final Ranking (Player.Profile.Dorm_rank is updated today)', ranking: 1 },
-  { m: 11, w: 3, d: ['Mon', 'Tue', 'Wed'], t: 'Academy Trip (Sunreach Bay, abroad)', noclass: 1, away: 1 },
-  { m: 11, w: 4, d: ['Wed', 'Thu', 'Fri', 'Sat'], t: 'World Competition abroad (the national four)', away: 1 },
-  { m: 11, w: 4, d: ['Sun'], t: 'Graduation (everyone attends; third-years leave by airship next morning)', noclass: 1, grad: 1 },
+  { m: 6, w: 3, d: ['Sat'], t: 'Sports Day (magic banned outright)', s: "09:00–18:00 events, no magic: running and team events on the Sports Field, crowd contests in the Main Courtyard, the rest at the lake and the Combat Grounds; medals tallied by dorm at the day's end" },
+  { m: 6, w: 4, d: ['Wed', 'Thu', 'Fri', 'Sat'], t: 'Academy Competition (cross-dorm teams of 4)', s: '09:00–18:00 knockout matches between the cross-dorm teams of four; the winning team represents the academy' },
+  { m: 7, w: 2, d: ALL, t: 'Magical & Science Fair week',
+    s: { Mon: 'Stands are built in the Main Courtyard through the week; classes as usual', Tue: 'Stands are built in the Main Courtyard; classes as usual', Wed: 'Stands are built in the Main Courtyard; classes as usual', Thu: 'Last day of building; classes as usual',
+      Fri: 'Classes in the morning; 13:00–18:00 set-up and viewing in the Main Courtyard', Sat: '09:00–18:00 judging: a staff panel questions and scores every stand' } },
+  { m: 7, w: 3, d: ALL, t: 'The Thinning: the seal is at its weakest; academy locked down all week', lockdown: 1, s: 'All week: absolute curfew, academy locked, nobody outside' },
+  { m: 8, w: 2, d: ['Thu', 'Fri', 'Sat', 'Sun'], t: 'Traveling Circus visits (Thu evening to Sun)', curfew: 22,
+    s: { Thu: 'Evening: the great tent opens in the Main Courtyard; stands, games, sideshows and fortune tellers across the grounds (stalls take points); curfew 22:00', Fri: 'Classes in the morning; shows several times a day from the afternoon; curfew 22:00', Sat: 'Classes in the morning; shows several times a day from the afternoon; curfew 22:00', Sun: 'Shows all day, the last one in the evening; curfew 22:00' } },
+  { m: 8, w: 3, d: ['Thu', 'Fri', 'Sat'], t: 'Academy Showcase',
+    s: { Thu: '09:00–18:00 acts on the Main Courtyard stage; parents and guardians visit (logged at the Gatehouse)', Fri: '09:00–18:00 acts on the Main Courtyard stage; families visit', Sat: '09:00–18:00 the last acts; scores tallied by dorm in the evening to name the most talented dorm' } },
+  { m: 8, w: 4, d: ['Sat'], t: 'Elemental Dorm Day', s: 'Fire Dormitory: ' + DORM_DAY },
+  { m: 9, w: 1, d: MON_THU, t: 'Midterm exams', noclass: 1, s: MIDTERM },
+  { m: 9, w: 2, d: ['Thu', 'Fri', 'Sat'], t: 'Academy Bazaar', s: '09:00–18:00 invited traders fill the Main Courtyard (stalls take points, haggling expected); traders logged at the Gatehouse, the Doves watch the stock and the crowd' },
+  { m: 9, w: 3, d: ['Sat'], t: 'Academy Founder Day', s: "09:00 speeches from the Headmaster and Vice Headmaster in the Arbiter Hall, then a short rite at the Founder's Statue; all day: the optional treasure hunt across the campus; 19:00 feast in the Ring Dining Hall" },
+  { m: 9, w: 4, d: ['Thu', 'Fri', 'Sat', 'Sun'], t: 'Kingdom Competition (four academies, one team each)', s: "09:00–18:00 knockout matches between the four academies' teams; each member of the winning team earns 5,000 points" },
+  { m: 10, w: 1, d: ['Tue'], t: 'Remembrance Day', s: 'All day: nothing loud (no clubs, duelling, music, games or sport); classes run quietly, the Bell Tower keeps a slow pattern, bouquets line the halls; evening (about 19:00): lantern release on the Grassy Field and Hills, one lantern each' },
+  { m: 10, w: 2, d: ['Sat'], t: 'Occult Dorm Day', s: 'Sky Dormitory: ' + DORM_DAY },
+  { m: 10, w: 4, d: ['Fri', 'Sat', 'Sun'], t: 'Harvest Festival (Fri evening to Sun)', curfew: { Fri: 23, Sat: 23 },
+    s: { Fri: 'Classes as usual; from 17:00 cafés, food stalls, game booths, haunted houses and stage acts, costumes and carved lanterns; families visit (logged at the Gatehouse); curfew 23:00', Sat: '09:00 until late: the festival all day; curfew 23:00', Sun: 'The festival all day; evening: fireworks over the lake, watched from the Grassy Field and Hills; the usual curfew' } },
+  { m: 11, w: 1, d: MON_THU, t: 'End of Semester exams', noclass: 1, s: FINALS },
+  { m: 11, w: 2, d: ['Fri'], t: 'Results & Final Ranking (Player.Profile.Dorm_rank is updated today)', ranking: 1,
+    s: '09:00 assembly in the Arbiter Hall: trial results stage by stage, then the final dorm ranking read aloud last; 19:00 feast in the Ring Dining Hall' },
+  { m: 11, w: 3, d: ['Mon', 'Tue', 'Wed'], t: 'Academy Trip (Sunreach Bay, abroad)', noclass: 1, away: 1,
+    s: { Mon: '07:00 airships leave (half a day to Sunreach Bay); beachfront hotels, four to a room; free time in groups of four; the teachers set a curfew', Tue: "Free time in groups of four (the day side only; the night side is out of bounds); the teachers' curfew", Wed: 'Morning free; afternoon: fly home, back by evening' } },
+  { m: 11, w: 4, d: ['Wed', 'Thu', 'Fri', 'Sat'], t: 'World Competition abroad (the national four)', away: 1, s: 'Abroad: the national four compete; the rest of the academy follows the news' },
+  { m: 11, w: 4, d: ['Sun'], t: 'Graduation (everyone attends; third-years leave by airship next morning)', noclass: 1, grad: 1,
+    s: '09:00 ceremony in the Arbiter Hall: the Headmaster speaks, the Dorm Heads read out their graduates, each touches the Arbiter Stone a last time; afternoon: recruitment tables (noble houses, the Royal Inspectorate, the Dovecote, the Bank, hunting companies, guilds); 19:00 farewell feast' },
   { m: 12, w: 1, d: ALL, t: 'Kingdom-wide holiday: students go home', home: 1 },
   { m: 12, w: 2, d: ALL, t: 'Kingdom-wide holiday: students go home', home: 1 },
   { m: 12, w: 3, d: ALL, t: 'Kingdom-wide holiday: students go home', home: 1 },
   { m: 12, w: 4, d: ALL, t: 'Kingdom-wide holiday: students go home', home: 1 },
 ];
+const schedOf = (e, day) => (!e.s ? '' : typeof e.s === 'string' ? e.s : e.s[day] || '');
+const curfewHour = (e, day) => (e.curfew && typeof e.curfew === 'object' ? e.curfew[day] : e.curfew);
 const TIMETABLE = {
   Mon: ['Magic Theory [M]', 'History [M]', 'Combat [D] (Combat Grounds)'],
   Tue: ['Dark Magic Defense [D]', 'Magic Theory [D]', 'Potion Crafting [M] (Potion Halls)'],
@@ -64,6 +94,7 @@ const DAILY_BOND_CAP = 3;   // before 1.2.2 only (Progress); the XP system reads
 // setting, a cooldown after each rank, a bond event to rank up (scripted in data/bond_events.json, else the rank's default theme).
 const BR = /*@@BOND_RULES@@*/{};
 const BEV = /*@@BOND_EVENTS@@*/[];
+const START = BR.start || {};   // 1.3.1: bonds that begin above Rank 0 (data/bond_rules.json start)
 const HAUNT = /*@@HAUNTS@@*/{};
 // 1.3.0 (owner brainstorm 2026-09-25): bond rewards (Rank 5 gift, Rank 10 benefit, mask -> truth, Krieg), reputation, training.
 // Single sources data/bond_rewards.json, reputation.json, training.json; NPC_GROUP: staff | student | other | rival (no bond system).
@@ -71,8 +102,42 @@ const REW = /*@@BOND_REWARDS@@*/{};
 const REP = /*@@REPUTATION@@*/{};
 const TRN = /*@@TRAINING@@*/{};
 const NPC_GROUP = /*@@NPC_GROUP@@*/{};
+// 1.3.1 (owner playtest): player settings for training and reputation (data/tuning.json rows; values in $ui.tune, else the default)
+const TUNING = /*@@TUNING@@*/[];
+function tuneOf(S) {
+  const u = _.isPlainObject((S.$ui || {}).tune) ? S.$ui.tune : {}, o = {};
+  for (const r of TUNING) { const v = Number(u[r.id]); o[r.id] = r.opts.some(([x]) => x === v) ? v : r.def; }
+  return o;
+}
 const NO_BOND = new Set(Object.keys(NPC_GROUP).filter(id => NPC_GROUP[id] === 'rival'));
 const MASK = new Set(REW.mask || []);
+// 1.3.8 Tension (owner design 2026-09-25, data/tension.json): the same bands and mechanical effects for everyone; how the tension
+// is played comes from the NPC's category (withdrawn, social, confrontational, authority, dangerous) or a personal override
+// (Etnie, Kanae, Althair, Ezrel). Quiet days ease it by the category's decay; a fight eases a confrontational NPC.
+const TEN = /*@@TENSION@@*/{};
+const TE = TEN.effects || {};
+function tensionProfile(id) {
+  const o = (TEN.overrides || {})[id];
+  if (o) return { ...o, cat: 'override', decay: num(o.decay, 0), riseMult: o.rise_mult || 1 };
+  const c = (TEN.npcs || {})[id], C = (TEN.categories || {})[c];
+  return C ? { ...C, cat: c, riseMult: 1 } : { cat: '', decay: 0, riseMult: 1 };
+}
+const tensionBand = t => (TEN.bands || [[0, '']]).reduce((a, [from, nm]) => (t >= from ? nm : a), '');
+// 1.4.3 Trust (owner design 2026-09-25, data/trust.json): how sure an NPC is that {{user}} can be relied on. The same bands and
+// effects for everyone (what they share, the perks and bond events that need it, XP, how Tension and apologies land); the category
+// (the NPC's openness) sets the start, how fast it rises and falls and whether it recovers; personal overrides (Etnie, Kanae,
+// Althair, Ezrel, Caine, Krieg), and a Dorm Head is easier on their own students (Ottavio and Sky).
+const TRU = /*@@TRUST@@*/{};
+const TRE = TRU.effects || {};
+const trustBand = x => (TRU.bands || [[0, '']]).reduce((a, [from, nm]) => (x >= from ? nm : a), '');
+function trustProfile(id, S, secretOut) {
+  const dh = (TRU.dorm_head || {})[id], mine = !!(dh && S && S.Player && S.Player.Profile && S.Player.Profile.Dorm === dh.dorm);
+  const cat = mine ? dh.category : (TRU.npcs || {})[id] || 'normal', C = (TRU.categories || {})[cat] || {};
+  let o = (TRU.overrides || {})[id] || {};
+  if (o.until_secret && secretOut && secretOut(id)) o = {};             // Kanae's Plan / Caine's secret is out: a plain category again
+  return { cat, C, o, dh: mine ? dh : null, start: C.start != null ? C.start : 50, rise: num(o.rise, 1) * num(C.rise, 1), drop: num(o.drop, 1) * num(C.drop, 1), recover: num(C.recover, 0) };
+}
+const trustGate = (id, rank) => (((TRU.overrides || {})[id] || {}).no_gates ? 0 : num((TRU.perk_gates || {})[String(rank)], 0));
 const repLevel = x => (x >= 0 ? 1 : -1) * (REP.thresholds || []).filter(t => Math.abs(x) >= t).length;
 const repFloor = L => (L === 0 ? 0 : Math.sign(L) * REP.thresholds[Math.abs(L) - 1]);   // the Rep XP at which level L begins
 const repBand = (r, L) => ((((REP.effects || {})[r]) || []).find(([a, c]) => L >= a && L <= c) || [0, 0, ''])[2];
@@ -103,6 +168,23 @@ const CASTLE = new Set(/*@@CASTLE@@*/[]);
 // v1.0.3 (F01): every campus place name (lowercase, with and without a leading "the"); anything else is off the grounds
 const CAMPUS = /*@@CAMPUS@@*/[];
 const placeOf = loc => String(loc || '').split(/\s+[—-]\s+/)[0].trim();
+// 1.3.1 (owner playtest: walking to "Boathouse" did not register on the map; "Boathouse and Lake — Fishing House" registered the
+// boathouse). World.Location is put in the Campus Map's words: a short name ("Boathouse", "the library") becomes the map name, and a
+// sub-spot that is itself a place ("… — Fishing House") becomes the place. A dorm room every dorm shares stays under its dorm.
+const PLACE_NAMES = /*@@PLACE_NAMES@@*/{};     // every way a place's own name is written (lowercase) -> map name
+const PLACE_ALIAS = /*@@PLACE_ALIAS@@*/{};     // short and partial names (tools/common.py place_aliases) -> map name
+const PLACE_SHARED = new Set(/*@@PLACE_SHARED@@*/[]);
+const plKey = s => String(s || '').trim().toLowerCase().replace(/[.!]+$/, '').replace(/\s+/g, ' ');
+const plName = s => { const k = plKey(s); return PLACE_NAMES[k] || PLACE_NAMES[k.replace(/^the /, '')] || ''; };
+function canonLocation(loc) {
+  const segs = String(loc || '').split(/\s+[—–-]\s+|,\s+/).map(x => x.trim()).filter(Boolean);
+  if (!segs.length) return String(loc || '');
+  let at = -1, nm = '';
+  for (let i = segs.length - 1; i >= 0 && at < 0; i--) { const n = plName(segs[i]); if (n && (i === 0 || !PLACE_SHARED.has(n))) { at = i; nm = n; } }
+  if (at < 0) { nm = PLACE_ALIAS[plKey(segs[0])] || PLACE_ALIAS[plKey(segs[0]).replace(/^the /, '')] || ''; if (nm) at = 0; }
+  if (at < 0) return String(loc);
+  return at === 0 && segs[0] === nm ? String(loc) : [nm, ...segs.slice(at + 1)].join(' — ');
+}
 const onCampus = loc => { const p = placeOf(loc).toLowerCase(); return !p || CAMPUS.some(c => p === c || p.startsWith(c + ' ') || p.startsWith(c + ',')); };
 const CAP = { Notices: 10, Letters: 12, Clues: 40, Journal: 30 };
 // Batch 5.2: trips (first day, for the unlock window) and the Kingdom prize (lore Competitions: 5,000 points per winning member)
@@ -220,8 +302,27 @@ function curfewOf(W, evs, S) {
   // v1.0.3 (A#6): a no-curfew event lifts it from its first day's evening to its last day's dawn, not for the whole two days
   const nc = evs.find(e => e.nocurfew);
   if (nc && ((W.Day === nc.d[0] && h >= 12) || (W.Day === nc.d[nc.d.length - 1] && W.Day !== nc.d[0] && h < 7))) return '';
-  const start = (evs.find(e => e.curfew) || {}).curfew || 20;
+  const start = evs.map(e => curfewHour(e, W.Day)).find(Boolean) || 20;
   return h >= start || h < 7 ? `CURFEW (${start}:00-07:00): students must be in their own dorms` : '';
+}
+
+// 1.3.4 (owner): the next thing on today's schedule, for the bracelet ($ui.next): an event's timed item ("09:00 sorting at the
+// Arbiter Stone…", "dusk (about 17:00): …"), a class period, curfew. Nothing left today -> null.
+function nextUp(W, evs, S) {
+  const now = hm(W.Time); if (now == null) return null;
+  const items = [], cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  for (const e of evs) for (const part of String(schedOf(e, W.Day) || '').split(/;\s+/)) {
+    const p = part.trim(); let m = /^(\d{1,2}):(\d{2})(?:\s*[–-]\s*(\d{1,2}):(\d{2}))?\s+(.+)$/.exec(p);
+    if (m) { items.push({ at: +m[1] * 60 + +m[2], what: cap(m[5]), kind: 'event' }); continue; }
+    m = /^(.*?)\(about (\d{1,2}):(\d{2})\):?\s*(.*)$/.exec(p);
+    if (m) items.push({ at: +m[2] * 60 + +m[3], what: cap((m[4] || m[1]).trim()), kind: 'event' });
+  }
+  const tt = TIMETABLE[W.Day], stop = evs.some(e => e.noclass || e.home || e.lockdown || e.away);
+  if (tt && !stop) [8, 10, 13].forEach((h, i) => items.push({ at: h * 60, what: String(tt[i]).replace(/\s*\[[MD]\]/g, ''), kind: /^(Study Hall|Clubs)/.test(tt[i]) ? 'club' : 'class' }));
+  const noCurfew = evs.some(e => e.lockdown || e.home || (e.nocurfew && W.Day === e.d[0])) || /^Away/.test(W._Curfew || '');
+  if (!noCurfew) items.push({ at: (evs.map(e => curfewHour(e, W.Day)).find(Boolean) || 20) * 60, what: 'Curfew: back to your dorm', kind: 'curfew' });
+  const next = items.filter(x => x.at > now).sort((a, b) => a.at - b.at || (a.kind === 'event' ? -1 : b.kind === 'event' ? 1 : 0))[0];
+  return next ? { at: `${pad(Math.floor(next.at / 60))}:${pad(next.at % 60)}`, what: next.what, kind: next.kind } : null;
 }
 
 // ---- F20 happenings ----
@@ -399,7 +500,7 @@ function fillShape(o, shape) {
   }
 }
 const BOND0 = { Rank: 0, Progress: 0, Trust: 50, Tension: 0, Title: '', Romance: false, Known_facts: [], Milestones: [], Last_seen: '' };
-const ENGINE_VER = '1.3.0';
+const ENGINE_VER = '@@VERSION@@';   // the card version (src/card/card.json, set by tools/gen_engine.py)
 
 function runEngine(S, B, text, seedHint) {
   if (!S || !S.World) return;
@@ -487,7 +588,25 @@ function runEngine(S, B, text, seedHint) {
   if (S.$ui.wxfx === 'off') OFF.add('weather');
   const offUnlock = new Set(FEATURES.filter(f => f.unlock && parkOff(S, f)).map(f => f.unlock));
 
+  // 1.3.4 (owner playtest: Etnie showed up in message 0 of a new chat). The chat's starting state comes from the card's lorebook
+  // as SillyTavern holds it ([initvar] entry 500), which is not replaced when the card is imported again. That entry carries the
+  // card version in $eng.lore; on the first update of a chat, an older one (or none) means an old lorebook: say so, and drop
+  // Etnie's pre-1.3.1 starting bond (she now bonds when they meet).
+  const staleDrop = new Set();
+  if (hasB && !(B.$eng && B.$eng.abs >= 0) && (B.$eng || {}).lore !== ENGINE_VER) {
+    const old = (B.$eng || {}).lore || 'before 1.3.4';
+    S.$ui.toasts.push(`Old lorebook (${old}): update the card's lorebook in SillyTavern`);
+    log.push(`This chat started from the card's lorebook ${old}, but the card is ${ENGINE_VER}: rules, lore and the starting state are out of date. In SillyTavern, replace the lorebook "Eldrasil — Halvard Academy" with the one inside the card (character panel → More… → Import Card Lore), then start a new chat.`);
+    const e = (S.Bonds || {}).Etnie;
+    if (!(B.$eng || {}).lore && e && !e.Last_seen && e.Rank === 3 && (e.Milestones || []).length <= 1 && S.World.Month === 1 && S.World.Week === 1) { delete S.Bonds.Etnie; staleDrop.add('Etnie'); }
+  }
+  S.$eng.lore = ENGINE_VER;
   // ---- 1. time ----
+  // 1.3.3: an unreadable Day or Time from the AI arrives as '' (schema): keep the previous one rather than guess
+  for (const [f, d] of [['Day', 'Mon'], ['Time', '08:00']]) {
+    if (!S.World[f]) { S.World[f] = (hasB && B.World[f]) || d; if (hasB) log.push(`World.${f} could not be read; it was kept at ${S.World[f]}.`); }
+  }
+  if (!(S.Trip && S.Trip.Active)) S.World.Location = canonLocation(S.World.Location);   // 1.3.1: the map's name for the place
   const absB = hasB ? (B.$eng && B.$eng.abs >= 0 ? B.$eng.abs : toAbs(B.World)) : toAbs(S.World);
   let absA = toAbs(S.World);
   if (hasB && absA < absB) {
@@ -505,7 +624,8 @@ function runEngine(S, B, text, seedHint) {
   // 1.2.0: {{user}}'s birthday (Builder, Profile.Birthday "M? W? Day") joins the day's events; lore entry 508 says how it plays out
   const bd = /^M(\d{1,2}) W([1-4]) (Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/.exec(String(S.Player.Profile.Birthday || '').trim());
   const bday = bd && +bd[1] === S.World.Month && +bd[2] === S.World.Week && bd[3] === S.World.Day;
-  S.World._Event_today = [...evs.map(e => e.t), ...(bday ? [`${S.Player.Profile.Name || 'Your'}'s birthday`] : [])].join('; ');
+  // 1.3.1: each event with today's plan (times from its lore entry), so the narrator runs the day on schedule
+  S.World._Event_today = [...evs.map(e => (schedOf(e, S.World.Day) ? `${e.t} — ${schedOf(e, S.World.Day)}` : e.t)), ...(bday ? [`${S.Player.Profile.Name || 'Your'}'s birthday`] : [])].join(' | ');
   S.World._Period = periodOf(S.World, evs);
   S.World._Curfew = curfewOf(S.World, evs, S);
   // F20: today's happening (visible from the day's start until its window closes)
@@ -568,11 +688,16 @@ function runEngine(S, B, text, seedHint) {
     if (e0 && e0.Technique === e.Technique && !(e.$started >= 0) && e0.$started >= 0) { e.$started = e0.$started; e.$settled = e0.$settled; }
   }
   const activeNow = tq => Object.values(M.Active || {}).some(e => e.Technique === tq);
+  const partnerHere = pk => { const P = (M.Pacts || {})[pk] || {}; return P.Presence === 'terms' || !!P.Summoned || activeNow('Summon ' + pk); };
   for (const c of M.Casts || []) {
     const t = T[c.Technique];
     if (!t) { log.push(`Unknown technique "${c.Technique}" was reported; nothing was charged.`); continue; }
     // v1.0.3 (A#4/F05): a sustained effect is cast by its Active entry, which pays the Activation; a Casts entry for it is not a second cast
     if (t.Cost_mode === 'sustained' && activeNow(c.Technique)) { log.push(`${c.Technique} is sustained: its Active entry already paid the activation, so the Casts entry was not charged.`); continue; }
+    // 1.3.2: a pact partner's ability ("<partner>: <ability>") works only while the partner is with {{user}} (summoned, or living
+    // by its terms); otherwise nothing happened and nothing is charged
+    const pm = /^\[pact\]\s*(.+)$/.exec(t.Notes || ''), pk = pm && pm[1].trim();
+    if (pk && c.Technique.startsWith(pk + ': ') && !partnerHere(pk)) { log.push(`${c.Technique}: ${pk} is not summoned, so the ability could not be used; nothing was charged.`); continue; }
     // hybrid: while the effect is running, a triggered use costs Trigger; otherwise a cast costs Activation
     const running = Object.values(M.Active || {}).some(e => e.Technique === c.Technique);
     const unit = t.Cost_mode === 'hybrid' && t.Trigger > 0 && running ? t.Trigger : (t.Activation || 0);
@@ -709,12 +834,15 @@ function runEngine(S, B, text, seedHint) {
   const repw = _.isPlainObject(S.$eng.repw) && S.$eng.repw.w === weekNo ? S.$eng.repw : { w: weekNo };
   const repLv = r => repLevel(rx[r]);
   // cap: 'week' (repeatable), 'bond' (only below bond_cap_level), '' (event or loss)
+  const TU = tuneOf(S);   // 1.3.1 Settings: pace (rep_mult), weekly cap (0 = none), bond milestones (0 off, 1 until bond_cap_level, 2 always)
   const repAdd = (r, x, why, cap) => {
     if (!REP.reps.includes(r) || !x) return 0;
-    if (cap === 'bond' && x > 0 && repLv(r) >= REP.bond_cap_level) { log.push(`${r} reputation is already +${repLv(r)}: bond milestones add no more (${why}).`); return 0; }
-    if (cap === 'week' && x > 0) {
-      const room = Math.max(0, REP.weekly_cap - num(repw[r], 0));
-      if (x > room) log.push(`${r} reputation: the weekly limit for everyday deeds (+${REP.weekly_cap}) is reached${room ? `; +${room} of +${x} counted` : ''} (${why}).`);
+    if (cap === 'bond' && !TU.rep_bond) return 0;
+    if (cap === 'bond' && x > 0 && TU.rep_bond === 1 && repLv(r) >= REP.bond_cap_level) { log.push(`${r} reputation is already +${repLv(r)}: bond milestones add no more (${why}).`); return 0; }
+    if (TU.rep_mult !== 1) x = Math.sign(x) * Math.max(1, Math.round(Math.abs(x) * TU.rep_mult));
+    if (cap === 'week' && x > 0 && TU.rep_week > 0) {
+      const room = Math.max(0, TU.rep_week - num(repw[r], 0));
+      if (x > room) log.push(`${r} reputation: the weekly limit for everyday deeds (+${TU.rep_week}) is reached${room ? `; +${room} of +${x} counted` : ''} (${why}).`);
       x = Math.min(x, room); repw[r] = num(repw[r], 0) + x;
       if (!x) return 0;
     }
@@ -782,6 +910,24 @@ function runEngine(S, B, text, seedHint) {
     const o = (BB[id] && BB[id].$Known_old) || [];
     if (o.length && !(b.$Known_old || []).length) b.$Known_old = [...o];
   }
+  // 1.3.3 (bug hunt): a bond is never removed by an update (a whole-/Bonds replace used to drop every bond it left out), and a
+  // record rewritten whole (its facts and milestones both came back empty) keeps what it knew: facts, milestones, title, and
+  // Trust / Tension where the rewrite only carried the defaults.
+  {
+    const kept = [], mended = [];
+    for (const [id, b0] of Object.entries(BB)) if (!(id in S.Bonds) && !staleDrop.has(id)) { S.Bonds[id] = _.cloneDeep(b0); kept.push(id); }
+    for (const [id, b] of Object.entries(S.Bonds)) {
+      const b0 = BB[id]; if (!b0 || kept.includes(id)) continue;
+      if ((b.Known_facts || []).length || (b.Milestones || []).length || !((b0.Known_facts || []).length || (b0.Milestones || []).length)) continue;
+      b.Known_facts = [...(b0.Known_facts || [])]; b.Milestones = [...(b0.Milestones || [])];
+      if (!b.Title) b.Title = b0.Title || '';
+      if (num(b.Trust, 50) === 50) b.Trust = num(b0.Trust, 50);
+      if (!num(b.Tension, 0)) b.Tension = num(b0.Tension, 0);
+      mended.push(id);
+    }
+    if (kept.length) log.push(`Bond records cannot be removed (${kept.join(', ')}); they were kept. Change a bond's fields instead of replacing /Bonds.`);
+    if (mended.length) log.push(`Bond record${mended.length > 1 ? 's' : ''} for ${mended.join(', ')} came back without facts or milestones; what was known was kept.`);
+  }
   const seen = `${stamp(S.World)} at ${S.World.Location}`;
   for (const id of Object.keys(S.Scene.Present)) {
     if (NPC_IDS.has(id) && !(id in S.Bonds) && (ARRIVES[id] || 1) > S.World.Year) {   // v1.0.3: incoming cohort, not here yet
@@ -816,6 +962,9 @@ function runEngine(S, B, text, seedHint) {
   // 1.3.0 mask -> truth (Castor, Kanae, Caine): the 8 -> 9 event waits until one of the NPC's secrets has come out in play
   const secretOut = id => [...(S.$ui.secrets || []), ...(S.Campus_State.Secrets_revealed || [])].some(x => String(x).toLowerCase().startsWith(id.toLowerCase() + '.'));
   const held = (id, b) => MASK.has(id) && b.Rank === 8 && !secretOut(id);
+  const tenseHold = (id, b) => { const P = tensionProfile(id); return !P.exempt && !P.lock && num(b.Tension, 0) >= num(TE.hold_event_from, 70); };   // 1.3.8
+  const trustHold = (id, b) => b.Rank + 1 !== 8 && num(b.Trust, 50) < trustGate(id, b.Rank + 1);   // 1.4.3
+  const spreadFrom = [];
   const KR = REW.krieg || {}, weeksNew = hasB ? Math.max(0, Math.min(8, weekNo - weekNoB)) : 0;
   const give = (id, which) => {                                // a Rank 5 gift / Rank 10 benefit, once
     const x = ((REW.npcs || {})[id] || {})[which];
@@ -829,7 +978,7 @@ function runEngine(S, B, text, seedHint) {
   };
   const rankedUp = (id, b) => {
     const R0 = repOfNpc(id), mx = (REP.bond_milestone_xp || {})[String(b.Rank)];
-    if (R0 && mx) repAdd(R0, mx, `bond with ${id} reached Rank ${b.Rank}`, 'bond');
+    if (R0 && mx && !(b.$ms || []).includes(b.Rank)) { repAdd(R0, mx, `bond with ${id} reached Rank ${b.Rank}`, 'bond'); b.$ms = [...(b.$ms || []), b.Rank]; }   // 1.3.8: once per rank
     if (b.Rank === 5) give(id, 'gift');
     if (b.Rank === 10) give(id, 'r10');
     const nd = ((REW.npcs || {})[id] || {}).nudge;
@@ -845,13 +994,30 @@ function runEngine(S, B, text, seedHint) {
     b.Progress = 0;
     b._Event_ready = b0 ? !!b0._Event_ready : false;
     b.$cool = b0 ? num(b0.$cool, -1) : num(b.$cool, -1);
-    if (!b0 && hasB && b.Rank > 0) b.Rank = 0;                // a new acquaintance starts at Rank 0
+    b.$ms = b0 ? [...(b0.$ms || [])] : [...(b.$ms || [])]; b.$tf = b0 ? num(b0.$tf, 0) : num(b.$tf, 0);   // 1.3.8 engine-owned
+    b.$tdrop = b0 ? num(b0.$tdrop, -99) : num(b.$tdrop, -99);   // 1.4.3
+    b.$tlast = b0 ? num(b0.$tlast, 0) : 0; b.$tbrk = b0 ? num(b0.$tbrk, 0) : 0;   // 1.4.4
+    b.$Recent = b0 ? [...(b0.$Recent || [])] : [...(b.$Recent || [])];   // 1.4.4 engine-owned
+    const acts = [...(byId[id] || [])], rank0 = b0 ? b0.Rank : b.Rank, tw0 = num(b.Tension, 0), trw0 = num(b.Trust, 50);
+    let rankTrust = 0;
+    if (S.$eng.tenv !== 1) b.$ms = [...new Set([...b.$ms, ...Object.keys(REP.bond_milestone_xp || {}).map(Number).filter(r => r <= b.Rank)])];   // older saves: milestones already paid
+    if (!b0 && hasB) { const s0 = trustProfile(id, S, secretOut).start; b.Trust = num(b.Trust, 50) === 50 ? s0 : Math.min(num(b.Trust, 50), s0); }   // 1.4.3
+    if (!b0 && hasB && START[id]) {                            // 1.3.1: a bond with its own start (Etnie adopts {{user}} on sight)
+      const st = START[id];
+      b.Rank = st.Rank; b.$cool = dayNo + coolDays(st.Rank, PACE); xp = 0;
+      if (!b.Title && st.Title) b.Title = st.Title;
+      if (st.Trust) b.Trust = st.Trust;
+      b.Known_facts = [...new Set([...(b.Known_facts || []), ...(st.Known_facts || [])])];
+      b.Milestones = [...new Set([...(b.Milestones || []), ...(st.Milestones || [])])];
+      S.$ui.toasts.push(`Bond with {npc:${id}} starts at Rank ${st.Rank}`);
+      for (const m of st.Milestones || []) jnl.push(m + '.');
+    } else if (!b0 && hasB && b.Rank > 0) b.Rank = 0;         // a new acquaintance starts at Rank 0
     if (b0 && b.Rank > b0.Rank) {
       if (b0._Event_ready && b.Rank === b0.Rank + 1) {
         xp = 0; b._Event_ready = false; b.$cool = dayNo + coolDays(b.Rank, PACE);
         S.$ui.toasts.push(`Bond with {npc:${id}} reached Rank ${b.Rank}: new profile info unlocked`);
         jnl.push(`Bond with ${id} deepened to Rank ${b.Rank}.`);
-        rankedUp(id, b);
+        rankedUp(id, b); rankTrust = num(TRU.rank_up, 0);   // 1.4.3: a rank earned together adds Trust (outside the weekly cap)
       } else {
         log.push(`Rank change for ${id} reverted: a rank rises by 1 only through the bond event, once the bond is ready.`);
         b.Rank = b0.Rank;
@@ -859,10 +1025,8 @@ function runEngine(S, B, text, seedHint) {
     } else if (b0 && b.Rank < b0.Rank) {
       b._Event_ready = false; log.push(`Bond with ${id} fell to Rank ${b.Rank}.`);
     }
-    if (b0 && num(b0.Tension, 0) < REP.tension_high && num(b.Tension, 0) >= REP.tension_high && repOfNpc(id) && repOfNpc(id) !== 'Doves') {
-      repAdd(repOfNpc(id), REP.tension_xp, `high tension with ${id}`, '');   // a public falling-out (staff: Academy, students: Student)
-    }
-    const need = needXP(b.Rank, PACE);
+    let need = needXP(b.Rank, PACE);
+    const xpStart = xp;   // 1.4.4: for the recent history
     // XP: talk and hangout once a day each, gifts and help a few times a week; a loved gift counts more from Rank 3
     let gain = 0;
     const d = daily[id] && daily[id].day === dayNo ? daily[id] : { day: dayNo }, w = bweek[id] && bweek[id].w === weekNo ? bweek[id] : { w: weekNo };
@@ -896,20 +1060,174 @@ function runEngine(S, B, text, seedHint) {
     }
     // 1.1.0 weather bonus, kept: +1 once a day for time together indoors in bad weather, outdoors in fine weather, a clear Star Night
     if (bondWx && !d.wx && (byId[id] || []).some(a => /^(talk|hangout)$/i.test(String((a && a.Kind) || '').trim()))) { d.wx = 1; gain += BR.weather_xp; }
+    // ---- 1.4.3 Trust: drops as the narrator wrote them (x the category), rises only from reported deeds (x the category, capped a
+    // week) and a rank earned; a quiet week recovers it towards the floor; then the overrides. tr0 (before this reply) decides what
+    // Trust does to Tension and apologies below.
+    const RP = trustProfile(id, S, secretOut), RO = RP.o, DH = RP.dh || {};
+    const tr0 = b0 ? num(b0.Trust, 50) : num(b.Trust, 50), band0 = trustBand(tr0);
+    let tr = num(b.Trust, 50), tdropped = 0, trXP = 0;
+    if (b0) {
+      if (tr > tr0) { log.push(`${id}'s Trust cannot be raised directly (${tr0} -> ${tr} undone): report the deed as an interaction (keep, secret, defend, confide).`); tr = tr0; }
+      const written = tr; let tback = 0; tr = tr0;
+      // 1.4.4 (owner): once they understand {{user}} meant no harm, part of the last drop comes back (by nature, once, within 30 days)
+      if ((byId[id] || []).some(a => /^understood$/i.test(String((a && a.Kind) || '').trim())) && RO.lock == null) {
+        const back = Math.round(num(b.$tlast, 0) * num(RP.C.understood, 0));
+        if (b.$tlast > 0 && dayNo - num(b.$tdrop, -99) <= num(TRU.understood_days, 30) && back > 0) { log.push(`${id} understands now: Trust +${back} (part of the last drop).`); tback = back; }
+        else if (b.$tlast > 0) log.push(`${id} understands, but it does not give back what was lost${num(RP.C.understood, 0) ? ' (too long ago)' : ' (not in their nature)'}.`);
+        b.$tlast = 0;
+      }
+      tr += tback;
+      if (written < tr0) { tdropped = Math.ceil((tr0 - written) * RP.drop); tr -= tdropped; b.$tdrop = dayNo; b.$tlast = tdropped; }
+      const kinds = { ...(TRU.kinds || {}), ...(RO.kind_extra || {}) };
+      let add = 0;
+      for (const a of byId[id] || []) {
+        const k = String((a && a.Kind) || '').trim().toLowerCase();
+        if (!(k in kinds) || d['tr_' + k]) continue;               // each kind once a day
+        d['tr_' + k] = 1;
+        add += kinds[k] * (a.Public && (TRU.public_mult || {})[k] ? TRU.public_mult[k] : 1) * num((RO.kind_mult || {})[k], 1);
+      }
+      add = Math.round(add * RP.rise);
+      if (add > 0) {
+        const got = Math.min(add, Math.max(0, num(TRU.weekly_cap, 8) - num(w.tr, 0)));
+        if (got > 0) { w.tr = num(w.tr, 0) + got; tr += got; }
+        if (got < add) log.push(`${id}: Trust rises at most +${TRU.weekly_cap} a week (+${got} of +${add} counted).`);
+      }
+      tr += rankTrust;
+      if (weeksNew > 0 && tr < num(TRU.floor, 35) && RP.recover > 0 && dayNo - num(b.$tdrop, -99) >= 7) tr = Math.min(num(TRU.floor, 35), tr + RP.recover * weeksNew);
+      if (RO.lock != null) {                                       // Althair: Trust stays put; a betrayal becomes bond XP
+        if (tdropped > 0) {
+          const cap = num(tensionProfile(id).daily_cap, 10), x = Math.min(Math.ceil(tdropped * num(RO.convert, 0.5)), Math.max(0, cap - num(d.tx, 0)));
+          if (x > 0) { d.tx = num(d.tx, 0) + x; trXP = x; log.push(`${id} enjoyed being betrayed: Trust stays ${RO.lock}, bond XP +${x}.`); }
+        }
+        tr = RO.lock;
+      }
+      if (RO.floor_hard != null && tr < RO.floor_hard) {           // Etnie: never below 50; the rest of the blow becomes Tension
+        const over = RO.floor_hard - tr; tr = RO.floor_hard;
+        if (RO.overflow_to_tension) { b.Tension = _.clamp(num(b.Tension, 0) + over, 0, 100); log.push(`${id} cannot stop trusting {{user}}: it hurts instead (Tension +${over}).`); }
+      }
+      if (RO.floor_hidden != null) tr = Math.max(RO.floor_hidden, tr);   // Kanae while her Plan is hidden
+      if (RO.cap != null) tr = Math.min(RO.cap, tr);                     // Caine and mages, until his secret is out
+      if (tdropped >= num((TRU.spread || {}).at, 999) && RO.lock == null) spreadFrom.push(id);
+    }
+    b.Trust = _.clamp(Math.round(tr), 0, 100);
+    gain = Math.round(gain * num(DH.bond_xp_mult, 1));                   // Ottavio and his own Sky students
+    // ---- 1.3.8 Tension: Althair's lock, Ezrel's half rises, fights, quiet-day decay, then its effects
+    const TP = tensionProfile(id), t0 = b0 ? num(b0.Tension, 0) : num(b.Tension, 0);
+    let t = num(b.Tension, 0), tgain = 0;
+    if (b0 && t > t0) {
+      if (TP.lock) {                                             // Althair: every rise becomes bond XP (/2, rounded up, capped a day)
+        const add = Math.min(Math.ceil((t - t0) * (TP.convert || 0.5)), Math.max(0, num(TP.daily_cap, 10) - num(d.tx, 0)));
+        if (add > 0) { d.tx = num(d.tx, 0) + add; tgain = add; log.push(`${id} enjoyed that: Tension stays 0, bond XP +${add}.`); }
+      } else {
+        const small = t - t0 <= num(TRE.small_tension_max, 15);
+        const m = TP.riseMult * num(DH.tension_rise_mult, 1) * (band0 === 'Confidant' && small ? num(TRE.confidant_small_tension_mult, 0.5) : band0 === 'Betrayed' ? num(TRE.betrayed_tension_mult, 1.5) : 1);
+        if (m !== 1) t = t0 + Math.ceil((t - t0) * m);   // 1.4.3: Trust and the Dorm Head
+      }
+    }
+    if (TP.lock) t = 0;
+    // 1.4.0 (owner): an apology eases Tension by the NPC's category (or override); one a day, and each further one in the same week
+    // counts half. Some NPCs take it badly (apology_npc, e.g. Sophia: it raises Tension).
+    const apo = (byId[id] || []).find(a => /^apolog/i.test(String((a && a.Kind) || '').trim()));
+    if (apo && !TP.lock && !d.apology) {
+      const A = (TEN.apology_npc || {})[id] || TP.apology || { private: 0, public: 0 };
+      let x = num(apo.Public ? A.public : A.private, 0);
+      if (num(w.apo, 0) > 0) x = Math.sign(x) * Math.round(Math.abs(x) * num(TE.apology_repeat_mult, 0.5));
+      if (x < 0) x = Math.round(x * num((TRE.apology_mult || {})[band0], 1) * num(DH.apology_mult, 1));   // 1.4.3: how much they believe it
+      d.apology = 1; w.apo = num(w.apo, 0) + 1;
+      if (x < 0 && t > 0) { const was = t; t = Math.max(0, t + x); log.push(`${id} accepted the apology${apo.Public ? ' (in public)' : ''}: Tension ${was} -> ${t}.`); }
+      else if (x > 0) { const was = t; t = Math.min(100, t + x); log.push(`The apology made it worse with ${id}: Tension ${was} -> ${t}.`); }
+      else if (t > 0) log.push(`An apology changes nothing with ${id}.`);
+    }
+    if (TP.cat === 'confrontational' && (byId[id] || []).some(a => /^fight$/i.test(String((a && a.Kind) || '').trim())) && !d.fight && t > 0) {
+      d.fight = 1; const was = t; t = Math.max(0, t - num(TE.fight_ease, 25)); log.push(`A fight with ${id} cleared the air: Tension ${was} -> ${t}.`);
+    }
+    // 1.4.4 (owner): kindness eases Tension by the character's nature (kind_ease: help / keep / defend; Social only a public
+    // defence), once a day
+    if (!TP.lock && t > 0 && !d.kind) {
+      const KE = TP.kind_ease || {};
+      const hit = (byId[id] || []).map(a => { const k = String((a && a.Kind) || '').trim().toLowerCase(); return k === 'defend' && a.Public && KE.defend_public != null ? KE.defend_public : KE[k]; }).filter(x => x < 0);
+      if (hit.length) { const x = Math.min(...hit), was = t; d.kind = 1; t = Math.max(0, t + x); log.push(`${id} took the kindness to heart: Tension ${was} -> ${t}.`); }
+    }
+    if (b0 && hasB && dayNo > dayNoB && t <= t0 && TP.decay > 0 && t > 0) {   // quiet days (no rise in this update)
+      const f = num(b.$tf, 0) + TP.decay * num(DH.tension_decay_mult, 1) * Math.min(60, dayNo - dayNoB), whole = Math.floor(f);
+      t = Math.max(0, t - whole); b.$tf = r2(f - whole);
+    }
+    b.Tension = _.clamp(Math.round(t), 0, 100);
     if (Object.keys(d).length > 1) daily[id] = d;
     if (Object.keys(w).length > 1) bweek[id] = w;
+    const cross = at => b0 && t0 < at && b.Tension >= at;
+    // a public falling-out costs reputation like a bond milestone earns it (staff: Academy, students: Student, Milena: Doves).
+    // 1.3.1: high Tension costs tension_xp, maximum Tension another tension_max_xp; Settings can turn it off. Kanae is exempt.
+    if (TU.rep_tension && repOfNpc(id) && !TP.exempt) {
+      for (const [at, x, what] of [[REP.tension_high, REP.tension_xp, 'high'], [REP.tension_max, REP.tension_max_xp, 'maximum']]) {
+        if (at && x && cross(at)) {
+          const got = repAdd(repOfNpc(id), x, `${what} tension with ${id}`, '');
+          if (got) log.push(`${what === 'high' ? 'High' : 'Maximum'} tension with ${id}: ${repOfNpc(id)} reputation ${got} XP.`);
+        }
+      }
+    }
+    if (TU.rep_tension && TP.enemy_rep && cross(TEN.bands[TEN.bands.length - 1][0])) {   // Social: a gossip campaign
+      for (const [r, x] of Object.entries(TP.enemy_rep)) { const got = repAdd(r, x, `${id} turned the students against {{user}}`, ''); if (got) log.push(`${id} turned the room against {{user}}: ${r} reputation ${got} XP.`); }
+    }
+    if (id === (TEN.krieg && KR.id) && cross(TEN.krieg.at)) {   // Krieg at maximum Tension: the Dovecote turns on {{user}}
+      if (S.Hidden._True_magic) { S.Hidden.Dove_attention = _.clamp(num(S.Hidden.Dove_attention, 0) + num(TEN.krieg.attention, 10), 0, 100); log.push(`Krieg has made {{user}} his business: Dove attention +${TEN.krieg.attention}.`); }
+      const got = repAdd('Doves', TEN.krieg.doves_xp, 'Krieg turned the Dovecote against {{user}}', ''); if (got) log.push(`Krieg turned the Dovecote against {{user}}: Doves reputation ${got} XP.`);
+    }
+    if (b.Tension < num(TE.rank_drop_rearm, 70)) b.$tbrk = 0;   // 1.4.4: re-armed once it has really cooled
+    if (cross(num(TE.rank_drop_at, 100)) && !TP.exempt && !TP.lock && b.Rank > 0 && !b.$tbrk) {   // maximum Tension breaks a rank (once per blow-up)
+      b.$tbrk = 1; b.Rank -= 1; xp = 0; b._Event_ready = false; b.$cool = dayNo + coolDays(b.Rank, PACE); need = needXP(b.Rank, PACE);
+      S.$ui.toasts.push(`Bond with {npc:${id}} fell to Rank ${b.Rank}`); jnl.push(`The bond with ${id} broke down to Rank ${b.Rank}.`);
+      log.push(`Maximum Tension with ${id}: the bond fell to Rank ${b.Rank}.`);
+    }
+    // what Tension does to the bond (everyone the same, but Kanae and Althair): Strained halves XP, Enemy stops it
+    if (!TP.exempt && !TP.lock) {
+      if (b.Tension >= num(TE.stop_xp_from, 90)) gain = 0;
+      else if (b.Tension >= num(TE.strained_from, 40)) gain = Math.round(gain * num(TE.strained_xp_mult, 0.5));
+    }
+    if (trustBand(b.Trust) === 'Betrayed' && RO.lock == null && !RO.no_gates) gain = Math.round(gain * num(TRE.betrayed_xp_mult, 0.5));   // 1.4.3
+    gain += tgain + trXP;
     xp = b.Rank >= 10 ? 0 : Math.min(need, xp + gain);          // the bar stops when full, until the event
     b.$xp = xp;
-    const ready = b.Rank < 10 && xp >= need && dayNo >= num(b.$cool, -1) && !held(id, b);
+    const ready = b.Rank < 10 && xp >= need && dayNo >= num(b.$cool, -1) && !held(id, b) && !tenseHold(id, b) && !trustHold(id, b);
     if (ready && !b._Event_ready) { b._Event_ready = true; fresh.push(id); }
     else if (!ready) b._Event_ready = false;
     // romance opens at the rank chosen in Settings (default 8); feelings can grow earlier in the story, the flag waits
     if (hasB && b.Romance && !(b0 && b0.Romance) && (romRank > 10 || b.Rank < romRank)) {
       b.Romance = false;
       log.push(romRank > 10 ? `Romance flags are off (Settings); ${id}'s was not set.` : `Romance with ${id} opens at Rank ${romRank} (Settings); the flag was not set yet.`);
+    } else if (hasB && b.Romance && !(b0 && b0.Romance) && b.Trust < trustGate(id, 8)) {   // 1.4.3
+      b.Romance = false; log.push(`Romance with ${id} needs Trust ${trustGate(id, 8)} (now ${b.Trust}); the flag was not set yet.`);
+    }
+    // 1.4.4 (owner): the bond's recent history with {{user}}: when, one sentence (the narrator's Note, else the kinds), the effect.
+    // Only what {{user}} did or reported: quiet-day easing and weekly recovery write no row.
+    if (hasB) {
+      const fx = [], dx = b.Rank < rank0 ? 0 : Math.max(0, num(b.$xp, 0) - xpStart), dT = b.Trust - (b0 ? num(b0.Trust, 50) : b.Trust), dX = b.Tension - (b0 ? num(b0.Tension, 0) : b.Tension);
+      if (b0 && b.Rank > rank0) fx.push(`Rank ${rank0} → ${b.Rank}`); else if (b0 && b.Rank < rank0) fx.push(`Rank fell to ${b.Rank}`);
+      if (dx > 0) fx.push(`XP +${dx}`); if (trXP + tgain > 0 && !dx) fx.push('enjoyed it');
+      const sg = x => (x > 0 ? '+' + x : '−' + Math.abs(x));
+      if (dT) fx.push(`Trust ${sg(dT)}`); if (dX) fx.push(`Tension ${sg(dX)}`);
+      if (b.Romance && !(b0 && b0.Romance)) fx.push('romance');
+      const notes = [...new Set(acts.map(a => String((a && a.Note) || '').trim()).filter(Boolean))];
+      const PH = (BR.recent || {}).phrases || {}, kinds = [...new Set(acts.map(a => String((a && a.Kind) || '').trim().toLowerCase()).filter(k => PH[k]))].map(k => PH[k]);
+      const said = notes.join(' ') || (kinds.length ? kinds.join(', ').replace(/^./, c => c.toUpperCase()) + '.' : '');
+      if (!b0) b.$Recent.push({ w: stamp(S.World), n: `First met, at ${S.World.Location}.`, fx: b.Rank > 0 ? `Bond starts at Rank ${b.Rank}` : '' });
+      else if (acts.length || fx.length && (b.Rank !== rank0 || trw0 !== num(b0.Trust, 50) || tw0 !== num(b0.Tension, 0) || dx > 0))
+        b.$Recent.push({ w: stamp(S.World), n: said || '(no note)', fx: fx.join(', ') });
+      b.$Recent = b.$Recent.slice(-num((BR.recent || {}).keep, 10));
     }
   }
+  // 1.4.3: word of a betrayal reaches the NPC's friends (their Friends lines), once; then the Rank 10 benefits Trust suspends
+  for (const id of spreadFrom) {
+    const hit = ((TRU.friends || {})[id] || []).filter(f => S.Bonds[f] && f !== id && ((TRU.overrides || {})[f] || {}).lock == null);
+    for (const f of hit) {
+      const o = (TRU.overrides || {})[f] || {}, was = S.Bonds[f].Trust; S.Bonds[f].Trust = Math.max(o.floor_hard != null ? o.floor_hard : 0, was + num(TRU.spread.friends, -5)); S.Bonds[f].$tdrop = dayNo;
+      if (was !== S.Bonds[f].Trust) S.Bonds[f].$Recent = [...(S.Bonds[f].$Recent || []), { w: stamp(S.World), n: `Heard what {{user}} did to ${id}.`, fx: `Trust −${was - S.Bonds[f].Trust}` }].slice(-num((BR.recent || {}).keep, 10));   // 1.4.4
+    }
+    if (hit.length) log.push(`Word of what {{user}} did to ${id} reached ${hit.join(', ')}: their Trust ${TRU.spread.friends}.`);
+  }
+  S.$ui.tsusp = Object.entries(S._Perks || {}).filter(([, p]) => p.Kind === 'rank10' && S.Bonds[p.From] && trustGate(p.From, 10) && S.Bonds[p.From].Trust < num(TRU.suspend_r10_below, 35)).map(([k]) => k);
   S.$eng.bondv = 2;
+  S.$eng.tenv = 1;   // 1.3.8: $ms filled for bonds from before
   for (const k of Object.keys(bweek)) if (bweek[k].w !== weekNo) delete bweek[k];
   S.$eng.bweek = bweek;
   // what the UI and the Now entry show: bonds whose bar is full (event ready now, or after the cooldown)
@@ -918,10 +1236,13 @@ function runEngine(S, B, text, seedHint) {
     if (b.Rank >= 10 || num(b.$xp, 0) < needXP(b.Rank, PACE)) continue;
     const e = BEV.find(x => x.npc === id && x.rank === b.Rank) || null;
     if (held(id, b)) { bev[id] = { r: b.Rank, ready: false, in: 0, held: 1, where: '', when: '', now: false, s: 0, dir: '' }; continue; }
+    if (tenseHold(id, b)) { bev[id] = { r: b.Rank, ready: false, in: 0, held: 1, why: 'tension', where: '', when: '', now: false, s: 0, dir: '' }; continue; }
+    if (trustHold(id, b)) { bev[id] = { r: b.Rank, ready: false, in: 0, held: 1, why: 'trust', need: trustGate(id, b.Rank + 1), where: '', when: '', now: false, s: 0, dir: '' }; continue; }
     const now = !!b._Event_ready && present.has(id) && (!e || bondEventOk(e, S));
     const RW = (REW.npcs || {})[id] || {}, rw = b.Rank === 4 ? RW.gift : b.Rank === 9 ? RW.r10 : null;
     const extra = [rw ? `${b.Rank === 4 ? 'This event gives {{user}} ' + id + "'s gift" : 'This event gives {{user}} ' + id + "'s Rank 10 benefit"} (${rw.name}): ${rw.text}${rw.secret ? ' (Narrator only: ' + rw.secret + ')' : ''} The engine records it when the rank rises.` : '',
-      b.Rank === 7 && MASK.has(id) && RW.nudge ? `This event carries a nudge: ${RW.nudge.text} The engine adds the Fact "${RW.nudge.fact}" when the rank rises.` : ''].filter(Boolean).join('\n');
+      b.Rank === 7 && MASK.has(id) && RW.nudge ? `This event carries a nudge: ${RW.nudge.text} The engine adds the Fact "${RW.nudge.fact}" when the rank rises.` : '',
+      b.Rank === 7 && b.Trust < trustGate(id, 8) ? `${id}'s Trust is ${b.Trust} (under ${trustGate(id, 8)}): this bond can only turn into a sworn rivalry here, not a best friendship or a romance.` : ''].filter(Boolean).join('\n');   // 1.4.3
     bev[id] = { r: b.Rank, ready: !!b._Event_ready, in: Math.max(0, num(b.$cool, -1) - dayNo),
       where: e && e.where && e.where.length ? e.where.join(' or ') : (HAUNT[id] || ''),
       when: e ? [e.days && e.days.length ? e.days.join('/') : '', e.time ? e.time.join('–') : ''].filter(Boolean).join(', ') : '',
@@ -948,8 +1269,8 @@ function runEngine(S, B, text, seedHint) {
   function trainRoom(k, weekly) {
     const T = S.Player.$Training[k]; if (!T) return 0;
     if (T.w !== weekNo) { T.w = weekNo; T.wg = 0; }
-    const tot = T.base * TRN.total_pct / 100 - T.gain;
-    return Math.max(0, weekly ? Math.min(T.base * TRN.weekly_pct / 100 - T.wg, tot) : tot);
+    const tot = TU.trn_total > 0 ? T.base * TU.trn_total / 100 - T.gain : Infinity;   // 1.3.1 Settings: 0 = no limit
+    return Math.max(0, weekly && TU.trn_week > 0 ? Math.min(T.base * TU.trn_week / 100 - T.wg, tot) : tot);
   }
   function trainAdd(k, amt, weekly) {
     const T = S.Player.$Training[k], f = TRN.tracks[k].field, add = r2(Math.max(0, Math.min(amt, trainRoom(k, weekly))));
@@ -969,9 +1290,9 @@ function runEngine(S, B, text, seedHint) {
       const k = /mana/.test(x.Track) ? 'mana' : /stam/.test(x.Track) ? 'stamina' : '';
       if (!k || !S.Player.$Training[k]) { log.push(`Training track "${x.Track}" is unknown (use mana or stamina); nothing was added.`); continue; }
       const T = S.Player.$Training[k], pr = partners(k), mult = 1 + pr.length * REW.train_bonus, lab = TRN.tracks[k].label;
-      const add = trainAdd(k, T.base * TRN.session_pct / 100 * mult, true);
-      if (add > 0) log.push(`Training: ${lab} +${add}${pr.length ? ` (with ${pr.join(' and ')}, x${mult})` : ''}; ${r2(T.gain)} of ${r2(T.base * TRN.total_pct / 100)} trained so far.`);
-      else log.push(T.gain >= T.base * TRN.total_pct / 100 ? `Training: ${lab} has reached its limit (twice the starting value); training keeps {{user}} in shape but adds no more.` : `Training: ${lab} already gained all it can this week.`);
+      const add = trainAdd(k, T.base * TU.trn_session / 100 * mult, true), lim = TU.trn_total > 0 ? r2(T.base * TU.trn_total / 100) : 0;
+      if (add > 0) log.push(`Training: ${lab} +${add}${pr.length ? ` (with ${pr.join(' and ')}, x${mult})` : ''}; ${r2(T.gain)}${lim ? ` of ${lim}` : ''} trained so far.`);
+      else log.push(lim && T.gain >= lim ? `Training: ${lab} has reached its limit (+${TU.trn_total}% of the starting value); training keeps {{user}} in shape but adds no more.` : `Training: ${lab} already gained all it can this week.`);
     }
     S.Training = [];
   }
@@ -981,6 +1302,7 @@ function runEngine(S, B, text, seedHint) {
     if (!k) { log.push(`Perk "${key}" is not held; nothing was spent.`); continue; }
     const p = S._Perks[k], fx = (((REW.npcs || {})[p.From]) || {})[p.Kind === 'gift' ? 'gift' : 'r10'] || {};
     if (!(p.Uses > 0)) { log.push(`"${k}" is not a one-use perk; nothing to spend.`); continue; }
+    if ((S.$ui.tsusp || []).includes(k)) { log.push(`"${k}" is suspended while ${p.From}'s Trust is low; it was kept.`); continue; }   // 1.4.3
     if (fx.rep_token) {
       if (!repLevelUp(fx.rep_token, true)) { log.push(`"${k}" only works while ${fx.rep_token} reputation is below 0 (now ${repLv(fx.rep_token)}); it was kept.`); continue; }
       log.push(`${fx.rep_token} reputation rose one level ("${k}").`);
@@ -1003,6 +1325,12 @@ function runEngine(S, B, text, seedHint) {
   const stageOf = a => (a < 20 ? 'Unnoticed' : a < 40 ? 'Rumoured' : a < 60 ? 'Watched' : a < 80 ? 'Investigated' : 'Exposed');
   const stg = stageOf(Hd.Dove_attention);
   if (Hd._True_magic && Hd._Stage !== stg) { log.push(`Dove attention is now: ${stg}.`); S.$ui.toasts.push(`Dove attention: ${stg}`); }
+  for (const [id, o] of Object.entries(TRU.overrides || {})) {   // 1.4.3: Krieg learns the hidden magic: his Trust is gone
+    if (o.zero_at_stage && Hd._True_magic && stg === o.zero_at_stage && S.Bonds[id] && S.Bonds[id].Trust > 0) {
+      S.Bonds[id].$Recent = [...(S.Bonds[id].$Recent || []), { w: stamp(S.World), n: 'Learned what {{user}} has been hiding.', fx: `Trust −${S.Bonds[id].Trust}` }].slice(-num((BR.recent || {}).keep, 10));   // 1.4.4
+      S.Bonds[id].Trust = 0; S.Bonds[id].$tdrop = dayNo; log.push(`${id} knows what {{user}} hid: Trust 0.`);
+    }
+  }
   Hd._Stage = stg;
 
   // ---- 8. monthly payout ----
@@ -1246,6 +1574,7 @@ function runEngine(S, B, text, seedHint) {
   if (Object.keys(S.Inventory || {}).length) unlock('inventory');                 // 1.1.0
   if (Object.keys(S.Player.Conditions || {}).length) unlock('conditions');
   if (S.Trip.Active || TRIPS.some(tp => { const d0 = (tp.m - 1) * 28 + (tp.w - 1) * 7 + DAYS.indexOf(tp.d); return doy >= d0 - 14 && doy <= d0 + 2; })) unlock('trip');
+  S.$ui.next = nextUp(S.World, evs, S);   // 1.3.4: the bracelet's "Next" chip
   S.$ui.toasts = S.$ui.toasts.slice(-10);
 
   // ---- 10. commit ----
