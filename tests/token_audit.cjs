@@ -25,3 +25,7 @@ rows.sort((x,y)=>y[3]-x[3]); console.log('uid | entry | start | heavy'); rows.fo
 console.log('TOTAL constant tokens ~', tot0, '(start) ', totH, '(heavy mid-game)');
 const card_desc=tok(card.description); console.log('card description ~', card_desc);
 const y=YAML.stringify(omit$(S)); const parts=Object.fromEntries(Object.keys(omit$(S)).map(k=>[k,tok(YAML.stringify(omit$(S)[k]))])); console.log('current_state by section (heavy):', JSON.stringify(parts));
+// 1.5.0: the edited preset's enabled prompts ({{// }} notes removed, as SillyTavern drops them), biggest first
+{ const PS=JSON.parse(fs.readFileSync(require('path').join(__dirname,'..','presets/Realistic_Frankenstein_2_2_Eldrasil.json'),'utf8')), ids=new Set(PS.prompt_order[0].order.filter(o=>o.enabled).map(o=>o.identifier));
+  const on=PS.prompts.filter(p=>ids.has(p.identifier)&&p.content).map(p=>[p.name,tok(p.content.replace(/\{\{\/\/[\s\S]*?\}\}/g,''))]).sort((a,b)=>b[1]-a[1]);
+  console.log('preset enabled prompts ~', on.reduce((a,x)=>a+x[1],0), 'tokens; biggest', JSON.stringify(on.slice(0,6))); }

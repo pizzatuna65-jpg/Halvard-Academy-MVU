@@ -34,6 +34,11 @@ They keep a second game state in a hidden HTML block that must sit "at the absol
 - **Colored Dialogue 2.0:** never colours inside `<UpdateVariable>`.
 - **NPC Instincts:** bond records describe history and never force compliance. This replaces "there is no affection meter", which contradicted the card's bond ranks.
 
+**Writing rules (1.5.0, character consistency; generic, they name no card data):**
+- **🎮 Player Input Authority (simulation) 📨** (new, ON, depth 0 just before BOLT): the player writes only {{user}}; what the message says about other characters or outcomes is a wish the world answers in character. It also repeats the newest player message (`{{lastUserMessage}}`) so the model knows which text is the input. Turn it OFF to play as a director.
+- **🌐 Output language** (new, OFF, after Total Output Length): turn ON and name a language to have the story written in it; OFF follows the card (English).
+- Realistic NPCs: no spotlight, no echoes. Scene Engine: simulate, do not dramatise; a quiet turn may end on something ordinary (HOLD). NPC Instincts + VAD: stress shows in the character's own way, plus a `<character_calibration>` block (reaction size, personality is a ceiling, ordinary help keeps its ordinary meaning). NPC Voice: a character's own card outranks the tag (the dialogue ratio is per scene), direct speech versus subtext. Anti-Omniscient: known people are not strangers; no foreshadowing narration. Main `<NPC_intro>`: canon appearance only, no sweep for people {{user}} knows. Anti-Therapist: one question mark per character. Anti-Cliché: no fake specificity, no organ autonomy.
+
 **Length (1.4.6):** "📝 Total Output Length" is ON at roughly 3 to 6 paragraphs. The card used to carry this default; it now lives here so players can change it.
 
 **Regex:** "FF5 Delete / Catch - Untagged Thoughts" are OFF. They serve the Time-and-Place header, which is off, and they delete everything before any line starting with `[... Time`. Tested: a player message ending in `[Time skip: two hours later]` reached the model as only that bracket.

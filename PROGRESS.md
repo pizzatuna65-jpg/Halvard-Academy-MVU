@@ -698,11 +698,39 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   - Tests: tests/test_audit_tool.cjs (13 checks, a synthetic chat with one planted error per check; skipped without Python 3).
     npm test 822 checks; stress passes.
 
+- 1.5.0 Batch A (card rules) + Batch E1 (preset writing rules), planning/DRAFT_batch_plan.md v2. No new canon.
+  - Card 504: "Canon over memory" (P8, card part: the lorebook and character sheets outrank the chat's earlier prose; Rank, Trust
+    and Tension change how a character treats {{user}}, never who they are; closeness is not warmth) and "Where the world's own
+    events come from" (World sources: calendar, happenings, regulars, Commitments, Hooks, Mysteries, bond events; features that
+    are off drop out). The list grows with Next, Events and the campus phase in 1.6.0/1.6.1, when those exist.
+  - N3a: the engine lists bonds whose XP reached 80% of the next rank's need (data/bond_rules.json close_at) in $ui.close; <now>
+    marks them ", close" on the Bond line and rule 504 lets one small behaviour of the next rank slip out.
+  - N10 butterfly clause ("adapt it to the story as it is now; never replay it as if nothing happened") on Royhan's Dorm
+    Competition weekend (101, via merge_lorebooks.py), the birthday (508) and every bond event in <now>.
+  - Preset (edit_preset.py section 8, generic, no card data): new "🎮 Player Input Authority (simulation) 📨" (N1 + D5, ON,
+    depth 0 before BOLT; <input_authority> + <latest_input>{{lastUserMessage}}), new "🌐 Output language" (OFF). Edits: N7 no
+    spotlight / no echoes; P12 + D8 simulate, do not dramatise, HOLD endings; U5 + D2 stress in their own way and
+    <character_calibration> (with "personality is a ceiling"); U4 + D3 a character's card outranks <npc_voice>, direct speech vs
+    subtext; U11 + D7 known people are not strangers, no foreshadowing; U9 canon looks in <NPC_intro>; U12 one question mark per
+    character; banned constructs: fake specificity, organ autonomy. Preset build run twice: byte-identical.
+  - Saves: tests/fixtures/make_save.cjs writes a ~6-week save with the current build; save_1.4.6.json was made on the 1.4.6 code.
+    tests/test_saves.cjs loads every fixture: no key lost, story values unchanged after a no-op update, $eng.ver updated, play
+    continues. Each release adds the previous release's save.
+  - Tests: test_rules_v150.cjs (14), test_preset.cjs (17), test_saves.cjs (6). npm test 859 checks; stress passes. token_audit:
+    card always-on ~11.4k at start (+~200), preset enabled prompts ~17.2k (+~1.4k; the audit now reports the preset). TEST card
+    rebuilt.
+  - To verify in ST: {{lastUserMessage}} is filled on the Gemini endpoint; the new depth-0 prompt does not push <UpdateVariable>
+    from the end of the reply.
+  - To confirm with the owner: the World sources line lists only sources that exist in 1.5.0 (the draft's Next, campus phase and
+    stale events come with the releases that add them). The preset grew more than the draft's +650 estimate (~+1.4k), mostly
+    the calibration block, the voice rules and the repeated player message.
+
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
-- Character-consistency plan (planning/DRAFT_batch_plan.md v2): next release is 1.5.0 (Batch A card rules + Batch E1
-  preset writing rules). After it, play in ST, export the chat and run tools/audit_chat.py for the first MVU baseline.
+- Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 done; next 1.5.1 (Batch B, Cast Sheet), then 1.6.0,
+  1.6.1, 1.6.2 and the G1 voice draft. The owner playtests once, after G1 is approved and applied; then run tools/audit_chat.py
+  on the exported chat for the first MVU baseline.
 - Playtest v1.3.2 in ST: a pact with abilities (Builder → Pacts, Techniques page), summon it and have it use an ability
   (charged once, not charged when not summoned).
 - Playtest v1.3.1 in ST: meet Etnie (Rank 3 on the spot), Etnie's dossier (no "{{user}}"), walk to the Boathouse and the Fishing
@@ -725,6 +753,8 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 - Scripted first-week classes (M1 W1 Tue-Sat, 14 sessions; per dorm for [D] classes; optional homework into Commitments).
 
 ## To verify in ST (could not be tested outside ST)
+- 1.5.0: the preset's {{lastUserMessage}} is filled on the Gemini endpoint; the depth-0 Player Input Authority prompt does not
+  move <UpdateVariable> from the end of the reply.
 - 1.1.0: the Prompt Template extension renders EJS in 502 / 504 (now gated per feature), also in MVU's extra-model mode if used.
 - 5.3: promptOnly regex minDepth trims the far chat as expected; [config_override] is picked up (MVU panel shows 'overriding');
   SillyTavern.chat[last].send_date is available to the Engine script when the seed is first set (fallback: world time + name).

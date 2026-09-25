@@ -1249,6 +1249,8 @@ function runEngine(S, B, text, seedHint) {
       now, s: e ? 1 : 0, dir: now ? [(e ? e.text : (BR.themes || {})[String(b.Rank)] || ''), extra].filter(Boolean).join('\n') : '' };
   }
   S.$ui.bev = bev;
+  // 1.5.0 (N3a): a bond is "close" when its XP reaches close_at of the next rank's need before the bar is full; <now> marks it
+  S.$ui.close = Object.entries(S.Bonds).filter(([id, b]) => b.Rank < 10 && !bev[id] && num(b.$xp, 0) >= Math.ceil(needXP(b.Rank, PACE) * num(BR.close_at, 0.8))).map(([id]) => id);
   for (const id of fresh) {
     const v = bev[id] || {};
     log.push(`Bond with ${id} is ready for its Rank ${S.Bonds[id].Rank + 1} event${v.where ? ` (likely at ${v.where}${v.when ? ', ' + v.when : ''})` : ''}.`);

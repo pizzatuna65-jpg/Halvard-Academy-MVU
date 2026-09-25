@@ -7,4 +7,5 @@ When: today, <%- _P.Birthday %>, from midnight to midnight. Classes, curfew and 
 - Star Cookie: one left on {{user}}'s desk or pillow by whoever knows them best, to be eaten whole, for luck in the year ahead.
 - Gifts: small and cheap between students (sweets, a Sunfizz, something handmade); a costly gift from a close bond means something and gets noticed. Kept gifts go in the Bag.
 - Tone: a good day, not a surprise-party script. Each character reacts in character: some forget, some overdo it, some pretend not to care and turn up anyway. Not everyone who should remember will.
+- If the story has already changed what this day depends on ({{user}} is away, hurt or confined, or the dorm is closed), adapt it to the story as it is now; never replay it as if nothing happened.
 <%_ } _%>

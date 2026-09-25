@@ -109,5 +109,79 @@ for r in d['extensions']['regex_scripts']:
 # ---- 7. settings for Gemini
 d['enable_web_search'] = False; log.append(('SET', 'enable_web_search = false', 'no search grounding in roleplay'))
 d['temperature'] = 1.0; d['top_p'] = 0.95; log.append(('SET', 'temperature 1.0, top_p 0.95', 'Gemini 3 guidance (0.7/0.8 was tuned for Mimo)'))
+# ---- 8. v1.5 writing rules (1.5.0, Batch E1; planning/DRAFT_preset_update.md, DRAFT_card_vs_preset.md §4). Generic on purpose:
+# nothing here names Eldrasil, its data or its characters, so every line still makes sense on another card.
+def new_prompt(like, ident, name, content, enabled, before=None, after=None, **kw):
+    q = copy.deepcopy(P[like] if like in P else byname(like))
+    q.update(identifier=ident, name=name, content=content, **kw)
+    d['prompts'].append(q); P[ident] = q
+    ref = before or after
+    i = next(i for i, o in enumerate(order) if o['identifier'] == (P[ref]['identifier'] if ref in P else byname(ref)['identifier']))
+    order.insert(i if before else i + 1, {'identifier': ident, 'enabled': enabled})
+    log.append(('NEW' if enabled else 'NEW (OFF)', name, ('before ' if before else 'after ') + (P[ref]['name'] if ref in P else byname(ref)['name'])))
+# N1 + D5: the player's message is {{user}}'s words and attempts; the rest is a wish. One toggle: OFF = "director" play.
+new_prompt(B, 'eldrasil-input-authority', '🎮 Player Input Authority (simulation) 📨', """{{// ON: the player controls only {{user}}; what the message says about other characters or outcomes is a wish the world answers in character. Turn OFF to play as a director who may decide other characters and outcomes. Also repeats the newest player message right before the CoT so the model knows exactly which text is the player's input.}}{{trim}}
+
+<input_authority>
+The player writes only {{user}}: their thoughts, feelings, words and attempted actions. Anything else in the player's message (what another character feels, says or decides, whether an action succeeds, facts about the world) is a wish, not a fact: characters answer from their own nature, and outcomes follow the world's rules. Confident wording adds nothing. An outcome that did not happen is not handed over anyway through a coincidence, a sudden change of heart or a rescue.
+</input_authority>
+<latest_input>{{lastUserMessage}}</latest_input>
+This is the player's newest message and nothing older is part of it. Read it by <input_authority>: {{user}}'s own words and attempts are real; anything it says about other characters or outcomes is a wish.""", True, before=B)
+# Output language: OFF means the story follows the card's own language
+new_prompt('Total Output Length', 'eldrasil-output-language', '🌐 Output language', """{{// Turn ON to have the story written in another language: change the language name below. OFF: the story follows the card's language. Names, places and any state-update block stay exactly as the card writes them.}}{{trim}}
+
+<output_language>
+Write the story (narration and dialogue) in Indonesian. Names of people and places, and any state-update block the card asks for, stay exactly as the card writes them.
+</output_language>""", False, after='Total Output Length')
+# N7: no spotlight, no echoes ("NPCs are fallible" is already in the tag)
+rep('Realistic NPCs', '\nExample of Full Physical Commitment:', """
+- No spotlight: strangers do not remember {{user}}'s name, sense something special or single {{user}} out without a reason on-screen. Praise, trust and interest are earned in scenes.
+- No echoes: do not reuse a scene beat, joke or line pattern from earlier replies, and never give two characters the same reaction to the same news.
+
+Example of Full Physical Commitment:""")
+# P12 + U7 + D8: simulate, do not dramatise; a quiet turn may end on something ordinary, and HOLD is a real ending
+rep('Scene Engine', "Stakes stay within the scene's scale unless fate or someone's actions change them.",
+    "Stakes stay within the scene's scale unless fate or someone's actions change them. Simulate, do not dramatise: people act from their role, their interests and the situation. No invented conflict, no test of {{user}} the situation does not call for, no coincidence without a cause, no character acting against their own interest for the sake of drama.")
+rep('Scene Engine', 'a closing beat that could be screenshotted as a quote is the wrong beat.',
+    "a closing beat that could be screenshotted as a quote is the wrong beat. On a quiet turn the committed action may be ordinary (picking up a cup, going back to a book). A reply does not have to finish an exchange, settle a relationship or move it forward; holding, stepping back and leaving something unsaid are valid endings. Never end on a summary, a verdict on the relationship, a preview, or a still picture of someone waiting for {{user}}.")
+# U5 + D2: stress shows in the character's own way; Gemini character calibration (from Duo Preset V13)
+rep('Instincts + VAD', '- NPCs are flawed, panic-prone, deceptive, and tactically poor under stress.',
+    "- Under stress people get worse in their own way, inside the limits their card sets: a composed character's stress shows in small wrong choices, a reckless one gets more reckless, a timid one freezes. VAD changes delivery, never the core.")
+rep('Instincts + VAD', '</vad_emotion>', """</vad_emotion>
+
+<character_calibration>
+- A persona is a long-term tendency, not a fixed performance. The size of a reaction matches its cause, the pressure built up, the person's habits and the real consequences. Do not turn cool into cruel, protective into controlling, kind into boundless, or rational into feelingless.
+- Personality is a ceiling, not a mood: closeness changes how a trait shows, not whether it is there. A shy person in love stays shy and shows it shyly; a strict one who trusts {{user}} is relaxed-strict, not un-strict.
+- Ordinary help, politeness, closeness and working together keep their ordinary meaning. They are not sacrifice, special attention, hidden feelings or desire. A relationship moves only through what happened in scenes.
+- Nobody has to take a stance, decide or change the relationship every turn. Hesitating, leaving things as they are and getting on with their own day are real outcomes.
+- Once a mood or a trait has been shown, do not stamp it again with synonyms.
+- Calibration restores the right size of reaction. It does not make everyone mild, positive or alike: a big enough cause still gets a strong reaction, in that person's own way.
+</character_calibration>""")
+# U4 + D3: the character's own canon voice outranks this tag; direct speech versus subtext
+V = '019f62e8-892f-7017-ae2e-44fbc7d29de7'   # the Micro NPC Voice (the one that ships ON)
+rep(V, '*ALL rules in this tag ONLY apply to NPC dialogue, NOT all prose.*',
+    "*ALL rules in this tag ONLY apply to NPC dialogue, NOT all prose.*\nA character's own card, lorebook entry or character sheet outranks every rule in this tag: their dialogue examples and described voice decide how they talk. The dialogue ratio is for the scene, not for each character: a quiet character stays quiet, and a composed one never shouts in capitals because a rule here allows it.")
+rep(V, '\n</npc_voice>', """
+- Direct people speak directly. Subtext, denial, a sharp tone or saying the opposite needs a reason in the scene: something they are hiding, protecting or not ready to say. Without one, they answer the plain way their voice allows.
+- Gender, age, looks or the relationship never make a character tsundere, flustered or contrary.
+- A character may answer part of a question, dodge, refuse or change the subject, always in a way that is theirs.
+- In a group, each speaks from what they know and want. They do not take turns voicing the same opinion, and nobody shares a narrator's explaining voice.
+</npc_voice>""")
+# U11 + D7: known people are not strangers; no foreshadowing narration
+rep('Anti-Omniscient', 'NPCs treat others as strangers initially.',
+    'NPCs treat others as strangers initially, unless the card records that they already know them (a shared history, a relationship, their lore).')
+rep('Anti-Omniscient', '\n</anti_omniscient_NPCs>', """
+No foreshadowing narration: never "little did they know", "this would matter later", "fate had already…". The narrator knows no more than the viewpoint allows.
+</anti_omniscient_NPCs>""")
+# U9: characters with canon looks keep them; people {{user}} already knows get no sweep
+rep('main', '    attire: clothing, texture, fit, accessories, footwear\n</NPC_intro>',
+    "    attire: clothing, texture, fit, accessories, footwear\n  canon: for a character with a lorebook entry or character sheet, the sweep uses only their canon appearance and what they carry, adding nothing that contradicts it; a character {{user}} already knows gets no sweep\n</NPC_intro>")
+# U12: the question-mark cap is per character, so a crowded scene does not flatten an inquisitive voice
+rep("Gemini, Don't Speak", 'CAP: one question mark per reply, maximum. Zero is the default, not a failure.',
+    "CAP: one question mark per character per reply, maximum, unless that character's card makes them inquisitive by nature. Zero is the default, not a failure.")
+# optional (owner: yes): no fake specificity, no organ autonomy
+rep('Anti-Cliché Moves', 'Spoken dialogue = full sentences.\n</banned_constructs>',
+    'Spoken dialogue = full sentences. No fake specificity: no invented exact numbers or durations that do nothing ("three seconds too long", "73%"). People act, not their body parts: never "his hand moved on its own".\n</banned_constructs>')
+
 json.dump(d, open(os.path.join(HERE, 'Realistic_Frankenstein_2_2_Eldrasil.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=4)
 for l in log: print(' | '.join(l))
