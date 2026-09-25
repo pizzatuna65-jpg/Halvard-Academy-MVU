@@ -12,7 +12,9 @@ const cHead = (id, full) => {
   const c = CD.npcs[id], b = CB[id], out = [];
   out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
   const bond = b ? 'Bond with {{user}}: Rank ' + (Number(b.Rank) || 0) + ', Trust ' + (Number(b.Trust) || 0) + ' (' + cBand(CD.trust_bands, Number(b.Trust) || 0).toLowerCase() + '), Tension ' + (Number(b.Tension) || 0) + ' (' + cBand(CD.tension_bands, Number(b.Tension) || 0).toLowerCase() + ').' : (c.nobond ? 'No bond system (rival academy).' : 'Not bonded yet: a stranger to {{user}} unless the story says otherwise.');
-  out.push('INVARIANTS: ' + c.pron + '. Called ' + c.called + '. ' + c.who + ' ' + bond + (c.never ? ' Never: ' + c.never + '.' : '') + (c.ties ? ' Key ties: ' + c.ties + '.' : ''));
+  const v = (CD.voice || {})[id];
+  out.push('INVARIANTS: ' + c.pron + '. Called ' + c.called + '. ' + c.who + ' ' + bond + (c.never ? ' Never: ' + c.never + '.' : '') + (c.ties ? ' Key ties: ' + c.ties + '.' : '')
+    + (v ? ' How they address people: ' + v.term_used + ' Carries: ' + v.carries : ''));
   const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
   return out.join('\n');
 };
@@ -38,6 +40,23 @@ const cMem = (id, full) => {
 // 1.6.1 (Batch D, N5): invented characters present: their Extras record is their card; those seen before without one
 const CX = getvar('stat_data.Extras') || {}, XHERE = (CS.extras || []).filter(x => CX[x]), XNEW = CS.xnew || [];
 const cExtra = x => { const r = CX[x]; return '[' + x + '] ' + r.Who + (r.Looks ? ' Looks: ' + r.Looks + '.' : '') + (r.Manner ? ' Manner: ' + r.Manner + '.' : '') + (r.Calls_user ? ' Calls {{user}} "' + r.Calls_user + '".' : '') + (r.Voice ? ' Voice: ' + r.Voice : ''); };
+// Batch G (owner-approved canon): how they sound (scene examples, never sounds like, don't flatten, anchor; full sheets) and the
+// stage for their current bond rank (every sheet). Masked characters' alone scenes stay <narrator_only>.
+const cBandOf = r => (r <= 2 ? '0-2' : r <= 5 ? '3-5' : r <= 8 ? '6-8' : '9-10');
+const cVoice = (id, full) => {
+  const v = (CD.voice || {})[id]; if (!v) return '';
+  const r = Math.max(0, Math.min(10, Number((CB[id] || {}).Rank) || 0)), out = [];
+  if (full) {
+    out.push('How ' + CD.npcs[id].first + ' sounds (examples of the voice in situations, not lines to repeat):');
+    for (const x of v.scenes) out.push('- ' + x);
+    if ((v.alone || []).length) out.push('<narrator_only>\nAlone (the mask off; {{user}} never sees this unless the story earns it):\n' + v.alone.map(x => '- ' + x).join('\n') + '\n</narrator_only>');
+    out.push('Never sounds like: ' + v.never_sounds);
+    out.push("Don't flatten: " + v.dont_flatten);
+  }
+  out.push('Stage with {{user}} (Rank ' + r + '): ' + v.stages[cBandOf(r)]);
+  if (full) out.push('Anchor: ' + v.anchor);
+  return out.join('\n');
+};
 const HERE = [...FULL, ...BRIEF];
 const pairs = [];
 for (const a of HERE) for (const b of HERE) if (a !== b && (CD.rel[a] || {})[b]) pairs.push(a + ' → ' + b + ': ' + CD.rel[a][b]);

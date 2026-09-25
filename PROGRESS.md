@@ -832,12 +832,33 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   - To verify in ST (U13): replies are not cut off before </UpdateVariable> (openai_max_tokens is 15000); the reasoning still
     opens with the "Now:" line.
 
+- 1.6.3 Batch G, wave G1 (canon, approved by the owner on 2026-09-25 as drafted: "approve draft 1"): the voice, stages and
+  anchor of the 8 key NPCs (Etnie, Irene, Aiden, Castor, Zara, Kanae, Rei, Caine) in their Cast Sheet.
+  - Data: `data/npc_canon.json` gains `voice[id]` (scenes, alone, never_sounds, term_used, dont_flatten, carries, stages for the
+    bands 0-2 / 3-5 / 6-8 / 9-10, anchor), copied from the draft's English blocks; `change` is filled for the 8 (fixed: Etnie,
+    Irene, Rei; shaped: Aiden, Castor, Zara, Kanae, Caine). Kept out of the lore text on purpose: the player dossier reads the
+    lore fields, and source_original stays the owner's.
+  - Cast Sheet (509): every sheet adds "How they address people" and "Carries" to the invariants line and the Stage line for the
+    current rank (only that band). A full sheet also prints the scene examples ("examples of the voice in situations, not lines
+    to repeat"), the alone lines inside <narrator_only>, Never sounds like, Don't flatten and the Anchor.
+  - Engine: a fixed NPC (Etnie, Irene, Rei) now refuses Imprint replacement (the 1.6.0 rule, now with data).
+  - Size: one G1 NPC present with a full sheet is 1.5k-2.2k tokens (Irene 1586, Aiden 1541, Zara 1618, Rei 1708, Etnie 1811,
+    Castor 1894, Kanae 2071, Caine 2181), about +400-900 over 1.6.2. The plan estimated +250-400 per NPC. The four largest together
+    are about 8k. If the playtest shows the context is tight, the scene examples are the first thing to trim (brief
+    sheets already skip them).
+  - Tests: test_voices_g1_v163.cjs (17 checks: data complete for the 8, every band present, the right band per rank, full vs
+    brief sheet, alone lines inside <narrator_only>, fixed NPC refuses replacement); test_memory_v160's replacement checks moved
+    from Irene (now fixed) to Caspian; save 1.6.2 added (saves 1.4.6 to 1.6.2 load). npm test 1005 checks; stress passes;
+    token_audit passes; preset built twice, byte-identical (unchanged). TEST card rebuilt.
+  - To verify in ST: the 8 NPCs sound like their scene examples without repeating them word for word; the Stage line changes
+    after a rank-up.
+
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
-- Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 to 1.6.2 done; the G1 voice draft
-  (planning/DRAFT_voices.md) waits for the owner's approval, NPC by NPC. The owner playtests once, after G1 is approved and applied; then run tools/audit_chat.py
-  on the exported chat for the first MVU baseline.
+- Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 to 1.6.3 done (G1 applied in 1.6.3). NOW: the owner
+  playtests once; then run tools/audit_chat.py on the exported chat for the first MVU baseline. Next canon wave: G2 (Year 1),
+  drafted in planning/DRAFT_voices_G2.md, applied only after the owner approves it.
 - Playtest v1.3.2 in ST: a pact with abilities (Builder → Pacts, Techniques page), summon it and have it use an ability
   (charged once, not charged when not summoned).
 - Playtest v1.3.1 in ST: meet Etnie (Rank 3 on the spot), Etnie's dossier (no "{{user}}"), walk to the Boathouse and the Fishing
@@ -860,6 +881,7 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 - Scripted first-week classes (M1 W1 Tue-Sat, 14 sessions; per dorm for [D] classes; optional homework into Commitments).
 
 ## To verify in ST (could not be tested outside ST)
+- 1.6.3: the 8 G1 NPCs sound like their scene examples without copying them; the Stage line follows a rank-up.
 - 1.6.2 (U13): replies are not cut off before </UpdateVariable> (preset openai_max_tokens 15000); reasoning opens with "Now:".
 - 1.6.1: tapping an invented character in the cast strip pins them (hidden tool message; thumbtack after the re-render).
 - 1.5.1: the Cast Sheet (509, ~260 KB of EJS) renders without a noticeable delay, also in extra-model mode; NPC keyword entries
