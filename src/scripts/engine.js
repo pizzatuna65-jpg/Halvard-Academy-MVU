@@ -537,7 +537,7 @@ function fillShape(o, shape) {
   }
 }
 const BOND0 = { Rank: 0, Progress: 0, Trust: 50, Tension: 0, Title: '', Romance: false, Known_facts: [], Milestones: [], Last_seen: '' };
-const ENGINE_VER = "1.6.1";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.6.2";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 
 function runEngine(S, B, text, seedHint) {
   if (!S || !S.World) return;

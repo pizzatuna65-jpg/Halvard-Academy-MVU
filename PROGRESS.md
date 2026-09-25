@@ -806,11 +806,37 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
     window (7 days) and the Extras cap (20) are the plan's numbers.
   - To verify in ST: the cast-strip pin writes the hidden tool message (like Settings) and the thumbtack shows after it.
 
+- 1.6.2 Batch E2 (preset): the reasoning reads what the card now provides, without naming it. Card unchanged apart from the
+  version. No new canon.
+  - BOLT step 0 (U2, V4): the "Now: M? W? Day HH:MM at <place>" first line is unchanged (VectFox reads it); the list of card
+    fields after it is now generic ("the card's current state: the time of day and today's events, curfew, who is present…"),
+    plus "If the card provides character sheets for the people present, I read them now."
+  - Step 7 (U3 + D4): a cast check per character who acts, from their sheet or card (what they know and from where, what pulls
+    them, what their personality allows, shown versus meant, what they carry); the loudest reaction, then how this person
+    usually handles it; the name-swap test; then the old slop review.
+  - Step 11 (U10 + D6): world-side material only from the sources the card allows (504 lists them); nobody arrives without the
+    time to get there.
+  - HQ NPC Genesis (U6): the card's naming guide first (else the old five-names rule); race and origin from the setting; the
+    card's record for invented characters is their card. Banned names stay. Scene Engine (U7): the same for the "generated
+    character" sentence.
+  - Bridge (U8 + D6): the <cast> block is the truth about the people present and outranks their lorebook text and the chat;
+    invented characters keep their Extras card; off-screen people follow their Next plans and the campus phase; arrivals take
+    the walk time.
+  - Size: enabled preset prompts ~17.2k → ~17.5k tokens.
+  - Tests: test_preset.cjs +13 (step texts, "Now:" line first and unchanged, no card field anywhere in BOLT outside that line,
+    every tag the CoT refers to exists in the preset or the card, Genesis, Scene Engine, Bridge); save 1.6.1 added (saves 1.4.6
+    to 1.6.1 load). npm test 984 checks; stress passes; preset built twice, byte-identical. TEST card rebuilt.
+  - Decision touched (to confirm with the owner): the plan kept step 0's "Game state (Eldrasil)" line, and its final test asks
+    for no card field names in BOLT outside the "Now:" line. I kept the "Now:" line exactly and made the rest of step 0
+    generic, like steps 2, 7 and 11, so the CoT copies no card field list that could go stale.
+  - To verify in ST (U13): replies are not cut off before </UpdateVariable> (openai_max_tokens is 15000); the reasoning still
+    opens with the "Now:" line.
+
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
-- Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0, 1.5.1, 1.6.0 and 1.6.1 done; next 1.6.2 (Batch E2,
-  preset CoT), then the G1 voice draft. The owner playtests once, after G1 is approved and applied; then run tools/audit_chat.py
+- Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 to 1.6.2 done; the G1 voice draft
+  (planning/DRAFT_voices.md) waits for the owner's approval, NPC by NPC. The owner playtests once, after G1 is approved and applied; then run tools/audit_chat.py
   on the exported chat for the first MVU baseline.
 - Playtest v1.3.2 in ST: a pact with abilities (Builder → Pacts, Techniques page), summon it and have it use an ability
   (charged once, not charged when not summoned).
@@ -834,6 +860,7 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 - Scripted first-week classes (M1 W1 Tue-Sat, 14 sessions; per dorm for [D] classes; optional homework into Commitments).
 
 ## To verify in ST (could not be tested outside ST)
+- 1.6.2 (U13): replies are not cut off before </UpdateVariable> (preset openai_max_tokens 15000); reasoning opens with "Now:".
 - 1.6.1: tapping an invented character in the cast strip pins them (hidden tool message; thumbtack after the re-render).
 - 1.5.1: the Cast Sheet (509, ~260 KB of EJS) renders without a noticeable delay, also in extra-model mode; NPC keyword entries
   read getvar('stat_data.$ui.cast') and go quiet while the NPC has a full sheet.

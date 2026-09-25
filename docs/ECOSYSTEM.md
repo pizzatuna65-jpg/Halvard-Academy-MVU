@@ -24,10 +24,12 @@ They keep a second game state in a hidden HTML block that must sit "at the absol
 **Edited prompts**
 - **Main:** removed the `<think>` wrapper, which the author says is only for Mimo via Crof. Random events are now recorded in the card state.
 - **BOLT CoT:**
-  - Task 0 reads `<current_state>` and `<now>`, and starts reasoning with `Now: M? W? Day HH:MM at <place>`.
+  - Task 0 starts reasoning with `Now: M? W? Day HH:MM at <place>` (unchanged: VectFox reads it), then reads the card's state and, since 1.6.2, the character sheets of the people present.
   - Task 2 plans the MVU patch instead of Internal States. Since 1.4.6 it points to the card's own update rules instead of copying them (the old copy taught the 1.0 bond rules).
+  - Task 7 (1.6.2) is a cast check for each character who acts (what they know, what pulls them, what their personality allows, shown versus meant, what they carry), then "the loudest reaction, then how this person usually handles it", a name-swap test, and the slop review.
   - Task 9 puts `<UpdateVariable>` last.
-  - Task 11 draws world events from the calendar and happenings instead of Fate rolls.
+  - Task 11 draws world events only from the sources the card allows (the card lists them; since 1.6.2 the CoT no longer copies the list) and nobody arrives without the time to get there.
+  - Since 1.6.2 the CoT names no card field outside the `Now:` line; the Bridge is the one Eldrasil-specific prompt.
   - The two Gemini-OFF checks are now conditional.
 - **Gemini jailbreak:** genre set to "magic academy, slice of life with a mystery, dark where earned". It also respects the card rule that {{user}}'s power level is the player's choice.
 - **Pop in Graphics:** letter, notice and page templates replace phone and terminal. The bracelet and stats are never drawn as graphics.
@@ -38,6 +40,8 @@ They keep a second game state in a hidden HTML block that must sit "at the absol
 - **🎮 Player Input Authority (simulation) 📨** (new, ON, depth 0 just before BOLT): the player writes only {{user}}; what the message says about other characters or outcomes is a wish the world answers in character. It also repeats the newest player message (`{{lastUserMessage}}`) so the model knows which text is the input. Turn it OFF to play as a director.
 - **🌐 Output language** (new, OFF, after Total Output Length): turn ON and name a language to have the story written in it; OFF follows the card (English).
 - Realistic NPCs: no spotlight, no echoes. Scene Engine: simulate, do not dramatise; a quiet turn may end on something ordinary (HOLD). NPC Instincts + VAD: stress shows in the character's own way, plus a `<character_calibration>` block (reaction size, personality is a ceiling, ordinary help keeps its ordinary meaning). NPC Voice: a character's own card outranks the tag (the dialogue ratio is per scene), direct speech versus subtext. Anti-Omniscient: known people are not strangers; no foreshadowing narration. Main `<NPC_intro>`: canon appearance only, no sweep for people {{user}} knows. Anti-Therapist: one question mark per character. Anti-Cliché: no fake specificity, no organ autonomy.
+
+**Card data (1.6.2):** HQ NPC Genesis follows the card's naming guide and its record for invented characters (the card's Extras) when there is one; the Scene Engine treats that record as the invented character's card. The Bridge says the `<cast>` block is the truth about the people present, invented characters keep their Extras card, off-screen people follow their Next plans and the campus phase, and arrivals take the walk time.
 
 **Length (1.4.6):** "📝 Total Output Length" is ON at roughly 3 to 6 paragraphs. The card used to carry this default; it now lives here so players can change it.
 
