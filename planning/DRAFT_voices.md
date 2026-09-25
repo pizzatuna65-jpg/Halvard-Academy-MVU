@@ -1,8 +1,9 @@
 # DRAFT: Suara dan tahap 8 NPC kunci (Batch G, gelombang G1)
 
-Status: **DRAF, belum kanon.** Belum ada satu baris pun dari file ini yang masuk lore, `data/` atau card. Setiap NPC diterapkan
-hanya setelah owner bilang "approve" / "proceed" untuk NPC itu (boleh sebagian, boleh dengan revisi). Setelah G1 disetujui dan
-diterapkan, owner playtest sekali, lalu `tools/audit_chat.py` dijalankan pada export chat-nya sebagai baseline pertama.
+Status: **DISETUJUI owner 2026-09-25 ("approve draft 1", semua usulan `[?]` ikut disetujui) dan DITERAPKAN di rilis 1.6.3.**
+Kanonnya sekarang tinggal di `data/npc_canon.json` (`voice`, `change`); file ini disimpan sebagai catatan asal. Kalau mau mengubah
+suara NPC G1, ubah `data/npc_canon.json` lalu build ulang. Langkah berikutnya: owner playtest sekali, lalu `tools/audit_chat.py`
+pada export chat-nya sebagai baseline pertama.
 
 NPC di gelombang ini (yang paling sering muncul, sesuai `DRAFT_batch_plan.md`): **Etnie, Irene, Aiden, Castor, Zara, Kanae, Rei,
 Caine.**

@@ -11,7 +11,7 @@ const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 // are people being talked to or about. MENTION_DENY: first names that are also ordinary words; at a sentence start they are no mention.
 const CAST_FULL = 4;
 const KNOWS_VISIBLE = 15, IMPRINT_MAX = 5, DEFINING_MAX = 5, NEXT_RANK = 3, MEANWHILE_RANK = 7;   // 1.6.0 (Batch C)
-const CHANGE = {};   // 1.6.0 (N2): fixed | shaped | fluid per NPC (data/npc_canon.json; empty until the canon waves)
+const CHANGE = {"Etnie": "fixed", "Irene": "fixed", "Aiden": "shaped", "Castor": "shaped", "Zara": "shaped", "Kanae": "shaped", "Rei": "fixed", "Caine": "shaped"};   // 1.6.0 (N2): fixed | shaped | fluid per NPC (data/npc_canon.json; empty until the canon waves)
 const MENTION_DENY = new Set(["Pip", "Ruby"]);
 const EXTRAS_MAX = 20, EXTRAS_ARCHIVE = 40, STALE_DAYS = 7;   // 1.6.1 (Batch D): invented characters kept; campus events without news
 const PHASES = [];   // 1.6.1 (N6): campus phases (data/campus_phases.json; empty until the canon waves)
@@ -537,7 +537,7 @@ function fillShape(o, shape) {
   }
 }
 const BOND0 = { Rank: 0, Progress: 0, Trust: 50, Tension: 0, Title: '', Romance: false, Known_facts: [], Milestones: [], Last_seen: '' };
-const ENGINE_VER = "1.6.2";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.6.3";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 
 function runEngine(S, B, text, seedHint) {
   if (!S || !S.World) return;

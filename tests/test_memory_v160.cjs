@@ -17,8 +17,8 @@ const P = (time, ops, text, day) => { S = applyPatch(S, [...(day ? [{ op: 'repla
 const here = ids => ({ op: 'replace', path: '/Scene/Present', value: Object.fromEntries(ids.map(i => [i, { Note: '' }])) });
 const B = (id, f, v) => ({ op: 'replace', path: `/Bonds/${id}/${f}`, value: v });
 const ins = (id, f, v) => ({ op: 'insert', path: `/Bonds/${id}/${f}/-`, value: v });
-P('09:00', [here(['Irene'])]);
-S.Bonds.Irene.Rank = 3;
+P('09:00', [here(['Irene', 'Caspian'])]);
+S.Bonds.Irene.Rank = 3; S.Bonds.Caspian.Rank = 3;
 
 // ---- Mind and Knows
 P('09:30', [B('Irene', 'Mind', 'Warier of {{user}} than she shows.'), ins('Irene', 'Knows', 'saw {{user}} out after curfew')]);
@@ -28,22 +28,22 @@ ok(S.Bonds.Irene.Knows.length === 15 && S.Bonds.Irene.$Knows_old.length === 2 &&
 P('09:50', []);
 ok(S.Bonds.Irene.Knows.length === 15 && S.Bonds.Irene.Knows.every(k => !/^\[M1 W1 Mon\] \[M1/.test(k)), 'dates are not stamped twice');
 
-// ---- Imprints
-const imp = (b, w) => ins('Irene', 'Imprints', { Belief: b, Weight: w, From: 'test' });
+// ---- Imprints (1.6.3: Irene is "fixed" by the G1 canon, so the replacement rules are shown on Caspian, who has no Change type)
+const imp = (b, w) => ins('Caspian', 'Imprints', { Belief: b, Weight: w, From: 'test' });
 P('10:00', [imp('Small thing', 3)]);
-ok(!S.Bonds.Irene.Imprints.length && /needs weight 5 or more/.test(S._Log.join(' ')), 'an Imprint under weight 5 is refused');
+ok(!S.Bonds.Caspian.Imprints.length && /needs weight 5 or more/.test(S._Log.join(' ')), 'an Imprint under weight 5 is refused');
 P('10:05', [imp('A', 5), imp('B', 6), imp('C', 7), imp('D', 8), imp('E', 9)]);
-ok(S.Bonds.Irene.Imprints.length === 5 && S.Bonds.Irene.Imprints[0].When === 'M1 W1 Mon', 'five Imprints, dated');
+ok(S.Bonds.Caspian.Imprints.length === 5 && S.Bonds.Caspian.Imprints[0].When === 'M1 W1 Mon', 'five Imprints, dated');
 P('10:10', [imp('F', 5)]);
-ok(S.Bonds.Irene.Imprints.length === 5 && !S.Bonds.Irene.Imprints.some(x => x.Belief === 'F') && /does not outweigh the lightest/.test(S._Log.join(' ')), 'a sixth that does not outweigh the lightest is refused');
+ok(S.Bonds.Caspian.Imprints.length === 5 && !S.Bonds.Caspian.Imprints.some(x => x.Belief === 'F') && /does not outweigh the lightest/.test(S._Log.join(' ')), 'a sixth that does not outweigh the lightest is refused');
 P('10:15', [imp('G', 10)]);
-const G = S.Bonds.Irene.Imprints.find(x => x.Belief === 'G');
-ok(S.Bonds.Irene.Imprints.length === 5 && G && G.Was === 'A' && !S.Bonds.Irene.Imprints.some(x => x.Belief === 'A'), 'a heavier one replaces the lightest and keeps what it replaced (Was)');
-{ // a "fixed" character (data/npc_canon.json Change) is never rewritten: same engine with Irene fixed
-  const src = rd('src/scripts/engine.js').replace(/const CHANGE = \{[^\n]*\};/, "const CHANGE = {\"Irene\":\"fixed\"};");
+const G = S.Bonds.Caspian.Imprints.find(x => x.Belief === 'G');
+ok(S.Bonds.Caspian.Imprints.length === 5 && G && G.Was === 'A' && !S.Bonds.Caspian.Imprints.some(x => x.Belief === 'A'), 'a heavier one replaces the lightest and keeps what it replaced (Was)');
+{ // a "fixed" character (data/npc_canon.json Change) is never rewritten: same engine with Caspian fixed
+  const src = rd('src/scripts/engine.js').replace(/const CHANGE = \{[^\n]*\};/, "const CHANGE = {\"Caspian\":\"fixed\"};");
   const run = new Function(src + '\nreturn runEngine;')();
-  const T = Schema.parse(_.cloneDeep(S)); T.Bonds.Irene.Imprints.push({ Belief: 'H', Weight: 10, When: '', From: '', Was: '' }); run(T, S, '');
-  ok(!T.Bonds.Irene.Imprints.some(x => x.Belief === 'H') && /does not change at the core \(fixed\)/.test(T._Log.join(' ')), 'a fixed character: a sixth Imprint is refused however heavy');
+  const T = Schema.parse(_.cloneDeep(S)); T.Bonds.Caspian.Imprints.push({ Belief: 'H', Weight: 10, When: '', From: '', Was: '' }); run(T, S, '');
+  ok(!T.Bonds.Caspian.Imprints.some(x => x.Belief === 'H') && /does not change at the core \(fixed\)/.test(T._Log.join(' ')), 'a fixed character: a sixth Imprint is refused however heavy');
 }
 
 // ---- Defining moments
@@ -89,7 +89,7 @@ ok(!bad.length, 'age bands at day, week, month and year edges; unreadable dates 
 ok(ageOf('M12 W4 Sun', { Month: 1, Week: 1, Day: 'Mon' }) === 'yesterday', 'over the new year: yesterday');
 
 // ---- Cast Sheet and <now>
-S = applyPatch(S, [here(['Irene', 'Aiden', 'Castor', 'Kanae', 'Zara'])]);
+S = applyPatch(S, [here(['Irene', 'Caspian', 'Aiden', 'Castor', 'Kanae'])]);
 let t = R(509, S);
 ok(/Their mind now: Warier of \{\{user\}\} than she shows\./.test(t) && /What they know about \{\{user\}\}[^\n]*\[M1 W1 Mon, [a-z0-9 ]+\] fact/.test(t), 'full sheet: Mind and Knows with their age');
 ok(/Imprints \(the only things that have changed who they are\): [^\n]*"G" \(weight 10, M1 W1 Mon, [a-z0-9 ]+; from test; replaced "A"\)/.test(t) && /Defining moments with \{\{user\}\}: \[M1 W1 Mon 11:00, [a-z0-9 ]+\] Read her private letter aloud/.test(t), 'full sheet: Imprints and defining moments');

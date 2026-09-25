@@ -108,14 +108,18 @@ def cast_npc(nid, n):
 CANON = json.load(open(P('data/npc_canon.json'), encoding='utf-8'))
 CHANGE_TEXT = {'fixed': 'Experience deepens who they are; it never rewrites them.', 'shaped': 'A major, repeated experience can change one part of them for good; the old self still shows under stress.', 'fluid': 'They change with their surroundings over months (a new year, a new circle), never within one scene.'}
 CAST = {'npcs': {}, 'rel': {}, 'trust_bands': tru_d['bands'], 'tension_bands': ten_d['bands'], 'change': {k: v + ': ' + CHANGE_TEXT[v] for k, v in CANON['change'].items()}}
+# Batch G (owner-approved canon waves): each NPC's voice, terms, props, stage by rank band and anchor (data/npc_canon.json voice)
+CAST['voice'] = CANON.get('voice', {})
+assert all(k in npcs for k in CAST['voice']) and all(k in npcs for k in CANON['change']), 'npc_canon.json names an unknown NPC'
+assert all(set(v['stages']) == {'0-2', '3-5', '6-8', '9-10'} for v in CAST['voice'].values()), 'every voice needs the four stage bands'
 sheets = []
 for nid, n in sorted(npcs.items()):
     raw = open(P(f"src/worldbook/content/{n['uid_card']}.txt"), encoding='utf-8').read()
     m = GATE_RX.match(raw); assert m and m.group(1) == nid, f'NPC entry {n["uid_card"]} ({nid}) has no Cast Sheet gate (merge_lorebooks.py)'
     lore = re.sub(r'^\[[^\]\n]+\]\n', '', m.group(2).strip('\n'))
     CAST['npcs'][nid] = cast_npc(nid, n); CAST['npcs'][nid]['secret'] = '<narrator_only>' in lore
-    sheets.append(f"<%_ if (FULL.includes('{nid}')) {{ _%>\n<%- cHead('{nid}', true) %>\n{lore}\n<%_ const _t{nid} = [cTail('{nid}'), cMem('{nid}', true)].filter(Boolean).join('\\n'); if (_t{nid}) {{ _%>\n<%- _t{nid} %>\n<%_ }} _%>\n"
-                  f"<%_ }} else if (BRIEF.includes('{nid}')) {{ _%>\n<%- [cHead('{nid}', false), cMem('{nid}', false)].filter(Boolean).join('\\n') %>\n<%_ }} _%>")
+    sheets.append(f"<%_ if (FULL.includes('{nid}')) {{ _%>\n<%- cHead('{nid}', true) %>\n{lore}\n<%_ const _t{nid} = [cVoice('{nid}', true), cTail('{nid}'), cMem('{nid}', true)].filter(Boolean).join('\\n'); if (_t{nid}) {{ _%>\n<%- _t{nid} %>\n<%_ }} _%>\n"
+                  f"<%_ }} else if (BRIEF.includes('{nid}')) {{ _%>\n<%- [cHead('{nid}', false), cVoice('{nid}', false), cMem('{nid}', false)].filter(Boolean).join('\\n') %>\n<%_ }} _%>")
 for r in rels:
     if r['from'] in npcs and r['to'] in npcs:
         CAST['rel'].setdefault(r['from'], {})[r['to']] = r['type'] + (('. ' + r['notes'][0]) if r.get('notes') else '')
