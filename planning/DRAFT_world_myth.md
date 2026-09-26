@@ -29,8 +29,8 @@ Told: across the world, the oldest story about a Spirit Lord pact.
 Lesson: a Spirit Lord collects its price in full, so know the price before you ask. The pact is lawful; the price is the danger.
 Status: nobody knows the terms of the pact, the king's name, or the name of the kingdom.
 ```
-Catatan kanon: `Lesson` sengaja tidak melarang pact. Spirit Lord pact sah menurut canon (Magic — Spirit Tiers), dan beberapa NPC
-punya (Alyssa/Hastur, Florian/Hades, Maple/Sobek, Ottavio/Loki, Lucius/Shub-Niggurath). Mitos ini jadi alasan orang berhati-hati,
+Catatan kanon: `Lesson` sengaja tidak melarang pact. Spirit Lord pact sah menurut canon (Magic — Spirit Tiers), dan ada NPC yang
+punya (Alyssa/Hastur; Lucius/Shub-Niggurath, the Lord of Harvest; Loki milik Ottavio mengaku Spirit Lord). Mitos ini jadi alasan orang berhati-hati,
 bukan alasan orang takut pada mereka.
 
 ### 2. World Myth - The Four Who Saved the World (owner)
