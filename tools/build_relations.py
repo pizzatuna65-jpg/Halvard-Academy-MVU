@@ -3,8 +3,8 @@
 Fixes vs 1.4: names win over other keys (Florian's key 'Elion' no longer steals Elion), multi-word titles are matched
 ('Vice Headmaster', 'Acting Warden', 'Sky Dorm Head'), longest non-overlapping match wins ('Vice Headmaster' is not also
 'Headmaster'), spirit/item/brand/shared-surname keys are ignored (same deny-list as the engine).
-Edge = what the FROM character's file says involving TO. Visibility: 'public' | 'rank:N' (bond with FROM >= N) | 'rank:99'
-(story-only field: needs Secrets_revealed '<From>.relationship')."""
+Edge = how FROM sees TO, told by VIA's file (1.6.10: VIA is often TO). Visibility: 'public' | 'rank:N' (bond with VIA >= N) | 'rank:99'
+(story-only field: needs Secrets_revealed '<Via>.relationship')."""
 import json, os, re
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 P = lambda *a: os.path.join(ROOT, *a)
@@ -56,25 +56,33 @@ for e in edges.values():
     e['types'].sort(key=ORDER.index); e['type'] = e['types'][0]
 # 1.4.1 (owner): the keyword guess above is only a starting point; the type of every line is curated by hand in
 # data/relations_curated.json ('drop' = no line). A line the lore gains later must be curated before the build passes.
+# 1.6.10 (owner): the direction is curated too. A sentence in A's file about B often says how B sees A ("Her Dorm Head, Kuroo,
+# has started pushing it"), so the value is one line or a list: 'type' = A -> B, '<type' = B -> A; '/12' keeps only those
+# sentences (0-based) as the line's notes, when the first one is the other person's side. The line keeps 'via' = A, the
+# person whose file (and bond) tells you about it.
 CUR = json.load(open(P('data/relations_curated.json'), encoding='utf-8'))
 new = [f"{a}>{b}" for (a, b) in edges if f"{a}>{b}" not in CUR['edges']]
 assert not new, f'relations_curated.json: lines without a curated type (add them): {new}'
-for key in list(edges):
-    e, k = edges[key], f"{key[0]}>{key[1]}"
-    typ = CUR['edges'][k]
-    if typ == 'drop': del edges[key]; continue
-    assert typ in CUR['types'], (key, typ)
-    e['types'] = [typ]; e['type'] = typ
-    e['visibility'] = 'rank:99' if e['frank'] >= 99 else ('public' if k in CUR['public'] else f"rank:{max(e['frank'], 5)}")
-for e in edges.values(): e.pop('frank', None)
+src, edges = edges, {}
+for key, e in src.items():
+    k = f"{key[0]}>{key[1]}"
+    vals = CUR['edges'][k]
+    for v in ([vals] if isinstance(vals, str) else vals):
+        if v == 'drop': continue
+        m = re.fullmatch(r'(<?)(\w+)(?:/(\d+))?', v); assert m and m.group(2) in CUR['types'], (k, v)
+        back, typ, pick = bool(m.group(1)), m.group(2), m.group(3)
+        assert not pick or max(map(int, pick)) < len(e['notes']), (k, v, e['notes'])
+        a, b = (key[1], key[0]) if back else key
+        vis = 'rank:99' if e['frank'] >= 99 else ('public' if k in CUR['public'] else f"rank:{max(e['frank'], 5)}")
+        edges[(a, b, key[0])] = {'from': a, 'to': b, 'types': [typ], 'type': typ, 'notes': [e['notes'][int(i)] for i in pick] if pick else e['notes'], 'visibility': vis, 'via': key[0]}
 # 1.4.2 (owner): someone everyone at Halvard dislikes (one way): every Halvard person gets a dislike line to them (the lore note
 # when there is one, else the curated note, opening at Rank 5), and none of their own lines is a dislike
 for tgt, D in CUR.get('disliked_by_all', {}).items():
     if tgt.startswith('_'): continue
     for nid, n in npcs.items():
         if nid == tgt or n.get('group', '').endswith('team') or nid in D.get('except', []): continue   # 'except' keeps their curated line
-        e = edges.setdefault((nid, tgt), {'from': nid, 'to': tgt, 'notes': [D['note']], 'visibility': 'rank:5'})
-        e['types'] = ['dislike']; e['type'] = 'dislike'
+        mine = [e for k, e in edges.items() if k[:2] == (nid, tgt)] or [edges.setdefault((nid, tgt, nid), {'from': nid, 'to': tgt, 'notes': [D['note']], 'visibility': 'rank:5', 'via': nid})]
+        for e in mine: e['types'] = ['dislike']; e['type'] = 'dislike'
     assert not [k for k, e in edges.items() if k[0] == tgt and e['type'] == 'dislike'], f'{tgt} dislikes no one (relations_curated.json)'
 # 1.4.2 (owner): group views (Caine hates mages; everyone's view of the Doves) become one-way lines to every member, opening at
 # the rank of the field that states them; a line already curated between the two people wins. 'rule' marks them for the UI.
@@ -90,10 +98,10 @@ for R in CUR.get('group_rules', {}).get('rules', []):
         if not typ: continue
         assert typ in CUR['types'], (R['id'], typ)
         for tgt in members(R['to']):
-            if tgt == nid or (nid, tgt) in edges: continue
-            edges[(nid, tgt)] = {'from': nid, 'to': tgt, 'types': [typ], 'type': typ, 'notes': [f"{R['field']}: {f['text']}"],
-                                 'visibility': 'rank:99' if f['rank'] >= 99 else f"rank:{f['rank']}", 'rule': R['id'], 'rule_label': R['label']}
-out = sorted(edges.values(), key=lambda e: (e['from'], e['to']))
+            if tgt == nid or any(k[:2] == (nid, tgt) for k in edges): continue
+            edges[(nid, tgt, nid)] = {'from': nid, 'to': tgt, 'types': [typ], 'type': typ, 'notes': [f"{R['field']}: {f['text']}"],
+                                 'visibility': 'rank:99' if f['rank'] >= 99 else f"rank:{f['rank']}", 'rule': R['id'], 'rule_label': R['label'], 'via': nid}
+out = sorted(edges.values(), key=lambda e: (e['from'], e['to'], e['via'] != e['from'], e['via']))   # the feeler's own file first
 json.dump(out, open(P('data/relations.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 from collections import Counter
 print('edges', len(out), Counter(e['type'] for e in out).most_common(), Counter(e['visibility'] for e in out).most_common())

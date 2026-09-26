@@ -949,6 +949,34 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   - To confirm with the owner: nothing beyond the approved drafts. The TEST card still sets every bond to Rank 7, so each 7->8
     event shows its branch direction.
 
+- 1.6.10 Direction of every People → Connections line (owner, 2026-09-26, thread "Stress test dan bug hunt": "di entry etnie ada
+  'Her Dorm Head, Kuroo Varnell, … has started pushing it' harusnya ini di entry kuroo … Kuroo and Mimosa: protective (both ways)
+  … jelas ini harusnya satu arah kuroo ke mimosa … Gareth and Gavlan … kedua entry ngejelasin gavlan"). No lore text changed.
+  Touches HANDOFF §4 Connections (1.4.1 curated types): the direction is now curated as well.
+  - Cause: `tools/build_relations.py` drew every line from the NPC whose file holds the sentence, so "Kuroo pushes Etnie" in
+    Etnie's file became Etnie → Kuroo, and two files describing the same view (Gavlan's of Gareth) became "both ways".
+  - Fixed (data): all 312 curated keys re-read, sentence by sentence, for who holds the view; 75 changed. 57 keep their type and
+    turn round (Kuroo → Etnie, Kuroo → Mimosa, Gavlan → Gareth, Caspian → Aiden, Caralynn → Aiden, Gavlan → Ezrel, Irene → Rei …).
+    Where the old type only made sense the old way round, the turned line takes the kind the sentence states: Althair → Aiden and
+    Althair → Bobby soft spot (he is amused; he dislikes no one), Ruby → Castor friends (glad to help; the old "wary" both ways
+    fitted neither), Ezrel → Irene soft spot, Mimosa → Royhan soft spot (her favourite member), Caspian → Tristan respect,
+    Baelin → Yvette and Tristan → Yvette soft spot (they sympathise, are kind), Caralynn → Caine dislike ("treats him as
+    furniture"). Some sentences state both sides and now give two lines: Ottavio dislikes Krieg / Krieg is wary of Ottavio (was
+    dislike both ways), Idris dislikes Milena / Milena has a soft spot for Idris (was Milena dislikes Idris), Vallie dislikes
+    Krieg / Krieg is wary of Vallie, Sophia dislikes Irene (looks down on her), Alyssa → Milena friends. Ezrel no longer has a
+    line to Althair ("Ezrel does not think about Althair at all"); he still does not dislike him (1.4.2). Where a sentence's first
+    note was the other person's side, the line keeps only its own sentence (Kuroo → Mimosa no longer shows Mimosa's imitation
+    habit as Kuroo's side; Sophia → Vallie, Vallie ↔ Krieg, Milena ↔ Idris, Alyssa → Milena). Dropped lines stay dropped.
+  - Build: a curated value is one line or a list: `type` = A → B, `<type` = B → A, `/N` = the line's own sentences. A turned line
+    keeps the file that tells it (`via`): it opens at that person's bond rank, as before, so what a bond tells you is unchanged; a
+    person you have not met still appears through it and is named. The dossier's "How they see others" and the Cast Sheet's ties
+    and "lines between the people present" follow the new direction (one row per person).
+  - Tests: test_connections_v1610.cjs (13 checks: the owner's three examples, the notes, the via rank, the Cast Sheet, the 1.6.9
+    save); test_connections_v141/v142 updated (Gavlan → Gareth is one arrow now; Ottavio/Krieg is the two-views example).
+    Save 1.6.9 added. npm test 1177 checks; stress passes; token_audit unchanged (~12.3k start, ~17.2k heavy); smoke 550 views,
+    no errors; preset built twice, byte-identical (unchanged).
+  - To confirm with the owner: the kinds picked for turned lines above. Optional: move the sentences to the NPC they describe
+    (the lore text itself); the lines are already right without that.
 - 1.6.9 Stress test, bug hunt and compatibility round (card + edited preset + VectFox), asked by the owner on 2026-09-26 in the
   thread "Stress test dan bug hunt". No canon changed; no HANDOFF §4 decision changed.
   - Checked, no problem found: npm test, npm run stress, the fuzz on seeds 2-9 (30 runs x 200 steps each, 48,000 updates), the

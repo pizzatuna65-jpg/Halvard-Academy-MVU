@@ -14,19 +14,19 @@ const npcs = Object.keys(U.DATA.npcs), halvard = npcs.filter(id => !['Althair', 
 ok(halvard.every(id => (rel(id, 'Althair') || [])[2] === 'dislike'), `all ${halvard.length} Halvard people dislike Althair`);
 ok(!U.DATA.rel.some(e => e[0] === 'Althair' && e[2] === 'dislike') && !rel('Althair', 'Krieg') && rel('Althair', 'Ezrel')[2] === 'softspot', 'Althair dislikes no one (his soft spots stay)');
 ok(!rel('Elion', 'Althair'), 'rival-academy teams are left out');
-ok(rel('Baelin', 'Althair')[2] === 'wary' && rel('Ezrel', 'Althair')[2] === 'softspot', 'owner: Baelin (wary) and Ezrel (soft spot) do not dislike him');
-ok(/Althair Veyne adores him/.test(rel('Ezrel', 'Althair')[5][0]) && rel('Gareth', 'Althair')[4] === 'rank:5', 'lore notes stay; a line without lore opens at Rank 5');
+ok(rel('Baelin', 'Althair')[2] === 'wary' && !rel('Ezrel', 'Althair'), 'owner: Baelin (wary) and Ezrel do not dislike him (1.6.10: Ezrel "does not think about Althair at all", so no line)');
+ok(U.DATA.rel.some(e => e[0] === 'Althair' && e[1] === 'Ezrel' && /Althair Veyne adores him/.test(e[5][0])) && rel('Gareth', 'Althair')[4] === 'rank:5', 'lore notes stay; a line without lore opens at Rank 5');
 
 // direction
 const meet = ids => ({ op: 'replace', path: '/Scene/Present', value: Object.fromEntries(ids.map(i => [i, { Note: '' }])) });
-let S = applyPatch(initState(), [meet(['Gareth', 'Althair', 'Gavlan', 'Caine', 'Irene', 'Krieg', 'Milena', 'Bobby', 'Kuroo'])]);
-for (const id of ['Gareth', 'Gavlan', 'Caine', 'Kuroo', 'Althair']) S.Bonds[id].Rank = 6;
+let S = applyPatch(initState(), [meet(['Gareth', 'Althair', 'Gavlan', 'Caine', 'Irene', 'Krieg', 'Milena', 'Bobby', 'Kuroo', 'Ottavio'])]);
+for (const id of ['Gareth', 'Gavlan', 'Caine', 'Kuroo', 'Althair', 'Ottavio']) S.Bonds[id].Rank = 6;
 U.view.gtypes = new Set(Object.keys(U.EDGE)); U.view.ggroups = new Set();
 let G = U.graphModel(S);
 const L = (a, b) => G.links.find(l => l.source === a && l.target === b);
 ok(L('Gareth', 'Althair') && L('Gareth', 'Althair').arrow && !L('Althair', 'Gareth'), 'Gareth → Althair: one line, arrow at Althair');
-ok(L('Gareth', 'Gavlan') && L('Gareth', 'Gavlan').both && !L('Gareth', 'Gavlan').arrow && !L('Gavlan', 'Gareth'),'a view both share (Gavlan and Gareth) is one line with no arrow');
-ok(L('Althair', 'Kuroo').arrow && L('Althair', 'Kuroo').bend && L('Kuroo', 'Althair').bend && L('Kuroo', 'Althair').type === 'dislike', 'two different views of a pair: two arrows that bow apart');
+ok(L('Gavlan', 'Gareth') && L('Gavlan', 'Gareth').arrow && !L('Gavlan', 'Gareth').both && !L('Gareth', 'Gavlan'), '1.6.10: Gavlan protective of Gareth is one arrow (both files describe Gavlan\'s view)');
+ok(L('Ottavio', 'Krieg').arrow && L('Ottavio', 'Krieg').bend && L('Krieg', 'Ottavio').bend && L('Ottavio', 'Krieg').type === 'dislike' && L('Krieg', 'Ottavio').type === 'wary', 'two different views of a pair (Ottavio dislikes Krieg, Krieg is wary of him): two arrows that bow apart');
 const src = fs.readFileSync(path.join(ROOT, 'src/ui/parts/10_people.js'), 'utf8');
 ok(/marker-end', d => \(d\.arrow \?/.test(src) && /'eg-arw-' \+ k/.test(src), 'arrowheads drawn at the To end, in the line colour');
 

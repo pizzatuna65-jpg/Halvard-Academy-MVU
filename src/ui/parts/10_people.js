@@ -103,7 +103,7 @@ PANELS.npc = {
       const locked = _.groupBy(n.fl.filter(f => f[2] < 99 && !fieldUnlocked(id, f, S)), f => f[2]);
       const lk = Object.keys(locked).sort((a, c) => a - c);
       if (lk.length) h += `<h3>Still to learn</h3>${lk.map(r => `<div class="lock">Rank ${r}: ${esc(_.uniq(locked[r].map(f => f[0])).join(', '))}</div>`).join('')}`;
-      const views = DATA.rel.filter(e => e[0] === id && e[4] !== 'public' && arrived(e[1], S) && edgeVisible(e, S));
+      const views = _.uniqBy(DATA.rel.filter(e => e[0] === id && e[4] !== 'public' && arrived(e[1], S) && edgeVisible(e, S)), e => e[1] + '|' + e[2]);   // 1.6.10: one row per person and kind
       const pill = t => `<span class="pill" style="border-color:${EDGE[t][0]};color:${EDGE[t][0]}">${EDGE[t][1]}</span>`;
       // 1.4.2: group-rule lines (e[6]) are one row per group: "Mages (43)" rather than 43 rows
       const groups = _.groupBy(views.filter(e => e[6]), e => e[6][0] + '|' + e[2]);
@@ -136,7 +136,7 @@ function graphModel(S) {
   // 1.3.7 (owner): a public line (family, teacher) shows only between people you have both met; someone you have not met appears
   // only through what a bond has told you (their views on others, Rank 5–6)
   // 1.4.2: a group-rule line (e[6]: Caine and mages, views of the Doves) is drawn only to people you have met
-  const shown = e => met.includes(e[0]) && arrived(e[1], S) && edgeVisible(e, S) && ((e[4] !== 'public' && !e[6]) || met.includes(e[1]));
+  const shown = e => met.includes(viaOf(e)) && arrived(e[0], S) && arrived(e[1], S) && edgeVisible(e, S) && ((e[4] !== 'public' && !e[6]) || met.includes(e[1]));
   for (const e of DATA.rel) if (shown(e)) for (const t of e[3]) if (view.gtypes.has(t)) add(e[0], e[1], t, e[5][0], e[0]);   // 1.0.3: no incoming students yet
   if (view.gtypes.has('story')) for (const [k, v] of Object.entries((S.Campus_State || {}).New_relations || {})) {
     const [a, c] = k.split(/\s*(?:→|->)\s*/).map(x => (x || '').trim());
@@ -212,7 +212,7 @@ function groupsOf(S) {
 function peopleGraphHTML(S) {
   const present = new Set();
   const met = Object.keys(S.Bonds || {});
-  for (const e of DATA.rel) if (met.includes(e[0]) && edgeVisible(e, S) && ((e[4] !== 'public' && !e[6]) || met.includes(e[1]))) e[3].forEach(t => present.add(t));
+  for (const e of DATA.rel) if (met.includes(viaOf(e)) && edgeVisible(e, S) && ((e[4] !== 'public' && !e[6]) || met.includes(e[1]))) e[3].forEach(t => present.add(t));
   if (Object.keys((S.Campus_State || {}).New_relations || {}).length) present.add('story');
   const known = present.size;
   for (const id of met) { const k = youKind(S.Bonds[id])[0]; if (k !== 'bond') present.add(k); }   // 1.4.2: your own lines

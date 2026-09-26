@@ -63,7 +63,7 @@ for nid, n in npcs.items():
         'fl': [[f['label'], f['text'], f['rank']] for f in n['fields']]}
     CAST[nid] = [n['thumb'], PUBLIC_ROLE.get(nid) or descriptor(nid, n), first, n.get('dorm_color') or '#6b6b7b']
 for e in json.load(open(P('data/relations.json'), encoding='utf-8')):
-    DATA['rel'].append([e['from'], e['to'], e['type'], e['types'], e['visibility'], e['notes']] + ([[e['rule'], e['rule_label']]] if e.get('rule') else []))   # 1.4.2 group-rule lines carry [id, label]
+    DATA['rel'].append([e['from'], e['to'], e['type'], e['types'], e['visibility'] + (f"@{e['via']}" if e['via'] != e['from'] and e['visibility'] != 'public' else ''), e['notes']] + ([[e['rule'], e['rule_label']]] if e.get('rule') else []))   # 1.4.2 group-rule lines carry [id, label]; 1.6.10 'rank:N@Via' = told by Via's file
 DATA['rom1'] = {k: v for k, v in json.load(open(P('data/relations_curated.json'), encoding='utf-8')).get('romance_one_way', {}).items() if not k.startswith('_')}   # 1.4.2
 for lid, l in json.load(open(P('data/locations.json'), encoding='utf-8')).items():
     DATA['locs'][lid] = {k: l[k] for k in ('name', 'category', 'kind', 'description', 'vibe', 'regulars', 'connections', 'walk_min',
