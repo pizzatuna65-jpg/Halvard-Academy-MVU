@@ -949,11 +949,36 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   - To confirm with the owner: nothing beyond the approved drafts. The TEST card still sets every bond to Rank 7, so each 7->8
     event shows its branch direction.
 
+- 1.6.9 Stress test, bug hunt and compatibility round (card + edited preset + VectFox), asked by the owner on 2026-09-26 in the
+  thread "Stress test dan bug hunt". No canon changed; no HANDOFF §4 decision changed.
+  - Checked, no problem found: npm test, npm run stress, the fuzz on seeds 2-9 (30 runs x 200 steps each, 48,000 updates), the
+    browser smoke test (550 views), a full rebuild (the committed outputs matched their sources), the preset built twice
+    (byte-identical, unchanged). SillyTavern source (`openai.js` populationInjectionPrompts): at depth 0 the user-role prompts
+    (the preset's Player Input Authority and BOLT) come before the system-role ones, and the card's 510 and 503 join the system
+    block after the preset's system prompts, so `<update_format>` stays last. `macros.js`: {{lastUserMessage}} skips hidden
+    messages, so Builder and Settings notes are never read as the player's input. The preset's own regexes (thought hiding,
+    dialogue colours, GFX) never touch `<UpdateVariable>`; the engine strips tags before it looks for speakers, so coloured
+    dialogue does not hide who spoke. The VectFox cleaning patterns still fit the 503 Analysis lines.
+  - Fixed (engine): the Rank 8 branch was decided on the Trust after the rank-up's +3, so an A or B bond at Trust 47-49 was told
+    to play a sworn rivalry and then recorded as a best friendship (no rival line in the Cast Sheet). It now uses the Trust the
+    7->8 event was played on.
+  - Fixed (Cast Sheet): a B or D character (no romance branch) says so on their sheet from Rank 6 ("Not a romance: … does not
+    become {{user}}'s romance. If {{user}} tries, they react as themselves."), so the prose does not write a romance the engine
+    refuses to record. A romance kept from an older save gets no such line.
+  - Fixed (UI): with romance set to open at Rank 10 in Settings, the dossier's Rank 8 line said romance was open at Rank 8; it
+    now says "romance (from Rank 10 in Settings)".
+  - Docs: `docs/TEST_CHECKLIST_v1.6.md` (what only SillyTavern can show for card + preset + VectFox); PLAYER_GUIDE Bonds names
+    the Rank 8 branches.
+  - Tests: test_bughunt_v169.cjs (16 checks). Save 1.6.8 added (saves 1.4.6 to 1.6.8 load). npm test 1155 checks; stress passes;
+    token_audit passes (unchanged); preset built twice, byte-identical (unchanged). TEST card rebuilt.
+  - To confirm with the owner: the wording of the "Not a romance" line (card rule text, not canon: it states the approved B/D
+    category).
+
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
 - Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 to 1.6.7 done (G1 in 1.6.3, G2 in 1.6.4, G3 in 1.6.5,
-  G4 in 1.6.6, G5 in 1.6.7; every bonded NPC has a voice), plus the Rank 8 branches in 1.6.8. NOW: the owner playtests; then run tools/audit_chat.py on the exported
+  G4 in 1.6.6, G5 in 1.6.7; every bonded NPC has a voice), plus the Rank 8 branches in 1.6.8 and the 1.6.9 bug hunt. NOW: the owner playtests (docs/TEST_CHECKLIST_v1.6.md first); then run tools/audit_chat.py on the exported
   chat for the first MVU baseline.
 - Playtest v1.3.2 in ST: a pact with abilities (Builder → Pacts, Techniques page), summon it and have it use an ability
   (charged once, not charged when not summoned).
@@ -977,6 +1002,8 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 - Scripted first-week classes (M1 W1 Tue-Sat, 14 sessions; per dorm for [D] classes; optional homework into Commitments).
 
 ## To verify in ST (could not be tested outside ST)
+- 1.6.9: docs/TEST_CHECKLIST_v1.6.md (card + preset + VectFox together): the depth-0 order in the real prompt, VectFox's
+  stored events, a sworn rivalry at Trust 47-49, the "Not a romance" line on a B or D character's sheet.
 - 1.6.8: a 7->8 event offers only the branches the NPC allows (a C character with low Trust waits; a B or D character never
   becomes a romance); after it, the Romance or Sworn rival line shows in the Cast Sheet and the NPC plays it.
 - 1.6.4: Alyssa reads somber and quiet, not melodramatic; after the rest day she knows shared moments only from her notebook.

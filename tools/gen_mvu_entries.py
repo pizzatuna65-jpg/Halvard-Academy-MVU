@@ -115,6 +115,7 @@ assert all(set(v['stages']) == {'0-2', '3-5', '6-8', '9-10'} for v in CAST['voic
 # 1.6.8 (owner): the Rank 8 branch lines match the NPC's branch (A: romance and rival, B: rival, C: romance, D: neither)
 _BR_LINES = {'A': {'romance', 'rival'}, 'B': {'rival'}, 'C': {'romance'}, 'D': set()}
 assert all({k for k in ('romance', 'rival') if k in v} == _BR_LINES[CANON['branch'][i]] for i, v in CAST['voice'].items()), 'a voice has Rank 8 branch lines that do not match its branch'
+CAST['branch'] = CANON['branch']   # 1.6.9: the sheet of a character with no romance branch (B, D) says so from Rank 6
 sheets = []
 for nid, n in sorted(npcs.items()):
     raw = open(P(f"src/worldbook/content/{n['uid_card']}.txt"), encoding='utf-8').read()
