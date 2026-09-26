@@ -26,9 +26,12 @@ Keys: `Azathoth`, `Lord of All`, `Primal Desert`, `Arslan Sultanate`, `Arslan`, 
 [The Devoured Kingdom]
 Story: thousands of years ago, a king made a pact with Azathoth, Lord of All, a Spirit Lord. Nobody knows what the king asked for. Azathoth's price was the king's entire kingdom, devoured to the last stone. What remains is the Primal Desert, where the Arslan Sultanate stands today.
 Told: across the world, the oldest story about a Spirit Lord pact.
-Lesson: a Spirit Lord always collects its price in full, so learn the price before you ask. Pacts are lawful; this is why careful mages read every term twice.
+Lesson: a Spirit Lord collects its price in full, so know the price before you ask. The pact is lawful; the price is the danger.
 Status: nobody knows the terms of the pact, the king's name, or the name of the kingdom.
 ```
+Catatan kanon: `Lesson` sengaja tidak melarang pact. Spirit Lord pact sah menurut canon (Magic — Spirit Tiers), dan beberapa NPC
+punya (Alyssa/Hastur, Florian/Hades, Maple/Sobek, Ottavio/Loki, Lucius/Shub-Niggurath). Mitos ini jadi alasan orang berhati-hati,
+bukan alasan orang takut pada mereka.
 
 ### 2. World Myth - The Four Who Saved the World (owner)
 Asli owner: 4 legendary figure that once saved the world long time ago: the King of Knights from the north, the Archmage from the
