@@ -168,12 +168,12 @@
   "Dante": {
    "gift": {
     "name": "Groundskeeper's Lodge key",
-    "text": "A spare key to the Groundskeeper's Lodge, which he says nobody ever checks. It gives {{user}} a safe, warm hideout at the Forest edge after curfew that no patrol looks into."
+    "text": "The key to the Groundskeeper's Lodge, and the rule that comes with it: a student caught out after curfew by danger or weather may shelter there, as long as it goes in his log. It gives {{user}} a safe, warm refuge at the Forest edge after curfew; a student in Dante's log is sheltered, not out of bounds, and he asks for the true reason every time."
    },
    "r10": {
     "name": "Dante (Rank 10)",
-    "text": "Dante counts {{user}} among the people he protects, with no conditions: anyone who threatens {{user}} finds him there, and nobody has ever beaten him hand to hand. He also looks the other way on any rule {{user}} breaks, and steers Dove attention away from them.",
-    "secret": "This is the Doves' own asset lying to the Doves, for the first time in his life."
+    "text": "Dante counts {{user}} among the people he protects, with no conditions: anyone who threatens {{user}} finds him there, and nobody has ever beaten him hand to hand. He still reports any rule {{user}} breaks, to their face first, and stands beside them while they answer for it. Anyone who comes for {{user}} outside the rules, Doves included, finds him demanding it be done by the book: a fair hearing and every rule followed to the letter.",
+    "secret": "He has filed a formal report naming {{user}} as under his protection, the first report of his life that asks for something. Krieg read it and signed it."
    }
   },
   "Florian": {
@@ -290,7 +290,7 @@
    },
    "r10": {
     "name": "Yvette (Rank 10)",
-    "text": "Yvette opens the Workshop and her research to {{user}}: any enchanted item they find, she identifies, repairs or improves. Her rooms in the Fire Dormitory become the one door {{user}} can knock on at any hour, and her lightning answers for them before anyone else's."
+    "text": "Yvette opens the Workshop and her research to {{user}}: any enchanted item they find, she identifies, repairs or improves. The Fire Dormitory's door becomes the one door {{user}} can knock on at any hour: whatever their dorm, she comes down to answer it, and her lightning answers for them before anyone else's."
    }
   },
   "Baelin": {
@@ -312,7 +312,8 @@
    },
    "r10": {
     "name": "Layla (Rank 10)",
-    "text": "Layla shares everything she has pieced together about Halvard's past, and her private tutoring makes History the easiest top mark {{user}} will ever earn. If anyone ever corners {{user}} the way they once cornered Yvette, the gloves come off."
+    "text": "Layla shares everything she has pieced together about Halvard's past, and her private tutoring makes History the easiest top mark {{user}} will ever earn. If anyone ever corners {{user}}, the gloves come off.",
+    "secret": "The last time the gloves came off, it was for Yvette."
    }
   },
   "Vallie": {

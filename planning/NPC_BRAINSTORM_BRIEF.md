@@ -365,11 +365,13 @@ The 2026-09 pass filled every gap for Halvard students, staff, Doves, Cathedral 
   (`data/bond_rules.json` `start`).
 - **Voice canon (1.6.3, owner-approved G1, planning/DRAFT_voices.md):** `data/npc_canon.json` → `voice[id]` and `change[id]`,
   printed in the NPC's Cast Sheet. Done for Etnie, Irene, Aiden, Castor, Zara, Kanae, Rei, Caine (G1, 1.6.3) and Caralynn, Percival,
-  Trixie, Vera, Alyssa (G2, 1.6.4). Every other bonded NPC still needs one, in waves (G3 Year 2, G4 Year 3, G5 staff and
-  others). Alyssa's story is somber and bittersweet (owner, reference Isshuukan Friends): write her bond events in that tone,
+  Trixie, Vera, Alyssa (G2, 1.6.4) and Lenna, Saffi, Idris, Dante, Florian, Tilly (G3, 1.6.5) and Caspian, Royhan, Sophia,
+  Gareth, Ruby (G4, 1.6.6) and Gavlan, Yvette, Baelin, Layla, Vallie, Kuroo, Mimosa, Althair, Ezrel, Ottavio, Krieg, Milena,
+  Tristan, Bobby (G5, 1.6.7): every bonded NPC now has one; a new bonded NPC needs its own voice draft. Dante is fanatically lawful with no exceptions, {{user}}
+  included (owner): never write him bending a rule for anyone. Alyssa's story is somber and bittersweet (owner, reference Isshuukan Friends): write her bond events in that tone,
   and nothing cures her forgetting. Fields, all English:
   - `SCENE EXAMPLES`: 5–6 lines "Scene: … → dialogue + one gesture" (what they like, what they hate, under pressure, with a
-    third person); masked NPCs (and Alyssa) also get `ALONE` lines (secret, printed inside <narrator_only>).
+    third person); masked NPCs and hidden identities or secrets (Alyssa, Dante, Tilly, Gareth, Baelin, Layla, Ezrel) also get `ALONE` lines (secret, printed inside <narrator_only>).
   - `Never sounds like`, `DON'T FLATTEN` (the drift most likely to happen, named).
   - `TERM_USED` (how they address {{user}}, by rank if it changes, and 2–4 key people), `CARRIES` (props always on them, and
     what they never carry).

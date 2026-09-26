@@ -872,12 +872,65 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
     (unchanged). TEST card rebuilt.
   - To verify in ST: Alyssa reads somber and quiet, not melodramatic, and does not "remember" shared moments after the rest day.
 
+- 1.6.5 Batch G, wave G3 (canon, approved by the owner on 2026-09-26: "approve g3, sekalian draft next", typed straight into the
+  working session): the voice of the Year 2 NPCs not in G1 (Lenna, Saffi, Idris, Dante, Florian, Tilly), from
+  planning/DRAFT_voices_G3.md, with Stages.
+  - Data: `data/npc_canon.json` `voice` and `change` (Lenna shaped, Saffi fixed, Idris shaped, Dante fixed, Florian fluid, Tilly
+    fixed). Dante (works for the Doves) and Tilly (Velmora's princess) hide an identity, so they get narrator-only alone scenes,
+    like Alyssa.
+  - Owner decision: Dante stays fanatically lawful with no exceptions, {{user}} included. His Rank 5 gift and Rank 10 benefit
+    (`data/bond_rewards.json`, canon since 1.3.0) changed with approval: the Lodge key is a logged, rule-sanctioned refuge after
+    curfew (not a hideout no patrol checks); at Rank 10 he still reports any rule {{user}} breaks, to their face first, stands
+    beside them while they answer for it, and demands that anyone coming for {{user}} outside the rules (Doves included) does it by
+    the book. The secret side is now a formal report naming {{user}} under his protection. Text only; no engine effect changed.
+  - Saffi's Rank 9-10 stage says "the only one besides Lenna" instead of "the second person, after Lenna" (same meaning; the old
+    phrase tripped the card-vs-preset taste check in test_split_v146).
+  - Size: one G3 NPC present with a full sheet is 1.2k-2.3k tokens (Saffi 1204, Lenna 1323, Idris 1557, Florian 1703, Dante 2136,
+    Tilly 2296).
+  - Tests: test_voices_g3_v165.cjs (18 checks); test_voices_g2_v164 checks the G2 part of the data only; save 1.6.4 added (saves
+    1.4.6 to 1.6.4 load). npm test 1050 checks; stress passes; token_audit passes; preset built twice, byte-identical (unchanged).
+    TEST card rebuilt.
+  - To confirm with the owner: invented details marked [?] in the draft were approved with it (for example Sister Ann of the
+    orphanage, and Krieg signing Dante's report).
+
+- 1.6.6 Batch G, wave G4 (canon, approved by the owner on 2026-09-26: "approve, draft g5", typed straight into the working
+  session): the voice of the Year 3 NPCs not in G1 (Caspian, Royhan, Sophia, Gareth, Ruby), from planning/DRAFT_voices_G4.md,
+  with Stages.
+  - Data: `data/npc_canon.json` `voice` and `change` (Caspian fixed, Royhan shaped, Sophia fixed, Gareth fixed, Ruby fixed).
+    Gareth hides his ambition and his brother's sabotage, so his alone scenes are narrator-only; no stage line names what only
+    his <narrator_only> lore knows. Sophia's Don't flatten keeps her water magic off living bodies (the Blood line). No reward
+    text changed.
+  - Size: one G4 NPC present with a full sheet is 1.7k-1.9k tokens (Caspian 1670, Royhan 1744, Gareth 1761, Ruby 1775, Sophia
+    1923).
+  - Tests: test_voices_g4_v166.cjs (15 checks). Caspian is now fixed, so test_memory_v160 shows Imprint replacement on Royhan
+    (shaped) and test_voices_g1_v163 uses Lucius (a rival with no bond) as the NPC without voice lines; test_voices_g3_v165 checks
+    the G3 part of the data only. Save 1.6.5 added (saves 1.4.6 to 1.6.5 load). npm test 1070 checks; stress passes; token_audit
+    passes; preset built twice, byte-identical (unchanged). TEST card rebuilt.
+
+- 1.6.7 Batch G, wave G5, the last wave (canon, approved by the owner on 2026-09-26: "approve", typed straight into the working
+  session, covering every [?] in the draft and the two Rank 10 text changes): the voice of the staff and the others (Gavlan,
+  Yvette, Baelin, Layla, Vallie, Kuroo, Mimosa, Althair, Ezrel, Ottavio, Krieg, Milena, Tristan, Bobby), from
+  planning/DRAFT_voices_G5.md, with Stages. Every bonded NPC now has a voice.
+  - Data: `data/npc_canon.json` `voice` and `change` (Mimosa, Milena and Bobby shaped; the other eleven fixed). Baelin (Tilly,
+    and why he never asks Aura to fight), Layla (the gloves) and Ezrel (what he is) have narrator-only alone scenes; no public line
+    names those secrets. Althair's and Ezrel's stages follow their Tension and Trust overrides, and Krieg's bond model is unchanged.
+  - Rewards (`data/bond_rewards.json` and both design copies): Yvette's Rank 10 no longer sends {{user}} to her rooms inside the
+    Fire Dormitory, which admits only its own: whatever their dorm, she comes down to answer its door. Layla's Rank 10 said "the
+    way they once cornered Yvette", which is her <narrator_only> lore; the public text now ends "If anyone ever corners {{user}},
+    the gloves come off.", and the Yvette line moved to the secret side. Effects unchanged.
+  - Size: one G5 NPC present with a full sheet is 1.5k-2.7k tokens (Krieg 1471 the smallest, Ezrel 2663 the largest).
+  - Tests: test_voices_g5_v167.cjs (22 checks); test_voices_g4_v166 no longer expects exactly 24 voices. Save 1.6.6 added (saves
+    1.4.6 to 1.6.6 load). npm test 1097 checks; stress passes; token_audit passes; preset built twice, byte-identical
+    (unchanged). TEST card rebuilt.
+  - To confirm with the owner: nothing new beyond the draft's [?] list, approved with it. The G4 draft called Krieg's title
+    "Commander" invented; it is in Milena's lore ("Yes, Commander."), and Caspian's line needed no change.
+
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
-- Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 to 1.6.4 done (G1 in 1.6.3, G2 in 1.6.4). NOW: the owner
-  playtests; then run tools/audit_chat.py on the exported chat for the first MVU baseline. Next canon wave: G3 (Year 2), with
-  Stages, as a draft first.
+- Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 to 1.6.7 done (G1 in 1.6.3, G2 in 1.6.4, G3 in 1.6.5,
+  G4 in 1.6.6, G5 in 1.6.7; every bonded NPC has a voice). NOW: the owner playtests; then run tools/audit_chat.py on the exported
+  chat for the first MVU baseline.
 - Playtest v1.3.2 in ST: a pact with abilities (Builder → Pacts, Techniques page), summon it and have it use an ability
   (charged once, not charged when not summoned).
 - Playtest v1.3.1 in ST: meet Etnie (Rank 3 on the spot), Etnie's dossier (no "{{user}}"), walk to the Boathouse and the Fishing

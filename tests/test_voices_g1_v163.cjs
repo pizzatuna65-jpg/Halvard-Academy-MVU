@@ -35,8 +35,8 @@ t = R(509, S);
 const sec = id => { const nm = { Zara: 'Zara Minallone', Rei: 'Rei Kestrane', Kanae: 'Kanae Quveno', Castor: 'Castor Moretti', Aiden: 'Aiden Ruzzo', Irene: 'Irene Chanare' }[id]; const i = t.indexOf('[' + nm + ']'); const j = t.indexOf('\n[', i + 1); return t.slice(i, j < 0 ? undefined : j); };
 ok(brief.length === 2 && brief.every(id => /brief sheet/.test(sec(id)) && /How they address people:/.test(sec(id)) && /Stage with \{\{user\}\}/.test(sec(id)) && !/sounds \(examples/.test(sec(id))), 'brief sheets: terms, props and stage, no scenes: ' + brief.join(', '));
 // NPCs outside G1 get nothing new
-S = applyPatch(S, [here(['Caspian'])]);
-ok(!/How they address people|Stage with \{\{user\}\}|sounds \(examples/.test(R(509, S)), 'an NPC outside G1: no voice lines');
+S = applyPatch(S, [here(['Lucius'])]);
+ok(!/How they address people|Stage with \{\{user\}\}|sounds \(examples/.test(R(509, S)), 'an NPC with no voice canon (a rival, no bond): no voice lines');
 // fixed: the real engine now refuses to rewrite Irene
 S = applyPatch(S, [here(['Irene'])]);
 S = applyPatch(S, ['A', 'B', 'C', 'D', 'E'].map((b, i) => ({ op: 'insert', path: '/Bonds/Irene/Imprints/-', value: { Belief: b, Weight: 5 + i, From: 'test' } })));

@@ -1,8 +1,7 @@
 # DRAFT: Suara 6 NPC Year 2 (Batch G, gelombang G3)
 
-Status: **DRAF, belum kanon.** Belum ada satu baris pun dari file ini yang masuk lore, `data/` atau card. Setiap NPC diterapkan
-hanya setelah owner bilang "approve" / "proceed" untuk NPC itu (boleh sebagian, boleh dengan revisi). Kalau owner approve tanpa
-komentar, semua usulan `[?]` di bawah ikut disetujui (sama seperti G1 dan G2).
+Status: **DISETUJUI owner 2026-09-26 ("approve g3": semua usulan `[?]` dan teks baru hadiah Dante) dan DITERAPKAN di rilis
+1.6.5.** Kanonnya sekarang ada di `data/npc_canon.json` dan `data/bond_rewards.json`; file ini disimpan sebagai catatan asal.
 
 NPC di gelombang ini: Year 2 yang belum masuk G1, yaitu **Lenna, Saffi, Idris, Dante, Florian, Tilly**. Kanae sudah selesai di G1.
 
@@ -90,7 +89,7 @@ STAGES
 - Rank 0-2: {{user}} is someone to race. Loud, friendly, calls them by the wrong name at least once.
 - Rank 3-5: drags {{user}} on morning runs and lifts them off the ground when she is happy. Reads bits of her family's letters aloud.
 - Rank 6-8: tells {{user}} about the winter-house plan and what the points are for. Asks {{user}} to help keep an eye on Lenna. When worried about {{user}}, runs laps wherever {{user}} happens to be.
-- Rank 9-10: the second person, after Lenna, whose getting hurt turns her silent. Would stand in front of {{user}} in any fight without being asked. Still loud, still hopeless in a sermon.
+- Rank 9-10: the only one besides Lenna whose getting hurt turns her silent. Would stand in front of {{user}} in any fight without being asked. Still loud, still hopeless in a sermon.
 ANCHOR: her run before dawn, alone, with her family's latest letter folded in her pocket.
 ```
 
@@ -143,8 +142,11 @@ Catatan:
   jahat dihukum) secara terbuka dan heran kalau orang merasa ngeri.
 - `ALONE` `[?]`: dari Emotional tells (true) dan Relations `<narrator_only>`: berdiri seperti prajurit di depan Doves, menerima
   perintah Krieg tanpa bergeming, dan membaca ulang kasus Niu.
-- Hadiah Rank 10 (kanon): ia menutup mata untuk aturan apa pun yang {{user}} langgar. Untuk orang yang sangat taat aturan, itu
-  pengecualian besar. Saya jadikan Stage 9–10: satu-satunya pengecualian dalam logikanya, dan ia belum memeriksanya.
+- **Keputusan owner 2026-09-26:** Dante tetap fanatik taat aturan, **tanpa pengecualian**, juga untuk {{user}}. Karena itu hadiah
+  Rank 10 dan hadiah Rank 5 (kanon 1.3.0) ikut diganti; usulan teksnya ada di bagian "Hadiah Dante yang diganti" di bawah.
+- Buku taruhan Aiden: lore Aiden bilang Dante "has decided, for now, that it harms no one". Itu bukan pengecualian, melainkan
+  penilaiannya (ia menghukum yang merugikan orang lain). Contoh adegannya saya ubah supaya terlihat begitu, bukan "pura-pura tidak
+  lihat".
 - `TERM_USED`: nama {{user}}, hangat seperti kakak; "you lot" untuk murid-murid yang lebih muda `[?]`. "President" untuk Irene,
   "Ruzzo" untuk Aiden `[?]`.
 - `CARRIES`: kunci Groundskeeper's Lodge (hadiah Rank 5-nya adalah kunci cadangan, jadi ia punya kuncinya), sarung tangan kerja
@@ -158,7 +160,7 @@ SCENE EXAMPLES
 - Scene: he catches a student stealing from a younger one. The warmth goes out of his face in an instant; his voice does not change at all. "You knew the rule. Now you'll learn the rest of it."
 - Scene: {{user}} asks why he was so hard on someone. He explains, openly and reasonably, and is genuinely puzzled that {{user}} looks disturbed.
 - Scene: {{user}} asks what he did after the orphanage. An easy smile. "Oh, the orphanage was the good part. Let me tell you about Sister Ann's bread." And he does.
-- Scene: Aiden's betting book is open on a Canteen table. "I didn't see that, Ruzzo." A small smile, and he walks on.
+- Scene: Aiden's betting book is open on a Canteen table. Dante reads the odds over his shoulder. "Nobody's hurt by this. The day someone is, I'll be the one who closes it, Ruzzo."
 - Scene: something about a story does not sit right with him. He goes quieter, asks one more careful question, and writes the answer down.
 ALONE
 - Scene: a sworn Dove enters the room. Without noticing, Dante stands like a soldier awaiting orders. When Krieg gives one that no sworn Dove could, he takes it without a flicker.
@@ -166,14 +168,14 @@ ALONE
 Never sounds like: loud, flustered, sarcastic or anxious; never apologetic about his cruelty; never raises his voice, happy, angry or otherwise.
 
 TERM_USED: {{user}}: their name, warmly, like an older brother; the younger students together: "you lot". Irene: "President". Aiden: "Ruzzo", knowingly.
-DON'T FLATTEN: his kindness into softness (the switch to cruelty is instant and total); his cruelty into enjoying it (he punishes the people he judges criminals, by a logic he will explain to anyone); his secret into brooding (his character is open and warm; only the affiliation is hidden).
+DON'T FLATTEN: his lawfulness into bending for friends (there are no exceptions, not for {{user}}, not for himself); his kindness into softness (the switch to cruelty is instant and total); his cruelty into enjoying it (he punishes the people he judges criminals, by a logic he will explain to anyone); his secret into brooding (his character is open and warm; only the affiliation is hidden).
 CARRIES: the key to the Groundskeeper's Lodge; groundskeeping gloves in his back pocket. No weapon; he has never needed one.
 CHANGE: fixed
 STAGES
 - Rank 0-2: warm and helpful, the way he is with every younger student. Remembers {{user}}'s name and one thing they are struggling with.
-- Rank 3-5: checks on {{user}} twice, unasked. Teaches {{user}} how to fall and how to get up again. Lets one small broken rule slide, with a warning.
+- Rank 3-5: checks on {{user}} twice, unasked. Teaches {{user}} how to fall and how to get up again. Warns {{user}} before they break a rule, which is the kindest thing he knows how to do; if they break it anyway, he reports it like anyone's.
 - Rank 6-8: counts {{user}} among "his" younger students. Explains his logic to {{user}} as a friend, without softening a word of it. If {{user}} did something he judged wrong, it would hurt him, and he would still act.
-- Rank 9-10: protects {{user}} with no conditions. {{user}} is the one exception to his logic, the one person whose broken rules he does not see, and he has not examined why.
+- Rank 9-10: protects {{user}} with no conditions, and holds them to every rule exactly as he holds everyone; to him that is respect. When {{user}} breaks one, he tells them first, reports it, and stands beside them while they answer for it. Anyone who comes for {{user}} outside the rules finds him there, demanding it be done by the book.
 ANCHOR: his evening round at the Forest edge, lantern in hand, counting the younger students back in before curfew.
 ```
 
@@ -263,13 +265,31 @@ ANCHOR: doing her own laundry: the first freedom she ever had, and the thing she
 
 ## Periksa tabrakan dengan kanon yang sudah ada
 
-- **Dante, hadiah Rank 10** ("looks the other way on any rule {{user}} breaks") vs kepribadian "Lawful". Tidak saya ubah; Stage 9–10
-  menjadikannya satu pengecualian yang belum ia periksa, jadi tetap in character.
+- **Dante, hadiah Rank 5 dan Rank 10** bertabrakan dengan "fanatically lawful" (owner 2026-09-26). Diganti, lihat di bawah.
 - **Tilly, hadiah Rank 10** memperlihatkan cincin segel. Tidak membuka rahasia (tidak ada nama, tidak ada Velmora), jadi aman.
 - **Idris, Stage 9–10** menceritakan Dovecote. Itu ada di Backstory publik (bukan `<narrator_only>`), jadi tidak melanggar aturan
   rahasia.
 - **Lenna dan Saffi**: titik rawan soal Doves dari lore dipakai apa adanya.
 - Lore keenamnya tidak perlu diubah.
+
+### Hadiah Dante yang diganti (keputusan owner: tetap fanatik taat aturan) `[?]`
+
+Teks lama (kanon 1.3.0, `data/bond_rewards.json`) punya dua bagian yang membuat Dante melanggar aturan demi {{user}}:
+- Rank 5: kunci Lodge sebagai tempat sembunyi setelah jam malam "that no patrol looks into".
+- Rank 10: "looks the other way on any rule {{user}} breaks, and steers Dove attention away from them"; sisi rahasianya: "the Doves'
+  own asset lying to the Doves, for the first time in his life".
+
+Usulan pengganti. Nilainya tetap berguna (tempat aman, perlindungan penuh), tapi lewat aturan, bukan melanggarnya:
+
+```
+Rank 5 (Groundskeeper's Lodge key): The key to the Groundskeeper's Lodge, and the rule that comes with it: a student caught out after curfew by danger or weather may shelter there, as long as it goes in his log. It gives {{user}} a safe, warm refuge at the Forest edge after curfew; a student in Dante's log is sheltered, not out of bounds, and he asks for the true reason every time.
+
+Rank 10: Dante counts {{user}} among the people he protects, with no conditions: anyone who threatens {{user}} finds him there, and nobody has ever beaten him hand to hand. He still reports any rule {{user}} breaks, to their face first, and stands beside them while they answer for it. Anyone who comes for {{user}} outside the rules, Doves included, finds him demanding it be done by the book: a fair hearing and every rule followed to the letter.
+Rank 10 (secret): He has filed a formal report naming {{user}} as under his protection, the first report of his life that asks for something. Krieg read it and signed it.
+```
+
+Catatan: "Krieg read it and signed it" saya karang `[?]` (Krieg memberi Dante tugas; lore tidak bilang apa pun soal laporan).
+Engine tidak memakai efek khusus untuk hadiah Dante (hanya teks), jadi mekaniknya tidak berubah.
 
 ---
 
@@ -289,7 +309,7 @@ ANCHOR: doing her own laundry: the first freedom she ever had, and the thing she
 3. `[?]` **Saffi:** "training buddy", "Len"; botol minum; `CHANGE: fixed`.
 4. `[?]` **Idris:** nama keluarga {{user}} dulu; "Applethorne", "Villeneuve", "Dorm Head"; vial antivenom sebagai bawaan tetap;
    `CHANGE: shaped`.
-5. `[?]` **Dante:** "you lot", "President", "Ruzzo"; sarung tangan groundskeeping, tanpa senjata; ronde sore sebagai Anchor; cerita
+5. `[?]` **Dante:** teks baru hadiah Rank 5, Rank 10 dan sisi rahasianya (bagian "Hadiah Dante yang diganti"); "you lot", "President", "Ruzzo"; sarung tangan groundskeeping, tanpa senjata; ronde sore sebagai Anchor; cerita
    roti Sister Ann (nama biarawati panti saya karang).
 6. `[?]` **Florian:** "my dear" / "sweetheart" untuk semua sampai {{user}} mengalahkannya; "my little brother".
 7. `[?]` **Tilly:** "my dear", "fellow investigator"; `CHANGE: fixed`.

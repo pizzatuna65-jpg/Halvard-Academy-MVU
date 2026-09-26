@@ -98,9 +98,9 @@ mendorong {{user}} ke arc-nya, dan pemain bebas mengabaikannya.
 - **Rank 10:** Idris haggles for {{user}} as if they were family business, and everything {{user}} buys at the Mall and the Commissary costs noticeably less. Mormo watches {{user}}'s back when Idris cannot, draining the stamina of anyone who comes at them in the dark.
 
 ### Dante
-- **Gift:** A spare key to the Groundskeeper's Lodge, which he says nobody ever checks. It gives {{user}} a safe, warm hideout at the Forest edge after curfew that no patrol looks into.
-- **Rank 10:** Dante counts {{user}} among the people he protects, with no conditions: anyone who threatens {{user}} finds him there, and nobody has ever beaten him hand to hand. He also looks the other way on any rule {{user}} breaks, and steers Dove attention away from them.
-  - <narrator_only>This is the Doves' own asset lying to the Doves, for the first time in his life.</narrator_only>
+- **Gift:** The key to the Groundskeeper's Lodge, and the rule that comes with it: a student caught out after curfew by danger or weather may shelter there, as long as it goes in his log. It gives {{user}} a safe, warm refuge at the Forest edge after curfew; a student in Dante's log is sheltered, not out of bounds, and he asks for the true reason every time.
+- **Rank 10:** Dante counts {{user}} among the people he protects, with no conditions: anyone who threatens {{user}} finds him there, and nobody has ever beaten him hand to hand. He still reports any rule {{user}} breaks, to their face first, and stands beside them while they answer for it. Anyone who comes for {{user}} outside the rules, Doves included, finds him demanding it be done by the book: a fair hearing and every rule followed to the letter.
+  - <narrator_only>He has filed a formal report naming {{user}} as under his protection, the first report of his life that asks for something. Krieg read it and signed it.</narrator_only>
 
 ### Florian
 - **Gift:** A Villeneuve silver token for The Snug's largest booth, on Florian's account. Whatever {{user}} orders there is paid for, and anyone {{user}} brings is treated as Florian's guest.
@@ -154,7 +154,7 @@ mendorong {{user}} ke arc-nya, dan pemain bebas mengabaikannya.
 
 ### Yvette
 - **Gift:** A small floating orb, the little sibling of her own focus. It warms and hums whenever someone nearby means {{user}} harm, because Yvette has never once felt safe at Halvard and does not want {{user}} to be caught unready.
-- **Rank 10:** Yvette opens the Workshop and her research to {{user}}: any enchanted item they find, she identifies, repairs or improves. Her rooms in the Fire Dormitory become the one door {{user}} can knock on at any hour, and her lightning answers for them before anyone else's.
+- **Rank 10:** Yvette opens the Workshop and her research to {{user}}: any enchanted item they find, she identifies, repairs or improves. The Fire Dormitory's door becomes the one door {{user}} can knock on at any hour: whatever their dorm, she comes down to answer it, and her lightning answers for them before anyone else's.
 
 ### Baelin
 - **Gift:** A card on the Headmaster's paper: "Bearer may see me without appointment." Once, he will hear {{user}}'s case in person and rule on it himself, over any other staff decision.
@@ -162,7 +162,8 @@ mendorong {{user}} ke arc-nya, dan pemain bebas mengabaikannya.
 
 ### Layla
 - **Gift:** A signed permission letter granting {{user}} reading rights in the Restricted Section. It opens the oldest records at Halvard, the ones that answer questions classes will not.
-- **Rank 10:** Layla shares everything she has pieced together about Halvard's past, and her private tutoring makes History the easiest top mark {{user}} will ever earn. If anyone ever corners {{user}} the way they once cornered Yvette, the gloves come off.
+- **Rank 10:** Layla shares everything she has pieced together about Halvard's past, and her private tutoring makes History the easiest top mark {{user}} will ever earn. If anyone ever corners {{user}}, the gloves come off.
+  - <narrator_only>The last time the gloves came off, it was for Yvette.</narrator_only>
 
 ### Vallie
 - **Gift:** A carved tusk from the Ironback Boar that took her eye, hung on a cord. Creatures smell a hunter's trophy and back off, which makes the Forest and the Expedition far safer for {{user}}.
