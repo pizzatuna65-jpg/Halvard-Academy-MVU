@@ -364,16 +364,18 @@ The 2026-09 pass filled every gap for Halvard students, staff, Doves, Cathedral 
   Since 1.3.1 (owner playtest) she is not bonded in message 1: her bond starts at Rank 3 the first time she and {{user}} meet
   (`data/bond_rules.json` `start`).
 - **Voice canon (1.6.3, owner-approved G1, planning/DRAFT_voices.md):** `data/npc_canon.json` → `voice[id]` and `change[id]`,
-  printed in the NPC's Cast Sheet. Done for Etnie, Irene, Aiden, Castor, Zara, Kanae, Rei, Caine. Every other bonded NPC still
-  needs one, in waves (G2 Year 1, G3 Year 2, G4 Year 3, G5 staff and others). Fields, all English:
+  printed in the NPC's Cast Sheet. Done for Etnie, Irene, Aiden, Castor, Zara, Kanae, Rei, Caine (G1, 1.6.3) and Caralynn, Percival,
+  Trixie, Vera, Alyssa (G2, 1.6.4). Every other bonded NPC still needs one, in waves (G3 Year 2, G4 Year 3, G5 staff and
+  others). Alyssa's story is somber and bittersweet (owner, reference Isshuukan Friends): write her bond events in that tone,
+  and nothing cures her forgetting. Fields, all English:
   - `SCENE EXAMPLES`: 5–6 lines "Scene: … → dialogue + one gesture" (what they like, what they hate, under pressure, with a
-    third person); masked NPCs also get `ALONE` lines (secret, printed inside <narrator_only>).
+    third person); masked NPCs (and Alyssa) also get `ALONE` lines (secret, printed inside <narrator_only>).
   - `Never sounds like`, `DON'T FLATTEN` (the drift most likely to happen, named).
   - `TERM_USED` (how they address {{user}}, by rank if it changes, and 2–4 key people), `CARRIES` (props always on them, and
     what they never carry).
   - `CHANGE`: fixed (experience deepens, never rewrites), shaped (can change slowly through defining moments) or fluid.
-  - `STAGES`: one line each for Rank 0–2, 3–5, 6–8, 9–10 (only the current band prints). Stages only for key NPCs; others may
-    have none.
+  - `STAGES`: one line each for Rank 0–2, 3–5, 6–8, 9–10 (only the current band prints). Every wave has them (owner,
+    2026-09-25).
   - `ANCHOR`: one object or ritual that holds their inner logic; not a reward, never given to {{user}}.
 - **Rival academy teams (Myrdath, Veyra, Ashvale):** kept minimal by design. They appear only in specific events and have
   **no bond system**, so no bond events and no Loves/Hates/Goals/Haunts are needed for them.

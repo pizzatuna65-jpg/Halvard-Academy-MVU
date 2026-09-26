@@ -1,8 +1,8 @@
 # DRAFT: Suara 5 NPC Year 1 (Batch G, gelombang G2)
 
-Status: **DRAF, belum kanon.** Belum ada satu baris pun dari file ini yang masuk lore, `data/` atau card. Setiap NPC diterapkan
-hanya setelah owner bilang "approve" / "proceed" untuk NPC itu (boleh sebagian, boleh dengan revisi). Kalau owner approve tanpa
-komentar, semua usulan `[?]` di bawah ikut disetujui (sama seperti G1).
+Status: **DISETUJUI owner 2026-09-26 ("approve f2 dan perubahan entry": semua usulan `[?]`, Stages, nada Alyssa dan kalimat
+hadiah Rank 10 Alyssa) dan DITERAPKAN di rilis 1.6.4.** Kanonnya sekarang ada di `data/npc_canon.json` (`voice`, `change`) dan
+`data/bond_rewards.json`; file ini disimpan sebagai catatan asal.
 
 NPC di gelombang ini: Year 1 yang belum masuk G1, yaitu **Caralynn, Percival, Trixie, Vera, Alyssa**. Aiden, Zara dan Castor
 sudah selesai di G1 (rilis 1.6.3).
