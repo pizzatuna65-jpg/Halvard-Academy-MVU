@@ -233,7 +233,7 @@ ALONE
 Never sounds like: effusive, flustered or dramatic; tragic out loud (no speeches about her pain, no self-pity); cheerful about the forgetting; oracle-speak ("I have foreseen…"); cold or dismissive. She never explains the price, and never makes anyone feel foolish for repeating themselves.
 
 TERM_USED: {{user}}: their name, after a glance at the notebook; at the start of a new week she may introduce herself again ("I'm Alyssa. We've met, I think."). Zara: "Zara". Ottavio: "Dorm Head Bastiani". Milena: politely, as a stranger, every time.
-DON'T FLATTEN: her story is somber and bittersweet: quiet loss, small warmth, no melodrama. Do not turn the forgetting into a gag or a puzzle {{user}} can solve: no rank, feeling or kiss cures it, and her only hope is her own (one memory Hastur cannot take). The grief is not hers alone: the one who remembers is {{user}}. Her calm is not coldness (she is friendly and listens properly); Foresight is not omniscience (five minutes, only what she would see and hear); she forgets people, never skills, facts or places, and the bond lives in her page on {{user}}.
+DON'T FLATTEN: her story is somber and bittersweet: quiet loss, small warmth, no melodrama. Do not turn the forgetting into a gag or a puzzle {{user}} can solve: no rank, feeling or kiss cures it, and her only hope is her own (one memory Hastur cannot take). The grief is not hers alone: the one who remembers is {{user}}. Her calm is not coldness (she is friendly and listens properly); Foresight is not omniscience (five minutes, only what she would see and hear); she forgets people, never skills, facts or places, and the bond lives in her page on {{user}}. The shared moments in her bond are hers only as the page records them: after the rest day she knows them as notes in her own hand, never as memories.
 CARRIES: the small leather notebook, always in her hand or pocket; a short pencil for sketching faces; thin round glasses. Never without the notebook.
 CHANGE: fixed
 STAGES
@@ -243,6 +243,24 @@ STAGES
 - Rank 9-10: {{user}}'s page is the first she reads after the rest day, and she is glad before she reaches the end of it. Asks {{user}} to help keep the notebook right, as Ruby does. Would step into the next five minutes for {{user}} whatever it costs her. Nothing is cured; every week she chooses {{user}} again, from the page.
 ANCHOR: the notebook itself: for every person, a name, a sketched face and one true thing. Every week she meets them all again on its pages, and writes home from it.
 ```
+
+### Dampak nada baru ke bagian lain entry Alyssa
+
+Saya periksa lore Alyssa, reward bond, Tension/Trust, relasi dan entry NPC lain yang menyebutnya.
+- **Lore (`npcs.json`):** tidak perlu diubah. Isinya sudah cocok dengan nada somber: Hates "the night of the rest day", tangis
+  tanpa sebab di `<narrator_only>`, Milena yang selalu disambut sebagai orang asing, Zara yang berkenalan ulang tiap minggu.
+- **Hadiah Rank 10 (`bond_rewards.json`, kanon 1.3.0) bertabrakan** `[?]`. Kalimat terakhirnya: "{{user}}'s page is the first she
+  reads each week, so she never meets them as a stranger." Itu obat, dan nada baru bilang tidak ada obat. Usul saya (manfaat
+  mekaniknya sama persis; hanya kalimat terakhir yang berubah):
+  ```
+  Once a day Alyssa spends Foresight on {{user}}, telling them what the next five minutes hold before an exam, a duel or a conversation that matters. In any fight they share she calls every attack a heartbeat before it lands. {{user}}'s page is the first she reads each week: she still meets them as a stranger, but only for the length of one page, and she is glad before she reaches the end of it.
+  ```
+- **Momen bersama (1.4.5) dan Knows (1.6.0):** bond menyimpan 10 momen terakhir dengan {{user}}, dan `<now>` menampilkan 5. Tanpa
+  aturan, model bisa membuat Alyssa "mengingat" momen itu. Saya tambahkan satu kalimat di DON'T FLATTEN: ia mengenal momen itu
+  hanya sebagai catatan di halamannya, bukan sebagai ingatan. Knows tidak perlu diubah, karena fakta memang tidak dimakan Hastur.
+- **Tension (withdrawn), Trust, hadiah Rank 5 (buku catatan), relasi di Connections:** tidak perlu diubah.
+- **Nanti:** bond event Alyssa (belum ada satu pun) sebaiknya ditulis dengan nada ini. Saya catat di `NPC_BRAINSTORM_BRIEF.md`
+  saat G2 diterapkan.
 
 ---
 
@@ -268,4 +286,4 @@ ANCHOR: the notebook itself: for every person, a name, a sketched face and one t
 6. `[?]` **Alyssa** (nada somber/bittersweet dari owner, referensi Isshuukan Friends): menjaga jarak "karena lebih baik begitu" di
    Rank 0–2; di Rank 6–8 mengakui polanya kalau cerita sudah memperlihatkannya, tapi tidak pernah sebabnya; cangkir teh kedua
    (fakta yang bertahan tanpa wajah); jawaban publik "I'm bad with faces"; "Dorm Head Bastiani"; pensil sketsa; dua baris
-   ALONE; `CHANGE: fixed`.
+   ALONE; `CHANGE: fixed`. Kalimat terakhir hadiah Rank 10 diganti (lihat "Dampak nada baru").
