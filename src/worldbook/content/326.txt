@@ -1,1 +1,4 @@
 [Regulars — Light Dormitory] Ezrel (Dorm Head, lives here); otherwise only its own students.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+From campaign Year 2 also: Hadrian.
+<%_ } _%>

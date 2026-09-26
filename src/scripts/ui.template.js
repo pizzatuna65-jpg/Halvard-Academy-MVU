@@ -1422,7 +1422,7 @@ const initials = s => String(s).split(/\s+/).map(w => w[0]).join('').slice(0, 2)
 function avatar(id, S, cls = 'av') {
   const n = npcOf(id), label = n ? (knowsName(id, S) ? (/\bxs\b/.test(cls) ? id.slice(0, 2) : id) : '?') : initials(id);
   const ring = n ? n.dc : '#6f737b';
-  return n ? `<img class="${cls}" style="border-color:${ring}" src="${esc(imgURL(n.t))}" alt="" data-fb="${esc(label)}" data-fbclass="${cls} fb">` : `<span class="${cls} fb" style="border-color:${ring}">${esc(label)}</span>`;
+  return n && n.t ? `<img class="${cls}" style="border-color:${ring}" src="${esc(imgURL(n.t))}" alt="" data-fb="${esc(label)}" data-fbclass="${cls} fb">` : `<span class="${cls} fb" style="border-color:${ring}">${esc(label)}</span>`;
 }
 const TOPIC = l => { l = l.toLowerCase(); return /magic/.test(l) ? 'magic' : /pact/.test(l) ? 'pact' : /goal/.test(l) ? 'goal' : /backstory|history|family|home/.test(l) ? 'backstory' : /relation/.test(l) ? 'relationship' : 'other'; };
 // v1.0.3 (F13): the AI's Secrets_revealed list is capped; $ui.secrets is the engine's permanent ledger. Unlocks read both.
@@ -1438,7 +1438,8 @@ const arrived = (id, S) => { const n = npcOf(id); return !n || (n.a || 1) <= cur
 const atHalvard = (id, S) => arrived(id, S) && !graduated(S).has(id);
 const yearNow = (id, S) => { const n = npcOf(id); return n && n.y ? n.y + curYear(S) - (n.a || 1) : 0; };
 const revealed = (S, id) => secretsOf(S).filter(x => String(x).split('.')[0].toLowerCase() === id.toLowerCase()).map(x => String(x).split('.').slice(1).join('.').toLowerCase());
-function fieldUnlocked(id, f, S) {   // f = [label, text, rank]
+function fieldUnlocked(id, f, S) {   // f = [label, text, rank, from campaign year (1.7.0, lines a later cohort added)]
+  if (f[3] && f[3] > curYear(S)) return false;
   if (f[2] >= 99) { const r = revealed(S, id); return r.includes(TOPIC(f[0])) || r.includes(f[0].toLowerCase()); }
   const b = ((S && S.Bonds) || {})[id];
   return f[2] <= (b ? b.Rank : 0);
@@ -1446,6 +1447,7 @@ function fieldUnlocked(id, f, S) {   // f = [label, text, rank]
 // 1.6.10 (owner): a line is how FROM sees TO; 'rank:N@Via' when another person's file (and bond) tells you, often TO's own
 const viaOf = e => e[4].split('@')[1] || e[0];
 function edgeVisible(e, S) {         // e = [from, to, type, types, visibility, notes]
+  if (!arrived(e[0], S) || !arrived(e[1], S)) return false;   // 1.7.0: nobody has a line with a student who has not arrived yet
   const v = e[4]; if (v === 'public') return true;
   const r = Number(v.split('@')[0].split(':')[1]), via = viaOf(e);
   if (r >= 99) return revealed(S, via).includes('relationship');

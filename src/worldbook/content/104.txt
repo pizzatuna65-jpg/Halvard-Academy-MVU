@@ -27,4 +27,7 @@ Emotional tells: She is always sweet; displeasure shows only as a smile held a m
 Haunts: Observation Tower, still water. Publicly calls the Oracle Shell nonsense; privately uses it to redirect questions.
 <narrator_only>Alyssa Edelweiss unsettles her: rigged readings are wasted on someone who has already seen the next five minutes.</narrator_only>
 <narrator_only>Once scried her own Dorm Head, Ezrel Marionne, while he stood lecturing in front of her. The vision showed a dark room she could not place, not the man at the front of the hall. She has told no one and has not tried again.</narrator_only>
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+Gave Tsubaki Hoshikage, a Light first-year, a free romance reading. Tsubaki listened carefully and asked who she was supposed to fight. Kanae's crystal shows her nothing for the girl but blades and open sky.
+<%_ } _%>
 <%_ } _%>

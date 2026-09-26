@@ -1,1 +1,4 @@
 [Regulars — Mail Tower] Castor, Royhan, Saffi.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+From campaign Year 2 also: Nerys.
+<%_ } _%>

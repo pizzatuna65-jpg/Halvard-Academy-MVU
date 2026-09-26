@@ -949,6 +949,52 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   - To confirm with the owner: nothing beyond the approved drafts. The TEST card still sets every bond to Rank 7, so each 7->8
     event shows its branch direction.
 
+- 1.7.0 Cohort 2: six new first-years who arrive in campaign Year 2 (owner, 2026-09-26: "implementasi draft cohort year 2 ke
+  character card", draft `planning/DRAFT_cohort2_npcs.md`, approved in the Brainstorming thread; the owner's instruction to apply it
+  is taken as approval of A6, the relation network, which the draft still marked as waiting). HANDOFF §4 "Cohorts" is used as
+  designed; no established decision changed.
+  - NPCs: Linus Tallyworth (Viridian, open, social, shaped, branch C, Rank 10 = Mana training partner), Maple Fernhollow (Sky,
+    red panda Beastkin, Greater Spirit Sobek, normal, withdrawn, shaped, C), Nerys Silvarenne (Fire, Elf, normal, social, fixed, A,
+    a new hobby every week), Hadrian Quelloris (Light, Elf, open, social, fixed, A, secret: afraid of dying), Wren Marlowe (Fire,
+    deaf, normal, withdrawn, shaped, C), Tsubaki Hoshikage (Light, wolf Beastkin, Royal Mage, open, confrontational, shaped, A,
+    Rank 10 = Stamina training partner). Voice canon (scenes, never sounds, terms, don't flatten, carries, Stages, anchor, Rank 8
+    lines) in `data/npc_canon.json`; Rank 5 gifts and Rank 10 benefits in `data/bond_rewards.json` (and both bond_rewards.md copies).
+  - Pipeline: a new lore pass `source_original/npc_lore_cohort2_2026-09-26/` (lore_cohort2.md: the six entries, uid 410-415 with
+    keys; lore_cohort2_additions.md: the lines they add to 24 older NPCs' files). `merge_lorebooks.py` adds the entries, appends the
+    lines behind an EJS campaign-year gate (card) or a `[from Year 2]` marker (v39 export), and adds the six to the roster's Year 1
+    line and to 18 Regulars entries (gated the same way). `curate_data.py` turns the marked lines into a Relations field with
+    `year: 2`; `build_relations.py` makes lines from it only with someone of that cohort (an aside like "with Sophia graduated"
+    never reaches an older line). 107 new curated Connections lines. Secret lines (Krieg > Maple, Krieg > Tsubaki, Dante >
+    Hadrian) are `<narrator_only>` and make no Connections line.
+  - Before Year 2 nothing of them shows: their entries are empty, the added lines and Regulars names are hidden, the roster skips
+    them, the engine starts no bond (as before), the Cast Sheet's Key ties list only people who have arrived, and the dossier and
+    People → Connections hide the added fields and lines (`fieldUnlocked`, `edgeVisible`), not even as locked rows.
+  - Cast Sheet: the school year on the sheet now follows the campaign year ("Year 2 student" for Aiden in Year 2; graduates show
+    as former students). Before, every sheet printed the lorebook year; with a cohort in Year 1 alongside them that was wrong.
+  - Nerys's weekly hobby (`npc_canon.json` → `weekly`): her sheet prints "This week's hobby: …" from the 48-week list, index
+    (Month-1)*4 + (Week-1). The 26 calendar weeks stay put; the 22 free weeks shift 7 slots each campaign year after Year 2 and say
+    "revival season"; from Rank 9 "(unless {{user}} chose one; then theirs)". Not in <now>.
+  - Engine: a Rank 10 benefit can carry the training-partner bonus (x1.5 while present), not only a Rank 5 gift; a Rank 10
+    benefit suspended for low Trust gives none. "Sobek", "Royal Mage" and "youngest Royal Mage" are not names (alias deny-lists);
+    Maple and Wren at a sentence start are not mentions (maple, wren).
+  - UI: an NPC without a portrait shows initials (avatar, dossier, graph, bracelet cast strip) instead of requesting a missing image.
+  - Canon filled in (small, to confirm with the owner): Maple's lore gets the line "Club: Gardening Club." (the draft names the club
+    in A1 and section 8 but not in her entry); regulars from each NPC's Haunts (Linus: Announcement Room, Sparring Pavilion,
+    Combat Grounds, Archive, Canteen; Maple: Gardens, Forest, Sky Dormitory, Combat Grounds; Nerys: Mail Tower, Gardens, Forest,
+    Founder's Park, Canteen; Hadrian: Club Rooms, Workshop, Light Dormitory, Canteen; Wren: Fishing dock, Fire Dormitory, Club
+    Rooms, Main Library, Canteen; Tsubaki: Combat Grounds, Sparring Pavilion, Observation Tower, Grassy Field and Hills).
+    Connections kinds for the A6 pairs the tables leave open, e.g. Nerys > Linus = Linus's wary view, Hadrian > Tsubaki = her wary view.
+  - To confirm with the owner: Hadrian's full Cast Sheet is ~3.45k tokens (the others 2.7-3.0k; earlier waves stayed under ~3.2k),
+    because his approved lore is long; not cut. Portraits: none yet (PNG needed, then `tools/process_assets.py` and the manifest).
+  - Tests: test_cohort2_v170.cjs (39 checks: Year 1 vs Year 2 for entries, added lines, roster, Regulars, sheet, dossier, lines;
+    the hobby list and its yearly shift; the Rank 10 training bonus; sizes; the 1.6.11 save). test_bughunt_v103 (fake cohort next to
+    the real one), test_rank8_v168 (A 23, C 12), test_tension_v138 (44 bonded), test_split_v146 ("the first person who" in Maple's
+    lore is not a point-of-view rule) updated for the new data. Save 1.6.11 added. npm test 1239 checks (42 suites + static QA);
+    stress passes; smoke 550 views, no errors; token_audit unchanged in Year 1 (~12.3k start, ~17.6k heavy); preset built twice,
+    byte-identical (unchanged).
+  - To verify in ST: a chat in campaign Year 2 (set World.Year or play through Graduation) with one of the six present: their
+    keyword entry, their Cast Sheet with the hobby line (Nerys), an older NPC's entry with the new lines; and in Year 1 that none of
+    it appears.
 - 1.6.11 A new bond starts at the character's own Trust, and clubs in Connections wait for Rank 1 (owner playtest, 2026-09-26, thread "Stress test dan bug hunt": "ini
   message 2, saya bertemu trixie untuk pertama kali, kenapa status trustnya 10, dan betrayed?"). No canon changed. Restores the
   approved 1.4.3 design (HANDOFF §4 Trust: new bonds start by category), which the engine did not enforce.
@@ -1037,6 +1083,7 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
+- 1.7.0: cohort 2 (six first-years from campaign Year 2) is in; they need portraits (owner's PNGs).
 - Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 to 1.6.7 done (G1 in 1.6.3, G2 in 1.6.4, G3 in 1.6.5,
   G4 in 1.6.6, G5 in 1.6.7; every bonded NPC has a voice), plus the Rank 8 branches in 1.6.8 and the 1.6.9 bug hunt. NOW: the owner playtests (docs/TEST_CHECKLIST_v1.6.md first); then run tools/audit_chat.py on the exported
   chat for the first MVU baseline.
@@ -1062,6 +1109,8 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 - Scripted first-week classes (M1 W1 Tue-Sat, 14 sessions; per dorm for [D] classes; optional homework into Commitments).
 
 ## To verify in ST (could not be tested outside ST)
+- 1.7.0: in campaign Year 2, one of the six first-years present (keyword entry, Cast Sheet, Nerys's hobby line) and an older
+  NPC's entry with the added lines (EJS year gate); in Year 1 none of it appears.
 - 1.6.9: docs/TEST_CHECKLIST_v1.6.md (card + preset + VectFox together): the depth-0 order in the real prompt, VectFox's
   stored events, a sworn rivalry at Trust 47-49, the "Not a romance" line on a B or D character's sheet.
 - 1.6.8: a 7->8 event offers only the branches the NPC allows (a C character with low Trust waits; a B or D character never
@@ -1103,7 +1152,7 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   Player.Profile.Year at a new campaign year. Payouts continue regardless.
 - A student the story keeps back (removed from Campus_State.Graduated) does not graduate automatically in a later year (shown as
   "repeating" in the roster); the story handles them.
-- Waiting on the owner: the new-first-years lorebook (Year 2 / Year 3 cohorts). See HANDOFF §6 "Add an incoming first-year cohort".
-- Location Regulars lore text (keyword entries) is not gated per name; when a cohort is added, check wording there.
+- Cohort 2 (Year 2) done in 1.7.0; a Year 3 cohort would follow the same playbook (HANDOFF §6). Their portraits are still missing.
+- Location Regulars lore text: since 1.7.0 a cohort's names are added behind the same campaign-year gate (merge_lorebooks.py COHORT_REGULARS).
 - No save-migration protocol yet beyond fillShape() and $eng.ver (bug hunt B §8.9: ID renames, field renames, downgrades need one).
 - UI latestState() may walk back through many floors when only an early floor holds state (bug hunt B §8.2); not measured in ST.

@@ -95,17 +95,20 @@ GATE_RX = re.compile(r"^<%_ if \(!\(\(getvar\('stat_data\.\$ui\.cast'\) \|\| \{\
 def cast_npc(nid, n):
     ties = sorted([r for r in rels if r['from'] == nid], key=lambda r: (TIE_ORDER.index(r['type']), r['to']))
     ties = [r for i, r in enumerate(ties) if r['to'] not in [x['to'] for x in ties[:i]]]   # 1.6.10: one tie per person (two files can tell the same line)
-    ties = [r for r in ties if not (r['type'] == 'dislike' and r['to'] == 'Althair')][:4]   # everyone dislikes Althair one way (1.4.2)
+    ties = [r for r in ties if not (r['type'] == 'dislike' and r['to'] == 'Althair')][:8]   # everyone dislikes Althair one way (1.4.2)
     o = ten_d['overrides'].get(nid) or {}
     ten_never = o.get('never') or (ten_d['categories'].get(ten_d['npcs'].get(nid)) or {}).get('never')
     tru_never = tru_d['categories'][OPEN_OF.get(nid, 'normal')]['never']
     grp = n.get('group') or ''
-    who = (f"{grp} student" if grp.startswith('Year') else grp) + (f", {n['dorm']} dorm" if n.get('dorm') else '') + ('; ' + ', '.join(n['public_tags']) if n.get('public_tags') else '') + '.'
+    who = ("@YEAR@ student" if grp.startswith('Year') else grp) + (f", {n['dorm']} dorm" if n.get('dorm') else '') + ('; ' + ', '.join(n['public_tags']) if n.get('public_tags') else '') + '.'
     full = n['name']; sur = full.split()[-1] if len(full.split()) > 1 else ''
     called = nid + (f"; full name {full}" if full != nid else '') + (f"; nickname {n['nickname']}" if n.get('nickname') else '')
     return {'name': full, 'first': nid, 'pron': {'F': 'she/her', 'M': 'he/him'}.get(n.get('gender'), 'they/them'), 'called': called, 'who': who,
             'never': '; '.join(x for x in [tru_never and tru_never + ' (Trust)', ten_never and ten_never + ' (when strained)'] if x),
-            'ties': ', '.join(f"{r['to']} ({r['type']})" for r in ties), 'secret': False, 'nobond': (grp.endswith('team'))}
+            # 1.7.0 cohorts: the sheet shows the first 4 ties with people already at Halvard ([to, type, campaign year they arrive]),
+            # and the school year as it is in the current campaign year (lorebook Year + campaign Year - arrival year)
+            'ties': [[r['to'], r['type'], npcs[r['to']].get('arrives', 1)] for r in ties], 'secret': False, 'nobond': (grp.endswith('team')),
+            'y': [n['year'], n.get('arrives', 1)] if grp.startswith('Year') and n.get('year') else None}
 CANON = json.load(open(P('data/npc_canon.json'), encoding='utf-8'))
 CHANGE_TEXT = {'fixed': 'Experience deepens who they are; it never rewrites them.', 'shaped': 'A major, repeated experience can change one part of them for good; the old self still shows under stress.', 'fluid': 'They change with their surroundings over months (a new year, a new circle), never within one scene.'}
 CAST = {'npcs': {}, 'rel': {}, 'trust_bands': tru_d['bands'], 'tension_bands': ten_d['bands'], 'change': {k: v + ': ' + CHANGE_TEXT[v] for k, v in CANON['change'].items()}}
@@ -116,7 +119,10 @@ assert all(set(v['stages']) == {'0-2', '3-5', '6-8', '9-10'} for v in CAST['voic
 # 1.6.8 (owner): the Rank 8 branch lines match the NPC's branch (A: romance and rival, B: rival, C: romance, D: neither)
 _BR_LINES = {'A': {'romance', 'rival'}, 'B': {'rival'}, 'C': {'romance'}, 'D': set()}
 assert all({k for k in ('romance', 'rival') if k in v} == _BR_LINES[CANON['branch'][i]] for i, v in CAST['voice'].items()), 'a voice has Rank 8 branch lines that do not match its branch'
-CAST['branch'] = CANON['branch']   # 1.6.9: the sheet of a character with no romance branch (B, D) says so from Rank 6
+CAST['branch'] = CANON['branch']
+# 1.7.0 (cohort 2, owner): a line per week of the campaign year for some NPCs (Nerys's hobby), printed in their Cast Sheet
+CAST['weekly'] = CANON.get('weekly', {})
+assert all(k in npcs and len(w['lines']) == 48 and all(0 <= i < 48 for i in w['pinned']) for k, w in CAST['weekly'].items()), 'npc_canon.json weekly: 48 lines per NPC'   # 1.6.9: the sheet of a character with no romance branch (B, D) says so from Rank 6
 sheets = []
 for nid, n in sorted(npcs.items()):
     raw = open(P(f"src/worldbook/content/{n['uid_card']}.txt"), encoding='utf-8').read()

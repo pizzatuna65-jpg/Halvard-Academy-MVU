@@ -28,4 +28,11 @@ Afraid of ghosts.
 Insists a Star Cookie only works in one bite; takes paid shifts when he can; sleeps through Cathedral sermons.
 Tilly Marsh tells him ghost stories; he remembers encountering every one of them personally.
 Has identified Loki, the Sky Dorm Head's little green dragon spirit, as the dragon he wrestled in the family orchards; Loki has not recovered from the accusation.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+Linus Tallyworth has checked forty-one of his deeds; Percival considers him the most diligent squire he has ever had.
+Has made himself the official taster for Nerys Silvarenne, a first-year in the Cooking Club whose dishes are either wonderful or inedible, never in between. He eats them in front of a crowd. He is undefeated.
+Knighted Hadrian Quelloris, a first-year, who now calls him 'my squire'. Percival is sure the boy's heart is noble underneath. It is not.
+Knighted Wren Marlowe, a deaf first-year, 'Dame Wren of the Silent Word', in writing, so she could read it.
+Knighted Tsubaki Hoshikage, a Royal Mage first-year, who took it as a real knighthood and asked who his liege was. He is working on an answer.
+<%_ } _%>
 <%_ } _%>

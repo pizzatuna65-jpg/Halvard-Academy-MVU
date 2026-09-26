@@ -13,7 +13,7 @@ NAME = f'Eldrasil — TEST Rank {RANK}'
 
 v3 = json.load(open(P('dist/Eldrasil_Halvard.json'), encoding='utf-8'))
 npcs = json.load(open(P('data/npcs.json'), encoding='utf-8'))
-bonded = sorted(k for k, n in npcs.items() if not (n.get('group') or '').endswith('team'))   # rival academy teams have no bonds
+bonded = sorted(k for k, n in npcs.items() if not (n.get('group') or '').endswith('team') and n.get('arrives', 1) == 1)   # rival academy teams have no bonds; 1.7.0: incoming cohorts are not here in Year 1
 d = copy.deepcopy(v3['data'])
 d['name'] = NAME
 d['extensions']['world'] = NAME

@@ -19,4 +19,8 @@ Haunts: Potion Halls, Workshop, Medical Centre. Lives on Firetooth; calls Nightw
 Close behind Royhan in Potion Crafting.
 Asked Ezrel Marionne one question about his golems; he answered it exactly, then walked away in the middle of her second. She has a list of forty more.
 Tries to take apart Bobby Becket's mechanical props, sometimes before he has finished performing with them.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+Argues with Linus Tallyworth about everything: he asks who wins, she asks why, and she thinks his question is the least interesting one in the world. Shares a bench with him anyway.
+Hadrian Quelloris, a first-year, once put his name on one of her diagrams at the Fair. She has not forgiven him, and he has not noticed.
+<%_ } _%>
 <%_ } _%>

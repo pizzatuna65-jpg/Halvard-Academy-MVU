@@ -16,4 +16,7 @@ Emotional tells: The more serious the moment, the lazier the teasing; a joke is 
 Haunts: the far Gardens, Menagerie, Forest; naps between the Elder Oak's roots and calls it the calmest thing on campus. Leaves a bite for the Forest despite mocking the superstition.
 Likes the Gardens' quieter edge.
 Tilly Marsh, in her year and dorm, keeps getting into danger; Lenna keeps hauling her out, complaining the whole way, and has never once refused.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+The only first-year who can keep a straight face longer than she can: Nerys Silvarenne. They nap in the same patch of sun and say almost nothing.
+<%_ } _%>
 <%_ } _%>

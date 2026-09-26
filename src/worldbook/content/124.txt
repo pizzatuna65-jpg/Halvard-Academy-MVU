@@ -18,4 +18,8 @@ Afraid of ghosts.
 Thinks Ezrel Marionne's flat asides are a comedy bit and is the only student who laughs at them; bosses his stage golems around at Theatre Troupe rehearsals and is convinced she is his favourite.
 Volunteers for every one of Bobby Becket's card tricks and keeps suggesting real fire effects, which starts the same argument about the point of the exercise every time.
 Haunts: the Courtyards (performances nobody asked for), Club Rooms and the old indoor amphitheatre (Theatre Troupe), the Notice Board (her posters), the Mall when there are new sweets, the Menagerie (the animals), the Fire Dormitory common room. In Month 8, wherever the circus has pitched its tents, every waking minute.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+Thinks Nerys Silvarenne, a first-year in her dorm, is the funniest person at Halvard; Nerys says every joke in the same flat voice and Trixie laughs until she has to sit down.
+Wren Marlowe, a deaf first-year in her dorm, finds her the easiest person at Halvard to understand, because Trixie talks with her whole body. Trixie has decided this makes them best friends.
+<%_ } _%>
 <%_ } _%>

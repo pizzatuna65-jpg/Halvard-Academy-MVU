@@ -1,1 +1,4 @@
 [Regulars — Workshop] Vera, Yvette, Zara, Aiden, Ezrel, Bobby.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+From campaign Year 2 also: Hadrian.
+<%_ } _%>

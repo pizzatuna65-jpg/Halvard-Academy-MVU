@@ -13,7 +13,8 @@ ok(!TASTE.test(cardText), 'card description sets no point of view, tense, length
 ok(/<UpdateVariable>/.test(card.description), 'card description still asks for the state-update block');
 const rules = card.character_book.entries.filter(e => /\[mvu_(update|plot)\]|Now —|Current State/.test(e.comment));
 // Data-format wording is card business, not story prose: the Interactions Note is stored history, written in the past tense.
-const DATA_FORMAT = [/one short sentence of what happened between them, in the past tense/g];
+// 1.7.0: "the first person who sat next to her" (Maple's lore) is a phrase, not a point of view.
+const DATA_FORMAT = [/one short sentence of what happened between them, in the past tense/g, /\bthe first person who\b/g];
 const leaks = rules.filter(e => TASTE.test(DATA_FORMAT.reduce((t, rx) => t.replace(rx, ''), e.content))).map(e => e.id);
 ok(!leaks.length, 'no card rule entry sets taste' + (leaks.length ? ': ' + leaks.join(',') : ''));
 

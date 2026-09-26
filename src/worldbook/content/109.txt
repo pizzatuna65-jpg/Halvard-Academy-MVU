@@ -18,4 +18,8 @@ Doves: Hates them. The crown once spent young mages like coins in a war; now the
 Considers Gareth Valkaryn, whom he taught as a first-year two years ago, the most gifted student he has taught in two decades, and cannot decide whether the boy is brilliant or hollow. Plays quiet Dragonchess with Royhan more than he admits.
 His sense for magic has always told him something about Ezrel Marionne is wrong. He puts it down to the golems, always running somewhere, and has never been fully satisfied with that answer.
 Haunts: Combat Grounds, Faculty Offices, his office library; Study Rooms when the Library is crowded; the Workshop to test counter-spells.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+Wary of Linus Tallyworth, a first-year in love with fights who keeps asking about the War of Independence. Gavlan has told him no four times and has started carrying the journal on purpose.
+Tsubaki Hoshikage, a wolf Beastkin first-year with a katana, asks him for a match every day. She has not beaten him yet. He has started looking forward to it.
+<%_ } _%>
 <%_ } _%>

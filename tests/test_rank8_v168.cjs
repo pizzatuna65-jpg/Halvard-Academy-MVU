@@ -21,7 +21,8 @@ const LINES = { A: ['romance', 'rival'], B: ['rival'], C: ['romance'], D: [] };
 ok(Object.keys(C.change).every(id => 'ABCD'.includes(C.branch[id]) && C.branch[id].length === 1), 'every NPC with canon has a branch A-D');
 ok(Object.keys(C.change).every(id => JSON.stringify(['romance', 'rival'].filter(k => C.voice[id][k])) === JSON.stringify(LINES[C.branch[id]])), 'each voice has exactly the lines its branch needs');
 const n = k => Object.values(C.branch).filter(x => x === k).length;
-ok(n('A') === 20 && n('B') === 2 && n('C') === 9 && n('D') === 7, `categories as approved: A 20, B 2, C 9, D 7 (${n('A')}, ${n('B')}, ${n('C')}, ${n('D')})`);
+// 1.7.0: cohort 2 adds A Nerys, Hadrian, Tsubaki and C Linus, Maple, Wren (planning/DRAFT_cohort2_npcs.md)
+ok(n('A') === 23 && n('B') === 2 && n('C') === 12 && n('D') === 7, `categories as approved: A 23, B 2, C 12, D 7 (${n('A')}, ${n('B')}, ${n('C')}, ${n('D')})`);
 ok(C.branch.Krieg === 'B' && C.branch.Tristan === 'B' && C.branch.Althair === 'D' && C.branch.Florian === 'A' && C.branch.Milena === 'A' && ['Trixie', 'Vera', 'Tilly', 'Ruby', 'Etnie'].every(id => C.branch[id] === 'C'), 'the owner\'s moves (Florian, Milena A; Tristan B; Trixie, Vera, Tilly C; Althair D)');
 ok(/a romance with \{\{user\}\} is the one exception, and he will not call it one/.test(C.voice.Florian.dont_flatten), 'Florian: the approved exception in Don\'t flatten');
 const TASTE = /\bparagraphs?\b|point of view|\bPOV\b|\btense\b|third person|second person|first person|word count|\bprose style\b|\{\{user\}\}'s (words|thoughts|choices)/i;

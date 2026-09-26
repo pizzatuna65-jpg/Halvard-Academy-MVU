@@ -234,8 +234,8 @@ button.chip{font:inherit;font-size:12px;cursor:pointer}button.chip:hover{backgro
         const known = c && ((b && b.Rank >= 1) || (ui.names || []).includes(id));
         const label = c ? (known ? c[2] : c[1]) : id;
         const tip = label + (v && v.Note ? ': ' + v.Note : '');
-        const face = c ? '<img class="face" style="border-color:' + c[3] + '" src="' + esc(BASE + c[0]) + '" alt="" data-fb="' + (known ? esc(c[2].slice(0, 2)) : '?') + '">'
-          : '<span class="face" style="border-color:#6f737b">' + esc(id.split(/\s+/).map(w => w[0]).join('').slice(0, 2)) + '</span>';
+        const face = c && c[0] ? '<img class="face" style="border-color:' + c[3] + '" src="' + esc(BASE + c[0]) + '" alt="" data-fb="' + (known ? esc(c[2].slice(0, 2)) : '?') + '">'
+          : '<span class="face" style="border-color:' + (c ? c[3] : '#6f737b') + '">' + esc(c && !known ? '?' : id.split(/\s+/).map(w => w[0]).join('').slice(0, 2)) + '</span>';   // 1.7.0: no portrait yet
         // 1.6.1 (N5): an invented character's button pins them in the Extras record (Keep) or lets them go
         const xr = !c ? ((S.Extras || {})[id] || null) : null, pin = xr && xr.Keep;
         const xtip = !c ? (pin ? ' (kept: tap to let them go)' : ' (tap to keep them in the record of invented characters)') : '';
