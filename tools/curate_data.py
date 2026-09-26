@@ -36,7 +36,7 @@ def parse_attr_block(seg):
     for a in attrs:
         if a in DORM_COLOR: info['dorm'] = a
         elif a == 'Elf': info['race'] = 'Elf'
-        elif re.fullmatch(r'\w+ B', a): info['race'], info['beast'] = 'Beastkin', a.split()[0]
+        elif re.fullmatch(r'\w+(?: \w+)? B', a): info['race'], info['beast'] = 'Beastkin', a[:-2]   # 1.7.0: 'red panda B'
         elif a in ('M', 'F'): info['gender'] = a
         elif re.fullmatch(r'Y[123]', a): info['year'] = int(a[1])
         elif a in ('Attack', 'Defense', 'Control', 'Healing', 'Support'): info['team_role'] = a
@@ -89,19 +89,25 @@ for u, e in sorted(N.items()):
     name = e['comment'].replace('NPC — ', '').strip(); nid = name.split()[0]
     raw = e['content']; has_secret = '<narrator_only>' in raw
     clean = SECRET.sub('', raw)
+    # 1.7.0 cohorts: lines another cohort added to this entry ("[from Year Y] ...", tools/merge_lorebooks.py) become one Relations
+    # field per year that the UI shows only from that campaign year ('year'); the card gates the same lines with EJS
+    later = {}
+    for m in re.finditer(r'^\[from Year (\d)\] (.*)$', clean, re.M):
+        if m.group(2).strip(): later.setdefault(int(m.group(1)), []).append(m.group(2).strip())
+    clean = re.sub(r'^\[from Year \d\] .*\n?', '', clean, flags=re.M)
     clean = re.sub(r'\n{2,}', '\n', clean)
     fields = []
-    for label, val in split_fields(clean):
+    for label, val, *y_from in split_fields(clean) + [['Relations', ' '.join(v), y] for y, v in sorted(later.items())]:
         val = re.sub(r'\s{2,}', ' ', val).strip()
         if not val: continue
         base = re.sub(r"\s*\(.*\)$", "", label); rank = RANK.get(base, MIN_RANK_ANY)
         for k in (f'{nid}.{base}', f'{nid}.{label}'):
             if k in FOVR: rank = FOVR[k]
-        fields.append({'label': label, 'text': val, 'rank': rank})
+        fields.append({'label': label, 'text': val, 'rank': rank, **({'year': y_from[0]} if y_from else {})})
         for m in SENSITIVE.finditer(val):
             flags.append(f"{nid}.{label}: …{val[max(0, m.start()-50):m.end()+50]}…")
     r = roster.get(nid, {})
-    a = MAN['npcs'][nid]
+    a = MAN['npcs'].get(nid) or {'portrait': None, 'thumb': None, 'focus': [50, 25]}   # 1.7.0: a new NPC may have no portrait yet (UI shows initials)
     npcs[nid] = {
         'id': nid, 'name': name, 'uid_card': REMAP.get(u, u), 'keys': e['key'],
         'academy': r.get('academy', 'Halvard'), 'group': r.get('group'), 'dorm': r.get('dorm'),

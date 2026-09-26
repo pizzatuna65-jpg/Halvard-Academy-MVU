@@ -188,12 +188,12 @@ const UIa = new Function(fs.readFileSync(path.join(ROOT, 'src/scripts/ui.js'), '
 ok(/World Competition[\s\S]{0,80}M11 W4 Wed/.test(UIa.acCompetition(set(S0, { Month: 11, Week: 3, Day: 'Sun' }))), 'Activities ladder dates the World Competition M11 W4 Wed');
 
 console.log('Incoming cohorts: inactive until their campaign year (fake NPC "Testa", arrives Year 2)');
-// engine with a fake incoming first-year injected (the real data/cohorts.json is empty until the owner sends the new lorebook)
+// engine with a fake incoming first-year injected (1.7.0: added next to the real cohort 2 of data/cohorts.json)
 const engSrc = fs.readFileSync(path.join(ROOT, 'src/scripts/engine.js'), 'utf8')
   .replace('const NPC_ALIAS = {', 'const NPC_ALIAS = {"testa":"Testa",')
   .replace('const NAME_FORMS = {', 'const NAME_FORMS = {"Testa":["Testa"],')
   .replace('const STUDENTS = {', 'const STUDENTS = {"Testa":[1,2],')
-  .replace(/const ARRIVES = \{\}/, 'const ARRIVES = {"Testa":2}');
+  .replace('const ARRIVES = {', 'const ARRIVES = {"Testa":2,');
 const runE = new Function(engSrc + '\nreturn runEngine;')();
 const step = (before, ops, text) => { const S = _.cloneDeep(before); for (const o of ops) _.set(S, o.path.slice(1).split('/'), o.value); const P = Schema.parse(S); runE(P, before, text || ''); return Schema.parse(P); };
 let Co = step(S0, [{ path: '/Scene/Present', value: { Testa: { Note: 'x' } } }], 'Testa waves.');

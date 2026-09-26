@@ -29,4 +29,10 @@ Treats Tilly Marsh as an equal without knowing why; she is the one person whose 
 Brags at Loki, Ottavio Bastiani's spirit, across the Sky common room most evenings; Loki usually wins.
 Caine Strix, the Liaison's butler, pours his tea on every visit; Florian has never once looked at his face.
 Haunts: the Tea Club room (Club Rooms), the Combat Grounds whenever Gareth has booked a ring, The Snug's largest booth, the Mall, the Sky Dormitory common room (bragging at Loki), the Noble Houses' Liaison for tea.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+A first-year called Linus Tallyworth keeps him at third in his ranking book 'until he beats someone above him'. Florian has offered to buy the book, then to burn it.
+Keeps asking Maple Fernhollow, the only other student with a Greater Spirit, for a spirit-to-spirit match. She keeps saying no, politely, which he finds more interesting every time.
+Nerys Silvarenne, a first-year of an old elven house, turns into a flawless noble at Liaison receptions and a pigeon-feeding enigma everywhere else. He has never seen anyone do the first so well, or care so little.
+Now the academy's first-ranked student, with Gareth Valkaryn and Sophia Helfin gone, he watched Tsubaki Hoshikage, a first-year, train one night and has not slept well since.
+<%_ } _%>
 <%_ } _%>

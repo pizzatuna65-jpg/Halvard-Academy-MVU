@@ -20,4 +20,10 @@ Haunts: Workshop stair and Bell Tower (curfew routes), the Rooftop (he phases th
 Claims he has heard the Three O'Clock Knock; hates how well the Taken superstition works.
 Slips out of the Light Dormitory past his Dorm Head Ezrel Marionne's door most nights and has never been stopped; he suspects a trap, and it is not one.
 Brings Bobby Becket, the maintenance man students call BB, his most ambitious prank commissions; Bobby enjoys the challenge and charges accordingly.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+Gets Linus Tallyworth's column a day before it runs and sets his odds by it; when it is wrong, he lets Linus take the blame.
+Nerys Silvarenne, a first-year, owes him forty-one points and pays it back in objects: pickled eels, a map of squeaky floorboards, a live pigeon. She also pranked him in her first week, and he still cannot work out how. The Tally has been wrong twice this year, both times on a feat Nerys swore she had seen; Aiden paid out both times and has not yet worked out whom to blame.
+Hadrian Quelloris, a Light first-year, has reported him to a teacher twice, for things Hadrian does himself. Aiden finds this almost impressive.
+With Sophia Helfin graduated, his biggest book is Tsubaki Hoshikage's duels. Nobody will bet against her, so he takes bets on how late she will be.
+<%_ } _%>
 <%_ } _%>

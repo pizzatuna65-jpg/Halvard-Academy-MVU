@@ -22,4 +22,7 @@ Goes up to the Rooftop to be alone; Ruby Bonbon showed her the way in her first 
 Hates the Third Stall story; the Bathhouse is otherwise a place she trusts. Sleeps on the highest Library shelves where few can wake her.
 With Royhan and Idris, part of the Sky outcast trio that gathers in the Gardens.
 Alyssa Edelweiss, in her dorm and year, forgets her every week; Zara reintroduces herself each time without complaint, and has shown her the way up to the Rooftop four times.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+Sits next to Maple Fernhollow in the Canteen, a first-year in her dorm who everyone else gives a wide berth. Neither of them says much. Neither needs to.
+<%_ } _%>
 <%_ } _%>

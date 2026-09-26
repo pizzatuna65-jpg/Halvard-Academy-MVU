@@ -22,4 +22,8 @@ Speech: Low, gravelly, unhurried, few words. Calls every student "kid" and every
 Emotional tells: The quieter he gets, the more serious it is. Thinking means the casino coin rolling across his knuckles. Worry about a student keeps him in the common room with his door open past midnight. Being thanked makes him grunt and leave. When the glasses come off, it is real, and even Loki behaves. When Loki dives into his coat, something dangerous is near.
 Haunts: the Sky Dormitory common room, the Fishing Club dock, the third-year Lecture Halls. Loki is usually wherever he is not supposed to be.
 Flips the casino coin across his knuckles when he is thinking.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+Maple Fernhollow, a first-year in his dorm, carries a Greater Spirit on a term that lets it come unsummoned. He looked at it once, nodded, and has watched out for her since; Loki hides in his coat whenever she is in the room, which Ottavio finds very useful.
+Wren Marlowe, a deaf first-year in the Fishing Club, signed to him on the dock in her first week, and he answered in the old Salaffian dock-hand, close enough to her hand-speech that they understood each other at once. He does not fuss over her; he makes sure the club faces her when they talk.
+<%_ } _%>
 <%_ } _%>

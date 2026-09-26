@@ -21,4 +21,7 @@ Emotional tells: Her face barely moves; her feelings show in the notebook instea
 Haunts: Library Study Rooms, the Mail Tower on letter days, the Rooftop (Zara has shown her the way up four times; it is in the notebook now).
 <narrator_only>Hastur and Shub-Niggurath are old acquaintances. Lucius Vortigern of Myrdath made his pact when no help came; Alyssa made hers when it did. If the two ever meet, both spirits will know.</narrator_only>
 Her Dorm Head, Ottavio Bastiani, makes the Dovecote go through him to reach her, and lets only Milena past. His page in her notebook holds one true thing: "Kinder than his face."
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+Wren Marlowe, a deaf first-year, writes her a page every Sunday of the week they had, both sides in both their hands. Every Monday Alyssa reads it and meets, for the first time, a friend who already knows her.
+<%_ } _%>
 <%_ } _%>

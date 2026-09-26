@@ -21,4 +21,7 @@ Doves: Neutral. A force to be managed, not hated, however much he loathes their 
 Takes tea with Tristan, the Cathedral steward, and the two quietly measure each other every time. Knows exactly what his Vice Headmaster Althair Veyne is doing and allows it, because Althair handles what he cannot and the academy runs well; he files every favour as a debt.
 Haunts: Headmaster's Office, Faculty Offices, Council Chamber. Walks out to the Elder Oak in the Forest Clearing on rest-day mornings, alone but for Aura; the sapling on his windowsill came from there. Watches exam weeks for signs of exhaustion.
 <narrator_only>The only one at Halvard who knows who Tilly Marsh really is.</narrator_only>
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+Tsubaki Hoshikage, a Royal Mage recruited at thirteen and sent to Halvard at the Crown's order, is exactly the kind of young mage he quit the court over. He has quietly decided that Halvard will teach her to be a person first, whatever the Crown wants.
+<%_ } _%>
 <%_ } _%>

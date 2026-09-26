@@ -39,6 +39,57 @@ def overlay_npc_lore(N):
     return changed
 print('NPC lore pass 2026-09-25:', len(overlay_npc_lore(N)), 'entries updated')
 
+# 1.7.0 cohort 2 (owner-approved 2026-09-26, planning/DRAFT_cohort2_npcs.md): new NPC entries (source_original/npc_lore_cohort2_*/
+# lore_cohort2.md: "## <id> — <Full Name>", "uid: N", "keys: a, b" and a fenced entry each), and lines added to existing NPC entries
+# (lore_cohort2_additions.md: "## <id> — <Full Name>", "year: Y" and fenced lines). The added lines and the new names in the roster
+# and the Regulars entries appear only from that campaign year: an EJS gate in the card, a "[from Year Y]" marker in the standalone
+# export (tools/curate_data.py turns it into a year-gated field for the UI).
+COHORT_DIRS = sorted(d for d in os.listdir(P('source_original')) if d.startswith('npc_lore_cohort'))
+def cohort_files(kind):   # kind '' = new entries (lore_cohortN.md), '_additions' = lines for older NPCs (lore_cohortN_additions.md)
+    return [P('source_original', d, f) for d in COHORT_DIRS for f in sorted(os.listdir(P('source_original', d))) if re.fullmatch(r'lore_cohort\d+' + kind + r'\.md', f)]
+def add_cohort_npcs(N):
+    added = []
+    for f in cohort_files(''):
+        text = open(f, encoding='utf-8').read()
+        for m in re.finditer(r'^## (\S+) — (.+?)\nuid: (\d+)\nkeys: (.+?)\n```\n(.*?)\n```', text, re.M | re.S):
+            uid = int(m.group(3)); assert uid not in N and uid not in C, f'cohort NPC uid {uid} is taken'
+            N[uid] = template_from(N[106], uid=uid, displayIndex=uid, comment='NPC — ' + m.group(2).strip(),
+                                   key=[k.strip() for k in m.group(4).split(',')], content=m.group(5))
+            added.append(m.group(1))
+    return added
+print('cohort NPC entries added:', add_cohort_npcs(N))
+def cohort_additions():
+    out = []
+    for f in cohort_files('_additions'):
+        text = open(f, encoding='utf-8').read()
+        for m in re.finditer(r'^## (\S+) — (.+?)\nyear: (\d)\n```\n(.*?)\n```', text, re.M | re.S):
+            out.append((m.group(2).strip(), int(m.group(3)), m.group(4).split('\n')))
+    return out
+YEAR_GATE = "<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= {y}) {{ _%>\n{body}\n<%_ }} _%>"
+COHORT_ROSTER = {2: ['Linus (Viridian, M, ash-brown, loud, Academy Newspaper, the Tally)', 'Maple (Sky, red panda B, F, russet red, gentle, Greater Spirit)',
+                     'Nerys (Fire, Elf, F, dark blue, deadpan, House Silvarenne)', 'Hadrian (Light, Elf, M, ash grey, shameless, Specialized Magic Club)',
+                     'Wren (Fire, F, blonde, earnest, Deaf, Fishing Club)', 'Tsubaki (Light, wolf B, F, white, oblivious, Royal Mage, Duelling Club)']}
+# Regulars entries (by the place in "Regulars — <place>") that gain a cohort's names, from each new NPC's Haunts
+COHORT_REGULARS = {2: {'Announcement Room': ['Linus'], 'The Sparring Pavilion': ['Linus', 'Tsubaki'], 'Combat Grounds': ['Linus', 'Maple', 'Tsubaki'],
+                       'Archive': ['Linus'], 'Common Rooms and Canteen': ['Linus', 'Nerys', 'Hadrian', 'Wren'], 'Gardens': ['Maple', 'Nerys'],
+                       'Forest': ['Maple', 'Nerys'], 'Sky Dormitory': ['Maple'], 'Light Dormitory': ['Hadrian'], 'Fire Dormitory': ['Wren'],
+                       'Mail Tower': ['Nerys'], "Founder's Park": ['Nerys'], 'Club Rooms': ['Hadrian', 'Wren'], 'Workshop': ['Hadrian'],
+                       'Boathouse and Lake': ['Wren'], 'Main Library': ['Wren'], 'Observation Tower': ['Tsubaki'], 'Grassy Field and Hills': ['Tsubaki']}}
+def apply_cohort(N, ejs):
+    byname = {e['comment'].replace('NPC — ', '').strip(): u for u, e in N.items() if e['comment'].startswith('NPC — ')}
+    for full, y, lines in cohort_additions():
+        assert full in byname, f'cohort additions: no NPC entry "NPC — {full}"'
+        e = N[byname[full]]
+        e['content'] += '\n' + (YEAR_GATE.format(y=y, body='\n'.join(lines)) if ejs else '\n'.join(f'[from Year {y}] {l}' for l in lines))
+    for y, segs in COHORT_ROSTER.items():   # the roster's Year 1 line (uid 97); the card's roster EJS places them by arrival year
+        rep(N[97], "Alyssa (Sky, F, burgundy, quiet).", "Alyssa (Sky, F, burgundy, quiet); " + '; '.join(segs) + '.')
+    regs = {e['comment'].replace('Regulars — ', '').strip(): u for u, e in N.items() if e['comment'].startswith('Regulars — ')}
+    for y, R in COHORT_REGULARS.items():
+        for place, ids in R.items():
+            assert place in regs, f'cohort regulars: no entry "Regulars — {place}"'
+            line = f"From campaign Year {y} also: {', '.join(ids)}."
+            N[regs[place]]['content'] += '\n' + (YEAR_GATE.format(y=y, body=line) if ejs else f'[from Year {y}] {line}')
+
 # v1.0.3 incoming cohorts (data/cohorts.json): an incoming NPC's card entry is empty until its campaign year (EJS gate);
 # the standalone v39 export has no EJS, so it gets a plain note instead.
 COH = json.load(open(P('data/cohorts.json'), encoding='utf-8'))
@@ -166,6 +217,7 @@ ROY_OLD = re.compile(r'Current trouble: This year, his last, he finally qualifie
 # ================= v39 standalone =================
 C39, N39 = copy.deepcopy(C), copy.deepcopy(N)
 apply_lore_edits(C39, N39)
+apply_cohort(N39, False)   # 1.7.0 cohort 2
 gate_cohorts(N39, False)
 rep(C39[137], CAL_M4_OLD, CAL_M4_NEW)
 assert ROY_OLD.search(N39[101]['content'])
@@ -181,6 +233,7 @@ for name, src, D in (('Core', core, C39), ('NPC_Detailed', npc, N39)):
 # ================= card worldbook =================
 Cc, Nc = copy.deepcopy(C), copy.deepcopy(N)
 apply_lore_edits(Cc, Nc)
+apply_cohort(Nc, True)   # 1.7.0 cohort 2
 # D19: remap NPC uid collisions 254-262 -> 401-409
 REMAP = {u: 401 + i for i, u in enumerate(range(254, 263))}
 for old, new in REMAP.items():

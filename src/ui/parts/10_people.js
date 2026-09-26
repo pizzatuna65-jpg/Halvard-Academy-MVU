@@ -71,7 +71,7 @@ PANELS.npc = {
   render(S) {
     const id = view.arg, n = npcOf(id), b = (S.Bonds || {})[id], rank = b ? b.Rank : 0;
     const title = n ? nameOf(id, S, true) : id;
-    const port = n ? `<img class="por" src="${esc(imgURL(n.p))}" alt="" style="object-position:${n.fc[0]}% ${n.fc[1]}%" data-fb="${esc(knowsName(id, S) ? initials(n.n) : '?')}" data-fbclass="por fb">` : `<span class="por fb">${esc(initials(id))}</span>`;
+    const port = n && n.p ? `<img class="por" src="${esc(imgURL(n.p))}" alt="" style="object-position:${n.fc[0]}% ${n.fc[1]}%" data-fb="${esc(knowsName(id, S) ? initials(n.n) : '?')}" data-fbclass="por fb">` : `<span class="por fb">${esc(n && !knowsName(id, S) ? '?' : initials(n ? n.n : id))}</span>`;
     let h = `<div class="dos">${port}<div><p class="name">${esc(title)}</p><div class="sub" style="margin:2px 0 8px">${esc([n && knowsName(id, S) && n.r, whoLine(id, S), graduated(S).has(id) && 'Graduated; has left campus'].filter(Boolean).join('. '))}</div>`;
     if (b) {
       const ev = bondEvt(id, S), who = esc(knowsName(id, S) ? id : 'them');
@@ -100,7 +100,7 @@ PANELS.npc = {
     if (n) {
       const open = n.fl.filter(f => fieldUnlocked(id, f, S) && !(/^(full )?name$/i.test(f[0]) && !knowsName(id, S)));
       h += open.map(f => `<h3>${esc(f[0])}${f[2] >= 99 ? ' <span class="pill f">uncovered</span>' : ''}</h3><p class="fv">${esc(f[1])}</p>`).join('');
-      const locked = _.groupBy(n.fl.filter(f => f[2] < 99 && !fieldUnlocked(id, f, S)), f => f[2]);
+      const locked = _.groupBy(n.fl.filter(f => f[2] < 99 && !(f[3] > curYear(S)) && !fieldUnlocked(id, f, S)), f => f[2]);   // 1.7.0: a later cohort's lines are not even hinted
       const lk = Object.keys(locked).sort((a, c) => a - c);
       if (lk.length) h += `<h3>Still to learn</h3>${lk.map(r => `<div class="lock">Rank ${r}: ${esc(_.uniq(locked[r].map(f => f[0])).join(', '))}</div>`).join('')}`;
       const views = _.uniqBy(DATA.rel.filter(e => e[0] === id && e[4] !== 'public' && arrived(e[1], S) && edgeVisible(e, S)), e => e[1] + '|' + e[2]);   // 1.6.10: one row per person and kind
@@ -281,7 +281,7 @@ async function drawGraph(S) {
   nd.append('text').attr('text-anchor', 'middle').attr('dy', '0.35em').attr('fill', themed('#cfcbc2')).attr('font-size', 11)
     .text(d => d.you ? 'You' : initials(knowsName(d.id, S) ? (npcOf(d.id) || { n: d.id }).n : '?'));
   const mine = portraitURL(S);   // 1.3.7: the student's picture in your own circle
-  nd.filter(d => (d.you && mine) || (!d.you && npcOf(d.id))).append('image').attr('href', d => (d.you ? mine : imgURL(npcOf(d.id).t))).attr('preserveAspectRatio', 'xMidYMid slice').attr('x', -15).attr('y', -15).attr('width', 30).attr('height', 30)
+  nd.filter(d => (d.you && mine) || (!d.you && npcOf(d.id) && npcOf(d.id).t)).append('image').attr('href', d => (d.you ? mine : imgURL(npcOf(d.id).t))).attr('preserveAspectRatio', 'xMidYMid slice').attr('x', -15).attr('y', -15).attr('width', 30).attr('height', 30)
     .style('clip-path', 'circle(50%)').on('error', function () { this.remove(); });
   nd.append('text').attr('text-anchor', 'middle').attr('y', 32).attr('fill', themed('#e6e3dc')).attr('font-size', 12)
     .attr('paint-order', 'stroke').attr('stroke', themed('#1d2126')).attr('stroke-width', 3)

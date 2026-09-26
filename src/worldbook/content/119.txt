@@ -23,4 +23,7 @@ Haunts: Staff Room, Card Club, the Viridian Dormitory common room.
 Tilly Marsh's etiquette is court-perfect, which a miller's daughter's should not be; he has noticed, and says nothing, for now.
 Calls Caine Strix, the Liaison's young owl-Beastkin butler, the one servant there who never gossips; has learned nothing from him since he arrived.
 Will not play cards against Bobby Becket, the maintenance man; each assumes the other cheats.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+Linus Tallyworth, one of his first-years, can read everyone's fight but will not step into one. Kuroo intends to get him into the ring before he graduates, whatever it takes.
+<%_ } _%>
 <%_ } _%>

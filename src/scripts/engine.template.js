@@ -1414,7 +1414,8 @@ function runEngine(S, B, text, seedHint) {
   }
   {
     const here = new Set(Object.keys(S.Scene.Present || {}).map(canon));
-    const partners = k => Object.entries(REW.npcs || {}).filter(([id, x]) => x.gift && x.gift.train === k && S._Perks[x.gift.name] && here.has(id)).map(([id]) => id);
+    // 1.7.0: a Rank 10 benefit can carry the training bonus too (Linus: mana, Tsubaki: stamina); a suspended benefit (low Trust) does not count
+    const partners = k => Object.entries(REW.npcs || {}).filter(([id, x]) => here.has(id) && ['gift', 'r10'].some(g => x[g] && x[g].train === k && S._Perks[x[g].name] && !(S.$ui.tsusp || []).includes(x[g].name))).map(([id]) => id);
     for (const x of (Array.isArray(S.Training) ? S.Training : [])) {
       const k = /mana/.test(x.Track) ? 'mana' : /stam/.test(x.Track) ? 'stamina' : '';
       if (!k || !S.Player.$Training[k]) { log.push(`Training track "${x.Track}" is unknown (use mana or stamina); nothing was added.`); continue; }

@@ -22,4 +22,9 @@ Untouchable on campus except through official letters to the capital, and Vice H
 Haunts: Dovecote, Detention Tower, Forest edge. Finds the Taken superstition childish but useful for curfew.
 Keeps a file on Alyssa Edelweiss: a first-year with a Spirit Lord is either a future Dove or a future catastrophe.
 Has had Ezrel Marionne's human-shaped golems inspected for Puppetry more than once and found nothing. Ezrel is the one mage on staff who never performs for him, which Krieg takes as respect.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+<narrator_only>Has a file open on Maple Fernhollow's spirit, and a question in it: what a Greater Spirit that answers to no summons would do for someone who asked it nicely.</narrator_only>
+Hadrian Quelloris, a Light first-year, is everything Krieg believes a mage is: selfish, slippery, one bad day from something worse. Krieg keeps a folder with the boy's name on it. It is empty. He has read every page of the law looking for a way to fill it.
+<narrator_only>Tsubaki Hoshikage, the Crown's youngest Royal Mage, writes a monthly report on everything she sees and has no idea what a secret is. Krieg would very much like to read them before the Crown does.</narrator_only>
+<%_ } _%>
 <%_ } _%>

@@ -19,4 +19,7 @@ Emotional tells: The cheer never moves, so watch everything else. Being hated ma
 <narrator_only>Has worked out what Dante Kleinn is, has never said so, and greets him a little too warmly.</narrator_only>
 Haunts: everywhere; his favours surface at The Snug, Council Chamber and Faculty Offices.
 Knows exactly what Bobby Becket does after hours and considers it the healthiest institution on campus.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+Hadrian Quelloris, a shameless Light first-year, keeps trying to talk his way past him. Althair adores him and makes sure he loses every time.
+<%_ } _%>
 <%_ } _%>

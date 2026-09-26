@@ -19,7 +19,7 @@ const xpr = (S, r) => S.Player.Profile.Reputation.$xp[r];
 
 // ---- every bonded NPC has a category or an override; the owner's placements
 const bonded = Object.entries(npcs).filter(([, n]) => !/team$/.test(n.group || '')).map(([k]) => k);
-ok(bonded.length === 38 && bonded.every(k => TEN.npcs[k] || TEN.overrides[k]), 'all 38 bonded NPCs have a category or an override');
+ok(bonded.length === 44 && bonded.every(k => TEN.npcs[k] || TEN.overrides[k]), 'all 44 bonded NPCs have a category or an override (1.7.0: 38 + cohort 2)');
 ok(TEN.npcs.Milena === 'social' && ['Castor', 'Dante', 'Gareth', 'Krieg'].every(k => TEN.npcs[k] === 'dangerous') && TEN.overrides.Kanae && TEN.overrides.Kanae.exempt && TEN.overrides.Althair.lock, "owner's placements: Milena social; Castor, Dante, Gareth dangerous; Kanae and Althair overrides");
 
 let S = T(initState(), '09:00', [meet(['Ruby', 'Sophia', 'Irene', 'Caralynn', 'Kanae', 'Althair', 'Ezrel', 'Krieg', 'Gareth'])]);

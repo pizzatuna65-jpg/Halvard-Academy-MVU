@@ -224,6 +224,37 @@ mendorong {{user}} ke arc-nya, dan pemain bebas mengabaikannya.
 
 ---
 
+## 5b. Cohort 2 (datang di tahun kampanye 2; 1.7.0, disetujui owner 2026-09-26, `planning/DRAFT_cohort2_npcs.md`)
+
+### Linus
+- **Gift:** A hand-copied section of the Tally made for {{user}}: every student he has seen fight, with their type, subtype, the size of their reserves as he read them and one habit they fall back on under pressure. Before any duel or competition against a student he has watched, {{user}} knows what they are walking into; Linus updates it after every fight he sees.
+  - <narrator_only>His readings are of quantity, not skill: the copy ranks by reserves, and anyone who wins on technique is ranked too low in it.</narrator_only>
+- **Rank 10:** Linus takes {{user}}'s corner for good: from the bench he reads {{user}}'s own mana as they train, calls where it is wasted and when it runs low, and in any fight he watches he calls the opponent's reserves as they drain. While he is in the scene, {{user}}'s Mana training goes further. *(engine: partner latihan Mana pool ×1.5 saat hadir)*
+
+### Maple
+- **Gift:** A palm-sized scale Sobek shed, white and warm, that Maple asked him to give. Carrying it, {{user}} is someone the earth recognises as his: once per fight, a slab of stone rises from the ground to take one blow meant for {{user}}, wherever they are.
+- **Rank 10:** Sobek counts {{user}} among what he guards. When {{user}} is in real danger within his hundred paces of Tremorsense, he may come for them unsummoned, as he does for Maple, and she will not call him back until {{user}} is safe. She also joins any team {{user}} forms, and Sobek fights for it.
+
+### Nerys
+- **Gift:** A spiral shell she modified with her Sound magic and linked to herself. {{user}} asks it a question, anywhere on campus, and the answer comes back in her voice, because it is her, listening from wherever she is. The answers are deadpan, sometimes absurd, and, when it genuinely matters, correct: a genius on call.
+  - <narrator_only>If she is asleep or out of reach, the shell answers only "Ask again later", in her voice, which she recorded in advance and finds very funny.</narrator_only>
+- **Rank 10:** Nerys takes {{user}}'s sound under her care: whenever she is nearby, {{user}}'s footsteps and voice carry only where Nerys allows, and she can throw a warning into {{user}}'s ear from across any room. She also joins any team {{user}} forms, and her Sound breaks formations and spells that need a clear word to cast.
+
+### Hadrian
+- **Gift:** A mouse-sized brass golem that follows {{user}}, carries small things, runs notes anywhere on the grounds, and stands watch while they sleep. He reminds {{user}} of this generosity often.
+  - <narrator_only>It also reports to Hadrian. He never said it didn't. He reads every report and uses what is in them whenever it suits him.</narrator_only>
+- **Rank 10:** Hadrian lends {{user}} a golem double of themselves. Once a week it can take their place at one lecture, one duty or one detention, close enough to pass a roll call. Never at exams, duels, anything the Doves supervise, or anywhere outside the lecture wings, and anyone who talks to it for more than a minute will notice. He mentions this favour at every opportunity, and has never yet taken it back.
+
+### Wren
+- **Gift:** Wren teaches {{user}} hand-speech properly, with a small primer she wrote and illustrated herself. {{user}} can hold a silent conversation with her across any room, and with anyone else who signs (Professor Bastiani, half the Fishing Club): through a closed window, across a lecture hall, past a Dove who is watching mouths, not hands.
+- **Rank 10:** Wren reads lips for {{user}}. Any conversation she can see from across a courtyard, a canteen or a lecture hall, she can follow word for word and sign or write down for them. She needs a clear view of the speaker's mouth and decent light; hoods, turned heads, covered mouths and the dark defeat her, and she will not read anything said to a healer or at a grave.
+
+### Tsubaki
+- **Gift:** Tsubaki cuts a single star and binds it into a small charm for {{user}}: a point of cold light the size of a pea. Once per fight it throws itself in the way of one blow aimed at {{user}}; at night, under an open sky, twice. It also points faintly towards Tsubaki, which she says is so {{user}} can find her. It is actually so she can be found.
+- **Rank 10:** Tsubaki trains beside {{user}} every day, at dawn and under the stars, and holds nothing back. While she is in the scene, {{user}}'s Stamina training goes further. *(engine: partner latihan Stamina ×1.5 saat hadir)*
+
+---
+
 ## 6. Catatan
 
 - **Item akses tidak tumpang tindih:** Dante = tempat sembunyi, Etnie = kunci biasa, Tilly = jalur tersembunyi,
@@ -237,6 +268,7 @@ mendorong {{user}} ke arc-nya, dan pemain bebas mengabaikannya.
   - Partner latihan (gift Rank 5, ×1.5, partner harus hadir di scene), satu laki-laki dan satu perempuan per jalur:
     - Stamina: **Saffi** dan **Percival**.
     - Mana pool: **Sophia** dan **Gareth**.
+  - Partner latihan dari Rank 10 (1.7.0, cohort 2; efek sama, dari benefit Rank 10): Mana pool **Linus**, Stamina **Tsubaki**.
   - Lompatan sekali +10% nilai awal (di luar batas mingguan, di dalam batas total 2×): **Vallie** Rank 10 (Stamina),
     **Gavlan** gift Rank 5 (Mana pool).
   - Aturan tumpuk: bonus **dijumlahkan, bukan dikalikan** (berlatih bersama dua partner = ×2.0).

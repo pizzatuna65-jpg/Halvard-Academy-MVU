@@ -1,1 +1,4 @@
 [Regulars — Founder's Park] Saffi, Lenna, Ruby, Trixie, Caralynn.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+From campaign Year 2 also: Nerys.
+<%_ } _%>

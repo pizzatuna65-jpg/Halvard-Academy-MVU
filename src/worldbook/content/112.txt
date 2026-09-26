@@ -23,4 +23,7 @@ Ruby Bonbon, a third-year Occultist, is as warm to the Doves as to anyone, which
 Haunts: Lecture Halls, Combat Grounds, Dovecote. The Crying on the Water story reminds her uncomfortably of Salaffos.
 Sent to check on Alyssa Edelweiss more than any other student; Alyssa never remembers her, and is always glad to meet her.
 Ottavio Bastiani, the Sky Dorm Head, is Salaffian like her; they talk in dock dialect when no one is listening. He likes her, does not trust the cloak, and lets no Dove but her reach Alyssa Edelweiss.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+Sent to check on Maple Fernhollow, a first-year whose Greater Spirit may act unsummoned. Visits more often than the file needs; Ares and the beast in the ground are very careful around each other.
+<%_ } _%>
 <%_ } _%>

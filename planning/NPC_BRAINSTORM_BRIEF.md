@@ -298,6 +298,14 @@ Columns: id — full name · group · dorm/race · role · club · openness · h
 - **Castor** — Castor Moretti · Year 1 · Viridian/Human · - · Academy Newspaper · guarded · yes · Calm, mature, melancholic.
 - **Alyssa** — Alyssa Edelweiss · Year 1 · Sky/Human · - · Drawing Club · normal · yes · Quiet, observant and almost expressionless, but friendly and easy to talk to: she listens properly, answers honestly, and never makes anyone
 
+**Incoming first-years, cohort 2 (arrive in campaign Year 2; 1.7.0, owner-approved `planning/DRAFT_cohort2_npcs.md`)**
+- **Linus** — Linus Tallyworth · Year 1 from campaign Year 2 · Viridian/Human · the Tally · Academy Newspaper · open · no · Excitable, argumentative, encyclopedic, loud and good-natured.
+- **Maple** — Maple Fernhollow · Year 1 from campaign Year 2 · Sky/Beastkin (red panda) · Greater Spirit (Sobek) · Gardening Club · normal · no · Sweet, gentle, earnest and anxious.
+- **Nerys** — Nerys Silvarenne · Year 1 from campaign Year 2 · Fire/Elf · House Silvarenne · Cooking Club · normal · no · Deadpan, stoic and unpredictable; a new hobby every week.
+- **Hadrian** — Hadrian Quelloris · Year 1 from campaign Year 2 · Light/Elf · - · Specialized Magic Club · open · yes · Brilliant, selfish, smug and a coward; never redeemed, at any rank.
+- **Wren** — Wren Marlowe · Year 1 from campaign Year 2 · Fire/Human · deaf · Fishing Club · normal · no · Warm, earnest, friendly and stubborn.
+- **Tsubaki** — Tsubaki Hoshikage · Year 1 from campaign Year 2 · Light/Beastkin (wolf) · Royal Mage · Duelling Club · open · no · A genius with a sword and a disaster at everything else.
+
 **Halvard students — Year 2**
 - **Lenna** — Lenna Greenwind · Year 2 · Fire/Elf · - · Beast Handling Club · guarded · no · Easygoing, sleepy, dry-humoured, warm, courageous, intelligent.
 - **Saffi** — Saffi Tamberlane · Year 2 · Viridian/Beastkin (cat) · - · Running Club · open · no · Excitable, loyal, stubborn, physical, a bit of an airhead.
@@ -375,7 +383,8 @@ The 2026-09 pass filled every gap for Halvard students, staff, Doves, Cathedral 
   printed in the NPC's Cast Sheet. Done for Etnie, Irene, Aiden, Castor, Zara, Kanae, Rei, Caine (G1, 1.6.3) and Caralynn, Percival,
   Trixie, Vera, Alyssa (G2, 1.6.4) and Lenna, Saffi, Idris, Dante, Florian, Tilly (G3, 1.6.5) and Caspian, Royhan, Sophia,
   Gareth, Ruby (G4, 1.6.6) and Gavlan, Yvette, Baelin, Layla, Vallie, Kuroo, Mimosa, Althair, Ezrel, Ottavio, Krieg, Milena,
-  Tristan, Bobby (G5, 1.6.7): every bonded NPC now has one; a new bonded NPC needs its own voice draft. Dante is fanatically lawful with no exceptions, {{user}}
+  Tristan, Bobby (G5, 1.6.7): every bonded NPC now has one; a new bonded NPC needs its own voice draft. Cohort 2 (Linus, Maple,
+  Nerys, Hadrian, Wren, Tsubaki, 1.7.0) came with theirs; Nerys also has a 48-week hobby list (`npc_canon.json` → `weekly`). Dante is fanatically lawful with no exceptions, {{user}}
   included (owner): never write him bending a rule for anyone. Alyssa's story is somber and bittersweet (owner, reference Isshuukan Friends): write her bond events in that tone,
   and nothing cures her forgetting. Fields, all English:
   - `SCENE EXAMPLES`: 5–6 lines "Scene: … → dialogue + one gesture" (what they like, what they hate, under pressure, with a
@@ -397,6 +406,7 @@ The 2026-09 pass filled every gap for Halvard students, staff, Doves, Cathedral 
 - `lore_year3.md` — Halvard students — Year 3: Irene, Caspian, Etnie, Royhan, Sophia, Gareth, Ruby (~6,400 tokens)
 - `lore_staff.md` — Teaching staff and dorm heads: Gavlan, Yvette, Baelin, Layla, Vallie, Rei, Kuroo, Mimosa, Althair, Ezrel, Ottavio (~11,000 tokens)
 - `lore_others.md` — Doves, Cathedral, Liaison and facilities: Krieg, Milena, Tristan, Caine, Bobby (~5,500 tokens)
+- `source_original/npc_lore_cohort2_2026-09-26/lore_cohort2.md` — cohort 2 (arrive in campaign Year 2): Linus, Maple, Nerys, Hadrian, Wren, Tsubaki; `lore_cohort2_additions.md` beside it holds the lines they added to older NPCs' files (shown from Year 2)
 - `lore_rivals.md` — Rival academy teams (Myrdath, Veyra, Ashvale): Lucius, Elion, Bellatrix, Kira, Mirelle, Theodore, Ines, Bram, Dex, Cassius, Morgana, Pip (~5,400 tokens)
 - `bond_rewards.md` — Rank 5 gift and Rank 10 benefit for every bonded NPC, plus the mask → truth and Krieg bond models
 - `reputation.md` — Academy / Student / Doves reputation: levels, Rep XP triggers, effects per level

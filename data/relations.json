@@ -40,6 +40,33 @@
  },
  {
   "from": "Aiden",
+  "to": "Linus",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Gets Linus Tallyworth's column a day before it runs and sets his odds by it; when it is wrong, he lets Linus take the blame."
+  ],
+  "visibility": "rank:6",
+  "via": "Aiden"
+ },
+ {
+  "from": "Aiden",
+  "to": "Nerys",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Nerys Silvarenne, a first-year, owes him forty-one points and pays it back in objects: pickled eels, a map of squeaky floorboards, a live pigeon.",
+   "The Tally has been wrong twice this year, both times on a feat Nerys swore she had seen; Aiden paid out both times and has not yet worked out whom to blame."
+  ],
+  "visibility": "rank:6",
+  "via": "Aiden"
+ },
+ {
+  "from": "Aiden",
   "to": "Sophia",
   "types": [
    "friends"
@@ -63,6 +90,19 @@
   ],
   "visibility": "rank:6",
   "via": "Sophia"
+ },
+ {
+  "from": "Aiden",
+  "to": "Tsubaki",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "With Sophia Helfin graduated, his biggest book is Tsubaki Hoshikage's duels."
+  ],
+  "visibility": "rank:6",
+  "via": "Aiden"
  },
  {
   "from": "Althair",
@@ -146,6 +186,32 @@
  },
  {
   "from": "Althair",
+  "to": "Hadrian",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Hadrian Quelloris, a shameless Light first-year, keeps trying to talk his way past him."
+  ],
+  "visibility": "rank:6",
+  "via": "Althair"
+ },
+ {
+  "from": "Althair",
+  "to": "Hadrian",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Has tried to talk his way out of trouble with Vice Headmaster Althair Veyne three times and lost each time without understanding how; Veyne enjoys him enormously."
+  ],
+  "visibility": "rank:6",
+  "via": "Hadrian"
+ },
+ {
+  "from": "Althair",
   "to": "Irene",
   "types": [
    "softspot"
@@ -197,6 +263,19 @@
   ],
   "visibility": "rank:5",
   "via": "Milena"
+ },
+ {
+  "from": "Alyssa",
+  "to": "Wren",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Wren Marlowe, a deaf first-year, writes her a page every Sunday of the week they had, both sides in both their hands."
+  ],
+  "visibility": "rank:6",
+  "via": "Alyssa"
  },
  {
   "from": "Alyssa",
@@ -345,6 +424,19 @@
    "Takes tea with Tristan, the Cathedral steward, and the two quietly measure each other every time."
   ],
   "visibility": "rank:5",
+  "via": "Baelin"
+ },
+ {
+  "from": "Baelin",
+  "to": "Tsubaki",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Tsubaki Hoshikage, a Royal Mage recruited at thirteen and sent to Halvard at the Crown's order, is exactly the kind of young mage he quit the court over."
+  ],
+  "visibility": "rank:6",
   "via": "Baelin"
  },
  {
@@ -721,6 +813,21 @@
  },
  {
   "from": "Caine",
+  "to": "Hadrian",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
   "to": "Idris",
   "types": [
    "dislike"
@@ -855,7 +962,37 @@
  },
  {
   "from": "Caine",
+  "to": "Linus",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
   "to": "Lucius",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Maple",
   "types": [
    "dislike"
   ],
@@ -916,6 +1053,21 @@
  {
   "from": "Caine",
   "to": "Morgana",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Nerys",
   "types": [
    "dislike"
   ],
@@ -1110,6 +1262,21 @@
  },
  {
   "from": "Caine",
+  "to": "Tsubaki",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
   "to": "Vallie",
   "types": [
    "dislike"
@@ -1126,6 +1293,21 @@
  {
   "from": "Caine",
   "to": "Vera",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Wren",
   "types": [
    "dislike"
   ],
@@ -1291,6 +1473,32 @@
  },
  {
   "from": "Caralynn",
+  "to": "Nerys",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Believes Nerys Silvarenne, a first-year in her dorm, is her most devoted fan, because of the flowers that keep arriving."
+  ],
+  "visibility": "rank:6",
+  "via": "Caralynn"
+ },
+ {
+  "from": "Caralynn",
+  "to": "Nerys",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Caralynn Veyturone, also Fire, believes Nerys is a devoted fan because of the flowers that keep arriving; Nerys has not corrected her."
+  ],
+  "visibility": "rank:6",
+  "via": "Nerys"
+ },
+ {
+  "from": "Caralynn",
   "to": "Ruby",
   "types": [
    "rivals"
@@ -1315,6 +1523,32 @@
   ],
   "visibility": "rank:5",
   "via": "Ruby"
+ },
+ {
+  "from": "Caralynn",
+  "to": "Wren",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Wren Marlowe, a deaf first-year in her dorm, sits on the floor at every Music Club rehearsal feeling the songs through the boards, and applauds harder than anyone."
+  ],
+  "visibility": "rank:6",
+  "via": "Caralynn"
+ },
+ {
+  "from": "Caralynn",
+  "to": "Wren",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Caralynn Veyturone sings lead in the Music Club; Wren cannot hear a note of it, sits on the floor at every rehearsal feeling it through the boards, and applauds harder than anyone, and Caralynn cannot decide whether this is the greatest compliment she has ever had or an insult."
+  ],
+  "visibility": "rank:6",
+  "via": "Wren"
  },
  {
   "from": "Caspian",
@@ -1655,6 +1889,32 @@
  },
  {
   "from": "Florian",
+  "to": "Linus",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "A first-year called Linus Tallyworth keeps him at third in his ranking book 'until he beats someone above him'."
+  ],
+  "visibility": "rank:6",
+  "via": "Florian"
+ },
+ {
+  "from": "Florian",
+  "to": "Maple",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Keeps asking Maple Fernhollow, the only other student with a Greater Spirit, for a spirit-to-spirit match."
+  ],
+  "visibility": "rank:6",
+  "via": "Florian"
+ },
+ {
+  "from": "Florian",
   "to": "Milena",
   "types": [
    "respect"
@@ -1666,6 +1926,19 @@
   "visibility": "rank:6",
   "rule": "doves",
   "rule_label": "The Dovecote",
+  "via": "Florian"
+ },
+ {
+  "from": "Florian",
+  "to": "Nerys",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Nerys Silvarenne, a first-year of an old elven house, turns into a flawless noble at Liaison receptions and a pigeon-feeding enigma everywhere else."
+  ],
+  "visibility": "rank:6",
   "via": "Florian"
  },
  {
@@ -1706,6 +1979,32 @@
   ],
   "visibility": "rank:5",
   "via": "Florian"
+ },
+ {
+  "from": "Florian",
+  "to": "Tsubaki",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Now the academy's first-ranked student, with Gareth Valkaryn and Sophia Helfin gone, he watched Tsubaki Hoshikage, a first-year, train one night and has not slept well since."
+  ],
+  "visibility": "rank:6",
+  "via": "Florian"
+ },
+ {
+  "from": "Florian",
+  "to": "Tsubaki",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Florian Villeneuve, finally the academy's first-ranked student now that Gareth Valkaryn and Sophia Helfin have graduated, watched her train once and has not slept well since."
+  ],
+  "visibility": "rank:6",
+  "via": "Tsubaki"
  },
  {
   "from": "Gareth",
@@ -1869,6 +2168,19 @@
  },
  {
   "from": "Gavlan",
+  "to": "Linus",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Wary of Linus Tallyworth, a first-year in love with fights who keeps asking about the War of Independence."
+  ],
+  "visibility": "rank:6",
+  "via": "Gavlan"
+ },
+ {
+  "from": "Gavlan",
   "to": "Milena",
   "types": [
    "dislike"
@@ -1933,6 +2245,99 @@
   ],
   "visibility": "rank:6",
   "via": "Gavlan"
+ },
+ {
+  "from": "Hadrian",
+  "to": "Aiden",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Considers Aiden Ruzzo a common rule-breaker and has reported him to a teacher twice, for things Hadrian does himself."
+  ],
+  "visibility": "rank:6",
+  "via": "Hadrian"
+ },
+ {
+  "from": "Hadrian",
+  "to": "Aiden",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hadrian Quelloris, a Light first-year, has reported him to a teacher twice, for things Hadrian does himself."
+  ],
+  "visibility": "rank:6",
+  "via": "Aiden"
+ },
+ {
+  "from": "Hadrian",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Hadrian",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Hadrian",
+  "to": "Ezrel",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Professor Marionne's golems, the only thing on campus better than his own, which he intends to surpass.",
+   "Surpass Professor Marionne.",
+   "Considers Professor Ezrel Marionne the only competent person at Halvard and his future rival; Marionne has never shown the slightest interest in either idea."
+  ],
+  "visibility": "rank:5",
+  "via": "Hadrian"
+ },
+ {
+  "from": "Hadrian",
+  "to": "Ezrel",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Hadrian Quelloris, a Light first-year, considers him his future rival in Golemancy."
+  ],
+  "visibility": "rank:6",
+  "via": "Ezrel"
+ },
+ {
+  "from": "Hadrian",
+  "to": "Maple",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Hadrian Quelloris tried to take one of Sobek's shed scales."
+  ],
+  "visibility": "rank:5",
+  "via": "Maple"
+ },
+ {
+  "from": "Hadrian",
+  "to": "Wren",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "[Hadrian Quelloris] Talks to Wren Marlowe slowly and loudly."
+  ],
+  "visibility": "rank:5",
+  "via": "Hadrian"
  },
  {
   "from": "Idris",
@@ -2250,6 +2655,20 @@
   "via": "Kanae"
  },
  {
+  "from": "Kanae",
+  "to": "Tsubaki",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Gave Tsubaki Hoshikage, a Light first-year, a free romance reading.",
+   "Tsubaki listened carefully and asked who she was supposed to fight."
+  ],
+  "visibility": "rank:6",
+  "via": "Kanae"
+ },
+ {
   "from": "Krieg",
   "to": "Althair",
   "types": [
@@ -2301,6 +2720,19 @@
    "Ezrel is the one mage on staff who never performs for him, which Krieg takes as respect."
   ],
   "visibility": "rank:5",
+  "via": "Krieg"
+ },
+ {
+  "from": "Krieg",
+  "to": "Hadrian",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hadrian Quelloris, a Light first-year, is everything Krieg believes a mage is: selfish, slippery, one bad day from something worse."
+  ],
+  "visibility": "rank:6",
   "via": "Krieg"
  },
  {
@@ -2554,6 +2986,19 @@
    "As a noble-house negotiator he watched Doves humiliate mage children of noble families; he takes it out on Krieg Valforth in exquisitely polite sarcasm."
   ],
   "visibility": "rank:5",
+  "via": "Kuroo"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Linus",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Linus Tallyworth, one of his first-years, can read everyone's fight but will not step into one."
+  ],
+  "visibility": "rank:6",
   "via": "Kuroo"
  },
  {
@@ -2868,6 +3313,19 @@
  },
  {
   "from": "Lenna",
+  "to": "Nerys",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "The only first-year who can keep a straight face longer than she can: Nerys Silvarenne."
+  ],
+  "visibility": "rank:6",
+  "via": "Lenna"
+ },
+ {
+  "from": "Lenna",
   "to": "Saffi",
   "types": [
    "friends"
@@ -2904,6 +3362,322 @@
   ],
   "visibility": "rank:6",
   "via": "Tilly"
+ },
+ {
+  "from": "Linus",
+  "to": "Aiden",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Gives Aiden Ruzzo each new Tally a day before it runs, in exchange for snacks after curfew; Aiden's odds follow it closely enough that people blame Linus when they lose money."
+  ],
+  "visibility": "rank:6",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Linus",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Linus",
+  "to": "Castor",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Shares the Newspaper club room with Castor Moretti, the club's quietest reporter, and keeps meaning to start a page on him, and never does."
+  ],
+  "visibility": "rank:6",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Florian",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "His own jargon, used without explanation: a \"stomp\", a \"low-diff\" or \"high-diff\" win, \"hax\" (any ability that ignores how tough you are, like Florian Villeneuve's Stop), \"speedblitzed\", \"outscales\", \"that's an outlier\", \"bloodlusted or not?\".",
+   "Keeps Florian Villeneuve at third on principle, \"until he beats someone above him\", and cannot understand why Florian takes it personally."
+  ],
+  "visibility": "rank:5",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Gavlan",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Do not ask.\" Reveres Gavlan Haverton and keeps trying to ask him about the War of Independence."
+  ],
+  "visibility": "rank:6",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Hadrian",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Refused to put Hadrian Quelloris on the Tally: 'No feats."
+  ],
+  "visibility": "rank:5",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Hadrian",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Tried to get Linus Tallyworth to put him on the Tally and was told \"no feats\"."
+  ],
+  "visibility": "rank:6",
+  "via": "Hadrian"
+ },
+ {
+  "from": "Linus",
+  "to": "Kuroo",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Kuroo Varnell, his Dorm Head, keeps asking him when he intends to step into the ring himself."
+  ],
+  "visibility": "rank:6",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Maple",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "[Linus Tallyworth] Fainted the first time he looked at Maple Fernhollow's spirit, Sobek."
+  ],
+  "visibility": "rank:5",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Nerys",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Has given up fact-checking Nerys Silvarenne, who feeds him false feats in a perfectly flat voice."
+  ],
+  "visibility": "rank:5",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Nerys",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Linus Tallyworth has tried to fact-check her claims and given up; she feeds him false feats on purpose, in a perfectly flat voice."
+  ],
+  "visibility": "rank:6",
+  "via": "Nerys"
+ },
+ {
+  "from": "Linus",
+  "to": "Percival",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "He has fact-checked forty-one of Percival Applethorne's heroic deeds and confirmed none, which Percival treats as a squire's diligence."
+  ],
+  "visibility": "rank:5",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Rei",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "See Rei fight, once.",
+   "Thinks Rei is the strongest person at Halvard and has a page for her with one line on it: \"Unknown."
+  ],
+  "visibility": "rank:5",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Tsubaki",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Put Tsubaki Hoshikage at the top of the Tally on her first day, on feats alone."
+  ],
+  "visibility": "rank:5",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Vera",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Argues with Vera Pulsar constantly: she wants to know why a spell works, he wants to know who wins, and neither thinks the other's question is the important one; they share a bench at the Combat Grounds anyway."
+  ],
+  "visibility": "rank:6",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Wren",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Just excuses.' Talks too fast for Wren Marlowe to read, so with her he writes; on paper he is slow, careful and funny, and she may be the only person who knows that Linus."
+  ],
+  "visibility": "rank:5",
+  "via": "Linus"
+ },
+ {
+  "from": "Maple",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Maple",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Maple",
+  "to": "Florian",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Florian Villeneuve, the only other student at Halvard with a Greater Spirit, keeps asking for a spirit-to-spirit match; she keeps saying no, and Hades and Sobek watch each other across the Combat Grounds."
+  ],
+  "visibility": "rank:6",
+  "via": "Maple"
+ },
+ {
+  "from": "Maple",
+  "to": "Linus",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Linus Tallyworth, from her own year, looked straight at Sobek's reserves in their first week and fainted; he has been trying to rank Sobek ever since, and she finds this both terrifying and very nice."
+  ],
+  "visibility": "rank:6",
+  "via": "Maple"
+ },
+ {
+  "from": "Maple",
+  "to": "Milena",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Milena Sagona visits more often than a Dove needs to, and Maple cannot tell whether that is kindness or a file."
+  ],
+  "visibility": "rank:6",
+  "via": "Maple"
+ },
+ {
+  "from": "Maple",
+  "to": "Ottavio",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Loki, the Sky Dorm Head's spirit, who claims to be a Spirit Lord, spends every visit of hers inside Ottavio Bastiani's coat; she leaves him a small offering at the coat's hem anyway, as is proper, and it is always gone by morning.",
+   "Ottavio Bastiani, her Dorm Head, is the only adult who looked at Sobek and simply nodded; she deeply respects him, the way she respects the village elder at home."
+  ],
+  "visibility": "rank:5",
+  "via": "Maple"
+ },
+ {
+  "from": "Maple",
+  "to": "Tsubaki",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Keeps finding Tsubaki Hoshikage lost in the Gardens and walking her back to the Light Dormitory.",
+   "Sobek, who kept wolves away from her village for centuries, growls at Tsubaki every time; Tsubaki asks him for a match, and Maple apologises to both of them."
+  ],
+  "visibility": "rank:5",
+  "via": "Maple"
+ },
+ {
+  "from": "Maple",
+  "to": "Wren",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Greets Wren Marlowe every morning with the first sign she learned."
+  ],
+  "visibility": "rank:5",
+  "via": "Maple"
+ },
+ {
+  "from": "Maple",
+  "to": "Zara",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Zara Minallone shares her dorm and her shyness, and is the first person who sat next to her in the Canteen without looking at the floor first."
+  ],
+  "visibility": "rank:6",
+  "via": "Maple"
  },
  {
   "from": "Milena",
@@ -2986,6 +3760,19 @@
    "Krieg Valforth is her commander; he finds her softness contemptible and uses it anyway, and she lets him, because it means she reaches students first."
   ],
   "visibility": "rank:5",
+  "via": "Milena"
+ },
+ {
+  "from": "Milena",
+  "to": "Maple",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Sent to check on Maple Fernhollow, a first-year whose Greater Spirit may act unsummoned."
+  ],
+  "visibility": "rank:6",
   "via": "Milena"
  },
  {
@@ -3171,6 +3958,191 @@
   "via": "Royhan"
  },
  {
+  "from": "Nerys",
+  "to": "Aiden",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Owes Aiden Ruzzo forty-one points and pays him back, in instalments, in objects: a jar of pickled eels, a hand-drawn map of every squeaky floorboard in the Fire Dormitory, a live pigeon.",
+   "Aiden Ruzzo is her creditor and her professional rival: two pranksters with opposite methods, loud against silent; she pranked him in her first week and he still does not know how."
+  ],
+  "visibility": "rank:5",
+  "via": "Nerys"
+ },
+ {
+  "from": "Nerys",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Nerys",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Nerys",
+  "to": "Hadrian",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "[Nerys Silvarenne] Hadrian Quelloris is the one person she cannot embarrass, and she has decided to take it personally."
+  ],
+  "visibility": "rank:5",
+  "via": "Nerys"
+ },
+ {
+  "from": "Nerys",
+  "to": "Hadrian",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Is the one person on campus Nerys Silvarenne cannot embarrass, which she has decided to take personally."
+  ],
+  "visibility": "rank:6",
+  "via": "Hadrian"
+ },
+ {
+  "from": "Nerys",
+  "to": "Lenna",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Lenna Greenwind shares her dry humour and her taste for napping outdoors, and is the only upperclassman who can out-deadpan her."
+  ],
+  "visibility": "rank:6",
+  "via": "Nerys"
+ },
+ {
+  "from": "Nerys",
+  "to": "Maple",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Maple Fernhollow, from her year, is the only person whose spirit she has taken up as a hobby (a week of \"spirit etiquette\"; Sobek was not consulted)."
+  ],
+  "visibility": "rank:6",
+  "via": "Nerys"
+ },
+ {
+  "from": "Nerys",
+  "to": "Maple",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Nerys Silvarenne spent a whole week studying 'spirit etiquette' because of Sobek."
+  ],
+  "visibility": "rank:5",
+  "via": "Maple"
+ },
+ {
+  "from": "Nerys",
+  "to": "Tilly",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Tilly Marsh, a Fire third-year, has a page in Halvard Unexplained on the Founder's Statue with Nerys at the top of the suspect list; Nerys leaves her a fresh clue every week, all of them false but one."
+  ],
+  "visibility": "rank:6",
+  "via": "Nerys"
+ },
+ {
+  "from": "Nerys",
+  "to": "Trixie",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Trixie Confetti, in her dorm, laughs at everything she says, which is either the best or the worst audience possible and Nerys has not decided."
+  ],
+  "visibility": "rank:6",
+  "via": "Nerys"
+ },
+ {
+  "from": "Nerys",
+  "to": "Tsubaki",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Draws Tsubaki Hoshikage a new map of the castle every week, each more beautiful than the last and each from a stranger angle (from above, from a pigeon's eye, upside down).",
+   "Tsubaki keeps every one and is still lost."
+  ],
+  "visibility": "rank:5",
+  "via": "Nerys"
+ },
+ {
+  "from": "Nerys",
+  "to": "Wren",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Took up hand-speech as a hobby for a week because of Wren Marlowe.",
+   "On Sunday she dropped the hobby, as always, and went on signing to Wren anyway."
+  ],
+  "visibility": "rank:5",
+  "via": "Nerys"
+ },
+ {
+  "from": "Nerys",
+  "to": "Wren",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Nerys Silvarenne, in her year and dorm, took up hand-speech as a hobby for one week; on Sunday she dropped the hobby, as always, and went on signing to Wren anyway."
+  ],
+  "visibility": "rank:6",
+  "via": "Wren"
+ },
+ {
+  "from": "Nerys",
+  "to": "Yvette",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Yvette Fallaron, her Dorm Head, jumped at a thrown footstep once, and Nerys saw that the fear was real; she has not thrown a single sound near Yvette since, and never will."
+  ],
+  "visibility": "rank:6",
+  "via": "Nerys"
+ },
+ {
+  "from": "Nerys",
+  "to": "Yvette",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Nerys Silvarenne, a strange first-year in her dorm, once made her jump with a footstep that was not there, and has never done it again."
+  ],
+  "visibility": "rank:6",
+  "via": "Yvette"
+ },
+ {
   "from": "Ottavio",
   "to": "Althair",
   "notes": [
@@ -3290,6 +4262,19 @@
  },
  {
   "from": "Ottavio",
+  "to": "Maple",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Maple Fernhollow, a first-year in his dorm, carries a Greater Spirit on a term that lets it come unsummoned."
+  ],
+  "visibility": "rank:6",
+  "via": "Ottavio"
+ },
+ {
+  "from": "Ottavio",
   "to": "Milena",
   "types": [
    "friends"
@@ -3329,6 +4314,19 @@
   "via": "Ruby"
  },
  {
+  "from": "Ottavio",
+  "to": "Wren",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Wren Marlowe, a deaf first-year in the Fishing Club, signed to him on the dock in her first week, and he answered in the old Salaffian dock-hand, close enough to her hand-speech that they understood each other at once."
+  ],
+  "visibility": "rank:6",
+  "via": "Ottavio"
+ },
+ {
   "from": "Percival",
   "to": "Althair",
   "notes": [
@@ -3366,6 +4364,32 @@
   ],
   "visibility": "rank:6",
   "via": "Dante"
+ },
+ {
+  "from": "Percival",
+  "to": "Hadrian",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Knighted Hadrian Quelloris, a first-year, who now calls him 'my squire'."
+  ],
+  "visibility": "rank:6",
+  "via": "Percival"
+ },
+ {
+  "from": "Percival",
+  "to": "Hadrian",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Let Percival Applethorne knight him once, for the free meal at the ceremony, and has used the title to cut queues ever since."
+  ],
+  "visibility": "rank:6",
+  "via": "Hadrian"
  },
  {
   "from": "Percival",
@@ -3411,6 +4435,19 @@
  },
  {
   "from": "Percival",
+  "to": "Linus",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Linus Tallyworth has checked forty-one of his deeds; Percival considers him the most diligent squire he has ever had."
+  ],
+  "visibility": "rank:6",
+  "via": "Percival"
+ },
+ {
+  "from": "Percival",
   "to": "Milena",
   "types": [
    "respect"
@@ -3426,6 +4463,32 @@
  },
  {
   "from": "Percival",
+  "to": "Nerys",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Has made himself the official taster for Nerys Silvarenne, a first-year in the Cooking Club whose dishes are either wonderful or inedible, never in between."
+  ],
+  "visibility": "rank:6",
+  "via": "Percival"
+ },
+ {
+  "from": "Percival",
+  "to": "Nerys",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Percival Applethorne volunteers to taste everything she cooks, in front of an audience, and has not yet been defeated; he has knighted her \"Dame Nerys of the Perilous Plate\", and she considers him her most valuable colleague."
+  ],
+  "visibility": "rank:6",
+  "via": "Nerys"
+ },
+ {
+  "from": "Percival",
   "to": "Saffi",
   "types": [
    "friends"
@@ -3436,6 +4499,58 @@
   ],
   "visibility": "rank:6",
   "via": "Percival"
+ },
+ {
+  "from": "Percival",
+  "to": "Tsubaki",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Knighted Tsubaki Hoshikage, a Royal Mage first-year, who took it as a real knighthood and asked who his liege was."
+  ],
+  "visibility": "rank:6",
+  "via": "Percival"
+ },
+ {
+  "from": "Percival",
+  "to": "Tsubaki",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Percival Applethorne knighted her; she thought it was a real knighthood and asked him who his liege was."
+  ],
+  "visibility": "rank:6",
+  "via": "Tsubaki"
+ },
+ {
+  "from": "Percival",
+  "to": "Wren",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Knighted Wren Marlowe, a deaf first-year, 'Dame Wren of the Silent Word', in writing, so she could read it."
+  ],
+  "visibility": "rank:6",
+  "via": "Percival"
+ },
+ {
+  "from": "Percival",
+  "to": "Wren",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Percival Applethorne knighted her \"Dame Wren of the Silent Word\", in writing, so that she could read it, and she keeps the note."
+  ],
+  "visibility": "rank:6",
+  "via": "Wren"
  },
  {
   "from": "Rei",
@@ -3996,6 +5111,19 @@
  },
  {
   "from": "Tilly",
+  "to": "Nerys",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Tilly has eleven witnesses, a map and a suspect, Nerys Silvarenne, a first-year who leaves her a new clue every week and answers every question with 'What statue?'"
+  ],
+  "visibility": "rank:6",
+  "via": "Tilly"
+ },
+ {
+  "from": "Tilly",
   "to": "Percival",
   "types": [
    "friends"
@@ -4165,6 +5293,189 @@
   "via": "Trixie"
  },
  {
+  "from": "Trixie",
+  "to": "Nerys",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Thinks Nerys Silvarenne, a first-year in her dorm, is the funniest person at Halvard; Nerys says every joke in the same flat voice and Trixie laughs until she has to sit down."
+  ],
+  "visibility": "rank:6",
+  "via": "Trixie"
+ },
+ {
+  "from": "Trixie",
+  "to": "Wren",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Wren Marlowe, a deaf first-year in her dorm, finds her the easiest person at Halvard to understand, because Trixie talks with her whole body."
+  ],
+  "visibility": "rank:6",
+  "via": "Trixie"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Tsubaki",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Baelin",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Headmaster Baelin Kalvor, once a court mage himself, quit the crown's service over young mages spent too early; he looks at Tsubaki and sees exactly that, and has quietly decided Halvard will teach her to be a person first."
+  ],
+  "visibility": "rank:6",
+  "via": "Tsubaki"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Gavlan",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Professor Gavlan Haverton is the first opponent at Halvard she could not beat in a week, and she asks him for a match every day."
+  ],
+  "visibility": "rank:6",
+  "via": "Tsubaki"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Gavlan",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Tsubaki Hoshikage, a wolf Beastkin first-year with a katana, asks him for a match every day."
+  ],
+  "visibility": "rank:6",
+  "via": "Gavlan"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Hadrian",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Hadrian Quelloris tried to recruit her as his bodyguard; she said \"No."
+  ],
+  "visibility": "rank:6",
+  "via": "Tsubaki"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Hadrian",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Tried to hire Tsubaki Hoshikage as his bodyguard."
+  ],
+  "visibility": "rank:5",
+  "via": "Hadrian"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Linus",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Linus Tallyworth had been collecting rumours about the youngest Royal Mage for years, nearly fainted when she turned up in person, and put her at the top of the Tally on her first day; she does not know what the Tally is."
+  ],
+  "visibility": "rank:6",
+  "via": "Tsubaki"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Maple",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Maple Fernhollow keeps finding her lost in the Gardens and walking her home; Maple's spirit, Sobek, has kept wolves away from a village for centuries and growls at her every time, which Tsubaki takes as an invitation, so she asks him for a match."
+  ],
+  "visibility": "rank:6",
+  "via": "Tsubaki"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Nerys",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Nerys Silvarenne draws her a new map of the castle every week; she keeps them all, in order, and is still lost."
+  ],
+  "visibility": "rank:6",
+  "via": "Tsubaki"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Rei",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Rei Kestrane, the staff swordswoman, has a blade mastery she never trained for; Tsubaki cannot understand how that is possible, finds it deeply unfair, and wants to fight her more than anyone alive."
+  ],
+  "visibility": "rank:6",
+  "via": "Tsubaki"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Rei",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Tsubaki Hoshikage, a first-year who trains every day of her life, cannot understand how Rei's blade mastery came without training, and wants to fight her more than anyone alive."
+  ],
+  "visibility": "rank:6",
+  "via": "Rei"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Wren",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Wren Marlowe has been trying to teach her hand-speech for a month; Tsubaki can sign exactly one word, \"spar\", and signs it wrong.",
+   "It does not matter much: Tsubaki looks straight at faces and says exactly what she means, so Wren reads her more easily than anyone."
+  ],
+  "visibility": "rank:6",
+  "via": "Tsubaki"
+ },
+ {
   "from": "Vallie",
   "to": "Althair",
   "notes": [
@@ -4228,6 +5539,33 @@
    "Used Saffi Tamberlane as a demonstration opponent all last year and still drags her in when she can, is delighted by Lenna Greenwind's hidden strength in the Beast Handling Club, and sees a natural rival in Sophia Helfin."
   ],
   "visibility": "public",
+  "via": "Vallie"
+ },
+ {
+  "from": "Vallie",
+  "to": "Linus",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Delighted by Linus Tallyworth, who has written down every eyepatch story she has ever told and asks for the next one."
+  ],
+  "visibility": "rank:6",
+  "via": "Vallie"
+ },
+ {
+  "from": "Vallie",
+  "to": "Maple",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Wants very badly to arm-wrestle Maple Fernhollow's spirit, Sobek.",
+   "Maple has said no three times; Vallie is sure the fourth will work."
+  ],
+  "visibility": "rank:6",
   "via": "Vallie"
  },
  {
@@ -4351,6 +5689,32 @@
  },
  {
   "from": "Vera",
+  "to": "Hadrian",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hadrian Quelloris, a first-year, once put his name on one of her diagrams at the Fair."
+  ],
+  "visibility": "rank:6",
+  "via": "Vera"
+ },
+ {
+  "from": "Vera",
+  "to": "Hadrian",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Once put his own name on one of Vera Pulsar's diagrams at the Fair and still does not see the problem, since he \"improved the handwriting\"."
+  ],
+  "visibility": "rank:6",
+  "via": "Hadrian"
+ },
+ {
+  "from": "Vera",
   "to": "Krieg",
   "types": [
    "respect"
@@ -4362,6 +5726,19 @@
   "visibility": "rank:6",
   "rule": "doves",
   "rule_label": "The Dovecote",
+  "via": "Vera"
+ },
+ {
+  "from": "Vera",
+  "to": "Linus",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Argues with Linus Tallyworth about everything: he asks who wins, she asks why, and she thinks his question is the least interesting one in the world."
+  ],
+  "visibility": "rank:6",
   "via": "Vera"
  },
  {
@@ -4406,6 +5783,138 @@
   ],
   "visibility": "rank:6",
   "via": "Vera"
+ },
+ {
+  "from": "Wren",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Wren",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Wren",
+  "to": "Alyssa",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "With you, I can't tell yet.\" Alyssa Edelweiss forgets her every week, so every Sunday Wren writes her a page of the week they had, both sides in both their hands, and every Monday Alyssa reads it and decides, again, that she likes her."
+  ],
+  "visibility": "rank:6",
+  "via": "Wren"
+ },
+ {
+  "from": "Wren",
+  "to": "Hadrian",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hadrian Quelloris talks to her slowly and loudly, as if deaf meant slow; she reads every condescending word on his lips, and once wrote back: \"I'm deaf, not stupid."
+  ],
+  "visibility": "rank:6",
+  "via": "Wren"
+ },
+ {
+  "from": "Wren",
+  "to": "Linus",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Linus Tallyworth talks too fast to read, so with her he writes, and on paper he is someone quieter and funnier than the boy everyone else hears."
+  ],
+  "visibility": "rank:6",
+  "via": "Wren"
+ },
+ {
+  "from": "Wren",
+  "to": "Maple",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Maple Fernhollow greets her every morning with the first sign she learned; Wren feels Sobek coming through the ground long before anyone sees him."
+  ],
+  "visibility": "rank:6",
+  "via": "Wren"
+ },
+ {
+  "from": "Wren",
+  "to": "Ottavio",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "The dock at dawn is the one place where nobody is talking and nobody expects her to, and Professor Bastiani answered her first sign in dock-hand.",
+   "Professor Ottavio Bastiani, who runs the Fishing Club, answered her very first sign on the dock in the old Salaffian dock-hand, which is close enough to hand-speech that they understood each other at once; he is the first adult at Halvard who talked to her in her own language."
+  ],
+  "visibility": "rank:5",
+  "via": "Wren"
+ },
+ {
+  "from": "Wren",
+  "to": "Trixie",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Trixie Confetti, in her dorm, talks with her whole body, which makes her the easiest person at Halvard to understand, and the most exhausting."
+  ],
+  "visibility": "rank:6",
+  "via": "Wren"
+ },
+ {
+  "from": "Wren",
+  "to": "Tsubaki",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "[Wren Marlowe] Tsubaki Hoshikage looks straight at faces for too long and says exactly what she means, which makes her the easiest person at Halvard to read.",
+   "Wren has been trying to teach her hand-speech for a month; Tsubaki can sign one word, \"spar\", and signs it wrong."
+  ],
+  "visibility": "rank:5",
+  "via": "Wren"
+ },
+ {
+  "from": "Wren",
+  "to": "Yvette",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Professor Yvette Fallaron, her Dorm Head, gave her the front seat in Magic Theory on the first day and writes every word of the lecture on the board, and has quietly learned the sign alphabet."
+  ],
+  "visibility": "rank:6",
+  "via": "Wren"
+ },
+ {
+  "from": "Wren",
+  "to": "Yvette",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Wren Marlowe, a deaf first-year in her dorm, sits in the front row of Magic Theory."
+  ],
+  "visibility": "rank:6",
+  "via": "Yvette"
  },
  {
   "from": "Yvette",
@@ -4571,6 +6080,19 @@
    "With Royhan and Idris, part of the Sky outcast trio that gathers in the Gardens."
   ],
   "visibility": "rank:5",
+  "via": "Zara"
+ },
+ {
+  "from": "Zara",
+  "to": "Maple",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Sits next to Maple Fernhollow in the Canteen, a first-year in her dorm who everyone else gives a wide berth."
+  ],
+  "visibility": "rank:6",
   "via": "Zara"
  },
  {

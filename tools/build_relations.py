@@ -12,7 +12,7 @@ npcs = json.load(open(P('data/npcs.json'), encoding='utf-8'))
 
 GROUPISH = re.compile(r'club|library|council|committee|society|circle|troupe|newspaper|house|team|academy|order|choir|squad', re.I)
 DENY = {'shub-niggurath', 'shub niggurath', 'lord of harvest', 'hastur', 'king in yellow', 'loki', 'hades', 'excalibur', 'gohn',
-        'janna', 'laetano', 'velmora', 'niu', 'nocturne', 'deathaxe', 'ardenne', 'villeneuve', 'blood saint'}
+        'janna', 'laetano', 'velmora', 'niu', 'nocturne', 'deathaxe', 'ardenne', 'villeneuve', 'blood saint', 'sobek', 'royal mage', 'youngest royal mage'}   # 1.7.0: Maple's spirit, Tsubaki's title
 alias = {}
 for nid, n in npcs.items():                       # pass 1: identities (first name, full name, nickname)
     for a in [nid, n['name'], n.get('nickname')]:
@@ -40,10 +40,14 @@ TYPE_RULES = [('family', r'\b(sister|brother|son|daughter|father|mother|cousin|s
 ORDER = [t for t, _ in TYPE_RULES] + ['knows']
 PUBLIC_T = {'family', 'mentor'}
 edges = {}
+ARR = lambda i: npcs[i].get('arrives', 1)
 for nid, n in npcs.items():
     for f in n['fields']:
         for sent in re.split(r'(?<=[.!?])\s+', f['text']):
             for t in mentions(sent) - {nid}:
+                # 1.7.0: a field another cohort added (year-gated) makes lines only with someone of that cohort; its asides about
+                # people who were already there (Sophia graduated) must not reach older lines before that year
+                if f.get('year') and max(ARR(nid), ARR(t)) < f['year']: continue
                 typ = next((ty for ty, rx in TYPE_RULES if re.search(rx, sent, re.I)), 'knows')
                 vis = 'rank:99' if f['rank'] >= 99 else ('public' if typ in PUBLIC_T else f'rank:{max(f["rank"], 5)}')
                 e = edges.setdefault((nid, t), {'from': nid, 'to': t, 'types': [], 'notes': [], 'visibility': vis, 'frank': f['rank']})

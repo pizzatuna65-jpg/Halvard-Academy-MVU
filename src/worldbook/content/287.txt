@@ -1,1 +1,4 @@
 [Regulars — Club Rooms] Florian, Trixie, Caralynn, Ruby, Aiden, Kuroo, Kanae, Ezrel, Bobby (old amphitheatre, testing props).
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+From campaign Year 2 also: Hadrian, Wren.
+<%_ } _%>

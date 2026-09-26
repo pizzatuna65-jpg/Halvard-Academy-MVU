@@ -333,6 +333,7 @@
   "regulars": [
    "Caralynn",
    "Lenna",
+   "Nerys",
    "Ruby",
    "Saffi",
    "Trixie"
@@ -901,7 +902,10 @@
    "Florian",
    "Gareth",
    "Gavlan",
-   "Sophia"
+   "Linus",
+   "Maple",
+   "Sophia",
+   "Tsubaki"
   ],
   "connections": [
    "courtyards",
@@ -1186,6 +1190,7 @@
    "Aiden",
    "Bobby",
    "Ezrel",
+   "Hadrian",
    "Vera",
    "Yvette",
    "Zara"
@@ -1307,6 +1312,7 @@
    "Gareth",
    "Irene",
    "Layla",
+   "Wren",
    "Zara"
   ],
   "connections": [
@@ -1546,7 +1552,8 @@
   "has_secret": false,
   "regulars": [
    "Castor",
-   "Layla"
+   "Layla",
+   "Linus"
   ],
   "connections": [
    "main_library",
@@ -1778,10 +1785,14 @@
   "regulars": [
    "Bobby",
    "Etnie",
+   "Hadrian",
    "Kanae",
    "Lenna",
+   "Linus",
+   "Nerys",
    "Percival",
-   "Ruby"
+   "Ruby",
+   "Wren"
   ],
   "connections": [
    "fire_dormitory",
@@ -1833,10 +1844,14 @@
   "regulars": [
    "Bobby",
    "Etnie",
+   "Hadrian",
    "Kanae",
    "Lenna",
+   "Linus",
+   "Nerys",
    "Percival",
-   "Ruby"
+   "Ruby",
+   "Wren"
   ],
   "connections": [
    "courtyards"
@@ -2287,10 +2302,12 @@
    "Caralynn",
    "Ezrel",
    "Florian",
+   "Hadrian",
    "Kanae",
    "Kuroo",
    "Ruby",
-   "Trixie"
+   "Trixie",
+   "Wren"
   ],
   "connections": [
    "courtyards",
@@ -2669,6 +2686,7 @@
   "has_secret": false,
   "regulars": [
    "Castor",
+   "Nerys",
    "Royhan",
    "Saffi"
   ],
@@ -3095,7 +3113,8 @@
   "vibe": "open sky, breezy.",
   "has_secret": false,
   "regulars": [
-   "Saffi"
+   "Saffi",
+   "Tsubaki"
   ],
   "connections": [
    "courtyards",
@@ -3163,6 +3182,8 @@
   "regulars": [
    "Dante",
    "Lenna",
+   "Maple",
+   "Nerys",
    "Vallie"
   ],
   "connections": [
@@ -3211,7 +3232,8 @@
    "Aiden",
    "Milena",
    "Ottavio",
-   "Sophia"
+   "Sophia",
+   "Wren"
   ],
   "connections": [
    "gardens",
@@ -3287,6 +3309,8 @@
   "regulars": [
    "Idris",
    "Lenna",
+   "Maple",
+   "Nerys",
    "Royhan",
    "Ruby",
    "Zara"
@@ -3428,7 +3452,8 @@
   "has_secret": false,
   "regulars": [
    "Gareth",
-   "Kanae"
+   "Kanae",
+   "Tsubaki"
   ],
   "connections": [
    "grassy_field_and_hills"
@@ -4517,6 +4542,7 @@
   "vibe": "hearth warmth, woodsmoke, stone.",
   "has_secret": false,
   "regulars": [
+   "Wren",
    "Yvette"
   ],
   "connections": [
@@ -4584,7 +4610,8 @@
   "vibe": "sunlight through glass, pale stone.",
   "has_secret": false,
   "regulars": [
-   "Ezrel"
+   "Ezrel",
+   "Hadrian"
   ],
   "connections": [
    "courtyards",
@@ -4658,6 +4685,7 @@
   "vibe": "cool stone, shimmering windows.",
   "has_secret": false,
   "regulars": [
+   "Maple",
    "Ottavio"
   ],
   "connections": [
@@ -4827,6 +4855,7 @@
   "regulars": [
    "Caralynn",
    "Castor",
+   "Linus",
    "Ruby"
   ],
   "connections": [
@@ -4992,7 +5021,9 @@
   "regulars": [
    "Caspian",
    "Gavlan",
-   "Sophia"
+   "Linus",
+   "Sophia",
+   "Tsubaki"
   ],
   "connections": [
    "combat_grounds"
@@ -5030,7 +5061,8 @@
    "Aiden",
    "Milena",
    "Ottavio",
-   "Sophia"
+   "Sophia",
+   "Wren"
   ],
   "connections": [
    "boathouse_and_lake"

@@ -21,4 +21,8 @@ Laughs at the Forest food superstition until students feed the wrong creature. T
 Lives beside the Menagerie in converted stables; runs the Creature Studies Expedition.
 Holds court in the Staff Quarters parlour on rest-day evenings; students who drop by leave with a story, a headlock, or both.
 Haunts: the Menagerie and her converted stables beside it, the Forest and the fields (wherever she has dragged her class), the Staff Quarters parlour on rest-day evenings, the Combat Grounds when Sophia Helfin wants a fight.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+Delighted by Linus Tallyworth, who has written down every eyepatch story she has ever told and asks for the next one.
+Wants very badly to arm-wrestle Maple Fernhollow's spirit, Sobek. Maple has said no three times; Vallie is sure the fourth will work.
+<%_ } _%>
 <%_ } _%>

@@ -22,4 +22,7 @@ The only person immune to Vice Headmaster Althair Veyne, because she wants nothi
 Ezrel Marionne was her Dorm Head in the Light Dormitory and looks exactly as he did in her first year. She watches him the way she watches the Seal Chamber door, and has never said why.
 Haunts: Warden's Office, Seal Chamber, Forest edge, Rooftop. Knows students use the roof door and has never once reported it. Ignores ghost stories unless they describe a real security problem.
 Attends Remembrance Day and is never asked to speak.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+Tsubaki Hoshikage, a first-year who trains every day of her life, cannot understand how Rei's blade mastery came without training, and wants to fight her more than anyone alive. Rei finds this tiring, and a little flattering.
+<%_ } _%>
 <%_ } _%>

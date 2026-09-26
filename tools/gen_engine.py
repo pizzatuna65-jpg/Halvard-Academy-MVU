@@ -11,7 +11,7 @@ for nid, n in npcs.items():
 # drop keys that are clearly not names (clubs, places, titles shared by many)
 BAD = re.compile(r'club|library|council|dorm|academy|team|circle|house|hall|tower|office|order|choir|lord|king|saint|squad|doves?$', re.I)
 DENY = {'festival committee', 'divination society', 'theatre troupe', 'shub-niggurath', 'shub niggurath', 'hastur', 'loki', 'hades',
-        'excalibur', 'gohn', 'janna', 'laetano', 'velmora', 'niu', 'ardenne', 'villeneuve'}  # spirits, items, brands, groups, shared surnames
+        'excalibur', 'gohn', 'janna', 'laetano', 'velmora', 'niu', 'ardenne', 'villeneuve', 'sobek', 'royal mage', 'youngest royal mage'}   # 1.7.0: Maple's spirit, Tsubaki's title  # spirits, items, brands, groups, shared surnames
 alias = {k: v for k, v in alias.items() if (not BAD.search(k) or k == v.lower()) and k not in DENY}
 forms = {nid: sorted({f for f in [nid, n['name'], n.get('nickname')] if f and len(f) > 1}, key=len, reverse=True) for nid, n in npcs.items()}
 t = open(P('src/scripts/engine.template.js'), encoding='utf-8').read()
@@ -98,7 +98,7 @@ tru['friends'] = {k: sorted(v) for k, v in sorted(fr.items())}
 t = t.replace('/*@@TRUST@@*/{}', json.dumps(tru, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@NAME_FORMS@@*/{}', json.dumps(forms, ensure_ascii=False, separators=(',', ':')))
 # 1.5.1 (P6): first names that are also ordinary words; a sentence-initial one is not counted as a mention
-MENTION_DENY = ['Pip', 'Ruby']
+MENTION_DENY = ['Pip', 'Ruby', 'Maple', 'Wren']   # 1.7.0: maple (the tree), wren (the bird)
 # 1.6.0 (N2): stability type per NPC (owner canon; empty until the canon waves)
 CANON = json.load(open(P('data/npc_canon.json'), encoding='utf-8'))
 assert all(k in npcs for k in CANON['change']) and set(CANON['change'].values()) <= {'fixed', 'shaped', 'fluid'}
