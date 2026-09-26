@@ -949,6 +949,29 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   - To confirm with the owner: nothing beyond the approved drafts. The TEST card still sets every bond to Rank 7, so each 7->8
     event shows its branch direction.
 
+- 1.6.11 A new bond starts at the character's own Trust, and clubs in Connections wait for Rank 1 (owner playtest, 2026-09-26, thread "Stress test dan bug hunt": "ini
+  message 2, saya bertemu trixie untuk pertama kali, kenapa status trustnya 10, dan betrayed?"). No canon changed. Restores the
+  approved 1.4.3 design (HANDOFF §4 Trust: new bonds start by category), which the engine did not enforce.
+  - Cause: when the narrator inserts a new bond with a Trust number, the engine kept it if it was below the character's start
+    (`Math.min(written, start)`). The output format's own example inserted a bond with "Trust": 45 and "Tension": 10, so the model
+    writes a number on first meetings; Trixie got 10, which is the Betrayed band (bond XP halved, shares nothing new).
+  - Fixed (engine): a new bond's Trust is always the character's start (open 60, normal 50, guarded 40, closed 30; Etnie's own
+    start stays); a number written on the first meeting gives way, with a log line saying why. Drops on an existing bond are
+    unchanged (written with the deed, as rule 502 says).
+  - Fixed (narrator): the 503 example inserts a bond without Trust or Tension; rule 502's Trust line says a new record starts at
+    the character's own Trust, so leave it out when inserting one.
+  - Every character was affected the same way (any first meeting where the narrator wrote a Trust below the character's start);
+    the fix is in the engine, so it covers all of them.
+  - Fixed (UI, owner: "setelah bertemu trixie saya bertemu ottavio, rank 0, tpi sudah unlock connection people yg beri tahu dia
+    di club apa, padahal itu unlock rank 1"): the club groups in People → Connections listed every member and advisor you had
+    met, at any rank. Now someone shows in a club once their Club field is open (Rank 1 for all 24 who have one), the same rule
+    the club list in Activities already used (`clubFieldOpen`); an advisor with no Club field of their own is not placed, as in Activities.
+  - In the owner's chat: after updating the card (and its lorebook), swipe the reply where Trixie first appeared; the engine
+    reruns from the state before it and she starts at 60.
+  - Tests: test_newbond_v1611.cjs (12 checks, with the 1.6.10 save); test_connections_v141 club check moved to Rank 1. npm test 1195 checks; stress passes; smoke 550 views, no
+    errors; preset built twice, byte-identical (unchanged). token_audit: start ~12.3k (+19, the rule line); the heavy figure
+    reads ~17.6k only because its test state inserts 38 bonds at once with a Trust written, one log line each (in play, one
+    line on a first meeting where the narrator writes a number).
 - 1.6.10 Direction of every People → Connections line (owner, 2026-09-26, thread "Stress test dan bug hunt": "di entry etnie ada
   'Her Dorm Head, Kuroo Varnell, … has started pushing it' harusnya ini di entry kuroo … Kuroo and Mimosa: protective (both ways)
   … jelas ini harusnya satu arah kuroo ke mimosa … Gareth and Gavlan … kedua entry ngejelasin gavlan"). No lore text changed.

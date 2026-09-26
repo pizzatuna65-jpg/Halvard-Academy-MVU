@@ -1047,7 +1047,9 @@ function runEngine(S, B, text, seedHint) {
     const acts = [...(byId[id] || [])], rank0 = b0 ? b0.Rank : b.Rank, tw0 = num(b.Tension, 0), trw0 = num(b.Trust, 50);
     let rankTrust = 0;
     if (S.$eng.tenv !== 1) b.$ms = [...new Set([...b.$ms, ...Object.keys(REP.bond_milestone_xp || {}).map(Number).filter(r => r <= b.Rank)])];   // older saves: milestones already paid
-    if (!b0 && hasB) { const s0 = trustProfile(id, S, secretOut).start; b.Trust = num(b.Trust, 50) === 50 ? s0 : Math.min(num(b.Trust, 50), s0); }   // 1.4.3
+    // 1.4.3: a new bond starts at the character's own Trust (owner: start by category). 1.6.11 (owner playtest: Trixie met for the
+    // first time showed Trust 10, Betrayed): a number the narrator writes on a first meeting is not a deed, so it gives way too
+    if (!b0 && hasB) { const s0 = trustProfile(id, S, secretOut).start; if (num(b.Trust, 50) !== 50 && num(b.Trust, 50) !== s0) log.push(`${id} is new: Trust starts at ${s0} by their nature (${num(b.Trust, 50)} written; a first meeting is not a deed).`); b.Trust = s0; }
     if (!b0 && hasB && START[id]) {                            // 1.3.1: a bond with its own start (Etnie adopts {{user}} on sight)
       const st = START[id];
       b.Rank = st.Rank; b.$cool = dayNo + coolDays(st.Rank, PACE); xp = 0;
