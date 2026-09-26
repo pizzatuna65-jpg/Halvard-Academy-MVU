@@ -151,7 +151,7 @@
   "5": "shares their goal and may ask for help with it",
   "6": "introduces {{user}} to friends; keeps {{user}}'s secrets",
   "7": "takes real risks for {{user}}: covers, lends points, backs {{user}} up with staff",
-  "8": "closest bond: best friend, romance or sworn rival (the rank 8 event decides)",
+  "8": "closest bond: best friend, romance or sworn rival, as far as this character allows (the rank 8 event decides)",
   "9": "acts for {{user}} unasked; their secret begins to surface",
   "10": "would sacrifice for {{user}}"
  },
@@ -163,7 +163,7 @@
   "4": "They tell {{user}} what they want most, and a way to help appears.",
   "5": "They speak honestly about the people around them, and about the Doves.",
   "6": "They tell {{user}} about their past and their family.",
-  "7": "A turning point: the bond becomes best friends, romance or a sworn rivalry, and the event lets {{user}} choose.",
+  "7": "A turning point: the bond becomes best friends, a romance or a sworn rivalry, as far as this character allows; the event lets {{user}} choose among what is open.",
   "8": "They start to let their guard down about what they hide; the story opens a way to the truth (never revealed by rank alone).",
   "9": "The peak of the bond: a moment that proves it, and what they would give up for {{user}}."
  },

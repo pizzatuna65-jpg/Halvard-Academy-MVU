@@ -84,6 +84,10 @@ PANELS.npc = {
         ${b._Event_ready ? `<div class="warn">Bond event ready: find ${who}${ev && ev.where ? ` (likely ${esc(ev.where)}${ev.when ? ', ' + esc(ev.when) : ''})` : ''} and spend time together; Rank ${b.Rank + 1} comes from that scene.</div>`
           : ev && ev.held ? `<div class="hint">${ev.why === 'tension' ? 'The next bond event waits until the tension eases.' : ev.why === 'trust' ? `The next bond event waits until ${who} trusts you more (Trust ${ev.need}).` : 'This bond has gone as far as it can for now.'}</div>`
           : ev ? `<div class="hint">The bar is full. The next bond event can start in ${ev.in} day${ev.in === 1 ? '' : 's'}.</div>` : b.Rank < 10 ? '<div class="hint">Talk, spend time together, give gifts they like, help with what they want: each fills the bar (a talk and a hangout count once a day, gifts twice a week).</div>' : ''}
+        ${b.Rank >= 6 && b.Rank < 8 ? (() => {   // 1.6.8 (owner): what the Rank 8 event can open for this character, so the choice is known in advance
+          const br = (DATA.branch || {})[id] || 'A', g8 = TRD.nogates.includes(id) ? 0 : num((TRD.gates || {})['8'], 50), off = num((S.$ui || {}).romrank, 8) > 10;
+          const ways = ['best friends', 'AC'.includes(br) && 'romance' + (off ? ' (off in Settings)' : ''), 'AB'.includes(br) && g8 && `sworn rivals (only while Trust is under ${g8})`].filter(Boolean);
+          return `<div class="sub">At Rank 8 this bond can become: ${esc(ways.join(' · '))}.${!'AB'.includes(br) && g8 ? ` The Rank 8 event waits for Trust ${g8}.` : ''}</div>`; })() : ''}
         ${b.Last_seen ? `<div class="sub">Last seen ${esc(b.Last_seen)}</div>` : ''}</div>`;
     } else h += '<div class="sub">You have not met yet.</div>';
     h += '</div></div>';

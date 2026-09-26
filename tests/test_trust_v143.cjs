@@ -57,8 +57,11 @@ G = T(G, '09:30');
 ok(!G.Bonds.Caspian._Event_ready && G.$ui.bev.Caspian.held && G.$ui.bev.Caspian.why === 'trust' && G.$ui.bev.Caspian.need === 50, 'the event to Rank 7 waits for Trust 50');
 G = set(G, 'Caspian', { Trust: 55 }); G.Bonds.Caspian.Trust = 55; G = T(G, '09:40');
 ok(G.Bonds.Caspian._Event_ready, 'with Trust 55 it opens');
-let E8 = set(S, 'Ruby', { Rank: 7, $xp: 999, $cool: -1, Trust: 40 }); E8 = T(E8, '09:40');
-ok(E8.Bonds.Ruby._Event_ready && /can only turn into a sworn rivalry/.test(E8.$ui.bev.Ruby.dir), 'the Rank 8 event is never held; under 50 it can only end in a sworn rivalry');
+// 1.6.8 (owner): this holds for characters with a rival branch (Irene, A); Ruby (C) has none, so her Rank 8 event waits instead
+let E8 = set(S, 'Irene', { Rank: 7, $xp: 999, $cool: -1, Trust: 40 }); E8 = T(E8, '09:40');
+ok(E8.Bonds.Irene._Event_ready && /can only turn into a sworn rivalry/.test(E8.$ui.bev.Irene.dir), 'the Rank 8 event is never held for an A/B character; under 50 it can only end in a sworn rivalry');
+let H8 = set(S, 'Ruby', { Rank: 7, $xp: 999, $cool: -1, Trust: 40 }); H8 = T(H8, '09:40');
+ok(!H8.Bonds.Ruby._Event_ready && H8.$ui.bev.Ruby.held && H8.$ui.bev.Ruby.why === 'trust' && H8.$ui.bev.Ruby.need === 50, 'a C/D character\'s Rank 8 event waits for Trust 50 (1.6.8)');
 let RM = set(S, 'Ruby', { Rank: 8, Trust: 40 }); RM = T(RM, '09:50', [{ op: 'replace', path: '/Bonds/Ruby/Romance', value: true }]);
 ok(!RM.Bonds.Ruby.Romance && RM._Log.some(l => /Romance with Ruby needs Trust 50/.test(l)), 'a romance needs Trust 50');
 

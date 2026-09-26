@@ -12,6 +12,10 @@ const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const CAST_FULL = 4;
 const KNOWS_VISIBLE = 15, IMPRINT_MAX = 5, DEFINING_MAX = 5, NEXT_RANK = 3, MEANWHILE_RANK = 7;   // 1.6.0 (Batch C)
 const CHANGE = /*@@CHANGE@@*/{};   // 1.6.0 (N2): fixed | shaped | fluid per NPC (data/npc_canon.json; empty until the canon waves)
+// 1.6.8 (owner): which Rank 8 branches each NPC allows (data/npc_canon.json branch): A all, B best friend or rival, C best friend
+// or romance, D best friend only. An NPC with no entry (a new one) allows all three until its canon says otherwise.
+const BRANCH = /*@@BRANCH@@*/{};
+const canRomance = id => 'AC'.includes(BRANCH[id] || 'A'), canRival = id => 'AB'.includes(BRANCH[id] || 'A');
 const MENTION_DENY = new Set(/*@@MENTION_DENY@@*/[]);
 const EXTRAS_MAX = 20, EXTRAS_ARCHIVE = 40, STALE_DAYS = 7;   // 1.6.1 (Batch D): invented characters kept; campus events without news
 const PHASES = /*@@PHASES@@*/[];   // 1.6.1 (N6): campus phases (data/campus_phases.json; empty until the canon waves)
@@ -1000,7 +1004,8 @@ function runEngine(S, B, text, seedHint) {
   const secretOut = id => [...(S.$ui.secrets || []), ...(S.Campus_State.Secrets_revealed || [])].some(x => String(x).toLowerCase().startsWith(id.toLowerCase() + '.'));
   const held = (id, b) => MASK.has(id) && b.Rank === 8 && !secretOut(id);
   const tenseHold = (id, b) => { const P = tensionProfile(id); return !P.exempt && !P.lock && num(b.Tension, 0) >= num(TE.hold_event_from, 70); };   // 1.3.8
-  const trustHold = (id, b) => b.Rank + 1 !== 8 && num(b.Trust, 50) < trustGate(id, b.Rank + 1);   // 1.4.3
+  // 1.4.3; 1.6.8 (owner): the Rank 8 event waits too when this character has no rival branch (C, D)
+  const trustHold = (id, b) => (b.Rank + 1 !== 8 || !canRival(id)) && num(b.Trust, 50) < trustGate(id, b.Rank + 1);
   const spreadFrom = [];
   const KR = REW.krieg || {}, weeksNew = hasB ? Math.max(0, Math.min(8, weekNo - weekNoB)) : 0;
   const give = (id, which) => {                                // a Rank 5 gift / Rank 10 benefit, once
@@ -1036,6 +1041,8 @@ function runEngine(S, B, text, seedHint) {
     b.$tlast = b0 ? num(b0.$tlast, 0) : 0; b.$tbrk = b0 ? num(b0.$tbrk, 0) : 0;   // 1.4.4
     b.$Recent = b0 ? [...(b0.$Recent || [])] : [...(b.$Recent || [])];   // 1.4.4 engine-owned
     b.$Defining = b0 ? [...(b0.$Defining || [])] : [...(b.$Defining || [])];   // 1.6.0 engine-owned
+    b.$branch = b0 ? String(b0.$branch || '') : String(b.$branch || '');   // 1.6.8 engine-owned: friend | romance | rival from Rank 8
+    if (!b.$branch && b0 && b0.Rank >= 8) b.$branch = b0.Romance ? 'romance' : /rival/i.test(String(b0.Title || '')) ? 'rival' : 'friend';   // saves from before 1.6.8
     b.$Knows_old = b0 ? [...(b0.$Knows_old || [])] : [...(b.$Knows_old || [])]; b.$seen = b0 ? num(b0.$seen, -1) : num(b.$seen, -1); b.$mw = b0 ? num(b0.$mw, -1) : num(b.$mw, -1);
     const acts = [...(byId[id] || [])], rank0 = b0 ? b0.Rank : b.Rank, tw0 = num(b.Tension, 0), trw0 = num(b.Trust, 50);
     let rankTrust = 0;
@@ -1230,13 +1237,20 @@ function runEngine(S, B, text, seedHint) {
     const ready = b.Rank < 10 && xp >= need && dayNo >= num(b.$cool, -1) && !held(id, b) && !tenseHold(id, b) && !trustHold(id, b);
     if (ready && !b._Event_ready) { b._Event_ready = true; fresh.push(id); }
     else if (!ready) b._Event_ready = false;
-    // romance opens at the rank chosen in Settings (default 8); feelings can grow earlier in the story, the flag waits
-    if (hasB && b.Romance && !(b0 && b0.Romance) && (romRank > 10 || b.Rank < romRank)) {
+    // romance opens at the rank chosen in Settings (default 8); feelings can grow earlier in the story, the flag waits.
+    // 1.6.8 (owner): never for a character whose canon has no romance branch (B, D); a romance from an older save stays.
+    if (hasB && b.Romance && !(b0 && b0.Romance) && !canRomance(id)) {
+      b.Romance = false; log.push(`Romance with ${id} is closed (canon: ${id} does not become a romance); the flag was not set.`);
+    } else if (hasB && b.Romance && !(b0 && b0.Romance) && (romRank > 10 || b.Rank < romRank)) {
       b.Romance = false;
       log.push(romRank > 10 ? `Romance flags are off (Settings); ${id}'s was not set.` : `Romance with ${id} opens at Rank ${romRank} (Settings); the flag was not set yet.`);
     } else if (hasB && b.Romance && !(b0 && b0.Romance) && b.Trust < trustGate(id, 8)) {   // 1.4.3
       b.Romance = false; log.push(`Romance with ${id} needs Trust ${trustGate(id, 8)} (now ${b.Trust}); the flag was not set yet.`);
     }
+    // 1.6.8: the branch the bond took, recorded once when it reaches Rank 8 (a romance flag accepted later turns it into a romance)
+    if (hasB && b.Romance && !(b0 && b0.Romance)) b.$branch = 'romance';
+    else if (hasB && b.Rank >= 8 && !b.$branch) b.$branch = b.Romance ? 'romance' : canRival(id) && num(b.Trust, 50) < trustGate(id, 8) ? 'rival' : 'friend';
+    else if (b.Rank < 8 && b.$branch) b.$branch = '';
     // 1.4.4 (owner): the bond's recent history with {{user}}: when, one sentence (the narrator's Note, else the kinds), the effect.
     // Only what {{user}} did or reported: quiet-day easing and weekly recovery write no row.
     if (hasB) {
@@ -1336,6 +1350,10 @@ function runEngine(S, B, text, seedHint) {
   S.$eng.bweek = bweek;
   // what the UI and the Now entry show: bonds whose bar is full (event ready now, or after the cooldown)
   const bev = {}, present = new Set(Object.keys(S.Scene.Present || {}));
+  // 1.6.8 (owner): what the 7->8 event may turn into for this character (branch, Trust, and the romance setting)
+  const rank8Way = (id, b) => canRival(id) && b.Trust < trustGate(id, 8) ? `${id}'s Trust is ${b.Trust} (under ${trustGate(id, 8)}): this bond can only turn into a sworn rivalry here, not a best friendship or a romance.`
+    : canRomance(id) && romRank <= 8 ? `This bond can turn into a best friendship or a romance here; not a rivalry.`
+    : `This bond can only turn into a best friendship here${canRomance(id) ? ' (romance is closed at this rank in Settings)' : ''}; not a romance or a rivalry.`;
   for (const [id, b] of Object.entries(S.Bonds)) {
     if (b.Rank >= 10 || num(b.$xp, 0) < needXP(b.Rank, PACE)) continue;
     const e = BEV.find(x => x.npc === id && x.rank === b.Rank) || null;
@@ -1346,7 +1364,7 @@ function runEngine(S, B, text, seedHint) {
     const RW = (REW.npcs || {})[id] || {}, rw = b.Rank === 4 ? RW.gift : b.Rank === 9 ? RW.r10 : null;
     const extra = [rw ? `${b.Rank === 4 ? 'This event gives {{user}} ' + id + "'s gift" : 'This event gives {{user}} ' + id + "'s Rank 10 benefit"} (${rw.name}): ${rw.text}${rw.secret ? ' (Narrator only: ' + rw.secret + ')' : ''} The engine records it when the rank rises.` : '',
       b.Rank === 7 && MASK.has(id) && RW.nudge ? `This event carries a nudge: ${RW.nudge.text} The engine adds the Fact "${RW.nudge.fact}" when the rank rises.` : '',
-      b.Rank === 7 && b.Trust < trustGate(id, 8) ? `${id}'s Trust is ${b.Trust} (under ${trustGate(id, 8)}): this bond can only turn into a sworn rivalry here, not a best friendship or a romance.` : ''].filter(Boolean).join('\n');   // 1.4.3
+      b.Rank === 7 ? rank8Way(id, b) : ''].filter(Boolean).join('\n');   // 1.4.3; 1.6.8 per branch
     bev[id] = { r: b.Rank, ready: !!b._Event_ready, in: Math.max(0, num(b.$cool, -1) - dayNo),
       where: e && e.where && e.where.length ? e.where.join(' or ') : (HAUNT[id] || ''),
       when: e ? [e.days && e.days.length ? e.days.join('/') : '', e.time ? e.time.join('–') : ''].filter(Boolean).join(', ') : '',

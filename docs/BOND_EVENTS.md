@@ -59,6 +59,10 @@ The rewards live in `data/bond_rewards.json` (approved list: `docs/design/bond_r
 - **Mask → truth** (Castor, Kanae, Caine): the engine appends the nudge to the **7→8** event and adds its Fact when the rank
   rises. The **8→9** event only opens once one of that NPC's secrets is in `Campus_State.Secrets_revealed` ("Castor.identity");
   until then the bond stays at Rank 8.
+- **Rank 8 branches** (1.6.8, owner): the **7→8** event offers only the branches that NPC allows (`data/npc_canon.json`
+  `branch`: A best friend, romance or rival; B best friend or rival; C best friend or romance; D best friend only). Under
+  Trust 50 an A or B bond can only become a sworn rivalry; a C or D bond waits for Trust 50. The engine appends the right
+  direction to the event in `<now>`; write the event so it works for every branch that is open.
 - **Krieg**: his 0→1 event (the introduction) is ready as soon as he appears; afterwards his bar fills only on Mondays, while
   Doves reputation is +1 or better. Talks, hangouts and gifts give him nothing.
 - Rival academy teams have no bond system: do not write events for them.

@@ -14,6 +14,7 @@ npcs = json.load(open(P('data/npcs.json'), encoding='utf-8'))
 locs = json.load(open(P('data/locations.json'), encoding='utf-8'))
 BR = json.load(open(P('data/bond_rules.json'), encoding='utf-8'))
 OPN = json.load(open(P('data/bond_openness.json'), encoding='utf-8'))
+BRANCH = json.load(open(P('data/npc_canon.json'), encoding='utf-8')).get('branch', {})   # 1.6.8: Rank 8 branches A-D
 EV = json.load(open(P('data/bond_events.json'), encoding='utf-8'))['events']
 tag = {nid: t for t in ('open', 'guarded', 'closed') for nid in OPN[t]}
 def tok(s): return f'~{round(len(s) / 4 / 100) * 100:,} tokens'
@@ -104,6 +105,9 @@ w(f"""- Rank 0–10 per NPC. Time together fills an XP bar: a real talk ({BR['ki
 - A full bar opens that rank's **bond event**; when it has played out, the rank rises by 1 (choices change Trust, never block
   the rank). After a rank there is a short wait before the next event.
 - Romance becomes official from Rank {BR['romance_default']} by default (player setting); feelings may grow earlier in the story.
+- **Rank 8 branches** (1.6.8, owner): each NPC allows some of best friend, romance and sworn rival (roster column "branch": A all,
+  B best friend or rival, C best friend or romance, D best friend only). A rivalry opens only under Trust 50; a C or D bond waits
+  for Trust 50 instead. A new bonded NPC needs its branch and its Romance/Rival line in `data/npc_canon.json`.
 - **What the NPC shares** at each rank (openness shifts the first tiers: open +2, guarded −1, closed −2; tiers from Rank
   {BR['share_real_from']} need the real rank; secrets never):""")
 for t, s in BR['share']: w(f'  - Rank {t}: {s}')
@@ -137,7 +141,7 @@ w(doc[doc.index('## Format'):doc.index('## Rewards and special bonds')].replace(
 w('Existing scripted events: ' + (', '.join(f"{e['npc']} {e['rank']}→{e['rank'] + 1}" for e in EV) or 'none yet') + '.\n')
 
 w('## 6. NPC roster (one line each; full lore in the group files)\n')
-w('Columns: id — full name · group · dorm/race · role · club · openness · has secrets · personality (first clause).\n')
+w('Columns: id — full name · group · dorm/race · role · club · openness · has secrets · Rank 8 branch · personality (first clause).\n')
 for gid, gname, pred in GROUPS:
     ids = [i for i, n in npcs.items() if pred(n)]
     w(f'**{gname}**')
@@ -147,7 +151,7 @@ for gid, gname, pred in GROUPS:
         role = ', '.join(n.get('public_tags') or []) or first(field(n, 'Role')) or (n.get('team_role') or '')
         club = first(field(n, 'Club')).rstrip('.')
         pers = first(field(n, 'Personality')) or '—'
-        w(f"- **{i}** — {n['name']} · {n['group']} · {n.get('dorm') or '-'}/{race} · {role or '-'} · {club or '-'} · {tag.get(i, 'normal')} · {'yes' if n.get('has_secret') else 'no'} · {pers[:140]}")
+        w(f"- **{i}** — {n['name']} · {n['group']} · {n.get('dorm') or '-'}/{race} · {role or '-'} · {club or '-'} · {tag.get(i, 'normal')} · {'yes' if n.get('has_secret') else 'no'} · {BRANCH.get(i, '-')} · {pers[:140]}")
     w('')
 
 w('## 7. Known gaps (fields missing from the lore; secrets kept in <narrator_only> are not gaps)\n')
