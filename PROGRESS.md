@@ -980,8 +980,8 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   - Tests: test_bughunt_v169.cjs (16 checks); test_preset.cjs +4 (BOLT task range, step 4 tag, the jailbreak's directive list,
     the yes-man tag) and its tag check now ignores {{// }} notes. Save 1.6.8 added (saves 1.4.6 to 1.6.8 load). npm test 1159
     checks; stress passes; token_audit passes (unchanged); preset built twice, byte-identical. TEST card rebuilt.
-  - To confirm with the owner: the wording of the "Not a romance" line (card rule text, not canon: it states the approved B/D
-    category).
+  - Confirmed by the owner (2026-09-26, "ya" in the thread): the wording of the "Not a romance" line (card rule text, not
+    canon: it states the approved B/D category).
 
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
