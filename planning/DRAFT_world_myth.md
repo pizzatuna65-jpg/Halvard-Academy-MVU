@@ -45,5 +45,6 @@ Status: nobody knows the terms of the pact.
 
 - [?] Judul "The Devoured Kingdom" dan kalimat `Told` / `Status` di mitos 1 buatan Claude (owner tidak memberi judul). Ganti kalau mau.
 - [?] Nama kerajaan yang dilahap: dibiarkan tanpa nama, atau owner mau memberi nama?
-- [?] Keyword `Arslan` / `Arslan Sultanate` memanggil entry ini. Ini satu-satunya lore tentang Arslan Sultanate sejauh ini; kalau
-  nanti Arslan dapat entry sendiri, keyword itu dipindah.
+- [x] Keyword `Arslan` / `Arslan Sultanate`: owner akan membuat entry negara (draft terpisah, ukuran sama dengan entry ini). Begitu
+  Arslan Sultanate punya entry sendiri, keyword `Arslan` pindah ke sana; mitos ini hanya memakai `Primal Desert`, `Azathoth`,
+  `Lord of All`, `Devoured Kingdom`.
