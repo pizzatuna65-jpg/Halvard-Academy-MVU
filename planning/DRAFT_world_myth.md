@@ -8,7 +8,8 @@ Catatan dalam bahasa Indonesia; teks card dalam bahasa Inggris.
 
 - **Ghost Story / Superstition** = folklore murid Halvard (skala kampus). **World Myth** = mitos dunia/kerajaan, dibawa murid dari
   rumah; bukan sejarah yang diajarkan History Class sebagai fakta.
-- Format sama dengan Superstition/Ghost Story: `[Judul]`, `Story`, `Told`, `Status`. Panjang 45–60 kata.
+- Format: `[Judul]`, `Story`, `Told`, `Lesson`, `Status`. Panjang 50–70 kata.
+- **`Lesson`** (owner, 2026-09-26): satu baris tentang kenapa mitos ini terus diceritakan, manfaat atau peringatannya.
 - **Mitos sudah sangat tua: nama dan wujud setiap tokoh tidak diketahui** (owner, 2026-09-26). Teks tidak memberi nama, rupa,
   atau gender tokoh mana pun; tiap entry menyebutnya di `Status`.
 - Setting entry disalin dari Superstition (order 65, position 0, keyword biasa). Comment: `World Myth - <judul>`.
@@ -24,7 +25,8 @@ Keys: `Azathoth`, `Lord of All`, `Primal Desert`, `Arslan Sultanate`, `Arslan`, 
 ```
 [The Devoured Kingdom]
 Story: thousands of years ago, a king made a pact with Azathoth, Lord of All, a Spirit Lord. Nobody knows what the king asked for. Azathoth's price was the king's entire kingdom, devoured to the last stone. What remains is the Primal Desert, where the Arslan Sultanate stands today.
-Told: across the world, as the oldest warning about pacts with Spirit Lords.
+Told: across the world, the oldest story about a Spirit Lord pact.
+Lesson: a Spirit Lord always collects its price in full, so learn the price before you ask. Pacts are lawful; this is why careful mages read every term twice.
 Status: nobody knows the terms of the pact, the king's name, or the name of the kingdom.
 ```
 
@@ -37,6 +39,7 @@ Keys: `King of Knights`, `Lady of the Lake`, `Empress of the Fractured Vow`, `Fr
 [The Four Who Saved the World]
 Story: long ago, when the world nearly ended, four heroes saved it: the King of Knights from the north, the Archmage from the east, the Lady of the Lake from the south, and the Empress of the Fractured Vow from the west.
 Told: across the continent. Every land tells its own hero as the one who mattered most; Eldrasil, in the east, tells the Archmage.
+Lesson: the world was saved by four lands together, never by one; told whenever nations quarrel, and at every World Competition.
 Status: their names and faces are lost. No two versions agree on what the world was saved from.
 ```
 Catatan kanon (owner, 2026-09-26): arah mata angin = arah **benua**; Eldrasil ada di timur benua, jadi "the Archmage from the east"
