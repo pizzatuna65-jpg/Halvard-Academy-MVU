@@ -54,7 +54,8 @@ const FIELD = /Eldrasil|Halvard|<now>|<cast>|<current_state>|Scene\.Present|Bond
 ok(!FIELD.test(boltRest), 'BOLT names no card field outside the "Now:" line' + (FIELD.test(boltRest) ? ': ' + boltRest.match(FIELD)[0] : ''));
 // every tag the CoT refers to exists in another preset prompt or in the card
 const cardText = JSON.parse(fs.readFileSync(path.join(ROOT, 'dist/Eldrasil_Halvard.json'), 'utf8')).data.character_book.entries.map(e => e.content).join('\n');
-const others = P.prompts.filter(p => p.identifier !== byName('BOLT Chain of Thought').identifier).map(p => p.content || '').join('\n');
+const noNotes = t => String(t || '').replace(/\{\{\/\/[\s\S]*?\}\}/g, '');   // 1.6.9: ST strips {{// }} notes, so a tag named only there does not count
+const others = P.prompts.filter(p => p.identifier !== byName('BOLT Chain of Thought').identifier).map(p => noNotes(p.content)).join('\n');
 const tags = [...new Set([...bolt.matchAll(/<([A-Za-z_]+)>/g)].map(m => m[1]))].filter(x => !['place', 'details'].includes(x));
 const missing = tags.filter(x => !others.includes('<' + x + '>') && !cardText.includes('<' + x + '>') && !cardText.includes('<' + x + ' '));
 ok(!missing.length, 'every tag the CoT refers to exists in the preset or the card (' + tags.length + ')' + (missing.length ? ': missing ' + missing.join(', ') : ''));
@@ -66,3 +67,13 @@ ok(!CARD.test(E2), 'E2 texts are generic' + (CARD.test(E2) ? ': ' + E2.match(CAR
 const br = C('Eldrasil × MVU × VectFox Bridge');
 ok(/The <cast> block is the truth about every present character/.test(br) && /Invented characters keep their Extras card/.test(br) && /their Next plans/.test(br) && /needs the walk time to get here/.test(br), 'U8 + D6: the Bridge divides the work with the card\'s new blocks');
 ok(!/_Event_ready|_Period|World\._Happening/.test(br), 'the Bridge copies no field list either');
+
+// ---- 1.6.9 bug hunt: pointers the model can follow
+const lastTask = Math.max(...[...bolt.matchAll(/\n(\d+)\. /g)].map(m => +m[1]));
+ok(bolt.includes(`all 0-${lastTask} tasks below`) && bolt.includes(`Never reason beyond the ${lastTask}th Task`), `BOLT's rule C covers every task (0-${lastTask})`);
+ok(!/<say_it_straight>/.test(noNotes(bolt)) && /<comparative_emphasis_killswitch>, <break_the_triad>/.test(bolt), 'BOLT step 4 points to the Comparative Emphasis Killswitch');
+const onText = P.prompts.filter(p => { const o = order.find(x => x.identifier === p.identifier); return o && o.enabled; }).map(p => noNotes(p.content)).join('\n');
+const jbList = (C('NEW AI Studio Jailbreak').match(/follow these directives from the preset: ([^\n]*)/) || ['', ''])[1];
+const jbTags = [...jbList.matchAll(/<([a-z_]+)>/g)].map(m => m[1]), jbMiss = jbTags.filter(x => !new RegExp('<' + x + '>[\\s\\S]*</' + x + '>').test(onText));
+ok(jbTags.length > 10 && !jbMiss.length, `every directive the jailbreak lists is in an enabled prompt (${jbTags.length})` + (jbMiss.length ? ': missing ' + jbMiss.join(', ') : ''));
+ok(!/<avoid_yesman_behaviour>/.test(C('Realism Mode / Jailbreak')) && /<abolish_yesman_behaviour>/.test(C('Realism Mode / Jailbreak')), 'Realism Mode names the real yes-man tag');

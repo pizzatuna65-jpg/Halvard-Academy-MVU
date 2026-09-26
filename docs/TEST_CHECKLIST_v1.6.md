@@ -1,6 +1,6 @@
 # Test checklist — card v1.6.9 with the edited preset and VectFox
 
-Automated (all passing at 1.6.9): `npm test` = 39 suites + static QA, 1155 checks (every save from 1.4.6 to 1.6.8 loads);
+Automated (all passing at 1.6.9): `npm test` = 39 suites + static QA, 1159 checks (every save from 1.4.6 to 1.6.8 loads);
 `npm run stress` plus the fuzz on seeds 2-9 (48,000 random updates, no problems); `tests/preview/smoke_all_panels.py` 550 views,
 no errors; token audit ~12.3k start / ~17.2k heavy mid-game; the preset built twice, byte-identical. Checked in upstream source:
 SillyTavern puts depth-0 prompts of the system role after the user-role ones (`openai.js` `populationInjectionPrompts`), so the
@@ -25,8 +25,8 @@ Everything below can only be checked inside SillyTavern. Most important first. E
 - [ ] Open the prompt of a reply (Prompt Itemization or the prompt inspector). At the bottom: your message, then the preset's
       `<input_authority>` and BOLT, then one system block that ends with the cast gate (only when someone is present) and
       `<update_format>`. No `<%` anywhere (EJS rendered).
-- [ ] The reasoning opens with `Now: M? W? Day HH:MM at <place>`; the reply ends with a complete `</UpdateVariable>` and the
-      bracelet sits above the narration.
+- [ ] The reasoning opens with `Now: M? W? Day HH:MM at <place>` and runs through BOLT task 11 (three options, one a HOLD);
+      the reply ends with a complete `</UpdateVariable>` and the bracelet sits above the narration.
 - [ ] Coloured dialogue (Colored Dialogue 2.0) shows in colour, and the update block is folded. With two people talking in the
       same reply, the next reply's prompt gives full sheets to those who spoke (the colour tags do not hide the speakers).
 - [ ] With four or more people present: the `<cast>` block has at most four full sheets, the rest brief; their keyword entries

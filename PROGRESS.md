@@ -967,10 +967,19 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
     refuses to record. A romance kept from an older save gets no such line.
   - Fixed (UI): with romance set to open at Rank 10 in Settings, the dossier's Rank 8 line said romance was open at Rank 8; it
     now says "romance (from Rank 10 in Settings)".
+  - Fixed (preset, owner: "cek bug di preset juga"; `presets/edit_preset.py` section 10): BOLT's rule C said "all 0-10 tasks ...
+    Never reason beyond the 10th Task" while rule A and the list run to task 11, which holds the world-stays-quiet and walk-time
+    checks the card relies on (1.6.2 U10 + D6); now 0-11. BOLT step 4 pointed to <say_it_straight>, which upstream replaced with
+    <comparative_emphasis_killswitch> (only a {{// }} note, stripped before sending, still named it). The AI Studio Jailbreak told
+    the model to follow <anti_briefing_register> and <final_register_gate>, whose prompts this edit keeps OFF on Gemini; they are
+    out of its list. Realism Mode named <avoid_yesman_behaviour> (upstream typo) for <abolish_yesman_behaviour>. Checked and
+    fine: every other tag an enabled prompt names exists or is conditional ("if <x> is present"), the macros ({{setvar}} blanks,
+    {{roll}}, {{lastUserMessage}}), the Gemini settings, the display regexes against the card's own.
   - Docs: `docs/TEST_CHECKLIST_v1.6.md` (what only SillyTavern can show for card + preset + VectFox); PLAYER_GUIDE Bonds names
     the Rank 8 branches.
-  - Tests: test_bughunt_v169.cjs (16 checks). Save 1.6.8 added (saves 1.4.6 to 1.6.8 load). npm test 1155 checks; stress passes;
-    token_audit passes (unchanged); preset built twice, byte-identical (unchanged). TEST card rebuilt.
+  - Tests: test_bughunt_v169.cjs (16 checks); test_preset.cjs +4 (BOLT task range, step 4 tag, the jailbreak's directive list,
+    the yes-man tag) and its tag check now ignores {{// }} notes. Save 1.6.8 added (saves 1.4.6 to 1.6.8 load). npm test 1159
+    checks; stress passes; token_audit passes (unchanged); preset built twice, byte-identical. TEST card rebuilt.
   - To confirm with the owner: the wording of the "Not a romance" line (card rule text, not canon: it states the approved B/D
     category).
 
