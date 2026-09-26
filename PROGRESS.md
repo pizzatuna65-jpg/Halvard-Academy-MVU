@@ -872,12 +872,33 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
     (unchanged). TEST card rebuilt.
   - To verify in ST: Alyssa reads somber and quiet, not melodramatic, and does not "remember" shared moments after the rest day.
 
+- 1.6.5 Batch G, wave G3 (canon, approved by the owner on 2026-09-26: "approve g3, sekalian draft next", typed straight into the
+  working session): the voice of the Year 2 NPCs not in G1 (Lenna, Saffi, Idris, Dante, Florian, Tilly), from
+  planning/DRAFT_voices_G3.md, with Stages.
+  - Data: `data/npc_canon.json` `voice` and `change` (Lenna shaped, Saffi fixed, Idris shaped, Dante fixed, Florian fluid, Tilly
+    fixed). Dante (works for the Doves) and Tilly (Velmora's princess) hide an identity, so they get narrator-only alone scenes,
+    like Alyssa.
+  - Owner decision: Dante stays fanatically lawful with no exceptions, {{user}} included. His Rank 5 gift and Rank 10 benefit
+    (`data/bond_rewards.json`, canon since 1.3.0) changed with approval: the Lodge key is a logged, rule-sanctioned refuge after
+    curfew (not a hideout no patrol checks); at Rank 10 he still reports any rule {{user}} breaks, to their face first, stands
+    beside them while they answer for it, and demands that anyone coming for {{user}} outside the rules (Doves included) does it by
+    the book. The secret side is now a formal report naming {{user}} under his protection. Text only; no engine effect changed.
+  - Saffi's Rank 9-10 stage says "the only one besides Lenna" instead of "the second person, after Lenna" (same meaning; the old
+    phrase tripped the card-vs-preset taste check in test_split_v146).
+  - Size: one G3 NPC present with a full sheet is 1.2k-2.3k tokens (Saffi 1204, Lenna 1323, Idris 1557, Florian 1703, Dante 2136,
+    Tilly 2296).
+  - Tests: test_voices_g3_v165.cjs (18 checks); test_voices_g2_v164 checks the G2 part of the data only; save 1.6.4 added (saves
+    1.4.6 to 1.6.4 load). npm test 1050 checks; stress passes; token_audit passes; preset built twice, byte-identical (unchanged).
+    TEST card rebuilt.
+  - To confirm with the owner: invented details marked [?] in the draft were approved with it (for example Sister Ann of the
+    orphanage, and Krieg signing Dante's report).
+
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
-- Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 to 1.6.4 done (G1 in 1.6.3, G2 in 1.6.4). NOW: the owner
-  playtests; then run tools/audit_chat.py on the exported chat for the first MVU baseline. Next canon wave: G3 (Year 2), with
-  Stages, as a draft first.
+- Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 to 1.6.5 done (G1 in 1.6.3, G2 in 1.6.4, G3 in 1.6.5).
+  NOW: the owner playtests; then run tools/audit_chat.py on the exported chat for the first MVU baseline. Next canon wave: G4
+  (Year 3), drafted in planning/DRAFT_voices_G4.md, applied only after approval.
 - Playtest v1.3.2 in ST: a pact with abilities (Builder → Pacts, Techniques page), summon it and have it use an ability
   (charged once, not charged when not summoned).
 - Playtest v1.3.1 in ST: meet Etnie (Rank 3 on the spot), Etnie's dossier (no "{{user}}"), walk to the Boathouse and the Fishing

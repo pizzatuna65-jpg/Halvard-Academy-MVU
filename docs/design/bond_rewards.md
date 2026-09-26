@@ -98,9 +98,9 @@ mendorong {{user}} ke arc-nya, dan pemain bebas mengabaikannya.
 - **Rank 10:** Idris haggles for {{user}} as if they were family business, and everything {{user}} buys at the Mall and the Commissary costs noticeably less. Mormo watches {{user}}'s back when Idris cannot, draining the stamina of anyone who comes at them in the dark.
 
 ### Dante
-- **Gift:** A spare key to the Groundskeeper's Lodge, which he says nobody ever checks. It gives {{user}} a safe, warm hideout at the Forest edge after curfew that no patrol looks into.
-- **Rank 10:** Dante counts {{user}} among the people he protects, with no conditions: anyone who threatens {{user}} finds him there, and nobody has ever beaten him hand to hand. He also looks the other way on any rule {{user}} breaks, and steers Dove attention away from them.
-  - <narrator_only>This is the Doves' own asset lying to the Doves, for the first time in his life.</narrator_only>
+- **Gift:** The key to the Groundskeeper's Lodge, and the rule that comes with it: a student caught out after curfew by danger or weather may shelter there, as long as it goes in his log. It gives {{user}} a safe, warm refuge at the Forest edge after curfew; a student in Dante's log is sheltered, not out of bounds, and he asks for the true reason every time.
+- **Rank 10:** Dante counts {{user}} among the people he protects, with no conditions: anyone who threatens {{user}} finds him there, and nobody has ever beaten him hand to hand. He still reports any rule {{user}} breaks, to their face first, and stands beside them while they answer for it. Anyone who comes for {{user}} outside the rules, Doves included, finds him demanding it be done by the book: a fair hearing and every rule followed to the letter.
+  - <narrator_only>He has filed a formal report naming {{user}} as under his protection, the first report of his life that asks for something. Krieg read it and signed it.</narrator_only>
 
 ### Florian
 - **Gift:** A Villeneuve silver token for The Snug's largest booth, on Florian's account. Whatever {{user}} orders there is paid for, and anyone {{user}} brings is treated as Florian's guest.

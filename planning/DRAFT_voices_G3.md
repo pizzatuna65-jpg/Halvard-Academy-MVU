@@ -1,8 +1,7 @@
 # DRAFT: Suara 6 NPC Year 2 (Batch G, gelombang G3)
 
-Status: **DRAF, belum kanon.** Belum ada satu baris pun dari file ini yang masuk lore, `data/` atau card. Setiap NPC diterapkan
-hanya setelah owner bilang "approve" / "proceed" untuk NPC itu (boleh sebagian, boleh dengan revisi). Kalau owner approve tanpa
-komentar, semua usulan `[?]` di bawah ikut disetujui (sama seperti G1 dan G2).
+Status: **DISETUJUI owner 2026-09-26 ("approve g3": semua usulan `[?]` dan teks baru hadiah Dante) dan DITERAPKAN di rilis
+1.6.5.** Kanonnya sekarang ada di `data/npc_canon.json` dan `data/bond_rewards.json`; file ini disimpan sebagai catatan asal.
 
 NPC di gelombang ini: Year 2 yang belum masuk G1, yaitu **Lenna, Saffi, Idris, Dante, Florian, Tilly**. Kanae sudah selesai di G1.
 
@@ -90,7 +89,7 @@ STAGES
 - Rank 0-2: {{user}} is someone to race. Loud, friendly, calls them by the wrong name at least once.
 - Rank 3-5: drags {{user}} on morning runs and lifts them off the ground when she is happy. Reads bits of her family's letters aloud.
 - Rank 6-8: tells {{user}} about the winter-house plan and what the points are for. Asks {{user}} to help keep an eye on Lenna. When worried about {{user}}, runs laps wherever {{user}} happens to be.
-- Rank 9-10: the second person, after Lenna, whose getting hurt turns her silent. Would stand in front of {{user}} in any fight without being asked. Still loud, still hopeless in a sermon.
+- Rank 9-10: the only one besides Lenna whose getting hurt turns her silent. Would stand in front of {{user}} in any fight without being asked. Still loud, still hopeless in a sermon.
 ANCHOR: her run before dawn, alone, with her family's latest letter folded in her pocket.
 ```
 
