@@ -202,5 +202,18 @@ rep('HQ NPC Genesis', 'Card: For an NPC with no card or lorebook entry, everythi
 rep('Scene Engine', 'A character generated during the chat has no card, so what the chat log has established about them serves as one;',
     "A character generated during the chat has the card's record for invented characters as their card when the card keeps one; until then, what the chat log has established about them serves as one;")
 
+# ---- 10. 1.6.9 (bug hunt): pointers that led nowhere in the prompt the model sees ({{// }} notes are stripped before sending)
+# BOLT counts its tasks 0-11 in rule A but told the model to stop after task 10, and task 11 carries the world-stays-quiet and
+# walk-time checks (1.6.2 U10 + D6)
+rep(B, 'C. Sequentially calculate and apply all 0-10 tasks below. Never skip. Always start your internal thinking with the game state. Never reason beyond the 10th Task.',
+    'C. Sequentially calculate and apply all 0-11 tasks below. Never skip. Always start your internal thinking with the game state. Never reason beyond the 11th Task.')
+# <say_it_straight> became the Comparative Emphasis Killswitch upstream; only a {{// }} note still names it
+rep(B, '(<say_it_straight>, <break_the_triad>,', '(<comparative_emphasis_killswitch>, <break_the_triad>,')
+# the jailbreak's directive list names the two register prompts this edit keeps OFF on Gemini (section 1)
+rep('NEW AI Studio Jailbreak', '<emission_limits>, <anti_briefing_register>, <abolish_yesman_behaviour>,', '<emission_limits>, <abolish_yesman_behaviour>,')
+rep('NEW AI Studio Jailbreak', '<human_vocal_limits>, <final_register_gate>.', '<human_vocal_limits>.')
+# upstream typo: the tag is <abolish_yesman_behaviour>
+rep('Realism Mode / Jailbreak', '<avoid_yesman_behaviour>', '<abolish_yesman_behaviour>')
+
 json.dump(d, open(os.path.join(HERE, 'Realistic_Frankenstein_2_2_Eldrasil.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=4)
 for l in log: print(' | '.join(l))

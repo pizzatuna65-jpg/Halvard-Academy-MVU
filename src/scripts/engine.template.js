@@ -1247,9 +1247,12 @@ function runEngine(S, B, text, seedHint) {
     } else if (hasB && b.Romance && !(b0 && b0.Romance) && b.Trust < trustGate(id, 8)) {   // 1.4.3
       b.Romance = false; log.push(`Romance with ${id} needs Trust ${trustGate(id, 8)} (now ${b.Trust}); the flag was not set yet.`);
     }
-    // 1.6.8: the branch the bond took, recorded once when it reaches Rank 8 (a romance flag accepted later turns it into a romance)
+    // 1.6.8: the branch the bond took, recorded once when it reaches Rank 8 (a romance flag accepted later turns it into a romance).
+    // 1.6.9 (bug hunt): decided by the Trust the 7->8 event was played on (before this reply's +3 for the rank), so a rivalry the
+    // narrator was told to play at Trust 47-49 is not recorded as a best friendship.
+    const tr8 = num(b0 && b0.Rank < 8 ? b0.Trust : b.Trust, 50);
     if (hasB && b.Romance && !(b0 && b0.Romance)) b.$branch = 'romance';
-    else if (hasB && b.Rank >= 8 && !b.$branch) b.$branch = b.Romance ? 'romance' : canRival(id) && num(b.Trust, 50) < trustGate(id, 8) ? 'rival' : 'friend';
+    else if (hasB && b.Rank >= 8 && !b.$branch) b.$branch = b.Romance ? 'romance' : canRival(id) && tr8 < trustGate(id, 8) ? 'rival' : 'friend';
     else if (b.Rank < 8 && b.$branch) b.$branch = '';
     // 1.4.4 (owner): the bond's recent history with {{user}}: when, one sentence (the narrator's Note, else the kinds), the effect.
     // Only what {{user}} did or reported: quiet-day easing and weekly recovery write no row.
