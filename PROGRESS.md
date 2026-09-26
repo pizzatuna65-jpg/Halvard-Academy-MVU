@@ -853,12 +853,31 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   - To verify in ST: the 8 NPCs sound like their scene examples without repeating them word for word; the Stage line changes
     after a rank-up.
 
+- 1.6.4 Batch G, wave G2 (canon, approved by the owner on 2026-09-26: "approve f2 dan perubahan entry", typed straight into the
+  working session): the voice of the Year 1 NPCs not in G1 (Caralynn, Percival, Trixie, Vera, Alyssa), from
+  planning/DRAFT_voices_G2.md.
+  - Owner decisions on the way: every wave gets Stages ("tetap beri stages", then "ya" for G3 to G5), and Alyssa's story is
+    somber, depressing and bittersweet, with Isshuukan Friends as the reference.
+  - Data: `data/npc_canon.json` `voice` and `change` for the five (Caralynn shaped, Percival fixed, Trixie fluid, Vera fixed,
+    Alyssa fixed). Alyssa is the first unmasked NPC with alone scenes (narrator-only).
+  - Alyssa's whole entry was checked against the new tone. Her Rank 10 benefit (`data/bond_rewards.json`, canon since 1.3.0) no
+    longer cures the forgetting: "she still meets them as a stranger, but only for the length of one page, and she is glad
+    before she reaches the end of it" (same mechanics). Her Don't flatten says shared moments are hers only as her page records
+    them. She admits the weekly pattern at Rank 6-8 only once the story has shown it to {{user}} (secrets never open by rank).
+    Her lore needed no change.
+  - Size: one G2 NPC present with a full sheet is 1.6k-2.3k tokens (Trixie 1591, Caralynn 1667, Vera 1709, Percival 2272,
+    Alyssa 2317).
+  - Tests: test_voices_g2_v164.cjs (18 checks); test_voices_g1_v163 now checks the G1 part of the data only; save 1.6.3 added
+    (saves 1.4.6 to 1.6.3 load). npm test 1028 checks; stress passes; token_audit passes; preset built twice, byte-identical
+    (unchanged). TEST card rebuilt.
+  - To verify in ST: Alyssa reads somber and quiet, not melodramatic, and does not "remember" shared moments after the rest day.
+
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
-- Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 to 1.6.3 done (G1 applied in 1.6.3). NOW: the owner
-  playtests once; then run tools/audit_chat.py on the exported chat for the first MVU baseline. Next canon wave: G2 (Year 1),
-  drafted in planning/DRAFT_voices_G2.md, applied only after the owner approves it.
+- Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 to 1.6.4 done (G1 in 1.6.3, G2 in 1.6.4). NOW: the owner
+  playtests; then run tools/audit_chat.py on the exported chat for the first MVU baseline. Next canon wave: G3 (Year 2), with
+  Stages, as a draft first.
 - Playtest v1.3.2 in ST: a pact with abilities (Builder → Pacts, Techniques page), summon it and have it use an ability
   (charged once, not charged when not summoned).
 - Playtest v1.3.1 in ST: meet Etnie (Rank 3 on the spot), Etnie's dossier (no "{{user}}"), walk to the Boathouse and the Fishing
@@ -881,6 +900,7 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 - Scripted first-week classes (M1 W1 Tue-Sat, 14 sessions; per dorm for [D] classes; optional homework into Commitments).
 
 ## To verify in ST (could not be tested outside ST)
+- 1.6.4: Alyssa reads somber and quiet, not melodramatic; after the rest day she knows shared moments only from her notebook.
 - 1.6.3: the 8 G1 NPCs sound like their scene examples without copying them; the Stage line follows a rank-up.
 - 1.6.2 (U13): replies are not cut off before </UpdateVariable> (preset openai_max_tokens 15000); reasoning opens with "Now:".
 - 1.6.1: tapping an invented character in the cast strip pins them (hidden tool message; thumbtack after the re-render).

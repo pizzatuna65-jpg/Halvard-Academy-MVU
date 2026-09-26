@@ -71,7 +71,7 @@ mendorong {{user}} ke arc-nya, dan pemain bebas mengabaikannya.
 
 ### Alyssa
 - **Gift:** A standing offer from her notebook: once a week {{user}} can name anyone at Halvard and Alyssa reads them her page on that person. It tells {{user}} where that person tends to be this week and one thing they would be glad to receive, because Alyssa writes down exactly what she has seen and nothing more.
-- **Rank 10:** Once a day Alyssa spends Foresight on {{user}}, telling them what the next five minutes hold before an exam, a duel or a conversation that matters. In any fight they share she calls every attack a heartbeat before it lands, and {{user}}'s page is the first she reads each week, so she never meets them as a stranger.
+- **Rank 10:** Once a day Alyssa spends Foresight on {{user}}, telling them what the next five minutes hold before an exam, a duel or a conversation that matters. In any fight they share she calls every attack a heartbeat before it lands. {{user}}'s page is the first she reads each week: she still meets them as a stranger, but only for the length of one page, and she is glad before she reaches the end of it.
 
 ---
 
