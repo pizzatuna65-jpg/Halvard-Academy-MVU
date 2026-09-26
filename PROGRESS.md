@@ -925,11 +925,35 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   - To confirm with the owner: nothing new beyond the draft's [?] list, approved with it. The G4 draft called Krieg's title
     "Commander" invented; it is in Milena's lore ("Yes, Commander."), and Caspian's line needed no change.
 
+- 1.6.8 Rank 8 branches per NPC (canon and rules approved by the owner on 2026-09-26 in the Brainstorming thread: categories,
+  then "approve, buat draft implementasi semua npc" for the lines, then "ya" to hand it over; planning/DRAFT_rank8_branches.md).
+  - Rules: each NPC allows some of best friend, romance and sworn rival: A all (20), B best friend or rival (Krieg, Tristan),
+    C best friend or romance (9), D best friend only (7). A rivalry opens only under the Rank 8 Trust gate (50); a C or D bond
+    waits for it (touches the HANDOFF §4 Trust decision "the Rank 8 event never waits", now true only for A and B; approved).
+    Romance is refused for B and D whatever the Settings say (touches §4 Bonds: romance no longer open to every NPC; approved).
+    Althair and Etnie have no Trust gates, so they are never held.
+  - Data: `data/npc_canon.json` `branch`, and `voice.<id>.romance` / `.rival` (the approved lines); Florian's Don't flatten
+    gains the approved exception ("a romance with {{user}} is the one exception, and he will not call it one"). bond_rules
+    themes 7 and perks 8 say "as far as this character allows"; trust.json notes the hold.
+  - Engine: BRANCH from npc_canon.json (an NPC with no entry allows all three); the 7->8 direction in <now> says which branches
+    are open (rivalry only; best friendship or romance; best friendship only, noting romance closed in Settings); the branch
+    taken is recorded once at Rank 8 in `Bonds.<id>.$branch` (friend / romance / rival; a romance flag accepted later makes it
+    romance; cleared if the rank falls below 8). Saves from before 1.6.8: a bond already at Rank 8+ gets its branch from Romance
+    or a "rival" Title, and nothing else changes (a romance with an NPC that is now D stays).
+  - Cast Sheet: "Romance with {{user}}: …" or "Sworn rival of {{user}}: …" after the Stage line (full and brief sheets).
+  - UI: the dossier says at Rank 6-7 what Rank 8 can open, and whether the event waits for Trust 50.
+  - Tests: test_rank8_v168.cjs (26 checks: data, holds, directions, romance refused for B/D, $branch, Cast Sheet lines, dossier,
+    older saves); test_trust_v143 now shows the never-held rivalry on Irene (A) and Ruby (C) waiting. Saves 1.6.7 and
+    1.6.7_rank8 (Kanae romance and Irene sworn rival at Rank 8) added. npm test 1134 checks; stress passes; token_audit passes;
+    preset built twice, byte-identical (unchanged). TEST card rebuilt.
+  - To confirm with the owner: nothing beyond the approved drafts. The TEST card still sets every bond to Rank 7, so each 7->8
+    event shows its branch direction.
+
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
 - Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 to 1.6.7 done (G1 in 1.6.3, G2 in 1.6.4, G3 in 1.6.5,
-  G4 in 1.6.6, G5 in 1.6.7; every bonded NPC has a voice). NOW: the owner playtests; then run tools/audit_chat.py on the exported
+  G4 in 1.6.6, G5 in 1.6.7; every bonded NPC has a voice), plus the Rank 8 branches in 1.6.8. NOW: the owner playtests; then run tools/audit_chat.py on the exported
   chat for the first MVU baseline.
 - Playtest v1.3.2 in ST: a pact with abilities (Builder → Pacts, Techniques page), summon it and have it use an ability
   (charged once, not charged when not summoned).
@@ -953,6 +977,8 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 - Scripted first-week classes (M1 W1 Tue-Sat, 14 sessions; per dorm for [D] classes; optional homework into Commitments).
 
 ## To verify in ST (could not be tested outside ST)
+- 1.6.8: a 7->8 event offers only the branches the NPC allows (a C character with low Trust waits; a B or D character never
+  becomes a romance); after it, the Romance or Sworn rival line shows in the Cast Sheet and the NPC plays it.
 - 1.6.4: Alyssa reads somber and quiet, not melodramatic; after the rest day she knows shared moments only from her notebook.
 - 1.6.3: the 8 G1 NPCs sound like their scene examples without copying them; the Stage line follows a rank-up.
 - 1.6.2 (U13): replies are not cut off before </UpdateVariable> (preset openai_max_tokens 15000); reasoning opens with "Now:".

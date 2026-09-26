@@ -103,6 +103,8 @@ MENTION_DENY = ['Pip', 'Ruby']
 CANON = json.load(open(P('data/npc_canon.json'), encoding='utf-8'))
 assert all(k in npcs for k in CANON['change']) and set(CANON['change'].values()) <= {'fixed', 'shaped', 'fluid'}
 t = t.replace('/*@@CHANGE@@*/{}', json.dumps(CANON['change'], ensure_ascii=False))
+assert all(CANON.get('branch', {}).get(k) in ('A', 'B', 'C', 'D') for k in CANON['change']), 'every NPC in npc_canon.json change needs a Rank 8 branch (A-D)'
+t = t.replace('/*@@BRANCH@@*/{}', json.dumps(CANON.get('branch', {}), ensure_ascii=False, separators=(',', ':')))   # 1.6.8
 # 1.6.1 (N6): campus phases, one line each for <now> while the phase runs (empty until the canon waves)
 PH = json.load(open(P('data/campus_phases.json'), encoding='utf-8'))['phases']
 assert all({'id', 'from', 'to', 'line'} <= set(p) for p in PH), 'campus phase needs id, from, to, line'

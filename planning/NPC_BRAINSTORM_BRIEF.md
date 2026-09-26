@@ -229,6 +229,14 @@ Club venues: Duelling – Combat Grounds (headquarters: Sparring Pavilion); Socc
     event can only run once their truth has come out in play; without that, the bond stays at Rank 8, and that is fine.
   - **Krieg:** Rank 1 comes from his introduction. After that his bond gains **+14 XP every Monday**, only while {{user}}'s
     Doves reputation is **≥ +1**; he gives no XP for talks, hangouts or gifts.
+- **Rank 8 branches** (1.6.8, owner-approved 2026-09-26, `planning/DRAFT_rank8_branches.md`): each NPC allows some of best
+  friend, romance and sworn rival (`data/npc_canon.json` `branch`): **A** all three, **B** best friend or rival, **C** best friend or
+  romance, **D** best friend only. A rivalry opens only under Trust 50; a C or D bond waits for Trust 50 instead. Romance is never
+  possible for B and D, whatever the Settings say. The Cast Sheet adds the NPC's `romance` or `rival` line (in `voice`) for the
+  active branch; a best friendship adds nothing. Now: A Irene, Aiden, Castor, Kanae, Rei, Caine, Caralynn, Percival, Lenna, Saffi,
+  Idris, Dante, Florian, Caspian, Royhan, Sophia, Gareth, Vallie, Kuroo, Milena; B Krieg, Tristan; C Etnie, Zara, Trixie, Vera,
+  Alyssa, Tilly, Ruby, Mimosa, Bobby; D Gavlan, Yvette, Baelin, Layla, Althair, Ezrel, Ottavio. Staff who can have a romance keep
+  it out of class while {{user}} is their student (their own lines say how). A new bonded NPC needs its branch and lines.
 - **Reputation** (Academy, Student, Doves; −5 to +5, tiered Rep XP; full rules in `reputation.md`) modifies bond XP: staff
   NPCs at Academy ±3, student NPCs at Student ±3/+5, and anti-Dove NPCs react against high Doves reputation.
 

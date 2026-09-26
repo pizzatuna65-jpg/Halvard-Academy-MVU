@@ -54,6 +54,10 @@ const cVoice = (id, full) => {
     out.push("Don't flatten: " + v.dont_flatten);
   }
   out.push('Stage with {{user}} (Rank ' + r + '): ' + v.stages[cBandOf(r)]);
+  // 1.6.8 (owner): from Rank 8 the branch adds one line; a best friendship adds none
+  const b = CB[id] || {};
+  if (b.Romance && v.romance) out.push('Romance with {{user}}: ' + v.romance);
+  else if (b.$branch === 'rival' && v.rival) out.push('Sworn rival of {{user}}: ' + v.rival);
   if (full) out.push('Anchor: ' + v.anchor);
   return out.join('\n');
 };

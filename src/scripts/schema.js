@@ -196,6 +196,7 @@ export const Schema = z.object({
     $Knows_old: Array.isArray(v.$Knows_old) ? v.$Knows_old.map(s).slice(-40) : [],   // older Knows lines (engine)
     $Defining: Array.isArray(v.$Defining) ? v.$Defining.filter(r => r && typeof r === 'object').map(r => ({ w: s(r.w), n: s(r.n), fx: s(r.fx), s: Number(r.s) || 0 })).slice(-5) : [],   // defining moments (engine)
     $seen: n(v.$seen, -1, 1e9, -1), $mw: n(v.$mw, -1, 1e9, -1),   // last day present; week of the last "Meanwhile" line (engine)
+    $branch: ['friend', 'romance', 'rival'].includes(v.$branch) ? v.$branch : '',   // 1.6.8: the branch the bond took at Rank 8 (engine)
   }), 'Title'),
 
   Campus_State: O({
