@@ -904,7 +904,7 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
     1923).
   - Tests: test_voices_g4_v166.cjs (15 checks). Caspian is now fixed, so test_memory_v160 shows Imprint replacement on Royhan
     (shaped) and test_voices_g1_v163 uses Lucius (a rival with no bond) as the NPC without voice lines; test_voices_g3_v165 checks
-    the G3 part of the data only. Save 1.6.5 added (saves 1.4.6 to 1.6.5 load). npm test 1066 checks; stress passes; token_audit
+    the G3 part of the data only. Save 1.6.5 added (saves 1.4.6 to 1.6.5 load). npm test 1070 checks; stress passes; token_audit
     passes; preset built twice, byte-identical (unchanged). TEST card rebuilt.
 
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)

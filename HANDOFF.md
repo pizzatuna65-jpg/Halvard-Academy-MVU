@@ -199,7 +199,7 @@ python3 tools/gen_ui.py              # ui.template.js, ui/parts, statusbar.templ
 python3 build/build_card.py          # always last -> dist/
 python3 tools/build_test_card.py 7   # optional: dist/test/ TEST card, every bond at Rank 7 (own lorebook name)
 npm run stress                       # optional (~30 s): fuzz, Builder fuzz, a simulated school year (tests/stress/)
-npm test                             # 36 suites + static QA on the built card (1066 checks at v1.6.6)
+npm test                             # 36 suites + static QA on the built card (1070 checks at v1.6.6)
 python3 tests/preview/smoke_all_panels.py   # optional: opens every panel/tab headless (482 views at v1.2.0); expects "errors: none"
 node tests/token_audit.cjs           # optional: always-on prompt size (~9.9k tokens at start, ~14.7k mid-year at v1.3.0)
 python3 presets/edit_preset.py       # regenerates the edited preset from presets/original/ (deterministic; run twice, compare)
