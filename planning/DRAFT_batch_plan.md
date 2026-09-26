@@ -261,7 +261,7 @@ Keputusan owner: selesaikan semua batch dulu. Kalau hasil playtest menunjukkan a
 7. **1.6.2** (E2)
 8. **G1:** `planning/DRAFT_voices.md` untuk 8 NPC kunci. Berhenti di sini dan tunggu review owner (kanon).
 9. Setelah G1 disetujui dan diterapkan (1.6.3): **satu playtest** oleh owner (dari checkpoint setelah Entrance Event), lalu `tools/audit_chat.py` pada export-nya. Temuan playtest menjadi batch perbaikan.
-10. Gelombang G2–G5 sesuai persetujuan owner.
+10. Gelombang G2–G5 sesuai persetujuan owner. Selesai 2026-09-26: G2 di 1.6.4, G3 di 1.6.5, G4 di 1.6.6, G5 di 1.6.7.
 
 **Save lintas versi:** setiap rilis wajib punya tes bahwa save dari rilis sebelumnya termuat tanpa kehilangan data (`fillShape`, `$eng.ver`). Dengan begitu owner bisa melanjutkan satu chat lintas versi tanpa mulai ulang.
 

@@ -290,7 +290,7 @@
    },
    "r10": {
     "name": "Yvette (Rank 10)",
-    "text": "Yvette opens the Workshop and her research to {{user}}: any enchanted item they find, she identifies, repairs or improves. Her rooms in the Fire Dormitory become the one door {{user}} can knock on at any hour, and her lightning answers for them before anyone else's."
+    "text": "Yvette opens the Workshop and her research to {{user}}: any enchanted item they find, she identifies, repairs or improves. The Fire Dormitory's door becomes the one door {{user}} can knock on at any hour: whatever their dorm, she comes down to answer it, and her lightning answers for them before anyone else's."
    }
   },
   "Baelin": {
@@ -312,7 +312,8 @@
    },
    "r10": {
     "name": "Layla (Rank 10)",
-    "text": "Layla shares everything she has pieced together about Halvard's past, and her private tutoring makes History the easiest top mark {{user}} will ever earn. If anyone ever corners {{user}} the way they once cornered Yvette, the gloves come off."
+    "text": "Layla shares everything she has pieced together about Halvard's past, and her private tutoring makes History the easiest top mark {{user}} will ever earn. If anyone ever corners {{user}}, the gloves come off.",
+    "secret": "The last time the gloves came off, it was for Yvette."
    }
   },
   "Vallie": {

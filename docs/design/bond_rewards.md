@@ -154,7 +154,7 @@ mendorong {{user}} ke arc-nya, dan pemain bebas mengabaikannya.
 
 ### Yvette
 - **Gift:** A small floating orb, the little sibling of her own focus. It warms and hums whenever someone nearby means {{user}} harm, because Yvette has never once felt safe at Halvard and does not want {{user}} to be caught unready.
-- **Rank 10:** Yvette opens the Workshop and her research to {{user}}: any enchanted item they find, she identifies, repairs or improves. Her rooms in the Fire Dormitory become the one door {{user}} can knock on at any hour, and her lightning answers for them before anyone else's.
+- **Rank 10:** Yvette opens the Workshop and her research to {{user}}: any enchanted item they find, she identifies, repairs or improves. The Fire Dormitory's door becomes the one door {{user}} can knock on at any hour: whatever their dorm, she comes down to answer it, and her lightning answers for them before anyone else's.
 
 ### Baelin
 - **Gift:** A card on the Headmaster's paper: "Bearer may see me without appointment." Once, he will hear {{user}}'s case in person and rule on it himself, over any other staff decision.
@@ -162,7 +162,8 @@ mendorong {{user}} ke arc-nya, dan pemain bebas mengabaikannya.
 
 ### Layla
 - **Gift:** A signed permission letter granting {{user}} reading rights in the Restricted Section. It opens the oldest records at Halvard, the ones that answer questions classes will not.
-- **Rank 10:** Layla shares everything she has pieced together about Halvard's past, and her private tutoring makes History the easiest top mark {{user}} will ever earn. If anyone ever corners {{user}} the way they once cornered Yvette, the gloves come off.
+- **Rank 10:** Layla shares everything she has pieced together about Halvard's past, and her private tutoring makes History the easiest top mark {{user}} will ever earn. If anyone ever corners {{user}}, the gloves come off.
+  - <narrator_only>The last time the gloves came off, it was for Yvette.</narrator_only>
 
 ### Vallie
 - **Gift:** A carved tusk from the Ironback Boar that took her eye, hung on a cord. Creatures smell a hunter's trophy and back off, which makes the Forest and the Expedition far safer for {{user}}.

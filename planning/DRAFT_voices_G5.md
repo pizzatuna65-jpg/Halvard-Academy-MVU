@@ -1,6 +1,8 @@
 # DRAFT: Suara 14 NPC staf dan lainnya (Batch G, gelombang G5)
 
-Status: **DRAF, belum diterapkan.** Menunggu persetujuan owner per NPC. Ini gelombang terakhir Batch G.
+Status: **DISETUJUI owner 2026-09-26 ("approve": semua usulan `[?]`, termasuk dua teks reward Rank 10) dan DITERAPKAN di rilis
+1.6.7.** Kanonnya sekarang ada di `data/npc_canon.json` dan `data/bond_rewards.json`; file ini disimpan sebagai catatan asal. Ini
+gelombang terakhir Batch G.
 
 NPC di gelombang ini: semua NPC ber-bond yang belum punya suara.
 - **Staf:** Gavlan, Yvette, Baelin, Layla, Vallie, Kuroo, Mimosa, Althair, Ezrel, Ottavio.
