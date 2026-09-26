@@ -1,8 +1,7 @@
 # DRAFT: Suara 5 NPC Year 3 (Batch G, gelombang G4)
 
-Status: **DRAF, belum kanon.** Belum ada satu baris pun dari file ini yang masuk lore, `data/` atau card. Setiap NPC diterapkan
-hanya setelah owner bilang "approve" / "proceed" untuk NPC itu (boleh sebagian, boleh dengan revisi). Kalau owner approve tanpa
-komentar, semua usulan `[?]` di bawah ikut disetujui (sama seperti G1–G3).
+Status: **DISETUJUI owner 2026-09-26 ("approve": semua usulan `[?]`) dan DITERAPKAN di rilis 1.6.6.** Kanonnya sekarang ada di
+`data/npc_canon.json`; file ini disimpan sebagai catatan asal.
 
 NPC di gelombang ini: Year 3 yang belum masuk G1, yaitu **Caspian, Royhan, Sophia, Gareth, Ruby**. Irene dan Etnie sudah selesai di
 G1.

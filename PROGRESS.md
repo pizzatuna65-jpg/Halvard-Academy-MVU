@@ -893,12 +893,26 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   - To confirm with the owner: invented details marked [?] in the draft were approved with it (for example Sister Ann of the
     orphanage, and Krieg signing Dante's report).
 
+- 1.6.6 Batch G, wave G4 (canon, approved by the owner on 2026-09-26: "approve, draft g5", typed straight into the working
+  session): the voice of the Year 3 NPCs not in G1 (Caspian, Royhan, Sophia, Gareth, Ruby), from planning/DRAFT_voices_G4.md,
+  with Stages.
+  - Data: `data/npc_canon.json` `voice` and `change` (Caspian fixed, Royhan shaped, Sophia fixed, Gareth fixed, Ruby fixed).
+    Gareth hides his ambition and his brother's sabotage, so his alone scenes are narrator-only; no stage line names what only
+    his <narrator_only> lore knows. Sophia's Don't flatten keeps her water magic off living bodies (the Blood line). No reward
+    text changed.
+  - Size: one G4 NPC present with a full sheet is 1.7k-1.9k tokens (Caspian 1670, Royhan 1744, Gareth 1761, Ruby 1775, Sophia
+    1923).
+  - Tests: test_voices_g4_v166.cjs (15 checks). Caspian is now fixed, so test_memory_v160 shows Imprint replacement on Royhan
+    (shaped) and test_voices_g1_v163 uses Lucius (a rival with no bond) as the NPC without voice lines; test_voices_g3_v165 checks
+    the G3 part of the data only. Save 1.6.5 added (saves 1.4.6 to 1.6.5 load). npm test 1066 checks; stress passes; token_audit
+    passes; preset built twice, byte-identical (unchanged). TEST card rebuilt.
+
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
-- Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 to 1.6.5 done (G1 in 1.6.3, G2 in 1.6.4, G3 in 1.6.5).
-  NOW: the owner playtests; then run tools/audit_chat.py on the exported chat for the first MVU baseline. Next canon wave: G4
-  (Year 3), drafted in planning/DRAFT_voices_G4.md, applied only after approval.
+- Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 to 1.6.6 done (G1 in 1.6.3, G2 in 1.6.4, G3 in 1.6.5,
+  G4 in 1.6.6). NOW: the owner playtests; then run tools/audit_chat.py on the exported chat for the first MVU baseline. Last canon
+  wave: G5 (staff and others), drafted in planning/DRAFT_voices_G5.md, applied only after approval.
 - Playtest v1.3.2 in ST: a pact with abilities (Builder → Pacts, Techniques page), summon it and have it use an ability
   (charged once, not charged when not summoned).
 - Playtest v1.3.1 in ST: meet Etnie (Rank 3 on the spot), Etnie's dossier (no "{{user}}"), walk to the Boathouse and the Fishing
