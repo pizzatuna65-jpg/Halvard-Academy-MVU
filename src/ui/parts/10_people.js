@@ -199,9 +199,11 @@ function groupsOf(S) {
     const m = Object.keys(DATA.npcs).filter(id => (DATA.npcs[id].dm === dm && /^Year/.test(DATA.npcs[id].g)) || (DATA.dormhead || {})[id] === dm);
     out.push(['dorm:' + dm, dm + ' Dormitory', m, P.Dorm === dm]);
   }
+  // 1.6.11 (owner playtest: Ottavio at Rank 0 already showed his club): someone shows in a club once their Club field is open
+  // (Rank 1), the same rule as the club list in Activities (clubFieldOpen)
   if (view.ggroups.has('club')) for (const c of DATA.clubs || []) {
     const mine = !!P.Club && (String(P.Club).toLowerCase().includes(String(c.key).toLowerCase()) || String(P.Club).toLowerCase() === String(c.name).toLowerCase());
-    out.push(['club:' + c.key, c.name, [...(c.members || []), ...(c.advisors || [])], mine]);
+    out.push(['club:' + c.key, c.name, [...(c.members || []), ...(c.advisors || [])].filter(id => clubFieldOpen(id, S)), mine]);
   }
   if (view.ggroups.has('faction')) for (const f of DATA.factions || []) {
     const m = f.secret && f.secret.length ? f.members.filter(id => revealed(S, id).some(t => f.secret.includes(String(t).toLowerCase()))) : f.members;
