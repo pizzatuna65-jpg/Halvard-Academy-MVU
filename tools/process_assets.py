@@ -15,7 +15,7 @@ cascade = cv2.CascadeClassifier(P('tools/animeface.xml'))
 TOVR = json.load(open(P('data/thumb_overrides.json'))) if os.path.exists(P('data/thumb_overrides.json')) else {}
 OVR = json.load(open(P('data/focus_overrides.json'))) if os.path.exists(P('data/focus_overrides.json')) else {}
 for d in ('portraits', 'thumbs', 'map'): os.makedirs(P('assets_hosting', d), exist_ok=True)
-manifest = {'base_url': 'https://cdn.jsdelivr.net/gh/pizzatuna65-jpg/eldrasil-assets@4b6a10d6b91bd5feaf1509e7876c13e09f88bc2f/', 'npcs': {}, 'map': 'map/halvard_map.webp', 'map_size': [1536, 1024]}
+manifest = {'base_url': 'https://cdn.jsdelivr.net/gh/pizzatuna65-jpg/eldrasil-assets@172dc4a91a54c2a9b6b0d5de67bf2ccb41f6da93/', 'npcs': {}, 'map': 'map/halvard_map.webp', 'map_size': [1536, 1024]}
 first_names = [n.split()[0] for n in names.values()]
 assert len(first_names) == len(set(first_names)), 'first names not unique'
 for uid, name in sorted(names.items()):

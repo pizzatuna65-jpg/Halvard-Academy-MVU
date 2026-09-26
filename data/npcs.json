@@ -5555,11 +5555,11 @@
   ],
   "team_role": null,
   "nickname": null,
-  "portrait": null,
-  "thumb": null,
+  "portrait": "portraits/linus.webp",
+  "thumb": "thumbs/linus.webp",
   "focus": [
-   50,
-   25
+   50.0,
+   28.0
   ],
   "has_secret": false,
   "fields": [
@@ -5670,11 +5670,11 @@
   ],
   "team_role": null,
   "nickname": null,
-  "portrait": null,
-  "thumb": null,
+  "portrait": "portraits/maple.webp",
+  "thumb": "thumbs/maple.webp",
   "focus": [
-   50,
-   25
+   50.0,
+   29.0
   ],
   "has_secret": false,
   "fields": [
@@ -5790,11 +5790,11 @@
   ],
   "team_role": null,
   "nickname": null,
-  "portrait": null,
-  "thumb": null,
+  "portrait": "portraits/nerys.webp",
+  "thumb": "thumbs/nerys.webp",
   "focus": [
-   50,
-   25
+   50.0,
+   25.0
   ],
   "has_secret": false,
   "fields": [
@@ -5904,11 +5904,11 @@
   ],
   "team_role": null,
   "nickname": null,
-  "portrait": null,
-  "thumb": null,
+  "portrait": "portraits/hadrian.webp",
+  "thumb": "thumbs/hadrian.webp",
   "focus": [
-   50,
-   25
+   49.5,
+   31.0
   ],
   "has_secret": true,
   "fields": [
@@ -6024,11 +6024,11 @@
   ],
   "team_role": null,
   "nickname": null,
-  "portrait": null,
-  "thumb": null,
+  "portrait": "portraits/wren.webp",
+  "thumb": "thumbs/wren.webp",
   "focus": [
-   50,
-   25
+   68.0,
+   31.0
   ],
   "has_secret": false,
   "fields": [
@@ -6151,11 +6151,11 @@
   ],
   "team_role": null,
   "nickname": null,
-  "portrait": null,
-  "thumb": null,
+  "portrait": "portraits/tsubaki.webp",
+  "thumb": "thumbs/tsubaki.webp",
   "focus": [
-   50,
-   25
+   52.0,
+   22.0
   ],
   "has_secret": false,
   "fields": [

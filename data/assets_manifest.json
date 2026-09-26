@@ -1,5 +1,5 @@
 {
- "base_url": "https://cdn.jsdelivr.net/gh/pizzatuna65-jpg/eldrasil-assets@4b6a10d6b91bd5feaf1509e7876c13e09f88bc2f/",
+ "base_url": "https://cdn.jsdelivr.net/gh/pizzatuna65-jpg/eldrasil-assets@172dc4a91a54c2a9b6b0d5de67bf2ccb41f6da93/",
  "npcs": {
   "Irene": {
    "uid": 98,
@@ -600,6 +600,78 @@
    ],
    "focus_source": "manual",
    "source_file": "Bobby_Becket_staff.png"
+  },
+  "Linus": {
+   "uid": 410,
+   "name": "Linus Tallyworth",
+   "portrait": "portraits/linus.webp",
+   "thumb": "thumbs/linus.webp",
+   "focus": [
+    50.0,
+    28.0
+   ],
+   "focus_source": "manual",
+   "source_file": "(uploaded as WebP to eldrasil-assets 172dc4a)"
+  },
+  "Maple": {
+   "uid": 411,
+   "name": "Maple Fernhollow",
+   "portrait": "portraits/maple.webp",
+   "thumb": "thumbs/maple.webp",
+   "focus": [
+    50.0,
+    29.0
+   ],
+   "focus_source": "manual",
+   "source_file": "(uploaded as WebP to eldrasil-assets 172dc4a)"
+  },
+  "Nerys": {
+   "uid": 412,
+   "name": "Nerys Silvarenne",
+   "portrait": "portraits/nerys.webp",
+   "thumb": "thumbs/nerys.webp",
+   "focus": [
+    50.0,
+    25.0
+   ],
+   "focus_source": "manual",
+   "source_file": "(uploaded as WebP to eldrasil-assets 172dc4a)"
+  },
+  "Hadrian": {
+   "uid": 413,
+   "name": "Hadrian Quelloris",
+   "portrait": "portraits/hadrian.webp",
+   "thumb": "thumbs/hadrian.webp",
+   "focus": [
+    49.5,
+    31.0
+   ],
+   "focus_source": "manual",
+   "source_file": "(uploaded as WebP to eldrasil-assets 172dc4a)"
+  },
+  "Wren": {
+   "uid": 414,
+   "name": "Wren Marlowe",
+   "portrait": "portraits/wren.webp",
+   "thumb": "thumbs/wren.webp",
+   "focus": [
+    68.0,
+    31.0
+   ],
+   "focus_source": "manual",
+   "source_file": "(uploaded as WebP to eldrasil-assets 172dc4a)"
+  },
+  "Tsubaki": {
+   "uid": 415,
+   "name": "Tsubaki Hoshikage",
+   "portrait": "portraits/tsubaki.webp",
+   "thumb": "thumbs/tsubaki.webp",
+   "focus": [
+    52.0,
+    22.0
+   ],
+   "focus_source": "manual",
+   "source_file": "(uploaded as WebP to eldrasil-assets 172dc4a)"
   }
  },
  "map": "map/halvard_map.webp",

@@ -23,7 +23,9 @@ const Y1 = initState(), Y2 = W(initState(), { Year: 2 }), Y3 = W(initState(), { 
 // ---- data
 ok(JSON.stringify(COH['2']) === JSON.stringify(NEW) && NEW.every(id => npcs[id] && npcs[id].arrives === 2 && npcs[id].group === 'Year 1'), 'cohorts.json: the six arrive in Year 2 as first-years');
 ok(npcs.Maple.beast === 'red panda' && npcs.Tsubaki.beast === 'wolf' && npcs.Nerys.race === 'Elf' && npcs.Linus.dorm === 'Viridian' && npcs.Wren.dorm === 'Fire', 'roster attributes parsed (red panda B included)');
-ok(NEW.every(id => npcs[id].portrait === null && npcs[id].thumb === null), 'no portraits yet: the UI shows initials');
+// 1.7.1: the owner uploaded their portraits to eldrasil-assets (172dc4a); the manifest pins that commit
+const MAN = JSON.parse(rd('data/assets_manifest.json'));
+ok(/eldrasil-assets@172dc4a91a54c2a9b6b0d5de67bf2ccb41f6da93\/$/.test(MAN.base_url) && NEW.every(id => npcs[id].portrait === `portraits/${id.toLowerCase()}.webp` && npcs[id].thumb === `thumbs/${id.toLowerCase()}.webp`), 'portraits and thumbnails for all six, from the pinned assets commit');
 ok(NEW.every(id => C.voice[id] && C.change[id] && C.branch[id]) && ['Nerys', 'Hadrian', 'Tsubaki'].every(id => C.branch[id] === 'A') && ['Linus', 'Maple', 'Wren'].every(id => C.branch[id] === 'C'), 'voice, Change and Rank 8 branch for all six (A: Nerys, Hadrian, Tsubaki; C: Linus, Maple, Wren)');
 ok(C.voice.Hadrian.alone.length === 1 && NEW.filter(id => id !== 'Hadrian').every(id => !C.voice[id].alone.length), 'only Hadrian has an alone line');
 ok(B.Linus.r10.train === 'mana' && B.Tsubaki.r10.train === 'stamina' && NEW.every(id => B[id].gift.name && B[id].r10.name), 'rewards for all six; Rank 10 training: Linus mana, Tsubaki stamina');
@@ -83,10 +85,11 @@ ok(af && /Linus Tallyworth/.test(af[1]) && !U.fieldUnlocked('Aiden', af, bondAt(
 const e = U.DATA.rel.find(x => x[0] === 'Aiden' && x[1] === 'Linus');
 ok(e && !U.edgeVisible(e, bondAt(Y1, 10)) && U.edgeVisible(e, bondAt(Y2, 10)), 'the Aiden → Linus line: hidden in Year 1, visible in Year 2');
 ok(!U.DATA.rel.some(x => x[0] === 'Aiden' && x[1] === 'Sophia' && x[5].some(n => /graduated/.test(n))), "Aiden's Year 2 aside about Sophia graduating makes no Aiden → Sophia line");
-ok(/<span class="av fb"/.test(U.avatar('Linus', bondAt(Y2, 1))), 'no portrait: the avatar is the initials, no image request');
+ok(/<img class="av"[^>]*thumbs\/linus\.webp/.test(U.avatar('Linus', bondAt(Y2, 1))), 'the avatar is his thumbnail');
+U.DATA.npcs.Linus.t = null; ok(/<span class="av fb"/.test(U.avatar('Linus', bondAt(Y2, 1))), 'an NPC without a thumbnail shows initials, no image request'); U.DATA.npcs.Linus.t = 'thumbs/linus.webp';
 const real = (s, r) => { const x = T(s, [here(['Aiden', 'Linus'])]); for (const b of Object.values(x.Bonds)) b.Rank = r; return x; };
 U.view.arg = 'Linus'; const dos = U.PANELS.npc.render(real(Y2, 6));
-ok(/<span class="por fb">LT<\/span>/.test(dos) && /Linus Tallyworth/.test(dos) && /How they see others/.test(dos), "Linus's dossier in Year 2: initials for the portrait, his views of others at Rank 6");
+ok(/<img class="por" src="[^"]*portraits\/linus\.webp"/.test(dos) && /Linus Tallyworth/.test(dos) && /How they see others/.test(dos), "Linus's dossier in Year 2: his portrait, his views of others at Rank 6");
 U.view.arg = 'Aiden'; ok(!/Linus/.test(U.PANELS.npc.render(real(Y1, 10))) && /Linus Tallyworth/.test(U.PANELS.npc.render(real(Y2, 10))), "Aiden's dossier at Rank 10: no word of Linus in Year 1");
 const rel = JSON.parse(rd('data/relations.json')), has = (a, b, t) => rel.some(x => x.from === a && x.to === b && x.type === t);
 ok([['Linus', 'Aiden', 'friends'], ['Florian', 'Linus', 'dislike'], ['Ottavio', 'Maple', 'protective'], ['Nerys', 'Yvette', 'protective'], ['Tilly', 'Nerys', 'rivals'],
@@ -97,7 +100,7 @@ ok(!rel.some(x => (x.from === 'Krieg' && ['Maple', 'Tsubaki'].includes(x.to)) ||
 // ---- a 1.6.11 save loads
 const save = JSON.parse(rd('tests/fixtures/saves/save_1.6.11.json'));
 const L = T(save, []);
-ok(L.$eng.ver === '1.7.0' && Object.keys(save.Bonds).every(id => L.Bonds[id] && L.Bonds[id].Rank === save.Bonds[id].Rank && L.Bonds[id].Trust === save.Bonds[id].Trust) && L.Journal.length >= save.Journal.length,
+ok(L.$eng.ver === JSON.parse(rd('src/card/card.json')).character_version && Object.keys(save.Bonds).every(id => L.Bonds[id] && L.Bonds[id].Rank === save.Bonds[id].Rank && L.Bonds[id].Trust === save.Bonds[id].Trust) && L.Journal.length >= save.Journal.length,
   'the 1.6.11 save loads with every bond, rank, Trust and the journal kept');
 
 // ---- size: each new NPC alone, full sheet (Year 2)

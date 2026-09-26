@@ -949,7 +949,22 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   - To confirm with the owner: nothing beyond the approved drafts. The TEST card still sets every bond to Rank 7, so each 7->8
     event shows its branch direction.
 
-- 1.7.0 Cohort 2: six new first-years who arrive in campaign Year 2 (owner, 2026-09-26: "implementasi draft cohort year 2 ke
+- 1.7.1 Cohort 2 portraits and a plain SillyTavern lorebook (owner, 2026-09-26: "image sudah ada di repo image ... setelah itu buat
+  update lorebook silly tavern biasa berdasarkan 1.7").
+  - Portraits: the owner uploaded portraits/<name>.webp and thumbs/<name>.webp for the six to eldrasil-assets (commits 914d201,
+    172dc4a; nothing else changed there). `data/assets_manifest.json` now pins 172dc4a and lists the six, with a face focus read
+    from the portraits (Linus 50/28, Maple 50/29, Nerys 50/25, Hadrian 49.5/31, Wren 68/31, Tsubaki 52/22).
+  - Plain lorebook: `tools/export_st_lorebook.py` writes `dist/lorebook_st/Eldrasil_<version>_Core.json` and `_NPC_Detailed.json`
+    (import both in SillyTavern's World Info, for use without the card). Source: the v39 export (the owner's v38 + every card lore
+    edit, the 2026-09-25 NPC pass, cohort 2) plus each NPC's voice canon appended to their entry (scene examples, never sounds
+    like, terms, props, don't flatten, how the bond grows by closeness, what the closest bond can become, anchor, Change; alone
+    lines stay <narrator_only>). No EJS, no variables: campaign years read as "{{user}}'s second year", and the roster lists
+    cohort 2 on its own "Arriving as first-years in {{user}}'s second year" line. Mechanics (ranks, Trust, rewards, Nerys's weekly
+    list) are card-only and not carried over. The card pipeline still reads the v39 export.
+  - Tests: test_stlorebook_v171.cjs (15 checks); test_cohort2_v170 now checks the portraits. Save 1.7.0 added. npm test 1259
+    checks (43 suites + static QA); stress passes; smoke 550 views, no errors; token_audit unchanged; preset built twice,
+    byte-identical (unchanged).
+ who arrive in campaign Year 2 (owner, 2026-09-26: "implementasi draft cohort year 2 ke
   character card", draft `planning/DRAFT_cohort2_npcs.md`, approved in the Brainstorming thread; the owner's instruction to apply it
   is taken as approval of A6, the relation network, which the draft still marked as waiting). HANDOFF §4 "Cohorts" is used as
   designed; no established decision changed.
@@ -1083,7 +1098,7 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
-- 1.7.0: cohort 2 (six first-years from campaign Year 2) is in; they need portraits (owner's PNGs).
+- 1.7.0/1.7.1: cohort 2 (six first-years from campaign Year 2) is in, with portraits; plain SillyTavern lorebook in dist/lorebook_st/.
 - Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 to 1.6.7 done (G1 in 1.6.3, G2 in 1.6.4, G3 in 1.6.5,
   G4 in 1.6.6, G5 in 1.6.7; every bonded NPC has a voice), plus the Rank 8 branches in 1.6.8 and the 1.6.9 bug hunt. NOW: the owner playtests (docs/TEST_CHECKLIST_v1.6.md first); then run tools/audit_chat.py on the exported
   chat for the first MVU baseline.
@@ -1152,7 +1167,7 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   Player.Profile.Year at a new campaign year. Payouts continue regardless.
 - A student the story keeps back (removed from Campus_State.Graduated) does not graduate automatically in a later year (shown as
   "repeating" in the roster); the story handles them.
-- Cohort 2 (Year 2) done in 1.7.0; a Year 3 cohort would follow the same playbook (HANDOFF §6). Their portraits are still missing.
+- Cohort 2 (Year 2) done in 1.7.0, portraits in 1.7.1; a Year 3 cohort would follow the same playbook (HANDOFF §6).
 - Location Regulars lore text: since 1.7.0 a cohort's names are added behind the same campaign-year gate (merge_lorebooks.py COHORT_REGULARS).
 - No save-migration protocol yet beyond fillShape() and $eng.ver (bug hunt B §8.9: ID renames, field renames, downgrades need one).
 - UI latestState() may walk back through many floors when only an early floor holds state (bug hunt B §8.2); not measured in ST.
