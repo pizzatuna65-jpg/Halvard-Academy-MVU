@@ -1413,7 +1413,7 @@ const npcOf = id => DATA.npcs && DATA.npcs[id];
 const _edgeNames = new WeakMap();
 function namedByEdges(S) {
   if (!S || typeof S !== 'object') return new Set();
-  if (!_edgeNames.has(S)) _edgeNames.set(S, new Set((DATA.rel || []).filter(e => !e[6] && edgeVisible(e, S) && ((S.Bonds || {})[e[0]])).map(e => e[1])));   // 1.4.2: group-rule lines (e[6]) name no one
+  if (!_edgeNames.has(S)) _edgeNames.set(S, new Set((DATA.rel || []).filter(e => !e[6] && edgeVisible(e, S) && ((S.Bonds || {})[viaOf(e)])).map(e => viaOf(e) === e[0] ? e[1] : e[0])));   // 1.4.2: group-rule lines (e[6]) name no one
   return _edgeNames.get(S);
 }
 const knowsName = (id, S) => { const b = ((S && S.Bonds) || {})[id]; return !!((b && b.Rank >= 1) || ((S && S.$ui && S.$ui.names) || []).includes(id) || namedByEdges(S).has(id)); };
@@ -1443,11 +1443,13 @@ function fieldUnlocked(id, f, S) {   // f = [label, text, rank]
   const b = ((S && S.Bonds) || {})[id];
   return f[2] <= (b ? b.Rank : 0);
 }
+// 1.6.10 (owner): a line is how FROM sees TO; 'rank:N@Via' when another person's file (and bond) tells you, often TO's own
+const viaOf = e => e[4].split('@')[1] || e[0];
 function edgeVisible(e, S) {         // e = [from, to, type, types, visibility, notes]
   const v = e[4]; if (v === 'public') return true;
-  const r = Number(v.split(':')[1]);
-  if (r >= 99) return revealed(S, e[0]).includes('relationship');
-  const b = ((S && S.Bonds) || {})[e[0]];
+  const r = Number(v.split('@')[0].split(':')[1]), via = viaOf(e);
+  if (r >= 99) return revealed(S, via).includes('relationship');
+  const b = ((S && S.Bonds) || {})[via];
   return !!(b && b.Rank >= r);
 }
 /*@@PARTS@@*/

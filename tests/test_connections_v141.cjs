@@ -12,8 +12,9 @@ ok(Object.keys(U.EDGE).join() === 'romance,friends,softspot,protective,respect,r
 ok(rel('Gavlan', 'Sophia')[2] === 'wary' && rel('Saffi', 'Lenna')[2] === 'friends' && rel('Sophia', 'Rei')[2] === 'respect' && rel('Kuroo', 'Tilly')[2] === 'wary' && rel('Royhan', 'Milena')[2] === 'friends',
   'the playtest oddities are fixed: Gavlan wary of Sophia, Saffi & Lenna friends, Sophia respects Rei, Kuroo wary of Tilly, Royhan & Milena friends');
 ok(rel('Althair', 'Ezrel')[2] === 'softspot' && rel('Baelin', 'Althair')[2] === 'wary' && rel('Kuroo', 'Mimosa')[2] === 'protective' && rel('Kuroo', 'Mimosa')[4] === 'public', 'soft spot, wary allies (Baelin and Althair), a public mentor tie');
-const cur = U.DATA.rel.filter(e => !e[6] && !(e[1] === 'Althair' && !CUR.edges[e[0] + '>Althair']));   // 1.4.2 rule lines aside
-ok(cur.length === Object.values(CUR.edges).filter(v => v !== 'drop').length && !rel('Mimosa', 'Irene'), `${cur.length} curated lines; passing facts dropped`);
+const cur = U.DATA.rel.filter(e => !e[6] && !(e[1] === 'Althair' && e[5][0] === CUR.disliked_by_all.Althair.note));   // 1.4.2 rule lines aside
+const nLines = Object.values(CUR.edges).flatMap(v => [].concat(v)).filter(v => v !== 'drop').length;   // 1.6.10: a key can hold a list of lines
+ok(cur.length === nLines && !rel('Mimosa', 'Irene'), `${cur.length} curated lines; passing facts dropped`);
 ok(/new = \[f"\{a\}>\{b\}" for \(a, b\) in edges if/.test(fs.readFileSync(path.join(ROOT, 'tools/build_relations.py'), 'utf8')), 'the build refuses lines that were never curated');
 
 // groups

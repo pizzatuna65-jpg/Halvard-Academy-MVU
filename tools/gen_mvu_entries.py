@@ -94,6 +94,7 @@ OPEN_OF = {nid: tag for tag in ('open', 'guarded', 'closed') for nid in OPN[tag]
 GATE_RX = re.compile(r"^<%_ if \(!\(\(getvar\('stat_data\.\$ui\.cast'\) \|\| \{\}\)\.full \|\| \[\]\)\.includes\('(\w+)'\)\) \{ _%>\n([\s\S]*)\n<%_ \} _%>$")
 def cast_npc(nid, n):
     ties = sorted([r for r in rels if r['from'] == nid], key=lambda r: (TIE_ORDER.index(r['type']), r['to']))
+    ties = [r for i, r in enumerate(ties) if r['to'] not in [x['to'] for x in ties[:i]]]   # 1.6.10: one tie per person (two files can tell the same line)
     ties = [r for r in ties if not (r['type'] == 'dislike' and r['to'] == 'Althair')][:4]   # everyone dislikes Althair one way (1.4.2)
     o = ten_d['overrides'].get(nid) or {}
     ten_never = o.get('never') or (ten_d['categories'].get(ten_d['npcs'].get(nid)) or {}).get('never')
@@ -126,7 +127,7 @@ for nid, n in sorted(npcs.items()):
                   f"<%_ }} else if (BRIEF.includes('{nid}')) {{ _%>\n<%- [cHead('{nid}', false), cVoice('{nid}', false), cMem('{nid}', false)].filter(Boolean).join('\\n') %>\n<%_ }} _%>")
 for r in rels:
     if r['from'] in npcs and r['to'] in npcs:
-        CAST['rel'].setdefault(r['from'], {})[r['to']] = r['type'] + (('. ' + r['notes'][0]) if r.get('notes') else '')
+        CAST['rel'].setdefault(r['from'], {}).setdefault(r['to'], r['type'] + (('. ' + r['notes'][0]) if r.get('notes') else ''))
 cs = open(P('src/worldbook/custom/509.template.ejs'), encoding='utf-8').read()
 cs = re.sub(r'^// .*\n', '', cs, flags=re.M)
 assert '/*@@CAST@@*/{}' in cs and '@@SHEETS@@' in cs

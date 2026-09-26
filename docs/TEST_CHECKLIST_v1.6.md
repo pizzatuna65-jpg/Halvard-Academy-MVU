@@ -1,4 +1,4 @@
-# Test checklist — card v1.6.9 with the edited preset and VectFox
+# Test checklist — card v1.6.10 with the edited preset and VectFox
 
 Automated (all passing at 1.6.9): `npm test` = 39 suites + static QA, 1159 checks (every save from 1.4.6 to 1.6.8 loads);
 `npm run stress` plus the fuzz on seeds 2-9 (48,000 random updates, no problems); `tests/preview/smoke_all_panels.py` 550 views,
@@ -53,3 +53,7 @@ Everything below can only be checked inside SillyTavern. Most important first. E
 ## Continuing a chat across versions
 - [ ] Open a chat started on 1.6.8 after importing 1.6.9: the card asks to update its lorebook; after that the next reply keeps
       every bond, rank, Trust, perk and Journal line (check Student file and People).
+
+## Card 1.6.10: Connections direction
+- [ ] People → Connections with Kuroo, Etnie and Mimosa met: arrows from Kuroo to Etnie and from Kuroo to Mimosa (protective,
+      one way); Gavlan and Gareth: one arrow from Gavlan. Click a line: each "X's side" note describes X's own view or doing.
