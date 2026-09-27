@@ -108,20 +108,29 @@ Kaitan canon: katana Tsubaki dan pedang Rei berasal dari sini (edit di bawah); A
 | Kingdom — Eldrasil (1) | semua | Daftar negara: `Sunreach Bay, Velmora, the Arslan Sultanate, Norvaine, Caelmar and Yozakura are named.` |
 | Banking House (92) | Arslan | `A branch of the World Bank of the Arslan Sultanate; its clerks answer to the Sultanate, not the academy.` (menjelaskan kenapa Bank termasuk kekuatan luar) |
 | Event — Star Night (22) | Utara | `Far to the north, the same midnight is the one Norvaine dreads: the night Yog-Sothoth takes its Chosen.` |
-| Competitions (19) | Yozakura, Norvaine, Caelmar | `The favourites at the World Competition are Yozakura, Norvaine and Caelmar.` |
+| Competitions (19), World tier | semua | `Nations at the World Competition include Yozakura, Norvaine and Caelmar, the usual favourites, the Arslan Sultanate, Velmora and Sunreach Bay.` |
 | Airships (231) | Yozakura | `Most airship lines on the continent are Yozakuran companies, and so are their crews.` |
 | Tsubaki Hoshikage (lore cohort 2) | Yozakura | Equipment: "a curved single-edged blade from far across the sea" → "a katana forged in Yozakura, far to the south" |
 | Rei Kestrane (lore staff) | Yozakura | Weapon: "A long single-edged sword." → "A long single-edged katana forged in Yozakura." |
 | Observation Tower (81) | Norvaine | `Its great telescope has a Norvaine starglass lens, the Divination Society's pride.` |
-| Kanae Quveno (lore year 2) | Norvaine | Baris baru: `Her crystal ball is Norvaine starglass, and nobody else is allowed to touch it.` |
+| Kanae Quveno (lore_year2.md) | Norvaine | Baris baru: `Her crystal ball is Norvaine starglass, and nobody else is allowed to touch it.` |
 | Magitech - Mana Grid (219) | Caelmar | `Most lanterns and wall torches are Caelmari-made, bought by the thousand.` |
 | Commissary (83) | Caelmar | `Its cheap stationery and everyday kit are Caelmari-made.` |
 | Classes - Etiquette (28) | Velmora | `Etiquette follows Velmoran court manners, the continent's standard.` |
 | The Mall (66) | Yozakura | `Its busiest tea house is a Yozakuran chain.` |
 | Sunreach Bay (246) | Yozakura | `Half its hotels are Yozakuran.` |
+| Event - Graduation (248) | Arslan | "the Bank" → "the World Bank (Arslan Sultanate)" di daftar meja rekrutmen |
+| Noble Houses' Liaison (91) | Velmora | `Its protocol follows Velmoran court manners.` |
+| Workshop (55) | Caelmar | `Its lathes and tool racks are Caelmari-made.` |
+| Classes - Combat (30) | Norvaine | `Its drills borrow from Norvaine's army, the strongest on the continent.` |
 | World Myth - The Devoured Kingdom (273) | Arslan | keyword `Arslan`, `Arslan Sultanate` dihapus dari sini (pindah ke entry negara). |
 
 ## Keputusan (owner, 2026-09-27)
+
+- Setiap negara punya mention di beberapa entry (owner): Arslan 4 (WORLD INDEX, Kingdom, Banking House, Graduation), Velmora 5
+  (+ Etiquette, Liaison, Tilly), Norvaine 7 (+ Star Night, Observation Tower, Kanae, Combat), Caelmar 5 (+ Mana Grid, Commissary,
+  Workshop), Yozakura 8 (+ Airships, Tsubaki, Rei, Mall, Sunreach Bay), Sunreach Bay (entry sendiri, Academy Trip). Semua negara
+  juga di WORLD INDEX, Kingdom — Eldrasil dan World Competition (Competitions, tier World).
 
 - Caelmar = hive city; Shiranui diganti Yozakura (selatan, Jepang, Beastkin, perusahaan jasa, raja Alpha dari turnamen);
   favorit World Competition lebih dari satu (owner: seperti Piala Dunia): Yozakura, Norvaine, Caelmar.
