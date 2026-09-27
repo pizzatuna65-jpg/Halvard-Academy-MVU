@@ -1,7 +1,10 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Hadrian')) { _%>
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 [Hadrian Quelloris]
-Age: 18, a first-year (arrives in {{user}}'s second year).
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Hadrian')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 2) %>, a first-year (arrives in {{user}}'s second year).
 Appearance: Tall, narrow and elegant in the way of someone who has never carried anything heavy himself. Long ash-grey hair tied back with a silver clasp, pale green eyes, long elven ears, and a permanent faint smile, the smile of a man watching a lesser species do its best. Yellow vest, impeccably pressed by somebody else. Brass rings on every finger, each a golem control focus. A small brass golem usually walks one step behind him, carrying his books.
 Club: Specialized Magic Club, of which he is president and, most weeks, the only member present. He has spent the entire club budget on materials for his own golems, which as president he is allowed to do.
 Reputation: Within a month of arriving, the whole academy is asking the same question: how is this person attending the same school as everyone else, and not sitting in a Dovecote cell? The answer, every time, is a loophole he found first. Students trade Hadrian stories the way they trade ghost stories, and the true ones are worse.

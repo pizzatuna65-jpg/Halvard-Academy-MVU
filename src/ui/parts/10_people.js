@@ -99,7 +99,7 @@ PANELS.npc = {
     if (dm.length) h += `<h3>Defining moments</h3><ul class="log">${dm.map(r => `<li><span class="sub">${esc(r.w)}</span> ${esc(youText(r.n, S))}${r.fx ? ` <span class="sub">(${esc(r.fx)})</span>` : ''}</li>`).join('')}</ul>`;
     if (n) {
       const open = n.fl.filter(f => fieldUnlocked(id, f, S) && !(/^(full )?name$/i.test(f[0]) && !knowsName(id, S)));
-      h += open.map(f => `<h3>${esc(f[0])}${f[2] >= 99 ? ' <span class="pill f">uncovered</span>' : ''}</h3><p class="fv">${esc(f[1])}</p>`).join('');
+      h += open.map(f => `<h3>${esc(f[0])}${f[2] >= 99 ? ' <span class="pill f">uncovered</span>' : ''}</h3><p class="fv">${esc(ageNow(n, f, S))}</p>`).join('');
       const locked = _.groupBy(n.fl.filter(f => f[2] < 99 && !(f[3] > curYear(S)) && !fieldUnlocked(id, f, S)), f => f[2]);   // 1.7.0: a later cohort's lines are not even hinted
       const lk = Object.keys(locked).sort((a, c) => a - c);
       if (lk.length) h += `<h3>Still to learn</h3>${lk.map(r => `<div class="lock">Rank ${r}: ${esc(_.uniq(locked[r].map(f => f[0])).join(', '))}</div>`).join('')}`;

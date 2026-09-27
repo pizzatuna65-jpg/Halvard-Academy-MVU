@@ -1,6 +1,6 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Kuroo')) { _%>
 [Kuroo Varnell]
-Role: Teaching first-year Etiquette for five years; advises the Card Club. Head of the Viridian Dormitory, his old dorm, and lives there. Age 35. A Halvard alumnus (Viridian Dormitory), same year as Rei.
+Role: Teaching first-year Etiquette for five years; advises the Card Club. Head of the Viridian Dormitory, his old dorm, and lives there. Age <%- 35 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. A Halvard alumnus (Viridian Dormitory), same year as Rei.
 Appearance: Tall and lean, narrow hazel eyes with a cat-like cast that make him look sly and intimidating, black hair spiking upward in a permanent bed-head. Black suit and white shirt.
 Magic: Spiritual.
 - Sharing (his "Circulation"): links with one ally within 10 metres. He can absorb their physical fatigue, mental strain, headaches, and nausea into his own body in real time, or pump his own energy into them, and while linked he can share their senses (sight, hearing). The lawful opposite of Drawing: he takes on burdens, never will.

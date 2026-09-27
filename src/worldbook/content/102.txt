@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Lenna')) { _%>
 [Lenna Greenwind]
-Age: 19 (young even by elven standards).
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Lenna')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 19 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %> (young even by elven standards).
 Appearance: Long green hair, ice-blue eyes, pointed ears, short and curvy. Red vest, skirt, white long-sleeved shirt, stockings. Off duty, simple t-shirts and shorts.
 Magic: Elemental — Earth. Also has a knack for sensing and soothing nature.
 Skills: Earth magic, cooking, archery (on the Archery Range, where magic is banned), fighting.

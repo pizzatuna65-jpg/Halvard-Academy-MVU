@@ -152,12 +152,13 @@ function datedItems(S) {
 
 // ---------------------------------------------------------------- journal
 function nbJournal(S) {
-  const parse = (l, old) => { const m = /^\[M(\d+) W(\d) (\w{3})\]\s*(.*)$/.exec(l); return m ? { M: +m[1], W: +m[2], D: m[3], t: m[4], old } : { M: 0, t: l, old }; };
+  // 1.7.1: from campaign Year 2 lines carry their year ("[Y2 M1 W1 Mon]"); a line without one is from Year 1. Groups are year + month.
+  const parse = (l, old) => { const m = /^\[(?:Y(\d+) )?M(\d+) W(\d) (\w{3})\]\s*(.*)$/.exec(l); return m ? { Y: +(m[1] || 1), M: +m[2], W: +m[3], D: m[4], t: m[5], old, g: `${+(m[1] || 1)}-${+m[2]}` } : { M: 0, t: l, old, g: '0' }; };
   // 5.3 (F21): archived lines (the narrator no longer reads them) stay in the player's journal, shown faded
   const J = [...((S.$ui || {}).archive || []).map(l => parse(l, true)), ...(S.Journal || []).map(l => parse(l, false))];
-  const groups = _.groupBy([...J].reverse(), 'M');
-  const months = [...new Set([...J].reverse().map(e => e.M))];
-  const tl = J.length ? months.map(M => `<h4>${M ? `Month ${M}` : 'Undated'}</h4><ol class="jt">${groups[M].map(e => `<li${e.old ? ' class="old" title="Archived: the narrator no longer reads this line"' : ''}>${e.W ? `<span class="sub">W${e.W} ${e.D}</span>` : ''}${esc(e.t)}</li>`).join('')}</ol>`).join('') : '<div class="empty">Nothing written yet.</div>';
+  const groups = _.groupBy([...J].reverse(), 'g'), years = J.some(e => e.Y > 1);
+  const months = [...new Set([...J].reverse().map(e => e.g))];
+  const tl = J.length ? months.map(g => { const e0 = groups[g][0]; return `<h4>${e0.M ? `${years ? `Year ${e0.Y}, ` : ''}Month ${e0.M}` : 'Undated'}</h4><ol class="jt">${groups[g].map(e => `<li${e.old ? ' class="old" title="Archived: the narrator no longer reads this line"' : ''}>${e.W ? `<span class="sub">W${e.W} ${e.D}</span>` : ''}${esc(e.t)}</li>`).join('')}</ol>`; }).join('') : '<div class="empty">Nothing written yet.</div>';
   const CS = S.Campus_State || {}, ev = Object.entries(CS.Events || {}), ru = [...(CS.Rumours || [])].reverse();
   // 1.1.0 (spec §3): how far each rumour has spread; rumours that died out stay, faded
   const gs = featureOn(S, 'gossip') ? Object.fromEntries(((S.$ui || {}).gossip || []).map(g => [g[0], g])) : {}, old = [...((S.$ui || {}).rumours_old || [])].reverse();

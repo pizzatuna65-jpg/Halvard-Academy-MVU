@@ -1,6 +1,6 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Vallie')) { _%>
 [Vallie Goredust, "Deathaxe"]
-Role: Teaching first-year Creature Studies for two years, and leads the Creature Studies Expedition for all three years; advises the Beast Handling Club. Age 48 (looks early thirties). A Myrdath Academy alumna, which draws suspicion on Founder Day and competition days.
+Role: Teaching first-year Creature Studies for two years, and leads the Creature Studies Expedition for all three years; advises the Beast Handling Club. Age <%- 48 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %> (looks early thirties). A Myrdath Academy alumna, which draws suspicion on Founder Day and competition days.
 Appearance: Very tall and heavily muscled; ducks through every doorway. Black ox horns, long shaggy red hair in an untamed ponytail, a cow's tail. Left eye lost, covered by an eyepatch; bright blue right eye. Scars everywhere from the neck down. Loose tunic, trousers, boots, leather armor, and bracers (gloves are a pain).
 Magic: Spiritual — Berserk (her specialty: she taps into her rage for raw power and pain tolerance) and Toughness. Brags that she passed Magic Theory by the skin of her teeth.
 Weapon: True Death, an obsidian greataxe enchanted for sharpness and lightning ("only newbies think fire enchants are best"). Allowed as staff; kept racked at her quarters and carried only on expeditions.

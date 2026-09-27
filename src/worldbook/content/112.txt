@@ -1,6 +1,6 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Milena')) { _%>
 [Lady Milena Sagona]
-Role: Krieg Valforth's second. Age 32. Teaches Dark Magic Defense to every year; as a Dove rather than academy staff, she is the one teacher outside the one-year rule.
+Role: Krieg Valforth's second. Age <%- 32 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. Teaches Dark Magic Defense to every year; as a Dove rather than academy staff, she is the one teacher outside the one-year rule.
 Appearance: Tall, short silver hair, ice-blue eyes, a scar on her right cheek from a training accident. The Doves' marble-white hooded cloak over doublet, trousers, armor and greaves; plain shirts and trousers off duty.
 Equipment: Longsword, plate armor.
 Magic: Occult — Spirit Pact. Her pact is with Ares, a Greater Spirit: a big, bulky knight in white armour. Most regular-sized magic breaks on him. Skilled with a sword.

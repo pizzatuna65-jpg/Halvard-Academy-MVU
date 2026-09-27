@@ -133,7 +133,10 @@ const repLines = (REPD.reps || []).map(r => [r, Math.max(-5, Math.min(5, Number(
   .map(([r, L]) => r + ' ' + (L > 0 ? '+' : '') + L + ': ' + ((REPD.effects[r] || []).find(([a, c]) => L >= a && L <= c) || [0, 0, ''])[2]);
 _%>
 <now>
-Month <%- W.Month %>, Week <%- W.Week %>, <%- W.Day %> <%- W.Time %> | <%- W._Period || 'free time' %> | at <%- W.Location %>
+<%- Y > 1 ? 'Year ' + Y + ', ' : '' %>Month <%- W.Month %>, Week <%- W.Week %>, <%- W.Day %> <%- W.Time %> | <%- W._Period || 'free time' %> | at <%- W.Location %>
+<%_ if (Y > 1) { _%>
+Campaign Year <%- Y %> ({{user}}: Year <%- Math.max(1, Math.min(3, Number(PR.Year) || 1)) %>). Lore calls students first-, second- or third-years, and says "this year", as of the year they were introduced (Year 1; the newer first-years: the year they arrived); their school year now is in the NPC roster. Ages in lore are current. Graduates (Campus_State.Graduated) have left Halvard.
+<%_ } _%>
 <%_ if (W._Event_today) { _%>
 Today: <%- W._Event_today %>
 <%_ } _%>

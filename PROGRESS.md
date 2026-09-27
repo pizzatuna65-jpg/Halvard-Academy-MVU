@@ -995,6 +995,58 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   - To verify in ST: a chat in campaign Year 2 (set World.Year or play through Graduation) with one of the six present: their
     keyword entry, their Cast Sheet with the hobby line (Nerys), an older NPC's entry with the new lines; and in Year 1 that none of
     it appears.
+- 1.7.1 Year 2 bug hunt and stress test (owner, 2026-09-27: "bug hunt dan stress test apa yg terjadi ketika user mencapai year 2":
+  arriving and graduating NPCs, ages, dynamic features, the Entrance Event, entries written for Year 1). Canon gaps that need the
+  owner are in `planning/DRAFT_year2.md` (nothing from it is in the lore). Touches HANDOFF §4 "Graduation" (Etnie, below) and the
+  pending "Player lifecycle" decision (§8); both to confirm.
+  - Found and fixed:
+    - Dates had no year: in Year 2 a Year 1 line dated "M1 W1 Mon" read "earlier today" in <now>'s Journal dates and the Cast Sheet
+      (Knows, Imprints, defining moments), and the Notebook's Journal merged Year 1's and Year 2's "Month 1". From campaign Year 2
+      every date the engine writes carries its year ("Y2 M1 W1 Mon"; Year 1 keeps the plain form, so nothing changes before Year 2);
+      a date the narrator writes in Year 2 without one gets it; the first update in Year 2 dates Year 1's lines "Y1" (Journal,
+      archive, Knows, Imprints, Recent, defining moments, Last seen, campus events). ageOf reads the year ("over a year ago"); the
+      Journal groups by year and month from Year 2. The chat seed keeps the old form.
+    - {{user}} stayed a Year 1 student unless the narrator acted on a log line, so <now> gave them first-year classmates (cohort 2)
+      and first-year teachers. The engine now moves Player.Profile.Year up at a new campaign year (Journal "Began Year 2 at
+      Halvard."), unless the narrator changed it in that update; the story can set it back; a third-year is not moved.
+    - Last year's Competition record (e.g. "eliminated, Academy", a team of graduates) stayed all of Year 2, so the narrator read
+      {{user}}'s competitive year as over. It is cleared at the new year; the Journal keeps it.
+    - Etnie graduated automatically, against her canon (narrator_only goal: fail her third year on purpose to stay beside {{user}}).
+      `data/cohorts.json` `stays` keeps her: not sent away at M12 W1 Mon, a log line that does not give the secret away (the player
+      sees the log), "not graduating" on Graduation day; roster "repeating", Cast Sheet "Year 3 student". The story can still
+      graduate her. To confirm with the owner (DRAFT_year2.md 1a).
+    - Ages never moved: every "Age: N" / "Age N" in a Halvard NPC's lore (students, staff) now adds the campaign years since Year 1
+      (a cohort: since its arrival year), in the entry, the Cast Sheet and the dossier; rival academy teams keep theirs.
+      {{user}} turns a year older on their birthday (once per year; not if the story already wrote the new age).
+    - A graduate's own keyword entry said nothing about graduating (only the roster and the Cast Sheet did): it now opens with
+      "Now: graduated; has left Halvard (a visit or a letter is still possible)". Royhan's "This year is his last chance" trouble
+      showed again in Year 2 (Month-only date gate): it is Year 1 only now.
+    - <now> never named the campaign year: from Year 2 its first line starts "Year 2, " and one line says how to read lore written
+      for Year 1 (first-/second-/third-year and "this year" as of the year a character was introduced; school year now in the
+      roster; ages already current; graduates have left).
+    - The Entrance Event day plan in Year 2 still read as {{user}}'s own arrival: from Year 2 `_Event_today` adds that {{user}} is a
+      returning student, never sorted again; arrivals, sorting, tour and dorm rooms are for the new first-years.
+    - The card description said "{{user}} is a first-year student": now "a student (a first-year when the story begins;
+      Player.Profile.Year says which year now)".
+  - Checked and fine: graduation of the Year 1 third-years at M12 W1 Mon (and of the Year 1 second-years at the end of Year 2),
+    also after a time skip; the six cohort-2 first-years arrive at the first update of Year 2 (roster, entries, added lines,
+    Regulars, sheets, Connections); graduates leave Regulars, club lists and the flu pool; happenings name no graduate; weekly and
+    daily caps, bond cooldowns, Meanwhile, stale events and Extras use absolute days (no Year 1/Year 2 collision); monthly payout
+    across the year boundary; notices and commitments dated "M1" written in Month 12; Nerys's hobby shift; every entry renders
+    in Year 2 and Year 3.
+  - Not changed (canon, `planning/DRAFT_year2.md`): Student Council has no President or VP in Year 2 (Irene and Caspian graduate);
+    most of {{user}}'s Year 2/3 teachers are unknown ("teacher not on record"); rival academy teams keep their third-years; dorm
+    top ranks (Gareth #1, Sophia #2) graduate; no Year 3 cohort; Year-1-only phrases in lore beyond the <now> note.
+  - Tests: test_year2_v171.cjs (42 checks: a 1.7.0 save made at the end of Year 1, `save_1.7.0_yearend.json` from the new
+    tests/fixtures/make_save_yearend.cjs, plays into Year 2 without losing data; dates, ages, Etnie, {{user}}'s year, competition,
+    birthday, Entrance Event, <now>, Cast Sheet, dossier, Journal, every entry in Years 2 and 3). test_bughunt_v103 (Etnie is no
+    longer in the graduating list; the roster shows her repeating) and test_cohort2_v170 (version read from card.json) updated.
+    Save 1.7.0 added. npm test 1291 checks (43 suites + static QA); stress passes (the 380-day run ends in Year 2); smoke 550 views,
+    no errors; token_audit unchanged in Year 1 (~12.3k start, ~17.6k heavy; <now> +~60 tokens only from Year 2); preset built twice,
+    byte-identical (unchanged).
+  - To confirm with the owner: DRAFT_year2.md 1a-1c (Etnie stays, {{user}} moves up, ages move) and the open canon in section 2.
+  - To verify in ST: in campaign Year 2, <now> starts "Year 2, " with the campaign-year line; the Journal in Notebook shows
+    "Year 2, Month 1" above "Year 1, Month 12"; a graduate mentioned by name prints "Now: graduated" in their entry.
 - 1.6.11 A new bond starts at the character's own Trust, and clubs in Connections wait for Rank 1 (owner playtest, 2026-09-26, thread "Stress test dan bug hunt": "ini
   message 2, saya bertemu trixie untuk pertama kali, kenapa status trustnya 10, dan betrayed?"). No canon changed. Restores the
   approved 1.4.3 design (HANDOFF §4 Trust: new bonds start by category), which the engine did not enforce.
@@ -1084,6 +1136,8 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 
 ## Next
 - 1.7.0: cohort 2 (six first-years from campaign Year 2) is in; they need portraits (owner's PNGs).
+- 1.7.1: Year 2 bug hunt done; the owner decides planning/DRAFT_year2.md (Etnie stays, {{user}} moves up, ages; Council, Year 2
+  teachers, rival teams, dorm ranks, a Year 3 cohort).
 - Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 to 1.6.7 done (G1 in 1.6.3, G2 in 1.6.4, G3 in 1.6.5,
   G4 in 1.6.6, G5 in 1.6.7; every bonded NPC has a voice), plus the Rank 8 branches in 1.6.8 and the 1.6.9 bug hunt. NOW: the owner playtests (docs/TEST_CHECKLIST_v1.6.md first); then run tools/audit_chat.py on the exported
   chat for the first MVU baseline.
@@ -1109,6 +1163,8 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 - Scripted first-week classes (M1 W1 Tue-Sat, 14 sessions; per dorm for [D] classes; optional homework into Commitments).
 
 ## To verify in ST (could not be tested outside ST)
+- 1.7.1: in campaign Year 2, <now> opens "Year 2, " with the campaign-year line; Notebook → Journal groups "Year 2, Month 1" above
+  "Year 1, Month 12"; a graduate's keyword entry opens "Now: graduated"; the Entrance Event is played as a returning student.
 - 1.7.0: in campaign Year 2, one of the six first-years present (keyword entry, Cast Sheet, Nerys's hobby line) and an older
   NPC's entry with the added lines (EJS year gate); in Year 1 none of it appears.
 - 1.6.9: docs/TEST_CHECKLIST_v1.6.md (card + preset + VectFox together): the depth-0 order in the real prompt, VectFox's
@@ -1148,8 +1204,8 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 ## Notes / open issues
 - Dependencies are unpinned: schema.js imports StageDog mvu_zod.js and mvu_loader.js the MVU bundle from default branches. F12 showed a
   helper change can silently alter behaviour. Pinning needs a tested pair of commits (owner decision; test in ST first).
-- Player lifecycle is not modelled: no enrolled/graduated/expelled state for {{user}}; the engine only reminds the narrator to update
-  Player.Profile.Year at a new campaign year. Payouts continue regardless.
+- Player lifecycle is only partly modelled: since 1.7.1 the engine moves Player.Profile.Year up at a new campaign year (the story
+  can hold {{user}} back); there is no graduated/expelled state for {{user}} after Year 3. Payouts continue regardless.
 - A student the story keeps back (removed from Campus_State.Graduated) does not graduate automatically in a later year (shown as
   "repeating" in the roster); the story handles them.
 - Cohort 2 (Year 2) done in 1.7.0; a Year 3 cohort would follow the same playbook (HANDOFF §6). Their portraits are still missing.

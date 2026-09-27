@@ -1,6 +1,6 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Caine')) { _%>
 [Caine Strix]
-Role: Butler of the Noble Houses' Liaison: runs its household, serves its guests, keeps its rooms and its calendar. Not academy staff. Owl Beastkin. Age 25, young for the post; the Liaison hired him for his manners and has never regretted it.
+Role: Butler of the Noble Houses' Liaison: runs its household, serves its guests, keeps its rooms and its calendar. Not academy staff. Owl Beastkin. Age <%- 25 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>, young for the post; the Liaison hired him for his manners and has never regretted it.
 Appearance: Tall and spare. Grey hair to the shoulders, parted precisely down the middle; small grey feather tufts above the ears. Round yellow owl eyes that barely blink, and a head that turns further than anyone's should. Walks without a sound. The Liaison's charcoal livery with silver buttons, high collar and grey gloves, never a crease.
 Magic (public): Mystic — Telekinesis. Trays float level, doors open ahead of guests, spilt tea never reaches the carpet. A servant's magic, exactly as useful as a house wants and no more.
 <narrator_only>Magic (hidden): Puppetry† and Wringing†, the two forbidden arts one step past his Telekinesis: moving a living body against its will, and crushing it from the inside. Lucifer's Mark has pushed both far past anything he could reach alone. He uses them rarely, and never where it could be traced.</narrator_only>

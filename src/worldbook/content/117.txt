@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Sophia')) { _%>
 [Sophia Helfin, "the Blood Saint"]
-Age: 20.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Sophia')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 20 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
 Appearance: Tall, intimidating, muscular. Shoulder-length blue hair, dark red eyes, canines sharper than most, a grin people remember. Scars from years of brawling and from the breach night. Red vest; off duty, practical tunics, trousers, and boots.
 Magic: Elemental — Water and Steam. A water bender with monstrous affinity and volume.
 - Water: she drags water out of the lake, the fountains, the rain, even the damp in the air. Pressure jets that cut stone, tidal slams that flatten whole teams. Nobody at Halvard moves that much water.

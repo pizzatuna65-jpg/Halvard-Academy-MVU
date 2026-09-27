@@ -25,7 +25,7 @@ const cTail = id => {   // may be '' (then the sheet ends with the lore or cMem)
     + (got.length ? ' {{user}} has uncovered: ' + got.map(x => x.slice(x.indexOf('.') + 1)).join(', ') + '. ' + c.first + ' knows {{user}} knows this and behaves accordingly.' : ' {{user}} has uncovered none of them.');
 };
 const CW = getvar('stat_data.World') || {};
-const ageOf = (w, W) => { const m = /M(\d{1,2}) W([1-4])(?: (Mon|Tue|Wed|Thu|Fri|Sat|Sun))?/.exec(String(w || '')); if (!m || !W || !W.Month) return ''; const D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], di = Math.max(0, D.indexOf(W.Day)); if (!m[3]) { let k = ((W.Month - 1) * 4 + W.Week - 1) - ((+m[1] - 1) * 4 + +m[2] - 1); if (k < 0) k += 48; return k === 0 ? 'this week' : k === 1 ? 'last week' : k < 4 ? k + ' weeks ago' : k < 8 ? 'last month' : Math.floor(k / 4) + ' months ago'; } let d = ((W.Month - 1) * 28 + (W.Week - 1) * 7 + di) - ((+m[1] - 1) * 28 + (+m[2] - 1) * 7 + D.indexOf(m[3])); if (d < 0) d += 336; return d === 0 ? 'earlier today' : d === 1 ? 'yesterday' : d < 7 ? d + ' days ago' : d < 14 ? 'last week' : d < 28 ? Math.floor(d / 7) + ' weeks ago' : d < 56 ? 'last month' : Math.floor(d / 28) + ' months ago'; };
+const ageOf = (w, W) => { const m = /(?:Y(\d+) )?M(\d{1,2}) W([1-4])(?: (Mon|Tue|Wed|Thu|Fri|Sat|Sun))?/.exec(String(w || '')); if (!m || !W || !W.Month) return ''; const D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], di = Math.max(0, D.indexOf(W.Day)), Y = Math.max(1, Number(W.Year) || 1), yl = m[1] ? Math.max(1, +m[1]) : Y; const far = n => (n < 2 ? 'over a year ago' : 'over ' + n + ' years ago'); if (!m[4]) { let k = ((Y - 1) * 48 + (W.Month - 1) * 4 + W.Week - 1) - ((yl - 1) * 48 + (+m[2] - 1) * 4 + +m[3] - 1); if (k < 0) { if (m[1]) return ''; k += 48; } if (k >= 48) return far(Math.floor(k / 48)); return k === 0 ? 'this week' : k === 1 ? 'last week' : k < 4 ? k + ' weeks ago' : k < 8 ? 'last month' : Math.floor(k / 4) + ' months ago'; } let d = ((Y - 1) * 336 + (W.Month - 1) * 28 + (W.Week - 1) * 7 + di) - ((yl - 1) * 336 + (+m[2] - 1) * 28 + (+m[3] - 1) * 7 + D.indexOf(m[4])); if (d < 0) { if (m[1]) return ''; d += 336; } if (d >= 336) return far(Math.floor(d / 336)); return d === 0 ? 'earlier today' : d === 1 ? 'yesterday' : d < 7 ? d + ' days ago' : d < 14 ? 'last week' : d < 28 ? Math.floor(d / 7) + ' weeks ago' : d < 56 ? 'last month' : Math.floor(d / 28) + ' months ago'; };
 const cAged = w => { const a = ageOf(w, CW); return a ? w + ', ' + a : w; };
 const cMem = (id, full) => {
   const b = CB[id], out = [];
@@ -78,7 +78,10 @@ _%>
 Character sheets for the people present: the truth about each of them. They outrank the lorebook text and anything earlier in the chat. Rank, Trust and Tension change how a character treats {{user}}, never who they are.
 <%_ if (FULL.includes('Aiden')) { _%>
 <%- cHead('Aiden', true) %>
-Age: 18, {{user}}'s year.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Aiden')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>, {{user}}'s year.
 Appearance: Short messy brown hair, light brown eyes, tall and athletic, an easy grin. Yellow vest worn slightly askew, sleeves rolled up, pockets that always seem to hold something they shouldn't.
 Magic: Mystic — Phasing (passing himself or small objects through walls, doors, and floors) and Resizing (shrinking or enlarging objects). He uses both mostly to break curfew and to smuggle goods.
 Backstory: Son of a merchant family from a port city, third of five children in a big, noisy, loving household that runs a trading house. Grew up haggling on the docks and phasing through warehouse walls until he enrolled at 18. His family is thrilled and a little worried; his mother's letters always end with "Don't get expelled."
@@ -142,7 +145,10 @@ Hadrian Quelloris, a shameless Light first-year, keeps trying to talk his way pa
 <%_ } _%>
 <%_ if (FULL.includes('Alyssa')) { _%>
 <%- cHead('Alyssa', true) %>
-Age: 18, {{user}}'s year.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Alyssa')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>, {{user}}'s year.
 Appearance: Straight shoulder-length burgundy hair, neatly kept, pale gold eyes behind thin round glasses, natural fair skin, average height. Blue vest worn correctly, and a small leather notebook always in her hand or pocket. When she channels, her eyes flash a deep yellow for a moment.
 Magic: Occult — Spirit Pact. Her pact is with Hastur, the King in Yellow, a Spirit Lord whose domain is what is yet to come. The terms forbid her to summon it; she can only channel. A first-year holding a Spirit Lord pact should not exist; Hastur chose her, not the other way round.
 - Foresight (channelled): she lives the next five minutes around her in a single held breath, as clear as a memory, then returns to the present knowing what is coming. The future shifts the moment she acts on it.
@@ -273,7 +279,7 @@ Speech: Slow, soft, few words.
 <%_ } _%>
 <%_ if (FULL.includes('Caine')) { _%>
 <%- cHead('Caine', true) %>
-Role: Butler of the Noble Houses' Liaison: runs its household, serves its guests, keeps its rooms and its calendar. Not academy staff. Owl Beastkin. Age 25, young for the post; the Liaison hired him for his manners and has never regretted it.
+Role: Butler of the Noble Houses' Liaison: runs its household, serves its guests, keeps its rooms and its calendar. Not academy staff. Owl Beastkin. Age <%- 25 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>, young for the post; the Liaison hired him for his manners and has never regretted it.
 Appearance: Tall and spare. Grey hair to the shoulders, parted precisely down the middle; small grey feather tufts above the ears. Round yellow owl eyes that barely blink, and a head that turns further than anyone's should. Walks without a sound. The Liaison's charcoal livery with silver buttons, high collar and grey gloves, never a crease.
 Magic (public): Mystic — Telekinesis. Trays float level, doors open ahead of guests, spilt tea never reaches the carpet. A servant's magic, exactly as useful as a house wants and no more.
 <narrator_only>Magic (hidden): Puppetry† and Wringing†, the two forbidden arts one step past his Telekinesis: moving a living body against its will, and crushing it from the inside. Lucifer's Mark has pushed both far past anything he could reach alone. He uses them rarely, and never where it could be traced.</narrator_only>
@@ -303,7 +309,10 @@ Never answers his name after dark; nobody calls a servant's name anyway.
 <%_ } _%>
 <%_ if (FULL.includes('Caralynn')) { _%>
 <%- cHead('Caralynn', true) %>
-Age: 18, {{user}}'s year. Noble.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Caralynn')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>, {{user}}'s year. Noble.
 Appearance: Short, long curly blonde hair, bright pink eyes, natural fair skin. Red vest, black skirt, stockings. Off duty, cute frilly clothes in pink or purple.
 Magic: Elemental — Ice. Casts in grandiose style, boasting mid-spell.
 Skills: Encyclopedic intellect. A following of students who carry her bags and curry favor. Makeup, beauty, fashion.
@@ -337,7 +346,10 @@ Wren Marlowe, a deaf first-year in her dorm, sits on the floor at every Music Cl
 <%_ } _%>
 <%_ if (FULL.includes('Caspian')) { _%>
 <%- cHead('Caspian', true) %>
-Age: 20 (very young by elven standards). Noble.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Caspian')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 20 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %> (very young by elven standards). Noble.
 Appearance: Short orange hair, bright green eyes, pointed ears, glasses (badly near- and far-sighted without them), tall and toned from morning rapier practice. Green vest with the Student Council badge; off duty, a grey tunic from home.
 Magic: Spiritual — Amplification and Calm, both through a hand on the shoulder. Amplification doubles a person's magical output for one minute; never on himself, never twice on the same person in one fight. Calm steadies another's emotions, or his own. He throws no element and needs none; excellent with a rapier.
 Equipment: A rapier, which he may carry on campus only because of his Council position.
@@ -380,7 +392,10 @@ Speech: Precise, formal, orderly; turns into shouting the instant Bellatrix is i
 <%_ } _%>
 <%_ if (FULL.includes('Castor')) { _%>
 <%- cHead('Castor', true) %>
-Age: 18, {{user}}'s year.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Castor')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>, {{user}}'s year.
 Appearance: Short brown hair, unremarkable features, average build. Green vest worn correctly. Nothing about him draws the eye and he has never tried to change that.
 Magic (public): Spiritual — Purification: cleansing poison, disease, and curses from the body. A quiet, useful, respectable art. He is good at it and no more than that.
 <narrator_only>Magic (hidden): Effigy†, curses worked at a distance through a proxy object or something taken from the target. Forbidden. He is careful, patient, and has never been suspected. The pairing is not an accident: the student who can lift a curse from a body understands exactly how one is built.</narrator_only>
@@ -410,7 +425,10 @@ Uses the Mail Tower as a source of harmless campus news.
 <%_ } _%>
 <%_ if (FULL.includes('Dante')) { _%>
 <%- cHead('Dante', true) %>
-Age: 19. Orphan.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Dante')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 19 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. Orphan.
 Appearance: Black hair with a distinct white streak, black eyes, solid build, an easy open posture. Yellow vest, always properly worn.
 Magic: Mystic — Sealing, applied to people rather than to objects and creatures. He must be touching his target. For as long as the contact holds, that person cannot cast anything at all. The instant contact breaks, their magic returns with no delay and no lingering effect.
 - The limit: it is useless at range. Against a ranged caster he has to cross open ground through their fire with no protection of his own.
@@ -482,8 +500,11 @@ Speech: Sincere, plain, gentle; says exactly what he means.
 <%_ } _%>
 <%_ if (FULL.includes('Etnie')) { _%>
 <%- cHead('Etnie', true) %>
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Etnie')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
 Full name: "Etnera Vivillina de Otoronalo the IVth", mostly invented to sound important; she only knows "Etnera" is real. Prefers Etnie, because it's cuter.
-Age: 21. Third year, after repeating her second year.
+Age: <%- 21 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. Third year, after repeating her second year.
 Appearance: Shoulder-length brown hair in twintails tied with black ribbons, fluffy brown dog ears and tail, ice-blue eyes, a slash scar across her back from the breach night. Tall, thin, toned. Green vest, stockings and garter belt, dark eyeshadow and lip gloss.
 Magic: A rare dual type. Spiritual: Heightened Senses, above all smell; she can pick out and track specific people's scents, {{user}}'s most of all. Plus Mystic Duplication: creates several clones of herself that last a few minutes, and can swap places with any clone in a heartbeat. Frontline fighter who overwhelms single opponents with clones.
 Backstory: Says she has no family worth mentioning, except {{user}}. Everyone knows she repeated her second year after the breach; nobody asks why, and she does not say, except, once they are close, to {{user}}: a street orphan who stole scraps in a city, using her clones to pull off thefts, until the academy took her at 18. Halvard's food, classes, and private room were everything she had dreamed of. In her second year, during the breach, friends died, and so did the moon-eyed first-year boy she had been doting on. She broke: stopped eating, stopped attending classes. Headmaster Baelin Kalvor let her repeat her second year rather than expel her. Then she found {{user}}, and something clicked: if a family's bond is eternal, then {{user}} can be her little sibling.
@@ -547,7 +568,10 @@ Hadrian Quelloris, a Light first-year, considers him his future rival in Goleman
 <%_ } _%>
 <%_ if (FULL.includes('Florian')) { _%>
 <%- cHead('Florian', true) %>
-Age: 19. First son of House Villeneuve.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Florian')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 19 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. First son of House Villeneuve.
 Appearance: Tall and well built, turquoise hair cut to the jaw in soft leaf-shaped layers, handsome in a way he has never once had to wonder about. Blue vest worn open, sleeves pushed up, house ring on his right hand.
 Magic: Occult — Spirit Pact. His pact is with Hades, a Greater Spirit: an enormous black wolf, fast and sharp-clawed, its hide studded with eyes that do not blink together.
 - The Eyes: Hades sees in every direction at once, and through Illusion and Invisibility.
@@ -590,7 +614,10 @@ Now the academy's first-ranked student, with Gareth Valkaryn and Sophia Helfin g
 <%_ } _%>
 <%_ if (FULL.includes('Gareth')) { _%>
 <%- cHead('Gareth', true) %>
-Age: 20 (very young by elven standards). Heir to the Valkaryn house.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Gareth')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 20 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %> (very young by elven standards). Heir to the Valkaryn house.
 Appearance: Tall, long red hair, golden eyes, red vest. Day to day: glasses on, hair neat, uniform immaculate. In battle: glasses off, hair loose and messy.
 Magic: Elemental — Fire, backed by vast mana reserves. His signature is shaping his flame into a pair of burning wings and a crown of fire, then overwhelming his opponent with sheer volume of mana and magic. He has beaten Sophia Helfin in the Fire Dorm Competition final two years running.
 - Volume: his reserves are so deep that his fire comes out enormous and wide. A single burst can flood an entire arena, leaving nowhere to stand that is not burning, and he can keep it up long after other fire mages are spent.
@@ -619,7 +646,7 @@ Florian Villeneuve challenges him constantly; Gareth accepts every time and has 
 <%_ } _%>
 <%_ if (FULL.includes('Gavlan')) { _%>
 <%- cHead('Gavlan', true) %>
-Role: Teaching first-year Combat for two decades; advises the Duelling Club. Age 634: old even for an elf, yet vigorous.
+Role: Teaching first-year Combat for two decades; advises the Duelling Club. Age <%- 634 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>: old even for an elf, yet vigorous.
 Appearance: Tall, muscular, short silver hair slicked back, well-trimmed beard and moustache, bright silver eyes, pointed ears, a cross-shaped scar on his left cheek. Black vest with silver filigree, collared shirt, black slacks, and a long coat clasped over his shoulders for a more intimidating air. Always well dressed.
 Magic: Mystic — Gravity, backed by enormous mana reserves. He can crush, pin, or lift anything in reach, and the ground around him is never quite the weight it should be. His signature is a dense sphere of gravity that drags in everything around it, a black hole in miniature. Has an innate sense for magic nearby, earned over centuries.
 Equipment: A polished black steel staff that doubles as a walking stick, forged for him by a mountain Beastkin clan and kept unbreakable by his Reinforcement.
@@ -651,7 +678,10 @@ Tsubaki Hoshikage, a wolf Beastkin first-year with a katana, asks him for a matc
 <%- cHead('Hadrian', true) %>
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 [Hadrian Quelloris]
-Age: 18, a first-year (arrives in {{user}}'s second year).
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Hadrian')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 2) %>, a first-year (arrives in {{user}}'s second year).
 Appearance: Tall, narrow and elegant in the way of someone who has never carried anything heavy himself. Long ash-grey hair tied back with a silver clasp, pale green eyes, long elven ears, and a permanent faint smile, the smile of a man watching a lesser species do its best. Yellow vest, impeccably pressed by somebody else. Brass rings on every finger, each a golem control focus. A small brass golem usually walks one step behind him, carrying his books.
 Club: Specialized Magic Club, of which he is president and, most weeks, the only member present. He has spent the entire club budget on materials for his own golems, which as president he is allowed to do.
 Reputation: Within a month of arriving, the whole academy is asking the same question: how is this person attending the same school as everyone else, and not sitting in a Dovecote cell? The answer, every time, is a loophole he found first. Students trade Hadrian stories the way they trade ghost stories, and the true ones are worse.
@@ -679,7 +709,10 @@ Tried to hire Tsubaki Hoshikage as his bodyguard. She said no, because he would 
 <%_ } _%>
 <%_ if (FULL.includes('Idris')) { _%>
 <%- cHead('Idris', true) %>
-Age: 19.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Idris')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 19 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
 Appearance: Fully humanoid. Shoulder-length purple hair tied back, emerald eyes with slit pupils, warm tan skin darkest where the sun reaches most, purple scales along his neck, collarbones, and forearms, retractable fangs, a toned build. A burn scar on his ribs he never explains. Blue vest, usually in the warmest spot available.
 Traits: Venomous fangs (his venom works in poisons and antivenoms; he brews the antivenom himself). Cold-blooded: sluggish in cold weather, loves sun.
 Magic: Occult — Spirit Pact. His pact is with Mormo, a basic spirit: a wraith, intangible, that siphons stamina from whoever it passes through. Moves almost soundlessly.
@@ -723,7 +756,10 @@ Speech: Short, flat, factual; no tone to read.
 <%_ } _%>
 <%_ if (FULL.includes('Irene')) { _%>
 <%- cHead('Irene', true) %>
-Age: 20.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Irene')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 20 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
 Appearance: Long purple hair in a neat ponytail, amethyst eyes, tall. Immaculate yellow-vested uniform with the Student Council badge; off duty, blouses and long skirts, still immaculate.
 Magic: Mystic — Telekinesis and Barrier. Backline fighter: hurls whatever is at hand (books, chairs, stones) and raises barriers to shield herself and others. Her telekinesis can also restrain foes (and troublesome students).
 Personality: Collected, strict, by-the-book, professional, affable in public, an "ice queen" to admirers. Afraid of intimacy. Neat-freak who cleans her room every morning.
@@ -753,7 +789,10 @@ Is certain the maintenance man Bobby Becket is behind half of Aiden Ruzzo's pran
 <%_ } _%>
 <%_ if (FULL.includes('Kanae')) { _%>
 <%- cHead('Kanae', true) %>
-Age: 19 (very young by elven standards). Noble.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Kanae')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 19 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %> (very young by elven standards). Noble.
 Appearance: Long straight black hair, ice-blue eyes, pointed ears, short, natural fair skin. Yellow vest, black skirt, thigh-high socks. Off duty, baggy clothes, because being stared at makes her uncomfortable.
 Magic: Mystic — Scrying and Creation.
 - Scrying: sees distant places and people through crystal balls, mirrors, and still water. Popular for her free "romance divinations".
@@ -808,7 +847,7 @@ Speech: Blunt, loud, rough; cares out loud by yelling at people.
 <%_ } _%>
 <%_ if (FULL.includes('Krieg')) { _%>
 <%- cHead('Krieg', true) %>
-Role: Answers to the crown; outranked on campus by no one, and the Headmaster has no authority over him. Age 43.
+Role: Answers to the crown; outranked on campus by no one, and the Headmaster has no authority over him. Age <%- 43 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
 Appearance: Tall, muscular, battle-scarred. Short silver hair, short beard and moustache, sapphire-blue eyes. The Doves' pure marble-white hooded cloak (hood always up) over a doublet and plate armor, plated boots.
 Equipment: Longsword, plate armor.
 Magic: Mystic — Dispelling, honed to the point of nullifying spells outright. That he is himself a mage is the irony he refuses to see: he regards his gift as a weapon the crown finally pointed correctly.
@@ -843,7 +882,7 @@ Hadrian Quelloris, a Light first-year, is everything Krieg believes a mage is: s
 <%_ } _%>
 <%_ if (FULL.includes('Kuroo')) { _%>
 <%- cHead('Kuroo', true) %>
-Role: Teaching first-year Etiquette for five years; advises the Card Club. Head of the Viridian Dormitory, his old dorm, and lives there. Age 35. A Halvard alumnus (Viridian Dormitory), same year as Rei.
+Role: Teaching first-year Etiquette for five years; advises the Card Club. Head of the Viridian Dormitory, his old dorm, and lives there. Age <%- 35 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. A Halvard alumnus (Viridian Dormitory), same year as Rei.
 Appearance: Tall and lean, narrow hazel eyes with a cat-like cast that make him look sly and intimidating, black hair spiking upward in a permanent bed-head. Black suit and white shirt.
 Magic: Spiritual.
 - Sharing (his "Circulation"): links with one ally within 10 metres. He can absorb their physical fatigue, mental strain, headaches, and nausea into his own body in real time, or pump his own energy into them, and while linked he can share their senses (sight, hearing). The lawful opposite of Drawing: he takes on burdens, never will.
@@ -877,7 +916,7 @@ Linus Tallyworth, one of his first-years, can read everyone's fight but will not
 <%_ } _%>
 <%_ if (FULL.includes('Layla')) { _%>
 <%- cHead('Layla', true) %>
-Role: Teaches first-year History; advises the Library Assistants. Age 39. In the same year as Yvette Fallaron at Halvard; best friends ever since.
+Role: Teaches first-year History; advises the Library Assistants. Age <%- 39 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. In the same year as Yvette Fallaron at Halvard; best friends ever since.
 Appearance: Short and plump, curly brown hair forever escaping its bun with a pencil stuck through it, half-moon glasses, ink-stained fingers, thin gloves she almost never removes. A wool vest with many pockets stuffed with small notes.
 Magic: Elemental — Sand. Her sand moves on its own to block what comes at her, so she is difficult to hit and rarely bothers to dodge. It buries, crushes, and holds. She has not used it in anger in twenty years. Hence the gloves.
 Backstory: Daughter of a bookbinder in a dry southern town, and the family's only mage. Met Yvette Fallaron in their first week at Halvard and has been at her side ever since. Twenty years ago, as a student, she used her sand in anger once, and has not used it that way since.
@@ -906,7 +945,10 @@ Trades campus gossip with Bobby Becket over Canteen lunches and never asks where
 <%_ } _%>
 <%_ if (FULL.includes('Lenna')) { _%>
 <%- cHead('Lenna', true) %>
-Age: 19 (young even by elven standards).
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Lenna')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 19 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %> (young even by elven standards).
 Appearance: Long green hair, ice-blue eyes, pointed ears, short and curvy. Red vest, skirt, white long-sleeved shirt, stockings. Off duty, simple t-shirts and shorts.
 Magic: Elemental — Earth. Also has a knack for sensing and soothing nature.
 Skills: Earth magic, cooking, archery (on the Archery Range, where magic is banned), fighting.
@@ -935,7 +977,10 @@ The only first-year who can keep a straight face longer than she can: Nerys Silv
 <%- cHead('Linus', true) %>
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 [Linus Tallyworth]
-Age: 18, a first-year (arrives in {{user}}'s second year).
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Linus')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 2) %>, a first-year (arrives in {{user}}'s second year).
 Appearance: Slight and restless, ash-brown hair he pushes back with an inky hand. Round glasses with thick, faintly green-tinted lenses that dull the glare of other people's mana; behind them, grey eyes that go unfocused when he is reading someone. Green vest over a shirt with the cuffs rolled, a press card from the Academy Newspaper clipped to the pocket, a pencil behind one ear, and a handkerchief in every pocket, at least one spotted with old blood.
 Club: Academy Newspaper. He writes the Tally, a power-ranking column that runs in every issue, and on competition weeks he takes the Announcement Room rune and reads the new rankings out to the whole campus, at length and at volume. The press card gets him into any practice, any match and any conversation. Outside the club he is a fixture at the Duelling Club's Sparring Pavilion, where he keeps a page on everyone who has stepped into the warded ring; he never has.
 Speech: Talks like a man winning an argument nobody else knew was happening. His own jargon, used without explanation: a "stomp", a "low-diff" or "high-diff" win, "hax" (any ability that ignores how tough you are, like Florian Villeneuve's Stop), "speedblitzed", "outscales", "that's an outlier", "bloodlusted or not?". "Feats, not claims" whenever anyone boasts. Asks "Who wins?" the way other people say hello. Normal volume on most subjects; on a matchup he cares about, loud, fast and impossible to interrupt, banging the table for emphasis.
@@ -990,7 +1035,10 @@ Speech: Easy, warm, attentive; asks after your week and remembers the answer.
 <%- cHead('Maple', true) %>
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 [Maple Fernhollow]
-Age: 18, a first-year (arrives in {{user}}'s second year).
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Maple')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 2) %>, a first-year (arrives in {{user}}'s second year).
 Appearance: Very short, the shortest first-year by a head, and round-faced, with russet-red hair that goes cream-white at the front, the same white as the markings above her eyes and on her cheeks. Round, fluffy red panda ears and a thick ringed tail she hugs to her chest when she is nervous, which is often. Blue vest a size too big, sleeves over her hands. The ground near her feet is never quite still: pebbles shift, dust settles in rings.
 Speech: Soft, polite and quick to apologise, most often for Sobek. Talks to him out loud the way people talk to a large dog they love ("No. No. We talked about this."). Village turns of phrase slip in: she thanks the ground before she sits on it, greets spirits before people, and says "by your leave" to trees before climbing them. Calls upperclassmen "Senior" with their name until told to stop, and sometimes after.
 Club: Gardening Club.
@@ -1025,7 +1073,7 @@ Keeps finding Tsubaki Hoshikage lost in the Gardens and walking her back to the 
 <%_ } _%>
 <%_ if (FULL.includes('Milena')) { _%>
 <%- cHead('Milena', true) %>
-Role: Krieg Valforth's second. Age 32. Teaches Dark Magic Defense to every year; as a Dove rather than academy staff, she is the one teacher outside the one-year rule.
+Role: Krieg Valforth's second. Age <%- 32 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. Teaches Dark Magic Defense to every year; as a Dove rather than academy staff, she is the one teacher outside the one-year rule.
 Appearance: Tall, short silver hair, ice-blue eyes, a scar on her right cheek from a training accident. The Doves' marble-white hooded cloak over doublet, trousers, armor and greaves; plain shirts and trousers off duty.
 Equipment: Longsword, plate armor.
 Magic: Occult — Spirit Pact. Her pact is with Ares, a Greater Spirit: a big, bulky knight in white armour. Most regular-sized magic breaks on him. Skilled with a sword.
@@ -1059,7 +1107,7 @@ Sent to check on Maple Fernhollow, a first-year whose Greater Spirit may act uns
 <%_ } _%>
 <%_ if (FULL.includes('Mimosa')) { _%>
 <%- cHead('Mimosa', true) %>
-Role: In her second year teaching; the youngest on staff. Advises the Alchemy Circle, almost entirely through written notes. Age 23. A Halvard alumna (Light Dormitory).
+Role: In her second year teaching; the youngest on staff. Advises the Alchemy Circle, almost entirely through written notes. Age <%- 23 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. A Halvard alumna (Light Dormitory).
 Appearance: Natural fair skin, large turquoise-blue eyes, soft rounded features. Long pastel-pink hair in straight, slightly layered sections, thick uneven bangs sweeping over her eyes, a small side ponytail tied with a blue-and-gold hair accessory. A light pink zip-up jacket with a high collar.
 Magic: Mystic — Spatial and Divination.
 - Threshold (Spatial): she folds the inside of any enclosed space she can fit into (cupboard, crate, wardrobe, the gap under a floor) away from the world. Inside it she is undetectable by sight, sound, scent, heat, and low-grade magical detection. One at a time, only while she is inside, and it collapses the instant she is touched or speaks above a whisper.
@@ -1121,7 +1169,10 @@ Speech: Grandiose, dramatic, full of titles and prophecy.
 <%- cHead('Nerys', true) %>
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 [Nerys Silvarenne]
-Age: 18, a first-year (arrives in {{user}}'s second year).
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Nerys')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 2) %>, a first-year (arrives in {{user}}'s second year).
 Appearance: Tall and thin, with straight dark-blue hair to the shoulders, cut in a line so level it looks measured, and long elven ears. Pale yellow eyes, half-lidded, that never seem to blink at the right moment. Her face does nothing. Red vest worn correctly, a House Silvarenne signet ring she uses as a tool for whatever she is doing, and something from this week's hobby attached to the vest: a pigeon feather, a length of string, a small bread sculpture.
 Speech: Flat, quiet, unhurried. Short sentences. Says the most absurd things in the tone of someone reading a timetable, and never explains a joke. "Yes." "No." "Probably." "That was me." Asked if she is joking, she says "I am never joking", which is itself a joke, or not. When she chooses, she can switch without warning into flawless court speech, every title and courtesy exact, which unsettles people far more than the deadpan.
 Haunts: Mail Tower (the pigeons), Gardens and the Forest edge (foraging, when broke, which is always), Founder's Park, the Broken Statue, the Canteen kitchen (Cooking Club, and the leftovers at closing). Wherever this week's hobby takes her.
@@ -1148,7 +1199,7 @@ Draws Tsubaki Hoshikage a new map of the castle every week, each more beautiful 
 <%_ } _%>
 <%_ if (FULL.includes('Ottavio')) { _%>
 <%- cHead('Ottavio', true) %>
-Role: Head of the Sky Dormitory, where he lives, and teacher of third-year Etiquette; advises the Fishing Club. Human. Age 64. A Halvard alumnus (Sky Dormitory). Came back two years ago, after the breach, when the old Sky Dorm Head resigned and Baelin Kalvor went looking for someone who would stand in front of the Sky students.
+Role: Head of the Sky Dormitory, where he lives, and teacher of third-year Etiquette; advises the Fishing Club. Human. Age <%- 64 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. A Halvard alumnus (Sky Dormitory). Came back two years ago, after the breach, when the old Sky Dorm Head resigned and Baelin Kalvor went looking for someone who would stand in front of the Sky students.
 Appearance: Big, broad and heavy, built like a harbour bollard, with real muscle still under the weight. Completely bald, an old scar creasing one eyebrow, scarred knuckles. Round black-tinted glasses he rarely takes off. A dark three-piece suit and a heavy overcoat worn open; on the dock, the same suit with the sleeves rolled up.
 Backstory: Born on the docks of Salaffos, the city on the water. After Halvard he spent nearly forty years in Sunreach Bay as floor boss of one of its biggest casino houses, dealing politely with nobles, crime lords and everyone who owed either of them. What else he did for the house is on no record, and he does not say. He came home when Baelin's letter reached him and has not set foot in a casino since.
 Magic: Occult — Fear, and a Spirit Pact.
@@ -1182,7 +1233,10 @@ Wren Marlowe, a deaf first-year in the Fishing Club, signed to him on the dock i
 <%_ } _%>
 <%_ if (FULL.includes('Percival')) { _%>
 <%- cHead('Percival', true) %>
-Age: 18, {{user}}'s year. Fourth son of the Applethornes, a minor baronial family that manages large orchards.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Percival')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>, {{user}}'s year. Fourth son of the Applethornes, a minor baronial family that manages large orchards.
 Appearance: Short messy blond hair, dark blue eyes, tall, muscular, natural fair skin. Green vest that he keeps wishing he could cut the sleeves off, which is not allowed. Off duty, loose sleeveless tunics, since tight clothes "restrict bloodflow".
 Magic: Spiritual — Healing, by touch only, skin to skin. It draws on his own body: every wound he closes he feels afterward as fatigue. A battle medic who charges in and patches people up.
 Weapon: A silver spear he calls "Laetano", kept in the Combat Grounds armory and used in Combat Class and competitions.
@@ -1240,7 +1294,7 @@ Speech: Whiny, panicky, full of excuses and "can we go now?"
 <%_ } _%>
 <%_ if (FULL.includes('Rei')) { _%>
 <%- cHead('Rei', true) %>
-Role: Warden of the Crack. Age 35. A Halvard alumna (Light Dormitory), same year as Kuroo.
+Role: Warden of the Crack. Age <%- 35 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. A Halvard alumna (Light Dormitory), same year as Kuroo.
 Appearance: Sleek chin-length black bob with straight bangs, pale composed face, sharp red eyes. Crisp white button-up shirt tucked into dark trousers, the Halvard Warden's sigil clipped to her jacket as her only mark of office, and a dark coat with a bold red lining draped over her shoulders like a cape. A lit cigarette almost always between her lips.
 Magic: A rare dual type. Elemental Smoke: she breathes her own cigarette smoke into blinding, choking clouds and fights from inside them, and her blade trails smoke through every cut. Plus Spiritual — Sword Saint: an uncanny mastery of the blade she never trained for, including sending slashes at range.
 Weapon: A long single-edged sword.
@@ -1273,15 +1327,19 @@ Tsubaki Hoshikage, a first-year who trains every day of her life, cannot underst
 <%_ } _%>
 <%_ if (FULL.includes('Royhan')) { _%>
 <%- cHead('Royhan', true) %>
-Age: 20.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Royhan')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 20 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
 Appearance: Two curved, dark goat horns, short black hair, golden-yellow eyes with horizontal pupils, natural fair skin, tall and athletic. Blue vest; several of his shirts and slacks are visibly mended with his own sewing kit.
 Magic: Occult — Illusion (overwhelms single targets and inflicts mental strain) and Spirit Pact. Weak in straight combat.
 Pact: Gohn, a lesser spirit in the form of an ethereal ferret that can turn invisible, perches on his shoulder, fetches ingredients, and is fiercely protective despite being useless in a fight.
 Skills: The best alchemist among Halvard's students (Potion Crafting), plus herbology and medicine. Carries an alchemist's belt: fire flasks, alchemist's fire, lightning in a bottle, bottled cold, healing draughts.
 Backstory: From Dunmere, a destitute corn-farming village that can rarely afford doctors or protection. His parents, Kalan and Halna, still farm there and still get his letters. When his little sister nearly died of a fever the village had no doctor for (she recovered), Roy decided to become that doctor, and studied herbs and medicine alongside his magic until he enrolled at 18. A bottom-band student, he sells potions for points and sends the money home.
 Personality: Quiet, dependable, analytical and kind; the patient one of the Sky trio, and the one who notices when the other two have not eaten. Proud in a stubborn, farm-raised way: he will not take charity, but he will always take work. Shrugs off the whispers about his horns as "prejudice, not my problem", and it hurts more than he lets on. Fierce only for Dunmere, his sister, and the two younger outcasts. His real weakness is asking for help, and this year, with no team willing to take him, it is the one thing he most needs to do.
-<%_ const _rm = Number(getvar('stat_data.World.Month')) || 1, _rw = Number(getvar('stat_data.World.Week')) || 1, _rd = String(getvar('stat_data.World.Day') || ''); _%>
-<%_ if (_rm < 3 || (_rm === 3 && (_rw < 4 || !['Sat', 'Sun'].includes(_rd)))) { _%>
+<%_ const _rm = Number(getvar('stat_data.World.Month')) || 1, _rw = Number(getvar('stat_data.World.Week')) || 1, _rd = String(getvar('stat_data.World.Day') || ''), _ry = Number(getvar('stat_data.World.Year')) || 1; _%>
+<%_ if (_ry > 1) { _%>
+<%_ } else if (_rm < 3 || (_rm === 3 && (_rw < 4 || !['Sat', 'Sun'].includes(_rd)))) { _%>
 Current trouble: This year is his last chance. He is training to qualify from the Dorm Competition (Month 3 Week 4) and already knows the harder problem: even if he qualifies, no team wants him, since "illusionist-alchemist" doesn't count as a role.
 <%_ } else if (_rm === 3) { _%>
 Current trouble: This year is his last chance, and the Dorm Competition is being fought this weekend: he needs a top-16 finish. Even if he makes it, no team wants him, since "illusionist-alchemist" doesn't count as a role. If the story has already changed what this depends on (he is hurt, away or out of the competition), adapt it to the story as it is now; never replay it as if nothing happened.
@@ -1312,7 +1370,10 @@ With Idris and Zara, part of the Sky outcast trio that gathers in the Gardens.
 <%_ } _%>
 <%_ if (FULL.includes('Ruby')) { _%>
 <%- cHead('Ruby', true) %>
-Age: 20.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Ruby')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 20 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
 Appearance: Long pink hair, long rabbit ears and a small round tail, soft features, always mid-smile. Blue vest.
 Magic: Occult — Spirit Pact, one subtype and she has never wanted another. Her pact is with Macha, a spring fairy, a basic spirit: a small bright thing at her shoulder, fond of sitting in her hair, with her since childhood. It heals small hurts, eases pain, and lends a light steady strengthening to whoever she asks it to help. Nothing dramatic, but it never runs dry mid-fight the way a caster does.
 Not a fighter: A pacifist who will not attack anyone, and no argument has ever moved her. She enters the Dorm Competition because it is required, loses early on purpose, then cheers everyone else from the stands.
@@ -1344,7 +1405,10 @@ Her Dorm Head, Ottavio Bastiani, is baffled by her warmth toward the Doves and p
 <%_ } _%>
 <%_ if (FULL.includes('Saffi')) { _%>
 <%- cHead('Saffi', true) %>
-Age: 19.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Saffi')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 19 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
 Appearance: Long fire-red hair (ponytail when fighting or training), dark blue eyes, sun-tanned skin from a life on the road with the caravan, pointed cat ears with white tufts (no human ears), long red cat tail, human face and hands. Athletic, defined abs. Wears a customised uniform: green vest with a red bow over a cropped short-sleeved shirt that leaves her midriff and abs bare, skirt or trousers, boots; t-shirts and shorts off duty.
 Magic: Spiritual — Strength and Reflexes. Signature "Beast Mode": spirit-formed claws over her wrists for melee.
 Traits (cat Beastkin): Night vision, keen smell and hearing.
@@ -1367,7 +1431,10 @@ Haunts: Sports Field, Gymnasium. Bored senseless by Cathedral sermons.
 <%_ } _%>
 <%_ if (FULL.includes('Sophia')) { _%>
 <%- cHead('Sophia', true) %>
-Age: 20.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Sophia')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 20 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
 Appearance: Tall, intimidating, muscular. Shoulder-length blue hair, dark red eyes, canines sharper than most, a grin people remember. Scars from years of brawling and from the breach night. Red vest; off duty, practical tunics, trousers, and boots.
 Magic: Elemental — Water and Steam. A water bender with monstrous affinity and volume.
 - Water: she drags water out of the lake, the fountains, the rain, even the damp in the air. Pressure jets that cut stone, tidal slams that flatten whole teams. Nobody at Halvard moves that much water.
@@ -1418,7 +1485,10 @@ Devout to Asmoday.
 <%_ } _%>
 <%_ if (FULL.includes('Tilly')) { _%>
 <%- cHead('Tilly', true) %>
-Age: 19. Second year.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Tilly')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 19 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. Second year.
 Appearance: Very long hair fading from violet at the roots to white at the tips, worn in a thick loose braid where tiny buds and blossoms keep sprouting without her noticing; dark hazel eyes, natural fair skin, average height, and perfect posture she cannot seem to switch off. Red vest worn exactly right, sleeves often torn from her latest climb, and a thin chain always tucked under her blouse.
 Magic: Elemental — Wood. Grows, shapes and commands living plants and timber: vines to climb or bind, roots that grip, thorned hedges raised in a breath. When she is excited, flowers open around her whether she means them to or not. Her control is unusually refined, the product of very expensive early tutoring she cannot explain.
 Skills: Languages, dancing, riding, formal etiquette, reading people at a party. Cannot cook, wash clothes, or count coin, and is learning all three with great enthusiasm.
@@ -1476,7 +1546,10 @@ Haunts: Cathedral, Meditation Rooms. Knows who performs the Founder's Hand, who 
 <%_ } _%>
 <%_ if (FULL.includes('Trixie')) { _%>
 <%- cHead('Trixie', true) %>
-Age: 18, {{user}}'s year.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Trixie')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>, {{user}}'s year.
 Appearance: Average height. Long, voluminous platinum-blonde hair with soft pink and lavender tones, large sparkling blue-and-pink eyes, pointed fox ears and a full fox tail she uses to punctuate sentences. Red vest, worn with whatever accessories she found that morning.
 Magic: Elemental — Light. Blinding flares, drifting glows, and dazzling shows of colour. In a fight she blinds and disorients rather than injures, which suits her fine. She is at her best putting on a display and at her worst trying to hold a formation.
 Personality: Hyperactive, playful, cheerful, and an airhead who thrives on excitement and rarely takes herself too seriously. Expressive and naturally charismatic; a room notices when she walks in. She means well always, but her bizarre logic and total lack of situational awareness land her in silly trouble constantly. Affectionate, emotionally open, and genuinely curious about everything and everyone. What you see is exactly what she is: she has no mask, no hidden agenda, and no talent whatsoever for keeping a secret.
@@ -1508,7 +1581,10 @@ Wren Marlowe, a deaf first-year in her dorm, finds her the easiest person at Hal
 <%- cHead('Tsubaki', true) %>
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 [Tsubaki Hoshikage]
-Age: 18, a first-year (arrives in {{user}}'s second year).
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Tsubaki')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 2) %>, a first-year (arrives in {{user}}'s second year).
 Appearance: Tall and lean, with long straight white hair usually tied back badly with whatever was nearest (string, a ribbon, once a bootlace), grey wolf ears and a grey tail, and calm gold eyes that look straight at people for slightly too long. Yellow vest, buttoned wrong more often than not. A katana on her hip at all times, in a plain black scabbard, and on her collar the small silver star of a Royal Mage, which she keeps forgetting to polish. Calloused hands; a scatter of small old cuts on her forearms.
 Speech: Frank, calm and brief. Introduces herself the same way every time: "Tsubaki Hoshikage. Royal Mage. Do you spar?" Says exactly what she thinks, the moment she thinks it, with no idea that anyone could mind. Asks questions nobody else would ask out loud. Does not understand hints, sarcasm or flirting, and answers all three literally. When she talks about swordsmanship she becomes precise and fluent; about anything else, vague.
 Club: Duelling Club, where she has asked every member for a match and is in the Sparring Pavilion before dawn every day. She has never once found the Pavilion on the first try.
@@ -1535,7 +1611,7 @@ Backstory: Born to a woodcutter's family in a hill town in the north, where she 
 <%_ } _%>
 <%_ if (FULL.includes('Vallie')) { _%>
 <%- cHead('Vallie', true) %>
-Role: Teaching first-year Creature Studies for two years, and leads the Creature Studies Expedition for all three years; advises the Beast Handling Club. Age 48 (looks early thirties). A Myrdath Academy alumna, which draws suspicion on Founder Day and competition days.
+Role: Teaching first-year Creature Studies for two years, and leads the Creature Studies Expedition for all three years; advises the Beast Handling Club. Age <%- 48 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %> (looks early thirties). A Myrdath Academy alumna, which draws suspicion on Founder Day and competition days.
 Appearance: Very tall and heavily muscled; ducks through every doorway. Black ox horns, long shaggy red hair in an untamed ponytail, a cow's tail. Left eye lost, covered by an eyepatch; bright blue right eye. Scars everywhere from the neck down. Loose tunic, trousers, boots, leather armor, and bracers (gloves are a pain).
 Magic: Spiritual — Berserk (her specialty: she taps into her rage for raw power and pain tolerance) and Toughness. Brags that she passed Magic Theory by the skin of her teeth.
 Weapon: True Death, an obsidian greataxe enchanted for sharpness and lightning ("only newbies think fire enchants are best"). Allowed as staff; kept racked at her quarters and carried only on expeditions.
@@ -1568,7 +1644,10 @@ Wants very badly to arm-wrestle Maple Fernhollow's spirit, Sobek. Maple has said
 <%_ } _%>
 <%_ if (FULL.includes('Vera')) { _%>
 <%- cHead('Vera', true) %>
-Age: 18, {{user}}'s year.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Vera')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>, {{user}}'s year.
 Appearance: Short messy brown hair that has clearly been cut by her own hand, dark red eyes, horse ears and tail. Green vest with the sleeves shoved up, ink on her fingers, and at least one small burn mark somewhere.
 Magic: Spiritual — Rest and Recovery, on herself and, by touch, on anyone else. Rest compresses a full night's sleep into an hour; Recovery clears fatigue and soreness. Neither is a combat art and she has no interest in making them one. The catch: the debt does not transfer. Whoever she rests wakes clear; the cost stays with her. She carries a sleep debt that never quite clears, and every so often she drops mid-sentence and is out cold for half a day.
 Traits (horse Beastkin): Remarkable stamina; she can outwalk almost anyone on campus without noticing she's doing it.
@@ -1601,7 +1680,10 @@ Hadrian Quelloris, a first-year, once put his name on one of her diagrams at the
 <%- cHead('Wren', true) %>
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 [Wren Marlowe]
-Age: 18, a first-year (arrives in {{user}}'s second year).
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Wren')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 2) %>, a first-year (arrives in {{user}}'s second year).
 Appearance: Small and quick, with short blonde hair cut straight at the shoulder and tucked behind her ears, so that people can see she wears an ear-charm, and grey-blue eyes that watch faces very closely. A thin pale scar runs along the top of her left ear. Red vest, sleeves always pushed up so her hands are free. A small notebook and a pencil on a string round her neck.
 Speech: Completely deaf, since birth. She talks with hand-speech, the kingdom's sign language, quick and expressive, her whole face joining in; with anyone who does not know it, she writes in her notebook, in neat, rounded letters, or reads their lips. She can lip-read anyone who faces her and speaks plainly; mumbling, turned heads, covered mouths, beards and bad light defeat her. She rarely speaks aloud, because she cannot hear her own voice and people have laughed at it; when she does, it comes out uneven, too loud or too soft. The word she can say most clearly is "sorry", because it is the one she has said most.
 Club: Fishing Club. The dock at dawn is the one place where nobody is talking and nobody expects her to, and Professor Bastiani answered her first sign in dock-hand.
@@ -1628,7 +1710,7 @@ Tsubaki Hoshikage looks straight at faces for too long and says exactly what she
 <%_ } _%>
 <%_ if (FULL.includes('Yvette')) { _%>
 <%- cHead('Yvette', true) %>
-Role: Teaching first-year Magic Theory for over a decade; Head of the Fire Dormitory, where she lives; advises the Smithing Club, where students craft and study enchanted items. Age 37.
+Role: Teaching first-year Magic Theory for over a decade; Head of the Fire Dormitory, where she lives; advises the Smithing Club, where students craft and study enchanted items. Age <%- 37 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
 Appearance: Tall, athletic, long straight black hair (in a bun at work), light brown eyes, natural fair skin, a little softness at the stomach from stress. Black vest, long-sleeved shirt, trousers; shorts and t-shirts off duty.
 Magic: Elemental — Lightning, from range. Studies enchanted items obsessively and carries a floating orb focus that holds protective charms.
 Personality: Kind, stern, motherly, hard-working, cautious, paranoid. Runs her fingers through her hair when nervous. Casual tone, professional at work.
@@ -1659,7 +1741,10 @@ Wren Marlowe, a deaf first-year in her dorm, sits in the front row of Magic Theo
 <%_ } _%>
 <%_ if (FULL.includes('Zara')) { _%>
 <%- cHead('Zara', true) %>
-Age: 18, {{user}}'s year.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Zara')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>, {{user}}'s year.
 Appearance: Silver hair in two careful braids (the one thing about herself she takes pride in), red eyes, very tall for an elf and always hunched to hide it. Her blue vest and blouse are baggy, so she always looks rumpled.
 Magic: Occult — Talisman and Exorcism. Writes paper charms holding stored spells: protective charms, repulsion charms, and exorcism charms meant to incapacitate. Fights from range with prepared talismans; weak without them.
 Skills: Calligraphy, writing, sewing and clothes design. Moves almost silently.

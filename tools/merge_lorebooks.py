@@ -241,8 +241,9 @@ for old, new in REMAP.items():
 # D18 Royhan — EJS date gate
 assert ROY_OLD.search(Nc[101]['content'])
 Nc[101]['content'] = ROY_OLD.sub(lambda _: (
-    "<%_ const _rm = Number(getvar('stat_data.World.Month')) || 1, _rw = Number(getvar('stat_data.World.Week')) || 1, _rd = String(getvar('stat_data.World.Day') || ''); _%>\n"
-    "<%_ if (_rm < 3 || (_rm === 3 && (_rw < 4 || !['Sat', 'Sun'].includes(_rd)))) { _%>\n"
+    "<%_ const _rm = Number(getvar('stat_data.World.Month')) || 1, _rw = Number(getvar('stat_data.World.Week')) || 1, _rd = String(getvar('stat_data.World.Day') || ''), _ry = Number(getvar('stat_data.World.Year')) || 1; _%>\n"
+    "<%_ if (_ry > 1) { _%>\n"   # 1.7.1: his last year is campaign Year 1; from Year 2 he has graduated (or the story kept him)
+    "<%_ } else if (_rm < 3 || (_rm === 3 && (_rw < 4 || !['Sat', 'Sun'].includes(_rd)))) { _%>\n"
     'Current trouble: This year is his last chance. He is training to qualify from the Dorm Competition (Month 3 Week 4) and already knows the harder problem: even if he qualifies, no team wants him, since "illusionist-alchemist" doesn\'t count as a role.\n'
     "<%_ } else if (_rm === 3) { _%>\n"
     'Current trouble: This year is his last chance, and the Dorm Competition is being fought this weekend: he needs a top-16 finish. Even if he makes it, no team wants him, since "illusionist-alchemist" doesn\'t count as a role. '
@@ -251,6 +252,24 @@ Nc[101]['content'] = ROY_OLD.sub(lambda _: (
     'Current trouble: This year, his last, he qualified from the Dorm Competition at rank 16, but no team will take him, since "illusionist-alchemist" doesn\'t count as a role. (Campus_State overrides this if the story played out differently.)\n'
     "<%_ } _%>"), Nc[101]['content'])
 gate_cohorts(Nc, True)   # v1.0.3 incoming cohorts (defined at the top)
+# 1.7.1 (Year 2 bug hunt): a Halvard NPC's age follows the campaign year (lore ages are as of Year 1, or a cohort's arrival year;
+# rival academy teams keep theirs), and a student's own entry says so once they have graduated (Campus_State.Graduated).
+YEAR_NOW = "(Number(getvar('stat_data.World.Year')) || 1)"
+RIVAL_RX = re.compile(r'^Role: Student, (?!Halvard)\w+ Academy', re.M)
+STUDENT_IDS = {seg.split()[0] for m in re.finditer(r'^Year [123]:\s*(.*)$', Nc[97]['content'], re.M) for seg in re.split(r';\s*(?![^()]*\))', m.group(1)) if seg.strip()}
+aged = 0
+for u, e in Nc.items():
+    nid = npc_id(e)
+    if not nid or RIVAL_RX.search(e['content']): continue
+    a = ARR.get(nid, 1)
+    e['content'], n = re.subn(r'(^Age: |\bAge )(\d+)\b', lambda m: f"{m.group(1)}<%- {m.group(2)} + Math.max(0, {YEAR_NOW} - {a}) %>", e['content'], flags=re.M)
+    aged += n
+    if nid in STUDENT_IDS:
+        e['content'], n = re.subn(r'^(\[[^\]\n]+\]\n)', lambda m: m.group(1) + (
+            f"<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('{nid}')) {{ _%>\n"
+            "Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.\n<%_ } _%>\n"), e['content'], count=1, flags=re.M)
+        assert n == 1, f'no [Name] header in the entry of {nid}'
+assert aged >= 30 and len(STUDENT_IDS) >= 28, (aged, len(STUDENT_IDS))
 # 1.5.1 (Batch B, P1): while an NPC has a full sheet in the Cast Sheet (custom 509, engine $ui.cast.full) their keyword entry
 # prints nothing, so the lore is not sent twice. Mentioned but not present, or present beyond the cap: the keyword entry works as before.
 for u, e in Nc.items():

@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Caspian')) { _%>
 [Caspian Riwalo]
-Age: 20 (very young by elven standards). Noble.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Caspian')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 20 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %> (very young by elven standards). Noble.
 Appearance: Short orange hair, bright green eyes, pointed ears, glasses (badly near- and far-sighted without them), tall and toned from morning rapier practice. Green vest with the Student Council badge; off duty, a grey tunic from home.
 Magic: Spiritual — Amplification and Calm, both through a hand on the shoulder. Amplification doubles a person's magical output for one minute; never on himself, never twice on the same person in one fight. Calm steadies another's emotions, or his own. He throws no element and needs none; excellent with a rapier.
 Equipment: A rapier, which he may carry on campus only because of his Council position.

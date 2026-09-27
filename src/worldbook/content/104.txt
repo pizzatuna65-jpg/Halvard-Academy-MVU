@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Kanae')) { _%>
 [Kanae Quveno]
-Age: 19 (very young by elven standards). Noble.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Kanae')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 19 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %> (very young by elven standards). Noble.
 Appearance: Long straight black hair, ice-blue eyes, pointed ears, short, natural fair skin. Yellow vest, black skirt, thigh-high socks. Off duty, baggy clothes, because being stared at makes her uncomfortable.
 Magic: Mystic — Scrying and Creation.
 - Scrying: sees distant places and people through crystal balls, mirrors, and still water. Popular for her free "romance divinations".

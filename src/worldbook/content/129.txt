@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Castor')) { _%>
 [Castor Moretti]
-Age: 18, {{user}}'s year.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Castor')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>, {{user}}'s year.
 Appearance: Short brown hair, unremarkable features, average build. Green vest worn correctly. Nothing about him draws the eye and he has never tried to change that.
 Magic (public): Spiritual — Purification: cleansing poison, disease, and curses from the body. A quiet, useful, respectable art. He is good at it and no more than that.
 <narrator_only>Magic (hidden): Effigy†, curses worked at a distance through a proxy object or something taken from the target. Forbidden. He is careful, patient, and has never been suspected. The pairing is not an accident: the student who can lift a curse from a body understands exactly how one is built.</narrator_only>

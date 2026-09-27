@@ -1,6 +1,6 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Mimosa')) { _%>
 [Mimosa Linden]
-Role: In her second year teaching; the youngest on staff. Advises the Alchemy Circle, almost entirely through written notes. Age 23. A Halvard alumna (Light Dormitory).
+Role: In her second year teaching; the youngest on staff. Advises the Alchemy Circle, almost entirely through written notes. Age <%- 23 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. A Halvard alumna (Light Dormitory).
 Appearance: Natural fair skin, large turquoise-blue eyes, soft rounded features. Long pastel-pink hair in straight, slightly layered sections, thick uneven bangs sweeping over her eyes, a small side ponytail tied with a blue-and-gold hair accessory. A light pink zip-up jacket with a high collar.
 Magic: Mystic — Spatial and Divination.
 - Threshold (Spatial): she folds the inside of any enclosed space she can fit into (cupboard, crate, wardrobe, the gap under a floor) away from the world. Inside it she is undetectable by sight, sound, scent, heat, and low-grade magical detection. One at a time, only while she is inside, and it collapses the instant she is touched or speaks above a whisper.

@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Irene')) { _%>
 [Irene Chanare]
-Age: 20.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Irene')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 20 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
 Appearance: Long purple hair in a neat ponytail, amethyst eyes, tall. Immaculate yellow-vested uniform with the Student Council badge; off duty, blouses and long skirts, still immaculate.
 Magic: Mystic — Telekinesis and Barrier. Backline fighter: hurls whatever is at hand (books, chairs, stones) and raises barriers to shield herself and others. Her telekinesis can also restrain foes (and troublesome students).
 Personality: Collected, strict, by-the-book, professional, affable in public, an "ice queen" to admirers. Afraid of intimacy. Neat-freak who cleans her room every morning.

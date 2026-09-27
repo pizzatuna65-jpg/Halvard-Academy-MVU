@@ -10,5 +10,9 @@
    "Tsubaki"
   ],
   "3": []
+ },
+ "_stays": "1.7.1: third-years whose canon keeps them at Halvard past their third year. The engine does not send them away with the graduates (M12 W1 Mon); it logs the line below instead. The story can still have them graduate (add the name to Campus_State.Graduated). The text is shown to the player in the engine log, so it must not give a secret away.",
+ "stays": {
+  "Etnie": "Etnie did not leave with the graduates: she stays on at Halvard for another third year (her lore says why)"
  }
 }

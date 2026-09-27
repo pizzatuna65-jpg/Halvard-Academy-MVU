@@ -1434,6 +1434,8 @@ const npcStatus = S => { const st = ((S && S.Campus_State) || {}).NPC_status || 
 const graduated = S => new Set((((S && S.Campus_State) || {}).Graduated) || []);
 // v1.0.3 incoming cohorts: an NPC is at Halvard from campaign year DATA.npcs[id].a (1 = from the start) until they graduate
 const curYear = S => Math.max(1, num((((S || {}).World) || {}).Year, 1));
+// 1.7.1: a Halvard NPC's lore ages are as of Year 1 (a cohort: its arrival year); the dossier shows them for the current campaign year
+const ageNow = (n, f, S) => { const add = n && n.ag ? Math.max(0, curYear(S) - (n.a || 1)) : 0; return !add ? f[1] : f[0] === 'Age' ? String(f[1]).replace(/^\d+/, x => +x + add) : String(f[1]).replace(/\bAge (\d+)\b/g, (_, x) => 'Age ' + (+x + add)); };
 const arrived = (id, S) => { const n = npcOf(id); return !n || (n.a || 1) <= curYear(S); };
 const atHalvard = (id, S) => arrived(id, S) && !graduated(S).has(id);
 const yearNow = (id, S) => { const n = npcOf(id); return n && n.y ? n.y + curYear(S) - (n.a || 1) : 0; };

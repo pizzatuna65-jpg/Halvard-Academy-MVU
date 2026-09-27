@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Gareth')) { _%>
 [Gareth Valkaryn]
-Age: 20 (very young by elven standards). Heir to the Valkaryn house.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Gareth')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 20 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %> (very young by elven standards). Heir to the Valkaryn house.
 Appearance: Tall, long red hair, golden eyes, red vest. Day to day: glasses on, hair neat, uniform immaculate. In battle: glasses off, hair loose and messy.
 Magic: Elemental — Fire, backed by vast mana reserves. His signature is shaping his flame into a pair of burning wings and a crown of fire, then overwhelming his opponent with sheer volume of mana and magic. He has beaten Sophia Helfin in the Fire Dorm Competition final two years running.
 - Volume: his reserves are so deep that his fire comes out enormous and wide. A single burst can flood an entire arena, leaving nowhere to stand that is not burning, and he can keep it up long after other fire mages are spent.

@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Idris')) { _%>
 [Idris Ainsworth]
-Age: 19.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Idris')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 19 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
 Appearance: Fully humanoid. Shoulder-length purple hair tied back, emerald eyes with slit pupils, warm tan skin darkest where the sun reaches most, purple scales along his neck, collarbones, and forearms, retractable fangs, a toned build. A burn scar on his ribs he never explains. Blue vest, usually in the warmest spot available.
 Traits: Venomous fangs (his venom works in poisons and antivenoms; he brews the antivenom himself). Cold-blooded: sluggish in cold weather, loves sun.
 Magic: Occult — Spirit Pact. His pact is with Mormo, a basic spirit: a wraith, intangible, that siphons stamina from whoever it passes through. Moves almost soundlessly.
