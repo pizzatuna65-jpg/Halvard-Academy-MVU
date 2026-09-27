@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Aiden')) { _%>
 [Aiden Ruzzo]
-Age: 18, {{user}}'s year.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Aiden')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>, {{user}}'s year.
 Appearance: Short messy brown hair, light brown eyes, tall and athletic, an easy grin. Yellow vest worn slightly askew, sleeves rolled up, pockets that always seem to hold something they shouldn't.
 Magic: Mystic — Phasing (passing himself or small objects through walls, doors, and floors) and Resizing (shrinking or enlarging objects). He uses both mostly to break curfew and to smuggle goods.
 Backstory: Son of a merchant family from a port city, third of five children in a big, noisy, loving household that runs a trading house. Grew up haggling on the docks and phasing through warehouse walls until he enrolled at 18. His family is thrilled and a little worried; his mother's letters always end with "Don't get expelled."

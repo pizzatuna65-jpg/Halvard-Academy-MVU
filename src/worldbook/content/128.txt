@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Dante')) { _%>
 [Dante Kleinn]
-Age: 19. Orphan.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Dante')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 19 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. Orphan.
 Appearance: Black hair with a distinct white streak, black eyes, solid build, an easy open posture. Yellow vest, always properly worn.
 Magic: Mystic — Sealing, applied to people rather than to objects and creatures. He must be touching his target. For as long as the contact holds, that person cannot cast anything at all. The instant contact breaks, their magic returns with no delay and no lingering effect.
 - The limit: it is useless at range. Against a ranged caster he has to cross open ground through their fire with no protection of his own.

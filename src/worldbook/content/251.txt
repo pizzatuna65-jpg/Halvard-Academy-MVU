@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Elion')) { _%>
 [Elion Villeneuve]
-Role: Student, Ashvale Academy. First year, age 18. Human, second son of House Villeneuve. Rank 1 at Ashvale.
+<%_ if ((1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
+Now: graduated from Ashvale Academy at the end of campaign Year 3; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Role: <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Ashvale Academy. <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 18 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %>. Human, second son of House Villeneuve. Rank 1 at Ashvale.
 Appearance: Tall, well built, short turquoise hair. Unmistakably Florian's brother. Ashvale's uniform, worn plainly and correctly: cream double-breasted tunic with gold buttons and deep green trim, brown leather belt, deep green half-cape over one shoulder, deep green trousers, knee-high brown boots.
 Magic: Mystic — Transmutation, which he calls Excalibur. Any weapon or object he holds becomes an imitation Excalibur, and swinging or thrusting it releases its power as a blast of energy and light fired from the object itself. Whatever is in his hand becomes a ranged weapon.
 - The vessel decides the output: the better the object, the more of Excalibur it can hold.
@@ -12,4 +15,5 @@ Personality: Kind, compassionate, deeply empathetic, with unwavering conviction.
 Backstory: Second son of House Villeneuve. Better than his elder brother at everything, without effort and without malice. His family's attention has always fallen on him.
 Relations: The youngest on Ashvale's team, and the one it is built around. Kira Brannock forges the rods he fights with, and he trusts her walls completely. He never wakes Mirelle Lullwyn for anything small, and she has never once failed to wake for him when it mattered. Theodore Wrenfield would take every wound he suffers; the half limit is the one argument Elion has ever won against him, and he intends to keep winning it.
 Speech: Sincere, plain, gentle; says exactly what he means.
+Named his magic after the sword of the King of Knights in the old story.
 <%_ } _%>

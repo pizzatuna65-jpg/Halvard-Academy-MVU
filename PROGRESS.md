@@ -995,6 +995,134 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   - To verify in ST: a chat in campaign Year 2 (set World.Year or play through Graduation) with one of the six present: their
     keyword entry, their Cast Sheet with the hobby line (Nerys), an older NPC's entry with the new lines; and in Year 1 that none of
     it appears.
+- 1.7.4 Year 2 bug hunt and stress test (owner, 2026-09-27: "bug hunt dan stress test apa yg terjadi ketika user mencapai year 2":
+  arriving and graduating NPCs, ages, dynamic features, the Entrance Event, entries written for Year 1), merged with 1.7.1-1.7.3
+  from the other session (World Myth, nations, NPC origins; owner: "gabungkan sesi ini dan sesi claude lain untuk membentuk
+  1.7.4"). The bug hunt was first built as a 1.7.1 on its own branch; it is renumbered 1.7.4 here and no 1.7.1-1.7.3 content
+  changed in the merge. Owner decisions on `planning/DRAFT_year2.md` (2026-09-27): Etnie stays; a Student Council President
+  election event and the Council as a club {{user}} can join are planned for later; teachers not on record are the narrator's to
+  create; rival academy third-years graduate too (new team members are for later); dorm ranks and after Year 3 are left as they
+  are. Touches HANDOFF §4 "Graduation" (Etnie, owner-approved) and the pending "Player lifecycle" decision (§8).
+  - Found and fixed:
+    - Dates had no year: in Year 2 a Year 1 line dated "M1 W1 Mon" read "earlier today" in <now>'s Journal dates and the Cast Sheet
+      (Knows, Imprints, defining moments), and the Notebook's Journal merged Year 1's and Year 2's "Month 1". From campaign Year 2
+      every date the engine writes carries its year ("Y2 M1 W1 Mon"; Year 1 keeps the plain form, so nothing changes before Year 2);
+      a date the narrator writes in Year 2 without one gets it; the first update in Year 2 dates Year 1's lines "Y1" (Journal,
+      archive, Knows, Imprints, Recent, defining moments, Last seen, campus events). ageOf reads the year ("over a year ago"); the
+      Journal groups by year and month from Year 2. The chat seed keeps the old form.
+    - {{user}} stayed a Year 1 student unless the narrator acted on a log line, so <now> gave them first-year classmates (cohort 2)
+      and first-year teachers. The engine now moves Player.Profile.Year up at a new campaign year (Journal "Began Year 2 at
+      Halvard."), unless the narrator changed it in that update; the story can set it back; a third-year is not moved.
+    - Last year's Competition record (e.g. "eliminated, Academy", a team of graduates) stayed all of Year 2, so the narrator read
+      {{user}}'s competitive year as over. It is cleared at the new year; the Journal keeps it.
+    - Etnie graduated automatically, against her canon (narrator_only goal: fail her third year on purpose to stay beside {{user}}).
+      `data/cohorts.json` `stays` keeps her: not sent away at M12 W1 Mon, a log line that does not give the secret away (the player
+      sees the log), "not graduating" on Graduation day; roster "repeating", Cast Sheet "Year 3 student". The story can still
+      graduate her. Owner: "Etnie tetap tinggal".
+    - Ages never moved: every "Age: N" / "Age N" in a Halvard NPC's lore (students, staff) now adds the campaign years since Year 1
+      (a cohort: since its arrival year), in the entry, the Cast Sheet and the dossier.
+      {{user}} turns a year older on their birthday (once per year; not if the story already wrote the new age).
+    - A graduate's own keyword entry said nothing about graduating (only the roster and the Cast Sheet did): it now opens with
+      "Now: graduated; has left Halvard (a visit or a letter is still possible)". Royhan's "This year is his last chance" trouble
+      showed again in Year 2 (Month-only date gate): it is Year 1 only now.
+    - <now> never named the campaign year: from Year 2 its first line starts "Year 2, " and one line says how to read lore written
+      for Year 1 (first-/second-/third-year and "this year" as of the year a character was introduced; school year now in the
+      roster; ages already current; graduates have left).
+    - The Entrance Event day plan in Year 2 still read as {{user}}'s own arrival: from Year 2 `_Event_today` adds that {{user}} is a
+      returning student, never sorted again; arrivals, sorting, tour and dorm rooms are for the new first-years.
+    - Rival academy teams never changed: their third-years (Ines, Cassius, Mirelle, Theodore) stayed on the Kingdom Competition
+      teams in Year 2. Each rival student's Role line now follows the campaign year (school year, age); after their third year the
+      entry opens "Now: graduated from <academy> at the end of campaign Year N; no longer on its team", and each team entry says
+      from Year 2 who has graduated and that the academy fields new members (none on record yet; owner: new NPCs later).
+    - A class with no teacher on record (most of {{user}}'s Year 2/3 subjects) said only "teacher not on record"; <now> now asks the
+      narrator to create one and keep them the same person every lesson (the Extras record keeps them from their second scene).
+    - The card description said "{{user}} is a first-year student": now "a student (a first-year when the story begins;
+      Player.Profile.Year says which year now)".
+  - Checked and fine: graduation of the Year 1 third-years at M12 W1 Mon (and of the Year 1 second-years at the end of Year 2),
+    also after a time skip; the six cohort-2 first-years arrive at the first update of Year 2 (roster, entries, added lines,
+    Regulars, sheets, Connections); graduates leave Regulars, club lists and the flu pool; happenings name no graduate; weekly and
+    daily caps, bond cooldowns, Meanwhile, stale events and Extras use absolute days (no Year 1/Year 2 collision); monthly payout
+    across the year boundary; notices and commitments dated "M1" written in Month 12; Nerys's hobby shift; every entry renders
+    in Year 2 and Year 3.
+  - Left as they are (owner): the Student Council has no President or VP in Year 2 until the planned election event; dorm top
+    ranks (Gareth #1, Sophia #2) graduate; nothing after Year 3; no new first-years in Year 3 (cohort 2 moves up to second year by
+    itself; `data/cohorts.json` "3" lists only new arrivals); Year-1-only phrases in lore beyond the <now> note.
+  - Tests: test_year2_v174.cjs (48 checks: the 1.7.3 save made at the end of Year 1, `save_1.7.3_yearend.json` from the new
+    tests/fixtures/make_save_yearend.cjs on the 1.7.3 code, plays into Year 2 without losing data; dates, ages, Etnie, {{user}}'s
+    year, competition, birthday, Entrance Event, <now>, Cast Sheet, dossier, Journal, rival teams, the teacher line, every entry in
+    Years 2 and 3). test_bughunt_v103 (Etnie is no longer in the graduating list; the roster shows her repeating) and
+    test_cohort2_v170 (version read from card.json) updated. Saves 1.7.3 and 1.7.3_yearend (1.7.3 code), 1.7.0_yearend added.
+    npm test 1430 checks (46 suites + static QA); stress passes (the 380-day run ends in Year 2); smoke 550 views, no errors;
+    token_audit in Year 1 as 1.7.3 plus the teacher words (~12.4k start, ~17.8k heavy; <now> +~60 tokens only from Year 2); preset
+    built twice, byte-identical (unchanged). TEST card rebuilt.
+  - To confirm with the owner: {{user}} moving up a year by themselves and NPC ages moving each campaign year (both built; the owner
+    did not object in the Year 2 review).
+  - To verify in ST: in campaign Year 2, <now> starts "Year 2, " with the campaign-year line; the Journal in Notebook shows
+    "Year 2, Month 1" above "Year 1, Month 12"; a graduate mentioned by name prints "Now: graduated" in their entry; a rival team
+    named in Year 2 prints who has graduated.
+- 1.7.3 NPC origins in the new nations (owner, 2026-09-27, draft `planning/DRAFT_npc_origins.md`, approved: "Approve"; both
+  moved to Eldrasil at twelve). No established decision changed.
+  - Idris Ainsworth: born in the Arslan Sultanate; the fur-trading family settled in Eldrasil's dry south when he was twelve and
+    still haggles the Arslan way. Vera Pulsar: born in Caelmar, where the immigrant family of clockmakers kept a shop on a middle
+    layer, before they settled in a mid-sized Eldrasil town when she was twelve. Both still go to Halvard at 18 like every gifted
+    child in Eldrasil.
+  - Tests: test_origins_v173.cjs (4 checks: both backstories, the UI data, the 1.7.2 save). Save 1.7.2 added. npm test 1367 checks
+    (45 suites + static QA); stress passes; token_audit unchanged; preset unchanged. TEST card rebuilt.
+- 1.7.2 Nations: five nations of the continent, each with its own trade, woven into the lore (owner, 2026-09-27, draft
+  `planning/DRAFT_nations.md`, approved: "approve"; the owner's rule for drafts: anything the owner does not comment on is approved).
+  No established decision changed.
+  - Entries (uid 278, 279, 333-335; Sunreach Bay's settings: keyword, order 80, position 1): the Arslan Sultanate (the money capital
+    in the Primal Desert; the World Bank), Norvaine (the north: the strongest army, a hereditary pact with Yog-Sothoth, Lord of the
+    Cosmos; each Star Night it takes one Chosen of the Cosmos, erased from memory, and only the rule is remembered; exports
+    starglass), Velmora (Eldrasil's northern border, the most formal court; its bloody succession is narrator_only), Caelmar (a
+    single hive city in the west, layered from the king above the clouds to the slums below; the continent's workshop), Yozakura
+    (the south, Japanese-themed, mostly Beastkin; service companies worldwide, rulers crowned by tournament as Alpha, katana).
+    The `Arslan` keywords moved from the Devoured Kingdom myth to the Arslan entry.
+  - Woven in: WORLD INDEX (a Nations line), Kingdom — Eldrasil (named nations), Competitions (the nations at the World Competition;
+    favourites Yozakura, Norvaine and Caelmar), Star Night, Etiquette, Combat Class, Workshop, the Mall, Observation Tower,
+    Commissary, Noble Houses' Liaison, Banking House (a World Bank branch), Mana Grid, Airships (Yozakuran lines and crews), Sunreach
+    Bay, Graduation ("the World Bank" at the recruitment tables). Every nation appears in 6-9 other entries.
+  - NPC lore: Tilly (narrator_only: Velmora's succession is a blood sport; her mother, the king's concubine, sent her, and her
+    letters go to her mother), Tsubaki (katana forged in Yozakura), Rei (katana forged in Yozakura), Kanae (a Norvaine starglass
+    crystal ball).
+  - Small wording choice: the Etiquette line says its lessons on noble conduct follow Velmoran manners (the class is marked on
+    judgement, not politeness, so the whole class does not).
+  - Sizes: 71-109 words, Norvaine 137 (it carries the most approved canon; kept as approved).
+  - Tests: test_nations_v172.cjs (57 checks: the entries, settings, trades, Norvaine and Yozakura rules, Velmora's secret, every
+    mention and how many entries each nation is woven into, the four NPC files, the v39 export, the 1.7.1 save). test_worldmyth_v171
+    follows the longer nations list and reads the version from card.json. Save 1.7.1 added. npm test 1358 checks (44 suites + static
+    QA); stress passes; token_audit ~12.4k start (+59, the WORLD INDEX Nations line), ~17.8k heavy; preset unchanged. TEST card rebuilt.
+  - To verify in ST: naming a nation in chat brings its entry; Tilly's scenes keep her secret.
+- 1.7.1 World Myth: a new lore category, five continent-wide myths (owner, 2026-09-26/27: "add kategori entry baru namanya
+  world myth ... lengthnya sama seperti kategori brand, takhayul, ghost story", myths 1-2 written by the owner, 3-5 from the
+  owner's direction; draft `planning/DRAFT_world_myth.md`, approved 2026-09-27: "Approve"). No established decision changed.
+  - Entries (uid 273-277, the Superstition entries' settings: keyword, order 65, position 0): The Devoured Kingdom (a king's pact
+    with Azathoth, Lord of All; the Primal Desert, now the Arslan Sultanate), The Four Who Saved the World (the King of Knights,
+    the Archmage, the Lady of the Lake, the Empress of the Fractured Vow), The First Bargain (a mortal's bargain with "something that
+    shone", Lucifer in narrator_only; magic fractured into four types), The Holy Grail, The Shaping of the World (Asmoday: spirits
+    first, mortals from the soil). Format Story / Told / Lesson / Status, 72-92 words (Brand ~40-60; the owner added the Lesson line).
+    Names, faces and gender of every figure are unknown (owner). The myths point at each other, with the First Bargain as the hub.
+  - Mentions, as the brands are mentioned: WORLD INDEX (Eldrasil "in the east of the continent", a World myths line), Kingdom —
+    Eldrasil (location, the Arslan Sultanate among the named nations, Eldrasil claims the Archmage), Veyra, Magic Theory, History,
+    Dark Magic Defense, Main Library, the Cathedral, Spirit Tiers; secret lines in The Morning Choir and Lucifer; one line each in the
+    files of Layla, Percival, Tilly, Morgana and Elion (`source_original/npc_lore_2026-09-25/`). Alyssa and Lucius (Spirit Lord
+    pacts) get no line on purpose, so nobody shuns them. All edits in `merge_lorebooks.py` (`WORLD_MYTHS`, `add_world_myths`), so the
+    card and the v39 export agree.
+  - New canon (all in the approved draft): Eldrasil lies in the east of the continent; Azathoth, Lord of All, the greatest of
+    Asmoday's spirits; the Arslan Sultanate stands in the Primal Desert; the Archmage sealed Lucifer (narrator_only; Lucifer's
+    "the thief" already implied it); the Morning Choir keeps the First Bargain as scripture; Elion named his magic after the King of
+    Knights' sword.
+  - Tests: test_worldmyth_v171.cjs (52 checks: the five entries, their settings and size, Lucifer unnamed outside narrator_only, the
+    Archmage without name or gender, the links, every mention, Tilly's line apart from her secret, no line for Alyssa and Lucius,
+    public location text, the v39 export, the 1.7.0 save). test_cohort2_v170 now reads the version from card.json. Save 1.7.0 added.
+    npm test 1296 checks (43 suites + static QA); stress passes; token_audit ~12.4k start (+68 always-on, the WORLD INDEX line),
+    ~17.7k heavy; preset built twice, byte-identical (unchanged). TEST card rebuilt.
+  - To confirm with the owner: the Holy Grail has no narrator_only line, so the narrator treats it as a legend (the owner did not
+    say whether it is real). Myth 5 says "mortals" rather than "human", so Elves and Beastkin come from the soil too.
+  - Next (owner): nation entries in their own draft, the same size; `Arslan` / `Arslan Sultanate` move from the Devoured Kingdom to
+    the Arslan entry then. A Velmora entry must not touch Tilly's secret.
+  - To verify in ST: naming a myth in chat (e.g. "the Holy Grail") brings its entry; the Cathedral and the Main Library mention
+    them when those entries fire.
 - 1.6.11 A new bond starts at the character's own Trust, and clubs in Connections wait for Rank 1 (owner playtest, 2026-09-26, thread "Stress test dan bug hunt": "ini
   message 2, saya bertemu trixie untuk pertama kali, kenapa status trustnya 10, dan betrayed?"). No canon changed. Restores the
   approved 1.4.3 design (HANDOFF §4 Trust: new bonds start by category), which the engine did not enforce.
@@ -1083,7 +1211,12 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
+- 1.7.3: Idris (Arslan) and Vera (Caelmar) have origins in the new nations.
+- 1.7.2: nations are in (Arslan, Norvaine, Velmora, Caelmar, Yozakura).
+- 1.7.1: World Myth category is in; next the owner's nation entries (own draft, same size).
 - 1.7.0: cohort 2 (six first-years from campaign Year 2) is in; they need portraits (owner's PNGs).
+- 1.7.4: Year 2 bug hunt done and merged with 1.7.1-1.7.3. Planned later (owner): a Student Council President election event,
+  the Student Council as a club {{user}} can join, new members for the rival teams from Year 2.
 - Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 to 1.6.7 done (G1 in 1.6.3, G2 in 1.6.4, G3 in 1.6.5,
   G4 in 1.6.6, G5 in 1.6.7; every bonded NPC has a voice), plus the Rank 8 branches in 1.6.8 and the 1.6.9 bug hunt. NOW: the owner playtests (docs/TEST_CHECKLIST_v1.6.md first); then run tools/audit_chat.py on the exported
   chat for the first MVU baseline.
@@ -1109,6 +1242,10 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 - Scripted first-week classes (M1 W1 Tue-Sat, 14 sessions; per dorm for [D] classes; optional homework into Commitments).
 
 ## To verify in ST (could not be tested outside ST)
+- 1.7.4: in campaign Year 2, <now> opens "Year 2, " with the campaign-year line; Notebook → Journal groups "Year 2, Month 1" above
+  "Year 1, Month 12"; a graduate's keyword entry opens "Now: graduated"; the Entrance Event is played as a returning student.
+- 1.7.2: naming a nation in chat brings its entry; Tilly's scenes keep the Velmora secret.
+- 1.7.1: naming a World Myth in chat brings its entry; the Cathedral and Main Library entries carry their myth line.
 - 1.7.0: in campaign Year 2, one of the six first-years present (keyword entry, Cast Sheet, Nerys's hobby line) and an older
   NPC's entry with the added lines (EJS year gate); in Year 1 none of it appears.
 - 1.6.9: docs/TEST_CHECKLIST_v1.6.md (card + preset + VectFox together): the depth-0 order in the real prompt, VectFox's
@@ -1148,8 +1285,8 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 ## Notes / open issues
 - Dependencies are unpinned: schema.js imports StageDog mvu_zod.js and mvu_loader.js the MVU bundle from default branches. F12 showed a
   helper change can silently alter behaviour. Pinning needs a tested pair of commits (owner decision; test in ST first).
-- Player lifecycle is not modelled: no enrolled/graduated/expelled state for {{user}}; the engine only reminds the narrator to update
-  Player.Profile.Year at a new campaign year. Payouts continue regardless.
+- Player lifecycle is only partly modelled: since 1.7.4 the engine moves Player.Profile.Year up at a new campaign year (the story
+  can hold {{user}} back); there is no graduated/expelled state for {{user}} after Year 3. Payouts continue regardless.
 - A student the story keeps back (removed from Campus_State.Graduated) does not graduate automatically in a later year (shown as
   "repeating" in the roster); the story handles them.
 - Cohort 2 (Year 2) done in 1.7.0; a Year 3 cohort would follow the same playbook (HANDOFF §6). Their portraits are still missing.

@@ -1183,7 +1183,7 @@
   "uid": 55,
   "category": "Academic",
   "kind": "location",
-  "description": "Down in the castle's vaulted undercroft beneath the Lecture Halls, where thick stone keeps its noise off the classrooms above and flues carry forge smoke up through the walls. Crafting space for the Smithing, Tailoring and Brewing clubs, plus Creation practicals and equipment repair. Tools, forges, benches. Enchantment sparks hang in the air a moment too long.",
+  "description": "Down in the castle's vaulted undercroft beneath the Lecture Halls, where thick stone keeps its noise off the classrooms above and flues carry forge smoke up through the walls. Crafting space for the Smithing, Tailoring and Brewing clubs, plus Creation practicals and equipment repair. Tools, forges, benches. Enchantment sparks hang in the air a moment too long. Its lathes and tool racks are Caelmari-made.",
   "vibe": "forge light, hammering, quenched metal.",
   "has_secret": false,
   "regulars": [
@@ -1304,7 +1304,7 @@
   "uid": 56,
   "category": "Library",
   "kind": "location",
-  "description": "Reading rooms and general collections; the academy's working heart in exam weeks. Open to all four dorms, one of the few places students mix by choice rather than schedule. The upper shelves sit permanently in shadow and are a standard hiding place for students avoiding class. In exam weeks, Firetooth tins and Star Cookies cover the study tables.",
+  "description": "Reading rooms and general collections; the academy's working heart in exam weeks. Open to all four dorms, one of the few places students mix by choice rather than schedule. The upper shelves sit permanently in shadow and are a standard hiding place for students avoiding class. In exam weeks, Firetooth tins and Star Cookies cover the study tables. A battered book of world myths (the Holy Grail, the Four Who Saved the World) is the most borrowed title in a first-year's first month.",
   "vibe": "towering, shadowed, murmuring.",
   "has_secret": false,
   "regulars": [
@@ -2183,7 +2183,7 @@
   "uid": 66,
   "category": "Student Life",
   "kind": "location",
-  "description": "The most popular building on campus and where students spend most free time. Crown-funded, holding everything a student needs without leaving: tailor, barber, laundry service, restaurants, tea houses and cafés, bakery, music rooms, art studios, game halls, and a multipurpose store. Everything costs points, with a basic free version of each available in the dorms. Familiar names: Nightwell, Merryhew's, the Sunfizz counter, the bakery. Ground level is food, tailoring, and supplies. Second floor is private dining, tea shops, and gaming parlors. The top deck belongs to the practice studios and meditation nooks.",
+  "description": "The most popular building on campus and where students spend most free time. Crown-funded, holding everything a student needs without leaving: tailor, barber, laundry service, restaurants, tea houses and cafés, bakery, music rooms, art studios, game halls, and a multipurpose store. Everything costs points, with a basic free version of each available in the dorms. Familiar names: Nightwell, Merryhew's, the Sunfizz counter, the bakery. Ground level is food, tailoring, and supplies. Second floor is private dining, tea shops, and gaming parlors. The top deck belongs to the practice studios and meditation nooks. Its busiest tea house is a Yozakuran chain.",
   "vibe": "warm, bright, loud.",
   "has_secret": false,
   "regulars": [
@@ -3447,7 +3447,7 @@
   "uid": 81,
   "category": "Sport and Grounds",
   "kind": "location",
-  "description": "A high tower for astral and celestial work, most important to Mystic students; the Divination Society meets here. The most contested spot on campus on Star Night. Instruments turn by themselves at night.",
+  "description": "A high tower for astral and celestial work, most important to Mystic students; the Divination Society meets here. The most contested spot on campus on Star Night. Instruments turn by themselves at night. Its great telescope has a Norvaine starglass lens, the Divination Society's pride.",
   "vibe": "high, windy, deep dark.",
   "has_secret": false,
   "regulars": [
@@ -3550,7 +3550,7 @@
   "uid": 83,
   "category": "Services",
   "kind": "location",
-  "description": "The academy shop, a big open-sided stall beside the Mall: one broad roof on timber posts, open on all four sides, its counters and shelves crammed to the rafters like a general store that sells a bit of everything. Supplies, uniforms, stationery, reagents, equipment, with special orders for anything not stocked. The cheap tier against the mall's store; specialised items can still eat a week of points. Sunfizz sells here for eight points, bottles returned for two. Everyday kit: notebooks, pencils, pen nibs and ink, folders, satchels, printed class textbooks; reagents and equipment on the back shelves.",
+  "description": "The academy shop, a big open-sided stall beside the Mall: one broad roof on timber posts, open on all four sides, its counters and shelves crammed to the rafters like a general store that sells a bit of everything. Supplies, uniforms, stationery, reagents, equipment, with special orders for anything not stocked. The cheap tier against the mall's store; specialised items can still eat a week of points. Sunfizz sells here for eight points, bottles returned for two. Everyday kit: notebooks, pencils, pen nibs and ink, folders, satchels, printed class textbooks; reagents and equipment on the back shelves. Its cheap stationery and everyday kit are Caelmari-made.",
   "vibe": "crowded shelves, new cloth, leather.",
   "has_secret": false,
   "regulars": [
@@ -4052,7 +4052,7 @@
   "uid": 90,
   "category": "External Presence",
   "kind": "location",
-  "description": "A house of worship for Asmoday, Goddess of Creation, on academy grounds but answerable to its own authority. Services open to all; its clergy are not academy employees and teach that Asmoday created magic and gifted it to mortals. That a goddess of creation holds ground at an institution built around sealing things away is a tension nobody discusses openly. It also runs orphanages across the kingdom, the Asmoday's Mercy houses. Halvard: run by a steward who keeps the registry of every oath sworn on academy grounds.",
+  "description": "A house of worship for Asmoday, Goddess of Creation, on academy grounds but answerable to its own authority. Services open to all; its clergy are not academy employees and teach that Asmoday created magic and gifted it to mortals. Every service opens with the Shaping of the World; the clergy teach that Asmoday fractured magic after the First Bargain. That a goddess of creation holds ground at an institution built around sealing things away is a tension nobody discusses openly. It also runs orphanages across the kingdom, the Asmoday's Mercy houses. Halvard: run by a steward who keeps the registry of every oath sworn on academy grounds.",
   "vibe": "stained-glass colour, incense, heavy stillness.",
   "has_secret": false,
   "regulars": [
@@ -4116,7 +4116,7 @@
   "uid": 91,
   "category": "External Presence",
   "kind": "location",
-  "description": "A small elegant manor hung with the banners of the noble houses, standing near the Cathedral and the Dovecote. A standing office representing the noble houses' interests, and the reason noble conduct is a graded part of Etiquette rather than a courtesy. It tracks promising students long before Graduation in Month 11, keeps its own notes on who is worth approaching, and hosts house representatives. Students who do not catch its attention usually never learn it exists.",
+  "description": "A small elegant manor hung with the banners of the noble houses, standing near the Cathedral and the Dovecote. A standing office representing the noble houses' interests, and the reason noble conduct is a graded part of Etiquette rather than a courtesy. It tracks promising students long before Graduation in Month 11, keeps its own notes on who is worth approaching, and hosts house representatives. Students who do not catch its attention usually never learn it exists. Its protocol follows Velmoran court manners.",
   "vibe": "carpeted, soft, deliberately comfortable.",
   "has_secret": false,
   "regulars": [
@@ -4161,7 +4161,7 @@
   "uid": 92,
   "category": "External Presence",
   "kind": "location",
-  "description": "A square stone building with a flat roof, heavy double doors, and a gilded coin emblem mounted above the entrance. The academy's only currency exchange, converting points to real money and back at 1:1 either way. It also moves real coin in and out of the grounds: family money, paid-work earnings and betting settlements all become coin here. It stands outside the mall, so a visit is a deliberate errand.",
+  "description": "A square stone building with a flat roof, heavy double doors, and a gilded coin emblem mounted above the entrance. The academy's only currency exchange, converting points to real money and back at 1:1 either way. It also moves real coin in and out of the grounds: family money, paid-work earnings and betting settlements all become coin here. It stands outside the mall, so a visit is a deliberate errand. A branch of the World Bank of the Arslan Sultanate; its clerks answer to the Sultanate, not the academy.",
   "vibe": "polished counters, clinking coin.",
   "has_secret": false,
   "regulars": [

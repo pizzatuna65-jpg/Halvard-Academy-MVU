@@ -1,9 +1,11 @@
 [Kingdom: Eldrasil]
 Genre: Fantasy magic academy
 Premise: Four magic academies in one kingdom, each tied to a cardinal region and each built on top of a great magical site.
-Other nations: exist; Sunreach Bay and Velmora are named.
+Location: the east of the continent.
+Other nations: exist; Sunreach Bay, Velmora, the Arslan Sultanate, Norvaine, Caelmar and Yozakura are named.
 - Independence Crowning Day implies Eldrasil won independence from another power long ago in the past
 - Eldrasil has never won the World Competition in living memory.
+- Eldrasil claims the Archmage of the Four Who Saved the World as its own hero.
 
 [Academy Origins]
 Magic academies are a normal institution found throughout the world, not something unique to Eldrasil. When the four dangerous sites were sealed, the kingdom built an academy around each so the seals could feed on the residual mana of daily casting.

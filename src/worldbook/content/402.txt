@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Mirelle')) { _%>
 [Mirelle Lullwyn]
-Role: Student, Ashvale Academy. Third year, age 20 (very young by elven standards). Elf. Control role on Ashvale's team.
+<%_ if ((3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
+Now: graduated from Ashvale Academy at the end of campaign Year 1; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Role: <%- (3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Ashvale Academy. <%- (3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 20 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %> (very young by elven standards). Elf. Control role on Ashvale's team.
 Appearance: Pink hair, pointed ears, average height, permanently half-asleep eyes. Usually drifting a little off the ground, pillow tucked under one arm. Ashvale's uniform (cream tunic with gold buttons and deep green trim, deep green pleated skirt, knee-high brown boots); her deep green half-cape usually ends up wrapped around her as a blanket.
 Inventory: A pillow. She takes it everywhere, without exception.
 Magic: Mystic — Gravity.

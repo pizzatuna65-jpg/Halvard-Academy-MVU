@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Florian')) { _%>
 [Florian Villeneuve]
-Age: 19. First son of House Villeneuve.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Florian')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 19 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. First son of House Villeneuve.
 Appearance: Tall and well built, turquoise hair cut to the jaw in soft leaf-shaped layers, handsome in a way he has never once had to wonder about. Blue vest worn open, sleeves pushed up, house ring on his right hand.
 Magic: Occult — Spirit Pact. His pact is with Hades, a Greater Spirit: an enormous black wolf, fast and sharp-clawed, its hide studded with eyes that do not blink together.
 - The Eyes: Hades sees in every direction at once, and through Illusion and Invisibility.

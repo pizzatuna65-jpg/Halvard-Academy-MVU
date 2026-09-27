@@ -56,7 +56,7 @@ const MIDTERM = { Mon: '08:00 Magic Theory, 10:00 Etiquette (written papers); af
 const FINALS = '08:00–18:00 the single practical trial, one student at a time: theory door, beast, potion, cursed room, examiner in role, duel with a staff member; Royal Inspectorate examiners watch from the gallery';
 const BOOTHS = 'Classes as usual; 16:00–18:00 club booths across the academy';
 const EVENTS = [
-  { m: 1, w: 1, d: ['Mon'], t: 'Entrance Event (Arbiter Stone sorting)', noclass: 1,
+  { m: 1, w: 1, d: ['Mon'], t: 'Entrance Event (Arbiter Stone sorting)', noclass: 1, entr: 1,
     s: '07:00–09:00 arrivals at Reception and Gatehouse; 09:00 sorting at the Arbiter Stone in the Arbiter Hall; 10:00–18:00 campus tour all day (three other newcomers and one senior per group) while club booths stand across the academy (sign-up open until Friday 18:00); late afternoon: seniors show the new students their dorm rooms; 19:00 Entrance Feast in the Ring Dining Hall, the Headmaster and Vice Headmaster speak before dinner' },
   { m: 1, w: 1, d: ['Tue', 'Wed', 'Thu', 'Fri'], t: 'Club sign-up week (club booths after classes)',
     s: { Tue: BOOTHS, Wed: BOOTHS, Thu: BOOTHS, Fri: BOOTHS + '; last day: club registration closes at 18:00' } },
@@ -117,6 +117,8 @@ const EVENTS = [
   { m: 12, w: 3, d: ALL, t: 'Kingdom-wide holiday: students go home', home: 1 },
   { m: 12, w: 4, d: ALL, t: 'Kingdom-wide holiday: students go home', home: 1 },
 ];
+// 1.7.4: from campaign Year 2 the Entrance Event is for the new first-years; {{user}} has been sorted already
+const ENTR_BACK = '{{user}} is a returning student, sorted in their first year and never sorted again: arrivals, sorting, the tour and the dorm rooms are for the new first-years, whom seniors guide';
 const schedOf = (e, day) => (!e.s ? '' : typeof e.s === 'string' ? e.s : e.s[day] || '');
 const curfewHour = (e, day) => (e.curfew && typeof e.curfew === 'object' ? e.curfew[day] : e.curfew);
 const TIMETABLE = {
@@ -235,6 +237,7 @@ const KINGDOM_PRIZE = 5000;
 // ARRIVES: incoming cohorts (data/cohorts.json) -> campaign year they arrive as first-years; before that they are not at Halvard.
 const STUDENTS = /*@@STUDENTS@@*/{};
 const ARRIVES = /*@@ARRIVES@@*/{};
+const STAYS = /*@@STAYS@@*/{};   // 1.7.4: third-years whose canon keeps them at Halvard (data/cohorts.json "stays"): {id: log line}
 const yearOf = (id, Y) => (STUDENTS[id] ? STUDENTS[id][0] + Y - STUDENTS[id][1] : 0);   // their school year in campaign year Y
 // Batch 5.3 (F20): seeded campus happenings. Pool from data/happenings.json (injected by tools/gen_engine.py).
 // Plan 4.6: never Math.random(). The chat seed is taken once from the creation time of the message whose update first ran the
@@ -266,11 +269,15 @@ const fromAbs = abs => {
   const Week = Math.floor(day / 7) + 1; day -= (Week - 1) * 7;
   return { Year, Month, Week, Day: DAYS[day], Time: `${pad(Math.floor(min / 60))}:${pad(min % 60)}` };
 };
-const stamp = W => `M${W.Month} W${W.Week} ${W.Day} ${W.Time}`;
+// 1.7.4: from campaign Year 2 every date the engine writes carries its year ("Y2 M1 W1 Mon"), so the age of a line is right across
+// years (<now>, Cast Sheet) and the Journal groups by year; Year 1 keeps the plain form. withYear() adds a year to a leading bare date.
+const yPre = W => ((W.Year || 1) > 1 ? `Y${W.Year} ` : '');
+const stamp = W => `${yPre(W)}M${W.Month} W${W.Week} ${W.Day} ${W.Time}`;
+const withYear = (s, Y) => String(s).replace(/^(\[?)(M\d{1,2} W[1-4]\b)/, `$1Y${Y} $2`);
 const eventsOn = W => EVENTS.filter(e => e.m === W.Month && e.w === W.Week && e.d.includes(W.Day));
 const pctOf = (v, max) => (max > 0 ? (v / max) * 100 : 0);
 const num = (v, d = 0) => { const x = Number(v); return Number.isFinite(x) ? x : d; };
-const dstamp = W => `M${W.Month} W${W.Week} ${W.Day}`;
+const dstamp = W => `${yPre(W)}M${W.Month} W${W.Week} ${W.Day}`;
 // Parses a due/until text written by the AI ("M2 W1 Tue 14:00", "Month 3 Week 2", "Fri 18:00", "tomorrow 9am", "M4") into an
 // absolute minute, relative to the current world time W. Missing parts: day -> Sunday of that week (or the next such weekday),
 // week -> week 4 when only a month is given, time -> 23:59. Returns -1 when nothing date-like is found.
@@ -666,11 +673,11 @@ function runEngine(S, B, text, seedHint) {
   const bd = /^M(\d{1,2}) W([1-4]) (Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/.exec(String(S.Player.Profile.Birthday || '').trim());
   const bday = bd && +bd[1] === S.World.Month && +bd[2] === S.World.Week && bd[3] === S.World.Day;
   // 1.3.1: each event with today's plan (times from its lore entry), so the narrator runs the day on schedule
-  S.World._Event_today = [...evs.map(e => (schedOf(e, S.World.Day) ? `${e.t} — ${schedOf(e, S.World.Day)}` : e.t)), ...(bday ? [`${S.Player.Profile.Name || 'Your'}'s birthday`] : [])].join(' | ');
+  S.World._Event_today = [...evs.map(e => (schedOf(e, S.World.Day) ? `${e.t} — ${schedOf(e, S.World.Day)}` : e.t) + (e.entr && S.World.Year > 1 ? ` (${ENTR_BACK})` : '')), ...(bday ? [`${S.Player.Profile.Name || 'Your'}'s birthday`] : [])].join(' | ');
   S.World._Period = periodOf(S.World, evs);
   S.World._Curfew = curfewOf(S.World, evs, S);
   // F20: today's happening (visible from the day's start until its window closes)
-  if (!(S.$eng.seed > 0)) S.$eng.seed = (hash32(String(seedHint || ''), stamp(S.World), String(S.Player.Profile.Name || '')) % 2147483646) + 1;
+  if (!(S.$eng.seed > 0)) S.$eng.seed = (hash32(String(seedHint || ''), stamp({ ...S.World, Year: 1 }), String(S.Player.Profile.Name || '')) % 2147483646) + 1;
   {
     const rate = HAPPEN_RATE[S.$ui.happenings] ?? HAPPEN_RATE.normal;
     const h = happeningOn(S.$eng.seed, Math.floor(absA / DAY_MIN), rate, S.$ui.wxfx), hr = Math.floor((absA % DAY_MIN) / 60);
@@ -684,8 +691,16 @@ function runEngine(S, B, text, seedHint) {
   const dayNo = Math.floor(absA / DAY_MIN);
   const dayNoB = Math.floor(absB / DAY_MIN);
   if (hasB && dayNo !== dayNoB && evs.some(e => e.ranking)) log.push('Results & Dorm Ranking today: update Player.Profile.Dorm_rank when the results are announced.');
-  if (hasB && dayNo !== dayNoB && evs.some(e => e.grad)) log.push('Graduation today: the third-years leave by airship tomorrow morning; the engine then lists them in Campus_State.Graduated.');
-  if (hasB && S.World.Year > (B.World.Year || 1)) log.push(`A new academic year began (Year ${S.World.Year}): update Player.Profile.Year if {{user}} moved up.`);
+  if (hasB && dayNo !== dayNoB && evs.some(e => e.grad)) log.push(`Graduation today: the third-years leave by airship tomorrow morning; the engine then lists them in Campus_State.Graduated.${Object.keys(STAYS).filter(id => yearOf(id, S.World.Year) === 3 && !(S.Campus_State.Graduated || []).includes(id)).map(id => ` ${id} is not graduating (see their lore).`).join('')}`);
+  // 1.7.4: {{user}} turns a year older on the first update of their birthday (once per campaign year), unless the story already
+  // changed Player.Profile.Age in that update
+  if (hasB && bday && dayNo !== dayNoB) {
+    const bs = S.$eng.bdays || (S.$eng.bdays = []), k = `Y${S.World.Year}`;
+    if (!bs.includes(k)) {
+      bs.push(k);
+      if (num(S.Player.Profile.Age, 18) === num(B.Player.Profile.Age, 18)) { S.Player.Profile.Age = num(S.Player.Profile.Age, 18) + 1; log.push(`Birthday: {{user}} turns ${S.Player.Profile.Age} today (Player.Profile.Age).`); }
+    }
+  }
 
   // ---- 1b. 1.1.0 weather (spec §4): season, sky, wind, rare weather and °C for the current block; the Divination Society forecast ----
   const WXM = S.$ui.wxfx, seed = S.$eng.seed;
@@ -1296,14 +1311,14 @@ function runEngine(S, B, text, seedHint) {
       const b0 = BB[id] || null;
       b.Knows = (Array.isArray(b.Knows) ? b.Knows : []).map(k => String(k).trim()).filter(Boolean);
       const old0 = new Set(b0 ? [...(b0.Knows || []), ...(b0.$Knows_old || [])] : []);
-      b.Knows = [...new Set(b.Knows)].map(k => (old0.has(k) || /^\[M\d{1,2} W[1-4]/.test(k) ? k : `[${dstamp(S.World)}] ${k}`));
+      b.Knows = [...new Set(b.Knows)].map(k => (old0.has(k) ? k : /^\[(Y\d+ )?M\d{1,2} W[1-4]/.test(k) ? (S.World.Year > 1 ? withYear(k, S.World.Year) : k) : `[${dstamp(S.World)}] ${k}`));
       if (b.Knows.length > KNOWS_VISIBLE) { b.$Knows_old = [...b.$Knows_old, ...b.Knows.slice(0, b.Knows.length - KNOWS_VISIBLE)].slice(-40); b.Knows = b.Knows.slice(-KNOWS_VISIBLE); }
       // Imprints
       const I0 = b0 ? (b0.Imprints || []) : [], key = x => String(x.Belief || '').trim().toLowerCase();
       let I = (Array.isArray(b.Imprints) ? b.Imprints : []).filter(x => x && String(x.Belief || '').trim());
       const fresh = I.filter(x => !I0.some(y => key(y) === key(x)));
       for (const x of fresh) {
-        if (!x.When) x.When = dstamp(S.World);
+        if (!x.When) x.When = dstamp(S.World); else if (S.World.Year > 1) x.When = withYear(x.When, S.World.Year);
         if (num(x.Weight, 0) < 5) { I = I.filter(y => y !== x); log.push(`An Imprint for ${id} needs weight 5 or more (an experience that changes who they are); "${x.Belief}" was not kept. Record smaller moments as Known_facts or Knows.`); }
       }
       while (I.length > IMPRINT_MAX) {
@@ -1564,6 +1579,22 @@ function runEngine(S, B, text, seedHint) {
   if (hasB && Tr.Active !== !!Tr0.Active) jnl.push(Tr.Active ? `Set off for ${Tr.Destination || 'a trip'}.` : `Back from ${Tr0.Destination || Tr.Destination || 'the trip'}.`);
 
   // ---- 8e. v1.0.3 new school year: a new class of first-years (incoming cohorts from data/cohorts.json) ----
+  // 1.7.4: {{user}} moves up a year with everyone else (the story may hold them back), and last year's competition record is cleared
+  // (the Journal keeps it): Losing at any tier ends only that year's competitions.
+  if (hasB && S.World.Year > (B.World.Year || 1)) {
+    const P = S.Player.Profile, y0 = num(B.Player.Profile.Year, 1), dy = S.World.Year - (B.World.Year || 1);
+    if (num(P.Year, 1) !== y0) log.push(`A new academic year began (Year ${S.World.Year}); {{user}} is in Year ${P.Year}.`);
+    else if (y0 < 3) {
+      P.Year = Math.min(3, y0 + dy);
+      jnl.push(`Began Year ${P.Year} at Halvard.`);
+      log.push(`A new academic year began (Year ${S.World.Year}): {{user}} moved up to Year ${P.Year} (Player.Profile.Year). If the story holds {{user}} back a year, set it back.`);
+    } else log.push(`A new academic year began (Year ${S.World.Year}). {{user}} was already a third-year: the card does not play {{user}}'s own graduation, so the story decides what happens now.`);
+    const Co = S.Competition;
+    if (Co && (Co.Tier || Co.Status || Co.Placement || (Co.Team || []).length || (Co.Results || []).length)) {
+      Object.assign(Co, { Tier: '', Status: '', Placement: '', Team: [], Results: [] });
+      log.push("A new competitive year: last year's Competition record was cleared (the Journal keeps it).");
+    }
+  }
   {
     const seen = S.$eng.cohorts || (S.$eng.cohorts = []);
     for (let Y = 2; hasB && Y <= S.World.Year; Y++) {
@@ -1581,8 +1612,9 @@ function runEngine(S, B, text, seedHint) {
     for (let Y = 1; hasB && Y <= S.World.Year; Y++) {
       if (done.includes(`Y${Y}`) || absA < toAbs({ Year: Y, Month: 12, Week: 1, Day: 'Mon', Time: '07:00' })) continue;
       done.push(`Y${Y}`);
-      const left = Object.keys(STUDENTS).filter(id => yearOf(id, Y) === 3 && !G.includes(id));
+      const left = Object.keys(STUDENTS).filter(id => yearOf(id, Y) === 3 && !G.includes(id) && !STAYS[id]);
       G.push(...left);
+      for (const id of Object.keys(STAYS)) if (yearOf(id, Y) === 3 && !G.includes(id)) log.push(`${STAYS[id]}. If the story had them graduate after all, add the name to Campus_State.Graduated.`);
       if (left.length) {
         jnl.push(`The third-years graduated and left Halvard: ${left.join(', ')}.`);
         S.$ui.toasts.push(`Graduates have left campus: ${left.map(id => `{npc:${id}}`).join(', ')}`);
@@ -1675,7 +1707,7 @@ function runEngine(S, B, text, seedHint) {
   // v1.0.3 (F13): every revealed secret also goes to a permanent, hidden ledger; unlocks read it, so the AI list may stay short
   for (const x of S.Campus_State.Secrets_revealed || []) if (!S.$ui.secrets.includes(x)) S.$ui.secrets.push(x);
   const J0 = new Set((hasB && B.Journal) || []);
-  S.Journal = (S.Journal || []).map(line => (J0.has(line) || /^\[M\d/.test(line) ? line : `[${dstamp(S.World)}] ${line}`));
+  S.Journal = (S.Journal || []).map(line => (J0.has(line) ? line : /^\[(Y\d+ )?M\d/.test(line) ? (S.World.Year > 1 ? withYear(line, S.World.Year) : line) : `[${dstamp(S.World)}] ${line}`));
   for (const line of jnl) S.Journal.push(`[${dstamp(S.World)}] ${line}`);
   S.Journal = [...new Set(S.Journal)].slice(-CAP.Journal);
   // F21 state-as-memory: the narrator reads the last CAP.Journal lines; older ones (and lines the AI removed) move to $ui.archive
@@ -1813,6 +1845,20 @@ function runEngine(S, B, text, seedHint) {
 
   // ---- 10. commit ----
   S.$eng.abs = absA;
+  // 1.7.4: the first update in campaign Year 2 or later dates every line still written in Year 1's plain form ("[M3 W2 Tue]" ->
+  // "[Y1 M3 W2 Tue]"); lines of this update already carry their own year (stamp, withYear), so a bare date here is from Year 1.
+  if (hasB && (B.World.Year || 1) === 1 && S.World.Year > 1) {
+    const y1 = x => (typeof x === 'string' ? withYear(x, 1) : x);
+    S.Journal = (S.Journal || []).map(y1);
+    if (Array.isArray(S.$ui.archive)) S.$ui.archive = S.$ui.archive.map(y1);
+    for (const b of Object.values(S.Bonds || {})) {
+      b.Last_seen = y1(b.Last_seen);
+      for (const f of ['Knows', '$Knows_old']) if (Array.isArray(b[f])) b[f] = b[f].map(y1);
+      for (const f of ['$Recent', '$Defining']) if (Array.isArray(b[f])) b[f] = b[f].map(r => (r && typeof r === 'object' ? { ...r, w: y1(r.w) } : r));
+      if (Array.isArray(b.Imprints)) b.Imprints = b.Imprints.map(x => (x && typeof x === 'object' ? { ...x, When: y1(x.When) } : x));
+    }
+    for (const v of Object.values((S.Campus_State || {}).Events || {})) if (v && typeof v === 'object') v.Updated = y1(v.Updated);
+  }
   if (log.length) S._Log = [...(S._Log || []), ...log.map(l => `[${stamp(S.World)}] ${l}`)].slice(-12);
 }
 

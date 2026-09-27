@@ -157,7 +157,7 @@ console.log('A#5 log view hides unknown names');
 ok(!/Kanae/.test(UI.pLog({ ...S0, _Log: ['[M1 W1 Mon 08:00] Bond progress with Kanae capped for today.'] })), 'pLog replaces an unknown NPC name');
 
 console.log('Graduation: third-years leave campus and stop being regulars');
-const y3 = ['Caspian', 'Etnie', 'Gareth', 'Irene', 'Royhan', 'Ruby', 'Sophia'];
+const y3 = ['Caspian', 'Gareth', 'Irene', 'Royhan', 'Ruby', 'Sophia'];   // 1.7.4: Etnie stays on (data/cohorts.json stays; test_year2_v174)
 let Gd = set(S0, { Month: 11, Week: 4, Day: 'Sun', Time: '09:00', Location: 'The Arbiter Hall' });
 ok(Gd.Campus_State.Graduated.length === 0 && Gd._Log.some(l => /Graduation today/.test(l)), 'Graduation day: nobody has left yet');
 Gd = set(Gd, { Month: 12, Week: 1, Day: 'Mon', Time: '08:00', Location: 'Student Council Chamber' });
@@ -219,5 +219,5 @@ const ros = fs.readFileSync(path.join(ROOT, 'src/worldbook/content/97.txt'), 'ut
 const rr = (Y, G) => ejs.render(ros, { getvar: k => ({ 'stat_data.World.Year': Y, 'stat_data.Campus_State.Graduated': G || [] })[k] });
 ok(!/Testa/.test(rr(1)) && /Year 3: Gareth/.test(rr(1)) && /Year 1: Trixie/.test(rr(1)), 'roster Year 1: as written, no Testa');
 const r2 = rr(2, y3);
-ok(/Year 1: Testa/.test(r2) && /Year 2: Trixie/.test(r2) && /Year 3: Florian/.test(r2) && /Graduated, no longer at Halvard: Gareth/.test(r2), 'roster Year 2: Testa arrives, everyone moves up, graduates listed apart');
+ok(/Year 1: Testa/.test(r2) && /Year 2: Trixie/.test(r2) && /Year 3: [^\n]*Florian/.test(r2) && /Etnie \([^)]*repeating\)/.test(r2) && /Graduated, no longer at Halvard: Gareth/.test(r2), 'roster Year 2: Testa arrives, everyone moves up, graduates listed apart');
 ok(/Etnie \([^)]*repeating\)/.test(rr(2, y3.filter(x => x !== 'Etnie'))), 'a student kept back shows as repeating');

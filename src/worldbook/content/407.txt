@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Cassius')) { _%>
 [Cassius Rhavel]
-Role: Student, Veyra Academy. Third year, age 20 (very young by elven standards). Elf. Control role and captain of Veyra's team.
+<%_ if ((3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
+Now: graduated from Veyra Academy at the end of campaign Year 1; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Role: <%- (3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Veyra Academy. <%- (3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 20 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %> (very young by elven standards). Elf. Control role and captain of Veyra's team.
 Appearance: Neat dark blue hair, sharp violet eyes, glasses he pushes up whenever he is about to correct someone. Veyra's boys' uniform worn perfectly: navy blazer with white piping, gold Veyra crest on the breast pocket, white collared shirt, blue-violet ribbon tie, navy trousers.
 Inventory: The notebook. Rules, formations, schedules, and his ideals of how a proper team conducts itself, all written in careful columns. He follows it to the letter and expects everyone else to.
 Magic: Mystic — Barrier, shaped into cages. He traps opponents in barrier boxes, cuts the field into orderly sections, and walls off anyone who strays from the plan.

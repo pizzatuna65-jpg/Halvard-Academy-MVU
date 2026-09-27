@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Caralynn')) { _%>
 [Caralynn "Cara" Veyturone]
-Age: 18, {{user}}'s year. Noble.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Caralynn')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>, {{user}}'s year. Noble.
 Appearance: Short, long curly blonde hair, bright pink eyes, natural fair skin. Red vest, black skirt, stockings. Off duty, cute frilly clothes in pink or purple.
 Magic: Elemental — Ice. Casts in grandiose style, boasting mid-spell.
 Skills: Encyclopedic intellect. A following of students who carry her bags and curry favor. Makeup, beauty, fashion.

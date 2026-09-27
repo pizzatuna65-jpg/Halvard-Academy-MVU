@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Dex')) { _%>
 [Dex Harlow]
-Role: Student, Myrdath Academy. Second year, age 19. Human. Healing role on Myrdath's team.
+<%_ if ((2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
+Now: graduated from Myrdath Academy at the end of campaign Year 2; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Role: <%- (2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Myrdath Academy. <%- (2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 19 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %>. Human. Healing role on Myrdath's team.
 Appearance: Messy dark red hair, several piercings in each ear, bandaged knuckles, Myrdath boys' uniform worn badly: white shirt untucked and half-unbuttoned, grey necktie hanging loose, charcoal-grey trousers.
 Magic: Spiritual — Healing and Stabilize. Good at both, and furious about how good.
 - The swarm problem: Lucius's swarm eats his healing as readily as the enemy's spells, so he heals in the gaps between swarm windows and complains about it every single time.

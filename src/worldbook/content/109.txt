@@ -1,6 +1,6 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Gavlan')) { _%>
 [Gavlan Haverton]
-Role: Teaching first-year Combat for two decades; advises the Duelling Club. Age 634: old even for an elf, yet vigorous.
+Role: Teaching first-year Combat for two decades; advises the Duelling Club. Age <%- 634 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>: old even for an elf, yet vigorous.
 Appearance: Tall, muscular, short silver hair slicked back, well-trimmed beard and moustache, bright silver eyes, pointed ears, a cross-shaped scar on his left cheek. Black vest with silver filigree, collared shirt, black slacks, and a long coat clasped over his shoulders for a more intimidating air. Always well dressed.
 Magic: Mystic — Gravity, backed by enormous mana reserves. He can crush, pin, or lift anything in reach, and the ground around him is never quite the weight it should be. His signature is a dense sphere of gravity that drags in everything around it, a black hole in miniature. Has an innate sense for magic nearby, earned over centuries.
 Equipment: A polished black steel staff that doubles as a walking stick, forged for him by a mountain Beastkin clan and kept unbreakable by his Reinforcement.

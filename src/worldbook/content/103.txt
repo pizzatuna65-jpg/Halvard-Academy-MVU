@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Saffi')) { _%>
 [Saffranelle "Saffi" Tamberlane]
-Age: 19.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Saffi')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 19 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
 Appearance: Long fire-red hair (ponytail when fighting or training), dark blue eyes, sun-tanned skin from a life on the road with the caravan, pointed cat ears with white tufts (no human ears), long red cat tail, human face and hands. Athletic, defined abs. Wears a customised uniform: green vest with a red bow over a cropped short-sleeved shirt that leaves her midriff and abs bare, skirt or trousers, boots; t-shirts and shorts off duty.
 Magic: Spiritual — Strength and Reflexes. Signature "Beast Mode": spirit-formed claws over her wrists for melee.
 Traits (cat Beastkin): Night vision, keen smell and hearing.

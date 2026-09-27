@@ -1,6 +1,6 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Krieg')) { _%>
 [Sir Krieg Valforth]
-Role: Answers to the crown; outranked on campus by no one, and the Headmaster has no authority over him. Age 43.
+Role: Answers to the crown; outranked on campus by no one, and the Headmaster has no authority over him. Age <%- 43 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
 Appearance: Tall, muscular, battle-scarred. Short silver hair, short beard and moustache, sapphire-blue eyes. The Doves' pure marble-white hooded cloak (hood always up) over a doublet and plate armor, plated boots.
 Equipment: Longsword, plate armor.
 Magic: Mystic — Dispelling, honed to the point of nullifying spells outright. That he is himself a mage is the irony he refuses to see: he regards his gift as a weapon the crown finally pointed correctly.

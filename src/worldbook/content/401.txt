@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Kira')) { _%>
 [Kira Brannock]
-Role: Student, Ashvale Academy. Second year, age 19. Panther Beastkin. Defense role on Ashvale's team.
+<%_ if ((2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
+Now: graduated from Ashvale Academy at the end of campaign Year 2; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Role: <%- (2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Ashvale Academy. <%- (2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 19 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %>. Panther Beastkin. Defense role on Ashvale's team.
 Appearance: Tall, short black hair, gold eyes, natural tan skin, panther ears and a long black tail. Ashvale's uniform worn roughly: cream tunic hanging open with the sleeves rolled up, brown leather belt, deep green half-cape, deep green pleated skirt, knee-high brown boots.
 Magic: Elemental — Metal.
 - Walls: raises metal walls in an instant to shield herself and her team.

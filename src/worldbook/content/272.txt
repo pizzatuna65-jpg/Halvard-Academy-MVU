@@ -2,3 +2,6 @@
 This year Ashvale is sending a completely new team, built around Elion.
 Team: Elion Villeneuve (Attack, Y1, M, turquoise, kind, Rank 1); Kira Brannock (Defense, Y2, panther B, F, black, rough); Mirelle Lullwyn (Control, Y3, Elf, F, pink, sleepy); Theodore Wrenfield (Healing, Y3, M, green, fatherly).
 Uniform: Knightly. Cream military-style tunic, double-breasted with gold buttons, deep green trim and epaulettes, brown leather belt, and a short deep green half-cape over one shoulder. Boys: deep green trousers and knee-high brown boots. Girls: deep green pleated skirt and knee-high brown boots.
+<%_ { const _Y = (Number(getvar('stat_data.World.Year')) || 1), _T = [["Elion Villeneuve", 1], ["Kira Brannock", 2], ["Mirelle Lullwyn", 3], ["Theodore Wrenfield", 3]], _g = _T.filter(([n, y]) => y + _Y - 1 > 3).map(t => t[0]); if (_Y > 1) { _%>
+From campaign Year <%- _Y %>: the school years above are as of Year 1; everyone has moved up <%- _Y - 1 %> year<%- _Y > 2 ? 's' : '' %>.<%- _g.length ? ' Graduated and off the team: ' + _g.join(', ') + '. The academy fields new members in their places (none on record yet).' : '' %>
+<%_ } } _%>

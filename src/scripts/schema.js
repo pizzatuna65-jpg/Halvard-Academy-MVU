@@ -330,6 +330,7 @@ export const Schema = z.object({
     seed: z.coerce.number().prefault(0).catch(0),   // 5.3: chat seed for happenings, set once by the engine
     prizes: StrList(20),
     grads: StrList(10),
+    bdays: StrList(10),    // 1.7.4: campaign years in which {{user}}'s birthday already added a year to Player.Profile.Age ("Y2")
     cohorts: StrList(10),  // 1.0.3: campaign years whose new first-years already arrived ("Y2")    // 1.0.3: campaign years whose graduates already left ("Y1")   // 1.0.3: competition prizes already paid ("Kingdom-Y1")
     ver: Str(''),          // 1.0.3: engine version that last wrote this state (for future save migrations)
     repw: z.any().prefault(null).catch(null),                    // 1.3.0: repeatable Rep XP gained this week { w, Academy, Student, Doves }

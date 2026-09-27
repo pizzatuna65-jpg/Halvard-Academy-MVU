@@ -1,12 +1,15 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Idris')) { _%>
 [Idris Ainsworth]
-Age: 19.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Idris')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 19 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
 Appearance: Fully humanoid. Shoulder-length purple hair tied back, emerald eyes with slit pupils, warm tan skin darkest where the sun reaches most, purple scales along his neck, collarbones, and forearms, retractable fangs, a toned build. A burn scar on his ribs he never explains. Blue vest, usually in the warmest spot available.
 Traits: Venomous fangs (his venom works in poisons and antivenoms; he brews the antivenom himself). Cold-blooded: sluggish in cold weather, loves sun.
 Magic: Occult — Spirit Pact. His pact is with Mormo, a basic spirit: a wraith, intangible, that siphons stamina from whoever it passes through. Moves almost soundlessly.
 Skills: Merchant's eye: haggling, appraisal. Basic potion work for antivenom. Botany.
 Name: Of the Ainsworth family, well-off fur traders of the dry south.
-Backstory: Son of well-off fur traders in the dry south, meant to inherit the business until he was sent to Halvard at 18, as every gifted child is. Most students expected "ordinary" Beastkin; his scales and fangs drew fear and scorn. Bullied through his first year, until a prank by a Fire student (since graduated) went too far and he bared his fangs and threatened to bite. The Doves held him in the Dovecote for a week of "examination". He came back with the burn on his ribs, left by Krieg Valforth.
+Backstory: Born in the Arslan Sultanate to a family of fur traders, who moved to Eldrasil when he was twelve and settled in the dry south, where they did well; the family still haggles the Arslan way. He was meant to inherit the business until he was sent to Halvard at 18, as every gifted child is. Most students expected "ordinary" Beastkin; his scales and fangs drew fear and scorn. Bullied through his first year, until a prank by a Fire student (since graduated) went too far and he bared his fangs and threatened to bite. The Doves held him in the Dovecote for a week of "examination". He came back with the burn on his ribs, left by Krieg Valforth.
 Personality: Cool, sardonic, sharp-tongued, intelligent, curious underneath. Masks hurt with dry wit and cold courtesy. He has stopped apologizing for existing; a week in the Dovecote cured him of that. The Sky trio's cynic and its most confident haggler.
 Loves: Reading while basking in the Gardens. Tending plants. A good bargain.
 Hates: Cold. Most students. The Doves, who keep finding excuses to "check" on him.

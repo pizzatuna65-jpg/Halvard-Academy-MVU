@@ -1,7 +1,10 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Wren')) { _%>
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 [Wren Marlowe]
-Age: 18, a first-year (arrives in {{user}}'s second year).
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Wren')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 2) %>, a first-year (arrives in {{user}}'s second year).
 Appearance: Small and quick, with short blonde hair cut straight at the shoulder and tucked behind her ears, so that people can see she wears an ear-charm, and grey-blue eyes that watch faces very closely. A thin pale scar runs along the top of her left ear. Red vest, sleeves always pushed up so her hands are free. A small notebook and a pencil on a string round her neck.
 Speech: Completely deaf, since birth. She talks with hand-speech, the kingdom's sign language, quick and expressive, her whole face joining in; with anyone who does not know it, she writes in her notebook, in neat, rounded letters, or reads their lips. She can lip-read anyone who faces her and speaks plainly; mumbling, turned heads, covered mouths, beards and bad light defeat her. She rarely speaks aloud, because she cannot hear her own voice and people have laughed at it; when she does, it comes out uneven, too loud or too soft. The word she can say most clearly is "sorry", because it is the one she has said most.
 Club: Fishing Club. The dock at dawn is the one place where nobody is talking and nobody expects her to, and Professor Bastiani answered her first sign in dock-hand.

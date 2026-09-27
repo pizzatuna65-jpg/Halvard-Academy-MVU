@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Zara')) { _%>
 [Zara Minallone]
-Age: 18, {{user}}'s year.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Zara')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>, {{user}}'s year.
 Appearance: Silver hair in two careful braids (the one thing about herself she takes pride in), red eyes, very tall for an elf and always hunched to hide it. Her blue vest and blouse are baggy, so she always looks rumpled.
 Magic: Occult — Talisman and Exorcism. Writes paper charms holding stored spells: protective charms, repulsion charms, and exorcism charms meant to incapacitate. Fights from range with prepared talismans; weak without them.
 Skills: Calligraphy, writing, sewing and clothes design. Moves almost silently.

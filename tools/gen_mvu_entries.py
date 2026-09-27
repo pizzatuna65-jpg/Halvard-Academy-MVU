@@ -52,12 +52,14 @@ MOODS = json.load(open(P('data/weather_moods.json'), encoding='utf-8'))['moods']
 assert all(m['id'] in npcs for m in MOODS)
 J = lambda o: json.dumps(o, ensure_ascii=False, separators=(',', ':'))
 # 1.6.0 (N13): the age of a dated line ("M2 W1 Tue ..." or "M2 W1") against the world clock, in words; unreadable -> ''.
-# One campus year is 12 months x 4 weeks x 7 days; a date later in the year than today is from the year before.
-AGE_JS = ("const ageOf = (w, W) => { const m = /M(\d{1,2}) W([1-4])(?: (Mon|Tue|Wed|Thu|Fri|Sat|Sun))?/.exec(String(w || '')); if (!m || !W || !W.Month) return '';"
-          " const D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], di = Math.max(0, D.indexOf(W.Day));"
-          " if (!m[3]) { let k = ((W.Month - 1) * 4 + W.Week - 1) - ((+m[1] - 1) * 4 + +m[2] - 1); if (k < 0) k += 48;"
+# One campus year is 12 months x 4 weeks x 7 days. 1.7.4: a line dated with its year ("Y1 M2 W1 Tue", the engine's form from campaign
+# Year 2) is aged exactly ("over a year ago"; a date still ahead gets no age); a line without a year is from the last 12 months.
+AGE_JS = ("const ageOf = (w, W) => { const m = /(?:Y(\\d+) )?M(\\d{1,2}) W([1-4])(?: (Mon|Tue|Wed|Thu|Fri|Sat|Sun))?/.exec(String(w || '')); if (!m || !W || !W.Month) return '';"
+          " const D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], di = Math.max(0, D.indexOf(W.Day)), Y = Math.max(1, Number(W.Year) || 1), yl = m[1] ? Math.max(1, +m[1]) : Y;"
+          " const far = n => (n < 2 ? 'over a year ago' : 'over ' + n + ' years ago');"
+          " if (!m[4]) { let k = ((Y - 1) * 48 + (W.Month - 1) * 4 + W.Week - 1) - ((yl - 1) * 48 + (+m[2] - 1) * 4 + +m[3] - 1); if (k < 0) { if (m[1]) return ''; k += 48; } if (k >= 48) return far(Math.floor(k / 48));"
           " return k === 0 ? 'this week' : k === 1 ? 'last week' : k < 4 ? k + ' weeks ago' : k < 8 ? 'last month' : Math.floor(k / 4) + ' months ago'; }"
-          " let d = ((W.Month - 1) * 28 + (W.Week - 1) * 7 + di) - ((+m[1] - 1) * 28 + (+m[2] - 1) * 7 + D.indexOf(m[3])); if (d < 0) d += 336;"
+          " let d = ((Y - 1) * 336 + (W.Month - 1) * 28 + (W.Week - 1) * 7 + di) - ((yl - 1) * 336 + (+m[2] - 1) * 28 + (+m[3] - 1) * 7 + D.indexOf(m[4])); if (d < 0) { if (m[1]) return ''; d += 336; } if (d >= 336) return far(Math.floor(d / 336));"
           " return d === 0 ? 'earlier today' : d === 1 ? 'yesterday' : d < 7 ? d + ' days ago' : d < 14 ? 'last week' : d < 28 ? Math.floor(d / 7) + ' weeks ago' : d < 56 ? 'last month' : Math.floor(d / 28) + ' months ago'; };")
 ejs = open(P('src/worldbook/custom/505.template.ejs'), encoding='utf-8').read()
 ejs = re.sub(r'^// Source of custom entry 505.*\n', '', ejs, flags=re.M)

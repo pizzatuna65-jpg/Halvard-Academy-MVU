@@ -37,6 +37,7 @@ Personality: Kind, compassionate, deeply empathetic, with unwavering conviction.
 Backstory: Second son of House Villeneuve. Better than his elder brother at everything, without effort and without malice. His family's attention has always fallen on him.
 Relations: The youngest on Ashvale's team, and the one it is built around. Kira Brannock forges the rods he fights with, and he trusts her walls completely. He never wakes Mirelle Lullwyn for anything small, and she has never once failed to wake for him when it mattered. Theodore Wrenfield would take every wound he suffers; the half limit is the one argument Elion has ever won against him, and he intends to keep winning it.
 Speech: Sincere, plain, gentle; says exactly what he means.
+Named his magic after the sword of the King of Knights in the old story.
 ```
 
 ## Bellatrix — Bellatrix Ardenne
@@ -161,6 +162,7 @@ Personality: Chuunibyou. Calls herself Nocturne, heir of the Archmage, and insis
 The Archmage: she is obsessed with the Archmage and has invented a name for them. It is her own invention and nothing more.
 Relations: Bellatrix Ardenne is, to Morgana, a "chosen berserker of the tomb"; Bellatrix finds this hilarious and plays along, which only encourages her. Cassius Rhavel asks for runes at critical moments, and those are exactly the moments she chooses to announce them properly; his fury only convinces her their rivalry is fated. He keeps a page in his notebook listing every rune name she invents. Pip Althorne is her favourite audience; her prophecies of doom only make him try to run faster.
 Speech: Grandiose, dramatic, full of titles and prophecy.
+Recites the Four Who Saved the World as family history, with the Archmage's lines in her own voice.
 ```
 
 ## Pip — Pip Althorne
