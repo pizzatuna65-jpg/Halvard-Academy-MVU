@@ -98,6 +98,7 @@ Hates the Night Student story, which resurfaces after her Remembrance Day speech
 Tilly Marsh argues her wildest theories in office hours; Layla enjoys it enormously.
 Has found the name Ezrel Marionne, Light Dorm Head, in every staff roll the Archive holds, back to the founding. She asked him once; he said yes, it was him. She still cannot decide whether he was joking, and has not dared ask again.
 Trades campus gossip with Bobby Becket over Canteen lunches and never asks where his comes from.
+Opens her first lecture with the Four Who Saved the World, to teach the difference between a myth and a record.
 ```
 
 ## Vallie — Vallie Goredust

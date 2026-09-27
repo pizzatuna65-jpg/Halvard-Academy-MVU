@@ -209,6 +209,83 @@ def apply_lore_edits(C, N):
     N[332] = template_from(N[283], uid=332, displayIndex=332, comment="Regulars — The Sparring Pavilion",
         key=["Sparring Pavilion", "the pavilion", "Duelling Club headquarters"],
         content="[Regulars — The Sparring Pavilion] Gavlan, Sophia, Caspian (as a guest).")
+    add_world_myths(C)
+
+# 1.7.1 World Myth (owner-approved 2026-09-27, planning/DRAFT_world_myth.md): five continent-wide myths, the same size and settings
+# as the Superstition entries, linked to each other, and a short mention in the entries that should know they exist (like the brands).
+WORLD_MYTHS = [
+    (273, "The Devoured Kingdom", ["Azathoth", "Lord of All", "Primal Desert", "Arslan Sultanate", "Arslan", "Devoured Kingdom"],
+     "[The Devoured Kingdom]\n"
+     "Story: thousands of years ago, a king made a pact with Azathoth, Lord of All, greatest of Asmoday's spirits. Its price was his whole kingdom, "
+     "devoured to the last stone; the Primal Desert, where the Arslan Sultanate stands today, is what remains.\n"
+     "Told: everywhere, always beside the First Bargain.\n"
+     "Lesson: a lawful pact can still cost everything.\n"
+     "Status: the terms, the king and the kingdom's name are all forgotten."),
+    (274, "The Four Who Saved the World", ["King of Knights", "Lady of the Lake", "Empress of the Fractured Vow", "Fractured Vow", "four heroes",
+                                          "Four Who Saved the World"],
+     "[The Four Who Saved the World]\n"
+     "Story: when the First Bargain nearly ended the world, four heroes saved it: the King of Knights from the north, the Archmage from the east, "
+     "the Lady of the Lake from the south, the Empress of the Fractured Vow from the west.\n"
+     "Told: across the continent; each land calls its own hero the greatest. Eldrasil, in the east, claims the Archmage.\n"
+     "Lesson: no land saves the world alone.\n"
+     "Status: their names and faces are lost. Some say each carried one of the four fractured magics.\n"
+     "<narrator_only>The Archmage's part was sealing what shone. Lucifer has called them the thief ever since.</narrator_only>"),
+    (275, "The First Bargain", ["First Bargain", "magic was whole", "fractured into four", "why four types"],
+     "[The First Bargain]\n"
+     "Story: when magic was still whole, a mortal bargained with something that shone brighter than any star and asked for all of magic. "
+     "The bargain was kept to the letter, and the world nearly broke. Magic was then fractured into four; nearly every mage since is born to one type.\n"
+     "Told: everywhere; Dark Magic Defense opens its Pacting lesson with it.\n"
+     "Lesson: never make a pact with anything but a spirit.\n"
+     "Status: the mortal is forgotten. The Cathedral says Asmoday fractured magic to save her world.\n"
+     "<narrator_only>What shone was Lucifer. Freed, he could give any magic to anyone again.</narrator_only>"),
+    (276, "The Holy Grail", ["Holy Grail", "the Grail", "wish-granting cup"],
+     "[The Holy Grail]\n"
+     "Story: a cup that grants any wish to whoever drinks from it. Some say the Lady of the Lake hid it after the First Bargain, "
+     "so no one could wish the world broken again.\n"
+     "Told: everywhere; the favourite tale of treasure hunters.\n"
+     "Lesson: every wish has a shape the wisher did not see.\n"
+     "Status: where it is, what it looks like and whether it was ever real are unknown. It is not Ashvale's Elixir, which only heals."),
+    (277, "The Shaping of the World", ["Shaping of the World", "creation myth", "how the world was made", "Goddess of Creation"],
+     "[The Shaping of the World]\n"
+     "Story: before anything there was formless dark. Asmoday, Goddess of Creation, shaped it: first the spirits, then land, sea, sky and every "
+     "living thing. Last, mortals were born from the soil of her world, and she gave them magic to shape things too.\n"
+     "Told: by the Cathedral word for word; the version most children grow up with.\n"
+     "Lesson: what you shape, you answer for.\n"
+     "Status: the Cathedral teaches it as truth; History Class leaves it to the Cathedral.\n"
+     "<narrator_only>The last line is the goddess wearing another's credit: Lucifer made magic, not Asmoday.</narrator_only>"),
+]
+def add_world_myths(C):
+    for uid, title, keys, content in WORLD_MYTHS:
+        assert uid not in C and uid not in N, f'world myth uid {uid} is taken'
+        C[uid] = template_from(C[222], uid=uid, displayIndex=uid, comment="World Myth - " + title, key=keys, content=content)
+    rep(C[0], "Kingdom: Eldrasil.", "Kingdom: Eldrasil, in the east of the continent.")
+    rep(C[0], "Taken (never answer your name after dark).",
+        "Taken (never answer your name after dark).\nWorld myths, told across the continent, not history: the Devoured Kingdom (Azathoth), "
+        "the Four Who Saved the World, the First Bargain (why magic has four types), the Holy Grail, the Shaping of the World (Asmoday).")
+    rep(C[1], "Other nations: exist; Sunreach Bay and Velmora are named.",
+        "Location: the east of the continent.\nOther nations: exist; Sunreach Bay, Velmora and the Arslan Sultanate are named.")
+    rep(C[1], "- Eldrasil has never won the World Competition in living memory.",
+        "- Eldrasil has never won the World Competition in living memory.\n- Eldrasil claims the Archmage of the Four Who Saved the World as its own hero.")
+    rep(C[3], "Site description: The resting place of the Archmage, full of treasure and spellbooks.",
+        "Site description: The resting place of the Archmage, full of treasure and spellbooks.\n"
+        "Veyra calls itself the hero's academy: the Archmage of the Four Who Saved the World rests beneath it.")
+    rep(C[17], "Spirit Pact and Spirit Tiers.",
+        "Spirit Pact and Spirit Tiers.\nThe First Bargain is the folk answer to why magic has four types; Magic Theory teaches the structure and leaves the story to Dark Magic Defense.")
+    rep(C[27], "and the academy records in the Archive.",
+        "and the academy records in the Archive.\nDraws the line between myth and record: the Four Who Saved the World and the First Bargain are legend; the Archmage's seals are history.")
+    rep(C[32], "Defensive drills against staff-cast approximations.",
+        "Defensive drills against staff-cast approximations. The lesson on Pacting opens with the First Bargain.")
+    rep(C[56], "In exam weeks, Firetooth tins and Star Cookies cover the study tables.",
+        "In exam weeks, Firetooth tins and Star Cookies cover the study tables. A battered book of world myths (the Holy Grail, the Four Who Saved the World) "
+        "is the most borrowed title in a first-year's first month.")
+    rep(C[90], "teach that Asmoday created magic and gifted it to mortals.",
+        "teach that Asmoday created magic and gifted it to mortals. Every service opens with the Shaping of the World; the clergy teach that Asmoday fractured magic after the First Bargain.")
+    rep(C[93], "The Archmage was a coward.",
+        "The Archmage was a coward. Tells the First Bargain as scripture: the mortal asked well, and the thief punished the world for it.")
+    rep(C[94], "Every mage's mana is his light.",
+        "Every mage's mana is his light. He was what shone in the First Bargain. He kept that bargain to the letter, and remembers the mortal fondly.")
+    rep(C[122], "not forbidden Pacting.",
+        "not forbidden Pacting. Every pact-holder has heard the Devoured Kingdom: Azathoth, Lord of All, took a whole kingdom as its price.")
 
 CAL_M4_OLD = "W2 Tue Independence Crowning Day (kingdom holiday, celebrated on campus)."
 CAL_M4_NEW = "W2 Tue Independence Crowning Day (kingdom holiday: the academy flies to the capital by airship; fireworks on campus at night)."

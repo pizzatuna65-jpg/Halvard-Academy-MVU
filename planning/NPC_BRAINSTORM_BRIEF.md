@@ -26,9 +26,11 @@ Rules:
 [Kingdom: Eldrasil]
 Genre: Fantasy magic academy
 Premise: Four magic academies in one kingdom, each tied to a cardinal region and each built on top of a great magical site.
-Other nations: exist; Sunreach Bay and Velmora are named.
+Location: the east of the continent.
+Other nations: exist; Sunreach Bay, Velmora and the Arslan Sultanate are named.
 - Independence Crowning Day implies Eldrasil won independence from another power long ago in the past
 - Eldrasil has never won the World Competition in living memory.
+- Eldrasil claims the Archmage of the Four Who Saved the World as its own hero.
 
 [Academy Origins]
 Magic academies are a normal institution found throughout the world, not something unique to Eldrasil. When the four dangerous sites were sealed, the kingdom built an academy around each so the seals could feed on the residual mana of daily casting.
@@ -74,7 +76,7 @@ Spirits are ranked in four tiers. The highest tier a mage can bond, bind, or pac
 2. Basic spirits — the working spirits of a regular spirit user. Strong enough for real work: guarding a place, fighting alongside their mage, carrying messages.
 3. Greater spirits — rare. Old, powerful, and willful. Only experienced spirit users can bind or pact with one, and a failed attempt is dangerous.
 4. Spirit Lords — extremely rare. Vast, ancient spirits bound to an entire domain of the world. Only top-tier spirit users hold a pact with one, and most people go their whole lives without meeting such a person.
-Law: A Spirit Lord is still a spirit, so a pact with one is a lawful Spirit Pact, not forbidden Pacting.
+Law: A Spirit Lord is still a spirit, so a pact with one is a lawful Spirit Pact, not forbidden Pacting. Every pact-holder has heard the Devoured Kingdom: Azathoth, Lord of All, took a whole kingdom as its price.
 Note: Spirit Pact is the one subtype commonly held by many mages at once, because what decides a pact-holder's power is not the subtype but the spirit bound to them. Two pact-holders can be nothing alike.
 ```
 
@@ -106,6 +108,7 @@ Four tiers, elimination. Losing at any tier ends your competitive year. The one 
 
 Forbidden arts (lore 32): The twenty forbidden arts (not all, but the famous one), by type. Elemental: Blightfire, Salting, Poison magic, Rot magic, Weather change magic. Mystic: Unmaking, Puppetry, Wringing, Soul magic, Raise dead. Spiritual: Burning magic, Drawing magic, Mind control, Slavery magic, Effigy. Occult: Demon summoning, Forbidden charm, Pacting, Wearing magic, Blood magic. Pacting = a pact with anything other than a spirit (forbidden).
 
+World myths (lore 273-277, 1.7.1; folk belief across the continent, not history; names and faces of every figure are lost): the Devoured Kingdom (a king's pact with Azathoth, Lord of All, greatest of Asmoday's spirits, cost his kingdom; now the Primal Desert, where the Arslan Sultanate stands); the Four Who Saved the World (the King of Knights, north; the Archmage, east; the Lady of the Lake, south; the Empress of the Fractured Vow, west) from the First Bargain (a mortal's bargain with "something that shone" for all of magic; magic was fractured into the four types; <narrator_only>it was Lucifer</narrator_only>); the Holy Grail (a wish-granting cup); the Shaping of the World (Asmoday made the spirits first, then everything, then mortals from the soil).
 Races: Human, Elf, Beastkin (animal ears/tail; the type varies). The player's dorm is set by the Arbiter Stone at the Entrance Event (M1 W1 Mon).
 
 ## 2. Calendar and timetable

@@ -12,4 +12,5 @@ Personality: Kind, compassionate, deeply empathetic, with unwavering conviction.
 Backstory: Second son of House Villeneuve. Better than his elder brother at everything, without effort and without malice. His family's attention has always fallen on him.
 Relations: The youngest on Ashvale's team, and the one it is built around. Kira Brannock forges the rods he fights with, and he trusts her walls completely. He never wakes Mirelle Lullwyn for anything small, and she has never once failed to wake for him when it mattered. Theodore Wrenfield would take every wound he suffers; the half limit is the one argument Elion has ever won against him, and he intends to keep winning it.
 Speech: Sincere, plain, gentle; says exactly what he means.
+Named his magic after the sword of the King of Knights in the old story.
 <%_ } _%>

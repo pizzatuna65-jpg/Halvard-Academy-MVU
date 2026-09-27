@@ -1,6 +1,11 @@
 # DRAFT — Kategori baru: World Myth
 
-Status: **draft, belum diterapkan.** Kelima mitos dari arahan owner; mitos 3–5 ditulis Claude dari arahan itu (2026-09-27).
+**DITERAPKAN di rilis 1.7.1 (2026-09-27)**, atas "Approve" owner (semua mitos, kaitan, dan tabel mention A, B, C termasuk
+Elion). Holy Grail dibiarkan tanpa `<narrator_only>` (dongeng); mitos 5 tetap "mortals". Sumbernya sekarang `WORLD_MYTHS` dan
+`add_world_myths` di `tools/merge_lorebooks.py`, plus satu baris di file lore Layla, Percival, Tilly, Morgana dan Elion.
+File ini disimpan sebagai catatan asal.
+
+Status sebelumnya: **draft, belum diterapkan.** Kelima mitos dari arahan owner; mitos 3–5 ditulis Claude dari arahan itu (2026-09-27).
 Diterapkan ke card hanya setelah kelima mitos lengkap dan owner approve. (Lima usulan awal dari Claude ditarik.)
 Catatan dalam bahasa Indonesia; teks card dalam bahasa Inggris.
 

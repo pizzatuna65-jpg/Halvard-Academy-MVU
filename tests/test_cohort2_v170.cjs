@@ -97,7 +97,7 @@ ok(!rel.some(x => (x.from === 'Krieg' && ['Maple', 'Tsubaki'].includes(x.to)) ||
 // ---- a 1.6.11 save loads
 const save = JSON.parse(rd('tests/fixtures/saves/save_1.6.11.json'));
 const L = T(save, []);
-ok(L.$eng.ver === '1.7.0' && Object.keys(save.Bonds).every(id => L.Bonds[id] && L.Bonds[id].Rank === save.Bonds[id].Rank && L.Bonds[id].Trust === save.Bonds[id].Trust) && L.Journal.length >= save.Journal.length,
+ok(L.$eng.ver === JSON.parse(rd('src/card/card.json')).character_version && Object.keys(save.Bonds).every(id => L.Bonds[id] && L.Bonds[id].Rank === save.Bonds[id].Rank && L.Bonds[id].Trust === save.Bonds[id].Trust) && L.Journal.length >= save.Journal.length,
   'the 1.6.11 save loads with every bond, rank, Trust and the journal kept');
 
 // ---- size: each new NPC alone, full sheet (Year 2)

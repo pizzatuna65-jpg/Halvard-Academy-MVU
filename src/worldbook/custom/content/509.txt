@@ -474,6 +474,7 @@ Personality: Kind, compassionate, deeply empathetic, with unwavering conviction.
 Backstory: Second son of House Villeneuve. Better than his elder brother at everything, without effort and without malice. His family's attention has always fallen on him.
 Relations: The youngest on Ashvale's team, and the one it is built around. Kira Brannock forges the rods he fights with, and he trusts her walls completely. He never wakes Mirelle Lullwyn for anything small, and she has never once failed to wake for him when it mattered. Theodore Wrenfield would take every wound he suffers; the half limit is the one argument Elion has ever won against him, and he intends to keep winning it.
 Speech: Sincere, plain, gentle; says exactly what he means.
+Named his magic after the sword of the King of Knights in the old story.
 <%_ const _tElion = [cVoice('Elion', true), cTail('Elion'), cMem('Elion', true)].filter(Boolean).join('\n'); if (_tElion) { _%>
 <%- _tElion %>
 <%_ } _%>
@@ -898,6 +899,7 @@ Hates the Night Student story, which resurfaces after her Remembrance Day speech
 Tilly Marsh argues her wildest theories in office hours; Layla enjoys it enormously.
 Has found the name Ezrel Marionne, Light Dorm Head, in every staff roll the Archive holds, back to the founding. She asked him once; he said yes, it was him. She still cannot decide whether he was joking, and has not dared ask again.
 Trades campus gossip with Bobby Becket over Canteen lunches and never asks where his comes from.
+Opens her first lecture with the Four Who Saved the World, to teach the difference between a myth and a record.
 <%_ const _tLayla = [cVoice('Layla', true), cTail('Layla'), cMem('Layla', true)].filter(Boolean).join('\n'); if (_tLayla) { _%>
 <%- _tLayla %>
 <%_ } _%>
@@ -1111,6 +1113,7 @@ Personality: Chuunibyou. Calls herself Nocturne, heir of the Archmage, and insis
 The Archmage: she is obsessed with the Archmage and has invented a name for them. It is her own invention and nothing more.
 Relations: Bellatrix Ardenne is, to Morgana, a "chosen berserker of the tomb"; Bellatrix finds this hilarious and plays along, which only encourages her. Cassius Rhavel asks for runes at critical moments, and those are exactly the moments she chooses to announce them properly; his fury only convinces her their rivalry is fated. He keeps a page in his notebook listing every rune name she invents. Pip Althorne is her favourite audience; her prophecies of doom only make him try to run faster.
 Speech: Grandiose, dramatic, full of titles and prophecy.
+Recites the Four Who Saved the World as family history, with the Archmage's lines in her own voice.
 <%_ const _tMorgana = [cVoice('Morgana', true), cTail('Morgana'), cMem('Morgana', true)].filter(Boolean).join('\n'); if (_tMorgana) { _%>
 <%- _tMorgana %>
 <%_ } _%>
@@ -1210,6 +1213,7 @@ Afraid of ghosts.
 Insists a Star Cookie only works in one bite; takes paid shifts when he can; sleeps through Cathedral sermons.
 Tilly Marsh tells him ghost stories; he remembers encountering every one of them personally.
 Has identified Loki, the Sky Dorm Head's little green dragon spirit, as the dragon he wrestled in the family orchards; Loki has not recovered from the accusation.
+Counts the King of Knights as a personal friend, and remembers the day they met.
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 Linus Tallyworth has checked forty-one of his deeds; Percival considers him the most diligent squire he has ever had.
 Has made himself the official taster for Nerys Silvarenne, a first-year in the Cooking Club whose dishes are either wonderful or inedible, never in between. He eats them in front of a crowd. He is undefeated.
@@ -1440,6 +1444,7 @@ Emotional tells: Excitement shows whether she likes it or not: flowers open arou
 Haunts: The Archive, the Broken Statue (her current favourite mystery), the Long Corridor after dark before curfew, the Forest edge at dusk, the Medical Centre.
 Halvard Unexplained has a page on her Magic Theory teacher, Ezrel Marionne, whose name is in every staff roll back to the founding and who has not aged in any of them. It is the one theory she has that is right, and she thinks it is her weakest.
 Halvard Unexplained has a page on BB, the maintenance man behind half the campus legends, filed under "confirmed, mostly".
+Her journal has a chapter on the Holy Grail, which she is certain is somewhere on campus.
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 Halvard Unexplained has a new page: the Founder's Statue, seen in two places at once. Tilly has eleven witnesses, a map and a suspect, Nerys Silvarenne, a first-year who leaves her a new clue every week and answers every question with 'What statue?'
 <%_ } _%>

@@ -3,3 +3,4 @@ Region: South
 Site name: unknown
 Site type: The Archmage's Rest
 Site description: The resting place of the Archmage, full of treasure and spellbooks.
+Veyra calls itself the hero's academy: the Archmage of the Four Who Saved the World rests beneath it.

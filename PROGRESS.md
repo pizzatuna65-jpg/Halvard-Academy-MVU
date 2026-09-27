@@ -995,6 +995,36 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   - To verify in ST: a chat in campaign Year 2 (set World.Year or play through Graduation) with one of the six present: their
     keyword entry, their Cast Sheet with the hobby line (Nerys), an older NPC's entry with the new lines; and in Year 1 that none of
     it appears.
+- 1.7.1 World Myth: a new lore category, five continent-wide myths (owner, 2026-09-26/27: "add kategori entry baru namanya
+  world myth ... lengthnya sama seperti kategori brand, takhayul, ghost story", myths 1-2 written by the owner, 3-5 from the
+  owner's direction; draft `planning/DRAFT_world_myth.md`, approved 2026-09-27: "Approve"). No established decision changed.
+  - Entries (uid 273-277, the Superstition entries' settings: keyword, order 65, position 0): The Devoured Kingdom (a king's pact
+    with Azathoth, Lord of All; the Primal Desert, now the Arslan Sultanate), The Four Who Saved the World (the King of Knights,
+    the Archmage, the Lady of the Lake, the Empress of the Fractured Vow), The First Bargain (a mortal's bargain with "something that
+    shone", Lucifer in narrator_only; magic fractured into four types), The Holy Grail, The Shaping of the World (Asmoday: spirits
+    first, mortals from the soil). Format Story / Told / Lesson / Status, 72-92 words (Brand ~40-60; the owner added the Lesson line).
+    Names, faces and gender of every figure are unknown (owner). The myths point at each other, with the First Bargain as the hub.
+  - Mentions, as the brands are mentioned: WORLD INDEX (Eldrasil "in the east of the continent", a World myths line), Kingdom —
+    Eldrasil (location, the Arslan Sultanate among the named nations, Eldrasil claims the Archmage), Veyra, Magic Theory, History,
+    Dark Magic Defense, Main Library, the Cathedral, Spirit Tiers; secret lines in The Morning Choir and Lucifer; one line each in the
+    files of Layla, Percival, Tilly, Morgana and Elion (`source_original/npc_lore_2026-09-25/`). Alyssa and Lucius (Spirit Lord
+    pacts) get no line on purpose, so nobody shuns them. All edits in `merge_lorebooks.py` (`WORLD_MYTHS`, `add_world_myths`), so the
+    card and the v39 export agree.
+  - New canon (all in the approved draft): Eldrasil lies in the east of the continent; Azathoth, Lord of All, the greatest of
+    Asmoday's spirits; the Arslan Sultanate stands in the Primal Desert; the Archmage sealed Lucifer (narrator_only; Lucifer's
+    "the thief" already implied it); the Morning Choir keeps the First Bargain as scripture; Elion named his magic after the King of
+    Knights' sword.
+  - Tests: test_worldmyth_v171.cjs (52 checks: the five entries, their settings and size, Lucifer unnamed outside narrator_only, the
+    Archmage without name or gender, the links, every mention, Tilly's line apart from her secret, no line for Alyssa and Lucius,
+    public location text, the v39 export, the 1.7.0 save). test_cohort2_v170 now reads the version from card.json. Save 1.7.0 added.
+    npm test 1296 checks (43 suites + static QA); stress passes; token_audit ~12.4k start (+68 always-on, the WORLD INDEX line),
+    ~17.7k heavy; preset built twice, byte-identical (unchanged). TEST card rebuilt.
+  - To confirm with the owner: the Holy Grail has no narrator_only line, so the narrator treats it as a legend (the owner did not
+    say whether it is real). Myth 5 says "mortals" rather than "human", so Elves and Beastkin come from the soil too.
+  - Next (owner): nation entries in their own draft, the same size; `Arslan` / `Arslan Sultanate` move from the Devoured Kingdom to
+    the Arslan entry then. A Velmora entry must not touch Tilly's secret.
+  - To verify in ST: naming a myth in chat (e.g. "the Holy Grail") brings its entry; the Cathedral and the Main Library mention
+    them when those entries fire.
 - 1.6.11 A new bond starts at the character's own Trust, and clubs in Connections wait for Rank 1 (owner playtest, 2026-09-26, thread "Stress test dan bug hunt": "ini
   message 2, saya bertemu trixie untuk pertama kali, kenapa status trustnya 10, dan betrayed?"). No canon changed. Restores the
   approved 1.4.3 design (HANDOFF §4 Trust: new bonds start by category), which the engine did not enforce.
@@ -1083,6 +1113,7 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
+- 1.7.1: World Myth category is in; next the owner's nation entries (own draft, same size).
 - 1.7.0: cohort 2 (six first-years from campaign Year 2) is in; they need portraits (owner's PNGs).
 - Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 to 1.6.7 done (G1 in 1.6.3, G2 in 1.6.4, G3 in 1.6.5,
   G4 in 1.6.6, G5 in 1.6.7; every bonded NPC has a voice), plus the Rank 8 branches in 1.6.8 and the 1.6.9 bug hunt. NOW: the owner playtests (docs/TEST_CHECKLIST_v1.6.md first); then run tools/audit_chat.py on the exported
@@ -1109,6 +1140,7 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 - Scripted first-week classes (M1 W1 Tue-Sat, 14 sessions; per dorm for [D] classes; optional homework into Commitments).
 
 ## To verify in ST (could not be tested outside ST)
+- 1.7.1: naming a World Myth in chat brings its entry; the Cathedral and Main Library entries carry their myth line.
 - 1.7.0: in campaign Year 2, one of the six first-years present (keyword entry, Cast Sheet, Nerys's hobby line) and an older
   NPC's entry with the added lines (EJS year gate); in Year 1 none of it appears.
 - 1.6.9: docs/TEST_CHECKLIST_v1.6.md (card + preset + VectFox together): the depth-0 order in the real prompt, VectFox's

@@ -7,4 +7,5 @@ Personality: Chuunibyou. Calls herself Nocturne, heir of the Archmage, and insis
 The Archmage: she is obsessed with the Archmage and has invented a name for them. It is her own invention and nothing more.
 Relations: Bellatrix Ardenne is, to Morgana, a "chosen berserker of the tomb"; Bellatrix finds this hilarious and plays along, which only encourages her. Cassius Rhavel asks for runes at critical moments, and those are exactly the moments she chooses to announce them properly; his fury only convinces her their rivalry is fated. He keeps a page in his notebook listing every rune name she invents. Pip Althorne is her favourite audience; her prophecies of doom only make him try to run faster.
 Speech: Grandiose, dramatic, full of titles and prophecy.
+Recites the Four Who Saved the World as family history, with the Archmage's lines in her own voice.
 <%_ } _%>

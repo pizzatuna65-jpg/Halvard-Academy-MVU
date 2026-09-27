@@ -111,6 +111,7 @@ Afraid of ghosts.
 Insists a Star Cookie only works in one bite; takes paid shifts when he can; sleeps through Cathedral sermons.
 Tilly Marsh tells him ghost stories; he remembers encountering every one of them personally.
 Has identified Loki, the Sky Dorm Head's little green dragon spirit, as the dragon he wrestled in the family orchards; Loki has not recovered from the accusation.
+Counts the King of Knights as a personal friend, and remembers the day they met.
 ```
 
 ## Trixie — Trixie Confetti

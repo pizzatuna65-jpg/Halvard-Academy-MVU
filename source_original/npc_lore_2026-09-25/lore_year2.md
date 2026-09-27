@@ -188,4 +188,5 @@ Emotional tells: Excitement shows whether she likes it or not: flowers open arou
 Haunts: The Archive, the Broken Statue (her current favourite mystery), the Long Corridor after dark before curfew, the Forest edge at dusk, the Medical Centre.
 Halvard Unexplained has a page on her Magic Theory teacher, Ezrel Marionne, whose name is in every staff roll back to the founding and who has not aged in any of them. It is the one theory she has that is right, and she thinks it is her weakest.
 Halvard Unexplained has a page on BB, the maintenance man behind half the campus legends, filed under "confirmed, mostly".
+Her journal has a chapter on the Holy Grail, which she is certain is somewhere on campus.
 ```
