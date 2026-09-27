@@ -81,7 +81,8 @@ Status: nobody knows where it is, what it looks like, or whether it was ever rea
 ```
 
 ### 5. World Myth - The Shaping of the World (owner, teks Claude)
-Arahan owner: asal dunia dibentuk.
+Arahan owner: asal dunia dibentuk. Tambahan owner (2026-09-27): Asmoday menciptakan spirit dan seluruh ciptaan, lalu terakhir
+manusia lahir dari tanahnya.
 Catatan kanon: Asmoday = Goddess of Creation, dan Cathedral mengajarkan Asmoday menciptakan sihir dan memberikannya ke manusia.
 Itu versi publik; kebenaran tersembunyinya Lucifer yang menciptakan sihir. Baris `<narrator_only>` menjaga agar AI tidak
 memperlakukan bagian "sihir dari Asmoday" sebagai fakta, walau entry Lucifer sedang tidak aktif.
@@ -89,7 +90,7 @@ memperlakukan bagian "sihir dari Asmoday" sebagai fakta, walau entry Lucifer sed
 Keys: `Shaping of the World`, `creation myth`, `how the world was made`, `Goddess of Creation`
 ```
 [The Shaping of the World]
-Story: before anything there was only formless dark. Asmoday, Goddess of Creation, shaped it: land from its weight, sea from its cold, sky from its silence. Last she made mortals, and gave them magic so they could shape things too.
+Story: before anything there was only formless dark. Asmoday, Goddess of Creation, shaped it: first the spirits, then land, sea, sky and every living thing. Last of all, mortals were born from the soil of her world, and she gave them magic so they could shape things too.
 Told: by the Cathedral word for word, and in every Asmoday's Mercy house; the version most of the continent grows up with.
 Lesson: what you shape, you answer for; told to explain why mages owe the world care.
 Status: the Cathedral teaches it as truth. History Class leaves it to the Cathedral.
@@ -118,8 +119,10 @@ Status: the Cathedral teaches it as truth. History Class leaves it to the Cathed
 - [?] Mitos 4: apakah Grail itu nyata (untuk `<narrator_only>`)? Kalau dibiarkan kosong, AI memperlakukannya sebagai dongeng.
   Opsional: kaitkan ke King of Knights / Lady of the Lake (mitos 2), atau ke Lucifer (dia juga bisa mengabulkan keinginan apa
   pun kalau bebas).
-- [?] Mitos 5: opsional kaitkan ke Azathoth, Lord of All (misalnya "formless dark" = Azathoth). Itu keputusan kosmologi besar,
-  jadi tidak dimasukkan tanpa owner.
+- [x] Mitos 5: spirit diciptakan Asmoday lebih dulu (owner), jadi Spirit Lord (termasuk Azathoth) juga ciptaannya; opsi
+  "formless dark = Azathoth" gugur.
+- [?] Mitos 5: owner menulis "human"; teks memakai "mortals" supaya Elf dan Beastkin ikut (ketiga ras ada di canon). Kalau hanya
+  manusia yang lahir dari tanah, asal Elf dan Beastkin perlu jawaban sendiri.
 - [x] Keyword `Arslan` / `Arslan Sultanate`: owner akan membuat entry negara (draft terpisah, ukuran sama dengan entry ini). Begitu
   Arslan Sultanate punya entry sendiri, keyword `Arslan` pindah ke sana; mitos ini hanya memakai `Primal Desert`, `Azathoth`,
   `Lord of All`, `Devoured Kingdom`.
