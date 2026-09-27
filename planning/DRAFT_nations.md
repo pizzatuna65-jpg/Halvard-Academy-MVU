@@ -1,6 +1,6 @@
 # DRAFT — Entry negara (Nations)
 
-Status: **draft, belum diterapkan.** Arahan owner 2026-09-27. Ukuran sama dengan entry World Myth (70–90 kata).
+Status: **draft, belum diterapkan.** Arahan owner 2026-09-27. Aturan owner: yang tidak dikomentari owner = disetujui. Ukuran sama dengan entry World Myth (70–90 kata).
 Catatan dalam bahasa Indonesia; teks card dalam bahasa Inggris.
 
 ## Aturan
@@ -23,10 +23,10 @@ Status: the sand still turns up stones of the devoured kingdom. Nobody digs deep
 Kaitan: mitos 1 (lokasinya Primal Desert). Canon: "the Bank" termasuk kekuatan luar di tanah akademi (WORLD INDEX, Banking
 House, uid 92) → usulan mention: Banking House adalah cabang World Bank (lihat bagian Mention).
 
-## 2. Nation — (nama?) kerajaan utara (owner: makmur, militer terkuat, pact turun-temurun dengan Yog-Sothoth)
-Keys: `<nama>`, `Yog-Sothoth`, `Lord of the Cosmos`, `Chosen of the Cosmos`
+## 2. Nation — Norvaine, kerajaan utara (owner: makmur, militer terkuat, pact turun-temurun dengan Yog-Sothoth)
+Keys: `Norvaine`, `Yog-Sothoth`, `Lord of the Cosmos`, `Chosen of the Cosmos`
 ```
-[<Name>]
+[Norvaine]
 What: the richest kingdom of the north, with the strongest army on the continent. For generations its kings have held a pact with Yog-Sothoth, Lord of the Cosmos, a Spirit Lord; each heir inherits it with the crown.
 Star Night: at midnight, over the royal castle, every star becomes an eye and every comet a tentacle.
 Price: at that midnight Yog-Sothoth takes one person, the Chosen of the Cosmos, erased from the world's memory with every proof they existed and their soul. The kingdom remembers the rule, never the person.
@@ -46,7 +46,7 @@ What: an old kingdom on Eldrasil's northern border: green valleys and walled orc
 Known for: diplomats, dancing masters and etiquette tutors, hired by noble houses everywhere; anyone who wants to sound well-bred copies Velmoran court manners.
 Ties: a long, quiet friendship with Eldrasil's crown.
 Status: Velmorans abroad are gracious, careful, and never discuss their king.
-<narrator_only>Its court is in a quiet succession struggle.</narrator_only>
+<narrator_only>Behind the manners, the succession is a blood sport: the king lets his children fight for the crown, and betrayal, coups, assassination and blackmail are all fair. Whoever is left standing is heir.</narrator_only>
 ```
 Yang dijaga dari canon Tilly:
 - Tilly lahir di istana Velmora, pandai bahasa, dansa, berkuda, etiket, dan tanpa sadar memakai "court phrasing". Velmora dibuat
@@ -54,28 +54,41 @@ Yang dijaga dari canon Tilly:
 - Cover Tilly: anak penggilingan dari "provinsi utara jauh Eldrasil". Velmora diletakkan di perbatasan utara Eldrasil, jadi logat
   atau kebiasaannya yang bocor masih bisa dijelaskan dengan cover itu.
 - "By private arrangement with Eldrasil's crown" (canon) → "a long, quiet friendship with Eldrasil's crown".
-- Teks publik tidak menyebut Tilly, putri, atau anak raja yang pergi. Perebutan takhta hanya di `narrator_only` (dan tanpa
-  menyebut putrinya, supaya berita tentang Velmora di cerita tidak menunjuk ke Tilly).
+- Owner (2026-09-27): citra publik anggun, suksesi sebenarnya berdarah (anak-anak raja diadu; pengkhianatan, kudeta, pembunuhan,
+  pemerasan semua sah). Itu rahasia, jadi di `narrator_only`, tanpa menyebut Tilly.
 - Efek samping yang perlu owner tahu: karena Velmora terkenal dengan tata krama istananya, NPC yang jeli bisa mencurigai asal Tilly
   dari "court phrasing"-nya. Itu jadi petunjuk yang bisa ditemukan, bukan bocoran; hapus baris "Known for" kalau tidak mau.
+
+## 4. Edit lore Tilly Marsh (owner: ibunya, selir raja, yang mengirimnya ke Halvard)
+File: `source_original/npc_lore_2026-09-25/lore_year2.md`. Semua baris ini sudah `<narrator_only>`.
+
+Identity, sebelum:
+> Velmora's court is in a quiet succession struggle, and her father sent her abroad under a false name, by private arrangement with Eldrasil's crown, to keep her out of reach until it is settled.
+
+Sesudah:
+> Behind Velmora's gracious court, the succession is a blood sport: the king lets his children fight for the crown, and betrayal, coups, assassination and blackmail are all fair. Her mother, the king's concubine, sent her abroad under a false name, by private arrangement with Eldrasil's crown, to keep her out of the contest.
+
+Backstory (true), sebelum:
+> She does not know which side of the succession struggle wants her gone, if either. Her letters to "her father the miller" go through a private route Baelin Kalvor arranged that never touches the Liaison, and they are written in cipher.
+
+Sesudah:
+> She does not know which of her half-siblings wants her dead; in Velmora, most of them would. Her letters to "her father the miller" go to her mother, through a private route Baelin Kalvor arranged that never touches the Liaison, and they are written in cipher.
+
+Tidak berubah: "Princess Ottilie Seraphine", cincin segel, hanya Baelin yang tahu, "late letter from her 'father'" (nama samaran
+ibunya), Baelin "until Velmora calls her home".
 
 ## Mention di entry lain (usulan)
 
 | Entry (uid) | Negara | Kalimat |
 |---|---|---|
-| 00 WORLD INDEX (0) | semua | Baris "Sunreach Bay: ..." diperluas: `Nations: Sunreach Bay (resort, Trip destination), the Arslan Sultanate (money; the World Bank), <North> (the strongest army; Yog-Sothoth), Velmora.` |
-| Kingdom — Eldrasil (1) | semua | Daftar negara: `Sunreach Bay, Velmora, the Arslan Sultanate and <North> are named.` |
+| 00 WORLD INDEX (0) | semua | Baris "Sunreach Bay: ..." diperluas: `Nations: Sunreach Bay (resort, Trip destination), the Arslan Sultanate (money; the World Bank), Norvaine (the strongest army; Yog-Sothoth), Velmora.` |
+| Kingdom — Eldrasil (1) | semua | Daftar negara: `Sunreach Bay, Velmora, the Arslan Sultanate and Norvaine are named.` |
 | Banking House (92) | Arslan | `A branch of the World Bank of the Arslan Sultanate; its clerks answer to the Sultanate, not the academy.` (menjelaskan kenapa Bank termasuk kekuatan luar) |
-| Event — Star Night (22) | Utara | `Far to the north, the same midnight is the one <North> dreads: the night Yog-Sothoth takes its Chosen.` |
-| Competitions (19) | Utara | `At the World Competition, <North> is the team everyone expects to win.` |
+| Event — Star Night (22) | Utara | `Far to the north, the same midnight is the one Norvaine dreads: the night Yog-Sothoth takes its Chosen.` |
+| Competitions (19) | Utara | `At the World Competition, Norvaine is the team everyone expects to win.` |
 | World Myth - The Devoured Kingdom (273) | Arslan | keyword `Arslan`, `Arslan Sultanate` dihapus dari sini (pindah ke entry negara). |
 
-## Keputusan terbuka
+## Keputusan (owner, 2026-09-27)
 
-- [?] **Nama kerajaan utara.** Contoh usulan: Valkenmar, Norvaine, Hallstrand, atau nama dari owner.
-- [x] Penghapusan: yang diingat hanya aturannya; gelar Chosen of the Cosmos; pact turun-temurun; rakyat takut tapi tunduk (owner).
-- [?] Kaitkan kerajaan utara ke King of Knights (mitos 2: pahlawan dari utara, dan kerajaan ini punya militer terkuat)?
-- [?] Arslan: ibu kota dan letaknya di benua (Primal Desert di mana)? "Stones of the devoured kingdom" dan "polite to anyone who
-  owes them" buatan Claude.
-- [?] Velmora: isi buatan Claude, owner cek (letak di perbatasan utara Eldrasil, kerajaan istana, petunjuk "court phrasing").
-- [?] Mention di tabel: semua, atau ada yang dicoret? Banking House = cabang World Bank adalah canon baru.
+- Nama kerajaan utara: Norvaine. Tidak dikaitkan ke King of Knights. Tabel mention disetujui. Velmora: isi Claude disetujui,
+  ditambah suksesi berdarah (rahasia) dan ibu Tilly, selir raja.
