@@ -8,7 +8,7 @@ Catatan dalam bahasa Indonesia; teks card dalam bahasa Inggris.
 - Setting entry disalin dari **Sunreach Bay** (uid 246, entry negara yang sudah ada): keyword, order 80, position 1.
   Comment: `Nation — <nama>`. Sunreach Bay sendiri tidak diubah.
 - Format: `[Nama]`, `What`, lalu 2–3 baris khas negara itu, `Status`. Rahasia di `<narrator_only>`.
-- uid kosong: 278, 279, 333.
+- uid kosong: 278 (Arslan), 279 (Norvaine), 333 (Velmora), 334 (Caelmar), 335 (Shiranui).
 
 ## 1. Nation — Arslan Sultanate (owner: kerajaan uang, "Wall Street" sebagai satu kerajaan, lokasi World Bank)
 Keys: `Arslan Sultanate`, `Arslan`, `World Bank`, `the Sultan` (keyword `Arslan` / `Arslan Sultanate` pindah dari mitos
@@ -77,15 +77,41 @@ Sesudah:
 Tidak berubah: "Princess Ottilie Seraphine", cincin segel, hanya Baelin yang tahu, "late letter from her 'father'" (nama samaran
 ibunya), Baelin "until Velmora calls her home".
 
+## 5. Nation — Caelmar (baru, Claude; ciri khas: republik kapal udara yang netral)
+Keys: `Caelmar`, `Caelmari`, `Navigators' Guild`
+```
+[Caelmar]
+What: a republic of cliff cities in the western mountains, where the wind never stops. It builds every airship on the continent and crews most of them.
+Rule: no king. The Navigators' Guild governs, and aboard ship the captain's word is law.
+Known for: neutrality for hire. A Caelmari airship carries anyone who pays, enemies on the same deck, and nothing said aboard is ever repeated.
+Status: every crown depends on its ships, so no crown dares touch it.
+```
+Kaitan canon: entry Airships (awak disewa, bukan staf akademi; "nothing aboard records or sends anything"). Satu-satunya negara
+tanpa raja.
+
+## 6. Nation — the Shiranui Isles (baru, Claude; ciri khas: kepulauan pandai pedang yang tertutup)
+Keys: `Shiranui`, `Shiranui Isles`, `Shiranui blade`
+```
+[Shiranui Isles]
+What: an island nation far across the eastern sea, open to foreigners through one harbour, twice a year.
+Known for: its swordsmiths. A Shiranui blade is the finest vessel a mage can hold: it takes a full enchantment and survives it. Few ever leave the islands, and crowns pay a fortune for each.
+Custom: every mage there carries a blade, and magic is taught through the sword before the hand.
+Status: outsiders are guests, never citizens; a guest who draws steel in anger is sent home without it.
+```
+Kaitan canon: katana Tsubaki ("a curved single-edged blade from far across the sea, given to her by the Crown") = pedang Shiranui;
+sihir Elion (Excalibur: "the better the object, the more it can hold") membuat pedang Shiranui wadah terbaik untuknya.
+
 ## Mention di entry lain (usulan)
 
 | Entry (uid) | Negara | Kalimat |
 |---|---|---|
-| 00 WORLD INDEX (0) | semua | Baris "Sunreach Bay: ..." diperluas: `Nations: Sunreach Bay (resort, Trip destination), the Arslan Sultanate (money; the World Bank), Norvaine (the strongest army; Yog-Sothoth), Velmora.` |
-| Kingdom — Eldrasil (1) | semua | Daftar negara: `Sunreach Bay, Velmora, the Arslan Sultanate and Norvaine are named.` |
+| 00 WORLD INDEX (0) | semua | Baris "Sunreach Bay: ..." diperluas: `Nations: Sunreach Bay (resort, Trip destination), the Arslan Sultanate (money; the World Bank), Norvaine (the strongest army; Yog-Sothoth), Velmora (the most formal court), Caelmar (airships), the Shiranui Isles (swordsmiths).` |
+| Kingdom — Eldrasil (1) | semua | Daftar negara: `Sunreach Bay, Velmora, the Arslan Sultanate, Norvaine, Caelmar and the Shiranui Isles are named.` |
 | Banking House (92) | Arslan | `A branch of the World Bank of the Arslan Sultanate; its clerks answer to the Sultanate, not the academy.` (menjelaskan kenapa Bank termasuk kekuatan luar) |
 | Event — Star Night (22) | Utara | `Far to the north, the same midnight is the one Norvaine dreads: the night Yog-Sothoth takes its Chosen.` |
 | Competitions (19) | Utara | `At the World Competition, Norvaine is the team everyone expects to win.` |
+| Airships (231) | Caelmar | `Every airship on the continent is built in Caelmar, and most crews are Caelmari.` |
+| Tsubaki Hoshikage (lore cohort 2) | Shiranui | "a curved single-edged blade from far across the sea" → "a Shiranui blade from the islands far across the sea" |
 | World Myth - The Devoured Kingdom (273) | Arslan | keyword `Arslan`, `Arslan Sultanate` dihapus dari sini (pindah ke entry negara). |
 
 ## Keputusan (owner, 2026-09-27)
