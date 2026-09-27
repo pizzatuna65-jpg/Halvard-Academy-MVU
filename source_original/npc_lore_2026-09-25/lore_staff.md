@@ -98,6 +98,7 @@ Hates the Night Student story, which resurfaces after her Remembrance Day speech
 Tilly Marsh argues her wildest theories in office hours; Layla enjoys it enormously.
 Has found the name Ezrel Marionne, Light Dorm Head, in every staff roll the Archive holds, back to the founding. She asked him once; he said yes, it was him. She still cannot decide whether he was joking, and has not dared ask again.
 Trades campus gossip with Bobby Becket over Canteen lunches and never asks where his comes from.
+Opens her first lecture with the Four Who Saved the World, to teach the difference between a myth and a record.
 ```
 
 ## Vallie — Vallie Goredust
@@ -132,7 +133,7 @@ Haunts: the Menagerie and her converted stables beside it, the Forest and the fi
 Role: Warden of the Crack. Age 35. A Halvard alumna (Light Dormitory), same year as Kuroo.
 Appearance: Sleek chin-length black bob with straight bangs, pale composed face, sharp red eyes. Crisp white button-up shirt tucked into dark trousers, the Halvard Warden's sigil clipped to her jacket as her only mark of office, and a dark coat with a bold red lining draped over her shoulders like a cape. A lit cigarette almost always between her lips.
 Magic: A rare dual type. Elemental Smoke: she breathes her own cigarette smoke into blinding, choking clouds and fights from inside them, and her blade trails smoke through every cut. Plus Spiritual — Sword Saint: an uncanny mastery of the blade she never trained for, including sending slashes at range.
-Weapon: A long single-edged sword.
+Weapon: A long single-edged katana forged in Yozakura.
 Backstory: Apprentice to Halvard's previous Warden. On the breach night two years ago, the old Warden died resealing the Crack, and Rei took over the seal that night. The crown has never confirmed her as full Warden: she is hard to control and does whatever she judges necessary without asking anyone. The coat with the red lining was the old Warden's; she has never explained why she wears it, and nobody has asked twice.
 Duties: Maintaining the seal, guarding the site from trespassers, and keeping the mana consumption ledgers, which only she can read. Never teaches.
 Personality: Effortlessly cool, nonchalant, stoic, bold, self-assured. Mysterious authority, zero drama in high-stakes situations. Headmaster Baelin Kalvor has long since stopped trying to control her.

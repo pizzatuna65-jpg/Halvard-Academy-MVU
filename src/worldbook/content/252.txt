@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Bellatrix')) { _%>
 [Bellatrix Ardenne]
-Role: Student, Veyra Academy. First year, age 18. Rabbit Beastkin. Rank 1 at Veyra.
+<%_ if ((1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
+Now: graduated from Veyra Academy at the end of campaign Year 3; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Role: <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Veyra Academy. <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 18 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %>. Rabbit Beastkin. Rank 1 at Veyra.
 Appearance: Short. Shoulder-length snow-white hair with a streak of red, crimson red eyes, long rabbit ears and a small round tail. Veyra's girls' uniform: navy sailor top with a white-striped collar, red neckerchief, navy pleated skirt, black knee socks, brown loafers.
 Family: Youngest child of the Ardenne family, the house behind the luxury equipment brand. Money has never been something she thinks about.
 Magic: Spiritual — Regeneration, Strength, Speed and Endurance. Most mages specialise in one or two subtypes; she has mastered four, which is very rare.

@@ -117,7 +117,7 @@ const EVENTS = [
   { m: 12, w: 3, d: ALL, t: 'Kingdom-wide holiday: students go home', home: 1 },
   { m: 12, w: 4, d: ALL, t: 'Kingdom-wide holiday: students go home', home: 1 },
 ];
-// 1.7.1: from campaign Year 2 the Entrance Event is for the new first-years; {{user}} has been sorted already
+// 1.7.4: from campaign Year 2 the Entrance Event is for the new first-years; {{user}} has been sorted already
 const ENTR_BACK = '{{user}} is a returning student, sorted in their first year and never sorted again: arrivals, sorting, the tour and the dorm rooms are for the new first-years, whom seniors guide';
 const schedOf = (e, day) => (!e.s ? '' : typeof e.s === 'string' ? e.s : e.s[day] || '');
 const curfewHour = (e, day) => (e.curfew && typeof e.curfew === 'object' ? e.curfew[day] : e.curfew);
@@ -237,7 +237,7 @@ const KINGDOM_PRIZE = 5000;
 // ARRIVES: incoming cohorts (data/cohorts.json) -> campaign year they arrive as first-years; before that they are not at Halvard.
 const STUDENTS = /*@@STUDENTS@@*/{};
 const ARRIVES = /*@@ARRIVES@@*/{};
-const STAYS = /*@@STAYS@@*/{};   // 1.7.1: third-years whose canon keeps them at Halvard (data/cohorts.json "stays"): {id: log line}
+const STAYS = /*@@STAYS@@*/{};   // 1.7.4: third-years whose canon keeps them at Halvard (data/cohorts.json "stays"): {id: log line}
 const yearOf = (id, Y) => (STUDENTS[id] ? STUDENTS[id][0] + Y - STUDENTS[id][1] : 0);   // their school year in campaign year Y
 // Batch 5.3 (F20): seeded campus happenings. Pool from data/happenings.json (injected by tools/gen_engine.py).
 // Plan 4.6: never Math.random(). The chat seed is taken once from the creation time of the message whose update first ran the
@@ -269,7 +269,7 @@ const fromAbs = abs => {
   const Week = Math.floor(day / 7) + 1; day -= (Week - 1) * 7;
   return { Year, Month, Week, Day: DAYS[day], Time: `${pad(Math.floor(min / 60))}:${pad(min % 60)}` };
 };
-// 1.7.1: from campaign Year 2 every date the engine writes carries its year ("Y2 M1 W1 Mon"), so the age of a line is right across
+// 1.7.4: from campaign Year 2 every date the engine writes carries its year ("Y2 M1 W1 Mon"), so the age of a line is right across
 // years (<now>, Cast Sheet) and the Journal groups by year; Year 1 keeps the plain form. withYear() adds a year to a leading bare date.
 const yPre = W => ((W.Year || 1) > 1 ? `Y${W.Year} ` : '');
 const stamp = W => `${yPre(W)}M${W.Month} W${W.Week} ${W.Day} ${W.Time}`;
@@ -692,7 +692,7 @@ function runEngine(S, B, text, seedHint) {
   const dayNoB = Math.floor(absB / DAY_MIN);
   if (hasB && dayNo !== dayNoB && evs.some(e => e.ranking)) log.push('Results & Dorm Ranking today: update Player.Profile.Dorm_rank when the results are announced.');
   if (hasB && dayNo !== dayNoB && evs.some(e => e.grad)) log.push(`Graduation today: the third-years leave by airship tomorrow morning; the engine then lists them in Campus_State.Graduated.${Object.keys(STAYS).filter(id => yearOf(id, S.World.Year) === 3 && !(S.Campus_State.Graduated || []).includes(id)).map(id => ` ${id} is not graduating (see their lore).`).join('')}`);
-  // 1.7.1: {{user}} turns a year older on the first update of their birthday (once per campaign year), unless the story already
+  // 1.7.4: {{user}} turns a year older on the first update of their birthday (once per campaign year), unless the story already
   // changed Player.Profile.Age in that update
   if (hasB && bday && dayNo !== dayNoB) {
     const bs = S.$eng.bdays || (S.$eng.bdays = []), k = `Y${S.World.Year}`;
@@ -1579,7 +1579,7 @@ function runEngine(S, B, text, seedHint) {
   if (hasB && Tr.Active !== !!Tr0.Active) jnl.push(Tr.Active ? `Set off for ${Tr.Destination || 'a trip'}.` : `Back from ${Tr0.Destination || Tr.Destination || 'the trip'}.`);
 
   // ---- 8e. v1.0.3 new school year: a new class of first-years (incoming cohorts from data/cohorts.json) ----
-  // 1.7.1: {{user}} moves up a year with everyone else (the story may hold them back), and last year's competition record is cleared
+  // 1.7.4: {{user}} moves up a year with everyone else (the story may hold them back), and last year's competition record is cleared
   // (the Journal keeps it): Losing at any tier ends only that year's competitions.
   if (hasB && S.World.Year > (B.World.Year || 1)) {
     const P = S.Player.Profile, y0 = num(B.Player.Profile.Year, 1), dy = S.World.Year - (B.World.Year || 1);
@@ -1845,7 +1845,7 @@ function runEngine(S, B, text, seedHint) {
 
   // ---- 10. commit ----
   S.$eng.abs = absA;
-  // 1.7.1: the first update in campaign Year 2 or later dates every line still written in Year 1's plain form ("[M3 W2 Tue]" ->
+  // 1.7.4: the first update in campaign Year 2 or later dates every line still written in Year 1's plain form ("[M3 W2 Tue]" ->
   // "[Y1 M3 W2 Tue]"); lines of this update already carry their own year (stamp, withYear), so a bare date here is from Year 1.
   if (hasB && (B.World.Year || 1) === 1 && S.World.Year > 1) {
     const y1 = x => (typeof x === 'string' ? withYear(x, 1) : x);

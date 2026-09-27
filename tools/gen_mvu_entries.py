@@ -52,7 +52,7 @@ MOODS = json.load(open(P('data/weather_moods.json'), encoding='utf-8'))['moods']
 assert all(m['id'] in npcs for m in MOODS)
 J = lambda o: json.dumps(o, ensure_ascii=False, separators=(',', ':'))
 # 1.6.0 (N13): the age of a dated line ("M2 W1 Tue ..." or "M2 W1") against the world clock, in words; unreadable -> ''.
-# One campus year is 12 months x 4 weeks x 7 days. 1.7.1: a line dated with its year ("Y1 M2 W1 Tue", the engine's form from campaign
+# One campus year is 12 months x 4 weeks x 7 days. 1.7.4: a line dated with its year ("Y1 M2 W1 Tue", the engine's form from campaign
 # Year 2) is aged exactly ("over a year ago"; a date still ahead gets no age); a line without a year is from the last 12 months.
 AGE_JS = ("const ageOf = (w, W) => { const m = /(?:Y(\\d+) )?M(\\d{1,2}) W([1-4])(?: (Mon|Tue|Wed|Thu|Fri|Sat|Sun))?/.exec(String(w || '')); if (!m || !W || !W.Month) return '';"
           " const D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], di = Math.max(0, D.indexOf(W.Day)), Y = Math.max(1, Number(W.Year) || 1), yl = m[1] ? Math.max(1, +m[1]) : Y;"

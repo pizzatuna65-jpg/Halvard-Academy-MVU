@@ -152,7 +152,7 @@ function datedItems(S) {
 
 // ---------------------------------------------------------------- journal
 function nbJournal(S) {
-  // 1.7.1: from campaign Year 2 lines carry their year ("[Y2 M1 W1 Mon]"); a line without one is from Year 1. Groups are year + month.
+  // 1.7.4: from campaign Year 2 lines carry their year ("[Y2 M1 W1 Mon]"); a line without one is from Year 1. Groups are year + month.
   const parse = (l, old) => { const m = /^\[(?:Y(\d+) )?M(\d+) W(\d) (\w{3})\]\s*(.*)$/.exec(l); return m ? { Y: +(m[1] || 1), M: +m[2], W: +m[3], D: m[4], t: m[5], old, g: `${+(m[1] || 1)}-${+m[2]}` } : { M: 0, t: l, old, g: '0' }; };
   // 5.3 (F21): archived lines (the narrator no longer reads them) stay in the player's journal, shown faded
   const J = [...((S.$ui || {}).archive || []).map(l => parse(l, true)), ...(S.Journal || []).map(l => parse(l, false))];

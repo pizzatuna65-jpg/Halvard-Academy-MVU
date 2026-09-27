@@ -1,3 +1,6 @@
 [Myrdath team]
 Team: Ines Vauclair (Attack, Y3, F, ash-grey, expressionless, Captain); Bram Holloway (Defense, Y1, bear B, M, brown, gentle); Lucius Vortigern (Control, Y2, M, black, dead-eyed, friendly, Rank 1); Dex Harlow (Healing, Y2, M, dark red, delinquent).
 Uniform: White and grey, no blazer. Girls: white long-sleeved sailor top with a charcoal collar trimmed in a white stripe, grey neckerchief, charcoal pleated skirt, charcoal cuffs with white stripes. Boys: white long-sleeved shirt, grey necktie, charcoal-grey trousers, charcoal cuffs with white stripes.
+<%_ { const _Y = (Number(getvar('stat_data.World.Year')) || 1), _T = [["Ines Vauclair", 3], ["Bram Holloway", 1], ["Lucius Vortigern", 2], ["Dex Harlow", 2]], _g = _T.filter(([n, y]) => y + _Y - 1 > 3).map(t => t[0]); if (_Y > 1) { _%>
+From campaign Year <%- _Y %>: the school years above are as of Year 1; everyone has moved up <%- _Y - 1 %> year<%- _Y > 2 ? 's' : '' %>.<%- _g.length ? ' Graduated and off the team: ' + _g.join(', ') + '. The academy fields new members in their places (none on record yet).' : '' %>
+<%_ } } _%>

@@ -1,0 +1,6 @@
+[Velmora]
+What: an old kingdom on Eldrasil's northern border: green valleys and walled orchards between Eldrasil and the north. Its court is the most formal on the continent.
+Known for: diplomats, dancing masters and etiquette tutors, hired by noble houses everywhere; anyone who wants to sound well-bred copies Velmoran court manners.
+Ties: a long, quiet friendship with Eldrasil's crown.
+Status: Velmorans abroad are gracious, careful, and never discuss their king.
+<narrator_only>Behind the manners, the succession is a blood sport: the king lets his children fight for the crown, and betrayal, coups, assassination and blackmail are all fair. Whoever is left standing is heir.</narrator_only>

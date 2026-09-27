@@ -157,7 +157,7 @@ console.log('A#5 log view hides unknown names');
 ok(!/Kanae/.test(UI.pLog({ ...S0, _Log: ['[M1 W1 Mon 08:00] Bond progress with Kanae capped for today.'] })), 'pLog replaces an unknown NPC name');
 
 console.log('Graduation: third-years leave campus and stop being regulars');
-const y3 = ['Caspian', 'Gareth', 'Irene', 'Royhan', 'Ruby', 'Sophia'];   // 1.7.1: Etnie stays on (data/cohorts.json stays; test_year2_v171)
+const y3 = ['Caspian', 'Gareth', 'Irene', 'Royhan', 'Ruby', 'Sophia'];   // 1.7.4: Etnie stays on (data/cohorts.json stays; test_year2_v174)
 let Gd = set(S0, { Month: 11, Week: 4, Day: 'Sun', Time: '09:00', Location: 'The Arbiter Hall' });
 ok(Gd.Campus_State.Graduated.length === 0 && Gd._Log.some(l => /Graduation today/.test(l)), 'Graduation day: nobody has left yet');
 Gd = set(Gd, { Month: 12, Week: 1, Day: 'Mon', Time: '08:00', Location: 'Student Council Chamber' });

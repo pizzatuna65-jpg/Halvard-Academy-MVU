@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Theodore')) { _%>
 [Theodore Wrenfield]
-Role: Student, Ashvale Academy. Third year, age 20. Human. Healing role on Ashvale's team.
+<%_ if ((3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
+Now: graduated from Ashvale Academy at the end of campaign Year 1; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Role: <%- (3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Ashvale Academy. <%- (3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 20 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %>. Human. Healing role on Ashvale's team.
 Appearance: Tall, green hair. Ashvale's uniform buttoned neatly to the collar: cream double-breasted tunic with gold buttons and deep green trim, brown leather belt, deep green half-cape over one shoulder, deep green trousers, knee-high brown boots.
 Magic: Spiritual — Sharing, applied to wounds.
 - Transfer: he can move a teammate's wounds onto himself, or onto anyone else, in whatever share he chooses: half, most, or all of it.

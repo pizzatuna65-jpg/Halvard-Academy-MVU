@@ -29,7 +29,7 @@ assert students, 'no Halvard students found'
 t = t.replace('/*@@STUDENTS@@*/{}', json.dumps(students, ensure_ascii=False, separators=(',', ':')))
 arrives = {nid: n['arrives'] for nid, n in sorted(npcs.items()) if n.get('arrives', 1) > 1}   # v1.0.3 incoming cohorts
 t = t.replace('/*@@ARRIVES@@*/{}', json.dumps(arrives, ensure_ascii=False, separators=(',', ':')))
-# 1.7.1: third-years whose canon keeps them at Halvard past their third year (data/cohorts.json "stays"): not sent away at Graduation
+# 1.7.4: third-years whose canon keeps them at Halvard past their third year (data/cohorts.json "stays"): not sent away at Graduation
 stays = json.load(open(P('data/cohorts.json'), encoding='utf-8')).get('stays', {})
 assert all(nid in students and students[nid][0] + 1 - students[nid][1] <= 3 for nid in stays), f'cohorts.json stays: not a Halvard student {sorted(stays)}'
 t = t.replace('/*@@STAYS@@*/{}', json.dumps(stays, ensure_ascii=False, separators=(',', ':')))

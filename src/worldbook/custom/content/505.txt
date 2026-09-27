@@ -54,7 +54,7 @@ if (cls && cls[3] === 'class' && cls[2].includes(pk)) {
   const mates = Object.keys(STU).filter(id => here(id) && STU[id][0] + Y - STU[id][1] === PY && !sick.includes(id) && !stOf(id)
     && (cls[1] !== 'D' || dorm === 'Unsorted' || STU[id][2] === dorm)).slice(0, 8);
   classLine = 'Your class now: ' + cls[0] + ' [' + cls[1] + '] (Year ' + PY + ', ' + (cls[1] === 'D' ? (dorm === 'Unsorted' ? 'dorm not yet sorted' : dorm + ' only') : 'all dorms')
-    + ') at ' + (VN[pk] || place) + ' — teacher ' + (tch || 'not on record') + '; classmates on record: ' + (mates.join(', ') || 'none');
+    + ') at ' + (VN[pk] || place) + ' — teacher ' + (tch || 'not on record: create one, and keep them the same person every lesson') + '; classmates on record: ' + (mates.join(', ') || 'none');
 }
 const regs = regs1.filter(r => !stOf(r)), regSt = regs1.filter(r => stOf(r));
 const cur = String(W._Curfew || '');

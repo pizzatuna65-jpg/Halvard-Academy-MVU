@@ -209,6 +209,170 @@ def apply_lore_edits(C, N):
     N[332] = template_from(N[283], uid=332, displayIndex=332, comment="Regulars — The Sparring Pavilion",
         key=["Sparring Pavilion", "the pavilion", "Duelling Club headquarters"],
         content="[Regulars — The Sparring Pavilion] Gavlan, Sophia, Caspian (as a guest).")
+    add_world_myths(C)
+    add_nations(C)
+
+# 1.7.1 World Myth (owner-approved 2026-09-27, planning/DRAFT_world_myth.md): five continent-wide myths, the same size and settings
+# as the Superstition entries, linked to each other, and a short mention in the entries that should know they exist (like the brands).
+WORLD_MYTHS = [
+    (273, "The Devoured Kingdom", ["Azathoth", "Lord of All", "Primal Desert", "Devoured Kingdom"],   # 1.7.2: Arslan keys -> its nation entry
+     "[The Devoured Kingdom]\n"
+     "Story: thousands of years ago, a king made a pact with Azathoth, Lord of All, greatest of Asmoday's spirits. Its price was his whole kingdom, "
+     "devoured to the last stone; the Primal Desert, where the Arslan Sultanate stands today, is what remains.\n"
+     "Told: everywhere, always beside the First Bargain.\n"
+     "Lesson: a lawful pact can still cost everything.\n"
+     "Status: the terms, the king and the kingdom's name are all forgotten."),
+    (274, "The Four Who Saved the World", ["King of Knights", "Lady of the Lake", "Empress of the Fractured Vow", "Fractured Vow", "four heroes",
+                                          "Four Who Saved the World"],
+     "[The Four Who Saved the World]\n"
+     "Story: when the First Bargain nearly ended the world, four heroes saved it: the King of Knights from the north, the Archmage from the east, "
+     "the Lady of the Lake from the south, the Empress of the Fractured Vow from the west.\n"
+     "Told: across the continent; each land calls its own hero the greatest. Eldrasil, in the east, claims the Archmage.\n"
+     "Lesson: no land saves the world alone.\n"
+     "Status: their names and faces are lost. Some say each carried one of the four fractured magics.\n"
+     "<narrator_only>The Archmage's part was sealing what shone. Lucifer has called them the thief ever since.</narrator_only>"),
+    (275, "The First Bargain", ["First Bargain", "magic was whole", "fractured into four", "why four types"],
+     "[The First Bargain]\n"
+     "Story: when magic was still whole, a mortal bargained with something that shone brighter than any star and asked for all of magic. "
+     "The bargain was kept to the letter, and the world nearly broke. Magic was then fractured into four; nearly every mage since is born to one type.\n"
+     "Told: everywhere; Dark Magic Defense opens its Pacting lesson with it.\n"
+     "Lesson: never make a pact with anything but a spirit.\n"
+     "Status: the mortal is forgotten. The Cathedral says Asmoday fractured magic to save her world.\n"
+     "<narrator_only>What shone was Lucifer. Freed, he could give any magic to anyone again.</narrator_only>"),
+    (276, "The Holy Grail", ["Holy Grail", "the Grail", "wish-granting cup"],
+     "[The Holy Grail]\n"
+     "Story: a cup that grants any wish to whoever drinks from it. Some say the Lady of the Lake hid it after the First Bargain, "
+     "so no one could wish the world broken again.\n"
+     "Told: everywhere; the favourite tale of treasure hunters.\n"
+     "Lesson: every wish has a shape the wisher did not see.\n"
+     "Status: where it is, what it looks like and whether it was ever real are unknown. It is not Ashvale's Elixir, which only heals."),
+    (277, "The Shaping of the World", ["Shaping of the World", "creation myth", "how the world was made", "Goddess of Creation"],
+     "[The Shaping of the World]\n"
+     "Story: before anything there was formless dark. Asmoday, Goddess of Creation, shaped it: first the spirits, then land, sea, sky and every "
+     "living thing. Last, mortals were born from the soil of her world, and she gave them magic to shape things too.\n"
+     "Told: by the Cathedral word for word; the version most children grow up with.\n"
+     "Lesson: what you shape, you answer for.\n"
+     "Status: the Cathedral teaches it as truth; History Class leaves it to the Cathedral.\n"
+     "<narrator_only>The last line is the goddess wearing another's credit: Lucifer made magic, not Asmoday.</narrator_only>"),
+]
+# 1.7.2 Nations (owner-approved 2026-09-27, planning/DRAFT_nations.md): five nations with the settings of Sunreach Bay (uid 246),
+# each with its own trade, and woven into the entries that should know they exist (WORLD INDEX, Kingdom, the World Competition...).
+NATIONS = [
+    (278, "Arslan Sultanate", ["Arslan Sultanate", "Arslan", "World Bank", "the Sultan"],
+     "[Arslan Sultanate]\n"
+     "What: a sultanate in the Primal Desert, where the Devoured Kingdom once stood, and the money capital of the world. The desert grows nothing, "
+     "so the whole country trades: bankers, brokers and moneylenders.\n"
+     "Known for: the World Bank, in its capital, which sets what every nation's coin is worth and lends to every crown, Eldrasil's included.\n"
+     "People: rich, exact, and very polite to anyone who owes them.\n"
+     "Status: the sand still turns up stones of the devoured kingdom. Nobody digs deeper than they have to."),
+    (279, "Norvaine", ["Norvaine", "Yog-Sothoth", "Lord of the Cosmos", "Chosen of the Cosmos"],
+     "[Norvaine]\n"
+     "What: the richest kingdom of the north, with the strongest army on the continent. For generations its kings have held a pact with "
+     "Yog-Sothoth, Lord of the Cosmos, a Spirit Lord; each heir inherits it with the crown.\n"
+     "Export: starglass, a glass that holds the night sky; the finest telescope lenses and scrying crystals in the world.\n"
+     "Star Night: at midnight, over the royal castle, every star becomes an eye and every comet a tentacle.\n"
+     "Price: at that midnight Yog-Sothoth takes one person, the Chosen of the Cosmos, erased from the world's memory with every proof they "
+     "existed and their soul. The kingdom remembers the rule, never the person.\n"
+     "People: they fear Yog-Sothoth, revere it, and bow to the sky every Star Night.\n"
+     "Status: nobody knows what the kings gained, or why the Chosen are taken."),
+    (333, "Velmora", ["Velmora", "Velmoran"],
+     "[Velmora]\n"
+     "What: an old kingdom on Eldrasil's northern border: green valleys and walled orchards between Eldrasil and the north. "
+     "Its court is the most formal on the continent.\n"
+     "Known for: diplomats, dancing masters and etiquette tutors, hired by noble houses everywhere; anyone who wants to sound well-bred "
+     "copies Velmoran court manners.\n"
+     "Ties: a long, quiet friendship with Eldrasil's crown.\n"
+     "Status: Velmorans abroad are gracious, careful, and never discuss their king.\n"
+     "<narrator_only>Behind the manners, the succession is a blood sport: the king lets his children fight for the crown, and betrayal, "
+     "coups, assassination and blackmail are all fair. Whoever is left standing is heir.</narrator_only>"),
+    (334, "Caelmar", ["Caelmar", "Caelmari", "city of layers"],
+     "[Caelmar]\n"
+     "What: a nation that is a single city in the west, as wide as a kingdom, built hundreds of floors into the sky and dozens deep into "
+     "the earth, split into hundreds of districts and dozens of layers.\n"
+     "Rule: the king lives on the highest layer, above the clouds; the lower you live, the less you matter.\n"
+     "Below: the deepest layers are slums that never see the sun, where the city's refuse, workshops and outlaws collect.\n"
+     "Export: the continent's workshop. Mana lanterns, rune heaters, pens, locks, anything made by the thousand comes up from the lower layers.\n"
+     "Status: most Caelmari die on the layer they were born on."),
+    (335, "Yozakura", ["Yozakura", "Yozakuran", "Alpha of Yozakura"],
+     "[Yozakura]\n"
+     "What: a kingdom in the south of the continent, mostly Beastkin, known for cherry blossoms and courtesy. Its companies run hotels, "
+     "restaurants, bathhouses and airship lines all over the world.\n"
+     "Rule: the throne is won, not inherited. A grand tournament crowns the ruler, titled Alpha, who reigns until beaten in the next one.\n"
+     "Known for: a passion for competing in everything, from academy duels to cooking contests; its team is always a favourite at the "
+     "World Competition. Its smiths forge the katana, the finest blade a mage can hold.\n"
+     "Status: a Yozakuran never refuses a fair challenge."),
+]
+def add_nations(C):
+    for uid, name, keys, content in NATIONS:
+        assert uid not in C and uid not in N, f'nation uid {uid} is taken'
+        C[uid] = template_from(C[246], uid=uid, displayIndex=uid, comment="Nation — " + name, key=keys, content=content)
+    rep(C[0], "Sunreach Bay: foreign resort nation, academy Trip destination.",
+        "Nations: Sunreach Bay (resort, academy Trip destination), the Arslan Sultanate (money; the World Bank), Norvaine (the strongest army; "
+        "Yog-Sothoth), Velmora (the most formal court), Caelmar (a hive city), Yozakura (Beastkin, service companies, rulers crowned by tournament).")
+    rep(C[1], "Sunreach Bay, Velmora and the Arslan Sultanate are named.",
+        "Sunreach Bay, Velmora, the Arslan Sultanate, Norvaine, Caelmar and Yozakura are named.")
+    rep(C[19], "Eldrasil has never won in living memory.",
+        "Eldrasil has never won in living memory. Nations at the World Competition include Yozakura, Norvaine and Caelmar, the usual favourites, "
+        "the Arslan Sultanate, Velmora and Sunreach Bay.")
+    rep(C[22], "A wish made during it is believed to come true.",
+        "A wish made during it is believed to come true.\n- Far to the north, the same midnight is the one Norvaine dreads: the night Yog-Sothoth takes its Chosen.")
+    rep(C[28], "and conduct at Graduation.",
+        "and conduct at Graduation. Its lessons on noble conduct follow Velmoran court manners, the continent's standard.")
+    rep(C[30], "Drills, sparring and marking are adjusted to each student's combat role.",
+        "Drills, sparring and marking are adjusted to each student's combat role. Its drills borrow from Norvaine's army, the strongest on the continent.")
+    rep(C[55], "Enchantment sparks hang in the air a moment too long.",
+        "Enchantment sparks hang in the air a moment too long. Its lathes and tool racks are Caelmari-made.")
+    rep(C[66], "The top deck belongs to the practice studios and meditation nooks.",
+        "The top deck belongs to the practice studios and meditation nooks. Its busiest tea house is a Yozakuran chain.")
+    rep(C[81], "Instruments turn by themselves at night.",
+        "Instruments turn by themselves at night. Its great telescope has a Norvaine starglass lens, the Divination Society's pride.")
+    rep(C[83], "reagents and equipment on the back shelves.",
+        "reagents and equipment on the back shelves. Its cheap stationery and everyday kit are Caelmari-made.")
+    rep(C[91], "Students who do not catch its attention usually never learn it exists.",
+        "Students who do not catch its attention usually never learn it exists. Its protocol follows Velmoran court manners.")
+    rep(C[92], "It stands outside the mall, so a visit is a deliberate errand.",
+        "It stands outside the mall, so a visit is a deliberate errand. A branch of the World Bank of the Arslan Sultanate; its clerks answer to "
+        "the Sultanate, not the academy.")
+    rep(C[219], "is the clearest daily sign that it is working.",
+        "is the clearest daily sign that it is working. Most lanterns and wall torches are Caelmari-made, bought by the thousand.")
+    rep(C[231], "Nothing aboard records or sends anything.",
+        "Nothing aboard records or sends anything. Most airship lines on the continent are Yozakuran companies, and so are their crews.")
+    rep(C[246], "Policy: gives you whatever you came for and asks no questions.",
+        "Policy: gives you whatever you came for and asks no questions.\nHalf its hotels are Yozakuran.")
+    rep(C[248], "the Dovecote, the Bank,", "the Dovecote, the World Bank (Arslan Sultanate),")
+
+def add_world_myths(C):
+    for uid, title, keys, content in WORLD_MYTHS:
+        assert uid not in C and uid not in N, f'world myth uid {uid} is taken'
+        C[uid] = template_from(C[222], uid=uid, displayIndex=uid, comment="World Myth - " + title, key=keys, content=content)
+    rep(C[0], "Kingdom: Eldrasil.", "Kingdom: Eldrasil, in the east of the continent.")
+    rep(C[0], "Taken (never answer your name after dark).",
+        "Taken (never answer your name after dark).\nWorld myths, told across the continent, not history: the Devoured Kingdom (Azathoth), "
+        "the Four Who Saved the World, the First Bargain (why magic has four types), the Holy Grail, the Shaping of the World (Asmoday).")
+    rep(C[1], "Other nations: exist; Sunreach Bay and Velmora are named.",
+        "Location: the east of the continent.\nOther nations: exist; Sunreach Bay, Velmora and the Arslan Sultanate are named.")
+    rep(C[1], "- Eldrasil has never won the World Competition in living memory.",
+        "- Eldrasil has never won the World Competition in living memory.\n- Eldrasil claims the Archmage of the Four Who Saved the World as its own hero.")
+    rep(C[3], "Site description: The resting place of the Archmage, full of treasure and spellbooks.",
+        "Site description: The resting place of the Archmage, full of treasure and spellbooks.\n"
+        "Veyra calls itself the hero's academy: the Archmage of the Four Who Saved the World rests beneath it.")
+    rep(C[17], "Spirit Pact and Spirit Tiers.",
+        "Spirit Pact and Spirit Tiers.\nThe First Bargain is the folk answer to why magic has four types; Magic Theory teaches the structure and leaves the story to Dark Magic Defense.")
+    rep(C[27], "and the academy records in the Archive.",
+        "and the academy records in the Archive.\nDraws the line between myth and record: the Four Who Saved the World and the First Bargain are legend; the Archmage's seals are history.")
+    rep(C[32], "Defensive drills against staff-cast approximations.",
+        "Defensive drills against staff-cast approximations. The lesson on Pacting opens with the First Bargain.")
+    rep(C[56], "In exam weeks, Firetooth tins and Star Cookies cover the study tables.",
+        "In exam weeks, Firetooth tins and Star Cookies cover the study tables. A battered book of world myths (the Holy Grail, the Four Who Saved the World) "
+        "is the most borrowed title in a first-year's first month.")
+    rep(C[90], "teach that Asmoday created magic and gifted it to mortals.",
+        "teach that Asmoday created magic and gifted it to mortals. Every service opens with the Shaping of the World; the clergy teach that Asmoday fractured magic after the First Bargain.")
+    rep(C[93], "The Archmage was a coward.",
+        "The Archmage was a coward. Tells the First Bargain as scripture: the mortal asked well, and the thief punished the world for it.")
+    rep(C[94], "Every mage's mana is his light.",
+        "Every mage's mana is his light. He was what shone in the First Bargain. He kept that bargain to the letter, and remembers the mortal fondly.")
+    rep(C[122], "not forbidden Pacting.",
+        "not forbidden Pacting. Every pact-holder has heard the Devoured Kingdom: Azathoth, Lord of All, took a whole kingdom as its price.")
 
 CAL_M4_OLD = "W2 Tue Independence Crowning Day (kingdom holiday, celebrated on campus)."
 CAL_M4_NEW = "W2 Tue Independence Crowning Day (kingdom holiday: the academy flies to the capital by airship; fireworks on campus at night)."
@@ -242,7 +406,7 @@ for old, new in REMAP.items():
 assert ROY_OLD.search(Nc[101]['content'])
 Nc[101]['content'] = ROY_OLD.sub(lambda _: (
     "<%_ const _rm = Number(getvar('stat_data.World.Month')) || 1, _rw = Number(getvar('stat_data.World.Week')) || 1, _rd = String(getvar('stat_data.World.Day') || ''), _ry = Number(getvar('stat_data.World.Year')) || 1; _%>\n"
-    "<%_ if (_ry > 1) { _%>\n"   # 1.7.1: his last year is campaign Year 1; from Year 2 he has graduated (or the story kept him)
+    "<%_ if (_ry > 1) { _%>\n"   # 1.7.4: his last year is campaign Year 1; from Year 2 he has graduated (or the story kept him)
     "<%_ } else if (_rm < 3 || (_rm === 3 && (_rw < 4 || !['Sat', 'Sun'].includes(_rd)))) { _%>\n"
     'Current trouble: This year is his last chance. He is training to qualify from the Dorm Competition (Month 3 Week 4) and already knows the harder problem: even if he qualifies, no team wants him, since "illusionist-alchemist" doesn\'t count as a role.\n'
     "<%_ } else if (_rm === 3) { _%>\n"
@@ -252,7 +416,7 @@ Nc[101]['content'] = ROY_OLD.sub(lambda _: (
     'Current trouble: This year, his last, he qualified from the Dorm Competition at rank 16, but no team will take him, since "illusionist-alchemist" doesn\'t count as a role. (Campus_State overrides this if the story played out differently.)\n'
     "<%_ } _%>"), Nc[101]['content'])
 gate_cohorts(Nc, True)   # v1.0.3 incoming cohorts (defined at the top)
-# 1.7.1 (Year 2 bug hunt): a Halvard NPC's age follows the campaign year (lore ages are as of Year 1, or a cohort's arrival year;
+# 1.7.4 (Year 2 bug hunt): a Halvard NPC's age follows the campaign year (lore ages are as of Year 1, or a cohort's arrival year;
 # rival academy teams keep theirs), and a student's own entry says so once they have graduated (Campus_State.Graduated).
 YEAR_NOW = "(Number(getvar('stat_data.World.Year')) || 1)"
 RIVAL_RX = re.compile(r'^Role: Student, (?!Halvard)\w+ Academy', re.M)
@@ -320,6 +484,35 @@ cal.update(disable=False, constant=True, comment='Calendar — Current Month (au
              "[Current month: Month <%- _m %>]\n<%- _cal[_m] %>\n[Next month (Month <%- _n %>) preview: <%- _cal[_n] %>]"))
 for u in range(134, 146): Cc.pop(u)
 Cc[134] = cal
+# 1.7.4 (owner, 2026-09-27: "tim akademi rival yg year 3 ikut lulus jadi nanti year 2 tim baru yg gk pake year 3 dari year
+# sebelumnya"): rival academy students move up a year each campaign year and graduate after their third, like Halvard's. Their
+# Role line follows the campaign year (school year, age), a graduate's entry says they left the team, and each team entry names who
+# has graduated; new members for the places are not written yet (the owner adds them later).
+RIVAL_ROLE = re.compile(r'^Role: Student, (\w+) Academy\. (First|Second|Third) year, age (\d+)', re.M)
+ORDINAL = {'First': 1, 'Second': 2, 'Third': 3}
+rivals = 0
+for u, e in Nc.items():
+    nid = npc_id(e); m = RIVAL_ROLE.search(e['content']) if nid else None
+    if not m: continue
+    y, acad, age, sy = ORDINAL[m.group(2)], m.group(1), int(m.group(3)), f"({ORDINAL[m.group(2)]} + {YEAR_NOW} - 1)"
+    e['content'] = (e['content'][:m.start()] + f"Role: <%- {sy} > 3 ? 'Former student' : 'Student' %>, {acad} Academy. "
+                    f"<%- {sy} > 3 ? 'Graduated' : ['First', 'Second', 'Third'][{sy} - 1] + ' year' %>, age <%- {age} + {YEAR_NOW} - 1 %>" + e['content'][m.end():])
+    e['content'], n = re.subn(r'^(\[[^\]\n]+\]\n)', lambda mm: mm.group(1) + (
+        f"<%_ if ({sy} > 3) {{ _%>\nNow: graduated from {acad} Academy at the end of campaign Year {4 - y}; no longer on its team (a visit or a letter "
+        "is still possible). What follows describes their time as a student.\n<%_ } _%>\n"), e['content'], count=1, flags=re.M)
+    assert n == 1, nid
+    rivals += 1
+teams = 0
+for D in (Cc, Nc):
+    for u, e in D.items():
+        m = re.search(r'^Team: (.*)$', e['content'], re.M)
+        if not m or not re.search(r'\(\w+, Y[123],', m.group(1)): continue
+        T = [[x.group(1), int(x.group(2))] for x in re.finditer(r'([A-Z][\w\' -]+?) \(\w+, Y([123]),', m.group(1))]
+        e['content'] += ("\n<%_ { const _Y = " + YEAR_NOW + ", _T = " + json.dumps(T) + ", _g = _T.filter(([n, y]) => y + _Y - 1 > 3).map(t => t[0]); if (_Y > 1) { _%>\n"
+                         "From campaign Year <%- _Y %>: the school years above are as of Year 1; everyone has moved up <%- _Y - 1 %> year<%- _Y > 2 ? 's' : '' %>."
+                         "<%- _g.length ? ' Graduated and off the team: ' + _g.join(', ') + '. The academy fields new members in their places (none on record yet).' : '' %>\n<%_ } } _%>")
+        teams += 1
+assert rivals == 12 and teams == 3, (rivals, teams)
 # merge + tagging (D2): lore -> [mvu_plot]; shared state/navigation entries stay untagged (sent to both models)
 UNTAGGED_CORE = {0, 132, 134, 131, 20}
 UNTAGGED_NPC = {97}

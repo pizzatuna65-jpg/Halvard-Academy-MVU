@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Lucius')) { _%>
 [Lucius Vortigern]
-Role: Student, Myrdath Academy. Second year, age 19. Human. Rank 1 at Myrdath.
+<%_ if ((2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
+Now: graduated from Myrdath Academy at the end of campaign Year 2; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Role: <%- (2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Myrdath Academy. <%- (2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 19 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %>. Human. Rank 1 at Myrdath.
 Appearance: Average height, average build. Neat black hair. Dead-fish eyes: dark, flat and lightless, as though nothing behind them is looking back. Yet he is always smiling, warm and friendly, and the smile never slips. Myrdath boys' uniform, worn neatly: white long-sleeved shirt, grey necktie, charcoal-grey trousers.
 Magic: Occult — Spirit Pact. His pact is with Shub-Niggurath, the Lord of Harvest. He has never once summoned it; everything he does is channelled.
 - The swarm (channelled): he channels a locust swarm that devours spells and mana. Barriers, projectiles, enchantments, and a mage's own mana reserves are all food to it. Against other mages it is a nightmare, and it is only a fraction of what the spirit itself could do.

@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Ines')) { _%>
 [Ines Vauclair]
-Role: Student, Myrdath Academy. Third year, age 20. Human. Attack role and captain of Myrdath's team.
+<%_ if ((3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
+Now: graduated from Myrdath Academy at the end of campaign Year 1; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Role: <%- (3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Myrdath Academy. <%- (3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 20 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %>. Human. Attack role and captain of Myrdath's team.
 Appearance: Waist-length straight ash-grey hair, grey eyes, a face that almost never moves. Myrdath girls' uniform: white long-sleeved sailor top with a charcoal collar trimmed in a white stripe, grey neckerchief, charcoal pleated skirt.
 Magic: Elemental — Crystal.
 - Lances and shards: forms crystal and launches it, from heavy lances to a spray of splinters.

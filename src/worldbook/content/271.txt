@@ -1,3 +1,6 @@
 [Veyra team]
 Team: Bellatrix Ardenne (Attack, Y1, rabbit B, F, white-red, sadistic, Rank 1); Cassius Rhavel (Control, Y3, Elf, M, dark blue, rigid, Captain); Morgana Vess (Support, Y2, F, black, dramatic, "Nocturne"); Pip Althorne (Healing, Y1, dog B, M, light brown, cowardly).
 Uniform: Dark navy. Boys: navy blazer with white piping, gold Veyra crest on the breast pocket, white collared shirt, blue-violet ribbon tie, navy trousers. Girls: navy sailor top with a white-striped collar, red neckerchief, navy pleated skirt, black knee socks, brown loafers.
+<%_ { const _Y = (Number(getvar('stat_data.World.Year')) || 1), _T = [["Bellatrix Ardenne", 1], ["Cassius Rhavel", 3], ["Morgana Vess", 2], ["Pip Althorne", 1]], _g = _T.filter(([n, y]) => y + _Y - 1 > 3).map(t => t[0]); if (_Y > 1) { _%>
+From campaign Year <%- _Y %>: the school years above are as of Year 1; everyone has moved up <%- _Y - 1 %> year<%- _Y > 2 ? 's' : '' %>.<%- _g.length ? ' Graduated and off the team: ' + _g.join(', ') + '. The academy fields new members in their places (none on record yet).' : '' %>
+<%_ } } _%>

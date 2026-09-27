@@ -1,6 +1,9 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Pip')) { _%>
 [Pip Althorne]
-Role: Student, Veyra Academy. First year, age 18. Dog Beastkin. Healing role on Veyra's team.
+<%_ if ((1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
+Now: graduated from Veyra Academy at the end of campaign Year 3; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Role: <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Veyra Academy. <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 18 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %>. Dog Beastkin. Healing role on Veyra's team.
 Appearance: Small, messy light brown hair, floppy dog ears, a tail permanently tucked between his legs. Veyra's boys' uniform: navy blazer with white piping, gold Veyra crest on the breast pocket, white collared shirt, blue-violet ribbon tie, navy trousers.
 Magic: Spiritual — Healing. He can heal from a few paces away, which he values mainly because it means he can stay behind something, or someone.
 Personality: A complete coward, and not a noble one. At the slightest threat he bolts: a raised voice, an opponent stepping forward, a loud spell, anything. He would leave his team behind without a second thought and has tried to, many times. He whines, bargains, and makes excuses, and none of it has ever worked.

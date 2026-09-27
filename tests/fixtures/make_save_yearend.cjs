@@ -1,4 +1,4 @@
-// 1.7.1: a save at the very end of campaign Year 1 (M12 W4 Sun 20:00), made by the CURRENT build from the ordinary save of the
+// 1.7.4: a save at the very end of campaign Year 1 (M12 W4 Sun 20:00), made by the CURRENT build from the ordinary save of the
 // same release: dated lines from across Year 1 (Journal, Knows, Last_seen, a campus event), a finished competition run and the
 // graduation already done. tests/test_year2_v171.cjs plays it into Year 2 with the new build.
 // Usage: node tests/fixtures/make_save_yearend.cjs   -> tests/fixtures/saves/save_<character_version>_yearend.json

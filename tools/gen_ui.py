@@ -61,7 +61,7 @@ for nid, n in npcs.items():
         'dc': n.get('dorm_color') or '#6b6b7b', 'd': descriptor(nid, n), 'r': PUBLIC_ROLE.get(nid, ''),
         'p': n['portrait'], 't': n['thumb'], 'fc': n.get('focus') or [50, 25],
         'fl': [[f['label'], f['text'], f['rank']] + ([f['year']] if f.get('year') else []) for f in n['fields']]}   # 1.7.0: [3] = shown from that campaign year
-    if n.get('academy') == 'Halvard': DATA['npcs'][nid]['ag'] = 1   # 1.7.1: ages in their fields follow the campaign year (see ageNow)
+    if n.get('academy') == 'Halvard': DATA['npcs'][nid]['ag'] = 1   # 1.7.4: ages in their fields follow the campaign year (see ageNow)
     CAST[nid] = [n['thumb'], PUBLIC_ROLE.get(nid) or descriptor(nid, n), first, n.get('dorm_color') or '#6b6b7b']
 for e in json.load(open(P('data/relations.json'), encoding='utf-8')):
     DATA['rel'].append([e['from'], e['to'], e['type'], e['types'], e['visibility'] + (f"@{e['via']}" if e['via'] != e['from'] and e['visibility'] != 'public' else ''), e['notes']] + ([[e['rule'], e['rule_label']]] if e.get('rule') else []))   # 1.4.2 group-rule lines carry [id, label]; 1.6.10 'rank:N@Via' = told by Via's file

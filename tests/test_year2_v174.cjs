@@ -1,14 +1,15 @@
-// 1.7.1 (owner: "bug hunt dan stress test apa yang terjadi ketika user mencapai Year 2"): what changes when the campaign reaches
+// 1.7.4 (owner: "bug hunt dan stress test apa yang terjadi ketika user mencapai Year 2"): what changes when the campaign reaches
 // Year 2. Dates carry their year from Year 2 (a Year 1 line is aged "over a year ago", not "earlier today"), and Year 1's lines are
 // dated "Y1" at the rollover; {{user}} moves up a year; last year's competition record is cleared; Etnie does not leave with the
 // graduates (her canon); {{user}} ages on their birthday; NPC ages follow the campaign year; a graduate's own entry says they left;
 // Royhan's "last chance" trouble is Year 1 only; <now> names the campaign year; the Entrance Event is for the new first-years;
-// the Journal groups by year. A 1.7.0 save made at the end of Year 1 plays into Year 2 without losing anything.
+// the Journal groups by year; rival academy third-years graduate too; a teacher not on record is the narrator's to create.
+// A 1.7.3 save (the previous release, merged from the other session) made at the end of Year 1 plays into Year 2 without losing anything.
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
 const { Schema, runEngine, initState, applyPatch, ok, ROOT } = require('./harness.cjs');
 global.window = { parent: { document: {} } };
 global.substitudeMacros = () => 'Aria Vale';
-console.log('Year 2 1.7.1');
+console.log('Year 2 1.7.4');
 const rd = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const cardJ = JSON.parse(rd('dist/Eldrasil_Halvard.json')).data;
 const entry = uid => cardJ.character_book.entries.find(e => e.id === uid).content;
@@ -19,9 +20,9 @@ const here = ids => ({ op: 'replace', path: '/Scene/Present', value: Object.from
 const U = new Function(rd('src/scripts/ui.js') + '\nreturn { nbJournal, PANELS, view };')();
 const ver = JSON.parse(rd('src/card/card.json')).character_version;
 
-// ---- the 1.7.0 save made at the end of Year 1 plays into Year 2
-const old = JSON.parse(rd('tests/fixtures/saves/save_1.7.0_yearend.json'));
-ok(old.World.Year === 1 && old.World.Month === 12 && old.Campus_State.Graduated.includes('Etnie') && old.Competition.Status === 'eliminated', 'fixture: 1.7.0, Year 1 M12 W4 Sun, graduation done (Etnie among them, as 1.7.0 did it), a finished competition');
+// ---- the 1.7.3 save made at the end of Year 1 plays into Year 2
+const old = JSON.parse(rd('tests/fixtures/saves/save_1.7.3_yearend.json'));
+ok(old.$eng.ver === '1.7.3' && old.World.Year === 1 && old.World.Month === 12 && old.Campus_State.Graduated.includes('Etnie') && old.Competition.Status === 'eliminated', 'fixture: 1.7.3, Year 1 M12 W4 Sun, graduation done (Etnie among them, as 1.7.3 did it), a finished competition');
 let S = W(old, { Year: 2, Month: 1, Week: 1, Day: 'Mon', Time: '07:30' }, [{ op: 'insert', path: '/Journal/-', value: '[M1 W1 Mon] Back at the gate for Year 2.' },
   { op: 'replace', path: '/Bonds/Kanae/Knows', value: [...old.Bonds.Kanae.Knows, '[M1 W1 Mon] {{user}} came back for a second year.'] }]);
 ok(S.$eng.ver === ver && Object.keys(old.Bonds).every(id => S.Bonds[id] && S.Bonds[id].Rank === old.Bonds[id].Rank && S.Bonds[id].Trust === old.Bonds[id].Trust), 'every bond keeps its rank and Trust');
@@ -96,13 +97,24 @@ const Y3 = W(Y2, { Year: 3, Month: 2, Week: 1, Day: 'Mon', Time: '12:00' });
 ok(/^Age: 18, a first-year/m.test(R(npcs.Linus.uid_card, Y2)) && /^Age: 19, a first-year/m.test(R(npcs.Linus.uid_card, Y3)), 'Linus (arrives Year 2): 18 in Year 2, 19 in Year 3');
 ok(/Age 634:/.test(R(npcs.Gavlan.uid_card, Y1)) && /Age 635:/.test(R(npcs.Gavlan.uid_card, Y2)), 'staff age too (Gavlan 634 -> 635)');
 const rival = Object.values(npcs).find(n => n.academy !== 'Halvard' && /age 18/.test(R(n.uid_card, Y1)));
-ok(rival && /age 18/.test(R(rival.uid_card, Y3)), `rival academy teams keep their ages (${rival && rival.id})`);
+ok(rival && /First year, age 18/.test(R(rival.uid_card, Y1)) && /Third year, age 20/.test(R(rival.uid_card, Y3)), `rival academy students move up and age too (${rival && rival.id}: first-year 18 -> third-year 20 in Year 3)`);
 ok(/^Age: 22\. Third year, after repeating her second year\./m.test(R(npcs.Etnie.uid_card, Y2)) && !/^Now: graduated/m.test(R(npcs.Etnie.uid_card, Y2)), 'Etnie in Year 2: 22, still a student');
 const rs = W(Y2, { Time: '13:00' }, [here(['Royhan'])]);
 ok(/Former student \(graduated\)/.test(R(509, rs)) && /Age: 21\./.test(R(509, rs)), "Royhan's Cast Sheet: former student, 21");
 // the dossier (UI) shows the same ages
 const dos = s => { const x = _.cloneDeep(s); x.Bonds.Royhan = { ...x.Bonds.Royhan, Rank: 2 }; x.$ui.names = [...(x.$ui.names || []), 'Royhan']; U.view.arg = 'Royhan'; return U.PANELS.npc.render(x); };
 ok(/<h3>Age<\/h3><p class="fv">20\.<\/p>/.test(dos(S0)) && /<h3>Age<\/h3><p class="fv">21\.<\/p>/.test(dos(Y2)), 'dossier: Royhan 20 in Year 1, 21 in Year 2');
+
+// ---- rival academy teams: their third-years graduate too, the rest move up (owner, 2026-09-27)
+const mir = s => R(npcs.Mirelle.uid_card, s), kira = s => R(npcs.Kira.uid_card, s);
+ok(/Role: Student, Ashvale Academy\. Third year, age 20 \(very young/.test(mir(Y1)) && !/Now: graduated/.test(mir(Y1)), 'Year 1: Mirelle is an Ashvale third-year, 20');
+ok(/^Now: graduated from Ashvale Academy at the end of campaign Year 1; no longer on its team/m.test(mir(Y2)) && /Role: Former student, Ashvale Academy\. Graduated, age 21/.test(mir(Y2)), 'Year 2: Mirelle has graduated and left the team');
+ok(/Role: Student, Ashvale Academy\. Third year, age 20\./.test(kira(Y2)) && /Now: graduated from Ashvale Academy at the end of campaign Year 2/.test(kira(Y3)), 'Kira: a third-year in Year 2, graduated in Year 3');
+const team = s => R(cardJ.character_book.entries.find(e => /^\[Ashvale team\]/m.test(e.content)).id, s);
+ok(!/From campaign Year/.test(team(Y1)) && /From campaign Year 2: the school years above are as of Year 1; everyone has moved up 1 year\. Graduated and off the team: Mirelle Lullwyn, Theodore Wrenfield\. The academy fields new members/.test(team(Y2)), 'the Ashvale team entry names who graduated from Year 2');
+ok(/Graduated and off the team: Kira Brannock, Mirelle Lullwyn, Theodore Wrenfield\./.test(team(Y3)), 'and in Year 3 the Year 1 second-year too');
+// ---- a teacher not on record is the narrator's to create (owner, 2026-09-27)
+ok(/'not on record: create one, and keep them the same person every lesson'/.test(entry(505)), '<now>: a class without a teacher on record asks the narrator to create one');
 
 // ---- the card
 ok(!/\{\{user\}\} is a first-year student/.test(cardJ.description) && /a first-year when the story begins; Player\.Profile\.Year says which year now/.test(cardJ.description), 'the card description no longer fixes {{user}} as a first-year');
