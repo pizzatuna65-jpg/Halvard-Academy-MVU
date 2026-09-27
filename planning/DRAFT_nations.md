@@ -28,10 +28,11 @@ Keys: `Norvaine`, `Yog-Sothoth`, `Lord of the Cosmos`, `Chosen of the Cosmos`
 ```
 [Norvaine]
 What: the richest kingdom of the north, with the strongest army on the continent. For generations its kings have held a pact with Yog-Sothoth, Lord of the Cosmos, a Spirit Lord; each heir inherits it with the crown.
+Export: starglass, a glass that holds the night sky; the finest telescope lenses and scrying crystals in the world.
 Star Night: at midnight, over the royal castle, every star becomes an eye and every comet a tentacle.
 Price: at that midnight Yog-Sothoth takes one person, the Chosen of the Cosmos, erased from the world's memory with every proof they existed and their soul. The kingdom remembers the rule, never the person.
-People: they fear Yog-Sothoth and revere it; on Star Night the whole kingdom bows to the sky.
-Status: nobody knows what the kings gained, or why Yog-Sothoth takes the Chosen.
+People: they fear Yog-Sothoth, revere it, and bow to the sky every Star Night.
+Status: nobody knows what the kings gained, or why the Chosen are taken.
 ```
 Keputusan owner (2026-09-27): yang diingat hanya aturannya, bukan orangnya; gelarnya **Chosen of the Cosmos** (bukan "Saint",
 jadi tidak bersinggungan dengan "the Blood Saint" Sophia); pact turun-temurun; rakyat takut tapi menghormati dan tunduk.
@@ -84,6 +85,7 @@ Keys: `Caelmar`, `Caelmari`, `city of layers`
 What: a nation that is a single city in the west, as wide as a kingdom, built hundreds of floors into the sky and dozens deep into the earth, split into hundreds of districts and dozens of layers.
 Rule: the king lives on the highest layer, above the clouds; the lower you live, the less you matter.
 Below: the deepest layers are slums that never see the sun, where the city's refuse, workshops and outlaws collect.
+Export: the continent's workshop. Mana lanterns, rune heaters, pens, locks, anything made by the thousand comes up from the lower layers.
 Status: most Caelmari die on the layer they were born on.
 ```
 
@@ -93,7 +95,7 @@ Keys: `Yozakura`, `Yozakuran`, `Alpha of Yozakura`
 [Yozakura]
 What: a kingdom in the south of the continent, mostly Beastkin, known for cherry blossoms and courtesy. Its companies run hotels, restaurants, bathhouses and airship lines all over the world.
 Rule: the throne is won, not inherited. A grand tournament crowns the ruler, titled Alpha, who reigns until beaten in the next one.
-Known for: a passion for competing in everything, from academy duels to cooking contests; its team is the one to beat at the World Competition. Its smiths forge the katana, the finest blade a mage can hold.
+Known for: a passion for competing in everything, from academy duels to cooking contests; its team is always a favourite at the World Competition. Its smiths forge the katana, the finest blade a mage can hold.
 Status: a Yozakuran never refuses a fair challenge.
 ```
 Kaitan canon: katana Tsubaki dan pedang Rei berasal dari sini (edit di bawah); Airships (awak disewa) = perusahaan Yozakura.
@@ -106,15 +108,24 @@ Kaitan canon: katana Tsubaki dan pedang Rei berasal dari sini (edit di bawah); A
 | Kingdom — Eldrasil (1) | semua | Daftar negara: `Sunreach Bay, Velmora, the Arslan Sultanate, Norvaine, Caelmar and Yozakura are named.` |
 | Banking House (92) | Arslan | `A branch of the World Bank of the Arslan Sultanate; its clerks answer to the Sultanate, not the academy.` (menjelaskan kenapa Bank termasuk kekuatan luar) |
 | Event — Star Night (22) | Utara | `Far to the north, the same midnight is the one Norvaine dreads: the night Yog-Sothoth takes its Chosen.` |
-| Competitions (19) | Yozakura | `At the World Competition, Yozakura is the team to beat.` |
+| Competitions (19) | Yozakura, Norvaine, Caelmar | `The favourites at the World Competition are Yozakura, Norvaine and Caelmar.` |
 | Airships (231) | Yozakura | `Most airship lines on the continent are Yozakuran companies, and so are their crews.` |
 | Tsubaki Hoshikage (lore cohort 2) | Yozakura | Equipment: "a curved single-edged blade from far across the sea" → "a katana forged in Yozakura, far to the south" |
 | Rei Kestrane (lore staff) | Yozakura | Weapon: "A long single-edged sword." → "A long single-edged katana forged in Yozakura." |
+| Observation Tower (81) | Norvaine | `Its great telescope has a Norvaine starglass lens, the Divination Society's pride.` |
+| Kanae Quveno (lore year 2) | Norvaine | Baris baru: `Her crystal ball is Norvaine starglass, and nobody else is allowed to touch it.` |
+| Magitech - Mana Grid (219) | Caelmar | `Most lanterns and wall torches are Caelmari-made, bought by the thousand.` |
+| Commissary (83) | Caelmar | `Its cheap stationery and everyday kit are Caelmari-made.` |
+| Classes - Etiquette (28) | Velmora | `Etiquette follows Velmoran court manners, the continent's standard.` |
+| The Mall (66) | Yozakura | `Its busiest tea house is a Yozakuran chain.` |
+| Sunreach Bay (246) | Yozakura | `Half its hotels are Yozakuran.` |
 | World Myth - The Devoured Kingdom (273) | Arslan | keyword `Arslan`, `Arslan Sultanate` dihapus dari sini (pindah ke entry negara). |
 
 ## Keputusan (owner, 2026-09-27)
 
 - Caelmar = hive city; Shiranui diganti Yozakura (selatan, Jepang, Beastkin, perusahaan jasa, raja Alpha dari turnamen);
-  mention Competitions pindah dari Norvaine ke Yozakura (militer terkuat ≠ tim kompetisi terkuat).
+  favorit World Competition lebih dari satu (owner: seperti Piala Dunia): Yozakura, Norvaine, Caelmar.
+- Keunggulan ekspor tiap negara (owner): Arslan = World Bank, Velmora = etiket istana (dan Tilly), Yozakura = katana dan jasa,
+  Norvaine = starglass, Caelmar = barang buatan massal (magitech sehari-hari).
 - Nama kerajaan utara: Norvaine. Tidak dikaitkan ke King of Knights. Tabel mention disetujui. Velmora: isi Claude disetujui,
   ditambah suksesi berdarah (rahasia) dan ibu Tilly, selir raja.
