@@ -389,6 +389,14 @@ N39[101]['content'] = ROY_OLD.sub(
     'Current trouble: This year is his last chance at the Dorm Competition (Month 3 Week 4). Before it, he is training to qualify and already knows the harder problem: '
     'no team wants him, since "illusionist-alchemist" doesn\'t count as a role. Canon outcome afterwards, unless the story changes it: he qualifies at rank 16, and still no team will take him.',
     N39[101]['content'])
+# 1.7.5 (owner, 2026-09-27: "edit entry entrance event agar menjelaskan bahwa di year 2/3 user sebagai senior yg mengajak new student
+# tour"): from {{user}}'s second year the Entrance Event is theirs to host, not to go through. Card: an EJS section on Player.Profile.Year;
+# the v39 export: a plain line.
+ENTR_SENIOR = ("{{user}} is a returning Year <%- _py %> student: sorted in their first year and never sorted again. Today {{user}} is one of the "
+               "seniors: at 10:00 {{user}} is given a group of four new first-years to take round the whole campus until 18:00 (their questions, "
+               "the shortcuts, the places to avoid, the club booths on the way), and in the late afternoon shows them their rooms if they were "
+               "sorted into {{user}}'s dorm. {{user}} watches the sorting at 09:00 from the gallery, and eats at the Entrance Feast with their own year.")
+C39[21]['content'] += "\nFrom {{user}}'s second year: " + ENTR_SENIOR.replace("a returning Year <%- _py %> student", "a returning student")
 os.makedirs(P('dist/lorebook_v39'), exist_ok=True)
 for name, src, D in (('Core', core, C39), ('NPC_Detailed', npc, N39)):
     out = copy.deepcopy(src); out['entries'] = {str(u): D[u] for u in sorted(D)}
@@ -396,6 +404,8 @@ for name, src, D in (('Core', core, C39), ('NPC_Detailed', npc, N39)):
 
 # ================= card worldbook =================
 Cc, Nc = copy.deepcopy(C), copy.deepcopy(N)
+Cc[21]['content'] += ("\n<%_ { const _py = Math.max(1, Math.min(3, Number(getvar('stat_data.Player.Profile.Year')) || 1)); if (_py > 1) { _%>\n"
+                      + ENTR_SENIOR + "\n<%_ } } _%>")
 apply_lore_edits(Cc, Nc)
 apply_cohort(Nc, True)   # 1.7.0 cohort 2
 # D19: remap NPC uid collisions 254-262 -> 401-409

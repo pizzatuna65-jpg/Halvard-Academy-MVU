@@ -117,8 +117,8 @@ const EVENTS = [
   { m: 12, w: 3, d: ALL, t: 'Kingdom-wide holiday: students go home', home: 1 },
   { m: 12, w: 4, d: ALL, t: 'Kingdom-wide holiday: students go home', home: 1 },
 ];
-// 1.7.4: from campaign Year 2 the Entrance Event is for the new first-years; {{user}} has been sorted already
-const ENTR_BACK = '{{user}} is a returning student, sorted in their first year and never sorted again: arrivals, sorting, the tour and the dorm rooms are for the new first-years, whom seniors guide';
+// 1.7.4: from campaign Year 2 the Entrance Event is for the new first-years; {{user}} has been sorted already. 1.7.5: {{user}} guides a group
+const ENTR_BACK = '{{user}} is a returning student and one of the seniors today: never sorted again; watches the 09:00 sorting, then takes a group of four new first-years round the campus 10:00–18:00 and shows them their dorm rooms';
 const schedOf = (e, day) => (!e.s ? '' : typeof e.s === 'string' ? e.s : e.s[day] || '');
 const curfewHour = (e, day) => (e.curfew && typeof e.curfew === 'object' ? e.curfew[day] : e.curfew);
 const TIMETABLE = {
@@ -673,7 +673,7 @@ function runEngine(S, B, text, seedHint) {
   const bd = /^M(\d{1,2}) W([1-4]) (Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/.exec(String(S.Player.Profile.Birthday || '').trim());
   const bday = bd && +bd[1] === S.World.Month && +bd[2] === S.World.Week && bd[3] === S.World.Day;
   // 1.3.1: each event with today's plan (times from its lore entry), so the narrator runs the day on schedule
-  S.World._Event_today = [...evs.map(e => (schedOf(e, S.World.Day) ? `${e.t} — ${schedOf(e, S.World.Day)}` : e.t) + (e.entr && S.World.Year > 1 ? ` (${ENTR_BACK})` : '')), ...(bday ? [`${S.Player.Profile.Name || 'Your'}'s birthday`] : [])].join(' | ');
+  S.World._Event_today = [...evs.map(e => (schedOf(e, S.World.Day) ? `${e.t} — ${schedOf(e, S.World.Day)}` : e.t) + (e.entr && (S.World.Year > 1 || num(S.Player.Profile.Year, 1) > 1) ? ` (${ENTR_BACK})` : '')), ...(bday ? [`${S.Player.Profile.Name || 'Your'}'s birthday`] : [])].join(' | ');
   S.World._Period = periodOf(S.World, evs);
   S.World._Curfew = curfewOf(S.World, evs, S);
   // F20: today's happening (visible from the day's start until its window closes)
@@ -1700,7 +1700,14 @@ function runEngine(S, B, text, seedHint) {
 
   // journal: engine-written turning points; date-stamp the AI's new lines
   if (hasB) {
-    if (B.Player.Profile.Dorm === 'Unsorted' && S.Player.Profile.Dorm !== 'Unsorted') jnl.unshift(`Sorted into the ${S.Player.Profile.Dorm} Dormitory by the Arbiter Stone.`);
+    // 1.7.5: a student past Year 1 (a chat that starts in Year 2 or 3) was sorted in their first year: the Stone's reading (D9) once
+    // the Builder has set the dominant type
+    const dm0 = { Elemental: 'Fire', Mystic: 'Light', Spiritual: 'Viridian', Occult: 'Sky' }[((S.Magic || {})._Affinity || {}).Dominant];
+    if (S.Player.Profile.Dorm === 'Unsorted' && num(S.Player.Profile.Year, 1) > 1 && dm0) {
+      S.Player.Profile.Dorm = dm0;
+      log.push(`{{user}} is a Year ${S.Player.Profile.Year} student, so the Arbiter Stone sorted them in their first year: ${dm0} Dormitory (Player.Profile.Dorm).`);
+    }
+    if (B.Player.Profile.Dorm === 'Unsorted' && S.Player.Profile.Dorm !== 'Unsorted') jnl.unshift(num(S.Player.Profile.Year, 1) > 1 ? `Of the ${S.Player.Profile.Dorm} Dormitory since the first-year sorting.` : `Sorted into the ${S.Player.Profile.Dorm} Dormitory by the Arbiter Stone.`);
     const sec0 = new Set([...((B.Campus_State && B.Campus_State.Secrets_revealed) || []), ...((B.$ui && B.$ui.secrets) || [])]);
     for (const x of S.Campus_State.Secrets_revealed || []) if (!sec0.has(x)) { const [who, ...topic] = String(x).split('.'); jnl.push(`Uncovered a hidden truth about ${who}${topic.length ? ` (${topic.join('.')})` : ''}.`); }
   }

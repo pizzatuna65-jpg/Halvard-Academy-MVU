@@ -75,7 +75,7 @@ const y3n = W(y3, { Year: 2, Month: 1, Week: 1, Day: 'Mon', Time: '08:00' });
 ok(y3n.Player.Profile.Year === 3 && y3n._Log.some(l => /was already a third-year: the card does not play \{\{user\}\}'s own graduation/.test(l)), 'a third-year {{user}} is not moved; the story decides');
 
 // ---- the Entrance Event in Year 2
-ok(!/returning student/.test(S0.World._Event_today) && /returning student, sorted in their first year and never sorted again/.test(W(G, { Year: 2, Month: 1, Week: 1, Day: 'Mon', Time: '09:00' }).World._Event_today), 'Entrance Event: from Year 2, {{user}} is a returning student and is not sorted again');
+ok(!/returning student/.test(S0.World._Event_today) && /returning student and one of the seniors today: never sorted again/.test(W(G, { Year: 2, Month: 1, Week: 1, Day: 'Mon', Time: '09:00' }).World._Event_today), 'Entrance Event: from Year 2, {{user}} is a returning student and is not sorted again');
 
 // ---- {{user}}'s birthday adds a year, once
 const bd = applyPatch(S0, [{ op: 'replace', path: '/Player/Profile/Birthday', value: 'M2 W1 Tue' }, { op: 'replace', path: '/Player/Profile/Age', value: 18 }]);

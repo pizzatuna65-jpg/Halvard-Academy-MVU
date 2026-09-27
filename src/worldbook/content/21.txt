@@ -6,3 +6,6 @@ When: Month 1 Week 1 Monday
 - Club promotion: stands across the academy, 10:00-18:00 on sorting day, then every afternoon after classes (16:00-18:00) until Friday; registration closes Friday at 18:00. It opens on sorting day on purpose, so clubs recruit before dorm loyalty settles.
 - Late afternoon: seniors show new students their rooms inside the dorms.
 - 19:00 Entrance Feast in the Ring Dining Hall: the Headmaster and the Vice Headmaster speak before dinner.
+<%_ { const _py = Math.max(1, Math.min(3, Number(getvar('stat_data.Player.Profile.Year')) || 1)); if (_py > 1) { _%>
+{{user}} is a returning Year <%- _py %> student: sorted in their first year and never sorted again. Today {{user}} is one of the seniors: at 10:00 {{user}} is given a group of four new first-years to take round the whole campus until 18:00 (their questions, the shortcuts, the places to avoid, the club booths on the way), and in the late afternoon shows them their rooms if they were sorted into {{user}}'s dorm. {{user}} watches the sorting at 09:00 from the gallery, and eats at the Entrance Feast with their own year.
+<%_ } } _%>

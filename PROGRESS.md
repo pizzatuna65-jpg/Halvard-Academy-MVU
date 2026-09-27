@@ -995,6 +995,32 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   - To verify in ST: a chat in campaign Year 2 (set World.Year or play through Graduation) with one of the six present: their
     keyword entry, their Cast Sheet with the hobby line (Nerys), an older NPC's entry with the new lines; and in Year 1 that none of
     it appears.
+- 1.7.5 The Entrance Event as a senior, and a TEST card that starts in Year 2 (owner, 2026-09-27: "edit entry entrance event agar
+  menjelaskan bahwa di year 2/3 user sebagai senior yg mengajak new student tour"; "buat character card test yg memulai campaign
+  sebagai year 2 dengan bond bervariasi (bond hasil year 1 biarkan new student masih kosong)"). No established decision changed.
+  - Entrance Event (lore 21, via merge_lorebooks.py): from {{user}}'s Year 2 an EJS section says {{user}} is a returning student,
+    never sorted again, and one of the seniors: watches the 09:00 sorting from the gallery, takes a group of four new first-years
+    round the campus 10:00-18:00, shows them their rooms if they are in {{user}}'s dorm, eats at the feast with their own year.
+    The v39 export carries the same as a plain line. The engine's day plan (`_Event_today`) says the same in short, from campaign
+    Year 2 or when {{user}} is past Year 1.
+  - Engine: a student past Year 1 who is still Unsorted (a chat that starts in Year 2 or 3) gets the dorm the Arbiter Stone reads
+    from their dominant type (D9) as soon as the Builder sets it; the Journal says "Of the <dorm> Dormitory since the first-year
+    sorting". A first-year is still sorted by the story.
+  - TEST card `dist/test/Eldrasil_TEST_Year2` (tools/build_test_card_year2.py, own lorebook name): starts at Year 2 M1 W1 Mon 07:30,
+    the Entrance Event, {{user}} a 19-year-old second-year with 1,450 points; 19 bonds from Year 1 at Ranks 1-6 with varied Trust
+    (30-85) and Tension (0-55), one Year 1 fact and milestone each, three of them now graduates (Gareth, Irene, Royhan, Ruby's
+    bonds stay); Rank 5 gifts already given (Etnie, Saffi, Gareth); Journal lines dated Y1; no bond with the new first-years or a
+    rival team. The engine sends Year 1's third-years away on the first update (Etnie stays) and journals the new first-years. Its
+    first message: {{user}} comes back through the gatehouse and is handed a senior guide's slip for the tour.
+  - Canon filled in for the TEST card only (not in the lore): each bond's one fact and Year 1 milestone, written from their lore
+    (e.g. Caralynn outshone in Magic Theory, Trixie's circus, Gavlan assigning the combat role).
+  - Tests: test_year2start_v175.cjs (22 checks: lore 21 and the day plan in Year 1/2/3, the v39 line; the TEST card's name, start,
+    ranks, Trust/Tension spread, no cohort-2 or rival bonds, gifts, Journal; Builder then dorm; graduation and arrivals on the first
+    update; a new first-year met at Rank 0; Etnie's sheet; the 1.7.4 save). test_year2_v174 follows the new day-plan words. Save
+    1.7.4 added. npm test 1453 checks (47 suites + static QA); stress passes; smoke 550 views, no errors; token_audit unchanged in
+    Year 1; preset built twice, byte-identical (unchanged). Both TEST cards rebuilt.
+  - To verify in ST: import the Year 2 TEST card, register in the Builder, and play the Entrance Event: the dorm is set, Etnie is
+    still there, the tour group is new first-years (Linus, Maple, ... are strangers).
 - 1.7.4 Year 2 bug hunt and stress test (owner, 2026-09-27: "bug hunt dan stress test apa yg terjadi ketika user mencapai year 2":
   arriving and graduating NPCs, ages, dynamic features, the Entrance Event, entries written for Year 1), merged with 1.7.1-1.7.3
   from the other session (World Myth, nations, NPC origins; owner: "gabungkan sesi ini dan sesi claude lain untuk membentuk

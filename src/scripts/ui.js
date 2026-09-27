@@ -1995,8 +1995,8 @@ const EVENTS = [
   { m: 12, w: 3, d: ALL, t: 'Kingdom-wide holiday: students go home', home: 1 },
   { m: 12, w: 4, d: ALL, t: 'Kingdom-wide holiday: students go home', home: 1 },
 ];
-// 1.7.4: from campaign Year 2 the Entrance Event is for the new first-years; {{user}} has been sorted already
-const ENTR_BACK = '{{user}} is a returning student, sorted in their first year and never sorted again: arrivals, sorting, the tour and the dorm rooms are for the new first-years, whom seniors guide';
+// 1.7.4: from campaign Year 2 the Entrance Event is for the new first-years; {{user}} has been sorted already. 1.7.5: {{user}} guides a group
+const ENTR_BACK = '{{user}} is a returning student and one of the seniors today: never sorted again; watches the 09:00 sorting, then takes a group of four new first-years round the campus 10:00–18:00 and shows them their dorm rooms';
 const schedOf = (e, day) => (!e.s ? '' : typeof e.s === 'string' ? e.s : e.s[day] || '');
 const curfewHour = (e, day) => (e.curfew && typeof e.curfew === 'object' ? e.curfew[day] : e.curfew);
 const TIMETABLE = {
