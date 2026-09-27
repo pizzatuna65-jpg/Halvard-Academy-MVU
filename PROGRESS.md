@@ -995,6 +995,14 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   - To verify in ST: a chat in campaign Year 2 (set World.Year or play through Graduation) with one of the six present: their
     keyword entry, their Cast Sheet with the hobby line (Nerys), an older NPC's entry with the new lines; and in Year 1 that none of
     it appears.
+- 1.7.3 NPC origins in the new nations (owner, 2026-09-27, draft `planning/DRAFT_npc_origins.md`, approved: "Approve"; both
+  moved to Eldrasil at twelve). No established decision changed.
+  - Idris Ainsworth: born in the Arslan Sultanate; the fur-trading family settled in Eldrasil's dry south when he was twelve and
+    still haggles the Arslan way. Vera Pulsar: born in Caelmar, where the immigrant family of clockmakers kept a shop on a middle
+    layer, before they settled in a mid-sized Eldrasil town when she was twelve. Both still go to Halvard at 18 like every gifted
+    child in Eldrasil.
+  - Tests: test_origins_v173.cjs (4 checks: both backstories, the UI data, the 1.7.2 save). Save 1.7.2 added. npm test 1367 checks
+    (45 suites + static QA); stress passes; token_audit unchanged; preset unchanged. TEST card rebuilt.
 - 1.7.2 Nations: five nations of the continent, each with its own trade, woven into the lore (owner, 2026-09-27, draft
   `planning/DRAFT_nations.md`, approved: "approve"; the owner's rule for drafts: anything the owner does not comment on is approved).
   No established decision changed.
@@ -1138,6 +1146,7 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
+- 1.7.3: Idris (Arslan) and Vera (Caelmar) have origins in the new nations.
 - 1.7.2: nations are in (Arslan, Norvaine, Velmora, Caelmar, Yozakura).
 - 1.7.1: World Myth category is in; next the owner's nation entries (own draft, same size).
 - 1.7.0: cohort 2 (six first-years from campaign Year 2) is in; they need portraits (owner's PNGs).
