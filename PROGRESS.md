@@ -995,6 +995,31 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   - To verify in ST: a chat in campaign Year 2 (set World.Year or play through Graduation) with one of the six present: their
     keyword entry, their Cast Sheet with the hobby line (Nerys), an older NPC's entry with the new lines; and in Year 1 that none of
     it appears.
+- 1.7.2 Nations: five nations of the continent, each with its own trade, woven into the lore (owner, 2026-09-27, draft
+  `planning/DRAFT_nations.md`, approved: "approve"; the owner's rule for drafts: anything the owner does not comment on is approved).
+  No established decision changed.
+  - Entries (uid 278, 279, 333-335; Sunreach Bay's settings: keyword, order 80, position 1): the Arslan Sultanate (the money capital
+    in the Primal Desert; the World Bank), Norvaine (the north: the strongest army, a hereditary pact with Yog-Sothoth, Lord of the
+    Cosmos; each Star Night it takes one Chosen of the Cosmos, erased from memory, and only the rule is remembered; exports
+    starglass), Velmora (Eldrasil's northern border, the most formal court; its bloody succession is narrator_only), Caelmar (a
+    single hive city in the west, layered from the king above the clouds to the slums below; the continent's workshop), Yozakura
+    (the south, Japanese-themed, mostly Beastkin; service companies worldwide, rulers crowned by tournament as Alpha, katana).
+    The `Arslan` keywords moved from the Devoured Kingdom myth to the Arslan entry.
+  - Woven in: WORLD INDEX (a Nations line), Kingdom — Eldrasil (named nations), Competitions (the nations at the World Competition;
+    favourites Yozakura, Norvaine and Caelmar), Star Night, Etiquette, Combat Class, Workshop, the Mall, Observation Tower,
+    Commissary, Noble Houses' Liaison, Banking House (a World Bank branch), Mana Grid, Airships (Yozakuran lines and crews), Sunreach
+    Bay, Graduation ("the World Bank" at the recruitment tables). Every nation appears in 6-9 other entries.
+  - NPC lore: Tilly (narrator_only: Velmora's succession is a blood sport; her mother, the king's concubine, sent her, and her
+    letters go to her mother), Tsubaki (katana forged in Yozakura), Rei (katana forged in Yozakura), Kanae (a Norvaine starglass
+    crystal ball).
+  - Small wording choice: the Etiquette line says its lessons on noble conduct follow Velmoran manners (the class is marked on
+    judgement, not politeness, so the whole class does not).
+  - Sizes: 71-109 words, Norvaine 137 (it carries the most approved canon; kept as approved).
+  - Tests: test_nations_v172.cjs (61 checks: the entries, settings, trades, Norvaine and Yozakura rules, Velmora's secret, every
+    mention and how many entries each nation is woven into, the four NPC files, the v39 export, the 1.7.1 save). test_worldmyth_v171
+    follows the longer nations list and reads the version from card.json. Save 1.7.1 added. npm test 1358 checks (44 suites + static
+    QA); stress passes; token_audit ~12.4k start (+59, the WORLD INDEX Nations line), ~17.8k heavy; preset unchanged. TEST card rebuilt.
+  - To verify in ST: naming a nation in chat brings its entry; Tilly's scenes keep her secret.
 - 1.7.1 World Myth: a new lore category, five continent-wide myths (owner, 2026-09-26/27: "add kategori entry baru namanya
   world myth ... lengthnya sama seperti kategori brand, takhayul, ghost story", myths 1-2 written by the owner, 3-5 from the
   owner's direction; draft `planning/DRAFT_world_myth.md`, approved 2026-09-27: "Approve"). No established decision changed.
@@ -1113,6 +1138,7 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 ## BATCH 5 COMPLETE — card v1.0 released (needs user playtest in ST)
 
 ## Next
+- 1.7.2: nations are in (Arslan, Norvaine, Velmora, Caelmar, Yozakura).
 - 1.7.1: World Myth category is in; next the owner's nation entries (own draft, same size).
 - 1.7.0: cohort 2 (six first-years from campaign Year 2) is in; they need portraits (owner's PNGs).
 - Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 to 1.6.7 done (G1 in 1.6.3, G2 in 1.6.4, G3 in 1.6.5,
@@ -1140,6 +1166,7 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 - Scripted first-week classes (M1 W1 Tue-Sat, 14 sessions; per dorm for [D] classes; optional homework into Commitments).
 
 ## To verify in ST (could not be tested outside ST)
+- 1.7.2: naming a nation in chat brings its entry; Tilly's scenes keep the Velmora secret.
 - 1.7.1: naming a World Myth in chat brings its entry; the Cathedral and Main Library entries carry their myth line.
 - 1.7.0: in campaign Year 2, one of the six first-years present (keyword entry, Cast Sheet, Nerys's hobby line) and an older
   NPC's entry with the added lines (EJS year gate); in Year 1 none of it appears.

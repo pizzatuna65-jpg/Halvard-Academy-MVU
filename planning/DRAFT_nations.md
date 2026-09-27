@@ -1,6 +1,9 @@
 # DRAFT — Entry negara (Nations)
 
-Status: **draft, belum diterapkan.** Arahan owner 2026-09-27. Aturan owner: yang tidak dikomentari owner = disetujui. Ukuran sama dengan entry World Myth (70–90 kata).
+**DITERAPKAN di rilis 1.7.2 (2026-09-27)**, atas "approve" owner. Sumbernya sekarang `NATIONS` dan `add_nations` di
+`tools/merge_lorebooks.py`, plus baris di lore Tilly, Tsubaki, Rei dan Kanae. File ini disimpan sebagai catatan asal.
+
+Status sebelumnya: **draft, belum diterapkan.** Arahan owner 2026-09-27. Aturan owner: yang tidak dikomentari owner = disetujui. Ukuran sama dengan entry World Myth (70–90 kata).
 Catatan dalam bahasa Indonesia; teks card dalam bahasa Inggris.
 
 ## Aturan

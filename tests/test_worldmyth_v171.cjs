@@ -40,7 +40,7 @@ ok(/First Bargain/.test(txt(273)) && /First Bargain/.test(txt(274)) && /First Ba
 const has = (uid, re, what) => ok(re.test(txt(uid)), `mention: ${what}`);
 has(0, /Kingdom: Eldrasil, in the east of the continent\./, 'WORLD INDEX places Eldrasil in the east');
 has(0, /World myths, told across the continent, not history: the Devoured Kingdom \(Azathoth\), the Four Who Saved the World, the First Bargain/, 'WORLD INDEX lists the myths');
-has(1, /Sunreach Bay, Velmora and the Arslan Sultanate are named/, 'Kingdom names the Arslan Sultanate');
+has(1, /Sunreach Bay, Velmora, the Arslan Sultanate[^.]* are named/, 'Kingdom names the Arslan Sultanate');
 has(1, /claims the Archmage of the Four Who Saved the World/, 'Kingdom claims the Archmage');
 has(3, /hero's academy/, 'Veyra');
 has(17, /The First Bargain is the folk answer/, 'Magic Theory');
@@ -70,7 +70,7 @@ ok(Object.keys(MYTHS).every(u => v39[u] && v39[u].comment === 'World Myth - ' + 
 // ---- a 1.7.0 save loads
 const save = JSON.parse(rd('tests/fixtures/saves/save_1.7.0.json'));
 const L = applyPatch(save, [{ op: 'replace', path: '/World/Time', value: '09:00' }]);
-ok(L.$eng.ver === JSON.parse(rd('src/card/card.json')).character_version && L.$eng.ver === '1.7.1'
+ok(L.$eng.ver === JSON.parse(rd('src/card/card.json')).character_version
   && Object.keys(save.Bonds).every(id => L.Bonds[id] && L.Bonds[id].Rank === save.Bonds[id].Rank && L.Bonds[id].Trust === save.Bonds[id].Trust)
   && L.Journal.length >= save.Journal.length, 'the 1.7.0 save loads with every bond, rank, Trust and the journal kept');
 ok(initState().$eng !== undefined, 'a new game still starts');

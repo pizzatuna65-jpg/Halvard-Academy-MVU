@@ -27,7 +27,7 @@ Rules:
 Genre: Fantasy magic academy
 Premise: Four magic academies in one kingdom, each tied to a cardinal region and each built on top of a great magical site.
 Location: the east of the continent.
-Other nations: exist; Sunreach Bay, Velmora and the Arslan Sultanate are named.
+Other nations: exist; Sunreach Bay, Velmora, the Arslan Sultanate, Norvaine, Caelmar and Yozakura are named.
 - Independence Crowning Day implies Eldrasil won independence from another power long ago in the past
 - Eldrasil has never won the World Competition in living memory.
 - Eldrasil claims the Archmage of the Four Who Saved the World as its own hero.
@@ -109,6 +109,7 @@ Four tiers, elimination. Losing at any tier ends your competitive year. The one 
 Forbidden arts (lore 32): The twenty forbidden arts (not all, but the famous one), by type. Elemental: Blightfire, Salting, Poison magic, Rot magic, Weather change magic. Mystic: Unmaking, Puppetry, Wringing, Soul magic, Raise dead. Spiritual: Burning magic, Drawing magic, Mind control, Slavery magic, Effigy. Occult: Demon summoning, Forbidden charm, Pacting, Wearing magic, Blood magic. Pacting = a pact with anything other than a spirit (forbidden).
 
 World myths (lore 273-277, 1.7.1; folk belief across the continent, not history; names and faces of every figure are lost): the Devoured Kingdom (a king's pact with Azathoth, Lord of All, greatest of Asmoday's spirits, cost his kingdom; now the Primal Desert, where the Arslan Sultanate stands); the Four Who Saved the World (the King of Knights, north; the Archmage, east; the Lady of the Lake, south; the Empress of the Fractured Vow, west) from the First Bargain (a mortal's bargain with "something that shone" for all of magic; magic was fractured into the four types; <narrator_only>it was Lucifer</narrator_only>); the Holy Grail (a wish-granting cup); the Shaping of the World (Asmoday made the spirits first, then everything, then mortals from the soil).
+Nations (lore 278, 279, 333-335, 1.7.2): the Arslan Sultanate (money capital in the Primal Desert, the World Bank; Halvard's Banking House is a branch); Norvaine (north, the strongest army, a hereditary pact with Yog-Sothoth, Lord of the Cosmos, who takes one Chosen of the Cosmos each Star Night, erased from memory; exports starglass); Velmora (Eldrasil's northern border, the most formal court; <narrator_only>its succession is a blood sport</narrator_only>); Caelmar (a hive city in the west, the continent's workshop); Yozakura (south, Japanese-themed, mostly Beastkin, service companies worldwide, rulers crowned by tournament as Alpha, katana). World Competition favourites: Yozakura, Norvaine, Caelmar.
 Races: Human, Elf, Beastkin (animal ears/tail; the type varies). The player's dorm is set by the Arbiter Stone at the Entrance Event (M1 W1 Mon).
 
 ## 2. Calendar and timetable

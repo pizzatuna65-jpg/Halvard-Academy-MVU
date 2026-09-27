@@ -1,7 +1,7 @@
 [WORLD INDEX — Never contradict this. Anything marked unknown is simply not established yet; the narrator may decide it and reveal it when the story reaches it; the narrator may freely create new characters. Text inside narrator_only tags is hidden truth characters do not know at first; let it surface through events, clues and discovery, and reveal it fully when the story gets there.]
 
 ALWAYS TRUE
-{{user}} is a first-year at Halvard. Kingdom: Eldrasil, in the east of the continent. Sunreach Bay: foreign resort nation, academy Trip destination. Races: Human, Elf, Beastkin.
+{{user}} is a first-year at Halvard. Kingdom: Eldrasil, in the east of the continent. Nations: Sunreach Bay (resort, academy Trip destination), the Arslan Sultanate (money; the World Bank), Norvaine (the strongest army; Yog-Sothoth), Velmora (the most formal court), Caelmar (a hive city), Yozakura (Beastkin, service companies, rulers crowned by tournament). Races: Human, Elf, Beastkin.
 Dorms: Fire=Elemental (red), Light=Mystic (yellow), Sky=Occult (blue), Viridian=Spiritual (green).
 Week: Mon-Sat study, Sunday rest, all on campus.
 Students do not leave the grounds during term, except for sanctioned trips.

@@ -210,11 +210,12 @@ def apply_lore_edits(C, N):
         key=["Sparring Pavilion", "the pavilion", "Duelling Club headquarters"],
         content="[Regulars — The Sparring Pavilion] Gavlan, Sophia, Caspian (as a guest).")
     add_world_myths(C)
+    add_nations(C)
 
 # 1.7.1 World Myth (owner-approved 2026-09-27, planning/DRAFT_world_myth.md): five continent-wide myths, the same size and settings
 # as the Superstition entries, linked to each other, and a short mention in the entries that should know they exist (like the brands).
 WORLD_MYTHS = [
-    (273, "The Devoured Kingdom", ["Azathoth", "Lord of All", "Primal Desert", "Arslan Sultanate", "Arslan", "Devoured Kingdom"],
+    (273, "The Devoured Kingdom", ["Azathoth", "Lord of All", "Primal Desert", "Devoured Kingdom"],   # 1.7.2: Arslan keys -> its nation entry
      "[The Devoured Kingdom]\n"
      "Story: thousands of years ago, a king made a pact with Azathoth, Lord of All, greatest of Asmoday's spirits. Its price was his whole kingdom, "
      "devoured to the last stone; the Primal Desert, where the Arslan Sultanate stands today, is what remains.\n"
@@ -254,6 +255,92 @@ WORLD_MYTHS = [
      "Status: the Cathedral teaches it as truth; History Class leaves it to the Cathedral.\n"
      "<narrator_only>The last line is the goddess wearing another's credit: Lucifer made magic, not Asmoday.</narrator_only>"),
 ]
+# 1.7.2 Nations (owner-approved 2026-09-27, planning/DRAFT_nations.md): five nations with the settings of Sunreach Bay (uid 246),
+# each with its own trade, and woven into the entries that should know they exist (WORLD INDEX, Kingdom, the World Competition...).
+NATIONS = [
+    (278, "Arslan Sultanate", ["Arslan Sultanate", "Arslan", "World Bank", "the Sultan"],
+     "[Arslan Sultanate]\n"
+     "What: a sultanate in the Primal Desert, where the Devoured Kingdom once stood, and the money capital of the world. The desert grows nothing, "
+     "so the whole country trades: bankers, brokers and moneylenders.\n"
+     "Known for: the World Bank, in its capital, which sets what every nation's coin is worth and lends to every crown, Eldrasil's included.\n"
+     "People: rich, exact, and very polite to anyone who owes them.\n"
+     "Status: the sand still turns up stones of the devoured kingdom. Nobody digs deeper than they have to."),
+    (279, "Norvaine", ["Norvaine", "Yog-Sothoth", "Lord of the Cosmos", "Chosen of the Cosmos"],
+     "[Norvaine]\n"
+     "What: the richest kingdom of the north, with the strongest army on the continent. For generations its kings have held a pact with "
+     "Yog-Sothoth, Lord of the Cosmos, a Spirit Lord; each heir inherits it with the crown.\n"
+     "Export: starglass, a glass that holds the night sky; the finest telescope lenses and scrying crystals in the world.\n"
+     "Star Night: at midnight, over the royal castle, every star becomes an eye and every comet a tentacle.\n"
+     "Price: at that midnight Yog-Sothoth takes one person, the Chosen of the Cosmos, erased from the world's memory with every proof they "
+     "existed and their soul. The kingdom remembers the rule, never the person.\n"
+     "People: they fear Yog-Sothoth, revere it, and bow to the sky every Star Night.\n"
+     "Status: nobody knows what the kings gained, or why the Chosen are taken."),
+    (333, "Velmora", ["Velmora", "Velmoran"],
+     "[Velmora]\n"
+     "What: an old kingdom on Eldrasil's northern border: green valleys and walled orchards between Eldrasil and the north. "
+     "Its court is the most formal on the continent.\n"
+     "Known for: diplomats, dancing masters and etiquette tutors, hired by noble houses everywhere; anyone who wants to sound well-bred "
+     "copies Velmoran court manners.\n"
+     "Ties: a long, quiet friendship with Eldrasil's crown.\n"
+     "Status: Velmorans abroad are gracious, careful, and never discuss their king.\n"
+     "<narrator_only>Behind the manners, the succession is a blood sport: the king lets his children fight for the crown, and betrayal, "
+     "coups, assassination and blackmail are all fair. Whoever is left standing is heir.</narrator_only>"),
+    (334, "Caelmar", ["Caelmar", "Caelmari", "city of layers"],
+     "[Caelmar]\n"
+     "What: a nation that is a single city in the west, as wide as a kingdom, built hundreds of floors into the sky and dozens deep into "
+     "the earth, split into hundreds of districts and dozens of layers.\n"
+     "Rule: the king lives on the highest layer, above the clouds; the lower you live, the less you matter.\n"
+     "Below: the deepest layers are slums that never see the sun, where the city's refuse, workshops and outlaws collect.\n"
+     "Export: the continent's workshop. Mana lanterns, rune heaters, pens, locks, anything made by the thousand comes up from the lower layers.\n"
+     "Status: most Caelmari die on the layer they were born on."),
+    (335, "Yozakura", ["Yozakura", "Yozakuran", "Alpha of Yozakura"],
+     "[Yozakura]\n"
+     "What: a kingdom in the south of the continent, mostly Beastkin, known for cherry blossoms and courtesy. Its companies run hotels, "
+     "restaurants, bathhouses and airship lines all over the world.\n"
+     "Rule: the throne is won, not inherited. A grand tournament crowns the ruler, titled Alpha, who reigns until beaten in the next one.\n"
+     "Known for: a passion for competing in everything, from academy duels to cooking contests; its team is always a favourite at the "
+     "World Competition. Its smiths forge the katana, the finest blade a mage can hold.\n"
+     "Status: a Yozakuran never refuses a fair challenge."),
+]
+def add_nations(C):
+    for uid, name, keys, content in NATIONS:
+        assert uid not in C and uid not in N, f'nation uid {uid} is taken'
+        C[uid] = template_from(C[246], uid=uid, displayIndex=uid, comment="Nation — " + name, key=keys, content=content)
+    rep(C[0], "Sunreach Bay: foreign resort nation, academy Trip destination.",
+        "Nations: Sunreach Bay (resort, academy Trip destination), the Arslan Sultanate (money; the World Bank), Norvaine (the strongest army; "
+        "Yog-Sothoth), Velmora (the most formal court), Caelmar (a hive city), Yozakura (Beastkin, service companies, rulers crowned by tournament).")
+    rep(C[1], "Sunreach Bay, Velmora and the Arslan Sultanate are named.",
+        "Sunreach Bay, Velmora, the Arslan Sultanate, Norvaine, Caelmar and Yozakura are named.")
+    rep(C[19], "Eldrasil has never won in living memory.",
+        "Eldrasil has never won in living memory. Nations at the World Competition include Yozakura, Norvaine and Caelmar, the usual favourites, "
+        "the Arslan Sultanate, Velmora and Sunreach Bay.")
+    rep(C[22], "A wish made during it is believed to come true.",
+        "A wish made during it is believed to come true.\n- Far to the north, the same midnight is the one Norvaine dreads: the night Yog-Sothoth takes its Chosen.")
+    rep(C[28], "and conduct at Graduation.",
+        "and conduct at Graduation. Its lessons on noble conduct follow Velmoran court manners, the continent's standard.")
+    rep(C[30], "Drills, sparring and marking are adjusted to each student's combat role.",
+        "Drills, sparring and marking are adjusted to each student's combat role. Its drills borrow from Norvaine's army, the strongest on the continent.")
+    rep(C[55], "Enchantment sparks hang in the air a moment too long.",
+        "Enchantment sparks hang in the air a moment too long. Its lathes and tool racks are Caelmari-made.")
+    rep(C[66], "The top deck belongs to the practice studios and meditation nooks.",
+        "The top deck belongs to the practice studios and meditation nooks. Its busiest tea house is a Yozakuran chain.")
+    rep(C[81], "Instruments turn by themselves at night.",
+        "Instruments turn by themselves at night. Its great telescope has a Norvaine starglass lens, the Divination Society's pride.")
+    rep(C[83], "reagents and equipment on the back shelves.",
+        "reagents and equipment on the back shelves. Its cheap stationery and everyday kit are Caelmari-made.")
+    rep(C[91], "Students who do not catch its attention usually never learn it exists.",
+        "Students who do not catch its attention usually never learn it exists. Its protocol follows Velmoran court manners.")
+    rep(C[92], "It stands outside the mall, so a visit is a deliberate errand.",
+        "It stands outside the mall, so a visit is a deliberate errand. A branch of the World Bank of the Arslan Sultanate; its clerks answer to "
+        "the Sultanate, not the academy.")
+    rep(C[219], "is the clearest daily sign that it is working.",
+        "is the clearest daily sign that it is working. Most lanterns and wall torches are Caelmari-made, bought by the thousand.")
+    rep(C[231], "Nothing aboard records or sends anything.",
+        "Nothing aboard records or sends anything. Most airship lines on the continent are Yozakuran companies, and so are their crews.")
+    rep(C[246], "Policy: gives you whatever you came for and asks no questions.",
+        "Policy: gives you whatever you came for and asks no questions.\nHalf its hotels are Yozakuran.")
+    rep(C[248], "the Dovecote, the Bank,", "the Dovecote, the World Bank (Arslan Sultanate),")
+
 def add_world_myths(C):
     for uid, title, keys, content in WORLD_MYTHS:
         assert uid not in C and uid not in N, f'world myth uid {uid} is taken'
