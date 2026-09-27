@@ -1,6 +1,6 @@
 # DRAFT — Kategori baru: World Myth
 
-Status: **draft, belum diterapkan.** Owner menulis sendiri 5 mitos; draft ini mengumpulkan versi Inggrisnya satu per satu.
+Status: **draft, belum diterapkan.** Kelima mitos dari arahan owner; mitos 3–5 ditulis Claude dari arahan itu (2026-09-27).
 Diterapkan ke card hanya setelah kelima mitos lengkap dan owner approve. (Lima usulan awal dari Claude ditarik.)
 Catatan dalam bahasa Indonesia; teks card dalam bahasa Inggris.
 
@@ -49,45 +49,51 @@ Catatan kanon (owner, 2026-09-26): arah mata angin = arah **benua**; Eldrasil ad
 = tokoh Eldrasil. Ini **Archmage yang sama** dengan canon (pemasang keempat segel, makam di Veyra). Cocok dengan canon "nama
 Archmage hilang dari semua catatan"; teks tidak memberi nama atau gender.
 
-### 3. World Myth - The Star That Went Out (usulan Claude, menunggu approve)
-Tautan canon: Lucifer (Father of Magic, "little lights", menyebut Archmage "the thief", segel = pencurian cahayanya). Lucifer tidak
-dikenal di luar cult, jadi mitos publiknya kabur: tidak ada nama, tidak ada "Morning Star" (itu keyword entry Lucifer). Hubungannya
-hanya ditulis di `<narrator_only>`.
+### 3. World Myth - The First Bargain (owner, teks Claude)
+Arahan owner: manusia yang membuat kontrak dengan Lucifer, menyebabkan bencana dunia yang membuat sihir manusia retak jadi 4.
+Catatan kanon: Lucifer **tidak dikenal di luar cult**, jadi versi publik tidak menyebut namanya (dan tidak memakai "Morning Star",
+keyword entry Lucifer): "something that shone brighter than any star". Namanya hanya di `<narrator_only>`. Dual type ada di canon
+(langka), jadi "nearly every mage". Sihir dipakai semua ras, jadi "mortal", bukan hanya "human". "Kept to the letter" sesuai
+kepribadian Lucifer (selalu menepati tawar-menawar secara harfiah).
 
-Keys: `Star That Went Out`, `the star that went out`, `little light`, `thief in the sky`
+Keys: `First Bargain`, `magic was whole`, `fractured into four`, `why four types`
 ```
-[The Star That Went Out]
-Story: once, one star outshone every other at dawn, and every mage cast stronger beneath it. One night a thief climbed the sky and put it out. It has not risen since.
-Told: in old villages across the continent; grandmothers still call a gifted child "little light".
-Lesson: the brightest light draws a thief; told to children who show off their magic.
-Status: nobody knows which star it was, or who the thief was. The Cathedral calls it a peasant tale.
-<narrator_only>A garbled memory of Lucifer's sealing: the star was his light, the thief the Archmage. The Morning Choir keeps the old version as scripture.</narrator_only>
+[The First Bargain]
+Story: long ago, when magic was still whole, a mortal made a bargain with something that shone brighter than any star, and asked for all of magic. The bargain was kept to the letter, and the world nearly broke. Afterwards magic was fractured into four, and nearly every mage since is born to one type.
+Told: everywhere; Dark Magic Defense opens its lesson on Pacting with it.
+Lesson: never make a pact with anything that is not a spirit; the reason Pacting is a forbidden art.
+Status: nobody knows the mortal's name, what they bargained with, or who fractured magic.
+<narrator_only>What shone was Lucifer. Freed, he could give any magic to anyone again.</narrator_only>
 ```
-Ironi dengan mitos 2: dunia mengingat Archmage sebagai pahlawan, Lucifer mengingatnya sebagai pencuri.
+Pasangan dengan mitos 1: pact dengan Spirit Lord sah tapi harganya mahal; pact dengan yang bukan spirit dilarang sama sekali.
 
-### 4. World Myth - The Unforced Spirit (usulan Claude, menunggu approve)
-Tautan canon: Spirit Pact ("a spirit cannot be forced"), forbidden art Slavery magic, familiar.
+### 4. World Myth - The Holy Grail (owner, teks Claude)
+Arahan owner: holy grail yang bisa mengabulkan keinginan apa pun.
+Catatan kanon: dibedakan tegas dari Elixir Ashvale (menyembuhkan apa pun), supaya AI tidak mencampur keduanya.
 
-Keys: `Unforced Spirit`, `chained spirits`, `the silent hundred years`
+Keys: `Holy Grail`, `the Grail`, `wish-granting cup`
 ```
-[The Unforced Spirit]
-Story: long ago, an empire learned to chain spirits to its will. In a single night every spirit left its land. No familiar came, no spirit answered anyone there, and the land stayed silent for a hundred years.
-Told: to every new spirit user, usually by the one who teaches them.
-Lesson: a spirit can be asked, never forced; the reason every Spirit Pact must be agreed by both sides.
-Status: nobody knows the empire's name or where it stood.
+[The Holy Grail]
+Story: somewhere in the world lies a cup that grants any wish to whoever drinks from it. It has been found, lost and fought over more times than any two stories agree on.
+Told: everywhere; the favourite tale of treasure hunters and of children with a list.
+Lesson: every wish has a shape the wisher did not see; told to anyone who wants something too badly.
+Status: nobody knows where it is, what it looks like, or whether it was ever real. It is not Ashvale's Elixir, which only heals.
 ```
 
-### 5. World Myth - The Fourfold Split (usulan Claude, menunggu approve)
-Tautan canon: empat tipe sihir dan Arbiter Stone, "specialize in 1-2" subtype, dual type yang langka ("nearly every"), mitos 2
-(dunia hampir berakhir). Resonansi: Lucifer, kalau bebas, bisa memberi sihir apa pun ke siapa pun.
+### 5. World Myth - The Shaping of the World (owner, teks Claude)
+Arahan owner: asal dunia dibentuk.
+Catatan kanon: Asmoday = Goddess of Creation, dan Cathedral mengajarkan Asmoday menciptakan sihir dan memberikannya ke manusia.
+Itu versi publik; kebenaran tersembunyinya Lucifer yang menciptakan sihir. Baris `<narrator_only>` menjaga agar AI tidak
+memperlakukan bagian "sihir dari Asmoday" sebagai fakta, walau entry Lucifer sedang tidak aktif.
 
-Keys: `Fourfold Split`, `magic was whole`, `why four types`
+Keys: `Shaping of the World`, `creation myth`, `how the world was made`, `Goddess of Creation`
 ```
-[The Fourfold Split]
-Story: once, magic was whole, and a single mage could do anything. The world nearly broke under them. So magic was split four ways, and since then nearly every mage is born to one type and masters only one or two of its arts.
-Told: everywhere, to explain why nobody can learn everything.
-Lesson: no one should hold all of magic; told to mages who reach for too much.
-Status: nobody knows who split it. Some tellers say this is what the four heroes saved the world from.
+[The Shaping of the World]
+Story: before anything there was only formless dark. Asmoday, Goddess of Creation, shaped it: land from its weight, sea from its cold, sky from its silence. Last she made mortals, and gave them magic so they could shape things too.
+Told: by the Cathedral word for word, and in every Asmoday's Mercy house; the version most of the continent grows up with.
+Lesson: what you shape, you answer for; told to explain why mages owe the world care.
+Status: the Cathedral teaches it as truth. History Class leaves it to the Cathedral.
+<narrator_only>The last line is the goddess wearing another's credit: Lucifer made magic, not Asmoday.</narrator_only>
 ```
 
 ## Implementasi setelah kelima mitos di-approve
@@ -105,11 +111,15 @@ Status: nobody knows who split it. Some tellers say this is what the four heroes
 - [x] Mitos 2: Archmage yang sama dengan canon; arah = arah benua, Eldrasil di timur benua (owner).
 - [x] Nama dan wujud tokoh di semua mitos tidak diketahui; kerajaan di mitos 1 juga tanpa nama (owner).
 - [?] Opsional: sihir Elion Villeneuve bernama "Excalibur". Boleh dikaitkan ke King of Knights / Lady of the Lake, atau dibiarkan.
-- [?] Mitos 3: baris `<narrator_only>` ("the Morning Choir keeps the old version as scripture") adalah canon baru kecil tentang cult.
-  Boleh, atau hapus baris itu dan biarkan hubungannya dengan Lucifer hanya tersirat?
-- [?] Mitos 5 menyambung ke mitos 2 ("some tellers say..."). Status mitos 2 tetap benar karena ini hanya satu versi.
-- [?] Alternatif untuk salah satu slot: mitos asal Beastkin (keturunan orang yang dulu membuat pact dengan roh berbentuk hewan).
-  Tidak dipilih karena sensitif: Beastkin yang "tidak biasa" (tanduk, sisik) sudah jadi sasaran bisik-bisik di canon.
+- [?] Semua judul, `Told`, `Lesson`, `Status` mitos 3–5 buatan Claude dari arahan owner.
+- [?] Mitos 3: sambungkan ke mitos 2? Contoh baris Status tambahan: "Some tellers say this is the disaster the four heroes ended."
+  (Status mitos 2 "no two agree" tetap benar karena ini hanya satu versi.) Juga cocok dengan canon: Archmage memasang segel,
+  Lucifer menyebutnya "the thief".
+- [?] Mitos 4: apakah Grail itu nyata (untuk `<narrator_only>`)? Kalau dibiarkan kosong, AI memperlakukannya sebagai dongeng.
+  Opsional: kaitkan ke King of Knights / Lady of the Lake (mitos 2), atau ke Lucifer (dia juga bisa mengabulkan keinginan apa
+  pun kalau bebas).
+- [?] Mitos 5: opsional kaitkan ke Azathoth, Lord of All (misalnya "formless dark" = Azathoth). Itu keputusan kosmologi besar,
+  jadi tidak dimasukkan tanpa owner.
 - [x] Keyword `Arslan` / `Arslan Sultanate`: owner akan membuat entry negara (draft terpisah, ukuran sama dengan entry ini). Begitu
   Arslan Sultanate punya entry sendiri, keyword `Arslan` pindah ke sana; mitos ini hanya memakai `Primal Desert`, `Azathoth`,
   `Lord of All`, `Devoured Kingdom`.
