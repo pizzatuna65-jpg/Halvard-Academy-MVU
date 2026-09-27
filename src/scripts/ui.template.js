@@ -1207,12 +1207,14 @@ function pBody(S) {
   return `${wx}${vbar('Health', V.HP, V.HP_max, '#c4504a', V._Condition)}${vbar('Stamina', V.Stamina, V.Stamina_max, '#d39b37', [V._Fatigue, trainLine(S, 'stamina')].filter(Boolean).join(' · '))}${vbar('Mana', V.Mana, V.Mana_max, '#5b8fd4', trainLine(S, 'mana'))}
   <h3>Injuries</h3>${inj.length ? `<table><tr><th>Injury</th><th>Severity</th><th>Effect</th><th>Heals</th></tr>${inj.map(([k, i]) => `<tr><td>${esc(k)}${i.Body_part ? `<div class="sub">${esc(i.Body_part)}</div>` : ''}</td><td>${esc(i.Severity)}</td><td>${esc(i.Effect)}</td><td>${esc(i.Heals_by || '—')}</td></tr>`).join('')}</table>` : '<div class="empty">No injuries.</div>'}${cond}`;
 }
-// 1.3.0 bond rewards held: Rank 5 gifts and Rank 10 benefits (engine-written _Perks); one-use ones already spent
+// 1.3.0 bond rewards held: Rank 5 gifts and Rank 10 benefits (engine-written _Perks); one-use ones already spent. 1.7.6: a graduate's
+// gift is a keepsake (Kind memento) and their Rank 10 benefit is listed as ended ($ui.perks_grad)
 function pPerks(S) {
-  const P = Object.entries(S._Perks || {}), used = (S.$ui || {}).perks_used || [];
-  const row = ([k, p]) => `<div class="item"><div class="row"><span class="t">${esc(k)}</span><span class="sub">${p.Kind === 'rank10' ? 'Rank 10' : 'gift'} · ${esc(nameOf(p.From, S))}${p.Uses > 0 ? ` · ${p.Uses} use${p.Uses > 1 ? 's' : ''} left` : ''}</span></div>${((S.$ui || {}).tsusp || []).includes(k) ? `<div class="warn">Suspended: ${esc(nameOf(p.From, S))} no longer trusts you enough (Trust ${esc(String((DATA.tru || {}).susp || 35))} brings it back).</div>` : ''}<div class="sub">${esc(youText(p.Effect, S))}</div></div>`;
+  const P = Object.entries(S._Perks || {}), used = (S.$ui || {}).perks_used || [], ended = Object.entries((S.$ui || {}).perks_grad || {}).filter(([, p]) => p && p.Kind === 'rank10');
+  const row = ([k, p]) => `<div class="item"><div class="row"><span class="t">${esc(k)}</span><span class="sub">${p.Kind === 'rank10' ? 'Rank 10' : p.Kind === 'memento' ? 'keepsake' : 'gift'} · ${esc(nameOf(p.From, S))}${p.Uses > 0 ? ` · ${p.Uses} use${p.Uses > 1 ? 's' : ''} left` : ''}</span></div>${((S.$ui || {}).tsusp || []).includes(k) ? `<div class="warn">Suspended: ${esc(nameOf(p.From, S))} no longer trusts you enough (Trust ${esc(String((DATA.tru || {}).susp || 35))} brings it back).</div>` : ''}<div class="sub">${esc(youText(p.Effect, S))}</div></div>`;
   return `<p class="lead">What your closest bonds have given you. Gifts are sold nowhere; a Rank 10 benefit is that person's alone.</p>
-    ${P.length ? ['gift', 'rank10'].map(kd => P.filter(([, p]) => p.Kind === kd)).filter(g => g.length).map((g, i) => `<h3>${g[0][1].Kind === 'rank10' ? 'Rank 10 benefits' : 'Gifts'}</h3>${g.map(row).join('')}`).join('') : '<div class="empty">Nothing held right now.</div>'}
+    ${P.length ? ['gift', 'rank10', 'memento'].map(kd => P.filter(([, p]) => p.Kind === kd)).filter(g => g.length).map((g, i) => `<h3>${g[0][1].Kind === 'rank10' ? 'Rank 10 benefits' : g[0][1].Kind === 'memento' ? 'Keepsakes from graduates' : 'Gifts'}</h3>${g.map(row).join('')}`).join('') : '<div class="empty">Nothing held right now.</div>'}
+    ${ended.length ? `<h3>Ended</h3><ul class="log">${ended.map(([k, p]) => `<li>${esc(k)}: ${esc(nameOf(p.From, S))} has graduated</li>`).join('')}</ul>` : ''}
     ${used.length ? `<h3>Used</h3><ul class="log">${used.map(u => `<li>${esc(u)}</li>`).join('')}</ul>` : ''}`;
 }
 // 1.1.0 (spec §8) the Bag: items grouped by Kind; buttons only draft the action into the chat box (D6)

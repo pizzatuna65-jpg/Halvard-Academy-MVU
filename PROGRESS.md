@@ -995,6 +995,25 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   - To verify in ST: a chat in campaign Year 2 (set World.Year or play through Graduation) with one of the six present: their
     keyword entry, their Cast Sheet with the hobby line (Nerys), an older NPC's entry with the new lines; and in Year 1 that none of
     it appears.
+- 1.7.6 A graduate's rewards stop working (owner, 2026-09-27: "harusnya perk sudah tidak efektif dan hadiah rank 5 hanya sebatas
+  memento"; decisions: a. reputation from a Rank 10 stays up, b. a gift with contents keeps what is left without refills, c. every
+  other gift is a keepsake). Touches HANDOFF §4 "Rewards" and the design principle "rewards must be useful, not mementos": an
+  owner-approved exception for graduates. Before, the engine ignored graduation for rewards: a graduate's perks stayed in _Perks
+  (and rule 502 told the narrator to honour them), a training bonus worked when a graduate visited, Irene's pardon could still be
+  spent, a monthly payment (Aiden's, after Year 3) kept coming, and a graduate's bond event still gave a new reward.
+  - Engine (8d2, every update, so a chat already past Graduation converts too): a graduate's Rank 5 gift becomes a keepsake
+    (_Perks Kind `memento`, no effect; data/bond_rewards.json `grad` for Royhan's pouch and Idris's vials: what is left can be used,
+    nothing is refilled); their Rank 10 benefit ends; the originals wait in `$ui.perks_grad` and come back if the story keeps the
+    person (their name leaves Campus_State.Graduated). A graduate gives no training bonus, a one-use perk from them is refused and
+    kept, a monthly payment from them stops, and their 4->5 or 9->10 event raises the rank but gives no reward (the event's
+    directions say so). Reputation already raised by a Rank 10 (Ruby) stays. Etnie stays on, so hers keep working.
+  - Rule 502 (_Perks) and 504 say a memento is a graduate's keepsake with no effect beyond its text. Student file → Gifts & perks:
+    "Keepsakes from graduates" and "Ended" sections.
+  - Tests: test_gradperks_v176.cjs (18 checks). Saves 1.7.5 and 1.7.5_yearend added. npm test 1481 checks (48 suites + static QA);
+    stress passes; smoke 550 views, no errors; token_audit ~12.5k start, ~17.8k heavy (+~60, the rule lines); preset built twice,
+    byte-identical (unchanged). Both TEST cards rebuilt (the Year 2 card's Gareth gift turns into a keepsake on its first update).
+  - To verify in ST: in Year 2, Student file → Gifts & perks shows a graduate's gift under Keepsakes; the narrator does not use an
+    ended Rank 10 benefit.
 - 1.7.5 The Entrance Event as a senior, and a TEST card that starts in Year 2 (owner, 2026-09-27: "edit entry entrance event agar
   menjelaskan bahwa di year 2/3 user sebagai senior yg mengajak new student tour"; "buat character card test yg memulai campaign
   sebagai year 2 dengan bond bervariasi (bond hasil year 1 biarkan new student masih kosong)"). No established decision changed.

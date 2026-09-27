@@ -283,7 +283,8 @@ export const Schema = z.object({
   Training: z.array(z.any().transform(v => ({ Track: s(typeof v === 'object' && v !== null ? v.Track : v).trim().toLowerCase() }))).prefault([]).catch([]),
   Perk_use: StrList(10),
   // 1.3.0 bond rewards held (engine-written, read-only for the AI): { "<name>": { From, Kind: gift|rank10, Effect, Uses } }; Uses 0 = not limited
-  _Perks: Rec(v => ({ From: s(v.From), Kind: s(v.Kind) === 'rank10' ? 'rank10' : 'gift', Effect: s(v.Effect), Uses: Math.round(n(v.Uses, 0, 99, 0)) }), 'Effect'),
+  _Perks: Rec(v => ({ From: s(v.From), Kind: s(v.Kind) === 'rank10' ? 'rank10' : s(v.Kind) === 'memento' ? 'memento' : 'gift',   // 1.7.6: memento = a graduate's gift, no effect
+    Effect: s(v.Effect), Uses: Math.round(n(v.Uses, 0, 99, 0)) }), 'Effect'),
 
   _Log: StrList(12),
 
@@ -317,6 +318,7 @@ export const Schema = z.object({
     stale: z.any().prefault([]).catch([]), phase: z.any().prefault(null).catch(null),   // 1.6.1: campus events with no news for a week; the campus phase (engine)
     cast: z.any().prefault({}).catch({}),                             // 1.5.1 (P1/P6): { full, brief, spoke, gone, ment } for the Cast Sheet (engine)
     perks_used: StrList(60),
+    perks_grad: z.record(z.string(), z.any()).prefault({}).catch({}),   // 1.7.6: rewards of graduates as they were ({name: perk}), restored if the story keeps them
     next: z.any().prefault(null).catch(null),                         // 1.3.4: the next thing on today's schedule (engine; bracelet)
     portrait: Str(''),                                                // 1.3.4: the student's picture (a SillyTavern user image path)                                          // 1.3.0: one-use perks already spent ("Council pardon (Irene), M3 W2 Tue")
     tsusp: StrList(40),                                               // 1.4.3: Rank 10 benefits suspended by low Trust (engine)

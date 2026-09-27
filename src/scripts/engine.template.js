@@ -689,6 +689,7 @@ function runEngine(S, B, text, seedHint) {
     } else { S.World._Happening = ''; S.$ui.hap = null; }
   }
   const dayNo = Math.floor(absA / DAY_MIN);
+  const goneNow = id => (S.Campus_State.Graduated || []).includes(id);   // 1.7.6: a graduate's rewards stop working
   const dayNoB = Math.floor(absB / DAY_MIN);
   if (hasB && dayNo !== dayNoB && evs.some(e => e.ranking)) log.push('Results & Dorm Ranking today: update Player.Profile.Dorm_rank when the results are announced.');
   if (hasB && dayNo !== dayNoB && evs.some(e => e.grad)) log.push(`Graduation today: the third-years leave by airship tomorrow morning; the engine then lists them in Campus_State.Graduated.${Object.keys(STAYS).filter(id => yearOf(id, S.World.Year) === 3 && !(S.Campus_State.Graduated || []).includes(id)).map(id => ` ${id} is not graduating (see their lore).`).join('')}`);
@@ -1023,9 +1024,11 @@ function runEngine(S, B, text, seedHint) {
   const trustHold = (id, b) => (b.Rank + 1 !== 8 || !canRival(id)) && num(b.Trust, 50) < trustGate(id, b.Rank + 1);
   const spreadFrom = [];
   const KR = REW.krieg || {}, weeksNew = hasB ? Math.max(0, Math.min(8, weekNo - weekNoB)) : 0;
+  const b0rank = which => (which === 'gift' ? 5 : 10);
   const give = (id, which) => {                                // a Rank 5 gift / Rank 10 benefit, once
     const x = ((REW.npcs || {})[id] || {})[which];
     if (!x || !_.isPlainObject(S._Perks)) return;
+    if (goneNow(id)) { log.push(`${id} has graduated: Rank ${b0rank(which)} brings no ${which === 'gift' ? 'gift' : 'Rank 10 benefit'} now.`); return; }   // 1.7.6 (owner)
     if (S._Perks[x.name] || (S.$ui.perks_used || []).some(u => u.startsWith(x.name + ' ('))) return;
     S._Perks[x.name] = { From: id, Kind: which === 'gift' ? 'gift' : 'rank10', Effect: x.text + (x.secret ? ` <narrator_only>${x.secret}</narrator_only>` : ''), Uses: x.uses || 0 };
     S.$ui.toasts.push(which === 'gift' ? `Gift from {npc:${id}}: ${x.name}` : `Rank 10 with {npc:${id}}: new benefit`);
@@ -1381,8 +1384,9 @@ function runEngine(S, B, text, seedHint) {
     if (tenseHold(id, b)) { bev[id] = { r: b.Rank, ready: false, in: 0, held: 1, why: 'tension', where: '', when: '', now: false, s: 0, dir: '' }; continue; }
     if (trustHold(id, b)) { bev[id] = { r: b.Rank, ready: false, in: 0, held: 1, why: 'trust', need: trustGate(id, b.Rank + 1), where: '', when: '', now: false, s: 0, dir: '' }; continue; }
     const now = !!b._Event_ready && present.has(id) && (!e || bondEventOk(e, S));
-    const RW = (REW.npcs || {})[id] || {}, rw = b.Rank === 4 ? RW.gift : b.Rank === 9 ? RW.r10 : null;
+    const RW = (REW.npcs || {})[id] || {}, rw0 = b.Rank === 4 ? RW.gift : b.Rank === 9 ? RW.r10 : null, rw = goneNow(id) ? null : rw0;   // 1.7.6: a graduate gives no reward
     const extra = [rw ? `${b.Rank === 4 ? 'This event gives {{user}} ' + id + "'s gift" : 'This event gives {{user}} ' + id + "'s Rank 10 benefit"} (${rw.name}): ${rw.text}${rw.secret ? ' (Narrator only: ' + rw.secret + ')' : ''} The engine records it when the rank rises.` : '',
+      rw0 && !rw ? `${id} has graduated: this event raises the rank but gives no ${b.Rank === 4 ? 'gift' : 'Rank 10 benefit'}.` : '',
       b.Rank === 7 && MASK.has(id) && RW.nudge ? `This event carries a nudge: ${RW.nudge.text} The engine adds the Fact "${RW.nudge.fact}" when the rank rises.` : '',
       b.Rank === 7 ? rank8Way(id, b) : ''].filter(Boolean).join('\n');   // 1.4.3; 1.6.8 per branch
     bev[id] = { r: b.Rank, ready: !!b._Event_ready, in: Math.max(0, num(b.$cool, -1) - dayNo),
@@ -1430,7 +1434,7 @@ function runEngine(S, B, text, seedHint) {
   {
     const here = new Set(Object.keys(S.Scene.Present || {}).map(canon));
     // 1.7.0: a Rank 10 benefit can carry the training bonus too (Linus: mana, Tsubaki: stamina); a suspended benefit (low Trust) does not count
-    const partners = k => Object.entries(REW.npcs || {}).filter(([id, x]) => here.has(id) && ['gift', 'r10'].some(g => x[g] && x[g].train === k && S._Perks[x[g].name] && !(S.$ui.tsusp || []).includes(x[g].name))).map(([id]) => id);
+    const partners = k => Object.entries(REW.npcs || {}).filter(([id, x]) => here.has(id) && !goneNow(id) && ['gift', 'r10'].some(g => x[g] && x[g].train === k && S._Perks[x[g].name] && S._Perks[x[g].name].Kind !== 'memento' && !(S.$ui.tsusp || []).includes(x[g].name))).map(([id]) => id);
     for (const x of (Array.isArray(S.Training) ? S.Training : [])) {
       const k = /mana/.test(x.Track) ? 'mana' : /stam/.test(x.Track) ? 'stamina' : '';
       if (!k || !S.Player.$Training[k]) { log.push(`Training track "${x.Track}" is unknown (use mana or stamina); nothing was added.`); continue; }
@@ -1446,6 +1450,7 @@ function runEngine(S, B, text, seedHint) {
     const k = Object.keys(S._Perks || {}).find(x => x === key) || Object.keys(S._Perks || {}).find(x => x.toLowerCase() === String(key).trim().toLowerCase());
     if (!k) { log.push(`Perk "${key}" is not held; nothing was spent.`); continue; }
     const p = S._Perks[k], fx = (((REW.npcs || {})[p.From]) || {})[p.Kind === 'gift' ? 'gift' : 'r10'] || {};
+    if (p.Kind === 'memento' || goneNow(p.From)) { log.push(`"${k}" came from ${p.From}, who has graduated: it no longer works; nothing was spent.`); continue; }   // 1.7.6
     if (!(p.Uses > 0)) { log.push(`"${k}" is not a one-use perk; nothing to spend.`); continue; }
     if ((S.$ui.tsusp || []).includes(k)) { log.push(`"${k}" is suspended while ${p.From}'s Trust is low; it was kept.`); continue; }   // 1.4.3
     if (fx.rep_token) {
@@ -1494,7 +1499,7 @@ function runEngine(S, B, text, seedHint) {
       }
       // 1.3.0: Academy +5 bonus, and points from bond rewards (data/bond_rewards.json monthly)
       const extra = [...(acad >= 5 && S.Player.Profile.Dorm !== 'Unsorted' ? [[REP.academy5_monthly, 'honoured student bonus (Academy reputation +5)']] : []),
-        ...Object.values(S._Perks || {}).map(p => (((REW.npcs || {})[p.From] || {})[p.Kind === 'gift' ? 'gift' : 'r10'] || {}).monthly).filter(Boolean).map(m => REW.monthly[m])];
+        ...Object.values(S._Perks || {}).filter(p => p.Kind !== 'memento' && !goneNow(p.From)).map(p => (((REW.npcs || {})[p.From] || {})[p.Kind === 'gift' ? 'gift' : 'r10'] || {}).monthly).filter(Boolean).map(m => REW.monthly[m])];
       for (const [pts, why] of extra) {
         S.Player.Wallet.Points += pts; S.Player.Wallet.Transactions.push(`+${pts} ${why}`); log.push(`Monthly: +${pts} points, ${why}.`);
       }
@@ -1622,6 +1627,30 @@ function runEngine(S, B, text, seedHint) {
       }
     }
     S.Campus_State.Graduated = [...new Set(G.map(x => NPC_ALIAS[String(x).toLowerCase()] || x))];
+  }
+  // ---- 8d2. 1.7.6 (owner, 2026-09-27): a graduate's rewards stop working. Their Rank 5 gift stays as a keepsake (_Perks Kind
+  // memento, no effect; a gift with a "grad" text in data/bond_rewards.json keeps what is left in it, without refills), their Rank 10
+  // benefit ends; Student reputation raised by a Rank 10 stays. The originals wait in $ui.perks_grad: if the story keeps the person
+  // (their name leaves Campus_State.Graduated), the reward works again. Runs every update, so a chat already past Graduation converts too.
+  {
+    const GR = new Set(S.Campus_State.Graduated || []), PG = _.isPlainObject(S.$ui.perks_grad) ? S.$ui.perks_grad : (S.$ui.perks_grad = {});
+    for (const [k, p] of Object.entries(S._Perks || {})) {
+      if (!p || p.Kind === 'memento' || !GR.has(p.From)) continue;
+      PG[k] = { ...p };
+      if (p.Kind === 'gift') {
+        const x = (((REW.npcs || {})[p.From]) || {}).gift || {};
+        S._Perks[k] = { From: p.From, Kind: 'memento', Effect: x.grad || `A keepsake from ${p.From}, who has graduated; it no longer does what it did.`, Uses: 0 };
+        log.push(`${p.From} has graduated: "${k}" is now a keepsake${x.grad ? ' (what is left in it can still be used, without refills)' : ' with no effect'}.`);
+      } else {
+        delete S._Perks[k];
+        log.push(`${p.From} has graduated: their Rank 10 benefit "${k}" has ended.`);
+      }
+    }
+    for (const [k, p] of Object.entries(PG)) {
+      if (GR.has(p.From)) continue;
+      S._Perks[k] = { ...p }; delete PG[k];
+      log.push(`${p.From} is at Halvard again: "${k}" works again.`);
+    }
   }
 
   // ---- 8f. 1.1.0 story hooks: narrator-side debts. Due anchored once like Commitments; state waiting | due | overdue | old ----

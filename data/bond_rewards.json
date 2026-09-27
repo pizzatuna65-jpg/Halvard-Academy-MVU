@@ -1,5 +1,5 @@
 {
- "_note": "1.3.0 bond rewards (owner brainstorm, approved 2026-09-25; docs/design/bond_rewards.md). Single source for the engine (tools/gen_engine.py), the Now entry (tools/gen_mvu_entries.py), the UI (tools/gen_ui.py) and the brief. gift = the Rank 4->5 event's exclusive gift, r10 = the Rank 9->10 benefit; name = its key in _Perks; secret = the narrator-only side. Engine effects: train (x bonus while that NPC is in the scene), jump (+pct of the starting value, once), rep_up (+1 level now), rep_token (one use, +1 level from a negative level only), monthly (points each month, see monthly), uses (one-use perk). mask = the mask -> truth model (7->8 nudge Fact, 8->9 needs one of the NPC's secrets revealed). krieg = model B.",
+ "_note": "1.3.0 bond rewards (owner brainstorm, approved 2026-09-25; docs/design/bond_rewards.md). Single source for the engine (tools/gen_engine.py), the Now entry (tools/gen_mvu_entries.py), the UI (tools/gen_ui.py) and the brief. gift = the Rank 4->5 event's exclusive gift, r10 = the Rank 9->10 benefit; name = its key in _Perks; secret = the narrator-only side. Engine effects: train (x bonus while that NPC is in the scene), jump (+pct of the starting value, once), rep_up (+1 level now), rep_token (one use, +1 level from a negative level only), monthly (points each month, see monthly), uses (one-use perk). mask = the mask -> truth model (7->8 nudge Fact, 8->9 needs one of the NPC's secrets revealed). krieg = model B. 1.7.6 (owner): grad = what a gift still does once its giver has graduated (only for gifts with contents left to use: Royhan, Idris); every other graduate's gift is a keepsake with no effect, and their Rank 10 benefit ends.",
  "train_bonus": 0.5,
  "jump_pct": 10,
  "monthly": {
@@ -158,7 +158,8 @@
   "Idris": {
    "gift": {
     "name": "Idris's two vials",
-    "text": "Two vials in precise script: an antivenom brewed from his own venom that cures almost any poison, and the venom itself. He calls the second \"for emergencies\" and will not explain further."
+    "text": "Two vials in precise script: an antivenom brewed from his own venom that cures almost any poison, and the venom itself. He calls the second \"for emergencies\" and will not explain further.",
+    "grad": "A keepsake from Idris, who has graduated: a vial not yet used still works once (the antivenom cures almost any poison); nothing more comes."
    },
    "r10": {
     "name": "Idris (Rank 10)",
@@ -231,7 +232,8 @@
   "Royhan": {
    "gift": {
     "name": "Royhan's alchemist pouch",
-    "text": "An alchemist's pouch of his own: three healing draughts and one bottle of lightning. He refills it whenever {{user}} brings back the empties, and he will not take points for it."
+    "text": "An alchemist's pouch of his own: three healing draughts and one bottle of lightning. He refills it whenever {{user}} brings back the empties, and he will not take points for it.",
+    "grad": "A keepsake from Royhan, who has graduated: whatever is still in the pouch (healing draughts, the bottle of lightning) can be used, but nobody refills it any more."
    },
    "r10": {
     "name": "Royhan (Rank 10)",
