@@ -1015,7 +1015,7 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
   - Small wording choice: the Etiquette line says its lessons on noble conduct follow Velmoran manners (the class is marked on
     judgement, not politeness, so the whole class does not).
   - Sizes: 71-109 words, Norvaine 137 (it carries the most approved canon; kept as approved).
-  - Tests: test_nations_v172.cjs (61 checks: the entries, settings, trades, Norvaine and Yozakura rules, Velmora's secret, every
+  - Tests: test_nations_v172.cjs (57 checks: the entries, settings, trades, Norvaine and Yozakura rules, Velmora's secret, every
     mention and how many entries each nation is woven into, the four NPC files, the v39 export, the 1.7.1 save). test_worldmyth_v171
     follows the longer nations list and reads the version from card.json. Save 1.7.1 added. npm test 1358 checks (44 suites + static
     QA); stress passes; token_audit ~12.4k start (+59, the WORLD INDEX Nations line), ~17.8k heavy; preset unchanged. TEST card rebuilt.
