@@ -49,11 +49,46 @@ Catatan kanon (owner, 2026-09-26): arah mata angin = arah **benua**; Eldrasil ad
 = tokoh Eldrasil. Ini **Archmage yang sama** dengan canon (pemasang keempat segel, makam di Veyra). Cocok dengan canon "nama
 Archmage hilang dari semua catatan"; teks tidak memberi nama atau gender.
 
-### 3. (menunggu owner)
+### 3. World Myth - The Star That Went Out (usulan Claude, menunggu approve)
+Tautan canon: Lucifer (Father of Magic, "little lights", menyebut Archmage "the thief", segel = pencurian cahayanya). Lucifer tidak
+dikenal di luar cult, jadi mitos publiknya kabur: tidak ada nama, tidak ada "Morning Star" (itu keyword entry Lucifer). Hubungannya
+hanya ditulis di `<narrator_only>`.
 
-### 4. (menunggu owner)
+Keys: `Star That Went Out`, `the star that went out`, `little light`, `thief in the sky`
+```
+[The Star That Went Out]
+Story: once, one star outshone every other at dawn, and every mage cast stronger beneath it. One night a thief climbed the sky and put it out. It has not risen since.
+Told: in old villages across the continent; grandmothers still call a gifted child "little light".
+Lesson: the brightest light draws a thief; told to children who show off their magic.
+Status: nobody knows which star it was, or who the thief was. The Cathedral calls it a peasant tale.
+<narrator_only>A garbled memory of Lucifer's sealing: the star was his light, the thief the Archmage. The Morning Choir keeps the old version as scripture.</narrator_only>
+```
+Ironi dengan mitos 2: dunia mengingat Archmage sebagai pahlawan, Lucifer mengingatnya sebagai pencuri.
 
-### 5. (menunggu owner)
+### 4. World Myth - The Unforced Spirit (usulan Claude, menunggu approve)
+Tautan canon: Spirit Pact ("a spirit cannot be forced"), forbidden art Slavery magic, familiar.
+
+Keys: `Unforced Spirit`, `chained spirits`, `the silent hundred years`
+```
+[The Unforced Spirit]
+Story: long ago, an empire learned to chain spirits to its will. In a single night every spirit left its land. No familiar came, no spirit answered anyone there, and the land stayed silent for a hundred years.
+Told: to every new spirit user, usually by the one who teaches them.
+Lesson: a spirit can be asked, never forced; the reason every Spirit Pact must be agreed by both sides.
+Status: nobody knows the empire's name or where it stood.
+```
+
+### 5. World Myth - The Fourfold Split (usulan Claude, menunggu approve)
+Tautan canon: empat tipe sihir dan Arbiter Stone, "specialize in 1-2" subtype, dual type yang langka ("nearly every"), mitos 2
+(dunia hampir berakhir). Resonansi: Lucifer, kalau bebas, bisa memberi sihir apa pun ke siapa pun.
+
+Keys: `Fourfold Split`, `magic was whole`, `why four types`
+```
+[The Fourfold Split]
+Story: once, magic was whole, and a single mage could do anything. The world nearly broke under them. So magic was split four ways, and since then nearly every mage is born to one type and masters only one or two of its arts.
+Told: everywhere, to explain why nobody can learn everything.
+Lesson: no one should hold all of magic; told to mages who reach for too much.
+Status: nobody knows who split it. Some tellers say this is what the four heroes saved the world from.
+```
 
 ## Implementasi setelah kelima mitos di-approve
 
@@ -70,6 +105,11 @@ Archmage hilang dari semua catatan"; teks tidak memberi nama atau gender.
 - [x] Mitos 2: Archmage yang sama dengan canon; arah = arah benua, Eldrasil di timur benua (owner).
 - [x] Nama dan wujud tokoh di semua mitos tidak diketahui; kerajaan di mitos 1 juga tanpa nama (owner).
 - [?] Opsional: sihir Elion Villeneuve bernama "Excalibur". Boleh dikaitkan ke King of Knights / Lady of the Lake, atau dibiarkan.
+- [?] Mitos 3: baris `<narrator_only>` ("the Morning Choir keeps the old version as scripture") adalah canon baru kecil tentang cult.
+  Boleh, atau hapus baris itu dan biarkan hubungannya dengan Lucifer hanya tersirat?
+- [?] Mitos 5 menyambung ke mitos 2 ("some tellers say..."). Status mitos 2 tetap benar karena ini hanya satu versi.
+- [?] Alternatif untuk salah satu slot: mitos asal Beastkin (keturunan orang yang dulu membuat pact dengan roh berbentuk hewan).
+  Tidak dipilih karena sensitif: Beastkin yang "tidak biasa" (tanduk, sisik) sudah jadi sasaran bisik-bisik di canon.
 - [x] Keyword `Arslan` / `Arslan Sultanate`: owner akan membuat entry negara (draft terpisah, ukuran sama dengan entry ini). Begitu
   Arslan Sultanate punya entry sendiri, keyword `Arslan` pindah ke sana; mitos ini hanya memakai `Primal Desert`, `Azathoth`,
   `Lord of All`, `Devoured Kingdom`.
