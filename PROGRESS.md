@@ -1215,6 +1215,7 @@ Plan: ELDRASIL_MVU_PLAN.md (v1.1)
 - 1.7.2: nations are in (Arslan, Norvaine, Velmora, Caelmar, Yozakura).
 - 1.7.1: World Myth category is in; next the owner's nation entries (own draft, same size).
 - 1.7.0: cohort 2 (six first-years from campaign Year 2) is in; they need portraits (owner's PNGs).
+- Future plans (owner, not scheduled): planning/FUTURE_PLANS.md (FP1-FP5, cohort 3 included).
 - 1.7.4: Year 2 bug hunt done and merged with 1.7.1-1.7.3. Planned later (owner): a Student Council President election event,
   the Student Council as a club {{user}} can join, new members for the rival teams from Year 2.
 - Character-consistency plan (planning/DRAFT_batch_plan.md v2): 1.5.0 to 1.6.7 done (G1 in 1.6.3, G2 in 1.6.4, G3 in 1.6.5,

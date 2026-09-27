@@ -339,6 +339,7 @@ python3 tools/audit_chat.py chat.jsonl --out report.md   # optional: character-d
 **Design decisions pending (from the v1.0.3 bug hunt)**
 - Pin the MVU / mvu_zod dependencies to tested commits.
 - Player lifecycle (graduated / expelled / repeating). Since 1.7.4 {{user}} moves up a year automatically; after Year 3 stays open (owner: leave it for now).
+- Future plans (owner-approved for later, not scheduled): `planning/FUTURE_PLANS.md` (FP1 NPCs seek {{user}} out, FP2 Council election, FP3 Council as a club, FP4 new rival team members, FP5 cohort 3).
 - Year 2 (`planning/DRAFT_year2.md`, owner 2026-09-27): planned later: a Student Council President election event, and the Council as a club {{user}} can join; new NPCs for the rival teams' Year 2 line-ups. Left as they are: teachers not on record (the narrator creates them), dorm ranks, after Year 3. Cohort year labels: the roster, the UI and (1.7.0) the Cast Sheet are year-aware; the dossier's lore text itself still says what the lorebook says.
 - A save-migration protocol for future versions (`$eng.ver` now records the engine version).
 
