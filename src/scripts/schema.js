@@ -363,6 +363,7 @@ export const Schema = z.object({
     practice: z.any().prefault([]).catch([]),
     craft: z.any().prefault([]).catch([]),                        // 1.28.0: available recipes and their next-turn results
     craft_sale: z.any().prefault(null).catch(null),                // 1.28.0: Apothecary's remaining weekly buying capacity
+    mastery: z.any().prefault(null).catch(null),                   // 1.30.0: Rank 5 stats and whether the week's lead is open here
     prof_offer: Bool(false),
     since: z.any().prefault([]).catch([]), maybe: z.any().prefault([]).catch([]),   // 1.6.0 (N4): Next plans met again / that may bring someone here (engine)
     xold: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.6.1 (N5): Extras records that left the full list; given back if they return (engine)

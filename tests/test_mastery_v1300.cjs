@@ -1,0 +1,94 @@
+// 1.30.0 (owner-approved planning/DRAFT_proficiency_practice.md, Batch 6): the mark formula and the Rank 5 mastery perks.
+const fs = require('fs'), path = require('path'), ejs = require('ejs');
+const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
+const read = p => fs.readFileSync(path.join(ROOT, p), 'utf8');
+const E = new Function(read('src/scripts/engine.js') + '\nreturn { fromAbs, hash32, SUBJECTS };')();
+const DAY = 1440, MID = 56;
+const at = (S, d, hhmm, loc, extra = []) => { const [h, m] = hhmm.split(':').map(Number), T = E.fromAbs(d * DAY + h * 60 + m);
+  return applyPatch(S, [...['Year', 'Month', 'Week', 'Day', 'Time'].map(k => ({ op: 'replace', path: '/World/' + k, value: T[k] })),
+    ...(loc ? [{ op: 'replace', path: '/World/Location', value: loc }] : []), ...extra]); };
+const set = (S, ops) => applyPatch(S, ops.map(([p, v]) => ({ op: 'replace', path: p, value: v })));
+const XP = [0, 10, 30, 60, 100, 150];
+const ranks = (S, r) => set(S, [['/$eng/prof/xp', Object.fromEntries(['Knowledge', 'Arcana', 'Craft', 'Prowess', 'Society', 'Nature'].map(k => [k, XP[typeof r === 'number' ? r : r[k] || 0]]))]]);
+const base = seed => set(initState(), [['/$eng/seed', seed], ['/$ui/wxfx', 'off'], ['/Player/Profile/Dorm', 'Fire'], ['/$ui/built', true], ['/$eng/auth', 'builder']]);
+const S0 = at(base(550), MID - 1, '20:00', 'Main Library');   // seed 550: a neutral exam day in every subject at the first midterm
+const fc = (S, h, r, extra = []) => at(set(ranks(S, r), [['/$eng/study/mins', h * 60], ...extra]), MID - 1, '21:00').$ui.grades;
+const score = (g, s) => Number(/= ([\d.]+):/.exec(g.why[s])[1]);
+
+console.log('The formula (draft table)');
+let g = fc(S0, 10, 0);
+ok(score(g, 'History') === 45 && g.marks.History === 'C' && score(g, 'Combat') === 35 && g.marks.Combat === 'C', 'first-year, fair, Rank 0, full attendance: 45 and 35, both lifted to C');
+g = fc(S0, 28, 2);
+ok(score(g, 'History') === 82 && g.marks.History === 'B' && score(g, 'Combat') === 70 && g.marks.Combat === 'B', 'diligent, excellent, Rank 2: 82 B and 70 B');
+g = fc(S0, 0, 4);
+ok(score(g, 'History') === 44 && g.marks.History === 'C' && score(g, 'Combat') === 60 && g.marks.Combat === 'C', 'talented but lazy, unprepared, Rank 4: 44 (C by the floor) and 60 C');
+g = fc(S0, 18, { Craft: 5 });
+ok(score(g, 'Potion Crafting') === 92.5 && g.marks['Potion Crafting'] === 'A', 'Craft focus, solid, Rank 5: Potion Crafting 92.5 A');
+g = fc(S0, 10, 2, [['/$eng/study/held', { History: 5, Combat: 5 }], ['/$eng/study/skip', { History: 2, Combat: 2 }]]);
+ok(score(g, 'History') === 49 && g.marks.History === 'D' && score(g, 'Combat') === 47 && g.marks.Combat === 'D', 'skips often, fair, Rank 2, 60%: 49 D and 47 D (no floor)');
+g = fc(S0, 28, { Arcana: 3 });
+ok(/Arcana Rank 3/.test(g.why['Magic Theory']) && /Arcana Rank 3/.test(g.why['Dark Magic Defense']) && /Knowledge Rank 0/.test(g.why.History), 'Magic Theory and Dark Magic Defense both draw on Arcana; History on Knowledge');
+const off = fc(set(S0, [['/$ui/off', ['proficiency']]]), 28, 0);
+ok(!/Rank/.test(off.why.History) && off.marks.History === 'A', 'with Proficiency off, preparation stands in for it');
+
+console.log('The exam-day roll');
+const seed = [...Array(5000).keys()].find(x => { const r = 1 + E.hash32(x, 'Y1M3', 'exam', 'History') % 100; return r > 70; });
+const Sx = at(base(seed), MID - 1, '20:00', 'Main Library');
+const pre = fc(Sx, 28, 2), during = at(set(ranks(Sx, 2), [['/$eng/study/mins', 28 * 60]]), MID, '07:00', 'Lecture Halls').$ui.grades;
+ok(!/day [+-]/.test(pre.why.History) && /(a good day \+4|an inspired day \+8)/.test(during.why.History), `the roll shows from exam week, not before (seed ${seed}: ${during.why.History})`);
+const again = at(set(ranks(Sx, 2), [['/$eng/study/mins', 28 * 60]]), MID, '07:00', 'Lecture Halls').$ui.grades;
+ok(JSON.stringify(again) === JSON.stringify(during), 'the roll is seeded: the same on a swipe');
+
+console.log('Attendance');
+let A = set(ranks(at(base(550), 8, '07:00', 'Lecture Halls'), 0), [['/$eng/study/held', {}]]);
+for (let d = 8; d < 13; d++) A = at(at(A, d, '12:30', 'Lecture Halls'), d, '17:00', 'Lecture Halls');
+const held = A.$eng.study.held;
+ok(Object.values(held).reduce((a, b) => a + b, 0) >= 10 && Object.keys(held).every(s => E.SUBJECTS.includes(s)), `class periods held are counted per subject (${JSON.stringify(held)})`);
+const save = JSON.parse(read('tests/fixtures/saves/save_1.29.0.json'));
+const migrated = applyPatch(save.state || save, []);
+ok(migrated.$eng.study && Object.keys(migrated.$eng.study.held || {}).length === 7, 'an old save gets per-subject class counts (classes so far count as attended)');
+
+console.log('Mastery perks');
+const M = (r, extra = []) => set(ranks(at(base(550), 20, '16:00', 'Main Library'), r), extra);
+const toast = at(set(M({ Knowledge: 4 }), [['/$eng/prof/xp/Knowledge', 149]]), 20, '18:00', 'Main Library', [{ op: 'insert', path: '/Practice/-', value: { Action: 'Study a subject', Subject: 'History' } }]);
+ok(toast.Player._Proficiency.Knowledge === 5 && toast.$ui.toasts.includes('Mastery: Encyclopaedic'), 'reaching Rank 5: toast "Mastery: Encyclopaedic"');
+const lib = at(M({ Knowledge: 5 }), 20, '16:30', 'Main Library');
+ok(lib.$ui.mastery && lib.$ui.mastery.lead, 'Encyclopaedic: the week\'s real lead is open in the Main Library');
+const found = at(lib, 20, '17:00', 'Main Library', [{ op: 'insert', path: '/Clues/Old ledger', value: { Thread: 'Ledgers', Detail: 'a missing page', Where: 'Main Library' } }]);
+ok(!found.$ui.mastery.lead && at(found, 20, '18:00', 'Archive').$ui.mastery.lead === false && at(found, 21, '10:00', 'Archive').$ui.mastery.lead, 'a Clue found there uses it for the week; the next week opens a new one');
+const rule504 = S => { const f = path.join(ROOT, 'src/worldbook/custom/content/504.txt'); return ejs.render(read('src/worldbook/custom/content/504.txt'), { getvar: k => k === 'stat_data.$ui' ? S.$ui : _.get({ stat_data: S }, k) }, { filename: f }); };
+ok(/Mastery \(Rank 5: Knowledge\)/.test(rule504(lib)) && /one genuine lead/.test(rule504(lib)) && !/Mastery \(Rank 5/.test(rule504(at(M(4), 20, '16:30'))), '504 carries the mastery rules only at Rank 5');
+const hid = set(at(base(550), 20, '16:00', 'Main Library'), [['/Hidden/_True_magic', 'Void'], ['/$eng/auth', 'builder']]), arc = ranks(hid, { Arcana: 5 }), arc4 = ranks(hid, { Arcana: 4 });
+const doves = S => S.Player.Profile.Reputation.$xp.Doves;
+ok(doves(arc) - doves(arc4) === 8 && arc.Hidden.Dove_attention === 3 && arc.$eng.prof.mastery.arcana, 'Arcane scholar: the Doves take an interest (+8), Dove attention +3 with hidden magic');
+const arc2 = at(arc, 20, '17:00');
+ok(arc2.Hidden.Dove_attention === 3, 'the Doves\' interest comes once');
+const T = { 'Lightning Step': { Type: 'Elemental', Subtype: 'Lightning', Effect: 'x', Cost_mode: 'per_use', Activation: 12 } };
+const mag = r => { const S = set(M({ Arcana: r }), [['/Magic/_Techniques', T], ['/Player/Vitals/Mana_max', 100], ['/Player/Vitals/Mana', 100], ['/$eng/auth', 'builder']]);
+  return 100 - applyPatch(S, [{ op: 'insert', path: '/Magic/Casts/-', value: { Technique: 'Lightning Step', Times: 1 } }]).Player.Vitals.Mana; };
+ok(Math.abs(mag(5) - mag(4) + 1) < 0.01, `per-use technique costs 10% less, to the half point (12 -> 11: ${mag(4)} vs ${mag(5)})`);
+const soc = at(M({ Society: 5 }), 20, '16:30');
+ok(Object.values(soc.Letters).some(l => /Liaison/.test(l.From)), "Consummate: a letter from the Noble Houses' Liaison");
+const meet = (S, id) => at(applyPatch(S, [{ op: 'replace', path: '/Scene/Present', value: { [id]: { Note: '' } } }, { op: 'insert', path: '/Bonds/' + id, value: { Rank: 1 } }]), 20, '17:00').Bonds[id].Trust;
+ok(meet(M({ Society: 5 }), 'Kuroo') === meet(M(0), 'Kuroo') + 5 && meet(M({ Society: 5 }), 'Florian') === meet(M(0), 'Florian') + 5, 'staff and a noble met for the first time start at Trust +5');
+ok(meet(M({ Society: 5 }), 'Aiden') === meet(M(0), 'Aiden'), 'an ordinary student does not');
+const fight = (S, name, sev) => applyPatch(S, [{ op: 'replace', path: '/Battle/Active', value: true }, { op: 'insert', path: '/Player/Injuries/' + name, value: { Severity: sev, Body_part: 'arm', Effect: 'x', Heals_by: 'treatment' } }]);
+const f1 = fight(M({ Prowess: 5 }), 'Slash', 'serious');
+ok(f1.Player.Injuries.Slash.Severity === 'moderate', 'Formidable: a fight injury lands one step lighter');
+const f2 = fight(f1, 'Bruise', 'moderate');
+ok(f2.Player.Injuries.Bruise.Severity === 'moderate', 'only once a week');
+ok(fight(M(4), 'Slash', 'serious').Player.Injuries.Slash.Severity === 'serious', 'not below Rank 5');
+const hall = (r, roll) => { const S = at(set(ranks(at(base(550), 20, '16:00', 'Potion Halls'), { Craft: r }), [['/Inventory/Common reagent bundle', { Qty: 2, Kind: 'reagent', Note: '', Plan: '' }]]), 20, '16:05', 'Potion Halls'); S.$ui.fortune.roll = roll; S.$ui.craft = []; return at(S, 20, '17:00', 'Potion Halls', [{ op: 'insert', path: '/Practice/-', value: { Action: 'craft', Aim: 'Warming draught' } }]); };
+const m5 = hall(5, 5), m4 = hall(4, 8);
+ok(m4.Inventory['Warming draught'].Qty === 1 && /rough/.test(m4.Inventory['Warming draught'].Note), 'Rank 4, score 20: weak (rough), one dose');
+ok(m5.Inventory['Warming draught'].Qty === 3 && !/rough/.test(m5.Inventory['Warming draught'].Note), "Master's hand: never rough (success) and one extra dose");
+const forage = r => at(at(ranks(at(base(550), 6, '10:00', 'Forest'), { Nature: r }), 6, '10:05', 'Forest'), 6, '11:00', 'Forest', [{ op: 'insert', path: '/Practice/-', value: { Action: 'Forage' } }]).Inventory['Foraged reagent'];
+ok(forage(5) && forage(0) && forage(5).Qty === 2 * forage(0).Qty, `Kin to the wild: foraging brings back double (${forage(0) && forage(0).Qty} -> ${forage(5) && forage(5).Qty})`);
+
+console.log('UI');
+global.window = { parent: { document: {} } };
+const U = new Function(read('src/scripts/ui.js') + '\nreturn { renderProfile, view };')();
+const studies = S => { U.view.tab = 'studies'; return U.renderProfile(S); };
+const html = studies(M({ Arcana: 5 }));
+ok(/Rank 5: Arcane scholar · You sense a ward/.test(html) && /Rank 5: Encyclopaedic \(locked\)/.test(html), 'Studies shows each Rank 5 perk, locked or open');
+ok(/theory leans on preparation, practicals on proficiency/.test(studies(S0)), 'Next exams explains the formula');

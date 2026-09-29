@@ -1425,13 +1425,21 @@ function pStudies(S) {
   // 1.15.0: the engine's expected marks for the next exams and why (planning/DRAFT_grades_exams.md)
   const E = featureOn(S, 'study') ? S.$ui.grades : null;
   const next = E ? `<h3>Next exams: ${esc(E.label)}</h3>
-  <p class="hint">Preparation: ${esc(E.tier)} (${fmt(E.h)} hours studied)${E.run ? ` · your trial run: ${esc(E.run)}` : ''}${E.set ? ' · marks already set, posted soon' : ''}. Attending every class of a subject guarantees at least a C; studying raises it.</p>
+  <p class="hint">Preparation: ${esc(E.tier)} (${fmt(E.h)} hours studied)${E.run ? ` · your trial run: ${esc(E.run)}` : ''}${E.set ? ' · marks already set, posted soon' : ''}. </p><p class="hint">Your mark = preparation, the proficiency the subject draws on, and attendance (theory leans on preparation, practicals on proficiency), plus how the day goes. Attending every class of a subject still guarantees at least a C.</p>
   <table>${Object.entries(E.marks || {}).map(([s, m]) => `<tr><td>${esc(s)}</td><td><b>${esc(m)}</b></td><td class="sub">${esc((E.why || {})[s] || '')}</td></tr>`).join('')}</table>` : '';
   const perks = E ? '<p class="hint">An A: +10 on Fortune rolls in that subject\'s field and paid tutoring (two sessions a week). An A or B: that subject\'s teacher warms to you faster. An F: a remedial session.</p>' : '';
   return `${prof}<dl class="kv"><dt>Now</dt><dd>${esc(S.World._Period || 'Free time')}</dd>${S.World._Event_today ? `<dt>Today</dt><dd>${esc(S.World._Event_today)}</dd>` : ''}</dl>${next}
   <h3 title="What the last exams recorded, subject by subject. Marks set your dorm rank and payout.">Grades</h3>${G.length ? `<table>${G.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('')}</table>` : '<div class="empty">No grades yet.</div>'}${perks}
   <h3>Exams</h3>${X.length ? `<table>${X.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('')}</table>` : '<div class="empty">No exams taken yet.</div>'}`;
 }
+// 1.30.0: each proficiency's Rank 5 perk (DECISIONS "Mastery")
+const MASTERY_PERKS = {
+  Knowledge: 'Once a week, digging through the Archive or the Library turns up one real lead.',
+  Arcana: 'You sense a ward, a trap or a spell at work before you step into it, and per-use techniques cost 10% less mana. The Doves take an interest.',
+  Craft: 'Every successful piece comes out one better (one extra dose or piece), nothing you make comes out rough, and no tier needs supervision.',
+  Prowess: 'Once a week, an injury from a fight lands one step lighter.',
+  Society: "Staff and nobles you meet for the first time start at Trust +5. The Noble Houses' Liaison takes note of you.",
+  Nature: "An ordinary creature's first reaction to you is curiosity, not fear or attack, and foraging brings back double." };
 function pProficiency(S) {
   const R = S.Player._Proficiency || {}, P = S.$eng.prof || {}, wk = P.wk || {}, cap = tuneVal(S, 'prof_pace') || 6;
   const xy = (i, r) => [150 + Math.cos(-Math.PI / 2 + i * Math.PI / 3) * r, 150 + Math.sin(-Math.PI / 2 + i * Math.PI / 3) * r];
@@ -1443,7 +1451,7 @@ function pProficiency(S) {
   const rows = PROF_STATS.map(k => { const rank = +R[k] || 0, xp = +((P.xp || {})[k] || 0), next = PROF_CUT[Math.min(5,rank+1)], pct = rank === 5 ? 100 : Math.round((xp-PROF_CUT[rank])/(next-PROF_CUT[rank])*100);
     const found = ((S.$ui || {}).discovered || []);
     const where = [...new Set((DATA.practice || []).filter(a => a.stat === k || a.stat === 'subject').map(a => (DATA.locs[a.loc] || {}).name).filter(n => n && found.some(d => String(d).toLowerCase() === n.toLowerCase())))].slice(0,5);
-    return `<div class="item profrow" id="prof-${k}" title="${rank === 0 ? 'Rank 0: ordinary, not bad. Nothing is taken off your rolls; practice adds to them.' : ''}"><div class="row"><span class="t">${k}${isNew(`stat:${k}:${rank}`, true) && rank > 0 ? newsDot() : ''}</span><b>Rank ${rank}</b></div><div class="sub">${esc(PROF_NAMES[k][rank])} · ${esc(PROF_SUBJECTS[k])} · Fortune +${rank*3}</div><div class="bar"><i style="width:${pct}%;background:var(--moon)"></i></div><div class="sub">${xp}/${next} XP · this week ${+(wk[k] || 0)}/${cap}${where.length ? ' · Practise at ' + esc(where.join(', ')) : ''}</div></div>`; }).join('');
+    return `<div class="item profrow" id="prof-${k}" title="${rank === 0 ? 'Rank 0: ordinary, not bad. Nothing is taken off your rolls; practice adds to them.' : ''}"><div class="row"><span class="t">${k}${isNew(`stat:${k}:${rank}`, true) && rank > 0 ? newsDot() : ''}</span><b>Rank ${rank}</b></div><div class="sub">${esc(PROF_NAMES[k][rank])} · ${esc(PROF_SUBJECTS[k])} · Fortune +${rank*3}</div><div class="bar"><i style="width:${pct}%;background:var(--moon)"></i></div><div class="sub">${xp}/${next} XP · this week ${+(wk[k] || 0)}/${cap}${where.length ? ' · Practise at ' + esc(where.join(', ')) : ''}</div><div class="sub" title="${esc(MASTERY_PERKS[k])}">Rank 5: ${esc(PROF_NAMES[k][5])}${rank === 5 ? ` · ${esc(MASTERY_PERKS[k])}` : ' (locked)'}</div></div>`; }).join('');
   return `<h3 title="What you can actually do, in class and out of it. It grows with the classes you attend, the life you lead and the practice you put in, and it changes Fortune rolls in its field.">Proficiency</h3>${offer}${svg}${rows}`;
 }
 function pMagic(S) {

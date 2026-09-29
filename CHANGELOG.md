@@ -1,7 +1,32 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.30.0 — New mark formula and mastery perks (2026-09-30)
+
+Batch 6, the last of the approved `planning/DRAFT_proficiency_practice.md` (now deleted; its tunables moved to `FUTURE_PLANS.md` §5).
+Decisions touched: **DECISIONS §3 "Grades and exams" rewritten** (owner-approved in the draft) and a new "Mastery" entry.
+- **Marks:** each subject scores preparation (tier × 25), the proficiency it draws on (rank × 20) and attendance of its classes since
+  the last exams, weighted 50/30/20 for theory and 30/50/20 for practicals, plus an exam-day roll seeded per subject and exams
+  (−8 to +8, shown from exam week so the narrator and the marks agree). A ≥ 85, B ≥ 70, C ≥ 55, D ≥ 40. Kept: the C floor without a
+  skip, Tired/Exhausted steps, make-up cap, the bond rewards, `/Exam_events`. Replaced: "three skips −1" (attendance is in the score)
+  and "six training sessions → Combat +1" (training raises Prowess). Studies and `<now>` show the sum ("excellent preparation 50 ·
+  Arcana Rank 2 12 · attended 100% 20 = 82: B"). With Proficiency off, preparation stands in for the proficiency part.
+- **Attendance per subject:** the engine counts each class period held (`$eng.study.held`); skips already counted against it. Old
+  saves (migration in `stepMigrate`): the term's classes so far count as attended, recorded skips stay.
+- **Mastery (Rank 5):** routine attempts in the field succeed without a roll (504, only at Rank 5). Knowledge: one real lead a week in
+  the Main Library or Archive. Arcana: senses wards, traps and spells; per-use techniques −10% mana; the Doves take an interest (Doves
+  +8 once; with hidden magic, Dove attention +3 once). Craft: never rough, +1 dose or piece. Prowess: once a week a fight injury one
+  step lighter. Society: staff and nobles met for the first time at Trust +5; a letter from the Noble Houses' Liaison. Nature:
+  creatures curious first; foraging doubles. Toast "Mastery: <perk>"; Studies lists each Rank 5 perk, locked or open.
+- Player guide: exams and a proficiency paragraph. Features: the Study and exams description.
+- Save fixture v1.29.0. Main and three TEST cards rebuilt. Tests: `test_grades_v1150` updated to the new formula (seed 550: a neutral
+  exam day at the first midterm), new `test_mastery_v1300.cjs` (29 checks: the draft's table, weights, both Arcana subjects, the
+  seeded roll, attendance counting and migration, every perk). **Full suite passes**, lint passes, `sim_year 120` passes.
+- To confirm with the owner (invented): the nobles for Consummate (Caspian, Caralynn, Florian, Elion, Nerys) and "staff" = teachers
+  plus the Doves, Cathedral, Liaison and facilities staff; the Liaison's letter wording; Formidable changes severity only (HP stays);
+  the lead is used when a new Clue is added in the Library or Archive; exam-day words (a bad / off / good / inspired day).
 
 ## v1.29.0 — Non-magic crafts and masterwork (2026-09-30)
 
@@ -65,25 +90,6 @@ DECISIONS §6 gains one line (where "seen" is kept) and §11 one verified fact.
   never writes); `test_saves`, `test_activities_b5`, `test_notebook`, `test_builder`, `test_settings_v199`, `qa_static`, lint pass.
   Browser preview: dots on the bracelet buttons and the Notebook tabs, a person's dot, the marker and lore dot on the Map. Save
   fixture `save_1.24.3.json` added.
-
-## v1.24.3 — Year floors named plainly; year-floor locations in the engine (2026-09-29)
-
-Owner: "make it clear without the description that the Lecture Halls etc. are split by year"; "check attendance and anything that
-reads the Lecture Halls location for errors when the location changes". Decisions touched: DECISIONS "World.Location is written in
-the Campus Map's words" (one sentence added for year floors).
-- **Map:** on Floors 2–4 the cards are named for the year ("First-year Lecture Halls", "Second-year Study Rooms", "Third-year
-  Lockers") in the header and beside the arrows; a line under the header says "Floor 3 · for Year 2 students · your year"; the
-  floor tabs read "Floor 3 Year 2".
-- **Check (probe of attendance, map, ambience, discovery with nine wordings for a second-year in P1 Magic Theory):** no wrong skip
-  in any case (a name the map does not know, like "Lecture Hall 3B", keeps the benefit of the doubt). But the 1.24.2 "Go here" wording
-  could come back as "Second-year Lecture Halls", which the engine did not know: no "You are here" on the map, not recorded as
-  visited, no ambience crowd; "Floor 3 — Lecture Halls" lost its floor.
-- **Fix:** `canonLocation` (`yearFloorLocation`) writes any year-floor wording as "<place> — Floor N" ("Second-year Lecture Halls",
-  "Lecture Halls, Floor 3", "Floor 4 — Study Rooms", "the lockers on the third-year floor"); a text that names another place first
-  keeps it ("Fire Dormitory — lockers on the second-year corridor"). The update rules (502) show the form; `<now>`'s class line says
-  the floor ("at Lecture Halls — Floor 3 (the Year 2 floor)").
-- Tests: `test_map_gates_v1240.cjs` gains the naming, canonLocation and attendance checks; `test_world_v110` reads the new class
-  line. `npm test`: 81 suites pass; lint passes. Browser preview checked. Save fixture `save_1.24.2.json` added.
 
 ## Release index (one line per release, oldest first)
 
@@ -175,3 +181,4 @@ the Campus Map's words" (one sentence added for year floors).
 - **v1.27.0 (2026-09-30):** Batches 2–3: six proficiency stats and Studies hexagon, weekly XP and Fortune bonuses, location-based Practice with validated `/Practice` reports.
 - **v1.28.0 (2026-09-30):** Batch 4: Fortune-based magical crafting, handmade Bag items and effects, foraged reagents, repair/enchant, and capped Apothecary sales.
 - **v1.29.0 (2026-09-30):** Batch 5: non-magic crafts (cooking, needlework, drawing, carving, calligraphy, smithing), four ingredients, masterwork from craft Projects.
+- **v1.30.0 (2026-09-30):** Batch 6: marks from preparation, proficiency and attendance plus a seeded exam-day roll; Rank 5 mastery perks.

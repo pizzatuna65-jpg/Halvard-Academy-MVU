@@ -92,7 +92,14 @@ const MID_SLOTS = { 'Magic Theory': [0, 480, 600], Etiquette: [0, 600, 720], His
 const PRACTICAL = ['Potion Crafting', 'Dark Magic Defense', 'Combat', 'Creature Studies'];
 // an A: +10 on a Fortune roll in the subject's field (rule 504 "specialty"), until the next exams
 const TOP_FIELD = Object.fromEntries(SUBJECTS.map(s => [s, PROF_FIELD[SUBJECT_STAT[s]]]));
-const TUTOR_PAY = 40, TUTOR_WEEK = 2, TRAIN_FOR_COMBAT = 6, ASSIGNMENT_MIN = 45;
+const TUTOR_PAY = 40, TUTOR_WEEK = 2, ASSIGNMENT_MIN = 45;
+// 1.30.0 (owner-approved planning/DRAFT_proficiency_practice.md, Batch 6): a mark's score = preparation, the subject's proficiency
+// and attendance, weighted for theory or practical, plus a seeded exam-day roll; Rank 5 in a proficiency opens its mastery perk
+const GRADE_W = { theory: [0.5, 0.3, 0.2], practical: [0.3, 0.5, 0.2] }, GRADE_CUT = [40, 55, 70, 85];
+const EXAM_DAY = [[10, -8, 'a bad day'], [30, -4, 'an off day'], [70, 0, ''], [90, 4, 'a good day'], [100, 8, 'an inspired day']];
+const MASTERY = 5, profRankOf = (X, k) => PROF_CUT.filter(x => num((((X || {}).$eng || {}).prof || {}).xp && X.$eng.prof.xp[k], 0) >= x).length - 1;
+// staff and nobles (Consummate: NPC_GROUP staff, or other = the Doves, the Cathedral, the Liaison, facilities); nobles by the lorebook (House Silvarenne, House Villeneuve, the Liaison's regulars)
+const CONSUMMATE_GROUPS = ['staff', 'other'], NOBLES = ['Caspian', 'Caralynn', 'Florian', 'Elion', 'Nerys'];
 const subjectOf = t => { const x = String(t || '').trim().toLowerCase(); return x === 'dmd' ? 'Dark Magic Defense' : SUBJECTS.find(s => s.toLowerCase() === x) || ''; };
 const subjectIn = t => SUBJECTS.find(s => new RegExp(`\\b${s}\\b`, 'i').test(String(t || ''))) || (/\bDMD\b/.test(String(t || '')) ? 'Dark Magic Defense' : '');
 const teaches = (id, subj, py) => ((CLASS.teach || {})[id] || []).some(x => x[0] === subj && (x[1] === py || x[1] === 0));
@@ -633,6 +640,16 @@ function stepMigrate(c) {
     S.$ui.prof_offer = true;
     log.push('Proficiency was estimated from weeks already played; Studies offers a one-time choice of starting ranks.');
   }
+  // 1.30.0: per-subject attendance starts with this release; the term's classes so far count as attended, recorded skips stay
+  for (const X of both) {
+    const ST = (X.$eng || {}).study;
+    if (!_.isPlainObject(ST) || _.isPlainObject(ST.held) || !X.World) continue;
+    const W = X.World, prev = [11, 9, 5, 3].find(m => m < W.Month || (m === W.Month && W.Week > 1));
+    const start = toAbs({ Year: W.Year, Month: prev || 1, Week: prev ? 2 : 1, Day: 'Mon', Time: '00:00' });
+    const weeks = Math.max(0, Math.floor((toAbs(W) - start) / (7 * DAY_MIN))), perWeek = {};
+    for (const row of Object.values(CLASS.tt || {})) for (const cell of row || []) if (cell && cell[3] === 'class') perWeek[cell[0]] = num(perWeek[cell[0]], 0) + 1;
+    ST.held = Object.fromEntries(SUBJECTS.map(s => [s, Math.max(num((ST.skip || {})[s], 0), weeks * num(perWeek[s], 0))]));
+  }
   for (const X of both) {
     const P = X._Perks;
     if (!_.isPlainObject(P)) continue;
@@ -985,7 +1002,7 @@ function stepWeather(c) {
 
 // ---- 2. magic: casts ----
 function stepMagic(c) {
-  const { S, B, log, hasB, absA, elapsed, TU, wxNow } = c;
+  const { S, B, log, hasB, absA, elapsed, TU, wxNow, OFF } = c;
   const V = S.Player.Vitals, M = S.Magic, T = M._Techniques || {};
   const BA = (hasB && B.Magic && B.Magic.Active) || {};
   // v1.0.3 (A#3): the AI never sees $ fields, so a whole-record replace drops them; the same effect keeps its start time
@@ -1061,7 +1078,8 @@ function stepMagic(c) {
     if (pk && c.Technique.startsWith(pk + ': ') && !partnerHere(pk)) { log.push(`${c.Technique}: ${pk} is not summoned, so the ability could not be used; nothing was charged.`); continue; }
     // hybrid: while the effect is running, a triggered use costs Trigger; otherwise a cast costs Activation
     const running = Object.values(M.Active || {}).some(e => e.Technique === c.Technique);
-    const unit = t.Cost_mode === 'hybrid' && t.Trigger > 0 && running ? t.Trigger : (t.Activation || 0);
+    const base = t.Cost_mode === 'hybrid' && t.Trigger > 0 && running ? t.Trigger : (t.Activation || 0);
+    const unit = t.Cost_mode === 'per_use' && base > 0 && !OFF.has('proficiency') && profRankOf(hasB ? B : S, 'Arcana') >= MASTERY ? Math.max(0.5, Math.round(base * 0.9 * 2) / 2) : base;   // 1.30.0: Arcane scholar
     const cost = windCost(t, unit * (c.Times || 1), c.Technique);
     if (cost > V.Mana + regenLeft) { log.push(`${c.Technique} needed ${cost} mana but only ${Math.floor(V.Mana + regenLeft)} was left: the casting strained or failed (mana now 0).`); V.Mana = 0; regenLeft = 0; }
     else { payMana(cost); profContext.profCast = true; }
@@ -1247,6 +1265,17 @@ function stepVitals(c) {
     const dmg = B.Player.Vitals.HP - V.HP;
     if (dmg > 40 && !V.Lethal_flag) { V.HP = B.Player.Vitals.HP - 40; log.push(`HP loss capped at 40 (no lethal flag): HP ${Math.round(V.HP)}.`); }
     if (V.HP <= 0 && B.Player.Vitals.HP > 0) log.push('{{user}} has died.');
+  }
+  // 1.30.0: Formidable (Prowess Rank 5): once a week, the worst new injury from a fight lands one step lighter
+  if (hasB && !c.OFF.has('proficiency') && profRankOf(B, 'Prowess') >= MASTERY && ((B.Battle || {}).Active || (S.Battle || {}).Active)) {
+    const P = S.$eng.prof || {}, MS = P.mastery = _.isPlainObject(P.mastery) ? P.mastery : {}, week = Math.floor(Math.floor(toAbs(S.World) / DAY_MIN) / 7);
+    const SEV = ['minor', 'moderate', 'serious', 'critical'], I = S.Player.Injuries || {}, BI = B.Player.Injuries || {};
+    const k = Object.keys(I).filter(x => !BI[x] && SEV.indexOf(String(I[x].Severity).toLowerCase()) > 0).sort((a, b) => SEV.indexOf(String(I[b].Severity).toLowerCase()) - SEV.indexOf(String(I[a].Severity).toLowerCase()))[0];
+    if (k && _.isPlainObject(P) && MS.fight !== week) {
+      MS.fight = week;
+      const was = String(I[k].Severity).toLowerCase(); I[k].Severity = SEV[SEV.indexOf(was) - 1];
+      log.push(`Formidable: ${k} lands one step lighter (${was} -> ${I[k].Severity}); once a week.`);
+    }
   }
   V.Lethal_flag = false;
   V.HP = _.clamp(V.HP, 0, V.HP_max); V.Stamina = _.clamp(V.Stamina, 0, V.Stamina_max); V.Mana = _.clamp(V.Mana, 0, V.Mana_max);
@@ -1447,7 +1476,7 @@ function stepSchoolWeek(c) {
       const cut = { 1: [2, 6, 12, 20], 2: [4, 10, 18, 28], 3: [6, 15, 25, 40] }[TU.study_tiers] || [4, 10, 18, 28];
       let ST = _.isPlainObject(S.$eng.study) ? S.$eng.study : null;
       if (!ST) ST = S.$eng.study = { key, mins: 0, grace: hasB, hist: {} };   // a save that gains the feature mid-term: floor "fair"
-      for (const k of ['hist', 'skip', 'cap', 'shift', 'res', 'marks', 'stand', 'rem']) if (!_.isPlainObject(ST[k])) ST[k] = {};
+      for (const k of ['hist', 'skip', 'cap', 'shift', 'res', 'marks', 'stand', 'rem', 'held']) if (!_.isPlainObject(ST[k])) ST[k] = {};
       const tierOf = () => { const h = num(ST.mins, 0) / 60; let i = cut.filter(c => h >= c).length; if (ST.grace) i = Math.max(i, 2); return i; };
       const sessOf = k => { const m = /^Y(\d+)M(\d+)$/.exec(String(k || '')); return m ? { Y: +m[1], M: +m[2], fin: +m[2] === 5 || +m[2] === 11 } : null; };
       const labelOf = c => `Y${c.Y} M${c.M} ${c.fin ? 'Finals' : 'Midterm'}`;
@@ -1473,20 +1502,29 @@ function stepSchoolWeek(c) {
       // Mimosa's focus draught, taken on an exam day: that day's marks follow the preparation with no penalty
       const draught = ((REW.npcs || {}).Mimosa || {}).gift;
       if (draught && REPORTED.perks.includes(draught.name.toLowerCase()) && perkOn('Mimosa', 'gift')) ST.focus = dayNo;
+      // 1.30.0: score = preparation (tier x 25), proficiency (rank x 20) and attendance (% of the subject's classes since the last
+      // exams), weighted 50/30/20 for theory and 30/50/20 for practicals, plus the exam-day roll (seeded per subject and exams,
+      // shown from exam week). With Proficiency off, preparation stands in for it. The C floor, condition steps, make-up cap and
+      // the bond rewards below are unchanged.
+      const profOn = !OFF.has('proficiency') && _.isPlainObject(S.$eng.prof);
+      const cs0 = sessOf(ST.key), examNow = !!cs0 && Wn.Year === cs0.Y && Wn.Month === cs0.M && Wn.Week === 1;
+      const r1 = x => Math.round(x * 10) / 10;
       const markUp = () => {
         const gareth = perkOn('Gareth', 'r10'), t = Math.min(4, tierOf() + (gareth ? 1 : 0)), marks = {}, why = {};
-        const tw = `${TIERS[tierOf()]} preparation${gareth ? " (+1 Gareth's tutoring)" : ''}`;
+        const prep = t * 25, prepWord = `${TIERS[t]} preparation${gareth ? " (Gareth's tutoring +1 tier)" : ''}`;
         for (const s of SUBJECTS) {
-          const sk = num(ST.skip[s], 0), c = ST.cap[s] || {}, r = [tw];
-          let m = t, mod = 0;
+          const sk = num(ST.skip[s], 0), held = num(ST.held[s], 0), c = ST.cap[s] || {}, Wt = GRADE_W[PRACTICAL.includes(s) ? 'practical' : 'theory'];
+          const stat = SUBJECT_STAT[s], rank = profOn ? profRankOf(S, stat) : -1, statPts = rank >= 0 ? rank * 20 : prep;
+          const att = held ? _.clamp((held - sk) / held, 0, 1) : sk ? 0 : 1;
+          const roll = 1 + hash32(seed, ST.key, 'exam', s) % 100, [, day, dayWord] = EXAM_DAY.find(([hi]) => roll <= hi);
+          const luck = examNow || ST.cap[s] ? day : 0, score = r1(Wt[0] * prep + Wt[1] * statPts + Wt[2] * att * 100 + luck);
+          let m = GRADE_CUT.filter(x => score >= x).length, mod = 0;
+          const parts = [`${prepWord} ${r1(Wt[0] * prep)}`, rank >= 0 ? `${stat} Rank ${rank} ${r1(Wt[1] * statPts)}` : '', `attended ${Math.round(att * 100)}% ${r1(Wt[2] * att * 100)}`, luck ? `${dayWord} ${luck > 0 ? '+' : ''}${luck}` : ''];
+          const r = [`${parts.filter(Boolean).join(' · ')} = ${score}: ${MARKS[m]}`];
           if (!sk && m < 2) { m = 2; r.push('no class skipped: at least C'); }
-          if (c.focus) r.push("focus draught: no penalty");
-          else {
-            if (sk >= 3) { mod--; r.push(`${sk} classes skipped -1`); }
-            if (c.f === 'Tired') { mod--; r.push('Tired -1'); } else if (c.f === 'Exhausted') { mod -= 2; r.push('Exhausted -2'); }
-          }
-          if (s === 'Combat' && num(ST.train, 0) >= TRAIN_FOR_COMBAT) { mod++; r.push(`${num(ST.train, 0)} training sessions +1`); }
-          m = _.clamp(m + _.clamp(mod, -2, 2), 0, 4);
+          if (c.focus) r.push('focus draught: no penalty');
+          else if (c.f === 'Tired') { mod--; r.push('Tired -1'); } else if (c.f === 'Exhausted') { mod -= 2; r.push('Exhausted -2'); }
+          m = _.clamp(m + mod, 0, 4);
           if (c.ex) { m = Math.min(m, 2); r.push('make-up exam: at most C'); }
           marks[s] = m; why[s] = r;
         }
@@ -1523,9 +1561,16 @@ function stepSchoolWeek(c) {
       if (begun && hasB && !ST.res[ST.key] && !ST.marks[ST.key] && (ST.key !== key || postDays)) ST.res[ST.key] = markUp().marks;
       if (ST.key !== key) {   // an exam week has passed
         if (!(ST.key in ST.hist)) ST.hist[ST.key] = tierOf();
-        Object.assign(ST, { key, mins: 0, grace: false, skip: {}, cap: {}, train: 0, shift: {} });
+        Object.assign(ST, { key, mins: 0, grace: false, skip: {}, cap: {}, shift: {}, held: {} });
+        delete ST.train;
       }
       for (const s of skippedNow) ST.skip[s] = num(ST.skip[s], 0) + 1;
+      // 1.30.0: each class period that ends in this update is held (the subject's attendance counts skips against it)
+      if (hasB && elapsed > 0 && elapsed <= 7 * DAY_MIN && CLASS.tt) for (let d = dayNoB; d <= dayNo; d++) {
+        const Wd = fromAbs(d * DAY_MIN), row = CLASS.tt[Wd.Day];
+        if (!row || eventsOn(Wd).some(e => e.noclass || e.home || e.lockdown || e.away)) continue;
+        [600, 720, 960].forEach((e0, p) => { const cell = row[p]; if (cell && cell[3] === 'class' && absB < d * DAY_MIN + e0 && absA >= d * DAY_MIN + e0) ST.held[cell[0]] = num(ST.held[cell[0]], 0) + 1; });
+      }
       // minutes: study places outside lessons (Saturday Study Hall counts), halves for the start and end of the update
       if (hasB && elapsed > 0 && elapsed <= 360 && restedAs !== 'sleep') {   // 1.12.0: Resting is reset in section 4; read what it was
         const SP = ['main library', 'study rooms', 'archive'], f = (SP.includes(pkB) ? 0.5 : 0) + (SP.includes(pkA) ? 0.5 : 0);
@@ -1621,7 +1666,7 @@ function stepSchoolWeek(c) {
       const examWeek = EXAMS.includes(Wn.Month) && Wn.Week === 1 && ['Mon', 'Tue', 'Wed', 'Thu'].includes(Wn.Day) && !evs.some(e => e.home);
       if (examWeek) {
         const di = DAYS.indexOf(Wn.Day), today = SUBJECTS.filter(s => (nx.fin ? run.d === di : (MID_SLOTS[s] || [])[0] === di));
-        S.$ui.exam = { tier: TIERS[tierOf()], h: Math.round(num(ST.mins, 0) / 60), run: S.$ui.grades.run, today: today.map(s => ({ s, mark: MARKS[fc.marks[s]], why: fc.why[s].slice(1).join('; ') })) };
+        S.$ui.exam = { tier: TIERS[tierOf()], h: Math.round(num(ST.mins, 0) / 60), run: S.$ui.grades.run, today: today.map(s => ({ s, mark: MARKS[fc.marks[s]], why: fc.why[s].join('; ') })) };
       }
       if (S.$ui.fortune && Array.isArray(S.$ui.fortune.mods)) {
         const fields = new Set();
@@ -1824,7 +1869,7 @@ function stepBonds(c) {
     let rankTrust = 0;
     // 1.4.3: a new bond starts at the character's own Trust (owner: start by category). 1.6.11 (owner playtest: Trixie met for the
     // first time showed Trust 10, Betrayed): a number the narrator writes on a first meeting is not a deed, so it gives way too
-    if (!b0 && hasB) { const s0 = trustProfile(id, S, secretOut).start; if (num(b.Trust, 50) !== 50 && num(b.Trust, 50) !== s0) log.push(`${id} is new: Trust starts at ${s0} by their nature (${num(b.Trust, 50)} written; a first meeting is not a deed).`); b.Trust = s0; }
+    if (!b0 && hasB) { const s0 = trustProfile(id, S, secretOut).start + (!OFF.has('proficiency') && profRankOf(B, 'Society') >= MASTERY && (CONSUMMATE_GROUPS.includes(NPC_GROUP[id]) || NOBLES.includes(id)) ? 5 : 0); if (num(b.Trust, 50) !== 50 && num(b.Trust, 50) !== s0) log.push(`${id} is new: Trust starts at ${s0} by their nature (${num(b.Trust, 50)} written; a first meeting is not a deed).`); b.Trust = s0; }
     if (!b0 && hasB && START[id]) {                            // Etnie adopts {{user}} on sight.
       const st = START[id];
       b.Rank = st.Rank; b.$cool = dayNo + coolDays(st.Rank, PACE); xp = 0;
@@ -2233,7 +2278,6 @@ function stepTraining(c) {
       if (!k || !S.Player.$Training[k]) { log.push(`Training track "${x.Track}" is unknown (use mana or stamina); nothing was added.`); continue; }
       const injury = Object.values(S.Player.Injuries).find(i => /serious|critical/.test(i.Severity) || k === 'stamina' && i.Severity === 'moderate');
       if (injury || /Exhausted|Collapsed/.test(V._Fatigue)) { log.push(`Training ${k}: ${injury ? 'Injured' : 'Too tired to train'}; no gain.`); continue; }
-      if (!OFF.has('study') && _.isPlainObject(S.$eng.study)) S.$eng.study.train = num(S.$eng.study.train, 0) + 1;   // 1.15.0: toward the Combat mark
       const fatigueMult = V._Fatigue === 'Tired' ? TU.tired_training : 1;
       const T = S.Player.$Training[k], pr = partners(k), partner = canon(x.Partner), pb = S.Bonds[partner];
       const r4 = !!(pb && pb.Rank >= 4 && pb.Trust >= 35 && pb.Tension < 70 && here.has(partner) && !npcAway(partner)
@@ -2258,6 +2302,7 @@ function stepProficiency(c) {
   S.$ui.practice = [];
   S.$ui.craft = [];
   S.$ui.craft_sale = null;
+  S.$ui.mastery = null;
   if (OFF.has('proficiency')) return;
   const ranks = S.Player._Proficiency || (S.Player._Proficiency = {});
   let P = S.$eng.prof;
@@ -2286,7 +2331,7 @@ function stepProficiency(c) {
     if (rank > ranks[k]) {
       ranks[k] = rank;
       const line = `${k} reached Rank ${rank} (${PROF_NAMES[k][rank]}).`;
-      jnl.push(line); S.$ui.toasts.push(`${k}: ${PROF_NAMES[k][rank]} (Rank ${rank})`);
+      jnl.push(line); S.$ui.toasts.push(rank >= MASTERY ? `Mastery: ${PROF_NAMES[k][MASTERY]}` : `${k}: ${PROF_NAMES[k][rank]} (Rank ${rank})`);
     }
     log.push(`${k} proficiency +${add} (${why}); ${P.xp[k]}/150 XP.`);
     return add;
@@ -2399,8 +2444,9 @@ function stepProficiency(c) {
     const tools = recipe.group ? craftGroup(recipe).tools || [] : Object.values(CRAFTS.groups || {}).flatMap(g => g.tools || []);
     const tool = Math.max(0, ...tools.filter(([n]) => craftQty(state.Inventory, n) > 0).map(([, n]) => n));
     const aid = craftExpert(state, recipe) ? 10 : 0, score = roll + skill + condition + tool + aid, dc = CRAFTS.tiers[recipe.tier];
-    const result = score >= dc + 25 ? 'fine' : score >= dc ? 'success' : score >= dc - 15 ? 'weak' : 'failed';
-    return { name: recipe.name, group: recipe.group, tier: recipe.tier, roll, score, dc, result, mishap: roll <= 3, mods: [skill && `Craft +${skill}`, condition && `conditions ${condition}`, tool && `tool +${tool}`, aid && `expert +${aid}`].filter(Boolean).join(', ') };
+    const band = score >= dc + 25 ? 'fine' : score >= dc ? 'success' : score >= dc - 15 ? 'weak' : 'failed';
+    const master = rank >= MASTERY, result = master && band === 'weak' ? 'success' : band;   // Master's hand: nothing comes out rough
+    return { name: recipe.name, group: recipe.group, tier: recipe.tier, roll, score, dc, result, master, mishap: roll <= 3, mods: [skill && `Craft +${skill}`, condition && `conditions ${condition}`, tool && `tool +${tool}`, aid && `expert +${aid}`].filter(Boolean).join(', ') };
   };
   const bagGain = (name, count, kind, note) => {
     const I = S.Inventory, k = craftItem(I, name) || name, start = craftQty((B || {}).Inventory, name);
@@ -2484,14 +2530,14 @@ function stepProficiency(c) {
           if (!S.Inventory[target]) S.Inventory[target] = _.cloneDeep(B.Inventory[ready.target]);
           if (recipe.target === 'repair' || recipe.target === 'mend') S.Inventory[target].Note = String(S.Inventory[target].Note || '').replace(/\bdamaged\b/ig, '').trim() || note;
           else S.Inventory[target].Note = `${String(S.Inventory[target].Note || '').trim()} enchanted ${recipe.gear}; ${note}`.trim();
-        } else bagGain(recipe.name, (recipe.yield || [1, 1, 1])[['fine', 'success', 'weak'].indexOf(made.result)], recipe.kind, note);
+        } else bagGain(recipe.name, (recipe.yield || [1, 1, 1])[['fine', 'success', 'weak'].indexOf(made.result)] + (made.master ? 1 : 0), recipe.kind, note);
       }
       log.push(`Craft ${recipe.name}: ${made.result}${made.mishap ? ', mishap' : ''}; ingredients spent${made.result === 'failed' ? ', no item' : ''}.`);
       if (recipe.group === 'Brewing' && recipe.tier === 'advanced') log.push('Advanced brewing may draw a Dove poison-magic inspection; play it if a Dove is present.');
       continue;
     }
     if (a.action === 'Tend the reagent beds') bagGain('Foraged reagent', 1, 'reagent', 'fresh from the Gardens');
-    if (a.action === 'Forage' && SEASONS[S.World.Month - 1] !== 'Winter') bagGain('Foraged reagent', SEASONS[S.World.Month - 1] === 'Summer' ? 1 : 2, 'reagent', 'foraged in the Forest');
+    if (a.action === 'Forage' && SEASONS[S.World.Month - 1] !== 'Winter') bagGain('Foraged reagent', (SEASONS[S.World.Month - 1] === 'Summer' ? 1 : 2) * (ranks.Nature >= MASTERY ? 2 : 1), 'reagent', 'foraged in the Forest');
     if (a.action === 'Gather clearing blooms') {
       bagGain('Clearing bloom', 1, 'reagent', 'wilts tomorrow');
       const C = S.$eng.craft || (S.$eng.craft = {}); C.blooms = C.blooms || {}; C.blooms['clearing bloom'] = dayNo;
@@ -2552,6 +2598,24 @@ function stepProficiency(c) {
     const a = ready.a;
     return !P.days[`${dayNo}:${a.loc}:${a.action}`];
   }).map(recipe => craftResult(S, recipe));
+  // 1.30.0: mastery perks (Rank 5). Arcana: the Doves take an interest (once; with hidden magic, Dove attention too). Society: the
+  // Noble Houses' Liaison writes (once). Knowledge: one real lead a week in the Main Library or the Archive (a new Clue found there
+  // uses it). The standing perks are rules in 504 (S.$ui.mastery); Prowess, Society's Trust, Arcana's mana and Craft act elsewhere.
+  const MS = P.mastery = _.isPlainObject(P.mastery) ? P.mastery : {};
+  if (ranks.Arcana >= MASTERY && !MS.arcana) {
+    MS.arcana = true;
+    if (c.repAdd) c.repAdd('Doves', 8, 'an arcane scholar the Doves take an interest in', '');
+    if (S.Hidden && S.Hidden._True_magic) { S.Hidden.Dove_attention = _.clamp(num(S.Hidden.Dove_attention, 0) + 3, 0, 100); log.push('Arcane scholar: the Doves take an interest; Dove attention +3.'); }
+  }
+  if (ranks.Society >= MASTERY && !MS.society) {
+    MS.society = true;
+    if (_.isPlainObject(S.Letters)) S.Letters["Noble Houses' Liaison: an invitation"] = { From: "Noble Houses' Liaison", To: '{{user}}', Gist: "Word of {{user}}'s manners has reached the noble houses: an invitation to the Liaison's next reception.", Date: stamp(S.World), Status: 'waiting' };
+    log.push("Consummate: the Noble Houses' Liaison has taken note of {{user}} (a letter).");
+  }
+  const leadHere = ['main library', 'archive'].includes(here);
+  if (hasB && ranks.Knowledge >= MASTERY && leadHere && MS.lead !== weekNo && Object.keys(S.Clues || {}).some(k => !(B.Clues || {})[k])) { MS.lead = weekNo; log.push("Encyclopaedic: this week's real lead is used."); }
+  const mastered = PROF.filter(k => ranks[k] >= MASTERY);
+  S.$ui.mastery = mastered.length ? { stats: mastered, lead: ranks.Knowledge >= MASTERY && leadHere && MS.lead !== weekNo } : null;
   if (num(ranks.Craft, 0) >= MW.rank) S.$ui.craft.push(...Object.keys(S.Projects || {}).filter(k => mwGroup(S.Projects[k]) !== null && num(S.Projects[k].Progress, 0) < 100).slice(0, 2).map(k => mwResult(S, k)));
   if (here === 'medical centre' && craftQty(S.Inventory, 'Healing draught') > 0)
     S.$ui.craft_sale = { sold: num(P.wk.sold, 0), remaining: Math.max(0, 3 - num(P.wk.sold, 0)) };

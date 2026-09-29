@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.30.0 (new mark formula, mastery perks): the three connected-session checks in its section below.
 - v1.29.0 (non-magic crafts, masterwork): the three connected-session checks in its section below.
 - v1.28.0 (magical crafting): the four connected-session checks in its section below.
 - v1.27.0 (Proficiency and Practice): the four checks in its section below.
@@ -56,6 +57,12 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.30.0 — New mark formula and mastery perks
+
+1. Continue the owner's own chat past this update: Studies → Next exams shows each subject's sum ("… preparation · <stat> Rank n · attended n% = score: mark") and the hint about theory and practicals. Nothing from before is lost; attendance reads 100% except where a skip was on record.
+2. Play one full midterm week (or use the TEST Year 2 card near M3 or M9): in exam week `<now>` lists today's subjects with the sum including the day's roll, the narrator plays that mark, and the posted marks match the Studies forecast. Swipe an exam-day reply: the same roll.
+3. On a test save with one proficiency at Rank 5 (Builder Custom), check its perk: Arcana (a per-use technique costs 10% less; a Doves reputation line and the toast "Mastery: Arcane scholar"), Society (the Liaison's letter; a staff member met for the first time starts at Trust +5), or Knowledge (in the Main Library the narrator may reveal one real lead, once a week). 504's mastery line appears only at Rank 5.
 
 ### v1.29.0 — Non-magic crafts and masterwork
 

@@ -19,8 +19,8 @@ def gated_chars(src):
         g = re.match(r"^if \(!on\('(\w+)'\)\) \{$", code)
         if g: stack.append('!' + g.group(1)); continue
         # 1.28.0: crafting and Apothecary rules appear only when relevant in the live state;
-        # the Settings estimate is the ordinary, no-craft-place cost.
-        if re.match(r'^if \(_U\.craft(?:_sale)?(?: && _U\.craft\.length)?\) \{$', code): stack.append('$dynamic'); continue
+        # the Settings estimate is the ordinary, no-craft-place cost. 1.30.0: mastery lines likewise (Rank 5 only).
+        if re.match(r'^if \(_U\.(?:craft(?:_sale)?(?: && _U\.craft\.length)?|mastery)\) \{$', code): stack.append('$dynamic'); continue
         if code == '}': stack.pop(); continue
         for ch in code:
             if ch == '{': stack.append(None)
