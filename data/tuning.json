@@ -2,6 +2,12 @@
  "_note": "1.3.1 (owner playtest): player settings for the 1.3.0 systems (Student file > Settings), stored in $ui.tune {id: value}. Single source for the engine (tools/gen_engine.py) and the UI (tools/gen_ui.py). def is the value used when nothing is set: gen_engine.py asserts it equals the number in data/training.json / reputation.json, so the default game is unchanged. A value must be one of opts; 0 means 'no limit' or 'off' where the label says so.",
  "groups": [
   {
+   "id": "proficiency",
+   "name": "Proficiency",
+   "hint": "Weekly practice XP in each field. Class and exam XP are outside this limit.",
+   "rows": [{"id":"prof_pace","name":"Proficiency pace","hint":"Practice XP per stat each week.","opts":[[4,"Slow: 4"],[6,"Normal: 6"],[9,"Fast: 9"]],"def":6,"src":""}]
+  },
+  {
    "id": "training",
    "name": "Training",
    "hint": "How fast training grows your mana pool and stamina, in percent of the value you started with.",

@@ -1,6 +1,7 @@
 {
  "_note": "v1.1.0 Features settings (single source). Engine: which state each feature parks when it is off (paths) and which unlock it gates. UI: rows of Student file > Settings > Features. tools/gen_mvu_entries.py measures each feature's rule text (EJS gates on(id) in 502/504/505) and writes data/feature_cost.json. control: toggle = on/off in $ui.off; levels = its own field in $ui (level 'off' counts as off).",
  "features": [
+  {"id":"proficiency","name":"Proficiency and practice","desc":"Six abilities grow through classes, daily life and practice; ranks add to Fortune in their field.","control":"toggle","paths":["Player._Proficiency","$eng.prof"],"unit":"six stats"},
   {"id": "planner", "name": "Planner", "desc": "Commitments: promises, appointments and deadlines with due times and overdue reminders.", "control": "toggle", "paths": ["Commitments"], "unlock": "planner", "unit": "per commitment"},
   {"id": "notices", "name": "Notice Board notices", "desc": "Story notices pinned on the board (paid work, recruitment, warnings). Official postings always show.", "control": "toggle", "paths": ["Notices"], "unlock": "notices", "unit": "per notice"},
   {"id": "letters", "name": "Letters", "desc": "Mail Tower letters in and out, with waiting reminders.", "control": "toggle", "paths": ["Letters"], "unlock": "letters", "unit": "per letter"},

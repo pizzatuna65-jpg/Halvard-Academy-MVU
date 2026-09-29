@@ -18,6 +18,9 @@ t = open(P('src/scripts/engine.template.js'), encoding='utf-8').read()
 cal = json.load(open(P('data/calendar.json'), encoding='utf-8'))
 t = t.replace('/*@@CAL_EVENTS@@*/[]', json.dumps(cal['events'], ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@CAL_TIMETABLE@@*/{}', json.dumps(cal['timetable'], ensure_ascii=False, separators=(',', ':')))
+t = t.replace('/*@@CLUB_STATS@@*/{}', json.dumps(json.load(open(P('data/club_stats.json'), encoding='utf-8')), ensure_ascii=False, separators=(',', ':')))
+_plocs = json.load(open(P('data/locations.json'), encoding='utf-8'))
+t = t.replace('/*@@PRACTICE@@*/[]', json.dumps([{**a, 'name': _plocs[a['loc']]['name']} for a in json.load(open(P('data/practice.json'), encoding='utf-8'))], ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@MOOD_GIFTS_SOURCE@@*/', open(P('src/scripts/mood_gifts.js'), encoding='utf-8').read())
 for key, file in [('NPC_MOODS', 'npc_moods'), ('GIFT_PREFS', 'gift_prefs'), ('WIND_CASTING', 'wind_casting')]:
     obj = json.load(open(P('data/' + file + '.json'), encoding='utf-8'))
@@ -66,6 +69,7 @@ from common import load_clubs
 _CALIAS = {c['key'].lower(): c['name'] for c in load_clubs(npcs, locs)}
 assert all(v in _CLUBS for v in _CALIAS.values()), 'club alias names a club without venues'
 t = t.replace('/*@@CLASS@@*/{}', json.dumps({'tt': _TT, 'teach': _TEACH, 'clubs': _CLUBS, 'calias': _CALIAS}, ensure_ascii=False, separators=(',', ':')))
+t = t.replace('/*@@CLUB_MEMBERS@@*/{}', json.dumps({c['name']: c['members'] for c in load_clubs(npcs, locs)}, ensure_ascii=False, separators=(',', ':')))
 # 1.3.1: place names for World.Location normalisation (engine canonLocation); dorm rooms every dorm shares are never promoted
 pnames = {k: l['name'] for lid, l in sorted(locs.items()) for k in place_keys(l, lid)}
 t = t.replace('/*@@PLACE_NAMES@@*/{}', json.dumps(pnames, ensure_ascii=False, separators=(',', ':')))

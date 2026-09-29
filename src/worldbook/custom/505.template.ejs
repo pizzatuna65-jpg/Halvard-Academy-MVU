@@ -231,6 +231,9 @@ More than <%- UI.leave.cap %> people are with {{user}} on an ordinary day: <%- U
 <%_ const FT = on('fortune') ? UI.fortune : null; if (FT && FT.roll) { _%>
 Fortune (important uncertain attempts only): <%- FT.roll %>; after modifiers <%- FT.fail %> or less fails, <%- FT.fail + 1 %>-<%- FT.part %> partial or costly, <%- FT.part + 1 %>+ clean.<%- FT.mods.length ? ' Modifiers: ' + FT.mods.join('; ') + '.' : '' %><%- FT.active.length ? ' Active magic: ' + FT.active.join(', ') + '.' : '' %>
 <%_ } _%>
+<%_ if (on('proficiency') && UI.practice && UI.practice.length) { const _p = UI.practice.filter(x => !x.locked); if (_p.length) { _%>
+Practice here: <%- _p.map(x => x.action + ' (' + x.stat + ')').join(', ') %>. Report in /Practice.
+<%_ } } _%>
 <%_ if (UI.training) { _%>
 {{user}}: <%- UI.training %>. Exhaustion shows in slow movements and short answers; collapsed means no interaction until awake.
 <%_ } if (on('weather') && UI.sleep && (UI.sleep.loss || UI.sleep.vigil)) { _%>

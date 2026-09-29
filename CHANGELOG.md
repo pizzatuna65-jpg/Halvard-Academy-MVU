@@ -3,6 +3,14 @@
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
 details: `git show b62d182:CHANGELOG.md`.
 
+## v1.27.0 — Proficiency and Practice (2026-09-30)
+
+Batches 2 and 3 of the owner-approved `planning/DRAFT_proficiency_practice.md` in one release.
+- Six engine-owned proficiency ranks with XP from classes, exams, study, interaction, casting, stamina training, battle, club time and tutoring. Repeatable XP has a per-stat weekly pace setting (4/6/9); rank and A-grade Fortune bonuses share a +20 ceiling. Society Rank 4/5 adds 10%/20% bond XP from talk or hangout.
+- Student Builder offers Normal or Custom starting ranks. Studies shows a six-axis chart, XP, weekly progress and practice places. Old saves receive a small estimate and a one-time starting-rank choice; the 1.25.0 save fixture is retained.
+- Activities gains Practice after the first training place is discovered. `/Practice` checks action, both endpoints' location, elapsed time, class hours, daily repeat, partner, club, weather, season, dorm and weekly cap. It can count as ordinary mana/stamina training, study or a paid animal-care shift. `<now>` lists available actions at the current place.
+- Build: main card and three TEST cards regenerated. New focused tests cover migration, read-only ranks, XP sources, place/time/partner rejection and report clearing. Full suite and live SillyTavern checks are recorded separately.
+
 ## v1.25.0 — Red "new" dots (2026-09-30)
 
 Owner: "a red dot in the UI to show that a new UI has unlocked". Batch 1 of the owner-approved `planning/DRAFT_proficiency_practice.md`
@@ -299,3 +307,4 @@ Owner: "lanjutkan batch 4". No canon or established design decision changed.
 - **v1.24.2 (2026-09-29):** Lecture Halls, Study Rooms and lockers on each year's floor (2, 3, 4) on the Map and in the Campus Map lore; the mouse wheel zooms the map.
 - **v1.24.3 (2026-09-29):** Year floors named plainly on the Map (First-/Second-/Third-year Lecture Halls, Study Rooms, Lockers); the engine writes every year-floor wording as "<place> — Floor N", and `<now>` names the class floor.
 - **v1.25.0 (2026-09-30):** Red "new" dots on the bracelet buttons, panel tabs, people just met and Map markers with a story heard; "seen" kept in Tavern Helper's chat variables.
+- **v1.27.0 (2026-09-30):** Batches 2–3: six proficiency stats and Studies hexagon, weekly XP and Fortune bonuses, location-based Practice with validated `/Practice` reports.

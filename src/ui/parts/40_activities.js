@@ -1,6 +1,9 @@
 // ================================================================ 5.2 Activities: Clubs, Competition, Shop, Projects, Trip (F18, F19) + Battle panel
 view.act = 'clubs'; view.shop = 'All';
-const ACT_TABS = [['clubs', 'Clubs'], ['competition', 'Competition', 'competition', ['competition']], ['shop', 'Shop'], ['projects', 'Projects', 'projects', ['projects']], ['trip', 'Trips', 'trip', ['trip']]];
+const ACT_TABS = [['clubs', 'Clubs'], ['practice', 'Practice', '', ['proficiency']], ['competition', 'Competition', 'competition', ['competition']], ['shop', 'Shop'], ['projects', 'Projects', 'projects', ['projects']], ['trip', 'Trips', 'trip', ['trip']]];
+const practicePlaces = S => [...new Set((DATA.practice || []).map(a => a.loc))].filter(id => {
+  const l = DATA.locs[id]; return l && ((S.$ui || {}).discovered || []).some(n => normPlace(n) === normPlace(l.name));
+});
 const ROLES5 = ['Attack', 'Defense', 'Healing', 'Support', 'Control'];
 const COMP_TIERS = [
   ['Dorm', 'Dorm Competition', 'Solo, open to the whole dorm, run as a ranking tournament so everyone finishes with a placement. The top 16 of each dorm qualify.'],
@@ -20,9 +23,9 @@ PANELS.activities = {
   live: true,
   render(S) {
     if (view.arg && ACT_TABS.some(t => t[0] === view.arg)) { view.act = view.arg; view.arg = ''; }
-    const tabs = ACT_TABS.filter(t => unlockedTab(S, t) && (t[0] !== 'shop' || shopsHere(S).length));
+    const tabs = ACT_TABS.filter(t => unlockedTab(S, t) && (t[0] !== 'shop' || shopsHere(S).length) && (t[0] !== 'practice' || practicePlaces(S).length));
     if (!tabs.some(t => t[0] === view.act)) view.act = 'clubs';
-    const body = ({ clubs: acClubs, competition: acCompetition, shop: acShop, projects: acProjects, trip: acTrip })[view.act](S);
+    const body = ({ clubs: acClubs, practice: acPractice, competition: acCompetition, shop: acShop, projects: acProjects, trip: acTrip })[view.act](S);
     return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>Activities</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
       <nav class="nav">${tabs.map(([id, l]) => `<button data-actab="${id}" class="${view.act === id ? 'on' : ''}">${l}${isNew(`tab:activities:${id}`, view.act === id) && view.act !== id ? newsDot() : ''}</button>`).join('')}</nav><div class="bd">${body}</div></div>`;
   },
@@ -33,6 +36,21 @@ PANELS.activities = {
     if (b.dataset.fill) fillChat(b.dataset.fill);
   },
 };
+
+function acPractice(S) {
+  const places = practicePlaces(S), here = locIdOf(S.World.Location), max = new Set((DATA.practice || []).map(a => a.loc)).size;
+  const card = (a, atHere) => {
+    const live = (((S.$ui || {}).practice || []).find(x => x.action === a.action) || {}), locked = atHere ? live.locked : '';
+    const stat = a.stat === 'subject' ? 'subject you choose' : a.stat;
+    const hint = [a.partner ? 'Needs company' : '', a.club ? 'Needs: ' + a.club + ' Club' : '', a.cost ? `${a.cost} points` : '', locked ? 'Needs: ' + locked : ''].filter(Boolean).join(' · ');
+    const fill = a.stat === 'subject' ? `I spend an hour at ${DATA.locs[a.loc].name} on [subject]: ` : a.partner ? `I ask [name] to join me at ${DATA.locs[a.loc].name} and ${a.action.toLowerCase()}: ` : `I spend an hour at ${DATA.locs[a.loc].name} and ${a.action.toLowerCase()}: `;
+    return `<div class="item"><div class="row"><span class="t">${esc(a.action)}</span><span class="pill">${esc(stat)} +${a.xp}</span></div>${hint ? `<div class="sub">${esc(hint)}</div>` : ''}<div class="meta">${atHere ? `<button class="btn sm" data-fill="${esc(fill)}" ${locked ? 'disabled' : ''}>Practise</button>` : `<button class="btn sm" data-go="${esc(a.loc)}">Go</button>`}</div></div>`;
+  };
+  const acts = id => (DATA.practice || []).filter(a => a.loc === id);
+  const hereBlock = places.includes(here) ? acts(here).map(a => card(a, true)).join('') : '<div class="empty">No practice action at this place.</div>';
+  const others = places.filter(id => id !== here).map(id => `<h3>${esc(DATA.locs[id].name)}${isNew(`act:${id}`, true) ? newsDot() : ''}</h3>${acts(id).map(a => card(a, false)).join('')}`).join('');
+  return `<p class="lead">Places where you can put in practice. Each session raises a proficiency, up to a weekly limit.</p><h3>Here${places.includes(here) && isNew(`act:${here}`, true) ? newsDot() : ''}</h3>${hereBlock}<h3>Elsewhere</h3>${others || '<div class="empty">No other place discovered yet.</div>'}<p class="hint">${Math.max(0,max-places.length)} more places to find.</p>`;
+}
 
 // ---------------------------------------------------------------- clubs
 function acClubs(S) {

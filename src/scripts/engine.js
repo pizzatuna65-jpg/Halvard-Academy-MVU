@@ -73,14 +73,20 @@ const PAYOUT = [[1, 3000], [3, 2000], [10, 1200], [25, 800], [50, 500], [Infinit
 // 1.15.0 (owner-approved planning/DRAFT_grades_exams.md): the engine marks every subject at each exam. Midterm slots from lore 232
 // ([day, from, to] in minutes; Creature Studies sits no midterm and is marked on fieldwork); finals are one run on a seeded day.
 const SUBJECTS = ['Magic Theory', 'History', 'Etiquette', 'Potion Crafting', 'Dark Magic Defense', 'Combat', 'Creature Studies'];
+const PROF = ['Knowledge', 'Arcana', 'Craft', 'Prowess', 'Society', 'Nature'];
+const PROF_CUT = [0, 10, 30, 60, 100, 150];
+const PROF_NAMES = { Knowledge: ['Everyday knowledge','Knows the basics','Well read','Learned','Erudite','Encyclopaedic'], Arcana: ['Everyday casting','Follows the proofs','Spell-literate','Pattern reader','Ward-wise','Arcane scholar'], Craft: ['Everyday hands','Follows the recipe','Steady hand','Skilled hands','Artisan',"Master's hand"], Prowess: ['Everyday fitness','Holds a stance','Quick on the feet','Seasoned','Duellist','Formidable'], Society: ['Everyday manners','Minds the forms','Poised','Gracious','Well connected','Consummate'], Nature: ['Everyday outdoors','Knows the signs','Calm hand','Trail-wise','Wild-wise','Kin to the wild'] };
+const SUBJECT_STAT = { History: 'Knowledge', 'Magic Theory': 'Arcana', 'Dark Magic Defense': 'Arcana', 'Potion Crafting': 'Craft', Combat: 'Prowess', Etiquette: 'Society', 'Creature Studies': 'Nature' };
+const PROF_FIELD = { Knowledge: 'history, sciences, numbers, geography, nations, languages, records and puzzles', Arcana: 'magic, curses, wards, traps and precise spellwork', Craft: 'making, brewing, mending, cooking and handiwork', Prowess: 'duels, sport, climbing, running and strength', Society: 'formal dealings, manners, bargaining, performance and reading a room', Nature: 'beasts, plants, weather, tracks and the outdoors' };
+const CLUB_STATS = {"Prowess":["Magic Duelling","Soccer","Running","Archery","Swimming","Gymnastics","Basketball","Walking"],"Nature":["Beast Handling","Gardening","Fishing","Groundskeeping"],"Craft":["Alchemy","Brewing","Smithing","Tailoring","Cooking","Drawing","Calligraphy"],"Society":["Music","Tea","Theatre","Card","Board Game","Festival Committee","Student Council","Medical Centre Volunteers"],"Arcana":["Warding Study","Divination","Specialized Magic"],"Knowledge":["Library Assistants","Newspaper"]};
+const CLUB_MEMBERS = {"Academy Newspaper":["Castor","Linus"],"Alchemy Circle":["Royhan"],"Archery Club":[],"Basketball Club":[],"Beast Handling Club":["Lenna"],"Board Game Club":["Gareth"],"Brewing Club":[],"Calligraphy Club":[],"Card Club":["Aiden"],"Cooking Club":["Nerys"],"Divination Society":["Kanae"],"Drawing Club":["Alyssa"],"Festival Committee":["Caspian"],"Fishing Club":["Ottavio","Wren"],"Gardening Club":["Idris","Maple"],"Groundskeeping":[],"Gymnastics Club":[],"Library Assistants":["Irene","Tilly"],"Magic Duelling Club":["Sophia","Tsubaki"],"Medical Centre Volunteers":[],"Music Club":["Caralynn","Ruby"],"Running Club":["Saffi"],"Smithing Club":["Vera"],"Soccer Club":["Percival"],"Specialized Magic Club":["Hadrian"],"Student Council":["Dante","Florian"],"Swimming Club":[],"Tailoring Club":["Zara"],"Tea Club":[],"Theatre Troupe":["Trixie","Ezrel"],"Walking Club":[],"Warding Study Group":[]};
+const PRACTICE = [{"loc":"potion_halls","action":"Brew a potion","stat":"Craft","xp":2,"afterClass":true,"until":1200,"dorm":true,"name":"Potion Halls"},{"loc":"potion_halls","action":"Reagent drill","stat":"Craft","xp":1,"name":"Potion Halls"},{"loc":"main_library","action":"Study a subject","stat":"subject","xp":2,"study":true,"name":"Main Library"},{"loc":"study_rooms","action":"Group study","stat":"subject","xp":2,"partner":true,"study":true,"name":"Study Rooms"},{"loc":"archive","action":"Dig through the records","stat":"Knowledge","xp":2,"name":"Archive"},{"loc":"seminar_rooms","action":"Practise wards and counter-curses","stat":"Arcana","xp":2,"afterClass":true,"name":"Seminar Rooms"},{"loc":"observation_tower","action":"Chart the stars","stat":"Arcana","xp":2,"night":true,"clear":true,"name":"Observation Tower"},{"loc":"meditation_rooms_spirit_house","action":"Will-focus meditation","stat":"Arcana","xp":1,"partner":true,"train":"mana","name":"Meditation Rooms / Spirit House"},{"loc":"club_rooms","action":"Specialized Magic practice","stat":"Arcana","xp":2,"club":"Specialized Magic","name":"Club Rooms"},{"loc":"combat_grounds","action":"Drill","stat":"Prowess","xp":1,"dorm":true,"train":"stamina","name":"Combat Grounds"},{"loc":"combat_grounds","action":"Spar with a partner","stat":"Prowess","xp":2,"dorm":true,"partner":true,"name":"Combat Grounds"},{"loc":"sparring_pavilion","action":"Take a challenge from the board","stat":"Prowess","xp":3,"club":"Magic Duelling","name":"The Sparring Pavilion"},{"loc":"gymnasium","action":"Train","stat":"Prowess","xp":1,"train":"stamina","name":"Gymnasium"},{"loc":"sports_field","action":"Train","stat":"Prowess","xp":1,"train":"stamina","name":"Sports Field"},{"loc":"archery_range","action":"Train","stat":"Prowess","xp":1,"train":"stamina","name":"Archery Range"},{"loc":"swimming_pool","action":"Train","stat":"Prowess","xp":1,"train":"stamina","name":"Swimming Pool"},{"loc":"gardens","action":"Tend the reagent beds","stat":"Nature","xp":1,"daylight":true,"club":"Gardening","name":"Gardens"},{"loc":"menagerie","action":"Help with the animals","stat":"Nature","xp":2,"daylight":true,"partner":true,"name":"Menagerie"},{"loc":"menagerie","action":"Muck out the pens (paid)","stat":"Nature","xp":1,"paid":40,"name":"Menagerie"},{"loc":"forest","action":"Fieldwork: tracks and signs","stat":"Nature","xp":2,"daylight":true,"name":"Forest"},{"loc":"forest","action":"Forage","stat":"Nature","xp":1,"seasons":["Spring","Autumn"],"name":"Forest"},{"loc":"forest_clearing","action":"Gather clearing blooms","stat":"Nature","xp":1,"name":"Forest Clearing"},{"loc":"fishing_house","action":"Fish the pond or the lake","stat":"Nature","xp":1,"club":"Fishing","name":"Fishing House"},{"loc":"mall","action":"Dance and deportment","stat":"Society","xp":2,"cost":15,"name":"The Mall"},{"loc":"mall","action":"Music practice","stat":"Society","xp":2,"cost":15,"name":"The Mall"},{"loc":"common_rooms","action":"Practise forms of address","stat":"Society","xp":1,"partner":true,"name":"Common Rooms"},{"loc":"club_rooms","action":"Music, Tea, Theatre practice","stat":"Society","xp":2,"clubAny":["Music","Tea","Theatre"],"name":"Club Rooms"},{"loc":"club_rooms","action":"Drawing, Calligraphy, Tailoring practice","stat":"Craft","xp":2,"clubAny":["Drawing","Calligraphy","Tailoring"],"name":"Club Rooms"},{"loc":"workshop","action":"Runes and talismans","stat":"Craft","xp":2,"name":"Workshop"},{"loc":"workshop","action":"Enchant or repair","stat":"Craft","xp":2,"name":"Workshop"},{"loc":"workshop","action":"Smithing","stat":"Craft","xp":2,"club":"Smithing","name":"Workshop"},{"loc":"workshop","action":"Tailoring","stat":"Craft","xp":2,"club":"Tailoring","name":"Workshop"},{"loc":"canteen","action":"Cook or bake","stat":"Craft","xp":2,"club":"Cooking","name":"Canteen"},{"loc":"common_rooms","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Common Rooms"},{"loc":"courtyards","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Courtyards"},{"loc":"gardens","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Gardens"},{"loc":"fire_dormitory","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Fire Dormitory"},{"loc":"light_dormitory","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Light Dormitory"},{"loc":"sky_dormitory","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Sky Dormitory"},{"loc":"viridian_dormitory","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Viridian Dormitory"}];
 const MARKS = ['F', 'D', 'C', 'B', 'A'];
 const MID_SLOTS = { 'Magic Theory': [0, 480, 600], Etiquette: [0, 600, 720], History: [1, 480, 600], 'Potion Crafting': [1, 780, 960],
   'Dark Magic Defense': [2, 480, 960], Combat: [3, 480, 960] };
 const PRACTICAL = ['Potion Crafting', 'Dark Magic Defense', 'Combat', 'Creature Studies'];
 // an A: +10 on a Fortune roll in the subject's field (rule 504 "specialty"), until the next exams
-const TOP_FIELD = { 'Magic Theory': 'analysing or unpicking unfamiliar magic', History: 'recognising old places, artefacts and symbols',
-  Etiquette: 'formal dealings with staff, nobles and envoys', 'Potion Crafting': 'brewing, or knowing a potion or poison',
-  'Dark Magic Defense': 'curses, wards and magical traps', Combat: 'duels and fights', 'Creature Studies': 'handling beasts' };
+const TOP_FIELD = Object.fromEntries(SUBJECTS.map(s => [s, PROF_FIELD[SUBJECT_STAT[s]]]));
 const TUTOR_PAY = 40, TUTOR_WEEK = 2, TRAIN_FOR_COMBAT = 6, ASSIGNMENT_MIN = 45;
 const subjectOf = t => { const x = String(t || '').trim().toLowerCase(); return x === 'dmd' ? 'Dark Magic Defense' : SUBJECTS.find(s => s.toLowerCase() === x) || ''; };
 const subjectIn = t => SUBJECTS.find(s => new RegExp(`\\b${s}\\b`, 'i').test(String(t || ''))) || (/\bDMD\b/.test(String(t || '')) ? 'Dark Magic Defense' : '');
@@ -98,7 +104,7 @@ const REP = {"reps":["Academy","Student","Doves"],"deeds":{"staff_job":["Academy
 const TRN = {"tracks":{"mana":{"label":"Mana pool","field":"Mana_max"},"stamina":{"label":"Stamina","field":"Stamina_max"}},"session_pct":1,"weekly_pct":2.5,"total_pct":100};
 const NPC_GROUP = {"Aiden":"student","Althair":"staff","Alyssa":"student","Baelin":"staff","Bellatrix":"rival","Bobby":"other","Bram":"rival","Caine":"other","Caralynn":"student","Caspian":"student","Cassius":"rival","Castor":"student","Dante":"student","Dex":"rival","Elion":"rival","Etnie":"student","Ezrel":"staff","Florian":"student","Gareth":"student","Gavlan":"staff","Hadrian":"student","Idris":"student","Ines":"rival","Irene":"student","Kanae":"student","Kira":"rival","Krieg":"other","Kuroo":"staff","Layla":"staff","Lenna":"student","Linus":"student","Lucius":"rival","Maple":"student","Milena":"other","Mimosa":"staff","Mirelle":"rival","Morgana":"rival","Nerys":"student","Ottavio":"staff","Percival":"student","Pip":"rival","Rei":"staff","Royhan":"student","Ruby":"student","Saffi":"student","Sophia":"student","Theodore":"rival","Tilly":"student","Tristan":"other","Trixie":"student","Tsubaki":"student","Vallie":"staff","Vera":"student","Wren":"student","Yvette":"staff","Zara":"student"};
 // 1.3.1 (owner playtest): player settings for training and reputation (data/tuning.json rows; values in $ui.tune, else the default)
-const TUNING = [{"id":"trn_session","opts":[[0.5,"0.5%"],[1,"1%"],[2,"2%"],[3,"3%"]],"def":1},{"id":"trn_week","opts":[[1.5,"1.5%"],[2.5,"2.5%"],[5,"5%"],[0,"No limit"]],"def":2.5},{"id":"trn_total","opts":[[50,"+50%"],[100,"+100% (twice the start)"],[200,"+200%"],[0,"No limit"]],"def":100},{"id":"rep_mult","opts":[[0.5,"Slow (x0.5)"],[1,"Standard"],[1.5,"Fast (x1.5)"],[2,"Very fast (x2)"]],"def":1},{"id":"rep_week","opts":[[3,"+3"],[5,"+5"],[10,"+10"],[0,"No limit"]],"def":5},{"id":"rep_bond","opts":[[1,"Until +3"],[2,"Always"],[0,"Off"]],"def":1},{"id":"rep_tension","opts":[[1,"On"],[0,"Off"]],"def":1},{"id":"mood_xp","opts":[[0,"Off"],[1,"1 XP"],[2,"2 XP"]],"def":1},{"id":"mood_tension","opts":[[1,"×1 (no extra)"],[1.5,"×1.5"],[2,"×2"]],"def":1.5},{"id":"mood_apology","opts":[[1,"×1 (no extra)"],[1.5,"×1.5"],[2,"×2"]],"def":1.5},{"id":"tired_training","opts":[[1,"Full gain"],[0.5,"Half"],[0,"None"]],"def":0.5},{"id":"sleep_hour","opts":[[0.05,"5%"],[0.1,"10%"],[0.15,"15%"]],"def":0.1},{"id":"sleep_cap","opts":[[0.2,"20%"],[0.4,"40%"],[0.6,"60%"]],"def":0.4},{"id":"sleep_full","opts":[[4,"4 hours"],[6,"6 hours"],[8,"8 hours"]],"def":6},{"id":"gale_stamina","opts":[[0,"None"],[10,"10 per hour"],[15,"15 per hour"],[25,"25 per hour"]],"def":15},{"id":"mana_regen","opts":[[4,"4 hours"],[6,"6 hours"],[8,"8 hours"],[12,"12 hours"]],"def":6},{"id":"init_rate","opts":[[1,"Rare (at most once a week)"],[2,"Normal (at most twice a week)"],[3,"Often (at most four times a week)"]],"def":2},{"id":"gossip_life","opts":[[10,"10 days"],[21,"3 weeks"],[42,"6 weeks"]],"def":21},{"id":"tension_fade","opts":[[0,"Never"],[0.5,"Slower (×0.5)"],[1,"Standard"],[2,"Faster (×2)"]],"def":1},{"id":"att_minutes","opts":[[20,"20 minutes"],[30,"30 minutes"],[45,"45 minutes"]],"def":30},{"id":"recap_mode","opts":[[1,"Only weeks where something changed"],[2,"Every week"]],"def":1},{"id":"scene_cap","opts":[[3,"3"],[4,"4"],[5,"5"],[6,"6"]],"def":4},{"id":"amb_freq","opts":[[1,"Rare"],[2,"Normal"],[3,"Often"]],"def":2},{"id":"study_tiers","opts":[[1,"Light: 2 / 6 / 12 / 20 h"],[2,"Standard: 4 / 10 / 18 / 28 h"],[3,"Demanding: 6 / 15 / 25 / 40 h"]],"def":2},{"id":"rank_move","opts":[[1,"At most one band"],[2,"At most two bands"]],"def":1},{"id":"fortune_band","opts":[[1,"Gentle: 1-10 fails, 11-35 partial"],[2,"Standard: 1-20 fails, 21-50 partial"],[3,"Harsh: 1-30 fails, 31-65 partial"]],"def":1}];
+const TUNING = [{"id":"prof_pace","opts":[[4,"Slow: 4"],[6,"Normal: 6"],[9,"Fast: 9"]],"def":6},{"id":"trn_session","opts":[[0.5,"0.5%"],[1,"1%"],[2,"2%"],[3,"3%"]],"def":1},{"id":"trn_week","opts":[[1.5,"1.5%"],[2.5,"2.5%"],[5,"5%"],[0,"No limit"]],"def":2.5},{"id":"trn_total","opts":[[50,"+50%"],[100,"+100% (twice the start)"],[200,"+200%"],[0,"No limit"]],"def":100},{"id":"rep_mult","opts":[[0.5,"Slow (x0.5)"],[1,"Standard"],[1.5,"Fast (x1.5)"],[2,"Very fast (x2)"]],"def":1},{"id":"rep_week","opts":[[3,"+3"],[5,"+5"],[10,"+10"],[0,"No limit"]],"def":5},{"id":"rep_bond","opts":[[1,"Until +3"],[2,"Always"],[0,"Off"]],"def":1},{"id":"rep_tension","opts":[[1,"On"],[0,"Off"]],"def":1},{"id":"mood_xp","opts":[[0,"Off"],[1,"1 XP"],[2,"2 XP"]],"def":1},{"id":"mood_tension","opts":[[1,"×1 (no extra)"],[1.5,"×1.5"],[2,"×2"]],"def":1.5},{"id":"mood_apology","opts":[[1,"×1 (no extra)"],[1.5,"×1.5"],[2,"×2"]],"def":1.5},{"id":"tired_training","opts":[[1,"Full gain"],[0.5,"Half"],[0,"None"]],"def":0.5},{"id":"sleep_hour","opts":[[0.05,"5%"],[0.1,"10%"],[0.15,"15%"]],"def":0.1},{"id":"sleep_cap","opts":[[0.2,"20%"],[0.4,"40%"],[0.6,"60%"]],"def":0.4},{"id":"sleep_full","opts":[[4,"4 hours"],[6,"6 hours"],[8,"8 hours"]],"def":6},{"id":"gale_stamina","opts":[[0,"None"],[10,"10 per hour"],[15,"15 per hour"],[25,"25 per hour"]],"def":15},{"id":"mana_regen","opts":[[4,"4 hours"],[6,"6 hours"],[8,"8 hours"],[12,"12 hours"]],"def":6},{"id":"init_rate","opts":[[1,"Rare (at most once a week)"],[2,"Normal (at most twice a week)"],[3,"Often (at most four times a week)"]],"def":2},{"id":"gossip_life","opts":[[10,"10 days"],[21,"3 weeks"],[42,"6 weeks"]],"def":21},{"id":"tension_fade","opts":[[0,"Never"],[0.5,"Slower (×0.5)"],[1,"Standard"],[2,"Faster (×2)"]],"def":1},{"id":"att_minutes","opts":[[20,"20 minutes"],[30,"30 minutes"],[45,"45 minutes"]],"def":30},{"id":"recap_mode","opts":[[1,"Only weeks where something changed"],[2,"Every week"]],"def":1},{"id":"scene_cap","opts":[[3,"3"],[4,"4"],[5,"5"],[6,"6"]],"def":4},{"id":"amb_freq","opts":[[1,"Rare"],[2,"Normal"],[3,"Often"]],"def":2},{"id":"study_tiers","opts":[[1,"Light: 2 / 6 / 12 / 20 h"],[2,"Standard: 4 / 10 / 18 / 28 h"],[3,"Demanding: 6 / 15 / 25 / 40 h"]],"def":2},{"id":"rank_move","opts":[[1,"At most one band"],[2,"At most two bands"]],"def":1},{"id":"fortune_band","opts":[[1,"Gentle: 1-10 fails, 11-35 partial"],[2,"Standard: 1-20 fails, 21-50 partial"],[3,"Harsh: 1-30 fails, 31-65 partial"]],"def":1}];
 // 1.10.0 (FP7): lessons with venues per weekday period, teachers ([subject, year]; year 0 = every year), club venues (tools/common.py)
 const CLASS = {"tt":{"Mon":[["Magic Theory","M",["lecture halls"],"class"],["History","M",["lecture halls"],"class"],["Combat","D",["combat grounds"],"class"]],"Tue":[["Dark Magic Defense","D",["lecture halls"],"class"],["Magic Theory","D",["lecture halls"],"class"],["Potion Crafting","M",["potion halls"],"class"]],"Wed":[["Etiquette","M",["lecture halls"],"class"],["Dark Magic Defense","M",["lecture halls"],"class"],["Creature Studies","M",["menagerie","forest"],"class"]],"Thu":[["History","M",["lecture halls"],"class"],["Magic Theory","D",["lecture halls"],"class"],["Combat","D",["combat grounds"],"class"]],"Fri":[["Magic Theory","M",["lecture halls"],"class"],["Etiquette","M",["lecture halls"],"class"],["Dark Magic Defense","D",["combat grounds","seminar rooms"],"class"]],"Sat":[["Etiquette","M",["lecture halls"],"class"],["Study Hall","",["main library"],"study"],["Clubs","",[],"clubs"]]},"teach":{"Ezrel":[["Magic Theory",2]],"Gavlan":[["Combat",1]],"Kuroo":[["Etiquette",1]],"Layla":[["History",1]],"Milena":[["Dark Magic Defense",0]],"Mimosa":[["Potion Crafting",1]],"Ottavio":[["Etiquette",3]],"Vallie":[["Creature Studies",1]],"Yvette":[["Magic Theory",1]]},"clubs":{"Academy Newspaper":["announcement room"],"Alchemy Circle":["potion halls"],"Archery Club":["archery range"],"Basketball Club":["gymnasium"],"Beast Handling Club":["menagerie"],"Board Game Club":["club rooms"],"Brewing Club":["potion halls"],"Calligraphy Club":["club rooms"],"Card Club":["club rooms"],"Cooking Club":["canteen"],"Divination Society":["observation tower"],"Drawing Club":["club rooms"],"Festival Committee":["student council chamber"],"Fishing Club":["fishing house"],"Gardening Club":["gardens"],"Groundskeeping":["groundskeeper's lodge"],"Gymnastics Club":["gymnasium"],"Library Assistants":["main library"],"Magic Duelling Club":["combat grounds","sparring pavilion"],"Medical Centre Volunteers":["medical centre"],"Music Club":["club rooms"],"Running Club":["sports field"],"Smithing Club":["workshop"],"Soccer Club":["sports field"],"Specialized Magic Club":["club rooms"],"Student Council":["student council chamber"],"Swimming Club":["gymnasium","swimming pool"],"Tailoring Club":["club rooms"],"Tea Club":["club rooms"],"Theatre Troupe":["club rooms"],"Walking Club":["grassy field and hills"],"Warding Study Group":["seminar rooms"]},"calias":{"newspaper":"Academy Newspaper","alchemy":"Alchemy Circle","archery":"Archery Club","basketball":"Basketball Club","beast handling":"Beast Handling Club","board game":"Board Game Club","brewing":"Brewing Club","calligraphy":"Calligraphy Club","card":"Card Club","cooking":"Cooking Club","divination":"Divination Society","drawing":"Drawing Club","festival committee":"Festival Committee","fishing":"Fishing Club","gardening":"Gardening Club","groundskeeping":"Groundskeeping","gymnastics":"Gymnastics Club","library assistants":"Library Assistants","magic duelling club":"Magic Duelling Club","medical centre volunteers":"Medical Centre Volunteers","music":"Music Club","running":"Running Club","smithing":"Smithing Club","soccer":"Soccer Club","specialized magic":"Specialized Magic Club","student council":"Student Council","swimming":"Swimming Club","tailoring":"Tailoring Club","tea":"Tea Club","theatre":"Theatre Troupe","walking":"Walking Club","warding study":"Warding Study Group"}};
 // 1.10.2 (FP11): why an NPC seeks {{user}} out: templates per Tension category, each NPC's category and club (data/initiative_asks.json)
@@ -517,7 +523,7 @@ const COND = {
   'Head cold': 'Stuffy and slow: stamina capped at 80% of max until it passes or the Medical Centre treats it.',
 };
 // ---- 1.1.0 Features settings (spec §9): which state each feature parks when it is off (data/features.json, injected) ----
-const FEATURES = [{"id":"planner","control":"toggle","paths":["Commitments"],"unlock":"planner"},{"id":"notices","control":"toggle","paths":["Notices"],"unlock":"notices"},{"id":"letters","control":"toggle","paths":["Letters"],"unlock":"letters"},{"id":"mystery","control":"toggle","paths":["Clues","Mysteries"],"unlock":"mystery"},{"id":"competition","control":"toggle","paths":["Competition"],"unlock":"competition"},{"id":"projects","control":"toggle","paths":["Projects"],"unlock":"projects"},{"id":"trip","control":"toggle","paths":["Trip"],"unlock":"trip"},{"id":"battle","control":"toggle","paths":["Battle"],"unlock":"battle"},{"id":"inventory","control":"toggle","paths":["Inventory"],"unlock":"inventory"},{"id":"happenings","control":"levels","field":"happenings"},{"id":"npc_initiative","control":"toggle"},{"id":"weather","control":"levels","field":"wxfx","paths":["Player.Conditions"],"unlock":"conditions"},{"id":"class","control":"toggle"},{"id":"hooks","control":"toggle","paths":["Hooks"]},{"id":"gossip","control":"toggle"},{"id":"fortune","control":"toggle"},{"id":"attendance","control":"toggle"},{"id":"recap","control":"toggle"},{"id":"small_scenes","control":"toggle"},{"id":"ambience","control":"levels","field":"ambience"},{"id":"reminders","control":"toggle"},{"id":"study","control":"toggle"}];
+const FEATURES = [{"id":"proficiency","control":"toggle","paths":["Player._Proficiency","$eng.prof"]},{"id":"planner","control":"toggle","paths":["Commitments"],"unlock":"planner"},{"id":"notices","control":"toggle","paths":["Notices"],"unlock":"notices"},{"id":"letters","control":"toggle","paths":["Letters"],"unlock":"letters"},{"id":"mystery","control":"toggle","paths":["Clues","Mysteries"],"unlock":"mystery"},{"id":"competition","control":"toggle","paths":["Competition"],"unlock":"competition"},{"id":"projects","control":"toggle","paths":["Projects"],"unlock":"projects"},{"id":"trip","control":"toggle","paths":["Trip"],"unlock":"trip"},{"id":"battle","control":"toggle","paths":["Battle"],"unlock":"battle"},{"id":"inventory","control":"toggle","paths":["Inventory"],"unlock":"inventory"},{"id":"happenings","control":"levels","field":"happenings"},{"id":"npc_initiative","control":"toggle"},{"id":"weather","control":"levels","field":"wxfx","paths":["Player.Conditions"],"unlock":"conditions"},{"id":"class","control":"toggle"},{"id":"hooks","control":"toggle","paths":["Hooks"]},{"id":"gossip","control":"toggle"},{"id":"fortune","control":"toggle"},{"id":"attendance","control":"toggle"},{"id":"recap","control":"toggle"},{"id":"small_scenes","control":"toggle"},{"id":"ambience","control":"levels","field":"ambience"},{"id":"reminders","control":"toggle"},{"id":"study","control":"toggle"}];
 const EMPTY = { Commitments: {}, Notices: {}, Letters: {}, Clues: {}, Mysteries: {}, Projects: {}, Inventory: {}, Hooks: {}, 'Player.Conditions': {},
   Competition: { Tier: '', Status: '', Placement: '', Team: [], Results: [] }, Trip: { Active: false, Destination: '', Companions: [], Note: '' },
   Battle: { Active: false, Combatants: {} } };
@@ -538,7 +544,7 @@ const CAP_HOOKS = 15, CAP_BAG = 40, BOTTLE_BACK = 2;
 // Fill missing containers with their empty shape; existing values are never touched. Arrays are only set when missing.
 const SHAPE = {
   Scene: { Present: {} },
-  Player: { Profile: { Reputation: {} }, Vitals: {}, Injuries: {}, Wallet: { Points: 0, Coin: 0, Transactions: [] }, Academics: { Grades: {}, Exams: {} }, Conditions: {} },
+  Player: { Profile: { Reputation: {} }, Vitals: {}, Injuries: {}, Wallet: { Points: 0, Coin: 0, Transactions: [] }, Academics: { Grades: {}, Exams: {} }, _Proficiency: {}, Conditions: {} },
   Magic: { _Techniques: {}, _Affinity: { Types: [], Dominant: '', Specialties: [], Preset: '' }, Active: {}, Casts: [], Pacts: {} },
   Hidden: { _True_magic: '', Known_by: [], Dove_attention: 0 },
   Bonds: {}, Campus_State: { Entrance_tour: { Year: 0, Guide: '', FirstYears: [] }, Council: { Candidates: { '1': { First: 'Florian', Second: 'Dante' } }, Results: {}, President: 'Irene', VicePresident: 'Caspian', PresidentElect: '', VicePresidentElect: '' }, Events: {}, Rumours: [], Location_changes: {}, NPC_status: {}, New_relations: {}, Secrets_revealed: [], Graduated: [] },
@@ -547,7 +553,7 @@ const SHAPE = {
   Trip: { Active: false, Destination: '', Companions: [], Note: '' }, Battle: { Active: false, Combatants: {} }, _Log: [],
   Inventory: {}, Hooks: {},   // 1.1.0
   Extras: {},   // 1.6.1
-  _Perks: {}, Rep_events: [], Training: [], Perk_use: [],   // 1.3.0
+  _Perks: {}, Rep_events: [], Training: [], Practice: [], Perk_use: [],   // 1.3.0 / 1.27.0
   Exam_events: [], Tutoring: [],   // 1.15.0
 };
 function fillShape(o, shape) {
@@ -677,7 +683,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.25.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.27.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
 // from the shared context c (the states, the reply's text and the values earlier steps computed) and adds what later steps use.
@@ -710,6 +716,19 @@ function stepMigrate(c) {
   const { S, hasB, log } = c;
   if (c.fromVer === ENGINE_VER) return;
   const B = c.B = hasB ? _.cloneDeep(c.B) : c.B, both = hasB ? [S, B] : [S];
+  // 1.26.0: old chats keep their history. A small class allowance recognises weeks already played;
+  // the one-time Studies offer lets the player choose a different starting history.
+  if (S.$eng.profv !== 1 && hasB) {
+    const weeks = Math.min(14, Math.floor(Math.max(0, num((B.$eng || {}).abs, 0)) / (7 * DAY_MIN)));
+    const xp = Math.min(29, weeks * 2);
+    for (const X of both) {
+      X.Player._Proficiency = Object.fromEntries(PROF.map(k => [k, xp >= 10 ? 1 : 0]));
+      X.$eng.prof = { xp: Object.fromEntries(PROF.map(k => [k, xp])), wk: { w: -1 }, days: {}, picked: false };
+      X.$eng.profv = 1;
+    }
+    S.$ui.prof_offer = true;
+    log.push('Proficiency was estimated from weeks already played; Studies offers a one-time choice of starting ranks.');
+  }
   for (const X of both) {
     const P = X._Perks;
     if (!_.isPlainObject(P)) continue;
@@ -752,7 +771,7 @@ function stepGuards(c) {
   const { S, B, text, log, hasB } = c;
   const byBuilder = S.$eng.auth === 'builder';
   if (hasB && !byBuilder) {
-    const keep = [['Magic', '_Techniques'], ['Magic', '_Affinity'], ['Hidden', '_True_magic'], ['$ui', 'built'], ['$ui', 'file'], ['_Perks']];
+    const keep = [['Magic', '_Techniques'], ['Magic', '_Affinity'], ['Hidden', '_True_magic'], ['Player', '_Proficiency'], ['$ui', 'built'], ['$ui', 'file'], ['_Perks']];
     for (const path of keep) {
       const was = _.get(B, path);
       if (was !== undefined && !_.isEqual(_.get(S, path), was)) { _.set(S, path, _.cloneDeep(was)); log.push(`${path.join('.')} is read-only; the change was reverted.`); }
@@ -861,6 +880,7 @@ function stepFeatures(c) {
     used: (Array.isArray(S.Consumables) ? S.Consumables : []).map(x => String(x).trim().toLowerCase()),
     perks: (Array.isArray(S.Perk_use) ? S.Perk_use : []).map(x => String(x).trim().toLowerCase()),
     training: Array.isArray(S.Training) ? S.Training.length : 0,
+    tutoring: Array.isArray(S.Tutoring) ? S.Tutoring.map(x => x.Subject) : [],
   };
   Object.assign(c, { OFF, offUnlock, staleDrop, REPORTED, B });
 }
@@ -1125,6 +1145,7 @@ function stepMagic(c) {
       } else P.Summoned = true;
     }
   }
+  const profContext = c;
   for (const c of M.Casts || []) {
     const t = T[c.Technique];
     if (!t) { log.push(`Unknown technique "${c.Technique}" was reported; nothing was charged.`); continue; }
@@ -1139,7 +1160,7 @@ function stepMagic(c) {
     const unit = t.Cost_mode === 'hybrid' && t.Trigger > 0 && running ? t.Trigger : (t.Activation || 0);
     const cost = windCost(t, unit * (c.Times || 1), c.Technique);
     if (cost > V.Mana + regenLeft) { log.push(`${c.Technique} needed ${cost} mana but only ${Math.floor(V.Mana + regenLeft)} was left: the casting strained or failed (mana now 0).`); V.Mana = 0; regenLeft = 0; }
-    else payMana(cost);
+    else { payMana(cost); profContext.profCast = true; }
   }
   M.Casts = [];
 
@@ -1668,11 +1689,13 @@ function stepSchoolWeek(c) {
       }
       // paid tutoring (lore 221) in a subject whose latest mark is an A: two sessions a week, each also a Notice Board request
       const TW = ST.tw && ST.tw.w === weekNo ? ST.tw : (ST.tw = { w: weekNo, n: 0 });
+      c.profTutoring = [];
       for (const t of (Array.isArray(S.Tutoring) ? S.Tutoring : [])) {
         const s = subjectOf(t.Subject);
         if (!s || num(ST.stand[s], -1) < 4) { log.push(`Tutoring ${s || t.Subject}: paid tutoring needs an A in that subject at the latest exams; nothing was paid.`); continue; }
         if (TW.n >= TUTOR_WEEK) { log.push(`Tutoring: ${TUTOR_WEEK} paid sessions already this week; no pay for another.`); continue; }
         TW.n++;
+        c.profTutoring.push(s);
         S.Player.Wallet.Points = num(S.Player.Wallet.Points, 0) + TUTOR_PAY;
         S.Player.Wallet.Transactions.push(`+${TUTOR_PAY} tutoring (${s}${t.Student ? ', ' + t.Student : ''})`);
         repAdd('Student', 2, `tutoring in ${s}`, 'week');
@@ -1688,7 +1711,13 @@ function stepSchoolWeek(c) {
         const di = DAYS.indexOf(Wn.Day), today = SUBJECTS.filter(s => (nx.fin ? run.d === di : (MID_SLOTS[s] || [])[0] === di));
         S.$ui.exam = { tier: TIERS[tierOf()], h: Math.round(num(ST.mins, 0) / 60), run: S.$ui.grades.run, today: today.map(s => ({ s, mark: MARKS[fc.marks[s]], why: fc.why[s].slice(1).join('; ') })) };
       }
-      if (S.$ui.fortune && Array.isArray(S.$ui.fortune.mods)) for (const s of SUBJECTS) if (num(ST.stand[s], -1) === 4) S.$ui.fortune.mods.push(`top mark in ${s}: ${TOP_FIELD[s]} +10`);
+      if (S.$ui.fortune && Array.isArray(S.$ui.fortune.mods)) {
+        const fields = new Set();
+        for (const s of SUBJECTS) if (num(ST.stand[s], -1) === 4 && !fields.has(SUBJECT_STAT[s])) {
+          S.$ui.fortune.mods.push(`top mark in ${s}: ${TOP_FIELD[s]} +10`);
+          fields.add(SUBJECT_STAT[s]);
+        }
+      }
     }
     S.Exam_events = []; S.Tutoring = [];
     // FP12: on a day with nothing on the calendar, at most TU.scene_cap people with {{user}}; one more takes their leave
@@ -1951,7 +1980,8 @@ function stepBonds(c) {
         if ((d[socialKind] || 0) >= BR.per_day[socialKind]) continue;
         d[socialKind] = (d[socialKind] || 0) + 1;
         const studyBonus = k === 'study' && b.Rank >= 4 && (RANK4_PARTNERS[id] || []).includes('study') && S.Scene.Present[id] && !npcAway(id);
-        gain += Math.round(Math.max(0, BR.kind_xp[socialKind] + repMod(id) + examMod(id) + socialMod) * (birthday ? BR.birthday.social_mult : 1) * (studyBonus ? 1.25 : 1));
+        const society = OFF.has('proficiency') ? 0 : num(S.Player._Proficiency.Society, 0);
+        gain += Math.round(Math.max(0, BR.kind_xp[socialKind] + repMod(id) + examMod(id) + socialMod) * (birthday ? BR.birthday.social_mult : 1) * (studyBonus ? 1.25 : 1) * (society >= 5 ? 1.2 : society >= 4 ? 1.1 : 1));
         if (socialKind === 'hangout' && a.Invited && b.Rank >= 2 && S.Scene.Present[id] && !npcAway(id) && !w.invited) { gain++; w.invited = 1; }
       } else if (k === 'gift') {
         const gk = giftTier(id, a.Item, a.Gift), firstBirthday = birthday && !d.birthdayGift;
@@ -2300,6 +2330,170 @@ function stepTraining(c) {
       else log.push(lim && T.gain >= lim ? `Training: ${lab} has reached its limit (+${TU.trn_total}% of the starting value); training keeps {{user}} in shape but adds no more.` : `Training: ${lab} already gained all it can this week.`);
     }
     S.Training = [];
+  }
+}
+
+// 1.26–1.27: six broad abilities. Only this step writes ranks and XP. A practice report is
+// checked against both ends of the move, the actual elapsed time and the week's limits.
+function stepProficiency(c) {
+  const { S, B, log, jnl, hasB, byBuilder, OFF, REPORTED, elapsed, absB, absA, dayNo, weekNo, TU } = c;
+  const reports = Array.isArray(S.Practice) ? S.Practice : [];
+  S.Practice = [];
+  S.$ui.practice = [];
+  if (OFF.has('proficiency')) return;
+  const ranks = S.Player._Proficiency || (S.Player._Proficiency = {});
+  let P = S.$eng.prof;
+  if (!_.isPlainObject(P)) P = S.$eng.prof = { xp: {}, wk: { w: -1 }, days: {}, picked: false };
+  S.$eng.profv = 1;
+  if (!_.isPlainObject(P.xp)) P.xp = {};
+  if (!_.isPlainObject(P.days)) P.days = {};
+  for (const k of PROF) {
+    const old = hasB ? num((((B.Player || {})._Proficiency || {})[k]), 0) : 0;
+    const selected = _.clamp(Math.round(num(ranks[k], 0)), 0, 5);
+    if (byBuilder && selected !== old) P.xp[k] = PROF_CUT[selected];
+    else if (!Number.isFinite(Number(P.xp[k]))) P.xp[k] = PROF_CUT[old];
+    P.xp[k] = _.clamp(Math.round(num(P.xp[k], 0)), 0, 150);
+    ranks[k] = PROF_CUT.filter(x => P.xp[k] >= x).length - 1;
+  }
+  if (byBuilder) { P.picked = true; S.$ui.prof_offer = false; }
+  const oldWeek = _.isPlainObject(P.wk) ? P.wk : { w: -1 };
+  const gain = (k, amount, why, capped = true) => {
+    if (!PROF.includes(k) || amount <= 0) return 0;
+    const room = capped ? Math.max(0, TU.prof_pace - num(P.wk[k], 0)) : amount;
+    const add = Math.min(amount, room, 150 - P.xp[k]);
+    if (add <= 0) return 0;
+    P.xp[k] += add;
+    if (capped) P.wk[k] = num(P.wk[k], 0) + add;
+    const rank = PROF_CUT.filter(x => P.xp[k] >= x).length - 1;
+    if (rank > ranks[k]) {
+      ranks[k] = rank;
+      const line = `${k} reached Rank ${rank} (${PROF_NAMES[k][rank]}).`;
+      jnl.push(line); S.$ui.toasts.push(`${k}: ${PROF_NAMES[k][rank]} (Rank ${rank})`);
+    }
+    log.push(`${k} proficiency +${add} (${why}); ${P.xp[k]}/150 XP.`);
+    return add;
+  };
+  if (oldWeek.w !== weekNo) {
+    P.wk = { w: weekNo, classes: {}, missed: {}, paid: 0 };
+    if (oldWeek.w >= 0 && oldWeek.w === weekNo - 1)
+      for (const k of PROF) if (Object.values(oldWeek.classes || {}).some(s => SUBJECT_STAT[s] === k) && !Object.keys(oldWeek.missed || {}).some(s => SUBJECT_STAT[s] === k))
+        gain(k, 2, 'all attended classes last week', false);
+  }
+  // The attendance engine marks a skipped period in att.done. Count classes only after a
+  // whole period has elapsed; a short visit to a classroom cannot earn a week's allowance.
+  if (hasB && elapsed > 0 && elapsed <= 7 * DAY_MIN) for (let d = Math.floor(absB / DAY_MIN); d <= dayNo; d++) {
+    const W = fromAbs(d * DAY_MIN), row = CLASS.tt && CLASS.tt[W.Day];
+    if (!row || Math.floor(d / 7) !== weekNo) continue;
+    for (const [p, end] of [[0,600],[1,720],[2,960]]) {
+      const cell = row[p], key = `${d}:${p}`;
+      if (cell && cell[3] === 'class' && absB < d * DAY_MIN + end && absA >= d * DAY_MIN + end) {
+        if (((S.$eng.att || {}).done || {})[key]) P.wk.missed[cell[0]] = true;
+        else P.wk.classes[cell[0]] = true;
+      }
+    }
+  }
+  // Sources already reported or computed elsewhere in the engine.
+  if (hasB && !c.toolEdit) {
+    const previous = ((B.Player || {}).Academics || {}).Grades || {};
+    for (const [s, mark] of Object.entries(S.Player.Academics.Grades || {})) if (mark !== previous[s] && /^(A|B)$/.test(mark)) gain(SUBJECT_STAT[s], mark === 'A' ? 4 : 2, `${s} exam`, false);
+    const studied = Math.max(0, num((S.$eng.study || {}).mins, 0) - num(((B.$eng || {}).study || {}).mins, 0));
+    if (['main library','study rooms','archive'].includes(placeKey(S.World.Location))) {
+      P.study = num(P.study, 0) + studied;
+      const n = Math.floor(P.study / 120); if (n) { P.study %= 120; gain('Knowledge', n, 'study time'); }
+    }
+    if ((REPORTED.acts || []).some(a => /^(talk|hangout|gift)$/.test(a.Kind)) && P.days.society !== dayNo) { P.days.society = dayNo; gain('Society', 1, 'social interaction'); }
+    if (c.profCast && P.days.arcana !== dayNo) { P.days.arcana = dayNo; gain('Arcana', 1, 'casting'); }
+    if (B.Battle && B.Battle.Active && !S.Battle.Active) gain('Prowess', 1, 'battle finished');
+    for (const s of c.profTutoring || []) gain(SUBJECT_STAT[s], 1, 'tutoring');
+    if (S.World.Day === 'Sat' && num(((S.$eng.att || {}).c || {})[`${dayNo}:2`], 0) >= 60 && P.days.club !== dayNo) {
+      P.days.club = dayNo;
+      const club = S.Player.Profile.Club || '';
+      const stat = PROF.find(k => (CLUB_STATS[k] || []).some(n => club.toLowerCase().includes(n.toLowerCase())));
+      if (stat) gain(stat, 1, 'Saturday club time');
+    }
+  }
+  const locName = x => placeKey(x.name);
+  const here = placeKey(S.World.Location), before = hasB ? placeKey(B.World.Location) : here;
+  const inScene = name => Object.keys(S.Scene.Present || {}).some(id => id.toLowerCase() === String(name || '').toLowerCase() || (NPC_ALIAS[String(name || '').toLowerCase()] || '') === id);
+  const whyLocked = (a, report) => {
+    const hr = hm(S.World.Time) || 0, club = S.Player.Profile.Club || '', withName = report && report.With;
+    if (a.afterClass && hr < 960) return 'after lessons';
+    if (a.until && hr > a.until) return 'closed for the day';
+    if (a.night && (hr < 1080 || hr >= 1440)) return 'night only';
+    if (a.daylight && (hr < 360 || hr >= (SEASONS[S.World.Month - 1] === 'Winter' ? 960 : 1080))) return 'daylight only';
+    if (a.clear && !OFF.has('weather') && !/clear/i.test(String(S.World._Weather || ''))) return 'clear sky needed';
+    if (a.seasons && !a.seasons.includes(SEASONS[S.World.Month - 1])) return `${a.seasons.join(' or ')} only`;
+    if (a.dorm && (S.Player.Profile.Dorm === 'Unsorted' || ['Fire','Light','Sky','Viridian'].some(dm => new RegExp(`\\b${dm}\\b`, 'i').test(S.World.Location) && dm !== S.Player.Profile.Dorm))) return 'your dorm area';
+    const partnerId = NPC_ALIAS[String(withName || '').toLowerCase()] || withName;
+    const helpingMember = withName && inScene(withName) && (CLUB_MEMBERS[a.club + ' Club'] || []).includes(partnerId);
+    const kitchenPermission = a.club === 'Cooking' && withName && inScene(withName) && /cook|chef/i.test(withName);
+    if (a.club && !club.toLowerCase().includes(a.club.toLowerCase()) && !helpingMember && !kitchenPermission) return `${a.club} Club`;
+    if (a.clubAny && !a.clubAny.some(n => club.toLowerCase().includes(n.toLowerCase()))) return `${a.clubAny.join(', ')} club`;
+    if (a.partner && (report ? (!withName || !inScene(withName)) : !Object.keys(S.Scene.Present || {}).length)) return 'a partner present';
+    if (a.action === 'Spar with a partner' && withName && NPC_DORMS[NPC_ALIAS[withName.toLowerCase()] || withName] !== S.Player.Profile.Dorm && !/Training Week/i.test(S.World._Event_today || '')) return 'a partner from your dorm';
+    if (a.cost && S.Player.Wallet.Points < a.cost) return `${a.cost} points`;
+    if (a.materials && !Object.keys(S.Inventory || {}).some(n => /thread|wool|sketch|charcoal|carving|limewood|paper|ink|talisman/i.test(n))) return 'materials in Bag';
+    if (a.train && (/Exhausted|Collapsed/.test(S.Player.Vitals._Fatigue) || Object.values(S.Player.Injuries || {}).some(i => /serious|critical/.test(i.Severity) || a.train === 'stamina' && i.Severity === 'moderate'))) return 'fit enough to train';
+    return '';
+  };
+  const done = new Set();
+  for (const r of reports) {
+    const action = String(r.Action || '').trim().toLowerCase();
+    const a = PRACTICE.find(x => x.action.toLowerCase() === action && locName(x) === here);
+    const subject = subjectOf(r.Subject), stat = a && (a.stat === 'subject' ? SUBJECT_STAT[subject] : a.stat);
+    let why = !a ? 'this action is not available here' : before !== here ? 'start and finish at the practice place' : whyLocked(a, r);
+    if (!why && !stat) why = 'name a subject';
+    if (!why && (elapsed < 45 || c.toolEdit)) why = 'a session needs at least 45 minutes';
+    if (!why && a.study && a.action === 'Study a subject' && elapsed < 60) why = 'one full hour of study';
+    if (!why && Math.floor(absB / DAY_MIN) !== dayNo) why = 'finish a session in one day';
+    if (!why && CLASS.tt && !((S.World._Event_today || '').match(/no classes/i))) {
+      const row = CLASS.tt[S.World.Day] || [];
+      if (row.some((cell, p) => cell && cell[3] === 'class' && [[480,600],[600,720],[780,960]][p] && absB % DAY_MIN < [[480,600],[600,720],[780,960]][p][1] && absA % DAY_MIN > [[480,600],[600,720],[780,960]][p][0])) why = 'during a lesson';
+    }
+    const key = `${dayNo}:${a ? a.loc + ':' + a.action : action}`;
+    if (!why && (P.days[key] || done.has(key))) why = 'already practised this action today';
+    if (!why && a.paid && P.wk.paid >= 2) why = 'two paid shifts this week';
+    if (!why && num(P.wk[stat], 0) >= TU.prof_pace) why = `${stat} is at its weekly limit`;
+    if (why) { log.push(`Practice ${r.Action}: ${why}; no proficiency XP.`); continue; }
+    done.add(key); P.days[key] = true;
+    const xp = a.study && a.action === 'Study a subject' ? Math.min(2, Math.floor(elapsed / 60)) : a.xp;
+    gain(stat, xp, a.action);
+    if (a.train) S.Training.push({ Track: a.train, Partner: r.With || '' });
+    if (a.cost) { S.Player.Wallet.Points -= a.cost; S.Player.Wallet.Transactions.push(`-${a.cost} studio practice`); }
+    if (a.paid) { P.wk.paid++; S.Player.Wallet.Points += a.paid; S.Player.Wallet.Transactions.push(`+${a.paid} animal care shift`); }
+    if (a.study && !OFF.has('study') && S.$eng.study) {
+      const counted = num(S.$eng.study.mins, 0) - num((((B || {}).$eng || {}).study || {}).mins, 0);
+      if (counted < 60) S.$eng.study.mins = num(S.$eng.study.mins, 0) + 60 - Math.max(0, counted);
+    }
+  }
+  for (const t of S.Training || []) if (/stam/i.test(t.Track || '') && !/Exhausted|Collapsed/.test(S.Player.Vitals._Fatigue)
+    && !Object.values(S.Player.Injuries || {}).some(i => /moderate|serious|critical/.test(i.Severity))) gain('Prowess', 1, 'stamina training');
+  if (hasB && elapsed >= 45 && !c.toolEdit) {
+    const event = String(S.World._Event_today || ''), place = here, hour = hm(S.World.Time) || 0, textNow = String(c.text || '');
+    const eventXP = (key, stat, xp, attended) => {
+      const mark = `event:${S.World.Year}:${key}`;
+      if (attended && !P.days[mark]) { P.days[mark] = true; gain(stat, xp, key, false); }
+    };
+    eventXP('Training Week', 'Prowess', 3, /Training Week/.test(event) && place === 'combat grounds' && hour >= 960);
+    eventXP('Creature Studies Expedition', 'Nature', 3, /Creature Studies Expedition/.test(event) && (S.Trip.Active || /forest|expedition/i.test(S.World.Location)));
+    eventXP('Warding Rite', 'Arcana', 2, /Warding Rite/.test(event) && place === 'main courtyard' && hour >= 1110);
+    eventXP('Star Night', 'Arcana', 2, /Star Night/.test(event) && /grassy field|hill/i.test(place) && hour >= 1200);
+    eventXP('Club Festival stand', 'Craft', 2, /Club Festival/.test(event) && place === 'main courtyard' && /stand|stall|booth/i.test(textNow));
+    eventXP('Academy Bazaar stand', 'Craft', 2, /Academy Bazaar/.test(event) && place === 'main courtyard' && /stand|stall|booth/i.test(textNow));
+    eventXP('Entrance feast', 'Society', 2, /Entrance Event/.test(event) && place === 'ring dining hall' && hour >= 1140);
+    eventXP('Founder Day feast', 'Society', 2, /Academy Founder Day/.test(event) && place === 'ring dining hall' && hour >= 1140);
+  }
+  for (const k of Object.keys(P.days)) if (/^\d+:/.test(k) && +k.split(':')[0] < dayNo - 14) delete P.days[k];
+  S.$ui.practice = PRACTICE.filter(a => locName(a) === here).map(a => {
+    const stat = a.stat === 'subject' ? '' : a.stat;
+    const locked = whyLocked(a, null) || (P.days[`${dayNo}:${a.loc}:${a.action}`] ? 'already practised today' : '')
+      || (a.paid && P.wk.paid >= 2 ? 'two paid shifts this week' : '')
+      || (stat && num(P.wk[stat], 0) >= TU.prof_pace ? `${stat} is at this week's limit (${P.wk[stat]}/${TU.prof_pace}); class attendance still counts` : '');
+    return { action: a.action, stat: a.stat, locked };
+  });
+  if (S.$ui.fortune && Array.isArray(S.$ui.fortune.mods)) {
+    const mods = PROF.filter(k => ranks[k] > 0).map(k => `${k} +${Math.min((SUBJECTS.some(s => SUBJECT_STAT[s] === k && num(((S.$eng.study || {}).stand || {})[s], -1) === 4) ? 10 : 20), ranks[k] * 3)}`);
+    if (mods.length) S.$ui.fortune.mods.push('proficiency: ' + mods.join('; '));
   }
 }
 
@@ -3229,7 +3423,7 @@ function stepCommit(c) {
   if (log.length) S._Log = [...(S._Log || []), ...log.map(l => `[${stamp(S.World)}] ${l}`)].slice(-12);
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepRest, stepExposure, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepUi, stepCommit];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepRest, stepExposure, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepUi, stepCommit];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,

@@ -26,6 +26,7 @@ Build order, generated files and test commands: `docs/BUILD.md`.
 | Shop prices, items, gear effects | `data/shop.json`, `tools/common.py` `effect_text` | `gen_mvu_entries.py`, `gen_engine.py`, `gen_ui.py` |
 | Bond ranks, rewards, gifts, moods | §7 bond data; engine `stepBonds`, `stepBondMemory`, `mood_gifts.js` | |
 | Reputation, training, grades | `data/reputation.json`, `training.json`; `stepReputation`, `stepTraining`, `stepSchoolWeek` | |
+| Proficiency and Practice | `data/club_stats.json`, `practice.json`; `stepProficiency`, `pProficiency`, `acPractice` | `test_proficiency_v1260.cjs`, `test_practice_v1270.cjs` |
 | Weather, ambience, happenings | `stepWeather`, `stepExposure`, `stepAmbience`; `data/ambience.json`, `happenings.json`, `wind_casting.json` | |
 | Map, pins, map variants, portraits | `data/map_pins.json`, `assets_manifest.json`, `src/ui/parts/20_map.js` (`discovered`, `mapView` zoom, `loreRow`), `tools/curate_data.py` `FAR_LEGS`, `GATES`, `YEAR_FLOORS` | assets are pinned to a commit (DECISIONS "Assets") |
 | Features settings (on/off) | `data/features.json`, `stepFeatures`, `ui.template.js` `pSettings`, `featureOn` | `feature_cost.py` measures it |
@@ -62,6 +63,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepNamesInProse` (6a) | names revealed by the prose | `NAME_RX` |
 | `stepBonds` (6) | XP, ranks, gates, gifts, rewards, Tension/Trust; exports `canon`, `npcAway`, `PACE` | bond data §7 |
 | `stepBondMemory` (6c) | Knows, Imprints, Mind, Next, betrayal spread | |
+| `stepProficiency` (6a) | six stats, XP sources, weekly caps, Practice validation | `data/practice.json`, `club_stats.json` |
 | `stepTraining` (6b) | Mana pool / Stamina sessions (`trainRoom`, `trainAdd`, `trainJump` are module functions) | `data/training.json` |
 | `stepPerkUse` (6c) | one-use perks | `_Perks` |
 | `stepHidden` (7) | Dove attention, hidden magic, Points without Transactions | |
@@ -139,7 +141,7 @@ Hand-written single sources (edit these): `shop.json`, `happenings.json`, `calen
 *Per NPC* (a new NPC needs a row): `bond_rewards.json`, `bond_rules.json`, `bond_openness.json`, `tension.json`, `trust.json`,
 `npc_moods.json`, `gift_prefs.json`, `npc_canon.json` (voices, stages, Rank 8 branch), `rank4_partners.json`, `relations_curated.json`,
 `voice_rules.json`, `initiative_asks.json`, `field_overrides.json`, `focus_overrides.json`, `thumb_overrides.json`.
-Systems: `reputation.json`, `training.json`, `factions.json`, `gift_shops.json`.
+Systems: `reputation.json`, `training.json`, `club_stats.json`, `practice.json`, `factions.json`, `gift_shops.json`.
 Generated (never edit): `npcs.json`, `locations.json`, `relations.json`, `map_pins.json` (curate_data), `themes.json` (make_themes),
 `feature_cost.json` (feature_cost). Review lists: `_review_sensitive_flags.json`; `uid_remap_npc.json`, `pins_pct.json` are pipeline data.
 

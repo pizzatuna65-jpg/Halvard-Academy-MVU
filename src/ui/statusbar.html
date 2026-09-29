@@ -211,6 +211,13 @@ button.chip{font:inherit;font-size:13px;cursor:pointer}button.chip:hover{filter:
     tab('activities', 'competition', u('competition') && f('competition'));
     tab('activities', 'projects', u('projects') && f('projects'));
     tab('activities', 'trip', u('trip') && f('trip'));
+    const practiceNames = ['Potion Halls','Main Library','Study Rooms','Archive','Seminar Rooms','Observation Tower','Meditation Rooms / Spirit House','Club Rooms','Combat Grounds','The Sparring Pavilion','Gymnasium','Sports Field','Archery Range','Swimming Pool','Gardens','Menagerie','Forest','Forest Clearing','Fishing House','The Mall','Common Rooms','Workshop','Canteen','Courtyards','Fire Dormitory','Light Dormitory','Sky Dormitory','Viridian Dormitory'];
+    const practiceHere = practiceNames.some(n => (ui.discovered || []).includes(n));
+    tab('activities', 'practice', practiceHere && f('proficiency'));
+    if (f('proficiency')) {
+      for (const [k, v] of Object.entries((((S || {}).Player || {})._Proficiency || {}))) if (+v > 0) out.push([`stat:${k}:${v}`, 'profile']);
+      (ui.discovered || []).forEach(n => { if (practiceNames.includes(n)) out.push(['act:' + n.toLowerCase().replace(/^the /,'').replace(/[^a-z0-9]+/g,'_').replace(/_$/,'') , 'activities']); });
+    }
     tab('profile', 'bag', u('inventory') && f('inventory'));
     tab('profile', 'hidden', !!((S && S.Hidden) || {})._True_magic || u('hidden'));
     tab('profile', 'perks', Object.keys((S && S._Perks) || {}).length > 0 || (ui.perks_used || []).length > 0);

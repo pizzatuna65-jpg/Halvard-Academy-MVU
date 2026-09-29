@@ -5,6 +5,10 @@
 const SUBTYPES = /*@@SUBTYPES@@*/{};
 const NPCS = /*@@NPCS@@*/[];
 const DATA = /*@@DATA@@*/{};   // Batch 4: npcs (dossier fields with unlock rank), rel, locs, pins, assets
+const PROF_STATS = ['Knowledge', 'Arcana', 'Craft', 'Prowess', 'Society', 'Nature'];
+const PROF_CUT = [0, 10, 30, 60, 100, 150];
+const PROF_NAMES = { Knowledge: ['Everyday knowledge','Knows the basics','Well read','Learned','Erudite','Encyclopaedic'], Arcana: ['Everyday casting','Follows the proofs','Spell-literate','Pattern reader','Ward-wise','Arcane scholar'], Craft: ['Everyday hands','Follows the recipe','Steady hand','Skilled hands','Artisan',"Master's hand"], Prowess: ['Everyday fitness','Holds a stance','Quick on the feet','Seasoned','Duellist','Formidable'], Society: ['Everyday manners','Minds the forms','Poised','Gracious','Well connected','Consummate'], Nature: ['Everyday outdoors','Knows the signs','Calm hand','Trail-wise','Wild-wise','Kin to the wild'] };
+const PROF_SUBJECTS = { Knowledge: 'History', Arcana: 'Magic Theory, Dark Magic Defense', Craft: 'Potion Crafting', Prowess: 'Combat', Society: 'Etiquette', Nature: 'Creature Studies' };
 const PANELS = {};              // Batch 4 panels register here: { render(S), click(button, S), after?(S), live? }
 const TYPES = ['Elemental', 'Mystic', 'Spiritual', 'Occult'];
 const DORM_OF = { Elemental: 'Fire', Mystic: 'Light', Spiritual: 'Viridian', Occult: 'Sky' };
@@ -120,6 +124,7 @@ function blankDraft() {
   return {
     name: personaName(), pronouns: '', pronOther: false, age: 18, race: 'Human', beast: '', appearance: '', personality: '', background: '', goal: '',
     bday: { m: 0, w: 1, d: 'Mon' }, mana: 100, types: [], dominant: '', specs: [], custom: [], techs: [], pacts: [],
+    profMode: 'normal', prof: Object.fromEntries(PROF_STATS.map(k => [k, 0])),
     hidden: { on: false, truth: blankTrue(), cover: '', cover_type: '', conceal: '' },
     newsub: { name: '', type: '', forb: 'no' },
   };
@@ -192,6 +197,8 @@ function draftFromState(S0) {
     mana: num(S.Player.Vitals.Mana_max, 100), types: [...(A.Types || [])], dominant: A.Dominant || '', specs: [...(A.Specialties || [])],
     custom: Object.entries(A.Custom || {}).map(([k, c]) => ({ name: k, type: c.Type || '', forbidden: !!c.Forbidden, wind: c.wind || 'fights' })),
   });
+  d.prof = Object.fromEntries(PROF_STATS.map(k => [k, +((S.Player._Proficiency || {})[k] || 0)]));
+  d.profMode = PROF_STATS.some(k => d.prof[k] > 0) ? 'custom' : 'normal';
   d.techs = Object.entries(T).filter(([, t]) => !/^\[(pact|true)\]/.test(t.Notes || '')).map(([k, t]) => techOf(k, t));
   d.pacts = Object.entries(S.Magic.Pacts || {}).map(([k, p]) => {
     const kind = PACT_KINDS[p.Kind] ? p.Kind : 'Spirit', s = T['Summon ' + k] || {}, c = T['Channel ' + k] || {}, def = pactCost(kind, p.Tier);
@@ -298,6 +305,7 @@ function diffOps(d, S) {
   set(P + 'Race', d.race); set(P + 'Beast_type', d.race === 'Beastkin' ? d.beast.trim() : '');
   set(P + 'Appearance', d.appearance.trim()); set(P + 'Personality', d.personality.trim()); set(P + 'Background', d.background.trim());
   set(P + 'Birthday', bdayText(d.bday)); set(P + 'Goal', d.goal.trim());
+  set('/Player/_Proficiency', Object.fromEntries(PROF_STATS.map(k => [k, d.profMode === 'custom' ? _.clamp(Math.round(num(d.prof[k], 0)), 0, 5) : +((S.Player._Proficiency || {})[k] || 0)])));
   // Combat_role is no longer chosen here (1.2.0): the Combat teacher assigns it at the first Combat class (rule 502)
   const mana = manaOf(d);
   set('/Player/Vitals/Mana_max', mana);
@@ -495,6 +503,7 @@ summary{cursor:pointer;color:var(--ink2);font-size:var(--fs-s)}
 summary:hover{color:var(--ink)}
 .bar{height:8px;border-radius:99px;background:rgba(0,0,0,.36);box-shadow:inset 0 1px 2px rgba(0,0,0,.3);overflow:hidden;margin:5px 0 3px}
 .bar i{display:block;height:100%;border-radius:99px;background-image:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,0) 55%,rgba(0,0,0,.12))}
+.profchart{display:flex;justify-content:center;overflow:auto;margin:8px 0 18px}.profchart svg{max-width:100%;height:auto}.profrow{scroll-margin-top:16px}.profrow .bar{max-width:360px}
 .vit{margin-bottom:14px}
 .vit .l{display:flex;justify-content:space-between;font-size:var(--fs-m)}
 .vit .l b{font-variant-numeric:lining-nums tabular-nums}
@@ -958,6 +967,10 @@ function bIdentity(d, S, V) {
   <label class="f full">Personality${txt('personality', d.personality, 'How you come across and what drives you: temper, habits, fears, what makes you laugh.')}</label>
   <label class="f full">Background${inp('background', d.background, 'list="eld-bg"')}<datalist id="eld-bg">${BACKGROUNDS.map(x => `<option value="${esc(x)}">`).join('')}</datalist></label>
   <label class="f full">Goal for the year${inp('goal', d.goal, 'placeholder="What does your student want from Halvard?"')}</label>
+  <div class="f full"><h3>Starting proficiency</h3><div class="meta"><label><input type="radio" data-k="profMode" value="normal" ${d.profMode === 'normal' ? 'checked' : ''}> Normal</label> <label><input type="radio" data-k="profMode" value="custom" ${d.profMode === 'custom' ? 'checked' : ''}> Custom</label></div>
+  <p class="hint">${d.profMode === 'custom' ? 'Choose where each stat starts, for a student with a past: a returning student, a noble upbringing, a farm childhood, years of duelling. Higher starts leave less to grow.' : 'Every stat starts at Rank 0, like every first-year. You grow from here through classes, daily life and practice.'}</p>
+  ${d.profMode === 'custom' ? `<div class="grid">${PROF_STATS.map(k => `<label class="f">${k}${sel('prof.' + k, d.prof[k], PROF_CUT.map((_, i) => [i, 'Rank ' + i + ' · ' + PROF_NAMES[k][i]]))}</label>`).join('')}</div>` : ''}
+  <p class="hint">Rank 0 is not bad. It is where everyone starts: an ordinary person who has not trained that field at Halvard yet. There is no penalty at Rank 0; ranks only add.</p></div>
   <div class="hint full">Combat roles are not chosen here: the Combat teacher assigns yours at your first Combat class, from how you fight.</div></div>`;
 }
 function bPower(d, S, V) {
@@ -1142,7 +1155,7 @@ function onChange(e) {
     if (el.dataset.k === 'hidden.on' && el.checked && !draft.hidden.truth.type) draft.hidden.truth.type = draft.dominant || draft.types[0] || '';
     if (el.dataset.k === 'hidden.on' && el.checked && !draft.hidden.truth.subtype.trim()) draft.hidden.truth.subtype = firstSpec(draft, draft.hidden.truth.type);
   }
-  else if (el.tagName === 'SELECT' && el.dataset.k) _.set(draft, el.dataset.k, el.dataset.num ? num(el.value, 0) : el.value);
+  else if ((el.tagName === 'SELECT' || el.type === 'radio') && el.dataset.k) _.set(draft, el.dataset.k, el.dataset.num ? num(el.value, 0) : el.value);
   if (el.dataset.act === 'scale') {
     const t = _.get(draft, el.dataset.base), c = t && SCALES[t.scale];
     if (c) { t.act = t.mode === 'per_use' ? c.use : c.act; t.up = t.mode === 'per_use' ? 0 : c.up; t.trig = t.mode === 'hybrid' ? c.trig : 0; }
@@ -1160,10 +1173,12 @@ function onChange(e) {
     // 1.2.1: a new type brings the student's specialty for it, unless the subtype already fits or was typed for this type
     if (tm[2] === 'type' && (!t.subtype.trim() || (typeOfSub(t.subtype, draft) && !subInfo(t.type, t.subtype, draft)))) t.subtype = firstSpec(draft, t.type);
   }
-  if (el.dataset.rr || el.tagName === 'SELECT' || el.type === 'checkbox') { const y = ov.querySelector('.bd').scrollTop; render(); ov.querySelector('.bd').scrollTop = y; }
+  if (el.dataset.rr || el.tagName === 'SELECT' || el.type === 'checkbox' || el.type === 'radio') { const y = ov.querySelector('.bd').scrollTop; render(); ov.querySelector('.bd').scrollTop = y; }
 }
 function onClick(e) {
   if (e.target === ov) { close(); return; }
+  const prof = e.target.closest('[data-prof]');
+  if (prof) { scrollInto(ov.querySelector('#prof-' + prof.dataset.prof), ov.querySelector('.bd'), true); return; }
   const b = e.target.closest('button'); if (!b) return;
   const a = b.dataset.act;
   if (a === 'close') return close();
@@ -1172,6 +1187,8 @@ function onClick(e) {
   if (PANELS[view.panel]) { const st = latestState(); PANELS[view.panel].click(b, st && st.data.stat_data); return; }
   if (view.panel === 'profile') {
     if (b.dataset.tab) { view.tab = b.dataset.tab; render(); } if (a === 'tobuilder') open('builder');
+    if (a === 'profkeep') { commitSetting([{ op: 'replace', path: '/$ui/prof_offer', value: false }], 'Starting proficiency kept.'); return; }
+    if (a === 'profcustom') { open('builder'); draft.profMode = 'custom'; view.step = 'identity'; render(); return; }
     if (a === 'bondset') {   // 1.2.2: bond pace / romance rank (Settings), written like every setting (D3)
       const st = latestState(), S0 = st && st.data.stat_data, f = b.dataset.f, v = f === 'romrank' ? +b.dataset.v : b.dataset.v;
       if (S0 && (S0.$ui || {})[f] !== v) commitSetting([{ op: 'replace', path: `/$ui/${f}`, value: v }], `⚙️ Setting: ${f === 'romrank' ? 'romance opens at ' + (v > 10 ? 'never (off)' : v ? 'Rank ' + v : 'any rank') : 'bond pace ' + v}.`);
@@ -1404,15 +1421,30 @@ function pWallet(S) {
 }
 function pStudies(S) {
   const A = S.Player.Academics, G = Object.entries(A.Grades || {}), X = Object.entries(A.Exams || {});
+  const prof = featureOn(S, 'proficiency') ? pProficiency(S) : '';
   // 1.15.0: the engine's expected marks for the next exams and why (planning/DRAFT_grades_exams.md)
   const E = featureOn(S, 'study') ? S.$ui.grades : null;
   const next = E ? `<h3>Next exams: ${esc(E.label)}</h3>
   <p class="hint">Preparation: ${esc(E.tier)} (${fmt(E.h)} hours studied)${E.run ? ` · your trial run: ${esc(E.run)}` : ''}${E.set ? ' · marks already set, posted soon' : ''}. Attending every class of a subject guarantees at least a C; studying raises it.</p>
   <table>${Object.entries(E.marks || {}).map(([s, m]) => `<tr><td>${esc(s)}</td><td><b>${esc(m)}</b></td><td class="sub">${esc((E.why || {})[s] || '')}</td></tr>`).join('')}</table>` : '';
   const perks = E ? '<p class="hint">An A: +10 on Fortune rolls in that subject\'s field and paid tutoring (two sessions a week). An A or B: that subject\'s teacher warms to you faster. An F: a remedial session.</p>' : '';
-  return `<dl class="kv"><dt>Now</dt><dd>${esc(S.World._Period || 'Free time')}</dd>${S.World._Event_today ? `<dt>Today</dt><dd>${esc(S.World._Event_today)}</dd>` : ''}</dl>${next}
-  <h3>Grades</h3>${G.length ? `<table>${G.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('')}</table>` : '<div class="empty">No grades yet.</div>'}${perks}
+  return `${prof}<dl class="kv"><dt>Now</dt><dd>${esc(S.World._Period || 'Free time')}</dd>${S.World._Event_today ? `<dt>Today</dt><dd>${esc(S.World._Event_today)}</dd>` : ''}</dl>${next}
+  <h3 title="What the last exams recorded, subject by subject. Marks set your dorm rank and payout.">Grades</h3>${G.length ? `<table>${G.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('')}</table>` : '<div class="empty">No grades yet.</div>'}${perks}
   <h3>Exams</h3>${X.length ? `<table>${X.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('')}</table>` : '<div class="empty">No exams taken yet.</div>'}`;
+}
+function pProficiency(S) {
+  const R = S.Player._Proficiency || {}, P = S.$eng.prof || {}, wk = P.wk || {}, cap = tuneVal(S, 'prof_pace') || 6;
+  const xy = (i, r) => [150 + Math.cos(-Math.PI / 2 + i * Math.PI / 3) * r, 150 + Math.sin(-Math.PI / 2 + i * Math.PI / 3) * r];
+  const pts = r => PROF_STATS.map((_, i) => xy(i, r).map(v => v.toFixed(1)).join(',')).join(' ');
+  const val = k => { const rank = +R[k] || 0, xp = +((P.xp || {})[k] || 0); return rank === 5 ? 5 : rank + _.clamp((xp - PROF_CUT[rank]) / (PROF_CUT[rank + 1] - PROF_CUT[rank]), 0, 1); };
+  const shape = PROF_STATS.map((k, i) => xy(i, 105 * val(k) / 5).map(v => v.toFixed(1)).join(',')).join(' ');
+  const svg = `<div class="profchart"><svg viewBox="0 0 300 300" width="300" height="300" role="img" aria-label="Six proficiency ranks: ${PROF_STATS.map(k => k + ' ' + (+R[k] || 0)).join(', ')}">${[1,2,3,4,5].map(i => `<polygon points="${pts(105 * i / 5)}" fill="none" stroke="var(--rule2)" stroke-width="1"/>`).join('')}${PROF_STATS.map((_, i) => { const [x,y] = xy(i,105); return `<line x1="150" y1="150" x2="${x}" y2="${y}" stroke="var(--rule2)"/>`; }).join('')}<polygon points="${shape}" fill="color-mix(in srgb,var(--moon) 27%,transparent)" stroke="var(--moon)" stroke-width="2"/>${PROF_STATS.map((k,i) => { const [x,y] = xy(i, 127); return `<text data-prof="${k}" x="${x}" y="${y}" text-anchor="middle" dominant-baseline="middle" fill="var(--ink)" font-size="11" style="cursor:pointer">${k}</text>`; }).join('')}</svg></div>`;
+  const offer = S.$ui.prof_offer ? '<div class="item"><b>Set your starting proficiency</b><p class="hint">Normal keeps what you have; Custom lets you choose.</p><div class="meta"><button class="btn sm" data-act="profkeep">Keep current</button><button class="btn sm" data-act="profcustom">Choose ranks</button></div></div>' : '';
+  const rows = PROF_STATS.map(k => { const rank = +R[k] || 0, xp = +((P.xp || {})[k] || 0), next = PROF_CUT[Math.min(5,rank+1)], pct = rank === 5 ? 100 : Math.round((xp-PROF_CUT[rank])/(next-PROF_CUT[rank])*100);
+    const found = ((S.$ui || {}).discovered || []);
+    const where = [...new Set((DATA.practice || []).filter(a => a.stat === k || a.stat === 'subject').map(a => (DATA.locs[a.loc] || {}).name).filter(n => n && found.some(d => String(d).toLowerCase() === n.toLowerCase())))].slice(0,5);
+    return `<div class="item profrow" id="prof-${k}" title="${rank === 0 ? 'Rank 0: ordinary, not bad. Nothing is taken off your rolls; practice adds to them.' : ''}"><div class="row"><span class="t">${k}${isNew(`stat:${k}:${rank}`, true) && rank > 0 ? newsDot() : ''}</span><b>Rank ${rank}</b></div><div class="sub">${esc(PROF_NAMES[k][rank])} · ${esc(PROF_SUBJECTS[k])} · Fortune +${rank*3}</div><div class="bar"><i style="width:${pct}%;background:var(--moon)"></i></div><div class="sub">${xp}/${next} XP · this week ${+(wk[k] || 0)}/${cap}${where.length ? ' · Practise at ' + esc(where.join(', ')) : ''}</div></div>`; }).join('');
+  return `<h3 title="What you can actually do, in class and out of it. It grows with the classes you attend, the life you lead and the practice you put in, and it changes Fortune rolls in its field.">Proficiency</h3>${offer}${svg}${rows}`;
 }
 function pMagic(S) {
   const M = S.Magic, A = M._Affinity || {}, T = M._Techniques || {}, V = S.Player.Vitals;

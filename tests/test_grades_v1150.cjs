@@ -67,7 +67,7 @@ ok(G(late).History === 'F', 'removed more than three hours after it began: misse
 
 console.log('Rewards: teachers, Fortune, tutoring');
 const std = set(S0, [['/$eng/study/stand', { Combat: 4, Etiquette: 3 }]]);
-ok(std.$ui.fortune.mods.some(m => /top mark in Combat: duels and fights \+10/.test(m)) && !std.$ui.fortune.mods.some(m => /Etiquette/.test(m)), 'an A adds +10 to Fortune in its field; a B does not');
+ok(std.$ui.fortune.mods.some(m => /top mark in Combat: .* \+10/.test(m)) && !std.$ui.fortune.mods.some(m => /top mark in Etiquette/.test(m)), 'an A adds +10 to Fortune in its field; a B does not');
 const tut = x => applyPatch(x, [0, 1, 2].map(() => ({ op: 'insert', path: '/Tutoring/-', value: { Subject: 'Combat', Student: 'Aiden' } })));
 const paid = tut(std);
 ok(paid.Player.Wallet.Points - std.Player.Wallet.Points === 80 && paid.Player.Wallet.Transactions.includes('+40 tutoring (Combat, Aiden)'), 'tutoring with an A: 40 points a session, two a week');

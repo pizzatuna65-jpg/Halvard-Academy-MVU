@@ -124,6 +124,8 @@ export const Schema = z.object({
       Grades: StrRec(),
       Exams: StrRec(),
     }),
+    _Proficiency: O({ Knowledge: Int(0, 5, 0), Arcana: Int(0, 5, 0), Craft: Int(0, 5, 0),
+      Prowess: Int(0, 5, 0), Society: Int(0, 5, 0), Nature: Int(0, 5, 0) }),
     // 1.1.0: weather conditions (Soaked, Chilled, Overheated, Head cold). The engine adds and clears them; the story may remove one.
     Conditions: Rec(v => ({ Effect: s(v.Effect), Since: s(v.Since) }), 'Effect'),
     // 1.3.0 training (engine): per track the starting value (base), what training has added in total and this week
@@ -284,6 +286,9 @@ export const Schema = z.object({
   // 1.2.2: interactions this reply, reported by the narrator; the engine turns them into bond XP and empties the list
   Interactions: z.array(z.any().transform(v => (typeof v === 'object' && v !== null
     ? { With: s(v.With), By: s(v.By), Kind: s(v.Kind).trim().toLowerCase(), Gift: s(v.Gift).trim().toLowerCase(), Item: s(v.Item).slice(0, 160), Rep: s(v.Rep), Why: s(v.Why), Public: b(v.Public), Invited: b(v.Invited), Note: s(v.Note).slice(0, 200) } : { With: s(v), By: '', Kind: 'talk', Gift: '', Public: false, Invited: false, Note: '' }))).prefault([]).catch([]),
+  Practice: z.array(z.any().transform(v => typeof v === 'object' && v !== null
+    ? { Action: s(v.Action).slice(0, 100), Subject: s(v.Subject).slice(0, 80), With: s(v.With).slice(0, 80), Aim: s(v.Aim).slice(0, 120) }
+    : { Action: s(v).slice(0, 100), Subject: '', With: '', Aim: '' })).prefault([]).catch([]),
 
   // 1.3.0: what earned or cost reputation this reply (narrator), training sessions (narrator), one-use perks spent (narrator);
   // the engine applies them and empties the lists
@@ -352,6 +357,8 @@ export const Schema = z.object({
     leave: z.any().prefault(null).catch(null),                   // 1.10.0 (FP12): who takes their leave from a crowded ordinary-day scene { id, n, cap }
     missed: z.array(z.string()).prefault([]).catch([]),        // 1.12.0: reminders of what the last update may have left out (engine 8l, <now>)
     fortune: z.any().prefault(null).catch(null),                 // 1.9.8: the Fortune roll for the next reply { roll, fail, part, mods, active }, engine-written for <now>
+    practice: z.any().prefault([]).catch([]),
+    prof_offer: Bool(false),
     since: z.any().prefault([]).catch([]), maybe: z.any().prefault([]).catch([]),   // 1.6.0 (N4): Next plans met again / that may bring someone here (engine)
     xold: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.6.1 (N5): Extras records that left the full list; given back if they return (engine)
     stale: z.any().prefault([]).catch([]), phase: z.any().prefault(null).catch(null),   // 1.6.1: campus events with no news for a week; the campus phase (engine)
@@ -369,6 +376,8 @@ export const Schema = z.object({
     late: Num(0, 1e6, 0),
     sleep: z.any().prefault(null).catch(null),
     daily: z.record(z.string(), z.any()).prefault({}).catch({}),
+    prof: z.any().prefault(null).catch(null),
+    profv: Int(0, 1, 0),
     initiative: z.any().prefault(null).catch(null),              // 1.7.7 (FP1): latched day/week, chosen NPC and per-NPC cooldown
     auth: Str(''),   // 'builder' only inside a Student Builder patch; lets it write the read-only fields once
     tool: z.coerce.number().prefault(0).catch(0),   // 1.11.1: 1 inside a player-tool patch (Builder, Settings): not a story turn (engine resets it)

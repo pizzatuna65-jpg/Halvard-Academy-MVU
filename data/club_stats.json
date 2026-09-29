@@ -1,0 +1,8 @@
+{
+  "Prowess": ["Magic Duelling", "Soccer", "Running", "Archery", "Swimming", "Gymnastics", "Basketball", "Walking"],
+  "Nature": ["Beast Handling", "Gardening", "Fishing", "Groundskeeping"],
+  "Craft": ["Alchemy", "Brewing", "Smithing", "Tailoring", "Cooking", "Drawing", "Calligraphy"],
+  "Society": ["Music", "Tea", "Theatre", "Card", "Board Game", "Festival Committee", "Student Council", "Medical Centre Volunteers"],
+  "Arcana": ["Warding Study", "Divination", "Specialized Magic"],
+  "Knowledge": ["Library Assistants", "Newspaper"]
+}

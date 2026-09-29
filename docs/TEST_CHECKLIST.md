@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.27.0 (Proficiency and Practice): the four checks in its section below.
 - v1.25.0 (red "new" dots): the four checks in its section below.
 - v1.24.0–1.24.3 (map gates, lore heard, year floors): the checks in the v1.24.0 section below.
 - v1.23.0 (panels): the three checks in its section below.
@@ -53,6 +54,13 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.27.0 — Proficiency and Practice
+
+1. Start a new chat and register with Normal, then with Custom ranks on a second chat. Studies shows the six-axis chart correctly in a light and dark theme and on a narrow screen; Rank 0 reads as neutral. A custom rank changes Fortune in its field.
+2. Load a v1.25.0 chat. Studies offers the one-time starting-rank choice, keeping the estimate or opening Custom Builder. Ranks and all older state survive a swipe/reload; the offer does not recur after it is dismissed.
+3. Discover the Potion Halls, Main Library and Combat Grounds. Practice unlocks with a dot, Here and Elsewhere update, and the Go and Practise buttons only fill the chat box. Locked actions state their reason.
+4. At a valid place, play a full session. The narrator reports `/Practice` with Action, Subject, With and Aim; the engine gives XP once and clears the report. Try a short session, a class-hour session and a repeat on the same day; each is rejected in `_Log`.
 
 ### v1.25.0 — Red "new" dots
 

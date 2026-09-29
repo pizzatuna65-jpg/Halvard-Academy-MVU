@@ -1,5 +1,6 @@
 {
  "rules": {
+  "proficiency": 244,
   "planner": 87,
   "notices": 98,
   "letters": 120,
@@ -23,7 +24,7 @@
   "reminders": 34,
   "study": 205
  },
- "core_rules": 8450,
+ "core_rules": 8451,
  "lore": 3964,
  "price_guide": 5164,
  "live": {

@@ -73,14 +73,20 @@ const PAYOUT = [[1, 3000], [3, 2000], [10, 1200], [25, 800], [50, 500], [Infinit
 // 1.15.0 (owner-approved planning/DRAFT_grades_exams.md): the engine marks every subject at each exam. Midterm slots from lore 232
 // ([day, from, to] in minutes; Creature Studies sits no midterm and is marked on fieldwork); finals are one run on a seeded day.
 const SUBJECTS = ['Magic Theory', 'History', 'Etiquette', 'Potion Crafting', 'Dark Magic Defense', 'Combat', 'Creature Studies'];
+const PROF = ['Knowledge', 'Arcana', 'Craft', 'Prowess', 'Society', 'Nature'];
+const PROF_CUT = [0, 10, 30, 60, 100, 150];
+const PROF_NAMES = { Knowledge: ['Everyday knowledge','Knows the basics','Well read','Learned','Erudite','Encyclopaedic'], Arcana: ['Everyday casting','Follows the proofs','Spell-literate','Pattern reader','Ward-wise','Arcane scholar'], Craft: ['Everyday hands','Follows the recipe','Steady hand','Skilled hands','Artisan',"Master's hand"], Prowess: ['Everyday fitness','Holds a stance','Quick on the feet','Seasoned','Duellist','Formidable'], Society: ['Everyday manners','Minds the forms','Poised','Gracious','Well connected','Consummate'], Nature: ['Everyday outdoors','Knows the signs','Calm hand','Trail-wise','Wild-wise','Kin to the wild'] };
+const SUBJECT_STAT = { History: 'Knowledge', 'Magic Theory': 'Arcana', 'Dark Magic Defense': 'Arcana', 'Potion Crafting': 'Craft', Combat: 'Prowess', Etiquette: 'Society', 'Creature Studies': 'Nature' };
+const PROF_FIELD = { Knowledge: 'history, sciences, numbers, geography, nations, languages, records and puzzles', Arcana: 'magic, curses, wards, traps and precise spellwork', Craft: 'making, brewing, mending, cooking and handiwork', Prowess: 'duels, sport, climbing, running and strength', Society: 'formal dealings, manners, bargaining, performance and reading a room', Nature: 'beasts, plants, weather, tracks and the outdoors' };
+const CLUB_STATS = /*@@CLUB_STATS@@*/{};
+const CLUB_MEMBERS = /*@@CLUB_MEMBERS@@*/{};
+const PRACTICE = /*@@PRACTICE@@*/[];
 const MARKS = ['F', 'D', 'C', 'B', 'A'];
 const MID_SLOTS = { 'Magic Theory': [0, 480, 600], Etiquette: [0, 600, 720], History: [1, 480, 600], 'Potion Crafting': [1, 780, 960],
   'Dark Magic Defense': [2, 480, 960], Combat: [3, 480, 960] };
 const PRACTICAL = ['Potion Crafting', 'Dark Magic Defense', 'Combat', 'Creature Studies'];
 // an A: +10 on a Fortune roll in the subject's field (rule 504 "specialty"), until the next exams
-const TOP_FIELD = { 'Magic Theory': 'analysing or unpicking unfamiliar magic', History: 'recognising old places, artefacts and symbols',
-  Etiquette: 'formal dealings with staff, nobles and envoys', 'Potion Crafting': 'brewing, or knowing a potion or poison',
-  'Dark Magic Defense': 'curses, wards and magical traps', Combat: 'duels and fights', 'Creature Studies': 'handling beasts' };
+const TOP_FIELD = Object.fromEntries(SUBJECTS.map(s => [s, PROF_FIELD[SUBJECT_STAT[s]]]));
 const TUTOR_PAY = 40, TUTOR_WEEK = 2, TRAIN_FOR_COMBAT = 6, ASSIGNMENT_MIN = 45;
 const subjectOf = t => { const x = String(t || '').trim().toLowerCase(); return x === 'dmd' ? 'Dark Magic Defense' : SUBJECTS.find(s => s.toLowerCase() === x) || ''; };
 const subjectIn = t => SUBJECTS.find(s => new RegExp(`\\b${s}\\b`, 'i').test(String(t || ''))) || (/\bDMD\b/.test(String(t || '')) ? 'Dark Magic Defense' : '');
@@ -538,7 +544,7 @@ const CAP_HOOKS = 15, CAP_BAG = 40, BOTTLE_BACK = 2;
 // Fill missing containers with their empty shape; existing values are never touched. Arrays are only set when missing.
 const SHAPE = {
   Scene: { Present: {} },
-  Player: { Profile: { Reputation: {} }, Vitals: {}, Injuries: {}, Wallet: { Points: 0, Coin: 0, Transactions: [] }, Academics: { Grades: {}, Exams: {} }, Conditions: {} },
+  Player: { Profile: { Reputation: {} }, Vitals: {}, Injuries: {}, Wallet: { Points: 0, Coin: 0, Transactions: [] }, Academics: { Grades: {}, Exams: {} }, _Proficiency: {}, Conditions: {} },
   Magic: { _Techniques: {}, _Affinity: { Types: [], Dominant: '', Specialties: [], Preset: '' }, Active: {}, Casts: [], Pacts: {} },
   Hidden: { _True_magic: '', Known_by: [], Dove_attention: 0 },
   Bonds: {}, Campus_State: { Entrance_tour: { Year: 0, Guide: '', FirstYears: [] }, Council: { Candidates: { '1': { First: 'Florian', Second: 'Dante' } }, Results: {}, President: 'Irene', VicePresident: 'Caspian', PresidentElect: '', VicePresidentElect: '' }, Events: {}, Rumours: [], Location_changes: {}, NPC_status: {}, New_relations: {}, Secrets_revealed: [], Graduated: [] },
@@ -547,7 +553,7 @@ const SHAPE = {
   Trip: { Active: false, Destination: '', Companions: [], Note: '' }, Battle: { Active: false, Combatants: {} }, _Log: [],
   Inventory: {}, Hooks: {},   // 1.1.0
   Extras: {},   // 1.6.1
-  _Perks: {}, Rep_events: [], Training: [], Perk_use: [],   // 1.3.0
+  _Perks: {}, Rep_events: [], Training: [], Practice: [], Perk_use: [],   // 1.3.0 / 1.27.0
   Exam_events: [], Tutoring: [],   // 1.15.0
 };
 function fillShape(o, shape) {
@@ -609,6 +615,19 @@ function stepMigrate(c) {
   const { S, hasB, log } = c;
   if (c.fromVer === ENGINE_VER) return;
   const B = c.B = hasB ? _.cloneDeep(c.B) : c.B, both = hasB ? [S, B] : [S];
+  // 1.26.0: old chats keep their history. A small class allowance recognises weeks already played;
+  // the one-time Studies offer lets the player choose a different starting history.
+  if (S.$eng.profv !== 1 && hasB) {
+    const weeks = Math.min(14, Math.floor(Math.max(0, num((B.$eng || {}).abs, 0)) / (7 * DAY_MIN)));
+    const xp = Math.min(29, weeks * 2);
+    for (const X of both) {
+      X.Player._Proficiency = Object.fromEntries(PROF.map(k => [k, xp >= 10 ? 1 : 0]));
+      X.$eng.prof = { xp: Object.fromEntries(PROF.map(k => [k, xp])), wk: { w: -1 }, days: {}, picked: false };
+      X.$eng.profv = 1;
+    }
+    S.$ui.prof_offer = true;
+    log.push('Proficiency was estimated from weeks already played; Studies offers a one-time choice of starting ranks.');
+  }
   for (const X of both) {
     const P = X._Perks;
     if (!_.isPlainObject(P)) continue;
@@ -651,7 +670,7 @@ function stepGuards(c) {
   const { S, B, text, log, hasB } = c;
   const byBuilder = S.$eng.auth === 'builder';
   if (hasB && !byBuilder) {
-    const keep = [['Magic', '_Techniques'], ['Magic', '_Affinity'], ['Hidden', '_True_magic'], ['$ui', 'built'], ['$ui', 'file'], ['_Perks']];
+    const keep = [['Magic', '_Techniques'], ['Magic', '_Affinity'], ['Hidden', '_True_magic'], ['Player', '_Proficiency'], ['$ui', 'built'], ['$ui', 'file'], ['_Perks']];
     for (const path of keep) {
       const was = _.get(B, path);
       if (was !== undefined && !_.isEqual(_.get(S, path), was)) { _.set(S, path, _.cloneDeep(was)); log.push(`${path.join('.')} is read-only; the change was reverted.`); }
@@ -760,6 +779,7 @@ function stepFeatures(c) {
     used: (Array.isArray(S.Consumables) ? S.Consumables : []).map(x => String(x).trim().toLowerCase()),
     perks: (Array.isArray(S.Perk_use) ? S.Perk_use : []).map(x => String(x).trim().toLowerCase()),
     training: Array.isArray(S.Training) ? S.Training.length : 0,
+    tutoring: Array.isArray(S.Tutoring) ? S.Tutoring.map(x => x.Subject) : [],
   };
   Object.assign(c, { OFF, offUnlock, staleDrop, REPORTED, B });
 }
@@ -1024,6 +1044,7 @@ function stepMagic(c) {
       } else P.Summoned = true;
     }
   }
+  const profContext = c;
   for (const c of M.Casts || []) {
     const t = T[c.Technique];
     if (!t) { log.push(`Unknown technique "${c.Technique}" was reported; nothing was charged.`); continue; }
@@ -1038,7 +1059,7 @@ function stepMagic(c) {
     const unit = t.Cost_mode === 'hybrid' && t.Trigger > 0 && running ? t.Trigger : (t.Activation || 0);
     const cost = windCost(t, unit * (c.Times || 1), c.Technique);
     if (cost > V.Mana + regenLeft) { log.push(`${c.Technique} needed ${cost} mana but only ${Math.floor(V.Mana + regenLeft)} was left: the casting strained or failed (mana now 0).`); V.Mana = 0; regenLeft = 0; }
-    else payMana(cost);
+    else { payMana(cost); profContext.profCast = true; }
   }
   M.Casts = [];
 
@@ -1567,11 +1588,13 @@ function stepSchoolWeek(c) {
       }
       // paid tutoring (lore 221) in a subject whose latest mark is an A: two sessions a week, each also a Notice Board request
       const TW = ST.tw && ST.tw.w === weekNo ? ST.tw : (ST.tw = { w: weekNo, n: 0 });
+      c.profTutoring = [];
       for (const t of (Array.isArray(S.Tutoring) ? S.Tutoring : [])) {
         const s = subjectOf(t.Subject);
         if (!s || num(ST.stand[s], -1) < 4) { log.push(`Tutoring ${s || t.Subject}: paid tutoring needs an A in that subject at the latest exams; nothing was paid.`); continue; }
         if (TW.n >= TUTOR_WEEK) { log.push(`Tutoring: ${TUTOR_WEEK} paid sessions already this week; no pay for another.`); continue; }
         TW.n++;
+        c.profTutoring.push(s);
         S.Player.Wallet.Points = num(S.Player.Wallet.Points, 0) + TUTOR_PAY;
         S.Player.Wallet.Transactions.push(`+${TUTOR_PAY} tutoring (${s}${t.Student ? ', ' + t.Student : ''})`);
         repAdd('Student', 2, `tutoring in ${s}`, 'week');
@@ -1587,7 +1610,13 @@ function stepSchoolWeek(c) {
         const di = DAYS.indexOf(Wn.Day), today = SUBJECTS.filter(s => (nx.fin ? run.d === di : (MID_SLOTS[s] || [])[0] === di));
         S.$ui.exam = { tier: TIERS[tierOf()], h: Math.round(num(ST.mins, 0) / 60), run: S.$ui.grades.run, today: today.map(s => ({ s, mark: MARKS[fc.marks[s]], why: fc.why[s].slice(1).join('; ') })) };
       }
-      if (S.$ui.fortune && Array.isArray(S.$ui.fortune.mods)) for (const s of SUBJECTS) if (num(ST.stand[s], -1) === 4) S.$ui.fortune.mods.push(`top mark in ${s}: ${TOP_FIELD[s]} +10`);
+      if (S.$ui.fortune && Array.isArray(S.$ui.fortune.mods)) {
+        const fields = new Set();
+        for (const s of SUBJECTS) if (num(ST.stand[s], -1) === 4 && !fields.has(SUBJECT_STAT[s])) {
+          S.$ui.fortune.mods.push(`top mark in ${s}: ${TOP_FIELD[s]} +10`);
+          fields.add(SUBJECT_STAT[s]);
+        }
+      }
     }
     S.Exam_events = []; S.Tutoring = [];
     // FP12: on a day with nothing on the calendar, at most TU.scene_cap people with {{user}}; one more takes their leave
@@ -1850,7 +1879,8 @@ function stepBonds(c) {
         if ((d[socialKind] || 0) >= BR.per_day[socialKind]) continue;
         d[socialKind] = (d[socialKind] || 0) + 1;
         const studyBonus = k === 'study' && b.Rank >= 4 && (RANK4_PARTNERS[id] || []).includes('study') && S.Scene.Present[id] && !npcAway(id);
-        gain += Math.round(Math.max(0, BR.kind_xp[socialKind] + repMod(id) + examMod(id) + socialMod) * (birthday ? BR.birthday.social_mult : 1) * (studyBonus ? 1.25 : 1));
+        const society = OFF.has('proficiency') ? 0 : num(S.Player._Proficiency.Society, 0);
+        gain += Math.round(Math.max(0, BR.kind_xp[socialKind] + repMod(id) + examMod(id) + socialMod) * (birthday ? BR.birthday.social_mult : 1) * (studyBonus ? 1.25 : 1) * (society >= 5 ? 1.2 : society >= 4 ? 1.1 : 1));
         if (socialKind === 'hangout' && a.Invited && b.Rank >= 2 && S.Scene.Present[id] && !npcAway(id) && !w.invited) { gain++; w.invited = 1; }
       } else if (k === 'gift') {
         const gk = giftTier(id, a.Item, a.Gift), firstBirthday = birthday && !d.birthdayGift;
@@ -2199,6 +2229,170 @@ function stepTraining(c) {
       else log.push(lim && T.gain >= lim ? `Training: ${lab} has reached its limit (+${TU.trn_total}% of the starting value); training keeps {{user}} in shape but adds no more.` : `Training: ${lab} already gained all it can this week.`);
     }
     S.Training = [];
+  }
+}
+
+// 1.26–1.27: six broad abilities. Only this step writes ranks and XP. A practice report is
+// checked against both ends of the move, the actual elapsed time and the week's limits.
+function stepProficiency(c) {
+  const { S, B, log, jnl, hasB, byBuilder, OFF, REPORTED, elapsed, absB, absA, dayNo, weekNo, TU } = c;
+  const reports = Array.isArray(S.Practice) ? S.Practice : [];
+  S.Practice = [];
+  S.$ui.practice = [];
+  if (OFF.has('proficiency')) return;
+  const ranks = S.Player._Proficiency || (S.Player._Proficiency = {});
+  let P = S.$eng.prof;
+  if (!_.isPlainObject(P)) P = S.$eng.prof = { xp: {}, wk: { w: -1 }, days: {}, picked: false };
+  S.$eng.profv = 1;
+  if (!_.isPlainObject(P.xp)) P.xp = {};
+  if (!_.isPlainObject(P.days)) P.days = {};
+  for (const k of PROF) {
+    const old = hasB ? num((((B.Player || {})._Proficiency || {})[k]), 0) : 0;
+    const selected = _.clamp(Math.round(num(ranks[k], 0)), 0, 5);
+    if (byBuilder && selected !== old) P.xp[k] = PROF_CUT[selected];
+    else if (!Number.isFinite(Number(P.xp[k]))) P.xp[k] = PROF_CUT[old];
+    P.xp[k] = _.clamp(Math.round(num(P.xp[k], 0)), 0, 150);
+    ranks[k] = PROF_CUT.filter(x => P.xp[k] >= x).length - 1;
+  }
+  if (byBuilder) { P.picked = true; S.$ui.prof_offer = false; }
+  const oldWeek = _.isPlainObject(P.wk) ? P.wk : { w: -1 };
+  const gain = (k, amount, why, capped = true) => {
+    if (!PROF.includes(k) || amount <= 0) return 0;
+    const room = capped ? Math.max(0, TU.prof_pace - num(P.wk[k], 0)) : amount;
+    const add = Math.min(amount, room, 150 - P.xp[k]);
+    if (add <= 0) return 0;
+    P.xp[k] += add;
+    if (capped) P.wk[k] = num(P.wk[k], 0) + add;
+    const rank = PROF_CUT.filter(x => P.xp[k] >= x).length - 1;
+    if (rank > ranks[k]) {
+      ranks[k] = rank;
+      const line = `${k} reached Rank ${rank} (${PROF_NAMES[k][rank]}).`;
+      jnl.push(line); S.$ui.toasts.push(`${k}: ${PROF_NAMES[k][rank]} (Rank ${rank})`);
+    }
+    log.push(`${k} proficiency +${add} (${why}); ${P.xp[k]}/150 XP.`);
+    return add;
+  };
+  if (oldWeek.w !== weekNo) {
+    P.wk = { w: weekNo, classes: {}, missed: {}, paid: 0 };
+    if (oldWeek.w >= 0 && oldWeek.w === weekNo - 1)
+      for (const k of PROF) if (Object.values(oldWeek.classes || {}).some(s => SUBJECT_STAT[s] === k) && !Object.keys(oldWeek.missed || {}).some(s => SUBJECT_STAT[s] === k))
+        gain(k, 2, 'all attended classes last week', false);
+  }
+  // The attendance engine marks a skipped period in att.done. Count classes only after a
+  // whole period has elapsed; a short visit to a classroom cannot earn a week's allowance.
+  if (hasB && elapsed > 0 && elapsed <= 7 * DAY_MIN) for (let d = Math.floor(absB / DAY_MIN); d <= dayNo; d++) {
+    const W = fromAbs(d * DAY_MIN), row = CLASS.tt && CLASS.tt[W.Day];
+    if (!row || Math.floor(d / 7) !== weekNo) continue;
+    for (const [p, end] of [[0,600],[1,720],[2,960]]) {
+      const cell = row[p], key = `${d}:${p}`;
+      if (cell && cell[3] === 'class' && absB < d * DAY_MIN + end && absA >= d * DAY_MIN + end) {
+        if (((S.$eng.att || {}).done || {})[key]) P.wk.missed[cell[0]] = true;
+        else P.wk.classes[cell[0]] = true;
+      }
+    }
+  }
+  // Sources already reported or computed elsewhere in the engine.
+  if (hasB && !c.toolEdit) {
+    const previous = ((B.Player || {}).Academics || {}).Grades || {};
+    for (const [s, mark] of Object.entries(S.Player.Academics.Grades || {})) if (mark !== previous[s] && /^(A|B)$/.test(mark)) gain(SUBJECT_STAT[s], mark === 'A' ? 4 : 2, `${s} exam`, false);
+    const studied = Math.max(0, num((S.$eng.study || {}).mins, 0) - num(((B.$eng || {}).study || {}).mins, 0));
+    if (['main library','study rooms','archive'].includes(placeKey(S.World.Location))) {
+      P.study = num(P.study, 0) + studied;
+      const n = Math.floor(P.study / 120); if (n) { P.study %= 120; gain('Knowledge', n, 'study time'); }
+    }
+    if ((REPORTED.acts || []).some(a => /^(talk|hangout|gift)$/.test(a.Kind)) && P.days.society !== dayNo) { P.days.society = dayNo; gain('Society', 1, 'social interaction'); }
+    if (c.profCast && P.days.arcana !== dayNo) { P.days.arcana = dayNo; gain('Arcana', 1, 'casting'); }
+    if (B.Battle && B.Battle.Active && !S.Battle.Active) gain('Prowess', 1, 'battle finished');
+    for (const s of c.profTutoring || []) gain(SUBJECT_STAT[s], 1, 'tutoring');
+    if (S.World.Day === 'Sat' && num(((S.$eng.att || {}).c || {})[`${dayNo}:2`], 0) >= 60 && P.days.club !== dayNo) {
+      P.days.club = dayNo;
+      const club = S.Player.Profile.Club || '';
+      const stat = PROF.find(k => (CLUB_STATS[k] || []).some(n => club.toLowerCase().includes(n.toLowerCase())));
+      if (stat) gain(stat, 1, 'Saturday club time');
+    }
+  }
+  const locName = x => placeKey(x.name);
+  const here = placeKey(S.World.Location), before = hasB ? placeKey(B.World.Location) : here;
+  const inScene = name => Object.keys(S.Scene.Present || {}).some(id => id.toLowerCase() === String(name || '').toLowerCase() || (NPC_ALIAS[String(name || '').toLowerCase()] || '') === id);
+  const whyLocked = (a, report) => {
+    const hr = hm(S.World.Time) || 0, club = S.Player.Profile.Club || '', withName = report && report.With;
+    if (a.afterClass && hr < 960) return 'after lessons';
+    if (a.until && hr > a.until) return 'closed for the day';
+    if (a.night && (hr < 1080 || hr >= 1440)) return 'night only';
+    if (a.daylight && (hr < 360 || hr >= (SEASONS[S.World.Month - 1] === 'Winter' ? 960 : 1080))) return 'daylight only';
+    if (a.clear && !OFF.has('weather') && !/clear/i.test(String(S.World._Weather || ''))) return 'clear sky needed';
+    if (a.seasons && !a.seasons.includes(SEASONS[S.World.Month - 1])) return `${a.seasons.join(' or ')} only`;
+    if (a.dorm && (S.Player.Profile.Dorm === 'Unsorted' || ['Fire','Light','Sky','Viridian'].some(dm => new RegExp(`\\b${dm}\\b`, 'i').test(S.World.Location) && dm !== S.Player.Profile.Dorm))) return 'your dorm area';
+    const partnerId = NPC_ALIAS[String(withName || '').toLowerCase()] || withName;
+    const helpingMember = withName && inScene(withName) && (CLUB_MEMBERS[a.club + ' Club'] || []).includes(partnerId);
+    const kitchenPermission = a.club === 'Cooking' && withName && inScene(withName) && /cook|chef/i.test(withName);
+    if (a.club && !club.toLowerCase().includes(a.club.toLowerCase()) && !helpingMember && !kitchenPermission) return `${a.club} Club`;
+    if (a.clubAny && !a.clubAny.some(n => club.toLowerCase().includes(n.toLowerCase()))) return `${a.clubAny.join(', ')} club`;
+    if (a.partner && (report ? (!withName || !inScene(withName)) : !Object.keys(S.Scene.Present || {}).length)) return 'a partner present';
+    if (a.action === 'Spar with a partner' && withName && NPC_DORMS[NPC_ALIAS[withName.toLowerCase()] || withName] !== S.Player.Profile.Dorm && !/Training Week/i.test(S.World._Event_today || '')) return 'a partner from your dorm';
+    if (a.cost && S.Player.Wallet.Points < a.cost) return `${a.cost} points`;
+    if (a.materials && !Object.keys(S.Inventory || {}).some(n => /thread|wool|sketch|charcoal|carving|limewood|paper|ink|talisman/i.test(n))) return 'materials in Bag';
+    if (a.train && (/Exhausted|Collapsed/.test(S.Player.Vitals._Fatigue) || Object.values(S.Player.Injuries || {}).some(i => /serious|critical/.test(i.Severity) || a.train === 'stamina' && i.Severity === 'moderate'))) return 'fit enough to train';
+    return '';
+  };
+  const done = new Set();
+  for (const r of reports) {
+    const action = String(r.Action || '').trim().toLowerCase();
+    const a = PRACTICE.find(x => x.action.toLowerCase() === action && locName(x) === here);
+    const subject = subjectOf(r.Subject), stat = a && (a.stat === 'subject' ? SUBJECT_STAT[subject] : a.stat);
+    let why = !a ? 'this action is not available here' : before !== here ? 'start and finish at the practice place' : whyLocked(a, r);
+    if (!why && !stat) why = 'name a subject';
+    if (!why && (elapsed < 45 || c.toolEdit)) why = 'a session needs at least 45 minutes';
+    if (!why && a.study && a.action === 'Study a subject' && elapsed < 60) why = 'one full hour of study';
+    if (!why && Math.floor(absB / DAY_MIN) !== dayNo) why = 'finish a session in one day';
+    if (!why && CLASS.tt && !((S.World._Event_today || '').match(/no classes/i))) {
+      const row = CLASS.tt[S.World.Day] || [];
+      if (row.some((cell, p) => cell && cell[3] === 'class' && [[480,600],[600,720],[780,960]][p] && absB % DAY_MIN < [[480,600],[600,720],[780,960]][p][1] && absA % DAY_MIN > [[480,600],[600,720],[780,960]][p][0])) why = 'during a lesson';
+    }
+    const key = `${dayNo}:${a ? a.loc + ':' + a.action : action}`;
+    if (!why && (P.days[key] || done.has(key))) why = 'already practised this action today';
+    if (!why && a.paid && P.wk.paid >= 2) why = 'two paid shifts this week';
+    if (!why && num(P.wk[stat], 0) >= TU.prof_pace) why = `${stat} is at its weekly limit`;
+    if (why) { log.push(`Practice ${r.Action}: ${why}; no proficiency XP.`); continue; }
+    done.add(key); P.days[key] = true;
+    const xp = a.study && a.action === 'Study a subject' ? Math.min(2, Math.floor(elapsed / 60)) : a.xp;
+    gain(stat, xp, a.action);
+    if (a.train) S.Training.push({ Track: a.train, Partner: r.With || '' });
+    if (a.cost) { S.Player.Wallet.Points -= a.cost; S.Player.Wallet.Transactions.push(`-${a.cost} studio practice`); }
+    if (a.paid) { P.wk.paid++; S.Player.Wallet.Points += a.paid; S.Player.Wallet.Transactions.push(`+${a.paid} animal care shift`); }
+    if (a.study && !OFF.has('study') && S.$eng.study) {
+      const counted = num(S.$eng.study.mins, 0) - num((((B || {}).$eng || {}).study || {}).mins, 0);
+      if (counted < 60) S.$eng.study.mins = num(S.$eng.study.mins, 0) + 60 - Math.max(0, counted);
+    }
+  }
+  for (const t of S.Training || []) if (/stam/i.test(t.Track || '') && !/Exhausted|Collapsed/.test(S.Player.Vitals._Fatigue)
+    && !Object.values(S.Player.Injuries || {}).some(i => /moderate|serious|critical/.test(i.Severity))) gain('Prowess', 1, 'stamina training');
+  if (hasB && elapsed >= 45 && !c.toolEdit) {
+    const event = String(S.World._Event_today || ''), place = here, hour = hm(S.World.Time) || 0, textNow = String(c.text || '');
+    const eventXP = (key, stat, xp, attended) => {
+      const mark = `event:${S.World.Year}:${key}`;
+      if (attended && !P.days[mark]) { P.days[mark] = true; gain(stat, xp, key, false); }
+    };
+    eventXP('Training Week', 'Prowess', 3, /Training Week/.test(event) && place === 'combat grounds' && hour >= 960);
+    eventXP('Creature Studies Expedition', 'Nature', 3, /Creature Studies Expedition/.test(event) && (S.Trip.Active || /forest|expedition/i.test(S.World.Location)));
+    eventXP('Warding Rite', 'Arcana', 2, /Warding Rite/.test(event) && place === 'main courtyard' && hour >= 1110);
+    eventXP('Star Night', 'Arcana', 2, /Star Night/.test(event) && /grassy field|hill/i.test(place) && hour >= 1200);
+    eventXP('Club Festival stand', 'Craft', 2, /Club Festival/.test(event) && place === 'main courtyard' && /stand|stall|booth/i.test(textNow));
+    eventXP('Academy Bazaar stand', 'Craft', 2, /Academy Bazaar/.test(event) && place === 'main courtyard' && /stand|stall|booth/i.test(textNow));
+    eventXP('Entrance feast', 'Society', 2, /Entrance Event/.test(event) && place === 'ring dining hall' && hour >= 1140);
+    eventXP('Founder Day feast', 'Society', 2, /Academy Founder Day/.test(event) && place === 'ring dining hall' && hour >= 1140);
+  }
+  for (const k of Object.keys(P.days)) if (/^\d+:/.test(k) && +k.split(':')[0] < dayNo - 14) delete P.days[k];
+  S.$ui.practice = PRACTICE.filter(a => locName(a) === here).map(a => {
+    const stat = a.stat === 'subject' ? '' : a.stat;
+    const locked = whyLocked(a, null) || (P.days[`${dayNo}:${a.loc}:${a.action}`] ? 'already practised today' : '')
+      || (a.paid && P.wk.paid >= 2 ? 'two paid shifts this week' : '')
+      || (stat && num(P.wk[stat], 0) >= TU.prof_pace ? `${stat} is at this week's limit (${P.wk[stat]}/${TU.prof_pace}); class attendance still counts` : '');
+    return { action: a.action, stat: a.stat, locked };
+  });
+  if (S.$ui.fortune && Array.isArray(S.$ui.fortune.mods)) {
+    const mods = PROF.filter(k => ranks[k] > 0).map(k => `${k} +${Math.min((SUBJECTS.some(s => SUBJECT_STAT[s] === k && num(((S.$eng.study || {}).stand || {})[s], -1) === 4) ? 10 : 20), ranks[k] * 3)}`);
+    if (mods.length) S.$ui.fortune.mods.push('proficiency: ' + mods.join('; '));
   }
 }
 
@@ -3128,7 +3322,7 @@ function stepCommit(c) {
   if (log.length) S._Log = [...(S._Log || []), ...log.map(l => `[${stamp(S.World)}] ${l}`)].slice(-12);
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepRest, stepExposure, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepUi, stepCommit];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepRest, stepExposure, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepUi, stepCommit];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,

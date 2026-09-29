@@ -81,6 +81,7 @@ from common import effect_text     # 1.9.5: shop item effects (shop and Bag)
 _byname = {l['name']: lid for lid, l in DATA['locs'].items()}
 DATA['palias'] = {re.sub(r'^the ', '', a): _byname[nm] for a, nm in place_aliases(json.load(open(P('data/locations.json'), encoding='utf-8'))).items()}
 DATA['tune'] = json.load(open(P('data/tuning.json'), encoding='utf-8'))['groups']   # 1.3.1 Settings rows
+DATA['practice'] = json.load(open(P('data/practice.json'), encoding='utf-8'))
 # 1.4.1 factions for People → Connections (data/factions.json; 'auto' = every NPC of those groups)
 _fac = json.load(open(P('data/factions.json'), encoding='utf-8'))['factions']
 DATA['factions'] = [{'id': f['id'], 'name': f['name'], 'secret': f.get('secret', []),

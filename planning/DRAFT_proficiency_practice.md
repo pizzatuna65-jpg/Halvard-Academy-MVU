@@ -90,7 +90,7 @@ INDEX §5.
 
 ---
 
-## Batch 2 — 6 stat + hexagon (1.26.0)
+## Batch 2 — 6 stat + hexagon (1.26.0) [DONE 1.27.0]
 
 **Tujuan.** Kemampuan nyata {{user}} terlihat dan tumbuh dari cara bermain; terpisah dari grade.
 
@@ -214,7 +214,7 @@ Live: hexagon di tema terang/gelap dan layar sempit; Builder Normal/Custom; tawa
 
 ---
 
-## Batch 3 — Tab Practice (1.27.0)
+## Batch 3 — Tab Practice (1.27.0) [DONE 1.27.0]
 
 **Tujuan.** Tempat yang sudah ditemukan membuka aksi latihan yang menaikkan stat.
 

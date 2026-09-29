@@ -3,12 +3,11 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.25.0** (2026-09-30). Red "new" dots (bracelet buttons, tabs, people, Map markers; "seen" in Tavern
-Helper's chat variables): Batch 1 of the owner-approved `planning/DRAFT_proficiency_practice.md`. Before it: map playtest fixes
-(1.24.x) and the UI overhaul "Brass & Moonglass" (1.21–1.23). Live checks: `docs/TEST_CHECKLIST.md` "Open".
+**Snapshot:** card **v1.27.0** (2026-09-30). Batches 2 and 3 of the approved proficiency plan: six stats with XP, Fortune
+modifiers and a Studies hexagon, plus location-based Practice in Activities. Live checks: `docs/TEST_CHECKLIST.md` "Open".
 Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** Batch 2 of `planning/DRAFT_proficiency_practice.md` (6 stats, hexagon in Studies) when the owner says "mulai batch 2";
+**Next task:** Batch 4 of `planning/DRAFT_proficiency_practice.md` (crafting engine and magical crafts) when the owner says "mulai batch 4";
 the draft lists each batch's files, save handling and tests. Draft is deleted in the release of Batch 6.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
