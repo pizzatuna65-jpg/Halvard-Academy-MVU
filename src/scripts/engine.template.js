@@ -342,6 +342,9 @@ function periodOf(W, evs) {
   else if (h < 20) p = 'After classes';
   else p = 'Evening';
   if (suspended && /^P\d/.test(p)) p = `Timetable suspended (${suspended.t.split(' (')[0]})`;
+  // 1.30.2 (owner playtest): on a day without classes (Entrance Event, breaks, lockdown) nothing is "before" or "after" classes
+  else if (suspended && p === 'Morning, before classes') p = 'Morning, no classes today';
+  else if (suspended && p === 'After classes') p = 'Afternoon, no classes today';
   return p;
 }
 function curfewOf(W, evs, S) {

@@ -1,7 +1,14 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.30.2 — "No classes today" on a day without classes (2026-09-30)
+
+Owner playtest: the bracelet said "Morning, before classes" at 07:30 on the Entrance Event, which has no classes. On a day whose
+timetable is suspended (Entrance Event, breaks, lockdown) the period now reads "Morning, no classes today" and, from 16:00,
+"Afternoon, no classes today"; ordinary school days are unchanged (`periodOf`). Save fixture v1.30.1. Tests: `test_playtest_v1301`
+(+2 checks), world, attendance, calendar, ambience, saves pass.
 
 ## v1.30.1 — Playtest fixes: area gates, rival teams, malformed update blocks (2026-09-30)
 
@@ -81,14 +88,6 @@ Batch 4 of the approved proficiency plan. `data/crafts.json` defines brewing, ru
 - Gardens, Forest and Clearing Practice yield reagents; clearing blooms wilt on the next day. Crafted draughts and talismans use `/Consumables`, including healing an injury and one-use fitting items. The Bag shows their effects and handmade notes, which gift preferences read. Enchanted clothing works as weather gear. The Medical Centre apothecary buys up to three Healing draught doses per week through `/Craft_sales`.
 - Craft instructions in rules 502/504 appear only where a recipe is available; Settings' token estimate measures the ordinary cost without those situational lines.
 - Save fixture v1.27.0; no migration. Main and three TEST cards rebuilt. Focused crafting tests, Practice tests, save compatibility, `npm run lint` and the full suite pass. Connected SillyTavern checks remain in `docs/TEST_CHECKLIST.md`.
-
-## v1.27.0 — Proficiency and Practice (2026-09-30)
-
-Batches 2 and 3 of the owner-approved `planning/DRAFT_proficiency_practice.md` in one release.
-- Six engine-owned proficiency ranks with XP from classes, exams, study, interaction, casting, stamina training, battle, club time and tutoring. Repeatable XP has a per-stat weekly pace setting (4/6/9); rank and A-grade Fortune bonuses share a +20 ceiling. Society Rank 4/5 adds 10%/20% bond XP from talk or hangout.
-- Student Builder offers Normal or Custom starting ranks. Studies shows a six-axis chart, XP, weekly progress and practice places. Old saves receive a small estimate and a one-time starting-rank choice; the 1.25.0 save fixture is retained.
-- Activities gains Practice after the first training place is discovered. `/Practice` checks action, both endpoints' location, elapsed time, class hours, daily repeat, partner, club, weather, season, dorm and weekly cap. It can count as ordinary mana/stamina training, study or a paid animal-care shift. `<now>` lists available actions at the current place.
-- Build: main card and three TEST cards regenerated. New focused tests cover migration, read-only ranks, XP sources, place/time/partner rejection and report clearing. Full suite and live SillyTavern checks are recorded separately.
 
 ## Release index (one line per release, oldest first)
 
@@ -182,3 +181,4 @@ Batches 2 and 3 of the owner-approved `planning/DRAFT_proficiency_practice.md` i
 - **v1.29.0 (2026-09-30):** Batch 5: non-magic crafts (cooking, needlework, drawing, carving, calligraphy, smithing), four ingredients, masterwork from craft Projects.
 - **v1.30.0 (2026-09-30):** Batch 6: marks from preparation, proficiency and attendance plus a seeded exam-day roll; Rank 5 mastery perks.
 - **v1.30.1 (2026-09-30):** Playtest fixes: map gates open only in their area; rival academy students kept off Halvard's grounds; malformed update blocks recovered.
+- **v1.30.2 (2026-09-30):** The period reads "no classes today" instead of "before classes" on a day without classes.

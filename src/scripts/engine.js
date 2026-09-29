@@ -342,6 +342,9 @@ function periodOf(W, evs) {
   else if (h < 20) p = 'After classes';
   else p = 'Evening';
   if (suspended && /^P\d/.test(p)) p = `Timetable suspended (${suspended.t.split(' (')[0]})`;
+  // 1.30.2 (owner playtest): on a day without classes (Entrance Event, breaks, lockdown) nothing is "before" or "after" classes
+  else if (suspended && p === 'Morning, before classes') p = 'Morning, no classes today';
+  else if (suspended && p === 'After classes') p = 'Afternoon, no classes today';
   return p;
 }
 function curfewOf(W, evs, S) {
@@ -695,7 +698,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.30.1";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.30.2";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
 // from the shared context c (the states, the reply's text and the values earlier steps computed) and adds what later steps use.

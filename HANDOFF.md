@@ -3,7 +3,7 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.30.1** (2026-09-30), playtest fixes on top of 1.30.0. The proficiency plan is complete (1.25–1.30): red "new" dots, six proficiencies,
+**Snapshot:** card **v1.30.2** (2026-09-30), playtest fixes on top of 1.30.0. The proficiency plan is complete (1.25–1.30): red "new" dots, six proficiencies,
 Practice, crafting with masterwork, and now marks from preparation, proficiency and attendance plus Rank 5 mastery perks. Live
 checks: `docs/TEST_CHECKLIST.md` "Open".
 Plans: `planning/FUTURE_PLANS.md`.

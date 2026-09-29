@@ -53,3 +53,8 @@ const bad = E.recoverPatch('<UpdateVariable><JSONPatch>{"op": "replace", "path":
 ok(bad && bad.error && !bad.ops, 'unreadable JSON: an error to report, no operations');
 const rule = read('src/worldbook/custom/content/503.txt');
 ok(/without them the whole update is lost/.test(rule), '503 says both JSONPatch tags are required');
+
+console.log('1.30.2: the period on a day without classes');
+const P = (d, hhmm) => at(S0, d, hhmm, 'Reception and Gatehouse').World._Period;
+ok(P(0, '07:30') === 'Morning, no classes today' && P(0, '17:00') === 'Afternoon, no classes today', `Entrance Event (M1 W1 Mon): no "before classes" (${P(0, '07:30')} / ${P(0, '17:00')})`);
+ok(P(1, '07:30') === 'Morning, before classes' && P(1, '17:00') === 'After classes', 'an ordinary school day keeps "before classes" and "After classes"');

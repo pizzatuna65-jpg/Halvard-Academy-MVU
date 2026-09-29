@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.30.2: the one check in its section below.
 - v1.30.1 (playtest fixes): the three connected-session checks in its section below.
 - v1.30.0 (new mark formula, mastery perks): the three connected-session checks in its section below.
 - v1.29.0 (non-magic crafts, masterwork): the three connected-session checks in its section below.
@@ -58,6 +59,10 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.30.2 — No classes today
+
+1. On the Entrance Event morning (07:30) the bracelet reads "Morning, no classes today"; on an ordinary school day, "Morning, before classes".
 
 ### v1.30.1 — Playtest fixes: area gates, rival teams, malformed update blocks
 
