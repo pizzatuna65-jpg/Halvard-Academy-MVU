@@ -1,0 +1,8 @@
+[Courtyards] Open spaces between buildings where students can hangout. Not designed for anything in particular, which is exactly why they work. Every flat edge worn smooth from centuries of sitting.
+Feel: open stone, sunny noon, windy dusk.
+<%_ { const _sm = Number(getvar('stat_data.World.Month')) || 1; _%>
+<%_ if (_sm >= 4 && _sm <= 6) { _%>
+In summer: Students chase the shade around the stone.
+<%_ } else if (_sm >= 10 && _sm <= 12) { _%>
+In winter: Swept stone in the middle, snowball fights in the drifts at the edges.
+<%_ } } _%>

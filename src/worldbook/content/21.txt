@@ -1,0 +1,11 @@
+[Entrance Event]
+When: Month 1 Week 1 Monday
+- 07:00-09:00 Arrival: new students check in at Reception and Gatehouse.
+- 09:00 Ceremony in the Arbiter Hall: Headmaster Baelin and Vice Headmaster Althair address the new class before sorting begins. The first-years then touch the Arbiter Stone one by one. Immediately after each sorting, a Student Council member gives that student the vest of their new dorm; they sit with that dorm and remain in the hall until everyone is sorted at 10:00. Do not send a sorted first-year outside to wait or offer free time between their sorting and the end of the ceremony.
+- 10:00-18:00 Tour: after sorting ends, each group is exactly two new first-years and one senior. The assigned trio meets in the Arbiter Hall and tours the campus together; club booths are stops along the way. Keep the same trio until the tour ends. Use the recorded Campus_State.Entrance_tour assignment; choose available roster students of this year's entering cohort before inventing a new first-year, and a roster senior before inventing a guide. If every suitable roster student is unavailable, a narrator-created student may fill the place.
+- Club promotion: stands across the academy, 10:00-18:00 on sorting day, then every afternoon after classes (16:00-18:00) until Friday; registration closes Friday at 18:00. It opens on sorting day on purpose, so clubs recruit before dorm loyalty settles.
+- Late afternoon: seniors show new students their rooms inside the dorms.
+- 19:00 Entrance Feast in the Ring Dining Hall: Headmaster Baelin and Vice Headmaster Althair speak again before dinner is served.
+<%_ { const _py = Math.max(1, Math.min(3, Number(getvar('stat_data.Player.Profile.Year')) || 1)); if (_py > 1) { _%>
+{{user}} is a returning Year <%- _py %> student: sorted in their first year and never sorted again. Today {{user}} is one of the seniors: at 10:00 {{user}} meets the two assigned new first-years in Campus_State.Entrance_tour and takes them round the whole campus until 18:00 (their questions, the shortcuts, the places to avoid, the club booths on the way), and in the late afternoon shows them their rooms if they were sorted into {{user}}'s dorm. {{user}} watches the speeches and sorting from the gallery, and eats at the Entrance Feast with their own year.
+<%_ } } _%>

@@ -1,0 +1,17 @@
+[Founder's Park] Open parkland with lawns, paths and benches; the main green space on campus and the nicest place to be outdoors between classes. Picnic blankets dot the lawns on any fair day, and weathered wooden picnic tables stand in the shade along the paths. Everyday use: sitting and talking, lunch on a blanket or at a picnic table, reading, napping, jogging the paths, couples finding somewhere semi-private. Busiest at lunch and on warm afternoons.
+The Founder's Statue stands at its centre: bronze, the academy's founding warden, cold even in full sun, its outstretched hand polished bright by the Founder's Hand superstition. Focus of Academy Founder Day in Month 9.
+Home of the Faraway Laugh story.
+Feel: open, windy, grass, green bronze.
+<%_ { const _sm = Number(getvar('stat_data.World.Month')) || 1; _%>
+<%_ if (_sm >= 1 && _sm <= 3) { _%>
+In spring: The first warm day fills every lawn.
+<%_ } else if (_sm >= 4 && _sm <= 6) { _%>
+In summer: Busiest of all: picnic blankets from lunch to dusk.
+<%_ } else if (_sm >= 7 && _sm <= 9) { _%>
+In autumn: Leaf piles along the paths, and the benches move into the last sun.
+<%_ } else if (_sm >= 10 && _sm <= 12) { _%>
+In winter: The benches stand empty, snowmen appear on the lawns overnight, and the exam-morning queue to the Founder's Hand stamps a path through the snow.
+<%_ } } _%>
+<%_ { const _w = getvar('stat_data.World') || {}; if ([3, 5, 9, 11].includes(+_w.Month) && +_w.Week === 1 && ['Mon', 'Tue', 'Wed', 'Thu'].includes(_w.Day) && String(_w.Time || '') < '12:00') { _%>
+This exam morning a queue snakes across the lawn to the Founder's Hand.
+<%_ } } _%>

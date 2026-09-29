@@ -1,0 +1,16 @@
+<current_state>
+The present moment of the story. Read it before writing; it is the source of truth.
+Fields starting with "_" are computed by the game engine: rely on them, never patch them. Empty fields are not shown; they still exist and follow the update rules.
+<%_ { // 1.11.0 (token audit B1/A6): the state as YAML without $ keys, empty values and retired bond fields; the variables themselves are unchanged
+const _E = v => v === '' || v === false || v == null || (Array.isArray(v) && !v.length) || (typeof v === 'object' && !Array.isArray(v) && !Object.keys(v).length);
+const _P = (v, path) => { if (Array.isArray(v)) { const a = v.map(x => _P(x, path)).filter(x => !_E(x)); return a; }
+  if (v && typeof v === 'object') { const o = {}; for (const [k, x] of Object.entries(v)) { if (k.startsWith('$') || (/^Bonds\.[^.]+$/.test(path) && (k === 'Progress' || k === '_Event_ready'))) continue; const y = _P(x, path ? path + '.' + k : k); if (!_E(y)) o[k] = y; } return o; }
+  return v; };
+const _Q = x => { const t = String(x); return /^[A-Za-z0-9_(][^\n"]*$/.test(t) && !/: |#|^[\[{]|\s$|^(true|false|null|yes|no|on|off|~)$/i.test(t) && !/^-?\d[\d.,:e+-]*$/.test(t) ? t : JSON.stringify(t); };
+const _V = x => (typeof x === 'number' || typeof x === 'boolean' ? String(x) : _Q(x));
+const _Y = (v, ind) => { const out = [];
+  if (Array.isArray(v)) { for (const x of v) { if (x && typeof x === 'object') { const b = _Y(x, ind + '  '); out.push(ind + '- ' + b.slice(ind.length + 2)); } else out.push(ind + '- ' + _V(x)); } }
+  else for (const [k, x] of Object.entries(v)) { if (x && typeof x === 'object') out.push(ind + _Q(k) + ':\n' + _Y(x, ind + '  ')); else out.push(ind + _Q(k) + ': ' + _V(x)); }
+  return out.join('\n'); };
+_%><%- _Y(_P(getvar('stat_data') || {}, ''), '') %><% } %>
+</current_state>

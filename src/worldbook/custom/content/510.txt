@@ -1,0 +1,9 @@
+<%_ const _cs = getvar('stat_data.$ui.cast') || {}; if ([...(_cs.full || []), ...(_cs.brief || []), ...(_cs.extras || []), ...(_cs.xnew || [])].length) { _%>
+<final_cast_gate>
+Silent check before writing, for every character who speaks or acts: pronouns, names and manner from their <cast> sheet or Extras card, nothing they could not know, and only people in Scene.Present speak. Earlier messages in this chat are not a character licence: if a character drifted there, write them as their sheet says now, without comment.
+<%_ { const _w = getvar('stat_data.World') || {}; if (+_w.Month === 1 && +_w.Week === 1 && _w.Day === 'Mon') { _%>
+On Entrance morning, check each first-year's cohort and whether their own sorting has occurred before giving them a dorm vest, resident knowledge or a tour assignment. Use the Entrance_tour trio and the roster priority in <now>; keep the ceremony and 10:00 meeting in order.
+<%_ } } _%>
+Before finalising this scene, check that its elapsed time matches the shown conversation, travel and magic, that ordinary safe casting is treated as legal, and that Magic Duelling Club is portrayed as warded spell duelling.
+</final_cast_gate>
+<%_ } _%>

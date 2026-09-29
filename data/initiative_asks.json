@@ -1,0 +1,60 @@
+{
+  "_note": "1.10.2 (FP11, owner-approved planning/DRAFT_batch_fp7_fp11.md Batch 3): why an NPC who seeks {{user}} out (FP1 NPC initiative) does so today. Generic templates per Tension category (data/tension.json npcs; 'social' when a character has none), filled from the NPC's own data: {place} = one of their haunts (plus common student spots from 'places' for every category but authority), {club} = their club, {thing} = something they love or like (data/gift_prefs.json), {event} = today's or tomorrow's calendar event. A template whose placeholder has no value for that NPC is skipped. The engine never repeats a template + filling for the same NPC within its last 20 uses. 'strained' replaces the category at Tension 70+. Written by the maintainer; not canon for any one character.",
+  "categories": {
+    "withdrawn": [
+      "leaves {{user}} a short note asking to meet at {place}, where it is quiet",
+      "wants {{user}}'s company at {place} without having to explain why",
+      "found {thing} and wants to show {{user}}, and only {{user}}",
+      "asks, awkwardly, whether {{user}} is going to {event}",
+      "needs a hand with something at {place} and would rather ask {{user}} than anyone else",
+      "wants {{user}} to sit with them at the {club} for once",
+      "waits for {{user}} at {place} and pretends it is by chance"
+    ],
+    "social": [
+      "wants {{user}} to come along to {place}",
+      "has news and wants {{user}} to hear it first",
+      "wants to share {thing} with {{user}}",
+      "is rounding people up for {event} and wants {{user}} along",
+      "wants {{user}} to drop by the {club} and meet everyone",
+      "wants {{user}}'s opinion on something, and {place} is where to give it",
+      "wants {{user}} to help pick something at {place}",
+      "saved {{user}} a seat at {place}"
+    ],
+    "confrontational": [
+      "wants a proper challenge from {{user}} at {place}",
+      "comes to complain to {{user}} about something, then stays",
+      "wants a training partner who can keep up and picks {{user}}",
+      "drags {{user}} to the {club} because nobody else will do",
+      "wants to settle a small argument with {{user}} before {event}",
+      "has an opinion about {thing} and needs {{user}} to hear it"
+    ],
+    "authority": [
+      "asks {{user}} to stop by {place} after classes",
+      "has a small task for {{user}} at {place}",
+      "wants to know how {{user}} is getting on, in their own way",
+      "mentions {event} and asks whether {{user}} is ready",
+      "wants a word with {{user}} about the {club}"
+    ],
+    "dangerous": [
+      "wants something from {{user}} and chooses {place} to ask for it",
+      "offers {{user}} a deal, at {place}",
+      "tests {{user}} with a question that is not quite a question",
+      "knows something about {event} and lets {{user}} notice"
+    ],
+    "strained": [
+      "has something to say to {{user}} and will not wait",
+      "wants to clear the air with {{user}}, on their own terms, at {place}",
+      "is looking for {{user}} to ask a pointed question",
+      "turns up where {{user}} is, clearly still annoyed"
+    ]
+  },
+  "places": [
+    "the Canteen",
+    "the Gardens",
+    "The Mall",
+    "the Main Courtyard",
+    "the Boathouse and Lake",
+    "the Grassy Field and Hills",
+    "the Study Rooms"
+  ]
+}

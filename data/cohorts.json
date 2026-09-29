@@ -1,0 +1,18 @@
+{
+ "_about": "v1.0.3: incoming student cohorts. Each key is the campaign year (World.Year) in which the listed NPC ids arrive at Halvard as first-years; before that they are inactive: their lore entry is empty (EJS gate), they are off the NPC roster, not regulars, not club members, not in the Connections graph, and the engine will not start a bond with them. Ids are first names, as in data/npcs.json. List them under 'Year 1:' in the lorebook's NPC Roster entry (uid 97). Then rebuild from tools/merge_lorebooks.py onward. 1.7.0: cohort 2 (owner-approved 2026-09-26, planning/DRAFT_cohort2_npcs.md) arrives in campaign Year 2; their entries come from source_original/npc_lore_cohort2_2026-09-26/.",
+ "incoming": {
+  "2": [
+   "Linus",
+   "Maple",
+   "Nerys",
+   "Hadrian",
+   "Wren",
+   "Tsubaki"
+  ],
+  "3": []
+ },
+ "_stays": "1.7.4: third-years whose canon keeps them at Halvard past their third year. The engine does not send them away with the graduates (M12 W1 Mon); it logs the line below instead. The story can still have them graduate (add the name to Campus_State.Graduated). The text is shown to the player in the engine log, so it must not give a secret away.",
+ "stays": {
+  "Etnie": "Etnie did not leave with the graduates: she stays on at Halvard for another third year (her lore says why)"
+ }
+}

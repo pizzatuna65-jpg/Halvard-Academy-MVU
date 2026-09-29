@@ -1,0 +1,11 @@
+{
+ "_comment": "rank override per '<NPC>.<Field>'; 99 = story-only (unlocks via Campus_State.Secrets_revealed). USER REVIEW.",
+ "Lucius.Magic": 99,
+ "Lucius.Notes": 99,
+ "Alyssa.Magic": 99,
+ "Alyssa.Backstory": 99,
+ "Alyssa.Goals": 99,
+ "Alyssa.Notes": 99,
+ "Milena.Current case": 99,
+ "Tilly.Goals": 99
+}

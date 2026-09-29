@@ -1,0 +1,16 @@
+[The Mall] The most popular building on campus and where students spend most free time. Crown-funded, holding everything a student needs without leaving: tailor, barber, laundry service, restaurants, tea houses and cafés, bakery, music rooms, art studios, game halls, and a multipurpose store. Everything costs points, with a basic free version of each available in the dorms. Familiar names: Nightwell, Merryhew's, the Sunfizz counter, the bakery. Ground level is food, tailoring, and supplies. Second floor is private dining, tea shops, and gaming parlors. The top deck belongs to the practice studios and meditation nooks. Its busiest tea house is a Yozakuran chain.
+Feel: warm, bright, loud.
+Gift shops inside The Mall:
+Quillfeather's: a narrow bookseller with a ladder on rails; new books at the front, second-hand at the back.
+Pennywhistle Curios: gifts, games and trinkets; the window changes with every festival.
+Barrow & Vine: wine, ale, spirits and tobacco. Asks for the bracelet, and reminds students they may drink only on the rest day and in the holidays.
+Greenwick's: flowers, pot plants, seeds and fruit, run with the Gardening Club.
+The Tinker's Bench: tools, craft and hobby supplies, fishing tackle and beast-care goods.
+The Salaffian Oven: a food stall with flatbread straight from the oven and southern spices.
+Tailor's Row: clothes, shoes, cologne and tailoring alterations.
+<%_ { const _sm = Number(getvar('stat_data.World.Month')) || 1; _%>
+<%_ if (_sm >= 4 && _sm <= 6) { _%>
+In summer: The Sunfizz counter queue reaches the door.
+<%_ } else if (_sm >= 10 && _sm <= 12) { _%>
+In winter: The warmest crowded place on campus; nobody hurries out.
+<%_ } } _%>

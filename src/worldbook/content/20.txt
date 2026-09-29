@@ -1,0 +1,6 @@
+[Point System]
+Balances are private by default, though anyone may show theirs.
+Sources: a monthly payout by current dorm rank (300 at the bottom band up to 3,000 for a dorm's rank 1); paid work; academic marks; competition results, where a Kingdom Competition win pays 5,000, more than most students earn in half a year.
+Family money converts at the Banking House.
+Everything in the mall costs points, from a 15-point bakery roll to a 4,000-point quality focus, while a free version of nearly everything exists on campus: the canteen against the restaurants, the common-room kettle against the cafés, self-service laundry against the paid service.
+Effect: wealth is visible without being announced. A student who never eats at the mall is marked by the habit, and since rare reagents cost more than a bottom-band student earns in a month, those who can afford good materials earn the marks that pay for more.

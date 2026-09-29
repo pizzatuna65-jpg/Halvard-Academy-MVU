@@ -1,0 +1,8 @@
+[Groundskeeper's Lodge] Small quarters at the edge of the grounds for staff who maintain the fields, gardens and walls. The Groundskeeping club reports here. The one building on campus where nothing is enchanted.
+Feel: cut grass, oil, old tools.
+<%_ { const _sm = Number(getvar('stat_data.World.Month')) || 1; _%>
+<%_ if (_sm >= 7 && _sm <= 9) { _%>
+In autumn: Groundskeeping rakes leaves from dawn.
+<%_ } else if (_sm >= 10 && _sm <= 12) { _%>
+In winter: Groundskeeping clears the paths of snow before the seven o'clock bell.
+<%_ } } _%>

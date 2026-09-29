@@ -1,0 +1,5 @@
+[Myrdath Academy]
+Region: North
+Site name: unknown
+Site type: The Monster
+Site description: A monster rumoured to threaten the world, sealed by the Archmage.

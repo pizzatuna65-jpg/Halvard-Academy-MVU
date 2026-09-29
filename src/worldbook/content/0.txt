@@ -1,0 +1,33 @@
+[WORLD INDEX — Never contradict this. Anything marked unknown is simply not established yet; the narrator may decide it and reveal it when the story reaches it; the narrator may freely create new characters. Text inside narrator_only tags is hidden truth characters do not know at first; let it surface through events, clues and discovery, and reveal it fully when the story gets there.]
+
+ALWAYS TRUE
+{{user}} is a Year <%- Math.max(1, Math.min(3, Number(getvar('stat_data.Player.Profile.Year')) || 1)) %> student at Halvard (a first-year when the story began; Player.Profile.Year is authoritative). Kingdom: Eldrasil, in the east of the continent. Nations: Sunreach Bay (resort, academy Trip destination), the Arslan Sultanate (money; the World Bank), Norvaine (the strongest army; Yog-Sothoth), Velmora (the most formal court), Caelmar (a hive city), Yozakura (Beastkin, service companies, rulers crowned by tournament). Races: Human, Elf, Beastkin.
+Dorms: Fire=Elemental (red), Light=Mystic (yellow), Sky=Occult (blue), Viridian=Spiritual (green).
+Week: Mon-Sat study, Sunday rest, all on campus.
+Students do not leave the grounds during term, except for sanctioned trips.
+Calendar: 12 months x 4 weeks x 7 days. Seasons: M1-3 spring, M4-6 summer, M7-9 autumn, M10-12 winter.
+Casual casting, including ordinary movement magic, is normal and allowed anywhere on campus; students practise in courtyards, commons and the Gardens. Restricted only: forbidden arts (arrest), sport events (no magic), duels outside a warded ring, magic near the Seal Chamber, and anything that damages property or endangers people. Doves intervene for an actual restriction, harm, or established suspicion, not for an ordinary safe spell.
+
+EXISTS
+Arbiter Stone: sorts students once, at entry.
+Dorm rank: recalculated M5W2 and M11W2.
+Subtypes: ~30 per type, specialize in 1-2.
+Points: bracelet currency, 1:1 with money.
+Competitions: Dorm M3W4, Academy M6W4, Kingdom M9W4, World M11W4 (abroad).
+Combat roles: attack, defense, healing, support, control.
+Exams: M3W1, M5W1, M9W1, M11W1.
+Breaks: M5W4 and M12, most students go home.
+The Thinning M7W3: seal weakest, campus locked down.
+Warden: guards the seal, never teaches.
+Outside powers on academy land: Dovecote, Royal Inspectorate, Cathedral, Noble Houses' Liaison, Bank.
+Daily rhythm: bells and curfew, period change, skipping spots, exam weeks, assignments, Notice Board, Lost & Found.
+Ghost stories, student folklore, NOT real: the third stall, the long corridor, the three o'clock knock, the crying on the water, the night student, the thirteenth stroke, the night swimmer, the walking lantern, breath on the glass, when the pens go quiet, the faraway laugh, the polite walker, the last bed, the other climber, the applause.
+Brands and shops: Sunfizz (cheap soda), the Lucky Roll (canteen mystery bread), Ardenne (luxury equipment), Firetooth (spicy sweets), Nightwell (the Vigil coffee), the Oracle Shell (yes/no toy), Merryhew's (joke/prank shop), the Snug (private-booth restaurant).
+Games: Dragonchess (living chess board).
+Magitech: mana grid (lanterns, wall torches), climate runes (indoor temperature), announcement pillars (live broadcast, no recording). No phones, computers or recording devices: messages travel by letter through the Mail Tower. Units are metric (°C, metres, kilometres, kilograms, litres).
+Paid work: canteen, mail sorting, commissary, shelving, menagerie, workshop, potion halls, tutoring.
+Superstitions: star cookie (luck), the founder's hand (exam), sleeping in the library, eating in the forest, Taken (never answer your name after dark).
+World myths, told across the continent, not history: the Devoured Kingdom (Azathoth), the Four Who Saved the World, the First Bargain (why magic has four types), the Holy Grail, the Shaping of the World (Asmoday).
+Everyday kit: paper notebooks, bound and printed textbooks, graphite pencils, steel-nib pens and ink bottles, folders and satchels; chalkboards in the Lecture Halls. No slates or scrolls in daily use — scrolls and vellum appear only in the Archive, the Restricted Section, and ritual work.
+
+The Ring Dining Hall opens only for feasts after major academy events, never for daily meals. Every formal academy event opens with speeches from Headmaster Baelin and Vice Headmaster Althair, and they speak again at its close: every feast begins with their speeches before the food is served.

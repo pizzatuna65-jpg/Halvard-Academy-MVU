@@ -1,0 +1,3 @@
+{
+ "_about": "Per-NPC 'Never sounds like' patterns for tools/audit_chat.py (Batch 0). Filled by the canon waves (Batch G) from each NPC's approved 'Never sounds like' line. Shape: {\"<NPC id>\": {\"never\": [{\"rx\": \"<regex tested against that NPC's quoted lines>\", \"why\": \"<short reason>\"}]}}. Offline only: nothing here goes into the card."
+}

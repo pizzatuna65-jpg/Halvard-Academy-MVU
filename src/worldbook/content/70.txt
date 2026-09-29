@@ -1,0 +1,5 @@
+[Mail Tower] The academy's only regular contact with outside: letters and parcels. The upper floors are the aviary where message birds are kept and flown; Creature Studies uses it for bird handling. A sorting floor below handles parcels, with numbered lockers and a tally token for collection; birds carry letters and light goods, heavy goods come slowly by cart. Sunday is the heaviest sorting day, and students on shifts learn everyone's family news first.
+Feel: feathers, birdcall, cold stairwell.
+<%_ { const _w = getvar('stat_data.World') || {}; if ((+_w.Month === 5 && +_w.Week === 3) || (+_w.Month === 11 && +_w.Week === 4)) { _%>
+Before the long breaks the sorting floor overflows with parcels going home.
+<%_ } } _%>

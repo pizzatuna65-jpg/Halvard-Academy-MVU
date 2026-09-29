@@ -1,0 +1,8 @@
+[Fire Dormitory] Home of the Elementalists (red vest). Red-tiled roof and a red banner over the door. A great hearth burns in its common room day and night, and the broad chimney stack rising above the front of the building is always warm, even in winter. Inside: a common area and personal rooms. Creed: "Through the Elements, Victory Is Ours."
+Feel: hearth warmth, woodsmoke, stone.
+<%_ { const _sm = Number(getvar('stat_data.World.Month')) || 1; _%>
+<%_ if (_sm >= 4 && _sm <= 6) { _%>
+In summer: The hearth burns anyway, and the common room is the hottest place on campus.
+<%_ } else if (_sm >= 10 && _sm <= 12) { _%>
+In winter: The hearth is the envy of the other three dormitories.
+<%_ } } _%>

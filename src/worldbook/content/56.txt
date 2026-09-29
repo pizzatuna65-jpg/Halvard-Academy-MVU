@@ -1,0 +1,5 @@
+[Main Library] Reading rooms and general collections; the academy's working heart in exam weeks. Open to all four dorms, one of the few places students mix by choice rather than schedule. The upper shelves sit permanently in shadow and are a standard hiding place for students avoiding class. A battered book of world myths (the Holy Grail, the Four Who Saved the World) is the most borrowed title in a first-year's first month.
+Feel: towering, shadowed, murmuring.
+<%_ { const _w = getvar('stat_data.World') || {}; if ([3, 5, 9, 11].includes(+_w.Month) && +_w.Week === 1) { _%>
+In exam weeks, Firetooth tins and Star Cookies cover the study tables.
+<%_ } } _%>

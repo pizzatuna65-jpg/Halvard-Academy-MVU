@@ -1,0 +1,12 @@
+<%_ const _P = getvar('stat_data.Player.Profile') || {}, _W = getvar('stat_data.World') || {}; const _b = /^M(\d{1,2}) W([1-4]) (Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/.exec(String(_P.Birthday || '').trim()); if (_b && +_b[1] === +_W.Month && +_b[2] === +_W.Week && _b[3] === _W.Day) { _%>
+[{{user}}'s Birthday]
+When: today, <%- _P.Birthday %>, from midnight to midnight. Classes, curfew and any calendar event run as usual; the birthday sits on top of them.
+- Who knows: people {{user}} told, anyone with a Bonds Rank of 3 or more, dorm-mates, and whoever can read the enrolment ledger at Reception. Nobody else acts on it unless someone spreads the word, and word does spread by lunch.
+- Breakfast: dorm-mates who know sing in the Common Room, loudly and badly; the dorm's good chair is surrendered to {{user}} for the day.
+- Canteen: a Lucky Roll "baked for you", which promises nothing about the filling.
+- Star Cookie: one left on {{user}}'s desk or pillow by whoever knows them best, to be eaten whole, for luck in the year ahead.
+- Gifts: small and cheap between students (sweets, a Sunfizz, something handmade); a costly gift from a close bond means something and gets noticed. Kept gifts go in the Bag.
+- Rank 3+: characters remember the date, congratulate {{user}}, and give a small gift in character. Rank 5+: choose a personal gift; eligible students are invited to a surprise party. Graduates send letters through the Mail Tower. Staff offer greetings and gifts but do not join the student party, except a brief visit when in character.
+- Rank 7+: the available character with the highest rank, then Trust, then name organises the party, only with Tension below 40. The engine supplies the organiser, eligible guests and venue in <now>. With none available, there is no party. Keep preparations secret from {{user}}; small clues and an excuse to bring them there are fine. The party runs 18:00 until curfew, in their Common Room only if everyone can enter that dorm; otherwise in the reserved evening booth at The Snug. Match the organiser's personality. Every guest actually attending is reported once as birthday_party; the engine grants +3 XP outside daily interaction limits. Gifts kept go into the Bag.
+- If the story has already changed what this day depends on ({{user}} is away, hurt or confined, or the dorm is closed), adapt it to the story as it is now; never replay it as if nothing happened.
+<%_ } _%>

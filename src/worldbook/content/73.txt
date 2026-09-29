@@ -1,0 +1,6 @@
+[Gymnasium] Home of the Gymnastics and Basketball clubs, and of the Swimming Club, which trains in the outdoor pool beside it. Indoor training, used heavily in bad weather and during The Thinning lockdown, when nobody is permitted outside for a week and the place never goes quiet.
+Feel: high roof, echoing.
+<%_ { const _sm = Number(getvar('stat_data.World.Month')) || 1; _%>
+<%_ if (_sm >= 10 && _sm <= 12) { _%>
+In winter: It is shared by every club that normally trains outside, and booking slots are fought over.
+<%_ } } _%>

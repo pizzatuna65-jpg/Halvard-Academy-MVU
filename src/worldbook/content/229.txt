@@ -1,0 +1,9 @@
+[Magical Beasts - Name List]
+Grades: IV nuisance, III dangerous to a person, II dangerous to a group, I settlement-scale. Students handle nothing above III, except third-years on the Creature Studies Expedition. Vary the creature to the place; do not default to boars.
+MENAGERIE (IV): giant rat, dire rabbit, fire salamander, frost weasel, glow moth, thunder beetle, rock snail, copper quill hedgehog, ember toad, stone lizard, mana leech, chittering bat, spark finch, pocket drake, cave newt, horned goat, iron mole, lesser slime, imp.
+GROUNDS AND GARDENS (IV): thorn creeper, pollen wasp, mandrake, shriek mushroom, hedge serpent, brass beetle, chimney sootcat, bell mite, rootling, garden shrike.
+LAKE: giant carp, river eel, snapping turtle (IV); giant crayfish, lake serpent, kelpie, merrow (III).
+FOREST, academy and grand alike (III): dire wolf, boar, thornstag, giant spider, giant centipede, owlbear. Grand forest only: goblin hound (IV), harpy, forest troll, ashen lynx, mist wolf, lesser drake, cockatrice, gargoyle (III).
+GRAND FOREST (II, expedition and hunting country): basilisk, manticore, wyvern, chimera, griffin, ogre, cave troll, dire bear, young hydra, giant scorpion, ironback boar, cinder wyrm, dread weaver, bone drake, roc, displacer cat, gorgon, rime elk.
+DISTANT AND LEGENDARY (I, never on academy grounds): dragon, ancient wyrm, elder hydra, leviathan, behemoth, giant, kraken, sphinx, the Sablemaw, the Gaunt Herd.
+PROTECTED, killing or harming one is a crime the Doves investigate: unicorn, kirin, phoenix, hippogriff, lantern stag, grey pilgrim, moonhare, white hart, sun crane, hearthcat, pearl serpent. Deep forest and remote country; Halvard's Menagerie holds none. Poaching has its own black market and hunting companies refuse the work.

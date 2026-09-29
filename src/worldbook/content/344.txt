@@ -1,0 +1,5 @@
+[The Last Bed]
+Where: the Medical Centre, at night, for students kept in overnight.
+Story: the curtain round the last bed on the ward is drawn, and someone behind it breathes slowly in their sleep. The ward register says that bed is empty.
+Rule: never open the last curtain. Ask the night nurse in the morning; she will tell you it was empty, and she will be kind about it.
+Known for: patients who are well enough ask to be moved nearer the door.

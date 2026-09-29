@@ -1,0 +1,4 @@
+Spiritual — Subtypes († = forbidden: will spent, taken, or imposed)
+Standard: Healing, Strength, Speed, Endurance, Reflexes, Heightened Senses, Focus, Sleep, Regeneration, Purification, Recovery, Toughness, Adaptation, Pain Suppression, Berserk, Warcry, Empathy, Calm.
+Notes: Stabilize — keeping the dying alive until a healer comes. Resuscitation — restarting a heart, legal only within minutes of death. Rest — a full night's sleep compressed into an hour. Aura — projected presence that intimidates or inspires. Willshield — resisting charms and mind control by will alone. Lifesense — sensing living beings nearby. Sharing — lending your own strength to someone else, the legal opposite of Drawing.
+Burning†: spending your own lifespan as power. Drawing†: taking another's will as fuel. Mind Control†: overriding decisions. Slavery†: permanent magical obedience. Effigy†: curses worked through a proxy object.

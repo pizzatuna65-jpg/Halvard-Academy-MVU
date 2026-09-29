@@ -1,0 +1,4 @@
+Elemental — Subtypes († = forbidden: harm that outlives the caster)
+Standard: Fire, Water, Wind, Earth, Ice, Lightning, Metal, Magma, Sand, Crystal, Acid, Mud, Ash, Snow, Steam, Mist, Smoke, Wood, Storm, Sound, Oil, Obsidian, Clay, Magnetism, Salt.
+Notes: Light — raw light, flashes and glare; not holy, unrelated to the Light Dormitory. Dark — absorbing light and warmth; not evil.
+Blightfire†: fire that never goes out, poisoning land for generations. Salting†: permanently killing soil, unlike ordinary Salt. Poison†: toxins made to persist and spread, unlike Potion Crafting. Rot†: decay that eats land and stone permanently. Weather†: changing weather on a scale no one can control.

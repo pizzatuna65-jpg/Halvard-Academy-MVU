@@ -1,0 +1,13 @@
+[Grassy Field and Hills] Wide open rolling ground in the far grounds, twenty minutes' walk from the Main Courtyard, used for recreation year-round, with the castle small in the distance. It is big: the Observation Tower stands on its nearer crest, the Old Hut is another ten minutes out on the far slope, and the lake shore and the Forest treeline are each a quarter of an hour away. On Star Night the hills fill with students in tents and bedrolls, and the campus below goes dark for the stars.
+Home of the Walking Lantern story.
+Feel: open sky, breezy.
+<%_ { const _sm = Number(getvar('stat_data.World.Month')) || 1; _%>
+<%_ if (_sm >= 1 && _sm <= 3) { _%>
+In spring: Kites go up on every windy afternoon.
+<%_ } else if (_sm >= 4 && _sm <= 6) { _%>
+In summer: Long evenings on blankets until the eight o'clock bell.
+<%_ } else if (_sm >= 7 && _sm <= 9) { _%>
+In autumn: The grass turns gold and the wind picks up.
+<%_ } else if (_sm >= 10 && _sm <= 12) { _%>
+In winter: The slopes become sledding runs, on trays borrowed from the Canteen.
+<%_ } } _%>

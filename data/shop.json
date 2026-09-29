@@ -1,0 +1,1776 @@
+{
+  "_note": "canon=true: price fixed by the lorebook. canon=false: guide price made for the card; edit freely, then re-run tools/gen_ui.py and tools/gen_mvu_entries.py. season: 'all' or a list of seasons (Winter, Spring, Summer, Autumn); v1.1.0 seasonal items are guide prices (canon false). Weather gear works through the Bag by item name (umbrella / oilskin, rain cloak = waterproof / wool, scarf, winter cloak, mittens = warm / sun hat, straw hat = sun). 1.9.5 (playtest Batch 5): gear = umbrella | waterproof | warm | sun (worn from the Bag, by exact item name as well as the name patterns); use = what reporting the item in /Consumables does: clears (conditions), stamina (+n), buff + mins (timed gear), cure ('Head cold' ends by the next day). tools/common.py effect_text() words the effect for the shop, the Bag and the Price Guide.",
+  "items": [
+    {
+      "shop": "Commissary",
+      "loc": "commissary",
+      "item": "Sunfizz",
+      "price": 8,
+      "note": "2 points back per returned bottle",
+      "canon": true,
+      "season": "all"
+    },
+    {
+      "shop": "Commissary",
+      "loc": "commissary",
+      "item": "Firetooth (tin)",
+      "price": 12,
+      "note": "exam-week staple",
+      "canon": true,
+      "season": "all"
+    },
+    {
+      "shop": "Commissary",
+      "loc": "commissary",
+      "item": "Notebook",
+      "price": 5,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Commissary",
+      "loc": "commissary",
+      "item": "Pen nibs and ink",
+      "price": 6,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Commissary",
+      "loc": "commissary",
+      "item": "Printed class textbook",
+      "price": 45,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Commissary",
+      "loc": "commissary",
+      "item": "Satchel",
+      "price": 70,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Commissary",
+      "loc": "commissary",
+      "item": "Spare uniform set",
+      "price": 120,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Commissary",
+      "loc": "commissary",
+      "item": "Common reagent bundle",
+      "price": 30,
+      "note": "back shelves; enough for a few practicals",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Commissary",
+      "loc": "commissary",
+      "item": "Basic practice focus",
+      "price": 250,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Commissary",
+      "loc": "commissary",
+      "item": "Rare reagent",
+      "price": 350,
+      "note": "costs more than a bottom-band monthly payout",
+      "canon": true,
+      "season": "all"
+    },
+    {
+      "shop": "Commissary",
+      "loc": "commissary",
+      "item": "Special order",
+      "price": null,
+      "note": "price of the item plus a wait; specialised kit can eat a week of points",
+      "canon": true,
+      "season": "all"
+    },
+    {
+      "shop": "Commissary",
+      "loc": "commissary",
+      "item": "Umbrella",
+      "price": 25,
+      "note": "keeps you dry unless the wind is up",
+      "canon": false,
+      "season": "all",
+      "gear": "umbrella"
+    },
+    {
+      "shop": "Commissary",
+      "loc": "commissary",
+      "item": "Oilskin rain cloak",
+      "price": 90,
+      "note": "waterproof in any weather",
+      "canon": false,
+      "season": [
+        "Autumn",
+        "Winter",
+        "Spring"
+      ],
+      "gear": "waterproof"
+    },
+    {
+      "shop": "The Mall — bakery",
+      "loc": "mall",
+      "item": "Bakery roll",
+      "price": 15,
+      "note": "",
+      "canon": true,
+      "season": "all"
+    },
+    {
+      "shop": "The Mall — bakery",
+      "loc": "mall",
+      "item": "Star Cookie",
+      "price": 8,
+      "note": "eaten whole before anything that matters; sells out by seven on exam mornings",
+      "canon": true,
+      "season": "all"
+    },
+    {
+      "shop": "The Mall — cafés and tea houses",
+      "loc": "mall",
+      "item": "Café drink and pastry",
+      "price": 25,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Mall — restaurants",
+      "loc": "mall",
+      "item": "Restaurant meal",
+      "price": 45,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Mall — private dining",
+      "loc": "mall",
+      "item": "Private dining (second floor)",
+      "price": 150,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Mall — store",
+      "loc": "mall",
+      "item": "Sunfizz",
+      "price": 8,
+      "note": "2 points back per returned bottle",
+      "canon": true,
+      "season": "all"
+    },
+    {
+      "shop": "The Mall — store",
+      "loc": "mall",
+      "item": "Quality focus",
+      "price": 4000,
+      "note": "the top tier of magical equipment",
+      "canon": true,
+      "season": "all"
+    },
+    {
+      "shop": "Tailor's Row",
+      "loc": "tailors_row",
+      "item": "Tailoring alteration",
+      "price": 40,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Mall — services",
+      "loc": "mall",
+      "item": "Barber",
+      "price": 20,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Mall — services",
+      "loc": "mall",
+      "item": "Laundry service (per load)",
+      "price": 10,
+      "note": "self-service laundry in the dorms is free",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Mall — studios",
+      "loc": "mall",
+      "item": "Practice studio or music room (per hour)",
+      "price": 15,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Mall — game halls",
+      "loc": "mall",
+      "item": "Game hall (per hour)",
+      "price": 10,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Mall — store",
+      "loc": "mall",
+      "item": "Wool scarf and mittens",
+      "price": 35,
+      "note": "warm",
+      "canon": false,
+      "season": [
+        "Autumn",
+        "Winter"
+      ],
+      "gear": "warm"
+    },
+    {
+      "shop": "The Mall — store",
+      "loc": "mall",
+      "item": "Lined winter cloak",
+      "price": 120,
+      "note": "warm",
+      "canon": false,
+      "season": [
+        "Winter"
+      ],
+      "gear": "warm"
+    },
+    {
+      "shop": "The Mall — store",
+      "loc": "mall",
+      "item": "Straw sun hat",
+      "price": 30,
+      "note": "shade in summer heat",
+      "canon": false,
+      "season": [
+        "Summer"
+      ],
+      "gear": "sun"
+    },
+    {
+      "shop": "The Mall — cafés and tea houses",
+      "loc": "mall",
+      "item": "Hot spiced tea",
+      "price": 12,
+      "note": "warms you through (clears a chill)",
+      "canon": false,
+      "season": [
+        "Spring",
+        "Autumn",
+        "Winter"
+      ],
+      "use": {
+        "clears": [
+          "Chilled"
+        ]
+      }
+    },
+    {
+      "shop": "The Mall — cafés and tea houses",
+      "loc": "mall",
+      "item": "Iced fruit cooler",
+      "price": 10,
+      "note": "cools you down (clears overheating)",
+      "canon": false,
+      "season": [
+        "Summer"
+      ],
+      "use": {
+        "clears": [
+          "Overheated"
+        ]
+      }
+    },
+    {
+      "shop": "Nightwell",
+      "loc": "nightwell",
+      "item": "The Vigil",
+      "price": 60,
+      "note": "two days without sleep, paid for afterwards",
+      "canon": true,
+      "season": "all"
+    },
+    {
+      "shop": "Nightwell",
+      "loc": "nightwell",
+      "item": "House coffee",
+      "price": 12,
+      "note": "strong, bottomless until the pot runs out",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Nightwell",
+      "loc": "nightwell",
+      "item": "Honey cream coffee",
+      "price": 16,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Nightwell",
+      "loc": "nightwell",
+      "item": "Spiced milk tea",
+      "price": 14,
+      "note": "the non-coffee order",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Nightwell",
+      "loc": "nightwell",
+      "item": "Iced coffee",
+      "price": 14,
+      "note": "cools you down (clears overheating)",
+      "canon": false,
+      "season": [
+        "Summer"
+      ],
+      "use": {
+        "clears": [
+          "Overheated"
+        ]
+      }
+    },
+    {
+      "shop": "Nightwell",
+      "loc": "nightwell",
+      "item": "Hot chocolate with cream",
+      "price": 14,
+      "note": "warms you through (clears a chill)",
+      "canon": false,
+      "season": [
+        "Autumn",
+        "Winter"
+      ],
+      "use": {
+        "clears": [
+          "Chilled"
+        ]
+      }
+    },
+    {
+      "shop": "Nightwell",
+      "loc": "nightwell",
+      "item": "Late-night pastry",
+      "price": 10,
+      "note": "what is left after the evening rush",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Nightwell",
+      "loc": "nightwell",
+      "item": "Bag of Nightwell beans",
+      "price": 35,
+      "note": "for the common-room kettle and a long week",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Merryhew's",
+      "loc": "merryhews",
+      "item": "The Oracle Shell",
+      "price": 40,
+      "note": "yes, no, or ask again later",
+      "canon": true,
+      "season": "all"
+    },
+    {
+      "shop": "Merryhew's",
+      "loc": "merryhews",
+      "item": "Itching charm",
+      "price": 15,
+      "note": "pinned on someone, itches for an hour",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Merryhew's",
+      "loc": "merryhews",
+      "item": "Voice-changing sweets (bag)",
+      "price": 12,
+      "note": "squeaky, booming or croaking, ten minutes each",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Merryhew's",
+      "loc": "merryhews",
+      "item": "Illusion vermin (box)",
+      "price": 25,
+      "note": "a swarm of fake mice or spiders; vanishes when touched",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Merryhew's",
+      "loc": "merryhews",
+      "item": "Screaming box",
+      "price": 35,
+      "note": "screams when opened; the lid can be set to a name",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Merryhew's",
+      "loc": "merryhews",
+      "item": "Colour-change hair sweet",
+      "price": 18,
+      "note": "one day of an alarming colour",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Merryhew's",
+      "loc": "merryhews",
+      "item": "Confetti ambush card",
+      "price": 10,
+      "note": "bursts when unfolded",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Merryhew's",
+      "loc": "merryhews",
+      "item": "Secret Fools Day kit",
+      "price": 60,
+      "note": "the year's big sale is Month 4 Week 1",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Snug",
+      "loc": "snug",
+      "item": "Private booth (per hour)",
+      "price": 30,
+      "note": "always a wait; staff hear nothing",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Snug",
+      "loc": "snug",
+      "item": "Set meal",
+      "price": 30,
+      "note": "soup, a main and bread; ordinary and filling",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Snug",
+      "loc": "snug",
+      "item": "Pot of tea for the booth",
+      "price": 12,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Snug",
+      "loc": "snug",
+      "item": "Stew and fresh bread",
+      "price": 22,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Snug",
+      "loc": "snug",
+      "item": "Sweet course",
+      "price": 14,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Snug",
+      "loc": "snug",
+      "item": "Evening booth (18:00 to curfew)",
+      "price": 90,
+      "note": "book it days ahead",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Ardenne (special order)",
+      "loc": "commissary",
+      "item": "Ardenne case",
+      "price": 1500,
+      "note": "the cheapest Ardenne item; more than most monthly payouts",
+      "canon": true,
+      "season": "all"
+    },
+    {
+      "shop": "Ardenne (special order)",
+      "loc": "commissary",
+      "item": "Ardenne focus",
+      "price": 4000,
+      "note": "marks its owner instantly as wealthy",
+      "canon": true,
+      "season": "all"
+    },
+    {
+      "shop": "Ardenne (special order)",
+      "loc": "commissary",
+      "item": "Ardenne measuring set",
+      "price": 2200,
+      "note": "calipers, scales and a mana gauge in fitted velvet",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Ardenne (special order)",
+      "loc": "commissary",
+      "item": "Ardenne tuning instrument",
+      "price": 2600,
+      "note": "for fine spellwork and warding practice",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "The Rose in the Tower",
+      "price": 18,
+      "note": "romance novel, twelve volumes and counting",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "Seven Towers (deluxe edition)",
+      "price": 30,
+      "note": "seven princesses, seven rescues, gilt edges",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "Nine Rivers: Field Tactics",
+      "price": 40,
+      "note": "the standard tactics treatise",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "Crossed Blades: Famous Duels",
+      "price": 30,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "Songs of the Oathbound",
+      "price": 20,
+      "note": "heroic ballads",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "Songbook of old ballads",
+      "price": 16,
+      "note": "with guitar chords",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "Lamps Out: Tales of Halvard",
+      "price": 18,
+      "note": "campus ghost stories",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "The Night Student: A True Account",
+      "price": 6,
+      "note": "cheap pamphlet, sells every autumn",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "The Truth Behind Halvard's Ghosts",
+      "price": 15,
+      "note": "debunks every story",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "Halvard Through the Centuries",
+      "price": 60,
+      "note": "leather-bound",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "Anecdotes of the Old Kingdom",
+      "price": 35,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "Founding of the Dovecote (old edition)",
+      "price": 45,
+      "note": "second-hand shelf",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "What Everyone Knows About the Founding",
+      "price": 12,
+      "note": "popular history",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "Commentaries of Saint Orel (antique)",
+      "price": 70,
+      "note": "doctrine",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "The Final Word on Everything",
+      "price": 12,
+      "note": "a book with every answer",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "Fallen Stars: Notes on Mana Resonance",
+      "price": 120,
+      "note": "rare magic theory",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "The Noble Houses, by Precedence",
+      "price": 50,
+      "note": "peerage register",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "Etiquette manual",
+      "price": 20,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "Dragonchess problem book",
+      "price": 25,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "Star atlas",
+      "price": 30,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "Hand-Speech for Beginners",
+      "price": 15,
+      "note": "the kingdom's sign language",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "Picture book for small children",
+      "price": 8,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "Old competition programmes",
+      "price": 10,
+      "note": "bundle, second-hand",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "Blank leather journal",
+      "price": 25,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "Pocket memory notebook",
+      "price": 20,
+      "note": "ribbon marker, pocket-sized",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Quillfeather's",
+      "loc": "quillfeathers",
+      "item": "Leather planner",
+      "price": 20,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Plush animal",
+      "price": 20,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Goosedown pillow",
+      "price": 35,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Silver hand mirror",
+      "price": 45,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Palm crystal ball",
+      "price": 60,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Porcelain tea set",
+      "price": 55,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Music box",
+      "price": 30,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Prism charm",
+      "price": 12,
+      "note": "throws rainbows",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Black silk ribbons",
+      "price": 10,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Travel Dragonchess set",
+      "price": 60,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Sovereigns",
+      "price": 80,
+      "note": "imported strategy game",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Gilt-edged playing cards",
+      "price": 12,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Vanishing-coin illusion kit",
+      "price": 25,
+      "note": "no magic involved",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Juggling set",
+      "price": 15,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Rainglass",
+      "price": 35,
+      "note": "a sealed globe of storm rain that never settles",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Everlamp, miniature",
+      "price": 40,
+      "note": "lights itself at dusk",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Hearthstone hand-warmer",
+      "price": 25,
+      "note": "stays warm all day",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Hooded night lamp",
+      "price": 20,
+      "note": "a lamp you can sit inside the light of",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Warding amulet",
+      "price": 25,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Wishing coin",
+      "price": 5,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Thank-you card",
+      "price": 3,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Get-well hamper",
+      "price": 30,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Engraved trophy cup",
+      "price": 50,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Knight's pennon",
+      "price": 20,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Halvard pennant",
+      "price": 10,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Royal crest paperweight",
+      "price": 35,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Independence War commemorative medal",
+      "price": 30,
+      "note": "sold for Crowning Day",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Carved Asmoday charm",
+      "price": 15,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Festival lantern set",
+      "price": 18,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Brass handbell",
+      "price": 8,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Wind-up alarm clock",
+      "price": 15,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Silver-polishing kit",
+      "price": 20,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Walnut desk tidy",
+      "price": 30,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Loaded bone dice",
+      "price": 12,
+      "note": "\"novelty dice\"",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Pennywhistle Curios",
+      "loc": "pennywhistle_curios",
+      "item": "Marked deck",
+      "price": 12,
+      "note": "\"novelty cards\"",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Barrow & Vine",
+      "loc": "barrow_vine",
+      "item": "Table wine",
+      "price": 25,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Barrow & Vine",
+      "loc": "barrow_vine",
+      "item": "Fine vintage",
+      "price": 90,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Barrow & Vine",
+      "loc": "barrow_vine",
+      "item": "Orchard cider",
+      "price": 10,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Barrow & Vine",
+      "loc": "barrow_vine",
+      "item": "Stonebrew ale (jug)",
+      "price": 18,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Barrow & Vine",
+      "loc": "barrow_vine",
+      "item": "Clan firewine",
+      "price": 70,
+      "note": "from the eastern Beastkin clans; small stock",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Barrow & Vine",
+      "loc": "barrow_vine",
+      "item": "Blackroot cigars",
+      "price": 15,
+      "note": "tin of five, cheap and strong",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Barrow & Vine",
+      "loc": "barrow_vine",
+      "item": "Engraved hip flask",
+      "price": 40,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Greenwick's",
+      "loc": "greenwicks",
+      "item": "Bouquet of stage roses",
+      "price": 20,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Greenwick's",
+      "loc": "greenwicks",
+      "item": "Cut flowers",
+      "price": 12,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Greenwick's",
+      "loc": "greenwicks",
+      "item": "Moonfern in a pot",
+      "price": 45,
+      "note": "glows faintly at night",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Greenwick's",
+      "loc": "greenwicks",
+      "item": "Oak sapling in a pot",
+      "price": 20,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Greenwick's",
+      "loc": "greenwicks",
+      "item": "Seed packets",
+      "price": 5,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Greenwick's",
+      "loc": "greenwicks",
+      "item": "Bag of red apples",
+      "price": 6,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Greenwick's",
+      "loc": "greenwicks",
+      "item": "Carrots and fresh greens",
+      "price": 5,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Greenwick's",
+      "loc": "greenwicks",
+      "item": "Pigeon feed",
+      "price": 4,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Greenwick's",
+      "loc": "greenwicks",
+      "item": "Pruning shears",
+      "price": 25,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Precision tool roll",
+      "price": 50,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Mystery clockwork (sold as seen)",
+      "price": 15,
+      "note": "nobody knows what it did",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Brass golem joint set",
+      "price": 90,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Glass stirring-rod set",
+      "price": 15,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Whetstone and blade oil",
+      "price": 20,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Armour polish kit",
+      "price": 18,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Duelling gauntlets",
+      "price": 40,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Fishing tackle box",
+      "price": 30,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Gut guitar strings",
+      "price": 12,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Tuning fork",
+      "price": 10,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Steel-nib fountain pen",
+      "price": 40,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Letter paper set",
+      "price": 8,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Sketchbook and charcoal",
+      "price": 15,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Carving knife and limewood block",
+      "price": 20,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Bolt of Sky silk",
+      "price": 40,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Embroidery thread set",
+      "price": 15,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Talisman paper stack",
+      "price": 10,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Chamois lens cloth",
+      "price": 5,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Pocket thermos",
+      "price": 25,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Shuttered dark-lantern",
+      "price": 25,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Running shoes",
+      "price": 45,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Premium beast jerky",
+      "price": 20,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Beast muzzle",
+      "price": 15,
+      "note": "Beast Handling supply",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Vigour tonic",
+      "price": 30,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Salaffian Oven",
+      "loc": "salaffian_oven",
+      "item": "Salaffian flatbread",
+      "price": 6,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Salaffian Oven",
+      "loc": "salaffian_oven",
+      "item": "Salaffian spice box",
+      "price": 25,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Tailor's Row",
+      "loc": "tailors_row",
+      "item": "Loud silk waistcoat",
+      "price": 70,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Tailor's Row",
+      "loc": "tailors_row",
+      "item": "Formal dress coat",
+      "price": 150,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Tailor's Row",
+      "loc": "tailors_row",
+      "item": "Platform boots",
+      "price": 55,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Tailor's Row",
+      "loc": "tailors_row",
+      "item": "Ballroom shoes",
+      "price": 60,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Tailor's Row",
+      "loc": "tailors_row",
+      "item": "Bergamot cologne",
+      "price": 35,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Tailor's Row",
+      "loc": "tailors_row",
+      "item": "Kid-leather gloves",
+      "price": 30,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Commissary",
+      "loc": "commissary",
+      "item": "Honey bun",
+      "price": 6,
+      "note": "already in Irene's lore",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Commissary",
+      "loc": "commissary",
+      "item": "Pocket campus map",
+      "price": 5,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Commissary",
+      "loc": "commissary",
+      "item": "Smoked river fish",
+      "price": 6,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Commissary",
+      "loc": "commissary",
+      "item": "Lavender laundry soap",
+      "price": 5,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Mall — bakery",
+      "loc": "mall",
+      "item": "Sweet bun",
+      "price": 6,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Mall — cafés and tea houses",
+      "loc": "mall",
+      "item": "Sweet bamboo tea (tin)",
+      "price": 14,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Mall — cafés and tea houses",
+      "loc": "mall",
+      "item": "Silvertip tea",
+      "price": 30,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Rain-ward charm",
+      "price": 18,
+      "note": "a folded talisman that sheds rain for three hours",
+      "canon": false,
+      "season": [
+        "Spring",
+        "Autumn"
+      ],
+      "use": {
+        "buff": "waterproof",
+        "mins": 180
+      }
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Quick-dry powder",
+      "price": 10,
+      "note": "a pinch over wet clothes and hair",
+      "canon": false,
+      "season": [
+        "Spring",
+        "Autumn",
+        "Winter"
+      ],
+      "use": {
+        "clears": [
+          "Soaked"
+        ]
+      }
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Cooling charm",
+      "price": 20,
+      "note": "a chilled rune-bead worn at the throat, good for four hours",
+      "canon": false,
+      "season": [
+        "Summer"
+      ],
+      "use": {
+        "buff": "sun",
+        "mins": 240
+      }
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Ember pouch",
+      "price": 15,
+      "note": "a charged ember-stone in a felt pouch, warm for four hours",
+      "canon": false,
+      "season": [
+        "Autumn",
+        "Winter"
+      ],
+      "use": {
+        "buff": "warm",
+        "mins": 240
+      }
+    },
+    {
+      "shop": "Greenwick's",
+      "loc": "greenwicks",
+      "item": "Elderflower cold syrup",
+      "price": 15,
+      "note": "grown and bottled with the Gardening Club",
+      "canon": false,
+      "season": [
+        "Spring",
+        "Autumn",
+        "Winter"
+      ],
+      "use": {
+        "cure": "Head cold"
+      }
+    },
+    {
+      "shop": "The Mall — bakery",
+      "loc": "mall",
+      "item": "Blossom honey cake",
+      "price": 9,
+      "note": "the first cake of spring",
+      "canon": false,
+      "season": [
+        "Spring"
+      ],
+      "use": {
+        "stamina": 10
+      }
+    },
+    {
+      "shop": "The Mall — bakery",
+      "loc": "mall",
+      "item": "Spiced apple turnover",
+      "price": 10,
+      "note": "hot from the oven",
+      "canon": false,
+      "season": [
+        "Autumn"
+      ],
+      "use": {
+        "stamina": 10
+      }
+    },
+    {
+      "shop": "The Mall — cafés and tea houses",
+      "loc": "mall",
+      "item": "Roasted chestnuts",
+      "price": 8,
+      "note": "a hot paper cone to hold",
+      "canon": false,
+      "season": [
+        "Autumn",
+        "Winter"
+      ],
+      "use": {
+        "clears": [
+          "Chilled"
+        ]
+      }
+    },
+    {
+      "shop": "Commissary",
+      "loc": "commissary",
+      "item": "Salted lemon water",
+      "price": 6,
+      "note": "a stoppered flask for the sports field",
+      "canon": false,
+      "season": [
+        "Summer"
+      ],
+      "use": {
+        "clears": [
+          "Overheated"
+        ],
+        "stamina": 10
+      }
+    },
+    {
+      "shop": "Tailor's Row",
+      "loc": "tailors_row",
+      "item": "Linen summer shirt",
+      "price": 45,
+      "note": "loose, pale and cool",
+      "canon": false,
+      "season": [
+        "Summer"
+      ],
+      "gear": "sun"
+    },
+    {
+      "shop": "Tailor's Row",
+      "loc": "tailors_row",
+      "item": "Fleece-lined boots",
+      "price": 70,
+      "note": "dry, warm feet on frozen paths",
+      "canon": false,
+      "season": [
+        "Autumn",
+        "Winter"
+      ],
+      "gear": "warm"
+    },
+    {
+      "shop": "The Snug",
+      "loc": "snug",
+      "item": "Mulled apple cider",
+      "price": 12,
+      "note": "alcohol-free, served steaming",
+      "canon": false,
+      "season": [
+        "Winter"
+      ],
+      "use": {
+        "clears": [
+          "Chilled"
+        ],
+        "stamina": 5
+      }
+    }
+  ]
+}

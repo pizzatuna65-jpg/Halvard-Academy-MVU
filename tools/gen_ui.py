@@ -1,0 +1,133 @@
+#!/usr/bin/env python3
+"""Batch 3.2 — generates src/scripts/ui.js from ui.template.js.
+Injects: magic subtypes parsed from lore entries 33-36 (standard / notable / forbidden) and the NPC list (for "who knows")."""
+import json, os, re
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+P = lambda *a: os.path.join(ROOT, *a)
+
+def parse_subtypes(uid):
+    t = open(P('src/worldbook/content', f'{uid}.txt'), encoding='utf-8').read()
+    std = re.search(r'^Standard:\s*(.+)$', t, re.M).group(1).rstrip('.')
+    standard = [x.strip() for x in std.split(',') if x.strip()]
+    notes = re.search(r'^Notes:\s*(.+?)(?=^\S+†:|\Z)', t, re.M | re.S)
+    notable = []
+    if notes:
+        body = notes.group(1)
+        for m in re.finditer(r"(?:^|[.:]\s+)([A-Z][A-Za-z' ]{1,30}?) — ([^.]+)", body):
+            notable.append({'name': m.group(1).strip(), 'desc': m.group(2).strip()})
+    forbidden = [{'name': m.group(1).strip(), 'desc': m.group(2).strip()} for m in re.finditer(r'^([A-Z][A-Za-z ]+?)†:\s*([^.]+)', t, re.M)]
+    forbidden += [{'name': m.group(1).strip(), 'desc': m.group(2).strip()} for m in re.finditer(r'(?<=\. )([A-Z][A-Za-z ]+?)†:\s*([^.]+)', t)]
+    seen, fb = set(), []
+    for f in forbidden:
+        if f['name'] not in seen: seen.add(f['name']); fb.append(f)
+    return {'standard': standard, 'notable': notable, 'forbidden': fb}
+
+SUB = {'Elemental': parse_subtypes(33), 'Mystic': parse_subtypes(34), 'Spiritual': parse_subtypes(35), 'Occult': parse_subtypes(36)}
+npcs = json.load(open(P('data/npcs.json'), encoding='utf-8'))
+NPCS = sorted([{'id': k, 'name': v['name'], 'dorm': v.get('dorm') or '', 'year': v.get('year') or 0, 'group': v.get('group') or '', 'a': v.get('arrives', 1)}
+               for k, v in npcs.items()], key=lambda x: x['name'])
+# ---- Batch 4: people / map data ----
+# Rank-0 public role (D14 table: appearance, dorm/year, public role). Curated: roster tags mix roles with traits and secrets.
+PUBLIC_ROLE = {
+    'Irene': 'Student Council President', 'Caspian': 'Student Council Vice President', 'Royhan': 'Third-year alchemist',
+    'Gavlan': 'Combat teacher', 'Yvette': 'Magic Theory teacher, Fire Dorm Head', 'Krieg': 'Dovecote Commander',
+    'Milena': 'Senior Dove, Dark Magic Defense teacher', 'Baelin': 'Headmaster', 'Layla': 'History teacher',
+    'Vallie': 'Creature Studies teacher', 'Gareth': "Halvard's top-ranked student (#1)", 'Sophia': "Halvard's #2 student, the Blood Saint",
+    'Florian': "Halvard's #3 student", 'Rei': 'Acting Warden', 'Kuroo': 'Etiquette teacher, Viridian Dorm Head',
+    'Mimosa': 'Potion Crafting teacher', 'Althair': 'Vice Headmaster', 'Tristan': 'Cathedral Steward',
+    'Ezrel': 'Magic Theory teacher, Light Dorm Head', 'Ottavio': 'Etiquette teacher, Sky Dorm Head',
+    'Caine': "Butler of the Noble Houses' Liaison", 'Bobby': 'Maintenance worker',
+    'Ines': 'Myrdath team captain', 'Cassius': 'Veyra team captain',
+}
+YEARW = {1: 'first-year', 2: 'second-year', 3: 'third-year'}
+def descriptor(nid, n):
+    hair = (n.get('hair') or '').replace(' hair', '').strip()
+    hw = (hair[:1].upper() + hair[1:] + '-haired ') if hair and hair != 'bald' else ('Bald ' if hair == 'bald' else '')
+    race = f"{n['beast']}-beastkin " if n.get('beast') else ('elf ' if n.get('race') == 'Elf' else '')
+    g = n.get('group') or ''
+    if g.startswith('Year'): who = f"{YEARW.get(n.get('year'), 'student')}"
+    elif g.endswith('team'): who = f"student from the {g}"
+    elif g == 'Staff': who = 'member of staff'
+    elif g == 'Doves': who = 'Dove officer'
+    else: who = 'stranger'
+    return (hw + race + who).strip()[:1].upper() + (hw + race + who).strip()[1:]
+DATA = {'npcs': {}, 'rel': [], 'locs': {}, 'pins': json.load(open(P('data/map_pins.json'), encoding='utf-8'))}
+man = json.load(open(P('data/assets_manifest.json'), encoding='utf-8'))
+DATA['assets'] = {'base': man['base_url'], 'map': man['map'], 'size': man['map_size'],
+                  'variants': man.get('map_variants', [])}   # 1.13.0: map by calendar (event, then season)
+CAST = {}
+for nid, n in npcs.items():
+    first = nid
+    DATA['npcs'][nid] = {'n': n['name'], 'g': n.get('group') or '', 'y': n.get('year') or 0, 'a': n.get('arrives', 1), 'dm': n.get('dorm') or '',
+        'dc': n.get('dorm_color') or '#6b6b7b', 'd': descriptor(nid, n), 'r': PUBLIC_ROLE.get(nid, ''),
+        'p': n['portrait'], 't': n['thumb'], 'fc': n.get('focus') or [50, 25],
+        'fl': [[f['label'], f['text'], f['rank']] + ([f['year']] if f.get('year') else []) for f in n['fields']]}   # 1.7.0: [3] = shown from that campaign year
+    if n.get('academy') == 'Halvard': DATA['npcs'][nid]['ag'] = 1   # 1.7.4: ages in their fields follow the campaign year (see ageNow)
+    CAST[nid] = [n['thumb'], descriptor(nid, n) if nid in ('Irene', 'Caspian') else PUBLIC_ROLE.get(nid) or descriptor(nid, n), first, n.get('dorm_color') or '#6b6b7b']
+for e in json.load(open(P('data/relations.json'), encoding='utf-8')):
+    DATA['rel'].append([e['from'], e['to'], e['type'], e['types'], e['visibility'] + (f"@{e['via']}" if e['via'] != e['from'] and e['visibility'] != 'public' else ''), e['notes']] + ([[e['rule'], e['rule_label']]] if e.get('rule') else []))   # 1.4.2 group-rule lines carry [id, label]; 1.6.10 'rank:N@Via' = told by Via's file
+DATA['rom1'] = {k: v for k, v in json.load(open(P('data/relations_curated.json'), encoding='utf-8')).get('romance_one_way', {}).items() if not k.startswith('_')}   # 1.4.2
+for lid, l in json.load(open(P('data/locations.json'), encoding='utf-8')).items():
+    DATA['locs'][lid] = {k: l[k] for k in ('name', 'category', 'kind', 'description', 'vibe', 'regulars', 'connections', 'walk_min',
+                                         'clubs', 'access', 'lore', 'floor', 'pin', 'discoverable', 'near')}
+    if l.get('seasons'): DATA['locs'][lid]['seasons'] = l['seasons']   # 1.14.0: the place in each season (location card)
+# ---- Batch 5.2: clubs, shop, team roles ----
+import sys; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from common import load_clubs   # v1.1.0: club data shared with gen_mvu_entries.py (Saturday club time in the Now entry)
+from common import place_aliases   # 1.3.1: short place names -> location id (map "you are here")
+from common import effect_text     # 1.9.5: shop item effects (shop and Bag)
+_byname = {l['name']: lid for lid, l in DATA['locs'].items()}
+DATA['palias'] = {re.sub(r'^the ', '', a): _byname[nm] for a, nm in place_aliases(json.load(open(P('data/locations.json'), encoding='utf-8'))).items()}
+DATA['tune'] = json.load(open(P('data/tuning.json'), encoding='utf-8'))['groups']   # 1.3.1 Settings rows
+# 1.4.1 factions for People → Connections (data/factions.json; 'auto' = every NPC of those groups)
+_fac = json.load(open(P('data/factions.json'), encoding='utf-8'))['factions']
+DATA['factions'] = [{'id': f['id'], 'name': f['name'], 'secret': f.get('secret', []),
+                     'members': sorted(set(f.get('members', [])) | {nid for nid, n in npcs.items() if (n.get('group') or '') in f.get('auto', [])})} for f in _fac]
+assert all(m in npcs for f in DATA['factions'] for m in f['members']), 'factions.json: unknown NPC'
+DATA['dormhead'] = {nid: m.group(1) for nid, n in npcs.items() for m in [re.search(r'\b(Fire|Light|Sky|Viridian) Dorm Head', ' '.join(n.get('public_tags') or []))] if m}   # 1.4.1
+_ten = json.load(open(P('data/tension.json'), encoding='utf-8'))   # 1.3.8: bands and who is exempt / locked (no behaviour texts: they are narrator-side)
+DATA['ten'] = {'bands': _ten['bands'], 'effects': _ten['effects'], 'exempt': [k for k, o in _ten['overrides'].items() if o.get('exempt')], 'lock': [k for k, o in _ten['overrides'].items() if o.get('lock')]}
+_tru = json.load(open(P('data/trust.json'), encoding='utf-8'))   # 1.4.3: bands, perk gates, who is exempt (texts are narrator-side)
+DATA['tru'] = {'bands': _tru['bands'], 'gates': _tru['perk_gates'], 'susp': _tru['suspend_r10_below'], 'effects': _tru['effects'],
+               'nogates': [k for k, o in _tru['overrides'].items() if o.get('no_gates')], 'lock': {k: o['lock'] for k, o in _tru['overrides'].items() if 'lock' in o}}
+DATA['clubs'] = load_clubs(npcs, json.load(open(P('data/locations.json'), encoding='utf-8')))
+DATA['mallShops'] = next(p['cluster'] for p in json.load(open(P('data/map_pins.json'), encoding='utf-8')) if 'mall' in p['cluster'])
+DATA['shop'] = [{**i, 'effect': effect_text(i)} for i in json.load(open(P('data/shop.json'), encoding='utf-8'))['items']]
+for nid, n in npcs.items():
+    if n.get('team_role'): DATA['npcs'][nid]['tr'] = n['team_role']
+# v1.1.0 Features settings (spec §9): rows from data/features.json, rule costs measured by tools/feature_cost.py
+OPN = json.load(open(P('data/bond_openness.json'), encoding='utf-8'))
+DATA['birthdayOffsets'] = {nid: shift for tag,shift in [('open',2), ('guarded',-1), ('closed',-2)] for nid in OPN[tag]}
+for nid, n in DATA['npcs'].items():
+    for f in n['fl']:
+        if f[0] == 'Birthday': f[2] = max(1, 3 - DATA['birthdayOffsets'].get(nid, 0))
+DATA['bond'] = {k: v for k, v in json.load(open(P('data/bond_rules.json'), encoding='utf-8')).items() if not k.startswith('_')}   # 1.2.2
+DATA['rank4'] = json.load(open(P('data/rank4_partners.json'), encoding='utf-8'))['npcs']
+DATA['branch'] = json.load(open(P('data/npc_canon.json'), encoding='utf-8')).get('branch', {})   # 1.6.8: Rank 8 branches A-D
+_rep = json.load(open(P('data/reputation.json'), encoding='utf-8'))   # 1.3.0
+DATA['rep'] = {k: _rep[k] for k in ('reps', 'about', 'thresholds', 'effects')}
+DATA['trn'] = {k: v for k, v in json.load(open(P('data/training.json'), encoding='utf-8')).items() if not k.startswith('_')}
+DATA['features'] = json.load(open(P('data/features.json'), encoding='utf-8'))['features']
+DATA['fcost'] = json.load(open(P('data/feature_cost.json'), encoding='utf-8'))
+bar = open(P('src/ui/statusbar.template.html'), encoding='utf-8').read()
+THEMES = json.load(open(P('data/themes.json'), encoding='utf-8')); THEMES.pop('_note', None)   # 1.3.1 colour themes (tools/make_themes.py)
+bar = bar.replace('/*@@THEMES@@*/{}', json.dumps(THEMES, ensure_ascii=False, separators=(',', ':')))
+bar = bar.replace('/*@@CAST@@*/{}', json.dumps(CAST, ensure_ascii=False, separators=(',', ':'))).replace('/*@@BASE@@*/""', json.dumps(man['base_url']))
+assert '/*@@' not in bar, 'unreplaced placeholder in statusbar.html'
+open(P('src/ui/statusbar.html'), 'w', encoding='utf-8', newline='\n').write(bar)
+
+t = open(P('src/scripts/ui.template.js'), encoding='utf-8').read()
+parts = ''.join(open(P('src/ui/parts', f), encoding='utf-8').read() + '\n' for f in sorted(os.listdir(P('src/ui/parts'))) if f.endswith('.js'))
+t = t.replace('/*@@PARTS@@*/', parts)
+eng = open(P('src/scripts/engine.template.js'), encoding='utf-8').read()
+cal = re.search(r'(const ALL = DAYS.*?)(?=// monthly payout)', eng, re.S).group(1)   # EVENTS + TIMETABLE + the election-day override
+t = t.replace('/*@@CALENDAR@@*/{ EVENTS: [], TIMETABLE: {} }', '(() => {\n' + cal + 'return { EVENTS, TIMETABLE, timetableFor, schedOf };\n})()')
+assert '@@CALENDAR@@' not in t
+t = t.replace("/*@@THEMES@@*/{ default: 'pewter', order: [], themes: {} }", json.dumps(THEMES, ensure_ascii=False, separators=(',', ':')))
+t = t.replace('/*@@DATA@@*/{}', json.dumps(DATA, ensure_ascii=False, separators=(',', ':')))
+t = t.replace('/*@@SUBTYPES@@*/{}', json.dumps(SUB, ensure_ascii=False, separators=(',', ':')))
+t = t.replace('/*@@NPCS@@*/[]', json.dumps(NPCS, ensure_ascii=False, separators=(',', ':')))
+assert '/*@@' not in t, 'unreplaced placeholder in ui.js'
+open(P('src/scripts/ui.js'), 'w', encoding='utf-8', newline='\n').write(t)
+print('clubs:', len(DATA['clubs']), 'with members:', sum(1 for c in DATA['clubs'] if c['members']), '| shop items:', len(DATA['shop']))
+print('data KB:', len(json.dumps(DATA)) // 1024, '| subtypes:', {k: (len(v['standard']), len(v['notable']), len(v['forbidden'])) for k, v in SUB.items()}, '| npcs:', len(NPCS))

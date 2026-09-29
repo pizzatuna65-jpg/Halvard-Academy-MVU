@@ -1,0 +1,73 @@
+{
+"_comment": "explicit thumbnail crop: [centre_x, centre_y, side] as fractions of portrait width/height/width",
+"Aiden": [
+0.52,
+0.27,
+0.48
+],
+"Bellatrix": [
+0.52,
+0.35,
+0.5
+],
+"Castor": [
+0.42,
+0.4,
+0.5
+],
+"Dante": [
+0.57,
+0.3,
+0.5
+],
+"Dex": [
+0.46,
+0.43,
+0.5
+],
+"Kira": [
+0.46,
+0.31,
+0.52
+],
+"Mirelle": [
+0.55,
+0.26,
+0.5
+],
+"Rei": [
+0.57,
+0.26,
+0.45
+],
+"Theodore": [
+0.6,
+0.29,
+0.45
+],
+"Tristan": [
+0.5,
+0.27,
+0.45
+],
+"Zara": [
+0.45,
+0.3,
+0.45
+],
+"Mimosa": [
+0.42,
+0.31,
+0.45
+],
+"Gavlan": [
+0.51,
+0.15,
+0.32
+],
+"Bobby": [
+0.56,
+0.31,
+0.45
+]
+}

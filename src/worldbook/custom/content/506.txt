@@ -1,0 +1,184 @@
+[Price Guide] What things cost on campus, in points. Use these prices; items not listed cost what a comparable listed item costs.
+- Sunfizz: 8 pts (canon); Commissary, The Mall — store; 2 points back per returned bottle
+- Firetooth (tin): 12 pts (canon); Commissary; exam-week staple
+- Notebook: 5 pts; Commissary
+- Pen nibs and ink: 6 pts; Commissary
+- Printed class textbook: 45 pts; Commissary
+- Satchel: 70 pts; Commissary
+- Spare uniform set: 120 pts; Commissary
+- Common reagent bundle: 30 pts; Commissary; back shelves; enough for a few practicals
+- Basic practice focus: 250 pts; Commissary
+- Rare reagent: 350 pts (canon); Commissary; costs more than a bottom-band monthly payout
+- Special order: varies (canon); Commissary; price of the item plus a wait; specialised kit can eat a week of points
+- Umbrella: 25 pts; Commissary; keeps you dry unless the wind is up; Worn from the Bag: keeps rain off (not in wind or storm)
+- Oilskin rain cloak: 90 pts; Commissary; waterproof in any weather; in season: Autumn, Winter, Spring; Worn from the Bag: waterproof: no Soaked from rain or snow
+- Bakery roll: 15 pts (canon); The Mall — bakery
+- Star Cookie: 8 pts (canon); The Mall — bakery; eaten whole before anything that matters; sells out by seven on exam mornings
+- Café drink and pastry: 25 pts; The Mall — cafés and tea houses
+- Restaurant meal: 45 pts; The Mall — restaurants
+- Private dining (second floor): 150 pts; The Mall — private dining
+- Quality focus: 4,000 pts (canon); The Mall — store; the top tier of magical equipment
+- Tailoring alteration: 40 pts; Tailor's Row
+- Barber: 20 pts; The Mall — services
+- Laundry service (per load): 10 pts; The Mall — services; self-service laundry in the dorms is free
+- Practice studio or music room (per hour): 15 pts; The Mall — studios
+- Game hall (per hour): 10 pts; The Mall — game halls
+- Wool scarf and mittens: 35 pts; The Mall — store; warm; in season: Autumn, Winter; Worn from the Bag: warm: holds off Chilled
+- Lined winter cloak: 120 pts; The Mall — store; warm; in season: Winter; Worn from the Bag: warm: holds off Chilled
+- Straw sun hat: 30 pts; The Mall — store; shade in summer heat; in season: Summer; Worn from the Bag: shade: Overheated only from 31 °C
+- Hot spiced tea: 12 pts; The Mall — cafés and tea houses; warms you through (clears a chill); in season: Spring, Autumn, Winter; When used: clears Chilled
+- Iced fruit cooler: 10 pts; The Mall — cafés and tea houses; cools you down (clears overheating); in season: Summer; When used: clears Overheated
+- The Vigil: 60 pts (canon); Nightwell; two days without sleep, paid for afterwards
+- House coffee: 12 pts; Nightwell; strong, bottomless until the pot runs out
+- Honey cream coffee: 16 pts; Nightwell
+- Spiced milk tea: 14 pts; Nightwell; the non-coffee order
+- Iced coffee: 14 pts; Nightwell; cools you down (clears overheating); in season: Summer; When used: clears Overheated
+- Hot chocolate with cream: 14 pts; Nightwell; warms you through (clears a chill); in season: Autumn, Winter; When used: clears Chilled
+- Late-night pastry: 10 pts; Nightwell; what is left after the evening rush
+- Bag of Nightwell beans: 35 pts; Nightwell; for the common-room kettle and a long week
+- The Oracle Shell: 40 pts (canon); Merryhew's; yes, no, or ask again later
+- Itching charm: 15 pts; Merryhew's; pinned on someone, itches for an hour
+- Voice-changing sweets (bag): 12 pts; Merryhew's; squeaky, booming or croaking, ten minutes each
+- Illusion vermin (box): 25 pts; Merryhew's; a swarm of fake mice or spiders; vanishes when touched
+- Screaming box: 35 pts; Merryhew's; screams when opened; the lid can be set to a name
+- Colour-change hair sweet: 18 pts; Merryhew's; one day of an alarming colour
+- Confetti ambush card: 10 pts; Merryhew's; bursts when unfolded
+- Secret Fools Day kit: 60 pts; Merryhew's; the year's big sale is Month 4 Week 1
+- Private booth (per hour): 30 pts; The Snug; always a wait; staff hear nothing
+- Set meal: 30 pts; The Snug; soup, a main and bread; ordinary and filling
+- Pot of tea for the booth: 12 pts; The Snug
+- Stew and fresh bread: 22 pts; The Snug
+- Sweet course: 14 pts; The Snug
+- Evening booth (18:00 to curfew): 90 pts; The Snug; book it days ahead
+- Ardenne case: 1,500 pts (canon); Ardenne (special order); the cheapest Ardenne item; more than most monthly payouts
+- Ardenne focus: 4,000 pts (canon); Ardenne (special order); marks its owner instantly as wealthy
+- Ardenne measuring set: 2,200 pts; Ardenne (special order); calipers, scales and a mana gauge in fitted velvet
+- Ardenne tuning instrument: 2,600 pts; Ardenne (special order); for fine spellwork and warding practice
+- The Rose in the Tower: 18 pts; Quillfeather's; romance novel, twelve volumes and counting
+- Seven Towers (deluxe edition): 30 pts; Quillfeather's; seven princesses, seven rescues, gilt edges
+- Nine Rivers: Field Tactics: 40 pts; Quillfeather's; the standard tactics treatise
+- Crossed Blades: Famous Duels: 30 pts; Quillfeather's
+- Songs of the Oathbound: 20 pts; Quillfeather's; heroic ballads
+- Songbook of old ballads: 16 pts; Quillfeather's; with guitar chords
+- Lamps Out: Tales of Halvard: 18 pts; Quillfeather's; campus ghost stories
+- The Night Student: A True Account: 6 pts; Quillfeather's; cheap pamphlet, sells every autumn
+- The Truth Behind Halvard's Ghosts: 15 pts; Quillfeather's; debunks every story
+- Halvard Through the Centuries: 60 pts; Quillfeather's; leather-bound
+- Anecdotes of the Old Kingdom: 35 pts; Quillfeather's
+- Founding of the Dovecote (old edition): 45 pts; Quillfeather's; second-hand shelf
+- What Everyone Knows About the Founding: 12 pts; Quillfeather's; popular history
+- Commentaries of Saint Orel (antique): 70 pts; Quillfeather's; doctrine
+- The Final Word on Everything: 12 pts; Quillfeather's; a book with every answer
+- Fallen Stars: Notes on Mana Resonance: 120 pts; Quillfeather's; rare magic theory
+- The Noble Houses, by Precedence: 50 pts; Quillfeather's; peerage register
+- Etiquette manual: 20 pts; Quillfeather's
+- Dragonchess problem book: 25 pts; Quillfeather's
+- Star atlas: 30 pts; Quillfeather's
+- Hand-Speech for Beginners: 15 pts; Quillfeather's; the kingdom's sign language
+- Picture book for small children: 8 pts; Quillfeather's
+- Old competition programmes: 10 pts; Quillfeather's; bundle, second-hand
+- Blank leather journal: 25 pts; Quillfeather's
+- Pocket memory notebook: 20 pts; Quillfeather's; ribbon marker, pocket-sized
+- Leather planner: 20 pts; Quillfeather's
+- Plush animal: 20 pts; Pennywhistle Curios
+- Goosedown pillow: 35 pts; Pennywhistle Curios
+- Silver hand mirror: 45 pts; Pennywhistle Curios
+- Palm crystal ball: 60 pts; Pennywhistle Curios
+- Porcelain tea set: 55 pts; Pennywhistle Curios
+- Music box: 30 pts; Pennywhistle Curios
+- Prism charm: 12 pts; Pennywhistle Curios; throws rainbows
+- Black silk ribbons: 10 pts; Pennywhistle Curios
+- Travel Dragonchess set: 60 pts; Pennywhistle Curios
+- Sovereigns: 80 pts; Pennywhistle Curios; imported strategy game
+- Gilt-edged playing cards: 12 pts; Pennywhistle Curios
+- Vanishing-coin illusion kit: 25 pts; Pennywhistle Curios; no magic involved
+- Juggling set: 15 pts; Pennywhistle Curios
+- Rainglass: 35 pts; Pennywhistle Curios; a sealed globe of storm rain that never settles
+- Everlamp, miniature: 40 pts; Pennywhistle Curios; lights itself at dusk
+- Hearthstone hand-warmer: 25 pts; Pennywhistle Curios; stays warm all day
+- Hooded night lamp: 20 pts; Pennywhistle Curios; a lamp you can sit inside the light of
+- Warding amulet: 25 pts; Pennywhistle Curios
+- Wishing coin: 5 pts; Pennywhistle Curios
+- Thank-you card: 3 pts; Pennywhistle Curios
+- Get-well hamper: 30 pts; Pennywhistle Curios
+- Engraved trophy cup: 50 pts; Pennywhistle Curios
+- Knight's pennon: 20 pts; Pennywhistle Curios
+- Halvard pennant: 10 pts; Pennywhistle Curios
+- Royal crest paperweight: 35 pts; Pennywhistle Curios
+- Independence War commemorative medal: 30 pts; Pennywhistle Curios; sold for Crowning Day
+- Carved Asmoday charm: 15 pts; Pennywhistle Curios
+- Festival lantern set: 18 pts; Pennywhistle Curios
+- Brass handbell: 8 pts; Pennywhistle Curios
+- Wind-up alarm clock: 15 pts; Pennywhistle Curios
+- Silver-polishing kit: 20 pts; Pennywhistle Curios
+- Walnut desk tidy: 30 pts; Pennywhistle Curios
+- Loaded bone dice: 12 pts; Pennywhistle Curios; "novelty dice"
+- Marked deck: 12 pts; Pennywhistle Curios; "novelty cards"
+- Table wine: 25 pts; Barrow & Vine
+- Fine vintage: 90 pts; Barrow & Vine
+- Orchard cider: 10 pts; Barrow & Vine
+- Stonebrew ale (jug): 18 pts; Barrow & Vine
+- Clan firewine: 70 pts; Barrow & Vine; from the eastern Beastkin clans; small stock
+- Blackroot cigars: 15 pts; Barrow & Vine; tin of five, cheap and strong
+- Engraved hip flask: 40 pts; Barrow & Vine
+- Bouquet of stage roses: 20 pts; Greenwick's
+- Cut flowers: 12 pts; Greenwick's
+- Moonfern in a pot: 45 pts; Greenwick's; glows faintly at night
+- Oak sapling in a pot: 20 pts; Greenwick's
+- Seed packets: 5 pts; Greenwick's
+- Bag of red apples: 6 pts; Greenwick's
+- Carrots and fresh greens: 5 pts; Greenwick's
+- Pigeon feed: 4 pts; Greenwick's
+- Pruning shears: 25 pts; Greenwick's
+- Precision tool roll: 50 pts; The Tinker's Bench
+- Mystery clockwork (sold as seen): 15 pts; The Tinker's Bench; nobody knows what it did
+- Brass golem joint set: 90 pts; The Tinker's Bench
+- Glass stirring-rod set: 15 pts; The Tinker's Bench
+- Whetstone and blade oil: 20 pts; The Tinker's Bench
+- Armour polish kit: 18 pts; The Tinker's Bench
+- Duelling gauntlets: 40 pts; The Tinker's Bench
+- Fishing tackle box: 30 pts; The Tinker's Bench
+- Gut guitar strings: 12 pts; The Tinker's Bench
+- Tuning fork: 10 pts; The Tinker's Bench
+- Steel-nib fountain pen: 40 pts; The Tinker's Bench
+- Letter paper set: 8 pts; The Tinker's Bench
+- Sketchbook and charcoal: 15 pts; The Tinker's Bench
+- Carving knife and limewood block: 20 pts; The Tinker's Bench
+- Bolt of Sky silk: 40 pts; The Tinker's Bench
+- Embroidery thread set: 15 pts; The Tinker's Bench
+- Talisman paper stack: 10 pts; The Tinker's Bench
+- Chamois lens cloth: 5 pts; The Tinker's Bench
+- Pocket thermos: 25 pts; The Tinker's Bench
+- Shuttered dark-lantern: 25 pts; The Tinker's Bench
+- Running shoes: 45 pts; The Tinker's Bench
+- Premium beast jerky: 20 pts; The Tinker's Bench
+- Beast muzzle: 15 pts; The Tinker's Bench; Beast Handling supply
+- Vigour tonic: 30 pts; The Tinker's Bench
+- Salaffian flatbread: 6 pts; The Salaffian Oven
+- Salaffian spice box: 25 pts; The Salaffian Oven
+- Loud silk waistcoat: 70 pts; Tailor's Row
+- Formal dress coat: 150 pts; Tailor's Row
+- Platform boots: 55 pts; Tailor's Row
+- Ballroom shoes: 60 pts; Tailor's Row
+- Bergamot cologne: 35 pts; Tailor's Row
+- Kid-leather gloves: 30 pts; Tailor's Row
+- Honey bun: 6 pts; Commissary; already in Irene's lore
+- Pocket campus map: 5 pts; Commissary
+- Smoked river fish: 6 pts; Commissary
+- Lavender laundry soap: 5 pts; Commissary
+- Sweet bun: 6 pts; The Mall — bakery
+- Sweet bamboo tea (tin): 14 pts; The Mall — cafés and tea houses
+- Silvertip tea: 30 pts; The Mall — cafés and tea houses
+- Rain-ward charm: 18 pts; The Tinker's Bench; a folded talisman that sheds rain for three hours; in season: Spring, Autumn; When used: waterproof: no Soaked from rain or snow for 3 hours
+- Quick-dry powder: 10 pts; The Tinker's Bench; a pinch over wet clothes and hair; in season: Spring, Autumn, Winter; When used: clears Soaked
+- Cooling charm: 20 pts; The Tinker's Bench; a chilled rune-bead worn at the throat, good for four hours; in season: Summer; When used: shade: Overheated only from 31 °C for 4 hours
+- Ember pouch: 15 pts; The Tinker's Bench; a charged ember-stone in a felt pouch, warm for four hours; in season: Autumn, Winter; When used: warm: holds off Chilled for 4 hours
+- Elderflower cold syrup: 15 pts; Greenwick's; grown and bottled with the Gardening Club; in season: Spring, Autumn, Winter; When used: a head cold ends by the next day
+- Blossom honey cake: 9 pts; The Mall — bakery; the first cake of spring; in season: Spring; When used: +10 stamina
+- Spiced apple turnover: 10 pts; The Mall — bakery; hot from the oven; in season: Autumn; When used: +10 stamina
+- Roasted chestnuts: 8 pts; The Mall — cafés and tea houses; a hot paper cone to hold; in season: Autumn, Winter; When used: clears Chilled
+- Salted lemon water: 6 pts; Commissary; a stoppered flask for the sports field; in season: Summer; When used: clears Overheated; +10 stamina
+- Linen summer shirt: 45 pts; Tailor's Row; loose, pale and cool; in season: Summer; Worn from the Bag: shade: Overheated only from 31 °C
+- Fleece-lined boots: 70 pts; Tailor's Row; dry, warm feet on frozen paths; in season: Autumn, Winter; Worn from the Bag: warm: holds off Chilled
+- Mulled apple cider: 12 pts; The Snug; alcohol-free, served steaming; in season: Winter; When used: clears Chilled; +5 stamina
+Paid work pays 20-40 points a shift. The Banking House changes points and coin 1:1. At the Academy Bazaar prices are whatever the trader says. Out-of-season items are not stocked. When {{user}} eats, drinks or uses an item marked "When used", insert its exact name into /Consumables/- (and lower its Inventory Qty if it was carried); "Worn from the Bag" gear works while it is in the Inventory.

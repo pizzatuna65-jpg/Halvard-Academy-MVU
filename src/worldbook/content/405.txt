@@ -1,0 +1,14 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Bram')) { _%>
+[Bram Holloway]
+<%_ if ((1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
+Now: graduated from Myrdath Academy at the end of campaign Year 3; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Role: <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Myrdath Academy. <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 18 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %>. Bear Beastkin. Defense role on Myrdath's team.
+Appearance: Enormous, broad and tall enough to shade a small crowd. Shaggy brown hair, small round bear ears, soft brown eyes. Myrdath boys' uniform: white long-sleeved shirt, grey necktie, charcoal-grey trousers.
+Magic: Spiritual — Strength and Toughness.
+Equipment: An iron tower shield nearly as tall as most students.
+- Why it works beside the swarm: when Lucius's swarm eats his magic, he is still a bear Beastkin the size of a door holding a slab of iron. The line holds either way.
+Personality: Quiet, gentle, patient. Speaks slowly and rarely, and nobody has ever seen him angry. Carries small animals out of the way before a fight and apologises to opponents after knocking them down.
+Relations: Ines Vauclair is his captain, and he follows her orders exactly. Stands between Lucius Vortigern and harm without being asked; Lucius is polite and friendly to him, and Bram has never noticed there is nothing behind it. Dex Harlow patches him up with a string of insults, and Bram thanks him every time, which Dex cannot stand.
+Speech: Slow, soft, few words.
+<%_ } _%>

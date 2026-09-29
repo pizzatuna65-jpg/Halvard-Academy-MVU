@@ -1,0 +1,624 @@
+{
+ "_note": "1.3.1 (owner playtest): player settings for the 1.3.0 systems (Student file > Settings), stored in $ui.tune {id: value}. Single source for the engine (tools/gen_engine.py) and the UI (tools/gen_ui.py). def is the value used when nothing is set: gen_engine.py asserts it equals the number in data/training.json / reputation.json, so the default game is unchanged. A value must be one of opts; 0 means 'no limit' or 'off' where the label says so.",
+ "groups": [
+  {
+   "id": "training",
+   "name": "Training",
+   "hint": "How fast training grows your mana pool and stamina, in percent of the value you started with.",
+   "rows": [
+    {
+     "id": "trn_session",
+     "name": "Gain per session",
+     "desc": "What one real session (an hour or more of drilling) adds, before partner bonuses.",
+     "opts": [
+      [
+       0.5,
+       "0.5%"
+      ],
+      [
+       1,
+       "1%"
+      ],
+      [
+       2,
+       "2%"
+      ],
+      [
+       3,
+       "3%"
+      ]
+     ],
+     "def": 1,
+     "src": "training.session_pct"
+    },
+    {
+     "id": "trn_week",
+     "name": "Weekly limit",
+     "desc": "Most that training can add in one week. Gift and Rank 10 jumps ignore it.",
+     "opts": [
+      [
+       1.5,
+       "1.5%"
+      ],
+      [
+       2.5,
+       "2.5%"
+      ],
+      [
+       5,
+       "5%"
+      ],
+      [
+       0,
+       "No limit"
+      ]
+     ],
+     "def": 2.5,
+     "src": "training.weekly_pct"
+    },
+    {
+     "id": "trn_total",
+     "name": "Lifetime limit",
+     "desc": "Most that training can ever add to a track.",
+     "opts": [
+      [
+       50,
+       "+50%"
+      ],
+      [
+       100,
+       "+100% (twice the start)"
+      ],
+      [
+       200,
+       "+200%"
+      ],
+      [
+       0,
+       "No limit"
+      ]
+     ],
+     "def": 100,
+     "src": "training.total_pct"
+    }
+   ]
+  },
+  {
+   "id": "reputation",
+   "name": "Reputation",
+   "hint": "How reputation (Academy, Student, Doves) moves.",
+   "rows": [
+    {
+     "id": "rep_mult",
+     "name": "Pace",
+     "desc": "Multiplies every reputation gain and loss (deeds, bond milestones, tension).",
+     "opts": [
+      [
+       0.5,
+       "Slow (x0.5)"
+      ],
+      [
+       1,
+       "Standard"
+      ],
+      [
+       1.5,
+       "Fast (x1.5)"
+      ],
+      [
+       2,
+       "Very fast (x2)"
+      ]
+     ],
+     "def": 1,
+     "src": ""
+    },
+    {
+     "id": "rep_week",
+     "name": "Weekly limit for everyday deeds",
+     "desc": "Repeatable good deeds count up to this much a week per reputation; events and losses have no limit.",
+     "opts": [
+      [
+       3,
+       "+3"
+      ],
+      [
+       5,
+       "+5"
+      ],
+      [
+       10,
+       "+10"
+      ],
+      [
+       0,
+       "No limit"
+      ]
+     ],
+     "def": 5,
+     "src": "reputation.weekly_cap"
+    },
+    {
+     "id": "rep_bond",
+     "name": "Bond milestones",
+     "desc": "A bond reaching Rank 5 or Rank 10 raises the matching reputation (+5 / +10: staff Academy, students Student, Milena Doves).",
+     "opts": [
+      [
+       1,
+       "Until +3"
+      ],
+      [
+       2,
+       "Always"
+      ],
+      [
+       0,
+       "Off"
+      ]
+     ],
+     "def": 1,
+     "src": ""
+    },
+    {
+     "id": "rep_tension",
+     "name": "Tension penalty",
+     "desc": "A bond reaching high Tension (70) costs the matching reputation -5, maximum Tension (100) another -10.",
+     "opts": [
+      [
+       1,
+       "On"
+      ],
+      [
+       0,
+       "Off"
+      ]
+     ],
+     "def": 1,
+     "src": ""
+    }
+   ]
+  },
+  {
+   "id": "weather_depth",
+   "name": "Mood and rest",
+   "hint": "Mood and sleep effects apply with Weather effects set to Full.",
+   "rows": [
+    {
+     "id": "mood_xp",
+     "name": "Mood XP",
+     "desc": "Good adds and Bad subtracts this much talk/hangout XP.",
+     "def": 1,
+     "opts": [
+      [
+       0,
+       "Off"
+      ],
+      [
+       1,
+       "1 XP"
+      ],
+      [
+       2,
+       "2 XP"
+      ]
+     ],
+     "src": ""
+    },
+    {
+     "id": "mood_tension",
+     "name": "Bad mood tension",
+     "desc": "Multiplier for tension caused by the player.",
+     "def": 1.5,
+     "opts": [
+      [
+       1,
+       "×1 (no extra)"
+      ],
+      [
+       1.5,
+       "×1.5"
+      ],
+      [
+       2,
+       "×2"
+      ]
+     ],
+     "src": ""
+    },
+    {
+     "id": "mood_apology",
+     "name": "Good mood apology",
+     "desc": "Multiplier for accepted apologies.",
+     "def": 1.5,
+     "opts": [
+      [
+       1,
+       "×1 (no extra)"
+      ],
+      [
+       1.5,
+       "×1.5"
+      ],
+      [
+       2,
+       "×2"
+      ]
+     ],
+     "src": ""
+    },
+    {
+     "id": "tired_training",
+     "name": "Tired training",
+     "desc": "Fraction of normal training gains.",
+     "def": 0.5,
+     "opts": [
+      [
+       1,
+       "Full gain"
+      ],
+      [
+       0.5,
+       "Half"
+      ],
+      [
+       0,
+       "None"
+      ]
+     ],
+     "src": ""
+    },
+    {
+     "id": "sleep_hour",
+     "name": "Sleep debt per hour",
+     "desc": "Stamina cap lost per late hour.",
+     "def": 0.1,
+     "opts": [
+      [
+       0.05,
+       "5%"
+      ],
+      [
+       0.1,
+       "10%"
+      ],
+      [
+       0.15,
+       "15%"
+      ]
+     ],
+     "src": ""
+    },
+    {
+     "id": "sleep_cap",
+     "name": "Maximum sleep penalty",
+     "desc": "Largest stamina cap reduction.",
+     "def": 0.4,
+     "opts": [
+      [
+       0.2,
+       "20%"
+      ],
+      [
+       0.4,
+       "40%"
+      ],
+      [
+       0.6,
+       "60%"
+      ]
+     ],
+     "src": ""
+    },
+    {
+     "id": "sleep_full",
+     "name": "Full sleep",
+     "desc": "Hours needed to clear debt.",
+     "def": 6,
+     "opts": [
+      [
+       4,
+       "4 hours"
+      ],
+      [
+       6,
+       "6 hours"
+      ],
+      [
+       8,
+       "8 hours"
+      ]
+     ],
+     "src": ""
+    },
+    {
+     "id": "gale_stamina",
+     "name": "Gale exposure",
+     "desc": "Stamina lost per hour outdoors.",
+     "def": 15,
+     "opts": [
+      [
+       0,
+       "None"
+      ],
+      [
+       10,
+       "10 per hour"
+      ],
+      [
+       15,
+       "15 per hour"
+      ],
+      [
+       25,
+       "25 per hour"
+      ]
+     ],
+     "src": ""
+    }
+   ]
+  },
+  {
+   "id": "body_magic",
+   "name": "Body and magic",
+   "hint": "How your body and magic recover (1.9.9).",
+   "rows": [
+    {
+     "id": "mana_regen",
+     "name": "Mana recovery",
+     "desc": "Time for an empty mana pool to refill by itself, awake or asleep (1.9.4).",
+     "opts": [
+      [
+       4,
+       "4 hours"
+      ],
+      [
+       6,
+       "6 hours"
+      ],
+      [
+       8,
+       "8 hours"
+      ],
+      [
+       12,
+       "12 hours"
+      ]
+     ],
+     "def": 6,
+     "src": ""
+    }
+   ]
+  },
+  {
+   "id": "campus_life",
+   "name": "Campus life",
+   "hint": "How often the campus moves by itself (1.9.9).",
+   "rows": [
+    {
+     "id": "init_rate",
+     "name": "NPC initiative",
+     "desc": "How often friends (Rank 3+) seek you out on their own (Features: NPC initiative).",
+     "opts": [
+      [
+       1,
+       "Rare (at most once a week)"
+      ],
+      [
+       2,
+       "Normal (at most twice a week)"
+      ],
+      [
+       3,
+       "Often (at most four times a week)"
+      ]
+     ],
+     "def": 2,
+     "src": ""
+    },
+    {
+     "id": "gossip_life",
+     "name": "Rumour lifetime",
+     "desc": "How long a rumour keeps circulating before it dies out (Features: Gossip).",
+     "opts": [
+      [
+       10,
+       "10 days"
+      ],
+      [
+       21,
+       "3 weeks"
+      ],
+      [
+       42,
+       "6 weeks"
+      ]
+     ],
+     "def": 21,
+     "src": ""
+    },
+    {
+     "id": "tension_fade",
+     "name": "Tension fades",
+     "desc": "How fast tension with someone eases on quiet days without new friction.",
+     "opts": [
+      [
+       0,
+       "Never"
+      ],
+      [
+       0.5,
+       "Slower (×0.5)"
+      ],
+      [
+       1,
+       "Standard"
+      ],
+      [
+       2,
+       "Faster (×2)"
+      ]
+     ],
+     "def": 1,
+     "src": ""
+    },
+    {
+     "id": "att_minutes",
+     "name": "Absence counts after",
+     "desc": "Minutes away from your class's room in one period before it counts as skipped (Features: Attendance).",
+     "opts": [
+      [
+       20,
+       "20 minutes"
+      ],
+      [
+       30,
+       "30 minutes"
+      ],
+      [
+       45,
+       "45 minutes"
+      ]
+     ],
+     "def": 30,
+     "src": ""
+    },
+    {
+     "id": "recap_mode",
+     "name": "Weekly recap",
+     "desc": "When the Journal gets a one-line recap of the week (Features: Weekly recap).",
+     "opts": [
+      [
+       1,
+       "Only weeks where something changed"
+      ],
+      [
+       2,
+       "Every week"
+      ]
+     ],
+     "def": 1,
+     "src": ""
+    },
+    {
+     "id": "scene_cap",
+     "name": "People in a scene on ordinary days",
+     "desc": "Most people with you at once on a day with nothing on the calendar; one more takes their leave (Features: Small scenes).",
+     "opts": [
+      [
+       3,
+       "3"
+      ],
+      [
+       4,
+       "4"
+      ],
+      [
+       5,
+       "5"
+      ],
+      [
+       6,
+       "6"
+      ]
+     ],
+     "def": 4,
+     "src": ""
+    },
+    {
+     "id": "amb_freq",
+     "name": "Ambient moments",
+     "desc": "How often small things happen around you (Features: Ambience, Full).",
+     "opts": [
+      [
+       1,
+       "Rare"
+      ],
+      [
+       2,
+       "Normal"
+      ],
+      [
+       3,
+       "Often"
+      ]
+     ],
+     "def": 2,
+     "src": ""
+    }
+   ]
+  },
+  {
+   "id": "studies",
+   "name": "Studies and dorm rank",
+   "hint": "How study time prepares you for exams, and how the Results days move your dorm rank (Features: Study and exams).",
+   "rows": [
+    {
+     "id": "study_tiers",
+     "name": "Hours for each level of preparation",
+     "desc": "Study hours between two exam weeks for shaky / fair / solid / excellent preparation.",
+     "opts": [
+      [
+       1,
+       "Light: 2 / 6 / 12 / 20 h"
+      ],
+      [
+       2,
+       "Standard: 4 / 10 / 18 / 28 h"
+      ],
+      [
+       3,
+       "Demanding: 6 / 15 / 25 / 40 h"
+      ]
+     ],
+     "def": 2,
+     "src": ""
+    },
+    {
+     "id": "rank_move",
+     "name": "Dorm rank change per Results day",
+     "desc": "How far one Results day can move your dorm rank (bands: #1, top 3, top 10, top 25, top 50, the rest).",
+     "opts": [
+      [
+       1,
+       "At most one band"
+      ],
+      [
+       2,
+       "At most two bands"
+      ]
+     ],
+     "def": 1,
+     "src": ""
+    }
+   ]
+  },
+  {
+   "id": "fortune",
+   "name": "Fortune roll",
+   "hint": "How often an important, uncertain attempt by you fails or only partly succeeds (1.9.8). Routine actions never roll.",
+   "rows": [
+    {
+     "id": "fortune_band",
+     "name": "Difficulty",
+     "desc": "Bands of the d100 the engine rolls for each reply, before situational modifiers.",
+     "opts": [
+      [
+       1,
+       "Gentle: 1-10 fails, 11-35 partial"
+      ],
+      [
+       2,
+       "Standard: 1-20 fails, 21-50 partial"
+      ],
+      [
+       3,
+       "Harsh: 1-30 fails, 31-65 partial"
+      ]
+     ],
+     "def": 1,
+     "src": ""
+    }
+   ]
+  }
+ ]
+}

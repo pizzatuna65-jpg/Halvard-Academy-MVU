@@ -1,0 +1,6 @@
+[Sports Field] Soccer, running, and Sports Day in Month 6. A running track circles the soccer pitch: home ground of the Soccer Club and the Running Club. Magic banned outright in play, so this is the one part of the academy where being a powerful mage counts for nothing.
+Feel: grass, mud, shouting.
+<%_ { const _sm = Number(getvar('stat_data.World.Month')) || 1; _%>
+<%_ if (_sm >= 10 && _sm <= 12) { _%>
+In winter: Once the snow settles the field closes; the Soccer and Running Clubs move into the Gymnasium and onto the cleared paths.
+<%_ } } _%>

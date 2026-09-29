@@ -1,0 +1,9 @@
+[Medical Centre] A white-walled building of its own, four minutes' walk from the Mall, with a herb garden along one side: more than an infirmary, less than a hospital. Treatment rooms, a small apothecary, and an inpatient ward where students stay overnight or for days under care. Staffed by Spiritual mages; busiest after Combat Class, in competition weeks, exam weeks, and after The Thinning. Nurses see injuries they must report and injuries they quietly do not. The attached Healing Ward is a teaching space where students practise on real patients under supervision. Staff can spot a Nightwell's Vigil overdose at a glance. Can heal any minor to mid injury to pristine; anything beyond is stabilised here and sent on to a proper hospital.
+Home of the Last Bed story.
+Feel: clean linen, green healing scent, too quiet.
+<%_ { const _sm = Number(getvar('stat_data.World.Month')) || 1; _%>
+<%_ if (_sm >= 4 && _sm <= 6) { _%>
+In summer: Sunburn and sports injuries.
+<%_ } else if (_sm >= 10 && _sm <= 12) { _%>
+In winter: The winter cold that goes round campus fills its ward with head colds.
+<%_ } } _%>

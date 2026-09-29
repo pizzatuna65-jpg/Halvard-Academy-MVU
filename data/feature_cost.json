@@ -1,0 +1,33 @@
+{
+ "rules": {
+  "planner": 87,
+  "notices": 98,
+  "letters": 120,
+  "mystery": 152,
+  "competition": 95,
+  "projects": 97,
+  "trip": 44,
+  "battle": 72,
+  "inventory": 178,
+  "happenings": 73,
+  "npc_initiative": 0,
+  "weather": 522,
+  "class": 0,
+  "hooks": 147,
+  "gossip": 19,
+  "fortune": 200,
+  "attendance": 11,
+  "recap": 0,
+  "small_scenes": 0,
+  "ambience": 54,
+  "reminders": 34,
+  "study": 233
+ },
+ "core_rules": 8026,
+ "lore": 3909,
+ "price_guide": 3684,
+ "live": {
+  "class": 40,
+  "weather": 25
+ }
+}

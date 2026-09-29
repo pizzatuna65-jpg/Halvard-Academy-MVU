@@ -1,0 +1,13 @@
+[Weekly Timetable]
+Periods: P1 08:00-10:00, P2 10:00-12:00, lunch, P3 13:00-16:00 (long practical block). All three years follow the same slots.
+Each academy teacher teaches one subject to one year level only; a [D] class is that same teacher taking each dorm separately. Dark Magic Defense is the exception: the Doves teach it to every year.
+[M] = all four dorms together. [D] = taught to each dorm separately.
+
+- Monday: Magic Theory [M] | History [M] | COMBAT [D]
+- Tuesday: Dark Magic Defense [D] | Magic Theory [D] | POTION CRAFTING [M]
+- Wednesday: Etiquette [M] | Dark Magic Defense [M] | CREATURE STUDIES [M]
+- Thursday: History [M] | Magic Theory [D] | COMBAT [D]
+- Friday: Magic Theory [M] | Etiquette [M] | DARK MAGIC DEFENSE [D]
+- Saturday: Etiquette [M] | Study Hall (unsupervised, Library) | CLUBS
+
+Creature Studies runs at the Menagerie or the Forest, not a lecture hall. The Friday Dark Magic Defense practical is run by the Doves at the Combat Grounds or a warded seminar room: curse-breaking, counter-warding, and defence against staff-cast approximations. Exams and academy events override the timetable.

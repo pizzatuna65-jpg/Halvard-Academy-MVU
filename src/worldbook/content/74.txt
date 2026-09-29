@@ -1,0 +1,9 @@
+[Swimming Pool] An outdoor pool beside the Gymnasium, its water kept warm by runes along the rim. Sport clubs and general recreation. Water-type students are banned from competing seriously, which they complain about constantly.
+Home of the Night Swimmer story.
+Feel: sun on water, splashing, wet stone.
+<%_ { const _sm = Number(getvar('stat_data.World.Month')) || 1; _%>
+<%_ if (_sm >= 4 && _sm <= 6) { _%>
+In summer: Crowded from the last class to the eight o'clock bell.
+<%_ } else if (_sm >= 10 && _sm <= 12) { _%>
+In winter: The rune-warmed water steams in the cold; the Swimming Club trains through it and sprints the few steps to the Gymnasium.
+<%_ } } _%>

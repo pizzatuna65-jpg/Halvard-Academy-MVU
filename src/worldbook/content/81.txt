@@ -1,0 +1,8 @@
+[Observation Tower] A high tower on the nearer crest of the Hills, five minutes up from the field, for astral and celestial work, most important to Mystic students; the Divination Society meets here. The most contested spot on campus on Star Night. Instruments turn by themselves at night. Its great telescope has a Norvaine starglass lens, the Divination Society's pride.
+Feel: high, windy, deep dark.
+<%_ { const _sm = Number(getvar('stat_data.World.Month')) || 1; _%>
+<%_ if (_sm >= 4 && _sm <= 6) { _%>
+In summer: Short nights; the Divination Society waits for midnight.
+<%_ } else if (_sm >= 10 && _sm <= 12) { _%>
+In winter: Winter nights are the clearest and the coldest; the Divination Society works in coats and gloves.
+<%_ } } _%>

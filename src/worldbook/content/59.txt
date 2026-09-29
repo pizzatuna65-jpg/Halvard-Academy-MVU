@@ -1,0 +1,5 @@
+[Study Rooms] Small bookable rooms, impossible to reserve before exam weeks. Fights over booking slots are permanent academy life. Soundproofed; late-night groups bring Nightwell's Vigil or Firetooth.
+Feel: small, warm, muffled.
+<%_ { const _w = getvar('stat_data.World') || {}; if (([2, 4, 8, 10].includes(+_w.Month) && +_w.Week >= 3) || ([3, 5, 9, 11].includes(+_w.Month) && +_w.Week === 1)) { _%>
+Every slot is booked; fights over booking slots are at their worst.
+<%_ } } _%>

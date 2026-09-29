@@ -1,0 +1,511 @@
+{
+  "npcs": {
+    "Irene": {
+      "loves": [
+        "Clear"
+      ],
+      "hates": [
+        "Storm"
+      ],
+      "clock": "M",
+      "exams": 1,
+      "trials": 0,
+      "reason": "cleans her room every morning, good grades"
+    },
+    "Caspian": {
+      "loves": [
+        "Clear"
+      ],
+      "hates": [
+        "Storm"
+      ],
+      "clock": "",
+      "exams": 0,
+      "trials": 0,
+      "reason": "outdoor festivals he runs; storms cancel them"
+    },
+    "Etnie": {
+      "loves": [
+        "Snow"
+      ],
+      "hates": [
+        "Storm"
+      ],
+      "clock": "",
+      "exams": 0,
+      "trials": 0,
+      "reason": "a dog in snow; thunder"
+    },
+    "Royhan": {
+      "loves": [
+        "Cool"
+      ],
+      "hates": [
+        "Hot",
+        "Heatwave"
+      ],
+      "clock": "M",
+      "exams": 0,
+      "trials": 0,
+      "reason": "farm-raised; steady"
+    },
+    "Sophia": {
+      "loves": [
+        "Rain",
+        "Storm"
+      ],
+      "hates": [
+        "Hot",
+        "Heatwave"
+      ],
+      "clock": "",
+      "exams": 0,
+      "trials": 1,
+      "reason": "rain means water everywhere; battle-hungry"
+    },
+    "Gareth": {
+      "loves": [
+        "Clear"
+      ],
+      "hates": [],
+      "clock": "M",
+      "exams": 1,
+      "trials": 1,
+      "reason": "winning"
+    },
+    "Ruby": {
+      "loves": [
+        "Clear",
+        "Mild"
+      ],
+      "hates": [
+        "Storm"
+      ],
+      "clock": "",
+      "exams": 0,
+      "trials": -1,
+      "reason": "hates fighting of any kind"
+    },
+    "Lenna": {
+      "loves": [
+        "Rain"
+      ],
+      "hates": [
+        "Hot"
+      ],
+      "clock": "N",
+      "exams": -1,
+      "trials": 0,
+      "reason": "naps; mornings are the enemy; courageous"
+    },
+    "Saffi": {
+      "loves": [
+        "Clear",
+        "Warm"
+      ],
+      "hates": [
+        "Rain"
+      ],
+      "clock": "M",
+      "exams": -1,
+      "trials": 1,
+      "reason": "a cat and water; can't sit still in class, lives to move"
+    },
+    "Kanae": {
+      "loves": [
+        "Clear night"
+      ],
+      "hates": [
+        "Overcast",
+        "Fog"
+      ],
+      "clock": "N",
+      "exams": 1,
+      "trials": 0,
+      "reason": "stars from the Observation Tower; top grades"
+    },
+    "Idris": {
+      "loves": [
+        "Clear by day ≥15 °C"
+      ],
+      "hates": [
+        "Cold",
+        "Freezing",
+        "Windy",
+        "Gale"
+      ],
+      "clock": "",
+      "exams": 0,
+      "trials": 0,
+      "reason": "cold-blooded"
+    },
+    "Tilly": {
+      "loves": [
+        "Fog",
+        "Storm"
+      ],
+      "hates": [],
+      "clock": "N",
+      "exams": 0,
+      "trials": 1,
+      "reason": "ghost weather; walks toward danger"
+    },
+    "Dante": {
+      "loves": [],
+      "hates": [],
+      "clock": "M",
+      "exams": 0,
+      "trials": 1,
+      "reason": "order under pressure"
+    },
+    "Florian": {
+      "loves": [
+        "Clear"
+      ],
+      "hates": [
+        "Rain"
+      ],
+      "clock": "N",
+      "exams": 0,
+      "trials": 1,
+      "reason": "being looked at, winning"
+    },
+    "Aiden": {
+      "loves": [
+        "Fog"
+      ],
+      "hates": [],
+      "clock": "N",
+      "exams": 1,
+      "trials": 1,
+      "reason": "curfew routes; exam and contest weeks are betting season"
+    },
+    "Caralynn": {
+      "loves": [
+        "Clear"
+      ],
+      "hates": [
+        "Rain",
+        "Storm",
+        "Windy",
+        "Gale"
+      ],
+      "clock": "",
+      "exams": -1,
+      "trials": 1,
+      "reason": "the spotlight; her hair"
+    },
+    "Zara": {
+      "loves": [
+        "Cold",
+        "Snow"
+      ],
+      "hates": [
+        "Hot",
+        "Windy",
+        "Gale"
+      ],
+      "clock": "",
+      "exams": 0,
+      "trials": -1,
+      "reason": "sitting by a fire; being stared at"
+    },
+    "Percival": {
+      "loves": [
+        "Storm",
+        "Gale"
+      ],
+      "hates": [],
+      "clock": "M",
+      "exams": -1,
+      "trials": 1,
+      "reason": "heroic weather; a chance for glory"
+    },
+    "Trixie": {
+      "loves": [
+        "Clear",
+        "Snow",
+        "Windy"
+      ],
+      "hates": [
+        "Rain"
+      ],
+      "clock": "M",
+      "exams": -1,
+      "trials": 1,
+      "reason": "outdoor shows; sitting still; excitement"
+    },
+    "Vera": {
+      "loves": [
+        "Storm"
+      ],
+      "hates": [],
+      "clock": "N",
+      "exams": 0,
+      "trials": 0,
+      "reason": "lightning; one tiny experiment all night"
+    },
+    "Castor": {
+      "loves": [
+        "Fog",
+        "Overcast"
+      ],
+      "hates": [],
+      "clock": "M",
+      "exams": 0,
+      "trials": 0,
+      "reason": "unnoticed; the Gardens early"
+    },
+    "Alyssa": {
+      "loves": [
+        "Clear"
+      ],
+      "hates": [],
+      "clock": "M",
+      "exams": 0,
+      "trials": 0,
+      "reason": "quiet mornings"
+    },
+    "Linus": {
+      "loves": [
+        "Clear"
+      ],
+      "hates": [],
+      "clock": "",
+      "exams": 0,
+      "trials": 1,
+      "reason": "brackets and matchups"
+    },
+    "Maple": {
+      "loves": [
+        "Clear",
+        "Mild"
+      ],
+      "hates": [
+        "Storm",
+        "Gale"
+      ],
+      "clock": "M",
+      "exams": 0,
+      "trials": -1,
+      "reason": "climbing trees; fights, and Sobek near them"
+    },
+    "Nerys": {
+      "loves": [
+        "Fog"
+      ],
+      "hates": [],
+      "clock": "",
+      "exams": 0,
+      "trials": 0,
+      "reason": "\"nobody there\"; no feelings about the rest"
+    },
+    "Hadrian": {
+      "loves": [
+        "Mild"
+      ],
+      "hates": [
+        "Rain",
+        "Cold"
+      ],
+      "clock": "",
+      "exams": 1,
+      "trials": -1,
+      "reason": "a warm coat, being right; risk"
+    },
+    "Wren": {
+      "loves": [
+        "Clear"
+      ],
+      "hates": [
+        "Fog"
+      ],
+      "clock": "M",
+      "exams": 0,
+      "trials": 0,
+      "reason": "the dock at dawn; bad light defeats lip-reading"
+    },
+    "Tsubaki": {
+      "loves": [
+        "Clear night",
+        "Snow"
+      ],
+      "hates": [
+        "Fog"
+      ],
+      "clock": "M",
+      "exams": -1,
+      "trials": 1,
+      "reason": "open sky; lectures she can't follow; a good opponent"
+    },
+    "Gavlan": {
+      "loves": [],
+      "hates": [
+        "Storm"
+      ],
+      "clock": "M",
+      "exams": 0,
+      "trials": 1,
+      "reason": "thunder and war nightmares; an old officer under pressure"
+    },
+    "Yvette": {
+      "loves": [],
+      "hates": [
+        "Fog"
+      ],
+      "clock": "",
+      "exams": 0,
+      "trials": -1,
+      "reason": "paranoid"
+    },
+    "Krieg": {
+      "loves": [
+        "Fog"
+      ],
+      "hates": [],
+      "clock": "M",
+      "exams": 0,
+      "trials": 1,
+      "reason": "doubled patrols in fog; the Thinning is his element"
+    },
+    "Milena": {
+      "loves": [
+        "Clear",
+        "Warm"
+      ],
+      "hates": [
+        "Cold",
+        "Snow",
+        "Gale"
+      ],
+      "clock": "M",
+      "exams": 0,
+      "trials": 0,
+      "reason": "a southerner from Salaffos"
+    },
+    "Baelin": {
+      "loves": [
+        "Clear"
+      ],
+      "hates": [],
+      "clock": "M",
+      "exams": 0,
+      "trials": 0,
+      "reason": "rest-day mornings at the Elder Oak; enormous patience"
+    },
+    "Layla": {
+      "loves": [
+        "Rain"
+      ],
+      "hates": [],
+      "clock": "",
+      "exams": 0,
+      "trials": 0,
+      "reason": "archive days and tea"
+    },
+    "Vallie": {
+      "loves": [
+        "Storm",
+        "Snow",
+        "Gale"
+      ],
+      "hates": [],
+      "clock": "N",
+      "exams": 0,
+      "trials": 1,
+      "reason": "always happy to test her strength"
+    },
+    "Rei": {
+      "loves": [
+        "Fog"
+      ],
+      "hates": [
+        "Heatwave"
+      ],
+      "clock": "N",
+      "exams": 0,
+      "trials": 1,
+      "reason": "the Rooftop at hours nobody is awake; zero drama when it matters"
+    },
+    "Kuroo": {
+      "loves": [],
+      "hates": [],
+      "clock": "N",
+      "exams": 0,
+      "trials": 1,
+      "reason": "Card Club evenings; the moment a student finally tries"
+    },
+    "Mimosa": {
+      "loves": [
+        "Rain",
+        "Overcast"
+      ],
+      "hates": [
+        "Clear",
+        "Hot"
+      ],
+      "clock": "N",
+      "exams": 0,
+      "trials": -1,
+      "reason": "small, dim, enclosed; a room full of eyes"
+    },
+    "Tristan": {
+      "loves": [],
+      "hates": [],
+      "clock": "",
+      "exams": 0,
+      "trials": 0,
+      "reason": "nothing rattles him"
+    },
+    "Althair": {
+      "loves": [
+        "Storm",
+        "Gale"
+      ],
+      "hates": [],
+      "clock": "",
+      "exams": 0,
+      "trials": 1,
+      "reason": "relentlessly cheerful, never Bad from weather; a good game"
+    },
+    "Ezrel": {
+      "loves": [],
+      "hates": [],
+      "clock": "",
+      "exams": 0,
+      "trials": 0,
+      "reason": "always Normal (apathetic)"
+    },
+    "Ottavio": {
+      "loves": [
+        "Rain",
+        "Fog"
+      ],
+      "hates": [],
+      "clock": "M",
+      "exams": 0,
+      "trials": 0,
+      "reason": "the fishing dock at dawn"
+    },
+    "Caine": {
+      "loves": [
+        "Overcast"
+      ],
+      "hates": [],
+      "clock": "",
+      "exams": 0,
+      "trials": 0,
+      "reason": "silence"
+    },
+    "Bobby": {
+      "loves": [
+        "Storm"
+      ],
+      "hates": [],
+      "clock": "",
+      "exams": 0,
+      "trials": 0,
+      "reason": "storms mean repair jobs"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+[Canteen] A single canteen for all four dorms on the castle's ground floor, just off the Main Courtyard. Everyday eating, free, open at set hours. Casual and noisy, unlike the Ring Dining Hall, and where most social life happens for students who cannot afford the mall. Loudest at five past noon. The default when points are tight; lunch crowds sort by friendship more than dorm. The main kitchen lies behind the Canteen, supplying its daily meals and preparing the Ring Dining Hall's feasts on major occasions. A dedicated section with its own benches, ovens and ingredient cupboard serves as the Cooking Club's regular venue.
+Feel: loud, bread, steam.
+<%_ { const _sm = Number(getvar('stat_data.World.Month')) || 1; _%>
+<%_ if (_sm >= 1 && _sm <= 3) { _%>
+In spring: Spring greens and new potatoes.
+<%_ } else if (_sm >= 4 && _sm <= 6) { _%>
+In summer: Cold soups, fruit, iced tea.
+<%_ } else if (_sm >= 7 && _sm <= 9) { _%>
+In autumn: Stews and roast squash.
+<%_ } else if (_sm >= 10 && _sm <= 12) { _%>
+In winter: Porridge, thick broth and second helpings.
+<%_ } } _%>

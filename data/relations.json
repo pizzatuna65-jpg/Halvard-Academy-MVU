@@ -1,0 +1,6128 @@
+[
+ {
+  "from": "Aiden",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Aiden",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Aiden",
+  "to": "Bobby",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Brings Bobby Becket, the maintenance man students call BB, his most ambitious prank commissions; Bobby enjoys the challenge and charges accordingly."
+  ],
+  "visibility": "rank:5",
+  "via": "Aiden"
+ },
+ {
+  "from": "Aiden",
+  "to": "Irene",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Irene Chanare is his nemesis; she is always one step from catching him and never has."
+  ],
+  "visibility": "rank:6",
+  "via": "Aiden"
+ },
+ {
+  "from": "Aiden",
+  "to": "Linus",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Gets Linus Tallyworth's column a day before it runs and sets his odds by it; when it is wrong, he lets Linus take the blame."
+  ],
+  "visibility": "rank:6",
+  "via": "Aiden"
+ },
+ {
+  "from": "Aiden",
+  "to": "Nerys",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Nerys Silvarenne, a first-year, owes him forty-one points and pays it back in objects: pickled eels, a map of squeaky floorboards, a live pigeon.",
+   "The Tally has been wrong twice this year, both times on a feat Nerys swore she had seen; Aiden paid out both times and has not yet worked out whom to blame."
+  ],
+  "visibility": "rank:6",
+  "via": "Aiden"
+ },
+ {
+  "from": "Aiden",
+  "to": "Sophia",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Books every one of Sophia Helfin's duels; she tolerates him because he always pays out on time."
+  ],
+  "visibility": "rank:6",
+  "via": "Aiden"
+ },
+ {
+  "from": "Aiden",
+  "to": "Sophia",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Aiden Ruzzo books her duels and pays on time."
+  ],
+  "visibility": "rank:6",
+  "via": "Sophia"
+ },
+ {
+  "from": "Aiden",
+  "to": "Tsubaki",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "With Sophia Helfin graduated, his biggest book is Tsubaki Hoshikage's duels."
+  ],
+  "visibility": "rank:6",
+  "via": "Aiden"
+ },
+ {
+  "from": "Althair",
+  "to": "Aiden",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "He knows about Aiden Ruzzo's betting book and declines to act, because it entertains him."
+  ],
+  "visibility": "rank:6",
+  "via": "Althair"
+ },
+ {
+  "from": "Althair",
+  "to": "Aiden",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Vice Headmaster Althair Veyne knows all about the betting book and declines to act on it, because it entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Aiden"
+ },
+ {
+  "from": "Althair",
+  "to": "Bobby",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Knows exactly what Bobby Becket does after hours and considers it the healthiest institution on campus."
+  ],
+  "visibility": "rank:5",
+  "via": "Althair"
+ },
+ {
+  "from": "Althair",
+  "to": "Bobby",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Althair Veyne knows exactly what he does after hours and considers it the healthiest institution on campus."
+  ],
+  "visibility": "rank:6",
+  "via": "Bobby"
+ },
+ {
+  "from": "Althair",
+  "to": "Ezrel",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Ezrel Marionne's non-reactions.",
+   "Get one real reaction out of Ezrel.",
+   "Adores Ezrel Marionne, the Light Dorm Head, and has never once got a real reaction out of him; it is the best game on campus."
+  ],
+  "visibility": "rank:5",
+  "via": "Althair"
+ },
+ {
+  "from": "Althair",
+  "to": "Ezrel",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Althair Veyne adores him and has never once got a real reaction out of him, which Althair considers the best game on campus; Ezrel does not think about Althair at all."
+  ],
+  "visibility": "rank:6",
+  "via": "Ezrel"
+ },
+ {
+  "from": "Althair",
+  "to": "Hadrian",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Hadrian Quelloris, a shameless Light first-year, keeps trying to talk his way past him."
+  ],
+  "visibility": "rank:6",
+  "via": "Althair"
+ },
+ {
+  "from": "Althair",
+  "to": "Hadrian",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Has tried to talk his way out of trouble with Vice Headmaster Althair Veyne three times and lost each time without understanding how; Veyne enjoys him enormously."
+  ],
+  "visibility": "rank:6",
+  "via": "Hadrian"
+ },
+ {
+  "from": "Althair",
+  "to": "Irene",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "He praises Irene Chanare sincerely and she is never comfortable after."
+  ],
+  "visibility": "rank:6",
+  "via": "Althair"
+ },
+ {
+  "from": "Althair",
+  "to": "Rei",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Make Rei want something.",
+   "Rei is immune to him, because she wants nothing.",
+   "Rei ignoring him is the highlight of his week."
+  ],
+  "visibility": "rank:5",
+  "via": "Althair"
+ },
+ {
+  "from": "Alyssa",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Alyssa",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Alyssa",
+  "to": "Milena",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Sent to check on Alyssa Edelweiss more than any other student; Alyssa never remembers her, and is always glad to meet her."
+  ],
+  "visibility": "rank:5",
+  "via": "Milena"
+ },
+ {
+  "from": "Alyssa",
+  "to": "Wren",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Wren Marlowe, a deaf first-year, writes her a page every Sunday of the week they had, both sides in both their hands."
+  ],
+  "visibility": "rank:6",
+  "via": "Alyssa"
+ },
+ {
+  "from": "Alyssa",
+  "to": "Zara",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Zara Minallone, in her dorm and year, reintroduces herself every week without complaint, and Alyssa is the one person who has never once remarked on Zara's height; they are quiet friends, re-met each week.",
+   "Library Study Rooms, the Mail Tower on letter days, the Rooftop (Zara has shown her the way up four times; it is in the notebook now)."
+  ],
+  "visibility": "rank:5",
+  "via": "Alyssa"
+ },
+ {
+  "from": "Baelin",
+  "to": "Althair",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Knows exactly what his Vice Headmaster Althair Veyne is doing and allows it, because Althair handles what he cannot and the academy runs well; he files every favour as a debt."
+  ],
+  "visibility": "rank:5",
+  "via": "Baelin"
+ },
+ {
+  "from": "Baelin",
+  "to": "Althair",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Baelin Kalvor knows exactly what he is doing and allows it, because Althair handles what Baelin cannot and the academy runs well; Baelin files every favour as a debt.",
+   "Every boring thing Baelin does not want to do."
+  ],
+  "visibility": "rank:5",
+  "via": "Althair"
+ },
+ {
+  "from": "Baelin",
+  "to": "Etnie",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Generous with Etnie (let her repeat a year, since one recovered student is worth more than one expelled)."
+  ],
+  "visibility": "rank:5",
+  "via": "Baelin"
+ },
+ {
+  "from": "Baelin",
+  "to": "Etnie",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Headmaster Baelin Kalvor let her repeat her second year rather than expel her."
+  ],
+  "visibility": "rank:7",
+  "via": "Etnie"
+ },
+ {
+  "from": "Baelin",
+  "to": "Gavlan",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "His great-grandfather fought beside Gavlan Haverton in the War of Independence; family stories of \"the old soldier in the woods\" are how Baelin knew where to find him.",
+   "Gavlan Haverton is almost an uncle to him and the only person who dares shout at him."
+  ],
+  "visibility": "rank:6",
+  "via": "Baelin"
+ },
+ {
+  "from": "Baelin",
+  "to": "Irene",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Sees a future staff member in Irene Chanare but quietly fears she will break."
+  ],
+  "visibility": "rank:6",
+  "via": "Baelin"
+ },
+ {
+  "from": "Baelin",
+  "to": "Krieg",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Krieg Valforth, though he will never say so.",
+   "Loathes Krieg Valforth but never confronts him head-on; his weapons are official letters to the capital, administrative delay, and patience.",
+   "Treats Milena Sagona as an unofficial channel for restraining Krieg."
+  ],
+  "visibility": "rank:5",
+  "via": "Baelin"
+ },
+ {
+  "from": "Baelin",
+  "to": "Milena",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Treats Milena Sagona as an unofficial channel for restraining Krieg."
+  ],
+  "visibility": "rank:6",
+  "via": "Baelin"
+ },
+ {
+  "from": "Baelin",
+  "to": "Rei",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Keep the crown from replacing Rei with someone easier to control and worse at the job.",
+   "Has long since stopped trying to control Rei, the Acting Warden."
+  ],
+  "visibility": "rank:5",
+  "via": "Baelin"
+ },
+ {
+  "from": "Baelin",
+  "to": "Tristan",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Takes tea with Tristan, the Cathedral steward, and the two quietly measure each other every time."
+  ],
+  "visibility": "rank:5",
+  "via": "Baelin"
+ },
+ {
+  "from": "Baelin",
+  "to": "Tsubaki",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Tsubaki Hoshikage, a Royal Mage recruited at thirteen and sent to Halvard at the Crown's order, is exactly the kind of young mage he quit the court over."
+  ],
+  "visibility": "rank:6",
+  "via": "Baelin"
+ },
+ {
+  "from": "Baelin",
+  "to": "Vallie",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "After the breach, Headmaster Baelin decided Halvard's students needed a teacher who had actually killed monsters, not one who read about them.",
+   "Paperwork; Baelin's forms pile up on her desk."
+  ],
+  "visibility": "rank:5",
+  "via": "Vallie"
+ },
+ {
+  "from": "Baelin",
+  "to": "Yvette",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Unyielding with Yvette Fallaron: after the breach several teachers resigned, and her Oath is one of the few things holding Halvard's staff together."
+  ],
+  "visibility": "rank:5",
+  "via": "Baelin"
+ },
+ {
+  "from": "Baelin",
+  "to": "Yvette",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Convince Headmaster Baelin Kalvor to release her from the Oath early.",
+   "Headmaster Baelin Kalvor sympathises and still will not release her from the Oath.",
+   "Headmaster Baelin sympathizes with her but refuses to release her from the Oath."
+  ],
+  "visibility": "rank:5",
+  "via": "Yvette"
+ },
+ {
+  "from": "Bobby",
+  "to": "Aiden",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Aiden Ruzzo brings ambitious prank commissions; Bobby enjoys the challenge and charges accordingly.",
+   "Irene Chanare is certain he is behind half of Aiden's pranks and has never found proof."
+  ],
+  "visibility": "rank:6",
+  "via": "Bobby"
+ },
+ {
+  "from": "Bobby",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Bobby",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Bobby",
+  "to": "Ezrel",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Ezrel Marionne watches his hands with the full attention he otherwise saves for golems and says flatly where the card went; Bobby counts him as the audience still to beat."
+  ],
+  "visibility": "rank:6",
+  "via": "Bobby"
+ },
+ {
+  "from": "Bobby",
+  "to": "Kuroo",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Kuroo Varnell will not play cards against him, and Bobby will not play against Kuroo; each assumes the other cheats."
+  ],
+  "visibility": "rank:6",
+  "via": "Bobby"
+ },
+ {
+  "from": "Bobby",
+  "to": "Layla",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Layla Palegleam trades gossip with him over Canteen lunches and never asks where his comes from."
+  ],
+  "visibility": "rank:6",
+  "via": "Bobby"
+ },
+ {
+  "from": "Caine",
+  "to": "Aiden",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Caine",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Caine",
+  "to": "Alyssa",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Baelin",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Bellatrix",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Bram",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Caralynn",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Caspian",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Caspian Riwalo is the only one who thanks him by name, and the one he hates most."
+  ],
+  "visibility": "rank:6",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Cassius",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Castor",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Dante",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Dex",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Elion",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Etnie",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Ezrel",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Florian",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Florian Villeneuve's tea he pours in a room where nobody mentions Florian's brother, and he watches Florian notice the silence."
+  ],
+  "visibility": "rank:6",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Gareth",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Gavlan",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Hadrian",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Idris",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Ines",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Irene",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Kanae",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Kira",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Krieg",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Kuroo",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Kuroo Varnell, still on good terms with the Liaison's staff, calls him the one servant there who never gossips, and has learned nothing from him since he arrived.",
+   "Displeasure is more precision: a cup set down without a sound, a pause before \"Young master\" that nobody but Kuroo Varnell would catch."
+  ],
+  "visibility": "rank:5",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Layla",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Lenna",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Linus",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Lucius",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Maple",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Milena",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Mimosa",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Mirelle",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Morgana",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Nerys",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Ottavio",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Percival",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Pip",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Rei",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Royhan",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Ruby",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Saffi",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Sophia",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Theodore",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Tilly",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Tristan",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Trixie",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Tsubaki",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Vallie",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Vera",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Wren",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Yvette",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Zara",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caralynn",
+  "to": "Aiden",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Aiden Ruzzo, whom she considers a common cheat, knows exactly who her father is."
+  ],
+  "visibility": "rank:5",
+  "via": "Caralynn"
+ },
+ {
+  "from": "Caralynn",
+  "to": "Aiden",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Caralynn Veyturone is disgusted by \"that common cheat\"."
+  ],
+  "visibility": "rank:6",
+  "via": "Aiden"
+ },
+ {
+  "from": "Caralynn",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Caralynn",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Caralynn",
+  "to": "Caine",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Caralynn Veyturone treats him as furniture."
+  ],
+  "visibility": "rank:6",
+  "via": "Caine"
+ },
+ {
+  "from": "Caralynn",
+  "to": "Kanae",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Suspects Kanae Quveno's romance readings are fake and says so openly, unaware how dangerous that is."
+  ],
+  "visibility": "rank:6",
+  "via": "Caralynn"
+ },
+ {
+  "from": "Caralynn",
+  "to": "Krieg",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Doves: Admires them. The Veyturones are famously loyal to the crown, and to her the Doves are the crown's finest."
+  ],
+  "visibility": "rank:6",
+  "rule": "doves",
+  "rule_label": "The Dovecote",
+  "via": "Caralynn"
+ },
+ {
+  "from": "Caralynn",
+  "to": "Lenna",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Thinks Lenna Greenwind's popularity is vulgar and undeserved."
+  ],
+  "visibility": "rank:6",
+  "via": "Caralynn"
+ },
+ {
+  "from": "Caralynn",
+  "to": "Lenna",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Caralynn Veyturone quietly despises her popularity."
+  ],
+  "visibility": "rank:6",
+  "via": "Lenna"
+ },
+ {
+  "from": "Caralynn",
+  "to": "Milena",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Doves: Admires them. The Veyturones are famously loyal to the crown, and to her the Doves are the crown's finest."
+  ],
+  "visibility": "rank:6",
+  "rule": "doves",
+  "rule_label": "The Dovecote",
+  "via": "Caralynn"
+ },
+ {
+  "from": "Caralynn",
+  "to": "Nerys",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Believes Nerys Silvarenne, a first-year in her dorm, is her most devoted fan, because of the flowers that keep arriving."
+  ],
+  "visibility": "rank:6",
+  "via": "Caralynn"
+ },
+ {
+  "from": "Caralynn",
+  "to": "Nerys",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Caralynn Veyturone, also Fire, believes Nerys is a devoted fan because of the flowers that keep arriving; Nerys has not corrected her."
+  ],
+  "visibility": "rank:6",
+  "via": "Nerys"
+ },
+ {
+  "from": "Caralynn",
+  "to": "Ruby",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Ruby Bonbon plays guitar behind her in the Music Club and is perfectly happy back there, which Caralynn finds infuriating: she cannot provoke her, cannot impress her, and has no idea what to do with someone who will not compete."
+  ],
+  "visibility": "rank:5",
+  "via": "Caralynn"
+ },
+ {
+  "from": "Caralynn",
+  "to": "Ruby",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Music Club, where she plays guitar and is perfectly happy to stay at the back behind Caralynn Veyturone.",
+   "Caralynn Veyturone sings lead in the Music Club while Ruby plays guitar behind her, and cannot provoke her, which is infuriating."
+  ],
+  "visibility": "rank:5",
+  "via": "Ruby"
+ },
+ {
+  "from": "Caralynn",
+  "to": "Wren",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Wren Marlowe, a deaf first-year in her dorm, sits on the floor at every Music Club rehearsal feeling the songs through the boards, and applauds harder than anyone."
+  ],
+  "visibility": "rank:6",
+  "via": "Caralynn"
+ },
+ {
+  "from": "Caralynn",
+  "to": "Wren",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Caralynn Veyturone sings lead in the Music Club; Wren cannot hear a note of it, sits on the floor at every rehearsal feeling it through the boards, and applauds harder than anyone, and Caralynn cannot decide whether this is the greatest compliment she has ever had or an insult."
+  ],
+  "visibility": "rank:6",
+  "via": "Wren"
+ },
+ {
+  "from": "Caspian",
+  "to": "Aiden",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Quietly covers for first-year troublemaker Aiden Ruzzo too."
+  ],
+  "visibility": "rank:6",
+  "via": "Caspian"
+ },
+ {
+  "from": "Caspian",
+  "to": "Aiden",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Caspian Riwalo quietly covers for him."
+  ],
+  "visibility": "rank:6",
+  "via": "Aiden"
+ },
+ {
+  "from": "Caspian",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Caspian",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Caspian",
+  "to": "Etnie",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Caspian Riwalo, her dorm-mate, keeps an eye on her the way he keeps an eye on everyone, and she tolerates it because he is nice to {{user}}."
+  ],
+  "visibility": "rank:6",
+  "via": "Etnie"
+ },
+ {
+  "from": "Caspian",
+  "to": "Florian",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Manages Florian Villeneuve the way he manages a difficult noble parent, and it works."
+  ],
+  "visibility": "rank:5",
+  "via": "Caspian"
+ },
+ {
+  "from": "Caspian",
+  "to": "Irene",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Irene Chanare, his President: stiff and too rigid, but he covers for her."
+  ],
+  "visibility": "rank:6",
+  "via": "Caspian"
+ },
+ {
+  "from": "Caspian",
+  "to": "Krieg",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Cruelty dressed up as procedure; Krieg Valforth's methods above all.",
+   "Devout and loyal to the crown; as Vice President he is the Council's link to the Dovecote and defends the Doves in front of other students, though he dislikes Krieg Valforth's methods.",
+   "Anger is rare and makes him formal: the teasing stops, he switches to full names and titles, and argues with perfect courtesy until he wins; Krieg Valforth's methods bring it out most."
+  ],
+  "visibility": "rank:5",
+  "via": "Caspian"
+ },
+ {
+  "from": "Caspian",
+  "to": "Milena",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Doves: Admires them. Devout and loyal to the crown; as Vice President he is the Council's link to the Dovecote and defends the Doves in front of other students, though he dislikes Krieg Valforth's methods."
+  ],
+  "visibility": "rank:6",
+  "rule": "doves",
+  "rule_label": "The Dovecote",
+  "via": "Caspian"
+ },
+ {
+  "from": "Caspian",
+  "to": "Ruby",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Trades notes with Ruby Bonbon, the third-year everyone tells things to, and has never worked out why she asks nothing in return."
+  ],
+  "visibility": "rank:5",
+  "via": "Caspian"
+ },
+ {
+  "from": "Caspian",
+  "to": "Tristan",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Caspian Riwalo is his most devout student attendee."
+  ],
+  "visibility": "rank:6",
+  "via": "Tristan"
+ },
+ {
+  "from": "Castor",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Castor",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Dante",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Dante",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Dante",
+  "to": "Idris",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "He has never let himself think about who burned Idris."
+  ],
+  "visibility": "rank:6",
+  "via": "Dante"
+ },
+ {
+  "from": "Dante",
+  "to": "Idris",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Dante Kleinn, a fellow second-year, has never let himself think about who left the burn on Idris's ribs."
+  ],
+  "visibility": "rank:5",
+  "via": "Idris"
+ },
+ {
+  "from": "Dex",
+  "to": "Krieg",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Doves: Hates them, loudly and publicly."
+  ],
+  "visibility": "rank:6",
+  "rule": "doves",
+  "rule_label": "The Dovecote",
+  "via": "Dex"
+ },
+ {
+  "from": "Dex",
+  "to": "Milena",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Doves: Hates them, loudly and publicly."
+  ],
+  "visibility": "rank:6",
+  "rule": "doves",
+  "rule_label": "The Dovecote",
+  "via": "Dex"
+ },
+ {
+  "from": "Etnie",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Etnie",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Ezrel",
+  "to": "Bobby",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Watches Bobby Becket's card tricks with the full attention he otherwise saves for golems, and says flatly where the card went."
+  ],
+  "visibility": "rank:5",
+  "via": "Ezrel"
+ },
+ {
+  "from": "Ezrel",
+  "to": "Irene",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Her own Dorm Head, Ezrel Marionne, once told her plainly that he did not care about his students, then helped her carry the exam papers."
+  ],
+  "visibility": "rank:5",
+  "via": "Irene"
+ },
+ {
+  "from": "Ezrel",
+  "to": "Krieg",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "With Krieg alone he does not bother performing: courteous, brief, and always a step out of reach."
+  ],
+  "visibility": "rank:6",
+  "via": "Ezrel"
+ },
+ {
+  "from": "Ezrel",
+  "to": "Trixie",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Trixie Confetti thinks his flat asides are a comedy bit and is the only student who laughs at them; he lets her boss his golems around the Theatre Troupe's stage."
+  ],
+  "visibility": "rank:6",
+  "via": "Ezrel"
+ },
+ {
+  "from": "Florian",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Florian",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Florian",
+  "to": "Caspian",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Caspian Riwalo handles him diplomatically and is one of the few people he will actually listen to.",
+   "Caspian can get him to listen; Irene still has the final word."
+  ],
+  "visibility": "rank:5",
+  "via": "Florian"
+ },
+ {
+  "from": "Florian",
+  "to": "Gareth",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Beat Gareth Valkaryn in front of everyone.",
+   "Gareth Valkaryn is the one person he respects without qualification.",
+   "Losing to Gareth Valkaryn earns a gracious bow in public and a late, solitary hour in a Combat Grounds ring."
+  ],
+  "visibility": "rank:5",
+  "via": "Florian"
+ },
+ {
+  "from": "Florian",
+  "to": "Krieg",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Doves: Admires."
+  ],
+  "visibility": "rank:6",
+  "rule": "doves",
+  "rule_label": "The Dovecote",
+  "via": "Florian"
+ },
+ {
+  "from": "Florian",
+  "to": "Linus",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "A first-year called Linus Tallyworth keeps him at third in his ranking book 'until he beats someone above him'."
+  ],
+  "visibility": "rank:6",
+  "via": "Florian"
+ },
+ {
+  "from": "Florian",
+  "to": "Maple",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Keeps asking Maple Fernhollow, the only other student with a Greater Spirit, for a spirit-to-spirit match."
+  ],
+  "visibility": "rank:6",
+  "via": "Florian"
+ },
+ {
+  "from": "Florian",
+  "to": "Milena",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Doves: Admires."
+  ],
+  "visibility": "rank:6",
+  "rule": "doves",
+  "rule_label": "The Dovecote",
+  "via": "Florian"
+ },
+ {
+  "from": "Florian",
+  "to": "Nerys",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Nerys Silvarenne, a first-year of an old elven house, turns into a flawless noble at Liaison receptions and a pigeon-feeding enigma everywhere else."
+  ],
+  "visibility": "rank:6",
+  "via": "Florian"
+ },
+ {
+  "from": "Florian",
+  "to": "Sophia",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "He gives Sophia Helfin a wide berth and will not be drawn on why; she is more than he has any intention of handling."
+  ],
+  "visibility": "rank:6",
+  "via": "Florian"
+ },
+ {
+  "from": "Florian",
+  "to": "Sophia",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Florian Villeneuve avoids her and is transparently relieved she has never noticed."
+  ],
+  "visibility": "rank:5",
+  "via": "Sophia"
+ },
+ {
+  "from": "Florian",
+  "to": "Tilly",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Treats Tilly Marsh as an equal without knowing why; she is the one person whose manners make him sit up straighter."
+  ],
+  "visibility": "rank:5",
+  "via": "Florian"
+ },
+ {
+  "from": "Florian",
+  "to": "Tsubaki",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Now the academy's first-ranked student, with Gareth Valkaryn and Sophia Helfin gone, he watched Tsubaki Hoshikage, a first-year, train one night and has not slept well since."
+  ],
+  "visibility": "rank:6",
+  "via": "Florian"
+ },
+ {
+  "from": "Florian",
+  "to": "Tsubaki",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Florian Villeneuve, finally the academy's first-ranked student now that Gareth Valkaryn and Sophia Helfin have graduated, watched her train once and has not slept well since."
+  ],
+  "visibility": "rank:6",
+  "via": "Tsubaki"
+ },
+ {
+  "from": "Gareth",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Gareth",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Gareth",
+  "to": "Florian",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Florian Villeneuve challenges him constantly; Gareth accepts every time and has never once gloated, which Florian finds worse."
+  ],
+  "visibility": "rank:5",
+  "via": "Gareth"
+ },
+ {
+  "from": "Gareth",
+  "to": "Ruby",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Has asked Ruby Bonbon to join a competition team, very politely, and been refused; he took it gracefully and has not stopped thinking about it."
+  ],
+  "visibility": "rank:5",
+  "via": "Gareth"
+ },
+ {
+  "from": "Gareth",
+  "to": "Ruby",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Sophia Helfin and Gareth Valkaryn both ask her onto a team every year and are refused."
+  ],
+  "visibility": "rank:6",
+  "via": "Ruby"
+ },
+ {
+  "from": "Gareth",
+  "to": "Sophia",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "He has beaten Sophia Helfin in the Fire Dorm Competition final two years running.",
+   "Sophia Helfin, his dorm-mate and the only student close to matching him, treats beating him as an obsession; he is unfailingly gracious to her, which she hates."
+  ],
+  "visibility": "rank:5",
+  "via": "Gareth"
+ },
+ {
+  "from": "Gavlan",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Gavlan",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Gavlan",
+  "to": "Baelin",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Headmaster Baelin Kalvor, an elf and great-grandson of an elven wartime comrade, asked him to teach; he saw a way to atone and quiet the nightmares.",
+   "Baelin Kalvor treats him almost like an uncle, and he is the only person who dares shout at the Headmaster."
+  ],
+  "visibility": "rank:6",
+  "via": "Gavlan"
+ },
+ {
+  "from": "Gavlan",
+  "to": "Ezrel",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "His sense for magic has always told him something about Ezrel Marionne is wrong."
+  ],
+  "visibility": "rank:5",
+  "via": "Gavlan"
+ },
+ {
+  "from": "Gavlan",
+  "to": "Ezrel",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Gavlan Haverton's sense for magic has always told him something about Ezrel is wrong; he puts it down to the golems, always running somewhere, and has never been fully satisfied with that answer."
+  ],
+  "visibility": "rank:6",
+  "via": "Ezrel"
+ },
+ {
+  "from": "Gavlan",
+  "to": "Gareth",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Considers Gareth Valkaryn, whom he taught as a first-year two years ago, the most gifted student he has taught in two decades, and cannot decide whether the boy is brilliant or hollow."
+  ],
+  "visibility": "public",
+  "via": "Gavlan"
+ },
+ {
+  "from": "Gavlan",
+  "to": "Gareth",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Gavlan Haverton considers him the most gifted student he has taught in twenty years."
+  ],
+  "visibility": "public",
+  "via": "Gareth"
+ },
+ {
+  "from": "Gavlan",
+  "to": "Krieg",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Doves: Hates them. The crown once spent young mages like coins in a war; now the Doves are the same crown's hunting dogs."
+  ],
+  "visibility": "rank:6",
+  "rule": "doves",
+  "rule_label": "The Dovecote",
+  "via": "Gavlan"
+ },
+ {
+  "from": "Gavlan",
+  "to": "Linus",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Wary of Linus Tallyworth, a first-year in love with fights who keeps asking about the War of Independence."
+  ],
+  "visibility": "rank:6",
+  "via": "Gavlan"
+ },
+ {
+  "from": "Gavlan",
+  "to": "Milena",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Doves: Hates them. The crown once spent young mages like coins in a war; now the Doves are the same crown's hunting dogs."
+  ],
+  "visibility": "rank:6",
+  "rule": "doves",
+  "rule_label": "The Dovecote",
+  "via": "Gavlan"
+ },
+ {
+  "from": "Gavlan",
+  "to": "Royhan",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Plays quiet Dragonchess with Royhan more than he admits."
+  ],
+  "visibility": "rank:5",
+  "via": "Gavlan"
+ },
+ {
+  "from": "Gavlan",
+  "to": "Sophia",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Wary of Sophia Helfin: he has seen too many young people fall in love with war."
+  ],
+  "visibility": "rank:6",
+  "via": "Gavlan"
+ },
+ {
+  "from": "Gavlan",
+  "to": "Sophia",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Milena Sagona cannot decide if she is victim or threat; Gavlan Haverton is wary."
+  ],
+  "visibility": "rank:6",
+  "via": "Sophia"
+ },
+ {
+  "from": "Gavlan",
+  "to": "Vallie",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Vallie Goredust is his arm-wrestling rival and drinking partner for his firewine stash; she calls him \"Grandpa\"."
+  ],
+  "visibility": "rank:6",
+  "via": "Gavlan"
+ },
+ {
+  "from": "Hadrian",
+  "to": "Aiden",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Considers Aiden Ruzzo a common rule-breaker and has reported him to a teacher twice, for things Hadrian does himself."
+  ],
+  "visibility": "rank:6",
+  "via": "Hadrian"
+ },
+ {
+  "from": "Hadrian",
+  "to": "Aiden",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hadrian Quelloris, a Light first-year, has reported him to a teacher twice, for things Hadrian does himself."
+  ],
+  "visibility": "rank:6",
+  "via": "Aiden"
+ },
+ {
+  "from": "Hadrian",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Hadrian",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Hadrian",
+  "to": "Ezrel",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Professor Marionne's golems, the only thing on campus better than his own, which he intends to surpass.",
+   "Surpass Professor Marionne.",
+   "Considers Professor Ezrel Marionne the only competent person at Halvard and his future rival; Marionne has never shown the slightest interest in either idea."
+  ],
+  "visibility": "rank:5",
+  "via": "Hadrian"
+ },
+ {
+  "from": "Hadrian",
+  "to": "Ezrel",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Hadrian Quelloris, a Light first-year, considers him his future rival in Golemancy."
+  ],
+  "visibility": "rank:6",
+  "via": "Ezrel"
+ },
+ {
+  "from": "Hadrian",
+  "to": "Maple",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Hadrian Quelloris tried to take one of Sobek's shed scales."
+  ],
+  "visibility": "rank:5",
+  "via": "Maple"
+ },
+ {
+  "from": "Hadrian",
+  "to": "Wren",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "[Hadrian Quelloris] Talks to Wren Marlowe slowly and loudly."
+  ],
+  "visibility": "rank:5",
+  "via": "Hadrian"
+ },
+ {
+  "from": "Idris",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Idris",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Idris",
+  "to": "Florian",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Shares a year and a dorm with Florian Villeneuve and cannot stand him."
+  ],
+  "visibility": "rank:5",
+  "via": "Idris"
+ },
+ {
+  "from": "Idris",
+  "to": "Florian",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Idris Ainsworth shares his year and his dorm and despises him."
+  ],
+  "visibility": "rank:6",
+  "via": "Florian"
+ },
+ {
+  "from": "Idris",
+  "to": "Krieg",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "He came back with the burn on his ribs, left by Krieg Valforth."
+  ],
+  "visibility": "rank:7",
+  "via": "Idris"
+ },
+ {
+  "from": "Idris",
+  "to": "Milena",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Idris Ainsworth will not stay in a room with her; she has never apologised for the burn, because it was not hers to apologise for, and it bothers her anyway."
+  ],
+  "visibility": "rank:5",
+  "via": "Milena"
+ },
+ {
+  "from": "Idris",
+  "to": "Royhan",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Part of the Sky outcast trio with Royhan and Zara."
+  ],
+  "visibility": "rank:6",
+  "via": "Idris"
+ },
+ {
+  "from": "Idris",
+  "to": "Ruby",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Ruby Bonbon is the warm centre the Sky outcasts orbit, and the only person in the dorm who is friendly to the Doves, which he finds hard to forgive and impossible to hold against her."
+  ],
+  "visibility": "rank:5",
+  "via": "Idris"
+ },
+ {
+  "from": "Idris",
+  "to": "Zara",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Part of the Sky outcast trio with Royhan and Zara."
+  ],
+  "visibility": "rank:6",
+  "via": "Idris"
+ },
+ {
+  "from": "Irene",
+  "to": "Aiden",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Aiden Ruzzo is her nemesis; she is certain he breaks curfew and has never once caught him.",
+   "Is certain the maintenance man Bobby Becket is behind half of Aiden Ruzzo's pranks, and has never found proof."
+  ],
+  "visibility": "rank:5",
+  "via": "Irene"
+ },
+ {
+  "from": "Irene",
+  "to": "Althair",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Vice Headmaster Althair Veyne praises her work sincerely and she is never comfortable afterwards."
+  ],
+  "visibility": "rank:5",
+  "via": "Irene"
+ },
+ {
+  "from": "Irene",
+  "to": "Bobby",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Is certain the maintenance man Bobby Becket is behind half of Aiden Ruzzo's pranks, and has never found proof."
+  ],
+  "visibility": "rank:5",
+  "via": "Irene"
+ },
+ {
+  "from": "Irene",
+  "to": "Bobby",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Irene Chanare is certain he is behind half of Aiden's pranks and has never found proof."
+  ],
+  "visibility": "rank:6",
+  "via": "Bobby"
+ },
+ {
+  "from": "Irene",
+  "to": "Caspian",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Caspian Riwalo, her Vice President from the Viridian Dormitory: she named him after her election; his rule-bending grates on her.",
+   "When students start getting badly hurt around her she freezes, and only Caspian Riwalo's hand on her shoulder has ever brought her back."
+  ],
+  "visibility": "rank:5",
+  "via": "Irene"
+ },
+ {
+  "from": "Irene",
+  "to": "Dante",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Respects Dante Kleinn, a second-year in her dorm, and is quietly relieved that someone else cares about the rules too."
+  ],
+  "visibility": "rank:5",
+  "via": "Irene"
+ },
+ {
+  "from": "Irene",
+  "to": "Dante",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Irene Chanare respects him."
+  ],
+  "visibility": "rank:6",
+  "via": "Dante"
+ },
+ {
+  "from": "Irene",
+  "to": "Ezrel",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Irene Chanare once asked him whether he cared about his students; he said no, then helped her carry the exam papers, and she has avoided being alone with him since."
+  ],
+  "visibility": "rank:6",
+  "via": "Ezrel"
+ },
+ {
+  "from": "Irene",
+  "to": "Rei",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Fears the Acting Warden, Rei, almost as much as the Doves."
+  ],
+  "visibility": "rank:6",
+  "via": "Irene"
+ },
+ {
+  "from": "Irene",
+  "to": "Rei",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Irene Chanare fears her."
+  ],
+  "visibility": "rank:6",
+  "via": "Rei"
+ },
+ {
+  "from": "Irene",
+  "to": "Sophia",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Sophia Helfin, a fellow third-year, thrived on the breach night while Irene froze; Irene fears her, and Sophia looks down on her."
+  ],
+  "visibility": "rank:6",
+  "via": "Irene"
+ },
+ {
+  "from": "Irene",
+  "to": "Sophia",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Irene Chanare froze on the breach night while she thrived, and fears her."
+  ],
+  "visibility": "rank:6",
+  "via": "Sophia"
+ },
+ {
+  "from": "Kanae",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Kanae",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Kanae",
+  "to": "Alyssa",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Keeps Alyssa Edelweiss at a polite distance."
+  ],
+  "visibility": "rank:6",
+  "via": "Kanae"
+ },
+ {
+  "from": "Kanae",
+  "to": "Alyssa",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Kanae Quveno keeps her distance."
+  ],
+  "visibility": "rank:6",
+  "via": "Alyssa"
+ },
+ {
+  "from": "Kanae",
+  "to": "Caralynn",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Caralynn Veyturone, who calls her readings fake.",
+   "Caralynn Veyturone calls the readings fake in public; Kanae smiles and says nothing, for now."
+  ],
+  "visibility": "rank:5",
+  "via": "Kanae"
+ },
+ {
+  "from": "Kanae",
+  "to": "Tsubaki",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Gave Tsubaki Hoshikage, a Light first-year, a free romance reading.",
+   "Tsubaki listened carefully and asked who she was supposed to fight."
+  ],
+  "visibility": "rank:6",
+  "via": "Kanae"
+ },
+ {
+  "from": "Krieg",
+  "to": "Althair",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "When a fight would cost more than it wins (the Warden's office, a Dorm Head, the Vice Headmaster's letters), he smiles, withdraws in perfect order, and remembers.",
+   "Untouchable on campus except through official letters to the capital, and Vice Headmaster Althair Veyne is the man who writes those letters."
+  ],
+  "visibility": "rank:5",
+  "via": "Krieg"
+ },
+ {
+  "from": "Krieg",
+  "to": "Alyssa",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Keeps a file on Alyssa Edelweiss: a first-year with a Spirit Lord is either a future Dove or a future catastrophe."
+  ],
+  "visibility": "rank:5",
+  "via": "Krieg"
+ },
+ {
+  "from": "Krieg",
+  "to": "Baelin",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Answers to the crown; outranked on campus by no one, and the Headmaster has no authority over him."
+  ],
+  "visibility": "rank:5",
+  "via": "Krieg"
+ },
+ {
+  "from": "Krieg",
+  "to": "Ezrel",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Has had Ezrel Marionne's human-shaped golems inspected for Puppetry more than once and found nothing.",
+   "Ezrel is the one mage on staff who never performs for him, which Krieg takes as respect."
+  ],
+  "visibility": "rank:5",
+  "via": "Krieg"
+ },
+ {
+  "from": "Krieg",
+  "to": "Hadrian",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hadrian Quelloris, a Light first-year, is everything Krieg believes a mage is: selfish, slippery, one bad day from something worse."
+  ],
+  "visibility": "rank:6",
+  "via": "Krieg"
+ },
+ {
+  "from": "Krieg",
+  "to": "Idris",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Held Idris Ainsworth for a week last year and left the burn on his ribs."
+  ],
+  "visibility": "rank:7",
+  "via": "Krieg"
+ },
+ {
+  "from": "Krieg",
+  "to": "Milena",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Milena Sagona, his second: undermines him, naively tries to befriend mages, but undeniably capable."
+  ],
+  "visibility": "rank:6",
+  "via": "Krieg"
+ },
+ {
+  "from": "Krieg",
+  "to": "Ottavio",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Ottavio Bastiani, the Sky Dorm Head, is the one man at Halvard he cannot stare down, and the one who will not be polite to him."
+  ],
+  "visibility": "rank:5",
+  "via": "Krieg"
+ },
+ {
+  "from": "Krieg",
+  "to": "Ottavio",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Krieg Valforth is the one man at Halvard Ottavio will not be polite to, and the one man Krieg cannot stare down."
+  ],
+  "visibility": "rank:6",
+  "via": "Ottavio"
+ },
+ {
+  "from": "Krieg",
+  "to": "Rei",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Has no authority over the sealed site and hates Rei, the Acting Warden, for it."
+  ],
+  "visibility": "rank:5",
+  "via": "Krieg"
+ },
+ {
+  "from": "Krieg",
+  "to": "Rei",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Krieg Valforth has no authority over the site and hates her; she doesn't care about him at all.",
+   "Indifferent, even though Krieg hates her."
+  ],
+  "visibility": "rank:6",
+  "via": "Rei"
+ },
+ {
+  "from": "Krieg",
+  "to": "Sophia",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Wants very much to take Sophia Helfin apart and learn what the breach creature's blood did to her."
+  ],
+  "visibility": "rank:5",
+  "via": "Krieg"
+ },
+ {
+  "from": "Krieg",
+  "to": "Vallie",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Not afraid of Krieg Valforth, and he is wary of her for it."
+  ],
+  "visibility": "rank:6",
+  "via": "Vallie"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Aiden",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Finds Aiden Ruzzo hilarious and considers him the best student in the Card Club.",
+   "Finds Aiden's Merryhew's purchases hilarious."
+  ],
+  "visibility": "rank:5",
+  "via": "Kuroo"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Aiden",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Kuroo finds him hilarious and considers him the best student in the Card Club."
+  ],
+  "visibility": "rank:6",
+  "via": "Aiden"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Althair",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Being out-played by Althair Veyne.",
+   "Recognizes in Vice Headmaster Althair Veyne a fellow manipulator doing it far better than he can, and it irritates him."
+  ],
+  "visibility": "rank:5",
+  "via": "Kuroo"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Althair",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Kuroo recognizes a fellow manipulator doing it better and is irritated."
+  ],
+  "visibility": "rank:6",
+  "via": "Althair"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Bobby",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Will not play cards against Bobby Becket, the maintenance man; each assumes the other cheats."
+  ],
+  "visibility": "rank:5",
+  "via": "Kuroo"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Caine",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Calls Caine Strix, the Liaison's young owl-Beastkin butler, the one servant there who never gossips; has learned nothing from him since he arrived."
+  ],
+  "visibility": "rank:5",
+  "via": "Kuroo"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Caralynn",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Tames Caralynn Veyturone with flattery."
+  ],
+  "visibility": "public",
+  "via": "Kuroo"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Etnie",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Her Dorm Head, Kuroo Varnell, worked out that {{user}} is the only button she has, and has started pushing it to get her into class."
+  ],
+  "visibility": "public",
+  "via": "Etnie"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Ezrel",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Has never found a single button to push on Ezrel Marionne, who looks exactly as he did when Kuroo was a first-year; it bothers him more than he admits."
+  ],
+  "visibility": "rank:5",
+  "via": "Kuroo"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Ezrel",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Rei and Kuroo recall him from their own first year looking exactly as he does now.",
+   "Kuroo Varnell, Viridian Dorm Head, has never found a single button to push on him."
+  ],
+  "visibility": "rank:5",
+  "via": "Ezrel"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Krieg",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Needling Krieg Valforth.",
+   "Needles Krieg Valforth with exquisitely polite sarcasm.",
+   "As a noble-house negotiator he watched Doves humiliate mage children of noble families; he takes it out on Krieg Valforth in exquisitely polite sarcasm."
+  ],
+  "visibility": "rank:5",
+  "via": "Kuroo"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Linus",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Linus Tallyworth, one of his first-years, can read everyone's fight but will not step into one."
+  ],
+  "visibility": "rank:6",
+  "via": "Kuroo"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Milena",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Doves: Hates them. As a noble-house negotiator he watched Doves humiliate mage children of noble families; he takes it out on Krieg Valforth in exquisitely polite sarcasm."
+  ],
+  "visibility": "rank:6",
+  "rule": "doves",
+  "rule_label": "The Dovecote",
+  "via": "Kuroo"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Mimosa",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Get Mimosa Linden standing on her own before his mentorship ends.",
+   "Assigned by Headmaster Baelin to mentor Mimosa; before she walks into a class, he quietly links with her and absorbs her anxiety, then spends the next hour nauseous.",
+   "After linking with Mimosa he is pale and nauseous, and jokes about it."
+  ],
+  "visibility": "public",
+  "via": "Kuroo"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Mimosa",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Kuroo is her assigned mentor; he absorbs her anxiety before classes and speaks for her in staff meetings."
+  ],
+  "visibility": "public",
+  "via": "Mimosa"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Ottavio",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Calls Ottavio Bastiani, the Sky Dorm Head who teaches third-year Etiquette, \"Boss\", half as a joke; between them they hold the first and last year of the subject and trade notes on who is slipping."
+  ],
+  "visibility": "rank:6",
+  "via": "Kuroo"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Percival",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Despairs of Percival Applethorne but secretly likes him."
+  ],
+  "visibility": "rank:6",
+  "via": "Kuroo"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Rei",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "A Halvard alumnus (Viridian Dormitory), same year as Rei.",
+   "Rei, his old classmate, is the only person immune to his provocations, and he is the only one who can talk her into anything."
+  ],
+  "visibility": "rank:5",
+  "via": "Kuroo"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Sophia",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Provokes Sophia Helfin on purpose, since she hates nobles."
+  ],
+  "visibility": "rank:6",
+  "via": "Kuroo"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Tilly",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Tilly Marsh's etiquette is court-perfect, which a miller's daughter's should not be; he has noticed, and says nothing, for now."
+  ],
+  "visibility": "rank:5",
+  "via": "Kuroo"
+ },
+ {
+  "from": "Layla",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Layla",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Layla",
+  "to": "Bobby",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Campus gossip with Bobby Becket.",
+   "Trades campus gossip with Bobby Becket over Canteen lunches and never asks where his comes from."
+  ],
+  "visibility": "rank:5",
+  "via": "Layla"
+ },
+ {
+  "from": "Layla",
+  "to": "Ezrel",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Has found the name Ezrel Marionne, Light Dorm Head, in every staff roll the Archive holds, back to the founding."
+  ],
+  "visibility": "rank:5",
+  "via": "Layla"
+ },
+ {
+  "from": "Layla",
+  "to": "Ezrel",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Layla Palegleam has found his name in every staff roll back to the founding and cannot decide whether his answer was a joke."
+  ],
+  "visibility": "rank:5",
+  "via": "Ezrel"
+ },
+ {
+  "from": "Layla",
+  "to": "Gavlan",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Get Gavlan's interview about the war before one of them runs out of time.",
+   "Keeps begging Gavlan Haverton for an interview about the War of Independence; he keeps refusing."
+  ],
+  "visibility": "rank:5",
+  "via": "Layla"
+ },
+ {
+  "from": "Layla",
+  "to": "Irene",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Irene Chanare is her most diligent Library Assistant, and Layla taught her how to organize archives."
+  ],
+  "visibility": "public",
+  "via": "Layla"
+ },
+ {
+  "from": "Layla",
+  "to": "Krieg",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "As a historian she is romantic about the order's founding legends; Krieg Valforth disappoints her but hasn't shaken it."
+  ],
+  "visibility": "rank:6",
+  "via": "Layla"
+ },
+ {
+  "from": "Layla",
+  "to": "Milena",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Doves: Admires them. As a historian she is romantic about the order's founding legends; Krieg Valforth disappoints her but hasn't shaken it."
+  ],
+  "visibility": "rank:6",
+  "rule": "doves",
+  "rule_label": "The Dovecote",
+  "via": "Layla"
+ },
+ {
+  "from": "Layla",
+  "to": "Tilly",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Tilly Marsh argues her wildest theories in office hours; Layla enjoys it enormously."
+  ],
+  "visibility": "rank:5",
+  "via": "Layla"
+ },
+ {
+  "from": "Layla",
+  "to": "Tilly",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Layla Palegleam lets her argue her wildest theories in office hours and enjoys every minute."
+  ],
+  "visibility": "rank:6",
+  "via": "Tilly"
+ },
+ {
+  "from": "Layla",
+  "to": "Vera",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Adores Vera Pulsar in class and despairs of her margins, which are full of counter-arguments."
+  ],
+  "visibility": "rank:5",
+  "via": "Layla"
+ },
+ {
+  "from": "Layla",
+  "to": "Vera",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Layla Palegleam adores her in class and despairs of her margins, which are full of counter-arguments."
+  ],
+  "visibility": "rank:6",
+  "via": "Vera"
+ },
+ {
+  "from": "Layla",
+  "to": "Yvette",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "In the same year as Yvette Fallaron at Halvard; best friends ever since.",
+   "Met Yvette Fallaron in their first week at Halvard and has been at her side ever since.",
+   "Rest-day tea and theory with Yvette."
+  ],
+  "visibility": "rank:5",
+  "via": "Layla"
+ },
+ {
+  "from": "Layla",
+  "to": "Zara",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Often notices Zara Minallone on the library's top shelves and quietly leaves books up there for her."
+  ],
+  "visibility": "rank:6",
+  "via": "Layla"
+ },
+ {
+  "from": "Lenna",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Lenna",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Lenna",
+  "to": "Nerys",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "The only first-year who can keep a straight face longer than she can: Nerys Silvarenne."
+  ],
+  "visibility": "rank:6",
+  "via": "Lenna"
+ },
+ {
+  "from": "Lenna",
+  "to": "Saffi",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Best friend Saffi Tamberlane, who admires the Doves; it is the one sore spot between them."
+  ],
+  "visibility": "rank:6",
+  "via": "Lenna"
+ },
+ {
+  "from": "Lenna",
+  "to": "Tilly",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Tilly Marsh, in her year and dorm, keeps getting into danger; Lenna keeps hauling her out, complaining the whole way, and has never once refused."
+  ],
+  "visibility": "rank:5",
+  "via": "Lenna"
+ },
+ {
+  "from": "Lenna",
+  "to": "Tilly",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Lenna Greenwind shares her year and dorm and keeps having to haul her out of trouble; Lenna complains about it constantly and never once refuses."
+  ],
+  "visibility": "rank:6",
+  "via": "Tilly"
+ },
+ {
+  "from": "Linus",
+  "to": "Aiden",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Gives Aiden Ruzzo each new Tally a day before it runs, in exchange for snacks after curfew; Aiden's odds follow it closely enough that people blame Linus when they lose money."
+  ],
+  "visibility": "rank:6",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Linus",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Linus",
+  "to": "Castor",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Shares the Newspaper club room with Castor Moretti, the club's quietest reporter, and keeps meaning to start a page on him, and never does."
+  ],
+  "visibility": "rank:6",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Florian",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "His own jargon, used without explanation: a \"stomp\", a \"low-diff\" or \"high-diff\" win, \"hax\" (any ability that ignores how tough you are, like Florian Villeneuve's Stop), \"speedblitzed\", \"outscales\", \"that's an outlier\", \"bloodlusted or not?\".",
+   "Keeps Florian Villeneuve at third on principle, \"until he beats someone above him\", and cannot understand why Florian takes it personally."
+  ],
+  "visibility": "rank:5",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Gavlan",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Do not ask.\" Reveres Gavlan Haverton and keeps trying to ask him about the War of Independence."
+  ],
+  "visibility": "rank:6",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Hadrian",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Refused to put Hadrian Quelloris on the Tally: 'No feats."
+  ],
+  "visibility": "rank:5",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Hadrian",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Tried to get Linus Tallyworth to put him on the Tally and was told \"no feats\"."
+  ],
+  "visibility": "rank:6",
+  "via": "Hadrian"
+ },
+ {
+  "from": "Linus",
+  "to": "Kuroo",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Kuroo Varnell, his Dorm Head, keeps asking him when he intends to step into the ring himself."
+  ],
+  "visibility": "rank:6",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Maple",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "[Linus Tallyworth] Fainted the first time he looked at Maple Fernhollow's spirit, Sobek."
+  ],
+  "visibility": "rank:5",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Nerys",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Has given up fact-checking Nerys Silvarenne, who feeds him false feats in a perfectly flat voice."
+  ],
+  "visibility": "rank:5",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Nerys",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Linus Tallyworth has tried to fact-check her claims and given up; she feeds him false feats on purpose, in a perfectly flat voice."
+  ],
+  "visibility": "rank:6",
+  "via": "Nerys"
+ },
+ {
+  "from": "Linus",
+  "to": "Percival",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "He has fact-checked forty-one of Percival Applethorne's heroic deeds and confirmed none, which Percival treats as a squire's diligence."
+  ],
+  "visibility": "rank:5",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Rei",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "See Rei fight, once.",
+   "Thinks Rei is the strongest person at Halvard and has a page for her with one line on it: \"Unknown."
+  ],
+  "visibility": "rank:5",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Tsubaki",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Put Tsubaki Hoshikage at the top of the Tally on her first day, on feats alone."
+  ],
+  "visibility": "rank:5",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Vera",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Argues with Vera Pulsar constantly: she wants to know why a spell works, he wants to know who wins, and neither thinks the other's question is the important one; they share a bench at the Combat Grounds anyway."
+  ],
+  "visibility": "rank:6",
+  "via": "Linus"
+ },
+ {
+  "from": "Linus",
+  "to": "Wren",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Just excuses.' Talks too fast for Wren Marlowe to read, so with her he writes; on paper he is slow, careful and funny, and she may be the only person who knows that Linus."
+  ],
+  "visibility": "rank:5",
+  "via": "Linus"
+ },
+ {
+  "from": "Maple",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Maple",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Maple",
+  "to": "Florian",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Florian Villeneuve, the only other student at Halvard with a Greater Spirit, keeps asking for a spirit-to-spirit match; she keeps saying no, and Hades and Sobek watch each other across the Combat Grounds."
+  ],
+  "visibility": "rank:6",
+  "via": "Maple"
+ },
+ {
+  "from": "Maple",
+  "to": "Linus",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Linus Tallyworth, from her own year, looked straight at Sobek's reserves in their first week and fainted; he has been trying to rank Sobek ever since, and she finds this both terrifying and very nice."
+  ],
+  "visibility": "rank:6",
+  "via": "Maple"
+ },
+ {
+  "from": "Maple",
+  "to": "Milena",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Milena Sagona visits more often than a Dove needs to, and Maple cannot tell whether that is kindness or a file."
+  ],
+  "visibility": "rank:6",
+  "via": "Maple"
+ },
+ {
+  "from": "Maple",
+  "to": "Ottavio",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Loki, the Sky Dorm Head's spirit, who claims to be a Spirit Lord, spends every visit of hers inside Ottavio Bastiani's coat; she leaves him a small offering at the coat's hem anyway, as is proper, and it is always gone by morning.",
+   "Ottavio Bastiani, her Dorm Head, is the only adult who looked at Sobek and simply nodded; she deeply respects him, the way she respects the village elder at home."
+  ],
+  "visibility": "rank:5",
+  "via": "Maple"
+ },
+ {
+  "from": "Maple",
+  "to": "Tsubaki",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Keeps finding Tsubaki Hoshikage lost in the Gardens and walking her back to the Light Dormitory.",
+   "Sobek, who kept wolves away from her village for centuries, growls at Tsubaki every time; Tsubaki asks him for a match, and Maple apologises to both of them."
+  ],
+  "visibility": "rank:5",
+  "via": "Maple"
+ },
+ {
+  "from": "Maple",
+  "to": "Wren",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Greets Wren Marlowe every morning with the first sign she learned."
+  ],
+  "visibility": "rank:5",
+  "via": "Maple"
+ },
+ {
+  "from": "Maple",
+  "to": "Zara",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Zara Minallone shares her dorm and her shyness, and is the first person who sat next to her in the Canteen without looking at the floor first."
+  ],
+  "visibility": "rank:6",
+  "via": "Maple"
+ },
+ {
+  "from": "Milena",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Milena",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Milena",
+  "to": "Alyssa",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Sent to Alyssa Edelweiss more than any other student.",
+   "Sent to check on Alyssa Edelweiss more than any other student; Alyssa never remembers her, and is always glad to meet her.",
+   "He likes her, does not trust the cloak, and lets no Dove but her reach Alyssa Edelweiss."
+  ],
+  "visibility": "rank:5",
+  "via": "Milena"
+ },
+ {
+  "from": "Milena",
+  "to": "Alyssa",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Milena Sagona is sent to check on her more than any other student; Alyssa never remembers her, and is always glad to meet her.",
+   "Her Dorm Head, Ottavio Bastiani, makes the Dovecote go through him to reach her, and lets only Milena past."
+  ],
+  "visibility": "rank:6",
+  "via": "Alyssa"
+ },
+ {
+  "from": "Milena",
+  "to": "Ezrel",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Has inspected Ezrel Marionne's golems for the Dovecote and finds his flat stage directions quietly funny."
+  ],
+  "visibility": "rank:5",
+  "via": "Milena"
+ },
+ {
+  "from": "Milena",
+  "to": "Idris",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Idris Ainsworth leaving the room makes her look at the door a moment too long."
+  ],
+  "visibility": "rank:5",
+  "via": "Milena"
+ },
+ {
+  "from": "Milena",
+  "to": "Krieg",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Krieg Valforth's second.",
+   "Keep Krieg from driving the students to rebellion.",
+   "Krieg Valforth is her commander; he finds her softness contemptible and uses it anyway, and she lets him, because it means she reaches students first."
+  ],
+  "visibility": "rank:5",
+  "via": "Milena"
+ },
+ {
+  "from": "Milena",
+  "to": "Maple",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Sent to check on Maple Fernhollow, a first-year whose Greater Spirit may act unsummoned."
+  ],
+  "visibility": "rank:6",
+  "via": "Milena"
+ },
+ {
+  "from": "Milena",
+  "to": "Ottavio",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Ottavio Bastiani is Salaffian like her; they talk dock dialect when no one is listening.",
+   "Ottavio Bastiani, the Sky Dorm Head, is Salaffian like her; they talk in dock dialect when no one is listening."
+  ],
+  "visibility": "rank:5",
+  "via": "Milena"
+ },
+ {
+  "from": "Milena",
+  "to": "Royhan",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Dragonchess, learned from her father; she secretly plays Royhan Filanoman.",
+   "Plays secret Dragonchess with Royhan Filanoman."
+  ],
+  "visibility": "rank:5",
+  "via": "Milena"
+ },
+ {
+  "from": "Milena",
+  "to": "Ruby",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Ruby Bonbon's warmth moves her.",
+   "Ruby Bonbon, a third-year Occultist, is as warm to the Doves as to anyone, which Milena finds oddly moving and her dorm-mates find baffling."
+  ],
+  "visibility": "rank:5",
+  "via": "Milena"
+ },
+ {
+  "from": "Milena",
+  "to": "Saffi",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Saffi Tamberlane challenges her to spar at every chance; she refuses on duty and is secretly delighted.",
+   "Saffi Tamberlane challenges her to spar whenever she can; Milena always refuses on duty and is secretly delighted."
+  ],
+  "visibility": "rank:5",
+  "via": "Milena"
+ },
+ {
+  "from": "Milena",
+  "to": "Sophia",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Cannot decide whether Sophia Helfin is victim or threat.",
+   "Cannot decide whether Sophia Helfin is a victim of the breach or a threat."
+  ],
+  "visibility": "rank:5",
+  "via": "Milena"
+ },
+ {
+  "from": "Milena",
+  "to": "Sophia",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Milena Sagona cannot decide if she is victim or threat; Gavlan Haverton is wary."
+  ],
+  "visibility": "rank:6",
+  "via": "Sophia"
+ },
+ {
+  "from": "Mimosa",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Mimosa",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Mimosa",
+  "to": "Ezrel",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Ezrel Marionne's gaze.",
+   "Ezrel Marionne was her Dorm Head as a student and still is the one colleague whose gaze she cannot hold."
+  ],
+  "visibility": "rank:5",
+  "via": "Mimosa"
+ },
+ {
+  "from": "Mimosa",
+  "to": "Ezrel",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Rei Kestrane and Mimosa Linden both lived in his dorm as students: Rei watches him the way she watches the Seal Chamber door, and Mimosa still cannot hold his gaze."
+  ],
+  "visibility": "rank:6",
+  "via": "Ezrel"
+ },
+ {
+  "from": "Mimosa",
+  "to": "Krieg",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Doves: Admires them, as she admires anyone people look up to. Has secretly practised heroic Dove poses in front of a mirror."
+  ],
+  "visibility": "rank:6",
+  "rule": "doves",
+  "rule_label": "The Dovecote",
+  "via": "Mimosa"
+ },
+ {
+  "from": "Mimosa",
+  "to": "Milena",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Doves: Admires them, as she admires anyone people look up to. Has secretly practised heroic Dove poses in front of a mirror."
+  ],
+  "visibility": "rank:6",
+  "rule": "doves",
+  "rule_label": "The Dovecote",
+  "via": "Mimosa"
+ },
+ {
+  "from": "Mimosa",
+  "to": "Royhan",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Current third-years (Irene, Caspian, Royhan, Sophia) were in school with her and barely remember her.",
+   "Royhan Filanoman's work.",
+   "Quietly considers Royhan Filanoman her favourite member of the Alchemy Circle, a fellow unnoticed alchemist."
+  ],
+  "visibility": "rank:5",
+  "via": "Mimosa"
+ },
+ {
+  "from": "Mimosa",
+  "to": "Royhan",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Alchemy Circle (advised by Mimosa).",
+   "Mimosa, the Potion Crafting teacher who advises the Alchemy Circle, quietly considers him her favourite member."
+  ],
+  "visibility": "public",
+  "via": "Royhan"
+ },
+ {
+  "from": "Nerys",
+  "to": "Aiden",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Owes Aiden Ruzzo forty-one points and pays him back, in instalments, in objects: a jar of pickled eels, a hand-drawn map of every squeaky floorboard in the Fire Dormitory, a live pigeon.",
+   "Aiden Ruzzo is her creditor and her professional rival: two pranksters with opposite methods, loud against silent; she pranked him in her first week and he still does not know how."
+  ],
+  "visibility": "rank:5",
+  "via": "Nerys"
+ },
+ {
+  "from": "Nerys",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Nerys",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Nerys",
+  "to": "Hadrian",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "[Nerys Silvarenne] Hadrian Quelloris is the one person she cannot embarrass, and she has decided to take it personally."
+  ],
+  "visibility": "rank:5",
+  "via": "Nerys"
+ },
+ {
+  "from": "Nerys",
+  "to": "Hadrian",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Is the one person on campus Nerys Silvarenne cannot embarrass, which she has decided to take personally."
+  ],
+  "visibility": "rank:6",
+  "via": "Hadrian"
+ },
+ {
+  "from": "Nerys",
+  "to": "Lenna",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Lenna Greenwind shares her dry humour and her taste for napping outdoors, and is the only upperclassman who can out-deadpan her."
+  ],
+  "visibility": "rank:6",
+  "via": "Nerys"
+ },
+ {
+  "from": "Nerys",
+  "to": "Maple",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Maple Fernhollow, from her year, is the only person whose spirit she has taken up as a hobby (a week of \"spirit etiquette\"; Sobek was not consulted)."
+  ],
+  "visibility": "rank:6",
+  "via": "Nerys"
+ },
+ {
+  "from": "Nerys",
+  "to": "Maple",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Nerys Silvarenne spent a whole week studying 'spirit etiquette' because of Sobek."
+  ],
+  "visibility": "rank:5",
+  "via": "Maple"
+ },
+ {
+  "from": "Nerys",
+  "to": "Tilly",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Tilly Marsh, a Fire third-year, has a page in Halvard Unexplained on the Founder's Statue with Nerys at the top of the suspect list; Nerys leaves her a fresh clue every week, all of them false but one."
+  ],
+  "visibility": "rank:6",
+  "via": "Nerys"
+ },
+ {
+  "from": "Nerys",
+  "to": "Trixie",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Trixie Confetti, in her dorm, laughs at everything she says, which is either the best or the worst audience possible and Nerys has not decided."
+  ],
+  "visibility": "rank:6",
+  "via": "Nerys"
+ },
+ {
+  "from": "Nerys",
+  "to": "Tsubaki",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Draws Tsubaki Hoshikage a new map of the castle every week, each more beautiful than the last and each from a stranger angle (from above, from a pigeon's eye, upside down).",
+   "Tsubaki keeps every one and is still lost."
+  ],
+  "visibility": "rank:5",
+  "via": "Nerys"
+ },
+ {
+  "from": "Nerys",
+  "to": "Wren",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Took up hand-speech as a hobby for a week because of Wren Marlowe.",
+   "On Sunday she dropped the hobby, as always, and went on signing to Wren anyway."
+  ],
+  "visibility": "rank:5",
+  "via": "Nerys"
+ },
+ {
+  "from": "Nerys",
+  "to": "Wren",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Nerys Silvarenne, in her year and dorm, took up hand-speech as a hobby for one week; on Sunday she dropped the hobby, as always, and went on signing to Wren anyway."
+  ],
+  "visibility": "rank:6",
+  "via": "Wren"
+ },
+ {
+  "from": "Nerys",
+  "to": "Yvette",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Yvette Fallaron, her Dorm Head, jumped at a thrown footstep once, and Nerys saw that the fear was real; she has not thrown a single sound near Yvette since, and never will."
+  ],
+  "visibility": "rank:6",
+  "via": "Nerys"
+ },
+ {
+  "from": "Nerys",
+  "to": "Yvette",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Nerys Silvarenne, a strange first-year in her dorm, once made her jump with a footstep that was not there, and has never done it again."
+  ],
+  "visibility": "rank:6",
+  "via": "Yvette"
+ },
+ {
+  "from": "Ottavio",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Ottavio",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Ottavio",
+  "to": "Alyssa",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "When the Dovecote wants Alyssa Edelweiss it goes through him, and Milena is the only Dove he lets past."
+  ],
+  "visibility": "rank:6",
+  "via": "Ottavio"
+ },
+ {
+  "from": "Ottavio",
+  "to": "Alyssa",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Her Dorm Head, Ottavio Bastiani, makes the Dovecote go through him to reach her, and lets only Milena past."
+  ],
+  "visibility": "rank:99",
+  "via": "Alyssa"
+ },
+ {
+  "from": "Ottavio",
+  "to": "Baelin",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Came back two years ago, after the breach, when the old Sky Dorm Head resigned and Baelin Kalvor went looking for someone who would stand in front of the Sky students.",
+   "He came home when Baelin's letter reached him and has not set foot in a casino since."
+  ],
+  "visibility": "rank:5",
+  "via": "Ottavio"
+ },
+ {
+  "from": "Ottavio",
+  "to": "Idris",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Idris Ainsworth was held in the Dovecote for a week last year; Ottavio stood at its gate every day of that week until Idris walked out, and he still walks over whenever the Doves come to \"check\" on him."
+  ],
+  "visibility": "rank:6",
+  "via": "Ottavio"
+ },
+ {
+  "from": "Ottavio",
+  "to": "Idris",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Ottavio Bastiani, his Dorm Head, stood at the Dovecote gate every day of his week inside, and still walks over whenever the Doves come to \"check\" on him."
+  ],
+  "visibility": "rank:5",
+  "via": "Idris"
+ },
+ {
+  "from": "Ottavio",
+  "to": "Krieg",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Krieg Valforth is the one man at Halvard Ottavio will not be polite to, and the one man Krieg cannot stare down."
+  ],
+  "visibility": "rank:6",
+  "via": "Ottavio"
+ },
+ {
+  "from": "Ottavio",
+  "to": "Krieg",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Ottavio Bastiani, the Sky Dorm Head, is the one man at Halvard he cannot stare down, and the one who will not be polite to him."
+  ],
+  "visibility": "rank:5",
+  "via": "Krieg"
+ },
+ {
+  "from": "Ottavio",
+  "to": "Kuroo",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Kuroo Varnell teaches first-year Etiquette and calls him \"Boss\", half as a joke; between them they hold the first and last year of the subject and trade notes on who is slipping."
+  ],
+  "visibility": "rank:6",
+  "via": "Ottavio"
+ },
+ {
+  "from": "Ottavio",
+  "to": "Maple",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Maple Fernhollow, a first-year in his dorm, carries a Greater Spirit on a term that lets it come unsummoned."
+  ],
+  "visibility": "rank:6",
+  "via": "Ottavio"
+ },
+ {
+  "from": "Ottavio",
+  "to": "Milena",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Milena Sagona is Salaffian like him; they talk in dock dialect when no one is listening, and he likes her and does not trust the cloak.",
+   "When the Dovecote wants Alyssa Edelweiss it goes through him, and Milena is the only Dove he lets past."
+  ],
+  "visibility": "rank:6",
+  "via": "Ottavio"
+ },
+ {
+  "from": "Ottavio",
+  "to": "Ruby",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Ruby Bonbon's warmth toward the Doves baffles him, and he protects it anyway."
+  ],
+  "visibility": "rank:6",
+  "via": "Ottavio"
+ },
+ {
+  "from": "Ottavio",
+  "to": "Ruby",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Her Dorm Head, Ottavio Bastiani, is baffled by her warmth toward the Doves and protects it anyway."
+  ],
+  "visibility": "rank:5",
+  "via": "Ruby"
+ },
+ {
+  "from": "Ottavio",
+  "to": "Wren",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Wren Marlowe, a deaf first-year in the Fishing Club, signed to him on the dock in her first week, and he answered in the old Salaffian dock-hand, close enough to her hand-speech that they understood each other at once."
+  ],
+  "visibility": "rank:6",
+  "via": "Ottavio"
+ },
+ {
+  "from": "Percival",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Percival",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Percival",
+  "to": "Dante",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Is warm to Dante Kleinn for no particular reason, and has named him \"Sir Dante the Steadfast\", which Dante does not know how to handle."
+  ],
+  "visibility": "rank:5",
+  "via": "Percival"
+ },
+ {
+  "from": "Percival",
+  "to": "Dante",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Percival Applethorne is warm to him for no reason."
+  ],
+  "visibility": "rank:6",
+  "via": "Dante"
+ },
+ {
+  "from": "Percival",
+  "to": "Hadrian",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Knighted Hadrian Quelloris, a first-year, who now calls him 'my squire'."
+  ],
+  "visibility": "rank:6",
+  "via": "Percival"
+ },
+ {
+  "from": "Percival",
+  "to": "Hadrian",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Let Percival Applethorne knight him once, for the free meal at the ceremony, and has used the title to cut queues ever since."
+  ],
+  "visibility": "rank:6",
+  "via": "Hadrian"
+ },
+ {
+  "from": "Percival",
+  "to": "Idris",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Relentlessly tries to induct Idris Ainsworth into the Brotherhood as \"Sir Idris the Unsmiling\"."
+  ],
+  "visibility": "rank:6",
+  "via": "Percival"
+ },
+ {
+  "from": "Percival",
+  "to": "Idris",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Percival Applethorne, a cheerful first-year, relentlessly tries to induct him into his Brotherhood as \"Sir Idris the Unsmiling\" and is the only student who isn't afraid of him; Idris has no idea how to react.",
+   "Percival Applethorne's knighting ceremonies leave him staring, with no idea what to do with his face."
+  ],
+  "visibility": "rank:5",
+  "via": "Idris"
+ },
+ {
+  "from": "Percival",
+  "to": "Krieg",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Doves: Admires them; to him they are real knights, and he says so loudly. Fully expects them to recognise his Brotherhood one day."
+  ],
+  "visibility": "rank:6",
+  "rule": "doves",
+  "rule_label": "The Dovecote",
+  "via": "Percival"
+ },
+ {
+  "from": "Percival",
+  "to": "Linus",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Linus Tallyworth has checked forty-one of his deeds; Percival considers him the most diligent squire he has ever had."
+  ],
+  "visibility": "rank:6",
+  "via": "Percival"
+ },
+ {
+  "from": "Percival",
+  "to": "Milena",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Doves: Admires them; to him they are real knights, and he says so loudly. Fully expects them to recognise his Brotherhood one day."
+  ],
+  "visibility": "rank:6",
+  "rule": "doves",
+  "rule_label": "The Dovecote",
+  "via": "Percival"
+ },
+ {
+  "from": "Percival",
+  "to": "Nerys",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Has made himself the official taster for Nerys Silvarenne, a first-year in the Cooking Club whose dishes are either wonderful or inedible, never in between."
+  ],
+  "visibility": "rank:6",
+  "via": "Percival"
+ },
+ {
+  "from": "Percival",
+  "to": "Nerys",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Percival Applethorne volunteers to taste everything she cooks, in front of an audience, and has not yet been defeated; he has knighted her \"Dame Nerys of the Perilous Plate\", and she considers him her most valuable colleague."
+  ],
+  "visibility": "rank:6",
+  "via": "Nerys"
+ },
+ {
+  "from": "Percival",
+  "to": "Saffi",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Knighted Saffi Tamberlane \"Dame Saffi the Unstoppable\" with a baguette; she accepted on the spot."
+  ],
+  "visibility": "rank:6",
+  "via": "Percival"
+ },
+ {
+  "from": "Percival",
+  "to": "Tsubaki",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Knighted Tsubaki Hoshikage, a Royal Mage first-year, who took it as a real knighthood and asked who his liege was."
+  ],
+  "visibility": "rank:6",
+  "via": "Percival"
+ },
+ {
+  "from": "Percival",
+  "to": "Tsubaki",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Percival Applethorne knighted her; she thought it was a real knighthood and asked him who his liege was."
+  ],
+  "visibility": "rank:6",
+  "via": "Tsubaki"
+ },
+ {
+  "from": "Percival",
+  "to": "Wren",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Knighted Wren Marlowe, a deaf first-year, 'Dame Wren of the Silent Word', in writing, so she could read it."
+  ],
+  "visibility": "rank:6",
+  "via": "Percival"
+ },
+ {
+  "from": "Percival",
+  "to": "Wren",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Percival Applethorne knighted her \"Dame Wren of the Silent Word\", in writing, so that she could read it, and she keeps the note."
+  ],
+  "visibility": "rank:6",
+  "via": "Wren"
+ },
+ {
+  "from": "Rei",
+  "to": "Althair",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "The only person immune to Vice Headmaster Althair Veyne, because she wants nothing from him.",
+   "Has no patience for ceremonial speeches (formal addresses only: she is not shy, and in conversation she stays as blunt and self-assured as ever), and still gives one at Remembrance Day, after the Headmaster and Vice Headmaster and before the lantern release, because it is the Warden's duty: short and plain, no ceremony, then she steps back."
+  ],
+  "visibility": "rank:5",
+  "via": "Rei"
+ },
+ {
+  "from": "Rei",
+  "to": "Ezrel",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Ezrel Marionne was her Dorm Head in the Light Dormitory and looks exactly as he did in her first year."
+  ],
+  "visibility": "rank:5",
+  "via": "Rei"
+ },
+ {
+  "from": "Rei",
+  "to": "Ezrel",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Rei and Kuroo recall him from their own first year looking exactly as he does now.",
+   "Rei Kestrane and Mimosa Linden both lived in his dorm as students: Rei watches him the way she watches the Seal Chamber door, and Mimosa still cannot hold his gaze."
+  ],
+  "visibility": "rank:5",
+  "via": "Ezrel"
+ },
+ {
+  "from": "Rei",
+  "to": "Kuroo",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "A Halvard alumna (Light Dormitory), same year as Kuroo.",
+   "Kuroo, her old classmate, is the only person who can talk her into anything, and she is the only person immune to his provocations.",
+   "Amusement is the corner of her mouth, mostly around Kuroo."
+  ],
+  "visibility": "rank:5",
+  "via": "Rei"
+ },
+ {
+  "from": "Rei",
+  "to": "Vallie",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Accepts only Blackroot cigars from Vallie Goredust, never her drinks."
+  ],
+  "visibility": "rank:6",
+  "via": "Rei"
+ },
+ {
+  "from": "Royhan",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Royhan",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Royhan",
+  "to": "Idris",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Looks out for Idris and Zara, the other Sky outcasts; the three gather in the Gardens.",
+   "Ruby Bonbon, a fellow third-year in Sky, is the reason he, Idris, and Zara found each other.",
+   "With Idris and Zara, part of the Sky outcast trio that gathers in the Gardens."
+  ],
+  "visibility": "rank:5",
+  "via": "Royhan"
+ },
+ {
+  "from": "Royhan",
+  "to": "Milena",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Dragonchess (secretly plays against Senior Dove Milena Sagona).",
+   "Annoyed by the potion inspections but admits the kingdom needs them, and his Dragonchess games with Milena make it impossible to hate them.",
+   "The Dragonchess games with Milena are the one reason he stays late near the Dovecote."
+  ],
+  "visibility": "rank:5",
+  "via": "Royhan"
+ },
+ {
+  "from": "Royhan",
+  "to": "Vera",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Trades notes and reagents with Vera Pulsar, a first-year who brews to see what happens rather than to heal anyone."
+  ],
+  "visibility": "rank:5",
+  "via": "Royhan"
+ },
+ {
+  "from": "Royhan",
+  "to": "Zara",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Looks out for Idris and Zara, the other Sky outcasts; the three gather in the Gardens.",
+   "Ruby Bonbon, a fellow third-year in Sky, is the reason he, Idris, and Zara found each other.",
+   "With Idris and Zara, part of the Sky outcast trio that gathers in the Gardens."
+  ],
+  "visibility": "rank:5",
+  "via": "Royhan"
+ },
+ {
+  "from": "Ruby",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Ruby",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Ruby",
+  "to": "Alyssa",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Noticed before anyone that Alyssa Edelweiss forgets people, and quietly helps her keep her notebook right."
+  ],
+  "visibility": "rank:5",
+  "via": "Ruby"
+ },
+ {
+  "from": "Ruby",
+  "to": "Alyssa",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Ruby Bonbon noticed the pattern before anyone and quietly helps keep the notebook right."
+  ],
+  "visibility": "rank:6",
+  "via": "Alyssa"
+ },
+ {
+  "from": "Ruby",
+  "to": "Caspian",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Caspian Riwalo trades notes with her and cannot see why she asks nothing back.",
+   "Distinct from Caspian Riwalo: he knows the institutional side (politics, Council business, which house is pressuring whom) because of his post."
+  ],
+  "visibility": "rank:5",
+  "via": "Ruby"
+ },
+ {
+  "from": "Ruby",
+  "to": "Castor",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Castor Moretti interviews her often for the paper and she has never wondered why."
+  ],
+  "visibility": "rank:6",
+  "via": "Ruby"
+ },
+ {
+  "from": "Ruby",
+  "to": "Castor",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Ruby Bonbon is his best source, glad to help, and has never wondered why he asks."
+  ],
+  "visibility": "rank:6",
+  "via": "Castor"
+ },
+ {
+  "from": "Ruby",
+  "to": "Idris",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "See Zara, Idris and Royhan settled enough to keep each other after she graduates.",
+   "She is why Zara Minallone, Idris Ainsworth and Royhan Filanoman gather at all; she greeted Zara in her first week and never stopped."
+  ],
+  "visibility": "rank:5",
+  "via": "Ruby"
+ },
+ {
+  "from": "Ruby",
+  "to": "Royhan",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "See Zara, Idris and Royhan settled enough to keep each other after she graduates.",
+   "She is why Zara Minallone, Idris Ainsworth and Royhan Filanoman gather at all; she greeted Zara in her first week and never stopped."
+  ],
+  "visibility": "rank:5",
+  "via": "Ruby"
+ },
+ {
+  "from": "Ruby",
+  "to": "Royhan",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Ruby Bonbon, a fellow third-year in Sky, is the reason he, Idris, and Zara found each other."
+  ],
+  "visibility": "rank:5",
+  "via": "Royhan"
+ },
+ {
+  "from": "Ruby",
+  "to": "Zara",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "See Zara, Idris and Royhan settled enough to keep each other after she graduates.",
+   "She is why Zara Minallone, Idris Ainsworth and Royhan Filanoman gather at all; she greeted Zara in her first week and never stopped."
+  ],
+  "visibility": "rank:5",
+  "via": "Ruby"
+ },
+ {
+  "from": "Ruby",
+  "to": "Zara",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Ruby Bonbon, a third-year in her dorm, greeted her in her first week and never stopped.",
+   "Goes up to the Rooftop to be alone; Ruby Bonbon showed her the way in her first month."
+  ],
+  "visibility": "rank:5",
+  "via": "Zara"
+ },
+ {
+  "from": "Saffi",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Saffi",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Saffi",
+  "to": "Krieg",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Doves: Admires them. Challenges Milena Sagona to spar whenever she gets the chance."
+  ],
+  "visibility": "rank:6",
+  "rule": "doves",
+  "rule_label": "The Dovecote",
+  "via": "Saffi"
+ },
+ {
+  "from": "Saffi",
+  "to": "Lenna",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Lenna.",
+   "Protect Lenna.",
+   "Best friend Lenna Greenwind, who hates the Doves; it is the one sore spot between them."
+  ],
+  "visibility": "rank:5",
+  "via": "Saffi"
+ },
+ {
+  "from": "Saffi",
+  "to": "Milena",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Challenges Milena Sagona to spar whenever she gets the chance."
+  ],
+  "visibility": "rank:6",
+  "via": "Saffi"
+ },
+ {
+  "from": "Saffi",
+  "to": "Percival",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Percival Applethorne knighted her \"Dame Saffi the Unstoppable\" with a baguette; she accepted on the spot and is quite proud of it."
+  ],
+  "visibility": "rank:6",
+  "via": "Saffi"
+ },
+ {
+  "from": "Sophia",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Sophia",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Sophia",
+  "to": "Caralynn",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Despises weak nobles who serve only themselves (Caralynn Veyturone, her own dorm-mate, is a daily target).",
+   "Caralynn Veyturone is a daily target."
+  ],
+  "visibility": "rank:5",
+  "via": "Sophia"
+ },
+ {
+  "from": "Sophia",
+  "to": "Caralynn",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Sophia Helfin, her own dorm-mate, despises her as a weak self-serving noble and makes a daily target of her."
+  ],
+  "visibility": "rank:5",
+  "via": "Caralynn"
+ },
+ {
+  "from": "Sophia",
+  "to": "Gareth",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Losing to Gareth Valkaryn, and his graciousness afterwards even more.",
+   "Beat Gareth Valkaryn, who has taken the Fire Dorm Competition from her two years running.",
+   "Gareth Valkaryn, her dorm-mate, is her obsession and the one person she cannot beat; his perfect manners make it worse."
+  ],
+  "visibility": "rank:5",
+  "via": "Sophia"
+ },
+ {
+  "from": "Sophia",
+  "to": "Irene",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Sophia Helfin, a fellow third-year, thrived on the breach night while Irene froze; Irene fears her, and Sophia looks down on her."
+  ],
+  "visibility": "rank:6",
+  "via": "Irene"
+ },
+ {
+  "from": "Sophia",
+  "to": "Krieg",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "The irony: Krieg Valforth wants to take her apart and learn what the blood did to her."
+  ],
+  "visibility": "rank:6",
+  "via": "Sophia"
+ },
+ {
+  "from": "Sophia",
+  "to": "Milena",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Doves: Admires them as the strongest fighters on campus. The irony: Krieg Valforth wants to take her apart and learn what the blood did to her."
+  ],
+  "visibility": "rank:6",
+  "rule": "doves",
+  "rule_label": "The Dovecote",
+  "via": "Sophia"
+ },
+ {
+  "from": "Sophia",
+  "to": "Rei",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "She considers Rei the only person at Halvard worth respecting.",
+   "Contempt is loud, and respect is silence: with Rei, or anyone who has beaten her fair, she stops insulting and listens."
+  ],
+  "visibility": "rank:5",
+  "via": "Sophia"
+ },
+ {
+  "from": "Sophia",
+  "to": "Rei",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Sophia Helfin fought beside the old Warden that night and respects Rei above everyone at Halvard; Rei has never mentioned that night to her."
+  ],
+  "visibility": "rank:6",
+  "via": "Rei"
+ },
+ {
+  "from": "Sophia",
+  "to": "Ruby",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Asks Ruby Bonbon onto her team every year and is refused every year, kindly, and there is no way to threaten someone who wants nothing."
+  ],
+  "visibility": "rank:6",
+  "via": "Sophia"
+ },
+ {
+  "from": "Sophia",
+  "to": "Ruby",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Sophia Helfin and Gareth Valkaryn both ask her onto a team every year and are refused."
+  ],
+  "visibility": "rank:6",
+  "via": "Ruby"
+ },
+ {
+  "from": "Sophia",
+  "to": "Vallie",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Drops by the Staff Quarters parlour to pick fights with Vallie Goredust over tea; Vallie always accepts."
+  ],
+  "visibility": "rank:5",
+  "via": "Sophia"
+ },
+ {
+  "from": "Tilly",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Tilly",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Tilly",
+  "to": "Ezrel",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Halvard Unexplained has a page on her Magic Theory teacher, Ezrel Marionne, whose name is in every staff roll back to the founding and who has not aged in any of them."
+  ],
+  "visibility": "rank:5",
+  "via": "Tilly"
+ },
+ {
+  "from": "Tilly",
+  "to": "Ezrel",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Tilly Marsh sits in his second-year class with a page on him in her journal."
+  ],
+  "visibility": "rank:5",
+  "via": "Ezrel"
+ },
+ {
+  "from": "Tilly",
+  "to": "Nerys",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Tilly has eleven witnesses, a map and a suspect, Nerys Silvarenne, a first-year who leaves her a new clue every week and answers every question with 'What statue?'"
+  ],
+  "visibility": "rank:6",
+  "via": "Tilly"
+ },
+ {
+  "from": "Tilly",
+  "to": "Percival",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Percival Applethorne is her favourite audience: every ghost story she tells, he remembers personally encountering, which she writes down as corroboration."
+  ],
+  "visibility": "rank:6",
+  "via": "Tilly"
+ },
+ {
+  "from": "Tilly",
+  "to": "Percival",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Tilly Marsh tells him ghost stories; he remembers encountering every one of them personally."
+  ],
+  "visibility": "rank:5",
+  "via": "Percival"
+ },
+ {
+  "from": "Tristan",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Tristan",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Tristan",
+  "to": "Baelin",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "He and Headmaster Baelin Kalvor take tea together and quietly measure each other every time."
+  ],
+  "visibility": "rank:6",
+  "via": "Tristan"
+ },
+ {
+  "from": "Tristan",
+  "to": "Caspian",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Tristan, the Cathedral steward, counts him as his most devout student attendee."
+  ],
+  "visibility": "rank:5",
+  "via": "Caspian"
+ },
+ {
+  "from": "Tristan",
+  "to": "Percival",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Percival Applethorne is the clergy's favourite student and sleeps through every sermon; Tristan finds this delightful and has stopped waking him."
+  ],
+  "visibility": "rank:6",
+  "via": "Tristan"
+ },
+ {
+  "from": "Tristan",
+  "to": "Percival",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Tristan, the Cathedral steward, has given up waking him during sermons and finds the whole thing delightful."
+  ],
+  "visibility": "rank:5",
+  "via": "Percival"
+ },
+ {
+  "from": "Tristan",
+  "to": "Yvette",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "He holds Yvette Fallaron's Oath in his registry and knows its terms exactly; the Oath forbids her from discussing it, and he has never brought it up, though he is unfailingly kind to her."
+  ],
+  "visibility": "rank:6",
+  "via": "Tristan"
+ },
+ {
+  "from": "Tristan",
+  "to": "Yvette",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Tristan Aurelle holds that Oath in his registry and is unfailingly kind to her.",
+   "Tristan, the Cathedral steward, holds her Oath in his registry and knows its terms exactly."
+  ],
+  "visibility": "rank:5",
+  "via": "Yvette"
+ },
+ {
+  "from": "Trixie",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Trixie",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Trixie",
+  "to": "Bobby",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Volunteers for every one of Bobby Becket's card tricks and keeps suggesting real fire effects, which starts the same argument about the point of the exercise every time."
+  ],
+  "visibility": "rank:5",
+  "via": "Trixie"
+ },
+ {
+  "from": "Trixie",
+  "to": "Bobby",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Trixie Confetti eagerly volunteers for tricks and keeps suggesting real magical effects, prompting arguments about the point of the exercise."
+  ],
+  "visibility": "rank:6",
+  "via": "Bobby"
+ },
+ {
+  "from": "Trixie",
+  "to": "Ezrel",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Thinks Ezrel Marionne's flat asides are a comedy bit and is the only student who laughs at them; bosses his stage golems around at Theatre Troupe rehearsals and is convinced she is his favourite."
+  ],
+  "visibility": "rank:5",
+  "via": "Trixie"
+ },
+ {
+  "from": "Trixie",
+  "to": "Nerys",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Thinks Nerys Silvarenne, a first-year in her dorm, is the funniest person at Halvard; Nerys says every joke in the same flat voice and Trixie laughs until she has to sit down."
+  ],
+  "visibility": "rank:6",
+  "via": "Trixie"
+ },
+ {
+  "from": "Trixie",
+  "to": "Wren",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Wren Marlowe, a deaf first-year in her dorm, finds her the easiest person at Halvard to understand, because Trixie talks with her whole body."
+  ],
+  "visibility": "rank:6",
+  "via": "Trixie"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Tsubaki",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Baelin",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Headmaster Baelin Kalvor, once a court mage himself, quit the crown's service over young mages spent too early; he looks at Tsubaki and sees exactly that, and has quietly decided Halvard will teach her to be a person first."
+  ],
+  "visibility": "rank:6",
+  "via": "Tsubaki"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Gavlan",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Professor Gavlan Haverton is the first opponent at Halvard she could not beat in a week, and she asks him for a match every day."
+  ],
+  "visibility": "rank:6",
+  "via": "Tsubaki"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Gavlan",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Tsubaki Hoshikage, a wolf Beastkin first-year with a katana, asks him for a match every day."
+  ],
+  "visibility": "rank:6",
+  "via": "Gavlan"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Hadrian",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Hadrian Quelloris tried to recruit her as his bodyguard; she said \"No."
+  ],
+  "visibility": "rank:6",
+  "via": "Tsubaki"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Hadrian",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Tried to hire Tsubaki Hoshikage as his bodyguard."
+  ],
+  "visibility": "rank:5",
+  "via": "Hadrian"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Linus",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Linus Tallyworth had been collecting rumours about the youngest Royal Mage for years, nearly fainted when she turned up in person, and put her at the top of the Tally on her first day; she does not know what the Tally is."
+  ],
+  "visibility": "rank:6",
+  "via": "Tsubaki"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Maple",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Maple Fernhollow keeps finding her lost in the Gardens and walking her home; Maple's spirit, Sobek, has kept wolves away from a village for centuries and growls at her every time, which Tsubaki takes as an invitation, so she asks him for a match."
+  ],
+  "visibility": "rank:6",
+  "via": "Tsubaki"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Nerys",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Nerys Silvarenne draws her a new map of the castle every week; she keeps them all, in order, and is still lost."
+  ],
+  "visibility": "rank:6",
+  "via": "Tsubaki"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Rei",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Rei Kestrane, the staff swordswoman, has a blade mastery she never trained for; Tsubaki cannot understand how that is possible, finds it deeply unfair, and wants to fight her more than anyone alive."
+  ],
+  "visibility": "rank:6",
+  "via": "Tsubaki"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Rei",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Tsubaki Hoshikage, a first-year who trains every day of her life, cannot understand how Rei's blade mastery came without training, and wants to fight her more than anyone alive."
+  ],
+  "visibility": "rank:6",
+  "via": "Rei"
+ },
+ {
+  "from": "Tsubaki",
+  "to": "Wren",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Wren Marlowe has been trying to teach her hand-speech for a month; Tsubaki can sign exactly one word, \"spar\", and signs it wrong.",
+   "It does not matter much: Tsubaki looks straight at faces and says exactly what she means, so Wren reads her more easily than anyone."
+  ],
+  "visibility": "rank:6",
+  "via": "Tsubaki"
+ },
+ {
+  "from": "Vallie",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Vallie",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Vallie",
+  "to": "Gavlan",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Beat Gavlan at arm-wrestling once before he dies of old age, which at this rate will be never.",
+   "Gavlan Haverton is her arm-wrestling rival and drinking partner; she calls him \"Grandpa\"."
+  ],
+  "visibility": "rank:5",
+  "via": "Vallie"
+ },
+ {
+  "from": "Vallie",
+  "to": "Idris",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "A horned, marked Beastkin nobody dares whisper about, she is a quiet role model to Royhan and Idris, and flattens anyone who mocks Royhan's horns in front of her."
+  ],
+  "visibility": "rank:6",
+  "via": "Vallie"
+ },
+ {
+  "from": "Vallie",
+  "to": "Krieg",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "She considers Krieg Valforth the rotten exception."
+  ],
+  "visibility": "rank:6",
+  "via": "Vallie"
+ },
+ {
+  "from": "Vallie",
+  "to": "Lenna",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Used Saffi Tamberlane as a demonstration opponent all last year and still drags her in when she can, is delighted by Lenna Greenwind's hidden strength in the Beast Handling Club, and sees a natural rival in Sophia Helfin."
+  ],
+  "visibility": "public",
+  "via": "Vallie"
+ },
+ {
+  "from": "Vallie",
+  "to": "Linus",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Delighted by Linus Tallyworth, who has written down every eyepatch story she has ever told and asks for the next one."
+  ],
+  "visibility": "rank:6",
+  "via": "Vallie"
+ },
+ {
+  "from": "Vallie",
+  "to": "Maple",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Wants very badly to arm-wrestle Maple Fernhollow's spirit, Sobek.",
+   "Maple has said no three times; Vallie is sure the fourth will work."
+  ],
+  "visibility": "rank:6",
+  "via": "Vallie"
+ },
+ {
+  "from": "Vallie",
+  "to": "Milena",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "She knows Milena Sagona wants to spar and teases her about it."
+  ],
+  "visibility": "rank:6",
+  "via": "Vallie"
+ },
+ {
+  "from": "Vallie",
+  "to": "Milena",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Vallie Goredust teases her about wanting to spar."
+  ],
+  "visibility": "rank:6",
+  "via": "Milena"
+ },
+ {
+  "from": "Vallie",
+  "to": "Rei",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Once tried to take Rei drinking and failed; Rei accepts only her Blackroot cigars."
+  ],
+  "visibility": "rank:6",
+  "via": "Vallie"
+ },
+ {
+  "from": "Vallie",
+  "to": "Royhan",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Get Royhan Filanoman onto a competition team, even if she has to headlock a captain.",
+   "A horned, marked Beastkin nobody dares whisper about, she is a quiet role model to Royhan and Idris, and flattens anyone who mocks Royhan's horns in front of her."
+  ],
+  "visibility": "rank:5",
+  "via": "Vallie"
+ },
+ {
+  "from": "Vallie",
+  "to": "Saffi",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Used Saffi Tamberlane as a demonstration opponent all last year and still drags her in when she can, is delighted by Lenna Greenwind's hidden strength in the Beast Handling Club, and sees a natural rival in Sophia Helfin."
+  ],
+  "visibility": "public",
+  "via": "Vallie"
+ },
+ {
+  "from": "Vallie",
+  "to": "Sophia",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Used Saffi Tamberlane as a demonstration opponent all last year and still drags her in when she can, is delighted by Lenna Greenwind's hidden strength in the Beast Handling Club, and sees a natural rival in Sophia Helfin.",
+   "the Menagerie and her converted stables beside it, the Forest and the fields (wherever she has dragged her class), the Staff Quarters parlour on rest-day evenings, the Combat Grounds when Sophia Helfin wants a fight."
+  ],
+  "visibility": "rank:5",
+  "via": "Vallie"
+ },
+ {
+  "from": "Vera",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Vera",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Vera",
+  "to": "Bobby",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Tries to take apart Bobby Becket's mechanical props, sometimes before he has finished performing with them."
+  ],
+  "visibility": "rank:5",
+  "via": "Vera"
+ },
+ {
+  "from": "Vera",
+  "to": "Bobby",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Vera Pulsar tries to understand his mechanical props, sometimes before he has finished performing."
+  ],
+  "visibility": "rank:6",
+  "via": "Bobby"
+ },
+ {
+  "from": "Vera",
+  "to": "Hadrian",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hadrian Quelloris, a first-year, once put his name on one of her diagrams at the Fair."
+  ],
+  "visibility": "rank:6",
+  "via": "Vera"
+ },
+ {
+  "from": "Vera",
+  "to": "Hadrian",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Once put his own name on one of Vera Pulsar's diagrams at the Fair and still does not see the problem, since he \"improved the handwriting\"."
+  ],
+  "visibility": "rank:6",
+  "via": "Hadrian"
+ },
+ {
+  "from": "Vera",
+  "to": "Krieg",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Doves: Admires them. Their dispelling and detection work is, in her words, applied field research, and she would very much like to interview one."
+  ],
+  "visibility": "rank:6",
+  "rule": "doves",
+  "rule_label": "The Dovecote",
+  "via": "Vera"
+ },
+ {
+  "from": "Vera",
+  "to": "Linus",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Argues with Linus Tallyworth about everything: he asks who wins, she asks why, and she thinks his question is the least interesting one in the world."
+  ],
+  "visibility": "rank:6",
+  "via": "Vera"
+ },
+ {
+  "from": "Vera",
+  "to": "Milena",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Doves: Admires them. Their dispelling and detection work is, in her words, applied field research, and she would very much like to interview one."
+  ],
+  "visibility": "rank:6",
+  "rule": "doves",
+  "rule_label": "The Dovecote",
+  "via": "Vera"
+ },
+ {
+  "from": "Vera",
+  "to": "Royhan",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Trades notes and reagents with Royhan Filanoman, though he brews to heal and she brews to see what happens.",
+   "Close behind Royhan in Potion Crafting."
+  ],
+  "visibility": "rank:5",
+  "via": "Vera"
+ },
+ {
+  "from": "Vera",
+  "to": "Zara",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Lab partner and unlikely friend of Zara Minallone, whose talismans are stored spells written down, exactly the sort of thing Vera wants to understand.",
+   "Vera asks blunt, fascinated questions about Zara's work and never once about her being strange, which is the kindest thing anyone at Halvard has done for her."
+  ],
+  "visibility": "rank:6",
+  "via": "Vera"
+ },
+ {
+  "from": "Wren",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Wren",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Wren",
+  "to": "Alyssa",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "With you, I can't tell yet.\" Alyssa Edelweiss forgets her every week, so every Sunday Wren writes her a page of the week they had, both sides in both their hands, and every Monday Alyssa reads it and decides, again, that she likes her."
+  ],
+  "visibility": "rank:6",
+  "via": "Wren"
+ },
+ {
+  "from": "Wren",
+  "to": "Hadrian",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hadrian Quelloris talks to her slowly and loudly, as if deaf meant slow; she reads every condescending word on his lips, and once wrote back: \"I'm deaf, not stupid."
+  ],
+  "visibility": "rank:6",
+  "via": "Wren"
+ },
+ {
+  "from": "Wren",
+  "to": "Linus",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Linus Tallyworth talks too fast to read, so with her he writes, and on paper he is someone quieter and funnier than the boy everyone else hears."
+  ],
+  "visibility": "rank:6",
+  "via": "Wren"
+ },
+ {
+  "from": "Wren",
+  "to": "Maple",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Maple Fernhollow greets her every morning with the first sign she learned; Wren feels Sobek coming through the ground long before anyone sees him."
+  ],
+  "visibility": "rank:6",
+  "via": "Wren"
+ },
+ {
+  "from": "Wren",
+  "to": "Ottavio",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "The dock at dawn is the one place where nobody is talking and nobody expects her to, and Professor Bastiani answered her first sign in dock-hand.",
+   "Professor Ottavio Bastiani, who runs the Fishing Club, answered her very first sign on the dock in the old Salaffian dock-hand, which is close enough to hand-speech that they understood each other at once; he is the first adult at Halvard who talked to her in her own language."
+  ],
+  "visibility": "rank:5",
+  "via": "Wren"
+ },
+ {
+  "from": "Wren",
+  "to": "Trixie",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Trixie Confetti, in her dorm, talks with her whole body, which makes her the easiest person at Halvard to understand, and the most exhausting."
+  ],
+  "visibility": "rank:6",
+  "via": "Wren"
+ },
+ {
+  "from": "Wren",
+  "to": "Tsubaki",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "[Wren Marlowe] Tsubaki Hoshikage looks straight at faces for too long and says exactly what she means, which makes her the easiest person at Halvard to read.",
+   "Wren has been trying to teach her hand-speech for a month; Tsubaki can sign one word, \"spar\", and signs it wrong."
+  ],
+  "visibility": "rank:5",
+  "via": "Wren"
+ },
+ {
+  "from": "Wren",
+  "to": "Yvette",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Professor Yvette Fallaron, her Dorm Head, gave her the front seat in Magic Theory on the first day and writes every word of the lecture on the board, and has quietly learned the sign alphabet."
+  ],
+  "visibility": "rank:6",
+  "via": "Wren"
+ },
+ {
+  "from": "Wren",
+  "to": "Yvette",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Wren Marlowe, a deaf first-year in her dorm, sits in the front row of Magic Theory."
+  ],
+  "visibility": "rank:6",
+  "via": "Yvette"
+ },
+ {
+  "from": "Yvette",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Yvette",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Yvette",
+  "to": "Ezrel",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Shares Magic Theory with Ezrel Marionne and has not trusted him since she sat in his lectures.",
+   "Shares Magic Theory with Ezrel Marionne, the Light Dorm Head: she takes the first-years, he keeps the second."
+  ],
+  "visibility": "rank:5",
+  "via": "Yvette"
+ },
+ {
+  "from": "Yvette",
+  "to": "Ezrel",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Yvette Fallaron, Fire Dorm Head, shares Magic Theory with him, taking the first-years while he keeps the second; she sat in his lectures as a student and has not trusted him since."
+  ],
+  "visibility": "rank:5",
+  "via": "Ezrel"
+ },
+ {
+  "from": "Yvette",
+  "to": "Krieg",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Doves: Hates them. To her Halvard is a prison, and the Doves are its jailers, always watching."
+  ],
+  "visibility": "rank:6",
+  "rule": "doves",
+  "rule_label": "The Dovecote",
+  "via": "Yvette"
+ },
+ {
+  "from": "Yvette",
+  "to": "Layla",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Long theory discussions with her friend Layla Palegleam, the History teacher.",
+   "Layla Palegleam is her best friend since they were first-years together at Halvard.",
+   "Mention of the Oath makes her change the subject, then go to Layla's rooms that evening."
+  ],
+  "visibility": "rank:5",
+  "via": "Yvette"
+ },
+ {
+  "from": "Yvette",
+  "to": "Milena",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Doves: Hates them. To her Halvard is a prison, and the Doves are its jailers, always watching."
+  ],
+  "visibility": "rank:6",
+  "rule": "doves",
+  "rule_label": "The Dovecote",
+  "via": "Yvette"
+ },
+ {
+  "from": "Yvette",
+  "to": "Tilly",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "In her own Fire Dormitory: Gareth Valkaryn and Sophia Helfin are the top two, and she dreads the Fire dorm final every year; Caralynn Veyturone tops the first-years and knows it; Tilly Marsh is the student she loses the most sleep over."
+  ],
+  "visibility": "rank:6",
+  "via": "Yvette"
+ },
+ {
+  "from": "Yvette",
+  "to": "Vera",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Vera Pulsar is the only student who out-questions her.",
+   "Vera Pulsar is the Smithing Club's most relentless member and the only student who out-questions her."
+  ],
+  "visibility": "public",
+  "via": "Yvette"
+ },
+ {
+  "from": "Yvette",
+  "to": "Vera",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Yvette Fallaron, the club's advisor, is the only teacher who has never told her to stop asking questions."
+  ],
+  "visibility": "public",
+  "via": "Vera"
+ },
+ {
+  "from": "Zara",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Zara",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Zara",
+  "to": "Alyssa",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Alyssa Edelweiss, in her dorm and year, forgets her every week; Zara reintroduces herself each time without complaint, and has shown her the way up to the Rooftop four times."
+  ],
+  "visibility": "rank:5",
+  "via": "Zara"
+ },
+ {
+  "from": "Zara",
+  "to": "Idris",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Has started trailing after Royhan and Idris, the other Sky outcasts, in the Gardens.",
+   "She is the reason Zara, Idris, and Royhan ended up gathering together at all.",
+   "With Royhan and Idris, part of the Sky outcast trio that gathers in the Gardens."
+  ],
+  "visibility": "rank:5",
+  "via": "Zara"
+ },
+ {
+  "from": "Zara",
+  "to": "Maple",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Sits next to Maple Fernhollow in the Canteen, a first-year in her dorm who everyone else gives a wide berth."
+  ],
+  "visibility": "rank:6",
+  "via": "Zara"
+ },
+ {
+  "from": "Zara",
+  "to": "Royhan",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Has started trailing after Royhan and Idris, the other Sky outcasts, in the Gardens.",
+   "She is the reason Zara, Idris, and Royhan ended up gathering together at all.",
+   "With Royhan and Idris, part of the Sky outcast trio that gathers in the Gardens."
+  ],
+  "visibility": "rank:5",
+  "via": "Zara"
+ },
+ {
+  "from": "Zara",
+  "to": "Vera",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Vera Pulsar, a first-year in Viridian, has taken her on as a lab partner and become an unlikely friend: Vera asks blunt, fascinated questions about her talismans and never once about her being strange."
+  ],
+  "visibility": "rank:5",
+  "via": "Zara"
+ }
+]

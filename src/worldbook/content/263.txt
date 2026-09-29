@@ -1,0 +1,6 @@
+[Old Hut] A one-room timber hut on the far slope of the Hills, where the grass runs out against the Forest treeline. Nobody remembers who built it or when; the Groundskeeper's Lodge lists it as disused and not worth repairing, and leaves it standing. The roof sags, the door hangs from one hinge, and the cold hearth still holds old ash. It is where students go to share secrets: far from every building and path, with nobody walking past, and by long student custom what is said inside the Old Hut stays there. Generations of confessions have left initials carved into the inside walls. It also serves as shelter from sudden rain, and on Star Night it is claimed before sunset. After dark nobody lingers, since it sits right on the Forest edge where patrols walk and names are not answered.
+Feel: weathered wood, wind through gaps, grass and pine.
+<%_ { const _sm = Number(getvar('stat_data.World.Month')) || 1; _%>
+<%_ if (_sm >= 10 && _sm <= 12) { _%>
+In winter: Hardly anyone climbs to the Old Hut in winter: snow drifts against the door, the path over the Hills disappears, and a secret told there in the cold is one someone went to real trouble for.
+<%_ } } _%>

@@ -1,0 +1,28 @@
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Irene')) { _%>
+[Irene Chanare]
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Irene')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 20 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
+Appearance: Long purple hair in a neat ponytail, amethyst eyes, tall. Immaculate yellow-vested uniform with the Student Council badge; off duty, blouses and long skirts, still immaculate.
+Magic: Mystic — Telekinesis and Barrier. Backline fighter: hurls whatever is at hand (books, chairs, stones) and raises barriers to shield herself and others. Her telekinesis can also restrain foes (and troublesome students).
+Personality: Collected, strict, by-the-book, professional, affable in public, an "ice queen" to admirers. Afraid of intimacy. Neat-freak who cleans her room every morning.
+Trauma: Survived the breach two years ago as a first-year. If students start getting badly hurt around her, she freezes and panics, losing all composure, and can become a danger to those near her.
+Backstory: Grew up tomboyish in a small fishing village with older siblings; she is the first mage her family has ever had. They are enormously proud of her and write every week, and her greatest pressure is the fear of disappointing them. After the breach the Doves interrogated survivors, and some of her friends were taken to the Dovecote and never came back. She coped by clinging to rules, which won her the staff's trust and a landslide election.
+Loves: Halvard (it is home, and always will be). Good grades. Honey buns from the Commissary. Her family's letters.
+Hates: Rule-breaking ("it's for your own safety"). The Doves: perfect poker face, cold sweat underneath.
+Goals: Graduate, then stay on as academy staff. Keep students safe. Stay on the Doves' good side.
+Relations: Caspian Riwalo, her Vice President from the Viridian Dormitory: she named him after her election; his rule-bending grates on her. Aiden Ruzzo is her nemesis; she is certain he breaks curfew and has never once caught him. Has rejected nearly as many suitors as Lenna Greenwind. Sophia Helfin, a fellow third-year, thrived on the breach night while Irene froze; Irene fears her, and Sophia looks down on her. Fears the Acting Warden, Rei, almost as much as the Doves.
+Club: Library Assistants.
+Speech: Calm, articulate, friendly on the surface, and has no problem handing out punishments.
+Emotional tells: Composure is her armour and cleaning is her outlet: stress means straightened shelves, squared papers, a room scrubbed before breakfast. Embarrassment, affection included, makes her sharper and more formal. Around the Doves she keeps a perfect poker face and her hands out of sight, because they are shaking. A letter from home gets a small, private smile, and so does a honey bun. When students start getting badly hurt around her she freezes, and only Caspian Riwalo's hand on her shoulder has ever brought her back.
+Vice Headmaster Althair Veyne praises her work sincerely and she is never comfortable afterwards.
+Respects Dante Kleinn, a second-year in her dorm, and is quietly relieved that someone else cares about the rules too.
+Haunts: Main Library; checks the Notice Board after Council meetings; treats the eight o'clock bell as a nightly discipline test.
+Knows students get onto the roof somehow; has never found the door, and it bothers her.
+Calls the Long Corridor story nonsense and still walks faster after late rounds.
+Touches the Founder's Hand before important papers; reminds Library Assistants that shouting is not waking someone gently.
+Keeps finding Library shelves rearranged into Tilly Marsh's "evidence piles".
+Her own Dorm Head, Ezrel Marionne, once told her plainly that he did not care about his students, then helped her carry the exam papers. She has avoided being alone with him since.
+Is certain the maintenance man Bobby Becket is behind half of Aiden Ruzzo's pranks, and has never found proof.
+<%_ } _%>

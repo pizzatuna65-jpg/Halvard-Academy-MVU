@@ -1,0 +1,12 @@
+[Forest] Wide old woodland at the farthest edge of the grounds, past the far slope of the Hills (a quarter of an hour from the field, twenty-five minutes along the lake shore). Creature Studies fieldwork, foraging, walking, and where students go when they want to not be found. Students leave a bite before eating there (Eating in the Forest superstition). Creature Studies teaches there and patrols watch its edge. A deer path, half an hour's walk, leads deep in to the Forest Clearing and its Elder Oak, the one bright place inside it.
+Feel: old growth, muffled, watched.
+<%_ { const _sm = Number(getvar('stat_data.World.Month')) || 1; _%>
+<%_ if (_sm >= 1 && _sm <= 3) { _%>
+In spring: Foraging season opens: wild garlic and early greens at the edges.
+<%_ } else if (_sm >= 4 && _sm <= 6) { _%>
+In summer: The canopy closes and the Forest is at its darkest by day.
+<%_ } else if (_sm >= 7 && _sm <= 9) { _%>
+In autumn: Mushrooms and nuts; Creature Studies warns about the ones that look alike.
+<%_ } else if (_sm >= 10 && _sm <= 12) { _%>
+In winter: Dusk comes early, so the patrols turn students back from the treeline by late afternoon; tracks in the snow show what else walks there.
+<%_ } } _%>

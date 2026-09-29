@@ -1,0 +1,3 @@
+[Dragonchess]
+Play: starts as ordinary chess (drawn from chess and shogi) on floating checkered spheres over golden clockwork pedestals that materialise the pieces. The board reads the players and escalates: it unfolds into layers and the pieces fight autonomously in real time, so players outmanoeuvre both the opponent and the game.
+Known for: rare sets; serious matches last days.

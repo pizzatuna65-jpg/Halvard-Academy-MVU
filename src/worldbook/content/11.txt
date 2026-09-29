@@ -1,0 +1,9 @@
+[The Warden]
+Count: One per site, four in the kingdom total.
+Duties:
+- Maintaining the site's seal
+- Guarding the site from trespassers
+Nature of the seal: Every site seal was laid by the Archmage. No living mage could build one, and none is asked to. A seal is a standing working that can be read, tuned, patched and re-anchored by anyone who understands how it runs, which is what a Warden is trained for. Sealing affinity helps but is not the post's requirement; knowing the working is.
+Notes: The original wardens were historical figures tied to the founding era of the academies. The modern Warden is a single successor at each site.
+
+At Halvard: The previous Warden (name unknown) died resealing the Crack on the breach night two years ago. Their apprentice took over the seal that night. The crown has never confirmed them as full Warden, only Acting Warden, because they answer to no one and do whatever they judge necessary.

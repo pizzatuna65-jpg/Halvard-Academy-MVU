@@ -1,0 +1,6 @@
+[Caelmar]
+What: a nation that is a single city in the west, as wide as a kingdom, built hundreds of floors into the sky and dozens deep into the earth, split into hundreds of districts and dozens of layers.
+Rule: the king lives on the highest layer, above the clouds; the lower you live, the less you matter.
+Below: the deepest layers are slums that never see the sun, where the city's refuse, workshops and outlaws collect.
+Export: the continent's workshop. Mana lanterns, rune heaters, pens, locks, anything made by the thousand comes up from the lower layers.
+Status: most Caelmari die on the layer they were born on.

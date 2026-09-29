@@ -1,0 +1,8 @@
+[Common Rooms] One per dorm, for study, arguments, and Dorm Day displays when the dormitory opens to visitors. Theirs alone the rest of the year. Free kettle and tea, against the mall's paid cafés. Every room has one good chair that unofficially belongs to someone, and a preservation locker beside the kettle where food from home is kept and shared.
+Feel: lamplit, worn, homely.
+<%_ { const _sm = Number(getvar('stat_data.World.Month')) || 1; _%>
+<%_ if (_sm >= 4 && _sm <= 6) { _%>
+In summer: Windows open, and the arguments carry outside.
+<%_ } else if (_sm >= 10 && _sm <= 12) { _%>
+In winter: Everyone crowds the heaters and the kettle never cools.
+<%_ } } _%>

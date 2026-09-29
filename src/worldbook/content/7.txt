@@ -1,0 +1,6 @@
+- Seals feed on mana. Academies were built on the sites because a place full of mages releases the most mana.
+- Warden duty: Checking and monitoring mana consumption.
+
+Magic leaves residual mana in the environment after a spell is cast. Normally this residual mana disperses and naturally fades over time. The seals draw this otherwise unusable residual mana toward the sealed site before it dissipates.
+
+Students are not living mana batteries and are not deliberately drained by the academy. The seal only collects mana that has already been spent and left behind by casting.

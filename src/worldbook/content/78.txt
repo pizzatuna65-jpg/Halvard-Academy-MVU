@@ -1,0 +1,12 @@
+[Boathouse and Lake] Vast open water in the far grounds, twenty minutes' walk beyond the Gardens, for rowing, swimming and the Fishing Club. The boathouse stores the craft and doubles as a quiet place to sit. Three minutes' walk along the shore from the boathouse stands the Fishing Club's Fishing House, with its own dock. Sound carries strangely across the water: a far-bank conversation arrives too clearly. Home of the Crying on the Water story; the boathouse refuses bookings after dark. Willow Island sits in the middle of the lake, reached only by boat.
+Feel: wet timber, cold water.
+<%_ { const _sm = Number(getvar('stat_data.World.Month')) || 1; _%>
+<%_ if (_sm >= 1 && _sm <= 3) { _%>
+In spring: Rowing season opens once the water warms.
+<%_ } else if (_sm >= 4 && _sm <= 6) { _%>
+In summer: The lake is at its busiest: rowers, swimmers off the jetty, the Fishing Club at dawn.
+<%_ } else if (_sm >= 7 && _sm <= 9) { _%>
+In autumn: Morning mist sits on the water until mid-morning.
+<%_ } else if (_sm >= 10 && _sm <= 12) { _%>
+In winter: The boats are stored, ice forms along the shallows, and the boathouse lends a boat only on a still, mild day.
+<%_ } } _%>

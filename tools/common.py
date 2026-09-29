@@ -1,0 +1,127 @@
+#!/usr/bin/env python3
+"""Shared data helpers for the generators (v1.1.0). Single source for club membership and outdoor places."""
+import json, os, re
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+P = lambda *a: os.path.join(ROOT, *a)
+
+CLUB_NAME = {'Theatre': 'Theatre Troupe', 'Newspaper': 'Academy Newspaper', 'Divination': 'Divination Society', 'Alchemy': 'Alchemy Circle',
+             'Festival Committee': 'Festival Committee', 'Library Assistants': 'Library Assistants', 'Groundskeeping': 'Groundskeeping',
+             'Medical Centre Volunteers': 'Medical Centre Volunteers', 'Warding Study': 'Warding Study Group',
+             'Student Council': 'Student Council', 'Magic Duelling Club': 'Magic Duelling Club'}
+# 1.2.0: Archery, Swimming, Gymnastics and Basketball are sport clubs (owner map review; lore: sport clubs ban magic in play)
+SPORT = {'Soccer', 'Running', 'Magic Duelling Club', 'Archery', 'Swimming', 'Gymnastics', 'Basketball'}   # practice after 16:00; spell duelling is exempt from the sport no-magic rule
+
+def load_clubs(npcs, locs):
+    """Clubs from location club lists + NPC 'Club' fields (was inline in gen_ui.py, Batch 5.2)."""
+    clubs = {}
+    for lid, l in locs.items():
+        for c in l['clubs']:
+            base = re.sub(r'\s*\(.*\)$', '', c)
+            clubs.setdefault(base, {'venues': []})['venues'].append(lid)
+    for base, c in clubs.items():
+        c.update(name=CLUB_NAME.get(base, base + ' Club'), key=base, sport=base in SPORT and base != 'Magic Duelling Club', practice=base in SPORT, members=[], advisors=[])
+    for nid, n in npcs.items():
+        f = next((f for f in n['fields'] if f['label'].lower() == 'club'), None)
+        if not f: continue
+        first = re.split(r'[.,;]', f['text'])[0]
+        if re.search(r'whichever club', first, re.I):
+            for c in clubs.values(): c.setdefault('follows', []).append(nid)
+            continue
+        for base, c in clubs.items():
+            if re.search(r'\b' + re.escape(base) + r'\b', first, re.I): c['members'].append(nid)
+        m = re.search(r'advised by (\w+)', f['text'])
+        if m and m.group(1) in npcs:
+            for base, c in clubs.items():
+                if re.search(r'\b' + re.escape(base) + r'\b', first, re.I) and m.group(1) not in c['advisors']: c['advisors'].append(m.group(1))
+    return sorted(clubs.values(), key=lambda c: c['name'])
+
+# v1.1.0 (spec §4.8): outdoor places. The spec rule is category "Sport and Grounds" + Courtyards + Rooftop. Canon corrections:
+# the Gymnasium is indoor training ("used heavily in bad weather", lore 73) and the Old Hut is a shelter from sudden rain (lore 263);
+# the Founder's Statue and Park (open parkland) and the Combat Grounds (training areas kept away from buildings) are outdoors.
+OUTDOOR_ADD = {'courtyards', 'rooftop', 'founders_statue_and_park', 'combat_grounds'}
+OUTDOOR_NOT = {'gymnasium', 'old_hut'}
+def outdoor_ids(locs):
+    return sorted(lid for lid, l in locs.items() if (l['category'] == 'Sport and Grounds' or lid in OUTDOOR_ADD) and lid not in OUTDOOR_NOT)
+
+def place_keys(l, lid):
+    """lowercase names a location can be written as (with and without a leading 'the', and its id with spaces)"""
+    return sorted({l['name'].lower(), re.sub(r'^the ', '', l['name'].lower()), lid.replace('_', ' ')})
+
+# 1.3.1 (owner playtest: "Boathouse" was not recognised as the Boathouse and Lake, so the map missed the player). Other ways the
+# narrator writes a place -> its Campus Map name. Parts of an "X and Y" / "X / Y" name count when no other place claims them;
+# the extra forms below are common short names. Used by the engine (World.Location is normalised to the map name) and the UI map.
+PLACE_EXTRA = {'main courtyard': 'Courtyards', 'courtyard': 'Courtyards', 'the courtyard': 'Courtyards', 'library': 'Main Library',
+               'arbiter hall': 'The Arbiter Hall', 'dining hall': 'The Ring Dining Hall', 'ring dining hall': 'The Ring Dining Hall',
+               'common room': 'Common Rooms', 'lecture hall': 'Lecture Halls', 'seminar room': 'Seminar Rooms', 'study room': 'Study Rooms',
+               'club room': 'Club Rooms', 'potion hall': 'Potion Halls', 'meditation room': 'Meditation Rooms / Spirit House',
+               'pool': 'Swimming Pool', 'gym': 'Gymnasium', 'infirmary': 'Medical Centre', 'medical center': 'Medical Centre',
+               'the woods': 'Forest', 'woods': 'Forest', 'the forest': 'Forest', 'clearing': 'Forest Clearing', 'the clearing': 'Forest Clearing',
+               'fire dorm': 'Fire Dormitory', 'light dorm': 'Light Dormitory', 'sky dorm': 'Sky Dormitory', 'viridian dorm': 'Viridian Dormitory',
+               'sparring pavilion': 'The Sparring Pavilion', 'the pavilion': 'The Sparring Pavilion', 'founders park': "Founder's Statue and Park",
+               "founder's park": "Founder's Statue and Park", 'fishing hut': 'Fishing House', 'boat house': 'Boathouse and Lake',
+               'the lake': 'Boathouse and Lake', 'lakeshore': 'Boathouse and Lake', 'lake shore': 'Boathouse and Lake', 'the hills': 'Grassy Field and Hills',
+               'grassy field': 'Grassy Field and Hills', 'hills': 'Grassy Field and Hills', 'gate': 'Reception and Gatehouse', 'the gate': 'Reception and Gatehouse',
+               'mall': 'The Mall', 'dovecote': 'The Dovecote', 'cathedral': 'The Cathedral', 'banking house': 'The Banking House', 'bank': 'The Banking House',
+               'royal inspectorate': 'The Royal Inspectorate', 'inspectorate': 'The Royal Inspectorate', 'seal chamber': 'The Seal Chamber',
+               "warden's office": "The Warden's Office", "headmaster's office": "Headmaster's Office", 'observatory': 'Observation Tower',
+               'willow': 'Willow Island', 'the island': 'Willow Island', 'hut': 'Old Hut', 'the hut': 'Old Hut'}
+def place_aliases(locs):
+    """{alias (lowercase): Campus Map name} for names that are not a place's own name"""
+    names = {l['name'] for l in locs.values()}
+    own = {k for lid, l in locs.items() for k in place_keys(l, lid)}
+    part = {}
+    for l in locs.values():
+        for p in re.split(r'\s+and\s+|\s*/\s*', l['name']):
+            p = re.sub(r'^the ', '', p.strip().lower())
+            if p and p != l['name'].lower(): part.setdefault(p, set()).add(l['name'])
+    out = {p: next(iter(v)) for p, v in part.items() if len(v) == 1 and p not in own}
+    for a, nm in PLACE_EXTRA.items():
+        assert nm in names, f'PLACE_EXTRA: unknown place {nm}'
+        if a not in own: out[a] = nm
+    return dict(sorted(out.items()))
+
+# 1.9.5 (playtest Batch 5): the mechanical effect of a shop item (data/shop.json gear / use), worded once for the Activities shop,
+# the Bag (via ui.js DATA.shop) and the Price Guide (custom 506). The engine applies the same fields (SHOP_FX in engine.js).
+GEAR_TEXT = {'umbrella': 'keeps rain off (not in wind or storm)', 'waterproof': 'waterproof: no Soaked from rain or snow',
+             'warm': 'warm: holds off Chilled', 'sun': 'shade: Overheated only from 31 °C'}
+def effect_text(item):
+    if item.get('gear'): return 'Worn from the Bag: ' + GEAR_TEXT[item['gear']]
+    u = item.get('use')
+    if not u: return ''
+    parts = []
+    if u.get('clears'): parts.append('clears ' + ' and '.join(u['clears']))
+    if u.get('buff'): parts.append(f"{GEAR_TEXT[u['buff']]} for {u['mins'] // 60} hours" if u['mins'] % 60 == 0 else f"{GEAR_TEXT[u['buff']]} for {u['mins']} minutes")
+    if u.get('stamina'): parts.append(f"+{u['stamina']} stamina")
+    if u.get('cure'): parts.append(f"a {u['cure'].lower()} ends by the next day")
+    return 'When used: ' + '; '.join(parts)
+
+# 1.10.0 (FP7): the weekly timetable with venues, the teachers and each club's venues, shared by gen_mvu_entries (the Now entry)
+# and gen_engine (attendance). The engine's TIMETABLE is the single source of the lessons.
+norm_place = lambda s: re.sub(r'^the ', '', s.strip().lower())
+def class_data(npcs, locs):
+    eng = open(P('src/scripts/engine.template.js'), encoding='utf-8').read()
+    tt_src = re.search(r'const TIMETABLE = \{(.*?)\n\};', eng, re.S).group(1)
+    VENUE_ALIAS = {'warded seminar room': 'Seminar Rooms'}
+    def venues_of(paren):
+        out = []
+        for chunk in re.split(r';|\bor\b', paren or ''):
+            c = chunk.strip().lower()
+            if not c or c in ('doves', 'club venues'): continue
+            name = VENUE_ALIAS.get(c) or next((l['name'] for l in locs.values() if norm_place(l['name']) == norm_place(c)), None)
+            assert name, f'timetable venue is not a location: {chunk!r}'
+            out.append(norm_place(name))
+        return out
+    TT = {}
+    for day, row in re.findall(r"(\w{3}): \[(.*?)\],", tt_src):
+        TT[day] = []
+        for cell in re.findall(r"'([^']*)'", row):
+            m = re.match(r'^(.*?)(?:\s*\[(M|D)\])?(?:\s*\((.*)\))?$', cell)
+            subj, mode, paren = m.group(1).strip(), m.group(2) or '', m.group(3)
+            if subj.startswith('Study Hall'): TT[day].append(['Study Hall', '', ['main library'], 'study'])
+            elif subj == 'Clubs': TT[day].append(['Clubs', '', [], 'clubs'])
+            else: TT[day].append([re.sub(r'\s+practical$', '', subj), mode, venues_of(paren) or ['lecture halls'], 'class'])
+    assert TT['Mon'][0] == ['Magic Theory', 'M', ['lecture halls'], 'class'] and TT['Fri'][2][2] == ['combat grounds', 'seminar rooms'] and TT['Wed'][2][2] == ['menagerie', 'forest'], TT
+    TEACH = {nid: n['teaches'] for nid, n in sorted(npcs.items()) if n.get('teaches')}
+    CLUBS = {c['name']: [norm_place(locs[v]['name']) for v in c['venues']] for c in load_clubs(npcs, locs)}
+    return TT, TEACH, CLUBS
+

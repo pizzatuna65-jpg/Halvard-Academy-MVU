@@ -1,0 +1,4 @@
+[Period Change]
+Rule: when the bell ends a period, the main corridors are impassable for four minutes, then empty as fast as they filled.
+Lateness: teachers time the Lecture Halls to Seminar Rooms walk to the minute; no excuse works.
+Feel: crushing, deafening.

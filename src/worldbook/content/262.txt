@@ -1,0 +1,12 @@
+[Viridian Dormitory] Home of the Spiritualists (green vest). Green-tiled roof and a green banner over the door. An old oak fills its inner court, its crown rising above the roofline, with meditation stones set among its roots. Inside: common area, meditation rooms, personal rooms. Creed: "Know Thyself, Know Victory."
+Feel: oak shade, rustling leaves, stone.
+<%_ { const _sm = Number(getvar('stat_data.World.Month')) || 1; _%>
+<%_ if (_sm >= 1 && _sm <= 3) { _%>
+In spring: The inner oak comes into new leaf.
+<%_ } else if (_sm >= 4 && _sm <= 6) { _%>
+In summer: Deep shade over the meditation stones.
+<%_ } else if (_sm >= 7 && _sm <= 9) { _%>
+In autumn: The oak turns gold and leaves drift into the common area.
+<%_ } else if (_sm >= 10 && _sm <= 12) { _%>
+In winter: Bare branches over the roofline; the meditation stones sit under snow.
+<%_ } } _%>

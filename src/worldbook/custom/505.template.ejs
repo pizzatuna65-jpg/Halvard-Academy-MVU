@@ -1,0 +1,328 @@
+<%_
+// Source of custom entry 505 (Now). tools/gen_mvu_entries.py fills the /*@@…@@*/ data and writes content/505.txt. Edit this file, not 505.txt.
+const W = getvar('stat_data.World') || {};
+const H = getvar('stat_data.Hidden') || {};
+const UI = getvar('stat_data.$ui') || {};
+const PR = getvar('stat_data.Player.Profile') || {};
+const OFF = UI.off || [];
+const on = id => (id === 'happenings' ? UI.happenings !== 'off' : id === 'weather' ? (UI.wxfx || 'full') !== 'off' : id === 'ambience' ? (UI.ambience || 'full') !== 'off' : !OFF.includes(id));
+const WX = on('weather') && UI.wx && !UI.wx.away && UI.wx.now ? UI.wx : null;
+const FULL = !!WX && WX.mode === 'full';
+const REG = /*@@REG@@*/{};
+const place = String(W.Location || '').split(/\s+[—-]\s+/)[0].trim();
+const pk = place.toLowerCase().replace(/^the /, '');
+const regs0 = REG[place.toLowerCase()] || REG[pk] || [];
+const NST = getvar('stat_data.Campus_State.NPC_status') || {};
+const stOf = r => { const k = Object.keys(NST).find(x => x.toLowerCase() === r.toLowerCase() || x.toLowerCase().split(/\s+/)[0] === r.toLowerCase()); return k ? NST[k] : ''; };
+const GRAD = getvar('stat_data.Campus_State.Graduated') || [], ARR = /*@@ARR@@*/{};
+const Y = Math.max(1, Number(W.Year) || 1);
+const COUNCIL = getvar('stat_data.Campus_State.Council') || {};
+const CANDIDATES = (COUNCIL.Candidates || {})[String(Y)] || {};
+const here = r => !GRAD.includes(r) && (ARR[r] || 1) <= Y;   // 1.0.3: graduates left; incoming first-years not here yet
+// 1.1.0: class-aware presence (spec §1), weather and flu (spec §4.8)
+const STU = /*@@STU@@*/{}, TEACH = /*@@TEACH@@*/{};
+const TT = /*@@TT@@*/{};
+const CLUBV = /*@@CLUBV@@*/{}, OUTD = /*@@OUTD@@*/[], VN = /*@@VN@@*/{};
+
+const sick = FULL && WX.flu ? (WX.sick || []) : [];
+let regs1 = regs0.filter(r => here(r) && !sick.includes(r));
+const per = /^P([123]) /.exec(String(W._Period || '')), pIdx = per ? +per[1] - 1 : -1;
+const electionBlock = W.Month === 10 && W.Week === 3 && W.Day === 'Sat' && pIdx === 2;
+const cls = electionBlock ? ['Student Council Election', '', ['main courtyard'], 'election']
+  : on('class') && pIdx >= 0 && TT[W.Day] ? TT[W.Day][pIdx] : null;   // [subject, M|D, venues, class|study|clubs]
+const until = ['10:00', '12:00', '16:00'][pIdx];
+const pres = [];
+let clubs = [];
+if (cls && cls[3] === 'class') {
+  const atVenue = cls[2].includes(pk), teaching = r => (TEACH[r] || []).some(x => x[0] === cls[0]);
+  regs1 = regs1.filter(r => !STU[r] && (atVenue || !teaching(r)));
+  pres.push('Students are in class until ' + until + '.');
+} else if (cls && cls[3] === 'study') {
+  if (cls[2].includes(pk)) pres.push('Study Hall until 12:00: most students are here.');
+  else { regs1 = regs1.filter(r => !STU[r]); pres.push('Students are at Study Hall in the Main Library until 12:00.'); }
+} else if (cls && cls[3] === 'election') {
+  regs1 = regs1.filter(r => !STU[r]);
+  pres.push('Students vote for Student Council President in the Main Courtyard until 16:00; ordinary clubs do not meet this afternoon.');
+} else if (cls) {
+  regs1 = regs1.filter(r => !STU[r]);
+  clubs = CLUBV[pk] || [];
+  if (!clubs.length) pres.push('Students are at their clubs until 16:00.');
+}
+const gale = FULL && WX.now.wind === 'gale';
+const bad = FULL && (WX.now.sky === 'Rain' || WX.now.sky === 'Storm' || gale);
+let moved = [];
+if (bad && OUTD.includes(pk) && !((pk === 'boathouse and lake' || pk === 'fishing house') && WX.now.sky === 'Rain' && !gale)) { moved = regs1.filter(id => !(gale && id === 'Ottavio')); regs1 = regs1.filter(id => gale && id === 'Ottavio'); }   // the Fishing Club likes rain
+const clubLine = clubs.map(c => {
+  const m = c[1].filter(id => here(id) && !sick.includes(id) && !stOf(id));
+  return c[0] + (bad && c[2] && (!c[3] || gale) ? ': practising indoors (Gymnasium) or cancelled in this weather' : ': meeting here until 16:00' + (m.length ? ' (members on record: ' + m.join(', ') + ')' : ''));
+}).join('; ');
+let classLine = '';
+if (cls && cls[3] === 'class' && cls[2].includes(pk)) {
+  const PY = Math.max(1, Math.min(3, Number(PR.Year) || 1)), dorm = PR.Dorm || 'Unsorted';
+  const tch = Object.keys(TEACH).find(id => TEACH[id].some(x => x[0] === cls[0] && (x[1] === PY || x[1] === 0)) && !stOf(id));
+  const mates = Object.keys(STU).filter(id => here(id) && STU[id][0] + Y - STU[id][1] === PY && !sick.includes(id) && !stOf(id)
+    && (cls[1] !== 'D' || dorm === 'Unsorted' || STU[id][2] === dorm)).slice(0, 8);
+  classLine = 'Your class now: ' + cls[0] + ' [' + cls[1] + '] (Year ' + PY + ', ' + (cls[1] === 'D' ? (dorm === 'Unsorted' ? 'dorm not yet sorted' : dorm + ' only') : 'all dorms')
+    + ') at ' + (VN[pk] || place) + ' — teacher ' + (tch || 'not on record: create one, and keep them the same person every lesson') + '; classmates on record: ' + (mates.join(', ') || 'none');
+}
+const regs = regs1.filter(r => !stOf(r)), regSt = regs1.filter(r => stOf(r));
+const cur = String(W._Curfew || '');
+const due = on('planner') ? Object.entries(getvar('stat_data.Commitments') || {}).filter(([k, c]) => c && (c._Late || /^(today|tomorrow)/.test(String(c._When || '')))) : [];
+const mail = on('letters') ? Object.values(getvar('stat_data.Letters') || {}).filter(l => l && l.Status === 'waiting').length : 0;
+const HK = on('hooks') ? Object.entries(getvar('stat_data.Hooks') || {}).filter(([k, h]) => h) : [];
+const hDue = HK.filter(([k, h]) => h._State === 'due' || h._State === 'overdue'), hOld = HK.filter(([k, h]) => h._State === 'old' && h.Weight >= 2);
+const GS = on('gossip') ? (UI.gossip || []).slice(-5).reverse() : [];
+const PRES = Object.keys(getvar('stat_data.Scene.Present') || {});
+const moods = on('weather') ? PRES.filter(id => (UI.moods || {})[id]).map(id => { const m = UI.moods[id]; return id + ': ' + m.mood.toLowerCase() + ' mood' + (m.reasons.length ? ' (' + m.reasons.join(', ') + ')' : '') + '. Mood colours their manner; keep them in character.'; }) : [];
+if (WX && PRES.includes('Idris')) { if (/cold|freezing/.test(WX.now.label)) moods.push('Idris is cold-blooded: sluggish and short-tempered in this cold.'); else if (WX.now.sky === 'Clear' && WX.block !== 2 && WX.now.temp >= 15) moods.push('Idris is cold-blooded and loves the sun: he is soaking it up, livelier than usual.'); }
+const BT = getvar('stat_data.Battle') || {};
+// 1.5.1 (P6): who spoke in the last reply without being in Scene.Present, and who was only mentioned (engine $ui.cast)
+const CAST = UI.cast || {}, PRON = /*@@PRON@@*/{};
+// 1.6.0 (N13): the age of dated lines in words; (N4) Next plans: met again, or may bring someone here now
+/*@@AGE@@*/
+const aged = w => { const a = ageOf(w, W); return a ? w + ', ' + a : w; };
+const SINCE = UI.since || [], MAYBE = UI.maybe || [];
+const STALE = UI.stale || [], PHASE = UI.phase || null;   // 1.6.1 (N4, N6): campus events with no news for a week; the campus phase (engine)
+const INITIATIVE = on('npc_initiative') ? UI.initiative : null;   // 1.7.7 (FP1): optional NPC-initiated contact today
+const JAGES = (getvar('stat_data.Journal') || []).slice(-5).reverse().map(l => (/^\[([^\]]+)\]/.exec(String(l)) || [])[1]).filter(w => w && ageOf(w, W));
+// 1.2.2 bonds: for each present NPC, what they will talk about at this rank (openness shifts the early tiers; goals, views of others
+// and the past need the real rank; secrets never come from rank) and what the bond allows
+const BOND = /*@@BOND@@*/{};
+const RANK4 = /*@@RANK4@@*/{};
+const BDAYS = /*@@BDAYS@@*/{};
+const BONDS = getvar('stat_data.Bonds') || {};
+const CLOSE = UI.close || [];   // 1.5.0 (N3a): bonds with XP at 80% or more of the next rank (engine)
+// 1.4.3 Trust shifts what they share (Doubtful -1, Trusting +1, Confidant +2 and the real tiers one rank early; Betrayed: nothing
+// new) and holds back the perks that need it (data/trust.json perk_gates)
+const TRUST = /*@@TRUST@@*/{};
+const SECR = [...(UI.secrets || []), ...((getvar('stat_data.Campus_State') || {}).Secrets_revealed || [])].map(x => String(x).toLowerCase());
+const trBand = x => (TRUST.bands || [[0, '']]).reduce((a, [f, nm]) => (x >= f ? nm : a), '');
+const trOver = id => { const o = (TRUST.overrides || {})[id]; return o && !(o.until_secret && SECR.some(x => x.startsWith(id.toLowerCase() + '.'))) ? o : null; };
+const bondLines = PRES.filter(id => BONDS[id] && BOND.share).map(id => {
+  const r = Math.max(0, Math.min(10, Number(BONDS[id].Rank) || 0)), tr = Math.max(0, Math.min(100, Number(BONDS[id].Trust) || 0)), tb = trBand(tr);
+  const sh = (TRUST.share || {})[tb], early = tb === 'Confidant' ? TRUST.early || 0 : 0, o = (BOND.off[id] || 0) + (sh || 0);
+  const ok = BOND.share.filter(([t]) => (t < BOND.real ? t <= Math.max(0, r + o) : t <= r + early));
+  const next = BOND.share.find(([t]) => !ok.some(x => x[0] === t));
+  const og = trOver(id), gated = og && og.no_gates ? [] : Object.entries(TRUST.gates || {}).filter(([g, need]) => +g <= r && +g !== 8 && tr < need && BOND.perks[g]).map(([g, need]) => BOND.perks[g] + ' (needs Trust ' + need + ')');
+  const susp = (UI.tsusp || []).filter(k => ((getvar('stat_data._Perks') || {})[k] || {}).From === id);
+  return id + ' (Rank ' + r + (BOND.tag[id] ? ', ' + BOND.tag[id] : '') + ', Trust ' + tr + ' ' + tb.toLowerCase() + (CLOSE.includes(id) ? ', close' : '') + '): '
+    + (sh === null ? 'shares nothing new with {{user}}; keeps to what {{user}} already knows' : 'shares ' + ok.map(x => x[1]).join('; ')
+    + (next ? '. Not yet: ' + next[1] + ' and beyond; asked about it, deflects in character (pushing too soon adds Tension)' : ''))
+    + (r > 0 && BOND.perks[String(r)] ? '. At this rank: ' + BOND.perks[String(r)] : '')
+    + (gated.length ? '. Held back by low Trust: ' + gated.join('; ') : '') + (susp.length ? '. Suspended until Trust ' + TRUST.susp + ': ' + susp.join(', ') : '') + '.';
+});
+// 1.4.3 how each present character carries their Trust: a personal rule (always), else only the telling bands
+const trustLines = PRES.filter(id => BONDS[id]).map(id => {
+  const og = trOver(id), dh = (TRUST.dorm_head || {})[id];
+  const mine = dh && PR.Dorm === dh.dorm, cat = mine ? dh.category : (TRUST.npcs || {})[id] || 'normal', C = (TRUST.cats || {})[cat];
+  const tr = Math.max(0, Math.min(100, Number(BONDS[id].Trust) || 0)), tb = trBand(tr);
+  const parts = [og && og.text, mine && dh.text, C && C.bands[tb] ? id + ' (Trust ' + tr + ', ' + tb.toLowerCase() + '; ' + C.name.toLowerCase() + '): ' + C.bands[tb] + '. Never: ' + C.never + '.' : ''].filter(Boolean);
+  return parts.join(' ');
+}).filter(Boolean);
+const rankCues = (UI.rank_cues || []).filter(x => x && PRES.includes(x.id));
+const access = UI.rank_access || {};
+// 1.3.8 Tension: how each present character carries it (data/tension.json: category or personal override), from Friction (20) up
+const TEN = /*@@TENSION@@*/{};
+const tensionLines = PRES.filter(id => BONDS[id]).map(id => {
+  const o = (TEN.overrides || {})[id], P = o || (TEN.categories || {})[(TEN.npcs || {})[id]];
+  if (!P) return '';
+  if (o && o.lock) return id + ': ' + o.text;
+  const t = Math.max(0, Math.min(100, Number(BONDS[id].Tension) || 0));
+  if (t < 20) return '';
+  const band = (TEN.bands || []).reduce((a, [f, nm]) => (t >= f ? nm : a), '');
+  const peak = band === 'Enemy' && (TEN.peaks || {})[id] ? ' (' + TEN.peaks[id] + ')' : '';
+  const an = (TEN.apology_npc || {})[id];
+  return id + ' (Tension ' + t + ', ' + band.toLowerCase() + '): ' + P.bands[band] + peak + '. Never: ' + P.never + '. Eases: ' + (an && an.note ? an.note : P.eases) + '.';
+}).filter(Boolean);
+// 1.4.4 (owner): each present character's latest moments with {{user}} (Bonds.<id>.$Recent, newest first) for consistency
+const recentLines = PRES.filter(id => BONDS[id] && (BONDS[id].$Recent || []).length).map(id => id + ' (newest first): ' + BONDS[id].$Recent.slice(-(BOND.recent_now || 5)).reverse()
+  .map(r => '[' + aged(r.w) + '] ' + r.n + (r.fx ? ' (' + r.fx + ')' : '')).join(' | '));
+// 1.4.4 (owner): how each present character takes teasing and play-fighting (tension category or override: banter)
+const banterLine = PRES.filter(id => BONDS[id]).map(id => { const o = (TEN.overrides || {})[id], P = (o && o.banter) ? o : (TEN.categories || {})[(TEN.npcs || {})[id]]; return P && P.banter ? id + ' ' + P.banter : ''; }).filter(Boolean).join('; ');
+// 1.3.0 reputation: what each non-zero level means for how staff, students and the Doves treat {{user}}
+const REPD = /*@@REP@@*/{};
+const RPN = PR.Reputation || {};
+const repLines = (REPD.reps || []).map(r => [r, Math.max(-5, Math.min(5, Number(RPN['_' + r]) || 0))]).filter(([, L]) => L)
+  .map(([r, L]) => r + ' ' + (L > 0 ? '+' : '') + L + ': ' + ((REPD.effects[r] || []).find(([a, c]) => L >= a && L <= c) || [0, 0, ''])[2]);
+_%>
+<now>
+<%- Y > 1 ? 'Year ' + Y + ', ' : '' %>Month <%- W.Month %>, Week <%- W.Week %>, <%- W.Day %> <%- W.Time %> | <%- W._Period || 'free time' %> | at <%- W.Location %>
+<%_ if (Y > 1) { _%>
+Campaign Year <%- Y %> ({{user}}: Year <%- Math.max(1, Math.min(3, Number(PR.Year) || 1)) %>). Lore calls students first-, second- or third-years, and says "this year", as of the year they were introduced (Year 1; the newer first-years: the year they arrived); their school year now is in the NPC roster. Ages in lore are current. Graduates (Campus_State.Graduated) have left Halvard.
+<%_ } _%>
+<%_ if (W._Event_today) { _%>
+Today: <%- String(W._Event_today).split(' | ').map(x => x.split(' — ')[0]).join(' | ') %> (plan in World._Event_today)
+<%_ } _%>
+<%_ if (+W.Month === 1 && +W.Week === 1 && W.Day === 'Mon') { const _T = getvar('stat_data.Campus_State.Entrance_tour') || {}, _h = Number(String(W.Time || '00:00').slice(0, 2)); _%>
+Entrance tour assignment (keep these same people through 18:00): <%- _T.Guide || 'guide not yet named' %> guides <%- Number(PR.Year) > 1 ? (_T.FirstYears || []).join(' and ') || 'two new first-years yet to be named' : '{{user}} and ' + ((_T.FirstYears || [])[0] || 'one new first-year yet to be named') %>. A vacant place may go to an invented student only when available roster newcomers cannot fill it.
+<%_ if (_h < 9) { _%>
+Before sorting: the new first-years have not been assigned dorms or received vests; let them wonder and make first impressions as newcomers.
+<%_ } else if (_h < 10) { _%>
+Ceremony now: speeches before sorting; each sorted first-year receives their vest from Council and sits with their dorm until sorting finishes. <%- Number(PR.Year) > 1 ? '{{user}} watches from the gallery, never sorting again.' : '{{user}} remains in the hall after their turn.' %> The tour party meets at 10:00, with no free interval.
+<%_ } else if (_h < 18) { _%>
+Tour now: use that exact trio as the travelling group; late afternoon room visits follow the tour. New students have only learned what they have actually seen today.
+<%_ } _%>
+<%_ } _%>
+Council: <%- COUNCIL.President || 'no active President on campus' %><%- COUNCIL.President ? ' (President)' : '' %>; <%- COUNCIL.VicePresident || 'no active Vice President on campus' %><%- COUNCIL.VicePresident ? ' (Vice President)' : '' %>.
+<%_ if (COUNCIL.PresidentElect) { _%>
+Incoming Council leaders: <%- COUNCIL.PresidentElect %> (President-elect), <%- COUNCIL.VicePresidentElect %> (Vice President-elect). They take office next academic year.
+<%_ } else if (W.Month === 10 && W.Week === 3 && CANDIDATES.First && CANDIDATES.Second) { _%>
+Council election nominees: <%- CANDIDATES.First %> and <%- CANDIDATES.Second %> for President; the winner names the other Vice President-elect after Saturday's vote.
+<%_ } _%>
+<%_ if (cur) { _%>
+Curfew: <%- cur %>
+<%_ } _%>
+<%_ if (PHASE && PHASE.line) { _%>
+Campus phase: <%- PHASE.line %>
+<%_ } _%>
+<%_ if (W._Happening && on('happenings')) { _%>
+Around campus today (optional, use only if it fits): <%- W._Happening %>
+<%_ } _%>
+<%_ if (/CURFEW|LOCKDOWN/.test(cur)) { _%>
+Presence: after curfew students are in their own dorms; only staff, patrols and rule-breakers are out.
+<%_ } else { _%>
+<%_ if (pres.length) { _%>
+<%- pres.join(' ') %>
+<%_ } _%>
+Likely around <%- place || 'here' %> (habits, not certainty; an established scene overrides): <%- regs.length ? regs.join(', ') : 'no regulars on record' %>
+<%_ if (moved.length) { _%>
+Moved indoors in this weather (Gymnasium, Common Rooms): <%- moved.join(', ') %>
+<%_ } _%>
+<%_ if (clubLine) { _%>
+Club time: <%- clubLine %>
+<%_ } _%>
+<%_ if (regSt.length) { _%>
+Regulars here with a status on record (it overrides their habits): <%- regSt.map(r => r + ': ' + stOf(r)).join('; ') %>
+<%_ } _%>
+<%_ if (classLine) { _%>
+<%- classLine %>
+<%_ } _%>
+<%_ } _%>
+<%_ const AMB = on('ambience') ? UI.amb : null; if (AMB) { _%>
+<%_ if (AMB.crowd || AMB.cue) { _%>
+Ambience at <%- AMB.place %>: <%- [AMB.crowd, AMB.light].filter(Boolean).join(', ') %>.<%- AMB.cue ? ' Sensory cue (write your own detail, once): ' + AMB.cue + '.' : '' %>
+<%_ } if (AMB.beat) { _%>
+<%- AMB.beat.kind === 'brush' ? 'Brushes {{user}} (small, harmless, changes nothing; {{user}} may ignore it)' : 'Nearby (optional, one clause, unnamed people; skip it if the scene is intense)' %>: <%- AMB.beat.text %>.
+<%_ } if (AMB.unc) { _%>
+Uncanny (narrator only, secret; <%- AMB.unc.title %>): <%- AMB.unc.text %>. Never confirm or explain it, leave a mundane reading possible, no harm; everyone reacts in character.
+<%_ } } _%>
+<%_ if (FULL && WX.flu) { _%>
+A cold is going around campus.<%- sick.length ? ' Off sick in their dorm today: ' + sick.join(', ') + '.' : '' %>
+<%_ } _%>
+<%_ for (const id of Object.keys(BDAYS).filter(id => (ARR[id] || 1) <= Y && (BONDS[id] || PRES.includes(id)) && BDAYS[id] === 'M' + W.Month + ' W' + W.Week + ' ' + W.Day)) { _%>
+Today is <%- id %>'s birthday. Friends may celebrate in character; report Kind birthday when {{user}} remembers it.
+<%_ } _%>
+<%_ const CD = { Soaked: 'wet, heavy, clinging clothes and dripping hair', Chilled: 'shivering, chattering teeth, numb fingers, clumsy hands', Overheated: 'flushed, sweating, sluggish', 'Head cold': 'stuffy nose, slow and heavy-headed' };
+const CONDS = (UI.wxfx || 'full') === 'full' ? Object.keys(CD).filter(k => (getvar('stat_data.Player.Conditions') || {})[k]) : []; if (CONDS.length) { _%>
+{{user}} is <%- CONDS.map(k => k === 'Head cold' ? 'down with a head cold' : k).join(' and ') %> right now: show it in this reply without being reminded (<%- CONDS.map(k => CD[k]).join('; ') %>). It lasts until the engine clears it or the story ends it.
+<%_ } _%>
+<%_ if (on('study') && UI.exam) { const _x = UI.exam.today || []; _%>
+Exam week. {{user}}'s preparation: <%- UI.exam.tier %> (<%- UI.exam.h %> hours studied since the last exams).<%- UI.exam.run ? " {{user}}'s run through the trial: " + UI.exam.run + '.' : '' %><%- _x.length ? ' Today: ' + _x.map(e => e.s + ' expected ' + e.mark + (e.why ? ' (' + e.why + ')' : '')).join('; ') + '. Play each exam to its expected mark; only a deciding moment moves it (/Exam_events).' : '' %>
+<%_ } if (on('study') && UI.posted) { _%>
+Marks posted (<%- UI.posted.label %>): <%- UI.posted.line %>.<%- (UI.posted.rem || []).map(r => ' Remedial ' + r.s + (r.t ? ' with ' + r.t : '') + ' on ' + r.due + '.').join('') %> {{user}} and the teachers react in character.
+<%_ } if (on('study') && UI.ranknews) { _%>
+Announce at the Results assembly: {{user}} is now #<%- UI.ranknews.to %> in the <%- UI.ranknews.dorm %> Dormitory<%- UI.ranknews.from ? ' (was #' + UI.ranknews.from + ')' : '' %>.
+<%_ } _%>
+<%_ if (on('attendance') && UI.absent) { const _t = UI.absent.teacher || 'The teacher'; _%>
+{{user}} was absent from <%- UI.absent.cls %> this period; the absence is on record. <%- _t %> reacts in character when they next meet.
+<%_ } if (on('small_scenes') && UI.leave) { _%>
+More than <%- UI.leave.cap %> people are with {{user}} on an ordinary day: <%- UI.leave.id %> takes their leave in this reply for a reason that fits them, then leaves Scene.Present.
+<%_ } _%>
+<%_ const FT = on('fortune') ? UI.fortune : null; if (FT && FT.roll) { _%>
+Fortune (important uncertain attempts only): <%- FT.roll %>; after modifiers <%- FT.fail %> or less fails, <%- FT.fail + 1 %>-<%- FT.part %> partial or costly, <%- FT.part + 1 %>+ clean.<%- FT.mods.length ? ' Modifiers: ' + FT.mods.join('; ') + '.' : '' %><%- FT.active.length ? ' Active magic: ' + FT.active.join(', ') + '.' : '' %>
+<%_ } _%>
+<%_ if (UI.training) { _%>
+{{user}}: <%- UI.training %>. Exhaustion shows in slow movements and short answers; collapsed means no interaction until awake.
+<%_ } if (on('weather') && UI.sleep && (UI.sleep.loss || UI.sleep.vigil)) { _%>
+Sleep: <%- UI.sleep.vigil ? 'The Vigil is active.' : 'Sleep debt: ' + UI.sleep.late + ' hours; ' + (UI.sleep.flavor ? 'flavor only, no stamina penalty' : 'stamina ceiling −' + Math.round(UI.sleep.loss * 100) + '%') + (UI.sleep.nights ? '; The Vigil needs ' + UI.sleep.nights + ' full nights to repay.' : '.') %>
+<%_ } if (WX && WX.field && /gusts/.test(WX.field)) { _%>
+Outdoor casting fights the wind: mist and smoke scatter, sound carries away, fire runs downwind, aimed spells drift. NPCs face the same wind in-story. An active wind-blocking barrier shelters casting behind it.
+<%_ } if (UI.party) { _%>
+Birthday surprise (narrator only): <%- UI.party.host %> organises a party at <%- UI.party.where %>, 18:00 until curfew. Guests: <%- UI.party.guests.join(', ') || 'none on record' %>. Keep it secret in the morning; small clues and excuses are fine. Only report birthday_party for guests actually attending, with Scene.Present and Location updated.
+<%_ } for (const m of moods) { _%>
+<%- m %>
+<%_ } _%>
+<%_ if (FULL && BT.Active && WX.field && on('battle')) { _%>
+Battle field (outdoors): <%- WX.field %>.
+<%_ } _%>
+<%_ if (WX && WX.fc) { _%>
+Divination Society forecast on the Notice Board for <%- WX.fc.tomorrow ? 'tomorrow' : 'today' %>: <%- WX.fc.blocks.map((b, i) => ['morning', 'afternoon', 'night'][i] + ' ' + b.text + ' (' + b.label + ')').join(', ') %>
+<%_ } _%>
+<%_ if (due.length) { _%>
+Due soon: <%- due.map(([k, c]) => k + ' (' + (c._Late ? 'OVERDUE' : c._When) + (c.With ? ', with ' + c.With : '') + ')').join('; ') %>
+<%_ } _%>
+<%_ if (mail) { _%>
+Mail Tower: <%- mail %> letter<%- mail > 1 ? 's' : '' %> waiting for {{user}} to collect.
+<%_ } _%>
+<%_ if (hDue.length) { _%>
+Hooks due now: <%- hDue.map(([k, h]) => k + (h._State === 'overdue' ? ' (overdue)' : '') + ' (' + (h.Who ? h.Who + ': ' : '') + h.Note + ')').join('; ') %>
+<%_ } _%>
+<%_ if (hOld.length) { _%>
+Old hooks (pay off or drop): <%- hOld.map(([k]) => k).join('; ') %>
+<%_ } _%>
+<%_ if (GS.length) { _%>
+Rumours going around: <%- GS.map(g => '"' + g[0] + '" (' + g[1] + ', day ' + g[2] + ')').join('; ') %>
+<%_ } _%>
+<%_ if (STALE.length) { _%>
+Campus events with no news for over a week (the world moves on without {{user}}: advance each through talk, a rumour, a notice or a letter when it fits, or remove it once it is over): <%- STALE.map(([k, u]) => k + ' (last news ' + aged(u) + ')').join('; ') %>
+<%_ } _%>
+<%_ if (INITIATIVE && INITIATIVE.id && INITIATIVE.stage) { _%>
+NPC initiative today: <%- INITIATIVE.id %> may try to reach {{user}}. At this bond rank, their Stage says: <%- INITIATIVE.stage %><%- INITIATIVE.ask ? ' Today\'s reason: ' + INITIATIVE.id + ' ' + INITIATIVE.ask + '.' : '' %> Let the contact take a form that fits their canon, current Trust and Tension, location, time, and existing plans. This is an opening, not an arrival or an obligation; if it cannot fit today, let it pass. Do not move them into Scene.Present until they actually enter the scene.<%- INITIATIVE.strained ? ' The approach is not friendly at this Tension.' : '' %>
+<%_ } _%>
+<%_ const MISSED = on('reminders') && Array.isArray(UI.missed) ? UI.missed : []; if (MISSED.length) { _%>
+Possibly missed in the last update. Report each in this reply's update only if it truly happened in the story; otherwise ignore it:
+<%_ for (const m of MISSED) { _%>
+- <%- m %>
+<%_ } _%>
+<%_ } _%>
+<%_ for (const id of (CAST.gone || [])) { _%>
+<%- id %> spoke in the last reply but is not in Scene.Present: add them if they are still here; otherwise they are gone and stay silent.
+<%_ } _%>
+<%_ if ((CAST.ment || []).length) { _%>
+Mentioned, not here (they may not speak or act on-screen): <%- CAST.ment.map(id => id + ' (' + (PRON[id] || 'they/them') + ((CAST.where || {})[id] ? '; usually: ' + CAST.where[id] : '') + ')').join('; ') %>
+<%_ } _%>
+<%_ for (const [id, what, until] of SINCE) { _%>
+Since you last saw <%- id %>: <%- what %><%- until ? ' (planned until ' + until + ')' : '' %>. Let it show in a small trace, never as a report.
+<%_ } _%>
+<%_ if (MAYBE.length) { _%>
+May be here by their own plans (Next): <%- MAYBE.map(([id, what]) => id + ' (' + what + ')').join('; ') %>
+<%_ } _%>
+<%_ if (JAGES.length) { _%>
+Journal dates, newest first: <%- JAGES.map(w => w + ' = ' + ageOf(w, W)).join('; ') %>
+<%_ } _%>
+<%_ for (const l of bondLines) { _%>
+Bond: <%- l %>
+<%_ } _%>
+<%_ for (const l of tensionLines) { _%>
+Tension: <%- l %>
+<%_ } _%>
+<%_ for (const l of trustLines) { _%>
+Trust: <%- l %>
+<%_ } _%>
+<%_ for (const l of recentLines) { _%>
+Recent with {{user}}: <%- l %>
+<%_ } _%>
+<%_ if (banterLine) { _%>
+Teasing (how each present character takes it): <%- banterLine %>
+<%_ } _%>
+<%_ for (const x of rankCues) { _%>
+<%- x.id %> has grown closer through this ordinary interaction. Let one small change in conduct show naturally when it fits; never announce a rank, unlock, XP, or perk.
+<%_ } _%>
+<%_ for (const id of PRES.filter(id => BONDS[id] && BONDS[id].Rank >= 4 && RANK4[id])) { _%>
+<%- id %> can actively accompany: <%- RANK4[id].join(', ') %>. Count the Rank 4 bonus only when appropriate shared study or training actually happens; do not mention the multiplier.
+<%_ } _%>
+<%_ for (const id of PRES.filter(id => BONDS[id] && BONDS[id].$gift_pending)) { _%>
+<%- id %>'s unique gift awaits a natural handover in the story. Once actually given, report /Interactions/- {"With":"<%- id %>","Kind":"rank_gift"}; do not conjure it into inventory beforehand.
+<%_ } _%>
+<%_ if ((access.dorms || []).length) { _%>
+Accompanied dorm visits available today: <%- access.dorms.join(', ') %>. The host must remain beside {{user}}; curfew, lockdown and private rooms still apply.
+<%_ } if ((access.staff || []).length) { _%>
+Unscheduled worksite visits may be attempted with: <%- access.staff.join(', ') %>. Their schedule and secure doors still matter.
+<%_ } _%>
+<%_ for (const l of repLines) { _%>
+Reputation, <%- l %>
+<%_ } _%>
+<%_ if (H._True_magic) { _%>
+Hidden magic — Dove attention: <%- H._Stage %> (<%- H.Dove_attention %>/100)
+<%_ } _%>
+</now>
