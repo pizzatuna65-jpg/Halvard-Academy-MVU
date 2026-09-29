@@ -7,7 +7,9 @@ global.window = { parent: { document: {} } };
 const U = new Function(read('src/scripts/ui.js') + '\nreturn { PANELS, view, renderProfile, DATA, locCard };')();
 const shop = JSON.parse(read('data/shop.json')).items, gifts = JSON.parse(read('data/gift_prefs.json'));
 const DAY = 1440, SEED = 424242;
-const S0 = applyPatch(initState(), [{ op: 'replace', path: '/$eng/seed', value: SEED }]);
+// 1.16.1 (audit B2): a used item must be in the Bag, so the student carries one of each item these checks use
+const BAG = ['Quick-dry powder', 'Hot spiced tea', 'Mulled apple cider', 'Ember pouch', 'Rain-ward charm', 'Salted lemon water', 'Elderflower cold syrup', 'Blossom honey cake', 'The Vigil', 'Star Cookie'];
+const S0 = applyPatch(initState(), [{ op: 'replace', path: '/$eng/seed', value: SEED }, { op: 'replace', path: '/Inventory', value: Object.fromEntries(BAG.map(k => [k, { Qty: 9, Kind: 'other' }])) }]);
 function at(S, d, hhmm, loc, extra = []) {
   const [h, mi] = hhmm.split(':').map(Number), T = E.fromAbs(d * DAY + h * 60 + mi);
   return applyPatch(S, [...['Year', 'Month', 'Week', 'Day', 'Time'].map(k => ({ op: 'replace', path: '/World/' + k, value: T[k] })),

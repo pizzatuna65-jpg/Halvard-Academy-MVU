@@ -8,7 +8,7 @@
   "projects": 97,
   "trip": 44,
   "battle": 72,
-  "inventory": 178,
+  "inventory": 207,
   "happenings": 73,
   "npc_initiative": 0,
   "weather": 522,
@@ -23,7 +23,7 @@
   "reminders": 34,
   "study": 233
  },
- "core_rules": 8026,
+ "core_rules": 8074,
  "lore": 3909,
  "price_guide": 3684,
  "live": {

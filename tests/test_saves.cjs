@@ -8,7 +8,7 @@ const ver = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/card/card.json'), 'u
 console.log('Saves from earlier releases load in ' + ver);
 const dir = path.join(__dirname, 'fixtures/saves'), files = fs.readdirSync(dir).filter(f => /^save_.*\.json$/.test(f)).sort();
 ok(files.length >= 1, 'at least one earlier save fixture: ' + files.join(', '));
-const VOLATILE = /^(_Log|\$ui\.toasts|\$ui\.moods|\$ui\.wx|Interactions|Rep_events|Training|Perk_use|Exposure)(\.|$)/;   // per-update lists the engine empties; weather-derived UI (1.9.4 rebaselined the seasons)
+const VOLATILE = /^(_Log|\$ui\.toasts|\$ui\.moods|\$ui\.wx|\$ui\.amb|Interactions|Rep_events|Training|Perk_use|Exposure)(\.|$)/;   // per-update lists the engine empties; weather-derived UI (1.9.4 rebaselined the seasons); $ui.amb is the next reply's ambience (1.16.0), rolled fresh each update
 function leaves(o, pre = '', out = {}) {
   if (_.isPlainObject(o)) { if (!Object.keys(o).length && pre) out[pre] = '{}'; for (const [k, v] of Object.entries(o)) leaves(v, pre ? pre + '.' + k : k, out); }
   else if (Array.isArray(o)) { out[pre + '#'] = o.length; o.forEach((v, i) => leaves(v, pre + '.' + i, out)); }

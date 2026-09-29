@@ -46,6 +46,16 @@ new section at the top of **By release**, not as a new file.
 
 ## By release
 
+### v1.16.1 — audit Batch 1
+
+1. Join a club with a short name in the story ("I join the soccer team"): Student file shows the club as "Soccer Club", and the next
+   Saturday afternoon there adds Student reputation.
+2. Say {{user}} drinks a hot spiced tea that is not in the Bag and was not bought: `_Log` says there is none, nothing changes. Buy
+   one at a café and drink it in the same reply: the effect applies.
+3. An OOC question to the narrator: the answer has no `<UpdateVariable>` block and the clock does not move.
+4. `<current_state>` in the prompt (Prompt Inspector) shows only this update's `_Log` lines.
+5. (Only if an engine error ever appears) the bracelet toasts "Engine error" and the state is unchanged; swiping works.
+
 ### v1.16.0 — ambience and ghost stories
 
 1. Walk through a class day (Canteen at lunch, the Library during a lesson, the Sports Field after classes, the Common Room in

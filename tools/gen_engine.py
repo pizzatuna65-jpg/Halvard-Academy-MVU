@@ -58,7 +58,11 @@ t = t.replace('/*@@STAYS@@*/{}', json.dumps(stays, ensure_ascii=False, separator
 import sys; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import outdoor_ids, place_keys, place_aliases, class_data
 _TT, _TEACH, _CLUBS = class_data(npcs, locs)   # 1.10.0 (FP7): lessons with venues, teachers, club venues for attendance
-t = t.replace('/*@@CLASS@@*/{}', json.dumps({'tt': _TT, 'teach': _TEACH, 'clubs': _CLUBS}, ensure_ascii=False, separators=(',', ':')))
+# 1.16.1 (audit B1): each club's short name (lowercase, as the lore's Club lines write it) -> its name, for canonClub
+from common import load_clubs
+_CALIAS = {c['key'].lower(): c['name'] for c in load_clubs(npcs, locs)}
+assert all(v in _CLUBS for v in _CALIAS.values()), 'club alias names a club without venues'
+t = t.replace('/*@@CLASS@@*/{}', json.dumps({'tt': _TT, 'teach': _TEACH, 'clubs': _CLUBS, 'calias': _CALIAS}, ensure_ascii=False, separators=(',', ':')))
 # 1.3.1: place names for World.Location normalisation (engine canonLocation); dorm rooms every dorm shares are never promoted
 pnames = {k: l['name'] for lid, l in sorted(locs.items()) for k in place_keys(l, lid)}
 t = t.replace('/*@@PLACE_NAMES@@*/{}', json.dumps(pnames, ensure_ascii=False, separators=(',', ':')))

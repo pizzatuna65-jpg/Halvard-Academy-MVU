@@ -126,7 +126,7 @@ let f=base([],'flavor',{Time:'00:00'});f=step(f,180);ok(f.Player.Vitals.Stamina=
 let off=base([],'off',{Time:'00:00'});off=step(off,180);ok(off.$eng.late===0 && off.Player.Vitals.Stamina===100,'Off does not accrue sleep debt');
 let cold=base([],'full',{Time:'00:00'});cold.Player.Conditions['Head cold']={Effect:'cold',Since:''};cold=step(cold,60);ok(cold.Player.Vitals.Stamina===80,'head cold wins over 10% debt');
 cold=step(cold,120);ok(cold.Player.Vitals.Stamina===70,'30% debt wins over head cold');
-let vigil=base([],'full',{Time:'00:00'});vigil=applyPatch(vigil,[op('/Consumables',['The Vigil'])]);vigil=step(vigil,48*60);
+let vigil=base([],'full',{Time:'00:00'});vigil=applyPatch(vigil,[op('/Inventory',{'The Vigil':{Qty:1,Kind:'other'}}),op('/Consumables',['The Vigil'])]);vigil=step(vigil,48*60);   // 1.16.1: a used item must be in the Bag
 ok(vigil.$eng.late===0 && vigil.$ui.sleep.nights===2 && vigil.Player.Vitals.Stamina===60,'Vigil protects 48h then immediately caps at 60%');
 vigil=step(vigil,360,[op('/Player/Vitals/Resting','sleep')]);ok(vigil.$ui.sleep.nights===1 && vigil.Player.Vitals.Stamina===60,'first full night retains crash');
 vigil=step(vigil,18*60);vigil=step(vigil,360,[op('/Player/Vitals/Resting','sleep')]);ok(vigil.$ui.sleep.nights===0 && vigil.$eng.late===0,'second full night clears Vigil crash');

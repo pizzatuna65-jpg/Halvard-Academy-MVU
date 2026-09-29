@@ -12,5 +12,8 @@ const _Y = (v, ind) => { const out = [];
   if (Array.isArray(v)) { for (const x of v) { if (x && typeof x === 'object') { const b = _Y(x, ind + '  '); out.push(ind + '- ' + b.slice(ind.length + 2)); } else out.push(ind + '- ' + _V(x)); } }
   else for (const [k, x] of Object.entries(v)) { if (x && typeof x === 'object') out.push(ind + _Q(k) + ':\n' + _Y(x, ind + '  ')); else out.push(ind + _Q(k) + ': ' + _V(x)); }
   return out.join('\n'); };
-_%><%- _Y(_P(getvar('stat_data') || {}, ''), '') %><% } %>
+// 1.16.1 (audit T7): _Log shows only the lines of the latest update (the date stamp of now); older lines were already narrated
+const _S = _P(getvar('stat_data') || {}, ''), _w = getvar('stat_data.World') || {};
+if (Array.isArray(_S._Log)) { const _st = '[' + (+_w.Year > 1 ? 'Y' + _w.Year + ' ' : '') + 'M' + _w.Month + ' W' + _w.Week + ' ' + _w.Day + ' ' + _w.Time + ']'; const _l = _S._Log.filter(x => String(x).startsWith(_st)); if (_l.length) _S._Log = _l; else delete _S._Log; }
+_%><%- _Y(_S, '') %><% } %>
 </current_state>

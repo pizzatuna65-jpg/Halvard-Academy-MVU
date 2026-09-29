@@ -25,5 +25,6 @@ Rules:
 - ops: replace | delta (numbers only) | insert (new key, or append to a list with "/-"; "add" also works) | remove | move.
 - Never patch a field whose name starts with "_" or "$".
 - If nothing else changed, still output the block with at least the Time update.
+- An out-of-character (OOC) answer to the player is not a story turn: output no block, and never move time for it.
 - The block is bookkeeping, not story: never mention it in the narration.
 </update_format>

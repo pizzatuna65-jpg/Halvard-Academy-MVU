@@ -29,7 +29,12 @@ const MISS_PLACE = "([A-Z][\\w'’&]*(?:\\s+(?:[A-Z][\\w'’&]*|of|and|&))*)";
 const MISS_ARRIVE_RX = new RegExp(`\\b(?:arrive[sd]?|arriving) (?:at|in) (?:the )?${MISS_PLACE}|\\b(?:step(?:s|ped)?|walk(?:s|ed)?|head(?:s|ed)?|slip(?:s|ped)?|burst(?:s)?) (?:into|inside) (?:the )?${MISS_PLACE}|\\b(?:reach(?:es|ed)?|enter(?:s|ed)?) (?:the )?${MISS_PLACE}`, 'g');
 const MISS_TRAIN_AT = ['combat grounds', 'sparring pavilion', 'gymnasium', 'sports field', 'swimming pool', 'meditation rooms / spirit house'];
 const MISS_TRAIN_RX = /\b(train(?:s|ed|ing)?|drill(?:s|ed|ing)?|practi[cs](?:e|es|ed|ing)|spar(?:s|red|ring)?|laps|meditat(?:e|es|ed|ing|ion))\b/i;
-function formRx(id) { return new RegExp('(^|[^A-Za-z])(' + NAME_FORMS[id].map(f => f.replace(/[.*+?^()|[\]\\]/g, '\\$&')).join('|') + ')(?![A-Za-z])', 'g'); }
+// 1.16.1 (audit A6): compiled once per NPC. matchAll clones a global regex; test() callers get it back at lastIndex 0.
+const FORM_RX = {}, WORD_RX = new Map();   // WORD_RX: whole-word tests of technique, perk and gift names (section 8l)
+function formRx(id) {
+  const r = FORM_RX[id] || (FORM_RX[id] = new RegExp('(^|[^A-Za-z])(' + NAME_FORMS[id].map(f => f.replace(/[.*+?^()|[\]\\]/g, '\\$&')).join('|') + ')(?![A-Za-z])', 'g'));
+  r.lastIndex = 0; return r;
+}
 function speakersIn(prose) {
   const out = [];
   for (const para of String(prose).split(/\n+/)) {
@@ -164,7 +169,6 @@ const TUTOR_PAY = 40, TUTOR_WEEK = 2, TRAIN_FOR_COMBAT = 6, ASSIGNMENT_MIN = 45;
 const subjectOf = t => { const x = String(t || '').trim().toLowerCase(); return x === 'dmd' ? 'Dark Magic Defense' : SUBJECTS.find(s => s.toLowerCase() === x) || ''; };
 const subjectIn = t => SUBJECTS.find(s => new RegExp(`\\b${s}\\b`, 'i').test(String(t || ''))) || (/\bDMD\b/.test(String(t || '')) ? 'Dark Magic Defense' : '');
 const teaches = (id, subj, py) => ((CLASS.teach || {})[id] || []).some(x => x[0] === subj && (x[1] === py || x[1] === 0));
-const DAILY_BOND_CAP = 3;   // before 1.2.2 only (Progress); the XP system reads data/bond_rules.json
 // 1.2.2 bond system (owner design): XP per kind of interaction with daily/weekly limits, rising XP per rank scaled by the pace
 // setting, a cooldown after each rank, then an in-scene interaction to deepen the bond.
 const BR = /*@@BOND_RULES@@*/{};
@@ -218,6 +222,7 @@ function trustProfile(id, S, secretOut) {
   if (o.until_secret && secretOut && secretOut(id)) o = {};             // Kanae's Plan / Caine's secret is out: a plain category again
   return { cat, C, o, dh: mine ? dh : null, start: C.start != null ? C.start : 50, rise: num(o.rise, 1) * num(C.rise, 1), drop: num(o.drop, 1) * num(C.drop, 1), recover: num(C.recover, 0) };
 }
+const tsuspOf = (S, bonds) => Object.entries(S._Perks || {}).filter(([, p]) => p.Kind === 'rank10' && bonds[p.From] && trustGate(p.From, 10) && num(bonds[p.From].Trust, 50) < num(TRU.suspend_r10_below, 35)).map(([k]) => k);
 const trustGate = (id, rank) => (((TRU.overrides || {})[id] || {}).no_gates ? 0 : num((TRU.perk_gates || {})[String(rank)], 0));
 const repLevel = x => (x >= 0 ? 1 : -1) * (REP.thresholds || []).filter(t => Math.abs(x) >= t).length;
 const repFloor = L => (L === 0 ? 0 : Math.sign(L) * REP.thresholds[Math.abs(L) - 1]);   // the Rep XP at which level L begins
@@ -449,9 +454,19 @@ function rawHappening(seed, dayNo, rate, exclude, wxm = 'off') {
   for (const h of pool) { r -= wt(h); if (r < 0) return h; }
   return null;
 }
-function happeningOn(seed, dayNo, rate, wxm) {   // no repeat of the previous two days' happening
-  const prev = [1, 2].map(k => rawHappening(seed, dayNo - k, rate, [], wxm)).filter(Boolean).map(h => h.id);
-  return rawHappening(seed, dayNo, rate, prev, wxm);
+// No repeat of the previous two days' happening. 1.16.1 (audit B3): "previous" means what those days actually got, so the year is
+// chained from its first day (Month 12 is the holiday, with no happenings, so a year never carries one over) and cached.
+const HAPY = new Map();
+function happeningOn(seed, dayNo, rate, wxm) {
+  const Y = Math.floor(dayNo / YEAR_DAYS), key = `${seed}|${Y}|${rate}|${wxm}`;
+  let arr = HAPY.get(key);
+  if (!arr) {
+    arr = [];
+    for (let i = 0; i < YEAR_DAYS; i++) arr.push(rawHappening(seed, Y * YEAR_DAYS + i, rate, arr.slice(-2).filter(Boolean).map(h => h.id), wxm));
+    if (HAPY.size > 8) HAPY.clear();
+    HAPY.set(key, arr);
+  }
+  return arr[dayNo - Y * YEAR_DAYS] || null;
 }
 
 // ---- 1.1.0 weather (spec §4): seasons, sky per block, wind, rare weather, °C. Pure functions of (seed, day): swipe-safe. ----
@@ -599,6 +614,24 @@ function fillShape(o, shape) {
     else if (_.isPlainObject(v) && _.isPlainObject(o[k]) && Object.keys(v).length) fillShape(o[k], v);
   }
 }
+// 1.16.1 (audit B4): one answer to "is this NPC away?" for bonds, introductions, Rank 5 handovers, the Entrance tour, NPC
+// initiative and birthday parties (each had its own list of words). A status is found by the NPC's id, alias or first word.
+const AWAY_RX = /away|abroad|absent|missing|dead|confined|hospital|unconscious|expelled|unavailable|left campus|left halvard|out of town/i;
+const npcStatusIn = (S, id) => {
+  const N = (S.Campus_State || {}).NPC_status || {}, lo = String(id).toLowerCase();
+  const k = Object.keys(N).find(x => (NPC_ALIAS[String(x).toLowerCase()] || x) === id || String(x).toLowerCase().split(/\s+/)[0] === lo);
+  return k ? String(N[k] || '') : '';
+};
+const npcAwayIn = (S, id) => ((S.Campus_State || {}).Graduated || []).includes(id) || AWAY_RX.test(npcStatusIn(S, id));
+// 1.16.1 (audit B1): Player.Profile.Club in the club list's own words ("Soccer", "soccer club" -> "Soccer Club"; "Theatre" ->
+// "Theatre Troupe"), so Saturday club time is counted; a club the list does not know is kept as written
+function canonClub(c) {
+  const s = String(c || '').trim(), k = s.toLowerCase().replace(/^the\s+/, '').replace(/\s+/g, ' ');
+  if (!k) return '';
+  if (/^duel+ing club$/.test(k)) return 'Magic Duelling Club';
+  const names = Object.keys(CLASS.clubs || {}), base = x => x.toLowerCase().replace(/\s+club$/, '');
+  return names.find(n => n.toLowerCase() === k) || (CLASS.calias || {})[base(k)] || names.find(n => base(n) === base(k)) || s;
+}
 const BOND0 = { $gifts: {}, Rank: 0, Progress: 0, Trust: 50, Tension: 0, Title: '', Romance: false, Known_facts: [], Milestones: [], Last_seen: '' };
 /*@@MOOD_GIFTS_SOURCE@@*/
 const ENGINE_VER = '@@VERSION@@';   // the card version (src/card/card.json, set by tools/gen_engine.py)
@@ -636,6 +669,13 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
   // 1.11.1: a player-tool message (the UI writes /$eng/tool = 1 with every Builder or Settings patch and marks its text)
   const toolEdit = hasB && (num(S.$eng.tool, 0) === 1 || /\(player tool\)/.test(String(text || '')));
   S.$eng.tool = 0;
+  // 1.16.1 (audit B1): the club in the club list's words, before attendance (5d) reads it
+  {
+    const P = S.Player.Profile, raw = String(P.Club || ''), c = canonClub(raw);
+    P.Club = c;
+    const was = hasB ? canonClub(((B.Player || {}).Profile || {}).Club) : c;
+    if (c && c !== was && !Object.keys(CLASS.clubs || {}).includes(c)) log.push(`Club "${c}" is not a club on record (${Object.keys(CLASS.clubs || {}).join(', ')}); Saturday club time is only counted for one of them.`);
+  }
   let healedMax = false;
   // 1.2.0 (owner playtest: a reload came back with the student's magic empty): the Builder keeps its own record in $ui.file.
   // A built student whose Builder-only fields are all empty gets them back from that record. The Builder always writes both
@@ -834,11 +874,7 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     if (old && old.Year === Y && old.Guide && (old.FirstYears || []).length === required) {
       S.Campus_State.Entrance_tour = _.cloneDeep(old);
     } else {
-      const unavailable = id => {
-        const statuses = S.Campus_State.NPC_status || {};
-        const key = Object.keys(statuses).find(k => k.toLowerCase().split(/\s+/)[0] === id.toLowerCase());
-        return (S.Campus_State.Graduated || []).includes(id) || !!(key && /missing|expelled|left|away|dead|unavailable|absent|hospital/i.test(statuses[key]));
-      };
+      const unavailable = id => npcAwayIn(S, id);
       const students = Object.keys(STUDENTS).filter(id => (STUDENTS[id][1] || 1) <= Y && !unavailable(id));
       const freshmen = students.filter(id => yearOf(id, Y) === 1);
       const seniors = students.filter(id => yearOf(id, Y) >= 2 && yearOf(id, Y) <= 3);
@@ -1065,8 +1101,21 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     }
   }
   V.Mana += regenLeft;                                           // 1.9.4: mana regenerates passively (section 2); resting adds none
+  // 1.16.1 (audit B2): a used item takes effect only if {{user}} has it: in the Bag before this reply, added to it in this reply,
+  // or bought in this reply (a new Transactions line names it, e.g. a hot drink at a café). Anything else changes nothing.
+  if (hasB && Array.isArray(S.Consumables) && S.Consumables.length) {
+    const ik = x => String(x || '').trim().toLowerCase().replace(/^(an?|the)\s+/, '').replace(/\s*\(.*\)$/, '');
+    const have = new Set([...Object.keys(B.Inventory || {}).filter(k => num((B.Inventory[k] || {}).Qty, 0) > 0), ...Object.keys(S.Inventory || {})].map(ik));
+    const T0 = new Set(((B.Player || {}).Wallet || {}).Transactions || []);
+    const bought = (S.Player.Wallet.Transactions || []).filter(l => !T0.has(l)).join(' | ').toLowerCase();
+    S.Consumables = S.Consumables.filter(c => {
+      const k = ik(c); if (!k || have.has(k) || bought.includes(k)) return true;
+      log.push(`"${String(c).trim()}" was reported used, but {{user}} has none (not in the Bag, not bought in this reply): no effect.`);
+      return false;
+    });
+  }
   updateSleep(S, hasB ? B : null, absB, absA, TU, log);
-  const consumed = S.Consumables || [];                          // 1.9.5: item effects are applied with the weather effects (4b)
+  const consumed = S.Consumables || [];                         // 1.9.5: item effects are applied with the weather effects (4b)
   S.Consumables = [];
   // 1.12.0 (H2): an item reported used lowers its Qty in the Bag by one per report, unless this update already lowered it
   if (hasB && consumed.length && _.isPlainObject(S.Inventory)) {
@@ -1174,8 +1223,6 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
   const repw = _.isPlainObject(S.$eng.repw) && S.$eng.repw.w === weekNo ? S.$eng.repw : { w: weekNo };
   const repLv = r => repLevel(rx[r]);
   // cap: 'week' (repeatable), 'bond' (only below bond_cap_level), '' (event or loss)
-  // Settings read before weather effects.
-  // const TU = tuneOf(S);   // 1.3.1 Settings: pace (rep_mult), weekly cap (0 = none), bond milestones (0 off, 1 until bond_cap_level, 2 always)
   const repAdd = (r, x, why, cap) => {
     if (!REP.reps.includes(r) || !x) return 0;
     if (cap === 'bond' && !TU.rep_bond) return 0;
@@ -1254,6 +1301,10 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     const active = Object.entries(M.Active || {}).map(([k, e]) => e.Technique && e.Technique !== k ? `${k} (${e.Technique})` : k);
     S.$ui.fortune = { roll: d100(seed, 'fortune', S.$eng.turn, absA), fail: band[0], part: band[1], mods, active };
   }
+
+  // 1.16.1 (audit B5): Rank 10 benefits suspended by low Trust, from the Trust before this reply, for the sections before the
+  // bonds (exam perks); recomputed after the bonds for the rest
+  S.$ui.tsusp = tsuspOf(S, (hasB && B.Bonds) || S.Bonds);
 
   // ---- 5d. 1.10.0 (owner-approved planning/DRAFT_batch_fp7_fp11.md, Batch 1): FP7 attendance, FP10 weekly recap, FP12 small scenes ----
   {
@@ -1618,7 +1669,7 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
   // 1.12.0: a genuine encounter or a Rank 5 handover reported one update late still counts for someone present at the end of the
   // previous update (they may have left in the reply that tells it)
   const wasHere = id => hasB && !!(((B.Scene || {}).Present || {})[id]);
-  const npcAway = id => goneNow(id) || Object.entries(S.Campus_State.NPC_status || {}).some(([k,v]) => canon(k) === id && /away|abroad|absent|missing|dead|confined|hospital|unconscious|left campus|out of town/i.test(v));
+  const npcAway = id => npcAwayIn(S, id);   // 1.16.1 (audit B4)
   const introductions = {};
   for (const a of S.Interactions || []) {
     if (a.Kind !== 'introduction') continue;
@@ -1720,7 +1771,7 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
       && dayNo >= num(b0.$cool, -1) && !held(id, b) && !tenseHold(id, b) && !trustHold(id, b);
     if (eligible && genuine) {
       b.Rank++; xp = 0; b._Event_ready = false; b.$cool = dayNo + coolDays(b.Rank, PACE);
-      b.Milestones = [...new Set([...(b.Milestones || []), `Grew closer through ordinary time together (${stamp(S.World)})`])].slice(-20);
+      // 1.16.1 (audit T4): no generic "grew closer" Milestone: $Recent records the rank, Milestones are the story's own
       jnl.push(`Bond with ${id} deepened to Rank ${b.Rank}.`);
       if (_.isPlainObject(S.$eng.wk)) (S.$eng.wk.ranks = S.$eng.wk.ranks || []).push(`${id} reached Rank ${b.Rank}`);   // 1.10.0 recap
       rankedUp(id, b); rankTrust = num(TRU.rank_up, 0);
@@ -2026,7 +2077,7 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     }
     if (hit.length) log.push(`Word of what {{user}} did to ${id} reached ${hit.join(', ')}: their Trust ${TRU.spread.friends}.`);
   }
-  S.$ui.tsusp = Object.entries(S._Perks || {}).filter(([, p]) => p.Kind === 'rank10' && S.Bonds[p.From] && trustGate(p.From, 10) && S.Bonds[p.From].Trust < num(TRU.suspend_r10_below, 35)).map(([k]) => k);
+  S.$ui.tsusp = tsuspOf(S, S.Bonds);
   S.$eng.bondv = 2;
   S.$eng.tenv = 1;   // 1.3.8: $ms filled for bonds from before
   for (const k of Object.keys(bweek)) if (bweek[k].w !== weekNo) delete bweek[k];
@@ -2252,8 +2303,6 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
   capRecord(S.Clues, CAP.Clues);
   // ---- 8c. Batch 5.2: club, competition, projects, trip ----
   const canonList = a => [...new Set((a || []).map(x => NPC_ALIAS[String(x).toLowerCase()] || x))];
-  const canonClub = c => /^duelling club$/i.test(String(c || '').trim()) ? 'Magic Duelling Club' : String(c || '');
-  S.Player.Profile.Club = canonClub(S.Player.Profile.Club);
   if (hasB) {
     const c0 = canonClub(B.Player.Profile.Club), c1 = S.Player.Profile.Club || '';
     if (c0 !== c1) jnl.push(c1 ? `Joined the ${c1}.` : `Left the ${c0}.`);
@@ -2366,7 +2415,7 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
         const pool = Object.keys(S.Bonds).sort().filter(id => {
           const b = S.Bonds[id];
           return b.Rank >= 3 && INITIATIVE_STAGES[id] && (ARRIVES[id] || 1) <= S.World.Year
-            && !goneNow(id) && !S.Scene.Present[id] && !S.Campus_State.NPC_status[id]
+            && !npcAwayIn(S, id) && !S.Scene.Present[id]   // 1.16.1 (audit B4): only a status that keeps them away
             && dayNo - num(I.last[id], -1000) >= IR[2];
         });
         const weight = id => ({ open: 3, normal: 2, guarded: 1, closed: 0.5 })[INITIATIVE_OPENNESS[id] || 'normal'];
@@ -2375,7 +2424,7 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
       }
     }
     if (off || S.Trip.Active || /LOCKDOWN/.test(S.World._Curfew || '') || (I.id &&
-        (!S.Bonds[I.id] || S.Bonds[I.id].Rank < 3 || S.Scene.Present[I.id] || goneNow(I.id) || S.Campus_State.NPC_status[I.id]))) I.done = true;
+        (!S.Bonds[I.id] || S.Bonds[I.id].Rank < 3 || S.Scene.Present[I.id] || npcAwayIn(S, I.id)))) I.done = true;
     const id = I.done ? '' : I.id;
     if (id && S.Bonds[id] && S.Bonds[id].Rank >= 3) {
       const rank = S.Bonds[id].Rank, band = rank <= 5 ? '3-5' : rank <= 8 ? '6-8' : '9-10';
@@ -2626,7 +2675,7 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
       const narr = prose.replace(QUOTE_RX, ' '), said = String(userText || ''), low = (said + '\n' + prose).toLowerCase();
       const actsOf = id => REPORTED.acts.filter(a => canon(a.With) === id);
       const bonded = Object.keys(S.Scene.Present || {}).map(canon).filter(id => S.Bonds[id] && id !== KR.id);
-      const Tq = M._Techniques || {}, hasWord = (hay, w) => new RegExp('(^|[^a-z])' + _.escapeRegExp(w.toLowerCase()) + '($|[^a-z])').test(hay);
+      const Tq = M._Techniques || {}, hasWord = (hay, w) => (WORD_RX.get(w) || WORD_RX.set(w, new RegExp('(^|[^a-z])' + _.escapeRegExp(w.toLowerCase()) + '($|[^a-z])')).get(w)).test(hay);
       // R1: HP lost with no injury named (D13)
       const hp0 = num(B.Player.Vitals.HP, 0), inj0 = B.Player.Injuries || {};
       if (V.HP > 0 && V.HP < hp0 && !Object.keys(S.Player.Injuries || {}).some(k => !(k in inj0)))
@@ -2836,7 +2885,8 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
 
   // ---- 9. UI bookkeeping ----
   const place = placeOf(S.World.Location);
-  if (place && !S.$ui.discovered.includes(place)) S.$ui.discovered.push(place);
+  // 1.16.1 (audit B6): only places on the Campus Map, so off-campus names never push a discovered place out of the list (cap 80)
+  if (place && plName(place) && !S.$ui.discovered.includes(place)) S.$ui.discovered.push(place);
   const unlock = k => { if (!offUnlock.has(k) && !S.$ui.unlocks.includes(k)) S.$ui.unlocks.push(k); };   // 1.1.0: a feature that is off does not unlock
   if (S.Battle.Active) unlock('battle');
   if (Hd._True_magic) unlock('hidden');
@@ -2885,8 +2935,21 @@ if (typeof eventOn === 'function' && typeof waitGlobalInitialized === 'function'
       try { const c = SillyTavern.chat || [], m = c[c.length - 1] || {}; hint = String(m.send_date || '') + '|' + (SillyTavern.getCurrentChatId ? SillyTavern.getCurrentChatId() : ''); } catch (e) { /* seed falls back to world time */ }
       // 1.12.0: the player's last visible message (not a hidden player-tool entry), for the reminders of section 8l
       try { const c = SillyTavern.chat || []; for (let i = c.length - 1; i >= 0; i--) { const x = c[i] || {}; if (x.is_user && !x.is_system && !/\(player tool\)/.test(String(x.mes || ''))) { said = String(x.mes || ''); break; } } } catch (e) { /* no reminders from the player's words */ }
-      try { runEngine(variables.stat_data, variables_before && variables_before.stat_data, text, hint, said); text = ''; }
-      catch (e) { console.error('[Eldrasil engine]', e); }
+      // 1.16.1 (audit B8): the engine edits the state in place. If it fails halfway, the state goes back to what it was before
+      // this reply (a half-run engine must not be saved), and the player is told so: swipe, or report the error.
+      const before = variables_before && variables_before.stat_data;
+      const snap = _.cloneDeep(before && before.World ? before : variables.stat_data);
+      try { runEngine(variables.stat_data, before, text, hint, said); text = ''; }
+      catch (e) {
+        console.error('[Eldrasil engine]', e);
+        text = '';
+        const S = variables.stat_data;
+        for (const k of Object.keys(S)) delete S[k];
+        Object.assign(S, snap);
+        const msg = `Engine error (${String((e && e.message) || e).slice(0, 160)}): this update was not applied and the state was kept as it was before the reply. Swipe the reply, or report the error with the browser console.`;
+        S._Log = [...(Array.isArray(S._Log) ? S._Log : []), msg].slice(-12);
+        if (S.$ui && typeof S.$ui === 'object') S.$ui.toasts = ['Engine error: the update was not applied (see Log)'];
+      }
     });
   })();
 }

@@ -4,6 +4,7 @@ const GIFT_PREFS = /*@@GIFT_PREFS@@*/{};
 const WIND_CASTING = /*@@WIND_CASTING@@*/{};
 const NPC_DORMS = /*@@NPC_DORMS@@*/{};
 const moodCanon = k => NPC_ALIAS[String(k).toLowerCase()] || k;
+const GRX = new Map(), grx = src => GRX.get(src) || GRX.set(src, new RegExp(src, 'i')).get(src);   // 1.16.1 (audit A6): compiled once
 const giftNorm = s => String(s || '').toLowerCase().replace(/[’‘]/g, "'").replace(/[–—]/g, '-').replace(/\s+/g, ' ').trim();
 const npcBirthday = (id, W) => ((GIFT_PREFS.npcs[id] || {}).birthday || '') === `M${W.Month} W${W.Week} ${W.Day}`;
 function giftTier(id, item, fallback) {
@@ -11,12 +12,12 @@ function giftTier(id, item, fallback) {
   let tier = '';
   const exact = name => { const n = giftNorm(name); const at = s.indexOf(n); return at >= 0 && !/[a-z0-9]/.test(s[at - 1] || '') && !/[a-z0-9]/.test(s[at + n.length] || ''); };
   const description = s + ' ' + Object.entries(GIFT_PREFS.catalog || {}).filter(([name]) => exact(name)).map(([,tags]) => tags).join(' ');
-  if (s && p) tier = order.find(k => (p.items[k] || []).some(exact) || p.patterns[k] && new RegExp(p.patterns[k], 'i').test(description)) || '';
-  if (s && !tier) tier = [...order, 'neutral'].find(k => GIFT_PREFS.universal[k] && new RegExp(GIFT_PREFS.universal[k], 'i').test(description)) || '';
+  if (s && p) tier = order.find(k => (p.items[k] || []).some(exact) || p.patterns[k] && grx(p.patterns[k]).test(description)) || '';
+  if (s && !tier) tier = [...order, 'neutral'].find(k => GIFT_PREFS.universal[k] && grx(GIFT_PREFS.universal[k]).test(description)) || '';
   if (!tier) tier = [...order, 'neutral'].includes(giftNorm(fallback)) ? giftNorm(fallback) : 'neutral';
   if (id === 'Ezrel' && tier === 'liked') tier = 'neutral';
   // Etnie's own hated gifts are the only exception to her minimum; universal dislikes do not overrule it.
-  if (id === 'Etnie' && !((p.items.hated || []).some(exact) || new RegExp(p.patterns.hated, 'i').test(s)) && !['liked', 'loved'].includes(tier)) tier = 'liked';
+  if (id === 'Etnie' && !((p.items.hated || []).some(exact) || grx(p.patterns.hated).test(s)) && !['liked', 'loved'].includes(tier)) tier = 'liked';
   return tier;
 }
 function moodOf(id, S, wx, day) {
@@ -59,8 +60,7 @@ const blocksWind = (active, techniques) => Object.entries(active || {}).some(([n
 });
 function birthdayParty(S) {
   if (S.Player.Profile.Birthday !== `M${S.World.Month} W${S.World.Week} ${S.World.Day}`) return null;
-  const absent = id => (S.Campus_State.Graduated || []).includes(id) || (ARRIVES[id] || 1) > S.World.Year
-    || Object.entries(S.Campus_State.NPC_status || {}).some(([k,v]) => moodCanon(k) === id && /away|abroad|absent|missing|dead|confined|hospital|unconscious|left campus|out of town/i.test(v));
+  const absent = id => (ARRIVES[id] || 1) > S.World.Year || npcAwayIn(S, id);   // 1.16.1 (audit B4): the engine's one rule
   const available = Object.entries(S.Bonds).filter(([id,b]) => b.Tension < BR.birthday.tension_below && !absent(id));
   const hosts = available.filter(([,b]) => b.Rank >= BR.birthday.host_rank).sort((a,b) => b[1].Rank - a[1].Rank || b[1].Trust - a[1].Trust || a[0].localeCompare(b[0]));
   if (!hosts.length || S.Trip.Active) return null;

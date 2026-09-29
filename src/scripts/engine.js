@@ -29,7 +29,12 @@ const MISS_PLACE = "([A-Z][\\w'’&]*(?:\\s+(?:[A-Z][\\w'’&]*|of|and|&))*)";
 const MISS_ARRIVE_RX = new RegExp(`\\b(?:arrive[sd]?|arriving) (?:at|in) (?:the )?${MISS_PLACE}|\\b(?:step(?:s|ped)?|walk(?:s|ed)?|head(?:s|ed)?|slip(?:s|ped)?|burst(?:s)?) (?:into|inside) (?:the )?${MISS_PLACE}|\\b(?:reach(?:es|ed)?|enter(?:s|ed)?) (?:the )?${MISS_PLACE}`, 'g');
 const MISS_TRAIN_AT = ['combat grounds', 'sparring pavilion', 'gymnasium', 'sports field', 'swimming pool', 'meditation rooms / spirit house'];
 const MISS_TRAIN_RX = /\b(train(?:s|ed|ing)?|drill(?:s|ed|ing)?|practi[cs](?:e|es|ed|ing)|spar(?:s|red|ring)?|laps|meditat(?:e|es|ed|ing|ion))\b/i;
-function formRx(id) { return new RegExp('(^|[^A-Za-z])(' + NAME_FORMS[id].map(f => f.replace(/[.*+?^()|[\]\\]/g, '\\$&')).join('|') + ')(?![A-Za-z])', 'g'); }
+// 1.16.1 (audit A6): compiled once per NPC. matchAll clones a global regex; test() callers get it back at lastIndex 0.
+const FORM_RX = {}, WORD_RX = new Map();   // WORD_RX: whole-word tests of technique, perk and gift names (section 8l)
+function formRx(id) {
+  const r = FORM_RX[id] || (FORM_RX[id] = new RegExp('(^|[^A-Za-z])(' + NAME_FORMS[id].map(f => f.replace(/[.*+?^()|[\]\\]/g, '\\$&')).join('|') + ')(?![A-Za-z])', 'g'));
+  r.lastIndex = 0; return r;
+}
 function speakersIn(prose) {
   const out = [];
   for (const para of String(prose).split(/\n+/)) {
@@ -164,7 +169,6 @@ const TUTOR_PAY = 40, TUTOR_WEEK = 2, TRAIN_FOR_COMBAT = 6, ASSIGNMENT_MIN = 45;
 const subjectOf = t => { const x = String(t || '').trim().toLowerCase(); return x === 'dmd' ? 'Dark Magic Defense' : SUBJECTS.find(s => s.toLowerCase() === x) || ''; };
 const subjectIn = t => SUBJECTS.find(s => new RegExp(`\\b${s}\\b`, 'i').test(String(t || ''))) || (/\bDMD\b/.test(String(t || '')) ? 'Dark Magic Defense' : '');
 const teaches = (id, subj, py) => ((CLASS.teach || {})[id] || []).some(x => x[0] === subj && (x[1] === py || x[1] === 0));
-const DAILY_BOND_CAP = 3;   // before 1.2.2 only (Progress); the XP system reads data/bond_rules.json
 // 1.2.2 bond system (owner design): XP per kind of interaction with daily/weekly limits, rising XP per rank scaled by the pace
 // setting, a cooldown after each rank, then an in-scene interaction to deepen the bond.
 const BR = {"_note":"1.2.2 bond system, single source for the engine (tools/gen_engine.py), the UI (tools/gen_ui.py) and the Now entry (tools/gen_mvu_entries.py). Edit here, then rebuild. xp_base[r] = XP from Rank r to Rank r+1 at standard pace; cool_base[r] = days after reaching Rank r before its next bond event can start. pace multiplies both (full rank: fast ~1 month, brisk ~2 months, standard ~1 semester, slow ~1 year of diligent play).","xp_base":[10,20,30,40,50,55,60,65,70,80],"cool_base":[0,1,2,3,3,4,5,6,7,7],"close_at":0.8,"_note_close_at":"1.5.0 (N3a): a bond is marked close in <now> once its XP reaches this share of the next rank's need (before the bar is full).","pace":{"fast":0.25,"brisk":0.5,"standard":1,"slow":2.5},"pace_labels":{"fast":"Fast (~1 month)","brisk":"Brisk (~2 months)","standard":"Standard (~1 semester)","slow":"Slow (~1 year)"},"kind_xp":{"talk":2,"hangout":3,"help":5},"per_day":{"talk":1,"hangout":1},"per_week":{"gift":2,"help":1},"gift_xp":{"loved":4,"liked":2,"neutral":1,"disliked":0,"hated":0},"gift_disliked_tension":5,"gift_bonus_rank":3,"gift_bonus_mult":1.5,"weather_xp":1,"start":{"_note":"1.3.1 (owner playtest): a bond that does not start at Rank 0. Applied once, when the engine first records the bond (the first scene they share); the next event waits for that rank's cooldown.","Etnie":{"Rank":3,"Trust":70,"Title":"Self-declared big sister","Known_facts":["Third-year, Viridian (dog beastkin); insists she is {{user}}'s big sister"],"Milestones":["Etnie decided {{user}} is her little sibling"]}},"romance_default":8,"romance_options":[[0,"Any rank"],[4,"Rank 4"],[6,"Rank 6"],[8,"Rank 8"],[10,"Rank 10"],[11,"Off"]],"openness":{"open":2,"normal":0,"guarded":-1,"closed":-2},"share":[[0,"how they look and their public role"],[1,"their name, age, club and where they spend time"],[2,"the magic and skills they use openly"],[3,"likes, dislikes, hobbies and birthday"],[4,"their personality and what shows when they are upset"],[5,"their goals"],[6,"what they think of other people and of the Doves"],[7,"their past and family"]],"share_real_from":5,"perks":{"1":"greets {{user}} and can be found at their usual places","2":"may accept a genuine invitation; first accepted invited hangout each week grants one extra bond XP","3":"sometimes seeks {{user}} out; remembers the birthday","4":"may actively help with their listed mana, stamina or study activities; ordinary shared work gets a modest bonus","5":"shares their goal and may ask for help with it","6":"may introduce {{user}} to a new roster NPC, whose bond starts at Rank 1","7":"may escort {{user}} into their dorm, or receive an unscheduled worksite visit if staff","8":"closest bond: best friend, romance or sworn rival, as far as this character and lived story allow","9":"may publicly vouch for {{user}} once per month, softening one related reputation loss by up to 5 XP","10":"would sacrifice for {{user}}"},"you_line":[{"kind":"dislike","tension_from":70,"arrow":true},{"kind":"rivals","title":"rival"},{"kind":"wary","tension_from":40,"arrow":true},{"kind":"wary","trust_below":35,"arrow":true},{"kind":"friends","title":"best friend"},{"kind":"friends","rank_from":5,"trust_from":65}],"_note_you_line":"1.4.2 (owner): People -> Connections, your own line to someone takes a kind from the bond. Romance first (Bonds.<id>.Romance), then the first rule here whose conditions all hold (tension_from, trust_below, trust_from, rank_from, title = a word in Bonds.<id>.Title); none = a plain gold bond line. arrow: the line is their view of you (them -> you); otherwise it is shared. The line is thicker with rank. 1.4.3: the Trust thresholds follow data/trust.json (Doubtful under 35, Trusting from 65).","recent":{"keep":10,"now":5,"phrases":{"talk":"talked","hangout":"spent time together","gift":"gave them a gift","help":"helped them","fight":"fought or sparred","apology":"apologised","keep":"kept a promise","secret":"kept their secret","defend":"stood up for them","confide":"confided a secret","understood":"they understood","choose":"chose them over someone else"}},"_note_recent":"1.4.4 (owner): each bond keeps its latest `keep` moments with {{user}} (Bonds.<id>.$Recent: when, one sentence, effect), shown in the dossier newest first; <now> gives the narrator the newest `now` of them for each present character. The sentence is the Note the narrator adds to an interaction; without one, the kinds (phrases).","gift_hated_tension":10,"birthday":{"gift_mult":2,"social_mult":1.5,"remember_trust":2,"recovery_mult":2,"party_xp":3,"host_rank":7,"guest_rank":5,"tension_below":40},"gift_log_cap":24};
@@ -180,7 +184,7 @@ const NPC_GROUP = {"Aiden":"student","Althair":"staff","Alyssa":"student","Baeli
 // 1.3.1 (owner playtest): player settings for training and reputation (data/tuning.json rows; values in $ui.tune, else the default)
 const TUNING = [{"id":"trn_session","opts":[[0.5,"0.5%"],[1,"1%"],[2,"2%"],[3,"3%"]],"def":1},{"id":"trn_week","opts":[[1.5,"1.5%"],[2.5,"2.5%"],[5,"5%"],[0,"No limit"]],"def":2.5},{"id":"trn_total","opts":[[50,"+50%"],[100,"+100% (twice the start)"],[200,"+200%"],[0,"No limit"]],"def":100},{"id":"rep_mult","opts":[[0.5,"Slow (x0.5)"],[1,"Standard"],[1.5,"Fast (x1.5)"],[2,"Very fast (x2)"]],"def":1},{"id":"rep_week","opts":[[3,"+3"],[5,"+5"],[10,"+10"],[0,"No limit"]],"def":5},{"id":"rep_bond","opts":[[1,"Until +3"],[2,"Always"],[0,"Off"]],"def":1},{"id":"rep_tension","opts":[[1,"On"],[0,"Off"]],"def":1},{"id":"mood_xp","opts":[[0,"Off"],[1,"1 XP"],[2,"2 XP"]],"def":1},{"id":"mood_tension","opts":[[1,"×1 (no extra)"],[1.5,"×1.5"],[2,"×2"]],"def":1.5},{"id":"mood_apology","opts":[[1,"×1 (no extra)"],[1.5,"×1.5"],[2,"×2"]],"def":1.5},{"id":"tired_training","opts":[[1,"Full gain"],[0.5,"Half"],[0,"None"]],"def":0.5},{"id":"sleep_hour","opts":[[0.05,"5%"],[0.1,"10%"],[0.15,"15%"]],"def":0.1},{"id":"sleep_cap","opts":[[0.2,"20%"],[0.4,"40%"],[0.6,"60%"]],"def":0.4},{"id":"sleep_full","opts":[[4,"4 hours"],[6,"6 hours"],[8,"8 hours"]],"def":6},{"id":"gale_stamina","opts":[[0,"None"],[10,"10 per hour"],[15,"15 per hour"],[25,"25 per hour"]],"def":15},{"id":"mana_regen","opts":[[4,"4 hours"],[6,"6 hours"],[8,"8 hours"],[12,"12 hours"]],"def":6},{"id":"init_rate","opts":[[1,"Rare (at most once a week)"],[2,"Normal (at most twice a week)"],[3,"Often (at most four times a week)"]],"def":2},{"id":"gossip_life","opts":[[10,"10 days"],[21,"3 weeks"],[42,"6 weeks"]],"def":21},{"id":"tension_fade","opts":[[0,"Never"],[0.5,"Slower (×0.5)"],[1,"Standard"],[2,"Faster (×2)"]],"def":1},{"id":"att_minutes","opts":[[20,"20 minutes"],[30,"30 minutes"],[45,"45 minutes"]],"def":30},{"id":"recap_mode","opts":[[1,"Only weeks where something changed"],[2,"Every week"]],"def":1},{"id":"scene_cap","opts":[[3,"3"],[4,"4"],[5,"5"],[6,"6"]],"def":4},{"id":"amb_freq","opts":[[1,"Rare"],[2,"Normal"],[3,"Often"]],"def":2},{"id":"study_tiers","opts":[[1,"Light: 2 / 6 / 12 / 20 h"],[2,"Standard: 4 / 10 / 18 / 28 h"],[3,"Demanding: 6 / 15 / 25 / 40 h"]],"def":2},{"id":"rank_move","opts":[[1,"At most one band"],[2,"At most two bands"]],"def":1},{"id":"fortune_band","opts":[[1,"Gentle: 1-10 fails, 11-35 partial"],[2,"Standard: 1-20 fails, 21-50 partial"],[3,"Harsh: 1-30 fails, 31-65 partial"]],"def":1}];
 // 1.10.0 (FP7): lessons with venues per weekday period, teachers ([subject, year]; year 0 = every year), club venues (tools/common.py)
-const CLASS = {"tt":{"Mon":[["Magic Theory","M",["lecture halls"],"class"],["History","M",["lecture halls"],"class"],["Combat","D",["combat grounds"],"class"]],"Tue":[["Dark Magic Defense","D",["lecture halls"],"class"],["Magic Theory","D",["lecture halls"],"class"],["Potion Crafting","M",["potion halls"],"class"]],"Wed":[["Etiquette","M",["lecture halls"],"class"],["Dark Magic Defense","M",["lecture halls"],"class"],["Creature Studies","M",["menagerie","forest"],"class"]],"Thu":[["History","M",["lecture halls"],"class"],["Magic Theory","D",["lecture halls"],"class"],["Combat","D",["combat grounds"],"class"]],"Fri":[["Magic Theory","M",["lecture halls"],"class"],["Etiquette","M",["lecture halls"],"class"],["Dark Magic Defense","D",["combat grounds","seminar rooms"],"class"]],"Sat":[["Etiquette","M",["lecture halls"],"class"],["Study Hall","",["main library"],"study"],["Clubs","",[],"clubs"]]},"teach":{"Ezrel":[["Magic Theory",2]],"Gavlan":[["Combat",1]],"Kuroo":[["Etiquette",1]],"Layla":[["History",1]],"Milena":[["Dark Magic Defense",0]],"Mimosa":[["Potion Crafting",1]],"Ottavio":[["Etiquette",3]],"Vallie":[["Creature Studies",1]],"Yvette":[["Magic Theory",1]]},"clubs":{"Academy Newspaper":["announcement room"],"Alchemy Circle":["potion halls"],"Archery Club":["archery range"],"Basketball Club":["gymnasium"],"Beast Handling Club":["menagerie"],"Board Game Club":["club rooms"],"Brewing Club":["potion halls"],"Calligraphy Club":["club rooms"],"Card Club":["club rooms"],"Cooking Club":["canteen"],"Divination Society":["observation tower"],"Drawing Club":["club rooms"],"Festival Committee":["student council chamber"],"Fishing Club":["fishing house"],"Gardening Club":["gardens"],"Groundskeeping":["groundskeeper's lodge"],"Gymnastics Club":["gymnasium"],"Library Assistants":["main library"],"Magic Duelling Club":["combat grounds","sparring pavilion"],"Medical Centre Volunteers":["medical centre"],"Music Club":["club rooms"],"Running Club":["sports field"],"Smithing Club":["workshop"],"Soccer Club":["sports field"],"Specialized Magic Club":["club rooms"],"Student Council":["student council chamber"],"Swimming Club":["gymnasium","swimming pool"],"Tailoring Club":["club rooms"],"Tea Club":["club rooms"],"Theatre Troupe":["club rooms"],"Walking Club":["grassy field and hills"],"Warding Study Group":["seminar rooms"]}};
+const CLASS = {"tt":{"Mon":[["Magic Theory","M",["lecture halls"],"class"],["History","M",["lecture halls"],"class"],["Combat","D",["combat grounds"],"class"]],"Tue":[["Dark Magic Defense","D",["lecture halls"],"class"],["Magic Theory","D",["lecture halls"],"class"],["Potion Crafting","M",["potion halls"],"class"]],"Wed":[["Etiquette","M",["lecture halls"],"class"],["Dark Magic Defense","M",["lecture halls"],"class"],["Creature Studies","M",["menagerie","forest"],"class"]],"Thu":[["History","M",["lecture halls"],"class"],["Magic Theory","D",["lecture halls"],"class"],["Combat","D",["combat grounds"],"class"]],"Fri":[["Magic Theory","M",["lecture halls"],"class"],["Etiquette","M",["lecture halls"],"class"],["Dark Magic Defense","D",["combat grounds","seminar rooms"],"class"]],"Sat":[["Etiquette","M",["lecture halls"],"class"],["Study Hall","",["main library"],"study"],["Clubs","",[],"clubs"]]},"teach":{"Ezrel":[["Magic Theory",2]],"Gavlan":[["Combat",1]],"Kuroo":[["Etiquette",1]],"Layla":[["History",1]],"Milena":[["Dark Magic Defense",0]],"Mimosa":[["Potion Crafting",1]],"Ottavio":[["Etiquette",3]],"Vallie":[["Creature Studies",1]],"Yvette":[["Magic Theory",1]]},"clubs":{"Academy Newspaper":["announcement room"],"Alchemy Circle":["potion halls"],"Archery Club":["archery range"],"Basketball Club":["gymnasium"],"Beast Handling Club":["menagerie"],"Board Game Club":["club rooms"],"Brewing Club":["potion halls"],"Calligraphy Club":["club rooms"],"Card Club":["club rooms"],"Cooking Club":["canteen"],"Divination Society":["observation tower"],"Drawing Club":["club rooms"],"Festival Committee":["student council chamber"],"Fishing Club":["fishing house"],"Gardening Club":["gardens"],"Groundskeeping":["groundskeeper's lodge"],"Gymnastics Club":["gymnasium"],"Library Assistants":["main library"],"Magic Duelling Club":["combat grounds","sparring pavilion"],"Medical Centre Volunteers":["medical centre"],"Music Club":["club rooms"],"Running Club":["sports field"],"Smithing Club":["workshop"],"Soccer Club":["sports field"],"Specialized Magic Club":["club rooms"],"Student Council":["student council chamber"],"Swimming Club":["gymnasium","swimming pool"],"Tailoring Club":["club rooms"],"Tea Club":["club rooms"],"Theatre Troupe":["club rooms"],"Walking Club":["grassy field and hills"],"Warding Study Group":["seminar rooms"]},"calias":{"newspaper":"Academy Newspaper","alchemy":"Alchemy Circle","archery":"Archery Club","basketball":"Basketball Club","beast handling":"Beast Handling Club","board game":"Board Game Club","brewing":"Brewing Club","calligraphy":"Calligraphy Club","card":"Card Club","cooking":"Cooking Club","divination":"Divination Society","drawing":"Drawing Club","festival committee":"Festival Committee","fishing":"Fishing Club","gardening":"Gardening Club","groundskeeping":"Groundskeeping","gymnastics":"Gymnastics Club","library assistants":"Library Assistants","magic duelling club":"Magic Duelling Club","medical centre volunteers":"Medical Centre Volunteers","music":"Music Club","running":"Running Club","smithing":"Smithing Club","soccer":"Soccer Club","specialized magic":"Specialized Magic Club","student council":"Student Council","swimming":"Swimming Club","tailoring":"Tailoring Club","tea":"Tea Club","theatre":"Theatre Troupe","walking":"Walking Club","warding study":"Warding Study Group"}};
 // 1.10.2 (FP11): why an NPC seeks {{user}} out: templates per Tension category, each NPC's category and club (data/initiative_asks.json)
 const INIT_ASKS = {"asks":{"withdrawn":["leaves {{user}} a short note asking to meet at {place}, where it is quiet","wants {{user}}'s company at {place} without having to explain why","found {thing} and wants to show {{user}}, and only {{user}}","asks, awkwardly, whether {{user}} is going to {event}","needs a hand with something at {place} and would rather ask {{user}} than anyone else","wants {{user}} to sit with them at the {club} for once","waits for {{user}} at {place} and pretends it is by chance"],"social":["wants {{user}} to come along to {place}","has news and wants {{user}} to hear it first","wants to share {thing} with {{user}}","is rounding people up for {event} and wants {{user}} along","wants {{user}} to drop by the {club} and meet everyone","wants {{user}}'s opinion on something, and {place} is where to give it","wants {{user}} to help pick something at {place}","saved {{user}} a seat at {place}"],"confrontational":["wants a proper challenge from {{user}} at {place}","comes to complain to {{user}} about something, then stays","wants a training partner who can keep up and picks {{user}}","drags {{user}} to the {club} because nobody else will do","wants to settle a small argument with {{user}} before {event}","has an opinion about {thing} and needs {{user}} to hear it"],"authority":["asks {{user}} to stop by {place} after classes","has a small task for {{user}} at {place}","wants to know how {{user}} is getting on, in their own way","mentions {event} and asks whether {{user}} is ready","wants a word with {{user}} about the {club}"],"dangerous":["wants something from {{user}} and chooses {place} to ask for it","offers {{user}} a deal, at {place}","tests {{user}} with a question that is not quite a question","knows something about {event} and lets {{user}} notice"],"strained":["has something to say to {{user}} and will not wait","wants to clear the air with {{user}}, on their own terms, at {place}","is looking for {{user}} to ask a pointed question","turns up where {{user}} is, clearly still annoyed"]},"cat":{"Ruby":"withdrawn","Zara":"withdrawn","Mimosa":"withdrawn","Royhan":"withdrawn","Alyssa":"withdrawn","Vera":"withdrawn","Trixie":"withdrawn","Tilly":"withdrawn","Lenna":"withdrawn","Caralynn":"social","Florian":"social","Aiden":"social","Idris":"social","Bobby":"social","Milena":"social","Sophia":"confrontational","Percival":"confrontational","Saffi":"confrontational","Vallie":"confrontational","Irene":"authority","Caspian":"authority","Baelin":"authority","Yvette":"authority","Gavlan":"authority","Layla":"authority","Kuroo":"authority","Ottavio":"authority","Rei":"authority","Krieg":"dangerous","Caine":"dangerous","Tristan":"dangerous","Castor":"dangerous","Dante":"dangerous","Gareth":"dangerous","Linus":"social","Maple":"withdrawn","Nerys":"social","Hadrian":"social","Wren":"withdrawn","Tsubaki":"confrontational"},"club":{"Castor":"Academy Newspaper","Linus":"Academy Newspaper","Royhan":"Alchemy Circle","Lenna":"Beast Handling Club","Gareth":"Board Game Club","Aiden":"Card Club","Nerys":"Cooking Club","Kanae":"Divination Society","Alyssa":"Drawing Club","Caspian":"Festival Committee","Ottavio":"Fishing Club","Wren":"Fishing Club","Idris":"Gardening Club","Maple":"Gardening Club","Irene":"Library Assistants","Tilly":"Library Assistants","Sophia":"Magic Duelling Club","Tsubaki":"Magic Duelling Club","Caralynn":"Music Club","Ruby":"Music Club","Saffi":"Running Club","Vera":"Smithing Club","Percival":"Soccer Club","Hadrian":"Specialized Magic Club","Dante":"Student Council","Florian":"Student Council","Zara":"Tailoring Club","Trixie":"Theatre Troupe","Ezrel":"Theatre Troupe"},"places":["the Canteen","the Gardens","The Mall","the Main Courtyard","the Boathouse and Lake","the Grassy Field and Hills","the Study Rooms"]};
 const TIMES = ['08:00-10:00', '10:00-12:00', '13:00-16:00'];
@@ -218,6 +222,7 @@ function trustProfile(id, S, secretOut) {
   if (o.until_secret && secretOut && secretOut(id)) o = {};             // Kanae's Plan / Caine's secret is out: a plain category again
   return { cat, C, o, dh: mine ? dh : null, start: C.start != null ? C.start : 50, rise: num(o.rise, 1) * num(C.rise, 1), drop: num(o.drop, 1) * num(C.drop, 1), recover: num(C.recover, 0) };
 }
+const tsuspOf = (S, bonds) => Object.entries(S._Perks || {}).filter(([, p]) => p.Kind === 'rank10' && bonds[p.From] && trustGate(p.From, 10) && num(bonds[p.From].Trust, 50) < num(TRU.suspend_r10_below, 35)).map(([k]) => k);
 const trustGate = (id, rank) => (((TRU.overrides || {})[id] || {}).no_gates ? 0 : num((TRU.perk_gates || {})[String(rank)], 0));
 const repLevel = x => (x >= 0 ? 1 : -1) * (REP.thresholds || []).filter(t => Math.abs(x) >= t).length;
 const repFloor = L => (L === 0 ? 0 : Math.sign(L) * REP.thresholds[Math.abs(L) - 1]);   // the Rep XP at which level L begins
@@ -449,9 +454,19 @@ function rawHappening(seed, dayNo, rate, exclude, wxm = 'off') {
   for (const h of pool) { r -= wt(h); if (r < 0) return h; }
   return null;
 }
-function happeningOn(seed, dayNo, rate, wxm) {   // no repeat of the previous two days' happening
-  const prev = [1, 2].map(k => rawHappening(seed, dayNo - k, rate, [], wxm)).filter(Boolean).map(h => h.id);
-  return rawHappening(seed, dayNo, rate, prev, wxm);
+// No repeat of the previous two days' happening. 1.16.1 (audit B3): "previous" means what those days actually got, so the year is
+// chained from its first day (Month 12 is the holiday, with no happenings, so a year never carries one over) and cached.
+const HAPY = new Map();
+function happeningOn(seed, dayNo, rate, wxm) {
+  const Y = Math.floor(dayNo / YEAR_DAYS), key = `${seed}|${Y}|${rate}|${wxm}`;
+  let arr = HAPY.get(key);
+  if (!arr) {
+    arr = [];
+    for (let i = 0; i < YEAR_DAYS; i++) arr.push(rawHappening(seed, Y * YEAR_DAYS + i, rate, arr.slice(-2).filter(Boolean).map(h => h.id), wxm));
+    if (HAPY.size > 8) HAPY.clear();
+    HAPY.set(key, arr);
+  }
+  return arr[dayNo - Y * YEAR_DAYS] || null;
 }
 
 // ---- 1.1.0 weather (spec §4): seasons, sky per block, wind, rare weather, °C. Pure functions of (seed, day): swipe-safe. ----
@@ -599,6 +614,24 @@ function fillShape(o, shape) {
     else if (_.isPlainObject(v) && _.isPlainObject(o[k]) && Object.keys(v).length) fillShape(o[k], v);
   }
 }
+// 1.16.1 (audit B4): one answer to "is this NPC away?" for bonds, introductions, Rank 5 handovers, the Entrance tour, NPC
+// initiative and birthday parties (each had its own list of words). A status is found by the NPC's id, alias or first word.
+const AWAY_RX = /away|abroad|absent|missing|dead|confined|hospital|unconscious|expelled|unavailable|left campus|left halvard|out of town/i;
+const npcStatusIn = (S, id) => {
+  const N = (S.Campus_State || {}).NPC_status || {}, lo = String(id).toLowerCase();
+  const k = Object.keys(N).find(x => (NPC_ALIAS[String(x).toLowerCase()] || x) === id || String(x).toLowerCase().split(/\s+/)[0] === lo);
+  return k ? String(N[k] || '') : '';
+};
+const npcAwayIn = (S, id) => ((S.Campus_State || {}).Graduated || []).includes(id) || AWAY_RX.test(npcStatusIn(S, id));
+// 1.16.1 (audit B1): Player.Profile.Club in the club list's own words ("Soccer", "soccer club" -> "Soccer Club"; "Theatre" ->
+// "Theatre Troupe"), so Saturday club time is counted; a club the list does not know is kept as written
+function canonClub(c) {
+  const s = String(c || '').trim(), k = s.toLowerCase().replace(/^the\s+/, '').replace(/\s+/g, ' ');
+  if (!k) return '';
+  if (/^duel+ing club$/.test(k)) return 'Magic Duelling Club';
+  const names = Object.keys(CLASS.clubs || {}), base = x => x.toLowerCase().replace(/\s+club$/, '');
+  return names.find(n => n.toLowerCase() === k) || (CLASS.calias || {})[base(k)] || names.find(n => base(n) === base(k)) || s;
+}
 const BOND0 = { $gifts: {}, Rank: 0, Progress: 0, Trust: 50, Tension: 0, Title: '', Romance: false, Known_facts: [], Milestones: [], Last_seen: '' };
 // Source helpers for the approved mood / gifts release, injected by gen_engine.py.
 const NPC_MOODS = {"Irene":{"loves":["Clear"],"hates":["Storm"],"clock":"M","exams":1,"trials":0,"reason":"cleans her room every morning, good grades"},"Caspian":{"loves":["Clear"],"hates":["Storm"],"clock":"","exams":0,"trials":0,"reason":"outdoor festivals he runs; storms cancel them"},"Etnie":{"loves":["Snow"],"hates":["Storm"],"clock":"","exams":0,"trials":0,"reason":"a dog in snow; thunder"},"Royhan":{"loves":["Cool"],"hates":["Hot","Heatwave"],"clock":"M","exams":0,"trials":0,"reason":"farm-raised; steady"},"Sophia":{"loves":["Rain","Storm"],"hates":["Hot","Heatwave"],"clock":"","exams":0,"trials":1,"reason":"rain means water everywhere; battle-hungry"},"Gareth":{"loves":["Clear"],"hates":[],"clock":"M","exams":1,"trials":1,"reason":"winning"},"Ruby":{"loves":["Clear","Mild"],"hates":["Storm"],"clock":"","exams":0,"trials":-1,"reason":"hates fighting of any kind"},"Lenna":{"loves":["Rain"],"hates":["Hot"],"clock":"N","exams":-1,"trials":0,"reason":"naps; mornings are the enemy; courageous"},"Saffi":{"loves":["Clear","Warm"],"hates":["Rain"],"clock":"M","exams":-1,"trials":1,"reason":"a cat and water; can't sit still in class, lives to move"},"Kanae":{"loves":["Clear night"],"hates":["Overcast","Fog"],"clock":"N","exams":1,"trials":0,"reason":"stars from the Observation Tower; top grades"},"Idris":{"loves":["Clear by day ≥15 °C"],"hates":["Cold","Freezing","Windy","Gale"],"clock":"","exams":0,"trials":0,"reason":"cold-blooded"},"Tilly":{"loves":["Fog","Storm"],"hates":[],"clock":"N","exams":0,"trials":1,"reason":"ghost weather; walks toward danger"},"Dante":{"loves":[],"hates":[],"clock":"M","exams":0,"trials":1,"reason":"order under pressure"},"Florian":{"loves":["Clear"],"hates":["Rain"],"clock":"N","exams":0,"trials":1,"reason":"being looked at, winning"},"Aiden":{"loves":["Fog"],"hates":[],"clock":"N","exams":1,"trials":1,"reason":"curfew routes; exam and contest weeks are betting season"},"Caralynn":{"loves":["Clear"],"hates":["Rain","Storm","Windy","Gale"],"clock":"","exams":-1,"trials":1,"reason":"the spotlight; her hair"},"Zara":{"loves":["Cold","Snow"],"hates":["Hot","Windy","Gale"],"clock":"","exams":0,"trials":-1,"reason":"sitting by a fire; being stared at"},"Percival":{"loves":["Storm","Gale"],"hates":[],"clock":"M","exams":-1,"trials":1,"reason":"heroic weather; a chance for glory"},"Trixie":{"loves":["Clear","Snow","Windy"],"hates":["Rain"],"clock":"M","exams":-1,"trials":1,"reason":"outdoor shows; sitting still; excitement"},"Vera":{"loves":["Storm"],"hates":[],"clock":"N","exams":0,"trials":0,"reason":"lightning; one tiny experiment all night"},"Castor":{"loves":["Fog","Overcast"],"hates":[],"clock":"M","exams":0,"trials":0,"reason":"unnoticed; the Gardens early"},"Alyssa":{"loves":["Clear"],"hates":[],"clock":"M","exams":0,"trials":0,"reason":"quiet mornings"},"Linus":{"loves":["Clear"],"hates":[],"clock":"","exams":0,"trials":1,"reason":"brackets and matchups"},"Maple":{"loves":["Clear","Mild"],"hates":["Storm","Gale"],"clock":"M","exams":0,"trials":-1,"reason":"climbing trees; fights, and Sobek near them"},"Nerys":{"loves":["Fog"],"hates":[],"clock":"","exams":0,"trials":0,"reason":"\"nobody there\"; no feelings about the rest"},"Hadrian":{"loves":["Mild"],"hates":["Rain","Cold"],"clock":"","exams":1,"trials":-1,"reason":"a warm coat, being right; risk"},"Wren":{"loves":["Clear"],"hates":["Fog"],"clock":"M","exams":0,"trials":0,"reason":"the dock at dawn; bad light defeats lip-reading"},"Tsubaki":{"loves":["Clear night","Snow"],"hates":["Fog"],"clock":"M","exams":-1,"trials":1,"reason":"open sky; lectures she can't follow; a good opponent"},"Gavlan":{"loves":[],"hates":["Storm"],"clock":"M","exams":0,"trials":1,"reason":"thunder and war nightmares; an old officer under pressure"},"Yvette":{"loves":[],"hates":["Fog"],"clock":"","exams":0,"trials":-1,"reason":"paranoid"},"Krieg":{"loves":["Fog"],"hates":[],"clock":"M","exams":0,"trials":1,"reason":"doubled patrols in fog; the Thinning is his element"},"Milena":{"loves":["Clear","Warm"],"hates":["Cold","Snow","Gale"],"clock":"M","exams":0,"trials":0,"reason":"a southerner from Salaffos"},"Baelin":{"loves":["Clear"],"hates":[],"clock":"M","exams":0,"trials":0,"reason":"rest-day mornings at the Elder Oak; enormous patience"},"Layla":{"loves":["Rain"],"hates":[],"clock":"","exams":0,"trials":0,"reason":"archive days and tea"},"Vallie":{"loves":["Storm","Snow","Gale"],"hates":[],"clock":"N","exams":0,"trials":1,"reason":"always happy to test her strength"},"Rei":{"loves":["Fog"],"hates":["Heatwave"],"clock":"N","exams":0,"trials":1,"reason":"the Rooftop at hours nobody is awake; zero drama when it matters"},"Kuroo":{"loves":[],"hates":[],"clock":"N","exams":0,"trials":1,"reason":"Card Club evenings; the moment a student finally tries"},"Mimosa":{"loves":["Rain","Overcast"],"hates":["Clear","Hot"],"clock":"N","exams":0,"trials":-1,"reason":"small, dim, enclosed; a room full of eyes"},"Tristan":{"loves":[],"hates":[],"clock":"","exams":0,"trials":0,"reason":"nothing rattles him"},"Althair":{"loves":["Storm","Gale"],"hates":[],"clock":"","exams":0,"trials":1,"reason":"relentlessly cheerful, never Bad from weather; a good game"},"Ezrel":{"loves":[],"hates":[],"clock":"","exams":0,"trials":0,"reason":"always Normal (apathetic)"},"Ottavio":{"loves":["Rain","Fog"],"hates":[],"clock":"M","exams":0,"trials":0,"reason":"the fishing dock at dawn"},"Caine":{"loves":["Overcast"],"hates":[],"clock":"","exams":0,"trials":0,"reason":"silence"},"Bobby":{"loves":["Storm"],"hates":[],"clock":"","exams":0,"trials":0,"reason":"storms mean repair jobs"}};
@@ -606,6 +639,7 @@ const GIFT_PREFS = {"_note":"Owner-approved 2026-09-27. Exact catalog names and 
 const WIND_CASTING = {"groups":{"fed":[1,0.75],"scattered":[1.5,2],"unaffected":[1,1],"fights":[1.25,1.5]},"subtypes":{"Wind":"fed","Storm":"fed","Mist":"scattered","Smoke":"scattered","Ash":"scattered","Sand":"scattered","Steam":"scattered","Sound":"scattered","Reinforcement":"unaffected","Mending":"unaffected","Phasing":"unaffected","Resizing":"unaffected"},"default":"fights"};
 const NPC_DORMS = {"Irene":"Light","Caspian":"Viridian","Etnie":"Viridian","Royhan":"Sky","Lenna":"Fire","Saffi":"Viridian","Kanae":"Light","Idris":"Sky","Aiden":"Light","Caralynn":"Fire","Zara":"Sky","Gavlan":null,"Yvette":null,"Krieg":null,"Milena":null,"Baelin":null,"Layla":null,"Vallie":null,"Percival":"Viridian","Sophia":"Fire","Rei":null,"Kuroo":null,"Mimosa":null,"Gareth":"Fire","Lucius":null,"Trixie":"Fire","Vera":"Viridian","Tristan":null,"Althair":null,"Dante":"Light","Castor":"Viridian","Ruby":"Sky","Florian":"Sky","Elion":null,"Bellatrix":null,"Kira":null,"Mirelle":null,"Theodore":null,"Ines":null,"Bram":null,"Dex":null,"Cassius":null,"Morgana":null,"Pip":null,"Alyssa":"Sky","Tilly":"Fire","Ezrel":null,"Ottavio":null,"Caine":null,"Bobby":null,"Linus":"Viridian","Maple":"Sky","Nerys":"Fire","Hadrian":"Light","Wren":"Fire","Tsubaki":"Light"};
 const moodCanon = k => NPC_ALIAS[String(k).toLowerCase()] || k;
+const GRX = new Map(), grx = src => GRX.get(src) || GRX.set(src, new RegExp(src, 'i')).get(src);   // 1.16.1 (audit A6): compiled once
 const giftNorm = s => String(s || '').toLowerCase().replace(/[’‘]/g, "'").replace(/[–—]/g, '-').replace(/\s+/g, ' ').trim();
 const npcBirthday = (id, W) => ((GIFT_PREFS.npcs[id] || {}).birthday || '') === `M${W.Month} W${W.Week} ${W.Day}`;
 function giftTier(id, item, fallback) {
@@ -613,12 +647,12 @@ function giftTier(id, item, fallback) {
   let tier = '';
   const exact = name => { const n = giftNorm(name); const at = s.indexOf(n); return at >= 0 && !/[a-z0-9]/.test(s[at - 1] || '') && !/[a-z0-9]/.test(s[at + n.length] || ''); };
   const description = s + ' ' + Object.entries(GIFT_PREFS.catalog || {}).filter(([name]) => exact(name)).map(([,tags]) => tags).join(' ');
-  if (s && p) tier = order.find(k => (p.items[k] || []).some(exact) || p.patterns[k] && new RegExp(p.patterns[k], 'i').test(description)) || '';
-  if (s && !tier) tier = [...order, 'neutral'].find(k => GIFT_PREFS.universal[k] && new RegExp(GIFT_PREFS.universal[k], 'i').test(description)) || '';
+  if (s && p) tier = order.find(k => (p.items[k] || []).some(exact) || p.patterns[k] && grx(p.patterns[k]).test(description)) || '';
+  if (s && !tier) tier = [...order, 'neutral'].find(k => GIFT_PREFS.universal[k] && grx(GIFT_PREFS.universal[k]).test(description)) || '';
   if (!tier) tier = [...order, 'neutral'].includes(giftNorm(fallback)) ? giftNorm(fallback) : 'neutral';
   if (id === 'Ezrel' && tier === 'liked') tier = 'neutral';
   // Etnie's own hated gifts are the only exception to her minimum; universal dislikes do not overrule it.
-  if (id === 'Etnie' && !((p.items.hated || []).some(exact) || new RegExp(p.patterns.hated, 'i').test(s)) && !['liked', 'loved'].includes(tier)) tier = 'liked';
+  if (id === 'Etnie' && !((p.items.hated || []).some(exact) || grx(p.patterns.hated).test(s)) && !['liked', 'loved'].includes(tier)) tier = 'liked';
   return tier;
 }
 function moodOf(id, S, wx, day) {
@@ -661,8 +695,7 @@ const blocksWind = (active, techniques) => Object.entries(active || {}).some(([n
 });
 function birthdayParty(S) {
   if (S.Player.Profile.Birthday !== `M${S.World.Month} W${S.World.Week} ${S.World.Day}`) return null;
-  const absent = id => (S.Campus_State.Graduated || []).includes(id) || (ARRIVES[id] || 1) > S.World.Year
-    || Object.entries(S.Campus_State.NPC_status || {}).some(([k,v]) => moodCanon(k) === id && /away|abroad|absent|missing|dead|confined|hospital|unconscious|left campus|out of town/i.test(v));
+  const absent = id => (ARRIVES[id] || 1) > S.World.Year || npcAwayIn(S, id);   // 1.16.1 (audit B4): the engine's one rule
   const available = Object.entries(S.Bonds).filter(([id,b]) => b.Tension < BR.birthday.tension_below && !absent(id));
   const hosts = available.filter(([,b]) => b.Rank >= BR.birthday.host_rank).sort((a,b) => b[1].Rank - a[1].Rank || b[1].Trust - a[1].Trust || a[0].localeCompare(b[0]));
   if (!hosts.length || S.Trip.Active) return null;
@@ -704,7 +737,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.16.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.16.1";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 
 function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the player's message this reply answers (section 8l)
   if (!S || !S.World) return;
@@ -739,6 +772,13 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
   // 1.11.1: a player-tool message (the UI writes /$eng/tool = 1 with every Builder or Settings patch and marks its text)
   const toolEdit = hasB && (num(S.$eng.tool, 0) === 1 || /\(player tool\)/.test(String(text || '')));
   S.$eng.tool = 0;
+  // 1.16.1 (audit B1): the club in the club list's words, before attendance (5d) reads it
+  {
+    const P = S.Player.Profile, raw = String(P.Club || ''), c = canonClub(raw);
+    P.Club = c;
+    const was = hasB ? canonClub(((B.Player || {}).Profile || {}).Club) : c;
+    if (c && c !== was && !Object.keys(CLASS.clubs || {}).includes(c)) log.push(`Club "${c}" is not a club on record (${Object.keys(CLASS.clubs || {}).join(', ')}); Saturday club time is only counted for one of them.`);
+  }
   let healedMax = false;
   // 1.2.0 (owner playtest: a reload came back with the student's magic empty): the Builder keeps its own record in $ui.file.
   // A built student whose Builder-only fields are all empty gets them back from that record. The Builder always writes both
@@ -937,11 +977,7 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     if (old && old.Year === Y && old.Guide && (old.FirstYears || []).length === required) {
       S.Campus_State.Entrance_tour = _.cloneDeep(old);
     } else {
-      const unavailable = id => {
-        const statuses = S.Campus_State.NPC_status || {};
-        const key = Object.keys(statuses).find(k => k.toLowerCase().split(/\s+/)[0] === id.toLowerCase());
-        return (S.Campus_State.Graduated || []).includes(id) || !!(key && /missing|expelled|left|away|dead|unavailable|absent|hospital/i.test(statuses[key]));
-      };
+      const unavailable = id => npcAwayIn(S, id);
       const students = Object.keys(STUDENTS).filter(id => (STUDENTS[id][1] || 1) <= Y && !unavailable(id));
       const freshmen = students.filter(id => yearOf(id, Y) === 1);
       const seniors = students.filter(id => yearOf(id, Y) >= 2 && yearOf(id, Y) <= 3);
@@ -1168,8 +1204,21 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     }
   }
   V.Mana += regenLeft;                                           // 1.9.4: mana regenerates passively (section 2); resting adds none
+  // 1.16.1 (audit B2): a used item takes effect only if {{user}} has it: in the Bag before this reply, added to it in this reply,
+  // or bought in this reply (a new Transactions line names it, e.g. a hot drink at a café). Anything else changes nothing.
+  if (hasB && Array.isArray(S.Consumables) && S.Consumables.length) {
+    const ik = x => String(x || '').trim().toLowerCase().replace(/^(an?|the)\s+/, '').replace(/\s*\(.*\)$/, '');
+    const have = new Set([...Object.keys(B.Inventory || {}).filter(k => num((B.Inventory[k] || {}).Qty, 0) > 0), ...Object.keys(S.Inventory || {})].map(ik));
+    const T0 = new Set(((B.Player || {}).Wallet || {}).Transactions || []);
+    const bought = (S.Player.Wallet.Transactions || []).filter(l => !T0.has(l)).join(' | ').toLowerCase();
+    S.Consumables = S.Consumables.filter(c => {
+      const k = ik(c); if (!k || have.has(k) || bought.includes(k)) return true;
+      log.push(`"${String(c).trim()}" was reported used, but {{user}} has none (not in the Bag, not bought in this reply): no effect.`);
+      return false;
+    });
+  }
   updateSleep(S, hasB ? B : null, absB, absA, TU, log);
-  const consumed = S.Consumables || [];                          // 1.9.5: item effects are applied with the weather effects (4b)
+  const consumed = S.Consumables || [];                         // 1.9.5: item effects are applied with the weather effects (4b)
   S.Consumables = [];
   // 1.12.0 (H2): an item reported used lowers its Qty in the Bag by one per report, unless this update already lowered it
   if (hasB && consumed.length && _.isPlainObject(S.Inventory)) {
@@ -1277,8 +1326,6 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
   const repw = _.isPlainObject(S.$eng.repw) && S.$eng.repw.w === weekNo ? S.$eng.repw : { w: weekNo };
   const repLv = r => repLevel(rx[r]);
   // cap: 'week' (repeatable), 'bond' (only below bond_cap_level), '' (event or loss)
-  // Settings read before weather effects.
-  // const TU = tuneOf(S);   // 1.3.1 Settings: pace (rep_mult), weekly cap (0 = none), bond milestones (0 off, 1 until bond_cap_level, 2 always)
   const repAdd = (r, x, why, cap) => {
     if (!REP.reps.includes(r) || !x) return 0;
     if (cap === 'bond' && !TU.rep_bond) return 0;
@@ -1357,6 +1404,10 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     const active = Object.entries(M.Active || {}).map(([k, e]) => e.Technique && e.Technique !== k ? `${k} (${e.Technique})` : k);
     S.$ui.fortune = { roll: d100(seed, 'fortune', S.$eng.turn, absA), fail: band[0], part: band[1], mods, active };
   }
+
+  // 1.16.1 (audit B5): Rank 10 benefits suspended by low Trust, from the Trust before this reply, for the sections before the
+  // bonds (exam perks); recomputed after the bonds for the rest
+  S.$ui.tsusp = tsuspOf(S, (hasB && B.Bonds) || S.Bonds);
 
   // ---- 5d. 1.10.0 (owner-approved planning/DRAFT_batch_fp7_fp11.md, Batch 1): FP7 attendance, FP10 weekly recap, FP12 small scenes ----
   {
@@ -1721,7 +1772,7 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
   // 1.12.0: a genuine encounter or a Rank 5 handover reported one update late still counts for someone present at the end of the
   // previous update (they may have left in the reply that tells it)
   const wasHere = id => hasB && !!(((B.Scene || {}).Present || {})[id]);
-  const npcAway = id => goneNow(id) || Object.entries(S.Campus_State.NPC_status || {}).some(([k,v]) => canon(k) === id && /away|abroad|absent|missing|dead|confined|hospital|unconscious|left campus|out of town/i.test(v));
+  const npcAway = id => npcAwayIn(S, id);   // 1.16.1 (audit B4)
   const introductions = {};
   for (const a of S.Interactions || []) {
     if (a.Kind !== 'introduction') continue;
@@ -1823,7 +1874,7 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
       && dayNo >= num(b0.$cool, -1) && !held(id, b) && !tenseHold(id, b) && !trustHold(id, b);
     if (eligible && genuine) {
       b.Rank++; xp = 0; b._Event_ready = false; b.$cool = dayNo + coolDays(b.Rank, PACE);
-      b.Milestones = [...new Set([...(b.Milestones || []), `Grew closer through ordinary time together (${stamp(S.World)})`])].slice(-20);
+      // 1.16.1 (audit T4): no generic "grew closer" Milestone: $Recent records the rank, Milestones are the story's own
       jnl.push(`Bond with ${id} deepened to Rank ${b.Rank}.`);
       if (_.isPlainObject(S.$eng.wk)) (S.$eng.wk.ranks = S.$eng.wk.ranks || []).push(`${id} reached Rank ${b.Rank}`);   // 1.10.0 recap
       rankedUp(id, b); rankTrust = num(TRU.rank_up, 0);
@@ -2129,7 +2180,7 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     }
     if (hit.length) log.push(`Word of what {{user}} did to ${id} reached ${hit.join(', ')}: their Trust ${TRU.spread.friends}.`);
   }
-  S.$ui.tsusp = Object.entries(S._Perks || {}).filter(([, p]) => p.Kind === 'rank10' && S.Bonds[p.From] && trustGate(p.From, 10) && S.Bonds[p.From].Trust < num(TRU.suspend_r10_below, 35)).map(([k]) => k);
+  S.$ui.tsusp = tsuspOf(S, S.Bonds);
   S.$eng.bondv = 2;
   S.$eng.tenv = 1;   // 1.3.8: $ms filled for bonds from before
   for (const k of Object.keys(bweek)) if (bweek[k].w !== weekNo) delete bweek[k];
@@ -2355,8 +2406,6 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
   capRecord(S.Clues, CAP.Clues);
   // ---- 8c. Batch 5.2: club, competition, projects, trip ----
   const canonList = a => [...new Set((a || []).map(x => NPC_ALIAS[String(x).toLowerCase()] || x))];
-  const canonClub = c => /^duelling club$/i.test(String(c || '').trim()) ? 'Magic Duelling Club' : String(c || '');
-  S.Player.Profile.Club = canonClub(S.Player.Profile.Club);
   if (hasB) {
     const c0 = canonClub(B.Player.Profile.Club), c1 = S.Player.Profile.Club || '';
     if (c0 !== c1) jnl.push(c1 ? `Joined the ${c1}.` : `Left the ${c0}.`);
@@ -2469,7 +2518,7 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
         const pool = Object.keys(S.Bonds).sort().filter(id => {
           const b = S.Bonds[id];
           return b.Rank >= 3 && INITIATIVE_STAGES[id] && (ARRIVES[id] || 1) <= S.World.Year
-            && !goneNow(id) && !S.Scene.Present[id] && !S.Campus_State.NPC_status[id]
+            && !npcAwayIn(S, id) && !S.Scene.Present[id]   // 1.16.1 (audit B4): only a status that keeps them away
             && dayNo - num(I.last[id], -1000) >= IR[2];
         });
         const weight = id => ({ open: 3, normal: 2, guarded: 1, closed: 0.5 })[INITIATIVE_OPENNESS[id] || 'normal'];
@@ -2478,7 +2527,7 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
       }
     }
     if (off || S.Trip.Active || /LOCKDOWN/.test(S.World._Curfew || '') || (I.id &&
-        (!S.Bonds[I.id] || S.Bonds[I.id].Rank < 3 || S.Scene.Present[I.id] || goneNow(I.id) || S.Campus_State.NPC_status[I.id]))) I.done = true;
+        (!S.Bonds[I.id] || S.Bonds[I.id].Rank < 3 || S.Scene.Present[I.id] || npcAwayIn(S, I.id)))) I.done = true;
     const id = I.done ? '' : I.id;
     if (id && S.Bonds[id] && S.Bonds[id].Rank >= 3) {
       const rank = S.Bonds[id].Rank, band = rank <= 5 ? '3-5' : rank <= 8 ? '6-8' : '9-10';
@@ -2729,7 +2778,7 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
       const narr = prose.replace(QUOTE_RX, ' '), said = String(userText || ''), low = (said + '\n' + prose).toLowerCase();
       const actsOf = id => REPORTED.acts.filter(a => canon(a.With) === id);
       const bonded = Object.keys(S.Scene.Present || {}).map(canon).filter(id => S.Bonds[id] && id !== KR.id);
-      const Tq = M._Techniques || {}, hasWord = (hay, w) => new RegExp('(^|[^a-z])' + _.escapeRegExp(w.toLowerCase()) + '($|[^a-z])').test(hay);
+      const Tq = M._Techniques || {}, hasWord = (hay, w) => (WORD_RX.get(w) || WORD_RX.set(w, new RegExp('(^|[^a-z])' + _.escapeRegExp(w.toLowerCase()) + '($|[^a-z])')).get(w)).test(hay);
       // R1: HP lost with no injury named (D13)
       const hp0 = num(B.Player.Vitals.HP, 0), inj0 = B.Player.Injuries || {};
       if (V.HP > 0 && V.HP < hp0 && !Object.keys(S.Player.Injuries || {}).some(k => !(k in inj0)))
@@ -2939,7 +2988,8 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
 
   // ---- 9. UI bookkeeping ----
   const place = placeOf(S.World.Location);
-  if (place && !S.$ui.discovered.includes(place)) S.$ui.discovered.push(place);
+  // 1.16.1 (audit B6): only places on the Campus Map, so off-campus names never push a discovered place out of the list (cap 80)
+  if (place && plName(place) && !S.$ui.discovered.includes(place)) S.$ui.discovered.push(place);
   const unlock = k => { if (!offUnlock.has(k) && !S.$ui.unlocks.includes(k)) S.$ui.unlocks.push(k); };   // 1.1.0: a feature that is off does not unlock
   if (S.Battle.Active) unlock('battle');
   if (Hd._True_magic) unlock('hidden');
@@ -2988,8 +3038,21 @@ if (typeof eventOn === 'function' && typeof waitGlobalInitialized === 'function'
       try { const c = SillyTavern.chat || [], m = c[c.length - 1] || {}; hint = String(m.send_date || '') + '|' + (SillyTavern.getCurrentChatId ? SillyTavern.getCurrentChatId() : ''); } catch (e) { /* seed falls back to world time */ }
       // 1.12.0: the player's last visible message (not a hidden player-tool entry), for the reminders of section 8l
       try { const c = SillyTavern.chat || []; for (let i = c.length - 1; i >= 0; i--) { const x = c[i] || {}; if (x.is_user && !x.is_system && !/\(player tool\)/.test(String(x.mes || ''))) { said = String(x.mes || ''); break; } } } catch (e) { /* no reminders from the player's words */ }
-      try { runEngine(variables.stat_data, variables_before && variables_before.stat_data, text, hint, said); text = ''; }
-      catch (e) { console.error('[Eldrasil engine]', e); }
+      // 1.16.1 (audit B8): the engine edits the state in place. If it fails halfway, the state goes back to what it was before
+      // this reply (a half-run engine must not be saved), and the player is told so: swipe, or report the error.
+      const before = variables_before && variables_before.stat_data;
+      const snap = _.cloneDeep(before && before.World ? before : variables.stat_data);
+      try { runEngine(variables.stat_data, before, text, hint, said); text = ''; }
+      catch (e) {
+        console.error('[Eldrasil engine]', e);
+        text = '';
+        const S = variables.stat_data;
+        for (const k of Object.keys(S)) delete S[k];
+        Object.assign(S, snap);
+        const msg = `Engine error (${String((e && e.message) || e).slice(0, 160)}): this update was not applied and the state was kept as it was before the reply. Swipe the reply, or report the error with the browser console.`;
+        S._Log = [...(Array.isArray(S._Log) ? S._Log : []), msg].slice(-12);
+        if (S.$ui && typeof S.$ui === 'object') S.$ui.toasts = ['Engine error: the update was not applied (see Log)'];
+      }
     });
   })();
 }

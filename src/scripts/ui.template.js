@@ -66,7 +66,7 @@ const fromAbs = abs => {
   const Y = Math.floor(day / 336) + 1; day -= (Y - 1) * 336;
   const M = Math.floor(day / 28) + 1; day -= (M - 1) * 28;
   const W = Math.floor(day / 7) + 1; day -= (W - 1) * 7;
-  return `M${M} W${W} ${DAYS[day]} ${String(Math.floor(min / 60)).padStart(2, '0')}:${String(min % 60).padStart(2, '0')}`;
+  return `${Y > 1 ? 'Y' + Y + ' ' : ''}M${M} W${W} ${DAYS[day]} ${String(Math.floor(min / 60)).padStart(2, '0')}:${String(min % 60).padStart(2, '0')}`;   // 1.16.1: the year from Year 2, as the engine writes dates
 };
 // 1.2.0: the subtype lists are suggestions. A student may name their own subtype and say whether it is a forbidden art
 // (draft.custom / Magic._Affinity.Custom); custom entries win over the catalogue.
@@ -1049,8 +1049,8 @@ function onClick(e) {
       const st = latestState(), S0 = st && st.data.stat_data, f = b.dataset.f, v = f === 'romrank' ? +b.dataset.v : b.dataset.v;
       if (S0 && (S0.$ui || {})[f] !== v) commitSetting([{ op: 'replace', path: `/$ui/${f}`, value: v }], `⚙️ Setting: ${f === 'romrank' ? 'romance opens at ' + (v > 10 ? 'never (off)' : v ? 'Rank ' + v : 'any rank') : 'bond pace ' + v}.`);
     }
-    if (a === 'theme') { setTheme(b.dataset.v); return; }
-    if (a === 'portraitdel') { commitSetting([{ op: 'replace', path: '/$ui/portrait', value: '' }], '🖼️ Student picture removed.'); return; }   // 1.3.1: per browser, no chat entry
+    if (a === 'theme') { setTheme(b.dataset.v); return; }   // 1.3.1: per browser, no chat entry
+    if (a === 'portraitdel') { commitSetting([{ op: 'replace', path: '/$ui/portrait', value: '' }], '🖼️ Student picture removed.'); return; }   // a hidden setting entry, like the upload
     if (a === 'tune') {   // 1.3.1: training / reputation settings (data/tuning.json), written like every setting (D3)
       const st = latestState(), S0 = st && st.data.stat_data, row = TUNE_ROWS.find(r => r.id === b.dataset.f), v = +b.dataset.v;
       if (S0 && row && tuneVal(S0, row.id) !== v) commitSetting([{ op: 'replace', path: '/$ui/tune', value: { ...(((S0.$ui || {}).tune) || {}), [row.id]: v } }], `⚙️ Setting: ${row.name} → ${(row.opts.find(o => o[0] === v) || [0, v])[1]}.`);

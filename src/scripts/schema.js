@@ -354,10 +354,10 @@ export const Schema = z.object({
     xold: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.6.1 (N5): Extras records that left the full list; given back if they return (engine)
     stale: z.any().prefault([]).catch([]), phase: z.any().prefault(null).catch(null),   // 1.6.1: campus events with no news for a week; the campus phase (engine)
     cast: z.any().prefault({}).catch({}),                             // 1.5.1 (P1/P6): { full, brief, spoke, gone, ment } for the Cast Sheet (engine)
-    perks_used: StrList(60),
+    perks_used: StrList(60),                                          // 1.3.0: one-use perks already spent ("Council pardon (Irene), M3 W2 Tue")
     perks_grad: z.record(z.string(), z.any()).prefault({}).catch({}),   // 1.7.6: rewards of graduates as they were ({name: perk}), restored if the story keeps them
     next: z.any().prefault(null).catch(null),                         // 1.3.4: the next thing on today's schedule (engine; bracelet)
-    portrait: Str(''),                                                // 1.3.4: the student's picture (a SillyTavern user image path)                                          // 1.3.0: one-use perks already spent ("Council pardon (Irene), M3 W2 Tue")
+    portrait: Str(''),                                                // 1.3.4: the student's picture (a SillyTavern user image path)
     tsusp: StrList(40),                                               // 1.4.3: Rank 10 benefits suspended by low Trust (engine)
     tune: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.3.1: training / reputation settings { id: value } (data/tuning.json; the engine checks the values)
   }),
@@ -371,10 +371,10 @@ export const Schema = z.object({
     auth: Str(''),   // 'builder' only inside a Student Builder patch; lets it write the read-only fields once
     tool: z.coerce.number().prefault(0).catch(0),   // 1.11.1: 1 inside a player-tool patch (Builder, Settings): not a story turn (engine resets it)
     seed: z.coerce.number().prefault(0).catch(0),   // 5.3: chat seed for happenings, set once by the engine
-    prizes: StrList(20),
-    grads: StrList(10),
+    prizes: StrList(20),   // 1.0.3: competition prizes already paid ("Kingdom-Y1")
+    grads: StrList(10),    // 1.0.3: campaign years whose graduates already left ("Y1")
     bdays: StrList(10),    // 1.7.4: campaign years in which {{user}}'s birthday already added a year to Player.Profile.Age ("Y2")
-    cohorts: StrList(10),  // 1.0.3: campaign years whose new first-years already arrived ("Y2")    // 1.0.3: campaign years whose graduates already left ("Y1")   // 1.0.3: competition prizes already paid ("Kingdom-Y1")
+    cohorts: StrList(10),  // 1.0.3: campaign years whose new first-years already arrived ("Y2")
     ver: Str(''),          // 1.0.3: engine version that last wrote this state (for future save migrations)
     repw: z.any().prefault(null).catch(null),                    // 1.3.0: repeatable Rep XP gained this week { w, Academy, Student, Doves }
     repv: z.coerce.number().prefault(0).catch(0),                // 1.3.0: 1 once the pre-1.3.0 Public / Dorm meters were migrated
@@ -390,10 +390,10 @@ export const Schema = z.object({
     study: z.any().prefault(null).catch(null),                   // 1.10.1 (FP8/FP9): study minutes toward the next exam, past tiers, Results done { key, mins, grace, hist, ranked }; 1.15.0: skips per subject, exam-day condition, training, story shifts, marks, standing, remedials
     bweek: z.record(z.string(), z.any()).prefault({}).catch({}),  // gifts, help and first invited hangout per week
     vouch: z.record(z.string(), z.any()).prefault({}).catch({}),
-    bondv: z.coerce.number().prefault(0).catch(0),
+    bondv: z.coerce.number().prefault(0).catch(0),               // 1.2.2: 2 once Progress was converted to XP
     tenv: z.coerce.number().prefault(0).catch(0),                // 1.3.8: 1 once older bonds had their paid milestones recorded
     xs: z.record(z.string(), z.any()).prefault({}).catch({}),     // 1.6.1 (N5): invented characters seen { lowercase name: { n: appearances, d: last day } }
-    lore: Str(''),                                                // 1.3.4: the card version of the lorebook this chat started from ([initvar])                // 1.2.2: 2 once Progress was converted to XP
+    lore: Str(''),                                                // 1.3.4: the card version of the lorebook this chat started from ([initvar])
   }),
 }).prefault({});
 

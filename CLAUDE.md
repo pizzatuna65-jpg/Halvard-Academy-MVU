@@ -53,7 +53,7 @@ Read in this order before doing anything:
 ## Environment
 
 - The owner's machine is Windows: `python3` is not on PATH, use `python` (HANDOFF writes `python3`). Node 18+: `npm install`
-  first (zod, lodash, yaml, ejs, d3). The folder is not a git repository.
+  first (zod, lodash, yaml, ejs, d3). Since 1.16.1 the folder is a local git repository (no remote): commit each release.
 - Keep text files LF.
 - `tools/audit_chat.py` measures character drift in an exported chat (.jsonl).
 - Portraits are hosted on jsDelivr, pinned to a commit in `data/assets_manifest.json`; `tools/process_assets.py` needs the

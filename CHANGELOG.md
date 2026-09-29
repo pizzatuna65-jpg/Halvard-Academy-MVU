@@ -78,7 +78,50 @@ newest first; releases before 1.8.0 are the numbered items under "BATCH 4 COMPLE
 - **v1.15.1 (2026-09-29):** Formal events open and close with the Headmaster's and Vice Headmaster's speeches, and every feast begins with them; the far grounds (Lake, Grassy Field and Hills, Forest) are as far as the owner describes, not as close as the map draws them, and no lore calls separate buildings "beside" each other any more.
 - **v1.15.2 (2026-09-29):** Remembrance Day opens with speeches from the Headmaster, the Vice Headmaster and Acting Warden Rei before the lantern release (Rei dislikes ceremonial speeches but gives one as the Warden's duty), and Crowning Day with the Headmaster's and Vice Headmaster's speeches before the airship.
 - **v1.16.0 (2026-09-29):** Ambience: how crowded and how lit each place is (the sun follows real-life seasons), a sensory cue type, small seeded moments around {{user}} and, rarely, a secret moment from one of 17 ghost stories (ten new; Tilly knows them all); Features Off / Texture / Full.
+- **v1.16.1 (2026-09-29):** Audit Batch 1 (`planning/AUDIT_2026-09-29.md`): club names are matched loosely so Saturday club time counts, a used item needs the item, happenings never repeat within two days, one rule for "this NPC is away", the engine rolls back a failed update and says so, `<current_state>` shows only the latest `_Log` lines, an OOC answer has no update block, `tools/build_all.py`, a local git repository.
 
+
+## v1.16.1 — Audit Batch 1: bug fixes and build (2026-09-29)
+
+Owner: "saya setuju dengan semua audit mu, bagi menjadi batch" (all findings of `planning/AUDIT_2026-09-29.md` approved; five
+batches, stopping after each). Batch 1 = the quick fixes. Decisions touched: none reversed. The "Missed reports" decision (§4) gains
+one rule: a used item works only if {{user}} has it.
+- **Git** (A1): the folder is a local git repository (baseline commit `946d1e9` = 1.16.0 before any change; `.arena/` is in it too).
+  Commit each release; nothing is pushed.
+- **`tools/build_all.py`** (A2): the build in its fixed order (gen_engine → gen_mvu_entries → gen_ui → build_card → TEST cards),
+  optional `--lore`, `--themes`, `--preset`, `--no-test-cards`, then `node --check` on every generated script. UTF-8 output on Windows.
+- **Club names** (B1): `canonClub` (engine, module level) matches `Player.Profile.Club` to the club list without case, with or without
+  "Club", and by each club's short lore name (`CLASS.calias`, from `tools/common.py` `load_clubs`: "Theatre" → Theatre Troupe). It
+  runs before attendance (5d), so "Soccer" now earns Saturday club time; an unknown club is kept as written and logged once. Rule 502
+  asks for the full club name.
+- **Used items** (B2): an item in `/Consumables` takes effect only if it was in the Bag before the reply, was added to it in the reply,
+  or was bought in the reply (a new Transactions line names it: a hot drink at a café). Otherwise `_Log` says so and nothing changes
+  (The Vigil too). Rule 502 says so.
+- **Happenings** (B3): "no repeat of the previous two days" now uses what those days actually got: each campaign year is chained from
+  its first day (Month 12 has no happenings, so nothing carries over) and cached. Measured over 5 seeds × 2 years: 17 repeats of
+  1,595 before, 0 after. (The audit's figure of 51 counted "the last two happenings", not the last two days; corrected there.)
+- **One "away" rule** (B4): `npcAwayIn(S, id)` (graduated, or a status with away / abroad / absent / missing / dead / confined /
+  hospital / unconscious / expelled / unavailable / left campus / out of town) is used by bonds, introductions, Rank 5 handovers, the
+  Entrance tour, NPC initiative and birthday parties. NPC initiative no longer stops for any status at all ("back from the capital").
+- **Rank 10 suspension** (B5): `$ui.tsusp` is computed before the exam perks read it (from the Trust before the reply), then again
+  after the bonds.
+- **Discovered places** (B6): only Campus Map places enter `$ui.discovered`, so off-campus names never push the Rooftop out of the cap.
+- **UI dates** (B7): the Student file's Active-effects start time shows the year from Year 2. (The audit's planner finding was wrong:
+  the Notebook has its own year-aware date keys.)
+- **Engine errors** (B8): the MVU hook snapshots the state; if the engine throws, the state goes back to the one before the reply,
+  `_Log` names the error and the bracelet toasts "Engine error: the update was not applied". Before, a half-run engine was saved.
+- **Tokens**: no generic "Grew closer through ordinary time together" Milestone on a rank-up (T4; `$Recent` records the rank);
+  `<current_state>` (501) shows only the `_Log` lines of the latest update (T7; rule 504 says "in the last update").
+- **OOC** (P3): rule 503: an out-of-character answer has no update block and never moves time.
+- **Code** (A6, A7): name, whole-word and gift regexes compiled once; `DAILY_BOND_CAP` and a commented-out line removed; misplaced
+  comments in the schema and the UI fixed.
+- Tests: new `tests/test_audit_b1_v1161.cjs` (20 checks). `test_batch5_shops` and `test_mood_gifts_v180` now put the used items in
+  the Bag; `test_saves` treats `$ui.amb` as per-update (it is the next reply's ambience). Run: the new suite and 40 related suites
+  pass (not the full run, per the owner's testing rule). Token audit: 14,470 start / 18,661 heavy (the heavy state's `_Log` lines are
+  all from one update, so T7 shows its saving only in play).
+- Save fixture `save_1.16.0.json` written before the changes; `test_saves` loads it.
+- To confirm with the owner: nothing (no canon invented).
+- Next: Batch 2 (tokens and preset), when the owner says "lanjutkan batch 2".
 
 ## v1.16.0 — Ambience and ghost stories (2026-09-29)
 
