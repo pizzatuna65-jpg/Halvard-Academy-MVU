@@ -90,3 +90,23 @@ ok(P0.Name === 'Charles Chevalier' && P0.Pronouns === 'he/him' && P0.Birthday ==
 ok(JSON.stringify(built.Magic._Affinity.Specialties) === '["Lightning"]' && Object.values(built.Player._Proficiency).every(v => v === 0), 'Elemental, Lightning; normal starting proficiency (all Rank 0)');
 const want = { 'Voltaic Core': ['sustained', 10, 0.3], 'Electromagnetic Flight': ['sustained', 20, 0.8], 'Lightning Arc': ['per_use', 12, 0], 'Lightning Blast': ['per_use', 45, 0] };
 ok(Object.keys(T0).length === 4 && Object.entries(want).every(([k, [m, a, u]]) => T0[k] && T0[k].Cost_mode === m && T0[k].Activation === a && T0[k].Upkeep_per_min === u), 'the four techniques with the same modes and costs as the Charles built in the playtest chat');
+
+console.log('1.30.5: the SillyTavern persona picture in the Student file');
+const Up = new Function(read('src/scripts/ui.js') + '\nreturn { portraitURL, personaFile, renderProfile, view };')();
+const built0 = applyPatch(initState(), B.buildOps(dc, initState()), { mvu: true });
+global.SillyTavern = { name1: 'Charles', chatMetadata: {}, chat: [], powerUserSettings: { personas: { 'charles.png': 'Charles', 'other.png': 'Mira' } } };
+ok(Up.portraitURL(built0) === '/User%20Avatars/charles.png', 'no picture uploaded: the persona named as {{user}} gives its picture');
+Up.view.tab = 'overview';
+let ov = Up.renderProfile(built0);
+ok(/Your SillyTavern persona picture/.test(ov) && /Use another picture/.test(ov) && !/data-act="portraitdel"/.test(ov), 'the Student file says where it comes from and offers another picture, with nothing to remove');
+const withPic = set(built0, [['/$ui/portrait', 'user/images/Eldrasil/student_1.jpg']]);
+ov = Up.renderProfile(withPic);
+ok(Up.portraitURL(withPic) === '/user/images/Eldrasil/student_1.jpg' && /data-act="portraitdel"/.test(ov) && !/persona picture/.test(ov), 'an uploaded picture still wins, and can be removed (back to the persona picture)');
+global.SillyTavern = { name1: 'Charles', chatMetadata: { persona: 'charles_b.png' }, chat: [], powerUserSettings: { personas: { 'charles_a.png': 'Charles', 'charles_b.png': 'Charles' } } };
+ok(Up.personaFile() === 'charles_b.png', 'two personas with that name: the one locked to this chat');
+global.SillyTavern = { name1: 'Charles', chatMetadata: {}, chat: [{ is_user: true, force_avatar: '/thumbnail?type=persona&file=charles_a.png' }, { is_user: false }], powerUserSettings: { personas: { 'charles_a.png': 'Charles', 'charles_b.png': 'Charles' } } };
+ok(Up.personaFile() === 'charles_a.png', 'else the one on the player\'s latest message');
+global.SillyTavern = { name1: 'Nobody', chatMetadata: {}, chat: [], powerUserSettings: { personas: {} } };
+ok(Up.portraitURL(built0) === '' && /No picture yet/.test(Up.renderProfile(built0)), 'no persona picture: "No picture yet" as before');
+delete global.SillyTavern;
+ok(Up.personaFile() === '', 'outside SillyTavern: nothing, no error');

@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.30.5: the one check in its section below.
 - v1.30.4: the one check in its section below.
 - v1.30.3: the one check in its section below.
 - v1.30.2: the one check in its section below.
@@ -61,6 +62,10 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.30.5 — Persona picture
+
+1. With a persona that has an image and no picture uploaded, Student file → Overview shows that image with "Your SillyTavern persona picture"; People shows it in your own circle. Switch persona, reopen the Student file: the picture follows. Upload a picture: it wins; Remove brings the persona picture back.
 
 ### v1.30.4 — Charles template
 

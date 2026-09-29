@@ -1423,7 +1423,7 @@ function renderProfile(S) {
 function pOverview(S) {
   const P = S.Player.Profile, W = S.World;
   if (!(S.$ui || {}).built) return `<p class="lead">This student file is still empty.</p><button class="btn pri" data-act="tobuilder">Create your student</button>`;
-  const pic = portraitURL(S);
+  const own = uploadedURL(S), pic = own || personaURL();
   return `<div class="ovw"><div class="ovl"><p class="name">${esc(P.Name)}</p>
   <p class="sub">To change your profile or magic, use <b>Edit student file</b> in the top-right corner.</p>
   <div class="sub" style="margin:2px 0 14px">Year ${P.Year}, <span style="color:var(--dc)">${esc(P.Dorm === 'Unsorted' ? 'not yet sorted' : P.Dorm + ' Dormitory')}</span>${P.Dorm_rank ? `, dorm rank ${P.Dorm_rank}` : ''}</div>
@@ -1434,7 +1434,7 @@ function pOverview(S) {
   <dt>Goal</dt><dd>${esc(P.Goal || '—')}</dd><dt>Appearance</dt><dd>${esc(P.Appearance || '—')}</dd><dt>Personality</dt><dd>${esc(P.Personality || '—')}</dd>
   <dt>Now</dt><dd>${esc(`Month ${W.Month}, Week ${W.Week}, ${W.Day} ${W.Time}`)}, ${esc(W.Location)}</dd></dl></div>
   <div class="portrait">${pic ? `<img src="${esc(pic)}" alt="${esc(P.Name)}" data-fb="Picture not found" data-fbclass="ph">` : '<div class="ph">No picture yet</div>'}
-    <div class="row"><label class="btn sm">${pic ? 'Change picture' : 'Upload picture'}<input type="file" accept="image/*" data-act="portrait"></label>${pic ? `<button class="btn sm del" data-act="portraitdel" ${view.busy ? 'disabled' : ''}>Remove</button>` : ''}</div></div></div>
+    ${pic && !own ? '<p class="sub">Your SillyTavern persona picture.</p>' : ''}<div class="row"><label class="btn sm">${own ? 'Change picture' : pic ? 'Use another picture' : 'Upload picture'}<input type="file" accept="image/*" data-act="portrait"></label>${own ? `<button class="btn sm del" data-act="portraitdel" ${view.busy ? 'disabled' : ''}>Remove</button>` : ''}</div></div></div>
   <h3>Reputation</h3>${REPD.reps.map(r => repRow(S, r)).join('')}`;
 }
 function pBody(S) {
@@ -1625,7 +1625,27 @@ function pSettings(S) {
 // 1.3.4 (owner): the student's picture. It is scaled down (640 px, JPEG) and saved as a SillyTavern user image (the same
 // /api/images/upload SillyTavern's own saveBase64AsFile uses), so it works on every device; the chat keeps only its path
 // ($ui.portrait, hidden from the narrator), never the picture itself (every message stores the variables).
-const portraitURL = S => { const p = String((((S || {}).$ui) || {}).portrait || ''); return !p ? '' : /^(https?:|data:|\/)/.test(p) ? p : '/' + p; };
+const uploadedURL = S => { const p = String((((S || {}).$ui) || {}).portrait || ''); return !p ? '' : /^(https?:|data:|\/)/.test(p) ? p : '/' + p; };
+// 1.30.5 (owner): with no picture uploaded, the SillyTavern persona's own image is shown (read each time, never stored). The
+// persona is the one whose name is the current {{user}} (power_user.personas: avatar file -> name); with two personas of that name,
+// the one locked to this chat, else the one on the player's latest message (force_avatar = /thumbnail?type=persona&file=…).
+// Verified in SillyTavern public/scripts/personas.js, script.js (sendMessageAsUser, getThumbnailUrl), st-context.js.
+function personaFile() {
+  try {
+    const C = SillyTavern || {}, P = ((C.powerUserSettings || {}).personas) || {}, named = Object.keys(P).filter(k => P[k] === C.name1);
+    if (named.length === 1) return named[0];
+    const locked = (C.chatMetadata || {}).persona;
+    if (locked && (!named.length || named.includes(locked))) return locked;
+    const chat = C.chat || [];
+    for (let i = chat.length - 1; i >= 0; i--) {
+      const m = chat[i], f = m && m.is_user && !m.is_system && /[?&]file=([^&]+)/.exec(String(m.force_avatar || ''));
+      if (f) { const k = decodeURIComponent(f[1]); if (!named.length || named.includes(k)) return k; }
+    }
+    return named[0] || '';
+  } catch (e) { return ''; }
+}
+const personaURL = () => { const f = personaFile(); return f ? '/User%20Avatars/' + encodeURIComponent(f) : ''; };
+const portraitURL = S => uploadedURL(S) || personaURL();
 async function uploadPortrait(file) {
   if (view.busy) return;
   if (!/^image\//.test(file.type || '')) { toastr.warning('Choose an image file.', 'Eldrasil'); return; }

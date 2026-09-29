@@ -1,7 +1,17 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.30.5 — The persona picture in the Student file (2026-09-30)
+
+Owner: "if the user already has a persona image in SillyTavern, put it in the Student file automatically". Decision touched:
+"The student's picture" (one sentence added; nothing new is stored).
+- With no picture uploaded, the Student file (and your own circle in People) shows the current SillyTavern persona's image, read
+  each time the panel is drawn: the persona whose name is {{user}}; with two of that name, the one locked to the chat, else the one
+  on the player's latest message. A line under it says it is the persona picture; "Use another picture" uploads one as before, and
+  removing an upload goes back to the persona picture. Verified in SillyTavern's and Tavern Helper's source (DECISIONS §11).
+- Save fixture v1.30.4. Tests: `test_playtest_v1301` (+7 checks); people map, builder, UI overhaul, saves, qa_static, lint pass.
 
 ## v1.30.4 — Builder template: Charles Chevalier (2026-09-30)
 
@@ -58,31 +68,6 @@ at the owner's request) and a new "Rival academy teams" entry; DECISIONS §11 ga
 - Save fixture v1.30.0. Cards rebuilt. Tests: new `test_playtest_v1301.cjs` (21 checks, using the two dropped blocks from the chat);
   map gates, people map, saves, tokens, cast sheet, activities, extras, audit and lint pass. Recovery inside SillyTavern is a live
   check (TEST_CHECKLIST).
-
-## v1.30.0 — New mark formula and mastery perks (2026-09-30)
-
-Batch 6, the last of the approved `planning/DRAFT_proficiency_practice.md` (now deleted; its tunables moved to `FUTURE_PLANS.md` §5).
-Decisions touched: **DECISIONS §3 "Grades and exams" rewritten** (owner-approved in the draft) and a new "Mastery" entry.
-- **Marks:** each subject scores preparation (tier × 25), the proficiency it draws on (rank × 20) and attendance of its classes since
-  the last exams, weighted 50/30/20 for theory and 30/50/20 for practicals, plus an exam-day roll seeded per subject and exams
-  (−8 to +8, shown from exam week so the narrator and the marks agree). A ≥ 85, B ≥ 70, C ≥ 55, D ≥ 40. Kept: the C floor without a
-  skip, Tired/Exhausted steps, make-up cap, the bond rewards, `/Exam_events`. Replaced: "three skips −1" (attendance is in the score)
-  and "six training sessions → Combat +1" (training raises Prowess). Studies and `<now>` show the sum ("excellent preparation 50 ·
-  Arcana Rank 2 12 · attended 100% 20 = 82: B"). With Proficiency off, preparation stands in for the proficiency part.
-- **Attendance per subject:** the engine counts each class period held (`$eng.study.held`); skips already counted against it. Old
-  saves (migration in `stepMigrate`): the term's classes so far count as attended, recorded skips stay.
-- **Mastery (Rank 5):** routine attempts in the field succeed without a roll (504, only at Rank 5). Knowledge: one real lead a week in
-  the Main Library or Archive. Arcana: senses wards, traps and spells; per-use techniques −10% mana; the Doves take an interest (Doves
-  +8 once; with hidden magic, Dove attention +3 once). Craft: never rough, +1 dose or piece. Prowess: once a week a fight injury one
-  step lighter. Society: staff and nobles met for the first time at Trust +5; a letter from the Noble Houses' Liaison. Nature:
-  creatures curious first; foraging doubles. Toast "Mastery: <perk>"; Studies lists each Rank 5 perk, locked or open.
-- Player guide: exams and a proficiency paragraph. Features: the Study and exams description.
-- Save fixture v1.29.0. Main and three TEST cards rebuilt. Tests: `test_grades_v1150` updated to the new formula (seed 550: a neutral
-  exam day at the first midterm), new `test_mastery_v1300.cjs` (29 checks: the draft's table, weights, both Arcana subjects, the
-  seeded roll, attendance counting and migration, every perk). **Full suite passes**, lint passes, `sim_year 120` passes.
-- To confirm with the owner (invented): the nobles for Consummate (Caspian, Caralynn, Florian, Elion, Nerys) and "staff" = teachers
-  plus the Doves, Cathedral, Liaison and facilities staff; the Liaison's letter wording; Formidable changes severity only (HP stays);
-  the lead is used when a new Clue is added in the Library or Archive; exam-day words (a bad / off / good / inspired day).
 
 ## Release index (one line per release, oldest first)
 
@@ -179,3 +164,4 @@ Decisions touched: **DECISIONS §3 "Grades and exams" rewritten** (owner-approve
 - **v1.30.2 (2026-09-30):** The period reads "no classes today" instead of "before classes" on a day without classes.
 - **v1.30.3 (2026-09-30):** Special-occasion days (calendar `fair`) are clear and calm; the temperature keeps the season.
 - **v1.30.4 (2026-09-30):** Student Builder template "Charles Chevalier", the owner's playtest student.
+- **v1.30.5 (2026-09-30):** With no picture uploaded, the Student file shows the SillyTavern persona's image.
