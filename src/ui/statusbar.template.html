@@ -1,67 +1,72 @@
 <head>
 <meta charset="utf-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&family=Cinzel:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@500;700&family=Alegreya+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style id="eld-bar-css">
 :root{
-  --pewter:#3b3f46; --pewter-lo:#2a2d33; --brass:#b39062; --brass-lo:#7c6240;
-  --glass:#18292b; --glow:#b9eadf; --ink:#e6e3dc; --ink-dim:#a9a69f;
-  --hp:#c4504a; --st:#d39b37; --mp:#5b8fd4; --warn:#e0a24a; --danger:#e0645a;
-  --dorm:#9aa3ad;
+  /* 1.21.0 "Brass & Moonglass": the same colour tokens as the panels (ui.template.js CSS), re-coloured by data/themes.json */
+  --pewter-hi:#666e80; --pewter:#464d5d; --pewter-lo:#2a2f3b; --well:#10141d; --sheet:#1c2230; --rule:#353e52; --rule2:#4a546c;
+  --brass:#c9a364; --brass-hi:#ecd49f; --brass-lo:#7d5f34; --on-brass:#1c1810;
+  --moon:#a3e6db; --moon-dim:#86c2b8; --glass-hi:#1f4a4f; --glass:#0e2124; --glass-lo:#0a171a; --glass-ink:#d7efe9;
+  --ink:#ece7db; --ink2:#c3beb2; --ink3:#aaa69b; --head:#f3e8cf;
+  --warn:#f0bd78; --danger:#f19a91; --warn-line:#e0a24a; --danger-line:#e0645a;
+  --hp:#d9625a/*keep*/; --st:#dcae4a/*keep*/; --mp:#6f9de6/*keep*/; --dorm:#9aa3ad/*keep*/;
+  --f-ui:"Alegreya Sans",system-ui,sans-serif; --f-sc:"Alegreya SC","Alegreya",Georgia,serif;
 }
 *{box-sizing:border-box}
-body{margin:0;font-family:"Alegreya Sans",system-ui,sans-serif;color:var(--ink);font-size:14px;line-height:1.35}
-.band{position:relative;margin:6px 0 2px;border-radius:14px;padding:10px 12px 10px;
-  background:linear-gradient(180deg,#464a52 0%,var(--pewter) 38%,var(--pewter-lo) 100%);
-  border:1px solid var(--brass-lo);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 -1px 0 rgba(0,0,0,.35)}
-.band::before{content:"";position:absolute;left:14px;right:14px;top:0;height:3px;border-radius:0 0 3px 3px;background:var(--dorm);opacity:.85}
+body{margin:0;font-family:var(--f-ui);color:var(--ink);font-size:14px;line-height:1.35}
+.band{position:relative;margin:6px 0 2px;border-radius:16px;padding:11px 13px 11px;
+  background:linear-gradient(180deg,var(--pewter-hi) 0%,var(--pewter) 22%,var(--pewter-lo) 100%);
+  border:1px solid var(--brass-lo);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 -2px 0 rgba(0,0,0,.25)}
+.band::before{content:"";position:absolute;left:18px;right:18px;top:-1px;height:3px;border-radius:0 0 3px 3px;background:var(--dorm);opacity:.9}
 .band.stale{display:none}
 .top{display:flex;gap:10px;align-items:stretch}
-.glass{flex:1 1 auto;min-width:0;border-radius:9px;padding:7px 10px;background:radial-gradient(120% 140% at 20% 0%,#21393b 0%,var(--glass) 60%);
-  border:1px solid #0e1718;box-shadow:inset 0 0 12px rgba(0,0,0,.55)}
+.glass{flex:1 1 auto;min-width:0;border-radius:10px;padding:8px 11px;background:radial-gradient(130% 150% at 12% 0%,var(--glass-hi) 0%,var(--glass) 55%,var(--glass-lo) 100%);
+  border:1px solid var(--glass-lo);box-shadow:inset 0 10px 22px rgba(0,0,0,.28)}
 .clock{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.clock .t{font-size:22px;font-weight:700;color:var(--glow);font-variant-numeric:tabular-nums;letter-spacing:.02em;text-shadow:0 0 8px rgba(120,220,200,.45)}
-.clock .d{color:#8fbfb5;font-size:13px}
-.clock .d .tc{color:var(--glow);font-weight:600}
-.period{color:#cfe9e3;font-size:13px;margin-top:1px}
-.loc{color:var(--ink-dim);font-size:13px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clock .t{font-size:23px;font-weight:700;color:var(--moon);font-variant-numeric:lining-nums tabular-nums;letter-spacing:.01em;text-shadow:0 0 12px color-mix(in srgb,var(--moon) 40%,transparent)}
+.clock .d{color:var(--moon-dim);font-size:13px}
+.clock .d .tc{color:var(--moon);font-weight:700}
+.period{color:var(--glass-ink);font-size:13.5px;margin-top:2px}
+.loc{color:var(--moon-dim);font-size:13px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .side{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;gap:6px}
-.pts{font-variant-numeric:tabular-nums;font-weight:700;font-size:18px;color:#f0e2c4}
-.pts small{font-weight:500;font-size:12px;color:var(--ink-dim);margin-left:3px}
-.dorm{font-family:Cinzel,serif;font-size:12px;letter-spacing:.04em;padding:2px 8px;border-radius:999px;border:1px solid var(--dorm);color:var(--dorm);white-space:nowrap}
-.vitals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:9px}
-.vit .row{display:flex;justify-content:space-between;gap:6px;font-size:12px;color:var(--ink-dim)}
-.vit .row b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
-.bar{height:6px;border-radius:4px;background:rgba(0,0,0,.35);overflow:hidden;margin-top:3px}
-.bar i{display:block;height:100%;border-radius:4px;transition:width .5s ease}
-.vit .sub{font-size:11.5px;color:var(--ink-dim);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pts{font-variant-numeric:lining-nums tabular-nums;font-weight:700;font-size:19px;color:var(--brass-hi)}
+.pts small{font-weight:500;font-size:12px;color:var(--ink2);margin-left:3px}
+.dorm{font-family:var(--f-sc);font-weight:700;font-size:13px;letter-spacing:.05em;padding:2px 9px;border-radius:999px;border:1px solid var(--dorm);color:var(--ink);white-space:nowrap}
+.vitals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
+.vit .row{display:flex;justify-content:space-between;gap:6px;font-size:12.5px;color:var(--ink2)}
+.vit .row b{color:var(--ink);font-weight:700;font-variant-numeric:lining-nums tabular-nums}
+.bar{height:7px;border-radius:99px;background:rgba(0,0,0,.36);box-shadow:inset 0 1px 2px rgba(0,0,0,.3);overflow:hidden;margin-top:4px}
+.bar i{display:block;height:100%;border-radius:99px;transition:width .5s ease;background-image:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,0) 55%,rgba(0,0,0,.12))}
+.vit .sub{font-size:12px;color:var(--ink2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vit .sub.bad{color:var(--danger)} .vit .sub.mid{color:var(--warn)}
-.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
-.chip{font-size:12px;padding:2px 8px;border-radius:999px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.08);color:var(--ink);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
-.chip.warn{border-color:rgba(224,162,74,.55);color:#f1cf95}
-.chip.danger{border-color:rgba(224,100,90,.6);color:#f4b0a9}
-.chip.glow{border-color:rgba(185,234,223,.45);color:var(--glow)}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.chip{font-size:12.5px;padding:2px 9px;border-radius:999px;background:rgba(0,0,0,.24);border:1px solid var(--rule);color:var(--ink);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.chip.warn{border-color:color-mix(in srgb,var(--warn-line) 60%,transparent);color:var(--warn)}
+.chip.danger{border-color:color-mix(in srgb,var(--danger-line) 65%,transparent);color:var(--danger)}
+.chip.glow{border-color:color-mix(in srgb,var(--moon) 45%,transparent);color:var(--moon)}
 .chip i{margin-right:4px;opacity:.85}
-button.chip{font:inherit;font-size:12px;cursor:pointer}button.chip:hover{background:rgba(179,144,98,.18)}button.chip:focus-visible{outline:2px solid var(--glow);outline-offset:1px}
-.cast{display:flex;gap:8px;margin-top:9px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
-.cast button{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:2px;width:58px;background:none;border:0;padding:0;cursor:pointer;color:var(--ink);font:inherit}
-.cast .face{width:40px;height:40px;border-radius:50%;border:2px solid var(--dorm);object-fit:cover;background:#1d2126;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#cfcbc2}
-.cast .nm{font-size:11.5px;max-width:58px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink-dim)}
-.cast button:focus-visible .face{outline:2px solid var(--glow);outline-offset:1px}
-.news{margin-top:8px;font-size:12.5px;color:#f0e2c4;border-left:2px solid var(--brass);padding-left:8px}
+button.chip{font:inherit;font-size:12.5px;cursor:pointer}button.chip:hover{background:color-mix(in srgb,var(--brass) 16%,transparent)}button.chip:focus-visible{outline:2px solid var(--moon);outline-offset:1px}
+.cast{display:flex;gap:8px;margin-top:10px;overflow-x:auto;padding:2px 0 2px 2px;scrollbar-width:none}
+.cast button{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;background:none;border:0;padding:0;cursor:pointer;color:var(--ink);font:inherit}
+.cast .face{width:40px;height:40px;border-radius:50%;border:2px solid var(--dorm);object-fit:cover;background:var(--well);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--ink2)}
+.cast .nm{font-size:12px;max-width:58px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink2)}
+.cast button:focus-visible .face{outline:2px solid var(--moon);outline-offset:1px}
+.news{margin-top:8px;font-size:13px;color:var(--head);border-left:2px solid var(--brass);padding-left:8px}
 .news div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cta{margin-top:9px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 10px;border-radius:9px;background:rgba(179,144,98,.14);border:1px dashed var(--brass)}
-.cta span{flex:1 1 180px;font-size:13px}
-.actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;align-items:center}
-.btn{font:inherit;font-size:13px;cursor:pointer;border-radius:8px;padding:4px 10px;color:var(--ink);background:rgba(0,0,0,.25);border:1px solid rgba(179,144,98,.55)}
-.btn:hover{background:rgba(179,144,98,.18)}
-.btn:focus-visible{outline:2px solid var(--glow);outline-offset:1px}
-.btn.primary{background:var(--brass);color:#1d1a15;border-color:var(--brass);font-weight:700}
-.btn.ghost{border-color:transparent;background:none;color:var(--ink-dim);margin-left:auto}
+.cta{margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 11px;border-radius:10px;background:color-mix(in srgb,var(--brass) 14%,transparent);border:1px dashed var(--brass)}
+.cta span{flex:1 1 180px;font-size:13.5px}
+.actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:center}
+.btn{font:inherit;font-size:13.5px;cursor:pointer;border-radius:8px;padding:4px 11px;min-height:30px;color:var(--ink);background:rgba(0,0,0,.2);border:1px solid color-mix(in srgb,var(--brass) 50%,transparent)}
+.btn:hover{background:color-mix(in srgb,var(--brass) 16%,transparent)}
+.btn:focus-visible{outline:2px solid var(--moon);outline-offset:1px}
+.btn.primary{background:var(--brass);color:var(--on-brass);border-color:var(--brass);font-weight:700}
+.btn.ghost{border-color:transparent;background:none;color:var(--ink2);margin-left:auto}
 .band.collapsed .vitals,.band.collapsed .chips,.band.collapsed .cast,.band.collapsed .news,.band.collapsed .cta,.band.collapsed .actions .opt{display:none}
 .band.collapsed .actions{margin-top:6px}
-.waiting{padding:8px 2px;color:var(--ink-dim);font-size:13px}
-@media (max-width:460px){.vitals{gap:6px}.vit .row{font-size:11px}.vit .row span{overflow:hidden;text-overflow:ellipsis}.vit .sub{font-size:11px}.clock .t{font-size:20px}}
+.waiting{padding:8px 2px;color:var(--ink2);font-size:13px}
+@media (max-width:460px){.vitals{gap:6px}.vit .row{font-size:11.5px}.vit .row span{overflow:hidden;text-overflow:ellipsis}.vit .sub{font-size:11.5px}.clock .t{font-size:21px}}
+@media (pointer:coarse){.btn{min-height:36px}}
 @media (prefers-reduced-motion:reduce){.bar i{transition:none}}
 </style>
 </head>
@@ -123,7 +128,7 @@ button.chip{font:inherit;font-size:12px;cursor:pointer}button.chip:hover{backgro
   function bar(label, cur, max, color, sub, cls) {
     const pct = max > 0 ? Math.max(0, Math.min(100, cur / max * 100)) : 0;
     return '<div class="vit"><div class="row"><span>' + label + '</span><b>' + fmt(cur) + ' / ' + fmt(max) + '</b></div>'
-      + '<div class="bar"><i style="width:' + pct + '%;background:' + color + '"></i></div>'
+      + '<div class="bar"><i style="width:' + pct + '%;background-color:' + color + '"></i></div>'
       + '<div class="sub ' + (cls || '') + '">' + esc(sub) + '</div></div>';
   }
   function chip(text, icon, cls, title, open) {   // open: panel target -> the chip becomes a button (5.1)

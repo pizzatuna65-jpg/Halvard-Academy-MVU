@@ -3,6 +3,30 @@
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
 details: `git show b62d182:CHANGELOG.md`.
 
+## v1.21.0 — UI overhaul 1: tokens and foundation (2026-09-29)
+
+Owner: audit the look and overhaul it without changing how the card works; the report ("Brass & Moonglass", artifact
+QjbmYWMLMpxihoq5oU5Dys) was approved in full: Alegreya instead of Cinzel, slate-blue neutrals, the default theme keeps the name
+Pewter, three staged releases (1.21 foundation, 1.22 bracelet, 1.23 panels and themes). Decision touched: §6 "Colour themes"
+(mechanism unchanged, the values of all five themes change).
+- **Colour tokens.** Every panel colour is a CSS variable in one block (`.ov{…}` in `ui.template.js` CSS), every bracelet colour in
+  `:root{…}` of `statusbar.template.html`, with the same names and values (284 literals, 105 distinct, became about 40 tokens).
+  `tools/make_themes.py` now lists each token's default value (`ROLES`) and each theme's value; `recolor()` is unchanged.
+  Paper notes, vital bars, dorm colours and the map are not themed (`/*keep*/`). The build fails if a theme's text colour falls
+  below 4.5:1 on a panel surface (WCAG AA); the old faint text was 3.97:1.
+- **Palette.** Neutrals take the slate blue of the castle spires on the map; brass is for what you can press, moonglass only for
+  magic and time. Vital colours a little brighter (Health `#d9625a`, Stamina `#dcae4a`, Mana `#6f9de6`).
+- **Type.** Alegreya Sans for the interface, Alegreya (serif) for text written in the story (dossier fields, journal lines, letters,
+  place descriptions), Alegreya SC only for panel nameplates, ranks and place names. Six sizes (12, 13.5, 15, 17, 21, 30 px) instead
+  of fifteen; no upper-case labels.
+- **Frame.** The panel is anchored to the top of the screen (switching tabs no longer moves the header); tabs are underlined in
+  brass; buttons, inputs and toggles have larger touch targets on touch screens.
+- Tests: new `test_ui_overhaul_v1210.cjs` (no colour outside the token blocks, both blocks agree, themes map token values only,
+  theme ids unchanged, fonts, top anchoring, the selectors other code uses); the recolor checks in `test_playtest_v131.cjs` and
+  `test_playtest_v134.cjs` use the new values. Run: those three, `test_saves`, `test_people_map`, `test_notebook`,
+  `test_batch5_shops`, `test_settings_v199`, `qa_static`: all pass. Save fixture `save_1.20.0.json` added.
+- To confirm with the owner: nothing new in canon.
+
 ## Documentation overhaul (2026-09-29, card stays 1.20.0)
 
 Owner: tidy the project files and docs, drop what is no longer relevant, and add an index so a session reads only what a task needs.
@@ -86,89 +110,6 @@ prompt (its card rules are in 504); Price Guide 506 becomes EJS (`src/worldbook/
 - Tests: new `tests/test_audit_b2_v1170.cjs`; `test_preset` and `test_batch5_shops` updated; related suites pass. Save fixture 1.16.1 written first.
 - Next: Batch 3 (integrations) when the owner says "lanjutkan batch 3".
 
-## v1.16.1 — Audit Batch 1: bug fixes and build (2026-09-29)
-
-Owner: "saya setuju dengan semua audit mu, bagi menjadi batch" (all findings of `planning/AUDIT_2026-09-29.md` approved; five
-batches, stopping after each). Batch 1 = the quick fixes. Decisions touched: none reversed. The "Missed reports" decision (§4) gains
-one rule: a used item works only if {{user}} has it.
-- **Git** (A1): the folder is a local git repository (baseline commit `946d1e9` = 1.16.0 before any change; `.arena/` is in it too).
-  Commit each release; nothing is pushed.
-- **`tools/build_all.py`** (A2): the build in its fixed order (gen_engine → gen_mvu_entries → gen_ui → build_card → TEST cards),
-  optional `--lore`, `--themes`, `--preset`, `--no-test-cards`, then `node --check` on every generated script. UTF-8 output on Windows.
-- **Club names** (B1): `canonClub` (engine, module level) matches `Player.Profile.Club` to the club list without case, with or without
-  "Club", and by each club's short lore name (`CLASS.calias`, from `tools/common.py` `load_clubs`: "Theatre" → Theatre Troupe). It
-  runs before attendance (5d), so "Soccer" now earns Saturday club time; an unknown club is kept as written and logged once. Rule 502
-  asks for the full club name.
-- **Used items** (B2): an item in `/Consumables` takes effect only if it was in the Bag before the reply, was added to it in the reply,
-  or was bought in the reply (a new Transactions line names it: a hot drink at a café). Otherwise `_Log` says so and nothing changes
-  (The Vigil too). Rule 502 says so.
-- **Happenings** (B3): "no repeat of the previous two days" now uses what those days actually got: each campaign year is chained from
-  its first day (Month 12 has no happenings, so nothing carries over) and cached. Measured over 5 seeds × 2 years: 17 repeats of
-  1,595 before, 0 after. (The audit's figure of 51 counted "the last two happenings", not the last two days; corrected there.)
-- **One "away" rule** (B4): `npcAwayIn(S, id)` (graduated, or a status with away / abroad / absent / missing / dead / confined /
-  hospital / unconscious / expelled / unavailable / left campus / out of town) is used by bonds, introductions, Rank 5 handovers, the
-  Entrance tour, NPC initiative and birthday parties. NPC initiative no longer stops for any status at all ("back from the capital").
-- **Rank 10 suspension** (B5): `$ui.tsusp` is computed before the exam perks read it (from the Trust before the reply), then again
-  after the bonds.
-- **Discovered places** (B6): only Campus Map places enter `$ui.discovered`, so off-campus names never push the Rooftop out of the cap.
-- **UI dates** (B7): the Student file's Active-effects start time shows the year from Year 2. (The audit's planner finding was wrong:
-  the Notebook has its own year-aware date keys.)
-- **Engine errors** (B8): the MVU hook snapshots the state; if the engine throws, the state goes back to the one before the reply,
-  `_Log` names the error and the bracelet toasts "Engine error: the update was not applied". Before, a half-run engine was saved.
-- **Tokens**: no generic "Grew closer through ordinary time together" Milestone on a rank-up (T4; `$Recent` records the rank);
-  `<current_state>` (501) shows only the `_Log` lines of the latest update (T7; rule 504 says "in the last update").
-- **OOC** (P3): rule 503: an out-of-character answer has no update block and never moves time.
-- **Code** (A6, A7): name, whole-word and gift regexes compiled once; `DAILY_BOND_CAP` and a commented-out line removed; misplaced
-  comments in the schema and the UI fixed.
-- Tests: new `tests/test_audit_b1_v1161.cjs` (20 checks). `test_batch5_shops` and `test_mood_gifts_v180` now put the used items in
-  the Bag; `test_saves` treats `$ui.amb` as per-update (it is the next reply's ambience). Run: the new suite and 40 related suites
-  pass (not the full run, per the owner's testing rule). Token audit: 14,470 start / 18,661 heavy (the heavy state's `_Log` lines are
-  all from one update, so T7 shows its saving only in play).
-- Save fixture `save_1.16.0.json` written before the changes; `test_saves` loads it.
-- To confirm with the owner: nothing (no canon invented).
-- Next: Batch 2 (tokens and preset), when the owner says "lanjutkan batch 2".
-
-## v1.16.0 — Ambience and ghost stories (2026-09-29)
-
-Owner-approved `planning/DRAFT_dynamic_ambience.md` (v1–v4 answers recorded there; "buat skrg dan masukan ke entry lorebook beserta
-semua draft yg sudah disetujui. buat tilly juga aware dengan hal ini, naikan chance ke 5%"; "walking lantern gk ada kaitan dengan
-remembrance day"). Decisions touched: none reversed. The preset's World Sim stays OFF (the card remains the only tracker); the
-engine does a Halvard-specific, seeded version instead. The NPC encounter roll the owner asked about earlier was dropped (owner).
-- **Engine 8m** (`data/ambience.json`, injected by `gen_engine.py`, which checks every place name). For the next reply, like the
-  Fortune roll (the same on every swipe):
-  - **Crowd** (empty, quiet, some people, busy, packed): 22 categories with a rhythm per time block for class days, Saturdays and
-    free days; exam week fills the Library; a place named in today's event plan is busy (the Arbiter Hall packed for the morning
-    assembly, the Ring Dining Hall at a feast); bad weather (Full) empties the outdoors and fills the indoors; breaks empty the
-    campus; after curfew only the dorms are alive.
-  - **Light**: sunrise and sunset by real-life months at about 48° N (M1 = March), interpolated by week, 40 minutes of dawn and
-    dusk; outdoors daylight, overcast, dawn, dusk, dark (starlit when clear); indoors daylight through the windows, lamps lit,
-    lanterns at their night burn after curfew.
-  - **Cue**: one sensory cue *type* on a new place or time block (owner: types, not sentences, so repeats still read differently),
-    not the same type at that place within three days; the place's own types come first.
-  - **Beat** (Full): on a new place or 30 minutes after the last roll, d100: calm 55 (Settings "Ambient moments": Rare 70, Often
-    40), texture 56–90, brush 91–100 (small, may touch {{user}} lightly, never harms, changes nothing; a happening or an event day
-    turns it calm). Unnamed people only; not in a battle, asleep, in {{user}}'s class or on a tool edit; a type not again in that
-    category within seven days. Three types draw on live data: a rumour overheard (Gossip), the weather turning, an event echo.
-  - **Uncanny** (Full, secret): where and when one of the 17 ghost stories can happen, 5% per update (doubled in fog, during the
-    Thinning indoors, for the Night Swimmer in winter and the Night Student on Remembrance Day), at most one a week, the same story
-    not within 30 days. Only a narrator-only line in `<now>`: unexplained, deniable, no harm, everyone reacts in character.
-- **Ghost stories** (`merge_lorebooks.py` `GHOST_STORIES`, uid 337–346): the Thirteenth Stroke, the Night Swimmer, the Walking
-  Lantern, Breath on the Glass, When the Pens Go Quiet, the Faraway Laugh, the Polite Walker, the Last Bed, the Other Climber, the
-  Applause. Each place's entry says "Home of the ... story" (the Polite Walker in the Campus Map's far-grounds line), the World
-  Index lists them, the Map cards link them (`curate_data.py`). Tilly's file: Halvard Unexplained has a page for every one of them.
-- **Card and preset.** `<now>`: "Ambience at <place>: <crowd>, <light>. Sensory cue (write your own detail, once): <type>." and
-  the Nearby / Brushes {{user}} / Uncanny lines. Rule 504: one short Ambience rule (54 tokens, measured). Features: Ambience Off /
-  Texture / Full (default Full); Settings → Campus life: Ambient moments. Preset (`edit_preset.py`): the Scene Engine allows one
-  light touch of the setting on a quiet turn. Warding Rite's day plan: dusk about 18:30 (was 17:00; the chip "Next" follows it).
-- Tests: new `tests/test_ambience_v1160.cjs` (29 checks); `test_playtest_v134` reads 18:30. Full `npm test` (73 suites + static
-  QA, 2,392 checks), `npm run stress` and the token audit pass: ~14.4k at the start, ~18.6k heavy (1.15.0: 14.0k / 18.2k; about
-  200 of the rise is 1.15.1's far-grounds and speech lore). `save_1.15.2.json` added. Card, preset, both lorebook exports and both
-  TEST cards rebuilt.
-- Approved by the owner afterwards ("semua setuju", 2026-09-29): the crowd rhythms per category; the conditions of each old ghost story (the Third Stall
-  and the Long Corridor after 20:00, the Three O'Clock Knock 02:50–03:10 while awake, Taken near the Forest, the Hills, the Old Hut
-  and the courtyard after dark); the other new stories' hours (Breath on the Glass 16:00–22:00, the Last Bed 21:00–06:00, the
-  Applause 18:00–23:00).
-
 ## Release index (one line per release, oldest first)
 
 - All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/archive/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; CHANGELOG 1.2.0/1.2.1).
@@ -248,3 +189,4 @@ engine does a Halvard-specific, seeded version instead. The NPC encounter roll t
 - **v1.18.0 (2026-09-29):** Audit Batch 3: quiet-week Dove attention, named reputation deeds, shop price and injury/curfew reminders, Known_by ↔ Knows, commitments in May be here, and one engine feature gate map.
 - **v1.19.0 (2026-09-29):** Audit Batch 4: shared calendar and timetable data, event-tagged exam/trial moods, smaller per-message state, test index and lint. PNG and Cast Sheet performance measured without compatibility-risk changes.
 - **v1.20.0 (2026-09-29):** Audit Batch 5 (the last): the engine runs as a list of steps with save migrations in one place, run once per version change; behaviour unchanged (proven against 1.19.0), except Dante's renamed gift now sticks on pre-1.3.x saves.
+- **v1.21.0 (2026-09-29):** UI overhaul 1 (foundation): one set of colour tokens for panels and bracelet, a slate-blue and brass palette, the Alegreya family instead of Cinzel, six text sizes, panels anchored to the top, AA contrast in every theme.

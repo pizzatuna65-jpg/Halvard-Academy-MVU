@@ -1,0 +1,45 @@
+// 1.21.0 UI overhaul "Brass & Moonglass" (owner-approved 2026-09-29): colours are tokens, themes re-colour the tokens, the fonts
+// are the Alegreya family, and the panels keep the selectors and data attributes the code and the other suites rely on.
+const fs = require('fs'), path = require('path');
+const { ok, ROOT } = require('./harness.cjs');
+global.window = { parent: { document: {} } };
+global.substitudeMacros = () => 'Aria Vale';
+const U = new Function(fs.readFileSync(path.join(ROOT, 'src/scripts/ui.js'), 'utf8') + '\nreturn { recolor, THEMES, CSS };')();
+const bar = fs.readFileSync(path.join(ROOT, 'src/ui/statusbar.html'), 'utf8');
+const barCss = bar.slice(bar.indexOf('<style id="eld-bar-css">'), bar.indexOf('</style>'));
+console.log('UI overhaul 1.21.0');
+
+// ---- 1. every colour outside the token block is a token, an overlay, or marked keep (so a theme reaches all of it)
+const COLOR = /#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b|rgba?\([^)]*\)/g;
+function strays(css, tokenBlock) {
+  const rest = css.replace(tokenBlock, '').replace(/\/\*(?!keep\*\/)[\s\S]*?\*\//g, '');   // comments are not colours
+  return (rest.match(new RegExp('(?:' + COLOR.source + ')(?!\\s*\\/\\*keep\\*\\/)', 'g')) || [])
+    .filter(c => !/^rgba\((0,0,0|255,255,255),[.\d]+\)$/.test(c.replace(/\s/g, '')));   // the two alpha overlays are themed as roles
+}
+const panelTokens = U.CSS.match(/\.ov\{[\s\S]*?\n\s*position:fixed/)[0], barTokens = barCss.match(/:root\{[\s\S]*?\n\}/)[0];
+ok(!strays(U.CSS, panelTokens).length, 'panels: no colour literal outside the token block ' + JSON.stringify(strays(U.CSS, panelTokens).slice(0, 5)));
+ok(!strays(barCss, barTokens).length, 'bracelet: no colour literal outside the token block ' + JSON.stringify(strays(barCss, barTokens).slice(0, 5)));
+
+// ---- 2. the same tokens in both places, and every theme maps only token values
+const toks = s => Object.fromEntries([...s.matchAll(/--([\w-]+):\s*([^;]+);/g)].map(m => [m[1], m[2].replace(/\/\*keep\*\//, '').trim()]));
+const P = toks(panelTokens), B = toks(barTokens);
+const shared = Object.keys(B).filter(k => k in P);
+ok(shared.length >= 20 && shared.every(k => P[k] === B[k]), `bracelet and panels agree on ${shared.length} shared tokens`);
+const hexKey = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)).join(',');
+const defaults = new Set(Object.values(P).filter(v => /^#[0-9a-f]{6}$/i.test(v)).map(hexKey).concat(['8,10,16', 'a:0,0,0', 'a:255,255,255']));
+ok(Object.values(U.THEMES.themes).every(t => Object.keys(t.map).every(k => defaults.has(k))), 'every theme re-colours token values only');
+ok(['pewter', 'midnight', 'rosewood', 'parchment', 'frost'].every(id => U.THEMES.themes[id]) && U.THEMES.default === 'pewter', 'theme ids unchanged (a saved choice still applies)');
+const parch = U.recolor(U.CSS, U.THEMES.themes.parchment.map);
+ok(/--sheet:#fbf8f1/.test(parch) && /--ink:#2b2620/.test(parch) && /--brass:#8f6a33/.test(parch), 'parchment: the token block turns light');
+
+// ---- 3. fonts: Alegreya family, Cinzel gone
+ok(!/Cinzel/.test(U.CSS) && !/Cinzel/.test(bar), 'no Cinzel left');
+ok(/family=Alegreya:ital/.test(fs.readFileSync(path.join(ROOT, 'src/scripts/ui.js'), 'utf8')) && /Alegreya\+SC/.test(bar), 'panels and bracelet load the Alegreya family');
+ok(/\.hd h2\{[^}]*var\(--f-sc\)/.test(U.CSS) && /p\.fv\{[^}]*var\(--f-text\)/.test(U.CSS), 'nameplates in Alegreya SC, story text in Alegreya');
+
+// ---- 4. the dialog is anchored to the top (tabs no longer move the header)
+ok(/\.ov\{[^}]*align-items:flex-start/.test(U.CSS), 'overlay anchors the dialog to the top');
+
+// ---- 5. contracts the code and other suites use are still styled
+for (const sel of ['.band.stale', '.band.collapsed', '.chip.warn', '.chip.danger', '.cast .face', '.btn.primary', '.cta']) ok(barCss.includes(sel), `bracelet keeps ${sel}`);
+for (const sel of ['.ov[hidden]', '.dlg.wide', '.nav button.on', '.pin.here', '.pin.sel', '.note', '.clue', '.feat.off', '.cd.today']) ok(U.CSS.includes(sel), `panels keep ${sel}`);

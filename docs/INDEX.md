@@ -120,7 +120,8 @@ Lore entries below uid 500 are generated (`src/worldbook/content/<uid>.txt`); ed
 | `src/ui/parts/40_activities.js` | `PANELS.activities`, `PANELS.battle`: clubs, competition, shop, projects, trip |
 | `src/ui/statusbar.template.html` | the in-chat bracelet (display regex in `src/regex/index.json`) |
 
-`tools/gen_ui.py` joins template + parts + `data/*` into `ui.js` and builds `statusbar.html`.
+`tools/gen_ui.py` joins template + parts + `data/*` into `ui.js` and builds `statusbar.html`. Colours are tokens (1.21.0): the `.ov{…}` block
+at the top of the CSS and `:root{…}` in the bracelet; a theme is a set of token values in `tools/make_themes.py` (then `gen_ui.py`).
 
 ## 6. Lore pipeline
 

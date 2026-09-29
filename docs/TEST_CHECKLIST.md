@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.21.0 (UI foundation): the four checks in its section below.
 - v1.20.0 (engine refactor): the two checks in its section below.
 - Basics that only ST can show: the trim regex (minDepth 24) trims the far chat; `[config_override]` is picked up (MVU panel
   shows "overriding"); `send_date` is available when the seed is first set; the display regex `maxDepth` on hidden messages.
@@ -48,6 +49,15 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.21.0 — UI overhaul 1 (tokens and foundation)
+
+- The panels and the bracelet show Alegreya (the clock digits and nameplates are no longer Cinzel) in the chat and in a message
+  iframe; if the fonts do not load, both fall back to a plain sans/serif without breaking the layout.
+- Student file > Settings > Appearance: switch through all five themes; the bracelet follows at once and the choice survives a reload
+  (the saved choice from 1.20.0 still applies).
+- Open the Notebook and switch tabs: the header stays where it is.
+- On a phone: tabs, buttons and toggles are easy to hit; nothing overflows sideways.
 
 ### v1.20.0 — audit Batch 5 (engine refactor)
 

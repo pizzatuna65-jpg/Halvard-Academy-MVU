@@ -1,64 +1,79 @@
 #!/usr/bin/env python3
 """1.3.1 (owner playtest) — writes data/themes.json: colour themes for the panels and the bracelet, palette only.
-Each theme gives a colour per role; a role is the set of colours of the default Pewter palette that play it. Edit here, re-run,
-then run tools/gen_ui.py. ("r,g,b"; "a:r,g,b" = only where the colour is written as rgba(), e.g. faint white lines;
-a value "r,g,b*k" also scales that rgba()'s alpha by k: light themes soften the dark overlays.)"""
+1.21.0 (UI overhaul "Brass & Moonglass", owner-approved): the colours are tokens. ROLES gives each token's value in the default
+Pewter palette, exactly as it is written in the token blocks of src/scripts/ui.template.js (CSS, `.ov{…}`) and
+src/ui/statusbar.template.html (`:root{…}`); each theme gives the token its own value. tools/gen_ui.py injects the result; the UI
+re-colours every occurrence of a default value (recolor()). Edit here, re-run, then run tools/gen_ui.py.
+("r,g,b"; "a:r,g,b" = only where the colour is written as rgba(), e.g. faint white lines; a value "r,g,b*k" also scales that
+rgba()'s alpha by k: light themes soften the dark overlays.) Paper notes, vital bars, dorm colours and the map are not themed."""
 import json, os
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ROLES = {
-    'backdrop': ['10,12,14'], 'bg0': ['29,33,38'], 'bg1': ['38,42,48'], 'bg2': ['43,47,53'], 'hdA': ['61,65,72'], 'hdB': ['48,52,58'],
-    'btn': ['48,52,59'], 'btnH': ['58,62,70'], 'tog': ['35,39,44'], 'card': ['45,49,55'], 'item': ['42,46,52'],
-    'gA': ['38,43,49'], 'gB': ['27,30,34'], 'fbA': ['35,40,46'], 'fbB': ['32,36,42'], 'plab': ['20,22,26'], 'crop': ['15,17,20'],
-    'glassA': ['33,57,59'], 'glass': ['24,41,43'], 'glassLine': ['14,23,24'], 'band': ['70,74,82'], 'pewter': ['59,63,70'], 'pewterLo': ['42,45,51'],
-    'line0': ['61,66,74'], 'line': ['71,76,85'], 'line2': ['83,88,98'], 'line3': ['111,115,123'], 'lineBrass': ['111,90,61'], 'brassLo': ['124,98,64'],
-    'brass': ['179,144,98'], 'ink': ['230,227,220'], 'inkIn': ['238,233,223'], 'head': ['240,226,196'], 'head2': ['246,234,208'], 'h3': ['232,211,168'],
-    'dim': ['169,166,159'], 'faint': ['142,138,130'], 'txt1': ['201,197,188'], 'txt2': ['220,215,204'], 'txt3': ['207,203,194'], 'txtPre': ['207,214,212'],
-    'white': ['255,255,255'], 'whiteA': ['a:255,255,255'], 'shade': ['a:0,0,0'], 'glow': ['185,234,223'], 'nowTxt': ['207,233,227'], 'clockD': ['143,191,181'],
-    'glowShadow': ['120,220,200'], 'warnTxt': ['241,207,149'], 'dangerTxt': ['244,176,169'], 'hidTxt': ['211,194,239'], 'romTxt': ['242,182,203'],
-    'pastTxt': ['232,198,141'], 'typeTxt': ['217,211,199'],
+ROLES = {   # token -> default (Pewter) value; every value must be unique
+    'backdrop': '8,10,16', 'night': '20,25,37', 'well': '16,20,29', 'sheet': '28,34,48', 'band': '33,40,56', 'card': '36,43,59',
+    'card2': '42,50,68', 'btn': '44,52,70', 'btnh': '53,63,85', 'rule': '53,62,82', 'rule2': '74,84,108',
+    'pewter-hi': '102,110,128', 'pewter': '70,77,93', 'pewter-lo': '42,47,59',
+    'brass': '201,163,100', 'brass-hi': '236,212,159', 'brass-lo': '125,95,52', 'on-brass': '28,24,16',
+    'moon': '163,230,219', 'moon-dim': '134,194,184', 'glass-hi': '31,74,79', 'glass': '14,33,36', 'glass-lo': '10,23,26', 'glass-ink': '215,239,233',
+    'ink': '236,231,219', 'ink2': '195,190,178', 'ink3': '170,166,155', 'head': '243,232,207', 'white': '255,255,255',
+    'good': '143,208,180', 'warn': '240,189,120', 'danger': '241,154,145', 'hid': '211,194,239', 'rom': '242,182,203', 'past': '232,198,141',
+    'warn-line': '224,162,74', 'danger-line': '224,100,90',
+    'shade': 'a:0,0,0', 'whiteA': 'a:255,255,255',
 }
-LIGHT_TEXT = {'shade': '70,52,30*0.45','warnTxt': '150,94,18', 'dangerTxt': '168,48,38', 'hidTxt': '98,68,150', 'romTxt': '160,48,90', 'pastTxt': '138,94,28', 'whiteA': '0,0,0',
-              'glowShadow': '255,255,255'}
+LIGHT_TEXT = {'shade': '70,52,30*0.45', 'whiteA': '0,0,0', 'good': '36,120,84', 'warn': '143,92,12', 'danger': '168,58,47', 'hid': '98,68,150',
+              'rom': '160,48,90', 'past': '138,94,28', 'warn-line': '190,130,40', 'danger-line': '192,70,58'}
 THEMES = {
     'midnight': ('Midnight (darker)', {
-        'backdrop': '0,0,0', 'bg0': '11,12,14', 'bg1': '19,20,23', 'bg2': '22,23,27', 'hdA': '32,34,38', 'hdB': '24,26,30', 'btn': '30,32,36',
-        'btnH': '40,42,47', 'tog': '22,24,27', 'card': '26,28,32', 'item': '24,26,29', 'gA': '22,24,28', 'gB': '9,10,12', 'fbA': '20,22,25',
-        'fbB': '17,19,22', 'plab': '10,11,13', 'crop': '8,9,11', 'glassA': '16,34,36', 'glass': '9,20,22', 'glassLine': '4,9,10', 'band': '40,42,46',
-        'pewter': '30,32,36', 'pewterLo': '18,19,22', 'line0': '40,43,48', 'line': '48,51,57', 'line2': '58,61,68', 'line3': '82,86,92'}),
+        'backdrop': '0,0,0', 'night': '7,9,14', 'well': '5,7,11', 'sheet': '13,16,23', 'band': '17,20,28', 'card': '20,24,33', 'card2': '25,29,40',
+        'btn': '26,30,41', 'btnh': '36,41,55', 'rule': '38,43,56', 'rule2': '58,64,82', 'pewter-hi': '72,78,92', 'pewter': '44,49,60',
+        'pewter-lo': '22,25,32', 'brass': '190,152,90', 'brass-hi': '228,202,148', 'brass-lo': '104,78,42', 'glass-hi': '18,50,55',
+        'glass': '6,22,25', 'glass-lo': '3,13,15'}),
     'rosewood': ('Rosewood (warm dark)', {
-        'backdrop': '14,8,9', 'bg0': '30,20,22', 'bg1': '44,30,32', 'bg2': '50,34,36', 'hdA': '72,47,49', 'hdB': '57,38,40', 'btn': '58,38,40',
-        'btnH': '74,49,51', 'tog': '40,27,29', 'card': '53,36,38', 'item': '49,33,35', 'gA': '46,31,33', 'gB': '27,18,20', 'fbA': '40,27,29',
-        'fbB': '36,24,26', 'plab': '26,17,19', 'crop': '20,12,14', 'glassA': '60,35,39', 'glass': '40,24,28', 'glassLine': '20,10,12',
-        'band': '84,55,57', 'pewter': '68,44,46', 'pewterLo': '46,30,32', 'line0': '82,58,60', 'line': '98,70,72', 'line2': '112,82,84',
-        'line3': '142,108,108', 'lineBrass': '132,88,62', 'brassLo': '132,88,62', 'brass': '200,142,98', 'glow': '242,192,172',
-        'nowTxt': '246,216,202', 'clockD': '214,160,142', 'glowShadow': '240,160,130'}),
+        'backdrop': '14,8,9', 'night': '26,16,19', 'well': '20,12,14', 'sheet': '36,24,27', 'band': '42,28,32', 'card': '48,32,36',
+        'card2': '56,38,42', 'btn': '58,39,43', 'btnh': '72,49,54', 'rule': '80,56,60', 'rule2': '108,80,84', 'pewter-hi': '128,96,98',
+        'pewter': '88,62,65', 'pewter-lo': '50,34,37', 'brass': '212,154,106', 'brass-hi': '242,208,168', 'brass-lo': '132,88,62',
+        'moon': '242,192,172', 'moon-dim': '214,160,142', 'glass-hi': '78,40,46', 'glass': '44,22,27', 'glass-lo': '30,14,18',
+        'glass-ink': '246,216,202', 'head': '246,226,204', 'ink2': '205,190,184', 'ink3': '182,164,158'}),
     'parchment': ('Parchment (light)', dict(LIGHT_TEXT, **{
-        'backdrop': '40,33,22', 'bg0': '255,252,245', 'bg1': '246,240,228', 'bg2': '238,230,214', 'hdA': '236,226,206', 'hdB': '227,215,191',
-        'btn': '240,232,216', 'btnH': '229,218,197', 'tog': '244,237,224', 'card': '251,247,238', 'item': '251,247,238', 'gA': '245,239,227',
-        'gB': '229,220,202', 'fbA': '232,224,208', 'fbB': '224,215,198', 'plab': '251,247,238', 'crop': '251,247,238', 'glassA': '238,247,243',
-        'glass': '223,238,232', 'glassLine': '168,198,188', 'band': '250,244,232', 'pewter': '240,232,216', 'pewterLo': '226,214,190',
-        'line0': '214,202,180', 'line': '200,187,163', 'line2': '188,174,148', 'line3': '158,148,130', 'lineBrass': '176,146,104',
-        'brassLo': '176,146,104', 'brass': '150,110,56', 'ink': '43,38,32', 'inkIn': '40,34,26', 'head': '74,50,20', 'head2': '74,50,20',
-        'h3': '122,84,36', 'dim': '108,98,84', 'faint': '132,122,108', 'txt1': '80,72,60', 'txt2': '60,54,44', 'txt3': '70,64,54',
-        'txtPre': '50,58,56', 'white': '30,26,20', 'glow': '28,118,102', 'nowTxt': '30,72,62', 'clockD': '52,112,100', 'typeTxt': '60,54,44'})),
+        'backdrop': '40,33,22', 'night': '233,225,208', 'well': '246,241,231', 'sheet': '251,248,241', 'band': '244,237,224', 'card': '243,237,225',
+        'card2': '236,228,212', 'btn': '240,232,216', 'btnh': '229,218,197', 'rule': '215,203,178', 'rule2': '186,172,146',
+        'pewter-hi': '253,250,243', 'pewter': '240,232,215', 'pewter-lo': '225,213,188', 'brass': '143,106,51', 'brass-hi': '109,79,34',
+        'brass-lo': '184,154,106', 'on-brass': '255,250,240', 'moon': '23,104,94', 'moon-dim': '52,108,100', 'glass-hi': '246,251,249',
+        'glass': '227,239,235', 'glass-lo': '211,229,224', 'glass-ink': '31,59,55', 'ink': '43,38,32', 'ink2': '87,79,67', 'ink3': '100,92,79',
+        'head': '74,50,20', 'white': '30,26,20'})),
     'frost': ('Frost (light, cool)', dict(LIGHT_TEXT, **{
-        'backdrop': '18,26,38', 'bg0': '255,255,255', 'bg1': '240,243,247', 'bg2': '232,237,243', 'hdA': '226,232,240', 'hdB': '213,221,231',
-        'btn': '228,234,241', 'btnH': '213,221,231', 'tog': '236,240,245', 'card': '248,250,252', 'item': '248,250,252', 'gA': '238,242,247',
-        'gB': '219,226,235', 'fbA': '228,233,240', 'fbB': '218,224,232', 'plab': '248,250,252', 'crop': '248,250,252', 'glassA': '236,247,248',
-        'glass': '220,237,240', 'glassLine': '158,194,200', 'band': '246,248,251', 'pewter': '232,237,243', 'pewterLo': '214,222,232',
-        'line0': '208,215,225', 'line': '191,200,212', 'line2': '176,186,200', 'line3': '140,150,164', 'lineBrass': '150,168,196',
-        'brassLo': '150,168,196', 'brass': '58,98,168', 'ink': '30,36,46', 'inkIn': '26,32,42', 'head': '22,42,74', 'head2': '22,42,74',
-        'h3': '40,70,120', 'dim': '88,98,112', 'faint': '118,128,142', 'txt1': '64,72,86', 'txt2': '50,58,70', 'txt3': '60,68,80',
-        'txtPre': '40,50,60', 'white': '20,26,36', 'glow': '24,112,122', 'nowTxt': '20,70,76', 'clockD': '40,108,116', 'typeTxt': '50,58,70'})),
+        'backdrop': '18,26,38', 'night': '226,232,240', 'well': '244,247,250', 'sheet': '252,253,254', 'band': '240,243,247', 'card': '243,246,250',
+        'card2': '232,237,243', 'btn': '234,239,245', 'btnh': '218,225,234', 'rule': '208,215,225', 'rule2': '176,186,200',
+        'pewter-hi': '255,255,255', 'pewter': '232,237,243', 'pewter-lo': '212,220,231', 'brass': '46,88,160', 'brass-hi': '26,58,116',
+        'brass-lo': '150,168,196', 'on-brass': '255,255,255', 'moon': '18,100,110', 'moon-dim': '44,106,114', 'glass-hi': '245,251,252',
+        'glass': '222,238,242', 'glass-lo': '205,227,233', 'glass-ink': '20,60,68', 'ink': '30,36,46', 'ink2': '64,72,86', 'ink3': '82,92,106',
+        'head': '22,42,74', 'white': '20,26,36'})),
 }
+
+# text tokens that must stay readable (WCAG AA, 4.5:1) on the surfaces they sit on, in every theme
+def _lum(v):
+    c = [int(x) / 255 for x in v.split('*')[0].split(',')]
+    c = [x / 12.92 if x <= 0.03928 else ((x + 0.055) / 1.055) ** 2.4 for x in c]
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+def _ratio(a, b):
+    x, y = sorted([_lum(a), _lum(b)]); return (y + 0.05) / (x + 0.05)
+TEXT = ['ink', 'ink2', 'ink3', 'head', 'brass-hi', 'moon', 'good', 'warn', 'danger', 'hid', 'rom', 'past']
+SURF = ['sheet', 'card', 'well']
+GLASS = [('moon', 'glass'), ('moon-dim', 'glass'), ('glass-ink', 'glass'), ('on-brass', 'brass')]
+
 out = {'_note': 'Generated by tools/make_themes.py (edit there). 1.3.1 (owner playtest): colour themes for the panels and the bracelet, palette '
-                'only; tools/gen_ui.py injects them into ui.js and statusbar.html. Each map sends a colour of the default Pewter palette '
-                '("r,g,b"; "a:r,g,b" = only its rgba() forms) to the theme\'s own. Colours not listed (dorm colours, bars, paper notes) stay. '
-                'The choice is kept per browser (localStorage "eld.theme").',
-       'default': 'pewter', 'order': ['pewter', 'midnight', 'rosewood', 'parchment', 'frost'], 'themes': {'pewter': {'name': 'Pewter (default)', 'map': {}}}}
-for key, (name, roles) in THEMES.items():
+                'only; 1.21.0: the colours are tokens (ROLES there). tools/gen_ui.py injects them into ui.js and statusbar.html. Each map sends a '
+                'colour of the default Pewter palette ("r,g,b"; "a:r,g,b" = only its rgba() forms) to the theme\'s own. Colours not listed (dorm '
+                'colours, bars, paper notes, the map) stay. The choice is kept per browser (localStorage "eld.theme").',
+       'default': 'pewter', 'order': ['pewter', *THEMES], 'themes': {'pewter': {'name': 'Pewter (default)', 'map': {}}}}
+vals = list(ROLES.values())
+assert len(vals) == len(set(vals)), 'every default token value must be unique'
+for key, (name, roles) in [('pewter', ('Pewter (default)', {})), *THEMES.items()]:
     assert set(roles) <= set(ROLES), set(roles) - set(ROLES)
-    out['themes'][key] = {'name': name, 'map': {src: rgb for role, rgb in roles.items() for src in ROLES[role]}}
-assert out['order'] == ['pewter', *THEMES]
+    full = {r: roles.get(r, ROLES[r]) for r in ROLES if not ROLES[r].startswith('a:')}
+    bad = [f'{t} on {s} {_ratio(full[t], full[s]):.2f}' for t in TEXT for s in SURF if _ratio(full[t], full[s]) < 4.5]
+    bad += [f'{t} on {s} {_ratio(full[t], full[s]):.2f}' for t, s in GLASS if _ratio(full[t], full[s]) < 4.5]
+    assert not bad, f'{key}: contrast below 4.5:1: {bad}'
+    if key != 'pewter':
+        out['themes'][key] = {'name': name, 'map': {ROLES[role]: rgb for role, rgb in roles.items()}}
 with open(os.path.join(ROOT, 'data/themes.json'), 'w', encoding='utf-8', newline='\n') as f: json.dump(out, f, ensure_ascii=False, indent=1)
 print('themes:', {k: len(v['map']) for k, v in out['themes'].items()})

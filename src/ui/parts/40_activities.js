@@ -150,7 +150,7 @@ function acProjects(S) {
   return `<p class="lead">Work that takes more than one sitting. Progress only moves when you actually spend time on it in the story.</p>` + Pj.map(([k, p]) => {
     const done = p.Progress >= 100, lid = p.Where ? locIdOf(p.Where) : '';
     return `<div class="item${done ? ' done' : ''}"><div class="row"><span class="t">${esc(k)}</span><span class="pill">${esc(p.Kind)}</span>${done ? '<span class="pill g">done</span>' : p.Due ? `<span class="pill w">due ${esc(p.Due)}</span>` : ''}</div>
-      ${p.Goal ? `<div>${esc(p.Goal)}</div>` : ''}<div class="bar"><i style="width:${p.Progress}%;background:${done ? '#3f9f69' : '#b39062'}"></i></div><div class="sub">${p.Progress}%${p.Needs && !done ? ` · still needs: ${esc(p.Needs)}` : ''}</div>
+      ${p.Goal ? `<div>${esc(p.Goal)}</div>` : ''}<div class="bar"><i style="width:${p.Progress}%;background:${done ? '#3f9f69' : '#c9a364'}"></i></div><div class="sub">${p.Progress}%${p.Needs && !done ? ` · still needs: ${esc(p.Needs)}` : ''}</div>
       <div class="meta">${p.With ? peopleIn(p.With, S) : ''}${p.Where ? `<span class="sub">at ${esc(p.Where)}</span>` : ''}
       ${!done ? `<button class="btn sm" data-fill="${esc(`I spend time working on ${k}${p.Where && !hereIs(S, lid) ? ` at ${p.Where}` : ''}: `)}">Work on it</button>` : ''}
       ${lid && !hereIs(S, lid) && !done ? `<button class="btn sm" data-go="${esc(lid)}">Go</button>` : ''}</div></div>`;
@@ -189,9 +189,9 @@ PANELS.battle = {
     const Bt = S.Battle || {}, V = S.Player.Vitals, M = S.Magic, T = M._Techniques || {}, H = S.Hidden || {};
     const field = featureOn(S, 'battle') && (S.$ui || {}).wxfx === 'full' && ((S.$ui || {}).wx || {}).field;   // 1.1.0: outdoor field line
     const foes = Object.entries(Bt.Combatants || {});
-    const fb = (label, cur, max, color) => { const mx = Math.max(max, cur, 1); return `<div class="fbar"><span>${label}</span><div class="bar"><i style="width:${_.clamp(cur / mx * 100, 0, 100)}%;background:${color}"></i></div><b>${fmt(cur)}</b></div>`; };
+    const fb = (label, cur, max, color) => { const mx = Math.max(max, cur, 1); return `<div class="fbar"><span>${label}</span><div class="bar"><i style="width:${_.clamp(cur / mx * 100, 0, 100)}%;background-color:${color}"></i></div><b>${fmt(cur)}</b></div>`; };
     const foeH = foes.length ? foes.map(([id, c]) => `<div class="foe">${npcOf(id) ? avatar(id, S, 'av') : `<span class="av fb">${esc(initials(id))}</span>`}<div class="pm"><span class="pn">${esc(nameOf(id, S))}</span>
-      ${fb('HP', c.HP, 100, '#c4504a')}${fb('Stamina', c.Stamina, 100, '#d39b37')}${c.Status ? `<div class="sub">${esc(c.Status)}</div>` : ''}</div></div>`).join('') : '<div class="empty">No opponents tracked.</div>';
+      ${fb('HP', c.HP, 100, '#d9625a')}${fb('Stamina', c.Stamina, 100, '#dcae4a')}${c.Status ? `<div class="sub">${esc(c.Status)}</div>` : ''}</div></div>`).join('') : '<div class="empty">No opponents tracked.</div>';
     const upkeep = Object.values(M.Active || {}).reduce((a, e) => a + num((T[e.Technique] || {}).Upkeep_per_min), 0);
     const act = Object.entries(M.Active || {}).map(([k, e]) => `<span class="pill g">${esc(k)} · ${fmt((T[e.Technique] || {}).Upkeep_per_min || 0)}/min<button class="lnk" data-fill="${esc(`I let ${k} fade. `)}" style="margin-left:6px">end</button></span>`).join('');
     const techs = Object.entries(T).map(([k, t]) => {
@@ -206,7 +206,7 @@ PANELS.battle = {
     return `<div class="dlg" tabindex="-1"><div class="hd"><h2>${Bt.Active ? 'Battle' : 'No fight in progress'}</h2><button class="x" data-act="close" aria-label="Close">×</button></div><div class="bd">
       ${featureOn(S, 'battle') ? '' : '<p class="hint">Battle tracking is off (Student file → Settings → Features); opponents are not tracked.</p>'}
       ${field ? `<div class="fieldl">Field: ${esc(field)}</div>` : ''}<h3>Opponents</h3>${foeH}
-      <h3>You</h3>${vbar('Health', V.HP, V.HP_max, '#c4504a', V._Condition)}${vbar('Stamina', V.Stamina, V.Stamina_max, '#d39b37', V._Fatigue)}${vbar('Mana', V.Mana, V.Mana_max, '#5b8fd4', upkeep ? `Upkeep −${fmt(upkeep)}/min` : '')}
+      <h3>You</h3>${vbar('Health', V.HP, V.HP_max, '#d9625a', V._Condition)}${vbar('Stamina', V.Stamina, V.Stamina_max, '#dcae4a', V._Fatigue)}${vbar('Mana', V.Mana, V.Mana_max, '#6f9de6', upkeep ? `Upkeep −${fmt(upkeep)}/min` : '')}
       ${act ? `<div class="meta">${act}</div>` : ''}
       <h3>Techniques</h3>${techs || '<div class="empty">No techniques. Add them in the Student Builder.</div>'}
       <p class="hint">Buttons only draft your action into the message box; the engine charges mana when the narrator reports the cast.</p></div></div>`;

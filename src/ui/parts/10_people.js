@@ -239,7 +239,7 @@ function peopleGraphHTML(S) {
   const groups = Object.entries(GROUP).map(([k, [c, l]]) => `<button data-ggroup="${k}" class="${view.ggroups.has(k) ? 'on' : ''}" style="--c:${c}" aria-pressed="${view.ggroups.has(k)}">${l}</button>`).join('');
   return `<p class="lead">Everyone you have met, around you (your line to each of them is gold, thicker with rank, and takes a colour when it means more: friends, rivals, wary or dislike when their Tension or distrust runs high, pink for a romance). The lines between them appear as you learn them: teachers and mentors once you have met both, and how someone sees the people around them (including people you have not met) at bond Rank 5–6. An arrow shows a one-way view: A → B is how A sees B; a line with no arrow is shared by both.</p>
     <div class="tog gt">${chips}</div>${known ? '' : '<div class="empty">No connections learned yet. Deepen a bond to Rank 5 to learn how someone sees the people around them.</div>'}
-    <div class="tog gt" style="margin-top:6px"><span class="sub" style="align-self:center">Groups:</span>${groups}${Object.keys(view.gpos || {}).length ? '<button data-gunpin="1" style="--c:#8e8a82">Reset layout</button>' : ''}</div>
+    <div class="tog gt" style="margin-top:6px"><span class="sub" style="align-self:center">Groups:</span>${groups}${Object.keys(view.gpos || {}).length ? '<button data-gunpin="1" style="--c:#aaa69b">Reset layout</button>' : ''}</div>
     <div class="graph"><svg class="g" role="img" aria-label="Connections diagram"></svg><div class="gload">Loading the diagram…</div></div>
     <div class="ginfo sub">Tap a line to read what you know about it; tap a person to open their dossier. Drag someone to place them (they stay where you drop them; double-click to let go); pinch or scroll to zoom.</div>`;
 }
@@ -266,7 +266,7 @@ async function drawGraph(S) {
     .attr('markerWidth', 10).attr('markerHeight', 10).attr('markerUnits', 'userSpaceOnUse').attr('orient', 'auto')
     .append('path').attr('d', 'M0,-4.5L10,0L0,4.5Z').attr('fill', c);
   const lk = g.append('g').selectAll('path').data(links).join('path').attr('fill', 'none')
-    .attr('stroke', d => d.type === 'bond' ? themed('#b39062') : d.type === 'group' ? GROUP[d.grp][0] : EDGE[d.type][0])
+    .attr('stroke', d => d.type === 'bond' ? themed('#c9a364') : d.type === 'group' ? GROUP[d.grp][0] : EDGE[d.type][0])
     .attr('stroke-width', d => d.type === 'bond' ? 1.5 + d.rank * 0.45 : d.mine ? 2.2 + d.rank * 0.45 : d.type === 'romance' ? 2.2 : d.type === 'group' ? 1 : d.type === 'softspot' ? 1.6 : 2.2)
     .attr('stroke-dasharray', d => d.type === 'group' ? '2 4' : d.type === 'softspot' && !d.mine ? '6 3' : null)
     .attr('stroke-opacity', d => d.type === 'bond' ? 0.55 : d.mine || d.type === 'romance' ? 0.85 : d.type === 'group' ? 0.55 : d.type === 'softspot' ? 0.6 : 0.85)
@@ -285,19 +285,19 @@ async function drawGraph(S) {
   const all = g.append('g').selectAll('g').data(nodes).join('g').style('cursor', 'pointer');
   const gp = all.filter(d => d.grp);   // 1.4.1 group label nodes
   gp.append('rect').attr('rx', 9).attr('height', 18).attr('y', -9).attr('x', d => -(d.label.length * 3.4 + 10)).attr('width', d => d.label.length * 6.8 + 20)
-    .attr('fill', themed('#1d2126')).attr('stroke', d => GROUP[d.grp][0]).attr('stroke-width', 1.2);
+    .attr('fill', themed('#10141d')).attr('stroke', d => GROUP[d.grp][0]).attr('stroke-width', 1.2);
   gp.append('text').attr('text-anchor', 'middle').attr('dy', '0.35em').attr('font-size', 11).attr('fill', d => GROUP[d.grp][0]).text(d => d.label);
   const nd = all.filter(d => !d.grp);
-  nd.append('circle').attr('r', d => d.you ? 20 : 17).attr('fill', themed('#1d2126'))
-    .attr('stroke', d => d.you ? themed('#b9eadf') : (npcOf(d.id) ? npcOf(d.id).dc : themed('#6f737b'))).attr('stroke-width', d => d.met || d.you ? 2.5 : 1.5)
+  nd.append('circle').attr('r', d => d.you ? 20 : 17).attr('fill', themed('#10141d'))
+    .attr('stroke', d => d.you ? themed('#a3e6db') : (npcOf(d.id) ? npcOf(d.id).dc : themed('#4a546c'))).attr('stroke-width', d => d.met || d.you ? 2.5 : 1.5)
     .attr('stroke-dasharray', d => d.met || d.you ? null : '3 2');
-  nd.append('text').attr('text-anchor', 'middle').attr('dy', '0.35em').attr('fill', themed('#cfcbc2')).attr('font-size', 11)
+  nd.append('text').attr('text-anchor', 'middle').attr('dy', '0.35em').attr('fill', themed('#c3beb2')).attr('font-size', 11)
     .text(d => d.you ? 'You' : initials(knowsName(d.id, S) ? (npcOf(d.id) || { n: d.id }).n : '?'));
   const mine = portraitURL(S);   // 1.3.7: the student's picture in your own circle
   nd.filter(d => (d.you && mine) || (!d.you && npcOf(d.id) && npcOf(d.id).t)).append('image').attr('href', d => (d.you ? mine : imgURL(npcOf(d.id).t))).attr('preserveAspectRatio', 'xMidYMid slice').attr('x', -15).attr('y', -15).attr('width', 30).attr('height', 30)
     .style('clip-path', 'circle(50%)').on('error', function () { this.remove(); });
-  nd.append('text').attr('text-anchor', 'middle').attr('y', 32).attr('fill', themed('#e6e3dc')).attr('font-size', 12)
-    .attr('paint-order', 'stroke').attr('stroke', themed('#1d2126')).attr('stroke-width', 3)
+  nd.append('text').attr('text-anchor', 'middle').attr('y', 32).attr('fill', themed('#ece7db')).attr('font-size', 12)
+    .attr('paint-order', 'stroke').attr('stroke', themed('#10141d')).attr('stroke-width', 3)
     .text(d => d.you ? (S.Player.Profile.Name || '') : knowsName(d.id, S) ? d.id : (npcOf(d.id) ? '?' : d.id));
   nd.append('title').text(d => d.you ? 'You' : nameOf(d.id, S, true));
   nd.on('click', (ev, d) => { if (!d.you && !ev.defaultPrevented) open('npc:' + d.id); });

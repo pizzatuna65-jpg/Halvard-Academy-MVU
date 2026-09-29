@@ -105,9 +105,9 @@ ok(/data-act="theme" data-v="parchment"/.test(st) && /data-act="theme" data-v="m
 
 // ---- 8. colour themes (palette only)
 const P = U.THEMES.themes.parchment.map;
-ok(U.recolor('.dlg{background:#262a30;color:#e6e3dc}', P) === '.dlg{background:#f6f0e4;color:#2b2620}', 'parchment: background and ink swap');
+ok(U.recolor('.dlg{background:#1c2230;color:#ece7db}', P) === '.dlg{background:#fbf8f1;color:#2b2620}', 'parchment: background and ink swap');
 ok(U.recolor('border:1px solid rgba(255,255,255,.07);color:#fff', P) === 'border:1px solid rgba(0,0,0,.07);color:#1e1a14', 'faint white lines turn dark; white text too');
-ok(U.recolor('#c4504a #3f9f69', P) === '#c4504a #3f9f69' && U.recolor('#262a30', {}) === '#262a30', 'bars and dorm colours stay; Pewter changes nothing');
+ok(U.recolor('#d9625a #3f9f69', P) === '#d9625a #3f9f69' && U.recolor('#1c2230', {}) === '#1c2230', 'bars and dorm colours stay; Pewter changes nothing');
 ok(Object.values(U.THEMES.themes).every(t => Object.keys(t.map).every(k => /^(a:)?\d+,\d+,\d+$/.test(k))), 'theme maps are well formed');
 const bar = fs.readFileSync(path.join(ROOT, 'src/ui/statusbar.html'), 'utf8');
 ok(/const THEMES = \{"default":"pewter"/.test(bar) && /eld\.theme/.test(bar), 'the bracelet carries the themes and follows the same setting');

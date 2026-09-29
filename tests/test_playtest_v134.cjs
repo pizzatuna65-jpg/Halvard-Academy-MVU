@@ -49,7 +49,7 @@ for (const th of ['rosewood', 'parchment', 'frost', 'midnight']) {
   const css = U.recolor(U.CSS, U.THEMES.themes[th].map);
   ok(/\.pin\.here\{background:#35e0b0\/\*keep\*\/;[^}]*border:3px solid #ffffff/.test(css) && /\.pin\.sel\{background:#fff4d8/.test(css) && /\.pin\{[^}]*background:#b39062\/\*keep\*\//.test(css), `${th}: you are here (mint, white ring) and the picked place (cream) stand out from the brass pins`);
 }
-ok(U.recolor('a{color:#262a30/*keep*/;background:#262a30}', U.THEMES.themes.parchment.map) === 'a{color:#262a30/*keep*/;background:#f6f0e4}', '"/*keep*/" opts a colour out of the theme');
+ok(U.recolor('a{color:#1c2230/*keep*/;background:#1c2230}', U.THEMES.themes.parchment.map) === 'a{color:#1c2230/*keep*/;background:#fbf8f1}', '"/*keep*/" opts a colour out of the theme');
 
 // ---- 6. the student's picture
 const d = Object.assign(U.blankDraft(), U.TEMPLATES[0].make()); d.name = 'Aria Vale';
