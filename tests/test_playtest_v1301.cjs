@@ -79,3 +79,14 @@ const exam = dayOf(3, 1, 'Mon'), wet = [...Array(60).keys()].some(s => W.wxDay(s
 ok(wet && !CAL.some(e => e.fair && /exam|Training Week|Thinning|holiday|Break/i.test(e.t)), 'exam weeks, long weeks, breaks and the Thinning keep ordinary weather');
 const arrive = at(set(initState(), [['/$eng/seed', 1699121023], ['/$ui/built', true], ['/$eng/auth', 'builder']]), 0, '08:30', 'Courtyards');
 ok(!arrive.Player.Conditions.Soaked && /clear/i.test(arrive.World._Weather || ''), `outdoors on the Entrance morning: no Soaked (${arrive.World._Weather})`);
+
+console.log('1.30.4: the Charles template (the owner\'s playtest student)');
+const B = new Function(read('src/scripts/ui.js') + '\nreturn { TEMPLATES, blankDraft, validate, buildOps };')();
+const tpl = B.TEMPLATES.find(t => t.id === 'charles'), dc = Object.assign(B.blankDraft(), tpl.make());
+ok(dc.name === 'Charles Chevalier' && B.validate(dc, initState()).blocking === 0, 'the template brings his name and is valid as it is');
+const built = applyPatch(initState(), B.buildOps(dc, initState()), { mvu: true });
+const P0 = built.Player.Profile, T0 = built.Magic._Techniques;
+ok(P0.Name === 'Charles Chevalier' && P0.Pronouns === 'he/him' && P0.Birthday === 'M4 W2 Mon' && built.Player.Vitals.Mana_max === 200 && P0.Goal === 'Having fun and enjoying life', 'profile: name, pronouns, birthday M4 W2 Mon, 200 mana, goal');
+ok(JSON.stringify(built.Magic._Affinity.Specialties) === '["Lightning"]' && Object.values(built.Player._Proficiency).every(v => v === 0), 'Elemental, Lightning; normal starting proficiency (all Rank 0)');
+const want = { 'Voltaic Core': ['sustained', 10, 0.3], 'Electromagnetic Flight': ['sustained', 20, 0.8], 'Lightning Arc': ['per_use', 12, 0], 'Lightning Blast': ['per_use', 45, 0] };
+ok(Object.keys(T0).length === 4 && Object.entries(want).every(([k, [m, a, u]]) => T0[k] && T0[k].Cost_mode === m && T0[k].Activation === a && T0[k].Upkeep_per_min === u), 'the four techniques with the same modes and costs as the Charles built in the playtest chat');

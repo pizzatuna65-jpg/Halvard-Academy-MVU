@@ -1,7 +1,19 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.30.4 — Builder template: Charles Chevalier (2026-09-30)
+
+Owner: "put this in the character build templates so I don't have to make the character every playtest". The Student Builder's
+template cards gain **Charles Chevalier** (last in the row): the owner's playtest student with the texts exactly as the owner wrote
+them, he/him, 18, Human, born M4 W2 Mon, 200 mana, Elemental (Lightning), normal starting proficiency, and four techniques with the
+same modes and costs as the Charles built in the 2026-09-30 playtest chat (Voltaic Core sustained Standard, Electromagnetic Flight
+sustained Major, Lightning Arc per use Standard, Lightning Blast per use Signature). A template may now bring its student's name
+(the other templates still keep the persona name). Save fixture v1.30.3. Tests: `test_builder` (every template valid and
+registered), `test_playtest_v1301` (+4 checks), saves, qa_static, lint pass.
+- To confirm with the owner: the birthday follows the pasted text (Monday); the playtest chat's Charles had M4 W2 Tue. The general
+  paragraph about Voltaic Core has no Builder field, so, as in the owner's own build, each technique carries its own text.
 
 ## v1.30.3 — Clear weather on special occasions (2026-09-30)
 
@@ -71,31 +83,6 @@ Decisions touched: **DECISIONS §3 "Grades and exams" rewritten** (owner-approve
 - To confirm with the owner (invented): the nobles for Consummate (Caspian, Caralynn, Florian, Elion, Nerys) and "staff" = teachers
   plus the Doves, Cathedral, Liaison and facilities staff; the Liaison's letter wording; Formidable changes severity only (HP stays);
   the lead is used when a new Clue is added in the Library or Archive; exam-day words (a bad / off / good / inspired day).
-
-## v1.29.0 — Non-magic crafts and masterwork (2026-09-30)
-
-Batch 5 of the approved proficiency plan. Decisions touched: none changed; DECISIONS "Crafting" gains the masterwork rule.
-- **Crafts:** cooking and baking (Cooking Club kitchen in the Canteen, or with the cook's leave), needlework, drawing and painting,
-  woodcarving, calligraphy (portable in the dorms, Common Rooms, Courtyards and Gardens; also their clubs) and smithing (Workshop,
-  Smithing Club): 20 recipes on the 1.28.0 engine. Food gives stamina, knitted scarves and winter sets are warm weather gear, the rest
-  are handmade gifts. `data/crafts.json` now names each craft's Practice actions, tools (Precision tool roll +5 for smithing, the
-  pen for calligraphy), experts and mishap injury, and each recipe's yield; brewing yields are unchanged.
-- **Ingredients:** Baking and cooking ingredients (Commissary 10), Bar stock and coal (Commissary 20), Knitting wool and needles
-  (Tinker's Bench 15), Paint box (Tinker's Bench 30). Knitting wool is not warm gear by its name.
-- **Practice:** two new actions: Art studio at the Mall (15 points, used for drawing) and Brewing Club bench at the Workshop (the
-  1.28.0 Practice tab showed Workshop brewing to Brewing Club members, but the engine had no action for it). The portable practice now
-  opens with any portable craft ingredient in the Bag (a bought wool scarf no longer counts). Practice recipes show their craft.
-- **Masterwork:** a Project of a craft Kind (potion, smithing, tailoring, enchantment, cooking, painting, carving, calligraphy or
-  craft) at Craft Rank 4 shows "Masterwork if finished this turn: <result>" in `<now>`; when the Project reaches 100 (or the narrator
-  reports `Aim: "masterwork"`) the engine judges it at DC 85, adds the piece to the Bag (`masterwork, handmade by {{user}}`, so gift
-  preferences read it), awards 3 Craft XP and closes the Project. Rules 502 (Projects Kinds, one sentence) and 504 updated; 506 says
-  where handmade work sells.
-- Save fixture v1.28.0; no migration. Main and three TEST cards rebuilt. Tests: new `test_crafts_v1290.cjs` (35 checks);
-  `test_crafting_v1280`, `test_practice_v1270`, `test_saves`, `test_tokens_v1110`, `test_batch5_shops`, `test_settings_v199`,
-  `qa_static`, `test_world_v110` and lint pass.
-- To confirm with the owner (invented, all tunable): recipe names and yields (stew pot 4/3/2 servings), sale guides (painting 30–80),
-  mishap injuries per craft, masterwork XP 3, the new Mall art studio and Workshop Brewing Club bench actions, and that a masterwork
-  Project closes whatever the result (a failed one leaves nothing).
 
 ## Release index (one line per release, oldest first)
 
@@ -191,3 +178,4 @@ Batch 5 of the approved proficiency plan. Decisions touched: none changed; DECIS
 - **v1.30.1 (2026-09-30):** Playtest fixes: map gates open only in their area; rival academy students kept off Halvard's grounds; malformed update blocks recovered.
 - **v1.30.2 (2026-09-30):** The period reads "no classes today" instead of "before classes" on a day without classes.
 - **v1.30.3 (2026-09-30):** Special-occasion days (calendar `fair`) are clear and calm; the temperature keeps the season.
+- **v1.30.4 (2026-09-30):** Student Builder template "Charles Chevalier", the owner's playtest student.

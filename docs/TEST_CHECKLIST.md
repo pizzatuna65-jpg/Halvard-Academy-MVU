@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.30.4: the one check in its section below.
 - v1.30.3: the one check in its section below.
 - v1.30.2: the one check in its section below.
 - v1.30.1 (playtest fixes): the three connected-session checks in its section below.
@@ -60,6 +61,10 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.30.4 — Charles template
+
+1. New chat → Student Builder → the "Charles Chevalier" card fills every step (name included); Register works without edits.
 
 ### v1.30.3 — Clear weather on special occasions
 

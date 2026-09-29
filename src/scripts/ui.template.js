@@ -166,6 +166,20 @@ const TEMPLATES = [
     hidden: { on: true, truth: tech('Unmake', 'Mystic', 'Unmaking', 'Erases a small object, or a hand-sized piece of something larger. What is unmade does not come back.', 'Nothing bigger than a chair; you have never tried it on anything alive.', 'per_use', 'Major'),
       cover: 'Telekinesis', cover_type: 'Mystic', conceal: 'Unmaking leaves no light or sound; you pass slips off as clumsy telekinesis and keep Quiet Hands running when you use it.' },
   }) },
+  // 1.30.4 (owner): the owner's playtest student, so a playtest does not start with building him again (texts as the owner wrote them)
+  { id: 'charles', title: 'Charles Chevalier', blurb: 'Elemental lightning: Voltaic Core speed, flight, wild arcs and one huge blast. 200 mana.', make: () => ({
+    name: 'Charles Chevalier', pronouns: 'he/him', age: 18, race: 'Human', bday: { m: 4, w: 2, d: 'Mon' },
+    appearance: 'Human male, short and lean for his age (18), medium-length blonde hair fading to grey at the ends, a stubborn ahoge, big yellow eyes, and one noticeable sharp fang that shows when he grins.',
+    background: 'Grows up in secluded village with minimum technology and simpler food. The villager there realize how much potential charles have with his magic so his family send him to halvard academy.',
+    goal: 'Having fun and enjoying life',
+    personality: 'childish, playful, prankster and disrespectful of anything boring. Little interest in learning concepts or frameworks — he prefers to "play it by ear" and "just wing it.". Have little atention span, thing he think interesting can be boring few minutes later. Selective memory anything he think not interesting will be forgotten few moment later. Think any food as delicious',
+    mana: 200, types: ['Elemental'], dominant: 'Elemental', specs: ['Lightning'], profMode: 'normal',
+    techs: [
+      tech('Voltaic Core', 'Elemental', 'Lightning', 'through the muscular and nervous systems, the user accelerates neural signals to achieve explosive speeds and instant reaction times', 'The longer spell continue the more stamina it uses', 'sustained', 'Standard'),
+      tech('Electromagnetic Flight', 'Elemental', 'Lightning', 'Launch from the ground with voltaic core then sustained in the sky until launching to any direction mimicking flying.', 'Can only go to one direction, stop, then go another direction cant fly freely or make maneuver.', 'sustained', 'Major'),
+      tech('Lightning Arc', 'Elemental', 'Lightning', 'Channel the lightning outward from his body, making yellow lightning arc to hit enemy, the output can be ajusted to mere zap to lethal', 'Once it launched it, charles cant control it, it become wild arc lightning, can be absorbed by earth or metal like normal lightning', 'per_use', 'Standard'),
+      tech('Lightning Blast', 'Elemental', 'Lightning', 'Channel concentrated Lightning to 1 part of body like hand or feet, then unleash it to create massive explosive blast upon impact', 'It have strong strain toward body especially toward the body part lightning blast concentrated', 'per_use', 'Signature'),
+    ] }) },
 ];
 
 const parseBday = s => { const m = String(s || '').match(/^M(\d{1,2}) W([1-4]) (Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/); return m ? { m: +m[1], w: +m[2], d: m[3] } : { m: 0, w: 1, d: 'Mon' }; };
@@ -1208,8 +1222,9 @@ function onClick(e) {
   if (b.dataset.tpl) {
     chosenTemplate = b.dataset.tpl;
     const base = blankDraft();
-    if (b.dataset.tpl !== 'blank') Object.assign(base, TEMPLATES.find(t => t.id === b.dataset.tpl).make());
-    base.name = draft.name || base.name;
+    const made = b.dataset.tpl !== 'blank' ? TEMPLATES.find(t => t.id === b.dataset.tpl).make() : {};
+    Object.assign(base, made);
+    base.name = made.name || draft.name || base.name;   // 1.30.4: a template for a named student brings the name
     draft = base; view.step = 'identity'; render(); return;
   }
   const toggle = (arr, v) => { if (arr.includes(v)) _.pull(arr, v); else arr.push(v); };
