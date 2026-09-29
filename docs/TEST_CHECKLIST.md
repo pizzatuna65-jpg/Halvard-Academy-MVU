@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.29.0 (non-magic crafts, masterwork): the three connected-session checks in its section below.
 - v1.28.0 (magical crafting): the four connected-session checks in its section below.
 - v1.27.0 (Proficiency and Practice): the four checks in its section below.
 - v1.25.0 (red "new" dots): the four checks in its section below.
@@ -55,6 +56,12 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.29.0 — Non-magic crafts and masterwork
+
+1. In the Common Rooms (or your dorm) with Knitting wool and needles in the Bag, open Activities → Practice: Needlework, Drawing, Woodcarving and Calligraphy recipes are listed, and the one you can make shows the same band as `Crafting now` in `<now>`. Knit a scarf through chat: the narrator plays that band; the Bag gains a Knitted scarf (handmade gear) and loses one wool; on a cold day it holds off Chilled.
+2. Give a handmade piece (a sketch, a carved figure or cookies from the Cooking Club kitchen) to someone who likes handmade things: the gift counts as liked. Try the Canteen kitchen as a non-member, once alone and once with the cook present.
+3. With a save at Craft Rank 4, keep a Project of Kind tailoring (or craft) under way: `<now>` shows "Masterwork if finished this turn". Finish it in the story: the narrator plays that result, the piece lands in the Bag as a masterwork, and the Project closes. Check the recipe rows and the masterwork line on a narrow screen.
 
 ### v1.28.0 — Magical crafting
 

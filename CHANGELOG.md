@@ -1,7 +1,32 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show b62d182:CHANGELOG.md`.
+details: `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.29.0 — Non-magic crafts and masterwork (2026-09-30)
+
+Batch 5 of the approved proficiency plan. Decisions touched: none changed; DECISIONS "Crafting" gains the masterwork rule.
+- **Crafts:** cooking and baking (Cooking Club kitchen in the Canteen, or with the cook's leave), needlework, drawing and painting,
+  woodcarving, calligraphy (portable in the dorms, Common Rooms, Courtyards and Gardens; also their clubs) and smithing (Workshop,
+  Smithing Club): 20 recipes on the 1.28.0 engine. Food gives stamina, knitted scarves and winter sets are warm weather gear, the rest
+  are handmade gifts. `data/crafts.json` now names each craft's Practice actions, tools (Precision tool roll +5 for smithing, the
+  pen for calligraphy), experts and mishap injury, and each recipe's yield; brewing yields are unchanged.
+- **Ingredients:** Baking and cooking ingredients (Commissary 10), Bar stock and coal (Commissary 20), Knitting wool and needles
+  (Tinker's Bench 15), Paint box (Tinker's Bench 30). Knitting wool is not warm gear by its name.
+- **Practice:** two new actions: Art studio at the Mall (15 points, used for drawing) and Brewing Club bench at the Workshop (the
+  1.28.0 Practice tab showed Workshop brewing to Brewing Club members, but the engine had no action for it). The portable practice now
+  opens with any portable craft ingredient in the Bag (a bought wool scarf no longer counts). Practice recipes show their craft.
+- **Masterwork:** a Project of a craft Kind (potion, smithing, tailoring, enchantment, cooking, painting, carving, calligraphy or
+  craft) at Craft Rank 4 shows "Masterwork if finished this turn: <result>" in `<now>`; when the Project reaches 100 (or the narrator
+  reports `Aim: "masterwork"`) the engine judges it at DC 85, adds the piece to the Bag (`masterwork, handmade by {{user}}`, so gift
+  preferences read it), awards 3 Craft XP and closes the Project. Rules 502 (Projects Kinds, one sentence) and 504 updated; 506 says
+  where handmade work sells.
+- Save fixture v1.28.0; no migration. Main and three TEST cards rebuilt. Tests: new `test_crafts_v1290.cjs` (35 checks);
+  `test_crafting_v1280`, `test_practice_v1270`, `test_saves`, `test_tokens_v1110`, `test_batch5_shops`, `test_settings_v199`,
+  `qa_static`, `test_world_v110` and lint pass.
+- To confirm with the owner (invented, all tunable): recipe names and yields (stew pot 4/3/2 servings), sale guides (painting 30–80),
+  mishap injuries per craft, masterwork XP 3, the new Mall art studio and Workshop Brewing Club bench actions, and that a masterwork
+  Project closes whatever the result (a failed one leaves nothing).
 
 ## v1.28.0 — Magical crafting (2026-09-30)
 
@@ -59,173 +84,6 @@ the Campus Map's words" (one sentence added for year floors).
   the floor ("at Lecture Halls — Floor 3 (the Year 2 floor)").
 - Tests: `test_map_gates_v1240.cjs` gains the naming, canonLocation and attendance checks; `test_world_v110` reads the new class
   line. `npm test`: 81 suites pass; lint passes. Browser preview checked. Save fixture `save_1.24.2.json` added.
-
-## v1.24.2 — Year floors in the castle, wheel zoom (2026-09-29)
-
-Owner: "lecture, study, storage room on Floors 3 and 4 too; Floor 2 is for first-years, a second-year has no place"; "zoom with the
-scroll". Decisions touched: none (lore 49 and 132 already put each year's Lecture Halls on its own floor).
-- **Year floors:** the Lecture Halls, Study Rooms and Storage and Lockers are on Floors 2, 3 and 4 (`locations.json` `floors` and
-  `floor_notes`, from `curate_data.py` `YEAR_FLOORS`). Each floor's card names whose they are ("Floor 3: The second-year Lecture
-  Halls."); "Go here" says the floor ("I head to the second-year Lecture Halls on Floor 3."); Walk adds a minute per floor climbed.
-  At one of them the Map opens on the floor World.Location names ("Floor 3", "second-year"), else on {{user}}'s year floor.
-- **Lore:** the Campus Map entry (132) now says the second- and third-year Lecture Hall floors have their own Study Rooms (lockers
-  were already on every Lecture Hall floor).
-- **Wheel zoom:** the mouse wheel zooms the map without Ctrl, one step per gesture, toward the pointer; at 100% scrolling down still
-  scrolls the panel.
-- Tests: `test_map_gates_v1240.cjs` gains the year-floor and wheel checks. `npm test`: 81 suites pass; lint passes. Browser
-  preview: a second-year at the Lecture Halls sees Floor 3 "You are here"; the wheel zooms in and out. Save fixture `save_1.24.1.json`.
-- To confirm with the owner: Study Rooms on Floors 3 and 4 are new canon (lore 132), added on the owner's request.
-
-## v1.24.1 — Map gates: far grounds only (2026-09-29)
-
-Owner, on the 1.24.0 suggestions: the Fishing House yes; the Mall and castle gates scrapped "so a new player is not confused about
-what is there and what it is for". Decisions touched: DECISIONS §7 "Gated places" (updated).
-- The Fishing House shows on the Map after the Boathouse (like Willow Island).
-- The Mall's shops and the castle's halls show from the start again; the castle entrance card and the engine's "Castle" entry in
-  `$ui.discovered` are gone (an old save that holds "Castle" is unaffected).
-- The other suggested gates were not chosen (moved to FUTURE_PLANS §2).
-- Tests: `test_map_gates_v1240.cjs` checks the new gate set; map, ambience, save and static suites pass. Save fixture
-  `save_1.24.0.json` added.
-
-## v1.24.0 — Map: gates, zoom, lore heard in the story (2026-09-29)
-
-Owner playtest notes (five points). Decisions touched: none changed; new standing lines in DECISIONS §7 (gated places, lore heard).
-- **Zoom:** + and − buttons on the map (100% to 300%), Ctrl + wheel or a trackpad pinch, drag with the mouse to pan (touch scrolls).
-  The zoom and its centre stay when the map is closed and opened again (kept in the script while the page is open; not in browser
-  storage, which DECISIONS "Colour themes" keeps for the theme).
-- **Cut-off labels:** a pin label near the right or left edge grows inward, near the top it sits below the pin (Willow Island,
-  Observation Tower). The black band at the right of a card header is gone: the header crop now follows the card's real width
-  (it assumed 280px). The thin scrollbar line at 100% zoom is gone too.
-- **Gated places** (UI only, `locations.json` `gate` from `curate_data.py` `GATES`): Willow Island shows after the Boathouse, the
-  Forest Clearing after the Forest, the Observation Tower and the Old Hut after the Grassy Field and Hills, the Mall's shops after
-  the Mall (or any shop), the castle's halls after the castle. Before that the Castle pin shows an entrance card ("Go here" fills
-  "I head into the Castle."); the engine records "Castle" in `$ui.discovered` when World.Location names the castle. The Rooftop
-  keeps D21. Old saves: every place already visited opens its gate.
-- **Lore and rumours are heard, not given:** the Map lists only the stories in the new `$ui.lore` (uids); the rest are counted
-  ("2 more you have not heard yet"), and a place text's "Home of the X story" sentence waits too. A story is heard (toast
-  "Heard at <place>: <title>") when (a) a non-calm ambience beat at its place turns into talk of it (`data/ambience.json`
-  `lore_chance` 35%, once a day, needs a crowd or company; `<now>` asks the narrator to weave it in as hearsay, with the entry's
-  text), or (b) the narration names it as a proper name ("Sunfizz", "the Faraway Laugh"; "the long corridor" in passing does not
-  count), or (c) with Ambience below Full, on the first visit. Old saves start with nothing heard.
-- **"Create your student"** stays on the collapsed bracelet.
-- Tests: new `test_map_gates_v1240.cjs` (gates, castle entrance, lore heard, labels, zoom, bracelet); `test_people_map` and
-  `test_mapvariants_v1130` read the new crop style and the castle gate. `npm test`: 81 suites pass. Browser preview: zoom kept
-  after closing, labels inside, full-width crops, castle card at phone width. Save fixture `save_1.23.0.json` added.
-- To confirm with the owner: the castle entrance card's line ("The old heart of Halvard: classrooms, the library, the canteen and
-  the offices, floor above floor.") is new UI text.
-
-## v1.23.0 — UI overhaul 3: panels (2026-09-29)
-
-Owner-approved report "Brass & Moonglass", stage 3 (the last). Decisions touched: none beyond 1.21.0 (same data, same actions).
-- **People:** the bonds list is a grid of cards (two columns on a wide panel): portrait with a dorm ring and a moonglass dot for
-  "here now", the rank as a brass medal, XP, Trust and Tension as three labelled meters.
-- **Dossier:** the portrait sits in a mat and stays in view while the file scrolls; the dorm shows as a gem; the bond box leads with
-  the rank medal ("Rank N of 10"); the character's fields are label/value rows in the story serif (no stack of capital headings);
-  a missing portrait is a monogram on the dorm colour.
-- **Student file > Settings:** each theme is a small picture of the bracelet in that theme (drawn with `keep` colours so the current
-  theme leaves it alone); an on/off feature is a switch (`role="switch"`, it sends the other value), a feature with levels keeps
-  its choices; token estimates read "About N tokens of rules, M of state".
-- **Builder:** numbered steps (done in brass, one with an error in red): the only tabs that are a real sequence.
-- **Activities:** the club directory is a dense two-column list with dividers instead of twenty identical boxes. **Journal:** lines
-  ruled like a notebook page. Map, Notebook boards, Battle and the rest follow the 1.21.0 tokens.
-- Tests: `test_ui_overhaul_v1210.cjs` gains the panel checks; `test_people_map`, `test_bonds_v122` and `test_year2_v174` read the new
-  markup (`<dt>` fields, "XP" meter). A browser smoke run opened 405 panel and tab views over every sample state with no errors, at
-  desktop and phone width. `npm test`: 80 suites pass; lint passes. Save fixture `save_1.22.0.json` added.
-
-## v1.22.0 — UI overhaul 2: the bracelet (2026-09-29)
-
-Owner-approved report "Brass & Moonglass", stage 2. Decisions touched: none (same data, same buttons, same stored keys).
-- **The bracelet is an object:** a brushed pewter band with a brass edge and the dorm colour inlaid along the top; the glass face
-  sits in a brass bezel and is the one bold element (the day in small capitals beside a large clock, then the period and place).
-- **Points and dorm:** the balance is a brass figure labelled "points"; the dorm is a gem in the dorm colour beside its name.
-- **Vitals** are thicker vials with a light sheen; the maximum is quieter than the current value.
-- **Chips** have three tiers (moonglass for events and magic, amber for warnings, red for danger) and a 26px minimum height.
-- **Who is here** and **the latest news** share one row (`.low`); portraits have a ring in the dorm colour with a gap, and the mood
-  (Rank 4+) is a small Font Awesome badge on the portrait instead of a Unicode glyph after the name.
-- **Panel buttons** are one joined row of charms; on a phone (≤540px) they become a 3-column grid with 40px targets, and the points
-  and crest move under the glass.
-- Tests: `test_ui_overhaul_v1210.cjs` gains the bracelet checks; run with the bracelet suites (`test_batch1_swipe`,
-  `test_batch4_seasons_mana`, `test_extras_v161`, `test_playtest_v131`, `test_playtest_v134`), `test_saves`, `qa_static`: all pass.
-  Save fixture `save_1.21.0.json` added.
-
-## v1.21.0 — UI overhaul 1: tokens and foundation (2026-09-29)
-
-Owner: audit the look and overhaul it without changing how the card works; the report ("Brass & Moonglass", artifact
-QjbmYWMLMpxihoq5oU5Dys) was approved in full: Alegreya instead of Cinzel, slate-blue neutrals, the default theme keeps the name
-Pewter, three staged releases (1.21 foundation, 1.22 bracelet, 1.23 panels and themes). Decision touched: §6 "Colour themes"
-(mechanism unchanged, the values of all five themes change).
-- **Colour tokens.** Every panel colour is a CSS variable in one block (`.ov{…}` in `ui.template.js` CSS), every bracelet colour in
-  `:root{…}` of `statusbar.template.html`, with the same names and values (284 literals, 105 distinct, became about 40 tokens).
-  `tools/make_themes.py` now lists each token's default value (`ROLES`) and each theme's value; `recolor()` is unchanged.
-  Paper notes, vital bars, dorm colours and the map are not themed (`/*keep*/`). The build fails if a theme's text colour falls
-  below 4.5:1 on a panel surface (WCAG AA); the old faint text was 3.97:1.
-- **Palette.** Neutrals take the slate blue of the castle spires on the map; brass is for what you can press, moonglass only for
-  magic and time. Vital colours a little brighter (Health `#d9625a`, Stamina `#dcae4a`, Mana `#6f9de6`).
-- **Type.** Alegreya Sans for the interface, Alegreya (serif) for text written in the story (dossier fields, journal lines, letters,
-  place descriptions), Alegreya SC only for panel nameplates, ranks and place names. Six sizes (12, 13.5, 15, 17, 21, 30 px) instead
-  of fifteen; no upper-case labels.
-- **Frame.** The panel is anchored to the top of the screen (switching tabs no longer moves the header); tabs are underlined in
-  brass; buttons, inputs and toggles have larger touch targets on touch screens.
-- Tests: new `test_ui_overhaul_v1210.cjs` (no colour outside the token blocks, both blocks agree, themes map token values only,
-  theme ids unchanged, fonts, top anchoring, the selectors other code uses); the recolor checks in `test_playtest_v131.cjs` and
-  `test_playtest_v134.cjs` use the new values. Run: those three, `test_saves`, `test_people_map`, `test_notebook`,
-  `test_batch5_shops`, `test_settings_v199`, `qa_static`: all pass. Save fixture `save_1.20.0.json` added.
-- To confirm with the owner: nothing new in canon.
-
-## Documentation overhaul (2026-09-29, card stays 1.20.0)
-
-Owner: tidy the project files and docs, drop what is no longer relevant, and add an index so a session reads only what a task needs.
-- New `docs/INDEX.md` (task → files and symbols; engine step, state, entry, UI and data maps), `docs/DECISIONS.md` (the established
-  decisions and verified external facts, formerly HANDOFF §4 and §7), `docs/BUILD.md` (build, generated files, tests, playbooks,
-  formerly HANDOFF §5, §6 and §9). `HANDOFF.md` is now a short snapshot and repository map; `CLAUDE.md` gives the new reading order
-  and the rule that an applied draft is deleted and a finished plan leaves `planning/FUTURE_PLANS.md`.
-- `planning/FUTURE_PLANS.md` is the one list of open work (FP4, FP5, ideas not chosen, audit A8/A10, decisions waiting on the owner,
-  tunables); the stale open-items lists of HANDOFF §8 and this file were checked and merged into it or dropped when done.
-- This file keeps the details of the five newest releases, then the release index. Older details, every implemented
-  `planning/DRAFT_*.md`, the audit, `docs/design/`, `docs/archive/`, the bug-hunt and playtest-state notes are in git at `b62d182`.
-- `make_npc_brief.py` and the NPC brief point to `data/bond_rewards.json`, `reputation.json`, `training.json` instead of the 1.3.0
-  design notes; `test_voices_g5_v167.cjs` no longer reads the design note (the data check stays).
-- Fix: `tools/make_npc_brief.py` had failed since 1.19.0 (it parsed `EVENTS` / `TIMETABLE` out of the engine); it now reads
-  `data/calendar.json`. Checked: lint, static QA, `test_voices_g5_v167.cjs`, the brief generator.
-
-## v1.20.0 — Audit Batch 5: engine steps and migrations (2026-09-29)
-
-Owner: "lanjutkan batch 5" (the previous attempt was interrupted before it wrote anything; this release redoes it from 1.19.0).
-Decisions touched: none. §4 "Engine is deterministic and replay-safe" gains how the engine is organised (below).
-- **A5 steps:** `runEngine` (≈2,300 lines) is now a loop over `ENGINE_STEPS`: `stepSetup`, `stepMigrate` and 34 section functions
-  (`stepGuards` … `stepCommit`, one per former section, in the same order; the two magic sections are one `stepMagic` because they
-  share the mana regeneration pool). Each step reads what it needs from the shared context `c` and adds what later steps use.
-  The split was generated from a scope analysis of the old function (espree + eslint-scope), so every shared variable is passed
-  explicitly. The training helpers (`trainRoom`, `trainAdd`, `trainJump`) are module functions taking `c`, as Rank rewards (section 6)
-  used them before training (6b) declared them.
-- **A5 migrations:** Dante's renamed gift, Florian's Rank 10 text, pre-1.3.0 reputation meters (`repv`), pre-1.2.2 bond Progress
-  (`bondv`), pre-1.3.8 paid milestones (`tenv`) and obsolete event hints (`$ui.bev`) moved into `stepMigrate`. It runs only on the
-  first update after the card version changes (or a new chat's first run), on S and on a copy of the before-state, so the engine
-  does not read a migration as a change the reply made. Each migration still keeps its own flag.
-- **Fix found on the way:** the Dante/Florian migration ran on S only, so the read-only guard on `_Perks` put the old gift back and
-  logged "_Perks is read-only; the change was reverted." on every update of a save that had the old key. Migrating the before-state
-  too fixes this.
-- **Proof of no change:** `tests/harness.cjs` gains `ENGINE_DIFF=<older engine.js>`: every engine run also runs the older build on a
-  copy and stops at the first difference in the state after, the state before or the error. Against the 1.19.0 engine (same
-  version string): all 78 suites, fuzz (2 × 4,545 runs), Builder fuzz (601) and the 380-day simulation (1,523) were identical; the only
-  difference is the Dante fix. Three older suites that simulated an old save by resetting a flag now also give that save an old
-  `$eng.ver`, as a real old save has. About 9.3 ms per update (was about 10).
-- Tests: new `tests/test_engine_steps_v1200.cjs` (step list and order, migration once per version, Dante fix, the caller's
-  before-state untouched). Save fixture `save_1.19.0.json` was written before edits. `npm test` (79 suites), `npm run lint` and
-  ESLint pass. Main card and the three TEST cards rebuilt; the preset is unchanged. Live check: `docs/TEST_CHECKLIST.md` v1.20.0.
-- Next: the audit is complete (all five batches). Remaining audit items stay open by design: A8 (split Cast Sheet only with evidence
-  of lag), A10 (compact PNG only after compatibility checks).
-
-## v1.19.0 — Audit Batch 4: calendar and state size (2026-09-29)
-
-Owner: "lanjutkan batch 4". No canon or established design decision changed.
-- **A3/I7:** `data/calendar.json` supplies 41 events, the weekly timetable and current-month lore to the engine, UI, lore 131/134 and class generator. Exam/trial mood dates read event tags. Election-candidate mood remains conditional on candidacy.
-- **A4:** the Journal UI archive retains 120 rather than 300 lines; each bond's `$Known_old` and `$Knows_old` retains 20 rather than 40. Mood state is saved for present or bonded NPCs. The 336-day stress scenario fell from 46,872 to 38,645 bytes per state (−17.5%; archive 10,394→3,980 bytes; moods 2,586→773 bytes). No exported real chat was available for measurement; live check added.
-- **A9:** `tests/README.md` maps features to tests. `npm run lint` checks handwritten/generated JavaScript syntax and compiles 118 EJS entries; `eslint.config.mjs` and `npm run lint:eslint` add lightweight template rules after installing the declared ESLint dependency.
-- **A8:** Cast Sheet 509 is 515,599 bytes; local EJS compile average was 7.70 ms over 100 runs after the final build. Prompt construction time in SillyTavern is unmeasured; the sheet was not split without evidence of user-visible lag.
-- **A10:** the card PNG is about 8.2 MB, with full v2 `chara` and v3 `ccv3` metadata. SillyTavern's parser prefers `ccv3`, but v2-only readers need `chara`; the optional compact fallback was deferred pending compatibility checks.
-- Save fixture `save_1.18.0.json` was written before edits. Main and three TEST cards rebuilt. `npm test`, `npm run lint`, `test_calendar_state_v1190.cjs`, `test_saves.cjs` and the 336-day stress scenario pass. Live checks are in `docs/TEST_CHECKLIST.md`.
-- Next: Batch 5 refactor, only when the owner says "lanjutkan batch 5".
 
 ## Release index (one line per release, oldest first)
 
@@ -316,3 +174,4 @@ Owner: "lanjutkan batch 4". No canon or established design decision changed.
 - **v1.25.0 (2026-09-30):** Red "new" dots on the bracelet buttons, panel tabs, people just met and Map markers with a story heard; "seen" kept in Tavern Helper's chat variables.
 - **v1.27.0 (2026-09-30):** Batches 2–3: six proficiency stats and Studies hexagon, weekly XP and Fortune bonuses, location-based Practice with validated `/Practice` reports.
 - **v1.28.0 (2026-09-30):** Batch 4: Fortune-based magical crafting, handmade Bag items and effects, foraged reagents, repair/enchant, and capped Apothecary sales.
+- **v1.29.0 (2026-09-30):** Batch 5: non-magic crafts (cooking, needlework, drawing, carving, calligraphy, smithing), four ingredients, masterwork from craft Projects.

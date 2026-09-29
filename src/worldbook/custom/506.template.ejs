@@ -14,4 +14,4 @@ Here (<%- _se %> stock; out-of-season items are not stocked):
 <%- _PG.canon %>
 Other shops: <%- _else.join(' | ') %>
 Paid work pays 20-40 points a shift. The Banking House changes points and coin 1:1. At the Academy Bazaar prices are whatever the trader says. When {{user}} eats, drinks or uses an item marked "When used", insert its exact name into /Consumables/- (it must be in the Bag, or bought in this reply); "Worn from the Bag" gear works while it is in the Inventory.
-Student-made craft sale guide: <%- _CS.map(([n,p]) => n + ' ' + p + ' pts').join('; ') %>. The Medical Centre apothecary buys at most three Healing draughts per week; report the sale in /Craft_sales/- and the engine handles the Bag and points.
+Student-made craft sale guide: <%- _CS.map(([n,p]) => n + ' ' + p + ' pts').join('; ') %>. Other handmade work sells at a stand at the Club Festival or the Academy Bazaar, or to someone who wants it. The Medical Centre apothecary buys at most three Healing draughts per week; report the sale in /Craft_sales/- and the engine handles the Bag and points.

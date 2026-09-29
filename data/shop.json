@@ -1653,6 +1653,24 @@
       }
     },
     {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Knitting wool and needles",
+      "price": 15,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "The Tinker's Bench",
+      "loc": "tinkers_bench",
+      "item": "Paint box",
+      "price": 30,
+      "note": "",
+      "canon": false,
+      "season": "all"
+    },
+    {
       "shop": "Greenwick's",
       "loc": "greenwicks",
       "item": "Elderflower cold syrup",
@@ -1729,6 +1747,24 @@
         ],
         "stamina": 10
       }
+    },
+    {
+      "shop": "Commissary",
+      "loc": "commissary",
+      "item": "Baking and cooking ingredients",
+      "price": 10,
+      "note": "flour, butter, eggs and sugar for one batch",
+      "canon": false,
+      "season": "all"
+    },
+    {
+      "shop": "Commissary",
+      "loc": "commissary",
+      "item": "Bar stock and coal",
+      "price": 20,
+      "note": "for the Workshop forge",
+      "canon": false,
+      "season": "all"
     },
     {
       "shop": "Tailor's Row",

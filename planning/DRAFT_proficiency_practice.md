@@ -1,6 +1,6 @@
 # DRAFT — Proficiency (6 stat), Practice, Crafting, titik merah, grade baru, mastery
 
-**Status: APPROVED oleh owner (2026-09-30), semua batch. Batch 1–4 sudah diterapkan; tunggu owner bilang "mulai batch 5".**
+**Status: APPROVED oleh owner (2026-09-30), semua batch. Batch 1–5 sudah diterapkan; tunggu owner bilang "mulai batch 6".**
 Tiap batch = satu rilis. Draft ini dihapus di rilis batch terakhir (sisa yang belum dibuat pindah ke `planning/FUTURE_PLANS.md`);
 sampai itu, batch yang sudah diterapkan ditandai **[DONE x.y.z]** di judulnya.
 
@@ -380,7 +380,7 @@ kerajinan yang bisa dilakukan, 0 di tempat lain. Live: narator memainkan hasil d
 
 ---
 
-## Batch 5 — Kerajinan non-magic + masterwork (1.29.0)
+## Batch 5 — Kerajinan non-magic + masterwork (1.29.0) [DONE 1.29.0]
 
 **Tujuan.** Keahlian di luar sihir (masak, rajut, lukis, dll.) memakai mesin yang sama.
 

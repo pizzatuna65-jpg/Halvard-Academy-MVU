@@ -233,9 +233,12 @@ Fortune (important uncertain attempts only): <%- FT.roll %>; after modifiers <%-
 <%_ if (on('proficiency') && UI.practice && UI.practice.length) { const _p = UI.practice.filter(x => !x.locked); if (_p.length) { _%>
 Practice here: <%- _p.map(x => x.action + ' (' + x.stat + ')').join(', ') %>. Report in /Practice.
 <%_ } } _%>
-<%_ if (on('proficiency') && UI.craft && UI.craft.length) { const _c = Object.values(UI.craft.reduce((a, x) => { const k = x.group + ' ' + x.tier + ' ' + x.result + (x.mishap ? ' mishap' : ''); (a[k] ||= []).push(x.name); return a; }, {})); const _keys = [...new Set(UI.craft.map(x => x.group + ' ' + x.tier + ' ' + x.result + (x.mishap ? ' mishap' : '')))]; _%>
+<%_ if (on('proficiency') && UI.craft && UI.craft.length) { const _r = UI.craft.filter(x => x.tier !== 'masterwork'), _m = UI.craft.filter(x => x.tier === 'masterwork'); const _k = x => x.group + ' ' + x.tier + ' ' + x.result + (x.mishap ? ' mishap' : ''); const _c = Object.values(_r.reduce((a, x) => { (a[_k(x)] ||= []).push(x.name); return a; }, {})); const _keys = [...new Set(_r.map(_k))]; _%>
+<%_ if (_r.length) { _%>
 Crafting now: <%- _c.map((names, i) => _keys[i] + ' [' + names.join(', ') + ']').join('; ') %>. Report the exact recipe in /Practice with Action "craft".
-<%_ } _%>
+<%_ } if (_m.length) { _%>
+Masterwork if finished this turn: <%- _m.map(x => x.name + ' ' + x.result + (x.mishap ? ' mishap' : '')).join('; ') %>. When {{user}} finishes it, report {"Action":"craft","Aim":"masterwork","Subject":"<Project name>"} in /Practice.
+<%_ } } _%>
 <%_ if (on('proficiency') && UI.craft_sale) { _%>
 Medical Centre apothecary: Healing draught 15 points per dose; <%- UI.craft_sale.sold %>/3 bought this week. Report a sale in /Craft_sales.
 <%_ } _%>

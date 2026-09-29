@@ -27,7 +27,7 @@ Build order, generated files and test commands: `docs/BUILD.md`.
 | Bond ranks, rewards, gifts, moods | §7 bond data; engine `stepBonds`, `stepBondMemory`, `mood_gifts.js` | |
 | Reputation, training, grades | `data/reputation.json`, `training.json`; `stepReputation`, `stepTraining`, `stepSchoolWeek` | |
 | Proficiency and Practice | `data/club_stats.json`, `practice.json`; `stepProficiency`, `pProficiency`, `acPractice` | `test_proficiency_v1260.cjs`, `test_practice_v1270.cjs` |
-| Magical crafting | `data/crafts.json`; `stepProficiency` craft helpers, `stepExposure` heal, `stepBag` bloom, `acPractice` recipes | `test_crafting_v1280.cjs`, `505.template.ejs`, `506.template.ejs` |
+| Crafting (magical and non-magic), masterwork | `data/crafts.json` (`groups`: Practice actions, tools, experts, mishaps; `masterwork`); `stepProficiency` craft helpers and `finishMasterwork`, `stepExposure` heal, `stepBag` bloom, `acPractice` recipes | `test_crafting_v1280.cjs`, `test_crafts_v1290.cjs`, `505.template.ejs`, `506.template.ejs` |
 | Weather, ambience, happenings | `stepWeather`, `stepExposure`, `stepAmbience`; `data/ambience.json`, `happenings.json`, `wind_casting.json` | |
 | Map, pins, map variants, portraits | `data/map_pins.json`, `assets_manifest.json`, `src/ui/parts/20_map.js` (`discovered`, `mapView` zoom, `loreRow`), `tools/curate_data.py` `FAR_LEGS`, `GATES`, `YEAR_FLOORS` | assets are pinned to a commit (DECISIONS "Assets") |
 | Features settings (on/off) | `data/features.json`, `stepFeatures`, `ui.template.js` `pSettings`, `featureOn` | `feature_cost.py` measures it |
@@ -64,7 +64,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepNamesInProse` (6a) | names revealed by the prose | `NAME_RX` |
 | `stepBonds` (6) | XP, ranks, gates, gifts, rewards, Tension/Trust; exports `canon`, `npcAway`, `PACE` | bond data §7 |
 | `stepBondMemory` (6c) | Knows, Imprints, Mind, Next, betrayal spread | |
-| `stepProficiency` (6a) | six stats, XP sources, weekly caps, Practice, crafting and Apothecary sales | `data/practice.json`, `club_stats.json`, `crafts.json` |
+| `stepProficiency` (6a) | six stats, XP sources, weekly caps, Practice, crafting, masterwork Projects and Apothecary sales | `data/practice.json`, `club_stats.json`, `crafts.json` |
 | `stepTraining` (6b) | Mana pool / Stamina sessions (`trainRoom`, `trainAdd`, `trainJump` are module functions) | `data/training.json` |
 | `stepPerkUse` (6c) | one-use perks | `_Perks` |
 | `stepHidden` (7) | Dove attention, hidden magic, Points without Transactions | |
