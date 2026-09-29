@@ -2,3 +2,4 @@ node_modules/
 __pycache__/
 package-lock.json
 docs/npc_brainstorm/
+.arena/
