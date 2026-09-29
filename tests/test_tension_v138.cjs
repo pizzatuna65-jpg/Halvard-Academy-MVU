@@ -84,7 +84,7 @@ U.view.arg = 'Sophia'; const dos = U.PANELS.npc.render(N);
 ok(/Tension 95 · Enemy/.test(dos) && /cannot grow until the tension eases/.test(dos), 'dossier: the band and what it does to the bond');
 U.view.arg = 'Althair'; ok(/Hostility only makes him fonder of you/.test(U.PANELS.npc.render(N)), "Althair's dossier explains his lock");
 // an older save: a bond already at Rank 5 counts its Rank 5 milestone as paid
-const O = clone(S); O.$eng.tenv = 0; O.Bonds.Irene.Rank = 6; O.Bonds.Irene.$ms = [];
+const O = clone(S); O.$eng.tenv = 0; O.$eng.ver = '1.3.7'; O.Bonds.Irene.Rank = 6; O.Bonds.Irene.$ms = [];
 ok(T(O, '10:00').Bonds.Irene.$ms.includes(5) && !T(O, '10:00').Bonds.Irene.$ms.includes(10), 'older saves: milestones up to the current rank count as paid');
 // 1.3.9 (owner): no cap on rises ("easier to make enemies than friends"): several offences in one day all count
 let Q = T(S, '10:00', [ten('Ruby', 30)]); Q = T(Q, '10:05', [ten('Ruby', 65)]); Q = T(Q, '10:10', [ten('Ruby', 95)]);

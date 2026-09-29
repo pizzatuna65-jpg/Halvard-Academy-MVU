@@ -57,7 +57,7 @@ const L = T(S, '12:40', [{ op: 'replace', path: '/Bonds/Trixie/Progress', value:
 ok(L.Bonds.Trixie.$xp === BR.kind_xp.hangout && L.Bonds.Trixie.Progress === 0, 'Progress +2 without Interactions counts as a hangout; Progress stays 0');
 
 // ---- migration of a pre-1.2.2 save: Progress becomes XP once
-const M0 = JSON.parse(JSON.stringify(S)); M0.$eng.bondv = 0; M0.Bonds.Etnie.Progress = 5;
+const M0 = JSON.parse(JSON.stringify(S)); M0.$eng.bondv = 0; M0.$eng.ver = '1.2.1'; M0.Bonds.Etnie.Progress = 5;
 const M1 = T(M0, '12:05');
 ok(M1.Bonds.Etnie.$xp === Math.round(0.5 * BR.xp_base[3]) && M1.Bonds.Etnie.Progress === 0 && M1.$eng.bondv === 2, `old Progress 5/10 at Rank 3 → ${M1.Bonds.Etnie.$xp} XP`);
 

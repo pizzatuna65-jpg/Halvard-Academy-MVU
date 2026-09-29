@@ -46,6 +46,11 @@ new section at the top of **By release**, not as a new file.
 
 ## By release
 
+### v1.20.0 — audit Batch 5 (engine refactor)
+
+1. Import the new PNG into the ongoing chat and continue from the v1.19.0 save for a few replies (a scene with an NPC, a purchase, a cast, sleeping to the next day). Nothing should look different: the refactor was proven output-identical offline. Check that no "Engine error" line appears in the Log and the browser console shows no `[Eldrasil engine]` error.
+2. If the chat started before 1.3.0 and Dante gave his Rank 5 gift: the Student file now lists "Council safety card", and the Log no longer repeats "_Perks is read-only" on every update.
+
 ### v1.19.0 — audit Batch 4
 
 1. Import the new PNG into the ongoing chat and continue from a v1.18.0 save. Check that calendar events and the weekly timetable still appear in Notebook and lore, including exam and trial moods.

@@ -652,28 +652,79 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.19.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.20.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 
+// 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
+// from the shared context c (the states, the reply's text and the values earlier steps computed) and adds what later steps use.
 function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the player's message this reply answers (section 8l)
   if (!S || !S.World) return;
+  const c = { S, B, text, seedHint, userText };
+  for (const step of ENGINE_STEPS) step(c);
+}
+
+function stepSetup(c) {
+  const { S, B } = c;
   fillShape(S, SHAPE);
   const log = [], jnl = [];                                    // jnl: journal lines the engine adds itself (5.1)
-  const oldDanteGift = S._Perks["Groundskeeper's Lodge key"];
-  if (oldDanteGift) {
-    if (!S._Perks['Council safety card']) S._Perks['Council safety card'] = { ...oldDanteGift, Effect: REW.npcs.Dante.gift.text };
-    delete S._Perks["Groundskeeper's Lodge key"];
-  }
-  if (S._Perks['Florian (Rank 10)']) S._Perks['Florian (Rank 10)'].Effect = REW.npcs.Florian.r10.text;
   S.$eng = S.$eng || { abs: -1, daily: {} };
   S.$ui = S.$ui || { unlocks: [], discovered: [], toasts: [] };
   for (const k of ['unlocks', 'discovered', 'toasts', 'names', 'archive', 'secrets', 'off', 'rumours_old']) if (!Array.isArray(S.$ui[k])) S.$ui[k] = [];
   if (!_.isPlainObject(S.$ui.parked)) S.$ui.parked = {};
   if (!['off', 'flavor', 'full'].includes(S.$ui.wxfx)) S.$ui.wxfx = 'full';
-  S.$eng.ver = ENGINE_VER;
   const hasB = !!(B && B.World);
+  const fromVer = hasB ? (B.$eng || {}).ver : S.$eng.ver;      // the engine version that wrote the state before this reply
+  S.$eng.ver = ENGINE_VER;
   if (hasB) S.$ui.toasts = [];                                  // toasts = what happened in THIS update only
+  Object.assign(c, { log, jnl, hasB, fromVer });
+}
 
-  // ---- 0. read-only fields: only a Student Builder patch (auth = 'builder') may change them ----
+// 1.20.0 (audit A5): save migrations, run on the first update after the card version changes (and on a new chat's first run).
+// Each keeps its own flag or test, so one already done is skipped. The engine reads its own fields from the state before the
+// reply (B), so a migration changes a copy of B as well as S: the reply is not read as having made the change.
+function stepMigrate(c) {
+  const { S, hasB, log } = c;
+  if (c.fromVer === ENGINE_VER) return;
+  const B = c.B = hasB ? _.cloneDeep(c.B) : c.B, both = hasB ? [S, B] : [S];
+  for (const X of both) {
+    const P = X._Perks;
+    if (!_.isPlainObject(P)) continue;
+    const oldDanteGift = P["Groundskeeper's Lodge key"];       // Dante's Rank 5 gift before its rename
+    if (oldDanteGift) {
+      if (!P['Council safety card']) P['Council safety card'] = { ...oldDanteGift, Effect: REW.npcs.Dante.gift.text };
+      delete P["Groundskeeper's Lodge key"];
+    }
+    if (P['Florian (Rank 10)']) P['Florian (Rank 10)'].Effect = REW.npcs.Florian.r10.text;
+  }
+  // 1.3.0: a pre-1.3.0 save's Public / Dorm meters become Academy / Student XP once
+  if (S.$eng.repv !== 1) {
+    const RP = S.Player.Profile.Reputation || (S.Player.Profile.Reputation = {});
+    const RPB = hasB ? (((B.Player || {}).Profile || {}).Reputation) : null;
+    const old = (RPB && (RPB.Public != null || RPB.Dorm != null)) ? RPB : RP, xp0 = (RPB && RPB.$xp) || RP.$xp || {};
+    if (REP.reps.every(r => !_.clamp(num(xp0[r], 0), -REP.thresholds[4], REP.thresholds[4])) && (num(old.Public, 0) || num(old.Dorm, 0))) {
+      const xp = { ...xp0, Academy: _.clamp(Math.round(num(old.Public, 0) * 1.25), -125, 125), Student: _.clamp(Math.round(num(old.Dorm, 0) * 1.25), -125, 125) };
+      RP.$xp = xp;
+      if (RPB) RPB.$xp = { ...xp };
+      log.push(`Reputation now has three parts (Academy, Student, Doves); the old academy and dorm standing became Academy ${repLevel(xp.Academy)} and Student ${repLevel(xp.Student)}.`);
+    }
+    S.$eng.repv = 1;
+  }
+  // 1.2.2: a pre-XP bond's Progress (0-10) becomes XP toward its next rank; 1.3.8: milestones of the ranks already reached count as paid
+  const PACE = paceOf(S);
+  for (const X of both) {
+    for (const b of Object.values(X.Bonds || {})) {
+      if (!b || typeof b !== 'object') continue;
+      if (S.$eng.bondv !== 2) { const p = num(b.Progress, 0); if (p > 0 && num(b.$xp, 0) === 0) b.$xp = Math.round(Math.min(p, 10) / 10 * needXP(b.Rank, PACE)); }
+      if (S.$eng.tenv !== 1) b.$ms = [...new Set([...(b.$ms || []), ...Object.keys(REP.bond_milestone_xp || {}).map(Number).filter(r => r <= b.Rank)])];
+    }
+  }
+  S.$eng.bondv = 2;
+  S.$eng.tenv = 1;
+  S.$ui.bev = {};                                               // obsolete event hints of older saves
+}
+
+// ---- 0. read-only fields: only a Student Builder patch (auth = 'builder') may change them ----
+function stepGuards(c) {
+  const { S, B, text, log, hasB } = c;
   const byBuilder = S.$eng.auth === 'builder';
   if (hasB && !byBuilder) {
     const keep = [['Magic', '_Techniques'], ['Magic', '_Affinity'], ['Hidden', '_True_magic'], ['$ui', 'built'], ['$ui', 'file'], ['_Perks']];
@@ -725,10 +776,15 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     }
     V0.Mana = Math.min(V0.Mana, V0.Mana_max); V0.Stamina = Math.min(V0.Stamina, V0.Stamina_max);
   }
+  Object.assign(c, { byBuilder, toolEdit });
+}
 
-  // ---- 0b. 1.1.0 Features settings: a feature that is off has its state parked in $ui.parked (hidden from the AI) and is not processed.
-  // Turning it back on restores it. A write the AI still makes into a parked module is merged into the parking, not dropped.
-  // On the update that toggles a feature, the "before" copy of its state is aligned, so the toggle is not read as a story change.
+// ---- 0b. 1.1.0 Features settings: a feature that is off has its state parked in $ui.parked (hidden from the AI) and is not processed.
+// Turning it back on restores it. A write the AI still makes into a parked module is merged into the parking, not dropped.
+// On the update that toggles a feature, the "before" copy of its state is aligned, so the toggle is not read as a story change.
+function stepFeatures(c) {
+  const { S, log, hasB } = c;
+  let { B } = c;
   {
     const parked = S.$ui.parked;
     let Bw = B;
@@ -781,8 +837,13 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     perks: (Array.isArray(S.Perk_use) ? S.Perk_use : []).map(x => String(x).trim().toLowerCase()),
     training: Array.isArray(S.Training) ? S.Training.length : 0,
   };
-  // ---- 1. time ----
-  // 1.3.3: an unreadable Day or Time from the AI arrives as '' (schema): keep the previous one rather than guess
+  Object.assign(c, { OFF, offUnlock, staleDrop, REPORTED, B });
+}
+
+// ---- 1. time ----
+// 1.3.3: an unreadable Day or Time from the AI arrives as '' (schema): keep the previous one rather than guess
+function stepTime(c) {
+  const { S, B, seedHint, log, jnl, hasB } = c;
   for (const [f, d] of [['Day', 'Mon'], ['Time', '08:00']]) {
     if (!S.World[f]) { S.World[f] = (hasB && B.World[f]) || d; if (hasB) log.push(`World.${f} could not be read; it was kept at ${S.World[f]}.`); }
   }
@@ -928,8 +989,12 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
       if (num(S.Player.Profile.Age, 18) === num(B.Player.Profile.Age, 18)) { S.Player.Profile.Age = num(S.Player.Profile.Age, 18) + 1; log.push(`Birthday: {{user}} turns ${S.Player.Profile.Age} today (Player.Profile.Age).`); }
     }
   }
+  Object.assign(c, { absB, absA, elapsed, evs, dayNo, goneNow, dayNoB });
+}
 
-  // ---- 1b. 1.1.0 weather (spec §4): season, sky, wind, rare weather and °C for the current block; the Divination Society forecast ----
+// ---- 1b. 1.1.0 weather (spec §4): season, sky, wind, rare weather and °C for the current block; the Divination Society forecast ----
+function stepWeather(c) {
+  const { S, log, hasB, absB, absA, dayNo } = c;
   const WXM = S.$ui.wxfx, seed = S.$eng.seed, TU = tuneOf(S);
   const away = /^Away from campus/.test(S.World._Curfew || '');
   let wxNow = null, wxBlk = null;                              // wxNow: the block whose effects apply (Full, on campus)
@@ -966,8 +1031,12 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
   if (WXM !== 'off') for (const id of Object.keys(NPC_MOODS)) if ((ARRIVES[id] || 1) <= S.World.Year && (S.Bonds[id] || (S.Scene.Present || {})[id]))
     S.$ui.moods[id] = moodOf(id, S, S.$ui.wx && !S.$ui.wx.away ? S.$ui.wx.now : null, dayNo);
   S.$ui.party = birthdayParty(S);
+  Object.assign(c, { WXM, seed, TU, wxNow });
+}
 
-  // ---- 2. magic: casts ----
+// ---- 2. magic: casts ----
+function stepMagic(c) {
+  const { S, B, log, hasB, absA, elapsed, TU, wxNow } = c;
   const V = S.Player.Vitals, M = S.Magic, T = M._Techniques || {};
   const BA = (hasB && B.Magic && B.Magic.Active) || {};
   // v1.0.3 (A#3): the AI never sees $ fields, so a whole-record replace drops them; the same effect keeps its start time
@@ -1094,10 +1163,14 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
       if (!settle(name, eff, absA)) { endPact(eff); delete M.Active[name]; continue; }
     }
   }
+  Object.assign(c, { V, M, regenLeft, startedNow });
+}
 
-  // ---- 4. rest & recovery (1.1.0: Soaked halves stamina recovery; sleep quality follows the night's weather, Full only) ----
-  // 1.12.0 (H1): a night skipped in one update (5 to 24 hours, 4 of them between 00:00 and 06:00) with no Resting written was
-  // slept, not stayed up: indoors (or on a trip), not in a battle, not under The Vigil. "awake" is a deliberate all-nighter.
+// ---- 4. rest & recovery (1.1.0: Soaked halves stamina recovery; sleep quality follows the night's weather, Full only) ----
+// 1.12.0 (H1): a night skipped in one update (5 to 24 hours, 4 of them between 00:00 and 06:00) with no Resting written was
+// slept, not stayed up: indoors (or on a trip), not in a battle, not under The Vigil. "awake" is a deliberate all-nighter.
+function stepRest(c) {
+  const { S, B, log, hasB, toolEdit, absB, absA, elapsed, seed, TU, wxNow, V, regenLeft } = c;
   if (V.Resting === 'awake') V.Resting = 'none';
   else if (hasB && !toolEdit && V.Resting === 'none' && V.HP > 0 && elapsed >= 300 && elapsed <= DAY_MIN && nightMinutes(absA) - nightMinutes(absB) >= 240
     && !(S.Battle && S.Battle.Active) && (!isOutdoor(S.World.Location) || (S.Trip && S.Trip.Active))) {
@@ -1149,8 +1222,12 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     }
   }
   V.Resting = 'none';
+  Object.assign(c, { restedAs, Cn, consumed });
+}
 
-  // ---- 4b. 1.1.0 weather effects (Full, on campus): outdoor exposure -> Soaked / Chilled / Overheated, daily Head cold roll ----
+// ---- 4b. 1.1.0 weather effects (Full, on campus): outdoor exposure -> Soaked / Chilled / Overheated, daily Head cold roll ----
+function stepExposure(c) {
+  const { S, B, log, hasB, absA, elapsed, dayNo, dayNoB, WXM, seed, TU, wxNow, V, Cn, consumed } = c;
   {
     const xs = _.isPlainObject(S.$eng.wxs) ? S.$eng.wxs : (S.$eng.wxs = {});
     for (const k of ['wet', 'cold', 'hot', 'dry']) if (!(xs[k] >= 0)) xs[k] = 0;
@@ -1203,8 +1280,11 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
       if (Cn['Head cold']) V.Stamina = Math.min(V.Stamina, V.Stamina_max * 0.8);
     }
   }
+}
 
-  // ---- 5. vitals ----
+// ---- 5. vitals ----
+function stepVitals(c) {
+  const { S, B, log, hasB, V } = c;
   if (hasB) {
     const dmg = B.Player.Vitals.HP - V.HP;
     if (dmg > 40 && !V.Lethal_flag) { V.HP = B.Player.Vitals.HP - 40; log.push(`HP loss capped at 40 (no lethal flag): HP ${Math.round(V.HP)}.`); }
@@ -1222,23 +1302,18 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
   V._Fatigue = V.Stamina <= 0 ? 'Collapsed' : st <= 30 ? 'Exhausted' : st <= 70 ? 'Tired' : 'Fresh';
   S.$ui.training = Object.values(S.Player.Injuries).some(i => /moderate|serious|critical/.test(i.Severity)) ? 'Injured' : /Exhausted|Collapsed/.test(V._Fatigue) ? 'Too tired to train' : '';
   if (hasB && B.Player.Vitals._Condition !== V._Condition) S.$ui.toasts.push(`Condition: ${V._Condition}`);
+}
 
-  // ---- 5b. 1.3.0 reputation: Academy (staff and the institution), Student (the student body), Doves (the Dovecote). Signed Rep XP
-  // (engine-owned, in $xp) sets the level -5..+5. The narrator reports what earned or cost reputation in /Rep_events: repeatable
-  // triggers are capped at REP.weekly_cap a week per reputation, events and losses are not. Bond milestones and high Tension are
-  // counted by the engine (§6). A pre-1.3.0 save's Public / Dorm meters become Academy / Student XP once.
+// ---- 5b. 1.3.0 reputation: Academy (staff and the institution), Student (the student body), Doves (the Dovecote). Signed Rep XP
+// (engine-owned, in $xp) sets the level -5..+5. The narrator reports what earned or cost reputation in /Rep_events: repeatable
+// triggers are capped at REP.weekly_cap a week per reputation, events and losses are not. Bond milestones and high Tension are
+// counted by the engine (§6). A pre-1.3.0 save's Public / Dorm meters became Academy / Student XP in stepMigrate.
+function stepReputation(c) {
+  const { S, B, log, jnl, hasB, dayNo, goneNow, dayNoB, TU } = c;
   const RP = S.Player.Profile.Reputation || (S.Player.Profile.Reputation = {});
   const RPB = hasB ? ((((B.Player || {}).Profile || {}).Reputation) || {}) : null;
   const rx = {};
   for (const r of REP.reps) rx[r] = _.clamp(num(((RPB && RPB.$xp) || RP.$xp || {})[r], 0), -REP.thresholds[4], REP.thresholds[4]);
-  if (S.$eng.repv !== 1) {
-    const old = (RPB && (RPB.Public != null || RPB.Dorm != null)) ? RPB : RP;
-    if (REP.reps.every(r => !rx[r]) && (num(old.Public, 0) || num(old.Dorm, 0))) {
-      rx.Academy = _.clamp(Math.round(num(old.Public, 0) * 1.25), -125, 125); rx.Student = _.clamp(Math.round(num(old.Dorm, 0) * 1.25), -125, 125);
-      log.push(`Reputation now has three parts (Academy, Student, Doves); the old academy and dorm standing became Academy ${repLevel(rx.Academy)} and Student ${repLevel(rx.Student)}.`);
-    }
-    S.$eng.repv = 1;
-  }
   delete RP.Public; delete RP.Dorm;
   const weekNo = Math.floor(dayNo / 7), weekNoB = Math.floor(dayNoB / 7);
   const repw = _.isPlainObject(S.$eng.repw) && S.$eng.repw.w === weekNo ? S.$eng.repw : { w: weekNo };
@@ -1304,13 +1379,17 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     RP.$xp = { ...rx };
   };
   repSync(false);
+  Object.assign(c, { weekNo, weekNoB, repw, repLv, repAdd, repLevelUp, repSync });
+}
 
-  // ---- 5c. 1.9.8 Fortune roll (owner-approved planning/DRAFT_outside_presets.md A1). One seeded d100 per update, shown in <now>
-  // for the next reply: swipes of that reply re-run from this same state, so they all see the same number (no reroll by swipe).
-  // The narrator uses it only for an important, uncertain attempt by {{user}} (rule 504), adding these standing modifiers and the
-  // situation's own (fitting magic, cover, an alert opponent). Bands come from Settings (Gentle by default).
-  // 1.11.1 (bug hunt): a player-tool edit (Builder, Settings, calendar note) is not a story turn: it keeps the roll, so editing
-  // a setting and swiping cannot reroll it (the edit is inserted before the last reply since 1.9.1)
+// ---- 5c. 1.9.8 Fortune roll (owner-approved planning/DRAFT_outside_presets.md A1). One seeded d100 per update, shown in <now>
+// for the next reply: swipes of that reply re-run from this same state, so they all see the same number (no reroll by swipe).
+// The narrator uses it only for an important, uncertain attempt by {{user}} (rule 504), adding these standing modifiers and the
+// situation's own (fitting magic, cover, an alert opponent). Bands come from Settings (Gentle by default).
+// 1.11.1 (bug hunt): a player-tool edit (Builder, Settings, calendar note) is not a story turn: it keeps the roll, so editing
+// a setting and swiping cannot reroll it (the edit is inserted before the last reply since 1.9.1)
+function stepFortune(c) {
+  const { S, B, hasB, toolEdit, OFF, absA, seed, TU, V, M, repLv } = c;
   S.$eng.turn = hasB ? num((B.$eng || {}).turn, 0) + (toolEdit ? 0 : 1) : num(S.$eng.turn, 0);
   if (OFF.has('fortune')) S.$ui.fortune = null;
   else {
@@ -1328,8 +1407,11 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
   // 1.16.1 (audit B5): Rank 10 benefits suspended by low Trust, from the Trust before this reply, for the sections before the
   // bonds (exam perks); recomputed after the bonds for the rest
   S.$ui.tsusp = tsuspOf(S, (hasB && B.Bonds) || S.Bonds);
+}
 
-  // ---- 5d. 1.10.0 (owner-approved planning/DRAFT_batch_fp7_fp11.md, Batch 1): FP7 attendance, FP10 weekly recap, FP12 small scenes ----
+// ---- 5d. 1.10.0 (owner-approved planning/DRAFT_batch_fp7_fp11.md, Batch 1): FP7 attendance, FP10 weekly recap, FP12 small scenes ----
+function stepSchoolWeek(c) {
+  const { S, B, log, jnl, hasB, byBuilder, OFF, REPORTED, absB, absA, elapsed, evs, dayNo, goneNow, dayNoB, seed, TU, V, restedAs, weekNo, weekNoB, repLv, repAdd } = c;
   {
     const Pf = S.Player.Profile, PY = _.clamp(num(Pf.Year, 1), 1, 3), pts = x => num(((x || {}).Wallet || {}).Points, 0);
     let WK = _.isPlainObject(S.$eng.wk) ? S.$eng.wk : null;
@@ -1601,16 +1683,22 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
       }
     }
   }
+}
 
-  // ---- 6a. names revealed by the story prose (not by the update block); before 6 so a name spoken in this reply counts ----
+// ---- 6a. names revealed by the story prose (not by the update block); before 6 so a name spoken in this reply counts ----
+function stepNamesInProse(c) {
+  const { S, text } = c;
   if (text) {
     const prose = String(text).replace(/<UpdateVariable>[\s\S]*?<\/UpdateVariable>/g, '').replace(/<[^>]+>/g, ' ');
     const names = S.$ui.names;
     // 1.11.1 (bug hunt): a first name that is also a word ("Maple leaves…", "Ruby light…") opening a sentence is no name reveal
     for (const [id, rx] of NAME_RX) if (!names.includes(id) && (ARRIVES[id] || 1) <= S.World.Year && mentionIn(prose, id, rx)) names.push(id);
   }
+}
 
-  // ---- 6. bonds ----
+// ---- 6. bonds ----
+function stepBonds(c) {
+  const { S, B, log, jnl, hasB, OFF, staleDrop, evs, dayNo, goneNow, dayNoB, WXM, seed, TU, wxNow, V, weekNo, weekNoB, repLv, repAdd, repLevelUp } = c;
   const canon = k => NPC_ALIAS[String(k).toLowerCase()] || k;
   // v1.0.3 (F09): when both an alias key and the canonical key exist, the alias record's real changes merge into the canonical one
   // (fields that differ from the empty record; lists are unioned). Engine-owned "_" / "$" fields are never taken from the alias.
@@ -1708,7 +1796,6 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
         && !npcAway(id) && !npcAway(by)) introductions[id] = by;
   }
   S.Interactions = [];
-  const migrate = S.$eng.bondv !== 2;
   S.$ui.rank_cues = [];
   // 1.3.0 reputation changes how fast NPCs warm up: extra XP per counted talk or hangout (REP.bond_mod), modifiers add up
   const modBy = (rows, L) => { const hit = rows.find(([at]) => (at > 0 ? L >= at : L <= at)); return hit ? hit[1] : 0; };
@@ -1737,7 +1824,7 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     S._Perks[x.name] = { From: id, Kind: which === 'gift' ? 'gift' : 'rank10', Effect: x.text + (x.secret ? ` <narrator_only>${x.secret}</narrator_only>` : ''), Uses: x.uses || 0 };
     S.$ui.toasts.push(which === 'gift' ? `Gift from {npc:${id}}: ${x.name}` : `Rank 10 with {npc:${id}}: new benefit`);
     jnl.push(which === 'gift' ? `${id} gave {{user}} ${x.name}.` : `Rank 10 with ${id}: ${x.text.split(/(?<=\.)\s/)[0]}`);
-    if (x.jump) trainJump(x.jump, `${x.name} (${id})`);
+    if (x.jump) trainJump(c, x.jump, `${x.name} (${id})`);
     if (x.rep_up && repLevelUp(x.rep_up, false)) log.push(`${x.rep_up} reputation rose one level (${id}, Rank 10).`);
   };
   const rankedUp = (id, b) => {
@@ -1754,7 +1841,6 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     if (hasB && g > 0 && !byId[id]) byId[id] = [{ Kind: g >= 2 ? 'hangout' : 'talk' }];
     // engine-owned fields come from the previous state; a record the AI (re)wrote cannot set them
     let xp = b0 ? num(b0.$xp, 0) : (hasB ? 0 : num(b.$xp, 0));
-    if (migrate) { const p = num(b0 ? b0.Progress : b.Progress, 0); if (p > 0 && xp === 0) xp = Math.round(Math.min(p, 10) / 10 * needXP(b.Rank, PACE)); }
     b.Progress = 0;
     b._Event_ready = b0 ? !!b0._Event_ready : false;
     b.$cool = b0 ? num(b0.$cool, -1) : num(b.$cool, -1);
@@ -1770,7 +1856,6 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     b.$Knows_old = b0 ? [...(b0.$Knows_old || [])] : [...(b.$Knows_old || [])]; b.$seen = b0 ? num(b0.$seen, -1) : num(b.$seen, -1); b.$mw = b0 ? num(b0.$mw, -1) : num(b.$mw, -1);
     const acts = [...(byId[id] || [])], rank0 = b0 ? b0.Rank : b.Rank, tw0 = num(b.Tension, 0), trw0 = num(b.Trust, 50);
     let rankTrust = 0;
-    if (S.$eng.tenv !== 1) b.$ms = [...new Set([...b.$ms, ...Object.keys(REP.bond_milestone_xp || {}).map(Number).filter(r => r <= b.Rank)])];   // older saves: milestones already paid
     // 1.4.3: a new bond starts at the character's own Trust (owner: start by category). 1.6.11 (owner playtest: Trixie met for the
     // first time showed Trust 10, Betrayed): a number the narrator writes on a first meeting is not a deed, so it gives way too
     if (!b0 && hasB) { const s0 = trustProfile(id, S, secretOut).start; if (num(b.Trust, 50) !== 50 && num(b.Trust, 50) !== s0) log.push(`${id} is new: Trust starts at ${s0} by their nature (${num(b.Trust, 50)} written; a first meeting is not a deed).`); b.Trust = s0; }
@@ -2039,13 +2124,18 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
       }
     }
   }
-  // ---- 6c. 1.6.0 (Batch C, P4/N4): what each character carries of {{user}}. Knows: dated, the latest KNOWS_VISIBLE (older
-  // lines move to $Knows_old). Imprints: weight 5+, at most IMPRINT_MAX; over the cap the lightest goes, and the new one must
-  // outweigh it; a "fixed" character (data/npc_canon.json Change) is never rewritten, only deepened; a "shaped" or "fluid" one keeps
-  // what the belief replaced (Was). Next (Rank NEXT_RANK+): their own plan when they leave; brought back when they meet {{user}}
-  // again ("since you last saw them") or, once it lapses unseen, moved into $Recent. Meanwhile: Rank MEANWHILE_RANK+ bonds unseen
-  // for a week get one Journal line a week about their own life.
-  // 1.18.0 (I6): a newly confirmed keeper of the true magic also remembers learning it.
+  Object.assign(c, { canon, BB, daily, PACE, bweek, npcAway, spreadFrom, KR });
+}
+
+// ---- 6c. 1.6.0 (Batch C, P4/N4): what each character carries of {{user}}. Knows: dated, the latest KNOWS_VISIBLE (older
+// lines move to $Knows_old). Imprints: weight 5+, at most IMPRINT_MAX; over the cap the lightest goes, and the new one must
+// outweigh it; a "fixed" character (data/npc_canon.json Change) is never rewritten, only deepened; a "shaped" or "fluid" one keeps
+// what the belief replaced (Was). Next (Rank NEXT_RANK+): their own plan when they leave; brought back when they meet {{user}}
+// again ("since you last saw them") or, once it lapses unseen, moved into $Recent. Meanwhile: Rank MEANWHILE_RANK+ bonds unseen
+// for a week get one Journal line a week about their own life.
+// 1.18.0 (I6): a newly confirmed keeper of the true magic also remembers learning it.
+function stepBondMemory(c) {
+  const { S, B, log, jnl, hasB, absA, dayNo, weekNo, canon, BB, daily, PACE, bweek, npcAway, spreadFrom } = c;
   if (hasB && S.Hidden._True_magic) {
     const known0 = new Set(((B.Hidden || {}).Known_by || []).map(canon));
     for (const raw of S.Hidden.Known_by || []) {
@@ -2119,12 +2209,9 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     if (hit.length) log.push(`Word of what {{user}} did to ${id} reached ${hit.join(', ')}: their Trust ${TRU.spread.friends}.`);
   }
   S.$ui.tsusp = tsuspOf(S, S.Bonds);
-  S.$eng.bondv = 2;
-  S.$eng.tenv = 1;   // 1.3.8: $ms filled for bonds from before
   for (const k of Object.keys(bweek)) if (bweek[k].w !== weekNo) delete bweek[k];
   S.$eng.bweek = bweek;
   // Passive readiness and visit access. The relationship changes inside ordinary scenes.
-  S.$ui.bev = {}; // clear obsolete event hints from older saves
   S.$ui.close = Object.entries(S.Bonds).filter(([id, b]) => b.Rank < 10 && num(b.$xp, 0) >= Math.ceil(needXP(b.Rank, PACE) * num(BR.close_at, 0.8))).map(([id]) => id);
   const visiting = Object.entries(S.Bonds).filter(([id, b]) => b.Rank >= 7 && b.Trust >= 50 && b.Tension < 70 && !npcAway(id));
   const accessDay = !S.Trip.Active && !/LOCKDOWN|CURFEW/.test(String(S.World._Curfew || ''));
@@ -2141,27 +2228,33 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
   }
   for (const id of Object.keys(daily)) if (daily[id].day !== dayNo) delete daily[id];
   S.$eng.daily = daily;
+}
 
-  // ---- 6b. 1.3.0 training: Mana pool (Mana_max) and Stamina (Stamina_max). The narrator reports sessions in /Training. One session
-  // adds TRN.session_pct % of the starting value x (1 + partner bonuses), at most TRN.weekly_pct % a week and TRN.total_pct % in all.
-  // Partners: an NPC whose Rank 5 gift is a training bonus for that track, in the scene. Jumps (rewards) skip the weekly limit only.
-  function trainRoom(k, weekly) {
-    const T = S.Player.$Training[k]; if (!T) return 0;
-    if (T.w !== weekNo) { T.w = weekNo; T.wg = 0; }
-    const tot = TU.trn_total > 0 ? T.base * TU.trn_total / 100 - T.gain : Infinity;   // 1.3.1 Settings: 0 = no limit
-    return Math.max(0, weekly && TU.trn_week > 0 ? Math.min(T.base * TU.trn_week / 100 - T.wg, tot) : tot);
-  }
-  function trainAdd(k, amt, weekly) {
-    const T = S.Player.$Training[k], f = TRN.tracks[k].field, add = r2(Math.max(0, Math.min(amt, trainRoom(k, weekly))));
-    if (add > 0) { S.Player.Vitals[f] = r2(S.Player.Vitals[f] + add); T.gain = r2(T.gain + add); if (weekly) T.wg = r2(T.wg + add); }
-    return add;
-  }
-  function trainJump(k, why) {
-    const T = S.Player.$Training[k]; if (!T) return;
-    const add = trainAdd(k, T.base * REW.jump_pct / 100, false);
-    log.push(add > 0 ? `${TRN.tracks[k].label} +${add} at once (${why}).` : `${TRN.tracks[k].label} is already at its training limit; ${why} adds nothing.`);
-    if (add > 0) S.$ui.toasts.push(`${TRN.tracks[k].label} +${add}`);
-  }
+// Training room left on a track this week and in all (section 6b); a reward jump (section 6) skips the weekly limit only.
+function trainRoom(c, k, weekly) {
+  const { S, weekNo, TU } = c;
+  const T = S.Player.$Training[k]; if (!T) return 0;
+  if (T.w !== weekNo) { T.w = weekNo; T.wg = 0; }
+  const tot = TU.trn_total > 0 ? T.base * TU.trn_total / 100 - T.gain : Infinity;   // 1.3.1 Settings: 0 = no limit
+  return Math.max(0, weekly && TU.trn_week > 0 ? Math.min(T.base * TU.trn_week / 100 - T.wg, tot) : tot);
+}
+function trainAdd(c, k, amt, weekly) {
+  const S = c.S, T = S.Player.$Training[k], f = TRN.tracks[k].field, add = r2(Math.max(0, Math.min(amt, trainRoom(c, k, weekly))));
+  if (add > 0) { S.Player.Vitals[f] = r2(S.Player.Vitals[f] + add); T.gain = r2(T.gain + add); if (weekly) T.wg = r2(T.wg + add); }
+  return add;
+}
+function trainJump(c, k, why) {
+  const S = c.S, T = S.Player.$Training[k]; if (!T) return;
+  const add = trainAdd(c, k, T.base * REW.jump_pct / 100, false);
+  c.log.push(add > 0 ? `${TRN.tracks[k].label} +${add} at once (${why}).` : `${TRN.tracks[k].label} is already at its training limit; ${why} adds nothing.`);
+  if (add > 0) S.$ui.toasts.push(`${TRN.tracks[k].label} +${add}`);
+}
+
+// ---- 6b. 1.3.0 training: Mana pool (Mana_max) and Stamina (Stamina_max). The narrator reports sessions in /Training. One session
+// adds TRN.session_pct % of the starting value x (1 + partner bonuses), at most TRN.weekly_pct % a week and TRN.total_pct % in all.
+// Partners: an NPC whose Rank 5 gift is a training bonus for that track, in the scene. Jumps (rewards) skip the weekly limit only.
+function stepTraining(c) {
+  const { S, log, OFF, goneNow, TU, V, canon, npcAway } = c;
   {
     const here = new Set(Object.keys(S.Scene.Present || {}).map(canon));
     // 1.7.0: a Rank 10 benefit can carry the training bonus too (Linus: mana, Tsubaki: stamina); a suspended benefit (low Trust) does not count
@@ -2177,13 +2270,17 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
       const r4 = !!(pb && pb.Rank >= 4 && pb.Trust >= 35 && pb.Tension < 70 && here.has(partner) && !npcAway(partner)
         && (RANK4_PARTNERS[partner] || []).includes(k));
       const mult = 1 + pr.length * REW.train_bonus + (r4 ? 0.25 : 0), lab = TRN.tracks[k].label;
-      const add = trainAdd(k, T.base * TU.trn_session / 100 * mult * fatigueMult, true), lim = TU.trn_total > 0 ? r2(T.base * TU.trn_total / 100) : 0;
+      const add = trainAdd(c, k, T.base * TU.trn_session / 100 * mult * fatigueMult, true), lim = TU.trn_total > 0 ? r2(T.base * TU.trn_total / 100) : 0;
       if (add > 0) log.push(`Training: ${lab} +${add}${fatigueMult < 1 ? ' (Tired: half gain)' : ''}${pr.length || r4 ? ` (with ${[...new Set([...pr, ...(r4 ? [partner] : [])])].join(' and ')}, x${mult})` : ''}; ${r2(T.gain)}${lim ? ` of ${lim}` : ''} trained so far.`);
       else log.push(lim && T.gain >= lim ? `Training: ${lab} has reached its limit (+${TU.trn_total}% of the starting value); training keeps {{user}} in shape but adds no more.` : `Training: ${lab} already gained all it can this week.`);
     }
     S.Training = [];
   }
-  // ---- 6c. 1.3.0 one-use perks spent this reply (/Perk_use). Kuroo's and Milena's Rank 10 favours lift a negative reputation one level.
+}
+
+// ---- 6c. 1.3.0 one-use perks spent this reply (/Perk_use). Kuroo's and Milena's Rank 10 favours lift a negative reputation one level.
+function stepPerkUse(c) {
+  const { S, log, jnl, goneNow, repw, repLv, repLevelUp, repSync } = c;
   for (const key of (Array.isArray(S.Perk_use) ? S.Perk_use : [])) {
     const k = Object.keys(S._Perks || {}).find(x => x === key) || Object.keys(S._Perks || {}).find(x => x.toLowerCase() === String(key).trim().toLowerCase());
     if (!k) { log.push(`Perk "${key}" is not held; nothing was spent.`); continue; }
@@ -2202,8 +2299,11 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
   S.Perk_use = [];
   repSync(true);
   S.$eng.repw = repw;
+}
 
-  // ---- 7. hidden magic ----
+// ---- 7. hidden magic ----
+function stepHidden(c) {
+  const { S, B, log, hasB, toolEdit, dayNo, wxNow, weekNo, weekNoB } = c;
   const Hd = S.Hidden;
   // 1.1.0 (Full): outdoors in fog, heavy rain, a storm or a blizzard the hidden magic is harder to notice: the rise is halved (rounded up)
   if (wxNow && hasB && Hd._True_magic && isOutdoor(S.World.Location) && (wxNow.sky === 'Fog' || wxHeavy(wxNow))) {
@@ -2262,7 +2362,12 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
       log.push(`{{user}} had ${P0} points but this reply spent ${spent}: the ${spent - P0} missing were not paid (Points stay 0). Settle it in the story (put something back, owe it, pay in coin) and fix Transactions.`);
     }
   }
-  // ---- 8. monthly payout ----
+  Object.assign(c, { Hd, lineNoPay });
+}
+
+// ---- 8. monthly payout ----
+function stepPayout(c) {
+  const { S, B, log, hasB, goneNow, repLv } = c;
   if (hasB) {
     const mi = W => ((W.Year || 1) - 1) * 12 + W.Month;
     const crossed = Math.min(12, mi(S.World) - mi(B.World));
@@ -2286,9 +2391,12 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     }
     S.Player.Wallet.Transactions = S.Player.Wallet.Transactions.slice(-20);
   }
+}
 
-  // ---- 8b. Batch 5.1 records: commitments, notices, letters, clues, journal ----
-  // 1.18.0 (I4): relative Heals_by dates are anchored once, like Commitment.Due.
+// ---- 8b. Batch 5.1 records: commitments, notices, letters, clues, journal ----
+// 1.18.0 (I4): relative Heals_by dates are anchored once, like Commitment.Due.
+function stepRecords(c) {
+  const { S, B, log, jnl, hasB, toolEdit, OFF, absA, canon } = c;
   {
     const prior = _.isPlainObject(S.$eng.heals) ? S.$eng.heals : {}, next = {};
     for (const [name, injury] of Object.entries(S.Player.Injuries || {})) {
@@ -2378,7 +2486,11 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     if (my.Status === 'solved' && (!BMy[k] || BMy[k].Status !== 'solved') && hasB) { jnl.push(`Solved: ${k}${my.Summary ? ` (${my.Summary})` : ''}.`); S.$ui.toasts.push(`Mystery solved: ${k}`); }
   }
   capRecord(S.Clues, CAP.Clues);
-  // ---- 8c. Batch 5.2: club, competition, projects, trip ----
+}
+
+// ---- 8c. Batch 5.2: club, competition, projects, trip ----
+function stepClubLife(c) {
+  const { S, B, log, jnl, hasB } = c;
   const canonList = a => [...new Set((a || []).map(x => NPC_ALIAS[String(x).toLowerCase()] || x))];
   if (hasB) {
     const c0 = canonClub(B.Player.Profile.Club), c1 = S.Player.Profile.Club || '';
@@ -2406,10 +2518,14 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
   const Tr = S.Trip, Tr0 = (hasB && B.Trip) || {};
   Tr.Companions = canonList(Tr.Companions);
   if (hasB && Tr.Active !== !!Tr0.Active) jnl.push(Tr.Active ? `Set off for ${Tr.Destination || 'a trip'}.` : `Back from ${Tr0.Destination || Tr.Destination || 'the trip'}.`);
+  Object.assign(c, { canonList });
+}
 
-  // ---- 8e. v1.0.3 new school year: a new class of first-years (incoming cohorts from data/cohorts.json) ----
-  // 1.7.4: {{user}} moves up a year with everyone else (the story may hold them back), and last year's competition record is cleared
-  // (the Journal keeps it): Losing at any tier ends only that year's competitions.
+// ---- 8e. v1.0.3 new school year: a new class of first-years (incoming cohorts from data/cohorts.json) ----
+// 1.7.4: {{user}} moves up a year with everyone else (the story may hold them back), and last year's competition record is cleared
+// (the Journal keeps it): Losing at any tier ends only that year's competitions.
+function stepNewYear(c) {
+  const { S, B, log, jnl, hasB } = c;
   if (hasB && S.World.Year > (B.World.Year || 1)) {
     const P = S.Player.Profile, y0 = num(B.Player.Profile.Year, 1), dy = S.World.Year - (B.World.Year || 1);
     if (num(P.Year, 1) !== y0) log.push(`A new academic year began (Year ${S.World.Year}); {{user}} is in Year ${P.Year}.`);
@@ -2435,7 +2551,11 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
       if (ids.length) log.push(`New first-years this year (now in the NPC roster): ${ids.join(', ')}.`);
     }
   }
-  // ---- 8d. v1.0.3 graduation: the morning after Graduation (M12 W1 Mon 07:00) that year's third-years leave campus ----
+}
+
+// ---- 8d. v1.0.3 graduation: the morning after Graduation (M12 W1 Mon 07:00) that year's third-years leave campus ----
+function stepGraduation(c) {
+  const { S, log, jnl, hasB, absA } = c;
   {
     const done = S.$eng.grads || (S.$eng.grads = []), G = S.Campus_State.Graduated || (S.Campus_State.Graduated = []);
     for (let Y = 1; hasB && Y <= S.World.Year; Y++) {
@@ -2452,10 +2572,14 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     }
     S.Campus_State.Graduated = [...new Set(G.map(x => NPC_ALIAS[String(x).toLowerCase()] || x))];
   }
-  // ---- 8d2. 1.7.6 (owner, 2026-09-27): a graduate's rewards stop working. Their Rank 5 gift stays as a keepsake (_Perks Kind
-  // memento, no effect; a gift with a "grad" text in data/bond_rewards.json keeps what is left in it, without refills), their Rank 10
-  // benefit ends; Student reputation raised by a Rank 10 stays. The originals wait in $ui.perks_grad: if the story keeps the person
-  // (their name leaves Campus_State.Graduated), the reward works again. Runs every update, so a chat already past Graduation converts too.
+}
+
+// ---- 8d2. 1.7.6 (owner, 2026-09-27): a graduate's rewards stop working. Their Rank 5 gift stays as a keepsake (_Perks Kind
+// memento, no effect; a gift with a "grad" text in data/bond_rewards.json keeps what is left in it, without refills), their Rank 10
+// benefit ends; Student reputation raised by a Rank 10 stays. The originals wait in $ui.perks_grad: if the story keeps the person
+// (their name leaves Campus_State.Graduated), the reward works again. Runs every update, so a chat already past Graduation converts too.
+function stepGraduateRewards(c) {
+  const { S, log } = c;
   {
     const GR = new Set(S.Campus_State.Graduated || []), PG = _.isPlainObject(S.$ui.perks_grad) ? S.$ui.perks_grad : (S.$ui.perks_grad = {});
     for (const [k, p] of Object.entries(S._Perks || {})) {
@@ -2476,9 +2600,12 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
       log.push(`${p.From} is at Halvard again: "${k}" works again.`);
     }
   }
+}
 
-  // ---- 8e. 1.7.7 (FP1): one optional NPC-initiated contact on some days. The result is latched per day so scene changes,
-  // swipes and replays do not reroll it. The narrator decides how (or whether) the approved Stage can play; no NPC is moved.
+// ---- 8e. 1.7.7 (FP1): one optional NPC-initiated contact on some days. The result is latched per day so scene changes,
+// swipes and replays do not reroll it. The narrator decides how (or whether) the approved Stage can play; no NPC is moved.
+function stepInitiative(c) {
+  const { S, OFF, evs, dayNo, seed, TU } = c;
   {
     const I = _.isPlainObject(S.$eng.initiative) ? S.$eng.initiative : (S.$eng.initiative = {});
     if (!_.isPlainObject(I.last)) I.last = {};
@@ -2535,8 +2662,11 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
       if (I.ask) S.$ui.initiative.ask = I.ask;
     } else S.$ui.initiative = null;
   }
+}
 
-  // ---- 8f. 1.1.0 story hooks: narrator-side debts. Due anchored once like Commitments; state waiting | due | overdue | old ----
+// ---- 8f. 1.1.0 story hooks: narrator-side debts. Due anchored once like Commitments; state waiting | due | overdue | old ----
+function stepHooks(c) {
+  const { S, B, log, hasB, absA, canonList } = c;
   {
     const BH = (hasB && B.Hooks) || {};
     for (const [k, hk] of Object.entries(S.Hooks || {})) {
@@ -2554,7 +2684,11 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     }
     capRecord(S.Hooks, CAP_HOOKS, h => h.Weight === 1);                          // over the cap: Weight-1 hooks go first, oldest first
   }
-  // ---- 8g. 1.1.0 gossip: each rumour's fate and reach by age; fizzled (day 3) and old (day 21) ones leave Campus_State.Rumours ----
+}
+
+// ---- 8g. 1.1.0 gossip: each rumour's fate and reach by age; fizzled (day 3) and old (day 21) ones leave Campus_State.Rumours ----
+function stepGossip(c) {
+  const { S, log, OFF, dayNo, seed, TU } = c;
   if (OFF.has('gossip')) S.$ui.gossip = [];
   else {
     const R = _.isPlainObject(S.$eng.rum) ? S.$eng.rum : (S.$eng.rum = {}), live = S.Campus_State.Rumours || [];
@@ -2571,7 +2705,11 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     }
     S.$ui.gossip = keep.map(r => [r, REACH(R[r], dayNo - R[r].born), dayNo - R[r].born]);
   }
-  // ---- 8h. 1.1.0 inventory (the Bag): merge case duplicates, remove at Qty 0, Sunfizz bottles, cap 40 (never gear) ----
+}
+
+// ---- 8h. 1.1.0 inventory (the Bag): merge case duplicates, remove at Qty 0, Sunfizz bottles, cap 40 (never gear) ----
+function stepBag(c) {
+  const { S, B, log, jnl, hasB } = c;
   {
     const I = S.Inventory || (S.Inventory = {}), BI = (hasB && B.Inventory) || {};
     const groups = _.groupBy(Object.keys(I), k => k.trim().toLowerCase());
@@ -2636,10 +2774,13 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     for (const l of B.Journal || []) if (!kept.has(l) && !have.has(l)) { arch.push(l); have.add(l); }
     S.$ui.archive = arch.slice(-JOURNAL_ARCHIVE);
   }
+}
 
-  // ---- 8j. 1.6.1 (Batch D, N4): campus events. Updated is stamped when an event's Text changes (a new event, or news about it);
-  // events with no news for STALE_DAYS are listed in <now> ($ui.stale), so the world moves them on or closes them. A bare string
-  // (the AI's shorthand, or a save from before 1.6.1) is the Text.
+// ---- 8j. 1.6.1 (Batch D, N4): campus events. Updated is stamped when an event's Text changes (a new event, or news about it);
+// events with no news for STALE_DAYS are listed in <now> ($ui.stale), so the world moves them on or closes them. A bare string
+// (the AI's shorthand, or a save from before 1.6.1) is the Text.
+function stepCampusEvents(c) {
+  const { S, B, hasB, dayNo } = c;
   {
     const E0 = (hasB && B.Campus_State && B.Campus_State.Events) || {}, stale = [];
     const ev = x => (_.isPlainObject(x) ? x : x == null ? null : { Text: String(x) });
@@ -2659,12 +2800,15 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     const ph = PHASES.find(p => { const a = doyOf(p.from), z = doyOf(p.to); return a >= 0 && z >= 0 && (a <= z ? d >= a && d <= z : d >= a || d <= z); });
     S.$ui.phase = ph ? { id: ph.id, line: ph.line } : null;
   }
+}
 
-  // ---- 8k. 1.6.1 (Batch D, N5): characters the narrator invented (Extras). A roster name is never an Extra. A key that differs
-  // only in case, or a first name that matches exactly one recorded full name, is the same person: it merges into the recorded
-  // key (in Scene.Present too). Every time one enters Scene.Present it is counted ($eng.xs); from the second appearance <cast>
-  // asks for their record until it exists. At most EXTRAS_MAX records: the least recently seen leave first (into a hidden
-  // archive, $ui.xold, which gives the record back if they turn up again), never one the player pinned (Keep) or one present.
+// ---- 8k. 1.6.1 (Batch D, N5): characters the narrator invented (Extras). A roster name is never an Extra. A key that differs
+// only in case, or a first name that matches exactly one recorded full name, is the same person: it merges into the recorded
+// key (in Scene.Present too). Every time one enters Scene.Present it is counted ($eng.xs); from the second appearance <cast>
+// asks for their record until it exists. At most EXTRAS_MAX records: the least recently seen leave first (into a hidden
+// archive, $ui.xold, which gives the record back if they turn up again), never one the player pinned (Keep) or one present.
+function stepExtras(c) {
+  const { S, B, log, hasB, absA, dayNo, canon } = c;
   let xHere = [], xNew = [];
   {
     const X = S.Extras = _.isPlainObject(S.Extras) ? S.Extras : {}, X0 = (hasB && _.isPlainObject(B.Extras) && B.Extras) || {};
@@ -2721,10 +2865,14 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     xHere = ext.filter(id => id in X && String(X[id].Who || '').trim());
     xNew = ext.filter(id => (id in X && !String(X[id].Who || '').trim()) || (!(id in X) && num((XS[xsKey[id]] || {}).n, 0) >= 2));
   }
+  Object.assign(c, { xHere, xNew });
+}
 
-  // ---- 8i. 1.5.1 (Batch B, P1/P6): the cast. Who among the present gets their full canon sheet in the Cast Sheet (509; their
-  // keyword lore entry stays empty meanwhile): those who spoke in the last reply first, then the highest bond rank, at most
-  // CAST_FULL; the others get a brief sheet. From the reply's prose: who spoke without being in Scene.Present, who was mentioned.
+// ---- 8i. 1.5.1 (Batch B, P1/P6): the cast. Who among the present gets their full canon sheet in the Cast Sheet (509; their
+// keyword lore entry stays empty meanwhile): those who spoke in the last reply first, then the highest bond rank, at most
+// CAST_FULL; the others get a brief sheet. From the reply's prose: who spoke without being in Scene.Present, who was mentioned.
+function stepCast(c) {
+  const { S, text, xHere, xNew } = c;
   {
     const prev = _.isPlainObject(S.$ui.cast) ? S.$ui.cast : {};
     const pres = Object.keys(S.Scene.Present || {}).filter(id => NPC_IDS.has(id) && (ARRIVES[id] || 1) <= S.World.Year);
@@ -2740,10 +2888,13 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     S.$ui.cast = { full: order.slice(0, CAST_FULL), brief: order.slice(CAST_FULL), spoke: spoke.filter(id => pres.includes(id)), gone, ment,
       where: Object.fromEntries(ment.filter(id => HAUNT[id]).map(id => [id, HAUNT[id]])), extras: xHere, xnew: xNew };
   }
+}
 
-  // ---- 8l. 1.12.0 (planning/DRAFT_missed_reports.md): what the last update may have left out of its report. Reminders for <now>
-  // only: nothing here changes a number. At most MISS_MAX lines, most important first, and the same hint is not repeated within two
-  // days ($eng.missed). A player-tool edit keeps the reminders it found.
+// ---- 8l. 1.12.0 (planning/DRAFT_missed_reports.md): what the last update may have left out of its report. Reminders for <now>
+// only: nothing here changes a number. At most MISS_MAX lines, most important first, and the same hint is not repeated within two
+// days ($eng.missed). A player-tool edit keeps the reminders it found.
+function stepReminders(c) {
+  const { S, B, text, userText, hasB, toolEdit, OFF, REPORTED, absA, elapsed, dayNo, V, M, startedNow, restedAs, canon, KR, Hd, lineNoPay } = c;
   if (hasB && !toolEdit) {
     const seen = _.pickBy(_.isPlainObject(S.$eng.missed) ? S.$eng.missed : {}, d => num(d, -99) >= dayNo - 2);
     const out = [], add = (sig, line) => { if (!(sig in seen) && !out.some(o => o[0] === sig)) out.push([sig, line]); };
@@ -2869,11 +3020,14 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     for (const [sig] of out.slice(0, MISS_MAX)) seen[sig] = dayNo;
     S.$eng.missed = seen;
   }
+}
 
-  // ---- 8m. 1.16.0 (owner-approved planning/DRAFT_dynamic_ambience.md): ambience for the next reply. How crowded and how lit the
-  // place is and one sensory cue type (on a new place or time block); a seeded beat (texture nearby, or a small brush with {{user}});
-  // rarely, a secret uncanny moment from the place's ghost story. Types, not sentences: the narrator writes the detail each time.
-  // Seeded and computed once per update, so every swipe of the next reply sees the same result (like the Fortune roll).
+// ---- 8m. 1.16.0 (owner-approved planning/DRAFT_dynamic_ambience.md): ambience for the next reply. How crowded and how lit the
+// place is and one sensory cue type (on a new place or time block); a seeded beat (texture nearby, or a small brush with {{user}});
+// rarely, a secret uncanny moment from the place's ghost story. Types, not sentences: the narrator writes the detail each time.
+// Seeded and computed once per update, so every swipe of the next reply sees the same result (like the Fortune roll).
+function stepAmbience(c) {
+  const { S, B, hasB, toolEdit, OFF, absB, absA, elapsed, evs, dayNo, dayNoB, WXM, seed, TU, wxNow, restedAs, weekNo } = c;
   S.$ui.amb = null;
   const AML = OFF.has('ambience') ? 'off' : S.$ui.ambience || 'full';
   if (AML !== 'off' && hasB && !toolEdit && AMB.cats) {
@@ -2988,8 +3142,11 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     }
     if (fresh || beat || unc) S.$ui.amb = { place: placeOf(S.World.Location), crowd: crowd >= 0 ? AMB_LEVELS[crowd] : '', light, cue, beat, unc };
   }
+}
 
-  // ---- 9. UI bookkeeping ----
+// ---- 9. UI bookkeeping ----
+function stepUi(c) {
+  const { S, offUnlock, evs, dayNo, M, Hd } = c;
   const place = placeOf(S.World.Location);
   // 1.16.1 (audit B6): only places on the Campus Map, so off-campus names never push a discovered place out of the list (cap 80)
   if (place && plName(place) && !S.$ui.discovered.includes(place)) S.$ui.discovered.push(place);
@@ -3010,8 +3167,11 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
   if (S.Trip.Active || TRIPS.some(tp => { const d0 = (tp.m - 1) * 28 + (tp.w - 1) * 7 + DAYS.indexOf(tp.d); return doy >= d0 - 14 && doy <= d0 + 2; })) unlock('trip');
   S.$ui.next = nextUp(S.World, evs, S);   // 1.3.4: the bracelet's "Next" chip
   S.$ui.toasts = S.$ui.toasts.slice(-10);
+}
 
-  // ---- 10. commit ----
+// ---- 10. commit ----
+function stepCommit(c) {
+  const { S, B, log, hasB, absA } = c;
   S.$eng.abs = absA;
   // 1.7.4: the first update in campaign Year 2 or later dates every line still written in Year 1's plain form ("[M3 W2 Tue]" ->
   // "[Y1 M3 W2 Tue]"); lines of this update already carry their own year (stamp, withYear), so a bare date here is from Year 1.
@@ -3029,6 +3189,8 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
   }
   if (log.length) S._Log = [...(S._Log || []), ...log.map(l => `[${stamp(S.World)}] ${l}`)].slice(-12);
 }
+
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepRest, stepExposure, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepUi, stepCommit];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,

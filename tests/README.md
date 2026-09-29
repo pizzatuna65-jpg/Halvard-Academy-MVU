@@ -12,5 +12,6 @@ Build first with `python tools/build_all.py`. Run all suites with `npm test`; ru
 | Map, shops and UI panels | `test_people_map.cjs`, `test_mapvariants_v1130.cjs`, `test_batch5_shops.cjs`, `test_notebook.cjs` |
 | Prompt and card package | `test_tokens_v1110.cjs`, `test_preset.cjs`, `qa_static.cjs`, `lint.cjs` |
 | Engine integration audit | `test_audit_b1_v1161.cjs`, `test_audit_b2_v1170.cjs`, `test_integrations_v1180.cjs` |
+| Engine steps and save migrations | `test_engine_steps_v1200.cjs`, `test_saves.cjs`; any suite with `ENGINE_DIFF=<older engine.js>` compares every engine run with that build |
 
 Stress scenarios live under `tests/stress/`; `sim_year.cjs 336` measures a full campaign year's state size and update time. Browser panel smoke checks live under `tests/preview/`.

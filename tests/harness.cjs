@@ -12,7 +12,31 @@ function loadSchema() {
 }
 function loadEngine() {
   const src = fs.readFileSync(path.join(ROOT, 'src/scripts/engine.js'), 'utf8');
-  return new Function(src + '\nreturn runEngine;')();
+  const run = new Function(src + '\nreturn runEngine;')();
+  return process.env.ENGINE_DIFF ? diffEngine(run, process.env.ENGINE_DIFF) : run;
+}
+// 1.20.0 (audit A5): ENGINE_DIFF=<an older engine.js> runs that engine on a copy of every input next to the current one and stops
+// at the first run whose state (after, and before) or error differs. For refactors that must not change behaviour.
+function diffEngine(run, oldFile) {
+  const old = new Function(fs.readFileSync(oldFile, 'utf8') + '\nreturn runEngine;')();
+  let calls = 0;
+  const firstDiff = (a, b, at) => {
+    if (_.isEqual(a, b)) return null;
+    if (!_.isObject(a) || !_.isObject(b) || Array.isArray(a) !== Array.isArray(b)) return `${at}: ${JSON.stringify(a)} vs ${JSON.stringify(b)}`.slice(0, 600);
+    for (const k of _.union(Object.keys(a), Object.keys(b))) { const d = firstDiff(a[k], b[k], `${at}/${k}`); if (d) return d; }
+    return `${at}: key order or undefined values differ`;
+  };
+  process.on('exit', () => console.error(`ENGINE_DIFF: ${calls} engine runs identical to ${path.basename(oldFile)}`));
+  return (S, B, ...rest) => {
+    const [S2, B2] = _.cloneDeep([S, B]);   // one copy keeps objects S and B share (a test may pass a parsed save and its source)
+    let e1 = null, e2 = null;
+    try { old(S2, B2, ...rest); } catch (e) { e1 = e; }
+    try { run(S, B, ...rest); } catch (e) { e2 = e; }
+    const d = String(e1 && e1.message) !== String(e2 && e2.message) ? `error: ${e1 && e1.message} vs ${e2 && e2.message}` : firstDiff(S2, S, 'after') || firstDiff(B2, B, 'before');
+    if (d) { console.error(`ENGINE_DIFF mismatch (run ${calls + 1}, old vs new) ${d}`); process.exit(3); }
+    calls++;
+    if (e2) throw e2;
+  };
 }
 const Schema = loadSchema(), runEngine = loadEngine();
 const YAML = require('yaml');

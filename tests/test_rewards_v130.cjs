@@ -38,7 +38,7 @@ ok(A._Log.some(l => /unknown/.test(l)), 'an unknown reputation name is logged, n
 const W = T(S, '09:05', [{ op: 'replace', path: '/Player/Profile/Reputation/_Academy', value: 5 }]);
 ok(W.Player.Profile.Reputation._Academy === 0, 'the AI cannot write a level (engine-computed)');
 // migration of the pre-1.3.0 meters
-const M0 = clone(S); M0.$eng.repv = 0; M0.Player.Profile.Reputation = { Public: 20, Dorm: -12 };
+const M0 = clone(S); M0.$eng.repv = 0; M0.$eng.ver = '1.2.2'; M0.Player.Profile.Reputation = { Public: 20, Dorm: -12 };
 const M1 = T(M0, '09:10');
 ok(M1.Player.Profile.Reputation.$xp.Academy === 25 && M1.Player.Profile.Reputation.$xp.Student === -15 && M1.Player.Profile.Reputation.Public === undefined,
   `old Public/Dorm become Academy/Student XP once (${JSON.stringify(M1.Player.Profile.Reputation.$xp)})`);

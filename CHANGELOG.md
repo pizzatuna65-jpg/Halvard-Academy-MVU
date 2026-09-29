@@ -82,7 +82,36 @@ newest first; releases before 1.8.0 are the numbered items under "BATCH 4 COMPLE
 - **v1.17.0 (2026-09-29):** Audit Batch 2 (tokens and preset): each run of "[…]" messages is sent as one line, the Price Guide lists only the shop {{user}} is at (plus canon prices and one line per other shop), `<current_state>` shows absent people's bonds briefly, the preset Bridge's Eldrasil rules live in rule 504, random events only from the card's sources, inline graphics and coloured dialogue opt-in, a lore-at-depth TEST card for cache testing.
 - **v1.18.0 (2026-09-29):** Audit Batch 3: quiet-week Dove attention, named reputation deeds, shop price and injury/curfew reminders, Known_by ↔ Knows, commitments in May be here, and one engine feature gate map.
 - **v1.19.0 (2026-09-29):** Audit Batch 4: shared calendar and timetable data, event-tagged exam/trial moods, smaller per-message state, test index and lint. PNG and Cast Sheet performance measured without compatibility-risk changes.
+- **v1.20.0 (2026-09-29):** Audit Batch 5 (the last): the engine runs as a list of steps with save migrations in one place, run once per version change; behaviour unchanged (proven against 1.19.0), except Dante's renamed gift now sticks on pre-1.3.x saves.
 
+
+## v1.20.0 — Audit Batch 5: engine steps and migrations (2026-09-29)
+
+Owner: "lanjutkan batch 5" (the previous attempt was interrupted before it wrote anything; this release redoes it from 1.19.0).
+Decisions touched: none. §4 "Engine is deterministic and replay-safe" gains how the engine is organised (below).
+- **A5 steps:** `runEngine` (≈2,300 lines) is now a loop over `ENGINE_STEPS`: `stepSetup`, `stepMigrate` and 34 section functions
+  (`stepGuards` … `stepCommit`, one per former section, in the same order; the two magic sections are one `stepMagic` because they
+  share the mana regeneration pool). Each step reads what it needs from the shared context `c` and adds what later steps use.
+  The split was generated from a scope analysis of the old function (espree + eslint-scope), so every shared variable is passed
+  explicitly. The training helpers (`trainRoom`, `trainAdd`, `trainJump`) are module functions taking `c`, as Rank rewards (section 6)
+  used them before training (6b) declared them.
+- **A5 migrations:** Dante's renamed gift, Florian's Rank 10 text, pre-1.3.0 reputation meters (`repv`), pre-1.2.2 bond Progress
+  (`bondv`), pre-1.3.8 paid milestones (`tenv`) and obsolete event hints (`$ui.bev`) moved into `stepMigrate`. It runs only on the
+  first update after the card version changes (or a new chat's first run), on S and on a copy of the before-state, so the engine
+  does not read a migration as a change the reply made. Each migration still keeps its own flag.
+- **Fix found on the way:** the Dante/Florian migration ran on S only, so the read-only guard on `_Perks` put the old gift back and
+  logged "_Perks is read-only; the change was reverted." on every update of a save that had the old key. Migrating the before-state
+  too fixes this.
+- **Proof of no change:** `tests/harness.cjs` gains `ENGINE_DIFF=<older engine.js>`: every engine run also runs the older build on a
+  copy and stops at the first difference in the state after, the state before or the error. Against the 1.19.0 engine (same
+  version string): all 78 suites, fuzz (2 × 4,545 runs), Builder fuzz (601) and the 380-day simulation (1,523) were identical; the only
+  difference is the Dante fix. Three older suites that simulated an old save by resetting a flag now also give that save an old
+  `$eng.ver`, as a real old save has. About 9.3 ms per update (was about 10).
+- Tests: new `tests/test_engine_steps_v1200.cjs` (step list and order, migration once per version, Dante fix, the caller's
+  before-state untouched). Save fixture `save_1.19.0.json` was written before edits. `npm test` (79 suites), `npm run lint` and
+  ESLint pass. Main card and the three TEST cards rebuilt; the preset is unchanged. Live check: `docs/TEST_CHECKLIST.md` v1.20.0.
+- Next: the audit is complete (all five batches). Remaining audit items stay open by design: A8 (split Cast Sheet only with evidence
+  of lag), A10 (compact PNG only after compatibility checks).
 
 ## v1.19.0 — Audit Batch 4: calendar and state size (2026-09-29)
 
