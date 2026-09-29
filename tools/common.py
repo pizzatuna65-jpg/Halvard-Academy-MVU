@@ -96,11 +96,10 @@ def effect_text(item):
     return 'When used: ' + '; '.join(parts)
 
 # 1.10.0 (FP7): the weekly timetable with venues, the teachers and each club's venues, shared by gen_mvu_entries (the Now entry)
-# and gen_engine (attendance). The engine's TIMETABLE is the single source of the lessons.
+# and gen_engine (attendance). data/calendar.json is the single source of the lessons.
 norm_place = lambda s: re.sub(r'^the ', '', s.strip().lower())
 def class_data(npcs, locs):
-    eng = open(P('src/scripts/engine.template.js'), encoding='utf-8').read()
-    tt_src = re.search(r'const TIMETABLE = \{(.*?)\n\};', eng, re.S).group(1)
+    timetable = json.load(open(P('data/calendar.json'), encoding='utf-8'))['timetable']
     VENUE_ALIAS = {'warded seminar room': 'Seminar Rooms'}
     def venues_of(paren):
         out = []
@@ -112,9 +111,9 @@ def class_data(npcs, locs):
             out.append(norm_place(name))
         return out
     TT = {}
-    for day, row in re.findall(r"(\w{3}): \[(.*?)\],", tt_src):
+    for day, row in timetable.items():
         TT[day] = []
-        for cell in re.findall(r"'([^']*)'", row):
+        for cell in row:
             m = re.match(r'^(.*?)(?:\s*\[(M|D)\])?(?:\s*\((.*)\))?$', cell)
             subj, mode, paren = m.group(1).strip(), m.group(2) or '', m.group(3)
             if subj.startswith('Study Hall'): TT[day].append(['Study Hall', '', ['main library'], 'study'])

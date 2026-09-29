@@ -15,6 +15,9 @@ DENY = {'festival committee', 'divination society', 'theatre troupe', 'shub-nigg
 alias = {k: v for k, v in alias.items() if (not BAD.search(k) or k == v.lower()) and k not in DENY}
 forms = {nid: sorted({f for f in [nid, n['name'], n.get('nickname')] if f and len(f) > 1}, key=len, reverse=True) for nid, n in npcs.items()}
 t = open(P('src/scripts/engine.template.js'), encoding='utf-8').read()
+cal = json.load(open(P('data/calendar.json'), encoding='utf-8'))
+t = t.replace('/*@@CAL_EVENTS@@*/[]', json.dumps(cal['events'], ensure_ascii=False, separators=(',', ':')))
+t = t.replace('/*@@CAL_TIMETABLE@@*/{}', json.dumps(cal['timetable'], ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@MOOD_GIFTS_SOURCE@@*/', open(P('src/scripts/mood_gifts.js'), encoding='utf-8').read())
 for key, file in [('NPC_MOODS', 'npc_moods'), ('GIFT_PREFS', 'gift_prefs'), ('WIND_CASTING', 'wind_casting')]:
     obj = json.load(open(P('data/' + file + '.json'), encoding='utf-8'))

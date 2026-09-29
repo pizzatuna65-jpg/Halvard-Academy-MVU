@@ -594,7 +594,8 @@ def formal_and_far_grounds(C, N):
     rep(C[237], "Evening: feast in the Ring Dining Hall.", "Evening: the Headmaster and Vice Headmaster speak, then the feast in the Ring Dining Hall.")
     rep(C[248], "The Headmaster speaks, dorm heads", "The Headmaster and Vice Headmaster speak, dorm heads")
     rep(C[248], "Evening: feast; graduates", "Evening: the Headmaster and Vice Headmaster speak once more, then the feast; graduates")
-    rep(C[134], "19:00 feast).", "19:00 speeches and feast).")
+    if "19:00 feast)." in C[134]['content']:
+        rep(C[134], "19:00 feast).", "19:00 speeches and feast).")
     # 1.15.2 (owner, 2026-09-29): Remembrance Day has speeches from the Headmaster, the Vice Headmaster and Acting Warden Rei before
     # the lantern release (replaces v38's "not asked to speak"; "rei tetap tidak suka speak tpi dia tahu ini kewajiban warden"); Crowning Day opens with the Headmaster's and Vice Headmaster's
     # speeches before the academy boards the airship
@@ -692,14 +693,22 @@ def ghost_stories(C, N):
         "Bed, the Other Climber, the Applause), each with dates, witnesses and a theory: she has counted bell strokes from the courtyard "
         "after curfew, sat up in the Medical Centre hoping for the Last Bed, and said \"after you\" to an empty path more than once.")
 
+# Weekly timetable lore follows the same data as the engine and Notebook in both exports.
+def calendar_timetable_lore(core_entries):
+    tt = json.load(open(P('data/calendar.json'), encoding='utf-8'))['timetable']
+    for day, label in [('Mon','Monday'),('Tue','Tuesday'),('Wed','Wednesday'),('Thu','Thursday'),('Fri','Friday'),('Sat','Saturday')]:
+        row = ' | '.join(tt[day])
+        core_entries[131]['content'] = re.sub(r'^- ' + label + r': .*$', '- ' + label + ': ' + row,
+                                               core_entries[131]['content'], count=1, flags=re.M)
+
 # ================= v39 standalone =================
 C39, N39 = copy.deepcopy(C), copy.deepcopy(N)
 apply_lore_edits(C39, N39)
+calendar_timetable_lore(C39)
 apply_dynamic_lore(C39, False)   # 1.14.0
 rep(C39[0], USER_YEAR_OLD, USER_YEAR_V39)   # 1.9.7
 apply_cohort(N39, False)   # 1.7.0 cohort 2
 gate_cohorts(N39, False)
-rep(C39[137], CAL_M4_OLD, CAL_M4_NEW)
 assert ROY_OLD.search(N39[101]['content'])
 N39[101]['content'] = ROY_OLD.sub(
     'Current trouble: This year is his last chance at the Dorm Competition (Month 3 Week 4). Before it, he is training to qualify and already knows the harder problem: '
@@ -716,6 +725,9 @@ C39[21]['content'] += "\nFrom {{user}}'s second year: " + ENTR_SENIOR.replace("a
 batch3_magic_canon(C39, N39)
 formal_and_far_grounds(C39, N39)   # 1.15.1
 ghost_stories(C39, N39)   # 1.16.0
+calendar_months = json.load(open(P('data/calendar.json'), encoding='utf-8'))['months']
+for month in range(1, 13):
+    C39[133 + month]['content'] = f'[Current month: Month {month}]\n' + calendar_months[str(month)]
 os.makedirs(P('dist/lorebook_v39'), exist_ok=True)
 for name, src, D in (('Core', core, C39), ('NPC_Detailed', npc, N39)):
     out = copy.deepcopy(src); out['entries'] = {str(u): D[u] for u in sorted(D)}
@@ -726,6 +738,7 @@ Cc, Nc = copy.deepcopy(C), copy.deepcopy(N)
 Cc[21]['content'] += ("\n<%_ { const _py = Math.max(1, Math.min(3, Number(getvar('stat_data.Player.Profile.Year')) || 1)); if (_py > 1) { _%>\n"
                       + ENTR_SENIOR + "\n<%_ } } _%>")
 apply_lore_edits(Cc, Nc)
+calendar_timetable_lore(Cc)
 apply_dynamic_lore(Cc, True)   # 1.14.0
 rep(Cc[0], USER_YEAR_OLD, USER_YEAR_CARD)   # 1.9.7: never a first-year from Year 2 on
 # 1.11.0 (token audit A3): the roster's Entrance-morning paragraph is sent only on Entrance day
@@ -822,10 +835,8 @@ Nc[97]['content'] += ("\n<%_ { const _c = getvar('stat_data.Campus_State.Council
                      "<%_ } } _%>")
 
 # D17 + calendar automation: 12 month entries -> one EJS entry (uid 134)
-months = {}
-for u in range(134, 146):
-    t = C[u]['content'].replace(CAL_M4_OLD, CAL_M4_NEW)
-    months[u - 133] = re.sub(r'^\[Current month: Month \d+\]\n?', '', t).strip()
+calendar = json.load(open(P('data/calendar.json'), encoding='utf-8'))
+months = {int(k): v for k, v in calendar['months'].items()}
 cal_js = ',\n'.join(f"  {k}: {json.dumps(v, ensure_ascii=False)}" for k, v in months.items())
 cal = copy.deepcopy(C[134])
 cal.update(disable=False, constant=True, comment='Calendar — Current Month (auto)', key=['calendar', 'this month', 'next month'],

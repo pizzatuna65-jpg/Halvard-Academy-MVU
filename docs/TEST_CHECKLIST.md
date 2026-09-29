@@ -46,6 +46,13 @@ new section at the top of **By release**, not as a new file.
 
 ## By release
 
+### v1.19.0 — audit Batch 4
+
+1. Import the new PNG into the ongoing chat and continue from a v1.18.0 save. Check that calendar events and the weekly timetable still appear in Notebook and lore, including exam and trial moods.
+2. In a long chat, export a real SillyTavern chat and compare file size before and after several updates. The headless one-year state fell from 46,872 to 38,645 bytes; real chat and swipe storage still need measurement.
+3. Observe Prompt Template timing with Cast Sheet 509 active and several NPCs present. Local EJS compilation measured about 7.70 ms per compile; split the sheet only if prompt building causes visible lag.
+4. Import the PNG in SillyTavern and, if v2-only card readers matter, verify that they still see the full lorebook and scripts. Both full metadata chunks remain in this release.
+
 ### v1.18.0 — audit Batch 3
 
 1. Use true magic where detection is plausible: the narrator reports a rise in Dove attention. A quiet week later it falls by one. Ordinary movement magic draws no Dove response by itself.

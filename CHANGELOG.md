@@ -81,7 +81,19 @@ newest first; releases before 1.8.0 are the numbered items under "BATCH 4 COMPLE
 - **v1.16.1 (2026-09-29):** Audit Batch 1 (`planning/AUDIT_2026-09-29.md`): club names are matched loosely so Saturday club time counts, a used item needs the item, happenings never repeat within two days, one rule for "this NPC is away", the engine rolls back a failed update and says so, `<current_state>` shows only the latest `_Log` lines, an OOC answer has no update block, `tools/build_all.py`, a local git repository.
 - **v1.17.0 (2026-09-29):** Audit Batch 2 (tokens and preset): each run of "[…]" messages is sent as one line, the Price Guide lists only the shop {{user}} is at (plus canon prices and one line per other shop), `<current_state>` shows absent people's bonds briefly, the preset Bridge's Eldrasil rules live in rule 504, random events only from the card's sources, inline graphics and coloured dialogue opt-in, a lore-at-depth TEST card for cache testing.
 - **v1.18.0 (2026-09-29):** Audit Batch 3: quiet-week Dove attention, named reputation deeds, shop price and injury/curfew reminders, Known_by ↔ Knows, commitments in May be here, and one engine feature gate map.
+- **v1.19.0 (2026-09-29):** Audit Batch 4: shared calendar and timetable data, event-tagged exam/trial moods, smaller per-message state, test index and lint. PNG and Cast Sheet performance measured without compatibility-risk changes.
 
+
+## v1.19.0 — Audit Batch 4: calendar and state size (2026-09-29)
+
+Owner: "lanjutkan batch 4". No canon or established design decision changed.
+- **A3/I7:** `data/calendar.json` supplies 41 events, the weekly timetable and current-month lore to the engine, UI, lore 131/134 and class generator. Exam/trial mood dates read event tags. Election-candidate mood remains conditional on candidacy.
+- **A4:** the Journal UI archive retains 120 rather than 300 lines; each bond's `$Known_old` and `$Knows_old` retains 20 rather than 40. Mood state is saved for present or bonded NPCs. The 336-day stress scenario fell from 46,872 to 38,645 bytes per state (−17.5%; archive 10,394→3,980 bytes; moods 2,586→773 bytes). No exported real chat was available for measurement; live check added.
+- **A9:** `tests/README.md` maps features to tests. `npm run lint` checks handwritten/generated JavaScript syntax and compiles 118 EJS entries; `eslint.config.mjs` and `npm run lint:eslint` add lightweight template rules after installing the declared ESLint dependency.
+- **A8:** Cast Sheet 509 is 515,599 bytes; local EJS compile average was 7.70 ms over 100 runs after the final build. Prompt construction time in SillyTavern is unmeasured; the sheet was not split without evidence of user-visible lag.
+- **A10:** the card PNG is about 8.2 MB, with full v2 `chara` and v3 `ccv3` metadata. SillyTavern's parser prefers `ccv3`, but v2-only readers need `chara`; the optional compact fallback was deferred pending compatibility checks.
+- Save fixture `save_1.18.0.json` was written before edits. Main and three TEST cards rebuilt. `npm test`, `npm run lint`, `test_calendar_state_v1190.cjs`, `test_saves.cjs` and the 336-day stress scenario pass. Live checks are in `docs/TEST_CHECKLIST.md`.
+- Next: Batch 5 refactor, only when the owner says "lanjutkan batch 5".
 
 ## v1.18.0 — Audit Batch 3: engine integrations (2026-09-29)
 

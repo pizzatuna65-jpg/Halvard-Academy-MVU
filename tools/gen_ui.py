@@ -119,9 +119,9 @@ open(P('src/ui/statusbar.html'), 'w', encoding='utf-8', newline='\n').write(bar)
 t = open(P('src/scripts/ui.template.js'), encoding='utf-8').read()
 parts = ''.join(open(P('src/ui/parts', f), encoding='utf-8').read() + '\n' for f in sorted(os.listdir(P('src/ui/parts'))) if f.endswith('.js'))
 t = t.replace('/*@@PARTS@@*/', parts)
-eng = open(P('src/scripts/engine.template.js'), encoding='utf-8').read()
-cal = re.search(r'(const ALL = DAYS.*?)(?=// monthly payout)', eng, re.S).group(1)   # EVENTS + TIMETABLE + the election-day override
-t = t.replace('/*@@CALENDAR@@*/{ EVENTS: [], TIMETABLE: {} }', '(() => {\n' + cal + 'return { EVENTS, TIMETABLE, timetableFor, schedOf };\n})()')
+cal = json.load(open(P('data/calendar.json'), encoding='utf-8'))
+cal_js = '(() => { const EVENTS = ' + json.dumps(cal['events'], ensure_ascii=False, separators=(',', ':')) + '; const TIMETABLE = ' + json.dumps(cal['timetable'], ensure_ascii=False, separators=(',', ':')) + '; const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]; const schedOf = (e, day) => (!e.s ? "" : typeof e.s === "string" ? e.s : e.s[day] || ""); const timetableFor = W => W.Month === 10 && W.Week === 3 && W.Day === "Sat" ? [TIMETABLE.Sat[0], TIMETABLE.Sat[1], "Student Council Election (Main Courtyard)"] : TIMETABLE[W.Day]; return {EVENTS, TIMETABLE, timetableFor, schedOf}; })()'
+t = t.replace('/*@@CALENDAR@@*/{ EVENTS: [], TIMETABLE: {} }', cal_js)
 assert '@@CALENDAR@@' not in t
 t = t.replace("/*@@THEMES@@*/{ default: 'pewter', order: [], themes: {} }", json.dumps(THEMES, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@DATA@@*/{}', json.dumps(DATA, ensure_ascii=False, separators=(',', ':')))

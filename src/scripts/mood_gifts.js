@@ -34,14 +34,12 @@ function moodOf(id, S, wx, day) {
   for (const k of p.hates) if (match(k)) add(-1, k.toLowerCase());
   if (p.clock === 'M') { if (block === 0) add(1, 'morning person'); if (hour >= 22 || hour < 6) add(-1, 'late for a morning person'); }
   if (p.clock === 'N') { if (block === 2) add(1, 'night owl'); if (hour < 10) add(-1, 'early for a night owl'); }
-  const m = W.Month, w = W.Week, d = DAYS.indexOf(W.Day);
-  const exams = ([3,9,5,11].includes(m) && w === 1 && d < 4) || ([5,11].includes(m) && w === 2 && d === 4);
+  const dayEvents = EVENTS.filter(e => e.m === W.Month && e.w === W.Week && e.d.includes(W.Day));
+  const exams = dayEvents.some(e => e.mood === 'exam');
+  const trials = dayEvents.some(e => e.mood === 'trial');
   if (exams && STUDENTS[id] && !(S.Campus_State.Graduated || []).includes(id)) add(p.exams, 'Exams');
-  const trials = m === 2 && (w === 1 && [4,5].includes(d) || w === 3 && d >= 2 && d <= 4)
-    || m === 3 && w === 4 && d >= 5 || m === 6 && w === 4 && d >= 2 && d <= 5
-    || m === 7 && w === 3 || m === 9 && w === 4 && d >= 3 || m === 11 && w === 4 && d >= 2 && d <= 5;
   const cand = ((S.Campus_State.Council || {}).Candidates || {})[String(W.Year)] || {};
-  if (trials || m === 10 && w === 3 && d < 6 && Object.values(cand).includes(id)) add(p.trials, 'Trials');
+  if (trials || W.Month === 10 && W.Week === 3 && DAYS.indexOf(W.Day) < 6 && Object.values(cand).includes(id)) add(p.trials, 'Trials');
   const status = Object.entries(S.Campus_State.NPC_status || {}).filter(([k]) => moodCanon(k) === id).map(([,v]) => v).join(' ');
   if (/sick|ill\b|injur|wound|griev|grief|bereav|mourning|hurt|head cold/i.test(status)) add(-1, 'unwell or grieving');
   const roll = rand01(S.$eng.seed, day, id, 'mood'); add(roll < 0.1 ? -1 : roll >= 0.9 ? 1 : 0, 'how the day feels');

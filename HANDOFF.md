@@ -2,7 +2,7 @@
 
 **Read this file first.** It is the complete context for continuing this project in a fresh session with any AI assistant, from any vendor. It assumes nothing about which assistant or tools you have, only that you can read files and (ideally) run Python 3 and Node.js.
 
-Snapshot: card **v1.18.0** (2026-09-29). Audit Batch 3 (`planning/AUDIT_2026-09-29.md`, owner-approved): quiet-week Dove attention, named reputation deeds, conditional shop/healing/curfew reminders, Known_by → Knows, appointment presence hints and shared feature gates. The prior v1.17.0 was audit Batch 2 (tokens and preset: "[…]" collapsed, Price Guide by place, lighter Bonds in `<current_state>`, Bridge rules in 504, lore-at-depth TEST card). 1.16.1 is Batch 1 of the audit; five batches total, stop after each until the owner says "lanjutkan batch N". Full automated tests pass for 1.18.0; live SillyTavern checks remain in `docs/TEST_CHECKLIST.md`. Earlier releases: 1.16.0 ambience; 1.15.0 grades and exams; 1.14.x seasonal and event maps; 1.12.0 missed reports. 1.13.0 makes the map follow the calendar (`map_variants` in `data/assets_manifest.json`;
+Snapshot: card **v1.19.0** (2026-09-29). Audit Batch 4 (`planning/AUDIT_2026-09-29.md`, owner-approved): `data/calendar.json` drives events, timetable, lore and mood; archive/fact caps and selective mood storage reduce state size 17.5% in a 336-day simulation; test index and lint added. PNG compaction and Cast Sheet splitting await live compatibility/performance evidence. The prior v1.18.0 was audit Batch 3 (quiet-week Dove attention, named reputation deeds, conditional shop/healing/curfew reminders, Known_by → Knows, appointment presence hints and shared feature gates). 1.17.0 was audit Batch 2; 1.16.1 Batch 1. Five batches total: stop after each until the owner says "lanjutkan batch N". Full automated tests pass for 1.19.0; live SillyTavern checks remain in `docs/TEST_CHECKLIST.md`. Earlier releases: 1.16.0 ambience; 1.15.0 grades and exams; 1.14.x seasonal and event maps; 1.12.0 missed reports. 1.13.0 makes the map follow the calendar (`map_variants` in `data/assets_manifest.json`;
 the Star Night map waits for its upload to the assets repo); 1.13.1 names the five nations at the Academy Bazaar and adds the
 img2img prompts for the season and event maps (`planning/DRAFT_event_maps.md`); 1.13.2 makes their visual lore canon (owner-approved;
 Eldrasil's royal colours are deep blue and gold); 1.14.0 gives 26 places a line per season and prints exam-week and pre-break lines
@@ -14,7 +14,7 @@ skipped night, the Bag after a used item, unlogged Points, summons and sustained
 the rest (engine section 8l); the documentation drift (stale checklist links, old figures) is fixed. The release history is in
 `CHANGELOG.md` (a one-line-per-release index at the top, details below it). Live SillyTavern checks: `docs/TEST_CHECKLIST.md`.
 
-**Next task:** audit **Batch 4** (`data/calendar.json`, state size, tests/lint and assets) only when the owner says "lanjutkan batch 4"; then Batch 5 (audit section 11). Live checks: `docs/TEST_CHECKLIST.md`, starting with v1.18.0 and the earlier lore-at-depth cache comparison.
+**Next task:** audit **Batch 5** (section 11: refactor `runEngine` in staged sections) only when the owner says "lanjutkan batch 5". Live checks: `docs/TEST_CHECKLIST.md`, starting with v1.19.0 and the earlier lore-at-depth cache comparison.
 
 ---
 
