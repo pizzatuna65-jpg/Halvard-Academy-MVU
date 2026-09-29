@@ -56,7 +56,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepGuards` (0) | read-only fields, player-tool edits, club name, Builder record restore, Mana_max/Stamina_max revert | `$ui.file` |
 | `stepFeatures` (0b) | parks features that are off, `OFF`, `$ui.on`, old-lorebook warning, `REPORTED` | `data/features.json` |
 | `stepTime` (1) | clock, rollover, `_Event_today` day plan, birthday, `absA`/`dayNo` | `data/calendar.json` |
-| `stepWeather` (1b) | season, sky, wind, °C, forecast | `wxDay`, `wxForecast` |
+| `stepWeather` (1b) | season, sky, wind, °C, forecast; clear on calendar `fair` days (`wxRollDay`) | `wxDay`, `wxForecast`, `data/calendar.json` |
 | `stepMagic` (2+3) | casts, mana regen, pacts/summons, sustained effects, Arcane scholar discount | `data/wind_casting.json` |
 | `stepRest` (4) | sleep and rest, sleep debt, used items (`/Consumables`) | |
 | `stepExposure` (4b) | Soaked / Chilled / Overheated, head cold, crafted Consumables healing | |
