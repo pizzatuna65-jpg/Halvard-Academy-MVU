@@ -294,6 +294,16 @@ for n, (label, cluster) in PINS.items():
     for lid in cluster:
         if locs[lid]['pin'] is None: locs[lid]['pin'] = n
 json.dump(pins, open(P('data/map_pins.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+# 1.24.0 (owner playtest): places that show on the map only once the player has been at the place that leads to them (or at the
+# place itself). 'castle' = any castle room, or the castle itself: the halls behind its entrance. The Rooftop keeps its own rule (D21).
+GATES = {'willow_island': 'boathouse_and_lake', 'forest_clearing': 'forest', 'observation_tower': 'grassy_field_and_hills',
+         'old_hut': 'grassy_field_and_hills'}
+for p in pins:
+    if p['pin'] == 22: GATES.update({lid: 'mall' for lid in p['cluster'] if lid != 'mall'})
+    if p['pin'] == 1: GATES.update({lid: 'castle' for lid in p['cluster'] if lid != 'rooftop'})
+for lid, g in GATES.items():
+    need(lid); assert g == 'castle' or g in locs, g
+    locs[lid]['gate'] = g
 # ---------------- 1.2.1 walking times (owner playtest: follow the map) ----------------
 # Paths: the lore connections, plus straight walks between nearby open-air places and buildings (map distance <= 30 units;
 # x is scaled 1.5 because the map is 3:2), plus the castle stairs. A leg costs 0.22 min per unit (Gatehouse -> Mall = 6, owner).

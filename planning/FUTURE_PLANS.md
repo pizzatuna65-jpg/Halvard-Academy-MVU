@@ -43,6 +43,10 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
 - **A10** PNG kartu ±8 MB (JSON disematkan dua kali, `chara` + `ccv3`): `chara` ringkas hanya setelah kompatibilitas pembaca v2 dicek.
 
 ## 4. Keputusan yang masih menunggu owner
+- Gate tempat tambahan (saran 1.24.0, owner minta diberi tahu dulu): Fishing House ← Boathouse; Swimming Pool ← Gymnasium; Ring
+  Dining Hall dan Portrait Hall ← Arbiter Hall; Sparring Pavilion ← Combat Grounds; ruang Undercroft (Archive, Restricted Section,
+  Seal Chamber) seperti Rooftop, hanya setelah ada yang menunjukkan jalannya; Broken Statue dan Spirit House hanya setelah
+  didengar/dikunjungi.
 - Pin dependensi MVU / mvu_zod ke commit yang sudah dites (`schema.js` dan `mvu_loader.js` memuat default branch; F12 menunjukkan
   perubahan helper bisa diam-diam mengubah perilaku). Perlu pasangan commit yang dites di ST dulu.
 - Siklus hidup {{user}} setelah Year 3 (lulus / dikeluarkan / mengulang). Sejak 1.7.4 Year naik otomatis; payout tetap jalan. Owner:

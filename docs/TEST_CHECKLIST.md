@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.24.0 (map gates, lore heard): the four checks in its section below.
 - v1.23.0 (panels): the three checks in its section below.
 - v1.22.0 (bracelet): the three checks in its section below.
 - v1.21.0 (UI foundation): the four checks in its section below.
@@ -51,6 +52,16 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.24.0 — Map: gates, zoom, lore heard
+
+- Map zoom: + / − and Ctrl + wheel zoom, mouse drag pans, tapping a pin after a drag does nothing; close and reopen the map: same
+  zoom and centre. On a phone the zoomed map scrolls with a finger.
+- A new chat: the Castle pin shows the entrance card; after "I head into the Castle." (or any class in the castle) the floors and
+  rooms appear. The Mall's shops appear after the Mall; Willow Island after the boathouse.
+- Lore: spend an hour or two in a busy place with a story (Canteen, Commissary, Founder's Park by day); when the toast "Heard at …"
+  comes, the narration shows students (or a companion) talking about it as hearsay, and the Map card lists it.
+- With the bracelet collapsed and no student yet, "Create your student" is still there and opens the Builder.
 
 ### v1.23.0 — UI overhaul 3 (panels)
 

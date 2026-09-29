@@ -1,6 +1,6 @@
 // ================================================================ 4.4 interactive map (D5–D8, D21)
 view.pin = null; view.floor = ''; view.focusLoc = ''; view.card = 0;
-const CARD_W = 280, CROP_H = 96, CROP_SCALE = 4;
+const CROP_H = 96, CROP_SCALE = 4;
 const normPlace = s => String(s || '').split(/\s+[—-]\s+/)[0].trim().toLowerCase().replace(/^the\s+/, '');
 // 1.3.1 (owner playtest): the same reading of World.Location as the engine (canonLocation): short names ("Boathouse", "the
 // library") via DATA.palias (tools/common.py place_aliases), and a sub-spot that is itself a place wins ("… — Fishing House").
@@ -13,7 +13,20 @@ function locIdOf(place) {
   const a = (DATA.palias || {})[segs[0]];
   return a && DATA.locs[a] ? a : '';
 }
-const discovered = (S, l) => !l.discoverable || ((S.$ui || {}).discovered || []).some(d => normPlace(d) === normPlace(l.name));
+// 1.24.0 (owner playtest): some places show only once the player has been where they lead from (data/locations.json gate:
+// Willow Island after the boathouse, the Clearing after the Forest, the Observation Tower and the Old Hut after the Grassy Field,
+// the Mall's shops after the Mall, the castle's halls after the castle), or at the place itself or another place behind the same
+// gate (one shop opens the Mall). The Rooftop keeps D21.
+const beenAt = (S, name) => normPlace((S.World || {}).Location) === normPlace(name) || ((S.$ui || {}).discovered || []).some(d => normPlace(d) === normPlace(name));
+const gateOpen = (S, g) => beenAt(S, g === 'castle' ? 'Castle' : DATA.locs[g].name) || Object.values(DATA.locs).some(l => l.gate === g && beenAt(S, l.name));
+const discovered = (S, l) => l.discoverable ? beenAt(S, l.name) : !l.gate || beenAt(S, l.name) || gateOpen(S, l.gate);
+const castlePin = p => p.cluster.some(id => (DATA.locs[id] || {}).gate === 'castle');
+// 1.24.0 (owner playtest: labels at the map's edge were cut off): a label near the right or left edge grows inward, near the top below
+const labPos = p => (p.x > 82 ? ' r' : p.x < 12 ? ' l' : '') + (p.y < 12 ? ' b' : '');
+// 1.24.0 (owner playtest): zoom and its centre, kept in the script while the page is open, so closing and opening the map keeps
+// them (not in browser storage: DECISIONS "Colour themes" allows only the theme there)
+const ZOOMS = [1, 1.5, 2, 2.5, 3];
+const mapView = { z: 1, cx: 0.5, cy: 0.5 };
 const pinOf = id => DATA.pins.find(p => p.cluster.includes(id) && p.pin === (DATA.locs[id] || {}).pin) || DATA.pins.find(p => p.cluster.includes(id));
 // 1.13.0 (owner): the map follows the calendar. data/assets_manifest.json map_variants, first match wins: an event variant while
 // that event is on (optionally only in its hours, e.g. Star Night from Saturday 18:00 to Sunday 06:00), then a season variant,
@@ -27,11 +40,14 @@ function mapFor(S) {
     || V.find(x => !x.event && x.season === season);
   return v ? v.file : DATA.assets.map;
 }
+// 1.24.0 (owner playtest: a black band at the right of the Willow Island header): the crop follows the card's real width. The map is
+// drawn CROP_SCALE times the card's width with the pin in the middle, held inside the image at the edges: across, a percentage
+// position does that for any width; down (the header is CROP_H high), p% + (CROP_H/2 - p·CROP_H)px, clamped to the image.
 function cropStyle(pin, S) {
-  const Iw = CARD_W * CROP_SCALE, Ih = Iw * DATA.assets.size[1] / DATA.assets.size[0];
-  const x = _.clamp(CARD_W / 2 - pin.x / 100 * Iw, CARD_W - Iw, 0), y = _.clamp(CROP_H / 2 - pin.y / 100 * Ih, CROP_H - Ih, 0);
+  const px = pin.x / 100, py = pin.y / 100, bx = _.clamp((CROP_SCALE * px - 0.5) / (CROP_SCALE - 1), 0, 1) * 100;
+  const by = `clamp(100%, calc(${+(py * 100).toFixed(2)}% + ${+(CROP_H / 2 - CROP_H * py).toFixed(1)}px), 0px)`;
   const file = mapFor(S), layers = [file, ...(file !== DATA.assets.map ? [DATA.assets.map] : [])].map(f => `url('${esc(imgURL(f))}')`).join(',');
-  return `background-image:${layers};background-size:${Iw}px ${Math.round(Ih)}px;background-position:${Math.round(x)}px ${Math.round(y)}px`;
+  return `background-image:${layers};background-size:${CROP_SCALE * 100}% auto;background-position:${+bx.toFixed(2)}% ${by}`;
 }
 const goText = name => `I head to the ${String(name).replace(/^the\s+/i, '')}.`;
 
@@ -76,11 +92,11 @@ PANELS.map = {
   render(S) {
     const cur = locIdOf(S.World.Location), curPin = cur ? pinOf(cur) : null;
     if (view.pin == null && curPin) view.pin = curPin.pin;
-    const pins = DATA.pins.filter(p => p.cluster.some(id => DATA.locs[id] && discovered(S, DATA.locs[id])));
+    const pins = DATA.pins.filter(p => castlePin(p) || p.cluster.some(id => DATA.locs[id] && discovered(S, DATA.locs[id])));
     const pinHTML = pins.map(p => {
       const here = curPin && curPin.pin === p.pin, sel = view.pin === p.pin;
       return `<button class="pin${here ? ' here' : ''}${sel ? ' sel' : ''}" data-pin="${p.pin}" style="left:${p.x}%;top:${p.y}%" aria-label="${esc(p.label)}${here ? ' (you are here)' : ''}" title="${esc(p.label)}"></button>`
-        + (sel || here ? `<span class="plab${here ? ' here' : ''}" style="left:${p.x}%;top:${p.y}%">${esc(p.label)}</span>` : '');
+        + (sel || here ? `<span class="plab${here ? ' here' : ''}${labPos(p)}" style="left:${p.x}%;top:${p.y}%">${esc(p.label)}</span>` : '');
     }).join('');
     let sheet = '<p class="hint">Tap a marker to see what is there.</p>';
     const P = DATA.pins.find(p => p.pin === view.pin);
@@ -99,21 +115,52 @@ PANELS.map = {
       view.focusLoc = ''; view.cardPin = P.pin + '|' + view.floor; view.card = _.clamp(view.card, 0, Math.max(0, ids.length - 1));
       const arrows = ids.length > 1 ? `<div class="cnav"><button class="btn sm" data-card="-1" aria-label="Previous place" ${view.card ? '' : 'disabled'}>‹</button>
         <span class="sub">${view.card + 1} / ${ids.length} · ${esc(DATA.locs[ids[view.card]].name)}</span><button class="btn sm" data-card="1" aria-label="Next place" ${view.card < ids.length - 1 ? '' : 'disabled'}>›</button></div>` : '';
-      sheet = `<h3>${esc(P.label)}</h3>${tabs}${arrows}<div class="car">${ids.length ? locCard(ids[view.card], S, cur, P) : '<div class="empty">Nothing here you know of yet.</div>'}</div>`;
+      sheet = `<h3>${esc(P.label)}</h3>${tabs}${arrows}<div class="car">${ids.length ? locCard(ids[view.card], S, cur, P) : castlePin(P) ? castleCard(S, cur, P) : '<div class="empty">Nothing here you know of yet.</div>'}</div>`;
     }
     return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>Halvard</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
-      <div class="bd"><div class="mapwrap"><div><div class="map"><img src="${esc(imgURL(mapFor(S)))}" alt="Map of Halvard Academy" data-fb="" data-fbclass="mapfb"${mapFor(S) !== DATA.assets.map ? ` data-alt="${esc(imgURL(DATA.assets.map))}"` : ''}>${pinHTML}</div>
+      <div class="bd"><div class="mapwrap"><div><div class="mapbox"><div class="mapview${mapView.z > 1 ? ' zin' : ''}"><div class="map" style="width:${mapView.z * 100}%"><img src="${esc(imgURL(mapFor(S)))}" alt="Map of Halvard Academy" draggable="false" data-fb="" data-fbclass="mapfb"${mapFor(S) !== DATA.assets.map ? ` data-alt="${esc(imgURL(DATA.assets.map))}"` : ''}>${pinHTML}</div></div>
+      <div class="zoom"><button data-zoom="1" aria-label="Zoom in" title="Zoom in (or Ctrl + wheel)" ${mapView.z >= ZOOMS[ZOOMS.length - 1] ? 'disabled' : ''}>+</button><button data-zoom="-1" aria-label="Zoom out" title="Zoom out" ${mapView.z <= 1 ? 'disabled' : ''}>−</button></div></div>
       <div class="sub" style="margin:6px 0 10px">You are at ${esc(S.World.Location)}.</div></div><div class="sheet">${sheet}</div></div></div></div>`;
   },
+  // 1.24.0: the zoomed map keeps its centre (mapView) through re-renders; drag with the mouse to pan, Ctrl + wheel (or a trackpad
+  // pinch) to zoom; on touch the view scrolls by itself
+  after() {
+    const vw = ov.querySelector('.mapview'); if (!vw) return;
+    const place = () => { vw.scrollLeft = mapView.cx * vw.scrollWidth - vw.clientWidth / 2; vw.scrollTop = mapView.cy * vw.scrollHeight - vw.clientHeight / 2; };
+    place(); const img = vw.querySelector('img'); if (img && !img.complete) img.addEventListener('load', place, { once: true });
+    vw.addEventListener('scroll', () => {
+      if (!vw.scrollWidth || mapView.z === 1) return;
+      mapView.cx = (vw.scrollLeft + vw.clientWidth / 2) / vw.scrollWidth; mapView.cy = (vw.scrollTop + vw.clientHeight / 2) / vw.scrollHeight;
+    }, { passive: true });
+    vw.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); zoomMap(e.deltaY < 0 ? 1 : -1); }, { passive: false });
+    let drag = null;
+    vw.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse' && e.button === 0 && mapView.z > 1) drag = { x: e.clientX, y: e.clientY, l: vw.scrollLeft, t: vw.scrollTop, moved: false }; });
+    vw.addEventListener('pointermove', e => {
+      if (!drag) return; const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+      if (!drag.moved && Math.hypot(dx, dy) < 5) return;
+      drag.moved = true; vw.classList.add('drag'); vw.scrollLeft = drag.l - dx; vw.scrollTop = drag.t - dy;
+    });
+    // a drag that moved is not a click on the pin under the mouse
+    vw.addEventListener('pointerup', () => { if (drag && drag.moved) { vw.classList.remove('drag'); vw.addEventListener('click', ev => ev.stopPropagation(), { capture: true, once: true }); } drag = null; });
+    vw.addEventListener('pointerleave', () => { if (drag) vw.classList.remove('drag'); drag = null; });
+  },
   click(b, S) {
+    if (b.dataset.zoom) { zoomMap(+b.dataset.zoom); return; }
     if (b.dataset.pin) { view.pin = +b.dataset.pin; view.floor = ''; render(); return; }
     if (b.dataset.card) { view.card += +b.dataset.card; render(); return; }
     if (b.dataset.floor) { view.floor = b.dataset.floor; render(); return; }
     if (b.dataset.loc) { const p = pinOf(b.dataset.loc); if (p) { view.pin = p.pin; view.floor = DATA.locs[b.dataset.loc].floor || ''; view.focusLoc = b.dataset.loc; render(); } return; }
     if (b.dataset.go) fillChat(goText(DATA.locs[b.dataset.go].name));   // shared helper (30_notebook.js)
+    if (b.dataset.gocastle) fillChat('I head into the Castle.');
   },
 };
 
+function zoomMap(step) {
+  const i = ZOOMS.indexOf(mapView.z), z = ZOOMS[_.clamp((i < 0 ? 0 : i) + step, 0, ZOOMS.length - 1)];
+  if (z === mapView.z) return;
+  mapView.z = z; if (z === 1) { mapView.cx = 0.5; mapView.cy = 0.5; }
+  render();
+}
 function classHint(S) {
   const m = /^P([123]) /.exec((S.World || {})._Period || ''); if (!m || !featureOn(S, 'class')) return '';
   const i = +m[1] - 1, until = ['10:00', '12:00', '16:00'][i], cell = (CAL.timetableFor(S.World) || [])[i] || '';
@@ -121,6 +168,27 @@ function classHint(S) {
 }
 // 1.14.0 (planning/DRAFT_dynamic_lore.md [?4]): the place in the current season (data/locations.json seasons, by calendar month)
 const seasonLine = (l, S) => { const k = SEASON_OF(((S || {}).World || {}).Month), t = (l.seasons || {})[k]; return t ? `<p class="sub season"><b>${esc(k)}:</b> ${esc(t)}</p>` : ''; };
+// 1.24.0 (owner playtest): before the player has been inside, the castle pin shows the castle itself; its halls come after
+function castleCard(S, cur, P) {
+  const t = cur ? walkFrom(cur, S).notice_board : undefined;   // the Notice Board stands in the entrance hall
+  const walk = t != null ? `${t <= 2 ? 'A minute or two' : `About ${t} min`} from here (${DATA.locs[cur].name})` : 'About 4 min from the Main Courtyard';
+  return `<article class="lc"><div class="crop" style="${cropStyle(P, S)}"><b>The Castle</b></div>
+    <div class="in"><p class="vibe">The old heart of Halvard: classrooms, the library, the canteen and the offices, floor above floor.</p>
+    <dl class="kv sm"><dt>Walk</dt><dd>${esc(walk)}</dd><dt>Access</dt><dd>Open to students</dd></dl>
+    <p class="sub">Its halls and rooms show on this map once you have been inside.</p>
+    <button class="btn pri go" data-gocastle="1">Go here</button></div></article>`;
+}
+// 1.24.0 (owner playtest): lore and rumours are heard in the story ($ui.lore: overheard, or named in the narration), not given by the map
+const heardSet = S => new Set(((S.$ui || {}).lore || []).map(String));
+// the place text names its story ("Home of the Faraway Laugh story."): that sentence waits until the story is heard
+const untoldOut = (l, S) => { const heard = heardSet(S), untold = l.lore.filter(x => !heard.has(String(x.uid))).map(x => x.title.replace(/^.* - /, '').replace(/^The /, '').toLowerCase());
+  return String(l.description || '').replace(/(\s*)Home of the ([^.;]+?) (?:ghost )?story(\.|;\s*([a-z]))/g,
+    (m, sp, nm, end, next) => !untold.includes(nm.trim().toLowerCase()) ? m : next ? sp + next.toUpperCase() : '').trim(); };
+function loreRow(l, S) {
+  const heard = heardSet(S), known = l.lore.filter(x => heard.has(String(x.uid))), rest = l.lore.length - known.length;
+  const more = rest ? `<p class="sub">${known.length ? `${rest} more you have not heard yet.` : 'You have not heard any stories about this place yet.'} People talk; spend time here.</p>` : '';
+  return `<details><summary>Lore and rumours (${known.length}/${l.lore.length})</summary>${known.map(x => `<p><b>${esc(x.title)}</b>: ${esc(x.summary)}</p>`).join('')}${more}</details>`;
+}
 function locCard(id, S, cur, P) {
   const l = DATA.locs[id], here = id === cur;
   const ra = (S.$ui || {}).rank_access || {};
@@ -144,9 +212,9 @@ function locCard(id, S, cur, P) {
   ];
   return `<article class="lc${here ? ' here' : ''}" data-loccard="${esc(id)}"><div class="crop" style="${cropStyle(P, S)}"><b>${esc(l.name)}</b>${here ? '<span class="you">You are here</span>' : ''}</div>
     <div class="in">${l.vibe ? `<p class="vibe">${esc(l.vibe)}</p>` : ''}${seasonLine(l, S)}
-    <details><summary>Description</summary><p>${esc(l.description)}</p></details>
+    <details><summary>Description</summary><p>${esc(untoldOut(l, S))}</p></details>
     <dl class="kv sm">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
-    ${l.lore.length ? `<details><summary>Lore and rumours (${l.lore.length})</summary>${l.lore.map(x => `<p><b>${esc(x.title)}</b>: ${esc(x.summary)}</p>`).join('')}</details>` : ''}
+    ${l.lore.length ? loreRow(l, S) : ''}
     ${change.length ? `<div class="warn">Changed: ${change.map(esc).join('; ')}</div>` : ''}
     <button class="btn ${here ? '' : 'pri'} go" data-go="${esc(id)}" ${here ? 'disabled' : ''}>${here ? 'You are here' : 'Go here'}</button></div></article>`;
 }

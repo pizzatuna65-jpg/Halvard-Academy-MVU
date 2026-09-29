@@ -46,7 +46,8 @@ ok(!U.discovered(S, roof), 'Rooftop undiscovered at start (D21)');
 const S4 = JSON.parse(JSON.stringify(S)); S4.$ui.discovered.push('Rooftop');
 ok(U.discovered(S4, roof), 'Rooftop discovered after being there');
 U.view.pin = 1; U.view.floor = 'Towers & Roof';
-ok(!/data-loccard="rooftop"/.test(U.PANELS.map.render(S)) && /Bell Tower/.test(U.PANELS.map.render(S)), 'map hides the Rooftop until discovered (D21)');
+const Sin = JSON.parse(JSON.stringify(S)); Sin.$ui.discovered.push('Canteen');   // 1.24.0: the castle's halls show once inside
+ok(!/data-loccard="rooftop"/.test(U.PANELS.map.render(Sin)) && /Bell Tower/.test(U.PANELS.map.render(Sin)), 'map hides the Rooftop until discovered (D21)');
 U.view.card = 1; ok(/data-loccard="rooftop"/.test(U.PANELS.map.render(S4)), 'once discovered, the Rooftop is the next card on Towers & Roof');
 U.view.pin = null; U.view.floor = ''; const mh = U.PANELS.map.render(S);
 ok(/class="pin here[^"]*" data-pin="26"/.test(mh), 'current location pin (Gatehouse) marked');
@@ -72,7 +73,7 @@ ok(/data-loccard="reception_and_gatehouse"/.test(mh) && /You are here/.test(mh),
 }
 ok(U.goText('The Mall') === 'I head to the Mall.' && U.goText("Founder's Statue and Park") === "I head to the Founder's Statue and Park.", 'Go here text');
 const cs = U.cropStyle(U.pinOf('mall'));
-ok(/background-position:-?\d+px -?\d+px/.test(cs), `map crop style: ${cs.split(';').pop()}`);
+ok(/background-size:400% auto;background-position:[\d.]+% clamp\(100%, calc\([\d.]+% \+ -?[\d.]+px\), 0px\)$/.test(cs), `map crop style (any card width, 1.24.0): ${cs.split(';').pop()}`);
 // Location_changes surface on the card
 const S5 = JSON.parse(JSON.stringify(S)); S5.Campus_State.Location_changes = { 'Reception and Gatehouse': 'a second checkpoint after the break-in' };
 ok(/Changed: a second checkpoint/.test(U.PANELS.map.render(S5)), 'Campus_State.Location_changes shown on the card');

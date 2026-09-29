@@ -3,6 +3,33 @@
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
 details: `git show b62d182:CHANGELOG.md`.
 
+## v1.24.0 — Map: gates, zoom, lore heard in the story (2026-09-29)
+
+Owner playtest notes (five points). Decisions touched: none changed; new standing lines in DECISIONS §7 (gated places, lore heard).
+- **Zoom:** + and − buttons on the map (100% to 300%), Ctrl + wheel or a trackpad pinch, drag with the mouse to pan (touch scrolls).
+  The zoom and its centre stay when the map is closed and opened again (kept in the script while the page is open; not in browser
+  storage, which DECISIONS "Colour themes" keeps for the theme).
+- **Cut-off labels:** a pin label near the right or left edge grows inward, near the top it sits below the pin (Willow Island,
+  Observation Tower). The black band at the right of a card header is gone: the header crop now follows the card's real width
+  (it assumed 280px). The thin scrollbar line at 100% zoom is gone too.
+- **Gated places** (UI only, `locations.json` `gate` from `curate_data.py` `GATES`): Willow Island shows after the Boathouse, the
+  Forest Clearing after the Forest, the Observation Tower and the Old Hut after the Grassy Field and Hills, the Mall's shops after
+  the Mall (or any shop), the castle's halls after the castle. Before that the Castle pin shows an entrance card ("Go here" fills
+  "I head into the Castle."); the engine records "Castle" in `$ui.discovered` when World.Location names the castle. The Rooftop
+  keeps D21. Old saves: every place already visited opens its gate.
+- **Lore and rumours are heard, not given:** the Map lists only the stories in the new `$ui.lore` (uids); the rest are counted
+  ("2 more you have not heard yet"), and a place text's "Home of the X story" sentence waits too. A story is heard (toast
+  "Heard at <place>: <title>") when (a) a non-calm ambience beat at its place turns into talk of it (`data/ambience.json`
+  `lore_chance` 35%, once a day, needs a crowd or company; `<now>` asks the narrator to weave it in as hearsay, with the entry's
+  text), or (b) the narration names it as a proper name ("Sunfizz", "the Faraway Laugh"; "the long corridor" in passing does not
+  count), or (c) with Ambience below Full, on the first visit. Old saves start with nothing heard.
+- **"Create your student"** stays on the collapsed bracelet.
+- Tests: new `test_map_gates_v1240.cjs` (gates, castle entrance, lore heard, labels, zoom, bracelet); `test_people_map` and
+  `test_mapvariants_v1130` read the new crop style and the castle gate. `npm test`: 81 suites pass. Browser preview: zoom kept
+  after closing, labels inside, full-width crops, castle card at phone width. Save fixture `save_1.23.0.json` added.
+- To confirm with the owner: the castle entrance card's line ("The old heart of Halvard: classrooms, the library, the canteen and
+  the offices, floor above floor.") is new UI text.
+
 ## v1.23.0 — UI overhaul 3: panels (2026-09-29)
 
 Owner-approved report "Brass & Moonglass", stage 3 (the last). Decisions touched: none beyond 1.21.0 (same data, same actions).
@@ -116,15 +143,6 @@ Owner: "lanjutkan batch 4". No canon or established design decision changed.
 - Save fixture `save_1.18.0.json` was written before edits. Main and three TEST cards rebuilt. `npm test`, `npm run lint`, `test_calendar_state_v1190.cjs`, `test_saves.cjs` and the 336-day stress scenario pass. Live checks are in `docs/TEST_CHECKLIST.md`.
 - Next: Batch 5 refactor, only when the owner says "lanjutkan batch 5".
 
-## v1.18.0 — Audit Batch 3: engine integrations (2026-09-29)
-
-Owner: "lanjutkan batch 3". The implementation choices are recorded in `planning/DRAFT_engine_integrations.md`.
-- **I1:** Dove attention loses one point per quiet week. The narrator still reports witnessed or detected rises; ordinary nearby people do not automatically trigger suspicion. Old saves conservatively skip an unknown prior week's decay.
-- **I2/T5:** `Rep_events.Kind` can name one of the fixed deeds in `data/reputation.json`; the engine chooses the reputation and signed XP. The old `repeat` and `event` with explicit XP remain valid for saves and unusual deeds. Rule 502 now lists kinds and only shows the old manual attendance/exam values when those features are off.
-- **I3–I5:** New shop stock with incomplete payment, an injury past its anchored `Heals_by`, and being out of the dorm at curfew produce conditional reminders. They do not change money, heal injuries or issue an automatic penalty.
-- **I6/I8/I9:** A newly confirmed witness of true magic gains a dated Knows line in an existing bond; the reverse path prompts a check. A near-due local Commitment lists its partner under May be here. The engine publishes `$ui.on` once for EJS and UI, with fallback for pre-update states.
-- Main card and three TEST cards rebuilt; save fixture 1.17.0 added. `npm test` passes. Connected narration checks remain open in `docs/TEST_CHECKLIST.md`.
-
 ## Release index (one line per release, oldest first)
 
 - All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/archive/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; CHANGELOG 1.2.0/1.2.1).
@@ -207,3 +225,4 @@ Owner: "lanjutkan batch 3". The implementation choices are recorded in `planning
 - **v1.21.0 (2026-09-29):** UI overhaul 1 (foundation): one set of colour tokens for panels and bracelet, a slate-blue and brass palette, the Alegreya family instead of Cinzel, six text sizes, panels anchored to the top, AA contrast in every theme.
 - **v1.22.0 (2026-09-29):** UI overhaul 2 (the bracelet): pewter band, brass bezel around the glass clock, dorm gem and crest, vials, three chip tiers, mood badges on portraits, a joined row of panel buttons (a 3-column grid on phones).
 - **v1.23.0 (2026-09-29):** UI overhaul 3 (panels): People cards with rank medals and meters, the Dossier as a file beside a matted portrait, theme pictures and feature switches in Settings, numbered Builder steps, a dense club directory.
+- **v1.24.0 (2026-09-29):** Map: zoom kept between openings, labels and header crops no longer cut off, places behind gates (Willow Island, Clearing, Observation Tower, Old Hut, Mall shops, castle halls), lore and rumours shown only once heard (overheard via ambience or named in the narration), "Create your student" on the collapsed bracelet.

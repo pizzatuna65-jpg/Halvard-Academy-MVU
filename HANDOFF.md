@@ -3,11 +3,12 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.23.0** (2026-09-29). UI overhaul "Brass & Moonglass" (owner-approved report, artifact
-QjbmYWMLMpxihoq5oU5Dys) done in three releases: 1.21.0 tokens and foundation, 1.22.0 bracelet, 1.23.0 panels. `npm test` passes
-(80 suites). Live checks: `docs/TEST_CHECKLIST.md` "Open" (1.21–1.23 UI checks first). Plans: `planning/FUTURE_PLANS.md`.
+**Snapshot:** card **v1.24.0** (2026-09-29). Map playtest fixes: zoom, edge labels and crops, gated places (castle halls, Mall
+shops, far-grounds spots), lore and rumours heard in the story (`$ui.lore`). Before it: UI overhaul "Brass & Moonglass" (1.21–1.23).
+`npm test` passes (81 suites). Live checks: `docs/TEST_CHECKLIST.md` "Open" (1.24 and 1.21–1.23 first). Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** none scheduled; wait for the owner's live check of the UI overhaul (TEST_CHECKLIST 1.21–1.23) or a new request.
+**Next task:** the owner chooses which further places get a gate (suggestions in `planning/FUTURE_PLANS.md` §4), then the live
+checks (TEST_CHECKLIST 1.24, 1.21–1.23).
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

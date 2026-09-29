@@ -576,7 +576,14 @@ dl.file dd.fv{margin:0;max-width:62ch}
 .graph svg{width:100%;height:100%;display:block;touch-action:none}
 .gload{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--ink2)}
 .ginfo{margin-top:8px;min-height:2.6em;font-size:var(--fs-m);color:var(--ink)}
-.map{position:relative;width:100%;aspect-ratio:3/2;border-radius:12px;overflow:hidden;border:1px solid var(--brass-lo);background:var(--well)}
+/* 1.24.0 (owner playtest): the map zooms inside a scrolling view (.map width = zoom x 100%); the zoom buttons keep fixed colours */
+.mapbox{position:relative}
+.mapview{position:relative;width:100%;aspect-ratio:3/2;overflow:auto;border-radius:12px;border:1px solid var(--brass-lo);background:var(--well);overscroll-behavior:contain;scrollbar-width:thin}
+.mapview:not(.zin){overflow:hidden}.mapview.zin{cursor:grab}.mapview.drag{cursor:grabbing;user-select:none}
+.map{position:relative;width:100%;aspect-ratio:3/2;overflow:hidden}
+.zoom{position:absolute;right:8px;bottom:8px;display:flex;flex-direction:column;gap:4px;z-index:5}
+.zoom button{width:32px;height:32px;padding:0;border-radius:8px;border:1px solid rgba(179,144,98,.8)/*keep*/;background:rgba(20,22,26,.88)/*keep*/;color:#f6ead0/*keep*/;font-size:19px;line-height:1;cursor:pointer}
+.zoom button:disabled{opacity:.4;cursor:default}
 .map img,.mapfb{width:100%;height:100%;display:block;object-fit:cover}
 .mapfb{background:repeating-linear-gradient(45deg,var(--card) 0 12px,var(--sheet) 12px 24px)}
 .pin{position:absolute;transform:translate(-50%,-50%);width:16px;height:16px;padding:0;border-radius:50%;border:2px solid #1d1a15/*keep*/;background:#b39062/*keep*/;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.6)/*keep*/}
@@ -587,6 +594,9 @@ dl.file dd.fv{margin:0;max-width:62ch}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(53,224,176,.8)/*keep*/}70%{box-shadow:0 0 0 14px rgba(53,224,176,0)/*keep*/}100%{box-shadow:0 0 0 0 rgba(53,224,176,0)/*keep*/}}
 .plab{position:absolute;transform:translate(-50%,-190%);pointer-events:none;white-space:nowrap;font-size:12.5px;padding:1px 7px;border-radius:6px;background:rgba(20,22,26,.9)/*keep*/;color:#f6ead0/*keep*/;border:1px solid rgba(179,144,98,.7)/*keep*/;z-index:4}
 .plab.here{color:#7ff5d6/*keep*/;border-color:rgba(53,224,176,.9)/*keep*/}
+/* 1.24.0 (owner playtest: Willow Island and Observation Tower were cut off): near an edge the label grows inward, near the top below */
+.plab.r{transform:translate(calc(-100% + 12px),-190%)}.plab.l{transform:translate(-12px,-190%)}.plab.b{transform:translate(-50%,95%)}
+.plab.r.b{transform:translate(calc(-100% + 12px),95%)}.plab.l.b{transform:translate(-12px,95%)}
 .tog.fl{margin-bottom:10px}
 .mapwrap{display:grid;grid-template-columns:minmax(0,1fr);gap:4px}.mapwrap>*{min-width:0}
 @media (min-width:860px){.mapwrap{grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}.sheet h3{margin-top:0}}

@@ -46,7 +46,7 @@ U.DATA.assets.variants = saved;
 const pin = U.pinOf('mall'), night = at(1, 3, 'Sat', '20:00');
 const cs = U.cropStyle(pin, night);
 ok(cs.indexOf(STAR) > -1 && cs.indexOf(DEF) > cs.indexOf(STAR), 'a card crop shows the variant over the default');
-ok(!U.cropStyle(pin, at(5, 1, 'Mon', '12:00')).includes(STAR) && !U.cropStyle(pin, at(5, 1, 'Mon', '12:00')).includes(','), 'summer: the default alone');
+ok(!U.cropStyle(pin, at(5, 1, 'Mon', '12:00')).includes(STAR) && !U.cropStyle(pin, at(5, 1, 'Mon', '12:00')).split(';')[0].includes(','), 'summer: the default alone');
 let S = initState();
 S = applyPatch(S, [{ op: 'replace', path: '/World/Month', value: 1 }, { op: 'replace', path: '/World/Week', value: 3 }, { op: 'replace', path: '/World/Day', value: 'Sat' }, { op: 'replace', path: '/World/Time', value: '20:00' }]);
 U.view.panel = 'map';

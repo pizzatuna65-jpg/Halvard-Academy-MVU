@@ -311,6 +311,7 @@ export const Schema = z.object({
   $ui: O({
     unlocks: StrList(60),
     discovered: StrList(80),
+    lore: StrList(60),   // 1.24.0: lore entries (uids) of places {{user}} has heard of; the Campus Map shows only these (engine 8m, 9)
     toasts: StrList(10),
     built: Bool(false),
     names: StrList(80),   // NPC ids whose name has appeared in the story prose (name reveal = story evidence, D14)

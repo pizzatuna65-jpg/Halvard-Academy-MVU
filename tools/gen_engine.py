@@ -73,6 +73,16 @@ t = t.replace('/*@@PLACE_ALIAS@@*/{}', json.dumps(place_aliases(locs), ensure_as
 pins = json.load(open(P('data/map_pins.json'), encoding='utf-8'))
 shared = sorted(locs[i]['name'] for i in locs if sum(i in p['cluster'] for p in pins) > 1)
 t = t.replace('/*@@PLACE_SHARED@@*/[]', json.dumps(shared, ensure_ascii=False))
+# 1.24.0 (owner playtest): lore and rumours of a place are heard, not given. {place key: [[uid, name as prose writes it, title, text]]};
+# the text is the lore entry without its [title] line, told once in <now> when it is overheard
+place_lore = {}
+for lid, l in sorted(locs.items()):
+    for x in l.get('lore') or []:
+        body = open(P(f"src/worldbook/content/{x['uid']}.txt"), encoding='utf-8').read().strip()
+        body = ' '.join(ln.strip() for ln in re.sub(r'^\[[^\]]+\]\s*', '', body).split('\n') if ln.strip())
+        name = re.sub(r'^(?:[A-Z][a-z]+ )+- ', '', x['title']); name = re.sub(r'^The ', '', name)
+        place_lore.setdefault(re.sub(r'^the ', '', l['name'].lower()), []).append([x['uid'], name, x['title'], body])
+t = t.replace('/*@@PLACE_LORE@@*/{}', json.dumps(place_lore, ensure_ascii=False, separators=(',', ':')))
 # 1.3.1 Settings for training and reputation (data/tuning.json); the defaults must be the numbers the data files use
 tun = json.load(open(P('data/tuning.json'), encoding='utf-8'))
 rows = [r for g in tun['groups'] for r in g['rows']]

@@ -161,6 +161,13 @@ const placeOf = loc => String(loc || '').split(/\s+[—-]\s+/)[0].trim();
 const PLACE_NAMES = /*@@PLACE_NAMES@@*/{};     // every way a place's own name is written (lowercase) -> map name
 const PLACE_ALIAS = /*@@PLACE_ALIAS@@*/{};     // short and partial names (tools/common.py place_aliases) -> map name
 const PLACE_SHARED = new Set(/*@@PLACE_SHARED@@*/[]);
+// 1.24.0 (owner playtest): a place's lore and rumours {place key: [[uid, name as prose writes it, title, text]]}. The Campus Map shows
+// only those {{user}} has heard ($ui.lore): overheard at the place (ambience, section 8m) or named in the narration (section 9).
+const PLACE_LORE = /*@@PLACE_LORE@@*/{};
+function hearLore(S, u, title, where) {
+  if (S.$ui.lore.includes(String(u))) return;
+  S.$ui.lore.push(String(u)); S.$ui.toasts.push(`Heard${where ? ' at ' + where : ''}: ${title}`);
+}
 const plKey = s => String(s || '').trim().toLowerCase().replace(/[.!]+$/, '').replace(/\s+/g, ' ');
 const plName = s => { const k = plKey(s); return PLACE_NAMES[k] || PLACE_NAMES[k.replace(/^the /, '')] || ''; };
 function canonLocation(loc) {
@@ -567,7 +574,7 @@ function stepSetup(c) {
   const log = [], jnl = [];                                    // jnl: journal lines the engine adds itself (5.1)
   S.$eng = S.$eng || { abs: -1, daily: {} };
   S.$ui = S.$ui || { unlocks: [], discovered: [], toasts: [] };
-  for (const k of ['unlocks', 'discovered', 'toasts', 'names', 'archive', 'secrets', 'off', 'rumours_old']) if (!Array.isArray(S.$ui[k])) S.$ui[k] = [];
+  for (const k of ['unlocks', 'discovered', 'toasts', 'names', 'archive', 'secrets', 'off', 'rumours_old', 'lore']) if (!Array.isArray(S.$ui[k])) S.$ui[k] = [];
   if (!_.isPlainObject(S.$ui.parked)) S.$ui.parked = {};
   if (!['off', 'flavor', 'full'].includes(S.$ui.wxfx)) S.$ui.wxfx = 'full';
   const hasB = !!(B && B.World);
@@ -3003,6 +3010,14 @@ function stepAmbience(c) {
       const d = d100(seed, 'amb', S.$eng.turn, absA), calm = { 1: 70, 2: 55, 3: 40 }[TU.amb_freq] || 55;
       let kind = d <= calm ? '' : d > 90 ? 'brush' : 'tex';
       if (kind === 'brush' && ((S.$ui.hap && S.$ui.hap.now) || noClass)) kind = '';   // a happening or an event day holds the attention
+      // 1.24.0 (owner playtest): now and then the talk nearby is one of this place's stories {{user}} has not heard yet (once a day;
+      // needs people around or company); the Campus Map then shows it
+      const untold = kind ? (PLACE_LORE[pk] || []).filter(([u]) => !S.$ui.lore.includes(String(u))) : [];
+      if (untold.length && (crowd > 0 || Object.keys(S.Scene.Present || {}).length) && num(AE.lore, -1) !== dayNo
+        && d100(seed, 'lore', S.$eng.turn, absA) <= num(AMB.lore_chance, 35)) {
+        const [u, , title, text] = untold[hash32(seed, 'lorepick', pk, absA) % untold.length];
+        AE.lore = dayNo; hearLore(S, u, title, placeOf(S.World.Location)); beat = { kind: 'lore', text: `${title}. ${text.replace(/[.\s]+$/, '')}` }; kind = '';
+      }
       if (kind) {
         const W1 = ((B.$ui || {}).wx || {}).now;
         const gos = S.$ui.gossip || [];
@@ -3045,10 +3060,18 @@ function stepAmbience(c) {
 
 // ---- 9. UI bookkeeping ----
 function stepUi(c) {
-  const { S, offUnlock, evs, dayNo, M, Hd } = c;
+  const { S, B, offUnlock, evs, dayNo, M, Hd, text, toolEdit, OFF } = c;
   const place = placeOf(S.World.Location);
   // 1.16.1 (audit B6): only places on the Campus Map, so off-campus names never push a discovered place out of the list (cap 80)
   if (place && plName(place) && !S.$ui.discovered.includes(place)) S.$ui.discovered.push(place);
+  // 1.24.0 (owner playtest): the castle's halls show on the map once {{user}} has been inside ("Castle" counts, and any castle room)
+  if (!S.$ui.discovered.includes('Castle') && (CASTLE.has(normP(S.World.Location)) || /\bcastle\b/i.test(placeOf(S.World.Location)))) S.$ui.discovered.push('Castle');
+  // 1.24.0: a story is heard when the narration names it (as a proper name, so "the long corridor" in passing does not count); with
+  // Ambience below Full nobody is overheard, so a place's stories come with the first visit
+  if (!toolEdit && text) for (const k of Object.keys(PLACE_LORE)) for (const [u, nm, title] of PLACE_LORE[k])
+    if (!S.$ui.lore.includes(String(u)) && new RegExp(`(^|[^\\w'])(The )?${_.escapeRegExp(nm)}(?![\\w'])`).test(text)) hearLore(S, u, title, '');
+  if ((OFF.has('ambience') || (S.$ui.ambience || 'full') !== 'full') && placeKey(S.World.Location) !== placeKey(((B || {}).World || {}).Location))
+    for (const [u, , title] of PLACE_LORE[placeKey(S.World.Location)] || []) hearLore(S, u, title, placeOf(S.World.Location));
   const unlock = k => { if (!offUnlock.has(k) && !S.$ui.unlocks.includes(k)) S.$ui.unlocks.push(k); };   // 1.1.0: a feature that is off does not unlock
   if (S.Battle.Active) unlock('battle');
   if (Hd._True_magic) unlock('hidden');

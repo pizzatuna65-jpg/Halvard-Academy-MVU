@@ -20,6 +20,7 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "gate": "castle",
   "near": [
    [
     "announcement_room",
@@ -136,6 +137,7 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "gate": "castle",
   "near": [
    [
     "announcement_room",
@@ -446,6 +448,7 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "gate": "castle",
   "near": [
    [
     "announcement_room",
@@ -583,6 +586,7 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "gate": "castle",
   "near": [
    [
     "announcement_room",
@@ -705,6 +709,7 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "gate": "castle",
   "near": [
    [
     "announcement_room",
@@ -824,6 +829,7 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "gate": "castle",
   "near": [
    [
     "announcement_room",
@@ -994,6 +1000,7 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "gate": "castle",
   "near": [
    [
     "announcement_room",
@@ -1115,6 +1122,7 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "gate": "castle",
   "near": [
    [
     "announcement_room",
@@ -1237,6 +1245,7 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "gate": "castle",
   "near": [
    [
     "announcement_room",
@@ -1366,6 +1375,7 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "gate": "castle",
   "near": [
    [
     "announcement_room",
@@ -1482,6 +1492,7 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "gate": "castle",
   "near": [
    [
     "announcement_room",
@@ -1599,6 +1610,7 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "gate": "castle",
   "near": [
    [
     "announcement_room",
@@ -1716,6 +1728,7 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "gate": "castle",
   "near": [
    [
     "announcement_room",
@@ -1915,6 +1928,7 @@
    "Autumn": "Stews and roast squash.",
    "Winter": "Porridge, thick broth and second helpings."
   },
+  "gate": "castle",
   "near": [
    [
     "announcement_room",
@@ -2135,6 +2149,7 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "gate": "castle",
   "near": [
    [
     "announcement_room",
@@ -2430,6 +2445,7 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "gate": "castle",
   "near": [
    [
     "announcement_room",
@@ -2554,6 +2570,7 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "gate": "castle",
   "near": [
    [
     "announcement_room",
@@ -2674,6 +2691,7 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "gate": "castle",
   "near": [
    [
     "announcement_room",
@@ -3581,6 +3599,7 @@
    "Summer": "Short nights; the Divination Society waits for midnight.",
    "Winter": "Winter nights are the clearest and the coldest; the Divination Society works in coats and gloves."
   },
+  "gate": "grassy_field_and_hills",
   "near": [
    [
     "grassy_field_and_hills",
@@ -3856,6 +3875,7 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "gate": "castle",
   "near": [
    [
     "announcement_room",
@@ -4082,6 +4102,7 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "gate": "castle",
   "near": [
    [
     "announcement_room",
@@ -4360,6 +4381,7 @@
   "seasons": {
    "Spring": "The flower field comes in weeks before anything else on campus."
   },
+  "gate": "forest",
   "near": [
    [
     "forest",
@@ -4519,6 +4541,7 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "gate": "castle",
   "near": [
    [
     "announcement_room",
@@ -4979,6 +5002,7 @@
   "seasons": {
    "Winter": "Hardly anyone climbs to the Old Hut in winter: snow drifts against the door, the path over the Hills disappears, and a secret told there in the cold is one someone went to real trouble for."
   },
+  "gate": "grassy_field_and_hills",
   "near": [
    [
     "forest",
@@ -5018,6 +5042,7 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "gate": "castle",
   "near": [
    [
     "archive",
@@ -5263,6 +5288,7 @@
   "seasons": {
    "Winter": "The fireflies stay all winter, even over the ice, which Creature Studies cannot explain."
   },
+  "gate": "boathouse_and_lake",
   "near": [
    [
     "boathouse_and_lake",
@@ -5291,6 +5317,7 @@
   "pin": 22,
   "discoverable": false,
   "seasons": {},
+  "gate": "mall",
   "near": [
    [
     "mall",
@@ -5319,6 +5346,7 @@
   "pin": 22,
   "discoverable": false,
   "seasons": {},
+  "gate": "mall",
   "near": [
    [
     "mall",
@@ -5347,6 +5375,7 @@
   "pin": 22,
   "discoverable": false,
   "seasons": {},
+  "gate": "mall",
   "near": [
    [
     "mall",
@@ -5375,6 +5404,7 @@
   "pin": 22,
   "discoverable": false,
   "seasons": {},
+  "gate": "mall",
   "near": [
    [
     "mall",
@@ -5403,6 +5433,7 @@
   "pin": 22,
   "discoverable": false,
   "seasons": {},
+  "gate": "mall",
   "near": [
    [
     "mall",
@@ -5431,6 +5462,7 @@
   "pin": 22,
   "discoverable": false,
   "seasons": {},
+  "gate": "mall",
   "near": [
    [
     "mall",
@@ -5459,6 +5491,7 @@
   "pin": 22,
   "discoverable": false,
   "seasons": {},
+  "gate": "mall",
   "near": [
    [
     "mall",
@@ -5487,6 +5520,7 @@
   "pin": 22,
   "discoverable": false,
   "seasons": {},
+  "gate": "mall",
   "near": [
    [
     "mall",
@@ -5515,6 +5549,7 @@
   "pin": 22,
   "discoverable": false,
   "seasons": {},
+  "gate": "mall",
   "near": [
    [
     "mall",
@@ -5543,6 +5578,7 @@
   "pin": 22,
   "discoverable": false,
   "seasons": {},
+  "gate": "mall",
   "near": [
    [
     "mall",

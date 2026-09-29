@@ -26,7 +26,7 @@ Build order, generated files and test commands: `docs/BUILD.md`.
 | Bond ranks, rewards, gifts, moods | §7 bond data; engine `stepBonds`, `stepBondMemory`, `mood_gifts.js` | |
 | Reputation, training, grades | `data/reputation.json`, `training.json`; `stepReputation`, `stepTraining`, `stepSchoolWeek` | |
 | Weather, ambience, happenings | `stepWeather`, `stepExposure`, `stepAmbience`; `data/ambience.json`, `happenings.json`, `wind_casting.json` | |
-| Map, pins, map variants, portraits | `data/map_pins.json`, `assets_manifest.json`, `src/ui/parts/20_map.js`, `tools/curate_data.py` `FAR_LEGS` | assets are pinned to a commit (DECISIONS "Assets") |
+| Map, pins, map variants, portraits | `data/map_pins.json`, `assets_manifest.json`, `src/ui/parts/20_map.js` (`discovered`, `mapView` zoom, `loreRow`), `tools/curate_data.py` `FAR_LEGS`, `GATES` | assets are pinned to a commit (DECISIONS "Assets") |
 | Features settings (on/off) | `data/features.json`, `stepFeatures`, `ui.template.js` `pSettings`, `featureOn` | `feature_cost.py` measures it |
 | Preset | `presets/edit_preset.py` (numbered sections), card-vs-preset test in `CLAUDE.md` | never edit the output JSON; `build_all.py --preset` |
 | Token cost | `node tests/token_audit.cjs`; the rule entries 501–510 | |
@@ -74,8 +74,8 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepBag` (8h) | Inventory merge, caps, Sunfizz | `data/shop.json` |
 | `stepCampusEvents` / `stepExtras` / `stepCast` (8j, 8k, 8i) | campus events; invented characters; who gets a Cast Sheet | `$ui.cast` → 509 |
 | `stepReminders` (8l) | "missed report" reminders for `<now>` | `$ui.missed` → 505 |
-| `stepAmbience` (8m) | crowd, light, cue, beat, uncanny moment | `data/ambience.json` |
-| `stepUi` (9) | discovered places, unlocks, Next chip | |
+| `stepAmbience` (8m) | crowd, light, cue, beat (1.24.0: overheard lore, `hearLore`), uncanny moment | `data/ambience.json`, `PLACE_LORE` |
+| `stepUi` (9) | discovered places (+ "Castle"), lore named in the narration (`$ui.lore`), unlocks, Next chip | |
 | `stepCommit` (10) | `$eng.abs`, Year 1 date labels, `_Log` | |
 
 Module helpers above `runEngine`: name matching (`formRx`, `speakersIn`, `mentionIn`), time (`parseWhen`, `whenText`, `periodOf`,

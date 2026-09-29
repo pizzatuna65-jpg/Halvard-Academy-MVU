@@ -9,7 +9,7 @@ Build first with `python tools/build_all.py`. Run all suites with `npm test`; ru
 | Attendance, study, grades, weather | `test_batch1_fp7_v1100.cjs`, `test_grades_v1150.cjs`, `test_world_v110.cjs`, `test_ambience_v1160.cjs` |
 | Bonds, Trust, Tension, gifts and perks | `test_bonds_v122.cjs`, `test_trust_v143.cjs`, `test_tension_v138.cjs`, `test_mood_gifts_v180.cjs`, `test_rank_perks_v190.cjs` |
 | NPCs, cast, lore and Year 2 | `test_castsheet_v151.cjs`, `test_cohort2_v170.cjs`, `test_year2_v174.cjs`, `test_dynamic_lore_v1140.cjs`, `test_voices_g1_v163.cjs` through `test_voices_g5_v167.cjs` |
-| Map, shops and UI panels | `test_ui_overhaul_v1210.cjs` (tokens, themes, fonts), `test_people_map.cjs`, `test_mapvariants_v1130.cjs`, `test_batch5_shops.cjs`, `test_notebook.cjs` |
+| Map, shops and UI panels | `test_ui_overhaul_v1210.cjs` (tokens, themes, fonts), `test_map_gates_v1240.cjs` (gates, lore heard, zoom), `test_people_map.cjs`, `test_mapvariants_v1130.cjs`, `test_batch5_shops.cjs`, `test_notebook.cjs` |
 | Prompt and card package | `test_tokens_v1110.cjs`, `test_preset.cjs`, `qa_static.cjs`, `lint.cjs` |
 | Engine integration audit | `test_audit_b1_v1161.cjs`, `test_audit_b2_v1170.cjs`, `test_integrations_v1180.cjs` |
 | Engine steps and save migrations | `test_engine_steps_v1200.cjs`, `test_saves.cjs`; any suite with `ENGINE_DIFF=<older engine.js>` compares every engine run with that build |

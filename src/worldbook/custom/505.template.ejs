@@ -202,7 +202,7 @@ Regulars here with a status on record (it overrides their habits): <%- regSt.map
 <%_ if (AMB.crowd || AMB.cue) { _%>
 Ambience at <%- AMB.place %>: <%- [AMB.crowd, AMB.light].filter(Boolean).join(', ') %>.<%- AMB.cue ? ' Sensory cue (write your own detail, once): ' + AMB.cue + '.' : '' %>
 <%_ } if (AMB.beat) { _%>
-<%- AMB.beat.kind === 'brush' ? 'Brushes {{user}} (small, harmless, changes nothing; {{user}} may ignore it)' : 'Nearby (optional, one clause, unnamed people; skip it if the scene is intense)' %>: <%- AMB.beat.text %>.
+<%- AMB.beat.kind === 'lore' ? "Overheard (weave it into this reply: a line or two of talk from students nearby, or a companion bringing it up; hearsay, never confirmed; {{user}} now knows it)" : AMB.beat.kind === 'brush' ?'Brushes {{user}} (small, harmless, changes nothing; {{user}} may ignore it)' : 'Nearby (optional, one clause, unnamed people; skip it if the scene is intense)' %>: <%- AMB.beat.text %>.
 <%_ } if (AMB.unc) { _%>
 Uncanny (narrator only, secret; <%- AMB.unc.title %>): <%- AMB.unc.text %>. Never confirm or explain it, leave a mundane reading possible, no harm; everyone reacts in character.
 <%_ } } _%>
