@@ -13,14 +13,12 @@ function locIdOf(place) {
   const a = (DATA.palias || {})[segs[0]];
   return a && DATA.locs[a] ? a : '';
 }
-// 1.24.0 (owner playtest): some places show only once the player has been where they lead from (data/locations.json gate:
-// Willow Island after the boathouse, the Clearing after the Forest, the Observation Tower and the Old Hut after the Grassy Field,
-// the Mall's shops after the Mall, the castle's halls after the castle), or at the place itself or another place behind the same
-// gate (one shop opens the Mall). The Rooftop keeps D21.
+// 1.24.0 (owner playtest): some far-grounds places show only once the player has been where they lead from (data/locations.json
+// gate: Willow Island and the Fishing House after the boathouse, the Clearing after the Forest, the Observation Tower and the Old
+// Hut after the Grassy Field), or at the place itself or another place behind the same gate. The Rooftop keeps D21.
 const beenAt = (S, name) => normPlace((S.World || {}).Location) === normPlace(name) || ((S.$ui || {}).discovered || []).some(d => normPlace(d) === normPlace(name));
-const gateOpen = (S, g) => beenAt(S, g === 'castle' ? 'Castle' : DATA.locs[g].name) || Object.values(DATA.locs).some(l => l.gate === g && beenAt(S, l.name));
+const gateOpen = (S, g) => beenAt(S, DATA.locs[g].name) || Object.values(DATA.locs).some(l => l.gate === g && beenAt(S, l.name));
 const discovered = (S, l) => l.discoverable ? beenAt(S, l.name) : !l.gate || beenAt(S, l.name) || gateOpen(S, l.gate);
-const castlePin = p => p.cluster.some(id => (DATA.locs[id] || {}).gate === 'castle');
 // 1.24.0 (owner playtest: labels at the map's edge were cut off): a label near the right or left edge grows inward, near the top below
 const labPos = p => (p.x > 82 ? ' r' : p.x < 12 ? ' l' : '') + (p.y < 12 ? ' b' : '');
 // 1.24.0 (owner playtest): zoom and its centre, kept in the script while the page is open, so closing and opening the map keeps
@@ -92,7 +90,7 @@ PANELS.map = {
   render(S) {
     const cur = locIdOf(S.World.Location), curPin = cur ? pinOf(cur) : null;
     if (view.pin == null && curPin) view.pin = curPin.pin;
-    const pins = DATA.pins.filter(p => castlePin(p) || p.cluster.some(id => DATA.locs[id] && discovered(S, DATA.locs[id])));
+    const pins = DATA.pins.filter(p => p.cluster.some(id => DATA.locs[id] && discovered(S, DATA.locs[id])));
     const pinHTML = pins.map(p => {
       const here = curPin && curPin.pin === p.pin, sel = view.pin === p.pin;
       return `<button class="pin${here ? ' here' : ''}${sel ? ' sel' : ''}" data-pin="${p.pin}" style="left:${p.x}%;top:${p.y}%" aria-label="${esc(p.label)}${here ? ' (you are here)' : ''}" title="${esc(p.label)}"></button>`
@@ -115,7 +113,7 @@ PANELS.map = {
       view.focusLoc = ''; view.cardPin = P.pin + '|' + view.floor; view.card = _.clamp(view.card, 0, Math.max(0, ids.length - 1));
       const arrows = ids.length > 1 ? `<div class="cnav"><button class="btn sm" data-card="-1" aria-label="Previous place" ${view.card ? '' : 'disabled'}>‹</button>
         <span class="sub">${view.card + 1} / ${ids.length} · ${esc(DATA.locs[ids[view.card]].name)}</span><button class="btn sm" data-card="1" aria-label="Next place" ${view.card < ids.length - 1 ? '' : 'disabled'}>›</button></div>` : '';
-      sheet = `<h3>${esc(P.label)}</h3>${tabs}${arrows}<div class="car">${ids.length ? locCard(ids[view.card], S, cur, P) : castlePin(P) ? castleCard(S, cur, P) : '<div class="empty">Nothing here you know of yet.</div>'}</div>`;
+      sheet = `<h3>${esc(P.label)}</h3>${tabs}${arrows}<div class="car">${ids.length ? locCard(ids[view.card], S, cur, P) : '<div class="empty">Nothing here you know of yet.</div>'}</div>`;
     }
     return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>Halvard</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
       <div class="bd"><div class="mapwrap"><div><div class="mapbox"><div class="mapview${mapView.z > 1 ? ' zin' : ''}"><div class="map" style="width:${mapView.z * 100}%"><img src="${esc(imgURL(mapFor(S)))}" alt="Map of Halvard Academy" draggable="false" data-fb="" data-fbclass="mapfb"${mapFor(S) !== DATA.assets.map ? ` data-alt="${esc(imgURL(DATA.assets.map))}"` : ''}>${pinHTML}</div></div>
@@ -151,7 +149,6 @@ PANELS.map = {
     if (b.dataset.floor) { view.floor = b.dataset.floor; render(); return; }
     if (b.dataset.loc) { const p = pinOf(b.dataset.loc); if (p) { view.pin = p.pin; view.floor = DATA.locs[b.dataset.loc].floor || ''; view.focusLoc = b.dataset.loc; render(); } return; }
     if (b.dataset.go) fillChat(goText(DATA.locs[b.dataset.go].name));   // shared helper (30_notebook.js)
-    if (b.dataset.gocastle) fillChat('I head into the Castle.');
   },
 };
 
@@ -168,16 +165,6 @@ function classHint(S) {
 }
 // 1.14.0 (planning/DRAFT_dynamic_lore.md [?4]): the place in the current season (data/locations.json seasons, by calendar month)
 const seasonLine = (l, S) => { const k = SEASON_OF(((S || {}).World || {}).Month), t = (l.seasons || {})[k]; return t ? `<p class="sub season"><b>${esc(k)}:</b> ${esc(t)}</p>` : ''; };
-// 1.24.0 (owner playtest): before the player has been inside, the castle pin shows the castle itself; its halls come after
-function castleCard(S, cur, P) {
-  const t = cur ? walkFrom(cur, S).notice_board : undefined;   // the Notice Board stands in the entrance hall
-  const walk = t != null ? `${t <= 2 ? 'A minute or two' : `About ${t} min`} from here (${DATA.locs[cur].name})` : 'About 4 min from the Main Courtyard';
-  return `<article class="lc"><div class="crop" style="${cropStyle(P, S)}"><b>The Castle</b></div>
-    <div class="in"><p class="vibe">The old heart of Halvard: classrooms, the library, the canteen and the offices, floor above floor.</p>
-    <dl class="kv sm"><dt>Walk</dt><dd>${esc(walk)}</dd><dt>Access</dt><dd>Open to students</dd></dl>
-    <p class="sub">Its halls and rooms show on this map once you have been inside.</p>
-    <button class="btn pri go" data-gocastle="1">Go here</button></div></article>`;
-}
 // 1.24.0 (owner playtest): lore and rumours are heard in the story ($ui.lore: overheard, or named in the narration), not given by the map
 const heardSet = S => new Set(((S.$ui || {}).lore || []).map(String));
 // the place text names its story ("Home of the Faraway Laugh story."): that sentence waits until the story is heard

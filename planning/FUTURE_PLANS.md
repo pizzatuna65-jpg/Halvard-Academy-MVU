@@ -37,16 +37,15 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
 - **Kerja paruh waktu terjadwal** (E7, 2026-09-28): shift tetap sebagai sumber uang untuk dorm rank rendah.
 - **Kelas minggu pertama yang di-script** (M1 W1 Tue–Sat, 14 sesi; per asrama untuk kelas [D]; PR opsional ke Commitments).
 - **Hemat token:** sembunyikan Clues dari thread misteri yang sudah selesai.
+- **Gate map lain** (saran 1.24.0; owner 1.24.1 hanya memilih Fishing House, Mall dan kastil dibatalkan): Swimming Pool ← Gymnasium;
+  Ring Dining Hall/Portrait Hall ← Arbiter Hall; Sparring Pavilion ← Combat Grounds; Undercroft seperti Rooftop; Broken Statue dan
+  Spirit House setelah didengar.
 
 ## 3. Sisa audit 2026-09-29 (sengaja ditunda)
 - **A8** Cast Sheet 509 (±515 KB EJS): pecah per NPC hanya kalau terbukti ada lag saat prompt dibangun di ST (compile lokal ±7,7 ms).
 - **A10** PNG kartu ±8 MB (JSON disematkan dua kali, `chara` + `ccv3`): `chara` ringkas hanya setelah kompatibilitas pembaca v2 dicek.
 
 ## 4. Keputusan yang masih menunggu owner
-- Gate tempat tambahan (saran 1.24.0, owner minta diberi tahu dulu): Fishing House ← Boathouse; Swimming Pool ← Gymnasium; Ring
-  Dining Hall dan Portrait Hall ← Arbiter Hall; Sparring Pavilion ← Combat Grounds; ruang Undercroft (Archive, Restricted Section,
-  Seal Chamber) seperti Rooftop, hanya setelah ada yang menunjukkan jalannya; Broken Statue dan Spirit House hanya setelah
-  didengar/dikunjungi.
 - Pin dependensi MVU / mvu_zod ke commit yang sudah dites (`schema.js` dan `mvu_loader.js` memuat default branch; F12 menunjukkan
   perubahan helper bisa diam-diam mengubah perilaku). Perlu pasangan commit yang dites di ST dulu.
 - Siklus hidup {{user}} setelah Year 3 (lulus / dikeluarkan / mengulang). Sejak 1.7.4 Year naik otomatis; payout tetap jalan. Owner:

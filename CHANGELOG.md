@@ -3,6 +3,17 @@
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
 details: `git show b62d182:CHANGELOG.md`.
 
+## v1.24.1 — Map gates: far grounds only (2026-09-29)
+
+Owner, on the 1.24.0 suggestions: the Fishing House yes; the Mall and castle gates scrapped "so a new player is not confused about
+what is there and what it is for". Decisions touched: DECISIONS §7 "Gated places" (updated).
+- The Fishing House shows on the Map after the Boathouse (like Willow Island).
+- The Mall's shops and the castle's halls show from the start again; the castle entrance card and the engine's "Castle" entry in
+  `$ui.discovered` are gone (an old save that holds "Castle" is unaffected).
+- The other suggested gates were not chosen (moved to FUTURE_PLANS §2).
+- Tests: `test_map_gates_v1240.cjs` checks the new gate set; map, ambience, save and static suites pass. Save fixture
+  `save_1.24.0.json` added.
+
 ## v1.24.0 — Map: gates, zoom, lore heard in the story (2026-09-29)
 
 Owner playtest notes (five points). Decisions touched: none changed; new standing lines in DECISIONS §7 (gated places, lore heard).
@@ -226,3 +237,4 @@ Owner: "lanjutkan batch 4". No canon or established design decision changed.
 - **v1.22.0 (2026-09-29):** UI overhaul 2 (the bracelet): pewter band, brass bezel around the glass clock, dorm gem and crest, vials, three chip tiers, mood badges on portraits, a joined row of panel buttons (a 3-column grid on phones).
 - **v1.23.0 (2026-09-29):** UI overhaul 3 (panels): People cards with rank medals and meters, the Dossier as a file beside a matted portrait, theme pictures and feature switches in Settings, numbered Builder steps, a dense club directory.
 - **v1.24.0 (2026-09-29):** Map: zoom kept between openings, labels and header crops no longer cut off, places behind gates (Willow Island, Clearing, Observation Tower, Old Hut, Mall shops, castle halls), lore and rumours shown only once heard (overheard via ambience or named in the narration), "Create your student" on the collapsed bracelet.
+- **v1.24.1 (2026-09-29):** Map gates on the far grounds only: the Fishing House joins Willow Island behind the Boathouse; Mall shops and castle halls visible from the start again.

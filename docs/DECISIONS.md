@@ -86,9 +86,10 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **Walking times follow the map** (1.2.1, owner) **on the castle grounds only** (1.15.1, owner: the map draws the far grounds too close). The Lake (Boathouse, Fishing House, Willow Island), the Grassy Field and Hills (Observation Tower, Old Hut) and the Forest (Clearing) are reached only by `FAR_LEGS` in `curate_data.py` (Gardens–boathouse 20, Courtyard–Hills 20, boathouse–Fishing House 3, Forest–Clearing 30, ...); the Campus Map walking line states the computed times (`tests/test_far_grounds_v1151.cjs` checks it). `curate_data.py` computes legs (map distance 0.22 min per unit, lore times on forest and boat legs, castle stairs) into `locations.json` `near`; the Campus Map lore line states the same numbers. The bracelet shows above the narration (display regex).
 - **Map cards** (1.2.0, owner): every card has Walk (from where the player is), Access, Clubs here, Regulars (only NPCs met whose Haunts entry is unlocked), Connected to; one card at a time with arrows. Club venues follow the owner's map (Running at the Sports Field, Archery at the Archery Range, Swimming/Gymnastics/Basketball at the Gymnasium, Divination at the Observation Tower); the Fishing House and Willow Island are their own places.
 - **The status bar shows only on the latest message** (F22).
-- **Gated places** (1.24.0, owner): some places show on the Map only after the place that leads to them (`curate_data.py` `GATES`:
-  Willow Island ← Boathouse, Forest Clearing ← Forest, Observation Tower and Old Hut ← Grassy Field, Mall shops ← Mall, castle halls
-  ← the castle, whose pin shows an entrance card until then). UI only; the narrator still knows every place. Add a gate there.
+- **Gated places** (1.24.0, 1.24.1, owner): far-grounds places show on the Map only after the place that leads to them
+  (`curate_data.py` `GATES`: Willow Island and Fishing House ← Boathouse, Forest Clearing ← Forest, Observation Tower and Old Hut ←
+  Grassy Field). The Mall's shops and the castle's halls are never gated, so a new player sees what is there (owner). UI only; the
+  narrator still knows every place.
 - **Lore and rumours are heard** (1.24.0, owner): a Map card lists only the lore in `$ui.lore`: overheard through an ambience beat,
   named in the narration, or (Ambience below Full) on the first visit. The map zoom lives in the script, not in browser storage.
 

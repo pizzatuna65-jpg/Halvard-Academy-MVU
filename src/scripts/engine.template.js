@@ -3064,8 +3064,6 @@ function stepUi(c) {
   const place = placeOf(S.World.Location);
   // 1.16.1 (audit B6): only places on the Campus Map, so off-campus names never push a discovered place out of the list (cap 80)
   if (place && plName(place) && !S.$ui.discovered.includes(place)) S.$ui.discovered.push(place);
-  // 1.24.0 (owner playtest): the castle's halls show on the map once {{user}} has been inside ("Castle" counts, and any castle room)
-  if (!S.$ui.discovered.includes('Castle') && (CASTLE.has(normP(S.World.Location)) || /\bcastle\b/i.test(placeOf(S.World.Location)))) S.$ui.discovered.push('Castle');
   // 1.24.0: a story is heard when the narration names it (as a proper name, so "the long corridor" in passing does not count); with
   // Ambience below Full nobody is overheard, so a place's stories come with the first visit
   if (!toolEdit && text) for (const k of Object.keys(PLACE_LORE)) for (const [u, nm, title] of PLACE_LORE[k])

@@ -1,4 +1,4 @@
-// 1.24.0 (owner playtest): places behind a gate, the castle entrance, lore heard in the story, map labels at the edge, zoom,
+// 1.24.0 (owner playtest): places behind a gate (1.24.1: far grounds only), lore heard in the story, map labels at the edge, zoom,
 // and "Create your student" on the collapsed bracelet.
 const fs = require('fs'), path = require('path');
 const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
@@ -17,17 +17,12 @@ const L = U.DATA.locs;
 
 console.log('Gates');
 let p = pinsOf(S0);
-ok(p.includes(1) && !p.includes(35) && !p.includes(11) && !p.includes(9) && !p.includes(10) && p.includes(12) && p.includes(37) && p.includes(36),
-  'at the start: the castle pin shows; Willow Island, the Clearing, the Observation Tower and the Old Hut do not');
-ok(!U.discovered(S0, L.lecture_halls) && !U.discovered(S0, L.merryhews) && U.discovered(S0, L.mall), 'castle rooms and Mall shops hidden, the Mall itself known');
-U.view.pin = 1; let h = U.PANELS.map.render(S0);
-ok(/data-gocastle="1"/.test(h) && !/data-loccard=/.test(h), 'the castle pin shows the castle entrance card before the player has been inside');
+ok(p.includes(1) && p.includes(22) && !p.includes(35) && !p.includes(34) && !p.includes(11) && !p.includes(9) && !p.includes(10) && p.includes(12) && p.includes(37) && p.includes(36),
+  'at the start: Willow Island, the Fishing House, the Clearing, the Observation Tower and the Old Hut do not show');
+ok(U.discovered(S0, L.lecture_halls) && U.discovered(S0, L.merryhews) && !U.discovered(S0, L.rooftop), '1.24.1 (owner): castle rooms and Mall shops show from the start; the Rooftop keeps D21');
+let h;
 let S = at(S0, 36, '10:00', 'Boathouse and Lake');
-ok(pinsOf(S).includes(35), 'Willow Island shows after the boathouse');
-S = at(S, 36, '12:00', 'Castle — entrance hall');
-ok(S.$ui.discovered.includes('Castle') && U.discovered(S, L.lecture_halls) && !U.discovered(S, L.rooftop), 'entering the castle opens its halls; the Rooftop keeps D21');
-S = at(S, 36, '13:00', "The Mall — Merryhew's");
-ok(U.discovered(S, L.quillfeathers), 'the Mall opens its shops');
+ok(pinsOf(S).includes(35) && pinsOf(S).includes(34), 'Willow Island and the Fishing House show after the boathouse');
 S = at(S, 36, '14:00', 'Grassy Field and Hills');
 ok(pinsOf(S).includes(9) && pinsOf(S).includes(10) && !pinsOf(S).includes(11), 'the Grassy Field opens the Observation Tower and the Old Hut, not the Clearing');
 
