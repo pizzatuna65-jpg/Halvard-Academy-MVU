@@ -92,7 +92,7 @@ ok(/Bond: Irene \(Rank 0, guarded, Trust 40 neutral\): shares how they look and 
 
 // ---- UI
 U.view.ptab = 'bonds'; let h = U.PANELS.people.render(A);
-ok(/10\/10 XP/.test(h) && !/bond event ready/.test(h), 'People: XP bar without an event badge');
+ok(/XP<b>10\/10<\/b>/.test(h) && !/bond event ready/.test(h), 'People: XP bar without an event badge');
 U.view.arg = 'Trixie'; h = U.PANELS.npc.render(R1);
 ok(/2\/20 XP/.test(h) && /fills the bar/.test(h), 'dossier: XP toward the next rank');
 U.view.tab = 'settings'; h = U.renderProfile(R1);

@@ -103,7 +103,7 @@ const rs = W(Y2, { Time: '13:00' }, [here(['Royhan'])]);
 ok(/Former student \(graduated\)/.test(R(509, rs)) && /Age: 21\./.test(R(509, rs)), "Royhan's Cast Sheet: former student, 21");
 // the dossier (UI) shows the same ages
 const dos = s => { const x = _.cloneDeep(s); x.Bonds.Royhan = { ...x.Bonds.Royhan, Rank: 2 }; x.$ui.names = [...(x.$ui.names || []), 'Royhan']; U.view.arg = 'Royhan'; return U.PANELS.npc.render(x); };
-ok(/<h3>Age<\/h3><p class="fv">20\.<\/p>/.test(dos(S0)) && /<h3>Age<\/h3><p class="fv">21\.<\/p>/.test(dos(Y2)), 'dossier: Royhan 20 in Year 1, 21 in Year 2');
+ok(/<dt>Age<\/dt><dd class="fv">20\.<\/dd>/.test(dos(S0)) && /<dt>Age<\/dt><dd class="fv">21\.<\/dd>/.test(dos(Y2)), 'dossier: Royhan 20 in Year 1, 21 in Year 2');
 
 // ---- rival academy teams: their third-years graduate too, the rest move up (owner, 2026-09-27)
 const mir = s => R(npcs.Mirelle.uid_card, s), kira = s => R(npcs.Kira.uid_card, s);

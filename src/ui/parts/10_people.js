@@ -67,14 +67,18 @@ function peopleListHTML(S) {
   const B = S.Bonds || {}, here = Object.keys((S.Scene || {}).Present || {});
   const ids = Object.keys(B).sort((a, b) => (here.includes(b) - here.includes(a)) || (B[b].Rank - B[a].Rank) || (num(B[b].$xp) - num(B[a].$xp)));
   if (!ids.length) return '<div class="empty">You have not met anyone yet.</div>';
-  return `<p class="lead">${ids.length} ${ids.length === 1 ? 'person' : 'people'} you have met. Time together deepens each bond; once the bar fills, the next genuine encounter can deepen it further.</p>` + ids.map(id => {
-    const b = B[id], n = npcOf(id);
-    const badges = [here.includes(id) ? '<span class="pill g">here now</span>' : '', b.Romance ? '<span class="pill r">romance</span>' : ''].join('');
-    return `<button class="pr" data-open="npc:${esc(id)}">${avatar(id, S, 'av lg')}<span class="pm">
-      <span class="pn">${esc(nameOf(id, S, true))}</span><span class="sub">${esc(b.Title || (n ? publicRole(id, S) || whoLine(id, S) : ''))}</span>
-      <span class="pb"><span class="rk">Rank ${b.Rank}</span>${xpBar(b, S)}<span class="sub" title="${esc(trustTxt(id, b))}">Trust</span>${mini(b.Trust, '#3f9f69')}<span class="sub" title="${esc(tensionTxt(id, b))}">${TEND.lock.includes(id) ? 'Tension' : esc(tensionBand(b.Tension))}</span>${mini(b.Tension, '#e0645a')}</span>
-      <span>${badges}</span></span></button>`;
-  }).join('');
+  // 1.23.0 (UI overhaul): cards in a grid; the rank is a brass medal, XP, Trust and Tension are three labelled meters, and a
+  // moonglass dot on the portrait says who is here now
+  return `<p class="lead">${ids.length} ${ids.length === 1 ? 'person' : 'people'} you have met. Time together deepens each bond; once the bar fills, the next genuine encounter can deepen it further.</p><div class="plist">` + ids.map(id => {
+    const b = B[id], n = npcOf(id), need = bondNeed(S, b.Rank), x = Math.min(num(b.$xp), need);
+    const dot = here.includes(id) ? '<i class="here" role="img" aria-label="here now" title="here now"></i>' : '';
+    return `<button class="pr" data-open="npc:${esc(id)}"><span class="pav">${avatar(id, S, 'av lg')}${dot}</span><span class="pm">
+      <span class="pn">${esc(nameOf(id, S, true))}${b.Romance ? ' <span class="pill r">romance</span>' : ''}</span><span class="sub">${esc(b.Title || (n ? publicRole(id, S) || whoLine(id, S) : ''))}</span></span>
+      <span class="medal" title="Rank ${b.Rank} of 10">${b.Rank}</span>
+      <span class="pmt"><span class="m" title="${b.Rank >= 10 ? 'max rank' : `${x} / ${need} XP to Rank ${b.Rank + 1}`}"><span class="ml">XP<b>${b.Rank >= 10 ? 'max' : `${x}/${need}`}</b></span><span class="mini xp"><i style="width:${b.Rank >= 10 ? 100 : need ? x / need * 100 : 0}%"></i></span></span>
+      <span class="m" title="${esc(trustTxt(id, b))}"><span class="ml">Trust<b>${id in TRD.lock ? 'fixed' : b.Trust}</b></span>${mini(b.Trust, '#3f9f69')}</span>
+      <span class="m" title="${esc(tensionTxt(id, b))}"><span class="ml">Tension<b>${TEND.lock.includes(id) ? '—' : esc(tensionBand(b.Tension))}</b></span>${mini(b.Tension, '#e0645a')}</span></span></button>`;
+  }).join('') + '</div>';
 }
 
 // ---------------------------------------------------------------- dossier
@@ -84,10 +88,12 @@ PANELS.npc = {
     const id = view.arg, n = npcOf(id), b = (S.Bonds || {})[id], rank = b ? b.Rank : 0;
     const title = n ? nameOf(id, S, true) : id;
     const port = n && n.p ? `<img class="por" src="${esc(imgURL(n.p))}" alt="" style="object-position:${n.fc[0]}% ${n.fc[1]}%" data-fb="${esc(knowsName(id, S) ? initials(n.n) : '?')}" data-fbclass="por fb">` : `<span class="por fb">${esc(n && !knowsName(id, S) ? '?' : initials(n ? n.n : id))}</span>`;
-    let h = `<div class="dos">${port}<div><p class="name">${esc(title)}</p><div class="sub" style="margin:2px 0 8px">${esc([n && knowsName(id, S) && publicRole(id, S), whoLine(id, S), graduated(S).has(id) && 'Graduated; has left campus'].filter(Boolean).join('. '))}</div>`;
+    // 1.23.0 (UI overhaul): the portrait (matted, sticky) and the dorm stay in the left column; everything else is the file
+    const dorm = n && n.dm && String(n.g).startsWith('Year') ? `<div class="idl"><i class="gem" aria-hidden="true"></i>${esc(n.dm)} Dormitory</div>` : '';
+    let h = `<div class="dos"><div class="dside"><div class="mat">${port}</div>${dorm}</div><div class="dmain"><p class="name">${esc(title)}</p><div class="sub" style="margin:2px 0 8px">${esc([n && knowsName(id, S) && publicRole(id, S), whoLine(id, S), graduated(S).has(id) && 'Graduated; has left campus'].filter(Boolean).join('. '))}</div>`;
     if (b) {
       const who = esc(knowsName(id, S) ? id : 'them');
-      h += `<div class="bond"><div class="l"><span class="rk">Rank ${b.Rank}</span>${xpBar(b, S)}</div>
+      h += `<div class="bond"><div class="l"><span class="medal" aria-hidden="true">${b.Rank}</span><span class="xpw"><span class="rk">Rank ${b.Rank} of 10</span>${xpBar(b, S)}</span></div>
         ${b.Title ? `<div style="margin:4px 0">${esc(b.Title)}${b.Romance ? ' <span class="pill r">romance</span>' : ''}</div>` : ''}
         <div class="tt"><span class="sub">${esc(trustTxt(id, b))}</span>${id in TRD.lock ? '' : mini(b.Trust, '#3f9f69')}<span class="sub">${esc(tensionTxt(id, b))}</span>${TEND.lock.includes(id) ? '' : mini(b.Tension, '#e0645a')}</div>
         ${!TEND.exempt.includes(id) && !TEND.lock.includes(id) && b.Tension >= num((TEND.effects || {}).strained_from, 40) ? `<div class="warn">${b.Tension >= num(TEND.effects.stop_xp_from, 90) ? 'This bond cannot grow until the tension eases.' : b.Tension >= num(TEND.effects.hold_event_from, 70) ? 'Too much tension: time together counts for half, and the bond cannot deepen until it eases below 70.' : 'Tension: time together counts for half until it eases below 40.'}</div>` : ''}
@@ -101,7 +107,6 @@ PANELS.npc = {
           return `<div class="sub">At Rank 8 this bond can become: ${esc(ways.join(' · '))}.${!'AB'.includes(br) && g8 ? ` This bond needs Trust ${g8} to deepen.` : ''}</div>`; })() : ''}
         ${b.Last_seen ? `<div class="sub">Last seen ${esc(b.Last_seen)}</div>` : ''}</div>`;
     } else h += '<div class="sub">You have not met yet.</div>';
-    h += '</div></div>';
     // 1.4.4 (owner): recent moments with you, newest first (engine: Bonds.<id>.$Recent; the narrator reads the same rows in <now>)
     if (b && Object.keys(b.$gifts || {}).length) h += '<h3>Gifts</h3><div class="gift-log">' + Object.entries(b.$gifts).reverse().map(([item,tier]) => `<span class="pill gift-${esc(tier)}">${esc(youText(item, S))} · ${esc(tier)}</span>`).join(' ') + '</div>';
     const rec = b ? [...(b.$Recent || [])].reverse() : [];
@@ -111,7 +116,7 @@ PANELS.npc = {
     if (dm.length) h += `<h3>Defining moments</h3><ul class="log">${dm.map(r => `<li><span class="sub">${esc(r.w)}</span> ${esc(youText(r.n, S))}${r.fx ? ` <span class="sub">(${esc(r.fx)})</span>` : ''}</li>`).join('')}</ul>`;
     if (n) {
       const open = n.fl.filter(f => fieldUnlocked(id, f, S) && !(/^(full )?name$/i.test(f[0]) && !knowsName(id, S)));
-      h += open.map(f => `<h3>${esc(f[0])}${f[2] >= 99 ? ' <span class="pill f">uncovered</span>' : ''}</h3><p class="fv">${esc(ageNow(n, f, S))}</p>`).join('');
+      if (open.length) h += `<dl class="file">${open.map(f => `<dt>${esc(f[0])}${f[2] >= 99 ? ' <span class="pill f">uncovered</span>' : ''}</dt><dd class="fv">${esc(ageNow(n, f, S))}</dd>`).join('')}</dl>`;
       const locked = _.groupBy(n.fl.filter(f => f[2] < 99 && !(f[3] > curYear(S)) && !fieldUnlocked(id, f, S)), f => f[2]);   // 1.7.0: a later cohort's lines are not even hinted
       const lk = Object.keys(locked).sort((a, c) => a - c);
       if (lk.length) h += `<h3>Still to learn</h3>${lk.map(r => `<div class="lock">Rank ${r}: ${esc(_.uniq(locked[r].map(f => f[0])).join(', '))}</div>`).join('')}`;
@@ -130,6 +135,7 @@ PANELS.npc = {
     const st = ((S.Campus_State || {}).NPC_status || {});
     const stKey = Object.keys(st).find(k => k.toLowerCase() === id.toLowerCase());
     if (stKey) h += `<div class="warn">Now: ${esc(st[stKey])}</div>`;
+    h += '</div></div>';   // .dmain, .dos
     return `<div class="dlg" tabindex="-1" style="--dc:${n ? n.dc : '#9aa3ad'}"><div class="hd"><h2>Dossier</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div><div class="bd">${h}</div></div>`;
   },
   click() {},

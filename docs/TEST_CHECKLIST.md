@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.23.0 (panels): the three checks in its section below.
 - v1.22.0 (bracelet): the three checks in its section below.
 - v1.21.0 (UI foundation): the four checks in its section below.
 - v1.20.0 (engine refactor): the two checks in its section below.
@@ -50,6 +51,13 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.23.0 — UI overhaul 3 (panels)
+
+- People: the cards show portraits, medals and meters; tapping a card opens the dossier; on a wide screen there are two columns.
+- Dossier: scrolling a long file keeps the portrait in view (desktop); a character without a portrait shows a monogram.
+- Settings: tapping a theme picture switches the theme at once; a feature switch turns the feature off and on again (the hidden
+  settings note appears in the chat as before, and the parked data comes back).
 
 ### v1.22.0 — UI overhaul 2 (the bracelet)
 

@@ -428,6 +428,12 @@ const CSS = `
 .nav button.on{color:var(--ink)}
 .nav button.on::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:2px 2px 0 0;background:var(--brass)}
 .nav button.err{color:var(--danger)}
+/* 1.23.0 Builder: numbered steps (the only panel whose tabs are a sequence) */
+.nav.steps{gap:18px}
+.nav.steps .n{display:inline-grid;place-items:center;width:21px;height:21px;margin-right:7px;border-radius:50%;border:1px solid var(--rule2);font-style:normal;font-size:var(--fs-xs);font-weight:700;color:var(--ink2);vertical-align:1px}
+.nav.steps button.on .n{background:var(--brass);border-color:var(--brass);color:var(--on-brass)}
+.nav.steps button.done .n{border-color:var(--brass-lo);color:var(--brass-hi)}
+.nav.steps button.err .n{border-color:var(--danger-line);color:var(--danger)}
 .bd{padding:18px 20px 22px;overflow-y:auto;flex:1;scrollbar-width:thin;scrollbar-color:var(--rule2) transparent}
 .ft{display:flex;gap:8px;align-items:center;padding:11px 20px;border-top:1px solid var(--rule);background:var(--band)}
 .ft .grow{flex:1;font-size:var(--fs-s);color:var(--ink2)}
@@ -515,10 +521,25 @@ th{color:var(--ink2);font-weight:500;font-size:var(--fs-s)}
 .dlg.wide{width:min(980px,100%)}
 .av{width:40px;height:40px;border-radius:50%;object-fit:cover;object-position:50% 30%;border:2px solid var(--rule2);background:var(--well);flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;font-weight:700;color:var(--ink2)}
 .av.lg{width:54px;height:54px}.av.fb{font-size:var(--fs-m)}
-.pr{display:flex;gap:14px;align-items:center;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;padding:11px 14px;margin-bottom:8px;border-radius:12px;border:1px solid transparent;background:var(--card)}
+/* 1.23.0 people list: cards in a grid; rank medal; XP, Trust and Tension as three labelled meters */
+.plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.pr{display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"av pm md" "mt mt mt";gap:2px 14px;align-items:center;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;padding:13px 14px 12px;border-radius:12px;border:1px solid transparent;background:var(--card)}
 .pr:hover{border-color:var(--brass-lo)}
-.pm{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1}
+.pav{grid-area:av;position:relative;display:flex}
+.pav .av{border:0;box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--ring,var(--rule2))}
+.pav .here{position:absolute;right:-2px;bottom:0;width:13px;height:13px;border-radius:50%;background:var(--moon);box-shadow:0 0 0 3px var(--card)}
+.pm{grid-area:pm;display:flex;flex-direction:column;gap:2px;min-width:0}
+.pm .sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pn{font-family:var(--f-text);font-weight:700;font-size:var(--fs-l);line-height:1.2;color:var(--head)}
+.pn .pill{margin:0 0 0 4px;vertical-align:2px}
+.medal{grid-area:md;width:42px;height:42px;flex:0 0 auto;border-radius:50%;display:grid;place-items:center;font-family:var(--f-text);font-weight:700;font-size:19px;line-height:1;color:var(--brass-hi);font-variant-numeric:lining-nums;
+  background:radial-gradient(circle at 35% 28%,color-mix(in srgb,var(--brass) 30%,var(--card)) 0%,var(--card) 70%);box-shadow:inset 0 0 0 1.5px var(--brass),inset 0 0 0 4px var(--card),inset 0 0 0 5px var(--brass-lo)}
+.pmt{grid-area:mt;display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:12px;margin-top:10px}
+.m{display:block;min-width:0}
+.ml{display:flex;justify-content:space-between;gap:6px;font-size:var(--fs-xs);color:var(--ink3)}
+.ml b{color:var(--ink2);font-weight:500;font-variant-numeric:lining-nums tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m .mini{display:block;width:auto;margin-top:4px}
+.mini.xp i{background:var(--brass)}
 .pb{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .rk{font-family:var(--f-sc);font-weight:700;font-size:var(--fs-s);letter-spacing:.03em;color:var(--brass-hi);white-space:nowrap}
 .xpb{display:inline-block;width:70px;height:6px;border-radius:99px;background:rgba(0,0,0,.36);overflow:hidden;vertical-align:middle}.xpb i{display:block;height:100%;background:var(--brass)}
@@ -526,12 +547,27 @@ th{color:var(--ink2);font-weight:500;font-size:var(--fs-s)}
 .mini{display:inline-block;width:54px;height:5px;border-radius:99px;background:rgba(0,0,0,.36);overflow:hidden;vertical-align:middle}.mini i{display:block;height:100%}
 .pill.w{border-color:color-mix(in srgb,var(--warn-line) 70%,transparent);color:var(--warn)}.pill.r{border-color:color-mix(in srgb,var(--rom) 60%,transparent);color:var(--rom)}
 .gift-loved{color:var(--rom)}.gift-liked{color:var(--good)}.gift-disliked{color:var(--warn)}.gift-hated{color:var(--danger)}
-.dos{display:grid;grid-template-columns:190px 1fr;gap:20px;align-items:start}
-.por{width:100%;aspect-ratio:600/877;object-fit:cover;border-radius:12px;border:1px solid var(--rule);background:var(--well);display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--ink3)}
-.bond{padding:12px 14px;border-radius:12px;background:var(--card);border:1px solid var(--rule)}
-.bond .l{display:flex;gap:10px;align-items:center}.tt{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0}
-p.fv{margin:0 0 4px;max-width:64ch;font-family:var(--f-text);font-size:16px;line-height:1.6;color:var(--ink)}
+/* 1.23.0 dossier: a matted portrait that stays in view, the bond with a rank medal, the file as label/value rows in the story serif */
+.dos{display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px;align-items:start}
+.dside{position:sticky;top:0;display:flex;flex-direction:column;gap:10px}
+.dmain{min-width:0}
+.mat{padding:5px;border-radius:12px;background:var(--well);box-shadow:inset 0 0 0 1px var(--brass-lo)}
+.por{width:100%;aspect-ratio:600/877;object-fit:cover;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--well);color:var(--ink3)}
+.por.fb{font-family:var(--f-text);font-weight:700;font-size:44px;color:var(--head);background:radial-gradient(circle at 50% 38%,color-mix(in srgb,var(--dc,var(--rule2)) 38%,var(--card)) 0%,var(--well) 75%)}
+.idl{display:flex;align-items:center;gap:9px;font-size:var(--fs-s);color:var(--ink2)}
+.gem{width:9px;height:9px;flex:none;transform:rotate(45deg);border-radius:2px;background:linear-gradient(135deg,rgba(255,255,255,.75) 0%,var(--dc,var(--rule2)) 42%,color-mix(in srgb,var(--dc,var(--rule2)) 55%,black) 100%);box-shadow:0 0 0 1.5px var(--brass-lo)}
+.bond{padding:14px 16px;border-radius:12px;background:var(--card)}
+.bond .l{display:flex;gap:14px;align-items:center}
+.bond .medal{width:50px;height:50px;font-size:22px}
+.xpw{flex:1;min-width:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.xpw .rk{flex:1 0 100%}
+.xpw .xpb{flex:1;min-width:80px;height:6px}
+dl.file{display:grid;grid-template-columns:118px minmax(0,1fr);margin:18px 0 0;border-top:1px solid var(--rule)}
+dl.file dt{font-size:var(--fs-s);font-weight:700;color:var(--brass);padding:13px 10px 12px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+dl.file dd{margin:0;padding:10px 0 12px;border-bottom:1px solid rgba(255,255,255,.06)}.tt{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0}
+.fv{margin:0 0 4px;max-width:64ch;font-family:var(--f-text);font-size:16px;line-height:1.6;color:var(--ink)}
 .lock{font-size:var(--fs-s);color:var(--ink3);margin:2px 0}
+dl.file dd.fv{margin:0;max-width:62ch}
 .lnk{font:inherit;background:none;border:0;padding:0;color:var(--brass-hi);cursor:pointer;text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--brass) 55%,transparent);text-underline-offset:3px}
 .lnk:hover{text-decoration-color:var(--brass-hi)}
 .vw{margin-bottom:8px}
@@ -596,7 +632,7 @@ h3.calh{display:flex;align-items:center;gap:8px}h3.calh span{margin-left:auto;di
 .cd .dn{color:var(--ink3);font-size:var(--fs-xs)}.cd .ce{color:var(--head);line-height:1.15;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.cd .cc{color:var(--moon)}
 h4{margin:16px 0 6px;font-size:var(--fs-s);font-weight:700;letter-spacing:.02em;color:var(--ink2)}
 ol.jt{list-style:none;margin:0;padding:0 0 0 14px;border-left:2px solid color-mix(in srgb,var(--brass) 40%,transparent)}
-ol.jt li{position:relative;padding:3px 0 8px 6px;font-family:var(--f-text);font-size:16px;line-height:1.5;color:var(--ink)}ol.jt li::before{content:"";position:absolute;left:-20px;top:11px;width:8px;height:8px;border-radius:50%;background:var(--brass);box-shadow:0 0 0 3px var(--sheet)}
+ol.jt li{position:relative;padding:4px 0 8px 6px;border-bottom:1px dashed rgba(255,255,255,.07);font-family:var(--f-text);font-size:16px;line-height:1.5;color:var(--ink)}ol.jt li::before{content:"";position:absolute;left:-20px;top:11px;width:8px;height:8px;border-radius:50%;background:var(--brass);box-shadow:0 0 0 3px var(--sheet)}
 ol.jt li .sub{margin-right:8px;font-family:var(--f-ui)}
 ol.jt li.old{opacity:.55}
 .now .hap{margin-top:8px;padding-top:7px;border-top:1px solid color-mix(in srgb,var(--moon) 20%,transparent)}.now .hap .btn{margin-top:5px}
@@ -613,8 +649,9 @@ ol.jt li.old{opacity:.55}
 .truth{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
 /* ---- Batch 5.2: activities, battle ---- */
 .item.mine{border-color:color-mix(in srgb,var(--moon) 50%,transparent);background:color-mix(in srgb,var(--moon) 5%,var(--card))}.item.done{opacity:.7}
-.clubs{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
-.club{border:1px solid var(--rule);border-radius:12px;padding:11px 13px;background:var(--card);display:flex;flex-direction:column;gap:2px}.club b{color:var(--head)}
+.clubs{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0 26px;border-top:1px solid var(--rule)}
+.club{border-bottom:1px solid var(--rule);padding:11px 2px 12px;display:flex;flex-direction:column;gap:2px}.club b{color:var(--head);font-size:var(--fs-m)}
+.club .btn{margin-top:4px}
 ol.ladder{list-style:none;margin:0;padding:0 0 0 16px;border-left:2px solid var(--rule2)}
 ol.ladder li{position:relative;padding:4px 0 10px 8px}ol.ladder li::before{content:"";position:absolute;left:-23px;top:9px;width:10px;height:10px;border-radius:50%;background:var(--rule2);border:2px solid var(--sheet)}
 ol.ladder li.on::before{background:var(--moon)}ol.ladder li.done::before{background:#3f9f69/*keep*/}ol.ladder li.out::before{background:var(--danger-line)}ol.ladder li.on b{color:var(--moon)}
@@ -628,7 +665,8 @@ table.shop{min-width:520px}table.shop b{color:var(--head)}table.shop .btn{white-
 .fbar{display:grid;grid-template-columns:62px 1fr 40px;gap:8px;align-items:center;font-size:var(--fs-s);color:var(--ink2)}.fbar .bar{margin:0}.fbar b{color:var(--ink);text-align:right;font-variant-numeric:lining-nums tabular-nums}
 .tq{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.07)}.tq.no{opacity:.55}.tq b{color:var(--head)}
 @media (max-width:560px){.cd{min-height:44px}.cd .ce{display:none}.cd.has .dn{color:var(--head);font-weight:700}}
-@media (max-width:560px){.dos{grid-template-columns:1fr}.por{aspect-ratio:auto;height:240px}.graph{aspect-ratio:4/5}}
+@media (max-width:560px){.dos{grid-template-columns:1fr;gap:14px}.dside{position:static;display:grid;grid-template-columns:120px minmax(0,1fr);align-items:end}.graph{aspect-ratio:4/5}
+  dl.file{grid-template-columns:1fr}dl.file dt{padding:12px 0 0;border:0}.pmt{gap:10px}}
 @media (prefers-reduced-motion:reduce){.pin.here{animation:none;box-shadow:0 0 0 4px rgba(53,224,176,.45)/*keep*/}}
 @media (max-width:560px){.grid{grid-template-columns:1fr}.dlg{max-height:calc(100dvh - 12px)}.ov{padding:6px}.bd{padding:14px}.hd{padding-left:16px}.nav{padding:0 16px;gap:16px}.ft{padding:10px 14px}}
 @media (pointer:coarse){.btn{min-height:40px}.btn.sm{min-height:36px}.tog button{min-height:38px}.nav button{padding:12px 0 13px}}
@@ -639,6 +677,19 @@ table.shop{min-width:520px}table.shop b{color:var(--head)}table.shop .btn{white-
 .feat.off{opacity:.75;border-style:dashed}.feat.core{margin-top:8px;border-color:color-mix(in srgb,var(--brass) 50%,transparent)}
 .feat .fm{min-width:0;flex:1}.feat b{color:var(--head)}.feat .tk{color:var(--moon-dim);margin-top:2px}.feat .tog{flex:0 0 auto;justify-content:flex-end}
 @media (max-width:560px){.feat{flex-direction:column;align-items:stretch}.feat .tog{justify-content:flex-start}}
+/* 1.23.0 settings: a picture per theme; on/off features are switches */
+.ths{display:grid;grid-template-columns:repeat(auto-fill,minmax(122px,1fr));gap:10px;margin:4px 0 6px}
+.th{display:flex;flex-direction:column;gap:8px;padding:8px 8px 10px;border-radius:12px;background:var(--card);border:1px solid var(--rule);text-align:left;font:inherit;font-size:var(--fs-s);color:var(--ink);cursor:pointer}
+.th:hover{border-color:var(--brass-lo)}
+.th.on{border-color:var(--brass);box-shadow:inset 0 0 0 1px var(--brass)}
+.th small{display:block;color:var(--ink3);font-size:var(--fs-xs)}
+.pv{height:42px;border-radius:8px;display:grid;grid-template-columns:1.5fr 1fr;gap:5px;padding:6px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
+.pv i{border-radius:5px}
+.sw{position:relative;flex:none;width:48px;height:28px;padding:0;border-radius:99px;border:1px solid var(--rule2);background:rgba(0,0,0,.3);cursor:pointer}
+.sw::after{content:"";position:absolute;top:4px;left:4px;width:18px;height:18px;border-radius:50%;background:var(--ink3);transition:transform .18s ease}
+.sw[aria-checked="true"]{background:color-mix(in srgb,var(--brass) 75%,var(--card));border-color:var(--brass)}
+.sw[aria-checked="true"]::after{transform:translateX(20px);background:var(--head)}
+.sw:disabled{opacity:.45;cursor:not-allowed}
 p.tot{margin:12px 0 4px;font-size:var(--fs-m)}p.tot b{color:var(--head)}
 .wxi{font-style:normal}
 .note.fc{background:#e7eef3/*keep*/;border-top:4px solid #4e7a8f/*keep*/}.note.fc::before{background:#4e7a8f/*keep*/}.note.fc .fcb{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:var(--fs-s)}
@@ -677,6 +728,11 @@ function setTheme(id) {
   if (!THEMES.themes[id]) return;
   try { localStorage.setItem(THEME_KEY, id); } catch (e) { toastr.warning('This browser does not allow saving the theme.', 'Eldrasil'); }
   applyTheme();
+}
+// 1.23.0: a small picture of a theme (band, glass in its bezel, on the panel colour) for Settings; "keep" so the current theme leaves it alone
+function themeSwatch(id) {
+  const m = (THEMES.themes[id] || {}).map || {}, c = rgb => `rgb(${m[rgb] || rgb})/*keep*/`;
+  return `<span class="pv" style="background:${c('28,34,48')}"><i style="background:linear-gradient(180deg,${c('102,110,128')},${c('42,47,59')})"></i><i style="background:radial-gradient(${c('31,74,79')},${c('14,33,36')});box-shadow:inset 0 0 0 2px ${c('201,163,100')}"></i></span>`;
 }
 function applyTheme() { const st = root && root.querySelector('style'); if (st) st.textContent = themed(CSS); render(); }
 
@@ -818,7 +874,8 @@ function renderBuilder(S) {
   const errStep = { identity: V.E.identity.length, power: V.E.power.length, techs: V.E.techs.length, pacts: V.E.pacts.length, hidden: V.E.hidden.length };
   const steps = STEPS.filter(([id]) => id !== 'start' || !draftBuilt);
   const cur = steps.findIndex(([id]) => id === view.step);
-  const nav = steps.map(([id, lab], k) => `<button data-step="${id}" class="${view.step === id ? 'on' : ''} ${errStep[id] && k < cur ? 'err' : ''}">${lab}</button>`).join('');
+  // 1.23.0 (UI overhaul): the steps are a real sequence, so they carry numbers (done ones in brass, one with an error in red)
+  const nav = steps.map(([id, lab], k) => `<button data-step="${id}" class="${view.step === id ? 'on' : ''} ${errStep[id] && k < cur ? 'err' : k < cur ? 'done' : ''}"><i class="n">${k + 1}</i>${lab}</button>`).join('');
   const body = ({ start: bStart, identity: bIdentity, power: bPower, techs: bTechs, pacts: bPacts, hidden: bHidden, review: bReview })[view.step](d, S, V);
   const i = steps.findIndex(([id]) => id === view.step);
   const back = i > 0 ? `<button class="btn" data-step="${steps[i - 1][0]}">Back</button>` : '';
@@ -826,7 +883,7 @@ function renderBuilder(S) {
     ? `<button class="btn pri" data-act="commit" ${V.blocking || view.busy ? 'disabled' : ''}>${draftBuilt ? 'Save changes' : 'Register student'}</button>`
     : `<button class="btn pri" data-step="${steps[i + 1][0]}">Next</button>`;
   return `<div class="dlg" tabindex="-1"><div class="hd"><h2>${draftBuilt ? 'Student Builder: amend your file' : 'Student Builder'}</h2><button class="x" data-act="close" aria-label="Close">×</button></div>
-    <nav class="nav">${nav}</nav><div class="bd">${body}</div>
+    <nav class="nav steps">${nav}</nav><div class="bd">${body}</div>
     <div class="ft">${back}<span class="grow">${V.blocking ? V.blocking + ' thing' + (V.blocking > 1 ? 's' : '') + ' to fix before registering' : ''}</span>${next}</div></div>`;
 }
 const errs = list => list.map(e => `<div class="errl">${esc(e)}</div>`).join('');
@@ -1384,9 +1441,12 @@ function pSettings(S) {
     const lv = featureLevel(S, f), isOn = lv !== 'off', rules = Math.max(0, FCOST.rules[f.id] || 0), st = featureState(S, f);
     if (isOn) on += rules + st; else saved += rules + st;
     const ctl = f.control === 'levels' ? f.levels : [['on', 'On'], ['off', 'Off']];
+    // 1.23.0 (UI overhaul): an on/off feature is one switch (it sends the other value); a feature with levels keeps its choices
+    const ctlH = f.control === 'levels' ? `<div class="tog">${ctl.map(([v, l]) => `<button data-act="featlv" data-f="${esc(f.id)}" data-v="${v}" class="${lv === v ? 'on' : ''}" aria-pressed="${lv === v}" ${view.busy ? 'disabled' : ''}>${l}</button>`).join('')}</div>`
+      : `<button class="sw" role="switch" aria-checked="${isOn}" aria-label="${esc(f.name)}" data-act="feat" data-f="${esc(f.id)}" data-v="${isOn ? 'off' : 'on'}" ${view.busy ? 'disabled' : ''}></button>`;
     return `<div class="feat${isOn ? '' : ' off'}"><div class="fm"><b>${esc(f.name)}</b><div class="sub">${esc(f.desc)}</div>
-      <div class="sub tk">rules ≈${rules} · state ≈${st}${f.unit && st > 1 ? ` (${esc(f.unit)})` : ''} tokens${isOn ? '' : (f.paths || []).length ? ' · off: parked, restored when you turn it on' : ' · off'}</div></div>
-      <div class="tog">${ctl.map(([v, l]) => `<button data-act="${f.control === 'levels' ? 'featlv' : 'feat'}" data-f="${esc(f.id)}" data-v="${v}" class="${lv === v ? 'on' : ''}" aria-pressed="${lv === v}" ${view.busy ? 'disabled' : ''}>${l}</button>`).join('')}</div></div>`;
+      <div class="sub tk">About ${rules} tokens of rules, ${st} of state${f.unit && st > 1 ? ` (${esc(f.unit)})` : ''}${isOn ? '' : (f.paths || []).length ? '. Off: parked, restored when you turn it on' : '. Off'}</div></div>
+      ${ctlH}</div>`;
   }).join('');
   const featPaths = FEATS.flatMap(f => f.paths || []);
   const core = omit$(S); for (const p of featPaths) _.unset(core, p);
@@ -1394,7 +1454,7 @@ function pSettings(S) {
   const th = themeId();
   return `<h3>Appearance</h3>
   <p class="hint">Colours of the panels and the bracelet. Kept in this browser only; nothing is written to the chat.</p>
-  <div class="tog">${(THEMES.order || []).map(k => `<button data-act="theme" data-v="${esc(k)}" class="${th === k ? 'on' : ''}" aria-pressed="${th === k}">${esc(THEMES.themes[k].name)}</button>`).join('')}</div>
+  <div class="ths">${(THEMES.order || []).map(k => { const [, nm, why] = /^(.*?)(?: \((.*)\))?$/.exec(THEMES.themes[k].name); return `<button data-act="theme" data-v="${esc(k)}" class="th${th === k ? ' on' : ''}" aria-pressed="${th === k}">${themeSwatch(k)}<span>${esc(nm)}<small>${esc(why || '')}</small></span></button>`; }).join('')}</div>
   <h3>Features</h3>
   <p class="hint">Turn off what you do not use to keep the prompt short. A feature that is off disappears from the narrator's state and rules, its tabs and chips hide, and whatever it held is kept aside (parked) until you turn it back on. Numbers are estimates (≈3.6 characters per token).</p>
   <div class="feats">${rows}</div>
@@ -1492,8 +1552,8 @@ const nameOf = (id, S, full) => { const n = npcOf(id); if (!n) return id; return
 const initials = s => String(s).split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
 function avatar(id, S, cls = 'av') {
   const n = npcOf(id), label = n ? (knowsName(id, S) ? (/\bxs\b/.test(cls) ? id.slice(0, 2) : id) : '?') : initials(id);
-  const ring = n ? n.dc : '#6f737b';
-  return n && n.t ? `<img class="${cls}" style="border-color:${ring}" src="${esc(imgURL(n.t))}" alt="" data-fb="${esc(label)}" data-fbclass="${cls} fb">` : `<span class="${cls} fb" style="border-color:${ring}">${esc(label)}</span>`;
+  const ring = n ? n.dc : '#4a546c', st = `border-color:${ring};--ring:${ring}`;   // 1.23.0: --ring for the people cards
+  return n && n.t ? `<img class="${cls}" style="${st}" src="${esc(imgURL(n.t))}" alt="" data-fb="${esc(label)}" data-fbclass="${cls} fb">` : `<span class="${cls} fb" style="${st}">${esc(label)}</span>`;
 }
 const TOPIC = l => { l = l.toLowerCase(); return /magic/.test(l) ? 'magic' : /pact/.test(l) ? 'pact' : /goal/.test(l) ? 'goal' : /backstory|history|family|home/.test(l) ? 'backstory' : /relation/.test(l) ? 'relationship' : 'other'; };
 // v1.0.3 (F13): the AI's Secrets_revealed list is capped; $ui.secrets is the engine's permanent ledger. Unlocks read both.

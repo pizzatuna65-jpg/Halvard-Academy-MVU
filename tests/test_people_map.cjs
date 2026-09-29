@@ -16,10 +16,10 @@ runEngine(S, B, 'Irene Chanare adjusted her badge.');
 ok(U.knowsName('Irene', S), 'once the story names Irene, the UI does too');
 // dossier gating
 U.view.arg = 'Etnie'; let h = U.PANELS.npc.render(S);
-ok(/<h3>Appearance/.test(h) && /<h3>Hates/.test(h) && !/<h3>Personality/.test(h), 'Etnie at Rank 3: Hates visible, Personality (Rank 4) locked');
+ok(/<dt>Appearance/.test(h) && /<dt>Hates/.test(h) && !/<dt>Personality/.test(h), 'Etnie at Rank 3: Hates visible, Personality (Rank 4) locked');
 ok(/Rank 4: [^<]*Personality/.test(h), 'locked fields listed as "Still to learn"');
 U.view.arg = 'Irene'; h = U.PANELS.npc.render(S);
-ok(/<h3>Appearance/.test(h) && !/<h3>Speech/.test(h), 'Irene at Rank 0: appearance only');
+ok(/<dt>Appearance/.test(h) && !/<dt>Speech/.test(h), 'Irene at Rank 0: appearance only');
 // story-only (rank 99) field needs Secrets_revealed
 const sec = Object.entries(U.DATA.npcs).find(([, n]) => n.fl.some(f => f[2] >= 99));
 const [sid, sn] = sec, f99 = sn.fl.find(f => f[2] >= 99);
