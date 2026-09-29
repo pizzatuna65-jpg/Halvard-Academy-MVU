@@ -233,7 +233,7 @@ Club venues: Duelling – Combat Grounds (headquarters: Sparring Pavilion); Socc
     event can only run once their truth has come out in play; without that, the bond stays at Rank 8, and that is fine.
   - **Krieg:** Rank 1 comes from his introduction. After that his bond gains **+14 XP every Monday**, only while {{user}}'s
     Doves reputation is **≥ +1**; he gives no XP for talks, hangouts or gifts.
-- **Rank 8 branches** (1.6.8, owner-approved 2026-09-26, `planning/DRAFT_rank8_branches.md`): each NPC allows some of best
+- **Rank 8 branches** (1.6.8, owner-approved 2026-09-26): each NPC allows some of best
   friend, romance and sworn rival (`data/npc_canon.json` `branch`): **A** all three, **B** best friend or rival, **C** best friend or
   romance, **D** best friend only. A rivalry opens only under Trust 50; a C or D bond waits for Trust 50 instead. Romance is never
   possible for B and D, whatever the Settings say. The Cast Sheet adds the NPC's `romance` or `rival` line (in `voice`) for the
@@ -302,7 +302,7 @@ Columns: id — full name · group · dorm/race · role · club · openness · h
 - **Castor** — Castor Moretti · Year 1 · Viridian/Human · - · Academy Newspaper · guarded · yes · Calm, mature, melancholic.
 - **Alyssa** — Alyssa Edelweiss · Year 1 · Sky/Human · - · Drawing Club · normal · yes · Quiet, observant and almost expressionless, but friendly and easy to talk to: she listens properly, answers honestly, and never makes anyone
 
-**Incoming first-years, cohort 2 (arrive in campaign Year 2; 1.7.0, owner-approved `planning/DRAFT_cohort2_npcs.md`)**
+**Incoming first-years, cohort 2 (arrive in campaign Year 2; 1.7.0, owner-approved)**
 - **Linus** — Linus Tallyworth · Year 1 from campaign Year 2 · Viridian/Human · the Tally · Academy Newspaper · open · no · Excitable, argumentative, encyclopedic, loud and good-natured.
 - **Maple** — Maple Fernhollow · Year 1 from campaign Year 2 · Sky/Beastkin (red panda) · Greater Spirit (Sobek) · Gardening Club · normal · no · Sweet, gentle, earnest and anxious.
 - **Nerys** — Nerys Silvarenne · Year 1 from campaign Year 2 · Fire/Elf · House Silvarenne · Cooking Club · normal · no · Deadpan, stoic and unpredictable; a new hobby every week.
@@ -371,11 +371,11 @@ The 2026-09 pass filled every gap for Halvard students, staff, Doves, Cathedral 
 - **Althair:** Backstory stays empty on purpose (canon: never settle it).
 - **Tension (1.3.8, owner-approved):** every bonded NPC has a tension category in `data/tension.json` (withdrawn, social,
   confrontational, authority, dangerous) or a personal override (Etnie, Kanae, Althair, Ezrel); a new NPC needs one.
-- **Trust (1.4.3, owner-approved, planning/DRAFT_trust.md):** `data/trust.json`. The Trust category is the NPC's
+- **Trust (1.4.3, owner-approved):** `data/trust.json`. The Trust category is the NPC's
   openness (`data/bond_openness.json`: open / guarded / closed; anyone else normal), so a new NPC only needs an openness tag.
   Personal overrides: Etnie, Kanae, Althair, Ezrel, Caine, Krieg. Dorm Heads can be easier on their own students
   (`dorm_head`; so far Ottavio and Sky: bond XP x1.5, Tension rises x0.5, eases x2, trusts like an open NPC).
-- **Grey areas (1.4.4, owner-approved, DRAFT_greyarea.md):** deeds are judged by intent (careless = small, no spread), teasing both
+- **Grey areas (1.4.4, owner-approved):** deeds are judged by intent (careless = small, no spread), teasing both
   sides enjoy is no offence (each Tension category and override has a `banter` line: how they take teasing), kindness (help,
   keep, defend) eases Tension by category (`kind_ease`), `understood` gives back part of a Trust drop, and maximum Tension breaks
   one rank per blow-up. A new NPC with an override needs `banter` and `kind_ease` too.
@@ -383,7 +383,7 @@ The 2026-09 pass filled every gap for Halvard students, staff, Doves, Cathedral 
   fail her third year stays in `<narrator_only>`.
   Since 1.3.1 (owner playtest) she is not bonded in message 1: her bond starts at Rank 3 the first time she and {{user}} meet
   (`data/bond_rules.json` `start`).
-- **Voice canon (1.6.3, owner-approved G1, planning/DRAFT_voices.md):** `data/npc_canon.json` → `voice[id]` and `change[id]`,
+- **Voice canon (1.6.3, owner-approved G1):** `data/npc_canon.json` → `voice[id]` and `change[id]`,
   printed in the NPC's Cast Sheet. Done for Etnie, Irene, Aiden, Castor, Zara, Kanae, Rei, Caine (G1, 1.6.3) and Caralynn, Percival,
   Trixie, Vera, Alyssa (G2, 1.6.4) and Lenna, Saffi, Idris, Dante, Florian, Tilly (G3, 1.6.5) and Caspian, Royhan, Sophia,
   Gareth, Ruby (G4, 1.6.6) and Gavlan, Yvette, Baelin, Layla, Vallie, Kuroo, Mimosa, Althair, Ezrel, Ottavio, Krieg, Milena,
@@ -421,7 +421,7 @@ This brief: ~7,800 tokens.
 
 ## Approved mood, gifts and birthdays (v1.8.0, 2026-09-28)
 
-Implemented from `DRAFT_mood_fatigue.md` and `DRAFT_gift_prefs.md`. All 44 bonded NPCs have profiles in `data/npc_moods.json` and `data/gift_prefs.json`. The latter is the full source for all four personal taste lists, exact items, category matches and universal fallbacks. Birthday and taste discovery in the player UI still follows bond knowledge. Ezrel has no birthday.
+Implemented in 1.8.0. All 44 bonded NPCs have profiles in `data/npc_moods.json` and `data/gift_prefs.json`. The latter is the full source for all four personal taste lists, exact items, category matches and universal fallbacks. Birthday and taste discovery in the player UI still follows bond knowledge. Ezrel has no birthday.
 
 | NPC | Birthday | Loves | Hates |
 |---|---|---|---|

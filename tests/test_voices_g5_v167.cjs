@@ -38,7 +38,6 @@ ok(/The Fire Dormitory's door becomes the one door \{\{user\}\} can knock on at 
 ok(/If anyone ever corners \{\{user\}\}, the gloves come off\.$/.test(B.Layla.r10.text) && !/Yvette/.test(B.Layla.r10.text) && B.Layla.r10.secret === 'The last time the gloves came off, it was for Yvette.', 'Layla Rank 10: Yvette moved to the secret side');
 const built = rd('dist/Eldrasil_Halvard.json') + rd('src/scripts/engine.js');
 ok(!/Her rooms in the Fire Dormitory become the one door/.test(built) && !/the way they once cornered Yvette/.test(built), 'the old wording is gone from the built card and engine');
-ok(/<narrator_only>The last time the gloves came off, it was for Yvette\.<\/narrator_only>/.test(rd('docs/design/bond_rewards.md')), 'the design record carries the change');   // 1.9.6: the planning/ duplicate was removed
 
 // the rest: a line from each group
 ok(/Stage with \{\{user\}\} \(Rank 10\):[^\n]*He still searches, questions and watches them like everyone else/.test(at('Krieg', 10)), 'Krieg at Rank 10: still watches {{user}}, as his benefit says');

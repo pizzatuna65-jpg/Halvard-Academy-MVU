@@ -6,8 +6,11 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.20.0 (engine refactor): the two checks in its section below.
+- Basics that only ST can show: the trim regex (minDepth 24) trims the far chat; `[config_override]` is picked up (MVU panel
+  shows "overriding"); `send_date` is available when the seed is first set; the display regex `maxDepth` on hidden messages.
 - The playtest follow-up releases v1.9.1–v1.9.5 have not yet been checked in a connected session (sections below).
-- After them, the Year 1 / Year 2 smoke playtest from `planning/DRAFT_playtest_batches_2026-09-28.md` (cross-batch acceptance):
+- After them, a Year 1 / Year 2 smoke playtest (cross-batch acceptance):
   sorting, first-year dialogue, speed travel, spell duelling, a winter water hit, mana recovery, Bag/shop links and swipe.
   Record narrator-only variability as observed examples.
 - v1.16.0 (ambience): the four checks in its section below.

@@ -77,17 +77,16 @@ w('Forbidden arts (lore 32): ' + (fa.group(0) if fa else '') + ' Pacting = a pac
 w('Races: Human, Elf, Beastkin (animal ears/tail; the type varies). The player\'s dorm is set by the Arbiter Stone at the Entrance Event (M1 W1 Mon).\n')
 
 w('## 2. Calendar and timetable\n')
-tpl = open(P('src/scripts/engine.template.js'), encoding='utf-8').read()
-ev = re.findall(r"\{ m: (\d+), w: (\d), d: (\[[^\]]*\]|\w+), t: '([^']+)'", tpl)
+CAL = json.load(open(P('data/calendar.json'), encoding='utf-8'))   # 1.19.0: the calendar's single source
+ev = [(e['m'], e['w'], ','.join(e['d']) if isinstance(e['d'], list) else str(e['d']), e['t']) for e in CAL['events']]
 w('Year = 12 months × 4 weeks × 7 days (Mon–Sun). Dates are written "M3 W2 Thu". Classes Mon–Sat in three periods: 08:00–10:00, 10:00–12:00, 13:00–16:00; Saturday afternoon is club time (13:00–16:00); curfew 20:00.\n')
 w('Academy calendar (fixed events):\n')
 for m, wk, d, t in ev:
     d = re.sub(r"[\[\]' ]", '', d).replace('MON_THU', 'Mon–Thu').replace('MON_FRI', 'Mon–Fri').replace('MON_SAT', 'Mon–Sat').replace('ALL', 'all week')
     w(f'- M{m} W{wk} {d}: {t}')
-tt = re.search(r'const TIMETABLE = \{([\s\S]*?)\};', tpl).group(1)
 w('\nWeekly timetable ([M] mixed dorms, [D] per dorm):')
-for day, cells in re.findall(r"(\w{3}): \[([^\]]*)\]", tt):
-    w(f'- {day}: ' + ' | '.join(re.findall(r"'([^']*)'", cells)))
+for day, cells in CAL['timetable'].items():
+    w(f'- {day}: ' + ' | '.join(cells))
 w('')
 
 w('## 3. Places (names to use in scenes)\n')
@@ -182,10 +181,10 @@ for gid, gname, pred in GROUPS:
     open(os.path.join(OUT, f'lore_{gid}.md'), 'w', encoding='utf-8').write(body)
     files.append((gid, gname, ids, body))
     w(f"- `lore_{gid}.md` — {gname}: {', '.join(ids)} ({tok(body)})")
-for f, d in (('bond_rewards.md', 'Rank 5 gift and Rank 10 benefit for every bonded NPC, plus the mask → truth and Krieg bond models'),
-             ('reputation.md', 'Academy / Student / Doves reputation: levels, Rep XP triggers, effects per level'),
-             ('training.md', 'Mana pool and Stamina training: capped gains (at most 2× the starting value in total, about one academic year to max), partner bonuses')):
-    w(f'- `{f}` — {d}')   # docs/design/ (Indonesian; attach with the brief)
+for f, d in (('data/bond_rewards.json', 'Rank 5 gift and Rank 10 benefit for every bonded NPC, plus the mask → truth and Krieg bond models'),
+             ('data/reputation.json', 'Academy / Student / Doves reputation: levels, Rep XP triggers, effects per level'),
+             ('data/training.json', 'Mana pool and Stamina training: capped gains (at most 2× the starting value in total, about one academic year to max), partner bonuses')):
+    w(f'- `{f}` — {d}')   # the current data (the 1.3.0 design notes are in git history)
 brief = '\n'.join(b) + '\n'
 open(os.path.join(OUT, 'NPC_BRAINSTORM_BRIEF.md'), 'w', encoding='utf-8').write(brief + f'\nThis brief: {tok(brief)}.\n')
 print('brief', tok(brief), '|', ', '.join(f'{g} {tok(bd)}' for g, _, _, bd in files))

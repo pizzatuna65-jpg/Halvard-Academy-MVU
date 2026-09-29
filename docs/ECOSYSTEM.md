@@ -30,7 +30,7 @@ They keep a second game state in a hidden HTML block that must sit "at the absol
   - Task 9 puts `<UpdateVariable>` last.
   - Task 10 (Plot Momentum; task 11 before 1.11.2) draws world events only from the sources the card allows (the card lists them; since 1.6.2 the CoT no longer copies the list) and nobody arrives without the time to get there.
   - Since 1.6.2 the CoT names no card field outside the `Now:` line; the Bridge is the one Eldrasil-specific prompt.
-  - 1.11.2 (preset audit, `planning/DRAFT_preset_audit.md`): no DnD d20 rolls next to the card's Fortune roll, no checks for toggles that stay OFF on Gemini (Staccato, Anti-Briefing, Quant Hardening), and the old task 8 is gone, so the tasks run 0-10.
+  - 1.11.2 (preset audit): no DnD d20 rolls next to the card's Fortune roll, no checks for toggles that stay OFF on Gemini (Staccato, Anti-Briefing, Quant Hardening), and the old task 8 is gone, so the tasks run 0-10.
   - The two Gemini-OFF checks are now conditional.
 - **Gemini jailbreak:** genre set to "magic academy, slice of life with a mystery, dark where earned". It also respects the card rule that {{user}}'s power level is the player's choice.
 - **Pop in Graphics:** letter, notice and page templates replace phone and terminal. The bracelet and stats are never drawn as graphics.
