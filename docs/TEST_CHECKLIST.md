@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.30.1 (playtest fixes): the three connected-session checks in its section below.
 - v1.30.0 (new mark formula, mastery perks): the three connected-session checks in its section below.
 - v1.29.0 (non-magic crafts, masterwork): the three connected-session checks in its section below.
 - v1.28.0 (magical crafting): the four connected-session checks in its section below.
@@ -57,6 +58,12 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.30.1 — Playtest fixes: area gates, rival teams, malformed update blocks
+
+1. Walk Courtyards → Grassy Field → Observation Tower → Old Hut → Courtyards and open the Map at each stop: the Observation Tower and Old Hut markers show from the Grassy Field until you are back at the Courtyards, then hide. Same for the Boathouse (Fishing House, Willow Island).
+2. When a reply's update block misses a `<JSONPatch>` tag (Gemini Flash does this now and then), the location and time still change and the Student file → Log says the engine read the malformed block. If the JSON itself is broken, a toast asks to swipe. Check in the browser console that MVU shows no error for the recovered commands.
+3. If the narrator puts a rival academy student (Mirelle, Kira, Theodore, Elion…) into a scene on campus, the bracelet does not show them and the Log explains why.
 
 ### v1.30.0 — New mark formula and mastery perks
 

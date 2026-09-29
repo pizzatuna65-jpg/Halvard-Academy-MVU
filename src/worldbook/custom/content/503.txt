@@ -21,7 +21,7 @@ End EVERY reply with exactly one state-update block, after the story text:
 </JSONPatch>
 </UpdateVariable>
 Rules:
-- The JSONPatch must be a valid JSON array: double quotes, no comments, no trailing commas.
+- The JSONPatch must be a valid JSON array inside both tags, <JSONPatch>[ … ]</JSONPatch>: without them the whole update is lost. Double quotes, no comments, no trailing commas.
 - ops: replace | delta (numbers only) | insert (new key, or append to a list with "/-"; "add" also works) | remove | move.
 - Never patch a field whose name starts with "_" or "$".
 - If nothing else changed, still output the block with at least the Time update.

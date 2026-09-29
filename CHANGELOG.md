@@ -1,7 +1,29 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.30.1 — Playtest fixes: area gates, rival teams, malformed update blocks (2026-09-30)
+
+Owner playtest of a new chat (Gemini 3.8 Flash), with the exported chat as evidence. Decisions touched: **"Gated places"** (changed
+at the owner's request) and a new "Rival academy teams" entry; DECISIONS §11 gains the verified MVU parsing facts.
+- **Map gates only in their area** (owner: "from the Grassy Field the Observation Tower and Old Hut unlock; they stay while I am
+  there, and lock again at the Courtyards"). Before, a gate opened for good after the first visit. Now the far-grounds places show
+  while {{user}} is at the gate place or behind the same gate, and hide back on the main grounds (`gateOpen` in `20_map.js`).
+- **Rival academy students are not at Halvard.** In reply 18 the narrator invented a Medical Centre healer and keyed her
+  "Mirelle Lullwyn" in `Scene.Present`; the engine took her for Ashvale's Mirelle and loaded her sheet. The engine now removes a
+  rival team member from a scene on campus (unless on a trip or at the Kingdom Competition) and tells the narrator to give invented
+  people their own names.
+- **Location not updating** was two replies whose whole update MVU dropped: reply 4 had no `<JSONPatch>` tags, reply 24 no opening
+  `[` and no `</JSONPatch>`. MagVarUpdate reads a patch only inside both tags (verified in its source, b13b43b). The engine now
+  listens to `COMMAND_PARSED`: when MVU found no JSON patch in a reply with an `<UpdateVariable>` block, it reads the list itself
+  and adds the same commands MVU would have made (checked identical against MVU's own `extractJsonPatch`). The Log says so; a block
+  whose JSON cannot be read gets a toast to swipe. 503 now says both tags are required.
+- Also seen in the export: floors 1–4 (the Builder entries and reply 4) carry no MVU data; the cause is not established (no
+  MVU cleanup snapshot marks). Later floors are intact, and play continued from the Builder's state.
+- Save fixture v1.30.0. Cards rebuilt. Tests: new `test_playtest_v1301.cjs` (21 checks, using the two dropped blocks from the chat);
+  map gates, people map, saves, tokens, cast sheet, activities, extras, audit and lint pass. Recovery inside SillyTavern is a live
+  check (TEST_CHECKLIST).
 
 ## v1.30.0 — New mark formula and mastery perks (2026-09-30)
 
@@ -67,29 +89,6 @@ Batches 2 and 3 of the owner-approved `planning/DRAFT_proficiency_practice.md` i
 - Student Builder offers Normal or Custom starting ranks. Studies shows a six-axis chart, XP, weekly progress and practice places. Old saves receive a small estimate and a one-time starting-rank choice; the 1.25.0 save fixture is retained.
 - Activities gains Practice after the first training place is discovered. `/Practice` checks action, both endpoints' location, elapsed time, class hours, daily repeat, partner, club, weather, season, dorm and weekly cap. It can count as ordinary mana/stamina training, study or a paid animal-care shift. `<now>` lists available actions at the current place.
 - Build: main card and three TEST cards regenerated. New focused tests cover migration, read-only ranks, XP sources, place/time/partner rejection and report clearing. Full suite and live SillyTavern checks are recorded separately.
-
-## v1.25.0 — Red "new" dots (2026-09-30)
-
-Owner: "a red dot in the UI to show that a new UI has unlocked". Batch 1 of the owner-approved `planning/DRAFT_proficiency_practice.md`
-(6 batches: dots, proficiency stats, Practice, crafting, non-magic crafts, grades and mastery). Decisions touched: none changed;
-DECISIONS §6 gains one line (where "seen" is kept) and §11 one verified fact.
-- **Dots:** a small red dot on a bracelet button (Student file, Bag, People, Map, Notebook) whose panel holds something new; on the
-  tab that is new (Notice Board, Letters, Mystery Board, Competition, Projects, Trips, Bag, Hidden, Gifts & perks); on a person just
-  met (People, until the dossier is opened); on a Map marker whose place has a story heard but not read (the card opens its lore
-  with a dot, then it counts as read). A button's dot goes when its panel is opened; a tab's or a person's when it is opened.
-  Things that change every turn (points, time, weather, bond XP) never get a dot. Colour: new token `--notify` in every theme;
-  map markers keep fixed colours (DECISIONS "Themes never touch the map").
-- **Where "seen" lives:** Tavern Helper's chat variables (`chat_metadata.variables.eld_seen`, saved with the chat), not the message
-  variables (no hidden message per click, nothing on swipes) and not the browser (DECISIONS §6). The panels write it; the bracelet
-  only reads it (`eldrasil:news` tells it to redraw). Verified in JS-Slash-Runner `src/function/variables.ts` (chat =
-  `chat_metadata.variables`, `saveMetadataDebounced`) and MagVarUpdate `update_variables.ts` (writes only its own keys there).
-  On an older chat everything already open counts as seen on the first run, so no flood of dots.
-- **Code:** `src/ui/news.shared.js` (new; pasted into the bracelet and the panels by `gen_ui.py`), `ui.template.js` (store, open,
-  render), People, Map, Notebook and Activities parts, the bracelet buttons, `make_themes.py` (`notify`).
-- Tests: `test_news_v1250.cjs` (26 checks: first run, panel vs tab vs item, swipe back, feature off, lore on the map, the bracelet
-  never writes); `test_saves`, `test_activities_b5`, `test_notebook`, `test_builder`, `test_settings_v199`, `qa_static`, lint pass.
-  Browser preview: dots on the bracelet buttons and the Notebook tabs, a person's dot, the marker and lore dot on the Map. Save
-  fixture `save_1.24.3.json` added.
 
 ## Release index (one line per release, oldest first)
 
@@ -182,3 +181,4 @@ DECISIONS §6 gains one line (where "seen" is kept) and §11 one verified fact.
 - **v1.28.0 (2026-09-30):** Batch 4: Fortune-based magical crafting, handmade Bag items and effects, foraged reagents, repair/enchant, and capped Apothecary sales.
 - **v1.29.0 (2026-09-30):** Batch 5: non-magic crafts (cooking, needlework, drawing, carving, calligraphy, smithing), four ingredients, masterwork from craft Projects.
 - **v1.30.0 (2026-09-30):** Batch 6: marks from preparation, proficiency and attendance plus a seeded exam-day roll; Rank 5 mastery perks.
+- **v1.30.1 (2026-09-30):** Playtest fixes: map gates open only in their area; rival academy students kept off Halvard's grounds; malformed update blocks recovered.

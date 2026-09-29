@@ -28,6 +28,8 @@ Build order, generated files and test commands: `docs/BUILD.md`.
 | Reputation, training, grades | `data/reputation.json`, `training.json`; `stepReputation`, `stepTraining`, `stepSchoolWeek` (`markUp`, `GRADE_W`, `EXAM_DAY`, per-subject `held`) | `test_grades_v1150.cjs`, `test_mastery_v1300.cjs` |
 | Proficiency and Practice | `data/club_stats.json`, `practice.json`; `stepProficiency`, `pProficiency`, `acPractice` | `test_proficiency_v1260.cjs`, `test_practice_v1270.cjs` |
 | Mastery perks (Rank 5) | `MASTERY`, `profRankOf`; `stepProficiency` (`P.mastery`, `$ui.mastery`), `stepMagic` (Arcane scholar), `stepVitals` (Formidable), `stepBonds` (Consummate: `CONSUMMATE_GROUPS`, `NOBLES`), 504 mastery line, `MASTERY_PERKS` in `ui.template.js` | `test_mastery_v1300.cjs` |
+| Malformed update blocks | `recoverPatch`, `patchCommands` and the `COMMAND_PARSED` listener at the end of `engine.template.js`; 503 format rule | `test_playtest_v1301.cjs` |
+| Map gates (far grounds) | `gateOpen`, `discovered` in `src/ui/parts/20_map.js`; `data/locations.json` `gate` | `test_playtest_v1301.cjs`, `test_map_gates_v1240.cjs` |
 | Crafting (magical and non-magic), masterwork | `data/crafts.json` (`groups`: Practice actions, tools, experts, mishaps; `masterwork`); `stepProficiency` craft helpers and `finishMasterwork`, `stepExposure` heal, `stepBag` bloom, `acPractice` recipes | `test_crafting_v1280.cjs`, `test_crafts_v1290.cjs`, `505.template.ejs`, `506.template.ejs` |
 | Weather, ambience, happenings | `stepWeather`, `stepExposure`, `stepAmbience`; `data/ambience.json`, `happenings.json`, `wind_casting.json` | |
 | Map, pins, map variants, portraits | `data/map_pins.json`, `assets_manifest.json`, `src/ui/parts/20_map.js` (`discovered`, `mapView` zoom, `loreRow`), `tools/curate_data.py` `FAR_LEGS`, `GATES`, `YEAR_FLOORS` | assets are pinned to a commit (DECISIONS "Assets") |
@@ -63,7 +65,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepFortune` (5c) | seeded d100, Rank 10 suspension | |
 | `stepSchoolWeek` (5d) | attendance (and per-subject classes held), weekly recap, small scenes, study and exams (mark formula) | `TIMETABLE`, grades |
 | `stepNamesInProse` (6a) | names revealed by the prose | `NAME_RX` |
-| `stepBonds` (6) | XP, ranks, gates, gifts, rewards, Tension/Trust; exports `canon`, `npcAway`, `PACE` | bond data §7 |
+| `stepBonds` (6) | XP, ranks, gates, gifts, rewards, Tension/Trust, rival teams off Halvard's grounds; exports `canon`, `npcAway`, `PACE` | bond data §7 |
 | `stepBondMemory` (6c) | Knows, Imprints, Mind, Next, betrayal spread | |
 | `stepProficiency` (6a) | six stats, XP sources, weekly caps, Practice, crafting, masterwork Projects, Apothecary sales, mastery perks | `data/practice.json`, `club_stats.json`, `crafts.json` |
 | `stepTraining` (6b) | Mana pool / Stamina sessions (`trainRoom`, `trainAdd`, `trainJump` are module functions) | `data/training.json` |

@@ -1770,6 +1770,13 @@ function stepBonds(c) {
     if (mended.length) log.push(`Bond record${mended.length > 1 ? 's' : ''} for ${mended.join(', ')} came back without facts or milestones; what was known was kept.`);
   }
   const seen = `${stamp(S.World)} at ${S.World.Location}`;
+  // 1.30.1 (owner playtest: an invented Medical Centre healer was keyed "Mirelle Lullwyn"): the other academies' teams are never at
+  // Halvard; their members meet {{user}} at the Kingdom Competition, on a trip or elsewhere off the grounds
+  const onGrounds = !!plName(placeOf(S.World.Location)) && !(S.Trip && S.Trip.Active) && !evs.some(e => /Kingdom Competition/.test(e.t));
+  for (const id of Object.keys(S.Scene.Present)) if (onGrounds && NO_BOND.has(id)) {
+    delete S.Scene.Present[id];
+    log.push(`${id} is on a rival academy's team and is never at Halvard (the teams meet at the Kingdom Competition); ${id} was removed from Scene.Present. Someone you invented gets a full name of their own (Extras), never a roster name.`);
+  }
   for (const id of Object.keys(S.Scene.Present)) {
     if (NPC_IDS.has(id) && !(id in S.Bonds) && (ARRIVES[id] || 1) > S.World.Year) {   // v1.0.3: incoming cohort, not here yet
       log.push(`${id} is not at Halvard yet (arrives as a first-year in Year ${ARRIVES[id]}); no bond was started. Check who this is.`);
@@ -3576,12 +3583,56 @@ function collapseTrimmed(chat) {
 if (typeof eventOn === 'function' && typeof tavern_events === 'object' && tavern_events && tavern_events.CHAT_COMPLETION_PROMPT_READY) {
   eventOn(tavern_events.CHAT_COMPLETION_PROMPT_READY, data => { try { collapseTrimmed(data && data.chat); } catch (e) { console.error('[Eldrasil trim]', e); } });
 }
+// 1.30.1 (owner playtest: two replies of fourteen lost their whole update, and with it the new location): MagVarUpdate reads a
+// patch only inside a complete <JSONPatch>…</JSONPatch> (update_variables.ts extractCommands, checked at MagVarUpdate b13b43b),
+// so a block without the tags, or without the closing one, was dropped. When MVU found no JSON patch in a reply that has an
+// <UpdateVariable> block, the engine reads the list itself (missing tags or brackets, trailing commas) and hands MVU the commands
+// its extractJsonPatch would have made, before the zod helper checks them (COMMAND_PARSED runs first).
+function recoverPatch(content) {
+  const m = /<UpdateVariable>([\s\S]*?)(?:<\/UpdateVariable>|$)/i.exec(String(content || ''));
+  if (!m) return null;
+  const body = m[1].replace(/<Analysis>[\s\S]*?<\/Analysis>/gi, '').replace(/<\/?json_?patch>/gi, '').replace(/```[a-z]*/gi, '');
+  const a = body.search(/[[{]/), z = Math.max(body.lastIndexOf(']'), body.lastIndexOf('}'));
+  if (a < 0 || z < a) return null;
+  let s = body.slice(a, z + 1).trim();
+  if (s[0] === '{') s = '[' + s.replace(/\]\s*$/, '') + ']';
+  let ops;
+  try { ops = JSON.parse(s.replace(/,\s*([\]}])/g, '$1')); } catch (e) { return { error: String(e.message || e).slice(0, 80) }; }
+  if (!Array.isArray(ops)) return { error: 'the block is not a list of operations' };
+  return { ops: ops.filter(o => o && typeof o === 'object' && typeof o.op === 'string') };
+}
+const mvuPath = segs => segs.map(x => `["${String(x).replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"]`).join('');
+const mvuPointer = p => mvuPath(String(p || '').replace(/^\//, '').split('/').map(x => x.replace(/~1/g, '/').replace(/~0/g, '~')));
+function patchCommands(ops) {
+  const out = [];
+  for (const op of ops) {
+    const path = mvuPointer(op.path ?? op.to), full = JSON.stringify(op), val = JSON.stringify(op.value);
+    if (op.op === 'replace') out.push({ type: 'set', full_match: full, args: [path, val], reason: 'json_patch' });
+    else if (op.op === 'delta') out.push({ type: 'add', full_match: full, args: [path, val], reason: 'json_patch' });
+    else if (op.op === 'insert' || op.op === 'add') {
+      const parts = _.toPath(path), last = parts[parts.length - 1];
+      out.push({ type: 'insert', full_match: full, args: [mvuPath(parts.slice(0, -1)), /^\d+$/.test(last) ? last : JSON.stringify(last), val], reason: 'json_patch' });
+    } else if (op.op === 'remove') out.push({ type: 'delete', full_match: full, args: [path], reason: 'json_patch' });
+    else if (op.op === 'move') out.push({ type: 'move', full_match: full, args: [mvuPointer(op.from), path], reason: 'json_patch' });
+  }
+  return out;
+}
 if (typeof eventOn === 'function' && typeof waitGlobalInitialized === 'function') {
   (async () => {
     await waitGlobalInitialized('Mvu');
     let text = '';   // message being parsed in this update (COMMAND_PARSED fires before VARIABLE_UPDATE_ENDED)
     eventOn(Mvu.events.VARIABLE_UPDATE_STARTED, () => { text = ''; });
-    eventOn(Mvu.events.COMMAND_PARSED, (_v, _c, content) => { text = content || ''; });
+    let repaired = '';   // 1.30.1: what the recovery of a malformed block did, for the Log after the engine runs
+    eventOn(Mvu.events.VARIABLE_UPDATE_STARTED, () => { repaired = ''; });
+    eventOn(Mvu.events.COMMAND_PARSED, (_v, commands, content) => {
+      text = content || '';
+      if (!Array.isArray(commands) || commands.some(x => x && x.reason === 'json_patch')) return;
+      const r = recoverPatch(content);
+      if (r && r.ops && r.ops.length) {
+        commands.push(...patchCommands(r.ops));
+        repaired = `The update block was malformed (a <JSONPatch> tag or bracket was missing); the engine read its ${r.ops.length} changes.`;
+      } else if (r && r.error) repaired = `The update block could not be read (${r.error}); nothing in it was applied. Swipe the reply.`;
+    });
     eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, (variables, variables_before) => {
       let hint = '', said = '';
       try { const c = SillyTavern.chat || [], m = c[c.length - 1] || {}; hint = String(m.send_date || '') + '|' + (SillyTavern.getCurrentChatId ? SillyTavern.getCurrentChatId() : ''); } catch (e) { /* seed falls back to world time */ }
@@ -3591,7 +3642,15 @@ if (typeof eventOn === 'function' && typeof waitGlobalInitialized === 'function'
       // this reply (a half-run engine must not be saved), and the player is told so: swipe, or report the error.
       const before = variables_before && variables_before.stat_data;
       const snap = _.cloneDeep(before && before.World ? before : variables.stat_data);
-      try { runEngine(variables.stat_data, before, text, hint, said); text = ''; }
+      try {
+        runEngine(variables.stat_data, before, text, hint, said); text = '';
+        if (repaired) {
+          const S = variables.stat_data;
+          S._Log = [...(Array.isArray(S._Log) ? S._Log : []), repaired].slice(-12);
+          if (/could not be read/.test(repaired) && S.$ui && Array.isArray(S.$ui.toasts)) S.$ui.toasts.push('Update block unreadable: swipe the reply');
+          repaired = '';
+        }
+      }
       catch (e) {
         console.error('[Eldrasil engine]', e);
         text = '';

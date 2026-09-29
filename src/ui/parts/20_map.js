@@ -13,12 +13,13 @@ function locIdOf(place) {
   const a = (DATA.palias || {})[segs[0]];
   return a && DATA.locs[a] ? a : '';
 }
-// 1.24.0 (owner playtest): some far-grounds places show only once the player has been where they lead from (data/locations.json
-// gate: Willow Island and the Fishing House after the boathouse, the Clearing after the Forest, the Observation Tower and the Old
-// Hut after the Grassy Field), or at the place itself or another place behind the same gate. The Rooftop keeps D21.
+// 1.24.0 (owner playtest): some far-grounds places show only from where they lead from (data/locations.json gate: Willow Island and
+// the Fishing House from the boathouse, the Clearing from the Forest, the Observation Tower and the Old Hut from the Grassy Field).
+// 1.30.1 (owner playtest): only while {{user}} is in that area (at the gate place or another place behind the same gate); back on
+// the main grounds they hide again. The Rooftop keeps D21 (shown once visited).
 const beenAt = (S, name) => normPlace((S.World || {}).Location) === normPlace(name) || ((S.$ui || {}).discovered || []).some(d => normPlace(d) === normPlace(name));
-const gateOpen = (S, g) => beenAt(S, DATA.locs[g].name) || Object.values(DATA.locs).some(l => l.gate === g && beenAt(S, l.name));
-const discovered = (S, l) => l.discoverable ? beenAt(S, l.name) : !l.gate || beenAt(S, l.name) || gateOpen(S, l.gate);
+const gateOpen = (S, g) => { const cur = locIdOf((S.World || {}).Location); return !!cur && (cur === g || (DATA.locs[cur] || {}).gate === g); };
+const discovered = (S, l) => l.discoverable ? beenAt(S, l.name) : !l.gate || gateOpen(S, l.gate);
 // 1.24.0 (owner playtest: labels at the map's edge were cut off): a label near the right or left edge grows inward, near the top below
 const labPos = p => (p.x > 82 ? ' r' : p.x < 12 ? ' l' : '') + (p.y < 12 ? ' b' : '');
 // 1.24.0 (owner playtest): zoom and its centre, kept in the script while the page is open, so closing and opening the map keeps
