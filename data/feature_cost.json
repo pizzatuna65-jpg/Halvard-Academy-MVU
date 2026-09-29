@@ -16,14 +16,14 @@
   "hooks": 147,
   "gossip": 19,
   "fortune": 200,
-  "attendance": 11,
+  "attendance": -6,
   "recap": 0,
   "small_scenes": 0,
   "ambience": 54,
   "reminders": 34,
-  "study": 233
+  "study": 205
  },
- "core_rules": 8402,
+ "core_rules": 8410,
  "lore": 3909,
  "price_guide": 5164,
  "live": {

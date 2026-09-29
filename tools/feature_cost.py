@@ -7,13 +7,16 @@ def gated_chars(src):
     for m in TAG.finditer(src):
         text = src[pos:m.start()]; pos = m.end()
         fid = next((x for x in reversed(stack) if x), None)
-        per[fid] = per.get(fid, 0) + len(text)
+        key = fid[1:] if fid and fid.startswith('!') else fid
+        per[key] = per.get(key, 0) + (-1 if fid and fid.startswith('!') else 1) * len(text)
         code = m.group(1).strip()
         # 1.10.0: an inline `on('x') ? 'shown when on' : 'shown when off'` counts toward x as (on text - off text)
         iv = re.match(r"^on\('(\w+)'\)\s*\?\s*'([^']*)'\s*:\s*'([^']*)'$", code)
         if iv: per[iv.group(1)] = per.get(iv.group(1), 0) + len(iv.group(2)) - len(iv.group(3)); continue
         g = re.match(r"^if \(on\('(\w+)'\)\) \{$", code)
         if g: stack.append(g.group(1)); continue
+        g = re.match(r"^if \(!on\('(\w+)'\)\) \{$", code)
+        if g: stack.append('!' + g.group(1)); continue
         if code == '}': stack.pop(); continue
         for ch in code:
             if ch == '{': stack.append(None)

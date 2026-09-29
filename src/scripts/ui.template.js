@@ -1327,7 +1327,7 @@ const FEATS = (DATA.features || []), FCOST = DATA.fcost || { rules: {}, live: {}
 const TUNE_GROUPS = DATA.tune || [], TUNE_ROWS = TUNE_GROUPS.flatMap(g => g.rows);
 function tuneVal(S, id) { const r = TUNE_ROWS.find(x => x.id === id); if (!r) return 0; const v = Number((((S || {}).$ui || {}).tune || {})[id]); return r.opts.some(([x]) => x === v) ? v : r.def; }
 const featureLevel = (S, f) => { const u = (S && S.$ui) || {}; return f.control === 'levels' ? (u[f.field] || f.def || (f.id === 'weather' ? 'full' : 'normal')) : ((u.off || []).includes(f.id) ? 'off' : 'on'); };
-function featureOn(S, id) { const f = FEATS.find(x => x.id === id); return !f || featureLevel(S, f) !== 'off'; }
+function featureOn(S, id) { const cached = (((S || {}).$ui || {}).on || {})[id]; if (typeof cached === 'boolean') return cached; const f = FEATS.find(x => x.id === id); return !f || featureLevel(S, f) !== 'off'; }
 const omit$ = o => (Array.isArray(o) ? o.map(omit$) : o && typeof o === 'object' ? Object.fromEntries(Object.entries(o).filter(([k]) => !k.startsWith('$')).map(([k, v]) => [k, omit$(v)])) : o);
 function ylen(v, ind = 0) {         // length of the YAML Tavern Helper prints for <current_state> (close enough for an estimate)
   if (Array.isArray(v)) return v.reduce((a, x) => a + ind + 2 + (x && typeof x === 'object' ? 1 + ylen(x, ind + 2) : String(x).length + 1), 0) || 3;
@@ -1356,7 +1356,7 @@ function pSettings(S) {
   const J = (S.Journal || []).length, A = ((S.$ui || {}).archive || []).length;
   let on = 0, saved = 0;
   const rows = FEATS.map(f => {
-    const lv = featureLevel(S, f), isOn = lv !== 'off', rules = FCOST.rules[f.id] || 0, st = featureState(S, f);
+    const lv = featureLevel(S, f), isOn = lv !== 'off', rules = Math.max(0, FCOST.rules[f.id] || 0), st = featureState(S, f);
     if (isOn) on += rules + st; else saved += rules + st;
     const ctl = f.control === 'levels' ? f.levels : [['on', 'On'], ['off', 'Off']];
     return `<div class="feat${isOn ? '' : ' off'}"><div class="fm"><b>${esc(f.name)}</b><div class="sub">${esc(f.desc)}</div>

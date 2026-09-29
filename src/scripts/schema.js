@@ -330,6 +330,7 @@ export const Schema = z.object({
     rumours_old: StrList(50),                                         // rumours that died out (UI only)
     gossip: z.any().prefault([]).catch([]),                           // live rumours with reach [[text, reach, day]] (engine)
     off: StrList(20),                                                 // feature ids turned off in Features settings
+    on: z.record(z.string(), z.boolean()).prefault({}).catch({}),  // 1.18.0: engine-computed feature gates for EJS and UI
     parked: z.record(z.string(), z.any()).prefault({}).catch({}),     // state of features that are off: { id: { path: value } }
     // 1.2.0
     file: z.any().prefault(null).catch(null),                         // the Builder's record of what it last wrote (self-heal, engine §0)
@@ -377,6 +378,8 @@ export const Schema = z.object({
     cohorts: StrList(10),  // 1.0.3: campaign years whose new first-years already arrived ("Y2")
     ver: Str(''),          // 1.0.3: engine version that last wrote this state (for future save migrations)
     repw: z.any().prefault(null).catch(null),                    // 1.3.0: repeatable Rep XP gained this week { w, Academy, Student, Doves }
+    doveweek: z.any().prefault(null).catch(null),                // 1.18.0: quiet-week Dove attention decay
+    heals: z.record(z.string(), z.any()).prefault({}).catch({}), // 1.18.0: anchored Heals_by dates
     repv: z.coerce.number().prefault(0).catch(0),                // 1.3.0: 1 once the pre-1.3.0 Public / Dorm meters were migrated
     rum: z.record(z.string(), z.any()).prefault({}).catch({}),   // 1.1.0: rumour metadata { text: { born, fate } }
     wxs: z.any().prefault(null).catch(null),                     // 1.1.0: weather exposure counters and head-cold bookkeeping

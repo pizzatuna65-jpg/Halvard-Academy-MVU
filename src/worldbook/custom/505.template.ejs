@@ -5,7 +5,7 @@ const H = getvar('stat_data.Hidden') || {};
 const UI = getvar('stat_data.$ui') || {};
 const PR = getvar('stat_data.Player.Profile') || {};
 const OFF = UI.off || [];
-const on = id => (id === 'happenings' ? UI.happenings !== 'off' : id === 'weather' ? (UI.wxfx || 'full') !== 'off' : id === 'ambience' ? (UI.ambience || 'full') !== 'off' : !OFF.includes(id));
+const on = id => typeof (UI.on || {})[id] === 'boolean' ? UI.on[id] : (id === 'happenings' ? UI.happenings !== 'off' : id === 'weather' ? (UI.wxfx || 'full') !== 'off' : id === 'ambience' ? (UI.ambience || 'full') !== 'off' : !OFF.includes(id));
 const WX = on('weather') && UI.wx && !UI.wx.away && UI.wx.now ? UI.wx : null;
 const FULL = !!WX && WX.mode === 'full';
 const REG = /*@@REG@@*/{};
@@ -285,7 +285,7 @@ Mentioned, not here (they may not speak or act on-screen): <%- CAST.ment.map(id 
 Since you last saw <%- id %>: <%- what %><%- until ? ' (planned until ' + until + ')' : '' %>. Let it show in a small trace, never as a report.
 <%_ } _%>
 <%_ if (MAYBE.length) { _%>
-May be here by their own plans (Next): <%- MAYBE.map(([id, what]) => id + ' (' + what + ')').join('; ') %>
+May be here by their own plans or appointments: <%- MAYBE.map(([id, what]) => id + ' (' + what + ')').join('; ') %>
 <%_ } _%>
 <%_ if (JAGES.length) { _%>
 Journal dates, newest first: <%- JAGES.map(w => w + ' = ' + ageOf(w, W)).join('; ') %>

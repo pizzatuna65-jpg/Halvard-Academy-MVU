@@ -80,7 +80,17 @@ newest first; releases before 1.8.0 are the numbered items under "BATCH 4 COMPLE
 - **v1.16.0 (2026-09-29):** Ambience: how crowded and how lit each place is (the sun follows real-life seasons), a sensory cue type, small seeded moments around {{user}} and, rarely, a secret moment from one of 17 ghost stories (ten new; Tilly knows them all); Features Off / Texture / Full.
 - **v1.16.1 (2026-09-29):** Audit Batch 1 (`planning/AUDIT_2026-09-29.md`): club names are matched loosely so Saturday club time counts, a used item needs the item, happenings never repeat within two days, one rule for "this NPC is away", the engine rolls back a failed update and says so, `<current_state>` shows only the latest `_Log` lines, an OOC answer has no update block, `tools/build_all.py`, a local git repository.
 - **v1.17.0 (2026-09-29):** Audit Batch 2 (tokens and preset): each run of "[…]" messages is sent as one line, the Price Guide lists only the shop {{user}} is at (plus canon prices and one line per other shop), `<current_state>` shows absent people's bonds briefly, the preset Bridge's Eldrasil rules live in rule 504, random events only from the card's sources, inline graphics and coloured dialogue opt-in, a lore-at-depth TEST card for cache testing.
+- **v1.18.0 (2026-09-29):** Audit Batch 3: quiet-week Dove attention, named reputation deeds, shop price and injury/curfew reminders, Known_by ↔ Knows, commitments in May be here, and one engine feature gate map.
 
+
+## v1.18.0 — Audit Batch 3: engine integrations (2026-09-29)
+
+Owner: "lanjutkan batch 3". The implementation choices are recorded in `planning/DRAFT_engine_integrations.md`.
+- **I1:** Dove attention loses one point per quiet week. The narrator still reports witnessed or detected rises; ordinary nearby people do not automatically trigger suspicion. Old saves conservatively skip an unknown prior week's decay.
+- **I2/T5:** `Rep_events.Kind` can name one of the fixed deeds in `data/reputation.json`; the engine chooses the reputation and signed XP. The old `repeat` and `event` with explicit XP remain valid for saves and unusual deeds. Rule 502 now lists kinds and only shows the old manual attendance/exam values when those features are off.
+- **I3–I5:** New shop stock with incomplete payment, an injury past its anchored `Heals_by`, and being out of the dorm at curfew produce conditional reminders. They do not change money, heal injuries or issue an automatic penalty.
+- **I6/I8/I9:** A newly confirmed witness of true magic gains a dated Knows line in an existing bond; the reverse path prompts a check. A near-due local Commitment lists its partner under May be here. The engine publishes `$ui.on` once for EJS and UI, with fallback for pre-update states.
+- Main card and three TEST cards rebuilt; save fixture 1.17.0 added. `npm test` passes. Connected narration checks remain open in `docs/TEST_CHECKLIST.md`.
 
 ## v1.17.0 — Audit Batch 2: tokens and preset (2026-09-29)
 

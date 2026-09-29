@@ -84,6 +84,10 @@ t = t.replace('/*@@OUTDOOR@@*/[]', json.dumps(outdoor, ensure_ascii=False))
 # 1.9.5 (playtest Batch 5): shop items with a mechanical effect, by lowercase name (data/shop.json gear / use)
 shop_fx = {i['item'].lower(): {k: i[k] for k in ('gear', 'use') if k in i} for i in json.load(open(P('data/shop.json'), encoding='utf-8'))['items'] if i.get('gear') or i.get('use')}
 t = t.replace('/*@@SHOP_FX@@*/{}', json.dumps(shop_fx, ensure_ascii=False, separators=(',', ':')))
+shop_prices = {}
+for i in json.load(open(P('data/shop.json'), encoding='utf-8'))['items']:
+    shop_prices.setdefault(i['item'].lower(), []).append([i['price'], i['shop']])
+t = t.replace('/*@@SHOP_PRICE@@*/{}', json.dumps(shop_prices, ensure_ascii=False, separators=(',', ':')))
 # v1.1.0 (spec §9): Features settings, single source data/features.json (the engine needs id, control, field, paths, unlock)
 feats = json.load(open(P('data/features.json'), encoding='utf-8'))['features']
 t = t.replace('/*@@FEATURES@@*/[]', json.dumps([{k: f[k] for k in ('id', 'control', 'field', 'paths', 'unlock') if k in f} for f in feats], ensure_ascii=False, separators=(',', ':')))

@@ -562,6 +562,7 @@ const GEAR = { umbrella: /umbrella/i, waterproof: /waterproof|oilskin|rain cloak
 // 1.9.5 (playtest Batch 5): shop items with an effect (data/shop.json gear / use, by lowercase name); gear also by exact item name,
 // and a used charm's timed protection (wxs.buff: { kind: until abs minute })
 const SHOP_FX = /*@@SHOP_FX@@*/{};
+const SHOP_PRICE = /*@@SHOP_PRICE@@*/{};
 const fxOf = name => SHOP_FX[String(name || '').trim().toLowerCase().replace(/^(an?|the)\s+/, '')] || SHOP_FX[String(name || '').trim().toLowerCase().replace(/^(an?|the)\s+/, '').replace(/\s*\(.*\)$/, '')] || null;
 const gearOf = (I, buff, now) => {
   const own = Object.keys(I || {}).filter(k => (I[k] && I[k].Qty) > 0), ks = own.join(' | ');
@@ -736,6 +737,9 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
   const OFF = new Set(S.$ui.off);
   if (S.$ui.happenings === 'off') OFF.add('happenings');
   if (S.$ui.wxfx === 'off') OFF.add('weather');
+  if (S.$ui.ambience === 'off') OFF.add('ambience');
+  S.$ui.on = Object.fromEntries(FEATURES.map(f => [f.id, !OFF.has(f.id)]));
+  S.$ui.on.wxfull = S.$ui.wxfx === 'full';
   const offUnlock = new Set(FEATURES.filter(f => f.unlock && parkOff(S, f)).map(f => f.unlock));
 
   // 1.3.4 (owner playtest: Etnie showed up in message 0 of a new chat). The chat's starting state comes from the card's lorebook
@@ -1248,9 +1252,11 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
   const vouchMonth = `Y${S.World.Year}M${S.World.Month}`, usedVouch = new Set();
   const vouchLedger = S.$eng.vouch = _.isPlainObject(S.$eng.vouch) ? S.$eng.vouch : {};
   for (const e of (Array.isArray(S.Rep_events) ? S.Rep_events : [])) {
-    const r = REP.reps.find(x => x.toLowerCase() === String(e.Rep || '').trim().toLowerCase());
+    const kind = String(e.Kind || '').trim().toLowerCase(), deed = (REP.deeds || {})[kind];
+    if (!deed && kind && !['repeat', 'event'].includes(kind)) { log.push(`Reputation deed "${kind}" is unknown; use a listed Kind or an explicit repeat/event entry.`); continue; }
+    const r = deed ? deed[0] : REP.reps.find(x => x.toLowerCase() === String(e.Rep || '').trim().toLowerCase());
     if (!r) { log.push(`Reputation "${e.Rep}" is unknown (use Academy, Student or Doves); nothing was changed.`); continue; }
-    let x = Math.round(num(e.XP, 0)); const kind = String(e.Kind || '').toLowerCase();
+    let x = deed ? deed[1] : Math.round(num(e.XP, 0));
     if (x < 0 && e.Why) {
       const a = (S.Interactions || []).find(a => {
         const id = NPC_ALIAS[String(a.With || '').toLowerCase()] || a.With, b = S.Bonds[id];
@@ -1261,11 +1267,11 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
       if (a) { const id = NPC_ALIAS[String(a.With || '').toLowerCase()] || a.With, saved = Math.min(5, -x); x += saved;
         vouchLedger[id] = vouchMonth; usedVouch.add(id); log.push(`${id} vouched for {{user}} in the ${r} matter (${e.Why}): reputation loss reduced by ${saved} XP.`); }
     }
-    if (S.World.Month === 10 && S.World.Week === 3 && S.World.Day === 'Sat' && r === 'Student' && x > 0 && kind !== 'event' && /\bclub\b/i.test(String(e.Why || ''))) {
+    if (S.World.Month === 10 && S.World.Week === 3 && S.World.Day === 'Sat' && r === 'Student' && x > 0 && (kind === 'club_time' || (kind !== 'event' && /\bclub\b/i.test(String(e.Why || ''))))) {
       log.push('Saturday club attendance earns no reputation during the Student Council election; the election replaced club time.');
       continue;
     }
-    repAdd(r, x, e.Why || kind || 'story', x > 0 && kind !== 'event' ? 'week' : '');
+    repAdd(r, x, e.Why || kind || 'story', deed ? deed[2] : x > 0 && kind !== 'event' ? 'week' : '');
   }
   S.Rep_events = [];
   const repSync = announce => {
@@ -2022,6 +2028,18 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
   // what the belief replaced (Was). Next (Rank NEXT_RANK+): their own plan when they leave; brought back when they meet {{user}}
   // again ("since you last saw them") or, once it lapses unseen, moved into $Recent. Meanwhile: Rank MEANWHILE_RANK+ bonds unseen
   // for a week get one Journal line a week about their own life.
+  // 1.18.0 (I6): a newly confirmed keeper of the true magic also remembers learning it.
+  if (hasB && S.Hidden._True_magic) {
+    const known0 = new Set(((B.Hidden || {}).Known_by || []).map(canon));
+    for (const raw of S.Hidden.Known_by || []) {
+      const id = canon(raw), b = S.Bonds[id];
+      if (id && !known0.has(id) && b) {
+        b.Knows = Array.isArray(b.Knows) ? b.Knows : [];
+        if (![...b.Knows, ...(b.$Knows_old || [])].some(x => /learned .*true magic/i.test(String(x))))
+          b.Knows.push(`Learned {{user}}'s true magic.`);
+      }
+    }
+  }
   {
     const presentIds = new Set(Object.keys(S.Scene.Present || {}));
     const wasHere = new Set(Object.keys((hasB && B.Scene && B.Scene.Present) || {}));
@@ -2173,6 +2191,19 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     const was = (B.Hidden && B.Hidden.Dove_attention) || 0, rise = Hd.Dove_attention - was;
     if (rise > 0) { Hd.Dove_attention = was + Math.ceil(rise / 2); log.push(`Dove attention rise halved by the weather (outdoors, ${wxText(wxNow)}): +${Math.ceil(rise / 2)} instead of +${rise}.`); }
   }
+  // 1.18.0 (I1): the narrator reports witnessed/detected rises; the engine owns quiet-week decay.
+  if (hasB) {
+    const prior = num((B.Hidden || {}).Dove_attention, 0);
+    if (Hd.Dove_attention < prior) { Hd.Dove_attention = prior; log.push('Dove attention falls only after a quiet week; the manual decrease was reverted.'); }
+    const raised = Hd.Dove_attention > prior;
+    const old = _.isPlainObject(S.$eng.doveweek) ? S.$eng.doveweek : { w: weekNoB, raised: true }; // old saves: do not assume the prior week was quiet
+    if (weekNo > num(old.w, weekNoB)) {
+      const quiet = Math.max(0, weekNo - num(old.w, weekNoB) - (old.raised ? 1 : 0));
+      const drop = Math.min(Hd.Dove_attention, quiet);
+      if (drop) { Hd.Dove_attention -= drop; log.push(`Dove attention −${drop} after ${quiet} quiet week${quiet === 1 ? '' : 's'}.`); }
+      S.$eng.doveweek = { w: weekNo, raised };
+    } else S.$eng.doveweek = { w: weekNo, raised: !!old.raised || raised };
+  }
   const stageOf = a => (a < 20 ? 'Unnoticed' : a < 40 ? 'Rumoured' : a < 60 ? 'Watched' : a < 80 ? 'Investigated' : 'Exposed');
   const stg = stageOf(Hd.Dove_attention);
   if (Hd._True_magic && Hd._Stage !== stg) { log.push(`Dove attention is now: ${stg}.`); S.$ui.toasts.push(`Dove attention: ${stg}`); }
@@ -2238,6 +2269,15 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
   }
 
   // ---- 8b. Batch 5.1 records: commitments, notices, letters, clues, journal ----
+  // 1.18.0 (I4): relative Heals_by dates are anchored once, like Commitment.Due.
+  {
+    const prior = _.isPlainObject(S.$eng.heals) ? S.$eng.heals : {}, next = {};
+    for (const [name, injury] of Object.entries(S.Player.Injuries || {})) {
+      const by = String((injury || {}).Heals_by || '');
+      next[name] = prior[name] && prior[name].text === by ? prior[name] : { text: by, abs: parseWhen(by, S.World, absA) };
+    }
+    S.$eng.heals = next;
+  }
   const newKeys = (cur, prev) => Object.keys(cur || {}).filter(k => !(prev && k in prev));
   // commitments: computed due text, overdue flag (logged once, when it turns overdue)
   const BC = (hasB && B.Commitments) || {};
@@ -2249,6 +2289,19 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     const late = abs >= 0 && abs < absA;
     if (late && !(BC[k] && BC[k]._Late)) { log.push(`"${k}" is overdue (was due ${c.Due}${c.With ? `, with ${c.With}` : ''}): resolve it in the story, then remove it.`); S.$ui.toasts.push(`Overdue: ${k}`); }
     c._Late = late;
+  }
+  // 1.18.0 (I8): an imminent appointment at this place can put its named partner in "May be here".
+  if (!OFF.has('planner') && !S.Trip.Active) {
+    const maybe = Array.isArray(S.$ui.maybe) ? S.$ui.maybe : [];
+    const here = placeKey(S.World.Location);
+    for (const [title, c] of Object.entries(S.Commitments || {})) {
+      if (!c || !c.With || !c.Where || c.$abs < absA || c.$abs > absA + 60 || placeKey(c.Where) !== here) continue;
+      for (const name of String(c.With).split(/,|\band\b/i).map(x => canon(x.trim())).filter(Boolean)) {
+        if (npcAwayIn(S, name) || (S.Scene.Present || {})[name] || maybe.some(x => x[0] === name)) continue;
+        maybe.push([name, `appointment: ${title}`]);
+      }
+    }
+    S.$ui.maybe = maybe;
   }
   // 1.15.0 (planning/DRAFT_grades_exams.md): a commitment removed before it was overdue was done. An assignment done on time is
   // study time; one removed overdue counts as a skipped class of the subject it names. A remedial attended turns its F into a D.
@@ -2676,6 +2729,35 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
     const seen = _.pickBy(_.isPlainObject(S.$eng.missed) ? S.$eng.missed : {}, d => num(d, -99) >= dayNo - 2);
     const out = [], add = (sig, line) => { if (!(sig in seen) && !out.some(o => o[0] === sig)) out.push([sig, line]); };
     if (!OFF.has('reminders')) {
+      // 1.18.0 (I3-I6): evidence-based prompts; none moves a number or invents detection/healing.
+      const bag0 = B.Inventory || {}, bag1 = S.Inventory || {}, tx0 = new Set(((B.Player || {}).Wallet || {}).Transactions || []);
+      const newTx = (S.Player.Wallet.Transactions || []).filter(x => !tx0.has(x)).join(' | ').toLowerCase();
+      const shopAt = placeKey(S.World.Location);
+      let expected = 0; const acquired = [];
+      for (const [name, item] of Object.entries(bag1)) {
+        const row = SHOP_PRICE[name.toLowerCase()], before = Object.keys(bag0).find(x => x.toLowerCase() === name.toLowerCase());
+        const qty = Math.max(0, num(item && item.Qty, 0) - num(before && bag0[before] && bag0[before].Qty, 0));
+        if (!row || !qty || !row.some(x => placeKey(x[1]) === shopAt)) continue;
+        expected += qty * row.find(x => placeKey(x[1]) === shopAt)[0]; acquired.push(name);
+      }
+      if (expected) {
+        const paid = Math.max(0, num(((B.Player || {}).Wallet || {}).Points, 0) - num(S.Player.Wallet.Points, 0));
+        const named = acquired.every(x => newTx.includes(x.toLowerCase()));
+        if (paid < expected || !named) add(`shop:${acquired.join('|')}:${dayNo}`, `${acquired.join(', ')} entered the Bag at a shop (listed total ${expected} points), but the Points decrease was ${paid}${named ? '' : ' and a matching Transaction is missing'}. If bought, report the full payment; if gifted or found, make that clear in the story.`);
+      }
+      for (const [name, injury] of Object.entries(S.Player.Injuries || {})) {
+        const by = num(((S.$eng.heals || {})[name] || {}).abs, -1);
+        if (by >= 0 && by <= absA) add(`heal:${name}:${dayNo}`, `${name}'s Heals_by time has arrived: show recovery or a Medical Centre visit if the story supports it; never heal off-screen.`);
+      }
+      const dorm = String(S.Player.Profile.Dorm || '').trim().toLowerCase(), where = placeKey(S.World.Location);
+      if (/^CURFEW/.test(S.World._Curfew || '') && dorm && dorm !== 'unsorted' && !where.startsWith(dorm) && !(S.Trip || {}).Active)
+        add(`curfew:${where}:${dayNo}`, `{{user}} is at ${placeOf(S.World.Location)} after dorm curfew. If someone catches them, report the appropriate reputation deed; being out alone is not proof of detection.`);
+      const keepers = new Set((S.Hidden.Known_by || []).map(canon));
+      for (const [id, bond] of Object.entries(S.Bonds || {})) {
+        const prior = (((B.Bonds || {})[id] || {}).Knows || []);
+        if (!keepers.has(id) && (bond.Knows || []).some(x => !prior.includes(x) && /(?:true|hidden|forbidden) magic/i.test(String(x))))
+          add(`knows-magic:${id}:${dayNo}`, `${id}'s Knows now mentions {{user}}'s hidden magic. If ${id} truly learned the secret, add ${id} to Hidden.Known_by.`);
+      }
       const prose = String(text || '').replace(/<UpdateVariable>[\s\S]*?<\/UpdateVariable>/g, '').replace(/<[^>]+>/g, ' ');
       const narr = prose.replace(QUOTE_RX, ' '), said = String(userText || ''), low = (said + '\n' + prose).toLowerCase();
       const actsOf = id => REPORTED.acts.filter(a => canon(a.With) === id);

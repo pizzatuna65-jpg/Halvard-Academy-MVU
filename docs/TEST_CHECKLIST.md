@@ -46,6 +46,16 @@ new section at the top of **By release**, not as a new file.
 
 ## By release
 
+### v1.18.0 — audit Batch 3
+
+1. Use true magic where detection is plausible: the narrator reports a rise in Dove attention. A quiet week later it falls by one. Ordinary movement magic draws no Dove response by itself.
+2. Do a named reputation deed (for example a staff job or being caught after curfew): the update reports its Kind, and Student file shows the engine's fixed reputation change. A custom deed still accepts explicit Rep and XP.
+3. At a shop, acquire an item without a matching payment: `<now>` conditionally reminds the narrator to settle or explain it. A paid purchase with a matching Transaction needs no reminder; a gift does not lose the item.
+4. Give an injury a `Heals_by` time and let it pass: `<now>` asks for a recovery scene or Medical Centre visit. The injury stays until the story treats it.
+5. Stay outside the dorm after curfew: `<now>` notes the risk. Reputation falls only if someone actually catches {{user}} and that deed is reported.
+6. Let Etnie or another bonded NPC truly learn the hidden magic: adding them to Known_by adds a dated Knows line. A Commitment due soon with that NPC at the current place lists them as possibly here without making them speak.
+7. Toggle Planner, Weather and Ambience: the related rule text, `<now>` and panels follow the same enabled state.
+
 ### v1.17.0 — audit Batch 2
 
 1. In a chat over 30 messages, Prompt Inspector shows one "[… N earlier messages …]" line instead of many "[…]".

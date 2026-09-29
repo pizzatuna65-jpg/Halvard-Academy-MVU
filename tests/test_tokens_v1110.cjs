@@ -29,7 +29,7 @@ console.log('One copy of each rule (A1, A2, A7, A9, A10)');
 const r502 = R(502, ordinary), r504 = R(504, ordinary);
 ok(r502.trim().endsWith('</variable_update_rules>') && /Students may buy alcohol/.test(r502) && !/\+1 XP|×1\.5|−10% stamina ceiling/.test(r502), 'every 502 rule is inside the tag, without engine arithmetic');
 ok(/On consuming The Vigil, insert "The Vigil"/.test(r502) && /blocks wind shelters casts/.test(r502) && /Birthdays: remembering someone's birthday matters/.test(r502), 'what the narrator must do from those blocks is kept');
-ok(r502.indexOf('  - Doves. repeat:') < r502.indexOf('- Exams: the engine marks') && r502.indexOf('- Reputation:') < r502.indexOf('  - Academy. repeat:'), 'Exams no longer splits the reputation list');
+ok(r502.indexOf('  - Doves kinds:') < r502.indexOf('- Exams: the engine marks') && r502.indexOf('- Reputation:') < r502.indexOf('  - Academy kinds:'), 'Exams no longer splits the reputation list');
 ok(!/Before setting Time or narrating lateness/.test(r504) && /Arrivals follow the Time rule/.test(r504) && (r504.match(/In a class period/g) || []).length === 1, '504: one travel bullet, one class-period sentence');
 ok(!/Magic Duelling Club/.test(r504), '504: the duelling-club correction lives in the lore and the cast gate');
 const ev = set(S0, [['World._Event_today', 'Star Night (Sat evening to Sun dawn) — 18:00 gathering on the Hills; the meteor shower from 23:00']]);

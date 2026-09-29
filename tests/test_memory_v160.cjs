@@ -61,7 +61,7 @@ P('12:10', [B('Ruby', 'Next', { What: 'Bake', Where: 'Canteen', Until: 'M1 W1 Mo
 ok(S.Bonds.Ruby.Next === null && /Next plans are kept for bonds of Rank 3/.test(S._Log.join(' ')), 'a Rank 0 bond keeps no Next plan');
 P('12:20', [here([]), B('Irene', 'Next', { What: 'Council budget meeting, then the library', Where: 'Main Library', Until: 'M1 W1 Mon 18:00' })]);
 S = applyPatch(S, [{ op: 'replace', path: '/World/Location', value: 'Main Library' }, { op: 'replace', path: '/World/Time', value: '13:00' }]);
-ok(S.$ui.maybe.some(([id]) => id === 'Irene') && /May be here by their own plans \(Next\): [^\n]*Irene \(Council budget/.test(R(505, S)), '{{user}} is where Irene planned to be: she may be here');
+ok(S.$ui.maybe.some(([id]) => id === 'Irene') && /May be here by their own plans or appointments: [^\n]*Irene \(Council budget/.test(R(505, S)), '{{user}} is where Irene planned to be: she may be here');
 P('13:30', [here(['Irene'])]);
 ok(S.Bonds.Irene.Next === null && S.$ui.since[0][0] === 'Irene' && /Since you last saw Irene: Council budget meeting, then the library \(Main Library\)/.test(R(505, S)), 'meeting again: "since you last saw" once, then the plan is spent');
 P('13:35', []);
