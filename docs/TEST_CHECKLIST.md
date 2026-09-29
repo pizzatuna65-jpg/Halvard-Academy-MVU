@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.22.0 (bracelet): the three checks in its section below.
 - v1.21.0 (UI foundation): the four checks in its section below.
 - v1.20.0 (engine refactor): the two checks in its section below.
 - Basics that only ST can show: the trim regex (minDepth 24) trims the far chat; `[config_override]` is picked up (MVU panel
@@ -49,6 +50,14 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.22.0 — UI overhaul 2 (the bracelet)
+
+- In a real chat message the bracelet shows the brass bezel, the clock and the Font Awesome icons (location pin, chip icons, the
+  charm row); nothing is cut off at the message width SillyTavern gives it.
+- With someone of Rank 4 or more present (Weather on), their mood badge sits on the lower right of their portrait.
+- On a phone: points and dorm move under the glass, the panel buttons form a 3-column grid, and collapsing leaves the glass and the
+  buttons only.
 
 ### v1.21.0 — UI overhaul 1 (tokens and foundation)
 

@@ -3,12 +3,11 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.21.0** (2026-09-29). UI overhaul "Brass & Moonglass" (owner-approved report) in three releases: 1.21.0
-foundation done (colour tokens, palette, Alegreya, top-anchored panels). `npm test` passed at 1.20.0 (79 suites); 1.21.0 ran the UI,
+**Snapshot:** card **v1.22.0** (2026-09-29). UI overhaul "Brass & Moonglass" (owner-approved report) in three releases: 1.21.0
+foundation and 1.22.0 bracelet done. `npm test` passed at 1.20.0 (79 suites); 1.21–1.22 ran the UI,
 save and static suites. Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** UI overhaul 2 (v1.22.0, the bracelet: metal band, brass bezel on the glass, dorm crest, vials, chip tiers, charm
-row) and 3 (v1.23.0, panels: People cards, Dossier file, Settings swatches and switches, Builder stepper, Journal, Activities,
+**Next task:** UI overhaul 3 (v1.23.0, panels: People cards, Dossier file, Settings swatches and switches, Builder stepper, Journal, Activities,
 themes tuned). The approved mockups are in the report (artifact QjbmYWMLMpxihoq5oU5Dys).
 
 ## 0. Starter prompt (for the owner to paste into a new chat)

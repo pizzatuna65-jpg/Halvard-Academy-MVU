@@ -3,6 +3,22 @@
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
 details: `git show b62d182:CHANGELOG.md`.
 
+## v1.22.0 — UI overhaul 2: the bracelet (2026-09-29)
+
+Owner-approved report "Brass & Moonglass", stage 2. Decisions touched: none (same data, same buttons, same stored keys).
+- **The bracelet is an object:** a brushed pewter band with a brass edge and the dorm colour inlaid along the top; the glass face
+  sits in a brass bezel and is the one bold element (the day in small capitals beside a large clock, then the period and place).
+- **Points and dorm:** the balance is a brass figure labelled "points"; the dorm is a gem in the dorm colour beside its name.
+- **Vitals** are thicker vials with a light sheen; the maximum is quieter than the current value.
+- **Chips** have three tiers (moonglass for events and magic, amber for warnings, red for danger) and a 26px minimum height.
+- **Who is here** and **the latest news** share one row (`.low`); portraits have a ring in the dorm colour with a gap, and the mood
+  (Rank 4+) is a small Font Awesome badge on the portrait instead of a Unicode glyph after the name.
+- **Panel buttons** are one joined row of charms; on a phone (≤540px) they become a 3-column grid with 40px targets, and the points
+  and crest move under the glass.
+- Tests: `test_ui_overhaul_v1210.cjs` gains the bracelet checks; run with the bracelet suites (`test_batch1_swipe`,
+  `test_batch4_seasons_mana`, `test_extras_v161`, `test_playtest_v131`, `test_playtest_v134`), `test_saves`, `qa_static`: all pass.
+  Save fixture `save_1.21.0.json` added.
+
 ## v1.21.0 — UI overhaul 1: tokens and foundation (2026-09-29)
 
 Owner: audit the look and overhaul it without changing how the card works; the report ("Brass & Moonglass", artifact
@@ -190,3 +206,4 @@ prompt (its card rules are in 504); Price Guide 506 becomes EJS (`src/worldbook/
 - **v1.19.0 (2026-09-29):** Audit Batch 4: shared calendar and timetable data, event-tagged exam/trial moods, smaller per-message state, test index and lint. PNG and Cast Sheet performance measured without compatibility-risk changes.
 - **v1.20.0 (2026-09-29):** Audit Batch 5 (the last): the engine runs as a list of steps with save migrations in one place, run once per version change; behaviour unchanged (proven against 1.19.0), except Dante's renamed gift now sticks on pre-1.3.x saves.
 - **v1.21.0 (2026-09-29):** UI overhaul 1 (foundation): one set of colour tokens for panels and bracelet, a slate-blue and brass palette, the Alegreya family instead of Cinzel, six text sizes, panels anchored to the top, AA contrast in every theme.
+- **v1.22.0 (2026-09-29):** UI overhaul 2 (the bracelet): pewter band, brass bezel around the glass clock, dorm gem and crest, vials, three chip tiers, mood badges on portraits, a joined row of panel buttons (a 3-column grid on phones).

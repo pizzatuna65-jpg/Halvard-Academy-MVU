@@ -15,58 +15,82 @@
 }
 *{box-sizing:border-box}
 body{margin:0;font-family:var(--f-ui);color:var(--ink);font-size:14px;line-height:1.35}
-.band{position:relative;margin:6px 0 2px;border-radius:16px;padding:11px 13px 11px;
-  background:linear-gradient(180deg,var(--pewter-hi) 0%,var(--pewter) 22%,var(--pewter-lo) 100%);
-  border:1px solid var(--brass-lo);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 -2px 0 rgba(0,0,0,.25)}
-.band::before{content:"";position:absolute;left:18px;right:18px;top:-1px;height:3px;border-radius:0 0 3px 3px;background:var(--dorm);opacity:.9}
+/* 1.22.0 the bracelet as an object: a brushed pewter band with a brass edge, the glass face set in a brass bezel (the one bold
+   element), the dorm as a gem and crest, vials for the vitals, a joined row of charms for the panels */
+.band{position:relative;margin:6px 0 2px;border-radius:16px;padding:12px 14px 13px;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.022) 0 1px,transparent 1px 3px),linear-gradient(180deg,var(--pewter-hi) 0%,var(--pewter) 20%,var(--pewter-lo) 100%);
+  border:1px solid var(--brass-lo);box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 -2px 0 rgba(0,0,0,.22)}
+.band::before{content:"";position:absolute;left:20px;right:20px;top:-1px;height:3px;border-radius:0 0 3px 3px;background:var(--dorm);box-shadow:0 0 10px color-mix(in srgb,var(--dorm) 70%,transparent)}
 .band.stale{display:none}
-.top{display:flex;gap:10px;align-items:stretch}
-.glass{flex:1 1 auto;min-width:0;border-radius:10px;padding:8px 11px;background:radial-gradient(130% 150% at 12% 0%,var(--glass-hi) 0%,var(--glass) 55%,var(--glass-lo) 100%);
-  border:1px solid var(--glass-lo);box-shadow:inset 0 10px 22px rgba(0,0,0,.28)}
-.clock{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.clock .t{font-size:23px;font-weight:700;color:var(--moon);font-variant-numeric:lining-nums tabular-nums;letter-spacing:.01em;text-shadow:0 0 12px color-mix(in srgb,var(--moon) 40%,transparent)}
-.clock .d{color:var(--moon-dim);font-size:13px}
+.top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px}
+.glass{position:relative;min-width:0;margin:3px;border-radius:12px;padding:9px 13px 10px;
+  background:radial-gradient(130% 150% at 12% 0%,var(--glass-hi) 0%,var(--glass) 55%,var(--glass-lo) 100%);
+  box-shadow:0 0 0 1px rgba(0,0,0,.35),0 0 0 3px var(--brass-lo),0 0 0 4px color-mix(in srgb,var(--brass-hi) 30%,transparent),inset 0 12px 26px rgba(0,0,0,.28),inset 0 0 0 1px color-mix(in srgb,var(--moon) 12%,transparent)}
+.glass::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(112deg,rgba(255,255,255,.08) 0%,rgba(255,255,255,0) 36%)}
+.clock{display:flex;align-items:baseline;gap:4px 8px;flex-wrap:wrap}
+.clock .dy{font-family:var(--f-sc);font-weight:500;font-size:15px;letter-spacing:.08em;color:var(--moon-dim)}
+.clock .t{font-size:29px;font-weight:700;line-height:1;color:var(--moon);font-variant-numeric:lining-nums tabular-nums;text-shadow:0 0 14px color-mix(in srgb,var(--moon) 38%,transparent)}
+.clock .d{color:var(--moon-dim);font-size:13px;margin-left:4px}
 .clock .d .tc{color:var(--moon);font-weight:700}
-.period{color:var(--glass-ink);font-size:13.5px;margin-top:2px}
+.period{color:var(--glass-ink);font-size:14.5px;margin-top:5px}
 .loc{color:var(--moon-dim);font-size:13px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.side{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;gap:6px}
-.pts{font-variant-numeric:lining-nums tabular-nums;font-weight:700;font-size:19px;color:var(--brass-hi)}
-.pts small{font-weight:500;font-size:12px;color:var(--ink2);margin-left:3px}
-.dorm{font-family:var(--f-sc);font-weight:700;font-size:13px;letter-spacing:.05em;padding:2px 9px;border-radius:999px;border:1px solid var(--dorm);color:var(--ink);white-space:nowrap}
-.vitals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
-.vit .row{display:flex;justify-content:space-between;gap:6px;font-size:12.5px;color:var(--ink2)}
-.vit .row b{color:var(--ink);font-weight:700;font-variant-numeric:lining-nums tabular-nums}
-.bar{height:7px;border-radius:99px;background:rgba(0,0,0,.36);box-shadow:inset 0 1px 2px rgba(0,0,0,.3);overflow:hidden;margin-top:4px}
-.bar i{display:block;height:100%;border-radius:99px;transition:width .5s ease;background-image:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,0) 55%,rgba(0,0,0,.12))}
-.vit .sub{font-size:12px;color:var(--ink2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.loc i{margin-right:3px}
+.side{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;gap:10px;padding:5px 2px 4px}
+.pts b{display:block;font-size:22px;font-weight:700;line-height:1;color:var(--brass-hi);font-variant-numeric:lining-nums tabular-nums;text-align:right}
+.pts small{display:block;text-align:right;font-size:12px;color:var(--ink2);margin-top:3px}
+.dorm{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-sc);font-weight:700;font-size:14.5px;letter-spacing:.06em;color:var(--ink);white-space:nowrap}
+.gem{width:11px;height:11px;flex:none;transform:rotate(45deg);border-radius:2px;background:linear-gradient(135deg,rgba(255,255,255,.75) 0%,var(--dorm) 42%,color-mix(in srgb,var(--dorm) 55%,black) 100%);box-shadow:0 0 0 1.5px var(--brass-lo),0 0 9px color-mix(in srgb,var(--dorm) 55%,transparent)}
+.vitals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:13px}
+.vit .row{display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-size:13px;color:var(--ink2)}
+.vit .row b{color:var(--ink);font-weight:700;font-variant-numeric:lining-nums tabular-nums;white-space:nowrap}
+.vit .row b small{color:var(--ink3);font-weight:500;font-size:12px}
+.bar{height:8px;border-radius:99px;background:rgba(0,0,0,.38);box-shadow:inset 0 1px 2px rgba(0,0,0,.35);overflow:hidden;margin-top:5px}
+.bar i{display:block;height:100%;border-radius:99px;transition:width .5s ease;background-image:linear-gradient(180deg,rgba(255,255,255,.3),rgba(255,255,255,0) 55%,rgba(0,0,0,.14))}
+.vit .sub{font-size:12.5px;color:var(--ink2);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vit .sub.bad{color:var(--danger)} .vit .sub.mid{color:var(--warn)}
-.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
-.chip{font-size:12.5px;padding:2px 9px;border-radius:999px;background:rgba(0,0,0,.24);border:1px solid var(--rule);color:var(--ink);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
-.chip.warn{border-color:color-mix(in srgb,var(--warn-line) 60%,transparent);color:var(--warn)}
-.chip.danger{border-color:color-mix(in srgb,var(--danger-line) 65%,transparent);color:var(--danger)}
-.chip.glow{border-color:color-mix(in srgb,var(--moon) 45%,transparent);color:var(--moon)}
-.chip i{margin-right:4px;opacity:.85}
-button.chip{font:inherit;font-size:12.5px;cursor:pointer}button.chip:hover{background:color-mix(in srgb,var(--brass) 16%,transparent)}button.chip:focus-visible{outline:2px solid var(--moon);outline-offset:1px}
-.cast{display:flex;gap:8px;margin-top:10px;overflow-x:auto;padding:2px 0 2px 2px;scrollbar-width:none}
-.cast button{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;background:none;border:0;padding:0;cursor:pointer;color:var(--ink);font:inherit}
-.cast .face{width:40px;height:40px;border-radius:50%;border:2px solid var(--dorm);object-fit:cover;background:var(--well);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--ink2)}
-.cast .nm{font-size:12px;max-width:58px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink2)}
-.cast button:focus-visible .face{outline:2px solid var(--moon);outline-offset:1px}
-.news{margin-top:8px;font-size:13px;color:var(--head);border-left:2px solid var(--brass);padding-left:8px}
-.news div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cta{margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 11px;border-radius:10px;background:color-mix(in srgb,var(--brass) 14%,transparent);border:1px dashed var(--brass)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.chip{display:inline-flex;align-items:center;min-height:26px;font-size:13px;padding:2px 11px 2px 9px;border-radius:999px;background:rgba(0,0,0,.24);border:1px solid var(--rule);color:var(--ink);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.chip.warn{border-color:color-mix(in srgb,var(--warn-line) 55%,transparent);background:color-mix(in srgb,var(--warn-line) 10%,transparent);color:var(--warn)}
+.chip.danger{border-color:color-mix(in srgb,var(--danger-line) 60%,transparent);background:color-mix(in srgb,var(--danger-line) 12%,transparent);color:var(--danger)}
+.chip.glow{border-color:color-mix(in srgb,var(--moon) 42%,transparent);background:color-mix(in srgb,var(--moon) 9%,transparent);color:var(--moon)}
+.chip i{margin-right:6px;font-size:12px;opacity:.9}
+button.chip{font:inherit;font-size:13px;cursor:pointer}button.chip:hover{filter:brightness(1.12)}button.chip:focus-visible{outline:2px solid var(--moon);outline-offset:1px}
+.low{display:flex;gap:16px;align-items:flex-start;margin-top:12px}
+.cast{display:flex;gap:10px;flex:0 1 auto;min-width:0;overflow-x:auto;padding:5px 4px 2px;scrollbar-width:none}
+.cast button{position:relative;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:5px;width:56px;background:none;border:0;padding:0;cursor:pointer;color:var(--ink);font:inherit}
+.cast .face{width:42px;height:42px;border-radius:50%;border:0;object-fit:cover;object-position:50% 25%;background:var(--well);box-shadow:0 0 0 2px var(--pewter-lo),0 0 0 4px var(--ring,var(--rule2));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--ink2)}
+.cast .nm{font-size:12px;max-width:56px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink2)}
+.cast .md{position:absolute;left:34px;top:28px;width:19px;height:19px;border-radius:50%;display:grid;place-items:center;background:var(--sheet);color:var(--brass-hi);box-shadow:0 0 0 1.5px var(--brass-lo);font-size:10px}
+.cast .md .fa-circle{font-size:6px}
+.cast button:focus-visible .face{outline:2px solid var(--moon);outline-offset:3px}
+.news{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:3px;font-size:13px;color:var(--head);padding-top:4px}
+.news div{display:flex;align-items:center;gap:9px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.news div::before{content:"";width:5px;height:5px;flex:none;transform:rotate(45deg);background:var(--brass)}
+.cta{margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border-radius:10px;background:color-mix(in srgb,var(--brass) 14%,transparent);border:1px dashed var(--brass)}
 .cta span{flex:1 1 180px;font-size:13.5px}
-.actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:center}
-.btn{font:inherit;font-size:13.5px;cursor:pointer;border-radius:8px;padding:4px 11px;min-height:30px;color:var(--ink);background:rgba(0,0,0,.2);border:1px solid color-mix(in srgb,var(--brass) 50%,transparent)}
-.btn:hover{background:color-mix(in srgb,var(--brass) 16%,transparent)}
-.btn:focus-visible{outline:2px solid var(--moon);outline-offset:1px}
+.actions{display:flex;margin-top:13px;border-radius:10px;border:1px solid var(--brass-lo);overflow:hidden;background:rgba(0,0,0,.14)}
+.btn{font:inherit;font-size:13.5px;cursor:pointer;border-radius:8px;padding:4px 12px;min-height:32px;color:var(--ink);background:rgba(0,0,0,.2);border:1px solid color-mix(in srgb,var(--brass) 50%,transparent);white-space:nowrap}
+.btn i{margin-right:6px;opacity:.9}
+.actions .btn{flex:1 1 auto;border:0;border-right:1px solid color-mix(in srgb,var(--brass-lo) 55%,transparent);border-radius:0;background:none;min-height:36px;padding:4px 10px}
+.btn:hover,.actions .btn:hover{background:color-mix(in srgb,var(--brass) 16%,transparent)}
+.btn:focus-visible{outline:2px solid var(--moon);outline-offset:-2px}
 .btn.primary{background:var(--brass);color:var(--on-brass);border-color:var(--brass);font-weight:700}
-.btn.ghost{border-color:transparent;background:none;color:var(--ink2);margin-left:auto}
-.band.collapsed .vitals,.band.collapsed .chips,.band.collapsed .cast,.band.collapsed .news,.band.collapsed .cta,.band.collapsed .actions .opt{display:none}
-.band.collapsed .actions{margin-top:6px}
+.actions .btn.ghost{flex:0 0 42px;border-right:0;color:var(--ink2);padding:0}
+.actions .btn.ghost i{margin:0}
+.band.collapsed .vitals,.band.collapsed .chips,.band.collapsed .low,.band.collapsed .cast,.band.collapsed .news,.band.collapsed .cta,.band.collapsed .actions .opt{display:none}
+.band.collapsed .actions{margin-top:10px}
 .waiting{padding:8px 2px;color:var(--ink2);font-size:13px}
-@media (max-width:460px){.vitals{gap:6px}.vit .row{font-size:11.5px}.vit .row span{overflow:hidden;text-overflow:ellipsis}.vit .sub{font-size:11.5px}.clock .t{font-size:21px}}
-@media (pointer:coarse){.btn{min-height:36px}}
+@media (max-width:540px){
+  .top{grid-template-columns:1fr;gap:8px}
+  .side{flex-direction:row-reverse;align-items:center;padding:2px 4px 0}
+  .pts{display:flex;align-items:baseline;gap:5px}.pts b{font-size:19px}.pts small{margin:0}
+  .clock .t{font-size:26px}
+  .vitals{gap:10px}.vit .row{font-size:12px}.vit .row span{overflow:hidden;text-overflow:ellipsis}.vit .row b small{display:none}.vit .sub{font-size:12px}
+  .low{flex-direction:column;gap:8px}
+  .actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;border:0;border-radius:0;overflow:visible;background:none}
+  .actions .btn{border:1px solid color-mix(in srgb,var(--brass) 45%,transparent);border-radius:8px;background:rgba(0,0,0,.18);min-height:40px;padding:4px 6px}
+  .actions .btn.ghost{border:1px solid var(--rule)}
+}
 @media (prefers-reduced-motion:reduce){.bar i{transition:none}}
 </style>
 </head>
@@ -127,7 +151,7 @@ button.chip{font:inherit;font-size:12.5px;cursor:pointer}button.chip:hover{backg
   }
   function bar(label, cur, max, color, sub, cls) {
     const pct = max > 0 ? Math.max(0, Math.min(100, cur / max * 100)) : 0;
-    return '<div class="vit"><div class="row"><span>' + label + '</span><b>' + fmt(cur) + ' / ' + fmt(max) + '</b></div>'
+    return '<div class="vit"><div class="row"><span>' + label + '</span><b>' + fmt(cur) + ' <small>/ ' + fmt(max) + '</small></b></div>'
       + '<div class="bar"><i style="width:' + pct + '%;background-color:' + color + '"></i></div>'
       + '<div class="sub ' + (cls || '') + '">' + esc(sub) + '</div></div>';
   }
@@ -182,12 +206,12 @@ button.chip{font:inherit;font-size:12.5px;cursor:pointer}button.chip:hover{backg
     const wx = ui.wx, wxm = ui.wxfx || 'full', wxOn = wxm !== 'off' && wx && wx.now && !wx.away && W._Weather;
     const season = ['Spring', 'Spring', 'Spring', 'Summer', 'Summer', 'Summer', 'Autumn', 'Autumn', 'Autumn', 'Winter', 'Winter', 'Winter'][((num(W.Month, 1) - 1) % 12 + 12) % 12];
     let h = '<div class="top"><div class="glass">'
-      + '<div class="clock"><span class="t">' + esc(W.Day) + ' ' + esc(W.Time) + '</span><span class="d">Month ' + esc(W.Month) + ', Week ' + esc(W.Week)
+      + '<div class="clock"><span class="dy">' + esc(W.Day) + '</span><span class="t">' + esc(W.Time) + '</span><span class="d">Month ' + esc(W.Month) + ', Week ' + esc(W.Week)
       + ' · ' + season + (wxOn ? ' · <b class="tc" title="' + esc(W._Weather) + '">' + esc(wx.now.temp) + ' °C</b>' : '') + '</span></div>'
       + '<div class="period">' + esc(W._Period || 'Free time') + '</div>'
       + '<div class="loc"><i class="fa-solid fa-location-dot"></i> ' + esc(W.Location) + '</div>'
-      + '</div><div class="side"><div class="pts">' + fmt((S.Player.Wallet || {}).Points) + '<small>pts</small></div>'
-      + '<div class="dorm">' + esc(P.Dorm === 'Unsorted' || !P.Dorm ? 'Unsorted' : P.Dorm + (P.Dorm_rank ? ' #' + P.Dorm_rank : '')) + '</div></div></div>';
+      + '</div><div class="side"><div class="pts"><b>' + fmt((S.Player.Wallet || {}).Points) + '</b><small>points</small></div>'
+      + '<div class="dorm"><i class="gem" aria-hidden="true"></i>' + esc(P.Dorm === 'Unsorted' || !P.Dorm ? 'Unsorted' : P.Dorm + (P.Dorm_rank ? ' #' + P.Dorm_rank : '')) + '</div></div></div>';
 
     h += '<div class="vitals">'
       + bar('Health', num(V.HP, 0), num(V.HP_max, 100), 'var(--hp)', V._Condition || '', sevCls(V._Condition || ''))
@@ -236,6 +260,7 @@ button.chip{font:inherit;font-size:12.5px;cursor:pointer}button.chip:hover{backg
     if (/^(the\s+)?(commissary|mall|nightwell|merryhew'?s|snug)\b/i.test(String(W.Location || '').trim())) c.push(chip('Shop here', 'fa-basket-shopping', '', 'Open the shop list', 'activities:shop'));
     if (c.length) h += '<div class="chips">' + c.join('') + '</div>';
 
+    const low = h.length;   // 1.22.0: who is here and the latest news share one row (.low)
     const here = Object.entries((S.Scene || {}).Present || {});
     if (here.length) {
       h += '<div class="cast" aria-label="Here with you">' + here.map(([id, v]) => {
@@ -243,10 +268,10 @@ button.chip{font:inherit;font-size:12.5px;cursor:pointer}button.chip:hover{backg
         const known = c && ((b && b.Rank >= 1) || (ui.names || []).includes(id));
         const label = c ? (known ? c[2] : c[1]) : id;
         const mood = wxm !== 'off' && b && b.Rank >= 4 && (ui.moods || {})[id];
-        const moodIcon = mood ? '<span title="' + esc(mood.mood + ' mood') + '">' + ({Good:'☀', Normal:'•', Bad:'☁'}[mood.mood] || '•') + '</span>' : '';
+        const moodIcon = mood ? '<span class="md" title="' + esc(mood.mood + ' mood') + '"><i class="fa-solid ' + ({ Good: 'fa-sun', Bad: 'fa-cloud' }[mood.mood] || 'fa-circle') + '"></i></span>' : '';   // 1.22.0: a badge on the portrait
         const tip = label + (v && v.Note ? ': ' + v.Note : '');
-        const face = c && c[0] ? '<img class="face" style="border-color:' + c[3] + '" src="' + esc(BASE + c[0]) + '" alt="" data-fb="' + (known ? esc(c[2].slice(0, 2)) : '?') + '">'
-          : '<span class="face" style="border-color:' + (c ? c[3] : '#6f737b') + '">' + esc(c && !known ? '?' : id.split(/\s+/).map(w => w[0]).join('').slice(0, 2)) + '</span>';   // 1.7.0: no portrait yet
+        const face = c && c[0] ? '<img class="face" style="--ring:' + c[3] + '" src="' + esc(BASE + c[0]) + '" alt="" data-fb="' + (known ? esc(c[2].slice(0, 2)) : '?') + '">'
+          : '<span class="face" style="--ring:' + (c ? c[3] : 'var(--rule2)') + '">' + esc(c && !known ? '?' : id.split(/\s+/).map(w => w[0]).join('').slice(0, 2)) + '</span>';   // 1.7.0: no portrait yet
         // 1.6.1 (N5): an invented character's button pins them in the Extras record (Keep) or lets them go
         const xr = !c ? ((S.Extras || {})[id] || null) : null, pin = xr && xr.Keep;
         const xtip = !c ? (pin ? ' (kept: tap to let them go)' : ' (tap to keep them in the record of invented characters)') : '';
@@ -256,6 +281,7 @@ button.chip{font:inherit;font-size:12.5px;cursor:pointer}button.chip:hover{backg
 
     const news = (ui.toasts || []).slice(-4).map(t => String(t).replace(/\{npc:([^}]+)\}/g, (_m, id) => who(id)));
     if (news.length) h += '<div class="news">' + news.map(t => '<div>' + esc(t) + '</div>').join('') + '</div>';
+    if (h.length > low) h = h.slice(0, low) + '<div class="low">' + h.slice(low) + '</div>';
 
     if (!ui.built) h += '<div class="cta"><span>Your student file is empty. Set up your student before your first action.</span><button class="btn primary" data-open="builder">Create your student</button></div>';
 
@@ -271,7 +297,7 @@ button.chip{font:inherit;font-size:12.5px;cursor:pointer}button.chip:hover{backg
     band.className = 'band' + (collapsed ? ' collapsed' : '');
     band.innerHTML = h;
     band.querySelectorAll('img[data-fb]').forEach(img => img.addEventListener('error', () => {
-      const sp = document.createElement('span'); sp.className = 'face'; sp.style.borderColor = img.style.borderColor; sp.textContent = img.dataset.fb; img.replaceWith(sp);
+      const sp = document.createElement('span'); sp.className = 'face'; sp.style.cssText = img.style.cssText; sp.textContent = img.dataset.fb; img.replaceWith(sp);
     }, { once: true }));
     popToasts(news);
   }
