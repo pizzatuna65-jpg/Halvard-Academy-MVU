@@ -16,11 +16,12 @@ ROLES = {   # token -> default (Pewter) value; every value must be unique
     'moon': '163,230,219', 'moon-dim': '134,194,184', 'glass-hi': '31,74,79', 'glass': '14,33,36', 'glass-lo': '10,23,26', 'glass-ink': '215,239,233',
     'ink': '236,231,219', 'ink2': '195,190,178', 'ink3': '170,166,155', 'head': '243,232,207', 'white': '255,255,255',
     'good': '143,208,180', 'warn': '240,189,120', 'danger': '241,154,145', 'hid': '211,194,239', 'rom': '242,182,203', 'past': '232,198,141',
-    'warn-line': '224,162,74', 'danger-line': '224,100,90',
+    'warn-line': '224,162,74', 'danger-line': '224,100,90', 'notify': '238,86,72',
     'shade': 'a:0,0,0', 'whiteA': 'a:255,255,255',
 }
 LIGHT_TEXT = {'shade': '70,52,30*0.45', 'whiteA': '0,0,0', 'good': '36,120,84', 'warn': '143,92,12', 'danger': '168,58,47', 'hid': '98,68,150',
-              'rom': '160,48,90', 'past': '138,94,28', 'warn-line': '190,130,40', 'danger-line': '192,70,58'}
+              'rom': '160,48,90', 'past': '138,94,28', 'warn-line': '190,130,40', 'danger-line': '192,70,58',
+              'notify': '204,58,44'}
 THEMES = {
     'midnight': ('Midnight (darker)', {
         'backdrop': '0,0,0', 'night': '7,9,14', 'well': '5,7,11', 'sheet': '13,16,23', 'band': '17,20,28', 'card': '20,24,33', 'card2': '25,29,40',

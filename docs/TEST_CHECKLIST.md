@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.25.0 (red "new" dots): the four checks in its section below.
 - v1.24.0–1.24.3 (map gates, lore heard, year floors): the checks in the v1.24.0 section below.
 - v1.23.0 (panels): the three checks in its section below.
 - v1.22.0 (bracelet): the three checks in its section below.
@@ -52,6 +53,14 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.25.0 — Red "new" dots
+
+- An older chat: after loading it no bracelet button has a dot (everything already open counts as seen).
+- Something new (a letter arrives, a new person is met, a story is overheard): the matching bracelet button gets a red dot; opening
+  the panel takes it away, the tab or person keeps its own dot until opened.
+- Reload SillyTavern (F5) and reopen the chat: dots already cleared stay cleared; a dot not yet cleared is still there.
+- Swipe the reply that brought the new thing: the dot goes with it; nothing reappears that was already seen.
 
 ### v1.24.0 — Map: gates, zoom, lore heard
 

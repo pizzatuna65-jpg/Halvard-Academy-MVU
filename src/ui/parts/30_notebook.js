@@ -34,7 +34,7 @@ PANELS.notebook = {
     const badge = id => (id === 'planner' && late ? `<i class="nbb bad">${late}</i>` : id === 'letters' && mail ? `<i class="nbb">${mail}</i>` : '');
     const body = ({ planner: nbPlanner, journal: nbJournal, notices: nbNotices, letters: nbLetters, mystery: nbMystery })[view.nb](S);
     return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>Notebook</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
-      <nav class="nav">${tabs.map(([id, l]) => `<button data-nb="${id}" class="${view.nb === id ? 'on' : ''}">${l}${badge(id)}</button>`).join('')}</nav><div class="bd">${body}</div></div>`;
+      <nav class="nav">${tabs.map(([id, l]) => `<button data-nb="${id}" class="${view.nb === id ? 'on' : ''}">${l}${badge(id)}${isNew(`tab:notebook:${id}`, view.nb === id) && view.nb !== id ? newsDot() : ''}</button>`).join('')}</nav><div class="bd">${body}</div></div>`;
   },
   input(el) { if (el.dataset.lt) view.letter[el.dataset.lt] = el.value; if (el.dataset.mk !== undefined) view.markText = el.value; },
   click(b, S) {

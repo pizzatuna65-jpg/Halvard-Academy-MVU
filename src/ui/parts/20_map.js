@@ -110,7 +110,9 @@ PANELS.map = {
     const pins = DATA.pins.filter(p => p.cluster.some(id => DATA.locs[id] && discovered(S, DATA.locs[id])));
     const pinHTML = pins.map(p => {
       const here = curPin && curPin.pin === p.pin, sel = view.pin === p.pin;
-      return `<button class="pin${here ? ' here' : ''}${sel ? ' sel' : ''}" data-pin="${p.pin}" style="left:${p.x}%;top:${p.y}%" aria-label="${esc(p.label)}${here ? ' (you are here)' : ''}" title="${esc(p.label)}"></button>`
+      // 1.25.0: a red dot on a marker whose places hold a story heard but not read yet
+      const fresh = p.cluster.some(id => DATA.locs[id] && discovered(S, DATA.locs[id]) && DATA.locs[id].lore.some(x => isNew(`lore:${x.uid}`)));
+      return `<button class="pin${here ? ' here' : ''}${sel ? ' sel' : ''}${fresh ? ' new' : ''}" data-pin="${p.pin}" style="left:${p.x}%;top:${p.y}%" aria-label="${esc(p.label)}${here ? ' (you are here)' : ''}" title="${esc(p.label)}"></button>`
         + (sel || here ? `<span class="plab${here ? ' here' : ''}${labPos(p)}" style="left:${p.x}%;top:${p.y}%">${esc(p.label)}</span>` : '');
     }).join('');
     let sheet = '<p class="hint">Tap a marker to see what is there.</p>';
@@ -204,7 +206,8 @@ const untoldOut = (l, S) => { const heard = heardSet(S), untold = l.lore.filter(
 function loreRow(l, S) {
   const heard = heardSet(S), known = l.lore.filter(x => heard.has(String(x.uid))), rest = l.lore.length - known.length;
   const more = rest ? `<p class="sub">${known.length ? `${rest} more you have not heard yet.` : 'You have not heard any stories about this place yet.'} People talk; spend time here.</p>` : '';
-  return `<details><summary>Lore and rumours (${known.length}/${l.lore.length})</summary>${known.map(x => `<p><b>${esc(x.title)}</b>: ${esc(x.summary)}</p>`).join('')}${more}</details>`;
+  const fresh = known.filter(x => isNew(`lore:${x.uid}`, true)).map(x => x.uid);   // 1.25.0: on screen now, so seen after this render
+  return `<details${fresh.length ? ' open' : ''}><summary>Lore and rumours (${known.length}/${l.lore.length})${fresh.length ? newsDot() : ''}</summary>${known.map(x => `<p><b>${esc(x.title)}</b>${fresh.includes(x.uid) ? newsDot() : ''}: ${esc(x.summary)}</p>`).join('')}${more}</details>`;
 }
 function locCard(id, S, cur, P) {
   const l = DATA.locs[id], fl = l.floors && l.floors.includes(view.floor) ? view.floor : '', here = id === cur && (!fl || fl === floorOf(cur, S));

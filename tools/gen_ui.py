@@ -112,6 +112,8 @@ DATA['trn'] = {k: v for k, v in json.load(open(P('data/training.json'), encoding
 DATA['features'] = json.load(open(P('data/features.json'), encoding='utf-8'))['features']
 DATA['fcost'] = json.load(open(P('data/feature_cost.json'), encoding='utf-8'))
 bar = open(P('src/ui/statusbar.template.html'), encoding='utf-8').read()
+NEWS = open(P('src/ui/news.shared.js'), encoding='utf-8').read()   # 1.25.0 red "new" dots, shared by the bracelet and the panels
+bar = bar.replace('/*@@NEWS@@*/', NEWS)
 THEMES = json.load(open(P('data/themes.json'), encoding='utf-8')); THEMES.pop('_note', None)   # 1.3.1 colour themes (tools/make_themes.py)
 bar = bar.replace('/*@@THEMES@@*/{}', json.dumps(THEMES, ensure_ascii=False, separators=(',', ':')))
 bar = bar.replace('/*@@CAST@@*/{}', json.dumps(CAST, ensure_ascii=False, separators=(',', ':'))).replace('/*@@BASE@@*/""', json.dumps(man['base_url']))
@@ -121,6 +123,7 @@ open(P('src/ui/statusbar.html'), 'w', encoding='utf-8', newline='\n').write(bar)
 t = open(P('src/scripts/ui.template.js'), encoding='utf-8').read()
 parts = ''.join(open(P('src/ui/parts', f), encoding='utf-8').read() + '\n' for f in sorted(os.listdir(P('src/ui/parts'))) if f.endswith('.js'))
 t = t.replace('/*@@PARTS@@*/', parts)
+t = t.replace('/*@@NEWS@@*/', NEWS)
 cal = json.load(open(P('data/calendar.json'), encoding='utf-8'))
 cal_js = '(() => { const EVENTS = ' + json.dumps(cal['events'], ensure_ascii=False, separators=(',', ':')) + '; const TIMETABLE = ' + json.dumps(cal['timetable'], ensure_ascii=False, separators=(',', ':')) + '; const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]; const schedOf = (e, day) => (!e.s ? "" : typeof e.s === "string" ? e.s : e.s[day] || ""); const timetableFor = W => W.Month === 10 && W.Week === 3 && W.Day === "Sat" ? [TIMETABLE.Sat[0], TIMETABLE.Sat[1], "Student Council Election (Main Courtyard)"] : TIMETABLE[W.Day]; return {EVENTS, TIMETABLE, timetableFor, schedOf}; })()'
 t = t.replace('/*@@CALENDAR@@*/{ EVENTS: [], TIMETABLE: {} }', cal_js)

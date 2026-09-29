@@ -407,7 +407,7 @@ const CSS = `
   --moon:#a3e6db; --moon-dim:#86c2b8; --glass-hi:#1f4a4f; --glass:#0e2124; --glass-lo:#0a171a; --glass-ink:#d7efe9;
   --ink:#ece7db; --ink2:#c3beb2; --ink3:#aaa69b; --head:#f3e8cf; --white:#ffffff;
   --good:#8fd0b4; --warn:#f0bd78; --danger:#f19a91; --hid:#d3c2ef; --rom:#f2b6cb; --past:#e8c68d;
-  --warn-line:#e0a24a; --danger-line:#e0645a;
+  --warn-line:#e0a24a; --danger-line:#e0645a; --notify:#ee5648;
   --f-ui:"Alegreya Sans",system-ui,sans-serif; --f-text:"Alegreya",Georgia,serif; --f-sc:"Alegreya SC","Alegreya",Georgia,serif;
   --fs-xs:12px; --fs-s:13.5px; --fs-m:15px; --fs-l:17px; --fs-xl:21px; --fs-xxl:30px;
   position:fixed;inset:0;z-index:99999;background:var(--backdrop);display:flex;align-items:flex-start;justify-content:center;
@@ -428,6 +428,9 @@ const CSS = `
 .nav button.on{color:var(--ink)}
 .nav button.on::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:2px 2px 0 0;background:var(--brass)}
 .nav button.err{color:var(--danger)}
+/* 1.25.0 red "new" dot (news.shared.js): on a tab, a person, a story heard; map pins keep fixed colours */
+.nd{display:inline-block;width:8px;height:8px;margin:0 0 1px 6px;border-radius:50%;background:var(--notify);vertical-align:middle}
+.pin.new::after{content:"";position:absolute;top:-5px;right:-5px;width:9px;height:9px;border-radius:50%;background:#ee3b2b/*keep*/;box-shadow:0 0 0 2px #1d1a15/*keep*/}
 /* 1.23.0 Builder: numbered steps (the only panel whose tabs are a sequence) */
 .nav.steps{gap:18px}
 .nav.steps .n{display:inline-grid;place-items:center;width:21px;height:21px;margin-right:7px;border-radius:50%;border:1px solid var(--rule2);font-style:normal;font-size:var(--fs-xs);font-weight:700;color:var(--ink2);vertical-align:1px}
@@ -752,6 +755,30 @@ function applyTheme() { const st = root && root.querySelector('style'); if (st) 
 const PD = window.parent.document;
 let host = null, root = null, ov = null;
 const view = { panel: '', arg: '', stack: [], step: 'start', tab: 'overview', busy: false };
+/*@@NEWS@@*/
+// 1.25.0: the panels record what the player has looked at (chat variables); without Tavern Helper (previews, tests) only in memory
+const NEWS_CHAT = typeof getVariables === 'function' && typeof updateVariablesWith === 'function';
+let newsMem = null, newsNow = { unseen: new Set(), shown: [] };
+const newsGet = () => (NEWS_CHAT ? newsStore() : newsMem);
+const newsFeat = S => id => featureOn(S, id);
+function newsWrite(st) {
+  newsMem = st;
+  if (NEWS_CHAT) try { updateVariablesWith(v => { v[NEWS_VAR] = st; return v; }, { type: 'chat' }); } catch (e) { console.warn('[Eldrasil] news', e); }
+  try { eventEmit('eldrasil:news'); } catch (e) { /* no Tavern Helper */ }
+}
+// the first time a chat is seen, everything already open counts as seen (no flood of dots on an older save)
+function newsInit(S) { if (S && S.World && !newsGet()) newsWrite({ seen: newsItems(S, newsFeat(S)).map(([k]) => k), noticed: [] }); }
+function newsMark(keys, level) {
+  const st = newsGet(); if (!st) return;
+  st.noticed = st.noticed || [];
+  const arr = level === 'noticed' ? st.noticed : st.seen, add = [...new Set(keys)].filter(k => !arr.includes(k));
+  if (!add.length) return;
+  arr.push(...add);
+  if (level === 'seen') st.noticed = st.noticed.filter(k => !add.includes(k));
+  newsWrite(st);
+}
+// during a render: is this key new? (shown = it is on screen now, so it counts as seen after this render)
+const isNew = (key, shown) => { const n = newsNow.unseen.has(key); if (n && shown) newsNow.shown.push(key); return n; };
 let draft = null, draftBuilt = false, chosenTemplate = '';
 
 function ensureHost() {
@@ -797,7 +824,11 @@ function open(target, { push = true } = {}) {
     draft = draftFromState(st.data.stat_data); draftBuilt = !!st.data.stat_data.$ui.built; chosenTemplate = '';
     view.step = draftBuilt ? 'identity' : 'start';
   }
-  view.panel = panel; ov.hidden = false; render();
+  view.panel = panel; ov.hidden = false;
+  newsInit(st.data.stat_data);
+  const np = panel === 'npc' ? 'people' : panel;   // 1.25.0: opening a panel takes the dot off its bracelet button
+  newsMark(newsUnseen(st.data.stat_data, newsFeat(st.data.stat_data), newsGet()).filter(([, p]) => p === np).map(([k]) => k), 'noticed');
+  render();
   const d = ov.querySelector('.dlg'); if (d) keepPage(() => d.focus({ preventScroll: true }));
 }
 // 1.3.5: the card's lorebook holds the starting state and the rules; without it nothing works (Tavern Helper worldbook API)
@@ -860,6 +891,7 @@ function render0() {
   if (!ov || ov.hidden) return;
   const st = latestState(); const S = st && st.data.stat_data;
   const bd0 = ov.querySelector('.bd'), key = view.panel + '|' + view.arg, y = bd0 && render0.key === key ? bd0.scrollTop : 0;   // 1.3.4
+  newsNow = { unseen: new Set(S ? newsUnseen(S, newsFeat(S), newsGet()).map(([k]) => k) : []), shown: [] };   // 1.25.0
   const html = view.panel === 'builder' ? renderBuilder(S) : view.panel === 'profile' ? renderProfile(S) : PANELS[view.panel].render(S);
   // 1.3.1 (owner playtest: Etnie's dossier mixed "{{user}}" with the persona name): lore text shows the student's name everywhere.
   // The Builder is left alone: its fields hold what will be saved.
@@ -872,6 +904,7 @@ function render0() {
     img.replaceWith(Object.assign(PD.createElement('span'), { className: img.dataset.fbclass || 'fb', textContent: img.dataset.fb }));
   }, { once: true }));
   if (PANELS[view.panel] && PANELS[view.panel].after) PANELS[view.panel].after(S);
+  if (newsNow.shown.length) newsMark(newsNow.shown, 'seen');
   const on = ov.querySelector('.nav .on'); if (on) scrollInto(on, on.parentElement);
 }
 
@@ -1308,7 +1341,7 @@ function renderProfile(S) {
   const P = S.Player.Profile;
   return `<div class="dlg" tabindex="-1" style="--dc:${DORM_COLOR[P.Dorm] || DORM_COLOR.Unsorted}"><div class="hd"><h2>Student file</h2>
     <button class="btn sm pri" data-act="tobuilder" title="Edit your profile, magic, techniques and pacts">${(S.$ui || {}).built ? 'Edit student file' : 'Create your student'}</button><button class="x" data-act="close" aria-label="Close">×</button></div>
-    <nav class="nav">${tabs.map(([id, lab]) => `<button data-tab="${id}" class="${view.tab === id ? 'on' : ''}">${lab}</button>`).join('')}</nav><div class="bd">${body}</div></div>`;
+    <nav class="nav">${tabs.map(([id, lab]) => `<button data-tab="${id}" class="${view.tab === id ? 'on' : ''}">${lab}${isNew(`tab:profile:${id}`, view.tab === id) && view.tab !== id ? newsDot() : ''}</button>`).join('')}</nav><div class="bd">${body}</div></div>`;
 }
 function pOverview(S) {
   const P = S.Player.Profile, W = S.World;
@@ -1619,11 +1652,14 @@ if (typeof eventOn === 'function' && typeof getButtonEvent === 'function') {
     eventOn(getButtonEvent('Notebook'), () => open('notebook'));
     eventOn(getButtonEvent('Activities'), () => open('activities'));
     const refresh = _.debounce(() => { if (view.panel === 'profile' || (PANELS[view.panel] && PANELS[view.panel].live)) render(); }, 300);
+    const newsBoot = _.debounce(() => { const st = latestState(); if (st) newsInit(st.data.stat_data); }, 800);   // 1.25.0
+    ['MESSAGE_RECEIVED', 'MESSAGE_SWIPED', 'CHAT_CHANGED'].forEach(k => tavern_events[k] && eventOn(tavern_events[k], newsBoot));
+    setTimeout(newsBoot, 2500);
     ['MESSAGE_RECEIVED', 'MESSAGE_DELETED', 'MESSAGE_SWIPED', 'MESSAGE_UPDATED'].forEach(k => tavern_events[k] && eventOn(tavern_events[k], refresh));
-    eventOn(tavern_events.CHAT_CHANGED, () => { draft = null; close(); loreChecked = ''; setTimeout(ensureLorebook, 1200); });
+    eventOn(tavern_events.CHAT_CHANGED, () => { draft = null; newsMem = null; close(); loreChecked = ''; setTimeout(ensureLorebook, 1200); });
     setTimeout(ensureLorebook, 1500);   // 1.3.6: the card installs or updates its own lorebook
     window.addEventListener('storage', e => { if (e.key === THEME_KEY) applyTheme(); });   // 1.3.1: the theme changed in another tab
-    waitGlobalInitialized('Mvu').then(() => eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, () => setTimeout(refresh, 400)));
+    waitGlobalInitialized('Mvu').then(() => eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, () => { setTimeout(refresh, 400); newsBoot(); }));
     $(window).on('pagehide', () => { delete window.parent.__eldrasilUI; if (host) host.remove(); });
   });
 }

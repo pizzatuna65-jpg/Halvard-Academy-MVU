@@ -73,7 +73,7 @@ function peopleListHTML(S) {
     const b = B[id], n = npcOf(id), need = bondNeed(S, b.Rank), x = Math.min(num(b.$xp), need);
     const dot = here.includes(id) ? '<i class="here" role="img" aria-label="here now" title="here now"></i>' : '';
     return `<button class="pr" data-open="npc:${esc(id)}"><span class="pav">${avatar(id, S, 'av lg')}${dot}</span><span class="pm">
-      <span class="pn">${esc(nameOf(id, S, true))}${b.Romance ? ' <span class="pill r">romance</span>' : ''}</span><span class="sub">${esc(b.Title || (n ? publicRole(id, S) || whoLine(id, S) : ''))}</span></span>
+      <span class="pn">${esc(nameOf(id, S, true))}${isNew(`npc:${id}`) ? newsDot() : ''}${b.Romance ? ' <span class="pill r">romance</span>' : ''}</span><span class="sub">${esc(b.Title || (n ? publicRole(id, S) || whoLine(id, S) : ''))}</span></span>
       <span class="medal" title="Rank ${b.Rank} of 10">${b.Rank}</span>
       <span class="pmt"><span class="m" title="${b.Rank >= 10 ? 'max rank' : `${x} / ${need} XP to Rank ${b.Rank + 1}`}"><span class="ml">XP<b>${b.Rank >= 10 ? 'max' : `${x}/${need}`}</b></span><span class="mini xp"><i style="width:${b.Rank >= 10 ? 100 : need ? x / need * 100 : 0}%"></i></span></span>
       <span class="m" title="${esc(trustTxt(id, b))}"><span class="ml">Trust<b>${id in TRD.lock ? 'fixed' : b.Trust}</b></span>${mini(b.Trust, '#3f9f69')}</span>
@@ -86,6 +86,7 @@ PANELS.npc = {
   live: true,
   render(S) {
     const id = view.arg, n = npcOf(id), b = (S.Bonds || {})[id], rank = b ? b.Rank : 0;
+    isNew(`npc:${id}`, true);   // 1.25.0: the dossier is open, so this person is no longer new
     const title = n ? nameOf(id, S, true) : id;
     const port = n && n.p ? `<img class="por" src="${esc(imgURL(n.p))}" alt="" style="object-position:${n.fc[0]}% ${n.fc[1]}%" data-fb="${esc(knowsName(id, S) ? initials(n.n) : '?')}" data-fbclass="por fb">` : `<span class="por fb">${esc(n && !knowsName(id, S) ? '?' : initials(n ? n.n : id))}</span>`;
     // 1.23.0 (UI overhaul): the portrait (matted, sticky) and the dorm stay in the left column; everything else is the file

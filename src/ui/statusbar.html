@@ -9,7 +9,7 @@
   --brass:#c9a364; --brass-hi:#ecd49f; --brass-lo:#7d5f34; --on-brass:#1c1810;
   --moon:#a3e6db; --moon-dim:#86c2b8; --glass-hi:#1f4a4f; --glass:#0e2124; --glass-lo:#0a171a; --glass-ink:#d7efe9;
   --ink:#ece7db; --ink2:#c3beb2; --ink3:#aaa69b; --head:#f3e8cf;
-  --warn:#f0bd78; --danger:#f19a91; --warn-line:#e0a24a; --danger-line:#e0645a;
+  --warn:#f0bd78; --danger:#f19a91; --warn-line:#e0a24a; --danger-line:#e0645a; --notify:#ee5648;
   --hp:#d9625a/*keep*/; --st:#dcae4a/*keep*/; --mp:#6f9de6/*keep*/; --dorm:#9aa3ad/*keep*/;
   --f-ui:"Alegreya Sans",system-ui,sans-serif; --f-sc:"Alegreya SC","Alegreya",Georgia,serif;
 }
@@ -75,6 +75,9 @@ button.chip{font:inherit;font-size:13px;cursor:pointer}button.chip:hover{filter:
 .btn:hover,.actions .btn:hover{background:color-mix(in srgb,var(--brass) 16%,transparent)}
 .btn:focus-visible{outline:2px solid var(--moon);outline-offset:-2px}
 .btn.primary{background:var(--brass);color:var(--on-brass);border-color:var(--brass);font-weight:700}
+/* 1.25.0 red "new" dot (news.shared.js) */
+.actions .btn{position:relative}
+.nd{position:absolute;top:4px;right:5px;width:8px;height:8px;border-radius:50%;background:var(--notify);box-shadow:0 0 0 2px rgba(0,0,0,.35);pointer-events:none}
 .actions .btn.ghost{flex:0 0 42px;border-right:0;color:var(--ink2);padding:0}
 .actions .btn.ghost i{margin:0}
 .band.collapsed .vitals,.band.collapsed .chips,.band.collapsed .low,.band.collapsed .cast,.band.collapsed .news,.band.collapsed .actions .opt{display:none}
@@ -111,7 +114,7 @@ button.chip{font:inherit;font-size:13px;cursor:pointer}button.chip:hover{filter:
   let collapsed = false; try { collapsed = localStorage.getItem('eld.bar.collapsed') === '1'; } catch (e) {}
   // 1.3.1 colour themes (owner playtest), palette only: data/themes.json, chosen in Student file > Settings (kept per browser in
   // localStorage "eld.theme", the same key the panels use); the bracelet re-colours itself when it changes.
-  const THEMES = {"default":"pewter","order":["pewter","midnight","rosewood","parchment","frost"],"themes":{"pewter":{"name":"Pewter (default)","map":{}},"midnight":{"name":"Midnight (darker)","map":{"8,10,16":"0,0,0","20,25,37":"7,9,14","16,20,29":"5,7,11","28,34,48":"13,16,23","33,40,56":"17,20,28","36,43,59":"20,24,33","42,50,68":"25,29,40","44,52,70":"26,30,41","53,63,85":"36,41,55","53,62,82":"38,43,56","74,84,108":"58,64,82","102,110,128":"72,78,92","70,77,93":"44,49,60","42,47,59":"22,25,32","201,163,100":"190,152,90","236,212,159":"228,202,148","125,95,52":"104,78,42","31,74,79":"18,50,55","14,33,36":"6,22,25","10,23,26":"3,13,15"}},"rosewood":{"name":"Rosewood (warm dark)","map":{"8,10,16":"14,8,9","20,25,37":"26,16,19","16,20,29":"20,12,14","28,34,48":"36,24,27","33,40,56":"42,28,32","36,43,59":"48,32,36","42,50,68":"56,38,42","44,52,70":"58,39,43","53,63,85":"72,49,54","53,62,82":"80,56,60","74,84,108":"108,80,84","102,110,128":"128,96,98","70,77,93":"88,62,65","42,47,59":"50,34,37","201,163,100":"212,154,106","236,212,159":"242,208,168","125,95,52":"132,88,62","163,230,219":"242,192,172","134,194,184":"214,160,142","31,74,79":"78,40,46","14,33,36":"44,22,27","10,23,26":"30,14,18","215,239,233":"246,216,202","243,232,207":"246,226,204","195,190,178":"205,190,184","170,166,155":"182,164,158"}},"parchment":{"name":"Parchment (light)","map":{"a:0,0,0":"70,52,30*0.45","a:255,255,255":"0,0,0","143,208,180":"36,120,84","240,189,120":"143,92,12","241,154,145":"168,58,47","211,194,239":"98,68,150","242,182,203":"160,48,90","232,198,141":"138,94,28","224,162,74":"190,130,40","224,100,90":"192,70,58","8,10,16":"40,33,22","20,25,37":"233,225,208","16,20,29":"246,241,231","28,34,48":"251,248,241","33,40,56":"244,237,224","36,43,59":"243,237,225","42,50,68":"236,228,212","44,52,70":"240,232,216","53,63,85":"229,218,197","53,62,82":"215,203,178","74,84,108":"186,172,146","102,110,128":"253,250,243","70,77,93":"240,232,215","42,47,59":"225,213,188","201,163,100":"143,106,51","236,212,159":"109,79,34","125,95,52":"184,154,106","28,24,16":"255,250,240","163,230,219":"23,104,94","134,194,184":"52,108,100","31,74,79":"246,251,249","14,33,36":"227,239,235","10,23,26":"211,229,224","215,239,233":"31,59,55","236,231,219":"43,38,32","195,190,178":"87,79,67","170,166,155":"100,92,79","243,232,207":"74,50,20","255,255,255":"30,26,20"}},"frost":{"name":"Frost (light, cool)","map":{"a:0,0,0":"70,52,30*0.45","a:255,255,255":"0,0,0","143,208,180":"36,120,84","240,189,120":"143,92,12","241,154,145":"168,58,47","211,194,239":"98,68,150","242,182,203":"160,48,90","232,198,141":"138,94,28","224,162,74":"190,130,40","224,100,90":"192,70,58","8,10,16":"18,26,38","20,25,37":"226,232,240","16,20,29":"244,247,250","28,34,48":"252,253,254","33,40,56":"240,243,247","36,43,59":"243,246,250","42,50,68":"232,237,243","44,52,70":"234,239,245","53,63,85":"218,225,234","53,62,82":"208,215,225","74,84,108":"176,186,200","102,110,128":"255,255,255","70,77,93":"232,237,243","42,47,59":"212,220,231","201,163,100":"46,88,160","236,212,159":"26,58,116","125,95,52":"150,168,196","28,24,16":"255,255,255","163,230,219":"18,100,110","134,194,184":"44,106,114","31,74,79":"245,251,252","14,33,36":"222,238,242","10,23,26":"205,227,233","215,239,233":"20,60,68","236,231,219":"30,36,46","195,190,178":"64,72,86","170,166,155":"82,92,106","243,232,207":"22,42,74","255,255,255":"20,26,36"}}}};
+  const THEMES = {"default":"pewter","order":["pewter","midnight","rosewood","parchment","frost"],"themes":{"pewter":{"name":"Pewter (default)","map":{}},"midnight":{"name":"Midnight (darker)","map":{"8,10,16":"0,0,0","20,25,37":"7,9,14","16,20,29":"5,7,11","28,34,48":"13,16,23","33,40,56":"17,20,28","36,43,59":"20,24,33","42,50,68":"25,29,40","44,52,70":"26,30,41","53,63,85":"36,41,55","53,62,82":"38,43,56","74,84,108":"58,64,82","102,110,128":"72,78,92","70,77,93":"44,49,60","42,47,59":"22,25,32","201,163,100":"190,152,90","236,212,159":"228,202,148","125,95,52":"104,78,42","31,74,79":"18,50,55","14,33,36":"6,22,25","10,23,26":"3,13,15"}},"rosewood":{"name":"Rosewood (warm dark)","map":{"8,10,16":"14,8,9","20,25,37":"26,16,19","16,20,29":"20,12,14","28,34,48":"36,24,27","33,40,56":"42,28,32","36,43,59":"48,32,36","42,50,68":"56,38,42","44,52,70":"58,39,43","53,63,85":"72,49,54","53,62,82":"80,56,60","74,84,108":"108,80,84","102,110,128":"128,96,98","70,77,93":"88,62,65","42,47,59":"50,34,37","201,163,100":"212,154,106","236,212,159":"242,208,168","125,95,52":"132,88,62","163,230,219":"242,192,172","134,194,184":"214,160,142","31,74,79":"78,40,46","14,33,36":"44,22,27","10,23,26":"30,14,18","215,239,233":"246,216,202","243,232,207":"246,226,204","195,190,178":"205,190,184","170,166,155":"182,164,158"}},"parchment":{"name":"Parchment (light)","map":{"a:0,0,0":"70,52,30*0.45","a:255,255,255":"0,0,0","143,208,180":"36,120,84","240,189,120":"143,92,12","241,154,145":"168,58,47","211,194,239":"98,68,150","242,182,203":"160,48,90","232,198,141":"138,94,28","224,162,74":"190,130,40","224,100,90":"192,70,58","238,86,72":"204,58,44","8,10,16":"40,33,22","20,25,37":"233,225,208","16,20,29":"246,241,231","28,34,48":"251,248,241","33,40,56":"244,237,224","36,43,59":"243,237,225","42,50,68":"236,228,212","44,52,70":"240,232,216","53,63,85":"229,218,197","53,62,82":"215,203,178","74,84,108":"186,172,146","102,110,128":"253,250,243","70,77,93":"240,232,215","42,47,59":"225,213,188","201,163,100":"143,106,51","236,212,159":"109,79,34","125,95,52":"184,154,106","28,24,16":"255,250,240","163,230,219":"23,104,94","134,194,184":"52,108,100","31,74,79":"246,251,249","14,33,36":"227,239,235","10,23,26":"211,229,224","215,239,233":"31,59,55","236,231,219":"43,38,32","195,190,178":"87,79,67","170,166,155":"100,92,79","243,232,207":"74,50,20","255,255,255":"30,26,20"}},"frost":{"name":"Frost (light, cool)","map":{"a:0,0,0":"70,52,30*0.45","a:255,255,255":"0,0,0","143,208,180":"36,120,84","240,189,120":"143,92,12","241,154,145":"168,58,47","211,194,239":"98,68,150","242,182,203":"160,48,90","232,198,141":"138,94,28","224,162,74":"190,130,40","224,100,90":"192,70,58","238,86,72":"204,58,44","8,10,16":"18,26,38","20,25,37":"226,232,240","16,20,29":"244,247,250","28,34,48":"252,253,254","33,40,56":"240,243,247","36,43,59":"243,246,250","42,50,68":"232,237,243","44,52,70":"234,239,245","53,63,85":"218,225,234","53,62,82":"208,215,225","74,84,108":"176,186,200","102,110,128":"255,255,255","70,77,93":"232,237,243","42,47,59":"212,220,231","201,163,100":"46,88,160","236,212,159":"26,58,116","125,95,52":"150,168,196","28,24,16":"255,255,255","163,230,219":"18,100,110","134,194,184":"44,106,114","31,74,79":"245,251,252","14,33,36":"222,238,242","10,23,26":"205,227,233","215,239,233":"20,60,68","236,231,219":"30,36,46","195,190,178":"64,72,86","170,166,155":"82,92,106","243,232,207":"22,42,74","255,255,255":"20,26,36"}}}};
   const STYLE = document.getElementById('eld-bar-css'), CSS0 = STYLE ? STYLE.textContent : '';   // 1.3.4: by id: Tavern Helper adds its own <style> first
   const rgbHex = s => '#' + s.split(',').map(x => (+x).toString(16).padStart(2, '0')).join('');
   function applyTheme() {
@@ -190,6 +193,45 @@ button.chip{font:inherit;font-size:13px;cursor:pointer}button.chip:hover{filter:
       band.querySelector('.cta span').innerHTML += '<br>Open the character panel → <b>More…</b> → <b>Import Card Lore</b>.';
     }
   }
+
+  // 1.25.0 (owner, planning/DRAFT_proficiency_practice.md Batch 1): red "new" dots. Shared by the bracelet and the panels
+  // (tools/gen_ui.py pastes this file into both). What was seen is not game state: it lives in Tavern Helper's chat variables
+  // (chat_metadata.variables, saved with the chat; MVU only writes its own keys there), never in the message variables or the
+  // browser (DECISIONS §6, §11). The panels write it; the bracelet only reads it.
+  // An item is [key, panel]. Two levels: a panel button's dot goes once the panel is opened ("noticed"); an item's dot goes once
+  // the item itself is shown ("seen").
+  const NEWS_VAR = 'eld_seen';
+  function newsItems(S, featOn) {
+    const ui = (S && S.$ui) || {}, unl = ui.unlocks || [], out = [];
+    const tab = (panel, id, ok) => { if (ok) out.push(['tab:' + panel + ':' + id, panel]); };
+    const f = id => featOn(id), u = k => unl.includes(k);
+    tab('notebook', 'notices', u('notices') && (f('notices') || f('weather')));
+    tab('notebook', 'letters', u('letters') && f('letters'));
+    tab('notebook', 'mystery', u('mystery') && f('mystery'));
+    tab('activities', 'competition', u('competition') && f('competition'));
+    tab('activities', 'projects', u('projects') && f('projects'));
+    tab('activities', 'trip', u('trip') && f('trip'));
+    tab('profile', 'bag', u('inventory') && f('inventory'));
+    tab('profile', 'hidden', !!((S && S.Hidden) || {})._True_magic || u('hidden'));
+    tab('profile', 'perks', Object.keys((S && S._Perks) || {}).length > 0 || (ui.perks_used || []).length > 0);
+    (ui.lore || []).forEach(x => out.push(['lore:' + x, 'map']));
+    Object.keys((S && S.Bonds) || {}).forEach(id => out.push(['npc:' + id, 'people']));
+    return out;
+  }
+  function newsStore() {
+    try { const v = (getVariables({ type: 'chat' }) || {})[NEWS_VAR]; return v && Array.isArray(v.seen) ? v : null; } catch (e) { return null; }
+  }
+  // keys not yet seen; with `panels`, the panels holding one that is not noticed either (the bracelet buttons)
+  function newsUnseen(S, featOn, st) {
+    if (!S || !st) return [];
+    const seen = new Set(st.seen);
+    return newsItems(S, featOn).filter(([k]) => !seen.has(k));
+  }
+  function newsPanels(S, featOn, st) {
+    const noticed = new Set((st && st.noticed) || []);
+    return new Set(newsUnseen(S, featOn, st).filter(([k]) => !noticed.has(k)).map(([, p]) => p));
+  }
+  const newsDot = label => '<i class="nd" role="img" aria-label="' + (label ? label + ', ' : '') + 'new" title="New"></i>';
 
   let who = id => id;
   function render() {
@@ -286,12 +328,16 @@ button.chip{font:inherit;font-size:13px;cursor:pointer}button.chip:hover{filter:
 
     if (!ui.built) h += '<div class="cta"><span>Your student file is empty. Set up your student before your first action.</span><button class="btn primary" data-open="builder">Create your student</button></div>';
 
-    h += '<div class="actions"><button class="btn" data-open="profile"><i class="fa-solid fa-id-card"></i> Student file</button>'
-      + (unl.includes('inventory') && !(ui.off || []).includes('inventory') ? '<button class="btn" data-open="profile:bag"><i class="fa-solid fa-bag-shopping"></i> Bag</button>' : '')
-      + '<button class="btn" data-open="people"><i class="fa-solid fa-users"></i> People</button>'
-      + '<button class="btn" data-open="map"><i class="fa-solid fa-map"></i> Map</button>'
-      + '<button class="btn" data-open="notebook"><i class="fa-solid fa-book"></i> Notebook</button>'
-      + '<button class="btn" data-open="activities"><i class="fa-solid fa-compass"></i> Activities</button>'
+    // 1.25.0: a red dot on a button whose panel holds something new the player has not looked at (news.shared.js)
+    const featOn = id => (typeof (ui.on || {})[id] === 'boolean' ? ui.on[id] : !OFF.includes(id)), nst = newsStore();
+    const NP = newsPanels(S, featOn, nst), nd = p => (NP.has(p) ? newsDot() : '');
+    const bagNew = newsUnseen(S, featOn, nst).some(([k]) => k === 'tab:profile:bag' && !((nst && nst.noticed) || []).includes(k));
+    h += '<div class="actions"><button class="btn" data-open="profile"><i class="fa-solid fa-id-card"></i> Student file' + nd('profile') + '</button>'
+      + (unl.includes('inventory') && !(ui.off || []).includes('inventory') ? '<button class="btn" data-open="profile:bag"><i class="fa-solid fa-bag-shopping"></i> Bag' + (bagNew ? newsDot() : '') + '</button>' : '')
+      + '<button class="btn" data-open="people"><i class="fa-solid fa-users"></i> People' + nd('people') + '</button>'
+      + '<button class="btn" data-open="map"><i class="fa-solid fa-map"></i> Map' + nd('map') + '</button>'
+      + '<button class="btn" data-open="notebook"><i class="fa-solid fa-book"></i> Notebook' + nd('notebook') + '</button>'
+      + '<button class="btn" data-open="activities"><i class="fa-solid fa-compass"></i> Activities' + nd('activities') + '</button>'
       + (!ui.built ? '<button class="btn opt" data-open="builder"><i class="fa-solid fa-pen-nib"></i> Builder</button>' : '')
       + '<button class="btn ghost" data-toggle="1" aria-label="Collapse or expand" aria-expanded="' + (!collapsed) + '" title="' + (collapsed ? 'Expand' : 'Collapse') + '"><i class="fa-solid ' + (collapsed ? 'fa-chevron-down' : 'fa-chevron-up') + '"></i></button></div>';
 
@@ -331,6 +377,7 @@ button.chip{font:inherit;font-size:13px;cursor:pointer}button.chip:hover{filter:
       if (tavern_events[k]) eventOn(tavern_events[k], rerender);
     });
     eventOn('eldrasil:state', rerender);
+    eventOn('eldrasil:news', rerender);   // 1.25.0: a panel marked something as seen
     waitGlobalInitialized('Mvu').then(() => {
       eventOn(Mvu.events.VARIABLE_INITIALIZED, rerender);
       eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, () => setTimeout(rerender, 400));

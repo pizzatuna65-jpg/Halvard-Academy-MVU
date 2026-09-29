@@ -24,7 +24,7 @@ PANELS.activities = {
     if (!tabs.some(t => t[0] === view.act)) view.act = 'clubs';
     const body = ({ clubs: acClubs, competition: acCompetition, shop: acShop, projects: acProjects, trip: acTrip })[view.act](S);
     return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>Activities</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
-      <nav class="nav">${tabs.map(([id, l]) => `<button data-actab="${id}" class="${view.act === id ? 'on' : ''}">${l}</button>`).join('')}</nav><div class="bd">${body}</div></div>`;
+      <nav class="nav">${tabs.map(([id, l]) => `<button data-actab="${id}" class="${view.act === id ? 'on' : ''}">${l}${isNew(`tab:activities:${id}`, view.act === id) && view.act !== id ? newsDot() : ''}</button>`).join('')}</nav><div class="bd">${body}</div></div>`;
   },
   click(b) {
     if (b.dataset.actab) { view.act = b.dataset.actab; render(); ov.querySelector('.bd').scrollTop = 0; return; }

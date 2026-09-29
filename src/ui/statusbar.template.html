@@ -9,7 +9,7 @@
   --brass:#c9a364; --brass-hi:#ecd49f; --brass-lo:#7d5f34; --on-brass:#1c1810;
   --moon:#a3e6db; --moon-dim:#86c2b8; --glass-hi:#1f4a4f; --glass:#0e2124; --glass-lo:#0a171a; --glass-ink:#d7efe9;
   --ink:#ece7db; --ink2:#c3beb2; --ink3:#aaa69b; --head:#f3e8cf;
-  --warn:#f0bd78; --danger:#f19a91; --warn-line:#e0a24a; --danger-line:#e0645a;
+  --warn:#f0bd78; --danger:#f19a91; --warn-line:#e0a24a; --danger-line:#e0645a; --notify:#ee5648;
   --hp:#d9625a/*keep*/; --st:#dcae4a/*keep*/; --mp:#6f9de6/*keep*/; --dorm:#9aa3ad/*keep*/;
   --f-ui:"Alegreya Sans",system-ui,sans-serif; --f-sc:"Alegreya SC","Alegreya",Georgia,serif;
 }
@@ -75,6 +75,9 @@ button.chip{font:inherit;font-size:13px;cursor:pointer}button.chip:hover{filter:
 .btn:hover,.actions .btn:hover{background:color-mix(in srgb,var(--brass) 16%,transparent)}
 .btn:focus-visible{outline:2px solid var(--moon);outline-offset:-2px}
 .btn.primary{background:var(--brass);color:var(--on-brass);border-color:var(--brass);font-weight:700}
+/* 1.25.0 red "new" dot (news.shared.js) */
+.actions .btn{position:relative}
+.nd{position:absolute;top:4px;right:5px;width:8px;height:8px;border-radius:50%;background:var(--notify);box-shadow:0 0 0 2px rgba(0,0,0,.35);pointer-events:none}
 .actions .btn.ghost{flex:0 0 42px;border-right:0;color:var(--ink2);padding:0}
 .actions .btn.ghost i{margin:0}
 .band.collapsed .vitals,.band.collapsed .chips,.band.collapsed .low,.band.collapsed .cast,.band.collapsed .news,.band.collapsed .actions .opt{display:none}
@@ -191,6 +194,7 @@ button.chip{font:inherit;font-size:13px;cursor:pointer}button.chip:hover{filter:
     }
   }
 
+/*@@NEWS@@*/
   let who = id => id;
   function render() {
     if (!isLatest()) { band.className = 'band stale'; band.innerHTML = ''; return; }
@@ -286,12 +290,16 @@ button.chip{font:inherit;font-size:13px;cursor:pointer}button.chip:hover{filter:
 
     if (!ui.built) h += '<div class="cta"><span>Your student file is empty. Set up your student before your first action.</span><button class="btn primary" data-open="builder">Create your student</button></div>';
 
-    h += '<div class="actions"><button class="btn" data-open="profile"><i class="fa-solid fa-id-card"></i> Student file</button>'
-      + (unl.includes('inventory') && !(ui.off || []).includes('inventory') ? '<button class="btn" data-open="profile:bag"><i class="fa-solid fa-bag-shopping"></i> Bag</button>' : '')
-      + '<button class="btn" data-open="people"><i class="fa-solid fa-users"></i> People</button>'
-      + '<button class="btn" data-open="map"><i class="fa-solid fa-map"></i> Map</button>'
-      + '<button class="btn" data-open="notebook"><i class="fa-solid fa-book"></i> Notebook</button>'
-      + '<button class="btn" data-open="activities"><i class="fa-solid fa-compass"></i> Activities</button>'
+    // 1.25.0: a red dot on a button whose panel holds something new the player has not looked at (news.shared.js)
+    const featOn = id => (typeof (ui.on || {})[id] === 'boolean' ? ui.on[id] : !OFF.includes(id)), nst = newsStore();
+    const NP = newsPanels(S, featOn, nst), nd = p => (NP.has(p) ? newsDot() : '');
+    const bagNew = newsUnseen(S, featOn, nst).some(([k]) => k === 'tab:profile:bag' && !((nst && nst.noticed) || []).includes(k));
+    h += '<div class="actions"><button class="btn" data-open="profile"><i class="fa-solid fa-id-card"></i> Student file' + nd('profile') + '</button>'
+      + (unl.includes('inventory') && !(ui.off || []).includes('inventory') ? '<button class="btn" data-open="profile:bag"><i class="fa-solid fa-bag-shopping"></i> Bag' + (bagNew ? newsDot() : '') + '</button>' : '')
+      + '<button class="btn" data-open="people"><i class="fa-solid fa-users"></i> People' + nd('people') + '</button>'
+      + '<button class="btn" data-open="map"><i class="fa-solid fa-map"></i> Map' + nd('map') + '</button>'
+      + '<button class="btn" data-open="notebook"><i class="fa-solid fa-book"></i> Notebook' + nd('notebook') + '</button>'
+      + '<button class="btn" data-open="activities"><i class="fa-solid fa-compass"></i> Activities' + nd('activities') + '</button>'
       + (!ui.built ? '<button class="btn opt" data-open="builder"><i class="fa-solid fa-pen-nib"></i> Builder</button>' : '')
       + '<button class="btn ghost" data-toggle="1" aria-label="Collapse or expand" aria-expanded="' + (!collapsed) + '" title="' + (collapsed ? 'Expand' : 'Collapse') + '"><i class="fa-solid ' + (collapsed ? 'fa-chevron-down' : 'fa-chevron-up') + '"></i></button></div>';
 
@@ -331,6 +339,7 @@ button.chip{font:inherit;font-size:13px;cursor:pointer}button.chip:hover{filter:
       if (tavern_events[k]) eventOn(tavern_events[k], rerender);
     });
     eventOn('eldrasil:state', rerender);
+    eventOn('eldrasil:news', rerender);   // 1.25.0: a panel marked something as seen
     waitGlobalInitialized('Mvu').then(() => {
       eventOn(Mvu.events.VARIABLE_INITIALIZED, rerender);
       eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, () => setTimeout(rerender, 400));

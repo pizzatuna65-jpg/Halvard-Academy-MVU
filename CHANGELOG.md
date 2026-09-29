@@ -3,6 +3,29 @@
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
 details: `git show b62d182:CHANGELOG.md`.
 
+## v1.25.0 — Red "new" dots (2026-09-30)
+
+Owner: "a red dot in the UI to show that a new UI has unlocked". Batch 1 of the owner-approved `planning/DRAFT_proficiency_practice.md`
+(6 batches: dots, proficiency stats, Practice, crafting, non-magic crafts, grades and mastery). Decisions touched: none changed;
+DECISIONS §6 gains one line (where "seen" is kept) and §11 one verified fact.
+- **Dots:** a small red dot on a bracelet button (Student file, Bag, People, Map, Notebook) whose panel holds something new; on the
+  tab that is new (Notice Board, Letters, Mystery Board, Competition, Projects, Trips, Bag, Hidden, Gifts & perks); on a person just
+  met (People, until the dossier is opened); on a Map marker whose place has a story heard but not read (the card opens its lore
+  with a dot, then it counts as read). A button's dot goes when its panel is opened; a tab's or a person's when it is opened.
+  Things that change every turn (points, time, weather, bond XP) never get a dot. Colour: new token `--notify` in every theme;
+  map markers keep fixed colours (DECISIONS "Themes never touch the map").
+- **Where "seen" lives:** Tavern Helper's chat variables (`chat_metadata.variables.eld_seen`, saved with the chat), not the message
+  variables (no hidden message per click, nothing on swipes) and not the browser (DECISIONS §6). The panels write it; the bracelet
+  only reads it (`eldrasil:news` tells it to redraw). Verified in JS-Slash-Runner `src/function/variables.ts` (chat =
+  `chat_metadata.variables`, `saveMetadataDebounced`) and MagVarUpdate `update_variables.ts` (writes only its own keys there).
+  On an older chat everything already open counts as seen on the first run, so no flood of dots.
+- **Code:** `src/ui/news.shared.js` (new; pasted into the bracelet and the panels by `gen_ui.py`), `ui.template.js` (store, open,
+  render), People, Map, Notebook and Activities parts, the bracelet buttons, `make_themes.py` (`notify`).
+- Tests: `test_news_v1250.cjs` (26 checks: first run, panel vs tab vs item, swipe back, feature off, lore on the map, the bracelet
+  never writes); `test_saves`, `test_activities_b5`, `test_notebook`, `test_builder`, `test_settings_v199`, `qa_static`, lint pass.
+  Browser preview: dots on the bracelet buttons and the Notebook tabs, a person's dot, the marker and lore dot on the Map. Save
+  fixture `save_1.24.3.json` added.
+
 ## v1.24.3 — Year floors named plainly; year-floor locations in the engine (2026-09-29)
 
 Owner: "make it clear without the description that the Lecture Halls etc. are split by year"; "check attendance and anything that
@@ -275,3 +298,4 @@ Owner: "lanjutkan batch 4". No canon or established design decision changed.
 - **v1.24.1 (2026-09-29):** Map gates on the far grounds only: the Fishing House joins Willow Island behind the Boathouse; Mall shops and castle halls visible from the start again.
 - **v1.24.2 (2026-09-29):** Lecture Halls, Study Rooms and lockers on each year's floor (2, 3, 4) on the Map and in the Campus Map lore; the mouse wheel zooms the map.
 - **v1.24.3 (2026-09-29):** Year floors named plainly on the Map (First-/Second-/Third-year Lecture Halls, Study Rooms, Lockers); the engine writes every year-floor wording as "<place> — Floor N", and `<now>` names the class floor.
+- **v1.25.0 (2026-09-30):** Red "new" dots on the bracelet buttons, panel tabs, people just met and Map markers with a story heard; "seen" kept in Tavern Helper's chat variables.

@@ -407,7 +407,7 @@ const CSS = `
   --moon:#a3e6db; --moon-dim:#86c2b8; --glass-hi:#1f4a4f; --glass:#0e2124; --glass-lo:#0a171a; --glass-ink:#d7efe9;
   --ink:#ece7db; --ink2:#c3beb2; --ink3:#aaa69b; --head:#f3e8cf; --white:#ffffff;
   --good:#8fd0b4; --warn:#f0bd78; --danger:#f19a91; --hid:#d3c2ef; --rom:#f2b6cb; --past:#e8c68d;
-  --warn-line:#e0a24a; --danger-line:#e0645a;
+  --warn-line:#e0a24a; --danger-line:#e0645a; --notify:#ee5648;
   --f-ui:"Alegreya Sans",system-ui,sans-serif; --f-text:"Alegreya",Georgia,serif; --f-sc:"Alegreya SC","Alegreya",Georgia,serif;
   --fs-xs:12px; --fs-s:13.5px; --fs-m:15px; --fs-l:17px; --fs-xl:21px; --fs-xxl:30px;
   position:fixed;inset:0;z-index:99999;background:var(--backdrop);display:flex;align-items:flex-start;justify-content:center;
@@ -428,6 +428,9 @@ const CSS = `
 .nav button.on{color:var(--ink)}
 .nav button.on::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:2px 2px 0 0;background:var(--brass)}
 .nav button.err{color:var(--danger)}
+/* 1.25.0 red "new" dot (news.shared.js): on a tab, a person, a story heard; map pins keep fixed colours */
+.nd{display:inline-block;width:8px;height:8px;margin:0 0 1px 6px;border-radius:50%;background:var(--notify);vertical-align:middle}
+.pin.new::after{content:"";position:absolute;top:-5px;right:-5px;width:9px;height:9px;border-radius:50%;background:#ee3b2b/*keep*/;box-shadow:0 0 0 2px #1d1a15/*keep*/}
 /* 1.23.0 Builder: numbered steps (the only panel whose tabs are a sequence) */
 .nav.steps{gap:18px}
 .nav.steps .n{display:inline-grid;place-items:center;width:21px;height:21px;margin-right:7px;border-radius:50%;border:1px solid var(--rule2);font-style:normal;font-size:var(--fs-xs);font-weight:700;color:var(--ink2);vertical-align:1px}
@@ -721,7 +724,7 @@ tr.oos td{opacity:.5}.pill.oos{border-color:var(--ink3);color:var(--ink3)}
 // ---------------------------------------------------------------- 1.3.1 colour themes (owner playtest), palette only
 // data/themes.json maps colours of the default Pewter palette to each theme's own; the CSS and every rendered panel pass through
 // themed(). The choice is per browser (storage key "eld.theme", shared with the bracelet, which re-colours itself on change).
-const THEMES = {"default":"pewter","order":["pewter","midnight","rosewood","parchment","frost"],"themes":{"pewter":{"name":"Pewter (default)","map":{}},"midnight":{"name":"Midnight (darker)","map":{"8,10,16":"0,0,0","20,25,37":"7,9,14","16,20,29":"5,7,11","28,34,48":"13,16,23","33,40,56":"17,20,28","36,43,59":"20,24,33","42,50,68":"25,29,40","44,52,70":"26,30,41","53,63,85":"36,41,55","53,62,82":"38,43,56","74,84,108":"58,64,82","102,110,128":"72,78,92","70,77,93":"44,49,60","42,47,59":"22,25,32","201,163,100":"190,152,90","236,212,159":"228,202,148","125,95,52":"104,78,42","31,74,79":"18,50,55","14,33,36":"6,22,25","10,23,26":"3,13,15"}},"rosewood":{"name":"Rosewood (warm dark)","map":{"8,10,16":"14,8,9","20,25,37":"26,16,19","16,20,29":"20,12,14","28,34,48":"36,24,27","33,40,56":"42,28,32","36,43,59":"48,32,36","42,50,68":"56,38,42","44,52,70":"58,39,43","53,63,85":"72,49,54","53,62,82":"80,56,60","74,84,108":"108,80,84","102,110,128":"128,96,98","70,77,93":"88,62,65","42,47,59":"50,34,37","201,163,100":"212,154,106","236,212,159":"242,208,168","125,95,52":"132,88,62","163,230,219":"242,192,172","134,194,184":"214,160,142","31,74,79":"78,40,46","14,33,36":"44,22,27","10,23,26":"30,14,18","215,239,233":"246,216,202","243,232,207":"246,226,204","195,190,178":"205,190,184","170,166,155":"182,164,158"}},"parchment":{"name":"Parchment (light)","map":{"a:0,0,0":"70,52,30*0.45","a:255,255,255":"0,0,0","143,208,180":"36,120,84","240,189,120":"143,92,12","241,154,145":"168,58,47","211,194,239":"98,68,150","242,182,203":"160,48,90","232,198,141":"138,94,28","224,162,74":"190,130,40","224,100,90":"192,70,58","8,10,16":"40,33,22","20,25,37":"233,225,208","16,20,29":"246,241,231","28,34,48":"251,248,241","33,40,56":"244,237,224","36,43,59":"243,237,225","42,50,68":"236,228,212","44,52,70":"240,232,216","53,63,85":"229,218,197","53,62,82":"215,203,178","74,84,108":"186,172,146","102,110,128":"253,250,243","70,77,93":"240,232,215","42,47,59":"225,213,188","201,163,100":"143,106,51","236,212,159":"109,79,34","125,95,52":"184,154,106","28,24,16":"255,250,240","163,230,219":"23,104,94","134,194,184":"52,108,100","31,74,79":"246,251,249","14,33,36":"227,239,235","10,23,26":"211,229,224","215,239,233":"31,59,55","236,231,219":"43,38,32","195,190,178":"87,79,67","170,166,155":"100,92,79","243,232,207":"74,50,20","255,255,255":"30,26,20"}},"frost":{"name":"Frost (light, cool)","map":{"a:0,0,0":"70,52,30*0.45","a:255,255,255":"0,0,0","143,208,180":"36,120,84","240,189,120":"143,92,12","241,154,145":"168,58,47","211,194,239":"98,68,150","242,182,203":"160,48,90","232,198,141":"138,94,28","224,162,74":"190,130,40","224,100,90":"192,70,58","8,10,16":"18,26,38","20,25,37":"226,232,240","16,20,29":"244,247,250","28,34,48":"252,253,254","33,40,56":"240,243,247","36,43,59":"243,246,250","42,50,68":"232,237,243","44,52,70":"234,239,245","53,63,85":"218,225,234","53,62,82":"208,215,225","74,84,108":"176,186,200","102,110,128":"255,255,255","70,77,93":"232,237,243","42,47,59":"212,220,231","201,163,100":"46,88,160","236,212,159":"26,58,116","125,95,52":"150,168,196","28,24,16":"255,255,255","163,230,219":"18,100,110","134,194,184":"44,106,114","31,74,79":"245,251,252","14,33,36":"222,238,242","10,23,26":"205,227,233","215,239,233":"20,60,68","236,231,219":"30,36,46","195,190,178":"64,72,86","170,166,155":"82,92,106","243,232,207":"22,42,74","255,255,255":"20,26,36"}}}};
+const THEMES = {"default":"pewter","order":["pewter","midnight","rosewood","parchment","frost"],"themes":{"pewter":{"name":"Pewter (default)","map":{}},"midnight":{"name":"Midnight (darker)","map":{"8,10,16":"0,0,0","20,25,37":"7,9,14","16,20,29":"5,7,11","28,34,48":"13,16,23","33,40,56":"17,20,28","36,43,59":"20,24,33","42,50,68":"25,29,40","44,52,70":"26,30,41","53,63,85":"36,41,55","53,62,82":"38,43,56","74,84,108":"58,64,82","102,110,128":"72,78,92","70,77,93":"44,49,60","42,47,59":"22,25,32","201,163,100":"190,152,90","236,212,159":"228,202,148","125,95,52":"104,78,42","31,74,79":"18,50,55","14,33,36":"6,22,25","10,23,26":"3,13,15"}},"rosewood":{"name":"Rosewood (warm dark)","map":{"8,10,16":"14,8,9","20,25,37":"26,16,19","16,20,29":"20,12,14","28,34,48":"36,24,27","33,40,56":"42,28,32","36,43,59":"48,32,36","42,50,68":"56,38,42","44,52,70":"58,39,43","53,63,85":"72,49,54","53,62,82":"80,56,60","74,84,108":"108,80,84","102,110,128":"128,96,98","70,77,93":"88,62,65","42,47,59":"50,34,37","201,163,100":"212,154,106","236,212,159":"242,208,168","125,95,52":"132,88,62","163,230,219":"242,192,172","134,194,184":"214,160,142","31,74,79":"78,40,46","14,33,36":"44,22,27","10,23,26":"30,14,18","215,239,233":"246,216,202","243,232,207":"246,226,204","195,190,178":"205,190,184","170,166,155":"182,164,158"}},"parchment":{"name":"Parchment (light)","map":{"a:0,0,0":"70,52,30*0.45","a:255,255,255":"0,0,0","143,208,180":"36,120,84","240,189,120":"143,92,12","241,154,145":"168,58,47","211,194,239":"98,68,150","242,182,203":"160,48,90","232,198,141":"138,94,28","224,162,74":"190,130,40","224,100,90":"192,70,58","238,86,72":"204,58,44","8,10,16":"40,33,22","20,25,37":"233,225,208","16,20,29":"246,241,231","28,34,48":"251,248,241","33,40,56":"244,237,224","36,43,59":"243,237,225","42,50,68":"236,228,212","44,52,70":"240,232,216","53,63,85":"229,218,197","53,62,82":"215,203,178","74,84,108":"186,172,146","102,110,128":"253,250,243","70,77,93":"240,232,215","42,47,59":"225,213,188","201,163,100":"143,106,51","236,212,159":"109,79,34","125,95,52":"184,154,106","28,24,16":"255,250,240","163,230,219":"23,104,94","134,194,184":"52,108,100","31,74,79":"246,251,249","14,33,36":"227,239,235","10,23,26":"211,229,224","215,239,233":"31,59,55","236,231,219":"43,38,32","195,190,178":"87,79,67","170,166,155":"100,92,79","243,232,207":"74,50,20","255,255,255":"30,26,20"}},"frost":{"name":"Frost (light, cool)","map":{"a:0,0,0":"70,52,30*0.45","a:255,255,255":"0,0,0","143,208,180":"36,120,84","240,189,120":"143,92,12","241,154,145":"168,58,47","211,194,239":"98,68,150","242,182,203":"160,48,90","232,198,141":"138,94,28","224,162,74":"190,130,40","224,100,90":"192,70,58","238,86,72":"204,58,44","8,10,16":"18,26,38","20,25,37":"226,232,240","16,20,29":"244,247,250","28,34,48":"252,253,254","33,40,56":"240,243,247","36,43,59":"243,246,250","42,50,68":"232,237,243","44,52,70":"234,239,245","53,63,85":"218,225,234","53,62,82":"208,215,225","74,84,108":"176,186,200","102,110,128":"255,255,255","70,77,93":"232,237,243","42,47,59":"212,220,231","201,163,100":"46,88,160","236,212,159":"26,58,116","125,95,52":"150,168,196","28,24,16":"255,255,255","163,230,219":"18,100,110","134,194,184":"44,106,114","31,74,79":"245,251,252","14,33,36":"222,238,242","10,23,26":"205,227,233","215,239,233":"20,60,68","236,231,219":"30,36,46","195,190,178":"64,72,86","170,166,155":"82,92,106","243,232,207":"22,42,74","255,255,255":"20,26,36"}}}};
 const THEME_KEY = 'eld.theme';
 function themeId() { let v = ''; try { v = localStorage.getItem(THEME_KEY) || ''; } catch (e) { /* storage blocked: default */ } return THEMES.themes[v] ? v : THEMES.default; }
 const rgbHex = s => '#' + s.split(',').map(x => (+x).toString(16).padStart(2, '0')).join('');
@@ -752,6 +755,68 @@ function applyTheme() { const st = root && root.querySelector('style'); if (st) 
 const PD = window.parent.document;
 let host = null, root = null, ov = null;
 const view = { panel: '', arg: '', stack: [], step: 'start', tab: 'overview', busy: false };
+  // 1.25.0 (owner, planning/DRAFT_proficiency_practice.md Batch 1): red "new" dots. Shared by the bracelet and the panels
+  // (tools/gen_ui.py pastes this file into both). What was seen is not game state: it lives in Tavern Helper's chat variables
+  // (chat_metadata.variables, saved with the chat; MVU only writes its own keys there), never in the message variables or the
+  // browser (DECISIONS §6, §11). The panels write it; the bracelet only reads it.
+  // An item is [key, panel]. Two levels: a panel button's dot goes once the panel is opened ("noticed"); an item's dot goes once
+  // the item itself is shown ("seen").
+  const NEWS_VAR = 'eld_seen';
+  function newsItems(S, featOn) {
+    const ui = (S && S.$ui) || {}, unl = ui.unlocks || [], out = [];
+    const tab = (panel, id, ok) => { if (ok) out.push(['tab:' + panel + ':' + id, panel]); };
+    const f = id => featOn(id), u = k => unl.includes(k);
+    tab('notebook', 'notices', u('notices') && (f('notices') || f('weather')));
+    tab('notebook', 'letters', u('letters') && f('letters'));
+    tab('notebook', 'mystery', u('mystery') && f('mystery'));
+    tab('activities', 'competition', u('competition') && f('competition'));
+    tab('activities', 'projects', u('projects') && f('projects'));
+    tab('activities', 'trip', u('trip') && f('trip'));
+    tab('profile', 'bag', u('inventory') && f('inventory'));
+    tab('profile', 'hidden', !!((S && S.Hidden) || {})._True_magic || u('hidden'));
+    tab('profile', 'perks', Object.keys((S && S._Perks) || {}).length > 0 || (ui.perks_used || []).length > 0);
+    (ui.lore || []).forEach(x => out.push(['lore:' + x, 'map']));
+    Object.keys((S && S.Bonds) || {}).forEach(id => out.push(['npc:' + id, 'people']));
+    return out;
+  }
+  function newsStore() {
+    try { const v = (getVariables({ type: 'chat' }) || {})[NEWS_VAR]; return v && Array.isArray(v.seen) ? v : null; } catch (e) { return null; }
+  }
+  // keys not yet seen; with `panels`, the panels holding one that is not noticed either (the bracelet buttons)
+  function newsUnseen(S, featOn, st) {
+    if (!S || !st) return [];
+    const seen = new Set(st.seen);
+    return newsItems(S, featOn).filter(([k]) => !seen.has(k));
+  }
+  function newsPanels(S, featOn, st) {
+    const noticed = new Set((st && st.noticed) || []);
+    return new Set(newsUnseen(S, featOn, st).filter(([k]) => !noticed.has(k)).map(([, p]) => p));
+  }
+  const newsDot = label => '<i class="nd" role="img" aria-label="' + (label ? label + ', ' : '') + 'new" title="New"></i>';
+
+// 1.25.0: the panels record what the player has looked at (chat variables); without Tavern Helper (previews, tests) only in memory
+const NEWS_CHAT = typeof getVariables === 'function' && typeof updateVariablesWith === 'function';
+let newsMem = null, newsNow = { unseen: new Set(), shown: [] };
+const newsGet = () => (NEWS_CHAT ? newsStore() : newsMem);
+const newsFeat = S => id => featureOn(S, id);
+function newsWrite(st) {
+  newsMem = st;
+  if (NEWS_CHAT) try { updateVariablesWith(v => { v[NEWS_VAR] = st; return v; }, { type: 'chat' }); } catch (e) { console.warn('[Eldrasil] news', e); }
+  try { eventEmit('eldrasil:news'); } catch (e) { /* no Tavern Helper */ }
+}
+// the first time a chat is seen, everything already open counts as seen (no flood of dots on an older save)
+function newsInit(S) { if (S && S.World && !newsGet()) newsWrite({ seen: newsItems(S, newsFeat(S)).map(([k]) => k), noticed: [] }); }
+function newsMark(keys, level) {
+  const st = newsGet(); if (!st) return;
+  st.noticed = st.noticed || [];
+  const arr = level === 'noticed' ? st.noticed : st.seen, add = [...new Set(keys)].filter(k => !arr.includes(k));
+  if (!add.length) return;
+  arr.push(...add);
+  if (level === 'seen') st.noticed = st.noticed.filter(k => !add.includes(k));
+  newsWrite(st);
+}
+// during a render: is this key new? (shown = it is on screen now, so it counts as seen after this render)
+const isNew = (key, shown) => { const n = newsNow.unseen.has(key); if (n && shown) newsNow.shown.push(key); return n; };
 let draft = null, draftBuilt = false, chosenTemplate = '';
 
 function ensureHost() {
@@ -797,7 +862,11 @@ function open(target, { push = true } = {}) {
     draft = draftFromState(st.data.stat_data); draftBuilt = !!st.data.stat_data.$ui.built; chosenTemplate = '';
     view.step = draftBuilt ? 'identity' : 'start';
   }
-  view.panel = panel; ov.hidden = false; render();
+  view.panel = panel; ov.hidden = false;
+  newsInit(st.data.stat_data);
+  const np = panel === 'npc' ? 'people' : panel;   // 1.25.0: opening a panel takes the dot off its bracelet button
+  newsMark(newsUnseen(st.data.stat_data, newsFeat(st.data.stat_data), newsGet()).filter(([, p]) => p === np).map(([k]) => k), 'noticed');
+  render();
   const d = ov.querySelector('.dlg'); if (d) keepPage(() => d.focus({ preventScroll: true }));
 }
 // 1.3.5: the card's lorebook holds the starting state and the rules; without it nothing works (Tavern Helper worldbook API)
@@ -860,6 +929,7 @@ function render0() {
   if (!ov || ov.hidden) return;
   const st = latestState(); const S = st && st.data.stat_data;
   const bd0 = ov.querySelector('.bd'), key = view.panel + '|' + view.arg, y = bd0 && render0.key === key ? bd0.scrollTop : 0;   // 1.3.4
+  newsNow = { unseen: new Set(S ? newsUnseen(S, newsFeat(S), newsGet()).map(([k]) => k) : []), shown: [] };   // 1.25.0
   const html = view.panel === 'builder' ? renderBuilder(S) : view.panel === 'profile' ? renderProfile(S) : PANELS[view.panel].render(S);
   // 1.3.1 (owner playtest: Etnie's dossier mixed "{{user}}" with the persona name): lore text shows the student's name everywhere.
   // The Builder is left alone: its fields hold what will be saved.
@@ -872,6 +942,7 @@ function render0() {
     img.replaceWith(Object.assign(PD.createElement('span'), { className: img.dataset.fbclass || 'fb', textContent: img.dataset.fb }));
   }, { once: true }));
   if (PANELS[view.panel] && PANELS[view.panel].after) PANELS[view.panel].after(S);
+  if (newsNow.shown.length) newsMark(newsNow.shown, 'seen');
   const on = ov.querySelector('.nav .on'); if (on) scrollInto(on, on.parentElement);
 }
 
@@ -1308,7 +1379,7 @@ function renderProfile(S) {
   const P = S.Player.Profile;
   return `<div class="dlg" tabindex="-1" style="--dc:${DORM_COLOR[P.Dorm] || DORM_COLOR.Unsorted}"><div class="hd"><h2>Student file</h2>
     <button class="btn sm pri" data-act="tobuilder" title="Edit your profile, magic, techniques and pacts">${(S.$ui || {}).built ? 'Edit student file' : 'Create your student'}</button><button class="x" data-act="close" aria-label="Close">×</button></div>
-    <nav class="nav">${tabs.map(([id, lab]) => `<button data-tab="${id}" class="${view.tab === id ? 'on' : ''}">${lab}</button>`).join('')}</nav><div class="bd">${body}</div></div>`;
+    <nav class="nav">${tabs.map(([id, lab]) => `<button data-tab="${id}" class="${view.tab === id ? 'on' : ''}">${lab}${isNew(`tab:profile:${id}`, view.tab === id) && view.tab !== id ? newsDot() : ''}</button>`).join('')}</nav><div class="bd">${body}</div></div>`;
 }
 function pOverview(S) {
   const P = S.Player.Profile, W = S.World;
@@ -1679,7 +1750,7 @@ function peopleListHTML(S) {
     const b = B[id], n = npcOf(id), need = bondNeed(S, b.Rank), x = Math.min(num(b.$xp), need);
     const dot = here.includes(id) ? '<i class="here" role="img" aria-label="here now" title="here now"></i>' : '';
     return `<button class="pr" data-open="npc:${esc(id)}"><span class="pav">${avatar(id, S, 'av lg')}${dot}</span><span class="pm">
-      <span class="pn">${esc(nameOf(id, S, true))}${b.Romance ? ' <span class="pill r">romance</span>' : ''}</span><span class="sub">${esc(b.Title || (n ? publicRole(id, S) || whoLine(id, S) : ''))}</span></span>
+      <span class="pn">${esc(nameOf(id, S, true))}${isNew(`npc:${id}`) ? newsDot() : ''}${b.Romance ? ' <span class="pill r">romance</span>' : ''}</span><span class="sub">${esc(b.Title || (n ? publicRole(id, S) || whoLine(id, S) : ''))}</span></span>
       <span class="medal" title="Rank ${b.Rank} of 10">${b.Rank}</span>
       <span class="pmt"><span class="m" title="${b.Rank >= 10 ? 'max rank' : `${x} / ${need} XP to Rank ${b.Rank + 1}`}"><span class="ml">XP<b>${b.Rank >= 10 ? 'max' : `${x}/${need}`}</b></span><span class="mini xp"><i style="width:${b.Rank >= 10 ? 100 : need ? x / need * 100 : 0}%"></i></span></span>
       <span class="m" title="${esc(trustTxt(id, b))}"><span class="ml">Trust<b>${id in TRD.lock ? 'fixed' : b.Trust}</b></span>${mini(b.Trust, '#3f9f69')}</span>
@@ -1692,6 +1763,7 @@ PANELS.npc = {
   live: true,
   render(S) {
     const id = view.arg, n = npcOf(id), b = (S.Bonds || {})[id], rank = b ? b.Rank : 0;
+    isNew(`npc:${id}`, true);   // 1.25.0: the dossier is open, so this person is no longer new
     const title = n ? nameOf(id, S, true) : id;
     const port = n && n.p ? `<img class="por" src="${esc(imgURL(n.p))}" alt="" style="object-position:${n.fc[0]}% ${n.fc[1]}%" data-fb="${esc(knowsName(id, S) ? initials(n.n) : '?')}" data-fbclass="por fb">` : `<span class="por fb">${esc(n && !knowsName(id, S) ? '?' : initials(n ? n.n : id))}</span>`;
     // 1.23.0 (UI overhaul): the portrait (matted, sticky) and the dorm stay in the left column; everything else is the file
@@ -2068,7 +2140,9 @@ PANELS.map = {
     const pins = DATA.pins.filter(p => p.cluster.some(id => DATA.locs[id] && discovered(S, DATA.locs[id])));
     const pinHTML = pins.map(p => {
       const here = curPin && curPin.pin === p.pin, sel = view.pin === p.pin;
-      return `<button class="pin${here ? ' here' : ''}${sel ? ' sel' : ''}" data-pin="${p.pin}" style="left:${p.x}%;top:${p.y}%" aria-label="${esc(p.label)}${here ? ' (you are here)' : ''}" title="${esc(p.label)}"></button>`
+      // 1.25.0: a red dot on a marker whose places hold a story heard but not read yet
+      const fresh = p.cluster.some(id => DATA.locs[id] && discovered(S, DATA.locs[id]) && DATA.locs[id].lore.some(x => isNew(`lore:${x.uid}`)));
+      return `<button class="pin${here ? ' here' : ''}${sel ? ' sel' : ''}${fresh ? ' new' : ''}" data-pin="${p.pin}" style="left:${p.x}%;top:${p.y}%" aria-label="${esc(p.label)}${here ? ' (you are here)' : ''}" title="${esc(p.label)}"></button>`
         + (sel || here ? `<span class="plab${here ? ' here' : ''}${labPos(p)}" style="left:${p.x}%;top:${p.y}%">${esc(p.label)}</span>` : '');
     }).join('');
     let sheet = '<p class="hint">Tap a marker to see what is there.</p>';
@@ -2162,7 +2236,8 @@ const untoldOut = (l, S) => { const heard = heardSet(S), untold = l.lore.filter(
 function loreRow(l, S) {
   const heard = heardSet(S), known = l.lore.filter(x => heard.has(String(x.uid))), rest = l.lore.length - known.length;
   const more = rest ? `<p class="sub">${known.length ? `${rest} more you have not heard yet.` : 'You have not heard any stories about this place yet.'} People talk; spend time here.</p>` : '';
-  return `<details><summary>Lore and rumours (${known.length}/${l.lore.length})</summary>${known.map(x => `<p><b>${esc(x.title)}</b>: ${esc(x.summary)}</p>`).join('')}${more}</details>`;
+  const fresh = known.filter(x => isNew(`lore:${x.uid}`, true)).map(x => x.uid);   // 1.25.0: on screen now, so seen after this render
+  return `<details${fresh.length ? ' open' : ''}><summary>Lore and rumours (${known.length}/${l.lore.length})${fresh.length ? newsDot() : ''}</summary>${known.map(x => `<p><b>${esc(x.title)}</b>${fresh.includes(x.uid) ? newsDot() : ''}: ${esc(x.summary)}</p>`).join('')}${more}</details>`;
 }
 function locCard(id, S, cur, P) {
   const l = DATA.locs[id], fl = l.floors && l.floors.includes(view.floor) ? view.floor : '', here = id === cur && (!fl || fl === floorOf(cur, S));
@@ -2230,7 +2305,7 @@ PANELS.notebook = {
     const badge = id => (id === 'planner' && late ? `<i class="nbb bad">${late}</i>` : id === 'letters' && mail ? `<i class="nbb">${mail}</i>` : '');
     const body = ({ planner: nbPlanner, journal: nbJournal, notices: nbNotices, letters: nbLetters, mystery: nbMystery })[view.nb](S);
     return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>Notebook</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
-      <nav class="nav">${tabs.map(([id, l]) => `<button data-nb="${id}" class="${view.nb === id ? 'on' : ''}">${l}${badge(id)}</button>`).join('')}</nav><div class="bd">${body}</div></div>`;
+      <nav class="nav">${tabs.map(([id, l]) => `<button data-nb="${id}" class="${view.nb === id ? 'on' : ''}">${l}${badge(id)}${isNew(`tab:notebook:${id}`, view.nb === id) && view.nb !== id ? newsDot() : ''}</button>`).join('')}</nav><div class="bd">${body}</div></div>`;
   },
   input(el) { if (el.dataset.lt) view.letter[el.dataset.lt] = el.value; if (el.dataset.mk !== undefined) view.markText = el.value; },
   click(b, S) {
@@ -2480,7 +2555,7 @@ PANELS.activities = {
     if (!tabs.some(t => t[0] === view.act)) view.act = 'clubs';
     const body = ({ clubs: acClubs, competition: acCompetition, shop: acShop, projects: acProjects, trip: acTrip })[view.act](S);
     return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>Activities</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
-      <nav class="nav">${tabs.map(([id, l]) => `<button data-actab="${id}" class="${view.act === id ? 'on' : ''}">${l}</button>`).join('')}</nav><div class="bd">${body}</div></div>`;
+      <nav class="nav">${tabs.map(([id, l]) => `<button data-actab="${id}" class="${view.act === id ? 'on' : ''}">${l}${isNew(`tab:activities:${id}`, view.act === id) && view.act !== id ? newsDot() : ''}</button>`).join('')}</nav><div class="bd">${body}</div></div>`;
   },
   click(b) {
     if (b.dataset.actab) { view.act = b.dataset.actab; render(); ov.querySelector('.bd').scrollTop = 0; return; }
@@ -2685,11 +2760,14 @@ if (typeof eventOn === 'function' && typeof getButtonEvent === 'function') {
     eventOn(getButtonEvent('Notebook'), () => open('notebook'));
     eventOn(getButtonEvent('Activities'), () => open('activities'));
     const refresh = _.debounce(() => { if (view.panel === 'profile' || (PANELS[view.panel] && PANELS[view.panel].live)) render(); }, 300);
+    const newsBoot = _.debounce(() => { const st = latestState(); if (st) newsInit(st.data.stat_data); }, 800);   // 1.25.0
+    ['MESSAGE_RECEIVED', 'MESSAGE_SWIPED', 'CHAT_CHANGED'].forEach(k => tavern_events[k] && eventOn(tavern_events[k], newsBoot));
+    setTimeout(newsBoot, 2500);
     ['MESSAGE_RECEIVED', 'MESSAGE_DELETED', 'MESSAGE_SWIPED', 'MESSAGE_UPDATED'].forEach(k => tavern_events[k] && eventOn(tavern_events[k], refresh));
-    eventOn(tavern_events.CHAT_CHANGED, () => { draft = null; close(); loreChecked = ''; setTimeout(ensureLorebook, 1200); });
+    eventOn(tavern_events.CHAT_CHANGED, () => { draft = null; newsMem = null; close(); loreChecked = ''; setTimeout(ensureLorebook, 1200); });
     setTimeout(ensureLorebook, 1500);   // 1.3.6: the card installs or updates its own lorebook
     window.addEventListener('storage', e => { if (e.key === THEME_KEY) applyTheme(); });   // 1.3.1: the theme changed in another tab
-    waitGlobalInitialized('Mvu').then(() => eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, () => setTimeout(refresh, 400)));
+    waitGlobalInitialized('Mvu').then(() => eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, () => { setTimeout(refresh, 400); newsBoot(); }));
     $(window).on('pagehide', () => { delete window.parent.__eldrasilUI; if (host) host.remove(); });
   });
 }
