@@ -597,7 +597,9 @@ dl.file dd.fv{margin:0;max-width:62ch}
 /* 1.24.0 (owner playtest: Willow Island and Observation Tower were cut off): near an edge the label grows inward, near the top below */
 .plab.r{transform:translate(calc(-100% + 12px),-190%)}.plab.l{transform:translate(-12px,-190%)}.plab.b{transform:translate(-50%,95%)}
 .plab.r.b{transform:translate(calc(-100% + 12px),95%)}.plab.l.b{transform:translate(-12px,95%)}
-.tog.fl{margin-bottom:10px}
+.tog.fl{margin-bottom:10px}.tog.fl small{opacity:.7;font-size:.85em}
+/* 1.24.3: whose floor a year-floor place is on (Lecture Halls, Study Rooms, lockers) */
+.yrfl{margin:0 0 6px;font-size:var(--fs-s);color:var(--ink2)}.yrfl b{color:var(--ink)}.yrfl .mine{color:var(--brass)}
 .mapwrap{display:grid;grid-template-columns:minmax(0,1fr);gap:4px}.mapwrap>*{min-width:0}
 @media (min-width:860px){.mapwrap{grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}.sheet h3{margin-top:0}}
 .car{display:block;padding-bottom:8px}.cnav{display:flex;align-items:center;gap:8px;margin-bottom:8px}.cnav .sub{flex:1;text-align:center}

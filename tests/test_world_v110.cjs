@@ -184,7 +184,7 @@ console.log('Class-aware presence (Now entry)');
   const likely = /Likely around Main Library[^:]*: (.*)/.exec(lib)[1];
   ok(!/Etnie|Gareth|Irene|Zara/.test(likely) && /Students are in class until 10:00\./.test(lib), `Monday 09:00 at the Main Library: no students (${likely})`);
   const lh = render(505, mon9(S0, 'Lecture Halls'));
-  ok(/Your class now: Magic Theory \[M\] \(Year 1, all dorms\) at Lecture Halls — teacher Yvette; classmates on record: .*Trixie.*Zara/.test(lh) && !/classmates on record:.*Florian/.test(lh), 'Lecture Halls: Year 1 Magic Theory, teacher Yvette, Year 1 classmates');
+  ok(/Your class now: Magic Theory \[M\] \(Year 1, all dorms\) at Lecture Halls — Floor 2 \(the Year 1 floor\) — teacher Yvette; classmates on record: .*Trixie.*Zara/.test(lh) && !/classmates on record:.*Florian/.test(lh), 'Lecture Halls: Year 1 Magic Theory, teacher Yvette, Year 1 classmates');
   const fireD = at(S0, 8, '11:00', 'Lecture Halls', [{ op: 'replace', path: '/Player/Profile/Dorm', value: 'Fire' }]);   // Tue P2 Magic Theory [D]
   const d = render(505, fireD);
   ok(/\(Year 1, Fire only\)/.test(d) && /classmates on record: Caralynn, Trixie$/m.test(d), `[D] class filters by dorm (${/classmates on record: (.*)/.exec(d)[1]})`);

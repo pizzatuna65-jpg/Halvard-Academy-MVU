@@ -79,7 +79,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepCommit` (10) | `$eng.abs`, Year 1 date labels, `_Log` | |
 
 Module helpers above `runEngine`: name matching (`formRx`, `speakersIn`, `mentionIn`), time (`parseWhen`, `whenText`, `periodOf`,
-`curfewOf`, `nextUp`), happenings (`happeningOn`), weather (`wxDay`, `wxForecast`, `fluOn`), `canonLocation`, `canonClub`, `gearOf`,
+`curfewOf`, `nextUp`), happenings (`happeningOn`), weather (`wxDay`, `wxForecast`, `fluOn`), `canonLocation` (with `yearFloorLocation`), `canonClub`, `gearOf`,
 `parkOff`, Tension/Trust profiles. Mood and gifts: `src/scripts/mood_gifts.js` (inlined by `gen_engine.py`). After the steps:
 `collapseTrimmed` (the "[…]" prompt hook) and the MVU event handler with the rollback on error.
 

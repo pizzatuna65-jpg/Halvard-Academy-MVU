@@ -82,6 +82,8 @@ for lid, l in sorted(locs.items()):
         body = ' '.join(ln.strip() for ln in re.sub(r'^\[[^\]]+\]\s*', '', body).split('\n') if ln.strip())
         name = re.sub(r'^(?:[A-Z][a-z]+ )+- ', '', x['title']); name = re.sub(r'^The ', '', name)
         place_lore.setdefault(re.sub(r'^the ', '', l['name'].lower()), []).append([x['uid'], name, x['title'], body])
+# 1.24.3: places on each year's floor (curate_data.py YEAR_FLOORS) -> their floors, for canonLocation
+t = t.replace('/*@@YEAR_FLOOR_PLACES@@*/{}', json.dumps({l['name']: l['floors'] for l in locs.values() if l.get('floors')}, ensure_ascii=False))
 t = t.replace('/*@@PLACE_LORE@@*/{}', json.dumps(place_lore, ensure_ascii=False, separators=(',', ':')))
 # 1.3.1 Settings for training and reputation (data/tuning.json); the defaults must be the numbers the data files use
 tun = json.load(open(P('data/tuning.json'), encoding='utf-8'))

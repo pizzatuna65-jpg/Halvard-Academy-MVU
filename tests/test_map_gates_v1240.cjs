@@ -60,7 +60,7 @@ ok(/class="map" style="width:150%"/.test(U.PANELS.map.render(S0)), 'zoom in: the
 const bar = read('src/ui/statusbar.html');
 ok(!/\.band\.collapsed \.cta[,{]/.test(bar.replace(/\.band\.collapsed \.cta\{margin/, '')), 'the collapsed bracelet keeps "Create your student"');
 
-console.log('Year floors (1.24.2)');
+console.log('Year floors (1.24.2, 1.24.3)');
 {
   const Y2 = set(S0, [['/Player/Profile/Year', 2], ['/World/Location', 'Main Courtyard']]);
   U.view.pin = 1; U.view.floor = ''; let m = U.PANELS.map.render(Y2);
@@ -69,12 +69,32 @@ console.log('Year floors (1.24.2)');
   const onF3 = []; for (let i = 0; i < 6; i++) { U.view.card = i; U.view.cardPin = '1|Floor 3'; const x = /data-loccard="([^"]+)"/.exec(U.PANELS.map.render(Y2)); if (x && !onF3.includes(x[1])) onF3.push(x[1]); }
   ok(['lecture_halls', 'study_rooms', 'storage_and_lockers', 'seminar_rooms'].every(id => onF3.includes(id)), `Floor 3 lists the Lecture Halls, Study Rooms, lockers and Seminar Rooms: ${onF3.join(', ')}`);
   U.view.card = onF3.indexOf('lecture_halls'); m = U.PANELS.map.render(Y2);
-  ok(/<b>Floor 3:<\/b> The second-year Lecture Halls\./.test(m) && /data-go="lecture_halls" data-gofl="Floor 3"/.test(m), 'the card names the second-year halls and its Go here carries the floor');
+  ok(/<b>Second-year Lecture Halls<\/b>/.test(m) && /1 \/ \d+ · Second-year Lecture Halls|· Second-year Lecture Halls</.test(m) && /data-go="lecture_halls" data-gofl="Floor 3"/.test(m),
+    '1.24.3: the card and the arrows name the Second-year Lecture Halls; Go here carries the floor');
+  ok(/<b>Floor 3<\/b> · for Year 2 students · <span class="mine">your year<\/span>/.test(m) && /data-floor="Floor 3" class="on">Floor 3 <small>Year 2<\/small>/.test(m), 'the floor line and tab say whose floor it is (and that it is yours)');
+  U.view.card = onF3.indexOf('storage_and_lockers'); ok(/<b>Second-year Lockers<\/b>/.test(U.PANELS.map.render(Y2)), 'the lockers are the Second-year Lockers');
   let said = ''; global.fillChat = t => { said = t; };
   const H = set(S0, [['/World/Location', 'Lecture Halls — Floor 4']]); U.view.floor = '';
   U.view.pin = 1; m = U.PANELS.map.render(H);
   ok(/data-floor="Floor 4" class="on"/.test(m), 'World.Location "Lecture Halls — Floor 4" opens Floor 4');
   const E132 = read('src/worldbook/content/132.txt');
   ok(/Floor 3: second-year Lecture Halls with their own Study Rooms/.test(E132) && /Floor 4: third-year Lecture Halls with their own Study Rooms/.test(E132), 'Campus Map lore: Study Rooms on Floors 3 and 4');
+}
+console.log('Year-floor locations in the engine (1.24.3)');
+{
+  const Ecl = new Function(read('src/scripts/engine.js') + '\nreturn { canonLocation };')().canonLocation;
+  const C = { 'Second-year Lecture Halls': 'Lecture Halls — Floor 3', 'Lecture Halls, Floor 3': 'Lecture Halls — Floor 3', 'Floor 4 — Study Rooms': 'Study Rooms — Floor 4',
+    'the lockers on the third-year floor': 'Storage and Lockers — Floor 4', 'Lecture Halls — Floor 3 — back row': 'Lecture Halls — Floor 3 — back row', 'Lecture Halls': 'Lecture Halls',
+    'Fire Dormitory — lockers on the second-year corridor': 'Fire Dormitory — lockers on the second-year corridor', 'Seminar Rooms, Floor 3': 'Seminar Rooms, Floor 3' };
+  const bad = Object.entries(C).filter(([a, b]) => Ecl(a) !== b).map(([a]) => `${a} -> ${Ecl(a)}`);
+  ok(!bad.length, 'every way of writing a year floor becomes "<place> — Floor N"; another place named first keeps its own' + (bad.length ? ': ' + bad.join('; ') : ''));
+  // attendance: a second-year in P1 Magic Theory (Lecture Halls) is present on any floor wording, absent in the Study Rooms
+  const S2 = set(S0, [['/Player/Profile/Year', 2]]), MON = 35;
+  const stay = loc => { let x = at(S2, MON, '07:50', loc); x = at(x, MON, '09:55', loc); return x; };
+  const r = ['Second-year Lecture Halls', 'Lecture Halls, Floor 3', 'Floor 3 — Lecture Halls', 'Lecture Hall 3B'].map(stay);
+  ok(r.every(x => x.$eng.wk.skipped === 0) && r.slice(0, 3).every(x => x.World.Location === 'Lecture Halls — Floor 3') && stay('Study Rooms — Floor 3').$eng.wk.skipped === 1,
+    'attendance: present in the Lecture Halls on any floor wording (unknown room names get the benefit of the doubt), absent in the Study Rooms');
+  const now = read('src/worldbook/custom/content/505.txt'), upd = read('src/worldbook/custom/content/502.txt');
+  ok(/pk === 'lecture halls' \? ' — Floor ' \+ \(PY \+ 1\)/.test(now) && /"Lecture Halls — Floor 3" \(Floor 2 first-years, 3 second-years, 4 third-years\)/.test(upd), '<now> names the class floor; the update rules show the year-floor form');
 }
 ok(/addEventListener\('wheel', e => \{\s*const step/.test(read('src/ui/parts/20_map.js')) && !/if \(!e\.ctrlKey\) return/.test(read('src/ui/parts/20_map.js')), 'the mouse wheel zooms without Ctrl');

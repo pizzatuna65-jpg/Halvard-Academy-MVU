@@ -52,6 +52,10 @@ const goText = name => `I head to the ${String(name).replace(/^the\s+/i, '')}.`;
 // 4). A place is on a floor if it is its floor or one of its floors; the player's floor is the one World.Location names ("Floor 3",
 // "second-year"), else the one for {{user}}'s school year.
 const onFloor = (id, f) => (DATA.locs[id].floors || [DATA.locs[id].floor]).includes(f);
+// 1.24.3 (owner: the split must show without opening the description): on a year's floor the place is named for that year
+// ("Second-year Lecture Halls"), and the floor tabs say whose floor it is
+const YEAR_OF_FLOOR = { 'Floor 2': 1, 'Floor 3': 2, 'Floor 4': 3 };
+const nameOn = (id, f) => { const l = DATA.locs[id]; return (l.fnote && l.fnote[f]) || l.name; };
 function floorOf(id, S) {
   const l = DATA.locs[id]; if (!l || !l.floors) return (l || {}).floor || '';
   const loc = String((S.World || {}).Location || ''), m = /\bfloor ([2-4])\b/i.exec(loc), y = /\b(first|second|third)[- ]year/i.exec(loc);
@@ -117,7 +121,7 @@ PANELS.map = {
       if (P.tabs) {
         const floors = P.tabs.filter(f => ids.some(id => onFloor(id, f)));
         if (!floors.includes(view.floor)) view.floor = (cur && P.cluster.includes(cur) && floorOf(cur, S)) || floors[1] || floors[0];
-        tabs = `<div class="tog fl">${floors.map(f => `<button data-floor="${esc(f)}" class="${view.floor === f ? 'on' : ''}">${esc(f)}</button>`).join('')}</div>`;
+        tabs = `<div class="tog fl">${floors.map(f => `<button data-floor="${esc(f)}" class="${view.floor === f ? 'on' : ''}">${esc(f)}${YEAR_OF_FLOOR[f] ? ` <small>Year ${YEAR_OF_FLOOR[f]}</small>` : ''}</button>`).join('')}</div>`;
         ids = ids.filter(id => onFloor(id, view.floor));
       }
       // 1.2.0 (owner): one card at a time with arrow buttons instead of a sideways scroll
@@ -125,7 +129,7 @@ PANELS.map = {
       else if (view.cardPin !== P.pin + '|' + view.floor) view.card = Math.max(0, ids.indexOf(cur));
       view.focusLoc = ''; view.cardPin = P.pin + '|' + view.floor; view.card = _.clamp(view.card, 0, Math.max(0, ids.length - 1));
       const arrows = ids.length > 1 ? `<div class="cnav"><button class="btn sm" data-card="-1" aria-label="Previous place" ${view.card ? '' : 'disabled'}>‹</button>
-        <span class="sub">${view.card + 1} / ${ids.length} · ${esc(DATA.locs[ids[view.card]].name)}</span><button class="btn sm" data-card="1" aria-label="Next place" ${view.card < ids.length - 1 ? '' : 'disabled'}>›</button></div>` : '';
+        <span class="sub">${view.card + 1} / ${ids.length} · ${esc(nameOn(ids[view.card], view.floor))}</span><button class="btn sm" data-card="1" aria-label="Next place" ${view.card < ids.length - 1 ? '' : 'disabled'}>›</button></div>` : '';
       sheet = `<h3>${esc(P.label)}</h3>${tabs}${arrows}<div class="car">${ids.length ? locCard(ids[view.card], S, cur, P) : '<div class="empty">Nothing here you know of yet.</div>'}</div>`;
     }
     return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>Halvard</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
@@ -170,7 +174,7 @@ PANELS.map = {
     if (b.dataset.loc) { const p = pinOf(b.dataset.loc); if (p) { view.pin = p.pin; view.floor = DATA.locs[b.dataset.loc].floor || ''; view.focusLoc = b.dataset.loc; render(); } return; }
     if (b.dataset.go) {   // fillChat: shared helper (30_notebook.js); 1.24.2: a place on each year's floor says which floor
       const l = DATA.locs[b.dataset.go], fl = b.dataset.gofl;
-      fillChat(fl && l.fnote ? `I head to the ${l.fnote[fl].replace(/^The /, '')} on ${fl}.` : goText(l.name));
+      fillChat(fl && l.fnote ? `I head to the ${l.fnote[fl].replace(/^\w/, ch => ch.toLowerCase())} on ${fl}.` : goText(l.name));
     }
   },
 };
@@ -223,8 +227,8 @@ function locCard(id, S, cur, P) {
     ['Clubs here', esc(l.clubs.map(c => c.replace(/\s*\(.*\)$/, '')).join(', ') || 'None')],
     ['Regulars', regs || '<span class="sub">Nobody you know yet</span>'], ['Connected to', conns || '—'],
   ];
-  return `<article class="lc${here ? ' here' : ''}" data-loccard="${esc(id)}"><div class="crop" style="${cropStyle(P, S)}"><b>${esc(l.name)}</b>${here ? '<span class="you">You are here</span>' : ''}</div>
-    <div class="in">${fl ? `<p class="sub"><b>${esc(fl)}:</b> ${esc(l.fnote[fl])}.</p>` : ''}${l.vibe ? `<p class="vibe">${esc(l.vibe)}</p>` : ''}${seasonLine(l, S)}
+  return `<article class="lc${here ? ' here' : ''}" data-loccard="${esc(id)}"><div class="crop" style="${cropStyle(P, S)}"><b>${esc(fl ? nameOn(id, fl) : l.name)}</b>${here ? '<span class="you">You are here</span>' : ''}</div>
+    <div class="in">${fl ? `<p class="yrfl"><b>${esc(fl)}</b> · for Year ${YEAR_OF_FLOOR[fl]} students${YEAR_OF_FLOOR[fl] === _.clamp(num(((S.Player || {}).Profile || {}).Year, 1), 1, 3) ? ' · <span class="mine">your year</span>' : ''}</p>` : ''}${l.vibe ? `<p class="vibe">${esc(l.vibe)}</p>` : ''}${seasonLine(l, S)}
     <details><summary>Description</summary><p>${esc(untoldOut(l, S))}</p></details>
     <dl class="kv sm">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
     ${l.lore.length ? loreRow(l, S) : ''}

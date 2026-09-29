@@ -589,9 +589,9 @@
    "Floor 4"
   ],
   "floor_notes": {
-   "Floor 2": "The first-year Lecture Halls",
-   "Floor 3": "The second-year Lecture Halls",
-   "Floor 4": "The third-year Lecture Halls"
+   "Floor 2": "First-year Lecture Halls",
+   "Floor 3": "Second-year Lecture Halls",
+   "Floor 4": "Third-year Lecture Halls"
   },
   "near": [
    [
@@ -1732,9 +1732,9 @@
    "Floor 4"
   ],
   "floor_notes": {
-   "Floor 2": "The first-year Study Rooms",
-   "Floor 3": "The second-year Study Rooms",
-   "Floor 4": "The third-year Study Rooms"
+   "Floor 2": "First-year Study Rooms",
+   "Floor 3": "Second-year Study Rooms",
+   "Floor 4": "Third-year Study Rooms"
   },
   "near": [
    [
@@ -2161,9 +2161,9 @@
    "Floor 4"
   ],
   "floor_notes": {
-   "Floor 2": "The lockers along the first-year corridors",
-   "Floor 3": "The lockers along the second-year corridors",
-   "Floor 4": "The lockers along the third-year corridors"
+   "Floor 2": "First-year Lockers",
+   "Floor 3": "Second-year Lockers",
+   "Floor 4": "Third-year Lockers"
   },
   "near": [
    [

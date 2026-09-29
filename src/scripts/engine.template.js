@@ -170,7 +170,25 @@ function hearLore(S, u, title, where) {
 }
 const plKey = s => String(s || '').trim().toLowerCase().replace(/[.!]+$/, '').replace(/\s+/g, ' ');
 const plName = s => { const k = plKey(s); return PLACE_NAMES[k] || PLACE_NAMES[k.replace(/^the /, '')] || ''; };
+// 1.24.3 (owner): the Lecture Halls, Study Rooms and lockers are on each year's floor (first-years Floor 2, second-years 3, third-years 4).
+// Any way of writing one ("Second-year Lecture Halls", "Lecture Halls, Floor 3", "Floor 3 — Study Rooms", "the lockers on the
+// third-year floor") becomes "<place> — Floor N" (+ any other detail), so the place is known and the floor is kept.
+const YEAR_FLOOR_PLACES = /*@@YEAR_FLOOR_PLACES@@*/{};
+const YF_WORD = { 'Lecture Halls': /\blecture[- ]halls?\b/i, 'Study Rooms': /\bstudy[- ]rooms?\b/i, 'Storage and Lockers': /\blockers?\b|\bstorage\b/i };
+function yearFloorLocation(loc) {
+  const s = String(loc || ''), f = /\bfloor ([2-4])\b/i.exec(s), y = /\b(first|second|third)[- ]years?\b/i.exec(s);
+  if (!f && !y) return '';
+  const hits = Object.keys(YEAR_FLOOR_PLACES).map(nm => [nm, YF_WORD[nm] && YF_WORD[nm].exec(s)]).filter(([, m]) => m).sort((a, b) => a[1].index - b[1].index);
+  if (!hits.length) return '';
+  // another place named first wins ("Fire Dormitory — lockers on the second-year corridor", "Canteen, talking about the first-year halls")
+  if (s.split(/\s+[—–-]\s+|,\s+/).some(x => { const n = plName(x); return n && !YEAR_FLOOR_PLACES[n]; })) return '';
+  const nm = hits[0][0], n = f ? +f[1] : ['first', 'second', 'third'].indexOf(y[1].toLowerCase()) + 2;
+  if (!YEAR_FLOOR_PLACES[nm].includes('Floor ' + n)) return '';
+  const rest = s.split(/\s+[—–-]\s+|,\s+/).map(x => x.trim()).filter(x => x && !/\bfloor [2-4]\b|\b(first|second|third)[- ]years?\b/i.test(x) && !Object.values(YF_WORD).some(rx => rx.test(x)));
+  return [nm, 'Floor ' + n, ...rest].join(' — ');
+}
 function canonLocation(loc) {
+  const yf = yearFloorLocation(loc); if (yf) return yf;
   const segs = String(loc || '').split(/\s+[—–-]\s+|,\s+/).map(x => x.trim()).filter(Boolean);
   if (!segs.length) return String(loc || '');
   let at = -1, nm = '';

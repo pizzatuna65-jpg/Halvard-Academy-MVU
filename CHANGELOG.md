@@ -3,6 +3,25 @@
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
 details: `git show b62d182:CHANGELOG.md`.
 
+## v1.24.3 — Year floors named plainly; year-floor locations in the engine (2026-09-29)
+
+Owner: "make it clear without the description that the Lecture Halls etc. are split by year"; "check attendance and anything that
+reads the Lecture Halls location for errors when the location changes". Decisions touched: DECISIONS "World.Location is written in
+the Campus Map's words" (one sentence added for year floors).
+- **Map:** on Floors 2–4 the cards are named for the year ("First-year Lecture Halls", "Second-year Study Rooms", "Third-year
+  Lockers") in the header and beside the arrows; a line under the header says "Floor 3 · for Year 2 students · your year"; the
+  floor tabs read "Floor 3 Year 2".
+- **Check (probe of attendance, map, ambience, discovery with nine wordings for a second-year in P1 Magic Theory):** no wrong skip
+  in any case (a name the map does not know, like "Lecture Hall 3B", keeps the benefit of the doubt). But the 1.24.2 "Go here" wording
+  could come back as "Second-year Lecture Halls", which the engine did not know: no "You are here" on the map, not recorded as
+  visited, no ambience crowd; "Floor 3 — Lecture Halls" lost its floor.
+- **Fix:** `canonLocation` (`yearFloorLocation`) writes any year-floor wording as "<place> — Floor N" ("Second-year Lecture Halls",
+  "Lecture Halls, Floor 3", "Floor 4 — Study Rooms", "the lockers on the third-year floor"); a text that names another place first
+  keeps it ("Fire Dormitory — lockers on the second-year corridor"). The update rules (502) show the form; `<now>`'s class line says
+  the floor ("at Lecture Halls — Floor 3 (the Year 2 floor)").
+- Tests: `test_map_gates_v1240.cjs` gains the naming, canonLocation and attendance checks; `test_world_v110` reads the new class
+  line. `npm test`: 81 suites pass; lint passes. Browser preview checked. Save fixture `save_1.24.2.json` added.
+
 ## v1.24.2 — Year floors in the castle, wheel zoom (2026-09-29)
 
 Owner: "lecture, study, storage room on Floors 3 and 4 too; Floor 2 is for first-years, a second-year has no place"; "zoom with the
@@ -255,3 +274,4 @@ Owner: "lanjutkan batch 4". No canon or established design decision changed.
 - **v1.24.0 (2026-09-29):** Map: zoom kept between openings, labels and header crops no longer cut off, places behind gates (Willow Island, Clearing, Observation Tower, Old Hut, Mall shops, castle halls), lore and rumours shown only once heard (overheard via ambience or named in the narration), "Create your student" on the collapsed bracelet.
 - **v1.24.1 (2026-09-29):** Map gates on the far grounds only: the Fishing House joins Willow Island behind the Boathouse; Mall shops and castle halls visible from the start again.
 - **v1.24.2 (2026-09-29):** Lecture Halls, Study Rooms and lockers on each year's floor (2, 3, 4) on the Map and in the Campus Map lore; the mouse wheel zooms the map.
+- **v1.24.3 (2026-09-29):** Year floors named plainly on the Map (First-/Second-/Third-year Lecture Halls, Study Rooms, Lockers); the engine writes every year-floor wording as "<place> — Floor N", and `<now>` names the class floor.
