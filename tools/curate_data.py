@@ -206,6 +206,14 @@ FLOORS = {'Undercroft': ['Workshop', 'Archive', 'Restricted Section', 'Seal Cham
 for fl, names in FLOORS.items():
     for nm in names:
         locs[need(L(nm))[0]]['floor'] = fl; locs[L(nm)]['walk_min'] = 4
+# 1.24.2 (owner): each year has its own Lecture Hall floor (lore 49, 132: first-years Floor 2, second-years 3, third-years 4), with
+# Study Rooms and lockers on each; the place is one place with three floors (floor = the first, floors = all, floor_notes per floor)
+YEAR_FLOORS = {'Floor 2': 'first-year', 'Floor 3': 'second-year', 'Floor 4': 'third-year'}
+for nm in ('Lecture Halls', 'Study Rooms', 'Storage and Lockers'):
+    l = locs[need(L(nm))[0]]; assert l['floor'] == 'Floor 2', nm
+    l['floors'] = list(YEAR_FLOORS)
+    l['floor_notes'] = {f: f'The {y} {nm}' for f, y in YEAR_FLOORS.items()} if nm != 'Storage and Lockers' \
+        else {f: f'The lockers along the {y} corridors' for f, y in YEAR_FLOORS.items()}
 for mins, names in WALK.items():
     for nm in names: locs[need(L(nm))[0]]['walk_min'] = mins
 for d in ('Fire Dormitory', 'Light Dormitory', 'Sky Dormitory', 'Viridian Dormitory', 'Staff Quarters'): locs[L(d)]['walk_min'] = 4

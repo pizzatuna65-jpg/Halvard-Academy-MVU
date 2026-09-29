@@ -6,8 +6,8 @@ Adjacent places (reached directly from each other):
   Undercroft: Workshop beneath the Lecture Halls; Archive beneath the Library, with the Restricted Section below it; the Seal Chamber deepest of all, reached only by the Warden's stair.
   Floor 1: Arbiter Hall (its vault rises through Floor 3), Ring Dining Hall, Canteen with the main kitchen behind it, Main Library reading rooms, Club Rooms corridor with the Student Council Chamber at its end and the Announcement Room and old amphitheatre off it, the Notice Board in the entrance hall at the foot of the main stair; the Warden's Office down its own corridor; the Royal Inspectorate's bannered door in the same wing; the foot of the Detention Tower stair.
   Floor 2: first-year Lecture Halls, Portrait Hall gallery along the Arbiter Hall's upper level, Study Rooms on the Library's galleries.
-  Floor 3: second-year Lecture Halls, Seminar Rooms, the Library's shadowed upper stacks.
-  Floor 4: third-year Lecture Halls, the four Potion Halls at the base of their towers.
+  Floor 3: second-year Lecture Halls with their own Study Rooms, Seminar Rooms, the Library's shadowed upper stacks.
+  Floor 4: third-year Lecture Halls with their own Study Rooms, the four Potion Halls at the base of their towers.
   Floor 5: Faculty Offices, Staff Room; the Headmaster's Office in its turret, up a short stair.
   Rooftop: flat lead roofs, the Bell Tower belfry, the Potion Hall tower tops, the top of the Detention Tower.
   Lockers line the corridors on every Lecture Hall floor.

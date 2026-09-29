@@ -568,6 +568,9 @@ def batch3_magic_canon(C, N):
             e['key'] = [k.replace('Duelling Club', 'Magic Duelling Club') for k in e.get('key', [])]
     rep(C[132], 'Club venues: Duelling – Combat Grounds', 'Club venues: Magic Duelling Club – Combat Grounds')
     rep(C[132], 'Walking times are measured FROM Main Courtyard', 'Ordinary walking estimates (minutes) are measured FROM Main Courtyard')
+    # 1.24.2 (owner): every year's Lecture Hall floor has Study Rooms (and lockers), so second- and third-years have their own
+    rep(C[132], 'Floor 3: second-year Lecture Halls, Seminar Rooms,', 'Floor 3: second-year Lecture Halls with their own Study Rooms, Seminar Rooms,')
+    rep(C[132], 'Floor 4: third-year Lecture Halls, the four', 'Floor 4: third-year Lecture Halls with their own Study Rooms, the four')
     rep(C[132], 'Movement: adjacent places are reached directly, usually in four or five minutes. Characters do not pass through the Courtyard to reach a neighbour. Crossing between distant clusters does take real time; say so rather than skipping it.',
         'Movement: adjacent places are reached directly, usually in four or five minutes on foot. Characters do not pass through the Courtyard to reach a neighbour. Crossing distant clusters on foot takes time. A described speed spell can shorten the actual route according to its effect and mana cost; never impose the walking estimate on magical travel.')
     rep(C[0], 'Casual casting is normal and allowed anywhere on campus;', 'Casual casting, including ordinary movement magic, is normal and allowed anywhere on campus;')

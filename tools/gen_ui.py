@@ -71,7 +71,8 @@ for lid, l in json.load(open(P('data/locations.json'), encoding='utf-8')).items(
     DATA['locs'][lid] = {k: l[k] for k in ('name', 'category', 'kind', 'description', 'vibe', 'regulars', 'connections', 'walk_min',
                                          'clubs', 'access', 'lore', 'floor', 'pin', 'discoverable', 'near')}
     if l.get('seasons'): DATA['locs'][lid]['seasons'] = l['seasons']
-    if l.get('gate'): DATA['locs'][lid]['gate'] = l['gate']   # 1.24.0: shown once the place that leads to it was visited   # 1.14.0: the place in each season (location card)
+    if l.get('gate'): DATA['locs'][lid]['gate'] = l['gate']
+    if l.get('floors'): DATA['locs'][lid].update(floors=l['floors'], fnote=l['floor_notes'])   # 1.24.2: a place on each year's floor   # 1.24.0: shown once the place that leads to it was visited   # 1.14.0: the place in each season (location card)
 # ---- Batch 5.2: clubs, shop, team roles ----
 import sys; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import load_clubs   # v1.1.0: club data shared with gen_mvu_entries.py (Saturday club time in the Now entry)

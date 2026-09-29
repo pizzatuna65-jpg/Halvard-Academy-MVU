@@ -6,7 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
-- v1.24.0–1.24.1 (map gates, lore heard): the four checks in the v1.24.0 section below.
+- v1.24.0–1.24.2 (map gates, lore heard, year floors): the checks in the v1.24.0 section below.
 - v1.23.0 (panels): the three checks in its section below.
 - v1.22.0 (bracelet): the three checks in its section below.
 - v1.21.0 (UI foundation): the four checks in its section below.
@@ -62,6 +62,8 @@ new section at the top of **By release**, not as a new file.
 - Lore: spend an hour or two in a busy place with a story (Canteen, Commissary, Founder's Park by day); when the toast "Heard at …"
   comes, the narration shows students (or a companion) talking about it as hearsay, and the Map card lists it.
 - With the bracelet collapsed and no student yet, "Create your student" is still there and opens the Builder.
+- (1.24.2) The mouse wheel over the map zooms in and out inside SillyTavern. As a second-year, the castle's Floor 3 lists the
+  Lecture Halls, Study Rooms and lockers; "Go here" there puts the narration on Floor 3 among second-years.
 
 ### v1.23.0 — UI overhaul 3 (panels)
 

@@ -3,6 +3,22 @@
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
 details: `git show b62d182:CHANGELOG.md`.
 
+## v1.24.2 — Year floors in the castle, wheel zoom (2026-09-29)
+
+Owner: "lecture, study, storage room on Floors 3 and 4 too; Floor 2 is for first-years, a second-year has no place"; "zoom with the
+scroll". Decisions touched: none (lore 49 and 132 already put each year's Lecture Halls on its own floor).
+- **Year floors:** the Lecture Halls, Study Rooms and Storage and Lockers are on Floors 2, 3 and 4 (`locations.json` `floors` and
+  `floor_notes`, from `curate_data.py` `YEAR_FLOORS`). Each floor's card names whose they are ("Floor 3: The second-year Lecture
+  Halls."); "Go here" says the floor ("I head to the second-year Lecture Halls on Floor 3."); Walk adds a minute per floor climbed.
+  At one of them the Map opens on the floor World.Location names ("Floor 3", "second-year"), else on {{user}}'s year floor.
+- **Lore:** the Campus Map entry (132) now says the second- and third-year Lecture Hall floors have their own Study Rooms (lockers
+  were already on every Lecture Hall floor).
+- **Wheel zoom:** the mouse wheel zooms the map without Ctrl, one step per gesture, toward the pointer; at 100% scrolling down still
+  scrolls the panel.
+- Tests: `test_map_gates_v1240.cjs` gains the year-floor and wheel checks. `npm test`: 81 suites pass; lint passes. Browser
+  preview: a second-year at the Lecture Halls sees Floor 3 "You are here"; the wheel zooms in and out. Save fixture `save_1.24.1.json`.
+- To confirm with the owner: Study Rooms on Floors 3 and 4 are new canon (lore 132), added on the owner's request.
+
 ## v1.24.1 — Map gates: far grounds only (2026-09-29)
 
 Owner, on the 1.24.0 suggestions: the Fishing House yes; the Mall and castle gates scrapped "so a new player is not confused about
@@ -238,3 +254,4 @@ Owner: "lanjutkan batch 4". No canon or established design decision changed.
 - **v1.23.0 (2026-09-29):** UI overhaul 3 (panels): People cards with rank medals and meters, the Dossier as a file beside a matted portrait, theme pictures and feature switches in Settings, numbered Builder steps, a dense club directory.
 - **v1.24.0 (2026-09-29):** Map: zoom kept between openings, labels and header crops no longer cut off, places behind gates (Willow Island, Clearing, Observation Tower, Old Hut, Mall shops, castle halls), lore and rumours shown only once heard (overheard via ambience or named in the narration), "Create your student" on the collapsed bracelet.
 - **v1.24.1 (2026-09-29):** Map gates on the far grounds only: the Fishing House joins Willow Island behind the Boathouse; Mall shops and castle halls visible from the start again.
+- **v1.24.2 (2026-09-29):** Lecture Halls, Study Rooms and lockers on each year's floor (2, 3, 4) on the Map and in the Campus Map lore; the mouse wheel zooms the map.

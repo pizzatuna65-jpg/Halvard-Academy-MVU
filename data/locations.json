@@ -583,6 +583,16 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "floors": [
+   "Floor 2",
+   "Floor 3",
+   "Floor 4"
+  ],
+  "floor_notes": {
+   "Floor 2": "The first-year Lecture Halls",
+   "Floor 3": "The second-year Lecture Halls",
+   "Floor 4": "The third-year Lecture Halls"
+  },
   "near": [
    [
     "announcement_room",
@@ -1716,6 +1726,16 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "floors": [
+   "Floor 2",
+   "Floor 3",
+   "Floor 4"
+  ],
+  "floor_notes": {
+   "Floor 2": "The first-year Study Rooms",
+   "Floor 3": "The second-year Study Rooms",
+   "Floor 4": "The third-year Study Rooms"
+  },
   "near": [
    [
     "announcement_room",
@@ -2135,6 +2155,16 @@
   "pin": 1,
   "discoverable": false,
   "seasons": {},
+  "floors": [
+   "Floor 2",
+   "Floor 3",
+   "Floor 4"
+  ],
+  "floor_notes": {
+   "Floor 2": "The lockers along the first-year corridors",
+   "Floor 3": "The lockers along the second-year corridors",
+   "Floor 4": "The lockers along the third-year corridors"
+  },
   "near": [
    [
     "announcement_room",

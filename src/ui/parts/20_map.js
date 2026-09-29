@@ -48,6 +48,16 @@ function cropStyle(pin, S) {
   return `background-image:${layers};background-size:${CROP_SCALE * 100}% auto;background-position:${+bx.toFixed(2)}% ${by}`;
 }
 const goText = name => `I head to the ${String(name).replace(/^the\s+/i, '')}.`;
+// 1.24.2 (owner): the Lecture Halls, Study Rooms and lockers are on each year's floor (first-years Floor 2, second-years 3, third-years
+// 4). A place is on a floor if it is its floor or one of its floors; the player's floor is the one World.Location names ("Floor 3",
+// "second-year"), else the one for {{user}}'s school year.
+const onFloor = (id, f) => (DATA.locs[id].floors || [DATA.locs[id].floor]).includes(f);
+function floorOf(id, S) {
+  const l = DATA.locs[id]; if (!l || !l.floors) return (l || {}).floor || '';
+  const loc = String((S.World || {}).Location || ''), m = /\bfloor ([2-4])\b/i.exec(loc), y = /\b(first|second|third)[- ]year/i.exec(loc);
+  const n = m ? +m[1] : y ? ['first', 'second', 'third'].indexOf(y[1].toLowerCase()) + 2 : _.clamp(num(((S.Player || {}).Profile || {}).Year, 1), 1, 3) + 1;
+  return l.floors.includes('Floor ' + n) ? 'Floor ' + n : l.floor;
+}
 
 // 1.2.0 / 1.2.1 (owner): walking time from where the player is now. The legs and their minutes come from tools/curate_data.py
 // (locs[id].near: map distance, lore times on forest and boat legs, castle stairs); this is the shortest path over them.
@@ -71,8 +81,11 @@ function walkFrom(from, S) {
 }
 function walkText(id, cur, S) {
   const l = DATA.locs[id];
-  if (id === cur) return 'You are here';
-  const t = cur ? walkFrom(cur, S)[id] : undefined;
+  if (id === cur && (!l.floors || !view.floor || view.floor === floorOf(cur, S))) return 'You are here';
+  // 1.24.2: the legs reach a place's first floor; each floor above adds a minute (lore 132: "each floor climbed adds about a minute")
+  const up = f => (f && /^Floor \d$/.test(f) ? +f.slice(-1) : 0);
+  const extra = l.floors && l.floors.includes(view.floor) ? Math.abs(up(view.floor) - (id === cur ? up(floorOf(cur, S)) : up(l.floor))) : 0;
+  const t0 = id === cur ? 0 : cur ? walkFrom(cur, S)[id] : undefined, t = t0 == null ? t0 : t0 + extra;
   if (t === 0) return 'Right here';
   if (t != null) return `${t <= 2 ? 'A minute or two' : `About ${t} min`} from here (${DATA.locs[cur].name})`;
   return l.walk_min == null ? 'Unknown' : l.walk_min === 0 ? 'At the Main Courtyard' : `About ${Math.max(l.walk_min, 2)} min from the Main Courtyard`;
@@ -102,10 +115,10 @@ PANELS.map = {
       let ids = P.cluster.filter(id => DATA.locs[id] && discovered(S, DATA.locs[id]));
       let tabs = '';
       if (P.tabs) {
-        const floors = P.tabs.filter(f => ids.some(id => DATA.locs[id].floor === f));
-        if (!floors.includes(view.floor)) view.floor = (cur && P.cluster.includes(cur) && DATA.locs[cur].floor) || floors[1] || floors[0];
+        const floors = P.tabs.filter(f => ids.some(id => onFloor(id, f)));
+        if (!floors.includes(view.floor)) view.floor = (cur && P.cluster.includes(cur) && floorOf(cur, S)) || floors[1] || floors[0];
         tabs = `<div class="tog fl">${floors.map(f => `<button data-floor="${esc(f)}" class="${view.floor === f ? 'on' : ''}">${esc(f)}</button>`).join('')}</div>`;
-        ids = ids.filter(id => DATA.locs[id].floor === view.floor);
+        ids = ids.filter(id => onFloor(id, view.floor));
       }
       // 1.2.0 (owner): one card at a time with arrow buttons instead of a sideways scroll
       if (view.focusLoc && ids.includes(view.focusLoc)) view.card = ids.indexOf(view.focusLoc);
@@ -117,11 +130,11 @@ PANELS.map = {
     }
     return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>Halvard</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
       <div class="bd"><div class="mapwrap"><div><div class="mapbox"><div class="mapview${mapView.z > 1 ? ' zin' : ''}"><div class="map" style="width:${mapView.z * 100}%"><img src="${esc(imgURL(mapFor(S)))}" alt="Map of Halvard Academy" draggable="false" data-fb="" data-fbclass="mapfb"${mapFor(S) !== DATA.assets.map ? ` data-alt="${esc(imgURL(DATA.assets.map))}"` : ''}>${pinHTML}</div></div>
-      <div class="zoom"><button data-zoom="1" aria-label="Zoom in" title="Zoom in (or Ctrl + wheel)" ${mapView.z >= ZOOMS[ZOOMS.length - 1] ? 'disabled' : ''}>+</button><button data-zoom="-1" aria-label="Zoom out" title="Zoom out" ${mapView.z <= 1 ? 'disabled' : ''}>−</button></div></div>
+      <div class="zoom"><button data-zoom="1" aria-label="Zoom in" title="Zoom in (or the mouse wheel)" ${mapView.z >= ZOOMS[ZOOMS.length - 1] ? 'disabled' : ''}>+</button><button data-zoom="-1" aria-label="Zoom out" title="Zoom out" ${mapView.z <= 1 ? 'disabled' : ''}>−</button></div></div>
       <div class="sub" style="margin:6px 0 10px">You are at ${esc(S.World.Location)}.</div></div><div class="sheet">${sheet}</div></div></div></div>`;
   },
-  // 1.24.0: the zoomed map keeps its centre (mapView) through re-renders; drag with the mouse to pan, Ctrl + wheel (or a trackpad
-  // pinch) to zoom; on touch the view scrolls by itself
+  // 1.24.0: the zoomed map keeps its centre (mapView) through re-renders; drag with the mouse to pan; on touch the view scrolls by
+  // itself. 1.24.2 (owner): the mouse wheel zooms (toward the pointer, one step at a time); at 100% scrolling down scrolls the panel
   after() {
     const vw = ov.querySelector('.mapview'); if (!vw) return;
     const place = () => { vw.scrollLeft = mapView.cx * vw.scrollWidth - vw.clientWidth / 2; vw.scrollTop = mapView.cy * vw.scrollHeight - vw.clientHeight / 2; };
@@ -130,7 +143,14 @@ PANELS.map = {
       if (!vw.scrollWidth || mapView.z === 1) return;
       mapView.cx = (vw.scrollLeft + vw.clientWidth / 2) / vw.scrollWidth; mapView.cy = (vw.scrollTop + vw.clientHeight / 2) / vw.scrollHeight;
     }, { passive: true });
-    vw.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); zoomMap(e.deltaY < 0 ? 1 : -1); }, { passive: false });
+    vw.addEventListener('wheel', e => {
+      const step = e.deltaY < 0 ? 1 : e.deltaY > 0 ? -1 : 0;
+      if (!step || (step < 0 && mapView.z <= 1)) return;
+      e.preventDefault();
+      if (Date.now() - (zoomMap.at || 0) < 180) return;   // a trackpad sends many small events for one gesture
+      const r = vw.getBoundingClientRect(), ox = e.clientX - r.left, oy = e.clientY - r.top;
+      zoomMap(step, { fx: (vw.scrollLeft + ox) / vw.scrollWidth, fy: (vw.scrollTop + oy) / vw.scrollHeight, rx: ox / vw.clientWidth, ry: oy / vw.clientHeight });
+    }, { passive: false });
     let drag = null;
     vw.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse' && e.button === 0 && mapView.z > 1) drag = { x: e.clientX, y: e.clientY, l: vw.scrollLeft, t: vw.scrollTop, moved: false }; });
     vw.addEventListener('pointermove', e => {
@@ -148,13 +168,19 @@ PANELS.map = {
     if (b.dataset.card) { view.card += +b.dataset.card; render(); return; }
     if (b.dataset.floor) { view.floor = b.dataset.floor; render(); return; }
     if (b.dataset.loc) { const p = pinOf(b.dataset.loc); if (p) { view.pin = p.pin; view.floor = DATA.locs[b.dataset.loc].floor || ''; view.focusLoc = b.dataset.loc; render(); } return; }
-    if (b.dataset.go) fillChat(goText(DATA.locs[b.dataset.go].name));   // shared helper (30_notebook.js)
+    if (b.dataset.go) {   // fillChat: shared helper (30_notebook.js); 1.24.2: a place on each year's floor says which floor
+      const l = DATA.locs[b.dataset.go], fl = b.dataset.gofl;
+      fillChat(fl && l.fnote ? `I head to the ${l.fnote[fl].replace(/^The /, '')} on ${fl}.` : goText(l.name));
+    }
   },
 };
 
-function zoomMap(step) {
+// at: the point under the pointer (fraction of the map, fx/fy) stays under it (fraction of the view, rx/ry)
+function zoomMap(step, at) {
   const i = ZOOMS.indexOf(mapView.z), z = ZOOMS[_.clamp((i < 0 ? 0 : i) + step, 0, ZOOMS.length - 1)];
   if (z === mapView.z) return;
+  zoomMap.at = Date.now();
+  if (at) { mapView.cx = at.fx + (0.5 - at.rx) / z; mapView.cy = at.fy + (0.5 - at.ry) / z; }
   mapView.z = z; if (z === 1) { mapView.cx = 0.5; mapView.cy = 0.5; }
   render();
 }
@@ -177,7 +203,7 @@ function loreRow(l, S) {
   return `<details><summary>Lore and rumours (${known.length}/${l.lore.length})</summary>${known.map(x => `<p><b>${esc(x.title)}</b>: ${esc(x.summary)}</p>`).join('')}${more}</details>`;
 }
 function locCard(id, S, cur, P) {
-  const l = DATA.locs[id], here = id === cur;
+  const l = DATA.locs[id], fl = l.floors && l.floors.includes(view.floor) ? view.floor : '', here = id === cur && (!fl || fl === floorOf(cur, S));
   const ra = (S.$ui || {}).rank_access || {};
   const dorm = /^(Fire|Light|Sky|Viridian) Dormitory$/.exec(l.name);
   const escorted = dorm && (ra.dorms || []).includes(dorm[1]) && !(S.Trip || {}).Active && !/LOCKDOWN|CURFEW/.test((S.World || {})._Curfew || '');
@@ -198,10 +224,10 @@ function locCard(id, S, cur, P) {
     ['Regulars', regs || '<span class="sub">Nobody you know yet</span>'], ['Connected to', conns || '—'],
   ];
   return `<article class="lc${here ? ' here' : ''}" data-loccard="${esc(id)}"><div class="crop" style="${cropStyle(P, S)}"><b>${esc(l.name)}</b>${here ? '<span class="you">You are here</span>' : ''}</div>
-    <div class="in">${l.vibe ? `<p class="vibe">${esc(l.vibe)}</p>` : ''}${seasonLine(l, S)}
+    <div class="in">${fl ? `<p class="sub"><b>${esc(fl)}:</b> ${esc(l.fnote[fl])}.</p>` : ''}${l.vibe ? `<p class="vibe">${esc(l.vibe)}</p>` : ''}${seasonLine(l, S)}
     <details><summary>Description</summary><p>${esc(untoldOut(l, S))}</p></details>
     <dl class="kv sm">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
     ${l.lore.length ? loreRow(l, S) : ''}
     ${change.length ? `<div class="warn">Changed: ${change.map(esc).join('; ')}</div>` : ''}
-    <button class="btn ${here ? '' : 'pri'} go" data-go="${esc(id)}" ${here ? 'disabled' : ''}>${here ? 'You are here' : 'Go here'}</button></div></article>`;
+    <button class="btn ${here ? '' : 'pri'} go" data-go="${esc(id)}"${fl ? ` data-gofl="${esc(fl)}"` : ''} ${here ? 'disabled' : ''}>${here ? 'You are here' : 'Go here'}</button></div></article>`;
 }
