@@ -58,3 +58,24 @@ console.log('1.30.2: the period on a day without classes');
 const P = (d, hhmm) => at(S0, d, hhmm, 'Reception and Gatehouse').World._Period;
 ok(P(0, '07:30') === 'Morning, no classes today' && P(0, '17:00') === 'Afternoon, no classes today', `Entrance Event (M1 W1 Mon): no "before classes" (${P(0, '07:30')} / ${P(0, '17:00')})`);
 ok(P(1, '07:30') === 'Morning, before classes' && P(1, '17:00') === 'After classes', 'an ordinary school day keeps "before classes" and "After classes"');
+
+console.log('1.30.3: special occasions are clear (the weather roll is suspended)');
+const W = new Function(read('src/scripts/engine.js') + '\nreturn { wxDay, wxForecast, EVENTS, fromAbs };')();
+const CAL = JSON.parse(read('data/calendar.json')).events;
+const dayOf = (m, w, d) => (m - 1) * 28 + (w - 1) * 7 + ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].indexOf(d);
+const fairDays = CAL.filter(e => e.fair).flatMap(e => e.d.map(d => dayOf(e.m, e.w, d)));
+const calm = bk => bk.sky === 'Clear' && !bk.wind && !bk.rain && !bk.snow && !bk.rare;
+let allClear = true, winterCold = true;
+for (let seed = 1; seed <= 60; seed++) for (const d of fairDays) {
+  const D = W.wxDay(seed, d);
+  if (!D.blocks.every(calm)) allClear = false;
+  if (D.season === 'Winter' && D.blocks[1].temp > 12) winterCold = false;
+}
+ok(fairDays.length === 41 && allClear, `every block of the ${fairDays.length} special-occasion days is clear and calm (60 seeds)`);
+ok(winterCold, 'the temperature still follows the season (a winter festival stays cold)');
+ok(W.wxDay(1699121023, 0).blocks.every(calm), 'the playtest chat\'s Entrance Event (light rain before) is now clear');
+ok(W.wxForecast(1699121023, 0).every(f => f.sky === 'Clear'), 'the Divination Society forecasts it right');
+const exam = dayOf(3, 1, 'Mon'), wet = [...Array(60).keys()].some(s => W.wxDay(s + 1, exam).blocks.some(b => b.sky !== 'Clear'));
+ok(wet && !CAL.some(e => e.fair && /exam|Training Week|Thinning|holiday|Break/i.test(e.t)), 'exam weeks, long weeks, breaks and the Thinning keep ordinary weather');
+const arrive = at(set(initState(), [['/$eng/seed', 1699121023], ['/$ui/built', true], ['/$eng/auth', 'builder']]), 0, '08:30', 'Courtyards');
+ok(!arrive.Player.Conditions.Soaked && /clear/i.test(arrive.World._Weather || ''), `outdoors on the Entrance morning: no Soaked (${arrive.World._Weather})`);

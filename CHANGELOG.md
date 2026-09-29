@@ -1,7 +1,22 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.30.3 — Clear weather on special occasions (2026-09-30)
+
+Owner: "when an event happens, suspend the weather roll and default to clear" (options chosen: special-occasion days only; the
+temperature keeps the season). Decision touched: DECISIONS §4 **Weather** (a pure function of seed and day; now with this exception).
+- `data/calendar.json` marks 22 events `"fair"` (41 days a year): the Entrance Event, Star Night, the Warding Rite, the four Dorm Days,
+  Club Festival, Dorm / Academy / Kingdom Competitions, Secret Fools Day, both Results days, Sports Day, the Traveling Circus, the
+  Academy Showcase and Bazaar, Founder Day, Remembrance Day, the Harvest Festival and Graduation. Not marked: exam weeks, the long
+  weeks (club sign-up, Training, Fair, Election, Return), breaks, away days and the Thinning.
+- `wxRollDay`: on those days every block is clear, with no wind, rain, snow or rare weather (no heatwave); the daily temperature
+  variation and the season stay, so a winter festival is still cold. The Divination Society forecasts those days right. Weather is
+  still a pure function of the seed and the day, so swipes and old saves agree. In the playtest chat the Entrance morning (light
+  rain before) is now clear and nobody arrives Soaked.
+- Save fixture v1.30.2. Tests: `test_playtest_v1301` (+6 checks over 60 seeds); `test_world_v110`'s climate statistics now leave
+  the unrolled event days out. **Full suite passes.**
 
 ## v1.30.2 — "No classes today" on a day without classes (2026-09-30)
 
@@ -81,13 +96,6 @@ Batch 5 of the approved proficiency plan. Decisions touched: none changed; DECIS
 - To confirm with the owner (invented, all tunable): recipe names and yields (stew pot 4/3/2 servings), sale guides (painting 30–80),
   mishap injuries per craft, masterwork XP 3, the new Mall art studio and Workshop Brewing Club bench actions, and that a masterwork
   Project closes whatever the result (a failed one leaves nothing).
-
-## v1.28.0 — Magical crafting (2026-09-30)
-
-Batch 4 of the approved proficiency plan. `data/crafts.json` defines brewing, runes, repair and enchant recipes, materials, effects and sale guides. The engine shows each available recipe's Fortune-based result in `<now>` and the Practice UI; `/Practice` with `Action: "craft"` uses that result, spends materials, awards Craft XP and puts handmade work in the Bag. Tools, an expert, conditions, rank, the A-grade bonus, mishaps, tiers and weak/failed outcomes are enforced.
-- Gardens, Forest and Clearing Practice yield reagents; clearing blooms wilt on the next day. Crafted draughts and talismans use `/Consumables`, including healing an injury and one-use fitting items. The Bag shows their effects and handmade notes, which gift preferences read. Enchanted clothing works as weather gear. The Medical Centre apothecary buys up to three Healing draught doses per week through `/Craft_sales`.
-- Craft instructions in rules 502/504 appear only where a recipe is available; Settings' token estimate measures the ordinary cost without those situational lines.
-- Save fixture v1.27.0; no migration. Main and three TEST cards rebuilt. Focused crafting tests, Practice tests, save compatibility, `npm run lint` and the full suite pass. Connected SillyTavern checks remain in `docs/TEST_CHECKLIST.md`.
 
 ## Release index (one line per release, oldest first)
 
@@ -182,3 +190,4 @@ Batch 4 of the approved proficiency plan. `data/crafts.json` defines brewing, ru
 - **v1.30.0 (2026-09-30):** Batch 6: marks from preparation, proficiency and attendance plus a seeded exam-day roll; Rank 5 mastery perks.
 - **v1.30.1 (2026-09-30):** Playtest fixes: map gates open only in their area; rival academy students kept off Halvard's grounds; malformed update blocks recovered.
 - **v1.30.2 (2026-09-30):** The period reads "no classes today" instead of "before classes" on a day without classes.
+- **v1.30.3 (2026-09-30):** Special-occasion days (calendar `fair`) are clear and calm; the temperature keeps the season.

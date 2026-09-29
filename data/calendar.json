@@ -9,7 +9,8 @@
       "t": "Entrance Event (Arbiter Stone sorting)",
       "noclass": 1,
       "entr": 1,
-      "s": "07:00–09:00 arrivals at Reception and Gatehouse; 09:00 Headmaster and Vice Headmaster speeches in the Arbiter Hall, then Stone sorting until 10:00 (Council hands out each dorm vest; sorted students remain seated with their dorm); 10:00–18:00 assigned tour groups of two new first-years and one senior, meeting in the hall, visit campus and club booths (sign-up open until Friday 18:00); late afternoon: seniors show new students their dorm rooms; 19:00 Entrance Feast in the Ring Dining Hall, opened by speeches from the Headmaster and Vice Headmaster before dinner"
+      "s": "07:00–09:00 arrivals at Reception and Gatehouse; 09:00 Headmaster and Vice Headmaster speeches in the Arbiter Hall, then Stone sorting until 10:00 (Council hands out each dorm vest; sorted students remain seated with their dorm); 10:00–18:00 assigned tour groups of two new first-years and one senior, meeting in the hall, visit campus and club booths (sign-up open until Friday 18:00); late afternoon: seniors show new students their dorm rooms; 19:00 Entrance Feast in the Ring Dining Hall, opened by speeches from the Headmaster and Vice Headmaster before dinner",
+      "fair": 1
     },
     {
       "m": 1,
@@ -40,7 +41,8 @@
       "s": {
         "Sat": "Sunset to sunrise, no 8pm curfew; 20:00–00:00 night market near the Grassy Field and Hills (students and mall vendors); stargazing on the hills, tents and bedrolls; midnight: the great meteor shower (a wish made during it is believed to come true)",
         "Sun": "Until dawn: students sleep out on the Grassy Field and Hills; the curfew is back from dawn"
-      }
+      },
+      "fair": 1
     },
     {
       "m": 1,
@@ -49,7 +51,8 @@
         "Sat"
       ],
       "t": "Spiritual Dorm Day",
-      "s": "Viridian Dormitory: 09:00–18:00 open house: the common room shows the dorm's history and the founding warden is honoured with a small rite at the entrance; upperclassmen showcase casting in the courtyard, first-years run booths, a public lesson for outsiders, food stalls, type contests open to all and the dorm tournament; 19:00 dorm-only closing dinner, first-years welcomed with a token of belonging"
+      "s": "Viridian Dormitory: 09:00–18:00 open house: the common room shows the dorm's history and the founding warden is honoured with a small rite at the entrance; upperclassmen showcase casting in the courtyard, first-years run booths, a public lesson for outsiders, food stalls, type contests open to all and the dorm tournament; 19:00 dorm-only closing dinner, first-years welcomed with a token of belonging",
+      "fair": 1
     },
     {
       "m": 2,
@@ -63,7 +66,8 @@
         "Fri": "Classes as usual while staff build a giant magic circle in the Main Courtyard all day; dusk (about 18:30): the Bell Tower rings a special pattern and every student gathers in the courtyard; speeches from the Headmaster, the Vice Headmaster and the Warden; the Dorm Heads lead each dorm through the shared working; then a feast in the Ring Dining Hall, opened by speeches from the Headmaster and Vice Headmaster",
         "Sat": "Until dawn: the feast runs late after the working"
       },
-      "mood": "trial"
+      "mood": "trial",
+      "fair": 1
     },
     {
       "m": 2,
@@ -113,7 +117,8 @@
       "s": {
         "Fri": "Classes in the morning; 13:00–18:00 every club runs a stand in the Main Courtyard: demonstrations, exhibition matches, sales, food",
         "Sat": "09:00–18:00 stands and exhibition matches all day; everyone drops one gold coin at the best stand (never their own club); the winner is announced at the close, 18:00"
-      }
+      },
+      "fair": 1
     },
     {
       "m": 3,
@@ -143,7 +148,8 @@
         "Sat": "09:00–18:00 solo ranking bouts inside each dorm, open to the whole dorm",
         "Sun": "09:00–18:00 the ranking bouts finish; every entrant gets a placement and the top 16 of each dorm qualify for the Academy Competition"
       },
-      "mood": "trial"
+      "mood": "trial",
+      "fair": 1
     },
     {
       "m": 4,
@@ -152,7 +158,8 @@
         "Wed"
       ],
       "t": "Secret Fools Day (prank day, dorm name-draw)",
-      "s": "Morning: participants draw a dorm-mate's name in secret, then prank them without warning all day; classes still run; Merryhew's biggest sale of the year"
+      "s": "Morning: participants draw a dorm-mate's name in secret, then prank them without warning all day; classes still run; Merryhew's biggest sale of the year",
+      "fair": 1
     },
     {
       "m": 4,
@@ -173,7 +180,8 @@
         "Sat"
       ],
       "t": "Mystic Dorm Day",
-      "s": "Light Dormitory: 09:00–18:00 open house: the common room shows the dorm's history and the founding warden is honoured with a small rite at the entrance; upperclassmen showcase casting in the courtyard, first-years run booths, a public lesson for outsiders, food stalls, type contests open to all and the dorm tournament; 19:00 dorm-only closing dinner, first-years welcomed with a token of belonging"
+      "s": "Light Dormitory: 09:00–18:00 open house: the common room shows the dorm's history and the founding warden is honoured with a small rite at the entrance; upperclassmen showcase casting in the courtyard, first-years run booths, a public lesson for outsiders, food stalls, type contests open to all and the dorm tournament; 19:00 dorm-only closing dinner, first-years welcomed with a token of belonging",
+      "fair": 1
     },
     {
       "m": 5,
@@ -198,7 +206,8 @@
       "t": "Results & Dorm Ranking (Player.Profile.Dorm_rank is updated today)",
       "ranking": 1,
       "s": "09:00 assembly in the Arbiter Hall, opened by speeches from the Headmaster and Vice Headmaster: trial results stage by stage, then the new dorm ranking read aloud last; 19:00 speeches from the Headmaster and Vice Headmaster, then the feast in the Ring Dining Hall",
-      "mood": "exam"
+      "mood": "exam",
+      "fair": 1
     },
     {
       "m": 5,
@@ -238,7 +247,8 @@
         "Sat"
       ],
       "t": "Sports Day (magic banned outright)",
-      "s": "09:00–18:00 events, no magic: running and team events on the Sports Field, crowd contests in the Main Courtyard, the rest at the lake and the Combat Grounds; medals tallied by dorm at the day's end"
+      "s": "09:00–18:00 events, no magic: running and team events on the Sports Field, crowd contests in the Main Courtyard, the rest at the lake and the Combat Grounds; medals tallied by dorm at the day's end",
+      "fair": 1
     },
     {
       "m": 6,
@@ -251,7 +261,8 @@
       ],
       "t": "Academy Competition (cross-dorm teams of 4)",
       "s": "09:00–18:00 knockout matches between the cross-dorm teams of four; the winning team represents the academy",
-      "mood": "trial"
+      "mood": "trial",
+      "fair": 1
     },
     {
       "m": 7,
@@ -308,7 +319,8 @@
         "Fri": "Classes in the morning; shows several times a day from the afternoon; curfew 22:00",
         "Sat": "Classes in the morning; shows several times a day from the afternoon; curfew 22:00",
         "Sun": "Shows all day, the last one in the evening; curfew 22:00"
-      }
+      },
+      "fair": 1
     },
     {
       "m": 8,
@@ -323,7 +335,8 @@
         "Thu": "09:00–18:00 acts on the Main Courtyard stage; parents and guardians visit (logged at the Gatehouse)",
         "Fri": "09:00–18:00 acts on the Main Courtyard stage; families visit",
         "Sat": "09:00–18:00 the last acts; scores tallied by dorm in the evening to name the most talented dorm"
-      }
+      },
+      "fair": 1
     },
     {
       "m": 8,
@@ -332,7 +345,8 @@
         "Sat"
       ],
       "t": "Elemental Dorm Day",
-      "s": "Fire Dormitory: 09:00–18:00 open house: the common room shows the dorm's history and the founding warden is honoured with a small rite at the entrance; upperclassmen showcase casting in the courtyard, first-years run booths, a public lesson for outsiders, food stalls, type contests open to all and the dorm tournament; 19:00 dorm-only closing dinner, first-years welcomed with a token of belonging"
+      "s": "Fire Dormitory: 09:00–18:00 open house: the common room shows the dorm's history and the founding warden is honoured with a small rite at the entrance; upperclassmen showcase casting in the courtyard, first-years run booths, a public lesson for outsiders, food stalls, type contests open to all and the dorm tournament; 19:00 dorm-only closing dinner, first-years welcomed with a token of belonging",
+      "fair": 1
     },
     {
       "m": 9,
@@ -362,7 +376,8 @@
         "Sat"
       ],
       "t": "Academy Bazaar",
-      "s": "09:00–18:00 invited traders fill the Main Courtyard (stalls take points, haggling expected); traders logged at the Gatehouse, the Doves watch the stock and the crowd"
+      "s": "09:00–18:00 invited traders fill the Main Courtyard (stalls take points, haggling expected); traders logged at the Gatehouse, the Doves watch the stock and the crowd",
+      "fair": 1
     },
     {
       "m": 9,
@@ -371,7 +386,8 @@
         "Sat"
       ],
       "t": "Academy Founder Day",
-      "s": "09:00 speeches from the Headmaster and Vice Headmaster in the Arbiter Hall, then a short rite at the Founder's Statue; all day: the optional treasure hunt across the campus; 19:00 speeches from the Headmaster and Vice Headmaster, then the feast in the Ring Dining Hall"
+      "s": "09:00 speeches from the Headmaster and Vice Headmaster in the Arbiter Hall, then a short rite at the Founder's Statue; all day: the optional treasure hunt across the campus; 19:00 speeches from the Headmaster and Vice Headmaster, then the feast in the Ring Dining Hall",
+      "fair": 1
     },
     {
       "m": 9,
@@ -384,7 +400,8 @@
       ],
       "t": "Kingdom Competition (four academies, one team each)",
       "s": "09:00–18:00 knockout matches between the four academies' teams; each member of the winning team earns 5,000 points",
-      "mood": "trial"
+      "mood": "trial",
+      "fair": 1
     },
     {
       "m": 10,
@@ -393,7 +410,8 @@
         "Tue"
       ],
       "t": "Remembrance Day",
-      "s": "All day: nothing loud (no clubs, duelling, music, games or sport); classes run quietly, the Bell Tower keeps a slow pattern, bouquets line the halls; evening (about 19:00) on the Grassy Field and Hills: speeches from the Headmaster, the Vice Headmaster and Acting Warden Rei, then the lantern release, one lantern each"
+      "s": "All day: nothing loud (no clubs, duelling, music, games or sport); classes run quietly, the Bell Tower keeps a slow pattern, bouquets line the halls; evening (about 19:00) on the Grassy Field and Hills: speeches from the Headmaster, the Vice Headmaster and Acting Warden Rei, then the lantern release, one lantern each",
+      "fair": 1
     },
     {
       "m": 10,
@@ -402,7 +420,8 @@
         "Sat"
       ],
       "t": "Occult Dorm Day",
-      "s": "Sky Dormitory: 09:00–18:00 open house: the common room shows the dorm's history and the founding warden is honoured with a small rite at the entrance; upperclassmen showcase casting in the courtyard, first-years run booths, a public lesson for outsiders, food stalls, type contests open to all and the dorm tournament; 19:00 dorm-only closing dinner, first-years welcomed with a token of belonging"
+      "s": "Sky Dormitory: 09:00–18:00 open house: the common room shows the dorm's history and the founding warden is honoured with a small rite at the entrance; upperclassmen showcase casting in the courtyard, first-years run booths, a public lesson for outsiders, food stalls, type contests open to all and the dorm tournament; 19:00 dorm-only closing dinner, first-years welcomed with a token of belonging",
+      "fair": 1
     },
     {
       "m": 10,
@@ -442,7 +461,8 @@
         "Fri": "Classes as usual; from 17:00 cafés, food stalls, game booths, haunted houses and stage acts, costumes and carved lanterns; families visit (logged at the Gatehouse); curfew 23:00",
         "Sat": "09:00 until late: the festival all day; curfew 23:00",
         "Sun": "The festival all day; evening: fireworks over the lake, watched from the Grassy Field and Hills; the usual curfew"
-      }
+      },
+      "fair": 1
     },
     {
       "m": 11,
@@ -467,7 +487,8 @@
       "t": "Results & Final Ranking (Player.Profile.Dorm_rank is updated today)",
       "ranking": 1,
       "s": "09:00 assembly in the Arbiter Hall, opened by speeches from the Headmaster and Vice Headmaster: trial results stage by stage, then the final dorm ranking read aloud last; 19:00 speeches from the Headmaster and Vice Headmaster, then the feast in the Ring Dining Hall",
-      "mood": "exam"
+      "mood": "exam",
+      "fair": 1
     },
     {
       "m": 11,
@@ -509,7 +530,8 @@
       "t": "Graduation (everyone attends; third-years leave by airship next morning)",
       "noclass": 1,
       "grad": 1,
-      "s": "09:00 ceremony in the Arbiter Hall: the Headmaster and Vice Headmaster speak, the Dorm Heads read out their graduates, each touches the Arbiter Stone a last time; afternoon: recruitment tables (noble houses, the Royal Inspectorate, the Dovecote, the Bank, hunting companies, guilds); from 12:00 the farewell winter market in the Main Courtyard and Founder's Park (stalls, snowmen if there is snow, the Farewell Pine, the Music Club on a small stage by the statue); dusk: the airship for the graduates moors above the Grassy Field; 19:00 the Headmaster and Vice Headmaster speak once more, then the farewell feast"
+      "s": "09:00 ceremony in the Arbiter Hall: the Headmaster and Vice Headmaster speak, the Dorm Heads read out their graduates, each touches the Arbiter Stone a last time; afternoon: recruitment tables (noble houses, the Royal Inspectorate, the Dovecote, the Bank, hunting companies, guilds); from 12:00 the farewell winter market in the Main Courtyard and Founder's Park (stalls, snowmen if there is snow, the Farewell Pine, the Music Club on a small stage by the statue); dusk: the airship for the graduates moors above the Grassy Field; 19:00 the Headmaster and Vice Headmaster speak once more, then the farewell feast",
+      "fair": 1
     },
     {
       "m": 12,

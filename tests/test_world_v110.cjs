@@ -31,6 +31,7 @@ console.log('Weather: distribution, continuity, rare events, determinism');
   let ro = [0, 0], ra = [0, 0], cc = [0, 0], clearAll = [0, 0], snowHot = 0, rareM = Array(12).fill(0);
   for (const seed of SEEDS) for (let d = 0; d < 336 * 3; d++) {
     const D = E.wxDay(seed, d), s = D.season, m = Math.floor((d % 336) / 28);
+    if (D.fair) continue;   // 1.30.3: a special occasion is not rolled (clear by the calendar), so it is not part of the climate
     for (const b of D.blocks) { (share[seed + s] = share[seed + s] || {})[b.sky] = (share[seed + s][b.sky] || 0) + 1; if (b.snow && b.temp > 3) snowHot++; if (b.rare) rareM[m]++; }
     const [mo, af] = D.blocks; ra[1]++; if (af.sky === 'Rain') ra[0]++;
     if (mo.sky === 'Overcast') { ro[1]++; if (af.sky === 'Rain') ro[0]++; }

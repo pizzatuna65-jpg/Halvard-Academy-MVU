@@ -450,11 +450,14 @@ const tempLabel = t => (t <= 0 ? 'freezing' : t <= 7 ? 'cold' : t <= 14 ? 'cool'
 const blockOf = abs => { const day = Math.floor(abs / DAY_MIN), h = Math.floor((abs - day * DAY_MIN) / 60); return h < 6 ? [day - 1, 2] : [day, h < 12 ? 0 : h < 18 ? 1 : 2]; };
 function wxRollDay(seed, day, prev) {                          // prev = the previous block ({sky, wind}) or null
   const P = dayParts(day), season = SEASONS[P.Month - 1];
-  const heat = season === 'Summer' && d100(seed, day, 'heat') >= 98;   // heatwave: the whole day clear, +8 °C
+  // 1.30.3 (owner): on a special occasion (data/calendar.json "fair": the Entrance Event, festivals, competitions, dorm days,
+  // Graduation…) the weather roll is suspended: clear and calm all day and night; the temperature still follows the season
+  const fair = eventsOn(P).some(e => e.fair);
+  const heat = !fair && season === 'Summer' && d100(seed, day, 'heat') >= 98;   // heatwave: the whole day clear, +8 °C
   const tv = hash32(seed, day, 'tv') % 7 - 3, blocks = [];
   for (let b = 0; b < 3; b++) {
     let sky = 'Clear';
-    if (!heat) {
+    if (!heat && !fair) {
       const w = SKY.map(k => WX_BASE[season][SKY.indexOf(k)] * (WX_BLOCK[b][k] || 1) * (prev ? (WX_TRANS[prev.sky][k] || 1) : 1));
       let r = rand01(seed, day, b, 'sky') * w.reduce((a, x) => a + x, 0);
       sky = SKY[SKY.length - 1];
@@ -470,7 +473,7 @@ function wxRollDay(seed, day, prev) {                          // prev = the pre
     }
     const th = 93 - (b === 1 ? 5 : 0) - (season === 'Spring' || season === 'Autumn' ? 4 : 0) - (sky === 'Rain' ? 6 : 0) - (prev && prev.wind ? 15 : 0) + (sky === 'Clear' ? 3 : 0);
     const wr = d100(seed, day, b, 'wind');
-    let wind = wr >= 100 ? 'gale' : wr >= th ? 'windy' : '';
+    let wind = fair ? '' : wr >= 100 ? 'gale' : wr >= th ? 'windy' : '';
     if (sky === 'Storm') wind = wr >= 95 ? 'gale' : 'windy';
     const rr = d100(seed, day, b, 'rare'), warm = season === 'Spring' || season === 'Summer';
     let rare = heat ? 'heatwave' : '';
@@ -482,7 +485,7 @@ function wxRollDay(seed, day, prev) {                          // prev = the pre
     blocks.push({ sky, rain, snow, wind, rare, temp: Math.round(temp) });
     prev = blocks[b];
   }
-  return { season, blocks };
+  return { season, blocks, fair };
 }
 const WXC = new Map();
 function wxDay(seed, day) {                                    // chain without state: 3 days of warm-up, then the day itself
@@ -502,7 +505,8 @@ function wxForecast(seed, day) {                               // the Divination
   const D = wxDay(seed, day);
   return D.blocks.map((bk, b) => {
     let sky = bk.sky;
-    if (d100(seed, day, b, 'fc') > FC_TRUE) { const nb = FC_NEAR[sky]; sky = nb[hash32(seed, day, b, 'fcn') % nb.length]; }
+    // 1.30.3: a special occasion's clear sky is forecast right
+    if (!D.fair && d100(seed, day, b, 'fc') > FC_TRUE) { const nb = FC_NEAR[sky]; sky = nb[hash32(seed, day, b, 'fcn') % nb.length]; }
     const t = bk.temp - (bk.rare === 'heatwave' ? 8 : 0) + (bk.rare === 'blizzard' ? 6 : 0);
     return { sky, text: sky === 'Rain' && D.season === 'Winter' && t <= 3 ? 'snow' : sky.toLowerCase(), label: tempLabel(t) };
   });

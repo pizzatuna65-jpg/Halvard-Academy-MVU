@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.30.3: the one check in its section below.
 - v1.30.2: the one check in its section below.
 - v1.30.1 (playtest fixes): the three connected-session checks in its section below.
 - v1.30.0 (new mark formula, mastery perks): the three connected-session checks in its section below.
@@ -59,6 +60,10 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.30.3 — Clear weather on special occasions
+
+1. On the Entrance Event (and later Star Night or a Dorm Day) the bracelet shows a clear sky all day, no rain chips, and the Notice Board forecast agrees; the temperature still fits the season. An ordinary day right after can rain again.
 
 ### v1.30.2 — No classes today
 
