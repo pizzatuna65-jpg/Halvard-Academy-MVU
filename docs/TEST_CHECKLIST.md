@@ -46,6 +46,12 @@ new section at the top of **By release**, not as a new file.
 
 ## By release
 
+### v1.17.0 — audit Batch 2
+
+1. In a chat over 30 messages, Prompt Inspector shows one "[… N earlier messages …]" line instead of many "[…]".
+2. Say "I buy a tea" at a Mall café: the Price Guide lists that place's stock; at the dorm it lists only canon prices and shops.
+3. Compare cached input tokens (provider usage) between the real card and `dist/test/Eldrasil_TEST_LoreDepth.png` over ~10 replies.
+
 ### v1.16.1 — audit Batch 1
 
 1. Join a club with a short name in the story ("I join the soccer team"): Student file shows the club as "Soccer Club", and the next

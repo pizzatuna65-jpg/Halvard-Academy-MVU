@@ -16,7 +16,7 @@ if '--lore' in args: steps += [py('tools/merge_lorebooks.py'), py('tools/curate_
 steps += [py('tools/gen_engine.py'), py('tools/gen_mvu_entries.py')]
 if '--themes' in args: steps.append(py('tools/make_themes.py'))
 steps += [py('tools/gen_ui.py'), py('build/build_card.py')]
-if '--no-test-cards' not in args: steps += [py('tools/build_test_card.py', '7'), py('tools/build_test_card_year2.py')]
+if '--no-test-cards' not in args: steps += [py('tools/build_test_card.py', '7'), py('tools/build_test_card_year2.py'), py('tools/build_test_card_loredepth.py')]
 if '--preset' in args: steps.append(py('presets/edit_preset.py'))
 # every generated script must at least parse (node detects the ES module syntax of schema.js by itself)
 steps += [['node', '--check', f'src/scripts/{f}'] for f in ('engine.js', 'ui.js', 'schema.js', 'mood_gifts.js')]

@@ -125,3 +125,19 @@ def class_data(npcs, locs):
     CLUBS = {c['name']: [norm_place(locs[v]['name']) for v in c['venues']] for c in load_clubs(npcs, locs)}
     return TT, TEACH, CLUBS
 
+
+# 1.17.0: a card PNG with its v2 (chara) and v3 (ccv3) JSON in tEXt chunks, like build/build_card.py (for TEST card variants)
+def write_card_png(v2, v3, out_path):
+    import base64, struct, zlib
+    chunk = lambda t, body: struct.pack('>I', len(body)) + t + body + struct.pack('>I', zlib.crc32(t + body) & 0xffffffff)
+    raw = open(P('src/card/avatar.png'), 'rb').read()
+    out, p = [raw[:8]], 8
+    while p < len(raw):
+        l = struct.unpack('>I', raw[p:p + 4])[0]; t = raw[p + 4:p + 8]
+        if t == b'IEND':
+            for k, obj in (('chara', v2), ('ccv3', v3)):
+                out.append(chunk(b'tEXt', k.encode() + b'\x00' + base64.b64encode(json.dumps(obj, ensure_ascii=False).encode('utf-8'))))
+        if t not in (b'tEXt', b'iTXt', b'zTXt'):
+            out.append(raw[p:p + 12 + l])
+        p += 12 + l
+    open(out_path, 'wb').write(b''.join(out))

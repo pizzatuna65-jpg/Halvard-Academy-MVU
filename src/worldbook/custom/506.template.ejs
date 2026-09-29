@@ -1,0 +1,16 @@
+// Source of custom entry 506 (Price Guide). tools/gen_mvu_entries.py fills /*@@PG@@*/ from data/shop.json and writes content/506.txt.
+// 1.17.0 (audit T2): the shop {{user}} is at, in season, then the canon prices and one line per other shop.
+<%_ const _PG = /*@@PG@@*/{}, _W = getvar('stat_data.World') || {};
+const _pl = String(_W.Location || '').split(/\s+[—–-]\s+/)[0].trim().toLowerCase(), _at = _PG.names[_pl] || _PG.names[_pl.replace(/^the /, '')] || '';
+const _se = ['Spring', 'Summer', 'Autumn', 'Winter'][Math.floor(((Number(_W.Month) || 1) - 1) / 3) % 4];
+const _here = _at && _PG.rows[_at] ? [_at] : [];   // The Mall's own counters; its shops (Nightwell, Quillfeather's…) are places of their own
+const _rows = _here.flatMap(l => _PG.rows[l]).filter(([, s]) => s === 'all' || s.includes(_se)).map(([t]) => t);
+const _else = Object.keys(_PG.dir).filter(l => !_here.includes(l)).map(l => _PG.dir[l]); _%>
+[Price Guide] What things cost, in points. Use these prices; an item not listed costs what a comparable listed item costs.
+<%_ if (_rows.length) { _%>
+Here (<%- _se %> stock; out-of-season items are not stocked):
+<%- _rows.join('\n') %>
+<%_ } _%>
+<%- _PG.canon %>
+Other shops: <%- _else.join(' | ') %>
+Paid work pays 20-40 points a shift. The Banking House changes points and coin 1:1. At the Academy Bazaar prices are whatever the trader says. When {{user}} eats, drinks or uses an item marked "When used", insert its exact name into /Consumables/- (it must be in the Bag, or bought in this reply); "Worn from the Bag" gear works while it is in the Inventory.

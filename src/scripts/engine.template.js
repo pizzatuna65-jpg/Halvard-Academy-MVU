@@ -1635,6 +1635,11 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
       if ((b.Known_facts || []).length || (b.Milestones || []).length || !((b0.Known_facts || []).length || (b0.Milestones || []).length)) continue;
       b.Known_facts = [...(b0.Known_facts || [])]; b.Milestones = [...(b0.Milestones || [])];
       if (!b.Title) b.Title = b0.Title || '';
+      // 1.17.0 (audit T3): <current_state> no longer shows Mind, Knows and Imprints of absent people, so a rewrite keeps them too
+      if (!(b.Knows || []).length && (b0.Knows || []).length) b.Knows = [...b0.Knows];
+      if (!(b.Imprints || []).length && (b0.Imprints || []).length) b.Imprints = _.cloneDeep(b0.Imprints);
+      if (!b.Mind && b0.Mind) b.Mind = b0.Mind;
+      if (!b.Next && b0.Next) b.Next = _.cloneDeep(b0.Next);
       if (num(b.Trust, 50) === 50) b.Trust = num(b0.Trust, 50);
       if (!num(b.Tension, 0)) b.Tension = num(b0.Tension, 0);
       mended.push(id);
@@ -2924,6 +2929,25 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
   if (log.length) S._Log = [...(S._Log || []), ...log.map(l => `[${stamp(S.World)}] ${l}`)].slice(-12);
 }
 
+// 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
+// still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,
+// prepareOpenAIMessages; Tavern Helper passes the object through): each run of "[…]" messages becomes one.
+const TRIMMED = /^\s*(?:[^\n:]{1,40}:\s*)?\[…\]\s*$/;
+function collapseTrimmed(chat) {
+  if (!Array.isArray(chat)) return 0;
+  let removed = 0;
+  for (let i = chat.length - 1; i > 0; i--) {
+    const a = chat[i - 1], b = chat[i];
+    if (a && b && typeof a.content === 'string' && typeof b.content === 'string' && TRIMMED.test(a.content) && TRIMMED.test(b.content)) {
+      a.n = (a.n || 1) + (b.n || 1); chat.splice(i, 1); removed++;
+    }
+  }
+  for (const m of chat) if (m && m.n > 1) { m.content = `[… ${m.n} earlier messages; <current_state> is the story's memory …]`; delete m.n; }
+  return removed;
+}
+if (typeof eventOn === 'function' && typeof tavern_events === 'object' && tavern_events && tavern_events.CHAT_COMPLETION_PROMPT_READY) {
+  eventOn(tavern_events.CHAT_COMPLETION_PROMPT_READY, data => { try { collapseTrimmed(data && data.chat); } catch (e) { console.error('[Eldrasil trim]', e); } });
+}
 if (typeof eventOn === 'function' && typeof waitGlobalInitialized === 'function') {
   (async () => {
     await waitGlobalInitialized('Mvu');

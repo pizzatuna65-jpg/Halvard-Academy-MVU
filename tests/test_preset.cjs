@@ -64,9 +64,10 @@ ok(/if the card gives a naming guide, follow it/.test(gen) && /Banned Names: Ela
 ok(/the card's record for invented characters as their card when the card keeps one/.test(C('Scene Engine')), 'U7: the Scene Engine\'s generated-character sentence');
 const E2 = [step(0).replace('"Now: M? W? Day HH:MM at <place>" (from campaign Year 2: "Now: Y? M? W? Day HH:MM at <place>"), copied from <now>', ''), step(7), step(10), gen].join('\n');
 ok(!CARD.test(E2), 'E2 texts are generic' + (CARD.test(E2) ? ': ' + E2.match(CARD)[0] : ''));
-const br = C('Eldrasil × MVU × VectFox Bridge');
-ok(/The <cast> block is the truth about every present character/.test(br) && /Invented characters keep their Extras card/.test(br) && /their Next plans/.test(br) && /needs plausible travel time/.test(br) && /shown speed spell can be faster/.test(br), 'U8 + D6: the Bridge divides the work with the card\'s new blocks');
-ok(!/_Event_ready|_Period|World\._Happening/.test(br), 'the Bridge copies no field list either');
+const br = C('Card State Bridge');
+// 1.17.0 (audit P1): the card works with any preset, so the Bridge's Eldrasil rules moved into rule 504; the Bridge is generic
+ok(/only game state and the only tracker/.test(br) && !CARD.test(noNotes(br)) && !FIELD.test(noNotes(br)), 'P1: the Bridge is a generic division of labour');
+ok(/Off-screen people keep their own lives/.test(cardText) && /never write another tracker/.test(cardText) && /becomes a Clue/.test(cardText), 'P1: rule 504 carries what the Bridge used to say');
 
 // ---- 1.6.9 bug hunt: pointers the model can follow
 const lastTask = Math.max(...[...bolt.matchAll(/\n(\d+)\. /g)].map(m => +m[1]));

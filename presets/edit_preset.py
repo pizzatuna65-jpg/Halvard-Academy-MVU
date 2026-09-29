@@ -298,5 +298,25 @@ rep('Eldrasil × MVU', "Setting: Eldrasil has no phones, computers or recording 
 rep('Scene Engine', "Environment is active reality: introduce a detail only when it affects movement, perception, timing, privacy, safety, or choice, and the world keeps moving beyond {{user}}'s attention, revealed through present evidence.",
     "Environment is active reality: introduce a detail only when it affects movement, perception, timing, privacy, safety, or choice, and the world keeps moving beyond {{user}}'s attention, revealed through present evidence. On a quiet turn, one light touch of the setting (its light, sound, weather or the people around) is welcome even when it changes nothing; keep it to one clause and never the same touch twice in a row.")
 
+# ---- 12. 1.17.0 (owner-approved planning/AUDIT_2026-09-29.md, Batch 2)
+# P1: the card must work with any preset, so the Bridge's Eldrasil rules (no other trackers, no state numbers in prose, off-screen
+# lives, Campus_State, setups and payoffs) now live in the card's rule 504; the Bridge keeps only a generic division of labour
+br = byname('Eldrasil × MVU')
+br['name'] = '🏫 Card State Bridge (MVU cards, VectFox)'
+br['content'] = """{{// For a card that keeps its own game state (an MVU card such as Eldrasil) and a memory extension (VectFox). Since 1.17.0 the card's own rules carry everything card-specific this prompt used to say; this is only the division of labour. Turn OFF for cards without their own state.}}{{trim}}
+
+<card_state_bridge>
+Division of labour:
+- When the card keeps its own game state and rules (a state block, an update format, character sheets), they are the only game state and the only tracker. Every change goes through the card's own update block, and the fields its engine computes are relied on, never contradicted.
+- This preset owns how the story is written; the card owns what is true now; a memory extension owns what happened long ago.
+</card_state_bridge>"""
+log.append(('EDIT', br['name'], 'Eldrasil rules moved into the card (rule 504)'))
+# P2: world events come only from where the card allows (card rule 504, BOLT task 10 HOLD)
+rep('main', "e.g., off-screen actions, a letter arriving, background movement; weave into narrative. When one matters, record it in the card's state (Campus_State), never in a separate tracker block).",
+    "e.g., off-screen actions, a letter arriving, background movement; only from the sources the card allows when it lists them; weave into narrative. When one matters, record it in the card's state, never in a separate tracker block).")
+# T8: inline graphics and coloured dialogue cost prompt and history tokens every turn; the player can turn them back on
+for frag in ('Pop in Graphics', 'Colored Dialogue 2.0'):
+    log.append(('OFF', toggle(frag, False), 'token audit T8: opt-in'))
+
 json.dump(d, open(os.path.join(HERE, 'Realistic_Frankenstein_2_2_Eldrasil.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=4)
 for l in log: print(' | '.join(l))

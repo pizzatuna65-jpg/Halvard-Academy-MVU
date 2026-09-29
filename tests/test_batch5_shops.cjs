@@ -32,7 +32,9 @@ console.log('Playtest Batch 5: seasonal stock');
   ok(new Set(shop.map(i => i.item + '|' + i.shop)).size === shop.length, 'no duplicate listings');
   const giftNames = JSON.stringify(gifts);
   ok(['Lined winter cloak', 'Straw sun hat', 'Hot chocolate with cream'].every(n => shop.some(i => i.item === n)) && /Lined winter cloak/.test(giftNames), 'items named in gift tastes keep their names');
-  const guide = read('src/worldbook/custom/content/506.txt');
+  // 1.17.0 (audit T2): the Price Guide lists the shop {{user}} is at, in season
+  const pg = JSON.parse(read('dist/Eldrasil_Halvard.json')).data.character_book.entries.find(e => e.id === 506).content;
+  const guide = require('ejs').render(pg, { getvar: k => _.get({ stat_data: { World: { Month: 8, Location: "The Tinker's Bench" } } }, k) });
   ok(/- Ember pouch: 15 pts; The Tinker's Bench;.*in season: Autumn, Winter; When used: warm: holds off Chilled for 4 hours/.test(guide) && /insert its exact name into \/Consumables\/-/.test(guide), 'Price Guide states season and effect, and how to report use');
   ok(/whose Price Guide line says "When used"/.test(read('src/worldbook/custom/content/502.txt')), 'narrator rule: report used items in /Consumables');
   // the shop greys out-of-season stock and shows effects

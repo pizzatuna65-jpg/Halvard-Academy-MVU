@@ -121,26 +121,34 @@ cs = cs.replace('/*@@CAST@@*/{}', J(CAST)).replace('@@SHEETS@@', '\n'.join(sheet
 assert '@@' not in cs
 open(P('src/worldbook/custom/content/509.txt'), 'w', encoding='utf-8').write(cs)
 shop = json.load(open(P('data/shop.json'), encoding='utf-8'))['items']
-lines, seen = [], set()
+# 1.17.0 (audit T2): the Price Guide lists the shop {{user}} is at (in season), the canon prices, and one line per other shop; the
+# whole list used to arrive (~3.7k tokens) whenever a message said "cost" or "shop"
+rows = {}
 for i in shop:
-    k = (i['item'], i['price'])
-    if k in seen: continue
-    seen.add(k)
-    where = ', '.join(sorted({x['shop'] for x in shop if x['item'] == i['item']}))
     price = 'varies' if i['price'] is None else f"{i['price']:,} pts"
-    season = '' if i.get('season', 'all') == 'all' else '; in season: ' + ', '.join(i['season'])   # 1.1.0
     fx = effect_text(i)   # 1.9.5
-    lines.append(f"- {i['item']}: {price}{' (canon)' if i['canon'] else ''}; {where}{'; ' + i['note'] if i['note'] else ''}{season}{'; ' + fx if fx else ''}")
-open(P('src/worldbook/custom/content/506.txt'), 'w', encoding='utf-8').write(
-    "[Price Guide] What things cost on campus, in points. Use these prices; items not listed cost what a comparable listed item costs.\n"
-    + "\n".join(lines) + "\nPaid work pays 20-40 points a shift. The Banking House changes points and coin 1:1. At the Academy Bazaar prices are whatever the trader says. Out-of-season items are not stocked. When {{user}} eats, drinks or uses an item marked \"When used\", insert its exact name into /Consumables/- (and lower its Inventory Qty if it was carried); \"Worn from the Bag\" gear works while it is in the Inventory.\n")
+    season = 'all' if i.get('season', 'all') == 'all' else i['season']   # 1.1.0
+    text = f"- {i['item']}: {price}{' (canon)' if i['canon'] else ''}; {i['shop']}{'; ' + i['note'] if i['note'] else ''}{'' if season == 'all' else '; in season: ' + ', '.join(season)}{'; ' + fx if fx else ''}"
+    rows.setdefault(i['loc'], []).append([text, season])
+assert all(l in locs for l in rows), 'shop.json: loc is not a location'
+canon = sorted({(i['item'], i['price']) for i in shop if i['canon'] and i['price'] is not None}, key=lambda x: x[1])
+def shop_line(l):
+    it = [i for i in shop if i['loc'] == l]; ps = [i['price'] for i in it if i['price'] is not None]
+    return f"{locs[l]['name']}: {len(it)} items, {min(ps):,}-{max(ps):,} pts ({', '.join(x['item'] for x in it[:4])}...)"
+PG = {'rows': rows, 'names': {k: l for l in rows for k in {locs[l]['name'].lower(), re.sub(r'^the ', '', locs[l]['name'].lower())}},
+      'dir': {l: shop_line(l) for l in rows},
+      'canon': 'Canon prices (never change): ' + '; '.join(f"{n} {p:,}" for n, p in canon) + '.'}
+pg = open(P('src/worldbook/custom/506.template.ejs'), encoding='utf-8').read()
+pg = re.sub(r'^// .*\n', '', pg, flags=re.M)
+assert '/*@@PG@@*/{}' in pg
+open(P('src/worldbook/custom/content/506.txt'), 'w', encoding='utf-8', newline='\n').write(pg.replace('/*@@PG@@*/{}', J(PG)))
 base = json.load(open(P('src/worldbook/index.json')))[0]
-def mk(uid, comment, constant, disable, position, depth, order, keys=()):
+def mk(uid, comment, constant, disable, position, depth, order, keys=(), whole=None, scan=None):
     e = dict(base)
     e.update(uid=uid, displayIndex=uid, comment=comment, key=list(keys), keysecondary=[], constant=constant, disable=disable,
              position=position, depth=depth, order=order, role=0, selective=True, selectiveLogic=0, probability=100,
-             useProbability=True, excludeRecursion=True, preventRecursion=True, group='', scanDepth=None, caseSensitive=None,
-             matchWholeWords=None)
+             useProbability=True, excludeRecursion=True, preventRecursion=True, group='', scanDepth=scan, caseSensitive=None,
+             matchWholeWords=whole)
     return e
 idx = [
     mk(500, '[initvar] Eldrasil starting state', False, True, 1, 4, 1),
@@ -149,7 +157,7 @@ idx = [
     mk(503, '[mvu_update] MVU — Output Format', True, False, 4, 0, 900),
     mk(504, '[mvu_plot] Campus Rules — State, Presence, Cognitive Isolation', True, False, 1, 4, 502),
     mk(505, 'Now — Clock, Curfew & Presence (EJS)', True, False, 4, 1, 499),
-    mk(506, '[mvu_plot] Price Guide', False, False, 1, 4, 503, keys=['buy', 'price', 'cost', 'afford', 'shop', 'Commissary', 'Mall', 'bakery', 'store', 'points for', 'how much', 'Banking House', 'coin', 'order']),
+    mk(506, '[mvu_plot] Price Guide (EJS, by place)', False, False, 1, 4, 503, keys=['buy', 'buys', 'bought', 'price', 'prices', 'afford', 'shop', 'shopping', 'Commissary', 'Mall', 'bakery', 'store', 'points for', 'how much', 'Banking House', 'special order'], whole=True, scan=2),   # 1.17.0 (audit T2): no 'cost' / 'order', whole words, the last two messages
     mk(507, '[config_override]', False, True, 1, 4, 999),   # MVU card config override (5.3): disabled on purpose, read by MVU
     mk(508, "[mvu_plot] Event — {{user}}'s Birthday (EJS, only on the day)", True, False, 1, 4, 85),   # 1.2.0: hand-written, gated on Profile.Birthday
     mk(509, '[mvu_plot] Cast Sheet — present characters (EJS)', True, False, 4, 1, 498),   # 1.5.1: generated from 509.template.ejs + lore

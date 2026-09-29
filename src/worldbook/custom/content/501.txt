@@ -1,6 +1,6 @@
 <current_state>
 The present moment of the story. Read it before writing; it is the source of truth.
-Fields starting with "_" are computed by the game engine: rely on them, never patch them. Empty fields are not shown; they still exist and follow the update rules.
+Fields starting with "_" are computed by the game engine: rely on them, never patch them. Empty fields are not shown; they still exist and follow the update rules. A bond of someone who is not here shows only their standing, plans and latest facts; <cast> gives the people here in full.
 <%_ { // 1.11.0 (token audit B1/A6): the state as YAML without $ keys, empty values and retired bond fields; the variables themselves are unchanged
 const _E = v => v === '' || v === false || v == null || (Array.isArray(v) && !v.length) || (typeof v === 'object' && !Array.isArray(v) && !Object.keys(v).length);
 const _P = (v, path) => { if (Array.isArray(v)) { const a = v.map(x => _P(x, path)).filter(x => !_E(x)); return a; }
@@ -15,5 +15,16 @@ const _Y = (v, ind) => { const out = [];
 // 1.16.1 (audit T7): _Log shows only the lines of the latest update (the date stamp of now); older lines were already narrated
 const _S = _P(getvar('stat_data') || {}, ''), _w = getvar('stat_data.World') || {};
 if (Array.isArray(_S._Log)) { const _st = '[' + (+_w.Year > 1 ? 'Y' + _w.Year + ' ' : '') + 'M' + _w.Month + ' W' + _w.Week + ' ' + _w.Day + ' ' + _w.Time + ']'; const _l = _S._Log.filter(x => String(x).startsWith(_st)); if (_l.length) _S._Log = _l; else delete _S._Log; }
+// 1.17.0 (audit T3): a bond of someone who is not here shows its standing, plans and latest facts only; for the people here <cast>
+// carries Mind and Imprints (and Knows on a full sheet), so they are not printed twice
+const _cs = getvar('stat_data.$ui.cast') || {}, _full = _cs.full || [], _here = [..._full, ...(_cs.brief || [])];
+const _KEEP = ['Rank', 'Trust', 'Tension', 'Title', 'Romance', 'Last_seen', 'Next', 'Known_facts', 'Milestones'];
+for (const [id, b] of Object.entries(_S.Bonds || {})) {
+  if (!b || typeof b !== 'object') continue;
+  if (_here.includes(id)) { delete b.Mind; delete b.Imprints; if (_full.includes(id)) delete b.Knows; continue; }
+  for (const k of Object.keys(b)) if (!_KEEP.includes(k)) delete b[k];
+  if (Array.isArray(b.Known_facts)) b.Known_facts = b.Known_facts.slice(-3);
+  if (Array.isArray(b.Milestones)) b.Milestones = b.Milestones.slice(-3);
+}
 _%><%- _Y(_S, '') %><% } %>
 </current_state>
