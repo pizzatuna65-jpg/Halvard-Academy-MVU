@@ -1,0 +1,21 @@
+{
+  "_note": "Craft recipes for Practice. Material options are alternatives; each listed item is consumed once per attempt. Sale values are guide prices for finished work, not shop stock.",
+  "tiers": {"simple": 25, "standard": 45, "advanced": 65, "masterwork": 85},
+  "recipes": [
+    {"name":"Warming draught","group":"Brewing","tier":"simple","materials":[[{"item":"Common reagent bundle","qty":1}],[{"item":"Foraged reagent","qty":1}]],"kind":"drink","use":{"clears":["Chilled"],"buff":"warm","mins":240},"sale":8},
+    {"name":"Cooling draught","group":"Brewing","tier":"simple","materials":[[{"item":"Common reagent bundle","qty":1}],[{"item":"Foraged reagent","qty":1}]],"kind":"drink","use":{"clears":["Overheated"],"buff":"sun","mins":240},"sale":8},
+    {"name":"Cold remedy","group":"Brewing","tier":"simple","materials":[[{"item":"Common reagent bundle","qty":1}],[{"item":"Foraged reagent","qty":1}]],"kind":"drink","use":{"cure":"Head cold"},"sale":10},
+    {"name":"Healing draught","group":"Brewing","tier":"standard","materials":[[{"item":"Common reagent bundle","qty":1}],[{"item":"Foraged reagent","qty":1}]],"kind":"drink","use":{"heal":"minor"},"sale":15},
+    {"name":"Vigour tonic","group":"Brewing","tier":"standard","materials":[[{"item":"Common reagent bundle","qty":1}],[{"item":"Foraged reagent","qty":1}]],"kind":"drink","use":{"stamina":20},"sale":12},
+    {"name":"Strong healing draught","group":"Brewing","tier":"advanced","materials":[[{"item":"Common reagent bundle","qty":2}],[{"item":"Common reagent bundle","qty":1},{"item":"Clearing bloom","qty":1}],[{"item":"Rare reagent","qty":1}]],"kind":"drink","use":{"heal":"moderate_to_minor"},"sale":40},
+    {"name":"Fire flask","group":"Brewing","tier":"advanced","materials":[[{"item":"Common reagent bundle","qty":2}],[{"item":"Common reagent bundle","qty":1},{"item":"Clearing bloom","qty":1}],[{"item":"Rare reagent","qty":1}]],"kind":"other","use":{"fitting":"fire"},"sale":40},
+    {"name":"Bottled cold","group":"Brewing","tier":"advanced","materials":[[{"item":"Common reagent bundle","qty":2}],[{"item":"Common reagent bundle","qty":1},{"item":"Clearing bloom","qty":1}],[{"item":"Rare reagent","qty":1}]],"kind":"other","use":{"fitting":"cold"},"sale":40},
+    {"name":"Warmth rune","group":"Runes","tier":"simple","materials":[[{"item":"Talisman paper stack","qty":1},{"item":"Pen nibs and ink","qty":1}]],"kind":"other","use":{"buff":"warm","mins":240},"sale":10},
+    {"name":"Rain-ward talisman","group":"Runes","tier":"standard","materials":[[{"item":"Talisman paper stack","qty":1},{"item":"Pen nibs and ink","qty":1}]],"kind":"other","use":{"buff":"waterproof","mins":180},"sale":20},
+    {"name":"Light rune","group":"Runes","tier":"standard","materials":[[{"item":"Talisman paper stack","qty":1},{"item":"Pen nibs and ink","qty":1}]],"kind":"other","use":{"fitting":"dark"},"sale":20},
+    {"name":"Ward talisman","group":"Runes","tier":"advanced","arcana":3,"materials":[[{"item":"Talisman paper stack","qty":1},{"item":"Pen nibs and ink","qty":1}]],"kind":"other","use":{"fitting":"curse or hex"},"sale":40},
+    {"name":"Repair damaged item","group":"Repair","tier":"standard","materials":[[]],"target":"repair","sale":0},
+    {"name":"Enchant warm","group":"Enchant","tier":"advanced","arcana":3,"materials":[[{"item":"Common reagent bundle","qty":1}]],"target":"enchant","gear":"warm","sale":0},
+    {"name":"Enchant waterproof","group":"Enchant","tier":"advanced","arcana":3,"materials":[[{"item":"Common reagent bundle","qty":1}]],"target":"enchant","gear":"waterproof","sale":0}
+  ]
+}

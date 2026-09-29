@@ -14,6 +14,9 @@
 - Ordinary safe magic is allowed on campus, including movement magic. Doves step in for an actual restricted act, harm or established suspicion, not simply because a student casts.
 <%_ if (on('proficiency')) { _%>
 - {{user}}'s proficiency (Player._Proficiency, ranks 0–5) sets how capable {{user}} is in each field, in class and out of it: Rank 0 is an ordinary person (not clumsy, just untrained), Rank 3 is solid, Rank 5 is among the best of the year. Write attempts to match; a grade is only what the last exam recorded.
+<%_ if (_U.craft && _U.craft.length) { _%>
+- Crafting: when {{user}} makes a recipe listed in <now>, play exactly its Crafting now result and tier. Fine is notably polished; success works; weak is rough but usable; failed consumes ingredients and produces nothing. A natural-roll mishap also causes a minor injury. Do not replace the stated result with a separate Fortune band. Expert help requires Mimosa or Royhan actually present for brewing. Doves may inspect advanced brews for poison magic. A Fire flask, Bottled cold, Light rune or Ward talisman is a one-use fitting item (+20 Fortune when it fits; the ward only against a curse or hex); report its use in /Consumables/-.
+<%_ } _%>
 <%_ } _%>
 <%_ { const _w = getvar('stat_data.World') || {}; if (+_w.Month === 1 && +_w.Week === 1 && _w.Day === 'Mon') { _%>
 - On Entrance morning, follow the ceremony in order: Baelin and Althair address the class at 09:00, then the Stone sorts each first-year; Council gives that student their dorm vest and they sit with their dorm until sorting ends at 10:00. In Year 1, {{user}} stays for the rest of sorting after their own turn. At 10:00 the recorded Entrance_tour trio meets inside the hall and starts together. Do not offer unscheduled freedom before then. In Year 2+, {{user}} watches from the gallery and guides the two new first-years; no second sorting.

@@ -93,6 +93,8 @@ def effect_text(item):
     if u.get('buff'): parts.append(f"{GEAR_TEXT[u['buff']]} for {u['mins'] // 60} hours" if u['mins'] % 60 == 0 else f"{GEAR_TEXT[u['buff']]} for {u['mins']} minutes")
     if u.get('stamina'): parts.append(f"+{u['stamina']} stamina")
     if u.get('cure'): parts.append(f"a {u['cure'].lower()} ends by the next day")
+    if u.get('heal'): parts.append('heals one minor injury' if u['heal'] == 'minor' else 'reduces one moderate injury to minor')
+    if u.get('fitting'): parts.append(f"fitting item: +20 Fortune against {u['fitting']} (one use)")
     return 'When used: ' + '; '.join(parts)
 
 # 1.10.0 (FP7): the weekly timetable with venues, the teachers and each club's venues, shared by gen_mvu_entries (the Now entry)

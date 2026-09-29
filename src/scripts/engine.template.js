@@ -81,6 +81,7 @@ const PROF_FIELD = { Knowledge: 'history, sciences, numbers, geography, nations,
 const CLUB_STATS = /*@@CLUB_STATS@@*/{};
 const CLUB_MEMBERS = /*@@CLUB_MEMBERS@@*/{};
 const PRACTICE = /*@@PRACTICE@@*/[];
+const CRAFTS = /*@@CRAFTS@@*/{};
 const MARKS = ['F', 'D', 'C', 'B', 'A'];
 const MID_SLOTS = { 'Magic Theory': [0, 480, 600], Etiquette: [0, 600, 720], History: [1, 480, 600], 'Potion Crafting': [1, 780, 960],
   'Dark Magic Defense': [2, 480, 960], Combat: [3, 480, 960] };
@@ -513,7 +514,7 @@ const SHOP_PRICE = /*@@SHOP_PRICE@@*/{};
 const fxOf = name => SHOP_FX[String(name || '').trim().toLowerCase().replace(/^(an?|the)\s+/, '')] || SHOP_FX[String(name || '').trim().toLowerCase().replace(/^(an?|the)\s+/, '').replace(/\s*\(.*\)$/, '')] || null;
 const gearOf = (I, buff, now) => {
   const own = Object.keys(I || {}).filter(k => (I[k] && I[k].Qty) > 0), ks = own.join(' | ');
-  return _.mapValues(GEAR, (rx, g) => rx.test(ks) || own.some(k => (fxOf(k) || {}).gear === g) || ((buff || {})[g] > now));
+  return _.mapValues(GEAR, (rx, g) => rx.test(ks) || own.some(k => (fxOf(k) || {}).gear === g || new RegExp(`\\benchanted ${g}\\b`, 'i').test(String(I[k].Note || ''))) || ((buff || {})[g] > now));
 };
 const EXPO = { soaked: 'Soaked', drenched: 'Soaked', wet: 'Soaked', chilled: 'Chilled', frozen: 'Chilled', frostbitten: 'Chilled' };   // 1.9.4: /Exposure kinds
 const COND = {
@@ -1192,6 +1193,14 @@ function stepExposure(c) {
       if (u.stamina > 0) { V.Stamina += u.stamina; done.push('+' + u.stamina + ' stamina'); }
       if (u.buff && WXM === 'full') { buff[u.buff] = Math.max(buff[u.buff] || 0, absA + u.mins); done.push(`${u.buff} until ${fromAbs(buff[u.buff]).Time}`); }
       if (u.cure && Cn[u.cure] && xs.hc > dayNo + 1) { xs.hc = dayNo + 1; done.push(u.cure.toLowerCase() + ' ends tomorrow'); }
+      if (u.heal) {
+        const target = Object.keys(S.Player.Injuries || {}).find(k => String(S.Player.Injuries[k].Severity).toLowerCase() === (u.heal === 'minor' ? 'minor' : 'moderate'));
+        if (target) {
+          if (u.heal === 'minor') { delete S.Player.Injuries[target]; done.push(`${target} healed`); }
+          else { S.Player.Injuries[target].Severity = 'minor'; done.push(`${target} reduced to minor`); }
+        }
+      }
+      if (u.fitting) done.push(`spent as a fitting ${u.fitting} item`);
       if (done.length) { log.push(`${String(c).trim()}: ${done.join(', ')}.`); S.$ui.toasts.push(`${String(c).trim()}: ${done[0]}`); }
     }
     for (const k of Object.keys(C0)) if (!Cn[k]) { if (k === 'Soaked') xs.wet = 0; if (k === 'Chilled') xs.cold = 0; if (k === 'Overheated') xs.hot = 0; if (k === 'Head cold') xs.hc = -1e9; }   // the story removed it
@@ -1883,7 +1892,9 @@ function stepBonds(c) {
         gain += Math.round(Math.max(0, BR.kind_xp[socialKind] + repMod(id) + examMod(id) + socialMod) * (birthday ? BR.birthday.social_mult : 1) * (studyBonus ? 1.25 : 1) * (society >= 5 ? 1.2 : society >= 4 ? 1.1 : 1));
         if (socialKind === 'hangout' && a.Invited && b.Rank >= 2 && S.Scene.Present[id] && !npcAway(id) && !w.invited) { gain++; w.invited = 1; }
       } else if (k === 'gift') {
-        const gk = giftTier(id, a.Item, a.Gift), firstBirthday = birthday && !d.birthdayGift;
+        const bagKey = Object.keys((B || {}).Inventory || {}).find(name => name.toLowerCase() === String(a.Item || '').toLowerCase());
+        const giftNote = bagKey ? String(B.Inventory[bagKey].Note || '') : '';
+        const gk = giftTier(id, a.Item, a.Gift, giftNote), firstBirthday = birthday && !d.birthdayGift;
         if (a.Item) { delete b.$gifts[a.Item]; b.$gifts[a.Item] = gk; capRecord(b.$gifts, BR.gift_log_cap); }
         const tension = gk === 'hated' ? BR.gift_hated_tension : gk === 'disliked' ? BR.gift_disliked_tension : 0;
         b.Tension = _.clamp(num(b.Tension, 0) + tension * (birthday ? BR.birthday.gift_mult : 1), 0, 100);
@@ -2237,8 +2248,12 @@ function stepTraining(c) {
 function stepProficiency(c) {
   const { S, B, log, jnl, hasB, byBuilder, OFF, REPORTED, elapsed, absB, absA, dayNo, weekNo, TU } = c;
   const reports = Array.isArray(S.Practice) ? S.Practice : [];
+  const sales = Array.isArray(S.Craft_sales) ? S.Craft_sales : [];
   S.Practice = [];
+  S.Craft_sales = [];
   S.$ui.practice = [];
+  S.$ui.craft = [];
+  S.$ui.craft_sale = null;
   if (OFF.has('proficiency')) return;
   const ranks = S.Player._Proficiency || (S.Player._Proficiency = {});
   let P = S.$eng.prof;
@@ -2335,10 +2350,60 @@ function stepProficiency(c) {
     if (a.train && (/Exhausted|Collapsed/.test(S.Player.Vitals._Fatigue) || Object.values(S.Player.Injuries || {}).some(i => /serious|critical/.test(i.Severity) || a.train === 'stamina' && i.Severity === 'moderate'))) return 'fit enough to train';
     return '';
   };
+  const craftAction = recipe => recipe.group === 'Brewing' ? 'Brew a potion' : recipe.group === 'Runes' ? (here === 'club rooms' ? 'Specialized Magic practice' : 'Runes and talismans') : 'Enchant or repair';
+  const craftItem = (I, name) => Object.keys(I || {}).find(k => k.toLowerCase() === String(name).toLowerCase());
+  const craftQty = (I, name) => { const k = craftItem(I, name); return k ? num(I[k].Qty, 0) : 0; };
+  const craftExpert = state => ['Mimosa', 'Royhan'].some(n => Object.keys((state.Scene || {}).Present || {}).some(id => id.toLowerCase() === n.toLowerCase()));
+  const craftMaterial = (I, recipe) => (recipe.materials || [[]]).find(option => option.every(m => craftQty(I, m.item) >= m.qty));
+  const craftTarget = (I, recipe, named) => {
+    if (!recipe.target) return '';
+    const items = named ? [craftItem(I, named)].filter(Boolean) : Object.keys(I || {});
+    return items.find(k => recipe.target === 'repair' ? /\bdamaged\b/i.test(String(I[k].Note || ''))
+      : /cloaks?|coats?|robes?|vests?|scarves?|shirts?|dresses?|uniforms?|jackets?|garments?/i.test(k) && !/enchanted/i.test(String(I[k].Note || ''))) || '';
+  };
+  const craftReady = (recipe, state, report) => {
+    const place = placeKey(state.World.Location), action = craftAction(recipe);
+    const a = PRACTICE.find(x => x.action === action && locName(x) === place);
+    if (!a) return { why: 'this craft is not available here' };
+    const locked = whyLocked(a, report);
+    if (locked) return { why: locked };
+    if (recipe.tier === 'advanced' && num(state.Player._Proficiency.Craft, 0) < 3 && !craftExpert(state)) return { why: 'Craft Rank 3 or an expert present' };
+    if (recipe.arcana && num(state.Player._Proficiency.Arcana, 0) < recipe.arcana) return { why: `Arcana Rank ${recipe.arcana}` };
+    const material = craftMaterial(state.Inventory, recipe);
+    if (!material) return { why: 'ingredients in Bag' };
+    const target = craftTarget(state.Inventory, recipe, report && report.Subject);
+    if (recipe.target && !target) return { why: recipe.target === 'repair' ? 'a damaged item in Bag' : 'ordinary clothing in Bag' };
+    return { a, material, target };
+  };
+  const craftResult = (state, recipe) => {
+    const f = ((state.$ui || {}).fortune || {}), roll = num(f.roll, 0) || d100(num((state.$eng || {}).seed, c.seed), 'fortune', num((state.$eng || {}).turn, 0), state === S ? absA : absB), rank = num(state.Player._Proficiency.Craft, 0);
+    const grade = ((state.Player.Academics || {}).Grades || {})['Potion Crafting'];
+    const skill = Math.min(grade === 'A' ? 20 : 15, rank * 3 + (grade === 'A' ? 10 : 0));
+    const Cn = state.Player.Conditions || {}, Vt = state.Player.Vitals, sev = Object.values(state.Player.Injuries || {}).map(i => i.Severity);
+    const condition = (Cn.Chilled ? -10 : 0) + (Cn.Soaked ? -5 : 0) + (Cn.Overheated ? -5 : 0) + (Cn['Head cold'] ? -5 : 0)
+      + (Vt._Fatigue === 'Exhausted' ? -15 : Vt._Fatigue === 'Tired' ? -5 : 0)
+      + (sev.some(x => /serious|critical/.test(x)) ? -20 : sev.includes('moderate') ? -10 : 0)
+      + (((state.$ui || {}).sleep || {}).loss >= 0.2 && !((state.$ui || {}).sleep || {}).flavor ? -5 : 0);
+    const tools = recipe.group === 'Brewing' ? [['Ardenne measuring set',10],['Glass stirring-rod set',5]] : recipe.group === 'Runes' ? [['Steel-nib fountain pen',5]] : [];
+    const tool = Math.max(0, ...tools.filter(([n]) => craftQty(state.Inventory, n) > 0).map(([, n]) => n));
+    const aid = craftExpert(state) ? 10 : 0, score = roll + skill + condition + tool + aid, dc = CRAFTS.tiers[recipe.tier];
+    const result = score >= dc + 25 ? 'fine' : score >= dc ? 'success' : score >= dc - 15 ? 'weak' : 'failed';
+    return { name: recipe.name, group: recipe.group, tier: recipe.tier, roll, score, dc, result, mishap: roll <= 3, mods: [skill && `Craft +${skill}`, condition && `conditions ${condition}`, tool && `tool +${tool}`, aid && `expert +${aid}`].filter(Boolean).join(', ') };
+  };
+  const bagGain = (name, count, kind, note) => {
+    const I = S.Inventory, k = craftItem(I, name) || name, start = craftQty((B || {}).Inventory, name);
+    if (!I[k]) I[k] = { Qty: 0, Kind: kind, Note: note, Plan: '' };
+    I[k].Qty = Math.max(num(I[k].Qty, 0), start + count);
+    I[k].Kind = kind; I[k].Note = note;
+  };
+  const takeMaterials = option => {
+    for (const m of option) { const k = craftItem(S.Inventory, m.item); if (k) S.Inventory[k].Qty = Math.min(num(S.Inventory[k].Qty, 0), craftQty((B || {}).Inventory, m.item) - m.qty); }
+  };
   const done = new Set();
   for (const r of reports) {
     const action = String(r.Action || '').trim().toLowerCase();
-    const a = PRACTICE.find(x => x.action.toLowerCase() === action && locName(x) === here);
+    const recipe = action === 'craft' && (CRAFTS.recipes || []).find(x => x.name.toLowerCase() === String(r.Aim || '').trim().toLowerCase());
+    const a = recipe ? PRACTICE.find(x => x.action === craftAction(recipe) && locName(x) === here) : PRACTICE.find(x => x.action.toLowerCase() === action && locName(x) === here);
     const subject = subjectOf(r.Subject), stat = a && (a.stat === 'subject' ? SUBJECT_STAT[subject] : a.stat);
     let why = !a ? 'this action is not available here' : before !== here ? 'start and finish at the practice place' : whyLocked(a, r);
     if (!why && !stat) why = 'name a subject';
@@ -2353,10 +2418,46 @@ function stepProficiency(c) {
     if (!why && (P.days[key] || done.has(key))) why = 'already practised this action today';
     if (!why && a.paid && P.wk.paid >= 2) why = 'two paid shifts this week';
     if (!why && num(P.wk[stat], 0) >= TU.prof_pace) why = `${stat} is at its weekly limit`;
+    let ready;
+    if (!why && action === 'craft') {
+      if (!recipe) why = 'unknown recipe';
+      else {
+        ready = craftReady(recipe, B, r);
+        if (ready.why) why = ready.why;
+      }
+    }
     if (why) { log.push(`Practice ${r.Action}: ${why}; no proficiency XP.`); continue; }
     done.add(key); P.days[key] = true;
-    const xp = a.study && a.action === 'Study a subject' ? Math.min(2, Math.floor(elapsed / 60)) : a.xp;
+    const priorCraft = recipe && ((((B || {}).$ui || {}).craft || []).find(x => x.name === recipe.name));
+    const made = recipe && (priorCraft || craftResult(B, recipe));
+    const xp = recipe ? (made.result === 'failed' ? 1 : a.xp) : a.study && a.action === 'Study a subject' ? Math.min(2, Math.floor(elapsed / 60)) : a.xp;
     gain(stat, xp, a.action);
+    if (recipe) {
+      takeMaterials(ready.material);
+      if (made.mishap && !Object.keys(S.Player.Injuries || {}).some(k => !(((B || {}).Player || {}).Injuries || {})[k])) {
+        const injury = `${recipe.group} mishap burn`;
+        S.Player.Injuries[injury] = { Severity: 'minor', Body_part: 'hand', Effect: 'tender fingers', Heals_by: 'treatment' };
+        S.Player.Vitals.HP = Math.max(1, S.Player.Vitals.HP - 5);
+      }
+      if (made.result !== 'failed') {
+        const note = `handmade by {{user}}${made.result === 'fine' ? ', fine' : made.result === 'weak' ? ', rough' : ''}`;
+        if (recipe.target) {
+          const target = craftItem(S.Inventory, ready.target) || ready.target;
+          if (!S.Inventory[target]) S.Inventory[target] = _.cloneDeep(B.Inventory[ready.target]);
+          if (recipe.target === 'repair') S.Inventory[target].Note = String(S.Inventory[target].Note || '').replace(/\bdamaged\b/ig, '').trim() || note;
+          else S.Inventory[target].Note = `${String(S.Inventory[target].Note || '').trim()} enchanted ${recipe.gear}; ${note}`.trim();
+        } else bagGain(recipe.name, recipe.group === 'Brewing' ? (recipe.tier === 'advanced' ? (made.result === 'fine' ? 2 : 1) : made.result === 'fine' ? 3 : made.result === 'success' ? 2 : 1) : 1, recipe.kind, note);
+      }
+      log.push(`Craft ${recipe.name}: ${made.result}${made.mishap ? ', mishap' : ''}; ingredients spent${made.result === 'failed' ? ', no item' : ''}.`);
+      if (recipe.group === 'Brewing' && recipe.tier === 'advanced') log.push('Advanced brewing may draw a Dove poison-magic inspection; play it if a Dove is present.');
+      continue;
+    }
+    if (a.action === 'Tend the reagent beds') bagGain('Foraged reagent', 1, 'reagent', 'fresh from the Gardens');
+    if (a.action === 'Forage' && SEASONS[S.World.Month - 1] !== 'Winter') bagGain('Foraged reagent', SEASONS[S.World.Month - 1] === 'Summer' ? 1 : 2, 'reagent', 'foraged in the Forest');
+    if (a.action === 'Gather clearing blooms') {
+      bagGain('Clearing bloom', 1, 'reagent', 'wilts tomorrow');
+      const C = S.$eng.craft || (S.$eng.craft = {}); C.blooms = C.blooms || {}; C.blooms['clearing bloom'] = dayNo;
+    }
     if (a.train) S.Training.push({ Track: a.train, Partner: r.With || '' });
     if (a.cost) { S.Player.Wallet.Points -= a.cost; S.Player.Wallet.Transactions.push(`-${a.cost} studio practice`); }
     if (a.paid) { P.wk.paid++; S.Player.Wallet.Points += a.paid; S.Player.Wallet.Transactions.push(`+${a.paid} animal care shift`); }
@@ -2364,6 +2465,19 @@ function stepProficiency(c) {
       const counted = num(S.$eng.study.mins, 0) - num((((B || {}).$eng || {}).study || {}).mins, 0);
       if (counted < 60) S.$eng.study.mins = num(S.$eng.study.mins, 0) + 60 - Math.max(0, counted);
     }
+  }
+  for (const sale of sales) {
+    const n = Math.min(Math.max(1, Math.floor(num(sale.Qty, 1))), 3 - num(P.wk.sold, 0));
+    const name = 'Healing draught', k = craftItem(S.Inventory, name);
+    if (String(sale.Item || '').toLowerCase() !== name.toLowerCase() || here !== 'medical centre' || before !== here || !hasB || n <= 0 || !k || craftQty(B.Inventory, name) < n || num(S.Inventory[k].Qty, 0) < n) {
+      log.push('Apothecary sale rejected: sell Healing draught at the Medical Centre, up to three doses per week, from the Bag.');
+      continue;
+    }
+    S.Inventory[k].Qty -= n; P.wk.sold = num(P.wk.sold, 0) + n;
+    S.Player.Wallet.Points += 15 * n;
+    S.Player.Wallet.Transactions.push(`+${15 * n} Apothecary: ${n} Healing draught${n === 1 ? '' : 's'}`);
+    c.craftSold = [...(c.craftSold || []), name.toLowerCase()];
+    log.push(`Medical Centre apothecary bought ${n} Healing draught${n === 1 ? '' : 's'} for ${15 * n} points (${P.wk.sold}/3 this week).`);
   }
   for (const t of S.Training || []) if (/stam/i.test(t.Track || '') && !/Exhausted|Collapsed/.test(S.Player.Vitals._Fatigue)
     && !Object.values(S.Player.Injuries || {}).some(i => /moderate|serious|critical/.test(i.Severity))) gain('Prowess', 1, 'stamina training');
@@ -2390,6 +2504,14 @@ function stepProficiency(c) {
       || (stat && num(P.wk[stat], 0) >= TU.prof_pace ? `${stat} is at this week's limit (${P.wk[stat]}/${TU.prof_pace}); class attendance still counts` : '');
     return { action: a.action, stat: a.stat, locked };
   });
+  S.$ui.craft = (CRAFTS.recipes || []).filter(recipe => {
+    const ready = craftReady(recipe, S, null);
+    if (ready.why || num(P.wk.Craft, 0) >= TU.prof_pace) return false;
+    const a = ready.a;
+    return !P.days[`${dayNo}:${a.loc}:${a.action}`];
+  }).map(recipe => craftResult(S, recipe));
+  if (here === 'medical centre' && craftQty(S.Inventory, 'Healing draught') > 0)
+    S.$ui.craft_sale = { sold: num(P.wk.sold, 0), remaining: Math.max(0, 3 - num(P.wk.sold, 0)) };
   if (S.$ui.fortune && Array.isArray(S.$ui.fortune.mods)) {
     const mods = PROF.filter(k => ranks[k] > 0).map(k => `${k} +${Math.min((SUBJECTS.some(s => SUBJECT_STAT[s] === k && num(((S.$eng.study || {}).stand || {})[s], -1) === 4) ? 10 : 20), ranks[k] * 3)}`);
     if (mods.length) S.$ui.fortune.mods.push('proficiency: ' + mods.join('; '));
@@ -2827,9 +2949,13 @@ function stepGossip(c) {
 
 // ---- 8h. 1.1.0 inventory (the Bag): merge case duplicates, remove at Qty 0, Sunfizz bottles, cap 40 (never gear) ----
 function stepBag(c) {
-  const { S, B, log, jnl, hasB } = c;
+  const { S, B, log, jnl, hasB, dayNo } = c;
   {
     const I = S.Inventory || (S.Inventory = {}), BI = (hasB && B.Inventory) || {};
+    const blooms = (S.$eng.craft || {}).blooms || {};
+    if (hasB) for (const k of Object.keys(I)) if (/^clearing bloom$/i.test(k) && num(blooms[k.toLowerCase()], dayNo) < dayNo) {
+      delete I[k]; delete blooms[k.toLowerCase()]; log.push('Clearing bloom wilted overnight.');
+    }
     const groups = _.groupBy(Object.keys(I), k => k.trim().toLowerCase());
     for (const ks of Object.values(groups)) {
       const main = ks.find(k => k in BI) || ks[0], rec = { ...I[main] };
@@ -3066,7 +3192,7 @@ function stepReminders(c) {
       const IB = B.Inventory || {}, IS = S.Inventory || {};
       for (const [k, it] of Object.entries(IB)) {
         const lk = k.toLowerCase(), now = Object.keys(IS).find(x => x.toLowerCase() === lk);
-        if (/sunfizz/.test(lk) || num(it && it.Qty, 1) - (now ? num(IS[now].Qty, 1) : 0) <= 0 || REPORTED.used.includes(lk)) continue;
+        if (/sunfizz/.test(lk) || num(it && it.Qty, 1) - (now ? num(IS[now].Qty, 1) : 0) <= 0 || REPORTED.used.includes(lk) || (c.craftSold || []).includes(lk)) continue;
         if (REPORTED.acts.some(a => /^(gift|rank_gift|birthday)$/.test(a.Kind) && (!a.Item || String(a.Item).toLowerCase().includes(lk) || lk.includes(String(a.Item).toLowerCase())))) continue;
         const usable = !!(fxOf(k) || {}).use;
         if (bonded.length) add(`bag:${lk}:${dayNo}`, `${k} left the Bag while ${bonded.slice(0, 2).join(' and ')} ${bonded.length > 1 ? 'were' : 'was'} here: if {{user}} gave it, report Kind gift with Item "${k}"${usable ? '; if {{user}} used it, insert it into /Consumables/-' : ''}.`);

@@ -1399,8 +1399,8 @@ function pPerks(S) {
 // 1.1.0 (spec §8) the Bag: items grouped by Kind; buttons only draft the action into the chat box (D6)
 const KINDS = [['food', 'Food'], ['drink', 'Drinks'], ['gear', 'Gear'], ['gift', 'Gifts'], ['book', 'Books'], ['reagent', 'Reagents'], ['other', 'Other']];
 const USE_VERB = { food: 'eat', drink: 'drink', book: 'read' };
-// 1.9.5 (playtest Batch 5): what a shop item does (data/shop.json gear / use, worded by tools/common.py effect_text)
-const itemFx = n => { const k = String(n || '').trim().toLowerCase(), i = (DATA.shop || []).find(x => x.effect && (x.item.toLowerCase() === k || x.item.toLowerCase() === k.replace(/\s*\(.*\)$/, ''))); return i ? i.effect : ''; };
+// Shop and crafted-item effects are worded by tools/common.py effect_text for the Bag.
+const itemFx = n => { const k = String(n || '').trim().toLowerCase(), i = [...(DATA.shop || []), ...(DATA.crafts || [])].find(x => x.effect && String(x.item || x.name).toLowerCase() === k.replace(/\s*\(.*\)$/, '')); return i ? i.effect : ''; };
 function pBag(S) {
   const I = Object.entries(S.Inventory || {});
   if (!I.length) return '<div class="empty">Your bag is empty. Things you buy, receive or find and keep appear here.</div>';

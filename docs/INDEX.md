@@ -27,6 +27,7 @@ Build order, generated files and test commands: `docs/BUILD.md`.
 | Bond ranks, rewards, gifts, moods | §7 bond data; engine `stepBonds`, `stepBondMemory`, `mood_gifts.js` | |
 | Reputation, training, grades | `data/reputation.json`, `training.json`; `stepReputation`, `stepTraining`, `stepSchoolWeek` | |
 | Proficiency and Practice | `data/club_stats.json`, `practice.json`; `stepProficiency`, `pProficiency`, `acPractice` | `test_proficiency_v1260.cjs`, `test_practice_v1270.cjs` |
+| Magical crafting | `data/crafts.json`; `stepProficiency` craft helpers, `stepExposure` heal, `stepBag` bloom, `acPractice` recipes | `test_crafting_v1280.cjs`, `505.template.ejs`, `506.template.ejs` |
 | Weather, ambience, happenings | `stepWeather`, `stepExposure`, `stepAmbience`; `data/ambience.json`, `happenings.json`, `wind_casting.json` | |
 | Map, pins, map variants, portraits | `data/map_pins.json`, `assets_manifest.json`, `src/ui/parts/20_map.js` (`discovered`, `mapView` zoom, `loreRow`), `tools/curate_data.py` `FAR_LEGS`, `GATES`, `YEAR_FLOORS` | assets are pinned to a commit (DECISIONS "Assets") |
 | Features settings (on/off) | `data/features.json`, `stepFeatures`, `ui.template.js` `pSettings`, `featureOn` | `feature_cost.py` measures it |
@@ -55,7 +56,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepWeather` (1b) | season, sky, wind, °C, forecast | `wxDay`, `wxForecast` |
 | `stepMagic` (2+3) | casts, mana regen, pacts/summons, sustained effects | `data/wind_casting.json` |
 | `stepRest` (4) | sleep and rest, sleep debt, used items (`/Consumables`) | |
-| `stepExposure` (4b) | Soaked / Chilled / Overheated, head cold | |
+| `stepExposure` (4b) | Soaked / Chilled / Overheated, head cold, crafted Consumables healing | |
 | `stepVitals` (5) | 40-HP cap per event unless `Lethal_flag`, death, clamps, mana rounding | |
 | `stepReputation` (5b) | Rep XP and levels, named deeds; exports `repAdd`, `repLv`, `weekNo` | `data/reputation.json` |
 | `stepFortune` (5c) | seeded d100, Rank 10 suspension | |
@@ -63,7 +64,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepNamesInProse` (6a) | names revealed by the prose | `NAME_RX` |
 | `stepBonds` (6) | XP, ranks, gates, gifts, rewards, Tension/Trust; exports `canon`, `npcAway`, `PACE` | bond data §7 |
 | `stepBondMemory` (6c) | Knows, Imprints, Mind, Next, betrayal spread | |
-| `stepProficiency` (6a) | six stats, XP sources, weekly caps, Practice validation | `data/practice.json`, `club_stats.json` |
+| `stepProficiency` (6a) | six stats, XP sources, weekly caps, Practice, crafting and Apothecary sales | `data/practice.json`, `club_stats.json`, `crafts.json` |
 | `stepTraining` (6b) | Mana pool / Stamina sessions (`trainRoom`, `trainAdd`, `trainJump` are module functions) | `data/training.json` |
 | `stepPerkUse` (6c) | one-use perks | `_Perks` |
 | `stepHidden` (7) | Dove attention, hidden magic, Points without Transactions | |
@@ -74,7 +75,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepGraduation` / `stepGraduateRewards` (8d, 8d2) | third-years leave; their rewards end | |
 | `stepInitiative` (8e) | optional NPC-initiated contact | `data/initiative_asks.json` |
 | `stepHooks` / `stepGossip` (8f, 8g) | story hooks; rumours | |
-| `stepBag` (8h) | Inventory merge, caps, Sunfizz | `data/shop.json` |
+| `stepBag` (8h) | Inventory merge, caps, Sunfizz, clearing bloom wilt | `data/shop.json`, `crafts.json` |
 | `stepCampusEvents` / `stepExtras` / `stepCast` (8j, 8k, 8i) | campus events; invented characters; who gets a Cast Sheet | `$ui.cast` → 509 |
 | `stepReminders` (8l) | "missed report" reminders for `<now>` | `$ui.missed` → 505 |
 | `stepAmbience` (8m) | crowd, light, cue, beat (1.24.0: overheard lore, `hearLore`), uncanny moment | `data/ambience.json`, `PLACE_LORE` |
@@ -116,7 +117,7 @@ Lore entries below uid 500 are generated (`src/worldbook/content/<uid>.txt`); ed
 
 | File | Contains |
 |---|---|
-| `src/scripts/ui.template.js` | constants and Builder data (`TEMPLATES`, `PACT_KINDS`), `latestState`, Builder (`renderBuilder`, `b*` steps, `validate`, `buildOps`, `liftReadonly`), `writeToolMessage`, Student file (`renderProfile`, `p*` tabs, `pSettings`, `featureOn`), themes, `ensureLorebook`, `open`/`render` |
+| `src/scripts/ui.template.js` | constants and Builder data (`TEMPLATES`, `PACT_KINDS`), `latestState`, Builder (`renderBuilder`, `b*` steps, `validate`, `buildOps`, `liftReadonly`), `writeToolMessage`, Student file (`renderProfile`, `p*` tabs, `pSettings`, `featureOn`, `pBag` crafted effects), themes, `ensureLorebook`, `open`/`render` |
 | `src/ui/parts/10_people.js` | `PANELS.people`, `PANELS.npc` (dossier), Connections graph |
 | `src/ui/parts/20_map.js` | `PANELS.map`: `mapFor` (map variants), `locCard`, `walkFrom` |
 | `src/ui/parts/30_notebook.js` | `PANELS.notebook`: planner, journal, notices, forecast, letters, mystery |
@@ -141,7 +142,7 @@ Hand-written single sources (edit these): `shop.json`, `happenings.json`, `calen
 *Per NPC* (a new NPC needs a row): `bond_rewards.json`, `bond_rules.json`, `bond_openness.json`, `tension.json`, `trust.json`,
 `npc_moods.json`, `gift_prefs.json`, `npc_canon.json` (voices, stages, Rank 8 branch), `rank4_partners.json`, `relations_curated.json`,
 `voice_rules.json`, `initiative_asks.json`, `field_overrides.json`, `focus_overrides.json`, `thumb_overrides.json`.
-Systems: `reputation.json`, `training.json`, `club_stats.json`, `practice.json`, `factions.json`, `gift_shops.json`.
+Systems: `reputation.json`, `training.json`, `club_stats.json`, `practice.json`, `crafts.json`, `factions.json`, `gift_shops.json`.
 Generated (never edit): `npcs.json`, `locations.json`, `relations.json`, `map_pins.json` (curate_data), `themes.json` (make_themes),
 `feature_cost.json` (feature_cost). Review lists: `_review_sensitive_flags.json`; `uid_remap_npc.json`, `pins_pct.json` are pipeline data.
 

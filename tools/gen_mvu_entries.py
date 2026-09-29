@@ -141,7 +141,9 @@ PG = {'rows': rows, 'names': {k: l for l in rows for k in {locs[l]['name'].lower
 pg = open(P('src/worldbook/custom/506.template.ejs'), encoding='utf-8').read()
 pg = re.sub(r'^// .*\n', '', pg, flags=re.M)
 assert '/*@@PG@@*/{}' in pg
-open(P('src/worldbook/custom/content/506.txt'), 'w', encoding='utf-8', newline='\n').write(pg.replace('/*@@PG@@*/{}', J(PG)))
+craft_sale = [[i['name'], i['sale']] for i in json.load(open(P('data/crafts.json'), encoding='utf-8'))['recipes'] if i.get('sale')]
+assert '/*@@CRAFT_SALE@@*/[]' in pg
+open(P('src/worldbook/custom/content/506.txt'), 'w', encoding='utf-8', newline='\n').write(pg.replace('/*@@PG@@*/{}', J(PG)).replace('/*@@CRAFT_SALE@@*/[]', J(craft_sale)))
 base = json.load(open(P('src/worldbook/index.json')))[0]
 def mk(uid, comment, constant, disable, position, depth, order, keys=(), whole=None, scan=None):
     e = dict(base)

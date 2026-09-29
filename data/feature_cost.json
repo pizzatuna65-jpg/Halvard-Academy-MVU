@@ -1,6 +1,6 @@
 {
  "rules": {
-  "proficiency": 244,
+  "proficiency": 245,
   "planner": 87,
   "notices": 98,
   "letters": 120,
@@ -26,7 +26,7 @@
  },
  "core_rules": 8451,
  "lore": 3964,
- "price_guide": 5164,
+ "price_guide": 5306,
  "live": {
   "class": 40,
   "weather": 25

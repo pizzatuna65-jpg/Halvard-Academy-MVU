@@ -51,6 +51,7 @@ python tools/audit_chat.py chat.jsonl --out report.md   # optional: character-dr
 ## 3. Hand-written single sources
 
 - `data/shop.json` (prices; canon prices are locked; 1.9.5: `gear` / `use` item effects, worded by `tools/common.py` `effect_text()`)
+- `data/crafts.json` (1.28.0 magical recipes, material alternatives, crafted effects and sale guides)
 - `data/bond_rewards.json`, `data/reputation.json`, `data/training.json` (1.3.0), `data/bond_rules.json` (1.3.1: `start`), `data/bond_openness.json`, `data/tuning.json` (1.3.1 Settings rows)
 - `source_original/npc_lore_2026-09-25/` (NPC entries that replace v38's; edit lore there or add a newer pass the same way)
 - `data/happenings.json` (seeded campus events; `where` must be a real location name)

@@ -3,11 +3,11 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.27.0** (2026-09-30). Batches 2 and 3 of the approved proficiency plan: six stats with XP, Fortune
-modifiers and a Studies hexagon, plus location-based Practice in Activities. Live checks: `docs/TEST_CHECKLIST.md` "Open".
+**Snapshot:** card **v1.28.0** (2026-09-30). Batch 4 of the approved proficiency plan: magical crafting with Fortune-based
+results, ingredients, handmade Bag items, reagent gathering, Consumables effects and Apothecary sales. Live checks: `docs/TEST_CHECKLIST.md` "Open".
 Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** Batch 4 of `planning/DRAFT_proficiency_practice.md` (crafting engine and magical crafts) when the owner says "mulai batch 4";
+**Next task:** Batch 5 of `planning/DRAFT_proficiency_practice.md` (non-magic crafts and masterwork) when the owner says "mulai batch 5";
 the draft lists each batch's files, save handling and tests. Draft is deleted in the release of Batch 6.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)

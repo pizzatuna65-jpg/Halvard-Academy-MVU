@@ -36,9 +36,9 @@ ok(club._Log.some(x => x.includes('Specialized Magic Club')), 'club-only action 
 const gym0 = at(initState(),0,'16:00','Gymnasium');
 const gym = report(gym0,0,'17:00','Gymnasium','Train');
 ok(gym.Player.$Training.stamina.gain > gym0.Player.$Training.stamina.gain && gym.$eng.prof.xp.Prowess >= 1, 'physical practice is an ordinary stamina training session');
-const forage0 = at(initState(),84,'16:00','Forest');
-const forage = report(forage0,84,'17:00','Forest','Forage');
-ok(forage._Log.some(x => x.includes('Spring or Autumn only')), 'foraging respects the season');
+const forage0 = at(initState(),252,'16:00','Forest');
+const forage = report(forage0,252,'17:00','Forest','Forage');
+ok(!forage.Inventory['Foraged reagent'] && forage.$eng.prof.xp.Nature > forage0.$eng.prof.xp.Nature, 'winter foraging is practice but finds no reagent');
 global.window = { parent: { document: {} } };
 const U = new Function(fs.readFileSync(path.join(ROOT, 'src/scripts/ui.js'), 'utf8') + '\nreturn { PANELS, view, renderProfile };')();
 U.view.act = 'practice';

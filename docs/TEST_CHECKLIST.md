@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.28.0 (magical crafting): the four connected-session checks in its section below.
 - v1.27.0 (Proficiency and Practice): the four checks in its section below.
 - v1.25.0 (red "new" dots): the four checks in its section below.
 - v1.24.0–1.24.3 (map gates, lore heard, year floors): the checks in the v1.24.0 section below.
@@ -54,6 +55,13 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.28.0 — Magical crafting
+
+1. In the Potion Halls with ingredients in the Bag, open Activities → Practice. The recipes and their result bands agree with `Crafting now` in `<now>`; brewing a Warming draught through chat makes the narrator play that band, and the engine spends one ingredient and adds the correct number of handmade doses. Swipe the reply: the band stays the same.
+2. Use a crafted Warming draught while Chilled and a Healing draught with a minor injury. `/Consumables` removes one dose; the weather protection and injury change appear in the state and story. When a Fire flask or Ward talisman fits an uncertain attempt, the narrator applies +20 and reports its one-use consumption.
+3. Gather a Clearing bloom, then leave it in the Bag through the next day; it wilts. At the Workshop, make a rune and repair or enchant a suitable item; the Practice tab, Bag notes and weather gear agree. Try a recipe without materials or Arcana Rank 3: no result is offered.
+4. Sell three Healing draught doses at the Medical Centre Apothecary. `/Craft_sales` pays 45 points and removes three doses; a fourth in the same week is rejected. Check the layout of recipe rows on a narrow screen.
 
 ### v1.27.0 — Proficiency and Practice
 

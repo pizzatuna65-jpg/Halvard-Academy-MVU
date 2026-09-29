@@ -24,6 +24,12 @@ Player.Vitals
 - Training: when {{user}} spends a real session (about an hour or more) drilling to grow their mana pool or stamina, insert {"Track":"mana|stamina","Partner":"<first name>"} into /Training/-. Omit Partner for solo sessions. The engine raises Mana_max / Stamina_max within existing limits. A Rank 4+ NPC actively helping with a track listed in <now> adds a small bonus; a personal training gift may add more. Being in the room alone is not participation. Never change Mana_max or Stamina_max yourself.
 <%_ if (on('proficiency')) { _%>
 - Practice: when {{user}} spends real time practising or crafting at a place (Practice here in <now>), report {"Action":"<listed action>","Subject":"<subject, for study>","With":"<person, if any>","Aim":"<intention or item>"} in /Practice/-. Report the attempt once, whatever the result. The engine checks place, time, company, requirements and the weekly limit, then clears the report. Do not write Player._Proficiency or award XP yourself. A Practice session that trains mana or stamina also counts as one /Training session; do not report that training separately.
+<%_ if (_U.craft && _U.craft.length) { _%>
+- For a listed craft recipe, report {"Action":"craft","Aim":"<exact recipe name>"} in /Practice/-; for repair or enchant also put the exact Bag item name in Subject. Use the result in Crafting now, including a mishap. The engine spends materials, creates the result or changes the item, and awards Craft XP. Do not add crafted output or deduct ingredients yourself.
+<%_ } _%>
+<%_ if (_U.craft_sale) { _%>
+- When the Medical Centre apothecary buys {{user}}'s Healing draught, report {"Item":"Healing draught","Qty":<doses sold>} in /Craft_sales/-. The engine removes doses, pays 15 points each, and enforces three sold per week. Do not change the Bag or Wallet for this sale yourself.
+<%_ } _%>
 <%_ } _%>
 - Mana: never deduct mana for {{user}}'s techniques yourself (see Magic). Change Mana directly only for non-technique causes (a mana draught, being drained by a ward).
 - Resting: set "rest" or "sleep" when {{user}} rested or slept during the elapsed time; the engine applies stamina recovery and resets it. A night skipped in one update counts as sleep; set "awake" only when {{user}} deliberately stayed up through it. Mana regenerates by itself with elapsed time, awake or asleep (empty to full in <%- Number((_U.tune || {}).mana_regen) || 6 %> hours); never add it yourself.

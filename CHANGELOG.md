@@ -3,6 +3,13 @@
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
 details: `git show b62d182:CHANGELOG.md`.
 
+## v1.28.0 — Magical crafting (2026-09-30)
+
+Batch 4 of the approved proficiency plan. `data/crafts.json` defines brewing, runes, repair and enchant recipes, materials, effects and sale guides. The engine shows each available recipe's Fortune-based result in `<now>` and the Practice UI; `/Practice` with `Action: "craft"` uses that result, spends materials, awards Craft XP and puts handmade work in the Bag. Tools, an expert, conditions, rank, the A-grade bonus, mishaps, tiers and weak/failed outcomes are enforced.
+- Gardens, Forest and Clearing Practice yield reagents; clearing blooms wilt on the next day. Crafted draughts and talismans use `/Consumables`, including healing an injury and one-use fitting items. The Bag shows their effects and handmade notes, which gift preferences read. Enchanted clothing works as weather gear. The Medical Centre apothecary buys up to three Healing draught doses per week through `/Craft_sales`.
+- Craft instructions in rules 502/504 appear only where a recipe is available; Settings' token estimate measures the ordinary cost without those situational lines.
+- Save fixture v1.27.0; no migration. Main and three TEST cards rebuilt. Focused crafting tests, Practice tests, save compatibility, `npm run lint` and the full suite pass. Connected SillyTavern checks remain in `docs/TEST_CHECKLIST.md`.
+
 ## v1.27.0 — Proficiency and Practice (2026-09-30)
 
 Batches 2 and 3 of the owner-approved `planning/DRAFT_proficiency_practice.md` in one release.
@@ -308,3 +315,4 @@ Owner: "lanjutkan batch 4". No canon or established design decision changed.
 - **v1.24.3 (2026-09-29):** Year floors named plainly on the Map (First-/Second-/Third-year Lecture Halls, Study Rooms, Lockers); the engine writes every year-floor wording as "<place> — Floor N", and `<now>` names the class floor.
 - **v1.25.0 (2026-09-30):** Red "new" dots on the bracelet buttons, panel tabs, people just met and Map markers with a story heard; "seen" kept in Tavern Helper's chat variables.
 - **v1.27.0 (2026-09-30):** Batches 2–3: six proficiency stats and Studies hexagon, weekly XP and Fortune bonuses, location-based Practice with validated `/Practice` reports.
+- **v1.28.0 (2026-09-30):** Batch 4: Fortune-based magical crafting, handmade Bag items and effects, foraged reagents, repair/enchant, and capped Apothecary sales.

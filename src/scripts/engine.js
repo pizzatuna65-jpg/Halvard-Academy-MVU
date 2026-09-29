@@ -80,7 +80,8 @@ const SUBJECT_STAT = { History: 'Knowledge', 'Magic Theory': 'Arcana', 'Dark Mag
 const PROF_FIELD = { Knowledge: 'history, sciences, numbers, geography, nations, languages, records and puzzles', Arcana: 'magic, curses, wards, traps and precise spellwork', Craft: 'making, brewing, mending, cooking and handiwork', Prowess: 'duels, sport, climbing, running and strength', Society: 'formal dealings, manners, bargaining, performance and reading a room', Nature: 'beasts, plants, weather, tracks and the outdoors' };
 const CLUB_STATS = {"Prowess":["Magic Duelling","Soccer","Running","Archery","Swimming","Gymnastics","Basketball","Walking"],"Nature":["Beast Handling","Gardening","Fishing","Groundskeeping"],"Craft":["Alchemy","Brewing","Smithing","Tailoring","Cooking","Drawing","Calligraphy"],"Society":["Music","Tea","Theatre","Card","Board Game","Festival Committee","Student Council","Medical Centre Volunteers"],"Arcana":["Warding Study","Divination","Specialized Magic"],"Knowledge":["Library Assistants","Newspaper"]};
 const CLUB_MEMBERS = {"Academy Newspaper":["Castor","Linus"],"Alchemy Circle":["Royhan"],"Archery Club":[],"Basketball Club":[],"Beast Handling Club":["Lenna"],"Board Game Club":["Gareth"],"Brewing Club":[],"Calligraphy Club":[],"Card Club":["Aiden"],"Cooking Club":["Nerys"],"Divination Society":["Kanae"],"Drawing Club":["Alyssa"],"Festival Committee":["Caspian"],"Fishing Club":["Ottavio","Wren"],"Gardening Club":["Idris","Maple"],"Groundskeeping":[],"Gymnastics Club":[],"Library Assistants":["Irene","Tilly"],"Magic Duelling Club":["Sophia","Tsubaki"],"Medical Centre Volunteers":[],"Music Club":["Caralynn","Ruby"],"Running Club":["Saffi"],"Smithing Club":["Vera"],"Soccer Club":["Percival"],"Specialized Magic Club":["Hadrian"],"Student Council":["Dante","Florian"],"Swimming Club":[],"Tailoring Club":["Zara"],"Tea Club":[],"Theatre Troupe":["Trixie","Ezrel"],"Walking Club":[],"Warding Study Group":[]};
-const PRACTICE = [{"loc":"potion_halls","action":"Brew a potion","stat":"Craft","xp":2,"afterClass":true,"until":1200,"dorm":true,"name":"Potion Halls"},{"loc":"potion_halls","action":"Reagent drill","stat":"Craft","xp":1,"name":"Potion Halls"},{"loc":"main_library","action":"Study a subject","stat":"subject","xp":2,"study":true,"name":"Main Library"},{"loc":"study_rooms","action":"Group study","stat":"subject","xp":2,"partner":true,"study":true,"name":"Study Rooms"},{"loc":"archive","action":"Dig through the records","stat":"Knowledge","xp":2,"name":"Archive"},{"loc":"seminar_rooms","action":"Practise wards and counter-curses","stat":"Arcana","xp":2,"afterClass":true,"name":"Seminar Rooms"},{"loc":"observation_tower","action":"Chart the stars","stat":"Arcana","xp":2,"night":true,"clear":true,"name":"Observation Tower"},{"loc":"meditation_rooms_spirit_house","action":"Will-focus meditation","stat":"Arcana","xp":1,"partner":true,"train":"mana","name":"Meditation Rooms / Spirit House"},{"loc":"club_rooms","action":"Specialized Magic practice","stat":"Arcana","xp":2,"club":"Specialized Magic","name":"Club Rooms"},{"loc":"combat_grounds","action":"Drill","stat":"Prowess","xp":1,"dorm":true,"train":"stamina","name":"Combat Grounds"},{"loc":"combat_grounds","action":"Spar with a partner","stat":"Prowess","xp":2,"dorm":true,"partner":true,"name":"Combat Grounds"},{"loc":"sparring_pavilion","action":"Take a challenge from the board","stat":"Prowess","xp":3,"club":"Magic Duelling","name":"The Sparring Pavilion"},{"loc":"gymnasium","action":"Train","stat":"Prowess","xp":1,"train":"stamina","name":"Gymnasium"},{"loc":"sports_field","action":"Train","stat":"Prowess","xp":1,"train":"stamina","name":"Sports Field"},{"loc":"archery_range","action":"Train","stat":"Prowess","xp":1,"train":"stamina","name":"Archery Range"},{"loc":"swimming_pool","action":"Train","stat":"Prowess","xp":1,"train":"stamina","name":"Swimming Pool"},{"loc":"gardens","action":"Tend the reagent beds","stat":"Nature","xp":1,"daylight":true,"club":"Gardening","name":"Gardens"},{"loc":"menagerie","action":"Help with the animals","stat":"Nature","xp":2,"daylight":true,"partner":true,"name":"Menagerie"},{"loc":"menagerie","action":"Muck out the pens (paid)","stat":"Nature","xp":1,"paid":40,"name":"Menagerie"},{"loc":"forest","action":"Fieldwork: tracks and signs","stat":"Nature","xp":2,"daylight":true,"name":"Forest"},{"loc":"forest","action":"Forage","stat":"Nature","xp":1,"seasons":["Spring","Autumn"],"name":"Forest"},{"loc":"forest_clearing","action":"Gather clearing blooms","stat":"Nature","xp":1,"name":"Forest Clearing"},{"loc":"fishing_house","action":"Fish the pond or the lake","stat":"Nature","xp":1,"club":"Fishing","name":"Fishing House"},{"loc":"mall","action":"Dance and deportment","stat":"Society","xp":2,"cost":15,"name":"The Mall"},{"loc":"mall","action":"Music practice","stat":"Society","xp":2,"cost":15,"name":"The Mall"},{"loc":"common_rooms","action":"Practise forms of address","stat":"Society","xp":1,"partner":true,"name":"Common Rooms"},{"loc":"club_rooms","action":"Music, Tea, Theatre practice","stat":"Society","xp":2,"clubAny":["Music","Tea","Theatre"],"name":"Club Rooms"},{"loc":"club_rooms","action":"Drawing, Calligraphy, Tailoring practice","stat":"Craft","xp":2,"clubAny":["Drawing","Calligraphy","Tailoring"],"name":"Club Rooms"},{"loc":"workshop","action":"Runes and talismans","stat":"Craft","xp":2,"name":"Workshop"},{"loc":"workshop","action":"Enchant or repair","stat":"Craft","xp":2,"name":"Workshop"},{"loc":"workshop","action":"Smithing","stat":"Craft","xp":2,"club":"Smithing","name":"Workshop"},{"loc":"workshop","action":"Tailoring","stat":"Craft","xp":2,"club":"Tailoring","name":"Workshop"},{"loc":"canteen","action":"Cook or bake","stat":"Craft","xp":2,"club":"Cooking","name":"Canteen"},{"loc":"common_rooms","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Common Rooms"},{"loc":"courtyards","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Courtyards"},{"loc":"gardens","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Gardens"},{"loc":"fire_dormitory","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Fire Dormitory"},{"loc":"light_dormitory","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Light Dormitory"},{"loc":"sky_dormitory","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Sky Dormitory"},{"loc":"viridian_dormitory","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Viridian Dormitory"}];
+const PRACTICE = [{"loc":"potion_halls","action":"Brew a potion","stat":"Craft","xp":2,"afterClass":true,"until":1200,"dorm":true,"name":"Potion Halls"},{"loc":"potion_halls","action":"Reagent drill","stat":"Craft","xp":1,"name":"Potion Halls"},{"loc":"main_library","action":"Study a subject","stat":"subject","xp":2,"study":true,"name":"Main Library"},{"loc":"study_rooms","action":"Group study","stat":"subject","xp":2,"partner":true,"study":true,"name":"Study Rooms"},{"loc":"archive","action":"Dig through the records","stat":"Knowledge","xp":2,"name":"Archive"},{"loc":"seminar_rooms","action":"Practise wards and counter-curses","stat":"Arcana","xp":2,"afterClass":true,"name":"Seminar Rooms"},{"loc":"observation_tower","action":"Chart the stars","stat":"Arcana","xp":2,"night":true,"clear":true,"name":"Observation Tower"},{"loc":"meditation_rooms_spirit_house","action":"Will-focus meditation","stat":"Arcana","xp":1,"partner":true,"train":"mana","name":"Meditation Rooms / Spirit House"},{"loc":"club_rooms","action":"Specialized Magic practice","stat":"Arcana","xp":2,"club":"Specialized Magic","name":"Club Rooms"},{"loc":"combat_grounds","action":"Drill","stat":"Prowess","xp":1,"dorm":true,"train":"stamina","name":"Combat Grounds"},{"loc":"combat_grounds","action":"Spar with a partner","stat":"Prowess","xp":2,"dorm":true,"partner":true,"name":"Combat Grounds"},{"loc":"sparring_pavilion","action":"Take a challenge from the board","stat":"Prowess","xp":3,"club":"Magic Duelling","name":"The Sparring Pavilion"},{"loc":"gymnasium","action":"Train","stat":"Prowess","xp":1,"train":"stamina","name":"Gymnasium"},{"loc":"sports_field","action":"Train","stat":"Prowess","xp":1,"train":"stamina","name":"Sports Field"},{"loc":"archery_range","action":"Train","stat":"Prowess","xp":1,"train":"stamina","name":"Archery Range"},{"loc":"swimming_pool","action":"Train","stat":"Prowess","xp":1,"train":"stamina","name":"Swimming Pool"},{"loc":"gardens","action":"Tend the reagent beds","stat":"Nature","xp":1,"daylight":true,"club":"Gardening","name":"Gardens"},{"loc":"menagerie","action":"Help with the animals","stat":"Nature","xp":2,"daylight":true,"partner":true,"name":"Menagerie"},{"loc":"menagerie","action":"Muck out the pens (paid)","stat":"Nature","xp":1,"paid":40,"name":"Menagerie"},{"loc":"forest","action":"Fieldwork: tracks and signs","stat":"Nature","xp":2,"daylight":true,"name":"Forest"},{"loc":"forest","action":"Forage","stat":"Nature","xp":1,"name":"Forest"},{"loc":"forest_clearing","action":"Gather clearing blooms","stat":"Nature","xp":1,"name":"Forest Clearing"},{"loc":"fishing_house","action":"Fish the pond or the lake","stat":"Nature","xp":1,"club":"Fishing","name":"Fishing House"},{"loc":"mall","action":"Dance and deportment","stat":"Society","xp":2,"cost":15,"name":"The Mall"},{"loc":"mall","action":"Music practice","stat":"Society","xp":2,"cost":15,"name":"The Mall"},{"loc":"common_rooms","action":"Practise forms of address","stat":"Society","xp":1,"partner":true,"name":"Common Rooms"},{"loc":"club_rooms","action":"Music, Tea, Theatre practice","stat":"Society","xp":2,"clubAny":["Music","Tea","Theatre"],"name":"Club Rooms"},{"loc":"club_rooms","action":"Drawing, Calligraphy, Tailoring practice","stat":"Craft","xp":2,"clubAny":["Drawing","Calligraphy","Tailoring"],"name":"Club Rooms"},{"loc":"workshop","action":"Runes and talismans","stat":"Craft","xp":2,"name":"Workshop"},{"loc":"workshop","action":"Enchant or repair","stat":"Craft","xp":2,"name":"Workshop"},{"loc":"workshop","action":"Smithing","stat":"Craft","xp":2,"club":"Smithing","name":"Workshop"},{"loc":"workshop","action":"Tailoring","stat":"Craft","xp":2,"club":"Tailoring","name":"Workshop"},{"loc":"canteen","action":"Cook or bake","stat":"Craft","xp":2,"club":"Cooking","name":"Canteen"},{"loc":"common_rooms","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Common Rooms"},{"loc":"courtyards","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Courtyards"},{"loc":"gardens","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Gardens"},{"loc":"fire_dormitory","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Fire Dormitory"},{"loc":"light_dormitory","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Light Dormitory"},{"loc":"sky_dormitory","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Sky Dormitory"},{"loc":"viridian_dormitory","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Viridian Dormitory"}];
+const CRAFTS = {"_note":"Craft recipes for Practice. Material options are alternatives; each listed item is consumed once per attempt. Sale values are guide prices for finished work, not shop stock.","tiers":{"simple":25,"standard":45,"advanced":65,"masterwork":85},"recipes":[{"name":"Warming draught","group":"Brewing","tier":"simple","materials":[[{"item":"Common reagent bundle","qty":1}],[{"item":"Foraged reagent","qty":1}]],"kind":"drink","use":{"clears":["Chilled"],"buff":"warm","mins":240},"sale":8},{"name":"Cooling draught","group":"Brewing","tier":"simple","materials":[[{"item":"Common reagent bundle","qty":1}],[{"item":"Foraged reagent","qty":1}]],"kind":"drink","use":{"clears":["Overheated"],"buff":"sun","mins":240},"sale":8},{"name":"Cold remedy","group":"Brewing","tier":"simple","materials":[[{"item":"Common reagent bundle","qty":1}],[{"item":"Foraged reagent","qty":1}]],"kind":"drink","use":{"cure":"Head cold"},"sale":10},{"name":"Healing draught","group":"Brewing","tier":"standard","materials":[[{"item":"Common reagent bundle","qty":1}],[{"item":"Foraged reagent","qty":1}]],"kind":"drink","use":{"heal":"minor"},"sale":15},{"name":"Vigour tonic","group":"Brewing","tier":"standard","materials":[[{"item":"Common reagent bundle","qty":1}],[{"item":"Foraged reagent","qty":1}]],"kind":"drink","use":{"stamina":20},"sale":12},{"name":"Strong healing draught","group":"Brewing","tier":"advanced","materials":[[{"item":"Common reagent bundle","qty":2}],[{"item":"Common reagent bundle","qty":1},{"item":"Clearing bloom","qty":1}],[{"item":"Rare reagent","qty":1}]],"kind":"drink","use":{"heal":"moderate_to_minor"},"sale":40},{"name":"Fire flask","group":"Brewing","tier":"advanced","materials":[[{"item":"Common reagent bundle","qty":2}],[{"item":"Common reagent bundle","qty":1},{"item":"Clearing bloom","qty":1}],[{"item":"Rare reagent","qty":1}]],"kind":"other","use":{"fitting":"fire"},"sale":40},{"name":"Bottled cold","group":"Brewing","tier":"advanced","materials":[[{"item":"Common reagent bundle","qty":2}],[{"item":"Common reagent bundle","qty":1},{"item":"Clearing bloom","qty":1}],[{"item":"Rare reagent","qty":1}]],"kind":"other","use":{"fitting":"cold"},"sale":40},{"name":"Warmth rune","group":"Runes","tier":"simple","materials":[[{"item":"Talisman paper stack","qty":1},{"item":"Pen nibs and ink","qty":1}]],"kind":"other","use":{"buff":"warm","mins":240},"sale":10},{"name":"Rain-ward talisman","group":"Runes","tier":"standard","materials":[[{"item":"Talisman paper stack","qty":1},{"item":"Pen nibs and ink","qty":1}]],"kind":"other","use":{"buff":"waterproof","mins":180},"sale":20},{"name":"Light rune","group":"Runes","tier":"standard","materials":[[{"item":"Talisman paper stack","qty":1},{"item":"Pen nibs and ink","qty":1}]],"kind":"other","use":{"fitting":"dark"},"sale":20},{"name":"Ward talisman","group":"Runes","tier":"advanced","arcana":3,"materials":[[{"item":"Talisman paper stack","qty":1},{"item":"Pen nibs and ink","qty":1}]],"kind":"other","use":{"fitting":"curse or hex"},"sale":40},{"name":"Repair damaged item","group":"Repair","tier":"standard","materials":[[]],"target":"repair","sale":0},{"name":"Enchant warm","group":"Enchant","tier":"advanced","arcana":3,"materials":[[{"item":"Common reagent bundle","qty":1}]],"target":"enchant","gear":"warm","sale":0},{"name":"Enchant waterproof","group":"Enchant","tier":"advanced","arcana":3,"materials":[[{"item":"Common reagent bundle","qty":1}]],"target":"enchant","gear":"waterproof","sale":0}]};
 const MARKS = ['F', 'D', 'C', 'B', 'A'];
 const MID_SLOTS = { 'Magic Theory': [0, 480, 600], Etiquette: [0, 600, 720], History: [1, 480, 600], 'Potion Crafting': [1, 780, 960],
   'Dark Magic Defense': [2, 480, 960], Combat: [3, 480, 960] };
@@ -508,12 +509,12 @@ const isOutdoor = loc => { const p = placeOf(loc).toLowerCase(); return !!p && O
 const GEAR = { umbrella: /umbrella/i, waterproof: /waterproof|oilskin|rain cloak|raincoat/i, warm: /wool|scarf|winter cloak|mittens/i, sun: /sun hat|straw hat/i };
 // 1.9.5 (playtest Batch 5): shop items with an effect (data/shop.json gear / use, by lowercase name); gear also by exact item name,
 // and a used charm's timed protection (wxs.buff: { kind: until abs minute })
-const SHOP_FX = {"umbrella":{"gear":"umbrella"},"oilskin rain cloak":{"gear":"waterproof"},"wool scarf and mittens":{"gear":"warm"},"lined winter cloak":{"gear":"warm"},"straw sun hat":{"gear":"sun"},"hot spiced tea":{"use":{"clears":["Chilled"]}},"iced fruit cooler":{"use":{"clears":["Overheated"]}},"iced coffee":{"use":{"clears":["Overheated"]}},"hot chocolate with cream":{"use":{"clears":["Chilled"]}},"rain-ward charm":{"use":{"buff":"waterproof","mins":180}},"quick-dry powder":{"use":{"clears":["Soaked"]}},"cooling charm":{"use":{"buff":"sun","mins":240}},"ember pouch":{"use":{"buff":"warm","mins":240}},"elderflower cold syrup":{"use":{"cure":"Head cold"}},"blossom honey cake":{"use":{"stamina":10}},"spiced apple turnover":{"use":{"stamina":10}},"roasted chestnuts":{"use":{"clears":["Chilled"]}},"salted lemon water":{"use":{"clears":["Overheated"],"stamina":10}},"linen summer shirt":{"gear":"sun"},"fleece-lined boots":{"gear":"warm"},"mulled apple cider":{"use":{"clears":["Chilled"],"stamina":5}}};
+const SHOP_FX = {"umbrella":{"gear":"umbrella"},"oilskin rain cloak":{"gear":"waterproof"},"wool scarf and mittens":{"gear":"warm"},"lined winter cloak":{"gear":"warm"},"straw sun hat":{"gear":"sun"},"hot spiced tea":{"use":{"clears":["Chilled"]}},"iced fruit cooler":{"use":{"clears":["Overheated"]}},"iced coffee":{"use":{"clears":["Overheated"]}},"hot chocolate with cream":{"use":{"clears":["Chilled"]}},"rain-ward charm":{"use":{"buff":"waterproof","mins":180}},"quick-dry powder":{"use":{"clears":["Soaked"]}},"cooling charm":{"use":{"buff":"sun","mins":240}},"ember pouch":{"use":{"buff":"warm","mins":240}},"elderflower cold syrup":{"use":{"cure":"Head cold"}},"blossom honey cake":{"use":{"stamina":10}},"spiced apple turnover":{"use":{"stamina":10}},"roasted chestnuts":{"use":{"clears":["Chilled"]}},"salted lemon water":{"use":{"clears":["Overheated"],"stamina":10}},"linen summer shirt":{"gear":"sun"},"fleece-lined boots":{"gear":"warm"},"mulled apple cider":{"use":{"clears":["Chilled"],"stamina":5}},"warming draught":{"use":{"clears":["Chilled"],"buff":"warm","mins":240}},"cooling draught":{"use":{"clears":["Overheated"],"buff":"sun","mins":240}},"cold remedy":{"use":{"cure":"Head cold"}},"healing draught":{"use":{"heal":"minor"}},"vigour tonic":{"use":{"stamina":20}},"strong healing draught":{"use":{"heal":"moderate_to_minor"}},"fire flask":{"use":{"fitting":"fire"}},"bottled cold":{"use":{"fitting":"cold"}},"warmth rune":{"use":{"buff":"warm","mins":240}},"rain-ward talisman":{"use":{"buff":"waterproof","mins":180}},"light rune":{"use":{"fitting":"dark"}},"ward talisman":{"use":{"fitting":"curse or hex"}},"enchant warm":{"gear":"warm"},"enchant waterproof":{"gear":"waterproof"}};
 const SHOP_PRICE = {"sunfizz":[[8,"Commissary"],[8,"The Mall — store"]],"firetooth (tin)":[[12,"Commissary"]],"notebook":[[5,"Commissary"]],"pen nibs and ink":[[6,"Commissary"]],"printed class textbook":[[45,"Commissary"]],"satchel":[[70,"Commissary"]],"spare uniform set":[[120,"Commissary"]],"common reagent bundle":[[30,"Commissary"]],"basic practice focus":[[250,"Commissary"]],"rare reagent":[[350,"Commissary"]],"special order":[[null,"Commissary"]],"umbrella":[[25,"Commissary"]],"oilskin rain cloak":[[90,"Commissary"]],"bakery roll":[[15,"The Mall — bakery"]],"star cookie":[[8,"The Mall — bakery"]],"café drink and pastry":[[25,"The Mall — cafés and tea houses"]],"restaurant meal":[[45,"The Mall — restaurants"]],"private dining (second floor)":[[150,"The Mall — private dining"]],"quality focus":[[4000,"The Mall — store"]],"tailoring alteration":[[40,"Tailor's Row"]],"barber":[[20,"The Mall — services"]],"laundry service (per load)":[[10,"The Mall — services"]],"practice studio or music room (per hour)":[[15,"The Mall — studios"]],"game hall (per hour)":[[10,"The Mall — game halls"]],"wool scarf and mittens":[[35,"The Mall — store"]],"lined winter cloak":[[120,"The Mall — store"]],"straw sun hat":[[30,"The Mall — store"]],"hot spiced tea":[[12,"The Mall — cafés and tea houses"]],"iced fruit cooler":[[10,"The Mall — cafés and tea houses"]],"the vigil":[[60,"Nightwell"]],"house coffee":[[12,"Nightwell"]],"honey cream coffee":[[16,"Nightwell"]],"spiced milk tea":[[14,"Nightwell"]],"iced coffee":[[14,"Nightwell"]],"hot chocolate with cream":[[14,"Nightwell"]],"late-night pastry":[[10,"Nightwell"]],"bag of nightwell beans":[[35,"Nightwell"]],"the oracle shell":[[40,"Merryhew's"]],"itching charm":[[15,"Merryhew's"]],"voice-changing sweets (bag)":[[12,"Merryhew's"]],"illusion vermin (box)":[[25,"Merryhew's"]],"screaming box":[[35,"Merryhew's"]],"colour-change hair sweet":[[18,"Merryhew's"]],"confetti ambush card":[[10,"Merryhew's"]],"secret fools day kit":[[60,"Merryhew's"]],"private booth (per hour)":[[30,"The Snug"]],"set meal":[[30,"The Snug"]],"pot of tea for the booth":[[12,"The Snug"]],"stew and fresh bread":[[22,"The Snug"]],"sweet course":[[14,"The Snug"]],"evening booth (18:00 to curfew)":[[90,"The Snug"]],"ardenne case":[[1500,"Ardenne (special order)"]],"ardenne focus":[[4000,"Ardenne (special order)"]],"ardenne measuring set":[[2200,"Ardenne (special order)"]],"ardenne tuning instrument":[[2600,"Ardenne (special order)"]],"the rose in the tower":[[18,"Quillfeather's"]],"seven towers (deluxe edition)":[[30,"Quillfeather's"]],"nine rivers: field tactics":[[40,"Quillfeather's"]],"crossed blades: famous duels":[[30,"Quillfeather's"]],"songs of the oathbound":[[20,"Quillfeather's"]],"songbook of old ballads":[[16,"Quillfeather's"]],"lamps out: tales of halvard":[[18,"Quillfeather's"]],"the night student: a true account":[[6,"Quillfeather's"]],"the truth behind halvard's ghosts":[[15,"Quillfeather's"]],"halvard through the centuries":[[60,"Quillfeather's"]],"anecdotes of the old kingdom":[[35,"Quillfeather's"]],"founding of the dovecote (old edition)":[[45,"Quillfeather's"]],"what everyone knows about the founding":[[12,"Quillfeather's"]],"commentaries of saint orel (antique)":[[70,"Quillfeather's"]],"the final word on everything":[[12,"Quillfeather's"]],"fallen stars: notes on mana resonance":[[120,"Quillfeather's"]],"the noble houses, by precedence":[[50,"Quillfeather's"]],"etiquette manual":[[20,"Quillfeather's"]],"dragonchess problem book":[[25,"Quillfeather's"]],"star atlas":[[30,"Quillfeather's"]],"hand-speech for beginners":[[15,"Quillfeather's"]],"picture book for small children":[[8,"Quillfeather's"]],"old competition programmes":[[10,"Quillfeather's"]],"blank leather journal":[[25,"Quillfeather's"]],"pocket memory notebook":[[20,"Quillfeather's"]],"leather planner":[[20,"Quillfeather's"]],"plush animal":[[20,"Pennywhistle Curios"]],"goosedown pillow":[[35,"Pennywhistle Curios"]],"silver hand mirror":[[45,"Pennywhistle Curios"]],"palm crystal ball":[[60,"Pennywhistle Curios"]],"porcelain tea set":[[55,"Pennywhistle Curios"]],"music box":[[30,"Pennywhistle Curios"]],"prism charm":[[12,"Pennywhistle Curios"]],"black silk ribbons":[[10,"Pennywhistle Curios"]],"travel dragonchess set":[[60,"Pennywhistle Curios"]],"sovereigns":[[80,"Pennywhistle Curios"]],"gilt-edged playing cards":[[12,"Pennywhistle Curios"]],"vanishing-coin illusion kit":[[25,"Pennywhistle Curios"]],"juggling set":[[15,"Pennywhistle Curios"]],"rainglass":[[35,"Pennywhistle Curios"]],"everlamp, miniature":[[40,"Pennywhistle Curios"]],"hearthstone hand-warmer":[[25,"Pennywhistle Curios"]],"hooded night lamp":[[20,"Pennywhistle Curios"]],"warding amulet":[[25,"Pennywhistle Curios"]],"wishing coin":[[5,"Pennywhistle Curios"]],"thank-you card":[[3,"Pennywhistle Curios"]],"get-well hamper":[[30,"Pennywhistle Curios"]],"engraved trophy cup":[[50,"Pennywhistle Curios"]],"knight's pennon":[[20,"Pennywhistle Curios"]],"halvard pennant":[[10,"Pennywhistle Curios"]],"royal crest paperweight":[[35,"Pennywhistle Curios"]],"independence war commemorative medal":[[30,"Pennywhistle Curios"]],"carved asmoday charm":[[15,"Pennywhistle Curios"]],"festival lantern set":[[18,"Pennywhistle Curios"]],"brass handbell":[[8,"Pennywhistle Curios"]],"wind-up alarm clock":[[15,"Pennywhistle Curios"]],"silver-polishing kit":[[20,"Pennywhistle Curios"]],"walnut desk tidy":[[30,"Pennywhistle Curios"]],"loaded bone dice":[[12,"Pennywhistle Curios"]],"marked deck":[[12,"Pennywhistle Curios"]],"table wine":[[25,"Barrow & Vine"]],"fine vintage":[[90,"Barrow & Vine"]],"orchard cider":[[10,"Barrow & Vine"]],"stonebrew ale (jug)":[[18,"Barrow & Vine"]],"clan firewine":[[70,"Barrow & Vine"]],"blackroot cigars":[[15,"Barrow & Vine"]],"engraved hip flask":[[40,"Barrow & Vine"]],"bouquet of stage roses":[[20,"Greenwick's"]],"cut flowers":[[12,"Greenwick's"]],"moonfern in a pot":[[45,"Greenwick's"]],"oak sapling in a pot":[[20,"Greenwick's"]],"seed packets":[[5,"Greenwick's"]],"bag of red apples":[[6,"Greenwick's"]],"carrots and fresh greens":[[5,"Greenwick's"]],"pigeon feed":[[4,"Greenwick's"]],"pruning shears":[[25,"Greenwick's"]],"precision tool roll":[[50,"The Tinker's Bench"]],"mystery clockwork (sold as seen)":[[15,"The Tinker's Bench"]],"brass golem joint set":[[90,"The Tinker's Bench"]],"glass stirring-rod set":[[15,"The Tinker's Bench"]],"whetstone and blade oil":[[20,"The Tinker's Bench"]],"armour polish kit":[[18,"The Tinker's Bench"]],"duelling gauntlets":[[40,"The Tinker's Bench"]],"fishing tackle box":[[30,"The Tinker's Bench"]],"gut guitar strings":[[12,"The Tinker's Bench"]],"tuning fork":[[10,"The Tinker's Bench"]],"steel-nib fountain pen":[[40,"The Tinker's Bench"]],"letter paper set":[[8,"The Tinker's Bench"]],"sketchbook and charcoal":[[15,"The Tinker's Bench"]],"carving knife and limewood block":[[20,"The Tinker's Bench"]],"bolt of sky silk":[[40,"The Tinker's Bench"]],"embroidery thread set":[[15,"The Tinker's Bench"]],"talisman paper stack":[[10,"The Tinker's Bench"]],"chamois lens cloth":[[5,"The Tinker's Bench"]],"pocket thermos":[[25,"The Tinker's Bench"]],"shuttered dark-lantern":[[25,"The Tinker's Bench"]],"running shoes":[[45,"The Tinker's Bench"]],"premium beast jerky":[[20,"The Tinker's Bench"]],"beast muzzle":[[15,"The Tinker's Bench"]],"vigour tonic":[[30,"The Tinker's Bench"]],"salaffian flatbread":[[6,"The Salaffian Oven"]],"salaffian spice box":[[25,"The Salaffian Oven"]],"loud silk waistcoat":[[70,"Tailor's Row"]],"formal dress coat":[[150,"Tailor's Row"]],"platform boots":[[55,"Tailor's Row"]],"ballroom shoes":[[60,"Tailor's Row"]],"bergamot cologne":[[35,"Tailor's Row"]],"kid-leather gloves":[[30,"Tailor's Row"]],"honey bun":[[6,"Commissary"]],"pocket campus map":[[5,"Commissary"]],"smoked river fish":[[6,"Commissary"]],"lavender laundry soap":[[5,"Commissary"]],"sweet bun":[[6,"The Mall — bakery"]],"sweet bamboo tea (tin)":[[14,"The Mall — cafés and tea houses"]],"silvertip tea":[[30,"The Mall — cafés and tea houses"]],"rain-ward charm":[[18,"The Tinker's Bench"]],"quick-dry powder":[[10,"The Tinker's Bench"]],"cooling charm":[[20,"The Tinker's Bench"]],"ember pouch":[[15,"The Tinker's Bench"]],"elderflower cold syrup":[[15,"Greenwick's"]],"blossom honey cake":[[9,"The Mall — bakery"]],"spiced apple turnover":[[10,"The Mall — bakery"]],"roasted chestnuts":[[8,"The Mall — cafés and tea houses"]],"salted lemon water":[[6,"Commissary"]],"linen summer shirt":[[45,"Tailor's Row"]],"fleece-lined boots":[[70,"Tailor's Row"]],"mulled apple cider":[[12,"The Snug"]]};
 const fxOf = name => SHOP_FX[String(name || '').trim().toLowerCase().replace(/^(an?|the)\s+/, '')] || SHOP_FX[String(name || '').trim().toLowerCase().replace(/^(an?|the)\s+/, '').replace(/\s*\(.*\)$/, '')] || null;
 const gearOf = (I, buff, now) => {
   const own = Object.keys(I || {}).filter(k => (I[k] && I[k].Qty) > 0), ks = own.join(' | ');
-  return _.mapValues(GEAR, (rx, g) => rx.test(ks) || own.some(k => (fxOf(k) || {}).gear === g) || ((buff || {})[g] > now));
+  return _.mapValues(GEAR, (rx, g) => rx.test(ks) || own.some(k => (fxOf(k) || {}).gear === g || new RegExp(`\\benchanted ${g}\\b`, 'i').test(String(I[k].Note || ''))) || ((buff || {})[g] > now));
 };
 const EXPO = { soaked: 'Soaked', drenched: 'Soaked', wet: 'Soaked', chilled: 'Chilled', frozen: 'Chilled', frostbitten: 'Chilled' };   // 1.9.4: /Exposure kinds
 const COND = {
@@ -590,11 +591,11 @@ const moodCanon = k => NPC_ALIAS[String(k).toLowerCase()] || k;
 const GRX = new Map(), grx = src => GRX.get(src) || GRX.set(src, new RegExp(src, 'i')).get(src);   // 1.16.1 (audit A6): compiled once
 const giftNorm = s => String(s || '').toLowerCase().replace(/[’‘]/g, "'").replace(/[–—]/g, '-').replace(/\s+/g, ' ').trim();
 const npcBirthday = (id, W) => ((GIFT_PREFS.npcs[id] || {}).birthday || '') === `M${W.Month} W${W.Week} ${W.Day}`;
-function giftTier(id, item, fallback) {
+function giftTier(id, item, fallback, note = '') {
   const p = GIFT_PREFS.npcs[id], s = giftNorm(item), order = ['hated', 'loved', 'disliked', 'liked'];
   let tier = '';
   const exact = name => { const n = giftNorm(name); const at = s.indexOf(n); return at >= 0 && !/[a-z0-9]/.test(s[at - 1] || '') && !/[a-z0-9]/.test(s[at + n.length] || ''); };
-  const description = s + ' ' + Object.entries(GIFT_PREFS.catalog || {}).filter(([name]) => exact(name)).map(([,tags]) => tags).join(' ');
+  const description = s + ' ' + giftNorm(note) + ' ' + Object.entries(GIFT_PREFS.catalog || {}).filter(([name]) => exact(name)).map(([,tags]) => tags).join(' ');
   if (s && p) tier = order.find(k => (p.items[k] || []).some(exact) || p.patterns[k] && grx(p.patterns[k]).test(description)) || '';
   if (s && !tier) tier = [...order, 'neutral'].find(k => GIFT_PREFS.universal[k] && grx(GIFT_PREFS.universal[k]).test(description)) || '';
   if (!tier) tier = [...order, 'neutral'].includes(giftNorm(fallback)) ? giftNorm(fallback) : 'neutral';
@@ -683,7 +684,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.27.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.28.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
 // from the shared context c (the states, the reply's text and the values earlier steps computed) and adds what later steps use.
@@ -1293,6 +1294,14 @@ function stepExposure(c) {
       if (u.stamina > 0) { V.Stamina += u.stamina; done.push('+' + u.stamina + ' stamina'); }
       if (u.buff && WXM === 'full') { buff[u.buff] = Math.max(buff[u.buff] || 0, absA + u.mins); done.push(`${u.buff} until ${fromAbs(buff[u.buff]).Time}`); }
       if (u.cure && Cn[u.cure] && xs.hc > dayNo + 1) { xs.hc = dayNo + 1; done.push(u.cure.toLowerCase() + ' ends tomorrow'); }
+      if (u.heal) {
+        const target = Object.keys(S.Player.Injuries || {}).find(k => String(S.Player.Injuries[k].Severity).toLowerCase() === (u.heal === 'minor' ? 'minor' : 'moderate'));
+        if (target) {
+          if (u.heal === 'minor') { delete S.Player.Injuries[target]; done.push(`${target} healed`); }
+          else { S.Player.Injuries[target].Severity = 'minor'; done.push(`${target} reduced to minor`); }
+        }
+      }
+      if (u.fitting) done.push(`spent as a fitting ${u.fitting} item`);
       if (done.length) { log.push(`${String(c).trim()}: ${done.join(', ')}.`); S.$ui.toasts.push(`${String(c).trim()}: ${done[0]}`); }
     }
     for (const k of Object.keys(C0)) if (!Cn[k]) { if (k === 'Soaked') xs.wet = 0; if (k === 'Chilled') xs.cold = 0; if (k === 'Overheated') xs.hot = 0; if (k === 'Head cold') xs.hc = -1e9; }   // the story removed it
@@ -1984,7 +1993,9 @@ function stepBonds(c) {
         gain += Math.round(Math.max(0, BR.kind_xp[socialKind] + repMod(id) + examMod(id) + socialMod) * (birthday ? BR.birthday.social_mult : 1) * (studyBonus ? 1.25 : 1) * (society >= 5 ? 1.2 : society >= 4 ? 1.1 : 1));
         if (socialKind === 'hangout' && a.Invited && b.Rank >= 2 && S.Scene.Present[id] && !npcAway(id) && !w.invited) { gain++; w.invited = 1; }
       } else if (k === 'gift') {
-        const gk = giftTier(id, a.Item, a.Gift), firstBirthday = birthday && !d.birthdayGift;
+        const bagKey = Object.keys((B || {}).Inventory || {}).find(name => name.toLowerCase() === String(a.Item || '').toLowerCase());
+        const giftNote = bagKey ? String(B.Inventory[bagKey].Note || '') : '';
+        const gk = giftTier(id, a.Item, a.Gift, giftNote), firstBirthday = birthday && !d.birthdayGift;
         if (a.Item) { delete b.$gifts[a.Item]; b.$gifts[a.Item] = gk; capRecord(b.$gifts, BR.gift_log_cap); }
         const tension = gk === 'hated' ? BR.gift_hated_tension : gk === 'disliked' ? BR.gift_disliked_tension : 0;
         b.Tension = _.clamp(num(b.Tension, 0) + tension * (birthday ? BR.birthday.gift_mult : 1), 0, 100);
@@ -2338,8 +2349,12 @@ function stepTraining(c) {
 function stepProficiency(c) {
   const { S, B, log, jnl, hasB, byBuilder, OFF, REPORTED, elapsed, absB, absA, dayNo, weekNo, TU } = c;
   const reports = Array.isArray(S.Practice) ? S.Practice : [];
+  const sales = Array.isArray(S.Craft_sales) ? S.Craft_sales : [];
   S.Practice = [];
+  S.Craft_sales = [];
   S.$ui.practice = [];
+  S.$ui.craft = [];
+  S.$ui.craft_sale = null;
   if (OFF.has('proficiency')) return;
   const ranks = S.Player._Proficiency || (S.Player._Proficiency = {});
   let P = S.$eng.prof;
@@ -2436,10 +2451,60 @@ function stepProficiency(c) {
     if (a.train && (/Exhausted|Collapsed/.test(S.Player.Vitals._Fatigue) || Object.values(S.Player.Injuries || {}).some(i => /serious|critical/.test(i.Severity) || a.train === 'stamina' && i.Severity === 'moderate'))) return 'fit enough to train';
     return '';
   };
+  const craftAction = recipe => recipe.group === 'Brewing' ? 'Brew a potion' : recipe.group === 'Runes' ? (here === 'club rooms' ? 'Specialized Magic practice' : 'Runes and talismans') : 'Enchant or repair';
+  const craftItem = (I, name) => Object.keys(I || {}).find(k => k.toLowerCase() === String(name).toLowerCase());
+  const craftQty = (I, name) => { const k = craftItem(I, name); return k ? num(I[k].Qty, 0) : 0; };
+  const craftExpert = state => ['Mimosa', 'Royhan'].some(n => Object.keys((state.Scene || {}).Present || {}).some(id => id.toLowerCase() === n.toLowerCase()));
+  const craftMaterial = (I, recipe) => (recipe.materials || [[]]).find(option => option.every(m => craftQty(I, m.item) >= m.qty));
+  const craftTarget = (I, recipe, named) => {
+    if (!recipe.target) return '';
+    const items = named ? [craftItem(I, named)].filter(Boolean) : Object.keys(I || {});
+    return items.find(k => recipe.target === 'repair' ? /\bdamaged\b/i.test(String(I[k].Note || ''))
+      : /cloaks?|coats?|robes?|vests?|scarves?|shirts?|dresses?|uniforms?|jackets?|garments?/i.test(k) && !/enchanted/i.test(String(I[k].Note || ''))) || '';
+  };
+  const craftReady = (recipe, state, report) => {
+    const place = placeKey(state.World.Location), action = craftAction(recipe);
+    const a = PRACTICE.find(x => x.action === action && locName(x) === place);
+    if (!a) return { why: 'this craft is not available here' };
+    const locked = whyLocked(a, report);
+    if (locked) return { why: locked };
+    if (recipe.tier === 'advanced' && num(state.Player._Proficiency.Craft, 0) < 3 && !craftExpert(state)) return { why: 'Craft Rank 3 or an expert present' };
+    if (recipe.arcana && num(state.Player._Proficiency.Arcana, 0) < recipe.arcana) return { why: `Arcana Rank ${recipe.arcana}` };
+    const material = craftMaterial(state.Inventory, recipe);
+    if (!material) return { why: 'ingredients in Bag' };
+    const target = craftTarget(state.Inventory, recipe, report && report.Subject);
+    if (recipe.target && !target) return { why: recipe.target === 'repair' ? 'a damaged item in Bag' : 'ordinary clothing in Bag' };
+    return { a, material, target };
+  };
+  const craftResult = (state, recipe) => {
+    const f = ((state.$ui || {}).fortune || {}), roll = num(f.roll, 0) || d100(num((state.$eng || {}).seed, c.seed), 'fortune', num((state.$eng || {}).turn, 0), state === S ? absA : absB), rank = num(state.Player._Proficiency.Craft, 0);
+    const grade = ((state.Player.Academics || {}).Grades || {})['Potion Crafting'];
+    const skill = Math.min(grade === 'A' ? 20 : 15, rank * 3 + (grade === 'A' ? 10 : 0));
+    const Cn = state.Player.Conditions || {}, Vt = state.Player.Vitals, sev = Object.values(state.Player.Injuries || {}).map(i => i.Severity);
+    const condition = (Cn.Chilled ? -10 : 0) + (Cn.Soaked ? -5 : 0) + (Cn.Overheated ? -5 : 0) + (Cn['Head cold'] ? -5 : 0)
+      + (Vt._Fatigue === 'Exhausted' ? -15 : Vt._Fatigue === 'Tired' ? -5 : 0)
+      + (sev.some(x => /serious|critical/.test(x)) ? -20 : sev.includes('moderate') ? -10 : 0)
+      + (((state.$ui || {}).sleep || {}).loss >= 0.2 && !((state.$ui || {}).sleep || {}).flavor ? -5 : 0);
+    const tools = recipe.group === 'Brewing' ? [['Ardenne measuring set',10],['Glass stirring-rod set',5]] : recipe.group === 'Runes' ? [['Steel-nib fountain pen',5]] : [];
+    const tool = Math.max(0, ...tools.filter(([n]) => craftQty(state.Inventory, n) > 0).map(([, n]) => n));
+    const aid = craftExpert(state) ? 10 : 0, score = roll + skill + condition + tool + aid, dc = CRAFTS.tiers[recipe.tier];
+    const result = score >= dc + 25 ? 'fine' : score >= dc ? 'success' : score >= dc - 15 ? 'weak' : 'failed';
+    return { name: recipe.name, group: recipe.group, tier: recipe.tier, roll, score, dc, result, mishap: roll <= 3, mods: [skill && `Craft +${skill}`, condition && `conditions ${condition}`, tool && `tool +${tool}`, aid && `expert +${aid}`].filter(Boolean).join(', ') };
+  };
+  const bagGain = (name, count, kind, note) => {
+    const I = S.Inventory, k = craftItem(I, name) || name, start = craftQty((B || {}).Inventory, name);
+    if (!I[k]) I[k] = { Qty: 0, Kind: kind, Note: note, Plan: '' };
+    I[k].Qty = Math.max(num(I[k].Qty, 0), start + count);
+    I[k].Kind = kind; I[k].Note = note;
+  };
+  const takeMaterials = option => {
+    for (const m of option) { const k = craftItem(S.Inventory, m.item); if (k) S.Inventory[k].Qty = Math.min(num(S.Inventory[k].Qty, 0), craftQty((B || {}).Inventory, m.item) - m.qty); }
+  };
   const done = new Set();
   for (const r of reports) {
     const action = String(r.Action || '').trim().toLowerCase();
-    const a = PRACTICE.find(x => x.action.toLowerCase() === action && locName(x) === here);
+    const recipe = action === 'craft' && (CRAFTS.recipes || []).find(x => x.name.toLowerCase() === String(r.Aim || '').trim().toLowerCase());
+    const a = recipe ? PRACTICE.find(x => x.action === craftAction(recipe) && locName(x) === here) : PRACTICE.find(x => x.action.toLowerCase() === action && locName(x) === here);
     const subject = subjectOf(r.Subject), stat = a && (a.stat === 'subject' ? SUBJECT_STAT[subject] : a.stat);
     let why = !a ? 'this action is not available here' : before !== here ? 'start and finish at the practice place' : whyLocked(a, r);
     if (!why && !stat) why = 'name a subject';
@@ -2454,10 +2519,46 @@ function stepProficiency(c) {
     if (!why && (P.days[key] || done.has(key))) why = 'already practised this action today';
     if (!why && a.paid && P.wk.paid >= 2) why = 'two paid shifts this week';
     if (!why && num(P.wk[stat], 0) >= TU.prof_pace) why = `${stat} is at its weekly limit`;
+    let ready;
+    if (!why && action === 'craft') {
+      if (!recipe) why = 'unknown recipe';
+      else {
+        ready = craftReady(recipe, B, r);
+        if (ready.why) why = ready.why;
+      }
+    }
     if (why) { log.push(`Practice ${r.Action}: ${why}; no proficiency XP.`); continue; }
     done.add(key); P.days[key] = true;
-    const xp = a.study && a.action === 'Study a subject' ? Math.min(2, Math.floor(elapsed / 60)) : a.xp;
+    const priorCraft = recipe && ((((B || {}).$ui || {}).craft || []).find(x => x.name === recipe.name));
+    const made = recipe && (priorCraft || craftResult(B, recipe));
+    const xp = recipe ? (made.result === 'failed' ? 1 : a.xp) : a.study && a.action === 'Study a subject' ? Math.min(2, Math.floor(elapsed / 60)) : a.xp;
     gain(stat, xp, a.action);
+    if (recipe) {
+      takeMaterials(ready.material);
+      if (made.mishap && !Object.keys(S.Player.Injuries || {}).some(k => !(((B || {}).Player || {}).Injuries || {})[k])) {
+        const injury = `${recipe.group} mishap burn`;
+        S.Player.Injuries[injury] = { Severity: 'minor', Body_part: 'hand', Effect: 'tender fingers', Heals_by: 'treatment' };
+        S.Player.Vitals.HP = Math.max(1, S.Player.Vitals.HP - 5);
+      }
+      if (made.result !== 'failed') {
+        const note = `handmade by {{user}}${made.result === 'fine' ? ', fine' : made.result === 'weak' ? ', rough' : ''}`;
+        if (recipe.target) {
+          const target = craftItem(S.Inventory, ready.target) || ready.target;
+          if (!S.Inventory[target]) S.Inventory[target] = _.cloneDeep(B.Inventory[ready.target]);
+          if (recipe.target === 'repair') S.Inventory[target].Note = String(S.Inventory[target].Note || '').replace(/\bdamaged\b/ig, '').trim() || note;
+          else S.Inventory[target].Note = `${String(S.Inventory[target].Note || '').trim()} enchanted ${recipe.gear}; ${note}`.trim();
+        } else bagGain(recipe.name, recipe.group === 'Brewing' ? (recipe.tier === 'advanced' ? (made.result === 'fine' ? 2 : 1) : made.result === 'fine' ? 3 : made.result === 'success' ? 2 : 1) : 1, recipe.kind, note);
+      }
+      log.push(`Craft ${recipe.name}: ${made.result}${made.mishap ? ', mishap' : ''}; ingredients spent${made.result === 'failed' ? ', no item' : ''}.`);
+      if (recipe.group === 'Brewing' && recipe.tier === 'advanced') log.push('Advanced brewing may draw a Dove poison-magic inspection; play it if a Dove is present.');
+      continue;
+    }
+    if (a.action === 'Tend the reagent beds') bagGain('Foraged reagent', 1, 'reagent', 'fresh from the Gardens');
+    if (a.action === 'Forage' && SEASONS[S.World.Month - 1] !== 'Winter') bagGain('Foraged reagent', SEASONS[S.World.Month - 1] === 'Summer' ? 1 : 2, 'reagent', 'foraged in the Forest');
+    if (a.action === 'Gather clearing blooms') {
+      bagGain('Clearing bloom', 1, 'reagent', 'wilts tomorrow');
+      const C = S.$eng.craft || (S.$eng.craft = {}); C.blooms = C.blooms || {}; C.blooms['clearing bloom'] = dayNo;
+    }
     if (a.train) S.Training.push({ Track: a.train, Partner: r.With || '' });
     if (a.cost) { S.Player.Wallet.Points -= a.cost; S.Player.Wallet.Transactions.push(`-${a.cost} studio practice`); }
     if (a.paid) { P.wk.paid++; S.Player.Wallet.Points += a.paid; S.Player.Wallet.Transactions.push(`+${a.paid} animal care shift`); }
@@ -2465,6 +2566,19 @@ function stepProficiency(c) {
       const counted = num(S.$eng.study.mins, 0) - num((((B || {}).$eng || {}).study || {}).mins, 0);
       if (counted < 60) S.$eng.study.mins = num(S.$eng.study.mins, 0) + 60 - Math.max(0, counted);
     }
+  }
+  for (const sale of sales) {
+    const n = Math.min(Math.max(1, Math.floor(num(sale.Qty, 1))), 3 - num(P.wk.sold, 0));
+    const name = 'Healing draught', k = craftItem(S.Inventory, name);
+    if (String(sale.Item || '').toLowerCase() !== name.toLowerCase() || here !== 'medical centre' || before !== here || !hasB || n <= 0 || !k || craftQty(B.Inventory, name) < n || num(S.Inventory[k].Qty, 0) < n) {
+      log.push('Apothecary sale rejected: sell Healing draught at the Medical Centre, up to three doses per week, from the Bag.');
+      continue;
+    }
+    S.Inventory[k].Qty -= n; P.wk.sold = num(P.wk.sold, 0) + n;
+    S.Player.Wallet.Points += 15 * n;
+    S.Player.Wallet.Transactions.push(`+${15 * n} Apothecary: ${n} Healing draught${n === 1 ? '' : 's'}`);
+    c.craftSold = [...(c.craftSold || []), name.toLowerCase()];
+    log.push(`Medical Centre apothecary bought ${n} Healing draught${n === 1 ? '' : 's'} for ${15 * n} points (${P.wk.sold}/3 this week).`);
   }
   for (const t of S.Training || []) if (/stam/i.test(t.Track || '') && !/Exhausted|Collapsed/.test(S.Player.Vitals._Fatigue)
     && !Object.values(S.Player.Injuries || {}).some(i => /moderate|serious|critical/.test(i.Severity))) gain('Prowess', 1, 'stamina training');
@@ -2491,6 +2605,14 @@ function stepProficiency(c) {
       || (stat && num(P.wk[stat], 0) >= TU.prof_pace ? `${stat} is at this week's limit (${P.wk[stat]}/${TU.prof_pace}); class attendance still counts` : '');
     return { action: a.action, stat: a.stat, locked };
   });
+  S.$ui.craft = (CRAFTS.recipes || []).filter(recipe => {
+    const ready = craftReady(recipe, S, null);
+    if (ready.why || num(P.wk.Craft, 0) >= TU.prof_pace) return false;
+    const a = ready.a;
+    return !P.days[`${dayNo}:${a.loc}:${a.action}`];
+  }).map(recipe => craftResult(S, recipe));
+  if (here === 'medical centre' && craftQty(S.Inventory, 'Healing draught') > 0)
+    S.$ui.craft_sale = { sold: num(P.wk.sold, 0), remaining: Math.max(0, 3 - num(P.wk.sold, 0)) };
   if (S.$ui.fortune && Array.isArray(S.$ui.fortune.mods)) {
     const mods = PROF.filter(k => ranks[k] > 0).map(k => `${k} +${Math.min((SUBJECTS.some(s => SUBJECT_STAT[s] === k && num(((S.$eng.study || {}).stand || {})[s], -1) === 4) ? 10 : 20), ranks[k] * 3)}`);
     if (mods.length) S.$ui.fortune.mods.push('proficiency: ' + mods.join('; '));
@@ -2928,9 +3050,13 @@ function stepGossip(c) {
 
 // ---- 8h. 1.1.0 inventory (the Bag): merge case duplicates, remove at Qty 0, Sunfizz bottles, cap 40 (never gear) ----
 function stepBag(c) {
-  const { S, B, log, jnl, hasB } = c;
+  const { S, B, log, jnl, hasB, dayNo } = c;
   {
     const I = S.Inventory || (S.Inventory = {}), BI = (hasB && B.Inventory) || {};
+    const blooms = (S.$eng.craft || {}).blooms || {};
+    if (hasB) for (const k of Object.keys(I)) if (/^clearing bloom$/i.test(k) && num(blooms[k.toLowerCase()], dayNo) < dayNo) {
+      delete I[k]; delete blooms[k.toLowerCase()]; log.push('Clearing bloom wilted overnight.');
+    }
     const groups = _.groupBy(Object.keys(I), k => k.trim().toLowerCase());
     for (const ks of Object.values(groups)) {
       const main = ks.find(k => k in BI) || ks[0], rec = { ...I[main] };
@@ -3167,7 +3293,7 @@ function stepReminders(c) {
       const IB = B.Inventory || {}, IS = S.Inventory || {};
       for (const [k, it] of Object.entries(IB)) {
         const lk = k.toLowerCase(), now = Object.keys(IS).find(x => x.toLowerCase() === lk);
-        if (/sunfizz/.test(lk) || num(it && it.Qty, 1) - (now ? num(IS[now].Qty, 1) : 0) <= 0 || REPORTED.used.includes(lk)) continue;
+        if (/sunfizz/.test(lk) || num(it && it.Qty, 1) - (now ? num(IS[now].Qty, 1) : 0) <= 0 || REPORTED.used.includes(lk) || (c.craftSold || []).includes(lk)) continue;
         if (REPORTED.acts.some(a => /^(gift|rank_gift|birthday)$/.test(a.Kind) && (!a.Item || String(a.Item).toLowerCase().includes(lk) || lk.includes(String(a.Item).toLowerCase())))) continue;
         const usable = !!(fxOf(k) || {}).use;
         if (bonded.length) add(`bag:${lk}:${dayNo}`, `${k} left the Bag while ${bonded.slice(0, 2).join(' and ')} ${bonded.length > 1 ? 'were' : 'was'} here: if {{user}} gave it, report Kind gift with Item "${k}"${usable ? '; if {{user}} used it, insert it into /Consumables/-' : ''}.`);

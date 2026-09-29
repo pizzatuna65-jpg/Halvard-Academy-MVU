@@ -48,8 +48,16 @@ function acPractice(S) {
   };
   const acts = id => (DATA.practice || []).filter(a => a.loc === id);
   const hereBlock = places.includes(here) ? acts(here).map(a => card(a, true)).join('') : '<div class="empty">No practice action at this place.</div>';
+  const craftGroups = here === 'potion_halls' ? ['Brewing'] : here === 'workshop' ? ['Brewing','Runes','Repair','Enchant'] : here === 'club_rooms' ? ['Runes'] : [];
+  const shown = (DATA.crafts || []).filter(r => craftGroups.includes(r.group) && (r.group !== 'Brewing' || here !== 'workshop' || /Brewing/i.test(S.Player.Profile.Club || '')) && (r.group !== 'Runes' || here !== 'club_rooms' || /Specialized Magic/i.test(S.Player.Profile.Club || '')));
+  const craftLive = ((S.$ui || {}).craft || []);
+  const recipes = shown.length ? `<h3>Craft recipes</h3><p class="hint">A session takes at least 45 minutes. The next turn's Fortune roll sets the result; the engine spends ingredients and puts finished work in the Bag.</p>${shown.map(r => {
+    const result = craftLive.find(x => x.name === r.name), needs = (r.materials || []).map(opt => opt.map(m => `${m.qty} ${m.item}`).join(' + ')).join(' or ');
+    const fill = r.target ? `I spend an hour making ${r.name.toLowerCase()} on [item]: ` : `I spend an hour crafting ${r.name} here: `;
+    return `<div class="item"><div class="row"><span class="t">${esc(r.name)}</span><span class="pill">${esc(r.tier)}</span>${result ? `<span class="pill ${result.result === 'failed' ? 'w' : 'g'}">${esc(result.result)}${result.mishap ? ' · mishap' : ''}</span>` : ''}</div><div class="sub">${esc(needs || 'No ingredients')}${r.effect ? ' · ' + esc(r.effect) : ''}</div><div class="meta"><button class="btn sm" data-fill="${esc(fill)}" ${result ? '' : 'disabled title="Needs ingredients, rank or an open practice session"'}>Craft</button></div></div>`;
+  }).join('')}` : '';
   const others = places.filter(id => id !== here).map(id => `<h3>${esc(DATA.locs[id].name)}${isNew(`act:${id}`, true) ? newsDot() : ''}</h3>${acts(id).map(a => card(a, false)).join('')}`).join('');
-  return `<p class="lead">Places where you can put in practice. Each session raises a proficiency, up to a weekly limit.</p><h3>Here${places.includes(here) && isNew(`act:${here}`, true) ? newsDot() : ''}</h3>${hereBlock}<h3>Elsewhere</h3>${others || '<div class="empty">No other place discovered yet.</div>'}<p class="hint">${Math.max(0,max-places.length)} more places to find.</p>`;
+  return `<p class="lead">Places where you can put in practice. Each session raises a proficiency, up to a weekly limit.</p><h3>Here${places.includes(here) && isNew(`act:${here}`, true) ? newsDot() : ''}</h3>${hereBlock}${recipes}<h3>Elsewhere</h3>${others || '<div class="empty">No other place discovered yet.</div>'}<p class="hint">${Math.max(0,max-places.length)} more places to find.</p>`;
 }
 
 // ---------------------------------------------------------------- clubs

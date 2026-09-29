@@ -19,7 +19,7 @@
   {"loc":"menagerie","action":"Help with the animals","stat":"Nature","xp":2,"daylight":true,"partner":true},
   {"loc":"menagerie","action":"Muck out the pens (paid)","stat":"Nature","xp":1,"paid":40},
   {"loc":"forest","action":"Fieldwork: tracks and signs","stat":"Nature","xp":2,"daylight":true},
-  {"loc":"forest","action":"Forage","stat":"Nature","xp":1,"seasons":["Spring","Autumn"]},
+  {"loc":"forest","action":"Forage","stat":"Nature","xp":1},
   {"loc":"forest_clearing","action":"Gather clearing blooms","stat":"Nature","xp":1},
   {"loc":"fishing_house","action":"Fish the pond or the lake","stat":"Nature","xp":1,"club":"Fishing"},
   {"loc":"mall","action":"Dance and deportment","stat":"Society","xp":2,"cost":15},

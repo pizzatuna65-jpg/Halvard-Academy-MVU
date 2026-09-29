@@ -21,6 +21,8 @@ t = t.replace('/*@@CAL_TIMETABLE@@*/{}', json.dumps(cal['timetable'], ensure_asc
 t = t.replace('/*@@CLUB_STATS@@*/{}', json.dumps(json.load(open(P('data/club_stats.json'), encoding='utf-8')), ensure_ascii=False, separators=(',', ':')))
 _plocs = json.load(open(P('data/locations.json'), encoding='utf-8'))
 t = t.replace('/*@@PRACTICE@@*/[]', json.dumps([{**a, 'name': _plocs[a['loc']]['name']} for a in json.load(open(P('data/practice.json'), encoding='utf-8'))], ensure_ascii=False, separators=(',', ':')))
+crafts = json.load(open(P('data/crafts.json'), encoding='utf-8'))
+t = t.replace('/*@@CRAFTS@@*/{}', json.dumps(crafts, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@MOOD_GIFTS_SOURCE@@*/', open(P('src/scripts/mood_gifts.js'), encoding='utf-8').read())
 for key, file in [('NPC_MOODS', 'npc_moods'), ('GIFT_PREFS', 'gift_prefs'), ('WIND_CASTING', 'wind_casting')]:
     obj = json.load(open(P('data/' + file + '.json'), encoding='utf-8'))
@@ -102,6 +104,7 @@ outdoor = sorted({k for lid in outdoor_ids(locs) for k in place_keys(locs[lid], 
 t = t.replace('/*@@OUTDOOR@@*/[]', json.dumps(outdoor, ensure_ascii=False))
 # 1.9.5 (playtest Batch 5): shop items with a mechanical effect, by lowercase name (data/shop.json gear / use)
 shop_fx = {i['item'].lower(): {k: i[k] for k in ('gear', 'use') if k in i} for i in json.load(open(P('data/shop.json'), encoding='utf-8'))['items'] if i.get('gear') or i.get('use')}
+shop_fx.update({i['name'].lower(): {k: i[k] for k in ('gear', 'use') if k in i} for i in crafts['recipes'] if i.get('gear') or i.get('use')})
 t = t.replace('/*@@SHOP_FX@@*/{}', json.dumps(shop_fx, ensure_ascii=False, separators=(',', ':')))
 shop_prices = {}
 for i in json.load(open(P('data/shop.json'), encoding='utf-8'))['items']:

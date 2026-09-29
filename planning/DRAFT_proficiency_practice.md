@@ -1,6 +1,6 @@
 # DRAFT — Proficiency (6 stat), Practice, Crafting, titik merah, grade baru, mastery
 
-**Status: APPROVED oleh owner (2026-09-30), semua batch. Belum diterapkan: tunggu owner bilang "mulai batch N".**
+**Status: APPROVED oleh owner (2026-09-30), semua batch. Batch 1–4 sudah diterapkan; tunggu owner bilang "mulai batch 5".**
 Tiap batch = satu rilis. Draft ini dihapus di rilis batch terakhir (sisa yang belum dibuat pindah ke `planning/FUTURE_PLANS.md`);
 sampai itu, batch yang sudah diterapkan ditandai **[DONE x.y.z]** di judulnya.
 
@@ -247,7 +247,7 @@ Live: hexagon di tema terang/gelap dan layar sempit; Builder Normal/Custom; tawa
 | Menagerie | Help with the animals | Nature | 2 | Siang, diawasi. |
 | Menagerie | Muck out the pens (paid) | Nature | 1 | +40 points per shift, maks. 2 seminggu. |
 | Forest | Fieldwork: tracks and signs | Nature | 2 | Siang; Winter pulang sore; curfew. |
-| Forest | Forage | Nature | 1 | Spring/Autumn. Batch 4: reagent. |
+| Forest | Forage | Nature | 1 | Batch 4: reagent Spring/Autumn 2, Summer 1, Winter 0. |
 | Forest Clearing | Gather clearing blooms | Nature | 1 | Batch 4: reagent langka, layu besok. |
 | Fishing House | Fish the pond or the lake | Nature | 1 | Fishing Club atau ikut anggota. |
 | The Mall (studios) | Dance and deportment / Music practice | Society | 2 | Bayar jam studio (15). |
@@ -297,7 +297,7 @@ INDEX §5, §7.
 
 ---
 
-## Batch 4 — Mesin crafting + kerajinan magic (1.28.0)
+## Batch 4 — Mesin crafting + kerajinan magic (1.28.0) [DONE 1.28.0]
 
 **Tujuan.** Kegiatan yang butuh keahlian punya hasil nyata, dan hasilnya bergantung pada Craft.
 

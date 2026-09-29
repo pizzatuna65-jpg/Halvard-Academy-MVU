@@ -289,6 +289,9 @@ export const Schema = z.object({
   Practice: z.array(z.any().transform(v => typeof v === 'object' && v !== null
     ? { Action: s(v.Action).slice(0, 100), Subject: s(v.Subject).slice(0, 80), With: s(v.With).slice(0, 80), Aim: s(v.Aim).slice(0, 120) }
     : { Action: s(v).slice(0, 100), Subject: '', With: '', Aim: '' })).prefault([]).catch([]),
+  Craft_sales: z.array(z.any().transform(v => typeof v === 'object' && v !== null
+    ? { Item: s(v.Item).slice(0, 100), Qty: Math.round(n(v.Qty, 1, 99, 1)) }
+    : { Item: s(v).slice(0, 100), Qty: 1 })).prefault([]).catch([]),
 
   // 1.3.0: what earned or cost reputation this reply (narrator), training sessions (narrator), one-use perks spent (narrator);
   // the engine applies them and empties the lists
@@ -358,6 +361,8 @@ export const Schema = z.object({
     missed: z.array(z.string()).prefault([]).catch([]),        // 1.12.0: reminders of what the last update may have left out (engine 8l, <now>)
     fortune: z.any().prefault(null).catch(null),                 // 1.9.8: the Fortune roll for the next reply { roll, fail, part, mods, active }, engine-written for <now>
     practice: z.any().prefault([]).catch([]),
+    craft: z.any().prefault([]).catch([]),                        // 1.28.0: available recipes and their next-turn results
+    craft_sale: z.any().prefault(null).catch(null),                // 1.28.0: Apothecary's remaining weekly buying capacity
     prof_offer: Bool(false),
     since: z.any().prefault([]).catch([]), maybe: z.any().prefault([]).catch([]),   // 1.6.0 (N4): Next plans met again / that may bring someone here (engine)
     xold: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.6.1 (N5): Extras records that left the full list; given back if they return (engine)
@@ -377,6 +382,7 @@ export const Schema = z.object({
     sleep: z.any().prefault(null).catch(null),
     daily: z.record(z.string(), z.any()).prefault({}).catch({}),
     prof: z.any().prefault(null).catch(null),
+    craft: z.any().prefault(null).catch(null),                     // 1.28.0: clearing bloom's harvest day
     profv: Int(0, 1, 0),
     initiative: z.any().prefault(null).catch(null),              // 1.7.7 (FP1): latched day/week, chosen NPC and per-NPC cooldown
     auth: Str(''),   // 'builder' only inside a Student Builder patch; lets it write the read-only fields once
