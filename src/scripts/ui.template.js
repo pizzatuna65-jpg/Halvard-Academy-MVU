@@ -1386,7 +1386,7 @@ function pOverview(S) {
   <dl class="kv"><dt>Pronouns</dt><dd>${esc(P.Pronouns || '—')}</dd><dt>Age</dt><dd>${esc(P.Age)}</dd>
   <dt>Race</dt><dd>${esc(P.Race)}${P.Beast_type ? ` (${esc(P.Beast_type)})` : ''}</dd><dt>Background</dt><dd>${esc(P.Background || '—')}</dd>
   <dt>Birthday</dt><dd>${esc(P.Birthday || '—')}</dd>
-  <dt>Club</dt><dd>${esc(P.Club || 'none yet')}</dd><dt>Combat roles</dt><dd>${esc(P.Combat_role || 'assigned at your first Practical Magic class')}</dd>
+  <dt>Club</dt><dd>${esc(P.Club || 'none yet')}</dd><dt>Student Council</dt><dd>${P.Council ? 'member · Saturday mornings' : 'not a member'}</dd><dt>Combat roles</dt><dd>${esc(P.Combat_role || 'assigned at your first Practical Magic class')}</dd>
   <dt>Goal</dt><dd>${esc(P.Goal || '—')}</dd><dt>Appearance</dt><dd>${esc(P.Appearance || '—')}</dd><dt>Personality</dt><dd>${esc(P.Personality || '—')}</dd>
   <dt>Now</dt><dd>${esc(`Month ${W.Month}, Week ${W.Week}, ${W.Day} ${W.Time}`)}, ${esc(W.Location)}</dd></dl></div>
   <div class="portrait">${pic ? `<img src="${esc(pic)}" alt="${esc(P.Name)}" data-fb="Picture not found" data-fbclass="ph">` : '<div class="ph">No picture yet</div>'}

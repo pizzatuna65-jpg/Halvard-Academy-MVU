@@ -3,6 +3,23 @@
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
 details: `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
 
+## v1.34.0 — Cohort 3 and Saturday Student Council (2026-10-01)
+
+Owner-approved `planning/DRAFT_cohort3_npcs.md` (now applied). Save fixture v1.33.0.
+- Seven new first-years arrive in campaign Year 3: Aurelian, William, Bruno, Bianca, Rigel, Topaz and Faye. Their full lore and
+  year-gated additions to existing NPCs are in `source_original/npc_lore_cohort3_2026-10-01/`; each has voice stages, bond and
+  Rank 8 branches, rewards, mood, gifts, birthday, Rank 4 partners, Tension and curated connections. Bellatrix's family line
+  names Rigel, and Wearing now explicitly includes a spirit wearing its pact-holder's own body. William's monthly serial is sold
+  at Quillfeather's. Portraits are not yet supplied; the UI uses initials.
+- Student Council membership is independent of an afternoon club. Members meet Saturday 10:00–12:00 in the Chamber in place of
+  Study Hall, unless a required F remedial takes priority. Year 2 candidates are Caralynn and Percival, or {{user}} when a Council
+  member at the start of that year; Year 3 candidates are Hadrian and Nerys. The nominee pair stays stable and an elected
+  {{user}} can take office. The Council roster feeds the Chamber and club directory.
+- Dante returns to Groundskeeping, Florian to Tea Club, and Dante's Rank 5 gift is again the Groundskeeper's Lodge key. Existing
+  Council safety card saves migrate to the Lodge key with uses preserved.
+- `python tools/build_all.py --lore`, `npm test` (all suites) and `npm run lint` pass. Connected SillyTavern checks are in
+  `docs/TEST_CHECKLIST.md`.
+
 ## v1.33.0 — Classes and teachers: Practical Magic by role, eight new teachers, free periods (2026-10-01)
 
 Owner-approved `planning/DRAFT_classes_and_teachers.md` (FP6, Grup C; drafted teacher by teacher with the owner, now deleted).
@@ -205,3 +222,4 @@ it". Decision touched: "Map cards" (the Connected to row is gone).
 - **v1.31.1 (2026-09-30):** Florian is a regular at the Spirit Path.
 - **v1.32.0 (2026-09-30):** Dorm Days on Sundays, Final Ranking Monday, a longer Academy Trip, the Kingdom Competition in the capital; "Coming up" in `<now>`; the Inventory panel.
 - **v1.33.0 (2026-10-01):** Classes and teachers: Practical Magic by combat role, eight new teachers, free periods, Dorm Competition role brackets.
+- **v1.34.0 (2026-10-01):** Seven Year 3 first-years, Saturday Student Council and elections, Dante's Lodge gift restored.

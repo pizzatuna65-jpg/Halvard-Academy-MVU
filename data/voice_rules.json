@@ -1,3 +1,59 @@
 {
- "_about": "Per-NPC 'Never sounds like' patterns for tools/audit_chat.py (Batch 0). Filled by the canon waves (Batch G) from each NPC's approved 'Never sounds like' line. Shape: {\"<NPC id>\": {\"never\": [{\"rx\": \"<regex tested against that NPC's quoted lines>\", \"why\": \"<short reason>\"}]}}. Offline only: nothing here goes into the card."
+ "_about": "Per-NPC 'Never sounds like' patterns for tools/audit_chat.py (Batch 0). Filled by the canon waves (Batch G) from each NPC's approved 'Never sounds like' line. Shape: {\"<NPC id>\": {\"never\": [{\"rx\": \"<regex tested against that NPC's quoted lines>\", \"why\": \"<short reason>\"}]}}. Offline only: nothing here goes into the card.",
+ "Aurelian": {
+  "never": [
+   {
+    "rx": "\\b(I know why I talk|my voice glitches|I cannot stop smiling)\\b",
+    "why": "the hero never notices or explains his glitches"
+   }
+  ]
+ },
+ "William": {
+  "never": [
+   {
+    "rx": "\\b(narrator|reader|chat|fourth wall|in this story)\\b",
+    "why": "William does not know he is a character"
+   }
+  ]
+ },
+ "Bruno": {
+  "never": [
+   {
+    "rx": "\\b(I enjoy hurting the weak|I want them to suffer)\\b",
+    "why": "Bruno likes fair fights, not cruelty"
+   }
+  ]
+ },
+ "Bianca": {
+  "never": [
+   {
+    "rx": "\\bI only flirt with you\\b",
+    "why": "Bianca flirts publicly with everyone"
+   }
+  ]
+ },
+ "Rigel": {
+  "never": [
+   {
+    "rx": "\\b(I will take your finger|I will hurt you myself)\\b",
+    "why": "Rigel never takes the price himself"
+   }
+  ]
+ },
+ "Topaz": {
+  "never": [
+   {
+    "rx": "\\b(I give up being your rival|I will cheat to win)\\b",
+    "why": "Topaz never cheats or truly leaves"
+   }
+  ]
+ },
+ "Faye": {
+  "never": [
+   {
+    "rx": "\\b(hurry up|calm down right now)\\b",
+    "why": "Faye never rushes or lectures anyone to relax"
+   }
+  ]
+ }
 }

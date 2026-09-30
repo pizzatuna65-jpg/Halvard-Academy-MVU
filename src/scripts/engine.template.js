@@ -67,7 +67,14 @@ const TIMETABLE = /*@@CAL_TIMETABLE@@*/{};
 const ENTR_BACK = '{{user}} is a returning student and the assigned senior guide: never sorted again; watches the speeches and sorting from the gallery, then tours 10:00–18:00 with the two new first-years recorded in Campus_State.Entrance_tour';
 const schedOf = (e, day) => (!e.s ? '' : typeof e.s === 'string' ? e.s : e.s[day] || '');
 const curfewHour = (e, day) => (e.curfew && typeof e.curfew === 'object' ? e.curfew[day] : e.curfew);
-const timetableFor = W => W.Month === 10 && W.Week === 3 && W.Day === 'Sat' ? [TIMETABLE.Sat[0], TIMETABLE.Sat[1], 'Student Council Election (Main Courtyard)'] : TIMETABLE[W.Day];
+const councilRemedial = (S, W) => !!S && Object.entries(S.Commitments || {}).some(([k, v]) => k.startsWith('Remedial ') && String(v.Due || '').includes(`M${W.Month} W${W.Week} Sat`));
+const timetableFor = (W, S) => {
+  const row = TIMETABLE[W.Day]; if (!row) return row;
+  const tt = [...row];
+  if (W.Day === 'Sat' && S && S.Player.Profile.Council && !councilRemedial(S, W)) tt[1] = 'Student Council (Student Council Chamber)';
+  if (W.Month === 10 && W.Week === 3 && W.Day === 'Sat') tt[2] = 'Student Council Election (Main Courtyard)';
+  return tt;
+};
 // monthly payout by dorm rank (lore: 300 bottom band ... 3,000 for rank 1). Bands between are tunable.
 const PAYOUT = [[1, 3000], [3, 2000], [10, 1200], [25, 800], [50, 500], [Infinity, 300]];
 // 1.15.0 (owner-approved planning/DRAFT_grades_exams.md): the engine marks every subject at each exam. Midterm slots from lore 232
@@ -349,9 +356,9 @@ const capRecord = (obj, max, dropFirst) => {                   // drop the oldes
   for (const k of order.slice(0, keys.length - max)) delete obj[k];
 };
 
-function periodOf(W, evs) {
+function periodOf(W, evs, S) {
   const [h] = W.Time.split(':').map(Number);
-  const tt = timetableFor(W);
+  const tt = timetableFor(W, S);
   const suspended = evs.find(e => e.noclass || e.home || e.lockdown);
   let p;
   if (!tt) p = 'Sunday (no classes)';
@@ -394,7 +401,7 @@ function nextUp(W, evs, S) {
     m = /^(.*?)\(about (\d{1,2}):(\d{2})\):?\s*(.*)$/.exec(p);
     if (m) items.push({ at: +m[2] * 60 + +m[3], what: cap((m[4] || m[1]).trim()), kind: 'event' });
   }
-  const tt = timetableFor(W), stop = evs.some(e => e.noclass || e.home || e.lockdown || e.away);
+  const tt = timetableFor(W, S), stop = evs.some(e => e.noclass || e.home || e.lockdown || e.away);
   if (tt && !stop) [8, 10, 13].forEach((h, i) => items.push({ at: h * 60, what: String(tt[i]).replace(/\s*\[[MD]\]/g, ''), kind: /^(Study Hall|Clubs)/.test(tt[i]) ? 'club' : 'class' }));
   const noCurfew = evs.some(e => e.lockdown || e.home || (e.nocurfew && W.Day === e.d[0])) || /^Away/.test(W._Curfew || '');
   if (!noCurfew) items.push({ at: (evs.map(e => curfewHour(e, W.Day)).find(Boolean) || 20) * 60, what: 'Curfew: back to your dorm', kind: 'curfew' });
@@ -611,10 +618,10 @@ const CAP_HOOKS = 15, CAP_BAG = 40, BOTTLE_BACK = 2;
 // Fill missing containers with their empty shape; existing values are never touched. Arrays are only set when missing.
 const SHAPE = {
   Scene: { Present: {} },
-  Player: { Profile: { Reputation: {} }, Vitals: {}, Injuries: {}, Wallet: { Points: 0, Coin: 0, Transactions: [] }, Academics: { Grades: {}, Exams: {} }, _Proficiency: {}, Conditions: {} },
+  Player: { Profile: { Council: false, Reputation: {} }, Vitals: {}, Injuries: {}, Wallet: { Points: 0, Coin: 0, Transactions: [] }, Academics: { Grades: {}, Exams: {} }, _Proficiency: {}, Conditions: {} },
   Magic: { _Techniques: {}, _Affinity: { Types: [], Dominant: '', Specialties: [], Preset: '' }, Active: {}, Casts: [], Pacts: {} },
   Hidden: { _True_magic: '', Known_by: [], Dove_attention: 0 },
-  Bonds: {}, Campus_State: { Entrance_tour: { Year: 0, Guide: '', FirstYears: [] }, Council: { Candidates: { '1': { First: 'Florian', Second: 'Dante' } }, Results: {}, President: 'Irene', VicePresident: 'Caspian', PresidentElect: '', VicePresidentElect: '' }, Events: {}, Rumours: [], Location_changes: {}, NPC_status: {}, New_relations: {}, Secrets_revealed: [], Graduated: [] },
+  Bonds: {}, Campus_State: { Entrance_tour: { Year: 0, Guide: '', FirstYears: [] }, Council: { Candidates: { '1': { First: 'Florian', Second: 'Dante' } }, Results: {}, President: 'Irene', VicePresident: 'Caspian', PresidentElect: '', VicePresidentElect: '', Members: ['Irene','Caspian','Florian','Dante'] }, Events: {}, Rumours: [], Location_changes: {}, NPC_status: {}, New_relations: {}, Secrets_revealed: [], Graduated: [] },
   Commitments: {}, Notices: {}, Letters: {}, Journal: [], Clues: {}, Mysteries: {},
   Competition: { Tier: '', Status: '', Placement: '', Team: [], Results: [] }, Projects: {},
   Trip: { Active: false, Destination: '', Companions: [], Note: '' }, Battle: { Active: false, Combatants: {} }, _Log: [],
@@ -731,12 +738,13 @@ function stepMigrate(c) {
   for (const X of both) {
     const P = X._Perks;
     if (!_.isPlainObject(P)) continue;
-    const oldDanteGift = P["Groundskeeper's Lodge key"];       // Dante's Rank 5 gift before its rename
+    const oldDanteGift = P['Council safety card'];
     if (oldDanteGift) {
-      if (!P['Council safety card']) P['Council safety card'] = { ...oldDanteGift, Effect: REW.npcs.Dante.gift.text };
-      delete P["Groundskeeper's Lodge key"];
+      if (!P["Groundskeeper's Lodge key"]) P["Groundskeeper's Lodge key"] = { ...oldDanteGift, Effect: REW.npcs.Dante.gift.text };
+      delete P['Council safety card'];
     }
     if (P['Florian (Rank 10)']) P['Florian (Rank 10)'].Effect = REW.npcs.Florian.r10.text;
+    if (X.Player.Profile.Club === 'Student Council') { X.Player.Profile.Council = true; X.Player.Profile.Club = ''; }
   }
   // 1.3.0: a pre-1.3.0 save's Public / Dorm meters become Academy / Student XP once
   if (S.$eng.repv !== 1) {
@@ -784,7 +792,10 @@ function stepGuards(c) {
   // 1.16.1 (audit B1): the club in the club list's words, before attendance (5d) reads it
   {
     const P = S.Player.Profile, raw = String(P.Club || ''), c = canonClub(raw);
-    P.Club = c;
+    if (c === 'Student Council') {
+      P.Council = true;
+      P.Club = hasB && B.Player.Profile.Club !== 'Student Council' ? B.Player.Profile.Club : '';
+    } else P.Club = c;
     const was = hasB ? canonClub(((B.Player || {}).Profile || {}).Club) : c;
     if (c && c !== was && !Object.keys(CLASS.clubs || {}).includes(c)) log.push(`Club "${c}" is not a club on record (${Object.keys(CLASS.clubs || {}).join(', ')}); Saturday club time is only counted for one of them.`);
   }
@@ -933,7 +944,7 @@ function stepTime(c) {
   const bday = bd && +bd[1] === S.World.Month && +bd[2] === S.World.Week && bd[3] === S.World.Day;
   // 1.3.1: each event with today's plan (times from its lore entry), so the narrator runs the day on schedule
   S.World._Event_today = [...evs.map(e => (schedOf(e, S.World.Day) ? `${e.t} — ${schedOf(e, S.World.Day)}` : e.t) + (e.entr && (S.World.Year > 1 || num(S.Player.Profile.Year, 1) > 1) ? ` (${ENTR_BACK})` : '')), ...(bday ? [`${S.Player.Profile.Name || 'Your'}'s birthday`] : [])].join(' | ');
-  S.World._Period = periodOf(S.World, evs);
+  S.World._Period = periodOf(S.World, evs, S);
   S.World._Curfew = curfewOf(S.World, evs, S);
   // F20: today's happening (visible from the day's start until its window closes)
   if (!(S.$eng.seed > 0)) S.$eng.seed = (hash32(String(seedHint || ''), stamp({ ...S.World, Year: 1 }), String(S.Player.Profile.Name || '')) % 2147483646) + 1;
@@ -955,12 +966,15 @@ function stepTime(c) {
   {
     const C = S.Campus_State.Council, BC = hasB && B.Campus_State && B.Campus_State.Council || {};
     C.Candidates['1'] = { First: 'Florian', Second: 'Dante' };
+    const playerName = S.Player.Profile.Name || '{{user}}';
+    if (S.World.Year >= 2 && !C.Candidates['2']) C.Candidates['2'] = { First: 'Caralynn', Second: S.Player.Profile.Council ? playerName : 'Percival' };
+    if (S.World.Year >= 3 && !C.Candidates['3']) C.Candidates['3'] = { First: 'Hadrian', Second: 'Nerys' };
     for (const [key, pair] of Object.entries(C.Candidates)) {
       const y = Number(key), prev = (BC.Candidates || {})[key];
       if (key === '1') continue;
       if (prev && prev.First && prev.Second) { C.Candidates[key] = prev; continue; }
       const ids = [pair.First, pair.Second].map(x => NPC_ALIAS[String(x).toLowerCase()] || x);
-      const eligible = id => !!STUDENTS[id] && (STUDENTS[id][1] || 1) <= y && yearOf(id, y) >= 1 && yearOf(id, y) <= 2;
+      const eligible = id => id === playerName ? y === 2 && pair.Second === playerName : !!STUDENTS[id] && (STUDENTS[id][1] || 1) <= y && yearOf(id, y) >= 1 && yearOf(id, y) <= 2;
       if (!Number.isInteger(y) || y < 2 || ids[0] === ids[1] || !ids.every(eligible)) {
         delete C.Candidates[key];
         if (pair.First || pair.Second) log.push(`Council candidates for Year ${key} must be two different named students eligible to attend the next year.`);
@@ -990,6 +1004,11 @@ function stepTime(c) {
     C.VicePresident = S.World.Month === 12 ? '' : cur.VicePresident || '';
     C.PresidentElect = elect.President || '';
     C.VicePresidentElect = elect.VicePresident || '';
+    C.Members = S.World.Month === 12 ? [] : S.World.Year === 1 ? ['Irene','Caspian','Florian','Dante']
+      : S.World.Year === 2 ? [C.President, C.VicePresident, 'Caralynn', C.Candidates['2']?.Second]
+      : [C.President, C.VicePresident, 'Hadrian', 'Nerys', 'Bianca'];
+    if (S.Player.Profile.Council && S.World.Month !== 12) C.Members.push(playerName);
+    C.Members = _.uniq(C.Members.filter(Boolean));
   }
   // Entrance tour: a reproducible roster-first assignment, saved once so swipes and scene changes keep the same trio.
   // In Year 1 {{user}} is one of the two first-years; in later years {{user}} is the senior guide.
@@ -1580,6 +1599,8 @@ function stepSchoolWeek(c) {
               S.$ui.absent = { cls: cell[0], teacher: tch || '' };
               log.push(`{{user}} skipped ${cell[0]} (${TIMES[p]}); Academy reputation -2.`);
             }
+          } else if (cell[3] === 'study' && Wd.Day === 'Sat' && Pf.Council && !councilRemedial(S, Wd)) {
+            ATT.c[key] = num(ATT.c[key], 0) + share(['student council chamber']);
           } else if (cell[3] === 'clubs' && Pf.Club && !elect) {
             const v = (CLASS.clubs || {})[Pf.Club] || [];
             ATT.c[key] = num(ATT.c[key], 0) + share(v);
@@ -1698,7 +1719,10 @@ function stepSchoolWeek(c) {
       }
       // minutes: study places outside lessons (Saturday Study Hall counts), halves for the start and end of the update
       if (hasB && elapsed > 0 && elapsed <= 360 && restedAs !== 'sleep') {   // 1.12.0: Resting is reset in section 4; read what it was
-        const SP = ['main library', 'study rooms', 'archive'], f = (SP.includes(pkB) ? 0.5 : 0) + (SP.includes(pkA) ? 0.5 : 0);
+        const SP = ['main library', 'study rooms', 'archive'];
+        const atStudy = (X, pk) => SP.includes(pk) || (Pf.Council && pk === 'student council chamber' && X.World.Day === 'Sat'
+          && hm(X.World.Time) >= 600 && hm(X.World.Time) < 720 && !councilRemedial(S, X.World));
+        const f = (atStudy(hasB ? B : S, pkB) ? 0.5 : 0) + (atStudy(S, pkA) ? 0.5 : 0);
         let lesson = 0;
         for (let d = dayNoB; d <= dayNo; d++) {
           const Wd = fromAbs(d * DAY_MIN), row = CLASS.tt && CLASS.tt[Wd.Day];

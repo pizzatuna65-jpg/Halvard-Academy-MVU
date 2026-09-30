@@ -70,13 +70,28 @@ def cohort_additions():
 YEAR_GATE = "<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= {y}) {{ _%>\n{body}\n<%_ }} _%>"
 COHORT_ROSTER = {2: ['Linus (Viridian, M, ash-brown, loud, Academy Newspaper, the Tally)', 'Maple (Sky, red panda B, F, russet red, gentle, Greater Spirit)',
                      'Nerys (Fire, Elf, F, dark blue, deadpan, House Silvarenne)', 'Hadrian (Light, Elf, M, ash grey, shameless, Specialized Magic Club)',
-                     'Wren (Fire, F, blonde, earnest, Deaf, Fishing Club)', 'Tsubaki (Light, wolf B, F, white, oblivious, Royal Mage, Duelling Club)']}
+                     'Wren (Fire, F, blonde, earnest, Deaf, Fishing Club)', 'Tsubaki (Light, wolf B, F, white, oblivious, Royal Mage, Duelling Club)'],
+                 3: ['Aurelian (Fire, Elf, M, honey-gold, hero, Basketball Club)', 'William (Sky, crow B, M, dark teal, dramatic, Board Game Club)',
+                     'Bruno (Fire, M, blue-black, brawler, Duelling Club)', 'Bianca (Light, F, blue-black, social, Swimming Club, Council)',
+                     'Rigel (Sky, rabbit B, M, white, Ardenne, Festival Committee)', 'Topaz (Light, Elf, F, orange, rival, follows {{user}} into their club)',
+                     'Faye (Viridian, Elf, F, periwinkle, calm, Walking Club)']}
 # Regulars entries (by the place in "Regulars — <place>") that gain a cohort's names, from each new NPC's Haunts
 COHORT_REGULARS = {2: {'Announcement Room': ['Linus'], 'The Sparring Pavilion': ['Linus', 'Tsubaki'], 'Combat Grounds': ['Linus', 'Maple', 'Tsubaki'],
                        'Archive': ['Linus'], 'Common Rooms and Canteen': ['Linus', 'Nerys', 'Hadrian', 'Wren'], 'Gardens': ['Maple', 'Nerys'],
                        'Forest': ['Maple', 'Nerys'], 'Sky Dormitory': ['Maple'], 'Light Dormitory': ['Hadrian'], 'Fire Dormitory': ['Wren'],
                        'Mail Tower': ['Nerys'], "Founder's Park": ['Nerys'], 'Club Rooms': ['Hadrian', 'Wren'], 'Workshop': ['Hadrian'],
-                       'Boathouse and Lake': ['Wren'], 'Main Library': ['Wren'], 'Observation Tower': ['Tsubaki'], 'Grassy Field and Hills': ['Tsubaki']}}
+                       'Boathouse and Lake': ['Wren'], 'Main Library': ['Wren'], 'Observation Tower': ['Tsubaki'], 'Grassy Field and Hills': ['Tsubaki'],
+                       'Forest Clearing': ['Maple']},
+                   3: {'Sports Field and Gymnasium': ['Aurelian', 'Bianca'], 'Fire Dormitory': ['Aurelian', 'Bruno'],
+                       'Combat Grounds': ['Aurelian', 'Bruno', 'Topaz'], 'Announcement Room': ['Aurelian'],
+                       'Common Rooms and Canteen': ['Aurelian', 'Bruno', 'Bianca', 'Topaz'],
+                       'The Sparring Pavilion': ['Bruno', 'Topaz', 'William'], 'Student Council Chamber': ['Bianca', 'Hadrian', 'Nerys'],
+                       'Light Dormitory': ['Bianca', 'Topaz'], 'Courtyards': ['Bianca'],
+                       'Boathouse and Lake': ['Rigel'], 'Sky Dormitory': ['Rigel', 'William'], 'The Mall': ['Rigel', 'William'],
+                       'The Cathedral': ['Rigel'], 'Rooftop': ['William'], 'Club Rooms': ['William'],
+                       'Main Library': ['William'], 'Spirit Path': ['William'],
+                       'Viridian Dormitory': ['Faye'], 'Grassy Field and Hills': ['Faye'],
+                       'Meditation Rooms': ['Faye'], 'Menagerie': ['Faye']}}
 def apply_cohort(N, ejs):
     byname = {e['comment'].replace('NPC — ', '').strip(): u for u, e in N.items() if e['comment'].startswith('NPC — ')}
     for full, y, lines in cohort_additions():
@@ -87,8 +102,9 @@ def apply_cohort(N, ejs):
             if not n: e['content'] += '\n' + '\n'.join(lines)
             continue
         e['content'] += '\n' + (YEAR_GATE.format(y=y, body='\n'.join(lines)) if ejs else '\n'.join(f'[from Year {y}] {l}' for l in lines))
-    for y, segs in COHORT_ROSTER.items():   # the roster's Year 1 line (uid 97); the card's roster EJS places them by arrival year
-        rep(N[97], "Alyssa (Sky, F, burgundy, quiet).", "Alyssa (Sky, F, burgundy, quiet); " + '; '.join(segs) + '.')
+    # The roster's source Year 1 line includes all incoming names; roster_ejs sorts them by arrival year.
+    segs = [seg for year in sorted(COHORT_ROSTER) for seg in COHORT_ROSTER[year]]
+    rep(N[97], "Alyssa (Sky, F, burgundy, quiet).", "Alyssa (Sky, F, burgundy, quiet); " + '; '.join(segs) + '.')
     regs = {e['comment'].replace('Regulars — ', '').strip(): u for u, e in N.items() if e['comment'].startswith('Regulars — ')}
     for y, R in COHORT_REGULARS.items():
         for place, ids in R.items():
@@ -263,7 +279,7 @@ def apply_lore_edits(C, N):
     C[66]['key'] = list(dict.fromkeys(C[66]['key'] + list(shops)))
 
     C[6]['content'] = (
-        "The Student Council meets as a club on Saturdays, 13:00-16:00, in the Student Council Chamber, except when an academy event replaces clubs. "
+        "The Student Council meets on Saturday mornings, 10:00-12:00, in the Student Council Chamber, in place of its members' Study Hall; members keep their own clubs in the 13:00-16:00 block. Students with an F attend their required remedial instead. "
         "It has a President, a Vice President, and members from each of the four dorms; there is no fixed membership limit. "
         "Together they handle club administration, events, student discipline, cross-dorm mediation, and speaking for students to staff.\n"
         "The President is elected each year in Month 10 Week 3: campaigning Monday-Thursday, a debate after Friday classes in the Seminar Rooms, "
@@ -274,17 +290,26 @@ def apply_lore_edits(C, N):
         key=['Student Council Election', 'Council election', 'presidential election', 'election campaign'],
         content=("[Student Council Election]\n"
                  "When: Month 10 Week 3, Monday through Saturday. The election chooses next year's Student Council President and Vice President.\n"
-                 "Campaign, Monday-Thursday: Classes run as usual. The serving Council nominees campaign outside class through dorm conversations, brochures, posters and public promises. Irene and Caspian oversee the Year 1 election; campaigning does not transfer their authority.\n"
+                 "Campaign, Monday-Thursday: Classes run as usual. The serving Council nominees campaign outside class through dorm conversations, brochures, posters and public promises. The current President and Vice President oversee the election; campaigning does not transfer their authority.\n"
+                 "<%_ { const _y = Number(getvar('stat_data.World.Year')) || 1, _c = getvar('stat_data.Campus_State.Council') || {}, _p = (_c.Candidates || {})[String(_y)] || {}; if (_y === 1) { _%>\n"
                  "Year 1 nominees: Florian Villeneuve of Sky and Dante Kleinn of Light, both second-years and Council members since the start of the year. Florian promises visible results and stronger club support; Dante promises consistent rules and safer students.\n"
+                 "<%_ } else if (_y === 2) { const second = _p.Second === (getvar('stat_data.Player.Profile.Name') || '{{user}}') ? '{{user}}' : 'Percival Applethorne'; const dorm = second === '{{user}}' ? (getvar('stat_data.Player.Profile.Dorm') || 'their dorm') : 'Viridian'; _%>\n"
+                 "Year 2 nominees: Caralynn Veyturone of Fire and <%- second %> of <%- dorm %>, both second-years and Council members since the start of the year. Caralynn promises a Halvard the whole kingdom talks about: bigger festivals, a proper stage and the academy's name in every newspaper. <%- second === '{{user}}' ? '{{user}} writes their own platform.' : 'Percival promises a code of chivalry for every student: nobody left behind, the weak protected, and a knight’s oath at every Entrance Event.' %>\n"
+                 "<%_ } else { _%>\n"
+                 "Year 3 nominees: Hadrian Quelloris of Light and Nerys Silvarenne of Fire, both second-years and Council members since the start of the year. Hadrian promises efficiency: fewer meetings, shorter queues for the deserving, and rules that exist for a reason. Nerys promises, in the same flat voice, a weekly bread-sculpture competition and a Canteen Lucky Roll she has baked herself; at the debate she answers every question in flawless court speech.\n"
+                 "<%_ } } _%>\n"
                  "Debate, Friday: Classes run as usual. After the last class, 16:00-18:00, the nominees debate in the Seminar Rooms and answer students' questions.\n"
-                 "Voting, Saturday: Morning Etiquette and Study Hall run as usual. The 13:00-16:00 club block is replaced academy-wide by private presidential voting in the Main Courtyard; no ordinary club meeting takes place that afternoon.\n"
+                 "Voting, Saturday: Morning Etiquette runs as usual. Council members meet 10:00-12:00 in place of Study Hall, unless required to attend remedial. The 13:00-16:00 club block is replaced academy-wide by private presidential voting in the Main Courtyard; no ordinary club meeting takes place that afternoon.\n"
                  "Results, Saturday: After the ballots are counted, the result is announced in the Main Courtyard. The winner becomes President-elect and names the losing candidate Vice President-elect. {{user}} has one vote, not automatic control of the result.\n"
-                 "Handover: Irene remains President and Caspian Vice President until Year 1 Graduation; their successors take office at Year 2 Month 1 Week 1. Later elections use eligible named students still attending next year."))
-    rep(N[287], 'Florian, ', '')
+                 "Handover: The serving President and Vice President remain in office through Graduation; their successors take office at the start of the next school year."))
     rep(N[290], 'Irene, Caspian.', 'Irene, Caspian, Florian, Dante.')
-    rep(N[313], 'Dante, Lenna.', 'Lenna.')
+    rep(N[328], 'otherwise only its own students.', 'Castor and Percival come here often; otherwise only its own students.')
+    rep(N[313], 'Dante, Lenna.', 'Dante, Lenna, Vera.')
     rep(N[97], 'Florian (Sky, M, turquoise, arrogant, #3)', 'Florian (Sky, M, turquoise, arrogant, #3, Council member)')
     rep(N[97], 'Dante (Light, M, black-white, fatherly)', 'Dante (Light, M, black-white, fatherly, Council member)')
+    rep(C[36], 'Wearing†: binding a spirit into a living person.', "Wearing†: binding a spirit into a living person, another's body or one's own; the same when the spirit does it under a pact.")
+    rep(N[252], 'Family: Youngest child of the Ardenne family, the house behind the luxury equipment brand. Money has never been something she thinks about.',
+        'Family: Second-youngest child of the Ardenne family, the house behind the luxury equipment brand. Money has never been something she thinks about. Her little brother Rigel, two years younger, is the youngest; she has treated him as her favourite toy since he could walk, and nobody else is allowed to touch him.')
     rep(C[52], "Spent mana makes the air shiver at dusk.",
         "Spent mana makes the air shiver at dusk. Beside the rings stands the Sparring Pavilion, the one building the four training areas share: equipment store, rest area, and the Duelling Club's headquarters.")
     C[52]['key'] = C[52]['key'] + ['Sparring Pavilion']
@@ -710,8 +735,8 @@ def batch3_magic_canon(C, N):
     """Apply the public club name to both exports after all cohort/calendar edits."""
     for D in (C, N):
         for e in D.values():
-            e['content'] = e['content'].replace('Duelling Club', 'Magic Duelling Club')
-            e['key'] = [k.replace('Duelling Club', 'Magic Duelling Club') for k in e.get('key', [])]
+            e['content'] = re.sub(r'(?<!Magic )Duelling Club', 'Magic Duelling Club', e['content'])
+            e['key'] = [re.sub(r'(?<!Magic )Duelling Club', 'Magic Duelling Club', k) for k in e.get('key', [])]
     rep(C[132], 'Club venues: Duelling – Combat Grounds', 'Club venues: Magic Duelling Club – Combat Grounds')
     rep(C[132], 'Walking times are measured FROM Main Courtyard', 'Ordinary walking estimates (minutes) are measured FROM Main Courtyard')
     # 1.24.2 (owner): every year's Lecture Hall floor has Study Rooms (and lockers), so second- and third-years have their own

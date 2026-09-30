@@ -1,1 +1,4 @@
-[Regulars — Viridian Dormitory] Kuroo (Dorm Head, lives here); otherwise only its own students.
+[Regulars — Viridian Dormitory] Kuroo (Dorm Head, lives here); Castor and Percival come here often; otherwise only its own students.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
+From campaign Year 3 also: Faye.
+<%_ } _%>

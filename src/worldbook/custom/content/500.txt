@@ -15,6 +15,7 @@ Player:
     Year: 1
     Dorm: Unsorted
     Dorm_rank: 0
+    Council: false
   Vitals:
     HP: 100
     HP_max: 100
@@ -50,6 +51,7 @@ Campus_State:
     VicePresident: Caspian
     PresidentElect: ""
     VicePresidentElect: ""
+    Members: [Irene, Caspian, Florian, Dante]
   Events: {}
   Rumours: []
   Location_changes: {}

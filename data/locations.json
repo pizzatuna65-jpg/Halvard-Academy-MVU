@@ -956,12 +956,15 @@
   "vibe": "scarred earth, charged air.",
   "has_secret": false,
   "regulars": [
+   "Aurelian",
+   "Bruno",
    "Florian",
    "Gareth",
    "Gavlan",
    "Linus",
    "Maple",
    "Sophia",
+   "Topaz",
    "Tsubaki"
   ],
   "connections": [
@@ -1382,6 +1385,7 @@
    "Irene",
    "Layla",
    "Magnus",
+   "William",
    "Wren",
    "Zara"
   ],
@@ -1869,7 +1873,10 @@
   "has_secret": false,
   "regulars": [
    "Anya",
+   "Aurelian",
+   "Bianca",
    "Bobby",
+   "Bruno",
    "Cedric",
    "Etnie",
    "Hadrian",
@@ -1880,6 +1887,7 @@
    "Nerys",
    "Percival",
    "Ruby",
+   "Topaz",
    "Valentin",
    "Wren"
   ],
@@ -1936,7 +1944,10 @@
   "has_secret": false,
   "regulars": [
    "Anya",
+   "Aurelian",
+   "Bianca",
    "Bobby",
+   "Bruno",
    "Cedric",
    "Etnie",
    "Hadrian",
@@ -1947,6 +1958,7 @@
    "Nerys",
    "Percival",
    "Ruby",
+   "Topaz",
    "Valentin",
    "Wren"
   ],
@@ -2309,8 +2321,10 @@
    "Althair",
    "Caralynn",
    "Dorian",
+   "Rigel",
    "Ruby",
-   "Trixie"
+   "Trixie",
+   "William"
   ],
   "connections": [
    "courtyards",
@@ -2460,11 +2474,13 @@
    "Bobby",
    "Caralynn",
    "Ezrel",
+   "Florian",
    "Hadrian",
    "Kanae",
    "Kuroo",
    "Ruby",
    "Trixie",
+   "William",
    "Wren"
   ],
   "connections": [
@@ -2606,10 +2622,13 @@
   "vibe": "cramped, ink, cold tea.",
   "has_secret": false,
   "regulars": [
+   "Bianca",
    "Caspian",
    "Dante",
    "Florian",
-   "Irene"
+   "Hadrian",
+   "Irene",
+   "Nerys"
   ],
   "connections": [
    "club_rooms"
@@ -2918,6 +2937,7 @@
   "regulars": [
    "Althair",
    "Anya",
+   "Bianca",
    "Dorian",
    "Trixie",
    "Valentin"
@@ -3027,6 +3047,8 @@
   "vibe": "grass, mud, shouting.",
   "has_secret": false,
   "regulars": [
+   "Aurelian",
+   "Bianca",
    "Percival",
    "Saffi"
   ],
@@ -3096,6 +3118,8 @@
   "vibe": "high roof, echoing.",
   "has_secret": false,
   "regulars": [
+   "Aurelian",
+   "Bianca",
    "Percival",
    "Saffi"
   ],
@@ -3157,6 +3181,8 @@
   "vibe": "sun on water, splashing, wet stone.",
   "has_secret": false,
   "regulars": [
+   "Aurelian",
+   "Bianca",
    "Percival",
    "Saffi"
   ],
@@ -3219,6 +3245,8 @@
   "vibe": "windy, open, quiet.",
   "has_secret": false,
   "regulars": [
+   "Aurelian",
+   "Bianca",
    "Percival",
    "Saffi"
   ],
@@ -3289,6 +3317,7 @@
   "vibe": "open sky, breezy.",
   "has_secret": false,
   "regulars": [
+   "Faye",
    "Saffi",
    "Tsubaki"
   ],
@@ -3423,6 +3452,7 @@
    "Anya",
    "Milena",
    "Ottavio",
+   "Rigel",
    "Sophia",
    "Wren"
   ],
@@ -3567,6 +3597,7 @@
   "vibe": "straw, musk, strange calls.",
   "has_secret": false,
   "regulars": [
+   "Faye",
    "Lenna",
    "Vallie"
   ],
@@ -3884,7 +3915,9 @@
   "vibe": "cut grass, oil, old tools.",
   "has_secret": false,
   "regulars": [
-   "Lenna"
+   "Dante",
+   "Lenna",
+   "Vera"
   ],
   "connections": [
    "reception_and_gatehouse",
@@ -4052,6 +4085,7 @@
   "regulars": [
    "Anselm",
    "Caspian",
+   "Faye",
    "Tristan"
   ],
   "connections": [
@@ -4276,6 +4310,7 @@
    "Anya",
    "Caspian",
    "Percival",
+   "Rigel",
    "Tristan"
   ],
   "connections": [
@@ -4443,6 +4478,7 @@
    "Baelin",
    "Idris",
    "Lenna",
+   "Maple",
    "Royhan"
   ],
   "connections": [
@@ -4479,6 +4515,7 @@
    "Aiden",
    "Alyssa",
    "Rei",
+   "William",
    "Zara"
   ],
   "connections": [
@@ -4780,6 +4817,8 @@
   "vibe": "hearth warmth, woodsmoke, stone.",
   "has_secret": false,
   "regulars": [
+   "Aurelian",
+   "Bruno",
    "Wren",
    "Yvette"
   ],
@@ -4853,8 +4892,10 @@
   "vibe": "sunlight through glass, pale stone.",
   "has_secret": false,
   "regulars": [
+   "Bianca",
    "Ezrel",
-   "Hadrian"
+   "Hadrian",
+   "Topaz"
   ],
   "connections": [
    "courtyards",
@@ -4937,7 +4978,9 @@
   "has_secret": false,
   "regulars": [
    "Maple",
-   "Ottavio"
+   "Ottavio",
+   "Rigel",
+   "William"
   ],
   "connections": [
    "courtyards",
@@ -5008,7 +5051,10 @@
   "vibe": "oak shade, rustling leaves, stone.",
   "has_secret": false,
   "regulars": [
-   "Kuroo"
+   "Castor",
+   "Faye",
+   "Kuroo",
+   "Percival"
   ],
   "connections": [
    "courtyards",
@@ -5128,6 +5174,7 @@
   "vibe": "cramped, warm lamplight, sheet music and newsprint.",
   "has_secret": false,
   "regulars": [
+   "Aurelian",
    "Caralynn",
    "Castor",
    "Linus",
@@ -5298,11 +5345,14 @@
   "vibe": "sweat, liniment, chalk dust, tired laughter.",
   "has_secret": false,
   "regulars": [
+   "Bruno",
    "Caspian",
    "Gavlan",
    "Linus",
    "Sophia",
-   "Tsubaki"
+   "Topaz",
+   "Tsubaki",
+   "William"
   ],
   "connections": [
    "sports_field",
@@ -5343,6 +5393,7 @@
    "Anya",
    "Milena",
    "Ottavio",
+   "Rigel",
    "Sophia",
    "Wren"
   ],
@@ -5417,7 +5468,8 @@
   "regulars": [
    "Florian",
    "Royhan",
-   "Ruby"
+   "Ruby",
+   "William"
   ],
   "connections": [
    "gymnasium",

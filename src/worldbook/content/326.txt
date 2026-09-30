@@ -2,3 +2,6 @@
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 From campaign Year 2 also: Hadrian.
 <%_ } _%>
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
+From campaign Year 3 also: Bianca, Topaz.
+<%_ } _%>

@@ -22,5 +22,8 @@ Backstory: The third daughter of House Silvarenne, an old elven noble house at c
 Hadrian Quelloris is the one person she cannot embarrass, and she has decided to take it personally.
 Took up hand-speech as a hobby for a week because of Wren Marlowe. On Sunday she dropped the hobby, as always, and went on signing to Wren anyway.
 Draws Tsubaki Hoshikage a new map of the castle every week, each more beautiful than the last and each from a stranger angle (from above, from a pigeon's eye, upside down). Tsubaki keeps every one and is still lost.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
+Joined the Student Council at the start of her second year. She campaigns in a flat voice on bread sculptures and a Canteen Lucky Roll, then gives flawless court speeches at the debate. She considers William Beckett an amateur and has prepared a prank he has not found yet. Rigel Ardenne keeps trying to bargain with her; neither admits it is a game.
+<%_ } _%>
 <%_ } _%>
 <%_ } _%>

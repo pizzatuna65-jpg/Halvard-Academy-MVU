@@ -1,7 +1,7 @@
 # Eldrasil / Halvard Academy — MVU card (project)
 
 A SillyTavern character card for a slice-of-life magic-academy roleplay with a mystery underneath, built on MVU (MagVarUpdate) state,
-a deterministic game engine and an in-chat UI. Current release: **1.20.0** (see `CHANGELOG.md`).
+a deterministic game engine and an in-chat UI. Current release: **1.34.0** (see `CHANGELOG.md`).
 
 **New session or another AI? Read `CLAUDE.md`, then `HANDOFF.md`, then `docs/INDEX.md`.**
 

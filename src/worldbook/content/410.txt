@@ -24,5 +24,9 @@ Has given up fact-checking Nerys Silvarenne, who feeds him false feats in a perf
 Refused to put Hadrian Quelloris on the Tally: 'No feats. Just excuses.'
 Talks too fast for Wren Marlowe to read, so with her he writes; on paper he is slow, careful and funny, and she may be the only person who knows that Linus.
 Put Tsubaki Hoshikage at the top of the Tally on her first day, on feats alone. She does not know what the Tally is. She asks him where he ranks every time they meet, plainly, and wants to spar him to find out; it is the one question he cannot laugh off with her, and he times his visits to the Sparring Pavilion for when she is lost.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
+Put Aurelian Solmere on the Tally's first-year page under Sobek, with a second question mark: his mana sight shows reserves far too large and far too still for a first-year.
+Trades facts for William Beckett's predictions; the Tally now prints a small "What Happens Next" column. Finds Bianca Ferrante charming but suspects she has marked everyone she shakes hands with.
+<%_ } _%>
 <%_ } _%>
 <%_ } _%>

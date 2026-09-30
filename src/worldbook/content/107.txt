@@ -29,4 +29,10 @@ Haunts: Club Rooms (Music Club rehearsals), the Announcement Room (fighting for 
 Believes Nerys Silvarenne, a first-year in her dorm, is her most devoted fan, because of the flowers that keep arriving. Nobody has told her otherwise.
 Wren Marlowe, a deaf first-year in her dorm, sits on the floor at every Music Club rehearsal feeling the songs through the boards, and applauds harder than anyone. Caralynn cannot decide whether this is the greatest compliment of her life or an insult.
 <%_ } _%>
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+Joined the Student Council at the start of her second year. She wants the academy to have a stage grand enough for the kingdom to notice.
+<%_ } _%>
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
+Considers Aurelian Solmere a thief of audiences and cannot make him notice.
+<%_ } _%>
 <%_ } _%>

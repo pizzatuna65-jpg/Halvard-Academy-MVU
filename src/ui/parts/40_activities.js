@@ -71,12 +71,14 @@ function acClubs(S) {
   const venueNames = c => c.venues.map(v => (DATA.locs[v] || { name: v }).name);
   const people = (c, withFollowers) => {
     // 1.0.3: graduates have left their clubs; incoming first-years are not members before they arrive
-    const ids = [...c.advisors, ...c.members.filter(m => !c.advisors.includes(m)), ...(withFollowers ? c.follows || [] : [])].filter(id => atHalvard(id, S));
-    const known = ids.filter(id => clubFieldOpen(id, S) || (withFollowers && (c.follows || []).includes(id)));
+    const ids = (c.name === 'Student Council' ? ((S.Campus_State || {}).Council || {}).Members || []
+      : [...c.advisors, ...c.members.filter(m => !c.advisors.includes(m)), ...(withFollowers ? c.follows || [] : [])]).filter(id => atHalvard(id, S));
+    const known = ids.filter(id => c.name === 'Student Council' || clubFieldOpen(id, S) || (withFollowers && (c.follows || []).includes(id)));
     const more = ids.length - known.length;
     return `${known.map(id => `<button class="who" data-open="npc:${esc(id)}">${avatar(id, S, 'av xs')}<span>${esc(nameOf(id, S))}${c.advisors.includes(id) ? ' (advisor)' : (c.follows || []).includes(id) ? ' (followed you in)' : ''}</span></button>`).join('')}${more > 0 ? `<span class="sub">+${more} you have not placed yet</span>` : ''}`;
   };
-  const meets = c => `Meets Saturday 13:00–16:00${c.practice ? '; also practises informally after 16:00 on other days' : ''}.${c.sport ? ' Magic is banned during play.' : ''}`;
+  const meets = c => c.name === 'Student Council' ? 'Meets Saturday 10:00–12:00 in place of Study Hall. Members keep their afternoon club; required remedial takes priority.'
+    : `Meets Saturday 13:00–16:00${c.practice ? '; also practises informally after 16:00 on other days' : ''}.${c.sport ? ' Magic is banned during play.' : ''}`;
   let h = '';
   if (mine) {
     const v0 = mine.venues[0];
@@ -86,11 +88,12 @@ function acClubs(S) {
       ${electionDay ? '' : `<button class="btn sm" data-fill="${esc(`I spend the afternoon at the ${mine.name}: `)}">Club time</button>`}</div></div>`;
   } else if (P.Club) h += `<div class="item mine"><div class="row"><span class="t">${esc(P.Club)}</span><span class="pill g">your club</span></div><div class="sub">A club not in the directory, founded or found in play.</div></div>`;
   else h += `<p class="lead">You have not joined a club. Clubs are the one place the four magic types mix freely, because recruitment happens before dorm loyalty settles.</p>`;
+  if (P.Council) h += `<div class="item mine"><div class="row"><span class="t">Student Council</span><span class="pill g">member</span></div><div class="sub">Saturday 10:00–12:00 · Student Council Chamber</div><div class="meta"><button class="btn sm" data-fill="I attend the Student Council meeting in the Chamber: ">Council meeting</button></div></div>`;
   if (electionDay) h += '<div class="warn">Student Council election: voting in the Main Courtyard replaces every club meeting this afternoon, 13:00–16:00.</div>';
   if (fest) { const n = daysTo(S, fest.di); if (n >= -1 && n <= 21) h += `<div class="warn">Club Festival ${n < 0 ? 'was yesterday' : n === 0 ? 'is today' : `in ${n} days`} (M3 W2, Fri afternoon and Sat): every club runs a stand in the Main Courtyard; one gold coin each to vote for the best stand.</div>`; }
-  h += `<h3>Directory</h3><div class="clubs">${(DATA.clubs || []).filter(c => c !== mine).map(c => `<div class="club"><b>${esc(c.name)}</b><div class="sub">${esc(venueNames(c).join(' · '))}${c.sport ? ' · sport, no magic in play' : ''}</div>
+  h += `<h3>Directory</h3><div class="clubs">${(DATA.clubs || []).filter(c => c !== mine).map(c => `<div class="club"><b>${esc(c.name)}</b><div class="sub">${esc(venueNames(c).join(' · '))}${c.sport ? ' · sport, no magic in play' : ''} · ${esc(meets(c))}</div>
     <div class="meta">${people(c, false)}</div>
-    <div class="meta">${!P.Club ? `<button class="btn sm" data-fill="${esc(`I go to the ${c.name} at ${venueNames(c)[0]} and ask about joining.`)}">Ask to join</button>` : ''}${c.venues[0] && !hereIs(S, c.venues[0]) ? `<button class="btn sm" data-go="${esc(c.venues[0])}">Go</button>` : ''}</div></div>`).join('')}</div>
+    <div class="meta">${(c.name === 'Student Council' ? !P.Council : !P.Club) ? `<button class="btn sm" data-fill="${esc(`I go to the ${c.name} at ${venueNames(c)[0]} and ask about joining.`)}">Ask to join</button>` : ''}${c.venues[0] && !hereIs(S, c.venues[0]) ? `<button class="btn sm" data-go="${esc(c.venues[0])}">Go</button>` : ''}</div></div>`).join('')}</div>
     <h3>Found your own</h3><p class="hint">A new club needs a teaching staff signature and five members; one teacher is responsible for it. The Student Council allocates rooms, and a new club gets whatever is left.</p>
     <button class="btn sm" data-fill="I want to found a new club: ">Start a club in the story</button>`;
   return h;

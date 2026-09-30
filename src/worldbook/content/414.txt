@@ -22,5 +22,8 @@ Relations: Professor Ottavio Bastiani, who runs the Fishing Club, answered her v
 Backstory: The daughter of a lamp-maker and a schoolteacher in a river town. Born deaf, she grew up in a house where everyone signed, and assumed the world did. The town school taught her otherwise: the other children mocked her voice, talked behind her back where she could not read them, and tore out her first ear-charm in the yard. She came to Halvard for a fresh start, where nobody knows her, and has decided that this time she will make friends if it takes every page in the notebook.
 Trauma: Laughter behind a covered mouth. When she sees it, she is back in the town schoolyard, and she smiles, and says "sorry" aloud, and leaves as soon as she can.
 Tsubaki Hoshikage looks straight at faces for too long and says exactly what she means, which makes her the easiest person at Halvard to read. Wren has been trying to teach her hand-speech for a month; Tsubaki can sign one word, "spar", and signs it wrong.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
+Reads Aurelian Solmere's lips and sees every speech clean and whole; she did not believe the others about his voice until they flinched. Bruno Ferrante makes sure nobody speaks over her, and Rigel Ardenne writes to her when he cannot sign a thought.
+<%_ } _%>
 <%_ } _%>
 <%_ } _%>

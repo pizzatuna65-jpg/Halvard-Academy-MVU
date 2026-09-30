@@ -1,1 +1,4 @@
 [Regulars — Forest Clearing] Lenna, Idris, Royhan, Baelin.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+From campaign Year 2 also: Maple.
+<%_ } _%>

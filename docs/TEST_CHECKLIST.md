@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.34.0 (Year 3 cohort and Student Council): the three checks in its section below.
 - v1.33.0 (classes and teachers): the four checks in its section below.
 - v1.32.0 (calendar moves, Coming up, Inventory): the three checks in its section below.
 - v1.31.0 (Spirit Path, restful places, activities): the four checks in its section below.
@@ -66,6 +67,16 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.34.0 — Year 3 cohort and Student Council
+
+1. Reach Year 3 M1 W1 and meet Aurelian, William, Bruno, Bianca, Rigel, Topaz and Faye: the roster, Cast Sheet, dossiers and
+   regulars reveal them only after arrival. Aurelian's inner truth stays narrator-only; William predicts patterns without revealing secrets.
+2. Join the Student Council while keeping an afternoon club. At Saturday 10:00–12:00 the bracelet and `<now>` point to the
+   Student Council Chamber, attendance and study time count there; a required F remedial takes priority. The afternoon club still meets.
+3. In a Council member's Year 2, verify Caralynn runs against {{user}} (otherwise Percival), record a vote after M10 W3 Saturday
+   16:00, and confirm the winner and losing candidate take President and Vice President at the start of Year 3. The Year 3 nominees
+   are Hadrian and Nerys; Bianca attends Council while keeping Swimming Club.
 
 ### v1.33.0 — Classes and teachers
 
@@ -196,7 +207,7 @@ new section at the top of **By release**, not as a new file.
 ### v1.20.0 — audit Batch 5 (engine refactor)
 
 1. Import the new PNG into the ongoing chat and continue from the v1.19.0 save for a few replies (a scene with an NPC, a purchase, a cast, sleeping to the next day). Nothing should look different: the refactor was proven output-identical offline. Check that no "Engine error" line appears in the Log and the browser console shows no `[Eldrasil engine]` error.
-2. If the chat started before 1.3.0 and Dante gave his Rank 5 gift: the Student file now lists "Council safety card", and the Log no longer repeats "_Perks is read-only" on every update.
+2. If Dante gave his Rank 5 gift in an older chat: the Student file now lists "Groundskeeper's Lodge key", retaining its uses, and the Log does not repeat "_Perks is read-only" on updates.
 
 ### v1.19.0 — audit Batch 4
 

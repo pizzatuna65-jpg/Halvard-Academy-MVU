@@ -1,57 +1,242 @@
 {
-  "_note": "Owner-approved 2026-09-28. A Rank 4+ bonded NPC may actively accompany only these activities. One generic +25% bonus per session; existing personal gift bonuses stay separate. All 52 bonded roster NPCs are listed (1.33.0: the eight new teachers); Extras and rival teams are excluded.",
-  "npcs": {
-    "Irene": ["mana", "study"],
-    "Caspian": ["mana", "study"],
-    "Etnie": ["mana", "stamina", "study"],
-    "Royhan": ["mana", "study"],
-    "Sophia": ["mana", "stamina"],
-    "Gareth": ["mana", "stamina", "study"],
-    "Ruby": ["study"],
-    "Lenna": ["mana", "stamina", "study"],
-    "Saffi": ["mana", "stamina"],
-    "Kanae": ["mana", "study"],
-    "Idris": ["mana", "study"],
-    "Tilly": ["stamina", "study"],
-    "Dante": ["mana", "study"],
-    "Florian": ["mana", "stamina"],
-    "Aiden": ["mana", "study"],
-    "Caralynn": ["mana", "study"],
-    "Zara": ["mana", "study"],
-    "Percival": ["mana", "stamina", "study"],
-    "Trixie": ["mana", "stamina"],
-    "Vera": ["mana", "study"],
-    "Castor": ["mana", "study"],
-    "Alyssa": ["mana", "study"],
-    "Linus": ["mana", "study"],
-    "Maple": ["mana", "study"],
-    "Nerys": ["mana", "study"],
-    "Hadrian": ["mana", "study"],
-    "Wren": ["mana", "study"],
-    "Tsubaki": ["mana", "stamina"],
-    "Gavlan": ["mana", "stamina", "study"],
-    "Yvette": ["mana", "stamina", "study"],
-    "Krieg": ["mana", "stamina"],
-    "Milena": ["mana", "stamina", "study"],
-    "Baelin": ["mana", "stamina", "study"],
-    "Layla": ["mana", "study"],
-    "Vallie": ["mana", "stamina"],
-    "Rei": ["mana", "stamina", "study"],
-    "Kuroo": ["mana", "study"],
-    "Mimosa": ["mana", "study"],
-    "Tristan": ["mana", "study"],
-    "Althair": ["mana", "study"],
-    "Ezrel": ["mana", "study"],
-    "Ottavio": ["mana", "study"],
-    "Caine": ["study"],
-    "Bobby": ["stamina", "study"],
-    "Hester": ["study"],
-    "Anselm": ["mana", "study"],
-    "Magnus": ["mana", "study"],
-    "Dorian": ["mana"],
-    "Cedric": ["study"],
-    "Anya": ["study"],
-    "Kotaro": ["stamina"],
-    "Valentin": ["mana", "study"]
-  }
+ "_note": "Owner-approved 2026-09-28. A Rank 4+ bonded NPC may actively accompany only these activities. One generic +25% bonus per session; existing personal gift bonuses stay separate. All 59 bonded roster NPCs are listed (1.34.0: seven cohort 3 students); Extras and rival teams are excluded.",
+ "npcs": {
+  "Irene": [
+   "mana",
+   "study"
+  ],
+  "Caspian": [
+   "mana",
+   "study"
+  ],
+  "Etnie": [
+   "mana",
+   "stamina",
+   "study"
+  ],
+  "Royhan": [
+   "mana",
+   "study"
+  ],
+  "Sophia": [
+   "mana",
+   "stamina"
+  ],
+  "Gareth": [
+   "mana",
+   "stamina",
+   "study"
+  ],
+  "Ruby": [
+   "study"
+  ],
+  "Lenna": [
+   "mana",
+   "stamina",
+   "study"
+  ],
+  "Saffi": [
+   "mana",
+   "stamina"
+  ],
+  "Kanae": [
+   "mana",
+   "study"
+  ],
+  "Idris": [
+   "mana",
+   "study"
+  ],
+  "Tilly": [
+   "stamina",
+   "study"
+  ],
+  "Dante": [
+   "mana",
+   "study"
+  ],
+  "Florian": [
+   "mana",
+   "stamina"
+  ],
+  "Aiden": [
+   "mana",
+   "study"
+  ],
+  "Caralynn": [
+   "mana",
+   "study"
+  ],
+  "Zara": [
+   "mana",
+   "study"
+  ],
+  "Percival": [
+   "mana",
+   "stamina",
+   "study"
+  ],
+  "Trixie": [
+   "mana",
+   "stamina"
+  ],
+  "Vera": [
+   "mana",
+   "study"
+  ],
+  "Castor": [
+   "mana",
+   "study"
+  ],
+  "Alyssa": [
+   "mana",
+   "study"
+  ],
+  "Linus": [
+   "mana",
+   "study"
+  ],
+  "Maple": [
+   "mana",
+   "study"
+  ],
+  "Nerys": [
+   "mana",
+   "study"
+  ],
+  "Hadrian": [
+   "mana",
+   "study"
+  ],
+  "Wren": [
+   "mana",
+   "study"
+  ],
+  "Tsubaki": [
+   "mana",
+   "stamina"
+  ],
+  "Gavlan": [
+   "mana",
+   "stamina",
+   "study"
+  ],
+  "Yvette": [
+   "mana",
+   "stamina",
+   "study"
+  ],
+  "Krieg": [
+   "mana",
+   "stamina"
+  ],
+  "Milena": [
+   "mana",
+   "stamina",
+   "study"
+  ],
+  "Baelin": [
+   "mana",
+   "stamina",
+   "study"
+  ],
+  "Layla": [
+   "mana",
+   "study"
+  ],
+  "Vallie": [
+   "mana",
+   "stamina"
+  ],
+  "Rei": [
+   "mana",
+   "stamina",
+   "study"
+  ],
+  "Kuroo": [
+   "mana",
+   "study"
+  ],
+  "Mimosa": [
+   "mana",
+   "study"
+  ],
+  "Tristan": [
+   "mana",
+   "study"
+  ],
+  "Althair": [
+   "mana",
+   "study"
+  ],
+  "Ezrel": [
+   "mana",
+   "study"
+  ],
+  "Ottavio": [
+   "mana",
+   "study"
+  ],
+  "Caine": [
+   "study"
+  ],
+  "Bobby": [
+   "stamina",
+   "study"
+  ],
+  "Hester": [
+   "study"
+  ],
+  "Anselm": [
+   "mana",
+   "study"
+  ],
+  "Magnus": [
+   "mana",
+   "study"
+  ],
+  "Dorian": [
+   "mana"
+  ],
+  "Cedric": [
+   "study"
+  ],
+  "Anya": [
+   "study"
+  ],
+  "Kotaro": [
+   "stamina"
+  ],
+  "Valentin": [
+   "mana",
+   "study"
+  ],
+  "Aurelian": [
+   "mana",
+   "stamina"
+  ],
+  "William": [
+   "mana",
+   "study"
+  ],
+  "Bruno": [
+   "stamina"
+  ],
+  "Bianca": [
+   "study",
+   "mana"
+  ],
+  "Rigel": [
+   "study",
+   "mana"
+  ],
+  "Topaz": [
+   "mana",
+   "study"
+  ],
+  "Faye": [
+   "stamina",
+   "mana"
+  ]
+ }
 }

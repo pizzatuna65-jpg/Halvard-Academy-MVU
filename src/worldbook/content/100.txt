@@ -22,4 +22,7 @@ Doves: Neutral; indifferent. Only {{user}} matters.
 <narrator_only>Rival: Smells something rotten about Kanae Quveno and watches her closely whenever she is near {{user}}.</narrator_only>
 Haunts: Library upper stacks; the Gardens when tracking {{user}} by scent. Refuses to go near the Third Stall.
 Treats Firetooth and Nightwell's Vigil as dares.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
+Topaz Vasquelle calls herself {{user}}'s rival and keeps challenging anyone near them; Etnie finds her irritating and watches her carefully.
+<%_ } _%>
 <%_ } _%>

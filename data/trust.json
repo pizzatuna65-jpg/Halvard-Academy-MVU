@@ -161,6 +161,12 @@
   },
   "Krieg": {
    "zero_at_stage": "Exposed"
+  },
+  "Topaz": {
+   "kind_extra": {
+    "challenge": 3
+   },
+   "text": "Topaz's trust grows when {{user}} takes her seriously: accepting her challenge and giving it their all → report {\"With\": \"Topaz\", \"Kind\": \"challenge\"}. Losing to {{user}} never lowers it; letting her win on purpose, once she notices, is a betrayal."
   }
  },
  "dorm_head": {

@@ -80,6 +80,7 @@ export const Schema = z.object({
       Dorm: Enum(['Unsorted', 'Fire', 'Light', 'Sky', 'Viridian'], 'Unsorted'),
       Dorm_rank: Int(0, 9999, 0),
       Club: Str(''),
+      Council: Bool(false), // membership is independent of the afternoon club
       Combat_role: Str(''),   // 1.2.0: set by the story at the first Combat class (the teacher assigns it), not by the Builder
       Goal: Str(''),
       // 1.3.0 (owner): three reputations, level -5..+5 computed by the engine from signed Rep XP ($xp, clamped at +-125).
@@ -209,6 +210,7 @@ export const Schema = z.object({
     Council: O({
       Candidates: Rec(v => ({ First: s(v.First), Second: s(v.Second) }), 'First'),
       Results: Rec(v => ({ President: s(v.President), VicePresident: s(v.VicePresident) }), 'President'),
+      Members: StrList(24),
       President: Str('Irene'), VicePresident: Str('Caspian'),
       PresidentElect: Str(''), VicePresidentElect: Str(''),
     }),

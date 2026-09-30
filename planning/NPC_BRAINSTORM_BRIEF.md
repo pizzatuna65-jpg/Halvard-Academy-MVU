@@ -180,6 +180,7 @@ Weekly timetable ([M] mixed dorms, [D] per dorm):
 - **The Site:** The Seal Chamber (Undercroft), The Warden's Office (Floor 1)
 
 Club venues: Duelling – Combat Grounds (headquarters: Sparring Pavilion); Soccer, Running – Sports Field (running track around the pitch); Archery – Archery Range; Swimming, Gymnastics, Basketball – Gymnasium; Swimming – Swimming Pool; Walking – Hills; Gardening – Gardens; Beast Handling – Menagerie; Fishing – Fishing House (on the lake shore); Alchemy, Brewing – Potion Halls; Smithing – Workshop; Library Assistants – Main Library; Warding Study – Seminar Rooms; Festival Committee – Council Chamber; Groundskeeping – Groundskeeper's Lodge; Cooking – Canteen's dedicated kitchen section; Medical Centre Volunteers – Medical Centre; Newspaper – Announcement Room; Theatre – Club Rooms for meetings and rehearsals, old indoor amphitheatre for performances; Divination – Observation Tower; Music, Card, Board Game, Tailoring, Drawing, Calligraphy, Tea, Specialized Magic – Club Rooms.
+Student Council membership is separate from the afternoon club: members meet Saturday 10:00–12:00 in place of Study Hall (required remedial first), then keep their club's 13:00–16:00 block.
 
 ## 4. The bond system (what ranks mean)
 
@@ -238,8 +239,8 @@ Club venues: Duelling – Combat Grounds (headquarters: Sparring Pavilion); Socc
   romance, **D** best friend only. A rivalry opens only under Trust 50; a C or D bond waits for Trust 50 instead. Romance is never
   possible for B and D, whatever the Settings say. The Cast Sheet adds the NPC's `romance` or `rival` line (in `voice`) for the
   active branch; a best friendship adds nothing. Now: A Irene, Aiden, Castor, Kanae, Rei, Caine, Caralynn, Percival, Lenna, Saffi,
-  Idris, Dante, Florian, Caspian, Royhan, Sophia, Gareth, Vallie, Kuroo, Milena, Valentin; B Krieg, Tristan; C Etnie, Zara, Trixie, Vera,
-  Alyssa, Tilly, Ruby, Mimosa, Bobby, Hester, Anya; D Gavlan, Yvette, Baelin, Layla, Althair, Ezrel, Ottavio, Anselm, Magnus, Dorian, Cedric, Kotaro. Staff who can have a romance keep
+  Idris, Dante, Florian, Caspian, Royhan, Sophia, Gareth, Vallie, Kuroo, Milena, Valentin, Aurelian, William, Bruno, Bianca, Rigel, Topaz; B Krieg, Tristan; C Etnie, Zara, Trixie, Vera,
+  Alyssa, Tilly, Ruby, Mimosa, Bobby, Hester, Anya, Faye; D Gavlan, Yvette, Baelin, Layla, Althair, Ezrel, Ottavio, Anselm, Magnus, Dorian, Cedric, Kotaro. Staff who can have a romance keep
   it out of class while {{user}} is their student (their own lines say how). A new bonded NPC needs its branch and lines.
 - **Reputation** (Academy, Student, Doves; −5 to +5, tiered Rep XP; full rules in `reputation.md`) modifies bond XP: staff
   NPCs at Academy ±3, student NPCs at Student ±3/+5, and anti-Dove NPCs react against high Doves reputation.
@@ -309,6 +310,15 @@ Columns: id — full name · group · dorm/race · role · club · openness · h
 - **Hadrian** — Hadrian Quelloris · Year 1 from campaign Year 2 · Light/Elf · - · Specialized Magic Club · open · yes · Brilliant, selfish, smug and a coward; never redeemed, at any rank.
 - **Wren** — Wren Marlowe · Year 1 from campaign Year 2 · Fire/Human · deaf · Fishing Club · normal · no · Warm, earnest, friendly and stubborn.
 - **Tsubaki** — Tsubaki Hoshikage · Year 1 from campaign Year 2 · Light/Beastkin (wolf) · Royal Mage · Duelling Club · open · no · A genius with a sword and a disaster at everything else.
+
+**Incoming first-years, cohort 3 (arrive in campaign Year 3; 1.34.0, owner-approved)**
+- **Aurelian** — Aurelian Solmere · Fire/Elf · Light beams, the Harvest Hall hero · Basketball Club · open · storybook hero whose speech glitches; his Spirit Pact is narrator-only.
+- **William** — William Beckett · Sky/Beastkin (crow) · Shadow and lesser spirit Chapter · Board Game Club · open · sees story patterns, stages his own arcs, never knows secrets.
+- **Bruno** — Bruno Ferrante · Fire/Human · Explosion · Magic Duelling Club · normal · loud, aggressive brawler; Bianca's twin.
+- **Bianca** — Bianca Ferrante · Light/Human · Marking and Transposition · Swimming Club and Student Council · open · public flirt and sharp social butterfly; Bruno's twin.
+- **Rigel** — Rigel Ardenne · Sky/Beastkin (rabbit) · Oath and Silence · Festival Committee · open · warm, rich, alarming about promises; Bellatrix's younger brother.
+- **Topaz** — Topaz Vasquelle · Light/Elf · Mimicry · follows {{user}} into their club · open · self-declared rival, clingy and competitive.
+- **Faye** — Faye Driftwell · Viridian/Elf · Flow · Walking Club · open · unhurried and present, but lets go too easily.
 
 **Halvard students — Year 2**
 - **Lenna** — Lenna Greenwind · Year 2 · Fire/Elf · - · Beast Handling Club · guarded · no · Easygoing, sleepy, dry-humoured, warm, courageous, intelligent.
@@ -396,7 +406,7 @@ The 2026-09 pass filled every gap for Halvard students, staff, Doves, Cathedral 
   Trixie, Vera, Alyssa (G2, 1.6.4) and Lenna, Saffi, Idris, Dante, Florian, Tilly (G3, 1.6.5) and Caspian, Royhan, Sophia,
   Gareth, Ruby (G4, 1.6.6) and Gavlan, Yvette, Baelin, Layla, Vallie, Kuroo, Mimosa, Althair, Ezrel, Ottavio, Krieg, Milena,
   Tristan, Bobby (G5, 1.6.7): every bonded NPC now has one; a new bonded NPC needs its own voice draft. Cohort 2 (Linus, Maple,
-  Nerys, Hadrian, Wren, Tsubaki, 1.7.0) came with theirs; Nerys also has a 48-week hobby list (`npc_canon.json` → `weekly`). Dante is fanatically lawful with no exceptions, {{user}}
+  Nerys, Hadrian, Wren, Tsubaki, 1.7.0) and cohort 3 (Aurelian, William, Bruno, Bianca, Rigel, Topaz, Faye, 1.34.0) came with theirs; Nerys also has a 48-week hobby list (`npc_canon.json` → `weekly`). Dante is fanatically lawful with no exceptions, {{user}}
   included (owner): never write him bending a rule for anyone. Alyssa's story is somber and bittersweet (owner, reference Isshuukan Friends): write her bond events in that tone,
   and nothing cures her forgetting. Fields, all English:
   - `SCENE EXAMPLES`: 5–6 lines "Scene: … → dialogue + one gesture" (what they like, what they hate, under pressure, with a
@@ -419,6 +429,7 @@ The 2026-09 pass filled every gap for Halvard students, staff, Doves, Cathedral 
 - `lore_staff.md` — Teaching staff and dorm heads: Gavlan, Yvette, Baelin, Layla, Vallie, Rei, Kuroo, Mimosa, Althair, Ezrel, Ottavio (~11,000 tokens); the eight teachers of 1.33.0 (Hester, Anselm, Magnus, Dorian, Cedric, Anya, Kotaro, Valentin) are in `source_original/npc_lore_staff_2026-10-01/lore_staff.md` and `planning/NPC_ROSTER.md`
 - `lore_others.md` — Doves, Cathedral, Liaison and facilities: Krieg, Milena, Tristan, Caine, Bobby (~5,500 tokens)
 - `source_original/npc_lore_cohort2_2026-09-26/lore_cohort2.md` — cohort 2 (arrive in campaign Year 2): Linus, Maple, Nerys, Hadrian, Wren, Tsubaki; `lore_cohort2_additions.md` beside it holds the lines they added to older NPCs' files (shown from Year 2)
+- `source_original/npc_lore_cohort3_2026-10-01/lore_cohort3.md` — cohort 3 (arrive in campaign Year 3): Aurelian, William, Bruno, Bianca, Rigel, Topaz, Faye; `lore_cohort3_additions.md` carries their lines for existing NPCs, plus Year 2 Council membership.
 - `lore_rivals.md` — Rival academy teams (Myrdath, Veyra, Ashvale): Lucius, Elion, Bellatrix, Kira, Mirelle, Theodore, Ines, Bram, Dex, Cassius, Morgana, Pip (~5,400 tokens)
 - `bond_rewards.md` — Rank 5 gift and Rank 10 benefit for every bonded NPC, plus the mask → truth and Krieg bond models
 - `reputation.md` — Academy / Student / Doves reputation: levels, Rep XP triggers, effects per level
@@ -429,7 +440,7 @@ This brief: ~7,800 tokens.
 
 ## Approved mood, gifts and birthdays (v1.8.0, 2026-09-28)
 
-Implemented in 1.8.0 (1.33.0: 52 with the new teachers). All bonded NPCs have profiles in `data/npc_moods.json` and `data/gift_prefs.json`. The latter is the full source for all four personal taste lists, exact items, category matches and universal fallbacks. Birthday and taste discovery in the player UI still follows bond knowledge. Ezrel has no birthday.
+Implemented in 1.8.0 (1.34.0: 59 with cohort 3). All bonded NPCs have profiles in `data/npc_moods.json` and `data/gift_prefs.json`. The latter is the full source for all four personal taste lists, exact items, category matches and universal fallbacks. Birthday and taste discovery in the player UI still follows bond knowledge. Ezrel has no birthday.
 
 | NPC | Birthday | Loves | Hates |
 |---|---|---|---|

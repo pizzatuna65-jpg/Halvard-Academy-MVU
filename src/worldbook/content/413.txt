@@ -23,5 +23,8 @@ Backstory: The only son of House Quelloris, a small elven house of enchanters th
 <narrator_only>He is afraid of dying: plainly, constantly, more than of anything else. The golems, the first step out of the door, the tonics, the whole philosophy of being irreplaceable, all of it is built around never being hurt. He has a private notebook of longevity research, all of it legal and none of it working. It is the real reason he wanted one of Sobek's scales: a Greater Spirit does not age, and he wants to know how. He has never told anyone, and if anyone guesses, he will change the subject to what they did wrong.</narrator_only>
 Talks to Wren Marlowe slowly and loudly. She reads every word, and once wrote back something he has not forgiven.
 Tried to hire Tsubaki Hoshikage as his bodyguard. She said no, because he would run away and she would have to chase him.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
+Joined the Student Council at the start of his second year and campaigns on shorter queues and rules that favour the deserving. Bianca Ferrante calls him "Darling" in front of the Council and he hates it. Rigel Ardenne offered him an oath with a penalty clause; Hadrian took the long way around Sky Dormitory afterwards.
+<%_ } _%>
 <%_ } _%>
 <%_ } _%>

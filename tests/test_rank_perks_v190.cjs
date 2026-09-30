@@ -14,7 +14,7 @@ console.log('Rank perks 1.9.0');
 
 const table = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/rank4_partners.json'), 'utf8')).npcs;
 const rewards = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/bond_rewards.json'), 'utf8')).npcs;
-ok(Object.keys(table).length === 52 && Object.keys(table).sort().join() === Object.keys(rewards).sort().join(), 'Rank 4 categories cover exactly the 52 bonded roster NPCs');
+ok(Object.keys(table).length === 59 && Object.keys(table).sort().join() === Object.keys(rewards).sort().join(), 'Rank 4 categories cover exactly the 59 bonded roster NPCs');
 ok(Object.values(table).some(v => v.length === 1) && Object.values(table).some(v => v.length === 2) && Object.values(table).some(v => v.length === 3), 'one, two and three-activity categories exist');
 
 let S = seed(['Trixie']); S.Bonds.Trixie.$xp = 10;

@@ -1,1 +1,4 @@
 [Regulars — Student Council Chamber] Irene, Caspian, Florian, Dante.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
+From campaign Year 3 also: Bianca, Hadrian, Nerys.
+<%_ } _%>

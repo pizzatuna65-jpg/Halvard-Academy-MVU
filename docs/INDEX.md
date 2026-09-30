@@ -22,7 +22,7 @@ Build order, generated files and test commands: `docs/BUILD.md`.
 | Lore text (a place, an NPC line, the calendar) | §6 lore pipeline → `tools/merge_lorebooks.py` `rep()` edit or its tables | `python tools/build_all.py --lore` |
 | Calendar, events, timetable | `data/calendar.json` | engine, UI, lore 131/134 all read it |
 | New NPC | `docs/DECISIONS.md` §2 "Bonds", §6 "Tension", "Trust", "Connections"; data files in §7 marked *per NPC* | playbook in `docs/BUILD.md` §4 |
-| Incoming first-year cohort | `data/cohorts.json`, `merge_lorebooks.py` `COHORT_*`, `source_original/npc_lore_cohort2_*` as the pattern | playbook in `docs/BUILD.md` §4 |
+| Incoming first-year cohort | `data/cohorts.json`, `merge_lorebooks.py` `COHORT_*`, `source_original/npc_lore_cohort2_*` or `npc_lore_cohort3_*` as the pattern | playbook in `docs/BUILD.md` §4 |
 | New NPC on campus from the start (staff) | `source_original/npc_lore_staff_2026-10-01/` (`lore_staff.md`, `lore_staff_additions.md` with `year: 1`), `merge_lorebooks.py` 1.33.0 block (roster 97, `STAFF_REGULARS`) | playbook "Add an NPC" in `docs/BUILD.md` §4 |
 | Shop prices, items, gear effects | `data/shop.json`, `tools/common.py` `effect_text` | `gen_mvu_entries.py`, `gen_engine.py`, `gen_ui.py` |
 | Bond ranks, rewards, gifts, moods | §7 bond data; engine `stepBonds`, `stepBondMemory`, `mood_gifts.js` | |

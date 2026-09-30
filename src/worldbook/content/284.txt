@@ -1,1 +1,4 @@
 [Regulars — Sports Field and Gymnasium] Percival, Saffi.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
+From campaign Year 3 also: Aurelian, Bianca.
+<%_ } _%>

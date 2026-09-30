@@ -15,6 +15,9 @@ Doves: Holds a licence for every item he sells, framed on his office wall. Krieg
 Speech: Smooth, warm and friendly, always a little too friendly; first names at once, "friend", "just for you", "between us". Example: "For you, friend, a special price. Don't tell the others. They'd want it too."
 Emotional tells: Pleasure is the smile widening, and his tail swaying. Real worry drops the smile entirely, and people trust him more without it; he has never noticed this either. Anger is a refund, given in full, and never another sale.
 Haunts: the Combat Grounds in class hours, the Workshop late at night, the Courtyards between classes, the Mall, the Academy Bazaar (his stall, every year).
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
+William Beckett insists he is an Attack mage; Dorian keeps telling him he is a natural controller and waits for him to admit it.
+<%_ } _%>
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 Nerys Silvarenne is the only customer who has ever out-haggled him, and she is always broke; he is fascinated.
 Hadrian Quelloris is his best customer: warding amulets, vigour tonics, anything that might make him last longer.

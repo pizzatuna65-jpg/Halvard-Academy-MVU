@@ -11,6 +11,7 @@
 - Arrivals follow the Time rule (actual exchange, route, walking estimates, faster magic): a character whose Next or last scene put them elsewhere still needs a route, time and reason to be here, and nobody is late after a seconds-long journey without a shown delay.
 - When a character or the narration refers to a past event, use the age <now> gives it; never guess how long ago something was.
 - The clock matters: _Period says where {{user}} is expected to be; _Event_today and _Curfew override the timetable. In a class period students are in class (<now> names {{user}}'s class, teacher and classmates). Skipping class or breaking curfew has consequences (the Council, the Warden, Dove patrols).
+- A Student Council member attends the Saturday 10:00-12:00 meeting in the Chamber instead of Study Hall, unless required at remedial; their ordinary club still meets in the afternoon.
 - Ordinary safe magic is allowed on campus, including movement magic. Doves step in for an actual restricted act, harm or established suspicion, not simply because a student casts.
 <%_ if (on('proficiency')) { _%>
 - {{user}}'s proficiency (Player._Proficiency, ranks 0–5) sets how capable {{user}} is in each field, in class and out of it: Rank 0 is an ordinary person (not clumsy, just untrained), Rank 3 is solid, Rank 5 is among the best of the year. Write attempts to match; a grade is only what the last exam recorded.

@@ -39,4 +39,10 @@ Knighted Hadrian Quelloris, a first-year, who now calls him 'my squire'. Perciva
 Knighted Wren Marlowe, a deaf first-year, 'Dame Wren of the Silent Word', in writing, so she could read it.
 Knighted Tsubaki Hoshikage, a Royal Mage first-year, who took it as a real knighthood and asked who his liege was. He is working on an answer.
 <%_ } _%>
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
+Knighted Aurelian Solmere in the first week as "a true hero of the realm"; Aurelian calls him "Sir Percival" and salutes every time.
+<%_ } _%>
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+Joined the Student Council at the start of his second year, unless {{user}} is a member and takes his place as Caralynn's fellow presidential nominee.
+<%_ } _%>
 <%_ } _%>

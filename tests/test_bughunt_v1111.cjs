@@ -17,7 +17,7 @@ for (const [r0, lo, hi] of [[81, 51, 999], [150, 51, 999], [60, 26, 80], [0, 26,
 }
 
 console.log('#2 bonds written straight into /Bonds');
-const rival = [...E.NO_BOND][0], incoming = Object.keys(E.ARRIVES)[0];
+const rival = [...E.NO_BOND][0], incoming = Object.keys(E.ARRIVES).find(id => E.ARRIVES[id] === 2);
 for (const who of ['Bob Baker', rival, incoming]) {
   let S = W(S0, { Time: '09:00' }, [{ op: 'replace', path: '/Bonds/' + who, value: { Rank: 1, Trust: 50 } }, { op: 'replace', path: '/Scene/Present', value: { [who]: { Note: '' } } }]);
   S = W(S, { Time: '09:30' }, [{ op: 'insert', path: '/Interactions/-', value: { With: who, Kind: 'talk' } }]);

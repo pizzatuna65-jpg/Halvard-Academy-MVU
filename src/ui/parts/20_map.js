@@ -222,7 +222,8 @@ function locCard(id, S, cur, P) {
   const stOf = npcStatus(S);   // v1.0.3 (F02): Campus_State.NPC_status beats the lorebook's habits
   // 1.0.3: graduates and not-yet-arrived students are not regulars
   const busy = classHint(S);   // 1.1.0 (spec §1): students are in class / Study Hall / at their clubs during the periods
-  const regs = l.regulars.filter(r => atHalvard(r, S) && hauntKnown(r, S)).map(r => (npcOf(r) ? (B[r] ? `<button class="lnk" data-open="npc:${esc(r)}">${esc(nameOf(r, S))}</button>` : esc(nameOf(r, S))) : esc(r))
+  const regIds = id === 'student_council_chamber' ? (((S.Campus_State || {}).Council || {}).Members || []) : l.regulars;
+  const regs = regIds.filter(r => atHalvard(r, S) && hauntKnown(r, S)).map(r => (npcOf(r) ? (B[r] ? `<button class="lnk" data-open="npc:${esc(r)}">${esc(nameOf(r, S))}</button>` : esc(nameOf(r, S))) : esc(r))
     + (stOf(r) ? ` <span class="sub">(${esc(stOf(r))})</span>` : busy && /^Year/.test((npcOf(r) || {}).g || '') ? ` <span class="sub">(${busy})</span>` : '')).join(', ');
   // 1.2.0 (owner): every card has the same rows, in the same order. 1.30.6 (owner): no "Connected to" row; the map shows the
   // neighbours, and the AI reads them in the Campus Map lore

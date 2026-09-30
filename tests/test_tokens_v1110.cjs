@@ -17,7 +17,7 @@ ok(/On Entrance morning, follow the ceremony/.test(R(504, entrance)) && !/On Ent
 ok(/Entrance morning \(Month 1 Week 1 Monday\)/.test(R(97, entrance)) && !/Entrance morning/.test(R(97, ordinary)), 'NPC Roster Entrance paragraph only on Entrance day');
 const withCast = S => set(S, [['$ui.cast', { full: ['Etnie'], brief: [] }]]);
 ok(/On Entrance morning, check each first-year/.test(R(510, withCast(entrance))) && !/On Entrance morning/.test(R(510, withCast(ordinary))), '510 Entrance check only on Entrance day');
-ok(/debate Friday 16:00-18:00/.test(R(502, set(S0, [['World.Month', 10]]))) && !/debate Friday/.test(R(502, ordinary)) && /the election is Month 10 Week 3 \(details that month\)/.test(R(502, ordinary)), 'Council details in Months 9-10, one line otherwise');
+ok(/debate Friday 16:00-18:00/.test(R(502, set(S0, [['World.Month', 10]]))) && !/debate Friday/.test(R(502, ordinary)) && /election is Month 10 Week 3 \(details that month\)/.test(R(502, ordinary)), 'Council details in Months 9-10, one line otherwise');
 ok(!/- Pacts \(set by the Student Builder/.test(R(502, ordinary)) && /- Pacts \(set by the Student Builder/.test(R(502, set(ordinary, [['Magic.Pacts', { Ember: { Kind: 'Spirit' } }]]))), 'Pacts rule only with a pact');
 ok(!/Dove_attention 0–100/.test(R(502, ordinary)) && /Dove_attention 0–100/.test(R(502, set(ordinary, [['Hidden._True_magic', 'Effigy']]))), 'Hidden rules only with hidden magic');
 ok(!/- _Perks:/.test(R(502, ordinary)) && /- _Perks:/.test(R(502, set(ordinary, [['_Perks', { Ribbon: { From: 'Etnie', Kind: 'gift', Effect: 'x', Uses: 0 } }]]))), '_Perks rule only with a perk');

@@ -185,7 +185,14 @@
   "Cedric": "authority",
   "Anya": "authority",
   "Kotaro": "withdrawn",
-  "Valentin": "dangerous"
+  "Valentin": "dangerous",
+  "Aurelian": "social",
+  "William": "social",
+  "Bruno": "confrontational",
+  "Bianca": "social",
+  "Rigel": "social",
+  "Topaz": "social",
+  "Faye": "social"
  },
  "peaks": {
   "Krieg": "a Dovecote examination or an arrest on a pretext",
@@ -269,6 +276,46 @@
    },
    "kind_ease": {},
    "banter": "does not notice"
+  },
+  "Rigel": {
+   "name": "Forgiving, for a price",
+   "bands": {
+    "Friction": "forgives {{user}} warmly on the spot, then asks, just as warmly, when they will pay the Ardenne price",
+    "Strained": "keeps forgiving and keeps reminding; writes the debt in his ledger in front of {{user}} and offers an Oath to settle it",
+    "Hostile": "hurt and baffled that a friend will not pay; very polite, stops buying for {{user}}, and writes home about it",
+    "Enemy": "strikes {{user}} from the ledger; perfectly courteous in public, and tells Bella, who remembers at the Kingdom Competition"
+   },
+   "never": "taking the price himself, or hurting {{user}} with his own hands",
+   "eases": "a kept promise or a sincere Oath eases it a lot; a paid price would end it at once, and nobody pays",
+   "decay": 1,
+   "apology": {
+    "private": -5,
+    "public": -5
+   },
+   "kind_ease": {
+    "defend_public": -5
+   },
+   "banter": "teasing delights him; he rarely notices it is teasing and answers literally"
+  },
+  "Topaz": {
+   "name": "Rival (clingy)",
+   "bands": {
+    "Friction": "challenges {{user}} more often and sulks between challenges; turns up anyway",
+    "Strained": "follows {{user}} everywhere \"to study them\"; loudly challenges anyone else who takes their time",
+    "Hostile": "a formal written challenge; if {{user}} refuses, she shadows them for days, silent and hurt, and trains until the Medical Centre sends her to bed",
+    "Enemy": "announces in front of everyone that {{user}} is no longer her rival, then still appears wherever they are, pretending not to look"
+   },
+   "never": "cheating, sabotage, or truly leaving {{user}}",
+   "eases": "{{user}} accepting a challenge, or calling her their rival, eases it a lot",
+   "decay": 2,
+   "apology": {
+    "private": -20,
+    "public": -25
+   },
+   "kind_ease": {
+    "defend_public": -5
+   },
+   "banter": "teasing is a challenge accepted; she fires straight back, red-eared"
   }
  },
  "krieg": {

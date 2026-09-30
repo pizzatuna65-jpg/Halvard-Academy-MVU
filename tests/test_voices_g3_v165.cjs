@@ -26,7 +26,7 @@ ok(!/exception/.test(C.voice.Dante.stages['9-10']) && /holds them to every rule 
 ok(/if they break it anyway, he reports it like anyone's/.test(at('Dante', 4)), 'Dante at Rank 4: warns, then reports');
 const Dr = JSON.parse(rd('data/bond_rewards.json')).npcs.Dante;
 ok(!/looks the other way|steers Dove attention|no patrol looks into|lying to the Doves/.test(JSON.stringify(Dr)), 'Dante\'s rewards: no hiding from patrols, no looking away');
-ok(/copy number in the Council log/.test(Dr.gift.text) && /He still reports any rule \{\{user\}\} breaks/.test(Dr.r10.text) && /demanding it be done by the book/.test(Dr.r10.text) && /formal report naming \{\{user\}\}/.test(Dr.r10.secret), 'Dante\'s current Council gift, benefit and secret side');
+ok(/Groundskeeper's Lodge/.test(Dr.gift.text) && /He still reports any rule \{\{user\}\} breaks/.test(Dr.r10.text) && /demanding it be done by the book/.test(Dr.r10.text) && /formal report naming \{\{user\}\}/.test(Dr.r10.secret), 'Dante\'s restored Lodge gift, benefit and secret side');
 ok(!/looks the other way on any rule/.test(rd('dist/Eldrasil_Halvard.json')) && !/looks the other way on any rule/.test(rd('src/scripts/engine.js')), 'the old wording is gone from the built card and engine');
 
 // Tilly: the princess stays secret

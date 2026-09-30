@@ -17,4 +17,7 @@ Speech: Light, wry, unhurried; answers questions with better questions.
 Emotional tells: Inverted: he jokes when things are serious and turns serious when they are funny. Interest shows when the questions stop and he simply listens. Being hurried makes him slow down, deliberately and cheerfully. Concern is an offer of wine. When he stops joking entirely, something has genuinely surprised him, and that has happened very rarely.
 Haunts: Cathedral, Meditation Rooms. Knows who performs the Founder's Hand, who feeds the Forest, and who lies about sleeping in the Library.
 <narrator_only>Holds the terms of Alyssa Edelweiss's pact in his registry, and is the only one besides her who knows its price.</narrator_only>
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
+Reads every oath Rigel Ardenne offers another student and strikes clauses he thinks Rigel is too young to understand.
+<%_ } _%>
 <%_ } _%>

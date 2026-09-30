@@ -16,15 +16,15 @@ ok(!/^function runEngine[\s\S]{0,400}fillShape/.test(src) && /for \(const step o
 console.log('Save migrations');
 const S = initState({ etnie: true });
 ok(S.$eng.ver === E.ENGINE_VER && S.$eng.repv === 1 && S.$eng.bondv === 2 && S.$eng.tenv === 1, 'a new chat is migrated on its first run');
-// Dante's renamed gift: in the old engine the read-only guard put the old key back (and logged it) on every update
-const D0 = clone(S); D0.$eng.ver = '1.3.0'; D0._Perks["Groundskeeper's Lodge key"] = { From: 'Dante', Kind: 'gift', Effect: 'old text', Uses: 0 };
+// Dante's restored gift: a save with the Council safety card keeps its uses under the Lodge key.
+const D0 = clone(S); D0.$eng.ver = '1.33.0'; D0._Perks['Council safety card'] = { From: 'Dante', Kind: 'gift', Effect: 'old text', Uses: 0 };
 const D0copy = clone(D0);
 const D1 = applyPatch(D0, [{ op: 'replace', path: '/World/Time', value: '09:30' }]);
-ok(D1._Perks['Council safety card'] && !D1._Perks["Groundskeeper's Lodge key"], "Dante's old gift key becomes Council safety card");
+ok(D1._Perks["Groundskeeper's Lodge key"] && !D1._Perks['Council safety card'], "Dante's gift key becomes Groundskeeper's Lodge key");
 ok(!(D1._Log || []).some(l => /read-only/.test(l)), 'no read-only revert of the migration');
 ok(_.isEqual(D0, D0copy), "the caller's before-state is not changed");
 const D2 = applyPatch(D1, [{ op: 'replace', path: '/World/Time', value: '09:40' }]);
-ok(D2._Perks['Council safety card'] && !D2._Perks["Groundskeeper's Lodge key"] && D2.$eng.ver === E.ENGINE_VER, 'the rename stays on the next update');
+ok(D2._Perks["Groundskeeper's Lodge key"] && !D2._Perks['Council safety card'] && D2.$eng.ver === E.ENGINE_VER, 'the rename stays on the next update');
 // same version: migrations are skipped (a flag reset alone does not re-run them)
 const K0 = clone(S); K0.$eng.repv = 0; K0.Player.Profile.Reputation = { ...K0.Player.Profile.Reputation, Public: 20 };
 const K1 = applyPatch(K0, [{ op: 'replace', path: '/World/Time', value: '09:50' }]);

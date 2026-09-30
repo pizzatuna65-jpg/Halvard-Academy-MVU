@@ -26,9 +26,12 @@ const CLUBV = /*@@CLUBV@@*/{}, OUTD = /*@@OUTD@@*/[], VN = /*@@VN@@*/{};
 
 const sick = FULL && WX.flu ? (WX.sick || []) : [];
 let regs1 = regs0.filter(r => here(r) && !sick.includes(r));
+if (pk === 'student council chamber') regs1 = [...new Set([...regs1, ...(COUNCIL.Members || []).filter(r => r !== PR.Name && here(r) && !sick.includes(r))])];
 const per = /^P([123]) /.exec(String(W._Period || '')), pIdx = per ? +per[1] - 1 : -1;
 const electionBlock = W.Month === 10 && W.Week === 3 && W.Day === 'Sat' && pIdx === 2;
+const councilMorning = W.Day === 'Sat' && pIdx === 1 && PR.Council && !Object.entries(getvar('stat_data.Commitments') || {}).some(([k,v]) => k.startsWith('Remedial ') && String(v.Due || '').includes(`M${W.Month} W${W.Week} Sat`));
 const cls = electionBlock ? ['Student Council Election', '', ['main courtyard'], 'election']
+  : councilMorning ? ['Student Council', '', ['student council chamber'], 'council']
   : on('class') && pIdx >= 0 && TT[W.Day] ? TT[W.Day][pIdx] : null;   // [subject, M|D, venues, class|study|clubs]
 const until = ['10:00', '12:00', '16:00'][pIdx];
 const pres = [];
@@ -40,6 +43,9 @@ if (cls && cls[3] === 'class') {
 } else if (cls && cls[3] === 'study') {
   if (cls[2].includes(pk)) pres.push('Study Hall until 12:00: most students are here.');
   else { regs1 = regs1.filter(r => !STU[r]); pres.push('Students are at Study Hall in the Main Library until 12:00.'); }
+} else if (cls && cls[3] === 'council') {
+  if (cls[2].includes(pk)) pres.push('Student Council meets here until 12:00; members attend instead of Study Hall.');
+  else pres.push('Student Council members meet in the Chamber until 12:00.');
 } else if (cls && cls[3] === 'election') {
   regs1 = regs1.filter(r => !STU[r]);
   pres.push('Students vote for Student Council President in the Main Courtyard until 16:00; ordinary clubs do not meet this afternoon.');

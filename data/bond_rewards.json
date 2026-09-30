@@ -14,6 +14,10 @@
   "mimosa": [
    150,
    "royalty on the formula co-authored with Mimosa"
+  ],
+  "rigel": [
+   200,
+   "friend-of-the-house allowance (Rigel)"
   ]
  },
  "mask": [
@@ -168,8 +172,8 @@
   },
   "Dante": {
    "gift": {
-    "name": "Council safety card",
-    "text": "A signed Student Council safety card bearing Dante's name and a copy number in the Council log. If {{user}} is in danger, stranded after curfew, or accused of breaking a rule, they can show it to a campus patrol or bring it to the Council Chamber. Dante takes their account into the record, arranges a safe escort or a formal hearing as needed, and makes sure the account reaches staff unchanged. The card is not a curfew pass or a pardon: he asks for the truth and reports any rule {{user}} did break."
+    "name": "Groundskeeper's Lodge key",
+    "text": "The key to the Groundskeeper's Lodge, and the rule that comes with it: a student caught out after curfew by danger or weather may shelter there, as long as it goes in his log. It gives {{user}} a safe, warm refuge at the Forest edge after curfew; a student in Dante's log is sheltered, not out of bounds, and he asks for the true reason every time."
    },
    "r10": {
     "name": "Dante (Rank 10)",
@@ -607,6 +611,83 @@
    "r10": {
     "name": "Valentin (Rank 10)",
     "text": "Valentin says, once, in public, that {{user}} is his equal, which he has never said of anyone. He gives {{user}} a key to his private laboratory: brewing there counts as brewing with a master present, whether he is in or not."
+   }
+  },
+  "Aurelian": {
+   "gift": {
+    "name": "Aurelian's sunstone",
+    "text": "A bead of clear glass he fused with a thin beam of his light, still faintly warm. Once a day it throws a hand's-width of steady daylight for an hour, or one blinding flash into a single attacker's eyes. \"Every [HERO] needs a light!\" The note that came with it is perfectly written."
+   },
+   "r10": {
+    "name": "Aurelian (Rank 10)",
+    "text": "Aurelian runs {{user}} through a hero's drills at dawn, booming encouragement the whole way. While he is in the scene, {{user}}'s Mana training goes further.",
+    "train": "mana"
+   }
+  },
+  "William": {
+   "gift": {
+    "name": "William's prediction notebook",
+    "text": "A page torn from his notebook with {{user}}'s name at the top. Once a week, {{user}} can ask William what \"usually happens next\" in a situation they are in. His answer is a genre guess, and it is right more often than it should be: the narrator gives one real, useful hint about what is coming (a danger, a turn, a person to watch), never a secret."
+   },
+   "r10": {
+    "name": "William (Rank 10)",
+    "text": "William has decided {{user}} is the hero and he is the partner, and partners show up for the comeback. Once per fight, when {{user}} is losing, his shadows pull the enemy off balance for one breath at exactly the right moment, and he names the move."
+   }
+  },
+  "Bruno": {
+   "gift": {
+    "name": "Bruno's knuckle wraps",
+    "text": "His own fighting wraps, soaked in his mana. Once per fight, one strike from {{user}} lands with a bang that knocks an opponent back a few paces. They are never clean either."
+   },
+   "r10": {
+    "name": "Bruno (Rank 10)",
+    "text": "Bruno trains with {{user}} every morning and fights beside them every chance he gets. While he is in the scene, {{user}}'s Stamina training goes further.",
+    "train": "stamina"
+   }
+  },
+  "Bianca": {
+   "gift": {
+    "name": "Bianca's gold ring",
+    "text": "A small gold ring from her own ear, carrying her mark for good. Once a day, if {{user}} is in danger and Bianca can see them, she swaps them out of it with the nearest cushion, chair or unlucky first-year. \"So I never lose my favourite senior.\""
+   },
+   "r10": {
+    "name": "Bianca (Rank 10)",
+    "text": "Bianca makes {{user}} the most talked-about student at Halvard, on purpose and mostly flattering: {{user}}'s Student reputation rises by one level.",
+    "rep_up": "Student"
+   }
+  },
+  "Rigel": {
+   "gift": {
+    "name": "Rigel's focus",
+    "text": "An Ardenne focus engraved with {{user}}'s name, which he bought the way other people buy a sweet. The finest focus most students will ever hold; since it is engraved, no shop will buy it back.",
+    "secret": "Every Ardenne focus is registered with the family. The Ardennes now know {{user}}'s name."
+   },
+   "r10": {
+    "name": "Rigel (Rank 10)",
+    "text": "Rigel writes {{user}} into the family ledger as a friend of the house. An allowance arrives every month, and he is hurt if it is refused.",
+    "monthly": "rigel",
+    "secret": "Friends of the house are in its ledger. One day the house may ask for something back."
+   }
+  },
+  "Topaz": {
+   "gift": {
+    "name": "Topaz's rival notebook",
+    "text": "The notebook itself: every page about {{user}}'s magic, habits, openings and mistakes. She hands it over furious and red. While she is in the scene, {{user}}'s Mana training goes further, because she will not stop pointing out what they did wrong.",
+    "train": "mana"
+   },
+   "r10": {
+    "name": "Topaz (Rank 10)",
+    "text": "Topaz has studied {{user}}'s strongest spell so long that she can copy it cleanly. Once per fight she casts it beside them, at a third of its strength, from her own hands, and keeps score of whose landed first."
+   }
+  },
+  "Faye": {
+   "gift": {
+    "name": "Faye's spare hammock",
+    "text": "Her second hammock, rolled and tied with a ribbon. Once a week, an hour's rest in it outdoors does {{user}} as much good as a night's sleep for their stamina, though not for injuries. She says it was meant to be theirs."
+   },
+   "r10": {
+    "name": "Faye (Rank 10)",
+    "text": "Faye's calm reaches {{user}} when it matters. Once per fight, when fear, panic or fear magic grips {{user}}, her hand on their back and a quiet \"no rush\" clears it, and {{user}} acts with a steady head."
    }
   }
  }

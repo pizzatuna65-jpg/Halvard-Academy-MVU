@@ -17,7 +17,7 @@ const migratedClub = applyPatch(oldClub, [{ op: 'replace', path: '/World/Time', 
 ok(migratedClub.Player.Profile.Club === 'Magic Duelling Club' && !/Left the Duelling Club|Joined the Magic Duelling Club/.test(migratedClub.Journal.slice(S.Journal.length).join()), 'old-save club migrates without a false join or leave');
 let h = U.PANELS.activities.render(S);
 ok(/your club/.test(h) && /followed you in/.test(h), 'your club card, Etnie follows you in');
-ok(!/data-nb|Ask to join/.test(h), 'no "Ask to join" once in a club');
+ok(!/data-nb/.test(h) && (h.match(/Ask to join/g) || []).length === 1 && /Student Council/.test(h), 'an existing club member may still join the Council');
 ok(!/data-actab="competition"/.test(h) && !/data-actab="shop"/.test(h), 'tabs: competition locked, no shop away from a shop (1.2.0)');
 // club members gated by the Club field (rank 1)
 const lib = U.DATA.clubs.find(c => c.key === 'Library Assistants');
