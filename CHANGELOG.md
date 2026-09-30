@@ -1,7 +1,23 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.30.6 — "Connected to" follows the map (2026-09-30)
+
+Owner: "connected to on the map and in the lorebook should follow the map picture (Founder's Park → Courtyards, Light Dormitory,
+Archery Range, Sports Field, Mail Tower, Medical Centre, Groundskeeper Lodge, Combat Ground); hide it on the map, the AI still sees
+it". Decision touched: "Map cards" (the Connected to row is gone).
+- Out of doors, each place now links to the places drawn next to it on the map (`tools/curate_data.py` `ADJ`); the Campus Map lore
+  (entry 132, "Adjacent places") states the same list. The Courtyard keeps the castle doors, the four dormitories, the Mall, the
+  Medical Centre, Founder's Park and the Gatehouse; Sports Field, Combat Grounds, Gardens, Mail Tower, the Hills and the Dovecote are
+  no longer its neighbours. The castle rooms, dorm rooms, Mall shops and the far grounds' long paths (`FAR_LEGS`) are unchanged.
+- Map cards no longer show "Connected to" (the data stays for the lore). Walking times: Mail Tower 7 → 8 and Sports Field 15 → 16
+  from the Courtyard (their old Courtyard shortcut is gone); the lore walking line says so.
+- Save fixture v1.30.5. Tests: people map, Mall shops (updated for the hidden row), map gates, far grounds, connections, playtest,
+  saves pass.
+- To confirm with the owner: the neighbours I read from the picture for places other than Founder's Park (list in the Campus Map
+  entry); the Hills link to Arbiter Hall and the Staff Quarters (the path behind them) while the walk still counts from the Courtyard.
 
 ## v1.30.5 — The persona picture in the Student file (2026-09-30)
 
@@ -46,28 +62,6 @@ Owner playtest: the bracelet said "Morning, before classes" at 07:30 on the Entr
 timetable is suspended (Entrance Event, breaks, lockdown) the period now reads "Morning, no classes today" and, from 16:00,
 "Afternoon, no classes today"; ordinary school days are unchanged (`periodOf`). Save fixture v1.30.1. Tests: `test_playtest_v1301`
 (+2 checks), world, attendance, calendar, ambience, saves pass.
-
-## v1.30.1 — Playtest fixes: area gates, rival teams, malformed update blocks (2026-09-30)
-
-Owner playtest of a new chat (Gemini 3.8 Flash), with the exported chat as evidence. Decisions touched: **"Gated places"** (changed
-at the owner's request) and a new "Rival academy teams" entry; DECISIONS §11 gains the verified MVU parsing facts.
-- **Map gates only in their area** (owner: "from the Grassy Field the Observation Tower and Old Hut unlock; they stay while I am
-  there, and lock again at the Courtyards"). Before, a gate opened for good after the first visit. Now the far-grounds places show
-  while {{user}} is at the gate place or behind the same gate, and hide back on the main grounds (`gateOpen` in `20_map.js`).
-- **Rival academy students are not at Halvard.** In reply 18 the narrator invented a Medical Centre healer and keyed her
-  "Mirelle Lullwyn" in `Scene.Present`; the engine took her for Ashvale's Mirelle and loaded her sheet. The engine now removes a
-  rival team member from a scene on campus (unless on a trip or at the Kingdom Competition) and tells the narrator to give invented
-  people their own names.
-- **Location not updating** was two replies whose whole update MVU dropped: reply 4 had no `<JSONPatch>` tags, reply 24 no opening
-  `[` and no `</JSONPatch>`. MagVarUpdate reads a patch only inside both tags (verified in its source, b13b43b). The engine now
-  listens to `COMMAND_PARSED`: when MVU found no JSON patch in a reply with an `<UpdateVariable>` block, it reads the list itself
-  and adds the same commands MVU would have made (checked identical against MVU's own `extractJsonPatch`). The Log says so; a block
-  whose JSON cannot be read gets a toast to swipe. 503 now says both tags are required.
-- Also seen in the export: floors 1–4 (the Builder entries and reply 4) carry no MVU data; the cause is not established (no
-  MVU cleanup snapshot marks). Later floors are intact, and play continued from the Builder's state.
-- Save fixture v1.30.0. Cards rebuilt. Tests: new `test_playtest_v1301.cjs` (21 checks, using the two dropped blocks from the chat);
-  map gates, people map, saves, tokens, cast sheet, activities, extras, audit and lint pass. Recovery inside SillyTavern is a live
-  check (TEST_CHECKLIST).
 
 ## Release index (one line per release, oldest first)
 
@@ -165,3 +159,4 @@ at the owner's request) and a new "Rival academy teams" entry; DECISIONS §11 ga
 - **v1.30.3 (2026-09-30):** Special-occasion days (calendar `fair`) are clear and calm; the temperature keeps the season.
 - **v1.30.4 (2026-09-30):** Student Builder template "Charles Chevalier", the owner's playtest student.
 - **v1.30.5 (2026-09-30):** With no picture uploaded, the Student file shows the SillyTavern persona's image.
+- **v1.30.6 (2026-09-30):** "Connected to" follows the map picture; the map cards no longer show it.

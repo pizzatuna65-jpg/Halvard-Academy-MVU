@@ -686,6 +686,37 @@ def ghost_stories(C, N):
         e['content'] = e['content'].replace('\nFeel:', f'\nHome of the {title} story.\nFeel:', 1)
     rep(C[132], "nothing out there is next door to anything else.",
         "nothing out there is next door to anything else. The long paths out are home of the Polite Walker story.")
+    # 1.30.6 (owner: "connected to" follows the map picture): the outdoor adjacency is what the map draws side by side. The same
+    # list is tools/curate_data.py ADJ (the map panel's data); keep the two together.
+    for head, line in (
+        ("- Perimeter:", "- Perimeter: Gatehouse/Reception (with its visiting parlour) – Main Courtyard (up the main avenue), Commissary, Medical Centre, "
+                         "Mail Tower, Groundskeeper's Lodge."),
+        ("- Dormitories:", "- Dormitories: Main Courtyard – Fire, Light, Sky and Viridian Dormitories, four separate buildings around it; each dormitory – "
+                           "its Common Room, Laundry, Bathhouse. Fire Dormitory – Sky Dormitory, Broken Statue. Sky Dormitory – The Mall, Cathedral, "
+                           "Broken Statue. Viridian Dormitory – Arbiter Hall, Staff Quarters, Gardens, Light Dormitory. Light Dormitory – Medical Centre, "
+                           "Founder's Park, Archery Range."),
+        ("- Student life:", "- Student life: Main Courtyard – The Mall, Medical Centre. The Mall – Medical Centre, Commissary (each its own building, three "
+                            "or four minutes' walk from it), Banking House, Cathedral. Medical Centre – Mail Tower, Commissary. Commissary – Banking House. "
+                            "Banking House – Meditation Rooms/Spirit House. Mail Tower – Groundskeeper's Lodge."),
+        ("- Outer grounds:", "- Outer grounds: Main Courtyard – Founder's Park. Founder's Park – Light Dormitory, Medical Centre, Mail Tower, Groundskeeper's "
+                             "Lodge, Combat Grounds, Sports Field, Archery Range. Arbiter Hall – Staff Quarters. Staff Quarters – Gardens. Gardens – "
+                             "Menagerie, Archery Range. Archery Range – Menagerie, Gymnasium, Sports Field. Gymnasium – Menagerie, Sports Field, Swimming "
+                             "Pool (outdoor). Sports Field – Combat Grounds, Sparring Pavilion. Combat Grounds – Sparring Pavilion, Groundskeeper's Lodge."),
+        ("- Far edge:", "- Far edge: the long path out from Main Courtyard, past Arbiter Hall and the Staff Quarters, climbs to the Grassy Field/Hills. "
+                        "Hills – Observation Tower, Old Hut, Boathouse/Lake, Fishing House, Forest. Gardens – Boathouse/Lake. Boathouse/Lake – Fishing "
+                        "House (three minutes along the shore from the boathouse), Willow Island (by boat only), Forest. Old Hut – Forest. Forest – "
+                        "Forest Clearing."),
+        ("- Set apart from the core:", "- Set apart from the core: the Dovecote, Cathedral and Noble Houses' Liaison stand together on one side of the "
+                                       "grounds, with the Meditation Rooms/Spirit House below them; between them and the Fire Dormitory, in the trees, "
+                                       "stands the Broken Statue. The Dovecote, Cathedral and Liaison sit on academy land the academy does not control, "
+                                       "as does the Royal Inspectorate's suite inside the castle (Floor 1). Dovecote – Cathedral, Noble Houses' Liaison, "
+                                       "Broken Statue. Cathedral – Noble Houses' Liaison, Broken Statue, Spirit House. Noble Houses' Liaison – Spirit House.")):
+        m = C[132]
+        assert m['content'].count('\n' + head) == 1, head
+        m['content'] = re.sub(r'(?m)^' + re.escape(head) + r'.*$', lambda _: line, m['content'], count=1)
+    # the shortest paths curate_data.py computes without the old Courtyard links
+    rep(C[132], "Mail Tower 7,", "Mail Tower 8,")
+    rep(C[132], "Sports Field 15;", "Sports Field 16;")
     rep(C[0], "the crying on the water, the night student.",
         "the crying on the water, the night student, the thirteenth stroke, the night swimmer, the walking lantern, breath on the glass, "
         "when the pens go quiet, the faraway laugh, the polite walker, the last bed, the other climber, the applause.")

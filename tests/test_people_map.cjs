@@ -65,7 +65,7 @@ ok(/data-loccard="reception_and_gatehouse"/.test(mh) && /You are here/.test(mh),
   ok(club('Running').includes('sports_field') && club('Archery').includes('archery_range') && ['Swimming', 'Gymnastics', 'Basketball'].every(c => club(c).includes('gymnasium')) && club('Divination').includes('observation_tower'), 'club venues follow the owner map');
   U.view.pin = 17; U.view.floor = ''; U.view.cardPin = '';
   const sf = U.PANELS.map.render(S);
-  ok(['Walk', 'Access', 'Clubs here', 'Regulars', 'Connected to'].every(k => sf.includes(`<dt>${k}</dt>`)) && /Nobody you know yet/.test(sf) && /Soccer, Running/.test(sf), 'every card has the same rows; regulars empty before you know anyone');
+  ok(['Walk', 'Access', 'Clubs here', 'Regulars'].every(k => sf.includes(`<dt>${k}</dt>`)) && !sf.includes('<dt>Connected to</dt>') && /Nobody you know yet/.test(sf) && /Soccer, Running/.test(sf), 'every card has the same rows; regulars empty before you know anyone');
   const K = JSON.parse(JSON.stringify(S)); K.Bonds.Saffi = { Rank: 1, Progress: 0, Trust: 50, Tension: 0, Title: '', Romance: false, Known_facts: [], Milestones: [], Last_seen: '', _Event_ready: false, $Known_old: [] };
   ok(/data-open="npc:Saffi"/.test(U.PANELS.map.render(K)), 'a regular appears once their Haunts entry unlocks');
   K.Bonds.Saffi.Rank = 0; ok(!/npc:Saffi/.test(U.PANELS.map.render(K)), 'met but below the Haunts rank: not listed yet');

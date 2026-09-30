@@ -169,24 +169,41 @@ L = lambda name: slug(re.sub(r'^The ', '', name))
 def need(*ids):
     for i in ids: assert i in locs, i
     return ids
-# adjacency from Core 132 Campus Map (+ D23-D25)
-ADJ = [('Reception and Gatehouse', 'Courtyards'), ('Reception and Gatehouse', "Groundskeeper's Lodge"),
-       *[('Courtyards', x) for x in ('Arbiter Hall', 'Canteen', 'Club Rooms', 'Main Library', 'Notice Board', 'Lecture Halls', 'Faculty Offices',
-                                     'Fire Dormitory', 'Light Dormitory', 'Sky Dormitory', 'Viridian Dormitory', 'The Mall', 'Mail Tower',
-                                     "Founder's Statue and Park", 'Combat Grounds', 'Sports Field', 'Gardens', 'Grassy Field and Hills', 'The Dovecote')],
+# adjacency from Core 132 Campus Map (+ D23-D25). 1.30.6 (owner: "connected to" follows the map picture): out of doors, a place
+# links to the places drawn next to it on the map (Founder's Park: Courtyards, Light Dormitory, Archery Range, Sports Field, Mail
+# Tower, Medical Centre, Groundskeeper's Lodge, Combat Grounds). The castle's doors, the rooms inside a building and the far
+# grounds (FAR_LEGS below, the owner's long paths) keep their links. merge_lorebooks.py writes the same list into the Campus Map.
+ADJ = [*[('Courtyards', x) for x in ('Arbiter Hall', 'Canteen', 'Club Rooms', 'Main Library', 'Notice Board', 'Lecture Halls', 'Faculty Offices',
+                                     'Fire Dormitory', 'Light Dormitory', 'Sky Dormitory', 'Viridian Dormitory', 'The Mall', 'Medical Centre',
+                                     "Founder's Statue and Park", 'Reception and Gatehouse')],
+       *[('Reception and Gatehouse', x) for x in ('Commissary', 'Medical Centre', 'Mail Tower', "Groundskeeper's Lodge")],
        ('Arbiter Hall', 'Ring Dining Hall'), ('Arbiter Hall', 'Portrait Hall'), ('Portrait Hall', 'Bell Tower'), ('Bell Tower', 'Rooftop'),
        ('Club Rooms', 'Student Council Chamber'), ('Club Rooms', 'Announcement Room'), ('Lecture Halls', 'Seminar Rooms'),
        ('Lecture Halls', 'Potion Halls'), ('Lecture Halls', 'Workshop'), ('Lecture Halls', 'Storage and Lockers'), ('Main Library', 'Study Rooms'),
        ('Main Library', 'Archive'), ('Archive', 'Restricted Section'), ('Faculty Offices', 'Staff Room'), ('Faculty Offices', "Headmaster's Office"),
        ("Warden's Office", 'Seal Chamber'), ('Notice Board', "Warden's Office"), ('Notice Board', 'The Royal Inspectorate'),
        ('Notice Board', 'Detention Tower'), ('Notice Board', 'Staff Quarters'), ("Warden's Office", 'The Royal Inspectorate'),
-       ('The Mall', 'Medical Centre'), ('The Mall', 'Commissary'), ('The Mall', 'The Banking House'), ('The Mall', 'Meditation Rooms / Spirit House'),
-       ("Founder's Statue and Park", 'Gardens'), ("Founder's Statue and Park", 'Sports Field'), ('Sports Field', 'Gymnasium'),
-       ('Sports Field', 'Archery Range'), ('Gymnasium', 'Swimming Pool'), ('Gardens', 'Menagerie'), ('Grassy Field and Hills', 'Observation Tower'),
-       ('Grassy Field and Hills', 'Old Hut'), ('Combat Grounds', 'The Sparring Pavilion'), ('Gardens', 'Boathouse and Lake'),
-       ('Boathouse and Lake', 'Forest'), ('Boathouse and Lake', 'Fishing House'), ('Boathouse and Lake', 'Willow Island'), ('Grassy Field and Hills', 'Forest'), ('Forest', 'Forest Clearing'),
+       ('Arbiter Hall', 'Viridian Dormitory'), ('Arbiter Hall', 'Staff Quarters'), ('Arbiter Hall', 'Grassy Field and Hills'),
+       ('Staff Quarters', 'Viridian Dormitory'), ('Staff Quarters', 'Gardens'), ('Staff Quarters', 'Grassy Field and Hills'),
+       ('Viridian Dormitory', 'Gardens'), ('Viridian Dormitory', 'Light Dormitory'),
+       *[('Light Dormitory', x) for x in ('Medical Centre', "Founder's Statue and Park", 'Archery Range')],
+       ('Fire Dormitory', 'Sky Dormitory'), ('Fire Dormitory', 'Broken Statue'),
+       *[('Sky Dormitory', x) for x in ('The Mall', 'The Cathedral', 'Broken Statue')],
+       *[("Founder's Statue and Park", x) for x in ('Medical Centre', 'Mail Tower', "Groundskeeper's Lodge", 'Combat Grounds', 'Sports Field', 'Archery Range')],
+       *[('The Mall', x) for x in ('Medical Centre', 'Commissary', 'The Banking House', 'The Cathedral')],
+       ('Medical Centre', 'Mail Tower'), ('Medical Centre', 'Commissary'), ('Mail Tower', "Groundskeeper's Lodge"),
+       ('Commissary', 'The Banking House'), ('The Banking House', 'Meditation Rooms / Spirit House'),
+       ('Gardens', 'Menagerie'), ('Gardens', 'Archery Range'), ('Menagerie', 'Archery Range'), ('Menagerie', 'Gymnasium'),
+       ('Archery Range', 'Gymnasium'), ('Archery Range', 'Sports Field'), ('Gymnasium', 'Swimming Pool'), ('Gymnasium', 'Sports Field'),
+       ('Sports Field', 'Combat Grounds'), ('Sports Field', 'The Sparring Pavilion'), ('Combat Grounds', 'The Sparring Pavilion'),
+       ('Combat Grounds', "Groundskeeper's Lodge"),
+       ('Grassy Field and Hills', 'Observation Tower'), ('Grassy Field and Hills', 'Old Hut'), ('Grassy Field and Hills', 'Forest'),
+       ('Grassy Field and Hills', 'Boathouse and Lake'), ('Grassy Field and Hills', 'Fishing House'), ('Old Hut', 'Forest'),
+       ('Gardens', 'Boathouse and Lake'), ('Boathouse and Lake', 'Forest'), ('Boathouse and Lake', 'Fishing House'),
+       ('Boathouse and Lake', 'Willow Island'), ('Forest', 'Forest Clearing'),
        ('The Dovecote', 'The Cathedral'), ('The Dovecote', "The Noble Houses' Liaison"), ('The Cathedral', "The Noble Houses' Liaison"),
-       ('Broken Statue', 'The Dovecote'), ('Broken Statue', 'Fire Dormitory'),
+       ('Broken Statue', 'The Dovecote'), ('Broken Statue', 'The Cathedral'),
+       ('Meditation Rooms / Spirit House', 'The Cathedral'), ('Meditation Rooms / Spirit House', "The Noble Houses' Liaison"),
        *[(d, x) for d in ('Fire Dormitory', 'Light Dormitory', 'Sky Dormitory', 'Viridian Dormitory')
          for x in ('Common Rooms', 'Laundry', 'Bathhouse and Washrooms')],
        *[('The Mall', s) for s in ('Nightwell', "Merryhew's", 'The Snug', *GIFT_SHOPS)]]   # 1.9.5: every Mall shop links to The Mall and back

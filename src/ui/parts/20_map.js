@@ -224,12 +224,12 @@ function locCard(id, S, cur, P) {
   const busy = classHint(S);   // 1.1.0 (spec §1): students are in class / Study Hall / at their clubs during the periods
   const regs = l.regulars.filter(r => atHalvard(r, S) && hauntKnown(r, S)).map(r => (npcOf(r) ? (B[r] ? `<button class="lnk" data-open="npc:${esc(r)}">${esc(nameOf(r, S))}</button>` : esc(nameOf(r, S))) : esc(r))
     + (stOf(r) ? ` <span class="sub">(${esc(stOf(r))})</span>` : busy && /^Year/.test((npcOf(r) || {}).g || '') ? ` <span class="sub">(${busy})</span>` : '')).join(', ');
-  const conns = l.connections.filter(c => DATA.locs[c] && discovered(S, DATA.locs[c])).map(c => `<button class="lnk" data-loc="${esc(c)}">${esc(DATA.locs[c].name)}</button>`).join(', ');
-  // 1.2.0 (owner): every card has the same rows, in the same order
+  // 1.2.0 (owner): every card has the same rows, in the same order. 1.30.6 (owner): no "Connected to" row; the map shows the
+  // neighbours, and the AI reads them in the Campus Map lore
   const rows = [
     ['Walk', esc(walkText(id, cur, S))], ['Access', esc(accessText)],
     ['Clubs here', esc(l.clubs.map(c => c.replace(/\s*\(.*\)$/, '')).join(', ') || 'None')],
-    ['Regulars', regs || '<span class="sub">Nobody you know yet</span>'], ['Connected to', conns || '—'],
+    ['Regulars', regs || '<span class="sub">Nobody you know yet</span>'],
   ];
   return `<article class="lc${here ? ' here' : ''}" data-loccard="${esc(id)}"><div class="crop" style="${cropStyle(P, S)}"><b>${esc(fl ? nameOn(id, fl) : l.name)}</b>${here ? '<span class="you">You are here</span>' : ''}</div>
     <div class="in">${fl ? `<p class="yrfl"><b>${esc(fl)}</b> · for Year ${YEAR_OF_FLOOR[fl]} students${YEAR_OF_FLOOR[fl] === _.clamp(num(((S.Player || {}).Profile || {}).Year, 1), 1, 3) ? ' · <span class="mine">your year</span>' : ''}</p>` : ''}${l.vibe ? `<p class="vibe">${esc(l.vibe)}</p>` : ''}${seasonLine(l, S)}

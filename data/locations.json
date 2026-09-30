@@ -240,7 +240,10 @@
   "connections": [
    "courtyards",
    "ring_dining_hall",
-   "portrait_hall"
+   "portrait_hall",
+   "viridian_dormitory",
+   "staff_quarters",
+   "grassy_field_and_hills"
   ],
   "walk_min": 7,
   "clubs": [],
@@ -262,6 +265,14 @@
    [
     "ring_dining_hall",
     1
+   ],
+   [
+    "staff_quarters",
+    3
+   ],
+   [
+    "viridian_dormitory",
+    4
    ]
   ]
  },
@@ -345,8 +356,13 @@
   ],
   "connections": [
    "courtyards",
-   "gardens",
-   "sports_field"
+   "light_dormitory",
+   "medical_centre",
+   "mail_tower",
+   "groundskeepers_lodge",
+   "combat_grounds",
+   "sports_field",
+   "archery_range"
   ],
   "walk_min": 7,
   "clubs": [],
@@ -378,12 +394,12 @@
     7
    ],
    [
-    "courtyards",
+    "combat_grounds",
     7
    ],
    [
-    "gardens",
-    9
+    "courtyards",
+    7
    ],
    [
     "groundskeepers_lodge",
@@ -944,8 +960,10 @@
    "Tsubaki"
   ],
   "connections": [
-   "courtyards",
-   "sparring_pavilion"
+   "founders_statue_and_park",
+   "sports_field",
+   "sparring_pavilion",
+   "groundskeepers_lodge"
   ],
   "walk_min": 14,
   "clubs": [
@@ -959,8 +977,8 @@
   "seasons": {},
   "near": [
    [
-    "courtyards",
-    14
+    "founders_statue_and_park",
+    7
    ],
    [
     "groundskeepers_lodge",
@@ -2274,10 +2292,11 @@
   ],
   "connections": [
    "courtyards",
+   "sky_dormitory",
    "medical_centre",
    "commissary",
    "banking_house",
-   "meditation_rooms_spirit_house",
+   "cathedral",
    "nightwell",
    "merryhews",
    "snug",
@@ -2819,9 +2838,12 @@
    "Saffi"
   ],
   "connections": [
-   "courtyards"
+   "reception_and_gatehouse",
+   "founders_statue_and_park",
+   "medical_centre",
+   "groundskeepers_lodge"
   ],
-  "walk_min": 7,
+  "walk_min": 8,
   "clubs": [],
   "access": null,
   "lore": [],
@@ -2833,10 +2855,6 @@
    [
     "commissary",
     5
-   ],
-   [
-    "courtyards",
-    7
    ],
    [
     "founders_statue_and_park",
@@ -2878,7 +2896,6 @@
    "Trixie"
   ],
   "connections": [
-   "reception_and_gatehouse",
    "arbiter_hall",
    "canteen",
    "club_rooms",
@@ -2891,13 +2908,9 @@
    "sky_dormitory",
    "viridian_dormitory",
    "mall",
-   "mail_tower",
+   "medical_centre",
    "founders_statue_and_park",
-   "combat_grounds",
-   "sports_field",
-   "gardens",
-   "grassy_field_and_hills",
-   "dovecote"
+   "reception_and_gatehouse"
   ],
   "walk_min": 0,
   "clubs": [],
@@ -2924,14 +2937,6 @@
     5
    ],
    [
-    "combat_grounds",
-    14
-   ],
-   [
-    "dovecote",
-    12
-   ],
-   [
     "faculty_offices",
     5
    ],
@@ -2944,10 +2949,6 @@
     7
    ],
    [
-    "gardens",
-    10
-   ],
-   [
     "grassy_field_and_hills",
     20
    ],
@@ -2958,10 +2959,6 @@
    [
     "light_dormitory",
     5
-   ],
-   [
-    "mail_tower",
-    7
    ],
    [
     "main_library",
@@ -2988,10 +2985,6 @@
     4
    ],
    [
-    "sports_field",
-    15
-   ],
-   [
     "viridian_dormitory",
     6
    ]
@@ -3011,12 +3004,13 @@
    "Saffi"
   ],
   "connections": [
-   "courtyards",
    "founders_statue_and_park",
+   "archery_range",
    "gymnasium",
-   "archery_range"
+   "combat_grounds",
+   "sparring_pavilion"
   ],
-  "walk_min": 15,
+  "walk_min": 16,
   "clubs": [
    "Soccer",
    "Running"
@@ -3037,10 +3031,6 @@
    [
     "combat_grounds",
     5
-   ],
-   [
-    "courtyards",
-    15
    ],
    [
     "founders_statue_and_park",
@@ -3078,8 +3068,10 @@
    "Saffi"
   ],
   "connections": [
-   "sports_field",
-   "swimming_pool"
+   "menagerie",
+   "archery_range",
+   "swimming_pool",
+   "sports_field"
   ],
   "walk_min": 14,
   "clubs": [
@@ -3190,6 +3182,11 @@
    "Saffi"
   ],
   "connections": [
+   "light_dormitory",
+   "founders_statue_and_park",
+   "gardens",
+   "menagerie",
+   "gymnasium",
    "sports_field"
   ],
   "walk_min": 11,
@@ -3255,10 +3252,13 @@
    "Tsubaki"
   ],
   "connections": [
-   "courtyards",
+   "arbiter_hall",
+   "staff_quarters",
    "observation_tower",
    "old_hut",
-   "forest"
+   "forest",
+   "boathouse_and_lake",
+   "fishing_house"
   ],
   "walk_min": 20,
   "clubs": [
@@ -3325,8 +3325,9 @@
    "Vallie"
   ],
   "connections": [
-   "boathouse_and_lake",
    "grassy_field_and_hills",
+   "old_hut",
+   "boathouse_and_lake",
    "forest_clearing"
   ],
   "walk_min": 35,
@@ -3384,6 +3385,7 @@
    "Wren"
   ],
   "connections": [
+   "grassy_field_and_hills",
    "gardens",
    "forest",
    "fishing_house",
@@ -3450,9 +3452,10 @@
    "Zara"
   ],
   "connections": [
-   "courtyards",
-   "founders_statue_and_park",
+   "staff_quarters",
+   "viridian_dormitory",
    "menagerie",
+   "archery_range",
    "boathouse_and_lake"
   ],
   "walk_min": 10,
@@ -3484,14 +3487,6 @@
    [
     "boathouse_and_lake",
     20
-   ],
-   [
-    "courtyards",
-    10
-   ],
-   [
-    "founders_statue_and_park",
-    9
    ],
    [
     "gymnasium",
@@ -3533,7 +3528,9 @@
    "Vallie"
   ],
   "connections": [
-   "gardens"
+   "gardens",
+   "archery_range",
+   "gymnasium"
   ],
   "walk_min": 13,
   "clubs": [
@@ -3635,7 +3632,13 @@
    "Vera"
   ],
   "connections": [
-   "mall"
+   "courtyards",
+   "reception_and_gatehouse",
+   "light_dormitory",
+   "founders_statue_and_park",
+   "mall",
+   "mail_tower",
+   "commissary"
   ],
   "walk_min": 6,
   "clubs": [
@@ -3706,7 +3709,10 @@
    "Zara"
   ],
   "connections": [
-   "mall"
+   "reception_and_gatehouse",
+   "mall",
+   "medical_centre",
+   "banking_house"
   ],
   "walk_min": 8,
   "clubs": [],
@@ -3770,6 +3776,9 @@
   "regulars": [],
   "connections": [
    "courtyards",
+   "commissary",
+   "medical_centre",
+   "mail_tower",
    "groundskeepers_lodge"
   ],
   "walk_min": 9,
@@ -3828,7 +3837,10 @@
    "Lenna"
   ],
   "connections": [
-   "reception_and_gatehouse"
+   "reception_and_gatehouse",
+   "founders_statue_and_park",
+   "mail_tower",
+   "combat_grounds"
   ],
   "walk_min": 11,
   "clubs": [
@@ -3993,7 +4005,9 @@
    "Ruby"
   ],
   "connections": [
-   "mall"
+   "banking_house",
+   "cathedral",
+   "noble_houses_liaison"
   ],
   "walk_min": 11,
   "clubs": [],
@@ -4051,7 +4065,6 @@
    "Milena"
   ],
   "connections": [
-   "courtyards",
    "cathedral",
    "noble_houses_liaison",
    "broken_statue"
@@ -4072,10 +4085,6 @@
    [
     "cathedral",
     5
-   ],
-   [
-    "courtyards",
-    12
    ],
    [
     "fire_dormitory",
@@ -4219,8 +4228,12 @@
    "Tristan"
   ],
   "connections": [
+   "sky_dormitory",
+   "mall",
    "dovecote",
-   "noble_houses_liaison"
+   "noble_houses_liaison",
+   "broken_statue",
+   "meditation_rooms_spirit_house"
   ],
   "walk_min": 8,
   "clubs": [],
@@ -4286,7 +4299,8 @@
   ],
   "connections": [
    "dovecote",
-   "cathedral"
+   "cathedral",
+   "meditation_rooms_spirit_house"
   ],
   "walk_min": 12,
   "clubs": [],
@@ -4330,7 +4344,9 @@
    "Royhan"
   ],
   "connections": [
-   "mall"
+   "mall",
+   "commissary",
+   "meditation_rooms_spirit_house"
   ],
   "walk_min": 10,
   "clubs": [],
@@ -4660,7 +4676,11 @@
    "Yvette"
   ],
   "connections": [
-   "notice_board"
+   "notice_board",
+   "arbiter_hall",
+   "viridian_dormitory",
+   "gardens",
+   "grassy_field_and_hills"
   ],
   "walk_min": 10,
   "clubs": [],
@@ -4671,6 +4691,10 @@
   "discoverable": false,
   "seasons": {},
   "near": [
+   [
+    "arbiter_hall",
+    3
+   ],
    [
     "archery_range",
     6
@@ -4708,6 +4732,7 @@
   ],
   "connections": [
    "courtyards",
+   "sky_dormitory",
    "broken_statue",
    "common_rooms",
    "laundry",
@@ -4780,6 +4805,10 @@
   ],
   "connections": [
    "courtyards",
+   "viridian_dormitory",
+   "medical_centre",
+   "founders_statue_and_park",
+   "archery_range",
    "common_rooms",
    "laundry",
    "bathhouse_and_washrooms"
@@ -4859,6 +4888,10 @@
   ],
   "connections": [
    "courtyards",
+   "fire_dormitory",
+   "mall",
+   "cathedral",
+   "broken_statue",
    "common_rooms",
    "laundry",
    "bathhouse_and_washrooms"
@@ -4926,6 +4959,10 @@
   ],
   "connections": [
    "courtyards",
+   "arbiter_hall",
+   "staff_quarters",
+   "gardens",
+   "light_dormitory",
    "common_rooms",
    "laundry",
    "bathhouse_and_washrooms"
@@ -4950,6 +4987,10 @@
    "Winter": "Bare branches over the roofline; the meditation stones sit under snow."
   },
   "near": [
+   [
+    "arbiter_hall",
+    4
+   ],
    [
     "archery_range",
     6
@@ -4999,7 +5040,8 @@
   "has_secret": false,
   "regulars": [],
   "connections": [
-   "grassy_field_and_hills"
+   "grassy_field_and_hills",
+   "forest"
   ],
   "walk_min": 30,
   "clubs": [],
@@ -5153,8 +5195,10 @@
   "has_secret": true,
   "regulars": [],
   "connections": [
+   "fire_dormitory",
+   "sky_dormitory",
    "dovecote",
-   "fire_dormitory"
+   "cathedral"
   ],
   "walk_min": 10,
   "clubs": [],
@@ -5208,6 +5252,7 @@
    "Tsubaki"
   ],
   "connections": [
+   "sports_field",
    "combat_grounds"
   ],
   "walk_min": 17,
@@ -5248,6 +5293,7 @@
    "Wren"
   ],
   "connections": [
+   "grassy_field_and_hills",
    "boathouse_and_lake"
   ],
   "walk_min": 33,

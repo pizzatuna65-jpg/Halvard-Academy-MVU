@@ -113,5 +113,5 @@ console.log('Mall connections');
   ok(shops.length === 10 && shops.every(l => l.connections.includes('mall') && L.mall.connections.includes(l.id)), `every Mall shop links to The Mall and back (${shops.length})`);
   ok(shops.every(l => l.walk_min === L.mall.walk_min + 1 && l.near.some(([o, m]) => o === 'mall' && m === 1)), 'each shop is a one-minute walk inside the Mall');
   const S = at(S0, 10, '10:00', 'The Mall');
-  ok(shops.every(l => new RegExp(`Connected to</dt><dd>[^]*?data-loc="mall"`).test(U.locCard(l.id, S, 'mall', { x: 50, y: 50 }) || '')), 'each shop card shows Connected to: The Mall');
+  ok(shops.every(l => !/Connected to/.test(U.locCard(l.id, S, 'mall', { x: 50, y: 50 }) || '')), '1.30.6: no card shows a Connected to row (the map shows it)');
 }

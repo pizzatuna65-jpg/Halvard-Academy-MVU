@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.30.6: the one check in its section below.
 - v1.30.5: the one check in its section below.
 - v1.30.4: the one check in its section below.
 - v1.30.3: the one check in its section below.
@@ -62,6 +63,10 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.30.6 — Connected to follows the map
+
+1. Open the Map, click Founder's Park and the Main Courtyard: no "Connected to" row. Ask the narrator where you can walk from Founder's Park: it names the neighbours from the Campus Map entry (Courtyards, Light Dormitory, Archery Range, Sports Field, Mail Tower, Medical Centre, Groundskeeper's Lodge, Combat Grounds).
 
 ### v1.30.5 — Persona picture
 
