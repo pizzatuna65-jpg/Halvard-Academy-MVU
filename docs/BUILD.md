@@ -46,6 +46,7 @@ python tools/audit_chat.py chat.jsonl --out report.md   # optional: character-dr
 | `data/npcs.json`, `locations.json`, `relations.json`, `map_pins.json` | `curate_data.py` |
 | `dist/*` | the build |
 | `data/themes.json` | `tools/make_themes.py` (1.3.1) |
+| `planning/NPC_ROSTER.md` | `tools/make_npc_roster.cjs` (1.32.0; run by `build_all.py --lore`) |
 | `presets/Realistic_Frankenstein_2_2_Eldrasil.json` | `edit_preset.py` |
 
 ## 3. Hand-written single sources

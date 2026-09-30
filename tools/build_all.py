@@ -12,7 +12,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 args = set(sys.argv[1:])
 py = lambda *a: [sys.executable, *a]
 steps = []
-if '--lore' in args: steps += [py('tools/merge_lorebooks.py'), py('tools/curate_data.py')]
+if '--lore' in args: steps += [py('tools/merge_lorebooks.py'), py('tools/curate_data.py'), ['node', 'tools/make_npc_roster.cjs']]   # 1.32.0: planning/NPC_ROSTER.md
 steps += [py('tools/gen_engine.py'), py('tools/gen_mvu_entries.py')]
 if '--themes' in args: steps.append(py('tools/make_themes.py'))
 steps += [py('tools/gen_ui.py'), py('build/build_card.py')]

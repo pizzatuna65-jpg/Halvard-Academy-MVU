@@ -53,6 +53,7 @@ docs/TEST_CHECKLIST.md     live SillyTavern checks (Open list at the top, newest
 docs/PLAYER_GUIDE.md, ECOSYSTEM.md, rentry/, vectfox_cleaning_patterns.json   player-facing docs (linked from the card)
 planning/FUTURE_PLANS.md   everything not done yet: owner plans, unchosen ideas, pending decisions, tunables
 planning/NPC_BRAINSTORM_BRIEF.md   brief for designing NPCs with another AI (kept by hand)
+planning/NPC_ROSTER.md     every NPC in one file: quick table + full profiles (generated; for NPC brainstorms)
 planning/DRAFT_*.md        only while a draft awaits approval or is being applied; deleted in the release that applies it
 source_original/           owner's lorebook v38 and NPC lore passes (canon, pipeline input, never edited)
 src/                       card sources: worldbook/ (generated lore + hand-written custom/ 500–510), scripts/, ui/, regex/, card/

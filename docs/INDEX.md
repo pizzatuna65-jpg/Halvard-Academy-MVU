@@ -40,7 +40,7 @@ Build order, generated files and test commands: `docs/BUILD.md`.
 | Live SillyTavern check to record | `docs/TEST_CHECKLIST.md`: its "Open" list and the newest section only | add a section at the top of "By release" |
 | Release bookkeeping | `CLAUDE.md` "Every release"; the newest `CHANGELOG.md` entry | |
 | Open work, ideas, tunables | `planning/FUTURE_PLANS.md` | |
-| NPC brainstorm with another AI | `planning/NPC_BRAINSTORM_BRIEF.md` or `python tools/make_npc_brief.py` | |
+| NPC brainstorm with another AI, or "is this character already in Eldrasil?" | `planning/NPC_ROSTER.md` only (table first, then the close matches' profiles); `planning/NPC_BRAINSTORM_BRIEF.md` for bond formats | roster: `node tools/make_npc_roster.cjs` (build_all `--lore` runs it) |
 | External behaviour (ST, MVU, Tavern Helper, VectFox) | `docs/DECISIONS.md` §11 verified facts first | read upstream source for anything new |
 
 ## 2. Engine map (`src/scripts/engine.template.js` → generated `engine.js`)
