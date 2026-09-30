@@ -10,6 +10,8 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
 |---|---|---|---|
 | FP4 Anggota baru tim rival | **[YEAR 2]** | Year 2 M9 W4 (Kingdom Competition) | Tim rival baru benar-benar tampil di Kingdom Competition. Sebelum itu entry tim hanya menulis "none on record yet". |
 | FP5 Cohort 3 | **[YEAR 3]** | Year 3 M1 W1 Mon (Entrance Event) | Cohort 2 sudah naik sendiri. Yang kosong hanya first-year yang datang di Year 3. |
+| FP6 Kelas dan guru (Grup C) | **[DRAFT]** | — | Owner setuju pembagian 2026-09-30; perlu draft panjang (canon, NPC baru, keputusan Grades dan Builder scope). |
+| FP7 Peta luar kampus (Grup D) | **[DRAFT]** | Year 1 M4 W2 (Crowning Day, peta ibukota) | Perlu draft lokasi + gambar peta dari owner. |
 
 ### FP4. Anggota baru tim akademi rival dari Year 2 [YEAR 2]
 - Dicatat: 2026-09-27, oleh ras ("tim akademi rival yg year 3 ikut lulus jadi nanti year 2 tim baru yg gk pake year 3 dari year
@@ -30,6 +32,35 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
   `planning/DRAFT_cohort3_npcs.md` (lore, voice canon, Rank 8 branch, rewards, relasi ke NPC lama dan ke cohort 2), lore pass
   `source_original/npc_lore_cohort3_<tanggal>/`, id di `data/cohorts.json` `"3"`, potret.
 - Terbuka [?]: berapa NPC; asrama; ikatan ke cohort 2 (adik kelas mereka) dan ke angkatan {{user}} (sekarang third-year).
+
+### FP6. Kelas dan guru (Grup C) [DRAFT]
+- Dicatat: 2026-09-30, oleh ras (poin 7–11 dari daftar 13 poin; Grup A dan B jadi 1.32.0). Jadi satu draft
+  `planning/DRAFT_classes_and_teachers.md`, karena semuanya bergantung pada daftar role dan daftar guru.
+- **Poin 8, kelas Combat.** Ganti nama (ini kelas praktik magic, "Combat" terkesan satu role; usulan *Applied Magic* atau
+  *Practical Magic*). Dibagi per role (Attack, Defense, Healing, Support, Control), bukan per dorm; guru tiap role mengajar tiga
+  year (seperti Dark Magic Defense). Butuh sekitar 4 NPC guru baru (Gavlan bisa satu role). Menyentuh keputusan **Grades**
+  (Combat → Prowess; kelas Healing mungkin stat lain) dan **Builder scope** (role ditetapkan di kelas Combat pertama).
+- **Poin 9, aturan satu year.** Guru yang hanya mengajar satu year: Magic Theory, Etiquette, Potion Crafting, History. Sisanya
+  mengajar tiga year (Vallie: Creature Studies). Ini mengubah canon "one-year rule" (Milena satu-satunya pengecualian di lore).
+- **Poin 10.** Headmaster Baelin Kalvor dan Vice Headmaster Althair Veyne juga mengajar. Draft memuat tabel mata pelajaran × year
+  yang belum punya guru, lalu mengisinya.
+- **Poin 11, jam kosong.** Saat kelas ada peluang kecil (seeded, tanpa `Math.random`) guru tidak datang, dengan alasan sesuai
+  karakter (sakit, rapat, dipanggil ke ibukota, urusan Dove). Kelas dihitung tidak diadakan (kehadiran aman).
+- **Poin 7, Dorm Competition.** Bracket gugur per role (Attack murni tanding, Healing lomba penyembuhan, dst.); 16 besar lolos ke
+  Academy Competition tanpa harus menang; juara dan runner-up tiap bracket dapat poin.
+- Terbuka [?]: nama kelas; murid dua role masuk kelas mana; 16 besar per dorm atau per role; "poin" = Points, reputasi atau poin
+  dorm; format lomba Defense/Support/Control; apakah Academy Competition (tim isi 4) ikut berubah; mapel dan year untuk Baelin dan
+  Althair; peluang jam kosong.
+
+### FP7. Peta luar kampus (Grup D) [DRAFT]
+- Dicatat: 2026-09-30, oleh ras (poin 12, plus detail poin 4 dan 13). Draft `planning/DRAFT_outside_maps.md`.
+- Peta khusus **Sunreach Bay**, **Primal Forest** dan **ibukota Eldrasil**, lengkap dengan lokasi di tiap peta. Peta ibukota juga
+  dipakai Crowning Day (M4W2) dan Kingdom Competition (arena, hotel). Sunreach sudah punya canon sisi siang/malam (kasino; sisi
+  malam terlarang), dan jadwal Trip Minggu–Rabu yang masih umum diisi dari sini.
+- Teknis: gambar peta dari owner (pipeline aset butuh PNG asli, lalu pin ke commit jsDelivr), pin dan lokasi baru, pemilih peta
+  (Campus / Sunreach / Primal Forest / Capital) yang aktif saat di luar kampus, lore tiap lokasi.
+- Terbuka [?]: "Primal Forest" belum ada di canon (hanya Primal Desert): wilayah baru, atau hutan Grade III Creature Studies
+  Expedition (M2W3)? Nama ibukota (belum ada di canon). Berapa lokasi per peta.
 
 ## 2. Ide yang dicatat tapi tidak dipilih (butuh "proceed" owner kalau mau dibuat)
 - **Patroli jam malam** (E2, 2026-09-28): risiko tertangkap yang di-seed saat {{user}} di luar setelah curfew. Sejak 1.18.0 hanya ada

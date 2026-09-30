@@ -155,6 +155,20 @@ rep(C[245], "The largest festival of the year, the last loud thing before exams.
 rep(C[247], "Where: Sunreach Bay, half a day by airship.",
     "Where: Sunreach Bay, half a day by airship, a southern resort that stays warm all year: a few days of summer in Halvard's winter.")
 rep(N[100], "graduated last spring without her", "graduated last year without her")
+
+# ---------- 1.32.0 calendar (owner): Dorm Days on Sundays, Final Ranking on Monday, a longer Academy Trip, the Kingdom Competition in the capital ----------
+# Same dates as data/calendar.json (engine, UI and the month entries read it).
+rep(C[23], "When: Saturdays, one dorm each. Spiritual M1W4, Mystic M4W3, Elemental M8W4, Occult M10W2.",
+    "When: Sundays, one dorm each. Spiritual M1W4, Mystic M4W3, Elemental M8W4, Occult M10W2.")
+rep(C[237], "Month 11 Week 2 Friday.", "Month 11 Week 2 Monday.")
+rep(C[246], "half a day from Halvard by airship.", "a full day from Halvard by airship.")
+rep(C[247], "When: Month 11 Week 3, Monday to Wednesday.", "When: Month 11 Week 2 Saturday to Week 3 Thursday.")
+rep(C[247], "Where: Sunreach Bay, half a day by airship, a southern resort",
+    "Where: Sunreach Bay, a full day by airship each way (the Saturday and the Thursday are spent flying, morning to night), a southern resort")
+rep(C[19], "3. Kingdom. One team per academy, four in total, knockout. Each member of the winning team earns 5,000 points.",
+    "3. Kingdom. One team per academy, four in total, knockout, at the arena in the capital. Each member of the winning team earns 5,000 points. "
+    "Only the teams travel: they arrive the day before and stay at a hotel near the arena, and fly home the day after. "
+    "Halvard's team goes with Gavlan Haverton as its escort; the rest of the academy stays at school and follows the news.")
 USER_YEAR_OLD = "{{user}} is a first-year at Halvard."
 USER_YEAR_CARD = ("{{user}} is a Year <%- Math.max(1, Math.min(3, Number(getvar('stat_data.Player.Profile.Year')) || 1)) %> student at Halvard "
                   "(a first-year when the story began; Player.Profile.Year is authoritative).")

@@ -54,15 +54,15 @@ ok(!panels(S), 'nothing new left');
 
 // Student file tabs and a swipe back: a key that is no longer in the state shows no dot
 S = applyPatch(S, [{ op: 'replace', path: '/Inventory/Sunfizz', value: { Qty: 1, Note: '' } }]);
-ok(panels(S) === 'profile', 'the Bag appears: Student file gets a dot');
-U.view.tab = 'overview'; U.setNow(S); h = U.renderProfile(S);
-ok(/data-tab="bag"[^>]*>Bag<i class="nd"/.test(h), 'Student file: a dot on the Bag tab');
+ok(panels(S) === 'notebook', 'the Bag appears: Inventory gets a dot (1.32.0)');
+U.view.nb = 'wallet'; U.setNow(S); h = U.PANELS.notebook.render(S);
+ok(/data-nb="bag"[^>]*>Bag<i class="nd"/.test(h), 'Inventory: a dot on the Bag tab');
 const swipedBack = JSON.parse(JSON.stringify(S)); swipedBack.$ui.unlocks = swipedBack.$ui.unlocks.filter(k => k !== 'inventory');
 ok(!panels(swipedBack), 'swiped back before the Bag: no dot');
 
 // a switched-off feature never shows a dot
 const off = JSON.parse(JSON.stringify(S)); off.$ui.on = Object.assign({}, off.$ui.on, { inventory: false });
-ok(!U.newsItems(off, U.newsFeat(off)).some(([k]) => k === 'tab:profile:bag'), 'a feature that is off gives no dot');
+ok(!U.newsItems(off, U.newsFeat(off)).some(([k]) => k === 'tab:notebook:bag'), 'a feature that is off gives no dot');
 
 // lore heard: the map pin and the card
 const L = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/locations.json'), 'utf8')).main_library;

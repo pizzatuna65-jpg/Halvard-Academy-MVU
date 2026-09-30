@@ -747,7 +747,7 @@
         "world comp"
       ],
       "keysecondary": [],
-      "content": "[Competitions]\nFour tiers, elimination. Losing at any tier ends your competitive year. The one exception is World selection, which is chosen rather than won.\n1. Dorm. Solo, open to the whole dorm, run as a ranking tournament so every entrant finishes with a placement. Top 16 per dorm qualify.\n2. Academy. Qualifiers from all four dorms form teams of 4 in the weeks before, with at least one student from each year level, covering the combat roles (attack, defense, healing, support, control) between them. Teams mix dorms and usually must, since no dorm covers every role well. Knockout bracket; the winning team represents the academy.\n3. Kingdom. One team per academy, four in total, knockout. Each member of the winning team earns 5,000 points.\n4. World (abroad). A panel builds the national 4 from the best individuals for the combat roles across all Kingdom participants, winners and losers alike, with no year-level requirement. Being picked off a losing team is a great honour. Eldrasil has never won in living memory. Nations at the World Competition include Yozakura, Norvaine and Caelmar, the usual favourites, the Arslan Sultanate, Velmora and Sunreach Bay.",
+      "content": "[Competitions]\nFour tiers, elimination. Losing at any tier ends your competitive year. The one exception is World selection, which is chosen rather than won.\n1. Dorm. Solo, open to the whole dorm, run as a ranking tournament so every entrant finishes with a placement. Top 16 per dorm qualify.\n2. Academy. Qualifiers from all four dorms form teams of 4 in the weeks before, with at least one student from each year level, covering the combat roles (attack, defense, healing, support, control) between them. Teams mix dorms and usually must, since no dorm covers every role well. Knockout bracket; the winning team represents the academy.\n3. Kingdom. One team per academy, four in total, knockout, at the arena in the capital. Each member of the winning team earns 5,000 points. Only the teams travel: they arrive the day before and stay at a hotel near the arena, and fly home the day after. Halvard's team goes with Gavlan Haverton as its escort; the rest of the academy stays at school and follows the news.\n4. World (abroad). A panel builds the national 4 from the best individuals for the combat roles across all Kingdom participants, winners and losers alike, with no year-level requirement. Being picked off a losing team is a great honour. Eldrasil has never won in living memory. Nations at the World Competition include Yozakura, Norvaine and Caelmar, the usual favourites, the Arslan Sultanate, Velmora and Sunreach Bay.",
       "constant": false,
       "vectorized": false,
       "selective": true,
@@ -958,7 +958,7 @@
         "open house"
       ],
       "keysecondary": [],
-      "content": "[Dorm Days]\nWhen: Saturdays, one dorm each. Spiritual M1W4, Mystic M4W3, Elemental M8W4, Occult M10W2.\nOpen house: the dorm opens to the other three, usually the only time outsiders see inside. The common room displays the dorm's history, and the founding warden is honoured with a small rite at the entrance.\nDay: upperclassmen showcase casting in the courtyard; first-years run booths; a public lesson lets outsiders try the dorm's type badly, for laughs. Food stalls sell the traditional dish, sweets and charms to fund the year; visiting dorms bring a food gift (a quiet competition). Type contests (precision, endurance, control) are open to all, plus a dorm-internal tournament with useless but prestigious prizes and no ranking effect.\nEvening: dorm-only closing dinner; first-years formally welcomed and given a token of belonging; dorm-specific lights, lanterns or music.",
+      "content": "[Dorm Days]\nWhen: Sundays, one dorm each. Spiritual M1W4, Mystic M4W3, Elemental M8W4, Occult M10W2.\nOpen house: the dorm opens to the other three, usually the only time outsiders see inside. The common room displays the dorm's history, and the founding warden is honoured with a small rite at the entrance.\nDay: upperclassmen showcase casting in the courtyard; first-years run booths; a public lesson lets outsiders try the dorm's type badly, for laughs. Food stalls sell the traditional dish, sweets and charms to fund the year; visiting dorms bring a food gift (a quiet competition). Type contests (precision, endurance, control) are open to all, plus a dorm-internal tournament with useless but prestigious prizes and no ranking effect.\nEvening: dorm-only closing dinner; first-years formally welcomed and given a token of belonging; dorm-specific lights, lanterns or music.",
       "constant": false,
       "vectorized": false,
       "selective": true,
@@ -4717,7 +4717,7 @@
         "M1"
       ],
       "keysecondary": [],
-      "content": "[Current month: Month 1]\nW1 Mon Entrance Event (09:00 speeches then sorting until 10:00, assigned trio tours 10:00-18:00, 19:00 speeches and feast). W1 Tue-Fri club booths 16:00-18:00, club registration closes Fri 18:00. W3 Sat evening to Sun dawn Star Night. W4 Sat Spiritual Dorm Day.",
+      "content": "[Current month: Month 1]\nW1 Mon Entrance Event (09:00 speeches then sorting until 10:00, assigned trio tours 10:00-18:00, 19:00 speeches and feast). W1 Tue-Fri club booths 16:00-18:00, club registration closes Fri 18:00. W3 Sat evening to Sun dawn Star Night. W4 Sun Spiritual Dorm Day.",
       "constant": true,
       "vectorized": false,
       "selective": true,
@@ -4870,7 +4870,7 @@
         "M4"
       ],
       "keysecondary": [],
-      "content": "[Current month: Month 4]\nW1 Wed Secret Fools Day (prank day, dorm name-draw). W2 Tue Independence Crowning Day (kingdom holiday: the academy flies to the capital by airship; fireworks on campus at night). W3 Sat Mystic Dorm Day. W4 normal classes.",
+      "content": "[Current month: Month 4]\nW1 Wed Secret Fools Day (prank day, dorm name-draw). W2 Tue Independence Crowning Day (kingdom holiday: the academy flies to the capital by airship; fireworks on campus at night). W3 Sun Mystic Dorm Day. W4 normal classes.",
       "constant": true,
       "vectorized": false,
       "selective": false,
@@ -5074,7 +5074,7 @@
         "M8"
       ],
       "keysecondary": [],
-      "content": "[Current month: Month 8]\nW2 Thu evening to Sun Traveling Circus visits. W3 Thu-Sat Academy Showcase. W4 Sat Elemental Dorm Day.",
+      "content": "[Current month: Month 8]\nW2 Thu evening to Sun Traveling Circus visits. W3 Thu-Sat Academy Showcase. W4 Sun Elemental Dorm Day.",
       "constant": true,
       "vectorized": false,
       "selective": false,
@@ -5125,7 +5125,7 @@
         "M9"
       ],
       "keysecondary": [],
-      "content": "[Current month: Month 9]\nW1 Mon-Thu Midterm. W2 Thu-Sat Academy Bazaar. W3 Sat Academy Founder Day. W4 Thu-Sun Kingdom Competition (four academies, one team each).",
+      "content": "[Current month: Month 9]\nW1 Mon-Thu Midterm. W2 Thu-Sat Academy Bazaar. W3 Sat Academy Founder Day. W4 Wed-Sat Kingdom Competition at the arena in the capital (four academies, one team each; only the teams travel, Halvard's with Gavlan Haverton: they fly out Tue and home Sun).",
       "constant": true,
       "vectorized": false,
       "selective": false,
@@ -5176,7 +5176,7 @@
         "M10"
       ],
       "keysecondary": [],
-      "content": "[Current month: Month 10]\nW1 Tue Remembrance Day. W2 Sat Occult Dorm Day. W3 Mon-Thu Student Council election campaign; W3 Fri 16:00-18:00 debate in the Seminar Rooms; W3 Sat 13:00-16:00 voting in the Main Courtyard replaces clubs, with results after counting. W4 Fri evening to Sun Harvest Festival.",
+      "content": "[Current month: Month 10]\nW1 Tue Remembrance Day. W2 Sun Occult Dorm Day. W3 Mon-Thu Student Council election campaign; W3 Fri 16:00-18:00 debate in the Seminar Rooms; W3 Sat 13:00-16:00 voting in the Main Courtyard replaces clubs, with results after counting. W4 Fri evening to Sun Harvest Festival.",
       "constant": true,
       "vectorized": false,
       "selective": false,
@@ -5227,7 +5227,7 @@
         "M11"
       ],
       "keysecondary": [],
-      "content": "[Current month: Month 11]\nW1 Mon-Thu End of Semester exams. W2 Fri Results & Final Ranking. W3 Mon-Wed Academy Trip (Sunreach Bay, abroad). W4 Wed-Sat World Competition, abroad (the national four). W4 Sun Graduation (third-years leave the next morning).",
+      "content": "[Current month: Month 11]\nW1 Mon-Thu End of Semester exams. W2 Mon Results & Final Ranking. W2 Sat to W3 Thu Academy Trip (Sunreach Bay, abroad; a full day by airship each way: out Sat, home Thu). W4 Wed-Sat World Competition, abroad (the national four). W4 Sun Graduation (third-years leave the next morning).",
       "constant": true,
       "vectorized": false,
       "selective": true,
@@ -7052,7 +7052,7 @@
         "Results & Dorm Ranking"
       ],
       "keysecondary": [],
-      "content": "[Results & Dorm Ranking]\nWhen: Month 5 Week 2 Friday and Month 11 Week 2 Friday.\nArbiter Hall assembly: the Headmaster and Vice Headmaster open it with speeches, then the trial results are given stage by stage, then the dorm ranking is recalculated from every member's marks and read aloud last. It holds until the next ranking day.\nEvening: the Headmaster and Vice Headmaster speak, then the feast in the Ring Dining Hall.\nMood: one dorm celebrates, three eat anyway.",
+      "content": "[Results & Dorm Ranking]\nWhen: Month 5 Week 2 Friday and Month 11 Week 2 Monday.\nArbiter Hall assembly: the Headmaster and Vice Headmaster open it with speeches, then the trial results are given stage by stage, then the dorm ranking is recalculated from every member's marks and read aloud last. It holds until the next ranking day.\nEvening: the Headmaster and Vice Headmaster speak, then the feast in the Ring Dining Hall.\nMood: one dorm celebrates, three eat anyway.",
       "constant": false,
       "vectorized": false,
       "selective": true,
@@ -7509,7 +7509,7 @@
         "Sunreach"
       ],
       "keysecondary": [],
-      "content": "[Sunreach Bay]\nWhat: a small island and coastal nation, the world's playground, half a day from Halvard by airship.\nDay: paradise; white beaches, turquoise lagoons, wholesome family fun.\nNight: neon casinos, pleasure houses, every vice sold openly.\nPolicy: gives you whatever you came for and asks no questions.\nHalf its hotels are Yozakuran.",
+      "content": "[Sunreach Bay]\nWhat: a small island and coastal nation, the world's playground, a full day from Halvard by airship.\nDay: paradise; white beaches, turquoise lagoons, wholesome family fun.\nNight: neon casinos, pleasure houses, every vice sold openly.\nPolicy: gives you whatever you came for and asks no questions.\nHalf its hotels are Yozakuran.",
       "constant": false,
       "vectorized": false,
       "selective": true,
@@ -7559,7 +7559,7 @@
         "Academy Trip"
       ],
       "keysecondary": [],
-      "content": "[Academy Trip]\nWhen: Month 11 Week 3, Monday to Wednesday. All three years; the third-years' last event as students.\nWhere: Sunreach Bay, half a day by airship, a southern resort that stays warm all year: a few days of summer in Halvard's winter. Whole beachfront hotels booked, four to a room; the rest is free time.\nRules: teachers in the same hotels set a curfew; leave the hotel only in groups of four. The day side is allowed; the night side is out of bounds, which some students ignore every year.\nMoney: points do not work abroad; this is what a year of saving is for, and Sunreach is expensive.\nMood: students return tired, sunburnt and poorer than planned.",
+      "content": "[Academy Trip]\nWhen: Month 11 Week 2 Saturday to Week 3 Thursday. All three years; the third-years' last event as students.\nWhere: Sunreach Bay, a full day by airship each way (the Saturday and the Thursday are spent flying, morning to night), a southern resort that stays warm all year: a few days of summer in Halvard's winter. Whole beachfront hotels booked, four to a room; the rest is free time.\nRules: teachers in the same hotels set a curfew; leave the hotel only in groups of four. The day side is allowed; the night side is out of bounds, which some students ignore every year.\nMoney: points do not work abroad; this is what a year of saving is for, and Sunreach is expensive.\nMood: students return tired, sunburnt and poorer than planned.",
       "constant": false,
       "vectorized": false,
       "selective": true,

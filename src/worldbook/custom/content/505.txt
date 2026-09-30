@@ -152,6 +152,9 @@ Campaign Year <%- Y %> ({{user}}: Year <%- Math.max(1, Math.min(3, Number(PR.Yea
 <%_ if (W._Event_today) { _%>
 Today: <%- String(W._Event_today).split(' | ').map(x => x.split(' — ')[0]).join(' | ') %> (plan in World._Event_today)
 <%_ } _%>
+<%_ if ((UI.soon || []).length) { _%>
+Coming up (next seven days; students and staff may bring these up when it fits who they are: plans, nerves, rumours, who goes with whom): <%- UI.soon.join('; ') %>
+<%_ } _%>
 <%_ if (+W.Month === 1 && +W.Week === 1 && W.Day === 'Mon') { const _T = getvar('stat_data.Campus_State.Entrance_tour') || {}, _h = Number(String(W.Time || '00:00').slice(0, 2)); _%>
 Entrance tour assignment (keep these same people through 18:00): <%- _T.Guide || 'guide not yet named' %> guides <%- Number(PR.Year) > 1 ? (_T.FirstYears || []).join(' and ') || 'two new first-years yet to be named' : '{{user}} and ' + ((_T.FirstYears || [])[0] || 'one new first-year yet to be named') %>. A vacant place may go to an invented student only when available roster newcomers cannot fill it.
 <%_ if (_h < 9) { _%>

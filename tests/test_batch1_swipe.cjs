@@ -56,7 +56,7 @@ async function run(initial, current, expected) {
   assert.equal(greeting.at(-1).is_hidden, true, 'a greeting with no prior floor uses the safe append path');
 
   const bar = fs.readFileSync(path.join(__dirname, '../src/ui/statusbar.html'), 'utf8');
-  assert(bar.includes('data-open="profile:bag"'));
+  assert(bar.includes('data-open="notebook"><i class="fa-solid fa-bag-shopping"></i> Inventory'));   // 1.32.0
   assert(bar.includes("(!ui.built ? '<button class=\"btn opt\" data-open=\"builder\""));
   assert(source.includes('if (panel === \'profile\' && arg) view.tab = arg;'));
   assert(source.includes('Edit student file'));

@@ -98,7 +98,7 @@ global.SillyTavern = { name1: 'Charles', chatMetadata: {}, chat: [], powerUserSe
 ok(Up.portraitURL(built0) === '/User%20Avatars/charles.png', 'no picture uploaded: the persona named as {{user}} gives its picture');
 Up.view.tab = 'overview';
 let ov = Up.renderProfile(built0);
-ok(/Your SillyTavern persona picture/.test(ov) && /Use another picture/.test(ov) && !/data-act="portraitdel"/.test(ov), 'the Student file says where it comes from and offers another picture, with nothing to remove');
+ok(!/Your SillyTavern persona picture/.test(ov) && /Use another picture/.test(ov) && !/data-act="portraitdel"/.test(ov), 'the Student file offers another picture, with nothing to remove (1.32.0: no caption)');
 const withPic = set(built0, [['/$ui/portrait', 'user/images/Eldrasil/student_1.jpg']]);
 ov = Up.renderProfile(withPic);
 ok(Up.portraitURL(withPic) === '/user/images/Eldrasil/student_1.jpg' && /data-act="portraitdel"/.test(ov) && !/persona picture/.test(ov), 'an uploaded picture still wins, and can be removed (back to the persona picture)');

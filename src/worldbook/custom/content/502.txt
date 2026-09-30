@@ -159,7 +159,7 @@ Projects: {"<name>": {"Kind": "potion|smithing|tailoring|enchantment|cooking|pai
 <%_ } _%>
 
 <%_ if (on('trip')) { _%>
-Trip: when {{user}} departs on a trip set {"Active": true, "Destination": "", "Companions": ["the group of four"], "Note": ""}; set Active false on return.
+Trip: when {{user}} departs on a trip (including the Kingdom Competition stay in the capital, if {{user}} is on Halvard's team) set {"Active": true, "Destination": "", "Companions": ["the group of four"], "Note": ""}; set Active false on return.
 <%_ } _%>
 
 <%_ if (on('battle')) { _%>

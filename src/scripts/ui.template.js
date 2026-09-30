@@ -837,12 +837,13 @@ function open(target, { push = true } = {}) {
   ensureHost();
   const st = latestState();
   if (!st) { toastr.warning(lorebookMissing() ? "This chat has no game state: the card's lorebook is not attached. Character panel → More… → Import Card Lore, then start a new chat." : 'The bracelet has not synced yet. Wait for MVU to initialise this chat, then try again.', 'Eldrasil'); return; }
-  const [panel, arg = ''] = String(target).split(/:(.*)/s);
+  let [panel, arg = ''] = String(target).split(/:(.*)/s);
+  if (panel === 'profile' && (arg === 'bag' || arg === 'wallet')) panel = 'notebook';   // 1.32.0: the Bag and the Wallet moved to Inventory
   if (panel !== 'builder' && panel !== 'profile' && !PANELS[panel]) return;
   if (push && !ov.hidden && view.panel && (view.panel !== panel || view.arg !== arg)) view.stack.push(view.panel + (view.arg ? ':' + view.arg : ''));
   if (ov.hidden) view.stack = [];
   view.arg = arg;
-  if (panel === 'profile' && arg) view.tab = arg;   // bracelet Bag button opens Student file directly on its Bag tab
+  if (panel === 'profile' && arg) view.tab = arg;
   if (panel === 'builder' && (!draft || draftBuilt !== !!st.data.stat_data.$ui.built)) {
     draft = draftFromState(st.data.stat_data); draftBuilt = !!st.data.stat_data.$ui.built; chosenTemplate = '';
     view.step = draftBuilt ? 'identity' : 'start';
@@ -1367,9 +1368,9 @@ function renderProfile(S) {
   if (!S) return `<div class="dlg"><div class="hd"><h2>Student file</h2><button class="x" data-act="close">×</button></div><div class="bd"><div class="empty">No state yet.</div></div></div>`;
   const unl = (S.$ui || {}).unlocks || [];
   const hiddenOn = !!(S.Hidden || {})._True_magic;
-  const tabs = [['overview', 'Overview'], ['body', 'Body'], ...(unl.includes('inventory') && featureOn(S, 'inventory') ? [['bag', 'Bag']] : []), ['wallet', 'Wallet'], ['studies', 'Studies'], ['magic', 'Magic'], ...(hiddenOn || unl.includes('hidden') ? [['hidden', 'Hidden']] : []), ...(Object.keys(S._Perks || {}).length || ((S.$ui || {}).perks_used || []).length ? [['perks', 'Gifts & perks']] : []), ['log', 'Log'], ['settings', 'Settings']];
+  const tabs = [['overview', 'Overview'], ['body', 'Body'], ['studies', 'Studies'], ['magic', 'Magic'], ...(hiddenOn || unl.includes('hidden') ? [['hidden', 'Hidden']] : []), ...(Object.keys(S._Perks || {}).length || ((S.$ui || {}).perks_used || []).length ? [['perks', 'Gifts & perks']] : []), ['log', 'Log'], ['settings', 'Settings']];
   if (!tabs.some(([id]) => id === view.tab)) view.tab = 'overview';
-  const body = ({ overview: pOverview, body: pBody, bag: pBag, wallet: pWallet, studies: pStudies, magic: pMagic, hidden: pHidden, perks: pPerks, log: pLog, settings: pSettings })[view.tab](S);
+  const body = ({ overview: pOverview, body: pBody, studies: pStudies, magic: pMagic, hidden: pHidden, perks: pPerks, log: pLog, settings: pSettings })[view.tab](S);
   const P = S.Player.Profile;
   return `<div class="dlg" tabindex="-1" style="--dc:${DORM_COLOR[P.Dorm] || DORM_COLOR.Unsorted}"><div class="hd"><h2>Student file</h2>
     <button class="btn sm pri" data-act="tobuilder" title="Edit your profile, magic, techniques and pacts">${(S.$ui || {}).built ? 'Edit student file' : 'Create your student'}</button><button class="x" data-act="close" aria-label="Close">×</button></div>
@@ -1389,7 +1390,7 @@ function pOverview(S) {
   <dt>Goal</dt><dd>${esc(P.Goal || '—')}</dd><dt>Appearance</dt><dd>${esc(P.Appearance || '—')}</dd><dt>Personality</dt><dd>${esc(P.Personality || '—')}</dd>
   <dt>Now</dt><dd>${esc(`Month ${W.Month}, Week ${W.Week}, ${W.Day} ${W.Time}`)}, ${esc(W.Location)}</dd></dl></div>
   <div class="portrait">${pic ? `<img src="${esc(pic)}" alt="${esc(P.Name)}" data-fb="Picture not found" data-fbclass="ph">` : '<div class="ph">No picture yet</div>'}
-    ${pic && !own ? '<p class="sub">Your SillyTavern persona picture.</p>' : ''}<div class="row"><label class="btn sm">${own ? 'Change picture' : pic ? 'Use another picture' : 'Upload picture'}<input type="file" accept="image/*" data-act="portrait"></label>${own ? `<button class="btn sm del" data-act="portraitdel" ${view.busy ? 'disabled' : ''}>Remove</button>` : ''}</div></div></div>
+    <div class="row"><label class="btn sm">${own ? 'Change picture' : pic ? 'Use another picture' : 'Upload picture'}<input type="file" accept="image/*" data-act="portrait"></label>${own ? `<button class="btn sm del" data-act="portraitdel" ${view.busy ? 'disabled' : ''}>Remove</button>` : ''}</div></div></div>
   <h3>Reputation</h3>${REPD.reps.map(r => repRow(S, r)).join('')}`;
 }
 function pBody(S) {
@@ -1724,7 +1725,7 @@ if (typeof eventOn === 'function' && typeof getButtonEvent === 'function') {
     eventOn(getButtonEvent('Builder'), () => open('builder'));
     eventOn(getButtonEvent('People'), () => open('people'));
     eventOn(getButtonEvent('Map'), () => open('map'));
-    eventOn(getButtonEvent('Notebook'), () => open('notebook'));
+    eventOn(getButtonEvent('Inventory'), () => open('notebook'));
     eventOn(getButtonEvent('Activities'), () => open('activities'));
     const refresh = _.debounce(() => { if (view.panel === 'profile' || (PANELS[view.panel] && PANELS[view.panel].live)) render(); }, 300);
     const newsBoot = _.debounce(() => { const st = latestState(); if (st) newsInit(st.data.stat_data); }, 800);   // 1.25.0

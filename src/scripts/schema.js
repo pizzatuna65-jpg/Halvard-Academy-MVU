@@ -374,6 +374,7 @@ export const Schema = z.object({
     perks_used: StrList(60),                                          // 1.3.0: one-use perks already spent ("Council pardon (Irene), M3 W2 Tue")
     perks_grad: z.record(z.string(), z.any()).prefault({}).catch({}),   // 1.7.6: rewards of graduates as they were ({name: perk}), restored if the story keeps them
     next: z.any().prefault(null).catch(null),                         // 1.3.4: the next thing on today's schedule (engine; bracelet)
+    soon: StrList(12),                                                // 1.32.0: calendar events of the next seven days, for <now> (engine)
     portrait: Str(''),                                                // 1.3.4: the student's picture (a SillyTavern user image path)
     tsusp: StrList(40),                                               // 1.4.3: Rank 10 benefits suspended by low Trust (engine)
     tune: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.3.1: training / reputation settings { id: value } (data/tuning.json; the engine checks the values)

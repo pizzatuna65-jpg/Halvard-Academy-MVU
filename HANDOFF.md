@@ -3,13 +3,13 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.31.1** (2026-09-30): the Meditation Rooms and the new Spirit Path (pin 38, first pacts in play; Florian a regular), six restful
-places (stamina and mana, by hour and weather), new activities (rowing, the hills, the willow, a bell-keeper's shift, the Old Hut
-custom, letters home). The proficiency plan is complete (1.25–1.30). Live checks: `docs/TEST_CHECKLIST.md` "Open".
-Plans: `planning/FUTURE_PLANS.md`.
+**Snapshot:** card **v1.32.0** (2026-09-30): calendar moves (Dorm Days on Sundays, Final Ranking M11 W2 Mon, the Academy Trip
+M11 W2 Sat to W3 Thu, the Kingdom Competition Wed–Sat in the capital with only the teams travelling), `<now>` "Coming up" (next seven
+days, for NPC talk), and the **Inventory** panel (Bag, Wallet, Planner, Journal, …) in place of the Notebook. Live checks:
+`docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** none scheduled. Playtest 1.31.0 (the Spirit Path, restful places, letters home) and the proficiency plan (live checks in
-`docs/TEST_CHECKLIST.md`), then tune the numbers in `planning/FUTURE_PLANS.md` §5 or pick a plan from there.
+**Next task:** write `planning/DRAFT_classes_and_teachers.md` (FUTURE_PLANS FP6: practical-magic classes by role, the one-year rule,
+Baelin and Althair teaching, free periods, role brackets at the Dorm Competition), then `DRAFT_outside_maps.md` (FP7). Playtest 1.32.0.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 
@@ -28,7 +28,7 @@ underneath. The player is a first-year student. The card combines:
   and a deterministic engine script enforces the rules: clock and calendar, weather, HP and injuries, mana, bonds, reputation,
   training, grades, hidden magic, payouts, journal, ambience and more.
 - **A UI**: an in-chat "bracelet" status bar (a regex replaces MVU's placeholder) and a Tavern Helper script with panels: Student
-  Builder, Student file (with Settings → Features), People (dossiers, relationship graph), Map, Notebook, Activities, Battle.
+  Builder, Student file (with Settings → Features), People (dossiers, relationship graph), Map, Inventory (Bag, Wallet, planner, journal), Activities, Battle.
 - **Ecosystem compatibility** with the owner's memory extension (VectFox) and prompt preset (Realistic Frankenstein 2.2, edited for
   Gemini): `docs/ECOSYSTEM.md`.
 

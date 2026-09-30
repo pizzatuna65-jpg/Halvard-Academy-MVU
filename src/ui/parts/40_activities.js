@@ -8,7 +8,7 @@ const ROLES5 = ['Attack', 'Defense', 'Healing', 'Support', 'Control'];
 const COMP_TIERS = [
   ['Dorm', 'Dorm Competition', 'Solo, open to the whole dorm, run as a ranking tournament so everyone finishes with a placement. The top 16 of each dorm qualify.'],
   ['Academy', 'Academy Competition', 'Qualifiers from all four dorms form teams of 4 with at least one student from each year, covering the combat roles between them. Knockout; the winning team represents Halvard.'],
-  ['Kingdom', 'Kingdom Competition', 'One team per academy, four in all, knockout. Each member of the winning team earns 5,000 points.'],
+  ['Kingdom', 'Kingdom Competition', 'One team per academy, four in all, knockout, at the arena in the capital. Only the teams travel (Halvard\'s with Gavlan Haverton): they arrive the day before, stay at a hotel and fly home the day after. Each member of the winning team earns 5,000 points.'],
   ['World', 'World Competition', 'Abroad. A panel picks the national four from the best individuals of the Kingdom Competition, winners and losers alike. Being picked off a losing team is a great honour.'],
 ];
 const clubOf = S => { const raw = String(((S.Player || {}).Profile || {}).Club || '').toLowerCase(); const c = raw === 'duelling club' ? 'magic duelling club' : raw; return c ? (DATA.clubs || []).find(x => c.includes(x.key.toLowerCase())) : null; };
@@ -194,7 +194,7 @@ const TRIP_INFO = [
     'Groups of four only. Uniform all day; the Doves travel along and staff count heads constantly.', 'Points do not work in the capital: carry coin.',
     'Back before dark, passenger lists counted twice. Fireworks over the hills at night; curfew moves to 22:00.'] },
   { rx: /^Academy Trip/, name: 'Academy Trip: Sunreach Bay', lines: [
-    'Month 11 Week 3, Monday to Wednesday; all three years. Half a day by airship.', 'Beachfront hotels, four to a room; teachers in the same hotels set a curfew.',
+    'Month 11 Week 2 Saturday to Week 3 Thursday; all three years. A full day by airship each way: out on the Saturday, home on the Thursday.', 'Beachfront hotels, four to a room; teachers in the same hotels set a curfew.',
     'Leave the hotel only in groups of four. The day side is allowed; the night side is out of bounds, which some students ignore every year.',
     'Points do not work abroad and Sunreach is expensive: this is what a year of saving is for.'] },
 ];

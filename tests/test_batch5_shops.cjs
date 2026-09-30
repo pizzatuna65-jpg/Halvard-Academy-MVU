@@ -46,8 +46,8 @@ console.log('Playtest Batch 5: seasonal stock');
   ok(!/pill oos/.test(row(hs, 'Blossom honey cake')) && /pill oos/.test(row(hw, 'Blossom honey cake')), 'Blossom honey cake: spring only');
   ok(/class="sub fx">When used: \+10 stamina/.test(row(hs, 'Blossom honey cake')), 'the shop row shows the effect');
   const bag = applyPatch(spring, [{ op: 'insert', path: '/Inventory/Rain-ward charm', value: { Qty: 2, Kind: 'gear' } }]);
-  U.view.tab = 'bag';
-  ok(/Rain-ward charm[\s\S]*?class="sub fx">When used: waterproof: no Soaked from rain or snow for 3 hours/.test(U.renderProfile(bag)), 'the Bag shows what a carried item does');
+  U.view.nb = 'bag';
+  ok(/Rain-ward charm[\s\S]*?class="sub fx">When used: waterproof: no Soaked from rain or snow for 3 hours/.test(U.PANELS.notebook.render(bag)), 'the Bag shows what a carried item does');
 }
 
 console.log('Item effects in the engine');

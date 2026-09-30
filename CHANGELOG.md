@@ -1,7 +1,28 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.32.0 — Calendar moves, "Coming up", the Inventory panel (2026-09-30)
+
+Owner request (13 points, grouped A–D; A and B done here, C and D saved in `planning/FUTURE_PLANS.md` §0). Save fixture v1.31.1.
+- **Calendar** (`data/calendar.json`, lore via `merge_lorebooks.py` 1.32.0 block): the four **Dorm Days move to Sunday**
+  (M1W4, M4W3, M8W4, M10W2). **Results & Final Ranking** is M11 W2 **Monday**. The **Academy Trip** runs M11 W2 **Saturday**
+  (a full day's flight out, arriving at night) to W3 **Thursday** (a full day's flight home); lore "half a day by airship" became
+  "a full day". The **Kingdom Competition** is Wed–Sat at the arena in the capital; only the teams travel (arrive the day before at
+  a hotel, fly home the day after): Halvard's team flies out Tue and home Sun with **Gavlan Haverton** as escort, so Monday is free
+  before Remembrance Day. Calendar `kingdom` flag marks the three days (rival-team rule); rule 502 Trip covers the team's stay.
+- **Coming up** (`stepUi`, `$ui.soon`, 505): `<now>` lists the calendar of the next seven days (a run of days is one line; an event
+  already running today and the Month 12 holiday are left out), and students and staff may bring it up when it fits who they are.
+- **Inventory** replaces the Notebook button: Bag, Wallet (both moved from the Student file), Planner, Journal, Notice Board,
+  Letters, Mystery Board. The panel id stays `notebook` (links and red dots keep working); the bracelet's separate Bag button is
+  gone; `profile:bag` / `profile:wallet` links open Inventory. The Tavern Helper button is renamed "Inventory".
+- The Student file no longer says "Your SillyTavern persona picture."
+- Tests: new `test_calendar_v1320` (9 checks); `test_notebook`, `test_news_v1250`, `test_batch1_swipe`, `test_batch5_shops`,
+  `test_world_v110`, `test_playtest_v1301` updated; saves, lint and static QA pass; panel checked in a browser preview.
+- To confirm with the owner: Results & Dorm Ranking in **M5** stays on Friday (only M11 was asked); Linus "grew up in a small town
+  near the arena" now reads as a town near the capital; the Trip's Sunday–Wednesday plan stays generic until the Sunreach map
+  (Group D); Gavlan's first-year Combat class on Kingdom Thursday is left to the narrator (free periods are Group C).
 
 ## v1.31.1 — Florian at the Spirit Path (2026-09-30)
 
@@ -62,18 +83,6 @@ Owner: "if the user already has a persona image in SillyTavern, put it in the St
   on the player's latest message. A line under it says it is the persona picture; "Use another picture" uploads one as before, and
   removing an upload goes back to the persona picture. Verified in SillyTavern's and Tavern Helper's source (DECISIONS §11).
 - Save fixture v1.30.4. Tests: `test_playtest_v1301` (+7 checks); people map, builder, UI overhaul, saves, qa_static, lint pass.
-
-## v1.30.4 — Builder template: Charles Chevalier (2026-09-30)
-
-Owner: "put this in the character build templates so I don't have to make the character every playtest". The Student Builder's
-template cards gain **Charles Chevalier** (last in the row): the owner's playtest student with the texts exactly as the owner wrote
-them, he/him, 18, Human, born M4 W2 Mon, 200 mana, Elemental (Lightning), normal starting proficiency, and four techniques with the
-same modes and costs as the Charles built in the 2026-09-30 playtest chat (Voltaic Core sustained Standard, Electromagnetic Flight
-sustained Major, Lightning Arc per use Standard, Lightning Blast per use Signature). A template may now bring its student's name
-(the other templates still keep the persona name). Save fixture v1.30.3. Tests: `test_builder` (every template valid and
-registered), `test_playtest_v1301` (+4 checks), saves, qa_static, lint pass.
-- To confirm with the owner: the birthday follows the pasted text (Monday); the playtest chat's Charles had M4 W2 Tue. The general
-  paragraph about Voltaic Core has no Builder field, so, as in the owner's own build, each technique carries its own text.
 
 ## Release index (one line per release, oldest first)
 
@@ -174,3 +183,4 @@ registered), `test_playtest_v1301` (+4 checks), saves, qa_static, lint pass.
 - **v1.30.6 (2026-09-30):** "Connected to" follows the map picture; the map cards no longer show it.
 - **v1.31.0 (2026-09-30):** Meditation Rooms and the new Spirit Path; restful places; new activities around the grounds; letters home.
 - **v1.31.1 (2026-09-30):** Florian is a regular at the Spirit Path.
+- **v1.32.0 (2026-09-30):** Dorm Days on Sundays, Final Ranking Monday, a longer Academy Trip, the Kingdom Competition in the capital; "Coming up" in `<now>`; the Inventory panel.

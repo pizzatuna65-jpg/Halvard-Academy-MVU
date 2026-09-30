@@ -4,7 +4,7 @@ Build first with `python tools/build_all.py`. Run all suites with `npm test`; ru
 
 | Feature | Main automated checks |
 |---|---|
-| Calendar, timetable, exam/trial mood, state budget | `test_calendar_state_v1190.cjs`, `test_notebook.cjs`, `test_mood_gifts_v180.cjs`, `test_playtest_v131.cjs` |
+| Calendar, timetable, exam/trial mood, state budget | `test_calendar_state_v1190.cjs`, `test_calendar_v1320.cjs` (1.32.0 dates, Coming up), `test_notebook.cjs` (Inventory panel), `test_mood_gifts_v180.cjs`, `test_playtest_v131.cjs` |
 | Old chat saves and state schema | `test_saves.cjs`, `test_builder.cjs`, `test_settings_v199.cjs` |
 | Attendance, study, grades, weather | `test_batch1_fp7_v1100.cjs`, `test_grades_v1150.cjs`, `test_mastery_v1300.cjs` (mark formula, mastery perks), `test_world_v110.cjs`, `test_ambience_v1160.cjs` |
 | Proficiency, Practice and crafting | `test_proficiency_v1260.cjs`, `test_practice_v1270.cjs`, `test_crafting_v1280.cjs`, `test_crafts_v1290.cjs` |

@@ -319,8 +319,8 @@ console.log('UI (Student file, Notebook, Activities)');
   const U = new Function(fs.readFileSync(path.join(ROOT, 'src/scripts/ui.js'), 'utf8') + '\nreturn { PANELS, view, renderProfile, featureOps, DATA };')();
   let S = applyPatch(at(S0, 1, '10:00', 'Canteen'), [{ op: 'insert', path: '/Inventory/Star Cookie', value: { Qty: 1, Kind: 'food', Plan: 'tonight' } },
     { op: 'insert', path: '/Letters/From home', value: { From: 'Mother', Gist: 'x', Status: 'waiting' } }]);
-  U.view.tab = 'bag'; let h = U.renderProfile(S);
-  ok(/data-tab="bag"/.test(h) && /I eat the Star Cookie\./.test(h) && /tonight/.test(h), 'Bag tab: item, plan and a Use button that drafts "I eat the Star Cookie."');
+  U.view.nb = 'bag'; let h = U.PANELS.notebook.render(S);
+  ok(/data-nb="bag"/.test(h) && /I eat the Star Cookie\./.test(h) && /tonight/.test(h), 'Bag tab: item, plan and a Use button that drafts "I eat the Star Cookie."');
   U.view.tab = 'settings'; h = U.renderProfile(S);
   ok((h.match(/class="feat( off)?"/g) || []).length === U.DATA.features.length && /Estimated always-on total for this chat now: <b>≈[\d,]+<\/b>/.test(h), 'Settings → Features: one row per feature and a live total');
   const ops = U.featureOps(S, 'letters', 'off');

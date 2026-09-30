@@ -149,7 +149,7 @@ Here's what's running underneath while you play. The short version: the AI write
 
 A plain metal bracelet goes on your wrist at Reception, blinks, and settles on **300**. That's your points. In play it's a status bar above each new reply: the clock, the class period, where you are, your points, your vitals, and chips for whatever matters right now (an event today, a shop nearby). Tap a chip and the matching panel opens.
 
-The panels are **Student file**, **People** (dossiers and a draggable connections graph), **Map** (clickable pins; places stay hidden until you find them), **Notebook** (planner, journal, notice board, letters, a mystery board) and **Activities** (clubs, competitions, the shop, projects, trips, battle).
+The panels are **Student file**, **People** (dossiers and a draggable connections graph), **Map** (clickable pins; places stay hidden until you find them), **Inventory** (bag, wallet, planner, journal, notice board, letters, a mystery board) and **Activities** (clubs, competitions, the shop, projects, trips, battle).
 
 !!! note The UI never plays for you
     Buttons like *Go here* or *Buy* only write a suggested action into your chat box. You edit it and send it yourself. Every change happens in the chat, so swipes and deletes stay consistent.

@@ -1,9 +1,11 @@
 // ================================================================ 5.1 Notebook: Planner (F14), Notice Board (F15), Letters (F16), Journal + Mystery Board (F17)
+// 1.32.0 (owner): shown as "Inventory", with the Bag and the Wallet (moved from the Student file) first; the panel id stays
+// "notebook" so links ("notebook:planner") and the red-dot keys keep working.
 // Calendar + timetable come from the engine template (single source), injected by tools/gen_ui.py.
 const CAL = /*@@CALENDAR@@*/{ EVENTS: [], TIMETABLE: {} };
-view.nb = 'planner'; view.calOff = 0; view.letter = { to: '', body: '' }; view.calSel = ''; view.markText = '';
+view.nb = 'bag'; view.calOff = 0; view.letter = { to: '', body: '' }; view.calSel = ''; view.markText = '';
 // [id, label, unlock, features (any on)] — 1.1.0: a tab whose features are all off is hidden (the board also carries the forecast)
-const NB_TABS = [['planner', 'Planner'], ['journal', 'Journal'], ['notices', 'Notice Board', 'notices', ['notices', 'weather']], ['letters', 'Letters', 'letters', ['letters']], ['mystery', 'Mystery Board', 'mystery', ['mystery']]];
+const NB_TABS = [['bag', 'Bag', '', ['inventory']], ['wallet', 'Wallet'], ['planner', 'Planner'], ['journal', 'Journal'], ['notices', 'Notice Board', 'notices', ['notices', 'weather']], ['letters', 'Letters', 'letters', ['letters']], ['mystery', 'Mystery Board', 'mystery', ['mystery']]];
 const dayIdx = (M, W, D) => (M - 1) * 28 + (W - 1) * 7 + Math.max(0, DAYS.indexOf(D));   // day of the year, 0-based
 const dayOf = i => { i = ((i % 336) + 336) % 336; return { M: Math.floor(i / 28) + 1, W: Math.floor((i % 28) / 7) + 1, D: DAYS[i % 7] }; };
 const eventsOnDay = (M, W, D) => CAL.EVENTS.filter(e => e.m === M && e.w === W && e.d.includes(D));
@@ -28,12 +30,12 @@ PANELS.notebook = {
   render(S) {
     if (view.arg && NB_TABS.some(t => t[0] === view.arg)) { view.nb = view.arg; view.arg = ''; }
     const tabs = NB_TABS.filter(t => unlockedTab(S, t));
-    if (!tabs.some(t => t[0] === view.nb)) view.nb = 'planner';
+    if (!tabs.some(t => t[0] === view.nb)) view.nb = tabs[0][0];
     const late = featureOn(S, 'planner') ? Object.values(S.Commitments || {}).filter(c => c._Late).length : 0;
     const mail = featureOn(S, 'letters') ? Object.values(S.Letters || {}).filter(l => l.Status === 'waiting').length : 0;
     const badge = id => (id === 'planner' && late ? `<i class="nbb bad">${late}</i>` : id === 'letters' && mail ? `<i class="nbb">${mail}</i>` : '');
-    const body = ({ planner: nbPlanner, journal: nbJournal, notices: nbNotices, letters: nbLetters, mystery: nbMystery })[view.nb](S);
-    return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>Notebook</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
+    const body = ({ bag: pBag, wallet: pWallet, planner: nbPlanner, journal: nbJournal, notices: nbNotices, letters: nbLetters, mystery: nbMystery })[view.nb](S);
+    return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>Inventory</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
       <nav class="nav">${tabs.map(([id, l]) => `<button data-nb="${id}" class="${view.nb === id ? 'on' : ''}">${l}${badge(id)}${isNew(`tab:notebook:${id}`, view.nb === id) && view.nb !== id ? newsDot() : ''}</button>`).join('')}</nav><div class="bd">${body}</div></div>`;
   },
   input(el) { if (el.dataset.lt) view.letter[el.dataset.lt] = el.value; if (el.dataset.mk !== undefined) view.markText = el.value; },

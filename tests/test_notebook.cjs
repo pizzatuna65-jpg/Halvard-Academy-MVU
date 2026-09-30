@@ -8,7 +8,9 @@ console.log('Notebook panel');
 ok(U.CAL.EVENTS.length > 30 && U.CAL.TIMETABLE.Mon.length === 3, 'calendar + timetable injected from the engine');
 let S = initState();
 let h = U.PANELS.notebook.render(S);
-ok(/data-nb="planner"/.test(h) && /data-nb="journal"/.test(h) && !/data-nb="letters"/.test(h) && !/data-nb="mystery"/.test(h), 'fresh chat: only Planner + Journal tabs');
+ok(/<h2>Inventory<\/h2>/.test(h) && /data-nb="bag" class="on"/.test(h) && /Your bag is empty/.test(h) && /data-nb="wallet"/.test(h), '1.32.0: Inventory opens on the Bag, with the Wallet beside it');
+ok(/data-nb="planner"/.test(h) && /data-nb="journal"/.test(h) && !/data-nb="letters"/.test(h) && !/data-nb="mystery"/.test(h), 'fresh chat: Bag, Wallet, Planner + Journal tabs only');
+U.view.nb = 'planner'; h = U.PANELS.notebook.render(S);
 ok(/Entrance Event/.test(h) && /class="cur"|Timetable suspended|No classes|class="off ev"/.test(h), 'planner shows today\'s event in the week table');
 S = applyPatch(S, [
   { op: 'replace', path: '/World/Time', value: '09:00' }, { op: 'replace', path: '/World/Location', value: 'Canteen' },

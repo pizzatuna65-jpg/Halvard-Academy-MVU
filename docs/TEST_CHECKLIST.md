@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.32.0 (calendar moves, Coming up, Inventory): the three checks in its section below.
 - v1.31.0 (Spirit Path, restful places, activities): the four checks in its section below.
 - v1.30.6: the one check in its section below.
 - v1.30.5: the one check in its section below.
@@ -64,6 +65,16 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.32.0 — Calendar moves, Coming up, Inventory
+
+1. Update the card (the Tavern Helper button list): the bracelet shows **Inventory** (bag icon) instead of Notebook and no separate
+   Bag button; Inventory opens on the Bag, with Wallet, Planner and Journal beside it; the Student file has no Bag or Wallet tab and no
+   "Your SillyTavern persona picture." line. In an old chat that was on the Student file's Bag tab nothing breaks.
+2. Play M10 W2 Wed (the Occult Dorm Day is that Sunday): `<now>` shows "Coming up … W2 Sun: Occult Dorm Day"; in a few scenes that
+   week a student mentions it in passing, in character, without every NPC bringing it up.
+3. M9 W4 as a non-member of Halvard's Kingdom team: Tue–Sun classes run as usual, Gavlan is away with the team, and nobody from the
+   rival teams turns up on campus. On M11 W2 Sat the Academy Trip starts with a full day of flying and Thursday is the flight home.
 
 ### v1.31.0 — Spirit Path, restful places, activities
 

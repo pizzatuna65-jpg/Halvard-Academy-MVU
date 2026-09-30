@@ -9,6 +9,7 @@
     const ui = (S && S.$ui) || {}, unl = ui.unlocks || [], out = [];
     const tab = (panel, id, ok) => { if (ok) out.push(['tab:' + panel + ':' + id, panel]); };
     const f = id => featOn(id), u = k => unl.includes(k);
+    tab('notebook', 'bag', u('inventory') && f('inventory'));   // 1.32.0: the Bag is in Inventory
     tab('notebook', 'notices', u('notices') && (f('notices') || f('weather')));
     tab('notebook', 'letters', u('letters') && f('letters'));
     tab('notebook', 'mystery', u('mystery') && f('mystery'));
@@ -22,7 +23,6 @@
       for (const [k, v] of Object.entries((((S || {}).Player || {})._Proficiency || {}))) if (+v > 0) out.push([`stat:${k}:${v}`, 'profile']);
       (ui.discovered || []).forEach(n => { if (practiceNames.includes(n)) out.push(['act:' + n.toLowerCase().replace(/^the /,'').replace(/[^a-z0-9]+/g,'_').replace(/_$/,'') , 'activities']); });
     }
-    tab('profile', 'bag', u('inventory') && f('inventory'));
     tab('profile', 'hidden', !!((S && S.Hidden) || {})._True_magic || u('hidden'));
     tab('profile', 'perks', Object.keys((S && S._Perks) || {}).length > 0 || (ui.perks_used || []).length > 0);
     (ui.lore || []).forEach(x => out.push(['lore:' + x, 'map']));

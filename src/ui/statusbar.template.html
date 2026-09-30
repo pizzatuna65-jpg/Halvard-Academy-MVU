@@ -293,12 +293,10 @@ button.chip{font:inherit;font-size:13px;cursor:pointer}button.chip:hover{filter:
     // 1.25.0: a red dot on a button whose panel holds something new the player has not looked at (news.shared.js)
     const featOn = id => (typeof (ui.on || {})[id] === 'boolean' ? ui.on[id] : !OFF.includes(id)), nst = newsStore();
     const NP = newsPanels(S, featOn, nst), nd = p => (NP.has(p) ? newsDot() : '');
-    const bagNew = newsUnseen(S, featOn, nst).some(([k]) => k === 'tab:profile:bag' && !((nst && nst.noticed) || []).includes(k));
     h += '<div class="actions"><button class="btn" data-open="profile"><i class="fa-solid fa-id-card"></i> Student file' + nd('profile') + '</button>'
-      + (unl.includes('inventory') && !(ui.off || []).includes('inventory') ? '<button class="btn" data-open="profile:bag"><i class="fa-solid fa-bag-shopping"></i> Bag' + (bagNew ? newsDot() : '') + '</button>' : '')
       + '<button class="btn" data-open="people"><i class="fa-solid fa-users"></i> People' + nd('people') + '</button>'
       + '<button class="btn" data-open="map"><i class="fa-solid fa-map"></i> Map' + nd('map') + '</button>'
-      + '<button class="btn" data-open="notebook"><i class="fa-solid fa-book"></i> Notebook' + nd('notebook') + '</button>'
+      + '<button class="btn" data-open="notebook"><i class="fa-solid fa-bag-shopping"></i> Inventory' + nd('notebook') + '</button>'
       + '<button class="btn" data-open="activities"><i class="fa-solid fa-compass"></i> Activities' + nd('activities') + '</button>'
       + (!ui.built ? '<button class="btn opt" data-open="builder"><i class="fa-solid fa-pen-nib"></i> Builder</button>' : '')
       + '<button class="btn ghost" data-toggle="1" aria-label="Collapse or expand" aria-expanded="' + (!collapsed) + '" title="' + (collapsed ? 'Expand' : 'Collapse') + '"><i class="fa-solid ' + (collapsed ? 'fa-chevron-down' : 'fa-chevron-up') + '"></i></button></div>';

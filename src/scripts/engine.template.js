@@ -222,7 +222,7 @@ function canonLocation(loc) {
 const onCampus = loc => { const p = placeOf(loc).toLowerCase(); return !p || CAMPUS.some(c => p === c || p.startsWith(c + ' ') || p.startsWith(c + ',')); };
 const CAP = { Notices: 10, Letters: 12, Clues: 40, Journal: 30 };
 // Batch 5.2: trips (first day, for the unlock window) and the Kingdom prize (lore Competitions: 5,000 points per winning member)
-const TRIPS = [{ m: 4, w: 2, d: 'Tue', name: 'the capital (Crowning Day)' }, { m: 11, w: 3, d: 'Mon', name: 'Sunreach Bay (Academy Trip)' }];
+const TRIPS = [{ m: 4, w: 2, d: 'Tue', name: 'the capital (Crowning Day)' }, { m: 11, w: 2, d: 'Sat', name: 'Sunreach Bay (Academy Trip)' }];
 const KINGDOM_PRIZE = 5000;
 // v1.0.3: Halvard students {id: [lorebook Year, campaign year they arrive]}, injected by gen_engine. Graduation (M11 W4 Sun) sends
 // the year's third-years away the next morning (M12 W1 Mon); they go to Campus_State.Graduated (the story may take a name back out).
@@ -1855,7 +1855,7 @@ function stepBonds(c) {
   const seen = `${stamp(S.World)} at ${S.World.Location}`;
   // 1.30.1 (owner playtest: an invented Medical Centre healer was keyed "Mirelle Lullwyn"): the other academies' teams are never at
   // Halvard; their members meet {{user}} at the Kingdom Competition, on a trip or elsewhere off the grounds
-  const onGrounds = !!plName(placeOf(S.World.Location)) && !(S.Trip && S.Trip.Active) && !evs.some(e => /Kingdom Competition/.test(e.t));
+  const onGrounds = !!plName(placeOf(S.World.Location)) && !(S.Trip && S.Trip.Active) && !evs.some(e => e.kingdom);   // 1.32.0: calendar "kingdom" marks the travel days too
   for (const id of Object.keys(S.Scene.Present)) if (onGrounds && NO_BOND.has(id)) {
     delete S.Scene.Present[id];
     log.push(`${id} is on a rival academy's team and is never at Halvard (the teams meet at the Kingdom Competition); ${id} was removed from Scene.Present. Someone you invented gets a full name of their own (Extras), never a roster name.`);
@@ -3673,6 +3673,20 @@ function stepUi(c) {
   if (Object.keys(S.Player.Conditions || {}).length) unlock('conditions');
   if (S.Trip.Active || TRIPS.some(tp => { const d0 = (tp.m - 1) * 28 + (tp.w - 1) * 7 + DAYS.indexOf(tp.d); return doy >= d0 - 14 && doy <= d0 + 2; })) unlock('trip');
   S.$ui.next = nextUp(S.World, evs, S);   // 1.3.4: the bracelet's "Next" chip
+  // 1.32.0 (owner): the calendar events of the next seven days, so people can talk about what is coming (<now> "Coming up");
+  // an event already running today and the Month 12 holiday are left out; a run of days of one event is one line
+  {
+    const soon = [], today = new Set(evs.map(e => e.t));
+    for (let d = dayNo + 1; d <= dayNo + 7; d++) {
+      const Wd = fromAbs(d * DAY_MIN);
+      for (const e of eventsOn(Wd)) {
+        if (today.has(e.t) || e.home) continue;
+        const last = soon.find(x => x.t === e.t && x.d1 === d - 1);
+        if (last) { last.d1 = d; last.to = Wd.Day; } else soon.push({ t: e.t, d1: d, from: `W${Wd.Week} ${Wd.Day}`, to: '' });
+      }
+    }
+    S.$ui.soon = soon.map(x => `${x.from}${x.to ? '–' + x.to : ''}: ${x.t.replace(/\s*\(Player\.Profile[^)]*\)/, '')}`).slice(0, 12);
+  }
   S.$ui.toasts = S.$ui.toasts.slice(-10);
 }
 
