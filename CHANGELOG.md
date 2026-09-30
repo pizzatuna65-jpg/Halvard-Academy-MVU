@@ -1,7 +1,12 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.31.1 — Florian at the Spirit Path (2026-09-30)
+
+Owner: "add Florian to the Spirit Path regulars". Regulars — Spirit Path: Ruby, Royhan, Florian (Occult, Spirit Pact with Hades, a
+Greater Spirit). Save fixture v1.31.0. Tests: `test_locations_v1310`, saves pass.
 
 ## v1.31.0 — Spirit Path, restful places, things to do around the grounds (2026-09-30)
 
@@ -69,21 +74,6 @@ sustained Major, Lightning Arc per use Standard, Lightning Blast per use Signatu
 registered), `test_playtest_v1301` (+4 checks), saves, qa_static, lint pass.
 - To confirm with the owner: the birthday follows the pasted text (Monday); the playtest chat's Charles had M4 W2 Tue. The general
   paragraph about Voltaic Core has no Builder field, so, as in the owner's own build, each technique carries its own text.
-
-## v1.30.3 — Clear weather on special occasions (2026-09-30)
-
-Owner: "when an event happens, suspend the weather roll and default to clear" (options chosen: special-occasion days only; the
-temperature keeps the season). Decision touched: DECISIONS §4 **Weather** (a pure function of seed and day; now with this exception).
-- `data/calendar.json` marks 22 events `"fair"` (41 days a year): the Entrance Event, Star Night, the Warding Rite, the four Dorm Days,
-  Club Festival, Dorm / Academy / Kingdom Competitions, Secret Fools Day, both Results days, Sports Day, the Traveling Circus, the
-  Academy Showcase and Bazaar, Founder Day, Remembrance Day, the Harvest Festival and Graduation. Not marked: exam weeks, the long
-  weeks (club sign-up, Training, Fair, Election, Return), breaks, away days and the Thinning.
-- `wxRollDay`: on those days every block is clear, with no wind, rain, snow or rare weather (no heatwave); the daily temperature
-  variation and the season stay, so a winter festival is still cold. The Divination Society forecasts those days right. Weather is
-  still a pure function of the seed and the day, so swipes and old saves agree. In the playtest chat the Entrance morning (light
-  rain before) is now clear and nobody arrives Soaked.
-- Save fixture v1.30.2. Tests: `test_playtest_v1301` (+6 checks over 60 seeds); `test_world_v110`'s climate statistics now leave
-  the unrolled event days out. **Full suite passes.**
 
 ## Release index (one line per release, oldest first)
 
@@ -183,3 +173,4 @@ temperature keeps the season). Decision touched: DECISIONS §4 **Weather** (a pu
 - **v1.30.5 (2026-09-30):** With no picture uploaded, the Student file shows the SillyTavern persona's image.
 - **v1.30.6 (2026-09-30):** "Connected to" follows the map picture; the map cards no longer show it.
 - **v1.31.0 (2026-09-30):** Meditation Rooms and the new Spirit Path; restful places; new activities around the grounds; letters home.
+- **v1.31.1 (2026-09-30):** Florian is a regular at the Spirit Path.

@@ -297,7 +297,7 @@ def apply_lore_edits(C, N):
     N[314]['comment'] = "Regulars — Meditation Rooms"
     N[314]['key'] = ['Meditation Room', 'Meditation Rooms', 'meditation', 'meditate']
     N[348] = template_from(N[314], uid=348, displayIndex=348, comment="Regulars — Spirit Path", key=["Spirit Path", "lesser spirit", "the cairns"],
-        content="[Regulars — Spirit Path] Ruby, Royhan.")
+        content="[Regulars — Spirit Path] Ruby, Royhan, Florian.")   # 1.31.1 (owner): Florian walks Hades here
     # 1.31.0 (owner-approved planning/DRAFT_restore_places.md and DRAFT_location_activities.md): why a place restores, the Cathedral's
     # service, the bell-keeper's shift, letters home, and talk in the laundry
     def add_to_first(uid, text):

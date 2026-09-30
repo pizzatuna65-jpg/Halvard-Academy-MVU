@@ -15,7 +15,7 @@ console.log('Two places');
 ok(L.meditation_rooms && L.spirit_path && !L.meditation_rooms_spirit_house, 'the Meditation Rooms and the Spirit Path, no "Spirit House"');
 ok(pins.some(p => p.pin === 38 && p.label === 'Spirit Path' && p.cluster.includes('spirit_path')) && pins.some(p => p.pin === 32 && p.label === 'Meditation Rooms'), 'pin 38 is the Spirit Path; pin 32 the Meditation Rooms');
 ok(['gymnasium', 'menagerie', 'sports_field'].every(x => L.spirit_path.connections.includes(x)) && L.spirit_path.category === 'Sport and Grounds', 'the Spirit Path joins the Gymnasium, Menagerie and Sports Field, out of doors');
-ok(L.meditation_rooms.regulars.join() === 'Caspian,Tristan' && L.spirit_path.regulars.join() === 'Royhan,Ruby', 'regulars: Caspian and Tristan meditate; Ruby and Royhan walk their spirits');
+ok(L.meditation_rooms.regulars.join() === 'Caspian,Tristan' && L.spirit_path.regulars.join() === 'Florian,Royhan,Ruby', 'regulars: Caspian and Tristan meditate; Ruby, Royhan and Florian (1.31.1) walk their spirits');
 ok(!L.meditation_rooms.access && !/not to go alone|sounds no one|bound spirits/i.test(entry(87)) && /no sound from the campus gets in/.test(entry(87)), 'the Meditation Rooms are calm now: no "not alone", no sounds, no bound spirits');
 ok(/first Spirit Pact/.test(entry(347)) && /Anyone may come to watch/.test(entry(347)), 'the Spirit Path lore: first pacts, and watching for everyone');
 ok(!/Spirit House/.test(entry(132)) && /Spirit Path 17/.test(entry(132)) && /Spirit Path \(the footpath/.test(entry(132)), 'the Campus Map says Meditation Rooms and knows the Spirit Path');

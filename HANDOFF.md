@@ -3,7 +3,7 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.31.0** (2026-09-30): the Meditation Rooms and the new Spirit Path (pin 38, first pacts in play), six restful
+**Snapshot:** card **v1.31.1** (2026-09-30): the Meditation Rooms and the new Spirit Path (pin 38, first pacts in play; Florian a regular), six restful
 places (stamina and mana, by hour and weather), new activities (rowing, the hills, the willow, a bell-keeper's shift, the Old Hut
 custom, letters home). The proficiency plan is complete (1.25–1.30). Live checks: `docs/TEST_CHECKLIST.md` "Open".
 Plans: `planning/FUTURE_PLANS.md`.
