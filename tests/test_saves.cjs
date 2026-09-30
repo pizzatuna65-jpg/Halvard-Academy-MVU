@@ -20,9 +20,11 @@ for (const f of files) {
   const old = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
   const P = Schema.parse(_.cloneDeep(old)); runEngine(P, _.cloneDeep(old), ''); const S = Schema.parse(P);
   const L0 = leaves(old), L1 = leaves(S);
-  const lost = Object.keys(L0).filter(p => !VOLATILE.test(p) && !(p in L1) && !Object.keys(L1).some(q => q.startsWith(p + '.')));
+  // 1.33.0: the Combat subject is Practical Magic (planning/DRAFT_classes_and_teachers.md); a renamed key is not a lost one
+  const RENAMED = p => p.replace(/(^|\.)Combat(\.|$)/, '$1Practical Magic$2').replace(/(^|\.)Remedial Combat(\.|$)/, '$1Remedial Practical Magic$2');
+  const lost = Object.keys(L0).filter(p => !VOLATILE.test(p) && !(p in L1) && !(RENAMED(p) in L1) && !Object.keys(L1).some(q => q.startsWith(p + '.') || q.startsWith(RENAMED(p) + '.')));
   ok(!lost.length, `${f}: no field is lost (${Object.keys(L0).length} paths)` + (lost.length ? ': ' + lost.slice(0, 8).join(', ') : ''));
-  const changed = Object.keys(L0).filter(p => story(p) && p in L1 && L1[p] !== L0[p]);
+  const changed = Object.keys(L0).filter(p => story(p) && p in L1 && L1[p] !== L0[p] && !(typeof L0[p] === 'string' && L1[p] === L0[p].replace(/Combat/g, 'Practical Magic')));
   ok(!changed.length, `${f}: story values unchanged after a no-op update` + (changed.length ? ': ' + changed.slice(0, 8).map(p => `${p} ${JSON.stringify(L0[p])} -> ${JSON.stringify(L1[p])}`).join('; ') : ''));
   ok(S.$eng.ver === ver, `${f}: $eng.ver ${old.$eng && old.$eng.ver} -> ${S.$eng.ver}`);
   ok(Object.keys(S.Bonds).every(id => S.Bonds[id].Rank === old.Bonds[id].Rank && S.Bonds[id].Trust === old.Bonds[id].Trust), `${f}: every bond keeps its rank and Trust`);

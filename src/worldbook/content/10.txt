@@ -4,5 +4,6 @@ Hierarchy:
 - Tier 2: Vice Headmaster, Warden (1 per academy)
 - Tier 3: Teaching Staff, Dorm Heads
 - Tier 4: Other Staff
-Teaching staff: Teach the six academy classes, each teacher one subject to one year level only. Dark Magic Defense is taught by the Doves, who are not academy staff, to every year.
+Teaching staff: Teach the academy classes. Magic Theory, History, Etiquette and Potion Crafting have a different teacher for each year level. Creature Studies and the five Practical Magic classes (one per combat role) have one teacher each for all three years. Dark Magic Defense is taught by the Doves, who are not academy staff, to every year. The Headmaster and the Vice Headmaster teach a class each as well (second-year History, third-year Magic Theory).
+Free periods: now and then a teacher cannot come (called away, ill, a meeting, an emergency); the class is not held, it counts against no one, and the hour is free.
 Club duty: Each teacher is responsible for exactly one club. A club requires a teaching staff signature to found.

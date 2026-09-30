@@ -1,7 +1,37 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.33.0 — Classes and teachers: Practical Magic by role, eight new teachers, free periods (2026-10-01)
+
+Owner-approved `planning/DRAFT_classes_and_teachers.md` (FP6, Grup C; drafted teacher by teacher with the owner, now deleted).
+Save fixture v1.32.0.
+- **Eight new teachers** (lore pass `source_original/npc_lore_staff_2026-10-01/`, uids 416–423, roster, Regulars): Hester Mortlake
+  (Head Nurse, Healing), Anselm Graywater (Defense), Magnus Tarrant (Support), Dorian Pryce (Control), Cedric Amor Fay (History Y3),
+  Anya Zeth (Etiquette Y2), Kotaro Hanamura (Potion Crafting Y2), Valentin Crane (Potion Crafting Y3). Each has a full bond set:
+  Rank 5 gift and Rank 10 benefit, openness, Tension category (Valentin: dangerous, with a peak), mood, gifts and birthday, Rank 4
+  activities, voice with stages, Rank 8 branch (Hester and Anya C, Valentin A, the rest D), curated connections (public teacher–pupil
+  lines) and one line in the files of the students and staff they touch (Percival, Tilly, Sophia, Irene, Caspian, Aiden, Kuroo, Layla,
+  Mimosa, Royhan; Dorian's and Kotaro's Year 2 lines about Nerys, Hadrian and Tsubaki are year-gated). Dorian is a craft expert for
+  Enchant and Runes, Valentin for Brewing. Baelin also teaches History Y2, Althair Magic Theory Y3 (one line each).
+- **Practical Magic** (was Combat): five classes at the old Combat slot, one per combat role, mixing the dorms by year; Gavlan now
+  teaches Attack to every year, Vallie Creature Studies to every year. The one-year rule holds only for Magic Theory, History,
+  Etiquette and Potion Crafting (lore 10, 97, 131, 30, 253, Gavlan/Vallie/Milena roles). A student with two roles attends the one
+  listed first (rule 502); the first class (M1 W1 Thu) is the joint assessment. Grades unchanged (one mark → Prowess); the engine's
+  `teaches` knows the role, so remedials and the A/B teacher XP go to {{user}}'s role teacher. Save migration: Combat marks, exam lines,
+  study counts and a pending "Remedial Combat" become Practical Magic.
+- **Free periods** (`data/free_periods.json`): 5% per class period (Kotaro 20%), seeded, never on event days or in M1 W1; the class is
+  not held (no absence, not in attendance). `<now>` says so and why; the planner marks it.
+- **Dorm Competition** in five role brackets (formats in lore 19); 16 per dorm qualify by role (Attack 4, others 3); bracket champion
+  +100 points, runner-up +50 (engine, once a year, from `Competition.Placement`). Royhan now qualifies "in the last Control place".
+- Tests: new `test_classes_v1330.cjs`; count tests 44 → 52 NPCs, Rank 8 branch totals, Meditation Rooms regulars, grade tests renamed
+  to Practical Magic; `test_saves.cjs` accepts the subject rename; `test_calendar_state_v1190.cjs` fixed (Final Ranking is Monday since
+  1.32.0). `npm test`, `npm run stress`, lint and the token audit pass. The panel smoke test was not run (Playwright not installed).
+- **To confirm with the owner** (invented to fit): the clubs the new teachers advise (Hester Medical Centre Volunteers, Anselm Warding
+  Study Group, Magnus Board Game Club, Dorian Specialized Magic Club, Cedric Gardening Club, Anya Tea Club, Kotaro Brewing Club,
+  Valentin Academy Newspaper), since canon says every teacher runs one club; Practical Magic sparring partners stay within one's dorm
+  except in Training Week (keeps the old class rule); the reasons teachers give for a free period.
 
 ## v1.32.0 — Calendar moves, "Coming up", the Inventory panel (2026-09-30)
 
@@ -73,16 +103,6 @@ it". Decision touched: "Map cards" (the Connected to row is gone).
   saves pass.
 - To confirm with the owner: the neighbours I read from the picture for places other than Founder's Park (list in the Campus Map
   entry); the Hills link to Arbiter Hall and the Staff Quarters (the path behind them) while the walk still counts from the Courtyard.
-
-## v1.30.5 — The persona picture in the Student file (2026-09-30)
-
-Owner: "if the user already has a persona image in SillyTavern, put it in the Student file automatically". Decision touched:
-"The student's picture" (one sentence added; nothing new is stored).
-- With no picture uploaded, the Student file (and your own circle in People) shows the current SillyTavern persona's image, read
-  each time the panel is drawn: the persona whose name is {{user}}; with two of that name, the one locked to the chat, else the one
-  on the player's latest message. A line under it says it is the persona picture; "Use another picture" uploads one as before, and
-  removing an upload goes back to the persona picture. Verified in SillyTavern's and Tavern Helper's source (DECISIONS §11).
-- Save fixture v1.30.4. Tests: `test_playtest_v1301` (+7 checks); people map, builder, UI overhaul, saves, qa_static, lint pass.
 
 ## Release index (one line per release, oldest first)
 
@@ -184,3 +204,4 @@ Owner: "if the user already has a persona image in SillyTavern, put it in the St
 - **v1.31.0 (2026-09-30):** Meditation Rooms and the new Spirit Path; restful places; new activities around the grounds; letters home.
 - **v1.31.1 (2026-09-30):** Florian is a regular at the Spirit Path.
 - **v1.32.0 (2026-09-30):** Dorm Days on Sundays, Final Ranking Monday, a longer Academy Trip, the Kingdom Competition in the capital; "Coming up" in `<now>`; the Inventory panel.
+- **v1.33.0 (2026-10-01):** Classes and teachers: Practical Magic by combat role, eight new teachers, free periods, Dorm Competition role brackets.

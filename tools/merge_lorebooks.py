@@ -44,9 +44,11 @@ print('NPC lore pass 2026-09-25:', len(overlay_npc_lore(N)), 'entries updated')
 # (lore_cohort2_additions.md: "## <id> — <Full Name>", "year: Y" and fenced lines). The added lines and the new names in the roster
 # and the Regulars entries appear only from that campaign year: an EJS gate in the card, a "[from Year Y]" marker in the standalone
 # export (tools/curate_data.py turns it into a year-gated field for the UI).
-COHORT_DIRS = sorted(d for d in os.listdir(P('source_original')) if d.startswith('npc_lore_cohort'))
+# 1.33.0 (owner-approved planning/DRAFT_classes_and_teachers.md): the new teaching staff use the same two files in
+# source_original/npc_lore_staff_*/ (lore_staff.md, lore_staff_additions.md); a "year: 1" addition is a plain line (no gate).
+COHORT_DIRS = sorted(d for d in os.listdir(P('source_original')) if d.startswith(('npc_lore_cohort', 'npc_lore_staff')))
 def cohort_files(kind):   # kind '' = new entries (lore_cohortN.md), '_additions' = lines for older NPCs (lore_cohortN_additions.md)
-    return [P('source_original', d, f) for d in COHORT_DIRS for f in sorted(os.listdir(P('source_original', d))) if re.fullmatch(r'lore_cohort\d+' + kind + r'\.md', f)]
+    return [P('source_original', d, f) for d in COHORT_DIRS for f in sorted(os.listdir(P('source_original', d))) if re.fullmatch(r'lore_(?:cohort\d+|staff)' + kind + r'\.md', f)]
 def add_cohort_npcs(N):
     added = []
     for f in cohort_files(''):
@@ -80,6 +82,10 @@ def apply_cohort(N, ejs):
     for full, y, lines in cohort_additions():
         assert full in byname, f'cohort additions: no NPC entry "NPC — {full}"'
         e = N[byname[full]]
+        if y <= 1:   # 1.33.0: on campus from the start: the lines join the entry's Relations line (dossier Rank 6)
+            e['content'], n = re.subn(r'^(Relations: .*)$', lambda m: m.group(1) + ' ' + ' '.join(lines), e['content'], count=1, flags=re.M)
+            if not n: e['content'] += '\n' + '\n'.join(lines)
+            continue
         e['content'] += '\n' + (YEAR_GATE.format(y=y, body='\n'.join(lines)) if ejs else '\n'.join(f'[from Year {y}] {l}' for l in lines))
     for y, segs in COHORT_ROSTER.items():   # the roster's Year 1 line (uid 97); the card's roster EJS places them by arrival year
         rep(N[97], "Alyssa (Sky, F, burgundy, quiet).", "Alyssa (Sky, F, burgundy, quiet); " + '; '.join(segs) + '.')
@@ -169,6 +175,82 @@ rep(C[19], "3. Kingdom. One team per academy, four in total, knockout. Each memb
     "3. Kingdom. One team per academy, four in total, knockout, at the arena in the capital. Each member of the winning team earns 5,000 points. "
     "Only the teams travel: they arrive the day before and stay at a hotel near the arena, and fly home the day after. "
     "Halvard's team goes with Gavlan Haverton as its escort; the rest of the academy stays at school and follows the news.")
+# ---------- 1.33.0 classes and teachers (owner-approved planning/DRAFT_classes_and_teachers.md) ----------
+# The one-year rule holds only for Magic Theory, History, Etiquette and Potion Crafting; Creature Studies, Dark Magic Defense and
+# the five Practical Magic classes (the old Combat Class, now one class per combat role) have one teacher for every year. Baelin
+# and Althair teach too. Eight new teachers (source_original/npc_lore_staff_*). The roster's attributes feed tools/curate_data.py
+# (`teaches`: "History Y2", "Creature Studies teacher for every year", "Healing class for every year").
+rep(N[97], "Baelin (Elf, M, ash-blond, patient, Headmaster)", "Baelin (Elf, M, ash-blond, patient, Headmaster, History Y2)")
+rep(N[97], "Althair (M, white, cheerful, Vice Headmaster)", "Althair (M, white, cheerful, Vice Headmaster, Magic Theory Y3)")
+rep(N[97], "Gavlan (Elf, M, silver, stern, Combat Y1)", "Gavlan (Elf, M, silver, stern, Attack class for every year)")
+rep(N[97], "Vallie (ox B, F, red, jovial, Creature Studies Y1,", "Vallie (ox B, F, red, jovial, Creature Studies teacher for every year,")
+rep(N[97], "Rei (F, black, cool, Acting Warden, the old Warden's apprentice).",
+    "Rei (F, black, cool, Acting Warden, the old Warden's apprentice); Hester (F, black, macabre, Healing class for every year, Head Nurse); "
+    "Anselm (tortoise B, M, bald, convoluted, Defense class for every year); Magnus (Elf, M, dark, cunning, Support class for every year); "
+    "Dorian (fox B, M, russet, slick, Control class for every year); Cedric (M, grey, doomed, History Y3); Anya (F, white, serene, Etiquette Y2); "
+    "Kotaro (tanuki B, M, brown, carefree, Potion Crafting Y2); Valentin (M, blond, vain, Potion Crafting Y3).")
+rep(N[97], "Each teacher teaches one subject to one year level only; posts not named here (Magic Theory Y3, Etiquette Y2, History Y2-3, Combat Y2-3, Creature Studies Y2-3, Potion Crafting Y2-3) are unknown.",
+    "Magic Theory, History, Etiquette and Potion Crafting have one teacher per year level; Creature Studies, Dark Magic Defense and the five "
+    "Practical Magic classes (Attack, Defense, Healing, Support, Control) have one teacher each for all three years.")
+rep(C[10], "Teaching staff: Teach the six academy classes, each teacher one subject to one year level only. Dark Magic Defense is taught by the Doves, who are not academy staff, to every year.",
+    "Teaching staff: Teach the academy classes. Magic Theory, History, Etiquette and Potion Crafting have a different teacher for each year level. "
+    "Creature Studies and the five Practical Magic classes (one per combat role) have one teacher each for all three years. "
+    "Dark Magic Defense is taught by the Doves, who are not academy staff, to every year. "
+    "The Headmaster and the Vice Headmaster teach a class each as well (second-year History, third-year Magic Theory).\n"
+    "Free periods: now and then a teacher cannot come (called away, ill, a meeting, an emergency); the class is not held, it counts against no one, and the hour is free.")
+rep(N[109], "Role: Teaching first-year Combat for two decades;",
+    "Role: Teaches Attack, one of the five Practical Magic classes, to all three years at the Combat Grounds, after two decades teaching first-year Combat;")
+rep(N[115], "Role: Teaching first-year Creature Studies for two years, and leads the Creature Studies Expedition for all three years;",
+    "Role: Teaches Creature Studies to all three years, for two years now, and leads the Creature Studies Expedition;")
+rep(N[112], "Teaches Dark Magic Defense to every year; as a Dove rather than academy staff, she is the one teacher outside the one-year rule.",
+    "Teaches Dark Magic Defense to every year, as a Dove rather than academy staff.")
+rep(N[112], "she secretly wishes she could join Combat Class sparring.", "she secretly wishes she could join Practical Magic sparring.")
+rep(N[113], "Role: In post for forty years.", "Role: In post for forty years; also teaches second-year History himself, the one class he has never given up.")
+rep(N[127], "Role: Late twenties, which is absurd for the post and the first thing anyone notices about him.",
+    "Role: Late twenties, which is absurd for the post and the first thing anyone notices about him. Also teaches third-year Magic Theory, and is annoyingly good at it.")
+rep(C[19], "1. Dorm. Solo, open to the whole dorm, run as a ranking tournament so every entrant finishes with a placement. Top 16 per dorm qualify.",
+    "1. Dorm. Solo, open to the whole dorm, in five brackets, one per combat role, each judged by that role's Practical Magic teacher: "
+    "Attack is a knockout duel; Defense holds a ring against rising attacks, longest standing wins; Healing races to treat staged injuries, "
+    "judged on speed and precision; Support is paired at random with an Attack fighter of the same dorm and judged on that partner's bout; "
+    "Control is a duel won by holding the opponent still for ten seconds, no injury needed. Every entrant finishes with a placement. "
+    "Sixteen per dorm qualify for the Academy Competition by role, whoever goes furthest in their bracket: Attack 4, Defense 3, Healing 3, Support 3, Control 3; "
+    "winning is not required. Each bracket's champion earns 100 points and its runner-up 50.")
+rep(C[253], "Five roles used in Combat Class, exams and team competitions. A student may fill more than one.",
+    "Five roles used in Practical Magic (one class per role), exams and team competitions. A student may fill more than one, and then attends the class of the role they want most.")
+rep(C[82], "busiest after Combat Class,", "busiest after Practical Magic,")
+rep(C[131], "Each academy teacher teaches one subject to one year level only; a [D] class is that same teacher taking each dorm separately. Dark Magic Defense is the exception: the Doves teach it to every year.",
+    "Magic Theory, History, Etiquette and Potion Crafting have one teacher per year level; Creature Studies and the Practical Magic classes have one teacher each for all three years, and the Doves teach Dark Magic Defense to every year. A [D] class is its teacher taking each dorm separately. "
+    "Practical Magic is five classes at the same hour, one per combat role (Attack, Support and Control at the Combat Grounds, Defense at the Sparring Pavilion, Healing in the Healing Ward of the Medical Centre); each student attends their own role's class with the rest of their year from every dorm. "
+    "Now and then a teacher cannot come: that class is a free period, not held and counted against no one.")
+STAFF_REGULARS = {'Medical Centre': ['Hester', 'Anya'], 'Staff Quarters': ['Hester', 'Kotaro'], 'Meditation Rooms': ['Anselm'],
+                  "Founder's Park": ['Anselm'], 'Main Library': ['Anselm', 'Magnus'], 'Mail Tower': ['Anselm', 'Magnus'],
+                  'Faculty Offices and Staff Room': ['Magnus', 'Valentin'], 'Workshop': ['Dorian'], 'Courtyards': ['Dorian', 'Anya', 'Valentin'],
+                  'The Mall': ['Dorian'], 'Lecture Halls': ['Cedric', 'Anya'], 'Archive': ['Cedric'], 'Gardens': ['Cedric'],
+                  'Common Rooms and Canteen': ['Cedric', 'Anya', 'Kotaro', 'Valentin'], 'The Cathedral': ['Anya'], 'Boathouse and Lake': ['Anya'],
+                  'Potion Halls': ['Kotaro', 'Valentin']}
+def staff_regulars(N):   # after apply_lore_edits, which renames some Regulars entries (Meditation Rooms)
+    regs = {e['comment'].replace('Regulars — ', '').strip(): u for u, e in N.items() if e['comment'].startswith('Regulars — ')}
+    for place, ids in STAFF_REGULARS.items():
+        assert place in regs, f'staff regulars: no entry "Regulars — {place}"'
+        e = N[regs[place]]
+        e['content'], n = re.subn(r'^(\[Regulars — [^\]]+\][^\n]*?)\.?$', lambda m: m.group(1) + ', ' + ', '.join(ids) + '.', e['content'], count=1, flags=re.M)
+        assert n == 1, place
+def practical_magic_class(C):   # after add_nations (which edits the old Combat Class entry): the class becomes Practical Magic
+    C[30]['comment'] = 'Classes - Practical Magic'
+    C[30]['key'] = list(dict.fromkeys(['Practical Magic', 'Attack class', 'Defense class', 'Healing class', 'Support class', 'Control class'] + C[30]['key']))
+    C[30]['content'] = (
+        "[Practical Magic]\n"
+        "Formerly called Combat Class; students still say \"Combat\".\n"
+        "Purpose: Practical casting under pressure, taught by combat role. The direct feeder into all four competition tiers.\n"
+        "Classes: five, one per combat role, each with one teacher for all three years: Attack (Gavlan Haverton, Combat Grounds), "
+        "Defense (Anselm Graywater, the Sparring Pavilion), Healing (Hester Mortlake, the Healing Ward of the Medical Centre), "
+        "Support (Magnus Tarrant, Combat Grounds), Control (Dorian Pryce, Combat Grounds). All five meet at the same time, "
+        "Monday and Thursday afternoons; a role class mixes the four dorms and is taught by year.\n"
+        "Roles: a student attends the class of their combat role; a student with two roles picks the one they want most. "
+        "The first class of the year (Month 1 Week 1 Thursday) is a joint assessment: the five teachers watch the first-years in drills and assign their roles.\n"
+        "Activity: Spellcasting drills, sparring and duels, marked by the role's own standard. Sparring partners come from one's own dorm "
+        "except in Training Week; this is a class rule, not a ban on casting elsewhere.\n"
+        "Covers: the five combat roles, and preparation for the Dorm and Academy Competitions.")
 USER_YEAR_OLD = "{{user}} is a first-year at Halvard."
 USER_YEAR_CARD = ("{{user}} is a Year <%- Math.max(1, Math.min(3, Number(getvar('stat_data.Player.Profile.Year')) || 1)) %> student at Halvard "
                   "(a first-year when the story began; Player.Profile.Year is authoritative).")
@@ -812,7 +894,7 @@ gate_cohorts(N39, False)
 assert ROY_OLD.search(N39[101]['content'])
 N39[101]['content'] = ROY_OLD.sub(
     'Current trouble: This year is his last chance at the Dorm Competition (Month 3 Week 4). Before it, he is training to qualify and already knows the harder problem: '
-    'no team wants him, since "illusionist-alchemist" doesn\'t count as a role. Canon outcome afterwards, unless the story changes it: he qualifies at rank 16, and still no team will take him.',
+    'no team wants him, since "illusionist-alchemist" doesn\'t count as a role. Canon outcome afterwards, unless the story changes it: he qualifies in the last Control place of his dorm, and still no team will take him.',
     N39[101]['content'])
 # 1.7.5 (owner, 2026-09-27: "edit entry entrance event agar menjelaskan bahwa di year 2/3 user sebagai senior yg mengajak new student
 # tour"): from {{user}}'s second year the Entrance Event is theirs to host, not to go through. Card: an EJS section on Player.Profile.Year;
@@ -825,6 +907,8 @@ C39[21]['content'] += "\nFrom {{user}}'s second year: " + ENTR_SENIOR.replace("a
 batch3_magic_canon(C39, N39)
 formal_and_far_grounds(C39, N39)   # 1.15.1
 ghost_stories(C39, N39)   # 1.16.0
+practical_magic_class(C39)   # 1.33.0
+staff_regulars(N39)   # 1.33.0
 calendar_months = json.load(open(P('data/calendar.json'), encoding='utf-8'))['months']
 for month in range(1, 13):
     C39[133 + month]['content'] = f'[Current month: Month {month}]\n' + calendar_months[str(month)]
@@ -857,10 +941,10 @@ Nc[101]['content'] = ROY_OLD.sub(lambda _: (
     "<%_ } else if (_rm < 3 || (_rm === 3 && (_rw < 4 || !['Sat', 'Sun'].includes(_rd)))) { _%>\n"
     'Current trouble: This year is his last chance. He is training to qualify from the Dorm Competition (Month 3 Week 4) and already knows the harder problem: even if he qualifies, no team wants him, since "illusionist-alchemist" doesn\'t count as a role.\n'
     "<%_ } else if (_rm === 3) { _%>\n"
-    'Current trouble: This year is his last chance, and the Dorm Competition is being fought this weekend: he needs a top-16 finish. Even if he makes it, no team wants him, since "illusionist-alchemist" doesn\'t count as a role. '
+    'Current trouble: This year is his last chance, and the Dorm Competition is being fought this weekend: he needs one of the three Control places in his dorm. Even if he makes it, no team wants him, since "illusionist-alchemist" doesn\'t count as a role. '
     'If the story has already changed what this depends on (he is hurt, away or out of the competition), adapt it to the story as it is now; never replay it as if nothing happened.\n'
     "<%_ } else { _%>\n"
-    'Current trouble: This year, his last, he qualified from the Dorm Competition at rank 16, but no team will take him, since "illusionist-alchemist" doesn\'t count as a role. (Campus_State overrides this if the story played out differently.)\n'
+    'Current trouble: This year, his last, he qualified from the Dorm Competition in the last Control place of his dorm, but no team will take him, since "illusionist-alchemist" doesn\'t count as a role. (Campus_State overrides this if the story played out differently.)\n'
     "<%_ } _%>"), Nc[101]['content'])
 gate_cohorts(Nc, True)   # v1.0.3 incoming cohorts (defined at the top)
 # 1.7.4 (Year 2 bug hunt): a Halvard NPC's age follows the campaign year (lore ages are as of Year 1, or a cohort's arrival year;
@@ -978,6 +1062,8 @@ assert rivals == 12 and teams == 3, (rivals, teams)
 batch3_magic_canon(Cc, Nc)
 formal_and_far_grounds(Cc, Nc)   # 1.15.1
 ghost_stories(Cc, Nc)   # 1.16.0
+practical_magic_class(Cc)   # 1.33.0
+staff_regulars(Nc)   # 1.33.0
 # merge + tagging (D2): lore -> [mvu_plot]; shared state/navigation entries stay untagged (sent to both models)
 UNTAGGED_CORE = {0, 132, 134, 131, 20}
 UNTAGGED_NPC = {97}

@@ -1,4 +1,4 @@
-[Regulars — Common Rooms and Canteen] Lenna (Fire), Kanae (Light), Ruby (Sky), Etnie (Viridian), Percival, Bobby (Canteen, during breaks).
+[Regulars — Common Rooms and Canteen] Lenna (Fire), Kanae (Light), Ruby (Sky), Etnie (Viridian), Percival, Bobby (Canteen, during breaks), Cedric, Anya, Kotaro, Valentin.
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 From campaign Year 2 also: Linus, Nerys, Hadrian, Wren.
 <%_ } _%>

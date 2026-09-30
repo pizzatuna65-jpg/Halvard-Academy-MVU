@@ -1,0 +1,26 @@
+{
+ "_note": "1.33.0 (owner-approved planning/DRAFT_classes_and_teachers.md): now and then a teacher cannot come and the class is not held (it counts against no one; the hour is free). Seeded per class and day (no Math.random). chance = percent per class period; npcs[id].chance overrides it; why = the reasons told, in character (a teacher without a list uses 'generic'). Never on a day with a calendar event (exams, Training Week, competitions, holidays) or in Month 1 Week 1.",
+ "chance": 5,
+ "generic": ["is ill today", "was called to a staff meeting", "was called away on academy business"],
+ "npcs": {
+  "Gavlan": {"why": ["had a bad night and sent word he would not come", "was called to the Headmaster"]},
+  "Yvette": {"why": ["is ill today", "is dealing with trouble in the Fire Dormitory"]},
+  "Layla": {"why": ["lost track of time in the Archive", "is ill today"]},
+  "Vallie": {"why": ["is chasing a creature that got out of the Menagerie", "is at the Menagerie with a sick beast"]},
+  "Kuroo": {"why": ["is at a meeting in the Noble Houses' Liaison", "sent a note: 'something came up'"]},
+  "Mimosa": {"why": ["could not face the classroom today", "is ill today"]},
+  "Ezrel": {"why": ["did not come, and gave no reason"]},
+  "Ottavio": {"why": ["is away on Sky Dormitory business"]},
+  "Milena": {"why": ["was called to the Dovecote", "is away on Dove business"]},
+  "Baelin": {"why": ["was summoned to a meeting in the capital", "is held up by academy business"]},
+  "Althair": {"why": ["is away on business he did not explain", "is 'unavoidably detained'"]},
+  "Hester": {"why": ["has an emergency on the ward", "is on the ward after a long night shift"]},
+  "Anselm": {"why": ["sent a note nobody could make sense of; the class is off", "is at the Meditation Rooms and lost track of the hour"]},
+  "Magnus": {"why": ["is in a competition scouting meeting", "is at the Mail Tower waiting for a letter"]},
+  "Dorian": {"why": ["is meeting a large buyer from off campus", "is restocking in the Workshop"]},
+  "Cedric": {"why": ["is ill today, and sent the reading anyway"]},
+  "Anya": {"why": ["is sitting with a patient at the Medical Centre", "is at a funeral"]},
+  "Kotaro": {"chance": 20, "why": ["is asleep in the Potion Halls storeroom", "is still recovering from last night", "forgot"]},
+  "Valentin": {"why": ["is presenting a formula at court", "is at a meeting of the alchemists' guild"]}
+ }
+}

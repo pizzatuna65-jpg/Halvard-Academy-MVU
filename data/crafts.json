@@ -2,10 +2,10 @@
   "_note": "Craft recipes for Practice. groups: the Practice actions a craft can be done under (club = extra club needed for that action), the best owned tool's bonus, the experts whose presence adds +10 and opens advanced work, and the mishap injury. Material options are alternatives; each listed item is consumed once per attempt. yield = pieces for fine / success / weak (default 1). Sale values are guide prices for finished work, not shop stock. masterwork: a finished Project of one of these Kinds, judged at the masterwork DC (Craft Rank 4); the Kind picks the group for tools, experts and the Bag kind.",
   "tiers": {"simple": 25, "standard": 45, "advanced": 65, "masterwork": 85},
   "groups": {
-    "Brewing":{"actions":[{"action":"Brew a potion"},{"action":"Brewing Club bench"}],"tools":[["Ardenne measuring set",10],["Glass stirring-rod set",5]],"experts":["Mimosa","Royhan"],"mishap":["burn","hand","tender fingers"],"bag":"drink"},
-    "Runes":{"actions":[{"action":"Runes and talismans"},{"action":"Specialized Magic practice"}],"tools":[["Steel-nib fountain pen",5]],"mishap":["burn","hand","tender fingers"]},
+    "Brewing":{"actions":[{"action":"Brew a potion"},{"action":"Brewing Club bench"}],"tools":[["Ardenne measuring set",10],["Glass stirring-rod set",5]],"experts":["Mimosa","Royhan","Valentin"],"mishap":["burn","hand","tender fingers"],"bag":"drink"},
+    "Runes":{"actions":[{"action":"Runes and talismans"},{"action":"Specialized Magic practice"}],"tools":[["Steel-nib fountain pen",5]],"experts":["Dorian"],"mishap":["burn","hand","tender fingers"]},
     "Repair":{"actions":[{"action":"Enchant or repair"}],"mishap":["burn","hand","tender fingers"]},
-    "Enchant":{"actions":[{"action":"Enchant or repair"}],"mishap":["burn","hand","tender fingers"]},
+    "Enchant":{"actions":[{"action":"Enchant or repair"}],"experts":["Dorian"],"mishap":["burn","hand","tender fingers"]},
     "Cooking":{"actions":[{"action":"Cook or bake"}],"mishap":["burn","hand","tender fingers"],"bag":"food"},
     "Needlework":{"actions":[{"action":"Knit or sew, sketch or paint, carve, calligraphy"},{"action":"Tailoring"},{"action":"Drawing, Calligraphy, Tailoring practice","club":"Tailoring"}],"mishap":["needle prick","finger","a sore fingertip"]},
     "Drawing":{"actions":[{"action":"Knit or sew, sketch or paint, carve, calligraphy"},{"action":"Art studio"},{"action":"Drawing, Calligraphy, Tailoring practice","club":"Drawing"}],"mishap":["strained wrist","wrist","an aching wrist"]},

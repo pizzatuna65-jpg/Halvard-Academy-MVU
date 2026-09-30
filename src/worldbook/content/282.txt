@@ -1,4 +1,4 @@
-[Regulars — Gardens] Idris, Royhan, Zara, Ruby, Lenna.
+[Regulars — Gardens] Idris, Royhan, Zara, Ruby, Lenna, Cedric.
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 From campaign Year 2 also: Maple, Nerys.
 <%_ } _%>

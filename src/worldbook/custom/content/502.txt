@@ -47,7 +47,7 @@ Player.Wallet
 Player.Profile
 - Dorm is set once, by the Arbiter Stone sorting. The Stone reads only Magic._Affinity.Dominant (Elemental→Fire, Mystic→Light, Spiritual→Viridian, Occult→Sky); it cannot see subtypes, or whether magic is hidden or forbidden. Dorm_rank changes only at Results & Dorm Ranking (Month 5 W2 Fri, Month 11 W2 Fri)<%- on('study') ? '; the engine sets it and <now> gives the announcement' : '' %>.
 - The rest of Profile, and all of Magic._Techniques / _Affinity, come from the player's Student Builder; do not rewrite them. Birthday is in the academy calendar ("M3 W2 Thu").
-- Combat_role: empty until {{user}}'s first Combat class. There the teacher watches {{user}} in drills and assigns one or two roles (Attack, Defense, Healing, Support, Control) that fit the techniques and how {{user}} actually fought; set it then (e.g. "Defense, Control"). Change it later only when a teacher reassigns it.
+- Combat_role: empty until {{user}}'s first Practical Magic class (Month 1 Week 1 Thursday, a joint assessment). There the five role teachers watch {{user}} in drills and assign one or two roles (Attack, Defense, Healing, Support, Control) that fit the techniques and how {{user}} actually fought; set it then (e.g. "Defense, Control"). With two roles, {{user}} picks the one class they want most; write that role first. Change it later only when a teacher reassigns it or {{user}} switches class.
 - Club: the club {{user}} has actually joined, by its full name as the lore gives it ("Magic Duelling Club", "Theatre Troupe", "Soccer Club"); "" if none.
 - Reputation: _Academy (staff), _Student (students), _Doves (Dovecote), −5..+5, engine-computed; <now> says what non-zero levels mean. Report a named deed as {"Kind": "deed_name", "Why": "max 8 words"} in /Rep_events/-. The engine chooses its reputation, signed XP and weekly cap. For an unusual deed absent from the list, use the legacy {"Rep": "Academy|Student|Doves", "XP": n, "Kind": "repeat|event", "Why": "..."}; repeat gains have a weekly limit. Report both sides of a deed with two entries where noted. Never report bond milestones, bond Tension, or engine-counted attendance. Doves reputation is not Dove attention.
 <%_ if (on('attendance')) { _%>
@@ -151,7 +151,7 @@ Mysteries {"<thread>": {"Status": "open|solved|cold", "Summary": "what {{user}} 
 <%_ } _%>
 
 <%_ if (on('competition')) { _%>
-Competition: {"Tier": "Dorm|Academy|Kingdom|World", "Status": "entered|qualified|eliminated|champion|selected", "Placement": "e.g. 7th of 40", "Team": ["teammates' first names"], "Results": ["R1: beat X"]}. Update as rounds are fought. Winning the Kingdom Competition pays 5,000 points each; the engine pays {{user}}, never add it yourself.
+Competition: {"Tier": "Dorm|Academy|Kingdom|World", "Status": "entered|qualified|eliminated|champion|selected", "Placement": "e.g. 7th of 40", "Team": ["teammates' first names"], "Results": ["R1: beat X"]}. Update as rounds are fought. At the Dorm tier {{user}} fights in their role's bracket: Placement is the place in that bracket (e.g. "2nd of 12, Defense bracket"). A bracket champion earns 100 points and the runner-up 50, and winning the Kingdom Competition pays 5,000 points each; the engine pays {{user}}, never add it yourself.
 <%_ } _%>
 
 <%_ if (on('projects')) { _%>

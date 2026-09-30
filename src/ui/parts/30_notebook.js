@@ -91,11 +91,17 @@ function nbPlanner(S) {
   }).join('') : '<div class="empty">Nothing promised, nothing due. Commitments appear here when you make them in the story.</div>';
   // this week's timetable
   const P = /^P(\d)/.exec(W._Period || ''), per = P ? +P[1] - 1 : -1;
+  const pmRole = ROLES5.map(r => [r, String((S.Player.Profile || {}).Combat_role || '').search(new RegExp(`\\b${r}\\b`, 'i'))]).filter(x => x[1] >= 0).sort((a, b) => a[1] - b[1]).map(x => x[0])[0] || '';
   const rows = DAYS.map(D => {
     const evs = eventsOnDay(W.Month, W.Week, D), stop = evs.find(e => e.noclass || e.home || e.lockdown), tt = CAL.timetableFor({ Month: W.Month, Week: W.Week, Day: D });
     const isToday = D === W.Day;
     const cells = !tt ? `<td colspan="3" class="off">No classes</td>` : stop ? `<td colspan="3" class="off ev">${esc(shortEv(stop.t))}</td>`
-      : tt.map((c, i) => `<td class="${isToday && i === per ? 'cur' : ''}">${esc(c.replace(/\s*\[(M|D)\]/, ''))}${/\[D\]/.test(c) ? ' <span class="dm" title="Taught to each dorm separately">dorm</span>' : ''}</td>`).join('');
+      : tt.map((c, i) => {
+        // 1.33.0: Practical Magic shows {{user}}'s role class; today's free periods (engine $ui.free) are marked
+        const free = isToday && ((S.$ui || {}).free || []).find(f => f.p === i);
+        const label = /^Practical Magic\b/.test(c) ? `Practical Magic${pmRole ? ` · ${pmRole}` : ''}` : c.replace(/\s*\[(M|D)\]/, '');
+        return `<td class="${[isToday && i === per ? 'cur' : '', free ? 'off' : ''].join(' ').trim()}"${free ? ` title="${esc(`${free.t || 'The teacher'} ${free.why}`)}"` : ''}>${esc(label)}${/\[D\]/.test(c) ? ' <span class="dm" title="Taught to each dorm separately">dorm</span>' : ''}${free ? ' <span class="dm">free period</span>' : ''}</td>`;
+      }).join('');
     const extra = evs.filter(e => e !== stop).map(e => `<div class="sub ev">${esc(shortEv(e.t))}</div>`).join('');
     return `<tr class="${isToday ? 'today' : ''}"><th>${D}${extra}</th>${cells}</tr>`;
   }).join('');

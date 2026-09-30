@@ -23,9 +23,11 @@ Build order, generated files and test commands: `docs/BUILD.md`.
 | Calendar, events, timetable | `data/calendar.json` | engine, UI, lore 131/134 all read it |
 | New NPC | `docs/DECISIONS.md` §2 "Bonds", §6 "Tension", "Trust", "Connections"; data files in §7 marked *per NPC* | playbook in `docs/BUILD.md` §4 |
 | Incoming first-year cohort | `data/cohorts.json`, `merge_lorebooks.py` `COHORT_*`, `source_original/npc_lore_cohort2_*` as the pattern | playbook in `docs/BUILD.md` §4 |
+| New NPC on campus from the start (staff) | `source_original/npc_lore_staff_2026-10-01/` (`lore_staff.md`, `lore_staff_additions.md` with `year: 1`), `merge_lorebooks.py` 1.33.0 block (roster 97, `STAFF_REGULARS`) | playbook "Add an NPC" in `docs/BUILD.md` §4 |
 | Shop prices, items, gear effects | `data/shop.json`, `tools/common.py` `effect_text` | `gen_mvu_entries.py`, `gen_engine.py`, `gen_ui.py` |
 | Bond ranks, rewards, gifts, moods | §7 bond data; engine `stepBonds`, `stepBondMemory`, `mood_gifts.js` | |
 | Reputation, training, grades | `data/reputation.json`, `training.json`; `stepReputation`, `stepTraining`, `stepSchoolWeek` (`markUp`, `GRADE_W`, `EXAM_DAY`, per-subject `held`) | `test_grades_v1150.cjs`, `test_mastery_v1300.cjs` |
+| Classes, teachers, free periods (1.33.0) | `data/free_periods.json`; engine `teacherOf`, `classRole`, `freeWhy`, `$ui.free`; `curate_data.py` `teaches` (roster attributes "History Y2", "Healing class for every year"); 505 class line; lore 10, 30 (Practical Magic), 131 | `test_classes_v1330.cjs` |
 | Proficiency and Practice | `data/club_stats.json`, `practice.json`; `stepProficiency`, `pProficiency`, `acPractice` | `test_proficiency_v1260.cjs`, `test_practice_v1270.cjs` |
 | Mastery perks (Rank 5) | `MASTERY`, `profRankOf`; `stepProficiency` (`P.mastery`, `$ui.mastery`), `stepMagic` (Arcane scholar), `stepVitals` (Formidable), `stepBonds` (Consummate: `CONSUMMATE_GROUPS`, `NOBLES`), 504 mastery line, `MASTERY_PERKS` in `ui.template.js` | `test_mastery_v1300.cjs` |
 | Malformed update blocks | `recoverPatch`, `patchCommands` and the `COMMAND_PARSED` listener at the end of `engine.template.js`; 503 format rule | `test_playtest_v1301.cjs` |
@@ -63,7 +65,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepVitals` (5) | 40-HP cap per event unless `Lethal_flag`, death, clamps, mana rounding, Formidable | |
 | `stepReputation` (5b) | Rep XP and levels, named deeds; exports `repAdd`, `repLv`, `weekNo` | `data/reputation.json` |
 | `stepFortune` (5c) | seeded d100, Rank 10 suspension | |
-| `stepSchoolWeek` (5d) | attendance (and per-subject classes held), weekly recap, small scenes, study and exams (mark formula) | `TIMETABLE`, grades |
+| `stepSchoolWeek` (5d) | attendance (and per-subject classes held; 1.33.0 free periods are not held), today's free periods (`$ui.free`), weekly recap, small scenes, study and exams (mark formula) | `TIMETABLE`, grades, `data/free_periods.json` |
 | `stepNamesInProse` (6a) | names revealed by the prose | `NAME_RX` |
 | `stepBonds` (6) | XP, ranks, gates, gifts, rewards, Tension/Trust, rival teams off Halvard's grounds; exports `canon`, `npcAway`, `PACE` | bond data §7 |
 | `stepBondMemory` (6c) | Knows, Imprints, Mind, Next, betrayal spread | |
@@ -73,7 +75,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepHidden` (7) | Dove attention, hidden magic, Points without Transactions | |
 | `stepPayout` (8) | monthly payout | |
 | `stepRecords` (8b) | Commitments, Notices, Letters (letters home and their parcel, `$eng.home`), Clues, Journal, Heals_by | `data/letters_home.json` |
-| `stepClubLife` (8c) | club, competition, projects, trip | |
+| `stepClubLife` (8c) | club, competition (Kingdom prize; 1.33.0 Dorm bracket prize), projects, trip | |
 | `stepNewYear` (8e) | new campaign year, cohorts | `data/cohorts.json` |
 | `stepGraduation` / `stepGraduateRewards` (8d, 8d2) | third-years leave; their rewards end | |
 | `stepInitiative` (8e) | optional NPC-initiated contact | `data/initiative_asks.json` |
@@ -141,7 +143,7 @@ In `merge_lorebooks.py`: `rep(entry, old, new)` (asserting text edits), `apply_l
 ## 7. Data files (`data/`)
 
 Hand-written single sources (edit these): `shop.json`, `happenings.json`, `calendar.json`, `features.json`, `tuning.json`,
-`ambience.json` (1.31.0: `lore_places`), `restore_places.json` and `letters_home.json` (1.31.0), `wind_casting.json`, `assets_manifest.json`, `cohorts.json`, `campus_phases.json` (empty until canon waves).
+`ambience.json` (1.31.0: `lore_places`), `restore_places.json` and `letters_home.json` (1.31.0), `free_periods.json` (1.33.0), `wind_casting.json`, `assets_manifest.json`, `cohorts.json`, `campus_phases.json` (empty until canon waves).
 *Per NPC* (a new NPC needs a row): `bond_rewards.json`, `bond_rules.json`, `bond_openness.json`, `tension.json`, `trust.json`,
 `npc_moods.json`, `gift_prefs.json`, `npc_canon.json` (voices, stages, Rank 8 branch), `rank4_partners.json`, `relations_curated.json`,
 `voice_rules.json`, `initiative_asks.json`, `field_overrides.json`, `focus_overrides.json`, `thumb_overrides.json`.

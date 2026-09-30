@@ -1,5 +1,7 @@
-Combat Class
-Purpose: Practical casting under pressure. The direct feeder into all four competition tiers.
-Activity: Drills, sparring, and duels. Each dorm trains differently — Elemental on destructive range, Mystic on battlefield control, Spiritual on endurance and frontline pressure, Occult on disruption and binding. Cross-dorm sparring in class only during Training Week; this is a class rule, not a ban on casting elsewhere.
-Spellcasting drills, sparring and marking are adjusted to each student's combat role.
-Covers: the five combat roles, the Combat Grounds, and preparation for the Dorm and Academy Competitions.
+[Practical Magic]
+Formerly called Combat Class; students still say "Combat".
+Purpose: Practical casting under pressure, taught by combat role. The direct feeder into all four competition tiers.
+Classes: five, one per combat role, each with one teacher for all three years: Attack (Gavlan Haverton, Combat Grounds), Defense (Anselm Graywater, the Sparring Pavilion), Healing (Hester Mortlake, the Healing Ward of the Medical Centre), Support (Magnus Tarrant, Combat Grounds), Control (Dorian Pryce, Combat Grounds). All five meet at the same time, Monday and Thursday afternoons; a role class mixes the four dorms and is taught by year.
+Roles: a student attends the class of their combat role; a student with two roles picks the one they want most. The first class of the year (Month 1 Week 1 Thursday) is a joint assessment: the five teachers watch the first-years in drills and assign their roles.
+Activity: Spellcasting drills, sparring and duels, marked by the role's own standard. Sparring partners come from one's own dorm except in Training Week; this is a class rule, not a ban on casting elsewhere.
+Covers: the five combat roles, and preparation for the Dorm and Academy Competitions.

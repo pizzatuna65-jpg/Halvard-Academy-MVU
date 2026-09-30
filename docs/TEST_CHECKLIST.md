@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.33.0 (classes and teachers): the four checks in its section below.
 - v1.32.0 (calendar moves, Coming up, Inventory): the three checks in its section below.
 - v1.31.0 (Spirit Path, restful places, activities): the four checks in its section below.
 - v1.30.6: the one check in its section below.
@@ -65,6 +66,17 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.33.0 — Classes and teachers
+
+1. A new first-year's first Practical Magic class (M1 W1 Thursday afternoon): the narrator runs a joint assessment with the five role
+   teachers (Gavlan, Anselm, Hester, Magnus, Dorian) and sets `Combat_role`; with two roles, the chosen class is written first.
+2. A later Practical Magic lesson: `<now>` names {{user}}'s role class and teacher (e.g. Hester in the Healing Ward for Healing), and
+   the narrator writes a mixed-dorm class of that role, not Gavlan's old Combat Class.
+3. Play through a free period (the planner marks it; Kotaro's second-year Potion Crafting has the most): `<now>` says the class is not
+   held and why, the narrator gives the hour free, and no absence is recorded.
+4. A new teacher in a scene (Hester on the ward, Anselm lecturing, Magnus with acronyms, Dorian selling, Cedric's closing line, Anya's
+   morbid question, Kotaro late, Valentin's board): the Cast Sheet voice holds, and they dislike Althair in character.
 
 ### v1.32.0 — Calendar moves, Coming up, Inventory
 

@@ -3,13 +3,14 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.32.0** (2026-09-30): calendar moves (Dorm Days on Sundays, Final Ranking M11 W2 Mon, the Academy Trip
-M11 W2 Sat to W3 Thu, the Kingdom Competition Wed–Sat in the capital with only the teams travelling), `<now>` "Coming up" (next seven
-days, for NPC talk), and the **Inventory** panel (Bag, Wallet, Planner, Journal, …) in place of the Notebook. Live checks:
-`docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
+**Snapshot:** card **v1.33.0** (2026-10-01): classes and teachers. Combat is **Practical Magic**, five classes by combat role
+(Attack Gavlan, Defense Anselm, Healing Hester, Support Magnus, Control Dorian); eight new teachers (also Cedric History Y3, Anya
+Etiquette Y2, Kotaro and Valentin Potion Crafting Y2/Y3; Baelin teaches History Y2, Althair Magic Theory Y3); seeded **free periods**;
+the Dorm Competition in role brackets with a bracket prize. Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans:
+`planning/FUTURE_PLANS.md`.
 
-**Next task:** write `planning/DRAFT_classes_and_teachers.md` (FUTURE_PLANS FP6: practical-magic classes by role, the one-year rule,
-Baelin and Althair teaching, free periods, role brackets at the Dorm Competition), then `DRAFT_outside_maps.md` (FP7). Playtest 1.32.0.
+**Next task:** confirm with the owner the invented bits listed in CHANGELOG 1.33.0 (the new teachers' clubs), then write
+`planning/DRAFT_outside_maps.md` (FUTURE_PLANS FP7). Playtest 1.33.0.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 
@@ -23,7 +24,7 @@ entry", "update lore entry X", "add feature Y".
 A **SillyTavern character card** for a slice-of-life magic-academy roleplay: Halvard Academy, Kingdom of Eldrasil, with a mystery
 underneath. The player is a first-year student. The card combines:
 
-- **A merged, corrected lorebook**: world, 56 NPCs (6 arrive in campaign Year 2), 67 locations, calendar, rules.
+- **A merged, corrected lorebook**: world, 64 NPCs (6 arrive in campaign Year 2), 67 locations, calendar, rules.
 - **MVU (MagVarUpdate) state.** The AI ends every reply with an `<UpdateVariable>` JSONPatch block. A Zod schema validates the state,
   and a deterministic engine script enforces the rules: clock and calendar, weather, HP and injuries, mana, bonds, reputation,
   training, grades, hidden magic, payouts, journal, ambience and more.

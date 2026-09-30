@@ -8,7 +8,7 @@ const DATA = /*@@DATA@@*/{};   // Batch 4: npcs (dossier fields with unlock rank
 const PROF_STATS = ['Knowledge', 'Arcana', 'Craft', 'Prowess', 'Society', 'Nature'];
 const PROF_CUT = [0, 10, 30, 60, 100, 150];
 const PROF_NAMES = { Knowledge: ['Everyday knowledge','Knows the basics','Well read','Learned','Erudite','Encyclopaedic'], Arcana: ['Everyday casting','Follows the proofs','Spell-literate','Pattern reader','Ward-wise','Arcane scholar'], Craft: ['Everyday hands','Follows the recipe','Steady hand','Skilled hands','Artisan',"Master's hand"], Prowess: ['Everyday fitness','Holds a stance','Quick on the feet','Seasoned','Duellist','Formidable'], Society: ['Everyday manners','Minds the forms','Poised','Gracious','Well connected','Consummate'], Nature: ['Everyday outdoors','Knows the signs','Calm hand','Trail-wise','Wild-wise','Kin to the wild'] };
-const PROF_SUBJECTS = { Knowledge: 'History', Arcana: 'Magic Theory, Dark Magic Defense', Craft: 'Potion Crafting', Prowess: 'Combat', Society: 'Etiquette', Nature: 'Creature Studies' };
+const PROF_SUBJECTS = { Knowledge: 'History', Arcana: 'Magic Theory, Dark Magic Defense', Craft: 'Potion Crafting', Prowess: 'Practical Magic', Society: 'Etiquette', Nature: 'Creature Studies' };
 const PANELS = {};              // Batch 4 panels register here: { render(S), click(button, S), after?(S), live? }
 const TYPES = ['Elemental', 'Mystic', 'Spiritual', 'Occult'];
 const DORM_OF = { Elemental: 'Fire', Mystic: 'Light', Spiritual: 'Viridian', Occult: 'Sky' };
@@ -320,7 +320,7 @@ function diffOps(d, S) {
   set(P + 'Appearance', d.appearance.trim()); set(P + 'Personality', d.personality.trim()); set(P + 'Background', d.background.trim());
   set(P + 'Birthday', bdayText(d.bday)); set(P + 'Goal', d.goal.trim());
   set('/Player/_Proficiency', Object.fromEntries(PROF_STATS.map(k => [k, d.profMode === 'custom' ? _.clamp(Math.round(num(d.prof[k], 0)), 0, 5) : +((S.Player._Proficiency || {})[k] || 0)])));
-  // Combat_role is no longer chosen here (1.2.0): the Combat teacher assigns it at the first Combat class (rule 502)
+  // Combat_role is no longer chosen here (1.2.0): the role teachers assign it at the first Practical Magic class (rule 502)
   const mana = manaOf(d);
   set('/Player/Vitals/Mana_max', mana);
   if (!(S.$ui || {}).built) set('/Player/Vitals/Mana', mana);
@@ -1386,7 +1386,7 @@ function pOverview(S) {
   <dl class="kv"><dt>Pronouns</dt><dd>${esc(P.Pronouns || '—')}</dd><dt>Age</dt><dd>${esc(P.Age)}</dd>
   <dt>Race</dt><dd>${esc(P.Race)}${P.Beast_type ? ` (${esc(P.Beast_type)})` : ''}</dd><dt>Background</dt><dd>${esc(P.Background || '—')}</dd>
   <dt>Birthday</dt><dd>${esc(P.Birthday || '—')}</dd>
-  <dt>Club</dt><dd>${esc(P.Club || 'none yet')}</dd><dt>Combat roles</dt><dd>${esc(P.Combat_role || 'assigned at your first Combat class')}</dd>
+  <dt>Club</dt><dd>${esc(P.Club || 'none yet')}</dd><dt>Combat roles</dt><dd>${esc(P.Combat_role || 'assigned at your first Practical Magic class')}</dd>
   <dt>Goal</dt><dd>${esc(P.Goal || '—')}</dd><dt>Appearance</dt><dd>${esc(P.Appearance || '—')}</dd><dt>Personality</dt><dd>${esc(P.Personality || '—')}</dd>
   <dt>Now</dt><dd>${esc(`Month ${W.Month}, Week ${W.Week}, ${W.Day} ${W.Time}`)}, ${esc(W.Location)}</dd></dl></div>
   <div class="portrait">${pic ? `<img src="${esc(pic)}" alt="${esc(P.Name)}" data-fb="Picture not found" data-fbclass="ph">` : '<div class="ph">No picture yet</div>'}

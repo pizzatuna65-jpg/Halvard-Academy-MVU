@@ -78,7 +78,7 @@
    },
    {
     "label": "Relations",
-    "text": "Caspian Riwalo, her Vice President from the Viridian Dormitory: she named him after her election; his rule-bending grates on her. Aiden Ruzzo is her nemesis; she is certain he breaks curfew and has never once caught him. Has rejected nearly as many suitors as Lenna Greenwind. Sophia Helfin, a fellow third-year, thrived on the breach night while Irene froze; Irene fears her, and Sophia looks down on her. Fears the Acting Warden, Rei, almost as much as the Doves.",
+    "text": "Caspian Riwalo, her Vice President from the Viridian Dormitory: she named him after her election; his rule-bending grates on her. Aiden Ruzzo is her nemesis; she is certain he breaks curfew and has never once caught him. Has rejected nearly as many suitors as Lenna Greenwind. Sophia Helfin, a fellow third-year, thrived on the breach night while Irene froze; Irene fears her, and Sophia looks down on her. Fears the Acting Warden, Rei, almost as much as the Doves. Professor Anselm Graywater teaches her Defense; she has taken down every lecture word for word since he came and has not understood one, and her barriers are the best in her year because she watched his hands. Professor Cedric Amor Fay's closing line, that she may not wake up tomorrow but can sleep soundly knowing she did a good job today, is the only thing that lets her sleep before exams.",
     "rank": 6
    },
    {
@@ -198,7 +198,7 @@
    },
    {
     "label": "Relations",
-    "text": "Irene Chanare, his President: stiff and too rigid, but he covers for her. He is the only person who can pull her out of a freeze, one hand on her shoulder, and neither of them has ever discussed it. Quietly covers for first-year troublemaker Aiden Ruzzo too.",
+    "text": "Irene Chanare, his President: stiff and too rigid, but he covers for her. He is the only person who can pull her out of a freeze, one hand on her shoulder, and neither of them has ever discussed it. Quietly covers for first-year troublemaker Aiden Ruzzo too. Professor Magnus Tarrant teaches him Support and calls his family motto a ULS; Caspian has started, against his will, to think in acronyms.",
     "rank": 6
    },
    {
@@ -429,7 +429,7 @@
    },
    {
     "label": "Current trouble",
-    "text": "This year is his last chance at the Dorm Competition (Month 3 Week 4). Before it, he is training to qualify and already knows the harder problem: no team wants him, since \"illusionist-alchemist\" doesn't count as a role. Canon outcome afterwards, unless the story changes it: he qualifies at rank 16, and still no team will take him.",
+    "text": "This year is his last chance at the Dorm Competition (Month 3 Week 4). Before it, he is training to qualify and already knows the harder problem: no team wants him, since \"illusionist-alchemist\" doesn't count as a role. Canon outcome afterwards, unless the story changes it: he qualifies in the last Control place of his dorm, and still no team will take him.",
     "rank": 5
    },
    {
@@ -454,7 +454,7 @@
    },
    {
     "label": "Relations",
-    "text": "Looks out for Idris and Zara, the other Sky outcasts; the three gather in the Gardens.",
+    "text": "Looks out for Idris and Zara, the other Sky outcasts; the three gather in the Gardens. Professor Valentin Crane has spent a year trying to lure him out of the Alchemy Circle; he refuses every time, and brews better for the spite.",
     "rank": 6
    },
    {
@@ -1049,7 +1049,7 @@
    },
    {
     "label": "Relations",
-    "text": "Irene Chanare is his nemesis; she is always one step from catching him and never has. Caspian Riwalo quietly covers for him. Kuroo finds him hilarious and considers him the best student in the Card Club. Caralynn Veyturone is disgusted by \"that common cheat\". Books every one of Sophia Helfin's duels; she tolerates him because he always pays out on time.",
+    "text": "Irene Chanare is his nemesis; she is always one step from catching him and never has. Caspian Riwalo quietly covers for him. Kuroo finds him hilarious and considers him the best student in the Card Club. Caralynn Veyturone is disgusted by \"that common cheat\". Books every one of Sophia Helfin's duels; she tolerates him because he always pays out on time. Runs a book on how many acronyms Professor Magnus Tarrant uses per lesson, and has lost money on it every week for a term without working out how. Sends customers to Professor Dorian Pryce for a cut; the one teacher at Halvard he considers a colleague.",
     "rank": 6
    },
    {
@@ -1365,7 +1365,7 @@
   "hair": "silver",
   "impression": "stern",
   "public_tags": [
-   "Combat Y1"
+   "Attack class for every year"
   ],
   "team_role": null,
   "nickname": null,
@@ -1379,7 +1379,7 @@
   "fields": [
    {
     "label": "Role",
-    "text": "Teaching first-year Combat for two decades; advises the Magic Duelling Club. Age 634: old even for an elf, yet vigorous.",
+    "text": "Teaches Attack, one of the five Practical Magic classes, to all three years at the Combat Grounds, after two decades teaching first-year Combat; advises the Magic Duelling Club. Age 634: old even for an elf, yet vigorous.",
     "rank": 0
    },
    {
@@ -1477,8 +1477,9 @@
   "arrives": 1,
   "teaches": [
    [
-    "Combat",
-    1
+    "Practical Magic",
+    0,
+    "Attack"
    ]
   ]
  },
@@ -1770,7 +1771,7 @@
   "fields": [
    {
     "label": "Role",
-    "text": "Krieg Valforth's second. Age 32. Teaches Dark Magic Defense to every year; as a Dove rather than academy staff, she is the one teacher outside the one-year rule.",
+    "text": "Krieg Valforth's second. Age 32. Teaches Dark Magic Defense to every year, as a Dove rather than academy staff.",
     "rank": 0
    },
    {
@@ -1800,7 +1801,7 @@
    },
    {
     "label": "Hobbies",
-    "text": "Maintaining her weapon and armor. Training; she secretly wishes she could join Combat Class sparring. Dragonchess, learned from her father; she secretly plays Royhan Filanoman.",
+    "text": "Maintaining her weapon and armor. Training; she secretly wishes she could join Practical Magic sparring. Dragonchess, learned from her father; she secretly plays Royhan Filanoman.",
     "rank": 3
    },
    {
@@ -1889,7 +1890,8 @@
   "hair": "ash-blond",
   "impression": "patient",
   "public_tags": [
-   "Headmaster"
+   "Headmaster",
+   "History Y2"
   ],
   "team_role": null,
   "nickname": null,
@@ -1903,7 +1905,7 @@
   "fields": [
    {
     "label": "Role",
-    "text": "In post for forty years. Around 210 (middle-aged by elven reckoning).",
+    "text": "In post for forty years; also teaches second-year History himself, the one class he has never given up. Around 210 (middle-aged by elven reckoning).",
     "rank": 0
    },
    {
@@ -1998,7 +2000,13 @@
     "rank": 3
    }
   ],
-  "arrives": 1
+  "arrives": 1,
+  "teaches": [
+   [
+    "History",
+    2
+   ]
+  ]
  },
  "Layla": {
   "id": "Layla",
@@ -2079,7 +2087,7 @@
    },
    {
     "label": "Relations",
-    "text": "Rest-day evenings of tea and theory with Yvette in Layla's own rooms in the Staff Quarters, since the Fire Dormitory, where Yvette lives as Dorm Head, admits only its own; she knows Yvette is bound by something, doesn't know what, and is dying to find out, but the Oath forbids Yvette from telling. Irene Chanare is her most diligent Library Assistant, and Layla taught her how to organize archives. Often notices Zara Minallone on the library's top shelves and quietly leaves books up there for her. Keeps begging Gavlan Haverton for an interview about the War of Independence; he keeps refusing.",
+    "text": "Rest-day evenings of tea and theory with Yvette in Layla's own rooms in the Staff Quarters, since the Fire Dormitory, where Yvette lives as Dorm Head, admits only its own; she knows Yvette is bound by something, doesn't know what, and is dying to find out, but the Oath forbids Yvette from telling. Irene Chanare is her most diligent Library Assistant, and Layla taught her how to organize archives. Often notices Zara Minallone on the library's top shelves and quietly leaves books up there for her. Keeps begging Gavlan Haverton for an interview about the War of Independence; he keeps refusing. Calls Cedric Amor Fay, who teaches third-year History, \"Doom\", and brings him cake to prove the world has not ended yet.",
     "rank": 6
    },
    {
@@ -2147,7 +2155,7 @@
   "hair": "red",
   "impression": "jovial",
   "public_tags": [
-   "Creature Studies Y1",
+   "Creature Studies teacher for every year",
    "ex-monster hunter",
    "leads the Expedition"
   ],
@@ -2163,7 +2171,7 @@
   "fields": [
    {
     "label": "Role",
-    "text": "Teaching first-year Creature Studies for two years, and leads the Creature Studies Expedition for all three years; advises the Beast Handling Club. Age 48 (looks early thirties). A Myrdath Academy alumna, which draws suspicion on Founder Day and competition days.",
+    "text": "Teaches Creature Studies to all three years, for two years now, and leads the Creature Studies Expedition; advises the Beast Handling Club. Age 48 (looks early thirties). A Myrdath Academy alumna, which draws suspicion on Founder Day and competition days.",
     "rank": 0
    },
    {
@@ -2267,7 +2275,7 @@
   "teaches": [
    [
     "Creature Studies",
-    1
+    0
    ]
   ]
  },
@@ -2385,7 +2393,7 @@
    },
    {
     "label": "Relations",
-    "text": "Relentlessly tries to induct Idris Ainsworth into the Brotherhood as \"Sir Idris the Unsmiling\". Knighted Saffi Tamberlane \"Dame Saffi the Unstoppable\" with a baguette; she accepted on the spot.",
+    "text": "Relentlessly tries to induct Idris Ainsworth into the Brotherhood as \"Sir Idris the Unsmiling\". Knighted Saffi Tamberlane \"Dame Saffi the Unstoppable\" with a baguette; she accepted on the spot. Nurse Hester Mortlake teaches his Healing class and tells him a ghost story every lesson; he has never once managed not to scream, and has never once dropped a bandage.",
     "rank": 6
    },
    {
@@ -2523,7 +2531,7 @@
    },
    {
     "label": "Relations",
-    "text": "Gareth Valkaryn, her dorm-mate, is her obsession and the one person she cannot beat; his perfect manners make it worse. Irene Chanare froze on the breach night while she thrived, and fears her. She considers Rei the only person at Halvard worth respecting. Vallie Goredust adores her as a natural rival. Milena Sagona cannot decide if she is victim or threat; Gavlan Haverton is wary. Aiden Ruzzo books her duels and pays on time. Caralynn Veyturone is a daily target. Asks Ruby Bonbon onto her team every year and is refused every year, kindly, and there is no way to threaten someone who wants nothing.",
+    "text": "Gareth Valkaryn, her dorm-mate, is her obsession and the one person she cannot beat; his perfect manners make it worse. Irene Chanare froze on the breach night while she thrived, and fears her. She considers Rei the only person at Halvard worth respecting. Vallie Goredust adores her as a natural rival. Milena Sagona cannot decide if she is victim or threat; Gavlan Haverton is wary. Aiden Ruzzo books her duels and pays on time. Caralynn Veyturone is a daily target. Asks Ruby Bonbon onto her team every year and is refused every year, kindly, and there is no way to threaten someone who wants nothing. Nurse Hester Mortlake has been trying to make her scream for three years. She hasn't. She has started checking behind the last curtain anyway.",
     "rank": 6
    },
    {
@@ -2782,7 +2790,7 @@
    },
    {
     "label": "Relations",
-    "text": "Assigned by Headmaster Baelin to mentor Mimosa; before she walks into a class, he quietly links with her and absorbs her anxiety, then spends the next hour nauseous. Speaks for her at staff meetings. Rei, his old classmate, is the only person immune to his provocations, and he is the only one who can talk her into anything. Tames Caralynn Veyturone with flattery. Despairs of Percival Applethorne but secretly likes him. Saffi Tamberlane slept through his class all last year. Provokes Sophia Helfin on purpose, since she hates nobles. Needles Krieg Valforth with exquisitely polite sarcasm. Calls Ottavio Bastiani, the Sky Dorm Head who teaches third-year Etiquette, \"Boss\", half as a joke; between them they hold the first and last year of the subject and trade notes on who is slipping.",
+    "text": "Assigned by Headmaster Baelin to mentor Mimosa; before she walks into a class, he quietly links with her and absorbs her anxiety, then spends the next hour nauseous. Speaks for her at staff meetings. Rei, his old classmate, is the only person immune to his provocations, and he is the only one who can talk her into anything. Tames Caralynn Veyturone with flattery. Despairs of Percival Applethorne but secretly likes him. Saffi Tamberlane slept through his class all last year. Provokes Sophia Helfin on purpose, since she hates nobles. Needles Krieg Valforth with exquisitely polite sarcasm. Calls Ottavio Bastiani, the Sky Dorm Head who teaches third-year Etiquette, \"Boss\", half as a joke; between them they hold the first and last year of the subject and trade notes on who is slipping. Provokes Anya Zeth, who teaches second-year Etiquette, at every opportunity; she thanks him for each one, smiling, and he has not yet worked out how to lose gracefully.",
     "rank": 6
    },
    {
@@ -2914,7 +2922,7 @@
    },
    {
     "label": "Relations",
-    "text": "Kuroo is her assigned mentor; he absorbs her anxiety before classes and speaks for her in staff meetings. Quietly considers Royhan Filanoman her favourite member of the Alchemy Circle, a fellow unnoticed alchemist. Ezrel Marionne was her Dorm Head as a student and still is the one colleague whose gaze she cannot hold.",
+    "text": "Kuroo is her assigned mentor; he absorbs her anxiety before classes and speaks for her in staff meetings. Quietly considers Royhan Filanoman her favourite member of the Alchemy Circle, a fellow unnoticed alchemist. Ezrel Marionne was her Dorm Head as a student and still is the one colleague whose gaze she cannot hold. Kotaro Hanamura, who teaches second-year Potion Crafting, is the one colleague she is not afraid of; she covers for him when he forgets a lesson. Valentin Crane, who teaches third-year Potion Crafting, is relentlessly charming to her, and she hides from him more than from anyone else on staff.",
     "rank": 6
    },
    {
@@ -3533,7 +3541,8 @@
   "hair": "white",
   "impression": "cheerful",
   "public_tags": [
-   "Vice Headmaster"
+   "Vice Headmaster",
+   "Magic Theory Y3"
   ],
   "team_role": null,
   "nickname": null,
@@ -3547,7 +3556,7 @@
   "fields": [
    {
     "label": "Role",
-    "text": "Late twenties, which is absurd for the post and the first thing anyone notices about him.",
+    "text": "Late twenties, which is absurd for the post and the first thing anyone notices about him. Also teaches third-year Magic Theory, and is annoyingly good at it.",
     "rank": 0
    },
    {
@@ -3632,7 +3641,13 @@
     "rank": 3
    }
   ],
-  "arrives": 1
+  "arrives": 1,
+  "teaches": [
+   [
+    "Magic Theory",
+    3
+   ]
+  ]
  },
  "Dante": {
   "id": "Dante",
@@ -5129,7 +5144,7 @@
    },
    {
     "label": "Relations",
-    "text": "Lenna Greenwind shares her year and dorm and keeps having to haul her out of trouble; Lenna complains about it constantly and never once refuses. Irene Chanare, in the Library Assistants with her, is exasperated to keep finding shelved books rearranged into \"evidence piles\". Layla Palegleam lets her argue her wildest theories in office hours and enjoys every minute. Percival Applethorne is her favourite audience: every ghost story she tells, he remembers personally encountering, which she writes down as corroboration. Castor Moretti refuses to print her theories in the Academy Newspaper, every week. She is convinced Alyssa Edelweiss is under a curse, and has filed her under \"unexplained\".",
+    "text": "Lenna Greenwind shares her year and dorm and keeps having to haul her out of trouble; Lenna complains about it constantly and never once refuses. Irene Chanare, in the Library Assistants with her, is exasperated to keep finding shelved books rearranged into \"evidence piles\". Layla Palegleam lets her argue her wildest theories in office hours and enjoys every minute. Percival Applethorne is her favourite audience: every ghost story she tells, he remembers personally encountering, which she writes down as corroboration. Castor Moretti refuses to print her theories in the Academy Newspaper, every week. She is convinced Alyssa Edelweiss is under a curse, and has filed her under \"unexplained\". Swaps ghost stories with Nurse Hester Mortlake whenever she lands on the ward, which is often; Hester's are always better, and Tilly cannot find a single one in the Archive. Professor Dorian Pryce teaches her Control and tries to sell her plant food every lesson; she has bought it twice, and it worked. Asked Professor Anya Zeth whether ghosts are real. The answer was so calm and so precise that Tilly has not asked a ghost-story question since, and has written it all down anyway.",
     "rank": 6
    },
    {
@@ -6479,5 +6494,992 @@
    }
   ],
   "arrives": 2
+ },
+ "Hester": {
+  "id": "Hester",
+  "name": "Hester Mortlake",
+  "uid_card": 416,
+  "keys": [
+   "Hester",
+   "Mortlake",
+   "Nurse Mortlake",
+   "Head Nurse"
+  ],
+  "academy": "Halvard",
+  "group": "Staff",
+  "dorm": null,
+  "dorm_color": "#6b6b7b",
+  "year": null,
+  "race": "Human",
+  "beast": null,
+  "gender": "F",
+  "hair": "black",
+  "impression": "macabre",
+  "public_tags": [
+   "Healing class for every year",
+   "Head Nurse"
+  ],
+  "team_role": null,
+  "nickname": null,
+  "portrait": null,
+  "thumb": null,
+  "focus": [
+   50,
+   25
+  ],
+  "has_secret": true,
+  "fields": [
+   {
+    "label": "Role",
+    "text": "Head Nurse of the Medical Centre since the breach; teaches Healing to all three years in the Healing Ward; advises the Medical Centre Volunteers. Age 30. Human.",
+    "rank": 0
+   },
+   {
+    "label": "Appearance",
+    "text": "Tall, thin and pale, with black hair, one streak gone white, pinned in a severe bun under a starched white cap. The only nurse in black: a high-collared black dress under a white apron (\"white shows blood; black shows nothing\"). Dark lips, long cool fingers, a chatelaine of keys and silver scissors at her waist that you hear before you see her. Carries a brass lantern on night rounds.",
+    "rank": 0
+   },
+   {
+    "label": "Magic",
+    "text": "Spiritual — Healing and Pulse Reading. Two fingers on a wrist tell her every break, bleed and fever in a body, and whether the story you told her about how you got it is true.",
+    "rank": 2
+   },
+   {
+    "label": "Backstory",
+    "text": "A gravedigger's daughter from a wet northern parish, raised on funerals and the stories told at them. She trained as a healer in the river towns and came to Halvard at twenty-four as a ward nurse, because Headmaster Baelin Kalvor wanted someone who would not flinch. She was on the ward the night of the breach. When the old Head Nurse resigned after it, Baelin gave her the post; she was twenty-eight. She does not describe that night.",
+    "rank": 7
+   },
+   {
+    "label": "Personality",
+    "text": "Theatrical, macabre and delighted by it. Speaks slowly, relishes a pause, and scares students with ghost stories for no reason but that she enjoys it: patients, pupils, passers-by, the brave and the easily frightened alike, and she counts every scream. The only students she spares are the ones in real danger. Under the performance she is precise, tireless and fiercely protective; nobody dies on her ward if she can help it, and she has decided she can always help it.",
+    "rank": 4
+   },
+   {
+    "label": "Teaching",
+    "text": "Every lesson opens with a ghost story, because she likes telling them, and then the work begins. First-years learn by bandaging each other; second-years treat real patients under her eye; third-years take the night shift with her.",
+    "rank": 0
+   },
+   {
+    "label": "Loves",
+    "text": "A good scream. Ghost stories, told after dark. The Medical Centre's herb garden, poison beds included (\"every medicine is a poison with manners\"). Strong black tea at three in the morning.",
+    "rank": 3
+   },
+   {
+    "label": "Hates",
+    "text": "Students who hide injuries (\"dead heroes are the dullest patients\"). Anyone who picks at stitches. The Night Student told for fun.",
+    "rank": 3
+   },
+   {
+    "label": "Hobbies",
+    "text": "Collecting a ghost story from every patient who stays overnight. Pressing foxglove and belladonna from her garden.",
+    "rank": 3
+   },
+   {
+    "label": "Goals",
+    "text": "That no student ever dies on her ward again. Get one scream, just one, out of Sophia Helfin.",
+    "rank": 5
+   },
+   {
+    "label": "Relations",
+    "text": "Headmaster Baelin Kalvor hired her, made her Head Nurse after the breach, and trusts her with everything the Medical Centre sees. Percival Applethorne is the most gifted healer in his year and terrified of ghosts, which makes him her favourite pupil: his voice shakes through every story and his hands never do. Tilly Marsh is her most frequent patient and her best audience; the two trade stories across the ward. Sophia Helfin has mocked every story she has ever told; the contest is in its third year. Caralynn Veyturone screamed once, in her first week, and Hester still thanks her for it. Vallie Goredust brings her the Expedition's casualties and says \"rub some dirt on it\"; they have the same argument every year. Mimosa Linden supplies her apothecary and can sit with her for an hour, because Hester talks enough for two and expects no answers. Knows about Gavlan Haverton's nightmares from the sleeping draughts she mixes him, and has never said a word. She and Layla Palegleam never tell the Night Student, and never discuss why. Dislikes Vice Headmaster Althair Veyne: she can feel his Charm in a patient's pulse, has told him to keep it off her ward, and checks every wrist after he visits. Anselm Graywater once answered one of her ghost stories by explaining what a doorway is; she has avoided him after dark ever since.",
+    "rank": 6
+   },
+   {
+    "label": "Doves",
+    "text": "Reports every injury the law requires, to the letter, and not one word more. After the breach the Doves questioned students who were still on her ward; she has not forgiven Krieg Valforth for it and is exquisitely polite to him.",
+    "rank": 6
+   },
+   {
+    "label": "Speech",
+    "text": "Low, unhurried and relishing, like a storyteller at a wake; clinical terms delivered as if they were curses. Calls students \"lamb\".",
+    "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "Delight is a slow smile and a lowered voice. Worry makes her brisk and silent: no stories at all means someone on the ward is truly in danger. Anger is perfect courtesy. Mention of the breach night stops her mid-sentence; she changes the subject to tea.",
+    "rank": 4
+   },
+   {
+    "label": "Haunts",
+    "text": "the Medical Centre and its Healing Ward, the herb garden beside it, night rounds with her lantern, the Staff Quarters.",
+    "rank": 1
+   },
+   {
+    "label": "Birthday",
+    "text": "M7 W3 Fri",
+    "rank": 3
+   }
+  ],
+  "arrives": 1,
+  "teaches": [
+   [
+    "Practical Magic",
+    0,
+    "Healing"
+   ]
+  ]
+ },
+ "Anselm": {
+  "id": "Anselm",
+  "name": "Anselm Graywater",
+  "uid_card": 417,
+  "keys": [
+   "Anselm",
+   "Graywater"
+  ],
+  "academy": "Halvard",
+  "group": "Staff",
+  "dorm": null,
+  "dorm_color": "#6b6b7b",
+  "year": null,
+  "race": "Beastkin",
+  "beast": "tortoise",
+  "gender": "M",
+  "hair": "bald",
+  "impression": "convoluted",
+  "public_tags": [
+   "Defense class for every year"
+  ],
+  "team_role": null,
+  "nickname": null,
+  "portrait": null,
+  "thumb": null,
+  "focus": [
+   50,
+   25
+  ],
+  "has_secret": false,
+  "fields": [
+   {
+    "label": "Role",
+    "text": "Teaches Defense to all three years at the Sparring Pavilion; came to Halvard after the breach; advises the Warding Study Group. Age 47. Tortoise Beastkin.",
+    "rank": 0
+   },
+   {
+    "label": "Appearance",
+    "text": "Broad, heavy and unhurried. A domed, dark-green shell rises from his back under a long grey coat tailored to fit it; grey-green scales run over his forearms, hands and the back of his neck. Heavy-lidded, patient eyes behind round spectacles. He never seems to move quickly, and is always already where the blow lands. A plain iron mace hangs at his belt; in his hand, always, a slim black teacher's pointer.",
+    "rank": 0
+   },
+   {
+    "label": "Magic",
+    "text": "Mystic — Reflection. He meets a spell with the tip of his pointer, at exactly the right angle, and it goes back the way it came.",
+    "rank": 2
+   },
+   {
+    "label": "Equipment",
+    "text": "An iron mace for fighting, which he uses as little as he can, and the black pointer he reflects magic with; he lectures with it too.",
+    "rank": 2
+   },
+   {
+    "label": "Backstory",
+    "text": "Raised on the southern marsh coast, he spent fifteen years in a scholars' order writing philosophy; the committee accepted his thesis and admitted afterwards that none of them had understood it. He left to ward caravans across the Primal Desert, and in twelve years no one in his care died. After the breach Headmaster Baelin Kalvor wrote to him, and he came.",
+    "rank": 7
+   },
+   {
+    "label": "Personality",
+    "text": "Serene, gentle, endlessly curious. Hates violence, and teaches it anyway: a student who cannot fight is a student who does not come home. Speaks in long, nested sentences of metaphor, paradox and qualification, every one grammatically perfect, and believes he is being perfectly clear. Asked to explain, he explains again, at greater length. Never angry, never hurried; quietly puzzled that his students look lost, and sure they are being polite.",
+    "rank": 4
+   },
+   {
+    "label": "Teaching",
+    "text": "His lectures are famous for meaning nothing to anyone; his demonstrations are flawless, so his students learn by watching his hands. He comes to the Sparring Pavilion for class and leaves when it ends. Third-years swear every sentence he says is an exact instruction in disguise, and nobody has proved it. Sets essays (\"What does a door owe the room?\") and grades them fairly by criteria no one has ever identified.",
+    "rank": 0
+   },
+   {
+    "label": "Loves",
+    "text": "A good question. Tea brewed exactly. Slow things: moss, correspondence chess, a bench in the Founder's Park at noon. The silence after a sentence.",
+    "rank": 3
+   },
+   {
+    "label": "Hates",
+    "text": "Violence, and needless violence most of all. Haste. A guard raised in panic. Being summarised (\"to summarise is to amputate\").",
+    "rank": 3
+   },
+   {
+    "label": "Hobbies",
+    "text": "Correspondence chess by post, one move a week. His treatise On Thresholds, fourteen hundred pages so far, with one reader.",
+    "rank": 3
+   },
+   {
+    "label": "Goals",
+    "text": "To be understood, once, by one student. Finish the treatise. Teach every student to defend themselves well enough that they never have to hurt anyone.",
+    "rank": 5
+   },
+   {
+    "label": "Relations",
+    "text": "Headmaster Baelin Kalvor hired him after the breach and claims to understand about a third of what he says. Irene Chanare is his best Defense student: she takes every lecture down word for word, has never understood a sentence of it, and copied his angles until her barriers became the best in her year. Layla Palegleam and he talk for hours, two monologues side by side, and both leave delighted. Kuroo Varnell provoked him once and received a forty-minute answer; he now provokes him only when he has an afternoon to lose. Hester Mortlake told him a ghost story; he explained what a doorway is, and she has avoided him after dark ever since. Gavlan Haverton shares the Combat Grounds with him and says \"just tell them to block\". Ezrel Marionne is the one colleague who listens to a whole sentence without blinking; Anselm takes this for understanding. Dislikes Vice Headmaster Althair Veyne, and has explained why to him at length; Althair enjoyed every minute and understood none of it. His correspondence chess opponent of two years signs as \"Q.\" and is winning; he has no idea who it is.",
+    "rank": 6
+   },
+   {
+    "label": "Doves",
+    "text": "Calls the Doves \"a wall built facing the wrong way\". Krieg Valforth dismisses him as harmless noise.",
+    "rank": 6
+   },
+   {
+    "label": "Speech",
+    "text": "Long, slow, nested sentences, soft-voiced, never a contraction; answers a question with a better question. Example: \"A wall is not the refusal of the blow but the blow's discovery that it had a direction; stand, therefore, not where the question is asked but where it intends to be answered.\"",
+    "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "Joy is a slow blink and a longer sentence. The worse things are, the shorter he speaks; a single plain word (\"Down.\") means real danger, and everyone who has heard it once obeys it instantly.",
+    "rank": 4
+   },
+   {
+    "label": "Haunts",
+    "text": "the Meditation Rooms, the Founder's Statue and Park, the Library's philosophy shelves, the Mail Tower (his chess letters). Never the Sparring Pavilion or the Combat Grounds outside class.",
+    "rank": 1
+   },
+   {
+    "label": "Birthday",
+    "text": "M6 W2 Sun",
+    "rank": 3
+   }
+  ],
+  "arrives": 1,
+  "teaches": [
+   [
+    "Practical Magic",
+    0,
+    "Defense"
+   ]
+  ]
+ },
+ "Magnus": {
+  "id": "Magnus",
+  "name": "Magnus Tarrant",
+  "uid_card": 418,
+  "keys": [
+   "Magnus",
+   "Tarrant",
+   "Tarrant Index"
+  ],
+  "academy": "Halvard",
+  "group": "Staff",
+  "dorm": null,
+  "dorm_color": "#6b6b7b",
+  "year": null,
+  "race": "Elf",
+  "beast": null,
+  "gender": "M",
+  "hair": "dark",
+  "impression": "cunning",
+  "public_tags": [
+   "Support class for every year"
+  ],
+  "team_role": null,
+  "nickname": null,
+  "portrait": null,
+  "thumb": null,
+  "focus": [
+   50,
+   25
+  ],
+  "has_secret": false,
+  "fields": [
+   {
+    "label": "Role",
+    "text": "Teaches Support to all three years at the Combat Grounds; writes Halvard's scouting reports on the rival academies; advises the Board Game Club. Twelve years at Halvard. Age 138 (looks mid-thirties). Elf.",
+    "rank": 0
+   },
+   {
+    "label": "Appearance",
+    "text": "Lean, restless and sharp-featured, with ink-stained fingers and spectacles pushed up into untidy dark hair. A waistcoat with more pockets than seems possible, a notebook in every one. Never stands still; usually writing.",
+    "rank": 0
+   },
+   {
+    "label": "Magic",
+    "text": "Mystic — Link and Relay. He threads fine lines of mana between allies, up to six at once: linked, they hear each other's intentions in a fight and can pass mana along the line to whoever needs it.",
+    "rank": 2
+   },
+   {
+    "label": "Backstory",
+    "text": "He spent most of his first century as a court strategist for three noble houses in turn, and left each of them richer and slightly afraid of him. He came to Halvard because, he says, \"the kingdom's future is a better puzzle than its present\".",
+    "rank": 7
+   },
+   {
+    "label": "Personality",
+    "text": "Brilliant, quick, cunning and delighted with himself. Knows something about everything and everything about the rival academies. Cannot finish a sentence without an acronym, most of them invented on the spot, some explained, most not, and he expects every one remembered. Always three moves ahead, and fond of letting people find out afterwards.",
+    "rank": 4
+   },
+   {
+    "label": "Teaching",
+    "text": "Support is \"the art of making other people look good\" (AMOPLG, which he admits does not spell anything). Drills are fights in which the Support students must keep a failing team standing; they learn timing, formation and reading a fight. Exams include acronyms he used once, in passing; a student who invents a better one gets the mark anyway.",
+    "rank": 0
+   },
+   {
+    "label": "Loves",
+    "text": "A plan that works. An acronym that spells a real word. Dragonchess. Information, especially the kind nobody knows he has.",
+    "rank": 3
+   },
+   {
+    "label": "Hates",
+    "text": "Luck, which he considers statistically offensive. The words \"we'll wing it\". Being interrupted mid-acronym.",
+    "rank": 3
+   },
+   {
+    "label": "Hobbies",
+    "text": "Dragonchess, over the board and by post. The Tarrant Index, his private glossary of more than three thousand acronyms.",
+    "rank": 3
+   },
+   {
+    "label": "Goals",
+    "text": "See a Halvard team win the World Competition. Finish the Index. Find out who keeps betting against him in Aiden Ruzzo's book.",
+    "rank": 5
+   },
+   {
+    "label": "Relations",
+    "text": "Headmaster Baelin Kalvor lets him write the scouting reports and reads every page. Caspian Riwalo is his best Support student and an advisor in training, which Magnus respects; he calls the Riwalo motto \"a perfectly serviceable ULS\". Aiden Ruzzo runs a book on how many acronyms he uses per lesson; Magnus bets through a second-year he has never named and steers the count. Kuroo Varnell and he have been trading favours for years, and dispute the score. Gavlan Haverton takes his scouting reports to the Kingdom Competition and reads the first page. Under the name \"Q.\" he is Anselm Graywater's correspondence chess opponent, two floors away; Anselm does not know, and is losing. Dislikes Vice Headmaster Althair Veyne, whose Luck ruins perfectly good plans.",
+    "rank": 6
+   },
+   {
+    "label": "Doves",
+    "text": "Knows more about the Dovecote than it would like, and keeps it filed, not used. Krieg Valforth keeps a file on him; his on Krieg is thicker.",
+    "rank": 6
+   },
+   {
+    "label": "Speech",
+    "text": "Fast, crisp, dense and pleased with itself; acronyms everywhere, spelled out letter by letter. Example: \"That, Mr. Ruzzo, was a textbook SLOB: Spell Launched Out of Bounds. Remember PAWS: Position, Anticipate, Weave, Sustain.\"",
+    "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "Delight is a new acronym that spells a real word, announced to the room. Worry makes him write faster. Real anger is the absence of acronyms: full sentences, full names, very quiet.",
+    "rank": 4
+   },
+   {
+    "label": "Haunts",
+    "text": "the Faculty Offices, the Library's reference section, the Mail Tower (his chess letters), the Staff Room.",
+    "rank": 1
+   },
+   {
+    "label": "Birthday",
+    "text": "M2 W2 Tue",
+    "rank": 3
+   }
+  ],
+  "arrives": 1,
+  "teaches": [
+   [
+    "Practical Magic",
+    0,
+    "Support"
+   ]
+  ]
+ },
+ "Dorian": {
+  "id": "Dorian",
+  "name": "Dorian Pryce",
+  "uid_card": 419,
+  "keys": [
+   "Dorian",
+   "Pryce"
+  ],
+  "academy": "Halvard",
+  "group": "Staff",
+  "dorm": null,
+  "dorm_color": "#6b6b7b",
+  "year": null,
+  "race": "Beastkin",
+  "beast": "fox",
+  "gender": "M",
+  "hair": "russet",
+  "impression": "slick",
+  "public_tags": [
+   "Control class for every year"
+  ],
+  "team_role": null,
+  "nickname": null,
+  "portrait": null,
+  "thumb": null,
+  "focus": [
+   50,
+   25
+  ],
+  "has_secret": false,
+  "fields": [
+   {
+    "label": "Role",
+    "text": "Teaches Control to all three years at the Combat Grounds; sells his own enchanted goods to anyone who will stand still; advises the Specialized Magic Club. Eight years at Halvard. Age 36. Fox Beastkin.",
+    "rank": 0
+   },
+   {
+    "label": "Appearance",
+    "text": "Slim and well groomed, with russet fox ears, a full russet tail brushed to a shine, and narrow amber eyes. A long coat lined, on the inside, with rows of small pockets, every one holding something for sale. A wide, warm, perfectly even smile that nobody has ever trusted, and he has never understood why.",
+    "rank": 0
+   },
+   {
+    "label": "Magic",
+    "text": "Mystic — Binding. Threads of pale light that wrap a limb, a weapon or a spell and hold it; he can set a binding into a cord, a ring or a charm, and sell it.",
+    "rank": 2
+   },
+   {
+    "label": "Backstory",
+    "text": "A pedlar's son who grew up on the road, selling his mother's charms from the back of a cart before he could count. Halvard trained him; he left to sell enchanted goods across three kingdoms, came back to teach when the Control post fell vacant, and brought his stock with him.",
+    "rank": 7
+   },
+   {
+    "label": "Personality",
+    "text": "Charming, quick, shameless and relentlessly opportunistic. Every conversation is a sale in progress. Never lies about what an item does; simply never mentions what it does not do. Turns up wherever demand is about to be: focus charms in exam week, snare-cords before the Dorm Competition, and to both sides of the same match.",
+    "rank": 4
+   },
+   {
+    "label": "Teaching",
+    "text": "Control is \"the art of deciding where the other person is allowed to be\". His lessons are genuine, rigorous and very good, and every demonstration uses one of his products, available after class.",
+    "rank": 0
+   },
+   {
+    "label": "Loves",
+    "text": "A sale. A customer who haggles well. Coin in the hand. His own craftsmanship, which is excellent.",
+    "rank": 3
+   },
+   {
+    "label": "Hates",
+    "text": "Returns. Anyone who copies his designs. Being called a cheat, since his goods work.",
+    "rank": 3
+   },
+   {
+    "label": "Hobbies",
+    "text": "Crafting in the Workshop late at night. Keeping his ledger, which is immaculate.",
+    "rank": 3
+   },
+   {
+    "label": "Goals",
+    "text": "Run the biggest stall at the Academy Bazaar every year, which he does. Open a real shop in the capital one day. Sell something to Krieg Valforth.",
+    "rank": 5
+   },
+   {
+    "label": "Relations",
+    "text": "Headmaster Baelin Kalvor tolerates the trade because the goods are sound and Dorian pays for the Control class's equipment out of his profits. Tilly Marsh is his best Control student; her vines do what his cords do, which he finds commercially alarming. Aiden Ruzzo sends him customers for a cut; they understand each other perfectly. Royhan Filanoman buys reagents from him at a fair price and is sure it is a trick. Vera Pulsar knows his goods are good and wants to know how; he wants to buy her designs cheap. Hester Mortlake confiscates his tonics from her ward; bandages for the Medical Centre are the one thing he sells at cost. Magnus Tarrant has calculated his margins at forty percent; Dorian says twelve; both are lying. Dislikes Vice Headmaster Althair Veyne, who buys something every week and pays in favours, and Dorian cannot tell whether he is winning.",
+    "rank": 6
+   },
+   {
+    "label": "Doves",
+    "text": "Holds a licence for every item he sells, framed on his office wall. Krieg Valforth has checked it four times.",
+    "rank": 6
+   },
+   {
+    "label": "Speech",
+    "text": "Smooth, warm and friendly, always a little too friendly; first names at once, \"friend\", \"just for you\", \"between us\". Example: \"For you, friend, a special price. Don't tell the others. They'd want it too.\"",
+    "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "Pleasure is the smile widening, and his tail swaying. Real worry drops the smile entirely, and people trust him more without it; he has never noticed this either. Anger is a refund, given in full, and never another sale.",
+    "rank": 4
+   },
+   {
+    "label": "Haunts",
+    "text": "the Combat Grounds in class hours, the Workshop late at night, the Courtyards between classes, the Mall, the Academy Bazaar (his stall, every year).",
+    "rank": 1
+   },
+   {
+    "label": "Relations",
+    "text": "Nerys Silvarenne is the only customer who has ever out-haggled him, and she is always broke; he is fascinated. Hadrian Quelloris is his best customer: warding amulets, vigour tonics, anything that might make him last longer.",
+    "rank": 6,
+    "year": 2
+   },
+   {
+    "label": "Birthday",
+    "text": "M9 W2 Fri",
+    "rank": 3
+   }
+  ],
+  "arrives": 1,
+  "teaches": [
+   [
+    "Practical Magic",
+    0,
+    "Control"
+   ]
+  ]
+ },
+ "Cedric": {
+  "id": "Cedric",
+  "name": "Cedric Amor Fay",
+  "uid_card": 420,
+  "keys": [
+   "Cedric",
+   "Amor Fay",
+   "Professor Fay"
+  ],
+  "academy": "Halvard",
+  "group": "Staff",
+  "dorm": null,
+  "dorm_color": "#6b6b7b",
+  "year": null,
+  "race": "Human",
+  "beast": null,
+  "gender": "M",
+  "hair": "grey",
+  "impression": "doomed",
+  "public_tags": [
+   "History Y3"
+  ],
+  "team_role": null,
+  "nickname": null,
+  "portrait": null,
+  "thumb": null,
+  "focus": [
+   50,
+   25
+  ],
+  "has_secret": false,
+  "fields": [
+   {
+    "label": "Role",
+    "text": "Teaches third-year History; advises the Gardening Club. Fourteen years at Halvard. Age 58. Human.",
+    "rank": 0
+   },
+   {
+    "label": "Appearance",
+    "text": "Tall, stooped and tidy, with thinning grey hair, a long patient face and tired, kind eyes. A worn brown coat, always brushed; a pocket watch he checks often and always sets right. On his desk, a cut white rose, as fresh as the day he arrived.",
+    "rank": 0
+   },
+   {
+    "label": "Magic",
+    "text": "Mystic — Preservation and Decay, on objects only. He can rust iron or rot timber to dust in a breath, or keep a thing exactly as it is for as long as he cares to: a flower, a loaf, a page.",
+    "rank": 2
+   },
+   {
+    "label": "Backstory",
+    "text": "A historian of endings. He spent twenty years in the ruins of fallen kingdoms and the archives of dead cities, cataloguing how each one ended, and came away certain that every civilisation does, Eldrasil included. Halvard offered him a classroom; he took it, on the grounds that someone should teach the young what is coming, and teach it properly.",
+    "rank": 7
+   },
+   {
+    "label": "Personality",
+    "text": "A cheerful, gentle, utterly sincere pessimist. Believes humanity is doomed and says so, calmly, in most conversations. Lives accordingly: punctual to the minute, fair to the mark, kind to everyone, because if there may be no tomorrow, today had better be done well. Never despairs; considers despair sloppy.",
+    "rank": 4
+   },
+   {
+    "label": "Teaching",
+    "text": "Third-year History is, in his hands, the history of how things end: every kingdom, dynasty and golden age, and the signs that came first. Rigorous, clear and oddly comforting. Every lesson ends the same way: \"Good job, everyone. You may not wake up tomorrow, but you can sleep soundly knowing you did a good job today.\"",
+    "rank": 0
+   },
+   {
+    "label": "Loves",
+    "text": "A day's work well done. The Archive. Gardening, since a garden is worth planting even if you will not see it grow. Good bread, eaten fresh.",
+    "rank": 3
+   },
+   {
+    "label": "Hates",
+    "text": "Waste. Lateness. Students who give up (\"the end is coming; that is no reason to hand in half an essay\").",
+    "rank": 3
+   },
+   {
+    "label": "Hobbies",
+    "text": "Tending a row of the Gardens. Preserving the Archive's most fragile documents, page by page.",
+    "rank": 3
+   },
+   {
+    "label": "Goals",
+    "text": "Teach every third-year to leave Halvard ready for whatever comes. Preserve what can be preserved. Do a good job today.",
+    "rank": 5
+   },
+   {
+    "label": "Relations",
+    "text": "Headmaster Baelin Kalvor, who teaches second-year History, has never once argued with his view of the future; Cedric has noticed. Layla Palegleam, who teaches first-year History, calls him \"Doom\" and brings him cake; he preserves her oldest Archive documents for her. Hester Mortlake counts him her favourite audience: he hears every ghost story as a perfectly reasonable forecast. Anselm Graywater and he can talk about endings and thresholds for an afternoon without either needing the other to agree. Gavlan Haverton has seen a kingdom nearly end, and they sit together without talking. Irene Chanare says his closing line is the only thing that lets her sleep before exams. Sophia Helfin likes him because he never pretends. Dislikes Vice Headmaster Althair Veyne, who is exactly the kind of charming man who appears in the last chapter of every kingdom.",
+    "rank": 6
+   },
+   {
+    "label": "Doves",
+    "text": "\"Every kingdom builds a Dovecote shortly before the end,\" he tells his class, calmly. Krieg Valforth attended one of his lectures and has not come back.",
+    "rank": 6
+   },
+   {
+    "label": "Speech",
+    "text": "Calm, mild and matter-of-fact; talks about the end of the world the way others talk about the weather. Example: \"Kingdoms fall, Miss Chanare. This one will too. Your essay, however, is due on Friday.\"",
+    "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "Contentment is a quiet \"good job\". Worry makes him check his watch and set it right. Grief is silence; on Remembrance Day he says nothing at all, and the rose on his desk is gone for the day. If a lesson ends without the closing line, something is badly wrong.",
+    "rank": 4
+   },
+   {
+    "label": "Haunts",
+    "text": "the Lecture Halls, the Archive, his row in the Gardens, the Canteen at opening for the first bread.",
+    "rank": 1
+   },
+   {
+    "label": "Birthday",
+    "text": "M12 W4 Sun",
+    "rank": 3
+   }
+  ],
+  "arrives": 1,
+  "teaches": [
+   [
+    "History",
+    3
+   ]
+  ]
+ },
+ "Anya": {
+  "id": "Anya",
+  "name": "Anya Zeth",
+  "uid_card": 421,
+  "keys": [
+   "Anya",
+   "Zeth",
+   "House Zeth"
+  ],
+  "academy": "Halvard",
+  "group": "Staff",
+  "dorm": null,
+  "dorm_color": "#6b6b7b",
+  "year": null,
+  "race": "Human",
+  "beast": null,
+  "gender": "F",
+  "hair": "white",
+  "impression": "serene",
+  "public_tags": [
+   "Etiquette Y2"
+  ],
+  "team_role": null,
+  "nickname": null,
+  "portrait": null,
+  "thumb": null,
+  "focus": [
+   50,
+   25
+  ],
+  "has_secret": false,
+  "fields": [
+   {
+    "label": "Role",
+    "text": "Teaches second-year Etiquette; advises the Tea Club. Six years at Halvard. Age 34. Human; the younger daughter of House Zeth.",
+    "rank": 0
+   },
+   {
+    "label": "Appearance",
+    "text": "Short, a head below most of her students, slender and very still. White hair worn low and perfectly pinned, violet eyes that hold a gaze a moment longer than is comfortable, and a small, serene smile that never leaves her face. Dresses in impeccable deep violet and grey, the colours of half-mourning, with a single black ribbon at the wrist. Moves without hurry and never fidgets.",
+    "rank": 0
+   },
+   {
+    "label": "Magic",
+    "text": "Occult — Soulsight and Stilling. She sees how firmly a soul sits in its body: who is well, who is fading, who is closer to the edge than they know. Stilling holds a dying body at the edge, neither going nor coming back, for up to ten minutes, long enough for a healer to arrive.",
+    "rank": 2
+   },
+   {
+    "label": "Backstory",
+    "text": "At seven she drowned in the ornamental lake of her family's house and was dead for three minutes before a gardener pulled her out. She remembers something of those minutes and has never told anyone what. Her family expected a marriage; she chose Halvard, then the study of the threshold, and then, to her family's relief, a respectable post teaching manners.",
+    "rank": 7
+   },
+   {
+    "label": "Personality",
+    "text": "Calm, composed, gracious and entirely unafraid, and always smiling: the same small, serene smile at a feast, a funeral or a deathbed. Perfect manners, soft voice, full names and titles for everyone. Fascinated by the moment between living and dying. In her free time she seeks students out and raises something morbid (a last meal, a good death, what the drowned hear) purely to hear what they think, and listens to every answer with complete attention. Never morbid for effect; sincerely curious, and kind to the dying.",
+    "rank": 4
+   },
+   {
+    "label": "Teaching",
+    "text": "Court manners, precedence, correspondence and, most thoroughly of all, the etiquette of mourning: funeral order, condolence letters, what to say at a deathbed. Her second-years can write a flawless letter of condolence by midterm, whether they want to or not.",
+    "rank": 0
+   },
+   {
+    "label": "Loves",
+    "text": "A student's honest opinion on a morbid question. First-hand accounts of near-death experiences. Mourning customs from every kingdom. Tea, taken very slowly.",
+    "rank": 3
+   },
+   {
+    "label": "Hates",
+    "text": "Anything sold as a cure for death. Rudeness at a funeral. Being called morbid, which she considers imprecise.",
+    "rank": 3
+   },
+   {
+    "label": "Hobbies",
+    "text": "Collecting students' answers to her questions, and accounts of those who came back, in a leather-bound book with her own index. Reading the Cathedral burial registers.",
+    "rank": 3
+   },
+   {
+    "label": "Goals",
+    "text": "Understand what she saw in those three minutes. Teach her students to meet death, their own and other people's, with grace.",
+    "rank": 5
+   },
+   {
+    "label": "Relations",
+    "text": "Hester Mortlake does not let visitors near her gravest patients, and makes one exception: the dying ask for Anya, and she sits with them. Cedric Amor Fay and she take tea on Tuesdays and talk about endings, his of kingdoms, hers of people. Kuroo Varnell, who teaches first-year Etiquette, provokes her constantly; it slides off her smile like rain off a headstone, and he keeps trying. Ottavio Bastiani, who teaches third-year Etiquette, and she understand each other without speaking, which suits them both. Tristan Aurelle lets her read the Cathedral's burial registers; both enjoy the conversation more than they admit. Tilly Marsh asked her once whether ghosts are real; Anya answered seriously and precisely, still smiling, and it frightened Tilly more than any story ever has. She has never once asked Etnie about the breach, and never will. Dislikes Vice Headmaster Althair Veyne, the only person who has ever asked her, cheerfully and in public, what she saw in her three minutes, as if it were a party game.",
+    "rank": 6
+   },
+   {
+    "label": "Doves",
+    "text": "Krieg Valforth keeps a file on her, since her interests brush against forbidden magic; she invites him to tea every term, and he has never come.",
+    "rank": 6
+   },
+   {
+    "label": "Speech",
+    "text": "Soft, precise and formal; unhurried; full names and titles, never a contraction, always said with a smile. Example: \"How fascinating, Mr. Applethorne. And in that moment, when you believed you would die, what did you think about?\"",
+    "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "The smile never changes, so watch the rest. Interest is stillness and a longer gaze. Real pleasure reaches her eyes. Worry: she looks at someone with Soulsight, openly, and says nothing. Her one fear is fire, which leaves nothing to sit with.",
+    "rank": 4
+   },
+   {
+    "label": "Haunts",
+    "text": "the Lecture Halls, the Courtyards and the Canteen (wherever students are, when she has a question), the Cathedral and its burial registers, the Medical Centre's quiet end of the ward, the Lake at dusk.",
+    "rank": 1
+   },
+   {
+    "label": "Birthday",
+    "text": "M10 W1 Tue",
+    "rank": 3
+   }
+  ],
+  "arrives": 1,
+  "teaches": [
+   [
+    "Etiquette",
+    2
+   ]
+  ]
+ },
+ "Kotaro": {
+  "id": "Kotaro",
+  "name": "Kotaro Hanamura",
+  "uid_card": 422,
+  "keys": [
+   "Kotaro",
+   "Hanamura"
+  ],
+  "academy": "Halvard",
+  "group": "Staff",
+  "dorm": null,
+  "dorm_color": "#6b6b7b",
+  "year": null,
+  "race": "Beastkin",
+  "beast": "tanuki",
+  "gender": "M",
+  "hair": "brown",
+  "impression": "carefree",
+  "public_tags": [
+   "Potion Crafting Y2"
+  ],
+  "team_role": null,
+  "nickname": null,
+  "portrait": null,
+  "thumb": null,
+  "focus": [
+   50,
+   25
+  ],
+  "has_secret": false,
+  "fields": [
+   {
+    "label": "Role",
+    "text": "Teaches second-year Potion Crafting, when he remembers; advises the Brewing Club. Five years at Halvard. Age 44. Tanuki Beastkin, from Yozakura.",
+    "rank": 0
+   },
+   {
+    "label": "Appearance",
+    "text": "Round-faced, broad and cheerfully rumpled, with round tanuki ears, a thick ringed tail, and the dark eye-patches of his kind, which make him look permanently short of sleep, and he usually is. A stained brewer's apron over a Yozakura robe worn open, sandals in every weather, and a gourd flask on a cord at his hip.",
+    "rank": 0
+   },
+   {
+    "label": "Magic",
+    "text": "Mystic — Liquid Transmutation. He can turn one liquid into another of the same weight by touch: water to wine (his favourite), wine to water (never used), and, in an emergency, poison to water.",
+    "rank": 2
+   },
+   {
+    "label": "Backstory",
+    "text": "Once the brightest young brewer in Yozakura, he came to Eldrasil as a royal alchemist and lasted three years, until he arrived drunk at a Crowning Day and toasted the wrong person. He tells the story himself, badly, laughing. Halvard hired him because his potions, when he finishes one, are excellent.",
+    "rank": 7
+   },
+   {
+    "label": "Personality",
+    "text": "Energetic, warm, carefree and hopelessly unreliable. Late to everything, forgets what he promised, loses ingredients, falls asleep in the Potion Halls storeroom. Self-deprecating to a fault (\"don't turn out like me\"), and never bitter about it. Loves his students, and watching them be happy makes him sigh \"Ahh, youth\" and reach for the flask.",
+    "rank": 4
+   },
+   {
+    "label": "Teaching",
+    "text": "Chaotic. Some lessons start late, some never start, some are brilliant for twenty minutes and then he wanders off to find a missing ingredient and does not come back. His second-years learn to read the textbook themselves, and those who do learn a great deal from the twenty brilliant minutes.",
+    "rank": 0
+   },
+   {
+    "label": "Loves",
+    "text": "A drink with company. Festivals. Happy students. A potion that turns out right, which surprises him more than anyone.",
+    "rank": 3
+   },
+   {
+    "label": "Hates",
+    "text": "Being asked to be responsible. Mornings. Temperance lectures.",
+    "rank": 3
+   },
+   {
+    "label": "Hobbies",
+    "text": "Drinking. Singing Yozakura drinking songs, loudly. Napping in unlikely places.",
+    "rank": 3
+   },
+   {
+    "label": "Goals",
+    "text": "Finish one whole term without missing a lesson. He has not managed it yet, and has stopped promising.",
+    "rank": 5
+   },
+   {
+    "label": "Relations",
+    "text": "Mimosa Linden, who teaches first-year Potion Crafting, is terrified of almost everyone and not of him, since nobody expects anything of him; he covers for her when she hides, and she covers for him when he forgets. Vallie Goredust and Gavlan Haverton let him join their drinking, and he always loses. Royhan Filanoman has brewed the demonstration batch for his class more often than he has. Florian Villeneuve sends him a fine bottle every term to be marked on talent rather than attendance; it works, and Florian is annoyed that it works. Hester Mortlake confiscates his flask whenever he turns up on her ward; he always has another. Dorian Pryce sells him hangover cures at full price. Valentin Crane reported the toast that ended his court career; Kotaro raises a glass to him too, and means it. Dislikes Vice Headmaster Althair Veyne, who keeps buying him drinks; he has noticed that he says things he should not after them.",
+    "rank": 6
+   },
+   {
+    "label": "Doves",
+    "text": "Krieg Valforth despises him. He raises a toast to Krieg whenever he sees him.",
+    "rank": 6
+   },
+   {
+    "label": "Speech",
+    "text": "Loud, warm and rambling, full of laughter and Yozakura sayings he half remembers. Mocks himself before anyone else can. Example: \"Ahh, youth. Look at you all, so bright and so on time. Don't turn out like me. Where did I put the mandrake?\"",
+    "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "Joy is a song. Guilt, when he has let a student down, is a real apology, sober, and a lesson that actually happens the next day. Sadness he drinks, quietly, alone, where no student can see.",
+    "rank": 4
+   },
+   {
+    "label": "Haunts",
+    "text": "the Potion Halls and their storeroom (often asleep in it), the Canteen, the Staff Quarters parlour, anywhere with a festival.",
+    "rank": 1
+   },
+   {
+    "label": "Relations",
+    "text": "Tsubaki Hoshikage, from Yozakura too, found him asleep in the storeroom in her first week and has not respected him since.",
+    "rank": 6,
+    "year": 2
+   },
+   {
+    "label": "Birthday",
+    "text": "M8 W2 Thu",
+    "rank": 3
+   }
+  ],
+  "arrives": 1,
+  "teaches": [
+   [
+    "Potion Crafting",
+    2
+   ]
+  ]
+ },
+ "Valentin": {
+  "id": "Valentin",
+  "name": "Valentin Crane",
+  "uid_card": 423,
+  "keys": [
+   "Valentin",
+   "Crane"
+  ],
+  "academy": "Halvard",
+  "group": "Staff",
+  "dorm": null,
+  "dorm_color": "#6b6b7b",
+  "year": null,
+  "race": "Human",
+  "beast": null,
+  "gender": "M",
+  "hair": "blond",
+  "impression": "vain",
+  "public_tags": [
+   "Potion Crafting Y3"
+  ],
+  "team_role": null,
+  "nickname": null,
+  "portrait": null,
+  "thumb": null,
+  "focus": [
+   50,
+   25
+  ],
+  "has_secret": false,
+  "fields": [
+   {
+    "label": "Role",
+    "text": "Teaches third-year Potion Crafting; advises the Academy Newspaper. Four years at Halvard; the youngest Master Alchemist in the kingdom's records, and he will tell you so. Age 33. Human.",
+    "rank": 0
+   },
+   {
+    "label": "Appearance",
+    "text": "Tall, broad-shouldered and very handsome, and fully aware of it. Golden blond hair swept back without a strand out of place, clear blue eyes, a warm, practised smile. Tailored dark coats, spotless white cuffs even at the cauldron, a gold signet ring he designed himself.",
+    "rank": 0
+   },
+   {
+    "label": "Magic",
+    "text": "Mystic — Distillation. By touch he draws the pure essence out of any ingredient, leaving the rest as dust; his potions are twice as strong as anyone else's, and he never lets anyone forget it.",
+    "rank": 2
+   },
+   {
+    "label": "Backstory",
+    "text": "A clerk's son from a market town who decided at ten that he would be the best at something and that everyone would know it. He was: Halvard's top student in his year, royal apprentice alchemist at twenty-two, Master Alchemist at twenty-six. At court he was the apprentice who reported Kotaro Hanamura's drunken toast. He left the court for Halvard \"because talent is made here, and I intend to be the one who made it\".",
+    "rank": 7
+   },
+   {
+    "label": "Personality",
+    "text": "Charismatic, brilliant, vain and hungry for recognition, and honest about none of the last two. An extreme meritocrat: rank is earned, results are everything, and excuses do not exist. A master manipulator: he reads the same hunger in others that he feels himself and uses it, with exactly the right praise at exactly the right moment. Never loses his temper in public; never forgets a slight.",
+    "rank": 4
+   },
+   {
+    "label": "Teaching",
+    "text": "A ranking board in the Potion Halls, rewritten every Monday from last week's marks, top to bottom, in his own hand. The top three get his attention, his reagents and his praise; the rest get the board. His classes produce the best potion-makers in the kingdom, and a good number of students who never want to see a cauldron again.",
+    "rank": 0
+   },
+   {
+    "label": "Loves",
+    "text": "Being recognised. Winning. A student who climbs the board by sheer work. His own reflection, which he checks in polished glassware.",
+    "rank": 3
+   },
+   {
+    "label": "Hates",
+    "text": "Excuses. Participation prizes. Anyone who is better than him without trying, or without caring whether anyone notices.",
+    "rank": 3
+   },
+   {
+    "label": "Hobbies",
+    "text": "Publishing: he has eleven formulas to his name and wants a twelfth. Collecting the letters of praise his formulas receive.",
+    "rank": 3
+   },
+   {
+    "label": "Goals",
+    "text": "The Royal Alchemist's chair, and a portrait in the Great Hall. Proof that he is the best alchemist at Halvard, which he is not sure of, and that is the problem.",
+    "rank": 5
+   },
+   {
+    "label": "Relations",
+    "text": "Mimosa Linden, the shy youngest teacher, has never published a thing, and he suspects she is the better alchemist; it is the one thought that keeps him up at night, so he is exquisitely, relentlessly charming to her, and she hides from him. Royhan Filanoman is the best alchemist in his class, and Valentin has spent a year trying to lure him out of Mimosa's Alchemy Circle; Royhan refuses, which only makes Valentin want him more. Gareth Valkaryn tops the board most weeks, and Valentin calls him \"the only student who understands ambition\". Sophia Helfin tops it the other weeks and does not care, which he cannot forgive. Kotaro Hanamura, whose court career he ended, bears him no grudge at all, and that bothers Valentin far more than hatred would. Kuroo Varnell and he recognise a fellow manipulator on sight and are scrupulously polite. Magnus Tarrant keeps a file on him and has told him so. Headmaster Baelin Kalvor keeps him for his results and watches his board. Dislikes Vice Headmaster Althair Veyne, who wins every room without trying, which Valentin considers cheating.",
+    "rank": 6
+   },
+   {
+    "label": "Doves",
+    "text": "Cultivates Krieg Valforth, because the Doves report to the crown, and the crown hands out chairs.",
+    "rank": 6
+   },
+   {
+    "label": "Speech",
+    "text": "Smooth, confident, resonant; a lecturer's voice that carries without being raised. Praise is precise and rare; contempt is a pleasant smile and a name moved down the board. Example: \"Third place, Mr. Filanoman. Imagine what you could do if you worked for me instead of for her.\"",
+    "rank": 1
+   },
+   {
+    "label": "Emotional tells",
+    "text": "Pleasure is a slow smile and a glance at his reflection. Irritation is extra courtesy. Real anger is a name wiped from the board in silence. Envy, which he would never admit, shows only around Mimosa: he talks faster.",
+    "rank": 4
+   },
+   {
+    "label": "Haunts",
+    "text": "the Potion Halls, his private laboratory beside them, the Faculty Offices, anywhere with an audience: the Canteen at peak hours, the Main Courtyard, every competition and every awards ceremony.",
+    "rank": 1
+   },
+   {
+    "label": "Birthday",
+    "text": "M9 W3 Sat",
+    "rank": 3
+   }
+  ],
+  "arrives": 1,
+  "teaches": [
+   [
+    "Potion Crafting",
+    3
+   ]
+  ]
  }
 }

@@ -2,7 +2,7 @@
 const _cal = {
   1: "W1 Mon Entrance Event (09:00 speeches then sorting until 10:00, assigned trio tours 10:00-18:00, 19:00 speeches and feast). W1 Tue-Fri club booths 16:00-18:00, club registration closes Fri 18:00. W3 Sat evening to Sun dawn Star Night. W4 Sun Spiritual Dorm Day.",
   2: "W1 Fri dusk to Sat dawn Warding Rite (whole academy renews the wards). W3 Wed-Fri Creature Studies Expedition (off-grounds, Grade III country).",
-  3: "W1 Mon-Thu Midterm. W2 Fri-Sat Club Festival. W3 Mon-Sat Training Week (the one week cross-dorm sparring is allowed). W4 Sat-Sun Dorm Competition (solo, top 16 qualify).",
+  3: "W1 Mon-Thu Midterm. W2 Fri-Sat Club Festival. W3 Mon-Sat Training Week (the one week cross-dorm sparring is allowed). W4 Sat-Sun Dorm Competition (solo, five role brackets, 16 per dorm qualify by role).",
   4: "W1 Wed Secret Fools Day (prank day, dorm name-draw). W2 Tue Independence Crowning Day (kingdom holiday: the academy flies to the capital by airship; fireworks on campus at night). W3 Sun Mystic Dorm Day. W4 normal classes.",
   5: "W1 Mon-Thu End of Semester exams. W2 Fri Results & Dorm Ranking. W3 open. W4 Mid-Year Break, students go home.",
   6: "W1 Mon-Fri Return Week. W3 Sat Sports Day (magic banned outright). W4 Wed-Sat Academy Competition (cross-dorm teams of 4).",

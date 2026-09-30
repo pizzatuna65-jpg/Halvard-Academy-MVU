@@ -72,11 +72,12 @@ const timetableFor = W => W.Month === 10 && W.Week === 3 && W.Day === 'Sat' ? [T
 const PAYOUT = [[1, 3000], [3, 2000], [10, 1200], [25, 800], [50, 500], [Infinity, 300]];
 // 1.15.0 (owner-approved planning/DRAFT_grades_exams.md): the engine marks every subject at each exam. Midterm slots from lore 232
 // ([day, from, to] in minutes; Creature Studies sits no midterm and is marked on fieldwork); finals are one run on a seeded day.
-const SUBJECTS = ['Magic Theory', 'History', 'Etiquette', 'Potion Crafting', 'Dark Magic Defense', 'Combat', 'Creature Studies'];
+// 1.33.0 (owner-approved planning/DRAFT_classes_and_teachers.md): Combat is Practical Magic, one class per combat role (still one mark)
+const SUBJECTS = ['Magic Theory', 'History', 'Etiquette', 'Potion Crafting', 'Dark Magic Defense', 'Practical Magic', 'Creature Studies'];
 const PROF = ['Knowledge', 'Arcana', 'Craft', 'Prowess', 'Society', 'Nature'];
 const PROF_CUT = [0, 10, 30, 60, 100, 150];
 const PROF_NAMES = { Knowledge: ['Everyday knowledge','Knows the basics','Well read','Learned','Erudite','Encyclopaedic'], Arcana: ['Everyday casting','Follows the proofs','Spell-literate','Pattern reader','Ward-wise','Arcane scholar'], Craft: ['Everyday hands','Follows the recipe','Steady hand','Skilled hands','Artisan',"Master's hand"], Prowess: ['Everyday fitness','Holds a stance','Quick on the feet','Seasoned','Duellist','Formidable'], Society: ['Everyday manners','Minds the forms','Poised','Gracious','Well connected','Consummate'], Nature: ['Everyday outdoors','Knows the signs','Calm hand','Trail-wise','Wild-wise','Kin to the wild'] };
-const SUBJECT_STAT = { History: 'Knowledge', 'Magic Theory': 'Arcana', 'Dark Magic Defense': 'Arcana', 'Potion Crafting': 'Craft', Combat: 'Prowess', Etiquette: 'Society', 'Creature Studies': 'Nature' };
+const SUBJECT_STAT = { History: 'Knowledge', 'Magic Theory': 'Arcana', 'Dark Magic Defense': 'Arcana', 'Potion Crafting': 'Craft', 'Practical Magic': 'Prowess', Etiquette: 'Society', 'Creature Studies': 'Nature' };
 const PROF_FIELD = { Knowledge: 'history, sciences, numbers, geography, nations, languages, records and puzzles', Arcana: 'magic, curses, wards, traps and precise spellwork', Craft: 'making, brewing, mending, cooking and handiwork', Prowess: 'duels, sport, climbing, running and strength', Society: 'formal dealings, manners, bargaining, performance and reading a room', Nature: 'beasts, plants, weather, tracks and the outdoors' };
 const CLUB_STATS = /*@@CLUB_STATS@@*/{};
 const CLUB_MEMBERS = /*@@CLUB_MEMBERS@@*/{};
@@ -85,6 +86,17 @@ const PRACTICE = /*@@PRACTICE@@*/[];
 const RESTFUL = /*@@RESTFUL@@*/{};
 // 1.31.0 (owner-approved planning/DRAFT_location_activities.md): a letter home once a month, the reply and its parcel (data/letters_home.json)
 const HOME = /*@@HOME@@*/{};
+// 1.33.0 (owner-approved planning/DRAFT_classes_and_teachers.md): free periods (data/free_periods.json). Now and then a teacher
+// cannot come; the class is not held and counts against no one. Seeded per class period and day; never on a calendar event day
+// or in Month 1 Week 1. Returns the reason, or '' when the class runs.
+const FREE = /*@@FREE@@*/{};
+const freeWhy = (Wd, p, subj, tch) => {
+  if (!tch || (Wd.Month === 1 && Wd.Week === 1) || eventsOn(Wd).length) return '';
+  const f = (FREE.npcs || {})[tch] || {}, ch = num(f.chance, num(FREE.chance, 0));
+  if (rand01('free', Wd.Year, Wd.Month, Wd.Week, Wd.Day, p, subj) * 100 >= ch) return '';
+  const why = f.why && f.why.length ? f.why : (FREE.generic && FREE.generic.length ? FREE.generic : ['cannot come today']);
+  return why[hash32('free-why', Wd.Year, Wd.Month, Wd.Week, Wd.Day, p) % why.length];
+};
 const CRAFTS = /*@@CRAFTS@@*/{};
 // 1.29.0: clothing a craft can mend or enchant; the materials that open the portable craft practice (from data/crafts.json)
 const CRAFT_CLOTHES = /cloaks?|coats?|robes?|vests?|scarves?|shirts?|dresses?|uniforms?|jackets?|garments?/i;
@@ -92,8 +104,8 @@ const CRAFT_PORTABLE = new Set((CRAFTS.recipes || []).filter(r => (((CRAFTS.grou
   .flatMap(r => (r.materials || []).flat().map(m => m.item.toLowerCase())));
 const MARKS = ['F', 'D', 'C', 'B', 'A'];
 const MID_SLOTS = { 'Magic Theory': [0, 480, 600], Etiquette: [0, 600, 720], History: [1, 480, 600], 'Potion Crafting': [1, 780, 960],
-  'Dark Magic Defense': [2, 480, 960], Combat: [3, 480, 960] };
-const PRACTICAL = ['Potion Crafting', 'Dark Magic Defense', 'Combat', 'Creature Studies'];
+  'Dark Magic Defense': [2, 480, 960], 'Practical Magic': [3, 480, 960] };
+const PRACTICAL = ['Potion Crafting', 'Dark Magic Defense', 'Practical Magic', 'Creature Studies'];
 // an A: +10 on a Fortune roll in the subject's field (rule 504 "specialty"), until the next exams
 const TOP_FIELD = Object.fromEntries(SUBJECTS.map(s => [s, PROF_FIELD[SUBJECT_STAT[s]]]));
 const TUTOR_PAY = 40, TUTOR_WEEK = 2, ASSIGNMENT_MIN = 45;
@@ -104,9 +116,14 @@ const EXAM_DAY = [[10, -8, 'a bad day'], [30, -4, 'an off day'], [70, 0, ''], [9
 const MASTERY = 5, profRankOf = (X, k) => PROF_CUT.filter(x => num((((X || {}).$eng || {}).prof || {}).xp && X.$eng.prof.xp[k], 0) >= x).length - 1;
 // staff and nobles (Consummate: NPC_GROUP staff, or other = the Doves, the Cathedral, the Liaison, facilities); nobles by the lorebook (House Silvarenne, House Villeneuve, the Liaison's regulars)
 const CONSUMMATE_GROUPS = ['staff', 'other'], NOBLES = ['Caspian', 'Caralynn', 'Florian', 'Elion', 'Nerys'];
-const subjectOf = t => { const x = String(t || '').trim().toLowerCase(); return x === 'dmd' ? 'Dark Magic Defense' : SUBJECTS.find(s => s.toLowerCase() === x) || ''; };
-const subjectIn = t => SUBJECTS.find(s => new RegExp(`\\b${s}\\b`, 'i').test(String(t || ''))) || (/\bDMD\b/.test(String(t || '')) ? 'Dark Magic Defense' : '');
-const teaches = (id, subj, py) => ((CLASS.teach || {})[id] || []).some(x => x[0] === subj && (x[1] === py || x[1] === 0));
+const subjectOf = t => { const x = String(t || '').trim().toLowerCase().replace(/ class$/, ''); return x === 'dmd' ? 'Dark Magic Defense' : x === 'combat' ? 'Practical Magic' : SUBJECTS.find(s => s.toLowerCase() === x) || ''; };
+const subjectIn = t => SUBJECTS.find(s => new RegExp(`\\b${s}\\b`, 'i').test(String(t || ''))) || (/\bDMD\b/.test(String(t || '')) ? 'Dark Magic Defense' : /\bCombat\b/i.test(String(t || '')) ? 'Practical Magic' : '');
+// 1.33.0: Practical Magic is taught per combat role ([subject, 0, role]); {{user}} attends the class of the first role in Combat_role
+// (a student with two roles lists the one they chose first). Before roles are set it is the joint assessment, led by Attack's teacher.
+const ROLES5 = ['Attack', 'Defense', 'Healing', 'Support', 'Control'];
+const classRole = P => { const t = String((P || {}).Combat_role || ''); return ROLES5.map(r => [r, t.search(new RegExp(`\\b${r}\\b`, 'i'))]).filter(x => x[1] >= 0).sort((a, b) => a[1] - b[1]).map(x => x[0])[0] || 'Attack'; };
+const teaches = (id, subj, py, role) => ((CLASS.teach || {})[id] || []).some(x => x[0] === subj && (x[1] === py || x[1] === 0) && (!x[2] || x[2] === (role || 'Attack')));
+const teacherOf = (subj, py, role) => Object.keys(CLASS.teach || {}).find(id => teaches(id, subj, py, role)) || '';
 // 1.2.2 bond system (owner design): XP per kind of interaction with daily/weekly limits, rising XP per rank scaled by the pace
 // setting, a cooldown after each rank, then an in-scene interaction to deepen the bond.
 const BR = /*@@BOND_RULES@@*/{};
@@ -224,6 +241,7 @@ const CAP = { Notices: 10, Letters: 12, Clues: 40, Journal: 30 };
 // Batch 5.2: trips (first day, for the unlock window) and the Kingdom prize (lore Competitions: 5,000 points per winning member)
 const TRIPS = [{ m: 4, w: 2, d: 'Tue', name: 'the capital (Crowning Day)' }, { m: 11, w: 2, d: 'Sat', name: 'Sunreach Bay (Academy Trip)' }];
 const KINGDOM_PRIZE = 5000;
+const DORM_PRIZE = [100, 50];   // 1.33.0: a Dorm Competition role bracket's champion and runner-up
 // v1.0.3: Halvard students {id: [lorebook Year, campaign year they arrive]}, injected by gen_engine. Graduation (M11 W4 Sun) sends
 // the year's third-years away the next morning (M12 W1 Mon); they go to Campus_State.Graduated (the story may take a name back out).
 // ARRIVES: incoming cohorts (data/cohorts.json) -> campaign year they arrive as first-years; before that they are not at Halvard.
@@ -692,6 +710,23 @@ function stepMigrate(c) {
     const W = X.World || {}, U = X.$ui || {};
     if (/^meditation rooms \/ spirit house\b/i.test(String(W.Location || ''))) W.Location = String(W.Location).replace(/^meditation rooms \/ spirit house/i, 'Meditation Rooms');
     if (Array.isArray(U.discovered)) U.discovered = _.uniq(U.discovered.map(n => n === 'Meditation Rooms / Spirit House' ? 'Meditation Rooms' : n));
+  }
+  // 1.33.0 (owner-approved planning/DRAFT_classes_and_teachers.md): the Combat subject is Practical Magic (marks, exam lines,
+  // attendance counts, the stored results and a pending remedial keep their values under the new name)
+  const toPM = o => { if (_.isPlainObject(o) && 'Combat' in o) { if (!('Practical Magic' in o)) o['Practical Magic'] = o.Combat; delete o.Combat; } };
+  for (const X of both) {
+    const Ac = (X.Player || {}).Academics || {}, ST = (X.$eng || {}).study, Cm = X.Commitments;
+    toPM(Ac.Grades);
+    for (const k of Object.keys(Ac.Exams || {})) Ac.Exams[k] = String(Ac.Exams[k]).replace(/\bCombat\b/g, 'Practical Magic');
+    if (_.isPlainObject(ST)) {
+      for (const k of ['skip', 'cap', 'shift', 'stand', 'held']) toPM(ST[k]);
+      for (const k of ['res', 'marks']) for (const m of Object.values(ST[k] || {})) toPM(m);
+      for (const k of Object.keys(ST.rem || {})) if (k === 'Remedial Combat') { ST.rem['Remedial Practical Magic'] = ST.rem[k]; delete ST.rem[k]; }
+    }
+    if (_.isPlainObject(Cm) && Cm['Remedial Combat']) {
+      Cm['Remedial Practical Magic'] = { ...Cm['Remedial Combat'], Desc: String(Cm['Remedial Combat'].Desc || '').replace(/\bCombat\b/g, 'Practical Magic') };
+      delete Cm['Remedial Combat'];
+    }
   }
   for (const X of both) {
     const P = X._Perks;
@@ -1505,6 +1540,12 @@ function stepSchoolWeek(c) {
     // FP7: minutes in or away from the room of each class period this update overlapped (the location at the start and the end
     // of the update each count for half). Long skips (over six hours) are assumed to follow the routine.
     S.$ui.absent = null;
+    // 1.33.0: today's free periods (a teacher cannot come), for <now> (505)
+    {
+      const Wt = S.World, row = CLASS.tt && CLASS.tt[Wt.Day];
+      const fr = (row || []).map((cell, p) => { if (!cell || cell[3] !== 'class') return null; const t = teacherOf(cell[0], PY, classRole(Pf)), why = freeWhy(Wt, p, cell[0], t); return why ? { p, s: cell[0], t, why } : null; }).filter(Boolean);
+      S.$ui.free = fr.length ? fr : null;
+    }
     const skippedNow = [];   // 1.15.0: subjects skipped in this update (a mark loses its attendance floor)
     const ATT =_.isPlainObject(S.$eng.att) ? S.$eng.att : (S.$eng.att = {});
     for (const k of ['p', 'c', 'done']) if (!_.isPlainObject(ATT[k])) ATT[k] = {};
@@ -1528,12 +1569,13 @@ function stepSchoolWeek(c) {
           if (ov <= 0) return;
           const cell = row[p], key = `${d}:${p}`, elect = Wd.Month === 10 && Wd.Week === 3 && Wd.Day === 'Sat' && p === 2;
           const share = (v, doubt) => ov * ((v.includes(pkB) || (doubt && !knownPlace(pkB)) ? 0.5 : 0) + (v.includes(pkA) || (doubt && !knownPlace(pkA)) ? 0.5 : 0));
+          if (cell[3] === 'class' && freeWhy(Wd, p, cell[0], teacherOf(cell[0], PY, classRole(Pf)))) return;   // 1.33.0: a free period
           if (cell[3] === 'class') {
             if (!ATT.done[key] && !(key in ATT.p)) { WK.periods++; ATT.p[key] = 0; }
             ATT.p[key] += ov - share(classVenues(cell[2]), true);
             if (!excused && !ATT.done[key] && ATT.p[key] > TU.att_minutes) {
               ATT.done[key] = true; WK.skipped++; skippedNow.push(cell[0]);
-              const tch = Object.keys(CLASS.teach || {}).find(id => teaches(id, cell[0], PY) && !goneNow(id));
+              const tch = Object.keys(CLASS.teach || {}).find(id => teaches(id, cell[0], PY, classRole(Pf)) && !goneNow(id));
               repAdd('Academy', -2, `skipped ${cell[0]}`, '');
               S.$ui.absent = { cls: cell[0], teacher: tch || '' };
               log.push(`{{user}} skipped ${cell[0]} (${TIMES[p]}); Academy reputation -2.`);
@@ -1652,7 +1694,7 @@ function stepSchoolWeek(c) {
       if (hasB && elapsed > 0 && elapsed <= 7 * DAY_MIN && CLASS.tt) for (let d = dayNoB; d <= dayNo; d++) {
         const Wd = fromAbs(d * DAY_MIN), row = CLASS.tt[Wd.Day];
         if (!row || eventsOn(Wd).some(e => e.noclass || e.home || e.lockdown || e.away)) continue;
-        [600, 720, 960].forEach((e0, p) => { const cell = row[p]; if (cell && cell[3] === 'class' && absB < d * DAY_MIN + e0 && absA >= d * DAY_MIN + e0) ST.held[cell[0]] = num(ST.held[cell[0]], 0) + 1; });
+        [600, 720, 960].forEach((e0, p) => { const cell = row[p]; if (cell && cell[3] === 'class' && absB < d * DAY_MIN + e0 && absA >= d * DAY_MIN + e0 && !freeWhy(Wd, p, cell[0], teacherOf(cell[0], PY, classRole(Pf)))) ST.held[cell[0]] = num(ST.held[cell[0]], 0) + 1; });
       }
       // minutes: study places outside lessons (Saturday Study Hall counts), halves for the start and end of the update
       if (hasB && elapsed > 0 && elapsed <= 360 && restedAs !== 'sleep') {   // 1.12.0: Resting is reset in section 4; read what it was
@@ -1661,7 +1703,7 @@ function stepSchoolWeek(c) {
         for (let d = dayNoB; d <= dayNo; d++) {
           const Wd = fromAbs(d * DAY_MIN), row = CLASS.tt && CLASS.tt[Wd.Day];
           if (!row || eventsOn(Wd).some(e => e.noclass || e.home || e.lockdown || e.away)) continue;
-          [[480, 600], [600, 720], [780, 960]].forEach(([s0, e0], p) => { if (row[p][3] === 'class') lesson += Math.max(0, Math.min(absA, d * DAY_MIN + e0) - Math.max(absB, d * DAY_MIN + s0)); });
+          [[480, 600], [600, 720], [780, 960]].forEach(([s0, e0], p) => { if (row[p][3] === 'class' && !freeWhy(Wd, p, row[p][0], teacherOf(row[p][0], PY, classRole(Pf)))) lesson += Math.max(0, Math.min(absA, d * DAY_MIN + e0) - Math.max(absB, d * DAY_MIN + s0)); });
         }
         ST.mins = num(ST.mins, 0) + Math.max(0, elapsed - lesson) * f;
       }
@@ -1686,7 +1728,7 @@ function stepSchoolWeek(c) {
         if (mk['Dark Magic Defense'] === 4) repAdd('Doves', 8, `top Dark Magic Defense mark (${label})`, '');
         const rem = [];
         for (const s of fails) {
-          const k = `Remedial ${s}`, t = Object.keys(CLASS.teach || {}).find(id => teaches(id, s, PY) && !goneNow(id)) || '';
+          const k = `Remedial ${s}`, t = Object.keys(CLASS.teach || {}).find(id => teaches(id, s, PY, classRole(S.Player.Profile)) && !goneNow(id)) || '';
           const due = stamp(fromAbs(((weekNo + 1) * 7 + 5) * DAY_MIN + 600));
           S.Commitments[k] = { Desc: `Make-up session for the ${s} F (${label}); attending turns it into a D for the dorm ranking`, Due: due, With: t, Where: '', Type: 'appointment' };
           ST.rem[k] = sess; rem.push({ s, t, due });
@@ -1907,7 +1949,7 @@ function stepBonds(c) {
   // in at the latest exams (once, however many of their subjects)
   const standing = !OFF.has('study') && S.$eng.study && _.isPlainObject(S.$eng.study.stand) ? S.$eng.study.stand : {};
   const PYb = _.clamp(num(S.Player.Profile.Year, 1), 1, 3);
-  const examMod = id => (SUBJECTS.some(s => num(standing[s], -1) >= 3 && teaches(id, s, PYb)) ? 1 : 0);
+  const examMod = id => (SUBJECTS.some(s => num(standing[s], -1) >= 3 && teaches(id, s, PYb, classRole(S.Player.Profile))) ? 1 : 0);
   // 1.3.0 mask -> truth (Castor, Kanae, Caine): the 8 -> 9 event waits until one of the NPC's secrets has come out in play
   const secretOut = id => [...(S.$ui.secrets || []), ...(S.Campus_State.Secrets_revealed || [])].some(x => String(x).toLowerCase().startsWith(id.toLowerCase() + '.'));
   const held = (id, b) => MASK.has(id) && b.Rank === 8 && !secretOut(id);
@@ -2990,6 +3032,18 @@ function stepClubLife(c) {
       S.Player.Wallet.Points += KINGDOM_PRIZE;
       S.Player.Wallet.Transactions = [...S.Player.Wallet.Transactions, `+${KINGDOM_PRIZE} Kingdom Competition prize`].slice(-20);
       log.push(`Kingdom Competition won: +${KINGDOM_PRIZE} points paid to each member of the team.`);
+    }
+  }
+  // 1.33.0 (owner-approved planning/DRAFT_classes_and_teachers.md): the Dorm Competition runs in role brackets; the bracket's
+  // champion earns 100 points and the runner-up 50 (Placement "1st …" / "2nd …", or Status champion), once per year
+  if (hasB && Co.Tier === 'Dorm') {
+    const place = num((String(Co.Placement || '').match(/^\s*(\d+)/) || [])[1], 0) || (Co.Status === 'champion' ? 1 : 0);
+    const amt = { 1: DORM_PRIZE[0], 2: DORM_PRIZE[1] }[place] || 0, key = `Dorm-Y${S.World.Year}`, paid = S.$eng.prizes || (S.$eng.prizes = []);
+    if (amt && !paid.includes(key)) {
+      paid.push(key);
+      S.Player.Wallet.Points += amt;
+      S.Player.Wallet.Transactions = [...S.Player.Wallet.Transactions, `+${amt} Dorm Competition prize (${place === 1 ? 'bracket champion' : 'runner-up'})`].slice(-20);
+      log.push(`Dorm Competition: ${place === 1 ? 'bracket champion' : 'runner-up'}, +${amt} points.`);
     }
   }
   const BP = (hasB && B.Projects) || {};

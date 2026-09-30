@@ -359,6 +359,7 @@ export const Schema = z.object({
     grades: z.any().prefault(null).catch(null),                  // 1.15.0: the next exams' expected marks { label, tier, h, marks, why, run } (engine; UI, <now>)
     posted: z.any().prefault(null).catch(null),                  // 1.15.0: marks posted in this update { label, line, rem } (engine; <now>)
     absent: z.any().prefault(null).catch(null),                  // 1.10.0 (FP7): the class {{user}} just skipped { cls, teacher }
+    free: z.any().prefault(null).catch(null),                    // 1.33.0: today's free periods [{ p, s, t, why }] for <now>
     leave: z.any().prefault(null).catch(null),                   // 1.10.0 (FP12): who takes their leave from a crowded ordinary-day scene { id, n, cap }
     missed: z.array(z.string()).prefault([]).catch([]),        // 1.12.0: reminders of what the last update may have left out (engine 8l, <now>)
     fortune: z.any().prefault(null).catch(null),                 // 1.9.8: the Fortune roll for the next reply { roll, fail, part, mods, active }, engine-written for <now>

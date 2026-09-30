@@ -1,5 +1,5 @@
 {
-  "_note": "Owner-approved 2026-09-28. A Rank 4+ bonded NPC may actively accompany only these activities. One generic +25% bonus per session; existing personal gift bonuses stay separate. All 44 bonded roster NPCs are listed; Extras and rival teams are excluded.",
+  "_note": "Owner-approved 2026-09-28. A Rank 4+ bonded NPC may actively accompany only these activities. One generic +25% bonus per session; existing personal gift bonuses stay separate. All 52 bonded roster NPCs are listed (1.33.0: the eight new teachers); Extras and rival teams are excluded.",
   "npcs": {
     "Irene": ["mana", "study"],
     "Caspian": ["mana", "study"],
@@ -44,6 +44,14 @@
     "Ezrel": ["mana", "study"],
     "Ottavio": ["mana", "study"],
     "Caine": ["study"],
-    "Bobby": ["stamina", "study"]
+    "Bobby": ["stamina", "study"],
+    "Hester": ["study"],
+    "Anselm": ["mana", "study"],
+    "Magnus": ["mana", "study"],
+    "Dorian": ["mana"],
+    "Cedric": ["study"],
+    "Anya": ["study"],
+    "Kotaro": ["stamina"],
+    "Valentin": ["mana", "study"]
   }
 }

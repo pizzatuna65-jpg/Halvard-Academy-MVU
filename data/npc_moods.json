@@ -506,6 +506,103 @@
       "exams": 0,
       "trials": 0,
       "reason": "storms mean repair jobs"
+    },
+    "Hester": {
+      "loves": [
+        "Storm",
+        "Fog",
+        "Clear night"
+      ],
+      "hates": [
+        "Heatwave"
+      ],
+      "clock": "N",
+      "exams": 0,
+      "trials": 1,
+      "reason": "night rounds and a good storm for a ghost story; busy ward days"
+    },
+    "Anselm": {
+      "loves": [
+        "Clear",
+        "Mild"
+      ],
+      "hates": [
+        "Storm"
+      ],
+      "clock": "",
+      "exams": 0,
+      "trials": -1,
+      "reason": "noon sun on a park bench; competition days mean students hurting each other"
+    },
+    "Magnus": {
+      "loves": [],
+      "hates": [],
+      "clock": "N",
+      "exams": 0,
+      "trials": 1,
+      "reason": "a competition is a puzzle he gets to solve"
+    },
+    "Dorian": {
+      "loves": [
+        "Clear"
+      ],
+      "hates": [
+        "Rain"
+      ],
+      "clock": "",
+      "exams": 1,
+      "trials": 1,
+      "reason": "exam and competition weeks are his best sales"
+    },
+    "Cedric": {
+      "loves": [
+        "Overcast",
+        "Rain"
+      ],
+      "hates": [],
+      "clock": "M",
+      "exams": 0,
+      "trials": 0,
+      "reason": "an early start and a quiet grey morning in the Gardens"
+    },
+    "Anya": {
+      "loves": [
+        "Fog",
+        "Overcast"
+      ],
+      "hates": [
+        "Heatwave"
+      ],
+      "clock": "",
+      "exams": 0,
+      "trials": 0,
+      "reason": "quiet, grey, still days; dusk by the Lake"
+    },
+    "Kotaro": {
+      "loves": [
+        "Warm",
+        "Clear night"
+      ],
+      "hates": [
+        "Cold",
+        "Freezing"
+      ],
+      "clock": "N",
+      "exams": -1,
+      "trials": 1,
+      "reason": "festival nights; mornings are the enemy"
+    },
+    "Valentin": {
+      "loves": [
+        "Clear"
+      ],
+      "hates": [
+        "Rain"
+      ],
+      "clock": "M",
+      "exams": 1,
+      "trials": 1,
+      "reason": "rankings day and an audience"
     }
   }
 }

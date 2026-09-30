@@ -347,6 +347,7 @@
   "vibe": "open, windy, grass, green bronze.",
   "has_secret": false,
   "regulars": [
+   "Anselm",
    "Caralynn",
    "Lenna",
    "Nerys",
@@ -567,6 +568,8 @@
   "vibe": "tiered stone, crowded, metallic air.",
   "has_secret": false,
   "regulars": [
+   "Anya",
+   "Cedric",
    "Ezrel",
    "Kuroo",
    "Layla",
@@ -832,8 +835,10 @@
   "vibe": "sweet, bitter, mineral.",
   "has_secret": false,
   "regulars": [
+   "Kotaro",
    "Mimosa",
    "Royhan",
+   "Valentin",
    "Vera"
   ],
   "connections": [
@@ -1007,6 +1012,8 @@
    "Baelin",
    "Gavlan",
    "Kuroo",
+   "Magnus",
+   "Valentin",
    "Yvette"
   ],
   "connections": [
@@ -1130,6 +1137,8 @@
    "Baelin",
    "Gavlan",
    "Kuroo",
+   "Magnus",
+   "Valentin",
    "Yvette"
   ],
   "connections": [
@@ -1246,6 +1255,7 @@
   "regulars": [
    "Aiden",
    "Bobby",
+   "Dorian",
    "Ezrel",
    "Hadrian",
    "Vera",
@@ -1366,10 +1376,12 @@
   "vibe": "towering, shadowed, murmuring.",
   "has_secret": false,
   "regulars": [
+   "Anselm",
    "Etnie",
    "Gareth",
    "Irene",
    "Layla",
+   "Magnus",
    "Wren",
    "Zara"
   ],
@@ -1612,6 +1624,7 @@
   "has_secret": false,
   "regulars": [
    "Castor",
+   "Cedric",
    "Layla",
    "Linus"
   ],
@@ -1855,15 +1868,19 @@
   "vibe": "lamplit, worn, homely.",
   "has_secret": false,
   "regulars": [
+   "Anya",
    "Bobby",
+   "Cedric",
    "Etnie",
    "Hadrian",
    "Kanae",
+   "Kotaro",
    "Lenna",
    "Linus",
    "Nerys",
    "Percival",
    "Ruby",
+   "Valentin",
    "Wren"
   ],
   "connections": [
@@ -1918,15 +1935,19 @@
   "vibe": "loud, bread, steam.",
   "has_secret": false,
   "regulars": [
+   "Anya",
    "Bobby",
+   "Cedric",
    "Etnie",
    "Hadrian",
    "Kanae",
+   "Kotaro",
    "Lenna",
    "Linus",
    "Nerys",
    "Percival",
    "Ruby",
+   "Valentin",
    "Wren"
   ],
   "connections": [
@@ -2287,6 +2308,7 @@
    "Aiden",
    "Althair",
    "Caralynn",
+   "Dorian",
    "Ruby",
    "Trixie"
   ],
@@ -2832,7 +2854,9 @@
   "vibe": null,
   "has_secret": false,
   "regulars": [
+   "Anselm",
    "Castor",
+   "Magnus",
    "Nerys",
    "Royhan",
    "Saffi"
@@ -2893,7 +2917,10 @@
   "has_secret": false,
   "regulars": [
    "Althair",
-   "Trixie"
+   "Anya",
+   "Dorian",
+   "Trixie",
+   "Valentin"
   ],
   "connections": [
    "arbiter_hall",
@@ -3393,6 +3420,7 @@
   "has_secret": false,
   "regulars": [
    "Aiden",
+   "Anya",
    "Milena",
    "Ottavio",
    "Sophia",
@@ -3457,6 +3485,7 @@
   "vibe": "turned earth, layered herb scents.",
   "has_secret": false,
   "regulars": [
+   "Cedric",
    "Idris",
    "Lenna",
    "Maple",
@@ -3641,10 +3670,12 @@
   "uid": 82,
   "category": "Services",
   "kind": "location",
-  "description": "A white-walled building of its own, four minutes' walk from the Mall, with a herb garden along one side: more than an infirmary, less than a hospital. Treatment rooms, a small apothecary, and an inpatient ward where students stay overnight or for days under care. Staffed by Spiritual mages; busiest after Combat Class, in competition weeks, exam weeks, and after The Thinning. Nurses see injuries they must report and injuries they quietly do not. The attached Healing Ward is a teaching space where students practise on real patients under supervision. Staff can spot a Nightwell's Vigil overdose at a glance. Can heal any minor to mid injury to pristine; anything beyond is stabilised here and sent on to a proper hospital. The ward's beds are for the injured first, but a nurse will let an exhausted student lie down for an hour.\nHome of the Last Bed story.",
+  "description": "A white-walled building of its own, four minutes' walk from the Mall, with a herb garden along one side: more than an infirmary, less than a hospital. Treatment rooms, a small apothecary, and an inpatient ward where students stay overnight or for days under care. Staffed by Spiritual mages; busiest after Practical Magic, in competition weeks, exam weeks, and after The Thinning. Nurses see injuries they must report and injuries they quietly do not. The attached Healing Ward is a teaching space where students practise on real patients under supervision. Staff can spot a Nightwell's Vigil overdose at a glance. Can heal any minor to mid injury to pristine; anything beyond is stabilised here and sent on to a proper hospital. The ward's beds are for the injured first, but a nurse will let an exhausted student lie down for an hour.\nHome of the Last Bed story.",
   "vibe": "clean linen, green healing scent, too quiet.",
   "has_secret": false,
   "regulars": [
+   "Anya",
+   "Hester",
    "Percival",
    "Sophia",
    "Tilly",
@@ -4019,6 +4050,7 @@
   "vibe": "calm, serene, hushed, moss and cool stone.",
   "has_secret": false,
   "regulars": [
+   "Anselm",
    "Caspian",
    "Tristan"
   ],
@@ -4241,6 +4273,7 @@
   "vibe": "stained-glass colour, incense, heavy stillness.",
   "has_secret": false,
   "regulars": [
+   "Anya",
    "Caspian",
    "Percival",
    "Tristan"
@@ -4687,6 +4720,8 @@
   "has_secret": false,
   "regulars": [
    "Gavlan",
+   "Hester",
+   "Kotaro",
    "Layla",
    "Mimosa",
    "Sophia",
@@ -5305,6 +5340,7 @@
   "has_secret": false,
   "regulars": [
    "Aiden",
+   "Anya",
    "Milena",
    "Ottavio",
    "Sophia",

@@ -520,6 +520,94 @@
     "text": "Tsubaki trains beside {{user}} every day, at dawn and under the stars, and holds nothing back. While she is in the scene, {{user}}'s Stamina training goes further.",
     "train": "stamina"
    }
+  },
+  "Hester": {
+   "gift": {
+    "name": "Hester's black bottle",
+    "uses": 3,
+    "text": "A stoppered black bottle of her own tincture, labelled only with a skull she drew herself. One dose heals a minor injury on the spot, or holds a worse one steady until {{user}} reaches the Medical Centre."
+   },
+   "r10": {
+    "name": "Hester (Rank 10)",
+    "text": "Hester teaches {{user}} the first step of Pulse Reading: a hand on a wrist tells {{user}} whether someone is hurt, feverish or lying about a wound. {{user}}'s injuries treated at the Medical Centre heal a step faster, and there is always a bed for {{user}} on the ward, first in line, whatever the queue."
+   }
+  },
+  "Anselm": {
+   "gift": {
+    "name": "Graywater's mirror-coin",
+    "uses": 1,
+    "text": "A silver coin polished to a mirror, holding one charge of his Reflection. Held up, it sends one spell aimed at {{user}} back the way it came, whatever its strength."
+   },
+   "r10": {
+    "name": "Anselm (Rank 10)",
+    "text": "{{user}} is the one person who understands him. He teaches {{user}} the angle: once per fight, {{user}} can send a spell aimed at them back the way it came."
+   }
+  },
+  "Magnus": {
+   "gift": {
+    "name": "Tarrant's link-pin",
+    "uses": 3,
+    "text": "A small silver pin threaded with one of his lines. Pinned on an ally before a fight, it links {{user}} and that ally for the whole fight: each hears what the other means to do, and either can pass mana to the other."
+   },
+   "r10": {
+    "name": "Magnus (Rank 10)",
+    "text": "Magnus names an acronym after {{user}} and puts it in the Index. Before every competition match, and on request before any arranged fight, he briefs {{user}}: the opponent's magic, role and favourite opening."
+   }
+  },
+  "Dorian": {
+   "gift": {
+    "name": "Pryce's snare-cord",
+    "uses": 3,
+    "text": "A braided cord with one of his bindings set in it. Thrown at an opponent, it wraps them and holds them still for a few heartbeats: long enough to run, or to land a blow."
+   },
+   "r10": {
+    "name": "Dorian (Rank 10)",
+    "text": "Friend price, for real this time: Dorian sells {{user}} anything from his coat at cost, and buys {{user}}'s own crafted work at its full guide value, no haggling."
+   }
+  },
+  "Cedric": {
+   "gift": {
+    "name": "Cedric's kept rose",
+    "uses": 1,
+    "text": "A white rose under his Preservation. Laid on one thing {{user}} owns that is spoiling, cracked or wearing out, it holds that thing exactly as it is: food that never spoils, a cracked tool that cracks no further, until {{user}} lets it go."
+   },
+   "r10": {
+    "name": "Cedric (Rank 10)",
+    "text": "Cedric tells {{user}} how he thinks the end will come, and why, and helps {{user}} prepare for it. Once a month {{user}} can ask him for the history behind anything (a place, a family, an old event), and he finds it in the Archive, however deep it is buried."
+   }
+  },
+  "Anya": {
+   "gift": {
+    "name": "Anya's black ribbon",
+    "uses": 1,
+    "text": "A black silk ribbon with one of her Stillings tied into it. Worn at the wrist, the first time {{user}} would fall in a fight or an accident, {{user}} is held at the edge instead: still conscious, still standing, for one last moment."
+   },
+   "r10": {
+    "name": "Anya (Rank 10)",
+    "text": "Anya tells {{user}} what she saw in her three minutes. And if {{user}} is ever gravely hurt, she comes, and stills {{user}} until help arrives: no grave injury of {{user}}'s grows worse before it is treated."
+   }
+  },
+  "Kotaro": {
+   "gift": {
+    "name": "Kotaro's gourd",
+    "uses": 3,
+    "text": "A little gourd flask with his transmutation in the stopper. Whatever {{user}} pours in comes out as a clean restorative: one swig clears Tired, or eases Exhausted to Tired."
+   },
+   "r10": {
+    "name": "Kotaro (Rank 10)",
+    "text": "Kotaro, sober and serious for once, teaches {{user}} the trick behind his brewing. Once a week, a brew of {{user}}'s that would fail comes out weak instead, and he turns up to every one of {{user}}'s important days, on time."
+   }
+  },
+  "Valentin": {
+   "gift": {
+    "name": "Crane's essence vial",
+    "uses": 3,
+    "text": "A crystal vial of his distilled essence. A drop added to any brew of {{user}}'s lifts the result one step: a weak brew comes out sound, a sound one comes out fine."
+   },
+   "r10": {
+    "name": "Valentin (Rank 10)",
+    "text": "Valentin says, once, in public, that {{user}} is his equal, which he has never said of anyone. He gives {{user}} a key to his private laboratory: brewing there counts as brewing with a master present, whether he is in or not."
+   }
   }
  }
 }

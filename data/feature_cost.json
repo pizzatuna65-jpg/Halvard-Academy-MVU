@@ -5,7 +5,7 @@
   "notices": 98,
   "letters": 202,
   "mystery": 152,
-  "competition": 95,
+  "competition": 149,
   "projects": 152,
   "trip": 69,
   "battle": 72,
@@ -24,8 +24,8 @@
   "reminders": 34,
   "study": 205
  },
- "core_rules": 8870,
- "lore": 4284,
+ "core_rules": 8918,
+ "lore": 4608,
  "price_guide": 5529,
  "live": {
   "class": 40,

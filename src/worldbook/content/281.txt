@@ -1,4 +1,4 @@
-[Regulars — Archive] Castor, Layla.
+[Regulars — Archive] Castor, Layla, Cedric.
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 From campaign Year 2 also: Linus.
 <%_ } _%>

@@ -1,12 +1,12 @@
 [Weekly Timetable]
 Periods: P1 08:00-10:00, P2 10:00-12:00, lunch, P3 13:00-16:00 (long practical block). All three years follow the same slots.
-Each academy teacher teaches one subject to one year level only; a [D] class is that same teacher taking each dorm separately. Dark Magic Defense is the exception: the Doves teach it to every year.
+Magic Theory, History, Etiquette and Potion Crafting have one teacher per year level; Creature Studies and the Practical Magic classes have one teacher each for all three years, and the Doves teach Dark Magic Defense to every year. A [D] class is its teacher taking each dorm separately. Practical Magic is five classes at the same hour, one per combat role (Attack, Support and Control at the Combat Grounds, Defense at the Sparring Pavilion, Healing in the Healing Ward of the Medical Centre); each student attends their own role's class with the rest of their year from every dorm. Now and then a teacher cannot come: that class is a free period, not held and counted against no one.
 [M] = all four dorms together. [D] = taught to each dorm separately.
 
-- Monday: Magic Theory [M] | History [M] | Combat [D] (Combat Grounds)
+- Monday: Magic Theory [M] | History [M] | Practical Magic [M] (Combat Grounds or The Sparring Pavilion or Medical Centre)
 - Tuesday: Dark Magic Defense [D] | Magic Theory [D] | Potion Crafting [M] (Potion Halls)
 - Wednesday: Etiquette [M] | Dark Magic Defense [M] | Creature Studies [M] (Menagerie or Forest)
-- Thursday: History [M] | Magic Theory [D] | Combat [D] (Combat Grounds)
+- Thursday: History [M] | Magic Theory [D] | Practical Magic [M] (Combat Grounds or The Sparring Pavilion or Medical Centre)
 - Friday: Magic Theory [M] | Etiquette [M] | Dark Magic Defense practical [D] (Doves; Combat Grounds or warded seminar room)
 - Saturday: Etiquette [M] | Study Hall (unsupervised, Main Library) | Clubs (club venues)
 

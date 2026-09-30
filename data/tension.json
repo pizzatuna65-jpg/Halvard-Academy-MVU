@@ -177,7 +177,15 @@
   "Nerys": "social",
   "Hadrian": "social",
   "Wren": "withdrawn",
-  "Tsubaki": "confrontational"
+  "Tsubaki": "confrontational",
+  "Hester": "authority",
+  "Anselm": "authority",
+  "Magnus": "authority",
+  "Dorian": "social",
+  "Cedric": "authority",
+  "Anya": "authority",
+  "Kotaro": "withdrawn",
+  "Valentin": "dangerous"
  },
  "peaks": {
   "Krieg": "a Dovecote examination or an arrest on a pretext",
@@ -185,7 +193,8 @@
   "Tristan": "a binding oath or a debt in his registry is called due",
   "Castor": "misfortune follows {{user}}: a curse worked through something taken from them, never traced to him",
   "Dante": "judges {{user}} a wrongdoer: the warmth goes out for good; he gathers proof for the Doves and is merciless once he has it",
-  "Gareth": "files it away behind the smile: {{user}}'s standing is sabotaged (a ruined casting, a lost place), never traceable, while he stays warm to {{user}}'s face"
+  "Gareth": "files it away behind the smile: {{user}}'s standing is sabotaged (a ruined casting, a lost place), never traceable, while he stays warm to {{user}}'s face",
+  "Valentin": "{{user}}'s name comes off his board for good, and every door he can close in potion-making closes: suppliers, recommendations, a word in the right ear at court"
  },
  "overrides": {
   "Etnie": {

@@ -49,9 +49,9 @@ ok(G(tired)['Magic Theory'] === 'C' && G(tired).History === 'B', `Tired during M
 const ill = week(good(S0), { [`${MID} 08:30`]: [{ op: 'replace', path: '/World/Location', value: 'Medical Centre' }] });
 ok(G(ill)['Magic Theory'] === 'C', 'in the Medical Centre at the exam: a make-up, at most C');
 const shift = week(good(S0), { [`${MID + 1} 08:30`]: [{ op: 'insert', path: '/Exam_events/-', value: { Subject: 'History', Shift: 1, Why: 'cited the founding charter' } },
-  { op: 'insert', path: '/Exam_events/-', value: { Subject: 'Combat', Fail: true, Why: 'caught with a charm' } }] });
-ok(G(shift).History === 'A' && G(shift).Combat === 'F', 'the story moves a mark one step (History A) or fails it (Combat F)');
-ok(shift.Commitments['Remedial Combat'] && shift.Commitments['Remedial Combat'].With === 'Gavlan', 'an F brings a remedial with the subject\'s teacher');
+  { op: 'insert', path: '/Exam_events/-', value: { Subject: 'Practical Magic', Fail: true, Why: 'caught with a charm' } }] });
+ok(G(shift).History === 'A' && G(shift)['Practical Magic'] === 'F', 'the story moves a mark one step (History A) or fails it (Practical Magic F)');
+ok(shift.Commitments['Remedial Practical Magic'] && shift.Commitments['Remedial Practical Magic'].With === 'Gavlan', 'an F brings a remedial with the subject\'s teacher');
 ok(JSON.stringify(week(good(S0))) === JSON.stringify(solid), 'replay gives the same marks');
 const wrote = applyPatch(solid, [{ op: 'replace', path: '/Player/Academics/Grades/History', value: 'A' }]);
 ok(G(wrote).History === 'B' && wrote._Log.some(l => /Player\.Academics is written by the engine/.test(l)), 'a direct write to Player.Academics is reverted');
@@ -73,11 +73,11 @@ const late = applyPatch(at(at(r1, 68, '12:00', 'Canteen'), 68, '13:30'), [{ op: 
 ok(G(late).History === 'F', 'removed more than three hours after it began: missed, the F stands');
 
 console.log('Rewards: teachers, Fortune, tutoring');
-const std = set(S0, [['/$eng/study/stand', { Combat: 4, Etiquette: 3 }]]);
-ok(std.$ui.fortune.mods.some(m => /top mark in Combat: .* \+10/.test(m)) && !std.$ui.fortune.mods.some(m => /top mark in Etiquette/.test(m)), 'an A adds +10 to Fortune in its field; a B does not');
-const tut = x => applyPatch(x, [0, 1, 2].map(() => ({ op: 'insert', path: '/Tutoring/-', value: { Subject: 'Combat', Student: 'Aiden' } })));
+const std = set(S0, [['/$eng/study/stand', { 'Practical Magic': 4, Etiquette: 3 }]]);
+ok(std.$ui.fortune.mods.some(m => /top mark in Practical Magic: .* \+10/.test(m)) && !std.$ui.fortune.mods.some(m => /top mark in Etiquette/.test(m)), 'an A adds +10 to Fortune in its field; a B does not');
+const tut = x => applyPatch(x, [0, 1, 2].map(() => ({ op: 'insert', path: '/Tutoring/-', value: { Subject: 'Practical Magic', Student: 'Aiden' } })));
 const paid = tut(std);
-ok(paid.Player.Wallet.Points - std.Player.Wallet.Points === 80 && paid.Player.Wallet.Transactions.includes('+40 tutoring (Combat, Aiden)'), 'tutoring with an A: 40 points a session, two a week');
+ok(paid.Player.Wallet.Points - std.Player.Wallet.Points === 80 && paid.Player.Wallet.Transactions.includes('+40 tutoring (Practical Magic, Aiden)'), 'tutoring with an A: 40 points a session, two a week');
 ok(paid.Player.Profile.Reputation.$xp.Student - std.Player.Profile.Reputation.$xp.Student === 4, 'each paid session is a Notice Board request (Student +2)');
 const noA = applyPatch(std, [{ op: 'insert', path: '/Tutoring/-', value: { Subject: 'History' } }]);
 ok(noA.Player.Wallet.Points === std.Player.Wallet.Points && noA._Log.some(l => /needs an A/.test(l)), 'no A, no pay');
@@ -91,7 +91,7 @@ const fc = S => at(S, MID - 1, '21:00').$ui.grades.marks;
 ok(fc(perk(S0, 'Layla')).History === 'A', "Layla (Rank 10): History at least A");
 ok(fc(perk(hours(S0, 18), 'Gareth'))['Magic Theory'] === 'B' && fc(hours(S0, 18))['Magic Theory'] === 'C', "Gareth (Rank 10): preparation one tier up (solid -> excellent: C -> B)");
 const aly = fc(perk(S0, 'Alyssa'));
-ok(aly['Potion Crafting'] === 'B' && aly.Combat === 'C', "Alyssa (Rank 10): one practical subject +1");
+ok(aly['Potion Crafting'] === 'B' && aly['Practical Magic'] === 'C', "Alyssa (Rank 10): one practical subject +1");
 const drt = perk(good(S0), 'Mimosa', "Mimosa's focus draught");
 const focus = week(drt, { [`${MID} 08:30`]: [{ op: 'replace', path: '/Player/Vitals/Stamina', value: 50 }, { op: 'insert', path: '/Perk_use/-', value: "Mimosa's focus draught" }] });
 ok(G(focus)['Magic Theory'] === 'B' && !focus._Perks["Mimosa's focus draught"], "Mimosa's focus draught on the day: no penalty for being Tired, and it is spent");
@@ -99,7 +99,7 @@ ok(G(focus)['Magic Theory'] === 'B' && !focus._Perks["Mimosa's focus draught"], 
 console.log('Training, assignments, finals and the dorm rank');
 let tr = S0;
 for (let i = 0; i < 6; i++) tr = applyPatch(tr, [{ op: 'insert', path: '/Training/-', value: { Track: 'mana' } }]);
-ok(tr.$eng.study.train === undefined && fc(hours(tr, 18)).Combat === fc(hours(S0, 18)).Combat, '1.30.0: training no longer lifts the Combat mark (it raises Prowess)');
+ok(tr.$eng.study.train === undefined && fc(hours(tr, 18))['Practical Magic'] === fc(hours(S0, 18))['Practical Magic'], '1.30.0: training no longer lifts the Practical Magic mark (it raises Prowess)');
 const asg = applyPatch(at(Sb, 49, '09:00', 'Canteen', [{ op: 'insert', path: '/Commitments/Potion essay', value: { Desc: 'Potion Crafting essay', Due: 'M2 W4 Fri 18:00', Type: 'assignment' } }]), [{ op: 'remove', path: '/Commitments/Potion essay' }]);
 ok(Math.round(asg.$eng.study.mins) === 45, 'an assignment done on time: +45 minutes of study');
 const fin = at(at(solid, 111, '20:00', 'Canteen'), 116, '12:00', 'Canteen');

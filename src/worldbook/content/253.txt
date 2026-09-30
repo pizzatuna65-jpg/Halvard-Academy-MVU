@@ -1,5 +1,5 @@
 [Combat Roles]
-Five roles used in Combat Class, exams and team competitions. A student may fill more than one.
+Five roles used in Practical Magic (one class per role), exams and team competitions. A student may fill more than one, and then attends the class of the role they want most.
 - Attack: deals the damage and finishes fights.
 - Defense: shields, blocks and holds the line for the team.
 - Healing: keeps allies standing mid-fight.

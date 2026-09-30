@@ -23,7 +23,7 @@ The greeting carries the **bracelet**, a status bar shown above the text of the 
 
 The Builder walks through seven steps: a sample to start from, identity, power, techniques, pacts, hidden magic, and a review. A few choices matter later:
 
-- **Identity** has pronouns (a list, or your own), a **personality**, and an optional **birthday** in the academy calendar. The birthday goes on your calendar and the day plays out as your birthday. **Combat roles** are not chosen here: the Combat teacher assigns yours at your first Combat class, from how you fight.
+- **Identity** has pronouns (a list, or your own), a **personality**, and an optional **birthday** in the academy calendar. The birthday goes on your calendar and the day plays out as your birthday. **Combat roles** are not chosen here: the five role teachers assign yours at your first Practical Magic class (the old Combat class), from how you fight. With two roles you attend the class you want most; now and then a teacher cannot come and the class becomes a free period.
 - **Mana capacity** is a slider (50 to 1,000; type a number for more). It is capacity, not a rank: nobody can read it off you, so a big pool can live a quiet life. Overpowered is allowed; the world reacts to what you show, never by quietly weakening you.
 - **Specialties**: the subtype lists are suggestions. Add your own subtype and say whether it is a forbidden art. A technique with a subtype of your own asks the same question.
 - **Techniques** start with your specialty for their type as the subtype (change it freely). **Apply technique** folds a finished one into a single line; tap it to edit. They have fixed costs: per use, sustained (upkeep per in-world minute), or hybrid. The engine charges them; the narrator never guesses.

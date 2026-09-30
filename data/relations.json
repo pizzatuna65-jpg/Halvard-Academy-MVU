@@ -27,6 +27,19 @@
  },
  {
   "from": "Aiden",
+  "to": "Dorian",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Sends customers to Professor Dorian Pryce for a cut; the one teacher at Halvard he considers a colleague."
+  ],
+  "visibility": "rank:6",
+  "via": "Aiden"
+ },
+ {
+  "from": "Aiden",
   "to": "Irene",
   "types": [
    "rivals"
@@ -47,6 +60,19 @@
   "type": "friends",
   "notes": [
    "Gets Linus Tallyworth's column a day before it runs and sets his odds by it; when it is wrong, he lets Linus take the blame."
+  ],
+  "visibility": "rank:6",
+  "via": "Aiden"
+ },
+ {
+  "from": "Aiden",
+  "to": "Magnus",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Runs a book on how many acronyms Professor Magnus Tarrant uses per lesson, and has lost money on it every week for a term without working out how."
   ],
   "visibility": "rank:6",
   "via": "Aiden"
@@ -290,6 +316,150 @@
   ],
   "visibility": "rank:5",
   "via": "Alyssa"
+ },
+ {
+  "from": "Anselm",
+  "to": "Althair",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Dislikes Vice Headmaster Althair Veyne, and has explained why to him at length; Althair enjoyed every minute and understood none of it."
+  ],
+  "visibility": "rank:6",
+  "via": "Anselm"
+ },
+ {
+  "from": "Anselm",
+  "to": "Baelin",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "After the breach Headmaster Baelin Kalvor wrote to him, and he came.",
+   "Headmaster Baelin Kalvor hired him after the breach and claims to understand about a third of what he says."
+  ],
+  "visibility": "rank:6",
+  "via": "Anselm"
+ },
+ {
+  "from": "Anselm",
+  "to": "Ezrel",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Ezrel Marionne is the one colleague who listens to a whole sentence without blinking; Anselm takes this for understanding."
+  ],
+  "visibility": "rank:6",
+  "via": "Anselm"
+ },
+ {
+  "from": "Anselm",
+  "to": "Gavlan",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Gavlan Haverton shares the Combat Grounds with him and says \"just tell them to block\"."
+  ],
+  "visibility": "rank:6",
+  "via": "Anselm"
+ },
+ {
+  "from": "Anselm",
+  "to": "Irene",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Irene Chanare is his best Defense student: she takes every lecture down word for word, has never understood a sentence of it, and copied his angles until her barriers became the best in her year."
+  ],
+  "visibility": "public",
+  "via": "Anselm"
+ },
+ {
+  "from": "Anselm",
+  "to": "Layla",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Layla Palegleam and he talk for hours, two monologues side by side, and both leave delighted."
+  ],
+  "visibility": "rank:6",
+  "via": "Anselm"
+ },
+ {
+  "from": "Anya",
+  "to": "Althair",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Dislikes Vice Headmaster Althair Veyne, the only person who has ever asked her, cheerfully and in public, what she saw in her three minutes, as if it were a party game."
+  ],
+  "visibility": "rank:6",
+  "via": "Anya"
+ },
+ {
+  "from": "Anya",
+  "to": "Cedric",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Cedric Amor Fay and she take tea on Tuesdays and talk about endings, his of kingdoms, hers of people."
+  ],
+  "visibility": "rank:6",
+  "via": "Anya"
+ },
+ {
+  "from": "Anya",
+  "to": "Etnie",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "She has never once asked Etnie about the breach, and never will."
+  ],
+  "visibility": "rank:6",
+  "via": "Anya"
+ },
+ {
+  "from": "Anya",
+  "to": "Ottavio",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Ottavio Bastiani, who teaches third-year Etiquette, and she understand each other without speaking, which suits them both."
+  ],
+  "visibility": "public",
+  "via": "Anya"
+ },
+ {
+  "from": "Anya",
+  "to": "Tristan",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Tristan Aurelle lets her read the Cathedral's burial registers; both enjoy the conversation more than they admit."
+  ],
+  "visibility": "rank:6",
+  "via": "Anya"
  },
  {
   "from": "Baelin",
@@ -592,6 +762,36 @@
  },
  {
   "from": "Caine",
+  "to": "Anselm",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Anya",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
   "to": "Baelin",
   "types": [
    "dislike"
@@ -695,6 +895,21 @@
  },
  {
   "from": "Caine",
+  "to": "Cedric",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
   "to": "Dante",
   "types": [
    "dislike"
@@ -711,6 +926,21 @@
  {
   "from": "Caine",
   "to": "Dex",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Dorian",
   "types": [
    "dislike"
   ],
@@ -828,6 +1058,21 @@
  },
  {
   "from": "Caine",
+  "to": "Hester",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
   "to": "Idris",
   "types": [
    "dislike"
@@ -889,6 +1134,21 @@
  {
   "from": "Caine",
   "to": "Kira",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Kotaro",
   "types": [
    "dislike"
   ],
@@ -978,6 +1238,21 @@
  {
   "from": "Caine",
   "to": "Lucius",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Magnus",
   "types": [
    "dislike"
   ],
@@ -1277,6 +1552,21 @@
  },
  {
   "from": "Caine",
+  "to": "Valentin",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
   "to": "Vallie",
   "types": [
    "dislike"
@@ -1401,6 +1691,19 @@
   ],
   "visibility": "rank:6",
   "via": "Caine"
+ },
+ {
+  "from": "Caralynn",
+  "to": "Hester",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Caralynn Veyturone screamed once, in her first week, and Hester still thanks her for it."
+  ],
+  "visibility": "rank:6",
+  "via": "Hester"
  },
  {
   "from": "Caralynn",
@@ -1645,6 +1948,19 @@
  },
  {
   "from": "Caspian",
+  "to": "Magnus",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Professor Magnus Tarrant teaches him Support and calls his family motto a ULS; Caspian has started, against his will, to think in acronyms."
+  ],
+  "visibility": "public",
+  "via": "Caspian"
+ },
+ {
+  "from": "Caspian",
   "to": "Milena",
   "types": [
    "respect"
@@ -1696,6 +2012,85 @@
    "dislike"
   ],
   "type": "dislike"
+ },
+ {
+  "from": "Cedric",
+  "to": "Althair",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Dislikes Vice Headmaster Althair Veyne, who is exactly the kind of charming man who appears in the last chapter of every kingdom."
+  ],
+  "visibility": "rank:6",
+  "via": "Cedric"
+ },
+ {
+  "from": "Cedric",
+  "to": "Anselm",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Anselm Graywater and he can talk about endings and thresholds for an afternoon without either needing the other to agree."
+  ],
+  "visibility": "rank:6",
+  "via": "Cedric"
+ },
+ {
+  "from": "Cedric",
+  "to": "Baelin",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Headmaster Baelin Kalvor, who teaches second-year History, has never once argued with his view of the future; Cedric has noticed."
+  ],
+  "visibility": "rank:6",
+  "via": "Cedric"
+ },
+ {
+  "from": "Cedric",
+  "to": "Gavlan",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Gavlan Haverton has seen a kingdom nearly end, and they sit together without talking."
+  ],
+  "visibility": "rank:6",
+  "via": "Cedric"
+ },
+ {
+  "from": "Cedric",
+  "to": "Irene",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Irene Chanare says his closing line is the only thing that lets her sleep before exams.",
+   "Example: \"Kingdoms fall, Miss Chanare."
+  ],
+  "visibility": "public",
+  "via": "Cedric"
+ },
+ {
+  "from": "Cedric",
+  "to": "Layla",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Layla Palegleam, who teaches first-year History, calls him \"Doom\" and brings him cake; he preserves her oldest Archive documents for her."
+  ],
+  "visibility": "public",
+  "via": "Cedric"
  },
  {
   "from": "Dante",
@@ -1765,6 +2160,123 @@
   "rule": "doves",
   "rule_label": "The Dovecote",
   "via": "Dex"
+ },
+ {
+  "from": "Dorian",
+  "to": "Aiden",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Aiden Ruzzo sends him customers for a cut; they understand each other perfectly."
+  ],
+  "visibility": "rank:6",
+  "via": "Dorian"
+ },
+ {
+  "from": "Dorian",
+  "to": "Althair",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Dislikes Vice Headmaster Althair Veyne, who buys something every week and pays in favours, and Dorian cannot tell whether he is winning."
+  ],
+  "visibility": "rank:6",
+  "via": "Dorian"
+ },
+ {
+  "from": "Dorian",
+  "to": "Baelin",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Headmaster Baelin Kalvor tolerates the trade because the goods are sound and Dorian pays for the Control class's equipment out of his profits."
+  ],
+  "visibility": "rank:6",
+  "via": "Dorian"
+ },
+ {
+  "from": "Dorian",
+  "to": "Hadrian",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Hadrian Quelloris is his best customer: warding amulets, vigour tonics, anything that might make him last longer."
+  ],
+  "visibility": "rank:6",
+  "via": "Dorian"
+ },
+ {
+  "from": "Dorian",
+  "to": "Kotaro",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Dorian Pryce sells him hangover cures at full price."
+  ],
+  "visibility": "rank:6",
+  "via": "Kotaro"
+ },
+ {
+  "from": "Dorian",
+  "to": "Magnus",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Magnus Tarrant has calculated his margins at forty percent; Dorian says twelve; both are lying."
+  ],
+  "visibility": "rank:6",
+  "via": "Dorian"
+ },
+ {
+  "from": "Dorian",
+  "to": "Nerys",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Nerys Silvarenne is the only customer who has ever out-haggled him, and she is always broke; he is fascinated."
+  ],
+  "visibility": "rank:6",
+  "via": "Dorian"
+ },
+ {
+  "from": "Dorian",
+  "to": "Tilly",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Tilly Marsh is his best Control student; her vines do what his cords do, which he finds commercially alarming."
+  ],
+  "visibility": "public",
+  "via": "Dorian"
+ },
+ {
+  "from": "Dorian",
+  "to": "Vera",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Vera Pulsar knows his goods are good and wants to know how; he wants to buy her designs cheap."
+  ],
+  "visibility": "rank:6",
+  "via": "Dorian"
  },
  {
   "from": "Etnie",
@@ -1872,6 +2384,19 @@
   ],
   "visibility": "rank:5",
   "via": "Florian"
+ },
+ {
+  "from": "Florian",
+  "to": "Kotaro",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Florian Villeneuve sends him a fine bottle every term to be marked on talent rather than attendance; it works, and Florian is annoyed that it works."
+  ],
+  "visibility": "rank:6",
+  "via": "Kotaro"
  },
  {
   "from": "Florian",
@@ -2341,6 +2866,217 @@
   "via": "Hadrian"
  },
  {
+  "from": "Hester",
+  "to": "Althair",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Dislikes Vice Headmaster Althair Veyne: she can feel his Charm in a patient's pulse, has told him to keep it off her ward, and checks every wrist after he visits."
+  ],
+  "visibility": "rank:6",
+  "via": "Hester"
+ },
+ {
+  "from": "Hester",
+  "to": "Anselm",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Anselm Graywater once answered one of her ghost stories by explaining what a doorway is; she has avoided him after dark ever since."
+  ],
+  "visibility": "rank:6",
+  "via": "Hester"
+ },
+ {
+  "from": "Hester",
+  "to": "Anselm",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Hester Mortlake told him a ghost story; he explained what a doorway is, and she has avoided him after dark ever since."
+  ],
+  "visibility": "rank:6",
+  "via": "Anselm"
+ },
+ {
+  "from": "Hester",
+  "to": "Anya",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Hester Mortlake does not let visitors near her gravest patients, and makes one exception: the dying ask for Anya, and she sits with them."
+  ],
+  "visibility": "rank:6",
+  "via": "Anya"
+ },
+ {
+  "from": "Hester",
+  "to": "Baelin",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "She trained as a healer in the river towns and came to Halvard at twenty-four as a ward nurse, because Headmaster Baelin Kalvor wanted someone who would not flinch.",
+   "When the old Head Nurse resigned after it, Baelin gave her the post; she was twenty-eight.",
+   "Headmaster Baelin Kalvor hired her, made her Head Nurse after the breach, and trusts her with everything the Medical Centre sees."
+  ],
+  "visibility": "rank:6",
+  "via": "Hester"
+ },
+ {
+  "from": "Hester",
+  "to": "Cedric",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Hester Mortlake counts him her favourite audience: he hears every ghost story as a perfectly reasonable forecast."
+  ],
+  "visibility": "rank:6",
+  "via": "Cedric"
+ },
+ {
+  "from": "Hester",
+  "to": "Dorian",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hester Mortlake confiscates his tonics from her ward; bandages for the Medical Centre are the one thing he sells at cost."
+  ],
+  "visibility": "rank:6",
+  "via": "Dorian"
+ },
+ {
+  "from": "Hester",
+  "to": "Gavlan",
+  "types": [
+   "protective"
+  ],
+  "type": "protective",
+  "notes": [
+   "Knows about Gavlan Haverton's nightmares from the sleeping draughts she mixes him, and has never said a word."
+  ],
+  "visibility": "rank:6",
+  "via": "Hester"
+ },
+ {
+  "from": "Hester",
+  "to": "Kotaro",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hester Mortlake confiscates his flask whenever he turns up on her ward; he always has another."
+  ],
+  "visibility": "rank:6",
+  "via": "Kotaro"
+ },
+ {
+  "from": "Hester",
+  "to": "Krieg",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "After the breach the Doves questioned students who were still on her ward; she has not forgiven Krieg Valforth for it and is exquisitely polite to him."
+  ],
+  "visibility": "rank:6",
+  "via": "Hester"
+ },
+ {
+  "from": "Hester",
+  "to": "Layla",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "She and Layla Palegleam never tell the Night Student, and never discuss why."
+  ],
+  "visibility": "rank:6",
+  "via": "Hester"
+ },
+ {
+  "from": "Hester",
+  "to": "Mimosa",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Mimosa Linden supplies her apothecary and can sit with her for an hour, because Hester talks enough for two and expects no answers."
+  ],
+  "visibility": "rank:6",
+  "via": "Hester"
+ },
+ {
+  "from": "Hester",
+  "to": "Percival",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Percival Applethorne is the most gifted healer in his year and terrified of ghosts, which makes him her favourite pupil: his voice shakes through every story and his hands never do."
+  ],
+  "visibility": "public",
+  "via": "Hester"
+ },
+ {
+  "from": "Hester",
+  "to": "Sophia",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Get one scream, just one, out of Sophia Helfin.",
+   "Sophia Helfin has mocked every story she has ever told; the contest is in its third year."
+  ],
+  "visibility": "rank:5",
+  "via": "Hester"
+ },
+ {
+  "from": "Hester",
+  "to": "Tilly",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Tilly Marsh is her most frequent patient and her best audience; the two trade stories across the ward."
+  ],
+  "visibility": "rank:6",
+  "via": "Hester"
+ },
+ {
+  "from": "Hester",
+  "to": "Vallie",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Vallie Goredust brings her the Expedition's casualties and says \"rub some dirt on it\"; they have the same argument every year."
+  ],
+  "visibility": "rank:6",
+  "via": "Hester"
+ },
+ {
   "from": "Idris",
   "to": "Althair",
   "notes": [
@@ -2473,6 +3209,19 @@
  },
  {
   "from": "Irene",
+  "to": "Anselm",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Professor Anselm Graywater teaches her Defense; she has taken down every lecture word for word since he came and has not understood one, and her barriers are the best in her year because she watched his hands."
+  ],
+  "visibility": "public",
+  "via": "Irene"
+ },
+ {
+  "from": "Irene",
   "to": "Bobby",
   "types": [
    "wary"
@@ -2509,6 +3258,19 @@
    "When students start getting badly hurt around her she freezes, and only Caspian Riwalo's hand on her shoulder has ever brought her back."
   ],
   "visibility": "rank:5",
+  "via": "Irene"
+ },
+ {
+  "from": "Irene",
+  "to": "Cedric",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Professor Cedric Amor Fay's closing line, that she may not wake up tomorrow but can sleep soundly knowing she did a good job today, is the only thing that lets her sleep before exams."
+  ],
+  "visibility": "public",
   "via": "Irene"
  },
  {
@@ -2670,6 +3432,71 @@
   "via": "Kanae"
  },
  {
+  "from": "Kotaro",
+  "to": "Althair",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Dislikes Vice Headmaster Althair Veyne, who keeps buying him drinks; he has noticed that he says things he should not after them."
+  ],
+  "visibility": "rank:6",
+  "via": "Kotaro"
+ },
+ {
+  "from": "Kotaro",
+  "to": "Gavlan",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Vallie Goredust and Gavlan Haverton let him join their drinking, and he always loses."
+  ],
+  "visibility": "rank:6",
+  "via": "Kotaro"
+ },
+ {
+  "from": "Kotaro",
+  "to": "Mimosa",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Mimosa Linden, who teaches first-year Potion Crafting, is terrified of almost everyone and not of him, since nobody expects anything of him; he covers for her when she hides, and she covers for him when he forgets."
+  ],
+  "visibility": "public",
+  "via": "Kotaro"
+ },
+ {
+  "from": "Kotaro",
+  "to": "Valentin",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Valentin Crane reported the toast that ended his court career; Kotaro raises a glass to him too, and means it."
+  ],
+  "visibility": "rank:6",
+  "via": "Kotaro"
+ },
+ {
+  "from": "Kotaro",
+  "to": "Vallie",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Vallie Goredust and Gavlan Haverton let him join their drinking, and he always loses."
+  ],
+  "visibility": "rank:6",
+  "via": "Kotaro"
+ },
+ {
   "from": "Krieg",
   "to": "Althair",
   "types": [
@@ -2698,6 +3525,32 @@
  },
  {
   "from": "Krieg",
+  "to": "Anselm",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Krieg Valforth dismisses him as harmless noise."
+  ],
+  "visibility": "rank:6",
+  "via": "Anselm"
+ },
+ {
+  "from": "Krieg",
+  "to": "Anya",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Krieg Valforth keeps a file on her, since her interests brush against forbidden magic; she invites him to tea every term, and he has never come."
+  ],
+  "visibility": "rank:6",
+  "via": "Anya"
+ },
+ {
+  "from": "Krieg",
   "to": "Baelin",
   "types": [
    "dislike"
@@ -2708,6 +3561,33 @@
   ],
   "visibility": "rank:5",
   "via": "Krieg"
+ },
+ {
+  "from": "Krieg",
+  "to": "Cedric",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Krieg Valforth attended one of his lectures and has not come back."
+  ],
+  "visibility": "rank:6",
+  "via": "Cedric"
+ },
+ {
+  "from": "Krieg",
+  "to": "Dorian",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Sell something to Krieg Valforth.",
+   "Krieg Valforth has checked it four times."
+  ],
+  "visibility": "rank:5",
+  "via": "Dorian"
  },
  {
   "from": "Krieg",
@@ -2748,6 +3628,20 @@
   ],
   "visibility": "rank:7",
   "via": "Krieg"
+ },
+ {
+  "from": "Krieg",
+  "to": "Kotaro",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Krieg Valforth despises him.",
+   "He raises a toast to Krieg whenever he sees him."
+  ],
+  "visibility": "rank:6",
+  "via": "Kotaro"
  },
  {
   "from": "Krieg",
@@ -2894,6 +3788,45 @@
   ],
   "visibility": "rank:6",
   "via": "Althair"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Anselm",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Kuroo Varnell provoked him once and received a forty-minute answer; he now provokes him only when he has an afternoon to lose."
+  ],
+  "visibility": "rank:6",
+  "via": "Anselm"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Anya",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Provokes Anya Zeth, who teaches second-year Etiquette, at every opportunity; she thanks him for each one, smiling, and he has not yet worked out how to lose gracefully."
+  ],
+  "visibility": "public",
+  "via": "Kuroo"
+ },
+ {
+  "from": "Kuroo",
+  "to": "Anya",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Kuroo Varnell, who teaches first-year Etiquette, provokes her constantly; it slides off her smile like rain off a headstone, and he keeps trying."
+  ],
+  "visibility": "public",
+  "via": "Anya"
  },
  {
   "from": "Kuroo",
@@ -3136,6 +4069,19 @@
    "Trades campus gossip with Bobby Becket over Canteen lunches and never asks where his comes from."
   ],
   "visibility": "rank:5",
+  "via": "Layla"
+ },
+ {
+  "from": "Layla",
+  "to": "Cedric",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Calls Cedric Amor Fay, who teaches third-year History, \"Doom\", and brings him cake to prove the world has not ended yet."
+  ],
+  "visibility": "public",
   "via": "Layla"
  },
  {
@@ -3575,6 +4521,125 @@
   "via": "Linus"
  },
  {
+  "from": "Magnus",
+  "to": "Aiden",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Find out who keeps betting against him in Aiden Ruzzo's book.",
+   "Aiden Ruzzo runs a book on how many acronyms he uses per lesson; Magnus bets through a second-year he has never named and steers the count.",
+   "Ruzzo, was a textbook SLOB: Spell Launched Out of Bounds."
+  ],
+  "visibility": "rank:5",
+  "via": "Magnus"
+ },
+ {
+  "from": "Magnus",
+  "to": "Althair",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Dislikes Vice Headmaster Althair Veyne, whose Luck ruins perfectly good plans."
+  ],
+  "visibility": "rank:6",
+  "via": "Magnus"
+ },
+ {
+  "from": "Magnus",
+  "to": "Anselm",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Under the name \"Q.\" he is Anselm Graywater's correspondence chess opponent, two floors away; Anselm does not know, and is losing."
+  ],
+  "visibility": "rank:6",
+  "via": "Magnus"
+ },
+ {
+  "from": "Magnus",
+  "to": "Baelin",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Headmaster Baelin Kalvor lets him write the scouting reports and reads every page."
+  ],
+  "visibility": "rank:6",
+  "via": "Magnus"
+ },
+ {
+  "from": "Magnus",
+  "to": "Caspian",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Caspian Riwalo is his best Support student and an advisor in training, which Magnus respects; he calls the Riwalo motto \"a perfectly serviceable ULS\"."
+  ],
+  "visibility": "public",
+  "via": "Magnus"
+ },
+ {
+  "from": "Magnus",
+  "to": "Gavlan",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Gavlan Haverton takes his scouting reports to the Kingdom Competition and reads the first page."
+  ],
+  "visibility": "rank:6",
+  "via": "Magnus"
+ },
+ {
+  "from": "Magnus",
+  "to": "Krieg",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Krieg Valforth keeps a file on him; his on Krieg is thicker."
+  ],
+  "visibility": "rank:6",
+  "via": "Magnus"
+ },
+ {
+  "from": "Magnus",
+  "to": "Kuroo",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Kuroo Varnell and he have been trading favours for years, and dispute the score."
+  ],
+  "visibility": "rank:6",
+  "via": "Magnus"
+ },
+ {
+  "from": "Magnus",
+  "to": "Valentin",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Magnus Tarrant keeps a file on him and has told him so."
+  ],
+  "visibility": "rank:6",
+  "via": "Valentin"
+ },
+ {
   "from": "Maple",
   "to": "Althair",
   "notes": [
@@ -3901,6 +4966,19 @@
  },
  {
   "from": "Mimosa",
+  "to": "Kotaro",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Kotaro Hanamura, who teaches second-year Potion Crafting, is the one colleague she is not afraid of; she covers for him when he forgets a lesson."
+  ],
+  "visibility": "public",
+  "via": "Mimosa"
+ },
+ {
+  "from": "Mimosa",
   "to": "Krieg",
   "types": [
    "respect"
@@ -3957,6 +5035,19 @@
   ],
   "visibility": "public",
   "via": "Royhan"
+ },
+ {
+  "from": "Mimosa",
+  "to": "Valentin",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Valentin Crane, who teaches third-year Potion Crafting, is relentlessly charming to her, and she hides from him more than from anyone else on staff."
+  ],
+  "visibility": "public",
+  "via": "Mimosa"
  },
  {
   "from": "Nerys",
@@ -4394,6 +5485,19 @@
  },
  {
   "from": "Percival",
+  "to": "Hester",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Nurse Hester Mortlake teaches his Healing class and tells him a ghost story every lesson; he has never once managed not to scream, and has never once dropped a bandage."
+  ],
+  "visibility": "public",
+  "via": "Percival"
+ },
+ {
+  "from": "Percival",
   "to": "Idris",
   "types": [
    "softspot"
@@ -4637,6 +5741,19 @@
  },
  {
   "from": "Royhan",
+  "to": "Dorian",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Royhan Filanoman buys reagents from him at a fair price and is sure it is a trick."
+  ],
+  "visibility": "rank:6",
+  "via": "Dorian"
+ },
+ {
+  "from": "Royhan",
   "to": "Idris",
   "types": [
    "friends"
@@ -4652,6 +5769,19 @@
  },
  {
   "from": "Royhan",
+  "to": "Kotaro",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Royhan Filanoman has brewed the demonstration batch for his class more often than he has."
+  ],
+  "visibility": "rank:6",
+  "via": "Kotaro"
+ },
+ {
+  "from": "Royhan",
   "to": "Milena",
   "types": [
    "friends"
@@ -4663,6 +5793,19 @@
    "The Dragonchess games with Milena are the one reason he stays late near the Dovecote."
   ],
   "visibility": "rank:5",
+  "via": "Royhan"
+ },
+ {
+  "from": "Royhan",
+  "to": "Valentin",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Professor Valentin Crane has spent a year trying to lure him out of the Alchemy Circle; he refuses every time, and brews better for the spite."
+  ],
+  "visibility": "public",
   "via": "Royhan"
  },
  {
@@ -4952,6 +6095,19 @@
  },
  {
   "from": "Sophia",
+  "to": "Cedric",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Sophia Helfin likes him because he never pretends."
+  ],
+  "visibility": "rank:6",
+  "via": "Cedric"
+ },
+ {
+  "from": "Sophia",
   "to": "Gareth",
   "types": [
    "rivals"
@@ -4963,6 +6119,19 @@
    "Gareth Valkaryn, her dorm-mate, is her obsession and the one person she cannot beat; his perfect manners make it worse."
   ],
   "visibility": "rank:5",
+  "via": "Sophia"
+ },
+ {
+  "from": "Sophia",
+  "to": "Hester",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Nurse Hester Mortlake has been trying to make her scream for three years."
+  ],
+  "visibility": "rank:6",
   "via": "Sophia"
  },
  {
@@ -5087,6 +6256,45 @@
  },
  {
   "from": "Tilly",
+  "to": "Anya",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Asked Professor Anya Zeth whether ghosts are real."
+  ],
+  "visibility": "rank:6",
+  "via": "Tilly"
+ },
+ {
+  "from": "Tilly",
+  "to": "Anya",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Tilly Marsh asked her once whether ghosts are real; Anya answered seriously and precisely, still smiling, and it frightened Tilly more than any story ever has."
+  ],
+  "visibility": "rank:6",
+  "via": "Anya"
+ },
+ {
+  "from": "Tilly",
+  "to": "Dorian",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Professor Dorian Pryce teaches her Control and tries to sell her plant food every lesson; she has bought it twice, and it worked."
+  ],
+  "visibility": "public",
+  "via": "Tilly"
+ },
+ {
+  "from": "Tilly",
   "to": "Ezrel",
   "types": [
    "wary"
@@ -5110,6 +6318,19 @@
   ],
   "visibility": "rank:5",
   "via": "Ezrel"
+ },
+ {
+  "from": "Tilly",
+  "to": "Hester",
+  "types": [
+   "friends"
+  ],
+  "type": "friends",
+  "notes": [
+   "Swaps ghost stories with Nurse Hester Mortlake whenever she lands on the ward, which is often; Hester's are always better, and Tilly cannot find a single one in the Archive."
+  ],
+  "visibility": "rank:6",
+  "via": "Tilly"
  },
  {
   "from": "Tilly",
@@ -5400,6 +6621,19 @@
  },
  {
   "from": "Tsubaki",
+  "to": "Kotaro",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Tsubaki Hoshikage, from Yozakura too, found him asleep in the storeroom in her first week and has not respected him since."
+  ],
+  "visibility": "rank:6",
+  "via": "Kotaro"
+ },
+ {
+  "from": "Tsubaki",
   "to": "Linus",
   "types": [
    "rivals"
@@ -5476,6 +6710,127 @@
   ],
   "visibility": "rank:6",
   "via": "Tsubaki"
+ },
+ {
+  "from": "Valentin",
+  "to": "Althair",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Dislikes Vice Headmaster Althair Veyne, who wins every room without trying, which Valentin considers cheating."
+  ],
+  "visibility": "rank:6",
+  "via": "Valentin"
+ },
+ {
+  "from": "Valentin",
+  "to": "Baelin",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Headmaster Baelin Kalvor keeps him for his results and watches his board."
+  ],
+  "visibility": "rank:6",
+  "via": "Valentin"
+ },
+ {
+  "from": "Valentin",
+  "to": "Gareth",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Gareth Valkaryn tops the board most weeks, and Valentin calls him \"the only student who understands ambition\"."
+  ],
+  "visibility": "rank:6",
+  "via": "Valentin"
+ },
+ {
+  "from": "Valentin",
+  "to": "Kotaro",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "At court he was the apprentice who reported Kotaro Hanamura's drunken toast.",
+   "Kotaro Hanamura, whose court career he ended, bears him no grudge at all, and that bothers Valentin far more than hatred would."
+  ],
+  "visibility": "rank:6",
+  "via": "Valentin"
+ },
+ {
+  "from": "Valentin",
+  "to": "Krieg",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Cultivates Krieg Valforth, because the Doves report to the crown, and the crown hands out chairs."
+  ],
+  "visibility": "rank:6",
+  "via": "Valentin"
+ },
+ {
+  "from": "Valentin",
+  "to": "Kuroo",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Kuroo Varnell and he recognise a fellow manipulator on sight and are scrupulously polite."
+  ],
+  "visibility": "rank:6",
+  "via": "Valentin"
+ },
+ {
+  "from": "Valentin",
+  "to": "Mimosa",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Mimosa Linden, the shy youngest teacher, has never published a thing, and he suspects she is the better alchemist; it is the one thought that keeps him up at night, so he is exquisitely, relentlessly charming to her, and she hides from him.",
+   "Royhan Filanoman is the best alchemist in his class, and Valentin has spent a year trying to lure him out of Mimosa's Alchemy Circle; Royhan refuses, which only makes Valentin want him more.",
+   "Envy, which he would never admit, shows only around Mimosa: he talks faster."
+  ],
+  "visibility": "public",
+  "via": "Valentin"
+ },
+ {
+  "from": "Valentin",
+  "to": "Royhan",
+  "types": [
+   "softspot"
+  ],
+  "type": "softspot",
+  "notes": [
+   "Royhan Filanoman is the best alchemist in his class, and Valentin has spent a year trying to lure him out of Mimosa's Alchemy Circle; Royhan refuses, which only makes Valentin want him more.",
+   "Filanoman."
+  ],
+  "visibility": "public",
+  "via": "Valentin"
+ },
+ {
+  "from": "Valentin",
+  "to": "Sophia",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Sophia Helfin tops it the other weeks and does not care, which he cannot forgive."
+  ],
+  "visibility": "rank:6",
+  "via": "Valentin"
  },
  {
   "from": "Vallie",

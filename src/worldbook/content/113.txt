@@ -1,6 +1,6 @@
 <%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Baelin')) { _%>
 [Headmaster Baelin Kalvor]
-Role: In post for forty years. Around 210 (middle-aged by elven reckoning).
+Role: In post for forty years; also teaches second-year History himself, the one class he has never given up. Around 210 (middle-aged by elven reckoning).
 Appearance: Tall and thin, ash-blond hair tied low, pale green eyes, a face lined with fatigue. Dark grey robes fastened with a silver clasp bearing Halvard's crest. Almost always holding a cup of tea he forgot to drink until it went cold.
 Magic: Occult — Spirit Pact. His pact is with Aura, a Greater Spirit of wind: a tall woman who floats rather than stands, white hair drifting in air nobody else feels. Baelin does not fight. Aura would, if he ever asked. In forty years he never has.
 Backstory: A Halvard alumnus of the Sky Dormitory, nearly two centuries ago. Spent decades in the capital's diplomatic service before Halvard's post fell vacant, which is where he learned to fight with letters and patience. His great-grandfather fought beside Gavlan Haverton in the War of Independence; family stories of "the old soldier in the woods" are how Baelin knew where to find him. Aura came to him on a storm-struck hilltop when he was a young man, and has stayed ever since.

@@ -57,12 +57,20 @@ const clubLine = clubs.map(c => {
   return c[0] + (bad && c[2] && (!c[3] || gale) ? ': practising indoors (Gymnasium) or cancelled in this weather' : ': meeting here until 16:00' + (m.length ? ' (members on record: ' + m.join(', ') + ')' : ''));
 }).join('; ');
 let classLine = '';
-if (cls && cls[3] === 'class' && cls[2].includes(pk)) {
-  const PY = Math.max(1, Math.min(3, Number(PR.Year) || 1)), dorm = PR.Dorm || 'Unsorted';
-  const tch = Object.keys(TEACH).find(id => TEACH[id].some(x => x[0] === cls[0] && (x[1] === PY || x[1] === 0)) && !stOf(id));
+// 1.33.0 (owner-approved planning/DRAFT_classes_and_teachers.md): Practical Magic is one class per combat role (all dorms, by year;
+// {{user}} attends the class of the first role in Combat_role); a free period (engine $ui.free) means the class is not held
+const ROLE = ['Attack', 'Defense', 'Healing', 'Support', 'Control'].map(r => [r, String(PR.Combat_role || '').search(new RegExp('\\b' + r + '\\b', 'i'))]).filter(x => x[1] >= 0).sort((a, b) => a[1] - b[1]).map(x => x[0])[0] || '';
+const freeNow = cls && cls[3] === 'class' ? (UI.free || []).find(f => f.p === pIdx && f.s === cls[0]) : null;
+if (freeNow) {
+  classLine = 'Free period: ' + cls[0] + ' is not held now (' + (freeNow.t || 'the teacher') + ' ' + freeNow.why + '). {{user}} and their classmates have the hour free; it counts against no one.';
+} else if (cls && cls[3] === 'class' && cls[2].includes(pk)) {
+  const PY = Math.max(1, Math.min(3, Number(PR.Year) || 1)), dorm = PR.Dorm || 'Unsorted', PM = cls[0] === 'Practical Magic';
+  const tch = Object.keys(TEACH).find(id => TEACH[id].some(x => x[0] === cls[0] && (x[1] === PY || x[1] === 0) && (!x[2] || x[2] === (ROLE || 'Attack'))) && !stOf(id));
   const mates = Object.keys(STU).filter(id => here(id) && STU[id][0] + Y - STU[id][1] === PY && !sick.includes(id) && !stOf(id)
     && (cls[1] !== 'D' || dorm === 'Unsorted' || STU[id][2] === dorm)).slice(0, 8);
-  classLine = 'Your class now: ' + cls[0] + ' [' + cls[1] + '] (Year ' + PY + ', ' + (cls[1] === 'D' ? (dorm === 'Unsorted' ? 'dorm not yet sorted' : dorm + ' only') : 'all dorms')
+  classLine = PM ? 'Your class now: Practical Magic, ' + (ROLE ? 'the ' + ROLE + ' class' : 'the joint assessment (roles not assigned yet: the five role teachers watch the first-years together and assign roles)')
+      + ' (Year ' + PY + ', all dorms; sparring partners from their own dorm except in Training Week) — teacher ' + (tch || 'not on record') + '; classmates: students of Year ' + PY + ' in this role, from any dorm'
+    : 'Your class now: ' + cls[0] + ' [' + cls[1] + '] (Year ' + PY + ', ' + (cls[1] === 'D' ? (dorm === 'Unsorted' ? 'dorm not yet sorted' : dorm + ' only') : 'all dorms')
     + ') at ' + (VN[pk] || place) + (pk === 'lecture halls' ? ' — Floor ' + (PY + 1) + ' (the Year ' + PY + ' floor)' : '') + ' — teacher ' + (tch || 'not on record: create one, and keep them the same person every lesson') + '; classmates on record: ' + (mates.join(', ') || 'none');
 }
 const regs = regs1.filter(r => !stOf(r)), regSt = regs1.filter(r => stOf(r));

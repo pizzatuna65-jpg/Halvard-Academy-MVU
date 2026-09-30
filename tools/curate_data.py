@@ -124,9 +124,10 @@ for _y, _ids in _coh.items():
         assert _id in npcs, f'cohorts.json: unknown NPC {_id}'
         npcs[_id]['arrives'] = int(_y)
 for _n in npcs.values(): _n.setdefault('arrives', 1)
-# v1.1.0 (spec §1): what each staff member teaches, from the roster's Staff/Doves lines: [[subject, year]], year 0 = every year.
+# v1.1.0 (spec §1): what each staff member teaches, from the roster's Staff/Doves lines: [[subject, year]], year 0 = every year
+# (1.33.0: ["Practical Magic", 0, role] for the five role classes).
 # Only posts the roster names; unknown posts stay unknown (never invent a teacher).
-SUBJECTS = ('Magic Theory', 'History', 'Combat', 'Dark Magic Defense', 'Potion Crafting', 'Etiquette', 'Creature Studies')
+SUBJECTS = ('Magic Theory', 'History', 'Practical Magic', 'Dark Magic Defense', 'Potion Crafting', 'Etiquette', 'Creature Studies')
 for _id, _r in roster.items():
     if _id not in npcs or _r.get('group') not in ('Staff', 'Doves'): continue
     _t = []
@@ -135,8 +136,12 @@ for _id, _r in roster.items():
         if _m: _t.append([_m.group(1), int(_m.group(2))]); continue
         _m = re.fullmatch(r'(%s) teacher for every year' % '|'.join(SUBJECTS), _x.strip())
         if _m: _t.append([_m.group(1), 0])
+        # 1.33.0: Practical Magic is taught per combat role, one teacher for every year: [subject, 0, role]
+        _m = re.fullmatch(r'(Attack|Defense|Healing|Support|Control) class for every year', _x.strip())
+        if _m: _t.append(['Practical Magic', 0, _m.group(1)])
     if _t: npcs[_id]['teaches'] = _t
 assert npcs['Yvette'].get('teaches') == [['Magic Theory', 1]] and npcs['Milena'].get('teaches') == [['Dark Magic Defense', 0]], 'teaches parse'
+assert npcs['Gavlan'].get('teaches') == [['Practical Magic', 0, 'Attack']] and npcs['Baelin'].get('teaches') == [['History', 2]], 'teaches parse (1.33.0)'
 missing_roster = [k for k in npcs if k not in roster]
 json.dump(npcs, open(P('data/npcs.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 

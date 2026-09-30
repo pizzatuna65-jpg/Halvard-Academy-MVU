@@ -20,7 +20,7 @@ const U=new Function(read('src/scripts/ui.js')+'\nreturn {PANELS,view,datedItems
 console.log('Mood scores and gates');
 let S=base(); const wx={sky:'Cloudy',temp:18,wind:'',rare:'',snow:false}, day=Math.floor(S.$eng.abs/1440);
 const mood=(id,w=wx,state=S)=>E.moodOf(id,state,w,Math.floor(E.toAbs(state.World)/1440));
-ok(Object.keys(E.NPC_MOODS).length===44 && Object.keys(E.GIFT_PREFS.npcs).length===44,'44 canon mood and gift profiles');
+ok(Object.keys(E.NPC_MOODS).length===52 && Object.keys(E.GIFT_PREFS.npcs).length===52,'52 canon mood and gift profiles (1.33.0: 44 + eight new teachers)');
 ok(mood('Sophia',{...wx,sky:'Rain'}).score-mood('Sophia').score===1,'weather love adds one');
 ok(mood('Sophia',{...wx,temp:30,rare:'heatwave'}).score-mood('Sophia').score===-2,'each matching hate counts (Hot + Heatwave)');
 ok(mood('Caralynn',{...wx,sky:'Rain',wind:'gale'}).score-mood('Caralynn').score===-2,'wind and rain stack');

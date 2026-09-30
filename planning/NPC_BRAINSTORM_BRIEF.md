@@ -89,7 +89,7 @@ Summoning (any tier): the spirit drains mana the whole time it is present, more 
 
 ```
 [Combat Roles]
-Five roles used in Combat Class, exams and team competitions. A student may fill more than one.
+Five roles used in Practical Magic (one class per role), exams and team competitions. A student may fill more than one, and then attends the class of the role they want most.
 - Attack: deals the damage and finishes fights.
 - Defense: shields, blocks and holds the line for the team.
 - Healing: keeps allies standing mid-fight.
@@ -126,7 +126,7 @@ Academy calendar (fixed events):
 - M3 W1 Mon–Thu: Midterm exams (1.15.0: marks A–F post on Friday; an F brings a remedial with the subject's teacher, next Saturday 10:00; teachers and classmates know {{user}}'s latest marks)
 - M3 W2 Fri,Sat: Club Festival
 - M3 W3 Mon–Sat: Training Week (cross-dorm sparring allowed; curfew 21:00)
-- M3 W4 Sat,Sun: Dorm Competition (solo, top 16 qualify)
+- M3 W4 Sat,Sun: Dorm Competition (solo, five role brackets, 16 per dorm qualify by role)
 - M4 W1 Wed: Secret Fools Day (prank day, dorm name-draw)
 - M4 W2 Tue: Independence Crowning Day (airship trip to the capital; fireworks on campus at night; curfew 22:00)
 - M4 W3 Sat: Mystic Dorm Day
@@ -238,8 +238,8 @@ Club venues: Duelling – Combat Grounds (headquarters: Sparring Pavilion); Socc
   romance, **D** best friend only. A rivalry opens only under Trust 50; a C or D bond waits for Trust 50 instead. Romance is never
   possible for B and D, whatever the Settings say. The Cast Sheet adds the NPC's `romance` or `rival` line (in `voice`) for the
   active branch; a best friendship adds nothing. Now: A Irene, Aiden, Castor, Kanae, Rei, Caine, Caralynn, Percival, Lenna, Saffi,
-  Idris, Dante, Florian, Caspian, Royhan, Sophia, Gareth, Vallie, Kuroo, Milena; B Krieg, Tristan; C Etnie, Zara, Trixie, Vera,
-  Alyssa, Tilly, Ruby, Mimosa, Bobby; D Gavlan, Yvette, Baelin, Layla, Althair, Ezrel, Ottavio. Staff who can have a romance keep
+  Idris, Dante, Florian, Caspian, Royhan, Sophia, Gareth, Vallie, Kuroo, Milena, Valentin; B Krieg, Tristan; C Etnie, Zara, Trixie, Vera,
+  Alyssa, Tilly, Ruby, Mimosa, Bobby, Hester, Anya; D Gavlan, Yvette, Baelin, Layla, Althair, Ezrel, Ottavio, Anselm, Magnus, Dorian, Cedric, Kotaro. Staff who can have a romance keep
   it out of class while {{user}} is their student (their own lines say how). A new bonded NPC needs its branch and lines.
 - **Reputation** (Academy, Student, Doves; −5 to +5, tiered Rep XP; full rules in `reputation.md`) modifies bond XP: staff
   NPCs at Academy ±3, student NPCs at Student ±3/+5, and anti-Dove NPCs react against high Doves reputation.
@@ -329,17 +329,25 @@ Columns: id — full name · group · dorm/race · role · club · openness · h
 - **Ruby** — Ruby Bonbon · Year 3 · Sky/Beastkin (rabbit) · - · Music Club, where she plays guitar and is perfectly happy to stay at the back behind Caralynn Veyturone · open · no · Kind-hearted, benevolent, charismatic, pacifist.
 
 **Teaching staff and dorm heads**
-- **Gavlan** — Gavlan Haverton · Staff · -/Elf · Combat Y1 · - · guarded · no · Harsh but fair, kind, stern, protective, a mentor.
+- **Gavlan** — Gavlan Haverton · Staff · -/Elf · Practical Magic: Attack, every year · - · guarded · no · Harsh but fair, kind, stern, protective, a mentor.
 - **Yvette** — Yvette Fallaron · Staff · -/Human · Magic Theory Y1, Fire Dorm Head · - · guarded · no · Kind, stern, motherly, hard-working, cautious, paranoid.
-- **Baelin** — Baelin Kalvor · Staff · -/Elf · Headmaster · - · guarded · yes · Soft-spoken, dry humour, enormous patience, never raises his voice.
+- **Baelin** — Baelin Kalvor · Staff · -/Elf · Headmaster, History Y2 · - · guarded · yes · Soft-spoken, dry humour, enormous patience, never raises his voice.
 - **Layla** — Layla Palegleam · Staff · -/Human · History Y1 · - · open · no · Warm, chatty, easily sidetracked;
-- **Vallie** — Vallie Goredust · Staff · -/Beastkin (ox) · Creature Studies Y1, ex-monster hunter, leads the Expedition · - · open · no · Jovial, blunt, crass, passionate, genuine, loyal, always happy to test her strength.
+- **Vallie** — Vallie Goredust · Staff · -/Beastkin (ox) · Creature Studies (every year), ex-monster hunter, leads the Expedition · - · open · no · Jovial, blunt, crass, passionate, genuine, loyal, always happy to test her strength.
 - **Rei** — Rei Kestrane · Staff · -/Human · Acting Warden, the old Warden's apprentice · - · guarded · yes · Effortlessly cool, nonchalant, stoic, bold, self-assured.
 - **Kuroo** — Kuroo Varnell · Staff · -/Human · Etiquette Y1, Viridian Dorm Head · - · normal · no · Laid-back yet scheming, a "provocation expert".
 - **Mimosa** — Mimosa Linden · Staff · -/Human · Potion Crafting Y1 · - · closed · no · Extremely introverted, with severe social anxiety;
-- **Althair** — Althair Veyne · Staff · -/Human · Vice Headmaster · - · open · yes · Relentlessly cheerful, friendly, and open, no matter what is happening.
+- **Althair** — Althair Veyne · Staff · -/Human · Vice Headmaster, Magic Theory Y3 · - · open · yes · Relentlessly cheerful, friendly, and open, no matter what is happening.
 - **Ezrel** — Ezrel Marionne · Staff · -/Human · Magic Theory Y2, Light Dorm Head · Theatre Troupe · normal · yes · Apathetic, and makes no secret of it.
 - **Ottavio** — Ottavio Bastiani · Staff · -/Human · Etiquette Y3, Sky Dorm Head, spirit Loki · Fishing Club · closed · yes · Hard-boiled and intimidating.
+- **Hester** — Hester Mortlake · Staff · -/Human · Head Nurse, Practical Magic: Healing · Medical Centre Volunteers · open · yes · Theatrical, macabre; scares everyone with ghost stories for fun, except a student in real danger.
+- **Anselm** — Anselm Graywater · Staff · -/Beastkin (tortoise) · Practical Magic: Defense · Warding Study Group · normal · no · Serene, gentle; speaks in convoluted philosophy nobody understands; hates violence.
+- **Magnus** — Magnus Tarrant · Staff · -/Elf · Practical Magic: Support, scouting reports · Board Game Club · normal · no · Cunning, knowledgeable strategist; an acronym in every sentence.
+- **Dorian** — Dorian Pryce · Staff · -/Beastkin (fox) · Practical Magic: Control · Specialized Magic Club · open · no · Slick, opportunistic salesman of his own crafted goods; a smile nobody trusts.
+- **Cedric** — Cedric Amor Fay · Staff · -/Human · History Y3 · Gardening Club · normal · no · Calm, kind doomer: the world will end, so do today well.
+- **Anya** — Anya Zeth · Staff · -/Human · Etiquette Y2 · Tea Club · guarded · yes · Calm noble, always smiling, fascinated by the threshold between life and death.
+- **Kotaro** — Kotaro Hanamura · Staff · -/Beastkin (tanuki) · Potion Crafting Y2 · Brewing Club · open · no · Carefree, self-deprecating drunk; unreliable at everything; "Ahh, youth."
+- **Valentin** — Valentin Crane · Staff · -/Human · Potion Crafting Y3 · Academy Newspaper · normal · yes · Charismatic, narcissistic meritocrat and manipulator; a ranking board every Monday.
 
 **Doves, Cathedral, Liaison and facilities**
 - **Krieg** — Krieg Valforth · Doves · -/Human · Dovecote Commander · - · closed · yes · Cordial, cunning, inquisitive, competent, violent, a bully, zealous about the Doves and the crown.
@@ -408,7 +416,7 @@ The 2026-09 pass filled every gap for Halvard students, staff, Doves, Cathedral 
 - `lore_year1.md` — Halvard students — Year 1: Aiden, Caralynn, Zara, Percival, Trixie, Vera, Castor, Alyssa (~7,700 tokens)
 - `lore_year2.md` — Halvard students — Year 2: Lenna, Saffi, Kanae, Idris, Dante, Florian, Tilly (~5,700 tokens)
 - `lore_year3.md` — Halvard students — Year 3: Irene, Caspian, Etnie, Royhan, Sophia, Gareth, Ruby (~6,400 tokens)
-- `lore_staff.md` — Teaching staff and dorm heads: Gavlan, Yvette, Baelin, Layla, Vallie, Rei, Kuroo, Mimosa, Althair, Ezrel, Ottavio (~11,000 tokens)
+- `lore_staff.md` — Teaching staff and dorm heads: Gavlan, Yvette, Baelin, Layla, Vallie, Rei, Kuroo, Mimosa, Althair, Ezrel, Ottavio (~11,000 tokens); the eight teachers of 1.33.0 (Hester, Anselm, Magnus, Dorian, Cedric, Anya, Kotaro, Valentin) are in `source_original/npc_lore_staff_2026-10-01/lore_staff.md` and `planning/NPC_ROSTER.md`
 - `lore_others.md` — Doves, Cathedral, Liaison and facilities: Krieg, Milena, Tristan, Caine, Bobby (~5,500 tokens)
 - `source_original/npc_lore_cohort2_2026-09-26/lore_cohort2.md` — cohort 2 (arrive in campaign Year 2): Linus, Maple, Nerys, Hadrian, Wren, Tsubaki; `lore_cohort2_additions.md` beside it holds the lines they added to older NPCs' files (shown from Year 2)
 - `lore_rivals.md` — Rival academy teams (Myrdath, Veyra, Ashvale): Lucius, Elion, Bellatrix, Kira, Mirelle, Theodore, Ines, Bram, Dex, Cassius, Morgana, Pip (~5,400 tokens)
@@ -421,7 +429,7 @@ This brief: ~7,800 tokens.
 
 ## Approved mood, gifts and birthdays (v1.8.0, 2026-09-28)
 
-Implemented in 1.8.0. All 44 bonded NPCs have profiles in `data/npc_moods.json` and `data/gift_prefs.json`. The latter is the full source for all four personal taste lists, exact items, category matches and universal fallbacks. Birthday and taste discovery in the player UI still follows bond knowledge. Ezrel has no birthday.
+Implemented in 1.8.0 (1.33.0: 52 with the new teachers). All bonded NPCs have profiles in `data/npc_moods.json` and `data/gift_prefs.json`. The latter is the full source for all four personal taste lists, exact items, category matches and universal fallbacks. Birthday and taste discovery in the player UI still follows bond knowledge. Ezrel has no birthday.
 
 | NPC | Birthday | Loves | Hates |
 |---|---|---|---|
@@ -468,4 +476,12 @@ Implemented in 1.8.0. All 44 bonded NPCs have profiles in `data/npc_moods.json` 
 | Ezrel | None | Brass golem joint set. | — |
 | Ottavio | M8 W1 Sun | Fishing tackle box. Salaffian spice box. | — |
 | Caine | M2 W3 Mon | Nothing he will admit. Silver-polishing kit (a real smirk, once). | — |
+| Hester | M7 W3 Fri | Lamps Out: Tales of Halvard. Hooded night lamp. | The Truth Behind Halvard's Ghosts. The Night Student: A True Account. |
+| Anselm | M6 W2 Sun | Silvertip tea. Travel Dragonchess set. | The Final Word on Everything. |
+| Magnus | M2 W2 Tue | Dragonchess problem book. Sovereigns. | Wishing coin, or any lucky charm. |
+| Dorian | M9 W2 Fri | Merryhew's goods. Precision tool roll. | A copy of one of his own designs. |
+| Cedric | M12 W4 Sun | Old Archive documents. Seed packets. | A monument, or any "timeless" keepsake. |
+| Anya | M10 W1 Tue | Black silk ribbons. Porcelain tea set. | Anything sold as an elixir of long life. |
+| Kotaro | M8 W2 Thu | Fine vintage. Stonebrew ale (jug). Clan firewine. | Anything that tells him to stop drinking. |
+| Valentin | M9 W3 Sat | Ardenne goods. Rare reagent. A portrait of him. | Anything given to everyone. |
 | Bobby | M9 W1 Thu | Vanishing-coin illusion kit. Campus gossip, written down. | A spoiled surprise. |

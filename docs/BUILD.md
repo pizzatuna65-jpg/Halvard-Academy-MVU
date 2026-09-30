@@ -54,10 +54,10 @@ python tools/audit_chat.py chat.jsonl --out report.md   # optional: character-dr
 - `data/shop.json` (prices; canon prices are locked; 1.9.5: `gear` / `use` item effects, worded by `tools/common.py` `effect_text()`)
 - `data/crafts.json` (1.28.0 magical recipes, material alternatives, crafted effects and sale guides)
 - `data/bond_rewards.json`, `data/reputation.json`, `data/training.json` (1.3.0), `data/bond_rules.json` (1.3.1: `start`), `data/bond_openness.json`, `data/tuning.json` (1.3.1 Settings rows)
-- `source_original/npc_lore_2026-09-25/` (NPC entries that replace v38's; edit lore there or add a newer pass the same way)
+- `source_original/npc_lore_2026-09-25/` (NPC entries that replace v38's; edit lore there or add a newer pass the same way); `source_original/npc_lore_staff_2026-10-01/` (1.33.0: the new teachers and the lines they add to older NPCs)
 - `data/happenings.json` (seeded campus events; `where` must be a real location name)
 - `data/field_overrides.json`, `focus_overrides.json`, `thumb_overrides.json`, `assets_manifest.json`
-- `data/features.json` (Features settings rows, parked paths, unlocks), `data/npc_moods.json` (44 mood profiles), `data/wind_casting.json` (subtype costs), `data/gift_prefs.json` (tastes and birthdays), `data/gift_shops.json` (Mall shop lore)
+- `data/features.json` (Features settings rows, parked paths, unlocks), `data/npc_moods.json` (44 mood profiles), `data/wind_casting.json` (subtype costs), `data/gift_prefs.json` (tastes and birthdays), `data/gift_shops.json` (Mall shop lore), `data/free_periods.json` (1.33.0: teacher absence chance and reasons)
 - `src/worldbook/custom/505.template.ejs` (the Now entry)
 - custom entries `500–504`, `507`, `508` (the birthday event, 1.2.0) and `510` (the last-mile cast gate, 1.5.1)
 - `src/regex/index.json`
@@ -96,7 +96,7 @@ python tools/audit_chat.py chat.jsonl --out report.md   # optional: character-dr
   Mention it with one `rep()` line in the entries that should know it exists (WORLD INDEX, the places and classes where it comes
   up), as the brands are mentioned in the Mall and the Main Library. Keep Lucifer and other secrets inside `<narrator_only>`.
 - **Add an NPC.**
-  1. Add the lore entry via the lorebook pipeline.
+  1. Add the lore entry via the lorebook pipeline. On campus from the start: a lore pass like `source_original/npc_lore_staff_2026-10-01/` (1.33.0: `lore_staff.md` with uid and keys, `lore_staff_additions.md` with `year: 1` lines that join the older NPC's Relations line), the roster line in `merge_lorebooks.py` (uid 97) and the Regulars (`STAFF_REGULARS`). Every bonded NPC needs a row in each *per NPC* data file (`docs/INDEX.md` §7) and a curated type for every relation line (`build_relations.py` fails otherwise); the count tests (mood/gift, Rank 4, Tension, Rank 8 branches) name the total.
   2. Add the portrait and thumbnail to the assets repo, then update the manifest and the pinned commit.
   3. Add focus and thumbnail overrides if the face crop is off.
   4. Rebuild; the engine alias map and UI data regenerate.

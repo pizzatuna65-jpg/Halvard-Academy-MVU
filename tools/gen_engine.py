@@ -11,7 +11,7 @@ for nid, n in npcs.items():
 # drop keys that are clearly not names (clubs, places, titles shared by many)
 BAD = re.compile(r'club|library|council|dorm|academy|team|circle|house|hall|tower|office|order|choir|lord|king|saint|squad|doves?$', re.I)
 DENY = {'festival committee', 'divination society', 'theatre troupe', 'shub-niggurath', 'shub niggurath', 'hastur', 'loki', 'hades',
-        'excalibur', 'gohn', 'janna', 'laetano', 'velmora', 'niu', 'ardenne', 'villeneuve', 'sobek', 'royal mage', 'youngest royal mage'}   # 1.7.0: Maple's spirit, Tsubaki's title  # spirits, items, brands, groups, shared surnames
+        'excalibur', 'gohn', 'janna', 'laetano', 'velmora', 'niu', 'ardenne', 'villeneuve', 'sobek', 'royal mage', 'youngest royal mage', 'crane'}   # 1.7.0: Maple's spirit, Tsubaki's title; 1.33.0: crane (the bird)  # spirits, items, brands, groups, shared surnames
 alias = {k: v for k, v in alias.items() if (not BAD.search(k) or k == v.lower()) and k not in DENY}
 forms = {nid: sorted({f for f in [nid, n['name'], n.get('nickname')] if f and len(f) > 1}, key=len, reverse=True) for nid, n in npcs.items()}
 t = open(P('src/scripts/engine.template.js'), encoding='utf-8').read()
@@ -135,6 +135,10 @@ _home = {k: v for k, v in json.load(open(P('data/letters_home.json'), encoding='
 _shopnames = {i['item'] for i in json.load(open(P('data/shop.json'), encoding='utf-8'))['items']}
 assert all(n in _shopnames for n, _ in _home['items']), 'letters_home.json: not a shop item'
 t = t.replace('/*@@HOME@@*/{}', json.dumps(_home, ensure_ascii=False, separators=(',', ':')))
+# 1.33.0 (owner-approved planning/DRAFT_classes_and_teachers.md): free periods, the chance and the reasons per teacher
+_free = {k: v for k, v in json.load(open(P('data/free_periods.json'), encoding='utf-8')).items() if not k.startswith('_')}
+assert all(k in json.load(open(P('data/npcs.json'), encoding='utf-8')) for k in _free['npcs']), 'free_periods.json: unknown NPC'
+t = t.replace('/*@@FREE@@*/{}', json.dumps(_free, ensure_ascii=False, separators=(',', ':')))
 # Bond rules and where each NPC is usually found (Haunts, first clause).
 t = t.replace('/*@@BOND_RULES@@*/{}', json.dumps(json.load(open(P('data/bond_rules.json'), encoding='utf-8')), ensure_ascii=False, separators=(',', ':')))
 haunt = {}

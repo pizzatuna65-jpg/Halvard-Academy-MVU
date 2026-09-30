@@ -1128,6 +1128,198 @@
         "disliked": "cruel.*prank",
         "hated": "spoiled surprise"
       }
+    },
+    "Hester": {
+      "birthday": "M7 W3 Fri",
+      "text": {
+        "loved": "Lamps Out: Tales of Halvard. Hooded night lamp.",
+        "liked": "A new ghost story, told to her. Strong black tea. Dried foxglove or belladonna.",
+        "disliked": "Cheerful get-well cards.",
+        "hated": "The Truth Behind Halvard's Ghosts. The Night Student: A True Account."
+      },
+      "items": {
+        "loved": [
+          "Lamps Out: Tales of Halvard",
+          "Hooded night lamp"
+        ],
+        "liked": [],
+        "disliked": [],
+        "hated": [
+          "The Truth Behind Halvard's Ghosts",
+          "The Night Student: A True Account"
+        ]
+      },
+      "patterns": {
+        "liked": "ghost stor|black tea|foxglove|belladonna",
+        "disliked": "get-well"
+      }
+    },
+    "Anselm": {
+      "birthday": "M6 W2 Sun",
+      "text": {
+        "loved": "Silvertip tea. Travel Dragonchess set.",
+        "liked": "A question he cannot answer. Philosophy books. Moss in a pot.",
+        "disliked": "Weapons as presents.",
+        "hated": "The Final Word on Everything."
+      },
+      "items": {
+        "loved": [
+          "Silvertip tea",
+          "Travel Dragonchess set"
+        ],
+        "liked": [],
+        "disliked": [],
+        "hated": [
+          "The Final Word on Everything"
+        ]
+      },
+      "patterns": {
+        "liked": "question|philosoph|\\bmoss\\b",
+        "disliked": "weapon"
+      }
+    },
+    "Magnus": {
+      "birthday": "M2 W2 Tue",
+      "text": {
+        "loved": "Dragonchess problem book. Sovereigns.",
+        "liked": "Steel-nib fountain pen. Notebooks. Information nobody else has.",
+        "disliked": "Anything left to chance (dice, a lottery ticket).",
+        "hated": "Wishing coin, or any lucky charm."
+      },
+      "items": {
+        "loved": [
+          "Dragonchess problem book",
+          "Sovereigns"
+        ],
+        "liked": [
+          "Steel-nib fountain pen"
+        ],
+        "disliked": [],
+        "hated": [
+          "Wishing coin"
+        ]
+      },
+      "patterns": {
+        "liked": "notebook|journal|information|secret",
+        "disliked": "\\bdice\\b|lottery",
+        "hated": "lucky charm|good.luck"
+      }
+    },
+    "Dorian": {
+      "birthday": "M9 W2 Fri",
+      "text": {
+        "loved": "Merryhew's goods. Precision tool roll.",
+        "liked": "Anything expensive and useful. A good haggle.",
+        "disliked": "Anything cheap and flimsy.",
+        "hated": "A copy of one of his own designs. Something he sold {{user}}, given back."
+      },
+      "items": {
+        "loved": [
+          "Precision tool roll"
+        ],
+        "liked": [],
+        "disliked": [],
+        "hated": []
+      },
+      "patterns": {
+        "loved": "merryhew",
+        "liked": "expensive|haggl",
+        "disliked": "cheap|flimsy",
+        "hated": "cop(y|ied).*design|knock.?off"
+      }
+    },
+    "Cedric": {
+      "birthday": "M12 W4 Sun",
+      "text": {
+        "loved": "Old Archive documents. Seed packets.",
+        "liked": "Bread still warm. Gardening tools.",
+        "disliked": "Anything meant to be kept forever.",
+        "hated": "A monument, or any \"timeless\" keepsake."
+      },
+      "items": {
+        "loved": [
+          "Seed packets"
+        ],
+        "liked": [],
+        "disliked": [],
+        "hated": []
+      },
+      "patterns": {
+        "loved": "archive document|old document",
+        "liked": "bread|garden",
+        "disliked": "forever|eternal",
+        "hated": "monument|timeless"
+      }
+    },
+    "Anya": {
+      "birthday": "M10 W1 Tue",
+      "text": {
+        "loved": "Black silk ribbons. Porcelain tea set.",
+        "liked": "A first-hand account of a near-death experience. Mourning customs from another kingdom. Tea.",
+        "disliked": "Loud or gaudy things.",
+        "hated": "Anything sold as an elixir of long life."
+      },
+      "items": {
+        "loved": [
+          "Black silk ribbons",
+          "Porcelain tea set"
+        ],
+        "liked": [],
+        "disliked": [],
+        "hated": []
+      },
+      "patterns": {
+        "liked": "near.death|mourning|\\btea\\b",
+        "disliked": "gaudy|loud",
+        "hated": "elixir|long life|immortal"
+      }
+    },
+    "Kotaro": {
+      "birthday": "M8 W2 Thu",
+      "text": {
+        "loved": "Fine vintage. Stonebrew ale (jug). Clan firewine.",
+        "liked": "Any drink. Festival food. A song.",
+        "disliked": "Anything that needs looking after.",
+        "hated": "Anything that tells him to stop drinking (a temperance pamphlet, a hangover cure \"for his own good\")."
+      },
+      "items": {
+        "loved": [
+          "Fine vintage",
+          "Stonebrew ale (jug)",
+          "Clan firewine"
+        ],
+        "liked": [],
+        "disliked": [],
+        "hated": []
+      },
+      "patterns": {
+        "liked": "ale|wine|sake|drink|festival|song",
+        "disliked": "plant|pet",
+        "hated": "temperance|hangover"
+      }
+    },
+    "Valentin": {
+      "birthday": "M9 W3 Sat",
+      "text": {
+        "loved": "Ardenne goods. Rare reagent. A portrait of him.",
+        "liked": "Anything that shows off his work. Praise in public.",
+        "disliked": "Anything cheap.",
+        "hated": "Anything given to everyone (a participation prize, a class-wide keepsake)."
+      },
+      "items": {
+        "loved": [
+          "Rare reagent"
+        ],
+        "liked": [],
+        "disliked": [],
+        "hated": []
+      },
+      "patterns": {
+        "loved": "ardenne|portrait",
+        "liked": "praise",
+        "disliked": "cheap",
+        "hated": "participation|everyone"
+      }
     }
   },
   "universal": {

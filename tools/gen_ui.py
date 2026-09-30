@@ -30,7 +30,7 @@ NPCS = sorted([{'id': k, 'name': v['name'], 'dorm': v.get('dorm') or '', 'year':
 # Rank-0 public role (D14 table: appearance, dorm/year, public role). Curated: roster tags mix roles with traits and secrets.
 PUBLIC_ROLE = {
     'Irene': 'Student Council President', 'Caspian': 'Student Council Vice President', 'Royhan': 'Third-year alchemist',
-    'Gavlan': 'Combat teacher', 'Yvette': 'Magic Theory teacher, Fire Dorm Head', 'Krieg': 'Dovecote Commander',
+    'Gavlan': 'Attack teacher (Practical Magic)', 'Yvette': 'Magic Theory teacher, Fire Dorm Head', 'Krieg': 'Dovecote Commander',
     'Milena': 'Senior Dove, Dark Magic Defense teacher', 'Baelin': 'Headmaster', 'Layla': 'History teacher',
     'Vallie': 'Creature Studies teacher', 'Gareth': "Halvard's top-ranked student (#1)", 'Sophia': "Halvard's #2 student, the Blood Saint",
     'Florian': "Halvard's #3 student", 'Rei': 'Acting Warden', 'Kuroo': 'Etiquette teacher, Viridian Dorm Head',
@@ -38,6 +38,9 @@ PUBLIC_ROLE = {
     'Ezrel': 'Magic Theory teacher, Light Dorm Head', 'Ottavio': 'Etiquette teacher, Sky Dorm Head',
     'Caine': "Butler of the Noble Houses' Liaison", 'Bobby': 'Maintenance worker',
     'Ines': 'Myrdath team captain', 'Cassius': 'Veyra team captain',
+    # 1.33.0 new teaching staff
+    'Hester': 'Head Nurse, Healing teacher', 'Anselm': 'Defense teacher', 'Magnus': 'Support teacher', 'Dorian': 'Control teacher',
+    'Cedric': 'History teacher', 'Anya': 'Etiquette teacher', 'Kotaro': 'Potion Crafting teacher', 'Valentin': 'Potion Crafting teacher',
 }
 YEARW = {1: 'first-year', 2: 'second-year', 3: 'third-year'}
 def descriptor(nid, n):
