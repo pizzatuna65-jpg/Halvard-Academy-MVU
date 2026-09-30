@@ -343,7 +343,7 @@
   "uid": 47,
   "category": "Ceremonial",
   "kind": "location",
-  "description": "Open parkland with lawns, paths and benches; the main green space on campus and the nicest place to be outdoors between classes. Picnic blankets dot the lawns on any fair day, and weathered wooden picnic tables stand in the shade along the paths. Everyday use: sitting and talking, lunch on a blanket or at a picnic table, reading, napping, jogging the paths, couples finding somewhere semi-private. Busiest at lunch and on warm afternoons.\nThe Founder's Statue stands at its centre: bronze, the academy's founding warden, cold even in full sun, its outstretched hand polished bright by the Founder's Hand superstition, with a queue that snakes across the lawn on exam mornings. Focus of Academy Founder Day in Month 9.\nHome of the Faraway Laugh story.",
+  "description": "Open parkland with lawns, paths and benches; the main green space on campus and the nicest place to be outdoors between classes. Picnic blankets dot the lawns on any fair day, and weathered wooden picnic tables stand in the shade along the paths. Everyday use: sitting and talking, lunch on a blanket or at a picnic table, reading, napping, jogging the paths, couples finding somewhere semi-private. Busiest at lunch and on warm afternoons. On a fair day, an hour on the grass restores more than an hour anywhere indoors.\nThe Founder's Statue stands at its centre: bronze, the academy's founding warden, cold even in full sun, its outstretched hand polished bright by the Founder's Hand superstition, with a queue that snakes across the lawn on exam mornings. Focus of Academy Founder Day in Month 9.\nHome of the Faraway Laugh story.",
   "vibe": "open, windy, grass, green bronze.",
   "has_secret": false,
   "regulars": [
@@ -437,7 +437,7 @@
   "uid": 48,
   "category": "Ceremonial",
   "kind": "location",
-  "description": "Marks class periods, meals, and curfew. Its pattern changes during The Thinning. The seven o'clock bell wakes the mana lanterns; the eight o'clock bell begins curfew. After it the lanterns drop to their night burn, each dormitory seals to its own students, and staff walk the courtyards for the first hour. Birds leave the roof just before it sounds.\nHome of the Thirteenth Stroke story.",
+  "description": "Marks class periods, meals, and curfew. Its pattern changes during The Thinning. The seven o'clock bell wakes the mana lanterns; the eight o'clock bell begins curfew. After it the lanterns drop to their night burn, each dormitory seals to its own students, and staff walk the courtyards for the first hour. Birds leave the roof just before it sounds. A bell-keeper looks after the bells and their ropes, and takes on a student for a paid shift now and then.\nHome of the Thirteenth Stroke story.",
   "vibe": "booming, felt through the floor.",
   "has_secret": false,
   "regulars": [
@@ -2054,7 +2054,7 @@
   "uid": 63,
   "category": "Residential",
   "kind": "location",
-  "description": "One in each dormitory. Uniforms, bedding and linens, self-service and free against the mall's paid service. Students on detention often end up working here. The free rune tubs are slow and hard on fabric, which is why bottom-band uniforms wear out faster.",
+  "description": "One in each dormitory. Uniforms, bedding and linens, self-service and free against the mall's paid service. Students on detention often end up working here. The free rune tubs are slow and hard on fabric, which is why bottom-band uniforms wear out faster. Talk carries over the rune tubs, and half the rumours on campus pass through here.",
   "vibe": "damp heat, humming.",
   "has_secret": false,
   "regulars": [
@@ -2100,7 +2100,7 @@
   "uid": 64,
   "category": "Residential",
   "kind": "location",
-  "description": "One in each dormitory. Regional in character and one of the few genuinely relaxed spaces on campus. Dorm-segregated, and a natural place for conversations that would not happen elsewhere; running water covers talk better than a door. Rune heaters make it the one place on campus that is truly warm. Home of the Third Stall ghost story.",
+  "description": "One in each dormitory. Regional in character and one of the few genuinely relaxed spaces on campus. Dorm-segregated, and a natural place for conversations that would not happen elsewhere; running water covers talk better than a door. Rune heaters make it the one place on campus that is truly warm. Home of the Third Stall ghost story. A long soak here takes the ache out of anything short of an injury.",
   "vibe": "steamy, echoing, warm.",
   "has_secret": false,
   "regulars": [
@@ -2379,7 +2379,7 @@
     4
    ],
    [
-    "meditation_rooms_spirit_house",
+    "meditation_rooms",
     6
    ],
    [
@@ -2828,7 +2828,7 @@
   "uid": 70,
   "category": "Student Life",
   "kind": "location",
-  "description": "The academy's only regular contact with outside: letters and parcels. The upper floors are the aviary where message birds are kept and flown; Creature Studies uses it for bird handling. A sorting floor below handles parcels, with numbered lockers and a tally token for collection; birds carry letters and light goods, heavy goods come slowly by cart. Sunday is the heaviest sorting day, and students on shifts learn everyone's family news first.\nFeel: feathers, birdcall, cold stairwell.\nBefore the long breaks the sorting floor overflows with parcels going home.",
+  "description": "The academy's only regular contact with outside: letters and parcels. The upper floors are the aviary where message birds are kept and flown; Creature Studies uses it for bird handling. A sorting floor below handles parcels, with numbered lockers and a tally token for collection; birds carry letters and light goods, heavy goods come slowly by cart. Sunday is the heaviest sorting day, and students on shifts learn everyone's family news first. Students write home from the desks on the sorting floor; a reply takes about a week, and sometimes a small parcel comes with it.\nFeel: feathers, birdcall, cold stairwell.\nBefore the long breaks the sorting floor overflows with parcels going home.",
   "vibe": null,
   "has_secret": false,
   "regulars": [
@@ -3008,7 +3008,8 @@
    "archery_range",
    "gymnasium",
    "combat_grounds",
-   "sparring_pavilion"
+   "sparring_pavilion",
+   "spirit_path"
   ],
   "walk_min": 16,
   "clubs": [
@@ -3049,6 +3050,10 @@
     5
    ],
    [
+    "spirit_path",
+    5
+   ],
+   [
     "swimming_pool",
     3
    ]
@@ -3071,7 +3076,8 @@
    "menagerie",
    "archery_range",
    "swimming_pool",
-   "sports_field"
+   "sports_field",
+   "spirit_path"
   ],
   "walk_min": 14,
   "clubs": [
@@ -3098,6 +3104,10 @@
    ],
    [
     "menagerie",
+    3
+   ],
+   [
+    "spirit_path",
     3
    ],
    [
@@ -3160,6 +3170,10 @@
    ],
    [
     "menagerie",
+    3
+   ],
+   [
+    "spirit_path",
     3
    ],
    [
@@ -3530,7 +3544,8 @@
   "connections": [
    "gardens",
    "archery_range",
-   "gymnasium"
+   "gymnasium",
+   "spirit_path"
   ],
   "walk_min": 13,
   "clubs": [
@@ -3563,6 +3578,10 @@
    [
     "gymnasium",
     3
+   ],
+   [
+    "spirit_path",
+    5
    ],
    [
     "sports_field",
@@ -3622,7 +3641,7 @@
   "uid": 82,
   "category": "Services",
   "kind": "location",
-  "description": "A white-walled building of its own, four minutes' walk from the Mall, with a herb garden along one side: more than an infirmary, less than a hospital. Treatment rooms, a small apothecary, and an inpatient ward where students stay overnight or for days under care. Staffed by Spiritual mages; busiest after Combat Class, in competition weeks, exam weeks, and after The Thinning. Nurses see injuries they must report and injuries they quietly do not. The attached Healing Ward is a teaching space where students practise on real patients under supervision. Staff can spot a Nightwell's Vigil overdose at a glance. Can heal any minor to mid injury to pristine; anything beyond is stabilised here and sent on to a proper hospital.\nHome of the Last Bed story.",
+  "description": "A white-walled building of its own, four minutes' walk from the Mall, with a herb garden along one side: more than an infirmary, less than a hospital. Treatment rooms, a small apothecary, and an inpatient ward where students stay overnight or for days under care. Staffed by Spiritual mages; busiest after Combat Class, in competition weeks, exam weeks, and after The Thinning. Nurses see injuries they must report and injuries they quietly do not. The attached Healing Ward is a teaching space where students practise on real patients under supervision. Staff can spot a Nightwell's Vigil overdose at a glance. Can heal any minor to mid injury to pristine; anything beyond is stabilised here and sent on to a proper hospital. The ward's beds are for the injured first, but a nurse will let an exhausted student lie down for an hour.\nHome of the Last Bed story.",
   "vibe": "clean linen, green healing scent, too quiet.",
   "has_secret": false,
   "regulars": [
@@ -3755,7 +3774,7 @@
     4
    ],
    [
-    "meditation_rooms_spirit_house",
+    "meditation_rooms",
     6
    ],
    [
@@ -3990,19 +4009,18 @@
    ]
   ]
  },
- "meditation_rooms_spirit_house": {
-  "id": "meditation_rooms_spirit_house",
-  "name": "Meditation Rooms / Spirit House",
+ "meditation_rooms": {
+  "id": "meditation_rooms",
+  "name": "Meditation Rooms",
   "uid": 87,
   "category": "Services",
   "kind": "location",
-  "description": "An old, weathered building built like a riad: blank outer walls with few windows, every room facing inward onto a shaded central courtyard. Moss and vines have taken its walls, and dense, leafy trees crowd close around it, swallowing the noise of the campus outside. Quiet dark rooms for will-focus training, and where bound spirits are kept between Occult lessons. The two functions share a building, which nobody finds reassuring. Students are not to go alone. On still nights the building makes sounds no one will explain.",
-  "vibe": "dark, silent, uneasy, moss and old stone.",
+  "description": "An old, weathered building built like a riad: blank outer walls with few windows, every room facing inward onto a shaded central courtyard with a still, shallow pool. Moss and vines cover its walls and dense, leafy trees crowd close around it; between the thick walls and the trees, no sound from the campus gets in. Small, dim rooms with floor cushions serve will-focus training, and the courtyard is for anyone who simply needs to sit. Open to every student, for training or just to take a breath. The one house rule: speak no louder than a murmur, and leave others to their silence. Mana settles and refills faster in the silence; students come before exams and after long practicals.",
+  "vibe": "calm, serene, hushed, moss and cool stone.",
   "has_secret": false,
   "regulars": [
    "Caspian",
-   "Royhan",
-   "Ruby"
+   "Tristan"
   ],
   "connections": [
    "banking_house",
@@ -4011,13 +4029,13 @@
   ],
   "walk_min": 11,
   "clubs": [],
-  "access": "Students are not to go alone",
+  "access": null,
   "lore": [],
   "floor": null,
   "pin": 32,
   "discoverable": false,
   "seasons": {
-   "Winter": "The bare vines let a little more light in, which somehow makes it worse."
+   "Winter": "The bare vines let more pale light into the courtyard, and the pool wears a thin skin of ice."
   },
   "near": [
    [
@@ -4091,7 +4109,7 @@
     6
    ],
    [
-    "meditation_rooms_spirit_house",
+    "meditation_rooms",
     6
    ],
    [
@@ -4219,7 +4237,7 @@
   "uid": 90,
   "category": "External Presence",
   "kind": "location",
-  "description": "A house of worship for Asmoday, Goddess of Creation, on academy grounds but answerable to its own authority. Services open to all; its clergy are not academy employees and teach that Asmoday created magic and gifted it to mortals. Every service opens with the Shaping of the World; the clergy teach that Asmoday fractured magic after the First Bargain. That a goddess of creation holds ground at an institution built around sealing things away is a tension nobody discusses openly. It also runs orphanages across the kingdom, the Asmoday's Mercy houses. Halvard: run by a steward who keeps the registry of every oath sworn on academy grounds.",
+  "description": "A house of worship for Asmoday, Goddess of Creation, on academy grounds but answerable to its own authority. Services open to all; its clergy are not academy employees and teach that Asmoday created magic and gifted it to mortals. Every service opens with the Shaping of the World; the clergy teach that Asmoday fractured magic after the First Bargain. That a goddess of creation holds ground at an institution built around sealing things away is a tension nobody discusses openly. It also runs orphanages across the kingdom, the Asmoday's Mercy houses. Halvard: run by a steward who keeps the registry of every oath sworn on academy grounds. A service is held every Sunday morning, from nine to eleven, and the pews are open every day for anyone who wants to sit in quiet. Students of every dormitory come: some to pray, some for the singing, some because it is the one place a conversation with a stranger does not seem strange. Mana comes back a little faster in the quiet of the nave; the clergy call it Asmoday's grace, the academy calls it the silence, and both are glad to see students on the pews.",
   "vibe": "stained-glass colour, incense, heavy stillness.",
   "has_secret": false,
   "regulars": [
@@ -4233,7 +4251,7 @@
    "dovecote",
    "noble_houses_liaison",
    "broken_statue",
-   "meditation_rooms_spirit_house"
+   "meditation_rooms"
   ],
   "walk_min": 8,
   "clubs": [],
@@ -4269,7 +4287,7 @@
     5
    ],
    [
-    "meditation_rooms_spirit_house",
+    "meditation_rooms",
     3
    ],
    [
@@ -4300,7 +4318,7 @@
   "connections": [
    "dovecote",
    "cathedral",
-   "meditation_rooms_spirit_house"
+   "meditation_rooms"
   ],
   "walk_min": 12,
   "clubs": [],
@@ -4324,7 +4342,7 @@
     3
    ],
    [
-    "meditation_rooms_spirit_house",
+    "meditation_rooms",
     3
    ]
   ]
@@ -4346,7 +4364,7 @@
   "connections": [
    "mall",
    "commissary",
-   "meditation_rooms_spirit_house"
+   "meditation_rooms"
   ],
   "walk_min": 10,
   "clubs": [],
@@ -4370,7 +4388,7 @@
     5
    ],
    [
-    "meditation_rooms_spirit_house",
+    "meditation_rooms",
     4
    ],
    [
@@ -4385,7 +4403,7 @@
   "uid": 254,
   "category": "Sport and Grounds",
   "kind": "location",
-  "description": "A single oak called the Elder Oak stands in an open clearing in the middle of the Forest, so broad a dozen students holding hands cannot circle it, and older than the castle by anyone's guess. The canopy opens above the clearing, so the oak stands in full sun while the woods around it stay dim; the muffled quiet of the Forest gives way to birdsong at its edge, and gold motes drift in the light even on grey days. Its roots pull the ground's mana into slow currents unlike anywhere else on campus, and a wild field of rare flowers has spread across the clearing around it, in colours found nowhere else. The Gardening Club has tried transplanting them; they wilt within a day of leaving the clearing. A deer path leads in from the treeline, about thirty minutes' walk. Students come to read, nap between the roots, or be alone without feeling lost. The crust for Eating in the Forest goes on its roots. Patrols turn students back at dusk, and nobody answers their name out here after dark. In winter the clearing stays green and in flower while snow lies everywhere around it.",
+  "description": "A single oak called the Elder Oak stands in an open clearing in the middle of the Forest, so broad a dozen students holding hands cannot circle it, and older than the castle by anyone's guess. The canopy opens above the clearing, so the oak stands in full sun while the woods around it stay dim; the muffled quiet of the Forest gives way to birdsong at its edge, and gold motes drift in the light even on grey days. Its roots pull the ground's mana into slow currents unlike anywhere else on campus, and a wild field of rare flowers has spread across the clearing around it, in colours found nowhere else. The Gardening Club has tried transplanting them; they wilt within a day of leaving the clearing. A deer path leads in from the treeline, about thirty minutes' walk. Students come to read, nap between the roots, or be alone without feeling lost. The crust for Eating in the Forest goes on its roots. Patrols turn students back at dusk, and nobody answers their name out here after dark. In winter the clearing stays green and in flower while snow lies everywhere around it. Sitting among the oak's roots, a mage feels their mana refill like water finding its level.",
   "vibe": "sunlit, still, majestic, flower-scent and birdsong.",
   "has_secret": false,
   "regulars": [
@@ -5222,7 +5240,7 @@
     4
    ],
    [
-    "meditation_rooms_spirit_house",
+    "meditation_rooms",
     6
    ],
    [
@@ -5348,6 +5366,55 @@
    [
     "boathouse_and_lake",
     10
+   ]
+  ]
+ },
+ "spirit_path": {
+  "id": "spirit_path",
+  "name": "Spirit Path",
+  "uid": 347,
+  "category": "Sport and Grounds",
+  "kind": "location",
+  "description": "A narrow footpath that leaves the grounds behind the Gymnasium and winds through old trees along the eastern edge of the academy, a loop short enough to walk in a quarter of an hour. Spirits like it here: the air under the trees is still and green, lesser spirits drift among the roots and branches, and small stone cairns that students have stacked over the years mark the way. Spirit users bring their pact partners here to let them out for a short walk. It is also where beginners come to meet a lesser spirit and try their first Spirit Pact; the custom is to go slowly, offer something small, and let the spirit choose. Almost any Occult student can bond a lesser spirit; a pact is a lasting contract, and the Occult teachers expect to be told of one. Anyone may come to watch: a stone bench at each bend faces the trees, and at dusk and dawn the lesser spirits are easy to see, a flicker in the ferns, a small light keeping pace along a branch. Most are shy; now and then one comes close out of curiosity, and it is considered lucky to be looked over and left in peace.",
+  "vibe": "green, dappled, hushed, quietly watched (never unkindly).",
+  "has_secret": false,
+  "regulars": [
+   "Royhan",
+   "Ruby"
+  ],
+  "connections": [
+   "gymnasium",
+   "menagerie",
+   "sports_field"
+  ],
+  "walk_min": 17,
+  "clubs": [],
+  "access": "Open to students; unlit after dark, and curfew applies",
+  "lore": [],
+  "floor": null,
+  "pin": 38,
+  "discoverable": false,
+  "seasons": {
+   "Spring": "Lesser spirits are thickest when the new leaves come; the path is busy with first-years.",
+   "Autumn": "Fallen leaves stir on windless days. It is only the spirits.",
+   "Winter": "Snow shows small tracks that stop in the middle of the path."
+  },
+  "near": [
+   [
+    "gymnasium",
+    3
+   ],
+   [
+    "menagerie",
+    5
+   ],
+   [
+    "sports_field",
+    5
+   ],
+   [
+    "swimming_pool",
+    3
    ]
   ]
  },

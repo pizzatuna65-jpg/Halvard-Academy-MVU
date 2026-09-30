@@ -137,7 +137,7 @@ None of these are true. Everyone follows them anyway.
     >third-year walks past, does something to the handle
     >"welcome up"
 
-There are also places on the map nobody will explain: a **headless statue** in a grove near the Dovecote, with an inscription worn smooth; an **Old Hut** on the edge of the Forest where, by long custom, whatever you say inside stays inside; and a **Spirit House** that makes noises on still nights.
+There are also places on the map nobody will explain: a **headless statue** in a grove near the Dovecote, with an inscription worn smooth, and an **Old Hut** on the edge of the Forest where, by long custom, whatever you say inside stays inside.
 
 ***
 

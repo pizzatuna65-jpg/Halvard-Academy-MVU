@@ -3,13 +3,13 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.30.6** (2026-09-30), playtest fixes on top of 1.30.0; the Builder has a "Charles Chevalier" template for playtests; "Connected to" follows the map picture (hidden on the map cards). The proficiency plan is complete (1.25–1.30): red "new" dots, six proficiencies,
-Practice, crafting with masterwork, and now marks from preparation, proficiency and attendance plus Rank 5 mastery perks. Live
-checks: `docs/TEST_CHECKLIST.md` "Open".
+**Snapshot:** card **v1.31.0** (2026-09-30): the Meditation Rooms and the new Spirit Path (pin 38, first pacts in play), six restful
+places (stamina and mana, by hour and weather), new activities (rowing, the hills, the willow, a bell-keeper's shift, the Old Hut
+custom, letters home). The proficiency plan is complete (1.25–1.30). Live checks: `docs/TEST_CHECKLIST.md` "Open".
 Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** none scheduled. Playtest the proficiency plan (live checks in `docs/TEST_CHECKLIST.md`), then tune the numbers in
-`planning/FUTURE_PLANS.md` §5 or pick a plan from there.
+**Next task:** none scheduled. Playtest 1.31.0 (the Spirit Path, restful places, letters home) and the proficiency plan (live checks in
+`docs/TEST_CHECKLIST.md`), then tune the numbers in `planning/FUTURE_PLANS.md` §5 or pick a plan from there.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

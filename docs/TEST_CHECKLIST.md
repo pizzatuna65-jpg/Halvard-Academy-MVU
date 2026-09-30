@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.31.0 (Spirit Path, restful places, activities): the four checks in its section below.
 - v1.30.6: the one check in its section below.
 - v1.30.5: the one check in its section below.
 - v1.30.4: the one check in its section below.
@@ -63,6 +64,13 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.31.0 — Spirit Path, restful places, activities
+
+1. Map: pin 38 "Spirit Path" sits in the trees right of the Gymnasium's pool; the Meditation Rooms card and the Spirit Path card read as the new lore. Open an old chat that was at the "Meditation Rooms / Spirit House": the location shows as the Meditation Rooms.
+2. Rest an hour in the Meditation Rooms (or the Bathhouse): `<now>` names the rate, the map card's Restores row says the same, and mana (stamina) rises faster than at the Library. The narrator does not add a bonus itself.
+3. With an Occult student at the Spirit Path, play out a first pact with a lesser spirit: the narrator adds it under Magic.Pacts and "Summon <name>" appears on the Techniques page. Try it at another place: the engine removes it and says why.
+4. At the Mail Tower, write a letter home: a week later a reply waits at the Mail Tower; read it, and any parcel lands in the Bag or the Wallet.
 
 ### v1.30.6 — Connected to follows the map
 

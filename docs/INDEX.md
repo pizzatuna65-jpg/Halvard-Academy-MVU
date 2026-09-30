@@ -57,8 +57,8 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepFeatures` (0b) | parks features that are off, `OFF`, `$ui.on`, old-lorebook warning, `REPORTED` | `data/features.json` |
 | `stepTime` (1) | clock, rollover, `_Event_today` day plan, birthday, `absA`/`dayNo` | `data/calendar.json` |
 | `stepWeather` (1b) | season, sky, wind, °C, forecast; clear on calendar `fair` days (`wxRollDay`) | `wxDay`, `wxForecast`, `data/calendar.json` |
-| `stepMagic` (2+3) | casts, mana regen, pacts/summons, sustained effects, Arcane scholar discount | `data/wind_casting.json` |
-| `stepRest` (4) | sleep and rest, sleep debt, used items (`/Consumables`) | |
+| `stepMagic` (2+3) | casts, mana regen, pacts/summons (a first lesser Spirit Pact in play, 1.31.0), sustained effects, Arcane scholar discount | `data/wind_casting.json` |
+| `stepRest` (4) | sleep and rest, restful places (`restMult`, `$ui.rest`), sleep debt, used items (`/Consumables`) | `data/restore_places.json` |
 | `stepExposure` (4b) | Soaked / Chilled / Overheated, head cold, crafted Consumables healing | |
 | `stepVitals` (5) | 40-HP cap per event unless `Lethal_flag`, death, clamps, mana rounding, Formidable | |
 | `stepReputation` (5b) | Rep XP and levels, named deeds; exports `repAdd`, `repLv`, `weekNo` | `data/reputation.json` |
@@ -72,7 +72,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepPerkUse` (6c) | one-use perks | `_Perks` |
 | `stepHidden` (7) | Dove attention, hidden magic, Points without Transactions | |
 | `stepPayout` (8) | monthly payout | |
-| `stepRecords` (8b) | Commitments, Notices, Letters, Clues, Journal, Heals_by | |
+| `stepRecords` (8b) | Commitments, Notices, Letters (letters home and their parcel, `$eng.home`), Clues, Journal, Heals_by | `data/letters_home.json` |
 | `stepClubLife` (8c) | club, competition, projects, trip | |
 | `stepNewYear` (8e) | new campaign year, cohorts | `data/cohorts.json` |
 | `stepGraduation` / `stepGraduateRewards` (8d, 8d2) | third-years leave; their rewards end | |
@@ -141,7 +141,7 @@ In `merge_lorebooks.py`: `rep(entry, old, new)` (asserting text edits), `apply_l
 ## 7. Data files (`data/`)
 
 Hand-written single sources (edit these): `shop.json`, `happenings.json`, `calendar.json`, `features.json`, `tuning.json`,
-`ambience.json`, `wind_casting.json`, `assets_manifest.json`, `cohorts.json`, `campus_phases.json` (empty until canon waves).
+`ambience.json` (1.31.0: `lore_places`), `restore_places.json` and `letters_home.json` (1.31.0), `wind_casting.json`, `assets_manifest.json`, `cohorts.json`, `campus_phases.json` (empty until canon waves).
 *Per NPC* (a new NPC needs a row): `bond_rewards.json`, `bond_rules.json`, `bond_openness.json`, `tension.json`, `trust.json`,
 `npc_moods.json`, `gift_prefs.json`, `npc_canon.json` (voices, stages, Rank 8 branch), `rank4_partners.json`, `relations_curated.json`,
 `voice_rules.json`, `initiative_asks.json`, `field_overrides.json`, `focus_overrides.json`, `thumb_overrides.json`.

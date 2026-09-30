@@ -192,7 +192,7 @@ ADJ = [*[('Courtyards', x) for x in ('Arbiter Hall', 'Canteen', 'Club Rooms', 'M
        *[("Founder's Statue and Park", x) for x in ('Medical Centre', 'Mail Tower', "Groundskeeper's Lodge", 'Combat Grounds', 'Sports Field', 'Archery Range')],
        *[('The Mall', x) for x in ('Medical Centre', 'Commissary', 'The Banking House', 'The Cathedral')],
        ('Medical Centre', 'Mail Tower'), ('Medical Centre', 'Commissary'), ('Mail Tower', "Groundskeeper's Lodge"),
-       ('Commissary', 'The Banking House'), ('The Banking House', 'Meditation Rooms / Spirit House'),
+       ('Commissary', 'The Banking House'), ('The Banking House', 'Meditation Rooms'),
        ('Gardens', 'Menagerie'), ('Gardens', 'Archery Range'), ('Menagerie', 'Archery Range'), ('Menagerie', 'Gymnasium'),
        ('Archery Range', 'Gymnasium'), ('Archery Range', 'Sports Field'), ('Gymnasium', 'Swimming Pool'), ('Gymnasium', 'Sports Field'),
        ('Sports Field', 'Combat Grounds'), ('Sports Field', 'The Sparring Pavilion'), ('Combat Grounds', 'The Sparring Pavilion'),
@@ -203,7 +203,8 @@ ADJ = [*[('Courtyards', x) for x in ('Arbiter Hall', 'Canteen', 'Club Rooms', 'M
        ('Boathouse and Lake', 'Willow Island'), ('Forest', 'Forest Clearing'),
        ('The Dovecote', 'The Cathedral'), ('The Dovecote', "The Noble Houses' Liaison"), ('The Cathedral', "The Noble Houses' Liaison"),
        ('Broken Statue', 'The Dovecote'), ('Broken Statue', 'The Cathedral'),
-       ('Meditation Rooms / Spirit House', 'The Cathedral'), ('Meditation Rooms / Spirit House', "The Noble Houses' Liaison"),
+       ('Meditation Rooms', 'The Cathedral'), ('Meditation Rooms', "The Noble Houses' Liaison"),
+       ('Spirit Path', 'Gymnasium'), ('Spirit Path', 'Menagerie'), ('Spirit Path', 'Sports Field'),   # 1.31.0
        *[(d, x) for d in ('Fire Dormitory', 'Light Dormitory', 'Sky Dormitory', 'Viridian Dormitory')
          for x in ('Common Rooms', 'Laundry', 'Bathhouse and Washrooms')],
        *[('The Mall', s) for s in ('Nightwell', "Merryhew's", 'The Snug', *GIFT_SHOPS)]]   # 1.9.5: every Mall shop links to The Mall and back
@@ -211,7 +212,7 @@ for a, b in ADJ:
     a, b = need(L(a), L(b))
     if b not in locs[a]['connections']: locs[a]['connections'].append(b)
     if a not in locs[b]['connections']: locs[b]['connections'].append(a)
-WALK = {5: ['The Mall', 'Medical Centre', 'Commissary', 'The Banking House', 'Meditation Rooms / Spirit House', "Founder's Statue and Park", 'Broken Statue', 'Mail Tower'],
+WALK = {5: ['The Mall', 'Medical Centre', 'Commissary', 'The Banking House', 'Meditation Rooms', "Founder's Statue and Park", 'Broken Statue', 'Mail Tower'],
         10: ['Combat Grounds', 'The Sparring Pavilion', 'Sports Field', 'Gymnasium', 'Swimming Pool', 'Archery Range'],
         15: ['Gardens', 'Menagerie'], 20: ['Grassy Field and Hills'], 25: ['Observation Tower'], 30: ['Old Hut', 'Boathouse and Lake'],
         33: ['Fishing House'], 35: ['Forest'], 40: ['Willow Island'], 65: ['Forest Clearing'], 0: ['Courtyards']}
@@ -240,9 +241,10 @@ ACCESS = {'Seal Chamber': 'Forbidden — the Warden only; magic near it is banne
           'Fire Dormitory': 'Residents only (bracelet door)', 'Light Dormitory': 'Residents only (bracelet door)', 'Sky Dormitory': 'Residents only (bracelet door)',
           'Viridian Dormitory': 'Residents only (bracelet door)', 'Staff Quarters': 'Staff residence', 'The Dovecote': "Crown ground — the Doves' compound",
           'The Royal Inspectorate': 'Crown office — the Headmaster has no authority past the door', "The Noble Houses' Liaison": 'By invitation',
-          'Detention Tower': 'When assigned detention', 'Meditation Rooms / Spirit House': 'Students are not to go alone',
+          'Detention Tower': 'When assigned detention',
           'Reception and Gatehouse': 'The only way in or out', 'Forest': 'Far edge of the grounds; curfew applies after dark',
           'Combat Grounds': 'Dorm-separated training areas; duels only inside a warded ring', 'Staff Room': 'Staff only',
+          'Spirit Path': 'Open to students; unlit after dark, and curfew applies',
           'Faculty Offices': 'Staff; students by visit', 'Willow Island': 'By boat from the boathouse; no bookings after dark'}
 for nm, a in ACCESS.items(): locs[need(L(nm))[0]]['access'] = a
 locs['rooftop']['discoverable'] = True
@@ -306,10 +308,11 @@ PINS = {1: ('Castle', ['canteen', 'main_library', 'club_rooms', 'student_council
         21: ("Founder's Park", ['founders_statue_and_park']), 22: ('The Mall', ['mall', 'nightwell', 'merryhews', 'snug'] + GIFT_SHOP_IDS),
         23: ('Commissary', ['commissary']), 24: ('Medical Centre', ['medical_centre']), 25: ('Mail Tower', ['mail_tower']),
         26: ('Gatehouse', ['reception_and_gatehouse']), 27: ('Banking House', ['banking_house']), 28: ('The Dovecote', ['dovecote']),
-        29: ('The Cathedral', ['cathedral']), 30: ("Noble Houses' Liaison", ['noble_houses_liaison']), 32: ('Spirit House', ['meditation_rooms_spirit_house']),
+        29: ('The Cathedral', ['cathedral']), 30: ("Noble Houses' Liaison", ['noble_houses_liaison']), 32: ('Meditation Rooms', ['meditation_rooms']),
         33: ('Broken Statue', ['broken_statue']), 34: ('Fishing House', ['fishing_house']), 35: ('Willow Island', ['willow_island']),   # 1.2.0: own places
         36: ('Grassy Field and Hills', ['grassy_field_and_hills']),
-        37: ('Forest', ['forest'])}   # 1.3.1 (owner): the Forest has its own pin, in the trees below the Forest Clearing near the Fire Dormitory
+        37: ('Forest', ['forest']),   # 1.3.1 (owner): the Forest has its own pin, in the trees below the Forest Clearing near the Fire Dormitory
+        38: ('Spirit Path', ['spirit_path'])}   # 1.31.0 (owner): the footpath through the trees east of the Gymnasium
 XY = json.load(open(P('data/pins_pct.json')))
 pins = []
 for n, (label, cluster) in PINS.items():

@@ -1,0 +1,209 @@
+{
+ "_note": "1.31.0 (owner-approved planning/DRAFT_restore_places.md, 2026-09-30): places where resting (Vitals.Resting \"rest\") for the whole elapsed time recovers faster. Stamina: the multiplier scales rest (+20 an hour); mana: it scales passive regeneration (Settings > Body and magic). Rules are checked in order for every five minutes of the rest and the first that fits sets the multiplier; none fits = usual. if: dark (outside daylight, as Practice daylight), from/to (minutes of the day), days, weeks ([month, week]), sky (weather sky), snow, tempMin/tempMax (degrees C outside), arrivedCold (Chilled or Soaked before the rest). With the weather off, weather conditions never fit. clears: a condition ended after that many minutes of rest there. Read by gen_engine.py (engine) and gen_ui.py (map card).",
+ "places": {
+  "founders_statue_and_park": {
+   "restores": "stamina",
+   "usual": 1.5,
+   "summary": "Stamina x1.5 while resting in fair daylight; x1.75 on a warm sunny afternoon; nothing extra in rain, snow, fog, cold or after dark",
+   "rules": [
+    {
+     "if": {
+      "dark": true
+     },
+     "mult": 1,
+     "why": "after dark"
+    },
+    {
+     "if": {
+      "sky": [
+       "Overcast",
+       "Fog",
+       "Rain",
+       "Storm"
+      ]
+     },
+     "mult": 1,
+     "why": "the weather"
+    },
+    {
+     "if": {
+      "snow": true
+     },
+     "mult": 1,
+     "why": "snow"
+    },
+    {
+     "if": {
+      "tempMax": 4
+     },
+     "mult": 1,
+     "why": "too cold to lie on the grass"
+    },
+    {
+     "if": {
+      "sky": [
+       "Clear"
+      ],
+      "tempMin": 15,
+      "tempMax": 27,
+      "from": 660,
+      "to": 960
+     },
+     "mult": 1.75,
+     "why": "a warm sunny afternoon"
+    }
+   ]
+  },
+  "medical_centre": {
+   "restores": "stamina",
+   "usual": 1.75,
+   "summary": "Stamina x1.75 while resting in the ward; x1.25 in exam weeks, competition weeks and the week after the Thinning",
+   "rules": [
+    {
+     "if": {
+      "weeks": [
+       [
+        3,
+        1
+       ],
+       [
+        5,
+        1
+       ],
+       [
+        9,
+        1
+       ],
+       [
+        11,
+        1
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        6,
+        4
+       ],
+       [
+        9,
+        4
+       ],
+       [
+        7,
+        4
+       ]
+      ]
+     },
+     "mult": 1.25,
+     "why": "a busy week: the beds go to the injured first"
+    }
+   ]
+  },
+  "bathhouse_and_washrooms": {
+   "restores": "stamina",
+   "usual": 2,
+   "clears": {
+    "Chilled": 30
+   },
+   "summary": "Stamina x2 while resting in your own dorm's bathhouse; x2.5 on a cold day or when you come in chilled or soaked; 30 minutes ends Chilled",
+   "rules": [
+    {
+     "if": {
+      "arrivedCold": true
+     },
+     "mult": 2.5,
+     "why": "warming up after the cold"
+    },
+    {
+     "if": {
+      "tempMax": 5
+     },
+     "mult": 2.5,
+     "why": "a cold day outside"
+    }
+   ]
+  },
+  "cathedral": {
+   "restores": "mana",
+   "usual": 1.25,
+   "summary": "Mana x1.25 while sitting quietly on the pews; x1.75 during the Sunday service (09:00-11:00)",
+   "rules": [
+    {
+     "if": {
+      "days": [
+       "Sun"
+      ],
+      "from": 540,
+      "to": 660
+     },
+     "mult": 1.75,
+     "why": "the Sunday service"
+    }
+   ]
+  },
+  "meditation_rooms": {
+   "restores": "mana",
+   "usual": 2,
+   "summary": "Mana x2 while resting; x2.5 in the quiet morning (07:00-09:00); x1.75 in exam weeks, when every room is full",
+   "rules": [
+    {
+     "if": {
+      "weeks": [
+       [
+        3,
+        1
+       ],
+       [
+        5,
+        1
+       ],
+       [
+        9,
+        1
+       ],
+       [
+        11,
+        1
+       ]
+      ]
+     },
+     "mult": 1.75,
+     "why": "exam week: every room is full"
+    },
+    {
+     "if": {
+      "from": 420,
+      "to": 540
+     },
+     "mult": 2.5,
+     "why": "the quiet morning"
+    }
+   ]
+  },
+  "forest_clearing": {
+   "restores": "mana",
+   "usual": 3,
+   "summary": "Mana x3 while resting among the Elder Oak's roots; x3.5 in full sun; x2 after dark",
+   "rules": [
+    {
+     "if": {
+      "dark": true
+     },
+     "mult": 2,
+     "why": "after dark"
+    },
+    {
+     "if": {
+      "sky": [
+       "Clear"
+      ]
+     },
+     "mult": 3.5,
+     "why": "full sun on the oak"
+    }
+   ]
+  }
+ }
+}

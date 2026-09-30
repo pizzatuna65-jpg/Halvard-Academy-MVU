@@ -174,8 +174,8 @@ Weekly timetable ([M] mixed dorms, [D] per dorm):
 - **Library:** Archive (Undercroft), Main Library (Floor 1), Restricted Section (Undercroft), Study Rooms (Floor 2)
 - **Mall shop:** Merryhew's, Nightwell, The Snug
 - **Residential:** Bathhouse and Washrooms, Canteen (Floor 1), Common Rooms, Fire Dormitory, Laundry, Light Dormitory, Sky Dormitory, Staff Quarters, Storage and Lockers (Floor 2), Viridian Dormitory
-- **Services:** Commissary, Detention Tower (Floor 1), Groundskeeper's Lodge, Medical Centre, Meditation Rooms / Spirit House, Reception and Gatehouse
-- **Sport and Grounds:** Archery Range, Boathouse and Lake, Broken Statue, Fishing House, Forest, Forest Clearing, Gardens, Grassy Field and Hills, Gymnasium, Menagerie, Observation Tower, Old Hut, Sports Field, Swimming Pool, Willow Island
+- **Services:** Commissary, Detention Tower (Floor 1), Groundskeeper's Lodge, Medical Centre, Meditation Rooms, Reception and Gatehouse
+- **Sport and Grounds:** Archery Range, Boathouse and Lake, Broken Statue, Fishing House, Forest, Forest Clearing, Gardens, Grassy Field and Hills, Gymnasium, Menagerie, Observation Tower, Old Hut, Spirit Path, Sports Field, Swimming Pool, Willow Island
 - **Student Life:** Announcement Room (Floor 1), Club Rooms (Floor 1), Courtyards, Mail Tower, Notice Board (Floor 1), Rooftop (Towers & Roof), Student Council Chamber (Floor 1), The Mall
 - **The Site:** The Seal Chamber (Undercroft), The Warden's Office (Floor 1)
 

@@ -239,7 +239,7 @@ def apply_lore_edits(C, N):
     m['content'] = m['content'].replace(old.group(0),
         "castle core 5-7 (more for the upper floors); Sky and Light Dormitories 4-5, Viridian 6, Fire 8; the Mall and Medical Centre 5-6, "
         "Mail Tower 7, Cathedral 8, Commissary 8, Banking House 10; Founder's Park 7; Reception and Gatehouse 9 (the Mall is only 6 from the gate); "
-        "Gardens, Hills and Broken Statue 10; Archery Range, Spirit House and Groundskeeper's Lodge 11; Dovecote and Noble Houses' Liaison 12; "
+        "Gardens, Hills and Broken Statue 10; Archery Range, Meditation Rooms and Groundskeeper's Lodge 11; Dovecote and Noble Houses' Liaison 12; "
         "Menagerie and Observation Tower 13; Combat Grounds, Gymnasium, Swimming Pool, Boathouse and Lake, Fishing House 14; Sports Field and Old Hut 15; "
         "Sparring Pavilion 17; Willow Island 24 (the last stretch by boat); Forest treeline 28; Forest Clearing 43.")
     rep(C[72], "[Sports Field] Soccer, running, and Sports Day in Month 6.",
@@ -267,6 +267,53 @@ def apply_lore_edits(C, N):
     N[332] = template_from(N[283], uid=332, displayIndex=332, comment="Regulars — The Sparring Pavilion",
         key=["Sparring Pavilion", "the pavilion", "Duelling Club headquarters"],
         content="[Regulars — The Sparring Pavilion] Gavlan, Sophia, Caspian (as a guest).")
+    # 1.31.0 (owner-approved planning/DRAFT_spirit_path.md, 2026-09-30): the old "Meditation Rooms / Spirit House" is two places. The
+    # riad is only the Meditation Rooms now, calm and silent (the bound spirits and the unexplained sounds are gone); the spirits have
+    # the Spirit Path, a footpath through the trees east of the Gymnasium (pin 38). Regulars: Caspian and Tristan (Haunts) meditate;
+    # Ruby and Royhan walk their pact partners.
+    C[87]['comment'] = 'Academy Location - Services - Meditation Rooms'
+    C[87]['key'] = ['Meditation Room', 'Meditation Rooms', 'meditation', 'meditate']
+    C[87]['content'] = ("[Meditation Rooms] An old, weathered building built like a riad: blank outer walls with few windows, every room facing inward "
+        "onto a shaded central courtyard with a still, shallow pool. Moss and vines cover its walls and dense, leafy trees crowd close around it; "
+        "between the thick walls and the trees, no sound from the campus gets in. Small, dim rooms with floor cushions serve will-focus training, "
+        "and the courtyard is for anyone who simply needs to sit. Open to every student, for training or just to take a breath. The one house rule: "
+        "speak no louder than a murmur, and leave others to their silence. Mana settles and refills faster in the silence; students come before "
+        "exams and after long practicals.\n"
+        "Feel: calm, serene, hushed, moss and cool stone.")
+    assert 347 not in C and 347 not in N and 348 not in C and 348 not in N
+    C[347] = template_from(C[269], uid=347, displayIndex=347, comment="Academy Location - Sport and Grounds - Spirit Path",
+        key=["Spirit Path", "spirit walk", "lesser spirit", "lesser spirits", "first pact", "the cairns"],
+        content=("[Spirit Path] A narrow footpath that leaves the grounds behind the Gymnasium and winds through old trees along the eastern edge of "
+                 "the academy, a loop short enough to walk in a quarter of an hour. Spirits like it here: the air under the trees is still and green, "
+                 "lesser spirits drift among the roots and branches, and small stone cairns that students have stacked over the years mark the way. "
+                 "Spirit users bring their pact partners here to let them out for a short walk. It is also where beginners come to meet a lesser "
+                 "spirit and try their first Spirit Pact; the custom is to go slowly, offer something small, and let the spirit choose. Almost any "
+                 "Occult student can bond a lesser spirit; a pact is a lasting contract, and the Occult teachers expect to be told of one. Anyone may "
+                 "come to watch: a stone bench at each bend faces the trees, and at dusk and dawn the lesser spirits are easy to see, a flicker in the "
+                 "ferns, a small light keeping pace along a branch. Most are shy; now and then one comes close out of curiosity, and it is considered "
+                 "lucky to be looked over and left in peace.\n"
+                 "Feel: green, dappled, hushed, quietly watched (never unkindly)."))
+    rep(N[314], "[Regulars — Meditation Rooms / Spirit House] Caspian, Ruby, Royhan.", "[Regulars — Meditation Rooms] Caspian, Tristan.")
+    N[314]['comment'] = "Regulars — Meditation Rooms"
+    N[314]['key'] = ['Meditation Room', 'Meditation Rooms', 'meditation', 'meditate']
+    N[348] = template_from(N[314], uid=348, displayIndex=348, comment="Regulars — Spirit Path", key=["Spirit Path", "lesser spirit", "the cairns"],
+        content="[Regulars — Spirit Path] Ruby, Royhan.")
+    # 1.31.0 (owner-approved planning/DRAFT_restore_places.md and DRAFT_location_activities.md): why a place restores, the Cathedral's
+    # service, the bell-keeper's shift, letters home, and talk in the laundry
+    def add_to_first(uid, text):
+        e = C[uid]; lines = e['content'].split('\n'); i = next(n for n, l in enumerate(lines) if l.startswith('['))
+        lines[i] = lines[i].rstrip() + ' ' + text; e['content'] = '\n'.join(lines)
+    add_to_first(64, "A long soak here takes the ache out of anything short of an injury.")
+    add_to_first(63, "Talk carries over the rune tubs, and half the rumours on campus pass through here.")
+    add_to_first(47, "On a fair day, an hour on the grass restores more than an hour anywhere indoors.")
+    add_to_first(82, "The ward's beds are for the injured first, but a nurse will let an exhausted student lie down for an hour.")
+    add_to_first(90, "A service is held every Sunday morning, from nine to eleven, and the pews are open every day for anyone who wants to sit in "
+                     "quiet. Students of every dormitory come: some to pray, some for the singing, some because it is the one place a conversation "
+                     "with a stranger does not seem strange. Mana comes back a little faster in the quiet of the nave; the clergy call it Asmoday's "
+                     "grace, the academy calls it the silence, and both are glad to see students on the pews.")
+    add_to_first(254, "Sitting among the oak's roots, a mage feels their mana refill like water finding its level.")
+    add_to_first(48, "A bell-keeper looks after the bells and their ropes, and takes on a student for a paid shift now and then.")
+    add_to_first(70, "Students write home from the desks on the sorting floor; a reply takes about a week, and sometimes a small parcel comes with it.")
     add_world_myths(C)
     add_nations(C)
 
@@ -528,7 +575,10 @@ SEASONAL = {
          'winter': "Porridge, thick broth and second helpings."},
     66: {'summer': "The Sunfizz counter queue reaches the door.", 'winter': "The warmest crowded place on campus; nobody hurries out."},
     82: {'summer': "Sunburn and sports injuries.", 'winter': "The winter cold that goes round campus fills its ward with head colds."},
-    87: {'winter': "The bare vines let a little more light in, which somehow makes it worse."},
+    87: {'winter': "The bare vines let more pale light into the courtyard, and the pool wears a thin skin of ice."},
+    347: {'spring': "Lesser spirits are thickest when the new leaves come; the path is busy with first-years.",
+          'autumn': "Fallen leaves stir on windless days. It is only the spirits.",
+          'winter': "Snow shows small tracks that stop in the middle of the path."},
 }
 EXAM_WEEK = "[3, 5, 9, 11].includes(+_w.Month) && +_w.Week === 1"
 PHASES = [   # (uid, sentence already in the entry or None, card gate on _w = World, line printed while it applies)
@@ -697,26 +747,28 @@ def ghost_stories(C, N):
                            "Founder's Park, Archery Range."),
         ("- Student life:", "- Student life: Main Courtyard – The Mall, Medical Centre. The Mall – Medical Centre, Commissary (each its own building, three "
                             "or four minutes' walk from it), Banking House, Cathedral. Medical Centre – Mail Tower, Commissary. Commissary – Banking House. "
-                            "Banking House – Meditation Rooms/Spirit House. Mail Tower – Groundskeeper's Lodge."),
+                            "Banking House – Meditation Rooms. Mail Tower – Groundskeeper's Lodge."),
         ("- Outer grounds:", "- Outer grounds: Main Courtyard – Founder's Park. Founder's Park – Light Dormitory, Medical Centre, Mail Tower, Groundskeeper's "
                              "Lodge, Combat Grounds, Sports Field, Archery Range. Arbiter Hall – Staff Quarters. Staff Quarters – Gardens. Gardens – "
                              "Menagerie, Archery Range. Archery Range – Menagerie, Gymnasium, Sports Field. Gymnasium – Menagerie, Sports Field, Swimming "
-                             "Pool (outdoor). Sports Field – Combat Grounds, Sparring Pavilion. Combat Grounds – Sparring Pavilion, Groundskeeper's Lodge."),
+                             "Pool (outdoor). Sports Field – Combat Grounds, Sparring Pavilion. Combat Grounds – Sparring Pavilion, Groundskeeper's Lodge. "
+                             "Spirit Path (the footpath through the trees east of the Gymnasium) – Gymnasium, Menagerie, Sports Field."),
         ("- Far edge:", "- Far edge: the long path out from Main Courtyard, past Arbiter Hall and the Staff Quarters, climbs to the Grassy Field/Hills. "
                         "Hills – Observation Tower, Old Hut, Boathouse/Lake, Fishing House, Forest. Gardens – Boathouse/Lake. Boathouse/Lake – Fishing "
                         "House (three minutes along the shore from the boathouse), Willow Island (by boat only), Forest. Old Hut – Forest. Forest – "
                         "Forest Clearing."),
         ("- Set apart from the core:", "- Set apart from the core: the Dovecote, Cathedral and Noble Houses' Liaison stand together on one side of the "
-                                       "grounds, with the Meditation Rooms/Spirit House below them; between them and the Fire Dormitory, in the trees, "
+                                       "grounds, with the Meditation Rooms below them; between them and the Fire Dormitory, in the trees, "
                                        "stands the Broken Statue. The Dovecote, Cathedral and Liaison sit on academy land the academy does not control, "
                                        "as does the Royal Inspectorate's suite inside the castle (Floor 1). Dovecote – Cathedral, Noble Houses' Liaison, "
-                                       "Broken Statue. Cathedral – Noble Houses' Liaison, Broken Statue, Spirit House. Noble Houses' Liaison – Spirit House.")):
+                                       "Broken Statue. Cathedral – Noble Houses' Liaison, Broken Statue, Meditation Rooms. Noble Houses' Liaison – Meditation Rooms.")):
         m = C[132]
         assert m['content'].count('\n' + head) == 1, head
         m['content'] = re.sub(r'(?m)^' + re.escape(head) + r'.*$', lambda _: line, m['content'], count=1)
     # the shortest paths curate_data.py computes without the old Courtyard links
     rep(C[132], "Mail Tower 7,", "Mail Tower 8,")
     rep(C[132], "Sports Field 15;", "Sports Field 16;")
+    rep(C[132], "Sparring Pavilion 17.", "Sparring Pavilion 17; Spirit Path 17.")   # 1.31.0
     rep(C[0], "the crying on the water, the night student.",
         "the crying on the water, the night student, the thirteenth stroke, the night swimmer, the walking lantern, breath on the glass, "
         "when the pens go quiet, the faraway laugh, the polite walker, the last bed, the other climber, the applause.")

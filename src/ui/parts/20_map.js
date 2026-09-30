@@ -231,6 +231,10 @@ function locCard(id, S, cur, P) {
     ['Clubs here', esc(l.clubs.map(c => c.replace(/\s*\(.*\)$/, '')).join(', ') || 'None')],
     ['Regulars', regs || '<span class="sub">Nobody you know yet</span>'],
   ];
+  // 1.31.0 (owner-approved planning/DRAFT_restore_places.md): a restful place says what resting there restores; where {{user}} is,
+  // with the rate the engine set for now
+  const rf = (DATA.restful || {})[id], rn = here && (S.$ui || {}).rest;
+  if (rf) rows.push(['Restores', rn ? esc(`${_.capitalize(rf.what)} ×${rn.mult} while resting now${rn.why ? ` (${rn.why}; usually ×${rf.usual})` : ''}`) : esc(rf.sum.replace(/ x(\d)/g, ' ×$1'))]);
   return `<article class="lc${here ? ' here' : ''}" data-loccard="${esc(id)}"><div class="crop" style="${cropStyle(P, S)}"><b>${esc(fl ? nameOn(id, fl) : l.name)}</b>${here ? '<span class="you">You are here</span>' : ''}</div>
     <div class="in">${fl ? `<p class="yrfl"><b>${esc(fl)}</b> · for Year ${YEAR_OF_FLOOR[fl]} students${YEAR_OF_FLOOR[fl] === _.clamp(num(((S.Player || {}).Profile || {}).Year, 1), 1, 3) ? ' · <span class="mine">your year</span>' : ''}</p>` : ''}${l.vibe ? `<p class="vibe">${esc(l.vibe)}</p>` : ''}${seasonLine(l, S)}
     <details><summary>Description</summary><p>${esc(untoldOut(l, S))}</p></details>

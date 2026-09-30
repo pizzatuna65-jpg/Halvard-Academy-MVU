@@ -243,6 +243,9 @@ Masterwork if finished this turn: <%- _m.map(x => x.name + ' ' + x.result + (x.m
 <%_ if (on('proficiency') && UI.craft_sale) { _%>
 Medical Centre apothecary: Healing draught 15 points per dose; <%- UI.craft_sale.sold %>/3 bought this week. Report a sale in /Craft_sales.
 <%_ } _%>
+<%_ if (UI.rest) { _%>
+Restful place: resting here (Resting "rest") now restores <%- UI.rest.what %> <%- UI.rest.mult %>x<%- UI.rest.why ? ' (' + UI.rest.why + (UI.rest.mult !== UI.rest.usual ? '; usually ' + UI.rest.usual + 'x' : '') + ')' : '' %>; the engine applies it.
+<%_ } _%>
 <%_ if (UI.training) { _%>
 {{user}}: <%- UI.training %>. Exhaustion shows in slow movements and short answers; collapsed means no interaction until awake.
 <%_ } if (on('weather') && UI.sleep && (UI.sleep.loss || UI.sleep.vigil)) { _%>

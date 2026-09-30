@@ -1,0 +1,10 @@
+[Spirit Path] A narrow footpath that leaves the grounds behind the Gymnasium and winds through old trees along the eastern edge of the academy, a loop short enough to walk in a quarter of an hour. Spirits like it here: the air under the trees is still and green, lesser spirits drift among the roots and branches, and small stone cairns that students have stacked over the years mark the way. Spirit users bring their pact partners here to let them out for a short walk. It is also where beginners come to meet a lesser spirit and try their first Spirit Pact; the custom is to go slowly, offer something small, and let the spirit choose. Almost any Occult student can bond a lesser spirit; a pact is a lasting contract, and the Occult teachers expect to be told of one. Anyone may come to watch: a stone bench at each bend faces the trees, and at dusk and dawn the lesser spirits are easy to see, a flicker in the ferns, a small light keeping pace along a branch. Most are shy; now and then one comes close out of curiosity, and it is considered lucky to be looked over and left in peace.
+Feel: green, dappled, hushed, quietly watched (never unkindly).
+<%_ { const _sm = Number(getvar('stat_data.World.Month')) || 1; _%>
+<%_ if (_sm >= 1 && _sm <= 3) { _%>
+In spring: Lesser spirits are thickest when the new leaves come; the path is busy with first-years.
+<%_ } else if (_sm >= 7 && _sm <= 9) { _%>
+In autumn: Fallen leaves stir on windless days. It is only the spirits.
+<%_ } else if (_sm >= 10 && _sm <= 12) { _%>
+In winter: Snow shows small tracks that stop in the middle of the path.
+<%_ } } _%>

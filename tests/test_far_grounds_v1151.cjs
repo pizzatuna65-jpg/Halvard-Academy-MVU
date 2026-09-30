@@ -35,7 +35,7 @@ ok(FAR.every(id => L[id].walk_min >= 20 && L[id].near.every(([o]) => FAR.include
 // every "<place> N" in the Campus Map walking line matches the computed walk from the Main Courtyard
 const line = /Ordinary walking estimates[^\n]*/.exec(map)[0];
 const NAMES = { 'Grassy Field and Hills': 'grassy_field_and_hills', 'Observation Tower': 'observation_tower', 'Boathouse and Lake': 'boathouse_and_lake', 'Old Hut': 'old_hut',
-  'Fishing House': 'fishing_house', 'Forest treeline': 'forest', 'Willow Island': 'willow_island', 'Forest Clearing': 'forest_clearing', 'Menagerie': 'menagerie', 'Sparring Pavilion': 'sparring_pavilion', 'Sports Field': 'sports_field' };
+  'Fishing House': 'fishing_house', 'Forest treeline': 'forest', 'Willow Island': 'willow_island', 'Forest Clearing': 'forest_clearing', 'Menagerie': 'menagerie', 'Sparring Pavilion': 'sparring_pavilion', 'Sports Field': 'sports_field', 'Spirit Path': 'spirit_path' };   // 1.31.0: the Spirit Path
 const bad = Object.entries(NAMES).filter(([n, id]) => { const m = new RegExp(n + ' ([0-9]+)').exec(line); return !m || +m[1] !== L[id].walk_min; });
 ok(!bad.length, `the walking line states the computed times (${bad.map(([n]) => n).join(', ') || 'all match'})`);
 ok(/far grounds \(the Lake, the Grassy Field and Hills, the Forest\) are wide open country, much farther than the map/.test(map) && /nothing out there is next door/.test(map), 'the Campus Map explains the far grounds');

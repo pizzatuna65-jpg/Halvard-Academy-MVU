@@ -127,6 +127,14 @@ assert not _bad, f'ambience.json: unknown places {_bad}'
 assert all(len(c[k]) == 9 for c in amb['cats'].values() for k in ('class', 'free', 'sat') if k in c) and len(amb['sun']) == 12, 'ambience.json: rhythm or sun table'
 assert all(b[0] == '*' or b[0] in amb['cats'] for b in amb['cues'] + amb['beats']), 'ambience.json: unknown category'
 t = t.replace('/*@@AMBIENCE@@*/{}', json.dumps({k: v for k, v in amb.items() if not k.startswith('_')}, ensure_ascii=False, separators=(',', ':')))
+# 1.31.0 restful places (keyed by the place's lowercase name) and letters home; their items must be shop items
+_rest = json.load(open(P('data/restore_places.json'), encoding='utf-8'))['places']
+assert all(lid in locs for lid in _rest), 'restore_places.json: unknown place'
+t = t.replace('/*@@RESTFUL@@*/{}', json.dumps({re.sub(r'^the ', '', locs[lid]['name'].lower()): v for lid, v in _rest.items()}, ensure_ascii=False, separators=(',', ':')))
+_home = {k: v for k, v in json.load(open(P('data/letters_home.json'), encoding='utf-8')).items() if not k.startswith('_')}
+_shopnames = {i['item'] for i in json.load(open(P('data/shop.json'), encoding='utf-8'))['items']}
+assert all(n in _shopnames for n, _ in _home['items']), 'letters_home.json: not a shop item'
+t = t.replace('/*@@HOME@@*/{}', json.dumps(_home, ensure_ascii=False, separators=(',', ':')))
 # Bond rules and where each NPC is usually found (Haunts, first clause).
 t = t.replace('/*@@BOND_RULES@@*/{}', json.dumps(json.load(open(P('data/bond_rules.json'), encoding='utf-8')), ensure_ascii=False, separators=(',', ':')))
 haunt = {}

@@ -15,7 +15,7 @@ const seasonLines = t => (t.match(/^In (spring|summer|autumn|winter): /gm) || []
 // every seasonal entry prints exactly its current season's line, never another season's
 const SEASON = m => ['spring', 'spring', 'spring', 'summer', 'summer', 'summer', 'autumn', 'autumn', 'autumn', 'winter', 'winter', 'winter'][m - 1];
 const seasonal = card.character_book.entries.filter(e => /^In (spring|summer|autumn|winter): /m.test(e.content)).map(e => e.id);
-ok(seasonal.length === 26, `26 entries carry season lines (${seasonal.length})`);
+ok(seasonal.length === 27, `27 entries carry season lines (${seasonal.length}; 1.31.0: the Spirit Path)`);
 let bad = [];
 for (const uid of seasonal) for (let m = 1; m <= 12; m++) {
   const L = seasonLines(R(uid, at(m))), want = new RegExp(`^In ${SEASON(m)}: `, 'm');
@@ -42,7 +42,7 @@ ok(/snakes across the lawn on exam mornings/.test(park.content) && (park.content
 
 // UI: the location card shows the current season's line; data/locations.json keeps the vibe clean
 const L = JSON.parse(rd('data/locations.json'));
-ok(Object.values(L).filter(l => l.seasons && Object.keys(l.seasons).length).length === 26 && L.old_hut.vibe === 'weathered wood, wind through gaps, grass and pine.', 'locations.json: 26 places with seasons, vibe untouched');
+ok(Object.values(L).filter(l => l.seasons && Object.keys(l.seasons).length).length === 27 && L.old_hut.vibe === 'weathered wood, wind through gaps, grass and pine.', 'locations.json: 27 places with seasons, vibe untouched');
 ok(!/In (spring|summer|autumn|winter):/.test(L.old_hut.description), 'the description no longer carries the season lines');
 const U = new Function(rd('src/scripts/ui.js') + '\nreturn { PANELS, view };')();
 let S = initState(); S.World.Month = 11; S.World.Location = 'Old Hut'; S.$ui.discovered = ['Old Hut'];

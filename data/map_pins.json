@@ -356,11 +356,11 @@
  },
  {
   "pin": 32,
-  "label": "Spirit House",
+  "label": "Meditation Rooms",
   "x": 18.23,
   "y": 79.1,
   "cluster": [
-   "meditation_rooms_spirit_house"
+   "meditation_rooms"
   ],
   "tabs": null
  },
@@ -411,6 +411,16 @@
   "y": 27.5,
   "cluster": [
    "forest"
+  ],
+  "tabs": null
+ },
+ {
+  "pin": 38,
+  "label": "Spirit Path",
+  "x": 95.1,
+  "y": 50.8,
+  "cluster": [
+   "spirit_path"
   ],
   "tabs": null
  }

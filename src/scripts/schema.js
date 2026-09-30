@@ -189,6 +189,7 @@ export const Schema = z.object({
     $tdrop: n(v.$tdrop, -99, 1e9, -99),   // 1.4.3: day of the last Trust drop (a quiet week recovers it; engine)
     $tlast: n(v.$tlast, 0, 100, 0),       // 1.4.4: size of that drop, for an 'understood' (engine)
     $tbrk: n(v.$tbrk, 0, 1, 0),           // 1.4.4: maximum Tension already broke a rank; re-armed below 70 (engine)
+    $hut: s(v.$hut),                      // 1.31.0: month of the last Old Hut confidence (engine)
     $Recent: Array.isArray(v.$Recent) ? v.$Recent.filter(r => r && typeof r === 'object').map(r => ({ w: s(r.w), n: s(r.n), fx: s(r.fx) })).slice(-10) : [],   // 1.4.4: latest moments with {{user}} (engine)
     // 1.6.0 (Batch C, P4/N4): the character's side, written by the narrator (not shown in the player's dossier)
     Mind: s(v.Mind).slice(0, 400),                                                  // how they feel about {{user}} now, what is on their mind
@@ -325,6 +326,7 @@ export const Schema = z.object({
     names: StrList(80),   // NPC ids whose name has appeared in the story prose (name reveal = story evidence, D14)
     happenings: Enum(['off', 'rare', 'normal', 'often'], 'normal'),   // 5.3: player setting (Student file > Settings)
     hap: z.any().prefault(null).catch(null),                          // 5.3: today's happening, structured for the UI
+    rest: z.any().prefault(null).catch(null),                         // 1.31.0: the restful place here and its multiplier now (engine)
     archive: StrList(300),                                            // 5.3: journal lines the narrator no longer reads
     secrets: StrList(500),                                            // 1.0.3: permanent ledger of Secrets_revealed (unlocks read it)
     // 1.1.0
@@ -384,6 +386,8 @@ export const Schema = z.object({
     daily: z.record(z.string(), z.any()).prefault({}).catch({}),
     prof: z.any().prefault(null).catch(null),
     craft: z.any().prefault(null).catch(null),                     // 1.28.0: clearing bloom's harvest day
+    pactPlay: Str(''),                                              // 1.31.0: the one Spirit Pact made in play (engine)
+    home: z.any().prefault(null).catch(null),                      // 1.31.0: the month's letter home, its reply and parcel (engine)
     profv: Int(0, 1, 0),
     initiative: z.any().prefault(null).catch(null),              // 1.7.7 (FP1): latched day/week, chosen NPC and per-NPC cooldown
     auth: Str(''),   // 'builder' only inside a Student Builder patch; lets it write the read-only fields once

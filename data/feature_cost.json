@@ -3,7 +3,7 @@
   "proficiency": 245,
   "planner": 87,
   "notices": 98,
-  "letters": 120,
+  "letters": 202,
   "mystery": 152,
   "competition": 95,
   "projects": 152,
@@ -24,8 +24,8 @@
   "reminders": 34,
   "study": 205
  },
- "core_rules": 8475,
- "lore": 4254,
+ "core_rules": 8870,
+ "lore": 4284,
  "price_guide": 5529,
  "live": {
   "class": 40,

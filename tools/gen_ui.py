@@ -82,6 +82,7 @@ _byname = {l['name']: lid for lid, l in DATA['locs'].items()}
 DATA['palias'] = {re.sub(r'^the ', '', a): _byname[nm] for a, nm in place_aliases(json.load(open(P('data/locations.json'), encoding='utf-8'))).items()}
 DATA['tune'] = json.load(open(P('data/tuning.json'), encoding='utf-8'))['groups']   # 1.3.1 Settings rows
 DATA['practice'] = json.load(open(P('data/practice.json'), encoding='utf-8'))
+DATA['restful'] = {lid: {'what': v['restores'], 'usual': v['usual'], 'sum': v['summary']} for lid, v in json.load(open(P('data/restore_places.json'), encoding='utf-8'))['places'].items()}   # 1.31.0
 _crafts = json.load(open(P('data/crafts.json'), encoding='utf-8'))
 DATA['crafts'] = [{**i, 'effect': effect_text(i)} for i in _crafts['recipes']]
 DATA['craftGroups'] = {g: v['actions'] for g, v in _crafts['groups'].items()}   # 1.29.0: Practice actions each craft is done under

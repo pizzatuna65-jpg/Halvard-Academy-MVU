@@ -1,7 +1,36 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.31.0 — Spirit Path, restful places, things to do around the grounds (2026-09-30)
+
+Owner-approved drafts `DRAFT_spirit_path`, `DRAFT_restore_places`, `DRAFT_location_activities` (all three deleted; leftovers in
+`planning/FUTURE_PLANS.md`). Decisions added: "Meditation Rooms and Spirit Path", "A first pact in play", "Restful places",
+"Location activities"; "Map cards" gains a Restores row.
+- **Two places.** The riad is only the **Meditation Rooms** now: calm, silent, open to everyone (no bound spirits, no night sounds,
+  no "not alone"); regulars Caspian and Tristan; Will-focus meditation no longer needs a partner; its own quiet ambience. The new
+  **Spirit Path** (pin 38, the trees east of the Gymnasium; 17 min from the Courtyard; next to the Gymnasium, Menagerie and Sports
+  Field): lore, seasons, regulars Ruby and Royhan, seasonal spirit sightings in the ambience, Practice "Watch the spirits" (Nature,
+  anyone) and "Walk with your spirit" (Arcana, pact partner with you). Old saves: the location and discovered list are renamed;
+  "Spirit House" still reads as the Meditation Rooms.
+- **A first pact in play**: an Occult student may bond one lesser spirit at the Spirit Path (rule 502); the engine writes its
+  Summon technique and removes any other new pact made outside the Builder.
+- **Restful places** (`data/restore_places.json`): resting there for the whole elapsed time. Stamina: Founder's Park x1.5 (x1.75
+  warm sunny afternoon; nothing in bad weather, cold or dark), Medical Centre ward x1.75 (x1.25 busy weeks), own Bathhouse x2
+  (x2.5 in the cold or arriving chilled; 30 min ends Chilled). Mana: Cathedral x1.25 (x1.75 Sunday service 09–11), Meditation Rooms
+  x2 (x2.5 07–09, x1.75 exam weeks), Forest Clearing x3 (x3.5 full sun, x2 after dark). `<now>` and the map card show the rate now.
+- **Activities**: Row on the lake, Run the hills (stamina training, not in storms), Read the sky (Nature), Sit under the willow
+  (Arcana, daylight); a paid Bell-keeper's shift (30, Craft); the Old Hut custom (a confidence there: Trust +1 once a month per
+  person); letters home from the Mail Tower (one a month; reply a week later; parcel 50% none / 30% an item / 20% 10–30 coin,
+  handed over on reading, `data/letters_home.json`); lore and rumours overheard at 60% in the bathhouse and laundry.
+- Save fixture v1.30.6. Tests: new `test_locations_v1310` (37 checks); `test_dynamic_lore_v1140` (27 seasonal entries) and
+  `test_far_grounds_v1151` (Spirit Path time) updated; full suite and lint pass.
+- To confirm with the owner: the bell-keeper bonus "next week's events early" was dropped (the Notebook already shows 14 days and
+  the full calendar; noted in FUTURE_PLANS); the bell-keeper's shift gives Craft +1 like the Menagerie shift gives Nature, and shares
+  the two paid shifts a week; Sit under the willow is daylight only; a pact made in play may be "terms" or "summoned"; the Old Hut
+  counts a confide or secret interaction; invented lines: the Meditation Rooms' cues ("the still pool", "cushions, low light"), a
+  laundry line ("half the rumours on campus pass through here") and the Mail Tower's writing desks.
 
 ## v1.30.6 — "Connected to" follows the map (2026-09-30)
 
@@ -55,13 +84,6 @@ temperature keeps the season). Decision touched: DECISIONS §4 **Weather** (a pu
   rain before) is now clear and nobody arrives Soaked.
 - Save fixture v1.30.2. Tests: `test_playtest_v1301` (+6 checks over 60 seeds); `test_world_v110`'s climate statistics now leave
   the unrolled event days out. **Full suite passes.**
-
-## v1.30.2 — "No classes today" on a day without classes (2026-09-30)
-
-Owner playtest: the bracelet said "Morning, before classes" at 07:30 on the Entrance Event, which has no classes. On a day whose
-timetable is suspended (Entrance Event, breaks, lockdown) the period now reads "Morning, no classes today" and, from 16:00,
-"Afternoon, no classes today"; ordinary school days are unchanged (`periodOf`). Save fixture v1.30.1. Tests: `test_playtest_v1301`
-(+2 checks), world, attendance, calendar, ambience, saves pass.
 
 ## Release index (one line per release, oldest first)
 
@@ -160,3 +182,4 @@ timetable is suspended (Entrance Event, breaks, lockdown) the period now reads "
 - **v1.30.4 (2026-09-30):** Student Builder template "Charles Chevalier", the owner's playtest student.
 - **v1.30.5 (2026-09-30):** With no picture uploaded, the Student file shows the SillyTavern persona's image.
 - **v1.30.6 (2026-09-30):** "Connected to" follows the map picture; the map cards no longer show it.
+- **v1.31.0 (2026-09-30):** Meditation Rooms and the new Spirit Path; restful places; new activities around the grounds; letters home.

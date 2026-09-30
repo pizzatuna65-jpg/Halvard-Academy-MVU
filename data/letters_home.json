@@ -1,0 +1,52 @@
+{
+ "_note": "1.31.0 (owner-approved planning/DRAFT_location_activities.md, 2026-09-30): a letter home, sent at the Mail Tower (Letters, From {{user}}, To a family member or 'home'), once a month. The reply arrives after `days`; the engine rolls its parcel once (percent: none, item, coin) and hands it over when {{user}} reads the reply. Items are shop items with their Bag kind; coin is a range.",
+ "days": 7,
+ "roll": {
+  "none": 50,
+  "item": 30,
+  "coin": 20
+ },
+ "coin": [
+  10,
+  30
+ ],
+ "to": "home|family|mother|father|mum|mom|dad|mama|papa|parents?|grand(?:ma|pa|mother|father|parents)|sister|brother|aunt|uncle|guardian|cousin",
+ "items": [
+  [
+   "Firetooth (tin)",
+   "food"
+  ],
+  [
+   "Honey bun",
+   "food"
+  ],
+  [
+   "Smoked river fish",
+   "food"
+  ],
+  [
+   "Elderflower cold syrup",
+   "drink"
+  ],
+  [
+   "Vigour tonic",
+   "drink"
+  ],
+  [
+   "Ember pouch",
+   "gear"
+  ],
+  [
+   "Rain-ward charm",
+   "gear"
+  ],
+  [
+   "Hearthstone hand-warmer",
+   "gear"
+  ],
+  [
+   "Letter paper set",
+   "other"
+  ]
+ ]
+}
