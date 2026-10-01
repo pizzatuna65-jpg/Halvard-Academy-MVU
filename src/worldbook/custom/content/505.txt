@@ -195,7 +195,7 @@ Campus phase: <%- PHASE.line %>
 Around campus today (optional, use only if it fits): <%- W._Happening %>
 <%_ } _%>
 <%_ if (/CURFEW|LOCKDOWN/.test(cur)) { _%>
-Presence: after curfew students are in their own dorms; only staff, patrols and rule-breakers are out.
+Presence: after curfew most students are in their own dorms; out are staff, patrols, and students sneaking out (only those whose personality allows it).
 <%_ } else { _%>
 <%_ if (pres.length) { _%>
 <%- pres.join(' ') %>

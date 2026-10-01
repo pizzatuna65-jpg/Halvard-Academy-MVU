@@ -9,8 +9,9 @@
       "t": "Entrance Event (Arbiter Stone sorting)",
       "noclass": 1,
       "entr": 1,
-      "s": "07:00–09:00 arrivals at Reception and Gatehouse; 09:00 Headmaster and Vice Headmaster speeches in the Arbiter Hall, then Stone sorting until 10:00 (Council hands out each dorm vest; sorted students remain seated with their dorm); 10:00–18:00 assigned tour groups of two new first-years and one senior, meeting in the hall, visit campus and club booths (sign-up open until Friday 18:00); late afternoon: seniors show new students their dorm rooms; 19:00 Entrance Feast in the Ring Dining Hall, opened by speeches from the Headmaster and Vice Headmaster before dinner",
-      "fair": 1
+      "s": "07:00–09:00 arrivals at Reception and Gatehouse; 09:00 Headmaster and Vice Headmaster speeches in the Arbiter Hall, then Stone sorting until 10:00 (Council hands out each dorm vest; sorted students remain seated with their dorm); 10:00–18:00 assigned tour groups of two new first-years and one senior, meeting in the hall, visit campus and club booths (sign-up open until Friday 18:00); late afternoon: seniors show new students their dorm rooms; 19:00 Entrance Feast in the Ring Dining Hall, opened by speeches from the Headmaster and Vice Headmaster before dinner; curfew moves to 22:00 tonight; classes begin tomorrow, Tuesday, first period 08:00",
+      "fair": 1,
+      "curfew": 22
     },
     {
       "m": 1,
@@ -67,7 +68,8 @@
         "Sat": "Until dawn: the feast runs late after the working"
       },
       "mood": "trial",
-      "fair": 1
+      "fair": 1,
+      "nocurfew": 1
     },
     {
       "m": 2,
@@ -207,7 +209,8 @@
       "ranking": 1,
       "s": "09:00 assembly in the Arbiter Hall, opened by speeches from the Headmaster and Vice Headmaster: trial results stage by stage, then the new dorm ranking read aloud last; 19:00 speeches from the Headmaster and Vice Headmaster, then the feast in the Ring Dining Hall",
       "mood": "exam",
-      "fair": 1
+      "fair": 1,
+      "curfew": 22
     },
     {
       "m": 5,
@@ -387,7 +390,8 @@
       ],
       "t": "Academy Founder Day",
       "s": "09:00 speeches from the Headmaster and Vice Headmaster in the Arbiter Hall, then a short rite at the Founder's Statue; all day: the optional treasure hunt across the campus; 19:00 speeches from the Headmaster and Vice Headmaster, then the feast in the Ring Dining Hall",
-      "fair": 1
+      "fair": 1,
+      "curfew": 22
     },
     {
       "m": 9,
@@ -432,7 +436,8 @@
       ],
       "t": "Remembrance Day",
       "s": "All day: nothing loud (no clubs, duelling, music, games or sport); classes run quietly, the Bell Tower keeps a slow pattern, bouquets line the halls; evening (about 19:00) on the Grassy Field and Hills: speeches from the Headmaster, the Vice Headmaster and Acting Warden Rei, then the lantern release, one lantern each",
-      "fair": 1
+      "fair": 1,
+      "curfew": 21
     },
     {
       "m": 10,
@@ -509,7 +514,8 @@
       "ranking": 1,
       "s": "09:00 assembly in the Arbiter Hall, opened by speeches from the Headmaster and Vice Headmaster: trial results stage by stage, then the final dorm ranking read aloud last; 19:00 speeches from the Headmaster and Vice Headmaster, then the feast in the Ring Dining Hall",
       "mood": "exam",
-      "fair": 1
+      "fair": 1,
+      "curfew": 22
     },
     {
       "m": 11,
@@ -569,7 +575,8 @@
       "noclass": 1,
       "grad": 1,
       "s": "09:00 ceremony in the Arbiter Hall: the Headmaster and Vice Headmaster speak, the Dorm Heads read out their graduates, each touches the Arbiter Stone a last time; afternoon: recruitment tables (noble houses, the Royal Inspectorate, the Dovecote, the Bank, hunting companies, guilds); from 12:00 the farewell winter market in the Main Courtyard and Founder's Park (stalls, snowmen if there is snow, the Farewell Pine, the Music Club on a small stage by the statue); dusk: the airship for the graduates moors above the Grassy Field; 19:00 the Headmaster and Vice Headmaster speak once more, then the farewell feast",
-      "fair": 1
+      "fair": 1,
+      "curfew": 22
     },
     {
       "m": 12,

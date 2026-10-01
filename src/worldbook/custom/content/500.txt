@@ -75,3 +75,4 @@ Battle:
 _Log: []
 $eng:
   lore: "@@VERSION@@"
+  profv: 1

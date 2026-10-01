@@ -3329,6 +3329,13 @@ function stepBag(c) {
   for (const x of S.Campus_State.Secrets_revealed || []) if (!S.$ui.secrets.includes(x)) S.$ui.secrets.push(x);
   const J0 = new Set((hasB && B.Journal) || []);
   S.Journal = (S.Journal || []).map(line => (J0.has(line) ? line : /^\[(Y\d+ )?M\d/.test(line) ? (S.World.Year > 1 ? withYear(line, S.World.Year) : line) : `[${dstamp(S.World)}] ${line}`));
+  // 1.35.2 (owner playtest): the narrator journaled the sorting in its own words and the engine added its line too. An engine
+  // line replaces a narrator line from this reply that says the same thing (ignoring the date, articles and punctuation).
+  if (jnl.length) {
+    const jkey = l => String(l).replace(/^\[[^\]]*\]\s*/, '').toLowerCase().replace(/\b(the|a|an)\b/g, ' ').replace(/[^a-z0-9]+/g, ' ').trim();
+    const mine = new Set(jnl.map(jkey));
+    S.Journal = S.Journal.filter(l => J0.has(l) || !mine.has(jkey(l)));
+  }
   for (const line of jnl) S.Journal.push(`[${dstamp(S.World)}] ${line}`);
   S.Journal = [...new Set(S.Journal)].slice(-CAP.Journal);
   // F21 state-as-memory: the narrator reads the last CAP.Journal lines; older ones (and lines the AI removed) move to $ui.archive

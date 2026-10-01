@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.35.2 (curfew, first appearances): the three checks in its section below.
 - v1.35.1 (items reach the Bag): the check in its section below.
 - v1.35.0 (lore activation): the two checks in its section below.
 - v1.34.2 (new portraits): the two checks in its section below.
@@ -70,6 +71,13 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.35.2 — Curfew, first appearances
+
+1. Stay at the Entrance Feast past 20:00: `<now>` shows no curfew until 22:00, and the hall is not described as empty.
+2. Sneak out after curfew where nobody patrols: nothing happens unless someone sees {{user}}. Invite a rule-breaker (Aiden,
+   Tilly) and a rule-keeper (Irene, Hadrian) out at night: the first may come, the second refuses in character.
+3. When the narrator brings in a new roster character, their first lines are short; from the next reply they sound like their sheet.
 
 ### v1.35.1 — Items reach the Bag
 

@@ -3,6 +3,26 @@
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
 details: `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
 
+## v1.35.2 — Curfew is a rule, not a law; feast nights; first appearances (2026-10-02)
+
+Owner's playtest (chat 2026-10-01) and answers. Save fixture v1.35.1.
+- Feast nights move curfew (`data/calendar.json`): the Entrance Feast starts at 19:00 but curfew began at 20:00, so the engine
+  called {{user}} out after curfew mid-feast and the ambience showed an empty hall. Now 22:00 on the Entrance, both Results,
+  Founder Day and Graduation evenings, 21:00 on Remembrance Day; the Warding Rite (dusk working, feast "until dawn") lifts it
+  from Friday evening to Saturday dawn. The Entrance day also says classes begin Tuesday 08:00 (the narrator said Thursday).
+- Curfew is a school rule (owner): breaking it costs nothing unless staff, a Council member, a Dove patrol or the Warden see
+  {{user}} or a witness reports them; patrols do not cover every corner. NPCs may suggest or accept a night outing when their
+  personality allows, and rule-abiding ones refuse in character (504; 505 presence line).
+- First appearances (504): a roster character who joins without a sheet in `<cast>` gets a short entrance and no invented
+  detail; their voice comes with the sheet next reply (Tilly arrived gruff and slangy, Kanae's eyes changed colour).
+- 504 (owner): someone who has not met {{user}} may address a crowd (a speech) without joining Scene.Present.
+- Journal: an engine line replaces the narrator's line from the same reply that says the same thing (the sorting was doubled).
+- A new chat no longer gets the 1.26.0 "estimated from weeks already played" proficiency offer (`$eng.profv` in 500); the Builder
+  already chooses starting proficiency.
+- 502: academy feasts serve students no alcohol (the alcohol rule; Tilly had prefects drawing cider for the Entrance Feast).
+- Tests: `test_playtest_v1352.cjs`; the curfew, ambience, proficiency, saves and entry suites.
+- To confirm with the owner: the curfew hours (22:00 feasts, 21:00 Remembrance Day).
+
 ## v1.35.1 — Items written under /Player reach the Bag (2026-10-02)
 
 Owner's playtest (chat 2026-10-01): Ruby gave {{user}} a honey-lemon sweet, the narrator's Analysis said "Inventory: added", but
@@ -57,53 +77,6 @@ Owner request while writing the portrait prompts. Save fixture v1.34.0.
 - Portrait prompts for the eight 1.33.0 teachers and the seven cohort 3 students: `planning/PORTRAIT_PROMPTS_1.33_cohort3.txt`,
   styled after the existing portraits.
 - `python tools/build_all.py --lore`, `tests/test_saves.cjs` and `tests/test_classes_v1330.cjs` pass.
-
-## v1.34.0 — Cohort 3 and Saturday Student Council (2026-10-01)
-
-Owner-approved `planning/DRAFT_cohort3_npcs.md` (now applied). Save fixture v1.33.0.
-- Seven new first-years arrive in campaign Year 3: Aurelian, William, Bruno, Bianca, Rigel, Topaz and Faye. Their full lore and
-  year-gated additions to existing NPCs are in `source_original/npc_lore_cohort3_2026-10-01/`; each has voice stages, bond and
-  Rank 8 branches, rewards, mood, gifts, birthday, Rank 4 partners, Tension and curated connections. Bellatrix's family line
-  names Rigel, and Wearing now explicitly includes a spirit wearing its pact-holder's own body. William's monthly serial is sold
-  at Quillfeather's. Portraits are not yet supplied; the UI uses initials.
-- Student Council membership is independent of an afternoon club. Members meet Saturday 10:00–12:00 in the Chamber in place of
-  Study Hall, unless a required F remedial takes priority. Year 2 candidates are Caralynn and Percival, or {{user}} when a Council
-  member at the start of that year; Year 3 candidates are Hadrian and Nerys. The nominee pair stays stable and an elected
-  {{user}} can take office. The Council roster feeds the Chamber and club directory.
-- Dante returns to Groundskeeping, Florian to Tea Club, and Dante's Rank 5 gift is again the Groundskeeper's Lodge key. Existing
-  Council safety card saves migrate to the Lodge key with uses preserved.
-- `python tools/build_all.py --lore`, `npm test` (all suites) and `npm run lint` pass. Connected SillyTavern checks are in
-  `docs/TEST_CHECKLIST.md`.
-
-## v1.33.0 — Classes and teachers: Practical Magic by role, eight new teachers, free periods (2026-10-01)
-
-Owner-approved `planning/DRAFT_classes_and_teachers.md` (FP6, Grup C; drafted teacher by teacher with the owner, now deleted).
-Save fixture v1.32.0.
-- **Eight new teachers** (lore pass `source_original/npc_lore_staff_2026-10-01/`, uids 416–423, roster, Regulars): Hester Mortlake
-  (Head Nurse, Healing), Anselm Graywater (Defense), Magnus Tarrant (Support), Dorian Pryce (Control), Cedric Amor Fay (History Y3),
-  Anya Zeth (Etiquette Y2), Kotaro Hanamura (Potion Crafting Y2), Valentin Crane (Potion Crafting Y3). Each has a full bond set:
-  Rank 5 gift and Rank 10 benefit, openness, Tension category (Valentin: dangerous, with a peak), mood, gifts and birthday, Rank 4
-  activities, voice with stages, Rank 8 branch (Hester and Anya C, Valentin A, the rest D), curated connections (public teacher–pupil
-  lines) and one line in the files of the students and staff they touch (Percival, Tilly, Sophia, Irene, Caspian, Aiden, Kuroo, Layla,
-  Mimosa, Royhan; Dorian's and Kotaro's Year 2 lines about Nerys, Hadrian and Tsubaki are year-gated). Dorian is a craft expert for
-  Enchant and Runes, Valentin for Brewing. Baelin also teaches History Y2, Althair Magic Theory Y3 (one line each).
-- **Practical Magic** (was Combat): five classes at the old Combat slot, one per combat role, mixing the dorms by year; Gavlan now
-  teaches Attack to every year, Vallie Creature Studies to every year. The one-year rule holds only for Magic Theory, History,
-  Etiquette and Potion Crafting (lore 10, 97, 131, 30, 253, Gavlan/Vallie/Milena roles). A student with two roles attends the one
-  listed first (rule 502); the first class (M1 W1 Thu) is the joint assessment. Grades unchanged (one mark → Prowess); the engine's
-  `teaches` knows the role, so remedials and the A/B teacher XP go to {{user}}'s role teacher. Save migration: Combat marks, exam lines,
-  study counts and a pending "Remedial Combat" become Practical Magic.
-- **Free periods** (`data/free_periods.json`): 5% per class period (Kotaro 20%), seeded, never on event days or in M1 W1; the class is
-  not held (no absence, not in attendance). `<now>` says so and why; the planner marks it.
-- **Dorm Competition** in five role brackets (formats in lore 19); 16 per dorm qualify by role (Attack 4, others 3); bracket champion
-  +100 points, runner-up +50 (engine, once a year, from `Competition.Placement`). Royhan now qualifies "in the last Control place".
-- Tests: new `test_classes_v1330.cjs`; count tests 44 → 52 NPCs, Rank 8 branch totals, Meditation Rooms regulars, grade tests renamed
-  to Practical Magic; `test_saves.cjs` accepts the subject rename; `test_calendar_state_v1190.cjs` fixed (Final Ranking is Monday since
-  1.32.0). `npm test`, `npm run stress`, lint and the token audit pass. The panel smoke test was not run (Playwright not installed).
-- **To confirm with the owner** (invented to fit): the clubs the new teachers advise (Hester Medical Centre Volunteers, Anselm Warding
-  Study Group, Magnus Board Game Club, Dorian Specialized Magic Club, Cedric Gardening Club, Anya Tea Club, Kotaro Brewing Club,
-  Valentin Academy Newspaper), since canon says every teacher runs one club; Practical Magic sparring partners stay within one's dorm
-  except in Training Week (keeps the old class rule); the reasons teachers give for a free period.
 
 ## Release index (one line per release, oldest first)
 
@@ -211,3 +184,4 @@ Save fixture v1.32.0.
 - **v1.34.2 (2026-10-01):** Fifteen new portrait and thumbnail pairs, all NPCs pictured; assets pinned to f42990c.
 - **v1.35.0 (2026-10-02):** Lore fires on plain words (spirit, pact, demon, beast...); World Index CORE FACTS; card entries ignore the WI budget.
 - **v1.35.1 (2026-10-02):** Items written to /Player/Inventory (or /Bag) are moved to the Bag instead of vanishing.
+- **v1.35.2 (2026-10-02):** Curfew is a school rule (consequences only when caught); feast nights move it; short first appearances; journal dedupe.
