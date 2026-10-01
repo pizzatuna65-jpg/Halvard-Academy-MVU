@@ -6699,9 +6699,9 @@
   "dorm_color": "#6b6b7b",
   "year": null,
   "race": "Beastkin",
-  "beast": "tortoise",
+  "beast": "sheep",
   "gender": "M",
-  "hair": "bald",
+  "hair": "grey wool",
   "impression": "convoluted",
   "public_tags": [
    "Defense class for every year"
@@ -6718,12 +6718,12 @@
   "fields": [
    {
     "label": "Role",
-    "text": "Teaches Defense to all three years at the Sparring Pavilion; came to Halvard after the breach; advises the Warding Study Group. Age 47. Tortoise Beastkin.",
+    "text": "Teaches Defense to all three years at the Sparring Pavilion; came to Halvard after the breach; advises the Warding Study Group. Age 47. Sheep Beastkin.",
     "rank": 0
    },
    {
     "label": "Appearance",
-    "text": "Broad, heavy and unhurried. A domed, dark-green shell rises from his back under a long grey coat tailored to fit it; grey-green scales run over his forearms, hands and the back of his neck. Heavy-lidded, patient eyes behind round spectacles. He never seems to move quickly, and is always already where the blow lands. A plain iron mace hangs at his belt; in his hand, always, a slim black teacher's pointer.",
+    "text": "Broad, heavy and unhurried. Thick, soft grey wool for hair, curling close over his head, and a pair of heavy ram's horns curling back past his drooping sheep's ears. Heavy-lidded, patient eyes behind round spectacles, and a long grey coat. He never seems to move quickly, and is always already where the blow lands. A plain iron mace hangs at his belt; in his hand, always, a slim black teacher's pointer.",
     "rank": 0
    },
    {
@@ -7346,7 +7346,7 @@
    },
    {
     "label": "Appearance",
-    "text": "Round-faced, broad and cheerfully rumpled, with round tanuki ears, a thick ringed tail, and the dark eye-patches of his kind, which make him look permanently short of sleep, and he usually is. A stained brewer's apron over a Yozakura robe worn open, sandals in every weather, and a gourd flask on a cord at his hip.",
+    "text": "Lean, loose-limbed and cheerfully rumpled, with round tanuki ears, a thick ringed tail, and the dark eye-patches of his kind, which make him look permanently short of sleep, and he usually is. His face always looks a little drunk, whether he is or not: flushed cheeks, a reddened nose, glassy half-lidded eyes and a lopsided grin. A stained brewer's apron over a Yozakura robe worn open, sandals in every weather, and a gourd flask on a cord at his hip.",
     "rank": 0
    },
    {

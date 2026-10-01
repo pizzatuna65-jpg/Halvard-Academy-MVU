@@ -30,8 +30,8 @@ uid: 417
 keys: Anselm, Graywater
 ```
 [Anselm Graywater]
-Role: Teaches Defense to all three years at the Sparring Pavilion; came to Halvard after the breach; advises the Warding Study Group. Age 47. Tortoise Beastkin.
-Appearance: Broad, heavy and unhurried. A domed, dark-green shell rises from his back under a long grey coat tailored to fit it; grey-green scales run over his forearms, hands and the back of his neck. Heavy-lidded, patient eyes behind round spectacles. He never seems to move quickly, and is always already where the blow lands. A plain iron mace hangs at his belt; in his hand, always, a slim black teacher's pointer.
+Role: Teaches Defense to all three years at the Sparring Pavilion; came to Halvard after the breach; advises the Warding Study Group. Age 47. Sheep Beastkin.
+Appearance: Broad, heavy and unhurried. Thick, soft grey wool for hair, curling close over his head, and a pair of heavy ram's horns curling back past his drooping sheep's ears. Heavy-lidded, patient eyes behind round spectacles, and a long grey coat. He never seems to move quickly, and is always already where the blow lands. A plain iron mace hangs at his belt; in his hand, always, a slim black teacher's pointer.
 Magic: Mystic — Reflection. He meets a spell with the tip of his pointer, at exactly the right angle, and it goes back the way it came.
 Equipment: An iron mace for fighting, which he uses as little as he can, and the black pointer he reflects magic with; he lectures with it too.
 Backstory: Raised on the southern marsh coast, he spent fifteen years in a scholars' order writing philosophy; the committee accepted his thesis and admitted afterwards that none of them had understood it. He left to ward caravans across the Primal Desert, and in twelve years no one in his care died. After the breach Headmaster Baelin Kalvor wrote to him, and he came.
@@ -142,7 +142,7 @@ keys: Kotaro, Hanamura
 ```
 [Kotaro Hanamura]
 Role: Teaches second-year Potion Crafting, when he remembers; advises the Brewing Club. Five years at Halvard. Age 44. Tanuki Beastkin, from Yozakura.
-Appearance: Round-faced, broad and cheerfully rumpled, with round tanuki ears, a thick ringed tail, and the dark eye-patches of his kind, which make him look permanently short of sleep, and he usually is. A stained brewer's apron over a Yozakura robe worn open, sandals in every weather, and a gourd flask on a cord at his hip.
+Appearance: Lean, loose-limbed and cheerfully rumpled, with round tanuki ears, a thick ringed tail, and the dark eye-patches of his kind, which make him look permanently short of sleep, and he usually is. His face always looks a little drunk, whether he is or not: flushed cheeks, a reddened nose, glassy half-lidded eyes and a lopsided grin. A stained brewer's apron over a Yozakura robe worn open, sandals in every weather, and a gourd flask on a cord at his hip.
 Magic: Mystic — Liquid Transmutation. He can turn one liquid into another of the same weight by touch: water to wine (his favourite), wine to water (never used), and, in an emergency, poison to water.
 Backstory: Once the brightest young brewer in Yozakura, he came to Eldrasil as a royal alchemist and lasted three years, until he arrived drunk at a Crowning Day and toasted the wrong person. He tells the story himself, badly, laughing. Halvard hired him because his potions, when he finishes one, are excellent.
 Personality: Energetic, warm, carefree and hopelessly unreliable. Late to everything, forgets what he promised, loses ingredients, falls asleep in the Potion Halls storeroom. Self-deprecating to a fault ("don't turn out like me"), and never bitter about it. Loves his students, and watching them be happy makes him sigh "Ahh, youth" and reach for the flask.

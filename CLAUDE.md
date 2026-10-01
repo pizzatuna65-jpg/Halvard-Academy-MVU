@@ -2,6 +2,10 @@
 
 ## Read only what the task needs
 
+0. **Memory first, every session.** Claude Code's memory for this project lives in
+   `C:\Users\seora\.claude\projects\D--Halvard-Academy-MVU-main\memory\`. `MEMORY.md` is only the index: before the first reply or
+   tool call of any task, open and read **every** file it lists (they are short). They hold the owner's corrections, above all:
+   silence = approval, never repeat an unanswered question, no obvious `[?]` questions.
 1. `HANDOFF.md` (short): snapshot, next task, what the project is, repository map.
 2. `docs/INDEX.md`: find the task, then open **only** the files and symbols it names. Grep for the symbol and read about 150 lines
    around it; never read a whole large file (the engine, the UI template, CHANGELOG, TEST_CHECKLIST, lore content).

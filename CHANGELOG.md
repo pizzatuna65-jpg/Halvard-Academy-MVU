@@ -3,6 +3,17 @@
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
 details: `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
 
+## v1.34.1 — Anselm and Kotaro look different (2026-10-01)
+
+Owner request while writing the portrait prompts. Save fixture v1.34.0.
+- Anselm Graywater is a sheep Beastkin, no longer a tortoise: grey wool for hair, curled ram's horns, drooping sheep's ears, a
+  long grey coat; no shell, no scales, not bald. His Cast Sheet props and the roster line follow.
+- Kotaro Hanamura is lean instead of round and broad, and his face always looks a little drunk (flushed cheeks, reddened nose,
+  glassy half-lidded eyes, a lopsided grin), drunk or not.
+- Portrait prompts for the eight 1.33.0 teachers and the seven cohort 3 students: `planning/PORTRAIT_PROMPTS_1.33_cohort3.txt`,
+  styled after the existing portraits.
+- `python tools/build_all.py --lore`, `tests/test_saves.cjs` and `tests/test_classes_v1330.cjs` pass.
+
 ## v1.34.0 — Cohort 3 and Saturday Student Council (2026-10-01)
 
 Owner-approved `planning/DRAFT_cohort3_npcs.md` (now applied). Save fixture v1.33.0.
@@ -223,3 +234,4 @@ it". Decision touched: "Map cards" (the Connected to row is gone).
 - **v1.32.0 (2026-09-30):** Dorm Days on Sundays, Final Ranking Monday, a longer Academy Trip, the Kingdom Competition in the capital; "Coming up" in `<now>`; the Inventory panel.
 - **v1.33.0 (2026-10-01):** Classes and teachers: Practical Magic by combat role, eight new teachers, free periods, Dorm Competition role brackets.
 - **v1.34.0 (2026-10-01):** Seven Year 3 first-years, Saturday Student Council and elections, Dante's Lodge gift restored.
+- **v1.34.1 (2026-10-01):** Anselm is a sheep Beastkin; Kotaro is lean and always looks drunk; portrait prompts.

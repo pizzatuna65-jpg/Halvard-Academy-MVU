@@ -202,7 +202,7 @@ rep(N[97], "Gavlan (Elf, M, silver, stern, Combat Y1)", "Gavlan (Elf, M, silver,
 rep(N[97], "Vallie (ox B, F, red, jovial, Creature Studies Y1,", "Vallie (ox B, F, red, jovial, Creature Studies teacher for every year,")
 rep(N[97], "Rei (F, black, cool, Acting Warden, the old Warden's apprentice).",
     "Rei (F, black, cool, Acting Warden, the old Warden's apprentice); Hester (F, black, macabre, Healing class for every year, Head Nurse); "
-    "Anselm (tortoise B, M, bald, convoluted, Defense class for every year); Magnus (Elf, M, dark, cunning, Support class for every year); "
+    "Anselm (sheep B, M, grey wool, convoluted, Defense class for every year); Magnus (Elf, M, dark, cunning, Support class for every year); "
     "Dorian (fox B, M, russet, slick, Control class for every year); Cedric (M, grey, doomed, History Y3); Anya (F, white, serene, Etiquette Y2); "
     "Kotaro (tanuki B, M, brown, carefree, Potion Crafting Y2); Valentin (M, blond, vain, Potion Crafting Y3).")
 rep(N[97], "Each teacher teaches one subject to one year level only; posts not named here (Magic Theory Y3, Etiquette Y2, History Y2-3, Combat Y2-3, Creature Studies Y2-3, Potion Crafting Y2-3) are unknown.",

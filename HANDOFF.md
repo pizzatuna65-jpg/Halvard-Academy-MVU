@@ -3,7 +3,8 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.34.0** (2026-10-01): seven incoming first-years arrive in campaign Year 3 (Aurelian, William, Bruno,
+**Snapshot:** card **v1.34.1** (2026-10-01): Anselm is now a sheep Beastkin and Kotaro lean and drunk-faced; portrait prompts for
+the new teachers and cohort 3 are in `planning/PORTRAIT_PROMPTS_1.33_cohort3.txt`. v1.34.0: seven incoming first-years arrive in campaign Year 3 (Aurelian, William, Bruno,
 Bianca, Rigel, Topaz, Faye), with lore, voice, bonds, gifts, moods and connections. Student Council membership is separate from
 the afternoon club and meets Saturday mornings; the Year 2 and Year 3 elections are seeded, including {{user}} as the Year 2
 nominee when eligible. Dante's Rank 5 gift is the Groundskeeper's Lodge key again. v1.33.0 added Practical Magic by role, eight
@@ -14,7 +15,8 @@ CHANGELOG 1.33.0. Outside-campus maps remain in `planning/FUTURE_PLANS.md` FP7.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 
-> Read `CLAUDE.md` and `HANDOFF.md`, then use `docs/INDEX.md` to open only what the task needs. Do this: **<task>**.
+> Read your memory files (every file `MEMORY.md` lists), `CLAUDE.md` and `HANDOFF.md`, then use `docs/INDEX.md` to open only
+> what the task needs. Do this: **<task>**.
 
 Examples of `<task>`: "fix what my playtest found: <notes>", "bug hunt the engine and UI", "add a new NPC from this lorebook
 entry", "update lore entry X", "add feature Y".

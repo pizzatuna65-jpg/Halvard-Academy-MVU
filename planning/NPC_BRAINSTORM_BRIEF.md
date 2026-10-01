@@ -351,7 +351,7 @@ Columns: id — full name · group · dorm/race · role · club · openness · h
 - **Ezrel** — Ezrel Marionne · Staff · -/Human · Magic Theory Y2, Light Dorm Head · Theatre Troupe · normal · yes · Apathetic, and makes no secret of it.
 - **Ottavio** — Ottavio Bastiani · Staff · -/Human · Etiquette Y3, Sky Dorm Head, spirit Loki · Fishing Club · closed · yes · Hard-boiled and intimidating.
 - **Hester** — Hester Mortlake · Staff · -/Human · Head Nurse, Practical Magic: Healing · Medical Centre Volunteers · open · yes · Theatrical, macabre; scares everyone with ghost stories for fun, except a student in real danger.
-- **Anselm** — Anselm Graywater · Staff · -/Beastkin (tortoise) · Practical Magic: Defense · Warding Study Group · normal · no · Serene, gentle; speaks in convoluted philosophy nobody understands; hates violence.
+- **Anselm** — Anselm Graywater · Staff · -/Beastkin (sheep) · Practical Magic: Defense · Warding Study Group · normal · no · Serene, gentle; speaks in convoluted philosophy nobody understands; hates violence.
 - **Magnus** — Magnus Tarrant · Staff · -/Elf · Practical Magic: Support, scouting reports · Board Game Club · normal · no · Cunning, knowledgeable strategist; an acronym in every sentence.
 - **Dorian** — Dorian Pryce · Staff · -/Beastkin (fox) · Practical Magic: Control · Specialized Magic Club · open · no · Slick, opportunistic salesman of his own crafted goods; a smile nobody trusts.
 - **Cedric** — Cedric Amor Fay · Staff · -/Human · History Y3 · Gardening Club · normal · no · Calm, kind doomer: the world will end, so do today well.

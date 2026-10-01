@@ -1,0 +1,162 @@
+PORTRAIT PROMPTS — dossier portraits (booru tags)
+The 8 new teachers of 1.33.0 and the 7 students of cohort 3 (draft, planning/DRAFT_cohort3_npcs.md)
+
+Style matched to the existing portraits in image_generation/portraits/:
+- vertical 2:3 (generate at 832x1216; the repo keeps 600x877 webp), cowboy shot or upper body, looking at the viewer;
+- a detailed background from the character's own haunt (library, castle courtyard, classroom, garden ruins), never a plain one;
+- a dynamic camera (from below, from above, slight dutch angle) and one signature prop or magic effect in frame;
+- clean, bright anime illustration with soft light and light particles.
+Halvard uniform as drawn: white collared shirt (sleeves often rolled), knitted sweater vest in the dorm colour (Fire red,
+Light yellow, Sky blue, Viridian green) with the academy emblem badge, black pleated skirt with black thighhighs, or black
+trousers. Teachers wear their own clothes.
+
+Use: COMMON POSITIVE + the character's Positive. COMMON NEGATIVE + the character's Negative.
+
+==================================================================================================================
+COMMON POSITIVE
+masterpiece, best quality, amazing quality, very aesthetic, absurdres, anime coloring, solo, looking at viewer,
+cowboy shot, detailed background, fantasy, magic academy, soft lighting, light particles
+
+COMMON NEGATIVE
+lowres, worst quality, low quality, normal quality, jpeg artifacts, blurry, bad anatomy, bad hands, extra fingers,
+fewer fingers, missing fingers, extra arms, deformed, disfigured, cropped head, multiple views, 2girls, 2boys, text,
+watermark, signature, username, artist name, logo, simple background, plain background, white background, nsfw,
+modern clothes, sci-fi, gun, 3d, realistic
+==================================================================================================================
+
+
+############################## 1.33.0 — NEW TEACHERS ##############################
+
+## Anselm Graywater — Defense teacher (Sheep Beastkin, M, 47) — at the Sparring Pavilion
+Positive:
+1boy, mature male, sheep boy, sheep ears, sheep horns, curled horns, ram horns, grey hair, curly hair, fluffy hair, wool,
+broad shoulders, heavyset, round eyewear, glasses, half-closed eyes, calm, slight smile, long grey coat, mace at belt,
+holding pointer stick, black pointer, deflecting a glowing spell with the pointer, reflected magic, magic circle, round
+domed pavilion, weapon racks, training ground, from below
+Negative:
+furry, anthro, animal face, snout, bald, turtle shell, scales, young, angry
+
+## Hester Mortlake — Head Nurse, Healing teacher (Human, F, 30) — Medical Centre ward at night
+Positive:
+1girl, mature female, tall, thin, pale skin, black hair, streaked hair, white streak, hair bun, tight bun, nurse cap,
+white nurse cap, black dress, high collar, long sleeves, white apron, dark lipstick, long fingers, chatelaine, keys at
+waist, scissors at waist, holding lantern, brass lantern, lantern light, stern, expressionless, infirmary, hospital beds,
+white curtains, night, dark, moody lighting
+Negative:
+smile, pink, cleavage, short dress, colorful, daytime
+
+## Magnus Tarrant — Support teacher, scout (Elf, M) — Combat Grounds spectator stands
+Positive:
+1boy, adult male, elf, pointy ears, long pointy ears, lean, sharp features, dark hair, messy hair, eyewear on head, glasses
+on head, ink stains, ink on fingers, waistcoat, many pockets, notebooks in pockets, holding notebook, writing, holding pen,
+glowing threads of light between fingers, mana threads, focused, busy, arena stands, outdoor training ground, from side
+Negative:
+muscular, armor, relaxed, idle
+
+## Dorian Pryce — Control teacher, seller of enchanted goods (Fox Beastkin, M) — Club Rooms corridor
+Positive:
+1boy, adult male, fox boy, fox ears, fox tail, russet hair, red-brown hair, narrow eyes, amber eyes, slim, well-groomed,
+long coat, open coat, coat lining full of small pockets, trinkets, charms, enchanted goods, holding a glowing charm out to
+viewer, wide smile, warm smile, slightly suspicious, threads of pale light, stone corridor, wooden doors, castle hallway
+Negative:
+furry, anthro, animal nose, snout, frown, shy
+
+## Cedric Amor Fay — third-year History teacher (Human, M, 58) — Lecture Hall at sunset
+Positive:
+1boy, old man, elderly, tall, stooped, thinning hair, grey hair, long face, tired eyes, kind eyes, gentle smile, brown
+coat, worn coat, holding pocket watch, pocket watch chain, white rose in a vase on desk, lecture hall, tiered desks,
+chalkboard, old maps, sunset, window light, warm lighting
+Negative:
+young, muscular, beard, armor, angry
+
+## Anya Zeth — second-year Etiquette teacher (Human, F, 34) — a quiet tea parlour
+Positive:
+1girl, mature female, petite, short stature, slender, white hair, low bun, neat hair, purple eyes, violet eyes, serene
+smile, closed mouth smile, unsettling gaze, deep violet dress, grey dress, high collar, half-mourning, black ribbon on
+wrist, elegant, noble, holding teacup, porcelain tea set, candle, dim parlour, curtains, dusk light
+Negative:
+tall, messy hair, open mouth, laughing, colorful, frills
+
+## Kotaro Hanamura — second-year Potion Crafting teacher, from Yozakura (Tanuki Beastkin, M, 44) — Potion Halls
+Positive:
+1boy, mature male, tanuki boy, tanuki ears, raccoon ears, tanuki tail, ringed tail, brown hair, messy hair, lean, slim,
+dark eye markings, drunk, blush, flushed face, red nose, half-closed eyes, glassy eyes, lopsided grin, rumpled clothes,
+open robe, japanese clothes, haori, stained apron, gourd, gourd flask at hip, sandals, relaxed, holding a ladle, bubbling
+cauldron, steam, potion bottles, brewing hall, from above
+Negative:
+furry, anthro, animal nose, snout, fat, chubby, round face, neat, formal suit, sober, serious
+
+## Valentin Crane — third-year Potion Crafting teacher, Master Alchemist (Human, M) — alchemy laboratory
+Positive:
+1boy, adult male, handsome, tall, broad shoulders, blonde hair, golden hair, slicked back hair, blue eyes, confident smile,
+smug, tailored coat, dark coat, white cuffs, white collar, gold ring, signet ring, holding vial, glowing potion,
+distillation, glass apparatus, laboratory, shelves of ingredients, golden light, elegant pose
+Negative:
+messy hair, stubble, dirty clothes, glasses
+
+
+############################## COHORT 3 — FIRST-YEARS (campaign Year 3) ##############################
+
+## Aurelian Solmere — Fire, Elf, M, 18 — Gymnasium basketball court
+Positive:
+1boy, young adult, elf, pointy ears, long pointy ears, tall, muscular, broad shoulders, square jaw, honey blonde hair,
+golden hair, swept back hair, wavy hair, blue eyes, sky blue eyes, wide smile, grin, teeth, confident, heroic, thumbs up,
+holding basketball, whistle around neck, school uniform, white collared shirt, sleeves rolled up, red sweater vest, emblem
+badge, black pants, light beam glowing from palm, indoor gymnasium, basketball court, bright lighting, from below
+Optional (subtle uncanny): fixed smile, unblinking, empty eyes
+Negative:
+frown, sad, dark hair, shy, blue sweater vest
+
+## Bruno Ferrante — Fire, Human, M, 18 (twin of Bianca) — Sparring Pavilion
+Positive:
+1boy, young adult, tall, muscular, big, tan, dark-skinned male, black hair, blue-black hair, short hair, spiked hair,
+thick eyebrows, scar on eyebrow, lip piercing, lip ring, brown eyes, sharp teeth, grin, menacing, aggressive, school
+uniform, white shirt, red sweater vest, sleeveless, torn sleeves, black pants, bandaged hands, hand wraps, clenched fist,
+explosion, sparks, smoke, flying debris, training ground, round domed pavilion, dynamic pose, from below
+Negative:
+pale skin, gentle, glasses, broken nose, crooked nose
+
+## Bianca Ferrante — Light, Human, F, 18 (twin of Bruno) — beside the outdoor Swimming Pool
+Positive:
+1girl, young adult, slim, tan, dark-skinned female, long hair, wavy hair, black hair, blue-black hair, brown eyes, pretty,
+smirk, half-closed eyes, teasing, ear piercing, multiple earrings, gold earrings, hair ribbon, hand on hip, hair flip,
+school uniform, white collared shirt, open collar, yellow sweater vest, emblem badge, black pleated skirt, black
+thighhighs, outdoor swimming pool, poolside, water reflections, sunny day, from below
+Negative:
+pale skin, shy, embarrassed, short hair, glasses, swimsuit
+
+## Rigel Ardenne — Sky, Rabbit Beastkin, M, 18 (little brother of Bellatrix) — lake dock at dawn
+Positive:
+1boy, young adult, slender, soft features, rabbit boy, rabbit ears, white rabbit ears, white hair, medium hair, red eyes,
+crimson eyes, large eyes, friendly smile, gentle, innocent, rich, school uniform, white silk shirt, cravat, blue sweater
+vest, emblem badge, black pants, holding leather ledger, fountain pen, wooden dock, lake, morning mist, dawn, soft light
+Negative:
+furry, anthro, animal nose, red streak in hair, streaked hair, menacing, sadistic, scar
+
+## Topaz Vasquelle — Light, Elf, F, 18 — Sparring Pavilion
+Positive:
+1girl, young adult, petite, elf, pointy ears, long pointy ears, red ears, orange hair, twintails, high twintails, green
+eyes, determined, v-shaped eyebrows, blush, pointing at viewer, open mouth, shouting, holding notebook, notebook under arm,
+school uniform, white collared shirt, sleeves pushed up, yellow sweater vest, emblem badge, black pleated skirt, black
+thighhighs, training ground, round domed pavilion, dynamic angle, from above
+Negative:
+tall, calm, bored, ponytail, short hair
+
+## William Beckett — Sky, Crow Beastkin, M, 18 — castle rooftop at dusk
+Positive:
+1boy, young adult, lean, tan, teal hair, dark teal hair, swept bangs, black feathers, feathers in hair, black eyes, sharp
+eyes, smirk, dramatic pose, chuunibyou, hand over face, long coat, dark coat, open coat, coat flowing in wind, popped
+collar, school uniform, white shirt, blue sweater vest, black pants, crow on shoulder, small black crow, bird on shoulder,
+shadow magic, dark tendrils, rooftop, castle towers, sunset, dusk, wind, from below
+Optional: black half mask, holding mask
+Negative:
+wings, feathered wings, harpy, pale skin, calm, blonde hair
+
+## Faye Driftwell — Viridian, Elf, F, 18 — the Grassy Field and Hills
+Positive:
+1girl, young adult, elf, pointy ears, long pointy ears, long hair, messy hair, loose braid, single braid, periwinkle hair,
+light blue hair, light purple hair, flower in hair, hair flower, amber eyes, half-closed eyes, content, relaxed, gentle
+smile, school uniform, white shirt, green sweater vest, emblem badge, sleeves past wrists, black pleated skirt, holding
+thermos, holding cup, sitting in hammock, grassy hill, fluffy clouds, blue sky, wildflowers, breeze, warm afternoon
+Negative:
+sleepy, yawning, closed eyes, pink hair, green hair, tense, angry
