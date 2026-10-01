@@ -1717,21 +1717,20 @@ function edgeVisible(e, S) {         // e = [from, to, type, types, visibility, 
 
 // ---------------------------------------------------------------- dialogue colours (1.37.0)
 // The narrator wraps each spoken line in <say:Name>; the card's display regex turns it into <span data-say="Name">. Colours live
-// in the card (DATA.say for the roster, Extras $say hues from the engine), never in the prompt: one rule set in SillyTavern's page.
+// in the card (DATA.say, the engine's $ui.say), never in the prompt: one rule set in SillyTavern's page.
 // OKLCH lightness follows the chat theme: light text means a dark theme. Unnamed or unrecorded speakers share the generic colour.
 function sayCss(S, lightText) {
-  // OKLCH: band 0 bright, 1 deeper (roster, data/dialogue_colors.json), x = an Extras hue, g = generic, u = {{user}}
-  const LC = lightText ? { 0: [80, .14], 1: [68, .11], x: [74, .10], g: [74, .02], u: [90, .04] } : { 0: [50, .14], 1: [40, .11], x: [45, .10], g: [45, .02], u: [30, .04] };
-  const col = ([h, b]) => `oklch(${LC[b][0]}% ${LC[b][1]} ${h})`;
+  // DATA.say: palette of [dark, light] OKLCH triples [hue, L %, C x100]; a roster character's colour is $ui.say[id] (moved by the
+  // engine so nobody in one scene shares one) or their start; an Extras character's is $ui.say[name]
+  const T = lightText ? 0 : 1, ok = c => `oklch(${c[1]}% ${c[2] / 100} ${c[0]})`;
   const q = n => '"' + String(n).trim().toLowerCase().replace(/[^\p{L}\p{N} '.-]/gu, '') + '"', sel = n => `.mes_text span[data-say=${q(n)} i]`;
-  const rules = [`.mes_text span[data-say]{color:${col(DATA.say.generic)}}`];
-  const who = Object.assign({}, DATA.say.who);
-  for (const [k, v] of Object.entries((S && S.Extras) || {})) if (v && Number(v.$say) >= 0) who[k.toLowerCase()] = who[k.split(/\s+/)[0].toLowerCase()] = [Number(v.$say), 'x'];
+  const SY = ((S && S.$ui) || {}).say || {}, rules = [`.mes_text span[data-say]{color:${ok(DATA.say.generic[T])}}`], by = {};
+  const put = (name, colour) => (by[colour] = by[colour] || []).push(name);
+  for (const [alias, id] of Object.entries(DATA.say.who)) { const i = id in SY ? SY[id] : DATA.say.start[id]; if (DATA.say.palette[i]) put(alias, ok(DATA.say.palette[i][T])); }
+  for (const [name, i] of Object.entries(SY)) if (!(name in DATA.say.start) && DATA.say.palette[i]) { put(name, ok(DATA.say.palette[i][T])); put(name.split(/\s+/)[0], ok(DATA.say.palette[i][T])); }
   const user = [((S && S.Player && S.Player.Profile) || {}).Name, typeof SillyTavern === 'object' ? SillyTavern.name1 : ''].filter(n => n && !/\{\{/.test(n));
-  for (const n of user) who[String(n).toLowerCase()] = DATA.say.user;
-  const by = {};
-  for (const [n, c] of Object.entries(who)) (by[c.join()] = by[c.join()] || { c, names: [] }).names.push(n);
-  for (const { c, names } of Object.values(by)) rules.push(`${names.map(sel).join(',')}{color:${col(c)}}`);
+  for (const n of user) put(n, ok(DATA.say.user[T]));
+  for (const [colour, names] of Object.entries(by)) rules.push(`${[...new Set(names.map(n => String(n).toLowerCase()))].map(sel).join(',')}{color:${colour}}`);
   rules.push('.mes_text span[data-tone="shout"]{font-weight:800;font-size:1.08em}',
     '.mes_text span[data-tone="whisper"]{font-size:.9em;font-style:italic;opacity:.8}',
     '.mes_text span[data-tone="measured"]{font-weight:600;letter-spacing:.3px}',

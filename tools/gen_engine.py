@@ -63,6 +63,8 @@ _TT, _TEACH, _CLUBS = class_data(npcs, locs)   # 1.10.0 (FP7): lessons with venu
 from common import load_clubs
 _CALIAS = {c['key'].lower(): c['name'] for c in load_clubs(npcs, locs)}
 assert all(v in _CLUBS for v in _CALIAS.values()), 'club alias names a club without venues'
+_SAY = json.load(open(P('data/dialogue_colors.json'), encoding='utf-8'))   # 1.37.1: dialogue colours
+t = t.replace('/*@@SAY@@*/{ n: 0, start: {}, dist: [] }', json.dumps({'n': len(_SAY['palette']), 'start': _SAY['npcs'], 'dist': _SAY['dist']}, separators=(',', ':')))
 t = t.replace('/*@@CLASS@@*/{}', json.dumps({'tt': _TT, 'teach': _TEACH, 'clubs': _CLUBS, 'calias': _CALIAS}, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@CLUB_MEMBERS@@*/{}', json.dumps({c['name']: c['members'] for c in load_clubs(npcs, locs)}, ensure_ascii=False, separators=(',', ':')))
 # 1.3.1: place names for World.Location normalisation (engine canonLocation); dorm rooms every dorm shares are never promoted

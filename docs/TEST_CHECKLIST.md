@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.37.1 (one colour per person in a scene): the check in its section below.
 - v1.37.0 (dialogue colours): the three checks in its section below.
 - v1.36.0 (preset RF2.2.1 port): the three checks in its section below.
 - v1.35.2 (curfew, first appearances): the three checks in its section below.
@@ -73,6 +74,11 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.37.1 — One colour per person in a scene
+
+1. In a scene with four or five named characters, every speaker has a clearly different colour (red, orange, gold, lime, green,
+   mint, cyan, blue, lavender, purple, magenta, pink). Someone who changed colour on arrival keeps the new one in the next scene.
 
 ### v1.37.0 — Dialogue colours
 

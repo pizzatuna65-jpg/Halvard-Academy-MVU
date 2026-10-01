@@ -1,7 +1,23 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.34.2), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.0), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.37.1 — Dialogue colours: nobody in a scene shares one (2026-10-02)
+
+Owner: "no two alike; I must tell A from B at a glance", theme and hair do not matter. Save fixture v1.37.0.
+- 71 colours cannot all be told apart at a glance (the 1.37.0 set had its closest two at 5 OKLab units), so the guarantee is per
+  scene. A palette of 12 colours that differ by kind (red, orange, gold, lime, green, mint, cyan, blue, lavender, purple, magenta,
+  pink; every two at least 10.4 apart, gold/lime the closest), each with its own light-theme version.
+- Engine (end of `stepCast`, `$ui.say`): roster characters start on their colour from `data/dialogue_colors.json`; a recorded
+  Extras character gets one when first present; whoever was already in the scene keeps theirs and a newcomer on a used colour
+  moves to the free one farthest from those in use. The move sticks. Up to 12 people in one scene, all different.
+- Starting colours: people who share scenes (relations, dorm and year, group, classmates, dorm mates) start on different colours
+  where 12 allow. Replaces the 1.37.0 per-character hues and the Extras `$say` hue (dropped from the schema; 1.37.0 had no saves
+  using it yet).
+- Tests: `test_say_colors_v1370.cjs` (palette spread, newcomer moves, the move sticks, eight people all different, Extras),
+  `test_saves.cjs`, the full suite.
+- Nothing to confirm with the owner.
 
 ## v1.37.0 — Dialogue colours (2026-10-02)
 
@@ -81,29 +97,6 @@ the Bag stayed empty. Save fixture v1.35.0.
 - 502: the path line says empty fields keep their place and these lists are top-level; the Inventory rule names `/Inventory/<item>`.
 - Tests: `test_stray_paths_v1351.cjs`, `test_saves.cjs`, `test_playtest_v1301.cjs`.
 - Nothing to confirm with the owner.
-
-## v1.35.0 — Lore activation: plain words, World Index core facts, no WI budget (2026-10-02)
-
-Owner's playtest note ("I only said spirit, and the narrator did not know spirits have tiers") and the audit that followed.
-Save fixture v1.34.2.
-- Topic entries fire on the plain word a player says. Their keys were compound phrases ("Spirit Tier", "Lesser Spirit"), and in
-  SillyTavern a whole-word key never matches its plural, so the new keys are SillyTavern regex keys (`/\bspirits?\b/i`). Added
-  for: Spirit Tiers (spirit, familiar), Spirit Pact (pact, summon), the four subtype entries (Elemental, Mystic, Spiritual,
-  Occult, subtype), Dark Magic Defense (dark magic, curse), Halvard (demon), Seals (seals), Student Council (council), the
-  election, Clubs, Competitions (competition, tournament, bracket, qualify), Exam Week (exam), the other academies, the Cathedral
-  (church, chapel, goddess), the Shaping of the World (Asmoday, goddess), the Noble Houses' Liaison (nobles), the Sparring Pavilion
-  (duel), and Magical Beasts (beast, monster, creature, and one regex of every creature in its own list). Table: `KEY_ADDS` in
-  `tools/merge_lorebooks.py`.
-- The WORLD INDEX has a CORE FACTS section: one line each for the magic types, the forbidden arts, the spirit tiers, the Spirit
-  Pact, the seals, the four academies, the breach, magical beasts, the dorm ladder, the academic year, staff, the Student Council,
-  clubs, competitions and airships (about 650 tokens, always on). It restates existing lore; nothing new is canon. The Morning
-  Choir and Lucifer stay keyword-only.
-- Every card entry ignores SillyTavern's World Info budget. ST counts the budget on the unrendered EJS (the Cast Sheet alone is
-  about 180k tokens raw, ~9k rendered); against the default 25% of a 1M context that sits right at the limit, and on overflow ST
-  silently drops the lowest-order entries first, which are the topic entries.
-- Not done (owner): sticky entries.
-- `tests/test_lore_activation_v1350.cjs` (new: what a player says → the entry that must fire, with SillyTavern's matching rules;
-  World Index coverage; budget flag), `test_saves`, `qa_static` and the lore suites pass.
 
 ## Release index (one line per release, oldest first)
 
@@ -214,3 +207,4 @@ Save fixture v1.34.2.
 - **v1.35.2 (2026-10-02):** Curfew is a school rule (consequences only when caught); feast nights move it; short first appearances; journal dedupe.
 - **v1.36.0 (2026-10-02):** Preset: RF2.2.1 port (Card Fidelity, Gemini killswitches and voice, new Scene Engine); 4-7 paragraphs; Embellish Mode.
 - **v1.37.0 (2026-10-02):** Dialogue colours: `<say:Name>` tags, colours from the card (roster data, Extras hue), a shared grey for the unnamed.
+- **v1.37.1 (2026-10-02):** Dialogue colours: 12 colours that differ by kind, and nobody present in one scene shares one (sticky moves).

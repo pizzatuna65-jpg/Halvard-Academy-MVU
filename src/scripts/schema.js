@@ -230,7 +230,6 @@ export const Schema = z.object({
   Extras: Rec(v => ({
     Who: s(v.Who).slice(0, 160), Looks: s(v.Looks).slice(0, 200), Manner: s(v.Manner).slice(0, 200),
     Calls_user: s(v.Calls_user).slice(0, 60), Voice: s(v.Voice).slice(0, 240), Keep: b(v.Keep), $seen: n(v.$seen, -1, 1e9, -1),
-    $say: n(v.$say, -1, 359, -1),   // 1.37.0: dialogue colour hue (engine, hidden from the narrator)
   }), 'Who'),
 
   // Batch 5.1: Where (optional place, enables "Go here"); _When / _Late / $abs are computed by the engine from Due
@@ -373,6 +372,7 @@ export const Schema = z.object({
     prof_offer: Bool(false),
     since: z.any().prefault([]).catch([]), maybe: z.any().prefault([]).catch([]),   // 1.6.0 (N4): Next plans met again / that may bring someone here (engine)
     xold: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.6.1 (N5): Extras records that left the full list; given back if they return (engine)
+    say: z.record(z.string(), z.number().int().min(0).max(63)).prefault({}).catch({}),   // 1.37.1: dialogue colours moved off their starting colour (engine)
     stale: z.any().prefault([]).catch([]), phase: z.any().prefault(null).catch(null),   // 1.6.1: campus events with no news for a week; the campus phase (engine)
     cast: z.any().prefault({}).catch({}),                             // 1.5.1 (P1/P6): { full, brief, spoke, gone, ment } for the Cast Sheet (engine)
     perks_used: StrList(60),                                          // 1.3.0: one-use perks already spent ("Council pardon (Irene), M3 W2 Tue")

@@ -12,11 +12,12 @@ const card = JSON.parse(rd('dist/Eldrasil_Halvard.json')).data;
 const E = uid => card.character_book.entries.find(e => e.id === uid);
 const R = (uid, S) => ejs.render(E(uid).content, { getvar: k => _.get({ stat_data: S }, k) });
 
-// ---- data: every roster character has one colour of their own
+// ---- data: a palette of colours that differ by kind; every roster character has a starting colour
 const npcs = JSON.parse(rd('data/npcs.json')), col = JSON.parse(rd('data/dialogue_colors.json'));
-ok(Object.keys(npcs).every(id => Array.isArray(col.npcs[id])), 'every roster character has a dialogue colour');
-ok(new Set(Object.values(col.npcs).map(c => c.join())).size === Object.keys(col.npcs).length && Object.values(col.npcs).every(([h, b]) => h >= 0 && h < 360 && (b === 0 || b === 1)), 'no two roster characters share a colour');
-ok(U.DATA.say.who.irene && U.DATA.say.who['irene chanare'] && U.DATA.say.who.chanare, 'every name Irene goes by maps to her colour');
+const K = col.palette.length, D = col.dist;
+ok(K >= 12 && Math.min(...D.flatMap((r, i) => r.filter((_, j) => j > i))) >= 10, `${K} colours, every two at least 10 apart (OKLab x100)`);
+ok(Object.keys(npcs).every(id => Number.isInteger(col.npcs[id]) && col.npcs[id] >= 0 && col.npcs[id] < K), 'every roster character has a starting colour');
+ok(U.DATA.say.who.irene === 'Irene' && U.DATA.say.who['irene chanare'] === 'Irene' && U.DATA.say.who.chanare === 'Irene', 'every name Irene goes by points to her');
 
 // ---- the display regex
 const rx = card.extensions.regex_scripts.find(r => /speaker tag/.test(r.scriptName));
@@ -27,17 +28,27 @@ ok(rx.placement.join() === '2' && rx.markdownOnly && !rx.promptOnly, 'display on
 const strip = card.extensions.regex_scripts.find(r => /older replies/.test(r.scriptName));
 ok(strip && strip.promptOnly && strip.minDepth === 4, 'older replies reach the prompt without the tags (the newest keep them as examples)');
 
-// ---- engine: an Extras record gets a hue when it is written; two records get different hues
+// ---- engine: nobody present at the same time shares a colour; a move sticks; a recorded Extra gets one, the unrecorded none
 let S = initState();
 const at = (time, ops, text) => { S = applyPatch(S, [{ op: 'replace', path: '/World/Time', value: time }, ...ops], { text: text || '' }); };
-at('09:00', [{ op: 'replace', path: '/Extras/Marta Bellweather', value: { Who: 'Commissary clerk' } }, { op: 'replace', path: '/Extras/Old Tom', value: { Who: '' } }]);
-const h1 = S.Extras['Marta Bellweather'].$say;
-ok(h1 >= 0 && S.Extras['Old Tom'].$say === -1, 'a written record gets a hue; an empty one waits');
-at('09:10', [{ op: 'replace', path: '/Extras/Old Tom', value: { Who: 'gardener' } }]);
-ok(S.Extras['Old Tom'].$say >= 0 && Math.min(Math.abs(S.Extras['Old Tom'].$say - h1), 360 - Math.abs(S.Extras['Old Tom'].$say - h1)) >= 90, 'the second record gets a hue far from the first');
-at('09:20', []);
-ok(S.Extras['Marta Bellweather'].$say === h1, 'the hue stays');
-ok(!/\$say/.test(R(501, S)), 'the narrator never sees $say');
+const here = o => ({ op: 'replace', path: '/Scene/Present', value: Object.fromEntries(Object.keys(o).map(k => [k, { Note: o[k] }])) });
+const colour = id => (id in S.$ui.say ? S.$ui.say[id] : col.npcs[id]);
+const same = Object.entries(col.npcs).reduce((m, [id, c]) => ((m[c] = m[c] || []).push(id), m), {});
+const [a1, a2] = Object.values(same).find(v => v.length >= 2 && v.every(id => (npcs[id].arrives || 1) <= 1 && !/team|Doves/.test(npcs[id].group || '')) ) || Object.values(same).find(v => v.length >= 2);
+at('09:00', [here({ [a1]: 'reading' })]);
+ok(colour(a1) === col.npcs[a1] && !(a1 in S.$ui.say), `${a1} alone keeps the starting colour`);
+at('09:10', [here({ [a1]: 'reading', [a2]: 'arrives' })]);
+ok(colour(a1) === col.npcs[a1] && colour(a2) !== colour(a1), `${a2} arrives on the same starting colour as ${a1}: the newcomer moves`);
+const moved = colour(a2);
+at('09:20', [here({})]); at('09:30', [here({ [a2]: 'alone' })]);
+ok(colour(a2) === moved, 'the move sticks after the scene');
+at('10:00', [here({ Irene: 'desk', Etnie: 'tea', Kanae: 'book', Aiden: 'cards', Castor: 'ledger', Zara: 'notes', Rei: 'door', Caine: 'window' })]);
+const eight = ['Irene', 'Etnie', 'Kanae', 'Aiden', 'Castor', 'Zara', 'Rei', 'Caine'].map(colour);
+ok(new Set(eight).size === 8, 'eight people in one scene: eight different colours');
+at('11:00', [here({ 'Marta Bellweather': 'till', Irene: 'queue' }), { op: 'replace', path: '/Extras/Marta Bellweather', value: { Who: 'Commissary clerk' } }]);
+at('11:05', [here({ 'Marta Bellweather': 'till', Irene: 'queue', 'a porter': 'boxes' })]);
+ok(Number.isInteger(S.$ui.say['Marta Bellweather']) && S.$ui.say['Marta Bellweather'] !== colour('Irene') && !('a porter' in S.$ui.say), 'a recorded Extra gets a colour of their own; an unrecorded one stays generic');
+ok(!/say/.test(R(501, S).replace(/<say/g, '')), 'the narrator never sees the colours');
 
 // ---- engine: a speaker tag counts as speaking (cast order)
 at('09:30', [{ op: 'replace', path: '/Scene/Present', value: { Irene: { Note: 'at the desk' }, Kanae: { Note: 'reading' } } }], '<say:Kanae>"Mm."</say> She turns a page.');
@@ -49,10 +60,11 @@ const off = _.cloneDeep(S); off.$ui.on = Object.assign({}, off.$ui.on, { say_col
 ok(!/<say/.test(R(504, off)) && !/<say/.test(R(510, off)), 'Features > Dialogue colours off: no tag rule');
 
 // ---- UI: one stylesheet in SillyTavern's page
-const css = U.sayCss(S, true), ir = U.DATA.say.who.irene;
+const css = U.sayCss(S, true), P = c => `{color:oklch(${c[1]}% ${c[2] / 100} ${c[0]})}`;
 const ruleFor = name => css.split('\n').find(l => l.includes(`span[data-say="${name}" i]`)) || '';
-ok(ruleFor('irene').endsWith(`{color:oklch(${ir[1] ? '68% 0.11' : '80% 0.14'} ${ir[0]})}`) && ruleFor('irene') === ruleFor('chanare'), 'Irene in her colour (dark theme), by every name');
-ok(ruleFor('marta').endsWith(`{color:oklch(74% 0.1 ${h1})}`) && ruleFor('marta') === ruleFor('marta bellweather'), 'Marta in her Extras colour, by full and first name');
-ok(/^\.mes_text span\[data-say\]\{color:oklch\(74% 0.02 250\)\}/.test(css), 'everyone else: the generic colour');
-ok(/span\[data-say="aria vale" i\]\{color:oklch\(90% 0.04 80\)/.test(U.sayCss({ ...S, Player: { Profile: { Name: 'Aria Vale' } } }, true)), "{{user}}'s own lines in the player colour");
-ok(/oklch\(50% 0.14 /.test(U.sayCss(S, false)) && !/oklch\(80%/.test(U.sayCss(S, false)), 'a light theme gets darker colours');
+ok(ruleFor('irene').endsWith(P(col.palette[colour('Irene')].dark)) && ruleFor('irene') === ruleFor('chanare'), 'Irene in her colour (dark theme), by every name');
+ok(ruleFor(a2.toLowerCase()).endsWith(P(col.palette[moved].dark)), 'a moved colour shows');
+ok(ruleFor('marta').endsWith(P(col.palette[S.$ui.say['Marta Bellweather']].dark)) && ruleFor('marta') === ruleFor('marta bellweather'), 'Marta in her colour, by full and first name');
+ok(css.startsWith(`.mes_text span[data-say]${P(col.generic.dark)}`), 'everyone else: the generic colour');
+ok(U.sayCss({ ...S, Player: { Profile: { Name: 'Aria Vale' } } }, true).includes(`span[data-say="aria vale" i]${P(col.user.dark)}`), "{{user}}'s own lines in the player colour");
+ok(U.sayCss(S, false).includes(P(col.palette[colour('Irene')].light)), 'a light theme gets the darker set');

@@ -120,13 +120,15 @@ DATA['rep'] = {k: _rep[k] for k in ('reps', 'about', 'thresholds', 'effects')}
 DATA['trn'] = {k: v for k, v in json.load(open(P('data/training.json'), encoding='utf-8')).items() if not k.startswith('_')}
 DATA['features'] = json.load(open(P('data/features.json'), encoding='utf-8'))['features']
 DATA['fcost'] = json.load(open(P('data/feature_cost.json'), encoding='utf-8'))
-# 1.37.0: dialogue colours by speaker name (data/dialogue_colors.json); every name a roster character goes by maps to their colour
+# 1.37.0/1.37.1: dialogue colours. who: every name a roster character goes by -> their id; start: id -> palette index (the engine's
+# $ui.say holds the moves and the Extras colours)
 _say = json.load(open(P('data/dialogue_colors.json'), encoding='utf-8'))
-DATA['say'] = {'generic': _say['generic'], 'user': _say['user'], 'who': {}}
-for _id, _hs in _say['npcs'].items():
-    for _a in [_id.lower(), npcs[_id]['name'].split()[0].lower()]: DATA['say']['who'].setdefault(_a, _hs)
+DATA['say'] = {'palette': [[p['dark'], p['light']] for p in _say['palette']], 'generic': [_say['generic']['dark'], _say['generic']['light']],
+               'user': [_say['user']['dark'], _say['user']['light']], 'start': _say['npcs'], 'who': {}}
+for _id in _say['npcs']:
+    for _a in [_id.lower(), npcs[_id]['name'].split()[0].lower()]: DATA['say']['who'].setdefault(_a, _id)
 for _a, _id in npc_aliases(npcs).items():
-    if _id in _say['npcs']: DATA['say']['who'].setdefault(_a, _say['npcs'][_id])
+    if _id in _say['npcs']: DATA['say']['who'].setdefault(_a, _id)
 bar = open(P('src/ui/statusbar.template.html'), encoding='utf-8').read()
 NEWS = open(P('src/ui/news.shared.js'), encoding='utf-8').read()   # 1.25.0 red "new" dots, shared by the bracelet and the panels
 bar = bar.replace('/*@@NEWS@@*/', NEWS)

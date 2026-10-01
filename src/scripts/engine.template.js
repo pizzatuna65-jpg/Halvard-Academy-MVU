@@ -147,6 +147,7 @@ const NPC_GROUP = /*@@NPC_GROUP@@*/{};
 const TUNING = /*@@TUNING@@*/[];
 // 1.10.0 (FP7): lessons with venues per weekday period, teachers ([subject, year]; year 0 = every year), club venues (tools/common.py)
 const CLASS = /*@@CLASS@@*/{};
+const SAY = /*@@SAY@@*/{ n: 0, start: {}, dist: [] };   // 1.37.1: dialogue colours (data/dialogue_colors.json)
 // 1.10.2 (FP11): why an NPC seeks {{user}} out: templates per Tension category, each NPC's category and club (data/initiative_asks.json)
 const INIT_ASKS = /*@@INITIATIVE_ASKS@@*/{};
 const TIMES = ['08:00-10:00', '10:00-12:00', '13:00-16:00'];
@@ -3403,7 +3404,6 @@ function stepExtras(c) {
       const a = X[keep], z = X[drop], fresh = !(drop in X0);
       for (const f of XF) if (String(z[f] || '').trim() && (fresh || !String(a[f] || '').trim())) a[f] = z[f];
       a.Keep = !!(a.Keep || z.Keep); a.$seen = Math.max(num(a.$seen, -1), num(z.$seen, -1));
-      if (!(num(a.$say, -1) >= 0) && num(z.$say, -1) >= 0) a.$say = z.$say;
       delete X[drop];
     }
     const P = S.Scene.Present;
@@ -3434,15 +3434,6 @@ function stepExtras(c) {
     const out = Object.keys(X).filter(k => !X[k].Keep && !ext.includes(k)).sort((a, b) => num(X[a].$seen, -1) - num(X[b].$seen, -1));
     for (const k of out.slice(0, Math.max(0, Object.keys(X).length - EXTRAS_MAX))) { XO[k] = X[k]; delete X[k]; }
     for (const k of Object.keys(XO).sort((a, b) => num(XO[b].$seen, -1) - num(XO[a].$seen, -1)).slice(EXTRAS_ARCHIVE)) delete XO[k];
-    // 1.37.0: a recorded character gets their own dialogue colour (a hue the other records are farthest from); the unrecorded
-    // share the generic colour. The UI reads $say; the narrator never sees it.
-    for (const k of Object.keys(X)) {
-      if (num(X[k].$say, -1) >= 0 || !String(X[k].Who || '').trim()) continue;
-      const taken = [...Object.values(X), ...Object.values(XO)].map(r => num((r || {}).$say, -1)).filter(h => h >= 0);
-      const gap = h => taken.length ? Math.min(...taken.map(t => { const d = Math.abs(h - t) % 360; return Math.min(d, 360 - d); })) : 360;
-      let best = 7; for (let h = 7; h < 360; h += 15) if (gap(h) > gap(best)) best = h;
-      X[k].$say = best;
-    }
     xHere = ext.filter(id => id in X && String(X[id].Who || '').trim());
     xNew = ext.filter(id => (id in X && !String(X[id].Who || '').trim()) || (!(id in X) && num((XS[xsKey[id]] || {}).n, 0) >= 2));
   }
@@ -3470,6 +3461,27 @@ function stepCast(c) {
     const order = [...pres].sort((a, b) => (spoke.includes(b) - spoke.includes(a)) || (rank(b) - rank(a)) || (pres.indexOf(a) - pres.indexOf(b)));
     S.$ui.cast = { full: order.slice(0, CAST_FULL), brief: order.slice(CAST_FULL), spoke: spoke.filter(id => pres.includes(id)), gone, ment,
       where: Object.fromEntries(ment.filter(id => HAUNT[id]).map(id => [id, HAUNT[id]])), extras: xHere, xnew: xNew };
+    // 1.37.1 (owner: tell A from B at a glance): dialogue colours. Roster characters start on their colour from the data; a recorded
+    // Extras character gets one when first present. Nobody present at the same time shares a colour: whoever was already here keeps
+    // theirs, and a newcomer moves to the free colour farthest from those in use. A move sticks ($ui.say). The unrecorded have none.
+    if (SAY.n) {
+      const SY = S.$ui.say = _.isPlainObject(S.$ui.say) ? S.$ui.say : {};
+      const before = [...(prev.full || []), ...(prev.brief || []), ...(prev.extras || [])];
+      const here = [...order, ...xHere], keep = here.filter(id => before.includes(id)).concat(here.filter(id => !before.includes(id)));
+      const xUse = i => Object.keys(SY).filter(k => !NPC_IDS.has(k) && SY[k] === i).length;
+      const taken = [];
+      for (const id of keep) {
+        let c = id in SY ? SY[id] : (id in SAY.start ? SAY.start[id] : -1);
+        if (!(c >= 0 && c < SAY.n) || taken.includes(c)) {
+          const free = [...Array(SAY.n).keys()].filter(i => !taken.includes(i));
+          if (!free.length) continue;
+          const gap = i => (taken.length ? Math.min(...taken.map(t => SAY.dist[i][t])) : 99);
+          c = free.reduce((b, i) => (gap(i) > gap(b) || (gap(i) === gap(b) && xUse(i) < xUse(b)) ? i : b));
+        }
+        taken.push(c);
+        if (SAY.start[id] === c) delete SY[id]; else SY[id] = c;
+      }
+    }
   }
 }
 

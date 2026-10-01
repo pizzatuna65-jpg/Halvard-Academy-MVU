@@ -1,297 +1,428 @@
 {
- "_note": "Dialogue colours (1.37.0, tools/make_dialogue_colors.py keeps existing entries). npcs: id -> [OKLCH hue 0-359, band 0 bright / 1 deeper]; OKLCH; the UI sets lightness from the chat theme. generic: unnamed or unrecorded speakers. user: {{user}}. Extras get a hue from the engine ($say) when their record is written.",
- "generic": [
-  250,
-  "g"
+ "_note": "Dialogue colours (1.37.1, tools/make_dialogue_colors.py; --fresh rebuilds the starting colours). palette: colours that differ by kind, OKLCH [hue, lightness %, chroma x100] for a dark and a light theme. npcs: each roster character's starting colour (palette index); the engine moves anyone off a colour a present character already has ($ui.say), so nobody in one scene shares a colour. generic: unnamed or unrecorded speakers. user: {{user}}.",
+ "palette": [
+  {
+   "name": "red",
+   "dark": [
+    25,
+    66,
+    20
+   ],
+   "light": [
+    25,
+    50,
+    20.0
+   ]
+  },
+  {
+   "name": "orange",
+   "dark": [
+    55,
+    76,
+    16
+   ],
+   "light": [
+    55,
+    58,
+    14.3
+   ]
+  },
+  {
+   "name": "gold",
+   "dark": [
+    95,
+    87,
+    15
+   ],
+   "light": [
+    95,
+    52,
+    10.5
+   ]
+  },
+  {
+   "name": "lime",
+   "dark": [
+    128,
+    86,
+    19
+   ],
+   "light": [
+    128,
+    50,
+    13.2
+   ]
+  },
+  {
+   "name": "green",
+   "dark": [
+    148,
+    68,
+    18
+   ],
+   "light": [
+    148,
+    42,
+    11.9
+   ]
+  },
+  {
+   "name": "mint",
+   "dark": [
+    178,
+    86,
+    11
+   ],
+   "light": [
+    178,
+    54,
+    9.8
+   ]
+  },
+  {
+   "name": "cyan",
+   "dark": [
+    215,
+    76,
+    13
+   ],
+   "light": [
+    215,
+    50,
+    8.9
+   ]
+  },
+  {
+   "name": "blue",
+   "dark": [
+    258,
+    66,
+    16
+   ],
+   "light": [
+    258,
+    44,
+    16.3
+   ]
+  },
+  {
+   "name": "lavender",
+   "dark": [
+    292,
+    80,
+    10
+   ],
+   "light": [
+    292,
+    54,
+    13.0
+   ]
+  },
+  {
+   "name": "purple",
+   "dark": [
+    315,
+    66,
+    20
+   ],
+   "light": [
+    315,
+    42,
+    20.5
+   ]
+  },
+  {
+   "name": "magenta",
+   "dark": [
+    345,
+    68,
+    22
+   ],
+   "light": [
+    345,
+    52,
+    22.1
+   ]
+  },
+  {
+   "name": "pink",
+   "dark": [
+    10,
+    85,
+    8
+   ],
+   "light": [
+    10,
+    62,
+    10.4
+   ]
+  }
  ],
- "user": [
-  80,
-  "u"
+ "generic": {
+  "dark": [
+   250,
+   74,
+   1.5
+  ],
+  "light": [
+   250,
+   46,
+   1.5
+  ]
+ },
+ "user": {
+  "dark": [
+   80,
+   94,
+   3
+  ],
+  "light": [
+   80,
+   42,
+   7
+  ]
+ },
+ "dist": [
+  [
+   0.0,
+   14.2,
+   29.3,
+   36.5,
+   33.5,
+   36.2,
+   34.4,
+   32.3,
+   26.8,
+   22.9,
+   14.6,
+   22.7
+  ],
+  [
+   14.2,
+   0.0,
+   15.3,
+   23.2,
+   26.0,
+   25.9,
+   28.6,
+   32.9,
+   23.4,
+   29.4,
+   23.7,
+   14.8
+  ],
+  [
+   29.3,
+   15.3,
+   0.0,
+   10.4,
+   24.2,
+   17.5,
+   26.6,
+   37.2,
+   25.7,
+   39.1,
+   36.0,
+   16.5
+  ],
+  [
+   36.5,
+   23.2,
+   10.4,
+   0.0,
+   19.1,
+   14.6,
+   24.6,
+   37.5,
+   29.4,
+   43.8,
+   42.9,
+   23.8
+  ],
+  [
+   33.5,
+   26.0,
+   24.2,
+   19.1,
+   0.0,
+   20.6,
+   19.3,
+   27.9,
+   29.3,
+   37.8,
+   39.6,
+   29.9
+  ],
+  [
+   36.2,
+   25.9,
+   17.5,
+   14.6,
+   20.6,
+   0.0,
+   12.7,
+   26.8,
+   18.6,
+   35.3,
+   37.4,
+   18.9
+  ],
+  [
+   34.4,
+   28.6,
+   26.6,
+   24.6,
+   19.3,
+   12.7,
+   0.0,
+   14.9,
+   15.1,
+   27.6,
+   32.9,
+   22.4
+  ],
+  [
+   32.3,
+   32.9,
+   37.2,
+   37.5,
+   27.9,
+   26.8,
+   14.9,
+   0.0,
+   16.9,
+   17.5,
+   26.6,
+   27.9
+  ],
+  [
+   26.8,
+   23.4,
+   25.7,
+   29.4,
+   29.3,
+   18.6,
+   15.1,
+   16.9,
+   0.0,
+   18.1,
+   21.5,
+   12.5
+  ],
+  [
+   22.9,
+   29.4,
+   39.1,
+   43.8,
+   37.8,
+   35.3,
+   27.6,
+   17.5,
+   18.1,
+   0.0,
+   11.2,
+   25.3
+  ],
+  [
+   14.6,
+   23.7,
+   36.0,
+   42.9,
+   39.6,
+   37.4,
+   32.9,
+   26.6,
+   21.5,
+   11.2,
+   0.0,
+   22.8
+  ],
+  [
+   22.7,
+   14.8,
+   16.5,
+   23.8,
+   29.9,
+   18.9,
+   22.4,
+   27.9,
+   12.5,
+   25.3,
+   22.8,
+   0.0
+  ]
  ],
  "npcs": {
-  "Aiden": [
-   140,
-   0
-  ],
-  "Althair": [
-   0,
-   0
-  ],
-  "Alyssa": [
-   10,
-   1
-  ],
-  "Anselm": [
-   220,
-   1
-  ],
-  "Anya": [
-   80,
-   1
-  ],
-  "Aurelian": [
-   250,
-   0
-  ],
-  "Baelin": [
-   100,
-   1
-  ],
-  "Bellatrix": [
-   10,
-   0
-  ],
-  "Bianca": [
-   280,
-   0
-  ],
-  "Bobby": [
-   190,
-   0
-  ],
-  "Bram": [
-   350,
-   0
-  ],
-  "Bruno": [
-   270,
-   1
-  ],
-  "Caine": [
-   180,
-   0
-  ],
-  "Caralynn": [
-   70,
-   1
-  ],
-  "Caspian": [
-   60,
-   1
-  ],
-  "Cassius": [
-   290,
-   0
-  ],
-  "Castor": [
-   240,
-   1
-  ],
-  "Cedric": [
-   260,
-   0
-  ],
-  "Dante": [
-   150,
-   1
-  ],
-  "Dex": [
-   40,
-   1
-  ],
-  "Dorian": [
-   30,
-   0
-  ],
-  "Elion": [
-   190,
-   1
-  ],
-  "Etnie": [
-   230,
-   0
-  ],
-  "Ezrel": [
-   280,
-   1
-  ],
-  "Faye": [
-   110,
-   0
-  ],
-  "Florian": [
-   200,
-   0
-  ],
-  "Gareth": [
-   20,
-   1
-  ],
-  "Gavlan": [
-   50,
-   0
-  ],
-  "Hadrian": [
-   310,
-   1
-  ],
-  "Hester": [
-   150,
-   0
-  ],
-  "Idris": [
-   300,
-   1
-  ],
-  "Ines": [
-   230,
-   1
-  ],
-  "Irene": [
-   310,
-   0
-  ],
-  "Kanae": [
-   70,
-   0
-  ],
-  "Kira": [
-   250,
-   1
-  ],
-  "Kotaro": [
-   140,
-   1
-  ],
-  "Krieg": [
-   240,
-   0
-  ],
-  "Kuroo": [
-   300,
-   0
-  ],
-  "Layla": [
-   30,
-   1
-  ],
-  "Lenna": [
-   130,
-   0
-  ],
-  "Linus": [
-   90,
-   1
-  ],
-  "Lucius": [
-   170,
-   1
-  ],
-  "Magnus": [
-   330,
-   0
-  ],
-  "Maple": [
-   40,
-   0
-  ],
-  "Milena": [
-   120,
-   0
-  ],
-  "Mimosa": [
-   350,
-   1
-  ],
-  "Mirelle": [
-   330,
-   1
-  ],
-  "Morgana": [
-   290,
-   1
-  ],
-  "Nerys": [
-   270,
-   0
-  ],
-  "Ottavio": [
-   180,
-   1
-  ],
-  "Percival": [
-   60,
-   0
-  ],
-  "Pip": [
-   340,
-   1
-  ],
-  "Rei": [
-   100,
-   0
-  ],
-  "Rigel": [
-   160,
-   1
-  ],
-  "Royhan": [
-   200,
-   1
-  ],
-  "Ruby": [
-   340,
-   0
-  ],
-  "Saffi": [
-   20,
-   0
-  ],
-  "Sophia": [
-   260,
-   1
-  ],
-  "Theodore": [
-   110,
-   1
-  ],
-  "Tilly": [
-   320,
-   1
-  ],
-  "Topaz": [
-   50,
-   1
-  ],
-  "Tristan": [
-   130,
-   1
-  ],
-  "Trixie": [
-   120,
-   1
-  ],
-  "Tsubaki": [
-   210,
-   1
-  ],
-  "Valentin": [
-   80,
-   0
-  ],
-  "Vallie": [
-   0,
-   1
-  ],
-  "Vera": [
-   320,
-   0
-  ],
-  "William": [
-   220,
-   0
-  ],
-  "Wren": [
-   90,
-   0
-  ],
-  "Yvette": [
-   210,
-   0
-  ],
-  "Zara": [
-   160,
-   0
-  ]
+  "Aiden": 2,
+  "Althair": 0,
+  "Alyssa": 1,
+  "Anselm": 9,
+  "Anya": 1,
+  "Aurelian": 4,
+  "Baelin": 5,
+  "Bellatrix": 0,
+  "Bianca": 4,
+  "Bobby": 10,
+  "Bram": 0,
+  "Bruno": 1,
+  "Caine": 3,
+  "Caralynn": 6,
+  "Caspian": 1,
+  "Cassius": 6,
+  "Castor": 8,
+  "Cedric": 11,
+  "Dante": 1,
+  "Dex": 11,
+  "Dorian": 8,
+  "Elion": 0,
+  "Etnie": 9,
+  "Ezrel": 2,
+  "Faye": 5,
+  "Florian": 5,
+  "Gareth": 11,
+  "Gavlan": 1,
+  "Hadrian": 9,
+  "Hester": 4,
+  "Idris": 6,
+  "Ines": 6,
+  "Irene": 7,
+  "Kanae": 8,
+  "Kira": 10,
+  "Kotaro": 7,
+  "Krieg": 7,
+  "Kuroo": 4,
+  "Layla": 6,
+  "Lenna": 9,
+  "Linus": 7,
+  "Lucius": 10,
+  "Magnus": 6,
+  "Maple": 11,
+  "Milena": 9,
+  "Mimosa": 11,
+  "Mirelle": 6,
+  "Morgana": 10,
+  "Nerys": 4,
+  "Ottavio": 10,
+  "Percival": 11,
+  "Pip": 0,
+  "Rei": 8,
+  "Rigel": 7,
+  "Royhan": 4,
+  "Ruby": 2,
+  "Saffi": 4,
+  "Sophia": 10,
+  "Theodore": 8,
+  "Tilly": 7,
+  "Topaz": 6,
+  "Tristan": 4,
+  "Trixie": 8,
+  "Tsubaki": 10,
+  "Valentin": 9,
+  "Vallie": 2,
+  "Vera": 2,
+  "William": 10,
+  "Wren": 5,
+  "Yvette": 10,
+  "Zara": 9
  }
 }
