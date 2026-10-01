@@ -44,7 +44,9 @@ They keep a second game state in a hidden HTML block that must sit "at the absol
 
 **Card data (1.6.2):** HQ NPC Genesis follows the card's naming guide and its record for invented characters (the card's Extras) when there is one; the Scene Engine treats that record as the invented character's card. The Bridge says the `<cast>` block is the truth about the people present, invented characters keep their Extras card, off-screen people follow their Next plans and the campus phase, and arrivals take the walk time.
 
-**Length (1.4.6):** "📝 Total Output Length" is ON at roughly 3 to 6 paragraphs. The card used to carry this default; it now lives here so players can change it.
+**Length (1.4.6):** "📝 Total Output Length" is ON at roughly 4 to 7 paragraphs (3 to 6 before 1.36.0). The card used to carry this default; it now lives here so players can change it.
+
+**RF2.2.1 port (1.36.0):** 🎭 Card Fidelity (ON, depth 0); the Gemini (Cosmos) comparative-emphasis and occupational-monomania killswitches with their gates replace the regular pairs; the Cosmos NPC Voice replaces the Micro voice (a per-line method, no 30-50% ratio); the rebuilt Scene Engine; a banned-vocabulary gate, door sounds and "Looks at a Stranger's Scale" (ON); Pacing (OFF). 🧂 Embellish Mode is ON instead of Anti-parrot (owner): the narrator writes {{user}}'s words and actions from the player's message. Not used: assistant-role CoTs and the smell package (the card's ambience cues name smells).
 
 **Regex:** "FF5 Delete / Catch - Untagged Thoughts" are OFF. They serve the Time-and-Place header, which is off, and they delete everything before any line starting with `[... Time`. Tested: a player message ending in `[Time skip: two hours later]` reached the model as only that bracket.
 ST runs preset regexes before the card's, so the preset's display regexes cannot touch the bracelet.

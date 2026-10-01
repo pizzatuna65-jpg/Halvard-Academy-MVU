@@ -23,14 +23,15 @@ ok(IA.injection_position === 1 && IA.injection_depth === 0 && pos('Player Input 
 ok(/<input_authority>[\s\S]*is a wish, not a fact[\s\S]*<\/input_authority>/.test(IA.content) && /<latest_input>\{\{lastUserMessage\}\}<\/latest_input>/.test(IA.content), 'input authority and the latest-input marker are one toggle');
 // ---- Output language: OFF, next to Total Output Length
 ok(byName('Output language') && !enabled('Output language') && pos('Output language') === pos('Total Output Length') + 1, 'Output language exists, OFF, after Total Output Length');
-ok(enabled('Total Output Length') && /roughly 3 to 6 paragraphs/.test(C('Total Output Length')), 'Total Output Length ON at 3-6 paragraphs');
+ok(enabled('Total Output Length') && /roughly 4 to 7 paragraphs/.test(C('Total Output Length')), 'Total Output Length ON at 4-7 paragraphs (owner, 1.36.0)');
 // ---- craft edits (every rep() in edit_preset.py asserts its anchor; these check the result landed where the CoT looks)
 ok(/No spotlight:[\s\S]*No echoes:/.test(C('Realistic NPCs')), 'N7 no spotlight, no echoes in <realistic_bold_characters>');
 ok(/Simulate, do not dramatise/.test(C('Scene Engine')) && /holding, stepping back and leaving something unsaid are valid endings/.test(C('Scene Engine')), 'P12 + D8 in <scene_engine>');
 ok(!/NPCs are flawed, panic-prone/.test(C('Instincts + VAD')) && /get worse in their own way, inside the limits their card sets/.test(C('Instincts + VAD')), 'U5: stress in their own way');
 ok(/<character_calibration>[\s\S]*Personality is a ceiling, not a mood[\s\S]*<\/character_calibration>/.test(C('Instincts + VAD')), 'D2 calibration (with the P8 ceiling line)');
-const voice = P.prompts.find(p => p.identifier === '019f62e8-892f-7017-ae2e-44fbc7d29de7');
-ok(enabled('NPC Voice + Dialogue Output') && /outranks every rule in this tag/.test(voice.content) && /Direct people speak directly/.test(voice.content), 'U4 + D3 in the active <npc_voice>');
+// 1.36.0: the active <npc_voice> is RF2.2.1's Cosmos (Gemini) edition; the Micro voice is OFF
+const voice = byName('NPC Voice + Dialogue Output: Cosmos');
+ok(enabled('NPC Voice + Dialogue Output: Cosmos') && !enabled('🎤NPC Voice + Dialogue Output') && /outranks every rule in this tag/.test(voice.content) && /Direct people speak directly/.test(voice.content), 'U4 + D3 in the active <npc_voice>');
 ok(/unless the card records that they already know them/.test(C('Anti-Omniscient')) && /No foreshadowing narration/.test(C('Anti-Omniscient')), 'U11 + D7 in <anti_omniscient_NPCs>');
 ok(/canon: for a character with a lorebook entry or character sheet/.test(C('Main Prompt')), 'U9 in <NPC_intro>');
 ok(/one question mark per character per reply/.test(C("Don't Speak Like a Therapist")), 'U12: question cap per character');
@@ -60,7 +61,7 @@ const tags = [...new Set([...bolt.matchAll(/<([A-Za-z_]+)>/g)].map(m => m[1]))].
 const missing = tags.filter(x => !others.includes('<' + x + '>') && !cardText.includes('<' + x + '>') && !cardText.includes('<' + x + ' '));
 ok(!missing.length, 'every tag the CoT refers to exists in the preset or the card (' + tags.length + ')' + (missing.length ? ': missing ' + missing.join(', ') : ''));
 const gen = C('HQ NPC Genesis');
-ok(/if the card gives a naming guide, follow it/.test(gen) && /Banned Names: Elara, Vane, Seraphina/.test(gen) && /If the card keeps a record for invented characters, that record is their card/.test(gen), 'U6: the card\'s naming guide and record first; banned names stay');
+ok(/if the card gives a naming guide, follow it/.test(gen) && /Banned Names: Elara, Vane, Vance, Seraphina/.test(gen) && /If the card keeps a record for invented characters, that record is their card/.test(gen), 'U6: the card\'s naming guide and record first; banned names stay');
 ok(/the card's record for invented characters as their card when the card keeps one/.test(C('Scene Engine')), 'U7: the Scene Engine\'s generated-character sentence');
 const E2 = [step(0).replace('"Now: M? W? Day HH:MM at <place>" (from campaign Year 2: "Now: Y? M? W? Day HH:MM at <place>"), copied from <now>', ''), step(7), step(10), gen].join('\n');
 ok(!CARD.test(E2), 'E2 texts are generic' + (CARD.test(E2) ? ': ' + E2.match(CARD)[0] : ''));
@@ -95,3 +96,22 @@ ok(!enabled('Attentional Salience') && /Micro-tells/.test(C('Main Prompt')), 'C1
 ok(!/Anti-Therapy Register|Ban tricolons|depends on four sources/.test(voice.content) && !/Figurative Economy/.test(C('Cinematic Realism')), 'C2-C5: duplicates removed from <npc_voice> and <prose_rules>');
 ok(!/Recalled memories|no phones|metric units/i.test(noNotes(br)), 'C7: the Bridge leaves memory and setting facts to the card');
 ok(/No phones, computers or recording devices[\s\S]*Units are metric/.test(cardText), 'C7: the card\'s World Index states them');
+
+// ---- 1.36.0: port from RF2.2.1 (Realistic Gemini BOLT configuration), owner-approved
+const at0 = frag => { const p = byName(frag); return p.injection_position === 1 && p.injection_depth === 0; };
+ok(enabled('Card Fidelity') && at0('Card Fidelity') && /lorebook entry or character sheet that defines them/.test(C('Card Fidelity')), 'Card Fidelity ON at depth 0; a character sheet counts as the card');
+ok(enabled('Anti-Comparative Emphasis: Cosmos') && enabled('Last-Mile Contrast Gate: Cosmos') && !enabled('⚖️ Comparative Emphasis Killswitch') && !enabled('Last-Mile Contrast Gate ⚖️'), 'comparative emphasis: the Cosmos pair replaces the regular pair');
+ok(enabled('Occupational Monomania Killswitch: Cosmos') && enabled('Last-Mile Vocation Gate: Cosmos') && !enabled('🧰 Occupational Monomania Killswitch') && !enabled('Last-Mile Vocation Gate 🧰'), 'occupational monomania: the Cosmos pair replaces the regular pair');
+const se = C('Scene Engine');
+ok(/Causality: an event lands before anyone answers it/.test(se) && /Simulate, do not dramatise/.test(se) && /one light touch of the setting/.test(se) && /Stop before any decision or reaction that belongs to \{\{user\}\}/.test(se), 'Scene Engine is the RF2.2.1 rebuild with the Eldrasil edits');
+ok(byName('Pacing: Cosmos') && !enabled('Pacing: Cosmos') && !/what fate or someone's agenda brings/.test(C('Pacing: Cosmos')), 'Pacing ships OFF and follows the card\'s sources');
+ok(/METHOD \(no menu; derive per line\), applied to every line/.test(voice.content) && !/<nsfw_register>|moan through intimacy/.test(noNotes(voice.content)), 'Cosmos voice: per-line method, no NSFW pointers');
+ok(!/30-50%/.test(bolt) && /keeps their stalls, restarts and fragments/.test(bolt) && /without copying the list into this reasoning/.test(bolt), 'BOLT: no dialogue ratio, nervous characters keep their stalls, banned words checked without reciting');
+ok(enabled('Last-Mile Gemini Banned Vocab Check') && /upholstery/.test(C('🚫Banned Word List')) && /A hyphen or a suffix does not make it a different word/.test(C('🚫Banned Word List')), 'banned words: scope line, upholstery, depth-0 gate');
+ok(enabled("Looks at a Stranger's Scale") && !/touches or uses/.test(C("Looks at a Stranger's Scale")), 'Scene Detail ported without the line that contradicts the ambience touch');
+ok(!P.prompts.some(p => /Scent Killswitch|Smell & Taste Rules/.test(p.name)), 'the smell package is not ported (the card\'s ambience cues name smells)');
+ok(enabled('More Diverse Door Sounds') && /Group chat with \{\{group\}\}/.test(P.group_nudge_prompt), 'door sounds and the group nudge');
+ok(['BOLT Chain of Thought', 'Player Input Authority'].every(f => byName(f).role === 'user'), 'BOLT and Player Input Authority stay user-role (not RF2.2.1\'s assistant role)');
+ok(enabled('Embellish Mode') && !enabled('Anti-parrot') && !/only 1 or 2 key elements/.test(C('Embellish Mode')) && /follow <input_authority>/.test(C('Embellish Mode')), 'owner: Embellish Mode instead of Anti-parrot, answering the whole input');
+const E3 = ['Card Fidelity', 'Scene Engine', 'Pacing: Cosmos', "Looks at a Stranger's Scale", 'Embellish Mode', 'Anti-Comparative Emphasis: Cosmos', 'Occupational Monomania Killswitch: Cosmos'].map(C).concat(voice.content).map(noNotes).join('\n');
+ok(!CARD.test(E3), '1.36.0 texts are generic' + (CARD.test(E3) ? ': ' + E3.match(CARD)[0] : ''));

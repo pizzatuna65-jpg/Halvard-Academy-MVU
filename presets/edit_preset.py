@@ -145,11 +145,7 @@ rep('Realistic NPCs', '\nExample of Full Physical Commitment:', """
 - No echoes: do not reuse a scene beat, joke or line pattern from earlier replies, and never give two characters the same reaction to the same news.
 
 Example of Full Physical Commitment:""")
-# P12 + U7 + D8: simulate, do not dramatise; a quiet turn may end on something ordinary, and HOLD is a real ending
-rep('Scene Engine', "Stakes stay within the scene's scale unless fate or someone's actions change them.",
-    "Stakes stay within the scene's scale unless fate or someone's actions change them. Simulate, do not dramatise: people act from their role, their interests and the situation. No invented conflict, no test of {{user}} the situation does not call for, no coincidence without a cause, no character acting against their own interest for the sake of drama.")
-rep('Scene Engine', 'a closing beat that could be screenshotted as a quote is the wrong beat.',
-    "a closing beat that could be screenshotted as a quote is the wrong beat. On a quiet turn the committed action may be ordinary (picking up a cup, going back to a book). A reply does not have to finish an exchange, settle a relationship or move it forward; holding, stepping back and leaving something unsaid are valid endings. Never end on a summary, a verdict on the relationship, a preview, or a still picture of someone waiting for {{user}}.")
+# P12 + U7 + D8 (simulate, do not dramatise; HOLD is a real ending): since 1.36.0 applied to the RF2.2.1 Scene Engine, section 13
 # U5 + D2: stress shows in the character's own way; Gemini character calibration (from Duo Preset V13)
 rep('Instincts + VAD', '- NPCs are flawed, panic-prone, deceptive, and tactically poor under stress.',
     "- Under stress people get worse in their own way, inside the limits their card sets: a composed character's stress shows in small wrong choices, a reckless one gets more reckless, a timid one freezes. VAD changes delivery, never the core.")
@@ -201,9 +197,7 @@ rep('HQ NPC Genesis', 'Naming: Generate 5 setting-appropriate, culturally/religi
 rep('HQ NPC Genesis', 'Ethnicity: Randomly select a fitting race;', 'Ethnicity: Select a race and origin the setting has;')
 rep('HQ NPC Genesis', 'Card: For an NPC with no card or lorebook entry, everything defined here is their card',
     "Card: If the card keeps a record for invented characters, that record is their card: write it when the card asks and follow it from then on. Otherwise, for an NPC with no card or lorebook entry, everything defined here is their card")
-# U7: the same in the Scene Engine's behaviour sources
-rep('Scene Engine', 'A character generated during the chat has no card, so what the chat log has established about them serves as one;',
-    "A character generated during the chat has the card's record for invented characters as their card when the card keeps one; until then, what the chat log has established about them serves as one;")
+# U7: the same in the Scene Engine's behaviour sources (section 13, on the RF2.2.1 text)
 
 # ---- 10. 1.6.9 (bug hunt): pointers that led nowhere in the prompt the model sees ({{// }} notes are stripped before sending)
 # BOLT counts its tasks 0-11 in rule A but told the model to stop after task 10, and task 11 carries the world-stays-quiet and
@@ -294,9 +288,7 @@ rep('Eldrasil × MVU', "- Recalled memories or event summaries from a memory ext
 rep('Eldrasil × MVU', "Setting: Eldrasil has no phones, computers or recording devices. Light comes from the mana grid, announcements from the Announcement Pillars, and messages travel by letter through the Mail Tower.\nUse metric units in prose (°C, metres, kilometres, kilograms, litres). The campus weather is World._Weather in <current_state>.\n", '')
 
 # 1.16.0 (owner-approved planning/DRAFT_dynamic_ambience.md E): a quiet turn may carry one light touch of the setting even when it
-# changes nothing (generic craft, so it belongs in the preset; the card supplies the facts in <now>)
-rep('Scene Engine', "Environment is active reality: introduce a detail only when it affects movement, perception, timing, privacy, safety, or choice, and the world keeps moving beyond {{user}}'s attention, revealed through present evidence.",
-    "Environment is active reality: introduce a detail only when it affects movement, perception, timing, privacy, safety, or choice, and the world keeps moving beyond {{user}}'s attention, revealed through present evidence. On a quiet turn, one light touch of the setting (its light, sound, weather or the people around) is welcome even when it changes nothing; keep it to one clause and never the same touch twice in a row.")
+# changes nothing (generic craft, so it belongs in the preset; the card supplies the facts in <now>). Section 13 applies it.
 
 # ---- 12. 1.17.0 (owner-approved planning/AUDIT_2026-09-29.md, Batch 2)
 # P1: the card must work with any preset, so the Bridge's Eldrasil rules (no other trackers, no state numbers in prose, off-screen
@@ -317,6 +309,127 @@ rep('main', "e.g., off-screen actions, a letter arriving, background movement; w
 # T8: inline graphics and coloured dialogue cost prompt and history tokens every turn; the player can turn them back on
 for frag in ('Pop in Graphics', 'Colored Dialogue 2.0'):
     log.append(('OFF', toggle(frag, False), 'token audit T8: opt-in'))
+
+# ---- 13. 1.36.0: port from RF2.2.1 "Limitless Realism" (owner-approved). Upstream ships it as per-model configurations; the owner's
+# is the Realistic Gemini BOLT one (original/..._2_2_1_Realistic_Gemini_BOLT.json). The base stays 2.2: that configuration drops the
+# AI Studio jailbreak, which carries edits from sections 4 and 11. Not ported: assistant-role CoTs (Player Input Authority must stay
+# a user-role block right before BOLT, DECISIONS §11), the smell package (Scent Killswitch, Smell & Taste Rules: the card's own
+# ambience cues name smells, DECISIONS Ambience), Time and Place / Realism Mode / Post-History ON, Staccato ON (its note says OFF on
+# Gemini), Turn Dice and the Mimo, Claude and GLM prompts and regexes.
+N = json.load(open(os.path.join(HERE, 'original', 'Realistic_Frankenstein_2_2_1_Realistic_Gemini_BOLT.json'), encoding='utf-8'))
+NP = {p['identifier']: p for p in N['prompts']}
+def port(ident, enabled, before=None, after=None, name=None, content=None):
+    q = copy.deepcopy(NP[ident])
+    if name: q['name'] = name
+    if content is not None: q['content'] = content
+    d['prompts'].append(q); P[ident] = q
+    ref = before or after; rid = P[ref]['identifier'] if ref in P else byname(ref)['identifier']
+    i = next(i for i, o in enumerate(order) if o['identifier'] == rid)
+    order.insert(i if before else i + 1, {'identifier': ident, 'enabled': enabled})
+    log.append(('NEW' if enabled else 'NEW (OFF)', q['name'], 'RF2.2.1, ' + ('before ' if before else 'after ') + P[rid]['name']))
+def nrep(ident, a, b):
+    assert a in NP[ident]['content'], (NP[ident]['name'], a[:60]); NP[ident]['content'] = NP[ident]['content'].replace(a, b, 1)
+
+# Card Fidelity (all models, depth 0, read last): the card wins over the style rules for the characters it describes. A character
+# sheet counts as the card, like U4 and U9.
+nrep('f14c6679-2497-4bee-a00e-4c33f2d6d19d', 'for a character without a card, a lorebook entry that defines them or the profile HQ NPC Genesis gave them does the same job.',
+     'for a character without a card of their own, a lorebook entry or character sheet that defines them, or the profile HQ NPC Genesis gave them, does the same job.')
+port('f14c6679-2497-4bee-a00e-4c33f2d6d19d', True, after='Last-Mile Vocation Gate')
+
+# Gemini (Cosmos) editions replace the regular pairs: comparative emphasis ("not X, but Y") and occupational monomania
+for frag in ('⚖️ Comparative Emphasis Killswitch', 'Last-Mile Contrast Gate ⚖️', '🧰 Occupational Monomania Killswitch', 'Last-Mile Vocation Gate 🧰'):
+    log.append(('OFF', toggle(frag, False), 'replaced by its RF2.2.1 Cosmos (Gemini) edition'))
+port('8708536d-f458-40dd-9d3f-a602cac9db97', True, after='⚖️ Comparative Emphasis Killswitch')
+port('bbb0aa7a-4b3c-487c-892d-a9c535aad3b6', True, after='Last-Mile Contrast Gate ⚖️')
+port('ed975e7f-1faf-5242-9c73-f70050645183', True, after='🧰 Occupational Monomania Killswitch')
+port('b2fa6828-f60d-50a4-9958-84bb0b35fbb1', True, after='Last-Mile Vocation Gate 🧰')
+
+# Scene Engine: RF2.2.1 rebuilt it from Director Preset 16.0 (no more "two speeds"); P12, D8, U7 and the 1.16.0 ambience touch
+# are re-applied to the new text
+SE = byname('Scene Engine'); SE['content'] = NP['8e5b9c01-2662-4b20-9d11-5b58f4ece1f0']['content']
+rep('Scene Engine', "Stakes stay within the scene's scale unless fate or someone's actions change them.",
+    "Stakes stay within the scene's scale unless fate or someone's actions change them. Simulate, do not dramatise: people act from their role, their interests and the situation. No invented conflict, no test of {{user}} the situation does not call for, no coincidence without a cause, no character acting against their own interest for the sake of drama.")
+rep('Scene Engine', 'a closing beat that could be screenshotted as a quote is the wrong beat.',
+    "a closing beat that could be screenshotted as a quote is the wrong beat. On a quiet turn the handoff may be ordinary (picking up a cup, going back to a book). A reply does not have to finish an exchange, settle a relationship or move it forward; holding, stepping back and leaving something unsaid are valid endings. Never end on a summary, a verdict on the relationship, a preview, or a still picture of someone waiting for {{user}}.")
+rep('Scene Engine', 'A character generated during the chat has no card, so the profile HQ NPC Genesis gave them, or what the chat log has established about them, serves as one;',
+    "A character generated during the chat has the card's record for invented characters as their card when the card keeps one; until then, the profile HQ NPC Genesis gave them, or what the chat log has established about them, serves as one;")
+rep('Scene Engine', "revealed through present evidence and practical consequences.",
+    "revealed through present evidence and practical consequences. On a quiet turn, one light touch of the setting (its light, sound, weather or the people around) is welcome even when it changes nothing; keep it to one clause and never the same touch twice in a row.")
+log.append(('EDIT', SE['name'], 'RF2.2.1 text + the Eldrasil edits'))
+# Pacing (Gemini): optional, OFF. Its "talk gets interrupted by what fate brings" pulls against BOLT task 10's HOLD and the card's
+# own list of where world events come from, so the interruption follows the card's sources here
+nrep('82632755-5233-56f8-8fa6-3f169510cc4e', "a long conversation gets interrupted by what fate or someone's agenda brings.",
+     "a long conversation gets interrupted by what someone's agenda brings, or by the world only from the sources the card allows when it lists them.")
+nrep('82632755-5233-56f8-8fa6-3f169510cc4e', '{{//GEMINI-ONLY.', "{{//GEMINI-ONLY. Ships OFF in the Eldrasil edit: NPCs push their own thread every reply, which a player who likes quiet turns may not want.")
+port('82632755-5233-56f8-8fa6-3f169510cc4e', False, after='Scene Engine')
+
+# NPC Voice (Gemini): a per-line method in place of the 30-50% dialogue ratio. Ships ON in place of the Micro voice, with the
+# Micro voice's Eldrasil edits (U4, D3, A1, C2, C3, C5) applied to it
+log.append(('OFF', toggle('🎤NPC Voice + Dialogue Output', False), 'replaced by its RF2.2.1 Cosmos (Gemini) edition'))
+CV = next(i for i, p in NP.items() if 'NPC Voice + Dialogue Output: Cosmos' in p.get('name', ''))
+port(CV, True, after='🎤NPC Voice + Dialogue Output')
+rep(CV, '*ALL rules in this tag ONLY apply to NPC dialogue, NOT all prose.*',
+    "*ALL rules in this tag ONLY apply to NPC dialogue, NOT all prose.*\nA character's own card, lorebook entry or character sheet outranks every rule in this tag: their dialogue examples and described voice decide how they talk. A quiet character stays quiet, and a composed one never shouts in capitals because a rule here allows it.")
+rep(CV, '- METHOD (no menu; derive per line), the same derivation <nsfw_register> uses for intimate lines, applied to every line of dialogue:',
+    '- METHOD (no menu; derive per line), applied to every line of dialogue:')   # the NSFW register is OFF here (adult content opt-in)
+rep(CV, '- Ensure NPCs talk or moan through intimacy:  "unnhhh, mmmm, YES!".\n\n', '')
+rep(CV, "- Anti-Therapy Register: ban reflective listening, psychoanalysis, emotional validation as its own beat, emotional debriefs, and mirroring {{user}}'s words back. NPCs answer from their own wants, not from {{user}}'s inner life.\n", '')
+rep(CV, '- Ban tricolons (lists of three elements). Break these patterns up using action beats.\n', '')
+rep(CV, "- Each line pursues what the speaker wants in the moment. Whether it runs warm or cold, calm or heated, depends on four sources: their card or lorebook entry (for a character generated during the chat, what the chat log has established about them); their mood; the scene's atmosphere; and what fate brings, from random events to the consequences of {{user}}'s and other characters' actions. Reactions are sized to what actually caused them, as that character would weigh it. With nothing pushing either way, a character stays at the baseline their card sets.",
+    "- Each line pursues what the speaker wants in the moment; how warm or heated it runs comes from the four sources in <scene_engine>, sized to what actually caused it.")
+rep(CV, '\n</npc_voice>', """
+- Direct people speak directly. Subtext, denial, a sharp tone or saying the opposite needs a reason in the scene: something they are hiding, protecting or not ready to say. Without one, they answer the plain way their voice allows.
+- Gender, age, looks or the relationship never make a character tsundere, flustered or contrary.
+- A character may answer part of a question, dodge, refuse or change the subject, always in a way that is theirs.
+- In a group, each speaks from what they know and want. They do not take turns voicing the same opinion, and nobody shares a narrator's explaining voice.
+</npc_voice>""")
+# BOLT task 5 asked for the 30-50% ratio, which the Cosmos voice drops; nervous characters keep their stalls (Card Fidelity)
+rep(B, 'What is the correct target dialogue ratio (30-50%) in the final output of <npc_voice>? ', '')
+rep(B, 'legato pacing (complete, multi-word sentences; avoiding staccato or telegraphic speech)?',
+    "legato pacing (complete, multi-word sentences; avoiding staccato or telegraphic speech), while a character whose card or first message makes nerves part of who they are keeps their stalls, restarts and fragments?")
+rep(B, 'Are NPCs hesitating or failing to fully execute actions ("hovering hands")? How can I apply <realistic_bold_characters> to the scene to ensure full actions without hesitation (physical and verbal)? I must provide a brief example.',
+    'Are NPCs hesitating or failing to fully execute actions ("hovering hands") where their card leaves hesitation out of who they are? How can I apply <realistic_bold_characters> to the scene to ensure full actions without hesitation (physical and verbal), while a character whose card or first message makes nerves part of who they are keeps exactly that? I must provide a brief example that fits the card.')
+# BOLT task 7: check the banned words without reciting the list (RF2.2.1)
+rep(B, 'Then I list <banned_vocabulary> and replace any banned word I had planned, avoid meta-commentary,',
+    'Then I check every planned word against <banned_vocabulary> without copying the list into this reasoning, including words inside hyphenated or compound forms and inflections, and write only the plain replacement for each hit. I avoid meta-commentary')
+# banned words: every form and compound counts, "upholstery" joins Case 1, and a depth-0 gate rechecks them (Case 2 stays: the
+# smell package is not ported)
+rep('🚫Banned Word List', 'husky, catching in throat,', 'husky, upholstery, catching in throat,')
+rep('🚫Banned Word List', 'You must select a replacement word.',
+    'Scope: each listed word is banned in every form it can take: singular or plural, noun, adjective or adverb, and as any part of a hyphenated or compound word. A hyphen or a suffix does not make it a different word.\n\nYou must select a replacement word.')
+port('1f782d15-d282-4a85-b087-2db2548752f0', True, after='Last-Mile Contrast Gate: Cosmos')
+# Therapist: questions come from the card, spent on what the NPC wants to know (merged with U12's per-character cap)
+rep("Gemini, Don't Speak", 'NPCs are allowed to be bad at this.\n',
+    "NPCs are allowed to be bad at this.\nWhich payoff drives an NPC's question and which of these responses they reach for comes from their card (a defining lorebook entry, character sheet or HQ NPC Genesis profile counts as one), so emotional distance belongs to the characters their card writes distant.\n")
+rep("Gemini, Don't Speak", "unless that character's card makes them inquisitive by nature. Zero is the default, not a failure.",
+    "unless that character's card makes them inquisitive by nature, spent on something the NPC wants to know for their own reasons.")
+# smaller RF2.2.1 fixes
+rep('HQ NPC Genesis', 'Banned Names: Elara, Vane, Seraphina,', 'Banned Names: Elara, Vane, Vance, Seraphina,')
+rep('main', 'Semantic re-skins of a detail count as repeats.', 'Semantic re-skins of a detail count as repeats (a flush counts as one detail, whichever way it spreads and whatever it reaches).')
+port('35813f61-a2aa-47c0-9d2a-63b20b0e55f7', True, after='Anti-Cliché Moves')   # door sounds
+d['group_nudge_prompt'] = N['group_nudge_prompt']; log.append(('SET', 'group_nudge_prompt', 'RF2.2.1'))
+# Scene Detail, adapted: looks, bodies and clothes at a stranger's scale. Upstream's first two lines are left out: "a place is
+# described through what someone touches" contradicts the card's ambience touch (1.16.0), and how NPCs know things is
+# <anti_omniscient_NPCs>' job
+SD = 'e3a1b7c4-5d2f-4a86-9c1e-7b0f3d9a2e51'
+port(SD, True, after="Gemini, Don't Speak", name="🔎 Looks at a Stranger's Scale (RF2.2.1 Scene Detail, adapted)", content="""{{//From RF2.2.1's Scene Detail & Evidence (Realistic Gemini), after Gemini kept caricaturing personas and keeping a card's intimate details on camera in scenes about something else. The Eldrasil edit keeps only the looks lines: setting detail and what NPCs can know are covered by the Scene Engine and Anti-Omniscient NPCs.}}{{trim}}
+
+<scene_detail>
+{{user}}'s looks and build register at the scale a stranger in the room would notice them, then recede behind what {{user}} says and does.
+An NPC's body and clothes, first-appearance sweep included, come into the prose at that same scale, as whatever someone present would notice while doing what the scene is about, and in the card's own words.
+Clothes enter as garment, colour and the way they are worn, and build shows through how the body stands and moves.
+Once the scene turns sexual or violent through what its characters are doing, the <adult_mode> rules for anatomy and vocabulary take over when that tag is present.
+</scene_detail>""")
+
+# owner (1.36.0): longer replies, and Embellish Mode instead of Anti-parrot (the AI may write {{user}}'s own words and actions,
+# expanded from what the player wrote). Rule 3 gets A5's fix; rule 1 keeps Player Input Authority's line between attempt and outcome.
+rep('Total Output Length', 'roughly 3 to 6 paragraphs', 'roughly 4 to 7 paragraphs')
+log.append(('OFF', toggle('Anti-parrot', False), 'owner: Embellish Mode instead'))
+log.append(('ON', toggle('Embellish Mode', True), 'owner: writes {{user}} from what the player wrote'))
+rep('Embellish Mode', "1. Enhancement: Elaborate, stylize, and expand {{user}}'s actions in the direction they wrote while maintaining their core ideas.",
+    "1. Enhancement: Elaborate, stylize, and expand {{user}}'s actions in the direction they wrote while maintaining their core ideas. Expand only what {{user}} says and attempts: whether an attempt succeeds and how others respond follow <input_authority> when it is present, and {{user}}'s thoughts stay unwritten.")
+rep('Embellish Mode', '3. NPCs: NPCs must react organically to only 1 or 2 key elements. Avoid point-by-point checklist replies.',
+    "3. NPCs: NPCs answer what a person would answer in {{user}}'s input, in one natural response, not item by item. Avoid point-by-point checklist replies.")
 
 json.dump(d, open(os.path.join(HERE, 'Realistic_Frankenstein_2_2_Eldrasil.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=4)
 for l in log: print(' | '.join(l))

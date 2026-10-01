@@ -3,14 +3,15 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.35.2** (2026-10-02): curfew is a school rule (consequences only when someone with authority sees
-{{user}}), feast nights move it to 22:00, new roster characters get a short first appearance until their sheet loads, and the
-sorting is no longer journaled twice. v1.35.1: items written to `/Player/Inventory` reach the Bag. v1.35.0: lore activation.
+**Snapshot:** card **v1.36.0** (2026-10-02), a preset-only release: the edited preset ports RF2.2.1 (Card Fidelity, the Gemini
+comparative-emphasis and monomania killswitches, the Gemini NPC Voice, the rebuilt Scene Engine); replies run 4 to 7 paragraphs and
+Embellish Mode replaces Anti-parrot (owner). v1.35.2: curfew is a school rule, feast-night curfews, short first appearances.
 Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** live-check v1.35.2 (feast curfew, night outings, first appearances), v1.35.1 (a gift reaches the Bag) and v1.35.0;
-then the v1.34.2 portraits and Graduation map, the Year 3 arrival and Council flow; confirm the invented teacher details
-(CHANGELOG 1.33.0, now in `git show 0358619:CHANGELOG.md`). Outside-campus maps remain in `planning/FUTURE_PLANS.md` FP7.
+**Next task:** live-check v1.36.0 (re-import the preset: voice, endings, Embellish), v1.35.2 (feast curfew, night outings, first
+appearances), v1.35.1 and v1.35.0; then the v1.34.2 portraits and Graduation map, the Year 3 arrival and Council flow; confirm the
+invented teacher details (CHANGELOG 1.33.0, now in `git show 0358619:CHANGELOG.md`). Outside-campus maps remain in
+`planning/FUTURE_PLANS.md` FP7.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 
@@ -31,8 +32,8 @@ underneath. The player is a first-year student. The card combines:
   training, grades, hidden magic, payouts, journal, ambience and more.
 - **A UI**: an in-chat "bracelet" status bar (a regex replaces MVU's placeholder) and a Tavern Helper script with panels: Student
   Builder, Student file (with Settings → Features), People (dossiers, relationship graph), Map, Inventory (Bag, Wallet, planner, journal), Activities, Battle.
-- **Ecosystem compatibility** with the owner's memory extension (VectFox) and prompt preset (Realistic Frankenstein 2.2, edited for
-  Gemini): `docs/ECOSYSTEM.md`.
+- **Ecosystem compatibility** with the owner's memory extension (VectFox) and prompt preset (Realistic Frankenstein 2.2 with an RF2.2.1
+  port, edited for Gemini): `docs/ECOSYSTEM.md`.
 
 **Division of labour (do not blur it):**
 

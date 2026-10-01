@@ -135,6 +135,7 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **MVU card config override** is uid 507 `[config_override]`, a disabled entry: `更新方式 = 随AI输出` (update with the AI reply) and `兼容性.更新到聊天变量 = false`.
   - Reason: in tool-call mode, updates arrive without prose, which breaks name reveals from story text.
 - **Story style is owned by the preset.** The card sets no prose style, point of view or length.
+- **Preset base** (1.36.0, owner): the edit stays on RF2.2 with a selective RF2.2.1 port (`edit_preset.py` §13); the CoTs stay user-role and the RF2.2.1 smell package is not used, because the card's ambience cues name smells. Owner's toggles: 4 to 7 paragraphs, Embellish Mode instead of Anti-parrot.
 - **Lore activation** (1.35.0, owner): a topic entry's keys include the plain word a player says, with SillyTavern regex keys (`/\bwords?\b/i`) for plurals and forms (`KEY_ADDS` in `merge_lorebooks.py`); the WORLD INDEX CORE FACTS section gives every system topic one core line (secret topics stay keyword-only). No sticky entries (owner); no recursion (it depends on a global ST setting, and the raw Cast Sheet holds every NPC). Every card entry has `ignoreBudget` set.
 
 ## 10. Ecosystem

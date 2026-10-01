@@ -1,7 +1,31 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 13c8d74:CHANGELOG.md` (1.34.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.36.0 — Preset: port from Realistic Frankenstein 2.2.1 (2026-10-02)
+
+Owner-approved comparison of RF2.2.1 "Limitless Realism" (Realistic Gemini BOLT configuration, kept in `presets/original/`) with
+the Eldrasil edit. Preset only; the card is unchanged. Save fixture v1.35.2.
+- New, ON: 🎭 Card Fidelity (depth 0; the card, lorebook entry or character sheet wins over style rules: nervous characters keep
+  their stalls, temperament holds, ease with one person stays with that person); the Gemini (Cosmos) editions of the comparative
+  emphasis killswitch ("not X, but Y") and occupational monomania (plus jargon and quirk-lens), each with its depth-0 gate, in place
+  of the regular pairs; the Cosmos NPC Voice (a per-line method instead of the 30-50% dialogue ratio) with the Micro voice's
+  Eldrasil edits; a depth-0 banned-vocabulary gate; More Diverse Door Sounds; "Looks at a Stranger's Scale" (RF2.2.1 Scene Detail,
+  only its looks, body and clothes lines).
+- Scene Engine is RF2.2.1's rebuild (Director Preset 16.0: no "two speeds", causality, pacing, initiative, handoff endings), with
+  simulate-not-dramatise, HOLD endings, the invented-character record and the ambience touch re-applied.
+- New, OFF: Pacing (Cosmos); NPCs push their own thread every reply, and interruptions follow the card's sources.
+- Smaller: BOLT checks banned words without reciting the list, nervous characters are exempt from "no hesitation" and legato,
+  no dialogue-ratio question; banned words in every form plus "upholstery"; Therapist questions come from the card; "Vance" is a
+  banned name; a flush counts as one detail; the group nudge.
+- Owner: Total Output Length 4 to 7 paragraphs; 🧂 Embellish Mode ON instead of Anti-parrot (the narrator writes {{user}}'s own
+  words and actions from what the player wrote; outcomes still follow Player Input Authority, thoughts stay unwritten).
+- Not ported: assistant-role CoTs, the smell package (the card's ambience cues name smells), Time and Place / Realism Mode /
+  Post-History ON, Staccato ON, Turn Dice, the Mimo, Claude and GLM prompts and regexes.
+- Tests: `test_preset.cjs` (1.36.0 block), `test_split_v146.cjs`, the full suite; two curfew checks left stale by 1.35.2 (the
+  Entrance Feast moves curfew to 22:00) now test 22:00.
+- Nothing to confirm with the owner.
 
 ## v1.35.2 — Curfew is a rule, not a law; feast nights; first appearances (2026-10-02)
 
@@ -66,17 +90,6 @@ Cedric, Anya, Kotaro, Valentin, Aurelian, William, Bruno, Bianca, Rigel, Topaz a
 is pinned to assets commit `f42990c`; the Graduation map path follows its lowercase filename in that commit. The full portraits
 use focus points matched to the uploaded thumbnail crops. Verified all existing and new asset paths against the commit tree;
 rebuilt the card and ran the relevant asset/map and old-save checks. Check the portraits and Graduation map once in SillyTavern.
-
-## v1.34.1 — Anselm and Kotaro look different (2026-10-01)
-
-Owner request while writing the portrait prompts. Save fixture v1.34.0.
-- Anselm Graywater is a sheep Beastkin, no longer a tortoise: grey wool for hair, curled ram's horns, drooping sheep's ears, a
-  long grey coat; no shell, no scales, not bald. His Cast Sheet props and the roster line follow.
-- Kotaro Hanamura is lean instead of round and broad, and his face always looks a little drunk (flushed cheeks, reddened nose,
-  glassy half-lidded eyes, a lopsided grin), drunk or not.
-- Portrait prompts for the eight 1.33.0 teachers and the seven cohort 3 students: `planning/PORTRAIT_PROMPTS_1.33_cohort3.txt`,
-  styled after the existing portraits.
-- `python tools/build_all.py --lore`, `tests/test_saves.cjs` and `tests/test_classes_v1330.cjs` pass.
 
 ## Release index (one line per release, oldest first)
 
@@ -185,3 +198,4 @@ Owner request while writing the portrait prompts. Save fixture v1.34.0.
 - **v1.35.0 (2026-10-02):** Lore fires on plain words (spirit, pact, demon, beast...); World Index CORE FACTS; card entries ignore the WI budget.
 - **v1.35.1 (2026-10-02):** Items written to /Player/Inventory (or /Bag) are moved to the Bag instead of vanishing.
 - **v1.35.2 (2026-10-02):** Curfew is a school rule (consequences only when caught); feast nights move it; short first appearances; journal dedupe.
+- **v1.36.0 (2026-10-02):** Preset: RF2.2.1 port (Card Fidelity, Gemini killswitches and voice, new Scene Engine); 4-7 paragraphs; Embellish Mode.

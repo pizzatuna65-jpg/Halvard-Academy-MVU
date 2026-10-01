@@ -33,7 +33,7 @@ ok(R.Bonds.Etnie && !R.$ui.toasts.some(t => /Old lorebook/.test(t)), 'an ongoing
 // ---- 8. "Next" on the bracelet: an event's timed item, a class, curfew
 const nx = w => W(S0, w).$ui.next;
 ok(nx({ Time: '08:00' }).at === '09:00' && /Headmaster and Vice Headmaster speeches in the Arbiter Hall, then Stone sorting/.test(nx({ Time: '08:00' }).what), 'Entrance Event 08:00: next 09:00 speeches before sorting, Arbiter Hall');
-ok(nx({ Time: '16:30' }).at === '19:00' && /Entrance Feast/.test(nx({ Time: '16:30' }).what) && nx({ Time: '19:30' }).kind === 'curfew' && nx({ Time: '21:00' }) === null, 'later: the feast, then curfew, then nothing');
+ok(nx({ Time: '16:30' }).at === '19:00' && /Entrance Feast/.test(nx({ Time: '16:30' }).what) && nx({ Time: '19:30' }).kind === 'curfew' && nx({ Time: '19:30' }).at === '22:00' && nx({ Time: '22:30' }) === null, 'later: the feast, then curfew (22:00 on a feast night, 1.35.2), then nothing');
 ok(nx({ Day: 'Tue', Time: '07:00' }).what === 'Dark Magic Defense' && nx({ Day: 'Tue', Time: '07:00' }).kind === 'class' && nx({ Day: 'Tue', Time: '15:00' }).what === 'Club booths across the academy', 'an ordinary day: the next class; club booths at 16:00');
 ok(nx({ Day: 'Sat', Time: '11:00' }).kind === 'club' && nx({ Day: 'Sun', Time: '10:00' }).kind === 'curfew', 'Saturday clubs; Sunday only curfew');
 ok(nx({ Month: 2, Week: 1, Day: 'Fri', Time: '15:00' }).at === '18:30' && nx({ Month: 7, Week: 3, Day: 'Wed', Time: '09:00' }) === null && nx({ Month: 10, Week: 4, Day: 'Fri', Time: '19:00' }).at === '23:00', 'dusk (about 18:30 since 1.16.0: the sun table), lockdown, a late festival curfew');

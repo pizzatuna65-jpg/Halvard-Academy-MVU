@@ -26,5 +26,5 @@ const bolt = byName('BOLT Chain of Thought').content;
 ok(!/bond Progress|\+2 significant/.test(bolt), 'BOLT step 2 no longer teaches the 1.0 bond rules');
 ok(/following the card's own update rules exactly/.test(bolt), "BOLT step 2 points to the card's update rules");
 ok(bolt.includes('my first reasoning line is exactly "Now: M? W? Day HH:MM at <place>"'), 'BOLT keeps the "Now:" first line (VectFox reads dates from reasoning)');
-ok(enabled('Total Output Length') && /roughly 3 to 6 paragraphs/.test(byName('Total Output Length').content), 'Total Output Length is ON at 3-6 paragraphs (the length moved here from the card)');
-ok(enabled('Hybrid POV') && enabled('Anti-parrot'), 'point of view and not writing {{user}} are preset toggles (ON)');
+ok(enabled('Total Output Length') && /roughly 4 to 7 paragraphs/.test(byName('Total Output Length').content), 'Total Output Length is ON at 4-7 paragraphs (the length moved here from the card; 4-7 since 1.36.0)');
+ok(enabled('Hybrid POV') && enabled('Embellish Mode') && !enabled('Anti-parrot'), 'point of view and whether the AI writes {{user}} are preset toggles (1.36.0, owner: Embellish Mode)');

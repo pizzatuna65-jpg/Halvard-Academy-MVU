@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.36.0 (preset RF2.2.1 port): the three checks in its section below.
 - v1.35.2 (curfew, first appearances): the three checks in its section below.
 - v1.35.1 (items reach the Bag): the check in its section below.
 - v1.35.0 (lore activation): the two checks in its section below.
@@ -71,6 +72,15 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.36.0 — Preset: RF2.2.1 port
+
+1. Re-import `presets/Realistic_Frankenstein_2_2_Eldrasil.json` and select it. In the prompt inspector the depth-0 tail has the
+   contrast, vocation, banned-vocabulary gates and `<card_fidelity>`, and the card's 510/503 are still the last text.
+2. Write a short action ("I ask Irene about the essay"): the reply opens with {{user}}'s action and line expanded (Embellish), Irene's
+   answer is hers, nothing is decided for {{user}} beyond what was written, and the reply runs about 4 to 7 paragraphs.
+3. Over a few replies: no "not X, but Y" lines; a shy or nervous character keeps stammering and fragments; NPCs' jobs and jargon do
+   not take over idle talk.
 
 ### v1.35.2 — Curfew, first appearances
 

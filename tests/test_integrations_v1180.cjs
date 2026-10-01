@@ -48,7 +48,7 @@ ok(!!S.Player.Injuries.Bruise, 'due injury does not heal automatically');
 
 S = initState();
 S.Player.Profile.Dorm = 'Fire';
-S = applyPatch(S, [put('/World/Time', '20:30'), put('/World/Location', 'Canteen')]);
+S = applyPatch(S, [put('/World/Time', '22:30'), put('/World/Location', 'Canteen')]);   // day 1 is the Entrance Feast: curfew 22:00 (1.35.2)
 ok(S.$ui.missed.some(x => /after dorm curfew/.test(x)), 'out of dorm after curfew gets a conditional reminder');
 
 S = initState({ etnie: true });
