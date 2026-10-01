@@ -1,7 +1,30 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.35.0 — Lore activation: plain words, World Index core facts, no WI budget (2026-10-02)
+
+Owner's playtest note ("I only said spirit, and the narrator did not know spirits have tiers") and the audit that followed.
+Save fixture v1.34.2.
+- Topic entries fire on the plain word a player says. Their keys were compound phrases ("Spirit Tier", "Lesser Spirit"), and in
+  SillyTavern a whole-word key never matches its plural, so the new keys are SillyTavern regex keys (`/spirits?/i`). Added
+  for: Spirit Tiers (spirit, familiar), Spirit Pact (pact, summon), the four subtype entries (Elemental, Mystic, Spiritual,
+  Occult, subtype), Dark Magic Defense (dark magic, curse), Halvard (demon), Seals (seals), Student Council (council), the
+  election, Clubs, Competitions (competition, tournament, bracket, qualify), Exam Week (exam), the other academies, the Cathedral
+  (church, chapel, goddess), the Shaping of the World (Asmoday, goddess), the Noble Houses' Liaison (nobles), the Sparring Pavilion
+  (duel), and Magical Beasts (beast, monster, creature, and one regex of every creature in its own list). Table: `KEY_ADDS` in
+  `tools/merge_lorebooks.py`.
+- The WORLD INDEX has a CORE FACTS section: one line each for the magic types, the forbidden arts, the spirit tiers, the Spirit
+  Pact, the seals, the four academies, the breach, magical beasts, the dorm ladder, the academic year, staff, the Student Council,
+  clubs, competitions and airships (about 650 tokens, always on). It restates existing lore; nothing new is canon. The Morning
+  Choir and Lucifer stay keyword-only.
+- Every card entry ignores SillyTavern's World Info budget. ST counts the budget on the unrendered EJS (the Cast Sheet alone is
+  about 180k tokens raw, ~9k rendered); against the default 25% of a 1M context that sits right at the limit, and on overflow ST
+  silently drops the lowest-order entries first, which are the topic entries.
+- Not done (owner): sticky entries.
+- `tests/test_lore_activation_v1350.cjs` (new: what a player says → the entry that must fire, with SillyTavern's matching rules;
+  World Index coverage; budget flag), `test_saves`, `qa_static` and the lore suites pass.
 
 ## v1.34.2 — Portraits for the new teachers and Year 3 cohort (2026-10-01)
 
@@ -68,77 +91,6 @@ Save fixture v1.32.0.
   Study Group, Magnus Board Game Club, Dorian Specialized Magic Club, Cedric Gardening Club, Anya Tea Club, Kotaro Brewing Club,
   Valentin Academy Newspaper), since canon says every teacher runs one club; Practical Magic sparring partners stay within one's dorm
   except in Training Week (keeps the old class rule); the reasons teachers give for a free period.
-
-## v1.32.0 — Calendar moves, "Coming up", the Inventory panel (2026-09-30)
-
-Owner request (13 points, grouped A–D; A and B done here, C and D saved in `planning/FUTURE_PLANS.md` §0). Save fixture v1.31.1.
-- **Calendar** (`data/calendar.json`, lore via `merge_lorebooks.py` 1.32.0 block): the four **Dorm Days move to Sunday**
-  (M1W4, M4W3, M8W4, M10W2). **Results & Final Ranking** is M11 W2 **Monday**. The **Academy Trip** runs M11 W2 **Saturday**
-  (a full day's flight out, arriving at night) to W3 **Thursday** (a full day's flight home); lore "half a day by airship" became
-  "a full day". The **Kingdom Competition** is Wed–Sat at the arena in the capital; only the teams travel (arrive the day before at
-  a hotel, fly home the day after): Halvard's team flies out Tue and home Sun with **Gavlan Haverton** as escort, so Monday is free
-  before Remembrance Day. Calendar `kingdom` flag marks the three days (rival-team rule); rule 502 Trip covers the team's stay.
-- **Coming up** (`stepUi`, `$ui.soon`, 505): `<now>` lists the calendar of the next seven days (a run of days is one line; an event
-  already running today and the Month 12 holiday are left out), and students and staff may bring it up when it fits who they are.
-- **Inventory** replaces the Notebook button: Bag, Wallet (both moved from the Student file), Planner, Journal, Notice Board,
-  Letters, Mystery Board. The panel id stays `notebook` (links and red dots keep working); the bracelet's separate Bag button is
-  gone; `profile:bag` / `profile:wallet` links open Inventory. The Tavern Helper button is renamed "Inventory".
-- The Student file no longer says "Your SillyTavern persona picture."
-- Tests: new `test_calendar_v1320` (9 checks); `test_notebook`, `test_news_v1250`, `test_batch1_swipe`, `test_batch5_shops`,
-  `test_world_v110`, `test_playtest_v1301` updated; saves, lint and static QA pass; panel checked in a browser preview.
-- To confirm with the owner: Results & Dorm Ranking in **M5** stays on Friday (only M11 was asked); Linus "grew up in a small town
-  near the arena" now reads as a town near the capital; the Trip's Sunday–Wednesday plan stays generic until the Sunreach map
-  (Group D); Gavlan's first-year Combat class on Kingdom Thursday is left to the narrator (free periods are Group C).
-
-## v1.31.1 — Florian at the Spirit Path (2026-09-30)
-
-Owner: "add Florian to the Spirit Path regulars". Regulars — Spirit Path: Ruby, Royhan, Florian (Occult, Spirit Pact with Hades, a
-Greater Spirit). Save fixture v1.31.0. Tests: `test_locations_v1310`, saves pass.
-
-## v1.31.0 — Spirit Path, restful places, things to do around the grounds (2026-09-30)
-
-Owner-approved drafts `DRAFT_spirit_path`, `DRAFT_restore_places`, `DRAFT_location_activities` (all three deleted; leftovers in
-`planning/FUTURE_PLANS.md`). Decisions added: "Meditation Rooms and Spirit Path", "A first pact in play", "Restful places",
-"Location activities"; "Map cards" gains a Restores row.
-- **Two places.** The riad is only the **Meditation Rooms** now: calm, silent, open to everyone (no bound spirits, no night sounds,
-  no "not alone"); regulars Caspian and Tristan; Will-focus meditation no longer needs a partner; its own quiet ambience. The new
-  **Spirit Path** (pin 38, the trees east of the Gymnasium; 17 min from the Courtyard; next to the Gymnasium, Menagerie and Sports
-  Field): lore, seasons, regulars Ruby and Royhan, seasonal spirit sightings in the ambience, Practice "Watch the spirits" (Nature,
-  anyone) and "Walk with your spirit" (Arcana, pact partner with you). Old saves: the location and discovered list are renamed;
-  "Spirit House" still reads as the Meditation Rooms.
-- **A first pact in play**: an Occult student may bond one lesser spirit at the Spirit Path (rule 502); the engine writes its
-  Summon technique and removes any other new pact made outside the Builder.
-- **Restful places** (`data/restore_places.json`): resting there for the whole elapsed time. Stamina: Founder's Park x1.5 (x1.75
-  warm sunny afternoon; nothing in bad weather, cold or dark), Medical Centre ward x1.75 (x1.25 busy weeks), own Bathhouse x2
-  (x2.5 in the cold or arriving chilled; 30 min ends Chilled). Mana: Cathedral x1.25 (x1.75 Sunday service 09–11), Meditation Rooms
-  x2 (x2.5 07–09, x1.75 exam weeks), Forest Clearing x3 (x3.5 full sun, x2 after dark). `<now>` and the map card show the rate now.
-- **Activities**: Row on the lake, Run the hills (stamina training, not in storms), Read the sky (Nature), Sit under the willow
-  (Arcana, daylight); a paid Bell-keeper's shift (30, Craft); the Old Hut custom (a confidence there: Trust +1 once a month per
-  person); letters home from the Mail Tower (one a month; reply a week later; parcel 50% none / 30% an item / 20% 10–30 coin,
-  handed over on reading, `data/letters_home.json`); lore and rumours overheard at 60% in the bathhouse and laundry.
-- Save fixture v1.30.6. Tests: new `test_locations_v1310` (37 checks); `test_dynamic_lore_v1140` (27 seasonal entries) and
-  `test_far_grounds_v1151` (Spirit Path time) updated; full suite and lint pass.
-- To confirm with the owner: the bell-keeper bonus "next week's events early" was dropped (the Notebook already shows 14 days and
-  the full calendar; noted in FUTURE_PLANS); the bell-keeper's shift gives Craft +1 like the Menagerie shift gives Nature, and shares
-  the two paid shifts a week; Sit under the willow is daylight only; a pact made in play may be "terms" or "summoned"; the Old Hut
-  counts a confide or secret interaction; invented lines: the Meditation Rooms' cues ("the still pool", "cushions, low light"), a
-  laundry line ("half the rumours on campus pass through here") and the Mail Tower's writing desks.
-
-## v1.30.6 — "Connected to" follows the map (2026-09-30)
-
-Owner: "connected to on the map and in the lorebook should follow the map picture (Founder's Park → Courtyards, Light Dormitory,
-Archery Range, Sports Field, Mail Tower, Medical Centre, Groundskeeper Lodge, Combat Ground); hide it on the map, the AI still sees
-it". Decision touched: "Map cards" (the Connected to row is gone).
-- Out of doors, each place now links to the places drawn next to it on the map (`tools/curate_data.py` `ADJ`); the Campus Map lore
-  (entry 132, "Adjacent places") states the same list. The Courtyard keeps the castle doors, the four dormitories, the Mall, the
-  Medical Centre, Founder's Park and the Gatehouse; Sports Field, Combat Grounds, Gardens, Mail Tower, the Hills and the Dovecote are
-  no longer its neighbours. The castle rooms, dorm rooms, Mall shops and the far grounds' long paths (`FAR_LEGS`) are unchanged.
-- Map cards no longer show "Connected to" (the data stays for the lore). Walking times: Mail Tower 7 → 8 and Sports Field 15 → 16
-  from the Courtyard (their old Courtyard shortcut is gone); the lore walking line says so.
-- Save fixture v1.30.5. Tests: people map, Mall shops (updated for the hidden row), map gates, far grounds, connections, playtest,
-  saves pass.
-- To confirm with the owner: the neighbours I read from the picture for places other than Founder's Park (list in the Campus Map
-  entry); the Hills link to Arbiter Hall and the Staff Quarters (the path behind them) while the walk still counts from the Courtyard.
 
 ## Release index (one line per release, oldest first)
 
@@ -244,3 +196,4 @@ it". Decision touched: "Map cards" (the Connected to row is gone).
 - **v1.34.0 (2026-10-01):** Seven Year 3 first-years, Saturday Student Council and elections, Dante's Lodge gift restored.
 - **v1.34.1 (2026-10-01):** Anselm is a sheep Beastkin; Kotaro is lean and always looks drunk; portrait prompts.
 - **v1.34.2 (2026-10-01):** Fifteen new portrait and thumbnail pairs, all NPCs pictured; assets pinned to f42990c.
+- **v1.35.0 (2026-10-02):** Lore fires on plain words (spirit, pact, demon, beast...); World Index CORE FACTS; card entries ignore the WI budget.

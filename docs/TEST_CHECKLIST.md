@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.35.0 (lore activation): the two checks in its section below.
 - v1.34.2 (new portraits): the two checks in its section below.
 - v1.34.0 (Year 3 cohort and Student Council): the three checks in its section below.
 - v1.33.0 (classes and teachers): the four checks in its section below.
@@ -68,6 +69,14 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.35.0 — Lore activation
+
+1. Update the card's lorebook when asked. In a scene with Alyssa or Ottavio, say only "tell me about your spirit": the prompt
+   (or the narrator's answer) has the Spirit Tiers entry, and the narrator places the spirit in a tier. "Can you summon it?" adds
+   the Spirit Pact entry. "There's a monster in the forest" adds Magical Beasts.
+2. World Info settings → turn on "Alert On Overflow" and play a turn that names three NPCs and a topic: no "World info budget
+   reached" toast (every card entry now ignores the budget).
 
 ### v1.34.2 — New portraits and asset pin
 

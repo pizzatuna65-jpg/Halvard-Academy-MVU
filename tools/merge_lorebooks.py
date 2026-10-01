@@ -900,6 +900,72 @@ def ghost_stories(C, N):
         "Bed, the Other Climber, the Applause), each with dates, witnesses and a theory: she has counted bell strokes from the courtyard "
         "after curfew, sat up in the Medical Centre hoping for the Last Bed, and said \"after you\" to an empty path more than once.")
 
+# 1.35.0 (owner, lore activation audit: "I only said spirit and the narrator did not know spirits have tiers"): a topic entry also
+# fires on the plain word a player says (keys were compound phrases such as "Spirit Tier"; a whole-word key never matches its plural,
+# so plurals and forms are SillyTavern regex keys, /.../i), and the WORLD INDEX carries one core line per system topic, so the
+# narrator knows a topic exists before its entry fires. Secret topics (the Morning Choir, Lucifer) stay keyword-only.
+# tests/test_lore_activation_v1350.cjs checks both with SillyTavern's own matching rules.
+KEY_ADDS = {
+    122: [r'/\bspirits?\b/i', r'/\b(?:my|his|her|their|your|its|a spirit) familiars?\b|\bfamiliars\b/i'],
+    249: [r'/\bpacts?\b/i', r'/\bpact(?:ed|-holders?)\b/i', r'/\bsummon(?:s|ed|ing)?\b/i'],
+    33: ['Elemental', r'/\bsub-?types?\b/i'],
+    34: ['Mystic', r'/\bsub-?types?\b/i'],
+    35: ['Spiritual', r'/\bsub-?types?\b/i'],
+    36: ['Occult', r'/\bsub-?types?\b/i'],
+    32: ['dark magic', 'dark arts', r'/\bdark mages?\b/i', r'/\bcurse[sd]?\b/i'],
+    5: [r'/\bdemons?\b/i', 'demonic'],
+    7: [r'/\bseals\b/i'],
+    6: [r'/\bcouncil\b/i'],
+    336: [r'/\belections?\b/i'],
+    26: [r'/\bclubs\b/i', r'/\b(?:my|your|our|his|her|their|a|the|any|new) club\b/i', 'club activities', 'club president'],
+    19: [r'/\bcompetitions?\b/i', r'/\btournaments?\b/i', r'/\bbrackets?\b/i', r'/\bqualif(?:y|ied|ies|ying|ier|iers)\b/i'],
+    203: [r'/\bexams?\b/i'],
+    2: [r'/\b(?:other|rival|four|sister) academ(?:y|ies)\b/i'],
+    3: [r'/\b(?:other|rival|four|sister) academ(?:y|ies)\b/i'],
+    4: [r'/\b(?:other|rival|four|sister) academ(?:y|ies)\b/i'],
+    90: [r'/\bchurch(?:es)?\b/i', 'chapel', r'/\bgoddess\b/i'],
+    277: ['Asmoday', r'/\bgoddess\b/i'],
+    91: [r'/\bnobles?\b/i', 'nobility', r'/\baristocra(?:t|ts|cy)\b/i'],
+    267: [r'/\bduel(?:s|led|ling|ing|ist|ists)?\b/i'],
+    229: [r'/\bbeasts?\b/i', r'/\bmonsters?\b/i', r'/\bcreatures?\b/i'],
+}
+CORE_FACTS = """CORE FACTS (the short version; a topic's full entry is added when it comes up)
+Magic types: Elemental (the elements and advanced elements), Mystic (changing the material world: creation, telekinesis, divination, warding), Spiritual (the mage's own will: enhancement, healing), Occult (illusions, charms, spirits). About thirty subtypes each.
+Forbidden arts: every type has forbidden subtypes next to what it practises daily (Blightfire, Puppetry, Mind Control, Pacting and others); using one means arrest. Dark Magic Defense, taught by the Doves, covers them and curses.
+Spirits: four tiers. Lesser (common; most familiars; almost any Occult student can bond one), Basic (a regular spirit user's working spirit), Greater (rare, old, willful; a failed binding is dangerous), Spirit Lord (extremely rare; bound to a whole domain of the world). A spirit user's standing is the highest tier they hold.
+Spirit Pact: the one lawful pact, a contract a spirit agrees to and cannot be forced into; a pact with anything else is Pacting, a forbidden art. A pact spirit is summoned (it drains mana while present) or, Greater and Spirit Lord only, channelled.
+Seals: every academy stands on a sealed site; the seals draw the residual mana left behind by casting (students are never drained).
+Four academies, one per region, each on a sealed site: Halvard (west: the Crack, a rift to the demon world), Myrdath (north: a sealed Monster), Veyra (south: the Archmage's Rest), Ashvale (east: the Elixir).
+The breach: two years ago, during the Thinning, something came through the Crack for one night and killed several students; Halvard's Warden resealed it and died, and the apprentice is now Acting Warden.
+Magical beasts: graded IV (nuisance) to I (settlement-scale); students handle nothing above III; some beasts are protected by law.
+Dorm ladder: students stay in one dorm for all three years and climb its ranked ladder (exams, competitions, achievements); rank sets the monthly payout.
+Academic year: three years of two semesters each; repeating a year needs the Headmaster's approval and is rare.
+Staff: Headmaster; Vice Headmaster and Warden; teaching staff and Dorm Heads; other staff.
+Student Council: a President, a Vice President and members from all four dorms; meets Saturday mornings; handles club administration, events, discipline and cross-dorm mediation; the President is elected in M10W3.
+Clubs: about thirty; the one place the four dorms mix freely; founding takes a teacher's signature and five members; sport clubs ban magic in play.
+Competitions: Dorm (solo, a bracket per combat role), Academy (teams of four covering the roles), Kingdom (one team per academy, in the capital), World (a national four picked from every Kingdom entrant). Losing ends a student's competitive year.
+Airships: the kingdom's long-distance transport, hired for the Expedition, the Academy Trip, the long breaks and the Kingdom and World Competitions."""
+def beast_names(text):   # every creature in the Magical Beasts list, for one regex key
+    names = []
+    for line in text.split('\n'):
+        if not re.match(r'^[A-Z]{4,}', line): continue
+        for sent in line.split(': ', 1)[1].split('. '):
+            items = re.split(r'[,;]', sent.split(': ')[-1])
+            if len(items) < 3: continue
+            for it in items:
+                n = re.sub(r'\s*\((?:I|II|III|IV)\)\.?|\.$', '', it).strip()
+                n = re.sub(r'^the ', '', n)
+                if re.fullmatch(r"[a-z][a-z' -]*", n.lower()) and n.lower() != 'giant': names.append(n.lower())
+    return sorted(set(names), key=lambda n: (-len(n), n))
+def lore_activation(C):
+    beasts = beast_names(C[229]['content'])
+    assert len(beasts) >= 80 and 'dire wolf' in beasts and 'unicorn' in beasts, len(beasts)
+    adds = dict(KEY_ADDS)
+    adds[229] = adds[229] + ['/\\b(?:' + '|'.join(re.escape(n).replace('\\ ', ' ') for n in beasts) + ')(?:s|es)?\\b/i']
+    for uid, keys in adds.items():
+        C[uid]['key'] = list(dict.fromkeys(C[uid]['key'] + keys))
+    rep(C[0], "\n\nThe Ring Dining Hall opens only", "\n\n" + CORE_FACTS + "\n\nThe Ring Dining Hall opens only")
+
 # Weekly timetable lore follows the same data as the engine and Notebook in both exports.
 def calendar_timetable_lore(core_entries):
     tt = json.load(open(P('data/calendar.json'), encoding='utf-8'))['timetable']
@@ -934,6 +1000,7 @@ formal_and_far_grounds(C39, N39)   # 1.15.1
 ghost_stories(C39, N39)   # 1.16.0
 practical_magic_class(C39)   # 1.33.0
 staff_regulars(N39)   # 1.33.0
+lore_activation(C39)   # 1.35.0
 calendar_months = json.load(open(P('data/calendar.json'), encoding='utf-8'))['months']
 for month in range(1, 13):
     C39[133 + month]['content'] = f'[Current month: Month {month}]\n' + calendar_months[str(month)]
@@ -1089,6 +1156,7 @@ formal_and_far_grounds(Cc, Nc)   # 1.15.1
 ghost_stories(Cc, Nc)   # 1.16.0
 practical_magic_class(Cc)   # 1.33.0
 staff_regulars(Nc)   # 1.33.0
+lore_activation(Cc)   # 1.35.0
 # merge + tagging (D2): lore -> [mvu_plot]; shared state/navigation entries stay untagged (sent to both models)
 UNTAGGED_CORE = {0, 132, 134, 131, 20}
 UNTAGGED_NPC = {97}
@@ -1105,6 +1173,7 @@ cdir = P('src/worldbook/content'); os.makedirs(cdir, exist_ok=True)
 for f in os.listdir(cdir): os.remove(os.path.join(cdir, f))
 index = []
 for e in merged:
+    e['ignoreBudget'] = True   # 1.35.0: SillyTavern counts the WI budget on unrendered EJS (the Cast Sheet alone is ~180k tokens raw)
     open(os.path.join(cdir, f"{e['uid']}.txt"), 'w', encoding='utf-8').write(e['content'])
     index.append({k: v for k, v in e.items() if k != 'content'})
 json.dump(index, open(P('src/worldbook/index.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)

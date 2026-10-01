@@ -3,16 +3,14 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.34.2** (2026-10-01): the 15 newly uploaded portraits and thumbnails for the eight teachers and Year 3
-cohort are in the card, pinned to assets commit f42990c. v1.34.1: Anselm is a sheep Beastkin and Kotaro lean and drunk-faced.
-v1.34.0: seven incoming first-years arrive in campaign Year 3 (Aurelian, William, Bruno,
-Bianca, Rigel, Topaz, Faye), with lore, voice, bonds, gifts, moods and connections. Student Council membership is separate from
-the afternoon club and meets Saturday mornings; the Year 2 and Year 3 elections are seeded, including {{user}} as the Year 2
-nominee when eligible. Dante's Rank 5 gift is the Groundskeeper's Lodge key again. v1.33.0 added Practical Magic by role, eight
-teachers and free periods. Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
+**Snapshot:** card **v1.35.0** (2026-10-02): lore activation. Topic entries fire on the plain word a player says (spirit, pact,
+demon, beast, club, exam...; SillyTavern regex keys), the WORLD INDEX has a CORE FACTS line per system topic, and every card
+entry ignores SillyTavern's World Info budget (it counted the Cast Sheet's raw EJS). v1.34.x: cohort 3, the Saturday Student
+Council, and all 71 NPC portraits. Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** live-check the 15 new portraits and Graduation map in v1.34.2, then the Year 3 arrival and Council flow; confirm
-the invented teacher details listed in CHANGELOG 1.33.0. Outside-campus maps remain in `planning/FUTURE_PLANS.md` FP7.
+**Next task:** live-check v1.35.0 (spirit talk brings the tiers; no budget toast), then the v1.34.2 portraits and Graduation
+map, the Year 3 arrival and Council flow; confirm the invented teacher details listed in CHANGELOG 1.33.0. Outside-campus maps
+remain in `planning/FUTURE_PLANS.md` FP7.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

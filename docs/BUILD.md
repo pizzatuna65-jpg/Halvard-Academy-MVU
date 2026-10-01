@@ -95,6 +95,9 @@ python tools/audit_chat.py chat.jsonl --out report.md   # optional: character-dr
   `merge_lorebooks.py` (or a list like it): a free uid, `template_from(C[222])` for the Superstition settings, keys and the text.
   Mention it with one `rep()` line in the entries that should know it exists (WORLD INDEX, the places and classes where it comes
   up), as the brands are mentioned in the Mall and the Main Library. Keep Lucifer and other secrets inside `<narrator_only>`.
+- **Add a system topic entry** (magic, world, academy rules; 1.35.0): give it the plain words a player would say as keys (regex keys
+  `/words?/i` for plurals) in `KEY_ADDS`, and a one-line summary in `CORE_FACTS` (both in `merge_lorebooks.py`); add its uid to
+  `TOPICS` and a player sentence to `MUST` in `tests/test_lore_activation_v1350.cjs`.
 - **Add an NPC.**
   1. Add the lore entry via the lorebook pipeline. On campus from the start: a lore pass like `source_original/npc_lore_staff_2026-10-01/` (1.33.0: `lore_staff.md` with uid and keys, `lore_staff_additions.md` with `year: 1` lines that join the older NPC's Relations line), the roster line in `merge_lorebooks.py` (uid 97) and the Regulars (`STAFF_REGULARS`). Every bonded NPC needs a row in each *per NPC* data file (`docs/INDEX.md` §7) and a curated type for every relation line (`build_relations.py` fails otherwise); the count tests (mood/gift, Rank 4, Tension, Rank 8 branches) name the total.
   2. Add the portrait and thumbnail to the assets repo, then update the manifest and the pinned commit.

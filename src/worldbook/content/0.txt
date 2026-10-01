@@ -30,4 +30,21 @@ Superstitions: star cookie (luck), the founder's hand (exam), sleeping in the li
 World myths, told across the continent, not history: the Devoured Kingdom (Azathoth), the Four Who Saved the World, the First Bargain (why magic has four types), the Holy Grail, the Shaping of the World (Asmoday).
 Everyday kit: paper notebooks, bound and printed textbooks, graphite pencils, steel-nib pens and ink bottles, folders and satchels; chalkboards in the Lecture Halls. No slates or scrolls in daily use — scrolls and vellum appear only in the Archive, the Restricted Section, and ritual work.
 
+CORE FACTS (the short version; a topic's full entry is added when it comes up)
+Magic types: Elemental (the elements and advanced elements), Mystic (changing the material world: creation, telekinesis, divination, warding), Spiritual (the mage's own will: enhancement, healing), Occult (illusions, charms, spirits). About thirty subtypes each.
+Forbidden arts: every type has forbidden subtypes next to what it practises daily (Blightfire, Puppetry, Mind Control, Pacting and others); using one means arrest. Dark Magic Defense, taught by the Doves, covers them and curses.
+Spirits: four tiers. Lesser (common; most familiars; almost any Occult student can bond one), Basic (a regular spirit user's working spirit), Greater (rare, old, willful; a failed binding is dangerous), Spirit Lord (extremely rare; bound to a whole domain of the world). A spirit user's standing is the highest tier they hold.
+Spirit Pact: the one lawful pact, a contract a spirit agrees to and cannot be forced into; a pact with anything else is Pacting, a forbidden art. A pact spirit is summoned (it drains mana while present) or, Greater and Spirit Lord only, channelled.
+Seals: every academy stands on a sealed site; the seals draw the residual mana left behind by casting (students are never drained).
+Four academies, one per region, each on a sealed site: Halvard (west: the Crack, a rift to the demon world), Myrdath (north: a sealed Monster), Veyra (south: the Archmage's Rest), Ashvale (east: the Elixir).
+The breach: two years ago, during the Thinning, something came through the Crack for one night and killed several students; Halvard's Warden resealed it and died, and the apprentice is now Acting Warden.
+Magical beasts: graded IV (nuisance) to I (settlement-scale); students handle nothing above III; some beasts are protected by law.
+Dorm ladder: students stay in one dorm for all three years and climb its ranked ladder (exams, competitions, achievements); rank sets the monthly payout.
+Academic year: three years of two semesters each; repeating a year needs the Headmaster's approval and is rare.
+Staff: Headmaster; Vice Headmaster and Warden; teaching staff and Dorm Heads; other staff.
+Student Council: a President, a Vice President and members from all four dorms; meets Saturday mornings; handles club administration, events, discipline and cross-dorm mediation; the President is elected in M10W3.
+Clubs: about thirty; the one place the four dorms mix freely; founding takes a teacher's signature and five members; sport clubs ban magic in play.
+Competitions: Dorm (solo, a bracket per combat role), Academy (teams of four covering the roles), Kingdom (one team per academy, in the capital), World (a national four picked from every Kingdom entrant). Losing ends a student's competitive year.
+Airships: the kingdom's long-distance transport, hired for the Expedition, the Academy Trip, the long breaks and the Kingdom and World Competitions.
+
 The Ring Dining Hall opens only for feasts after major academy events, never for daily meals. Every formal academy event opens with speeches from Headmaster Baelin and Vice Headmaster Althair, and they speak again at its close: every feast begins with their speeches before the food is served.

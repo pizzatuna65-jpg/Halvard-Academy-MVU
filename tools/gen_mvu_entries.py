@@ -150,7 +150,7 @@ def mk(uid, comment, constant, disable, position, depth, order, keys=(), whole=N
     e.update(uid=uid, displayIndex=uid, comment=comment, key=list(keys), keysecondary=[], constant=constant, disable=disable,
              position=position, depth=depth, order=order, role=0, selective=True, selectiveLogic=0, probability=100,
              useProbability=True, excludeRecursion=True, preventRecursion=True, group='', scanDepth=scan, caseSensitive=None,
-             matchWholeWords=whole)
+             matchWholeWords=whole, ignoreBudget=True)   # 1.35.0: the budget would count the raw EJS (see merge_lorebooks.py)
     return e
 idx = [
     mk(500, '[initvar] Eldrasil starting state', False, True, 1, 4, 1),
