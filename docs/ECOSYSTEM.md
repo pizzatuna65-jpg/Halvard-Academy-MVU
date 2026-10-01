@@ -12,7 +12,7 @@ Card v1.0.2 (VectFox notes updated through 1.6.0) · preset `Realistic_Frankenst
 | Status display | **Card** bracelet and panels | preset Internal States HTML (OFF) |
 
 ## Preset changes (vs the original 2.2 "Nuts & Bolts")
-**Turned OFF: overlapping trackers.** Internal States (master), Relationships RPG, GM's Notebook, Internal Agenda, Chekhov's Gun, World Sim, Fate & Routine, Internal Thoughts.
+**Turned OFF: overlapping trackers.** Internal States (master), Relationships RPG, GM's Notebook, Internal Agenda, Chekhov's Gun, World Sim, Fate & Routine.
 They keep a second game state in a hidden HTML block that must sit "at the absolute end of every response", which competes with the card's `<UpdateVariable>` block, duplicates Bonds, Campus_State, Journal and Clues, and costs thousands of output tokens per reply.
 
 **Turned OFF / ON for Gemini, following the preset's own notes.**
@@ -20,6 +20,8 @@ They keep a second game state in a hidden HTML block that must sit "at the absol
 - ON: Gemini "Don't Speak Like a Therapist", the new AI Studio jailbreak for Gemini 3.8 Flash, and the "Really Did It" fix for Western models.
 
 **New: 🏫 Eldrasil × MVU × VectFox Bridge** (right after the Main Prompt). It establishes that the card state is the only tracker. It replaces the disabled trackers with state-free guidance: off-screen lives, and setups and payoffs recorded as Clues, Commitments or Journal lines. "⏰ Time and Place" is locked OFF: the card computes time and weather itself. Since 1.11.2 the card says the rest itself (rule 504: recalled memories are the past; World Index: no phones, metric units), so the card works with any preset.
+
+**Back ON (1.37.3, owner): 🧠 Internal Thoughts** as a block of its own, `<npc_thoughts>`, right before `<UpdateVariable>`: up to three NPCs' raw thoughts, never {{user}}'s, never an unrevealed secret. Two preset regexes fold it on screen and drop it from older replies in the prompt; the card draws it in brass; a VectFox pattern keeps it out of memory. Turn it OFF in the preset to hide it.
 
 **Edited prompts**
 - **Main:** removed the `<think>` wrapper, which the author says is only for Mimo via Crof. Random events are now recorded in the card state.
@@ -78,9 +80,9 @@ The card's lore is designed around keywords and a few constant entries; let Sill
    - untick **Strip <UpdateVariable> Tags (MVU)**: otherwise the block, the only place the in-world date appears in the text, is gone before any custom pattern sees it;
    - delete any older custom pattern that would touch the block first, such as a catch-all "strip every HTML tag" (`<\/?[a-z][^>]*>`), and never replace `
 {3,}` with nothing (that glues paragraphs together; VectFox already turns 3+ newlines into one blank line);
-   - import `vectfox_cleaning_patterns.json` (Text Cleaning → Import; all five pass VectFox's import check and are appended in order).
+   - import `vectfox_cleaning_patterns.json` (Text Cleaning → Import; all seven pass VectFox's import check and are appended in order).
 
-   Each reply is then stored as its prose plus one line such as `[In-world time: Y2 M1 W2 Wed 13:40, at Courtyards]`: the patterns drop the update block and the `<StatusPlaceHolderImpl/>` tag, remove colored-dialogue tags (keeping the words) and unwrap in-story graphics (keeping their text). Since 1.11.3 the time pattern also reads the year (Year 2+), a place written without an arrow ("Courtyards (unchanged)"), time and place on two lines, and "->" arrows; `tests/test_vectfox_v1113.cjs` checks them.
+   Each reply is then stored as its prose plus one line such as `[In-world time: Y2 M1 W2 Wed 13:40, at Courtyards]`: the patterns drop the update block and the `<StatusPlaceHolderImpl/>` tag, remove colored-dialogue tags (keeping the words), drop NPC thoughts and unwrap in-story graphics (keeping their text). Since 1.11.3 the time pattern also reads the year (Year 2+), a place written without an arrow ("Courtyards (unchanged)"), time and place on two lines, and "->" arrows; `tests/test_vectfox_v1113.cjs` checks them.
 2. **EventBase: ON.** It is the only source of the details of old scenes.
 3. **Summarizer Injection: OFF** (since card 1.6.0). The card keeps the story's memory itself: the Journal, each bond's recent and defining moments, and what each character knows and feels about you (Mind, Knows, Imprints, Next). A VectFox summary would repeat it and can contradict it. If you still want it, keep it to about 3,000 characters.
 4. **Ghosting or the card's trim regex: use one.** Ghosting works only while Summarizer Injection is ON too (`core/summarizer-injection.js`); with Summarizer Injection OFF (recommended) the Ghosting switch does nothing, and the card's regex "Eldrasil — State-as-memory: trim far chat (prompt)" does the trimming. With Summarizer Injection + Ghosting on, disable that card regex (Ghosting only removes messages already stored in memory; the card's regex trims by depth regardless).

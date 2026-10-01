@@ -14,7 +14,8 @@ def toggle(frag, on):
 log = []
 
 # ---- 1. toggles: the card is the only state tracker; Gemini-specific settings per the preset's own notes
-for frag in ['Fate & Routine', 'Internal Agenda', "GM's Notebook", 'Relationships RPG', 'World Sim', "Chekhov's Gun", 'Internal Thoughts', 'Internal States 💾']:
+# 1.37.3: Internal Thoughts left this list; section 15 rebuilds it as a block of its own, ON
+for frag in ['Fate & Routine', 'Internal Agenda', "GM's Notebook", 'Relationships RPG', 'World Sim', "Chekhov's Gun", 'Internal States 💾']:
     log.append(('OFF', toggle(frag, False), 'duplicates the card state (MVU) / needs the Internal States block'))
 # v1.1.0: the card owns weather and time (World._Weather, <now>); the preset's Time and Place header would invent its own (°C/°F)
 log.append(('OFF', toggle('Time and Place', False), 'the card computes time and weather (v1.1.0)'))
@@ -436,6 +437,39 @@ rep('Embellish Mode', '3. NPCs: NPCs must react organically to only 1 or 2 key e
 for frag in ('Colored Dialogue 2.0', '🌈 Colored Dialogue VN'):
     q = byname(frag); q['content'] = q['content'].replace('{{//', "{{// With a card that colours dialogue itself (Eldrasil: Student file > Settings > Features > Dialogue colours), keep this OFF.", 1)
 log.append(('NOTE', 'Colored Dialogue toggles', 'keep OFF with a card that colours dialogue itself'))
+
+# ---- 15. 1.37.3 (owner): Internal Thoughts back ON, as a block of its own. Upstream it only fills a template inside the Internal
+# States block (OFF here: the card is the only tracker), so turned ON alone it had nowhere to go. It keeps no state: a per-reply
+# view of what NPCs think, before the card's update block. Generic: it names no card data, so it works on any card.
+IT = byname('Internal Thoughts')
+IT['content'] = """{{// ON: after the story, a folded 🧠 Thoughts block shows what up to three NPCs are thinking right now. It keeps no state and never writes {{user}}'s thoughts; the story itself still keeps thoughts unspoken. OFF: no block. The preset's regexes fold it on screen and drop it from older replies in the prompt.}}{{trim}}
+
+<internal_npcthoughts>
+After the narrative, write one thoughts block in exactly this form, in the story's language:
+<npc_thoughts>
+- **Name**: thought
+- **Name** (where they are, what they are doing): thought
+</npc_thoughts>
+1. Who: up to 3 NPCs, those present in the scene first. An absent NPC appears only when they matter to what is happening, at the place and task the card's records or the story already give them; the block never moves anyone or invents a meeting. Never {{user}}: their thoughts belong to the player.
+2. Voice: 1 to 3 short lines per NPC, raw and in the moment (fragments, impulses, second thoughts), in that character's own voice and true to their card, their current mood and, when the card keeps one, its record of how they see {{user}}.
+3. What they know: only what that character knows. A thought shows feelings, wants and what they are about to do; it never spells out a secret the story still keeps from {{user}} (a hidden identity, a lie, a plan not yet revealed). Such a thing shows only as the character would feel it (unease, a topic they steer away from), never by name.
+4. Consistency: the thoughts match what the narrative just showed and drive what each NPC does next; the next reply never drops them without a reason in the scene.
+5. Place: the block stands outside the narrative, so the prose never quotes or summarises it. If the card asks for a state-update block at the end of the reply, the thoughts block goes right before it and the update block stays last. Never write the tag name of this instruction block in the reply.
+</internal_npcthoughts>"""
+log.append(('ON', toggle('Internal Thoughts', True), 'owner 1.37.3: a <npc_thoughts> block of its own, no Internal States'))
+rep(B, 'Output order: the story (any gfx sits inline where it occurs), then, if <update_format> is present,',
+    'Output order: the story (any gfx sits inline where it occurs), then, if <internal_npcthoughts> is present, its one <npc_thoughts> block, then, if <update_format> is present,')
+rep('Total Output Length', '(excluding headers and the state-update block)', '(excluding headers, the thoughts block and the state-update block)')
+d['extensions']['regex_scripts'] += [
+    {'id': 'eldrasil-npc-thoughts-fold', 'scriptName': 'Eldrasil edit - NPC Thoughts: fold (display)',
+     'findRegex': r'/<npc_thoughts>\s*([\s\S]*?)\s*<\/npc_thoughts>/gi',
+     'replaceString': '<details data-npc-thoughts="1" style="margin:.6em 0;border:1px solid rgba(127,127,127,.35);border-left:3px solid rgba(168,85,247,.6);border-radius:8px;padding:.3em .8em;"><summary style="cursor:pointer;font-weight:600;opacity:.85;">🧠 Thoughts</summary>\n\n$1\n\n</details>',
+     'trimStrings': [], 'placement': [2], 'disabled': False, 'markdownOnly': True, 'promptOnly': False, 'runOnEdit': True, 'substituteRegex': 0, 'minDepth': None, 'maxDepth': None},
+    # the newest reply keeps its thoughts (the next one follows on from them); older ones cost tokens for nothing
+    {'id': 'eldrasil-npc-thoughts-trim', 'scriptName': 'Eldrasil edit - NPC Thoughts: drop from older replies (prompt)',
+     'findRegex': r'/\s*<npc_thoughts>[\s\S]*?<\/npc_thoughts>\s*/gi', 'replaceString': '\n\n',
+     'trimStrings': [], 'placement': [2], 'disabled': False, 'markdownOnly': False, 'promptOnly': True, 'runOnEdit': True, 'substituteRegex': 0, 'minDepth': 3, 'maxDepth': None}]
+log.append(('REGEX NEW', 'NPC Thoughts: fold (display), drop from older replies (prompt, depth 3+)', '1.37.3'))
 
 json.dump(d, open(os.path.join(HERE, 'Realistic_Frankenstein_2_2_Eldrasil.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=4)
 for l in log: print(' | '.join(l))

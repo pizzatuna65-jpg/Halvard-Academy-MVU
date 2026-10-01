@@ -140,7 +140,7 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **Lore activation** (1.35.0, owner): a topic entry's keys include the plain word a player says, with SillyTavern regex keys (`/\bwords?\b/i`) for plurals and forms (`KEY_ADDS` in `merge_lorebooks.py`); the WORLD INDEX CORE FACTS section gives every system topic one core line (secret topics stay keyword-only). No sticky entries (owner); no recursion (it depends on a global ST setting, and the raw Cast Sheet holds every NPC). Every card entry has `ignoreBudget` set.
 
 ## 10. Ecosystem
-- **The card is the only tracker.** The preset's Internal States family stays OFF: Bonds/Relationships RPG, GM Notebook, Agenda, Chekhov, World Sim, Fate & Routine, Thoughts.
+- **The card is the only tracker.** The preset's Internal States family stays OFF: Bonds/Relationships RPG, GM Notebook, Agenda, Chekhov, World Sim, Fate & Routine. Exception (1.37.3, owner): Internal Thoughts is ON as its own `<npc_thoughts>` block. It keeps no state (a per-reply view, folded, dropped from older replies and from VectFox), never writes {{user}}, never spells out an unrevealed secret, and sits before `<UpdateVariable>`.
 - Do **not** vectorize the card's lorebook for VectFox Semantic World Info. It injects raw text, so EJS stays unrendered, MVU filtering is bypassed, and lore is duplicated.
 - Use **either** VectFox ghosting **or** the card's trim regex, not both.
 

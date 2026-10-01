@@ -38,7 +38,7 @@ Build order, generated files and test commands: `docs/BUILD.md`.
 | Weather, ambience, happenings | `stepWeather`, `stepExposure`, `stepAmbience`; `data/ambience.json`, `happenings.json`, `wind_casting.json` | |
 | Map, pins, map variants, portraits | `data/map_pins.json`, `assets_manifest.json`, `src/ui/parts/20_map.js` (`discovered`, `mapView` zoom, `loreRow`), `tools/curate_data.py` `FAR_LEGS`, `GATES`, `YEAR_FLOORS` | assets are pinned to a commit (DECISIONS "Assets") |
 | Features settings (on/off) | `data/features.json`, `stepFeatures`, `ui.template.js` `pSettings`, `featureOn` | `feature_cost.py` measures it |
-| Preset | `presets/edit_preset.py` (numbered sections; §13 ports RF2.2.1 from `presets/original/`), card-vs-preset test in `CLAUDE.md` | never edit the output JSON; `build_all.py --preset` |
+| Preset | `presets/edit_preset.py` (numbered sections; §13 ports RF2.2.1 from `presets/original/`; §15 the NPC Thoughts block and its two regexes, styled by `thoughtsCss` in `ui.template.js`), card-vs-preset test in `CLAUDE.md` | never edit the output JSON; `build_all.py --preset` |
 | Token cost | `node tests/token_audit.cjs`; the rule entries 501–510 | |
 | Character drift in a real chat | `tools/audit_chat.py`, `data/voice_rules.json` | |
 | Live SillyTavern check to record | `docs/TEST_CHECKLIST.md`: its "Open" list and the newest section only | add a section at the top of "By release" |

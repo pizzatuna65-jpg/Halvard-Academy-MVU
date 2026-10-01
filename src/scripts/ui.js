@@ -2904,13 +2904,22 @@ function sayCss(S, lightText) {
     '.mes_text span[data-tone="tremble"]{font-style:italic;letter-spacing:1px;opacity:.9}');
   return rules.join('\n');
 }
+// 1.37.3: the preset's NPC Thoughts block (<npc_thoughts>, folded by the preset's regex into details[data-npc-thoughts]) in the
+// card's brass, with the story's serif; !important beats the preset's inline style, which stays the look on other cards
+function thoughtsCss(lightText) {
+  const brass = lightText ? '#c9a364' : '#7d5f34', head = lightText ? '#ecd49f' : '#5e4626';
+  return [`.mes_text details[data-npc-thoughts]{border:1px solid color-mix(in srgb,${brass} 40%,transparent)!important;border-left:3px solid ${brass}!important;background:color-mix(in srgb,${brass} 7%,transparent)!important}`,
+    `.mes_text details[data-npc-thoughts]>summary{color:${head};font-family:"Alegreya SC","Alegreya",Georgia,serif;letter-spacing:.04em;opacity:1!important}`,
+    '.mes_text details[data-npc-thoughts] li,.mes_text details[data-npc-thoughts] p{font-family:"Alegreya",Georgia,serif;font-style:italic}',
+    '.mes_text details[data-npc-thoughts] strong{font-style:normal}'].join('\n');
+}
 function sayStyle() {
   try {
     const st = latestState(), S = st && st.data && st.data.stat_data;
     const c = ((PD.defaultView || window).getComputedStyle(PD.documentElement).getPropertyValue('--SmartThemeBodyColor') || '').match(/\d+(\.\d+)?/g);
     const lightText = !c || (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255 > 0.5;
     let el = PD.getElementById('eldrasil-say'); if (!el) { el = PD.createElement('style'); el.id = 'eldrasil-say'; PD.head.appendChild(el); }
-    const css = sayCss(S, lightText); if (el.textContent !== css) el.textContent = css;
+    const css = sayCss(S, lightText) + '\n' + thoughtsCss(lightText); if (el.textContent !== css) el.textContent = css;
   } catch (e) { console.warn('[Eldrasil] dialogue colours', e); }
 }
 

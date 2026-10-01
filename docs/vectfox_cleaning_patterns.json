@@ -35,6 +35,13 @@
   "enabled": true
  },
  {
+  "name": "Eldrasil: drop NPC thoughts (preset Internal Thoughts, 1.37.3)",
+  "pattern": "<npc_thoughts>[\\s\\S]*?</npc_thoughts>",
+  "replacement": "",
+  "flags": "gi",
+  "enabled": true
+ },
+ {
   "name": "Eldrasil: unwrap in-story graphics, keep their text (preset Pop in Graphics)",
   "pattern": "<!--\\s*GFX_(?:START|END)\\s*-->|</?(?:div|span|p)\\b[^>]*>|<br\\s*/?>",
   "replacement": "\n",

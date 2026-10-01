@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.37.3 (NPC Thoughts): the two checks in its section below.
 - v1.37.2 (light colours, spare colours): the check in its section below.
 - v1.37.1 (one colour per person in a scene): the check in its section below.
 - v1.37.0 (dialogue colours): the three checks in its section below.
@@ -75,6 +76,13 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.37.3 — NPC Thoughts
+
+1. Re-import the preset and `docs/vectfox_cleaning_patterns.json`. A reply ends with a folded 🧠 Thoughts block (brass border)
+   above the folded state update: up to three NPCs, bold names, never {{user}}, and no secret the story has not revealed.
+2. Turn "🧠 Internal Thoughts 💭" OFF: the next reply has no block. ON again: the block returns, and the prose itself still never
+   summarises anyone's thoughts.
 
 ### v1.37.2 — Light colours, spare colours
 

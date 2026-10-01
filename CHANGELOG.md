@@ -1,7 +1,22 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 1ea58ff:CHANGELOG.md` (1.35.2), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.37.3 — NPC Thoughts back ON in the preset (2026-10-02)
+
+Owner: liked the preset's Internal Thoughts and wants it back with an on/off toggle; asked card or preset (preset: it is writing
+craft that makes sense on any card). Save fixture v1.37.2.
+- Preset (`edit_preset.py` §15): "🧠 Internal Thoughts 💭" is ON, rewritten as a block of its own. Upstream it only filled a template
+  inside the Internal States block, which stays OFF (the card is the only tracker), so turned on alone it had nowhere to go. After
+  the story the narrator writes `<npc_thoughts>`: up to 3 NPCs (those present first; an absent one only at the place and task the
+  card or story gives them), 1-3 raw lines each, never {{user}}, never a secret the story still keeps from {{user}}, right before
+  the update block, which stays last (BOLT output order). Two new preset regexes: fold it into a 🧠 Thoughts `<details>` on screen,
+  and drop it from replies at depth 3+ in the prompt (the newest keeps it so the next reply follows on).
+- Card: the chat style sheet (`thoughtsCss` next to `sayCss`) draws the block in brass with the story serif.
+- VectFox: a new cleaning pattern drops the block, so thoughts never become remembered events (re-import the patterns).
+- Tests: `test_npc_thoughts_v1373.cjs` (toggle, BOLT order, both regexes, VectFox, CSS), `test_preset.cjs`, `test_saves.cjs`.
+- To confirm with the owner: nothing.
 
 ## v1.37.2 — Dialogue colours: light only, a second and third colour each (2026-10-02)
 
@@ -81,26 +96,6 @@ the Eldrasil edit. Preset only; the card is unchanged. Save fixture v1.35.2.
 - Tests: `test_preset.cjs` (1.36.0 block), `test_split_v146.cjs`, the full suite; two curfew checks left stale by 1.35.2 (the
   Entrance Feast moves curfew to 22:00) now test 22:00.
 - Nothing to confirm with the owner.
-
-## v1.35.2 — Curfew is a rule, not a law; feast nights; first appearances (2026-10-02)
-
-Owner's playtest (chat 2026-10-01) and answers. Save fixture v1.35.1.
-- Feast nights move curfew (`data/calendar.json`): the Entrance Feast starts at 19:00 but curfew began at 20:00, so the engine
-  called {{user}} out after curfew mid-feast and the ambience showed an empty hall. Now 22:00 on the Entrance, both Results,
-  Founder Day and Graduation evenings, 21:00 on Remembrance Day; the Warding Rite (dusk working, feast "until dawn") lifts it
-  from Friday evening to Saturday dawn. The Entrance day also says classes begin Tuesday 08:00 (the narrator said Thursday).
-- Curfew is a school rule (owner): breaking it costs nothing unless staff, a Council member, a Dove patrol or the Warden see
-  {{user}} or a witness reports them; patrols do not cover every corner. NPCs may suggest or accept a night outing when their
-  personality allows, and rule-abiding ones refuse in character (504; 505 presence line).
-- First appearances (504): a roster character who joins without a sheet in `<cast>` gets a short entrance and no invented
-  detail; their voice comes with the sheet next reply (Tilly arrived gruff and slangy, Kanae's eyes changed colour).
-- 504 (owner): someone who has not met {{user}} may address a crowd (a speech) without joining Scene.Present.
-- Journal: an engine line replaces the narrator's line from the same reply that says the same thing (the sorting was doubled).
-- A new chat no longer gets the 1.26.0 "estimated from weeks already played" proficiency offer (`$eng.profv` in 500); the Builder
-  already chooses starting proficiency.
-- 502: academy feasts serve students no alcohol (the alcohol rule; Tilly had prefects drawing cider for the Entrance Feast).
-- Tests: `test_playtest_v1352.cjs`; the curfew, ambience, proficiency, saves and entry suites.
-- To confirm with the owner: the curfew hours (22:00 feasts, 21:00 Remembrance Day).
 
 ## Release index (one line per release, oldest first)
 
@@ -213,3 +208,4 @@ Owner's playtest (chat 2026-10-01) and answers. Save fixture v1.35.1.
 - **v1.37.0 (2026-10-02):** Dialogue colours: `<say:Name>` tags, colours from the card (roster data, Extras hue), a shared grey for the unnamed.
 - **v1.37.1 (2026-10-02):** Dialogue colours: 12 colours that differ by kind, and nobody present in one scene shares one (sticky moves).
 - **v1.37.2 (2026-10-02):** Dialogue colours: light colours only; every character has a first, second and third colour.
+- **v1.37.3 (2026-10-02):** Preset: Internal Thoughts back ON as its own `<npc_thoughts>` block (folded, trimmed from older replies, kept out of VectFox).
