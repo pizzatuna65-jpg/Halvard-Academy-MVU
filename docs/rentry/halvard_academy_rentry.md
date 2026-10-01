@@ -534,7 +534,7 @@ You can't bond with the other three academies' competition teams. They're there 
 
 ### Arriving next year
 
-In your second year, six new first-years come through the gate. They have voices and stories already, but no portraits yet.
+In your second year, six new first-years come through the gate. They have voices, stories and portraits already.
 
 - **Linus Tallyworth** · *Viridian.* He can see how much mana you have and writes *the Tally*, a power ranking of everyone at Halvard, staff included. *"Feats, not claims!"*
 - **Maple Fernhollow** · *Sky · red panda.* The shortest first-year, and the gentlest. Her pact spirit is a white beast the size of a house.

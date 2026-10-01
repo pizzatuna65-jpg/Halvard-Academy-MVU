@@ -6587,11 +6587,11 @@
   ],
   "team_role": null,
   "nickname": null,
-  "portrait": null,
-  "thumb": null,
+  "portrait": "portraits/hester.webp",
+  "thumb": "thumbs/hester.webp",
   "focus": [
-   50,
-   25
+   50.0,
+   23.9
   ],
   "has_secret": true,
   "fields": [
@@ -6708,11 +6708,11 @@
   ],
   "team_role": null,
   "nickname": null,
-  "portrait": null,
-  "thumb": null,
+  "portrait": "portraits/anselm.webp",
+  "thumb": "thumbs/anselm.webp",
   "focus": [
-   50,
-   25
+   50.0,
+   23.9
   ],
   "has_secret": false,
   "fields": [
@@ -6835,11 +6835,11 @@
   ],
   "team_role": null,
   "nickname": null,
-  "portrait": null,
-  "thumb": null,
+  "portrait": "portraits/magnus.webp",
+  "thumb": "thumbs/magnus.webp",
   "focus": [
-   50,
-   25
+   43.3,
+   23.9
   ],
   "has_secret": false,
   "fields": [
@@ -6956,11 +6956,11 @@
   ],
   "team_role": null,
   "nickname": null,
-  "portrait": null,
-  "thumb": null,
+  "portrait": "portraits/dorian.webp",
+  "thumb": "thumbs/dorian.webp",
   "focus": [
-   50,
-   25
+   50.0,
+   23.9
   ],
   "has_secret": false,
   "fields": [
@@ -7090,11 +7090,11 @@
   ],
   "team_role": null,
   "nickname": null,
-  "portrait": null,
-  "thumb": null,
+  "portrait": "portraits/cedric.webp",
+  "thumb": "thumbs/cedric.webp",
   "focus": [
-   50,
-   25
+   50.0,
+   23.9
   ],
   "has_secret": false,
   "fields": [
@@ -7211,11 +7211,11 @@
   ],
   "team_role": null,
   "nickname": null,
-  "portrait": null,
-  "thumb": null,
+  "portrait": "portraits/anya.webp",
+  "thumb": "thumbs/anya.webp",
   "focus": [
-   50,
-   25
+   50.0,
+   23.9
   ],
   "has_secret": false,
   "fields": [
@@ -7331,11 +7331,11 @@
   ],
   "team_role": null,
   "nickname": null,
-  "portrait": null,
-  "thumb": null,
+  "portrait": "portraits/kotaro.webp",
+  "thumb": "thumbs/kotaro.webp",
   "focus": [
-   50,
-   25
+   50.0,
+   23.9
   ],
   "has_secret": false,
   "fields": [
@@ -7457,11 +7457,11 @@
   ],
   "team_role": null,
   "nickname": null,
-  "portrait": null,
-  "thumb": null,
+  "portrait": "portraits/valentin.webp",
+  "thumb": "thumbs/valentin.webp",
   "focus": [
-   50,
-   25
+   50.0,
+   23.9
   ],
   "has_secret": false,
   "fields": [
@@ -7578,11 +7578,11 @@
   ],
   "team_role": null,
   "nickname": null,
-  "portrait": null,
-  "thumb": null,
+  "portrait": "portraits/aurelian.webp",
+  "thumb": "thumbs/aurelian.webp",
   "focus": [
-   50,
-   25
+   50.0,
+   23.9
   ],
   "has_secret": true,
   "fields": [
@@ -7698,11 +7698,11 @@
   ],
   "team_role": null,
   "nickname": null,
-  "portrait": null,
-  "thumb": null,
+  "portrait": "portraits/william.webp",
+  "thumb": "thumbs/william.webp",
   "focus": [
-   50,
-   25
+   50.0,
+   23.9
   ],
   "has_secret": false,
   "fields": [
@@ -7817,11 +7817,11 @@
   ],
   "team_role": null,
   "nickname": null,
-  "portrait": null,
-  "thumb": null,
+  "portrait": "portraits/bruno.webp",
+  "thumb": "thumbs/bruno.webp",
   "focus": [
-   50,
-   25
+   50.0,
+   23.9
   ],
   "has_secret": false,
   "fields": [
@@ -7937,11 +7937,11 @@
   ],
   "team_role": null,
   "nickname": null,
-  "portrait": null,
-  "thumb": null,
+  "portrait": "portraits/bianca.webp",
+  "thumb": "thumbs/bianca.webp",
   "focus": [
-   50,
-   25
+   50.0,
+   23.9
   ],
   "has_secret": false,
   "fields": [
@@ -8056,11 +8056,11 @@
   ],
   "team_role": null,
   "nickname": null,
-  "portrait": null,
-  "thumb": null,
+  "portrait": "portraits/rigel.webp",
+  "thumb": "thumbs/rigel.webp",
   "focus": [
-   50,
-   25
+   50.0,
+   23.9
   ],
   "has_secret": true,
   "fields": [
@@ -8175,11 +8175,11 @@
   ],
   "team_role": null,
   "nickname": null,
-  "portrait": null,
-  "thumb": null,
+  "portrait": "portraits/topaz.webp",
+  "thumb": "thumbs/topaz.webp",
   "focus": [
-   50,
-   25
+   50.0,
+   23.9
   ],
   "has_secret": false,
   "fields": [
@@ -8294,11 +8294,11 @@
   ],
   "team_role": null,
   "nickname": null,
-  "portrait": null,
-  "thumb": null,
+  "portrait": "portraits/faye.webp",
+  "thumb": "thumbs/faye.webp",
   "focus": [
-   50,
-   25
+   50.0,
+   23.9
   ],
   "has_secret": false,
   "fields": [

@@ -3,6 +3,14 @@
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
 details: `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
 
+## v1.34.2 — Portraits for the new teachers and Year 3 cohort (2026-10-01)
+
+Save fixture v1.34.1. The owner's 15 portrait and thumbnail pairs are now wired into the card: Hester, Anselm, Magnus, Dorian,
+Cedric, Anya, Kotaro, Valentin, Aurelian, William, Bruno, Bianca, Rigel, Topaz and Faye. All 71 NPCs now have images. The CDN
+is pinned to assets commit `f42990c`; the Graduation map path follows its lowercase filename in that commit. The full portraits
+use focus points matched to the uploaded thumbnail crops. Verified all existing and new asset paths against the commit tree;
+rebuilt the card and ran the relevant asset/map and old-save checks. Check the portraits and Graduation map once in SillyTavern.
+
 ## v1.34.1 — Anselm and Kotaro look different (2026-10-01)
 
 Owner request while writing the portrait prompts. Save fixture v1.34.0.
@@ -235,3 +243,4 @@ it". Decision touched: "Map cards" (the Connected to row is gone).
 - **v1.33.0 (2026-10-01):** Classes and teachers: Practical Magic by combat role, eight new teachers, free periods, Dorm Competition role brackets.
 - **v1.34.0 (2026-10-01):** Seven Year 3 first-years, Saturday Student Council and elections, Dante's Lodge gift restored.
 - **v1.34.1 (2026-10-01):** Anselm is a sheep Beastkin; Kotaro is lean and always looks drunk; portrait prompts.
+- **v1.34.2 (2026-10-01):** Fifteen new portrait and thumbnail pairs, all NPCs pictured; assets pinned to f42990c.

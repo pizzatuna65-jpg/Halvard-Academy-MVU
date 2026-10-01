@@ -1,5 +1,5 @@
 {
- "base_url": "https://cdn.jsdelivr.net/gh/pizzatuna65-jpg/eldrasil-assets@1ece91e88971af7aa66426a3964f6f6b0e6257ab/",
+ "base_url": "https://cdn.jsdelivr.net/gh/pizzatuna65-jpg/eldrasil-assets@f42990c5f15784c5387bef75aaf8b08be98fcafc/",
  "npcs": {
   "Irene": {
    "uid": 98,
@@ -672,6 +672,186 @@
    ],
    "focus_source": "manual",
    "source_file": "uploaded as WebP (assets commit 172dc4a)"
+  },
+  "Hester": {
+   "uid": 416,
+   "name": "Hester Mortlake",
+   "portrait": "portraits/hester.webp",
+   "thumb": "thumbs/hester.webp",
+   "focus": [
+    50.0,
+    23.9
+   ],
+   "focus_source": "thumb crop",
+   "source_file": "uploaded as WebP (assets commit f42990c)"
+  },
+  "Anselm": {
+   "uid": 417,
+   "name": "Anselm Graywater",
+   "portrait": "portraits/anselm.webp",
+   "thumb": "thumbs/anselm.webp",
+   "focus": [
+    50.0,
+    23.9
+   ],
+   "focus_source": "thumb crop",
+   "source_file": "uploaded as WebP (assets commit f42990c)"
+  },
+  "Magnus": {
+   "uid": 418,
+   "name": "Magnus Tarrant",
+   "portrait": "portraits/magnus.webp",
+   "thumb": "thumbs/magnus.webp",
+   "focus": [
+    43.3,
+    23.9
+   ],
+   "focus_source": "thumb crop",
+   "source_file": "uploaded as WebP (assets commit f42990c)"
+  },
+  "Dorian": {
+   "uid": 419,
+   "name": "Dorian Pryce",
+   "portrait": "portraits/dorian.webp",
+   "thumb": "thumbs/dorian.webp",
+   "focus": [
+    50.0,
+    23.9
+   ],
+   "focus_source": "thumb crop",
+   "source_file": "uploaded as WebP (assets commit f42990c)"
+  },
+  "Cedric": {
+   "uid": 420,
+   "name": "Cedric Amor Fay",
+   "portrait": "portraits/cedric.webp",
+   "thumb": "thumbs/cedric.webp",
+   "focus": [
+    50.0,
+    23.9
+   ],
+   "focus_source": "thumb crop",
+   "source_file": "uploaded as WebP (assets commit f42990c)"
+  },
+  "Anya": {
+   "uid": 421,
+   "name": "Anya Zeth",
+   "portrait": "portraits/anya.webp",
+   "thumb": "thumbs/anya.webp",
+   "focus": [
+    50.0,
+    23.9
+   ],
+   "focus_source": "thumb crop",
+   "source_file": "uploaded as WebP (assets commit f42990c)"
+  },
+  "Kotaro": {
+   "uid": 422,
+   "name": "Kotaro Hanamura",
+   "portrait": "portraits/kotaro.webp",
+   "thumb": "thumbs/kotaro.webp",
+   "focus": [
+    50.0,
+    23.9
+   ],
+   "focus_source": "thumb crop",
+   "source_file": "uploaded as WebP (assets commit f42990c)"
+  },
+  "Valentin": {
+   "uid": 423,
+   "name": "Valentin Crane",
+   "portrait": "portraits/valentin.webp",
+   "thumb": "thumbs/valentin.webp",
+   "focus": [
+    50.0,
+    23.9
+   ],
+   "focus_source": "thumb crop",
+   "source_file": "uploaded as WebP (assets commit f42990c)"
+  },
+  "Aurelian": {
+   "uid": 424,
+   "name": "Aurelian Solmere",
+   "portrait": "portraits/aurelian.webp",
+   "thumb": "thumbs/aurelian.webp",
+   "focus": [
+    50.0,
+    23.9
+   ],
+   "focus_source": "thumb crop",
+   "source_file": "uploaded as WebP (assets commit f42990c)"
+  },
+  "William": {
+   "uid": 425,
+   "name": "William Beckett",
+   "portrait": "portraits/william.webp",
+   "thumb": "thumbs/william.webp",
+   "focus": [
+    50.0,
+    23.9
+   ],
+   "focus_source": "thumb crop",
+   "source_file": "uploaded as WebP (assets commit f42990c)"
+  },
+  "Bruno": {
+   "uid": 426,
+   "name": "Bruno Ferrante",
+   "portrait": "portraits/bruno.webp",
+   "thumb": "thumbs/bruno.webp",
+   "focus": [
+    50.0,
+    23.9
+   ],
+   "focus_source": "thumb crop",
+   "source_file": "uploaded as WebP (assets commit f42990c)"
+  },
+  "Bianca": {
+   "uid": 427,
+   "name": "Bianca Ferrante",
+   "portrait": "portraits/bianca.webp",
+   "thumb": "thumbs/bianca.webp",
+   "focus": [
+    50.0,
+    23.9
+   ],
+   "focus_source": "thumb crop",
+   "source_file": "uploaded as WebP (assets commit f42990c)"
+  },
+  "Rigel": {
+   "uid": 428,
+   "name": "Rigel Ardenne",
+   "portrait": "portraits/rigel.webp",
+   "thumb": "thumbs/rigel.webp",
+   "focus": [
+    50.0,
+    23.9
+   ],
+   "focus_source": "thumb crop",
+   "source_file": "uploaded as WebP (assets commit f42990c)"
+  },
+  "Topaz": {
+   "uid": 429,
+   "name": "Topaz Vasquelle",
+   "portrait": "portraits/topaz.webp",
+   "thumb": "thumbs/topaz.webp",
+   "focus": [
+    50.0,
+    23.9
+   ],
+   "focus_source": "thumb crop",
+   "source_file": "uploaded as WebP (assets commit f42990c)"
+  },
+  "Faye": {
+   "uid": 430,
+   "name": "Faye Driftwell",
+   "portrait": "portraits/faye.webp",
+   "thumb": "thumbs/faye.webp",
+   "focus": [
+    50.0,
+    23.9
+   ],
+   "focus_source": "thumb crop",
+   "source_file": "uploaded as WebP (assets commit f42990c)"
   }
  },
  "map": "map/halvard_map.webp",
@@ -690,7 +870,7 @@
   {"id": "circus", "file": "map/halvard_fall_traveling%20circus.webp", "event": "Traveling Circus", "hours": {"Thu": [17, 24], "Fri": [0, 24], "Sat": [0, 24], "Sun": [0, 24]}},
   {"id": "bazaar", "file": "map/halvard_fall_academy%20bazaar.webp", "event": "Academy Bazaar"},
   {"id": "harvest", "file": "map/halvard_winter_harvest%20festival.webp", "event": "Harvest Festival", "hours": {"Fri": [17, 24], "Sat": [0, 24], "Sun": [0, 24]}},
-  {"id": "graduation", "file": "map/Halvard_winter_graduation.webp", "event": "Graduation", "hours": {"Sun": [12, 24]}},
+  {"id": "graduation", "file": "map/halvard_winter_graduation.webp", "event": "Graduation", "hours": {"Sun": [12, 24]}},
   {"id": "spring", "file": "map/halvard_spring.webp", "season": "Spring"},
   {"id": "autumn", "file": "map/halvard_fall.webp", "season": "Autumn"},
   {"id": "winter", "file": "map/halvard_winter.webp", "season": "Winter"}

@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.34.2 (new portraits): the two checks in its section below.
 - v1.34.0 (Year 3 cohort and Student Council): the three checks in its section below.
 - v1.33.0 (classes and teachers): the four checks in its section below.
 - v1.32.0 (calendar moves, Coming up, Inventory): the three checks in its section below.
@@ -67,6 +68,11 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.34.2 — New portraits and asset pin
+
+1. Open People and the bracelet cast in a fresh chat. The eight teachers Hester, Anselm, Magnus, Dorian, Cedric, Anya, Kotaro and Valentin show portraits and thumbnails; the full portraits have their faces in frame.
+2. In campaign Year 3, Aurelian, William, Bruno, Bianca, Rigel, Topaz and Faye show portraits and thumbnails. On Graduation afternoon, the Map shows the winter Graduation variant from the new asset pin.
 
 ### v1.34.0 — Year 3 cohort and Student Council
 
