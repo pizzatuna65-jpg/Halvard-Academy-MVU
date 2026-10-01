@@ -1720,14 +1720,19 @@ function edgeVisible(e, S) {         // e = [from, to, type, types, visibility, 
 // in the card (DATA.say, the engine's $ui.say), never in the prompt: one rule set in SillyTavern's page.
 // OKLCH lightness follows the chat theme: light text means a dark theme. Unnamed or unrecorded speakers share the generic colour.
 function sayCss(S, lightText) {
-  // DATA.say: palette of [dark, light] OKLCH triples [hue, L %, C x100]; a roster character's colour is $ui.say[id] (moved by the
-  // engine so nobody in one scene shares one) or their start; an Extras character's is $ui.say[name]
+  // DATA.say: palette of [dark, light] OKLCH triples [hue, L %, C x100]. A character's colour is $ui.say (the engine's choice for
+  // the people present, so nobody in one scene shares one), otherwise their first colour (roster data, or $ui.sayx for Extras)
   const T = lightText ? 0 : 1, ok = c => `oklch(${c[1]}% ${c[2] / 100} ${c[0]})`;
   const q = n => '"' + String(n).trim().toLowerCase().replace(/[^\p{L}\p{N} '.-]/gu, '') + '"', sel = n => `.mes_text span[data-say=${q(n)} i]`;
   const SY = ((S && S.$ui) || {}).say || {}, rules = [`.mes_text span[data-say]{color:${ok(DATA.say.generic[T])}}`], by = {};
   const put = (name, colour) => (by[colour] = by[colour] || []).push(name);
-  for (const [alias, id] of Object.entries(DATA.say.who)) { const i = id in SY ? SY[id] : DATA.say.start[id]; if (DATA.say.palette[i]) put(alias, ok(DATA.say.palette[i][T])); }
-  for (const [name, i] of Object.entries(SY)) if (!(name in DATA.say.start) && DATA.say.palette[i]) { put(name, ok(DATA.say.palette[i][T])); put(name.split(/\s+/)[0], ok(DATA.say.palette[i][T])); }
+  const SX = ((S && S.$ui) || {}).sayx || {};
+  for (const [alias, id] of Object.entries(DATA.say.who)) { const i = id in SY ? SY[id] : (DATA.say.start[id] || [])[0]; if (DATA.say.palette[i]) put(alias, ok(DATA.say.palette[i][T])); }
+  for (const name of new Set([...Object.keys(SX), ...Object.keys(SY)])) {
+    if (name in DATA.say.start) continue;
+    const i = name in SY ? SY[name] : (SX[name] || [])[0];
+    if (DATA.say.palette[i]) { put(name, ok(DATA.say.palette[i][T])); put(name.split(/\s+/)[0], ok(DATA.say.palette[i][T])); }
+  }
   const user = [((S && S.Player && S.Player.Profile) || {}).Name, typeof SillyTavern === 'object' ? SillyTavern.name1 : ''].filter(n => n && !/\{\{/.test(n));
   for (const n of user) put(n, ok(DATA.say.user[T]));
   for (const [colour, names] of Object.entries(by)) rules.push(`${[...new Set(names.map(n => String(n).toLowerCase()))].map(sel).join(',')}{color:${colour}}`);

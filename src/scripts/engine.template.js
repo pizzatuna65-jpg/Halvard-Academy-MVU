@@ -3461,26 +3461,33 @@ function stepCast(c) {
     const order = [...pres].sort((a, b) => (spoke.includes(b) - spoke.includes(a)) || (rank(b) - rank(a)) || (pres.indexOf(a) - pres.indexOf(b)));
     S.$ui.cast = { full: order.slice(0, CAST_FULL), brief: order.slice(CAST_FULL), spoke: spoke.filter(id => pres.includes(id)), gone, ment,
       where: Object.fromEntries(ment.filter(id => HAUNT[id]).map(id => [id, HAUNT[id]])), extras: xHere, xnew: xNew };
-    // 1.37.1 (owner: tell A from B at a glance): dialogue colours. Roster characters start on their colour from the data; a recorded
-    // Extras character gets one when first present. Nobody present at the same time shares a colour: whoever was already here keeps
-    // theirs, and a newcomer moves to the free colour farthest from those in use. A move sticks ($ui.say). The unrecorded have none.
+    // 1.37.1/1.37.2 (owner: tell A from B at a glance): dialogue colours. Nobody present at the same time shares a colour. Each
+    // roster character has a first, second and third colour (data); a recorded Extras character gets three when first present
+    // ($ui.sayx). Whoever was already in the scene keeps their colour; a newcomer takes the first of their three nobody present
+    // has, then the free colour farthest from those in use. $ui.say holds the colours of the people present now; someone who
+    // leaves goes back to their first colour. The unrecorded have none (the shared grey).
     if (SAY.n) {
-      const SY = S.$ui.say = _.isPlainObject(S.$ui.say) ? S.$ui.say : {};
+      const SX = S.$ui.sayx = _.isPlainObject(S.$ui.sayx) ? S.$ui.sayx : {}, was = _.isPlainObject(S.$ui.say) ? S.$ui.say : {}, SY = {};
       const before = [...(prev.full || []), ...(prev.brief || []), ...(prev.extras || [])];
       const here = [...order, ...xHere], keep = here.filter(id => before.includes(id)).concat(here.filter(id => !before.includes(id)));
-      const xUse = i => Object.keys(SY).filter(k => !NPC_IDS.has(k) && SY[k] === i).length;
       const taken = [];
-      for (const id of keep) {
-        let c = id in SY ? SY[id] : (id in SAY.start ? SAY.start[id] : -1);
-        if (!(c >= 0 && c < SAY.n) || taken.includes(c)) {
-          const free = [...Array(SAY.n).keys()].filter(i => !taken.includes(i));
-          if (!free.length) continue;
-          const gap = i => (taken.length ? Math.min(...taken.map(t => SAY.dist[i][t])) : 99);
-          c = free.reduce((b, i) => (gap(i) > gap(b) || (gap(i) === gap(b) && xUse(i) < xUse(b)) ? i : b));
-        }
-        taken.push(c);
-        if (SAY.start[id] === c) delete SY[id]; else SY[id] = c;
+      const gap = i => (taken.length ? Math.min(...taken.map(t => SAY.dist[i][t])) : 99);
+      const farthest = (pool, tie) => pool.reduce((b, i) => (gap(i) > gap(b) || (gap(i) === gap(b) && tie(i) < tie(b)) ? i : b));
+      for (const k of Object.keys(SX)) if (!(k in (S.Extras || {})) && !(k in (S.$ui.xold || {}))) delete SX[k];   // forgotten records
+      for (const id of xHere) if (!Array.isArray(SX[id])) {   // three colours for a new Extras character, the least used by others first
+        const xUse = i => Object.values(SX).filter(t => t[0] === i).length;
+        const t = [];
+        for (let k = 0; k < 3; k++) t.push(farthest([...Array(SAY.n).keys()].filter(i => !t.includes(i) && !taken.includes(i)) , i => xUse(i) * 100 + i));
+        SX[id] = t;
       }
+      for (const id of keep) {
+        const three = SAY.start[id] || SX[id] || [];
+        let c = before.includes(id) && id in was ? was[id] : -1;
+        if (!(c >= 0 && c < SAY.n) || taken.includes(c)) c = three.find(i => i >= 0 && i < SAY.n && !taken.includes(i)) ?? -1;
+        if (c < 0) { const free = [...Array(SAY.n).keys()].filter(i => !taken.includes(i)); if (!free.length) continue; c = farthest(free, i => i); }
+        taken.push(c); SY[id] = c;
+      }
+      S.$ui.say = SY;
     }
   }
 }

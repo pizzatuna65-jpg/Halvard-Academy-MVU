@@ -1,7 +1,24 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.0), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.37.2 — Dialogue colours: light only, a second and third colour each (2026-10-02)
+
+Owner: no dark colours; a second and third backup colour so nobody in a scene shares one. Asked whether this touches NPC
+encounters: no, the colour step runs after the cast is decided and writes only `$ui.say` / `$ui.sayx`, which only the UI reads.
+Save fixture v1.37.1.
+- Palette: the same 12 kinds, all light (dark theme lightness 72-89; light theme 50-60, never dark). Lavender moved away from the
+  narration grey; the closest pair is now lavender/purple at 9.7.
+- Every roster character has a first, second and third colour (`data/dialogue_colors.json`): the first differs from the people
+  they share scenes with where 12 colours allow; the second and third avoid those people's first colours. A recorded Extras
+  character gets three when first present (`$ui.sayx`, the least used first).
+- In a scene (end of `stepCast`): whoever was already there keeps their colour; a newcomer takes the first of their three nobody
+  present has, then the free colour farthest from those in use. `$ui.say` now holds only the people present, so someone who
+  leaves is back on their first colour next time (1.37.1 kept the move).
+- Tests: `test_say_colors_v1370.cjs` (light palette, three colours each, second then third on arrival, back to the first alone,
+  twelve in one scene all different, Extras), `test_saves.cjs` (`$ui.say` is recomputed each update), the full suite.
+- Nothing to confirm with the owner.
 
 ## v1.37.1 — Dialogue colours: nobody in a scene shares one (2026-10-02)
 
@@ -84,19 +101,6 @@ Owner's playtest (chat 2026-10-01) and answers. Save fixture v1.35.1.
 - 502: academy feasts serve students no alcohol (the alcohol rule; Tilly had prefects drawing cider for the Entrance Feast).
 - Tests: `test_playtest_v1352.cjs`; the curfew, ambience, proficiency, saves and entry suites.
 - To confirm with the owner: the curfew hours (22:00 feasts, 21:00 Remembrance Day).
-
-## v1.35.1 — Items written under /Player reach the Bag (2026-10-02)
-
-Owner's playtest (chat 2026-10-01): Ruby gave {{user}} a honey-lemon sweet, the narrator's Analysis said "Inventory: added", but
-the Bag stayed empty. Save fixture v1.35.0.
-- Cause: `<current_state>` hides empty fields, so with an empty Bag the narrator could not see where Inventory lives and wrote
-  `/Player/Inventory/<item>` (next to Wallet). The schema drops unknown keys under Player, so the item vanished silently (twice).
-- Engine: the `COMMAND_PARSED` hook (`fixStrayPaths`) moves a top-level list written under `/Player`, `/World` or `/Scene`
-  (Inventory, Commitments, Projects, Clues, the report lists...) or as `/Bag` back to the root before the zod helper applies it,
-  with a `_Log` line naming the right path. Verified against MagVarUpdate `update_variables.ts` (listener order, bracket paths).
-- 502: the path line says empty fields keep their place and these lists are top-level; the Inventory rule names `/Inventory/<item>`.
-- Tests: `test_stray_paths_v1351.cjs`, `test_saves.cjs`, `test_playtest_v1301.cjs`.
-- Nothing to confirm with the owner.
 
 ## Release index (one line per release, oldest first)
 
@@ -208,3 +212,4 @@ the Bag stayed empty. Save fixture v1.35.0.
 - **v1.36.0 (2026-10-02):** Preset: RF2.2.1 port (Card Fidelity, Gemini killswitches and voice, new Scene Engine); 4-7 paragraphs; Embellish Mode.
 - **v1.37.0 (2026-10-02):** Dialogue colours: `<say:Name>` tags, colours from the card (roster data, Extras hue), a shared grey for the unnamed.
 - **v1.37.1 (2026-10-02):** Dialogue colours: 12 colours that differ by kind, and nobody present in one scene shares one (sticky moves).
+- **v1.37.2 (2026-10-02):** Dialogue colours: light colours only; every character has a first, second and third colour.

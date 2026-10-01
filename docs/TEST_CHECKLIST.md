@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.37.2 (light colours, spare colours): the check in its section below.
 - v1.37.1 (one colour per person in a scene): the check in its section below.
 - v1.37.0 (dialogue colours): the three checks in its section below.
 - v1.36.0 (preset RF2.2.1 port): the three checks in its section below.
@@ -74,6 +75,11 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.37.2 — Light colours, spare colours
+
+1. No speaker's colour is dark on your theme. When two characters who usually share a colour meet, the one who arrived later uses
+   another colour; in their next scene alone they are back to their usual one.
 
 ### v1.37.1 — One colour per person in a scene
 

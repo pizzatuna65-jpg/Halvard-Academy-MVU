@@ -372,7 +372,8 @@ export const Schema = z.object({
     prof_offer: Bool(false),
     since: z.any().prefault([]).catch([]), maybe: z.any().prefault([]).catch([]),   // 1.6.0 (N4): Next plans met again / that may bring someone here (engine)
     xold: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.6.1 (N5): Extras records that left the full list; given back if they return (engine)
-    say: z.record(z.string(), z.number().int().min(0).max(63)).prefault({}).catch({}),   // 1.37.1: dialogue colours moved off their starting colour (engine)
+    say: z.record(z.string(), z.number().int().min(0).max(63)).prefault({}).catch({}),   // 1.37.1: dialogue colour of each character present now (engine)
+    sayx: z.record(z.string(), z.array(z.number().int().min(0).max(63)).max(3)).prefault({}).catch({}),   // 1.37.2: an Extras character's three dialogue colours (engine)
     stale: z.any().prefault([]).catch([]), phase: z.any().prefault(null).catch(null),   // 1.6.1: campus events with no news for a week; the campus phase (engine)
     cast: z.any().prefault({}).catch({}),                             // 1.5.1 (P1/P6): { full, brief, spoke, gone, ment } for the Cast Sheet (engine)
     perks_used: StrList(60),                                          // 1.3.0: one-use perks already spent ("Council pardon (Irene), M3 W2 Tue")
