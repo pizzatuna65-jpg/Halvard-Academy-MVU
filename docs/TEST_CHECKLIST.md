@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.37.4 (calm thoughts): the check in its section below.
 - v1.37.3 (NPC Thoughts): the two checks in its section below.
 - v1.37.2 (light colours, spare colours): the check in its section below.
 - v1.37.1 (one colour per person in a scene): the check in its section below.
@@ -76,6 +77,11 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.37.4 — Calm thoughts
+
+1. Re-import the preset. A calm or reserved character's thoughts read as calmly as they speak. With the regex "NPC Thoughts: drop
+   from every reply" enabled, the thoughts still show on screen.
 
 ### v1.37.3 — NPC Thoughts
 

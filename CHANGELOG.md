@@ -1,7 +1,18 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 1ea58ff:CHANGELOG.md` (1.35.2), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.37.4 — NPC Thoughts: calm characters think calmly; an optional no-read-back regex (2026-10-02)
+
+Owner asked whether thoughts help consistency or cause drift (both, depending on the build). Save fixture v1.37.3.
+- Preset toggle text: thoughts are only as raw as the character is; a calm, composed or reserved character thinks in a measured
+  way, and a thought is never more emotional than their card (upstream's "chaotic, impulsive, raw" pushed quiet characters into
+  melodrama).
+- New preset regex, OFF: "NPC Thoughts: drop from every reply (prompt, optional)". With it on, the player still sees the thoughts
+  and the AI never reads them back, so they cannot snowball. The toggle's note names it.
+- Tests: `test_npc_thoughts_v1373.cjs` (two new checks), `test_preset.cjs`, `test_saves.cjs`, `test_tokens_v1110.cjs`.
+- To confirm with the owner: nothing.
 
 ## v1.37.3 — NPC Thoughts back ON in the preset (2026-10-02)
 
@@ -72,30 +83,6 @@ the Extras record. Save fixture v1.36.0.
 - Preset: both colour toggles stay OFF and their notes say so. VectFox cleaning patterns: drop `<say>` tags.
 - Tests: `test_say_colors_v1370.cjs` (new), full suite.
 - To confirm with the owner: the colours themselves (`data/dialogue_colors.json`; tell me any you want changed).
-
-## v1.36.0 — Preset: port from Realistic Frankenstein 2.2.1 (2026-10-02)
-
-Owner-approved comparison of RF2.2.1 "Limitless Realism" (Realistic Gemini BOLT configuration, kept in `presets/original/`) with
-the Eldrasil edit. Preset only; the card is unchanged. Save fixture v1.35.2.
-- New, ON: 🎭 Card Fidelity (depth 0; the card, lorebook entry or character sheet wins over style rules: nervous characters keep
-  their stalls, temperament holds, ease with one person stays with that person); the Gemini (Cosmos) editions of the comparative
-  emphasis killswitch ("not X, but Y") and occupational monomania (plus jargon and quirk-lens), each with its depth-0 gate, in place
-  of the regular pairs; the Cosmos NPC Voice (a per-line method instead of the 30-50% dialogue ratio) with the Micro voice's
-  Eldrasil edits; a depth-0 banned-vocabulary gate; More Diverse Door Sounds; "Looks at a Stranger's Scale" (RF2.2.1 Scene Detail,
-  only its looks, body and clothes lines).
-- Scene Engine is RF2.2.1's rebuild (Director Preset 16.0: no "two speeds", causality, pacing, initiative, handoff endings), with
-  simulate-not-dramatise, HOLD endings, the invented-character record and the ambience touch re-applied.
-- New, OFF: Pacing (Cosmos); NPCs push their own thread every reply, and interruptions follow the card's sources.
-- Smaller: BOLT checks banned words without reciting the list, nervous characters are exempt from "no hesitation" and legato,
-  no dialogue-ratio question; banned words in every form plus "upholstery"; Therapist questions come from the card; "Vance" is a
-  banned name; a flush counts as one detail; the group nudge.
-- Owner: Total Output Length 4 to 7 paragraphs; 🧂 Embellish Mode ON instead of Anti-parrot (the narrator writes {{user}}'s own
-  words and actions from what the player wrote; outcomes still follow Player Input Authority, thoughts stay unwritten).
-- Not ported: assistant-role CoTs, the smell package (the card's ambience cues name smells), Time and Place / Realism Mode /
-  Post-History ON, Staccato ON, Turn Dice, the Mimo, Claude and GLM prompts and regexes.
-- Tests: `test_preset.cjs` (1.36.0 block), `test_split_v146.cjs`, the full suite; two curfew checks left stale by 1.35.2 (the
-  Entrance Feast moves curfew to 22:00) now test 22:00.
-- Nothing to confirm with the owner.
 
 ## Release index (one line per release, oldest first)
 
@@ -209,3 +196,4 @@ the Eldrasil edit. Preset only; the card is unchanged. Save fixture v1.35.2.
 - **v1.37.1 (2026-10-02):** Dialogue colours: 12 colours that differ by kind, and nobody present in one scene shares one (sticky moves).
 - **v1.37.2 (2026-10-02):** Dialogue colours: light colours only; every character has a first, second and third colour.
 - **v1.37.3 (2026-10-02):** Preset: Internal Thoughts back ON as its own `<npc_thoughts>` block (folded, trimmed from older replies, kept out of VectFox).
+- **v1.37.4 (2026-10-02):** NPC Thoughts: only as raw as the character is; optional regex so the AI never reads thoughts back.

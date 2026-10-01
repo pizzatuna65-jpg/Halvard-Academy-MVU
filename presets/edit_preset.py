@@ -442,7 +442,7 @@ log.append(('NOTE', 'Colored Dialogue toggles', 'keep OFF with a card that colou
 # States block (OFF here: the card is the only tracker), so turned ON alone it had nowhere to go. It keeps no state: a per-reply
 # view of what NPCs think, before the card's update block. Generic: it names no card data, so it works on any card.
 IT = byname('Internal Thoughts')
-IT['content'] = """{{// ON: after the story, a folded 🧠 Thoughts block shows what up to three NPCs are thinking right now. It keeps no state and never writes {{user}}'s thoughts; the story itself still keeps thoughts unspoken. OFF: no block. The preset's regexes fold it on screen and drop it from older replies in the prompt.}}{{trim}}
+IT['content'] = """{{// ON: after the story, a folded 🧠 Thoughts block shows what up to three NPCs are thinking right now. It keeps no state and never writes {{user}}'s thoughts; the story itself still keeps thoughts unspoken. OFF: no block. The preset's regexes fold it on screen and drop it from older replies in the prompt. If characters start to drift, also enable the regex "NPC Thoughts: drop from every reply": you still see the thoughts, and the AI never reads them back.}}{{trim}}
 
 <internal_npcthoughts>
 After the narrative, write one thoughts block in exactly this form, in the story's language:
@@ -451,7 +451,7 @@ After the narrative, write one thoughts block in exactly this form, in the story
 - **Name** (where they are, what they are doing): thought
 </npc_thoughts>
 1. Who: up to 3 NPCs, those present in the scene first. An absent NPC appears only when they matter to what is happening, at the place and task the card's records or the story already give them; the block never moves anyone or invents a meeting. Never {{user}}: their thoughts belong to the player.
-2. Voice: 1 to 3 short lines per NPC, raw and in the moment (fragments, impulses, second thoughts), in that character's own voice and true to their card, their current mood and, when the card keeps one, its record of how they see {{user}}.
+2. Voice: 1 to 3 short lines per NPC, in the moment (fragments, impulses, second thoughts), but only as raw as that character is: a calm, composed or reserved character thinks in their own measured way, and a thought is never more emotional or dramatic than their card makes them. In that character's own voice and true to their card, their current mood and, when the card keeps one, its record of how they see {{user}}.
 3. What they know: only what that character knows. A thought shows feelings, wants and what they are about to do; it never spells out a secret the story still keeps from {{user}} (a hidden identity, a lie, a plan not yet revealed). Such a thing shows only as the character would feel it (unease, a topic they steer away from), never by name.
 4. Consistency: the thoughts match what the narrative just showed and drive what each NPC does next; the next reply never drops them without a reason in the scene.
 5. Place: the block stands outside the narrative, so the prose never quotes or summarises it. If the card asks for a state-update block at the end of the reply, the thoughts block goes right before it and the update block stays last. Never write the tag name of this instruction block in the reply.
@@ -468,7 +468,11 @@ d['extensions']['regex_scripts'] += [
     # the newest reply keeps its thoughts (the next one follows on from them); older ones cost tokens for nothing
     {'id': 'eldrasil-npc-thoughts-trim', 'scriptName': 'Eldrasil edit - NPC Thoughts: drop from older replies (prompt)',
      'findRegex': r'/\s*<npc_thoughts>[\s\S]*?<\/npc_thoughts>\s*/gi', 'replaceString': '\n\n',
-     'trimStrings': [], 'placement': [2], 'disabled': False, 'markdownOnly': False, 'promptOnly': True, 'runOnEdit': True, 'substituteRegex': 0, 'minDepth': 3, 'maxDepth': None}]
+     'trimStrings': [], 'placement': [2], 'disabled': False, 'markdownOnly': False, 'promptOnly': True, 'runOnEdit': True, 'substituteRegex': 0, 'minDepth': 3, 'maxDepth': None},
+    # 1.37.4: optional (OFF), for a player who sees drift: the AI never reads its own thoughts back, so they cannot snowball
+    {'id': 'eldrasil-npc-thoughts-trim-all', 'scriptName': 'Eldrasil edit - NPC Thoughts: drop from every reply (prompt, optional)',
+     'findRegex': r'/\s*<npc_thoughts>[\s\S]*?<\/npc_thoughts>\s*/gi', 'replaceString': '\n\n',
+     'trimStrings': [], 'placement': [2], 'disabled': True, 'markdownOnly': False, 'promptOnly': True, 'runOnEdit': True, 'substituteRegex': 0, 'minDepth': None, 'maxDepth': None}]
 log.append(('REGEX NEW', 'NPC Thoughts: fold (display), drop from older replies (prompt, depth 3+)', '1.37.3'))
 
 json.dump(d, open(os.path.join(HERE, 'Realistic_Frankenstein_2_2_Eldrasil.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=4)

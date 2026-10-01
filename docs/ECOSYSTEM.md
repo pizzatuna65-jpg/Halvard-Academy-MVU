@@ -21,7 +21,7 @@ They keep a second game state in a hidden HTML block that must sit "at the absol
 
 **New: 🏫 Eldrasil × MVU × VectFox Bridge** (right after the Main Prompt). It establishes that the card state is the only tracker. It replaces the disabled trackers with state-free guidance: off-screen lives, and setups and payoffs recorded as Clues, Commitments or Journal lines. "⏰ Time and Place" is locked OFF: the card computes time and weather itself. Since 1.11.2 the card says the rest itself (rule 504: recalled memories are the past; World Index: no phones, metric units), so the card works with any preset.
 
-**Back ON (1.37.3, owner): 🧠 Internal Thoughts** as a block of its own, `<npc_thoughts>`, right before `<UpdateVariable>`: up to three NPCs' raw thoughts, never {{user}}'s, never an unrevealed secret. Two preset regexes fold it on screen and drop it from older replies in the prompt; the card draws it in brass; a VectFox pattern keeps it out of memory. Turn it OFF in the preset to hide it.
+**Back ON (1.37.3, owner): 🧠 Internal Thoughts** as a block of its own, `<npc_thoughts>`, right before `<UpdateVariable>`: up to three NPCs' raw thoughts, never {{user}}'s, never an unrevealed secret. Two preset regexes fold it on screen and drop it from older replies in the prompt (a third, OFF, drops it from every reply if characters drift); the card draws it in brass; a VectFox pattern keeps it out of memory. Turn it OFF in the preset to hide it.
 
 **Edited prompts**
 - **Main:** removed the `<think>` wrapper, which the author says is only for Mimo via Crof. Random events are now recorded in the card state.

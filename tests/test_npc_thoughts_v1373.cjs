@@ -25,3 +25,8 @@ const clean = pats.filter(p => p.enabled !== false).reduce((s, p) => s.replace(n
 ok(!/late again|npc_thoughts/.test(clean) && clean.includes('Irene looks up.'), 'VectFox: thoughts never enter memory, the prose stays');
 const ui = fs.readFileSync(path.join(ROOT, 'src/scripts/ui.template.js'), 'utf8');
 ok(/function thoughtsCss/.test(ui) && /sayCss\(S, lightText\) \+ '\\n' \+ thoughtsCss\(lightText\)/.test(ui), 'card UI styles the block in brass');
+
+// 1.37.4: thoughts only as raw as the character is; an optional regex (OFF) keeps the AI from reading any thoughts back
+ok(/only as raw as that character is/.test(IT) && /never more emotional or dramatic than their card/.test(IT), '1.37.4: a calm character thinks calmly');
+const [all, A] = rx('NPC Thoughts: drop from every reply');
+ok(all.disabled && all.promptOnly && all.minDepth == null && reply.replace(A, all.replaceString) === sent && /drop from every reply/.test(IT), '1.37.4: optional drop-from-every-reply regex, OFF, named in the toggle note');

@@ -3,12 +3,13 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.37.3** (2026-10-02): the preset's 🧠 Internal Thoughts is back ON (a toggle) as its own `<npc_thoughts>`
+**Snapshot:** card **v1.37.4** (2026-10-02): NPC thoughts only as raw as the character is, plus an optional regex so the AI never
+reads them back. v1.37.3: the preset's 🧠 Internal Thoughts is back ON (a toggle) as its own `<npc_thoughts>`
 block before `<UpdateVariable>`: up to three NPCs' raw thoughts, never {{user}}'s, no unrevealed secrets; folded on screen in brass,
 dropped from older replies and from VectFox. v1.37.0-v1.37.2: dialogue colours (`<say:Name>`, a colour per person in a scene).
 Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** live-check v1.37.3 (re-import preset and VectFox patterns; NPC Thoughts on/off), v1.37.0-v1.37.2 (dialogue
+**Next task:** live-check v1.37.4 and v1.37.3 (re-import preset and VectFox patterns; NPC Thoughts on/off), v1.37.0-v1.37.2 (dialogue
 colours), v1.36.0 (voice, endings, Embellish), v1.35.2 and earlier per the "Open" list; confirm the invented teacher details
 (CHANGELOG 1.33.0, `git show 0358619:CHANGELOG.md`). Outside-campus maps remain in `planning/FUTURE_PLANS.md` FP7.
 
