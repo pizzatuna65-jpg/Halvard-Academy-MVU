@@ -80,6 +80,7 @@ for lid, l in json.load(open(P('data/locations.json'), encoding='utf-8')).items(
 import sys; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import load_clubs   # v1.1.0: club data shared with gen_mvu_entries.py (Saturday club time in the Now entry)
 from common import place_aliases   # 1.3.1: short place names -> location id (map "you are here")
+from common import npc_aliases     # 1.37.0: dialogue colours by every name a character goes by
 from common import effect_text     # 1.9.5: shop item effects (shop and Bag)
 _byname = {l['name']: lid for lid, l in DATA['locs'].items()}
 DATA['palias'] = {re.sub(r'^the ', '', a): _byname[nm] for a, nm in place_aliases(json.load(open(P('data/locations.json'), encoding='utf-8'))).items()}
@@ -119,6 +120,13 @@ DATA['rep'] = {k: _rep[k] for k in ('reps', 'about', 'thresholds', 'effects')}
 DATA['trn'] = {k: v for k, v in json.load(open(P('data/training.json'), encoding='utf-8')).items() if not k.startswith('_')}
 DATA['features'] = json.load(open(P('data/features.json'), encoding='utf-8'))['features']
 DATA['fcost'] = json.load(open(P('data/feature_cost.json'), encoding='utf-8'))
+# 1.37.0: dialogue colours by speaker name (data/dialogue_colors.json); every name a roster character goes by maps to their colour
+_say = json.load(open(P('data/dialogue_colors.json'), encoding='utf-8'))
+DATA['say'] = {'generic': _say['generic'], 'user': _say['user'], 'who': {}}
+for _id, _hs in _say['npcs'].items():
+    for _a in [_id.lower(), npcs[_id]['name'].split()[0].lower()]: DATA['say']['who'].setdefault(_a, _hs)
+for _a, _id in npc_aliases(npcs).items():
+    if _id in _say['npcs']: DATA['say']['who'].setdefault(_a, _say['npcs'][_id])
 bar = open(P('src/ui/statusbar.template.html'), encoding='utf-8').read()
 NEWS = open(P('src/ui/news.shared.js'), encoding='utf-8').read()   # 1.25.0 red "new" dots, shared by the bracelet and the panels
 bar = bar.replace('/*@@NEWS@@*/', NEWS)

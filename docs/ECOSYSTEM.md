@@ -34,7 +34,7 @@ They keep a second game state in a hidden HTML block that must sit "at the absol
   - The two Gemini-OFF checks are now conditional.
 - **Gemini jailbreak:** genre set to "magic academy, slice of life with a mystery, dark where earned". It also respects the card rule that {{user}}'s power level is the player's choice.
 - **Pop in Graphics:** letter, notice and page templates replace phone and terminal. The bracelet and stats are never drawn as graphics.
-- **Colored Dialogue 2.0:** never colours inside `<UpdateVariable>`.
+- **Colored Dialogue 2.0:** never colours inside `<UpdateVariable>`. Since 1.37.0 the card colours dialogue itself (`<say:Name>`), so both preset colour toggles stay OFF; VectFox's cleaning patterns drop the `<say>` tags too.
 - **NPC Instincts:** bond records describe history and never force compliance. This replaces "there is no affection meter", which contradicted the card's bond ranks.
 
 **Writing rules (1.5.0, character consistency; generic, they name no card data):**

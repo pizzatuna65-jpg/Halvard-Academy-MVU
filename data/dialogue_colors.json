@@ -1,0 +1,297 @@
+{
+ "_note": "Dialogue colours (1.37.0, tools/make_dialogue_colors.py keeps existing entries). npcs: id -> [OKLCH hue 0-359, band 0 bright / 1 deeper]; OKLCH; the UI sets lightness from the chat theme. generic: unnamed or unrecorded speakers. user: {{user}}. Extras get a hue from the engine ($say) when their record is written.",
+ "generic": [
+  250,
+  "g"
+ ],
+ "user": [
+  80,
+  "u"
+ ],
+ "npcs": {
+  "Aiden": [
+   140,
+   0
+  ],
+  "Althair": [
+   0,
+   0
+  ],
+  "Alyssa": [
+   10,
+   1
+  ],
+  "Anselm": [
+   220,
+   1
+  ],
+  "Anya": [
+   80,
+   1
+  ],
+  "Aurelian": [
+   250,
+   0
+  ],
+  "Baelin": [
+   100,
+   1
+  ],
+  "Bellatrix": [
+   10,
+   0
+  ],
+  "Bianca": [
+   280,
+   0
+  ],
+  "Bobby": [
+   190,
+   0
+  ],
+  "Bram": [
+   350,
+   0
+  ],
+  "Bruno": [
+   270,
+   1
+  ],
+  "Caine": [
+   180,
+   0
+  ],
+  "Caralynn": [
+   70,
+   1
+  ],
+  "Caspian": [
+   60,
+   1
+  ],
+  "Cassius": [
+   290,
+   0
+  ],
+  "Castor": [
+   240,
+   1
+  ],
+  "Cedric": [
+   260,
+   0
+  ],
+  "Dante": [
+   150,
+   1
+  ],
+  "Dex": [
+   40,
+   1
+  ],
+  "Dorian": [
+   30,
+   0
+  ],
+  "Elion": [
+   190,
+   1
+  ],
+  "Etnie": [
+   230,
+   0
+  ],
+  "Ezrel": [
+   280,
+   1
+  ],
+  "Faye": [
+   110,
+   0
+  ],
+  "Florian": [
+   200,
+   0
+  ],
+  "Gareth": [
+   20,
+   1
+  ],
+  "Gavlan": [
+   50,
+   0
+  ],
+  "Hadrian": [
+   310,
+   1
+  ],
+  "Hester": [
+   150,
+   0
+  ],
+  "Idris": [
+   300,
+   1
+  ],
+  "Ines": [
+   230,
+   1
+  ],
+  "Irene": [
+   310,
+   0
+  ],
+  "Kanae": [
+   70,
+   0
+  ],
+  "Kira": [
+   250,
+   1
+  ],
+  "Kotaro": [
+   140,
+   1
+  ],
+  "Krieg": [
+   240,
+   0
+  ],
+  "Kuroo": [
+   300,
+   0
+  ],
+  "Layla": [
+   30,
+   1
+  ],
+  "Lenna": [
+   130,
+   0
+  ],
+  "Linus": [
+   90,
+   1
+  ],
+  "Lucius": [
+   170,
+   1
+  ],
+  "Magnus": [
+   330,
+   0
+  ],
+  "Maple": [
+   40,
+   0
+  ],
+  "Milena": [
+   120,
+   0
+  ],
+  "Mimosa": [
+   350,
+   1
+  ],
+  "Mirelle": [
+   330,
+   1
+  ],
+  "Morgana": [
+   290,
+   1
+  ],
+  "Nerys": [
+   270,
+   0
+  ],
+  "Ottavio": [
+   180,
+   1
+  ],
+  "Percival": [
+   60,
+   0
+  ],
+  "Pip": [
+   340,
+   1
+  ],
+  "Rei": [
+   100,
+   0
+  ],
+  "Rigel": [
+   160,
+   1
+  ],
+  "Royhan": [
+   200,
+   1
+  ],
+  "Ruby": [
+   340,
+   0
+  ],
+  "Saffi": [
+   20,
+   0
+  ],
+  "Sophia": [
+   260,
+   1
+  ],
+  "Theodore": [
+   110,
+   1
+  ],
+  "Tilly": [
+   320,
+   1
+  ],
+  "Topaz": [
+   50,
+   1
+  ],
+  "Tristan": [
+   130,
+   1
+  ],
+  "Trixie": [
+   120,
+   1
+  ],
+  "Tsubaki": [
+   210,
+   1
+  ],
+  "Valentin": [
+   80,
+   0
+  ],
+  "Vallie": [
+   0,
+   1
+  ],
+  "Vera": [
+   320,
+   0
+  ],
+  "William": [
+   220,
+   0
+  ],
+  "Wren": [
+   90,
+   0
+  ],
+  "Yvette": [
+   210,
+   0
+  ],
+  "Zara": [
+   160,
+   0
+  ]
+ }
+}

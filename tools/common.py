@@ -143,3 +143,17 @@ def write_card_png(v2, v3, out_path):
             out.append(raw[p:p + 12 + l])
         p += 12 + l
     open(out_path, 'wb').write(b''.join(out))
+
+
+def npc_aliases(npcs):
+    """Every name a roster character goes by (lowercase) -> id: the engine's NPC_ALIAS and the UI's dialogue colours."""
+    alias = {}
+    for nid, n in npcs.items():
+        for a in [nid, n['name'], n.get('nickname')] + [k for k in n['keys'] if k[:1].isupper() and len(k.split()) <= 3]:
+            if a: alias.setdefault(a.lower(), nid)
+    # drop keys that are clearly not names (clubs, places, titles shared by many)
+    BAD = re.compile(r'club|library|council|dorm|academy|team|circle|house|hall|tower|office|order|choir|lord|king|saint|squad|doves?$', re.I)
+    DENY = {'festival committee', 'divination society', 'theatre troupe', 'shub-niggurath', 'shub niggurath', 'hastur', 'loki', 'hades',
+            'excalibur', 'gohn', 'janna', 'laetano', 'velmora', 'niu', 'ardenne', 'villeneuve', 'sobek', 'royal mage', 'youngest royal mage', 'crane'}   # 1.7.0: Maple's spirit, Tsubaki's title; 1.33.0: crane (the bird)  # spirits, items, brands, groups, shared surnames
+    alias = {k: v for k, v in alias.items() if (not BAD.search(k) or k == v.lower()) and k not in DENY}
+    return alias

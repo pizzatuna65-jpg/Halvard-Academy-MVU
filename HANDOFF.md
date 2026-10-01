@@ -3,12 +3,12 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.36.0** (2026-10-02), a preset-only release: the edited preset ports RF2.2.1 (Card Fidelity, the Gemini
-comparative-emphasis and monomania killswitches, the Gemini NPC Voice, the rebuilt Scene Engine); replies run 4 to 7 paragraphs and
-Embellish Mode replaces Anti-parrot (owner). v1.35.2: curfew is a school rule, feast-night curfews, short first appearances.
+**Snapshot:** card **v1.37.0** (2026-10-02): dialogue colours. The narrator tags each spoken line `<say:Name>`; the card colours
+it from `data/dialogue_colors.json` (roster) or an Extras record's hue, and the unnamed share a grey. v1.36.0: the preset ports
+RF2.2.1 (Card Fidelity, Gemini killswitches and voice, new Scene Engine), 4 to 7 paragraphs, Embellish Mode.
 Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** live-check v1.36.0 (re-import the preset: voice, endings, Embellish), v1.35.2 (feast curfew, night outings, first
+**Next task:** live-check v1.37.0 (dialogue colours; re-import the VectFox patterns), v1.36.0 (re-import the preset: voice, endings, Embellish), v1.35.2 (feast curfew, night outings, first
 appearances), v1.35.1 and v1.35.0; then the v1.34.2 portraits and Graduation map, the Year 3 arrival and Council flow; confirm the
 invented teacher details (CHANGELOG 1.33.0, now in `git show 0358619:CHANGELOG.md`). Outside-campus maps remain in
 `planning/FUTURE_PLANS.md` FP7.

@@ -3403,6 +3403,7 @@ function stepExtras(c) {
       const a = X[keep], z = X[drop], fresh = !(drop in X0);
       for (const f of XF) if (String(z[f] || '').trim() && (fresh || !String(a[f] || '').trim())) a[f] = z[f];
       a.Keep = !!(a.Keep || z.Keep); a.$seen = Math.max(num(a.$seen, -1), num(z.$seen, -1));
+      if (!(num(a.$say, -1) >= 0) && num(z.$say, -1) >= 0) a.$say = z.$say;
       delete X[drop];
     }
     const P = S.Scene.Present;
@@ -3433,6 +3434,15 @@ function stepExtras(c) {
     const out = Object.keys(X).filter(k => !X[k].Keep && !ext.includes(k)).sort((a, b) => num(X[a].$seen, -1) - num(X[b].$seen, -1));
     for (const k of out.slice(0, Math.max(0, Object.keys(X).length - EXTRAS_MAX))) { XO[k] = X[k]; delete X[k]; }
     for (const k of Object.keys(XO).sort((a, b) => num(XO[b].$seen, -1) - num(XO[a].$seen, -1)).slice(EXTRAS_ARCHIVE)) delete XO[k];
+    // 1.37.0: a recorded character gets their own dialogue colour (a hue the other records are farthest from); the unrecorded
+    // share the generic colour. The UI reads $say; the narrator never sees it.
+    for (const k of Object.keys(X)) {
+      if (num(X[k].$say, -1) >= 0 || !String(X[k].Who || '').trim()) continue;
+      const taken = [...Object.values(X), ...Object.values(XO)].map(r => num((r || {}).$say, -1)).filter(h => h >= 0);
+      const gap = h => taken.length ? Math.min(...taken.map(t => { const d = Math.abs(h - t) % 360; return Math.min(d, 360 - d); })) : 360;
+      let best = 7; for (let h = 7; h < 360; h += 15) if (gap(h) > gap(best)) best = h;
+      X[k].$say = best;
+    }
     xHere = ext.filter(id => id in X && String(X[id].Who || '').trim());
     xNew = ext.filter(id => (id in X && !String(X[id].Who || '').trim()) || (!(id in X) && num((XS[xsKey[id]] || {}).n, 0) >= 2));
   }
@@ -3450,7 +3460,9 @@ function stepCast(c) {
     let spoke = prev.spoke || [], gone = prev.gone || [], ment = prev.ment || [];
     if (text) {
       const prose = String(text).replace(/<UpdateVariable>[\s\S]*?<\/UpdateVariable>/g, '').replace(/<[^>]+>/g, ' ');
-      spoke = speakersIn(prose); const said = new Set(spoke);
+      // 1.37.0: a dialogue-colour tag names its speaker outright
+      const tagged = [...String(text).matchAll(/<say\s*:\s*([^:<>"\n]{1,40}?)\s*(?::\s*[a-z]+\s*)?>/gi)].map(m => NPC_ALIAS[m[1].trim().toLowerCase()]).filter(id => id && NPC_IDS.has(id));
+      spoke = [...new Set([...speakersIn(prose), ...tagged])]; const said = new Set(spoke);
       gone = spoke.filter(id => !pres.includes(id));
       ment = NAME_RX.filter(([id, rx]) => !pres.includes(id) && !said.has(id) && (ARRIVES[id] || 1) <= S.World.Year && mentionIn(prose, id, rx)).map(([id]) => id).slice(0, 4);
     }

@@ -431,5 +431,11 @@ rep('Embellish Mode', "1. Enhancement: Elaborate, stylize, and expand {{user}}'s
 rep('Embellish Mode', '3. NPCs: NPCs must react organically to only 1 or 2 key elements. Avoid point-by-point checklist replies.',
     "3. NPCs: NPCs answer what a person would answer in {{user}}'s input, in one natural response, not item by item. Avoid point-by-point checklist replies.")
 
+# ---- 14. 1.37.0: the card colours dialogue itself (a <say:Name> tag rule in its own rules, colours from its data); the preset's
+# two colour toggles stay OFF and say so, since two colour formats in one reply would fight
+for frag in ('Colored Dialogue 2.0', '🌈 Colored Dialogue VN'):
+    q = byname(frag); q['content'] = q['content'].replace('{{//', "{{// With a card that colours dialogue itself (Eldrasil: Student file > Settings > Features > Dialogue colours), keep this OFF.", 1)
+log.append(('NOTE', 'Colored Dialogue toggles', 'keep OFF with a card that colours dialogue itself'))
+
 json.dump(d, open(os.path.join(HERE, 'Realistic_Frankenstein_2_2_Eldrasil.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=4)
 for l in log: print(' | '.join(l))

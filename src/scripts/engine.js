@@ -597,7 +597,7 @@ const COND = {
   'Head cold': 'Stuffy and slow: stamina capped at 80% of max until it passes or the Medical Centre treats it.',
 };
 // ---- 1.1.0 Features settings (spec §9): which state each feature parks when it is off (data/features.json, injected) ----
-const FEATURES = [{"id":"proficiency","control":"toggle","paths":["Player._Proficiency","$eng.prof"]},{"id":"planner","control":"toggle","paths":["Commitments"],"unlock":"planner"},{"id":"notices","control":"toggle","paths":["Notices"],"unlock":"notices"},{"id":"letters","control":"toggle","paths":["Letters"],"unlock":"letters"},{"id":"mystery","control":"toggle","paths":["Clues","Mysteries"],"unlock":"mystery"},{"id":"competition","control":"toggle","paths":["Competition"],"unlock":"competition"},{"id":"projects","control":"toggle","paths":["Projects"],"unlock":"projects"},{"id":"trip","control":"toggle","paths":["Trip"],"unlock":"trip"},{"id":"battle","control":"toggle","paths":["Battle"],"unlock":"battle"},{"id":"inventory","control":"toggle","paths":["Inventory"],"unlock":"inventory"},{"id":"happenings","control":"levels","field":"happenings"},{"id":"npc_initiative","control":"toggle"},{"id":"weather","control":"levels","field":"wxfx","paths":["Player.Conditions"],"unlock":"conditions"},{"id":"class","control":"toggle"},{"id":"hooks","control":"toggle","paths":["Hooks"]},{"id":"gossip","control":"toggle"},{"id":"fortune","control":"toggle"},{"id":"attendance","control":"toggle"},{"id":"recap","control":"toggle"},{"id":"small_scenes","control":"toggle"},{"id":"ambience","control":"levels","field":"ambience"},{"id":"reminders","control":"toggle"},{"id":"study","control":"toggle"}];
+const FEATURES = [{"id":"proficiency","control":"toggle","paths":["Player._Proficiency","$eng.prof"]},{"id":"planner","control":"toggle","paths":["Commitments"],"unlock":"planner"},{"id":"notices","control":"toggle","paths":["Notices"],"unlock":"notices"},{"id":"letters","control":"toggle","paths":["Letters"],"unlock":"letters"},{"id":"mystery","control":"toggle","paths":["Clues","Mysteries"],"unlock":"mystery"},{"id":"competition","control":"toggle","paths":["Competition"],"unlock":"competition"},{"id":"projects","control":"toggle","paths":["Projects"],"unlock":"projects"},{"id":"trip","control":"toggle","paths":["Trip"],"unlock":"trip"},{"id":"battle","control":"toggle","paths":["Battle"],"unlock":"battle"},{"id":"inventory","control":"toggle","paths":["Inventory"],"unlock":"inventory"},{"id":"happenings","control":"levels","field":"happenings"},{"id":"npc_initiative","control":"toggle"},{"id":"weather","control":"levels","field":"wxfx","paths":["Player.Conditions"],"unlock":"conditions"},{"id":"class","control":"toggle"},{"id":"hooks","control":"toggle","paths":["Hooks"]},{"id":"gossip","control":"toggle"},{"id":"fortune","control":"toggle"},{"id":"attendance","control":"toggle"},{"id":"recap","control":"toggle"},{"id":"small_scenes","control":"toggle"},{"id":"ambience","control":"levels","field":"ambience"},{"id":"reminders","control":"toggle"},{"id":"study","control":"toggle"},{"id":"say_colors","control":"toggle"}];
 const EMPTY = { Commitments: {}, Notices: {}, Letters: {}, Clues: {}, Mysteries: {}, Projects: {}, Inventory: {}, Hooks: {}, 'Player.Conditions': {},
   Competition: { Tier: '', Status: '', Placement: '', Team: [], Results: [] }, Trip: { Active: false, Destination: '', Companions: [], Note: '' },
   Battle: { Active: false, Combatants: {} } };
@@ -757,7 +757,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.36.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.37.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
 // from the shared context c (the states, the reply's text and the values earlier steps computed) and adds what later steps use.
@@ -3504,6 +3504,7 @@ function stepExtras(c) {
       const a = X[keep], z = X[drop], fresh = !(drop in X0);
       for (const f of XF) if (String(z[f] || '').trim() && (fresh || !String(a[f] || '').trim())) a[f] = z[f];
       a.Keep = !!(a.Keep || z.Keep); a.$seen = Math.max(num(a.$seen, -1), num(z.$seen, -1));
+      if (!(num(a.$say, -1) >= 0) && num(z.$say, -1) >= 0) a.$say = z.$say;
       delete X[drop];
     }
     const P = S.Scene.Present;
@@ -3534,6 +3535,15 @@ function stepExtras(c) {
     const out = Object.keys(X).filter(k => !X[k].Keep && !ext.includes(k)).sort((a, b) => num(X[a].$seen, -1) - num(X[b].$seen, -1));
     for (const k of out.slice(0, Math.max(0, Object.keys(X).length - EXTRAS_MAX))) { XO[k] = X[k]; delete X[k]; }
     for (const k of Object.keys(XO).sort((a, b) => num(XO[b].$seen, -1) - num(XO[a].$seen, -1)).slice(EXTRAS_ARCHIVE)) delete XO[k];
+    // 1.37.0: a recorded character gets their own dialogue colour (a hue the other records are farthest from); the unrecorded
+    // share the generic colour. The UI reads $say; the narrator never sees it.
+    for (const k of Object.keys(X)) {
+      if (num(X[k].$say, -1) >= 0 || !String(X[k].Who || '').trim()) continue;
+      const taken = [...Object.values(X), ...Object.values(XO)].map(r => num((r || {}).$say, -1)).filter(h => h >= 0);
+      const gap = h => taken.length ? Math.min(...taken.map(t => { const d = Math.abs(h - t) % 360; return Math.min(d, 360 - d); })) : 360;
+      let best = 7; for (let h = 7; h < 360; h += 15) if (gap(h) > gap(best)) best = h;
+      X[k].$say = best;
+    }
     xHere = ext.filter(id => id in X && String(X[id].Who || '').trim());
     xNew = ext.filter(id => (id in X && !String(X[id].Who || '').trim()) || (!(id in X) && num((XS[xsKey[id]] || {}).n, 0) >= 2));
   }
@@ -3551,7 +3561,9 @@ function stepCast(c) {
     let spoke = prev.spoke || [], gone = prev.gone || [], ment = prev.ment || [];
     if (text) {
       const prose = String(text).replace(/<UpdateVariable>[\s\S]*?<\/UpdateVariable>/g, '').replace(/<[^>]+>/g, ' ');
-      spoke = speakersIn(prose); const said = new Set(spoke);
+      // 1.37.0: a dialogue-colour tag names its speaker outright
+      const tagged = [...String(text).matchAll(/<say\s*:\s*([^:<>"\n]{1,40}?)\s*(?::\s*[a-z]+\s*)?>/gi)].map(m => NPC_ALIAS[m[1].trim().toLowerCase()]).filter(id => id && NPC_IDS.has(id));
+      spoke = [...new Set([...speakersIn(prose), ...tagged])]; const said = new Set(spoke);
       gone = spoke.filter(id => !pres.includes(id));
       ment = NAME_RX.filter(([id, rx]) => !pres.includes(id) && !said.has(id) && (ARRIVES[id] || 1) <= S.World.Year && mentionIn(prose, id, rx)).map(([id]) => id).slice(0, 4);
     }

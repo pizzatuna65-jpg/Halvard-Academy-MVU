@@ -1715,6 +1715,39 @@ function edgeVisible(e, S) {         // e = [from, to, type, types, visibility, 
 }
 /*@@PARTS@@*/
 
+// ---------------------------------------------------------------- dialogue colours (1.37.0)
+// The narrator wraps each spoken line in <say:Name>; the card's display regex turns it into <span data-say="Name">. Colours live
+// in the card (DATA.say for the roster, Extras $say hues from the engine), never in the prompt: one rule set in SillyTavern's page.
+// OKLCH lightness follows the chat theme: light text means a dark theme. Unnamed or unrecorded speakers share the generic colour.
+function sayCss(S, lightText) {
+  // OKLCH: band 0 bright, 1 deeper (roster, data/dialogue_colors.json), x = an Extras hue, g = generic, u = {{user}}
+  const LC = lightText ? { 0: [80, .14], 1: [68, .11], x: [74, .10], g: [74, .02], u: [90, .04] } : { 0: [50, .14], 1: [40, .11], x: [45, .10], g: [45, .02], u: [30, .04] };
+  const col = ([h, b]) => `oklch(${LC[b][0]}% ${LC[b][1]} ${h})`;
+  const q = n => '"' + String(n).trim().toLowerCase().replace(/[^\p{L}\p{N} '.-]/gu, '') + '"', sel = n => `.mes_text span[data-say=${q(n)} i]`;
+  const rules = [`.mes_text span[data-say]{color:${col(DATA.say.generic)}}`];
+  const who = Object.assign({}, DATA.say.who);
+  for (const [k, v] of Object.entries((S && S.Extras) || {})) if (v && Number(v.$say) >= 0) who[k.toLowerCase()] = who[k.split(/\s+/)[0].toLowerCase()] = [Number(v.$say), 'x'];
+  const user = [((S && S.Player && S.Player.Profile) || {}).Name, typeof SillyTavern === 'object' ? SillyTavern.name1 : ''].filter(n => n && !/\{\{/.test(n));
+  for (const n of user) who[String(n).toLowerCase()] = DATA.say.user;
+  const by = {};
+  for (const [n, c] of Object.entries(who)) (by[c.join()] = by[c.join()] || { c, names: [] }).names.push(n);
+  for (const { c, names } of Object.values(by)) rules.push(`${names.map(sel).join(',')}{color:${col(c)}}`);
+  rules.push('.mes_text span[data-tone="shout"]{font-weight:800;font-size:1.08em}',
+    '.mes_text span[data-tone="whisper"]{font-size:.9em;font-style:italic;opacity:.8}',
+    '.mes_text span[data-tone="measured"]{font-weight:600;letter-spacing:.3px}',
+    '.mes_text span[data-tone="tremble"]{font-style:italic;letter-spacing:1px;opacity:.9}');
+  return rules.join('\n');
+}
+function sayStyle() {
+  try {
+    const st = latestState(), S = st && st.data && st.data.stat_data;
+    const c = ((PD.defaultView || window).getComputedStyle(PD.documentElement).getPropertyValue('--SmartThemeBodyColor') || '').match(/\d+(\.\d+)?/g);
+    const lightText = !c || (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255 > 0.5;
+    let el = PD.getElementById('eldrasil-say'); if (!el) { el = PD.createElement('style'); el.id = 'eldrasil-say'; PD.head.appendChild(el); }
+    const css = sayCss(S, lightText); if (el.textContent !== css) el.textContent = css;
+  } catch (e) { console.warn('[Eldrasil] dialogue colours', e); }
+}
+
 // ---------------------------------------------------------------- wiring
 if (typeof eventOn === 'function' && typeof getButtonEvent === 'function') {
   $(() => {
@@ -1735,7 +1768,10 @@ if (typeof eventOn === 'function' && typeof getButtonEvent === 'function') {
     eventOn(tavern_events.CHAT_CHANGED, () => { draft = null; newsMem = null; close(); loreChecked = ''; setTimeout(ensureLorebook, 1200); });
     setTimeout(ensureLorebook, 1500);   // 1.3.6: the card installs or updates its own lorebook
     window.addEventListener('storage', e => { if (e.key === THEME_KEY) applyTheme(); });   // 1.3.1: the theme changed in another tab
-    waitGlobalInitialized('Mvu').then(() => eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, () => { setTimeout(refresh, 400); newsBoot(); }));
-    $(window).on('pagehide', () => { delete window.parent.__eldrasilUI; if (host) host.remove(); });
+    const sayBoot = _.debounce(sayStyle, 300);   // 1.37.0: dialogue colours follow new Extras and the chat theme
+    ['MESSAGE_RECEIVED', 'MESSAGE_SWIPED', 'MESSAGE_UPDATED', 'CHAT_CHANGED'].forEach(k => tavern_events[k] && eventOn(tavern_events[k], sayBoot));
+    setTimeout(sayStyle, 1500);
+    waitGlobalInitialized('Mvu').then(() => eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, () => { setTimeout(refresh, 400); newsBoot(); sayBoot(); }));
+    $(window).on('pagehide', () => { delete window.parent.__eldrasilUI; if (host) host.remove(); const s = PD.getElementById('eldrasil-say'); if (s) s.remove(); });
   });
 }

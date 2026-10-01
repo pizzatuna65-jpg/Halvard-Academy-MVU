@@ -117,5 +117,53 @@
   ],
   "markdownOnly": false,
   "promptOnly": true
+ },
+ {
+  "trimStrings": [],
+  "disabled": false,
+  "runOnEdit": true,
+  "substituteRegex": 0,
+  "minDepth": null,
+  "maxDepth": null,
+  "scriptName": "Eldrasil — dialogue colours: speaker tag (display)",
+  "findRegex": "/<say(?:\\s*:\\s*([^:<>\"\n]{1,40}?))?(?:\\s*:\\s*(shout|whisper|measured|tremble))?\\s*>\\s*([“\"])([^”\"]{1,2000}?)([”\"])(?:\\s*<\\/say\\s*>)?/gi",
+  "replaceString": "$3<span data-say=\"$1\" data-tone=\"$2\">$4</span>$5",
+  "placement": [
+   2
+  ],
+  "markdownOnly": true,
+  "promptOnly": false
+ },
+ {
+  "trimStrings": [],
+  "disabled": false,
+  "runOnEdit": true,
+  "substituteRegex": 0,
+  "minDepth": null,
+  "maxDepth": null,
+  "scriptName": "Eldrasil — dialogue colours: stray tags (display)",
+  "findRegex": "/<\\/?say\b[^<>\n]{0,60}>/gi",
+  "replaceString": "",
+  "placement": [
+   2
+  ],
+  "markdownOnly": true,
+  "promptOnly": false
+ },
+ {
+  "trimStrings": [],
+  "disabled": false,
+  "runOnEdit": true,
+  "substituteRegex": 0,
+  "minDepth": 4,
+  "maxDepth": null,
+  "scriptName": "Eldrasil — dialogue colours: strip tags from older replies (prompt)",
+  "findRegex": "/<\\/?say\b[^<>\n]{0,60}>/gi",
+  "replaceString": "",
+  "placement": [
+   2
+  ],
+  "markdownOnly": false,
+  "promptOnly": true
  }
 ]

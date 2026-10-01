@@ -22,7 +22,8 @@
   "small_scenes": 0,
   "ambience": 54,
   "reminders": 34,
-  "study": 205
+  "study": 205,
+  "say_colors": 183
  },
  "core_rules": 9414,
  "lore": 5424,

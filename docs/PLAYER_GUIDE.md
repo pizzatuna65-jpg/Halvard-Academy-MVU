@@ -91,6 +91,8 @@ The bracelet shows what comes **next** today: the next class, the next item of a
 
 Switching a feature off removes it from the narrator's state and rules and hides its tabs and chips. Nothing is deleted: its state is set aside and comes back when you switch it on again. Weather **Flavor** keeps the sky and temperature but drops the effects; **Off** removes weather entirely. Turning off the four new features (weather, class presence, hooks, gossip) and the Bag brings the prompt back to about the size of v1.0.3.
 
+**Dialogue colours** (1.37.0): every named character speaks in a colour of their own, the same in every chat; strangers and passers-by share one grey until the story gives them a record (Extras), and then they get their own. Your own lines have a soft colour too. The colours follow your SillyTavern theme (light or dark). Switch it off in Features if you prefer plain text.
+
 The **story hooks** are the narrator's private notes on promises and planted details it owes you a payoff for. They never appear in your panels; that is on purpose.
 
 ## 7. Memory

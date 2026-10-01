@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.37.0 (dialogue colours): the three checks in its section below.
 - v1.36.0 (preset RF2.2.1 port): the three checks in its section below.
 - v1.35.2 (curfew, first appearances): the three checks in its section below.
 - v1.35.1 (items reach the Bag): the check in its section below.
@@ -72,6 +73,16 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.37.0 — Dialogue colours
+
+1. Update the card's lorebook when asked, and re-import `docs/vectfox_cleaning_patterns.json` in VectFox (one new pattern). In a
+   scene with two roster characters, each spoken line shows in that character's colour, the same colour in a later reply, and the
+   raw message (edit) shows `<say:Name>"…"</say>` tags.
+2. A shop clerk or passing student speaks in the shared grey. Once the narrator writes their Extras record (second appearance),
+   their next lines have a colour of their own.
+3. Switch SillyTavern to a light theme: the colours turn darker and stay readable. Features → Dialogue colours off: the next reply
+   has no tags.
 
 ### v1.36.0 — Preset: RF2.2.1 port
 

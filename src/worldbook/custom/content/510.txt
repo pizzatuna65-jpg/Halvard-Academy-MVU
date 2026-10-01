@@ -4,6 +4,9 @@ Silent check before writing, for every character who speaks or acts: pronouns, n
 <%_ { const _w = getvar('stat_data.World') || {}; if (+_w.Month === 1 && +_w.Week === 1 && _w.Day === 'Mon') { _%>
 On Entrance morning, check each first-year's cohort and whether their own sorting has occurred before giving them a dorm vest, resident knowledge or a tour assignment. Use the Entrance_tour trio and the roster priority in <now>; keep the ceremony and 10:00 meeting in order.
 <%_ } } _%>
+<%_ { const _u = getvar('stat_data.$ui') || {}; if (typeof (_u.on || {}).say_colors === 'boolean' ? _u.on.say_colors : !(_u.off || []).includes('say_colors')) { _%>
+Every spoken line sits in its speaker's <say:Name> tag, or <say> for someone without a name or record.
+<%_ } } _%>
 Before finalising this scene, check that its elapsed time matches the shown conversation, travel and magic, that ordinary safe casting is treated as legal, and that Magic Duelling Club is portrayed as warded spell duelling.
 </final_cast_gate>
 <%_ } _%>

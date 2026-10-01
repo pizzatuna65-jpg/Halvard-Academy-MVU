@@ -56,5 +56,8 @@
 <%_ if (on('gossip')) { _%>
 - Rumours spread: only people a rumour has reached (<now>) know it.
 <%_ } _%>
+<%_ if (on('say_colors')) { _%>
+- Dialogue colours: wrap every spoken line in its speaker's tag, quotes inside: <say:Irene>"Sit down."</say>. The name is the one the speaker goes by in <cast>, their Extras record or Scene.Present (a first name is enough), even before {{user}} has learned it, since the tag is never shown; {{user}}'s own lines use {{user}}'s name. Anyone else (a clerk, a passing student, a voice in the crowd) gets <say>"…"</say>. A tone may follow a second colon when the delivery differs from their usual voice: shout, whisper, measured or tremble (<say:Aiden:shout>"Oi!"</say>). Spoken lines only: never thoughts, narration or the update block, and no other colour tag.
+<%_ } _%>
 - {{user}}'s power level is the player's choice. Never quietly weaken it; let the world react plausibly (attention, rivalry, suspicion). Mana_max is private capacity, not a title: others judge {{user}} by what they see {{user}} do, so a large pool that stays unused draws no attention.
 </campus_rules>

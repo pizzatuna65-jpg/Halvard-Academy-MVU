@@ -4,15 +4,8 @@ import json, os, re
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 P = lambda *a: os.path.join(ROOT, *a)
 npcs = json.load(open(P('data/npcs.json'), encoding='utf-8'))
-alias = {}
-for nid, n in npcs.items():
-    for a in [nid, n['name'], n.get('nickname')] + [k for k in n['keys'] if k[:1].isupper() and len(k.split()) <= 3]:
-        if a: alias.setdefault(a.lower(), nid)
-# drop keys that are clearly not names (clubs, places, titles shared by many)
-BAD = re.compile(r'club|library|council|dorm|academy|team|circle|house|hall|tower|office|order|choir|lord|king|saint|squad|doves?$', re.I)
-DENY = {'festival committee', 'divination society', 'theatre troupe', 'shub-niggurath', 'shub niggurath', 'hastur', 'loki', 'hades',
-        'excalibur', 'gohn', 'janna', 'laetano', 'velmora', 'niu', 'ardenne', 'villeneuve', 'sobek', 'royal mage', 'youngest royal mage', 'crane'}   # 1.7.0: Maple's spirit, Tsubaki's title; 1.33.0: crane (the bird)  # spirits, items, brands, groups, shared surnames
-alias = {k: v for k, v in alias.items() if (not BAD.search(k) or k == v.lower()) and k not in DENY}
+from common import npc_aliases
+alias = npc_aliases(npcs)   # 1.37.0: shared with gen_ui.py (dialogue colours)
 forms = {nid: sorted({f for f in [nid, n['name'], n.get('nickname')] if f and len(f) > 1}, key=len, reverse=True) for nid, n in npcs.items()}
 t = open(P('src/scripts/engine.template.js'), encoding='utf-8').read()
 cal = json.load(open(P('data/calendar.json'), encoding='utf-8'))

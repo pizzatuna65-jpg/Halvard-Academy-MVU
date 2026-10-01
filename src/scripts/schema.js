@@ -230,6 +230,7 @@ export const Schema = z.object({
   Extras: Rec(v => ({
     Who: s(v.Who).slice(0, 160), Looks: s(v.Looks).slice(0, 200), Manner: s(v.Manner).slice(0, 200),
     Calls_user: s(v.Calls_user).slice(0, 60), Voice: s(v.Voice).slice(0, 240), Keep: b(v.Keep), $seen: n(v.$seen, -1, 1e9, -1),
+    $say: n(v.$say, -1, 359, -1),   // 1.37.0: dialogue colour hue (engine, hidden from the narrator)
   }), 'Who'),
 
   // Batch 5.1: Where (optional place, enables "Go here"); _When / _Late / $abs are computed by the engine from Due

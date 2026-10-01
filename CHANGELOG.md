@@ -1,7 +1,29 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 13c8d74:CHANGELOG.md` (1.34.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.34.2), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.37.0 — Dialogue colours (2026-10-02)
+
+Owner request: consistent dialogue colours; unnamed passers-by share one colour, and a character gets their own once they enter
+the Extras record. Save fixture v1.36.0.
+- The narrator wraps each spoken line in `<say:Name>"…"</say>` (`<say>` for anyone without a name or record; optional tone
+  shout / whisper / measured / tremble). Rule in 504, a one-line reminder in the 510 gate; feature **Dialogue colours** (ON).
+- Colours stay out of the prompt: the card's display regex turns the tag into `<span data-say>` (verified: SillyTavern's message
+  sanitizer keeps data attributes and prefixes classes, `chats.js` `addDOMPurifyHooks`; unmatched regex groups become empty,
+  `regex/engine.js`), and the UI script puts one stylesheet into SillyTavern's page. Tags are stripped from replies older than
+  depth 4 in the prompt; the newest keep them as examples.
+- `data/dialogue_colors.json`: one OKLCH hue and band per roster character (71, all different), placed by
+  `tools/make_dialogue_colors.py` so people often in the same scene (relations, dorm, year, group) are far apart, with colourful
+  hair pulling toward its hue (Irene purple, Ruby pink, Alyssa red). Edit a colour there by hand; the tool keeps edits and only
+  fills new NPCs. Every name a character goes by maps to it (`npc_aliases`, now shared with the engine).
+- Extras: the engine gives a record a hue (`$say`, hidden from the narrator) when its Who is written, the hue farthest from the
+  other records'. Unrecorded speakers share the generic grey; {{user}}'s lines get a soft warm colour.
+- Lightness follows the SillyTavern theme (light text = dark theme). A `<say:Name>` tag also counts as that character speaking
+  for the Cast Sheet order (`stepCast`).
+- Preset: both colour toggles stay OFF and their notes say so. VectFox cleaning patterns: drop `<say>` tags.
+- Tests: `test_say_colors_v1370.cjs` (new), full suite.
+- To confirm with the owner: the colours themselves (`data/dialogue_colors.json`; tell me any you want changed).
 
 ## v1.36.0 — Preset: port from Realistic Frankenstein 2.2.1 (2026-10-02)
 
@@ -82,14 +104,6 @@ Save fixture v1.34.2.
 - Not done (owner): sticky entries.
 - `tests/test_lore_activation_v1350.cjs` (new: what a player says → the entry that must fire, with SillyTavern's matching rules;
   World Index coverage; budget flag), `test_saves`, `qa_static` and the lore suites pass.
-
-## v1.34.2 — Portraits for the new teachers and Year 3 cohort (2026-10-01)
-
-Save fixture v1.34.1. The owner's 15 portrait and thumbnail pairs are now wired into the card: Hester, Anselm, Magnus, Dorian,
-Cedric, Anya, Kotaro, Valentin, Aurelian, William, Bruno, Bianca, Rigel, Topaz and Faye. All 71 NPCs now have images. The CDN
-is pinned to assets commit `f42990c`; the Graduation map path follows its lowercase filename in that commit. The full portraits
-use focus points matched to the uploaded thumbnail crops. Verified all existing and new asset paths against the commit tree;
-rebuilt the card and ran the relevant asset/map and old-save checks. Check the portraits and Graduation map once in SillyTavern.
 
 ## Release index (one line per release, oldest first)
 
@@ -199,3 +213,4 @@ rebuilt the card and ran the relevant asset/map and old-save checks. Check the p
 - **v1.35.1 (2026-10-02):** Items written to /Player/Inventory (or /Bag) are moved to the Bag instead of vanishing.
 - **v1.35.2 (2026-10-02):** Curfew is a school rule (consequences only when caught); feast nights move it; short first appearances; journal dedupe.
 - **v1.36.0 (2026-10-02):** Preset: RF2.2.1 port (Card Fidelity, Gemini killswitches and voice, new Scene Engine); 4-7 paragraphs; Embellish Mode.
+- **v1.37.0 (2026-10-02):** Dialogue colours: `<say:Name>` tags, colours from the card (roster data, Extras hue), a shared grey for the unnamed.

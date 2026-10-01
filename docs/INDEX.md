@@ -18,6 +18,7 @@ Build order, generated files and test commands: `docs/BUILD.md`.
 | What the narrator is told (rules) | §4 custom entries: 502 update rules, 504 narration rules, 505 `<now>` | EJS gates `on('id')`; `gen_mvu_entries.py` |
 | `<now>` / Cast Sheet / Price Guide text | `src/worldbook/custom/505.template.ejs`, `509.template.ejs`, `506.template.ejs` | never edit `content/505|506|509.txt` |
 | UI panel or bracelet | §5 UI map → the part file or `ui.template.js` symbol | `gen_ui.py`; `tests/preview/` for a visual check |
+| Dialogue colours | `data/dialogue_colors.json` (`tools/make_dialogue_colors.py` fills new NPCs, keeps edits), `sayCss` / `sayStyle` in `ui.template.js`, the `<say>` regexes in `src/regex/index.json`, Extras `$say` in `stepExtras`, the rule in 504 / 510 | `tests/test_say_colors_v1370.cjs` |
 | Red "new" dots | `src/ui/news.shared.js`, `ui.template.js` `newsInit` / `newsMark` / `isNew` | `test_news_v1250.cjs` |
 | Lore not reaching the narrator (keywords, World Index, WI budget) | `merge_lorebooks.py` `KEY_ADDS`, `CORE_FACTS`, `lore_activation`; DECISIONS §9 "Lore activation", §11 World Info facts | `test_lore_activation_v1350.cjs` |
 | Lore text (a place, an NPC line, the calendar) | §6 lore pipeline → `tools/merge_lorebooks.py` `rep()` edit or its tables | `python tools/build_all.py --lore` |
@@ -147,7 +148,7 @@ Hand-written single sources (edit these): `shop.json`, `happenings.json`, `calen
 `ambience.json` (1.31.0: `lore_places`), `restore_places.json` and `letters_home.json` (1.31.0), `free_periods.json` (1.33.0), `wind_casting.json`, `assets_manifest.json`, `cohorts.json`, `campus_phases.json` (empty until canon waves).
 *Per NPC* (a new NPC needs a row): `bond_rewards.json`, `bond_rules.json`, `bond_openness.json`, `tension.json`, `trust.json`,
 `npc_moods.json`, `gift_prefs.json`, `npc_canon.json` (voices, stages, Rank 8 branch), `rank4_partners.json`, `relations_curated.json`,
-`voice_rules.json`, `initiative_asks.json`, `field_overrides.json`, `focus_overrides.json`, `thumb_overrides.json`.
+`voice_rules.json`, `initiative_asks.json`, `dialogue_colors.json` (1.37.0; new NPCs via `make_dialogue_colors.py`), `field_overrides.json`, `focus_overrides.json`, `thumb_overrides.json`.
 Systems: `reputation.json`, `training.json`, `club_stats.json`, `practice.json`, `crafts.json`, `factions.json`, `gift_shops.json`.
 Generated (never edit): `npcs.json`, `locations.json`, `relations.json`, `map_pins.json` (curate_data), `themes.json` (make_themes),
 `feature_cost.json` (feature_cost). Review lists: `_review_sensitive_flags.json`; `uid_remap_npc.json`, `pins_pct.json` are pipeline data.

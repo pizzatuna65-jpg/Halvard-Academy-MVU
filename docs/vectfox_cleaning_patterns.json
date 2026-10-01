@@ -21,6 +21,13 @@
   "enabled": true
  },
  {
+  "name": "Eldrasil: drop dialogue-colour speaker tags, keep the dialogue (card 1.37.0)",
+  "pattern": "</?say\\b[^<>\\n]{0,60}>",
+  "replacement": "",
+  "flags": "gi",
+  "enabled": true
+ },
+ {
   "name": "Eldrasil: drop colored-dialogue tags, keep the dialogue (preset Colored Dialogue 2.0)",
   "pattern": "</?(?:cyan|pink|teal|orange|gold|violet|salmon|orchid|yellow|plum)(?::(?:shout|whisper|measured|tremble))?>",
   "replacement": "",
