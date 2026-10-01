@@ -129,7 +129,7 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **MVU card config override** is uid 507 `[config_override]`, a disabled entry: `更新方式 = 随AI输出` (update with the AI reply) and `兼容性.更新到聊天变量 = false`.
   - Reason: in tool-call mode, updates arrive without prose, which breaks name reveals from story text.
 - **Story style is owned by the preset.** The card sets no prose style, point of view or length.
-- **Lore activation** (1.35.0, owner): a topic entry's keys include the plain word a player says, with SillyTavern regex keys (`/words?/i`) for plurals and forms (`KEY_ADDS` in `merge_lorebooks.py`); the WORLD INDEX CORE FACTS section gives every system topic one core line (secret topics stay keyword-only). No sticky entries (owner); no recursion (it depends on a global ST setting, and the raw Cast Sheet holds every NPC). Every card entry has `ignoreBudget` set.
+- **Lore activation** (1.35.0, owner): a topic entry's keys include the plain word a player says, with SillyTavern regex keys (`/\bwords?\b/i`) for plurals and forms (`KEY_ADDS` in `merge_lorebooks.py`); the WORLD INDEX CORE FACTS section gives every system topic one core line (secret topics stay keyword-only). No sticky entries (owner); no recursion (it depends on a global ST setting, and the raw Cast Sheet holds every NPC). Every card entry has `ignoreBudget` set.
 
 ## 10. Ecosystem
 - **The card is the only tracker.** The preset's Internal States family stays OFF: Bonds/Relationships RPG, GM Notebook, Agenda, Chekhov, World Sim, Fate & Routine, Thoughts.

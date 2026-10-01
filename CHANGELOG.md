@@ -8,7 +8,7 @@ details: `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:C
 Owner's playtest note ("I only said spirit, and the narrator did not know spirits have tiers") and the audit that followed.
 Save fixture v1.34.2.
 - Topic entries fire on the plain word a player says. Their keys were compound phrases ("Spirit Tier", "Lesser Spirit"), and in
-  SillyTavern a whole-word key never matches its plural, so the new keys are SillyTavern regex keys (`/spirits?/i`). Added
+  SillyTavern a whole-word key never matches its plural, so the new keys are SillyTavern regex keys (`/\bspirits?\b/i`). Added
   for: Spirit Tiers (spirit, familiar), Spirit Pact (pact, summon), the four subtype entries (Elemental, Mystic, Spiritual,
   Occult, subtype), Dark Magic Defense (dark magic, curse), Halvard (demon), Seals (seals), Student Council (council), the
   election, Clubs, Competitions (competition, tournament, bracket, qualify), Exam Week (exam), the other academies, the Cathedral
