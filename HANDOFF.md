@@ -3,12 +3,13 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.35.0** (2026-10-02): lore activation. Topic entries fire on the plain word a player says (spirit, pact,
+**Snapshot:** card **v1.35.1** (2026-10-02): an item the narrator writes to `/Player/Inventory` (or `/Bag`) is moved to the
+Bag instead of vanishing (Ruby's sweet). v1.35.0: lore activation. Topic entries fire on the plain word a player says (spirit, pact,
 demon, beast, club, exam...; SillyTavern regex keys), the WORLD INDEX has a CORE FACTS line per system topic, and every card
 entry ignores SillyTavern's World Info budget (it counted the Cast Sheet's raw EJS). v1.34.x: cohort 3, the Saturday Student
 Council, and all 71 NPC portraits. Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** live-check v1.35.0 (spirit talk brings the tiers; no budget toast), then the v1.34.2 portraits and Graduation
+**Next task:** live-check v1.35.1 (a gift from an NPC reaches the Bag) and v1.35.0 (spirit talk brings the tiers; no budget toast), then the v1.34.2 portraits and Graduation
 map, the Year 3 arrival and Council flow; confirm the invented teacher details listed in CHANGELOG 1.33.0. Outside-campus maps
 remain in `planning/FUTURE_PLANS.md` FP7.
 

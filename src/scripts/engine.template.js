@@ -3844,6 +3844,34 @@ function patchCommands(ops) {
   }
   return out;
 }
+// 1.35.1 (owner playtest: Ruby's sweet never reached the Bag): <current_state> hides empty fields, so the narrator guessed
+// /Player/Inventory/<item>; the zod schema drops unknown keys under Player, so the item vanished without a warning. A top-level
+// list written under Player, World or Scene (or as "Bag") is moved back to the root before the zod helper applies the commands
+// (MagVarUpdate update_variables.ts: COMMAND_PARSED listeners run before COMMAND_PARSED_for_zod; json_patch paths are
+// ["a"]["b"] bracket paths, which pathFixPass leaves alone).
+const ROOT_LISTS = new Set(['Inventory', 'Commitments', 'Notices', 'Letters', 'Competition', 'Projects', 'Trip', 'Journal', 'Clues',
+  'Mysteries', 'Battle', 'Hooks', 'Extras', 'Interactions', 'Practice', 'Craft_sales', 'Rep_events', 'Training', 'Perk_use',
+  'Exam_events', 'Tutoring', 'Consumables', 'Exposure']);
+function fixStrayPaths(commands) {
+  const moved = [];
+  const fix = p => {
+    if (typeof p !== 'string') return p;
+    const parts = _.toPath(p.trim());
+    if (parts[0] === 'stat_data') parts.shift();
+    let n = 0;
+    if (/^(Player|World|Scene)$/.test(parts[0]) && (ROOT_LISTS.has(parts[1]) || parts[1] === 'Bag')) n = 1;
+    if (parts[n] !== 'Bag' && !(n && ROOT_LISTS.has(parts[n]))) return p;
+    const out = [parts[n] === 'Bag' ? 'Inventory' : parts[n], ...parts.slice(n + 1)];
+    moved.push(`${parts.slice(0, n + 1).join('.')} → ${out[0]}`);
+    return mvuPath(out);
+  };
+  for (const c of commands || []) {
+    if (!c || c.reason !== 'json_patch' || !Array.isArray(c.args) || !c.args.length) continue;   // MVU path-fixes the others later
+    c.args[0] = fix(c.args[0]);
+    if (c.type === 'move' && c.args.length > 1) c.args[1] = fix(c.args[1]);
+  }
+  return [...new Set(moved)];
+}
 if (typeof eventOn === 'function' && typeof waitGlobalInitialized === 'function') {
   (async () => {
     await waitGlobalInitialized('Mvu');
@@ -3853,12 +3881,16 @@ if (typeof eventOn === 'function' && typeof waitGlobalInitialized === 'function'
     eventOn(Mvu.events.VARIABLE_UPDATE_STARTED, () => { repaired = ''; });
     eventOn(Mvu.events.COMMAND_PARSED, (_v, commands, content) => {
       text = content || '';
-      if (!Array.isArray(commands) || commands.some(x => x && x.reason === 'json_patch')) return;
-      const r = recoverPatch(content);
-      if (r && r.ops && r.ops.length) {
-        commands.push(...patchCommands(r.ops));
-        repaired = `The update block was malformed (a <JSONPatch> tag or bracket was missing); the engine read its ${r.ops.length} changes.`;
-      } else if (r && r.error) repaired = `The update block could not be read (${r.error}); nothing in it was applied. Swipe the reply.`;
+      if (!Array.isArray(commands)) return;
+      if (!commands.some(x => x && x.reason === 'json_patch')) {
+        const r = recoverPatch(content);
+        if (r && r.ops && r.ops.length) {
+          commands.push(...patchCommands(r.ops));
+          repaired = `The update block was malformed (a <JSONPatch> tag or bracket was missing); the engine read its ${r.ops.length} changes.`;
+        } else if (r && r.error) repaired = `The update block could not be read (${r.error}); nothing in it was applied. Swipe the reply.`;
+      }
+      const moved = fixStrayPaths(commands);
+      if (moved.length) repaired = [repaired, `Wrong path moved to the root (${moved.join(', ')}): these lists are top-level, e.g. /Inventory/<item>.`].filter(Boolean).join(' ');
     });
     eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, (variables, variables_before) => {
       let hint = '', said = '';

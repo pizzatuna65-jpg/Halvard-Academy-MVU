@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.35.1 (items reach the Bag): the check in its section below.
 - v1.35.0 (lore activation): the two checks in its section below.
 - v1.34.2 (new portraits): the two checks in its section below.
 - v1.34.0 (Year 3 cohort and Student Council): the three checks in its section below.
@@ -69,6 +70,11 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.35.1 — Items reach the Bag
+
+1. With an empty Bag, have an NPC give {{user}} something small (a sweet, a note). The item shows in Inventory → Bag; if the
+   narrator wrote `/Player/Inventory/...`, the Log says the path was moved to the root.
 
 ### v1.35.0 — Lore activation
 

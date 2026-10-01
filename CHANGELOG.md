@@ -3,6 +3,19 @@
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
 details: `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
 
+## v1.35.1 — Items written under /Player reach the Bag (2026-10-02)
+
+Owner's playtest (chat 2026-10-01): Ruby gave {{user}} a honey-lemon sweet, the narrator's Analysis said "Inventory: added", but
+the Bag stayed empty. Save fixture v1.35.0.
+- Cause: `<current_state>` hides empty fields, so with an empty Bag the narrator could not see where Inventory lives and wrote
+  `/Player/Inventory/<item>` (next to Wallet). The schema drops unknown keys under Player, so the item vanished silently (twice).
+- Engine: the `COMMAND_PARSED` hook (`fixStrayPaths`) moves a top-level list written under `/Player`, `/World` or `/Scene`
+  (Inventory, Commitments, Projects, Clues, the report lists...) or as `/Bag` back to the root before the zod helper applies it,
+  with a `_Log` line naming the right path. Verified against MagVarUpdate `update_variables.ts` (listener order, bracket paths).
+- 502: the path line says empty fields keep their place and these lists are top-level; the Inventory rule names `/Inventory/<item>`.
+- Tests: `test_stray_paths_v1351.cjs`, `test_saves.cjs`, `test_playtest_v1301.cjs`.
+- Nothing to confirm with the owner.
+
 ## v1.35.0 — Lore activation: plain words, World Index core facts, no WI budget (2026-10-02)
 
 Owner's playtest note ("I only said spirit, and the narrator did not know spirits have tiers") and the audit that followed.
@@ -197,3 +210,4 @@ Save fixture v1.32.0.
 - **v1.34.1 (2026-10-01):** Anselm is a sheep Beastkin; Kotaro is lean and always looks drunk; portrait prompts.
 - **v1.34.2 (2026-10-01):** Fifteen new portrait and thumbnail pairs, all NPCs pictured; assets pinned to f42990c.
 - **v1.35.0 (2026-10-02):** Lore fires on plain words (spirit, pact, demon, beast...); World Index CORE FACTS; card entries ignore the WI budget.
+- **v1.35.1 (2026-10-02):** Items written to /Player/Inventory (or /Bag) are moved to the Bag instead of vanishing.
