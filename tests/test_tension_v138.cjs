@@ -27,7 +27,7 @@ ok(TEN.npcs.Milena === 'social' && ['Castor', 'Dante', 'Gareth', 'Krieg'].every(
 let S = T(initState(), '09:00', [meet(['Ruby', 'Sophia', 'Irene', 'Caralynn', 'Kanae', 'Althair', 'Ezrel', 'Krieg', 'Gareth'])]);
 S = T(S, '09:05', [meet([])]);
 // ---- effects: Strained halves XP, Enemy stops it, Hostile holds the event
-const gainAt = (id, t) => { const X = T(T(S, '09:10', [ten(id, t)]), '09:20', [IA(id, 'talk'), IA(id, 'hangout')]); return X.Bonds[id].$xp - S.Bonds[id].$xp; };
+const gainAt = (id, t) => { const X = T(T(S, '09:10', [ten(id, t), meet([id])]), '09:20', [IA(id, 'talk'), IA(id, 'hangout')]); return X.Bonds[id].$xp - S.Bonds[id].$xp; };   // 1.42.0: XP needs the NPC there
 ok(gainAt('Ruby', 10) === 5 && gainAt('Ruby', 45) === 3 && gainAt('Ruby', 95) === 0, `Ruby: calm 5 XP, strained ${gainAt('Ruby', 45)}, enemy 0`);
 let H = clone(S); Object.assign(H.Bonds.Ruby, { $xp: 999, $cool: -1 }); H = T(H, '09:30', [ten('Ruby', 75)]);
 ok(!H.Bonds.Ruby._Event_ready, 'Hostile: a full bar cannot advance the bond');
@@ -61,7 +61,7 @@ ok(day(T(D, '13:00', [ten('Ruby', 60)]), 'Sat', [ten('Ruby', 70)]).Bonds.Ruby.Te
 // ---- overrides
 let K = T(S, '10:00', [ten('Kanae', 100)]);
 ok(K.Bonds.Kanae.Tension === 100 && xpr(K, 'Student') === 0 && K.Bonds.Kanae.Rank === 0, 'Kanae at 100: no reputation cost, no rank loss');
-ok(T(K, '10:30', [IA('Kanae', 'talk'), IA('Kanae', 'hangout')]).Bonds.Kanae.$xp === 5, 'Kanae still grows the bond at full Tension');
+ok(T(K, '10:30', [meet(['Kanae']), IA('Kanae', 'talk'), IA('Kanae', 'hangout')]).Bonds.Kanae.$xp === 5, 'Kanae still grows the bond at full Tension');
 let A = clone(S); A.Bonds.Althair.Rank = 3; A = T(A, '10:00', [ten('Althair', 25)]);
 ok(A.Bonds.Althair.Tension === 0 && A.Bonds.Althair.$xp === 10 && A._Log.some(l => /Althair enjoyed that/.test(l)), 'Althair: +25 Tension becomes +10 XP (/2 rounded up = 13, capped 10 a day); Tension stays 0');
 ok(T(A, '11:00', [ten('Althair', 10)]).Bonds.Althair.$xp === 10, 'the daily cap holds');

@@ -32,7 +32,7 @@ ok(acad(at(t29, TUE, '08:31', 'Canteen')) === base - 2, '31 minutes away: skippe
 ok(acad(at(applyPatch(morning, [{ op: 'replace', path: '/$ui/tune', value: { att_minutes: 45 } }]), TUE, '08:40', 'Canteen')) === base, 'Settings: 45 minutes allowed');
 ok(acad(at(morning, TUE, '09:00', 'Medical Centre')) === base && acad(at(at(morning, TUE, '07:56', 'Medical Centre'), TUE, '09:00', 'Medical Centre')) === base, 'excused at the Medical Centre');
 ok(acad(at(morning, TUE, '09:00', 'Canteen', [{ op: 'insert', path: '/Player/Injuries/Twisted ankle', value: { Severity: 'moderate' } }])) === base, 'excused with a moderate injury');
-ok(acad(at(morning, TUE, '15:00', 'Canteen')) === base, 'a long skip (over six hours) is assumed to follow the routine');
+ok(acad(at(morning, TUE, '15:00', 'Canteen')) < base, '1.42.0 (audit 1.7): over six hours between two map places on one day is no routine: skipped');
 const expo = 44;   // M2 W3 Wed: Creature Studies Expedition, away, no classes
 ok(acad(at(at(S0, expo, '07:55', 'Canteen'), expo, '09:30', 'Canteen')) === acad(at(S0, expo, '07:55', 'Canteen')), 'no classes on an event day that suspends them');
 

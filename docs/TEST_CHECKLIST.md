@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.42.0 (audit batch 1): the four checks in its section below.
 - v1.41.0 (Sunreach Bay): the five checks in its section below.
 - v1.40.0 (the airship): the four checks in its section below.
 - v1.39.0 (Avalon): the five checks in its section below.
@@ -81,6 +82,18 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.42.0 — Audit batch 1 (bug fixes)
+
+Continue any chat (re-import the card; the save loads as it was).
+1. Load: the browser console shows MVU loading from `MagVarUpdate@438f9ff…` and `tavern_resource@276040b…`, with no import error,
+   and an update still runs the engine (the bracelet changes).
+2. A reply with `<say:Name>` dialogue: four or more replies later, the prompt (Prompt Itemization or the raw request) holds the
+   quotes without `<say…>` tags; a stray `</say>` never shows in the chat.
+3. Give a Bag item to someone in the scene (Kind gift with its Item): the Bag drops by one. Report a hangout with someone who is not
+   there: no bond XP, and `_Log` says why.
+4. On a class day, one reply from the Boathouse at 07:30 to the Boathouse at 16:30: the day's classes count as skipped. On a trip
+   that left `Trip.Active` true, walking back to a campus place ends it (log line).
 
 ### v1.41.0 — Sunreach Bay
 

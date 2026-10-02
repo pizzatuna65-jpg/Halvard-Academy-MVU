@@ -3,6 +3,41 @@
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
 details: `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
 
+## v1.42.0 — Audit batch 1: every bug from the 2026-10-03 audit (2026-10-03)
+
+`audit/AUDIT_2026-10-03_3_batch_perbaikan.md` batch 1 (audit part 1, items 1.1–1.10 and the "Rendah" table). Save fixture v1.41.0.
+Three commits: hotfix, gameplay rules, small bugs. Tests: `tests/test_audit_batch1_v1420.cjs` (one check per bug); full suite.
+- **Hotfix.** The dialogue-colour regexes "stray tags" and "strip tags from older replies" held a JSON `` (a backspace) and
+  never matched: `<say:…>` tags now leave old replies in the prompt and stray tags leave the display. One item-name key (`itemKey`,
+  `bagKeyOf`) for the Consumables filter, the Qty decrease and the R2 reminder ("a Quick-dry powder" now lowers the Bag). New
+  Transactions lines are counted as a multiset (`newLines`), so the same line on another day ("-3 tea at the Snug", "+40 tutoring
+  (History)") no longer adds a false "(not itemised)". A Bag over 40 kinds names what it left behind (toast and log). The MVU bundle
+  and `mvu_zod.js` are pinned to commits (`438f9ff`, `276040b`; byte-identical to what loaded on 2026-10-03).
+- **Gameplay rules** (behaviour changes):
+  - One "away" test (`awayIn`): Trip.Active, an outside area (airship, the Expedition's forest, Avalon, Sunreach), or off the
+    grounds on a calendar "away" day. It replaces every `Trip.Active` check (rest, attendance, small scenes, Meanwhile, visits,
+    the planner's "may be here", initiative, curfew and arrival reminders, the birthday party). A Trip left Active ends by itself,
+    with a log line, once {{user}} was off campus during it and is back at a campus place on a day with no "away" event.
+  - A gift (Kind gift or birthday) whose Item was in the Bag lowers its Qty, unless the reply already did (as H2). Kind
+    rank_gift is the NPC's Rank 5 handover to {{user}}, so it never lowers the Bag.
+  - Talk, hangout, study, help and gift XP (and the weather bonus) need the NPC in the scene now or at the reply's start; the log
+    says when an interaction gave nothing. A gift from afar still records the NPC's taste. Owner decision as proposed: letters and
+    messages from afar give no XP.
+  - An update over six hours within one day, between two places the map knows, counts the class periods whose venue neither end
+    is at as skipped. Owner decision as proposed: yes. Unknown places and jumps into another day still follow the routine.
+  - A Day written one or two days back in the same week, with no time-skip words in the prose, keeps the clock (with a log line)
+    instead of jumping six days ahead.
+  - Narrator rules (502): Trip (the engine knows the outside maps, ends a stale Trip) and Interactions (only with the NPC there).
+- **Small bugs.** Sleep quality and the rare-weather toast read Sunreach's own weather. The UI timetable gives a Council member
+  Saturday P2 at the Student Council, as the engine. The dossier finds an NPC_status keyed by full name. The Battle panel prices a
+  cast as the engine does (wind ×, Arcane scholar, a pact partner who must be here; `$ui.wx.wind`). The Proficiency panel's Fortune
+  bonus shows the engine's +10 cap. A parked feature's values are no longer overwritten by schema defaults (`mergePark` gets only
+  what the reply wrote). `$ui.names` and `$ui.lore` hold 200. Dead code removed (`MON_SAT`, `tensionBand`, `normP`, `wxBlk`, an
+  unused `OFF`, `pips`).
+- **Older tests updated** to the new rules: `test_batch1_fp7_v1100` (long same-day update), `test_tension_v138` and
+  `test_world_v110` (XP with the NPC present).
+- **Live checks:** `docs/TEST_CHECKLIST.md` 1.42.0 (the dialogue-colour regexes in SillyTavern, the pinned MVU loading).
+
 ## v1.41.0 — Sunreach Bay: the Academy Trip's city, day and night; area indexes (2026-10-03)
 
 FP7 area 3, the last outside map (owner-approved `planning/DRAFT_outside_maps.md`, part 3, after three rounds of owner notes; both
@@ -179,17 +214,6 @@ owner's, generated from `planning/MAP_PROMPTS_outside_maps.txt`). Save fixture v
   afternoon rain 70%, storm 10%); a protected beast may be glimpsed at the Old Heart (15% an hour, harmless); Grade II beasts
   met by Years 1–2 are told to the narrator as "beyond you: run or fire the flare".
 
-## v1.37.4 — NPC Thoughts: calm characters think calmly; an optional no-read-back regex (2026-10-02)
-
-Owner asked whether thoughts help consistency or cause drift (both, depending on the build). Save fixture v1.37.3.
-- Preset toggle text: thoughts are only as raw as the character is; a calm, composed or reserved character thinks in a measured
-  way, and a thought is never more emotional than their card (upstream's "chaotic, impulsive, raw" pushed quiet characters into
-  melodrama).
-- New preset regex, OFF: "NPC Thoughts: drop from every reply (prompt, optional)". With it on, the player still sees the thoughts
-  and the AI never reads them back, so they cannot snowball. The toggle's note names it.
-- Tests: `test_npc_thoughts_v1373.cjs` (two new checks), `test_preset.cjs`, `test_saves.cjs`, `test_tokens_v1110.cjs`.
-- To confirm with the owner: nothing.
-
 ## Release index (one line per release, oldest first)
 
 - All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/archive/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; CHANGELOG 1.2.0/1.2.1).
@@ -307,3 +331,4 @@ Owner asked whether thoughts help consistency or cause drift (both, depending on
 - **v1.39.0 (2026-10-02):** Avalon, the capital: its own map (pins holding places), walks and hire carriages, the White Line, the Crowning Day muster, the city's seeded life (pickpockets, other academies' students, Tsubaki lost, Rookery raids), map tab.
 - **v1.40.0 (2026-10-02):** The airship: four places aboard (Promenade Deck, Common Room with a bar and a stage, Cabin Deck, Cargo Hold) during every academy flight, boarding and landing, the seeded sky / stage / hold, an Airship map tab.
 - **v1.41.0 (2026-10-03):** Sunreach Bay, the Academy Trip's city: one city by day and by night (two maps), ten pins, carriages, water taxis and the tour boat, bets at The Golden Tide, students of every academy met where their personality takes them, the sea and the Leviathan; index entries for every outside area (FP7 done).
+- **v1.42.0 (2026-10-03):** Audit batch 1: every bug from the audit (dialogue-colour regexes, item names, Transactions, one "away" test, gifts leave the Bag, XP only together, long-update truancy, day slips, UI fixes, pinned MVU).

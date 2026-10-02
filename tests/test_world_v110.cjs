@@ -163,7 +163,7 @@ console.log('Sleep quality, bond cap, Dove cover');
   ok(Math.abs(sleep(warmN) / g0 - 0.9) < 0.01, 'a night at >= 22 °C: -10%');
   // 1.2.2: bond XP replaces Progress; the weather still adds once a day (+1 XP) to time spent together
   const IA = k => ({ op: 'insert', path: '/Interactions/-', value: { With: 'Etnie', Kind: k } });
-  const bond = (d, loc, kinds, S = S0) => applyPatch(at(S, d, '13:00', loc), kinds.map(IA)).Bonds.Etnie.$xp - (S.Bonds.Etnie.$xp || 0);
+  const bond = (d, loc, kinds, S = S0) => applyPatch(at(S, d, '13:00', loc), [{ op: 'replace', path: '/Scene/Present', value: { Etnie: { Note: '' } } }, ...kinds.map(IA)]).Bonds.Etnie.$xp - (S.Bonds.Etnie.$xp || 0);   // 1.42.0: XP needs her there
   const rainAft = find(1, b => b.sky === 'Rain'), fineAft = find(1, b => (b.sky === 'Clear' || b.sky === 'Cloudy') && b.temp >= 15 && b.temp <= 27), dull = find(1, b => b.sky === 'Overcast');
   const moodBonus = (d, loc, n) => { const A = at(S0,d,'13:00',loc), m=A.$ui.moods.Etnie.mood; return n * (m === 'Good' ? 1 : m === 'Bad' ? -1 : 0); };
   ok(bond(dull, 'Canteen', ['talk', 'hangout']) === 5 + moodBonus(dull, 'Canteen', 2), 'a talk and a hangout: 5 XP');

@@ -3,15 +3,14 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.41.0** (2026-10-03): Sunreach Bay, FP7 area 3 and the last outside map. During the Academy Trip
-(M11 W2 Sat night to W3 Thu morning) the city has its own day and night maps (`data/sunreach.json`, `stepSunreach`, the Sunreach tab):
-ten pins, carriages, water taxis and the tour boat, bets settled by the engine, students of every academy met where their personality
-takes them, the sea and the Leviathan. Every outside area (forest, Avalon, Sunreach, the airship) now has one constant index entry and
-keyword place entries, like the campus. v1.40.0: the airship; v1.39.0: Avalon; v1.38.0: the forest. Live checks:
-`docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
+**Snapshot:** card **v1.42.0** (2026-10-03): audit batch 1, every bug from the 2026-10-03 audit (`audit/`): the dialogue-colour
+regexes now match, one item-name key, Transactions diffed as a multiset, one "away" test (`awayIn`) in place of every `Trip.Active`
+check, gifts leave the Bag, bond XP only with the NPC there, long same-day updates count truancy, a Day written back keeps the clock,
+UI fixes (Council Saturday, dossier status, Battle costs, Fortune cap), MVU and `mvu_zod` pinned to commits. v1.41.0: Sunreach Bay,
+the last outside map. Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** live-check v1.41.0 (Sunreach, on a chat at M11 W2) and v1.38.0–v1.40.0, and the earlier "Open" items; confirm the
-details invented for 1.38.0–1.41.0 (CHANGELOG). FP7 is done; the remaining plans are in `planning/FUTURE_PLANS.md`.
+**Next task:** audit batch 2 when the owner says "perbaiki batch 2" (`audit/AUDIT_2026-10-03_3_batch_perbaikan.md`: `shared.js` +
+`rollTable`, a pure refactor proven with `ENGINE_DIFF`). Live-check v1.42.0 and v1.38.0–v1.41.0 and the earlier "Open" items.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 
