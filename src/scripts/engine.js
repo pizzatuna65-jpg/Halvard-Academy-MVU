@@ -298,6 +298,10 @@ const withYear = (s, Y) => String(s).replace(/^(\[?)(M\d{1,2} W[1-4]\b)/, `$1Y${
 const eventsOn = W => EVENTS.filter(e => e.m === W.Month && e.w === W.Week && e.d.includes(W.Day));
 const pctOf = (v, max) => (max > 0 ? (v / max) * 100 : 0);
 const num = (v, d = 0) => { const x = Number(v); return Number.isFinite(x) ? x : d; };
+// 1.42.0 (audit 1.5): the lines a list gained, counted as a multiset: a line written again ("-3 tea at the Snug" on another
+// day, "+40 tutoring (History)" next week) is new even though the same text is already in the list
+const newLines = (before, after) => { const n = _.countBy(Array.isArray(before) ? before : []), seen = {};
+  return (Array.isArray(after) ? after : []).filter(l => (seen[l] = (seen[l] || 0) + 1) > (n[l] || 0)); };
 const dstamp = W => `${yPre(W)}M${W.Month} W${W.Week} ${W.Day}`;
 // Parses a due/until text written by the AI ("M2 W1 Tue 14:00", "Month 3 Week 2", "Fri 18:00", "tomorrow 9am", "M4") into an
 // absolute minute, relative to the current world time W. Missing parts: day -> Sunday of that week (or the next such weekday),
@@ -769,6 +773,12 @@ const GEAR = { umbrella: /umbrella/i, waterproof: /waterproof|oilskin|rain cloak
 // and a used charm's timed protection (wxs.buff: { kind: until abs minute })
 const SHOP_FX = {"umbrella":{"gear":"umbrella"},"oilskin rain cloak":{"gear":"waterproof"},"wool scarf and mittens":{"gear":"warm"},"lined winter cloak":{"gear":"warm"},"straw sun hat":{"gear":"sun"},"hot spiced tea":{"use":{"clears":["Chilled"]}},"iced fruit cooler":{"use":{"clears":["Overheated"]}},"iced coffee":{"use":{"clears":["Overheated"]}},"hot chocolate with cream":{"use":{"clears":["Chilled"]}},"rain-ward charm":{"use":{"buff":"waterproof","mins":180}},"quick-dry powder":{"use":{"clears":["Soaked"]}},"cooling charm":{"use":{"buff":"sun","mins":240}},"ember pouch":{"use":{"buff":"warm","mins":240}},"elderflower cold syrup":{"use":{"cure":"Head cold"}},"blossom honey cake":{"use":{"stamina":10}},"spiced apple turnover":{"use":{"stamina":10}},"roasted chestnuts":{"use":{"clears":["Chilled"]}},"salted lemon water":{"use":{"clears":["Overheated"],"stamina":10}},"linen summer shirt":{"gear":"sun"},"fleece-lined boots":{"gear":"warm"},"mulled apple cider":{"use":{"clears":["Chilled"],"stamina":5}},"warming draught":{"use":{"clears":["Chilled"],"buff":"warm","mins":240}},"cooling draught":{"use":{"clears":["Overheated"],"buff":"sun","mins":240}},"cold remedy":{"use":{"cure":"Head cold"}},"healing draught":{"use":{"heal":"minor"}},"vigour tonic":{"use":{"stamina":20}},"strong healing draught":{"use":{"heal":"moderate_to_minor"}},"fire flask":{"use":{"fitting":"fire"}},"bottled cold":{"use":{"fitting":"cold"}},"warmth rune":{"use":{"buff":"warm","mins":240}},"rain-ward talisman":{"use":{"buff":"waterproof","mins":180}},"light rune":{"use":{"fitting":"dark"}},"ward talisman":{"use":{"fitting":"curse or hex"}},"enchant warm":{"gear":"warm"},"enchant waterproof":{"gear":"waterproof"},"honey buns":{"use":{"stamina":10}},"butter cookies":{"use":{"stamina":10}},"hearty stew pot":{"use":{"stamina":15}},"knitted scarf":{"gear":"warm"},"knitted winter set":{"gear":"warm"}};
 const SHOP_PRICE = {"sunfizz":[[8,"Commissary"],[8,"The Mall — store"]],"firetooth (tin)":[[12,"Commissary"]],"notebook":[[5,"Commissary"]],"pen nibs and ink":[[6,"Commissary"]],"printed class textbook":[[45,"Commissary"]],"satchel":[[70,"Commissary"]],"spare uniform set":[[120,"Commissary"]],"common reagent bundle":[[30,"Commissary"]],"basic practice focus":[[250,"Commissary"]],"rare reagent":[[350,"Commissary"]],"special order":[[null,"Commissary"]],"umbrella":[[25,"Commissary"]],"oilskin rain cloak":[[90,"Commissary"]],"bakery roll":[[15,"The Mall — bakery"]],"star cookie":[[8,"The Mall — bakery"]],"café drink and pastry":[[25,"The Mall — cafés and tea houses"]],"restaurant meal":[[45,"The Mall — restaurants"]],"private dining (second floor)":[[150,"The Mall — private dining"]],"quality focus":[[4000,"The Mall — store"]],"tailoring alteration":[[40,"Tailor's Row"]],"barber":[[20,"The Mall — services"]],"laundry service (per load)":[[10,"The Mall — services"]],"practice studio or music room (per hour)":[[15,"The Mall — studios"]],"game hall (per hour)":[[10,"The Mall — game halls"]],"wool scarf and mittens":[[35,"The Mall — store"]],"lined winter cloak":[[120,"The Mall — store"]],"straw sun hat":[[30,"The Mall — store"]],"hot spiced tea":[[12,"The Mall — cafés and tea houses"]],"iced fruit cooler":[[10,"The Mall — cafés and tea houses"]],"the vigil":[[60,"Nightwell"]],"house coffee":[[12,"Nightwell"]],"honey cream coffee":[[16,"Nightwell"]],"spiced milk tea":[[14,"Nightwell"]],"iced coffee":[[14,"Nightwell"]],"hot chocolate with cream":[[14,"Nightwell"]],"late-night pastry":[[10,"Nightwell"]],"bag of nightwell beans":[[35,"Nightwell"]],"the oracle shell":[[40,"Merryhew's"]],"itching charm":[[15,"Merryhew's"]],"voice-changing sweets (bag)":[[12,"Merryhew's"]],"illusion vermin (box)":[[25,"Merryhew's"]],"screaming box":[[35,"Merryhew's"]],"colour-change hair sweet":[[18,"Merryhew's"]],"confetti ambush card":[[10,"Merryhew's"]],"secret fools day kit":[[60,"Merryhew's"]],"private booth (per hour)":[[30,"The Snug"]],"set meal":[[30,"The Snug"]],"pot of tea for the booth":[[12,"The Snug"]],"stew and fresh bread":[[22,"The Snug"]],"sweet course":[[14,"The Snug"]],"evening booth (18:00 to curfew)":[[90,"The Snug"]],"ardenne case":[[1500,"Ardenne (special order)"]],"ardenne focus":[[4000,"Ardenne (special order)"]],"ardenne measuring set":[[2200,"Ardenne (special order)"]],"ardenne tuning instrument":[[2600,"Ardenne (special order)"]],"the rose in the tower":[[18,"Quillfeather's"]],"seven towers (deluxe edition)":[[30,"Quillfeather's"]],"nine rivers: field tactics":[[40,"Quillfeather's"]],"crossed blades: famous duels":[[30,"Quillfeather's"]],"songs of the oathbound":[[20,"Quillfeather's"]],"songbook of old ballads":[[16,"Quillfeather's"]],"lamps out: tales of halvard":[[18,"Quillfeather's"]],"the night student: a true account":[[6,"Quillfeather's"]],"the truth behind halvard's ghosts":[[15,"Quillfeather's"]],"halvard through the centuries":[[60,"Quillfeather's"]],"anecdotes of the old kingdom":[[35,"Quillfeather's"]],"founding of the dovecote (old edition)":[[45,"Quillfeather's"]],"what everyone knows about the founding":[[12,"Quillfeather's"]],"commentaries of saint orel (antique)":[[70,"Quillfeather's"]],"the final word on everything":[[12,"Quillfeather's"]],"fallen stars: notes on mana resonance":[[120,"Quillfeather's"]],"the noble houses, by precedence":[[50,"Quillfeather's"]],"etiquette manual":[[20,"Quillfeather's"]],"dragonchess problem book":[[25,"Quillfeather's"]],"star atlas":[[30,"Quillfeather's"]],"hand-speech for beginners":[[15,"Quillfeather's"]],"picture book for small children":[[8,"Quillfeather's"]],"old competition programmes":[[10,"Quillfeather's"]],"blank leather journal":[[25,"Quillfeather's"]],"pocket memory notebook":[[20,"Quillfeather's"]],"leather planner":[[20,"Quillfeather's"]],"plush animal":[[20,"Pennywhistle Curios"]],"goosedown pillow":[[35,"Pennywhistle Curios"]],"silver hand mirror":[[45,"Pennywhistle Curios"]],"palm crystal ball":[[60,"Pennywhistle Curios"]],"porcelain tea set":[[55,"Pennywhistle Curios"]],"music box":[[30,"Pennywhistle Curios"]],"prism charm":[[12,"Pennywhistle Curios"]],"black silk ribbons":[[10,"Pennywhistle Curios"]],"travel dragonchess set":[[60,"Pennywhistle Curios"]],"sovereigns":[[80,"Pennywhistle Curios"]],"gilt-edged playing cards":[[12,"Pennywhistle Curios"]],"vanishing-coin illusion kit":[[25,"Pennywhistle Curios"]],"juggling set":[[15,"Pennywhistle Curios"]],"rainglass":[[35,"Pennywhistle Curios"]],"everlamp, miniature":[[40,"Pennywhistle Curios"]],"hearthstone hand-warmer":[[25,"Pennywhistle Curios"]],"hooded night lamp":[[20,"Pennywhistle Curios"]],"warding amulet":[[25,"Pennywhistle Curios"]],"wishing coin":[[5,"Pennywhistle Curios"]],"thank-you card":[[3,"Pennywhistle Curios"]],"get-well hamper":[[30,"Pennywhistle Curios"]],"engraved trophy cup":[[50,"Pennywhistle Curios"]],"knight's pennon":[[20,"Pennywhistle Curios"]],"halvard pennant":[[10,"Pennywhistle Curios"]],"royal crest paperweight":[[35,"Pennywhistle Curios"]],"independence war commemorative medal":[[30,"Pennywhistle Curios"]],"carved asmoday charm":[[15,"Pennywhistle Curios"]],"festival lantern set":[[18,"Pennywhistle Curios"]],"brass handbell":[[8,"Pennywhistle Curios"]],"wind-up alarm clock":[[15,"Pennywhistle Curios"]],"silver-polishing kit":[[20,"Pennywhistle Curios"]],"walnut desk tidy":[[30,"Pennywhistle Curios"]],"loaded bone dice":[[12,"Pennywhistle Curios"]],"marked deck":[[12,"Pennywhistle Curios"]],"table wine":[[25,"Barrow & Vine"]],"fine vintage":[[90,"Barrow & Vine"]],"orchard cider":[[10,"Barrow & Vine"]],"stonebrew ale (jug)":[[18,"Barrow & Vine"]],"clan firewine":[[70,"Barrow & Vine"]],"blackroot cigars":[[15,"Barrow & Vine"]],"engraved hip flask":[[40,"Barrow & Vine"]],"bouquet of stage roses":[[20,"Greenwick's"]],"cut flowers":[[12,"Greenwick's"]],"moonfern in a pot":[[45,"Greenwick's"]],"oak sapling in a pot":[[20,"Greenwick's"]],"seed packets":[[5,"Greenwick's"]],"bag of red apples":[[6,"Greenwick's"]],"carrots and fresh greens":[[5,"Greenwick's"]],"pigeon feed":[[4,"Greenwick's"]],"pruning shears":[[25,"Greenwick's"]],"precision tool roll":[[50,"The Tinker's Bench"]],"mystery clockwork (sold as seen)":[[15,"The Tinker's Bench"]],"brass golem joint set":[[90,"The Tinker's Bench"]],"glass stirring-rod set":[[15,"The Tinker's Bench"]],"whetstone and blade oil":[[20,"The Tinker's Bench"]],"armour polish kit":[[18,"The Tinker's Bench"]],"duelling gauntlets":[[40,"The Tinker's Bench"]],"fishing tackle box":[[30,"The Tinker's Bench"]],"gut guitar strings":[[12,"The Tinker's Bench"]],"tuning fork":[[10,"The Tinker's Bench"]],"steel-nib fountain pen":[[40,"The Tinker's Bench"]],"letter paper set":[[8,"The Tinker's Bench"]],"sketchbook and charcoal":[[15,"The Tinker's Bench"]],"carving knife and limewood block":[[20,"The Tinker's Bench"]],"bolt of sky silk":[[40,"The Tinker's Bench"]],"embroidery thread set":[[15,"The Tinker's Bench"]],"talisman paper stack":[[10,"The Tinker's Bench"]],"chamois lens cloth":[[5,"The Tinker's Bench"]],"pocket thermos":[[25,"The Tinker's Bench"]],"shuttered dark-lantern":[[25,"The Tinker's Bench"]],"running shoes":[[45,"The Tinker's Bench"]],"premium beast jerky":[[20,"The Tinker's Bench"]],"beast muzzle":[[15,"The Tinker's Bench"]],"vigour tonic":[[30,"The Tinker's Bench"]],"salaffian flatbread":[[6,"The Salaffian Oven"]],"salaffian spice box":[[25,"The Salaffian Oven"]],"loud silk waistcoat":[[70,"Tailor's Row"]],"formal dress coat":[[150,"Tailor's Row"]],"platform boots":[[55,"Tailor's Row"]],"ballroom shoes":[[60,"Tailor's Row"]],"bergamot cologne":[[35,"Tailor's Row"]],"kid-leather gloves":[[30,"Tailor's Row"]],"honey bun":[[6,"Commissary"]],"pocket campus map":[[5,"Commissary"]],"smoked river fish":[[6,"Commissary"]],"lavender laundry soap":[[5,"Commissary"]],"sweet bun":[[6,"The Mall — bakery"]],"sweet bamboo tea (tin)":[[14,"The Mall — cafés and tea houses"]],"silvertip tea":[[30,"The Mall — cafés and tea houses"]],"rain-ward charm":[[18,"The Tinker's Bench"]],"quick-dry powder":[[10,"The Tinker's Bench"]],"cooling charm":[[20,"The Tinker's Bench"]],"ember pouch":[[15,"The Tinker's Bench"]],"knitting wool and needles":[[15,"The Tinker's Bench"]],"paint box":[[30,"The Tinker's Bench"]],"elderflower cold syrup":[[15,"Greenwick's"]],"blossom honey cake":[[9,"The Mall — bakery"]],"spiced apple turnover":[[10,"The Mall — bakery"]],"roasted chestnuts":[[8,"The Mall — cafés and tea houses"]],"salted lemon water":[[6,"Commissary"]],"baking and cooking ingredients":[[10,"Commissary"]],"bar stock and coal":[[20,"Commissary"]],"linen summer shirt":[[45,"Tailor's Row"]],"fleece-lined boots":[[70,"Tailor's Row"]],"mulled apple cider":[[12,"The Snug"]],"the ninth dawn (latest volume)":[[8,"Quillfeather's"]]};
+// 1.42.0 (audit 1.3): one item-name key for the Consumables filter, the Qty decrease (H2), gifts and the R2 reminder:
+// lowercase, without a leading article or a trailing "(...)", so "a Quick-dry powder" is the Bag's "Quick-dry powder"
+const itemKey = x => String(x || '').trim().toLowerCase().replace(/^(an?|the)\s+/, '').replace(/\s*\(.*\)$/, '');
+// the Bag key a reported name means: the exact name first (any case), then the same itemKey, preferring one still held
+const bagKeyOf = (I, name) => { const ks = Object.keys(I || {}), lo = String(name || '').trim().toLowerCase(), k = itemKey(name);
+  return ks.find(x => x.toLowerCase() === lo) || ks.find(x => itemKey(x) === k && num((I[x] || {}).Qty, 1) > 0) || ks.find(x => itemKey(x) === k) || ''; };
 const fxOf = name => SHOP_FX[String(name || '').trim().toLowerCase().replace(/^(an?|the)\s+/, '')] || SHOP_FX[String(name || '').trim().toLowerCase().replace(/^(an?|the)\s+/, '').replace(/\s*\(.*\)$/, '')] || null;
 const gearOf = (I, buff, now) => {
   const own = Object.keys(I || {}).filter(k => (I[k] && I[k].Qty) > 0), ks = own.join(' | ');
@@ -1173,7 +1183,7 @@ function stepFeatures(c) {
   const REPORTED = {
     acts: (Array.isArray(S.Interactions) ? S.Interactions : []).filter(a => a && typeof a === 'object'),
     casts: (Array.isArray(S.Magic && S.Magic.Casts) ? S.Magic.Casts : []).map(c => String((c && c.Technique) || '')),
-    used: (Array.isArray(S.Consumables) ? S.Consumables : []).map(x => String(x).trim().toLowerCase()),
+    used: (Array.isArray(S.Consumables) ? S.Consumables : []).map(itemKey),
     perks: (Array.isArray(S.Perk_use) ? S.Perk_use : []).map(x => String(x).trim().toLowerCase()),
     training: Array.isArray(S.Training) ? S.Training.length : 0,
     tutoring: Array.isArray(S.Tutoring) ? S.Tutoring.map(x => x.Subject) : [],
@@ -1624,12 +1634,10 @@ function stepRest(c) {
   // 1.16.1 (audit B2): a used item takes effect only if {{user}} has it: in the Bag before this reply, added to it in this reply,
   // or bought in this reply (a new Transactions line names it, e.g. a hot drink at a café). Anything else changes nothing.
   if (hasB && Array.isArray(S.Consumables) && S.Consumables.length) {
-    const ik = x => String(x || '').trim().toLowerCase().replace(/^(an?|the)\s+/, '').replace(/\s*\(.*\)$/, '');
-    const have = new Set([...Object.keys(B.Inventory || {}).filter(k => num((B.Inventory[k] || {}).Qty, 0) > 0), ...Object.keys(S.Inventory || {})].map(ik));
-    const T0 = new Set(((B.Player || {}).Wallet || {}).Transactions || []);
-    const bought = (S.Player.Wallet.Transactions || []).filter(l => !T0.has(l)).join(' | ').toLowerCase();
+    const have = new Set([...Object.keys(B.Inventory || {}).filter(k => num((B.Inventory[k] || {}).Qty, 0) > 0), ...Object.keys(S.Inventory || {})].map(itemKey));
+    const bought = newLines(((B.Player || {}).Wallet || {}).Transactions, S.Player.Wallet.Transactions).join(' | ').toLowerCase();
     S.Consumables = S.Consumables.filter(c => {
-      const k = ik(c); if (!k || have.has(k) || bought.includes(k)) return true;
+      const k = itemKey(c); if (!k || have.has(k) || bought.includes(k)) return true;
       log.push(`"${String(c).trim()}" was reported used, but {{user}} has none (not in the Bag, not bought in this reply): no effect.`);
       return false;
     });
@@ -1639,10 +1647,10 @@ function stepRest(c) {
   S.Consumables = [];
   // 1.12.0 (H2): an item reported used lowers its Qty in the Bag by one per report, unless this update already lowered it
   if (hasB && consumed.length && _.isPlainObject(S.Inventory)) {
-    const IB = B.Inventory || {}, need = _.countBy(consumed.map(x => String(x).trim().toLowerCase()));
-    for (const [lk, n] of Object.entries(need)) {
-      const k = Object.keys(S.Inventory).find(x => x.toLowerCase() === lk), kb = Object.keys(IB).find(x => x.toLowerCase() === lk);
-      if (!k || !kb) continue;
+    const IB = B.Inventory || {}, need = _.countBy(consumed.map(x => bagKeyOf(IB, x)).filter(Boolean));
+    for (const [kb, n] of Object.entries(need)) {
+      const k = bagKeyOf(S.Inventory, kb);
+      if (!k) continue;
       const extra = n - Math.max(0, num(IB[kb].Qty, 1) - num(S.Inventory[k].Qty, 1));
       if (extra > 0) S.Inventory[k].Qty = Math.max(0, num(S.Inventory[k].Qty, 1) - extra);
     }
@@ -3507,7 +3515,7 @@ function stepHidden(c) {
     const WB = (B.Player || {}).Wallet || {}, WS = S.Player.Wallet, T0 = new Set(WB.Transactions || []);
     const amt = l => { const m = /^\s*([+−-])\s*([\d,]+)/.exec(String(l)); return m ? (m[1] === '+' ? 1 : -1) * Number(m[2].replace(/,/g, '')) : 0; };
     const pts = l => amt(l) && !/\bcoins?\b/i.test(l);
-    const fresh = (WS.Transactions || []).filter(l => !T0.has(l) && pts(l));
+    const fresh = newLines(WB.Transactions, WS.Transactions).filter(pts);
     const dP = num(WS.Points, 0) - num(WB.Points, 0), dC = num(WS.Coin, 0) - num(WB.Coin, 0);
     if (dP && !fresh.length) WS.Transactions = [...(WS.Transactions || []), `${dP > 0 ? '+' : '-'}${Math.abs(dP)} (not itemised)`];
     else if (!dP && !dC) {
@@ -3520,8 +3528,8 @@ function stepHidden(c) {
   // 1.11.1 (bug hunt): spending more than {{user}} has. The schema stops Points at 0, which made the missing part free; the
   // reply's new Transactions lines show what was spent, so the narrator is told to settle it in the story.
   if (hasB) {
-    const P0 = num(((B.Player || {}).Wallet || {}).Points, 0), T0 = new Set((((B.Player || {}).Wallet || {}).Transactions) || []);
-    const spent = (S.Player.Wallet.Transactions || []).filter(l => !T0.has(l)).reduce((a, l) => {
+    const P0 = num(((B.Player || {}).Wallet || {}).Points, 0);
+    const spent = newLines(((B.Player || {}).Wallet || {}).Transactions, S.Player.Wallet.Transactions).reduce((a, l) => {
       const m = /^\s*([+−-])\s*([\d,]+)/.exec(String(l)); return m ? a + (m[1] === '+' ? -1 : 1) * Number(m[2].replace(/,/g, '')) : a; }, 0);
     if (num(S.Player.Wallet.Points, 0) === 0 && spent > P0) {
       S.$ui.toasts.push('Not enough points');
@@ -3962,7 +3970,9 @@ function stepBag(c) {
     const ks = Object.keys(I);
     if (ks.length > CAP_BAG) {
       const order = [...ks.filter(k => /^(other|food)$/.test(I[k].Kind)), ...ks.filter(k => !/^(other|food|gear)$/.test(I[k].Kind))];
-      for (const k of order.slice(0, ks.length - CAP_BAG)) delete I[k];
+      const drop = order.slice(0, ks.length - CAP_BAG);   // 1.42.0 (audit 1.10): never silently
+      for (const k of drop) delete I[k];
+      if (drop.length) { S.$ui.toasts.push(`Bag full (${CAP_BAG}): left behind ${drop.slice(0, 3).join(', ')}${drop.length > 3 ? ' +' + (drop.length - 3) : ''}`); log.push(`The Bag holds ${CAP_BAG} kinds of item: ${drop.join(', ')} ${drop.length > 1 ? 'were' : 'was'} left behind to make room. If {{user}} still has ${drop.length > 1 ? 'them' : 'it'}, the story should say where (a dorm room, a locker).`); }
     }
   }
 
@@ -4155,8 +4165,8 @@ function stepReminders(c) {
     const out = [], add = (sig, line) => { if (!(sig in seen) && !out.some(o => o[0] === sig)) out.push([sig, line]); };
     if (!OFF.has('reminders')) {
       // 1.18.0 (I3-I6): evidence-based prompts; none moves a number or invents detection/healing.
-      const bag0 = B.Inventory || {}, bag1 = S.Inventory || {}, tx0 = new Set(((B.Player || {}).Wallet || {}).Transactions || []);
-      const newTx = (S.Player.Wallet.Transactions || []).filter(x => !tx0.has(x)).join(' | ').toLowerCase();
+      const bag0 = B.Inventory || {}, bag1 = S.Inventory || {};
+      const newTx = newLines(((B.Player || {}).Wallet || {}).Transactions, S.Player.Wallet.Transactions).join(' | ').toLowerCase();
       const shopAt = placeKey(S.World.Location);
       let expected = 0; const acquired = [];
       for (const [name, item] of Object.entries(bag1)) {
@@ -4203,7 +4213,7 @@ function stepReminders(c) {
       const IB = B.Inventory || {}, IS = S.Inventory || {};
       for (const [k, it] of Object.entries(IB)) {
         const lk = k.toLowerCase(), now = Object.keys(IS).find(x => x.toLowerCase() === lk);
-        if (/sunfizz/.test(lk) || num(it && it.Qty, 1) - (now ? num(IS[now].Qty, 1) : 0) <= 0 || REPORTED.used.includes(lk) || (c.craftSold || []).includes(lk)) continue;
+        if (/sunfizz/.test(lk) || num(it && it.Qty, 1) - (now ? num(IS[now].Qty, 1) : 0) <= 0 || REPORTED.used.includes(itemKey(k)) || (c.craftSold || []).includes(lk)) continue;
         if (REPORTED.acts.some(a => /^(gift|rank_gift|birthday)$/.test(a.Kind) && (!a.Item || String(a.Item).toLowerCase().includes(lk) || lk.includes(String(a.Item).toLowerCase())))) continue;
         const usable = !!(fxOf(k) || {}).use;
         if (bonded.length) add(`bag:${lk}:${dayNo}`, `${k} left the Bag while ${bonded.slice(0, 2).join(' and ')} ${bonded.length > 1 ? 'were' : 'was'} here: if {{user}} gave it, report Kind gift with Item "${k}"${usable ? '; if {{user}} used it, insert it into /Consumables/-' : ''}.`);

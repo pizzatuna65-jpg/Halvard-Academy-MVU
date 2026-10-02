@@ -298,6 +298,10 @@ const withYear = (s, Y) => String(s).replace(/^(\[?)(M\d{1,2} W[1-4]\b)/, `$1Y${
 const eventsOn = W => EVENTS.filter(e => e.m === W.Month && e.w === W.Week && e.d.includes(W.Day));
 const pctOf = (v, max) => (max > 0 ? (v / max) * 100 : 0);
 const num = (v, d = 0) => { const x = Number(v); return Number.isFinite(x) ? x : d; };
+// 1.42.0 (audit 1.5): the lines a list gained, counted as a multiset: a line written again ("-3 tea at the Snug" on another
+// day, "+40 tutoring (History)" next week) is new even though the same text is already in the list
+const newLines = (before, after) => { const n = _.countBy(Array.isArray(before) ? before : []), seen = {};
+  return (Array.isArray(after) ? after : []).filter(l => (seen[l] = (seen[l] || 0) + 1) > (n[l] || 0)); };
 const dstamp = W => `${yPre(W)}M${W.Month} W${W.Week} ${W.Day}`;
 // Parses a due/until text written by the AI ("M2 W1 Tue 14:00", "Month 3 Week 2", "Fri 18:00", "tomorrow 9am", "M4") into an
 // absolute minute, relative to the current world time W. Missing parts: day -> Sunday of that week (or the next such weekday),
@@ -769,6 +773,12 @@ const GEAR = { umbrella: /umbrella/i, waterproof: /waterproof|oilskin|rain cloak
 // and a used charm's timed protection (wxs.buff: { kind: until abs minute })
 const SHOP_FX = /*@@SHOP_FX@@*/{};
 const SHOP_PRICE = /*@@SHOP_PRICE@@*/{};
+// 1.42.0 (audit 1.3): one item-name key for the Consumables filter, the Qty decrease (H2), gifts and the R2 reminder:
+// lowercase, without a leading article or a trailing "(...)", so "a Quick-dry powder" is the Bag's "Quick-dry powder"
+const itemKey = x => String(x || '').trim().toLowerCase().replace(/^(an?|the)\s+/, '').replace(/\s*\(.*\)$/, '');
+// the Bag key a reported name means: the exact name first (any case), then the same itemKey, preferring one still held
+const bagKeyOf = (I, name) => { const ks = Object.keys(I || {}), lo = String(name || '').trim().toLowerCase(), k = itemKey(name);
+  return ks.find(x => x.toLowerCase() === lo) || ks.find(x => itemKey(x) === k && num((I[x] || {}).Qty, 1) > 0) || ks.find(x => itemKey(x) === k) || ''; };
 const fxOf = name => SHOP_FX[String(name || '').trim().toLowerCase().replace(/^(an?|the)\s+/, '')] || SHOP_FX[String(name || '').trim().toLowerCase().replace(/^(an?|the)\s+/, '').replace(/\s*\(.*\)$/, '')] || null;
 const gearOf = (I, buff, now) => {
   const own = Object.keys(I || {}).filter(k => (I[k] && I[k].Qty) > 0), ks = own.join(' | ');
@@ -1072,7 +1082,7 @@ function stepFeatures(c) {
   const REPORTED = {
     acts: (Array.isArray(S.Interactions) ? S.Interactions : []).filter(a => a && typeof a === 'object'),
     casts: (Array.isArray(S.Magic && S.Magic.Casts) ? S.Magic.Casts : []).map(c => String((c && c.Technique) || '')),
-    used: (Array.isArray(S.Consumables) ? S.Consumables : []).map(x => String(x).trim().toLowerCase()),
+    used: (Array.isArray(S.Consumables) ? S.Consumables : []).map(itemKey),
     perks: (Array.isArray(S.Perk_use) ? S.Perk_use : []).map(x => String(x).trim().toLowerCase()),
     training: Array.isArray(S.Training) ? S.Training.length : 0,
     tutoring: Array.isArray(S.Tutoring) ? S.Tutoring.map(x => x.Subject) : [],
@@ -1523,12 +1533,10 @@ function stepRest(c) {
   // 1.16.1 (audit B2): a used item takes effect only if {{user}} has it: in the Bag before this reply, added to it in this reply,
   // or bought in this reply (a new Transactions line names it, e.g. a hot drink at a café). Anything else changes nothing.
   if (hasB && Array.isArray(S.Consumables) && S.Consumables.length) {
-    const ik = x => String(x || '').trim().toLowerCase().replace(/^(an?|the)\s+/, '').replace(/\s*\(.*\)$/, '');
-    const have = new Set([...Object.keys(B.Inventory || {}).filter(k => num((B.Inventory[k] || {}).Qty, 0) > 0), ...Object.keys(S.Inventory || {})].map(ik));
-    const T0 = new Set(((B.Player || {}).Wallet || {}).Transactions || []);
-    const bought = (S.Player.Wallet.Transactions || []).filter(l => !T0.has(l)).join(' | ').toLowerCase();
+    const have = new Set([...Object.keys(B.Inventory || {}).filter(k => num((B.Inventory[k] || {}).Qty, 0) > 0), ...Object.keys(S.Inventory || {})].map(itemKey));
+    const bought = newLines(((B.Player || {}).Wallet || {}).Transactions, S.Player.Wallet.Transactions).join(' | ').toLowerCase();
     S.Consumables = S.Consumables.filter(c => {
-      const k = ik(c); if (!k || have.has(k) || bought.includes(k)) return true;
+      const k = itemKey(c); if (!k || have.has(k) || bought.includes(k)) return true;
       log.push(`"${String(c).trim()}" was reported used, but {{user}} has none (not in the Bag, not bought in this reply): no effect.`);
       return false;
     });
@@ -1538,10 +1546,10 @@ function stepRest(c) {
   S.Consumables = [];
   // 1.12.0 (H2): an item reported used lowers its Qty in the Bag by one per report, unless this update already lowered it
   if (hasB && consumed.length && _.isPlainObject(S.Inventory)) {
-    const IB = B.Inventory || {}, need = _.countBy(consumed.map(x => String(x).trim().toLowerCase()));
-    for (const [lk, n] of Object.entries(need)) {
-      const k = Object.keys(S.Inventory).find(x => x.toLowerCase() === lk), kb = Object.keys(IB).find(x => x.toLowerCase() === lk);
-      if (!k || !kb) continue;
+    const IB = B.Inventory || {}, need = _.countBy(consumed.map(x => bagKeyOf(IB, x)).filter(Boolean));
+    for (const [kb, n] of Object.entries(need)) {
+      const k = bagKeyOf(S.Inventory, kb);
+      if (!k) continue;
       const extra = n - Math.max(0, num(IB[kb].Qty, 1) - num(S.Inventory[k].Qty, 1));
       if (extra > 0) S.Inventory[k].Qty = Math.max(0, num(S.Inventory[k].Qty, 1) - extra);
     }
@@ -3406,7 +3414,7 @@ function stepHidden(c) {
     const WB = (B.Player || {}).Wallet || {}, WS = S.Player.Wallet, T0 = new Set(WB.Transactions || []);
     const amt = l => { const m = /^\s*([+−-])\s*([\d,]+)/.exec(String(l)); return m ? (m[1] === '+' ? 1 : -1) * Number(m[2].replace(/,/g, '')) : 0; };
     const pts = l => amt(l) && !/\bcoins?\b/i.test(l);
-    const fresh = (WS.Transactions || []).filter(l => !T0.has(l) && pts(l));
+    const fresh = newLines(WB.Transactions, WS.Transactions).filter(pts);
     const dP = num(WS.Points, 0) - num(WB.Points, 0), dC = num(WS.Coin, 0) - num(WB.Coin, 0);
     if (dP && !fresh.length) WS.Transactions = [...(WS.Transactions || []), `${dP > 0 ? '+' : '-'}${Math.abs(dP)} (not itemised)`];
     else if (!dP && !dC) {
@@ -3419,8 +3427,8 @@ function stepHidden(c) {
   // 1.11.1 (bug hunt): spending more than {{user}} has. The schema stops Points at 0, which made the missing part free; the
   // reply's new Transactions lines show what was spent, so the narrator is told to settle it in the story.
   if (hasB) {
-    const P0 = num(((B.Player || {}).Wallet || {}).Points, 0), T0 = new Set((((B.Player || {}).Wallet || {}).Transactions) || []);
-    const spent = (S.Player.Wallet.Transactions || []).filter(l => !T0.has(l)).reduce((a, l) => {
+    const P0 = num(((B.Player || {}).Wallet || {}).Points, 0);
+    const spent = newLines(((B.Player || {}).Wallet || {}).Transactions, S.Player.Wallet.Transactions).reduce((a, l) => {
       const m = /^\s*([+−-])\s*([\d,]+)/.exec(String(l)); return m ? a + (m[1] === '+' ? -1 : 1) * Number(m[2].replace(/,/g, '')) : a; }, 0);
     if (num(S.Player.Wallet.Points, 0) === 0 && spent > P0) {
       S.$ui.toasts.push('Not enough points');
@@ -3861,7 +3869,9 @@ function stepBag(c) {
     const ks = Object.keys(I);
     if (ks.length > CAP_BAG) {
       const order = [...ks.filter(k => /^(other|food)$/.test(I[k].Kind)), ...ks.filter(k => !/^(other|food|gear)$/.test(I[k].Kind))];
-      for (const k of order.slice(0, ks.length - CAP_BAG)) delete I[k];
+      const drop = order.slice(0, ks.length - CAP_BAG);   // 1.42.0 (audit 1.10): never silently
+      for (const k of drop) delete I[k];
+      if (drop.length) { S.$ui.toasts.push(`Bag full (${CAP_BAG}): left behind ${drop.slice(0, 3).join(', ')}${drop.length > 3 ? ' +' + (drop.length - 3) : ''}`); log.push(`The Bag holds ${CAP_BAG} kinds of item: ${drop.join(', ')} ${drop.length > 1 ? 'were' : 'was'} left behind to make room. If {{user}} still has ${drop.length > 1 ? 'them' : 'it'}, the story should say where (a dorm room, a locker).`); }
     }
   }
 
@@ -4054,8 +4064,8 @@ function stepReminders(c) {
     const out = [], add = (sig, line) => { if (!(sig in seen) && !out.some(o => o[0] === sig)) out.push([sig, line]); };
     if (!OFF.has('reminders')) {
       // 1.18.0 (I3-I6): evidence-based prompts; none moves a number or invents detection/healing.
-      const bag0 = B.Inventory || {}, bag1 = S.Inventory || {}, tx0 = new Set(((B.Player || {}).Wallet || {}).Transactions || []);
-      const newTx = (S.Player.Wallet.Transactions || []).filter(x => !tx0.has(x)).join(' | ').toLowerCase();
+      const bag0 = B.Inventory || {}, bag1 = S.Inventory || {};
+      const newTx = newLines(((B.Player || {}).Wallet || {}).Transactions, S.Player.Wallet.Transactions).join(' | ').toLowerCase();
       const shopAt = placeKey(S.World.Location);
       let expected = 0; const acquired = [];
       for (const [name, item] of Object.entries(bag1)) {
@@ -4102,7 +4112,7 @@ function stepReminders(c) {
       const IB = B.Inventory || {}, IS = S.Inventory || {};
       for (const [k, it] of Object.entries(IB)) {
         const lk = k.toLowerCase(), now = Object.keys(IS).find(x => x.toLowerCase() === lk);
-        if (/sunfizz/.test(lk) || num(it && it.Qty, 1) - (now ? num(IS[now].Qty, 1) : 0) <= 0 || REPORTED.used.includes(lk) || (c.craftSold || []).includes(lk)) continue;
+        if (/sunfizz/.test(lk) || num(it && it.Qty, 1) - (now ? num(IS[now].Qty, 1) : 0) <= 0 || REPORTED.used.includes(itemKey(k)) || (c.craftSold || []).includes(lk)) continue;
         if (REPORTED.acts.some(a => /^(gift|rank_gift|birthday)$/.test(a.Kind) && (!a.Item || String(a.Item).toLowerCase().includes(lk) || lk.includes(String(a.Item).toLowerCase())))) continue;
         const usable = !!(fxOf(k) || {}).use;
         if (bonded.length) add(`bag:${lk}:${dayNo}`, `${k} left the Bag while ${bonded.slice(0, 2).join(' and ')} ${bonded.length > 1 ? 'were' : 'was'} here: if {{user}} gave it, report Kind gift with Item "${k}"${usable ? '; if {{user}} used it, insert it into /Consumables/-' : ''}.`);

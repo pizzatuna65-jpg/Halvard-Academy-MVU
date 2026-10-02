@@ -1,4 +1,4 @@
-import { registerMvuSchema } from 'https://testingcf.jsdelivr.net/gh/StageDog/tavern_resource/dist/util/mvu_zod.js';
+import { registerMvuSchema } from 'https://testingcf.jsdelivr.net/gh/StageDog/tavern_resource@276040b5f26436f18662d841fb667429e82b26d4/dist/util/mvu_zod.js';
 // zod and lodash are available globally as `z` and `_`
 // Eldrasil / Halvard — MVU ZOD schema (Batch 2.1, extended in 3.2)
 // Prefix rules: `_Name` = visible to the AI but read-only for it (engine/builder writes); `$name` = hidden from the AI.
