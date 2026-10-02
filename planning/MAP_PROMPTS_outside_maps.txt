@@ -102,6 +102,71 @@ the top edge.
 Do not include any text, labels, place names, legend, compass rose, frame, border, scale bar or UI elements. No people or creatures.
 
 ==================================================================================================================
-2. IBUKOTA — menyusul setelah draft bagian 2
+2. AVALON, IBUKOTA (diterapkan di v1.39.0; data/avalon.json; hasil disetujui: Maps/avalon.webp)
+==================================================================================================================
+
+Referensi gaya: lampirkan Maps/halvard_summer.webp (Crowning Day jatuh di awal musim panas). Blok GAYA UMUM disalin di bawah dengan
+pohon dan palet disesuaikan untuk kota putih. Tujuh kawasan (pin) diberi posisi; gedung lain hanya digambar, bukan pin. The Rookery
+(di bawah tanah) sengaja tidak digambar.
+
+Use the attached map of Halvard Academy as the strict reference for art style: copy its rendering, line work, colour palette,
+lighting, level of detail and camera angle exactly, so that the two maps look like they were painted by the same artist for the
+same atlas. That style is:
+- a high bird's-eye view from the south, looking north at about 45 degrees, almost isometric, with only slight perspective;
+- a bright, cheerful, hand-painted miniature look, like a storybook or cosy fantasy game world map: clean, crisp shapes with thin
+  soft outlines, gentle cel-like shading, soft light from the upper left, small soft shadows, high-key and low contrast, nothing
+  gritty, murky or photographic;
+- small, simple, stylised trees repeated evenly: round puffy broadleaf trees in fresh summer green, neat cone-shaped conifers in
+  deep teal-green, used for the gardens, the avenues and the countryside around the city;
+- a saturated but soft palette: white and cream stone, pale grey shadows, soft blue-grey and pale slate roofs, fresh greens, clear
+  light-blue water, with small accents of deep blue and gold (the royal colours);
+- soft white clouds of mist drifting in from the outer edges and corners of the image, framing it;
+- every feature drawn small and tidy, like a model on a table, so the whole map reads clearly at a glance.
+
+Make a 1536x1024 landscape map of Avalon, the white capital city of a fantasy kingdom, in early summer.
+
+Keep it calm and readable, and make it one continuous city, not separate pictures placed on a background. Avalon is a round city
+of white stone on a gentle hill, inside one great white wall with four gates (south, west, north, east); seen from the south at
+45 degrees the round city appears as a wide oval filling most of the image, with green countryside, fields and a road around it.
+There are no inner walls: the city is laid out in concentric rings by its streets alone, each ring a little higher than the one
+outside it, so the city rises gently towards the castle at the centre. Wide straight avenues run from each gate to the centre, and
+a ring boulevard lined with trees runs just inside the wall. Most of the city is a calm, even pattern of small white houses with
+soft blue-grey roofs, drawn simply and repeated; only the places below stand out, each with its own look so it stays recognisable
+when cropped and zoomed. Every place grows out of the streets around it and fades into the ordinary houses over a wide margin, with
+no hard outlines, circles or patches; light, shadow and haze are the same across the whole map.
+
+1. Eldrasil Castle (centre, about 50% across, 46% down): a tall white castle with slender towers and blue-grey conical roofs on the
+   top of the hill, deep blue and gold banners on its towers, the tallest building in the city except the Great Spire. Around it, the
+   Noble Ring: larger white townhouses with private walled gardens and trees, quieter and greener than the rest of the city.
+2. Crown Square (about 50% across, 66% down, below the castle): a large paved white square with fountains and a small memorial
+   column, where the main south avenue ends at the foot of the castle hill. Around it, in the ring of grand civic buildings: a huge
+   white cathedral with a tall rose window to the west, a long white government building around a courtyard to the north-west, a
+   white tower with a walled courtyard to the north-east, and a white bank with a long colonnade to the east.
+3. The Great Gate (bottom centre, about 52% across, 90% down): the main gate in the south wall, with the Skyport just outside it:
+   tall mooring masts with three wooden airships with balloon envelopes floating at anchor. Just inside the gate, where the main
+   avenue begins, a long glass-roofed shopping arcade.
+4. The Lantern Quarter (middle left, about 26% across, 64% down): a crowded market district of narrow covered streets and awnings in
+   warm colours, strung with rows of paper lanterns; next to it one street of narrower, taller shops with small chimneys and coloured
+   glass windows (the magic trades).
+5. Old Town (upper left, about 33% across, 22% down): the one grey quarter: older grey stone houses with dark roofs, crooked narrow
+   lanes and small squares, clearly different from the white city around it but in the same soft style. On its edge, towards the
+   north, an open fairground with one giant wheel (taller than the houses), a carousel and striped stalls.
+6. The Great Spire (top, about 43% across, 12% down, just north-east of Old Town, inside the north wall): the tallest building in Avalon, a very slender white
+   tower with a viewing gallery near its top.
+7. The Garden of Avalon (upper right, about 67% across, 24% down): the largest green space in the city: lawns, flower terraces, tree
+   walks and a long reflecting pool, and at its centre a colossal white stone statue of a hooded mage with a staff raised high,
+   standing taller than the trees, with four round seals carved into the ground around its plinth. Beside the garden, a white opera
+   house with a dome.
+8. The Arena Quarter (middle right, about 75% across, 64% down): a large open-air oval stadium of white stone, and beside it a grand
+   white hotel with many windows and a courtyard.
+
+Six more Herald Spires, each a slender white tower much shorter than the Great Spire, stand spaced around the outer ring of the city
+(near the Great Gate, in the Lantern Quarter, in the west, in Old Town, near the garden, near the arena). Deep blue and gold banners
+hang in a few places along the main south avenue. The countryside, fields and a road continue past every edge of the image and fade
+into haze along the top edge.
+
+Do not include any text, labels, place names, legend, compass rose, frame, border, scale bar or UI elements. No people or creatures.
+
+==================================================================================================================
 3. SUNREACH BAY — menyusul setelah draft bagian 3
 ==================================================================================================================

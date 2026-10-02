@@ -64,6 +64,12 @@ _exp = json.load(open(P('data/expedition.json'), encoding='utf-8'))
 DATA['forest'] = {'area': _exp['area'], 'map': _exp['map'], 'legs': [l[:3] for l in _exp['legs']],
                   'places': [{k: p[k] for k in ('id', 'name', 'group', 'x', 'y') if k in p} for p in _exp['places']],
                   'groups': {g: {'title': G['title'], 'desc': G['desc'], 'feel': G['feel']} for g, G in _exp['groups'].items()}}
+# 1.39.0 (owner-approved planning/DRAFT_outside_maps.md, part 2): the Avalon map: pins that hold places (like the campus map); the
+# castle pin hides until a Kingdom win, the Rookery until it is visited
+_av = json.load(open(P('data/avalon.json'), encoding='utf-8'))
+DATA['capital'] = {'area': _av['area'], 'map': _av['map'], 'legs': _av['legs'], 'fare': _av['rates']['ride_coin'],
+                   'pins': [{k: p[k] for k in ('id', 'name', 'x', 'y', 'locked') if k in p} for p in _av['pins']],
+                   'places': [{k: p[k] for k in ('id', 'name', 'pin', 'in', 'locked', 'hidden', 'desc', 'vibe') if k in p} for p in _av['places']]}
 CAST = {}
 for nid, n in npcs.items():
     first = nid

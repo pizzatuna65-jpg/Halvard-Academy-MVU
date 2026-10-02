@@ -38,7 +38,7 @@ ok(/First Bargain/.test(txt(273)) && /First Bargain/.test(txt(274)) && /First Ba
 
 // ---- mentions in other entries, as the brands are mentioned
 const has = (uid, re, what) => ok(re.test(txt(uid)), `mention: ${what}`);
-has(0, /Kingdom: Eldrasil, in the east of the continent\./, 'WORLD INDEX places Eldrasil in the east');
+has(0, /Kingdom: Eldrasil, in the east of the continent; its capital is Avalon\./, 'WORLD INDEX places Eldrasil in the east');
 has(0, /World myths, told across the continent, not history: the Devoured Kingdom \(Azathoth\), the Four Who Saved the World, the First Bargain/, 'WORLD INDEX lists the myths');
 has(1, /Sunreach Bay, Velmora, the Arslan Sultanate[^.]* are named/, 'Kingdom names the Arslan Sultanate');
 has(1, /claims the Archmage of the Four Who Saved the World/, 'Kingdom claims the Archmage');

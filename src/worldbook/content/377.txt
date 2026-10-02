@@ -1,0 +1,7 @@
+<%_ if ((getvar('stat_data.$ui.capital') || {}).on) { _%>
+[Avalon — the Royal Mages on Crowning Day]
+The Royal Mages, the Crown's own mages, lead the Crowning Day parade: ranks in white and deep blue, the silver star of the order on every collar, casting light and colour over Crown Avenue as they march. The youngest of them, Tsubaki Hoshikage, a wolf Beastkin with a katana, marches among them.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) < 2) { _%>
+Tsubaki Hoshikage this year: seventeen, long white hair tied back badly, grey wolf ears and tail, calm gold eyes, a katana in a plain black scabbard, the silver star on her collar. Frank, calm, brief; introduces herself as "Tsubaki Hoshikage. Royal Mage. Do you spar?" A genius with the sword who cannot find her way anywhere and does not understand hints or jokes. She is not a Halvard student yet: the Crown sends her there next year.
+<%_ } _%>
+<%_ } _%>

@@ -20,9 +20,9 @@ ok(feasts.length >= 6 && feasts.every(e => /Headmaster and Vice Headmaster/.test
 // 1.15.2 (owner): Remembrance Day (with Acting Warden Rei) and the Crowning Day morning
 ok(/Headmaster Baelin, Vice Headmaster Althair and Acting Warden Rei speak, then the lantern release/.test(entry(244)) && !/not asked to speak/.test(entry(244)), 'Remembrance Day: three speeches before the lanterns');
 ok(/no patience for ceremonial speeches \(formal addresses only: she is not shy.*gives one at Remembrance Day.*because it is the Warden's duty/.test(entry(118)) && !/never asked to speak/.test(entry(118)), "Rei's file agrees");
-ok(/Headmaster Baelin and Vice Headmaster Althair speak to the assembled academy, then everyone boards the airship/.test(entry(24)), 'Crowning Day: speeches before the airship');
+ok(/Headmaster Baelin and Vice Headmaster Althair speak to the assembled academy at 07:00, then everyone boards the airship/.test(entry(24)), 'Crowning Day: speeches before the airship');
 const plan = t => JSON.stringify((E.EVENTS.find(e => e.t.startsWith(t)) || {}).s || '');
-ok(/Acting Warden Rei, then the lantern release/.test(plan('Remembrance Day')) && /07:00 speeches from the Headmaster and Vice Headmaster.*flies to the capital/.test(plan('Independence Crowning Day')), 'engine day plans match');
+ok(/Acting Warden Rei, then the lantern release/.test(plan('Remembrance Day')) && /07:00 speeches from the Headmaster and Vice Headmaster.*flies to Avalon/.test(plan('Independence Crowning Day')), 'engine day plans match');
 
 console.log('Far grounds');
 const map = entry(132);

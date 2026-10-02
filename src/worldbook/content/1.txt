@@ -2,6 +2,7 @@
 Genre: Fantasy magic academy
 Premise: Four magic academies in one kingdom, each tied to a cardinal region and each built on top of a great magical site.
 Location: the east of the continent.
+Capital: Avalon, a round white city on a hill in the heart of the kingdom, with Eldrasil Castle, the royal seat, at its centre.
 Other nations: exist; Sunreach Bay, Velmora, the Arslan Sultanate, Norvaine, Caelmar and Yozakura are named.
 - Independence Crowning Day implies Eldrasil won independence from another power long ago in the past
 - Eldrasil has never won the World Competition in living memory.

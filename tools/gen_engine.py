@@ -143,6 +143,17 @@ assert all(p['group'] in _exp['groups'] for p in _exp['places']), 'expedition.js
 t = t.replace('/*@@EXPEDITION@@*/{}', json.dumps({**{k: v for k, v in _exp.items() if not k.startswith('_') and k != 'groups'},
     'groups': {g: {k: v for k, v in G.items() if k in ('IV', 'III', 'II', 'protected', 'rate')} for g, G in _exp['groups'].items()}},
     ensure_ascii=False, separators=(',', ':')))
+# 1.39.0 (owner-approved planning/DRAFT_outside_maps.md, part 2): Avalon (pins, places, walks, rates, the city-life pools) and
+# the rival academies' students for the chance meetings there ({id: lorebook school year}); descriptions stay in the lore and the UI
+_av = json.load(open(P('data/avalon.json'), encoding='utf-8'))
+_apins, _aids = {p['id'] for p in _av['pins']}, {p['id'] for p in _av['places']}
+assert all(a in _apins and b in _apins for a, b, _m in _av['legs']), 'avalon.json: a leg names an unknown pin'
+assert all(p['pin'] in _apins for p in _av['places']) and all(set(v) <= _aids for v in _av['where'].values()), 'avalon.json: unknown pin or place'
+_npcs_all = json.load(open(P('data/npcs.json'), encoding='utf-8'))
+t = t.replace('/*@@AVALON@@*/{}', json.dumps({**{k: v for k, v in _av.items() if not k.startswith('_')},
+    'places': [{k: v for k, v in p.items() if k not in ('desc', 'vibe')} for p in _av['places']],
+    'rivals': {nid: n['year'] for nid, n in sorted(_npcs_all.items()) if (n.get('group') or '').endswith('team')}},
+    ensure_ascii=False, separators=(',', ':')))
 # Bond rules and where each NPC is usually found (Haunts, first clause).
 t = t.replace('/*@@BOND_RULES@@*/{}', json.dumps(json.load(open(P('data/bond_rules.json'), encoding='utf-8')), ensure_ascii=False, separators=(',', ':')))
 haunt = {}

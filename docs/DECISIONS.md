@@ -129,8 +129,12 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
   engine rolls what appears (target, signs, other beasts), the chance grows with hours searched and never reaches 100%, and a catch
   counts only after the engine brought the target in. The bracelet tracker is a staff binding for the trip, not a built-in feature.
   The Wendigo (Grade I, the Gloaming) adapts to a kind of spell it has been hit by, down to 20%, never immune; no visual tell.
+  Area 2, Avalon (1.39.0): a city map works like the campus map instead: pins hold places, every public pin shows from the start;
+  a locked pin is not shown at all (the castle, until a Kingdom win), a hidden place only once visited (the Rookery). Street life
+  (pickpockets, processions, other academies' students, raids) is engine-rolled once an hour like the forest's beasts; the narrator
+  adds no trouble or luck of its own. Points never work there (coin only).
 - **Map by calendar** (1.13.0, owner): `map_variants` in `data/assets_manifest.json`, first match wins: an event map while the event is on (optionally in its hours), then a season map, then the default. Every variant is 1536×1024 with the default's layout (pins and card crops are percent positions on it); a variant that fails to load shows the default. UI only: no state, no rule.
-- **Assets** live in `github.com/pizzatuna65-jpg/eldrasil-assets`, served via jsDelivr. They are **pinned to commit 288b5a6** (1.38.0: the Grand Vast Forest map added to 1.34.2's f42990c; nothing else changed), and `base_url` exists in one place only: `data/assets_manifest.json`. Never ship `@main`.
+- **Assets** live in `github.com/pizzatuna65-jpg/eldrasil-assets`, served via jsDelivr. They are **pinned to commit 505dd35** (1.39.0: the Avalon map added to 1.38.0's 288b5a6, which added the Grand Vast Forest map to 1.34.2's f42990c; nothing else changed), and `base_url` exists in one place only: `data/assets_manifest.json`. Never ship `@main`.
 - **State-as-memory**: the narrator reads the latest ~24 messages (card regex, promptOnly, minDepth 24).
   - The Journal keeps the latest 30 lines for the AI. Older lines move to `$ui.archive`.
   - Bonds show the latest 10 `Known_facts` to the AI. Older facts move to `$Known_old`.

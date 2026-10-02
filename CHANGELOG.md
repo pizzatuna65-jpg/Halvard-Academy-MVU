@@ -1,7 +1,60 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.39.0 — Avalon: the capital's own map (2026-10-02)
+
+FP7 area 2 (owner-approved `planning/DRAFT_outside_maps.md`, part 2, after six rounds of owner notes; the city's name and the map
+image are the owner's, from `planning/MAP_PROMPTS_outside_maps.txt` part 2). Save fixture v1.38.0.
+- **The city.** Avalon, the capital: a round white city on a hill inside one wall, laid out in rings by its streets alone
+  (Eldrasil Castle and the Noble Ring; the Crown Ring around Crown Square; the Lower City, 60% of the city). Seven Herald Spires
+  carry broadcasts and music across it (the academy's announcement pillars, city-sized). Old Town is the one grey quarter, and
+  the Rookery, the city's underbelly, lies beneath it. `data/avalon.json` is the single source for the lore, the engine and the UI.
+- **Map.** Pins hold places like the campus map: Crown Square (Crown Square, Grand Cathedral, The Chancery, High Dovecote, Royal
+  Bank), Great Gate (Skyport, Gilded Arcade), Lantern Quarter (Lantern Market, Spellwright Row), Old Town (Old Town, Skywheel Fair,
+  The Great Spire, and the Rookery once visited), Garden of Avalon (the garden with the faceless Archmage statue, Grand Theatre),
+  Arena Quarter (Royal Arena, Whitestone Hotel). The Eldrasil Castle pin (castle and Noble Ring) is not on the map until {{user}}
+  wins the Kingdom Competition.
+- **Engine** (`stepCapital`, after `stepExpedition`). On Crowning Day, and for Halvard's team on its Kingdom Competition days,
+  `World.Location` is "Avalon — <place>" (`avPlace`, `avLoc`; short aliases like "the cathedral" count only once in Avalon, so the
+  campus Cathedral stays the campus Cathedral). Walks between pins take 25–120 minutes and 5% of Stamina_max an hour; inside a pin
+  5–15 minutes and no stamina; owed minutes are kept like the forest's hours. A hire carriage (`/Avalon/Ride`): half the time, 10
+  coin, no stamina. Crowning Day 10:00–13:00 the crowds make legs through Crown Square half as long again. The White Line: the
+  castle and the Noble Ring hold {{user}} at the last place before them, and a second try the same day is reported (`defied_staff`);
+  only the Kingdom winners pass, for the King's reception. The Crowning Day muster (Skyport 15:30): `<now>` counts down with the
+  walk back; missing it is `detention` reputation and a Journal line. Once an hour in the city (seeded, swipe-safe; nothing during
+  the parade and the speech): pickpockets (8%; half are caught in the act, else 10–25% of the coin, at most 300), noble and Royal
+  Guard processions, street sights, students of the other academies (25%, one not met today, still at school), Tsubaki lost after
+  the parade (10%, once per Crowning Day), talent scouts (Kingdom days), City Watch raids in the Rookery (5%; caught 40%:
+  `detention_tower`). Avalon has the kingdom's weather of the day. The team keeps the Whitestone Hotel's curfew (22:00), not the
+  dorm curfew. The day before a visit, `<now>` reminds the narrator that points do not work there (the Banking House).
+- **Tsubaki before Halvard.** In Year 1 she may be met in Avalon as the youngest Royal Mage (described in the Royal Mages entry;
+  no bond and no warning); when she arrives in Year 2 her bond starts with that memory.
+- **Narrator.** `<now>` gets an Avalon block: where {{user}} is, walks to every pin and the places in this quarter, carriage fare,
+  the Crowning Day plan and muster (or the Kingdom team's hours and the reception), only the events the engine rolled, the Herald
+  Spires. Campus regulars and happenings are left out there. 502: the location format and the carriage flag around a visit. Lore:
+  an overview (rings, the White Line, the map's parts and places, every walk between them, the Herald Spires, rules), one entry
+  per part of the city, the Rookery (its way in narrator-only), the Royal Mages on Crowning Day; all constant behind a gate on
+  `$ui.capital.on`. Edited: the World Index and the kingdom entry (capital Avalon), Crowning Day (24: times, the Royal Mages, coin
+  the day before, the muster), the Kingdom Competition (19: Royal Arena, Whitestone Hotel, free evenings, the reception), the
+  calendar texts and the Activities trip card.
+- **UI.** The Map panel gets an Avalon tab once {{user}} has been there, and opens on it while in the city. Pin cards one place at
+  a time, with the walk and the carriage time from here; the muster countdown under the map.
+- **Assets** pinned to commit `505dd35` (`288b5a6` plus `map/avalon.webp`, verified identical); local copy `Maps/avalon.webp`.
+- Tests: new `test_avalon_v1390.cjs` (routes, names and aliases, arrival, weather, crowds, carriages, the White Line, the hourly
+  rolls, the muster, home again, Tsubaki in Year 1, the Kingdom team and the reception, the day-before reminder, the hotel curfew,
+  lore gate, `<now>`, 502, UI data); `test_mapvariants_v1130.cjs` (the new commit), `test_worldmyth_v171.cjs` and
+  `test_far_grounds_v1151.cjs` (the new wording); full `npm test` passes; stress passes (the fuzz's "bond rank jumped undefined -> 2
+  (Topaz)" note predates this release).
+- To confirm with the owner (invented while applying): the city's size and two hours by airship; white rebuilt after the War of
+  Independence (Old Town grey); the faceless, nameless Archmage statue; Ardenne, Merryhew's and Firetooth flagships in the Gilded
+  Arcade; the place names (Crown Ring, Crown Avenue, Ring Boulevard, the Chancery, High Dovecote, Royal Bank, Skyport, Gilded
+  Arcade, Lantern Market, Spellwright Row, the Rookery and its rooks, the Drowned Rat, Skywheel Fair, Great Spire, Grand Theatre,
+  Royal Arena, Whitestone Hotel, the White Line, the Royal Guard); the Crowning Day times (09:30 landing, 10:00 parade, 11:00
+  speech, 11:30–15:30 free, 16:00 departure); the Kingdom team's free evenings until 21:00 and hotel curfew 22:00; the winners'
+  reception at the castle on Saturday evening; the hire carriage at 10 coin; the other academies also in Avalon on Crowning Day;
+  Tsubaki seventeen in Year 1.
 
 ## v1.38.0 — The Grand Vast Forest: the Expedition's own map (2026-10-02)
 
@@ -83,22 +136,6 @@ Save fixture v1.37.1.
   leaves is back on their first colour next time (1.37.1 kept the move).
 - Tests: `test_say_colors_v1370.cjs` (light palette, three colours each, second then third on arrival, back to the first alone,
   twelve in one scene all different, Extras), `test_saves.cjs` (`$ui.say` is recomputed each update), the full suite.
-- Nothing to confirm with the owner.
-
-## v1.37.1 — Dialogue colours: nobody in a scene shares one (2026-10-02)
-
-Owner: "no two alike; I must tell A from B at a glance", theme and hair do not matter. Save fixture v1.37.0.
-- 71 colours cannot all be told apart at a glance (the 1.37.0 set had its closest two at 5 OKLab units), so the guarantee is per
-  scene. A palette of 12 colours that differ by kind (red, orange, gold, lime, green, mint, cyan, blue, lavender, purple, magenta,
-  pink; every two at least 10.4 apart, gold/lime the closest), each with its own light-theme version.
-- Engine (end of `stepCast`, `$ui.say`): roster characters start on their colour from `data/dialogue_colors.json`; a recorded
-  Extras character gets one when first present; whoever was already in the scene keeps theirs and a newcomer on a used colour
-  moves to the free one farthest from those in use. The move sticks. Up to 12 people in one scene, all different.
-- Starting colours: people who share scenes (relations, dorm and year, group, classmates, dorm mates) start on different colours
-  where 12 allow. Replaces the 1.37.0 per-character hues and the Extras `$say` hue (dropped from the schema; 1.37.0 had no saves
-  using it yet).
-- Tests: `test_say_colors_v1370.cjs` (palette spread, newcomer moves, the move sticks, eight people all different, Extras),
-  `test_saves.cjs`, the full suite.
 - Nothing to confirm with the owner.
 
 ## Release index (one line per release, oldest first)
@@ -215,3 +252,4 @@ Owner: "no two alike; I must tell A from B at a glance", theme and hair do not m
 - **v1.37.3 (2026-10-02):** Preset: Internal Thoughts back ON as its own `<npc_thoughts>` block (folded, trimmed from older replies, kept out of VectFox).
 - **v1.37.4 (2026-10-02):** NPC Thoughts: only as raw as the character is; optional regex so the AI never reads thoughts back.
 - **v1.38.0 (2026-10-02):** The Grand Vast Forest: the Expedition's own map, engine-rolled hunt (target, signs, beasts, the Wendigo), walking stamina, forest weather, map tab.
+- **v1.39.0 (2026-10-02):** Avalon, the capital: its own map (pins holding places), walks and hire carriages, the White Line, the Crowning Day muster, the city's seeded life (pickpockets, other academies' students, Tsubaki lost, Rookery raids), map tab.

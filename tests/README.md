@@ -13,6 +13,7 @@ Build first with `python tools/build_all.py`. Run all suites with `npm test`; ru
 | Map, shops and UI panels | `test_ui_overhaul_v1210.cjs` (tokens, themes, fonts), `test_map_gates_v1240.cjs` (gates, lore heard, zoom), `test_playtest_v1301.cjs` (area gates, rival teams, malformed update blocks), `test_stray_paths_v1351.cjs` (/Player/Inventory moved to the root), `test_playtest_v1352.cjs` (feast-night curfew, journal dedupe, new-chat proficiency), `test_people_map.cjs`, `test_mapvariants_v1130.cjs`, `test_batch5_shops.cjs`, `test_notebook.cjs`, `test_news_v1250.cjs` (red "new" dots) |
 | Prompt and card package | `test_tokens_v1110.cjs`, `test_preset.cjs`, `test_npc_thoughts_v1373.cjs` (preset NPC Thoughts block), `qa_static.cjs`, `lint.cjs` |
 | Grand Vast Forest / Expedition (1.38.0) | `test_expedition_v1380.cjs` (routes, place names, walking and owed hours, the seeded hunt, the catch guard, the result, `<now>`, lore gate, UI data) |
+| Avalon, the capital (1.39.0) | `test_avalon_v1390.cjs` (routes, names and aliases, walks, crowds, carriages, the White Line, the hourly city rolls, the muster, Tsubaki in Year 1, the Kingdom team, the day-before reminder, lore gate, `<now>`, 502, UI data) |
 | Engine integration audit | `test_audit_b1_v1161.cjs`, `test_audit_b2_v1170.cjs`, `test_integrations_v1180.cjs` |
 | Engine steps and save migrations | `test_engine_steps_v1200.cjs`, `test_saves.cjs`; any suite with `ENGINE_DIFF=<older engine.js>` compares every engine run with that build |
 

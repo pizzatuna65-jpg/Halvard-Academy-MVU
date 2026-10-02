@@ -153,14 +153,65 @@ function renderForest(S, tabs) {
     <div class="sub" style="margin:6px 0 10px">${where}</div></div><div class="sheet">${sheet}</div></div></div></div>`;
 }
 
+// ---- 1.39.0 (owner-approved planning/DRAFT_outside_maps.md, part 2): Avalon (DATA.capital, engine $ui.capital). A tab once
+// {{user}} has been there; it opens by itself while {{user}} is in the city. Pins hold places like the campus map, one card at a time.
+// Every public pin shows; the castle pin only after a Kingdom win, the Rookery only once visited.
+const cz = () => DATA.capital || { pins: [], places: [], legs: [] };
+const cPlace = id => cz().places.find(p => p.id === id), cPin = id => cz().pins.find(p => p.id === id);
+function capWalks(from) {                                       // minutes between pins; the castle is no way through
+  const d = { [from]: 0 }, done = new Set();
+  for (;;) {
+    let u = null; for (const k in d) if (!done.has(k) && (u === null || d[k] < d[u])) u = k;
+    if (u === null) break; done.add(u);
+    if (u !== from && (cPin(u) || {}).locked) continue;
+    for (const [a, b, m] of cz().legs) { const v = a === u ? b : b === u ? a : null; if (v && (!(v in d) || d[u] + m < d[v])) d[v] = d[u] + m; }
+  }
+  return d;
+}
+const capMin = (a, b) => a === b ? 0 : cPlace(a).pin === cPlace(b).pin ? Math.max(5, num(cPlace(a).in, 5) + num(cPlace(b).in, 5)) : capWalks(cPlace(a).pin)[cPlace(b).pin];
+function capCard(id, S, C) {
+  const p = cPlace(id), here = C.on && C.at === id, from = C.on && C.at ? C.at : 'skyport', m = capMin(from, id), split = cPlace(from).pin !== p.pin;
+  const walk = here ? 'You are here' : `About ${m} min on foot${split ? ` (${Math.round(m / 2)} by hire carriage, ${cz().fare} coin)` : ''} from ${C.on && C.at ? 'here' : 'the Skyport'} (${cPlace(from).name})`;
+  return `<article class="lc${here ? ' here' : ''}"><div class="crop" style="${cropStyle(cPin(p.pin), S, cz().map)}"><b>${esc(p.name)}</b>${here ? '<span class="you">You are here</span>' : ''}</div>
+    <div class="in">${p.vibe ? `<p class="vibe">${esc(p.vibe)}</p>` : ''}
+    <details><summary>Description</summary><p>${esc(p.desc || '')}</p></details>
+    <dl class="kv sm"><dt>Walk</dt><dd>${esc(walk)}</dd></dl>
+    <button class="btn ${here ? '' : 'pri'} go" data-cgo="${esc(id)}" ${here || !C.on ? 'disabled' : ''}>${here ? 'You are here' : C.on ? 'Go here' : 'Only while in Avalon'}</button></div></article>`;
+}
+function renderCapital(S, tabs) {
+  const C = (S.$ui || {}).capital || {}, seen = new Set(C.seen || []);
+  const pinOk = p => !p.locked || C.castle, placeOk = p => (!p.locked || C.castle) && (!p.hidden || seen.has(p.id));
+  const curPin = C.on && C.at ? (cPlace(C.at) || {}).pin : '';
+  if (!view.cpin || !pinOk(cPin(view.cpin) || { locked: true })) view.cpin = curPin || 'square';
+  const pinHTML = cz().pins.filter(pinOk).map(p => {
+    const here = curPin === p.id, sel = view.cpin === p.id;
+    return `<button class="pin${here ? ' here' : ''}${sel ? ' sel' : ''}" data-cpin="${esc(p.id)}" style="left:${p.x}%;top:${p.y}%" aria-label="${esc(p.name)}${here ? ' (you are here)' : ''}" title="${esc(p.name)}"></button>`
+      + (sel || here ? `<span class="plab${here ? ' here' : ''}${labPos(p)}" style="left:${p.x}%;top:${p.y}%">${esc(p.name)}</span>` : '');
+  }).join('');
+  const P = cPin(view.cpin), ids = P ? cz().places.filter(x => x.pin === P.id && placeOk(x)).map(x => x.id) : [];
+  if (view.ccardPin !== view.cpin) view.ccard = Math.max(0, ids.indexOf(C.at));
+  view.ccardPin = view.cpin; view.ccard = _.clamp(view.ccard || 0, 0, Math.max(0, ids.length - 1));
+  const arrows = ids.length > 1 ? `<div class="cnav"><button class="btn sm" data-ccard="-1" aria-label="Previous place" ${view.ccard ? '' : 'disabled'}>‹</button>
+    <span class="sub">${view.ccard + 1} / ${ids.length} · ${esc(cPlace(ids[view.ccard]).name)}</span><button class="btn sm" data-ccard="1" aria-label="Next place" ${view.ccard < ids.length - 1 ? '' : 'disabled'}>›</button></div>` : '';
+  const sheet = P ? `<h3>${esc(P.name)}</h3>${arrows}<div class="car">${ids.length ? capCard(ids[view.ccard], S, C) : ''}</div>` : '';
+  const where = C.on ? `You are at ${esc(S.World.Location)}.${C.muster && !C.muster.missed && C.muster.left > 0 ? ` Muster at the Skyport at ${esc(C.muster.at)}: ${C.muster.left} min left, ${C.muster.back} min on foot from here.` : ''}` : 'You are not in Avalon now. The map shows the city as you saw it.';
+  return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>${esc(cz().area)}</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
+    <div class="bd">${tabs}<div class="mapwrap"><div><div class="mapbox"><div class="mapview${mapView.z > 1 ? ' zin' : ''}"><div class="map" style="width:${mapView.z * 100}%"><img src="${esc(imgURL(cz().map))}" alt="Map of ${esc(cz().area)}" draggable="false">${pinHTML}</div></div>
+    <div class="zoom"><button data-zoom="1" aria-label="Zoom in" title="Zoom in (or the mouse wheel)" ${mapView.z >= ZOOMS[ZOOMS.length - 1] ? 'disabled' : ''}>+</button><button data-zoom="-1" aria-label="Zoom out" title="Zoom out" ${mapView.z <= 1 ? 'disabled' : ''}>−</button></div></div>
+    <div class="sub" style="margin:6px 0 10px">${where}</div></div><div class="sheet">${sheet}</div></div></div></div>`;
+}
+
 PANELS.map = {
   live: true,
   render(S) {
-    // 1.38.0: Halvard / Grand Vast Forest tabs once the forest has been visited; the forest opens by itself while {{user}} is in it
-    const F = (S.$ui || {}).forest || {}, hasF = !!(F.seen || []).length;
-    const which = hasF && (view.map || (F.on ? 'forest' : 'campus')) === 'forest' ? 'forest' : 'campus';
-    const tabs = hasF ? `<div class="tog maps">${[['campus', 'Halvard'], ['forest', fz().area]].map(([k, n]) => `<button data-map="${k}" class="${which === k ? 'on' : ''}">${esc(n)}</button>`).join('')}</div>` : '';
+    // 1.38.0: Halvard / Grand Vast Forest tabs once the forest has been visited; the forest opens by itself while {{user}} is in it.
+    // 1.39.0: an Avalon tab the same way.
+    const F = (S.$ui || {}).forest || {}, hasF = !!(F.seen || []).length, Cp = (S.$ui || {}).capital || {}, hasC = !!(Cp.seen || []).length;
+    const maps = [['campus', 'Halvard'], ...(hasF ? [['forest', fz().area]] : []), ...(hasC ? [['capital', cz().area]] : [])];
+    const want = view.map || (F.on ? 'forest' : Cp.on ? 'capital' : 'campus'), which = maps.some(m => m[0] === want) ? want : 'campus';
+    const tabs = maps.length > 1 ? `<div class="tog maps">${maps.map(([k, n]) => `<button data-map="${k}" class="${which === k ? 'on' : ''}">${esc(n)}</button>`).join('')}</div>` : '';
     if (which === 'forest') return renderForest(S, tabs);
+    if (which === 'capital') return renderCapital(S, tabs);
     const cur = locIdOf(S.World.Location), curPin = cur ? pinOf(cur) : null;
     if (view.pin == null && curPin) view.pin = curPin.pin;
     const pins = DATA.pins.filter(p => p.cluster.some(id => DATA.locs[id] && discovered(S, DATA.locs[id])));
@@ -229,6 +280,9 @@ PANELS.map = {
     if (b.dataset.map) { view.map = b.dataset.map; mapView.z = 1; mapView.cx = 0.5; mapView.cy = 0.5; render(); return; }
     if (b.dataset.fpin) { view.fpin = b.dataset.fpin; render(); return; }
     if (b.dataset.fgo) { const p = fPlace(b.dataset.fgo); if (p) fillChat(`I head to ${p.name.replace(/^The /, 'the ')}.`); return; }
+    if (b.dataset.cpin) { view.cpin = b.dataset.cpin; view.ccardPin = ''; render(); return; }   // 1.39.0: Avalon
+    if (b.dataset.ccard) { view.ccard = (view.ccard || 0) + +b.dataset.ccard; render(); return; }
+    if (b.dataset.cgo) { const p = cPlace(b.dataset.cgo); if (p) fillChat(`I head to ${/^(Crown Square|Spellwright Row|Old Town|Eldrasil Castle)$/.test(p.name) ? p.name : 'the ' + p.name.replace(/^The /, '')}.`); return; }
     if (b.dataset.pin) { view.pin = +b.dataset.pin; view.floor = ''; render(); return; }
     if (b.dataset.card) { view.card += +b.dataset.card; render(); return; }
     if (b.dataset.floor) { view.floor = b.dataset.floor; render(); return; }

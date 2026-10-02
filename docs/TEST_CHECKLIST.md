@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.39.0 (Avalon): the five checks in its section below.
 - v1.38.0 (Grand Vast Forest): the four checks in its section below.
 - v1.37.4 (calm thoughts): the check in its section below.
 - v1.37.3 (NPC Thoughts): the two checks in its section below.
@@ -79,9 +80,25 @@ new section at the top of **By release**, not as a new file.
 
 ## By release
 
+### v1.39.0 — Avalon
+
+Play to Month 4 Week 2 (Monday evening), or a Year 2 chat there. Re-import the card (new lore, the Avalon map at assets commit 505dd35).
+1. Monday: `<now>` says points do not work in Avalon tomorrow and the narrator lets someone mention the Banking House; change
+   points into coin.
+2. Crowning Day: after the speeches and the flight `World.Location` reads "Avalon — Skyport", the bracelet weather says Avalon, and
+   the Map panel opens on the Avalon tab (six pins; no castle pin). The parade has the Royal Mages at its head; the King speaks at
+   Crown Square.
+3. Free time: walk to the Garden of Avalon: the clock moves by the walk (about 75–80 min from the south), stamina drops a little;
+   take a hire carriage back (the narrator sets `Avalon.Ride`): about half the time and 10 coin. Try to walk into Eldrasil Castle:
+   the Royal Guard turns {{user}} back and the location stays at Crown Square.
+4. The narrator plays only what `<now>` lists from the street (a pickpocket, a student of another academy, Tsubaki lost) and adds
+   no trouble of its own; a swipe keeps the same events.
+5. Stay out past 15:30: `<now>` says {{user}} missed the muster, the Journal records it and Academy reputation drops. Back at
+   Halvard the Avalon lore and block are gone; the Map keeps the Avalon tab.
+
 ### v1.38.0 — The Grand Vast Forest
 
-Use the TEST Year 2 card or play to Month 2 Week 3 (Wednesday). Re-import the card (new lore, the forest map at assets commit 288b5a6).
+Use the TEST Year 2 card or play to Month 2 Week 3 (Wednesday). Re-import the card (new lore, the forest map; assets now at commit 505dd35).
 1. Fly to the forest. On arrival `World.Location` reads "Grand Vast Forest — Base Camp", the bracelet shows the rainforest's weather,
    and the Map panel opens on the forest with Base Camp and the three Wildwood pins; the Halvard tab still shows the campus map.
 2. Thursday 08:00: `<now>` names the target but not where it lives; the narrator does not bring it in by itself while `<now>` says

@@ -99,6 +99,9 @@ const STALE = UI.stale || [], PHASE = UI.phase || null;   // 1.6.1 (N4, N6): cam
 const INITIATIVE = on('npc_initiative') ? UI.initiative : null;   // 1.7.7 (FP1): optional NPC-initiated contact today
 // 1.38.0 (owner-approved planning/DRAFT_outside_maps.md, part 1): the Creature Studies Expedition in the Grand Vast Forest (engine $ui.forest)
 const FOREST = UI.forest && UI.forest.on ? UI.forest : null, WENDIGO = {"line":"The Wendigo (Grade I): a gaunt humanoid about three metres tall, grey-white skin tight over bone, a deer's skull for a head with antlers and a dim light in the sockets, long clawed fingers; the air turns cold, frost forms where it stands, it smells of rot and speaks in voices it has heard. It stalks first and calls in borrowed voices, then tests the intruders and drives them out; it does not follow anyone out of the Gloaming. Every spell of a kind that has already hit it this fight does a fifth less than the one before (100%, 80%, 60%, 40%, then 20%, never less); a new kind starts at full; weapons do not make it adapt, but its hide is Grade I hard. Students cannot beat it: running, hiding and the flare are the sane choices."};
+// 1.39.0 (owner-approved planning/DRAFT_outside_maps.md, part 2): Avalon, the capital (engine $ui.capital); AVD: the carriage fare and the rival students
+const CAPITAL = UI.capital && UI.capital.on ? UI.capital : null, AVD = {"fare":10,"rivals":{"Bellatrix":["Bellatrix Ardenne","Veyra",1],"Bram":["Bram Holloway","Myrdath",1],"Cassius":["Cassius Rhavel","Veyra",3],"Dex":["Dex Harlow","Myrdath",2],"Elion":["Elion Villeneuve","Ashvale",1],"Ines":["Ines Vauclair","Myrdath",3],"Kira":["Kira Brannock","Ashvale",2],"Lucius":["Lucius Vortigern","Myrdath",2],"Mirelle":["Mirelle Lullwyn","Ashvale",3],"Morgana":["Morgana Vess","Veyra",2],"Pip":["Pip Althorne","Veyra",1],"Theodore":["Theodore Wrenfield","Ashvale",3]}};
+const avRival = id => { const r = (AVD.rivals || {})[id]; return r ? r[0] + ' (' + r[1] + ', Year ' + Math.min(3, r[2] + Y - 1) + ')' : id; };
 const JAGES = (getvar('stat_data.Journal') || []).slice(-5).reverse().map(l => (/^\[([^\]]+)\]/.exec(String(l)) || [])[1]).filter(w => w && ageOf(w, W));
 // 1.2.2 bonds: for each present NPC, what they will talk about at this rank (openness shifts the early tiers; goals, views of others
 // and the past need the real rank; secrets never come from rank) and what the bond allows
@@ -208,15 +211,34 @@ Still on the road: <%- FOREST.owe %> h of the last walk are not on the clock yet
 Last year's Expedition: {{user}}'s group <%- FOREST.last.res === 'caught' ? 'brought back its ' + FOREST.last.tgt : 'came back without its ' + FOREST.last.tgt + ' and failed' %>; people remember.
 <%_ } _%>
 <%_ } _%>
+<%_ if (CAPITAL) { const _M = CAPITAL.muster; _%>
+Avalon<%- CAPITAL.crown ? ' (Independence Crowning Day)' : CAPITAL.kd ? ' (Kingdom Competition, with Halvard\'s team)' : '' %>: {{user}} is at <%- CAPITAL.name %><%- CAPITAL.pinName !== CAPITAL.name ? ' (' + CAPITAL.pinName + ')' : '' %>. Bracelet points do not work here: coin only.
+Walks from here (minutes on foot; a hire carriage takes half and costs <%- AVD.fare %> coin: set Avalon.Ride true in the same update): <%- CAPITAL.walks.map(w => w[1] + ' ' + w[2]).join(', ') %>.<%- CAPITAL.near.length ? ' In this quarter: ' + CAPITAL.near.map(n => n[0] + ' ' + n[1]).join(', ') + '.' : '' %> Advance the clock by the whole walk.
+<%_ if (CAPITAL.owe) { _%>
+Still on the way: <%- CAPITAL.owe %> min of the last walk are not on the clock yet.
+<%_ } _%>
+<%_ if (_M) { _%>
+Crowning Day plan: parade 10:00 on Crown Avenue (the Royal Mages at its head), the King's speech 11:00 at Crown Square, free time in groups of four from 11:30, muster 15:30 at the Skyport, airship home 16:00. <%- _M.missed ? '{{user}} missed the muster: staff and the Doves are out looking for the group; the airship waits for them.' : _M.left > 0 ? 'Muster in ' + _M.left + ' min; the Skyport is ' + _M.back + ' min on foot from here' + (_M.cab !== _M.back ? ' (' + _M.cab + ' by carriage)' : '') + (_M.warn ? '. Time to head back.' : '.') : '' %>
+<%_ } else if (CAPITAL.kd) { _%>
+Kingdom Competition: matches 09:00-18:00 at the Royal Arena; free time in the city with the team until 21:00 (Lower City and Crown Square); curfew 22:00 at the Whitestone Hotel, Gavlan Haverton on watch.<%- CAPITAL.pass ? ' The team won: the King receives them at Eldrasil Castle tonight, the only time students pass the White Line.' : '' %>
+<%_ } _%>
+<%_ for (const e of CAPITAL.ev || []) { if (e.k === 'walk' || e.k === 'missed') continue; _%>
+<%- e.k === 'white' ? 'The White Line (engine): the Royal Guard turns {{user}} back from ' + e.to + (e.n > 1 ? '; a second try, so they report it to the Halvard staff.' : ', politely and firmly.') : e.k === 'pick' ? (e.caught ? 'Pickpocket (engine): a hand slips into a pocket of {{user}}, and {{user}} catches it this reply; the thief bolts into the crowd.' : e.lost ? 'Pickpocket (engine): ' + e.lost + ' coin gone from the purse of {{user}}; nobody noticed the hand, and {{user}} finds out later.' : 'Pickpocket (engine): a thief tries the pockets of {{user}} and finds nothing worth taking.') : e.k === 'procession' ? 'Passing by (engine): ' + e.t + '.' : e.k === 'street' ? 'In the street (engine, colour only): ' + e.t + '.' : e.k === 'rival' ? 'Another academy (engine): ' + avRival(e.id) + ' crosses the path of the group here. Play them from their lore entry.' : e.k === 'tsubaki' ? (e.first ? 'Tsubaki Hoshikage (engine), the youngest Royal Mage, has lost her ranks after the parade and is lost in the city; the group runs into her here. She is not a Halvard student yet (the Royal Mages entry).' : 'Tsubaki Hoshikage (engine) marched with the Royal Mages and cannot find her way back to the Halvard group; the group runs into her here, lost as ever.') : e.k === 'scout' ? 'A talent scout (engine) from a noble house or a hunting company asks {{user}} for a word about the matches.' : e.k === 'raid' ? (e.caught ? 'Raid (engine): the City Watch storms the Rookery and catches {{user}}; Halvard staff are sent for.' : 'Raid (engine): the City Watch storms the Rookery; the rooks hear it coming and {{user}} gets out in the rush.') : '' %>
+<%_ } _%>
+On the hour the seven Herald Spires ring a bell and a few bars of music across the city; at noon, the news.
+<%_ } _%>
+<%_ if (!CAPITAL && UI.capital && UI.capital.coin) { _%>
+Tomorrow: <%- UI.capital.coin %> in Avalon, where bracelet points do not work. Students change points into coin at the Banking House today (1:1); someone may remind {{user}}.
+<%_ } _%>
 <%_ if (PHASE && PHASE.line) { _%>
 Campus phase: <%- PHASE.line %>
 <%_ } _%>
-<%_ if (W._Happening && on('happenings') && !FOREST) { _%>
+<%_ if (W._Happening && on('happenings') && !FOREST && !CAPITAL) { _%>
 Around campus today (optional, use only if it fits): <%- W._Happening %>
 <%_ } _%>
 <%_ if (/CURFEW|LOCKDOWN/.test(cur)) { _%>
 Presence: after curfew most students are in their own dorms; out are staff, patrols, and students sneaking out (only those whose personality allows it).
-<%_ } else if (!FOREST) { _%>
+<%_ } else if (!FOREST && !CAPITAL) { _%>
 <%_ if (pres.length) { _%>
 <%- pres.join(' ') %>
 <%_ } _%>

@@ -3,14 +3,14 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.38.0** (2026-10-02): the Grand Vast Forest, FP7 area 1. The Creature Studies Expedition (M2 W3) has its
-own map (`data/expedition.json`, `stepExpedition`, the forest tab in the Map panel): places with walking hours and stamina, an
-engine-rolled hunt (target, signs, other beasts, the Wendigo), a catch that counts only after the engine met the target, rainforest
-weather, the result on the Creature Studies mark and in next year's `<now>`. v1.37.0-v1.37.4: dialogue colours; NPC Thoughts in the
-preset. Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
+**Snapshot:** card **v1.39.0** (2026-10-02): Avalon, the capital, FP7 area 2. On Crowning Day (M4 W2 Tue) and for Halvard's
+Kingdom Competition team (M9 W4) the city has its own map (`data/avalon.json`, `stepCapital`, the Avalon tab in the Map panel):
+pins holding places, walks and hire carriages, the White Line (the castle only for the Kingdom winners), the Crowning Day muster,
+the city's seeded life (pickpockets, other academies' students, Tsubaki lost, Rookery raids). v1.38.0: the Grand Vast Forest
+(FP7 area 1). Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** live-check v1.38.0 (the forest, on a chat at M2 W3) and the earlier "Open" items; confirm the details invented for
-1.38.0 (CHANGELOG). Then FP7 area 2: the capital (draft first; its name is not canon yet; map style in
+**Next task:** live-check v1.39.0 (Avalon, on a chat at M4 W2) and v1.38.0 (the forest), and the earlier "Open" items; confirm the
+details invented for 1.38.0 and 1.39.0 (CHANGELOG). Then FP7 area 3: Sunreach Bay (draft first; map style in
 `planning/MAP_PROMPTS_outside_maps.txt` "GAYA UMUM").
 
 ## 0. Starter prompt (for the owner to paste into a new chat)

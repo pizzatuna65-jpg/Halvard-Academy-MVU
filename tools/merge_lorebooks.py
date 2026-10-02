@@ -943,7 +943,7 @@ Academic year: three years of two semesters each; repeating a year needs the Hea
 Staff: Headmaster; Vice Headmaster and Warden; teaching staff and Dorm Heads; other staff.
 Student Council: a President, a Vice President and members from all four dorms; meets Saturday mornings; handles club administration, events, discipline and cross-dorm mediation; the President is elected in M10W3.
 Clubs: about thirty; the one place the four dorms mix freely; founding takes a teacher's signature and five members; sport clubs ban magic in play.
-Competitions: Dorm (solo, a bracket per combat role), Academy (teams of four covering the roles), Kingdom (one team per academy, in the capital), World (a national four picked from every Kingdom entrant). Losing ends a student's competitive year.
+Competitions: Dorm (solo, a bracket per combat role), Academy (teams of four covering the roles), Kingdom (one team per academy, in Avalon, the capital), World (a national four picked from every Kingdom entrant). Losing ends a student's competitive year.
 Airships: the kingdom's long-distance transport, hired for the Expedition, the Academy Trip, the long breaks and the Kingdom and World Competitions."""
 def beast_names(text):   # every creature in the Magical Beasts list, for one regex key
     names = []
@@ -1040,6 +1040,99 @@ def grand_vast_forest(C, ejs):
     rep(C[229], "displacer cat, gorgon, rime elk.", "displacer cat, gorgon, rime elk, bloom maw.")
     rep(C[229], "the Sablemaw, the Gaunt Herd.", "the Sablemaw, the Gaunt Herd.\nGRAND FOREST (I): the Wendigo, which lives in the Gloaming of the Grand Vast Forest (its own entry); the one Grade I a student may ever meet, and nothing a student can beat.")
 
+def avalon(C, ejs):
+    """1.39.0 (owner-approved planning/DRAFT_outside_maps.md, part 2): Avalon, the capital, from data/avalon.json: an overview (rings,
+    the White Line, pins and their places, every shortest walk between pins, the Herald Spires, rules for the narrator), one entry per
+    part of the city, the Rookery, the Royal Mages on Crowning Day; the World Index, the kingdom, Crowning Day (24) and the Kingdom
+    Competition (19). Card: constant, behind a gate on $ui.capital.on (nothing outside Avalon). v39: keyword entries."""
+    A = json.load(open(P('data/avalon.json'), encoding='utf-8'))
+    PL, PIN = {p['id']: p for p in A['places']}, {p['id']: p for p in A['pins']}
+    nb = {}
+    for a, b, m in A['legs']:
+        nb.setdefault(a, []).append((b, m)); nb.setdefault(b, []).append((a, m))
+    def walks(src):   # minutes between pins; the castle is never a way through
+        d, done = {src: 0}, set()
+        while True:
+            u = min((k for k in d if k not in done), key=lambda k: d[k], default=None)
+            if u is None: return d
+            done.add(u)
+            if u != src and PIN[u].get('locked'): continue
+            for v, m in nb.get(u, []):
+                if v not in d or d[u] + m < d[v]: d[v] = d[u] + m
+    ids = [p['id'] for p in A['pins']]
+    pin_line = lambda p: p['name'] + ': ' + ', '.join(x['name'] for x in A['places'] if x['pin'] == p['id'] and not x.get('hidden')) + '.'
+    rows = []
+    for i, a in enumerate(ids[:-1]):
+        d = walks(a)
+        rows.append(PIN[a]['name'] + ': ' + ', '.join(PIN[b]['name'] + ' ' + str(d[b]) for b in sorted(ids[i + 1:], key=lambda b: (d[b], ids.index(b)))) + '.')
+    Cr = A['crowning']
+    overview = ("[Avalon — the capital]\nAvalon is the capital of Eldrasil and its largest city, some two hours from Halvard by airship. A round city of white "
+                "stone on a gentle hill, inside one great white wall with four gates; the Great Gate in the south faces the Skyport. Past the wall there "
+                "are no more walls: the city is laid out in rings by its streets alone, each ring a little higher than the one outside it, rising to "
+                "Eldrasil Castle on its hill, which can be seen from every street.\n"
+                "Rings, from the castle out: the Noble Ring, the houses of the noble families on the castle's terraces; the Crown Ring, where the kingdom "
+                "is run, around Crown Square; and the Lower City, the widest ring by far, where most of Avalon lives, works, shops and plays. Great "
+                "avenues run from the gates to Crown Square, and the Ring Boulevard circles the Lower City just inside the wall; between them lie homes, "
+                "workshops and the quarters visitors come for.\n"
+                "The White Line: a band of white marble set into every street where the Noble Ring begins. The Royal Guard stands on it. Nobody crosses "
+                "without a royal summons or a noble's household badge, and the guards do not argue; the Doves are never far away. Students never cross it, "
+                "except the team that wins the Kingdom Competition, received by the King at the castle.\n"
+                "The city was rebuilt in white after the War of Independence. Old Town alone keeps the grey stone of the years before, left as it was on "
+                "purpose. Royal banners, deep blue and gold, fly from the castle towers; on Crowning Day they hang along every avenue.\n"
+                "The Herald Spires: seven tall white spires across the city, the city-sized version of the academy's announcement pillars. Each carries the "
+                "same broadcast at once, live and never recorded: royal proclamations, the noon news, a bell and a few bars of music on every hour, and on "
+                "Crowning Day the King's own voice. At night they glow faintly. The Great Spire in the north is the one the public may climb.\n"
+                "The city map (parts, then their places): " + ' '.join(pin_line(PIN[i]) for i in ids) + "\n"
+                "Walks between the parts (minutes on foot, the same both ways; a place inside one part is five to fifteen minutes from the next):\n"
+                + '\n'.join(rows) + "\n"
+                "Getting around: on foot, or by hire carriage from the stands at the Skyport, Crown Square and every quarter: half the time, for coin. "
+                "Bracelet points do not work in Avalon; students carry coin, changed at the Banking House before they leave.\n"
+                "Rules for the narrator: what happens in the streets each hour (pickpockets, processions, students of the other academies, a raid) is the "
+                "engine's, listed in <now>; never add trouble or luck of your own. Crowds, sellers, music, smells and colour are yours. Every walk takes "
+                "its minutes on the clock. {{user}} never crosses the White Line unless <now> says the team was summoned.")
+    gate0, gate1 = "<%_ if ((getvar('stat_data.$ui.capital') || {}).on) { _%>\n", "\n<%_ } _%>"
+    def entry(uid, comment, keys, text):
+        assert uid not in C and uid not in N, f'avalon uid {uid} is taken'
+        e = template_from(C[230], uid=uid, displayIndex=uid, comment=comment, key=keys, content=(gate0 + text + gate1) if ejs else text)
+        if ejs: e.update(constant=True)
+        C[uid] = e
+    def part(title, pids):
+        return f'[Avalon — {title}]\n' + '\n'.join(PL[i]['name'] + ': ' + PL[i]['desc'] for i in pids)
+    entry(370, 'Avalon', ['Avalon', 'the capital', 'Herald Spire', 'White Line'], overview)
+    entry(371, 'Avalon - Eldrasil Castle and the Noble Ring', ['Eldrasil Castle', 'Noble Ring', 'royal castle'],
+          part('Eldrasil Castle and the Noble Ring', ['eldrasil_castle', 'noble_ring']) + '\nBoth lie past the White Line and are closed to students. The one way in is a royal summons: the team that wins the Kingdom Competition is received by the King at the castle on the last evening.')
+    entry(372, 'Avalon - Crown Square', ['Crown Square', 'Grand Cathedral', 'Chancery', 'High Dovecote', 'Royal Bank'],
+          part('Crown Square and the Crown Ring', ['crown_square', 'grand_cathedral', 'chancery', 'high_dovecote', 'royal_bank']))
+    entry(373, 'Avalon - Great Gate and Lantern Quarter', ['Skyport', 'Gilded Arcade', 'Lantern Market', 'Spellwright Row', 'Great Gate', 'Lantern Quarter'],
+          part('Great Gate and Lantern Quarter', ['skyport', 'gilded_arcade', 'lantern_market', 'spellwright_row']))
+    entry(374, 'Avalon - Old Town', ['Old Town', 'Skywheel Fair', 'Great Spire'],
+          part('Old Town', ['old_town', 'skywheel_fair', 'great_spire']))
+    entry(375, 'Avalon - Garden of Avalon and Arena Quarter', ['Garden of Avalon', 'Grand Theatre', 'Royal Arena', 'Whitestone Hotel', 'Arena Quarter', 'Archmage statue'],
+          part('Garden of Avalon and Arena Quarter', ['garden_of_avalon', 'grand_theatre', 'royal_arena', 'whitestone_hotel']))
+    entry(376, 'Avalon - The Rookery', ['Rookery', 'rooks', 'Drowned Rat'],
+          '[Avalon — The Rookery]\nThe Rookery: ' + PL['rookery']['desc'] + ' Buying or practising a forbidden art there is still arrest, as everywhere; being caught there is a serious offence for a student.\n'
+          '<narrator_only>The way in: the cellar door behind the bar of the Drowned Rat, a tavern on the lowest lane of Old Town; the barkeep opens it for anyone who asks for "the cellar wine". '
+          'A few Old Town locals will point the way for coin; nobody else will. The City Watch raids the Rookery now and then (the engine decides when, in <now>), and the rooks usually hear it coming.</narrator_only>')
+    tsu = ('Tsubaki Hoshikage this year: seventeen, long white hair tied back badly, grey wolf ears and tail, calm gold eyes, a katana in a plain black scabbard, '
+           'the silver star on her collar. Frank, calm, brief; introduces herself as "Tsubaki Hoshikage. Royal Mage. Do you spar?" A genius with the sword who cannot '
+           'find her way anywhere and does not understand hints or jokes. She is not a Halvard student yet: the Crown sends her there next year.')
+    mages = ('[Avalon — the Royal Mages on Crowning Day]\nThe Royal Mages, the Crown\'s own mages, lead the Crowning Day parade: ranks in white and deep blue, the silver '
+             'star of the order on every collar, casting light and colour over Crown Avenue as they march. The youngest of them, Tsubaki Hoshikage, a wolf Beastkin with a katana, marches among them.\n')
+    entry(377, 'Avalon - The Royal Mages', ['Royal Mage', 'Royal Mages', 'parade'],
+          mages + (("<%_ if ((Number(getvar('stat_data.World.Year')) || 1) < 2) { _%>\n" + tsu + "\n<%_ } _%>") if ejs else '(Before campaign Year 2) ' + tsu))
+    rep(C[0], "Kingdom: Eldrasil, in the east of the continent.", "Kingdom: Eldrasil, in the east of the continent; its capital is Avalon.")
+    rep(C[1], "Location: the east of the continent.", "Location: the east of the continent.\nCapital: Avalon, a round white city on a hill in the heart of the kingdom, with Eldrasil Castle, the royal seat, at its centre.")
+    rep(C[24], "Morning: Headmaster Baelin and Vice Headmaster Althair speak to the assembled academy, then everyone boards the airship to the capital.\n"
+               "Capital: parade, the King's speech, then free time until the afternoon muster (markets, food, sights). Groups of four only. Points do not work; students carry coin.\n"
+               "Late afternoon: back before dark, passenger lists counted twice.",
+        f"The day before: students change bracelet points into coin at the Banking House; points do not work in the capital.\n"
+        f"Morning: Headmaster Baelin and Vice Headmaster Althair speak to the assembled academy at 07:00, then everyone boards the airship to Avalon, the capital (about two hours).\n"
+        f"Avalon: the airship lands at the Skyport at {Cr['arrive']}. {Cr['parade']} the parade on Crown Avenue, the Royal Mages at its head, watched from the stands reserved for Halvard; {Cr['speech']} the King's speech at Crown Square, carried by the Herald Spires to the whole city. "
+        f"Then free time from {Cr['free']} until the muster at the Skyport at {Cr['muster']} (markets, food, sights; the city's own entries). Groups of four only. Points do not work; students carry coin.\n"
+        f"Late afternoon: the airship leaves at {Cr['depart']}, back before dark, passenger lists counted twice. A student late for the muster is searched for, and punished as for a detention.")
+    rep(C[19], "3. Kingdom. One team per academy, four in total, knockout, at the arena in the capital. Each member of the winning team earns 5,000 points. Only the teams travel: they arrive the day before and stay at a hotel near the arena, and fly home the day after.",
+        "3. Kingdom. One team per academy, four in total, knockout, at the Royal Arena in Avalon, the capital. Each member of the winning team earns 5,000 points, and the winning team is received by the King at Eldrasil Castle on the last evening. Only the teams travel: they arrive the day before and stay at the Whitestone Hotel beside the arena, and fly home the day after. Evenings are free in the city until 21:00, the hotel by 22:00.")
+
 def lore_activation(C):
     beasts = beast_names(C[229]['content'])
     assert len(beasts) >= 80 and 'dire wolf' in beasts and 'unicorn' in beasts, len(beasts)
@@ -1084,6 +1177,7 @@ ghost_stories(C39, N39)   # 1.16.0
 practical_magic_class(C39)   # 1.33.0
 staff_regulars(N39)   # 1.33.0
 grand_vast_forest(C39, False)   # 1.38.0
+avalon(C39, False)   # 1.39.0
 lore_activation(C39)   # 1.35.0
 calendar_months = json.load(open(P('data/calendar.json'), encoding='utf-8'))['months']
 for month in range(1, 13):
@@ -1241,6 +1335,7 @@ ghost_stories(Cc, Nc)   # 1.16.0
 practical_magic_class(Cc)   # 1.33.0
 staff_regulars(Nc)   # 1.33.0
 grand_vast_forest(Cc, True)   # 1.38.0
+avalon(Cc, True)   # 1.39.0
 lore_activation(Cc)   # 1.35.0
 # merge + tagging (D2): lore -> [mvu_plot]; shared state/navigation entries stay untagged (sent to both models)
 UNTAGGED_CORE = {0, 132, 134, 131, 20}

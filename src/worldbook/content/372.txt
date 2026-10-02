@@ -1,0 +1,8 @@
+<%_ if ((getvar('stat_data.$ui.capital') || {}).on) { _%>
+[Avalon — Crown Square and the Crown Ring]
+Crown Square: The great square at the foot of the castle hill, where Crown Avenue ends and every avenue of the city meets the Crown Ring. The parade finishes here on Crowning Day, the Royal Mages at its head, and the King speaks from the dais on the White Line; the Herald Spires carry the speech to the whole city. Fountains, a column to the War of Independence, food stalls on holidays.
+Grand Cathedral: The house of Asmoday for the whole kingdom, white and immense, its nave open to anyone. Every cathedral in Eldrasil, Halvard's included, answers to it. Sermons on the hour on holy days; the registry of oaths sworn in the capital is kept in its undercroft.
+The Chancery: The crown's offices in one long white building around a courtyard: ministries, courts, the Royal Inspectorate's headquarters, the royal archive. Open to the public in its front halls for petitions; nobody goes in for fun.
+High Dovecote: The headquarters of the Doves, a white tower with a walled courtyard of grey uniforms. The public may stand at its gate; nobody walks in. Mages in academy uniform are noticed here.
+Royal Bank: The kingdom's bank behind a long white colonnade, where Halvard's Banking House sends its ledgers. Coin changed, accounts opened, loans signed. The Arslan World Bank keeps an office in the same street.
+<%_ } _%>

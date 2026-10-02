@@ -71,6 +71,8 @@ Trip:
   Active: false
 Expedition:
   Caught: false
+Avalon:
+  Ride: false
 Battle:
   Active: false
   Combatants: {}

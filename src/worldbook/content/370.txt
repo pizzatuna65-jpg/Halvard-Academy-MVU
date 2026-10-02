@@ -1,0 +1,18 @@
+<%_ if ((getvar('stat_data.$ui.capital') || {}).on) { _%>
+[Avalon — the capital]
+Avalon is the capital of Eldrasil and its largest city, some two hours from Halvard by airship. A round city of white stone on a gentle hill, inside one great white wall with four gates; the Great Gate in the south faces the Skyport. Past the wall there are no more walls: the city is laid out in rings by its streets alone, each ring a little higher than the one outside it, rising to Eldrasil Castle on its hill, which can be seen from every street.
+Rings, from the castle out: the Noble Ring, the houses of the noble families on the castle's terraces; the Crown Ring, where the kingdom is run, around Crown Square; and the Lower City, the widest ring by far, where most of Avalon lives, works, shops and plays. Great avenues run from the gates to Crown Square, and the Ring Boulevard circles the Lower City just inside the wall; between them lie homes, workshops and the quarters visitors come for.
+The White Line: a band of white marble set into every street where the Noble Ring begins. The Royal Guard stands on it. Nobody crosses without a royal summons or a noble's household badge, and the guards do not argue; the Doves are never far away. Students never cross it, except the team that wins the Kingdom Competition, received by the King at the castle.
+The city was rebuilt in white after the War of Independence. Old Town alone keeps the grey stone of the years before, left as it was on purpose. Royal banners, deep blue and gold, fly from the castle towers; on Crowning Day they hang along every avenue.
+The Herald Spires: seven tall white spires across the city, the city-sized version of the academy's announcement pillars. Each carries the same broadcast at once, live and never recorded: royal proclamations, the noon news, a bell and a few bars of music on every hour, and on Crowning Day the King's own voice. At night they glow faintly. The Great Spire in the north is the one the public may climb.
+The city map (parts, then their places): Eldrasil Castle: Eldrasil Castle, Noble Ring. Crown Square: Crown Square, Grand Cathedral, The Chancery, High Dovecote, Royal Bank. Great Gate: Skyport, Gilded Arcade. Lantern Quarter: Lantern Market, Spellwright Row. Old Town: Old Town, Skywheel Fair, The Great Spire. Garden of Avalon: Garden of Avalon, Grand Theatre. Arena Quarter: Royal Arena, Whitestone Hotel.
+Walks between the parts (minutes on foot, the same both ways; a place inside one part is five to fifteen minutes from the next):
+Eldrasil Castle: Crown Square 45, Great Gate 70, Lantern Quarter 80, Arena Quarter 85, Old Town 120, Garden of Avalon 120.
+Crown Square: Great Gate 25, Lantern Quarter 35, Arena Quarter 40, Old Town 75, Garden of Avalon 75.
+Great Gate: Arena Quarter 35, Lantern Quarter 40, Garden of Avalon 80, Old Town 90.
+Lantern Quarter: Old Town 50, Arena Quarter 75, Garden of Avalon 100.
+Old Town: Garden of Avalon 50, Arena Quarter 95.
+Garden of Avalon: Arena Quarter 45.
+Getting around: on foot, or by hire carriage from the stands at the Skyport, Crown Square and every quarter: half the time, for coin. Bracelet points do not work in Avalon; students carry coin, changed at the Banking House before they leave.
+Rules for the narrator: what happens in the streets each hour (pickpockets, processions, students of the other academies, a raid) is the engine's, listed in <now>; never add trouble or luck of your own. Crowds, sellers, music, smells and colour are yours. Every walk takes its minutes on the clock. {{user}} never crosses the White Line unless <now> says the team was summoned.
+<%_ } _%>

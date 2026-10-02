@@ -12,6 +12,9 @@ World
 <%_ if ((getvar('stat_data.$ui.forest') || {}).on) { _%>
 - Creature Studies Expedition (1.38.0): in the Grand Vast Forest write Location as "Grand Vast Forest — <place>" in the forest map's words (Base Camp, Wildwood (west), Wildwood (north), Wildwood (east), Blightbriar, The Gloaming, Silverstair Falls, Jade Terraces, Grand Cave Network, The Old Heart), plus " — detail". Advance Time by the whole walk between places (<now> lists the hours). Set Expedition.Caught true only in the reply where the group actually catches or kills its assigned target after <now> has brought it in; never otherwise.
 <%_ } _%>
+<%_ if ((getvar('stat_data.$ui.capital') || {}).on || /Independence Crowning Day/.test(getvar('stat_data.World._Event_today') || '') || (/Kingdom Competition/.test(getvar('stat_data.World._Event_today') || '') && (getvar('stat_data.Competition') || {}).Tier === 'Kingdom')) { _%>
+- Avalon (1.39.0): in the capital write Location as "Avalon — <place>" in the city map's words (Skyport, Gilded Arcade, Crown Square, Grand Cathedral, The Chancery, High Dovecote, Royal Bank, Lantern Market, Spellwright Row, Old Town, Skywheel Fair, The Great Spire, Garden of Avalon, Grand Theatre, Royal Arena, Whitestone Hotel), plus " — detail"; on arrival "Avalon — Skyport". Advance Time by the whole walk (<now> lists the minutes). Set Avalon.Ride true only in the update where {{user}} takes a hire carriage for that move.
+<%_ } _%>
 <%_ if (_entr) { _%>
 - Entrance Event (M1 W1 Mon): 09:00 Headmaster and Vice Headmaster speeches precede Stone sorting. Each sorted first-year receives their dorm vest from a Student Council member, then remains seated with that dorm until sorting ends at 10:00. At 10:00 the assigned group meets in the Arbiter Hall; there is no free-time gap. Campus_State.Entrance_tour is the stable trio: Year 1 has {{user}}, one roster first-year and a roster senior guide; Year 2+ has {{user}} as guide and two first-years of the new cohort. The engine picks available roster students first. Do not replace this group with newly invented students or change its names during the tour.
 <%_ } _%>
@@ -44,7 +47,7 @@ Player.Injuries: {"<injury>": {"Severity": "minor|moderate|serious|critical", "B
 Player.Wallet
 - Points: use delta, and log every purchase or income by inserting a line into Transactions ("-15 bakery roll (The Mall)"); a change with no line is logged as not itemised.
 - The monthly dorm-rank payout is automatic; never add it yourself.
-- Coin: real money. The Banking House exchanges points and coin 1:1; family money arrives as coin. Only coin works off campus (the capital, Sunreach Bay). Log coin spending in Transactions too.
+- Coin: real money. The Banking House exchanges points and coin 1:1; family money arrives as coin. Only coin works off campus (Avalon, the capital; Sunreach Bay). Log coin spending in Transactions too.
 - Prices: follow the Price Guide; a price marked canon never changes.
 
 Player.Profile

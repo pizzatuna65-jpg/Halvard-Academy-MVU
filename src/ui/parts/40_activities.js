@@ -192,9 +192,11 @@ function acProjects(S) {
 
 // ---------------------------------------------------------------- trips
 const TRIP_INFO = [
-  { rx: /^Independence Crowning Day/, name: 'Independence Crowning Day: the capital', lines: [
-    'Morning: the whole academy flies to the capital by airship.', 'Parade and the King\'s speech, then free time until the afternoon muster: markets, food, sights.',
-    'Groups of four only. Uniform all day; the Doves travel along and staff count heads constantly.', 'Points do not work in the capital: carry coin.',
+  { rx: /^Independence Crowning Day/, name: 'Independence Crowning Day: Avalon, the capital', lines: [
+    'The day before: change points into coin at the Banking House. Points do not work in Avalon.',
+    '07:00 speeches, then the whole academy flies to Avalon by airship (the Skyport at 09:30).', '10:00 the parade on Crown Avenue, the Royal Mages at its head; 11:00 the King\'s speech at Crown Square.',
+    'Free time from 11:30 until the muster at the Skyport at 15:30: markets, food, sights. Walks across the city take an hour or more; a hire carriage is faster, for coin.',
+    'Groups of four only. Uniform all day; the Doves travel along and staff count heads constantly. Late for the muster means a detention.',
     'Back before dark, passenger lists counted twice. Fireworks over the hills at night; curfew moves to 22:00.'] },
   { rx: /^Academy Trip/, name: 'Academy Trip: Sunreach Bay', lines: [
     'Month 11 Week 2 Saturday to Week 3 Thursday; all three years. A full day by airship each way: out on the Saturday, home on the Thursday.', 'Beachfront hotels, four to a room; teachers in the same hotels set a curfew.',
