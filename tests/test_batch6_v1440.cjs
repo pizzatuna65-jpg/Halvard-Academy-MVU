@@ -63,3 +63,49 @@ console.log('Agenda: the letter home and the player\'s own dates');
   ok(S.$ui.agenda.some(x => x.k === 'letter' && /^Reply from Mother expected$/.test(x.t)) && S.$ui.agenda.some(x => x.k === 'note' && x.t === 'Ask Gareth to spar' && x.d === 3),
     'the reply from home is expected, and the calendar note is in the feed');
 }
+
+console.log('Information: a rumour or a story pinned as a clue');
+{
+  const TOOL = { op: 'replace', path: '/$eng/tool', value: 1 };
+  let S = at(S0, day(2, 1, 'Mon'), '10:00', 'Canteen', [{ op: 'replace', path: '/Campus_State/Rumours', value: ['The east ward hums at night'] }]);
+  ok(S.$ui.unlocks.includes('mystery'), 'a rumour going around opens the Mystery Board (it can be pinned there)');
+  S = applyPatch(S, [{ op: 'replace', path: '/Clues/Rumour: The east ward hums at night', value: { Thread: 'Unsorted clues', Detail: 'The east ward hums at night', Where: '', Links: [], Source: 'rumour' } }, TOOL]);
+  const C = S.Clues['Rumour: The east ward hums at night'];
+  ok(C && C.Source === 'rumour' && C.Found && S.Mysteries['Unsorted clues'] && S.$ui.toasts.includes('New clue: Rumour: The east ward hums at night'), 'the player tool pins it: Source rumour, dated, on its thread');
+  ok(applyPatch(S, [{ op: 'replace', path: '/Clues/X', value: { Detail: 'y', Source: 'gossip' } }]).Clues.X.Source === '', 'Source is only rumour, story or records');
+
+  console.log('Information: Encyclopaedic files one real lead a week');
+  S = applyPatch(S, [{ op: 'replace', path: '/$eng/prof/xp/Knowledge', value: 150 }]);
+  S = at(S, day(2, 1, 'Mon'), '13:00', 'Main Library');
+  ok(S.Player._Proficiency.Knowledge === 5 && S.$ui.mastery && S.$ui.mastery.lead && !Object.keys(S.Clues).some(k => /^Records/.test(k)), 'walking in: the lead is open, nothing filed yet');
+  S = later(S, 90, 'Main Library');
+  const R = S.Clues['Records: Rumour: The east ward hums at night'];
+  ok(R && R.Source === 'records' && R.Thread === 'Unsorted clues' && R.Where === 'The Main Library' && S._Log.some(l => /Encyclopaedic: digging in the Main Library turned up this week's real lead on "Rumour: The east ward hums at night"/.test(l)),
+    'a reply spent there: the engine files the lead on the pinned rumour, for the narrator to reveal');
+  ok(!S.$ui.mastery.lead, 'the week\'s lead is used');
+  S = later(S, 90, 'Main Library');
+  ok(Object.keys(S.Clues).filter(k => /^Records/.test(k)).length === 1, 'one a week');
+  S = at(S, day(2, 2, 'Mon'), '13:00', 'Main Library');
+  S = later(S, 60, 'Main Library', [{ op: 'insert', path: '/Clues/Old ledger', value: { Thread: 'The east ward', Detail: 'a ledger of ward repairs', Where: 'Main Library' } }]);
+  ok(S.Clues['Old ledger'].Source === 'records' && S._Log.some(l => /"Old ledger" is this week's real lead/.test(l)) && Object.keys(S.Clues).filter(k => /^Records/.test(k)).length === 1,
+    'next week a clue the story adds there is the lead itself');
+}
+
+console.log('Competition: reputation, its price, and the team');
+{
+  const xp = S => S.Player.Profile.Reputation.$xp.Academy;
+  let S = at(S0, day(3, 2, 'Mon'), '10:00', 'Arbiter Hall');
+  const x0 = xp(S);
+  S = applyPatch(S, [{ op: 'replace', path: '/Competition', value: { Tier: 'Dorm', Status: 'qualified', Placement: '2nd of 12, Defense bracket', Team: ['Etnie'], Results: [] } }]);
+  ok(xp(S) === x0 + 5 && S._Log.some(l => /Dorm Competition qualified: Academy reputation \+5/.test(l)), 'qualifying from the Dorm tier pays its deed (+5) by itself');
+  ok(S._Log.some(l => /Etnie fought beside \{\{user\}\} in the Dorm Competition: \+5 bond XP/.test(l)), 'the teammate gains bond XP');
+  S = applyPatch(S, [{ op: 'replace', path: '/Competition/Status', value: 'champion' }, { op: 'insert', path: '/Rep_events/-', value: { Kind: 'dorm_competition_qualified' } }]);
+  ok(xp(S) === x0 + 5 && S._Log.some(l => /"dorm_competition_qualified" is paid by the engine/.test(l)), 'never twice a year, and a narrator report of it is not counted');
+  ok(S._Log.filter(l => /fought beside/.test(l)).length === 1, 'team bond XP once a tier');
+  S = applyPatch(S, [{ op: 'replace', path: '/Competition', value: { Tier: 'Academy', Status: 'champion', Placement: '1st', Team: ['Etnie'], Results: [] } }]);
+  ok(xp(S) === x0 + 20 && S.$eng.comp.exp && S.$eng.comp.exp.tier === 'Academy' && S._Log.some(l => /Academy title: the staff now expect/.test(l)), 'the Academy title (+15), and the staff now expect a defence');
+  S = applyPatch(S, [{ op: 'replace', path: '/Competition', value: { Tier: 'Kingdom', Status: 'eliminated', Placement: '', Team: ['Etnie'], Results: [] } }]);
+  ok(xp(S) === x0 + 20 && S.$eng.comp.exp, 'losing a tier above the title costs nothing');
+  S = applyPatch(S, [{ op: 'replace', path: '/Competition', value: { Tier: 'Dorm', Status: 'eliminated', Placement: '', Team: [], Results: [] } }]);
+  ok(xp(S) === x0 + 15 && !S.$eng.comp.exp && S._Log.some(l => /Eliminated after the Academy title: the staff expected more. Academy reputation -5/.test(l)), 'the next elimination at or below the title tier: Academy -5, then the expectation is spent');
+}

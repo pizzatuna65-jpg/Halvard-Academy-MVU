@@ -4,8 +4,8 @@
   "planner": 87,
   "notices": 98,
   "letters": 202,
-  "mystery": 152,
-  "competition": 149,
+  "mystery": 198,
+  "competition": 252,
   "projects": 152,
   "trip": 116,
   "battle": 72,
@@ -25,7 +25,7 @@
   "study": 205,
   "say_colors": 183
  },
- "core_rules": 10048,
+ "core_rules": 10026,
  "lore": 9007,
  "price_guide": 5534,
  "live": {

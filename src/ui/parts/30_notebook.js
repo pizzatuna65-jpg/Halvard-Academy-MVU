@@ -3,7 +3,7 @@
 // "notebook" so links ("notebook:planner") and the red-dot keys keep working.
 // Calendar + timetable come from the engine template (single source), injected by tools/gen_ui.py.
 const CAL = /*@@CALENDAR@@*/{ EVENTS: [], TIMETABLE: {} };
-view.nb = 'bag'; view.calOff = 0; view.letter = { to: '', body: '' }; view.calSel = ''; view.markText = '';
+view.nb = 'bag'; view.pinTh = 'Unsorted clues'; view.calOff = 0; view.letter = { to: '', body: '' }; view.calSel = ''; view.markText = '';
 // [id, label, unlock, features (any on)] — 1.1.0: a tab whose features are all off is hidden (the board also carries the forecast)
 const NB_TABS = [['bag', 'Bag', '', ['inventory']], ['wallet', 'Wallet'], ['planner', 'Planner'], ['journal', 'Journal'], ['notices', 'Notice Board', 'notices', ['notices', 'weather']], ['letters', 'Letters', 'letters', ['letters']], ['mystery', 'Mystery Board', 'mystery', ['mystery']]];
 const dayIdx = (M, W, D) => (M - 1) * 28 + (W - 1) * 7 + Math.max(0, DAYS.indexOf(D));   // day of the year, 0-based
@@ -39,7 +39,7 @@ PANELS.notebook = {
     return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>Inventory</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
       <nav class="nav">${tabs.map(([id, l]) => `<button data-nb="${id}" class="${view.nb === id ? 'on' : ''}">${l}${badge(id)}${isNew(`tab:notebook:${id}`, view.nb === id) && view.nb !== id ? newsDot() : ''}</button>`).join('')}</nav><div class="bd">${body}</div></div>`;
   },
-  input(el) { if (el.dataset.lt) view.letter[el.dataset.lt] = el.value; if (el.dataset.mk !== undefined) view.markText = el.value; },
+  input(el) { if (el.dataset.lt) view.letter[el.dataset.lt] = el.value; if (el.dataset.mk !== undefined) view.markText = el.value; if (el.dataset.pinth) view.pinTh = el.value; },
   click(b, S) {
     if (b.dataset.nb) { view.nb = b.dataset.nb; render(); ov.querySelector('.bd').scrollTop = 0; return; }
     if (b.dataset.cal) { view.calOff = _.clamp(view.calOff + +b.dataset.cal, 0, 11); render(); return; }
@@ -50,6 +50,11 @@ PANELS.notebook = {
       if (text) marks[key] = text; else delete marks[key];
       if (_.isEqual(marks, (S.$ui || {}).marks || {})) return;
       commitSetting([{ op: 'replace', path: '/$ui/marks', value: marks }], text ? `🗓️ Calendar note for ${key}: ${text}` : `🗓️ Calendar note for ${key} removed.`);
+      return;
+    }
+    if (b.dataset.pin !== undefined) {   // 1.44.0: pin a heard rumour or story as a clue (a hidden player-tool message, like Settings)
+      const x = heardOf(S)[+b.dataset.pin]; if (!x || !x.key) return;
+      commitSetting([{ op: 'replace', path: `/Clues/${x.key}`, value: { Thread: view.pinTh || 'Unsorted clues', Detail: x.d, Where: x.w, Links: [], Source: x.src } }], `📌 Pinned as a clue: ${x.key}`);
       return;
     }
     if (b.dataset.go) { const l = DATA.locs[b.dataset.go]; if (l) fillChat(goText(l.name)); return; }
@@ -129,10 +134,10 @@ function nbPlanner(S) {
         <span class="sub">Notes are yours: the narrator does not read them. Saving adds a small hidden entry to the chat.</span></div></div>`;
     }
   }
-  // coming up (14 days): 1.44.0 the engine's Agenda feed (academy events and your own dated things), plus the birthdays your
-  // dossiers have opened (only the UI knows which)
-  const up = agendaOf(S).filter(x => x.d >= 0 || x.te >= 0 || x.s === 'overdue').map(x => ({ n: x.k === 'event' ? Math.max(0, x.d) : x.d, on: x.on, at: x.at, mine: x.k !== 'event',
-    t: `${x.k === 'note' ? '✎ ' : x.k === 'birthday' ? '🎂 ' : ''}${x.t}${x.to ? ` (to ${x.to})` : ''}${x.w ? ` (with ${x.w})` : ''}${x.s === 'overdue' ? ' · overdue' : ''}` }));
+  // coming up (14 days): 1.44.0 the engine's Agenda feed (academy events and your own dated things; the overdue ones are under
+  // Commitments), plus the birthdays your dossiers have opened (only the UI knows which)
+  const up = agendaOf(S).filter(x => x.d >= 0 || x.te >= 0).map(x => ({ n: x.k === 'event' ? Math.max(0, x.d) : x.d, on: x.on, at: x.at, mine: x.k !== 'event',
+    t: `${x.k === 'note' ? '✎ ' : x.k === 'birthday' ? '🎂 ' : ''}${x.t}${x.to ? ` (to ${x.to})` : ''}${x.w ? ` (with ${x.w})` : ''}` }));
   for (let n = 0; n <= 14; n++) {
     const d = dayOf(today + n), y = W.Year + (today + n >= 336 ? 1 : 0);
     for (const x of (mine[markKey(y, d.M, d.W, d.D)] || []).filter(x => x.k === 'birthday' && x.t !== 'Your birthday'))
@@ -249,7 +254,7 @@ function nbMystery(S) {
     const m = My[t], cs = Cl.filter(([, c]) => c.Thread === t);
     return `<section class="thread ${m.Status}"><div class="row"><span class="t">${esc(t)}</span><span class="pill ${m.Status === 'open' ? 'w' : m.Status === 'solved' ? 'g' : ''}">${m.Status}</span></div>
       <p class="sum">${esc(m.Summary || 'Nothing pieced together yet.')}</p><div class="clues">${cs.map(([k, c], i) => `<div class="clue" style="--r:${[-1, .7, -.4, 1][i % 4]}deg"><b>${esc(k)}</b><div>${esc(c.Detail)}</div>
-      <div class="sub">${esc([c.Found, c.Where].filter(Boolean).join(' · '))}</div>${c.Links.length ? `<div class="meta">${c.Links.map(x => linkChip(x, S)).join('')}</div>` : ''}
+      <div class="sub">${esc([c.Found, c.Where, CLUE_SRC[c.Source]].filter(Boolean).join(' · '))}</div>${c.Links.length ? `<div class="meta">${c.Links.map(x => linkChip(x, S)).join('')}</div>` : ''}
       ${m.Status === 'open' ? `<button class="btn sm" data-fill="${esc(`I follow up on the clue "${k}": `)}">Follow up</button>` : ''}</div>`).join('')}</div></section>`;
   }).join('');
   const sec = _.groupBy(secretsOf(S), x => String(x).split('.')[0]);
@@ -258,6 +263,22 @@ function nbMystery(S) {
     const topics = xs.map(x => String(x).split('.').slice(1).join('.') || 'other');
     return `<div class="truth">${id ? linkChip(id, S) : `<span class="pill">${esc(who)}</span>`}<span>${topics.map(tp => `<span class="pill g">${esc(tp)}</span>`).join('')}</span></div>`;
   }).join('');
+  const hh = heardOf(S), open = Object.keys(My).filter(t => My[t].Status === 'open' && t !== 'Unsorted clues');
+  if (!['Unsorted clues', ...open].includes(view.pinTh)) view.pinTh = 'Unsorted clues';
+  const heardH = hh.length ? `<h3>Heard around campus</h3><details><summary>${hh.length} rumour${hh.length === 1 ? '' : 's'} and stories you can pin</summary><p class="hint">Pin one to a thread to keep it as a clue. It stays hearsay until the story bears it out.</p>
+    <label class="f">Pin to<select data-pinth="1">${['Unsorted clues', ...open].map(t => `<option${t === view.pinTh ? ' selected' : ''}>${esc(t)}</option>`).join('')}</select></label>
+    <ul class="log">${hh.map((x, i) => `<li><span class="pill">${x.src === 'rumour' ? 'rumour' : 'story'}</span> ${esc(x.src === 'rumour' ? x.d : `${x.key}: ${x.d}`)} <button class="btn sm" data-pin="${i}" ${view.busy ? 'disabled' : ''}>Pin as a clue</button></li>`).join('')}</ul></details>` : '';
   return `<p class="lead">What you have noticed, and what it might mean. Clues are pinned by thread; solved threads move to the bottom.</p>
-    ${board || '<div class="empty">No clues yet.</div>'}${truths ? `<h3>Truths uncovered</h3><p class="hint">Opens the matching part of each person's dossier.</p>${truths}` : ''}`;
+    ${board || '<div class="empty">No clues yet.</div>'}${heardH}${truths ? `<h3>Truths uncovered</h3><p class="hint">Opens the matching part of each person's dossier.</p>${truths}` : ''}`;
+}
+// 1.44.0 (audit 3.12): what {{user}} has heard and not pinned yet: the rumours going around, and the places' stories ($ui.lore).
+// A pinned one is a Clue with Source rumour / story (hearsay); Encyclopaedic later looks it up in the records (engine recordsLead).
+const CLUE_SRC = { rumour: 'hearsay (a rumour)', story: 'hearsay (a story)', records: 'from the records' };
+const clueKey = t => String(t).replace(/[./~]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 60);
+function heardOf(S) {
+  const Cl = S.Clues || {}, details = new Set(Object.values(Cl).map(c => c.Detail)), heard = new Set(((S.$ui || {}).lore || []).map(String)), out = [];
+  for (const r of ((S.Campus_State || {}).Rumours || [])) out.push({ src: 'rumour', key: clueKey(`Rumour: ${String(r).split(/\s+/).slice(0, 7).join(' ')}`), d: String(r), w: '' });
+  for (const l of Object.values(DATA.locs || {})) for (const x of l.lore || []) if (heard.has(String(x.uid)) && !out.some(o => o.uid === x.uid))
+    out.push({ src: 'story', uid: x.uid, key: clueKey(x.title), d: String(x.summary || '').replace(/^Story:\s*/, '').slice(0, 220), w: l.name });
+  return out.filter(x => !(x.key in Cl) && !details.has(x.d));
 }

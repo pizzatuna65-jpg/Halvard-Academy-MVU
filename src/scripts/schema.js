@@ -268,6 +268,8 @@ export const Schema = z.object({
   Journal: StrList(30),   // "[M1 W1 Mon] turning point" — long-term memory (used by state-as-memory in 5.3)
   Clues: Rec(v => ({
     Thread: s(v.Thread) || 'Unsorted clues', Detail: s(v.Detail), Where: s(v.Where), Found: s(v.Found),
+    // 1.44.0: rumour / story = hearsay {{user}} pinned (player tool; unconfirmed); records = Encyclopaedic's real lead; '' = seen in play
+    Source: ['rumour', 'story', 'records'].includes(s(v.Source).trim().toLowerCase()) ? s(v.Source).trim().toLowerCase() : '',
     Links: Array.isArray(v.Links) ? v.Links.map(s).filter(Boolean).slice(0, 8) : (v.Links ? String(v.Links).split(/\s*,\s*/).filter(Boolean).slice(0, 8) : []),
   }), 'Detail'),
   Mysteries: Rec(v => ({

@@ -2068,8 +2068,10 @@ function stepReputation(c) {
   };
   const vouchMonth = `Y${S.World.Year}M${S.World.Month}`, usedVouch = new Set();
   const vouchLedger = S.$eng.vouch = _.isPlainObject(S.$eng.vouch) ? S.$eng.vouch : {};
+  const CP = REP.competition || {}, compKinds = new Set(Object.values(CP.pay || {}));
   for (const e of (Array.isArray(S.Rep_events) ? S.Rep_events : [])) {
     const kind = String(e.Kind || '').trim().toLowerCase(), deed = (REP.deeds || {})[kind];
+    if (compKinds.has(kind)) { log.push(`Reputation deed "${kind}" is paid by the engine from Competition (Tier and Status); it was not counted here.`); continue; }
     if (!deed && kind && !['repeat', 'event'].includes(kind)) { log.push(`Reputation deed "${kind}" is unknown; use a listed Kind or an explicit repeat/event entry.`); continue; }
     const r = deed ? deed[0] : REP.reps.find(x => x.toLowerCase() === String(e.Rep || '').trim().toLowerCase());
     if (!r) { log.push(`Reputation "${e.Rep}" is unknown (use Academy, Student or Doves); nothing was changed.`); continue; }
@@ -2091,6 +2093,28 @@ function stepReputation(c) {
     repAdd(r, x, e.Why || kind || 'story', deed ? deed[2] : x > 0 && kind !== 'event' ? 'week' : '');
   }
   S.Rep_events = [];
+  // 1.44.0 (audit 3.13): a competition result pays its deed itself, once a year each (REP.competition.pay). A title has a price:
+  // the staff expect {{user}} to defend it, and the next elimination at that tier or below costs Academy Rep XP (expect). The
+  // team's result at a tier also brings each teammate bond XP once a year (teamBond, given in stepBonds).
+  let teamBond = null;
+  const Co = S.Competition || {}, Co0 = (hasB && B.Competition) || {};
+  if (hasB && Co.Tier && Co.Status && (Co.Status !== Co0.Status || Co.Tier !== Co0.Tier)) {
+    const K = S.$eng.comp = _.isPlainObject(S.$eng.comp) ? S.$eng.comp : {}, y = S.World.Year || 1, T = CP.tiers || [];
+    K.paid = Array.isArray(K.paid) ? K.paid : [];
+    const paidOnce = key => (K.paid.includes(key) ? false : (K.paid = [...K.paid, key].slice(-30), true));
+    const kind = (CP.pay || {})[`${Co.Tier}:${Co.Status}`], deed = kind && (REP.deeds || {})[kind];
+    if (deed && paidOnce(`${kind}-Y${y}`)) { const got = repAdd(deed[0], deed[1], `${Co.Tier} Competition`, ''); log.push(`${Co.Tier} Competition ${Co.Status}: ${deed[0]} reputation ${got >= 0 ? '+' : ''}${got} Rep XP (${kind}).`); }
+    const cost = num((CP.expect || {})[Co.Tier], 0);
+    if (Co.Status === 'champion' && cost && (!K.exp || T.indexOf(Co.Tier) >= T.indexOf(K.exp.tier))) {
+      K.exp = { tier: Co.Tier, cost };
+      log.push(`${Co.Tier} title: the staff now expect {{user}} to defend it; teachers and coaches hold {{user}} to it, and the next elimination at the ${Co.Tier} tier or below costs Academy reputation.`);
+    } else if (Co.Status === 'eliminated' && K.exp && T.indexOf(Co.Tier) <= T.indexOf(K.exp.tier)) {
+      const got = repAdd('Academy', K.exp.cost, `eliminated after the ${K.exp.tier} title`, '');
+      log.push(`Eliminated after the ${K.exp.tier} title: the staff expected more. Academy reputation ${got} Rep XP.`); K.exp = null;
+    }
+    if (['qualified', 'eliminated', 'champion'].includes(Co.Status) && num(CP.team_xp, 0) > 0 && paidOnce(`team:${Co.Tier}-Y${y}`))
+      teamBond = { tier: Co.Tier, xp: num(CP.team_xp, 0), ids: new Set((Co.Team || []).map(x => NPC_ALIAS[String(x).toLowerCase()] || x)) };
+  }
   const repSync = announce => {
     for (const r of REP.reps) {
       const L = repLevel(rx[r]), L0 = RPB ? num(RPB['_' + r], 0) : L;
@@ -2104,7 +2128,7 @@ function stepReputation(c) {
     RP.$xp = { ...rx };
   };
   repSync(false);
-  Object.assign(c, { weekNo, weekNoB, repw, repLv, repAdd, repLevelUp, repSync });
+  Object.assign(c, { weekNo, weekNoB, repw, repLv, repAdd, repLevelUp, repSync, teamBond });
 }
 
 // ---- 5c. 1.9.8 Fortune roll (owner-approved planning/DRAFT_outside_presets.md A1). One seeded d100 per update, shown in <now>
@@ -2463,7 +2487,7 @@ function stepNamesInProse(c) {
 
 // ---- 6. bonds ----
 function stepBonds(c) {
-  const { S, B, log, jnl, hasB, OFF, staleDrop, evs, dayNo, goneNow, dayNoB, WXM, seed, TU, wxNow, V, weekNo, weekNoB, repLv, repAdd, repLevelUp } = c;
+  const { S, B, log, jnl, hasB, OFF, staleDrop, evs, dayNo, goneNow, dayNoB, WXM, seed, TU, wxNow, V, weekNo, weekNoB, repLv, repAdd, repLevelUp, teamBond } = c;
   const canon = k => NPC_ALIAS[String(k).toLowerCase()] || k;
   // v1.0.3 (F09): when both an alias key and the canonical key exist, the alias record's real changes merge into the canonical one
   // (fields that differ from the empty record; lists are unioned). Engine-owned "_" / "$" fields are never taken from the alias.
@@ -2730,6 +2754,8 @@ function stepBonds(c) {
     if (apart.size) log.push(`${id} was not in the scene: no bond XP for ${[...apart].join(', ')} (only time together counts).`);
     // 1.1.0 weather bonus, kept: +1 once a day for time together indoors in bad weather, outdoors in fine weather, a clear Star Night
     if (V._Fatigue !== 'Collapsed' && together && bondWx && !d.wx && (byId[id] || []).some(a => /^(talk|hangout|study)$/i.test(String((a && a.Kind) || '').trim()))) { d.wx = 1; gain += BR.weather_xp; }
+    // 1.44.0 (audit 3.13): a teammate fought beside {{user}}: bond XP once a year per competition tier (stepReputation's teamBond)
+    if (teamBond && teamBond.ids.has(id) && id !== KR.id) { gain += teamBond.xp; log.push(`${id} fought beside {{user}} in the ${teamBond.tier} Competition: +${teamBond.xp} bond XP.`); }
     // ---- 1.4.3 Trust: drops as the narrator wrote them (x the category), rises only from reported deeds (x the category, capped a
     // week) and a rank earned; a quiet week recovers it towards the floor; then the overrides. tr0 (before this reply) decides what
     // Trust does to Tension and apologies below.
@@ -3393,7 +3419,16 @@ function stepProficiency(c) {
     log.push("Consummate: the Noble Houses' Liaison has taken note of {{user}} (a letter).");
   }
   const leadHere = ['main library', 'archive'].includes(here);
-  if (hasB && ranks.Knowledge >= MASTERY && leadHere && MS.lead !== weekNo && Object.keys(S.Clues || {}).some(k => !(B.Clues || {})[k])) { MS.lead = weekNo; log.push("Encyclopaedic: this week's real lead is used."); }
+  // 1.44.0 (audit 3.12): a Clue the story adds here is the week's lead (Source records); a reply spent here without one files it:
+  // on the oldest rumour or story {{user}} pinned and has not had looked up yet, else on the open thread found most recently
+  if (hasB && !c.toolEdit && !OFF.has('mystery') && ranks.Knowledge >= MASTERY && leadHere && MS.lead !== weekNo) {
+    const fresh = Object.keys(S.Clues || {}).find(k => !(B.Clues || {})[k]);
+    if (fresh) { MS.lead = weekNo; S.Clues[fresh].Source = 'records'; log.push(`Encyclopaedic: "${fresh}" is this week's real lead.`); }
+    else if (before === here) {
+      const lead = recordsLead(S, MS, here === 'archive' ? 'the Archive' : 'the Main Library');
+      if (lead) { MS.lead = weekNo; S.Clues[lead.key] = lead.clue; log.push(lead.log); }
+    }
+  }
   const mastered = PROF.filter(k => ranks[k] >= MASTERY);
   S.$ui.mastery = mastered.length ? { stats: mastered, lead: ranks.Knowledge >= MASTERY && leadHere && MS.lead !== weekNo } : null;
   if (num(ranks.Craft, 0) >= MW.rank) S.$ui.craft.push(...Object.keys(S.Projects || {}).filter(k => mwGroup(S.Projects[k]) !== null && num(S.Projects[k].Progress, 0) < 100).slice(0, 2).map(k => mwResult(S, k)));
@@ -3403,6 +3438,19 @@ function stepProficiency(c) {
     const mods = PROF.filter(k => ranks[k] > 0).map(k => `${k} +${Math.min((SUBJECTS.some(s => SUBJECT_STAT[s] === k && num(((S.$eng.study || {}).stand || {})[s], -1) === 4) ? 10 : 20), ranks[k] * 3)}`);
     if (mods.length) S.$ui.fortune.mods.push('proficiency: ' + mods.join('; '));
   }
+}
+
+// 1.44.0 (audit 3.12): Encyclopaedic's weekly real lead, filed by the engine. The narrator says what the record shows (true to the
+// lore) and rewrites the Detail; the engine never invents the content.
+function recordsLead(S, MS, where) {
+  const Cl = S.Clues || {}, done = MS.led = Array.isArray(MS.led) ? MS.led : [];
+  const pin = Object.keys(Cl).find(k => /^(rumour|story)$/.test(Cl[k].Source) && !done.includes(k) && (S.Mysteries[Cl[k].Thread] || {}).Status !== 'solved');
+  const open = Object.keys(Cl).reverse().map(k => Cl[k].Thread).find(t => (S.Mysteries[t] || {}).Status === 'open' && t !== 'Unsorted clues');
+  const on = pin || open; if (!on) return null;
+  if (pin) MS.led = [...done, pin].slice(-20);
+  const key = `Records: ${on}`.replace(/[./~]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 60), about = pin ? `"${pin}"` : on;
+  return { key, clue: { Thread: pin ? Cl[pin].Thread : open, Detail: `A record in ${where} bears on ${about}; what it shows comes out next.`, Where: where.replace(/^the /, 'The '), Links: [], Source: 'records' },
+    log: `Encyclopaedic: digging in ${where} turned up this week's real lead on ${about} (Clue "${key}"). In the next reply show what the record says, true to the lore, and rewrite that Clue's Detail with it.` };
 }
 
 // ---- 6c. 1.3.0 one-use perks spent this reply (/Perk_use). Kuroo's and Milena's Rank 10 favours lift a negative reputation one level.
@@ -4448,7 +4496,8 @@ function stepUi(c) {
   if (Object.keys(M.Pacts || {}).length) unlock('pacts');
   if (Object.keys(S.Commitments || {}).length) unlock('planner');
   if (Object.keys(S.Player.Injuries || {}).length) unlock('injuries');
-  if ((S.Campus_State.Secrets_revealed || []).length || Object.keys(S.Clues || {}).length) unlock('mystery');
+  // 1.44.0: a rumour or a story heard can be pinned as a clue there, so either opens the Mystery Board
+  if ((S.Campus_State.Secrets_revealed || []).length || Object.keys(S.Clues || {}).length || (S.Campus_State.Rumours || []).length || S.$ui.lore.length) unlock('mystery');
   if (Object.keys(S.Notices || {}).length || CASTLE.has(place.toLowerCase())) unlock('notices');
   if (Object.keys(S.Letters || {}).length) unlock('letters');
   const doy = dayNo % (YEAR_DAYS);
