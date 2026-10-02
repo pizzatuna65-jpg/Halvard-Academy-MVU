@@ -154,6 +154,15 @@ t = t.replace('/*@@AVALON@@*/{}', json.dumps({**{k: v for k, v in _av.items() if
     'places': [{k: v for k, v in p.items() if k not in ('desc', 'vibe')} for p in _av['places']],
     'rivals': {nid: n['year'] for nid, n in sorted(_npcs_all.items()) if (n.get('group') or '').endswith('team')}},
     ensure_ascii=False, separators=(',', ':')))
+# 1.40.0 (owner-approved planning/DRAFT_airship.md): the airship flights and the places aboard; descriptions stay in the lore and the UI
+_air = json.load(open(P('data/airship.json'), encoding='utf-8'))
+_airids = {p['id'] for p in _air['places']}
+assert _air['board'] in _airids and _air['bath']['place'] in _airids, 'airship.json: board or bath names an unknown place'
+assert all(f['who'] in ('all', 'kingdom') and f['dir'] in ('out', 'home') and f['route'] + '_' + f['dir'] in _air['views'] and f['route'] + '_' + f['dir'] in _air['cargo']
+           and len(_air['views'][f['route'] + '_' + f['dir']]) == 3 and (f['route'] in _air['sky']) for f in _air['flights']), 'airship.json: a flight without its views, cargo or sky'
+assert all(re.match(r'^\d\d:\d\d$', f['from']) and f['from'] < f['to'] for f in _air['flights']), 'airship.json: flight times'
+t = t.replace('/*@@AIRSHIP@@*/{}', json.dumps({**{k: v for k, v in _air.items() if not k.startswith('_')},
+    'places': [{k: v for k, v in p.items() if k not in ('desc', 'line')} for p in _air['places']]}, ensure_ascii=False, separators=(',', ':')))
 # Bond rules and where each NPC is usually found (Haunts, first clause).
 t = t.replace('/*@@BOND_RULES@@*/{}', json.dumps(json.load(open(P('data/bond_rules.json'), encoding='utf-8')), ensure_ascii=False, separators=(',', ':')))
 haunt = {}

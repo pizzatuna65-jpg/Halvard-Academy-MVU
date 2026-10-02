@@ -3,7 +3,7 @@
 const fs = require('fs'), path = require('path'), ejs = require('ejs'), YAML = require('yaml');
 const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
 const E = new Function(fs.readFileSync(path.join(ROOT, 'src/scripts/engine.js'), 'utf8')
-  + '\nreturn { wxDay, wxForecast, rawHappening, fromAbs, blockOf, fluOn, HAPPENINGS, hash32, OUTDOOR };')();
+  + '\nreturn { wxDay, wxForecast, rawHappening, fromAbs, blockOf, fluOn, HAPPENINGS, hash32, OUTDOOR, airFlight };')();
 const card = JSON.parse(fs.readFileSync(path.join(ROOT, 'dist/Eldrasil_Halvard.json'), 'utf8')).data;
 const entry = uid => card.character_book.entries.find(e => e.id === uid).content;
 const render = (uid, S) => ejs.render(entry(uid), { getvar: k => _.get({ stat_data: S }, k) });
@@ -300,7 +300,7 @@ console.log('Weather in the Now entry: indoor schedules, flu, moods, battle fiel
   const satRain = (() => { for (let d = 5; d < 3000; d += 7) { const D = E.wxDay(SEED, d); if (QUIET(d) && D.blocks[1].sky === 'Rain' && !D.blocks[1].snow) return d; } })();
   ok(/Soccer Club: practising indoors \(Gymnasium\) or cancelled/.test(render(505, at(S0, satRain, '14:00', 'Sports Field'))), 'Saturday clubs with only outdoor venues practise indoors or cancel');
   ok(/Fishing Club: meeting here/.test(render(505, at(S0, satRain, '14:00', 'Fishing House'))), '...except the Fishing Club, which goes out in the rain (at its Fishing House, 1.2.0)');
-  const fluD = (() => { for (let d = 252; d < 308; d++) if (E.fluOn(SEED, d) && QUIET(d)) return d; for (let d = 588; d < 644; d++) if (E.fluOn(SEED, d)) return d; })();   // 1.9.4: Months 10-11
+  const fluD = (() => { for (let d = 252; d < 308; d++) if (E.fluOn(SEED, d) && QUIET(d) && !E.airFlight({ ...E.fromAbs(d * 1440), Time: '17:00' }, {})) return d; for (let d = 588; d < 644; d++) if (E.fluOn(SEED, d)) return d; })();   // 1.9.4: Months 10-11 (1.40.0: not a day {{user}} spends flying)
   const F = at(S0, fluD, '17:00', 'Main Library'), ft = render(505, F);
   ok(F.$ui.wx.flu && F.$ui.wx.sick.length >= 1 && /A cold is going around campus\. Off sick in their dorm today: /.test(ft), `flu wave: ${F.$ui.wx.sick.join(', ')} off sick`);
   const likely = /Likely around[^:]*: (.*)/.exec(ft)[1];

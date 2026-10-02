@@ -384,6 +384,8 @@ function curfewOf(W, evs, S) {
   // v1.0.3 (F01): on a trip or an off-grounds day, and not at a campus place, the dorm curfew does not apply
   const Tr = (S && S.Trip) || {};
   // 1.39.0: Halvard's Kingdom Competition team in Avalon keeps the Whitestone Hotel's hours (lore 19: Gavlan Haverton escorts them)
+  // 1.40.0: aboard the airship nobody keeps dorm hours; the teachers count heads at boarding and landing
+  if (placeOf(W.Location) === AIR.area) return 'Away from campus (aboard the airship): the dorm curfew does not apply; the teachers count heads at boarding and landing';
   if (placeOf(W.Location) === AV.area && avKingdom(W, S || {})) return h >= 22 || h < 7 ? 'Hotel curfew (22:00-07:00): the team stays in its rooms at the Whitestone Hotel; Gavlan Haverton keeps watch' : h >= 21 ? 'Back at the Whitestone Hotel by 22:00 (free time in the city ended at 21:00)' : 'Away from campus (Avalon, with the team): the dorm curfew does not apply; free time in the city until 21:00, the Whitestone Hotel by 22:00';
   if (!onCampus(W.Location) && (Tr.Active || evs.some(e => e.away))) return `Away from campus${Tr.Active && Tr.Destination ? ` (${Tr.Destination})` : ''}: the dorm curfew does not apply; the teachers in charge set the rules`;
   // v1.0.3 (A#6): a no-curfew event lifts it from its first day's evening to its last day's dawn, not for the whole two days
@@ -657,6 +659,31 @@ function avLoc(loc, id) {                                        // "Avalon — 
   const extra = String(loc || '').split(/\s+[—–-]\s+|,\s+/).map(x => x.trim()).filter(x => { const k = avKey(x); return x && !AV_NAME[k] && !AV_ALIAS[k] && k !== 'avalon' && k !== 'capital'; });
   return [AV.area, AV_PL[id].name, ...extra].join(' — ');
 }
+// ---- 1.40.0 (owner-approved planning/DRAFT_airship.md): the academy's airship flights (data/airship.json). While a flight is in the
+// air World.Location is "Airship — <place>" (Promenade Deck, Common Room, Cabin Deck, Cargo Hold): a closed place until it lands.
+// Boarding puts {{user}} in the Common Room; a Location that still says the airship after landing becomes the flight's destination.
+// stepAirship rolls the sky, the stage and the hold once per hour aboard; <now> gives the view, the landing time and the bar's rule.
+const AIR = {"area":"Airship","board":"common_room","move_min":2,"bath":{"place":"cabin_deck","words":"bath|bathing|washroom|soak","min":10,"clears":["Soaked","Chilled"]},"rates":{"sky":15,"stage":30,"hold":30,"max_rolls":6},"flights":[{"id":"exp_out","m":2,"w":3,"d":"Wed","from":"07:00","to":"12:00","who":"all","route":"forest","dir":"out","event":"the Creature Studies Expedition","dest":"Grand Vast Forest — Base Camp","lands":"Base Camp, at the Grand Vast Forest's southern edge","bar":false},{"id":"exp_home","m":2,"w":3,"d":"Fri","from":"13:00","to":"18:00","who":"all","route":"forest","dir":"home","event":"the Creature Studies Expedition","dest":"Grassy Field and Hills","lands":"Halvard, at the edge of the grounds","bar":false},{"id":"crown_out","m":4,"w":2,"d":"Tue","from":"07:30","to":"09:30","who":"all","route":"avalon","dir":"out","event":"Independence Crowning Day","dest":"Avalon — Skyport","lands":"the Skyport, Avalon","bar":true},{"id":"crown_home","m":4,"w":2,"d":"Tue","from":"16:00","to":"18:00","who":"all","route":"avalon","dir":"home","event":"Independence Crowning Day","dest":"Grassy Field and Hills","lands":"Halvard, at the edge of the grounds","bar":true},{"id":"kd_out","m":9,"w":4,"d":"Tue","from":"08:00","to":"10:00","who":"kingdom","route":"avalon","dir":"out","event":"the Kingdom Competition (Halvard's team and Gavlan Haverton only)","dest":"Avalon — Skyport","lands":"the Skyport, Avalon","bar":false},{"id":"kd_home","m":9,"w":4,"d":"Sun","from":"16:00","to":"18:00","who":"kingdom","route":"avalon","dir":"home","event":"the Kingdom Competition (Halvard's team and Gavlan Haverton only)","dest":"Grassy Field and Hills","lands":"Halvard, at the edge of the grounds","bar":true},{"id":"trip_out","m":11,"w":2,"d":"Sat","from":"07:00","to":"20:00","who":"all","route":"sunreach","dir":"out","event":"the Academy Trip","dest":"Sunreach Bay","lands":"Sunreach Bay","bar":false},{"id":"trip_home","m":11,"w":3,"d":"Thu","from":"08:00","to":"20:00","who":"all","route":"sunreach","dir":"home","event":"the Academy Trip","dest":"Grassy Field and Hills","lands":"Halvard, at the edge of the grounds","bar":false}],"places":[{"id":"promenade_deck","name":"Promenade Deck","aliases":["promenade","the promenade","observation gallery","the observation gallery","observation deck","the bow","the windows","the glass"]},{"id":"common_room","name":"Common Room","aliases":["the common room","lounge","the lounge","canteen","the canteen","canteen counter","the canteen counter","bar","the bar","stage","the stage"]},{"id":"cabin_deck","name":"Cabin Deck","aliases":["cabin","the cabin","cabins","the cabins","our cabin","bunks","the bunks","washrooms","the washrooms","bathing stalls","the bathing stalls","the baths"]},{"id":"cargo_hold","name":"Cargo Hold","aliases":["hold","the hold","cargo","the cargo","luggage","the luggage","luggage racks","the luggage racks","lower deck","the lower deck"]}],"cargo":{"forest_out":"tents, cookfires and camp gear for the Expedition","forest_home":"the Expedition's camp gear, muddier than it left","avalon_out":"the academy's banners and spare uniforms for the day","avalon_home":"the academy's banners, rolled, and whatever the students bought in Avalon","sunreach_out":"the whole academy's luggage for the Trip","sunreach_home":"more luggage than left Halvard, and the crates of what the teachers confiscated"},"views":{"forest_out":["Halvard's grounds and towers falling away behind; farmland and hedges below","the farmland thins into scrub and long empty hills","a green line on the horizon grows into the Grand Vast Forest's canopy, endless, mist rising from it"],"forest_home":["the canopy sliding away under the stern, Base Camp's meadow a pale patch at its edge","long empty hills, then farmland again","Halvard's towers on the horizon, the Bell Tower first"],"avalon_out":["Halvard's grounds falling away behind; towns and roads of the kingdom below","the roads all start bending the same way, towards the capital","Avalon ahead: a round white city on its hill, the castle at its heart and the Herald Spires standing over it"],"avalon_home":["Avalon's white wall shrinking behind, the castle last to go","the kingdom's towns and roads in the afternoon light","Halvard's towers on the horizon, the Bell Tower first"],"sunreach_out":["Halvard falling away; the kingdom's farmland, then its southern towns","the coast, then nothing but sea for hours, a sea that turns bluer the further south it goes","islands, then lights: Sunreach Bay's white beaches by day, its neon side by night"],"sunreach_home":["Sunreach's beaches and lagoons falling behind","open sea for hours, greyer and colder the further north it goes","the coast of Eldrasil, then Halvard's towers in the dark"]},"sky":{"forest":["the canopy breaks for a moment over a river so wide it looks like a lake","a flock of something large lifts out of the trees and keeps pace with the ship for a minute","the ship banks around a column of rain standing on the forest"],"avalon":["another academy's airship draws alongside, its students crowding their own promenade glass","a royal courier ship passes fast and high, gold on blue","the Herald Spires' bells reach the ship before the city does"],"sunreach":["the coast falls behind and there is nothing but sea for hours","a Yozakuran steward walks the promenade ringing a small bell: the line where the warm south begins, and sweets for everyone","flying fish, or something like them, break the water far below"],"home":["Halvard's towers show on the horizon, smaller than anyone remembers","half the ship falls asleep at once","a teacher walks the cabins counting heads early, and loses count"]},"stage":["a Yozakuran steward plays a long-necked lute, slow songs from home","two second-years from another dorm do a duel of insults in rhyme and the room keeps score","a first-year's illusion of a dragon gets away from them and loops the ceiling","a teacher borrows the stage to read out the landing order","the stage is empty and the chalkboard has one name on it: {{user}}'s cabin-mate signed them up"],"hold":["a crate shifts in its straps and something inside knocks back","the quartermaster is asleep on a coil of rope, snoring in time with the engines","two older students come down the ladder, see {{user}}, and go back up without a word","a stowaway cat from the last port watches from the top of the luggage"]};
+const AIR_PL = Object.fromEntries((AIR.places || []).map(p => [p.id, p]));
+const AIR_NAME = {}, AIR_ALIAS = {};
+for (const p of AIR.places || []) { AIR_NAME[avKey(p.name)] = p.id; for (const a of p.aliases || []) AIR_ALIAS[avKey(a)] = p.id; }
+// the flight in the air at W ({{user}} on it: the Kingdom flights only for Halvard's team), or null
+function airFlight(W, S) {
+  const t = hm(W.Time); if (t == null) return null;
+  return (AIR.flights || []).find(f => f.m === num(W.Month, 0) && f.w === num(W.Week, 0) && f.d === W.Day && t >= hm(f.from) && t < hm(f.to)
+    && (f.who !== 'kingdom' || avKingdom(W, S || {}))) || null;
+}
+// The airship place a Location names, or ''. aboard: the aliases count too ("the bar", "our cabin"), only while a flight is in the air.
+function airPlace(loc, aboard) {
+  const segs = String(loc || '').split(/\s+[—–-]\s+|,\s+/).map(avKey).filter(Boolean);
+  for (let i = segs.length - 1; i >= 0; i--) { const id = AIR_NAME[segs[i]] || ((aboard || segs[0] === 'airship') && AIR_ALIAS[segs[i]]); if (id) return id; }
+  return segs[0] === 'airship' ? AIR.board : '';
+}
+function airLoc(loc, id) {                                       // "Airship — <place>" plus any detail the story wrote ("— the bathing
+  const segs = String(loc || '').split(/\s+[—–-]\s+|,\s+/).map(x => x.trim()), named = segs.some(x => AIR_NAME[avKey(x)]);   // stalls" stays after the name)
+  const extra = segs.filter(x => { const k = avKey(x); return x && !AIR_NAME[k] && !(AIR_ALIAS[k] && !named) && k !== 'airship'; });
+  return [AIR.area, AIR_PL[id].name, ...extra].join(' — ');
+}
 // 1.31.0 (data/restore_places.json): the multiplier a restful place gives at one moment, [multiplier, why]. The first rule that fits
 // wins; weather conditions never fit with the weather off. dark = outside Practice's daylight hours. wxc caches a time block's weather.
 function restMult(R, abs, seed, wxOn, cold, wxc) {
@@ -861,7 +888,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.39.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.40.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
 // from the shared context c (the states, the reply's text and the values earlier steps computed) and adds what later steps use.
@@ -1109,13 +1136,31 @@ function stepTime(c) {
   }
   // 1.38.0: during the Expedition a forest place is written in the forest map's words; elsewhere in the campus map's (1.3.1)
   const fPrev = hasB ? forestPlace(B.World.Location, (_.isPlainObject((B.$ui || {}).forest) && B.$ui.forest.on && B.$ui.forest.at) || '') : '';
-  const fAt = expOnDay(S.World) ? forestPlace(S.World.Location, fPrev) : '';
+  // 1.40.0: while a flight is in the air {{user}} is aboard, in the airship's words. An outbound flight boards whoever is still
+  // elsewhere (the Common Room, where the crew counts heads); a flight home leaves a place in the forest or Avalon to those maps
+  // until the story boards. A Location that still says the airship after landing becomes the flight's destination.
+  const sFl = airFlight(S.World, S), sPrev = hasB && placeOf(B.World.Location) === AIR.area ? airPlace(B.World.Location, true) : '';
+  let sAt = '', sBoard = false;
+  if (sFl) {
+    sAt = airPlace(S.World.Location, true);
+    if (!sAt && !(sFl.dir === 'home' && (forestPlace(S.World.Location, '') || avPlace(S.World.Location, '') || /sunreach/i.test(String(S.World.Location))))) {
+      sAt = sPrev || AIR.board; sBoard = !sPrev;
+      log.push(sBoard ? `The airship for ${sFl.event} is in the air (${sFl.from}-${sFl.to}): {{user}} is aboard; World.Location was set to ${AIR.area} — ${AIR_PL[sAt].name}.`
+        : `Nobody leaves the airship until it lands (${sFl.to}): World.Location was kept at ${AIR.area} — ${AIR_PL[sAt].name}.`);
+      S.World.Location = '';
+    }
+  } else if (sPrev && (placeOf(S.World.Location) === AIR.area || AIR_NAME[avKey(S.World.Location)])) {
+    const bFl = airFlight(B.World, S);
+    if (bFl) { log.push(`The airship has landed (${bFl.to}): World.Location was set to ${bFl.dest}.`); S.World.Location = bFl.dest; }
+  }
+  const fAt = !sAt && expOnDay(S.World) ? forestPlace(S.World.Location, fPrev) : '';
   // 1.39.0: in Avalon (Crowning Day; the Kingdom Competition days for Halvard's team) a city place is written in the city map's
   // words. Past the White Line (the castle pin) only the Kingdom winners go: anyone else is held at the last place before it.
   const aPrev = hasB ? avPlace(B.World.Location, (_.isPlainObject((B.$ui || {}).capital) && B.$ui.capital.on && B.$ui.capital.at) || '') : '';
-  let aAt = !fAt && (avCrown(S.World) || avKingdom(S.World, S)) ? avPlace(S.World.Location, aPrev) : '', aHeld = '';
+  let aAt = !sAt && !fAt && (avCrown(S.World) || avKingdom(S.World, S)) ? avPlace(S.World.Location, aPrev) : '', aHeld = '';
   if (aAt && AV_PL[aAt].locked && !avPass(S)) { aHeld = aAt; aAt = aPrev && !AV_PL[aPrev].locked ? aPrev : 'crown_square'; }
-  if (fAt) S.World.Location = forestLoc(S.World.Location, fAt);
+  if (sAt) S.World.Location = airLoc(S.World.Location, sAt);
+  else if (fAt) S.World.Location = forestLoc(S.World.Location, fAt);
   else if (aAt) S.World.Location = aHeld ? avLoc('', aAt) : avLoc(S.World.Location, aAt);
   else if (!(S.Trip && S.Trip.Active)) S.World.Location = canonLocation(S.World.Location);
   const absB = hasB ? (B.$eng && B.$eng.abs >= 0 ? B.$eng.abs : toAbs(B.World)) : toAbs(S.World);
@@ -1267,7 +1312,7 @@ function stepTime(c) {
       if (num(S.Player.Profile.Age, 18) === num(B.Player.Profile.Age, 18)) { S.Player.Profile.Age = num(S.Player.Profile.Age, 18) + 1; log.push(`Birthday: {{user}} turns ${S.Player.Profile.Age} today (Player.Profile.Age).`); }
     }
   }
-  Object.assign(c, { absB, absA, elapsed, evs, dayNo, goneNow, dayNoB, fAt, fPrev, aAt, aPrev, aHeld });
+  Object.assign(c, { absB, absA, elapsed, evs, dayNo, goneNow, dayNoB, fAt, fPrev, aAt, aPrev, aHeld, sAt, sPrev, sFl, sBoard });
 }
 
 // ---- 1b. 1.1.0 weather (spec §4): season, sky, wind, rare weather and °C for the current block; the Divination Society forecast ----
@@ -1808,6 +1853,34 @@ function stepCapital(c) {
     walks: AV.pins.filter(p => p.id !== pin && (!p.locked || pass)).map(p => [p.id, p.name, R0[p.id].m]).sort((a, b) => a[2] - b[2]),
     near: AV.places.filter(p => p.pin === pin && p.id !== aAt && (!p.locked || pass) && (!p.hidden || seen.includes(p.id))).map(p => [p.name, avMin(aAt, p.id)]),
     muster, ev: evs };
+}
+
+// 1.40.0 (owner-approved planning/DRAFT_airship.md): aboard the airship. A hot bath on the Cabin Deck ends Soaked and Chilled; once
+// per hour in the air a moment in the sky (the route's pool, or the way home's), and in the Common Room the stage, in the Cargo Hold
+// the hold (seeded by the flight and the hour, so a swipe sees the same flight). Outside a flight: whether one leaves within 90 min.
+function stepAirship(c) {
+  const { S, log, hasB, toolEdit, absA, absB, elapsed, seed, restedAs, Cn, sAt, sPrev, sFl, sBoard } = c;
+  if (!sAt) {
+    const t = hm(S.World.Time), nx = t == null ? null : (AIR.flights || []).find(f => f.m === num(S.World.Month, 0) && f.w === num(S.World.Week, 0) && f.d === S.World.Day
+      && hm(f.from) > t && hm(f.from) - t <= 90 && (f.who !== 'kingdom' || avKingdom(S.World, S)));
+    S.$ui.airship = nx ? { on: false, soon: { event: nx.event, from: nx.from, lands: nx.lands } } : { on: false };
+    return;
+  }
+  const R = AIR.rates || {}, Bt = AIR.bath || {}, fid = `${num(S.World.Year, 1)}-${sFl.id}`, route = sFl.dir === 'home' ? 'home' : sFl.route, evs = [];
+  if (hasB && !toolEdit && sAt === Bt.place && sPrev === Bt.place && elapsed >= num(Bt.min, 10) && new RegExp(Bt.words || 'bath', 'i').test(S.World.Location))
+    for (const k of Bt.clears || []) if (Cn[k]) { delete Cn[k]; S.$ui.toasts.push(`${k}: over`); log.push(`${k} ended: a hot bath in the airship's bathing stalls.`); }
+  if (hasB && !toolEdit && elapsed > 0 && sPrev && restedAs !== 'sleep') {
+    const h1 = Math.floor(absA / 60), got = new Set();
+    for (let h = Math.max(Math.floor(absB / 60) + 1, h1 - num(R.max_rolls, 6) + 1); h <= h1; h++) {
+      const roll = k => rand01(seed, 'air', fid, h, k) * 100, pick = (a, k) => a[hash32(seed, 'air', fid, h, k) % a.length];
+      for (const [k, pool, ok] of [['sky', (AIR.sky || {})[route], true], ['stage', AIR.stage, sAt === 'common_room'], ['hold', AIR.hold, sAt === 'cargo_hold']])
+        if (ok && !got.has(k) && (pool || []).length && roll(k) < num(R[k], 0)) { got.add(k); evs.push({ k, t: pick(pool, k + 't') }); }
+    }
+  }
+  const t = hm(S.World.Time), a = hm(sFl.from), b = hm(sFl.to), key = `${sFl.route}_${sFl.dir}`;
+  S.$ui.airship = { on: true, at: sAt, name: AIR_PL[sAt].name, event: sFl.event, from: sFl.from, to: sFl.to, lands: sFl.lands, left: Math.max(0, b - t), bar: !!sFl.bar,
+    board: sBoard, view: sAt === 'promenade_deck' ? ((AIR.views || {})[key] || [])[Math.min(2, Math.floor((t - a) * 3 / Math.max(1, b - a)))] || '' : '',
+    cargo: sAt === 'cargo_hold' ? (AIR.cargo || {})[key] || '' : '', near: AIR.places.filter(p => p.id !== sAt).map(p => p.name), ev: evs };
 }
 
 // ---- 5. vitals ----
@@ -4245,7 +4318,7 @@ function stepCommit(c) {
   if (log.length) S._Log = [...(S._Log || []), ...log.map(l => `[${stamp(S.World)}] ${l}`)].slice(-12);
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepRest, stepExposure, stepExpedition, stepCapital, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepUi, stepCommit];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepUi, stepCommit];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,

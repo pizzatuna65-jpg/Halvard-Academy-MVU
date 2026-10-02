@@ -50,7 +50,7 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
   - Area 2 Avalon, ibukota: **selesai, v1.39.0** (`data/avalon.json`). Peta kota seperti peta kampus (pin berisi lokasi, semua pin
     umum terbuka, pin terkunci tidak tampil, lokasi tersembunyi tampil setelah dikunjungi); `stepCapital` (jalan, kereta, White Line,
     muster, kocokan kehidupan kota per jam); `renderCapital`. Area 3 bisa memakai pola kota ini untuk sisi siang/malam Sunreach.
-  - Area 3 Sunreach Bay: belum.
+  - Area 3 Sunreach Bay: belum. Penerbangan Trip (Sab dan Kam) sudah ada sejak 1.40.0 dan mendarat di "Sunreach Bay".
 
 ## 2. Ide yang dicatat tapi tidak dipilih (butuh "proceed" owner kalau mau dibuat)
 - **Patroli jam malam** (E2, 2026-09-28): risiko tertangkap yang di-seed saat {{user}} di luar setelah curfew. Sejak 1.18.0 hanya ada
@@ -96,4 +96,6 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
 - Avalon (1.39.0, `data/avalon.json` `rates`, `crowning`, `legs`): jalan 5%/jam, keramaian ×1.5 (10:00–13:00), kereta 10 coin,
   copet 8% (50% ketahuan, 10–25% koin, maks 300), prosesi 10%, atraksi 20%, siswa akademi lain 25%, Tsubaki 10%, pencari bakat
   15%, razia Rookery 5% (lolos 60%), jam Crowning Day (09:30, 10:00, 11:00, 11:30–15:30, 16:00), menit jalan antar pin.
+- Airship (1.40.0, `data/airship.json`): jam terbang tiap acara, momen langit 15%/jam, panggung 30%/jam, hold 30%/jam, mandi 10 menit,
+  pindah tempat 2 menit, `soon` 90 menit sebelum berangkat. Mid-Year Break dan World Competition belum jadi penerbangan.
 - UI: `latestState()` bisa mundur banyak floor bila hanya floor awal yang memegang state (belum diukur di ST).

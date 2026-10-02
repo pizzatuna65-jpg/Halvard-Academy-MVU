@@ -3,15 +3,15 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.39.0** (2026-10-02): Avalon, the capital, FP7 area 2. On Crowning Day (M4 W2 Tue) and for Halvard's
-Kingdom Competition team (M9 W4) the city has its own map (`data/avalon.json`, `stepCapital`, the Avalon tab in the Map panel):
-pins holding places, walks and hire carriages, the White Line (the castle only for the Kingdom winners), the Crowning Day muster,
-the city's seeded life (pickpockets, other academies' students, Tsubaki lost, Rookery raids). v1.38.0: the Grand Vast Forest
-(FP7 area 1). Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
+**Snapshot:** card **v1.40.0** (2026-10-02): the airship. During every academy flight (Expedition, Crowning Day, the Kingdom
+team's flights, the Academy Trip; `data/airship.json`, `stepAirship`, an Airship tab in the Map panel) {{user}} is aboard in one of
+four places (Promenade Deck, Common Room with a bar and a stage, Cabin Deck, Cargo Hold), boarded and landed by the engine, with
+seeded moments in the sky, on the stage and in the hold. v1.39.0: Avalon, the capital (FP7 area 2); v1.38.0: the Grand Vast
+Forest (FP7 area 1). Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** live-check v1.39.0 (Avalon, on a chat at M4 W2) and v1.38.0 (the forest), and the earlier "Open" items; confirm the
-details invented for 1.38.0 and 1.39.0 (CHANGELOG). Then FP7 area 3: Sunreach Bay (draft first; map style in
-`planning/MAP_PROMPTS_outside_maps.txt` "GAYA UMUM").
+**Next task:** FP7 area 3: Sunreach Bay (draft first; map style in `planning/MAP_PROMPTS_outside_maps.txt` "GAYA UMUM"; the Trip
+flights already exist, landing at "Sunreach Bay"). Live-check v1.40.0, v1.39.0 and v1.38.0 and the earlier "Open" items; confirm
+the details invented for 1.38.0–1.40.0 (CHANGELOG).
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

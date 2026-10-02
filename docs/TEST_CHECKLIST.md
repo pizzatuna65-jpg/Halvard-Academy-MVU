@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.40.0 (the airship): the four checks in its section below.
 - v1.39.0 (Avalon): the five checks in its section below.
 - v1.38.0 (Grand Vast Forest): the four checks in its section below.
 - v1.37.4 (calm thoughts): the check in its section below.
@@ -79,6 +80,19 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.40.0 — The airship
+
+Play Crowning Day (Month 4 Week 2 Tuesday morning), or a Year 2 chat there. Re-import the card (new lore and update rules).
+1. 07:00 at the speeches: `<now>` says the flight leaves at 07:30. After 07:30 `World.Location` reads "Airship — Common Room", the
+   Map panel opens on the Airship tab (four cards, the landing countdown), and the bracelet shows no dorm curfew.
+2. Go to the Promenade Deck, the Cabin Deck and the Cargo Hold: the narrator uses each entry (the view by the glass, the bathing
+   stalls, the grumbling quartermaster) and writes "Airship — <place>". At the bar the stewards serve drinks (a holiday); on a
+   weekday flight they would not.
+3. Try to leave early ("Avalon — Skyport" before 09:30) or walk into the bridge: kept aboard / turned back, no punishment. The
+   narrator plays only the stage, hold and sky moments `<now>` lists; a swipe keeps them.
+4. Landing: the location becomes "Avalon — Skyport" and the Avalon tab takes over; the airship lore and block are gone. On the way
+   home (16:00) the same, landing at the Grassy Field and Hills.
 
 ### v1.39.0 — Avalon
 

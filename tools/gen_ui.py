@@ -70,6 +70,9 @@ _av = json.load(open(P('data/avalon.json'), encoding='utf-8'))
 DATA['capital'] = {'area': _av['area'], 'map': _av['map'], 'legs': _av['legs'], 'fare': _av['rates']['ride_coin'],
                    'pins': [{k: p[k] for k in ('id', 'name', 'x', 'y', 'locked') if k in p} for p in _av['pins']],
                    'places': [{k: p[k] for k in ('id', 'name', 'pin', 'in', 'locked', 'hidden', 'desc', 'vibe') if k in p} for p in _av['places']]}
+# 1.40.0 (owner-approved planning/DRAFT_airship.md): the airship tab (no map image): the four places aboard, shown only during a flight
+_air = json.load(open(P('data/airship.json'), encoding='utf-8'))
+DATA['airship'] = {'area': _air['area'], 'places': [{k: p[k] for k in ('id', 'name', 'line', 'desc')} for p in _air['places']]}
 CAST = {}
 for nid, n in npcs.items():
     first = nid

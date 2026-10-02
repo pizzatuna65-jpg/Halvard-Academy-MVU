@@ -14,6 +14,7 @@ Build first with `python tools/build_all.py`. Run all suites with `npm test`; ru
 | Prompt and card package | `test_tokens_v1110.cjs`, `test_preset.cjs`, `test_npc_thoughts_v1373.cjs` (preset NPC Thoughts block), `qa_static.cjs`, `lint.cjs` |
 | Grand Vast Forest / Expedition (1.38.0) | `test_expedition_v1380.cjs` (routes, place names, walking and owed hours, the seeded hunt, the catch guard, the result, `<now>`, lore gate, UI data) |
 | Avalon, the capital (1.39.0) | `test_avalon_v1390.cjs` (routes, names and aliases, walks, crowds, carriages, the White Line, the hourly city rolls, the muster, Tsubaki in Year 1, the Kingdom team, the day-before reminder, lore gate, `<now>`, 502, UI data) |
+| The airship (1.40.0) | `test_airship_v1400.cjs` (flights and who flies, boarding, kept aboard, landing at the destination, the bathing stalls, the seeded sky / stage / hold, the bar's rule, lore gate, `<now>`, 502, the Airship tab) |
 | Engine integration audit | `test_audit_b1_v1161.cjs`, `test_audit_b2_v1170.cjs`, `test_integrations_v1180.cjs` |
 | Engine steps and save migrations | `test_engine_steps_v1200.cjs`, `test_saves.cjs`; any suite with `ENGINE_DIFF=<older engine.js>` compares every engine run with that build |
 

@@ -1,7 +1,45 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.40.0 — The airship: four places aboard (2026-10-02)
+
+Owner-approved `planning/DRAFT_airship.md` (owner notes: no map image; a bar and a small stage; the cargo hold as a place; no beast
+pens), done before FP7 area 3 because the Academy Trip spends two whole days in the air. Save fixture v1.39.0.
+- **Flights** (`data/airship.json`, single source for the lore, the engine and the UI): the Expedition (Wed 07:00–12:00 out, Fri
+  13:00–18:00 home), Crowning Day (07:30–09:30, 16:00–18:00), the Kingdom Competition for Halvard's team only (Tue 08:00–10:00,
+  Sun 16:00–18:00), the Academy Trip (Sat 07:00–20:00, Thu 08:00–20:00). Mid-Year Break and the World Competition are not flights
+  yet (one line each in the data when wanted).
+- **Places aboard** (lore 378–381, from the canon `[Airships]` "Onboard" list): Promenade Deck (the glassed gallery and the view,
+  teachers strolling, the bridge door); Common Room (Yozakuran low tables, the canteen counter, a small bar, a stage with a chalkboard
+  sign-up, the galley hatch); Cabin Deck (one cabin per group of four, hot bathing stalls, the teachers' cabins forward); Cargo Hold
+  (luggage and gear, a grumbling Yozakuran quartermaster, the most private place aboard, the engine room door). The galley, the engine
+  room, the bridge and the teachers' cabins stay crew and staff only, with no penalty.
+- **Engine** (`airFlight`, `airPlace`, `airLoc` in `stepTime`; `stepAirship` after `stepCapital`). During a flight `World.Location`
+  is "Airship — <place>"; short aliases ("the bar", "our cabin", "the hold") count only in the air. An outbound flight boards whoever
+  is still elsewhere (the Common Room); a flight home leaves a place in the forest or Avalon to those maps until the story boards;
+  nobody leaves before landing; a Location that still says the airship after landing becomes the destination (Avalon — Skyport,
+  Grand Vast Forest — Base Camp, Sunreach Bay, or the Grassy Field and Hills at Halvard), where the forest and the city take over.
+  Moving aboard takes two minutes. Ten minutes in the bathing stalls end Soaked and Chilled. Once per hour in the air (seeded by the
+  flight and the hour, swipe-safe, not while asleep): a moment in the sky (15%, the route's pool, the way home's on return flights),
+  the stage in the Common Room (30%), the hold in the Cargo Hold (30%); stories only, no points, coin or items. Aboard there is no
+  dorm curfew ("Away from campus (aboard the airship)") and the weather is the narrator's.
+- **Narrator.** `<now>` gets an airship block: where {{user}} is, where and when it lands (countdown), the four places and the crew-only
+  doors, the bar's rule for the day (students drink only on the rest day and in the holidays: Crowning Day and the Kingdom team's
+  Sunday flight home), the view from the promenade by route and third of the flight, the hold's cargo by route, the rolled moments.
+  90 minutes before a flight it says when it leaves. Campus regulars and happenings are left out aboard. 502: the Location format
+  around a flight. The four entries are constant behind a gate on `$ui.airship` (on, or soon).
+- **UI.** The Map panel gets an Airship tab only during a flight, opened by itself: four place cards (no map image, owner), the
+  landing countdown and the view.
+- Tests: new `test_airship_v1400.cjs` (data and aliases, boarding, the view by third, the hold's cargo, kept aboard, landing at
+  Avalon and the forest, the flight home, the bathing stalls, who flies, the seeded sky / stage / hold, sleep, lore gate, `<now>`,
+  502, UI); `test_world_v110.cjs` (the flu check skips a day {{user}} spends flying); full `npm test` passes; stress passes (the old
+  Topaz fuzz note).
+- To confirm with the owner (invented while applying): the arrival times the calendar does not give (Expedition out 12:00, home
+  13:00–18:00; Crowning Day boarding 07:30 and home 18:00; Kingdom 08:00–10:00 and 16:00–18:00; Trip arrivals 20:00, home from
+  08:00); the airship landing at the Grassy Field and Hills; the Yozakuran quartermaster and the crew musician; the view and cargo
+  lines per route.
 
 ## v1.39.0 — Avalon: the capital's own map (2026-10-02)
 
@@ -121,23 +159,6 @@ craft that makes sense on any card). Save fixture v1.37.2.
 - Tests: `test_npc_thoughts_v1373.cjs` (toggle, BOLT order, both regexes, VectFox, CSS), `test_preset.cjs`, `test_saves.cjs`.
 - To confirm with the owner: nothing.
 
-## v1.37.2 — Dialogue colours: light only, a second and third colour each (2026-10-02)
-
-Owner: no dark colours; a second and third backup colour so nobody in a scene shares one. Asked whether this touches NPC
-encounters: no, the colour step runs after the cast is decided and writes only `$ui.say` / `$ui.sayx`, which only the UI reads.
-Save fixture v1.37.1.
-- Palette: the same 12 kinds, all light (dark theme lightness 72-89; light theme 50-60, never dark). Lavender moved away from the
-  narration grey; the closest pair is now lavender/purple at 9.7.
-- Every roster character has a first, second and third colour (`data/dialogue_colors.json`): the first differs from the people
-  they share scenes with where 12 colours allow; the second and third avoid those people's first colours. A recorded Extras
-  character gets three when first present (`$ui.sayx`, the least used first).
-- In a scene (end of `stepCast`): whoever was already there keeps their colour; a newcomer takes the first of their three nobody
-  present has, then the free colour farthest from those in use. `$ui.say` now holds only the people present, so someone who
-  leaves is back on their first colour next time (1.37.1 kept the move).
-- Tests: `test_say_colors_v1370.cjs` (light palette, three colours each, second then third on arrival, back to the first alone,
-  twelve in one scene all different, Extras), `test_saves.cjs` (`$ui.say` is recomputed each update), the full suite.
-- Nothing to confirm with the owner.
-
 ## Release index (one line per release, oldest first)
 
 - All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/archive/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; CHANGELOG 1.2.0/1.2.1).
@@ -253,3 +274,4 @@ Save fixture v1.37.1.
 - **v1.37.4 (2026-10-02):** NPC Thoughts: only as raw as the character is; optional regex so the AI never reads thoughts back.
 - **v1.38.0 (2026-10-02):** The Grand Vast Forest: the Expedition's own map, engine-rolled hunt (target, signs, beasts, the Wendigo), walking stamina, forest weather, map tab.
 - **v1.39.0 (2026-10-02):** Avalon, the capital: its own map (pins holding places), walks and hire carriages, the White Line, the Crowning Day muster, the city's seeded life (pickpockets, other academies' students, Tsubaki lost, Rookery raids), map tab.
+- **v1.40.0 (2026-10-02):** The airship: four places aboard (Promenade Deck, Common Room with a bar and a stage, Cabin Deck, Cargo Hold) during every academy flight, boarding and landing, the seeded sky / stage / hold, an Airship map tab.

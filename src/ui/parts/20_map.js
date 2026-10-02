@@ -201,17 +201,35 @@ function renderCapital(S, tabs) {
     <div class="sub" style="margin:6px 0 10px">${where}</div></div><div class="sheet">${sheet}</div></div></div></div>`;
 }
 
+// ---- 1.40.0 (owner-approved planning/DRAFT_airship.md): the airship (DATA.airship, engine $ui.airship). A tab only during a flight,
+// opened by itself; no map image (owner): the four places aboard as cards, two minutes apart.
+const az = () => DATA.airship || { places: [] };
+function renderAirship(S, tabs) {
+  const A = (S.$ui || {}).airship || {}, l = num(A.left, 0);
+  const cards = az().places.map(p => {
+    const here = A.at === p.id;
+    return `<article class="lc${here ? ' here' : ''}"><div class="in"><h3>${esc(p.name)}${here ? ' <span class="you">You are here</span>' : ''}</h3><p class="vibe">${esc(p.line)}</p>
+      <details><summary>Description</summary><p>${esc(p.desc)}</p></details>
+      <button class="btn ${here ? '' : 'pri'} go" data-ago="${esc(p.id)}" ${here ? 'disabled' : ''}>${here ? 'You are here' : 'Go here (2 min)'}</button></div></article>`;
+  }).join('');
+  const where = `${esc(A.event || '')}: lands at ${esc(A.lands || '')} at ${esc(A.to || '')} (${l >= 60 ? `${Math.floor(l / 60)}h ${l % 60}m` : `${l} min`} left).${A.view ? ` Outside: ${esc(A.view)}.` : ''}`;
+  return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>${esc(az().area)}</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
+    <div class="bd">${tabs}<div class="sub" style="margin:6px 0 10px">${where}</div><div class="car air">${cards}</div></div></div>`;
+}
+
 PANELS.map = {
   live: true,
   render(S) {
     // 1.38.0: Halvard / Grand Vast Forest tabs once the forest has been visited; the forest opens by itself while {{user}} is in it.
     // 1.39.0: an Avalon tab the same way.
     const F = (S.$ui || {}).forest || {}, hasF = !!(F.seen || []).length, Cp = (S.$ui || {}).capital || {}, hasC = !!(Cp.seen || []).length;
-    const maps = [['campus', 'Halvard'], ...(hasF ? [['forest', fz().area]] : []), ...(hasC ? [['capital', cz().area]] : [])];
-    const want = view.map || (F.on ? 'forest' : Cp.on ? 'capital' : 'campus'), which = maps.some(m => m[0] === want) ? want : 'campus';
+    const Ar = (S.$ui || {}).airship || {};   // 1.40.0: the Airship tab only during a flight
+    const maps = [['campus', 'Halvard'], ...(hasF ? [['forest', fz().area]] : []), ...(hasC ? [['capital', cz().area]] : []), ...(Ar.on ? [['airship', az().area]] : [])];
+    const want = view.map || (Ar.on ? 'airship' : F.on ? 'forest' : Cp.on ? 'capital' : 'campus'), which = maps.some(m => m[0] === want) ? want : 'campus';
     const tabs = maps.length > 1 ? `<div class="tog maps">${maps.map(([k, n]) => `<button data-map="${k}" class="${which === k ? 'on' : ''}">${esc(n)}</button>`).join('')}</div>` : '';
     if (which === 'forest') return renderForest(S, tabs);
     if (which === 'capital') return renderCapital(S, tabs);
+    if (which === 'airship') return renderAirship(S, tabs);
     const cur = locIdOf(S.World.Location), curPin = cur ? pinOf(cur) : null;
     if (view.pin == null && curPin) view.pin = curPin.pin;
     const pins = DATA.pins.filter(p => p.cluster.some(id => DATA.locs[id] && discovered(S, DATA.locs[id])));
@@ -282,6 +300,7 @@ PANELS.map = {
     if (b.dataset.fgo) { const p = fPlace(b.dataset.fgo); if (p) fillChat(`I head to ${p.name.replace(/^The /, 'the ')}.`); return; }
     if (b.dataset.cpin) { view.cpin = b.dataset.cpin; view.ccardPin = ''; render(); return; }   // 1.39.0: Avalon
     if (b.dataset.ccard) { view.ccard = (view.ccard || 0) + +b.dataset.ccard; render(); return; }
+    if (b.dataset.ago) { const p = az().places.find(x => x.id === b.dataset.ago); if (p) fillChat(`I head to the ${p.name}.`); return; }
     if (b.dataset.cgo) { const p = cPlace(b.dataset.cgo); if (p) fillChat(`I head to ${/^(Crown Square|Spellwright Row|Old Town|Eldrasil Castle)$/.test(p.name) ? p.name : 'the ' + p.name.replace(/^The /, '')}.`); return; }
     if (b.dataset.pin) { view.pin = +b.dataset.pin; view.floor = ''; render(); return; }
     if (b.dataset.card) { view.card += +b.dataset.card; render(); return; }

@@ -641,6 +641,7 @@ dl.file dd.fv{margin:0;max-width:62ch}
 .lc details p{margin:6px 0;font-family:var(--f-text);font-size:15.5px;line-height:1.55;color:var(--ink)}
 dl.kv.sm{font-size:var(--fs-s);gap:3px 10px}
 .lc .go{margin-top:4px;align-self:flex-start}
+.car.air{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}.car.air .lc{max-width:none}.air h3{margin:0;font-size:16px}.air .you{font-size:var(--fs-xs);font-weight:400;padding:1px 8px;margin-left:6px;border-radius:999px;background:var(--well);color:var(--moon);vertical-align:2px}   /* 1.40.0: the airship tab */
 /* ---- Batch 5.1: notebook ---- */
 .nav .nbb{font-style:normal;display:inline-grid;place-items:center;min-width:18px;height:18px;margin-left:6px;padding:0 5px;border-radius:9px;background:var(--brass);color:var(--on-brass);font-size:11.5px;font-weight:700;vertical-align:1px}
 .nav .nbb.bad{background:var(--danger-line);color:#fff/*keep*/}

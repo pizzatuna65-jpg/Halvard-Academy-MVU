@@ -390,6 +390,7 @@ export const Schema = z.object({
     tune: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.3.1: training / reputation settings { id: value } (data/tuning.json; the engine checks the values)
     forest: z.any().prefault(null).catch(null),                       // 1.38.0: the Grand Vast Forest now { on, at, seen, hist, tgt, left, walks, ev } (engine; UI, <now>, lore gate)
     capital: z.any().prefault(null).catch(null),                      // 1.39.0: Avalon now { on, at, pin, seen, castle, walks, ev, muster } (engine; UI, <now>, lore gate)
+    airship: z.any().prefault(null).catch(null),                      // 1.40.0: aboard the airship { on, at, event, to, left, bar, view, cargo, ev } or { on: false, soon } (engine; UI, <now>, lore gate)
   }),
 
   $eng: O({

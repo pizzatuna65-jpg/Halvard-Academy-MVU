@@ -1133,6 +1133,20 @@ def avalon(C, ejs):
     rep(C[19], "3. Kingdom. One team per academy, four in total, knockout, at the arena in the capital. Each member of the winning team earns 5,000 points. Only the teams travel: they arrive the day before and stay at a hotel near the arena, and fly home the day after.",
         "3. Kingdom. One team per academy, four in total, knockout, at the Royal Arena in Avalon, the capital. Each member of the winning team earns 5,000 points, and the winning team is received by the King at Eldrasil Castle on the last evening. Only the teams travel: they arrive the day before and stay at the Whitestone Hotel beside the arena, and fly home the day after. Evenings are free in the city until 21:00, the hotel by 22:00.")
 
+def airship(C, ejs):
+    """1.40.0 (owner-approved planning/DRAFT_airship.md): the four places aboard the academy's airship, from data/airship.json (378-381).
+    Card: constant, behind a gate on $ui.airship (on during a flight, soon in the 90 minutes before one). v39: keyword entries."""
+    A = json.load(open(P('data/airship.json'), encoding='utf-8'))
+    gate0, gate1 = "<%_ if ((getvar('stat_data.$ui.airship') || {}).on || (getvar('stat_data.$ui.airship') || {}).soon) { _%>\n", "\n<%_ } _%>"
+    keys = {'promenade_deck': ['Promenade Deck', 'airship promenade'], 'common_room': ['airship common room', 'airship bar', 'airship stage'],
+            'cabin_deck': ['Cabin Deck', 'bathing stalls'], 'cargo_hold': ['Cargo Hold', 'quartermaster']}
+    for uid, p in zip(range(378, 382), A['places']):
+        assert uid not in C, f'airship uid {uid} is taken'
+        text = f"[Airship: {p['name']}] " + p['desc']
+        e = template_from(C[230], uid=uid, displayIndex=uid, comment='Airship - ' + p['name'], key=keys[p['id']], content=(gate0 + text + gate1) if ejs else text)
+        if ejs: e.update(constant=True)
+        C[uid] = e
+
 def lore_activation(C):
     beasts = beast_names(C[229]['content'])
     assert len(beasts) >= 80 and 'dire wolf' in beasts and 'unicorn' in beasts, len(beasts)
@@ -1178,6 +1192,7 @@ practical_magic_class(C39)   # 1.33.0
 staff_regulars(N39)   # 1.33.0
 grand_vast_forest(C39, False)   # 1.38.0
 avalon(C39, False)   # 1.39.0
+airship(C39, False)   # 1.40.0
 lore_activation(C39)   # 1.35.0
 calendar_months = json.load(open(P('data/calendar.json'), encoding='utf-8'))['months']
 for month in range(1, 13):
@@ -1336,6 +1351,7 @@ practical_magic_class(Cc)   # 1.33.0
 staff_regulars(Nc)   # 1.33.0
 grand_vast_forest(Cc, True)   # 1.38.0
 avalon(Cc, True)   # 1.39.0
+airship(Cc, True)   # 1.40.0
 lore_activation(Cc)   # 1.35.0
 # merge + tagging (D2): lore -> [mvu_plot]; shared state/navigation entries stay untagged (sent to both models)
 UNTAGGED_CORE = {0, 132, 134, 131, 20}

@@ -133,6 +133,9 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
   a locked pin is not shown at all (the castle, until a Kingdom win), a hidden place only once visited (the Rookery). Street life
   (pickpockets, processions, other academies' students, raids) is engine-rolled once an hour like the forest's beasts; the narrator
   adds no trouble or luck of its own. Points never work there (coin only).
+  The airship (1.40.0, owner): every academy flight is a closed place of four places (Promenade Deck, Common Room with a bar and a
+  stage, Cabin Deck, Cargo Hold), no map image; the engine boards and lands {{user}}, nobody leaves before landing, crew-only doors
+  turn {{user}} back without a penalty. The bar keeps the student drinking rule (the rest day and the holidays). No beast pens aboard.
 - **Map by calendar** (1.13.0, owner): `map_variants` in `data/assets_manifest.json`, first match wins: an event map while the event is on (optionally in its hours), then a season map, then the default. Every variant is 1536×1024 with the default's layout (pins and card crops are percent positions on it); a variant that fails to load shows the default. UI only: no state, no rule.
 - **Assets** live in `github.com/pizzatuna65-jpg/eldrasil-assets`, served via jsDelivr. They are **pinned to commit 505dd35** (1.39.0: the Avalon map added to 1.38.0's 288b5a6, which added the Grand Vast Forest map to 1.34.2's f42990c; nothing else changed), and `base_url` exists in one place only: `data/assets_manifest.json`. Never ship `@main`.
 - **State-as-memory**: the narrator reads the latest ~24 messages (card regex, promptOnly, minDepth 24).
