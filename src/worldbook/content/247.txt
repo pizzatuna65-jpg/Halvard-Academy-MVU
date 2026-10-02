@@ -32,5 +32,5 @@ Turquoise Lagoon: West Cliffs 70, Open Sea 110.
 West Cliffs: Open Sea 100.
 Getting around: horse carriages anywhere on land (6 coin) and water taxis between the shore parts (8 coin), both half the time; the Open Sea only by tour boat from the Sea Dock (15 coin each way). Points do not work; coin only.
 Also in Sunreach these weeks: students of Myrdath, Ashvale and Veyra on their own trips, in the hotels along Coral Strand.
-Rules for the narrator: who is met, street sights, hustlers, the sea and the dice are the engine's, listed in <now>; never add encounters or luck of your own, and never decide a bet. Nothing sexual happens to {{user}} or any student here, on page or off.
+Rules for the narrator: who is met, street sights, hustlers, the sea and the dice are the engine's, listed in <now>; never add encounters or luck of your own, and never decide a bet.
 <%_ } } } _%>

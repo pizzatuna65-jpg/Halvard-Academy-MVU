@@ -1197,7 +1197,7 @@ def sunreach(C, ejs):
              f"both half the time; the Open Sea only by tour boat from the Sea Dock ({R['tour']} coin each way). Points do not work; coin only.\n"
              "Also in Sunreach these weeks: students of Myrdath, Ashvale and Veyra on their own trips, in the hotels along Coral Strand.\n"
              "Rules for the narrator: who is met, street sights, hustlers, the sea and the dice are the engine's, listed in <now>; never add "
-             "encounters or luck of your own, and never decide a bet. Nothing sexual happens to {{user}} or any student here, on page or off.")
+             "encounters or luck of your own, and never decide a bet.")
     trip = ("[Academy Trip]\nWhen: Month 11 Week 2 Saturday to Week 3 Thursday. All three years; the third-years' last event as students.\n"
             "Where: Sunreach Bay, a full day by airship each way (the Saturday and the Thursday are spent flying, morning to night), a southern resort that "
             "stays warm all year: a few days of summer in Halvard's winter. Halvard has The Hanabira, a Yozakuran beachfront hotel on Coral Strand, four "
