@@ -43,7 +43,7 @@ _feats = json.load(open(P('data/features.json'), encoding='utf-8'))['features']
 _unknown = set(_cost) - {f['id'] for f in _feats}
 assert not _unknown, f'gates for unknown features: {_unknown}'
 FC = {'rules': {f['id']: _tok(_cost.get(f['id'], 0)) for f in _feats}, 'core_rules': _tok(_core), 'lore': _tok(_lore),
-      'price_guide': _tok(len(_C(506))),
+      'price_guide': _tok(len(_C(506)) - PG_SHARED_LEN),   # 1.43.0: without the shared.js code (gen_mvu_entries.py)
       # Now-entry lines that are not in <current_state>: the class line during a class period; the forecast line
       'live': {'class': 40, 'weather': 25}}
 json.dump(FC, open(P('data/feature_cost.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
