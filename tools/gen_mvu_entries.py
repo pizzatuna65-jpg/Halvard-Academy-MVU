@@ -150,6 +150,8 @@ PG = {'rows': rows, 'names': {k: l for l in rows for k in {locs[l]['name'].lower
       'dir': {l: shop_line(l) for l in rows},
       'canon': 'Canon prices (never change): ' + '; '.join(f"{n} {p:,}" for n, p in canon) + '.'}
 pg = open(P('src/worldbook/custom/506.template.ejs'), encoding='utf-8').read()
+assert pg.count('/*@@SHARED@@*/') == 1
+pg = pg.replace('/*@@SHARED@@*/', shared_js())   # 1.43.0 (audit batch 2)
 pg = re.sub(r'^// .*\n', '', pg, flags=re.M)
 assert '/*@@PG@@*/{}' in pg
 craft_sale = [[i['name'], i['sale']] for i in json.load(open(P('data/crafts.json'), encoding='utf-8'))['recipes'] if i.get('sale')]
