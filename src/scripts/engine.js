@@ -46,6 +46,31 @@ const itemBase = x => String(x || '').trim().toLowerCase().replace(/^(an?|the)\s
 const itemKey = x => itemBase(x).replace(/\s*\(.*\)$/, '');
 // the key of a record (the Bag, perks) written in any case: the name as stored, or undefined
 const keyIn = (O, name) => { const lo = String(name == null ? '' : name).toLowerCase(); return Object.keys(O || {}).find(k => k.toLowerCase() === lo); };
+// ---- seeded draws (1.43.0, audit 3.6). Every seeded chance and pick goes through these, so a swipe or a replay of the same
+// update draws the same: each is a pure function of its parts (the chat seed, the day or hour, the place, a salt naming the draw).
+const hash32 = (...parts) => {
+  let h = 2166136261;
+  for (const ch of parts.join('|')) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); }
+  h ^= h >>> 16; h = Math.imul(h, 2246822507); h ^= h >>> 13; h = Math.imul(h, 3266489909); h ^= h >>> 16;
+  return h >>> 0;
+};
+const rand01 = (...parts) => hash32(...parts) / 4294967296;       // [0, 1)
+const roll100 = (...parts) => rand01(...parts) * 100;             // [0, 100): "roll100(...) < pct" is a pct% chance
+const d100 = (...parts) => hash32(...parts) % 100 + 1;            // 1..100
+const rollInt = (lo, hi, ...parts) => lo + hash32(...parts) % (hi - lo + 1);
+const pickOf = (arr, ...parts) => arr[hash32(...parts) % arr.length];
+// rollTable(pool, o): one draw from a table. o.roll: the chance's parts, against o.p (0..1, rand01) or o.pct (0..100, roll100);
+// without o.roll there is no chance step. o.skip(x): entries out for now (a cooldown, no repeat). o.weight(x): a weighted pick,
+// rand01(...o.pick) x the total weight; otherwise a uniform pickOf(pool, ...o.pick). The entry, or null.
+function rollTable(pool, o) {
+  if (o.roll && !('pct' in o ? roll100(...o.roll) < o.pct : rand01(...o.roll) < o.p)) return null;
+  const P = o.skip ? (pool || []).filter(x => !o.skip(x)) : pool || [];
+  if (!P.length) return null;
+  if (!o.weight) return pickOf(P, ...o.pick);
+  let r = rand01(...o.pick) * P.reduce((a, x) => a + o.weight(x), 0);
+  for (const x of P) { r -= o.weight(x); if (r < 0) return x; }
+  return null;
+}
 // ---- end of shared.js
 
 // 1.5.1 (P6): who spoke in a reply. A name counts as a speaker when it opens the sentence that leads into a quote
@@ -141,9 +166,9 @@ const FREE = {"chance":5,"generic":["is ill today","was called to a staff meetin
 const freeWhy = (Wd, p, subj, tch) => {
   if (!tch || (Wd.Month === 1 && Wd.Week === 1) || eventsOn(Wd).length) return '';
   const f = (FREE.npcs || {})[tch] || {}, ch = num(f.chance, num(FREE.chance, 0));
-  if (rand01('free', Wd.Year, Wd.Month, Wd.Week, Wd.Day, p, subj) * 100 >= ch) return '';
+  if (roll100('free', Wd.Year, Wd.Month, Wd.Week, Wd.Day, p, subj) >= ch) return '';
   const why = f.why && f.why.length ? f.why : (FREE.generic && FREE.generic.length ? FREE.generic : ['cannot come today']);
-  return why[hash32('free-why', Wd.Year, Wd.Month, Wd.Week, Wd.Day, p) % why.length];
+  return pickOf(why, 'free-why', Wd.Year, Wd.Month, Wd.Week, Wd.Day, p);
 };
 const CRAFTS = {"_note":"Craft recipes for Practice. groups: the Practice actions a craft can be done under (club = extra club needed for that action), the best owned tool's bonus, the experts whose presence adds +10 and opens advanced work, and the mishap injury. Material options are alternatives; each listed item is consumed once per attempt. yield = pieces for fine / success / weak (default 1). Sale values are guide prices for finished work, not shop stock. masterwork: a finished Project of one of these Kinds, judged at the masterwork DC (Craft Rank 4); the Kind picks the group for tools, experts and the Bag kind.","tiers":{"simple":25,"standard":45,"advanced":65,"masterwork":85},"groups":{"Brewing":{"actions":[{"action":"Brew a potion"},{"action":"Brewing Club bench"}],"tools":[["Ardenne measuring set",10],["Glass stirring-rod set",5]],"experts":["Mimosa","Royhan","Valentin"],"mishap":["burn","hand","tender fingers"],"bag":"drink"},"Runes":{"actions":[{"action":"Runes and talismans"},{"action":"Specialized Magic practice"}],"tools":[["Steel-nib fountain pen",5]],"experts":["Dorian"],"mishap":["burn","hand","tender fingers"]},"Repair":{"actions":[{"action":"Enchant or repair"}],"mishap":["burn","hand","tender fingers"]},"Enchant":{"actions":[{"action":"Enchant or repair"}],"experts":["Dorian"],"mishap":["burn","hand","tender fingers"]},"Cooking":{"actions":[{"action":"Cook or bake"}],"mishap":["burn","hand","tender fingers"],"bag":"food"},"Needlework":{"actions":[{"action":"Knit or sew, sketch or paint, carve, calligraphy"},{"action":"Tailoring"},{"action":"Drawing, Calligraphy, Tailoring practice","club":"Tailoring"}],"mishap":["needle prick","finger","a sore fingertip"]},"Drawing":{"actions":[{"action":"Knit or sew, sketch or paint, carve, calligraphy"},{"action":"Art studio"},{"action":"Drawing, Calligraphy, Tailoring practice","club":"Drawing"}],"mishap":["strained wrist","wrist","an aching wrist"]},"Woodcarving":{"actions":[{"action":"Knit or sew, sketch or paint, carve, calligraphy"}],"mishap":["cut","hand","a bandaged finger"]},"Calligraphy":{"actions":[{"action":"Knit or sew, sketch or paint, carve, calligraphy"},{"action":"Drawing, Calligraphy, Tailoring practice","club":"Calligraphy"}],"tools":[["Steel-nib fountain pen",5]],"mishap":["paper cut","finger","a stinging fingertip"]},"Smithing":{"actions":[{"action":"Smithing"}],"tools":[["Precision tool roll",5]],"mishap":["burn","hand","tender fingers"]}},"masterwork":{"rank":4,"xp":3,"kinds":{"craft":"","potion":"Brewing","smithing":"Smithing","tailoring":"Needlework","enchantment":"Runes","cooking":"Cooking","painting":"Drawing","carving":"Woodcarving","calligraphy":"Calligraphy"}},"recipes":[{"name":"Warming draught","group":"Brewing","tier":"simple","materials":[[{"item":"Common reagent bundle","qty":1}],[{"item":"Foraged reagent","qty":1}]],"kind":"drink","use":{"clears":["Chilled"],"buff":"warm","mins":240},"sale":8,"yield":[3,2,1]},{"name":"Cooling draught","group":"Brewing","tier":"simple","materials":[[{"item":"Common reagent bundle","qty":1}],[{"item":"Foraged reagent","qty":1}]],"kind":"drink","use":{"clears":["Overheated"],"buff":"sun","mins":240},"sale":8,"yield":[3,2,1]},{"name":"Cold remedy","group":"Brewing","tier":"simple","materials":[[{"item":"Common reagent bundle","qty":1}],[{"item":"Foraged reagent","qty":1}]],"kind":"drink","use":{"cure":"Head cold"},"sale":10,"yield":[3,2,1]},{"name":"Healing draught","group":"Brewing","tier":"standard","materials":[[{"item":"Common reagent bundle","qty":1}],[{"item":"Foraged reagent","qty":1}]],"kind":"drink","use":{"heal":"minor"},"sale":15,"yield":[3,2,1]},{"name":"Vigour tonic","group":"Brewing","tier":"standard","materials":[[{"item":"Common reagent bundle","qty":1}],[{"item":"Foraged reagent","qty":1}]],"kind":"drink","use":{"stamina":20},"sale":12,"yield":[3,2,1]},{"name":"Strong healing draught","group":"Brewing","tier":"advanced","materials":[[{"item":"Common reagent bundle","qty":2}],[{"item":"Common reagent bundle","qty":1},{"item":"Clearing bloom","qty":1}],[{"item":"Rare reagent","qty":1}]],"kind":"drink","use":{"heal":"moderate_to_minor"},"sale":40,"yield":[2,1,1]},{"name":"Fire flask","group":"Brewing","tier":"advanced","materials":[[{"item":"Common reagent bundle","qty":2}],[{"item":"Common reagent bundle","qty":1},{"item":"Clearing bloom","qty":1}],[{"item":"Rare reagent","qty":1}]],"kind":"other","use":{"fitting":"fire"},"sale":40,"yield":[2,1,1]},{"name":"Bottled cold","group":"Brewing","tier":"advanced","materials":[[{"item":"Common reagent bundle","qty":2}],[{"item":"Common reagent bundle","qty":1},{"item":"Clearing bloom","qty":1}],[{"item":"Rare reagent","qty":1}]],"kind":"other","use":{"fitting":"cold"},"sale":40,"yield":[2,1,1]},{"name":"Warmth rune","group":"Runes","tier":"simple","materials":[[{"item":"Talisman paper stack","qty":1},{"item":"Pen nibs and ink","qty":1}]],"kind":"other","use":{"buff":"warm","mins":240},"sale":10},{"name":"Rain-ward talisman","group":"Runes","tier":"standard","materials":[[{"item":"Talisman paper stack","qty":1},{"item":"Pen nibs and ink","qty":1}]],"kind":"other","use":{"buff":"waterproof","mins":180},"sale":20},{"name":"Light rune","group":"Runes","tier":"standard","materials":[[{"item":"Talisman paper stack","qty":1},{"item":"Pen nibs and ink","qty":1}]],"kind":"other","use":{"fitting":"dark"},"sale":20},{"name":"Ward talisman","group":"Runes","tier":"advanced","arcana":3,"materials":[[{"item":"Talisman paper stack","qty":1},{"item":"Pen nibs and ink","qty":1}]],"kind":"other","use":{"fitting":"curse or hex"},"sale":40},{"name":"Repair damaged item","group":"Repair","tier":"standard","materials":[[]],"target":"repair","sale":0},{"name":"Enchant warm","group":"Enchant","tier":"advanced","arcana":3,"materials":[[{"item":"Common reagent bundle","qty":1}]],"target":"enchant","gear":"warm","sale":0},{"name":"Enchant waterproof","group":"Enchant","tier":"advanced","arcana":3,"materials":[[{"item":"Common reagent bundle","qty":1}]],"target":"enchant","gear":"waterproof","sale":0},{"name":"Honey buns","group":"Cooking","tier":"simple","materials":[[{"item":"Baking and cooking ingredients","qty":1}]],"kind":"food","use":{"stamina":10},"yield":[3,2,1],"sale":4},{"name":"Butter cookies","group":"Cooking","tier":"simple","materials":[[{"item":"Baking and cooking ingredients","qty":1}]],"kind":"food","use":{"stamina":10},"yield":[3,2,1],"sale":4},{"name":"Hearty stew pot","group":"Cooking","tier":"standard","materials":[[{"item":"Baking and cooking ingredients","qty":1},{"item":"Carrots and fresh greens","qty":1}],[{"item":"Baking and cooking ingredients","qty":1},{"item":"Salaffian spice box","qty":1}]],"kind":"food","use":{"stamina":15},"yield":[4,3,2],"sale":8},{"name":"Festival cake","group":"Cooking","tier":"advanced","materials":[[{"item":"Baking and cooking ingredients","qty":2}],[{"item":"Baking and cooking ingredients","qty":1},{"item":"Bag of red apples","qty":1}],[{"item":"Baking and cooking ingredients","qty":1},{"item":"Salaffian spice box","qty":1}]],"kind":"food","sale":30},{"name":"Mend clothes","group":"Needlework","tier":"simple","materials":[[]],"kind":"other","target":"mend"},{"name":"Knitted scarf","group":"Needlework","tier":"standard","materials":[[{"item":"Knitting wool and needles","qty":1}]],"kind":"gear","gear":"warm","sale":20},{"name":"Embroidered handkerchief","group":"Needlework","tier":"standard","materials":[[{"item":"Embroidery thread set","qty":1}]],"kind":"gift","sale":15},{"name":"Knitted winter set","group":"Needlework","tier":"advanced","materials":[[{"item":"Knitting wool and needles","qty":2}]],"kind":"gear","gear":"warm","sale":45},{"name":"Sky silk garment","group":"Needlework","tier":"advanced","materials":[[{"item":"Bolt of Sky silk","qty":1},{"item":"Embroidery thread set","qty":1}]],"kind":"gift","sale":80},{"name":"Sketch","group":"Drawing","tier":"simple","materials":[[{"item":"Sketchbook and charcoal","qty":1}]],"kind":"gift","sale":5},{"name":"Portrait","group":"Drawing","tier":"standard","materials":[[{"item":"Sketchbook and charcoal","qty":1}],[{"item":"Paint box","qty":1}]],"kind":"gift","sale":20},{"name":"Painting","group":"Drawing","tier":"advanced","materials":[[{"item":"Paint box","qty":1}]],"kind":"gift","sale":"30-80"},{"name":"Carved figure","group":"Woodcarving","tier":"standard","materials":[[{"item":"Carving knife and limewood block","qty":1}]],"kind":"gift","sale":15},{"name":"Carved box","group":"Woodcarving","tier":"advanced","materials":[[{"item":"Carving knife and limewood block","qty":1}]],"kind":"gift","sale":35},{"name":"Formal letter","group":"Calligraphy","tier":"standard","materials":[[{"item":"Letter paper set","qty":1},{"item":"Pen nibs and ink","qty":1}]],"kind":"other"},{"name":"Illuminated invitation","group":"Calligraphy","tier":"advanced","materials":[[{"item":"Letter paper set","qty":1},{"item":"Pen nibs and ink","qty":1}]],"kind":"gift","sale":25},{"name":"Hooks and nails","group":"Smithing","tier":"simple","materials":[[{"item":"Bar stock and coal","qty":1}]],"kind":"other","sale":5},{"name":"Balanced blade","group":"Smithing","tier":"standard","materials":[[{"item":"Bar stock and coal","qty":1}]],"kind":"other","sale":25},{"name":"Forged fittings","group":"Smithing","tier":"advanced","materials":[[{"item":"Bar stock and coal","qty":2}]],"kind":"other","sale":40},{"name":"Small forged tool","group":"Smithing","tier":"advanced","materials":[[{"item":"Bar stock and coal","qty":2}]],"kind":"other","sale":40}]};
 // 1.29.0: clothing a craft can mend or enchant; the materials that open the portable craft practice (from data/crafts.json)
@@ -301,13 +326,7 @@ const HAPPENINGS = [{"id":"work_menagerie","text":"A paid-work opening is up on 
 const AMB = {"uncanny_chance":5,"lore_chance":35,"lore_places":{"bathhouse and washrooms":60,"laundry":60},"sun":{"1":[365,1075],"2":[315,1125],"3":[270,1170],"4":[245,1195],"5":[255,1185],"6":[295,1145],"7":[345,1095],"8":[395,1045],"9":[440,1000],"10":[470,970],"11":[460,980],"12":[415,1025]},"cats":{"teaching":{"places":["lecture halls","seminar rooms"],"class":[0,0,4,4,1,4,1,0,0],"sat":[0,0,4,0,0,0,0,0,0],"free":[0,0,0,0,0,0,0,0,0]},"craft":{"places":["potion halls","workshop"],"class":[0,0,1,1,0,4,3,2,0],"free":[0,0,1,2,1,2,2,1,0]},"study":{"places":["main library","study rooms","archive","restricted section"],"class":[0,1,1,1,2,1,3,3,1],"sat":[0,0,1,4,2,2,2,2,1],"free":[0,0,2,3,2,3,3,3,1]},"staff":{"places":["faculty offices","staff room","headmaster's office","staff quarters"],"class":[0,1,2,2,2,2,2,1,0],"free":[0,0,1,1,1,1,1,1,0]},"ceremonial":{"places":["arbiter hall","ring dining hall","portrait hall"],"class":[0,0,0,0,0,0,0,0,0],"free":[0,0,0,0,0,0,0,0,0]},"clubs":{"places":["club rooms","student council chamber","announcement room"],"class":[0,0,0,0,1,0,3,3,0],"sat":[0,0,0,1,1,4,2,2,0],"free":[0,0,1,2,1,2,2,2,0]},"dining":{"places":["canteen"],"class":[0,3,1,1,4,1,2,4,0],"free":[0,1,1,2,4,2,2,4,0]},"dorm_social":{"places":["common rooms","fire dormitory","light dormitory","sky dormitory","viridian dormitory"],"class":[1,2,0,0,1,0,2,3,3],"free":[1,1,2,2,2,2,3,3,3]},"dorm_utility":{"places":["laundry","bathhouse and washrooms","storage and lockers"],"class":[0,3,0,0,1,0,2,3,2],"free":[0,1,2,2,1,2,2,3,2]},"hub":{"places":["main courtyard","courtyards","notice board","mail tower"],"class":[0,2,1,1,4,1,3,2,0],"free":[0,1,2,3,3,3,3,2,0]},"mall":{"places":["mall","nightwell","merryhew's","snug","quillfeather's","pennywhistle curios","barrow & vine","greenwick's","tinker's bench","salaffian oven","tailor's row","commissary","banking house"],"class":[0,0,0,0,2,0,3,3,0],"free":[0,0,2,3,3,4,3,2,0]},"care":{"places":["medical centre"],"class":[0,1,1,1,1,1,1,1,1],"free":[0,1,1,1,1,1,1,1,1]},"stillness":{"places":["meditation rooms"],"class":[0,1,1,1,1,1,1,1,0],"free":[0,1,1,1,1,1,1,1,0]},"spirits":{"places":["spirit path"],"class":[0,1,0,0,1,0,2,2,0],"free":[0,1,1,1,1,1,2,2,0]},"gate":{"places":["reception and gatehouse","groundskeeper's lodge"],"class":[0,1,1,1,1,1,1,1,0],"free":[0,1,1,1,1,1,1,1,0]},"enclave":{"places":["dovecote","cathedral","noble houses' liaison","royal inspectorate"],"class":[0,1,1,1,1,1,1,1,0],"free":[0,1,1,2,1,1,1,1,0]},"site":{"places":["detention tower","warden's office","seal chamber"],"class":[0,0,0,0,0,0,1,0,0],"free":[0,0,0,0,0,0,0,0,0]},"heights":{"places":["bell tower","rooftop","observation tower"],"class":[0,0,0,0,0,0,1,1,1],"free":[0,0,1,1,1,1,1,2,1]},"sport":{"places":["sports field","gymnasium","swimming pool","archery range"],"class":[0,1,0,0,1,0,3,3,0],"free":[0,1,2,3,2,3,3,2,0]},"combat":{"places":["combat grounds","sparring pavilion"],"class":[0,1,0,0,0,3,3,2,0],"free":[0,1,1,2,1,2,2,1,0]},"green":{"places":["gardens","founder's statue and park","menagerie","broken statue"],"class":[0,1,0,0,1,0,2,2,0],"free":[0,1,2,2,2,3,2,2,0]},"lake":{"places":["boathouse and lake","fishing house","willow island"],"class":[0,2,0,0,1,0,2,2,0],"free":[0,2,2,3,2,3,2,2,0]},"hills":{"places":["grassy field and hills","old hut"],"class":[0,0,0,0,0,0,2,2,0],"free":[0,1,2,2,2,3,2,2,0]},"forest":{"places":["forest","forest clearing"],"class":[0,0,0,0,0,1,0,0,0],"free":[0,0,1,1,0,1,1,0,0]}},"cues":[["*","cue","the weather heard from indoors",{"out":false,"wx":["rain","snow","wind","storm"]}],["*","cue","the weather on skin and clothes",{"out":true}],["*","cue","the quality of the light right now",{}],["*","cue","the temperature of the air",{}],["*","cue","the general noise of people",{"min":3}],["*","cue","a small sound that the quiet makes loud",{"max":1}],["teaching","cue","the smell and dust of a teaching room",{}],["teaching","cue","the rustle of a full room settling",{"min":3}],["craft","cue","the smell of the work being done here",{}],["craft","cue","heat and noise from the benches",{"min":3}],["study","cue","the particular hush of this room",{}],["study","cue","lamplight on the tables",{"tb":["evening","night"]}],["study","cue","the tension of people cramming",{"exam":true}],["staff","cue","the formality of the corridor",{}],["ceremonial","cue","the size of the room when it is empty",{"max":0}],["ceremonial","cue","the whole hall's noise under the vault",{"min":3}],["clubs","cue","the clutter of rooms many clubs share",{}],["dining","cue","the din of a full canteen",{"min":3}],["dining","cue","the kitchen heard through the hatch",{"max":1}],["dining","cue","today's food smell",{}],["dorm_social","cue","the dorm's own smell and warmth",{}],["dorm_social","cue","the fire or lamps in the common room",{"tb":["evening","night"]}],["dorm_utility","cue","steam, soap or damp stone",{}],["hub","cue","how full or empty the courtyard is right now",{}],["hub","cue","the season in the courtyard",{}],["mall","cue","the mix of shop smells",{}],["mall","cue","the bustle between the stalls and shops",{"min":3}],["care","cue","the clean, herbal smell of the place",{}],["stillness","cue","the silence, and the still pool in the courtyard",{}],["stillness","cue","cushions, low light and cool stone",{}],["spirits","cue","what the lesser spirits are doing in the trees",{}],["spirits","cue","the green light under the trees and the stone cairns along the path",{}],["gate","cue","the traffic at the gate",{}],["enclave","cue","the change in the air past the academy's ground",{}],["site","cue","the silence and the cold",{}],["heights","cue","the height and the wind",{}],["heights","cue","the stars",{"tb":["night"],"wx":["clear"]}],["sport","cue","the smell of the grass, the floor or the water",{}],["combat","cue","the scuffed rings and the smell of spent magic",{}],["green","cue","what is growing or blooming this season",{}],["lake","cue","the water's mood right now",{}],["lake","cue","mist on the water",{"tb":["dawn","morning"]}],["hills","cue","the openness and the wind in the grass",{}],["hills","cue","the castle small in the distance",{}],["forest","cue","the light under the trees",{}],["forest","cue","the forest's quiet or its noise",{}]],"beats":[["*","tex","a bell marking the hour or a period",{"far":true,"curfew":true}],["*","tex","voices carrying from somewhere out of sight",{"far":true,"curfew":true}],["*","tex","someone hurrying past on an errand",{}],["*","tex","laughter from a group close by",{"min":2}],["*","tex","an argument kept to a low hiss nearby",{"min":2}],["*","tex","an Announcement Pillar crackling with a notice",{"far":true}],["*","tex","casual magic used for something trivial nearby",{"min":2}],["*","tex","overheard: a live rumour, in someone else's words",{"min":2,"special":"overheard"}],["*","tex","the weather turning",{"far":true,"curfew":true,"special":"weather_turn"}],["*","tex","an event echo",{"special":"event_echo"}],["*","brush","someone mistakes {{user}} for someone else",{"min":2}],["*","brush","someone asks {{user}} for directions or the time",{"min":2}],["*","brush","a stray object ends up at {{user}}'s feet",{}],["*","brush","the wind takes something of {{user}}'s or someone else's",{"out":true,"wx":["wind","storm"]}],["*","tex","a patrol's lantern passing at a distance",{"far":true,"curfew":true,"tb":["night"]}],["teaching","tex","a lecture overheard through a door",{"min":3}],["teaching","tex","a note passed along a bench",{"min":2}],["teaching","tex","chalk or quill scratching in an empty room nearby",{"far":true}],["teaching","brush","someone borrows or returns something of {{user}}'s",{"min":3}],["craft","tex","a small mishap at a bench (a fizz, a crack, a curse)",{"min":2}],["craft","tex","tools and vessels settling and ticking as they cool",{"far":true}],["craft","brush","a whiff or splash from someone's work reaches {{user}}",{"min":2}],["study","tex","a stifled laugh and someone shushing it",{"min":2}],["study","tex","books being shelved or carted",{"far":true}],["study","tex","someone asleep over their notes",{"exam":true}],["study","brush","someone asks {{user}} to keep an eye on their things",{"min":2}],["staff","tex","a door opening on a teacher's voice mid-sentence",{}],["staff","tex","staff talking shop behind a door",{"far":true}],["staff","brush","a passing teacher glances at {{user}} and remembers something",{}],["ceremonial","tex","staff preparing the room for the next occasion",{"far":true}],["ceremonial","tex","a table breaking into a toast or a cheer",{"min":3}],["ceremonial","brush","{{user}} is jostled in the crush at the doors",{"min":3}],["clubs","tex","a club rehearsing, arguing or recruiting behind a door",{"min":2}],["clubs","tex","a notice or flyer being pinned up",{}],["clubs","brush","someone tries to recruit {{user}} for something",{"min":2}],["dining","tex","a table celebrating or daring someone",{"min":3}],["dining","tex","someone at a nearby table eating alone",{"min":2}],["dining","brush","a spill or a tipped tray reaches {{user}}",{"min":3}],["dining","brush","someone asks to share {{user}}'s table",{"min":2}],["dorm_social","tex","a game, a card table or a study group in full swing",{"min":2}],["dorm_social","tex","something going on in someone's room upstairs",{"far":true,"curfew":true}],["dorm_social","tex","late whispering on the stairs",{"tb":["night"]}],["dorm_social","brush","a dormmate drags {{user}} into something small",{"min":2}],["dorm_utility","tex","someone's laundry mishap",{}],["dorm_utility","brush","a mix-up with {{user}}'s things",{}],["hub","tex","a crowd gathered around something",{"min":3}],["hub","tex","students flooding out between periods",{"min":3}],["hub","tex","a notice going up on the board",{}],["hub","brush","a flyer, a leaflet or a message pressed into {{user}}'s hand",{"min":3}],["mall","tex","haggling or a small scene at a counter",{"min":2}],["mall","tex","a shopkeeper calling out a deal",{}],["mall","brush","a shopkeeper tries to sell {{user}} something",{"min":1}],["care","tex","someone being patched up nearby",{}],["care","tex","coughing from the beds",{"flu":true}],["care","brush","a volunteer offers {{user}} something (water, a remedy, a seat)",{}],["stillness","tex","someone breathing slowly in the next room",{}],["stillness","tex","a student slipping out, calmer than they came in",{}],["stillness","brush","someone nods {{user}} to a free cushion without a word",{}],["spirits","tex","a knot of pollen-light drifting against the breeze",{"season":["Spring"],"far":true}],["spirits","tex","a leaf-shaped spirit riding a new shoot as it unfurls",{"season":["Spring"],"far":true}],["spirits","tex","three tiny lights playing tag between the cairns",{"season":["Spring"],"far":true}],["spirits","tex","a spirit like a dragonfly of green glass hovering at eye level",{"season":["Summer"],"far":true}],["spirits","tex","warm motes gathering in the one patch of sun",{"season":["Summer"],"far":true}],["spirits","tex","something small drinking from a dew-filled leaf, then gone",{"season":["Summer"],"far":true}],["spirits","tex","leaves stirring in a spiral on a windless path",{"season":["Autumn"],"far":true}],["spirits","tex","a russet spirit shaped like a squirrel, sorting acorns it cannot eat",{"season":["Autumn"],"far":true}],["spirits","tex","a pale light nesting in a hollow stump",{"season":["Autumn"],"far":true}],["spirits","tex","tracks in the snow that stop in the middle of the path",{"season":["Winter"],"far":true}],["spirits","tex","frost ferns growing on a cairn while {{user}} watches",{"season":["Winter"],"far":true}],["spirits","tex","a breath of warm air where a small spirit sleeps under the roots",{"season":["Winter"],"far":true}],["spirits","brush","a lesser spirit settles on {{user}}'s shoulder for a moment, looks them over, and leaves",{"far":true}],["gate","tex","someone signing in or being turned away",{}],["gate","tex","a delivery arriving",{}],["gate","brush","the porter asks {{user}} to pass something on",{}],["enclave","tex","an official about their business",{}],["enclave","tex","a service, a drill or a meeting heard from inside",{"far":true}],["enclave","brush","{{user}} is watched a moment too long",{}],["site","tex","a sound the stone makes on its own",{"far":true}],["site","brush","a feeling of being noticed, with no one there",{}],["heights","tex","the campus below going about its business",{"far":true}],["heights","tex","stargazers setting up",{"tb":["night"],"wx":["clear"]}],["heights","brush","the wind nearly takes something",{"wx":["wind","storm"]}],["sport","tex","a match or a practice going on",{"min":3}],["sport","tex","a team shouting or a coach's whistle",{"min":2}],["sport","brush","a ball or a stray arrow lands near {{user}}",{"min":2}],["sport","brush","someone asks {{user}} to make up the numbers",{"min":2}],["combat","tex","a duel or drill going on in a warded ring",{"min":2}],["combat","tex","the ward lines humming or flickering",{"far":true}],["combat","brush","a stray spark or gust from a ring reaches {{user}}",{"min":2}],["green","tex","a queue of students touching the Founder's Hand",{"exam":true,"tb":["morning"]}],["green","tex","a gardener or handler at work",{}],["green","tex","an animal making itself known",{"far":true}],["green","brush","a creature or a plant takes an interest in {{user}}",{}],["lake","tex","birds or fish on the water",{"far":true}],["lake","tex","rowers, swimmers or anglers out",{"min":2}],["lake","tex","a voice carrying too clearly across the water",{"far":true}],["lake","brush","something washes up or drifts to {{user}}",{}],["hills","tex","people out on the slopes (kites, blankets or sledges by season)",{"min":2}],["hills","tex","the Forest's edge making a sound",{"far":true}],["hills","brush","the wind takes something across the grass",{"wx":["wind","storm"]}],["forest","tex","something moving unseen in the undergrowth",{"far":true}],["forest","tex","tracks in the snow that are not a deer's",{"far":true,"wx":["snow"]}],["forest","tex","an offering left on a stump by someone who ate here",{"far":true}],["forest","brush","a branch, a bramble or a root catches {{user}}",{}]],"uncanny":[{"id":"third_stall","uid":205,"title":"The Third Stall","places":["bathhouse and washrooms"],"from":1200,"to":360,"text":"the Third Stall answers {{user}}'s knock, or its latch moves by itself"},{"id":"long_corridor","uid":206,"title":"The Long Corridor","places":["lecture halls","notice board","club rooms","seminar rooms","storage and lockers"],"from":1200,"to":360,"alone":true,"text":"the corridor runs longer than it should, and the time does not add up"},{"id":"three_knock","uid":207,"title":"The Three O'Clock Knock","places":["fire dormitory","light dormitory","sky dormitory","viridian dormitory","common rooms"],"from":170,"to":190,"awake":true,"text":"three evenly spaced knocks at {{user}}'s door"},{"id":"crying_water","uid":208,"title":"The Crying on the Water","places":["boathouse and lake","fishing house","willow island"],"dark":true,"text":"a woman crying somewhere out on the water, never from the same place twice"},{"id":"night_student","uid":209,"title":"The Night Student","places":["lecture halls"],"curfew":true,"x2":"remembrance","text":"a student in an old-cut uniform, sitting as if waiting for a class"},{"id":"library_sleep","uid":224,"title":"Sleeping in the Library","places":["main library","study rooms"],"asleep":true,"text":"{{user}} wakes in a reading room that is subtly wrong, and nobody else is there"},{"id":"taken","uid":226,"title":"Taken","places":["forest","grassy field and hills","old hut","main courtyard","courtyards"],"dark":true,"out":true,"text":"{{user}}'s own name called in the dark by someone out of sight"},{"id":"thirteenth_stroke","title":"The Thirteenth Stroke","places":[],"out":true,"from":1200,"to":360,"text":"the Bell Tower strikes once more than the hour, with no one in the tower"},{"id":"night_swimmer","title":"The Night Swimmer","places":["swimming pool"],"dark":true,"x2":"winter","text":"someone swimming lengths in the steam, the lane rope moving, and the water empty"},{"id":"walking_lantern","title":"The Walking Lantern","places":["grassy field and hills","old hut"],"dark":true,"text":"a single lantern light crossing the ridge with no one carrying it"},{"id":"breath_glass","title":"Breath on the Glass","places":["gardens"],"from":960,"to":1320,"text":"the greenhouse glass fogs from the inside around a handprint that is not {{user}}'s"},{"id":"pens_quiet","title":"When the Pens Go Quiet","places":["menagerie"],"dusk":true,"text":"every animal in the pens falls silent at once and faces the Forest"},{"id":"faraway_laugh","title":"The Faraway Laugh","places":["founder's statue and park"],"dark":true,"text":"a woman's laugh from the old trees, faint, as if far away"},{"id":"polite_walker","title":"The Polite Walker","places":[],"path":true,"dusk":true,"alone":true,"text":"footsteps behind {{user}} on the long path that stop when {{user}} stops"},{"id":"last_bed","title":"The Last Bed","places":["medical centre"],"from":1260,"to":360,"text":"the curtain round the last bed is drawn and someone breathes behind it; the ward register says the bed is empty"},{"id":"other_climber","title":"The Other Climber","places":["rooftop"],"dark":true,"text":"someone sitting on the far gable in {{user}}'s posture, wearing {{user}}'s dorm vest"},{"id":"applause","title":"The Applause","places":["club rooms"],"from":1080,"to":1380,"text":"applause from the empty upper tiers of the old amphitheatre, and one seat folded down"}]};
 const AMB_LEVELS = ['empty', 'quiet', 'some people', 'busy', 'packed'];
 const HAPPEN_RATE = { off: 0, rare: 0.2, normal: 0.4, often: 0.65 };
-const hash32 = (...parts) => {
-  let h = 2166136261;
-  for (const ch of parts.join('|')) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); }
-  h ^= h >>> 16; h = Math.imul(h, 2246822507); h ^= h >>> 13; h = Math.imul(h, 3266489909); h ^= h >>> 16;
-  return h >>> 0;
-};
-const rand01 = (...parts) => hash32(...parts) / 4294967296;
+// hash32, rand01, roll100, d100, rollInt, pickOf and rollTable: shared.js (seeded draws)
 const JOURNAL_ARCHIVE = 120;
 const FACTS_VISIBLE = 10;      // 5.4 token budget: the narrator reads each bond's latest 10 Known_facts; older ones go to $Known_old   // $ui.archive: journal lines the narrator no longer reads (UI only)
 
@@ -483,14 +502,10 @@ function wxFits(h, seed, dayNo, wxm) {
 function rawHappening(seed, dayNo, rate, exclude, wxm = 'off') {
   const P = dayParts(dayNo), evs = eventsOn(P);
   if (!rate || evs.some(e => e.home || e.lockdown)) return null;       // breaks and the Thinning: nothing
-  if (rand01(seed, dayNo, 'roll') >= rate * (evs.length ? 0.5 : 1)) return null;   // calendar days are busy enough
-  const pool = HAPPENINGS.filter(h => happeningFits(h, P) && !(exclude || []).includes(h.id) && wxFits(h, seed, dayNo, wxm));
   const stormy = wxm === 'full' && wxDay(seed, dayNo - 1).blocks.some(b => b.sky === 'Storm' || b.wind === 'gale');
-  const wt = h => (h.weight || 1) * (stormy && h.after_storm_x3 ? 3 : 1);
-  const total = pool.reduce((a, h) => a + wt(h), 0);
-  let r = rand01(seed, dayNo, 'pick') * total;
-  for (const h of pool) { r -= wt(h); if (r < 0) return h; }
-  return null;
+  return rollTable(HAPPENINGS, { roll: [seed, dayNo, 'roll'], p: rate * (evs.length ? 0.5 : 1),   // calendar days are busy enough
+    skip: h => !(happeningFits(h, P) && !(exclude || []).includes(h.id) && wxFits(h, seed, dayNo, wxm)),
+    pick: [seed, dayNo, 'pick'], weight: h => (h.weight || 1) * (stormy && h.after_storm_x3 ? 3 : 1) });
 }
 // No repeat of the previous two days' happening. 1.16.1 (audit B3): "previous" means what those days actually got, so the year is
 // chained from its first day (Month 12 is the holiday, with no happenings, so a year never carries one over) and cached.
@@ -520,7 +535,6 @@ const WX_MEAN = [9, 12, 15, 18, 21, 22, 19, 14, 9, 4, 1, 1];   // monthly mean ย
 const BLOCKS = ['morning', 'afternoon', 'night'], BLOCK_T = [-2, 4, -4];
 const FC_NEAR = { Clear: ['Cloudy'], Cloudy: ['Clear', 'Overcast', 'Fog'], Overcast: ['Cloudy', 'Rain'], Fog: ['Cloudy'], Rain: ['Overcast', 'Storm'], Storm: ['Rain'] };
 const FC_TRUE = 75;            // Divination Society forecast: d100 <= 75 -> the true sky (owner: 70-80%)
-const d100 = (...p) => hash32(...p) % 100 + 1;
 const tempLabel = t => (t <= 0 ? 'freezing' : t <= 7 ? 'cold' : t <= 14 ? 'cool' : t <= 21 ? 'mild' : t <= 27 ? 'warm' : 'hot');
 // night belongs to the day it starts on: 03:00 is the night block of the previous day
 const blockOf = abs => { const day = Math.floor(abs / DAY_MIN), h = Math.floor((abs - day * DAY_MIN) / 60); return h < 6 ? [day - 1, 2] : [day, h < 12 ? 0 : h < 18 ? 1 : 2]; };
@@ -594,7 +608,7 @@ const FLU_FROM = 9 * 28;   // Month 10, Week 1
 function fluOn(seed, day) {
   const Y = Math.floor(day / YEAR_DAYS), doy = day - Y * YEAR_DAYS;
   if (doy < FLU_FROM || doy >= FLU_FROM + 56) return false;
-  for (let k = 0, n = 1 + hash32(seed, Y, 'flu') % 2; k < n; k++) { const st = FLU_FROM + hash32(seed, Y, k, 'flus') % 51; if (doy >= st && doy < st + 5) return true; }
+  for (let k = 0, n = rollInt(1, 2, seed, Y, 'flu'); k < n; k++) { const st = rollInt(FLU_FROM, FLU_FROM + 50, seed, Y, k, 'flus'); if (doy >= st && doy < st + 5) return true; }
   return false;
 }
 // outdoor places (spec ยง4.8; generated by gen_engine from data/locations.json) and weather gear from Bag item names
@@ -1468,7 +1482,7 @@ function stepWeather(c) {
       if (!fAt && !rAt && fluOn(seed, dayNo)) {                          // a cold is going around: 1-2 seeded students off sick today
         const pool = Object.keys(STUDENTS).filter(id => (STUDENTS[id][1] || 1) <= S.World.Year && yearOf(id, S.World.Year) <= 3 && !(S.Campus_State.Graduated || []).includes(id)).sort();
         const sick = [];
-        for (let k = 0, n = 1 + hash32(seed, dayNo, 'sickn') % 2; k < n && pool.length; k++) sick.push(pool.splice(hash32(seed, dayNo, k, 'sick') % pool.length, 1)[0]);
+        for (let k = 0, n = rollInt(1, 2, seed, dayNo, 'sickn'); k < n && pool.length; k++) sick.push(pool.splice(rollInt(0, pool.length - 1, seed, dayNo, k, 'sick'), 1)[0]);
         Object.assign(S.$ui.wx, { flu: true, sick });
       }
       if (isOutdoor(S.World.Location)) {                         // outdoor fights: field line for the narrator and the Battle panel
@@ -1769,7 +1783,7 @@ function stepExposure(c) {
       // head cold: one roll at the first update of a new day
       if (hasB && dayNo !== dayNoB && !Cn['Head cold']) {
         const p = (xs.exp >= dayNoB ? 0.15 : 0) + (fluOn(seed, dayNo) ? 0.05 : 0) + (pctOf(V.Stamina, V.Stamina_max) < 30 ? 0.05 : 0);
-        if (p > 0 && rand01(seed, dayNo, 'hc') < p) { xs.hc = dayNo + 2 + hash32(seed, dayNo, 'hcd') % 3; add('Head cold', `for ${xs.hc - dayNo} days`); }
+        if (p > 0 && rand01(seed, dayNo, 'hc') < p) { xs.hc = dayNo + rollInt(2, 4, seed, dayNo, 'hcd'); add('Head cold', `for ${xs.hc - dayNo} days`); }
       }
       if (Cn['Head cold'] && xs.hc > -1e9 && dayNo >= xs.hc) { delete Cn['Head cold']; xs.hc = -1e9; S.$ui.toasts.push('Head cold is over'); }
       for (const e of expo) { hit = true; add(e.k, e.why || (e.k === 'Soaked' ? 'a direct soaking' : 'a freezing hit')); }
@@ -1817,7 +1831,7 @@ function stepExpedition(c) {
     X.grade = num(S.Player.Profile.Year, 1) >= 3 ? 'II' : 'III';
     const homeOf = b => EXP.places.filter(p => !['base_camp', 'old_heart'].includes(p.id) && (G(p.id)[X.grade] || []).includes(b)).map(p => p.id);
     const pool = _.uniq(EXP.places.flatMap(p => ['base_camp', 'old_heart'].includes(p.id) ? [] : G(p.id)[X.grade] || [])).sort();
-    X.tgt = pool[hash32(seed, Y, 'exp-target') % pool.length]; X.homes = homeOf(X.tgt);
+    X.tgt = pickOf(pool, seed, Y, 'exp-target'); X.homes = homeOf(X.tgt);
     S.$ui.toasts.push(`Expedition target: ${X.tgt}`);
     log.push(`Creature Studies Expedition: Vallie assigns {{user}}'s group its target, a ${X.tgt} (Grade ${X.grade}). Where it lives is the group's to find out.`);
   }
@@ -1854,7 +1868,7 @@ function stepExpedition(c) {
     const g = G(fAt), beasts = [...(g.IV || []), ...(g.III || []), ...(g.II || [])];
     let rolls = 0, signed = false;
     for (let k = Math.floor(t0) + 1; k <= Math.floor(t1) && rolls < num(R.max_rolls, 12); k++, rolls++) {
-      const at = absA - Math.round((t1 - k) * 60), dark = expNight(at), roll = kind => rand01(seed, Y, 'exp', fAt, k, kind) * 100;
+      const at = absA - Math.round((t1 - k) * 60), dark = expNight(at), roll = kind => roll100(seed, Y, 'exp', fAt, k, kind);
       if (X.tgt && !X.met && !X.res && at >= hs && at < he) {
         const n = X.hrs[fAt] = num(X.hrs[fAt], 0) + 1;
         if (X.homes.includes(fAt)) {
@@ -1869,10 +1883,10 @@ function stepExpedition(c) {
       if (!X.wen && wr && roll('wen') < wr) { X.wen = 1; evs.push({ k: 'wendigo' }); continue; }
       const er = (dark ? num(R.encounter_night, 15) : num(R.encounter, 10)) * num(g.rate, 1), pool = beasts.filter(b => b !== X.tgt);
       if (pool.length && roll('enc') < er) {
-        const b = pool[hash32(seed, Y, 'exp', fAt, k, 'encb') % pool.length];
+        const b = pickOf(pool, seed, Y, 'exp', fAt, k, 'encb');
         evs.push({ k: 'beast', b, g: (g.II || []).includes(b) ? 'II' : (g.III || []).includes(b) ? 'III' : 'IV' });
       }
-      if (fAt === 'old_heart' && (g.protected || []).length && roll('prot') < 15) evs.push({ k: 'protected', b: g.protected[hash32(seed, Y, 'exp', fAt, k, 'protb') % g.protected.length] });
+      if (fAt === 'old_heart' && (g.protected || []).length && roll('prot') < 15) evs.push({ k: 'protected', b: pickOf(g.protected, seed, Y, 'exp', fAt, k, 'protb') });
     }
   }
   if (fAt && !seen.includes(fAt)) seen.push(fAt);
@@ -1959,10 +1973,10 @@ function stepCapital(c) {
     const Wh = AV.where || {}, inW = k => (Wh[k] || []).includes(aAt), h1 = Math.floor(absA / 60);
     let street = false;
     for (let h = Math.max(Math.floor(absB / 60) + 1, h1 - num(R.max_rolls, 6) + 1); h <= h1; h++) {
-      const abs = h * 60, roll = k => rand01(seed, 'av', h, aAt, k) * 100, pick = (a, k) => a[hash32(seed, 'av', h, aAt, k) % a.length];
+      const abs = h * 60, roll = k => roll100(seed, 'av', h, aAt, k), pick = (a, k) => pickOf(a, seed, 'av', h, aAt, k);
       if (crown && (abs < at(Cr.free) || abs >= at(Cr.depart))) continue;   // the parade and the speech; then the airship
       if (inW('pickpocket') && roll('pick') < num(R.pickpocket, 8)) {
-        const caught = roll('pseen') < num(R.pick_seen, 50), pct = num(R.pick_min, 10) + hash32(seed, 'av', h, 'pamt') % (num(R.pick_max, 25) - num(R.pick_min, 10) + 1);
+        const caught = roll('pseen') < num(R.pick_seen, 50), pct = rollInt(num(R.pick_min, 10), num(R.pick_max, 25), seed, 'av', h, 'pamt');
         const lost = caught ? 0 : Math.min(num(R.pick_cap, 300), Math.round(coinNow() * pct / 100));
         if (lost) spend(lost, 'pickpocketed in Avalon');
         evs.push({ k: 'pick', caught, lost, empty: !caught && !lost });
@@ -1973,7 +1987,7 @@ function stepCapital(c) {
       if (crown && X.ts !== Y && inW('tsubaki') && roll('tsu') < num(R.tsubaki, 10)) { X.ts = Y; evs.push({ k: 'tsubaki', first: Y < (ARRIVES.Tsubaki || 1) }); }
       else if ((crown ? inW('rival_crowning') : kd && inW('rival_kingdom')) && roll('riv') < num(R.rival, 25)) {
         const pool = Object.keys(AV.rivals || {}).filter(id => AV.rivals[id] + Y - 1 <= 3 && !(X.met || []).includes(id)).sort();
-        if (pool.length) { const id = pool[hash32(seed, 'av', h, aAt, 'rivp') % pool.length]; X.met = [...(X.met || []), id]; evs.push({ k: 'rival', id }); }
+        if (pool.length) { const id = pickOf(pool, seed, 'av', h, aAt, 'rivp'); X.met = [...(X.met || []), id]; evs.push({ k: 'rival', id }); }
       }
       if (kd && !X.sc && ['Thu', 'Fri', 'Sat'].includes(S.World.Day) && inW('scout') && (S.Competition || {}).Status !== 'eliminated' && roll('scout') < num(R.scout, 15)) { X.sc = 1; evs.push({ k: 'scout' }); }
       if (inW('raid') && roll('raid') < num(R.raid, 5)) {
@@ -2007,9 +2021,10 @@ function stepAirship(c) {
   if (hasB && !toolEdit && elapsed > 0 && sPrev && restedAs !== 'sleep') {
     const h1 = Math.floor(absA / 60), got = new Set();
     for (let h = Math.max(Math.floor(absB / 60) + 1, h1 - num(R.max_rolls, 6) + 1); h <= h1; h++) {
-      const roll = k => rand01(seed, 'air', fid, h, k) * 100, pick = (a, k) => a[hash32(seed, 'air', fid, h, k) % a.length];
-      for (const [k, pool, ok] of [['sky', (AIR.sky || {})[route], true], ['stage', AIR.stage, sAt === 'common_room'], ['hold', AIR.hold, sAt === 'cargo_hold']])
-        if (ok && !got.has(k) && (pool || []).length && roll(k) < num(R[k], 0)) { got.add(k); evs.push({ k, t: pick(pool, k + 't') }); }
+      for (const [k, pool, ok] of [['sky', (AIR.sky || {})[route], true], ['stage', AIR.stage, sAt === 'common_room'], ['hold', AIR.hold, sAt === 'cargo_hold']]) {
+        const t = ok && !got.has(k) ? rollTable(pool, { roll: [seed, 'air', fid, h, k], pct: num(R[k], 0), pick: [seed, 'air', fid, h, k + 't'] }) : null;
+        if (t !== null) { got.add(k); evs.push({ k, t }); }
+      }
     }
   }
   const t = hm(S.World.Time), a = hm(sFl.from), b = hm(sFl.to), key = `${sFl.route}_${sFl.dir}`;
@@ -2077,7 +2092,7 @@ function stepSunreach(c) {
     else if (stake > coinNow()) log.push(`Sunreach.Bet: {{user}} has ${coinNow()} coin, less than the stake; no bet.`);
     else {
       X.nb = num(X.nb, 0) + 1;
-      const win = rand01(seed, 'srbet', absA, X.nb) * 100 < G.win, net = win ? stake * (G.pay - 1) : -stake;
+      const win = roll100(seed, 'srbet', absA, X.nb) < G.win, net = win ? stake * (G.pay - 1) : -stake;
       pay(net, `${win ? 'won' : 'lost'} at ${game}, The Golden Tide`);
       evs.push({ k: 'bet', game, stake, win, net });
       S.$ui.toasts.push(`${_.capitalize(game)}: ${win ? 'won' : 'lost'} ${Math.abs(net)} coin`);
@@ -2088,12 +2103,12 @@ function stepSunreach(c) {
     const h1 = Math.floor(absA / 60), present = new Set(Object.keys((S.Scene || {}).Present || {})), grad = new Set((S.Campus_State || {}).Graduated || []);
     const M = SR.meet || {}, got = new Set();
     for (let h = Math.max(Math.floor(absB / 60) + 1, h1 - num(R.max_rolls, 6) + 1); h <= h1; h++) {
-      const nt = srNight(h * 60) ? 1 : 0, roll = k => rand01(seed, 'sr', h, at, k) * 100, pick = (a, k) => a[hash32(seed, 'sr', h, at, k) % a.length];
+      const nt = srNight(h * 60) ? 1 : 0, roll = k => roll100(seed, 'sr', h, at, k), pick = (a, k) => pickOf(a, seed, 'sr', h, at, k);
       const st = ((SR.street || {})[at] || [])[nt] || [];
       if (!got.has('street') && st.length && roll('st') < num(R.street, 20)) { got.add('street'); evs.push({ k: 'street', t: pick(st, 'stt') }); }
       if ((SR.hustle || []).includes(at) && !got.has('hustle') && roll('hus') < num(R.hustle, 8)) {
         got.add('hustle');
-        const caught = roll('hseen') < num(R.hustle_seen, 50), pct = num(R.hustle_min, 10) + hash32(seed, 'sr', h, 'hamt') % (num(R.hustle_max, 25) - num(R.hustle_min, 10) + 1);
+        const caught = roll('hseen') < num(R.hustle_seen, 50), pct = rollInt(num(R.hustle_min, 10), num(R.hustle_max, 25), seed, 'sr', h, 'hamt');
         const lost = caught ? 0 : Math.min(num(R.hustle_cap, 300), Math.round(coinNow() * pct / 100));
         if (lost) { pay(-lost, 'hustled in Sunreach Bay'); jnl.push(`Sunreach Bay: a hustler took ${lost} coin from {{user}} at ${SR_PL[at].name}.`); S.$ui.toasts.push(`Hustled: -${lost} coin`); }
         evs.push({ k: 'hustle', caught, lost, empty: !caught && !lost });
@@ -2357,7 +2372,7 @@ function stepSchoolWeek(c) {
       const tierOf = () => { const h = num(ST.mins, 0) / 60; let i = cut.filter(c => h >= c).length; if (ST.grace) i = Math.max(i, 2); return i; };
       const sessOf = k => { const m = /^Y(\d+)M(\d+)$/.exec(String(k || '')); return m ? { Y: +m[1], M: +m[2], fin: +m[2] === 5 || +m[2] === 11 } : null; };
       const labelOf = c => `Y${c.Y} M${c.M} ${c.fin ? 'Finals' : 'Midterm'}`;
-      const runOf = k => ({ d: hash32(seed, k, 'run') % 4, h: 8 + hash32(seed, k, 'runh') % 8 });   // {{user}}'s finals run: Mon-Thu, 08:00-15:00
+      const runOf = k => ({ d: rollInt(0, 3, seed, k, 'run'), h: rollInt(8, 15, seed, k, 'runh') });   // {{user}}'s finals run: Mon-Thu, 08:00-15:00
       const perkOn = (id, which) => { const x = ((REW.npcs || {})[id] || {})[which], p = x && (S._Perks || {})[x.name];
         return !!(p && p.Kind !== 'memento' && !goneNow(id) && !(S.$ui.tsusp || []).includes(x.name)); };
       // the engine owns Player.Academics while the feature is on: a direct write is reverted (the story uses /Exam_events)
@@ -2393,7 +2408,7 @@ function stepSchoolWeek(c) {
           const sk = num(ST.skip[s], 0), held = num(ST.held[s], 0), c = ST.cap[s] || {}, Wt = GRADE_W[PRACTICAL.includes(s) ? 'practical' : 'theory'];
           const stat = SUBJECT_STAT[s], rank = profOn ? profRankOf(S, stat) : -1, statPts = rank >= 0 ? rank * 20 : prep;
           const att = held ? _.clamp((held - sk) / held, 0, 1) : sk ? 0 : 1;
-          const roll = 1 + hash32(seed, ST.key, 'exam', s) % 100, [, day, dayWord] = EXAM_DAY.find(([hi]) => roll <= hi);
+          const roll = d100(seed, ST.key, 'exam', s), [, day, dayWord] = EXAM_DAY.find(([hi]) => roll <= hi);
           const luck = examNow || ST.cap[s] ? day : 0, score = r1(Wt[0] * prep + Wt[1] * statPts + Wt[2] * att * 100 + luck);
           let m = GRADE_CUT.filter(x => score >= x).length, mod = 0;
           const parts = [`${prepWord} ${r1(Wt[0] * prep)}`, rank >= 0 ? `${stat} Rank ${rank} ${r1(Wt[1] * statPts)}` : '', `attended ${Math.round(att * 100)}% ${r1(Wt[2] * att * 100)}`, luck ? `${dayWord} ${luck > 0 ? '+' : ''}${luck}` : ''];
@@ -2511,13 +2526,13 @@ function stepSchoolWeek(c) {
         const Co = S.Competition || {}, tier = String(Co.Tier || ''), status = String(Co.Status || '').toLowerCase();
         const comp = /champion/.test(status) ? 2 : /Academy|Kingdom|World/.test(tier) || /qualified|selected/.test(status) ? 1 : 0;
         const aL = repLv('Academy'), acadPts = aL >= 2 ? 1 : aL <= -2 ? -1 : 0;
-        const score = exScore + comp + acadPts + (hash32(seed, rk, 'rank') % 100) / 100 - 0.5;
+        const score = exScore + comp + acadPts + rollInt(0, 99, seed, rk, 'rank') / 100 - 0.5;
         const BANDS = [[1, 1], [2, 3], [4, 10], [11, 25], [26, 50], [51, 80]];
         // 1.11.1 (bug hunt): a rank below #80 is in the last band (it used to find no band and jump to #1)
         const bandOf = r => { const i = r >= 1 ? BANDS.findIndex(([, hi]) => r <= hi) : 5; return i < 0 ? 5 : i; }, cur = num(Pf.Dorm_rank, 0), b0 = bandOf(cur);
         const want = score >= 6.5 ? 0 : score >= 5.5 ? 1 : score >= 4.2 ? 2 : score >= 3 ? 3 : score >= 1.8 ? 4 : 5;
         const step = TU.rank_move || 1, b1 = want < b0 ? Math.max(want, b0 - step) : want > b0 ? Math.min(want, b0 + step) : b0;
-        const [lo, hi] = BANDS[b1], to = b1 === b0 && cur >= 1 ? cur : lo + hash32(seed, rk, 'rankpos') % (hi - lo + 1);
+        const [lo, hi] = BANDS[b1], to = b1 === b0 && cur >= 1 ? cur : rollInt(lo, hi, seed, rk, 'rankpos');
         Pf.Dorm_rank = to;
         if (b1 < b0) repAdd('Academy', 5, 'dorm rank up on Results day', '');
         S.$ui.ranknews = { from: cur, to, dorm: Pf.Dorm };
@@ -3735,8 +3750,8 @@ function stepRecords(c) {
       if (H.month === month) { log.push(`Letter "${k}": one letter home a month gets a reply; this one is on its way, but no parcel will come of it.`); continue; }
       if (placeKey(S.World.Location) !== 'mail tower') { log.push(`Letter "${k}": letters home go from the Mail Tower; no reply is on its way yet.`); continue; }
       const r = d100(seed, 'home', month), R = HOME.roll;
-      const parcel = r <= R.none ? null : r <= R.none + R.item ? { item: HOME.items[hash32(seed, 'homeitem', month) % HOME.items.length] }
-        : { coin: HOME.coin[0] + hash32(seed, 'homecoin', month) % (HOME.coin[1] - HOME.coin[0] + 1) };
+      const parcel = r <= R.none ? null : r <= R.none + R.item ? { item: pickOf(HOME.items, seed, 'homeitem', month) }
+        : { coin: rollInt(HOME.coin[0], HOME.coin[1], seed, 'homecoin', month) };
       Object.assign(H, { month, due: absA + HOME.days * DAY_MIN, from: String(L.To || '').trim() || 'home', parcel, key: '', given: false });
       log.push(`Letter home sent: a reply arrives in about ${HOME.days} days.`);
     }
@@ -3916,16 +3931,14 @@ function stepInitiative(c) {
     if (I.day !== dayNo) {
       I.day = dayNo; I.id = ''; I.done = false;
       if (!off && !awayIn(S) && !/LOCKDOWN/.test(S.World._Curfew || '') && I.count < IR[1]
-          && rand01(seed, dayNo, 'npc-initiative-roll') < IR[0]) {
-        const pool = Object.keys(S.Bonds).sort().filter(id => {
-          const b = S.Bonds[id];
-          return b.Rank >= 3 && INITIATIVE_STAGES[id] && (ARRIVES[id] || 1) <= S.World.Year
-            && !npcAwayIn(S, id) && !S.Scene.Present[id]   // 1.16.1 (audit B4): only a status that keeps them away
-            && dayNo - num(I.last[id], -1000) >= IR[2];
-        });
-        const weight = id => ({ open: 3, normal: 2, guarded: 1, closed: 0.5 })[INITIATIVE_OPENNESS[id] || 'normal'];
-        let ticket = rand01(seed, dayNo, 'npc-initiative-pick') * pool.reduce((sum, id) => sum + weight(id), 0);
-        for (const id of pool) if ((ticket -= weight(id)) < 0) { I.id = id; I.last[id] = dayNo; I.count++; break; }
+      ) {
+        const id = rollTable(Object.keys(S.Bonds).sort(), { roll: [seed, dayNo, 'npc-initiative-roll'], p: IR[0], pick: [seed, dayNo, 'npc-initiative-pick'],
+          skip: id => { const b = S.Bonds[id];
+            return !(b.Rank >= 3 && INITIATIVE_STAGES[id] && (ARRIVES[id] || 1) <= S.World.Year
+              && !npcAwayIn(S, id) && !S.Scene.Present[id]   // 1.16.1 (audit B4): only a status that keeps them away
+              && dayNo - num(I.last[id], -1000) >= IR[2]); },
+          weight: id => ({ open: 3, normal: 2, guarded: 1, closed: 0.5 })[INITIATIVE_OPENNESS[id] || 'normal'] });
+        if (id) { I.id = id; I.last[id] = dayNo; I.count++; }
       }
     }
     if (off || awayIn(S) || /LOCKDOWN/.test(S.World._Curfew || '') || (I.id &&
@@ -3956,7 +3969,7 @@ function stepInitiative(c) {
           for (const v of fills[k]) combos.push([ti, v, t.replace('{' + k + '}', v)]);
         });
         const used = I.used[id] || [], fresh = combos.filter(([ti, v]) => !used.includes(ti + '|' + v)), pool = fresh.length ? fresh : combos;
-        const pick = pool.length ? pool[hash32(seed, dayNo, 'ask', id) % pool.length] : null;
+        const pick = pool.length ? pickOf(pool, seed, dayNo, 'ask', id) : null;
         I.askDay = dayNo; I.askId = id; I.ask = pick ? pick[2] : '';
         if (pick) I.used[id] = [...used, pick[0] + '|' + pick[1]].slice(-20);
       }
@@ -3996,7 +4009,7 @@ function stepGossip(c) {
     for (const r of Object.keys(R)) if (!live.includes(r)) delete R[r];         // the story removed it: drop its metadata
     const keep = [], gone = [];
     for (const r of live) {
-      if (!R[r]) { const d20 = hash32(seed, r, 'rum') % 20 + 1; R[r] = { born: dayNo, fate: d20 <= 3 ? 'fizzle' : d20 >= 18 ? 'fast' : 'normal' }; }
+      if (!R[r]) { const d20 = rollInt(1, 20, seed, r, 'rum'); R[r] = { born: dayNo, fate: d20 <= 3 ? 'fizzle' : d20 >= 18 ? 'fast' : 'normal' }; }
       const age = dayNo - R[r].born;
       if ((R[r].fate === 'fizzle' && age >= 3) || age >= TU.gossip_life) { gone.push(r); delete R[r]; } else keep.push(r);   // 1.9.9: lifetime from Settings > Campus life
     }
@@ -4430,13 +4443,13 @@ function stepAmbience(c) {
     // one cue type per new place or time block, not the same one at this place within three days
     const fresh = pk !== pkB || blk !== blkB || dayNo !== dayNoB || elapsed > 360;
     // the place's own types come first (7 or 6 times in 10), so the shared ones do not crowd them out
-    const placeFirst = (all, tenths, tag) => { const own = all.filter(([x]) => x[0] === cat); return own.length && hash32(seed, tag + 'own', pk, absA) % 10 < tenths ? own : all; };
+    const placeFirst = (all, tenths, tag) => { const own = all.filter(([x]) => x[0] === cat); return own.length && rollInt(0, 9, seed, tag + 'own', pk, absA) < tenths ? own : all; };
     let cue = '';
     if (C0 && fresh) {
       const hist = (AE.cue[pk] || []).filter(([, d]) => dayNo - d < 3);
       const all = AMB.cues.map((c, i) => [c, i]).filter(([c, i]) => (c[0] === '*' || c[0] === cat) && fits(c[3], false) && !hist.some(([j]) => j === i));
       const pool = placeFirst(all, 7, 'cue');
-      if (pool.length) { const [c, i] = pool[hash32(seed, 'cue', pk, absA) % pool.length]; cue = c[2]; hist.push([i, dayNo]); }
+      if (pool.length) { const [c, i] = pickOf(pool, seed, 'cue', pk, absA); cue = c[2]; hist.push([i, dayNo]); }
       AE.cue[pk] = hist.slice(-12);
       for (const k of Object.keys(AE.cue).slice(0, -40)) delete AE.cue[k];
     }
@@ -4454,14 +4467,14 @@ function stepAmbience(c) {
       const untold = kind ? (PLACE_LORE[pk] || []).filter(([u]) => !S.$ui.lore.includes(String(u))) : [];
       if (untold.length && (crowd > 0 || Object.keys(S.Scene.Present || {}).length) && num(AE.lore, -1) !== dayNo
         && d100(seed, 'lore', S.$eng.turn, absA) <= num((AMB.lore_places || {})[pk], num(AMB.lore_chance, 35))) {
-        const [u, , title, text] = untold[hash32(seed, 'lorepick', pk, absA) % untold.length];
+        const [u, , title, text] = pickOf(untold, seed, 'lorepick', pk, absA);
         AE.lore = dayNo; hearLore(S, u, title, placeOf(S.World.Location)); beat = { kind: 'lore', text: `${title}. ${text.replace(/[.\s]+$/, '')}` }; kind = '';
       }
       if (kind) {
         const W1 = ((B.$ui || {}).wx || {}).now;
         const gos = S.$ui.gossip || [];
         const tomorrow = eventsOn(fromAbs((dayNo + 1) * DAY_MIN)).filter(e => !evs.some(x => x.t === e.t)), yesterday = eventsOn(fromAbs((dayNo - 1) * DAY_MIN)).filter(e => !evs.some(x => x.t === e.t));
-        const special = sp => sp === 'overheard' ? (gos.length ? `overheard: the rumour "${gos[hash32(seed, 'ovh', absA) % gos.length][0]}", in someone else's words` : '')
+        const special = sp => sp === 'overheard' ? (gos.length ? `overheard: the rumour "${pickOf(gos, seed, 'ovh', absA)[0]}", in someone else's words` : '')
           : sp === 'weather_turn' ? (W0 && W1 && (W0.sky !== W1.sky || W0.rare !== W1.rare) ? `the weather turning: ${S.$ui.wx.text || W0.sky.toLowerCase()}` : '')
           : sp === 'event_echo' ? (tomorrow.length ? `preparations for tomorrow's ${tomorrow[0].t.split(' (')[0]}` : yesterday.length ? `what is left of yesterday's ${yesterday[0].t.split(' (')[0]}` : '') : '';
         // 1.31.0 (owner-approved planning/DRAFT_location_activities.md): under running water the talk carries; at these places a beat
@@ -4473,7 +4486,7 @@ function stepAmbience(c) {
           const bh = (AE.beat[cat] || []).filter(([, dd]) => dayNo - dd < 7);
           const pool = placeFirst(AMB.beats.map((b, i) => [b, i]).filter(([b, i]) => (b[0] === '*' || b[0] === cat) && b[1] === kind && fits(b[3], true) && !bh.some(([j]) => j === i) && (!b[3].special || special(b[3].special))), 6, 'beat');
           if (pool.length) {
-            const [b, i] = pool[hash32(seed, 'beat', pk, absA) % pool.length];
+            const [b, i] = pickOf(pool, seed, 'beat', pk, absA);
             beat = { kind, text: b[3].special ? special(b[3].special) : b[2] }; bh.push([i, dayNo]);
           }
           AE.beat[cat] = bh.slice(-30);
@@ -4494,7 +4507,7 @@ function stepAmbience(c) {
         && (!u.alone || alone) && (!u.awake || restedAs !== 'sleep') && (!u.asleep || restedAs === 'sleep' || restedAs === 'rest') && (!u.path || path)
         && !(thin && out) && dayNo - num(U.last[u.id], -99) >= 30);
       if (cands.length) {
-        const u = cands[hash32(seed, 'unc', absA) % cands.length];
+        const u = pickOf(cands, seed, 'unc', absA);
         const own = (u.x2 === 'winter' && season === 'Winter') || (u.x2 === 'remembrance' && evs.some(e => /Remembrance/.test(e.t)));
         const ch = num(AMB.uncanny_chance, 5) * (wtags.has('fog') ? 2 : 1) * (thin ? 2 : 1) * (own ? 2 : 1);
         if (d100(seed, 'uncanny', S.$eng.turn, absA) <= ch) { U.w = weekNo; U.last[u.id] = dayNo; unc = { id: u.id, title: u.title, text: u.text }; }

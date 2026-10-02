@@ -145,6 +145,31 @@ const itemBase = x => String(x || '').trim().toLowerCase().replace(/^(an?|the)\s
 const itemKey = x => itemBase(x).replace(/\s*\(.*\)$/, '');
 // the key of a record (the Bag, perks) written in any case: the name as stored, or undefined
 const keyIn = (O, name) => { const lo = String(name == null ? '' : name).toLowerCase(); return Object.keys(O || {}).find(k => k.toLowerCase() === lo); };
+// ---- seeded draws (1.43.0, audit 3.6). Every seeded chance and pick goes through these, so a swipe or a replay of the same
+// update draws the same: each is a pure function of its parts (the chat seed, the day or hour, the place, a salt naming the draw).
+const hash32 = (...parts) => {
+  let h = 2166136261;
+  for (const ch of parts.join('|')) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); }
+  h ^= h >>> 16; h = Math.imul(h, 2246822507); h ^= h >>> 13; h = Math.imul(h, 3266489909); h ^= h >>> 16;
+  return h >>> 0;
+};
+const rand01 = (...parts) => hash32(...parts) / 4294967296;       // [0, 1)
+const roll100 = (...parts) => rand01(...parts) * 100;             // [0, 100): "roll100(...) < pct" is a pct% chance
+const d100 = (...parts) => hash32(...parts) % 100 + 1;            // 1..100
+const rollInt = (lo, hi, ...parts) => lo + hash32(...parts) % (hi - lo + 1);
+const pickOf = (arr, ...parts) => arr[hash32(...parts) % arr.length];
+// rollTable(pool, o): one draw from a table. o.roll: the chance's parts, against o.p (0..1, rand01) or o.pct (0..100, roll100);
+// without o.roll there is no chance step. o.skip(x): entries out for now (a cooldown, no repeat). o.weight(x): a weighted pick,
+// rand01(...o.pick) x the total weight; otherwise a uniform pickOf(pool, ...o.pick). The entry, or null.
+function rollTable(pool, o) {
+  if (o.roll && !('pct' in o ? roll100(...o.roll) < o.pct : rand01(...o.roll) < o.p)) return null;
+  const P = o.skip ? (pool || []).filter(x => !o.skip(x)) : pool || [];
+  if (!P.length) return null;
+  if (!o.weight) return pickOf(P, ...o.pick);
+  let r = rand01(...o.pick) * P.reduce((a, x) => a + o.weight(x), 0);
+  for (const x of P) { r -= o.weight(x); if (r < 0) return x; }
+  return null;
+}
 // ---- end of shared.js
 
   const DORM = DORM_COLOR;   // shared.js
