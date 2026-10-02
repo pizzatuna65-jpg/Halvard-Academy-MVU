@@ -69,6 +69,8 @@ Competition: {}
 Projects: {}
 Trip:
   Active: false
+Expedition:
+  Caught: false
 Battle:
   Active: false
   Combatants: {}

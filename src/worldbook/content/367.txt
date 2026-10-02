@@ -1,0 +1,5 @@
+<%_ if ((getvar('stat_data.$ui.forest') || {}).on) { _%>
+[Grand Cave Network] A mouth in a cliff wall at the forest's north-west, wide enough to fly an airship into, opening onto caves said to run as far as the forest itself; nobody has mapped the end. Groups often pitch their tents just inside the mouth, dry and out of the wind. Staff chalk a line across the first chamber: no group goes past it. Warm air rises from somewhere below.
+Feel: cold breath from below, dripping, an echo that answers late.
+Possible encounters: giant centipede, echo bat (its shriek stuns), gargoyle and lesser drake (on the cliff face) (III); cave troll, basilisk, giant scorpion, bone drake, cinder wyrm (II).
+<%_ } _%>

@@ -1,7 +1,46 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.38.0 — The Grand Vast Forest: the Expedition's own map (2026-10-02)
+
+FP7 area 1 (owner-approved `planning/DRAFT_outside_maps.md`, part 1, after seven rounds of owner notes; the map image is the
+owner's, generated from `planning/MAP_PROMPTS_outside_maps.txt`). Save fixture v1.37.4.
+- **Map.** The Creature Studies Expedition (M2 W3 Wed–Fri) happens on a map of its own: the southern rim of the Grand Vast
+  Forest, a rainforest weeks across. Ten points: Base Camp (with the Huntsmen's Lodge), the Wildwood (one entry, three pins: west,
+  north, east of camp), Blightbriar (poison thorns and spores), the Gloaming (the darkest, least visited stand), Silverstair Falls,
+  the Jade Terraces (Huanglong-like pools), the Grand Cave Network (groups camp in its mouth) and the Old Heart (the giant tree
+  everyone steers by). Walks of 1.5–5 h between neighbours; Base Camp to the far edge 10.5 h. `data/expedition.json` is the
+  single source for the lore, the engine and the UI.
+- **Engine** (`stepExpedition`, after the weather effects). During the Expedition, `World.Location` is written "Grand Vast
+  Forest — <place>" (`forestPlace`, `forestLoc`; a bare "Wildwood" keeps {{user}}'s pin or takes the nearest). Every walk costs
+  8% of Stamina_max an hour (×1.5 on spore paths without a mask, on the falls stair and dragging a catch; ×1.25 in rain and at
+  night); hours the clock has not covered yet are still "on the road". Thursday 08:00 the engine picks the group's target (Grade
+  III for Years 1–2, Grade II for Year 3, never at Base Camp or the Old Heart). Each search hour at a place rolls, seeded and
+  swipe-safe: the target only where it lives (3% the first hour, +3% an hour, at most 24%, half at night for day beasts), signs
+  towards it elsewhere (20%), another beast (10%, 15% at night), the Wendigo in the Gloaming (1%, once). A catch reported with
+  `/Expedition/Caught` counts only after the engine brought the target in. No catch by Friday 08:00 fails the practical: the
+  result moves the Creature Studies mark a step (an `Exam_events` shift), goes into the Journal and `$ui.forest.hist`, and next
+  year's `<now>` remembers it. The forest has its own weather (`forestWx`: warm, morning mist, afternoon downpours) and its
+  effects apply; nights in the tents count as sleep.
+- **Narrator.** `<now>` gets a forest block: where {{user}} is, the target without its home, hours left, every walk from here,
+  and only what the engine rolled this reply (target, signs, a beast, the Wendigo with its rules). Campus regulars and happenings
+  are left out there. 502 tells the narrator how to write the place and report a catch. Lore: a forest overview (neighbours and
+  every shortest walk, computed from the legs, plus the narrator rules), one entry per place with its possible encounters, and
+  the Wendigo, all constant behind a gate on `$ui.forest.on` (nothing outside the Expedition); 230 (Vallie leads, the bracelet
+  tracker is a staff binding for the trip, the flare, catches, nights) and 229 (torrent eel, echo bat, hush owl, spore shambler,
+  chime toad, bloom maw, the Wendigo).
+- **UI.** The Map panel has Halvard / Grand Vast Forest tabs once {{user}} has been there, and opens on the forest during the
+  Expedition. Points open as you go: the places visited and their neighbours (at the start Base Camp and the three Wildwood pins).
+  Cards: the walk from here, the known paths, the description and feel; never the beasts.
+- **Assets** pinned to commit `288b5a6` (`f42990c` plus the forest map); local copy `Maps/grand_vast_forest.webp`.
+- Tests: new `test_expedition_v1380.cjs` (routes, place names, arrival, weather, target, walking and owed hours, search and the
+  meeting, the catch guard, failure, home again, `<now>`, lore gate, update rule, UI data); `test_mapvariants_v1130.cjs` (the new
+  commit); `test_split_v146.cjs` caught a "first person" in a place's feel (reworded); full `npm test` passes.
+- To confirm with the owner (invented while applying): the Lodge sells cloth spore masks; the forest's weather numbers (24–29 °C,
+  afternoon rain 70%, storm 10%); a protected beast may be glimpsed at the Old Heart (15% an hour, harmless); Grade II beasts
+  met by Years 1–2 are told to the narrator as "beyond you: run or fire the flare".
 
 ## v1.37.4 — NPC Thoughts: calm characters think calmly; an optional no-read-back regex (2026-10-02)
 
@@ -61,28 +100,6 @@ Owner: "no two alike; I must tell A from B at a glance", theme and hair do not m
 - Tests: `test_say_colors_v1370.cjs` (palette spread, newcomer moves, the move sticks, eight people all different, Extras),
   `test_saves.cjs`, the full suite.
 - Nothing to confirm with the owner.
-
-## v1.37.0 — Dialogue colours (2026-10-02)
-
-Owner request: consistent dialogue colours; unnamed passers-by share one colour, and a character gets their own once they enter
-the Extras record. Save fixture v1.36.0.
-- The narrator wraps each spoken line in `<say:Name>"…"</say>` (`<say>` for anyone without a name or record; optional tone
-  shout / whisper / measured / tremble). Rule in 504, a one-line reminder in the 510 gate; feature **Dialogue colours** (ON).
-- Colours stay out of the prompt: the card's display regex turns the tag into `<span data-say>` (verified: SillyTavern's message
-  sanitizer keeps data attributes and prefixes classes, `chats.js` `addDOMPurifyHooks`; unmatched regex groups become empty,
-  `regex/engine.js`), and the UI script puts one stylesheet into SillyTavern's page. Tags are stripped from replies older than
-  depth 4 in the prompt; the newest keep them as examples.
-- `data/dialogue_colors.json`: one OKLCH hue and band per roster character (71, all different), placed by
-  `tools/make_dialogue_colors.py` so people often in the same scene (relations, dorm, year, group) are far apart, with colourful
-  hair pulling toward its hue (Irene purple, Ruby pink, Alyssa red). Edit a colour there by hand; the tool keeps edits and only
-  fills new NPCs. Every name a character goes by maps to it (`npc_aliases`, now shared with the engine).
-- Extras: the engine gives a record a hue (`$say`, hidden from the narrator) when its Who is written, the hue farthest from the
-  other records'. Unrecorded speakers share the generic grey; {{user}}'s lines get a soft warm colour.
-- Lightness follows the SillyTavern theme (light text = dark theme). A `<say:Name>` tag also counts as that character speaking
-  for the Cast Sheet order (`stepCast`).
-- Preset: both colour toggles stay OFF and their notes say so. VectFox cleaning patterns: drop `<say>` tags.
-- Tests: `test_say_colors_v1370.cjs` (new), full suite.
-- To confirm with the owner: the colours themselves (`data/dialogue_colors.json`; tell me any you want changed).
 
 ## Release index (one line per release, oldest first)
 
@@ -197,3 +214,4 @@ the Extras record. Save fixture v1.36.0.
 - **v1.37.2 (2026-10-02):** Dialogue colours: light colours only; every character has a first, second and third colour.
 - **v1.37.3 (2026-10-02):** Preset: Internal Thoughts back ON as its own `<npc_thoughts>` block (folded, trimmed from older replies, kept out of VectFox).
 - **v1.37.4 (2026-10-02):** NPC Thoughts: only as raw as the character is; optional regex so the AI never reads thoughts back.
+- **v1.38.0 (2026-10-02):** The Grand Vast Forest: the Expedition's own map, engine-rolled hunt (target, signs, beasts, the Wendigo), walking stamina, forest weather, map tab.

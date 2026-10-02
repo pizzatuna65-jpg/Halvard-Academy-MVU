@@ -957,6 +957,89 @@ def beast_names(text):   # every creature in the Magical Beasts list, for one re
                 n = re.sub(r'^the ', '', n)
                 if re.fullmatch(r"[a-z][a-z' -]*", n.lower()) and n.lower() != 'giant': names.append(n.lower())
     return sorted(set(names), key=lambda n: (-len(n), n))
+def grand_vast_forest(C, ejs):
+    """1.38.0 (owner-approved planning/DRAFT_outside_maps.md, part 1): the Grand Vast Forest from data/expedition.json: an overview
+    (neighbours and every shortest walk, computed from the legs), one entry per place group, the Wendigo; the Expedition entry (230)
+    and the beast list (229). Card: constant, behind a gate on $ui.forest.on (nothing outside the Expedition). v39: keyword entries."""
+    X = json.load(open(P('data/expedition.json'), encoding='utf-8'))
+    PL = {p['id']: p for p in X['places']}
+    nb = {}
+    for a, b, h, m, note in X['legs']:
+        nb.setdefault(a, []).append((b, h, note)); nb.setdefault(b, []).append((a, h, note))
+    def walks(src):
+        d, done = {src: 0}, set()
+        while True:
+            u = min((k for k in d if k not in done), key=lambda k: d[k], default=None)
+            if u is None: return d
+            done.add(u)
+            for v, h, _n in nb.get(u, []):
+                if v not in d or d[u] + h < d[v]: d[v] = d[u] + h
+    nm = lambda i: 'the ' + PL[i]['name'][4:] if PL[i]['name'].startswith('The ') else PL[i]['name'] if i in ('base_camp', 'blightbriar', 'falls') else 'the ' + PL[i]['name']
+    hrs = lambda h: ('%g' % h)
+    ids = [p['id'] for p in X['places']]
+    lead = lambda s: s[0].upper() + s[1:]
+    neigh = ' '.join(lead(nm(a)) + ' – ' + ', '.join(nm(b) + ' ' + hrs(h) + (f' ({n})' if n and n != 'spore' else '') for b, h, n in nb[a] if ids.index(b) > ids.index(a)) + '.'
+                     for a in ids if any(ids.index(b) > ids.index(a) for b, _h, _n in nb[a]))
+    rows = []
+    for i, a in enumerate(ids[:-1]):
+        d = walks(a)
+        rest = sorted(ids[i + 1:], key=lambda b: (d[b], ids.index(b)))
+        rows.append(lead(nm(a)) + ': ' + ', '.join(nm(b) + ' ' + hrs(d[b]) for b in rest) + '.')
+    rules = ("Rules for the narrator: the engine decides when the assigned target and any other beast appear (<now> says so). Never bring the "
+             "target in on your own, never let a beast appear because it would be convenient, and never tell {{user}} where a beast lives: let "
+             "tracks, class knowledge and the signs <now> gives show the way. Possible encounters in a place entry are what may appear there, "
+             "not what is waiting. Every walk takes its hours on the clock; nobody crosses this forest in minutes.")
+    overview = ("[Grand Vast Forest]\nWhat: Eldrasil's great rainforest, half a day from Halvard by airship, so vast that crossing it takes weeks and "
+                "nobody has walked all of it. Hunting-company country. Halvard comes once a year, for the Creature Studies Expedition (Month 2 "
+                "Week 3), and uses only its southern rim: from Base Camp to the farthest point of that country is about half a day on foot.\n"
+                "Landmark: the Old Heart, a single giant tree at the rim's northern edge, rising far above the canopy and seen from anywhere in "
+                "the southern forest; everyone steers by it. Beyond it the deep forest runs on, unmapped.\n"
+                "Climate: warm and wet all year. Mornings start in mist, the air is heavy and humid, and most afternoons a downpour comes "
+                "through the canopy; nothing ever fully dries. Buttress-rooted giants, palms, tree ferns, hanging vines and moss on everything.\n"
+                "Neighbours (hours on foot): " + neigh + " Any other walk passes through the places between.\n"
+                "Shortest walks (hours, the same both ways):\n" + '\n'.join(rows) + "\n"
+                "Walking costs stamina; half a day on foot without rest leaves anyone exhausted. The three Wildwood stretches (west, north, east) "
+                "are one forest in three directions from Base Camp.\n" + rules)
+    gate0, gate1 = "<%_ if ((getvar('stat_data.$ui.forest') || {}).on) { _%>\n", "\n<%_ } _%>"
+    def entry(uid, comment, keys, text):
+        assert uid not in C and uid not in N, f'forest uid {uid} is taken'
+        e = template_from(C[230], uid=uid, displayIndex=uid, comment=comment, key=keys, content=(gate0 + text + gate1) if ejs else text)
+        if ejs: e.update(constant=True)
+        C[uid] = e
+    entry(360, 'Grand Vast Forest', ['Grand Vast Forest', 'rainforest', 'Base Camp'], overview)
+    for k, (g, G) in enumerate(X['groups'].items()):
+        names = [p['name'] for p in X['places'] if p['group'] == g]
+        keys = list(dict.fromkeys([G['title'].replace('The ', '')] + [n.replace('The ', '') for n in names]))
+        entry(361 + k, 'Grand Vast Forest - ' + G['title'], keys, f"[{G['title']}] {G['desc']}\nFeel: {G['feel']}.\n{G['enc']}")
+    entry(369, 'Grand Vast Forest - The Wendigo', ['Wendigo'],
+          "[The Wendigo] Grade I. A gaunt humanoid about three metres tall: grey-white skin drawn tight over bone, a deer's skull for a head, with "
+          "antlers and a dim light in the sockets, and long clawed fingers. The air turns cold around it, frost forms where it stands, and it smells "
+          "of rot. It speaks in the voices of people it has heard. It lives in the Gloaming of the Grand Vast Forest and is sometimes seen at the "
+          "edge of the Old Heart.\nAdapts: every spell of a kind (an element or a school) that has already hit it this fight does a fifth less than "
+          "the one before: the first in full, then 80%, 60%, 40%, and 20% from the fifth on, never less. A new kind of spell starts again at full. "
+          "It forgets after a day without a fight. Weapons do not make it adapt, but its hide is Grade I hard. Only overwhelming power (a Gareth "
+          "Valkaryn) can force a way through a kind it has learned.\nBehaviour: territorial. It stalks first and calls in borrowed voices, then "
+          "tests intruders and drives them out; it does not follow anyone out of the Gloaming. Hunting companies do not take work there because of it.")
+    assert len(X['groups']) == 8
+    rep(C[230], "The Creature Studies practical exam, run by the Creature Studies teachers, one per year level, with the first-year teacher (the ex-monster hunter) leading.",
+        "The Creature Studies practical exam, led by Vallie Goredust; one airship per year level, each with two other members of staff aboard by rota, and the Doves travel along.")
+    rep(C[230], "Wed: flight, then camp (tents, cookfires, watch rotations) and gear prep.\n"
+                "Thu: each group is assigned a beast to bring back within 24 hours. Years 1-2 get Grade III targets, year 3 Grade II. Staff shadow at a distance and pull out groups in trouble.\n"
+                "Fri: break camp, fly home. Catches count dead or alive.",
+        "Wed: flight, then Base Camp (tents, cookfires, watch rotations) and gear prep.\n"
+        "Thu: from 08:00 each group is told its target (Years 1-2 Grade III, Year 3 Grade II) but not where to find it, heads out, and pitches its own camp in the wild wherever the hunt takes it; 24 hours. Staff shadow at a distance and pull out groups in trouble.\n"
+        "Fri: groups return to Base Camp by noon; break camp, fly home. Catches count dead or alive. A group that comes back without its target fails the practical and hears about it all year.\n"
+        "The evening before: the queue to touch the Founder's Statue's hand fills Founder's Park.\n"
+        "Bracelets: before the flight, staff bind every bracelet to a reading board in Vallie's command tent, which shows where each student is and their heartbeat. Staff watch it day and night and go to any group whose readings spike or stop. The binding is lifted on return. Inside the Grand Cave Network the reading fades past the first chamber.\n"
+        "Flare: every group also carries one red recall flare. Firing it is no failure: staff come within minutes and the group is marked on what it did before. A group that should have fired and did not is marked down harder.\n"
+        "Catches: live ones are marked, then released at the treeline (Halvard's Menagerie keeps Grade IV only); dead ones are sold to the Huntsmen's Lodge for the academy. Students carry coin; points do not work here.\n"
+        "Nights: Wednesday night everyone stays in Base Camp except the watch. Thursday the hunt runs through the night.")
+    rep(C[230], "Where: the Grand Vast Forest, half a day by airship; one ship per year level.",
+        "Where: the Grand Vast Forest (its own entries: a rainforest, mapped for the Expedition), half a day by airship; one ship per year level.")
+    rep(C[229], "lesser drake, cockatrice, gargoyle (III).", "lesser drake, cockatrice, gargoyle, torrent eel, echo bat, hush owl, spore shambler (III); chime toad (IV).")
+    rep(C[229], "displacer cat, gorgon, rime elk.", "displacer cat, gorgon, rime elk, bloom maw.")
+    rep(C[229], "the Sablemaw, the Gaunt Herd.", "the Sablemaw, the Gaunt Herd.\nGRAND FOREST (I): the Wendigo, which lives in the Gloaming of the Grand Vast Forest (its own entry); the one Grade I a student may ever meet, and nothing a student can beat.")
+
 def lore_activation(C):
     beasts = beast_names(C[229]['content'])
     assert len(beasts) >= 80 and 'dire wolf' in beasts and 'unicorn' in beasts, len(beasts)
@@ -1000,6 +1083,7 @@ formal_and_far_grounds(C39, N39)   # 1.15.1
 ghost_stories(C39, N39)   # 1.16.0
 practical_magic_class(C39)   # 1.33.0
 staff_regulars(N39)   # 1.33.0
+grand_vast_forest(C39, False)   # 1.38.0
 lore_activation(C39)   # 1.35.0
 calendar_months = json.load(open(P('data/calendar.json'), encoding='utf-8'))['months']
 for month in range(1, 13):
@@ -1156,6 +1240,7 @@ formal_and_far_grounds(Cc, Nc)   # 1.15.1
 ghost_stories(Cc, Nc)   # 1.16.0
 practical_magic_class(Cc)   # 1.33.0
 staff_regulars(Nc)   # 1.33.0
+grand_vast_forest(Cc, True)   # 1.38.0
 lore_activation(Cc)   # 1.35.0
 # merge + tagging (D2): lore -> [mvu_plot]; shared state/navigation entries stay untagged (sent to both models)
 UNTAGGED_CORE = {0, 132, 134, 131, 20}

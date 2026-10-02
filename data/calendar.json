@@ -83,9 +83,9 @@
       "noclass": 1,
       "away": 1,
       "s": {
-        "Wed": "07:00 airships leave, one per year level (half a day to the Grand Vast Forest); afternoon: make camp (tents, cookfires, watch rotations) and prepare gear",
-        "Thu": "Morning: each group of four is assigned a beast to bring back within 24 hours (Years 1–2 Grade III, Year 3 Grade II); staff shadow at a distance and pull out groups in trouble",
-        "Fri": "Morning: break camp and fly home, back on campus by evening; catches count dead or alive"
+        "Wed": "07:00 airships leave, one per year level (half a day to the Grand Vast Forest); afternoon: Base Camp (tents, cookfires, watch rotations) and gear prep; Vallie's staff bind every bracelet to the reading board",
+        "Thu": "08:00: each group of four is told its target (Years 1–2 Grade III, Year 3 Grade II), not where it lives; the hunt runs 24 hours and groups camp in the wild; staff shadow at a distance and pull out groups in trouble",
+        "Fri": "08:00 the hunt ends; groups back at Base Camp by noon; break camp and fly home, back on campus by evening; catches count dead or alive"
       },
       "mood": "trial"
     },

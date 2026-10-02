@@ -97,6 +97,8 @@ const aged = w => { const a = ageOf(w, W); return a ? w + ', ' + a : w; };
 const SINCE = UI.since || [], MAYBE = UI.maybe || [];
 const STALE = UI.stale || [], PHASE = UI.phase || null;   // 1.6.1 (N4, N6): campus events with no news for a week; the campus phase (engine)
 const INITIATIVE = on('npc_initiative') ? UI.initiative : null;   // 1.7.7 (FP1): optional NPC-initiated contact today
+// 1.38.0 (owner-approved planning/DRAFT_outside_maps.md, part 1): the Creature Studies Expedition in the Grand Vast Forest (engine $ui.forest)
+const FOREST = UI.forest && UI.forest.on ? UI.forest : null, WENDIGO = {"line":"The Wendigo (Grade I): a gaunt humanoid about three metres tall, grey-white skin tight over bone, a deer's skull for a head with antlers and a dim light in the sockets, long clawed fingers; the air turns cold, frost forms where it stands, it smells of rot and speaks in voices it has heard. It stalks first and calls in borrowed voices, then tests the intruders and drives them out; it does not follow anyone out of the Gloaming. Every spell of a kind that has already hit it this fight does a fifth less than the one before (100%, 80%, 60%, 40%, then 20%, never less); a new kind starts at full; weapons do not make it adapt, but its hide is Grade I hard. Students cannot beat it: running, hiding and the flare are the sane choices."};
 const JAGES = (getvar('stat_data.Journal') || []).slice(-5).reverse().map(l => (/^\[([^\]]+)\]/.exec(String(l)) || [])[1]).filter(w => w && ageOf(w, W));
 // 1.2.2 bonds: for each present NPC, what they will talk about at this rank (openness shifts the early tiers; goals, views of others
 // and the past need the real rank; secrets never come from rank) and what the bond allows
@@ -188,15 +190,33 @@ Council election nominees: <%- CANDIDATES.First %> and <%- CANDIDATES.Second %> 
 <%_ if (cur) { _%>
 Curfew: <%- cur %>
 <%_ } _%>
+<%_ if (FOREST) { _%>
+Grand Vast Forest (Creature Studies Expedition): {{user}} is at <%- FOREST.name %>.
+<%_ if (FOREST.tgt) { _%>
+Target: <%- FOREST.tgt %> (Grade <%- FOREST.grade %>)<%- FOREST.res === 'caught' ? ', caught: the group has it; bring it back to Base Camp by Friday noon.' : FOREST.res === 'failed' ? ': the hunt is over and the group never found it; the practical is failed. Back to Base Camp by Friday noon, then home.' : FOREST.met ? ': it has shown itself; the catch is up to the group (set Expedition.Caught only if they actually catch or kill it).' : '. {{user}} knows its name, not where it lives. ' + FOREST.left + ' h of the hunt left (until Friday 08:00). Searched here: ' + FOREST.here + ' h, no sign of it here yet; do not bring it in.' %>
+<%_ } else if (FOREST.hs) { _%>
+Target: none yet; Vallie assigns each group its target at 08:00 on Thursday.
+<%_ } _%>
+Walks from here (hours on foot, shortest route): <%- FOREST.walks.map(w => w[1] + ' ' + w[2]).join(', ') %>. Advance the clock by the whole walk.
+<%_ if (FOREST.owe) { _%>
+Still on the road: <%- FOREST.owe %> h of the last walk are not on the clock yet; searching here starts after that.
+<%_ } _%>
+<%_ for (const e of FOREST.ev || []) { if (e.k === 'walk') continue; _%>
+<%- e.k === 'target' ? 'The target is here (engine): the ' + e.b + ' shows itself this reply, first as fresh signs, then the beast. Play the encounter in full; the catch is not certain.' : e.k === 'sign' ? 'Signs (engine): tracks, a kill or droppings of the ' + e.b + ' lead toward ' + e.toName + '. Write them as signs; the beast does not appear.' : e.k === 'beast' ? 'Encounter (engine): a ' + e.b + ' (Grade ' + e.g + ') crosses the path of the group this reply. Not the target. ' + (e.g === 'II' && FOREST.grade !== 'II' ? 'It is beyond first- and second-years: running, hiding and the flare are sane choices.' : 'Play it in character; it may be avoided.') : e.k === 'protected' ? 'Seen (engine): a ' + e.b + ', a protected beast; harming one is a crime the Doves investigate.' : e.k === 'wendigo' ? 'The Wendigo (engine) is here this reply. ' + WENDIGO.line : e.k === 'caught' ? 'Catch recorded (engine): the ' + FOREST.tgt + ' counts.' : e.k === 'failed' ? 'The hunt is over (engine): the group did not bring back its ' + FOREST.tgt + '; the practical is failed.' : '' %>
+<%_ } _%>
+<%_ if (FOREST.last) { _%>
+Last year's Expedition: {{user}}'s group <%- FOREST.last.res === 'caught' ? 'brought back its ' + FOREST.last.tgt : 'came back without its ' + FOREST.last.tgt + ' and failed' %>; people remember.
+<%_ } _%>
+<%_ } _%>
 <%_ if (PHASE && PHASE.line) { _%>
 Campus phase: <%- PHASE.line %>
 <%_ } _%>
-<%_ if (W._Happening && on('happenings')) { _%>
+<%_ if (W._Happening && on('happenings') && !FOREST) { _%>
 Around campus today (optional, use only if it fits): <%- W._Happening %>
 <%_ } _%>
 <%_ if (/CURFEW|LOCKDOWN/.test(cur)) { _%>
 Presence: after curfew most students are in their own dorms; out are staff, patrols, and students sneaking out (only those whose personality allows it).
-<%_ } else { _%>
+<%_ } else if (!FOREST) { _%>
 <%_ if (pres.length) { _%>
 <%- pres.join(' ') %>
 <%_ } _%>

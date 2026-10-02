@@ -257,6 +257,9 @@ export const Schema = z.object({
     Needs: s(v.Needs), Where: s(v.Where), Due: s(v.Due), With: s(v.With),
   }), 'Goal'),
   Trip: O({ Active: Bool(false), Destination: Str(''), Companions: StrList(6), Note: Str('') }),
+  // 1.38.0: the Creature Studies Expedition; the narrator sets Caught when the group catches or kills its assigned target (the
+  // engine reverts it until <now> has brought the target in, and clears it after the Expedition)
+  Expedition: O({ Caught: Bool(false) }),
   Journal: StrList(30),   // "[M1 W1 Mon] turning point" — long-term memory (used by state-as-memory in 5.3)
   Clues: Rec(v => ({
     Thread: s(v.Thread) || 'Unsorted clues', Detail: s(v.Detail), Where: s(v.Where), Found: s(v.Found),
@@ -383,10 +386,12 @@ export const Schema = z.object({
     portrait: Str(''),                                                // 1.3.4: the student's picture (a SillyTavern user image path)
     tsusp: StrList(40),                                               // 1.4.3: Rank 10 benefits suspended by low Trust (engine)
     tune: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.3.1: training / reputation settings { id: value } (data/tuning.json; the engine checks the values)
+    forest: z.any().prefault(null).catch(null),                       // 1.38.0: the Grand Vast Forest now { on, at, seen, hist, tgt, left, walks, ev } (engine; UI, <now>, lore gate)
   }),
 
   $eng: O({
     abs: z.coerce.number().prefault(-1).catch(-1),
+    exp: z.any().prefault(null).catch(null),                       // 1.38.0: this year's Expedition hunt { y, tgt, homes, t, hrs, owe, met, caught, res, wen } (engine)
     late: Num(0, 1e6, 0),
     sleep: z.any().prefault(null).catch(null),
     daily: z.record(z.string(), z.any()).prefault({}).catch({}),

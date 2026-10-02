@@ -1,8 +1,13 @@
 [Creature Studies Expedition]
-When: Month 2 Week 3, Wednesday to Friday. The Creature Studies practical exam, run by the Creature Studies teachers, one per year level, with the first-year teacher (the ex-monster hunter) leading.
-Where: the Grand Vast Forest, half a day by airship; one ship per year level.
+When: Month 2 Week 3, Wednesday to Friday. The Creature Studies practical exam, led by Vallie Goredust; one airship per year level, each with two other members of staff aboard by rota, and the Doves travel along.
+Where: the Grand Vast Forest (its own entries: a rainforest, mapped for the Expedition), half a day by airship; one ship per year level.
 Teams: groups of four, graded together.
-Wed: flight, then camp (tents, cookfires, watch rotations) and gear prep.
-Thu: each group is assigned a beast to bring back within 24 hours. Years 1-2 get Grade III targets, year 3 Grade II. Staff shadow at a distance and pull out groups in trouble.
-Fri: break camp, fly home. Catches count dead or alive.
+Wed: flight, then Base Camp (tents, cookfires, watch rotations) and gear prep.
+Thu: from 08:00 each group is told its target (Years 1-2 Grade III, Year 3 Grade II) but not where to find it, heads out, and pitches its own camp in the wild wherever the hunt takes it; 24 hours. Staff shadow at a distance and pull out groups in trouble.
+Fri: groups return to Base Camp by noon; break camp, fly home. Catches count dead or alive. A group that comes back without its target fails the practical and hears about it all year.
+The evening before: the queue to touch the Founder's Statue's hand fills Founder's Park.
+Bracelets: before the flight, staff bind every bracelet to a reading board in Vallie's command tent, which shows where each student is and their heartbeat. Staff watch it day and night and go to any group whose readings spike or stop. The binding is lifted on return. Inside the Grand Cave Network the reading fades past the first chamber.
+Flare: every group also carries one red recall flare. Firing it is no failure: staff come within minutes and the group is marked on what it did before. A group that should have fired and did not is marked down harder.
+Catches: live ones are marked, then released at the treeline (Halvard's Menagerie keeps Grade IV only); dead ones are sold to the Huntsmen's Lodge for the academy. Students carry coin; points do not work here.
+Nights: Wednesday night everyone stays in Base Camp except the watch. Thursday the hunt runs through the night.
 Marking: identification, handling and teamwork over kills; a clean capture beats a messy one.

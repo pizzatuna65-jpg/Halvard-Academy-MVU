@@ -1,0 +1,110 @@
+{
+ "_note": "1.38.0 (owner-approved planning/DRAFT_outside_maps.md, part 1): the Grand Vast Forest, the Creature Studies Expedition's map. Single source for the lore entries (tools/merge_lorebooks.py grand_vast_forest), the engine (stepExpedition, forest weather; tools/gen_engine.py) and the UI forest map (tools/gen_ui.py). Places: x/y are percent positions on map; group = the lore entry and beast list a place shares (the three Wildwood pins). legs: [a, b, hours, multiplier, note]. beasts: by group, Grade IV/III/II and protected; targets come from III (Years 1-2) or II (Year 3), never from base_camp or old_heart. rates: percents. weather: per block (morning, afternoon, night) sky weights, rain weights and temperature.",
+ "area": "Grand Vast Forest",
+ "event": "Creature Studies Expedition",
+ "map": "map/grand_vast_forest.webp",
+ "places": [
+  {"id": "base_camp", "name": "Base Camp", "group": "base_camp", "x": 50, "y": 80, "aliases": ["base camp", "camp", "expedition camp", "huntsmen's lodge", "huntsmens lodge", "the lodge", "command tent"]},
+  {"id": "wildwood_north", "name": "Wildwood (north)", "group": "wildwood", "x": 50, "y": 57, "aliases": ["wildwood (north)", "wildwood north", "north wildwood", "northern wildwood", "the north wildwood"]},
+  {"id": "wildwood_west", "name": "Wildwood (west)", "group": "wildwood", "x": 28, "y": 76, "aliases": ["wildwood (west)", "wildwood west", "west wildwood", "western wildwood", "the west wildwood"]},
+  {"id": "wildwood_east", "name": "Wildwood (east)", "group": "wildwood", "x": 70, "y": 75, "aliases": ["wildwood (east)", "wildwood east", "east wildwood", "eastern wildwood", "the east wildwood"]},
+  {"id": "blightbriar", "name": "Blightbriar", "group": "blightbriar", "x": 18, "y": 48, "aliases": ["blightbriar", "the blightbriar", "blight briar"]},
+  {"id": "gloaming", "name": "The Gloaming", "group": "gloaming", "x": 48, "y": 43, "aliases": ["the gloaming", "gloaming"]},
+  {"id": "falls", "name": "Silverstair Falls", "group": "falls", "x": 83, "y": 45, "aliases": ["silverstair falls", "silverstair", "the falls", "falls", "waterfall", "the waterfall"]},
+  {"id": "terraces", "name": "Jade Terraces", "group": "terraces", "x": 83, "y": 23, "aliases": ["jade terraces", "the jade terraces", "terraces", "the terraces", "the pools"]},
+  {"id": "cave", "name": "Grand Cave Network", "group": "cave", "x": 15, "y": 22, "indoor": true, "aliases": ["grand cave network", "the grand cave network", "cave network", "cave mouth", "the cave mouth", "the caves", "caves", "cave", "the cave"]},
+  {"id": "old_heart", "name": "The Old Heart", "group": "old_heart", "x": 50, "y": 9, "aliases": ["the old heart", "old heart"]}
+ ],
+ "wild_words": ["wildwood", "the wildwood", "forest", "the forest", "woods", "the woods", "jungle", "rainforest", "grand vast forest", "trail", "the trail"],
+ "legs": [
+  ["base_camp", "wildwood_west", 2, 1, ""],
+  ["base_camp", "wildwood_north", 2, 1, ""],
+  ["base_camp", "wildwood_east", 2, 1, ""],
+  ["wildwood_west", "wildwood_north", 2.5, 1, ""],
+  ["wildwood_north", "wildwood_east", 2.5, 1, ""],
+  ["wildwood_west", "blightbriar", 3, 1, ""],
+  ["wildwood_north", "gloaming", 3.5, 1, ""],
+  ["wildwood_east", "falls", 4, 1, "along the river"],
+  ["blightbriar", "gloaming", 2.5, 1.5, "spore"],
+  ["blightbriar", "cave", 5, 1.5, "spore"],
+  ["gloaming", "falls", 3.5, 1, ""],
+  ["gloaming", "cave", 4, 1, ""],
+  ["gloaming", "old_heart", 5, 1, ""],
+  ["falls", "terraces", 1.5, 1.5, "a climb"],
+  ["terraces", "old_heart", 4, 1, ""],
+  ["cave", "old_heart", 5, 1, ""]
+ ],
+ "spore_mask": "spore mask|face cloth|face mask|mask",
+ "groups": {
+  "base_camp": {
+   "title": "Base Camp",
+   "desc": "A wide meadow at the forest's southern edge where the three academy airships ride at anchor; the Expedition's start and end. Tents in three rings, one per year level, around a central fire and Vallie's command tent with the bracelet reading board; a marking table where catches are logged and caged; watch posts at the corners. On its edge stands the Huntsmen's Lodge, a timber lodge the hunting companies share: smokehouse, weighing hook, and a counter selling rope, bait, salves, lamp oil and cloth spore masks for coin. Company hunters pass through and size up the students. Every way out of camp leads into the Wildwood: west, north or east.",
+   "feel": "woodsmoke, wet canvas, nervous laughter, the ships creaking overhead",
+   "enc": "Possible encounters (rare, the camp is guarded): goblin hound (IV), dire wolf (III).",
+   "IV": ["goblin hound"], "III": ["dire wolf"], "II": [], "protected": [], "rate": 0.2
+  },
+  "wildwood": {
+   "title": "The Wildwood",
+   "desc": "The ordinary rainforest that fills everything between the named places: broadleaf giants on buttress roots, palms and tree ferns underneath, vines hanging to the ground, deer paths, deadfall, muddy hollows churned by boar, the odd clearing where a storm took the trees down. It is ordinary only by this forest's standards. Three stretches of it are named on the map, west, north and east of Base Camp; they are the same forest, only in different directions. Vallie tells every group about ironback boars before they leave camp.",
+   "feel": "birdsong that stops when something bigger moves",
+   "enc": "Possible encounters: goblin hound (IV); dire wolf, boar, thornstag, owlbear, forest troll (III); ironback boar, dire bear, ogre, chimera (II).",
+   "IV": ["goblin hound"], "III": ["dire wolf", "boar", "thornstag", "owlbear", "forest troll"], "II": ["ironback boar", "dire bear", "ogre", "chimera"], "protected": []
+  },
+  "blightbriar": {
+   "title": "Blightbriar",
+   "desc": "A stretch of the forest gone wrong: thorn thickets with poisoned barbs, fungus in shelves and bulbs and towers, and puffs of spore that hang in the air and burn the throat. Walking it without a face cloth leaves anyone coughing and drained. The danger here is mostly the plants.",
+   "feel": "sweet rot, itching skin, everything faintly moving",
+   "enc": "Possible encounters: thorn creeper, shriek mushroom (IV); spore shambler (a dead animal walked by fungus threads) (III); bloom maw (a cart-sized carnivorous flower that lures with scent; it does not move, you come to it), manticore (II).",
+   "IV": ["thorn creeper", "shriek mushroom"], "III": ["spore shambler"], "II": ["bloom maw", "manticore"], "protected": []
+  },
+  "gloaming": {
+   "title": "The Gloaming",
+   "desc": "The oldest, thickest stand of the rainforest: trunks wider than towers, moss and hanging vines over everything, a canopy so dense that noon looks like dusk and pale fungi give the only light. Few people come here, and it feels it: no trails, no cut wood, no sound of anyone. Hunting companies do not take work in the Gloaming.",
+   "feel": "green dark, damp, the sense that nobody has stood here in years",
+   "enc": "Possible encounters: ashen lynx, hush owl (wings as wide as a cart, flies without a sound, drops from the dark canopy), giant spider (III); displacer cat, dread weaver (II). The Wendigo lives here.",
+   "IV": [], "III": ["ashen lynx", "hush owl", "giant spider"], "II": ["displacer cat", "dread weaver"], "protected": []
+  },
+  "falls": {
+   "title": "Silverstair Falls",
+   "desc": "The Silverrun river drops over a wide cliff in a dozen broad tiers, each with its own plunge pool; spray hangs over the whole stair, rainbows by day and mist by morning. Climbing the stair to the Jade Terraces takes an hour and a half and wet hands.",
+   "feel": "roar of water, soaked to the skin, rainbows",
+   "enc": "Possible encounters: mist wolf, kelpie, torrent eel (rides the falls and strikes with a jolt), harpy (III); griffin, roc, wyvern (nest on the cliff) (II).",
+   "IV": [], "III": ["mist wolf", "kelpie", "torrent eel", "harpy"], "II": ["griffin", "roc", "wyvern"], "protected": []
+  },
+  "terraces": {
+   "title": "Jade Terraces",
+   "desc": "Above the falls, a valley of stepped pools rimmed in pale gold stone, hundreds of them, each a different blue or green. The springs that feed the pools run cold, the one cool place in the forest. Animal-shaped stones stand in some of the pools; they are not carvings.",
+   "feel": "colour, stillness, steam on cold mornings",
+   "enc": "Possible encounters: chime toad (rings like glass at dusk) (IV); cockatrice (III); young hydra, gorgon, rime elk (comes down to the cold pools at dawn) (II). A pearl serpent has been seen here, which is protected.",
+   "IV": ["chime toad"], "III": ["cockatrice"], "II": ["young hydra", "gorgon", "rime elk"], "protected": ["pearl serpent"]
+  },
+  "cave": {
+   "title": "Grand Cave Network",
+   "desc": "A mouth in a cliff wall at the forest's north-west, wide enough to fly an airship into, opening onto caves said to run as far as the forest itself; nobody has mapped the end. Groups often pitch their tents just inside the mouth, dry and out of the wind. Staff chalk a line across the first chamber: no group goes past it. Warm air rises from somewhere below.",
+   "feel": "cold breath from below, dripping, an echo that answers late",
+   "enc": "Possible encounters: giant centipede, echo bat (its shriek stuns), gargoyle and lesser drake (on the cliff face) (III); cave troll, basilisk, giant scorpion, bone drake, cinder wyrm (II).",
+   "IV": [], "III": ["giant centipede", "echo bat", "gargoyle", "lesser drake"], "II": ["cave troll", "basilisk", "giant scorpion", "bone drake", "cinder wyrm"], "protected": []
+  },
+  "old_heart": {
+   "title": "The Old Heart",
+   "desc": "A single giant tree at the northern edge of the Expedition country, its trunk wider than the Main Courtyard, rising far above the canopy and seen from anywhere in the southern forest. Past it the deep forest begins, unmapped and weeks across. The protected beasts live around it; harming one is a crime the Doves investigate. No student goes, and no hunting company takes work there. Rumour says poachers do.",
+   "feel": "silver light, absolute quiet, the sense of being allowed in",
+   "enc": "Possible encounters (never hunted): unicorn, lantern stag, moonhare, white hart, grey pilgrim. The Wendigo is sometimes seen at its edge.",
+   "IV": [], "III": [], "II": [], "protected": ["unicorn", "lantern stag", "moonhare", "white hart", "grey pilgrim"]
+  }
+ },
+ "night_beasts": ["hush owl", "mist wolf", "echo bat", "displacer cat", "ashen lynx"],
+ "wendigo": {"where": "gloaming", "edge": "old_heart", "line": "The Wendigo (Grade I): a gaunt humanoid about three metres tall, grey-white skin tight over bone, a deer's skull for a head with antlers and a dim light in the sockets, long clawed fingers; the air turns cold, frost forms where it stands, it smells of rot and speaks in voices it has heard. It stalks first and calls in borrowed voices, then tests the intruders and drives them out; it does not follow anyone out of the Gloaming. Every spell of a kind that has already hit it this fight does a fifth less than the one before (100%, 80%, 60%, 40%, then 20%, never less); a new kind starts at full; weapons do not make it adapt, but its hide is Grade I hard. Students cannot beat it: running, hiding and the flare are the sane choices."},
+ "rates": {
+  "target_base": 3, "target_step": 3, "target_cap": 24, "night_mult": 0.5,
+  "sign": 20, "encounter": 10, "encounter_night": 15, "wendigo": 1, "wendigo_edge": 0.3,
+  "walk_pct": 8, "search_pct": 3, "rain_mult": 1.25, "night_walk_mult": 1.25, "drag_mult": 1.5,
+  "max_rolls": 12, "night_from": 19, "night_to": 6
+ },
+ "hunt": {"day": "Thu", "from": "08:00", "hours": 24, "back_by": "12:00"},
+ "weather": {
+  "temp": [24, 29, 23],
+  "sky": [{"Fog": 55, "Cloudy": 35, "Clear": 10}, {"Rain": 70, "Storm": 10, "Cloudy": 20}, {"Rain": 30, "Cloudy": 60, "Clear": 10}],
+  "rain": {"light": 25, "steady": 35, "heavy": 40}
+ }
+}

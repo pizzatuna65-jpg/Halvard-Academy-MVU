@@ -57,7 +57,7 @@ TRUST = {'bands': _tru['bands'], 'share': _tru['effects']['share'], 'early': _tr
 REPD = json.load(open(P('data/reputation.json'), encoding='utf-8'))   # 1.3.0
 REPD = {'reps': REPD['reps'], 'effects': REPD['effects']}
 for k, v in {'BDAYS': {k:v['birthday'] for k,v in GIFTS.items() if v['birthday']}, 'REP': REPD, 'BOND': BOND, 'RANK4': json.load(open(P('data/rank4_partners.json'), encoding='utf-8'))['npcs'], 'TRUST': TRUST, 'REG': reg, 'ARR': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1}, 'STU': STU, 'TEACH': TEACH, 'TT': TT,
-             'CLUBV': CLUBV, 'OUTD': OUTD, 'VN': VN, 'PRON': {nid: {'F': 'she/her', 'M': 'he/him'}.get(n.get('gender'), 'they/them') for nid, n in sorted(npcs.items())},
+             'CLUBV': CLUBV, 'OUTD': OUTD, 'VN': VN, 'WENDIGO': {'line': json.load(open(P('data/expedition.json'), encoding='utf-8'))['wendigo']['line']}, 'PRON': {nid: {'F': 'she/her', 'M': 'he/him'}.get(n.get('gender'), 'they/them') for nid, n in sorted(npcs.items())},
              'TENSION': {k: v for k, v in json.load(open(P('data/tension.json'), encoding='utf-8')).items() if k in ('bands', 'categories', 'npcs', 'peaks', 'overrides', 'apology_npc')}}.items():   # 1.3.8 (+1.4.0 apology_npc)
     ph = '/*@@' + k + '@@*/' + ('[]' if isinstance(v, list) else '{}')
     assert ph in ejs, ph

@@ -1,0 +1,5 @@
+<%_ if ((getvar('stat_data.$ui.forest') || {}).on) { _%>
+[Jade Terraces] Above the falls, a valley of stepped pools rimmed in pale gold stone, hundreds of them, each a different blue or green. The springs that feed the pools run cold, the one cool place in the forest. Animal-shaped stones stand in some of the pools; they are not carvings.
+Feel: colour, stillness, steam on cold mornings.
+Possible encounters: chime toad (rings like glass at dusk) (IV); cockatrice (III); young hydra, gorgon, rime elk (comes down to the cold pools at dawn) (II). A pearl serpent has been seen here, which is protected.
+<%_ } _%>

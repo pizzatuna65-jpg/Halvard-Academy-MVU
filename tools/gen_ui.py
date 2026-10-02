@@ -58,6 +58,12 @@ DATA = {'npcs': {}, 'rel': [], 'locs': {}, 'pins': json.load(open(P('data/map_pi
 man = json.load(open(P('data/assets_manifest.json'), encoding='utf-8'))
 DATA['assets'] = {'base': man['base_url'], 'map': man['map'], 'size': man['map_size'],
                   'variants': man.get('map_variants', [])}   # 1.13.0: map by calendar (event, then season)
+# 1.38.0 (owner-approved planning/DRAFT_outside_maps.md, part 1): the Grand Vast Forest map. The cards show the description and the
+# feel; the possible encounters are the narrator's (lore only), so the player explores to learn where a beast lives.
+_exp = json.load(open(P('data/expedition.json'), encoding='utf-8'))
+DATA['forest'] = {'area': _exp['area'], 'map': _exp['map'], 'legs': [l[:3] for l in _exp['legs']],
+                  'places': [{k: p[k] for k in ('id', 'name', 'group', 'x', 'y') if k in p} for p in _exp['places']],
+                  'groups': {g: {'title': G['title'], 'desc': G['desc'], 'feel': G['feel']} for g, G in _exp['groups'].items()}}
 CAST = {}
 for nid, n in npcs.items():
     first = nid

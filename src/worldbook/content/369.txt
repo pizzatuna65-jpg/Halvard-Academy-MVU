@@ -1,0 +1,5 @@
+<%_ if ((getvar('stat_data.$ui.forest') || {}).on) { _%>
+[The Wendigo] Grade I. A gaunt humanoid about three metres tall: grey-white skin drawn tight over bone, a deer's skull for a head, with antlers and a dim light in the sockets, and long clawed fingers. The air turns cold around it, frost forms where it stands, and it smells of rot. It speaks in the voices of people it has heard. It lives in the Gloaming of the Grand Vast Forest and is sometimes seen at the edge of the Old Heart.
+Adapts: every spell of a kind (an element or a school) that has already hit it this fight does a fifth less than the one before: the first in full, then 80%, 60%, 40%, and 20% from the fifth on, never less. A new kind of spell starts again at full. It forgets after a day without a fight. Weapons do not make it adapt, but its hide is Grade I hard. Only overwhelming power (a Gareth Valkaryn) can force a way through a kind it has learned.
+Behaviour: territorial. It stalks first and calls in borrowed voices, then tests intruders and drives them out; it does not follow anyone out of the Gloaming. Hunting companies do not take work there because of it.
+<%_ } _%>

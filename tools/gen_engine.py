@@ -134,6 +134,15 @@ t = t.replace('/*@@HOME@@*/{}', json.dumps(_home, ensure_ascii=False, separators
 _free = {k: v for k, v in json.load(open(P('data/free_periods.json'), encoding='utf-8')).items() if not k.startswith('_')}
 assert all(k in json.load(open(P('data/npcs.json'), encoding='utf-8')) for k in _free['npcs']), 'free_periods.json: unknown NPC'
 t = t.replace('/*@@FREE@@*/{}', json.dumps(_free, ensure_ascii=False, separators=(',', ':')))
+# 1.38.0 (owner-approved planning/DRAFT_outside_maps.md, part 1): the Grand Vast Forest (places, legs, beasts, rates, weather);
+# the descriptions stay in the lore and the UI
+_exp = json.load(open(P('data/expedition.json'), encoding='utf-8'))
+_eids = {p['id'] for p in _exp['places']}
+assert all(a in _eids and b in _eids for a, b, *_ in _exp['legs']), 'expedition.json: a leg names an unknown place'
+assert all(p['group'] in _exp['groups'] for p in _exp['places']), 'expedition.json: unknown group'
+t = t.replace('/*@@EXPEDITION@@*/{}', json.dumps({**{k: v for k, v in _exp.items() if not k.startswith('_') and k != 'groups'},
+    'groups': {g: {k: v for k, v in G.items() if k in ('IV', 'III', 'II', 'protected', 'rate')} for g, G in _exp['groups'].items()}},
+    ensure_ascii=False, separators=(',', ':')))
 # Bond rules and where each NPC is usually found (Haunts, first clause).
 t = t.replace('/*@@BOND_RULES@@*/{}', json.dumps(json.load(open(P('data/bond_rules.json'), encoding='utf-8')), ensure_ascii=False, separators=(',', ':')))
 haunt = {}

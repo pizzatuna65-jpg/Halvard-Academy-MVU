@@ -1,0 +1,107 @@
+MAP PROMPTS — peta luar kampus (FP7)
+Dipakai di ChatGPT image. Lampirkan gambar peta Halvard (map/halvard_map.webp) sebagai referensi gaya dan bentuk peta.
+Ukuran 1536x1024 (landscape 3:2), sama dengan peta kampus. Nama tempat TIDAK digambar: UI yang menaruh pin dan label.
+Posisi tempat di bawah dipakai lagi untuk pin (persen dari kiri, persen dari atas), jadi usahakan hasilnya mendekati.
+
+==================================================================================================================
+GAYA UMUM — dipakai di setiap peta baru (owner menyetujui hasilnya, 2026-10-02: Maps/grand_vast_forest.webp)
+==================================================================================================================
+Lampirkan Maps/halvard_spring.webp (atau varian musim yang cocok) dan tempel blok ini di awal prompt, lalu tambah musim, tata
+letak dan daftar tempat. Untuk peta kota atau pantai, "trees" disesuaikan, sisanya tetap.
+
+Use the attached map of Halvard Academy as the strict reference for art style: copy its rendering, line work, colour palette,
+lighting, level of detail and camera angle exactly, so that the two maps look like they were painted by the same artist for the
+same atlas. That style is:
+- a high bird's-eye view from the south, looking north at about 45 degrees, almost isometric, with only slight perspective;
+- a bright, cheerful, hand-painted miniature look, like a storybook or cosy fantasy game world map: clean, crisp shapes with thin
+  soft outlines, gentle cel-like shading, soft light from the upper left, small soft shadows, high-key and low contrast, nothing
+  gritty, murky or photographic;
+- small, simple, stylised trees repeated evenly: round puffy broadleaf trees in fresh yellow-green and lime, neat cone-shaped
+  conifers in deep teal-green, and blossom trees in pastel pink and white dotted among them;
+- a saturated but soft palette: fresh yellow-greens, teal-blue pines, pastel pink blossom, cream and pale grey stone, clear
+  light-blue water;
+- soft white clouds of mist drifting in from the outer edges and corners of the image, framing it;
+- every feature drawn small and tidy, like a model on a table, so the whole map reads clearly at a glance.
+Even dark or sinister places stay in this bright, soft, storybook style: darker and stranger than the rest, never realistic or
+horror-like.
+Make it one continuous landscape, not separate pictures placed on a background: the ground has one believable shape, every place
+grows out of the land around it and fades into its surroundings over a wide margin, with no hard outlines, circles, patches or
+seams, and light, shadow and haze are the same across the whole map. Most of the image stays plain and calm; only the named places
+stand out, well apart from each other.
+Do not include any text, labels, place names, legend, compass rose, frame, border, scale bar or UI elements.
+Kartu tempat di UI memakai potongan peta yang diperbesar sekitar 4x, jadi setiap tempat perlu detail yang tetap terbaca saat di-zoom.
+
+==================================================================================================================
+1. GRAND VAST FOREST (diterapkan di v1.38.0; data/expedition.json)
+==================================================================================================================
+
+Percobaan 1 (2026-10-02): gaya berbeda dari peta Halvard dan terlalu ramai. Revisi: tujuh tempat (Wallows, Silkhollow, Windfall
+dihapus; hutan di antaranya = the Wildwood, tanpa gambar khusus), tempat lebih berjauhan, hutan di antaranya polos.
+Revisi 2 (owner): tempat terlihat "ditempel"; prompt sekarang meminta setiap tempat tumbuh dari hutan dan medan di sekitarnya.
+HASIL REVISI 2 DISETUJUI (2026-10-02): Maps/grand_vast_forest.webp. Prompt di bawah disimpan apa adanya. Hutan ini rainforest
+(owner, sesudahnya); hasilnya sudah terlihat seperti itu (palem, pakis), jadi gambar tidak diulang.
+Referensi gaya: Maps/halvard_spring.webp (Expedition jatuh di musim semi). Gaya ditulis dengan kata-kata karena ChatGPT
+mengabaikan gambar referensi kalau tidak dijelaskan.
+
+Use the attached map of Halvard Academy as the strict reference for art style: copy its rendering, line work, colour palette,
+lighting, level of detail and camera angle exactly, so that the two maps look like they were painted by the same artist for the
+same atlas. That style is:
+- a high bird's-eye view from the south, looking north at about 45 degrees, almost isometric, with only slight perspective;
+- a bright, cheerful, hand-painted miniature look, like a storybook or cosy fantasy game world map: clean, crisp shapes with thin
+  soft outlines, gentle cel-like shading, soft light from the upper left, small soft shadows, high-key and low contrast, nothing
+  gritty, murky or photographic;
+- small, simple, stylised trees repeated evenly: round puffy broadleaf trees in fresh yellow-green and lime, neat cone-shaped
+  conifers in deep teal-green, and spring blossom trees in pastel pink and white dotted among them; light grassy ground shows
+  between the trees in many places;
+- a saturated but soft palette: fresh yellow-greens, teal-blue pines, pastel pink blossom, cream and pale grey stone, clear
+  light-blue water;
+- soft white clouds of mist drifting in from the outer edges and corners of the image, framing it;
+- every feature drawn small and tidy, like a model on a table, so the whole map reads clearly at a glance.
+Even the dark and sinister places (Blightbriar, the Gloaming, the cave) stay in this bright, soft, storybook style: they are
+darker and stranger than the rest, never realistic or horror-like.
+
+Make a 1536x1024 landscape map of the southern rim of a vast wild fantasy forest called the Grand Vast Forest, in early spring
+(fresh pale greens, some bare branches, a little morning mist in the low places).
+
+Keep it calm and readable, and make it one continuous landscape, not separate pictures placed on a forest background. Most of the
+image is plain forest canopy in soft, simple shapes, with no extra features, ruins, paths or props. Seven places stand out from it,
+well separated by wide stretches of forest, each with its own look so it stays recognisable when cropped and zoomed.
+
+Every place must grow out of the land around it, with no hard outlines, no circles or patches, and no visible seams:
+- The ground has one believable shape: low and flat in the south, rising gently to the north, with a rocky ridge across the
+  north-west and a river valley down the east side. Cliffs, the falls and the terraces are parts of that terrain, not objects.
+- Each place fades into the forest over a wide margin: its colours, trees and textures thin out gradually, the ordinary trees mix in,
+  and the canopy closes over its edges in places. Light, shadow, haze and colour temperature are the same across the whole map.
+- Tree species, sizes and colours change gradually across the map (smaller pines and birches near Base Camp, broad old trees towards
+  the north), so the special places look like the far end of a gradient, not something different dropped in.
+
+1. Base Camp (bottom centre, about 50% across, 86% down): a small natural meadow at the forest's southern edge, its grass worn
+   and trampled, trees leaning in around it; three wooden airships with balloon envelopes floating at anchor above it, a ring of
+   canvas tents round a campfire, one timber lodge half under the trees.
+2. Blightbriar (middle left, about 20% across, 55% down): the forest slowly sickening: towards its centre the ordinary trees grow
+   twisted and bare, thorn thickets creep up their trunks, and fungus shelves and tall mushroom towers in sour orange and violet take
+   over, under a faint greenish haze. At its edges healthy and sick trees stand side by side.
+3. The Gloaming (centre, about 45% across, 45% down): the trees grow older and bigger towards the centre of the map until they
+   are enormous, and the canopy darkens to a dense black-green, with a few tiny points of pale blue light beneath. No border: the
+   forest simply becomes ancient.
+4. Silverstair Falls (middle right, about 75% across, 50% down): where the river valley steps down, the river drops over a wide
+   mossy rock face in broad tiers of white water, trees growing on every ledge and spray softening the forest around it.
+5. The Jade Terraces (upper right, about 82% across, 25% down, above the falls): the river valley above the falls is lined with
+   stepped natural pools rimmed in pale gold stone, like Huanglong valley, in turquoise and jade green, with trees growing between
+   and around the pools and the forest closing in on both sides of the valley.
+6. The Grand Cave Network (upper left, about 15% across, 20% down): part of the north-west ridge, where the ground rises into a
+   grey cliff with trees on its top and ledges, and one huge dark cave mouth opens at its foot, half hidden by the forest in front.
+7. The Old Heart (top centre, about 50% across, 14% down): one colossal tree, by far the largest thing on the map, its crown
+   rising high above the canopy and its roots disappearing into the surrounding forest; the trees around it grow larger as they
+   near it.
+
+A single river (the Silverrun) enters at the top right, runs through the Jade Terraces, drops over Silverstair Falls, then winds
+south-east and leaves the image at the bottom right. The forest continues past every edge of the image and fades into haze along
+the top edge.
+
+Do not include any text, labels, place names, legend, compass rose, frame, border, scale bar or UI elements. No people or creatures.
+
+==================================================================================================================
+2. IBUKOTA — menyusul setelah draft bagian 2
+3. SUNREACH BAY — menyusul setelah draft bagian 3
+==================================================================================================================

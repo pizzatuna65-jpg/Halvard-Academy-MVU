@@ -1,0 +1,5 @@
+<%_ if ((getvar('stat_data.$ui.forest') || {}).on) { _%>
+[Base Camp] A wide meadow at the forest's southern edge where the three academy airships ride at anchor; the Expedition's start and end. Tents in three rings, one per year level, around a central fire and Vallie's command tent with the bracelet reading board; a marking table where catches are logged and caged; watch posts at the corners. On its edge stands the Huntsmen's Lodge, a timber lodge the hunting companies share: smokehouse, weighing hook, and a counter selling rope, bait, salves, lamp oil and cloth spore masks for coin. Company hunters pass through and size up the students. Every way out of camp leads into the Wildwood: west, north or east.
+Feel: woodsmoke, wet canvas, nervous laughter, the ships creaking overhead.
+Possible encounters (rare, the camp is guarded): goblin hound (IV), dire wolf (III).
+<%_ } _%>

@@ -33,10 +33,12 @@ Build order, generated files and test commands: `docs/BUILD.md`.
 | Proficiency and Practice | `data/club_stats.json`, `practice.json`; `stepProficiency`, `pProficiency`, `acPractice` | `test_proficiency_v1260.cjs`, `test_practice_v1270.cjs` |
 | Mastery perks (Rank 5) | `MASTERY`, `profRankOf`; `stepProficiency` (`P.mastery`, `$ui.mastery`), `stepMagic` (Arcane scholar), `stepVitals` (Formidable), `stepBonds` (Consummate: `CONSUMMATE_GROUPS`, `NOBLES`), 504 mastery line, `MASTERY_PERKS` in `ui.template.js` | `test_mastery_v1300.cjs` |
 | Malformed update blocks | `recoverPatch`, `patchCommands`, `fixStrayPaths` (1.35.1: top-level lists written under /Player or as /Bag) and the `COMMAND_PARSED` listener at the end of `engine.template.js`; 503 format rule | `test_playtest_v1301.cjs`, `test_stray_paths_v1351.cjs` |
+| Grand Vast Forest / Creature Studies Expedition (1.38.0) | `data/expedition.json` (places, legs, beasts, rates, forest weather; single source); engine `forestPlace`, `forestLoc`, `forestWx`, `expRoutes`, `stepExpedition` (`$eng.exp`, `$ui.forest`); `merge_lorebooks.py` `grand_vast_forest` (lore 360-369, 229, 230); 505 forest block; 502 forest rule; `20_map.js` `renderForest`, `forestKnown` | `test_expedition_v1380.cjs` |
 | Map gates (far grounds) | `gateOpen`, `discovered` in `src/ui/parts/20_map.js`; `data/locations.json` `gate` | `test_playtest_v1301.cjs`, `test_map_gates_v1240.cjs` |
 | Crafting (magical and non-magic), masterwork | `data/crafts.json` (`groups`: Practice actions, tools, experts, mishaps; `masterwork`); `stepProficiency` craft helpers and `finishMasterwork`, `stepExposure` heal, `stepBag` bloom, `acPractice` recipes | `test_crafting_v1280.cjs`, `test_crafts_v1290.cjs`, `505.template.ejs`, `506.template.ejs` |
 | Weather, ambience, happenings | `stepWeather`, `stepExposure`, `stepAmbience`; `data/ambience.json`, `happenings.json`, `wind_casting.json` | |
 | Map, pins, map variants, portraits | `data/map_pins.json`, `assets_manifest.json`, `src/ui/parts/20_map.js` (`discovered`, `mapView` zoom, `loreRow`), `tools/curate_data.py` `FAR_LEGS`, `GATES`, `YEAR_FLOORS` | assets are pinned to a commit (DECISIONS "Assets") |
+| Look at a map image, or write a prompt for a new map | `Maps/halvard_<season>[_<event>].webp`: local copies of every campus map variant (open one with Read; the style reference for new maps), and approved outside maps (`Maps/grand_vast_forest.webp`). Prompts and the shared style block ("GAYA UMUM"): `planning/MAP_PROMPTS_outside_maps.txt` | live copies are in the assets repo; portraits are in `image_generation/` (not committed) |
 | Features settings (on/off) | `data/features.json`, `stepFeatures`, `ui.template.js` `pSettings`, `featureOn` | `feature_cost.py` measures it |
 | Preset | `presets/edit_preset.py` (numbered sections; §13 ports RF2.2.1 from `presets/original/`; §15 the NPC Thoughts block and its two regexes, styled by `thoughtsCss` in `ui.template.js`), card-vs-preset test in `CLAUDE.md` | never edit the output JSON; `build_all.py --preset` |
 | Token cost | `node tests/token_audit.cjs`; the rule entries 501–510 | |
@@ -64,6 +66,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepMagic` (2+3) | casts, mana regen, pacts/summons (a first lesser Spirit Pact in play, 1.31.0), sustained effects, Arcane scholar discount | `data/wind_casting.json` |
 | `stepRest` (4) | sleep and rest, restful places (`restMult`, `$ui.rest`), sleep debt, used items (`/Consumables`) | `data/restore_places.json` |
 | `stepExposure` (4b) | Soaked / Chilled / Overheated, head cold, crafted Consumables healing | |
+| `stepExpedition` (4c) | 1.38.0: the Expedition in the Grand Vast Forest: walks (stamina, owed hours), search hours and their seeded rolls (target, signs, beasts, Wendigo), the catch guard, the result (Journal, Creature Studies shift) | `data/expedition.json`, `$eng.exp`, `$ui.forest` → 505, lore gate, Map |
 | `stepVitals` (5) | 40-HP cap per event unless `Lethal_flag`, death, clamps, mana rounding, Formidable | |
 | `stepReputation` (5b) | Rep XP and levels, named deeds; exports `repAdd`, `repLv`, `weekNo` | `data/reputation.json` |
 | `stepFortune` (5c) | seeded d100, Rank 10 suspension | |
@@ -145,7 +148,7 @@ In `merge_lorebooks.py`: `rep(entry, old, new)` (asserting text edits), `apply_l
 ## 7. Data files (`data/`)
 
 Hand-written single sources (edit these): `shop.json`, `happenings.json`, `calendar.json`, `features.json`, `tuning.json`,
-`ambience.json` (1.31.0: `lore_places`), `restore_places.json` and `letters_home.json` (1.31.0), `free_periods.json` (1.33.0), `wind_casting.json`, `assets_manifest.json`, `cohorts.json`, `campus_phases.json` (empty until canon waves).
+`ambience.json` (1.31.0: `lore_places`), `restore_places.json` and `letters_home.json` (1.31.0), `free_periods.json` (1.33.0), `expedition.json` (1.38.0), `wind_casting.json`, `assets_manifest.json`, `cohorts.json`, `campus_phases.json` (empty until canon waves).
 *Per NPC* (a new NPC needs a row): `bond_rewards.json`, `bond_rules.json`, `bond_openness.json`, `tension.json`, `trust.json`,
 `npc_moods.json`, `gift_prefs.json`, `npc_canon.json` (voices, stages, Rank 8 branch), `rank4_partners.json`, `relations_curated.json`,
 `voice_rules.json`, `initiative_asks.json`, `dialogue_colors.json` (1.37.0; new NPCs via `make_dialogue_colors.py`), `field_overrides.json`, `focus_overrides.json`, `thumb_overrides.json`.

@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.38.0 (Grand Vast Forest): the four checks in its section below.
 - v1.37.4 (calm thoughts): the check in its section below.
 - v1.37.3 (NPC Thoughts): the two checks in its section below.
 - v1.37.2 (light colours, spare colours): the check in its section below.
@@ -77,6 +78,18 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.38.0 — The Grand Vast Forest
+
+Use the TEST Year 2 card or play to Month 2 Week 3 (Wednesday). Re-import the card (new lore, the forest map at assets commit 288b5a6).
+1. Fly to the forest. On arrival `World.Location` reads "Grand Vast Forest — Base Camp", the bracelet shows the rainforest's weather,
+   and the Map panel opens on the forest with Base Camp and the three Wildwood pins; the Halvard tab still shows the campus map.
+2. Thursday 08:00: `<now>` names the target but not where it lives; the narrator does not bring it in by itself while `<now>` says
+   "no sign of it here yet". Walk to another place: the clock moves by the walk's hours, stamina drops, the new neighbours appear on
+   the map, and a beast card never lists beasts.
+3. When `<now>` says "The target is here", the narrator plays the encounter; after a catch the narrator sets `Expedition.Caught`
+   and the Journal records it. (A catch written before that is reverted, with a line in `_Log`.)
+4. Back on campus the forest lore and the `<now>` block are gone; the Map keeps the Grand Vast Forest tab with the places found.
 
 ### v1.37.4 — Calm thoughts
 

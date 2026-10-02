@@ -1,0 +1,19 @@
+<%_ if ((getvar('stat_data.$ui.forest') || {}).on) { _%>
+[Grand Vast Forest]
+What: Eldrasil's great rainforest, half a day from Halvard by airship, so vast that crossing it takes weeks and nobody has walked all of it. Hunting-company country. Halvard comes once a year, for the Creature Studies Expedition (Month 2 Week 3), and uses only its southern rim: from Base Camp to the farthest point of that country is about half a day on foot.
+Landmark: the Old Heart, a single giant tree at the rim's northern edge, rising far above the canopy and seen from anywhere in the southern forest; everyone steers by it. Beyond it the deep forest runs on, unmapped.
+Climate: warm and wet all year. Mornings start in mist, the air is heavy and humid, and most afternoons a downpour comes through the canopy; nothing ever fully dries. Buttress-rooted giants, palms, tree ferns, hanging vines and moss on everything.
+Neighbours (hours on foot): Base Camp – the Wildwood (west) 2, the Wildwood (north) 2, the Wildwood (east) 2. The Wildwood (north) – the Wildwood (west) 2.5, the Wildwood (east) 2.5, the Gloaming 3.5. The Wildwood (west) – Blightbriar 3. The Wildwood (east) – Silverstair Falls 4 (along the river). Blightbriar – the Gloaming 2.5, the Grand Cave Network 5. The Gloaming – Silverstair Falls 3.5, the Grand Cave Network 4, the Old Heart 5. Silverstair Falls – the Jade Terraces 1.5 (a climb). The Jade Terraces – the Old Heart 4. The Grand Cave Network – the Old Heart 5. Any other walk passes through the places between.
+Shortest walks (hours, the same both ways):
+Base Camp: the Wildwood (north) 2, the Wildwood (west) 2, the Wildwood (east) 2, Blightbriar 5, the Gloaming 5.5, Silverstair Falls 6, the Jade Terraces 7.5, the Grand Cave Network 9.5, the Old Heart 10.5.
+The Wildwood (north): the Wildwood (west) 2.5, the Wildwood (east) 2.5, the Gloaming 3.5, Blightbriar 5.5, Silverstair Falls 6.5, the Grand Cave Network 7.5, the Jade Terraces 8, the Old Heart 8.5.
+The Wildwood (west): Blightbriar 3, the Wildwood (east) 4, the Gloaming 5.5, Silverstair Falls 8, the Grand Cave Network 8, the Jade Terraces 9.5, the Old Heart 10.5.
+The Wildwood (east): Silverstair Falls 4, the Jade Terraces 5.5, the Gloaming 6, Blightbriar 7, the Old Heart 9.5, the Grand Cave Network 10.
+Blightbriar: the Gloaming 2.5, the Grand Cave Network 5, Silverstair Falls 6, the Jade Terraces 7.5, the Old Heart 7.5.
+The Gloaming: Silverstair Falls 3.5, the Grand Cave Network 4, the Jade Terraces 5, the Old Heart 5.
+Silverstair Falls: the Jade Terraces 1.5, the Old Heart 5.5, the Grand Cave Network 7.5.
+The Jade Terraces: the Old Heart 4, the Grand Cave Network 9.
+The Grand Cave Network: the Old Heart 5.
+Walking costs stamina; half a day on foot without rest leaves anyone exhausted. The three Wildwood stretches (west, north, east) are one forest in three directions from Base Camp.
+Rules for the narrator: the engine decides when the assigned target and any other beast appear (<now> says so). Never bring the target in on your own, never let a beast appear because it would be convenient, and never tell {{user}} where a beast lives: let tracks, class knowledge and the signs <now> gives show the way. Possible encounters in a place entry are what may appear there, not what is waiting. Every walk takes its hours on the clock; nobody crosses this forest in minutes.
+<%_ } _%>

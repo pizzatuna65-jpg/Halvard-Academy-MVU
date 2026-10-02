@@ -624,6 +624,7 @@ dl.file dd.fv{margin:0;max-width:62ch}
 .plab.r{transform:translate(calc(-100% + 12px),-190%)}.plab.l{transform:translate(-12px,-190%)}.plab.b{transform:translate(-50%,95%)}
 .plab.r.b{transform:translate(calc(-100% + 12px),95%)}.plab.l.b{transform:translate(-12px,95%)}
 .tog.fl{margin-bottom:10px}.tog.fl small{opacity:.7;font-size:.85em}
+.tog.maps{margin:0 0 8px}
 /* 1.24.3: whose floor a year-floor place is on (Lecture Halls, Study Rooms, lockers) */
 .yrfl{margin:0 0 6px;font-size:var(--fs-s);color:var(--ink2)}.yrfl b{color:var(--ink)}.yrfl .mine{color:var(--brass)}
 .mapwrap{display:grid;grid-template-columns:minmax(0,1fr);gap:4px}.mapwrap>*{min-width:0}

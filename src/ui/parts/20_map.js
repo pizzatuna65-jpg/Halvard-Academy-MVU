@@ -42,10 +42,10 @@ function mapFor(S) {
 // 1.24.0 (owner playtest: a black band at the right of the Willow Island header): the crop follows the card's real width. The map is
 // drawn CROP_SCALE times the card's width with the pin in the middle, held inside the image at the edges: across, a percentage
 // position does that for any width; down (the header is CROP_H high), p% + (CROP_H/2 - p·CROP_H)px, clamped to the image.
-function cropStyle(pin, S) {
+function cropStyle(pin, S, own) {                                // own: another map's file (1.38.0: the forest), no fallback layer
   const px = pin.x / 100, py = pin.y / 100, bx = _.clamp((CROP_SCALE * px - 0.5) / (CROP_SCALE - 1), 0, 1) * 100;
   const by = `clamp(100%, calc(${+(py * 100).toFixed(2)}% + ${+(CROP_H / 2 - CROP_H * py).toFixed(1)}px), 0px)`;
-  const file = mapFor(S), layers = [file, ...(file !== DATA.assets.map ? [DATA.assets.map] : [])].map(f => `url('${esc(imgURL(f))}')`).join(',');
+  const file = own || mapFor(S), layers = [file, ...(!own && file !== DATA.assets.map ? [DATA.assets.map] : [])].map(f => `url('${esc(imgURL(f))}')`).join(',');
   return `background-image:${layers};background-size:${CROP_SCALE * 100}% auto;background-position:${+bx.toFixed(2)}% ${by}`;
 }
 const goText = name => `I head to the ${String(name).replace(/^the\s+/i, '')}.`;
@@ -103,9 +103,64 @@ function hauntKnown(id, S) {
   return f ? fieldUnlocked(id, f, S) : b.Rank >= 1;
 }
 
+// ---- 1.38.0 (owner-approved planning/DRAFT_outside_maps.md, part 1): the Grand Vast Forest map (DATA.forest, engine $ui.forest).
+// A tab next to Halvard once {{user}} has been there; it opens by itself during the Expedition. Points open as you go: the places
+// visited and their neighbours. Cards: the walk from here, the known paths, the description and feel; never the beasts.
+const fz = () => DATA.forest || { places: [], legs: [], groups: {} };
+const fPlace = id => fz().places.find(p => p.id === id);
+function forestKnown(S) {
+  const seen = (((S.$ui || {}).forest || {}).seen || []).filter(fPlace), k = new Set(seen);
+  for (const id of seen) for (const [a, b] of fz().legs) { if (a === id) k.add(b); if (b === id) k.add(a); }
+  return k;
+}
+function forestWalks(from) {
+  const d = { [from]: 0 }, done = new Set();
+  for (;;) {
+    let u = null; for (const k in d) if (!done.has(k) && (u === null || d[k] < d[u])) u = k;
+    if (u === null) break; done.add(u);
+    for (const [a, b, h] of fz().legs) { const v = a === u ? b : b === u ? a : null; if (v && (!(v in d) || d[u] + h < d[v])) d[v] = d[u] + h; }
+  }
+  return d;
+}
+function forestCard(id, S, F, known) {
+  const p = fPlace(id), g = fz().groups[p.group] || {}, here = F.on && F.at === id, from = F.on && F.at ? F.at : 'base_camp';
+  const w = forestWalks(from)[id], fromName = (fPlace(from) || {}).name;
+  const nb = fz().legs.filter(l => l[0] === id || l[1] === id).map(l => [l[0] === id ? l[1] : l[0], l[2]]);
+  const nbKnown = nb.filter(([v]) => known.has(v)), more = nb.length - nbKnown.length;
+  const walk = here ? 'You are here' : F.on && F.at ? `About ${w} h on foot from here (${fromName})` : `About ${w} h on foot from ${fromName}`;
+  const paths = nbKnown.map(([v, h]) => `${fPlace(v).name} ${h} h`).join(', ') + (more ? `${nbKnown.length ? '; ' : ''}${more} path${more > 1 ? 's' : ''} you have not taken yet` : '');
+  const rows = [['Walk', esc(walk)], ['Paths', esc(paths || 'None known')]];
+  return `<article class="lc${here ? ' here' : ''}"><div class="crop" style="${cropStyle(p, S, fz().map)}"><b>${esc(p.name)}</b>${here ? '<span class="you">You are here</span>' : ''}</div>
+    <div class="in">${g.feel ? `<p class="vibe">${esc(_.capitalize(g.feel))}</p>` : ''}
+    <details><summary>Description</summary><p>${esc(g.desc || '')}</p></details>
+    <dl class="kv sm">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
+    <button class="btn ${here ? '' : 'pri'} go" data-fgo="${esc(id)}" ${here || !F.on ? 'disabled' : ''}>${here ? 'You are here' : F.on ? 'Go here' : 'Only during the Expedition'}</button></div></article>`;
+}
+function renderForest(S, tabs) {
+  const F = (S.$ui || {}).forest || {}, known = forestKnown(S);
+  if (!view.fpin || !known.has(view.fpin)) view.fpin = F.on && F.at ? F.at : 'base_camp';
+  const pinHTML = fz().places.filter(p => known.has(p.id)).map(p => {
+    const here = F.on && F.at === p.id, sel = view.fpin === p.id;
+    return `<button class="pin${here ? ' here' : ''}${sel ? ' sel' : ''}" data-fpin="${esc(p.id)}" style="left:${p.x}%;top:${p.y}%" aria-label="${esc(p.name)}${here ? ' (you are here)' : ''}" title="${esc(p.name)}"></button>`
+      + (sel || here ? `<span class="plab${here ? ' here' : ''}${labPos(p)}" style="left:${p.x}%;top:${p.y}%">${esc(p.name)}</span>` : '');
+  }).join('');
+  const P = fPlace(view.fpin), sheet = P ? `<h3>${esc(P.name)}</h3><div class="car">${forestCard(P.id, S, F, known)}</div>` : '';
+  const hunt = F.on && F.tgt ? ` Target: ${F.tgt}${F.res === 'caught' ? ' (caught)' : F.res === 'failed' ? ' (not found)' : ''}.` : '';
+  const where = F.on ? `You are at ${esc(S.World.Location)}.${esc(hunt)}` : 'You are not in the forest now. The map shows what you found on your Expedition.';
+  return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>${esc(fz().area)}</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
+    <div class="bd">${tabs}<div class="mapwrap"><div><div class="mapbox"><div class="mapview${mapView.z > 1 ? ' zin' : ''}"><div class="map" style="width:${mapView.z * 100}%"><img src="${esc(imgURL(fz().map))}" alt="Map of the ${esc(fz().area)}" draggable="false">${pinHTML}</div></div>
+    <div class="zoom"><button data-zoom="1" aria-label="Zoom in" title="Zoom in (or the mouse wheel)" ${mapView.z >= ZOOMS[ZOOMS.length - 1] ? 'disabled' : ''}>+</button><button data-zoom="-1" aria-label="Zoom out" title="Zoom out" ${mapView.z <= 1 ? 'disabled' : ''}>−</button></div></div>
+    <div class="sub" style="margin:6px 0 10px">${where}</div></div><div class="sheet">${sheet}</div></div></div></div>`;
+}
+
 PANELS.map = {
   live: true,
   render(S) {
+    // 1.38.0: Halvard / Grand Vast Forest tabs once the forest has been visited; the forest opens by itself while {{user}} is in it
+    const F = (S.$ui || {}).forest || {}, hasF = !!(F.seen || []).length;
+    const which = hasF && (view.map || (F.on ? 'forest' : 'campus')) === 'forest' ? 'forest' : 'campus';
+    const tabs = hasF ? `<div class="tog maps">${[['campus', 'Halvard'], ['forest', fz().area]].map(([k, n]) => `<button data-map="${k}" class="${which === k ? 'on' : ''}">${esc(n)}</button>`).join('')}</div>` : '';
+    if (which === 'forest') return renderForest(S, tabs);
     const cur = locIdOf(S.World.Location), curPin = cur ? pinOf(cur) : null;
     if (view.pin == null && curPin) view.pin = curPin.pin;
     const pins = DATA.pins.filter(p => p.cluster.some(id => DATA.locs[id] && discovered(S, DATA.locs[id])));
@@ -136,7 +191,7 @@ PANELS.map = {
       sheet = `<h3>${esc(P.label)}</h3>${tabs}${arrows}<div class="car">${ids.length ? locCard(ids[view.card], S, cur, P) : '<div class="empty">Nothing here you know of yet.</div>'}</div>`;
     }
     return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>Halvard</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
-      <div class="bd"><div class="mapwrap"><div><div class="mapbox"><div class="mapview${mapView.z > 1 ? ' zin' : ''}"><div class="map" style="width:${mapView.z * 100}%"><img src="${esc(imgURL(mapFor(S)))}" alt="Map of Halvard Academy" draggable="false" data-fb="" data-fbclass="mapfb"${mapFor(S) !== DATA.assets.map ? ` data-alt="${esc(imgURL(DATA.assets.map))}"` : ''}>${pinHTML}</div></div>
+      <div class="bd">${tabs}<div class="mapwrap"><div><div class="mapbox"><div class="mapview${mapView.z > 1 ? ' zin' : ''}"><div class="map" style="width:${mapView.z * 100}%"><img src="${esc(imgURL(mapFor(S)))}" alt="Map of Halvard Academy" draggable="false" data-fb="" data-fbclass="mapfb"${mapFor(S) !== DATA.assets.map ? ` data-alt="${esc(imgURL(DATA.assets.map))}"` : ''}>${pinHTML}</div></div>
       <div class="zoom"><button data-zoom="1" aria-label="Zoom in" title="Zoom in (or the mouse wheel)" ${mapView.z >= ZOOMS[ZOOMS.length - 1] ? 'disabled' : ''}>+</button><button data-zoom="-1" aria-label="Zoom out" title="Zoom out" ${mapView.z <= 1 ? 'disabled' : ''}>−</button></div></div>
       <div class="sub" style="margin:6px 0 10px">You are at ${esc(S.World.Location)}.</div></div><div class="sheet">${sheet}</div></div></div></div>`;
   },
@@ -171,6 +226,9 @@ PANELS.map = {
   },
   click(b, S) {
     if (b.dataset.zoom) { zoomMap(+b.dataset.zoom); return; }
+    if (b.dataset.map) { view.map = b.dataset.map; mapView.z = 1; mapView.cx = 0.5; mapView.cy = 0.5; render(); return; }
+    if (b.dataset.fpin) { view.fpin = b.dataset.fpin; render(); return; }
+    if (b.dataset.fgo) { const p = fPlace(b.dataset.fgo); if (p) fillChat(`I head to ${p.name.replace(/^The /, 'the ')}.`); return; }
     if (b.dataset.pin) { view.pin = +b.dataset.pin; view.floor = ''; render(); return; }
     if (b.dataset.card) { view.card += +b.dataset.card; render(); return; }
     if (b.dataset.floor) { view.floor = b.dataset.floor; render(); return; }
