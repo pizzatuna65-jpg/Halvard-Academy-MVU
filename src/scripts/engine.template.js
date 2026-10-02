@@ -259,6 +259,11 @@ const HAPPENINGS = /*@@HAPPENINGS@@*/[];
 // 1.16.0 ambience (data/ambience.json): categories and their crowd rhythm, the sun table, cue and beat types, the uncanny stories
 const AMB = /*@@AMBIENCE@@*/{};
 const AMB_LEVELS = ['empty', 'quiet', 'some people', 'busy', 'packed'];
+// Settings > Campus life > Ambient moments (tune amb_freq): d100 at or under "calm" is a quiet beat. 1.43.0 (audit 3.6): the same
+// setting scales the outside areas' small life (street sights, people met, pickpockets and hustlers, the airship's sky, stage and
+// hold) by its share of moments against Normal; story beats (Tsubaki lost, the Leviathan, raids, scouts) and the Expedition do not move.
+const AMB_CALM = { 1: 70, 2: 55, 3: 40 };
+const lifeX = TU => (100 - (AMB_CALM[TU.amb_freq] || AMB_CALM[2])) / (100 - AMB_CALM[2]);
 const HAPPEN_RATE = { off: 0, rare: 0.2, normal: 0.4, often: 0.65 };
 // hash32, rand01, roll100, d100, rollInt, pickOf and rollTable: shared.js (seeded draws)
 const JOURNAL_ARCHIVE = 120;
@@ -1746,8 +1751,8 @@ const r1h = x => Math.round(num(x, 0) * 10) / 10;
 // pin), walks to every pin, places nearby, the Crowning Day muster and this update's events.
 const avRep = (S, Kind, Why) => { S.Rep_events = [...(Array.isArray(S.Rep_events) ? S.Rep_events : []), { Kind, Why }]; };
 function stepCapital(c) {
-  const { S, log, jnl, hasB, toolEdit, absA, absB, elapsed, seed, V, restedAs, aAt, aPrev, aHeld, dayNo } = c;
-  const R = AV.rates || {}, Y = num(S.World.Year, 1), U0 = _.isPlainObject(S.$ui.capital) ? S.$ui.capital : {};
+  const { S, log, jnl, hasB, toolEdit, absA, absB, elapsed, seed, V, restedAs, aAt, aPrev, aHeld, dayNo, TU } = c;
+  const R = AV.rates || {}, LX = lifeX(TU), Y = num(S.World.Year, 1), U0 = _.isPlainObject(S.$ui.capital) ? S.$ui.capital : {};
   const seen = Array.isArray(U0.seen) ? U0.seen.filter(id => AV_PL[id]) : [];
   const castle = (S.$eng.prizes || []).some(p => /^Kingdom-Y\d+$/.test(p));
   if (!_.isPlainObject(S.Avalon)) S.Avalon = { Ride: false };
@@ -1808,17 +1813,17 @@ function stepCapital(c) {
     for (let h = Math.max(Math.floor(absB / 60) + 1, h1 - num(R.max_rolls, 6) + 1); h <= h1; h++) {
       const abs = h * 60, roll = k => roll100(seed, 'av', h, aAt, k), pick = (a, k) => pickOf(a, seed, 'av', h, aAt, k);
       if (crown && (abs < at(Cr.free) || abs >= at(Cr.depart))) continue;   // the parade and the speech; then the airship
-      if (inW('pickpocket') && roll('pick') < num(R.pickpocket, 8)) {
+      if (inW('pickpocket') && roll('pick') < num(R.pickpocket, 8) * LX) {
         const caught = roll('pseen') < num(R.pick_seen, 50), pct = rollInt(num(R.pick_min, 10), num(R.pick_max, 25), seed, 'av', h, 'pamt');
         const lost = caught ? 0 : Math.min(num(R.pick_cap, 300), Math.round(coinNow() * pct / 100));
         if (lost) spend(lost, 'pickpocketed in Avalon');
         evs.push({ k: 'pick', caught, lost, empty: !caught && !lost });
         if (lost) { jnl.push(`Avalon: a pickpocket took ${lost} coin from {{user}} at ${AV_PL[aAt].name}.`); S.$ui.toasts.push(`Pickpocketed: -${lost} coin`); }
       }
-      if (inW('procession') && roll('proc') < num(R.procession, 10)) evs.push({ k: 'procession', t: pick(AV.procession || [''], 'proct') });
-      if (!street && (AV.street || {})[aAt] && roll('street') < num(R.street, 20)) { street = true; evs.push({ k: 'street', t: pick(AV.street[aAt], 'strt') }); }
+      if (inW('procession') && roll('proc') < num(R.procession, 10) * LX) evs.push({ k: 'procession', t: pick(AV.procession || [''], 'proct') });
+      if (!street && (AV.street || {})[aAt] && roll('street') < num(R.street, 20) * LX) { street = true; evs.push({ k: 'street', t: pick(AV.street[aAt], 'strt') }); }
       if (crown && X.ts !== Y && inW('tsubaki') && roll('tsu') < num(R.tsubaki, 10)) { X.ts = Y; evs.push({ k: 'tsubaki', first: Y < (ARRIVES.Tsubaki || 1) }); }
-      else if ((crown ? inW('rival_crowning') : kd && inW('rival_kingdom')) && roll('riv') < num(R.rival, 25)) {
+      else if ((crown ? inW('rival_crowning') : kd && inW('rival_kingdom')) && roll('riv') < num(R.rival, 25) * LX) {
         const pool = Object.keys(AV.rivals || {}).filter(id => AV.rivals[id] + Y - 1 <= 3 && !(X.met || []).includes(id)).sort();
         if (pool.length) { const id = pickOf(pool, seed, 'av', h, aAt, 'rivp'); X.met = [...(X.met || []), id]; evs.push({ k: 'rival', id }); }
       }
@@ -1841,7 +1846,7 @@ function stepCapital(c) {
 // per hour in the air a moment in the sky (the route's pool, or the way home's), and in the Common Room the stage, in the Cargo Hold
 // the hold (seeded by the flight and the hour, so a swipe sees the same flight). Outside a flight: whether one leaves within 90 min.
 function stepAirship(c) {
-  const { S, log, hasB, toolEdit, absA, absB, elapsed, seed, restedAs, Cn, sAt, sPrev, sFl, sBoard } = c;
+  const { S, log, hasB, toolEdit, absA, absB, elapsed, seed, restedAs, Cn, sAt, sPrev, sFl, sBoard, TU } = c;
   if (!sAt) {
     const t = hm(S.World.Time), nx = t == null ? null : (AIR.flights || []).find(f => f.m === num(S.World.Month, 0) && f.w === num(S.World.Week, 0) && f.d === S.World.Day
       && hm(f.from) > t && hm(f.from) - t <= 90 && (f.who !== 'kingdom' || avKingdom(S.World, S)));
@@ -1855,7 +1860,7 @@ function stepAirship(c) {
     const h1 = Math.floor(absA / 60), got = new Set();
     for (let h = Math.max(Math.floor(absB / 60) + 1, h1 - num(R.max_rolls, 6) + 1); h <= h1; h++) {
       for (const [k, pool, ok] of [['sky', (AIR.sky || {})[route], true], ['stage', AIR.stage, sAt === 'common_room'], ['hold', AIR.hold, sAt === 'cargo_hold']]) {
-        const t = ok && !got.has(k) ? rollTable(pool, { roll: [seed, 'air', fid, h, k], pct: num(R[k], 0), pick: [seed, 'air', fid, h, k + 't'] }) : null;
+        const t = ok && !got.has(k) ? rollTable(pool, { roll: [seed, 'air', fid, h, k], pct: num(R[k], 0) * lifeX(TU), pick: [seed, 'air', fid, h, k + 't'] }) : null;
         if (t !== null) { got.add(k); evs.push({ k, t }); }
       }
     }
@@ -1872,7 +1877,8 @@ function stepAirship(c) {
 // the hour and the place; not asleep): a street sight, a hustler, one student of another academy and one of Halvard who would be
 // there by personality (not met today, not in the scene), the sea and once in a Trip the Leviathan far off. Outside: the day before.
 function stepSunreach(c) {
-  const { S, log, jnl, hasB, toolEdit, absA, absB, elapsed, seed, V, restedAs, rPrev, dayNo } = c;
+  const { S, log, jnl, hasB, toolEdit, absA, absB, elapsed, seed, V, restedAs, rPrev, dayNo, TU } = c;
+  const LX = lifeX(TU);
   let at = c.rAt;
   const R = SR.rates || {}, Y = num(S.World.Year, 1), U0 = _.isPlainObject(S.$ui.sunreach) ? S.$ui.sunreach : {};
   const seen = Array.isArray(U0.seen) ? U0.seen.filter(id => SR_PL[id]) : [];
@@ -1938,8 +1944,8 @@ function stepSunreach(c) {
     for (let h = Math.max(Math.floor(absB / 60) + 1, h1 - num(R.max_rolls, 6) + 1); h <= h1; h++) {
       const nt = srNight(h * 60) ? 1 : 0, roll = k => roll100(seed, 'sr', h, at, k), pick = (a, k) => pickOf(a, seed, 'sr', h, at, k);
       const st = ((SR.street || {})[at] || [])[nt] || [];
-      if (!got.has('street') && st.length && roll('st') < num(R.street, 20)) { got.add('street'); evs.push({ k: 'street', t: pick(st, 'stt') }); }
-      if ((SR.hustle || []).includes(at) && !got.has('hustle') && roll('hus') < num(R.hustle, 8)) {
+      if (!got.has('street') && st.length && roll('st') < num(R.street, 20) * LX) { got.add('street'); evs.push({ k: 'street', t: pick(st, 'stt') }); }
+      if ((SR.hustle || []).includes(at) && !got.has('hustle') && roll('hus') < num(R.hustle, 8) * LX) {
         got.add('hustle');
         const caught = roll('hseen') < num(R.hustle_seen, 50), pct = rollInt(num(R.hustle_min, 10), num(R.hustle_max, 25), seed, 'sr', h, 'hamt');
         const lost = caught ? 0 : Math.min(num(R.hustle_cap, 300), Math.round(coinNow() * pct / 100));
@@ -1947,7 +1953,7 @@ function stepSunreach(c) {
         evs.push({ k: 'hustle', caught, lost, empty: !caught && !lost });
       }
       const meetOne = (kind, who, ok) => {
-        if (got.has(kind) || roll(kind) >= num(R[kind], 0)) return;
+        if (got.has(kind) || roll(kind) >= num(R[kind], 0) * LX) return;
         const pool = Object.keys(who || {}).filter(id => (who[id][nt] || []).includes(at) && ok(id) && !X.met.includes(id) && !present.has(id)).sort();
         if (!pool.length) return;
         const id = pick(pool, kind + 'p'); got.add(kind); X.met = [...X.met, id]; evs.push({ k: kind, id });
@@ -1958,7 +1964,7 @@ function stepSunreach(c) {
         if (X.lev !== Y && roll('lev') < num(R.leviathan, 5)) {
           X.lev = Y; got.add('sea'); evs.push({ k: 'leviathan', t: SR.leviathan });
           jnl.push('Sunreach Bay: out on the open sea, {{user}} saw the Leviathan, far off, and the boat turned for home.'); S.$ui.toasts.push('The Leviathan!');
-        } else if (!got.has('sea') && roll('sea') < num(R.sea, 50)) { got.add('sea'); evs.push({ k: 'sea', t: pick(SR.sea || [''], 'seat') }); }
+        } else if (!got.has('sea') && roll('sea') < num(R.sea, 50) * LX) { got.add('sea'); evs.push({ k: 'sea', t: pick(SR.sea || [''], 'seat') }); }
       }
     }
   }
@@ -4292,7 +4298,7 @@ function stepAmbience(c) {
     let beat = null, unc = null;
     if (AML === 'full' && C0 && !battle && restedAs !== 'sleep' && !inClass && (pk !== pkB || !(num(AE.last, -1) >= 0) || absA - num(AE.last, -1) >= 30)) {
       AE.last = absA;
-      const d = d100(seed, 'amb', S.$eng.turn, absA), calm = { 1: 70, 2: 55, 3: 40 }[TU.amb_freq] || 55;
+      const d = d100(seed, 'amb', S.$eng.turn, absA), calm = AMB_CALM[TU.amb_freq] || AMB_CALM[2];
       let kind = d <= calm ? '' : d > 90 ? 'brush' : 'tex';
       if (kind === 'brush' && ((S.$ui.hap && S.$ui.hap.now) || noClass)) kind = '';   // a happening or an event day holds the attention
       // 1.24.0 (owner playtest): now and then the talk nearby is one of this place's stories {{user}} has not heard yet (once a day;

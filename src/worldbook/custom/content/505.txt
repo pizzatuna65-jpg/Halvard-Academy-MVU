@@ -30,7 +30,7 @@ const npcStatusOf = (N, id, alias) => {
 };
 // a Location's parts: "Place — detail, more"; placeOf is the place, placeKey its lowercase key without "the"
 const LOC_SPLIT = /\s+[—–-]\s+|,\s+/;
-const PLACE_SPLIT = /\s+[—-]\s+/;
+const PLACE_SPLIT = /\s+[—–-]\s+/;   // 1.43.0: with the en dash (a narrator may write "Canteen – kitchen")
 const locParts = loc => String(loc || '').split(LOC_SPLIT);
 const placeOf = loc => String(loc || '').split(PLACE_SPLIT)[0].trim();
 const placeKey = loc => placeOf(loc).toLowerCase().replace(/^the /, '');

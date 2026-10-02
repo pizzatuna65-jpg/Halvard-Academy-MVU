@@ -3,7 +3,7 @@
 <%_
 /*@@SHARED@@*/
 const _PG = /*@@PG@@*/{}, _CS = /*@@CRAFT_SALE@@*/[], _W = getvar('stat_data.World') || {};
-const _pl = String(_W.Location || '').split(/\s+[—–-]\s+/)[0].trim().toLowerCase(), _at = _PG.names[_pl] || _PG.names[_pl.replace(/^the /, '')] || '';
+const _pl = placeOf(_W.Location).toLowerCase(), _at = _PG.names[_pl] || _PG.names[_pl.replace(/^the /, '')] || '';
 const _se = SEASON_OF(_W.Month);   // shared.js
 const _here = _at && _PG.rows[_at] ? [_at] : [];   // The Mall's own counters; its shops (Nightwell, Quillfeather's…) are places of their own
 const _rows = _here.flatMap(l => _PG.rows[l]).filter(([, s]) => s === 'all' || s.includes(_se)).map(([t]) => t);
