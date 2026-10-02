@@ -15,7 +15,7 @@ Bila konteks sesi hampir habis sebelum batch selesai, Claude berhenti di titik y
 | 3 | Laporan narrator yang diurus engine: ledger, Bag, `/Purchases`, sesi latihan gabungan | 2.5, 3.4, 3.5, 3.9 | sedang | 2 | belum |
 | 4 | Modul Area untuk area luar: Sunreach, Avalon, hutan, airship, iklim, renderer UI | 2.1, 3.1, 3.7 | besar | 2, 3 | belum |
 | 5 | Kampus sebagai Area + `whereabouts` | 3.2, 3.3, 3.8 | sedang–besar | 4 | belum |
-| 6 | Agenda + jalur informasi + kompetisi | 3.10, 3.12, 3.13 | sedang | 2 | selesai (1.44.0, commit @@C@@) |
+| 6 | Agenda + jalur informasi + kompetisi | 3.10, 3.12, 3.13 | sedang | 2 | selesai (1.44.0, commit 2759e6d) |
 | 7 | `$ui.now`, Cast Sheet per NPC, diet state | 2.6, 2.7, 2.9, 3.11 | besar | 3, 5, 6 | belum |
 
 Urutan wajib: 1 → 2. Setelah itu, batch 3 dan 6 bebas urutannya, lalu 4 → 5, dan 7 paling akhir.
