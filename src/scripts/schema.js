@@ -387,7 +387,7 @@ export const Schema = z.object({
     perks_used: StrList(60),                                          // 1.3.0: one-use perks already spent ("Council pardon (Irene), M3 W2 Tue")
     perks_grad: z.record(z.string(), z.any()).prefault({}).catch({}),   // 1.7.6: rewards of graduates as they were ({name: perk}), restored if the story keeps them
     next: z.any().prefault(null).catch(null),                         // 1.3.4: the next thing on today's schedule (engine; bracelet)
-    soon: StrList(12),                                                // 1.32.0: calendar events of the next seven days, for <now> (engine)
+    agenda: z.any().prefault([]).catch([]),                           // 1.44.0: the Agenda's coming-up feed (engine stepAgenda; Planner, Notice Board, bracelet, <now>)
     portrait: Str(''),                                                // 1.3.4: the student's picture (a SillyTavern user image path)
     tsusp: StrList(40),                                               // 1.4.3: Rank 10 benefits suspended by low Trust (engine)
     tune: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.3.1: training / reputation settings { id: value } (data/tuning.json; the engine checks the values)
@@ -409,6 +409,8 @@ export const Schema = z.object({
     craft: z.any().prefault(null).catch(null),                     // 1.28.0: clearing bloom's harvest day
     pactPlay: Str(''),                                              // 1.31.0: the one Spirit Pact made in play (engine)
     home: z.any().prefault(null).catch(null),                      // 1.31.0: the month's letter home, its reply and parcel (engine)
+    agenda: z.any().prefault(null).catch(null),                    // 1.44.0: Agenda { when: { id: [text, abs] } for Projects and Next plans, st: last statuses } (engine)
+    comp: z.any().prefault(null).catch(null),                      // 1.44.0: competition results paid { paid: [keys], exp: 0-2 staff expectation } (engine)
     profv: Int(0, 1, 0),
     trip: Int(0, 1, 0),                                             // 1.42.0: 1 once {{user}} was off campus during the active Trip (engine)
     initiative: z.any().prefault(null).catch(null),              // 1.7.7 (FP1): latched day/week, chosen NPC and per-NPC cooldown

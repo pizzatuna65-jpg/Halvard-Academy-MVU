@@ -211,7 +211,7 @@ console.log('Story hooks');
   S = later(S, 220, 'Canteen'); ok(S.Hooks['Irene returns']._State === 'overdue' && S._Log.filter(l => /Hook due now/.test(l)).length === 1, 'overdue 3 h after (the due log was written once)');
   let O = applyPatch(S0, [{ op: 'insert', path: '/Hooks/Cracked seal', value: { Note: 'hairline crack on the east ward', Weight: 2 } }, { op: 'insert', path: '/Hooks/Odd smell', value: { Note: 'x', Weight: 1 } }]);
   O = at(O, 15, '09:00', 'Canteen');
-  ok(O.Hooks['Cracked seal']._State === 'old' && O.Hooks['Odd smell']._State === 'waiting' && /Old hooks \(pay off or drop\): Cracked seal/.test(render(505, O)), 'Weight >= 2 without Due turns old after 14 days');
+  ok(O.Hooks['Cracked seal']._State === 'stale' && O.Hooks['Odd smell']._State === 'waiting' && /Old hooks \(pay off or drop\): Cracked seal/.test(render(505, O)), 'Weight >= 2 without Due turns stale after 14 days (1.44.0: was "old")');
   const many = Object.fromEntries(Array.from({ length: 16 }, (_x, i) => [`H${i}`, { Note: 'n', Weight: i % 2 ? 2 : 1 }]));
   const C = applyPatch(S0, [{ op: 'replace', path: '/Hooks', value: many }]);
   ok(Object.keys(C.Hooks).length === 15 && !C.Hooks.H0 && C.Hooks.H2 && C.Hooks.H1, 'cap 15: the oldest Weight-1 hook goes first');

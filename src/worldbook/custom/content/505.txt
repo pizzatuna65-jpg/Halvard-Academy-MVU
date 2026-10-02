@@ -147,10 +147,14 @@ if (freeNow) {
 }
 const regs = regs1.filter(r => !stOf(r)), regSt = regs1.filter(r => stOf(r));
 const cur = String(W._Curfew || '');
-const due = on('planner') ? Object.entries(getvar('stat_data.Commitments') || {}).filter(([k, c]) => c && (c._Late || /^(today|tomorrow)/.test(String(c._When || '')))) : [];
+// 1.44.0 (Agenda): one feed (engine stepAgenda): the academy events of the next seven days (not one running today, not the Month 12
+// holiday; a run of days is one line), and commitments and projects due today, tomorrow or overdue
+const AG = Array.isArray(UI.agenda) ? UI.agenda : [];
+const COMING = AG.filter(x => x.k === 'event' && !x.h && x.d >= 1 && x.d <= 7).map(x => x.on.replace(/^(Y\d+ )?M\d+ /, '') + (x.to ? '–' + x.to : '') + ': ' + x.t).slice(0, 12);
+const due = AG.filter(x => (x.k === 'commitment' || x.k === 'project') && (x.s === 'overdue' || x.d <= 1));
 const mail = on('letters') ? Object.values(getvar('stat_data.Letters') || {}).filter(l => l && l.Status === 'waiting').length : 0;
 const HK = on('hooks') ? Object.entries(getvar('stat_data.Hooks') || {}).filter(([k, h]) => h) : [];
-const hDue = HK.filter(([k, h]) => h._State === 'due' || h._State === 'overdue'), hOld = HK.filter(([k, h]) => h._State === 'old' && h.Weight >= 2);
+const hDue = HK.filter(([k, h]) => h._State === 'due' || h._State === 'overdue'), hOld = HK.filter(([k, h]) => h._State === 'stale' && h.Weight >= 2);
 const GS = on('gossip') ? (UI.gossip || []).slice(-5).reverse() : [];
 const PRES = Object.keys(getvar('stat_data.Scene.Present') || {});
 const moods = on('weather') ? PRES.filter(id => (UI.moods || {})[id]).map(id => { const m = UI.moods[id]; return id + ': ' + m.mood.toLowerCase() + ' mood' + (m.reasons.length ? ' (' + m.reasons.join(', ') + ')' : '') + '. Mood colours their manner; keep them in character.'; }) : [];
@@ -243,8 +247,8 @@ Campaign Year <%- Y %> ({{user}}: Year <%- Math.max(1, Math.min(3, Number(PR.Yea
 <%_ if (W._Event_today) { _%>
 Today: <%- String(W._Event_today).split(' | ').map(x => x.split(' — ')[0]).join(' | ') %> (plan in World._Event_today)
 <%_ } _%>
-<%_ if ((UI.soon || []).length) { _%>
-Coming up (next seven days; students and staff may bring these up when it fits who they are: plans, nerves, rumours, who goes with whom): <%- UI.soon.join('; ') %>
+<%_ if (COMING.length) { _%>
+Coming up (next seven days; students and staff may bring these up when it fits who they are: plans, nerves, rumours, who goes with whom): <%- COMING.join('; ') %>
 <%_ } _%>
 <%_ if (+W.Month === 1 && +W.Week === 1 && W.Day === 'Mon') { const _T = getvar('stat_data.Campus_State.Entrance_tour') || {}, _h = Number(String(W.Time || '00:00').slice(0, 2)); _%>
 Entrance tour assignment (keep these same people through 18:00): <%- _T.Guide || 'guide not yet named' %> guides <%- Number(PR.Year) > 1 ? (_T.FirstYears || []).join(' and ') || 'two new first-years yet to be named' : '{{user}} and ' + ((_T.FirstYears || [])[0] || 'one new first-year yet to be named') %>. A vacant place may go to an invented student only when available roster newcomers cannot fill it.
@@ -432,7 +436,7 @@ Battle field (outdoors): <%- WX.field %>.
 Divination Society forecast on the Notice Board for <%- WX.fc.tomorrow ? 'tomorrow' : 'today' %>: <%- WX.fc.blocks.map((b, i) => ['morning', 'afternoon', 'night'][i] + ' ' + b.text + ' (' + b.label + ')').join(', ') %>
 <%_ } _%>
 <%_ if (due.length) { _%>
-Due soon: <%- due.map(([k, c]) => k + ' (' + (c._Late ? 'OVERDUE' : c._When) + (c.With ? ', with ' + c.With : '') + ')').join('; ') %>
+Due soon: <%- due.map(x => x.t + ' (' + (x.s === 'overdue' ? 'OVERDUE' : (x.d === 0 ? 'today' : 'tomorrow') + (x.at ? ' ' + x.at : '')) + (x.w ? ', with ' + x.w : '') + ')').join('; ') %>
 <%_ } _%>
 <%_ if (mail) { _%>
 Mail Tower: <%- mail %> letter<%- mail > 1 ? 's' : '' %> waiting for {{user}} to collect.

@@ -10,6 +10,7 @@ const dayIdx = (M, W, D) => (M - 1) * 28 + (W - 1) * 7 + Math.max(0, DAYS.indexO
 const dayOf = i => { i = ((i % 336) + 336) % 336; return { M: Math.floor(i / 28) + 1, W: Math.floor((i % 28) / 7) + 1, D: DAYS[i % 7] }; };
 const eventsOnDay = (M, W, D) => CAL.EVENTS.filter(e => e.m === M && e.w === W && e.d.includes(D));
 const shortEv = t => String(t).split(' (')[0].split(':')[0];
+const agendaOf = S => (Array.isArray((S.$ui || {}).agenda) ? S.$ui.agenda : []);   // 1.44.0: the engine's Agenda feed (stepAgenda)
 const relDay = n => n === 0 ? 'Today' : n === 1 ? 'Tomorrow' : n === -1 ? 'Yesterday' : n > 0 ? `In ${n} days` : `${-n} days ago`;
 function fillChat(text) {          // D6/D3: the UI never moves the story itself; it drafts the action for the player to edit and send
   const ta = PD.querySelector('#send_textarea');
@@ -128,14 +129,16 @@ function nbPlanner(S) {
         <span class="sub">Notes are yours: the narrator does not read them. Saving adds a small hidden entry to the chat.</span></div></div>`;
     }
   }
-  // coming up (14 days): academy events plus your own dated things
-  const up = [];
-  for (let n = 0; n < 15; n++) {
+  // coming up (14 days): 1.44.0 the engine's Agenda feed (academy events and your own dated things), plus the birthdays your
+  // dossiers have opened (only the UI knows which)
+  const up = agendaOf(S).filter(x => x.d >= 0 || x.te >= 0 || x.s === 'overdue').map(x => ({ n: x.k === 'event' ? Math.max(0, x.d) : x.d, on: x.on, at: x.at, mine: x.k !== 'event',
+    t: `${x.k === 'note' ? '✎ ' : x.k === 'birthday' ? '🎂 ' : ''}${x.t}${x.to ? ` (to ${x.to})` : ''}${x.w ? ` (with ${x.w})` : ''}${x.s === 'overdue' ? ' · overdue' : ''}` }));
+  for (let n = 0; n <= 14; n++) {
     const d = dayOf(today + n), y = W.Year + (today + n >= 336 ? 1 : 0);
-    for (const e of eventsOnDay(d.M, d.W, d.D)) if (!up.some(u => u.e === e)) up.push({ n, d, e, t: e.t });
-    for (const x of mine[markKey(y, d.M, d.W, d.D)] || []) up.push({ n, d, t: `${x.k === 'note' ? '✎ ' : x.k === 'birthday' ? '🎂 ' : ''}${x.t}`, mine: 1 });
+    for (const x of (mine[markKey(y, d.M, d.W, d.D)] || []).filter(x => x.k === 'birthday' && x.t !== 'Your birthday'))
+      up.splice(_.sortedLastIndexBy(up, { n }, 'n'), 0, { n, on: `M${d.M} W${d.W} ${d.D}`, t: `🎂 ${x.t}`, mine: 1 });
   }
-  const upH = up.length ? `<ul class="up">${up.map(u => `<li${u.mine ? ' class="mine"' : ''}><span class="rd">${relDay(u.n)}</span><span class="sub">M${u.d.M} W${u.d.W} ${u.d.D}</span> ${esc(u.t)}</li>`).join('')}</ul>` : '<div class="empty">Nothing on the academy calendar in the next two weeks.</div>';
+  const upH = up.length ? `<ul class="up">${up.map(u => `<li${u.mine ? ' class="mine"' : ''}><span class="rd">${relDay(u.n)}</span><span class="sub">${esc(u.on)}${u.at ? ' ' + u.at : ''}</span> ${esc(u.t)}</li>`).join('')}</ul>` : '<div class="empty">Nothing on the academy calendar in the next two weeks.</div>';
   return `${now}${featureOn(S, 'planner') ? `<h3>Commitments</h3>${com}` : ''}<h3>This week</h3>${table}<h3>Coming up</h3>${upH}
     <h3 class="calh">Calendar: Month ${mo}${view.calOff ? '' : ' (now)'}<span><button class="btn sm" data-cal="-1" ${view.calOff ? '' : 'disabled'} aria-label="Previous month">‹</button><button class="btn sm" data-cal="1" ${view.calOff >= 11 ? 'disabled' : ''} aria-label="Next month">›</button></span></h3><p class="hint">Tap a day to see what is on it and write yourself a note.</p><div class="cal">${grid}</div>${detail}`;
 }
@@ -182,19 +185,12 @@ function nbJournal(S) {
 }
 
 // ---------------------------------------------------------------- notice board
+// 1.44.0: the Agenda feed's academy events from yesterday to ten days ahead (the Month 12 holiday is not posted)
 function officialNotices(S) {
-  const W = S.World, today = dayIdx(W.Month, W.Week, W.Day), out = [];
-  for (let n = -1; n <= 10; n++) {
-    const d = dayOf(today + n);
-    for (const e of eventsOnDay(d.M, d.W, d.D)) {
-      if (out.some(o => o.e === e) || e.home) continue;
-      out.push({ e, n, d, t: e.ranking ? 'Results and dorm rankings' : shortEv(e.t), x: e.t.replace(/\s*\(Player\.Profile[^)]*\)/, '') });
-    }
-  }
-  return out;
+  return agendaOf(S).filter(x => x.k === 'event' && !x.h && x.d <= 10).map(x => ({ n: x.d, on: x.on, t: x.r ? 'Results and dorm rankings' : shortEv(x.t), x: x.t }));
 }
 function nbNotices(S) {
-  const off = officialNotices(S).map(o => `<div class="note off"><b>${esc(o.t)}</b><div>${esc(o.x)}</div><div class="sub">${esc(`${relDay(o.n)} · M${o.d.M} W${o.d.W} ${o.d.D}`)} · Academy Administration</div></div>`).join('');
+  const off = officialNotices(S).map(o => `<div class="note off"><b>${esc(o.t)}</b><div>${esc(o.x)}</div><div class="sub">${esc(`${relDay(o.n)} · ${o.on}`)} · Academy Administration</div></div>`).join('');
   const N = featureOn(S, 'notices') ? Object.entries(S.Notices || {}).reverse() : [];
   const own = N.map(([k, v], i) => `<div class="note" style="--r:${[-1.2, .8, -.5, 1.1, -.9][i % 5]}deg"><b>${esc(k)}</b><div>${esc(v.Text)}</div>
     <div class="sub">${esc([v.By && `Posted by ${v.By}`, v.Posted, v.Until && `until ${v.Until}`].filter(Boolean).join(' · '))}</div>

@@ -354,6 +354,26 @@ const capRecord = (obj, max, dropFirst) => {                   // drop the oldes
   const order = dropFirst ? [...keys.filter(k => dropFirst(obj[k])), ...keys.filter(k => !dropFirst(obj[k]))] : keys;
   for (const k of order.slice(0, keys.length - max)) delete obj[k];
 };
+// 1.44.0 (audit 3.10, Agenda): everything that waits on a date (Commitments, Hooks, Next plans, Projects, Notices, the letter home)
+// shares one date marker and one status. A date is parsed once, when its text is new, and kept: "tomorrow" must not move every turn.
+// Status: '' (no date) | waiting | due (from `before` minutes ahead until `grace` minutes after) | overdue; an undated Hook can be stale.
+const anchorWhen = (text, prevText, prevAbs, W, absA) => (prevText === text && prevAbs >= 0 ? prevAbs : parseWhen(text, W, absA));
+const AGENDA = { days: 14, kinds: { commitment: [30, 0], hook: [30, 180], project: [2 * DAY_MIN, 0], notice: [DAY_MIN, 60], letter: [0, 0] }, stale_days: 14 };
+function agendaState(abs, absA, kind) {
+  const [before, grace] = AGENDA.kinds[kind] || [30, 0];
+  return abs < 0 ? '' : absA < abs - before ? 'waiting' : absA <= abs + grace ? 'due' : 'overdue';
+}
+// dates the records cannot hold ($abs on Projects and Next plans), kept in $eng.agenda.when { id: [text, abs] } (stepAgenda prunes)
+function agendaWhen(c) {
+  if (c.agWhen) return c.agWhen;
+  const { S, absA } = c, A = S.$eng.agenda = _.isPlainObject(S.$eng.agenda) ? S.$eng.agenda : {};
+  const W = A.when = _.isPlainObject(A.when) ? A.when : {};
+  return (c.agWhen = (id, text) => {
+    text = String(text || '').trim(); if (!text) { delete W[id]; return -1; }
+    const p = W[id], abs = anchorWhen(text, p && p[0], p ? num(p[1], -1) : -1, S.World, absA);
+    W[id] = [text, abs]; return abs;
+  });
+}
 
 function periodOf(W, evs, S) {
   const [h] = W.Time.split(':').map(Number);
@@ -2953,7 +2973,7 @@ function stepBondMemory(c) {
       // Next
       let nx = b.Next && typeof b.Next === 'object' && String(b.Next.What || '').trim() ? { What: String(b.Next.What).trim(), Where: String(b.Next.Where || '').trim(), Until: String(b.Next.Until || '').trim() } : null;
       if (nx && b.Rank < NEXT_RANK) { if (!(b0 && b0.Next)) log.push(`Next plans are kept for bonds of Rank ${NEXT_RANK} or more; ${id}'s was not kept.`); nx = null; }
-      const until = nx ? parseWhen(nx.Until, S.World, absA) : -1;
+      const until = agendaWhen(c)('n:' + id, nx ? nx.Until : '');   // 1.44.0 (Agenda): parsed once; "tomorrow" no longer moves on
       if (nx && presentIds.has(id) && !wasHere.has(id) && b0 && b0.Next) {
         since.push([id, nx.What + (nx.Where ? ' (' + nx.Where + ')' : ''), nx.Until]); nx = null;
       } else if (nx && until >= 0 && until < absA && !presentIds.has(id)) {
@@ -3513,16 +3533,14 @@ function stepRecords(c) {
     S.$eng.heals = next;
   }
   const newKeys = (cur, prev) => Object.keys(cur || {}).filter(k => !(prev && k in prev));
-  // commitments: computed due text, overdue flag (logged once, when it turns overdue)
+  // commitments: computed due text, overdue flag (1.44.0: the Agenda (8n) reminds once, when it turns overdue)
   const BC = (hasB && B.Commitments) || {};
   for (const [k, c] of Object.entries(S.Commitments || {})) {
     // v1.0.3 (A#2/F04): parse Due once (new record or new Due text) and keep that target; "tomorrow" must not drift every turn
     const c0 = BC[k];
-    const abs = c0 && c0.Due === c.Due && c0.$abs >= 0 ? c0.$abs : parseWhen(c.Due, S.World, absA);
+    const abs = anchorWhen(c.Due, c0 && c0.Due, c0 ? num(c0.$abs, -1) : -1, S.World, absA);
     c.$abs = abs; c._When = whenText(abs, absA);
-    const late = abs >= 0 && abs < absA;
-    if (late && !(BC[k] && BC[k]._Late)) { log.push(`"${k}" is overdue (was due ${c.Due}${c.With ? `, with ${c.With}` : ''}): resolve it in the story, then remove it.`); S.$ui.toasts.push(`Overdue: ${k}`); }
-    c._Late = late;
+    c._Late = agendaState(abs, absA, 'commitment') === 'overdue';
   }
   // 1.18.0 (I8): an imminent appointment at this place can put its named partner in "May be here".
   if (!OFF.has('planner') && !awayIn(S)) {
@@ -3563,9 +3581,9 @@ function stepRecords(c) {
   const BN = (hasB && B.Notices) || {};
   for (const k of newKeys(S.Notices, BN)) { if (!S.Notices[k].Posted) S.Notices[k].Posted = dstamp(S.World); if (hasB) S.$ui.toasts.push(`New notice: ${k}`); }
   for (const [k, nt] of Object.entries(S.Notices || {})) {
-    const n0 = BN[k], u = n0 && n0.Until === nt.Until && n0.$abs >= 0 ? n0.$abs : parseWhen(nt.Until, S.World, absA);
+    const n0 = BN[k], u = anchorWhen(nt.Until, n0 && n0.Until, n0 ? num(n0.$abs, -1) : -1, S.World, absA);
     nt.$abs = u;
-    if (u >= 0 && u < absA - 60) delete S.Notices[k];
+    if (agendaState(u, absA, 'notice') === 'overdue') delete S.Notices[k];   // an hour after its last day ends
   }
   capRecord(S.Notices, CAP.Notices);
   // letters: stamp, direction, cap (read/sent ones go first)
@@ -3827,13 +3845,11 @@ function stepHooks(c) {
       if (h0 && !(hk.$born >= 0) && h0.$born >= 0) hk.$born = h0.$born;             // a whole-record replace keeps the birth time
       if (!(hk.$born >= 0)) hk.$born = absA;
       if (!hk.Planted) hk.Planted = (h0 && h0.Planted) || dstamp(S.World);
-      const abs = hk.Due ? (h0 && h0.Due === hk.Due && h0.$abs >= 0 ? h0.$abs : parseWhen(hk.Due, S.World, absA)) : -1;
+      const abs = hk.Due ? anchorWhen(hk.Due, h0 && h0.Due, h0 ? num(h0.$abs, -1) : -1, S.World, absA) : -1;
       hk.$abs = abs;
       hk.Who = canonList(String(hk.Who || '').split(/\s*,\s*/).filter(Boolean)).join(', ');
-      const st = abs >= 0 ? (absA < abs - 30 ? 'waiting' : absA <= abs + 180 ? 'due' : 'overdue')
-        : (hk.Weight >= 2 && absA - hk.$born >= 14 * DAY_MIN ? 'old' : 'waiting');
-      if (st === 'due' && (!h0 || h0._State !== 'due')) log.push(`Hook due now: \"${k}\"${hk.Who ? ` (${hk.Who})` : ''}. Pay it off, break it, or drop it.`);
-      hk._State = st;
+      // 1.44.0 (Agenda): one status set; an undated major hook left two weeks is stale (was "old"); the Agenda (8n) reminds
+      hk._State = agendaState(abs, absA, 'hook') || (hk.Weight >= 2 && absA - hk.$born >= AGENDA.stale_days * DAY_MIN ? 'stale' : 'waiting');
     }
     capRecord(S.Hooks, CAP_HOOKS, h => h.Weight === 1);                          // over the cap: Weight-1 hooks go first, oldest first
   }
@@ -4357,6 +4373,64 @@ function stepAmbience(c) {
 }
 
 // ---- 9. UI bookkeeping ----
+// ---- 8n. 1.44.0 (audit 3.10) Agenda. Commitments, Hooks, Next plans, Projects (Due), Notices (Until) and the letter home share one
+// date marker (anchorWhen / agendaWhen) and one status (agendaState). This step gives the one reminder when a thing turns due or
+// overdue, and builds the one "coming up" feed ($ui.agenda) that the Planner, the Notice Board, the bracelet and <now> read. Item:
+// { d: days from today, k: event | commitment | project | notice | letter | birthday | note, t, on: "M3 W2 Mon", to / te: last day
+// (name / days from today) of a run of event days, at: "HH:MM" when timed, s: status, w: with whom, h: 1 the Month 12 holiday, r: 1 a results day }. Window:
+// yesterday to AGENDA.days ahead, plus anything overdue. Hooks and Next plans are the narrator's: reminded, never in the feed.
+function stepAgenda(c) {
+  const { S, log, absA, dayNo, OFF } = c;
+  const A = S.$eng.agenda = _.isPlainObject(S.$eng.agenda) ? S.$eng.agenda : {}, at = agendaWhen(c);
+  const first = !_.isPlainObject(A.st), st0 = first ? {} : A.st, st = {};
+  const Y = S.World.Year || 1, dayLabel = n => { const T = fromAbs(n * DAY_MIN); return `${T.Year !== Y ? `Y${T.Year} ` : ''}M${T.Month} W${T.Week} ${T.Day}`; };
+  const turned = (id, s) => { st[id] = s; return !first && !!s && st0[id] !== s; };   // the first run after an update only records
+  const items = [];
+  const put = (k, t, abs, s, extra) => {
+    if (abs < 0) return;
+    const n = Math.floor(abs / DAY_MIN), d = n - dayNo, tm = fromAbs(abs).Time;
+    if ((d >= -1 && d <= AGENDA.days) || s === 'overdue') items.push({ d, k, t, on: dayLabel(n), ...(tm !== '23:59' ? { at: tm } : {}), ...(s ? { s } : {}), ...extra });
+  };
+  for (const [k, cm] of Object.entries(S.Commitments || {})) {
+    const abs = num(cm.$abs, -1), s = agendaState(abs, absA, 'commitment');
+    put('commitment', k, abs, s, cm.With ? { w: cm.With } : {});
+    if (turned('c:' + k, s) && s === 'overdue') { log.push(`"${k}" is overdue (was due ${cm.Due}${cm.With ? `, with ${cm.With}` : ''}): resolve it in the story, then remove it.`); S.$ui.toasts.push(`Overdue: ${k}`); }
+  }
+  for (const [k, hk] of Object.entries(S.Hooks || {}))
+    if (turned('h:' + k, hk._State) && hk._State === 'due') log.push(`Hook due now: "${k}"${hk.Who ? ` (${hk.Who})` : ''}. Pay it off, break it, or drop it.`);
+  for (const [k, pj] of Object.entries(S.Projects || {})) {
+    const p = num(pj.Progress, 0), abs = at('p:' + k, p < 100 ? pj.Due : ''), s = agendaState(abs, absA, 'project');
+    put('project', `${k} due`, abs, s, pj.With ? { w: pj.With } : {});
+    if (!turned('p:' + k, s)) continue;
+    if (s === 'due') log.push(`Project "${k}" is due ${whenText(abs, absA)} (Progress ${p}%).`);
+    if (s === 'overdue') { log.push(`Project "${k}" was due ${pj.Due} and is not finished (Progress ${p}%): hand it in late, ask for more time, or drop it in the story.`); S.$ui.toasts.push(`Overdue: ${k}`); }
+  }
+  for (const [k, nt] of Object.entries(S.Notices || {})) put('notice', `last day: ${k}`, num(nt.$abs, -1), agendaState(num(nt.$abs, -1), absA, 'notice'));
+  const H = S.$eng.home;
+  if (!OFF.has('letters') && _.isPlainObject(H) && num(H.due, -1) >= 0 && !H.key) put('letter', `Reply from ${H.from || 'home'} expected`, Math.floor(H.due / DAY_MIN) * DAY_MIN + DAY_MIN - 1, '');
+  // {{user}}'s birthday and the player's own calendar notes ($ui.marks "Y1 M3 W2 Thu"; the narrator never reads them)
+  const dayOfKey = (y, m, w, dd) => (y - 1) * YEAR_DAYS + (m - 1) * 28 + (w - 1) * 7 + DAYS.indexOf(dd);
+  const bd = /^M(\d{1,2}) W([1-4]) (Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/.exec(String(S.Player.Profile.Birthday || '').trim());
+  if (bd) for (const y of [Y, Y + 1]) put('birthday', 'Your birthday', dayOfKey(y, +bd[1], +bd[2], bd[3]) * DAY_MIN + DAY_MIN - 1, '');
+  for (const [key, t] of Object.entries(S.$ui.marks || {})) {
+    const m = /^Y(\d+) M(\d{1,2}) W([1-4]) (Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/.exec(key);
+    if (m && t) put('note', String(t), dayOfKey(+m[1], +m[2], +m[3], m[4]) * DAY_MIN + DAY_MIN - 1, '');
+  }
+  // the calendar: each event once, a run of days of one event as one item
+  const runs = [];
+  for (let d = -1; d <= AGENDA.days; d++) for (const e of eventsOn(fromAbs((dayNo + d) * DAY_MIN))) {
+    const last = runs.find(x => x.e.t === e.t && x.to === d - 1);
+    if (last) last.to = d; else runs.push({ e, d, to: d });
+  }
+  for (const { e, d, to } of runs) items.push({ d, k: 'event', t: e.t.replace(/\s*\(Player\.Profile[^)]*\)/, ''), on: dayLabel(dayNo + d),
+    ...(to > d ? { to: fromAbs((dayNo + to) * DAY_MIN).Day, te: to } : {}), ...(e.home ? { h: 1 } : {}), ...(e.ranking ? { r: 1 } : {}) });
+  const KO = ['event', 'birthday', 'commitment', 'project', 'notice', 'letter', 'note'];
+  S.$ui.agenda = _.sortBy(items, [x => x.d, x => x.at || '99', x => KO.indexOf(x.k)]);
+  A.st = st;
+  if (_.isPlainObject(A.when)) for (const id of Object.keys(A.when))
+    if ((id.startsWith('n:') && !((S.Bonds || {})[id.slice(2)] || {}).Next) || (id.startsWith('p:') && !(S.Projects || {})[id.slice(2)])) delete A.when[id];
+}
+
 function stepUi(c) {
   const { S, B, offUnlock, evs, dayNo, M, Hd, text, toolEdit, OFF } = c;
   const place = placeOf(S.World.Location);
@@ -4383,21 +4457,12 @@ function stepUi(c) {
   if (Object.keys(S.Inventory || {}).length) unlock('inventory');                 // 1.1.0
   if (Object.keys(S.Player.Conditions || {}).length) unlock('conditions');
   if (S.Trip.Active || TRIPS.some(tp => { const d0 = (tp.m - 1) * 28 + (tp.w - 1) * 7 + DAYS.indexOf(tp.d); return doy >= d0 - 14 && doy <= d0 + 2; })) unlock('trip');
-  S.$ui.next = nextUp(S.World, evs, S);   // 1.3.4: the bracelet's "Next" chip
-  // 1.32.0 (owner): the calendar events of the next seven days, so people can talk about what is coming (<now> "Coming up");
-  // an event already running today and the Month 12 holiday are left out; a run of days of one event is one line
+  // 1.3.4: the bracelet's "Next" chip; 1.44.0 (Agenda): an appointment later today comes first when it is sooner
   {
-    const soon = [], today = new Set(evs.map(e => e.t));
-    for (let d = dayNo + 1; d <= dayNo + 7; d++) {
-      const Wd = fromAbs(d * DAY_MIN);
-      for (const e of eventsOn(Wd)) {
-        if (today.has(e.t) || e.home) continue;
-        const last = soon.find(x => x.t === e.t && x.d1 === d - 1);
-        if (last) { last.d1 = d; last.to = Wd.Day; } else soon.push({ t: e.t, d1: d, from: `W${Wd.Week} ${Wd.Day}`, to: '' });
-      }
-    }
-    S.$ui.soon = soon.map(x => `${x.from}${x.to ? '–' + x.to : ''}: ${x.t.replace(/\s*\(Player\.Profile[^)]*\)/, '')}`).slice(0, 12);
+    const nx = nextUp(S.World, evs, S), mine = (S.$ui.agenda || []).find(x => x.d === 0 && x.at && x.k === 'commitment' && x.s !== 'overdue' && x.at > S.World.Time);
+    S.$ui.next = mine && (!nx || mine.at < nx.at) ? { at: mine.at, what: mine.t, kind: 'plan' } : nx;
   }
+  delete S.$ui.soon;   // 1.32.0's seven-day list is the Agenda feed now ($ui.agenda, stepAgenda)
   S.$ui.toasts = S.$ui.toasts.slice(-10);
 }
 
@@ -4422,7 +4487,7 @@ function stepCommit(c) {
   if (log.length) S._Log = [...(S._Log || []), ...log.map(l => `[${stamp(S.World)}] ${l}`)].slice(-12);
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepUi, stepCommit];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepAgenda, stepUi, stepCommit];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,

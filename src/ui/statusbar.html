@@ -350,9 +350,9 @@ function rollTable(pool, o) {
       Object.entries((S.Player || {}).Conditions || {}).forEach(([k, v]) => c.push(chip(k, CI[k] || 'fa-circle-exclamation', 'warn', (v && v.Effect) || k, 'profile')));
     }
     if (W._Event_today) c.push(chip(W._Event_today.split(/ \| |;/)[0].split(' — ')[0].split(' (')[0], 'fa-star', 'glow', W._Event_today));
-    // 1.3.4 (owner): what comes next today (engine $ui.next): an event's timed item, a class, curfew
+    // 1.3.4 (owner): what comes next today (engine $ui.next): an event's timed item, a class, curfew; 1.44.0 an appointment
     const nx = ui.next;
-    if (nx && nx.at) c.push(chip('Next ' + nx.at + ' · ' + nx.what, nx.kind === 'curfew' ? 'fa-moon' : nx.kind === 'class' ? 'fa-book-open' : 'fa-clock', nx.kind === 'event' ? 'glow' : '', 'Next today: ' + nx.at + ', ' + nx.what, 'notebook:planner'));
+    if (nx && nx.at) c.push(chip('Next ' + nx.at + ' · ' + nx.what, nx.kind === 'curfew' ? 'fa-moon' : nx.kind === 'class' ? 'fa-book-open' : nx.kind === 'plan' ? 'fa-thumbtack' : 'fa-clock', nx.kind === 'event' ? 'glow' : '', 'Next today: ' + nx.at + ', ' + nx.what, 'notebook:planner'));
     if (ui.training) c.push(chip(ui.training, 'fa-bed', 'warn'));
     if (wxm === 'full' && ui.sleep && ui.sleep.loss) c.push(chip('Sleep debt: −' + Math.round(ui.sleep.loss * 100) + '% stamina', 'fa-bed', 'warn', ui.sleep.nights ? 'The Vigil: ' + ui.sleep.nights + ' full nights owed' : 'One sleep of at least 6 hours clears the debt'));
     if (W._Curfew) c.push(chip(/LOCKDOWN/.test(W._Curfew) ? 'Lockdown' : /Break/.test(W._Curfew) ? 'Break' : /^Away/.test(W._Curfew) ? 'Away' : 'Curfew', /^Away/.test(W._Curfew) ? 'fa-route' : 'fa-moon', /LOCKDOWN|CURFEW/.test(W._Curfew) ? 'danger' : 'warn', W._Curfew));
@@ -364,8 +364,9 @@ function rollTable(pool, o) {
     if (unl.includes('pacts') && summoned.length) c.push(chip(summoned.join(', ') + ' summoned', 'fa-feather', 'glow'));
     if (unl.includes('hidden') && H._True_magic) c.push(chip('Doves: ' + (H._Stage || 'Unnoticed'), 'fa-eye', num(H.Dove_attention, 0) >= 40 ? 'danger' : num(H.Dove_attention, 0) >= 20 ? 'warn' : '', 'Dove attention ' + num(H.Dove_attention, 0) + '/100'));
     if ((S.Battle || {}).Active && on('battle')) c.push(chip('In battle: ' + Object.keys(S.Battle.Combatants || {}).map(k => CAST[k] && !(((S.Bonds || {})[k] || {}).Rank >= 1 || (ui.names || []).includes(k)) ? CAST[k][1] : k).join(', '), 'fa-khanda', 'danger', 'Open the battle panel', 'battle'));
-    const com = on('planner') ? Object.entries(S.Commitments || {}) : [], late = com.filter(([, x]) => x && x._Late).map(([k]) => k);
-    const soon = com.filter(([, x]) => x && !x._Late && /^today/.test(x._When || '')).map(([k]) => k);
+    // 1.44.0: overdue and due today from the engine's Agenda feed (commitments and projects)
+    const com = on('planner') ? Object.entries(S.Commitments || {}) : [], ag = (Array.isArray(ui.agenda) ? ui.agenda : []).filter(x => x.k === 'commitment' || x.k === 'project');
+    const late = ag.filter(x => x.s === 'overdue').map(x => x.t), soon = ag.filter(x => x.s !== 'overdue' && x.d === 0).map(x => x.t);
     if (late.length) c.push(chip('Overdue: ' + late.join(', '), 'fa-triangle-exclamation', 'danger', 'Open the planner', 'notebook:planner'));
     else if (soon.length) c.push(chip('Due today: ' + soon.join(', '), 'fa-thumbtack', 'warn', 'Open the planner', 'notebook:planner'));
     else if (unl.includes('planner') && com.length) c.push(chip(com.length + (com.length === 1 ? ' commitment' : ' commitments'), 'fa-thumbtack', '', com.map(([k]) => k).join(', '), 'notebook:planner'));
