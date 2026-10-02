@@ -44,6 +44,8 @@ const placeKey = loc => placeOf(loc).toLowerCase().replace(/^the /, '');
 // an item's name as one key: lowercase, without a leading article or a trailing "(...)"; itemBase keeps the "(...)"
 const itemBase = x => String(x || '').trim().toLowerCase().replace(/^(an?|the)\s+/, '');
 const itemKey = x => itemBase(x).replace(/\s*\(.*\)$/, '');
+// the key of a record (the Bag, perks) written in any case: the name as stored, or undefined
+const keyIn = (O, name) => { const lo = String(name == null ? '' : name).toLowerCase(); return Object.keys(O || {}).find(k => k.toLowerCase() === lo); };
 // ---- end of shared.js
 
 // 1.5.1 (P6): who spoke in a reply. A name counts as a speaker when it opens the sentence that leads into a quote
@@ -262,15 +264,15 @@ function yearFloorLocation(loc) {
   const hits = Object.keys(YEAR_FLOOR_PLACES).map(nm => [nm, YF_WORD[nm] && YF_WORD[nm].exec(s)]).filter(([, m]) => m).sort((a, b) => a[1].index - b[1].index);
   if (!hits.length) return '';
   // another place named first wins ("Fire Dormitory — lockers on the second-year corridor", "Canteen, talking about the first-year halls")
-  if (s.split(/\s+[—–-]\s+|,\s+/).some(x => { const n = plName(x); return n && !YEAR_FLOOR_PLACES[n]; })) return '';
+  if (locParts(s).some(x => { const n = plName(x); return n && !YEAR_FLOOR_PLACES[n]; })) return '';
   const nm = hits[0][0], n = f ? +f[1] : ['first', 'second', 'third'].indexOf(y[1].toLowerCase()) + 2;
   if (!YEAR_FLOOR_PLACES[nm].includes('Floor ' + n)) return '';
-  const rest = s.split(/\s+[—–-]\s+|,\s+/).map(x => x.trim()).filter(x => x && !/\bfloor [2-4]\b|\b(first|second|third)[- ]years?\b/i.test(x) && !Object.values(YF_WORD).some(rx => rx.test(x)));
+  const rest = locParts(s).map(x => x.trim()).filter(x => x && !/\bfloor [2-4]\b|\b(first|second|third)[- ]years?\b/i.test(x) && !Object.values(YF_WORD).some(rx => rx.test(x)));
   return [nm, 'Floor ' + n, ...rest].join(' — ');
 }
 function canonLocation(loc) {
   const yf = yearFloorLocation(loc); if (yf) return yf;
-  const segs = String(loc || '').split(/\s+[—–-]\s+|,\s+/).map(x => x.trim()).filter(Boolean);
+  const segs = locParts(loc).map(x => x.trim()).filter(Boolean);
   if (!segs.length) return String(loc || '');
   let at = -1, nm = '';
   for (let i = segs.length - 1; i >= 0 && at < 0; i--) { const n = plName(segs[i]); if (n && (i === 0 || !PLACE_SHARED.has(n))) { at = i; nm = n; } }
@@ -630,7 +632,7 @@ const expOnDay = W => eventsOn(W).some(e => String(e.t || '').startsWith(EXP.eve
 // "the forest" or "Grand Vast Forest" keeps the place before (on arrival: Base Camp). Without the area's name or a forest place
 // before, a bare "forest" is the campus Forest.
 function forestPlace(loc, prev) {
-  const s = String(loc || ''), segs = s.split(/\s+[—–-]\s+|,\s+/).map(x => x.trim().toLowerCase().replace(/[.!]+$/, '').replace(/^the /, '')).filter(Boolean);
+  const s = String(loc || ''), segs = locParts(s).map(x => x.trim().toLowerCase().replace(/[.!]+$/, '').replace(/^the /, '')).filter(Boolean);
   for (let i = segs.length - 1; i >= 0; i--) if (EXP_ALIAS[segs[i]]) return EXP_ALIAS[segs[i]];
   const named = new RegExp('\\b' + String(EXP.area || '-').toLowerCase() + '\\b').test(s.toLowerCase());
   if (!segs.some(x => EXP_WILD.has(x)) || !(prev || named)) return '';
@@ -642,7 +644,7 @@ function forestPlace(loc, prev) {
   return prev && EXP_PL[prev] ? prev : 'base_camp';
 }
 function forestLoc(loc, id) {                                    // "Grand Vast Forest — <place>" plus any detail the story wrote
-  const extra = String(loc || '').split(/\s+[—–-]\s+|,\s+/).map(x => x.trim()).filter(x => {
+  const extra = locParts(loc).map(x => x.trim()).filter(x => {
     const k = x.toLowerCase().replace(/[.!]+$/, '').replace(/^the /, '');
     return x && !EXP_ALIAS[k] && !EXP_WILD.has(k) && k !== String(EXP.area || '').toLowerCase();
   });
@@ -690,13 +692,13 @@ const avKingdom = (W, S) => eventsOn(W).some(e => e.kingdom) && ((S && S.Competi
 const avPass = S => ((S.$eng && S.$eng.prizes) || []).includes(`Kingdom-Y${num(S.World.Year, 1)}`) && avKingdom(S.World, S);
 // The Avalon place a Location names, or ''. "Avalon" or "the capital" alone keeps the place before (on arrival: the Skyport).
 function avPlace(loc, prev) {
-  const s = String(loc || ''), segs = s.split(/\s+[—–-]\s+|,\s+/).map(avKey).filter(Boolean);
+  const s = String(loc || ''), segs = locParts(s).map(avKey).filter(Boolean);
   const inside = !!(prev && AV_PL[prev]) || segs.includes('avalon');
   for (let i = segs.length - 1; i >= 0; i--) { const id = AV_NAME[segs[i]] || (inside && AV_ALIAS[segs[i]]); if (id) return id; }
   return segs.includes('avalon') || segs.includes('capital') ? (prev && AV_PL[prev] ? prev : 'skyport') : '';
 }
 function avLoc(loc, id) {                                        // "Avalon — <place>" plus any detail the story wrote
-  const extra = String(loc || '').split(/\s+[—–-]\s+|,\s+/).map(x => x.trim()).filter(x => { const k = avKey(x); return x && !AV_NAME[k] && !AV_ALIAS[k] && k !== 'avalon' && k !== 'capital'; });
+  const extra = locParts(loc).map(x => x.trim()).filter(x => { const k = avKey(x); return x && !AV_NAME[k] && !AV_ALIAS[k] && k !== 'avalon' && k !== 'capital'; });
   return [AV.area, AV_PL[id].name, ...extra].join(' — ');
 }
 // ---- 1.40.0 (owner-approved planning/DRAFT_airship.md): the academy's airship flights (data/airship.json). While a flight is in the
@@ -715,12 +717,12 @@ function airFlight(W, S) {
 }
 // The airship place a Location names, or ''. aboard: the aliases count too ("the bar", "our cabin"), only while a flight is in the air.
 function airPlace(loc, aboard) {
-  const segs = String(loc || '').split(/\s+[—–-]\s+|,\s+/).map(avKey).filter(Boolean);
+  const segs = locParts(loc).map(avKey).filter(Boolean);
   for (let i = segs.length - 1; i >= 0; i--) { const id = AIR_NAME[segs[i]] || ((aboard || segs[0] === 'airship') && AIR_ALIAS[segs[i]]); if (id) return id; }
   return segs[0] === 'airship' ? AIR.board : '';
 }
 function airLoc(loc, id) {                                       // "Airship — <place>" plus any detail the story wrote ("— the bathing
-  const segs = String(loc || '').split(/\s+[—–-]\s+|,\s+/).map(x => x.trim()), named = segs.some(x => AIR_NAME[avKey(x)]);   // stalls" stays after the name)
+  const segs = locParts(loc).map(x => x.trim()), named = segs.some(x => AIR_NAME[avKey(x)]);   // stalls" stays after the name)
   const extra = segs.filter(x => { const k = avKey(x); return x && !AIR_NAME[k] && !(AIR_ALIAS[k] && !named) && k !== 'airship'; });
   return [AIR.area, AIR_PL[id].name, ...extra].join(' — ');
 }
@@ -768,13 +770,13 @@ const awayIn = S => {
 };
 // The Sunreach place a Location names, or ''. Short aliases ("the beach", "the casino") only once in Sunreach.
 function srPlace(loc, prev) {
-  const s = String(loc || ''), segs = s.split(/\s+[—–-]\s+|,\s+/).map(avKey).filter(Boolean);
+  const s = String(loc || ''), segs = locParts(s).map(avKey).filter(Boolean);
   const inside = !!(prev && SR_PL[prev]) || segs.some(x => x === 'sunreach bay' || x === 'sunreach');
   for (let i = segs.length - 1; i >= 0; i--) { const id = SR_NAME[segs[i]] || (inside && SR_ALIAS[segs[i]]); if (id) return id; }
   return inside && segs.some(x => x === 'sunreach bay' || x === 'sunreach') ? (prev && SR_PL[prev] ? prev : SR.arrive) : '';
 }
 function srLoc(loc, id) {                                        // "Sunreach Bay — <place>" plus any detail the story wrote
-  const segs = String(loc || '').split(/\s+[—–-]\s+|,\s+/).map(x => x.trim()), named = segs.some(x => SR_NAME[avKey(x)] === id);
+  const segs = locParts(loc).map(x => x.trim()), named = segs.some(x => SR_NAME[avKey(x)] === id);
   const extra = segs.filter(x => { const k = avKey(x); return x && !SR_NAME[k] && !(SR_ALIAS[k] && !named) && k !== 'sunreach bay' && k !== 'sunreach'; });
   return [SR.area, SR_PL[id].name, ...extra].join(' — ');
 }
@@ -2830,7 +2832,7 @@ function stepBonds(c) {
         gain += Math.round(Math.max(0, BR.kind_xp[socialKind] + repMod(id) + examMod(id) + socialMod) * (birthday ? BR.birthday.social_mult : 1) * (studyBonus ? 1.25 : 1) * (society >= 5 ? 1.2 : society >= 4 ? 1.1 : 1));
         if (socialKind === 'hangout' && a.Invited && b.Rank >= 2 && S.Scene.Present[id] && !npcAway(id) && !w.invited) { gain++; w.invited = 1; }
       } else if (k === 'gift') {
-        const bagKey = Object.keys((B || {}).Inventory || {}).find(name => name.toLowerCase() === String(a.Item || '').toLowerCase());
+        const bagKey = keyIn((B || {}).Inventory, a.Item || '');
         const giftNote = bagKey ? String(B.Inventory[bagKey].Note || '') : '';
         const gk = giftTier(id, a.Item, a.Gift, giftNote), firstBirthday = birthday && !d.birthdayGift;
         if (a.Item) { delete b.$gifts[a.Item]; b.$gifts[a.Item] = gk; capRecord(b.$gifts, BR.gift_log_cap); }
@@ -3304,7 +3306,7 @@ function stepProficiency(c) {
   // 1.29.0: each craft group lists the Practice actions it can be done under (data/crafts.json groups), with an optional extra club
   const craftGroup = recipe => (CRAFTS.groups || {})[recipe.group] || {};
   const craftActs = (recipe, place) => (craftGroup(recipe).actions || []).map(g => [g, PRACTICE.find(x => x.action === g.action && locName(x) === place)]).filter(([, a]) => a);
-  const craftItem = (I, name) => Object.keys(I || {}).find(k => k.toLowerCase() === String(name).toLowerCase());
+  const craftItem = (I, name) => keyIn(I, name);   // shared.js
   const craftQty = (I, name) => { const k = craftItem(I, name); return k ? num(I[k].Qty, 0) : 0; };
   const craftExpert = (state, recipe) => (craftGroup(recipe).experts || []).some(n => Object.keys((state.Scene || {}).Present || {}).some(id => id.toLowerCase() === n.toLowerCase()));
   const craftMaterial = (I, recipe) => (recipe.materials || [[]]).find(option => option.every(m => craftQty(I, m.item) >= m.qty));
@@ -3745,7 +3747,7 @@ function stepRecords(c) {
     if (H.key && !H.given && S.Letters[H.key] && S.Letters[H.key].Status !== 'waiting') {
       H.given = true;
       if (H.parcel && H.parcel.item) {
-        const [n, kind] = H.parcel.item, I = _.isPlainObject(S.Inventory) ? S.Inventory : (S.Inventory = {}), ik = Object.keys(I).find(x => x.toLowerCase() === n.toLowerCase()) || n;
+        const [n, kind] = H.parcel.item, I = _.isPlainObject(S.Inventory) ? S.Inventory : (S.Inventory = {}), ik = keyIn(I, n) || n;
         I[ik] = I[ik] || { Qty: 0, Kind: kind, Note: 'from home', Plan: '' }; I[ik].Qty = num(I[ik].Qty, 0) + 1;
         log.push(`Parcel from home: ${n} (in the Bag).`); S.$ui.toasts.push(`From home: ${n}`);
       }
@@ -4245,7 +4247,7 @@ function stepReminders(c) {
       const shopAt = placeKey(S.World.Location);
       let expected = 0; const acquired = [];
       for (const [name, item] of Object.entries(bag1)) {
-        const row = SHOP_PRICE[name.toLowerCase()], before = Object.keys(bag0).find(x => x.toLowerCase() === name.toLowerCase());
+        const row = SHOP_PRICE[name.toLowerCase()], before = keyIn(bag0, name);
         const qty = Math.max(0, num(item && item.Qty, 0) - num(before && bag0[before] && bag0[before].Qty, 0));
         if (!row || !qty || !row.some(x => placeKey(x[1]) === shopAt)) continue;
         expected += qty * row.find(x => placeKey(x[1]) === shopAt)[0]; acquired.push(name);
@@ -4287,7 +4289,7 @@ function stepReminders(c) {
       // R2: an item left the Bag with no use or gift reported
       const IB = B.Inventory || {}, IS = S.Inventory || {};
       for (const [k, it] of Object.entries(IB)) {
-        const lk = k.toLowerCase(), now = Object.keys(IS).find(x => x.toLowerCase() === lk);
+        const lk = k.toLowerCase(), now = keyIn(IS, lk);
         if (/sunfizz/.test(lk) || num(it && it.Qty, 1) - (now ? num(IS[now].Qty, 1) : 0) <= 0 || REPORTED.used.includes(itemKey(k)) || (c.craftSold || []).includes(lk)) continue;
         if (REPORTED.acts.some(a => /^(gift|rank_gift|birthday)$/.test(a.Kind) && (!a.Item || String(a.Item).toLowerCase().includes(lk) || lk.includes(String(a.Item).toLowerCase())))) continue;
         const usable = !!(fxOf(k) || {}).use;

@@ -43,6 +43,8 @@ const placeKey = loc => placeOf(loc).toLowerCase().replace(/^the /, '');
 // an item's name as one key: lowercase, without a leading article or a trailing "(...)"; itemBase keeps the "(...)"
 const itemBase = x => String(x || '').trim().toLowerCase().replace(/^(an?|the)\s+/, '');
 const itemKey = x => itemBase(x).replace(/\s*\(.*\)$/, '');
+// the key of a record (the Bag, perks) written in any case: the name as stored, or undefined
+const keyIn = (O, name) => { const lo = String(name == null ? '' : name).toLowerCase(); return Object.keys(O || {}).find(k => k.toLowerCase() === lo); };
 // ---- end of shared.js
 
 const PROF_STATS = ['Knowledge', 'Arcana', 'Craft', 'Prowess', 'Society', 'Nature'];
