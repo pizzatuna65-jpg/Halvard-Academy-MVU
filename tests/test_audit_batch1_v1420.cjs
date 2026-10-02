@@ -110,3 +110,60 @@ console.log('1.8 a Day written a day back');
   const N = go(go(B0, { Day: 'Sun', Time: '22:00' }), { Day: 'Mon', Time: '07:00' });
   ok(N.World.Week === 4 && N.World.Day === 'Mon', 'Sun -> Mon (week not turned) is still the next morning');
 }
+
+// ---- small, latent and dead code ----
+global.window = { parent: { document: {} } };
+const U = new Function(rd('src/scripts/ui.js') + '\nreturn { DATA, PANELS, view, CAL, pProficiency };')();
+
+console.log('weather in Sunreach (sleep, rare-weather toast)');
+{
+  const src = rd('src/scripts/engine.template.js');
+  ok(/b0 = fAt \? forestWx\(seed, bd, bb\) : rAt \? srWx\(seed, bd, bb\)/.test(src) && /nb = fAt \? forestWx\(seed, nd, 2\) : rAt \? srWx\(seed, nd, 2\)/.test(src), "the rare-weather toast and the night's sleep read Sunreach's own weather");
+}
+
+console.log('a Council member\'s Saturday in the UI');
+{
+  const S = _.cloneDeep(SAVE); S.Player.Profile.Council = true;
+  ok(/Student Council/.test(U.CAL.timetableFor({ Month: 2, Week: 3, Day: 'Sat' }, S)[1]) && /Study Hall/.test(U.CAL.timetableFor({ Month: 2, Week: 3, Day: 'Sat' }, SAVE)[1]), 'Sat P2: Student Council for a member, Study Hall for others (as the engine)');
+}
+
+console.log('dossier status by full name');
+{
+  const S = _.cloneDeep(SAVE); S.Campus_State.NPC_status = { 'Etnie Sylvaine': 'away visiting family' };
+  U.view.arg = 'Etnie';
+  ok(/Now: away visiting family/.test(U.PANELS.npc.render(S)), 'a status keyed by the full name shows in the dossier');
+}
+
+console.log('Battle panel prices a cast as the engine');
+{
+  const S = _.cloneDeep(SAVE);
+  S.Magic._Techniques = { 'Mist Veil': { Type: 'Elemental', Subtype: 'Mist', Cost_mode: 'per_use', Activation: 10, Effect: '', Notes: '' },
+    'Wisp: Glow': { Type: 'Occult', Subtype: 'Spirit Pact', Cost_mode: 'per_use', Activation: 2, Effect: '', Notes: '[pact] Wisp' } };
+  S.Player.Vitals.Mana = 14; S.$ui.wx = { wind: 'gale' }; S.Player._Proficiency.Arcana = 5; S.$ui.on = { ...(S.$ui.on || {}), proficiency: true };
+  const h = U.PANELS.battle.render(S);
+  ok(/Mist Veil[\s\S]*?18 mana \(wind ×2\)[\s\S]*?disabled/.test(h), 'gale outdoors doubles a scattered cast after the Arcane scholar discount (10 -> 9 -> 18 > 14: disabled)');
+  ok(/Wisp is not here[\s\S]*?disabled title="The partner is not here"/.test(h), "a pact partner's ability is disabled while the partner is away");
+}
+
+console.log('Fortune bonus text follows the engine cap');
+{
+  const S = _.cloneDeep(SAVE); S.Player._Proficiency.Knowledge = 4; S.$eng.study = { ...(S.$eng.study || {}), stand: { History: 4 } };
+  ok(/Fortune \+10</.test(U.pProficiency(S).split('id="prof-Knowledge"')[1].split('</div>')[1] + '<'), 'Knowledge Rank 4 with an A in History: +10, not +12');
+}
+
+console.log('a parked feature keeps its values');
+{
+  let S = go(sv(), { Day: 'Mon', Week: 3, Time: '08:00' });
+  const before = _.cloneDeep(S.Player._Proficiency);
+  S = applyPatch(S, [{ op: 'replace', path: '/$ui/off', value: [...S.$ui.off, 'proficiency'] }, { op: 'replace', path: '/$eng/tool', value: 1 }]);
+  S = go(S, { Time: '09:00' }); S = go(S, { Time: '10:00' });
+  ok(_.isEqual(S.$ui.parked.proficiency['Player._Proficiency'], before), `Proficiency parked across two updates is not zeroed by the schema default (${JSON.stringify(S.$ui.parked.proficiency['Player._Proficiency'])})`);
+}
+
+console.log('caps and dead code');
+{
+  const sch = rd('src/scripts/schema.js');
+  ok(/lore: StrList\(200\)/.test(sch) && /names: StrList\(200\)/.test(sch), '$ui.names and $ui.lore hold 200');
+  const eng = rd('src/scripts/engine.template.js'), ppl = rd('src/ui/parts/10_people.js');
+  ok(!/\bMON_SAT\b|const tensionBand\b|\bnormP\b|\bwxBlk\b/.test(eng) && !/const pips\b/.test(ppl), 'MON_SAT, tensionBand, normP, wxBlk and pips are gone');
+}

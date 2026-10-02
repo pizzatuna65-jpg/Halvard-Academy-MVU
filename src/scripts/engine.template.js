@@ -61,7 +61,7 @@ function mentionIn(prose, id, rx) {
   return [...String(prose).matchAll(formRx(id))].some(m => m[2] !== id || !/(^|[.!?]["”]?\s+)$/.test(prose.slice(0, m.index + m[1].length)));
 }
 const DAY_MIN = 1440, YEAR_DAYS = 12 * 4 * 7;
-const MON_THU = DAYS.slice(0, 4), MON_FRI = DAYS.slice(0, 5), MON_SAT = DAYS.slice(0, 6);
+const MON_THU = DAYS.slice(0, 4), MON_FRI = DAYS.slice(0, 5);
 const EVENTS = /*@@CAL_EVENTS@@*/[];
 const TIMETABLE = /*@@CAL_TIMETABLE@@*/{};
 const ENTR_BACK = '{{user}} is a returning student and the assigned senior guide: never sorted again; watches the speeches and sorting from the gallery, then tours 10:00–18:00 with the two new first-years recorded in Campus_State.Entrance_tour';
@@ -170,7 +170,6 @@ function tensionProfile(id) {
   const c = (TEN.npcs || {})[id], C = (TEN.categories || {})[c];
   return C ? { ...C, cat: c, riseMult: 1 } : { cat: '', decay: 0, riseMult: 1 };
 }
-const tensionBand = t => (TEN.bands || [[0, '']]).reduce((a, [from, nm]) => (t >= from ? nm : a), '');
 // 1.4.3 Trust (owner design 2026-09-25, data/trust.json): how sure an NPC is that {{user}} can be relied on. The same bands and
 // effects for everyone (what they share, rank benefits, XP, how Tension and apologies land); the category
 // (the NPC's openness) sets the start, how fast it rises and falls and whether it recovers; personal overrides (Etnie, Kanae,
@@ -196,7 +195,6 @@ const paceOf = S => ((BR.pace || {})[(S.$ui || {}).bondpace] || 1);
 const needXP = (r, m) => (r >= 10 ? 0 : Math.max(3, Math.round(BR.xp_base[r] * m)));
 const coolDays = (r, m) => Math.round((BR.cool_base[Math.min(r, 9)] || 0) * m);
 const hm = t => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(t || '').trim()); return m ? +m[1] * 60 + +m[2] : null; };
-const normP = x => String(x || '').split(/\s+[—-]\s+/)[0].trim().toLowerCase().replace(/^the\s+/, '');
 // Batch 5.1: castle places (the Notice Board is in the Floor 1 entrance hall that every student crosses) and module caps
 const CASTLE = new Set(/*@@CASTLE@@*/[]);
 // v1.0.3 (F01): every campus place name (lowercase, with and without a leading "the"); anything else is off the grounds
@@ -1052,7 +1050,11 @@ function stepFeatures(c) {
         const Pk = parked[f.id] || (parked[f.id] = {});
         for (const p of f.paths) {
           const cur = _.get(S, p);
-          Pk[p] = p in Pk ? mergePark(Pk[p], cur) : _.cloneDeep(cur === undefined ? EMPTY[p] : cur);
+          // 1.42.0 (audit): only what this reply wrote joins the parking; the placeholder the schema fills in (Proficiency zeros)
+          // is not a write and must not overwrite the parked values
+          const prev = hasB && p in Pk ? _.get(B, p) : undefined, wrote = prev === undefined ? cur : _.isPlainObject(cur) && _.isPlainObject(prev)
+            ? _.pickBy(cur, (v, k) => !_.isEqual(v, prev[k])) : _.isEqual(cur, prev) ? undefined : cur;
+          Pk[p] = p in Pk ? mergePark(Pk[p], wrote) : _.cloneDeep(cur === undefined ? EMPTY[p] : cur);
           _.set(S, p, _.cloneDeep(EMPTY[p]));
         }
       } else if (parked[f.id]) {
@@ -1315,12 +1317,11 @@ function stepWeather(c) {
   // 1.38.0: in the Grand Vast Forest the weather is the rainforest's (forestWx) and its effects apply as on campus.
   // 1.39.0: Avalon has the kingdom's weather of the day (Halvard's), and its effects apply there too
   const away = /^Away from campus/.test(S.World._Curfew || '') && !fAt && !aAt && !rAt;   // 1.41.0: Sunreach has its own weather
-  let wxNow = null, wxBlk = null;                              // wxNow: the block whose effects apply (Full, on campus)
+  let wxNow = null;                                            // wxNow: the block whose effects apply (Full, on campus)
   if (WXM === 'off') { S.World._Season = ''; S.World._Weather = ''; S.$ui.wx = null; }
   else {
     const [wd, wb] = blockOf(absA), D = wxDay(seed, wd), bk = fAt ? forestWx(seed, wd, wb) : rAt ? srWx(seed, wd, wb) : D.blocks[wb];
     const lab = x => ({ ...x, label: tempLabel(x.temp) });
-    wxBlk = bk;
     S.World._Season = D.season;
     S.World._Weather = away ? "Away: local weather is the narrator's call" : rAt ? `${_.capitalize(BLOCKS[wb])}, ${SR.area} (warm south): ${wxText(bk)}, ${bk.temp} °C (${tempLabel(bk.temp)})` : fAt ? `${_.capitalize(BLOCKS[wb])}, ${EXP.area} (rainforest): ${wxText(bk)}, ${bk.temp} °C (${tempLabel(bk.temp)})`
       : `${_.capitalize(BLOCKS[wb])}, ${D.season.toLowerCase()}${aAt ? ', ' + AV.area : ''}: ${wxText(bk)}, ${bk.temp} °C (${tempLabel(bk.temp)})`;
@@ -1341,7 +1342,7 @@ function stepWeather(c) {
       }
     }
     if (hasB && bk.rare && !away) {                              // a rare event: toast + log when it begins
-      const [bd, bb] = blockOf(absB), b0 = fAt ? forestWx(seed, bd, bb) : wxDay(seed, bd).blocks[bb];
+      const [bd, bb] = blockOf(absB), b0 = fAt ? forestWx(seed, bd, bb) : rAt ? srWx(seed, bd, bb) : wxDay(seed, bd).blocks[bb];   // 1.42.0: Sunreach too
       if ((bd !== wd || bb !== wb) && b0.rare !== bk.rare) { S.$ui.toasts.push(`Weather: ${bk.rare}`); log.push(`Rare weather: ${wxText(bk)}.`); }
     }
   }
@@ -1394,6 +1395,7 @@ function stepMagic(c) {
     if (wind && amount > 0) log.push(`${name} cost ${cost} (×${mult}, ${wind} outdoors).`);
     return cost;
   };
+  if (S.$ui.wx) S.$ui.wx.wind = wind;   // 1.42.0: the Battle panel prices a cast as the engine will
   if (wind && S.$ui.wx.field) S.$ui.wx.field += '; casting: Wind/Storm ×' + (wind === 'gale' ? '0.75' : '1') + ', scattered ×' + (wind === 'gale' ? '2' : '1.5') + ', body/object ×1, others ×' + (wind === 'gale' ? '1.5' : '1.25');
   // 1.9.4 (playtest Batch 4): passive mana regeneration, Mana_max / 360 per elapsed minute awake or asleep (empty to full in six
   // hours). The turn's regeneration is a pool counted once: a cast or activation that needs more than the mana on hand draws on it,
@@ -1516,7 +1518,7 @@ function stepMagic(c) {
 // 1.12.0 (H1): a night skipped in one update (5 to 24 hours, 4 of them between 00:00 and 06:00) with no Resting written was
 // slept, not stayed up: indoors (or on a trip), not in a battle, not under The Vigil. "awake" is a deliberate all-nighter.
 function stepRest(c) {
-  const { S, B, log, hasB, toolEdit, absB, absA, elapsed, seed, TU, wxNow, V, regenLeft, fAt, REPORTED } = c;
+  const { S, B, log, hasB, toolEdit, absB, absA, elapsed, seed, TU, wxNow, V, regenLeft, fAt, rAt, REPORTED } = c;
   if (V.Resting === 'awake') V.Resting = 'none';
   else if (hasB && !toolEdit && V.Resting === 'none' && V.HP > 0 && elapsed >= 300 && elapsed <= DAY_MIN && nightMinutes(absA) - nightMinutes(absB) >= 240
     && !(S.Battle && S.Battle.Active) && (!isOutdoor(S.World.Location) || awayIn(S) || fAt)) {   // 1.38.0: tents in the forest
@@ -1530,7 +1532,7 @@ function stepRest(c) {
     const h = elapsed / 60;
     let stMul = wxNow && Cn.Soaked ? 0.5 : 1;
     if (V.Resting === 'sleep' && wxNow) {
-      const [sd, sb] = blockOf(absB), nd = sb === 2 ? sd : Math.floor(absB / DAY_MIN), nb = fAt ? forestWx(seed, nd, 2) : wxDay(seed, nd).blocks[2];   // the night of the sleep
+      const [sd, sb] = blockOf(absB), nd = sb === 2 ? sd : Math.floor(absB / DAY_MIN), nb = fAt ? forestWx(seed, nd, 2) : rAt ? srWx(seed, nd, 2) : wxDay(seed, nd).blocks[2];   // the night of the sleep (1.42.0: Sunreach's own)
       stMul *= 1 + (nb.sky === 'Rain' && !nb.snow && nb.rain !== 'heavy' ? 0.1 : 0) - (nb.sky === 'Storm' ? 0.2 : 0) - (nb.temp >= 22 ? 0.1 : 0);
     }
     if (V.Resting === 'sleep') {
@@ -3035,7 +3037,7 @@ function trainJump(c, k, why) {
 // adds TRN.session_pct % of the starting value x (1 + partner bonuses), at most TRN.weekly_pct % a week and TRN.total_pct % in all.
 // Partners: an NPC whose Rank 5 gift is a training bonus for that track, in the scene. Jumps (rewards) skip the weekly limit only.
 function stepTraining(c) {
-  const { S, log, OFF, goneNow, TU, V, canon, npcAway } = c;
+  const { S, log, goneNow, TU, V, canon, npcAway } = c;
   {
     const here = new Set(Object.keys(S.Scene.Present || {}).map(canon));
     // 1.7.0: a Rank 10 benefit can carry the training bonus too (Linus: mana, Tsubaki: stamina); a suspended benefit (low Trust) does not count

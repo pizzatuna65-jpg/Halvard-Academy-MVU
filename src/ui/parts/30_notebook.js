@@ -93,7 +93,7 @@ function nbPlanner(S) {
   const P = /^P(\d)/.exec(W._Period || ''), per = P ? +P[1] - 1 : -1;
   const pmRole = ROLES5.map(r => [r, String((S.Player.Profile || {}).Combat_role || '').search(new RegExp(`\\b${r}\\b`, 'i'))]).filter(x => x[1] >= 0).sort((a, b) => a[1] - b[1]).map(x => x[0])[0] || '';
   const rows = DAYS.map(D => {
-    const evs = eventsOnDay(W.Month, W.Week, D), stop = evs.find(e => e.noclass || e.home || e.lockdown), tt = CAL.timetableFor({ Month: W.Month, Week: W.Week, Day: D });
+    const evs = eventsOnDay(W.Month, W.Week, D), stop = evs.find(e => e.noclass || e.home || e.lockdown), tt = CAL.timetableFor({ Month: W.Month, Week: W.Week, Day: D }, S);   // 1.42.0: a Council member's Saturday P2
     const isToday = D === W.Day;
     const cells = !tt ? `<td colspan="3" class="off">No classes</td>` : stop ? `<td colspan="3" class="off ev">${esc(shortEv(stop.t))}</td>`
       : tt.map((c, i) => {

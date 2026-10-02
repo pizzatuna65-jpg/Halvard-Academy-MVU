@@ -21,7 +21,6 @@ const publicRole = (id, S) => {
   if (id === 'Dante') return old ? '' : 'Student Council member';
   return (npcOf(id) || {}).r || '';
 };
-const pips = (p, n = 10) => `<span class="pips" aria-label="${fmt(p)} of ${n}">${_.range(n).map(i => `<i class="${i < Math.floor(p) ? 'on' : ''}"></i>`).join('')}</span>`;
 // 1.2.2 bond XP (same formula as the engine, data/bond_rules.json)
 const BRU = DATA.bond || { xp_base: [], pace: {} };
 const bondNeed = (S, r) => (r >= 10 ? 0 : Math.max(3, Math.round(BRU.xp_base[r] * ((BRU.pace || {})[((S && S.$ui) || {}).bondpace] || 1))));
@@ -133,9 +132,8 @@ PANELS.npc = {
     const facts = b ? [...(b.$Known_old || []), ...(b.Known_facts || [])] : [];   // 5.4: older facts are kept in $Known_old
     if (facts.length) h += `<h3>What you know</h3><ul class="log">${facts.map(f => `<li>${esc(f)}</li>`).join('')}</ul>`;
     if (b && b.Milestones.length) h += `<h3>Milestones</h3><ul class="log">${b.Milestones.map(f => `<li>${esc(f)}</li>`).join('')}</ul>`;
-    const st = ((S.Campus_State || {}).NPC_status || {});
-    const stKey = Object.keys(st).find(k => k.toLowerCase() === id.toLowerCase());
-    if (stKey) h += `<div class="warn">Now: ${esc(st[stKey])}</div>`;
+    const stNow = npcStatus(S)(id);   // 1.42.0: the shared lookup (a full-name key matches too)
+    if (stNow) h += `<div class="warn">Now: ${esc(stNow)}</div>`;
     h += '</div></div>';   // .dmain, .dos
     return `<div class="dlg" tabindex="-1" style="--dc:${n ? n.dc : '#9aa3ad'}"><div class="hd"><h2>Dossier</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div><div class="bd">${h}</div></div>`;
   },

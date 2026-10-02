@@ -220,6 +220,19 @@ function acTrip(S) {
 
 // ---------------------------------------------------------------- battle panel (opens from the "In battle" chip)
 const isRunning = (t, M) => Object.values(M.Active || {}).some(e => e.Technique === t);
+// 1.42.0 (audit): a cast priced as the engine charges it (stepMagic): the wind outdoors (the engine's $ui.wx.wind, data/wind_casting.json),
+// the Arcane scholar discount on per-use casts (Arcana Rank 5), and a pact partner's ability only while the partner is here
+function castCost(S, k, t, running) {
+  const M = S.Magic || {}, base = t.Cost_mode === 'hybrid' && running && t.Trigger > 0 ? t.Trigger : (t.Activation || 0);
+  const unit = t.Cost_mode === 'per_use' && base > 0 && featureOn(S, 'proficiency') && num((S.Player._Proficiency || {}).Arcana, 0) >= 5 ? Math.max(0.5, Math.round(base * 0.9 * 2) / 2) : base;
+  const wind = ((S.$ui || {}).wx || {}).wind || '', W = DATA.wind || {}, custom = (M._Affinity || {}).Custom || {};
+  const ck = Object.keys(custom).find(x => x.toLowerCase() === String(t.Subtype || '').toLowerCase());
+  const cat = ck ? custom[ck].wind || W.default : (W.subtypes || {})[t.Subtype] || W.default;
+  const mult = wind && W.groups ? (W.groups[cat] || W.groups[W.default] || [1, 1])[wind === 'gale' ? 1 : 0] : 1;
+  const pm = /^\[pact\]\s*(.+)$/.exec(t.Notes || ''), pk = pm && pm[1].trim(), P = pk ? (M.Pacts || {})[pk] || {} : {};
+  const away = !!pk && k.startsWith(pk + ': ') && !(P.Presence === 'terms' || P.Summoned || isRunning('Summon ' + pk, M));
+  return { cost: Math.round(unit * mult * 100) / 100, mult, away, pk };
+}
 PANELS.battle = {
   live: true,
   render(S) {
@@ -233,12 +246,12 @@ PANELS.battle = {
     const act = Object.entries(M.Active || {}).map(([k, e]) => `<span class="pill g">${esc(k)} · ${fmt((T[e.Technique] || {}).Upkeep_per_min || 0)}/min<button class="lnk" data-fill="${esc(`I let ${k} fade. `)}" style="margin-left:6px">end</button></span>`).join('');
     const techs = Object.entries(T).map(([k, t]) => {
       const running = isRunning(k, M);
-      const cost = t.Cost_mode === 'hybrid' && running && t.Trigger ? t.Trigger : t.Activation;
-      const can = cost <= V.Mana;
+      const { cost, mult, away, pk } = castCost(S, k, t, running);
+      const can = cost <= V.Mana && !away;
       const warn = H._True_magic && t.Hidden ? ' <span class="pill h" title="Using it here may be noticed">hidden</span>' : '';
-      return `<div class="tq${can ? '' : ' no'}"><div><b>${esc(k)}</b>${warn}<div class="sub">${esc(MODES[t.Cost_mode])}: ${fmt(cost)} mana${t.Cost_mode !== 'per_use' && !running ? ` + ${fmt(t.Upkeep_per_min)}/min` : ''}${running ? ' (running)' : ''}</div></div>
+      return `<div class="tq${can ? '' : ' no'}"><div><b>${esc(k)}</b>${warn}<div class="sub">${esc(MODES[t.Cost_mode])}: ${fmt(cost)} mana${mult !== 1 ? ` (wind ×${mult})` : ''}${away ? ` · ${esc(pk)} is not here` : ''}${t.Cost_mode !== 'per_use' && !running ? ` + ${fmt(t.Upkeep_per_min)}/min` : ''}${running ? ' (running)' : ''}</div></div>
         ${running && t.Cost_mode === 'sustained' ? '<span class="pill g">active</span>'
-          : `<button class="btn sm" data-fill="${esc(running ? `I trigger ${k}: ` : `I use ${k}: `)}" ${can ? '' : 'disabled title="Not enough mana"'}>${running ? 'Trigger' : 'Use'}</button>`}</div>`;
+          : `<button class="btn sm" data-fill="${esc(running ? `I trigger ${k}: ` : `I use ${k}: `)}" ${can ? '' : `disabled title="${away ? 'The partner is not here' : 'Not enough mana'}"`}>${running ? 'Trigger' : 'Use'}</button>`}</div>`;
     }).join('');
     return `<div class="dlg" tabindex="-1"><div class="hd"><h2>${Bt.Active ? 'Battle' : 'No fight in progress'}</h2><button class="x" data-act="close" aria-label="Close">×</button></div><div class="bd">
       ${featureOn(S, 'battle') ? '' : '<p class="hint">Battle tracking is off (Student file → Settings → Features); opponents are not tracked.</p>'}

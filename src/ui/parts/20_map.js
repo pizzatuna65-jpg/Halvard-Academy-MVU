@@ -379,8 +379,8 @@ function zoomMap(step, at) {
 }
 function classHint(S) {
   const m = /^P([123]) /.exec((S.World || {})._Period || ''); if (!m || !featureOn(S, 'class')) return '';
-  const i = +m[1] - 1, until = ['10:00', '12:00', '16:00'][i], cell = (CAL.timetableFor(S.World) || [])[i] || '';
-  return /^Study Hall/.test(cell) ? `Study Hall until ${until}` : /^Clubs/.test(cell) ? `at their club until ${until}` : `in class until ${until}`;
+  const i = +m[1] - 1, until = ['10:00', '12:00', '16:00'][i], cell = (CAL.timetableFor(S.World, S) || [])[i] || '';
+  return /^Study Hall/.test(cell) ? `Study Hall until ${until}` : /^Student Council \(/.test(cell) ? `at the Student Council until ${until}` : /^Clubs/.test(cell) ? `at their club until ${until}` : `in class until ${until}`;
 }
 // 1.14.0 (planning/DRAFT_dynamic_lore.md [?4]): the place in the current season (data/locations.json seasons, by calendar month)
 const seasonLine = (l, S) => { const k = SEASON_OF(((S || {}).World || {}).Month), t = (l.seasons || {})[k]; return t ? `<p class="sub season"><b>${esc(k)}:</b> ${esc(t)}</p>` : ''; };

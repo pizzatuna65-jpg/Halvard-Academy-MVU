@@ -90,6 +90,7 @@ for nid, n in npcs.items():
     CAST[nid] = [n['thumb'], descriptor(nid, n) if nid in ('Irene', 'Caspian') else PUBLIC_ROLE.get(nid) or descriptor(nid, n), first, n.get('dorm_color') or '#6b6b7b']
 for e in json.load(open(P('data/relations.json'), encoding='utf-8')):
     DATA['rel'].append([e['from'], e['to'], e['type'], e['types'], e['visibility'] + (f"@{e['via']}" if e['via'] != e['from'] and e['visibility'] != 'public' else ''), e['notes']] + ([[e['rule'], e['rule_label']]] if e.get('rule') else []))   # 1.4.2 group-rule lines carry [id, label]; 1.6.10 'rank:N@Via' = told by Via's file
+DATA['wind'] = {k: v for k, v in json.load(open(P('data/wind_casting.json'), encoding='utf-8')).items() if not k.startswith('_')}   # 1.42.0: the Battle panel's casting cost
 DATA['rom1'] = {k: v for k, v in json.load(open(P('data/relations_curated.json'), encoding='utf-8')).get('romance_one_way', {}).items() if not k.startswith('_')}   # 1.4.2
 for lid, l in json.load(open(P('data/locations.json'), encoding='utf-8')).items():
     DATA['locs'][lid] = {k: l[k] for k in ('name', 'category', 'kind', 'description', 'vibe', 'regulars', 'connections', 'walk_min',
@@ -164,7 +165,7 @@ parts = ''.join(open(P('src/ui/parts', f), encoding='utf-8').read() + '\n' for f
 t = t.replace('/*@@PARTS@@*/', parts)
 t = t.replace('/*@@NEWS@@*/', NEWS)
 cal = json.load(open(P('data/calendar.json'), encoding='utf-8'))
-cal_js = '(() => { const EVENTS = ' + json.dumps(cal['events'], ensure_ascii=False, separators=(',', ':')) + '; const TIMETABLE = ' + json.dumps(cal['timetable'], ensure_ascii=False, separators=(',', ':')) + '; const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]; const schedOf = (e, day) => (!e.s ? "" : typeof e.s === "string" ? e.s : e.s[day] || ""); const timetableFor = W => W.Month === 10 && W.Week === 3 && W.Day === "Sat" ? [TIMETABLE.Sat[0], TIMETABLE.Sat[1], "Student Council Election (Main Courtyard)"] : TIMETABLE[W.Day]; return {EVENTS, TIMETABLE, timetableFor, schedOf}; })()'
+cal_js = '(() => { const EVENTS = ' + json.dumps(cal['events'], ensure_ascii=False, separators=(',', ':')) + '; const TIMETABLE = ' + json.dumps(cal['timetable'], ensure_ascii=False, separators=(',', ':')) + '; const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]; const schedOf = (e, day) => (!e.s ? "" : typeof e.s === "string" ? e.s : e.s[day] || ""); const councilRemedial = (S, W) => Object.entries(S.Commitments || {}).some(([k, v]) => k.startsWith("Remedial ") && String((v || {}).Due || "").includes(`M${W.Month} W${W.Week} Sat`)); const timetableFor = (W, S) => { const row = TIMETABLE[W.Day]; if (!row) return row; const tt = [...row]; if (W.Day === "Sat" && S && ((S.Player || {}).Profile || {}).Council && !councilRemedial(S, W)) tt[1] = "Student Council (Student Council Chamber)"; if (W.Month === 10 && W.Week === 3 && W.Day === "Sat") tt[2] = "Student Council Election (Main Courtyard)"; return tt; }; return {EVENTS, TIMETABLE, timetableFor, schedOf}; })()'
 t = t.replace('/*@@CALENDAR@@*/{ EVENTS: [], TIMETABLE: {} }', cal_js)
 assert '@@CALENDAR@@' not in t
 t = t.replace("/*@@THEMES@@*/{ default: 'pewter', order: [], themes: {} }", json.dumps(THEMES, ensure_ascii=False, separators=(',', ':')))
