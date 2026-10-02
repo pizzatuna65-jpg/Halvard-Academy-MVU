@@ -6,6 +6,7 @@ const NPC_IDS = new Set(Object.values(NPC_ALIAS));
 const NAME_FORMS = /*@@NAME_FORMS@@*/{};
 const NAME_RX = Object.entries(NAME_FORMS).map(([id, forms]) => [id, new RegExp('(^|[^A-Za-z])(' + forms.map(f => f.replace(/[.*+?^()|[\]\\]/g, '\\$&')).join('|') + ')(?![A-Za-z])')]);
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+/*@@SHARED@@*/
 // 1.5.1 (P6): who spoke in a reply. A name counts as a speaker when it opens the sentence that leads into a quote
 // ("Irene looked up. "Curfew.") or directly follows a closing quote ("Curfew," Irene said / "…," said Irene). Names inside quotes
 // are people being talked to or about. MENTION_DENY: first names that are also ordinary words; at a sentence start they are no mention.
@@ -67,11 +68,10 @@ const TIMETABLE = /*@@CAL_TIMETABLE@@*/{};
 const ENTR_BACK = '{{user}} is a returning student and the assigned senior guide: never sorted again; watches the speeches and sorting from the gallery, then tours 10:00–18:00 with the two new first-years recorded in Campus_State.Entrance_tour';
 const schedOf = (e, day) => (!e.s ? '' : typeof e.s === 'string' ? e.s : e.s[day] || '');
 const curfewHour = (e, day) => (e.curfew && typeof e.curfew === 'object' ? e.curfew[day] : e.curfew);
-const councilRemedial = (S, W) => !!S && Object.entries(S.Commitments || {}).some(([k, v]) => k.startsWith('Remedial ') && String(v.Due || '').includes(`M${W.Month} W${W.Week} Sat`));
 const timetableFor = (W, S) => {
   const row = TIMETABLE[W.Day]; if (!row) return row;
   const tt = [...row];
-  if (W.Day === 'Sat' && S && S.Player.Profile.Council && !councilRemedial(S, W)) tt[1] = 'Student Council (Student Council Chamber)';
+  if (W.Day === 'Sat' && S && S.Player.Profile.Council && !councilRemedial(S.Commitments, W)) tt[1] = 'Student Council (Student Council Chamber)';
   if (W.Month === 10 && W.Week === 3 && W.Day === 'Sat') tt[2] = 'Student Council Election (Main Courtyard)';
   return tt;
 };
@@ -110,8 +110,9 @@ const CRAFT_CLOTHES = /cloaks?|coats?|robes?|vests?|scarves?|shirts?|dresses?|un
 const CRAFT_PORTABLE = new Set((CRAFTS.recipes || []).filter(r => (((CRAFTS.groups || {})[r.group] || {}).actions || []).some(g => PRACTICE.some(a => a.materials && a.action === g.action)))
   .flatMap(r => (r.materials || []).flat().map(m => m.item.toLowerCase())));
 const MARKS = ['F', 'D', 'C', 'B', 'A'];
-const MID_SLOTS = { 'Magic Theory': [0, 480, 600], Etiquette: [0, 600, 720], History: [1, 480, 600], 'Potion Crafting': [1, 780, 960],
-  'Dark Magic Defense': [2, 480, 960], 'Practical Magic': [3, 480, 960] };
+const [P1, P2, P3] = PERIODS;   // shared.js
+const MID_SLOTS = { 'Magic Theory': [0, P1[0], P1[1]], Etiquette: [0, P2[0], P2[1]], History: [1, P1[0], P1[1]], 'Potion Crafting': [1, P3[0], P3[1]],
+  'Dark Magic Defense': [2, P1[0], P3[1]], 'Practical Magic': [3, P1[0], P3[1]] };
 const PRACTICAL = ['Potion Crafting', 'Dark Magic Defense', 'Practical Magic', 'Creature Studies'];
 // an A: +10 on a Fortune roll in the subject's field (rule 504 "specialty"), until the next exams
 const TOP_FIELD = Object.fromEntries(SUBJECTS.map(s => [s, PROF_FIELD[SUBJECT_STAT[s]]]));
@@ -127,8 +128,7 @@ const subjectOf = t => { const x = String(t || '').trim().toLowerCase().replace(
 const subjectIn = t => SUBJECTS.find(s => new RegExp(`\\b${s}\\b`, 'i').test(String(t || ''))) || (/\bDMD\b/.test(String(t || '')) ? 'Dark Magic Defense' : /\bCombat\b/i.test(String(t || '')) ? 'Practical Magic' : '');
 // 1.33.0: Practical Magic is taught per combat role ([subject, 0, role]); {{user}} attends the class of the first role in Combat_role
 // (a student with two roles lists the one they chose first). Before roles are set it is the joint assessment, led by Attack's teacher.
-const ROLES5 = ['Attack', 'Defense', 'Healing', 'Support', 'Control'];
-const classRole = P => { const t = String((P || {}).Combat_role || ''); return ROLES5.map(r => [r, t.search(new RegExp(`\\b${r}\\b`, 'i'))]).filter(x => x[1] >= 0).sort((a, b) => a[1] - b[1]).map(x => x[0])[0] || 'Attack'; };
+const classRole = P => classRoleOf(P) || 'Attack';   // shared.js
 const teaches = (id, subj, py, role) => ((CLASS.teach || {})[id] || []).some(x => x[0] === subj && (x[1] === py || x[1] === 0) && (!x[2] || x[2] === (role || 'Attack')));
 const teacherOf = (subj, py, role) => Object.keys(CLASS.teach || {}).find(id => teaches(id, subj, py, role)) || '';
 // 1.2.2 bond system (owner design): XP per kind of interaction with daily/weekly limits, rising XP per rank scaled by the pace
@@ -150,8 +150,6 @@ const CLASS = /*@@CLASS@@*/{};
 const SAY = /*@@SAY@@*/{ n: 0, start: {}, dist: [] };   // 1.37.1: dialogue colours (data/dialogue_colors.json)
 // 1.10.2 (FP11): why an NPC seeks {{user}} out: templates per Tension category, each NPC's category and club (data/initiative_asks.json)
 const INIT_ASKS = /*@@INITIATIVE_ASKS@@*/{};
-const TIMES = ['08:00-10:00', '10:00-12:00', '13:00-16:00'];
-const placeKey = loc => placeOf(loc).toLowerCase().replace(/^the /, '');
 function tuneOf(S) {
   const u = _.isPlainObject((S.$ui || {}).tune) ? S.$ui.tune : {}, o = {};
   for (const r of TUNING) { const v = Number(u[r.id]); o[r.id] = r.opts.some(([x]) => x === v) ? v : r.def; }
@@ -176,7 +174,7 @@ function tensionProfile(id) {
 // Althair, Ezrel, Caine, Krieg), and a Dorm Head is easier on their own students (Ottavio and Sky).
 const TRU = /*@@TRUST@@*/{};
 const TRE = TRU.effects || {};
-const trustBand = x => (TRU.bands || [[0, '']]).reduce((a, [from, nm]) => (x >= from ? nm : a), '');
+const trustBand = x => bandOf(TRU.bands, x);
 function trustProfile(id, S, secretOut) {
   const dh = (TRU.dorm_head || {})[id], mine = !!(dh && S && S.Player && S.Player.Profile && S.Player.Profile.Dorm === dh.dorm);
   const cat = mine ? dh.category : (TRU.npcs || {})[id] || 'normal', C = (TRU.categories || {})[cat] || {};
@@ -199,7 +197,6 @@ const hm = t => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(t || '').trim()); 
 const CASTLE = new Set(/*@@CASTLE@@*/[]);
 // v1.0.3 (F01): every campus place name (lowercase, with and without a leading "the"); anything else is off the grounds
 const CAMPUS = /*@@CAMPUS@@*/[];
-const placeOf = loc => String(loc || '').split(/\s+[—-]\s+/)[0].trim();
 // 1.3.1 (owner playtest: walking to "Boathouse" did not register on the map; "Boathouse and Lake — Fishing House" registered the
 // boathouse). World.Location is put in the Campus Map's words: a short name ("Boathouse", "the library") becomes the map name, and a
 // sub-spot that is itself a place ("… — Fishing House") becomes the place. A dorm room every dorm shares stays under its dorm.
@@ -244,8 +241,7 @@ function canonLocation(loc) {
 }
 const onCampus = loc => { const p = placeOf(loc).toLowerCase(); return !p || CAMPUS.some(c => p === c || p.startsWith(c + ' ') || p.startsWith(c + ',')); };
 const CAP = { Notices: 10, Letters: 12, Clues: 40, Journal: 30 };
-// Batch 5.2: trips (first day, for the unlock window) and the Kingdom prize (lore Competitions: 5,000 points per winning member)
-const TRIPS = [{ m: 4, w: 2, d: 'Tue', name: 'the capital (Crowning Day)' }, { m: 11, w: 2, d: 'Sat', name: 'Sunreach Bay (Academy Trip)' }];
+// Batch 5.2: the Kingdom prize (lore Competitions: 5,000 points per winning member); the trips are TRIPS in shared.js
 const KINGDOM_PRIZE = 5000;
 const DORM_PRIZE = [100, 50];   // 1.33.0: a Dorm Competition role bracket's champion and runner-up
 // v1.0.3: Halvard students {id: [lorebook Year, campaign year they arrive]}, injected by gen_engine. Graduation (M11 W4 Sun) sends
@@ -366,11 +362,11 @@ function periodOf(W, evs, S) {
   let p;
   if (!tt) p = 'Sunday (no classes)';
   else if (h < 7) p = 'Night';
-  else if (h < 8) p = 'Morning, before classes';
-  else if (h < 10) p = `P1 08:00-10:00: ${tt[0]}`;
-  else if (h < 12) p = `P2 10:00-12:00: ${tt[1]}`;
-  else if (h < 13) p = 'Lunch';
-  else if (h < 16) p = `P3 13:00-16:00: ${tt[2]}`;
+  else if (h * 60 < P1[0]) p = 'Morning, before classes';
+  else if (h * 60 < P1[1]) p = `P1 ${PERIOD_TEXT[0]}: ${tt[0]}`;
+  else if (h * 60 < P2[1]) p = `P2 ${PERIOD_TEXT[1]}: ${tt[1]}`;
+  else if (h * 60 < P3[0]) p = 'Lunch';
+  else if (h * 60 < P3[1]) p = `P3 ${PERIOD_TEXT[2]}: ${tt[2]}`;
   else if (h < 20) p = 'After classes';
   else p = 'Evening';
   if (suspended && /^P\d/.test(p)) p = `Timetable suspended (${suspended.t.split(' (')[0]})`;
@@ -411,7 +407,7 @@ function nextUp(W, evs, S) {
     if (m) items.push({ at: +m[2] * 60 + +m[3], what: cap((m[4] || m[1]).trim()), kind: 'event' });
   }
   const tt = timetableFor(W, S), stop = evs.some(e => e.noclass || e.home || e.lockdown || e.away);
-  if (tt && !stop) [8, 10, 13].forEach((h, i) => items.push({ at: h * 60, what: String(tt[i]).replace(/\s*\[[MD]\]/g, ''), kind: /^(Study Hall|Clubs)/.test(tt[i]) ? 'club' : 'class' }));
+  if (tt && !stop) PERIODS.forEach(([at], i) => items.push({ at, what: String(tt[i]).replace(/\s*\[[MD]\]/g, ''), kind: /^(Study Hall|Clubs)/.test(tt[i]) ? 'club' : 'class' }));
   const noCurfew = evs.some(e => e.lockdown || e.home || (e.nocurfew && W.Day === e.d[0])) || /^Away/.test(W._Curfew || '');
   if (!noCurfew) items.push({ at: (evs.map(e => curfewHour(e, W.Day)).find(Boolean) || 20) * 60, what: 'Curfew: back to your dorm', kind: 'curfew' });
   const next = items.filter(x => x.at > now).sort((a, b) => a.at - b.at || (a.kind === 'event' ? -1 : b.kind === 'event' ? 1 : 0))[0];
@@ -471,7 +467,7 @@ function happeningOn(seed, dayNo, rate, wxm) {
 
 // ---- 1.1.0 weather (spec §4): seasons, sky per block, wind, rare weather, °C. Pure functions of (seed, day): swipe-safe. ----
 // 1.9.4 (playtest Batch 4): the academic year opens in spring. One label per season; 'Autumn' is the internal and displayed name.
-const SEASONS = ['Spring', 'Spring', 'Spring', 'Summer', 'Summer', 'Summer', 'Autumn', 'Autumn', 'Autumn', 'Winter', 'Winter', 'Winter'];   // by Month-1
+// SEASONS (by Month - 1) is in shared.js (data/calendar.json)
 const SKY = ['Clear', 'Cloudy', 'Overcast', 'Fog', 'Rain', 'Storm'];
 const WX_BASE = { Winter: [25, 20, 25, 10, 18, 2], Spring: [30, 25, 15, 8, 20, 2], Summer: [50, 22, 8, 3, 12, 5], Autumn: [28, 22, 20, 12, 16, 2] };
 const WX_BLOCK = [{ Fog: 2, Storm: 0.5 }, { Fog: 0.3, Storm: 1.8 }, {}];   // morning, afternoon, night
@@ -779,13 +775,12 @@ const GEAR = { umbrella: /umbrella/i, waterproof: /waterproof|oilskin|rain cloak
 // and a used charm's timed protection (wxs.buff: { kind: until abs minute })
 const SHOP_FX = /*@@SHOP_FX@@*/{};
 const SHOP_PRICE = /*@@SHOP_PRICE@@*/{};
-// 1.42.0 (audit 1.3): one item-name key for the Consumables filter, the Qty decrease (H2), gifts and the R2 reminder:
-// lowercase, without a leading article or a trailing "(...)", so "a Quick-dry powder" is the Bag's "Quick-dry powder"
-const itemKey = x => String(x || '').trim().toLowerCase().replace(/^(an?|the)\s+/, '').replace(/\s*\(.*\)$/, '');
+// 1.42.0 (audit 1.3): one item-name key (itemKey, shared.js) for the Consumables filter, the Qty decrease (H2), gifts and the R2
+// reminder: "a Quick-dry powder" is the Bag's "Quick-dry powder"
 // the Bag key a reported name means: the exact name first (any case), then the same itemKey, preferring one still held
 const bagKeyOf = (I, name) => { const ks = Object.keys(I || {}), lo = String(name || '').trim().toLowerCase(), k = itemKey(name);
   return ks.find(x => x.toLowerCase() === lo) || ks.find(x => itemKey(x) === k && num((I[x] || {}).Qty, 1) > 0) || ks.find(x => itemKey(x) === k) || ''; };
-const fxOf = name => SHOP_FX[String(name || '').trim().toLowerCase().replace(/^(an?|the)\s+/, '')] || SHOP_FX[String(name || '').trim().toLowerCase().replace(/^(an?|the)\s+/, '').replace(/\s*\(.*\)$/, '')] || null;
+const fxOf = name => SHOP_FX[itemBase(name)] || SHOP_FX[itemKey(name)] || null;   // itemBase, itemKey: shared.js
 const gearOf = (I, buff, now) => {
   const own = Object.keys(I || {}).filter(k => (I[k] && I[k].Qty) > 0), ks = own.join(' | ');
   return _.mapValues(GEAR, (rx, g) => rx.test(ks) || own.some(k => (fxOf(k) || {}).gear === g || new RegExp(`\\benchanted ${g}\\b`, 'i').test(String(I[k].Note || ''))) || ((buff || {})[g] > now));
@@ -840,11 +835,7 @@ function fillShape(o, shape) {
 // 1.16.1 (audit B4): one answer to "is this NPC away?" for bonds, introductions, Rank 5 handovers, the Entrance tour, NPC
 // initiative and birthday parties (each had its own list of words). A status is found by the NPC's id, alias or first word.
 const AWAY_RX = /away|abroad|absent|missing|dead|confined|hospital|unconscious|expelled|unavailable|left campus|left halvard|out of town/i;
-const npcStatusIn = (S, id) => {
-  const N = (S.Campus_State || {}).NPC_status || {}, lo = String(id).toLowerCase();
-  const k = Object.keys(N).find(x => (NPC_ALIAS[String(x).toLowerCase()] || x) === id || String(x).toLowerCase().split(/\s+/)[0] === lo);
-  return k ? String(N[k] || '') : '';
-};
+const npcStatusIn = (S, id) => npcStatusOf((S.Campus_State || {}).NPC_status, id, NPC_ALIAS);   // shared.js
 const npcAwayIn = (S, id) => ((S.Campus_State || {}).Graduated || []).includes(id) || AWAY_RX.test(npcStatusIn(S, id));
 // 1.16.1 (audit B1): Player.Profile.Club in the club list's own words ("Soccer", "soccer club" -> "Soccer Club"; "Theatre" ->
 // "Theatre Troupe"), so Saturday club time is counted; a club the list does not know is kept as written
@@ -2178,7 +2169,7 @@ function stepSchoolWeek(c) {
       for (let d = dayNoB; d <= dayNo; d++) {
         const Wd = fromAbs(d * DAY_MIN), evD = eventsOn(Wd), row = CLASS.tt[Wd.Day];
         if (!row || evD.some(e => e.noclass || e.home || e.lockdown || e.away)) continue;
-        [[480, 600], [600, 720], [780, 960]].forEach(([s0, e0], p) => {
+        PERIODS.forEach(([s0, e0], p) => {
           const ov = Math.min(absA, d * DAY_MIN + e0) - Math.max(absB, d * DAY_MIN + s0);
           if (ov <= 0) return;
           const cell = row[p], key = `${d}:${p}`, elect = Wd.Month === 10 && Wd.Week === 3 && Wd.Day === 'Sat' && p === 2;
@@ -2193,9 +2184,9 @@ function stepSchoolWeek(c) {
               const tch = Object.keys(CLASS.teach || {}).find(id => teaches(id, cell[0], PY, classRole(Pf)) && !goneNow(id));
               repAdd('Academy', -2, `skipped ${cell[0]}`, '');
               S.$ui.absent = { cls: cell[0], teacher: tch || '' };
-              log.push(`{{user}} skipped ${cell[0]} (${TIMES[p]}); Academy reputation -2.`);
+              log.push(`{{user}} skipped ${cell[0]} (${PERIOD_TEXT[p]}); Academy reputation -2.`);
             }
-          } else if (cell[3] === 'study' && Wd.Day === 'Sat' && Pf.Council && !councilRemedial(S, Wd)) {
+          } else if (cell[3] === 'study' && Wd.Day === 'Sat' && Pf.Council && !councilRemedial(S.Commitments, Wd)) {
             ATT.c[key] = num(ATT.c[key], 0) + share(['student council chamber']);
           } else if (cell[3] === 'clubs' && Pf.Club && !elect) {
             const v = (CLASS.clubs || {})[Pf.Club] || [];
@@ -2212,7 +2203,7 @@ function stepSchoolWeek(c) {
     // Results day. Marks set the dorm rank, Academy/Doves reputation, remedials for an F, and the rewards of an A or B.
     S.$ui.exam = null; S.$ui.ranknews = null; S.$ui.grades = null; S.$ui.posted = null;
     if (!OFF.has('study')) {
-      const EXAMS = [3, 5, 9, 11], Wn = S.World;
+      const EXAMS = EXAM_MONTHS, Wn = S.World;
       const nextExam = W => { const m = EXAMS.find(x => W.Month < x || (W.Month === x && W.Week === 1)); return m ? `Y${W.Year}M${m}` : `Y${W.Year + 1}M3`; };
       const key = nextExam(Wn), TIERS = ['unprepared', 'shaky', 'fair', 'solid', 'excellent'];
       const cut = { 1: [2, 6, 12, 20], 2: [4, 10, 18, 28], 3: [6, 15, 25, 40] }[TU.study_tiers] || [4, 10, 18, 28];
@@ -2311,19 +2302,19 @@ function stepSchoolWeek(c) {
       if (hasB && elapsed > 0 && elapsed <= 7 * DAY_MIN && CLASS.tt) for (let d = dayNoB; d <= dayNo; d++) {
         const Wd = fromAbs(d * DAY_MIN), row = CLASS.tt[Wd.Day];
         if (!row || eventsOn(Wd).some(e => e.noclass || e.home || e.lockdown || e.away)) continue;
-        [600, 720, 960].forEach((e0, p) => { const cell = row[p]; if (cell && cell[3] === 'class' && absB < d * DAY_MIN + e0 && absA >= d * DAY_MIN + e0 && !freeWhy(Wd, p, cell[0], teacherOf(cell[0], PY, classRole(Pf)))) ST.held[cell[0]] = num(ST.held[cell[0]], 0) + 1; });
+        PERIODS.forEach(([, e0], p) => { const cell = row[p]; if (cell && cell[3] === 'class' && absB < d * DAY_MIN + e0 && absA >= d * DAY_MIN + e0 && !freeWhy(Wd, p, cell[0], teacherOf(cell[0], PY, classRole(Pf)))) ST.held[cell[0]] = num(ST.held[cell[0]], 0) + 1; });
       }
       // minutes: study places outside lessons (Saturday Study Hall counts), halves for the start and end of the update
       if (hasB && elapsed > 0 && elapsed <= 360 && restedAs !== 'sleep') {   // 1.12.0: Resting is reset in section 4; read what it was
         const SP = ['main library', 'study rooms', 'archive'];
         const atStudy = (X, pk) => SP.includes(pk) || (Pf.Council && pk === 'student council chamber' && X.World.Day === 'Sat'
-          && hm(X.World.Time) >= 600 && hm(X.World.Time) < 720 && !councilRemedial(S, X.World));
+          && hm(X.World.Time) >= P2[0] && hm(X.World.Time) < P2[1] && !councilRemedial(S.Commitments, X.World));
         const f = (atStudy(hasB ? B : S, pkB) ? 0.5 : 0) + (atStudy(S, pkA) ? 0.5 : 0);
         let lesson = 0;
         for (let d = dayNoB; d <= dayNo; d++) {
           const Wd = fromAbs(d * DAY_MIN), row = CLASS.tt && CLASS.tt[Wd.Day];
           if (!row || eventsOn(Wd).some(e => e.noclass || e.home || e.lockdown || e.away)) continue;
-          [[480, 600], [600, 720], [780, 960]].forEach(([s0, e0], p) => { if (row[p][3] === 'class' && !freeWhy(Wd, p, row[p][0], teacherOf(row[p][0], PY, classRole(Pf)))) lesson += Math.max(0, Math.min(absA, d * DAY_MIN + e0) - Math.max(absB, d * DAY_MIN + s0)); });
+          PERIODS.forEach(([s0, e0], p) => { if (row[p][3] === 'class' && !freeWhy(Wd, p, row[p][0], teacherOf(row[p][0], PY, classRole(Pf)))) lesson += Math.max(0, Math.min(absA, d * DAY_MIN + e0) - Math.max(absB, d * DAY_MIN + s0)); });
         }
         ST.mins = num(ST.mins, 0) + Math.max(0, elapsed - lesson) * f;
       }
@@ -3116,7 +3107,7 @@ function stepProficiency(c) {
   if (hasB && elapsed > 0 && elapsed <= 7 * DAY_MIN) for (let d = Math.floor(absB / DAY_MIN); d <= dayNo; d++) {
     const W = fromAbs(d * DAY_MIN), row = CLASS.tt && CLASS.tt[W.Day];
     if (!row || Math.floor(d / 7) !== weekNo) continue;
-    for (const [p, end] of [[0,600],[1,720],[2,960]]) {
+    for (const [p, end] of PERIODS.map(([, e], i) => [i, e])) {
       const cell = row[p], key = `${d}:${p}`;
       if (cell && cell[3] === 'class' && absB < d * DAY_MIN + end && absA >= d * DAY_MIN + end) {
         if (((S.$eng.att || {}).done || {})[key]) P.wk.missed[cell[0]] = true;
@@ -3149,7 +3140,7 @@ function stepProficiency(c) {
   const inScene = name => Object.keys(S.Scene.Present || {}).some(id => id.toLowerCase() === String(name || '').toLowerCase() || (NPC_ALIAS[String(name || '').toLowerCase()] || '') === id);
   const whyLocked = (a, report) => {
     const hr = hm(S.World.Time) || 0, club = S.Player.Profile.Club || '', withName = report && report.With;
-    if (a.afterClass && hr < 960) return 'after lessons';
+    if (a.afterClass && hr < P3[1]) return 'after lessons';
     if (a.until && hr > a.until) return 'closed for the day';
     if (a.night && (hr < 1080 || hr >= 1440)) return 'night only';
     if (a.daylight && (hr < 360 || hr >= (SEASONS[S.World.Month - 1] === 'Winter' ? 960 : 1080))) return 'daylight only';
@@ -3270,7 +3261,7 @@ function stepProficiency(c) {
     if (!why && Math.floor(absB / DAY_MIN) !== dayNo) why = 'finish a session in one day';
     if (!why && CLASS.tt && !((S.World._Event_today || '').match(/no classes/i))) {
       const row = CLASS.tt[S.World.Day] || [];
-      if (row.some((cell, p) => cell && cell[3] === 'class' && [[480,600],[600,720],[780,960]][p] && absB % DAY_MIN < [[480,600],[600,720],[780,960]][p][1] && absA % DAY_MIN > [[480,600],[600,720],[780,960]][p][0])) why = 'during a lesson';
+      if (row.some((cell, p) => cell && cell[3] === 'class' && PERIODS[p] && absB % DAY_MIN < PERIODS[p][1] && absA % DAY_MIN > PERIODS[p][0])) why = 'during a lesson';
     }
     const key = `${dayNo}:${a ? a.loc + ':' + a.action : action}`;
     if (!why && (P.days[key] || done.has(key))) why = 'already practised this action today';
@@ -3346,7 +3337,7 @@ function stepProficiency(c) {
       const mark = `event:${S.World.Year}:${key}`;
       if (attended && !P.days[mark]) { P.days[mark] = true; gain(stat, xp, key, false); }
     };
-    eventXP('Training Week', 'Prowess', 3, /Training Week/.test(event) && place === 'combat grounds' && hour >= 960);
+    eventXP('Training Week', 'Prowess', 3, /Training Week/.test(event) && place === 'combat grounds' && hour >= P3[1]);
     eventXP('Creature Studies Expedition', 'Nature', 3, /Creature Studies Expedition/.test(event) && (S.Trip.Active || /forest|expedition/i.test(S.World.Location)));
     eventXP('Warding Rite', 'Arcana', 2, /Warding Rite/.test(event) && place === 'main courtyard' && hour >= 1110);
     eventXP('Star Night', 'Arcana', 2, /Star Night/.test(event) && /grassy field|hill/i.test(place) && hour >= 1200);
@@ -4250,12 +4241,13 @@ function stepAmbience(c) {
       return (sub && byName(n => sub.includes(n))) || byName(n => inPlace(key, n)) || '';
     };
     const cat = catOf(pk), C0 = AMB.cats[cat] || null;
-    const blockAt = m => [360, 480, 600, 720, 780, 960, 1080, 1200].filter(x => m >= x).length;
+    const BLOCKS_AT = [...new Set([360, ...PERIODS.flat(), 1080, 1200])];   // dawn, the periods, dusk, late evening
+    const blockAt = m => BLOCKS_AT.filter(x => m >= x).length;
     const blk = blockAt(t), blkB = blockAt(absB % DAY_MIN);
     const cur = String(S.World._Curfew || ''), afterCurfew = /CURFEW|LOCKDOWN/.test(cur);
     const out = isOutdoor(S.World.Location) || /courtyard/.test(pk);
     const noClass = evs.some(e => e.noclass || e.home || e.lockdown || e.away);
-    const exam = [3, 5, 9, 11].includes(S.World.Month) && S.World.Week === 1 && MON_THU.includes(S.World.Day);
+    const exam = EXAM_MONTHS.includes(S.World.Month) && S.World.Week === 1 && MON_THU.includes(S.World.Day);
     const W0 = WXM !== 'off' && S.$ui.wx && !S.$ui.wx.away ? S.$ui.wx.now : null;
     const wtags = new Set();
     if (W0) {

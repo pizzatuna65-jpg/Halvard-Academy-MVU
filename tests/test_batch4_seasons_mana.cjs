@@ -22,9 +22,10 @@ console.log('Playtest Batch 4: seasons and weather');
   ok(JSON.stringify(E.SEASONS) === JSON.stringify(want), 'engine: M1-3 Spring, M4-6 Summer, M7-9 Autumn, M10-12 Winter');
   const bounds = [[0, 'Spring'], [83, 'Spring'], [84, 'Summer'], [167, 'Summer'], [168, 'Autumn'], [251, 'Autumn'], [252, 'Winter'], [335, 'Winter'], [336, 'Spring']];
   ok(bounds.every(([d, s]) => E.wxDay(SEED, d).season === s), 'month boundaries switch season on the first day of M4, M7, M10 and the new year');
-  const tab = src => (/\[('Spring'[^\]]*)\]/.exec(src) || [])[1];
-  const ui = tab(read('src/scripts/ui.template.js').split('const SEASON_OF')[1]), bar = tab(read('src/ui/statusbar.template.html').split('const season =')[1]);
-  ok(ui && ui === bar && ui === want.map(x => `'${x}'`).join(', '), 'Activities shop and bracelet use the same season table as the engine');
+  // 1.43.0 (audit batch 2): one table, data/calendar.json "seasons" through shared.js, in the engine, the panels and the bracelet
+  const sh = f => (/const SH = (\{.*?\});/.exec(read(f)) || [])[1];
+  ok(['src/scripts/engine.js', 'src/scripts/ui.js', 'src/ui/statusbar.html'].every(f => sh(f) && JSON.stringify(JSON.parse(sh(f)).seasons) === JSON.stringify(want)) && /const season = SEASON_OF\(W\.Month\)/.test(read('src/ui/statusbar.template.html')),
+    'Activities shop and bracelet use the same season table as the engine (shared.js)');
   const mean = (months, b) => { let t = 0, n = 0; for (const seed of SEEDS) for (let d = 0; d < 336; d++) if (months.includes(monthOf(d))) { t += E.wxDay(seed, d).blocks[b].temp; n++; } return t / n; };
   const m1 = mean([1], 0), su = mean([4, 5, 6], 1), wi = mean([10, 11, 12], 2);
   ok(m1 >= 4 && m1 <= 10, `Month 1 mornings are cool spring, not freezing (${m1.toFixed(1)} °C)`);

@@ -5,6 +5,7 @@
 const SUBTYPES = /*@@SUBTYPES@@*/{};
 const NPCS = /*@@NPCS@@*/[];
 const DATA = /*@@DATA@@*/{};   // Batch 4: npcs (dossier fields with unlock rank), rel, locs, pins, assets
+/*@@SHARED@@*/
 const PROF_STATS = ['Knowledge', 'Arcana', 'Craft', 'Prowess', 'Society', 'Nature'];
 const PROF_CUT = [0, 10, 30, 60, 100, 150];
 const PROF_NAMES = { Knowledge: ['Everyday knowledge','Knows the basics','Well read','Learned','Erudite','Encyclopaedic'], Arcana: ['Everyday casting','Follows the proofs','Spell-literate','Pattern reader','Ward-wise','Arcane scholar'], Craft: ['Everyday hands','Follows the recipe','Steady hand','Skilled hands','Artisan',"Master's hand"], Prowess: ['Everyday fitness','Holds a stance','Quick on the feet','Seasoned','Duellist','Formidable'], Society: ['Everyday manners','Minds the forms','Poised','Gracious','Well connected','Consummate'], Nature: ['Everyday outdoors','Knows the signs','Calm hand','Trail-wise','Wild-wise','Kin to the wild'] };
@@ -12,7 +13,6 @@ const PROF_SUBJECTS = { Knowledge: 'History', Arcana: 'Magic Theory, Dark Magic 
 const PANELS = {};              // Batch 4 panels register here: { render(S), click(button, S), after?(S), live? }
 const TYPES = ['Elemental', 'Mystic', 'Spiritual', 'Occult'];
 const DORM_OF = { Elemental: 'Fire', Mystic: 'Light', Spiritual: 'Viridian', Occult: 'Sky' };
-const DORM_COLOR = { Fire: '#d0583f', Light: '#dcb342', Sky: '#4d86d6', Viridian: '#3f9f69', Unsorted: '#9aa3ad' };
 const TYPE_TEXT = {
   Elemental: 'The elements and their offshoots: fire, water, wind, earth, ice, lightning, metal…',
   Mystic: 'Changing the material world: creation, telekinesis, barriers, divination, astral magic.',
@@ -1658,7 +1658,6 @@ async function toggleKeep(name) {
 
 // 1.1.0 weather glyph for the UI (the bracelet uses Font Awesome icons)
 const wxIcon = wx => { const n = wx && wx.now; if (!n) return ''; return n.rare === 'lightning storm' || n.sky === 'Storm' ? '⛈' : n.snow ? '❄' : n.sky === 'Rain' ? '🌧' : n.sky === 'Fog' ? '🌫' : n.sky === 'Overcast' ? '☁' : n.sky === 'Cloudy' ? '⛅' : wx.block === 2 ? '☾' : '☀'; };
-const SEASON_OF = m => ['Spring', 'Spring', 'Spring', 'Summer', 'Summer', 'Summer', 'Autumn', 'Autumn', 'Autumn', 'Winter', 'Winter', 'Winter'][((num(m, 1) - 1) % 12 + 12) % 12];   // 1.9.4: same table as the engine's SEASONS
 
 // ---------------------------------------------------------------- shared helpers for Batch 4 panels
 const imgURL = path => (DATA.assets && DATA.assets.base ? DATA.assets.base : '') + path;
@@ -1683,8 +1682,7 @@ const TOPIC = l => { l = l.toLowerCase(); return /magic/.test(l) ? 'magic' : /pa
 // v1.0.3 (F13): the AI's Secrets_revealed list is capped; $ui.secrets is the engine's permanent ledger. Unlocks read both.
 const secretsOf = S => [...new Set([...((S && S.Campus_State && S.Campus_State.Secrets_revealed) || []), ...((S && S.$ui && S.$ui.secrets) || [])])];
 // v1.0.3 (F02): Campus_State.NPC_status by NPC id (the engine keys it by first name; full names / other case still match)
-const npcStatus = S => { const st = ((S && S.Campus_State) || {}).NPC_status || {}, ks = Object.keys(st);
-  return id => { const k = ks.find(x => x === id || x.toLowerCase() === String(id).toLowerCase() || x.toLowerCase().split(/\s+/)[0] === String(id).toLowerCase()); return k ? st[k] : ''; }; };
+const npcStatus = S => { const st = ((S && S.Campus_State) || {}).NPC_status || {}; return id => npcStatusOf(st, id); };   // shared.js
 // v1.0.3: students who left campus after Graduation (Campus_State.Graduated); no longer regulars or club members
 const graduated = S => new Set((((S && S.Campus_State) || {}).Graduated) || []);
 // v1.0.3 incoming cohorts: an NPC is at Halvard from campaign year DATA.npcs[id].a (1 = from the start) until they graduate

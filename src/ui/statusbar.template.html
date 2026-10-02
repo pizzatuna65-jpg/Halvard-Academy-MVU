@@ -105,7 +105,8 @@ button.chip{font:inherit;font-size:13px;cursor:pointer}button.chip:hover{filter:
   const PH = '<Status' + 'PlaceHolderImpl/>';
   const CAST = /*@@CAST@@*/{};   // id -> [thumb, rank-0 descriptor, first name, dorm colour]
   const BASE = /*@@BASE@@*/"";
-  const DORM = { Fire:'#d0583f', Light:'#dcb342', Sky:'#4d86d6', Viridian:'#3f9f69', Unsorted:'#9aa3ad' };
+/*@@SHARED@@*/
+  const DORM = DORM_COLOR;   // shared.js
   const MID = typeof getCurrentMessageId === 'function' ? getCurrentMessageId() : -1;
   const band = document.getElementById('band');
   const esc = v => String(v == null ? '' : v).replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
@@ -207,9 +208,9 @@ button.chip{font:inherit;font-size:13px;cursor:pointer}button.chip:hover{filter:
     band.style.setProperty('--dorm', DORM[P.Dorm] || DORM.Unsorted);
     const upkeep = Object.values(M.Active || {}).reduce((a, e) => a + num((T[e.Technique] || {}).Upkeep_per_min, 0), 0);
 
-    // 1.9.4 (playtest Batch 4): season beside Month/Week (same table as the engine's SEASONS), and the temperature when Weather is on
+    // 1.9.4 (playtest Batch 4): season beside Month/Week (shared.js SEASONS, as the engine), and the temperature when Weather is on
     const wx = ui.wx, wxm = ui.wxfx || 'full', wxOn = wxm !== 'off' && wx && wx.now && !wx.away && W._Weather;
-    const season = ['Spring', 'Spring', 'Spring', 'Summer', 'Summer', 'Summer', 'Autumn', 'Autumn', 'Autumn', 'Winter', 'Winter', 'Winter'][((num(W.Month, 1) - 1) % 12 + 12) % 12];
+    const season = SEASON_OF(W.Month);
     let h = '<div class="top"><div class="glass">'
       + '<div class="clock"><span class="dy">' + esc(W.Day) + '</span><span class="t">' + esc(W.Time) + '</span><span class="d">Month ' + esc(W.Month) + ', Week ' + esc(W.Week)
       + ' · ' + season + (wxOn ? ' · <b class="tc" title="' + esc(W._Weather) + '">' + esc(wx.now.temp) + ' °C</b>' : '') + '</span></div>'

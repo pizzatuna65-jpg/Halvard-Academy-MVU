@@ -157,3 +157,16 @@ def npc_aliases(npcs):
             'excalibur', 'gohn', 'janna', 'laetano', 'velmora', 'niu', 'ardenne', 'villeneuve', 'sobek', 'royal mage', 'youngest royal mage', 'crane'}   # 1.7.0: Maple's spirit, Tsubaki's title; 1.33.0: crane (the bird)  # spirits, items, brands, groups, shared surnames
     alias = {k: v for k, v in alias.items() if (not BAD.search(k) or k == v.lower()) and k not in DENY}
     return alias
+
+
+def shared_js():
+    """1.43.0 (audit batch 2): src/scripts/shared.js with its data filled in (data/calendar.json), for the engine, the panels,
+    the bracelet and the <now> entry (each template marks the spot with a SHARED placeholder)."""
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    cal = json.load(open(os.path.join(root, 'data/calendar.json'), encoding='utf-8'))
+    data = {k: cal[k] for k in ('periods', 'exam_months', 'seasons', 'dorm_colors')}
+    data['trips'] = [{'m': e['m'], 'w': e['w'], 'd': e['d'][0], 'name': e['trip']} for e in cal['events'] if e.get('trip')]
+    src = open(os.path.join(root, 'src/scripts/shared.js'), encoding='utf-8').read()
+    ph = "/*@@SHARED_DATA@@*/{ periods: [], exam_months: [], seasons: [], trips: [], dorm_colors: {} }"
+    assert ph in src, 'shared.js lost its data placeholder'
+    return src.replace(ph, json.dumps(data, ensure_ascii=False, separators=(',', ':')))

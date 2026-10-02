@@ -1,10 +1,10 @@
 // ================================================================ 4.4 interactive map (D5–D8, D21)
 view.pin = null; view.floor = ''; view.focusLoc = ''; view.card = 0;
 const CROP_H = 96, CROP_SCALE = 4;
-const normPlace = s => String(s || '').split(/\s+[—-]\s+/)[0].trim().toLowerCase().replace(/^the\s+/, '');
+const normPlace = s => placeOf(s).toLowerCase().replace(/^the\s+/, '');   // placeOf: shared.js
 // 1.3.1 (owner playtest): the same reading of World.Location as the engine (canonLocation): short names ("Boathouse", "the
 // library") via DATA.palias (tools/common.py place_aliases), and a sub-spot that is itself a place wins ("… — Fishing House").
-const plSegs = s => String(s || '').split(/\s+[—–-]\s+|,\s+/).map(x => x.trim().toLowerCase().replace(/[.!]+$/, '').replace(/^the\s+/, '')).filter(Boolean);
+const plSegs = s => locParts(s).map(x => x.trim().toLowerCase().replace(/[.!]+$/, '').replace(/^the\s+/, '')).filter(Boolean);
 const sharedLoc = id => DATA.pins.filter(p => p.cluster.includes(id)).length > 1;
 function locIdOf(place) {
   const segs = plSegs(place); if (!segs.length) return '';
@@ -379,7 +379,7 @@ function zoomMap(step, at) {
 }
 function classHint(S) {
   const m = /^P([123]) /.exec((S.World || {})._Period || ''); if (!m || !featureOn(S, 'class')) return '';
-  const i = +m[1] - 1, until = ['10:00', '12:00', '16:00'][i], cell = (CAL.timetableFor(S.World, S) || [])[i] || '';
+  const i = +m[1] - 1, until = PERIOD_END[i], cell = (CAL.timetableFor(S.World, S) || [])[i] || '';
   return /^Study Hall/.test(cell) ? `Study Hall until ${until}` : /^Student Council \(/.test(cell) ? `at the Student Council until ${until}` : /^Clubs/.test(cell) ? `at their club until ${until}` : `in class until ${until}`;
 }
 // 1.14.0 (planning/DRAFT_dynamic_lore.md [?4]): the place in the current season (data/locations.json seasons, by calendar month)

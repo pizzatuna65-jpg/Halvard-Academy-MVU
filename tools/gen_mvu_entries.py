@@ -68,6 +68,9 @@ for k, v in {'BDAYS': {k:v['birthday'] for k,v in GIFTS.items() if v['birthday']
     assert ph in ejs, ph
     ejs = ejs.replace(ph, J(v))
 ejs = ejs.replace('/*@@AGE@@*/', AGE_JS)
+from common import shared_js
+assert ejs.count('/*@@SHARED@@*/') == 1
+ejs = ejs.replace('/*@@SHARED@@*/', shared_js())   # 1.43.0 (audit batch 2): the rules and constants every runtime shares
 assert '@@' not in ejs
 open(P('src/worldbook/custom/content/505.txt'), 'w', encoding='utf-8').write(ejs)
 # ---- 1.5.1 (Batch B): Cast Sheet (509) and the last-mile cast gate (510) ----
@@ -136,7 +139,7 @@ for i in shop:
     text = f"- {i['item']}: {price}{' (canon)' if i['canon'] else ''}; {i['shop']}{'; ' + i['note'] if i['note'] else ''}{'' if season == 'all' else '; in season: ' + ', '.join(season)}{'; ' + fx if fx else ''}"
     rows.setdefault(i['loc'], []).append([text, season])
 assert all(l in locs for l in rows), 'shop.json: loc is not a location'
-canon = sorted({(i['item'], i['price']) for i in shop if i['canon'] and i['price'] is not None}, key=lambda x: x[1])
+canon = sorted({(i['item'], i['price']) for i in shop if i['canon'] and i['price'] is not None}, key=lambda x: (x[1], x[0]))   # 1.43.0: ties by name (a set's order changed between builds)
 def shop_line(l):
     it = [i for i in shop if i['loc'] == l]; ps = [i['price'] for i in it if i['price'] is not None]
     return f"{locs[l]['name']}: {len(it)} items, {min(ps):,}-{max(ps):,} pts ({', '.join(x['item'] for x in it[:4])}...)"

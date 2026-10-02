@@ -29,11 +29,11 @@ const xpBar = (b, S) => { const need = bondNeed(S, b.Rank), x = Math.min(num(b.$
 const rank4For = id => (DATA.rank4 || {})[id] || [];
 // 1.3.8 Tension bands (data/tension.json); Althair's Tension is locked at 0 (hostility turns into bond XP)
 const TEND = DATA.ten || { bands: [[0, '']], effects: {}, exempt: [], lock: [] };
-const tensionBand = t => TEND.bands.reduce((a, [f, nm]) => (num(t) >= f ? nm : a), '');
+const tensionBand = t => bandOf(TEND.bands, num(t));
 const tensionTxt = (id, b) => (TEND.lock.includes(id) ? 'Hostility only makes him fonder of you' : `Tension ${b.Tension} · ${tensionBand(b.Tension)}`);
 // 1.4.3 Trust bands (data/trust.json) and what low Trust holds back
 const TRD = DATA.tru || { bands: [[0, '']], gates: {}, nogates: [], lock: {} };
-const trustBand = t => TRD.bands.reduce((a, [f, nm]) => (num(t) >= f ? nm : a), '');
+const trustBand = t => bandOf(TRD.bands, num(t));
 const trustTxt = (id, b) => (id in TRD.lock ? 'Trust fixed: he trusts no one, and needs no one\'s' : `Trust ${b.Trust} · ${trustBand(b.Trust)}`);
 const heldBack = (id, b) => (TRD.nogates.includes(id) ? [] : Object.entries(TRD.gates).filter(([g, need]) => +g <= b.Rank && +g !== 8 && b.Trust < need && ((DATA.bond || {}).perks || {})[g]).map(([g, need]) => [g, need, DATA.bond.perks[g]]));
 const mini = (v, color) => `<span class="mini"><i style="width:${_.clamp(num(v), 0, 100)}%;background:${color}"></i></span>`;

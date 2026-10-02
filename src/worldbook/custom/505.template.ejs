@@ -1,5 +1,6 @@
 <%_
 // Source of custom entry 505 (Now). tools/gen_mvu_entries.py fills the /*@@…@@*/ data and writes content/505.txt. Edit this file, not 505.txt.
+/*@@SHARED@@*/
 const W = getvar('stat_data.World') || {};
 const H = getvar('stat_data.Hidden') || {};
 const UI = getvar('stat_data.$ui') || {};
@@ -9,11 +10,11 @@ const on = id => typeof (UI.on || {})[id] === 'boolean' ? UI.on[id] : (id === 'h
 const WX = on('weather') && UI.wx && !UI.wx.away && UI.wx.now ? UI.wx : null;
 const FULL = !!WX && WX.mode === 'full';
 const REG = /*@@REG@@*/{};
-const place = String(W.Location || '').split(/\s+[—-]\s+/)[0].trim();
+const place = placeOf(W.Location);
 const pk = place.toLowerCase().replace(/^the /, '');
 const regs0 = REG[place.toLowerCase()] || REG[pk] || [];
 const NST = getvar('stat_data.Campus_State.NPC_status') || {};
-const stOf = r => { const k = Object.keys(NST).find(x => x.toLowerCase() === r.toLowerCase() || x.toLowerCase().split(/\s+/)[0] === r.toLowerCase()); return k ? NST[k] : ''; };
+const stOf = r => npcStatusOf(NST, r);
 const GRAD = getvar('stat_data.Campus_State.Graduated') || [], ARR = /*@@ARR@@*/{};
 const Y = Math.max(1, Number(W.Year) || 1);
 const COUNCIL = getvar('stat_data.Campus_State.Council') || {};
@@ -29,11 +30,11 @@ let regs1 = regs0.filter(r => here(r) && !sick.includes(r));
 if (pk === 'student council chamber') regs1 = [...new Set([...regs1, ...(COUNCIL.Members || []).filter(r => r !== PR.Name && here(r) && !sick.includes(r))])];
 const per = /^P([123]) /.exec(String(W._Period || '')), pIdx = per ? +per[1] - 1 : -1;
 const electionBlock = W.Month === 10 && W.Week === 3 && W.Day === 'Sat' && pIdx === 2;
-const councilMorning = W.Day === 'Sat' && pIdx === 1 && PR.Council && !Object.entries(getvar('stat_data.Commitments') || {}).some(([k,v]) => k.startsWith('Remedial ') && String(v.Due || '').includes(`M${W.Month} W${W.Week} Sat`));
+const councilMorning = W.Day === 'Sat' && pIdx === 1 && PR.Council && !councilRemedial(getvar('stat_data.Commitments'), W);
 const cls = electionBlock ? ['Student Council Election', '', ['main courtyard'], 'election']
   : councilMorning ? ['Student Council', '', ['student council chamber'], 'council']
   : on('class') && pIdx >= 0 && TT[W.Day] ? TT[W.Day][pIdx] : null;   // [subject, M|D, venues, class|study|clubs]
-const until = ['10:00', '12:00', '16:00'][pIdx];
+const until = PERIOD_END[pIdx];
 const pres = [];
 let clubs = [];
 if (cls && cls[3] === 'class') {
@@ -41,18 +42,18 @@ if (cls && cls[3] === 'class') {
   regs1 = regs1.filter(r => !STU[r] && (atVenue || !teaching(r)));
   pres.push('Students are in class until ' + until + '.');
 } else if (cls && cls[3] === 'study') {
-  if (cls[2].includes(pk)) pres.push('Study Hall until 12:00: most students are here.');
-  else { regs1 = regs1.filter(r => !STU[r]); pres.push('Students are at Study Hall in the Main Library until 12:00.'); }
+  if (cls[2].includes(pk)) pres.push('Study Hall until ' + PERIOD_END[1] + ': most students are here.');
+  else { regs1 = regs1.filter(r => !STU[r]); pres.push('Students are at Study Hall in the Main Library until ' + PERIOD_END[1] + '.'); }
 } else if (cls && cls[3] === 'council') {
-  if (cls[2].includes(pk)) pres.push('Student Council meets here until 12:00; members attend instead of Study Hall.');
-  else pres.push('Student Council members meet in the Chamber until 12:00.');
+  if (cls[2].includes(pk)) pres.push('Student Council meets here until ' + PERIOD_END[1] + '; members attend instead of Study Hall.');
+  else pres.push('Student Council members meet in the Chamber until ' + PERIOD_END[1] + '.');
 } else if (cls && cls[3] === 'election') {
   regs1 = regs1.filter(r => !STU[r]);
-  pres.push('Students vote for Student Council President in the Main Courtyard until 16:00; ordinary clubs do not meet this afternoon.');
+  pres.push('Students vote for Student Council President in the Main Courtyard until ' + PERIOD_END[2] + '; ordinary clubs do not meet this afternoon.');
 } else if (cls) {
   regs1 = regs1.filter(r => !STU[r]);
   clubs = CLUBV[pk] || [];
-  if (!clubs.length) pres.push('Students are at their clubs until 16:00.');
+  if (!clubs.length) pres.push('Students are at their clubs until ' + PERIOD_END[2] + '.');
 }
 const gale = FULL && WX.now.wind === 'gale';
 const bad = FULL && (WX.now.sky === 'Rain' || WX.now.sky === 'Storm' || gale);
@@ -60,12 +61,12 @@ let moved = [];
 if (bad && OUTD.includes(pk) && !((pk === 'boathouse and lake' || pk === 'fishing house') && WX.now.sky === 'Rain' && !gale)) { moved = regs1.filter(id => !(gale && id === 'Ottavio')); regs1 = regs1.filter(id => gale && id === 'Ottavio'); }   // the Fishing Club likes rain
 const clubLine = clubs.map(c => {
   const m = c[1].filter(id => here(id) && !sick.includes(id) && !stOf(id));
-  return c[0] + (bad && c[2] && (!c[3] || gale) ? ': practising indoors (Gymnasium) or cancelled in this weather' : ': meeting here until 16:00' + (m.length ? ' (members on record: ' + m.join(', ') + ')' : ''));
+  return c[0] + (bad && c[2] && (!c[3] || gale) ? ': practising indoors (Gymnasium) or cancelled in this weather' : ': meeting here until ' + PERIOD_END[2] + (m.length ? ' (members on record: ' + m.join(', ') + ')' : ''));
 }).join('; ');
 let classLine = '';
 // 1.33.0 (owner-approved planning/DRAFT_classes_and_teachers.md): Practical Magic is one class per combat role (all dorms, by year;
 // {{user}} attends the class of the first role in Combat_role); a free period (engine $ui.free) means the class is not held
-const ROLE = ['Attack', 'Defense', 'Healing', 'Support', 'Control'].map(r => [r, String(PR.Combat_role || '').search(new RegExp('\\b' + r + '\\b', 'i'))]).filter(x => x[1] >= 0).sort((a, b) => a[1] - b[1]).map(x => x[0])[0] || '';
+const ROLE = classRoleOf(PR);   // shared.js
 const freeNow = cls && cls[3] === 'class' ? (UI.free || []).find(f => f.p === pIdx && f.s === cls[0]) : null;
 if (freeNow) {
   classLine = 'Free period: ' + cls[0] + ' is not held now (' + (freeNow.t || 'the teacher') + ' ' + freeNow.why + '). {{user}} and their classmates have the hour free; it counts against no one.';
@@ -120,7 +121,7 @@ const CLOSE = UI.close || [];   // 1.5.0 (N3a): bonds with XP at 80% or more of 
 // new) and holds back the perks that need it (data/trust.json perk_gates)
 const TRUST = /*@@TRUST@@*/{};
 const SECR = [...(UI.secrets || []), ...((getvar('stat_data.Campus_State') || {}).Secrets_revealed || [])].map(x => String(x).toLowerCase());
-const trBand = x => (TRUST.bands || [[0, '']]).reduce((a, [f, nm]) => (x >= f ? nm : a), '');
+const trBand = x => bandOf(TRUST.bands, x);
 const trOver = id => { const o = (TRUST.overrides || {})[id]; return o && !(o.until_secret && SECR.some(x => x.startsWith(id.toLowerCase() + '.'))) ? o : null; };
 const bondLines = PRES.filter(id => BONDS[id] && BOND.share).map(id => {
   const r = Math.max(0, Math.min(10, Number(BONDS[id].Rank) || 0)), tr = Math.max(0, Math.min(100, Number(BONDS[id].Trust) || 0)), tb = trBand(tr);
@@ -153,7 +154,7 @@ const tensionLines = PRES.filter(id => BONDS[id]).map(id => {
   if (o && o.lock) return id + ': ' + o.text;
   const t = Math.max(0, Math.min(100, Number(BONDS[id].Tension) || 0));
   if (t < 20) return '';
-  const band = (TEN.bands || []).reduce((a, [f, nm]) => (t >= f ? nm : a), '');
+  const band = bandOf(TEN.bands, t);
   const peak = band === 'Enemy' && (TEN.peaks || {})[id] ? ' (' + TEN.peaks[id] + ')' : '';
   const an = (TEN.apology_npc || {})[id];
   return id + ' (Tension ' + t + ', ' + band.toLowerCase() + '): ' + P.bands[band] + peak + '. Never: ' + P.never + '. Eases: ' + (an && an.note ? an.note : P.eases) + '.';

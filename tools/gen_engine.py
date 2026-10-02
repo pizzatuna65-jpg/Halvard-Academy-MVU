@@ -17,6 +17,10 @@ t = t.replace('/*@@PRACTICE@@*/[]', json.dumps([{**a, 'name': _plocs[a['loc']]['
 crafts = json.load(open(P('data/crafts.json'), encoding='utf-8'))
 t = t.replace('/*@@CRAFTS@@*/{}', json.dumps(crafts, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@MOOD_GIFTS_SOURCE@@*/', open(P('src/scripts/mood_gifts.js'), encoding='utf-8').read())
+import sys; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from common import shared_js
+assert t.count('/*@@SHARED@@*/') == 1
+t = t.replace('/*@@SHARED@@*/', shared_js())   # 1.43.0 (audit batch 2): the rules and constants every runtime shares
 for key, file in [('NPC_MOODS', 'npc_moods'), ('GIFT_PREFS', 'gift_prefs'), ('WIND_CASTING', 'wind_casting')]:
     obj = json.load(open(P('data/' + file + '.json'), encoding='utf-8'))
     if key == 'NPC_MOODS': obj = obj['npcs']

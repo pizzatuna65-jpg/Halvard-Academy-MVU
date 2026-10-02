@@ -4,7 +4,6 @@ const ACT_TABS = [['clubs', 'Clubs'], ['practice', 'Practice', '', ['proficiency
 const practicePlaces = S => [...new Set((DATA.practice || []).map(a => a.loc))].filter(id => {
   const l = DATA.locs[id]; return l && ((S.$ui || {}).discovered || []).some(n => normPlace(n) === normPlace(l.name));
 });
-const ROLES5 = ['Attack', 'Defense', 'Healing', 'Support', 'Control'];
 const COMP_TIERS = [
   ['Dorm', 'Dorm Competition', 'Solo, open to the whole dorm, run as a ranking tournament so everyone finishes with a placement. The top 16 of each dorm qualify.'],
   ['Academy', 'Academy Competition', 'Qualifiers from all four dorms form teams of 4 with at least one student from each year, covering the combat roles between them. Knockout; the winning team represents Halvard.'],
@@ -77,8 +76,8 @@ function acClubs(S) {
     const more = ids.length - known.length;
     return `${known.map(id => `<button class="who" data-open="npc:${esc(id)}">${avatar(id, S, 'av xs')}<span>${esc(nameOf(id, S))}${c.advisors.includes(id) ? ' (advisor)' : (c.follows || []).includes(id) ? ' (followed you in)' : ''}</span></button>`).join('')}${more > 0 ? `<span class="sub">+${more} you have not placed yet</span>` : ''}`;
   };
-  const meets = c => c.name === 'Student Council' ? 'Meets Saturday 10:00–12:00 in place of Study Hall. Members keep their afternoon club; required remedial takes priority.'
-    : `Meets Saturday 13:00–16:00${c.practice ? '; also practises informally after 16:00 on other days' : ''}.${c.sport ? ' Magic is banned during play.' : ''}`;
+  const meets = c => c.name === 'Student Council' ? `Meets Saturday ${PERIOD_TEXT[1].replace('-', '–')} in place of Study Hall. Members keep their afternoon club; required remedial takes priority.`
+    : `Meets Saturday ${PERIOD_TEXT[2].replace('-', '–')}${c.practice ? `; also practises informally after ${PERIOD_END[2]} on other days` : ''}.${c.sport ? ' Magic is banned during play.' : ''}`;
   let h = '';
   if (mine) {
     const v0 = mine.venues[0];
@@ -89,7 +88,7 @@ function acClubs(S) {
   } else if (P.Club) h += `<div class="item mine"><div class="row"><span class="t">${esc(P.Club)}</span><span class="pill g">your club</span></div><div class="sub">A club not in the directory, founded or found in play.</div></div>`;
   else h += `<p class="lead">You have not joined a club. Clubs are the one place the four magic types mix freely, because recruitment happens before dorm loyalty settles.</p>`;
   if (P.Council) h += `<div class="item mine"><div class="row"><span class="t">Student Council</span><span class="pill g">member</span></div><div class="sub">Saturday 10:00–12:00 · Student Council Chamber</div><div class="meta"><button class="btn sm" data-fill="I attend the Student Council meeting in the Chamber: ">Council meeting</button></div></div>`;
-  if (electionDay) h += '<div class="warn">Student Council election: voting in the Main Courtyard replaces every club meeting this afternoon, 13:00–16:00.</div>';
+  if (electionDay) h += '<div class="warn">Student Council election: voting in the Main Courtyard replaces every club meeting this afternoon, ' + PERIOD_TEXT[2].replace('-', '–') + '.</div>';
   if (fest) { const n = daysTo(S, fest.di); if (n >= -1 && n <= 21) h += `<div class="warn">Club Festival ${n < 0 ? 'was yesterday' : n === 0 ? 'is today' : `in ${n} days`} (M3 W2, Fri afternoon and Sat): every club runs a stand in the Main Courtyard; one gold coin each to vote for the best stand.</div>`; }
   h += `<h3>Directory</h3><div class="clubs">${(DATA.clubs || []).filter(c => c !== mine).map(c => `<div class="club"><b>${esc(c.name)}</b><div class="sub">${esc(venueNames(c).join(' · '))}${c.sport ? ' · sport, no magic in play' : ''} · ${esc(meets(c))}</div>
     <div class="meta">${people(c, false)}</div>

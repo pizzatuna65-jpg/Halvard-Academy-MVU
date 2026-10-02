@@ -91,7 +91,7 @@ function nbPlanner(S) {
   }).join('') : '<div class="empty">Nothing promised, nothing due. Commitments appear here when you make them in the story.</div>';
   // this week's timetable
   const P = /^P(\d)/.exec(W._Period || ''), per = P ? +P[1] - 1 : -1;
-  const pmRole = ROLES5.map(r => [r, String((S.Player.Profile || {}).Combat_role || '').search(new RegExp(`\\b${r}\\b`, 'i'))]).filter(x => x[1] >= 0).sort((a, b) => a[1] - b[1]).map(x => x[0])[0] || '';
+  const pmRole = classRoleOf(S.Player.Profile);   // shared.js
   const rows = DAYS.map(D => {
     const evs = eventsOnDay(W.Month, W.Week, D), stop = evs.find(e => e.noclass || e.home || e.lockdown), tt = CAL.timetableFor({ Month: W.Month, Week: W.Week, Day: D }, S);   // 1.42.0: a Council member's Saturday P2
     const isToday = D === W.Day;
@@ -105,7 +105,7 @@ function nbPlanner(S) {
     const extra = evs.filter(e => e !== stop).map(e => `<div class="sub ev">${esc(shortEv(e.t))}</div>`).join('');
     return `<tr class="${isToday ? 'today' : ''}"><th>${D}${extra}</th>${cells}</tr>`;
   }).join('');
-  const table = `<div class="scroll"><table class="tt"><tr><th></th><th>08:00–10:00</th><th>10:00–12:00</th><th>13:00–16:00</th></tr>${rows}</table></div>`;
+  const table = `<div class="scroll"><table class="tt"><tr><th></th>${PERIOD_TEXT.map(t => `<th>${t.replace('-', '–')}</th>`).join('')}</tr>${rows}</table></div>`;
   // month calendar (1.2.0: interactive; every dated thing in the state lands on its day, and the player can write notes)
   const mo = ((W.Month - 1 + view.calOff) % 12) + 1, yr = W.Year + Math.floor((W.Month - 1 + view.calOff) / 12);
   const mine = datedItems(S);

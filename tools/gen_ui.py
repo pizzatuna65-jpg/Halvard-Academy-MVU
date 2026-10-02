@@ -154,6 +154,9 @@ for _a, _id in npc_aliases(npcs).items():
 bar = open(P('src/ui/statusbar.template.html'), encoding='utf-8').read()
 NEWS = open(P('src/ui/news.shared.js'), encoding='utf-8').read()   # 1.25.0 red "new" dots, shared by the bracelet and the panels
 bar = bar.replace('/*@@NEWS@@*/', NEWS)
+from common import shared_js
+assert bar.count('/*@@SHARED@@*/') == 1
+bar = bar.replace('/*@@SHARED@@*/', shared_js())   # 1.43.0 (audit batch 2)
 THEMES = json.load(open(P('data/themes.json'), encoding='utf-8')); THEMES.pop('_note', None)   # 1.3.1 colour themes (tools/make_themes.py)
 bar = bar.replace('/*@@THEMES@@*/{}', json.dumps(THEMES, ensure_ascii=False, separators=(',', ':')))
 bar = bar.replace('/*@@CAST@@*/{}', json.dumps(CAST, ensure_ascii=False, separators=(',', ':'))).replace('/*@@BASE@@*/""', json.dumps(man['base_url']))
@@ -163,9 +166,12 @@ open(P('src/ui/statusbar.html'), 'w', encoding='utf-8', newline='\n').write(bar)
 t = open(P('src/scripts/ui.template.js'), encoding='utf-8').read()
 parts = ''.join(open(P('src/ui/parts', f), encoding='utf-8').read() + '\n' for f in sorted(os.listdir(P('src/ui/parts'))) if f.endswith('.js'))
 t = t.replace('/*@@PARTS@@*/', parts)
+from common import shared_js
+assert t.count('/*@@SHARED@@*/') == 1
+t = t.replace('/*@@SHARED@@*/', shared_js())   # 1.43.0 (audit batch 2)
 t = t.replace('/*@@NEWS@@*/', NEWS)
 cal = json.load(open(P('data/calendar.json'), encoding='utf-8'))
-cal_js = '(() => { const EVENTS = ' + json.dumps(cal['events'], ensure_ascii=False, separators=(',', ':')) + '; const TIMETABLE = ' + json.dumps(cal['timetable'], ensure_ascii=False, separators=(',', ':')) + '; const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]; const schedOf = (e, day) => (!e.s ? "" : typeof e.s === "string" ? e.s : e.s[day] || ""); const councilRemedial = (S, W) => Object.entries(S.Commitments || {}).some(([k, v]) => k.startsWith("Remedial ") && String((v || {}).Due || "").includes(`M${W.Month} W${W.Week} Sat`)); const timetableFor = (W, S) => { const row = TIMETABLE[W.Day]; if (!row) return row; const tt = [...row]; if (W.Day === "Sat" && S && ((S.Player || {}).Profile || {}).Council && !councilRemedial(S, W)) tt[1] = "Student Council (Student Council Chamber)"; if (W.Month === 10 && W.Week === 3 && W.Day === "Sat") tt[2] = "Student Council Election (Main Courtyard)"; return tt; }; return {EVENTS, TIMETABLE, timetableFor, schedOf}; })()'
+cal_js = '(() => { const EVENTS = ' + json.dumps(cal['events'], ensure_ascii=False, separators=(',', ':')) + '; const TIMETABLE = ' + json.dumps(cal['timetable'], ensure_ascii=False, separators=(',', ':')) + '; const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]; const schedOf = (e, day) => (!e.s ? "" : typeof e.s === "string" ? e.s : e.s[day] || ""); const timetableFor = (W, S) => { const row = TIMETABLE[W.Day]; if (!row) return row; const tt = [...row]; if (W.Day === "Sat" && S && ((S.Player || {}).Profile || {}).Council && !councilRemedial(S.Commitments, W)) tt[1] = "Student Council (Student Council Chamber)"; if (W.Month === 10 && W.Week === 3 && W.Day === "Sat") tt[2] = "Student Council Election (Main Courtyard)"; return tt; }; return {EVENTS, TIMETABLE, timetableFor, schedOf}; })()'
 t = t.replace('/*@@CALENDAR@@*/{ EVENTS: [], TIMETABLE: {} }', cal_js)
 assert '@@CALENDAR@@' not in t
 t = t.replace("/*@@THEMES@@*/{ default: 'pewter', order: [], themes: {} }", json.dumps(THEMES, ensure_ascii=False, separators=(',', ':')))
