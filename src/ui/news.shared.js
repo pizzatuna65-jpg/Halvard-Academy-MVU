@@ -16,7 +16,7 @@
     tab('activities', 'competition', u('competition') && f('competition'));
     tab('activities', 'projects', u('projects') && f('projects'));
     tab('activities', 'trip', u('trip') && f('trip'));
-    const practiceNames = ['Potion Halls','Main Library','Study Rooms','Archive','Seminar Rooms','Observation Tower','Meditation Rooms','Spirit Path','Boathouse and Lake','Grassy Field and Hills','Willow Island','Bell Tower','Club Rooms','Combat Grounds','The Sparring Pavilion','Gymnasium','Sports Field','Archery Range','Swimming Pool','Gardens','Menagerie','Forest','Forest Clearing','Fishing House','The Mall','Common Rooms','Workshop','Canteen','Courtyards','Fire Dormitory','Light Dormitory','Sky Dormitory','Viridian Dormitory'];
+    const practiceNames = /*@@PRACTICE_NAMES@@*/[];   // 1.43.0: every place with a Practice action (data/practice.json)
     const practiceHere = practiceNames.some(n => (ui.discovered || []).includes(n));
     tab('activities', 'practice', practiceHere && f('proficiency'));
     if (f('proficiency')) {

@@ -1450,13 +1450,7 @@ function pStudies(S) {
   <h3>Exams</h3>${X.length ? `<table>${X.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('')}</table>` : '<div class="empty">No exams taken yet.</div>'}`;
 }
 // 1.30.0: each proficiency's Rank 5 perk (DECISIONS "Mastery")
-const MASTERY_PERKS = {
-  Knowledge: 'Once a week, digging through the Archive or the Library turns up one real lead.',
-  Arcana: 'You sense a ward, a trap or a spell at work before you step into it, and per-use techniques cost 10% less mana. The Doves take an interest.',
-  Craft: 'Every successful piece comes out one better (one extra dose or piece), nothing you make comes out rough, and no tier needs supervision.',
-  Prowess: 'Once a week, an injury from a fight lands one step lighter.',
-  Society: "Staff and nobles you meet for the first time start at Trust +5. The Noble Houses' Liaison takes note of you.",
-  Nature: "An ordinary creature's first reaction to you is curiosity, not fear or attack, and foraging brings back double." };
+const MASTERY_PERKS = (DATA.mastery || {}).perks || {};   // 1.43.0: data/mastery.json
 function pProficiency(S) {
   const R = S.Player._Proficiency || {}, P = S.$eng.prof || {}, wk = P.wk || {}, cap = tuneVal(S, 'prof_pace') || 6;
   const xy = (i, r) => [150 + Math.cos(-Math.PI / 2 + i * Math.PI / 3) * r, 150 + Math.sin(-Math.PI / 2 + i * Math.PI / 3) * r];

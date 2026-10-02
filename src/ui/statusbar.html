@@ -254,7 +254,7 @@ const keyIn = (O, name) => { const lo = String(name == null ? '' : name).toLower
     tab('activities', 'competition', u('competition') && f('competition'));
     tab('activities', 'projects', u('projects') && f('projects'));
     tab('activities', 'trip', u('trip') && f('trip'));
-    const practiceNames = ['Potion Halls','Main Library','Study Rooms','Archive','Seminar Rooms','Observation Tower','Meditation Rooms','Spirit Path','Boathouse and Lake','Grassy Field and Hills','Willow Island','Bell Tower','Club Rooms','Combat Grounds','The Sparring Pavilion','Gymnasium','Sports Field','Archery Range','Swimming Pool','Gardens','Menagerie','Forest','Forest Clearing','Fishing House','The Mall','Common Rooms','Workshop','Canteen','Courtyards','Fire Dormitory','Light Dormitory','Sky Dormitory','Viridian Dormitory'];
+    const practiceNames = ["Potion Halls","Main Library","Study Rooms","Archive","Seminar Rooms","Observation Tower","Meditation Rooms","Spirit Path","Willow Island","Club Rooms","Combat Grounds","The Sparring Pavilion","Gymnasium","Sports Field","Archery Range","Swimming Pool","Gardens","Menagerie","Bell Tower","Boathouse and Lake","Grassy Field and Hills","Forest","Forest Clearing","Fishing House","The Mall","Common Rooms","Workshop","Canteen","Courtyards","Fire Dormitory","Light Dormitory","Sky Dormitory","Viridian Dormitory"];   // 1.43.0: every place with a Practice action (data/practice.json)
     const practiceHere = practiceNames.some(n => (ui.discovered || []).includes(n));
     tab('activities', 'practice', practiceHere && f('proficiency'));
     if (f('proficiency')) {
@@ -349,7 +349,7 @@ const keyIn = (O, name) => { const lo = String(name == null ? '' : name).toLower
     const hap = ui.hap;   // 5.3 (F20): today's campus happening
     if (hap && hap.text && ui.happenings !== 'off') c.push(chip((hap.now ? 'Now: ' : hap.from + ':00 ') + (hap.where || 'Around campus'), 'fa-bullhorn', hap.now ? 'glow' : '', hap.text, 'notebook:planner'));
     // 1.2.0: at a shop (Commissary, the Mall and its shops) a chip opens the Shop tab, which exists only there
-    if (/^(the\s+)?(commissary|mall|nightwell|merryhew'?s|snug)\b/i.test(String(W.Location || '').trim())) c.push(chip('Shop here', 'fa-basket-shopping', '', 'Open the shop list', 'activities:shop'));
+    if (/^(the\s+)?(commissary|mall|nightwell|merryhew'?s|snug|quillfeather'?s|pennywhistle curios|barrow & vine|greenwick'?s|tinker'?s bench|salaffian oven|tailor'?s row)\b/i.test(String(W.Location || '').trim())) c.push(chip('Shop here', 'fa-basket-shopping', '', 'Open the shop list', 'activities:shop'));
     if (c.length) h += '<div class="chips">' + c.join('') + '</div>';
 
     const low = h.length;   // 1.22.0: who is here and the latest news share one row (.low)

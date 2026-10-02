@@ -1,0 +1,14 @@
+{
+ "_note": "1.43.0 (audit batch 2, 2.8): what Rank 5 in a proficiency gives (owner-approved planning/DRAFT_proficiency_practice.md, 1.30.0). The numbers are the engine's (tools/gen_engine.py MASTERY_FX); the texts are the Student file's (tools/gen_ui.py), with their numbers filled from this file.",
+ "arcana_cost": 0.9,
+ "society_trust": 5,
+ "nature_forage": 2,
+ "perks": {
+  "Knowledge": "Once a week, digging through the Archive or the Library turns up one real lead.",
+  "Arcana": "You sense a ward, a trap or a spell at work before you step into it, and per-use techniques cost {@mastery.arcana_cost:pctoff} less mana. The Doves take an interest.",
+  "Craft": "Every successful piece comes out one better (one extra dose or piece), nothing you make comes out rough, and no tier needs supervision.",
+  "Prowess": "Once a week, an injury from a fight lands one step lighter.",
+  "Society": "Staff and nobles you meet for the first time start at Trust +{@mastery.society_trust}. The Noble Houses' Liaison takes note of you.",
+  "Nature": "An ordinary creature's first reaction to you is curiosity, not fear or attack, and foraging brings back {@mastery.nature_forage:times}."
+ }
+}

@@ -71,7 +71,11 @@
    "price": 30,
    "note": "back shelves; enough for a few practicals",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "sweets and baked goods",
+    "raw reagent"
+   ]
   },
   {
    "shop": "Commissary",
@@ -80,7 +84,10 @@
    "price": 250,
    "note": "",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "enchanted"
+   ]
   },
   {
    "shop": "Commissary",
@@ -89,7 +96,10 @@
    "price": 350,
    "note": "costs more than a bottom-band monthly payout",
    "canon": true,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "raw reagent"
+   ]
   },
   {
    "shop": "Commissary",
@@ -131,7 +141,10 @@
    "price": 15,
    "note": "",
    "canon": true,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "sweets and baked goods"
+   ]
   },
   {
    "shop": "The Mall — bakery",
@@ -140,7 +153,10 @@
    "price": 8,
    "note": "eaten whole before anything that matters; sells out by seven on exam mornings",
    "canon": true,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "sweets and baked goods"
+   ]
   },
   {
    "shop": "The Mall — cafés and tea houses",
@@ -149,7 +165,10 @@
    "price": 25,
    "note": "",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "sweets and baked goods"
+   ]
   },
   {
    "shop": "The Mall — restaurants",
@@ -158,7 +177,11 @@
    "price": 45,
    "note": "",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "food",
+    "good meal"
+   ]
   },
   {
    "shop": "The Mall — private dining",
@@ -185,7 +208,10 @@
    "price": 4000,
    "note": "the top tier of magical equipment",
    "canon": true,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "enchanted"
+   ]
   },
   {
    "shop": "Tailor's Row",
@@ -370,7 +396,10 @@
     "clears": [
      "Chilled"
     ]
-   }
+   },
+   "gift_tags": [
+    "sweets and baked goods"
+   ]
   },
   {
    "shop": "Nightwell",
@@ -379,7 +408,10 @@
    "price": 10,
    "note": "what is left after the evening rush",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "sweets and baked goods"
+   ]
   },
   {
    "shop": "Nightwell",
@@ -397,7 +429,10 @@
    "price": 40,
    "note": "yes, no, or ask again later",
    "canon": true,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "prank goods"
+   ]
   },
   {
    "shop": "Merryhew's",
@@ -406,7 +441,10 @@
    "price": 15,
    "note": "pinned on someone, itches for an hour",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "prank goods"
+   ]
   },
   {
    "shop": "Merryhew's",
@@ -415,7 +453,11 @@
    "price": 12,
    "note": "squeaky, booming or croaking, ten minutes each",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "prank goods",
+    "sweets and baked goods"
+   ]
   },
   {
    "shop": "Merryhew's",
@@ -424,7 +466,10 @@
    "price": 25,
    "note": "a swarm of fake mice or spiders; vanishes when touched",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "prank goods"
+   ]
   },
   {
    "shop": "Merryhew's",
@@ -433,7 +478,10 @@
    "price": 35,
    "note": "screams when opened; the lid can be set to a name",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "prank goods"
+   ]
   },
   {
    "shop": "Merryhew's",
@@ -442,7 +490,11 @@
    "price": 18,
    "note": "one day of an alarming colour",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "prank goods",
+    "sweets and baked goods"
+   ]
   },
   {
    "shop": "Merryhew's",
@@ -451,7 +503,10 @@
    "price": 10,
    "note": "bursts when unfolded",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "prank goods"
+   ]
   },
   {
    "shop": "Merryhew's",
@@ -460,7 +515,10 @@
    "price": 60,
    "note": "the year's big sale is Month 4 Week 1",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "prank goods"
+   ]
   },
   {
    "shop": "The Snug",
@@ -478,7 +536,11 @@
    "price": 30,
    "note": "soup, a main and bread; ordinary and filling",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "food",
+    "good meal"
+   ]
   },
   {
    "shop": "The Snug",
@@ -496,7 +558,11 @@
    "price": 22,
    "note": "",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "food",
+    "good meal"
+   ]
   },
   {
    "shop": "The Snug",
@@ -505,7 +571,10 @@
    "price": 14,
    "note": "",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "sweets and baked goods"
+   ]
   },
   {
    "shop": "The Snug",
@@ -559,7 +628,10 @@
    "price": 18,
    "note": "romance novel, twelve volumes and counting",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -568,7 +640,10 @@
    "price": 30,
    "note": "seven princesses, seven rescues, gilt edges",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -577,7 +652,10 @@
    "price": 40,
    "note": "the standard tactics treatise",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -586,7 +664,10 @@
    "price": 30,
    "note": "",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -595,7 +676,10 @@
    "price": 20,
    "note": "heroic ballads",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -604,7 +688,10 @@
    "price": 16,
    "note": "with guitar chords",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -613,7 +700,10 @@
    "price": 18,
    "note": "campus ghost stories",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -622,7 +712,10 @@
    "price": 6,
    "note": "cheap pamphlet, sells every autumn",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -631,7 +724,10 @@
    "price": 15,
    "note": "debunks every story",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -640,7 +736,10 @@
    "price": 60,
    "note": "leather-bound",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -649,7 +748,10 @@
    "price": 35,
    "note": "",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -658,7 +760,10 @@
    "price": 45,
    "note": "second-hand shelf",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -667,7 +772,10 @@
    "price": 12,
    "note": "popular history",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -676,7 +784,10 @@
    "price": 70,
    "note": "doctrine",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -685,7 +796,10 @@
    "price": 12,
    "note": "a book with every answer",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -694,7 +808,10 @@
    "price": 120,
    "note": "rare magic theory",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -703,7 +820,10 @@
    "price": 50,
    "note": "peerage register",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -712,7 +832,10 @@
    "price": 20,
    "note": "",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -721,7 +844,10 @@
    "price": 25,
    "note": "",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -730,7 +856,10 @@
    "price": 30,
    "note": "",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -739,7 +868,10 @@
    "price": 15,
    "note": "the kingdom's sign language",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -748,7 +880,10 @@
    "price": 8,
    "note": "",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -757,7 +892,10 @@
    "price": 10,
    "note": "bundle, second-hand",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   },
   {
    "shop": "Quillfeather's",
@@ -910,7 +1048,10 @@
    "price": 35,
    "note": "a sealed globe of storm rain that never settles",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "enchanted"
+   ]
   },
   {
    "shop": "Pennywhistle Curios",
@@ -919,7 +1060,10 @@
    "price": 40,
    "note": "lights itself at dusk",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "enchanted"
+   ]
   },
   {
    "shop": "Pennywhistle Curios",
@@ -928,7 +1072,10 @@
    "price": 25,
    "note": "stays warm all day",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "enchanted"
+   ]
   },
   {
    "shop": "Pennywhistle Curios",
@@ -946,7 +1093,10 @@
    "price": 25,
    "note": "",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "enchanted"
+   ]
   },
   {
    "shop": "Pennywhistle Curios",
@@ -1207,7 +1357,10 @@
    "price": 6,
    "note": "",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "food"
+   ]
   },
   {
    "shop": "Greenwick's",
@@ -1216,7 +1369,10 @@
    "price": 5,
    "note": "",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "food"
+   ]
   },
   {
    "shop": "Greenwick's",
@@ -1243,7 +1399,10 @@
    "price": 50,
    "note": "",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "sweets and baked goods"
+   ]
   },
   {
    "shop": "The Tinker's Bench",
@@ -1306,7 +1465,10 @@
    "price": 30,
    "note": "",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "food"
+   ]
   },
   {
    "shop": "The Tinker's Bench",
@@ -1459,7 +1621,10 @@
    "price": 6,
    "note": "",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "food"
+   ]
   },
   {
    "shop": "The Salaffian Oven",
@@ -1531,7 +1696,10 @@
    "price": 6,
    "note": "already in Irene's lore",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "sweets and baked goods"
+   ]
   },
   {
    "shop": "Commissary",
@@ -1549,7 +1717,10 @@
    "price": 6,
    "note": "",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "food"
+   ]
   },
   {
    "shop": "Commissary",
@@ -1567,7 +1738,10 @@
    "price": 6,
    "note": "",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "sweets and baked goods"
+   ]
   },
   {
    "shop": "The Mall — cafés and tea houses",
@@ -1576,7 +1750,10 @@
    "price": 14,
    "note": "",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "sweets and baked goods"
+   ]
   },
   {
    "shop": "The Mall — cafés and tea houses",
@@ -1698,7 +1875,10 @@
    ],
    "use": {
     "stamina": 10
-   }
+   },
+   "gift_tags": [
+    "sweets and baked goods"
+   ]
   },
   {
    "shop": "The Mall — bakery",
@@ -1712,7 +1892,10 @@
    ],
    "use": {
     "stamina": 10
-   }
+   },
+   "gift_tags": [
+    "sweets and baked goods"
+   ]
   },
   {
    "shop": "The Mall — cafés and tea houses",
@@ -1729,7 +1912,10 @@
     "clears": [
      "Chilled"
     ]
-   }
+   },
+   "gift_tags": [
+    "food"
+   ]
   },
   {
    "shop": "Commissary",
@@ -1815,7 +2001,10 @@
    "price": 8,
    "note": "action serial, a new volume every month",
    "canon": false,
-   "season": "all"
+   "season": "all",
+   "gift_tags": [
+    "book"
+   ]
   }
  ]
 }

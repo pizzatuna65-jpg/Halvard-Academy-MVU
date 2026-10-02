@@ -3,7 +3,7 @@
  "area": "Avalon",
  "map": "map/avalon.webp",
  "crowning": {"event": "Independence Crowning Day", "day": "Tue", "arrive": "09:30", "parade": "10:00", "speech": "11:00", "free": "11:30", "muster": "15:30", "depart": "16:00", "crowd_from": "10:00", "crowd_to": "13:00"},
- "kingdom": {"free_until": "21:00", "curfew": "22:00", "reception": "Sat"},
+ "kingdom": {"matches": "09:00-18:00", "free_until": "21:00", "curfew": "22:00", "reception": "Sat", "prize": 5000},
  "pins": [
   {"id": "castle", "name": "Eldrasil Castle", "x": 50, "y": 31, "locked": true},
   {"id": "square", "name": "Crown Square", "x": 50, "y": 57},

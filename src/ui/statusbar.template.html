@@ -263,7 +263,7 @@ button.chip{font:inherit;font-size:13px;cursor:pointer}button.chip:hover{filter:
     const hap = ui.hap;   // 5.3 (F20): today's campus happening
     if (hap && hap.text && ui.happenings !== 'off') c.push(chip((hap.now ? 'Now: ' : hap.from + ':00 ') + (hap.where || 'Around campus'), 'fa-bullhorn', hap.now ? 'glow' : '', hap.text, 'notebook:planner'));
     // 1.2.0: at a shop (Commissary, the Mall and its shops) a chip opens the Shop tab, which exists only there
-    if (/^(the\s+)?(commissary|mall|nightwell|merryhew'?s|snug)\b/i.test(String(W.Location || '').trim())) c.push(chip('Shop here', 'fa-basket-shopping', '', 'Open the shop list', 'activities:shop'));
+    if (/*@@SHOP_RX@@*/.test(String(W.Location || '').trim())) c.push(chip('Shop here', 'fa-basket-shopping', '', 'Open the shop list', 'activities:shop'));
     if (c.length) h += '<div class="chips">' + c.join('') + '</div>';
 
     const low = h.length;   // 1.22.0: who is here and the latest news share one row (.low)

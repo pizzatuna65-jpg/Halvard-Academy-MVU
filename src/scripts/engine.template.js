@@ -121,6 +121,7 @@ const TUTOR_PAY = 40, TUTOR_WEEK = 2, ASSIGNMENT_MIN = 45;
 // and attendance, weighted for theory or practical, plus a seeded exam-day roll; Rank 5 in a proficiency opens its mastery perk
 const GRADE_W = { theory: [0.5, 0.3, 0.2], practical: [0.3, 0.5, 0.2] }, GRADE_CUT = [40, 55, 70, 85];
 const EXAM_DAY = [[10, -8, 'a bad day'], [30, -4, 'an off day'], [70, 0, ''], [90, 4, 'a good day'], [100, 8, 'an inspired day']];
+const MASTERY_FX = /*@@MASTERY_FX@@*/{ arcana_cost: 0.9, society_trust: 5, nature_forage: 2 };   // 1.43.0: data/mastery.json
 const MASTERY = 5, profRankOf = (X, k) => PROF_CUT.filter(x => num((((X || {}).$eng || {}).prof || {}).xp && X.$eng.prof.xp[k], 0) >= x).length - 1;
 // staff and nobles (Consummate: NPC_GROUP staff, or other = the Doves, the Cathedral, the Liaison, facilities); nobles by the lorebook (House Silvarenne, House Villeneuve, the Liaison's regulars)
 const CONSUMMATE_GROUPS = ['staff', 'other'], NOBLES = ['Caspian', 'Caralynn', 'Florian', 'Elion', 'Nerys'];
@@ -241,8 +242,8 @@ function canonLocation(loc) {
 }
 const onCampus = loc => { const p = placeOf(loc).toLowerCase(); return !p || CAMPUS.some(c => p === c || p.startsWith(c + ' ') || p.startsWith(c + ',')); };
 const CAP = { Notices: 10, Letters: 12, Clues: 40, Journal: 30 };
-// Batch 5.2: the Kingdom prize (lore Competitions: 5,000 points per winning member); the trips are TRIPS in shared.js
-const KINGDOM_PRIZE = 5000;
+// Batch 5.2: the Kingdom prize (lore Competitions: 5,000 points per winning member) is avalon.json kingdom.prize (KINGDOM_PRIZE,
+// below AV); the trips are TRIPS in shared.js
 const DORM_PRIZE = [100, 50];   // 1.33.0: a Dorm Competition role bracket's champion and runner-up
 // v1.0.3: Halvard students {id: [lorebook Year, campaign year they arrive]}, injected by gen_engine. Graduation (M11 W4 Sun) sends
 // the year's third-years away the next morning (M12 W1 Mon); they go to Campus_State.Graduated (the story may take a name back out).
@@ -622,6 +623,7 @@ function forestWx(seed, day, b) {                                 // the rainfor
 // walk (or a hire carriage), keeps the White Line closed except to the Kingdom winners, runs the Crowning Day muster, and rolls the
 // city's life once per hour there: pickpockets, processions, street sights, other academies' students, Tsubaki lost, Rookery raids.
 const AV = /*@@AVALON@@*/{};
+const KINGDOM_PRIZE = AV.kingdom.prize;   // 1.43.0: one source with the Activities panel's Competition text
 const AV_PL = Object.fromEntries((AV.places || []).map(p => [p.id, p]));
 const AV_PIN = Object.fromEntries((AV.pins || []).map(p => [p.id, p]));
 const AV_NB = {};                                              // pin -> [[pin, minutes]]
@@ -1450,7 +1452,7 @@ function stepMagic(c) {
     // hybrid: while the effect is running, a triggered use costs Trigger; otherwise a cast costs Activation
     const running = Object.values(M.Active || {}).some(e => e.Technique === c.Technique);
     const base = t.Cost_mode === 'hybrid' && t.Trigger > 0 && running ? t.Trigger : (t.Activation || 0);
-    const unit = t.Cost_mode === 'per_use' && base > 0 && !OFF.has('proficiency') && profRankOf(hasB ? B : S, 'Arcana') >= MASTERY ? Math.max(0.5, Math.round(base * 0.9 * 2) / 2) : base;   // 1.30.0: Arcane scholar
+    const unit = t.Cost_mode === 'per_use' && base > 0 && !OFF.has('proficiency') && profRankOf(hasB ? B : S, 'Arcana') >= MASTERY ? Math.max(0.5, Math.round(base * MASTERY_FX.arcana_cost * 2) / 2) : base;   // 1.30.0: Arcane scholar
     const cost = windCost(t, unit * (c.Times || 1), c.Technique);
     if (cost > V.Mana + regenLeft) { log.push(`${c.Technique} needed ${cost} mana but only ${Math.floor(V.Mana + regenLeft)} was left: the casting strained or failed (mana now 0).`); V.Mana = 0; regenLeft = 0; }
     else { payMana(cost); profContext.profCast = true; }
@@ -2614,7 +2616,7 @@ function stepBonds(c) {
     let rankTrust = 0;
     // 1.4.3: a new bond starts at the character's own Trust (owner: start by category). 1.6.11 (owner playtest: Trixie met for the
     // first time showed Trust 10, Betrayed): a number the narrator writes on a first meeting is not a deed, so it gives way too
-    if (!b0 && hasB) { const s0 = trustProfile(id, S, secretOut).start + (!OFF.has('proficiency') && profRankOf(B, 'Society') >= MASTERY && (CONSUMMATE_GROUPS.includes(NPC_GROUP[id]) || NOBLES.includes(id)) ? 5 : 0); if (num(b.Trust, 50) !== 50 && num(b.Trust, 50) !== s0) log.push(`${id} is new: Trust starts at ${s0} by their nature (${num(b.Trust, 50)} written; a first meeting is not a deed).`); b.Trust = s0; }
+    if (!b0 && hasB) { const s0 = trustProfile(id, S, secretOut).start + (!OFF.has('proficiency') && profRankOf(B, 'Society') >= MASTERY && (CONSUMMATE_GROUPS.includes(NPC_GROUP[id]) || NOBLES.includes(id)) ? MASTERY_FX.society_trust : 0); if (num(b.Trust, 50) !== 50 && num(b.Trust, 50) !== s0) log.push(`${id} is new: Trust starts at ${s0} by their nature (${num(b.Trust, 50)} written; a first meeting is not a deed).`); b.Trust = s0; }
     if (!b0 && hasB && START[id]) {                            // Etnie adopts {{user}} on sight.
       const st = START[id];
       b.Rank = st.Rank; b.$cool = dayNo + coolDays(st.Rank, PACE); xp = 0;
@@ -3299,7 +3301,7 @@ function stepProficiency(c) {
       continue;
     }
     if (a.action === 'Tend the reagent beds') bagGain('Foraged reagent', 1, 'reagent', 'fresh from the Gardens');
-    if (a.action === 'Forage' && SEASONS[S.World.Month - 1] !== 'Winter') bagGain('Foraged reagent', (SEASONS[S.World.Month - 1] === 'Summer' ? 1 : 2) * (ranks.Nature >= MASTERY ? 2 : 1), 'reagent', 'foraged in the Forest');
+    if (a.action === 'Forage' && SEASONS[S.World.Month - 1] !== 'Winter') bagGain('Foraged reagent', (SEASONS[S.World.Month - 1] === 'Summer' ? 1 : 2) * (ranks.Nature >= MASTERY ? MASTERY_FX.nature_forage : 1), 'reagent', 'foraged in the Forest');
     if (a.action === 'Gather clearing blooms') {
       bagGain('Clearing bloom', 1, 'reagent', 'wilts tomorrow');
       const C = S.$eng.craft || (S.$eng.craft = {}); C.blooms = C.blooms || {}; C.blooms['clearing bloom'] = dayNo;

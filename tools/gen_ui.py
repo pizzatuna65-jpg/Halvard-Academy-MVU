@@ -28,20 +28,7 @@ NPCS = sorted([{'id': k, 'name': v['name'], 'dorm': v.get('dorm') or '', 'year':
                for k, v in npcs.items()], key=lambda x: x['name'])
 # ---- Batch 4: people / map data ----
 # Rank-0 public role (D14 table: appearance, dorm/year, public role). Curated: roster tags mix roles with traits and secrets.
-PUBLIC_ROLE = {
-    'Irene': 'Student Council President', 'Caspian': 'Student Council Vice President', 'Royhan': 'Third-year alchemist',
-    'Gavlan': 'Attack teacher (Practical Magic)', 'Yvette': 'Magic Theory teacher, Fire Dorm Head', 'Krieg': 'Dovecote Commander',
-    'Milena': 'Senior Dove, Dark Magic Defense teacher', 'Baelin': 'Headmaster', 'Layla': 'History teacher',
-    'Vallie': 'Creature Studies teacher', 'Gareth': "Halvard's top-ranked student (#1)", 'Sophia': "Halvard's #2 student, the Blood Saint",
-    'Florian': "Halvard's #3 student", 'Rei': 'Acting Warden', 'Kuroo': 'Etiquette teacher, Viridian Dorm Head',
-    'Mimosa': 'Potion Crafting teacher', 'Althair': 'Vice Headmaster', 'Tristan': 'Cathedral Steward',
-    'Ezrel': 'Magic Theory teacher, Light Dorm Head', 'Ottavio': 'Etiquette teacher, Sky Dorm Head',
-    'Caine': "Butler of the Noble Houses' Liaison", 'Bobby': 'Maintenance worker',
-    'Ines': 'Myrdath team captain', 'Cassius': 'Veyra team captain',
-    # 1.33.0 new teaching staff
-    'Hester': 'Head Nurse, Healing teacher', 'Anselm': 'Defense teacher', 'Magnus': 'Support teacher', 'Dorian': 'Control teacher',
-    'Cedric': 'History teacher', 'Anya': 'Etiquette teacher', 'Kotaro': 'Potion Crafting teacher', 'Valentin': 'Potion Crafting teacher',
-}
+PUBLIC_ROLE = {k: v for k, v in json.load(open(P('data/public_roles.json'), encoding='utf-8')).items() if not k.startswith('_')}   # 1.43.0: data file
 YEARW = {1: 'first-year', 2: 'second-year', 3: 'third-year'}
 def descriptor(nid, n):
     hair = (n.get('hair') or '').replace(' hair', '').strip()
@@ -104,6 +91,9 @@ from common import load_clubs   # v1.1.0: club data shared with gen_mvu_entries.
 from common import place_aliases   # 1.3.1: short place names -> location id (map "you are here")
 from common import npc_aliases     # 1.37.0: dialogue colours by every name a character goes by
 from common import effect_text     # 1.9.5: shop item effects (shop and Bag)
+from common import fill_data
+_mst = json.load(open(P('data/mastery.json'), encoding='utf-8'))   # 1.43.0 (2.8): Rank 5 perks and their numbers
+DATA['mastery'] = {'arcana_cost': _mst['arcana_cost'], 'perks': {k: fill_data(v) for k, v in _mst['perks'].items()}}
 _byname = {l['name']: lid for lid, l in DATA['locs'].items()}
 DATA['palias'] = {re.sub(r'^the ', '', a): _byname[nm] for a, nm in place_aliases(json.load(open(P('data/locations.json'), encoding='utf-8'))).items()}
 DATA['tune'] = json.load(open(P('data/tuning.json'), encoding='utf-8'))['groups']   # 1.3.1 Settings rows
@@ -153,7 +143,16 @@ for _a, _id in npc_aliases(npcs).items():
     if _id in _say['npcs']: DATA['say']['who'].setdefault(_a, _id)
 bar = open(P('src/ui/statusbar.template.html'), encoding='utf-8').read()
 NEWS = open(P('src/ui/news.shared.js'), encoding='utf-8').read()   # 1.25.0 red "new" dots, shared by the bracelet and the panels
+# 1.43.0 (2.8): the places with a Practice action, from data/practice.json (a new practice place gets its red dot)
+_pnames = list(dict.fromkeys(DATA['locs'][a['loc']]['name'] for a in json.load(open(P('data/practice.json'), encoding='utf-8'))))
+assert NEWS.count('/*@@PRACTICE_NAMES@@*/[]') == 1
+NEWS = NEWS.replace('/*@@PRACTICE_NAMES@@*/[]', json.dumps(_pnames, ensure_ascii=False, separators=(',', ':')))
 bar = bar.replace('/*@@NEWS@@*/', NEWS)
+# 1.43.0 (2.8): the "Shop here" chip at a shop place: the Commissary and the Mall's cluster (the Shop tab's places), by name
+_shops = ['commissary'] + DATA['mallShops']
+_shop_rx = '|'.join(re.sub(r'^the ', '', DATA['locs'][i]['name'].lower()).replace("'", "'?") for i in _shops)
+assert bar.count('/*@@SHOP_RX@@*/') == 1
+bar = bar.replace('/*@@SHOP_RX@@*/', '/^(the\\s+)?(' + _shop_rx + ')\\b/i')
 from common import shared_js
 assert bar.count('/*@@SHARED@@*/') == 1
 bar = bar.replace('/*@@SHARED@@*/', shared_js())   # 1.43.0 (audit batch 2)
@@ -169,6 +168,8 @@ t = t.replace('/*@@PARTS@@*/', parts)
 from common import shared_js
 assert t.count('/*@@SHARED@@*/') == 1
 t = t.replace('/*@@SHARED@@*/', shared_js())   # 1.43.0 (audit batch 2)
+from common import fill_data
+t = fill_data(t)   # 1.43.0 (2.8): times and numbers in panel texts come from the data ({@file.path})
 t = t.replace('/*@@NEWS@@*/', NEWS)
 cal = json.load(open(P('data/calendar.json'), encoding='utf-8'))
 cal_js = '(() => { const EVENTS = ' + json.dumps(cal['events'], ensure_ascii=False, separators=(',', ':')) + '; const TIMETABLE = ' + json.dumps(cal['timetable'], ensure_ascii=False, separators=(',', ':')) + '; const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]; const schedOf = (e, day) => (!e.s ? "" : typeof e.s === "string" ? e.s : e.s[day] || ""); const timetableFor = (W, S) => { const row = TIMETABLE[W.Day]; if (!row) return row; const tt = [...row]; if (W.Day === "Sat" && S && ((S.Player || {}).Profile || {}).Council && !councilRemedial(S.Commitments, W)) tt[1] = "Student Council (Student Council Chamber)"; if (W.Month === 10 && W.Week === 3 && W.Day === "Sat") tt[2] = "Student Council Election (Main Courtyard)"; return tt; }; return {EVENTS, TIMETABLE, timetableFor, schedOf}; })()'

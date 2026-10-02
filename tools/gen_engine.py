@@ -29,16 +29,11 @@ for key, file in [('NPC_MOODS', 'npc_moods'), ('GIFT_PREFS', 'gift_prefs'), ('WI
         obj['catalog'] = {}
         for item in json.load(open(P('data/shop.json'), encoding='utf-8'))['items']:
             name, shop = item['item'], item['shop']
-            tags = [shop]
-            if shop == "Merryhew's": tags.append('prank goods')
-            if shop == "Quillfeather's" and not re.search(r'journal|notebook|planner', name, re.I): tags.append('book')
-            if re.search(r'roll|bun|cookie|pastry|sweet|chocolate|cake|turnover', name, re.I): tags.append('sweets and baked goods')
-            if re.search(r'meal|stew|flatbread|fish|carrots|apples|chestnuts', name, re.I): tags.append('food')
-            if re.search(r'meal|stew', name, re.I): tags.append('good meal')
-            if 'reagent' in name.lower(): tags.append('raw reagent')
-            if name in ('Rainglass', 'Everlamp, miniature', 'Hearthstone hand-warmer', 'Warding amulet', 'Quality focus', 'Basic practice focus'): tags.append('enchanted')
+            tags = [shop] + item.get('gift_tags', [])   # 1.43.0 (2.8): data/shop.json gift_tags, no longer guessed from the name
             obj['catalog'][name] = ' '.join(tags)
     t = t.replace('/*@@' + key + '@@*/{}', json.dumps(obj, ensure_ascii=False, separators=(',', ':')))
+_mst = json.load(open(P('data/mastery.json'), encoding='utf-8'))   # 1.43.0 (2.8): Rank 5 perks' numbers
+t = t.replace('/*@@MASTERY_FX@@*/{ arcana_cost: 0.9, society_trust: 5, nature_forage: 2 }', json.dumps({k: _mst[k] for k in ('arcana_cost', 'society_trust', 'nature_forage')}))
 t = t.replace('/*@@NPC_DORMS@@*/{}', json.dumps({k: v.get('dorm') for k,v in npcs.items()}, separators=(',', ':')))
 
 locs = json.load(open(P('data/locations.json'), encoding='utf-8'))

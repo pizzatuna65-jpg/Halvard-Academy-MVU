@@ -170,3 +170,31 @@ def shared_js():
     ph = "/*@@SHARED_DATA@@*/{ periods: [], exam_months: [], seasons: [], trips: [], dorm_colors: {} }"
     assert ph in src, 'shared.js lost its data placeholder'
     return src.replace(ph, json.dumps(data, ensure_ascii=False, separators=(',', ':')))
+
+
+_DATA_REF = re.compile(r'\{@([a-z_]+)\.([A-Za-z0-9_.]+)(?::([a-z]+))?\}')
+_DAY_FULL = {'Mon': 'Monday', 'Tue': 'Tuesday', 'Wed': 'Wednesday', 'Thu': 'Thursday', 'Fri': 'Friday', 'Sat': 'Saturday', 'Sun': 'Sunday'}
+
+
+def fill_data(text):
+    """1.43.0 (audit batch 2, 2.8): a player- or narrator-facing text names its numbers and times as {@file.path} (data/<file>.json,
+    list indices as numbers), so the text follows the data. Formats: {@…:n} 5,000; {@…:day} Sat -> Saturday; {@…:nextday} Thu ->
+    Friday; {@…:clock} 12:00 -> noon; {@…:pctoff} 0.9 -> 10%; {@…:times} 2 -> double."""
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    cache = {}
+    def sub(m):
+        f, path, fmt = m.group(1), m.group(2), m.group(3)
+        if f not in cache: cache[f] = json.load(open(os.path.join(root, 'data', f + '.json'), encoding='utf-8'))
+        v = cache[f]
+        for part in path.split('.'): v = v[int(part)] if isinstance(v, list) else v[part]
+        if fmt == 'n': return f'{v:,}'
+        if fmt == 'day': return _DAY_FULL[v]
+        if fmt == 'nextday': d = list(_DAY_FULL); return _DAY_FULL[d[(d.index(v) + 1) % 7]]
+        if fmt == 'clock': return 'noon' if v == '12:00' else 'midnight' if v == '00:00' else v
+        if fmt == 'pctoff': return f'{round((1 - v) * 100)}%'
+        if fmt == 'times': return {2: 'double', 3: 'triple'}.get(v, f'{v} times as much')
+        assert fmt is None, f'unknown data format {fmt}'
+        return str(v)
+    out = _DATA_REF.sub(sub, text)
+    assert '{@' not in out, 'a data reference was not filled: ' + out[out.index('{@'):][:60]
+    return out

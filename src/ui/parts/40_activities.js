@@ -7,7 +7,7 @@ const practicePlaces = S => [...new Set((DATA.practice || []).map(a => a.loc))].
 const COMP_TIERS = [
   ['Dorm', 'Dorm Competition', 'Solo, open to the whole dorm, run as a ranking tournament so everyone finishes with a placement. The top 16 of each dorm qualify.'],
   ['Academy', 'Academy Competition', 'Qualifiers from all four dorms form teams of 4 with at least one student from each year, covering the combat roles between them. Knockout; the winning team represents Halvard.'],
-  ['Kingdom', 'Kingdom Competition', 'One team per academy, four in all, knockout, at the arena in the capital. Only the teams travel (Halvard\'s with Gavlan Haverton): they arrive the day before, stay at a hotel and fly home the day after. Each member of the winning team earns 5,000 points.'],
+  ['Kingdom', 'Kingdom Competition', 'One team per academy, four in all, knockout, at the arena in the capital. Only the teams travel (Halvard\'s with Gavlan Haverton): they arrive the day before, stay at a hotel and fly home the day after. Each member of the winning team earns {@avalon.kingdom.prize:n} points.'],
   ['World', 'World Competition', 'Abroad. A panel picks the national four from the best individuals of the Kingdom Competition, winners and losers alike. Being picked off a losing team is a great honour.'],
 ];
 const clubOf = S => { const raw = String(((S.Player || {}).Profile || {}).Club || '').toLowerCase(); const c = raw === 'duelling club' ? 'magic duelling club' : raw; return c ? (DATA.clubs || []).find(x => c.includes(x.key.toLowerCase())) : null; };
@@ -193,16 +193,16 @@ function acProjects(S) {
 const TRIP_INFO = [
   { rx: /^Independence Crowning Day/, name: 'Independence Crowning Day: Avalon, the capital', lines: [
     'The day before: change points into coin at the Banking House. Points do not work in Avalon.',
-    '07:00 speeches, then the whole academy flies to Avalon by airship (the Skyport at 09:30).', '10:00 the parade on Crown Avenue, the Royal Mages at its head; 11:00 the King\'s speech at Crown Square.',
-    'Free time from 11:30 until the muster at the Skyport at 15:30: markets, food, sights. Walks across the city take an hour or more; a hire carriage is faster, for coin.',
+    '07:00 speeches, then the whole academy flies to Avalon by airship (the Skyport at {@avalon.crowning.arrive}).', '{@avalon.crowning.parade} the parade on Crown Avenue, the Royal Mages at its head; {@avalon.crowning.speech} the King\'s speech at Crown Square.',
+    'Free time from {@avalon.crowning.free} until the muster at the Skyport at {@avalon.crowning.muster}: markets, food, sights. Walks across the city take an hour or more; a hire carriage is faster, for coin.',
     'Groups of four only. Uniform all day; the Doves travel along and staff count heads constantly. Late for the muster means a detention.',
     'Back before dark, passenger lists counted twice. Fireworks over the hills at night; curfew moves to 22:00.'] },
   { rx: /^Academy Trip/, name: 'Academy Trip: Sunreach Bay', lines: [
-    'Month 11 Week 2 Saturday to Week 3 Thursday; all three years. A full day by airship each way: out on the Saturday, home on the Thursday.',
+    'Month {@sunreach.window.m} Week {@sunreach.window.from.0} {@sunreach.window.from.1:day} to Week {@sunreach.window.to.0} {@sunreach.window.to.1:day}; all three years. A full day by airship each way: out on the {@sunreach.window.from.1:day}, home on the {@sunreach.window.to.1:day}.',
     'The day before: change points into coin at the Banking House. Points do not work abroad, and Sunreach is expensive: this is what a year of saving is for.',
-    'Halvard stays at The Hanabira, a Yozakuran hotel on Coral Strand, four to a room. Sunday 09:00 the teachers\' briefing; Wednesday 19:00 the farewell dinner; Thursday 08:00 boarding.',
-    'One city with two faces: a seaside paradise by day, lit by rune-light from 18:00 to dawn. Carriages and water taxis for coin; the open sea by tour boat.',
-    'Leave the hotel only in groups of four; curfew 22:00. The night side (the casinos and the Velvet Lanes) is out of bounds, which some students ignore every year.'] },
+    'Halvard stays at The Hanabira, a Yozakuran hotel on Coral Strand, four to a room. {@sunreach.schedule.0.1:day} {@sunreach.schedule.0.2} the teachers\' briefing; {@sunreach.schedule.1.1:day} {@sunreach.schedule.1.2} the farewell dinner; {@sunreach.schedule.2.1:day} {@sunreach.schedule.2.2} boarding.',
+    'One city with two faces: a seaside paradise by day, lit by rune-light from {@sunreach.night.from} to dawn. Carriages and water taxis for coin; the open sea by tour boat.',
+    'Leave the hotel only in groups of four; curfew {@sunreach.curfew.0}:00. The night side (the casinos and the Velvet Lanes) is out of bounds, which some students ignore every year.'] },
 ];
 function acTrip(S) {
   const T = S.Trip || {}, W = S.Player.Wallet;
@@ -223,7 +223,7 @@ const isRunning = (t, M) => Object.values(M.Active || {}).some(e => e.Technique 
 // the Arcane scholar discount on per-use casts (Arcana Rank 5), and a pact partner's ability only while the partner is here
 function castCost(S, k, t, running) {
   const M = S.Magic || {}, base = t.Cost_mode === 'hybrid' && running && t.Trigger > 0 ? t.Trigger : (t.Activation || 0);
-  const unit = t.Cost_mode === 'per_use' && base > 0 && featureOn(S, 'proficiency') && num((S.Player._Proficiency || {}).Arcana, 0) >= 5 ? Math.max(0.5, Math.round(base * 0.9 * 2) / 2) : base;
+  const unit = t.Cost_mode === 'per_use' && base > 0 && featureOn(S, 'proficiency') && num((S.Player._Proficiency || {}).Arcana, 0) >= 5 ? Math.max(0.5, Math.round(base * (DATA.mastery || {}).arcana_cost * 2) / 2) : base;
   const wind = ((S.$ui || {}).wx || {}).wind || '', W = DATA.wind || {}, custom = (M._Affinity || {}).Custom || {};
   const ck = Object.keys(custom).find(x => x.toLowerCase() === String(t.Subtype || '').toLowerCase());
   const cat = ck ? custom[ck].wind || W.default : (W.subtypes || {})[t.Subtype] || W.default;

@@ -71,6 +71,9 @@ ejs = ejs.replace('/*@@AGE@@*/', AGE_JS)
 from common import shared_js
 assert ejs.count('/*@@SHARED@@*/') == 1
 ejs = ejs.replace('/*@@SHARED@@*/', shared_js())   # 1.43.0 (audit batch 2): the rules and constants every runtime shares
+from common import fill_data
+assert json.load(open(P('data/expedition.json'), encoding='utf-8'))['hunt']['hours'] == 24, '505 says the hunt ends at the same hour the next day'
+ejs = fill_data(ejs)   # 1.43.0 (2.8): times and numbers in the text come from the data ({@file.path})
 assert '@@' not in ejs
 open(P('src/worldbook/custom/content/505.txt'), 'w', encoding='utf-8').write(ejs)
 # ---- 1.5.1 (Batch B): Cast Sheet (509) and the last-mile cast gate (510) ----
