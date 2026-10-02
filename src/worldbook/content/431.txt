@@ -1,0 +1,6 @@
+[Skydock] A broad walled stone platform on the bay's south-west headland, where airships rest in wooden cradles beside their mooring masts, with a customs shed where a single bored Yozakuran clerk stamps everything. Every arrival and departure musters here. A switchback cliff road climbs from it along the west headland to the Lighthouse.
+Feel: salt wind, gulls, ropes creaking.
+<%_ { const _hh = Number(String(getvar('stat_data.World.Time') || '').slice(0, 2)); if (_hh >= 18 || _hh < 6) { _%>
+At night: The masts and the platform are lit like a row of lanterns, lamps mark the cliff road all the way up to the Lighthouse, and the city's glow fills the whole bay below.
+Feel at night: warm wind, distant music.
+<%_ } } _%>

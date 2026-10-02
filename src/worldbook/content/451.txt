@@ -1,0 +1,6 @@
+[Open Sea] The deep water beyond the bay, an hour out by tour boat from the Sea Dock: morning tours to watch whales and dolphins, deep-sea fishing with the crew's rods, and a slow dusk cruise. The island shrinks to a line, then to nothing. Sailors here say the Leviathan has always lived somewhere under these waters and that, once in a lifetime, it lets itself be seen.
+Feel: blue on blue, sun, deep swell.
+<%_ { const _hh = Number(String(getvar('stat_data.World.Time') || '').slice(0, 2)); if (_hh >= 18 || _hh < 6) { _%>
+At night: Only the dusk cruise is out; the city glows on the horizon like a jewel.
+Feel at night: dark swell, a glowing horizon.
+<%_ } } _%>

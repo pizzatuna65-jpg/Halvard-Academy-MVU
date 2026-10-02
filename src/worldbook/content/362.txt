@@ -1,5 +1,3 @@
-<%_ if ((getvar('stat_data.$ui.forest') || {}).on) { _%>
 [The Wildwood] The ordinary rainforest that fills everything between the named places: broadleaf giants on buttress roots, palms and tree ferns underneath, vines hanging to the ground, deer paths, deadfall, muddy hollows churned by boar, the odd clearing where a storm took the trees down. It is ordinary only by this forest's standards. Three stretches of it are named on the map, west, north and east of Base Camp; they are the same forest, only in different directions. Vallie tells every group about ironback boars before they leave camp.
 Feel: birdsong that stops when something bigger moves.
 Possible encounters: goblin hound (IV); dire wolf, boar, thornstag, owlbear, forest troll (III); ironback boar, dire bear, ogre, chimera (II).
-<%_ } _%>

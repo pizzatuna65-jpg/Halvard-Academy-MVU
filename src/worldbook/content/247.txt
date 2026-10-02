@@ -1,6 +1,36 @@
+<%_ { const _m = Number(getvar('stat_data.World.Month')) || 0, _w = Number(getvar('stat_data.World.Week')) || 0, _on = (getvar('stat_data.$ui.sunreach') || {}).on; if ((_m === 11 && _w <= 3) || _on) { _%>
 [Academy Trip]
 When: Month 11 Week 2 Saturday to Week 3 Thursday. All three years; the third-years' last event as students.
-Where: Sunreach Bay, a full day by airship each way (the Saturday and the Thursday are spent flying, morning to night), a southern resort that stays warm all year: a few days of summer in Halvard's winter. Whole beachfront hotels booked, four to a room; the rest is free time.
-Rules: teachers in the same hotels set a curfew; leave the hotel only in groups of four. The day side is allowed; the night side is out of bounds, which some students ignore every year.
+Where: Sunreach Bay, a full day by airship each way (the Saturday and the Thursday are spent flying, morning to night), a southern resort that stays warm all year: a few days of summer in Halvard's winter. Halvard has The Hanabira, a Yozakuran beachfront hotel on Coral Strand, four to a room; the rest is free time.
+Days: Saturday night the landing at the Skydock and check-in; Sunday 09:00 the teachers' briefing in the hotel garden; free time until Wednesday; Wednesday 19:00 the farewell dinner at The Hanabira, then packing; Thursday 08:00 check out and board.
+Rules: the teachers in the same hotel set a curfew at 22:00; leave the hotel only in groups of four. The city by day is allowed; its night side (the casinos and the Velvet Lanes) is out of bounds, which some students ignore every year.
+Also there: Myrdath, Ashvale and Veyra send their students to Sunreach the same weeks.
 Money: points do not work abroad; this is what a year of saving is for, and Sunreach is expensive.
 Mood: students return tired, sunburnt and poorer than planned.
+<%_ if (_on) { _%>
+SUNREACH BAY INDEX — the city of the Academy Trip. Each place has its own entry when it comes up.
+One city around a turquoise bay. By day a seaside paradise; from 18:00 to 06:00 the same streets are lit by rune-light: glowing coloured glass signs, painted banners under rune lamps, lanterns. No electricity anywhere.
+Skydock: Skydock (airship masts, customs, the cliff road up to the Lighthouse).
+Fisherman's Wharf: Fish Market (the seafood heart, grills by day, lantern stalls by night), Sea Dock (fishing fleet and the tour boats to the open sea).
+Coral Strand: The Hanabira (Halvard's Yozakuran hotel, rooftop hot spring), Coral Beach (white sand, volleyball, fire dancers at night).
+Sunpier: Sunpier (amusement pier, the Gull Run coaster), Tidehouse Aquarium (glass tunnel, the old turtle, violet at night).
+Sunreach Crossing: Sunreach Crossing (six-street crossroads, glowing banners, game halls), Velvet Lanes (tiny stacked bars, singing rooms, the night market).
+Casino Row: The Golden Tide (the great casino and its fountain lake), Plaza Dourada (pastel colonial square, custard tarts).
+Cliffside Terraces: The Terraces (the islanders' stacked hillside town on stilts), Skyrail (red cable cars from the Crossing to the summit), Old Fort (ruin on the summit, stars at night).
+Turquoise Lagoon: The Lagoon (warm turquoise water, rafts, a bar on stilts), Reef Gardens (glass-bottom boats, pearl divers), Shell Cove (hidden pink-sand cove).
+West Cliffs: The Lighthouse (Norvaine keeper, up the cliff road from the Skydock), Sunset Cliffs (sunset, cliff diving), Glowtide Grotto (sea cave, glowing cavern and pool).
+Open Sea: Open Sea (whales, dolphins, deep-sea fishing).
+Walks between the parts (minutes on foot, the same both ways; a place inside one part is five to ten minutes from the next):
+Skydock: Fisherman's Wharf 10, Coral Strand 15, Sunpier 25, Sunreach Crossing 25, West Cliffs 30, Casino Row 40, Cliffside Terraces 40, Turquoise Lagoon 60, Open Sea 70.
+Fisherman's Wharf: Coral Strand 15, Sunreach Crossing 15, Sunpier 25, Casino Row 30, Cliffside Terraces 30, West Cliffs 40, Turquoise Lagoon 50, Open Sea 60.
+Coral Strand: Sunpier 10, Sunreach Crossing 10, Casino Row 25, Cliffside Terraces 25, Turquoise Lagoon 45, West Cliffs 45, Open Sea 75.
+Sunpier: Casino Row 15, Sunreach Crossing 20, Cliffside Terraces 35, Turquoise Lagoon 35, West Cliffs 55, Open Sea 85.
+Sunreach Crossing: Casino Row 15, Cliffside Terraces 15, Turquoise Lagoon 35, West Cliffs 50, Open Sea 75.
+Casino Row: Turquoise Lagoon 20, Cliffside Terraces 30, West Cliffs 65, Open Sea 90.
+Cliffside Terraces: Turquoise Lagoon 35, West Cliffs 35, Open Sea 90.
+Turquoise Lagoon: West Cliffs 70, Open Sea 110.
+West Cliffs: Open Sea 100.
+Getting around: horse carriages anywhere on land (6 coin) and water taxis between the shore parts (8 coin), both half the time; the Open Sea only by tour boat from the Sea Dock (15 coin each way). Points do not work; coin only.
+Also in Sunreach these weeks: students of Myrdath, Ashvale and Veyra on their own trips, in the hotels along Coral Strand.
+Rules for the narrator: who is met, street sights, hustlers, the sea and the dice are the engine's, listed in <now>; never add encounters or luck of your own, and never decide a bet. Nothing sexual happens to {{user}} or any student here, on page or off.
+<%_ } } } _%>

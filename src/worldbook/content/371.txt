@@ -1,6 +1,1 @@
-<%_ if ((getvar('stat_data.$ui.capital') || {}).on) { _%>
-[Avalon — Eldrasil Castle and the Noble Ring]
-Eldrasil Castle: The royal seat at the top of the hill, white towers higher than anything in the city but the Great Spire, deep blue and gold banners on every tower. The King lives and rules here. The royal road climbs to it from Crown Square through the Noble Ring.
-Noble Ring: The townhouses of the noble families on the terraces around the castle: gardens behind white walls, quiet streets, private guards at the gates. The Noble Houses' Liaison keeps its offices here.
-Both lie past the White Line and are closed to students. The one way in is a royal summons: the team that wins the Kingdom Competition is received by the King at the castle on the last evening.
-<%_ } _%>
+[Eldrasil Castle] The royal seat at the top of the hill, white towers higher than anything in the city but the Great Spire, deep blue and gold banners on every tower. The King lives and rules here. The royal road climbs to it from Crown Square through the Noble Ring.

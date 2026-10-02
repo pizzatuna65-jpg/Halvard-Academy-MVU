@@ -1,0 +1,6 @@
+[Tidehouse Aquarium] A domed glass aquarium at the pier's root: a walk-through tunnel under a tank of reef fish, rays and a slow old sea turtle everyone names. Quiet, cool and dim, the best place on the island to escape the heat.
+Feel: blue, cool, hushed.
+<%_ { const _hh = Number(String(getvar('stat_data.World.Time') || '').slice(0, 2)); if (_hh >= 18 || _hh < 6) { _%>
+At night: Open late with the tank lit violet by rune lamps and jellyfish glowing in the dark; a favourite date.
+Feel at night: violet glow, whispers.
+<%_ } } _%>

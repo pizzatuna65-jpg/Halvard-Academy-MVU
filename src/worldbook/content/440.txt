@@ -1,0 +1,7 @@
+[The Golden Tide] The biggest casino resort on the island, a domed tower of gold and blue glass with a great golden sea serpent coiled up its whole front, and a round lake of fountains at its feet: dice, cards and the great wheel on a floor of nobles, crime lords and tourists, and house dealers who never smile. It does not check a bracelet or ask an age. By day it is half-asleep: cleaners, gamblers who never went to bed, and cool air at the doors.
+Feel: cool air, chips clicking, gold.
+<%_ { const _hh = Number(String(getvar('stat_data.World.Time') || '').slice(0, 2)); if (_hh >= 18 || _hh < 6) { _%>
+At night: Every hour the house's water mages throw the lake into fountains higher than the tower in time to an orchestra on the terrace, the tables are full to the walls, and the doors swallow the whole street.
+Feel at night: fountains, roar of the tables, gold and red.
+<%_ } } _%>
+<narrator_only>Ottavio Bastiani was floor boss here for nearly forty years. The older dealers and doormen still speak of "Signor Bastiani" with respect and some fear; a student who mentions him, or a Sky student who carries themselves like one, is treated very carefully. Nobody here will say what else he did for the house.</narrator_only>

@@ -1,7 +1,2 @@
-<%_ if ((getvar('stat_data.$ui.capital') || {}).on) { _%>
-[Avalon — Great Gate and Lantern Quarter]
-Skyport: Airship masts and a paved landing field just outside the Great Gate, the main gate in the south wall, with the customs hall and the passenger halls inside it. Every academy trip lands and musters here.
-Gilded Arcade: Two glass-roofed shopping arcades either side of Crown Avenue, just inside the Great Gate. Ardenne's flagship store, the original Merryhew's, Firetooth's own sweet shop, cafés, tailors and jewellers. Expensive, polished, and the first thing most visitors see.
-Lantern Market: Avalon's biggest market: covered streets and a glass market hall hung with paper lanterns that are lit at dusk. Food from every province, cheap clothes, charms, imported goods, street performers, pickpockets.
-Spellwright Row: The street of the magic trades. Staff and wand makers, component sellers, enchanters, rune engravers, spellbook dealers, a shop for duelling gear. Stock the academy Mall never carries, at capital prices; every shop holds a Doves licence on the wall.
-<%_ } _%>
+[Crown Square] The great square at the foot of the castle hill, where Crown Avenue ends and every avenue of the city meets the Crown Ring. The parade finishes here on Crowning Day, the Royal Mages at its head, and the King speaks from the dais on the White Line; the Herald Spires carry the speech to the whole city. Fountains, a column to the War of Independence, food stalls on holidays.
+Feel: The heart of the kingdom, in white stone and blue banners.

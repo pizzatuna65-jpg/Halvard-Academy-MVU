@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.41.0 (Sunreach Bay): the five checks in its section below.
 - v1.40.0 (the airship): the four checks in its section below.
 - v1.39.0 (Avalon): the five checks in its section below.
 - v1.38.0 (Grand Vast Forest): the four checks in its section below.
@@ -80,6 +81,20 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.41.0 — Sunreach Bay
+
+Play to Month 11 Week 2 (Friday), or a Year 2 chat there. Re-import the card (new lore, both Sunreach maps at assets commit 4620b2c).
+1. Friday: `<now>` says points do not work abroad tomorrow. Saturday: fly, and at 20:00 the location becomes "Sunreach Bay — Skydock";
+   the Map panel opens on the Sunreach tab with the night map; the bracelet weather says Sunreach Bay (warm south).
+2. Sunday: the 09:00 briefing is on `<now>`; walk to the Crossing, then take a carriage (`Sunreach.Ride` "carriage") and a water taxi
+   ("boat"): half the time and the coin. At 18:00 the map, the card and the place entry switch to their night face.
+3. At The Golden Tide place a bet: the narrator sets `Sunreach.Bet`, plays up to the throw, and the next `<now>` says how it went;
+   the coin changes by the stake. At Velvet Lanes or the casino `<now>` only reminds that it is out of bounds.
+4. Over a day or two the narrator plays only the students `<now>` names (another academy's, or Halvard's), each in character, and the
+   sights; on the Open Sea (tour boat from the Sea Dock) the sea sights, maybe once the Leviathan, far off.
+5. The index: in Sunreach the Academy Trip entry carries the city index; a place's own entry appears when it is mentioned; after
+   22:00 the curfew line is the teachers' at The Hanabira. Thursday 08:00 boarding; back at Halvard the Sunreach lore and block are gone.
 
 ### v1.40.0 — The airship
 

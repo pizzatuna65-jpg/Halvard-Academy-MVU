@@ -1,3 +1,1 @@
-<%_ if ((getvar('stat_data.$ui.airship') || {}).on || (getvar('stat_data.$ui.airship') || {}).soon) { _%>
 [Airship: Cabin Deck] A narrow corridor of numbered doors, one cabin to each group of four: two bunks stacked on each side, a round porthole, four lockers and a fold-down table. Thin walls; everyone hears the cabin next door laugh. At the far end are the washrooms and the bathing stalls, hot water piped from the engines, a Yozakuran touch every student remembers. On long flights it is where people sleep, sulk, study or hide. At the aft end a steep ladder goes down to the Cargo Hold. The forward end, past a curtain, holds the teachers' cabins: knock or don't go. Nothing aboard records or sends anything.
-<%_ } _%>

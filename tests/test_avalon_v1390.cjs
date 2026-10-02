@@ -110,7 +110,7 @@ console.log('Lore, <now>, update rules and UI data');
 const _ = require('lodash'), ejs = require('ejs'), gv = St => k => _.get({ stat_data: St }, k);
 const idx = JSON.parse(read('src/worldbook/index.json'));
 const av = idx.filter(e => /^(\[mvu_plot\] )?Avalon( - |$)/.test(e.comment));
-ok(av.length === 8 && av.every(e => e.constant && /stat_data\.\$ui\.capital/.test(read(`src/worldbook/content/${e.uid}.txt`))), 'eight Avalon entries, constant behind a gate on $ui.capital');
+ok(av.length === 21 && av.every(e => e.uid === 370 ? e.constant && /stat_data\.\$ui\.capital/.test(read('src/worldbook/content/370.txt')) : !e.constant), '1.41.0: the index (370) constant behind a gate on $ui.capital; 18 places, the Rookery and the Royal Mages as keyword entries');
 const lore = (uid, St) => ejs.render(read(`src/worldbook/content/${uid}.txt`), { getvar: gv(St) });
 ok(/Walks between the parts/.test(lore(370, W)) && /Crown Square: Great Gate 25/.test(lore(370, W)) && lore(370, home).trim() === '', 'the overview (with the walk table) prints only in Avalon');
 ok(/Tsubaki Hoshikage this year/.test(lore(377, W)) && /narrator_only/.test(lore(376, W)), 'Year 1: Tsubaki described in the Royal Mages entry; the Rookery\'s way in is narrator-only');

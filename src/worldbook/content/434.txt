@@ -1,0 +1,6 @@
+[The Hanabira] Halvard's hotel for the Trip: a long white Yozakuran beachfront hotel of five storeys with paper lanterns on every balcony, a lobby of pale wood and koi pools, a garden of flowering trees, and a hot spring bath on the roof. Postcards at the front desk.
+Feel: cool wood, quiet water, polite bows.
+<%_ { const _hh = Number(String(getvar('stat_data.World.Time') || '').slice(0, 2)); if (_hh >= 18 || _hh < 6) { _%>
+At night: The lanterns glow on every balcony, and from the rooftop bath the whole lit city is laid out across the bay.
+Feel at night: lantern light, steam, distant city noise.
+<%_ } } _%>

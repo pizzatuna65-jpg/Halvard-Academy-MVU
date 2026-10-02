@@ -1,5 +1,3 @@
-<%_ if ((getvar('stat_data.$ui.forest') || {}).on) { _%>
 [Silverstair Falls] The Silverrun river drops over a wide cliff in a dozen broad tiers, each with its own plunge pool; spray hangs over the whole stair, rainbows by day and mist by morning. Climbing the stair to the Jade Terraces takes an hour and a half and wet hands.
 Feel: roar of water, soaked to the skin, rainbows.
 Possible encounters: mist wolf, kelpie, torrent eel (rides the falls and strikes with a jolt), harpy (III); griffin, roc, wyvern (nest on the cliff) (II).
-<%_ } _%>

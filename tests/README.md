@@ -15,6 +15,7 @@ Build first with `python tools/build_all.py`. Run all suites with `npm test`; ru
 | Grand Vast Forest / Expedition (1.38.0) | `test_expedition_v1380.cjs` (routes, place names, walking and owed hours, the seeded hunt, the catch guard, the result, `<now>`, lore gate, UI data) |
 | Avalon, the capital (1.39.0) | `test_avalon_v1390.cjs` (routes, names and aliases, walks, crowds, carriages, the White Line, the hourly city rolls, the muster, Tsubaki in Year 1, the Kingdom team, the day-before reminder, lore gate, `<now>`, 502, UI data) |
 | The airship (1.40.0) | `test_airship_v1400.cjs` (flights and who flies, boarding, kept aboard, landing at the destination, the bathing stalls, the seeded sky / stage / hold, the bar's rule, lore gate, `<now>`, 502, the Airship tab) |
+| Sunreach Bay (1.41.0) | `test_sunreach_v1410.cjs` (routes and names, the window, landing, the teachers' curfew, walks, carriages, water taxis, the tour boat, bets, who is met where by personality, the sea and the Leviathan, the index pattern for Sunreach, the forest, Avalon and the airship, `<now>`, 502, the day/night map tab) |
 | Engine integration audit | `test_audit_b1_v1161.cjs`, `test_audit_b2_v1170.cjs`, `test_integrations_v1180.cjs` |
 | Engine steps and save migrations | `test_engine_steps_v1200.cjs`, `test_saves.cjs`; any suite with `ENGINE_DIFF=<older engine.js>` compares every engine run with that build |
 

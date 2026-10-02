@@ -103,6 +103,9 @@ const FOREST = UI.forest && UI.forest.on ? UI.forest : null, WENDIGO = {"line":"
 const CAPITAL = UI.capital && UI.capital.on ? UI.capital : null, AVD = {"fare":10,"rivals":{"Bellatrix":["Bellatrix Ardenne","Veyra",1],"Bram":["Bram Holloway","Myrdath",1],"Cassius":["Cassius Rhavel","Veyra",3],"Dex":["Dex Harlow","Myrdath",2],"Elion":["Elion Villeneuve","Ashvale",1],"Ines":["Ines Vauclair","Myrdath",3],"Kira":["Kira Brannock","Ashvale",2],"Lucius":["Lucius Vortigern","Myrdath",2],"Mirelle":["Mirelle Lullwyn","Ashvale",3],"Morgana":["Morgana Vess","Veyra",2],"Pip":["Pip Althorne","Veyra",1],"Theodore":["Theodore Wrenfield","Ashvale",3]}};
 // 1.40.0 (owner-approved planning/DRAFT_airship.md): aboard the airship (engine $ui.airship); SOON: a flight leaves within 90 min
 const AIRSHIP = UI.airship && UI.airship.on ? UI.airship : null, SOON = UI.airship && !UI.airship.on ? UI.airship.soon : null;
+// 1.41.0 (owner-approved planning/DRAFT_outside_maps.md, part 3): Sunreach Bay (engine $ui.sunreach); SRD: fares, who may be met
+const SUNREACH = UI.sunreach && UI.sunreach.on ? UI.sunreach : null, SRD = {"carriage":6,"boat":8,"tour":15,"bet_max":200,"names":{"Lucius":["Lucius Vortigern","Myrdath"],"Ines":["Ines Vauclair","Myrdath"],"Bram":["Bram Holloway","Myrdath"],"Dex":["Dex Harlow","Myrdath"],"Elion":["Elion Villeneuve","Ashvale"],"Kira":["Kira Brannock","Ashvale"],"Mirelle":["Mirelle Lullwyn","Ashvale"],"Theodore":["Theodore Wrenfield","Ashvale"],"Bellatrix":["Bellatrix Ardenne","Veyra"],"Cassius":["Cassius Rhavel","Veyra"],"Morgana":["Morgana Vess","Veyra"],"Pip":["Pip Althorne","Veyra"],"Irene":["Irene Chanare","Halvard"],"Caspian":["Caspian Riwalo","Halvard"],"Etnie":["Etnie","Halvard"],"Royhan":["Royhan Filanoman","Halvard"],"Lenna":["Lenna Greenwind","Halvard"],"Saffi":["Saffi Tamberlane","Halvard"],"Kanae":["Kanae Quveno","Halvard"],"Idris":["Idris Ainsworth","Halvard"],"Aiden":["Aiden Ruzzo","Halvard"],"Caralynn":["Caralynn Veyturone","Halvard"],"Zara":["Zara Minallone","Halvard"],"Percival":["Percival Applethorne","Halvard"],"Sophia":["Sophia Helfin","Halvard"],"Gareth":["Gareth Valkaryn","Halvard"],"Trixie":["Trixie Confetti","Halvard"],"Vera":["Vera Pulsar","Halvard"],"Dante":["Dante Kleinn","Halvard"],"Castor":["Castor Moretti","Halvard"],"Ruby":["Ruby Bonbon","Halvard"],"Florian":["Florian Villeneuve","Halvard"],"Alyssa":["Alyssa Edelweiss","Halvard"],"Tilly":["Tilly Marsh","Halvard"],"Linus":["Linus Tallyworth","Halvard"],"Maple":["Maple Fernhollow","Halvard"],"Nerys":["Nerys Silvarenne","Halvard"],"Hadrian":["Hadrian Quelloris","Halvard"],"Wren":["Wren Marlowe","Halvard"],"Tsubaki":["Tsubaki Hoshikage","Halvard"],"Aurelian":["Aurelian Solmere","Halvard"],"William":["William Beckett","Halvard"],"Bruno":["Bruno Ferrante","Halvard"],"Bianca":["Bianca Ferrante","Halvard"],"Rigel":["Rigel Ardenne","Halvard"],"Topaz":["Topaz Vasquelle","Halvard"],"Faye":["Faye Driftwell","Halvard"]}};
+const srWho = id => { const r = (SRD.names || {})[id]; return r ? r[0] + ' (' + r[1] + ')' : id; };
 const avRival = id => { const r = (AVD.rivals || {})[id]; return r ? r[0] + ' (' + r[1] + ', Year ' + Math.min(3, r[2] + Y - 1) + ')' : id; };
 const JAGES = (getvar('stat_data.Journal') || []).slice(-5).reverse().map(l => (/^\[([^\]]+)\]/.exec(String(l)) || [])[1]).filter(w => w && ageOf(w, W));
 // 1.2.2 bonds: for each present NPC, what they will talk about at this rank (openness shifts the early tiers; goals, views of others
@@ -245,18 +248,40 @@ In the hold this flight: <%- _A.cargo %>.
 <%_ } else if (SOON) { _%>
 Airship: the flight for <%- SOON.event %> leaves at <%- SOON.from %> for <%- SOON.lands %>; everyone boards before then.
 <%_ } _%>
+<%_ if (SUNREACH) { const _S = SUNREACH; _%>
+Sunreach Bay (the Academy Trip, <%- _S.night ? 'night: the whole city lit by rune-light until dawn' : 'day' %>): {{user}} is at <%- _S.name %><%- _S.pinName !== _S.name ? ' (' + _S.pinName + ')' : '' %>. Bracelet points do not work here; coin only.
+Walks from here (minutes on foot; a horse carriage for <%- SRD.carriage %> coin, or a water taxi for <%- SRD.boat %> coin between the shore parts, takes half: set Sunreach.Ride "carriage" or "boat" in the same update; the Open Sea only by tour boat from the Sea Dock, <%- SRD.tour %> coin each way): <%- _S.walks.map(w => w[1] + ' ' + w[2]).join(', ') %>.<%- _S.near.length ? ' Here too: ' + _S.near.map(n => n[0] + ' ' + n[1]).join(', ') + '.' : '' %>
+<%_ if (_S.owe) { _%>
+Still on the way: <%- _S.owe %> min of the last move are not on the clock yet.
+<%_ } _%>
+<%_ for (const _t of _S.today || []) { _%>
+Today at <%- _t[0] %>: <%- _t[1] %>.
+<%_ } _%>
+<%_ if (_S.off) { _%>
+Teachers' rule for the Trip: this is the city's night side, out of bounds for Halvard students. A reminder only; nothing follows unless the story brings a teacher.
+<%_ } _%>
+<%_ if (_S.at === 'golden_tide') { _%>
+The tables: dice, cards and the wheel, <%- SRD.bet_max %> coin at most a bet. When {{user}} bets, set Sunreach.Bet {"Game": "dice" | "cards" | "wheel", "Stake": coin} in that update and play up to the moment of the throw; the engine settles it and the next <now> says how it went. Never decide a bet yourself.
+<%_ } _%>
+<%_ for (const e of _S.ev || []) { if (e.k === 'walk') continue; _%>
+<%- e.k === 'bet' ? 'The bet (engine): ' + e.stake + ' coin on ' + e.game + ', and {{user}} ' + (e.win ? 'won ' + e.net + ' coin.' : 'lost it.') : e.k === 'hustle' ? (e.caught ? 'A hustler (engine) tries a trick on {{user}}, and {{user}} sees through it this reply.' : e.lost ? 'A hustler (engine): ' + e.lost + ' coin gone from {{user}}, by a trick or a quick hand; {{user}} finds out later.' : 'A hustler (engine) tries {{user}} and finds nothing worth taking.') : e.k === 'street' ? 'In the street (engine, colour only): ' + e.t + '.' : e.k === 'rival' ? 'Another academy (engine): ' + srWho(e.id) + ' is here on their own Trip and crosses the path of the group. Play them from their lore entry, in character.' : e.k === 'student' ? 'Halvard (engine): ' + srWho(e.id) + ' is here with their own group and runs into {{user}}. Play them in character.' : e.k === 'sea' ? 'At sea (engine): ' + e.t + '.' : e.k === 'leviathan' ? 'THE LEVIATHAN (engine): ' + e.t + '. A sight for a lifetime, seen only from far off; nobody fights it.' : '' %>
+<%_ } _%>
+<%_ } _%>
+<%_ if (!SUNREACH && UI.sunreach && UI.sunreach.coin) { _%>
+Tomorrow: <%- UI.sunreach.coin %>, abroad, where bracelet points do not work. Students change points into coin at the Banking House today (1:1); someone may remind {{user}}.
+<%_ } _%>
 <%_ if (!CAPITAL && UI.capital && UI.capital.coin) { _%>
 Tomorrow: <%- UI.capital.coin %> in Avalon, where bracelet points do not work. Students change points into coin at the Banking House today (1:1); someone may remind {{user}}.
 <%_ } _%>
 <%_ if (PHASE && PHASE.line) { _%>
 Campus phase: <%- PHASE.line %>
 <%_ } _%>
-<%_ if (W._Happening && on('happenings') && !FOREST && !CAPITAL && !AIRSHIP) { _%>
+<%_ if (W._Happening && on('happenings') && !FOREST && !CAPITAL && !AIRSHIP && !SUNREACH) { _%>
 Around campus today (optional, use only if it fits): <%- W._Happening %>
 <%_ } _%>
 <%_ if (/CURFEW|LOCKDOWN/.test(cur)) { _%>
 Presence: after curfew most students are in their own dorms; out are staff, patrols, and students sneaking out (only those whose personality allows it).
-<%_ } else if (!FOREST && !CAPITAL && !AIRSHIP) { _%>
+<%_ } else if (!FOREST && !CAPITAL && !AIRSHIP && !SUNREACH) { _%>
 <%_ if (pres.length) { _%>
 <%- pres.join(' ') %>
 <%_ } _%>

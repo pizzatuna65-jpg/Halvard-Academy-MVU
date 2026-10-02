@@ -136,8 +136,15 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
   The airship (1.40.0, owner): every academy flight is a closed place of four places (Promenade Deck, Common Room with a bar and a
   stage, Cabin Deck, Cargo Hold), no map image; the engine boards and lands {{user}}, nobody leaves before landing, crew-only doors
   turn {{user}} back without a penalty. The bar keeps the student drinking rule (the rest day and the holidays). No beast pens aboard.
+  Area 3, Sunreach Bay (1.41.0, owner): one city with two faces and two map images (day, and night 18:00-06:00, same pins); lighting
+  is rune-light, never electricity or moving pictures. The night side (casinos, Velvet Lanes) is out of bounds only as a `<now>`
+  reminder, never a roll or a penalty. Bets are settled by the engine. Students of every academy are met where their personality
+  takes them (`meet`), by chance, never for certain.
+  **Index pattern** (1.41.0, owner): every outside area has one constant index entry while {{user}} is there (forest 360, Avalon 370,
+  Sunreach in 247, airship 465) and keyword entries for its places, like the campus map (132) and the campus places. Place entries
+  use the campus location format (`[Name]`, `Feel:`) and hold no rules for {{user}}.
 - **Map by calendar** (1.13.0, owner): `map_variants` in `data/assets_manifest.json`, first match wins: an event map while the event is on (optionally in its hours), then a season map, then the default. Every variant is 1536×1024 with the default's layout (pins and card crops are percent positions on it); a variant that fails to load shows the default. UI only: no state, no rule.
-- **Assets** live in `github.com/pizzatuna65-jpg/eldrasil-assets`, served via jsDelivr. They are **pinned to commit 505dd35** (1.39.0: the Avalon map added to 1.38.0's 288b5a6, which added the Grand Vast Forest map to 1.34.2's f42990c; nothing else changed), and `base_url` exists in one place only: `data/assets_manifest.json`. Never ship `@main`.
+- **Assets** live in `github.com/pizzatuna65-jpg/eldrasil-assets`, served via jsDelivr. They are **pinned to commit 4620b2c** (1.41.0: the two Sunreach maps added to 1.39.0's 505dd35, which added the Avalon map to 1.38.0's 288b5a6, which added the Grand Vast Forest map to 1.34.2's f42990c; nothing else changed), and `base_url` exists in one place only: `data/assets_manifest.json`. Never ship `@main`.
 - **State-as-memory**: the narrator reads the latest ~24 messages (card regex, promptOnly, minDepth 24).
   - The Journal keeps the latest 30 lines for the AI. Older lines move to `$ui.archive`.
   - Bonds show the latest 10 `Known_facts` to the AI. Older facts move to `$Known_old`.

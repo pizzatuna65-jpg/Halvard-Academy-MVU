@@ -1,5 +1,3 @@
-<%_ if ((getvar('stat_data.$ui.forest') || {}).on) { _%>
 [The Old Heart] A single giant tree at the northern edge of the Expedition country, its trunk wider than the Main Courtyard, rising far above the canopy and seen from anywhere in the southern forest. Past it the deep forest begins, unmapped and weeks across. The protected beasts live around it; harming one is a crime the Doves investigate. No student goes, and no hunting company takes work there. Rumour says poachers do.
 Feel: silver light, absolute quiet, the sense of being allowed in.
 Possible encounters (never hunted): unicorn, lantern stag, moonhare, white hart, grey pilgrim. The Wendigo is sometimes seen at its edge.
-<%_ } _%>

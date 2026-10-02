@@ -1,0 +1,6 @@
+[Old Fort] A ruined sea fort at the top of the hill: crumbling walls, rusted cannons and goats; the best view of the whole bay, and on a clear day of the open sea.
+Feel: wind, quiet, old stone.
+<%_ { const _hh = Number(String(getvar('stat_data.World.Time') || '').slice(0, 2)); if (_hh >= 18 || _hh < 6) { _%>
+At night: Dark and quiet above the glowing city; the one place in Sunreach where the stars show.
+Feel at night: dark, stars, the city humming below.
+<%_ } } _%>

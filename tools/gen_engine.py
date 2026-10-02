@@ -163,6 +163,18 @@ assert all(f['who'] in ('all', 'kingdom') and f['dir'] in ('out', 'home') and f[
 assert all(re.match(r'^\d\d:\d\d$', f['from']) and f['from'] < f['to'] for f in _air['flights']), 'airship.json: flight times'
 t = t.replace('/*@@AIRSHIP@@*/{}', json.dumps({**{k: v for k, v in _air.items() if not k.startswith('_')},
     'places': [{k: v for k, v in p.items() if k not in ('desc', 'line')} for p in _air['places']]}, ensure_ascii=False, separators=(',', ':')))
+# 1.41.0 (owner-approved planning/DRAFT_outside_maps.md, part 3): Sunreach Bay (pins, places, walks, rates, games, the hourly pools,
+# who may be met where); descriptions stay in the lore and the UI
+_sr = json.load(open(P('data/sunreach.json'), encoding='utf-8'))
+_spins, _sids = {p['id'] for p in _sr['pins']}, {p['id'] for p in _sr['places']}
+assert all(a in _spins and b in _spins for a, b, *_m in _sr['legs']) and all(p['pin'] in _spins for p in _sr['places']), 'sunreach.json: unknown pin'
+assert _sr['arrive'] in _sids and _sr['hotel'] in _sids and set(_sr['street']) <= _sids and set(_sr['hustle']) <= _sids, 'sunreach.json: unknown place'
+assert all(set(d + n) <= _sids for g in _sr['meet'].values() for d, n in g.values()), 'sunreach.json: meet names an unknown place'
+assert set(_sr['meet']['rivals']) <= {nid for nid, n in _npcs_all.items() if (n.get('group') or '').endswith('team')}, 'sunreach.json: not a rival team member'
+assert set(_sr['meet']['halvard']) <= {nid for nid, n in _npcs_all.items() if n.get('academy') == 'Halvard' and (n.get('group') or '').startswith('Year')}, 'sunreach.json: not a Halvard student'
+t = t.replace('/*@@SUNREACH@@*/{}', json.dumps({**{k: v for k, v in _sr.items() if not k.startswith('_')},
+    'places': [{k: v for k, v in p.items() if k not in ('desc', 'feel', 'night', 'night_feel', 'narrator', 'brief')} for p in _sr['places']]},
+    ensure_ascii=False, separators=(',', ':')))
 # Bond rules and where each NPC is usually found (Haunts, first clause).
 t = t.replace('/*@@BOND_RULES@@*/{}', json.dumps(json.load(open(P('data/bond_rules.json'), encoding='utf-8')), ensure_ascii=False, separators=(',', ':')))
 haunt = {}

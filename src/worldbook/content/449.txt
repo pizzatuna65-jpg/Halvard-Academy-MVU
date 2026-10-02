@@ -1,0 +1,6 @@
+[Sunset Cliffs] The cliffs below the lighthouse where the whole island comes to watch the sun go down into the sea. Locals and the brave dive from the lower ledges into deep clear water; the Trip's most famous confessions happen here at dusk.
+Feel: gold light, height, held breath.
+<%_ { const _hh = Number(String(getvar('stat_data.World.Time') || '').slice(0, 2)); if (_hh >= 18 || _hh < 6) { _%>
+At night: The crowd goes back to the city; the cliffs are dark and windy.
+Feel at night: wind, dark, surf below.
+<%_ } } _%>

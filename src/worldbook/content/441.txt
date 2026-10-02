@@ -1,0 +1,6 @@
+[Plaza Dourada] An old colonial square beside the casinos, from the days before the island sold itself to pleasure: pastel arcaded buildings, a wave-patterned black-and-white mosaic pavement, a fountain, and pastry shops selling custard tarts and almond cookies. Quiet and charming by day.
+Feel: pastel, mosaic, sweet pastry.
+<%_ { const _hh = Number(String(getvar('stat_data.World.Time') || '').slice(0, 2)); if (_hh >= 18 || _hh < 6) { _%>
+At night: The square is ringed by the casino towers' light and filled with tourists drifting in from the tables; the pastry shops stay open and the fountain is lit gold.
+Feel at night: gold light, old stone, the casinos' glow.
+<%_ } } _%>

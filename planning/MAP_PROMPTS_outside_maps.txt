@@ -168,5 +168,106 @@ into haze along the top edge.
 Do not include any text, labels, place names, legend, compass rose, frame, border, scale bar or UI elements. No people or creatures.
 
 ==================================================================================================================
-3. SUNREACH BAY — menyusul setelah draft bagian 3
+3. SUNREACH BAY (diterapkan di v1.41.0; data/sunreach.json; hasil disetujui: Maps/sunreach_day.webp, Maps/sunreach_night.webp)
 ==================================================================================================================
+
+Dua gambar dengan komposisi yang sama persis, karena pin dipakai bersama:
+- 3a SIANG dulu. Referensi gaya: lampirkan Maps/halvard_summer.webp. Simpan sebagai map/sunreach_day.webp.
+- 3b MALAM setelah 3a disetujui. Lampirkan gambar 3a (bukan peta Halvard), supaya semua bangunan dan garis pantai tidak bergeser.
+  Simpan sebagai map/sunreach_night.webp.
+Sepuluh kawasan (pin) diberi posisi; gedung lain hanya digambar, bukan pin. Tidak ada tulisan apa pun, juga di papan dan banner.
+
+------------------------------------------------------------------------------------------------------------------
+3a. SIANG
+------------------------------------------------------------------------------------------------------------------
+
+Use the attached map of Halvard Academy as the strict reference for art style: copy its rendering, line work, colour palette,
+lighting, level of detail and camera angle exactly, so that the two maps look like they were painted by the same artist for the
+same atlas. That style is:
+- a high bird's-eye view from the south, looking north at about 45 degrees, almost isometric, with only slight perspective;
+- a bright, cheerful, hand-painted miniature look, like a storybook or cosy fantasy game world map: clean, crisp shapes with thin
+  soft outlines, gentle cel-like shading, soft light from the upper left, small soft shadows, high-key and low contrast, nothing
+  gritty, murky or photographic;
+- small, simple, stylised trees repeated evenly: tall palm trees with round crowns in fresh yellow-green, round puffy broadleaf
+  trees, and bushes of pink and magenta bougainvillea dotted among the houses;
+- a saturated but soft palette: white and cream walls, terracotta and pastel roofs (coral, peach, mint, sky blue), white sand,
+  turquoise and clear light-blue water that deepens to soft blue far out, fresh greens;
+- soft white clouds of mist drifting in from the outer edges and corners of the image, framing it;
+- every feature drawn small and tidy, like a model on a table, so the whole map reads clearly at a glance.
+
+Make a 1536x1024 landscape map of Sunreach Bay, a warm southern island resort city in a fantasy world, on a sunny day.
+
+Keep it calm and readable, and make it one continuous city and coast, not separate pictures placed on a background. The city wraps
+around a wide, sheltered bay of turquoise water that opens to the south: the bay fills the lower middle of the image, from about
+20% to 75% across and 45% to 85% down, and its mouth opens onto the deep blue open sea along the bottom edge. Two headlands close the
+bay, a rocky one to the west and a lower one to the east. Behind the bay the city rises up a steep green hill to the north. The
+technology is that of a fantasy world: no electricity, no screens, no cars; there are sailing boats, rowing boats, horse carriages
+and wooden airships with balloon envelopes. Most of the city is a calm, even pattern of small white and pastel houses with
+terracotta roofs, drawn simply and repeated; only the places below stand out, each with its own look so it stays recognisable when
+cropped and zoomed. Every place grows out of the streets and shore around it and fades into its surroundings over a wide margin,
+with no hard outlines, circles or patches; light, shadow and haze are the same across the whole map.
+
+1. Skydock (lower left, about 18% across, 74% down, on the tip of the western headland): a row of tall mooring masts with two
+   wooden airships with balloon envelopes floating at anchor, and a small customs shed.
+2. Fisherman's Wharf (left, about 27% across, 55% down, on the west shore inside the bay): a long open market hall with a tiled
+   roof on the waterfront, streets of food stalls with awnings around it, and a wooden working dock beside it with fishing boats
+   and two larger tour boats with white sails.
+3. Coral Strand (centre, about 44% across, 47% down, along the back of the bay): a long curve of white sand beach with rows of
+   striped umbrellas and volleyball nets, and behind it a row of beachfront hotels; the biggest is a long white five-storey hotel
+   in Yozakuran style (Japanese-like curved roof edges, paper lanterns on its balconies, a garden of pink flowering trees).
+4. Sunpier (centre right, about 58% across, 58% down): a long wooden amusement pier running from the beach straight out into the
+   bay, with a carousel, striped game stalls and a small wooden roller coaster that loops out over the water near its end; at its
+   root on the shore, a small domed glass aquarium building.
+5. Sunreach Crossing (centre, about 46% across, 31% down, the city centre behind the beach): a very wide crossroads where six
+   streets meet, surrounded by taller shop buildings whose walls are covered with huge colourful painted banners and painted signs
+   with patterns and pictures but no letters, and a clock tower at one corner. Just behind it, a dense tangle of very narrow alleys
+   with tiny stacked buildings two and three storeys high, outside staircases and hanging lanterns.
+6. Casino Row (right, about 70% across, 40% down, on the east shore of the bay): one tall grand casino tower of gold and glass with a
+   coiled sea-serpent sculpture over its entrance and a round ornamental lake with fountains in front of it; next to it, an old
+   colonial square of pastel arcaded buildings with a black-and-white wave-patterned mosaic pavement and a fountain in the middle.
+7. Cliffside Terraces (top centre, about 52% across, 15% down, on the steep hillside above the city): the islanders' old town built
+   in many stacked layers up the slope, houses on tall stilts clinging to the cliff, stairways and little bridges between them; a
+   small hanging railway on a cable climbs from the city centre up the hill and passes right through the middle of two buildings;
+   on the very top of the hill, a ruined stone sea fort with old cannons (about 56% across, 7% down).
+8. Turquoise Lagoon (lower right, about 86% across, 63% down, on the eastern headland outside the bay): a shallow lagoon of very
+   bright turquoise behind a curving coral reef, with small floating rafts, paddle boats and a beach bar under palms; at its far end
+   beyond some rocks, a tiny hidden cove of pink sand with a single crooked palm.
+9. West Cliffs (far left, about 7% across, 40% down, on the western headland): tall pale cliffs over the sea with a tall white
+   lighthouse on top; at the foot of the cliff, a dark low cave arch at the water line with a small rowing boat going in.
+10. Open Sea (bottom, about 45% across, 93% down, beyond the bay mouth): deep blue open water with gentle waves, one tour boat with
+   white sails heading out, and a few dolphins leaping far apart.
+
+Water taxis (small boats) cross the bay here and there, and a few horse carriages on the main streets. The open sea continues past
+the bottom edge, and the hills, palms and coast fade into haze along the top and side edges.
+
+Do not include any text, letters, numbers, labels, place names, legend, compass rose, frame, border, scale bar or UI elements. No
+people or creatures except the few dolphins.
+
+------------------------------------------------------------------------------------------------------------------
+3b. MALAM (lampirkan gambar 3a yang sudah disetujui)
+------------------------------------------------------------------------------------------------------------------
+
+Repaint the attached map as the same place at night. Keep the composition exactly the same: every building, street, shore, pier,
+hill, boat, mast and tree stays in exactly the same position, size and shape; only the light, colours and sky change. Keep the same
+bright, soft, hand-painted storybook style: a cosy, magical night, never gritty, murky, horror-like or photographic.
+
+- The sky and the sea are a deep, soft night blue with a few stars and a pale moon reflection on the open sea; the edges still fade
+  into soft mist, now blue-violet.
+- The city is lit only by magic and flame, never electricity: glowing coloured glass signs and tubes (rune-light in pink, cyan,
+  violet, gold and red, shaped as symbols and patterns, never letters), paper lanterns, rune lamps and torches. The light glows
+  softly and reflects in the water of the bay.
+- Sunreach Crossing and the tangle of alleys behind it are the brightest, densest, most colourful part of the city: every wall
+  covered in glowing coloured signs and lit painted banners, lantern strings across every alley.
+- The casino tower glows gold from top to bottom, and the fountains in its round lake shoot high in glowing gold and white; the
+  pastel square beside it is lit warm gold.
+- The stacked hillside town glows layer by layer in warm gold from many windows and lanterns, like a stacked lantern; the hanging
+  railway carriage is lit as it passes through the buildings. The ruined fort on the summit stays dark.
+- The pier is outlined end to end in small lights, the carousel lit, and the domed aquarium glows violet from inside.
+- Small bonfires and coloured lamps along the beach; the big hotel's paper lanterns glow on every balcony.
+- The fish market hall and its food streets glow red from paper lanterns, with soft steam rising.
+- The lighthouse throws a soft beam out to sea; the cave arch at the foot of the west cliffs shows a faint blue-green glow from
+  inside; the lagoon is dark with a few small lights on its rafts, and the reef edge glows faintly blue.
+- The airships at the masts and the boats in the harbour carry small lamps.
+
+Do not include any text, letters, numbers, labels, place names, legend, compass rose, frame, border, scale bar or UI elements. No
+people or creatures.

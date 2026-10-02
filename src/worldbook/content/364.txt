@@ -1,5 +1,3 @@
-<%_ if ((getvar('stat_data.$ui.forest') || {}).on) { _%>
 [The Gloaming] The oldest, thickest stand of the rainforest: trunks wider than towers, moss and hanging vines over everything, a canopy so dense that noon looks like dusk and pale fungi give the only light. Few people come here, and it feels it: no trails, no cut wood, no sound of anyone. Hunting companies do not take work in the Gloaming.
 Feel: green dark, damp, the sense that nobody has stood here in years.
 Possible encounters: ashen lynx, hush owl (wings as wide as a cart, flies without a sound, drops from the dark canopy), giant spider (III); displacer cat, dread weaver (II). The Wendigo lives here.
-<%_ } _%>

@@ -1,0 +1,6 @@
+[Reef Gardens] The coral reef at the lagoon's mouth: glass-bottom boats on the hour, snorkels for hire, and pearl divers who show off for coins. The colours are like nothing in Eldrasil.
+Feel: colour, salt, sunlight through water.
+<%_ { const _hh = Number(String(getvar('stat_data.World.Time') || '').slice(0, 2)); if (_hh >= 18 || _hh < 6) { _%>
+At night: The boats stop; the reef's edge glows faintly where the plankton stirs.
+Feel at night: dark, faint glow.
+<%_ } } _%>

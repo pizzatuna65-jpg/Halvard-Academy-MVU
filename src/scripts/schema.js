@@ -262,6 +262,9 @@ export const Schema = z.object({
   Expedition: O({ Caught: Bool(false) }),
   // 1.39.0: Avalon; the narrator sets Ride when {{user}} takes a hire carriage for this move (the engine charges it and clears it)
   Avalon: O({ Ride: Bool(false) }),
+  // 1.41.0: Sunreach Bay; Ride "carriage" or "boat" for this move, Bet {Game: dice|cards|wheel, Stake} at The Golden Tide (the engine
+  // charges and settles them, then clears them)
+  Sunreach: O({ Ride: Str(''), Bet: O({ Game: Str(''), Stake: Num(0, 100000, 0) }) }),
   Journal: StrList(30),   // "[M1 W1 Mon] turning point" — long-term memory (used by state-as-memory in 5.3)
   Clues: Rec(v => ({
     Thread: s(v.Thread) || 'Unsorted clues', Detail: s(v.Detail), Where: s(v.Where), Found: s(v.Found),
@@ -390,12 +393,14 @@ export const Schema = z.object({
     tune: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.3.1: training / reputation settings { id: value } (data/tuning.json; the engine checks the values)
     forest: z.any().prefault(null).catch(null),                       // 1.38.0: the Grand Vast Forest now { on, at, seen, hist, tgt, left, walks, ev } (engine; UI, <now>, lore gate)
     capital: z.any().prefault(null).catch(null),                      // 1.39.0: Avalon now { on, at, pin, seen, castle, walks, ev, muster } (engine; UI, <now>, lore gate)
+    sunreach: z.any().prefault(null).catch(null),                     // 1.41.0: Sunreach Bay now { on, at, pin, night, seen, walks, near, today, ev } or { on: false, seen, coin } (engine; UI, <now>, lore gate)
     airship: z.any().prefault(null).catch(null),                      // 1.40.0: aboard the airship { on, at, event, to, left, bar, view, cargo, ev } or { on: false, soon } (engine; UI, <now>, lore gate)
   }),
 
   $eng: O({
     abs: z.coerce.number().prefault(-1).catch(-1),
     exp: z.any().prefault(null).catch(null),                       // 1.38.0: this year's Expedition hunt { y, tgt, homes, t, hrs, owe, met, caught, res, wen } (engine)
+    sr: z.any().prefault(null).catch(null),                        // 1.41.0: Sunreach visit state { d, owe, met, nb, lev } (engine)
     cap: z.any().prefault(null).catch(null),                       // 1.39.0: Avalon visit state { d, owe, met, ts, tsu, mm, wl } (engine)
     late: Num(0, 1e6, 0),
     sleep: z.any().prefault(null).catch(null),

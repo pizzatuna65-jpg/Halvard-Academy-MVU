@@ -73,6 +73,12 @@ DATA['capital'] = {'area': _av['area'], 'map': _av['map'], 'legs': _av['legs'], 
 # 1.40.0 (owner-approved planning/DRAFT_airship.md): the airship tab (no map image): the four places aboard, shown only during a flight
 _air = json.load(open(P('data/airship.json'), encoding='utf-8'))
 DATA['airship'] = {'area': _air['area'], 'places': [{k: p[k] for k in ('id', 'name', 'line', 'desc')} for p in _air['places']]}
+# 1.41.0 (owner-approved planning/DRAFT_outside_maps.md, part 3): the Sunreach Bay map, a day image and a night image (18:00-06:00)
+# with the same pins; the cards show the place's day or night face
+_srm = json.load(open(P('data/sunreach.json'), encoding='utf-8'))
+DATA['sunreach'] = {'area': _srm['area'], 'maps': _srm['maps'], 'night': _srm['night'], 'legs': _srm['legs'],
+                    'fare': {k: _srm['rates'][k] for k in ('carriage', 'boat', 'tour')},
+                    'pins': _srm['pins'], 'places': [{k: p[k] for k in ('id', 'name', 'pin', 'in', 'desc', 'feel', 'night', 'night_feel')} for p in _srm['places']]}
 CAST = {}
 for nid, n in npcs.items():
     first = nid

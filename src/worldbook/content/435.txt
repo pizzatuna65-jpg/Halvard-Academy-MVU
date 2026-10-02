@@ -1,0 +1,6 @@
+[Coral Beach] The white beach in front of the hotels, a long curve of fine sand and gentle surf, striped umbrellas, rented loungers and beach volleyball nets. Lifeguards in red until sunset; half the people on it are some shade of sunburnt.
+Feel: hot sand, bright, waves.
+<%_ { const _hh = Number(String(getvar('stat_data.World.Time') || '').slice(0, 2)); if (_hh >= 18 || _hh < 6) { _%>
+At night: Beach clubs open under coloured rune lamps, fire dancers spin on the sand to drums, and the lit skyline doubles itself in the wet sand at the water's edge.
+Feel at night: drums, firelight, warm sand.
+<%_ } } _%>

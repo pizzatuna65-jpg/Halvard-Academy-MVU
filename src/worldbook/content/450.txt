@@ -1,0 +1,6 @@
+[Glowtide Grotto] A sea cave in the cliff foot. A boatman rows visitors in through a low arch at the water line and along a winding tunnel where the water glows blue wherever an oar touches it, until the tunnel opens into a great cavern. There the boat ties up on a broad shore of smooth rock that can be walked on all the way round. In the middle lies a still round pool whose water glitters like scattered stars, and high above, the whole ceiling is covered in glowing plants, hanging moss and vines that shed a soft blue-green light over everything. Voices echo; nobody talks loudly for long. Boatmen charge a few coins and wait as long as you like.
+Feel: blue-green glow, echo, cool stone, glittering water.
+<%_ { const _hh = Number(String(getvar('stat_data.World.Time') || '').slice(0, 2)); if (_hh >= 18 || _hh < 6) { _%>
+At night: Outside it is dark, inside it is exactly the same, only quieter; the boatmen charge double after dark.
+Feel at night: glow, stillness, the sea breathing outside.
+<%_ } } _%>

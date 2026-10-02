@@ -386,6 +386,8 @@ function curfewOf(W, evs, S) {
   // 1.39.0: Halvard's Kingdom Competition team in Avalon keeps the Whitestone Hotel's hours (lore 19: Gavlan Haverton escorts them)
   // 1.40.0: aboard the airship nobody keeps dorm hours; the teachers count heads at boarding and landing
   if (placeOf(W.Location) === AIR.area) return 'Away from campus (aboard the airship): the dorm curfew does not apply; the teachers count heads at boarding and landing';
+  // 1.41.0: the Academy Trip keeps the teachers' hours at The Hanabira (lore 247)
+  if (placeOf(W.Location) === SR.area) { const [c0, c1] = SR.curfew || [22, 7]; return h >= c0 || h < c1 ? `Hotel curfew (${pad(c0)}:00-${pad(c1)}:00): the teachers' curfew at ${SR_PL[SR.hotel].name}; students stay in their rooms` : `Away from campus (Sunreach Bay, the Academy Trip): the dorm curfew does not apply; back at ${SR_PL[SR.hotel].name} by ${pad(c0)}:00`; }
   if (placeOf(W.Location) === AV.area && avKingdom(W, S || {})) return h >= 22 || h < 7 ? 'Hotel curfew (22:00-07:00): the team stays in its rooms at the Whitestone Hotel; Gavlan Haverton keeps watch' : h >= 21 ? 'Back at the Whitestone Hotel by 22:00 (free time in the city ended at 21:00)' : 'Away from campus (Avalon, with the team): the dorm curfew does not apply; free time in the city until 21:00, the Whitestone Hotel by 22:00';
   if (!onCampus(W.Location) && (Tr.Active || evs.some(e => e.away))) return `Away from campus${Tr.Active && Tr.Destination ? ` (${Tr.Destination})` : ''}: the dorm curfew does not apply; the teachers in charge set the rules`;
   // v1.0.3 (A#6): a no-curfew event lifts it from its first day's evening to its last day's dawn, not for the whole two days
@@ -560,6 +562,7 @@ const OUTDOOR = /*@@OUTDOOR@@*/[];
 // 1.38.0: the Grand Vast Forest is outdoors, except inside the mouth of the Grand Cave Network
 const isOutdoor = loc => { const p = placeOf(loc).toLowerCase(); if (p && p === String(EXP.area || '').toLowerCase()) return !/grand cave network/i.test(String(loc));
   if (p && p === String(AV.area || '').toLowerCase()) { const id = avPlace(loc, ''); return !!(id && AV_PL[id].out); }   // 1.39.0
+  if (p && p === String(SR.area || '').toLowerCase()) { const id = srPlace(loc, ''); return !!(id && SR_PL[id].out); }   // 1.41.0
   return !!p && OUTDOOR.some(c => p === c || p.startsWith(c + ' ') || p.startsWith(c + ',')); };
 // ---- 1.38.0 (owner-approved planning/DRAFT_outside_maps.md, part 1): the Grand Vast Forest, the Creature Studies Expedition's map
 // (data/expedition.json). While the Expedition is on, World.Location is "Grand Vast Forest — <place>" in the forest map's words.
@@ -684,6 +687,57 @@ function airLoc(loc, id) {                                       // "Airship —
   const extra = segs.filter(x => { const k = avKey(x); return x && !AIR_NAME[k] && !(AIR_ALIAS[k] && !named) && k !== 'airship'; });
   return [AIR.area, AIR_PL[id].name, ...extra].join(' — ');
 }
+// ---- 1.41.0 (owner-approved planning/DRAFT_outside_maps.md, part 3): Sunreach Bay, the Academy Trip's city (data/sunreach.json),
+// FP7 area 3. From landing (M11 W2 Sat 20:00) to boarding (W3 Thu 08:00) World.Location is "Sunreach Bay — <place>". One city with
+// two faces: from 18:00 to 06:00 it is lit by rune-light (the night map, the entries' night lines). Pins hold places like Avalon;
+// stepSunreach charges walks, horse carriages and water taxis (and the tour boat to the Open Sea), settles bets at The Golden Tide,
+// and rolls the city once an hour: street sights, hustlers, students of the other academies and of Halvard where they would be by
+// their personality (data `meet`), the sea and, once in a Trip, the Leviathan far off.
+const SR = /*@@SUNREACH@@*/{};
+const SR_PL = Object.fromEntries((SR.places || []).map(p => [p.id, p]));
+const SR_PIN = Object.fromEntries((SR.pins || []).map(p => [p.id, p]));
+const SR_NB = {};                                              // pin -> [[pin, minutes, tour]]
+for (const [a, b, m, t] of SR.legs || []) { (SR_NB[a] = SR_NB[a] || []).push([b, m, !!t]); (SR_NB[b] = SR_NB[b] || []).push([a, m, !!t]); }
+const SR_NAME = {}, SR_ALIAS = {};
+for (const p of SR.places || []) { SR_NAME[avKey(p.name)] = p.id; for (const a of p.aliases || []) SR_ALIAS[avKey(a)] = p.id; }
+for (const p of SR.pins || []) { const k = avKey(p.name); if (!SR_NAME[k]) SR_NAME[k] = SR_ALIAS[k] || SR.places.find(x => x.pin === p.id).id; }
+const SR_ROUTES = {};
+function srRoutes(from) {                                        // shortest ways between pins (minutes)
+  if (SR_ROUTES[from]) return SR_ROUTES[from];
+  const d = { [from]: { m: 0, prev: '' } }, done = new Set();
+  for (;;) {
+    let u = null; for (const k in d) if (!done.has(k) && (u === null || d[k].m < d[u].m)) u = k;
+    if (u === null) break; done.add(u);
+    for (const [v, m] of SR_NB[u] || []) if (!d[v] || d[u].m + m < d[v].m) d[v] = { m: d[u].m + m, prev: u };
+  }
+  return (SR_ROUTES[from] = d);
+}
+const srPinPath = (a, b) => { const R = srRoutes(a); if (!R[b]) return []; const p = [b]; while (p[0] !== a) p.unshift(R[p[0]].prev); return p; };
+const srMin = (a, b) => a === b ? 0 : SR_PL[a].pin === SR_PL[b].pin ? Math.max(5, num(SR_PL[a].in, 5) + num(SR_PL[b].in, 5)) : (srRoutes(SR_PL[a].pin)[SR_PL[b].pin] || { m: 999 }).m;
+const srNight = abs => { const t = ((abs % DAY_MIN) + DAY_MIN) % DAY_MIN; return t >= hm(SR.night.from) || t < hm(SR.night.to); };
+function srWindow(W) {                                           // from the landing to the boarding home
+  const Wn = SR.window || {}, Y = num(W.Year, 1), t = toAbs(W);
+  if (num(W.Month, 0) !== Wn.m) return false;
+  const at = ([w, d, tm]) => toAbs({ Year: Y, Month: Wn.m, Week: w, Day: d, Time: tm });
+  return t >= at(Wn.from) && t < at(Wn.to);
+}
+// The Sunreach place a Location names, or ''. Short aliases ("the beach", "the casino") only once in Sunreach.
+function srPlace(loc, prev) {
+  const s = String(loc || ''), segs = s.split(/\s+[—–-]\s+|,\s+/).map(avKey).filter(Boolean);
+  const inside = !!(prev && SR_PL[prev]) || segs.some(x => x === 'sunreach bay' || x === 'sunreach');
+  for (let i = segs.length - 1; i >= 0; i--) { const id = SR_NAME[segs[i]] || (inside && SR_ALIAS[segs[i]]); if (id) return id; }
+  return inside && segs.some(x => x === 'sunreach bay' || x === 'sunreach') ? (prev && SR_PL[prev] ? prev : SR.arrive) : '';
+}
+function srLoc(loc, id) {                                        // "Sunreach Bay — <place>" plus any detail the story wrote
+  const segs = String(loc || '').split(/\s+[—–-]\s+|,\s+/).map(x => x.trim()), named = segs.some(x => SR_NAME[avKey(x)] === id);
+  const extra = segs.filter(x => { const k = avKey(x); return x && !SR_NAME[k] && !(SR_ALIAS[k] && !named) && k !== 'sunreach bay' && k !== 'sunreach'; });
+  return [SR.area, SR_PL[id].name, ...extra].join(' — ');
+}
+function srWx(seed, day, b) {                                    // Sunreach's warm southern weather for a time block (SR.weather)
+  const W = SR.weather || {}, pick = (o, salt) => { const ks = Object.keys(o), tot = ks.reduce((a, k) => a + o[k], 0); let r = hash32(seed, day, b, salt) % tot; for (const k of ks) { if (r < o[k]) return k; r -= o[k]; } return ks[0]; };
+  const sky = pick(W.sky[b], 'ssky'), wet = sky === 'Rain' || sky === 'Storm';
+  return { sky, rain: wet ? pick(W.rain, 'srain') : '', snow: false, wind: sky === 'Storm' ? 'windy' : '', rare: '', temp: W.temp[b] + hash32(seed, day, b, 'stemp') % 3 - 1 };
+}
 // 1.31.0 (data/restore_places.json): the multiplier a restful place gives at one moment, [multiplier, why]. The first rule that fits
 // wins; weather conditions never fit with the weather off. dark = outside Practice's daylight hours. wxc caches a time block's weather.
 function restMult(R, abs, seed, wxOn, cold, wxc) {
@@ -755,7 +809,7 @@ const SHAPE = {
   Bonds: {}, Campus_State: { Entrance_tour: { Year: 0, Guide: '', FirstYears: [] }, Council: { Candidates: { '1': { First: 'Florian', Second: 'Dante' } }, Results: {}, President: 'Irene', VicePresident: 'Caspian', PresidentElect: '', VicePresidentElect: '', Members: ['Irene','Caspian','Florian','Dante'] }, Events: {}, Rumours: [], Location_changes: {}, NPC_status: {}, New_relations: {}, Secrets_revealed: [], Graduated: [] },
   Commitments: {}, Notices: {}, Letters: {}, Journal: [], Clues: {}, Mysteries: {},
   Competition: { Tier: '', Status: '', Placement: '', Team: [], Results: [] }, Projects: {},
-  Trip: { Active: false, Destination: '', Companions: [], Note: '' }, Expedition: { Caught: false }, Avalon: { Ride: false }, Battle: { Active: false, Combatants: {} }, _Log: [],
+  Trip: { Active: false, Destination: '', Companions: [], Note: '' }, Expedition: { Caught: false }, Avalon: { Ride: false }, Sunreach: { Ride: '', Bet: { Game: '', Stake: 0 } }, Battle: { Active: false, Combatants: {} }, _Log: [],
   Inventory: {}, Hooks: {},   // 1.1.0
   Extras: {},   // 1.6.1
   _Perks: {}, Rep_events: [], Training: [], Practice: [], Perk_use: [],   // 1.3.0 / 1.27.0
@@ -1058,9 +1112,13 @@ function stepTime(c) {
   const aPrev = hasB ? avPlace(B.World.Location, (_.isPlainObject((B.$ui || {}).capital) && B.$ui.capital.on && B.$ui.capital.at) || '') : '';
   let aAt = !sAt && !fAt && (avCrown(S.World) || avKingdom(S.World, S)) ? avPlace(S.World.Location, aPrev) : '', aHeld = '';
   if (aAt && AV_PL[aAt].locked && !avPass(S)) { aHeld = aAt; aAt = aPrev && !AV_PL[aPrev].locked ? aPrev : 'crown_square'; }
+  // 1.41.0: Sunreach Bay, from the landing to the boarding home, in the city map's words
+  const rPrev = hasB ? srPlace(B.World.Location, (_.isPlainObject((B.$ui || {}).sunreach) && B.$ui.sunreach.on && B.$ui.sunreach.at) || '') : '';
+  const rAt = !sAt && !fAt && !aAt && srWindow(S.World) ? srPlace(S.World.Location, rPrev) : '';
   if (sAt) S.World.Location = airLoc(S.World.Location, sAt);
   else if (fAt) S.World.Location = forestLoc(S.World.Location, fAt);
   else if (aAt) S.World.Location = aHeld ? avLoc('', aAt) : avLoc(S.World.Location, aAt);
+  else if (rAt) S.World.Location = srLoc(S.World.Location, rAt);
   else if (!(S.Trip && S.Trip.Active)) S.World.Location = canonLocation(S.World.Location);
   const absB = hasB ? (B.$eng && B.$eng.abs >= 0 ? B.$eng.abs : toAbs(B.World)) : toAbs(S.World);
   let absA = toAbs(S.World);
@@ -1211,31 +1269,31 @@ function stepTime(c) {
       if (num(S.Player.Profile.Age, 18) === num(B.Player.Profile.Age, 18)) { S.Player.Profile.Age = num(S.Player.Profile.Age, 18) + 1; log.push(`Birthday: {{user}} turns ${S.Player.Profile.Age} today (Player.Profile.Age).`); }
     }
   }
-  Object.assign(c, { absB, absA, elapsed, evs, dayNo, goneNow, dayNoB, fAt, fPrev, aAt, aPrev, aHeld, sAt, sPrev, sFl, sBoard });
+  Object.assign(c, { absB, absA, elapsed, evs, dayNo, goneNow, dayNoB, fAt, fPrev, aAt, aPrev, aHeld, sAt, sPrev, sFl, sBoard, rAt, rPrev });
 }
 
 // ---- 1b. 1.1.0 weather (spec §4): season, sky, wind, rare weather and °C for the current block; the Divination Society forecast ----
 function stepWeather(c) {
-  const { S, log, hasB, absB, absA, dayNo, fAt, aAt } = c;
+  const { S, log, hasB, absB, absA, dayNo, fAt, aAt, rAt } = c;
   const WXM = S.$ui.wxfx, seed = S.$eng.seed, TU = tuneOf(S);
   // 1.38.0: in the Grand Vast Forest the weather is the rainforest's (forestWx) and its effects apply as on campus.
   // 1.39.0: Avalon has the kingdom's weather of the day (Halvard's), and its effects apply there too
-  const away = /^Away from campus/.test(S.World._Curfew || '') && !fAt && !aAt;
+  const away = /^Away from campus/.test(S.World._Curfew || '') && !fAt && !aAt && !rAt;   // 1.41.0: Sunreach has its own weather
   let wxNow = null, wxBlk = null;                              // wxNow: the block whose effects apply (Full, on campus)
   if (WXM === 'off') { S.World._Season = ''; S.World._Weather = ''; S.$ui.wx = null; }
   else {
-    const [wd, wb] = blockOf(absA), D = wxDay(seed, wd), bk = fAt ? forestWx(seed, wd, wb) : D.blocks[wb];
+    const [wd, wb] = blockOf(absA), D = wxDay(seed, wd), bk = fAt ? forestWx(seed, wd, wb) : rAt ? srWx(seed, wd, wb) : D.blocks[wb];
     const lab = x => ({ ...x, label: tempLabel(x.temp) });
     wxBlk = bk;
     S.World._Season = D.season;
-    S.World._Weather = away ? "Away: local weather is the narrator's call" : fAt ? `${_.capitalize(BLOCKS[wb])}, ${EXP.area} (rainforest): ${wxText(bk)}, ${bk.temp} °C (${tempLabel(bk.temp)})`
+    S.World._Weather = away ? "Away: local weather is the narrator's call" : rAt ? `${_.capitalize(BLOCKS[wb])}, ${SR.area} (warm south): ${wxText(bk)}, ${bk.temp} °C (${tempLabel(bk.temp)})` : fAt ? `${_.capitalize(BLOCKS[wb])}, ${EXP.area} (rainforest): ${wxText(bk)}, ${bk.temp} °C (${tempLabel(bk.temp)})`
       : `${_.capitalize(BLOCKS[wb])}, ${D.season.toLowerCase()}${aAt ? ', ' + AV.area : ''}: ${wxText(bk)}, ${bk.temp} °C (${tempLabel(bk.temp)})`;
     const fday = (absA % DAY_MIN) >= 7 * 60 ? dayNo + 1 : dayNo;   // posted daily at 07:00 for the next day
-    S.$ui.wx = { mode: WXM, season: D.season, away, forest: !!fAt, block: wb, now: lab(bk), text: wxText(bk), blocks: (fAt ? [0, 1, 2].map(b => forestWx(seed, wd, b)) : D.blocks).slice(0, wb + 1).map(lab),
+    S.$ui.wx = { mode: WXM, season: D.season, away, forest: !!fAt, block: wb, now: lab(bk), text: wxText(bk), blocks: (fAt ? [0, 1, 2].map(b => forestWx(seed, wd, b)) : rAt ? [0, 1, 2].map(b => srWx(seed, wd, b)) : D.blocks).slice(0, wb + 1).map(lab),
       fc: { day: fday, tomorrow: fday > dayNo, blocks: wxForecast(seed, fday) }, flu: false, sick: [], field: '' };
     if (WXM === 'full' && !away) {
       wxNow = bk;
-      if (!fAt && fluOn(seed, dayNo)) {                          // a cold is going around: 1-2 seeded students off sick today
+      if (!fAt && !rAt && fluOn(seed, dayNo)) {                          // a cold is going around: 1-2 seeded students off sick today
         const pool = Object.keys(STUDENTS).filter(id => (STUDENTS[id][1] || 1) <= S.World.Year && yearOf(id, S.World.Year) <= 3 && !(S.Campus_State.Graduated || []).includes(id)).sort();
         const sick = [];
         for (let k = 0, n = 1 + hash32(seed, dayNo, 'sickn') % 2; k < n && pool.length; k++) sick.push(pool.splice(hash32(seed, dayNo, k, 'sick') % pool.length, 1)[0]);
@@ -1780,6 +1838,110 @@ function stepAirship(c) {
   S.$ui.airship = { on: true, at: sAt, name: AIR_PL[sAt].name, event: sFl.event, from: sFl.from, to: sFl.to, lands: sFl.lands, left: Math.max(0, b - t), bar: !!sFl.bar,
     board: sBoard, view: sAt === 'promenade_deck' ? ((AIR.views || {})[key] || [])[Math.min(2, Math.floor((t - a) * 3 / Math.max(1, b - a)))] || '' : '',
     cargo: sAt === 'cargo_hold' ? (AIR.cargo || {})[key] || '' : '', near: AIR.places.filter(p => p.id !== sAt).map(p => p.name), ev: evs };
+}
+
+// 1.41.0 (owner-approved planning/DRAFT_outside_maps.md, part 3): Sunreach Bay. Walking (5% stamina an hour), a horse carriage
+// ("carriage") or a water taxi ("boat", both ends on the shore): half the time, coin, no stamina; the tour boat to the Open Sea has
+// its own minutes and fare. A bet (Sunreach.Bet) counts only at The Golden Tide and the engine settles it. Once an hour (seeded by
+// the hour and the place; not asleep): a street sight, a hustler, one student of another academy and one of Halvard who would be
+// there by personality (not met today, not in the scene), the sea and once in a Trip the Leviathan far off. Outside: the day before.
+function stepSunreach(c) {
+  const { S, log, jnl, hasB, toolEdit, absA, absB, elapsed, seed, V, restedAs, rPrev, dayNo } = c;
+  let at = c.rAt;
+  const R = SR.rates || {}, Y = num(S.World.Year, 1), U0 = _.isPlainObject(S.$ui.sunreach) ? S.$ui.sunreach : {};
+  const seen = Array.isArray(U0.seen) ? U0.seen.filter(id => SR_PL[id]) : [];
+  if (!_.isPlainObject(S.Sunreach)) S.Sunreach = { Ride: '', Bet: { Game: '', Stake: 0 } };
+  const ride = String(S.Sunreach.Ride || '').toLowerCase(), bet = _.isPlainObject(S.Sunreach.Bet) ? S.Sunreach.Bet : {};
+  S.Sunreach.Ride = ''; S.Sunreach.Bet = { Game: '', Stake: 0 };
+  const betAsked = !!(String(bet.Game || '').trim() || num(bet.Stake, 0));
+  if (!at) {   // the day before the Trip: points do not work abroad (the Banking House)
+    const tmr = fromAbs((dayNo + 1) * DAY_MIN + 8 * 60), Wn = SR.window;
+    S.$ui.sunreach = { on: false, seen, coin: tmr.Month === Wn.m && tmr.Week === Wn.from[0] && tmr.Day === Wn.from[1] ? 'the Academy Trip to Sunreach Bay' : '' };
+    if (ride) log.push('Sunreach.Ride is only for a carriage or a water taxi in Sunreach Bay; it was cleared.');
+    if (betAsked) log.push('Sunreach.Bet counts only at The Golden Tide in Sunreach Bay; it was cleared.');
+    return;
+  }
+  const X = _.isPlainObject(S.$eng.sr) ? S.$eng.sr : (S.$eng.sr = {});
+  if (X.d !== dayNo) Object.assign(X, { d: dayNo, owe: 0, met: [] });
+  const evs = [], coinNow = () => num(S.Player.Wallet.Coin, 0);
+  const pay = (x, why) => { S.Player.Wallet.Coin = Math.max(0, coinNow() + x); S.Player.Wallet.Transactions = [...(S.Player.Wallet.Transactions || []), `${x >= 0 ? '+' : ''}${x} coin: ${why}`].slice(-20); };
+  // moving: inside a pin a few minutes; between pins the route, on foot or by carriage or water taxi; the Open Sea by tour boat only
+  if (hasB && !toolEdit && elapsed > 0 && rPrev && SR_PL[rPrev] && rPrev !== at) {
+    const pA = SR_PL[rPrev].pin, pB = SR_PL[at].pin, path = pA === pB ? [] : srPinPath(pA, pB);
+    let land = pA === pB ? srMin(rPrev, at) : 0, tourM = 0, tours = 0;
+    for (let i = 1; i < path.length; i++) { const [, lm, tr] = SR_NB[path[i - 1]].find(x => x[0] === path[i]); if (tr) { tourM += lm; tours++; } else land += lm; }
+    const fare = tours * num(R.tour, 15);
+    if (tours && coinNow() < fare) {
+      log.push(`The tour boat costs ${num(R.tour, 15)} coin and {{user}} has ${coinNow()}: no boat, so World.Location was kept at ${SR_PL[rPrev].name}.`);
+      at = rPrev; S.World.Location = srLoc('', at);
+    } else {
+      if (fare) pay(-fare, 'tour boat, Sunreach Bay');
+      const want = /boat|water|taxi/.test(ride) ? 'boat' : /carriage|cab|horse|coach/.test(ride) ? 'carriage' : '';
+      const ends = [path.find(p => p !== 'sea') || pA, [...path].reverse().find(p => p !== 'sea') || pB];
+      const kind = !want || pA === pB || !land ? '' : want === 'boat' && ends.every(p => SR_PIN[p] && SR_PIN[p].shore) ? 'boat' : 'carriage';
+      const rfare = kind ? num(R[kind], 6) : 0, byRide = !!kind && coinNow() >= rfare;
+      if (kind && !byRide) log.push(`A ${kind === 'boat' ? 'water taxi' : 'carriage'} costs ${rfare} coin and {{user}} has ${coinNow()}: they walked.`);
+      if (byRide) pay(-rfare, `${kind === 'boat' ? 'water taxi' : 'horse carriage'}, Sunreach Bay`);
+      const total = Math.round(tourM + (byRide ? land / 2 : land)), cost = byRide || pA === pB ? 0 : land / 60 * num(R.walk_pct, 5);
+      if (cost) V.Stamina -= cost / 100 * num(V.Stamina_max, 100);
+      X.owe = Math.max(0, Math.round(total + num(X.owe, 0) - elapsed));
+      const via = path.length > 2 ? ` via ${path.slice(1, -1).map(p => SR_PIN[p].name).join(', ')}` : '';
+      log.push(`${byRide ? (kind === 'boat' ? 'Water taxi' : 'Horse carriage') : tours && !land ? 'Tour boat' : 'Walked'} ${SR_PL[rPrev].name} → ${SR_PL[at].name}${via}: ${total} min${byRide ? `, -${rfare} coin` : ''}${fare ? `, tour boat -${fare} coin` : ''}${cost ? `, -${Math.round(cost)}% stamina` : ''}${X.owe ? `; ${X.owe} min of the way are still ahead` : ''}.`);
+      evs.push({ k: 'walk', m: total, ride: byRide ? kind : '', tour: tours > 0, owe: X.owe });
+    }
+  } else if (hasB && elapsed > 0) X.owe = Math.max(0, num(X.owe, 0) - elapsed);
+  // a bet at The Golden Tide: the engine settles it (never the narrator)
+  if (betAsked) {
+    const game = String(bet.Game || '').trim().toLowerCase(), G = (SR.games || {})[game], stake = Math.round(num(bet.Stake, 0));
+    if (at !== 'golden_tide') log.push('Sunreach.Bet counts only at The Golden Tide; it was cleared.');
+    else if (!G) log.push(`Sunreach.Bet: "${bet.Game}" is not a game at The Golden Tide (dice, cards or wheel); no bet.`);
+    else if (stake <= 0 || stake > num(R.bet_max, 200)) log.push(`Sunreach.Bet: the house takes 1 to ${num(R.bet_max, 200)} coin a bet; no bet.`);
+    else if (stake > coinNow()) log.push(`Sunreach.Bet: {{user}} has ${coinNow()} coin, less than the stake; no bet.`);
+    else {
+      X.nb = num(X.nb, 0) + 1;
+      const win = rand01(seed, 'srbet', absA, X.nb) * 100 < G.win, net = win ? stake * (G.pay - 1) : -stake;
+      pay(net, `${win ? 'won' : 'lost'} at ${game}, The Golden Tide`);
+      evs.push({ k: 'bet', game, stake, win, net });
+      S.$ui.toasts.push(`${_.capitalize(game)}: ${win ? 'won' : 'lost'} ${Math.abs(net)} coin`);
+    }
+  }
+  // the city, once an hour
+  if (hasB && !toolEdit && elapsed > 0 && rPrev && restedAs !== 'sleep' && at === c.rAt) {
+    const h1 = Math.floor(absA / 60), present = new Set(Object.keys((S.Scene || {}).Present || {})), grad = new Set((S.Campus_State || {}).Graduated || []);
+    const M = SR.meet || {}, got = new Set();
+    for (let h = Math.max(Math.floor(absB / 60) + 1, h1 - num(R.max_rolls, 6) + 1); h <= h1; h++) {
+      const nt = srNight(h * 60) ? 1 : 0, roll = k => rand01(seed, 'sr', h, at, k) * 100, pick = (a, k) => a[hash32(seed, 'sr', h, at, k) % a.length];
+      const st = ((SR.street || {})[at] || [])[nt] || [];
+      if (!got.has('street') && st.length && roll('st') < num(R.street, 20)) { got.add('street'); evs.push({ k: 'street', t: pick(st, 'stt') }); }
+      if ((SR.hustle || []).includes(at) && !got.has('hustle') && roll('hus') < num(R.hustle, 8)) {
+        got.add('hustle');
+        const caught = roll('hseen') < num(R.hustle_seen, 50), pct = num(R.hustle_min, 10) + hash32(seed, 'sr', h, 'hamt') % (num(R.hustle_max, 25) - num(R.hustle_min, 10) + 1);
+        const lost = caught ? 0 : Math.min(num(R.hustle_cap, 300), Math.round(coinNow() * pct / 100));
+        if (lost) { pay(-lost, 'hustled in Sunreach Bay'); jnl.push(`Sunreach Bay: a hustler took ${lost} coin from {{user}} at ${SR_PL[at].name}.`); S.$ui.toasts.push(`Hustled: -${lost} coin`); }
+        evs.push({ k: 'hustle', caught, lost, empty: !caught && !lost });
+      }
+      const meetOne = (kind, who, ok) => {
+        if (got.has(kind) || roll(kind) >= num(R[kind], 0)) return;
+        const pool = Object.keys(who || {}).filter(id => (who[id][nt] || []).includes(at) && ok(id) && !X.met.includes(id) && !present.has(id)).sort();
+        if (!pool.length) return;
+        const id = pick(pool, kind + 'p'); got.add(kind); X.met = [...X.met, id]; evs.push({ k: kind, id });
+      };
+      meetOne('rival', M.rivals, id => AV.rivals[id] !== undefined && AV.rivals[id] + Y - 1 <= 3);
+      meetOne('student', M.halvard, id => !!STUDENTS[id] && yearOf(id, Y) >= 1 && yearOf(id, Y) <= 3 && !grad.has(id));
+      if (at === 'open_sea') {
+        if (X.lev !== Y && roll('lev') < num(R.leviathan, 5)) {
+          X.lev = Y; got.add('sea'); evs.push({ k: 'leviathan', t: SR.leviathan });
+          jnl.push('Sunreach Bay: out on the open sea, {{user}} saw the Leviathan, far off, and the boat turned for home.'); S.$ui.toasts.push('The Leviathan!');
+        } else if (!got.has('sea') && roll('sea') < num(R.sea, 50)) { got.add('sea'); evs.push({ k: 'sea', t: pick(SR.sea || [''], 'seat') }); }
+      }
+    }
+  }
+  for (const id of [rPrev, at]) if (id && SR_PL[id] && !seen.includes(id)) seen.push(id);
+  const pin = SR_PL[at].pin, R0 = srRoutes(pin), W = S.World, tnow = hm(W.Time);
+  const today = (SR.schedule || []).filter(([w, d, t]) => num(W.Month, 0) === SR.window.m && num(W.Week, 0) === w && W.Day === d && hm(t) >= tnow).map(([, , t, what]) => [t, what]);
+  S.$ui.sunreach = { on: true, at, name: SR_PL[at].name, pin, pinName: SR_PIN[pin].name, night: srNight(absA), seen, owe: num(X.owe, 0), off: !!SR_PL[at].off,
+    walks: SR.pins.filter(p => p.id !== pin).map(p => [p.id, p.name, R0[p.id].m]).sort((a, b) => a[2] - b[2]),
+    near: SR.places.filter(p => p.pin === pin && p.id !== at).map(p => [p.name, srMin(at, p.id)]), today, ev: evs, coin: '' };
 }
 
 // ---- 5. vitals ----
@@ -4217,7 +4379,7 @@ function stepCommit(c) {
   if (log.length) S._Log = [...(S._Log || []), ...log.map(l => `[${stamp(S.World)}] ${l}`)].slice(-12);
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepUi, stepCommit];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepUi, stepCommit];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,

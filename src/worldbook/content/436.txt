@@ -1,0 +1,6 @@
+[Sunpier] An amusement pier running far out over the bay: a carousel, games of skill with stuffed prizes, a hall of mirrors, ice cream and Sunfizz stands, caricature artists, and the Gull Run, a little wooden roller coaster that swings out over the water. Sunreach's family side at its loudest.
+Feel: screams, sugar, sea spray.
+<%_ { const _hh = Number(String(getvar('stat_data.World.Time') || '').slice(0, 2)); if (_hh >= 18 || _hh < 6) { _%>
+At night: The pier is outlined in rune lamps from end to end, fortune tellers set up between the games, and the Gull Run goes out over black water.
+Feel at night: lights, screams, black water.
+<%_ } } _%>

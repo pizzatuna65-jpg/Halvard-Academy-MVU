@@ -199,9 +199,11 @@ const TRIP_INFO = [
     'Groups of four only. Uniform all day; the Doves travel along and staff count heads constantly. Late for the muster means a detention.',
     'Back before dark, passenger lists counted twice. Fireworks over the hills at night; curfew moves to 22:00.'] },
   { rx: /^Academy Trip/, name: 'Academy Trip: Sunreach Bay', lines: [
-    'Month 11 Week 2 Saturday to Week 3 Thursday; all three years. A full day by airship each way: out on the Saturday, home on the Thursday.', 'Beachfront hotels, four to a room; teachers in the same hotels set a curfew.',
-    'Leave the hotel only in groups of four. The day side is allowed; the night side is out of bounds, which some students ignore every year.',
-    'Points do not work abroad and Sunreach is expensive: this is what a year of saving is for.'] },
+    'Month 11 Week 2 Saturday to Week 3 Thursday; all three years. A full day by airship each way: out on the Saturday, home on the Thursday.',
+    'The day before: change points into coin at the Banking House. Points do not work abroad, and Sunreach is expensive: this is what a year of saving is for.',
+    'Halvard stays at The Hanabira, a Yozakuran hotel on Coral Strand, four to a room. Sunday 09:00 the teachers\' briefing; Wednesday 19:00 the farewell dinner; Thursday 08:00 boarding.',
+    'One city with two faces: a seaside paradise by day, lit by rune-light from 18:00 to dawn. Carriages and water taxis for coin; the open sea by tour boat.',
+    'Leave the hotel only in groups of four; curfew 22:00. The night side (the casinos and the Velvet Lanes) is out of bounds, which some students ignore every year.'] },
 ];
 function acTrip(S) {
   const T = S.Trip || {}, W = S.Player.Wallet;

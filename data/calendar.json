@@ -528,8 +528,8 @@
       "noclass": 1,
       "away": 1,
       "s": {
-        "Sat": "07:00 airships leave Halvard: a full day's flight to Sunreach Bay (meals and the promenade aboard); arrival at night, check-in at the beachfront hotels, four to a room; the teachers set a curfew",
-        "Sun": "Free time in groups of four (the day side only; the night side is out of bounds); the teachers' curfew"
+        "Sat": "07:00 airships leave Halvard: a full day's flight to Sunreach Bay (meals and the promenade aboard); 20:00 landing at the Skydock, check-in at The Hanabira on Coral Strand, four to a room; the teachers' curfew 22:00",
+        "Sun": "09:00 the teachers' briefing in The Hanabira's garden; then free time in groups of four (the night side, the casinos and the Velvet Lanes, is out of bounds); the teachers' curfew 22:00"
       }
     },
     {
@@ -545,10 +545,10 @@
       "noclass": 1,
       "away": 1,
       "s": {
-        "Mon": "Free time in groups of four (the day side only; the night side is out of bounds); the teachers' curfew",
-        "Tue": "Free time in groups of four (the day side only; the night side is out of bounds); the teachers' curfew",
-        "Wed": "Last full day: free time in groups of four (the day side only); pack in the evening; the teachers' curfew",
-        "Thu": "Morning: check out and board; a full day's flight home, back at Halvard by night"
+        "Mon": "Free time in groups of four (the night side, the casinos and the Velvet Lanes, is out of bounds); the teachers' curfew 22:00",
+        "Tue": "Free time in groups of four (the night side, the casinos and the Velvet Lanes, is out of bounds); the teachers' curfew 22:00",
+        "Wed": "Last full day: free time in groups of four; 19:00 the farewell dinner at The Hanabira, then packing; the teachers' curfew 22:00",
+        "Thu": "08:00 check out and board at the Skydock; a full day's flight home, back at Halvard by night"
       }
     },
     {

@@ -1,0 +1,1230 @@
+{
+ "_note": "1.41.0 (owner-approved planning/DRAFT_outside_maps.md, part 3): Sunreach Bay, the Academy Trip's city (FP7 area 3). One city with two faces: night 18:00-06:00 (rune-light, no electricity). Pins hold places like Avalon; window: from landing (M11 W2 Sat 20:00) to boarding (W3 Thu 08:00). legs: minutes on foot ('tour': by tour boat only, fare and minutes fixed). Rides: carriage (any land leg) or boat (water taxi, both ends on the shore), half the time, no stamina. off: the night side the teachers forbid (only a <now> reminder). meet: who may be met where, by personality ([day places, night places]). Read by gen_engine.py, merge_lorebooks.py, gen_ui.py, gen_mvu_entries.py.",
+ "area": "Sunreach Bay",
+ "maps": {
+  "day": "map/sunreach_day.webp",
+  "night": "map/sunreach_night.webp"
+ },
+ "night": {
+  "from": "18:00",
+  "to": "06:00"
+ },
+ "window": {
+  "m": 11,
+  "from": [
+   2,
+   "Sat",
+   "20:00"
+  ],
+  "to": [
+   3,
+   "Thu",
+   "08:00"
+  ]
+ },
+ "arrive": "skydock",
+ "hotel": "the_hanabira",
+ "curfew": [
+  22,
+  7
+ ],
+ "schedule": [
+  [
+   2,
+   "Sun",
+   "09:00",
+   "the teachers' briefing in The Hanabira's garden"
+  ],
+  [
+   3,
+   "Wed",
+   "19:00",
+   "the farewell dinner at The Hanabira, then packing"
+  ],
+  [
+   3,
+   "Thu",
+   "08:00",
+   "check out and board the airship home"
+  ]
+ ],
+ "pins": [
+  {
+   "id": "skydock",
+   "name": "Skydock",
+   "x": 14,
+   "y": 68,
+   "shore": true
+  },
+  {
+   "id": "wharf",
+   "name": "Fisherman's Wharf",
+   "x": 25,
+   "y": 50,
+   "shore": true
+  },
+  {
+   "id": "strand",
+   "name": "Coral Strand",
+   "x": 44,
+   "y": 44,
+   "shore": true
+  },
+  {
+   "id": "sunpier",
+   "name": "Sunpier",
+   "x": 64,
+   "y": 56,
+   "shore": true
+  },
+  {
+   "id": "crossing",
+   "name": "Sunreach Crossing",
+   "x": 51,
+   "y": 31
+  },
+  {
+   "id": "casino",
+   "name": "Casino Row",
+   "x": 81,
+   "y": 37,
+   "shore": true
+  },
+  {
+   "id": "terraces",
+   "name": "Cliffside Terraces",
+   "x": 60,
+   "y": 16
+  },
+  {
+   "id": "lagoon",
+   "name": "Turquoise Lagoon",
+   "x": 84,
+   "y": 77,
+   "shore": true
+  },
+  {
+   "id": "cliffs",
+   "name": "West Cliffs",
+   "x": 8,
+   "y": 35,
+   "shore": true
+  },
+  {
+   "id": "sea",
+   "name": "Open Sea",
+   "x": 45,
+   "y": 87
+  }
+ ],
+ "legs": [
+  [
+   "skydock",
+   "wharf",
+   10
+  ],
+  [
+   "skydock",
+   "strand",
+   15
+  ],
+  [
+   "skydock",
+   "cliffs",
+   30
+  ],
+  [
+   "wharf",
+   "strand",
+   15
+  ],
+  [
+   "wharf",
+   "crossing",
+   15
+  ],
+  [
+   "strand",
+   "sunpier",
+   10
+  ],
+  [
+   "strand",
+   "crossing",
+   10
+  ],
+  [
+   "sunpier",
+   "casino",
+   15
+  ],
+  [
+   "crossing",
+   "casino",
+   15
+  ],
+  [
+   "crossing",
+   "terraces",
+   15
+  ],
+  [
+   "casino",
+   "lagoon",
+   20
+  ],
+  [
+   "terraces",
+   "cliffs",
+   35
+  ],
+  [
+   "terraces",
+   "lagoon",
+   35
+  ],
+  [
+   "wharf",
+   "sea",
+   60,
+   "tour"
+  ]
+ ],
+ "places": [
+  {
+   "id": "skydock",
+   "name": "Skydock",
+   "pin": "skydock",
+   "in": 5,
+   "out": true,
+   "aliases": [
+    "the skydock",
+    "the airship masts",
+    "customs"
+   ],
+   "brief": "airship masts, customs, the cliff road up to the Lighthouse",
+   "desc": "A broad walled stone platform on the bay's south-west headland, where airships rest in wooden cradles beside their mooring masts, with a customs shed where a single bored Yozakuran clerk stamps everything. Every arrival and departure musters here. A switchback cliff road climbs from it along the west headland to the Lighthouse.",
+   "feel": "salt wind, gulls, ropes creaking",
+   "night": "The masts and the platform are lit like a row of lanterns, lamps mark the cliff road all the way up to the Lighthouse, and the city's glow fills the whole bay below.",
+   "night_feel": "warm wind, distant music"
+  },
+  {
+   "id": "fish_market",
+   "name": "Fish Market",
+   "pin": "wharf",
+   "in": 5,
+   "out": true,
+   "aliases": [
+    "the fish market",
+    "the wharf",
+    "the night market stalls",
+    "the food stalls",
+    "the grills"
+   ],
+   "brief": "the seafood heart, grills by day, lantern stalls by night",
+   "desc": "The city's seafood heart on the wharf: a long open hall where the morning catch is sold off ice and cooked on the spot, and the streets around it given over to grills, steamers and noodle stalls. Skewered prawns, grilled octopus, crab in chilli, coconut rice in leaf parcels, shaved ice in fruit syrup. Cheap by Sunreach standards, loud, and the best food on the island.",
+   "feel": "smoke, salt, shouting",
+   "night": "Red paper lanterns and rune-lit signs over a hundred steaming stalls, low wooden stools in the street, and the cooks still shouting until three in the morning.",
+   "night_feel": "steam, sizzle, red light"
+  },
+  {
+   "id": "sea_dock",
+   "name": "Sea Dock",
+   "pin": "wharf",
+   "in": 5,
+   "out": true,
+   "aliases": [
+    "the sea dock",
+    "the docks",
+    "the tour boats",
+    "the harbour"
+   ],
+   "brief": "fishing fleet and the tour boats to the open sea",
+   "desc": "The working dock beside the Fish Market where the fishing fleet ties up and the tour boats leave for the open sea: whale and dolphin tours in the morning, deep-sea fishing at noon, a dusk cruise at sunset. Nets drying, crates of ice, crews calling the next departure.",
+   "feel": "tar, nets, gulls",
+   "night": "The fishing boats come in under their lamps and unload straight into the market.",
+   "night_feel": "lamps on water, wet planks"
+  },
+  {
+   "id": "the_hanabira",
+   "name": "The Hanabira",
+   "pin": "strand",
+   "in": 5,
+   "out": false,
+   "aliases": [
+    "hanabira",
+    "the hotel",
+    "our hotel",
+    "the rooftop bath",
+    "the lobby"
+   ],
+   "brief": "Halvard's Yozakuran hotel, rooftop hot spring",
+   "desc": "Halvard's hotel for the Trip: a long white Yozakuran beachfront hotel of five storeys with paper lanterns on every balcony, a lobby of pale wood and koi pools, a garden of flowering trees, and a hot spring bath on the roof. Postcards at the front desk.",
+   "feel": "cool wood, quiet water, polite bows",
+   "night": "The lanterns glow on every balcony, and from the rooftop bath the whole lit city is laid out across the bay.",
+   "night_feel": "lantern light, steam, distant city noise"
+  },
+  {
+   "id": "coral_beach",
+   "name": "Coral Beach",
+   "pin": "strand",
+   "in": 5,
+   "out": true,
+   "aliases": [
+    "the beach",
+    "coral strand",
+    "the sand"
+   ],
+   "brief": "white sand, volleyball, fire dancers at night",
+   "desc": "The white beach in front of the hotels, a long curve of fine sand and gentle surf, striped umbrellas, rented loungers and beach volleyball nets. Lifeguards in red until sunset; half the people on it are some shade of sunburnt.",
+   "feel": "hot sand, bright, waves",
+   "night": "Beach clubs open under coloured rune lamps, fire dancers spin on the sand to drums, and the lit skyline doubles itself in the wet sand at the water's edge.",
+   "night_feel": "drums, firelight, warm sand"
+  },
+  {
+   "id": "sunpier",
+   "name": "Sunpier",
+   "pin": "sunpier",
+   "in": 5,
+   "out": true,
+   "aliases": [
+    "the pier",
+    "the gull run",
+    "the carousel"
+   ],
+   "brief": "amusement pier, the Gull Run coaster",
+   "desc": "An amusement pier running far out over the bay: a carousel, games of skill with stuffed prizes, a hall of mirrors, ice cream and Sunfizz stands, caricature artists, and the Gull Run, a little wooden roller coaster that swings out over the water. Sunreach's family side at its loudest.",
+   "feel": "screams, sugar, sea spray",
+   "night": "The pier is outlined in rune lamps from end to end, fortune tellers set up between the games, and the Gull Run goes out over black water.",
+   "night_feel": "lights, screams, black water"
+  },
+  {
+   "id": "tidehouse_aquarium",
+   "name": "Tidehouse Aquarium",
+   "pin": "sunpier",
+   "in": 5,
+   "out": false,
+   "aliases": [
+    "the aquarium",
+    "tidehouse"
+   ],
+   "brief": "glass tunnel, the old turtle, violet at night",
+   "desc": "A domed glass aquarium at the pier's root: a walk-through tunnel under a tank of reef fish, rays and a slow old sea turtle everyone names. Quiet, cool and dim, the best place on the island to escape the heat.",
+   "feel": "blue, cool, hushed",
+   "night": "Open late with the tank lit violet by rune lamps and jellyfish glowing in the dark; a favourite date.",
+   "night_feel": "violet glow, whispers"
+  },
+  {
+   "id": "sunreach_crossing",
+   "name": "Sunreach Crossing",
+   "pin": "crossing",
+   "in": 5,
+   "out": true,
+   "aliases": [
+    "the crossing",
+    "the clock tower",
+    "the city centre",
+    "downtown"
+   ],
+   "brief": "six-street crossroads, glowing banners, game halls",
+   "desc": "The heart of the city, a vast crossroads where six streets meet under walls of huge painted banners (suns, waves, swirls of colour) and shopfronts: fashion boutiques, fruit-juice bars, game halls, a stand of horse carriages, and a clock tower everybody uses as a meeting point, where the Skyrail starts up the hill. By day it is busy and colourful.",
+   "feel": "crowds, bright paint, movement",
+   "night": "Every banner glows under rune lamps and every shop sign burns in rune-lit glass; when the crossing keepers drop their flags, a thousand people cross at once in every direction. Street fashion, buskers, portrait sketchers, game halls open all night, and the noise never drops.",
+   "night_feel": "colour, footsteps, a sea of faces"
+  },
+  {
+   "id": "velvet_lanes",
+   "name": "Velvet Lanes",
+   "pin": "crossing",
+   "in": 5,
+   "out": true,
+   "aliases": [
+    "the velvet lanes",
+    "the lanes",
+    "the alleys",
+    "the bars"
+   ],
+   "brief": "tiny stacked bars, singing rooms, the night market",
+   "desc": "A tangle of narrow alleys behind the Crossing, packed with tiny bars of six seats each, stacked two and three storeys high and reached by steep outside stairs; singing rooms with a hired lute player, smoky grills, fortune tellers, a night market selling anything (charms, forged papers, potions no apothecary at home would stock), and further in the pleasure houses behind silk curtains. Shuttered and sleepy by day.",
+   "feel": "shuttered, narrow, stale smoke",
+   "night": "The brightest, densest, loudest few streets in the world: every sign competes in rune-lit glass, touts call from every door, and a group can lose each other in ten steps.",
+   "night_feel": "rune-glow, smoke, whispers, too close",
+   "off": true
+  },
+  {
+   "id": "golden_tide",
+   "name": "The Golden Tide",
+   "pin": "casino",
+   "in": 5,
+   "out": false,
+   "aliases": [
+    "golden tide",
+    "the casino",
+    "the tables"
+   ],
+   "brief": "the great casino and its fountain lake",
+   "desc": "The biggest casino resort on the island, a domed tower of gold and blue glass with a great golden sea serpent coiled up its whole front, and a round lake of fountains at its feet: dice, cards and the great wheel on a floor of nobles, crime lords and tourists, and house dealers who never smile. It does not check a bracelet or ask an age. By day it is half-asleep: cleaners, gamblers who never went to bed, and cool air at the doors.",
+   "feel": "cool air, chips clicking, gold",
+   "night": "Every hour the house's water mages throw the lake into fountains higher than the tower in time to an orchestra on the terrace, the tables are full to the walls, and the doors swallow the whole street.",
+   "night_feel": "fountains, roar of the tables, gold and red",
+   "narrator": "Ottavio Bastiani was floor boss here for nearly forty years. The older dealers and doormen still speak of \"Signor Bastiani\" with respect and some fear; a student who mentions him, or a Sky student who carries themselves like one, is treated very carefully. Nobody here will say what else he did for the house.",
+   "off": true
+  },
+  {
+   "id": "plaza_dourada",
+   "name": "Plaza Dourada",
+   "pin": "casino",
+   "in": 5,
+   "out": true,
+   "aliases": [
+    "the plaza",
+    "the colonial square",
+    "the mosaic square"
+   ],
+   "brief": "pastel colonial square, custard tarts",
+   "desc": "An old colonial square beside the casinos, from the days before the island sold itself to pleasure: pastel arcaded buildings, a wave-patterned black-and-white mosaic pavement, a fountain, and pastry shops selling custard tarts and almond cookies. Quiet and charming by day.",
+   "feel": "pastel, mosaic, sweet pastry",
+   "night": "The square is ringed by the casino towers' light and filled with tourists drifting in from the tables; the pastry shops stay open and the fountain is lit gold.",
+   "night_feel": "gold light, old stone, the casinos' glow"
+  },
+  {
+   "id": "the_terraces",
+   "name": "The Terraces",
+   "pin": "terraces",
+   "in": 5,
+   "out": true,
+   "aliases": [
+    "cliffside terraces",
+    "the terraces",
+    "the stilt houses",
+    "the hillside town"
+   ],
+   "brief": "the islanders' stacked hillside town on stilts",
+   "desc": "The island's own town, built up the steep hillside behind the city in layers: streets stacked on streets, stairways, alley markets and houses on tall timber stilts clinging to the cliff, so that the ground floor of one street is the roof of the next; old stone aqueducts arch across the ravines between the hills. Spice stalls, woven hats, shell jewellery, fruit nobody can name, aloe salve, and cafés where the locals play dominoes. Cheaper and friendlier than anywhere on the beach.",
+   "feel": "stairs, spice, laundry lines, shade",
+   "night": "The whole hillside lights up layer by layer, the stilt houses glowing gold over the city like a stacked lantern; hot-pot restaurants spill onto every landing.",
+   "night_feel": "chilli steam, gold light, a long way down"
+  },
+  {
+   "id": "skyrail",
+   "name": "Skyrail",
+   "pin": "terraces",
+   "in": 5,
+   "out": true,
+   "aliases": [
+    "the skyrail",
+    "the cable cars",
+    "the cable car"
+   ],
+   "brief": "red cable cars from the Crossing to the summit",
+   "desc": "Little red cable cars drawn by rune-engines on a long cable from the clock tower at the Crossing up over the stilt houses to the summit by the Old Fort, passing through a station built right into a house halfway up. Everyone takes the same sketch of it.",
+   "feel": "rattling, windy, a view",
+   "night": "The cabins glow as they swing up over the lit terraces, and the whole city opens out below.",
+   "night_feel": "vertigo, light everywhere below"
+  },
+  {
+   "id": "old_fort",
+   "name": "Old Fort",
+   "pin": "terraces",
+   "in": 5,
+   "out": true,
+   "aliases": [
+    "the old fort",
+    "the fort",
+    "the summit"
+   ],
+   "brief": "ruin on the summit, stars at night",
+   "desc": "A ruined sea fort at the top of the hill: crumbling walls, rusted cannons and goats; the best view of the whole bay, and on a clear day of the open sea.",
+   "feel": "wind, quiet, old stone",
+   "night": "Dark and quiet above the glowing city; the one place in Sunreach where the stars show.",
+   "night_feel": "dark, stars, the city humming below"
+  },
+  {
+   "id": "the_lagoon",
+   "name": "The Lagoon",
+   "pin": "lagoon",
+   "in": 5,
+   "out": true,
+   "aliases": [
+    "turquoise lagoon",
+    "the lagoon",
+    "the rafts",
+    "the beach bar"
+   ],
+   "brief": "warm turquoise water, rafts, a bar on stilts",
+   "desc": "A shallow lagoon of startling turquoise behind the reef on the eastern headland, warm as a bath, with floating rafts, rented paddle boats, and a beach bar on stilts over the water with thatched huts on its jetties, serving coconut drinks.",
+   "feel": "turquoise, warm water, laughter",
+   "night": "The rafts are strung with rune lamps and the beach bar plays slow music; the water is black and still.",
+   "night_feel": "small lights, black water, slow music"
+  },
+  {
+   "id": "reef_gardens",
+   "name": "Reef Gardens",
+   "pin": "lagoon",
+   "in": 5,
+   "out": true,
+   "aliases": [
+    "the reef",
+    "reef gardens",
+    "the glass-bottom boat",
+    "the coral"
+   ],
+   "brief": "glass-bottom boats, pearl divers",
+   "desc": "The coral reef at the lagoon's mouth: glass-bottom boats on the hour, snorkels for hire, and pearl divers who show off for coins. The colours are like nothing in Eldrasil.",
+   "feel": "colour, salt, sunlight through water",
+   "night": "The boats stop; the reef's edge glows faintly where the plankton stirs.",
+   "night_feel": "dark, faint glow"
+  },
+  {
+   "id": "shell_cove",
+   "name": "Shell Cove",
+   "pin": "lagoon",
+   "in": 5,
+   "out": true,
+   "aliases": [
+    "shell cove",
+    "the cove",
+    "the pink beach"
+   ],
+   "brief": "hidden pink-sand cove",
+   "desc": "A small hidden cove at the tip of the eastern headland, beyond the rocks at the lagoon's far end and reached by a path through the palms: pink shell sand, a single crooked palm leaning over the water, and nobody else.",
+   "feel": "secret, pink sand, quiet",
+   "night": "Moonlight on the shells and the city's glow on the far side of the bay.",
+   "night_feel": "moonlight, waves, alone together"
+  },
+  {
+   "id": "the_lighthouse",
+   "name": "The Lighthouse",
+   "pin": "cliffs",
+   "in": 5,
+   "out": true,
+   "aliases": [
+    "the lighthouse",
+    "the cliff road"
+   ],
+   "brief": "Norvaine keeper, up the cliff road from the Skydock",
+   "desc": "A tall white lighthouse at the top of the west headland, reached by the switchback cliff road from the Skydock; open to climb by day for a coin. The keeper is a retired Norvaine sailor who tells storm stories to anyone who listens.",
+   "feel": "wind, white paint, endless sea",
+   "night": "The beam sweeps the sea and the lit city both; the keeper lets nobody up after dark.",
+   "night_feel": "the beam, the dark sea"
+  },
+  {
+   "id": "sunset_cliffs",
+   "name": "Sunset Cliffs",
+   "pin": "cliffs",
+   "in": 5,
+   "out": true,
+   "aliases": [
+    "sunset cliffs",
+    "the cliffs",
+    "the diving ledges"
+   ],
+   "brief": "sunset, cliff diving",
+   "desc": "The cliffs below the lighthouse where the whole island comes to watch the sun go down into the sea. Locals and the brave dive from the lower ledges into deep clear water; the Trip's most famous confessions happen here at dusk.",
+   "feel": "gold light, height, held breath",
+   "night": "The crowd goes back to the city; the cliffs are dark and windy.",
+   "night_feel": "wind, dark, surf below"
+  },
+  {
+   "id": "glowtide_grotto",
+   "name": "Glowtide Grotto",
+   "pin": "cliffs",
+   "in": 5,
+   "out": false,
+   "aliases": [
+    "the grotto",
+    "glowtide",
+    "the sea cave",
+    "the cave"
+   ],
+   "brief": "sea cave, glowing cavern and pool",
+   "desc": "A sea cave in the cliff foot. A boatman rows visitors in through a low arch at the water line and along a winding tunnel where the water glows blue wherever an oar touches it, until the tunnel opens into a great cavern. There the boat ties up on a broad shore of smooth rock that can be walked on all the way round. In the middle lies a still round pool whose water glitters like scattered stars, and high above, the whole ceiling is covered in glowing plants, hanging moss and vines that shed a soft blue-green light over everything. Voices echo; nobody talks loudly for long. Boatmen charge a few coins and wait as long as you like.",
+   "feel": "blue-green glow, echo, cool stone, glittering water",
+   "night": "Outside it is dark, inside it is exactly the same, only quieter; the boatmen charge double after dark.",
+   "night_feel": "glow, stillness, the sea breathing outside"
+  },
+  {
+   "id": "open_sea",
+   "name": "Open Sea",
+   "pin": "sea",
+   "in": 5,
+   "out": true,
+   "aliases": [
+    "the open sea",
+    "the tour boat",
+    "out at sea"
+   ],
+   "brief": "whales, dolphins, deep-sea fishing",
+   "desc": "The deep water beyond the bay, an hour out by tour boat from the Sea Dock: morning tours to watch whales and dolphins, deep-sea fishing with the crew's rods, and a slow dusk cruise. The island shrinks to a line, then to nothing. Sailors here say the Leviathan has always lived somewhere under these waters and that, once in a lifetime, it lets itself be seen.",
+   "feel": "blue on blue, sun, deep swell",
+   "night": "Only the dusk cruise is out; the city glows on the horizon like a jewel.",
+   "night_feel": "dark swell, a glowing horizon"
+  }
+ ],
+ "rates": {
+  "walk_pct": 5,
+  "carriage": 6,
+  "boat": 8,
+  "tour": 15,
+  "street": 20,
+  "hustle": 8,
+  "hustle_seen": 50,
+  "hustle_min": 10,
+  "hustle_max": 25,
+  "hustle_cap": 300,
+  "rival": 25,
+  "student": 20,
+  "sea": 50,
+  "leviathan": 5,
+  "max_rolls": 6,
+  "bet_max": 200
+ },
+ "games": {
+  "dice": {
+   "win": 45,
+   "pay": 2
+  },
+  "cards": {
+   "win": 48,
+   "pay": 2
+  },
+  "wheel": {
+   "win": 8,
+   "pay": 10
+  }
+ },
+ "hustle": [
+  "fish_market",
+  "sunreach_crossing",
+  "velvet_lanes",
+  "sunpier"
+ ],
+ "street": {
+  "fish_market": [
+   [
+    "a cook flips a whole grilled fish in the air and the crowd applauds",
+    "two stallholders shout prices at each other in a bidding war"
+   ],
+   [
+    "a lantern-lit queue for the famous crab-in-chilli stall winds round the block",
+    "a cook breathes a puff of fire to sear a tray of prawns"
+   ]
+  ],
+  "sea_dock": [
+   [
+    "a fishing boat comes in with a swordfish longer than the boat",
+    "a tour crew calls the next departure with a conch"
+   ],
+   [
+    "the fleet comes in under its lamps, gulls screaming"
+   ]
+  ],
+  "coral_beach": [
+   [
+    "a beach volleyball match draws a crowd of shouting tourists",
+    "a child buries their father to the neck in sand"
+   ],
+   [
+    "fire dancers spin burning chains to drums",
+    "a beach club throws coloured rune-light across the waves"
+   ]
+  ],
+  "sunpier": [
+   [
+    "a stuffed-prize game hands out its biggest prize and the whole pier cheers",
+    "the Gull Run stalls at the top for a breathless moment, then drops"
+   ],
+   [
+    "the pier lights flick on end to end in one long run",
+    "a fortune teller calls out to {{user}} by a guess at their name"
+   ]
+  ],
+  "tidehouse_aquarium": [
+   [
+    "the old turtle swims right over the tunnel and everyone ducks"
+   ],
+   [
+    "the jellyfish tank glows violet and a couple goes very quiet"
+   ]
+  ],
+  "sunreach_crossing": [
+   [
+    "a troupe of street dancers takes over one corner of the crossing",
+    "a painter on a rope swing repaints a giant banner"
+   ],
+   [
+    "the crossing keepers drop their flags and a thousand people cross at once",
+    "a busker draws a ring of people with a song from Yozakura"
+   ]
+  ],
+  "velvet_lanes": [
+   [
+    "a shutter goes up and a bleary bartender squints at the daylight"
+   ],
+   [
+    "a tout tries three languages on {{user}} in one breath",
+    "a singing room spills a terrible duet into the alley"
+   ]
+  ],
+  "golden_tide": [
+   [
+    "a gambler who never went to bed counts his last coins on the steps"
+   ],
+   [
+    "the fountains leap higher than the tower in time to the orchestra"
+   ]
+  ],
+  "plaza_dourada": [
+   [
+    "an old man feeds pigeons on the wave mosaic",
+    "the custard tarts come out of the oven and a queue forms at once"
+   ],
+   [
+    "a gold-lit fountain draws tourists drifting in from the tables"
+   ]
+  ],
+  "the_terraces": [
+   [
+    "a woman lowers a basket on a rope from a stilt house to a stall below",
+    "locals slam dominoes on a café table"
+   ],
+   [
+    "hot-pot steam rises from every landing",
+    "the whole hillside lights up layer by layer"
+   ]
+  ],
+  "skyrail": [
+   [
+    "a cable car sways in the wind and everyone inside grabs a strap"
+   ],
+   [
+    "a lit cabin swings past an open window and the family inside waves"
+   ]
+  ],
+  "old_fort": [
+   [
+    "a goat stares down {{user}} from a cannon"
+   ],
+   [
+    "shooting stars over the dark summit"
+   ]
+  ],
+  "the_lagoon": [
+   [
+    "a raft tips over and its passengers fall in laughing"
+   ],
+   [
+    "slow music from the bar on stilts drifts over the black water"
+   ]
+  ],
+  "reef_gardens": [
+   [
+    "a pearl diver surfaces holding up a pearl for the boat to see",
+    "a shoal of blue fish turns all at once under the glass"
+   ]
+  ],
+  "shell_cove": [
+   [
+    "a hermit crab drags a too-big shell across the pink sand"
+   ]
+  ],
+  "the_lighthouse": [
+   [
+    "the keeper starts a storm story nobody asked for"
+   ],
+   [
+    "the beam sweeps over {{user}} and out to sea"
+   ]
+  ],
+  "sunset_cliffs": [
+   [
+    "a local dives from the highest ledge and the crowd holds its breath",
+    "the sun touches the sea and the whole crowd goes quiet"
+   ]
+  ],
+  "glowtide_grotto": [
+   [
+    "the boatman sings and the echo comes back in three voices",
+    "a hand trailed in the pool leaves a wake of light"
+   ]
+  ]
+ },
+ "sea": [
+  "a pod of dolphins races the bow for a mile",
+  "a whale surfaces close enough to hear it breathe, then shows its tail",
+  "a shoal of flying fish skims away over the swell",
+  "a giant sea turtle drifts past, older than the city",
+  "a storm walks along the horizon, never coming closer",
+  "a foreign merchant ship passes under full sail and dips its flag",
+  "a crew member hooks something huge on a deep-sea line, and it takes the whole line"
+ ],
+ "leviathan": "far out, the sea humps up into a back the size of an island, grey and barnacled, rises, rolls, and sinks again; the swell reaches the boat a long minute later, and the crew turns for home without a word",
+ "meet": {
+  "rivals": {
+   "Lucius": [
+    [
+     "plaza_dourada",
+     "tidehouse_aquarium"
+    ],
+    [
+     "sunreach_crossing"
+    ]
+   ],
+   "Ines": [
+    [
+     "old_fort",
+     "the_lighthouse"
+    ],
+    [
+     "tidehouse_aquarium"
+    ]
+   ],
+   "Bram": [
+    [
+     "tidehouse_aquarium",
+     "reef_gardens"
+    ],
+    [
+     "the_lagoon"
+    ]
+   ],
+   "Dex": [
+    [
+     "sunreach_crossing"
+    ],
+    [
+     "velvet_lanes",
+     "golden_tide"
+    ]
+   ],
+   "Elion": [
+    [
+     "fish_market",
+     "the_terraces"
+    ],
+    [
+     "plaza_dourada"
+    ]
+   ],
+   "Kira": [
+    [
+     "sunset_cliffs",
+     "coral_beach"
+    ],
+    [
+     "sunpier"
+    ]
+   ],
+   "Mirelle": [
+    [
+     "the_lagoon",
+     "coral_beach"
+    ],
+    [
+     "the_lagoon"
+    ]
+   ],
+   "Theodore": [
+    [
+     "fish_market",
+     "sunpier"
+    ],
+    [
+     "plaza_dourada"
+    ]
+   ],
+   "Bellatrix": [
+    [
+     "sunreach_crossing"
+    ],
+    [
+     "velvet_lanes",
+     "golden_tide"
+    ]
+   ],
+   "Cassius": [
+    [
+     "old_fort",
+     "skyrail"
+    ],
+    [
+     "plaza_dourada"
+    ]
+   ],
+   "Morgana": [
+    [
+     "glowtide_grotto",
+     "the_lighthouse"
+    ],
+    [
+     "old_fort",
+     "glowtide_grotto"
+    ]
+   ],
+   "Pip": [
+    [
+     "tidehouse_aquarium",
+     "shell_cove"
+    ],
+    [
+     "sunpier"
+    ]
+   ]
+  },
+  "halvard": {
+   "Irene": [
+    [
+     "tidehouse_aquarium",
+     "plaza_dourada"
+    ],
+    [
+     "plaza_dourada",
+     "the_hanabira"
+    ]
+   ],
+   "Caspian": [
+    [
+     "plaza_dourada",
+     "fish_market"
+    ],
+    [
+     "sunreach_crossing",
+     "plaza_dourada"
+    ]
+   ],
+   "Etnie": [
+    [
+     "coral_beach",
+     "sunpier"
+    ],
+    [
+     "coral_beach",
+     "sunreach_crossing"
+    ]
+   ],
+   "Royhan": [
+    [
+     "the_terraces",
+     "fish_market"
+    ],
+    [
+     "the_hanabira"
+    ]
+   ],
+   "Lenna": [
+    [
+     "coral_beach",
+     "tidehouse_aquarium"
+    ],
+    [
+     "fish_market"
+    ]
+   ],
+   "Saffi": [
+    [
+     "coral_beach",
+     "sunset_cliffs"
+    ],
+    [
+     "coral_beach"
+    ]
+   ],
+   "Kanae": [
+    [
+     "sunpier",
+     "plaza_dourada"
+    ],
+    [
+     "tidehouse_aquarium",
+     "sunpier"
+    ]
+   ],
+   "Idris": [
+    [
+     "the_terraces",
+     "old_fort"
+    ],
+    [
+     "the_terraces"
+    ]
+   ],
+   "Aiden": [
+    [
+     "sunreach_crossing"
+    ],
+    [
+     "golden_tide",
+     "velvet_lanes"
+    ]
+   ],
+   "Caralynn": [
+    [
+     "coral_beach",
+     "sunreach_crossing"
+    ],
+    [
+     "sunreach_crossing"
+    ]
+   ],
+   "Zara": [
+    [
+     "the_terraces",
+     "plaza_dourada"
+    ],
+    [
+     "the_hanabira"
+    ]
+   ],
+   "Percival": [
+    [
+     "old_fort",
+     "the_lighthouse"
+    ],
+    [
+     "fish_market"
+    ]
+   ],
+   "Sophia": [
+    [
+     "sunset_cliffs",
+     "open_sea"
+    ],
+    [
+     "velvet_lanes"
+    ]
+   ],
+   "Gareth": [
+    [
+     "the_terraces",
+     "plaza_dourada"
+    ],
+    [
+     "sunreach_crossing"
+    ]
+   ],
+   "Trixie": [
+    [
+     "sunpier",
+     "sunreach_crossing"
+    ],
+    [
+     "sunpier",
+     "coral_beach"
+    ]
+   ],
+   "Vera": [
+    [
+     "reef_gardens",
+     "glowtide_grotto"
+    ],
+    [
+     "glowtide_grotto"
+    ]
+   ],
+   "Dante": [
+    [
+     "coral_beach",
+     "the_lagoon"
+    ],
+    [
+     "the_hanabira"
+    ]
+   ],
+   "Castor": [
+    [
+     "old_fort",
+     "shell_cove"
+    ],
+    [
+     "old_fort"
+    ]
+   ],
+   "Ruby": [
+    [
+     "sunpier",
+     "plaza_dourada"
+    ],
+    [
+     "coral_beach"
+    ]
+   ],
+   "Florian": [
+    [
+     "golden_tide",
+     "coral_beach"
+    ],
+    [
+     "velvet_lanes",
+     "golden_tide"
+    ]
+   ],
+   "Alyssa": [
+    [
+     "the_lighthouse",
+     "tidehouse_aquarium"
+    ],
+    [
+     "the_hanabira"
+    ]
+   ],
+   "Tilly": [
+    [
+     "glowtide_grotto",
+     "the_lighthouse"
+    ],
+    [
+     "glowtide_grotto",
+     "old_fort"
+    ]
+   ],
+   "Linus": [
+    [
+     "sunreach_crossing",
+     "fish_market"
+    ],
+    [
+     "fish_market"
+    ]
+   ],
+   "Maple": [
+    [
+     "tidehouse_aquarium",
+     "skyrail"
+    ],
+    [
+     "skyrail"
+    ]
+   ],
+   "Nerys": [
+    [
+     "fish_market",
+     "skydock"
+    ],
+    [
+     "sunpier"
+    ]
+   ],
+   "Hadrian": [
+    [
+     "plaza_dourada",
+     "skyrail"
+    ],
+    [
+     "plaza_dourada"
+    ]
+   ],
+   "Wren": [
+    [
+     "sea_dock",
+     "the_lagoon"
+    ],
+    [
+     "coral_beach"
+    ]
+   ],
+   "Tsubaki": [
+    [
+     "old_fort",
+     "sunset_cliffs"
+    ],
+    [
+     "old_fort"
+    ]
+   ],
+   "Aurelian": [
+    [
+     "coral_beach",
+     "sunreach_crossing"
+    ],
+    [
+     "sunreach_crossing"
+    ]
+   ],
+   "William": [
+    [
+     "the_lighthouse",
+     "old_fort"
+    ],
+    [
+     "skyrail"
+    ]
+   ],
+   "Bruno": [
+    [
+     "sunset_cliffs",
+     "fish_market"
+    ],
+    [
+     "velvet_lanes"
+    ]
+   ],
+   "Bianca": [
+    [
+     "coral_beach",
+     "sunreach_crossing"
+    ],
+    [
+     "coral_beach",
+     "velvet_lanes"
+    ]
+   ],
+   "Rigel": [
+    [
+     "fish_market",
+     "open_sea"
+    ],
+    [
+     "fish_market"
+    ]
+   ],
+   "Topaz": [
+    [
+     "coral_beach",
+     "sunset_cliffs"
+    ],
+    [
+     "sunpier"
+    ]
+   ],
+   "Faye": [
+    [
+     "the_lagoon",
+     "shell_cove"
+    ],
+    [
+     "the_lagoon"
+    ]
+   ]
+  }
+ },
+ "weather": {
+  "temp": [
+   27,
+   31,
+   26
+  ],
+  "sky": [
+   {
+    "Clear": 70,
+    "Cloudy": 25,
+    "Fog": 5
+   },
+   {
+    "Clear": 50,
+    "Cloudy": 20,
+    "Rain": 25,
+    "Storm": 5
+   },
+   {
+    "Clear": 70,
+    "Cloudy": 25,
+    "Rain": 5
+   }
+  ],
+  "rain": {
+   "light": 50,
+   "steady": 35,
+   "heavy": 15
+  }
+ }
+}

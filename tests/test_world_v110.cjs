@@ -60,7 +60,7 @@ console.log('Weather: distribution, continuity, rare events, determinism');
   ok(off.World._Weather === '' && off.World._Season === '' && off.$ui.wx === null, 'Off mode: nothing computed, _Weather empty');
   const tripD = 294;   // M11 W3 Mon: Academy Trip (away)
   const away = at(S0, tripD, '10:00', 'Sunreach Bay — beach');
-  ok(/^Away/.test(away.World._Weather) && !away.$ui.wx.field, `away from campus: ${away.World._Weather}`);
+  ok(/Sunreach Bay \(warm south\)/.test(away.World._Weather) && !away.$ui.wx.away && !away.$ui.wx.field, `the Academy Trip (1.41.0: Sunreach's own weather): ${away.World._Weather}`);
 }
 
 console.log('Divination Society forecast');

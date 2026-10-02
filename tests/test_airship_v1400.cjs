@@ -74,12 +74,13 @@ ok(/Halvard's towers in the dark/.test(tl.$ui.airship.view) && tl.$ui.airship.la
 console.log('Lore, <now>, update rules and UI');
 const _ = require('lodash'), ejs = require('ejs'), gv = St => k => _.get({ stat_data: St }, k);
 const idx = JSON.parse(read('src/worldbook/index.json'));
-const ae = idx.filter(e => /^(\[mvu_plot\] )?Airship - /.test(e.comment));
-ok(ae.length === 4 && ae.map(e => e.uid).join() === '378,379,380,381' && ae.every(e => e.constant && /stat_data\.\$ui\.airship/.test(read(`src/worldbook/content/${e.uid}.txt`))), 'four airship entries (378-381), constant behind a gate on $ui.airship');
+const ae = idx.filter(e => /^(\[mvu_plot\] )?Airship - /.test(e.comment) && e.uid !== 465);
+ok(ae.length === 4 && ae.map(e => e.uid).join() === '378,379,380,381' && ae.every(e => !e.constant), 'four airship place entries (378-381), keyword (1.41.0: like the campus places)');
+ok(idx.find(e => e.uid === 465).constant && /stat_data\.\$ui\.airship/.test(read('src/worldbook/content/465.txt')), '1.41.0: a mini index (465), constant behind a gate on $ui.airship');
 const lore = (uid, St) => ejs.render(read(`src/worldbook/content/${uid}.txt`), { getvar: gv(St) });
 const free = at(land, CROWN, '12:00', 'Avalon — Crown Square');
-ok(/small raised stage/.test(lore(379, S)) && /\[Airship: Cargo Hold\]/.test(lore(381, H)) && /\[Airship: Promenade Deck\]/.test(lore(378, at(initState(), CROWN, '07:00', 'Main Courtyard'))), 'the entries print aboard, and in the 90 minutes before a flight');
-ok(lore(379, free).trim() === '' && lore(381, home).trim() === '' && !/beast pen/i.test(A.places.map(p => p.desc).join(' ')), 'nothing outside a flight; no beast pens');
+ok(/small raised stage/.test(lore(379, S)) && /\[Airship: Cargo Hold\]/.test(lore(381, H)) && /Promenade Deck \(the glassed gallery/.test(lore(465, at(initState(), CROWN, '07:00', 'Main Courtyard'))), 'the place entries when they come up; the index aboard and in the 90 minutes before a flight');
+ok(lore(465, free).trim() === '' && lore(465, home).trim() === '' && !/beast pen/i.test(A.places.map(p => p.desc).join(' ')), 'no index outside a flight; no beast pens');
 const now = St => ejs.render(read('src/worldbook/custom/content/505.txt'), { getvar: gv(St) });
 const nH = now(H), nP = now(P), nK = now(kYes);
 ok(/Aboard the airship \(Independence Crowning Day\): \{\{user\}\} is in the Cargo Hold\. It lands at the Skyport, Avalon at 09:30 \(in 1h 30m\)/.test(nH) && /In the hold this flight: the academy's banners/.test(nH), '<now>: where, landing, the hold\'s cargo');

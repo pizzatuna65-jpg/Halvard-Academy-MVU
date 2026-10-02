@@ -960,7 +960,9 @@ def beast_names(text):   # every creature in the Magical Beasts list, for one re
 def grand_vast_forest(C, ejs):
     """1.38.0 (owner-approved planning/DRAFT_outside_maps.md, part 1): the Grand Vast Forest from data/expedition.json: an overview
     (neighbours and every shortest walk, computed from the legs), one entry per place group, the Wendigo; the Expedition entry (230)
-    and the beast list (229). Card: constant, behind a gate on $ui.forest.on (nothing outside the Expedition). v39: keyword entries."""
+    and the beast list (229). Card: constant, behind a gate on $ui.forest.on (nothing outside the Expedition). v39: keyword entries.
+    1.41.0 (owner): 360 is the forest's index (constant during the Expedition, one line per place); every place entry is a keyword
+    entry, like the campus map (132) and the campus places."""
     X = json.load(open(P('data/expedition.json'), encoding='utf-8'))
     PL = {p['id']: p for p in X['places']}
     nb = {}
@@ -989,24 +991,29 @@ def grand_vast_forest(C, ejs):
              "target in on your own, never let a beast appear because it would be convenient, and never tell {{user}} where a beast lives: let "
              "tracks, class knowledge and the signs <now> gives show the way. Possible encounters in a place entry are what may appear there, "
              "not what is waiting. Every walk takes its hours on the clock; nobody crosses this forest in minutes.")
-    overview = ("[Grand Vast Forest]\nWhat: Eldrasil's great rainforest, half a day from Halvard by airship, so vast that crossing it takes weeks and "
+    brief = {'base_camp': 'the meadow at the southern edge: tents, the command tent, the Huntsmen\'s Lodge', 'wildwood': 'the ordinary rainforest west, north and east of Base Camp',
+             'blightbriar': 'poisoned thorns and spore fungus', 'gloaming': 'the oldest, darkest stand, where noon looks like dusk',
+             'falls': 'the Silverrun river falling in a dozen tiers', 'terraces': 'hundreds of cold stepped pools above the falls',
+             'cave': 'a cliff mouth onto caves nobody has mapped', 'old_heart': 'the single giant tree at the northern edge'}
+    places = 'Places: ' + ', '.join(f"{G['title']} ({brief[g]})" for g, G in X['groups'].items()) + '. Each has its own entry when it comes up.\n'
+    overview = ("[GRAND VAST FOREST INDEX]\nWhat: Eldrasil's great rainforest, half a day from Halvard by airship, so vast that crossing it takes weeks and "
                 "nobody has walked all of it. Hunting-company country. Halvard comes once a year, for the Creature Studies Expedition (Month 2 "
                 "Week 3), and uses only its southern rim: from Base Camp to the farthest point of that country is about half a day on foot.\n"
                 "Landmark: the Old Heart, a single giant tree at the rim's northern edge, rising far above the canopy and seen from anywhere in "
                 "the southern forest; everyone steers by it. Beyond it the deep forest runs on, unmapped.\n"
                 "Climate: warm and wet all year. Mornings start in mist, the air is heavy and humid, and most afternoons a downpour comes "
                 "through the canopy; nothing ever fully dries. Buttress-rooted giants, palms, tree ferns, hanging vines and moss on everything.\n"
-                "Neighbours (hours on foot): " + neigh + " Any other walk passes through the places between.\n"
+                + places + "Neighbours (hours on foot): " + neigh + " Any other walk passes through the places between.\n"
                 "Shortest walks (hours, the same both ways):\n" + '\n'.join(rows) + "\n"
                 "Walking costs stamina; half a day on foot without rest leaves anyone exhausted. The three Wildwood stretches (west, north, east) "
                 "are one forest in three directions from Base Camp.\n" + rules)
     gate0, gate1 = "<%_ if ((getvar('stat_data.$ui.forest') || {}).on) { _%>\n", "\n<%_ } _%>"
-    def entry(uid, comment, keys, text):
+    def entry(uid, comment, keys, text, index=False):
         assert uid not in C and uid not in N, f'forest uid {uid} is taken'
-        e = template_from(C[230], uid=uid, displayIndex=uid, comment=comment, key=keys, content=(gate0 + text + gate1) if ejs else text)
-        if ejs: e.update(constant=True)
+        e = template_from(C[230], uid=uid, displayIndex=uid, comment=comment, key=keys, content=(gate0 + text + gate1) if ejs and index else text)
+        if ejs and index: e.update(constant=True)
         C[uid] = e
-    entry(360, 'Grand Vast Forest', ['Grand Vast Forest', 'rainforest', 'Base Camp'], overview)
+    entry(360, 'Grand Vast Forest', ['Grand Vast Forest', 'rainforest'], overview, index=True)
     for k, (g, G) in enumerate(X['groups'].items()):
         names = [p['name'] for p in X['places'] if p['group'] == g]
         keys = list(dict.fromkeys([G['title'].replace('The ', '')] + [n.replace('The ', '') for n in names]))
@@ -1044,7 +1051,9 @@ def avalon(C, ejs):
     """1.39.0 (owner-approved planning/DRAFT_outside_maps.md, part 2): Avalon, the capital, from data/avalon.json: an overview (rings,
     the White Line, pins and their places, every shortest walk between pins, the Herald Spires, rules for the narrator), one entry per
     part of the city, the Rookery, the Royal Mages on Crowning Day; the World Index, the kingdom, Crowning Day (24) and the Kingdom
-    Competition (19). Card: constant, behind a gate on $ui.capital.on (nothing outside Avalon). v39: keyword entries."""
+    Competition (19). Card: constant, behind a gate on $ui.capital.on (nothing outside Avalon). v39: keyword entries.
+    1.41.0 (owner): 370 is the city's index (constant in Avalon, one line per place); every place has its own keyword entry in the
+    campus location format ([Name] description, Feel), like the campus map (132) and the campus places."""
     A = json.load(open(P('data/avalon.json'), encoding='utf-8'))
     PL, PIN = {p['id']: p for p in A['places']}, {p['id']: p for p in A['pins']}
     nb = {}
@@ -1060,13 +1069,20 @@ def avalon(C, ejs):
             for v, m in nb.get(u, []):
                 if v not in d or d[u] + m < d[v]: d[v] = d[u] + m
     ids = [p['id'] for p in A['pins']]
-    pin_line = lambda p: p['name'] + ': ' + ', '.join(x['name'] for x in A['places'] if x['pin'] == p['id'] and not x.get('hidden')) + '.'
+    brief = {'eldrasil_castle': 'the royal seat on the hill', 'noble_ring': 'the noble houses on the castle terraces', 'crown_square': 'the great square, the King\'s speech',
+             'grand_cathedral': 'the kingdom\'s cathedral', 'chancery': 'the crown\'s offices and courts', 'high_dovecote': 'the Doves\' tower',
+             'royal_bank': 'the kingdom\'s bank', 'skyport': 'airship masts outside the Great Gate', 'gilded_arcade': 'glass-roofed shopping arcades',
+             'lantern_market': 'the biggest market, under lanterns', 'spellwright_row': 'the magic trades', 'old_town': 'the grey old quarter',
+             'skywheel_fair': 'the fairground and its giant wheel', 'great_spire': 'the tallest Herald Spire, open to climb',
+             'garden_of_avalon': 'the great garden and the Archmage statue', 'grand_theatre': 'the domed opera house',
+             'royal_arena': 'the Kingdom Competition\'s stadium', 'whitestone_hotel': 'where the four academies\' teams stay'}
+    pin_line = lambda p: p['name'] + ': ' + ', '.join(f"{x['name']} ({brief[x['id']]})" for x in A['places'] if x['pin'] == p['id'] and not x.get('hidden')) + '.'
     rows = []
     for i, a in enumerate(ids[:-1]):
         d = walks(a)
         rows.append(PIN[a]['name'] + ': ' + ', '.join(PIN[b]['name'] + ' ' + str(d[b]) for b in sorted(ids[i + 1:], key=lambda b: (d[b], ids.index(b)))) + '.')
     Cr = A['crowning']
-    overview = ("[Avalon — the capital]\nAvalon is the capital of Eldrasil and its largest city, some two hours from Halvard by airship. A round city of white "
+    overview = ("[AVALON INDEX — the capital. Each place has its own entry when it comes up.]\nAvalon is the capital of Eldrasil and its largest city, some two hours from Halvard by airship. A round city of white "
                 "stone on a gentle hill, inside one great white wall with four gates; the Great Gate in the south faces the Skyport. Past the wall there "
                 "are no more walls: the city is laid out in rings by its streets alone, each ring a little higher than the one outside it, rising to "
                 "Eldrasil Castle on its hill, which can be seen from every street.\n"
@@ -1091,24 +1107,18 @@ def avalon(C, ejs):
                 "engine's, listed in <now>; never add trouble or luck of your own. Crowds, sellers, music, smells and colour are yours. Every walk takes "
                 "its minutes on the clock. {{user}} never crosses the White Line unless <now> says the team was summoned.")
     gate0, gate1 = "<%_ if ((getvar('stat_data.$ui.capital') || {}).on) { _%>\n", "\n<%_ } _%>"
-    def entry(uid, comment, keys, text):
+    def entry(uid, comment, keys, text, index=False):
         assert uid not in C and uid not in N, f'avalon uid {uid} is taken'
-        e = template_from(C[230], uid=uid, displayIndex=uid, comment=comment, key=keys, content=(gate0 + text + gate1) if ejs else text)
-        if ejs: e.update(constant=True)
+        e = template_from(C[230], uid=uid, displayIndex=uid, comment=comment, key=keys, content=(gate0 + text + gate1) if ejs and index else text)
+        if ejs and index: e.update(constant=True)
         C[uid] = e
-    def part(title, pids):
-        return f'[Avalon — {title}]\n' + '\n'.join(PL[i]['name'] + ': ' + PL[i]['desc'] for i in pids)
-    entry(370, 'Avalon', ['Avalon', 'the capital', 'Herald Spire', 'White Line'], overview)
-    entry(371, 'Avalon - Eldrasil Castle and the Noble Ring', ['Eldrasil Castle', 'Noble Ring', 'royal castle'],
-          part('Eldrasil Castle and the Noble Ring', ['eldrasil_castle', 'noble_ring']) + '\nBoth lie past the White Line and are closed to students. The one way in is a royal summons: the team that wins the Kingdom Competition is received by the King at the castle on the last evening.')
-    entry(372, 'Avalon - Crown Square', ['Crown Square', 'Grand Cathedral', 'Chancery', 'High Dovecote', 'Royal Bank'],
-          part('Crown Square and the Crown Ring', ['crown_square', 'grand_cathedral', 'chancery', 'high_dovecote', 'royal_bank']))
-    entry(373, 'Avalon - Great Gate and Lantern Quarter', ['Skyport', 'Gilded Arcade', 'Lantern Market', 'Spellwright Row', 'Great Gate', 'Lantern Quarter'],
-          part('Great Gate and Lantern Quarter', ['skyport', 'gilded_arcade', 'lantern_market', 'spellwright_row']))
-    entry(374, 'Avalon - Old Town', ['Old Town', 'Skywheel Fair', 'Great Spire'],
-          part('Old Town', ['old_town', 'skywheel_fair', 'great_spire']))
-    entry(375, 'Avalon - Garden of Avalon and Arena Quarter', ['Garden of Avalon', 'Grand Theatre', 'Royal Arena', 'Whitestone Hotel', 'Arena Quarter', 'Archmage statue'],
-          part('Garden of Avalon and Arena Quarter', ['garden_of_avalon', 'grand_theatre', 'royal_arena', 'whitestone_hotel']))
+    entry(370, 'Avalon', ['Avalon', 'the capital', 'Herald Spire', 'White Line'], overview, index=True)
+    uids = iter([371, 372, 373, 374, 375] + list(range(452, 465)))
+    for q in A['places']:
+        if q['id'] == 'rookery': continue
+        nm = q['name']
+        entry(next(uids), 'Avalon - ' + nm, list(dict.fromkeys([nm, nm[4:] if nm.startswith('The ') else nm])),
+              f"[{nm}] {q['desc']}" + (f"\nFeel: {q['vibe']}" if q.get('vibe') else ''))
     entry(376, 'Avalon - The Rookery', ['Rookery', 'rooks', 'Drowned Rat'],
           '[Avalon — The Rookery]\nThe Rookery: ' + PL['rookery']['desc'] + ' Buying or practising a forbidden art there is still arrest, as everywhere; being caught there is a serious offence for a student.\n'
           '<narrator_only>The way in: the cellar door behind the bar of the Drowned Rat, a tavern on the lowest lane of Old Town; the barkeep opens it for anyone who asks for "the cellar wine". '
@@ -1135,17 +1145,86 @@ def avalon(C, ejs):
 
 def airship(C, ejs):
     """1.40.0 (owner-approved planning/DRAFT_airship.md): the four places aboard the academy's airship, from data/airship.json (378-381).
-    Card: constant, behind a gate on $ui.airship (on during a flight, soon in the 90 minutes before one). v39: keyword entries."""
+    Card: keyword entries (1.41.0, owner), and a small index (465) constant behind a gate on $ui.airship (on during a flight, soon
+    in the 90 minutes before one), like the campus map (132) and the campus places. v39: keyword entries."""
     A = json.load(open(P('data/airship.json'), encoding='utf-8'))
     gate0, gate1 = "<%_ if ((getvar('stat_data.$ui.airship') || {}).on || (getvar('stat_data.$ui.airship') || {}).soon) { _%>\n", "\n<%_ } _%>"
-    keys = {'promenade_deck': ['Promenade Deck', 'airship promenade'], 'common_room': ['airship common room', 'airship bar', 'airship stage'],
+    keys = {'promenade_deck': ['Promenade Deck', 'airship promenade'], 'common_room': ['Airship — Common Room', 'airship common room', 'airship bar', 'airship stage'],
             'cabin_deck': ['Cabin Deck', 'bathing stalls'], 'cargo_hold': ['Cargo Hold', 'quartermaster']}
     for uid, p in zip(range(378, 382), A['places']):
         assert uid not in C, f'airship uid {uid} is taken'
         text = f"[Airship: {p['name']}] " + p['desc']
-        e = template_from(C[230], uid=uid, displayIndex=uid, comment='Airship - ' + p['name'], key=keys[p['id']], content=(gate0 + text + gate1) if ejs else text)
-        if ejs: e.update(constant=True)
-        C[uid] = e
+        C[uid] = template_from(C[230], uid=uid, displayIndex=uid, comment='Airship - ' + p['name'], key=keys[p['id']], content=text)
+    brief = {'promenade_deck': 'the glassed gallery and the view', 'common_room': 'the canteen counter, a small bar, the stage',
+             'cabin_deck': 'a cabin to each group of four, hot bathing stalls', 'cargo_hold': 'luggage and gear, the most private corner'}
+    idx = ("[AIRSHIP INDEX] Aboard the academy's airship: " + ', '.join(f"{p['name']} ({brief[p['id']]})" for p in A['places'])
+           + ". Two minutes apart; each place has its own entry when it comes up.")
+    assert 465 not in C, 'airship uid 465 is taken'
+    e = template_from(C[230], uid=465, displayIndex=465, comment='Airship - index', key=['airship'], content=(gate0 + idx + gate1) if ejs else idx)
+    if ejs: e.update(constant=True)
+    C[465] = e
+
+def sunreach(C, ejs):
+    """1.41.0 (owner-approved planning/DRAFT_outside_maps.md, part 3): Sunreach Bay from data/sunreach.json. The Academy Trip entry (247)
+    carries the city's index (constant from Month 11 Week 1 to the end of the Trip; the index only in Sunreach) and one keyword entry
+    per place (431-451) in the campus location format, its night lines only from 18:00 to 06:00. v39: keyword entries."""
+    D = json.load(open(P('data/sunreach.json'), encoding='utf-8'))
+    PIN = {p['id']: p for p in D['pins']}
+    nb = {}
+    for a, b, m, *_t in D['legs']:
+        nb.setdefault(a, []).append((b, m)); nb.setdefault(b, []).append((a, m))
+    def walks(src):
+        d, done = {src: 0}, set()
+        while True:
+            u = min((k for k in d if k not in done), key=lambda k: d[k], default=None)
+            if u is None: return d
+            done.add(u)
+            for v, m in nb.get(u, []):
+                if v not in d or d[u] + m < d[v]: d[v] = d[u] + m
+    ids = [p['id'] for p in D['pins']]
+    rows = []
+    for i, a in enumerate(ids[:-1]):
+        d = walks(a)
+        rows.append(PIN[a]['name'] + ': ' + ', '.join(PIN[b]['name'] + ' ' + str(d[b]) for b in sorted(ids[i + 1:], key=lambda b: (d[b], ids.index(b)))) + '.')
+    R = D['rates']
+    index = ("SUNREACH BAY INDEX — the city of the Academy Trip. Each place has its own entry when it comes up.\n"
+             "One city around a turquoise bay. By day a seaside paradise; from 18:00 to 06:00 the same streets are lit by rune-light: "
+             "glowing coloured glass signs, painted banners under rune lamps, lanterns. No electricity anywhere.\n"
+             + '\n'.join(PIN[k]['name'] + ': ' + ', '.join(f"{q['name']} ({q['brief']})" for q in D['places'] if q['pin'] == k) + '.' for k in ids) + "\n"
+             "Walks between the parts (minutes on foot, the same both ways; a place inside one part is five to ten minutes from the next):\n"
+             + '\n'.join(rows) + "\n"
+             f"Getting around: horse carriages anywhere on land ({R['carriage']} coin) and water taxis between the shore parts ({R['boat']} coin), "
+             f"both half the time; the Open Sea only by tour boat from the Sea Dock ({R['tour']} coin each way). Points do not work; coin only.\n"
+             "Also in Sunreach these weeks: students of Myrdath, Ashvale and Veyra on their own trips, in the hotels along Coral Strand.\n"
+             "Rules for the narrator: who is met, street sights, hustlers, the sea and the dice are the engine's, listed in <now>; never add "
+             "encounters or luck of your own, and never decide a bet. Nothing sexual happens to {{user}} or any student here, on page or off.")
+    trip = ("[Academy Trip]\nWhen: Month 11 Week 2 Saturday to Week 3 Thursday. All three years; the third-years' last event as students.\n"
+            "Where: Sunreach Bay, a full day by airship each way (the Saturday and the Thursday are spent flying, morning to night), a southern resort that "
+            "stays warm all year: a few days of summer in Halvard's winter. Halvard has The Hanabira, a Yozakuran beachfront hotel on Coral Strand, four "
+            "to a room; the rest is free time.\n"
+            "Days: Saturday night the landing at the Skydock and check-in; Sunday 09:00 the teachers' briefing in the hotel garden; free time until "
+            "Wednesday; Wednesday 19:00 the farewell dinner at The Hanabira, then packing; Thursday 08:00 check out and board.\n"
+            "Rules: the teachers in the same hotel set a curfew at 22:00; leave the hotel only in groups of four. The city by day is allowed; its night "
+            "side (the casinos and the Velvet Lanes) is out of bounds, which some students ignore every year.\n"
+            "Also there: Myrdath, Ashvale and Veyra send their students to Sunreach the same weeks.\n"
+            "Money: points do not work abroad; this is what a year of saving is for, and Sunreach is expensive.\n"
+            "Mood: students return tired, sunburnt and poorer than planned.")
+    if ejs:
+        C[247]['content'] = ("<%_ { const _m = Number(getvar('stat_data.World.Month')) || 0, _w = Number(getvar('stat_data.World.Week')) || 0, "
+                             "_on = (getvar('stat_data.$ui.sunreach') || {}).on; if ((_m === 11 && _w <= 3) || _on) { _%>\n" + trip
+                             + "\n<%_ if (_on) { _%>\n" + index + "\n<%_ } } } _%>")
+        C[247]['constant'] = True
+    else:
+        C[247]['content'] = trip + '\n' + index
+    n0, n1 = "<%_ { const _hh = Number(String(getvar('stat_data.World.Time') || '').slice(0, 2)); if (_hh >= 18 || _hh < 6) { _%>\n", "\n<%_ } } _%>"
+    for uid, q in zip(range(431, 452), D['places']):
+        assert uid not in C, f'sunreach uid {uid} is taken'
+        nm = q['name']
+        night = f"At night: {q['night']}\nFeel at night: {q['night_feel']}."
+        text = (f"[{nm}] {q['desc']}\nFeel: {q['feel']}.\n" + ((n0 + night + n1) if ejs else night)
+                + (f"\n<narrator_only>{q['narrator']}</narrator_only>" if q.get('narrator') else ''))
+        C[uid] = template_from(C[230], uid=uid, displayIndex=uid, comment='Sunreach Bay - ' + nm, key=list(dict.fromkeys([nm, nm[4:] if nm.startswith('The ') else nm])), content=text)
+    assert len(D['places']) == 21
 
 def lore_activation(C):
     beasts = beast_names(C[229]['content'])
@@ -1193,6 +1272,7 @@ staff_regulars(N39)   # 1.33.0
 grand_vast_forest(C39, False)   # 1.38.0
 avalon(C39, False)   # 1.39.0
 airship(C39, False)   # 1.40.0
+sunreach(C39, False)   # 1.41.0
 lore_activation(C39)   # 1.35.0
 calendar_months = json.load(open(P('data/calendar.json'), encoding='utf-8'))['months']
 for month in range(1, 13):
@@ -1352,6 +1432,7 @@ staff_regulars(Nc)   # 1.33.0
 grand_vast_forest(Cc, True)   # 1.38.0
 avalon(Cc, True)   # 1.39.0
 airship(Cc, True)   # 1.40.0
+sunreach(Cc, True)   # 1.41.0
 lore_activation(Cc)   # 1.35.0
 # merge + tagging (D2): lore -> [mvu_plot]; shared state/navigation entries stay untagged (sent to both models)
 UNTAGGED_CORE = {0, 132, 134, 131, 20}

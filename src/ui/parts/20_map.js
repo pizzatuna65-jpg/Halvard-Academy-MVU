@@ -201,6 +201,56 @@ function renderCapital(S, tabs) {
     <div class="sub" style="margin:6px 0 10px">${where}</div></div><div class="sheet">${sheet}</div></div></div></div>`;
 }
 
+// ---- 1.41.0 (owner-approved planning/DRAFT_outside_maps.md, part 3): Sunreach Bay (DATA.sunreach, engine $ui.sunreach). A tab once
+// {{user}} has been there, opened by itself during the Trip. Two images with the same pins: the night map from 18:00 to 06:00, and the
+// cards show each place's night face then.
+const rz = () => DATA.sunreach || { pins: [], places: [], legs: [], maps: {}, fare: {} };
+const rPlace = id => rz().places.find(p => p.id === id), rPin = id => rz().pins.find(p => p.id === id);
+const rMin = t => { const m = /^(\d{1,2}):(\d{2})/.exec(String(t || '')); return m ? +m[1] * 60 + +m[2] : null; };
+const rNight = S => { const t = rMin((S.World || {}).Time), N = rz().night || {}; return t != null && (t >= rMin(N.from) || t < rMin(N.to)); };
+function srWalks(from) {                                        // minutes between pins
+  const d = { [from]: 0 }, done = new Set();
+  for (;;) {
+    let u = null; for (const k in d) if (!done.has(k) && (u === null || d[k] < d[u])) u = k;
+    if (u === null) break; done.add(u);
+    for (const [a, b, m] of rz().legs) { const v = a === u ? b : b === u ? a : null; if (v && (!(v in d) || d[u] + m < d[v])) d[v] = d[u] + m; }
+  }
+  return d;
+}
+const srMinUI = (a, b) => a === b ? 0 : rPlace(a).pin === rPlace(b).pin ? Math.max(5, num(rPlace(a).in, 5) + num(rPlace(b).in, 5)) : srWalks(rPlace(a).pin)[rPlace(b).pin];
+function srCard(id, S, R, night) {
+  const p = rPlace(id), here = R.on && R.at === id, from = R.on && R.at ? R.at : 'skydock', m = srMinUI(from, id), split = rPlace(from).pin !== p.pin;
+  const sea = p.pin === 'sea' || rPlace(from).pin === 'sea', F = rz().fare;
+  const walk = here ? 'You are here' : sea ? `About ${m} min, by tour boat from the Sea Dock (${F.tour} coin)` : `About ${m} min on foot${split ? ` (${Math.round(m / 2)} by carriage, ${F.carriage} coin)` : ''} from ${R.on && R.at ? 'here' : 'the Skydock'} (${rPlace(from).name})`;
+  const map = rz().maps[night ? 'night' : 'day'];
+  return `<article class="lc${here ? ' here' : ''}"><div class="crop" style="${cropStyle(rPin(p.pin), S, map)}"><b>${esc(p.name)}</b>${here ? '<span class="you">You are here</span>' : ''}</div>
+    <div class="in"><p class="vibe">${esc(night ? p.night_feel : p.feel)}</p>
+    <details><summary>Description</summary><p>${esc(p.desc)}</p>${night ? `<p>${esc(p.night)}</p>` : ''}</details>
+    <dl class="kv sm"><dt>Walk</dt><dd>${esc(walk)}</dd></dl>
+    <button class="btn ${here ? '' : 'pri'} go" data-rgo="${esc(id)}" ${here || !R.on ? 'disabled' : ''}>${here ? 'You are here' : R.on ? 'Go here' : 'Only while in Sunreach Bay'}</button></div></article>`;
+}
+function renderSunreach(S, tabs) {
+  const R = (S.$ui || {}).sunreach || {}, night = rNight(S), map = rz().maps[night ? 'night' : 'day'];
+  const curPin = R.on && R.at ? (rPlace(R.at) || {}).pin : '';
+  if (!view.rpin || !rPin(view.rpin)) view.rpin = curPin || 'strand';
+  const pinHTML = rz().pins.map(p => {
+    const here = curPin === p.id, sel = view.rpin === p.id;
+    return `<button class="pin${here ? ' here' : ''}${sel ? ' sel' : ''}" data-rpin="${esc(p.id)}" style="left:${p.x}%;top:${p.y}%" aria-label="${esc(p.name)}${here ? ' (you are here)' : ''}" title="${esc(p.name)}"></button>`
+      + (sel || here ? `<span class="plab${here ? ' here' : ''}${labPos(p)}" style="left:${p.x}%;top:${p.y}%">${esc(p.name)}</span>` : '');
+  }).join('');
+  const P = rPin(view.rpin), ids = P ? rz().places.filter(x => x.pin === P.id).map(x => x.id) : [];
+  if (view.rcardPin !== view.rpin) view.rcard = Math.max(0, ids.indexOf(R.at));
+  view.rcardPin = view.rpin; view.rcard = _.clamp(view.rcard || 0, 0, Math.max(0, ids.length - 1));
+  const arrows = ids.length > 1 ? `<div class="cnav"><button class="btn sm" data-rcard="-1" aria-label="Previous place" ${view.rcard ? '' : 'disabled'}>‹</button>
+    <span class="sub">${view.rcard + 1} / ${ids.length} · ${esc(rPlace(ids[view.rcard]).name)}</span><button class="btn sm" data-rcard="1" aria-label="Next place" ${view.rcard < ids.length - 1 ? '' : 'disabled'}>›</button></div>` : '';
+  const sheet = P ? `<h3>${esc(P.name)}</h3>${arrows}<div class="car">${ids.length ? srCard(ids[view.rcard], S, R, night) : ''}</div>` : '';
+  const where = R.on ? `You are at ${esc(S.World.Location)}. ${night ? 'Night: the city is lit until dawn.' : 'Day.'}` : `You are not in ${esc(rz().area)} now. The map shows the city as you saw it.`;
+  return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>${esc(rz().area)}</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
+    <div class="bd">${tabs}<div class="mapwrap"><div><div class="mapbox"><div class="mapview${mapView.z > 1 ? ' zin' : ''}"><div class="map" style="width:${mapView.z * 100}%"><img src="${esc(imgURL(map))}" alt="Map of ${esc(rz().area)}${night ? ' at night' : ''}" draggable="false">${pinHTML}</div></div>
+    <div class="zoom"><button data-zoom="1" aria-label="Zoom in" title="Zoom in (or the mouse wheel)" ${mapView.z >= ZOOMS[ZOOMS.length - 1] ? 'disabled' : ''}>+</button><button data-zoom="-1" aria-label="Zoom out" title="Zoom out" ${mapView.z <= 1 ? 'disabled' : ''}>−</button></div></div>
+    <div class="sub" style="margin:6px 0 10px">${where}</div></div><div class="sheet">${sheet}</div></div></div></div>`;
+}
+
 // ---- 1.40.0 (owner-approved planning/DRAFT_airship.md): the airship (DATA.airship, engine $ui.airship). A tab only during a flight,
 // opened by itself; no map image (owner): the four places aboard as cards, two minutes apart.
 const az = () => DATA.airship || { places: [] };
@@ -224,12 +274,14 @@ PANELS.map = {
     // 1.39.0: an Avalon tab the same way.
     const F = (S.$ui || {}).forest || {}, hasF = !!(F.seen || []).length, Cp = (S.$ui || {}).capital || {}, hasC = !!(Cp.seen || []).length;
     const Ar = (S.$ui || {}).airship || {};   // 1.40.0: the Airship tab only during a flight
-    const maps = [['campus', 'Halvard'], ...(hasF ? [['forest', fz().area]] : []), ...(hasC ? [['capital', cz().area]] : []), ...(Ar.on ? [['airship', az().area]] : [])];
-    const want = view.map || (Ar.on ? 'airship' : F.on ? 'forest' : Cp.on ? 'capital' : 'campus'), which = maps.some(m => m[0] === want) ? want : 'campus';
+    const Sr = (S.$ui || {}).sunreach || {}, hasR = !!(Sr.seen || []).length;   // 1.41.0: Sunreach Bay once visited
+    const maps = [['campus', 'Halvard'], ...(hasF ? [['forest', fz().area]] : []), ...(hasC ? [['capital', cz().area]] : []), ...(hasR ? [['sunreach', rz().area]] : []), ...(Ar.on ? [['airship', az().area]] : [])];
+    const want = view.map || (Ar.on ? 'airship' : F.on ? 'forest' : Cp.on ? 'capital' : Sr.on ? 'sunreach' : 'campus'), which = maps.some(m => m[0] === want) ? want : 'campus';
     const tabs = maps.length > 1 ? `<div class="tog maps">${maps.map(([k, n]) => `<button data-map="${k}" class="${which === k ? 'on' : ''}">${esc(n)}</button>`).join('')}</div>` : '';
     if (which === 'forest') return renderForest(S, tabs);
     if (which === 'capital') return renderCapital(S, tabs);
     if (which === 'airship') return renderAirship(S, tabs);
+    if (which === 'sunreach') return renderSunreach(S, tabs);
     const cur = locIdOf(S.World.Location), curPin = cur ? pinOf(cur) : null;
     if (view.pin == null && curPin) view.pin = curPin.pin;
     const pins = DATA.pins.filter(p => p.cluster.some(id => DATA.locs[id] && discovered(S, DATA.locs[id])));
@@ -300,6 +352,9 @@ PANELS.map = {
     if (b.dataset.fgo) { const p = fPlace(b.dataset.fgo); if (p) fillChat(`I head to ${p.name.replace(/^The /, 'the ')}.`); return; }
     if (b.dataset.cpin) { view.cpin = b.dataset.cpin; view.ccardPin = ''; render(); return; }   // 1.39.0: Avalon
     if (b.dataset.ccard) { view.ccard = (view.ccard || 0) + +b.dataset.ccard; render(); return; }
+    if (b.dataset.rpin) { view.rpin = b.dataset.rpin; view.rcardPin = ''; render(); return; }   // 1.41.0: Sunreach Bay
+    if (b.dataset.rcard) { view.rcard = (view.rcard || 0) + +b.dataset.rcard; render(); return; }
+    if (b.dataset.rgo) { const p = rPlace(b.dataset.rgo); if (p) fillChat(`I head to ${/^The /.test(p.name) ? p.name.replace(/^The /, 'the ') : p.name === 'Open Sea' ? 'the open sea' : 'the ' + p.name}.`); return; }
     if (b.dataset.ago) { const p = az().places.find(x => x.id === b.dataset.ago); if (p) fillChat(`I head to the ${p.name}.`); return; }
     if (b.dataset.cgo) { const p = cPlace(b.dataset.cgo); if (p) fillChat(`I head to ${/^(Crown Square|Spellwright Row|Old Town|Eldrasil Castle)$/.test(p.name) ? p.name : 'the ' + p.name.replace(/^The /, '')}.`); return; }
     if (b.dataset.pin) { view.pin = +b.dataset.pin; view.floor = ''; render(); return; }
