@@ -77,13 +77,13 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepAirship` (4e) | 1.40.0: aboard the airship: the bathing stalls end Soaked and Chilled, the hourly seeded sky / stage / hold, the view and the cargo, the landing countdown; outside a flight, whether one leaves within 90 min (`soon`) | `data/airship.json`, `$ui.airship` → 505, lore gate, Map |
 | `stepSunreach` (4f) | 1.41.0: Sunreach Bay: walks, carriages, water taxis and the tour boat (stamina, owed minutes), bets at The Golden Tide, the hourly seeded city (street sights, hustlers, students of other academies and of Halvard by `meet`, the sea, the Leviathan once a Trip), today's schedule, the day-before coin reminder | `data/sunreach.json`, `$eng.sr`, `$ui.sunreach` → 505, lore gate, Map |
 | `stepVitals` (5) | 40-HP cap per event unless `Lethal_flag`, death, clamps, mana rounding, Formidable | |
-| `stepReputation` (5b) | Rep XP and levels, named deeds; exports `repAdd`, `repLv`, `weekNo` | `data/reputation.json` |
+| `stepReputation` (5b) | Rep XP and levels, named deeds; 1.44.0 competition results (deeds, the title's price `$eng.comp`, `teamBond` for stepBonds); exports `repAdd`, `repLv`, `weekNo` | `data/reputation.json` (`competition`) |
 | `stepFortune` (5c) | seeded d100, Rank 10 suspension | |
 | `stepSchoolWeek` (5d) | attendance (and per-subject classes held; 1.33.0 free periods are not held), today's free periods (`$ui.free`), weekly recap, small scenes, study and exams (mark formula) | `TIMETABLE`, grades, `data/free_periods.json` |
 | `stepNamesInProse` (6a) | names revealed by the prose | `NAME_RX` |
 | `stepBonds` (6) | XP, ranks, gates, gifts, rewards, Tension/Trust, rival teams off Halvard's grounds; exports `canon`, `npcAway`, `PACE` | bond data §7 |
 | `stepBondMemory` (6c) | Knows, Imprints, Mind, Next, betrayal spread | |
-| `stepProficiency` (6a) | six stats, XP sources, weekly caps, Practice, crafting, masterwork Projects, Apothecary sales, mastery perks | `data/practice.json`, `club_stats.json`, `crafts.json` |
+| `stepProficiency` (6a) | six stats, XP sources, weekly caps, Practice, crafting, masterwork Projects, Apothecary sales, mastery perks (1.44.0: Encyclopaedic's lead, `recordsLead`) | `data/practice.json`, `club_stats.json`, `crafts.json` |
 | `stepTraining` (6b) | Mana pool / Stamina sessions (`trainRoom`, `trainAdd`, `trainJump` are module functions) | `data/training.json` |
 | `stepPerkUse` (6c) | one-use perks | `_Perks` |
 | `stepHidden` (7) | Dove attention, hidden magic, Points without Transactions | |
@@ -98,7 +98,8 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepCampusEvents` / `stepExtras` / `stepCast` (8j, 8k, 8i) | campus events; invented characters; who gets a Cast Sheet | `$ui.cast` → 509 |
 | `stepReminders` (8l) | "missed report" reminders for `<now>` | `$ui.missed` → 505 |
 | `stepAmbience` (8m) | crowd, light, cue, beat (1.24.0: overheard lore, `hearLore`), uncanny moment | `data/ambience.json`, `PLACE_LORE` |
-| `stepUi` (9) | discovered places (+ "Castle"), lore named in the narration (`$ui.lore`), unlocks, Next chip, the next seven days' events (`$ui.soon`, 1.32.0) | `<now>` "Coming up" |
+| `stepAgenda` (8n) | 1.44.0: the Agenda: one status for Commitments, Hooks, Next plans, Projects, Notices and the letter home (`anchorWhen`, `agendaState`, `agendaWhen` = `$eng.agenda.when`), one reminder per change, the coming-up feed `$ui.agenda` | Planner, Notice Board, bracelet, `<now>` "Coming up" / "Due soon" |
+| `stepUi` (9) | discovered places (+ "Castle"), lore named in the narration (`$ui.lore`), unlocks, Next chip (an appointment from `$ui.agenda` when sooner) | bracelet |
 | `stepCommit` (10) | `$eng.abs`, Year 1 date labels, `_Log` | |
 
 Module helpers above `runEngine`: name matching (`formRx`, `speakersIn`, `mentionIn`), time (`parseWhen`, `whenText`, `periodOf`,
@@ -139,7 +140,7 @@ Lore entries below uid 500 are generated (`src/worldbook/content/<uid>.txt`); ed
 | `src/scripts/ui.template.js` | constants and Builder data (`TEMPLATES`, `PACT_KINDS`), `latestState`, Builder (`renderBuilder`, `b*` steps, `validate`, `buildOps`, `liftReadonly`), `writeToolMessage`, Student file (`renderProfile`, `p*` tabs, `pSettings`, `featureOn`), `pBag` (crafted effects) and `pWallet` used by the Inventory panel, themes, `ensureLorebook`, `open`/`render` |
 | `src/ui/parts/10_people.js` | `PANELS.people`, `PANELS.npc` (dossier), Connections graph |
 | `src/ui/parts/20_map.js` | `PANELS.map`: `mapFor` (map variants), `locCard`, `walkFrom` |
-| `src/ui/parts/30_notebook.js` | `PANELS.notebook`, shown as **Inventory** (1.32.0): Bag and Wallet (`pBag`, `pWallet` in `ui.template.js`), planner, journal, notices, forecast, letters, mystery |
+| `src/ui/parts/30_notebook.js` | `PANELS.notebook`, shown as **Inventory** (1.32.0): Bag and Wallet (`pBag`, `pWallet` in `ui.template.js`), planner, journal, notices, forecast, letters, mystery (1.44.0: `agendaOf` reads `$ui.agenda`; `heardOf` and the pin-as-clue tool) |
 | `src/ui/parts/40_activities.js` | `PANELS.activities`, `PANELS.battle`: clubs, competition, shop, projects, trip |
 | `src/ui/statusbar.template.html` | the in-chat bracelet (display regex in `src/regex/index.json`); `/*@@SHOP_RX@@*/` (the Shop chip's places) from `gen_ui.py` |
 | `src/scripts/shared.js` | 1.43.0: shared with the engine, 505 and 506 (see §1); injected at `/*@@SHARED@@*/` |

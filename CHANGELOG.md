@@ -1,7 +1,41 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.44.0 — Audit batch 6: Agenda, information, competition results (2026-10-03)
+
+`audit/AUDIT_2026-10-03_3_batch_perbaikan.md` batch 6 (audit part 1, items 3.10, 3.12, 3.13). Save fixture v1.43.0. Two commits.
+- **Agenda (3.10).** Commitments, Hooks, Next plans, Projects (`Due`), Notices (`Until`) and the letter home share one date marker
+  (`anchorWhen`, `agendaWhen`: a date is parsed once, when its text is new) and one status (`agendaState`: waiting / due / overdue;
+  an undated major Hook left two weeks is `stale`, was "old"). New step `stepAgenda` (8n) gives the one reminder when a thing turns
+  due or overdue and builds one coming-up feed, `$ui.agenda` (yesterday to 14 days ahead, plus anything overdue), which the Planner
+  ("Coming up"), the Notice Board (official postings), the bracelet (Next chip, Overdue / Due today chips) and `<now>` ("Coming up",
+  "Due soon") all read. `$ui.soon` (1.32.0) is gone. State fields are unchanged; Projects' and Next plans' anchored dates live in
+  `$eng.agenda`.
+- **Behaviour.** A Next plan's `Until` ("tomorrow evening") used to be parsed again every turn, so it never passed; now it is
+  anchored and the plan happens off-screen when it does. Projects get reminders: due from the start of the day before (once), and
+  overdue (once, with a toast). An appointment later today takes the bracelet's Next chip when it comes before the next class. The
+  Notice Board no longer posts the Academy Trip twice (its two weeks are one run of days).
+- **Information (3.12).** The Mystery Board lists what {{user}} has heard and not pinned (the rumours going around, the places'
+  stories in `$ui.lore`) and pins one as a Clue to a chosen thread (a hidden player-tool message). A Clue has a new field `Source`:
+  `rumour` / `story` (hearsay, unconfirmed), `records`, or empty. A heard rumour or story now opens the Mystery Board. Encyclopaedic
+  (Knowledge Rank 5): a Clue the story adds in the Main Library or the Archive is the week's lead (`Source` records); a reply spent
+  there without one, the engine files the lead itself (`recordsLead`) on the oldest pinned hearsay not yet looked up, else on the
+  open thread found most recently, and tells the narrator to reveal what the record shows (true to the lore) and rewrite its Detail.
+- **Competition (3.13).** `data/reputation.json` `competition`: a result pays its deed itself, once a year each (Dorm qualified or
+  bracket champion +5, Academy title +15, Kingdom title +25 Academy Rep XP, the approved deed values); the narrator no longer reports
+  those kinds (a report is not counted, with a log). A title's price (owner decision, proposal adopted): the staff expect a defence,
+  and the next elimination at that tier or below costs Academy −5 after an Academy title, −10 after a Kingdom title (losing at a
+  higher tier costs nothing). Teammates (`Competition.Team`) gain 5 bond XP once a year per tier when the team's result at it comes in.
+- **Rules.** 502: the Competition, Clues and reputation-kind lines; 504: the Encyclopaedic line. Settings token estimates: Mystery
+  Board 152 → 198, Competition up by the new sentence.
+- **Tests:** `tests/test_batch6_v1440.cjs` (agenda states, anchored Next plans, reminders and the feed, the letter home and notes,
+  pinning, Encyclopaedic, competition reputation, its price and team XP); `test_calendar_v1320` and `test_world_v110` read the
+  feed and `stale`; `test_saves` treats `$ui.soon` as derived. Full suite. `tests/snapshot_render.cjs` before/after: only the
+  Planner, Notice Board, Mystery Board, Settings estimates and the 502/505 texts differ, as intended.
+- **To confirm with the owner:** the competition numbers above (−5 / −10, 5 bond XP) follow the batch's proposal.
+- **Live checks:** `docs/TEST_CHECKLIST.md` 1.44.0.
 
 ## v1.43.0 — Audit batch 2: one source (`shared.js`, `rollTable`, texts from data) (2026-10-03)
 
@@ -153,59 +187,6 @@ pens), done before FP7 area 3 because the Academy Trip spends two whole days in 
   08:00); the airship landing at the Grassy Field and Hills; the Yozakuran quartermaster and the crew musician; the view and cargo
   lines per route.
 
-## v1.39.0 — Avalon: the capital's own map (2026-10-02)
-
-FP7 area 2 (owner-approved `planning/DRAFT_outside_maps.md`, part 2, after six rounds of owner notes; the city's name and the map
-image are the owner's, from `planning/MAP_PROMPTS_outside_maps.txt` part 2). Save fixture v1.38.0.
-- **The city.** Avalon, the capital: a round white city on a hill inside one wall, laid out in rings by its streets alone
-  (Eldrasil Castle and the Noble Ring; the Crown Ring around Crown Square; the Lower City, 60% of the city). Seven Herald Spires
-  carry broadcasts and music across it (the academy's announcement pillars, city-sized). Old Town is the one grey quarter, and
-  the Rookery, the city's underbelly, lies beneath it. `data/avalon.json` is the single source for the lore, the engine and the UI.
-- **Map.** Pins hold places like the campus map: Crown Square (Crown Square, Grand Cathedral, The Chancery, High Dovecote, Royal
-  Bank), Great Gate (Skyport, Gilded Arcade), Lantern Quarter (Lantern Market, Spellwright Row), Old Town (Old Town, Skywheel Fair,
-  The Great Spire, and the Rookery once visited), Garden of Avalon (the garden with the faceless Archmage statue, Grand Theatre),
-  Arena Quarter (Royal Arena, Whitestone Hotel). The Eldrasil Castle pin (castle and Noble Ring) is not on the map until {{user}}
-  wins the Kingdom Competition.
-- **Engine** (`stepCapital`, after `stepExpedition`). On Crowning Day, and for Halvard's team on its Kingdom Competition days,
-  `World.Location` is "Avalon — <place>" (`avPlace`, `avLoc`; short aliases like "the cathedral" count only once in Avalon, so the
-  campus Cathedral stays the campus Cathedral). Walks between pins take 25–120 minutes and 5% of Stamina_max an hour; inside a pin
-  5–15 minutes and no stamina; owed minutes are kept like the forest's hours. A hire carriage (`/Avalon/Ride`): half the time, 10
-  coin, no stamina. Crowning Day 10:00–13:00 the crowds make legs through Crown Square half as long again. The White Line: the
-  castle and the Noble Ring hold {{user}} at the last place before them, and a second try the same day is reported (`defied_staff`);
-  only the Kingdom winners pass, for the King's reception. The Crowning Day muster (Skyport 15:30): `<now>` counts down with the
-  walk back; missing it is `detention` reputation and a Journal line. Once an hour in the city (seeded, swipe-safe; nothing during
-  the parade and the speech): pickpockets (8%; half are caught in the act, else 10–25% of the coin, at most 300), noble and Royal
-  Guard processions, street sights, students of the other academies (25%, one not met today, still at school), Tsubaki lost after
-  the parade (10%, once per Crowning Day), talent scouts (Kingdom days), City Watch raids in the Rookery (5%; caught 40%:
-  `detention_tower`). Avalon has the kingdom's weather of the day. The team keeps the Whitestone Hotel's curfew (22:00), not the
-  dorm curfew. The day before a visit, `<now>` reminds the narrator that points do not work there (the Banking House).
-- **Tsubaki before Halvard.** In Year 1 she may be met in Avalon as the youngest Royal Mage (described in the Royal Mages entry;
-  no bond and no warning); when she arrives in Year 2 her bond starts with that memory.
-- **Narrator.** `<now>` gets an Avalon block: where {{user}} is, walks to every pin and the places in this quarter, carriage fare,
-  the Crowning Day plan and muster (or the Kingdom team's hours and the reception), only the events the engine rolled, the Herald
-  Spires. Campus regulars and happenings are left out there. 502: the location format and the carriage flag around a visit. Lore:
-  an overview (rings, the White Line, the map's parts and places, every walk between them, the Herald Spires, rules), one entry
-  per part of the city, the Rookery (its way in narrator-only), the Royal Mages on Crowning Day; all constant behind a gate on
-  `$ui.capital.on`. Edited: the World Index and the kingdom entry (capital Avalon), Crowning Day (24: times, the Royal Mages, coin
-  the day before, the muster), the Kingdom Competition (19: Royal Arena, Whitestone Hotel, free evenings, the reception), the
-  calendar texts and the Activities trip card.
-- **UI.** The Map panel gets an Avalon tab once {{user}} has been there, and opens on it while in the city. Pin cards one place at
-  a time, with the walk and the carriage time from here; the muster countdown under the map.
-- **Assets** pinned to commit `505dd35` (`288b5a6` plus `map/avalon.webp`, verified identical); local copy `Maps/avalon.webp`.
-- Tests: new `test_avalon_v1390.cjs` (routes, names and aliases, arrival, weather, crowds, carriages, the White Line, the hourly
-  rolls, the muster, home again, Tsubaki in Year 1, the Kingdom team and the reception, the day-before reminder, the hotel curfew,
-  lore gate, `<now>`, 502, UI data); `test_mapvariants_v1130.cjs` (the new commit), `test_worldmyth_v171.cjs` and
-  `test_far_grounds_v1151.cjs` (the new wording); full `npm test` passes; stress passes (the fuzz's "bond rank jumped undefined -> 2
-  (Topaz)" note predates this release).
-- To confirm with the owner (invented while applying): the city's size and two hours by airship; white rebuilt after the War of
-  Independence (Old Town grey); the faceless, nameless Archmage statue; Ardenne, Merryhew's and Firetooth flagships in the Gilded
-  Arcade; the place names (Crown Ring, Crown Avenue, Ring Boulevard, the Chancery, High Dovecote, Royal Bank, Skyport, Gilded
-  Arcade, Lantern Market, Spellwright Row, the Rookery and its rooks, the Drowned Rat, Skywheel Fair, Great Spire, Grand Theatre,
-  Royal Arena, Whitestone Hotel, the White Line, the Royal Guard); the Crowning Day times (09:30 landing, 10:00 parade, 11:00
-  speech, 11:30–15:30 free, 16:00 departure); the Kingdom team's free evenings until 21:00 and hotel curfew 22:00; the winners'
-  reception at the castle on Saturday evening; the hire carriage at 10 coin; the other academies also in Avalon on Crowning Day;
-  Tsubaki seventeen in Year 1.
-
 ## Release index (one line per release, oldest first)
 
 - All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/archive/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; CHANGELOG 1.2.0/1.2.1).
@@ -325,3 +306,4 @@ image are the owner's, from `planning/MAP_PROMPTS_outside_maps.txt` part 2). Sav
 - **v1.41.0 (2026-10-03):** Sunreach Bay, the Academy Trip's city: one city by day and by night (two maps), ten pins, carriages, water taxis and the tour boat, bets at The Golden Tide, students of every academy met where their personality takes them, the sea and the Leviathan; index entries for every outside area (FP7 done).
 - **v1.42.0 (2026-10-03):** Audit batch 1: every bug from the audit (dialogue-colour regexes, item names, Transactions, one "away" test, gifts leave the Bag, XP only together, long-update truancy, day slips, UI fixes, pinned MVU).
 - **v1.43.0 (2026-10-03):** Audit batch 2: one source (`shared.js` for the constants, rules and seeded draws every runtime shares; texts read their times and numbers from data); Ambient moments paces the outside areas.
+- **v1.44.0 (2026-10-03):** Audit batch 6: the Agenda (one date marker, status, reminder and coming-up feed `$ui.agenda`), rumours and stories pinned as Clues and Encyclopaedic's filed lead, competition results that pay reputation (with a price) and team bond XP.

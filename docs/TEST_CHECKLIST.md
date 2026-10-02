@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.44.0 (audit batch 6): the four checks in its section below.
 - v1.43.0 (audit batch 2): the three checks in its section below.
 - v1.42.0 (audit batch 1): the four checks in its section below.
 - v1.41.0 (Sunreach Bay): the five checks in its section below.
@@ -83,6 +84,18 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.44.0 — Audit batch 6 (Agenda, information, competition)
+
+Continue any chat (re-import the card: new scripts and lore entries). The feed appears after the first reply in 1.44.0.
+1. Add an appointment later today (a Commitment with a time): the bracelet's Next chip shows it before the next class, the Planner's
+   "Coming up" lists it, and once it is past it turns Overdue (one reminder in the log, one toast).
+2. A Project with a Due date: the day before, `_Log` reminds once that it is due; `<now>` lists it under "Due soon".
+3. Mystery Board > Heard around campus: pin a rumour to a thread. The hidden player-tool message appears, the clue shows "hearsay
+   (a rumour)", and the narrator treats it as unconfirmed. With Knowledge Rank 5 (Encyclopaedic), spend a reply in the Main Library:
+   a "Records: …" clue is filed and the next reply reveals what the record shows.
+4. Set Competition to Dorm / qualified with a teammate: Academy reputation +5 Rep XP and the teammate's bond XP +5 without any
+   Rep_events report; a later title, then an elimination at or below its tier, costs Academy reputation once.
 
 ### v1.43.0 — Audit batch 2 (one source)
 

@@ -3,14 +3,15 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.43.0** (2026-10-03): audit batch 2, one source. `src/scripts/shared.js` holds the constants, small
-rules and seeded draws (`rollTable`, `pickOf`, `roll100`, `rollInt`) that the engine, the panels, the bracelet, `<now>` and the Price
-Guide share; texts read their times and numbers from data (`{@file.path}`). Proven identical with `ENGINE_DIFF` and
-`tests/snapshot_render.cjs`; one marked change: Ambient moments also paces the outside areas. v1.42.0: audit batch 1 (every bug).
-Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
+**Snapshot:** card **v1.44.0** (2026-10-03): audit batch 6. One Agenda: Commitments, Hooks, Next plans, Projects, Notices and the
+letter home share one date marker and status (`anchorWhen`, `agendaState`); `stepAgenda` reminds once and builds `$ui.agenda`, the
+one coming-up feed for the Planner, the Notice Board, the bracelet and `<now>`. Heard rumours and stories can be pinned as Clues
+(`Source`), Encyclopaedic files its weekly lead; competition results pay reputation (with a price) and team bond XP
+(`data/reputation.json` `competition`). v1.43.0: batch 2 (`shared.js`); v1.42.0: batch 1 (bugs). Live checks: `docs/TEST_CHECKLIST.md`
+"Open". Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** audit batch 3 or 6 when the owner says "perbaiki batch N" (`audit/AUDIT_2026-10-03_3_batch_perbaikan.md`; 3 and 6 may
-go in either order, then 4 → 5, 7 last). Live-check v1.43.0, v1.42.0 and the earlier "Open" items.
+**Next task:** audit batch 3 when the owner says "perbaiki batch 3" (`audit/AUDIT_2026-10-03_3_batch_perbaikan.md`; then 4 → 5,
+7 last). Live-check v1.44.0, v1.43.0, v1.42.0 and the earlier "Open" items.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 
