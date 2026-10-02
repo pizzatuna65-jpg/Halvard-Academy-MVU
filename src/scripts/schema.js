@@ -410,6 +410,7 @@ export const Schema = z.object({
     pactPlay: Str(''),                                              // 1.31.0: the one Spirit Pact made in play (engine)
     home: z.any().prefault(null).catch(null),                      // 1.31.0: the month's letter home, its reply and parcel (engine)
     profv: Int(0, 1, 0),
+    trip: Int(0, 1, 0),                                             // 1.42.0: 1 once {{user}} was off campus during the active Trip (engine)
     initiative: z.any().prefault(null).catch(null),              // 1.7.7 (FP1): latched day/week, chosen NPC and per-NPC cooldown
     auth: Str(''),   // 'builder' only inside a Student Builder patch; lets it write the read-only fields once
     tool: z.coerce.number().prefault(0).catch(0),   // 1.11.1: 1 inside a player-tool patch (Builder, Settings): not a story turn (engine resets it)

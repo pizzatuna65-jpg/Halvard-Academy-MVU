@@ -61,7 +61,7 @@ function birthdayParty(S) {
   const absent = id => (ARRIVES[id] || 1) > S.World.Year || npcAwayIn(S, id);   // 1.16.1 (audit B4): the engine's one rule
   const available = Object.entries(S.Bonds).filter(([id,b]) => b.Tension < BR.birthday.tension_below && !absent(id));
   const hosts = available.filter(([,b]) => b.Rank >= BR.birthday.host_rank).sort((a,b) => b[1].Rank - a[1].Rank || b[1].Trust - a[1].Trust || a[0].localeCompare(b[0]));
-  if (!hosts.length || S.Trip.Active) return null;
+  if (!hosts.length || awayIn(S)) return null;   // 1.42.0 (audit 1.2): no party at Halvard while {{user}} is away
   const host = hosts[0][0], guests = available.filter(([id,b]) => STUDENTS[id] && b.Rank >= BR.birthday.guest_rank).map(([id]) => id).sort();
   const all = [...new Set([host, ...guests])], dorm = S.Player.Profile.Dorm;
   const where = dorm !== 'Unsorted' && all.every(id => NPC_DORMS[id] === dorm) ? `${dorm} Dormitory Common Room` : 'The Snug (reserved evening booth)';

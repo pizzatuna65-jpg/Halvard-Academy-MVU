@@ -725,6 +725,14 @@ function srWindow(W) {                                           // from the lan
   const at = ([w, d, tm]) => toAbs({ Year: Y, Month: Wn.m, Week: w, Day: d, Time: tm });
   return t >= at(Wn.from) && t < at(Wn.to);
 }
+// 1.42.0 (audit 1.2): {{user}} is away from Halvard: on a story trip (Trip.Active), in an outside area (aboard the airship, the
+// Expedition's forest, Avalon, Sunreach Bay), or off the grounds on a calendar "away" day (the Crowning Day evening on campus and
+// the World Competition for anyone not in the national four are not away). One test for every system that pauses meanwhile.
+const awayIn = S => {
+  const W = (S && S.World) || {}, p = placeOf(W.Location);
+  return !!((S && S.Trip) || {}).Active || [AIR.area, AV.area, SR.area].includes(p) || (expOnDay(W) && !!forestPlace(W.Location, ''))
+    || (!onCampus(W.Location) && eventsOn(W).some(e => e.away));
+};
 // The Sunreach place a Location names, or ''. Short aliases ("the beach", "the casino") only once in Sunreach.
 function srPlace(loc, prev) {
   const s = String(loc || ''), segs = s.split(/\s+[—–-]\s+|,\s+/).map(avKey).filter(Boolean);
@@ -1093,7 +1101,7 @@ function stepFeatures(c) {
 // ---- 1. time ----
 // 1.3.3: an unreadable Day or Time from the AI arrives as '' (schema): keep the previous one rather than guess
 function stepTime(c) {
-  const { S, B, seedHint, log, jnl, hasB } = c;
+  const { S, B, seedHint, log, jnl, hasB, text } = c;
   for (const [f, d] of [['Day', 'Mon'], ['Time', '08:00']]) {
     if (!S.World[f]) { S.World[f] = (hasB && B.World[f]) || d; if (hasB) log.push(`World.${f} could not be read; it was kept at ${S.World[f]}.`); }
   }
@@ -1130,12 +1138,30 @@ function stepTime(c) {
   else if (aAt) S.World.Location = aHeld ? avLoc('', aAt) : avLoc(S.World.Location, aAt);
   else if (rAt) S.World.Location = srLoc(S.World.Location, rAt);
   else if (!(S.Trip && S.Trip.Active)) S.World.Location = canonLocation(S.World.Location);
+  else {
+    // 1.42.0 (audit 1.2): a Trip left Active after {{user}} came home (seen off campus during it, now at a campus place on a day
+    // with no "away" event) ends here, so it no longer pauses the campus systems
+    const cl = canonLocation(S.World.Location);
+    if (hasB && num(S.$eng.trip, 0) && plName(placeOf(cl)) && onCampus(cl) && !eventsOn(S.World).some(e => e.away)) {
+      S.Trip.Active = false; S.World.Location = cl;
+      log.push(`{{user}} is back at ${placeOf(cl)}: Trip.Active was still true, so the engine set it false (set it false on return).`);
+    }
+  }
+  S.$eng.trip = S.Trip && S.Trip.Active ? (num(S.$eng.trip, 0) || (!onCampus(S.World.Location) ? 1 : 0)) : 0;   // seen off campus on this Trip
   const absB = hasB ? (B.$eng && B.$eng.abs >= 0 ? B.$eng.abs : toAbs(B.World)) : toAbs(S.World);
   let absA = toAbs(S.World);
   if (hasB && absA < absB) {
     // v1.0.3 (A#1): a new Day without Week/Month/Year rollover advances by whole weeks. On the same Day, only a clear
     // late-night to early-morning crossing is an implicit midnight rollover; a small backwards typo must not skip a day.
-    const dayChanged = S.World.Day !== B.World.Day;
+    let dayChanged = S.World.Day !== B.World.Day;
+    // 1.42.0 (audit 1.8): a Day one or two days back in the same week, with no time skip in the prose, is a slip ("Mon" for
+    // "Tue"), not a week later: the clock is kept, as on the same Day
+    const back = (DAYS.indexOf(B.World.Day) - DAYS.indexOf(S.World.Day) + 7) % 7;
+    if (dayChanged && back >= 1 && back <= 2 && S.World.Week === B.World.Week && S.World.Month === B.World.Month && (S.World.Year || 1) === (B.World.Year || 1)
+      && !MISS_TIME_RX.test(String(text || '').replace(/<UpdateVariable>[\s\S]*?<\/UpdateVariable>/g, '').replace(QUOTE_RX, ' '))) {
+      log.push(`World.Day went back from ${B.World.Day} to ${S.World.Day} with no time skip in the story: the clock was kept at ${stamp(B.World)}. If the story did mean a week later, write the Week too.`);
+      dayChanged = false; absA = absB;
+    }
     const overnight = !dayChanged && B.World.Time >= '20:00' && S.World.Time <= '06:00';
     const step = dayChanged ? 7 * DAY_MIN : overnight ? DAY_MIN : 0, limit = dayChanged ? 60 : overnight ? 1 : 0;
     let k = 0;
@@ -1490,10 +1516,10 @@ function stepMagic(c) {
 // 1.12.0 (H1): a night skipped in one update (5 to 24 hours, 4 of them between 00:00 and 06:00) with no Resting written was
 // slept, not stayed up: indoors (or on a trip), not in a battle, not under The Vigil. "awake" is a deliberate all-nighter.
 function stepRest(c) {
-  const { S, B, log, hasB, toolEdit, absB, absA, elapsed, seed, TU, wxNow, V, regenLeft, fAt } = c;
+  const { S, B, log, hasB, toolEdit, absB, absA, elapsed, seed, TU, wxNow, V, regenLeft, fAt, REPORTED } = c;
   if (V.Resting === 'awake') V.Resting = 'none';
   else if (hasB && !toolEdit && V.Resting === 'none' && V.HP > 0 && elapsed >= 300 && elapsed <= DAY_MIN && nightMinutes(absA) - nightMinutes(absB) >= 240
-    && !(S.Battle && S.Battle.Active) && (!isOutdoor(S.World.Location) || (S.Trip && S.Trip.Active) || fAt)) {   // 1.38.0: tents in the forest
+    && !(S.Battle && S.Battle.Active) && (!isOutdoor(S.World.Location) || awayIn(S) || fAt)) {   // 1.38.0: tents in the forest
     const vig = num((((B.$eng || {}).sleep) || {}).vigilUntil, -1) > absB || (S.Consumables || []).some(x => /^the vigil$/i.test(String(x).trim()));
     if (!vig) { V.Resting = 'sleep'; log.push('{{user}} slept through the night (read from the time skip; write Resting "awake" for an all-nighter).'); }
   }
@@ -1519,7 +1545,7 @@ function stepRest(c) {
   // their hour, week and weather. <now> and the map card show the multiplier for where {{user}} is now.
   const RK = placeKey(S.World.Location), RP = RESTFUL[RK], wxOn = c.WXM !== 'off' && !!wxNow, wxc = new Map();
   if (RP && V.Resting === 'rest' && elapsed > 0 && hasB && !toolEdit && placeKey(B.World.Location) === RK && V.HP > 0
-    && !(S.Battle && S.Battle.Active) && !(S.Trip && S.Trip.Active) && !(Array.isArray(S.Training) && S.Training.length) && !(Array.isArray(S.Practice) && S.Practice.length)) {
+    && !(S.Battle && S.Battle.Active) && !awayIn(S) && !(Array.isArray(S.Training) && S.Training.length) && !(Array.isArray(S.Practice) && S.Practice.length)) {
     const C0 = (B.Player || {}).Conditions || {}, cold = !!(C0.Chilled || C0.Soaked);
     let extra = 0;                                                  // minutes of rest beyond the usual, weighted by (multiplier - 1)
     for (let t = absB; t < Math.min(absA, absB + 2 * DAY_MIN); t += 5) extra += (restMult(RP, t, seed, wxOn, cold, wxc)[0] - 1) * Math.min(5, absA - t);
@@ -1544,14 +1570,21 @@ function stepRest(c) {
   updateSleep(S, hasB ? B : null, absB, absA, TU, log);
   const consumed = S.Consumables || [];                         // 1.9.5: item effects are applied with the weather effects (4b)
   S.Consumables = [];
-  // 1.12.0 (H2): an item reported used lowers its Qty in the Bag by one per report, unless this update already lowered it
-  if (hasB && consumed.length && _.isPlainObject(S.Inventory)) {
-    const IB = B.Inventory || {}, need = _.countBy(consumed.map(x => bagKeyOf(IB, x)).filter(Boolean));
+  // 1.12.0 (H2): an item reported used lowers its Qty in the Bag by one per report, unless this update already lowered it.
+  // 1.42.0 (audit 1.4): so does a gift (Kind gift or birthday) whose Item {{user}} held in the Bag before this reply
+  const IB = (hasB && B.Inventory) || {};
+  const gifted = (REPORTED.acts || []).filter(a => /^(gift|birthday)$/i.test(String(a.Kind || '').trim()) && a.Item)
+    .map(a => bagKeyOf(IB, a.Item)).filter(k => k && num((IB[k] || {}).Qty, 1) > 0);
+  if (hasB && (consumed.length || gifted.length) && _.isPlainObject(S.Inventory)) {
+    const need = _.countBy([...consumed.map(x => bagKeyOf(IB, x)), ...gifted].filter(Boolean)), giftN = _.countBy(gifted);
     for (const [kb, n] of Object.entries(need)) {
       const k = bagKeyOf(S.Inventory, kb);
       if (!k) continue;
       const extra = n - Math.max(0, num(IB[kb].Qty, 1) - num(S.Inventory[k].Qty, 1));
-      if (extra > 0) S.Inventory[k].Qty = Math.max(0, num(S.Inventory[k].Qty, 1) - extra);
+      if (extra > 0) {
+        S.Inventory[k].Qty = Math.max(0, num(S.Inventory[k].Qty, 1) - extra);
+        if (giftN[kb]) log.push(`${k}: given as a gift, so the Bag holds one less (${S.Inventory[k].Qty} left).`);
+      }
     }
   }
   V.Resting = 'none';
@@ -2135,8 +2168,11 @@ function stepSchoolWeek(c) {
     const VENUE_PARTS = { 'combat grounds': ['sparring pavilion'], forest: ['forest clearing'] };
     const classVenues = v => [...v, ...v.flatMap(x => VENUE_PARTS[x] || [])];
     const excused = pkA === 'medical centre' || pkB === 'medical centre' || (S.Player.Conditions || {})['Head cold'] || inj
-      || (S.Trip && S.Trip.Active) || (S.Battle && S.Battle.Active) || V._Fatigue === 'Collapsed' || Pf.Dorm === 'Unsorted';
-    if (hasB && elapsed > 0 && elapsed <= 360 && !OFF.has('attendance') && CLASS.tt) {
+      || awayIn(S) || (S.Battle && S.Battle.Active) || V._Fatigue === 'Collapsed' || Pf.Dorm === 'Unsorted';
+    // 1.42.0 (audit 1.7): an update longer than six hours within one day, between two places the map knows, is no routine: a
+    // class period whose venue neither end is at was skipped
+    const longGap = elapsed > 360 && dayNo === dayNoB && knownPlace(pkA) && knownPlace(pkB);
+    if (hasB && elapsed > 0 && (elapsed <= 360 || longGap) && !OFF.has('attendance') && CLASS.tt) {
       for (let d = dayNoB; d <= dayNo; d++) {
         const Wd = fromAbs(d * DAY_MIN), evD = eventsOn(Wd), row = CLASS.tt[Wd.Day];
         if (!row || evD.some(e => e.noclass || e.home || e.lockdown || e.away)) continue;
@@ -2148,6 +2184,7 @@ function stepSchoolWeek(c) {
           if (cell[3] === 'class' && freeWhy(Wd, p, cell[0], teacherOf(cell[0], PY, classRole(Pf)))) return;   // 1.33.0: a free period
           if (cell[3] === 'class') {
             if (!ATT.done[key] && !(key in ATT.p)) { WK.periods++; ATT.p[key] = 0; }
+            if (longGap && classVenues(cell[2]).some(v => v === pkA || v === pkB)) return;   // an end in the room: the routine held
             ATT.p[key] += ov - share(classVenues(cell[2]), true);
             if (!excused && !ATT.done[key] && ATT.p[key] > TU.att_minutes) {
               ATT.done[key] = true; WK.skipped++; skippedNow.push(cell[0]);
@@ -2388,7 +2425,7 @@ function stepSchoolWeek(c) {
     const hr = Math.floor((absA % DAY_MIN) / 60), perNow = /^P[123] /.test(S.World._Period || '');
     const partyOn = S.$ui.party && hr >= 18;
     const present = Object.keys(S.Scene.Present || {});
-    if (!OFF.has('small_scenes') && !evs.length && !perNow && !partyOn && !(S.Trip && S.Trip.Active) && !(S.Battle && S.Battle.Active) && present.length > TU.scene_cap) {
+    if (!OFF.has('small_scenes') && !evs.length && !perNow && !partyOn && !awayIn(S) && !(S.Battle && S.Battle.Active) && present.length > TU.scene_cap) {
       const talked = new Set((S.Interactions || []).map(a => NPC_ALIAS[String(a.With || '').toLowerCase()] || a.With));
       const dormHere = /dormitor|common room/.test(pkA);
       let pool = present.filter(id => !talked.has(id) && !(dormHere && num((S.Bonds[id] || {}).Rank, 0) >= 7));
@@ -2478,7 +2515,7 @@ function stepBonds(c) {
   const seen = `${stamp(S.World)} at ${S.World.Location}`;
   // 1.30.1 (owner playtest: an invented Medical Centre healer was keyed "Mirelle Lullwyn"): the other academies' teams are never at
   // Halvard; their members meet {{user}} at the Kingdom Competition, on a trip or elsewhere off the grounds
-  const onGrounds = !!plName(placeOf(S.World.Location)) && !(S.Trip && S.Trip.Active) && !evs.some(e => e.kingdom);   // 1.32.0: calendar "kingdom" marks the travel days too
+  const onGrounds = !!plName(placeOf(S.World.Location)) && !awayIn(S) && !evs.some(e => e.kingdom);   // 1.32.0: calendar "kingdom" marks the travel days too
   for (const id of Object.keys(S.Scene.Present)) if (onGrounds && NO_BOND.has(id)) {
     delete S.Scene.Present[id];
     log.push(`${id} is on a rival academy's team and is never at Halvard (the teams meet at the Kingdom Competition); ${id} was removed from Scene.Present. Someone you invented gets a full name of their own (Extras), never a roster name.`);
@@ -2636,9 +2673,13 @@ function stepBonds(c) {
         else { b.Tension = _.clamp(num(b.Tension, 0) + 1, 0, 100); log.push(`Krieg: no bond progress this week (Doves reputation ${repLv('Doves')}${S.Hidden._True_magic ? ', Dove attention ' + S.Hidden.Dove_attention : ''}); Tension +1.`); }
       }
     }
+    // 1.42.0 (audit 1.6): talk, hangout, study, help and gift XP need {{user}} and the NPC together (in the scene now or at the
+    // start of this reply); a letter or a word from afar gives none
+    const together = !!(S.Scene.Present[id] || wasHere(id)), apart = new Set();
     for (const a of byId[id] || []) {
       const k = String((a && a.Kind) || '').trim().toLowerCase();
       if (V._Fatigue === 'Collapsed') { log.push('Collapsed: no interaction until {{user}} wakes.'); continue; }
+      if (!together && /^(talk|hangout|study|help)$/.test(k)) { apart.add(k); continue; }
       if (k === 'rank_gift') {
         if (b.$gift_pending && b.Rank >= 5 && (S.Scene.Present[id] || wasHere(id)) && !npcAway(id)) {
           give(id, 'gift'); b.$gift_pending = false;
@@ -2663,6 +2704,7 @@ function stepBonds(c) {
         const tension = gk === 'hated' ? BR.gift_hated_tension : gk === 'disliked' ? BR.gift_disliked_tension : 0;
         b.Tension = _.clamp(num(b.Tension, 0) + tension * (birthday ? BR.birthday.gift_mult : 1), 0, 100);
         log.push(`${id}: ${a.Item || 'gift'} — ${gk}${firstBirthday ? ' (birthday)' : ''}.`);
+        if (!together) { apart.add('gift'); continue; }
         if (firstBirthday) d.birthdayGift = 1;
         else if ((w.gift || 0) >= BR.per_week.gift) { log.push(`${id} already had ${BR.per_week.gift} gifts this week: no bond XP for another.`); continue; }
         else w.gift = (w.gift || 0) + 1;
@@ -2674,8 +2716,9 @@ function stepBonds(c) {
         w.help = (w.help || 0) + 1; gain += BR.kind_xp.help;
       }
     }
+    if (apart.size) log.push(`${id} was not in the scene: no bond XP for ${[...apart].join(', ')} (only time together counts).`);
     // 1.1.0 weather bonus, kept: +1 once a day for time together indoors in bad weather, outdoors in fine weather, a clear Star Night
-    if (V._Fatigue !== 'Collapsed' && bondWx && !d.wx && (byId[id] || []).some(a => /^(talk|hangout|study)$/i.test(String((a && a.Kind) || '').trim()))) { d.wx = 1; gain += BR.weather_xp; }
+    if (V._Fatigue !== 'Collapsed' && together && bondWx && !d.wx && (byId[id] || []).some(a => /^(talk|hangout|study)$/i.test(String((a && a.Kind) || '').trim()))) { d.wx = 1; gain += BR.weather_xp; }
     // ---- 1.4.3 Trust: drops as the narrator wrote them (x the category), rises only from reported deeds (x the category, capped a
     // week) and a rank earned; a quiet week recovers it towards the floor; then the overrides. tr0 (before this reply) decides what
     // Trust does to Tension and apologies below.
@@ -2929,7 +2972,7 @@ function stepBondMemory(c) {
       // Meanwhile
       if (presentIds.has(id)) b.$seen = dayNo;
       const wk = Math.floor(dayNo / 7);
-      if (hasB && b.Rank >= MEANWHILE_RANK && !presentIds.has(id) && b.$seen >= 0 && dayNo - b.$seen >= 7 && b.$mw !== wk && !S.Trip.Active) {
+      if (hasB && b.Rank >= MEANWHILE_RANK && !presentIds.has(id) && b.$seen >= 0 && dayNo - b.$seen >= 7 && b.$mw !== wk && !awayIn(S)) {
         b.$mw = wk;
         const what = b.Next ? b.Next.What : (HAUNT[id] ? 'was seen around ' + HAUNT[id].split(/[;,]/)[0].trim() : 'kept to their own business');
         jnl.push(`Meanwhile: ${id} ${b.Next ? 'is busy with ' + what.replace(/^./, c => c.toLowerCase()) : what}.`);
@@ -2952,7 +2995,7 @@ function stepBondMemory(c) {
   // Passive readiness and visit access. The relationship changes inside ordinary scenes.
   S.$ui.close = Object.entries(S.Bonds).filter(([id, b]) => b.Rank < 10 && num(b.$xp, 0) >= Math.ceil(needXP(b.Rank, PACE) * num(BR.close_at, 0.8))).map(([id]) => id);
   const visiting = Object.entries(S.Bonds).filter(([id, b]) => b.Rank >= 7 && b.Trust >= 50 && b.Tension < 70 && !npcAway(id));
-  const accessDay = !S.Trip.Active && !/LOCKDOWN|CURFEW/.test(String(S.World._Curfew || ''));
+  const accessDay = !awayIn(S) && !/LOCKDOWN|CURFEW/.test(String(S.World._Curfew || ''));
   S.$ui.rank_access = {
     dorms: accessDay ? [...new Set(visiting.filter(([id]) => NPC_GROUP[id] === 'student' && (S.Scene.Present || {})[id]).map(([id]) => NPC_DORMS[id]).filter(Boolean))] : [],
     staff: accessDay ? visiting.filter(([id]) => NPC_GROUP[id] === 'staff' || id === 'Bobby' || id === 'Milena').map(([id]) => id) : []
@@ -3491,7 +3534,7 @@ function stepRecords(c) {
     c._Late = late;
   }
   // 1.18.0 (I8): an imminent appointment at this place can put its named partner in "May be here".
-  if (!OFF.has('planner') && !S.Trip.Active) {
+  if (!OFF.has('planner') && !awayIn(S)) {
     const maybe = Array.isArray(S.$ui.maybe) ? S.$ui.maybe : [];
     const here = placeKey(S.World.Location);
     for (const [title, c] of Object.entries(S.Commitments || {})) {
@@ -3735,7 +3778,7 @@ function stepInitiative(c) {
     if (I.week !== week) { I.week = week; I.count = 0; }
     if (I.day !== dayNo) {
       I.day = dayNo; I.id = ''; I.done = false;
-      if (!off && !S.Trip.Active && !/LOCKDOWN/.test(S.World._Curfew || '') && I.count < IR[1]
+      if (!off && !awayIn(S) && !/LOCKDOWN/.test(S.World._Curfew || '') && I.count < IR[1]
           && rand01(seed, dayNo, 'npc-initiative-roll') < IR[0]) {
         const pool = Object.keys(S.Bonds).sort().filter(id => {
           const b = S.Bonds[id];
@@ -3748,7 +3791,7 @@ function stepInitiative(c) {
         for (const id of pool) if ((ticket -= weight(id)) < 0) { I.id = id; I.last[id] = dayNo; I.count++; break; }
       }
     }
-    if (off || S.Trip.Active || /LOCKDOWN/.test(S.World._Curfew || '') || (I.id &&
+    if (off || awayIn(S) || /LOCKDOWN/.test(S.World._Curfew || '') || (I.id &&
         (!S.Bonds[I.id] || S.Bonds[I.id].Rank < 3 || S.Scene.Present[I.id] || npcAwayIn(S, I.id)))) I.done = true;
     const id = I.done ? '' : I.id;
     if (id && S.Bonds[id] && S.Bonds[id].Rank >= 3) {
@@ -4084,7 +4127,7 @@ function stepReminders(c) {
         if (by >= 0 && by <= absA) add(`heal:${name}:${dayNo}`, `${name}'s Heals_by time has arrived: show recovery or a Medical Centre visit if the story supports it; never heal off-screen.`);
       }
       const dorm = String(S.Player.Profile.Dorm || '').trim().toLowerCase(), where = placeKey(S.World.Location);
-      if (/^CURFEW/.test(S.World._Curfew || '') && dorm && dorm !== 'unsorted' && !where.startsWith(dorm) && !(S.Trip || {}).Active)
+      if (/^CURFEW/.test(S.World._Curfew || '') && dorm && dorm !== 'unsorted' && !where.startsWith(dorm) && !awayIn(S))
         add(`curfew:${where}:${dayNo}`, `{{user}} is at ${placeOf(S.World.Location)} after dorm curfew. If someone catches them, report the appropriate reputation deed; being out alone is not proof of detection.`);
       const keepers = new Set((S.Hidden.Known_by || []).map(canon));
       for (const [id, bond] of Object.entries(S.Bonds || {})) {
@@ -4172,7 +4215,7 @@ function stepReminders(c) {
         let arr = '';
         for (const m of narr.matchAll(MISS_ARRIVE_RX)) arr = (m[1] || m[2] || m[3] || '').replace(/\s+(?:of|and|&)$/, '');
         const nm = arr && (plName(arr) || PLACE_ALIAS[plKey(arr)] || PLACE_ALIAS[plKey(arr).replace(/^the /, '')] || '');
-        if (nm && !(S.Trip && S.Trip.Active) && placeKey(nm) !== placeKey(S.World.Location))
+        if (nm && !awayIn(S) && placeKey(nm) !== placeKey(S.World.Location))
           add(`loc:${placeKey(nm)}:${absA}`, `The narration has {{user}} arriving at ${nm}, but Location is ${placeOf(S.World.Location) || 'unset'}: update it if {{user}} is there now.`);
         // R10: an hour or more at a training place, training words, no /Training
         if (elapsed >= 50 && !REPORTED.training && MISS_TRAIN_AT.includes(placeKey(S.World.Location)) && !/^P[123] /.test(S.World._Period || '')

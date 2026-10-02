@@ -46,3 +46,67 @@ console.log('1.10 a full Bag says what it left behind');
   const M = go(S0, { Time: '09:10' }, [{ op: 'replace', path: '/Inventory', value: I }]);
   ok(Object.keys(M.Inventory).length === 40 && M.$ui.toasts.some(t => /Bag full/.test(t)) && M._Log.some(l => /Pebble 1, .*left behind/.test(l)), '45 items: 40 kept, a toast and a log line name the rest');
 }
+
+// ---- gameplay rules (behaviour changes, CHANGELOG 1.42.0) ----
+const E = new Function(rd('src/scripts/engine.js') + '\nreturn { awayIn, birthdayParty };')();
+const SAVE = JSON.parse(rd('tests/fixtures/saves/save_1.41.0.json'));   // Viridian, M2 W2 Sun 22:00, Etnie Rank 4
+const sv = () => applyPatch(SAVE, []);
+
+console.log('1.2 one "away" test');
+{
+  const at = (loc, extra = {}) => ({ Trip: { Active: false }, World: { Year: 1, Month: 2, Week: 2, Day: 'Mon', Time: '10:00', Location: loc, ...extra } });
+  ok(!E.awayIn(at('Main Library')) && E.awayIn({ ...at('Main Library'), Trip: { Active: true } }), 'Trip.Active counts');
+  ok(E.awayIn(at('Sunreach Bay — Coral Beach', { Month: 11, Week: 2, Day: 'Sun' })), 'an outside area counts without Trip.Active');
+  ok(!E.awayIn(at('Grassy Field and Hills', { Month: 4, Week: 2, Day: 'Tue', Time: '21:00' })), 'back on campus on the Crowning Day evening: not away');
+  let T = go(sv(), { Day: 'Mon', Week: 3, Time: '06:00', Location: 'a roadside inn on the way north' }, [{ op: 'replace', path: '/Trip', value: { Active: true, Destination: 'the north', Companions: [], Note: '' } }]);
+  T = go(T, { Time: '18:00', Location: 'library' });
+  ok(!T.Trip.Active && T.World.Location === 'Main Library' && T._Log.some(l => /Trip.Active was still true/.test(l)), `a Trip left Active after coming home ends, and the place is the map's again (${T.World.Location})`);
+  T = go(sv(), { Day: 'Mon', Week: 3, Time: '06:00', Location: 'Main Gate' }, [{ op: 'replace', path: '/Trip', value: { Active: true, Destination: 'the north', Companions: [], Note: '' } }]);
+  T = go(T, { Time: '06:20', Location: 'Main Gate' });
+  ok(T.Trip.Active, 'still waiting at the gate on the way out: the Trip stays Active');
+  // the 1.41.0 audit case: a birthday on the Academy Trip (M11 W2 Sun), Etnie at Rank 7, no Trip.Active
+  const P = _.cloneDeep(SAVE);
+  Object.assign(P.World, { Month: 11, Week: 2, Day: 'Sun', Time: '10:00', Location: 'Sunreach Bay — Coral Beach' });
+  P.Player.Profile.Birthday = 'M11 W2 Sun'; P.Bonds.Etnie.Rank = 7; P.Bonds.Etnie.Tension = 0; P.Trip.Active = false;
+  ok(E.birthdayParty(P) === null, 'no party booked at Halvard while {{user}} is in Sunreach');
+  P.World.Location = 'Viridian Dormitory'; P.World.Month = 6;  P.Player.Profile.Birthday = 'M6 W2 Sun';
+  ok(!!E.birthdayParty(P), 'the same birthday at home still gets its party');
+}
+
+console.log('1.4 a gift leaves the Bag');
+{
+  const B0 = go(sv(), { Day: 'Mon', Week: 3, Time: '17:00', Location: 'Canteen' }, [present(['Etnie']), { op: 'replace', path: '/Inventory/Honey cake', value: { Qty: 2, Kind: 'food', Note: '', Plan: '' } }]);
+  const gift = { op: 'insert', path: '/Interactions/-', value: { With: 'Etnie', Kind: 'gift', Item: 'Honey cake', Gift: 'liked' } };
+  let M = go(B0, { Time: '17:10' }, [gift]);
+  ok(M.Inventory['Honey cake'].Qty === 1 && M._Log.some(l => /Honey cake: given as a gift/.test(l)), 'Kind gift with a Bag item lowers its Qty');
+  M = go(B0, { Time: '17:10' }, [gift, { op: 'replace', path: '/Inventory/Honey cake/Qty', value: 1 }]);
+  ok(M.Inventory['Honey cake'].Qty === 1, 'no second loss when the narrator lowered it too');
+}
+
+console.log('1.6 bond XP needs the NPC there');
+{
+  const B0 = go(sv(), { Day: 'Mon', Week: 3, Time: '17:00', Location: 'Canteen' }, [present([])]);
+  const xp0 = B0.Bonds.Etnie.$xp;
+  const M = go(B0, { Time: '18:00' }, [{ op: 'insert', path: '/Interactions/-', value: { With: 'Etnie', Kind: 'hangout', Note: 'wrote her a letter' } }]);
+  ok(M.Bonds.Etnie.$xp === xp0 && M._Log.some(l => /Etnie was not in the scene: no bond XP for hangout/.test(l)), `an absent NPC: no XP, and the log says why (${xp0} -> ${M.Bonds.Etnie.$xp})`);
+  const N = go(go(B0, { Time: '17:05' }, [present(['Etnie'])]), { Time: '18:00' }, [{ op: 'insert', path: '/Interactions/-', value: { With: 'Etnie', Kind: 'hangout', Note: 'tea' } }]);
+  ok(N.Bonds.Etnie.$xp > xp0, 'present: XP as before');
+}
+
+console.log('1.7 a long update away from class is truancy');
+{
+  const B0 = go(sv(), { Day: 'Mon', Week: 3, Time: '07:30', Location: 'Boathouse' });
+  const M = go(B0, { Time: '16:30', Location: 'Boathouse' });
+  ok(M._Log.filter(l => /skipped .* Academy reputation -2/.test(l)).length >= 2, `07:30 -> 16:30 at the Boathouse skips the day's classes (${M._Log.filter(l => /skipped/.test(l)).length})`);
+  const K = go(go(B0, { Time: '07:45', Location: 'Viridian Dormitory' }), { Day: 'Tue', Time: '07:30', Location: 'Viridian Dormitory' });
+  ok(!K._Log.some(l => /skipped/.test(l)), 'a skip into the next day still follows the routine');
+}
+
+console.log('1.8 a Day written a day back');
+{
+  const B0 = go(sv(), { Day: 'Tue', Week: 3, Time: '09:00', Location: 'Canteen' });
+  const M = go(B0, { Day: 'Mon', Time: '10:00' });
+  ok(M.World.Week === 3 && M.World.Day === 'Tue' && M.World.Time === '09:00' && M._Log.some(l => /went back from Tue to Mon/.test(l)), `Tue -> "Mon": the clock is kept (${M.World.Month}/${M.World.Week} ${M.World.Day} ${M.World.Time})`);
+  const N = go(go(B0, { Day: 'Sun', Time: '22:00' }), { Day: 'Mon', Time: '07:00' });
+  ok(N.World.Week === 4 && N.World.Day === 'Mon', 'Sun -> Mon (week not turned) is still the next morning');
+}
