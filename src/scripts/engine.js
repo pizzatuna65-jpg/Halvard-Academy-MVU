@@ -1011,7 +1011,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.42.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.43.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
 // from the shared context c (the states, the reply's text and the values earlier steps computed) and adds what later steps use.

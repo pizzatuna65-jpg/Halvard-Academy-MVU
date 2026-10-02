@@ -3,6 +3,37 @@
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
 details: `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
 
+## v1.43.0 — Audit batch 2: one source (`shared.js`, `rollTable`, texts from data) (2026-10-03)
+
+`audit/AUDIT_2026-10-03_3_batch_perbaikan.md` batch 2 (audit part 1, items 2.2–2.4, 2.8, 3.6). Save fixture v1.42.0. A refactor in
+five commits, then one marked behaviour commit.
+- **`src/scripts/shared.js`**, injected into the engine, the panels, the bracelet, `<now>` (505) and the Price Guide (506) at their
+  `/*@@SHARED@@*/` (`tools/common.py` `shared_js()`): class periods, exam months, seasons, trips and dorm colours (now
+  `data/calendar.json` `periods`, `exam_months`, `seasons`, `dorm_colors`, and a `trip` field on the two trip events); the class
+  role, the Council remedial, Trust/Tension bands, NPC status, `placeOf` / `placeKey` / `locParts`, `itemKey` / `keyIn`; and the
+  seeded draws `hash32`, `rand01`, `roll100`, `d100`, `rollInt`, `pickOf`, `rollTable`. Every copy in the engine, the panels, the
+  bracelet and the EJS entries was replaced (2.2–2.4).
+- **Seeded draws** (3.6): happenings, NPC initiative, the airship's sky / stage / hold, Avalon and Sunreach city life, Expedition
+  encounters, gossip fate, flu, head cold, free periods, the parcel from home, exam and rank rolls and the ambience picks draw through
+  them, with their seeds and order kept (old chats swipe to the same results).
+- **Texts from data** (2.8): the Trip and Competition texts, the Crowning Day, Kingdom and Expedition lines in `<now>` write their times
+  and the prize as `{@file.path}` (`fill_data()`); the Kingdom prize, the Rank 5 perks (`data/mastery.json`), the public roles
+  (`data/public_roles.json`), shop gift tags (`shop.json` `gift_tags`), the practice places for the red dots and the bracelet's
+  shop chip come from data.
+- **Proof.** `ENGINE_DIFF` against 1.42.0 identical over the full suite, a 380-day year and the fuzz run (6,068 engine runs) for
+  every refactor commit. New `tests/snapshot_render.cjs` renders every panel tab, the bracelet and every EJS entry from 17 fixed
+  states (3,638 renders): identical, except (1) the Price Guide's order of equal canon prices, now sorted by name (a Python set
+  had made it change between builds) and (2) the Settings token estimate of the Price Guide (5,559 → 5,534: its template code got
+  shorter; the shared code, never sent, is left out of the count).
+- **Behaviour (marked commit):** Settings > Campus life > Ambient moments now also paces the outside areas' small life (Avalon and
+  Sunreach street sights, people met, pickpockets and hustlers; the airship's sky, stage and hold): Rare ×0.67, Normal ×1, Often
+  ×1.33. Story beats (Tsubaki lost, the Leviathan, raids, scouts) and the Expedition keep their rates. `placeOf` splits at an en
+  dash too ("Canteen – kitchen"). Found on the way: the bracelet's "Shop here" chip knew only the Mall's first four shops; it now
+  shows at every shop the Shop tab knows (Quillfeather's, Tinker's Bench and the rest).
+- **Tests:** `test_one_source_v1430.cjs` (a shared table copied back into a template fails), `test_audit_batch2_v1430.cjs` (the
+  behaviour commit); `test_batch4_seasons_mana` reads the season table from `shared.js`. Full suite.
+- **Live checks:** `docs/TEST_CHECKLIST.md` 1.43.0 (the bracelet, `<now>` and the Price Guide run `shared.js` inside SillyTavern).
+
 ## v1.42.0 — Audit batch 1: every bug from the 2026-10-03 audit (2026-10-03)
 
 `audit/AUDIT_2026-10-03_3_batch_perbaikan.md` batch 1 (audit part 1, items 1.1–1.10 and the "Rendah" table). Save fixture v1.41.0.
@@ -175,45 +206,6 @@ image are the owner's, from `planning/MAP_PROMPTS_outside_maps.txt` part 2). Sav
   reception at the castle on Saturday evening; the hire carriage at 10 coin; the other academies also in Avalon on Crowning Day;
   Tsubaki seventeen in Year 1.
 
-## v1.38.0 — The Grand Vast Forest: the Expedition's own map (2026-10-02)
-
-FP7 area 1 (owner-approved `planning/DRAFT_outside_maps.md`, part 1, after seven rounds of owner notes; the map image is the
-owner's, generated from `planning/MAP_PROMPTS_outside_maps.txt`). Save fixture v1.37.4.
-- **Map.** The Creature Studies Expedition (M2 W3 Wed–Fri) happens on a map of its own: the southern rim of the Grand Vast
-  Forest, a rainforest weeks across. Ten points: Base Camp (with the Huntsmen's Lodge), the Wildwood (one entry, three pins: west,
-  north, east of camp), Blightbriar (poison thorns and spores), the Gloaming (the darkest, least visited stand), Silverstair Falls,
-  the Jade Terraces (Huanglong-like pools), the Grand Cave Network (groups camp in its mouth) and the Old Heart (the giant tree
-  everyone steers by). Walks of 1.5–5 h between neighbours; Base Camp to the far edge 10.5 h. `data/expedition.json` is the
-  single source for the lore, the engine and the UI.
-- **Engine** (`stepExpedition`, after the weather effects). During the Expedition, `World.Location` is written "Grand Vast
-  Forest — <place>" (`forestPlace`, `forestLoc`; a bare "Wildwood" keeps {{user}}'s pin or takes the nearest). Every walk costs
-  8% of Stamina_max an hour (×1.5 on spore paths without a mask, on the falls stair and dragging a catch; ×1.25 in rain and at
-  night); hours the clock has not covered yet are still "on the road". Thursday 08:00 the engine picks the group's target (Grade
-  III for Years 1–2, Grade II for Year 3, never at Base Camp or the Old Heart). Each search hour at a place rolls, seeded and
-  swipe-safe: the target only where it lives (3% the first hour, +3% an hour, at most 24%, half at night for day beasts), signs
-  towards it elsewhere (20%), another beast (10%, 15% at night), the Wendigo in the Gloaming (1%, once). A catch reported with
-  `/Expedition/Caught` counts only after the engine brought the target in. No catch by Friday 08:00 fails the practical: the
-  result moves the Creature Studies mark a step (an `Exam_events` shift), goes into the Journal and `$ui.forest.hist`, and next
-  year's `<now>` remembers it. The forest has its own weather (`forestWx`: warm, morning mist, afternoon downpours) and its
-  effects apply; nights in the tents count as sleep.
-- **Narrator.** `<now>` gets a forest block: where {{user}} is, the target without its home, hours left, every walk from here,
-  and only what the engine rolled this reply (target, signs, a beast, the Wendigo with its rules). Campus regulars and happenings
-  are left out there. 502 tells the narrator how to write the place and report a catch. Lore: a forest overview (neighbours and
-  every shortest walk, computed from the legs, plus the narrator rules), one entry per place with its possible encounters, and
-  the Wendigo, all constant behind a gate on `$ui.forest.on` (nothing outside the Expedition); 230 (Vallie leads, the bracelet
-  tracker is a staff binding for the trip, the flare, catches, nights) and 229 (torrent eel, echo bat, hush owl, spore shambler,
-  chime toad, bloom maw, the Wendigo).
-- **UI.** The Map panel has Halvard / Grand Vast Forest tabs once {{user}} has been there, and opens on the forest during the
-  Expedition. Points open as you go: the places visited and their neighbours (at the start Base Camp and the three Wildwood pins).
-  Cards: the walk from here, the known paths, the description and feel; never the beasts.
-- **Assets** pinned to commit `288b5a6` (`f42990c` plus the forest map); local copy `Maps/grand_vast_forest.webp`.
-- Tests: new `test_expedition_v1380.cjs` (routes, place names, arrival, weather, target, walking and owed hours, search and the
-  meeting, the catch guard, failure, home again, `<now>`, lore gate, update rule, UI data); `test_mapvariants_v1130.cjs` (the new
-  commit); `test_split_v146.cjs` caught a "first person" in a place's feel (reworded); full `npm test` passes.
-- To confirm with the owner (invented while applying): the Lodge sells cloth spore masks; the forest's weather numbers (24–29 °C,
-  afternoon rain 70%, storm 10%); a protected beast may be glimpsed at the Old Heart (15% an hour, harmless); Grade II beasts
-  met by Years 1–2 are told to the narrator as "beyond you: run or fire the flare".
-
 ## Release index (one line per release, oldest first)
 
 - All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/archive/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; CHANGELOG 1.2.0/1.2.1).
@@ -332,3 +324,4 @@ owner's, generated from `planning/MAP_PROMPTS_outside_maps.txt`). Save fixture v
 - **v1.40.0 (2026-10-02):** The airship: four places aboard (Promenade Deck, Common Room with a bar and a stage, Cabin Deck, Cargo Hold) during every academy flight, boarding and landing, the seeded sky / stage / hold, an Airship map tab.
 - **v1.41.0 (2026-10-03):** Sunreach Bay, the Academy Trip's city: one city by day and by night (two maps), ten pins, carriages, water taxis and the tour boat, bets at The Golden Tide, students of every academy met where their personality takes them, the sea and the Leviathan; index entries for every outside area (FP7 done).
 - **v1.42.0 (2026-10-03):** Audit batch 1: every bug from the audit (dialogue-colour regexes, item names, Transactions, one "away" test, gifts leave the Bag, XP only together, long-update truancy, day slips, UI fixes, pinned MVU).
+- **v1.43.0 (2026-10-03):** Audit batch 2: one source (`shared.js` for the constants, rules and seeded draws every runtime shares; texts read their times and numbers from data); Ambient moments paces the outside areas.

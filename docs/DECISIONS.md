@@ -84,6 +84,13 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **Dorm Competition brackets** (1.33.0, owner-approved): five solo brackets per dorm, one per role, judged by the role teachers (formats in lore 19). 16 per dorm qualify for the Academy Competition by role (Attack 4, Defense 3, Healing 3, Support 3, Control 3) without having to win; a bracket champion earns 100 points and the runner-up 50 (engine, once a year, from `Competition.Placement`). The Academy Competition itself is unchanged.
 
 ## 6. Social systems, UI rules and versioning (from 1.3.1)
+- **One source** (1.43.0, audit batch 2): a constant or small rule that more than one runtime (engine, panels, bracelet, 505, 506)
+  uses lives in `src/scripts/shared.js`, its data in `data/*.json`; a player- or narrator-facing text names a time or number from
+  the data as `{@file.path}`. Every seeded chance and pick goes through the shared draws (`roll100`, `pickOf`, `rollInt`,
+  `rollTable`), each a pure function of its parts. A refactor is proven with `ENGINE_DIFF` and `tests/snapshot_render.cjs`.
+- **Ambient moments paces the outside areas** (1.43.0): Settings > Campus life > Ambient moments scales the small life of Avalon,
+  Sunreach and the airship (street sights, people met, pickpockets and hustlers, the sky / stage / hold) as it scales campus
+  ambience; story beats (Tsubaki lost, the Leviathan, raids, scouts) and the Expedition keep their own rates.
 - **Etnie** is not bonded at the start; `data/bond_rules.json` `start` gives her bond Rank 3 (Trust 70, title, fact, milestone) the first time the engine records it. Any other bond starts at Rank 0.
 - **World.Location is written in the Campus Map's words** by the engine (`canonLocation`, `stepTime`): short names and parts of "X and Y" names (`tools/common.py place_aliases`) become the map name; a sub-spot that is its own place wins, except a dorm room every dorm shares. Trips and off-campus text are left alone. The UI map reads locations the same way. A year's floor of the Lecture Halls, Study Rooms or lockers is written "<place> — Floor N" (1.24.3).
 - **Events carry a day plan with times** (`s` in `data/calendar.json` events, one per day where the lore differs); `_Event_today` = "<event> — <plan>", events joined by " | ". Club sign-up week M1 W1 Tue–Fri 16:00–18:00, registration closes Friday 18:00 (lore 21 edited).

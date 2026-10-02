@@ -12,6 +12,7 @@ Build order, generated files and test commands: `docs/BUILD.md`.
 | Task | Read | Then |
 |---|---|---|
 | Engine bug (a number, a rule, a reminder in `<now>`) | §2 engine map → the one step; its tests (`tests/README.md`) | `gen_engine.py`, the step's suites |
+| A constant or small rule several runtimes use (class periods, exam months, seasons, trips, dorm colours, class role, Council remedial, Trust/Tension bands, NPC status, place and item keys, seeded draws `rollTable` / `pickOf` / `roll100` / `rollInt`) | `src/scripts/shared.js` (data: `data/calendar.json` `periods`, `exam_months`, `seasons`, `dorm_colors`, events' `trip`); `tools/common.py` `shared_js()`, `fill_data()` (`{@file.path}` in texts) | rebuild; `test_one_source_v1430.cjs`; a refactor: `ENGINE_DIFF` + `tests/snapshot_render.cjs` |
 | Engine refactor | §2; `tests/harness.cjs` `diffEngine` | tests with `ENGINE_DIFF=<old engine.js>` must stay identical |
 | Save compatibility / field rename | `stepMigrate` (engine), `tests/test_saves.cjs`, `tests/fixtures/make_save.cjs` | a flagged migration in `stepMigrate`, never inside a step |
 | State shape (new field) | `src/scripts/schema.js` (§3), the step that writes it, `data/features.json` if switchable | declare every field (Zod strips unknown keys) |
@@ -140,7 +141,8 @@ Lore entries below uid 500 are generated (`src/worldbook/content/<uid>.txt`); ed
 | `src/ui/parts/20_map.js` | `PANELS.map`: `mapFor` (map variants), `locCard`, `walkFrom` |
 | `src/ui/parts/30_notebook.js` | `PANELS.notebook`, shown as **Inventory** (1.32.0): Bag and Wallet (`pBag`, `pWallet` in `ui.template.js`), planner, journal, notices, forecast, letters, mystery |
 | `src/ui/parts/40_activities.js` | `PANELS.activities`, `PANELS.battle`: clubs, competition, shop, projects, trip |
-| `src/ui/statusbar.template.html` | the in-chat bracelet (display regex in `src/regex/index.json`) |
+| `src/ui/statusbar.template.html` | the in-chat bracelet (display regex in `src/regex/index.json`); `/*@@SHOP_RX@@*/` (the Shop chip's places) from `gen_ui.py` |
+| `src/scripts/shared.js` | 1.43.0: shared with the engine, 505 and 506 (see §1); injected at `/*@@SHARED@@*/` |
 | `src/ui/news.shared.js` | 1.25.0 red "new" dots: `newsItems` (what can be new), `newsStore` (chat variable `eld_seen`), `newsPanels`; pasted into the bracelet and `ui.js` by `gen_ui.py`; the panels write it (`newsInit`, `newsMark`, `isNew` in `ui.template.js`) |
 
 `tools/gen_ui.py` joins template + parts + `data/*` into `ui.js` and builds `statusbar.html`. Colours are tokens (1.21.0): the `.ov{…}` block
@@ -156,7 +158,7 @@ In `merge_lorebooks.py`: `rep(entry, old, new)` (asserting text edits), `apply_l
 ## 7. Data files (`data/`)
 
 Hand-written single sources (edit these): `shop.json`, `happenings.json`, `calendar.json`, `features.json`, `tuning.json`,
-`ambience.json` (1.31.0: `lore_places`), `restore_places.json` and `letters_home.json` (1.31.0), `free_periods.json` (1.33.0), `expedition.json` (1.38.0), `avalon.json` (1.39.0), `airship.json` (1.40.0), `sunreach.json` (1.41.0), `wind_casting.json`, `assets_manifest.json`, `cohorts.json`, `campus_phases.json` (empty until canon waves).
+`ambience.json` (1.31.0: `lore_places`), `restore_places.json` and `letters_home.json` (1.31.0), `free_periods.json` (1.33.0), `mastery.json` and `public_roles.json` (1.43.0), `expedition.json` (1.38.0), `avalon.json` (1.39.0), `airship.json` (1.40.0), `sunreach.json` (1.41.0), `wind_casting.json`, `assets_manifest.json`, `cohorts.json`, `campus_phases.json` (empty until canon waves).
 *Per NPC* (a new NPC needs a row): `bond_rewards.json`, `bond_rules.json`, `bond_openness.json`, `tension.json`, `trust.json`,
 `npc_moods.json`, `gift_prefs.json`, `npc_canon.json` (voices, stages, Rank 8 branch), `rank4_partners.json`, `relations_curated.json`,
 `voice_rules.json`, `initiative_asks.json`, `dialogue_colors.json` (1.37.0; new NPCs via `make_dialogue_colors.py`), `field_overrides.json`, `focus_overrides.json`, `thumb_overrides.json`.

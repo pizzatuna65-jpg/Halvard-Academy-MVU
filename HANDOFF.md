@@ -3,14 +3,14 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.42.0** (2026-10-03): audit batch 1, every bug from the 2026-10-03 audit (`audit/`): the dialogue-colour
-regexes now match, one item-name key, Transactions diffed as a multiset, one "away" test (`awayIn`) in place of every `Trip.Active`
-check, gifts leave the Bag, bond XP only with the NPC there, long same-day updates count truancy, a Day written back keeps the clock,
-UI fixes (Council Saturday, dossier status, Battle costs, Fortune cap), MVU and `mvu_zod` pinned to commits. v1.41.0: Sunreach Bay,
-the last outside map. Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
+**Snapshot:** card **v1.43.0** (2026-10-03): audit batch 2, one source. `src/scripts/shared.js` holds the constants, small
+rules and seeded draws (`rollTable`, `pickOf`, `roll100`, `rollInt`) that the engine, the panels, the bracelet, `<now>` and the Price
+Guide share; texts read their times and numbers from data (`{@file.path}`). Proven identical with `ENGINE_DIFF` and
+`tests/snapshot_render.cjs`; one marked change: Ambient moments also paces the outside areas. v1.42.0: audit batch 1 (every bug).
+Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** audit batch 2 when the owner says "perbaiki batch 2" (`audit/AUDIT_2026-10-03_3_batch_perbaikan.md`: `shared.js` +
-`rollTable`, a pure refactor proven with `ENGINE_DIFF`). Live-check v1.42.0 and v1.38.0–v1.41.0 and the earlier "Open" items.
+**Next task:** audit batch 3 or 6 when the owner says "perbaiki batch N" (`audit/AUDIT_2026-10-03_3_batch_perbaikan.md`; 3 and 6 may
+go in either order, then 4 → 5, 7 last). Live-check v1.43.0, v1.42.0 and the earlier "Open" items.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

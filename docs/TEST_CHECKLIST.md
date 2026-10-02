@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.43.0 (audit batch 2): the three checks in its section below.
 - v1.42.0 (audit batch 1): the four checks in its section below.
 - v1.41.0 (Sunreach Bay): the five checks in its section below.
 - v1.40.0 (the airship): the four checks in its section below.
@@ -82,6 +83,16 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.43.0 — Audit batch 2 (one source)
+
+Continue any chat (re-import the card: new scripts and lore entries).
+1. The bracelet and every panel open without a console error; the season beside the date and the Planner's period headers read as
+   before; at Quillfeather's (or another Mall shop) the bracelet shows "Shop here".
+2. `<now>` (505) and the Price Guide (506) still render (Prompt Itemization): during a class period the class line says "until 10:00 /
+   12:00 / 16:00"; at a shop the Price Guide lists its stock. They now carry `shared.js` code; nothing of it reaches the prompt.
+3. In Sunreach (M11 W2) with Settings > Campus life > Ambient moments on Rare, a day there brings fewer street sights and people than
+   on Often.
 
 ### v1.42.0 — Audit batch 1 (bug fixes)
 

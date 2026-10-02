@@ -25,6 +25,8 @@ python tests/preview/smoke_all_panels.py   # optional: opens every panel/tab hea
 node tests/token_audit.cjs           # optional: always-on prompt size, before/after a rules change
 npm run lint                         # syntax of every script + compile of every EJS entry
 ENGINE_DIFF=<old engine.js> npm test # optional: every engine run compared with an older build (refactors)
+node tests/snapshot_render.cjs states s.json; node tests/snapshot_render.cjs render s.json a.json   # 1.43.0: every panel, the bracelet
+node tests/snapshot_render.cjs diff a.json b.json   # and every EJS entry rendered from fixed states, before vs after a UI/EJS refactor
 python presets/edit_preset.py       # regenerates the edited preset from presets/original/ (deterministic; run twice, compare)
 node tests/fixtures/make_save.cjs    # BEFORE changing anything in a release: writes the current release's save fixture
 node tests/fixtures/make_save_yearend.cjs   # 1.7.4: the same save played to the end of Year 1 (after make_save.cjs)
@@ -37,9 +39,9 @@ python tools/audit_chat.py chat.jsonl --out report.md   # optional: character-dr
 
 | Generated | Source |
 |---|---|
-| `src/scripts/engine.js` | `engine.template.js` + `data/*` |
-| `src/scripts/ui.js` | `ui.template.js` + `src/ui/parts/*` |
-| `src/ui/statusbar.html` | `statusbar.template.html` |
+| `src/scripts/engine.js` | `engine.template.js` + `shared.js` + `data/*` |
+| `src/scripts/ui.js` | `ui.template.js` + `shared.js` + `src/ui/parts/*` |
+| `src/ui/statusbar.html` | `statusbar.template.html` + `shared.js` |
 | `src/worldbook/*` | `tools/merge_lorebooks.py` |
 | `src/worldbook/custom/index.json`, `content/505.txt`, `content/506.txt`, `content/509.txt` | `tools/gen_mvu_entries.py` (505 from `custom/505.template.ejs`, 509 from `custom/509.template.ejs` + NPC lore) |
 | `data/feature_cost.json` | `tools/feature_cost.py` (run by `gen_mvu_entries.py`) |
@@ -59,6 +61,12 @@ python tools/audit_chat.py chat.jsonl --out report.md   # optional: character-dr
 - `data/field_overrides.json`, `focus_overrides.json`, `thumb_overrides.json`, `assets_manifest.json`
 - `data/features.json` (Features settings rows, parked paths, unlocks), `data/npc_moods.json` (44 mood profiles), `data/wind_casting.json` (subtype costs), `data/gift_prefs.json` (tastes and birthdays), `data/gift_shops.json` (Mall shop lore), `data/free_periods.json` (1.33.0: teacher absence chance and reasons)
 - `src/worldbook/custom/505.template.ejs` (the Now entry)
+- `src/scripts/shared.js` (1.43.0): the constants and small rules the engine, the panels, the bracelet, 505 and 506 share (class
+  periods, exam months, seasons, trips, dorm colours from `data/calendar.json`; class role, Council remedial, bands, NPC status,
+  place and item keys, the seeded draws). Generators inject it at `/*@@SHARED@@*/` (`tools/common.py` `shared_js()`). A text that
+  names a time or number from the data writes `{@file.path}` (`fill_data()`: `:n`, `:day`, `:nextday`, `:clock`, `:pctoff`, `:times`).
+  `tests/test_one_source_v1430.cjs` fails if a shared table is copied back.
+- `data/mastery.json` (1.43.0: Rank 5 perks, texts and numbers), `data/public_roles.json` (1.43.0: Rank-0 public roles)
 - custom entries `500–504`, `507`, `508` (the birthday event, 1.2.0) and `510` (the last-mile cast gate, 1.5.1)
 - `src/regex/index.json`
 - `src/card/card.json`
