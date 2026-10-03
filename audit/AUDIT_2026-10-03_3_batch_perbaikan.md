@@ -16,7 +16,7 @@ Bila konteks sesi hampir habis sebelum batch selesai, Claude berhenti di titik y
 | 4 | Modul Area untuk area luar: Sunreach, Avalon, hutan, airship, iklim, renderer UI | 2.1, 3.1, 3.7 | besar | 2, 3 | selesai (1.46.0, commit a10842e) |
 | 5 | Kampus sebagai Area + `whereabouts` | 3.2, 3.3, 3.8 | sedang–besar | 4 | selesai (1.47.0, commit a354cc9) |
 | 6 | Agenda + jalur informasi + kompetisi | 3.10, 3.12, 3.13 | sedang | 2 | selesai (1.44.0, commit 2759e6d) |
-| 7 | `$ui.now`, Cast Sheet per NPC, diet state | 2.6, 2.7, 2.9, 3.11 | besar | 3, 5, 6 | belum |
+| 7 | `$ui.now`, Cast Sheet per NPC, diet state | 2.6, 2.7, 2.9, 3.11 | besar | 3, 5, 6 | selesai (1.48.0, commit caa1e45) |
 
 Urutan wajib: 1 → 2. Setelah itu, batch 3 dan 6 bebas urutannya, lalu 4 → 5, dan 7 paling akhir.
 
