@@ -112,6 +112,7 @@
   },
   {
    "id": "sea",
+   "sea": true,
    "name": "Open Sea",
    "x": 45,
    "y": 87
@@ -567,11 +568,6 @@
   "boat": 8,
   "tour": 15,
   "street": 20,
-  "hustle": 8,
-  "hustle_seen": 50,
-  "hustle_min": 10,
-  "hustle_max": 25,
-  "hustle_cap": 300,
   "rival": 25,
   "student": 20,
   "sea": 50,
@@ -593,12 +589,24 @@
    "pay": 10
   }
  },
- "hustle": [
-  "fish_market",
-  "sunreach_crossing",
-  "velvet_lanes",
-  "sunpier"
- ],
+ "theft": {
+  "where": [
+   "fish_market",
+   "sunreach_crossing",
+   "velvet_lanes",
+   "sunpier"
+  ],
+  "rate": 8,
+  "seen": 50,
+  "min": 10,
+  "max": 25,
+  "cap": 300,
+  "once": true,
+  "ev": "hustle",
+  "who": "a hustler",
+  "toast": "Hustled",
+  "why": "hustled in Sunreach Bay"
+ },
  "street": {
   "fish_market": [
    [
@@ -1197,7 +1205,8 @@
    ]
   }
  },
- "weather": {
+ "climate": {
+  "label": "warm south", "salt": "s",
   "temp": [
    27,
    31,

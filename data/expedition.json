@@ -1,5 +1,5 @@
 {
- "_note": "1.38.0 (owner-approved planning/DRAFT_outside_maps.md, part 1): the Grand Vast Forest, the Creature Studies Expedition's map. Single source for the lore entries (tools/merge_lorebooks.py grand_vast_forest), the engine (stepExpedition, forest weather; tools/gen_engine.py) and the UI forest map (tools/gen_ui.py). Places: x/y are percent positions on map; group = the lore entry and beast list a place shares (the three Wildwood pins). legs: [a, b, hours, multiplier, note]. beasts: by group, Grade IV/III/II and protected; targets come from III (Years 1-2) or II (Year 3), never from base_camp or old_heart. rates: percents. weather: per block (morning, afternoon, night) sky weights, rain weights and temperature.",
+ "_note": "1.38.0 (owner-approved planning/DRAFT_outside_maps.md, part 1): the Grand Vast Forest, the Creature Studies Expedition's map. Single source for the lore entries (tools/merge_lorebooks.py grand_vast_forest), the engine (stepExpedition, forest weather; tools/gen_engine.py) and the UI forest map (tools/gen_ui.py). Places: x/y are percent positions on map; group = the lore entry and beast list a place shares (the three Wildwood pins). legs: [a, b, hours, multiplier, note]. beasts: by group, Grade IV/III/II and protected; targets come from III (Years 1-2) or II (Year 3), never from base_camp or old_heart. rates: percents. climate (1.46.0: the area's climate profile, engine areaWx): per block (morning, afternoon, night) sky weights, rain weights and temperature; salt keeps the seeded rolls; rare: a rare sight on that sky.",
  "area": "Grand Vast Forest",
  "event": "Creature Studies Expedition",
  "map": "map/grand_vast_forest.webp",
@@ -102,7 +102,8 @@
   "max_rolls": 12, "night_from": 19, "night_to": 6
  },
  "hunt": {"day": "Thu", "from": "08:00", "hours": 24, "back_by": "12:00"},
- "weather": {
+ "climate": {
+  "label": "rainforest", "salt": "f", "rare": {"sky": "Storm", "at": 60, "text": "lightning storm"},
   "temp": [24, 29, 23],
   "sky": [{"Fog": 55, "Cloudy": 35, "Clear": 10}, {"Rain": 70, "Storm": 10, "Cloudy": 20}, {"Rain": 30, "Cloudy": 60, "Clear": 10}],
   "rain": {"light": 25, "steady": 35, "heavy": 40}

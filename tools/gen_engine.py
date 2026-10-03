@@ -168,7 +168,7 @@ t = t.replace('/*@@AIRSHIP@@*/{}', json.dumps({**{k: v for k, v in _air.items() 
 _sr = json.load(open(P('data/sunreach.json'), encoding='utf-8'))
 _spins, _sids = {p['id'] for p in _sr['pins']}, {p['id'] for p in _sr['places']}
 assert all(a in _spins and b in _spins for a, b, *_m in _sr['legs']) and all(p['pin'] in _spins for p in _sr['places']), 'sunreach.json: unknown pin'
-assert _sr['arrive'] in _sids and _sr['hotel'] in _sids and set(_sr['street']) <= _sids and set(_sr['hustle']) <= _sids, 'sunreach.json: unknown place'
+assert _sr['arrive'] in _sids and _sr['hotel'] in _sids and set(_sr['street']) <= _sids and set(_sr['theft']['where']) <= _sids, 'sunreach.json: unknown place'
 assert all(set(d + n) <= _sids for g in _sr['meet'].values() for d, n in g.values()), 'sunreach.json: meet names an unknown place'
 assert set(_sr['meet']['rivals']) <= {nid for nid, n in _npcs_all.items() if (n.get('group') or '').endswith('team')}, 'sunreach.json: not a rival team member'
 assert set(_sr['meet']['halvard']) <= {nid for nid, n in _npcs_all.items() if n.get('academy') == 'Halvard' and (n.get('group') or '').startswith('Year')}, 'sunreach.json: not a Halvard student'

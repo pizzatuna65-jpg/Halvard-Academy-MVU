@@ -64,6 +64,24 @@ function rollTable(pool, o) {
   for (const x of P) { r -= o.weight(x); if (r < 0) return x; }
   return null;
 }
+// ---- outside areas (1.46.0, audit 2.1 / 3.1): one shortest-way search for every area map, in the engine and the Map panel.
+// areaNb(legs): { node: [[neighbour, weight, ...the leg's other fields], ...] } in the legs' order. areaRoutes(nb, from, blocked):
+// { node: { w, prev } }; blocked(id) is a node that can be reached but not crossed (Avalon's castle); a tie keeps the first found.
+const areaNb = legs => { const nb = {}; for (const [a, b, ...x] of legs || []) { (nb[a] = nb[a] || []).push([b, ...x]); (nb[b] = nb[b] || []).push([a, ...x]); } return nb; };
+function areaRoutes(nb, from, blocked) {
+  const d = { [from]: { w: 0, prev: '' } }, done = new Set();
+  for (;;) {
+    let u = null; for (const k in d) if (!done.has(k) && (u === null || d[k].w < d[u].w)) u = k;
+    if (u === null) break; done.add(u);
+    if (u !== from && blocked && blocked(u)) continue;
+    for (const [v, w] of nb[u] || []) if (!d[v] || d[u].w + w < d[v].w) d[v] = { w: d[u].w + w, prev: u };
+  }
+  return d;
+}
+const areaPath = (R, a, b) => { if (!R[b]) return []; const p = [b]; while (p[0] !== a) p.unshift(R[p[0]].prev); return p; };
+// minutes between two places of a pin map: inside one pin their "in" minutes (at least 5), else the pins' shortest way
+const inMin = x => { const v = Number(x); return Number.isFinite(v) ? v : 5; };
+const areaMin = (PL, routesOf, a, b) => a === b ? 0 : PL[a].pin === PL[b].pin ? Math.max(5, inMin(PL[a].in) + inMin(PL[b].in)) : (routesOf(PL[a].pin)[PL[b].pin] || { w: 999 }).w;
 // ---- end of shared.js
 
 const W = getvar('stat_data.World') || {};

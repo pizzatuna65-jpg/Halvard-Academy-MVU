@@ -71,6 +71,24 @@ function rollTable(pool, o) {
   for (const x of P) { r -= o.weight(x); if (r < 0) return x; }
   return null;
 }
+// ---- outside areas (1.46.0, audit 2.1 / 3.1): one shortest-way search for every area map, in the engine and the Map panel.
+// areaNb(legs): { node: [[neighbour, weight, ...the leg's other fields], ...] } in the legs' order. areaRoutes(nb, from, blocked):
+// { node: { w, prev } }; blocked(id) is a node that can be reached but not crossed (Avalon's castle); a tie keeps the first found.
+const areaNb = legs => { const nb = {}; for (const [a, b, ...x] of legs || []) { (nb[a] = nb[a] || []).push([b, ...x]); (nb[b] = nb[b] || []).push([a, ...x]); } return nb; };
+function areaRoutes(nb, from, blocked) {
+  const d = { [from]: { w: 0, prev: '' } }, done = new Set();
+  for (;;) {
+    let u = null; for (const k in d) if (!done.has(k) && (u === null || d[k].w < d[u].w)) u = k;
+    if (u === null) break; done.add(u);
+    if (u !== from && blocked && blocked(u)) continue;
+    for (const [v, w] of nb[u] || []) if (!d[v] || d[u].w + w < d[v].w) d[v] = { w: d[u].w + w, prev: u };
+  }
+  return d;
+}
+const areaPath = (R, a, b) => { if (!R[b]) return []; const p = [b]; while (p[0] !== a) p.unshift(R[p[0]].prev); return p; };
+// minutes between two places of a pin map: inside one pin their "in" minutes (at least 5), else the pins' shortest way
+const inMin = x => { const v = Number(x); return Number.isFinite(v) ? v : 5; };
+const areaMin = (PL, routesOf, a, b) => a === b ? 0 : PL[a].pin === PL[b].pin ? Math.max(5, inMin(PL[a].in) + inMin(PL[b].in)) : (routesOf(PL[a].pin)[PL[b].pin] || { w: 999 }).w;
 // ---- end of shared.js
 
 // 1.5.1 (P6): who spoke in a reply. A name counts as a speaker when it opens the sentence that leads into a quote
@@ -471,7 +489,7 @@ function curfewOf(W, evs, S) {
   // 1.40.0: aboard the airship nobody keeps dorm hours; the teachers count heads at boarding and landing
   if (placeOf(W.Location) === AIR.area) return 'Away from campus (aboard the airship): the dorm curfew does not apply; the teachers count heads at boarding and landing';
   // 1.41.0: the Academy Trip keeps the teachers' hours at The Hanabira (lore 247)
-  if (placeOf(W.Location) === SR.area) { const [c0, c1] = SR.curfew || [22, 7]; return h >= c0 || h < c1 ? `Hotel curfew (${pad(c0)}:00-${pad(c1)}:00): the teachers' curfew at ${SR_PL[SR.hotel].name}; students stay in their rooms` : `Away from campus (Sunreach Bay, the Academy Trip): the dorm curfew does not apply; back at ${SR_PL[SR.hotel].name} by ${pad(c0)}:00`; }
+  if (placeOf(W.Location) === SR.area) { const [c0, c1] = SR.curfew || [22, 7]; return h >= c0 || h < c1 ? `Hotel curfew (${pad(c0)}:00-${pad(c1)}:00): the teachers' curfew at ${AR.sunreach.PL[SR.hotel].name}; students stay in their rooms` : `Away from campus (Sunreach Bay, the Academy Trip): the dorm curfew does not apply; back at ${AR.sunreach.PL[SR.hotel].name} by ${pad(c0)}:00`; }
   if (placeOf(W.Location) === AV.area && avKingdom(W, S || {})) return h >= 22 || h < 7 ? 'Hotel curfew (22:00-07:00): the team stays in its rooms at the Whitestone Hotel; Gavlan Haverton keeps watch' : h >= 21 ? 'Back at the Whitestone Hotel by 22:00 (free time in the city ended at 21:00)' : 'Away from campus (Avalon, with the team): the dorm curfew does not apply; free time in the city until 21:00, the Whitestone Hotel by 22:00';
   if (!onCampus(W.Location) && (Tr.Active || evs.some(e => e.away))) return `Away from campus${Tr.Active && Tr.Destination ? ` (${Tr.Destination})` : ''}: the dorm curfew does not apply; the teachers in charge set the rules`;
   // v1.0.3 (A#6): a no-curfew event lifts it from its first day's evening to its last day's dawn, not for the whole two days
@@ -640,160 +658,184 @@ function fluOn(seed, day) {
 const OUTDOOR = ["archery range", "boathouse and lake", "broken statue", "combat grounds", "courtyards", "fishing house", "forest", "forest clearing", "founder's statue and park", "founders statue and park", "gardens", "grassy field and hills", "menagerie", "observation tower", "rooftop", "spirit path", "sports field", "swimming pool", "willow island"];
 // 1.38.0: the Grand Vast Forest is outdoors, except inside the mouth of the Grand Cave Network
 const isOutdoor = loc => { const p = placeOf(loc).toLowerCase(); if (p && p === String(EXP.area || '').toLowerCase()) return !/grand cave network/i.test(String(loc));
-  if (p && p === String(AV.area || '').toLowerCase()) { const id = avPlace(loc, ''); return !!(id && AV_PL[id].out); }   // 1.39.0
-  if (p && p === String(SR.area || '').toLowerCase()) { const id = srPlace(loc, ''); return !!(id && SR_PL[id].out); }   // 1.41.0
+  for (const A of [AR.avalon, AR.sunreach]) if (p && p === String(A.area || '').toLowerCase()) { const id = areaPlace(A, loc, ''); return !!(id && A.PL[id].out); }   // 1.39.0, 1.41.0
   return !!p && OUTDOOR.some(c => p === c || p.startsWith(c + ' ') || p.startsWith(c + ',')); };
-// ---- 1.38.0 (owner-approved planning/DRAFT_outside_maps.md, part 1): the Grand Vast Forest, the Creature Studies Expedition's map
-// (data/expedition.json). While the Expedition is on, World.Location is "Grand Vast Forest — <place>" in the forest map's words.
-// stepExpedition charges stamina for every walk and counts search hours per place; once per search hour it rolls the assigned
-// target (only where it lives), signs that point towards it, other beasts and the Wendigo. The narrator plays only what <now> says.
-const EXP = {"area":"Grand Vast Forest","event":"Creature Studies Expedition","map":"map/grand_vast_forest.webp","places":[{"id":"base_camp","name":"Base Camp","group":"base_camp","x":50,"y":80,"aliases":["base camp","camp","expedition camp","huntsmen's lodge","huntsmens lodge","the lodge","command tent"]},{"id":"wildwood_north","name":"Wildwood (north)","group":"wildwood","x":50,"y":57,"aliases":["wildwood (north)","wildwood north","north wildwood","northern wildwood","the north wildwood"]},{"id":"wildwood_west","name":"Wildwood (west)","group":"wildwood","x":28,"y":76,"aliases":["wildwood (west)","wildwood west","west wildwood","western wildwood","the west wildwood"]},{"id":"wildwood_east","name":"Wildwood (east)","group":"wildwood","x":70,"y":75,"aliases":["wildwood (east)","wildwood east","east wildwood","eastern wildwood","the east wildwood"]},{"id":"blightbriar","name":"Blightbriar","group":"blightbriar","x":18,"y":48,"aliases":["blightbriar","the blightbriar","blight briar"]},{"id":"gloaming","name":"The Gloaming","group":"gloaming","x":48,"y":43,"aliases":["the gloaming","gloaming"]},{"id":"falls","name":"Silverstair Falls","group":"falls","x":83,"y":45,"aliases":["silverstair falls","silverstair","the falls","falls","waterfall","the waterfall"]},{"id":"terraces","name":"Jade Terraces","group":"terraces","x":83,"y":23,"aliases":["jade terraces","the jade terraces","terraces","the terraces","the pools"]},{"id":"cave","name":"Grand Cave Network","group":"cave","x":15,"y":22,"indoor":true,"aliases":["grand cave network","the grand cave network","cave network","cave mouth","the cave mouth","the caves","caves","cave","the cave"]},{"id":"old_heart","name":"The Old Heart","group":"old_heart","x":50,"y":9,"aliases":["the old heart","old heart"]}],"wild_words":["wildwood","the wildwood","forest","the forest","woods","the woods","jungle","rainforest","grand vast forest","trail","the trail"],"legs":[["base_camp","wildwood_west",2,1,""],["base_camp","wildwood_north",2,1,""],["base_camp","wildwood_east",2,1,""],["wildwood_west","wildwood_north",2.5,1,""],["wildwood_north","wildwood_east",2.5,1,""],["wildwood_west","blightbriar",3,1,""],["wildwood_north","gloaming",3.5,1,""],["wildwood_east","falls",4,1,"along the river"],["blightbriar","gloaming",2.5,1.5,"spore"],["blightbriar","cave",5,1.5,"spore"],["gloaming","falls",3.5,1,""],["gloaming","cave",4,1,""],["gloaming","old_heart",5,1,""],["falls","terraces",1.5,1.5,"a climb"],["terraces","old_heart",4,1,""],["cave","old_heart",5,1,""]],"spore_mask":"spore mask|face cloth|face mask|mask","night_beasts":["hush owl","mist wolf","echo bat","displacer cat","ashen lynx"],"wendigo":{"where":"gloaming","edge":"old_heart","line":"The Wendigo (Grade I): a gaunt humanoid about three metres tall, grey-white skin tight over bone, a deer's skull for a head with antlers and a dim light in the sockets, long clawed fingers; the air turns cold, frost forms where it stands, it smells of rot and speaks in voices it has heard. It stalks first and calls in borrowed voices, then tests the intruders and drives them out; it does not follow anyone out of the Gloaming. Every spell of a kind that has already hit it this fight does a fifth less than the one before (100%, 80%, 60%, 40%, then 20%, never less); a new kind starts at full; weapons do not make it adapt, but its hide is Grade I hard. Students cannot beat it: running, hiding and the flare are the sane choices."},"rates":{"target_base":3,"target_step":3,"target_cap":24,"night_mult":0.5,"sign":20,"encounter":10,"encounter_night":15,"wendigo":1,"wendigo_edge":0.3,"walk_pct":8,"search_pct":3,"rain_mult":1.25,"night_walk_mult":1.25,"drag_mult":1.5,"max_rolls":12,"night_from":19,"night_to":6},"hunt":{"day":"Thu","from":"08:00","hours":24,"back_by":"12:00"},"weather":{"temp":[24,29,23],"sky":[{"Fog":55,"Cloudy":35,"Clear":10},{"Rain":70,"Storm":10,"Cloudy":20},{"Rain":30,"Cloudy":60,"Clear":10}],"rain":{"light":25,"steady":35,"heavy":40}},"groups":{"base_camp":{"IV":["goblin hound"],"III":["dire wolf"],"II":[],"protected":[],"rate":0.2},"wildwood":{"IV":["goblin hound"],"III":["dire wolf","boar","thornstag","owlbear","forest troll"],"II":["ironback boar","dire bear","ogre","chimera"],"protected":[]},"blightbriar":{"IV":["thorn creeper","shriek mushroom"],"III":["spore shambler"],"II":["bloom maw","manticore"],"protected":[]},"gloaming":{"IV":[],"III":["ashen lynx","hush owl","giant spider"],"II":["displacer cat","dread weaver"],"protected":[]},"falls":{"IV":[],"III":["mist wolf","kelpie","torrent eel","harpy"],"II":["griffin","roc","wyvern"],"protected":[]},"terraces":{"IV":["chime toad"],"III":["cockatrice"],"II":["young hydra","gorgon","rime elk"],"protected":["pearl serpent"]},"cave":{"IV":[],"III":["giant centipede","echo bat","gargoyle","lesser drake"],"II":["cave troll","basilisk","giant scorpion","bone drake","cinder wyrm"],"protected":[]},"old_heart":{"IV":[],"III":[],"II":[],"protected":["unicorn","lantern stag","moonhare","white hart","grey pilgrim"]}}};
-const EXP_PL = Object.fromEntries((EXP.places || []).map(p => [p.id, p]));
-const EXP_NB = {};                                             // place -> [[neighbour, hours, multiplier, note]]
-for (const [a, b, h, m, note] of EXP.legs || []) { (EXP_NB[a] = EXP_NB[a] || []).push([b, h, m, note]); (EXP_NB[b] = EXP_NB[b] || []).push([a, h, m, note]); }
-const EXP_ALIAS = {};
-for (const p of EXP.places || []) for (const a of [p.name.toLowerCase(), ...(p.aliases || [])]) EXP_ALIAS[a.replace(/^the /, '')] = p.id;
-const EXP_WILD = new Set((EXP.wild_words || []).map(w => w.replace(/^the /, '')));
-const EXP_ROUTES = {};
-function expRoutes(from) {                                       // shortest walks from a place: { id: { h, prev } }
-  if (EXP_ROUTES[from]) return EXP_ROUTES[from];
-  const d = { [from]: { h: 0, prev: '' } }, done = new Set();
-  for (;;) {
-    let u = null; for (const k in d) if (!done.has(k) && (u === null || d[k].h < d[u].h)) u = k;
-    if (u === null) break; done.add(u);
-    for (const [v, h] of EXP_NB[u] || []) if (!d[v] || d[u].h + h < d[v].h) d[v] = { h: d[u].h + h, prev: u };
-  }
-  return (EXP_ROUTES[from] = d);
+// ---- 1.46.0 (audit 3.1): the outside areas, one module. Every area's data file (data/expedition.json, avalon.json, airship.json,
+// sunreach.json) becomes one record with the same parts: places (PL) and pins (PIN), the walking graph (NB, routes, path, min; the one
+// search in shared.js, also used by the Map panel), the names and aliases a Location may use (NAME, ALIAS), the place parser
+// (areaPlace) and the Location formatter (areaLoc), the climate (areaWx), the seeded hourly life (areaHours, areaTheft, areaStreet)
+// and the moves with their fares (areaMove, paid through the ledger). The steps 4c-4f keep only what is the area's own: the
+// Expedition's hunt, Avalon's White Line and muster, the airship's flights, Sunreach's bets and sea.
+// o: salt (the hourly rolls' seed word, kept from 1.38-1.41 so old chats swipe the same), words (the area's own names: a Location with
+// one is in the area; "in" those that also let the short aliases count), arrive (where a bare area name lands), aliasDetail (an alias
+// after a place's name stays as a detail of the Location), blocked (a pin that can be reached but not crossed), modes (carriage,
+// boat, tour: fare and wording), crowd (a leg the crowds slow, and its note), theft (the pickpocket or hustler's roll words).
+const EXP = {"area":"Grand Vast Forest","event":"Creature Studies Expedition","map":"map/grand_vast_forest.webp","places":[{"id":"base_camp","name":"Base Camp","group":"base_camp","x":50,"y":80,"aliases":["base camp","camp","expedition camp","huntsmen's lodge","huntsmens lodge","the lodge","command tent"]},{"id":"wildwood_north","name":"Wildwood (north)","group":"wildwood","x":50,"y":57,"aliases":["wildwood (north)","wildwood north","north wildwood","northern wildwood","the north wildwood"]},{"id":"wildwood_west","name":"Wildwood (west)","group":"wildwood","x":28,"y":76,"aliases":["wildwood (west)","wildwood west","west wildwood","western wildwood","the west wildwood"]},{"id":"wildwood_east","name":"Wildwood (east)","group":"wildwood","x":70,"y":75,"aliases":["wildwood (east)","wildwood east","east wildwood","eastern wildwood","the east wildwood"]},{"id":"blightbriar","name":"Blightbriar","group":"blightbriar","x":18,"y":48,"aliases":["blightbriar","the blightbriar","blight briar"]},{"id":"gloaming","name":"The Gloaming","group":"gloaming","x":48,"y":43,"aliases":["the gloaming","gloaming"]},{"id":"falls","name":"Silverstair Falls","group":"falls","x":83,"y":45,"aliases":["silverstair falls","silverstair","the falls","falls","waterfall","the waterfall"]},{"id":"terraces","name":"Jade Terraces","group":"terraces","x":83,"y":23,"aliases":["jade terraces","the jade terraces","terraces","the terraces","the pools"]},{"id":"cave","name":"Grand Cave Network","group":"cave","x":15,"y":22,"indoor":true,"aliases":["grand cave network","the grand cave network","cave network","cave mouth","the cave mouth","the caves","caves","cave","the cave"]},{"id":"old_heart","name":"The Old Heart","group":"old_heart","x":50,"y":9,"aliases":["the old heart","old heart"]}],"wild_words":["wildwood","the wildwood","forest","the forest","woods","the woods","jungle","rainforest","grand vast forest","trail","the trail"],"legs":[["base_camp","wildwood_west",2,1,""],["base_camp","wildwood_north",2,1,""],["base_camp","wildwood_east",2,1,""],["wildwood_west","wildwood_north",2.5,1,""],["wildwood_north","wildwood_east",2.5,1,""],["wildwood_west","blightbriar",3,1,""],["wildwood_north","gloaming",3.5,1,""],["wildwood_east","falls",4,1,"along the river"],["blightbriar","gloaming",2.5,1.5,"spore"],["blightbriar","cave",5,1.5,"spore"],["gloaming","falls",3.5,1,""],["gloaming","cave",4,1,""],["gloaming","old_heart",5,1,""],["falls","terraces",1.5,1.5,"a climb"],["terraces","old_heart",4,1,""],["cave","old_heart",5,1,""]],"spore_mask":"spore mask|face cloth|face mask|mask","night_beasts":["hush owl","mist wolf","echo bat","displacer cat","ashen lynx"],"wendigo":{"where":"gloaming","edge":"old_heart","line":"The Wendigo (Grade I): a gaunt humanoid about three metres tall, grey-white skin tight over bone, a deer's skull for a head with antlers and a dim light in the sockets, long clawed fingers; the air turns cold, frost forms where it stands, it smells of rot and speaks in voices it has heard. It stalks first and calls in borrowed voices, then tests the intruders and drives them out; it does not follow anyone out of the Gloaming. Every spell of a kind that has already hit it this fight does a fifth less than the one before (100%, 80%, 60%, 40%, then 20%, never less); a new kind starts at full; weapons do not make it adapt, but its hide is Grade I hard. Students cannot beat it: running, hiding and the flare are the sane choices."},"rates":{"target_base":3,"target_step":3,"target_cap":24,"night_mult":0.5,"sign":20,"encounter":10,"encounter_night":15,"wendigo":1,"wendigo_edge":0.3,"walk_pct":8,"search_pct":3,"rain_mult":1.25,"night_walk_mult":1.25,"drag_mult":1.5,"max_rolls":12,"night_from":19,"night_to":6},"hunt":{"day":"Thu","from":"08:00","hours":24,"back_by":"12:00"},"climate":{"label":"rainforest","salt":"f","rare":{"sky":"Storm","at":60,"text":"lightning storm"},"temp":[24,29,23],"sky":[{"Fog":55,"Cloudy":35,"Clear":10},{"Rain":70,"Storm":10,"Cloudy":20},{"Rain":30,"Cloudy":60,"Clear":10}],"rain":{"light":25,"steady":35,"heavy":40}},"groups":{"base_camp":{"IV":["goblin hound"],"III":["dire wolf"],"II":[],"protected":[],"rate":0.2},"wildwood":{"IV":["goblin hound"],"III":["dire wolf","boar","thornstag","owlbear","forest troll"],"II":["ironback boar","dire bear","ogre","chimera"],"protected":[]},"blightbriar":{"IV":["thorn creeper","shriek mushroom"],"III":["spore shambler"],"II":["bloom maw","manticore"],"protected":[]},"gloaming":{"IV":[],"III":["ashen lynx","hush owl","giant spider"],"II":["displacer cat","dread weaver"],"protected":[]},"falls":{"IV":[],"III":["mist wolf","kelpie","torrent eel","harpy"],"II":["griffin","roc","wyvern"],"protected":[]},"terraces":{"IV":["chime toad"],"III":["cockatrice"],"II":["young hydra","gorgon","rime elk"],"protected":["pearl serpent"]},"cave":{"IV":[],"III":["giant centipede","echo bat","gargoyle","lesser drake"],"II":["cave troll","basilisk","giant scorpion","bone drake","cinder wyrm"],"protected":[]},"old_heart":{"IV":[],"III":[],"II":[],"protected":["unicorn","lantern stag","moonhare","white hart","grey pilgrim"]}}};
+const AV = {"area":"Avalon","map":"map/avalon.webp","crowning":{"event":"Independence Crowning Day","day":"Tue","arrive":"09:30","parade":"10:00","speech":"11:00","free":"11:30","muster":"15:30","depart":"16:00","crowd_from":"10:00","crowd_to":"13:00"},"kingdom":{"matches":"09:00-18:00","free_until":"21:00","curfew":"22:00","reception":"Sat","prize":5000},"pins":[{"id":"castle","name":"Eldrasil Castle","x":50,"y":31,"locked":true},{"id":"square","name":"Crown Square","x":50,"y":57},{"id":"gate","name":"Great Gate","x":50,"y":83},{"id":"lantern","name":"Lantern Quarter","x":24,"y":56},{"id":"oldtown","name":"Old Town","x":32,"y":23},{"id":"garden","name":"Garden of Avalon","x":67,"y":27},{"id":"arena","name":"Arena Quarter","x":78,"y":56}],"legs":[["square","gate",25],["square","lantern",35],["square","arena",40],["square","oldtown",75],["square","garden",75],["square","castle",45],["gate","lantern",40],["lantern","oldtown",50],["oldtown","garden",50],["garden","arena",45],["arena","gate",35]],"places":[{"id":"eldrasil_castle","name":"Eldrasil Castle","pin":"castle","in":10,"out":false,"locked":true,"aliases":["the castle","royal castle","the palace","the throne room"]},{"id":"noble_ring","name":"Noble Ring","pin":"castle","in":5,"out":true,"locked":true,"aliases":["the noble quarter","the noble district","noble houses"]},{"id":"crown_square","name":"Crown Square","pin":"square","in":0,"out":true,"aliases":["the square","the plaza","the parade stands","the stands","crown avenue","the white line"]},{"id":"grand_cathedral","name":"Grand Cathedral","pin":"square","in":5,"out":false,"aliases":["the cathedral","the grand cathedral"]},{"id":"chancery","name":"The Chancery","pin":"square","in":5,"out":false,"aliases":["chancery","the royal inspectorate","the ministries","the courts"]},{"id":"high_dovecote","name":"High Dovecote","pin":"square","in":5,"out":false,"aliases":["the dovecote","the high dovecote","doves headquarters"]},{"id":"royal_bank","name":"Royal Bank","pin":"square","in":5,"out":false,"aliases":["the bank","the royal bank"]},{"id":"skyport","name":"Skyport","pin":"gate","in":5,"out":true,"aliases":["the skyport","the great gate","the airship dock","the docks","the muster","the landing field"]},{"id":"gilded_arcade","name":"Gilded Arcade","pin":"gate","in":5,"out":false,"aliases":["the arcade","the gilded arcade"]},{"id":"lantern_market","name":"Lantern Market","pin":"lantern","in":5,"out":true,"aliases":["the market","the lantern market","the lantern quarter","the market hall"]},{"id":"spellwright_row","name":"Spellwright Row","pin":"lantern","in":10,"out":true,"aliases":["spellwright","the magic shops"]},{"id":"old_town","name":"Old Town","pin":"oldtown","in":5,"out":true,"aliases":["the old town","the old quarter","the grey quarter"]},{"id":"rookery","name":"The Rookery","pin":"oldtown","in":10,"out":false,"hidden":true,"aliases":["rookery","the tunnels","the underbelly","the black market","the drowned rat","the cellars"]},{"id":"skywheel_fair","name":"Skywheel Fair","pin":"oldtown","in":5,"out":true,"aliases":["the fair","the fairground","the wheel","the skywheel","the carousel"]},{"id":"great_spire","name":"The Great Spire","pin":"oldtown","in":10,"out":false,"aliases":["great spire","the spire","the viewing gallery","the herald spire"]},{"id":"garden_of_avalon","name":"Garden of Avalon","pin":"garden","in":5,"out":true,"aliases":["the garden","the gardens","the statue","the archmage statue","the archmage","the reflecting pool"]},{"id":"grand_theatre","name":"Grand Theatre","pin":"garden","in":10,"out":false,"aliases":["the theatre","the opera","the opera house"]},{"id":"royal_arena","name":"Royal Arena","pin":"arena","in":5,"out":true,"aliases":["the arena","the arena quarter","the stadium","the royal arena"]},{"id":"whitestone_hotel","name":"Whitestone Hotel","pin":"arena","in":5,"out":false,"aliases":["the hotel","whitestone"]}],"rates":{"walk_pct":5,"crowd_mult":1.5,"ride_coin":10,"max_rolls":6,"procession":10,"street":20,"rival":25,"tsubaki":10,"scout":15,"raid":5,"raid_escape":60},"theft":{"where":["lantern_market","crown_square","skyport","old_town","skywheel_fair"],"rate":8,"seen":50,"min":10,"max":25,"cap":300,"once":false,"ev":"pick","who":"a pickpocket","toast":"Pickpocketed","why":"pickpocketed in Avalon"},"where":{"procession":["crown_square","gilded_arcade"],"rival_crowning":["crown_square","skyport","gilded_arcade","lantern_market","spellwright_row","old_town","skywheel_fair","great_spire","garden_of_avalon","grand_theatre","royal_arena","grand_cathedral","royal_bank"],"rival_kingdom":["royal_arena","whitestone_hotel"],"tsubaki":["gilded_arcade","lantern_market","spellwright_row","old_town","skywheel_fair","great_spire","garden_of_avalon","grand_theatre","royal_arena"],"scout":["royal_arena","whitestone_hotel"],"raid":["rookery"]},"street":{"crown_square":["a fire-breather working the holiday crowd by the fountains","a children's choir rehearsing the anthem on the memorial steps"],"skyport":["a merchant airship unloading crates of foreign fruit","porters racing each other with luggage carts"],"gilded_arcade":["a window display of Ardenne's new season drawing a crowd","Merryhew's staff testing a prank on passers-by"],"lantern_market":["a spice seller shouting a price war with the stall opposite","a puppet show for a ring of children"],"spellwright_row":["an enchanter demonstrating a self-sharpening knife","a dealer auctioning a battered old spellbook"],"old_town":["a fortune teller calling out to {{user}} by the colour of their vest","an old man playing a fiddle for coins under a grey arch"],"skywheel_fair":["a strongman offering a prize to anyone who can ring the bell","a couple stuck at the top of the wheel, waving"],"great_spire":["a guide pointing out each academy's direction from the gallery","pigeons scattering round the lift cage"],"garden_of_avalon":["a flower festival on the terraces in deep blue and gold","two scholars arguing loudly about the Archmage's face"],"grand_theatre":["a tenor warming up on the steps before the matinee","ticket touts selling seats for the evening opera"],"royal_arena":["groundskeepers raking the sand and re-chalking the rings","a junior tournament with very loud parents"],"whitestone_hotel":["a porter mixing up two academies' luggage","reporters waiting in the lobby for any team member"]},"procession":["a noble family's carriage with outriders in house colours","a column of the Royal Guard changing posts on the White Line","a minister's carriage with Inspectorate clerks running behind"],"rivals":{"Bellatrix":1,"Bram":1,"Cassius":3,"Dex":2,"Elion":1,"Ines":3,"Kira":2,"Lucius":2,"Mirelle":3,"Morgana":2,"Pip":1,"Theodore":3}};
+const AIR = {"area":"Airship","board":"common_room","move_min":2,"bath":{"place":"cabin_deck","words":"bath|bathing|washroom|soak","min":10,"clears":["Soaked","Chilled"]},"rates":{"sky":15,"stage":30,"hold":30,"max_rolls":6},"flights":[{"id":"exp_out","m":2,"w":3,"d":"Wed","from":"07:00","to":"12:00","who":"all","route":"forest","dir":"out","event":"the Creature Studies Expedition","dest":"Grand Vast Forest — Base Camp","lands":"Base Camp, at the Grand Vast Forest's southern edge","bar":false},{"id":"exp_home","m":2,"w":3,"d":"Fri","from":"13:00","to":"18:00","who":"all","route":"forest","dir":"home","event":"the Creature Studies Expedition","dest":"Grassy Field and Hills","lands":"Halvard, at the edge of the grounds","bar":false},{"id":"crown_out","m":4,"w":2,"d":"Tue","from":"07:30","to":"09:30","who":"all","route":"avalon","dir":"out","event":"Independence Crowning Day","dest":"Avalon — Skyport","lands":"the Skyport, Avalon","bar":true},{"id":"crown_home","m":4,"w":2,"d":"Tue","from":"16:00","to":"18:00","who":"all","route":"avalon","dir":"home","event":"Independence Crowning Day","dest":"Grassy Field and Hills","lands":"Halvard, at the edge of the grounds","bar":true},{"id":"kd_out","m":9,"w":4,"d":"Tue","from":"08:00","to":"10:00","who":"kingdom","route":"avalon","dir":"out","event":"the Kingdom Competition (Halvard's team and Gavlan Haverton only)","dest":"Avalon — Skyport","lands":"the Skyport, Avalon","bar":false},{"id":"kd_home","m":9,"w":4,"d":"Sun","from":"16:00","to":"18:00","who":"kingdom","route":"avalon","dir":"home","event":"the Kingdom Competition (Halvard's team and Gavlan Haverton only)","dest":"Grassy Field and Hills","lands":"Halvard, at the edge of the grounds","bar":true},{"id":"trip_out","m":11,"w":2,"d":"Sat","from":"07:00","to":"20:00","who":"all","route":"sunreach","dir":"out","event":"the Academy Trip","dest":"Sunreach Bay — Skydock","lands":"the Skydock, Sunreach Bay","bar":false},{"id":"trip_home","m":11,"w":3,"d":"Thu","from":"08:00","to":"20:00","who":"all","route":"sunreach","dir":"home","event":"the Academy Trip","dest":"Grassy Field and Hills","lands":"Halvard, at the edge of the grounds","bar":false}],"places":[{"id":"promenade_deck","name":"Promenade Deck","aliases":["promenade","the promenade","observation gallery","the observation gallery","observation deck","the bow","the windows","the glass"]},{"id":"common_room","name":"Common Room","aliases":["the common room","lounge","the lounge","canteen","the canteen","canteen counter","the canteen counter","bar","the bar","stage","the stage"]},{"id":"cabin_deck","name":"Cabin Deck","aliases":["cabin","the cabin","cabins","the cabins","our cabin","bunks","the bunks","washrooms","the washrooms","bathing stalls","the bathing stalls","the baths"]},{"id":"cargo_hold","name":"Cargo Hold","aliases":["hold","the hold","cargo","the cargo","luggage","the luggage","luggage racks","the luggage racks","lower deck","the lower deck"]}],"cargo":{"forest_out":"tents, cookfires and camp gear for the Expedition","forest_home":"the Expedition's camp gear, muddier than it left","avalon_out":"the academy's banners and spare uniforms for the day","avalon_home":"the academy's banners, rolled, and whatever the students bought in Avalon","sunreach_out":"the whole academy's luggage for the Trip","sunreach_home":"more luggage than left Halvard, and the crates of what the teachers confiscated"},"views":{"forest_out":["Halvard's grounds and towers falling away behind; farmland and hedges below","the farmland thins into scrub and long empty hills","a green line on the horizon grows into the Grand Vast Forest's canopy, endless, mist rising from it"],"forest_home":["the canopy sliding away under the stern, Base Camp's meadow a pale patch at its edge","long empty hills, then farmland again","Halvard's towers on the horizon, the Bell Tower first"],"avalon_out":["Halvard's grounds falling away behind; towns and roads of the kingdom below","the roads all start bending the same way, towards the capital","Avalon ahead: a round white city on its hill, the castle at its heart and the Herald Spires standing over it"],"avalon_home":["Avalon's white wall shrinking behind, the castle last to go","the kingdom's towns and roads in the afternoon light","Halvard's towers on the horizon, the Bell Tower first"],"sunreach_out":["Halvard falling away; the kingdom's farmland, then its southern towns","the coast, then nothing but sea for hours, a sea that turns bluer the further south it goes","islands, then lights: Sunreach Bay's white beaches by day, its neon side by night"],"sunreach_home":["Sunreach's beaches and lagoons falling behind","open sea for hours, greyer and colder the further north it goes","the coast of Eldrasil, then Halvard's towers in the dark"]},"sky":{"forest":["the canopy breaks for a moment over a river so wide it looks like a lake","a flock of something large lifts out of the trees and keeps pace with the ship for a minute","the ship banks around a column of rain standing on the forest"],"avalon":["another academy's airship draws alongside, its students crowding their own promenade glass","a royal courier ship passes fast and high, gold on blue","the Herald Spires' bells reach the ship before the city does"],"sunreach":["the coast falls behind and there is nothing but sea for hours","a Yozakuran steward walks the promenade ringing a small bell: the line where the warm south begins, and sweets for everyone","flying fish, or something like them, break the water far below"],"home":["Halvard's towers show on the horizon, smaller than anyone remembers","half the ship falls asleep at once","a teacher walks the cabins counting heads early, and loses count"]},"stage":["a Yozakuran steward plays a long-necked lute, slow songs from home","two second-years from another dorm do a duel of insults in rhyme and the room keeps score","a first-year's illusion of a dragon gets away from them and loops the ceiling","a teacher borrows the stage to read out the landing order","the stage is empty and the chalkboard has one name on it: {{user}}'s cabin-mate signed them up"],"hold":["a crate shifts in its straps and something inside knocks back","the quartermaster is asleep on a coil of rope, snoring in time with the engines","two older students come down the ladder, see {{user}}, and go back up without a word","a stowaway cat from the last port watches from the top of the luggage"]};
+const SR = {"area":"Sunreach Bay","maps":{"day":"map/sunreach_day.webp","night":"map/sunreach_night.webp"},"night":{"from":"18:00","to":"06:00"},"window":{"m":11,"from":[2,"Sat","20:00"],"to":[3,"Thu","08:00"]},"arrive":"skydock","hotel":"the_hanabira","curfew":[22,7],"schedule":[[2,"Sun","09:00","the teachers' briefing in The Hanabira's garden"],[3,"Wed","19:00","the farewell dinner at The Hanabira, then packing"],[3,"Thu","08:00","check out and board the airship home"]],"pins":[{"id":"skydock","name":"Skydock","x":14,"y":68,"shore":true},{"id":"wharf","name":"Fisherman's Wharf","x":25,"y":50,"shore":true},{"id":"strand","name":"Coral Strand","x":44,"y":44,"shore":true},{"id":"sunpier","name":"Sunpier","x":64,"y":56,"shore":true},{"id":"crossing","name":"Sunreach Crossing","x":51,"y":31},{"id":"casino","name":"Casino Row","x":81,"y":37,"shore":true},{"id":"terraces","name":"Cliffside Terraces","x":60,"y":16},{"id":"lagoon","name":"Turquoise Lagoon","x":84,"y":77,"shore":true},{"id":"cliffs","name":"West Cliffs","x":8,"y":35,"shore":true},{"id":"sea","sea":true,"name":"Open Sea","x":45,"y":87}],"legs":[["skydock","wharf",10],["skydock","strand",15],["skydock","cliffs",30],["wharf","strand",15],["wharf","crossing",15],["strand","sunpier",10],["strand","crossing",10],["sunpier","casino",15],["crossing","casino",15],["crossing","terraces",15],["casino","lagoon",20],["terraces","cliffs",35],["terraces","lagoon",35],["wharf","sea",60,"tour"]],"places":[{"id":"skydock","name":"Skydock","pin":"skydock","in":5,"out":true,"aliases":["the skydock","the airship masts","customs"]},{"id":"fish_market","name":"Fish Market","pin":"wharf","in":5,"out":true,"aliases":["the fish market","the wharf","the night market stalls","the food stalls","the grills"]},{"id":"sea_dock","name":"Sea Dock","pin":"wharf","in":5,"out":true,"aliases":["the sea dock","the docks","the tour boats","the harbour"]},{"id":"the_hanabira","name":"The Hanabira","pin":"strand","in":5,"out":false,"aliases":["hanabira","the hotel","our hotel","the rooftop bath","the lobby"]},{"id":"coral_beach","name":"Coral Beach","pin":"strand","in":5,"out":true,"aliases":["the beach","coral strand","the sand"]},{"id":"sunpier","name":"Sunpier","pin":"sunpier","in":5,"out":true,"aliases":["the pier","the gull run","the carousel"]},{"id":"tidehouse_aquarium","name":"Tidehouse Aquarium","pin":"sunpier","in":5,"out":false,"aliases":["the aquarium","tidehouse"]},{"id":"sunreach_crossing","name":"Sunreach Crossing","pin":"crossing","in":5,"out":true,"aliases":["the crossing","the clock tower","the city centre","downtown"]},{"id":"velvet_lanes","name":"Velvet Lanes","pin":"crossing","in":5,"out":true,"aliases":["the velvet lanes","the lanes","the alleys","the bars"],"off":true},{"id":"golden_tide","name":"The Golden Tide","pin":"casino","in":5,"out":false,"aliases":["golden tide","the casino","the tables"],"off":true},{"id":"plaza_dourada","name":"Plaza Dourada","pin":"casino","in":5,"out":true,"aliases":["the plaza","the colonial square","the mosaic square"]},{"id":"the_terraces","name":"The Terraces","pin":"terraces","in":5,"out":true,"aliases":["cliffside terraces","the terraces","the stilt houses","the hillside town"]},{"id":"skyrail","name":"Skyrail","pin":"terraces","in":5,"out":true,"aliases":["the skyrail","the cable cars","the cable car"]},{"id":"old_fort","name":"Old Fort","pin":"terraces","in":5,"out":true,"aliases":["the old fort","the fort","the summit"]},{"id":"the_lagoon","name":"The Lagoon","pin":"lagoon","in":5,"out":true,"aliases":["turquoise lagoon","the lagoon","the rafts","the beach bar"]},{"id":"reef_gardens","name":"Reef Gardens","pin":"lagoon","in":5,"out":true,"aliases":["the reef","reef gardens","the glass-bottom boat","the coral"]},{"id":"shell_cove","name":"Shell Cove","pin":"lagoon","in":5,"out":true,"aliases":["shell cove","the cove","the pink beach"]},{"id":"the_lighthouse","name":"The Lighthouse","pin":"cliffs","in":5,"out":true,"aliases":["the lighthouse","the cliff road"]},{"id":"sunset_cliffs","name":"Sunset Cliffs","pin":"cliffs","in":5,"out":true,"aliases":["sunset cliffs","the cliffs","the diving ledges"]},{"id":"glowtide_grotto","name":"Glowtide Grotto","pin":"cliffs","in":5,"out":false,"aliases":["the grotto","glowtide","the sea cave","the cave"]},{"id":"open_sea","name":"Open Sea","pin":"sea","in":5,"out":true,"aliases":["the open sea","the tour boat","out at sea"]}],"rates":{"walk_pct":5,"carriage":6,"boat":8,"tour":15,"street":20,"rival":25,"student":20,"sea":50,"leviathan":5,"max_rolls":6,"bet_max":200},"games":{"dice":{"win":45,"pay":2},"cards":{"win":48,"pay":2},"wheel":{"win":8,"pay":10}},"theft":{"where":["fish_market","sunreach_crossing","velvet_lanes","sunpier"],"rate":8,"seen":50,"min":10,"max":25,"cap":300,"once":true,"ev":"hustle","who":"a hustler","toast":"Hustled","why":"hustled in Sunreach Bay"},"street":{"fish_market":[["a cook flips a whole grilled fish in the air and the crowd applauds","two stallholders shout prices at each other in a bidding war"],["a lantern-lit queue for the famous crab-in-chilli stall winds round the block","a cook breathes a puff of fire to sear a tray of prawns"]],"sea_dock":[["a fishing boat comes in with a swordfish longer than the boat","a tour crew calls the next departure with a conch"],["the fleet comes in under its lamps, gulls screaming"]],"coral_beach":[["a beach volleyball match draws a crowd of shouting tourists","a child buries their father to the neck in sand"],["fire dancers spin burning chains to drums","a beach club throws coloured rune-light across the waves"]],"sunpier":[["a stuffed-prize game hands out its biggest prize and the whole pier cheers","the Gull Run stalls at the top for a breathless moment, then drops"],["the pier lights flick on end to end in one long run","a fortune teller calls out to {{user}} by a guess at their name"]],"tidehouse_aquarium":[["the old turtle swims right over the tunnel and everyone ducks"],["the jellyfish tank glows violet and a couple goes very quiet"]],"sunreach_crossing":[["a troupe of street dancers takes over one corner of the crossing","a painter on a rope swing repaints a giant banner"],["the crossing keepers drop their flags and a thousand people cross at once","a busker draws a ring of people with a song from Yozakura"]],"velvet_lanes":[["a shutter goes up and a bleary bartender squints at the daylight"],["a tout tries three languages on {{user}} in one breath","a singing room spills a terrible duet into the alley"]],"golden_tide":[["a gambler who never went to bed counts his last coins on the steps"],["the fountains leap higher than the tower in time to the orchestra"]],"plaza_dourada":[["an old man feeds pigeons on the wave mosaic","the custard tarts come out of the oven and a queue forms at once"],["a gold-lit fountain draws tourists drifting in from the tables"]],"the_terraces":[["a woman lowers a basket on a rope from a stilt house to a stall below","locals slam dominoes on a café table"],["hot-pot steam rises from every landing","the whole hillside lights up layer by layer"]],"skyrail":[["a cable car sways in the wind and everyone inside grabs a strap"],["a lit cabin swings past an open window and the family inside waves"]],"old_fort":[["a goat stares down {{user}} from a cannon"],["shooting stars over the dark summit"]],"the_lagoon":[["a raft tips over and its passengers fall in laughing"],["slow music from the bar on stilts drifts over the black water"]],"reef_gardens":[["a pearl diver surfaces holding up a pearl for the boat to see","a shoal of blue fish turns all at once under the glass"]],"shell_cove":[["a hermit crab drags a too-big shell across the pink sand"]],"the_lighthouse":[["the keeper starts a storm story nobody asked for"],["the beam sweeps over {{user}} and out to sea"]],"sunset_cliffs":[["a local dives from the highest ledge and the crowd holds its breath","the sun touches the sea and the whole crowd goes quiet"]],"glowtide_grotto":[["the boatman sings and the echo comes back in three voices","a hand trailed in the pool leaves a wake of light"]]},"sea":["a pod of dolphins races the bow for a mile","a whale surfaces close enough to hear it breathe, then shows its tail","a shoal of flying fish skims away over the swell","a giant sea turtle drifts past, older than the city","a storm walks along the horizon, never coming closer","a foreign merchant ship passes under full sail and dips its flag","a crew member hooks something huge on a deep-sea line, and it takes the whole line"],"leviathan":"far out, the sea humps up into a back the size of an island, grey and barnacled, rises, rolls, and sinks again; the swell reaches the boat a long minute later, and the crew turns for home without a word","meet":{"rivals":{"Lucius":[["plaza_dourada","tidehouse_aquarium"],["sunreach_crossing"]],"Ines":[["old_fort","the_lighthouse"],["tidehouse_aquarium"]],"Bram":[["tidehouse_aquarium","reef_gardens"],["the_lagoon"]],"Dex":[["sunreach_crossing"],["velvet_lanes","golden_tide"]],"Elion":[["fish_market","the_terraces"],["plaza_dourada"]],"Kira":[["sunset_cliffs","coral_beach"],["sunpier"]],"Mirelle":[["the_lagoon","coral_beach"],["the_lagoon"]],"Theodore":[["fish_market","sunpier"],["plaza_dourada"]],"Bellatrix":[["sunreach_crossing"],["velvet_lanes","golden_tide"]],"Cassius":[["old_fort","skyrail"],["plaza_dourada"]],"Morgana":[["glowtide_grotto","the_lighthouse"],["old_fort","glowtide_grotto"]],"Pip":[["tidehouse_aquarium","shell_cove"],["sunpier"]]},"halvard":{"Irene":[["tidehouse_aquarium","plaza_dourada"],["plaza_dourada","the_hanabira"]],"Caspian":[["plaza_dourada","fish_market"],["sunreach_crossing","plaza_dourada"]],"Etnie":[["coral_beach","sunpier"],["coral_beach","sunreach_crossing"]],"Royhan":[["the_terraces","fish_market"],["the_hanabira"]],"Lenna":[["coral_beach","tidehouse_aquarium"],["fish_market"]],"Saffi":[["coral_beach","sunset_cliffs"],["coral_beach"]],"Kanae":[["sunpier","plaza_dourada"],["tidehouse_aquarium","sunpier"]],"Idris":[["the_terraces","old_fort"],["the_terraces"]],"Aiden":[["sunreach_crossing"],["golden_tide","velvet_lanes"]],"Caralynn":[["coral_beach","sunreach_crossing"],["sunreach_crossing"]],"Zara":[["the_terraces","plaza_dourada"],["the_hanabira"]],"Percival":[["old_fort","the_lighthouse"],["fish_market"]],"Sophia":[["sunset_cliffs","open_sea"],["velvet_lanes"]],"Gareth":[["the_terraces","plaza_dourada"],["sunreach_crossing"]],"Trixie":[["sunpier","sunreach_crossing"],["sunpier","coral_beach"]],"Vera":[["reef_gardens","glowtide_grotto"],["glowtide_grotto"]],"Dante":[["coral_beach","the_lagoon"],["the_hanabira"]],"Castor":[["old_fort","shell_cove"],["old_fort"]],"Ruby":[["sunpier","plaza_dourada"],["coral_beach"]],"Florian":[["golden_tide","coral_beach"],["velvet_lanes","golden_tide"]],"Alyssa":[["the_lighthouse","tidehouse_aquarium"],["the_hanabira"]],"Tilly":[["glowtide_grotto","the_lighthouse"],["glowtide_grotto","old_fort"]],"Linus":[["sunreach_crossing","fish_market"],["fish_market"]],"Maple":[["tidehouse_aquarium","skyrail"],["skyrail"]],"Nerys":[["fish_market","skydock"],["sunpier"]],"Hadrian":[["plaza_dourada","skyrail"],["plaza_dourada"]],"Wren":[["sea_dock","the_lagoon"],["coral_beach"]],"Tsubaki":[["old_fort","sunset_cliffs"],["old_fort"]],"Aurelian":[["coral_beach","sunreach_crossing"],["sunreach_crossing"]],"William":[["the_lighthouse","old_fort"],["skyrail"]],"Bruno":[["sunset_cliffs","fish_market"],["velvet_lanes"]],"Bianca":[["coral_beach","sunreach_crossing"],["coral_beach","velvet_lanes"]],"Rigel":[["fish_market","open_sea"],["fish_market"]],"Topaz":[["coral_beach","sunset_cliffs"],["sunpier"]],"Faye":[["the_lagoon","shell_cove"],["the_lagoon"]]}},"climate":{"label":"warm south","salt":"s","temp":[27,31,26],"sky":[{"Clear":70,"Cloudy":25,"Fog":5},{"Clear":50,"Cloudy":20,"Rain":25,"Storm":5},{"Clear":70,"Cloudy":25,"Rain":5}],"rain":{"light":50,"steady":35,"heavy":15}}};
+function makeArea(key, D, o = {}) {
+  const A = { key, D, area: D.area, R: D.rates || {}, PL: Object.fromEntries((D.places || []).map(p => [p.id, p])),
+    PIN: Object.fromEntries((D.pins || []).map(p => [p.id, p])), NB: areaNb(D.legs), NAME: {}, ALIAS: {}, RT: {},
+    words: [], in: null, arrive: '', aliasDetail: false, modes: {}, ...o };
+  if (!A.in) A.in = A.words;
+  for (const p of D.places || []) { A.NAME[avKey(p.name)] = p.id; for (const a of p.aliases || []) A.ALIAS[avKey(a)] = p.id; }
+  for (const p of D.pins || []) { const k = avKey(p.name); if (!A.NAME[k]) A.NAME[k] = A.ALIAS[k] || D.places.find(x => x.pin === p.id).id; }
+  A.routes = from => A.RT[from] || (A.RT[from] = areaRoutes(A.NB, from, A.blocked && (id => A.blocked(A, id))));
+  A.path = (a, b) => areaPath(A.routes(a), a, b);
+  A.min = (a, b) => areaMin(A.PL, A.routes, a, b);
+  return A;
 }
-const expPath = (a, b) => { const R = expRoutes(a); if (!R[b]) return []; const p = [b]; while (p[0] !== a) p.unshift(R[p[0]].prev); return p; };
+const avKey = x => String(x || '').trim().toLowerCase().replace(/[.!]+$/, '').replace(/^the /, '');
+const AR = {
+  forest: makeArea('forest', EXP, { salt: 'exp', words: [String(EXP.area || '').toLowerCase()], arrive: 'base_camp' }),
+  avalon: makeArea('avalon', AV, { salt: 'av', words: ['avalon', 'capital'], in: ['avalon'], arrive: 'skyport', blocked: (A, id) => A.PIN[id].locked,
+    modes: { carriage: { fare: num((AV.rates || {}).ride_coin, 10), name: 'hire carriage', line: 'Hire carriage', why: 'hire carriage in Avalon' } },
+    crowd: { pin: 'square', note: ' (holiday crowds at Crown Square)' }, theft: ['pick', 'pseen', 'pamt'], street: ['street', 'strt'] }),
+  airship: makeArea('airship', AIR, { salt: 'air', words: ['airship'], arrive: AIR.board, aliasDetail: true }),
+  sunreach: makeArea('sunreach', SR, { salt: 'sr', words: ['sunreach bay', 'sunreach'], arrive: SR.arrive, aliasDetail: true,
+    modes: { carriage: { fare: num((SR.rates || {}).carriage, 6), name: 'carriage', line: 'Horse carriage', why: 'horse carriage, Sunreach Bay' },
+      boat: { fare: num((SR.rates || {}).boat, 6), name: 'water taxi', line: 'Water taxi', why: 'water taxi, Sunreach Bay', shore: true },
+      tour: { fare: num((SR.rates || {}).tour, 15), name: 'tour boat', line: 'Tour boat', why: 'tour boat, Sunreach Bay' } },
+    theft: ['hus', 'hseen', 'hamt'], street: ['st', 'stt'] }),
+};
+// The place a Location names in area A, or ''. A place's (or pin's) own name always counts; the short aliases ("the market", "the
+// bar") only inside the area: a place there before (prev), one of its "in" words in the Location, or aboard. A bare area name keeps
+// the place before (on arrival: A.arrive).
+function areaPlace(A, loc, prev, aboard) {
+  const segs = locParts(loc).map(avKey).filter(Boolean), had = !!(prev && A.PL[prev]);
+  const inside = had || !!aboard || segs.some(x => A.in.includes(x));
+  for (let i = segs.length - 1; i >= 0; i--) { const id = A.NAME[segs[i]] || (inside && A.ALIAS[segs[i]]); if (id) return id; }
+  return segs.some(x => A.words.includes(x)) ? (had ? prev : A.arrive) : '';
+}
+// "<Area> — <place>" plus any detail the story wrote (an alias stays as a detail after the place's own name where aliasDetail)
+function areaLoc(A, loc, id) {
+  const segs = locParts(loc).map(x => x.trim()), named = segs.some(x => A.NAME[avKey(x)] === id);
+  const extra = segs.filter(x => { const k = avKey(x); return x && !A.NAME[k] && !(A.ALIAS[k] && !(A.aliasDetail && named)) && !A.words.includes(k) && !(A.drop && A.drop.has(k)); });
+  return [A.area, A.PL[id].name, ...extra].join(' — ');
+}
+// 3.7: an area's own weather for a time block (D.climate: sky and rain weights, temperatures, a rare sight; salt keeps the old rolls).
+// An area with no climate of its own (Avalon, the airship) has Halvard's sky.
+function areaWx(A, seed, day, b) {
+  const W = A.D.climate, s = W.salt, pick = (o, salt) => { const ks = Object.keys(o), tot = ks.reduce((a, k) => a + o[k], 0); let r = hash32(seed, day, b, salt) % tot; for (const k of ks) { if (r < o[k]) return k; r -= o[k]; } return ks[0]; };
+  const sky = pick(W.sky[b], s + 'sky'), wet = sky === 'Rain' || sky === 'Storm', R = W.rare;
+  return { sky, rain: wet ? pick(W.rain, s + 'rain') : '', snow: false, wind: sky === 'Storm' ? 'windy' : '',
+    rare: R && sky === R.sky && d100(seed, day, b, s + 'rare') >= R.at ? R.text : '', temp: W.temp[b] + hash32(seed, day, b, s + 'temp') % 3 - 1 };
+}
+// the weather block at (day, b) where {{user}} is: the area's climate, else Halvard's
+const wxWhere = (A, seed, day, b) => (A && A.D.climate ? areaWx(A, seed, day, b) : wxDay(seed, day).blocks[b]);
+// once per hour since the last update in area A (at most rates.max_rolls), not asleep: fn(h); fn returning false stops
+function areaHours(c, A, ok, fn) {
+  const { hasB, toolEdit, elapsed, absA, absB, restedAs } = c;
+  if (!(hasB && !toolEdit && elapsed > 0 && ok && restedAs !== 'sleep')) return;
+  const h1 = Math.floor(absA / 60);
+  for (let h = Math.max(Math.floor(absB / 60) + 1, h1 - num(A.R.max_rolls, 6) + 1); h <= h1; h++) if (fn(h) === false) break;
+}
+const areaRoll = (c, A, h, at, k) => roll100(c.seed, A.salt, h, at, k);
+// a street sight at place `at` (pool), once per update (got): a colour-only line for <now>
+function areaStreet(c, A, h, at, pool, got, evs) {
+  if (got.has('street') || !(pool || []).length) return;
+  const t = rollTable(pool, { roll: [c.seed, A.salt, h, at, A.street[0]], pct: num(A.R.street, 20) * lifeX(c.TU), pick: [c.seed, A.salt, h, at, A.street[1]] });
+  if (t !== null) { got.add('street'); evs.push({ k: 'street', t }); }
+}
+// 3.1: one theft (Avalon's pickpockets, Sunreach's hustlers; D.theft: where, rate, seen, min, max, cap, once, the event and its
+// wording): seen through half the time; otherwise a share of the coin {{user}} carries, through the ledger
+function areaTheft(c, A, h, at, got, evs) {
+  const T = A.D.theft || {}, [kr, ks, ka] = A.theft, { S, seed, jnl } = c;
+  if (!(T.where || []).includes(at) || (T.once && got.has('theft')) || areaRoll(c, A, h, at, kr) >= num(T.rate, 8) * lifeX(c.TU)) return;
+  if (T.once) got.add('theft');
+  const caught = areaRoll(c, A, h, at, ks) < num(T.seen, 50), pct = rollInt(num(T.min, 10), num(T.max, 25), seed, A.salt, h, ka);
+  const lost = caught ? 0 : Math.min(num(T.cap, 300), Math.round(num(S.Player.Wallet.Coin, 0) * pct / 100));
+  if (lost) {
+    ledger(c, 'Coin', -lost, T.why);
+    jnl.push(`${A.area}: ${T.who} took ${lost} coin from {{user}} at ${A.PL[at].name}.`); S.$ui.toasts.push(`${T.toast}: -${lost} coin`);
+  }
+  evs.push({ k: T.ev, caught, lost, empty: !caught && !lost });
+}
+// a move inside area A from prev to at: inside one pin a few minutes, between pins the shortest way. want: a mode the narrator asked
+// for (carriage, or a boat between two shore pins): half the land minutes, its fare, no stamina. A tour leg (the 4th field of a leg)
+// has its own minutes and fare and is the only way across; without the coin the move is refused (returns false). A crowd leg (touching
+// A.crowd.pin while crowded) is slower, ride or not. Stamina: rates.walk_pct an hour on foot. X.owe: the minutes the clock still owes.
+function areaMove(c, A, X, prev, at, want, crowded, evs) {
+  const { S, log, elapsed, V } = c, R = A.R, coinNow = () => num(S.Player.Wallet.Coin, 0);
+  const pA = A.PL[prev].pin, pB = A.PL[at].pin, path = pA === pB ? [] : A.path(pA, pB);
+  let land = pA === pB ? A.min(prev, at) : 0, crowd = 0, tourM = 0, tours = 0;
+  for (let i = 1; i < path.length; i++) {
+    const [, lm, tour] = A.NB[path[i - 1]].find(x => x[0] === path[i]);
+    if (tour) { tourM += lm; tours++; } else if (crowded && (path[i - 1] === A.crowd.pin || path[i] === A.crowd.pin)) crowd += lm * num(R.crowd_mult, 1.5); else land += lm;
+  }
+  const Tm = A.modes.tour, fare = tours * (Tm ? Tm.fare : 0);
+  if (tours && coinNow() < fare) { log.push(`The ${Tm.name} costs ${Tm.fare} coin and {{user}} has ${coinNow()}: no boat, so World.Location was kept at ${A.PL[prev].name}.`); return false; }
+  if (fare) ledger(c, 'Coin', -fare, Tm.why);
+  const ends = [path.find(p => !(A.PIN[p] || {}).sea) || pA, [...path].reverse().find(p => !(A.PIN[p] || {}).sea) || pB];
+  const kind = !want || pA === pB || !(land + crowd) ? '' : want === 'boat' && A.modes.boat && ends.every(p => A.PIN[p] && A.PIN[p].shore) ? 'boat' : A.modes.carriage ? 'carriage' : '';
+  const Md = kind ? A.modes[kind] : null, byRide = !!Md && coinNow() >= Md.fare;
+  if (Md && !byRide) log.push(`A ${Md.name} costs ${Md.fare} coin and {{user}} has ${coinNow()}: they walked.`);
+  if (byRide) ledger(c, 'Coin', -Md.fare, Md.why);
+  const total = Math.round(tourM + crowd + (byRide ? land / 2 : land)), walked = pA === pB ? 0 : crowd + (byRide ? 0 : land), cost = walked / 60 * num(R.walk_pct, 5);
+  if (cost) V.Stamina -= cost / 100 * num(V.Stamina_max, 100);
+  X.owe = Math.max(0, Math.round(total + num(X.owe, 0) - elapsed));
+  const via = path.length > 2 ? ` via ${path.slice(1, -1).map(p => A.PIN[p].name).join(', ')}` : '';
+  log.push(`${byRide ? Md.line : tours && !land ? Tm.line : 'Walked'} ${A.PL[prev].name} → ${A.PL[at].name}${via}: ${total} min${byRide ? `, -${Md.fare} coin` : ''}${fare ? `, ${Tm.name} -${fare} coin` : ''}${cost ? `, -${Math.round(cost)}% stamina` : ''}${crowd ? A.crowd.note : ''}${X.owe ? `; ${X.owe} min of the way are still ahead` : ''}.`);
+  evs.push({ k: 'walk', m: total, ride: byRide ? kind : '', tour: tours > 0, owe: X.owe });
+  return true;
+}
+// the places of area A seen so far (kept in $ui), and the walks and places nearby for <now> and the Map
+const areaSeen = (A, U0) => (Array.isArray((U0 || {}).seen) ? U0.seen.filter(id => A.PL[id]) : []);
+function areaNear(A, at, pinOk, placeOk) {
+  const pin = A.PL[at].pin, R0 = A.routes(pin);
+  return { pin, pinName: A.PIN[pin].name, walks: A.D.pins.filter(p => p.id !== pin && pinOk(p)).map(p => [p.id, p.name, R0[p.id].w]).sort((a, b) => a[2] - b[2]),
+    near: A.D.places.filter(p => p.pin === pin && p.id !== at && placeOk(p)).map(p => [p.name, A.min(at, p.id)]) };
+}
+
+// ---- the Grand Vast Forest (1.38.0, owner-approved planning/DRAFT_outside_maps.md, part 1): the Creature Studies Expedition's map.
+// While the Expedition is on, World.Location is "Grand Vast Forest — <place>" in the forest map's words. stepExpedition charges
+// stamina for every walk and counts search hours per place; once per search hour it rolls the assigned target (only where it lives),
+// signs that point towards it, other beasts and the Wendigo. The narrator plays only what <now> says.
+AR.forest.drop = new Set((EXP.wild_words || []).map(w => w.replace(/^the /, '')));
 const expEvent = () => EVENTS.find(e => String(e.t || '').startsWith(EXP.event));
 const expOnDay = W => eventsOn(W).some(e => String(e.t || '').startsWith(EXP.event));
 // The forest place a Location names, or ''. A bare "Wildwood" keeps the Wildwood pin {{user}} is on, else the nearest one; a bare
 // "the forest" or "Grand Vast Forest" keeps the place before (on arrival: Base Camp). Without the area's name or a forest place
 // before, a bare "forest" is the campus Forest.
 function forestPlace(loc, prev) {
-  const s = String(loc || ''), segs = locParts(s).map(x => x.trim().toLowerCase().replace(/[.!]+$/, '').replace(/^the /, '')).filter(Boolean);
-  for (let i = segs.length - 1; i >= 0; i--) if (EXP_ALIAS[segs[i]]) return EXP_ALIAS[segs[i]];
+  const F = AR.forest, s = String(loc || ''), segs = locParts(s).map(avKey).filter(Boolean);
+  for (let i = segs.length - 1; i >= 0; i--) { const id = F.NAME[segs[i]] || F.ALIAS[segs[i]]; if (id) return id; }
   const named = new RegExp('\\b' + String(EXP.area || '-').toLowerCase() + '\\b').test(s.toLowerCase());
-  if (!segs.some(x => EXP_WILD.has(x)) || !(prev || named)) return '';
+  if (!segs.some(x => F.drop.has(x)) || !(prev || named)) return '';
   if (segs.includes('wildwood')) {
-    if (prev && EXP_PL[prev] && EXP_PL[prev].group === 'wildwood') return prev;
-    const R = expRoutes(prev && EXP_PL[prev] ? prev : 'base_camp');
-    return _.minBy(EXP.places.filter(p => p.group === 'wildwood'), p => (R[p.id] || { h: 99 }).h).id;   // a tie: the first listed (north)
+    if (prev && F.PL[prev] && F.PL[prev].group === 'wildwood') return prev;
+    const R = F.routes(prev && F.PL[prev] ? prev : 'base_camp');
+    return _.minBy(EXP.places.filter(p => p.group === 'wildwood'), p => (R[p.id] || { w: 99 }).w).id;   // a tie: the first listed (north)
   }
-  return prev && EXP_PL[prev] ? prev : 'base_camp';
-}
-function forestLoc(loc, id) {                                    // "Grand Vast Forest — <place>" plus any detail the story wrote
-  const extra = locParts(loc).map(x => x.trim()).filter(x => {
-    const k = x.toLowerCase().replace(/[.!]+$/, '').replace(/^the /, '');
-    return x && !EXP_ALIAS[k] && !EXP_WILD.has(k) && k !== String(EXP.area || '').toLowerCase();
-  });
-  return [EXP.area, EXP_PL[id].name, ...extra].join(' — ');
+  return prev && F.PL[prev] ? prev : 'base_camp';
 }
 const expNight = abs => { const h = Math.floor((abs % DAY_MIN) / 60), R = EXP.rates || {}; return h >= num(R.night_from, 19) || h < num(R.night_to, 6); };
-function forestWx(seed, day, b) {                                 // the rainforest's weather for a time block (EXP.weather)
-  const W = EXP.weather || {}, pick = (o, salt) => { const ks = Object.keys(o), tot = ks.reduce((a, k) => a + o[k], 0); let r = hash32(seed, day, b, salt) % tot; for (const k of ks) { if (r < o[k]) return k; r -= o[k]; } return ks[0]; };
-  const sky = pick(W.sky[b], 'fsky'), wet = sky === 'Rain' || sky === 'Storm';
-  return { sky, rain: wet ? pick(W.rain, 'frain') : '', snow: false, wind: sky === 'Storm' ? 'windy' : '',
-    rare: sky === 'Storm' && d100(seed, day, b, 'frare') >= 60 ? 'lightning storm' : '', temp: W.temp[b] + hash32(seed, day, b, 'ftemp') % 3 - 1 };
-}
-// ---- 1.39.0 (owner-approved planning/DRAFT_outside_maps.md, part 2): Avalon, the capital (data/avalon.json). On Crowning Day and,
-// for Halvard's Kingdom Competition team, on its days in the capital, World.Location is "Avalon — <place>" in the city map's words.
-// Pins hold places like the campus map; walks run between pins, and a move inside one pin takes minutes. stepCapital charges the
-// walk (or a hire carriage), keeps the White Line closed except to the Kingdom winners, runs the Crowning Day muster, and rolls the
-// city's life once per hour there: pickpockets, processions, street sights, other academies' students, Tsubaki lost, Rookery raids.
-const AV = {"area":"Avalon","map":"map/avalon.webp","crowning":{"event":"Independence Crowning Day","day":"Tue","arrive":"09:30","parade":"10:00","speech":"11:00","free":"11:30","muster":"15:30","depart":"16:00","crowd_from":"10:00","crowd_to":"13:00"},"kingdom":{"matches":"09:00-18:00","free_until":"21:00","curfew":"22:00","reception":"Sat","prize":5000},"pins":[{"id":"castle","name":"Eldrasil Castle","x":50,"y":31,"locked":true},{"id":"square","name":"Crown Square","x":50,"y":57},{"id":"gate","name":"Great Gate","x":50,"y":83},{"id":"lantern","name":"Lantern Quarter","x":24,"y":56},{"id":"oldtown","name":"Old Town","x":32,"y":23},{"id":"garden","name":"Garden of Avalon","x":67,"y":27},{"id":"arena","name":"Arena Quarter","x":78,"y":56}],"legs":[["square","gate",25],["square","lantern",35],["square","arena",40],["square","oldtown",75],["square","garden",75],["square","castle",45],["gate","lantern",40],["lantern","oldtown",50],["oldtown","garden",50],["garden","arena",45],["arena","gate",35]],"places":[{"id":"eldrasil_castle","name":"Eldrasil Castle","pin":"castle","in":10,"out":false,"locked":true,"aliases":["the castle","royal castle","the palace","the throne room"]},{"id":"noble_ring","name":"Noble Ring","pin":"castle","in":5,"out":true,"locked":true,"aliases":["the noble quarter","the noble district","noble houses"]},{"id":"crown_square","name":"Crown Square","pin":"square","in":0,"out":true,"aliases":["the square","the plaza","the parade stands","the stands","crown avenue","the white line"]},{"id":"grand_cathedral","name":"Grand Cathedral","pin":"square","in":5,"out":false,"aliases":["the cathedral","the grand cathedral"]},{"id":"chancery","name":"The Chancery","pin":"square","in":5,"out":false,"aliases":["chancery","the royal inspectorate","the ministries","the courts"]},{"id":"high_dovecote","name":"High Dovecote","pin":"square","in":5,"out":false,"aliases":["the dovecote","the high dovecote","doves headquarters"]},{"id":"royal_bank","name":"Royal Bank","pin":"square","in":5,"out":false,"aliases":["the bank","the royal bank"]},{"id":"skyport","name":"Skyport","pin":"gate","in":5,"out":true,"aliases":["the skyport","the great gate","the airship dock","the docks","the muster","the landing field"]},{"id":"gilded_arcade","name":"Gilded Arcade","pin":"gate","in":5,"out":false,"aliases":["the arcade","the gilded arcade"]},{"id":"lantern_market","name":"Lantern Market","pin":"lantern","in":5,"out":true,"aliases":["the market","the lantern market","the lantern quarter","the market hall"]},{"id":"spellwright_row","name":"Spellwright Row","pin":"lantern","in":10,"out":true,"aliases":["spellwright","the magic shops"]},{"id":"old_town","name":"Old Town","pin":"oldtown","in":5,"out":true,"aliases":["the old town","the old quarter","the grey quarter"]},{"id":"rookery","name":"The Rookery","pin":"oldtown","in":10,"out":false,"hidden":true,"aliases":["rookery","the tunnels","the underbelly","the black market","the drowned rat","the cellars"]},{"id":"skywheel_fair","name":"Skywheel Fair","pin":"oldtown","in":5,"out":true,"aliases":["the fair","the fairground","the wheel","the skywheel","the carousel"]},{"id":"great_spire","name":"The Great Spire","pin":"oldtown","in":10,"out":false,"aliases":["great spire","the spire","the viewing gallery","the herald spire"]},{"id":"garden_of_avalon","name":"Garden of Avalon","pin":"garden","in":5,"out":true,"aliases":["the garden","the gardens","the statue","the archmage statue","the archmage","the reflecting pool"]},{"id":"grand_theatre","name":"Grand Theatre","pin":"garden","in":10,"out":false,"aliases":["the theatre","the opera","the opera house"]},{"id":"royal_arena","name":"Royal Arena","pin":"arena","in":5,"out":true,"aliases":["the arena","the arena quarter","the stadium","the royal arena"]},{"id":"whitestone_hotel","name":"Whitestone Hotel","pin":"arena","in":5,"out":false,"aliases":["the hotel","whitestone"]}],"rates":{"walk_pct":5,"crowd_mult":1.5,"ride_coin":10,"max_rolls":6,"pickpocket":8,"pick_seen":50,"pick_min":10,"pick_max":25,"pick_cap":300,"procession":10,"street":20,"rival":25,"tsubaki":10,"scout":15,"raid":5,"raid_escape":60},"where":{"pickpocket":["lantern_market","crown_square","skyport","old_town","skywheel_fair"],"procession":["crown_square","gilded_arcade"],"rival_crowning":["crown_square","skyport","gilded_arcade","lantern_market","spellwright_row","old_town","skywheel_fair","great_spire","garden_of_avalon","grand_theatre","royal_arena","grand_cathedral","royal_bank"],"rival_kingdom":["royal_arena","whitestone_hotel"],"tsubaki":["gilded_arcade","lantern_market","spellwright_row","old_town","skywheel_fair","great_spire","garden_of_avalon","grand_theatre","royal_arena"],"scout":["royal_arena","whitestone_hotel"],"raid":["rookery"]},"street":{"crown_square":["a fire-breather working the holiday crowd by the fountains","a children's choir rehearsing the anthem on the memorial steps"],"skyport":["a merchant airship unloading crates of foreign fruit","porters racing each other with luggage carts"],"gilded_arcade":["a window display of Ardenne's new season drawing a crowd","Merryhew's staff testing a prank on passers-by"],"lantern_market":["a spice seller shouting a price war with the stall opposite","a puppet show for a ring of children"],"spellwright_row":["an enchanter demonstrating a self-sharpening knife","a dealer auctioning a battered old spellbook"],"old_town":["a fortune teller calling out to {{user}} by the colour of their vest","an old man playing a fiddle for coins under a grey arch"],"skywheel_fair":["a strongman offering a prize to anyone who can ring the bell","a couple stuck at the top of the wheel, waving"],"great_spire":["a guide pointing out each academy's direction from the gallery","pigeons scattering round the lift cage"],"garden_of_avalon":["a flower festival on the terraces in deep blue and gold","two scholars arguing loudly about the Archmage's face"],"grand_theatre":["a tenor warming up on the steps before the matinee","ticket touts selling seats for the evening opera"],"royal_arena":["groundskeepers raking the sand and re-chalking the rings","a junior tournament with very loud parents"],"whitestone_hotel":["a porter mixing up two academies' luggage","reporters waiting in the lobby for any team member"]},"procession":["a noble family's carriage with outriders in house colours","a column of the Royal Guard changing posts on the White Line","a minister's carriage with Inspectorate clerks running behind"],"rivals":{"Bellatrix":1,"Bram":1,"Cassius":3,"Dex":2,"Elion":1,"Ines":3,"Kira":2,"Lucius":2,"Mirelle":3,"Morgana":2,"Pip":1,"Theodore":3}};
+// ---- Avalon, the capital (1.39.0, owner-approved planning/DRAFT_outside_maps.md, part 2). On Crowning Day and, for Halvard's Kingdom
+// Competition team, on its days in the capital, World.Location is "Avalon — <place>" in the city map's words. Pins hold places like
+// the campus map. stepCapital charges the move, keeps the White Line closed except to the Kingdom winners, runs the Crowning Day
+// muster, and rolls the city's life once per hour: pickpockets, processions, street sights, other academies' students, Tsubaki
+// lost, scouts, Rookery raids.
 const KINGDOM_PRIZE = AV.kingdom.prize;   // 1.43.0: one source with the Activities panel's Competition text
-const AV_PL = Object.fromEntries((AV.places || []).map(p => [p.id, p]));
-const AV_PIN = Object.fromEntries((AV.pins || []).map(p => [p.id, p]));
-const AV_NB = {};                                              // pin -> [[pin, minutes]]
-for (const [a, b, m] of AV.legs || []) { (AV_NB[a] = AV_NB[a] || []).push([b, m]); (AV_NB[b] = AV_NB[b] || []).push([a, m]); }
-// a place's own name (and a pin's name, for its first place) always counts; the short aliases ("the market", "the cathedral") only
-// once {{user}} is in Avalon or the Location names it, so the campus Cathedral never turns into the Grand Cathedral
-const AV_NAME = {}, AV_ALIAS = {};
-const avKey = x => String(x || '').trim().toLowerCase().replace(/[.!]+$/, '').replace(/^the /, '');
-for (const p of AV.places || []) { AV_NAME[avKey(p.name)] = p.id; for (const a of p.aliases || []) AV_ALIAS[avKey(a)] = p.id; }
-for (const p of AV.pins || []) if (!AV_NAME[avKey(p.name)]) AV_NAME[avKey(p.name)] = AV.places.find(x => x.pin === p.id).id;
-const AV_ROUTES = {};
-function avRoutes(from) {                                        // shortest walks between pins (minutes); the castle is no way through
-  if (AV_ROUTES[from]) return AV_ROUTES[from];
-  const d = { [from]: { m: 0, prev: '' } }, done = new Set();
-  for (;;) {
-    let u = null; for (const k in d) if (!done.has(k) && (u === null || d[k].m < d[u].m)) u = k;
-    if (u === null) break; done.add(u);
-    if (u !== from && AV_PIN[u].locked) continue;
-    for (const [v, m] of AV_NB[u] || []) if (!d[v] || d[u].m + m < d[v].m) d[v] = { m: d[u].m + m, prev: u };
-  }
-  return (AV_ROUTES[from] = d);
-}
-const avPinPath = (a, b) => { const R = avRoutes(a); if (!R[b]) return []; const p = [b]; while (p[0] !== a) p.unshift(R[p[0]].prev); return p; };
-const avMin = (a, b) => a === b ? 0 : AV_PL[a].pin === AV_PL[b].pin ? Math.max(5, num(AV_PL[a].in, 5) + num(AV_PL[b].in, 5)) : (avRoutes(AV_PL[a].pin)[AV_PL[b].pin] || { m: 999 }).m;
 const avCrown = W => eventsOn(W).some(e => String(e.t || '').startsWith(AV.crowning.event));
 const avKingdom = (W, S) => eventsOn(W).some(e => e.kingdom) && ((S && S.Competition) || {}).Tier === 'Kingdom';
 const avPass = S => ((S.$eng && S.$eng.prizes) || []).includes(`Kingdom-Y${num(S.World.Year, 1)}`) && avKingdom(S.World, S);
-// The Avalon place a Location names, or ''. "Avalon" or "the capital" alone keeps the place before (on arrival: the Skyport).
-function avPlace(loc, prev) {
-  const s = String(loc || ''), segs = locParts(s).map(avKey).filter(Boolean);
-  const inside = !!(prev && AV_PL[prev]) || segs.includes('avalon');
-  for (let i = segs.length - 1; i >= 0; i--) { const id = AV_NAME[segs[i]] || (inside && AV_ALIAS[segs[i]]); if (id) return id; }
-  return segs.includes('avalon') || segs.includes('capital') ? (prev && AV_PL[prev] ? prev : 'skyport') : '';
-}
-function avLoc(loc, id) {                                        // "Avalon — <place>" plus any detail the story wrote
-  const extra = locParts(loc).map(x => x.trim()).filter(x => { const k = avKey(x); return x && !AV_NAME[k] && !AV_ALIAS[k] && k !== 'avalon' && k !== 'capital'; });
-  return [AV.area, AV_PL[id].name, ...extra].join(' — ');
-}
-// ---- 1.40.0 (owner-approved planning/DRAFT_airship.md): the academy's airship flights (data/airship.json). While a flight is in the
-// air World.Location is "Airship — <place>" (Promenade Deck, Common Room, Cabin Deck, Cargo Hold): a closed place until it lands.
+// ---- the airship (1.40.0, owner-approved planning/DRAFT_airship.md): every academy flight. While a flight is in the air
+// World.Location is "Airship — <place>" (Promenade Deck, Common Room, Cabin Deck, Cargo Hold): a closed place until it lands.
 // Boarding puts {{user}} in the Common Room; a Location that still says the airship after landing becomes the flight's destination.
 // stepAirship rolls the sky, the stage and the hold once per hour aboard; <now> gives the view, the landing time and the bar's rule.
-const AIR = {"area":"Airship","board":"common_room","move_min":2,"bath":{"place":"cabin_deck","words":"bath|bathing|washroom|soak","min":10,"clears":["Soaked","Chilled"]},"rates":{"sky":15,"stage":30,"hold":30,"max_rolls":6},"flights":[{"id":"exp_out","m":2,"w":3,"d":"Wed","from":"07:00","to":"12:00","who":"all","route":"forest","dir":"out","event":"the Creature Studies Expedition","dest":"Grand Vast Forest — Base Camp","lands":"Base Camp, at the Grand Vast Forest's southern edge","bar":false},{"id":"exp_home","m":2,"w":3,"d":"Fri","from":"13:00","to":"18:00","who":"all","route":"forest","dir":"home","event":"the Creature Studies Expedition","dest":"Grassy Field and Hills","lands":"Halvard, at the edge of the grounds","bar":false},{"id":"crown_out","m":4,"w":2,"d":"Tue","from":"07:30","to":"09:30","who":"all","route":"avalon","dir":"out","event":"Independence Crowning Day","dest":"Avalon — Skyport","lands":"the Skyport, Avalon","bar":true},{"id":"crown_home","m":4,"w":2,"d":"Tue","from":"16:00","to":"18:00","who":"all","route":"avalon","dir":"home","event":"Independence Crowning Day","dest":"Grassy Field and Hills","lands":"Halvard, at the edge of the grounds","bar":true},{"id":"kd_out","m":9,"w":4,"d":"Tue","from":"08:00","to":"10:00","who":"kingdom","route":"avalon","dir":"out","event":"the Kingdom Competition (Halvard's team and Gavlan Haverton only)","dest":"Avalon — Skyport","lands":"the Skyport, Avalon","bar":false},{"id":"kd_home","m":9,"w":4,"d":"Sun","from":"16:00","to":"18:00","who":"kingdom","route":"avalon","dir":"home","event":"the Kingdom Competition (Halvard's team and Gavlan Haverton only)","dest":"Grassy Field and Hills","lands":"Halvard, at the edge of the grounds","bar":true},{"id":"trip_out","m":11,"w":2,"d":"Sat","from":"07:00","to":"20:00","who":"all","route":"sunreach","dir":"out","event":"the Academy Trip","dest":"Sunreach Bay — Skydock","lands":"the Skydock, Sunreach Bay","bar":false},{"id":"trip_home","m":11,"w":3,"d":"Thu","from":"08:00","to":"20:00","who":"all","route":"sunreach","dir":"home","event":"the Academy Trip","dest":"Grassy Field and Hills","lands":"Halvard, at the edge of the grounds","bar":false}],"places":[{"id":"promenade_deck","name":"Promenade Deck","aliases":["promenade","the promenade","observation gallery","the observation gallery","observation deck","the bow","the windows","the glass"]},{"id":"common_room","name":"Common Room","aliases":["the common room","lounge","the lounge","canteen","the canteen","canteen counter","the canteen counter","bar","the bar","stage","the stage"]},{"id":"cabin_deck","name":"Cabin Deck","aliases":["cabin","the cabin","cabins","the cabins","our cabin","bunks","the bunks","washrooms","the washrooms","bathing stalls","the bathing stalls","the baths"]},{"id":"cargo_hold","name":"Cargo Hold","aliases":["hold","the hold","cargo","the cargo","luggage","the luggage","luggage racks","the luggage racks","lower deck","the lower deck"]}],"cargo":{"forest_out":"tents, cookfires and camp gear for the Expedition","forest_home":"the Expedition's camp gear, muddier than it left","avalon_out":"the academy's banners and spare uniforms for the day","avalon_home":"the academy's banners, rolled, and whatever the students bought in Avalon","sunreach_out":"the whole academy's luggage for the Trip","sunreach_home":"more luggage than left Halvard, and the crates of what the teachers confiscated"},"views":{"forest_out":["Halvard's grounds and towers falling away behind; farmland and hedges below","the farmland thins into scrub and long empty hills","a green line on the horizon grows into the Grand Vast Forest's canopy, endless, mist rising from it"],"forest_home":["the canopy sliding away under the stern, Base Camp's meadow a pale patch at its edge","long empty hills, then farmland again","Halvard's towers on the horizon, the Bell Tower first"],"avalon_out":["Halvard's grounds falling away behind; towns and roads of the kingdom below","the roads all start bending the same way, towards the capital","Avalon ahead: a round white city on its hill, the castle at its heart and the Herald Spires standing over it"],"avalon_home":["Avalon's white wall shrinking behind, the castle last to go","the kingdom's towns and roads in the afternoon light","Halvard's towers on the horizon, the Bell Tower first"],"sunreach_out":["Halvard falling away; the kingdom's farmland, then its southern towns","the coast, then nothing but sea for hours, a sea that turns bluer the further south it goes","islands, then lights: Sunreach Bay's white beaches by day, its neon side by night"],"sunreach_home":["Sunreach's beaches and lagoons falling behind","open sea for hours, greyer and colder the further north it goes","the coast of Eldrasil, then Halvard's towers in the dark"]},"sky":{"forest":["the canopy breaks for a moment over a river so wide it looks like a lake","a flock of something large lifts out of the trees and keeps pace with the ship for a minute","the ship banks around a column of rain standing on the forest"],"avalon":["another academy's airship draws alongside, its students crowding their own promenade glass","a royal courier ship passes fast and high, gold on blue","the Herald Spires' bells reach the ship before the city does"],"sunreach":["the coast falls behind and there is nothing but sea for hours","a Yozakuran steward walks the promenade ringing a small bell: the line where the warm south begins, and sweets for everyone","flying fish, or something like them, break the water far below"],"home":["Halvard's towers show on the horizon, smaller than anyone remembers","half the ship falls asleep at once","a teacher walks the cabins counting heads early, and loses count"]},"stage":["a Yozakuran steward plays a long-necked lute, slow songs from home","two second-years from another dorm do a duel of insults in rhyme and the room keeps score","a first-year's illusion of a dragon gets away from them and loops the ceiling","a teacher borrows the stage to read out the landing order","the stage is empty and the chalkboard has one name on it: {{user}}'s cabin-mate signed them up"],"hold":["a crate shifts in its straps and something inside knocks back","the quartermaster is asleep on a coil of rope, snoring in time with the engines","two older students come down the ladder, see {{user}}, and go back up without a word","a stowaway cat from the last port watches from the top of the luggage"]};
-const AIR_PL = Object.fromEntries((AIR.places || []).map(p => [p.id, p]));
-const AIR_NAME = {}, AIR_ALIAS = {};
-for (const p of AIR.places || []) { AIR_NAME[avKey(p.name)] = p.id; for (const a of p.aliases || []) AIR_ALIAS[avKey(a)] = p.id; }
 // the flight in the air at W ({{user}} on it: the Kingdom flights only for Halvard's team), or null
 function airFlight(W, S) {
   const t = hm(W.Time); if (t == null) return null;
   return (AIR.flights || []).find(f => f.m === num(W.Month, 0) && f.w === num(W.Week, 0) && f.d === W.Day && t >= hm(f.from) && t < hm(f.to)
     && (f.who !== 'kingdom' || avKingdom(W, S || {}))) || null;
 }
-// The airship place a Location names, or ''. aboard: the aliases count too ("the bar", "our cabin"), only while a flight is in the air.
-function airPlace(loc, aboard) {
-  const segs = locParts(loc).map(avKey).filter(Boolean);
-  for (let i = segs.length - 1; i >= 0; i--) { const id = AIR_NAME[segs[i]] || ((aboard || segs[0] === 'airship') && AIR_ALIAS[segs[i]]); if (id) return id; }
-  return segs[0] === 'airship' ? AIR.board : '';
-}
-function airLoc(loc, id) {                                       // "Airship — <place>" plus any detail the story wrote ("— the bathing
-  const segs = locParts(loc).map(x => x.trim()), named = segs.some(x => AIR_NAME[avKey(x)]);   // stalls" stays after the name)
-  const extra = segs.filter(x => { const k = avKey(x); return x && !AIR_NAME[k] && !(AIR_ALIAS[k] && !named) && k !== 'airship'; });
-  return [AIR.area, AIR_PL[id].name, ...extra].join(' — ');
-}
-// ---- 1.41.0 (owner-approved planning/DRAFT_outside_maps.md, part 3): Sunreach Bay, the Academy Trip's city (data/sunreach.json),
-// FP7 area 3. From landing (M11 W2 Sat 20:00) to boarding (W3 Thu 08:00) World.Location is "Sunreach Bay — <place>". One city with
-// two faces: from 18:00 to 06:00 it is lit by rune-light (the night map, the entries' night lines). Pins hold places like Avalon;
-// stepSunreach charges walks, horse carriages and water taxis (and the tour boat to the Open Sea), settles bets at The Golden Tide,
-// and rolls the city once an hour: street sights, hustlers, students of the other academies and of Halvard where they would be by
-// their personality (data `meet`), the sea and, once in a Trip, the Leviathan far off.
-const SR = {"area":"Sunreach Bay","maps":{"day":"map/sunreach_day.webp","night":"map/sunreach_night.webp"},"night":{"from":"18:00","to":"06:00"},"window":{"m":11,"from":[2,"Sat","20:00"],"to":[3,"Thu","08:00"]},"arrive":"skydock","hotel":"the_hanabira","curfew":[22,7],"schedule":[[2,"Sun","09:00","the teachers' briefing in The Hanabira's garden"],[3,"Wed","19:00","the farewell dinner at The Hanabira, then packing"],[3,"Thu","08:00","check out and board the airship home"]],"pins":[{"id":"skydock","name":"Skydock","x":14,"y":68,"shore":true},{"id":"wharf","name":"Fisherman's Wharf","x":25,"y":50,"shore":true},{"id":"strand","name":"Coral Strand","x":44,"y":44,"shore":true},{"id":"sunpier","name":"Sunpier","x":64,"y":56,"shore":true},{"id":"crossing","name":"Sunreach Crossing","x":51,"y":31},{"id":"casino","name":"Casino Row","x":81,"y":37,"shore":true},{"id":"terraces","name":"Cliffside Terraces","x":60,"y":16},{"id":"lagoon","name":"Turquoise Lagoon","x":84,"y":77,"shore":true},{"id":"cliffs","name":"West Cliffs","x":8,"y":35,"shore":true},{"id":"sea","name":"Open Sea","x":45,"y":87}],"legs":[["skydock","wharf",10],["skydock","strand",15],["skydock","cliffs",30],["wharf","strand",15],["wharf","crossing",15],["strand","sunpier",10],["strand","crossing",10],["sunpier","casino",15],["crossing","casino",15],["crossing","terraces",15],["casino","lagoon",20],["terraces","cliffs",35],["terraces","lagoon",35],["wharf","sea",60,"tour"]],"places":[{"id":"skydock","name":"Skydock","pin":"skydock","in":5,"out":true,"aliases":["the skydock","the airship masts","customs"]},{"id":"fish_market","name":"Fish Market","pin":"wharf","in":5,"out":true,"aliases":["the fish market","the wharf","the night market stalls","the food stalls","the grills"]},{"id":"sea_dock","name":"Sea Dock","pin":"wharf","in":5,"out":true,"aliases":["the sea dock","the docks","the tour boats","the harbour"]},{"id":"the_hanabira","name":"The Hanabira","pin":"strand","in":5,"out":false,"aliases":["hanabira","the hotel","our hotel","the rooftop bath","the lobby"]},{"id":"coral_beach","name":"Coral Beach","pin":"strand","in":5,"out":true,"aliases":["the beach","coral strand","the sand"]},{"id":"sunpier","name":"Sunpier","pin":"sunpier","in":5,"out":true,"aliases":["the pier","the gull run","the carousel"]},{"id":"tidehouse_aquarium","name":"Tidehouse Aquarium","pin":"sunpier","in":5,"out":false,"aliases":["the aquarium","tidehouse"]},{"id":"sunreach_crossing","name":"Sunreach Crossing","pin":"crossing","in":5,"out":true,"aliases":["the crossing","the clock tower","the city centre","downtown"]},{"id":"velvet_lanes","name":"Velvet Lanes","pin":"crossing","in":5,"out":true,"aliases":["the velvet lanes","the lanes","the alleys","the bars"],"off":true},{"id":"golden_tide","name":"The Golden Tide","pin":"casino","in":5,"out":false,"aliases":["golden tide","the casino","the tables"],"off":true},{"id":"plaza_dourada","name":"Plaza Dourada","pin":"casino","in":5,"out":true,"aliases":["the plaza","the colonial square","the mosaic square"]},{"id":"the_terraces","name":"The Terraces","pin":"terraces","in":5,"out":true,"aliases":["cliffside terraces","the terraces","the stilt houses","the hillside town"]},{"id":"skyrail","name":"Skyrail","pin":"terraces","in":5,"out":true,"aliases":["the skyrail","the cable cars","the cable car"]},{"id":"old_fort","name":"Old Fort","pin":"terraces","in":5,"out":true,"aliases":["the old fort","the fort","the summit"]},{"id":"the_lagoon","name":"The Lagoon","pin":"lagoon","in":5,"out":true,"aliases":["turquoise lagoon","the lagoon","the rafts","the beach bar"]},{"id":"reef_gardens","name":"Reef Gardens","pin":"lagoon","in":5,"out":true,"aliases":["the reef","reef gardens","the glass-bottom boat","the coral"]},{"id":"shell_cove","name":"Shell Cove","pin":"lagoon","in":5,"out":true,"aliases":["shell cove","the cove","the pink beach"]},{"id":"the_lighthouse","name":"The Lighthouse","pin":"cliffs","in":5,"out":true,"aliases":["the lighthouse","the cliff road"]},{"id":"sunset_cliffs","name":"Sunset Cliffs","pin":"cliffs","in":5,"out":true,"aliases":["sunset cliffs","the cliffs","the diving ledges"]},{"id":"glowtide_grotto","name":"Glowtide Grotto","pin":"cliffs","in":5,"out":false,"aliases":["the grotto","glowtide","the sea cave","the cave"]},{"id":"open_sea","name":"Open Sea","pin":"sea","in":5,"out":true,"aliases":["the open sea","the tour boat","out at sea"]}],"rates":{"walk_pct":5,"carriage":6,"boat":8,"tour":15,"street":20,"hustle":8,"hustle_seen":50,"hustle_min":10,"hustle_max":25,"hustle_cap":300,"rival":25,"student":20,"sea":50,"leviathan":5,"max_rolls":6,"bet_max":200},"games":{"dice":{"win":45,"pay":2},"cards":{"win":48,"pay":2},"wheel":{"win":8,"pay":10}},"hustle":["fish_market","sunreach_crossing","velvet_lanes","sunpier"],"street":{"fish_market":[["a cook flips a whole grilled fish in the air and the crowd applauds","two stallholders shout prices at each other in a bidding war"],["a lantern-lit queue for the famous crab-in-chilli stall winds round the block","a cook breathes a puff of fire to sear a tray of prawns"]],"sea_dock":[["a fishing boat comes in with a swordfish longer than the boat","a tour crew calls the next departure with a conch"],["the fleet comes in under its lamps, gulls screaming"]],"coral_beach":[["a beach volleyball match draws a crowd of shouting tourists","a child buries their father to the neck in sand"],["fire dancers spin burning chains to drums","a beach club throws coloured rune-light across the waves"]],"sunpier":[["a stuffed-prize game hands out its biggest prize and the whole pier cheers","the Gull Run stalls at the top for a breathless moment, then drops"],["the pier lights flick on end to end in one long run","a fortune teller calls out to {{user}} by a guess at their name"]],"tidehouse_aquarium":[["the old turtle swims right over the tunnel and everyone ducks"],["the jellyfish tank glows violet and a couple goes very quiet"]],"sunreach_crossing":[["a troupe of street dancers takes over one corner of the crossing","a painter on a rope swing repaints a giant banner"],["the crossing keepers drop their flags and a thousand people cross at once","a busker draws a ring of people with a song from Yozakura"]],"velvet_lanes":[["a shutter goes up and a bleary bartender squints at the daylight"],["a tout tries three languages on {{user}} in one breath","a singing room spills a terrible duet into the alley"]],"golden_tide":[["a gambler who never went to bed counts his last coins on the steps"],["the fountains leap higher than the tower in time to the orchestra"]],"plaza_dourada":[["an old man feeds pigeons on the wave mosaic","the custard tarts come out of the oven and a queue forms at once"],["a gold-lit fountain draws tourists drifting in from the tables"]],"the_terraces":[["a woman lowers a basket on a rope from a stilt house to a stall below","locals slam dominoes on a café table"],["hot-pot steam rises from every landing","the whole hillside lights up layer by layer"]],"skyrail":[["a cable car sways in the wind and everyone inside grabs a strap"],["a lit cabin swings past an open window and the family inside waves"]],"old_fort":[["a goat stares down {{user}} from a cannon"],["shooting stars over the dark summit"]],"the_lagoon":[["a raft tips over and its passengers fall in laughing"],["slow music from the bar on stilts drifts over the black water"]],"reef_gardens":[["a pearl diver surfaces holding up a pearl for the boat to see","a shoal of blue fish turns all at once under the glass"]],"shell_cove":[["a hermit crab drags a too-big shell across the pink sand"]],"the_lighthouse":[["the keeper starts a storm story nobody asked for"],["the beam sweeps over {{user}} and out to sea"]],"sunset_cliffs":[["a local dives from the highest ledge and the crowd holds its breath","the sun touches the sea and the whole crowd goes quiet"]],"glowtide_grotto":[["the boatman sings and the echo comes back in three voices","a hand trailed in the pool leaves a wake of light"]]},"sea":["a pod of dolphins races the bow for a mile","a whale surfaces close enough to hear it breathe, then shows its tail","a shoal of flying fish skims away over the swell","a giant sea turtle drifts past, older than the city","a storm walks along the horizon, never coming closer","a foreign merchant ship passes under full sail and dips its flag","a crew member hooks something huge on a deep-sea line, and it takes the whole line"],"leviathan":"far out, the sea humps up into a back the size of an island, grey and barnacled, rises, rolls, and sinks again; the swell reaches the boat a long minute later, and the crew turns for home without a word","meet":{"rivals":{"Lucius":[["plaza_dourada","tidehouse_aquarium"],["sunreach_crossing"]],"Ines":[["old_fort","the_lighthouse"],["tidehouse_aquarium"]],"Bram":[["tidehouse_aquarium","reef_gardens"],["the_lagoon"]],"Dex":[["sunreach_crossing"],["velvet_lanes","golden_tide"]],"Elion":[["fish_market","the_terraces"],["plaza_dourada"]],"Kira":[["sunset_cliffs","coral_beach"],["sunpier"]],"Mirelle":[["the_lagoon","coral_beach"],["the_lagoon"]],"Theodore":[["fish_market","sunpier"],["plaza_dourada"]],"Bellatrix":[["sunreach_crossing"],["velvet_lanes","golden_tide"]],"Cassius":[["old_fort","skyrail"],["plaza_dourada"]],"Morgana":[["glowtide_grotto","the_lighthouse"],["old_fort","glowtide_grotto"]],"Pip":[["tidehouse_aquarium","shell_cove"],["sunpier"]]},"halvard":{"Irene":[["tidehouse_aquarium","plaza_dourada"],["plaza_dourada","the_hanabira"]],"Caspian":[["plaza_dourada","fish_market"],["sunreach_crossing","plaza_dourada"]],"Etnie":[["coral_beach","sunpier"],["coral_beach","sunreach_crossing"]],"Royhan":[["the_terraces","fish_market"],["the_hanabira"]],"Lenna":[["coral_beach","tidehouse_aquarium"],["fish_market"]],"Saffi":[["coral_beach","sunset_cliffs"],["coral_beach"]],"Kanae":[["sunpier","plaza_dourada"],["tidehouse_aquarium","sunpier"]],"Idris":[["the_terraces","old_fort"],["the_terraces"]],"Aiden":[["sunreach_crossing"],["golden_tide","velvet_lanes"]],"Caralynn":[["coral_beach","sunreach_crossing"],["sunreach_crossing"]],"Zara":[["the_terraces","plaza_dourada"],["the_hanabira"]],"Percival":[["old_fort","the_lighthouse"],["fish_market"]],"Sophia":[["sunset_cliffs","open_sea"],["velvet_lanes"]],"Gareth":[["the_terraces","plaza_dourada"],["sunreach_crossing"]],"Trixie":[["sunpier","sunreach_crossing"],["sunpier","coral_beach"]],"Vera":[["reef_gardens","glowtide_grotto"],["glowtide_grotto"]],"Dante":[["coral_beach","the_lagoon"],["the_hanabira"]],"Castor":[["old_fort","shell_cove"],["old_fort"]],"Ruby":[["sunpier","plaza_dourada"],["coral_beach"]],"Florian":[["golden_tide","coral_beach"],["velvet_lanes","golden_tide"]],"Alyssa":[["the_lighthouse","tidehouse_aquarium"],["the_hanabira"]],"Tilly":[["glowtide_grotto","the_lighthouse"],["glowtide_grotto","old_fort"]],"Linus":[["sunreach_crossing","fish_market"],["fish_market"]],"Maple":[["tidehouse_aquarium","skyrail"],["skyrail"]],"Nerys":[["fish_market","skydock"],["sunpier"]],"Hadrian":[["plaza_dourada","skyrail"],["plaza_dourada"]],"Wren":[["sea_dock","the_lagoon"],["coral_beach"]],"Tsubaki":[["old_fort","sunset_cliffs"],["old_fort"]],"Aurelian":[["coral_beach","sunreach_crossing"],["sunreach_crossing"]],"William":[["the_lighthouse","old_fort"],["skyrail"]],"Bruno":[["sunset_cliffs","fish_market"],["velvet_lanes"]],"Bianca":[["coral_beach","sunreach_crossing"],["coral_beach","velvet_lanes"]],"Rigel":[["fish_market","open_sea"],["fish_market"]],"Topaz":[["coral_beach","sunset_cliffs"],["sunpier"]],"Faye":[["the_lagoon","shell_cove"],["the_lagoon"]]}},"weather":{"temp":[27,31,26],"sky":[{"Clear":70,"Cloudy":25,"Fog":5},{"Clear":50,"Cloudy":20,"Rain":25,"Storm":5},{"Clear":70,"Cloudy":25,"Rain":5}],"rain":{"light":50,"steady":35,"heavy":15}}};
-const SR_PL = Object.fromEntries((SR.places || []).map(p => [p.id, p]));
-const SR_PIN = Object.fromEntries((SR.pins || []).map(p => [p.id, p]));
-const SR_NB = {};                                              // pin -> [[pin, minutes, tour]]
-for (const [a, b, m, t] of SR.legs || []) { (SR_NB[a] = SR_NB[a] || []).push([b, m, !!t]); (SR_NB[b] = SR_NB[b] || []).push([a, m, !!t]); }
-const SR_NAME = {}, SR_ALIAS = {};
-for (const p of SR.places || []) { SR_NAME[avKey(p.name)] = p.id; for (const a of p.aliases || []) SR_ALIAS[avKey(a)] = p.id; }
-for (const p of SR.pins || []) { const k = avKey(p.name); if (!SR_NAME[k]) SR_NAME[k] = SR_ALIAS[k] || SR.places.find(x => x.pin === p.id).id; }
-const SR_ROUTES = {};
-function srRoutes(from) {                                        // shortest ways between pins (minutes)
-  if (SR_ROUTES[from]) return SR_ROUTES[from];
-  const d = { [from]: { m: 0, prev: '' } }, done = new Set();
-  for (;;) {
-    let u = null; for (const k in d) if (!done.has(k) && (u === null || d[k].m < d[u].m)) u = k;
-    if (u === null) break; done.add(u);
-    for (const [v, m] of SR_NB[u] || []) if (!d[v] || d[u].m + m < d[v].m) d[v] = { m: d[u].m + m, prev: u };
-  }
-  return (SR_ROUTES[from] = d);
-}
-const srPinPath = (a, b) => { const R = srRoutes(a); if (!R[b]) return []; const p = [b]; while (p[0] !== a) p.unshift(R[p[0]].prev); return p; };
-const srMin = (a, b) => a === b ? 0 : SR_PL[a].pin === SR_PL[b].pin ? Math.max(5, num(SR_PL[a].in, 5) + num(SR_PL[b].in, 5)) : (srRoutes(SR_PL[a].pin)[SR_PL[b].pin] || { m: 999 }).m;
+// ---- Sunreach Bay (1.41.0, owner-approved planning/DRAFT_outside_maps.md, part 3), the Academy Trip's city, FP7 area 3. From landing
+// (M11 W2 Sat 20:00) to boarding (W3 Thu 08:00) World.Location is "Sunreach Bay — <place>". One city with two faces: from 18:00 to
+// 06:00 it is lit by rune-light (the night map, the entries' night lines). stepSunreach charges walks, horse carriages and water
+// taxis (and the tour boat to the Open Sea), settles bets at The Golden Tide, and rolls the city once an hour: street sights, hustlers,
+// students of the other academies and of Halvard where they would be by their personality (data `meet`), the sea and, once in a
+// Trip, the Leviathan far off.
 const srNight = abs => { const t = ((abs % DAY_MIN) + DAY_MIN) % DAY_MIN; return t >= hm(SR.night.from) || t < hm(SR.night.to); };
 function srWindow(W) {                                           // from the landing to the boarding home
   const Wn = SR.window || {}, Y = num(W.Year, 1), t = toAbs(W);
@@ -809,23 +851,6 @@ const awayIn = S => {
   return !!((S && S.Trip) || {}).Active || [AIR.area, AV.area, SR.area].includes(p) || (expOnDay(W) && !!forestPlace(W.Location, ''))
     || (!onCampus(W.Location) && eventsOn(W).some(e => e.away));
 };
-// The Sunreach place a Location names, or ''. Short aliases ("the beach", "the casino") only once in Sunreach.
-function srPlace(loc, prev) {
-  const s = String(loc || ''), segs = locParts(s).map(avKey).filter(Boolean);
-  const inside = !!(prev && SR_PL[prev]) || segs.some(x => x === 'sunreach bay' || x === 'sunreach');
-  for (let i = segs.length - 1; i >= 0; i--) { const id = SR_NAME[segs[i]] || (inside && SR_ALIAS[segs[i]]); if (id) return id; }
-  return inside && segs.some(x => x === 'sunreach bay' || x === 'sunreach') ? (prev && SR_PL[prev] ? prev : SR.arrive) : '';
-}
-function srLoc(loc, id) {                                        // "Sunreach Bay — <place>" plus any detail the story wrote
-  const segs = locParts(loc).map(x => x.trim()), named = segs.some(x => SR_NAME[avKey(x)] === id);
-  const extra = segs.filter(x => { const k = avKey(x); return x && !SR_NAME[k] && !(SR_ALIAS[k] && !named) && k !== 'sunreach bay' && k !== 'sunreach'; });
-  return [SR.area, SR_PL[id].name, ...extra].join(' — ');
-}
-function srWx(seed, day, b) {                                    // Sunreach's warm southern weather for a time block (SR.weather)
-  const W = SR.weather || {}, pick = (o, salt) => { const ks = Object.keys(o), tot = ks.reduce((a, k) => a + o[k], 0); let r = hash32(seed, day, b, salt) % tot; for (const k of ks) { if (r < o[k]) return k; r -= o[k]; } return ks[0]; };
-  const sky = pick(W.sky[b], 'ssky'), wet = sky === 'Rain' || sky === 'Storm';
-  return { sky, rain: wet ? pick(W.rain, 'srain') : '', snow: false, wind: sky === 'Storm' ? 'windy' : '', rare: '', temp: W.temp[b] + hash32(seed, day, b, 'stemp') % 3 - 1 };
-}
 // 1.31.0 (data/restore_places.json): the multiplier a restful place gives at one moment, [multiplier, why]. The first rule that fits
 // wins; weather conditions never fit with the weather off. dark = outside Practice's daylight hours. wxc caches a time block's weather.
 function restMult(R, abs, seed, wxOn, cold, wxc) {
@@ -1320,33 +1345,33 @@ function stepTime(c) {
   // 1.40.0: while a flight is in the air {{user}} is aboard, in the airship's words. An outbound flight boards whoever is still
   // elsewhere (the Common Room, where the crew counts heads); a flight home leaves a place in the forest or Avalon to those maps
   // until the story boards. A Location that still says the airship after landing becomes the flight's destination.
-  const sFl = airFlight(S.World, S), sPrev = hasB && placeOf(B.World.Location) === AIR.area ? airPlace(B.World.Location, true) : '';
+  const sFl = airFlight(S.World, S), sPrev = hasB && placeOf(B.World.Location) === AIR.area ? areaPlace(AR.airship, B.World.Location, '', true) : '';
   let sAt = '', sBoard = false;
   if (sFl) {
-    sAt = airPlace(S.World.Location, true);
-    if (!sAt && !(sFl.dir === 'home' && (forestPlace(S.World.Location, '') || avPlace(S.World.Location, '') || /sunreach/i.test(String(S.World.Location))))) {
+    sAt = areaPlace(AR.airship, S.World.Location, '', true);
+    if (!sAt && !(sFl.dir === 'home' && (forestPlace(S.World.Location, '') || areaPlace(AR.avalon, S.World.Location, '') || /sunreach/i.test(String(S.World.Location))))) {
       sAt = sPrev || AIR.board; sBoard = !sPrev;
-      log.push(sBoard ? `The airship for ${sFl.event} is in the air (${sFl.from}-${sFl.to}): {{user}} is aboard; World.Location was set to ${AIR.area} — ${AIR_PL[sAt].name}.`
-        : `Nobody leaves the airship until it lands (${sFl.to}): World.Location was kept at ${AIR.area} — ${AIR_PL[sAt].name}.`);
+      log.push(sBoard ? `The airship for ${sFl.event} is in the air (${sFl.from}-${sFl.to}): {{user}} is aboard; World.Location was set to ${AIR.area} — ${AR.airship.PL[sAt].name}.`
+        : `Nobody leaves the airship until it lands (${sFl.to}): World.Location was kept at ${AIR.area} — ${AR.airship.PL[sAt].name}.`);
       S.World.Location = '';
     }
-  } else if (sPrev && (placeOf(S.World.Location) === AIR.area || AIR_NAME[avKey(S.World.Location)])) {
+  } else if (sPrev && (placeOf(S.World.Location) === AIR.area || AR.airship.NAME[avKey(S.World.Location)])) {
     const bFl = airFlight(B.World, S);
     if (bFl) { log.push(`The airship has landed (${bFl.to}): World.Location was set to ${bFl.dest}.`); S.World.Location = bFl.dest; }
   }
   const fAt = !sAt && expOnDay(S.World) ? forestPlace(S.World.Location, fPrev) : '';
   // 1.39.0: in Avalon (Crowning Day; the Kingdom Competition days for Halvard's team) a city place is written in the city map's
   // words. Past the White Line (the castle pin) only the Kingdom winners go: anyone else is held at the last place before it.
-  const aPrev = hasB ? avPlace(B.World.Location, (_.isPlainObject((B.$ui || {}).capital) && B.$ui.capital.on && B.$ui.capital.at) || '') : '';
-  let aAt = !sAt && !fAt && (avCrown(S.World) || avKingdom(S.World, S)) ? avPlace(S.World.Location, aPrev) : '', aHeld = '';
-  if (aAt && AV_PL[aAt].locked && !avPass(S)) { aHeld = aAt; aAt = aPrev && !AV_PL[aPrev].locked ? aPrev : 'crown_square'; }
+  const aPrev = hasB ? areaPlace(AR.avalon, B.World.Location, (_.isPlainObject((B.$ui || {}).capital) && B.$ui.capital.on && B.$ui.capital.at) || '') : '';
+  let aAt = !sAt && !fAt && (avCrown(S.World) || avKingdom(S.World, S)) ? areaPlace(AR.avalon, S.World.Location, aPrev) : '', aHeld = '';
+  if (aAt && AR.avalon.PL[aAt].locked && !avPass(S)) { aHeld = aAt; aAt = aPrev && !AR.avalon.PL[aPrev].locked ? aPrev : 'crown_square'; }
   // 1.41.0: Sunreach Bay, from the landing to the boarding home, in the city map's words
-  const rPrev = hasB ? srPlace(B.World.Location, (_.isPlainObject((B.$ui || {}).sunreach) && B.$ui.sunreach.on && B.$ui.sunreach.at) || '') : '';
-  const rAt = !sAt && !fAt && !aAt && srWindow(S.World) ? srPlace(S.World.Location, rPrev) : '';
-  if (sAt) S.World.Location = airLoc(S.World.Location, sAt);
-  else if (fAt) S.World.Location = forestLoc(S.World.Location, fAt);
-  else if (aAt) S.World.Location = aHeld ? avLoc('', aAt) : avLoc(S.World.Location, aAt);
-  else if (rAt) S.World.Location = srLoc(S.World.Location, rAt);
+  const rPrev = hasB ? areaPlace(AR.sunreach, B.World.Location, (_.isPlainObject((B.$ui || {}).sunreach) && B.$ui.sunreach.on && B.$ui.sunreach.at) || '') : '';
+  const rAt = !sAt && !fAt && !aAt && srWindow(S.World) ? areaPlace(AR.sunreach, S.World.Location, rPrev) : '';
+  if (sAt) S.World.Location = areaLoc(AR.airship, S.World.Location, sAt);
+  else if (fAt) S.World.Location = areaLoc(AR.forest, S.World.Location, fAt);
+  else if (aAt) S.World.Location = areaLoc(AR.avalon, aHeld ? '' : S.World.Location, aAt);
+  else if (rAt) S.World.Location = areaLoc(AR.sunreach, S.World.Location, rAt);
   else if (!(S.Trip && S.Trip.Active)) S.World.Location = canonLocation(S.World.Location);
   else {
     // 1.42.0 (audit 1.2): a Trip left Active after {{user}} came home (seen off campus during it, now at a campus place on a day
@@ -1522,23 +1547,25 @@ function stepTime(c) {
 function stepWeather(c) {
   const { S, log, hasB, absB, absA, dayNo, fAt, aAt, rAt } = c;
   const WXM = S.$ui.wxfx, seed = S.$eng.seed, TU = tuneOf(S);
-  // 1.38.0: in the Grand Vast Forest the weather is the rainforest's (forestWx) and its effects apply as on campus.
+  // 1.38.0: in the Grand Vast Forest the weather is the rainforest's and its effects apply as on campus; 1.41.0: Sunreach has its own.
+  // 1.46.0 (audit 3.7): an area's climate profile (data climate, areaWx); WA is that area for every later weather effect (sleep, toasts).
   // 1.39.0: Avalon has the kingdom's weather of the day (Halvard's), and its effects apply there too
-  const away = /^Away from campus/.test(S.World._Curfew || '') && !fAt && !aAt && !rAt;   // 1.41.0: Sunreach has its own weather
+  const WA = fAt ? AR.forest : rAt ? AR.sunreach : null;
+  const away = /^Away from campus/.test(S.World._Curfew || '') && !fAt && !aAt && !rAt;
   let wxNow = null;                                            // wxNow: the block whose effects apply (Full, on campus)
   if (WXM === 'off') { S.World._Season = ''; S.World._Weather = ''; S.$ui.wx = null; }
   else {
-    const [wd, wb] = blockOf(absA), D = wxDay(seed, wd), bk = fAt ? forestWx(seed, wd, wb) : rAt ? srWx(seed, wd, wb) : D.blocks[wb];
+    const [wd, wb] = blockOf(absA), D = wxDay(seed, wd), bk = WA ? areaWx(WA, seed, wd, wb) : D.blocks[wb];
     const lab = x => ({ ...x, label: tempLabel(x.temp) });
     S.World._Season = D.season;
-    S.World._Weather = away ? "Away: local weather is the narrator's call" : rAt ? `${_.capitalize(BLOCKS[wb])}, ${SR.area} (warm south): ${wxText(bk)}, ${bk.temp} °C (${tempLabel(bk.temp)})` : fAt ? `${_.capitalize(BLOCKS[wb])}, ${EXP.area} (rainforest): ${wxText(bk)}, ${bk.temp} °C (${tempLabel(bk.temp)})`
+    S.World._Weather = away ? "Away: local weather is the narrator's call" : WA ? `${_.capitalize(BLOCKS[wb])}, ${WA.area} (${WA.D.climate.label}): ${wxText(bk)}, ${bk.temp} °C (${tempLabel(bk.temp)})`
       : `${_.capitalize(BLOCKS[wb])}, ${D.season.toLowerCase()}${aAt ? ', ' + AV.area : ''}: ${wxText(bk)}, ${bk.temp} °C (${tempLabel(bk.temp)})`;
     const fday = (absA % DAY_MIN) >= 7 * 60 ? dayNo + 1 : dayNo;   // posted daily at 07:00 for the next day
-    S.$ui.wx = { mode: WXM, season: D.season, away, forest: !!fAt, block: wb, now: lab(bk), text: wxText(bk), blocks: (fAt ? [0, 1, 2].map(b => forestWx(seed, wd, b)) : rAt ? [0, 1, 2].map(b => srWx(seed, wd, b)) : D.blocks).slice(0, wb + 1).map(lab),
+    S.$ui.wx = { mode: WXM, season: D.season, away, forest: !!fAt, block: wb, now: lab(bk), text: wxText(bk), blocks: (WA ? [0, 1, 2].map(b => areaWx(WA, seed, wd, b)) : D.blocks).slice(0, wb + 1).map(lab),
       fc: { day: fday, tomorrow: fday > dayNo, blocks: wxForecast(seed, fday) }, flu: false, sick: [], field: '' };
     if (WXM === 'full' && !away) {
       wxNow = bk;
-      if (!fAt && !rAt && fluOn(seed, dayNo)) {                          // a cold is going around: 1-2 seeded students off sick today
+      if (!WA && fluOn(seed, dayNo)) {                          // a cold is going around: 1-2 seeded students off sick today
         const pool = Object.keys(STUDENTS).filter(id => (STUDENTS[id][1] || 1) <= S.World.Year && yearOf(id, S.World.Year) <= 3 && !(S.Campus_State.Graduated || []).includes(id)).sort();
         const sick = [];
         for (let k = 0, n = rollInt(1, 2, seed, dayNo, 'sickn'); k < n && pool.length; k++) sick.push(pool.splice(rollInt(0, pool.length - 1, seed, dayNo, k, 'sick'), 1)[0]);
@@ -1550,7 +1577,7 @@ function stepWeather(c) {
       }
     }
     if (hasB && bk.rare && !away) {                              // a rare event: toast + log when it begins
-      const [bd, bb] = blockOf(absB), b0 = fAt ? forestWx(seed, bd, bb) : rAt ? srWx(seed, bd, bb) : wxDay(seed, bd).blocks[bb];   // 1.42.0: Sunreach too
+      const [bd, bb] = blockOf(absB), b0 = wxWhere(WA, seed, bd, bb);   // 1.42.0: Sunreach too
       if ((bd !== wd || bb !== wb) && b0.rare !== bk.rare) { S.$ui.toasts.push(`Weather: ${bk.rare}`); log.push(`Rare weather: ${wxText(bk)}.`); }
     }
   }
@@ -1559,7 +1586,7 @@ function stepWeather(c) {
   if (WXM !== 'off') for (const id of Object.keys(NPC_MOODS)) if ((ARRIVES[id] || 1) <= S.World.Year && (S.Bonds[id] || (S.Scene.Present || {})[id]))
     S.$ui.moods[id] = moodOf(id, S, S.$ui.wx && !S.$ui.wx.away ? S.$ui.wx.now : null, dayNo);
   S.$ui.party = birthdayParty(S);
-  Object.assign(c, { WXM, seed, TU, wxNow });
+  Object.assign(c, { WXM, seed, TU, wxNow, WA });
 }
 
 // ---- 2. magic: casts ----
@@ -1778,7 +1805,7 @@ function stepRest(c) {
     const h = elapsed / 60;
     let stMul = wxNow && Cn.Soaked ? 0.5 : 1;
     if (V.Resting === 'sleep' && wxNow) {
-      const [sd, sb] = blockOf(absB), nd = sb === 2 ? sd : Math.floor(absB / DAY_MIN), nb = fAt ? forestWx(seed, nd, 2) : rAt ? srWx(seed, nd, 2) : wxDay(seed, nd).blocks[2];   // the night of the sleep (1.42.0: Sunreach's own)
+      const [sd, sb] = blockOf(absB), nd = sb === 2 ? sd : Math.floor(absB / DAY_MIN), nb = wxWhere(c.WA, seed, nd, 2);   // the night of the sleep (1.42.0: Sunreach's own)
       stMul *= 1 + (nb.sky === 'Rain' && !nb.snow && nb.rain !== 'heavy' ? 0.1 : 0) - (nb.sky === 'Storm' ? 0.2 : 0) - (nb.temp >= 22 ? 0.1 : 0);
     }
     if (V.Resting === 'sleep') {
@@ -1909,13 +1936,13 @@ function stepExposure(c) {
 function stepExpedition(c) {
   const { S, B, log, jnl, hasB, toolEdit, absA, elapsed, seed, V, restedAs, fAt, fPrev, WXM } = c;
   const R = EXP.rates || {}, Y = num(S.World.Year, 1), U0 = _.isPlainObject(S.$ui.forest) ? S.$ui.forest : {};
-  const seen = Array.isArray(U0.seen) ? U0.seen.filter(id => EXP_PL[id]) : [], hist = _.isPlainObject(U0.hist) ? _.cloneDeep(U0.hist) : {};
+  const F = AR.forest, seen = areaSeen(F, U0), hist = _.isPlainObject(U0.hist) ? _.cloneDeep(U0.hist) : {};
   if (!_.isPlainObject(S.Expedition)) S.Expedition = { Caught: false };
   const ev = expEvent(), onDay = expOnDay(S.World);
   let X = _.isPlainObject(S.$eng.exp) && S.$eng.exp.y === Y ? S.$eng.exp : null;
   if (!ev || (!X && !(onDay && fAt))) { S.$ui.forest = { on: false, seen, hist }; S.Expedition.Caught = false; return; }
   if (!X) X = S.$eng.exp = { y: Y, tgt: '', grade: '', homes: [], t: {}, hrs: {}, owe: 0, met: 0, caught: 0, carry: 0, res: '', wen: 0 };
-  const G = id => EXP.groups[EXP_PL[id].group] || {};
+  const G = id => EXP.groups[F.PL[id].group] || {};
   const nextDay = DAYS[(DAYS.indexOf(EXP.hunt.day) + 1) % 7];
   const hs = toAbs({ Year: Y, Month: ev.m, Week: ev.w, Day: EXP.hunt.day, Time: EXP.hunt.from }), he = hs + num(EXP.hunt.hours, 24) * 60;
   const back = toAbs({ Year: Y, Month: ev.m, Week: ev.w, Day: nextDay, Time: EXP.hunt.back_by });
@@ -1938,21 +1965,21 @@ function stepExpedition(c) {
   if (X.caught) Ex.Caught = true;
   // walking and searching: the route's stamina, the hours the clock still owes the walk, then search hours and their rolls
   if (hasB && !toolEdit && elapsed > 0 && fAt && fPrev) {
-    const eH = elapsed / 60, wet = WXM !== 'off' && wxBad(forestWx(seed, ...blockOf(absA))), night = expNight(absA);
+    const eH = elapsed / 60, wet = WXM !== 'off' && wxBad(areaWx(AR.forest, seed, ...blockOf(absA))), night = expNight(absA);
     const mask = new RegExp(EXP.spore_mask || 'mask', 'i'), masked = Object.keys(S.Inventory || {}).some(k => mask.test(k) && num((S.Inventory[k] || {}).Qty, 1) > 0);
     let search;
     if (fAt !== fPrev) {
-      const path = expPath(fPrev, fAt);
+      const path = F.path(fPrev, fAt);
       let h = 0, cost = 0;
       for (let i = 1; i < path.length; i++) {
-        const [, lh, lm, note] = EXP_NB[path[i - 1]].find(x => x[0] === path[i]);
+        const [, lh, lm, note] = F.NB[path[i - 1]].find(x => x[0] === path[i]);
         h += lh; cost += lh * num(R.walk_pct, 8) * (note === 'spore' && masked ? 1 : lm);
         if (!seen.includes(path[i - 1])) seen.push(path[i - 1]);
       }
       cost *= (wet ? num(R.rain_mult, 1.25) : 1) * (night ? num(R.night_walk_mult, 1.25) : 1) * (X.carry ? num(R.drag_mult, 1.5) : 1);
       V.Stamina -= cost / 100 * num(V.Stamina_max, 100);
       const avail = eH - h - X.owe; X.owe = Math.max(0, -avail); search = Math.max(0, avail);
-      log.push(`Walked ${path.map(id => EXP_PL[id].name).join(' → ')}: ${h} h on foot, -${Math.round(cost)}% stamina${X.owe ? `; ${r1h(X.owe)} h of the walk are still ahead (searching here starts after that)` : ''}.`);
+      log.push(`Walked ${path.map(id => F.PL[id].name).join(' → ')}: ${h} h on foot, -${Math.round(cost)}% stamina${X.owe ? `; ${r1h(X.owe)} h of the walk are still ahead (searching here starts after that)` : ''}.`);
       evs.push({ k: 'walk', h, cost: Math.round(cost), owe: r1h(X.owe) });
     } else { search = Math.max(0, eH - X.owe); X.owe = Math.max(0, X.owe - eH); }
     if (X.carry && fAt === 'base_camp') X.carry = 0;
@@ -1969,8 +1996,8 @@ function stepExpedition(c) {
           const p = Math.min(num(R.target_base, 3) + num(R.target_step, 3) * (n - 1), num(R.target_cap, 24)) * (dark && !(EXP.night_beasts || []).includes(X.tgt) ? num(R.night_mult, 0.5) : 1);
           if (roll('tgt') < p) { X.met = 1; evs.push({ k: 'target', b: X.tgt, n }); continue; }
         } else if (!signed && roll('sign') < num(R.sign, 20)) {
-          const home = _.minBy(X.homes, id => (expRoutes(fAt)[id] || { h: 99 }).h), path = home ? expPath(fAt, home) : [];
-          if (path.length > 1) { signed = true; evs.push({ k: 'sign', b: X.tgt, to: path[1], toName: EXP_PL[path[1]].name }); }
+          const home = _.minBy(X.homes, id => (F.routes(fAt)[id] || { w: 99 }).w), path = home ? F.path(fAt, home) : [];
+          if (path.length > 1) { signed = true; evs.push({ k: 'sign', b: X.tgt, to: path[1], toName: F.PL[path[1]].name }); }
         }
       }
       const W = EXP.wendigo || {}, wr = fAt === W.where ? num(R.wendigo, 1) : fAt === W.edge ? num(R.wendigo_edge, 0) : 0;
@@ -1992,9 +2019,9 @@ function stepExpedition(c) {
     jnl.push(X.res === 'caught' ? `Creature Studies Expedition: {{user}}'s group brought back its assigned ${X.tgt}.` : `Creature Studies Expedition: {{user}}'s group came back without its assigned ${X.tgt} and failed the practical.`);
     S.$ui.toasts.push(X.res === 'caught' ? `Expedition: ${X.tgt} caught` : 'Expedition: target not found');
   }
-  const R0 = fAt ? expRoutes(fAt) : {}, left = X.tgt && !X.res ? Math.max(0, Math.round((he - absA) / 6) / 10) : 0;
-  S.$ui.forest = { on: !!fAt, at: fAt, name: fAt ? EXP_PL[fAt].name : '', seen, hist, tgt: X.tgt, grade: X.grade, res: X.res, met: X.met, left, hs: absA < hs, back: absA < back,
-    here: fAt ? num(X.hrs[fAt], 0) : 0, owe: r1h(X.owe), walks: fAt ? EXP.places.filter(p => p.id !== fAt).map(p => [p.id, p.name, R0[p.id].h]).sort((a, b) => a[2] - b[2]) : [],
+  const R0 = fAt ? F.routes(fAt) : {}, left = X.tgt && !X.res ? Math.max(0, Math.round((he - absA) / 6) / 10) : 0;
+  S.$ui.forest = { on: !!fAt, at: fAt, name: fAt ? F.PL[fAt].name : '', seen, hist, tgt: X.tgt, grade: X.grade, res: X.res, met: X.met, left, hs: absA < hs, back: absA < back,
+    here: fAt ? num(X.hrs[fAt], 0) : 0, owe: r1h(X.owe), walks: fAt ? EXP.places.filter(p => p.id !== fAt).map(p => [p.id, p.name, R0[p.id].w]).sort((a, b) => a[2] - b[2]) : [],
     ev: evs, last: hist['Y' + (Y - 1)] || null };
   if (!onDay && !fAt) S.Expedition.Caught = false;
 }
@@ -2007,9 +2034,8 @@ const r1h = x => Math.round(num(x, 0) * 10) / 10;
 // pin), walks to every pin, places nearby, the Crowning Day muster and this update's events.
 const avRep = (S, Kind, Why) => { S.Rep_events = [...(Array.isArray(S.Rep_events) ? S.Rep_events : []), { Kind, Why }]; };
 function stepCapital(c) {
-  const { S, log, jnl, hasB, toolEdit, absA, absB, elapsed, seed, V, restedAs, aAt, aPrev, aHeld, dayNo, TU } = c;
-  const R = AV.rates || {}, LX = lifeX(TU), Y = num(S.World.Year, 1), U0 = _.isPlainObject(S.$ui.capital) ? S.$ui.capital : {};
-  const seen = Array.isArray(U0.seen) ? U0.seen.filter(id => AV_PL[id]) : [];
+  const { S, log, jnl, hasB, absA, absB, elapsed, seed, aAt, aPrev, aHeld, dayNo, TU } = c;
+  const A = AR.avalon, R = A.R, LX = lifeX(TU), Y = num(S.World.Year, 1), seen = areaSeen(A, S.$ui.capital);
   const castle = (S.$eng.prizes || []).some(p => /^Kingdom-Y\d+$/.test(p));
   if (!_.isPlainObject(S.Avalon)) S.Avalon = { Ride: false };
   const ride = !!S.Avalon.Ride; S.Avalon.Ride = false;
@@ -2020,39 +2046,22 @@ function stepCapital(c) {
   const X = _.isPlainObject(S.$eng.cap) ? S.$eng.cap : (S.$eng.cap = {});
   if (X.d !== dayNo) Object.assign(X, { d: dayNo, owe: 0, met: [], wl: 0, sc: 0 });
   const crown = avCrown(S.World), kd = !crown && avKingdom(S.World, S), Cr = AV.crowning, evs = [], at = t => dayNo * DAY_MIN + hm(t);
-  const coinNow = () => num(S.Player.Wallet.Coin, 0), spend = (x, why) => ledger(c, 'Coin', -x, why);
   // the White Line: the Royal Guard turns {{user}} back; a second try the same day is reported (Academy, defied_staff)
   if (aHeld && hasB) {
-    X.wl = num(X.wl, 0) + 1; evs.push({ k: 'white', n: X.wl, to: AV_PL[aHeld].name });
-    log.push(`${AV_PL[aHeld].name} is past the White Line, closed to students: the Royal Guard turned {{user}} back${X.wl > 1 ? ' again and reported it to the staff' : ''}. World.Location was kept at ${AV_PL[aAt].name}.`);
+    X.wl = num(X.wl, 0) + 1; evs.push({ k: 'white', n: X.wl, to: A.PL[aHeld].name });
+    log.push(`${A.PL[aHeld].name} is past the White Line, closed to students: the Royal Guard turned {{user}} back${X.wl > 1 ? ' again and reported it to the staff' : ''}. World.Location was kept at ${A.PL[aAt].name}.`);
     if (X.wl === 2) avRep(S, 'defied_staff', 'tried twice to cross the White Line in Avalon');
   }
-  // walking: inside a pin a few minutes and no stamina; between pins the route's minutes and stamina, or a hire carriage (half the
-  // time, coin, no stamina). On Crowning Day morning the crowds make every leg through Crown Square slower, carriage or not.
-  if (hasB && !toolEdit && elapsed > 0 && aPrev && AV_PL[aPrev] && aPrev !== aAt) {
-    const pA = AV_PL[aPrev].pin, pB = AV_PL[aAt].pin, crowd = crown && absB >= at(Cr.crowd_from) && absB < at(Cr.crowd_to), fare = num(R.ride_coin, 10);
-    let m = 0, mc = 0, path = [];
-    if (pA === pB) m = avMin(aPrev, aAt);
-    else {
-      path = avPinPath(pA, pB);
-      for (let i = 1; i < path.length; i++) { const lm = AV_NB[path[i - 1]].find(x => x[0] === path[i])[1]; if (crowd && (path[i - 1] === 'square' || path[i] === 'square')) mc += lm * num(R.crowd_mult, 1.5); else m += lm; }
-    }
-    const byCab = ride && pA !== pB && coinNow() >= fare;
-    if (ride && pA !== pB && !byCab) log.push(`A hire carriage costs ${fare} coin and {{user}} has ${coinNow()}: they walked.`);
-    if (byCab) spend(fare, 'hire carriage in Avalon');
-    const walked = pA === pB ? 0 : mc + (byCab ? 0 : m), total = Math.round(mc + (byCab ? m / 2 : m)), cost = walked / 60 * num(R.walk_pct, 5);
-    if (cost) V.Stamina -= cost / 100 * num(V.Stamina_max, 100);
-    X.owe = Math.max(0, Math.round(total + num(X.owe, 0) - elapsed));
-    const via = path.length > 2 ? ` via ${path.slice(1, -1).map(p => AV_PIN[p].name).join(', ')}` : '';
-    log.push(`${byCab ? 'Hire carriage' : 'Walked'} ${AV_PL[aPrev].name} → ${AV_PL[aAt].name}${via}: ${total} min${byCab ? `, -${fare} coin` : ''}${cost ? `, -${Math.round(cost)}% stamina` : ''}${mc ? ' (holiday crowds at Crown Square)' : ''}${X.owe ? `; ${X.owe} min of the way are still ahead` : ''}.`);
-    evs.push({ k: 'walk', m: total, ride: byCab, owe: X.owe });
-  } else if (hasB && elapsed > 0) X.owe = Math.max(0, num(X.owe, 0) - elapsed);
+  // walking, or a hire carriage (Avalon.Ride): half the time, coin, no stamina. On Crowning Day morning the crowds make every leg
+  // through Crown Square slower, carriage or not.
+  if (hasB && !c.toolEdit && elapsed > 0 && aPrev && A.PL[aPrev] && aPrev !== aAt) areaMove(c, A, X, aPrev, aAt, ride ? 'carriage' : '', crown && absB >= at(Cr.crowd_from) && absB < at(Cr.crowd_to), evs);
+  else if (hasB && elapsed > 0) X.owe = Math.max(0, num(X.owe, 0) - elapsed);
   // Tsubaki in Avalon before she comes to Halvard: remembered for when she arrives (stepBonds)
   if ((S.Scene.Present || {}).Tsubaki && Y < (ARRIVES.Tsubaki || 1) && !X.tsu) X.tsu = stamp(S.World);
   // the Crowning Day muster at the Skyport: missing it is a detention's worth of Academy reputation; the airship waits
   let muster = null;
   if (crown) {
-    const mAbs = at(Cr.muster), back = avMin(aAt, 'skyport'), split = AV_PL[aAt].pin !== AV_PL.skyport.pin;
+    const mAbs = at(Cr.muster), back = A.min(aAt, 'skyport'), split = A.PL[aAt].pin !== A.PL.skyport.pin;
     if (hasB && absA >= mAbs && aAt !== 'skyport' && X.mm !== Y) {
       X.mm = Y; evs.push({ k: 'missed' });
       avRep(S, 'detention', 'missed the Crowning Day muster in Avalon');
@@ -2063,39 +2072,28 @@ function stepCapital(c) {
     muster.warn = muster.left > 0 && muster.left - back <= 30;
   }
   // the city's life, once per hour in Avalon (seeded by the hour and the place, so a swipe sees the same street)
-  if (hasB && !toolEdit && elapsed > 0 && aPrev && restedAs !== 'sleep') {
-    const Wh = AV.where || {}, inW = k => (Wh[k] || []).includes(aAt), h1 = Math.floor(absA / 60);
-    let street = false;
-    for (let h = Math.max(Math.floor(absB / 60) + 1, h1 - num(R.max_rolls, 6) + 1); h <= h1; h++) {
-      const abs = h * 60, roll = k => roll100(seed, 'av', h, aAt, k), pick = (a, k) => pickOf(a, seed, 'av', h, aAt, k);
-      if (crown && (abs < at(Cr.free) || abs >= at(Cr.depart))) continue;   // the parade and the speech; then the airship
-      if (inW('pickpocket') && roll('pick') < num(R.pickpocket, 8) * LX) {
-        const caught = roll('pseen') < num(R.pick_seen, 50), pct = rollInt(num(R.pick_min, 10), num(R.pick_max, 25), seed, 'av', h, 'pamt');
-        const lost = caught ? 0 : Math.min(num(R.pick_cap, 300), Math.round(coinNow() * pct / 100));
-        if (lost) spend(lost, 'pickpocketed in Avalon');
-        evs.push({ k: 'pick', caught, lost, empty: !caught && !lost });
-        if (lost) { jnl.push(`Avalon: a pickpocket took ${lost} coin from {{user}} at ${AV_PL[aAt].name}.`); S.$ui.toasts.push(`Pickpocketed: -${lost} coin`); }
-      }
-      if (inW('procession') && roll('proc') < num(R.procession, 10) * LX) evs.push({ k: 'procession', t: pick(AV.procession || [''], 'proct') });
-      if (!street && (AV.street || {})[aAt] && roll('street') < num(R.street, 20) * LX) { street = true; evs.push({ k: 'street', t: pick(AV.street[aAt], 'strt') }); }
-      if (crown && X.ts !== Y && inW('tsubaki') && roll('tsu') < num(R.tsubaki, 10)) { X.ts = Y; evs.push({ k: 'tsubaki', first: Y < (ARRIVES.Tsubaki || 1) }); }
-      else if ((crown ? inW('rival_crowning') : kd && inW('rival_kingdom')) && roll('riv') < num(R.rival, 25) * LX) {
-        const pool = Object.keys(AV.rivals || {}).filter(id => AV.rivals[id] + Y - 1 <= 3 && !(X.met || []).includes(id)).sort();
-        if (pool.length) { const id = pickOf(pool, seed, 'av', h, aAt, 'rivp'); X.met = [...(X.met || []), id]; evs.push({ k: 'rival', id }); }
-      }
-      if (kd && !X.sc && ['Thu', 'Fri', 'Sat'].includes(S.World.Day) && inW('scout') && (S.Competition || {}).Status !== 'eliminated' && roll('scout') < num(R.scout, 15)) { X.sc = 1; evs.push({ k: 'scout' }); }
-      if (inW('raid') && roll('raid') < num(R.raid, 5)) {
-        const caught = roll('resc') >= num(R.raid_escape, 60); evs.push({ k: 'raid', caught });
-        if (caught) { avRep(S, 'detention_tower', 'caught in the Rookery during a City Watch raid in Avalon'); jnl.push('Avalon: {{user}} was caught in the Rookery in a City Watch raid; the staff were sent for.'); S.$ui.toasts.push('Caught in a raid'); break; }
-      }
+  const Wh = AV.where || {}, inW = k => (Wh[k] || []).includes(aAt), got = new Set();
+  areaHours(c, A, aPrev, h => {
+    const abs = h * 60, roll = k => areaRoll(c, A, h, aAt, k), pick = (a, k) => pickOf(a, seed, A.salt, h, aAt, k);
+    if (crown && (abs < at(Cr.free) || abs >= at(Cr.depart))) return;   // the parade and the speech; then the airship
+    areaTheft(c, A, h, aAt, got, evs);
+    if (inW('procession') && roll('proc') < num(R.procession, 10) * LX) evs.push({ k: 'procession', t: pick(AV.procession || [''], 'proct') });
+    areaStreet(c, A, h, aAt, (AV.street || {})[aAt], got, evs);
+    if (crown && X.ts !== Y && inW('tsubaki') && roll('tsu') < num(R.tsubaki, 10)) { X.ts = Y; evs.push({ k: 'tsubaki', first: Y < (ARRIVES.Tsubaki || 1) }); }
+    else if ((crown ? inW('rival_crowning') : kd && inW('rival_kingdom')) && roll('riv') < num(R.rival, 25) * LX) {
+      const pool = Object.keys(AV.rivals || {}).filter(id => AV.rivals[id] + Y - 1 <= 3 && !(X.met || []).includes(id)).sort();
+      if (pool.length) { const id = pick(pool, 'rivp'); X.met = [...(X.met || []), id]; evs.push({ k: 'rival', id }); }
     }
-  }
-  for (const id of [aPrev, aAt]) if (id && AV_PL[id] && !seen.includes(id)) seen.push(id);
-  const pin = AV_PL[aAt].pin, R0 = avRoutes(pin), pass = avPass(S);
-  S.$ui.capital = { on: true, at: aAt, name: AV_PL[aAt].name, pin, pinName: AV_PIN[pin].name, seen, castle, pass, crown, kd, owe: num(X.owe, 0),
-    walks: AV.pins.filter(p => p.id !== pin && (!p.locked || pass)).map(p => [p.id, p.name, R0[p.id].m]).sort((a, b) => a[2] - b[2]),
-    near: AV.places.filter(p => p.pin === pin && p.id !== aAt && (!p.locked || pass) && (!p.hidden || seen.includes(p.id))).map(p => [p.name, avMin(aAt, p.id)]),
-    muster, ev: evs };
+    if (kd && !X.sc && ['Thu', 'Fri', 'Sat'].includes(S.World.Day) && inW('scout') && (S.Competition || {}).Status !== 'eliminated' && roll('scout') < num(R.scout, 15)) { X.sc = 1; evs.push({ k: 'scout' }); }
+    if (inW('raid') && roll('raid') < num(R.raid, 5)) {
+      const caught = roll('resc') >= num(R.raid_escape, 60); evs.push({ k: 'raid', caught });
+      if (caught) { avRep(S, 'detention_tower', 'caught in the Rookery during a City Watch raid in Avalon'); jnl.push('Avalon: {{user}} was caught in the Rookery in a City Watch raid; the staff were sent for.'); S.$ui.toasts.push('Caught in a raid'); return false; }
+    }
+  });
+  for (const id of [aPrev, aAt]) if (id && A.PL[id] && !seen.includes(id)) seen.push(id);
+  const pass = avPass(S);
+  S.$ui.capital = { on: true, at: aAt, name: A.PL[aAt].name, ...areaNear(A, aAt, p => !p.locked || pass, p => (!p.locked || pass) && (!p.hidden || seen.includes(p.id))),
+    seen, castle, pass, crown, kd, owe: num(X.owe, 0), muster, ev: evs };
 }
 
 // 1.40.0 (owner-approved planning/DRAFT_airship.md): aboard the airship. A hot bath on the Cabin Deck ends Soaked and Chilled; once
@@ -2122,7 +2120,7 @@ function stepAirship(c) {
     }
   }
   const t = hm(S.World.Time), a = hm(sFl.from), b = hm(sFl.to), key = `${sFl.route}_${sFl.dir}`;
-  S.$ui.airship = { on: true, at: sAt, name: AIR_PL[sAt].name, event: sFl.event, from: sFl.from, to: sFl.to, lands: sFl.lands, left: Math.max(0, b - t), bar: !!sFl.bar,
+  S.$ui.airship = { on: true, at: sAt, name: AR.airship.PL[sAt].name, event: sFl.event, from: sFl.from, to: sFl.to, lands: sFl.lands, left: Math.max(0, b - t), bar: !!sFl.bar,
     board: sBoard, view: sAt === 'promenade_deck' ? ((AIR.views || {})[key] || [])[Math.min(2, Math.floor((t - a) * 3 / Math.max(1, b - a)))] || '' : '',
     cargo: sAt === 'cargo_hold' ? (AIR.cargo || {})[key] || '' : '', near: AIR.places.filter(p => p.id !== sAt).map(p => p.name), ev: evs };
 }
@@ -2133,11 +2131,9 @@ function stepAirship(c) {
 // the hour and the place; not asleep): a street sight, a hustler, one student of another academy and one of Halvard who would be
 // there by personality (not met today, not in the scene), the sea and once in a Trip the Leviathan far off. Outside: the day before.
 function stepSunreach(c) {
-  const { S, log, jnl, hasB, toolEdit, absA, absB, elapsed, seed, V, restedAs, rPrev, dayNo, TU } = c;
-  const LX = lifeX(TU);
+  const { S, log, jnl, hasB, absA, elapsed, seed, rPrev, dayNo, TU } = c;
+  const A = AR.sunreach, R = A.R, LX = lifeX(TU), Y = num(S.World.Year, 1), seen = areaSeen(A, S.$ui.sunreach);
   let at = c.rAt;
-  const R = SR.rates || {}, Y = num(S.World.Year, 1), U0 = _.isPlainObject(S.$ui.sunreach) ? S.$ui.sunreach : {};
-  const seen = Array.isArray(U0.seen) ? U0.seen.filter(id => SR_PL[id]) : [];
   if (!_.isPlainObject(S.Sunreach)) S.Sunreach = { Ride: '', Bet: { Game: '', Stake: 0 } };
   const ride = String(S.Sunreach.Ride || '').toLowerCase(), bet = _.isPlainObject(S.Sunreach.Bet) ? S.Sunreach.Bet : {};
   S.Sunreach.Ride = ''; S.Sunreach.Bet = { Game: '', Stake: 0 };
@@ -2152,31 +2148,10 @@ function stepSunreach(c) {
   const X = _.isPlainObject(S.$eng.sr) ? S.$eng.sr : (S.$eng.sr = {});
   if (X.d !== dayNo) Object.assign(X, { d: dayNo, owe: 0, met: [] });
   const evs = [], coinNow = () => num(S.Player.Wallet.Coin, 0);
-  const pay = (x, why) => ledger(c, 'Coin', x, why);
   // moving: inside a pin a few minutes; between pins the route, on foot or by carriage or water taxi; the Open Sea by tour boat only
-  if (hasB && !toolEdit && elapsed > 0 && rPrev && SR_PL[rPrev] && rPrev !== at) {
-    const pA = SR_PL[rPrev].pin, pB = SR_PL[at].pin, path = pA === pB ? [] : srPinPath(pA, pB);
-    let land = pA === pB ? srMin(rPrev, at) : 0, tourM = 0, tours = 0;
-    for (let i = 1; i < path.length; i++) { const [, lm, tr] = SR_NB[path[i - 1]].find(x => x[0] === path[i]); if (tr) { tourM += lm; tours++; } else land += lm; }
-    const fare = tours * num(R.tour, 15);
-    if (tours && coinNow() < fare) {
-      log.push(`The tour boat costs ${num(R.tour, 15)} coin and {{user}} has ${coinNow()}: no boat, so World.Location was kept at ${SR_PL[rPrev].name}.`);
-      at = rPrev; S.World.Location = srLoc('', at);
-    } else {
-      if (fare) pay(-fare, 'tour boat, Sunreach Bay');
-      const want = /boat|water|taxi/.test(ride) ? 'boat' : /carriage|cab|horse|coach/.test(ride) ? 'carriage' : '';
-      const ends = [path.find(p => p !== 'sea') || pA, [...path].reverse().find(p => p !== 'sea') || pB];
-      const kind = !want || pA === pB || !land ? '' : want === 'boat' && ends.every(p => SR_PIN[p] && SR_PIN[p].shore) ? 'boat' : 'carriage';
-      const rfare = kind ? num(R[kind], 6) : 0, byRide = !!kind && coinNow() >= rfare;
-      if (kind && !byRide) log.push(`A ${kind === 'boat' ? 'water taxi' : 'carriage'} costs ${rfare} coin and {{user}} has ${coinNow()}: they walked.`);
-      if (byRide) pay(-rfare, `${kind === 'boat' ? 'water taxi' : 'horse carriage'}, Sunreach Bay`);
-      const total = Math.round(tourM + (byRide ? land / 2 : land)), cost = byRide || pA === pB ? 0 : land / 60 * num(R.walk_pct, 5);
-      if (cost) V.Stamina -= cost / 100 * num(V.Stamina_max, 100);
-      X.owe = Math.max(0, Math.round(total + num(X.owe, 0) - elapsed));
-      const via = path.length > 2 ? ` via ${path.slice(1, -1).map(p => SR_PIN[p].name).join(', ')}` : '';
-      log.push(`${byRide ? (kind === 'boat' ? 'Water taxi' : 'Horse carriage') : tours && !land ? 'Tour boat' : 'Walked'} ${SR_PL[rPrev].name} → ${SR_PL[at].name}${via}: ${total} min${byRide ? `, -${rfare} coin` : ''}${fare ? `, tour boat -${fare} coin` : ''}${cost ? `, -${Math.round(cost)}% stamina` : ''}${X.owe ? `; ${X.owe} min of the way are still ahead` : ''}.`);
-      evs.push({ k: 'walk', m: total, ride: byRide ? kind : '', tour: tours > 0, owe: X.owe });
-    }
+  if (hasB && !c.toolEdit && elapsed > 0 && rPrev && A.PL[rPrev] && rPrev !== at) {
+    const want = /boat|water|taxi/.test(ride) ? 'boat' : /carriage|cab|horse|coach/.test(ride) ? 'carriage' : '';
+    if (!areaMove(c, A, X, rPrev, at, want, false, evs)) { at = rPrev; S.World.Location = areaLoc(A, '', at); }
   } else if (hasB && elapsed > 0) X.owe = Math.max(0, num(X.owe, 0) - elapsed);
   // a bet at The Golden Tide: the engine settles it (never the narrator)
   if (betAsked) {
@@ -2188,48 +2163,37 @@ function stepSunreach(c) {
     else {
       X.nb = num(X.nb, 0) + 1;
       const win = roll100(seed, 'srbet', absA, X.nb) < G.win, net = win ? stake * (G.pay - 1) : -stake;
-      pay(net, `${win ? 'won' : 'lost'} at ${game}, The Golden Tide`);
+      ledger(c, 'Coin', net, `${win ? 'won' : 'lost'} at ${game}, The Golden Tide`);
       evs.push({ k: 'bet', game, stake, win, net });
       S.$ui.toasts.push(`${_.capitalize(game)}: ${win ? 'won' : 'lost'} ${Math.abs(net)} coin`);
     }
   }
   // the city, once an hour
-  if (hasB && !toolEdit && elapsed > 0 && rPrev && restedAs !== 'sleep' && at === c.rAt) {
-    const h1 = Math.floor(absA / 60), present = new Set(Object.keys((S.Scene || {}).Present || {})), grad = new Set((S.Campus_State || {}).Graduated || []);
-    const M = SR.meet || {}, got = new Set();
-    for (let h = Math.max(Math.floor(absB / 60) + 1, h1 - num(R.max_rolls, 6) + 1); h <= h1; h++) {
-      const nt = srNight(h * 60) ? 1 : 0, roll = k => roll100(seed, 'sr', h, at, k), pick = (a, k) => pickOf(a, seed, 'sr', h, at, k);
-      const st = ((SR.street || {})[at] || [])[nt] || [];
-      if (!got.has('street') && st.length && roll('st') < num(R.street, 20) * LX) { got.add('street'); evs.push({ k: 'street', t: pick(st, 'stt') }); }
-      if ((SR.hustle || []).includes(at) && !got.has('hustle') && roll('hus') < num(R.hustle, 8) * LX) {
-        got.add('hustle');
-        const caught = roll('hseen') < num(R.hustle_seen, 50), pct = rollInt(num(R.hustle_min, 10), num(R.hustle_max, 25), seed, 'sr', h, 'hamt');
-        const lost = caught ? 0 : Math.min(num(R.hustle_cap, 300), Math.round(coinNow() * pct / 100));
-        if (lost) { pay(-lost, 'hustled in Sunreach Bay'); jnl.push(`Sunreach Bay: a hustler took ${lost} coin from {{user}} at ${SR_PL[at].name}.`); S.$ui.toasts.push(`Hustled: -${lost} coin`); }
-        evs.push({ k: 'hustle', caught, lost, empty: !caught && !lost });
-      }
-      const meetOne = (kind, who, ok) => {
-        if (got.has(kind) || roll(kind) >= num(R[kind], 0) * LX) return;
-        const pool = Object.keys(who || {}).filter(id => (who[id][nt] || []).includes(at) && ok(id) && !X.met.includes(id) && !present.has(id)).sort();
-        if (!pool.length) return;
-        const id = pick(pool, kind + 'p'); got.add(kind); X.met = [...X.met, id]; evs.push({ k: kind, id });
-      };
-      meetOne('rival', M.rivals, id => AV.rivals[id] !== undefined && AV.rivals[id] + Y - 1 <= 3);
-      meetOne('student', M.halvard, id => !!STUDENTS[id] && yearOf(id, Y) >= 1 && yearOf(id, Y) <= 3 && !grad.has(id));
-      if (at === 'open_sea') {
-        if (X.lev !== Y && roll('lev') < num(R.leviathan, 5)) {
-          X.lev = Y; got.add('sea'); evs.push({ k: 'leviathan', t: SR.leviathan });
-          jnl.push('Sunreach Bay: out on the open sea, {{user}} saw the Leviathan, far off, and the boat turned for home.'); S.$ui.toasts.push('The Leviathan!');
-        } else if (!got.has('sea') && roll('sea') < num(R.sea, 50) * LX) { got.add('sea'); evs.push({ k: 'sea', t: pick(SR.sea || [''], 'seat') }); }
-      }
+  const present = new Set(Object.keys((S.Scene || {}).Present || {})), grad = new Set((S.Campus_State || {}).Graduated || []);
+  const M = SR.meet || {}, got = new Set();
+  areaHours(c, A, rPrev && at === c.rAt, h => {
+    const nt = srNight(h * 60) ? 1 : 0, roll = k => areaRoll(c, A, h, at, k), pick = (a, k) => pickOf(a, seed, A.salt, h, at, k);
+    areaStreet(c, A, h, at, ((SR.street || {})[at] || [])[nt], got, evs);
+    areaTheft(c, A, h, at, got, evs);
+    const meetOne = (kind, who, ok) => {
+      if (got.has(kind) || roll(kind) >= num(R[kind], 0) * LX) return;
+      const pool = Object.keys(who || {}).filter(id => (who[id][nt] || []).includes(at) && ok(id) && !X.met.includes(id) && !present.has(id)).sort();
+      if (!pool.length) return;
+      const id = pick(pool, kind + 'p'); got.add(kind); X.met = [...X.met, id]; evs.push({ k: kind, id });
+    };
+    meetOne('rival', M.rivals, id => AV.rivals[id] !== undefined && AV.rivals[id] + Y - 1 <= 3);
+    meetOne('student', M.halvard, id => !!STUDENTS[id] && yearOf(id, Y) >= 1 && yearOf(id, Y) <= 3 && !grad.has(id));
+    if (at === 'open_sea') {
+      if (X.lev !== Y && roll('lev') < num(R.leviathan, 5)) {
+        X.lev = Y; got.add('sea'); evs.push({ k: 'leviathan', t: SR.leviathan });
+        jnl.push('Sunreach Bay: out on the open sea, {{user}} saw the Leviathan, far off, and the boat turned for home.'); S.$ui.toasts.push('The Leviathan!');
+      } else if (!got.has('sea') && roll('sea') < num(R.sea, 50) * LX) { got.add('sea'); evs.push({ k: 'sea', t: pick(SR.sea || [''], 'seat') }); }
     }
-  }
-  for (const id of [rPrev, at]) if (id && SR_PL[id] && !seen.includes(id)) seen.push(id);
-  const pin = SR_PL[at].pin, R0 = srRoutes(pin), W = S.World, tnow = hm(W.Time);
+  });
+  for (const id of [rPrev, at]) if (id && A.PL[id] && !seen.includes(id)) seen.push(id);
+  const W = S.World, tnow = hm(W.Time);
   const today = (SR.schedule || []).filter(([w, d, t]) => num(W.Month, 0) === SR.window.m && num(W.Week, 0) === w && W.Day === d && hm(t) >= tnow).map(([, , t, what]) => [t, what]);
-  S.$ui.sunreach = { on: true, at, name: SR_PL[at].name, pin, pinName: SR_PIN[pin].name, night: srNight(absA), seen, owe: num(X.owe, 0), off: !!SR_PL[at].off,
-    walks: SR.pins.filter(p => p.id !== pin).map(p => [p.id, p.name, R0[p.id].m]).sort((a, b) => a[2] - b[2]),
-    near: SR.places.filter(p => p.pin === pin && p.id !== at).map(p => [p.name, srMin(at, p.id)]), today, ev: evs, coin: '' };
+  S.$ui.sunreach = { on: true, at, name: A.PL[at].name, ...areaNear(A, at, () => true, () => true), night: srNight(absA), seen, owe: num(X.owe, 0), off: !!A.PL[at].off, today, ev: evs, coin: '' };
 }
 
 // ---- 5. vitals ----

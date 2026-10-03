@@ -5,7 +5,9 @@
 // keyword place entries; <now>, 502 and the map tab.
 const fs = require('fs'), path = require('path');
 const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
-const E = new Function(fs.readFileSync(path.join(ROOT, 'src/scripts/engine.js'), 'utf8') + '\nreturn { fromAbs, srPlace, srRoutes, srMin, srWindow, SR };')();
+const E = new Function(fs.readFileSync(path.join(ROOT, 'src/scripts/engine.js'), 'utf8') + '\nreturn { fromAbs, AR, areaPlace, srWindow, SR };')();
+// 1.46.0 (audit 3.1): the area helpers are one module (AR, areaPlace)
+E.srPlace = (l, p) => E.areaPlace(E.AR.sunreach, l, p); E.srRoutes = f => E.AR.sunreach.routes(f); E.srMin = (a, b) => E.AR.sunreach.min(a, b);
 const read = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const T = (d, time) => E.fromAbs(d * 1440 + (+time.slice(0, 2)) * 60 + (+time.slice(3)));
 const at = (S, d, time, loc, extra = []) => applyPatch(S, [...['Year', 'Month', 'Week', 'Day', 'Time'].map(k => ({ op: 'replace', path: '/World/' + k, value: T(d, time)[k] })), { op: 'replace', path: '/World/Location', value: loc }, ...extra]);
@@ -18,7 +20,7 @@ const bet = (g, n) => [{ op: 'replace', path: '/Sunreach/Bet', value: { Game: g,
 
 console.log('Data, names and routes');
 ok(D.pins.length === 10 && D.places.length === 21 && T(SAT, '08:00').Day === 'Sat' && T(THU, '08:00').Day === 'Thu' && T(SAT, '08:00').Month === 11, 'ten pins, 21 places; the test days are the Trip');
-ok(E.srRoutes('skydock').casino.m === 40 && E.srRoutes('skydock').sea.m === 70 && E.srMin('the_hanabira', 'coral_beach') === 10, 'walks: Skydock to Casino Row 40, to the Open Sea 70 (by the Sea Dock); inside a pin 10');
+ok(E.srRoutes('skydock').casino.w === 40 && E.srRoutes('skydock').sea.w === 70 && E.srMin('the_hanabira', 'coral_beach') === 10, 'walks: Skydock to Casino Row 40, to the Open Sea 70 (by the Sea Dock); inside a pin 10');
 ok(E.srPlace('The Golden Tide', '') === 'golden_tide' && E.srPlace('the casino', '') === '' && E.srPlace('the casino', 'coral_beach') === 'golden_tide' && E.srPlace('Sunreach Bay', '') === 'skydock', 'names always, short aliases only in Sunreach; "Sunreach Bay" alone is the Skydock');
 ok(E.srPlace('Cliffside Terraces', '') === 'the_terraces' && E.srPlace('Coral Strand', '') === 'coral_beach' && E.srPlace('Casino Row', '') === 'golden_tide', 'a part\'s name means its own place, else its first');
 ok(!E.srWindow(T(SAT, '19:00')) && E.srWindow(T(SAT, '20:30')) && E.srWindow(T(WED, '23:00')) && !E.srWindow(T(THU, '08:30')), 'the city map from the landing (Sat 20:00) to the boarding (Thu 08:00)');

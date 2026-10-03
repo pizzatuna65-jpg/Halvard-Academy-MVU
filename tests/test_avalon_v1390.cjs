@@ -4,7 +4,9 @@
 // before she comes to Halvard, the lore gate, <now> and the map tab.
 const fs = require('fs'), path = require('path');
 const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
-const E = new Function(fs.readFileSync(path.join(ROOT, 'src/scripts/engine.js'), 'utf8') + '\nreturn { fromAbs, avPlace, avRoutes, avMin, AV };')();
+const E = new Function(fs.readFileSync(path.join(ROOT, 'src/scripts/engine.js'), 'utf8') + '\nreturn { fromAbs, AR, areaPlace, AV };')();
+// 1.46.0 (audit 3.1): the area helpers are one module (AR, areaPlace)
+E.avPlace = (l, p) => E.areaPlace(E.AR.avalon, l, p); E.avRoutes = f => E.AR.avalon.routes(f); E.avMin = (a, b) => E.AR.avalon.min(a, b);
 const read = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const T = (d, time) => E.fromAbs(d * 1440 + (+time.slice(0, 2)) * 60 + (+time.slice(3)));
 const at = (S, d, time, loc, extra = []) => applyPatch(S, [...['Year', 'Month', 'Week', 'Day', 'Time'].map(k => ({ op: 'replace', path: '/World/' + k, value: T(d, time)[k] })), { op: 'replace', path: '/World/Location', value: loc }, ...extra]);
@@ -17,8 +19,8 @@ const coin = (S, n) => [{ op: 'replace', path: '/Player/Wallet/Coin', value: n }
 console.log('Data and routes');
 ok(A.pins.length === 7 && A.places.length === 19 && A.pins.filter(p => p.locked).map(p => p.id).join() === 'castle', 'seven pins (the castle locked), nineteen places');
 const R = E.avRoutes('gate');
-ok(R.square.m === 25 && R.garden.m === 80 && R.oldtown.m === 90 && R.castle.m === 70, 'walks from the Great Gate match the approved table (Garden 80, Old Town 90)');
-ok(E.avRoutes('oldtown').arena.m === 95 && E.avRoutes('lantern').garden.m === 100, 'the castle is never a way through (Old Town to the Arena 95, round the ring)');
+ok(R.square.w === 25 && R.garden.w === 80 && R.oldtown.w === 90 && R.castle.w === 70, 'walks from the Great Gate match the approved table (Garden 80, Old Town 90)');
+ok(E.avRoutes('oldtown').arena.w === 95 && E.avRoutes('lantern').garden.w === 100, 'the castle is never a way through (Old Town to the Arena 95, round the ring)');
 ok(E.avMin('skyport', 'gilded_arcade') === 10 && E.avMin('old_town', 'skywheel_fair') === 10 && E.avMin('crown_square', 'grand_cathedral') === 5, 'inside a pin: a few minutes');
 ok(E.avPlace('Avalon — Lantern Market', '') === 'lantern_market' && E.avPlace('Lantern Quarter', '') === 'lantern_market' && E.avPlace('Garden of Avalon — by the statue', '') === 'garden_of_avalon', 'names and pin names');
 ok(E.avPlace('The Cathedral', '') === '' && E.avPlace('the cathedral', 'crown_square') === 'grand_cathedral' && E.avPlace('Avalon, the market', '') === 'lantern_market', 'short aliases only once in Avalon: the campus Cathedral stays the campus Cathedral');

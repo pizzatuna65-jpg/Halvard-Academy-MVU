@@ -3,7 +3,9 @@
 // destination, the Kingdom flights only for the team, the bathing stalls, the seeded sky / stage / hold, the lore gate, <now>, the tab.
 const fs = require('fs'), path = require('path');
 const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
-const E = new Function(fs.readFileSync(path.join(ROOT, 'src/scripts/engine.js'), 'utf8') + '\nreturn { fromAbs, airPlace, airFlight, AIR };')();
+const E = new Function(fs.readFileSync(path.join(ROOT, 'src/scripts/engine.js'), 'utf8') + '\nreturn { fromAbs, AR, areaPlace, airFlight, AIR };')();
+// 1.46.0 (audit 3.1): the area helpers are one module (AR, areaPlace)
+E.airPlace = (l, aboard) => E.areaPlace(E.AR.airship, l, '', aboard);
 const read = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const T = (d, time) => E.fromAbs(d * 1440 + (+time.slice(0, 2)) * 60 + (+time.slice(3)));
 const at = (S, d, time, loc, extra = []) => applyPatch(S, [...['Year', 'Month', 'Week', 'Day', 'Time'].map(k => ({ op: 'replace', path: '/World/' + k, value: T(d, time)[k] })), { op: 'replace', path: '/World/Location', value: loc }, ...extra]);

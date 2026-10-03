@@ -118,7 +118,7 @@ const U = new Function(rd('src/scripts/ui.js') + '\nreturn { DATA, PANELS, view,
 console.log('weather in Sunreach (sleep, rare-weather toast)');
 {
   const src = rd('src/scripts/engine.template.js');
-  ok(/b0 = fAt \? forestWx\(seed, bd, bb\) : rAt \? srWx\(seed, bd, bb\)/.test(src) && /nb = fAt \? forestWx\(seed, nd, 2\) : rAt \? srWx\(seed, nd, 2\)/.test(src), "the rare-weather toast and the night's sleep read Sunreach's own weather");
+  ok(/b0 = wxWhere\(WA, seed, bd, bb\)/.test(src) && /nb = wxWhere\(c\.WA, seed, nd, 2\)/.test(src) && /const WA = fAt \? AR\.forest : rAt \? AR\.sunreach : null/.test(src), "the rare-weather toast and the night's sleep read Sunreach's own weather");
 }
 
 console.log('a Council member\'s Saturday in the UI');

@@ -3,7 +3,9 @@
 // signs and other beasts, a catch counts only after the target was met, the result moves the Creature Studies mark and is kept.
 const fs = require('fs'), path = require('path');
 const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
-const E = new Function(fs.readFileSync(path.join(ROOT, 'src/scripts/engine.js'), 'utf8') + '\nreturn { fromAbs, forestPlace, expRoutes, EXP };')();
+const E = new Function(fs.readFileSync(path.join(ROOT, 'src/scripts/engine.js'), 'utf8') + '\nreturn { fromAbs, forestPlace, AR, EXP };')();
+// 1.46.0 (audit 3.1): the area helpers are one module (AR, areaPlace)
+E.expRoutes = f => E.AR.forest.routes(f);
 const read = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const at = (S, d, time, loc, extra = []) => { const T = E.fromAbs(d * 1440 + (+time.slice(0, 2)) * 60 + (+time.slice(3)));
   return applyPatch(S, [...['Year', 'Month', 'Week', 'Day', 'Time'].map(k => ({ op: 'replace', path: '/World/' + k, value: T[k] })), { op: 'replace', path: '/World/Location', value: loc }, ...extra]); };
@@ -13,8 +15,8 @@ const X = JSON.parse(read('data/expedition.json'));
 
 console.log('Data and routes');
 const R = E.expRoutes('base_camp');
-ok(R.old_heart.h === 10.5 && R.cave.h === 9.5 && R.terraces.h === 7.5 && R.gloaming.h === 5.5, 'shortest walks from Base Camp match the approved table (Old Heart 10.5 h)');
-ok(E.expRoutes('wildwood_west').wildwood_east.h === 4 && E.expRoutes('falls').terraces.h === 1.5, 'Wildwood west to east 4 h (through north); the falls stair 1.5 h');
+ok(R.old_heart.w === 10.5 && R.cave.w === 9.5 && R.terraces.w === 7.5 && R.gloaming.w === 5.5, 'shortest walks from Base Camp match the approved table (Old Heart 10.5 h)');
+ok(E.expRoutes('wildwood_west').wildwood_east.w === 4 && E.expRoutes('falls').terraces.w === 1.5, 'Wildwood west to east 4 h (through north); the falls stair 1.5 h');
 ok(X.places.filter(p => p.group === 'wildwood').length === 3, 'three Wildwood pins share one entry');
 ok(E.forestPlace('the Gloaming', '') === 'gloaming' && E.forestPlace('Grand Vast Forest — Wildwood', 'base_camp') === 'wildwood_north', 'names and aliases; a bare Wildwood from camp is the nearest pin');
 ok(E.forestPlace('Forest', '') === '' && E.forestPlace('the forest', 'falls') === 'falls', 'a bare "forest" is the campus Forest unless {{user}} was already in the Grand Vast Forest');
@@ -57,7 +59,7 @@ const home = homes[0], RB = E.expRoutes('base_camp'), route = [home];
 while (route[0] !== 'base_camp') route.unshift(RB[route[0]].prev);
 const nameOf = id => X.places.find(p => p.id === id).name;
 let T = S, tm = THU * 1440 + 8 * 60 + 15;
-for (let i = 1; i < route.length; i++) { tm += E.expRoutes(route[i - 1])[route[i]].h * 60; T = go(T, tm, GVF + nameOf(route[i]), full); }
+for (let i = 1; i < route.length; i++) { tm += E.expRoutes(route[i - 1])[route[i]].w * 60; T = go(T, tm, GVF + nameOf(route[i]), full); }
 ok(T.$ui.forest.at === home && T.$ui.forest.owe === 0, `walked to ${nameOf(home)} (${route.length - 1} legs), the clock covering the walk`);
 let met = null, hrs = 0;
 for (let k = 1; k <= 14 && !met; k++) {

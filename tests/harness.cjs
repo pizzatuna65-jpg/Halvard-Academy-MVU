@@ -20,11 +20,13 @@ function loadEngine() {
 function diffEngine(run, oldFile) {
   const old = new Function(fs.readFileSync(oldFile, 'utf8') + '\nreturn runEngine;')();
   let calls = 0;
+  // 1.46.0: ENGINE_DIFF_IGNORE=<regex> skips paths that differ on purpose ("after/$ui/capital/ev/0/ride"), for a list of explained differences
+  const ign = process.env.ENGINE_DIFF_IGNORE ? new RegExp(process.env.ENGINE_DIFF_IGNORE) : null;
   const firstDiff = (a, b, at) => {
-    if (_.isEqual(a, b)) return null;
+    if (_.isEqual(a, b) || (ign && ign.test(at))) return null;
     if (!_.isObject(a) || !_.isObject(b) || Array.isArray(a) !== Array.isArray(b)) return `${at}: ${JSON.stringify(a)} vs ${JSON.stringify(b)}`.slice(0, 600);
     for (const k of _.union(Object.keys(a), Object.keys(b))) { const d = firstDiff(a[k], b[k], `${at}/${k}`); if (d) return d; }
-    return `${at}: key order or undefined values differ`;
+    return ign ? null : `${at}: key order or undefined values differ`;   // with ENGINE_DIFF_IGNORE, only ignored children differed
   };
   process.on('exit', () => console.error(`ENGINE_DIFF: ${calls} engine runs identical to ${path.basename(oldFile)}`));
   return (S, B, ...rest) => {
