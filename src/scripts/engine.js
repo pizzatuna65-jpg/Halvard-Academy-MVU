@@ -1302,7 +1302,7 @@ function stepFeatures(c) {
     casts: (Array.isArray(S.Magic && S.Magic.Casts) ? S.Magic.Casts : []).map(c => String((c && c.Technique) || '')),
     used: (Array.isArray(S.Consumables) ? S.Consumables : []).map(itemKey),
     perks: (Array.isArray(S.Perk_use) ? S.Perk_use : []).map(x => String(x).trim().toLowerCase()),
-    training: Array.isArray(S.Training) ? S.Training.length : 0,
+    training: (Array.isArray(S.Training) ? S.Training.length : 0) + (Array.isArray(S.Practice) ? S.Practice.filter(r => r && r.Track).length : 0),
     tutoring: Array.isArray(S.Tutoring) ? S.Tutoring.map(x => x.Subject) : [],
   };
   Object.assign(c, { OFF, offUnlock, staleDrop, REPORTED, B });
@@ -2597,8 +2597,7 @@ function stepSchoolWeek(c) {
         ST.mins = num(ST.mins, 0) + Math.max(0, elapsed - lesson) * f;
       }
       for (const a of S.Interactions || []) if (String(a.Kind || '').toLowerCase() === 'study') {
-        const id = NPC_ALIAS[String(a.With || '').toLowerCase()] || a.With, b = S.Bonds[id];
-        ST.mins = num(ST.mins, 0) + 60 + (b && b.Rank >= 4 && (RANK4_PARTNERS[id] || []).includes('study') ? 30 : 0);
+        ST.mins = num(ST.mins, 0) + 60 + (r4Partner(S, a.With, 'study') ? 30 : 0);   // 1.45.0 (audit 3.9): one partner rule
       }
       // posting: midterm marks at once, finals on Results day. Reputation from the average (docs/design/reputation.md figures),
       // and a remedial session for each F (next week's Saturday Study Hall slot, with the subject's teacher)
@@ -2962,7 +2961,7 @@ function stepBonds(c) {
         const socialKind = k === 'study' ? 'hangout' : k;
         if ((d[socialKind] || 0) >= BR.per_day[socialKind]) continue;
         d[socialKind] = (d[socialKind] || 0) + 1;
-        const studyBonus = k === 'study' && b.Rank >= 4 && (RANK4_PARTNERS[id] || []).includes('study') && S.Scene.Present[id] && !npcAway(id);
+        const studyBonus = k === 'study' && !!r4Partner(S, id, 'study');   // 1.45.0 (audit 3.9): one partner rule
         const society = OFF.has('proficiency') ? 0 : num(S.Player._Proficiency.Society, 0);
         gain += Math.round(Math.max(0, BR.kind_xp[socialKind] + repMod(id) + examMod(id) + socialMod) * (birthday ? BR.birthday.social_mult : 1) * (studyBonus ? 1.25 : 1) * (society >= 5 ? 1.2 : society >= 4 ? 1.1 : 1));
         if (socialKind === 'hangout' && a.Invited && b.Rank >= 2 && S.Scene.Present[id] && !npcAway(id) && !w.invited) { gain++; w.invited = 1; }
@@ -3283,6 +3282,19 @@ function stepBondMemory(c) {
   S.$eng.daily = daily;
 }
 
+// 1.45.0 (audit 3.9): one practice session, several tracks (proficiency and craft actions, mana, stamina, study). One fitness check
+// for a mana or stamina session (Practice actions that train, /Practice Track, the old /Training) and one partner rule for every
+// track data/rank4_partners.json lists (mana, stamina, study): a Rank 4+ bonded NPC with Trust 35+ and Tension under 70, in the
+// scene and not away. Each track keeps its own weekly limit.
+const unfitToTrain = (S, track) => {
+  const hurt = Object.values(S.Player.Injuries || {}).some(i => /serious|critical/.test(i.Severity) || track === 'stamina' && i.Severity === 'moderate');
+  return hurt ? 'Injured' : /Exhausted|Collapsed/.test(S.Player.Vitals._Fatigue) ? 'Too tired to train' : '';
+};
+function r4Partner(S, name, track) {
+  const id = NPC_ALIAS[String(name || '').trim().toLowerCase()] || String(name || '').trim(), b = (S.Bonds || {})[id];
+  const here = Object.keys((S.Scene || {}).Present || {}).some(k => (NPC_ALIAS[k.toLowerCase()] || k) === id);
+  return b && here && b.Rank >= 4 && b.Trust >= 35 && b.Tension < 70 && !npcAwayIn(S, id) && (RANK4_PARTNERS[id] || []).includes(track) ? id : '';
+}
 // Training room left on a track this week and in all (section 6b); a reward jump (section 6) skips the weekly limit only.
 function trainRoom(c, k, weekly) {
   const { S, weekNo, TU } = c;
@@ -3307,20 +3319,18 @@ function trainJump(c, k, why) {
 // adds TRN.session_pct % of the starting value x (1 + partner bonuses), at most TRN.weekly_pct % a week and TRN.total_pct % in all.
 // Partners: an NPC whose Rank 5 gift is a training bonus for that track, in the scene. Jumps (rewards) skip the weekly limit only.
 function stepTraining(c) {
-  const { S, log, goneNow, TU, V, canon, npcAway } = c;
+  const { S, log, goneNow, TU, V, canon } = c;
   {
     const here = new Set(Object.keys(S.Scene.Present || {}).map(canon));
     // 1.7.0: a Rank 10 benefit can carry the training bonus too (Linus: mana, Tsubaki: stamina); a suspended benefit (low Trust) does not count
     const partners = k => Object.entries(REW.npcs || {}).filter(([id, x]) => here.has(id) && !goneNow(id) && ['gift', 'r10'].some(g => x[g] && x[g].train === k && S._Perks[x[g].name] && S._Perks[x[g].name].Kind !== 'memento' && !(S.$ui.tsusp || []).includes(x[g].name))).map(([id]) => id);
-    for (const x of (Array.isArray(S.Training) ? S.Training : [])) {
+    for (const x of c.sessions || []) {   // 1.45.0 (audit 3.9): gathered by stepProficiency
       const k = /mana/.test(x.Track) ? 'mana' : /stam/.test(x.Track) ? 'stamina' : '';
       if (!k || !S.Player.$Training[k]) { log.push(`Training track "${x.Track}" is unknown (use mana or stamina); nothing was added.`); continue; }
-      const injury = Object.values(S.Player.Injuries).find(i => /serious|critical/.test(i.Severity) || k === 'stamina' && i.Severity === 'moderate');
-      if (injury || /Exhausted|Collapsed/.test(V._Fatigue)) { log.push(`Training ${k}: ${injury ? 'Injured' : 'Too tired to train'}; no gain.`); continue; }
+      const unfit = unfitToTrain(S, k);
+      if (unfit) { log.push(`Training ${k}: ${unfit}; no gain.`); continue; }
       const fatigueMult = V._Fatigue === 'Tired' ? TU.tired_training : 1;
-      const T = S.Player.$Training[k], pr = partners(k), partner = canon(x.Partner), pb = S.Bonds[partner];
-      const r4 = !!(pb && pb.Rank >= 4 && pb.Trust >= 35 && pb.Tension < 70 && here.has(partner) && !npcAway(partner)
-        && (RANK4_PARTNERS[partner] || []).includes(k));
+      const T = S.Player.$Training[k], pr = partners(k), partner = r4Partner(S, x.With, k), r4 = !!partner;
       const mult = 1 + pr.length * REW.train_bonus + (r4 ? 0.25 : 0), lab = TRN.tracks[k].label;
       const add = trainAdd(c, k, T.base * TU.trn_session / 100 * mult * fatigueMult, true), lim = TU.trn_total > 0 ? r2(T.base * TU.trn_total / 100) : 0;
       if (add > 0) log.push(`Training: ${lab} +${add}${fatigueMult < 1 ? ' (Tired: half gain)' : ''}${pr.length || r4 ? ` (with ${[...new Set([...pr, ...(r4 ? [partner] : [])])].join(' and ')}, x${mult})` : ''}; ${r2(T.gain)}${lim ? ` of ${lim}` : ''} trained so far.`);
@@ -3334,7 +3344,15 @@ function stepTraining(c) {
 // checked against both ends of the move, the actual elapsed time and the week's limits.
 function stepProficiency(c) {
   const { S, B, log, jnl, hasB, byBuilder, OFF, REPORTED, elapsed, absB, absA, dayNo, weekNo, TU } = c;
-  const reports = Array.isArray(S.Practice) ? S.Practice : [];
+  // 1.45.0 (audit 3.9): one session report. A /Practice entry with a Track and no Action (or Action "train") is a mana or stamina
+  // session; /Training is still read as one. Practice actions that train add theirs below; stepTraining applies them all.
+  const sessions = c.sessions = (Array.isArray(S.Training) ? S.Training : []).map(x => ({ Track: x.Track, With: x.Partner || '' }));
+  const reports = [];
+  for (const r of Array.isArray(S.Practice) ? S.Practice : []) {
+    if (r.Track && /^(train|training)?$/i.test(String(r.Action || '').trim())) sessions.push({ Track: r.Track, With: r.With || '' });
+    else reports.push(r);
+  }
+  S.Training = [];
   const sales = Array.isArray(S.Craft_sales) ? S.Craft_sales : [];
   S.Practice = [];
   S.Craft_sales = [];
@@ -3437,7 +3455,7 @@ function stepProficiency(c) {
     if (a.action === 'Spar with a partner' && withName && NPC_DORMS[NPC_ALIAS[withName.toLowerCase()] || withName] !== S.Player.Profile.Dorm && !/Training Week/i.test(S.World._Event_today || '')) return 'a partner from your dorm';
     if (a.cost && S.Player.Wallet.Points < a.cost) return `${a.cost} points`;
     if (a.materials && !Object.keys(S.Inventory || {}).some(n => CRAFT_PORTABLE.has(n.toLowerCase()) && num(S.Inventory[n].Qty, 0) > 0)) return 'materials in Bag';
-    if (a.train && (/Exhausted|Collapsed/.test(S.Player.Vitals._Fatigue) || Object.values(S.Player.Injuries || {}).some(i => /serious|critical/.test(i.Severity) || a.train === 'stamina' && i.Severity === 'moderate'))) return 'fit enough to train';
+    if (a.train && unfitToTrain(S, a.train)) return 'fit enough to train';
     return '';
   };
   // 1.29.0: each craft group lists the Practice actions it can be done under (data/crafts.json groups), with an optional extra club
@@ -3579,12 +3597,13 @@ function stepProficiency(c) {
       bagGain('Clearing bloom', 1, 'reagent', 'wilts tomorrow');
       const C = S.$eng.craft || (S.$eng.craft = {}); C.blooms = C.blooms || {}; C.blooms['clearing bloom'] = dayNo;
     }
-    if (a.train) S.Training.push({ Track: a.train, Partner: r.With || '' });
+    if (a.train) sessions.push({ Track: a.train, With: r.With || '' });
     if (a.cost) ledger(c, 'Points', -a.cost, 'studio practice');
     if (a.paid) { P.wk.paid++; ledger(c, 'Points', a.paid, a.paidAs || 'paid shift'); }
     if (a.study && !OFF.has('study') && S.$eng.study) {
       const counted = num(S.$eng.study.mins, 0) - num((((B || {}).$eng || {}).study || {}).mins, 0);
-      if (counted < 60) S.$eng.study.mins = num(S.$eng.study.mins, 0) + 60 - Math.max(0, counted);
+      const hour = 60 + (r4Partner(S, r.With, 'study') ? 30 : 0);   // 1.45.0 (audit 3.9): the study partner rule, as for a study Interaction
+      if (counted < hour) S.$eng.study.mins = num(S.$eng.study.mins, 0) + hour - Math.max(0, counted);
     }
   }
   if (hasB) for (const k of Object.keys(B.Projects || {})) {
@@ -3603,8 +3622,7 @@ function stepProficiency(c) {
     c.craftSold = [...(c.craftSold || []), name.toLowerCase()];
     log.push(`Medical Centre apothecary bought ${n} Healing draught${n === 1 ? '' : 's'} for ${15 * n} points (${P.wk.sold}/3 this week).`);
   }
-  for (const t of S.Training || []) if (/stam/i.test(t.Track || '') && !/Exhausted|Collapsed/.test(S.Player.Vitals._Fatigue)
-    && !Object.values(S.Player.Injuries || {}).some(i => /moderate|serious|critical/.test(i.Severity))) gain('Prowess', 1, 'stamina training');
+  for (const t of sessions) if (/stam/i.test(t.Track || '') && !unfitToTrain(S, 'stamina')) gain('Prowess', 1, 'stamina training');
   if (hasB && elapsed >= 45 && !c.toolEdit) {
     const event = String(S.World._Event_today || ''), place = here, hour = hm(S.World.Time) || 0, textNow = String(c.text || '');
     const eventXP = (key, stat, xp, attended) => {
@@ -4500,10 +4518,10 @@ function stepReminders(c) {
         const nm = arr && (plName(arr) || PLACE_ALIAS[plKey(arr)] || PLACE_ALIAS[plKey(arr).replace(/^the /, '')] || '');
         if (nm && !awayIn(S) && placeKey(nm) !== placeKey(S.World.Location))
           add(`loc:${placeKey(nm)}:${absA}`, `The narration has {{user}} arriving at ${nm}, but Location is ${placeOf(S.World.Location) || 'unset'}: update it if {{user}} is there now.`);
-        // R10: an hour or more at a training place, training words, no /Training
+        // R10: an hour or more at a training place, training words, no training session reported
         if (elapsed >= 50 && !REPORTED.training && MISS_TRAIN_AT.includes(placeKey(S.World.Location)) && !/^P[123] /.test(S.World._Period || '')
           && MISS_TRAIN_RX.test(said + '\n' + narr) && V._Fatigue !== 'Collapsed')
-          add(`train:${placeKey(S.World.Location)}:${dayNo}`, `{{user}} may have trained at ${placeOf(S.World.Location)}: if it was a real session of about an hour, report it in /Training/- (mana or stamina).`);
+          add(`train:${placeKey(S.World.Location)}:${dayNo}`, `{{user}} may have trained at ${placeOf(S.World.Location)}: if it was a real session of about an hour, report it in /Practice/- with its Track (mana or stamina).`);
       }
     }
     S.$ui.missed = out.slice(0, MISS_MAX).map(o => o[1]);

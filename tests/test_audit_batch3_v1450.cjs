@@ -69,3 +69,25 @@ console.log('/Purchases');
   const summer = go(go(S0, { Location: 'The Mall', Month: ms }), { Time: '09:40' }, [ins('/Purchases', { Item: 'Hot spiced tea', Price: 5 })]);
   ok(!summer.Inventory['Hot spiced tea'] && summer._Log.some(l => /sold here only in/.test(l)), 'out of season at its shop: refused, even with a Price');
 }
+
+console.log('3.9 one practice session report');
+{
+  const SAVE = JSON.parse(rd('tests/fixtures/saves/save_1.44.0.json'));
+  const base = go(applyPatch(SAVE, []), { Day: 'Sun', Time: '10:00', Location: 'Combat Grounds' }, [present(['Etnie'])]);
+  const gain = (X, Y) => Math.round((Y.Player.Vitals.Mana_max - X.Player.Vitals.Mana_max) * 100) / 100;
+  const viaT = go(base, { Time: '11:00' }, [ins('/Training', { Track: 'mana' })]);
+  const viaP = go(base, { Time: '11:00' }, [ins('/Practice', { Track: 'mana' })]);
+  ok(gain(base, viaP) > 0 && gain(base, viaP) === gain(base, viaT), `a /Practice Track session trains like the old /Training (+${gain(base, viaP)} / +${gain(base, viaT)})`);
+  ok(viaP.Practice.length === 0 && viaT.Training.length === 0, 'both lists are emptied');
+  const withE = go(base, { Time: '11:00' }, [ins('/Practice', { Track: 'mana', With: 'Etnie' })]);
+  const alias = go(base, { Time: '11:00' }, [ins('/Training', { Track: 'mana', Partner: 'Etnie' })]);
+  ok(gain(base, withE) > gain(base, viaP) && gain(base, withE) === gain(base, alias), `a Rank 4 partner adds the bonus on either report (+${gain(base, withE)})`);
+  const tense = go(base, {}, [{ op: 'replace', path: '/Bonds/Etnie/Tension', value: 75 }]);
+  ok(gain(tense, go(tense, { Time: '11:00' }, [ins('/Practice', { Track: 'mana', With: 'Etnie' })])) === gain(base, viaP), 'Tension 70+: no partner bonus (one rule for every track)');
+  const hurt = go(base, {}, [{ op: 'replace', path: '/Player/Injuries/Torn shoulder', value: { Severity: 'serious', Body_part: 'shoulder', Effect: 'pain', Heals_by: 'treatment' } }]);
+  const H = go(hurt, { Time: '11:00' }, [ins('/Practice', { Track: 'mana' })]);
+  ok(gain(hurt, H) === 0 && H._Log.some(l => /Training mana: Injured; no gain/.test(l)), 'one fitness check: a serious injury stops a session');
+  const eng = rd('src/scripts/engine.template.js');
+  ok((eng.match(/Exhausted\|Collapsed/g) || []).length <= 3 && /const unfitToTrain/.test(eng) && /function r4Partner/.test(eng), 'the fitness check and the partner rule are written once');
+  ok(!/RANK4_PARTNERS\[(id|partner)\] \|\| \[\]\)\.includes\('study'\)/.test(eng), 'the study bonus uses the same partner rule');
+}
