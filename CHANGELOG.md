@@ -3,6 +3,22 @@
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
 details: `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
 
+## v1.52.1 — Commitment "Where" is the meeting place (2026-10-04)
+
+From the owner's 1.34.2 chat: Tilly arranged a 22:45 meeting "by the founding plaque in the first-floor corridor" while both sat in
+the Arbiter Hall, and the narrator wrote `Where: "The Arbiter Hall"`, the place where the plan was made. Save fixture v1.52.0.
+- **Cause: the instruction, not the engine.** The engine and UI already read `Commitments.Where` as the place to be at Due
+  (`stepHere`'s "May be here" in the hour before, the Planner's "at …" and "Go here"); 502 only said `"place (optional)"`.
+- **502.** Commitments `Where`: "where {{user}} must be at Due", never where the plan was made, a Campus Map place with the exact
+  spot after a dash ("Notice Board — by the founding plaque"). Clues `Where` "where it was observed", Projects `Where` "where the
+  work is done" (the same ambiguity; the Map pins clues and the Activities panel works projects there).
+- **The owner's chat** (a fixed copy, not in the repo): Ruby's misfiled fact about {{user}}'s village removed, her duplicated parting
+  at 08:35 removed (Last_seen 08:20), the commitment's Where `Notice Board — by the founding plaque` (the castle's Floor 1 entrance
+  hall at the foot of the main stair; the plaque itself is narrator invention).
+- **Tests:** `test_saves` (with the new 1.52.0 fixture), `test_tokens_v1110`, `test_audit_b2_v1170`, `test_audit_batch7_v1480`,
+  `test_calendar_state_v1190`, `test_memory_v160` pass. The fixed chat loads in 1.52.1 with no story value lost, and Tilly shows as
+  "may be here" at the Notice Board at 22:10 (not at the Arbiter Hall).
+
 ## v1.52.0 — Feature batch 4: NPC routines (2026-10-04)
 
 `audit/AUDIT_2026-10-03_4_batch_fitur.md` batch 4 (audit part 2, suggestion 4.7), from the owner-approved
@@ -265,3 +281,4 @@ commits, each proven before the next.
 - **v1.50.0 (2026-10-03):** Feature batch 2: the routine week (a weekly plan in the Planner, lived in one reply to Sunday evening or the evening before the next event or due date; counted within the weekly limits; one or two moments played).
 - **v1.51.0 (2026-10-04):** Feature batch 3: NPC pair moments from visible relations (Meanwhile, ambience), story relations that fade from Connections, "?" pins and trace beats for open mystery threads.
 - **v1.52.0 (2026-10-04):** Feature batch 4: NPC weekly routines in the one whereabouts model (70% a day by the shared roll; `<now>`, Map "Usually here", the dossier's Routine field, initiative places), switchable in Features.
+- **v1.52.1 (2026-10-04):** 502: a Commitment's Where is the meeting place, not where it was arranged (Clues and Projects Where clarified too).

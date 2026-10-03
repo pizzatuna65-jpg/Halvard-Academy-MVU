@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.52.1 (Commitment Where): the check in its section below.
 - v1.52.0 (feature batch 4): the three checks in its section below.
 - v1.51.0 (feature batch 3): the three checks in its section below.
 - v1.50.0 (feature batch 2): the four checks in its section below.
@@ -92,6 +93,11 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.52.1 — Commitment "Where" is the meeting place
+
+1. Have an NPC arrange a meeting for later somewhere other than the current place ("meet me at the library at eight"). The new
+   Commitment's Where is the meeting place (a Campus Map place, maybe with a spot after a dash), not the place where you talked.
 
 ### v1.52.0 — Feature batch 4 (NPC routines)
 
