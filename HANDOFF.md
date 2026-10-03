@@ -3,15 +3,15 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.44.0** (2026-10-03): audit batch 6. One Agenda: Commitments, Hooks, Next plans, Projects, Notices and the
-letter home share one date marker and status (`anchorWhen`, `agendaState`); `stepAgenda` reminds once and builds `$ui.agenda`, the
-one coming-up feed for the Planner, the Notice Board, the bracelet and `<now>`. Heard rumours and stories can be pinned as Clues
-(`Source`), Encyclopaedic files its weekly lead; competition results pay reputation (with a price) and team bond XP
-(`data/reputation.json` `competition`). v1.43.0: batch 2 (`shared.js`); v1.42.0: batch 1 (bugs). Live checks: `docs/TEST_CHECKLIST.md`
-"Open". Plans: `planning/FUTURE_PLANS.md`.
+**Snapshot:** card **v1.45.0** (2026-10-03): audit batch 3. The engine settles what the narrator reports: one ledger for Points
+and Coin (`ledger`, the not-itemised and overspend checks read only the narrator's own lines), one Bag ledger (`bagTake` /
+`bagGive`), `/Purchases` (`stepPurchases`: listed price at its shop and in season, story price otherwise, points on campus, coin
+away), one practice session report (`/Practice` with a Track; `/Training` still read) with one Rank 4 partner rule (`r4Partner`).
+v1.44.0: batch 6 (Agenda); v1.43.0: batch 2 (`shared.js`). Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans:
+`planning/FUTURE_PLANS.md`.
 
-**Next task:** audit batch 3 when the owner says "perbaiki batch 3" (`audit/AUDIT_2026-10-03_3_batch_perbaikan.md`; then 4 → 5,
-7 last). Live-check v1.44.0, v1.43.0, v1.42.0 and the earlier "Open" items.
+**Next task:** audit batch 4 when the owner says "perbaiki batch 4" (`audit/AUDIT_2026-10-03_3_batch_perbaikan.md`; then 5, 7
+last). Live-check v1.45.0, v1.44.0, v1.43.0, v1.42.0 and the earlier "Open" items.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

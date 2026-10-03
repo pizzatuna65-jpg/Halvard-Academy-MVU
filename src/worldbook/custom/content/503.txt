@@ -11,8 +11,7 @@ End EVERY reply with exactly one state-update block, after the story text:
 <JSONPatch>
 [
   {"op": "replace", "path": "/World/Time", "value": "08:40"},
-  {"op": "delta", "path": "/Player/Wallet/Points", "value": -15},
-  {"op": "insert", "path": "/Player/Wallet/Transactions/-", "value": "-15 bakery roll (The Mall)"},
+  {"op": "insert", "path": "/Purchases/-", "value": {"Item": "Bakery roll", "Qty": 1, "Shop": "The Mall", "Used": true}},
   {"op": "insert", "path": "/Bonds/Irene", "value": {"Rank": 0, "Title": "Council President", "Known_facts": ["Strict about rules"]}},
   {"op": "insert", "path": "/Interactions/-", "value": {"With": "Irene", "Kind": "talk"}},
   {"op": "insert", "path": "/Rep_events/-", "value": {"Rep": "Student", "XP": 2, "Kind": "repeat", "Why": "did a Notice Board request"}},

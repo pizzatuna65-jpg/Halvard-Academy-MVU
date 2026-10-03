@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.45.0 (audit batch 3): the four checks in its section below.
 - v1.44.0 (audit batch 6): the four checks in its section below.
 - v1.43.0 (audit batch 2): the three checks in its section below.
 - v1.42.0 (audit batch 1): the four checks in its section below.
@@ -84,6 +85,17 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.45.0 — Audit batch 3 (ledger, Bag, purchases, practice sessions)
+
+Continue any chat (re-import the card: new engine, rules 502/503/506).
+1. At The Mall, ask to buy a bakery roll to eat now and a notebook to keep: the narrator writes two `/Purchases` entries (the roll
+   with "Used": true), Points fall by the listed prices, Transactions get the engine's lines, only the notebook enters the Bag.
+2. Try to buy something the Commissary does not sell while standing in the Commissary (or with too few points): `_Log` says the
+   purchase was refused and the narrator plays it as not bought.
+3. In Avalon or Sunreach Bay buy a street snack: the narrator gives a Price, coin is paid, the line says "story price".
+4. Train mana for an hour with a Rank 4 partner: the narrator reports `/Practice {"Track":"mana","With":…}` (not `/Training`), and the
+   log shows the gain "with <partner>".
 
 ### v1.44.0 — Audit batch 6 (Agenda, information, competition)
 

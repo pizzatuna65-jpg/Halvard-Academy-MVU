@@ -40,6 +40,7 @@ Build order, generated files and test commands: `docs/BUILD.md`.
 | Sunreach Bay (1.41.0: the Academy Trip) | `data/sunreach.json` (pins, places with day and night faces, legs, rates, games, street and sea pools, `meet`: who may be met where; single source); engine `srPlace`, `srLoc`, `srWindow`, `srWx` (in `stepTime`, `stepWeather`), `stepSunreach` (`$eng.sr`, `$ui.sunreach`), the hotel curfew in `curfewOf`; `merge_lorebooks.py` `sunreach` (247 with the city index, 431-451 keyword places); 505 Sunreach block and the day-before line; 502 Sunreach rule; `20_map.js` `renderSunreach`, `srCard` | `test_sunreach_v1410.cjs` |
 | Away from Halvard (1.42.0) | engine `awayIn` (Trip.Active, an outside area, off the grounds on an "away" day; every pause uses it), the stale-Trip end in `stepTime` (`$eng.trip`); `birthdayParty` in `mood_gifts.js`; 502 Trip rule | `test_audit_batch1_v1420.cjs` |
 | Item names, new Transactions lines (1.42.0) | engine `itemKey`, `bagKeyOf` (Consumables filter, the H2 / gift Bag decrease in `stepRest`, reminder R2), `newLines` (multiset diff: `stepRest`, `stepHidden` H3, reminders) | `test_audit_batch1_v1420.cjs` |
+| Money and the Bag (1.45.0): an engine payment, a purchase, an item the engine adds or takes | engine `ledger` (Points / Coin, `c.tx`; the cut to 20 in `stepCommit`), `bagTake` / `bagGive` (`bagMove`, `c.bagTx`), `stepPurchases` (`/Purchases`, `SHOP_PRICE` rows, `shopRows`), H3 and the overspend check in `stepHidden`; 502 Buying rule, 503 example | `test_audit_batch3_v1450.cjs` |
 | Map gates (far grounds) | `gateOpen`, `discovered` in `src/ui/parts/20_map.js`; `data/locations.json` `gate` | `test_playtest_v1301.cjs`, `test_map_gates_v1240.cjs` |
 | Crafting (magical and non-magic), masterwork | `data/crafts.json` (`groups`: Practice actions, tools, experts, mishaps; `masterwork`); `stepProficiency` craft helpers and `finishMasterwork`, `stepExposure` heal, `stepBag` bloom, `acPractice` recipes | `test_crafting_v1280.cjs`, `test_crafts_v1290.cjs`, `505.template.ejs`, `506.template.ejs` |
 | Weather, ambience, happenings | `stepWeather`, `stepExposure`, `stepAmbience`; `data/ambience.json`, `happenings.json`, `wind_casting.json` | |
@@ -70,6 +71,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepTime` (1) | clock, rollover (1.42.0: a Day one or two back is a slip), a stale Trip ended, `_Event_today` day plan, birthday, `absA`/`dayNo` | `data/calendar.json` |
 | `stepWeather` (1b) | season, sky, wind, °C, forecast; clear on calendar `fair` days (`wxRollDay`) | `wxDay`, `wxForecast`, `data/calendar.json` |
 | `stepMagic` (2+3) | casts, mana regen, pacts/summons (a first lesser Spirit Pact in play, 1.31.0), sustained effects, Arcane scholar discount | `data/wind_casting.json` |
+| `stepPurchases` (3b) | 1.45.0: `/Purchases`: listed price at a shop that sells it in season, else the narrator's story price; points on campus, coin away; pays through `ledger`, fills the Bag (`bagGive`) or applies an item Used at once; refusals in `_Log` | `data/shop.json` (`SHOP_PRICE`), stepRest's used items |
 | `stepRest` (4) | sleep and rest, restful places (`restMult`, `$ui.rest`), sleep debt, used items (`/Consumables`) | `data/restore_places.json` |
 | `stepExposure` (4b) | Soaked / Chilled / Overheated, head cold, crafted Consumables healing | |
 | `stepExpedition` (4c) | 1.38.0: the Expedition in the Grand Vast Forest: walks (stamina, owed hours), search hours and their seeded rolls (target, signs, beasts, Wendigo), the catch guard, the result (Journal, Creature Studies shift) | `data/expedition.json`, `$eng.exp`, `$ui.forest` → 505, lore gate, Map |
@@ -84,7 +86,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepBonds` (6) | XP, ranks, gates, gifts, rewards, Tension/Trust, rival teams off Halvard's grounds; exports `canon`, `npcAway`, `PACE` | bond data §7 |
 | `stepBondMemory` (6c) | Knows, Imprints, Mind, Next, betrayal spread | |
 | `stepProficiency` (6a) | six stats, XP sources, weekly caps, Practice, crafting, masterwork Projects, Apothecary sales, mastery perks (1.44.0: Encyclopaedic's lead, `recordsLead`) | `data/practice.json`, `club_stats.json`, `crafts.json` |
-| `stepTraining` (6b) | Mana pool / Stamina sessions (`trainRoom`, `trainAdd`, `trainJump` are module functions) | `data/training.json` |
+| `stepTraining` (6b) | Mana pool / Stamina sessions gathered by `stepProficiency` (`c.sessions`: `/Practice` Track entries, the old `/Training`, Practice actions that train; 1.45.0); `trainRoom`, `trainAdd`, `trainJump`, `unfitToTrain`, `r4Partner` (the one Rank 4 partner rule for mana, stamina, study) are module functions | `data/training.json`, `rank4_partners.json` |
 | `stepPerkUse` (6c) | one-use perks | `_Perks` |
 | `stepHidden` (7) | Dove attention, hidden magic, Points without Transactions | |
 | `stepPayout` (8) | monthly payout | |

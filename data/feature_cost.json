@@ -1,6 +1,6 @@
 {
  "rules": {
-  "proficiency": 245,
+  "proficiency": 243,
   "planner": 87,
   "notices": 98,
   "letters": 202,
@@ -9,7 +9,7 @@
   "projects": 152,
   "trip": 116,
   "battle": 72,
-  "inventory": 216,
+  "inventory": 249,
   "happenings": 73,
   "npc_initiative": 0,
   "weather": 522,
@@ -25,9 +25,9 @@
   "study": 205,
   "say_colors": 183
  },
- "core_rules": 10026,
+ "core_rules": 10185,
  "lore": 9007,
- "price_guide": 5534,
+ "price_guide": 5568,
  "live": {
   "class": 40,
   "weather": 25

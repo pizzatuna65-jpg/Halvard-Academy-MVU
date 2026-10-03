@@ -1,7 +1,45 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.45.0 — Audit batch 3: reports the engine settles (ledger, Bag, purchases, practice sessions) (2026-10-03)
+
+`audit/AUDIT_2026-10-03_3_batch_perbaikan.md` batch 3 (audit part 1, items 2.5, 3.4, 3.5, 3.9). Save fixture v1.44.0. Three engine
+commits and this release.
+- **One ledger (3.5, 2.5).** `ledger(c, 'Points'|'Coin', delta, why)` makes every engine payment (Avalon and Sunreach fares, bets
+  and thefts, tutoring, studio practice, paid shifts, the apothecary, the payout and monthly bonuses, the parcel's coin, competition
+  prizes, Sunfizz bottles, purchases): the balance (never below 0), one Transactions line, and a record of the reply's engine lines.
+  The "not itemised" check and the overspend check now read only the narrator's own lines and changes, so an engine payment in the
+  same reply no longer hides a narrator's unlogged change. The overspend check runs per currency (a coin line no longer counts as
+  points; spending coin {{user}} lacks is caught too, toast "Not enough coin"). Transactions are cut to 20 lines once, in
+  `stepCommit` (was in about 12 places, some never). The parcel's coin line reads "+N coin: from home".
+- **One Bag ledger (3.4).** `bagTake` / `bagGive` (keyed by `bagKeyOf`) for used items, gifts, crafting materials and output, the
+  apothecary sale, the parcel from home, empty Sunfizz bottles and purchases. A change the narrator already made to that item in the
+  reply counts toward it (never taken or given twice), and several engine changes to one item in a reply add up. Behaviour: an item
+  put in the Bag and used in the same reply now leaves the Bag (it used to stay); craft materials bought in the same reply are no
+  longer lost.
+- **`/Purchases` (3.4).** New report list `[{Item, Qty, Shop, Price?, Used?, Kind?}]`, settled by the new step `stepPurchases` (3b,
+  before used items are read). A Price Guide item costs its listed price at a shop that sells it (`SHOP_PRICE` rows now carry the
+  shop's place, seasons and the item name), in season; out of season there it is refused. Elsewhere, or for an unlisted item, the
+  narrator's `Price` is a story price (the line says so); without one the purchase is refused. Points on campus, coin away
+  (`awayIn`). Not enough money: refused, nothing paid. `Used: true` (a meal, a drink at the counter, a service) pays without filling
+  the Bag, and an item with a "When used" effect takes effect. Refusals are `_Log` lines with a toast. The shop reminder stays only
+  for an item put in the Bag at its shop with no purchase reported, and now points to `/Purchases`.
+- **One practice session (3.9).** `/Practice {"Track":"mana|stamina","With":…}` is a training session; `/Training` is still read
+  as one (old habit, old swipes). `stepProficiency` gathers every session (also those of Practice actions that train), `stepTraining`
+  applies them. One fitness check (`unfitToTrain`) and one Rank 4 partner rule (`r4Partner`) for mana, stamina and study (owner
+  decision, proposal adopted: the bonus for every track in `rank4_partners.json`). Behaviour: the study partner bonus (+30 study
+  minutes, +25% bond XP) now also needs Trust 35+, Tension under 70, the partner present and not away; a "Study a subject" Practice
+  with such a partner counts 90 minutes. Weekly limits are unchanged; no migration.
+- **Rules.** 502: Training reports in `/Practice`, the new Buying rule, Points for other income or costs, coin purchases off campus,
+  Inventory and Consumables lines; 503: the example patch buys through `/Purchases`; 506: buying through `/Purchases`.
+- **Tests:** `tests/test_audit_batch3_v1450.cjs` (27 checks: the ledger and the cut, narrator vs engine lines, coin overspend, the Bag
+  ledger, purchases at and away from a shop, story price, refusals, Used, seasons, the session tracks, the partner rule, the fitness
+  check). `ENGINE_DIFF` against 1.44.0 after the ledger commit: identical except the used-item case above. Full suite and stress
+  (the fuzz notice "bond rank jumped (Topaz)" also appears on 1.44.0).
+- **To confirm with the owner:** none beyond the partner rule above (adopted as proposed). `/Purchases` touches no DECISIONS entry.
+- **Live checks:** `docs/TEST_CHECKLIST.md` 1.45.0.
 
 ## v1.44.0 — Audit batch 6: Agenda, information, competition results (2026-10-03)
 
@@ -149,44 +187,6 @@ map images are the owner's, from `planning/MAP_PROMPTS_outside_maps.txt` part 3)
   dinner, curfew 22:00); the prices (carriage 6, water taxi 8, tour boat 15, bets up to 200); who may be met where (the table in the
   data, by personality).
 
-## v1.40.0 — The airship: four places aboard (2026-10-02)
-
-Owner-approved `planning/DRAFT_airship.md` (owner notes: no map image; a bar and a small stage; the cargo hold as a place; no beast
-pens), done before FP7 area 3 because the Academy Trip spends two whole days in the air. Save fixture v1.39.0.
-- **Flights** (`data/airship.json`, single source for the lore, the engine and the UI): the Expedition (Wed 07:00–12:00 out, Fri
-  13:00–18:00 home), Crowning Day (07:30–09:30, 16:00–18:00), the Kingdom Competition for Halvard's team only (Tue 08:00–10:00,
-  Sun 16:00–18:00), the Academy Trip (Sat 07:00–20:00, Thu 08:00–20:00). Mid-Year Break and the World Competition are not flights
-  yet (one line each in the data when wanted).
-- **Places aboard** (lore 378–381, from the canon `[Airships]` "Onboard" list): Promenade Deck (the glassed gallery and the view,
-  teachers strolling, the bridge door); Common Room (Yozakuran low tables, the canteen counter, a small bar, a stage with a chalkboard
-  sign-up, the galley hatch); Cabin Deck (one cabin per group of four, hot bathing stalls, the teachers' cabins forward); Cargo Hold
-  (luggage and gear, a grumbling Yozakuran quartermaster, the most private place aboard, the engine room door). The galley, the engine
-  room, the bridge and the teachers' cabins stay crew and staff only, with no penalty.
-- **Engine** (`airFlight`, `airPlace`, `airLoc` in `stepTime`; `stepAirship` after `stepCapital`). During a flight `World.Location`
-  is "Airship — <place>"; short aliases ("the bar", "our cabin", "the hold") count only in the air. An outbound flight boards whoever
-  is still elsewhere (the Common Room); a flight home leaves a place in the forest or Avalon to those maps until the story boards;
-  nobody leaves before landing; a Location that still says the airship after landing becomes the destination (Avalon — Skyport,
-  Grand Vast Forest — Base Camp, Sunreach Bay, or the Grassy Field and Hills at Halvard), where the forest and the city take over.
-  Moving aboard takes two minutes. Ten minutes in the bathing stalls end Soaked and Chilled. Once per hour in the air (seeded by the
-  flight and the hour, swipe-safe, not while asleep): a moment in the sky (15%, the route's pool, the way home's on return flights),
-  the stage in the Common Room (30%), the hold in the Cargo Hold (30%); stories only, no points, coin or items. Aboard there is no
-  dorm curfew ("Away from campus (aboard the airship)") and the weather is the narrator's.
-- **Narrator.** `<now>` gets an airship block: where {{user}} is, where and when it lands (countdown), the four places and the crew-only
-  doors, the bar's rule for the day (students drink only on the rest day and in the holidays: Crowning Day and the Kingdom team's
-  Sunday flight home), the view from the promenade by route and third of the flight, the hold's cargo by route, the rolled moments.
-  90 minutes before a flight it says when it leaves. Campus regulars and happenings are left out aboard. 502: the Location format
-  around a flight. The four entries are constant behind a gate on `$ui.airship` (on, or soon).
-- **UI.** The Map panel gets an Airship tab only during a flight, opened by itself: four place cards (no map image, owner), the
-  landing countdown and the view.
-- Tests: new `test_airship_v1400.cjs` (data and aliases, boarding, the view by third, the hold's cargo, kept aboard, landing at
-  Avalon and the forest, the flight home, the bathing stalls, who flies, the seeded sky / stage / hold, sleep, lore gate, `<now>`,
-  502, UI); `test_world_v110.cjs` (the flu check skips a day {{user}} spends flying); full `npm test` passes; stress passes (the old
-  Topaz fuzz note).
-- To confirm with the owner (invented while applying): the arrival times the calendar does not give (Expedition out 12:00, home
-  13:00–18:00; Crowning Day boarding 07:30 and home 18:00; Kingdom 08:00–10:00 and 16:00–18:00; Trip arrivals 20:00, home from
-  08:00); the airship landing at the Grassy Field and Hills; the Yozakuran quartermaster and the crew musician; the view and cargo
-  lines per route.
-
 ## Release index (one line per release, oldest first)
 
 - All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/archive/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; CHANGELOG 1.2.0/1.2.1).
@@ -307,3 +307,4 @@ pens), done before FP7 area 3 because the Academy Trip spends two whole days in 
 - **v1.42.0 (2026-10-03):** Audit batch 1: every bug from the audit (dialogue-colour regexes, item names, Transactions, one "away" test, gifts leave the Bag, XP only together, long-update truancy, day slips, UI fixes, pinned MVU).
 - **v1.43.0 (2026-10-03):** Audit batch 2: one source (`shared.js` for the constants, rules and seeded draws every runtime shares; texts read their times and numbers from data); Ambient moments paces the outside areas.
 - **v1.44.0 (2026-10-03):** Audit batch 6: the Agenda (one date marker, status, reminder and coming-up feed `$ui.agenda`), rumours and stories pinned as Clues and Encyclopaedic's filed lead, competition results that pay reputation (with a price) and team bond XP.
+- **v1.45.0 (2026-10-03):** Audit batch 3: one ledger for Points and Coin, one Bag ledger, `/Purchases` settled by the engine (price, place, season, money), one practice session report with tracks (`/Training` an alias) and one Rank 4 partner rule.
