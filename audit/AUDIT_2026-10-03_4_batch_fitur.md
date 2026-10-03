@@ -11,7 +11,7 @@ perintah yang sama.
 
 | Batch | Isi | Dari saran | Ukuran | Bergantung pada | Status |
 |-------|-----|-----------|--------|-----------------|--------|
-| 1 | Tugas dan proyek kelompok + bantuan dan utang budi | 4.10, 4.6 | sedang | – | belum |
+| 1 | Tugas dan proyek kelompok + bantuan dan utang budi | 4.10, 4.6 | sedang | – | selesai (1.49.0, commit 0f435ab) |
 | 2 | Minggu rutin (maju cepat mingguan) | 4.5 | besar | 1 | belum |
 | 3 | Dunia hidup antar-NPC + papan misteri yang hidup | 4.8, 4.9 | sedang | – | belum |
 | 4 | Jadwal hidup NPC (draft dulu, lalu dibangun) | 4.7 | sedang–besar | – (draft perlu "proceed") | belum |
@@ -51,7 +51,7 @@ Yang ditambah:
 - **Proyek kelompok** = Project `Kind: "assignment"` dengan `Subject` dan `With` (rekan sekelas). Mengerjakannya dilaporkan sebagai
   `/Practice` Track `"study"` bersama rekan itu: menit belajar masuk ke kolam persiapan (aturan partner Rank 4 yang sudah ada), dan
   rekan yang hadir mendapat bond XP sebagai interaksi study biasa (batas harian/mingguan tetap; aturan "Bond XP needs time together").
-- Selesai tepat waktu: +45 menit belajar seperti assignment biasa, plus +1 XP dengan guru mata pelajaran itu (sama dengan nilai A/B).
+- Selesai tepat waktu: +45 menit belajar seperti assignment biasa. (+1 XP dengan guru tidak dibuat: bond XP butuh waktu bersama.)
 - Terlambat karena {{user}}: Tension tiap rekan naik sesuai kategori Tension-nya (tidak dibatasi). Rekan yang malas **tidak**
   ditentukan engine: narator memainkannya sesuai karakter (prinsip NPC in character), dan Tension hanya naik lewat laporan biasa.
 - 502: satu aturan singkat (cara mencatat proyek kelompok). Planner menampilkan rekan dan mata pelajaran.
