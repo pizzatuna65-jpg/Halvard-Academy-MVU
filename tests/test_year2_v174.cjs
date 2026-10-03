@@ -114,7 +114,8 @@ const team = s => R(cardJ.character_book.entries.find(e => /^\[Ashvale team\]/m.
 ok(!/From campaign Year/.test(team(Y1)) && /From campaign Year 2: the school years above are as of Year 1; everyone has moved up 1 year\. Graduated and off the team: Mirelle Lullwyn, Theodore Wrenfield\. The academy fields new members/.test(team(Y2)), 'the Ashvale team entry names who graduated from Year 2');
 ok(/Graduated and off the team: Kira Brannock, Mirelle Lullwyn, Theodore Wrenfield\./.test(team(Y3)), 'and in Year 3 the Year 1 second-year too');
 // ---- a teacher not on record is the narrator's to create (owner, 2026-09-27)
-ok(/'not on record: create one, and keep them the same person every lesson'/.test(entry(505)), '<now>: a class without a teacher on record asks the narrator to create one');
+ok(/'not on record: create one, and keep them the same person every lesson'/.test(fs.readFileSync(path.join(ROOT, 'src/scripts/engine.js'), 'utf8')),   // 1.47.0: engine stepHere
+   '<now>: a class without a teacher on record asks the narrator to create one');
 
 // ---- the card
 ok(!/\{\{user\}\} is a first-year student/.test(cardJ.description) && /a first-year when the story begins; Player\.Profile\.Year says which year now/.test(cardJ.description), 'the card description no longer fixes {{user}} as a first-year');

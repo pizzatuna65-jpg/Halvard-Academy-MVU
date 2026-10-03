@@ -1,0 +1,7 @@
+{
+ "_note": "1.47.0 (audit batch 5, 3.2): walking on the Halvard grounds. The walking graph is data/locations.json near (the Campus Map's minutes); the engine (AR.campus, stepCampus) charges the time and stamina of a move between two campus places like the outside areas do. walk_pct: stamina an hour on foot (owner decision: 5%, as in Avalon); far_min: only a walk this long or longer costs stamina (short walks inside the grounds cost none); owe_min: minutes the clock may lag behind a walk before <now> says the way is still ahead; walks_listed: the nearest Campus Map pins <now> lists under 'Walks from here' ({{user}}'s own dorm is always listed).",
+ "walk_pct": 5,
+ "far_min": 15,
+ "owe_min": 5,
+ "walks_listed": 10
+}

@@ -95,6 +95,7 @@ console.log('Year-floor locations in the engine (1.24.3)');
   ok(r.every(x => x.$eng.wk.skipped === 0) && r.slice(0, 3).every(x => x.World.Location === 'Lecture Halls — Floor 3') && stay('Study Rooms — Floor 3').$eng.wk.skipped === 1,
     'attendance: present in the Lecture Halls on any floor wording (unknown room names get the benefit of the doubt), absent in the Study Rooms');
   const now = read('src/worldbook/custom/content/505.txt'), upd = read('src/worldbook/custom/content/502.txt');
-  ok(/pk === 'lecture halls' \? ' — Floor ' \+ \(PY \+ 1\)/.test(now) && /"Lecture Halls — Floor 3" \(Floor 2 first-years, 3 second-years, 4 third-years\)/.test(upd), '<now> names the class floor; the update rules show the year-floor form');
+  ok(/pk === 'lecture halls' \? ' — Floor ' \+ \(PY \+ 1\)/.test(read('src/scripts/engine.js')) && /HERE\.cls/.test(now) &&   // 1.47.0: the class line is the engine's ($ui.here)
+     /"Lecture Halls — Floor 3" \(Floor 2 first-years, 3 second-years, 4 third-years\)/.test(upd), '<now> names the class floor; the update rules show the year-floor form');
 }
 ok(/addEventListener\('wheel', e => \{\s*const step/.test(read('src/ui/parts/20_map.js')) && !/if \(!e\.ctrlKey\) return/.test(read('src/ui/parts/20_map.js')), 'the mouse wheel zooms without Ctrl');

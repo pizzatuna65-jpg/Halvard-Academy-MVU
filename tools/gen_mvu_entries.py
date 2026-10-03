@@ -6,26 +6,8 @@ P = lambda *a: os.path.join(ROOT, *a)
 locs = json.load(open(P('data/locations.json'), encoding='utf-8'))
 ARRIVES = {k: v['arrives'] for k, v in json.load(open(P('data/npcs.json'), encoding='utf-8')).items() if v.get('arrives', 1) > 1}   # v1.0.3
 import sys; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from common import outdoor_ids, place_keys, load_clubs, effect_text, class_data
+from common import effect_text
 npcs = json.load(open(P('data/npcs.json'), encoding='utf-8'))
-reg = {}
-for lid, l in locs.items():
-    if not l['regulars']: continue
-    for k in sorted({l['name'].lower(), re.sub(r'^the ', '', l['name'].lower()), lid.replace('_', ' ')}):
-        reg[k] = l['regulars']
-reg['main courtyard'] = locs['courtyards']['regulars']
-# ---- v1.1.0 (spec §1) class-aware presence: students, teachers, timetable with venues (engine TIMETABLE = single source) ----
-norm = lambda s: re.sub(r'^the ', '', s.strip().lower())
-VN = {norm(l['name']): l['name'] for l in locs.values()}
-STU = {nid: [n['year'], n.get('arrives', 1), n.get('dorm') or ''] for nid, n in sorted(npcs.items()) if re.match(r'^Year \d$', n.get('group') or '') and n.get('year')}
-TT, TEACH, _CLUBS = class_data(npcs, locs)   # 1.10.0: shared with the engine (tools/common.py)
-OUT_IDS = outdoor_ids(locs)
-OUTD = sorted({norm(k) for lid in OUT_IDS for k in place_keys(locs[lid], lid)})
-CLUBV = {}
-for c in load_clubs(npcs, locs):
-    allout = all(v in OUT_IDS for v in c['venues'])
-    for v in c['venues']:
-        CLUBV.setdefault(norm(locs[v]['name']), []).append([c['name'], c['members'], allout, c['key'] == 'Fishing'])
 GIFTS = json.load(open(P('data/gift_prefs.json'), encoding='utf-8'))['npcs']
 J = lambda o: json.dumps(o, ensure_ascii=False, separators=(',', ':'))
 # 1.6.0 (N13): the age of a dated line ("M2 W1 Tue ..." or "M2 W1") against the world clock, in words; unreadable -> ''.
@@ -61,8 +43,8 @@ _srd = json.load(open(P('data/sunreach.json'), encoding='utf-8'))
 SRD = {**{k: _srd['rates'][k] for k in ('carriage', 'boat', 'tour', 'bet_max')},
        'names': {nid: [npcs[nid]['name'], npcs[nid]['group'].replace(' team', '') if npcs[nid].get('group', '').endswith('team') else 'Halvard']
                  for g in _srd['meet'].values() for nid in g}}
-for k, v in {'BDAYS': {k:v['birthday'] for k,v in GIFTS.items() if v['birthday']}, 'REP': REPD, 'BOND': BOND, 'RANK4': json.load(open(P('data/rank4_partners.json'), encoding='utf-8'))['npcs'], 'TRUST': TRUST, 'REG': reg, 'ARR': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1}, 'STU': STU, 'TEACH': TEACH, 'TT': TT,
-             'CLUBV': CLUBV, 'OUTD': OUTD, 'VN': VN, 'WENDIGO': {'line': json.load(open(P('data/expedition.json'), encoding='utf-8'))['wendigo']['line']}, 'SUNREACH': SRD, 'AVALON': {'fare': json.load(open(P('data/avalon.json'), encoding='utf-8'))['rates']['ride_coin'], 'rivals': {nid: [n['name'], n['group'].replace(' team', ''), n['year']] for nid, n in sorted(npcs.items()) if (n.get('group') or '').endswith('team')}}, 'PRON': {nid: {'F': 'she/her', 'M': 'he/him'}.get(n.get('gender'), 'they/them') for nid, n in sorted(npcs.items())},
+for k, v in {'BDAYS': {k:v['birthday'] for k,v in GIFTS.items() if v['birthday']}, 'REP': REPD, 'BOND': BOND, 'RANK4': json.load(open(P('data/rank4_partners.json'), encoding='utf-8'))['npcs'], 'TRUST': TRUST, 'ARR': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1},
+             'WENDIGO': {'line': json.load(open(P('data/expedition.json'), encoding='utf-8'))['wendigo']['line']}, 'SUNREACH': SRD, 'AVALON': {'fare': json.load(open(P('data/avalon.json'), encoding='utf-8'))['rates']['ride_coin'], 'rivals': {nid: [n['name'], n['group'].replace(' team', ''), n['year']] for nid, n in sorted(npcs.items()) if (n.get('group') or '').endswith('team')}}, 'PRON': {nid: {'F': 'she/her', 'M': 'he/him'}.get(n.get('gender'), 'they/them') for nid, n in sorted(npcs.items())},
              'TENSION': {k: v for k, v in json.load(open(P('data/tension.json'), encoding='utf-8')).items() if k in ('bands', 'categories', 'npcs', 'peaks', 'overrides', 'apology_npc')}}.items():   # 1.3.8 (+1.4.0 apology_npc)
     ph = '/*@@' + k + '@@*/' + ('[]' if isinstance(v, list) else '{}')
     assert ph in ejs, ph
@@ -70,7 +52,7 @@ for k, v in {'BDAYS': {k:v['birthday'] for k,v in GIFTS.items() if v['birthday']
 ejs = ejs.replace('/*@@AGE@@*/', AGE_JS)
 from common import shared_js
 assert ejs.count('/*@@SHARED@@*/') == 1
-ejs = ejs.replace('/*@@SHARED@@*/', shared_js())   # 1.43.0 (audit batch 2): the rules and constants every runtime shares
+ejs = ejs.replace('/*@@SHARED@@*/', shared_js(presence=False))   # 1.43.0 (audit batch 2): the rules and constants every runtime shares
 from common import fill_data
 assert json.load(open(P('data/expedition.json'), encoding='utf-8'))['hunt']['hours'] == 24, '505 says the hunt ends at the same hour the next day'
 ejs = fill_data(ejs)   # 1.43.0 (2.8): times and numbers in the text come from the data ({@file.path})
@@ -151,8 +133,8 @@ PG = {'rows': rows, 'names': {k: l for l in rows for k in {locs[l]['name'].lower
       'canon': 'Canon prices (never change): ' + '; '.join(f"{n} {p:,}" for n, p in canon) + '.'}
 pg = open(P('src/worldbook/custom/506.template.ejs'), encoding='utf-8').read()
 assert pg.count('/*@@SHARED@@*/') == 1
-pg = pg.replace('/*@@SHARED@@*/', shared_js())   # 1.43.0 (audit batch 2)
-PG_SHARED_LEN = len(re.sub(r'^// .*\n', '', shared_js(), flags=re.M))   # code only, never sent: left out of the Settings estimate
+pg = pg.replace('/*@@SHARED@@*/', shared_js(presence=False))   # 1.43.0 (audit batch 2)
+PG_SHARED_LEN = len(re.sub(r'^// .*\n', '', shared_js(presence=False), flags=re.M))   # code only, never sent: left out of the Settings estimate
 pg = re.sub(r'^// .*\n', '', pg, flags=re.M)
 assert '/*@@PG@@*/{}' in pg
 craft_sale = [[i['name'], i['sale']] for i in json.load(open(P('data/crafts.json'), encoding='utf-8'))['recipes'] if i.get('sale')]
@@ -181,4 +163,4 @@ idx = [
 ]
 json.dump(idx, open(P('src/worldbook/custom/index.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 exec(open(P('tools/feature_cost.py'), encoding='utf-8').read())   # v1.1.0: writes data/feature_cost.json
-print('custom entries:', [e['uid'] for e in idx], '| REG keys', len(reg))
+print('custom entries:', [e['uid'] for e in idx])

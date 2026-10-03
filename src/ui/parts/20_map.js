@@ -289,11 +289,6 @@ function zoomMap(step, at) {
   mapView.z = z; if (z === 1) { mapView.cx = 0.5; mapView.cy = 0.5; }
   render();
 }
-function classHint(S) {
-  const m = /^P([123]) /.exec((S.World || {})._Period || ''); if (!m || !featureOn(S, 'class')) return '';
-  const i = +m[1] - 1, until = PERIOD_END[i], cell = (CAL.timetableFor(S.World, S) || [])[i] || '';
-  return /^Study Hall/.test(cell) ? `Study Hall until ${until}` : /^Student Council \(/.test(cell) ? `at the Student Council until ${until}` : /^Clubs/.test(cell) ? `at their club until ${until}` : `in class until ${until}`;
-}
 // 1.14.0 (planning/DRAFT_dynamic_lore.md [?4]): the place in the current season (data/locations.json seasons, by calendar month)
 const seasonLine = (l, S) => { const k = SEASON_OF(((S || {}).World || {}).Month), t = (l.seasons || {})[k]; return t ? `<p class="sub season"><b>${esc(k)}:</b> ${esc(t)}</p>` : ''; };
 // 1.24.0 (owner playtest): lore and rumours are heard in the story ($ui.lore: overheard, or named in the narration), not given by the map
@@ -317,12 +312,14 @@ function locCard(id, S, cur, P) {
   const accessText = escorted ? `A trusted resident here can escort you into the common areas. ${l.access || ''}` : visitStaff.length ? `You may visit ${visitStaff.join(', ')} here without an appointment if available. ${l.access || ''}` : l.access || 'Open to students';
   const change = Object.entries((S.Campus_State || {}).Location_changes || {}).filter(([k]) => normPlace(k) === normPlace(l.name)).map(([, v]) => v);
   const B = S.Bonds || {};
-  const stOf = npcStatus(S);   // v1.0.3 (F02): Campus_State.NPC_status beats the lorebook's habits
-  // 1.0.3: graduates and not-yet-arrived students are not regulars
-  const busy = classHint(S);   // 1.1.0 (spec §1): students are in class / Study Hall / at their clubs during the periods
+  // 1.0.3: graduates and not-yet-arrived students are not regulars. 1.47.0 (audit 3.8): each regular's note is the engine's
+  // whereabouts (shared.js): a status on record (Campus_State.NPC_status), off sick, or busy elsewhere this period (a student in class,
+  // at Study Hall, voting or at their club; a teacher teaching), the same model <now> uses
+  const V = presenceView(DATA.presence, S, f => featureOn(S, f)), pk = placeKey(l.name);
+  const note = r => { const w = whereabouts(DATA.presence, V, r); return w.st || (w.sick ? 'off sick' : w.busy && !w.busy[1].includes(pk) ? w.busy[0] : ''); };
   const regIds = id === 'student_council_chamber' ? (((S.Campus_State || {}).Council || {}).Members || []) : l.regulars;
   const regs = regIds.filter(r => atHalvard(r, S) && hauntKnown(r, S)).map(r => (npcOf(r) ? (B[r] ? `<button class="lnk" data-open="npc:${esc(r)}">${esc(nameOf(r, S))}</button>` : esc(nameOf(r, S))) : esc(r))
-    + (stOf(r) ? ` <span class="sub">(${esc(stOf(r))})</span>` : busy && /^Year/.test((npcOf(r) || {}).g || '') ? ` <span class="sub">(${busy})</span>` : '')).join(', ');
+    + (note(r) ? ` <span class="sub">(${esc(note(r))})</span>` : '')).join(', ');
   // 1.2.0 (owner): every card has the same rows, in the same order. 1.30.6 (owner): no "Connected to" row; the map shows the
   // neighbours, and the AI reads them in the Campus Map lore
   const rows = [

@@ -159,9 +159,10 @@ def npc_aliases(npcs):
     return alias
 
 
-def shared_js():
+def shared_js(presence=True):
     """1.43.0 (audit batch 2): src/scripts/shared.js with its data filled in (data/calendar.json), for the engine, the panels,
-    the bracelet and the <now> entry (each template marks the spot with a SHARED placeholder)."""
+    the bracelet and the <now> entry (each template marks the spot with a SHARED placeholder). presence=False (1.47.0) leaves out
+    the whereabouts section, which only the engine and the panels run."""
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     cal = json.load(open(os.path.join(root, 'data/calendar.json'), encoding='utf-8'))
     data = {k: cal[k] for k in ('periods', 'exam_months', 'seasons', 'dorm_colors')}
@@ -169,7 +170,46 @@ def shared_js():
     src = open(os.path.join(root, 'src/scripts/shared.js'), encoding='utf-8').read()
     ph = "/*@@SHARED_DATA@@*/{ periods: [], exam_months: [], seasons: [], trips: [], dorm_colors: {} }"
     assert ph in src, 'shared.js lost its data placeholder'
+    if not presence:
+        s, e = src.index('// ---- whereabouts ('), src.index('// ---- end of whereabouts')
+        src = src[:s] + src[src.index('\n', e) + 1:]
     return src.replace(ph, json.dumps(data, ensure_ascii=False, separators=(',', ':')))
+
+
+def presence_data(npcs, locs):
+    """1.47.0 (audit 3.8): the data shared.js whereabouts / presenceAt read, for the engine (it writes $ui.here for <now>) and the
+    Map panel. reg: place key -> regulars (the name, the name without "the", the id in words); stu: Halvard student -> [lorebook
+    year, campaign year they arrive, dorm]; arr: NPC -> campaign year they arrive (later cohorts only); teach, tt: class_data;
+    clubv: place key -> [club, members, all its venues outdoors, the Fishing Club]; outd: outdoor place keys; vn: place key -> name."""
+    norm = lambda s: re.sub(r'^the ', '', s.strip().lower())
+    reg = {}
+    for lid, l in locs.items():
+        if not l['regulars']: continue
+        for k in sorted({l['name'].lower(), re.sub(r'^the ', '', l['name'].lower()), lid.replace('_', ' ')}):
+            reg[k] = l['regulars']
+    reg['main courtyard'] = locs['courtyards']['regulars']
+    stu = {nid: [n['year'], n.get('arrives', 1), n.get('dorm') or ''] for nid, n in sorted(npcs.items()) if re.match(r'^Year \d$', n.get('group') or '') and n.get('year')}
+    tt, teach, _clubs = class_data(npcs, locs)
+    out_ids = outdoor_ids(locs)
+    clubv = {}
+    for c in load_clubs(npcs, locs):
+        allout = all(v in out_ids for v in c['venues'])
+        for v in c['venues']:
+            clubv.setdefault(norm(locs[v]['name']), []).append([c['name'], c['members'], allout, c['key'] == 'Fishing'])
+    return {'reg': reg, 'stu': stu, 'arr': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1}, 'teach': teach, 'tt': tt, 'clubv': clubv,
+            'outd': sorted({norm(k) for lid in out_ids for k in place_keys(locs[lid], lid)}), 'vn': {norm(l['name']): l['name'] for l in locs.values()}}
+
+
+def campus_map(locs, pins):
+    """1.47.0 (audit 3.2): the campus as an Area for the engine (AR.campus): every place its own node with its floors, the walking
+    legs of data/locations.json near (each pair once, minutes), the Campus Map's pins (label, places), the dorm-room places every
+    dorm shares (walked from {{user}}'s own dorm), and each dorm's place."""
+    legs = sorted({tuple(sorted((a, b))) + (w,) for a, l in locs.items() for b, w in l.get('near') or [] if b in locs})
+    shared = sorted(i for i in locs if sum(i in p['cluster'] for p in pins) > 1)
+    return {'area': 'Halvard', 'places': [{'id': i, 'name': l['name'], 'pin': i, **({'floor': l['floor'], 'floors': l['floors']} if l.get('floors') else {})} for i, l in sorted(locs.items())],
+            'pins': [{'id': i, 'name': l['name']} for i, l in sorted(locs.items())], 'legs': [list(x) for x in legs],
+            'map': [[p['label'], [i for i in p['cluster'] if i not in shared]] for p in pins], 'shared': shared,
+            'dorms': {d: f'{d.lower()}_dormitory' for d in ('Fire', 'Light', 'Sky', 'Viridian') if f'{d.lower()}_dormitory' in locs}}
 
 
 _DATA_REF = re.compile(r'\{@([a-z_]+)\.([A-Za-z0-9_.]+)(?::([a-z]+))?\}')

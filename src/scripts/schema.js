@@ -387,6 +387,7 @@ export const Schema = z.object({
     mastery: z.any().prefault(null).catch(null),                   // 1.30.0: Rank 5 stats and whether the week's lead is open here
     prof_offer: Bool(false),
     since: z.any().prefault([]).catch([]), maybe: z.any().prefault([]).catch([]),   // 1.6.0 (N4): Next plans met again / that may bring someone here (engine)
+    here: z.any().prefault(null).catch(null),                         // 1.47.0 (audit 3.8): who is likely around {{user}}'s place now (engine stepHere -> <now>)
     xold: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.6.1 (N5): Extras records that left the full list; given back if they return (engine)
     say: z.record(z.string(), z.number().int().min(0).max(63)).prefault({}).catch({}),   // 1.37.1: dialogue colour of each character present now (engine)
     sayx: z.record(z.string(), z.array(z.number().int().min(0).max(63)).max(3)).prefault({}).catch({}),   // 1.37.2: an Extras character's three dialogue colours (engine)

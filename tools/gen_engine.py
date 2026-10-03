@@ -73,6 +73,11 @@ t = t.replace('/*@@PLACE_ALIAS@@*/{}', json.dumps(place_aliases(locs), ensure_as
 pins = json.load(open(P('data/map_pins.json'), encoding='utf-8'))
 shared = sorted(locs[i]['name'] for i in locs if sum(i in p['cluster'] for p in pins) > 1)
 t = t.replace('/*@@PLACE_SHARED@@*/[]', json.dumps(shared, ensure_ascii=False))
+# 1.47.0 (audit batch 5): the campus as an Area (3.2: the walking graph, the pins, data/campus.json) and whereabouts (3.8)
+from common import presence_data, campus_map
+for ph, v in (('CAMPUS_MAP', {**campus_map(locs, pins), 'rates': json.load(open(P('data/campus.json'), encoding='utf-8'))}), ('PRESENCE', presence_data(npcs, locs))):
+    assert t.count('/*@@' + ph + '@@*/{}') == 1, ph
+    t = t.replace('/*@@' + ph + '@@*/{}', json.dumps(v, ensure_ascii=False, separators=(',', ':')))
 # 1.24.0 (owner playtest): lore and rumours of a place are heard, not given. {place key: [[uid, name as prose writes it, title, text]]};
 # the text is the lore entry without its [title] line, told once in <now> when it is overheard
 place_lore = {}

@@ -148,6 +148,8 @@ const NPC_GROUP = /*@@NPC_GROUP@@*/{};
 const TUNING = /*@@TUNING@@*/[];
 // 1.10.0 (FP7): lessons with venues per weekday period, teachers ([subject, year]; year 0 = every year), club venues (tools/common.py)
 const CLASS = /*@@CLASS@@*/{};
+// 1.47.0 (audit 3.8): the data shared.js whereabouts and presenceAt read (tools/common.py presence_data), for stepHere
+const PRESENCE = /*@@PRESENCE@@*/{};
 const SAY = /*@@SAY@@*/{ n: 0, start: {}, dist: [] };   // 1.37.1: dialogue colours (data/dialogue_colors.json)
 // 1.10.2 (FP11): why an NPC seeks {{user}} out: templates per Tension category, each NPC's category and club (data/initiative_asks.json)
 const INIT_ASKS = /*@@INITIATIVE_ASKS@@*/{};
@@ -590,6 +592,7 @@ const EXP = /*@@EXPEDITION@@*/{};
 const AV = /*@@AVALON@@*/{};
 const AIR = /*@@AIRSHIP@@*/{};
 const SR = /*@@SUNREACH@@*/{};
+const CAMPUS_MAP = /*@@CAMPUS_MAP@@*/{};   // 1.47.0 (audit 3.2): the campus as an Area (tools/common.py campus_map, data/campus.json)
 function makeArea(key, D, o = {}) {
   const A = { key, D, area: D.area, R: D.rates || {}, PL: Object.fromEntries((D.places || []).map(p => [p.id, p])),
     PIN: Object.fromEntries((D.pins || []).map(p => [p.id, p])), NB: areaNb(D.legs), NAME: {}, ALIAS: {}, RT: {},
@@ -762,14 +765,20 @@ function srWindow(W) {                                           // from the lan
   const at = ([w, d, tm]) => toAbs({ Year: Y, Month: Wn.m, Week: w, Day: d, Time: tm });
   return t >= at(Wn.from) && t < at(Wn.to);
 }
-// 1.42.0 (audit 1.2): {{user}} is away from Halvard: on a story trip (Trip.Active), in an outside area (aboard the airship, the
-// Expedition's forest, Avalon, Sunreach Bay), or off the grounds on a calendar "away" day (the Crowning Day evening on campus and
-// the World Competition for anyone not in the national four are not away). One test for every system that pauses meanwhile.
-const awayIn = S => {
+// 1.47.0 (audit 3.3): the area {{user}} is in, from World.Location as stepTime left it: an outside area's key (aboard the airship,
+// Avalon, Sunreach Bay; the Expedition's forest on its days), 'campus' on the Halvard grounds, '' off them
+function areaNow(S) {
   const W = (S && S.World) || {}, p = placeOf(W.Location);
-  return !!((S && S.Trip) || {}).Active || [AIR.area, AV.area, SR.area].includes(p) || (expOnDay(W) && !!forestPlace(W.Location, ''))
-    || (!onCampus(W.Location) && eventsOn(W).some(e => e.away));
-};
+  if (p === AIR.area) return 'airship';
+  if (p === AV.area) return 'avalon';
+  if (p === SR.area) return 'sunreach';
+  if (expOnDay(W) && forestPlace(W.Location, '')) return 'forest';
+  return onCampus(W.Location) ? 'campus' : '';
+}
+// 1.42.0 (audit 1.2): {{user}} is away from Halvard: on a story trip (Trip.Active), in an outside area, or off the grounds on a
+// calendar "away" day (the Crowning Day evening on campus and the World Competition for anyone not in the national four are not
+// away). One test for every system that pauses meanwhile; 1.47.0: the area comes from areaNow.
+const awayIn = S => { const a = areaNow(S); return !!((S && S.Trip) || {}).Active || (a !== 'campus' && (a !== '' || eventsOn((S && S.World) || {}).some(e => e.away))); };
 // 1.31.0 (data/restore_places.json): the multiplier a restful place gives at one moment, [multiplier, why]. The first rule that fits
 // wins; weather conditions never fit with the weather off. dark = outside Practice's daylight hours. wxc caches a time block's weather.
 function restMult(R, abs, seed, wxOn, cold, wxc) {
@@ -4517,6 +4526,31 @@ function stepAgenda(c) {
     if ((id.startsWith('n:') && !((S.Bonds || {})[id.slice(2)] || {}).Next) || (id.startsWith('p:') && !(S.Projects || {})[id.slice(2)])) delete A.when[id];
 }
 
+// ---- 8o. 1.47.0 (audit 3.8): whereabouts. Who is likely around {{user}}'s place now ($ui.here: what the period holds, the regulars,
+// those the weather moved indoors, clubs meeting here, regulars with a status, {{user}}'s class line), from the one model in shared.js
+// (whereabouts, presenceAt) that the Map panel's Regulars also use. <now> prints it; nothing here changes the story.
+const presenceNow = S => presenceView(PRESENCE, S, id => uiOn(S.$ui, id));
+// 1.33.0 (owner-approved planning/DRAFT_classes_and_teachers.md): Practical Magic is one class per combat role (all dorms, by year;
+// {{user}} attends the class of the first role in Combat_role); a free period ($ui.free) means the class is not held
+function classLineAt(PD, V, loc) {
+  const place = placeOf(loc), pk = place.toLowerCase().replace(/^the /, ''), c = V.cls;
+  const ROLE = classRoleOf(V.PR), TEACH = PD.teach || {}, STU = PD.stu || {}, free = c && c[3] === 'class' ? (V.UI.free || []).find(f => f.p === V.pIdx && f.s === c[0]) : null;
+  if (free) return 'Free period: ' + c[0] + ' is not held now (' + (free.t || 'the teacher') + ' ' + free.why + '). {{user}} and their classmates have the hour free; it counts against no one.';
+  if (!(c && c[3] === 'class' && c[2].includes(pk))) return '';
+  const PY = Math.max(1, Math.min(3, Number(V.PR.Year) || 1)), dorm = V.PR.Dorm || 'Unsorted', PM = c[0] === 'Practical Magic', st = id => npcStatusOf(V.NST, id);
+  const tch = Object.keys(TEACH).find(id => TEACH[id].some(x => x[0] === c[0] && (x[1] === PY || x[1] === 0) && (!x[2] || x[2] === (ROLE || 'Attack'))) && !st(id));
+  const mates = Object.keys(STU).filter(id => { const w = whereabouts(PD, V, id); return !w.gone && !w.sick && !w.st && STU[id][0] + V.Y - STU[id][1] === PY && (c[1] !== 'D' || dorm === 'Unsorted' || STU[id][2] === dorm); }).slice(0, 8);
+  return PM ? 'Your class now: Practical Magic, ' + (ROLE ? 'the ' + ROLE + ' class' : 'the joint assessment (roles not assigned yet: the five role teachers watch the first-years together and assign roles)')
+      + ' (Year ' + PY + ', all dorms; sparring partners from their own dorm except in Training Week) — teacher ' + (tch || 'not on record') + '; classmates: students of Year ' + PY + ' in this role, from any dorm'
+    : 'Your class now: ' + c[0] + ' [' + c[1] + '] (Year ' + PY + ', ' + (c[1] === 'D' ? (dorm === 'Unsorted' ? 'dorm not yet sorted' : dorm + ' only') : 'all dorms')
+    + ') at ' + ((PD.vn || {})[pk] || place) + (pk === 'lecture halls' ? ' — Floor ' + (PY + 1) + ' (the Year ' + PY + ' floor)' : '') + ' — teacher ' + (tch || 'not on record: create one, and keep them the same person every lesson') + '; classmates on record: ' + (mates.join(', ') || 'none');
+}
+function stepHere(c) {
+  const { S } = c;
+  const V = presenceNow(S);
+  S.$ui.here = { ...presenceAt(PRESENCE, V, S.World.Location), cls: classLineAt(PRESENCE, V, S.World.Location) };
+}
+
 function stepUi(c) {
   const { S, B, offUnlock, evs, dayNo, M, Hd, text, toolEdit, OFF } = c;
   const place = placeOf(S.World.Location);
@@ -4575,7 +4609,7 @@ function stepCommit(c) {
   if (log.length) S._Log = [...(S._Log || []), ...log.map(l => `[${stamp(S.World)}] ${l}`)].slice(-12);
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepAgenda, stepUi, stepCommit];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,

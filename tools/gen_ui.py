@@ -63,6 +63,8 @@ _srm = json.load(open(P('data/sunreach.json'), encoding='utf-8'))
 _tour = next(l for l in _srm['legs'] if len(l) > 3 and l[3])
 _dock = next(p['name'] for p in _srm['places'] if p['pin'] == _tour[0] and 'Dock' in p['name'])
 _AV_BARE = ('Crown Square', 'Spellwright Row', 'Old Town', 'Eldrasil Castle')
+from common import presence_data   # 1.47.0 (audit 3.8): the Map card's Regulars use the engine's whereabouts (shared.js)
+DATA['presence'] = presence_data(npcs, json.load(open(P('data/locations.json'), encoding='utf-8')))
 DATA['areas'] = {
     'forest': {'area': _exp['area'], 'map': _exp['map'], 'unit': 'h', 'arrive': 'base_camp', 'start': 'base_camp', 'reveal': 'near', 'paths': True,
                'offGo': 'Only during the Expedition', 'offText': 'You are not in the forest now. The map shows what you found on your Expedition.',
@@ -174,7 +176,7 @@ assert bar.count('/*@@SHOP_RX@@*/') == 1
 bar = bar.replace('/*@@SHOP_RX@@*/', '/^(the\\s+)?(' + _shop_rx + ')\\b/i')
 from common import shared_js
 assert bar.count('/*@@SHARED@@*/') == 1
-bar = bar.replace('/*@@SHARED@@*/', shared_js())   # 1.43.0 (audit batch 2)
+bar = bar.replace('/*@@SHARED@@*/', shared_js(presence=False))   # 1.43.0 (audit batch 2)
 THEMES = json.load(open(P('data/themes.json'), encoding='utf-8')); THEMES.pop('_note', None)   # 1.3.1 colour themes (tools/make_themes.py)
 bar = bar.replace('/*@@THEMES@@*/{}', json.dumps(THEMES, ensure_ascii=False, separators=(',', ':')))
 bar = bar.replace('/*@@CAST@@*/{}', json.dumps(CAST, ensure_ascii=False, separators=(',', ':'))).replace('/*@@BASE@@*/""', json.dumps(man['base_url']))

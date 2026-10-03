@@ -81,4 +81,63 @@ const areaPath = (R, a, b) => { if (!R[b]) return []; const p = [b]; while (p[0]
 // minutes between two places of a pin map: inside one pin their "in" minutes (at least 5), else the pins' shortest way
 const inMin = x => { const v = Number(x); return Number.isFinite(v) ? v : 5; };
 const areaMin = (PL, routesOf, a, b) => a === b ? 0 : PL[a].pin === PL[b].pin ? Math.max(5, inMin(PL[a].in) + inMin(PL[b].in)) : (routesOf(PL[a].pin)[PL[b].pin] || { w: 999 }).w;
+// a Settings feature is on, read from $ui as the engine left it ($ui.on; older saves: off, happenings, wxfx, ambience)
+const uiOn = (UI, id) => { const U = UI || {}; return typeof (U.on || {})[id] === 'boolean' ? U.on[id] : id === 'happenings' ? U.happenings !== 'off' : id === 'weather' ? (U.wxfx || 'full') !== 'off'
+  : id === 'ambience' ? (U.ambience || 'full') !== 'off' : !(U.off || []).includes(id); };
+// ---- whereabouts (1.47.0, audit 3.8): one answer to "where is NPC X now" and "who is likely around this place" for the engine
+// (it writes $ui.here for <now>; NPC initiative, Next plans and appointments, the students met in an outside area) and the Map
+// panel's Regulars. PD is the presence data each runtime is given (tools/common.py presence_data): reg (place key -> regulars),
+// stu (Halvard student -> [lorebook year, campaign year they arrive, dorm]), arr (NPC -> campaign year they arrive), teach, tt (the
+// timetable with venues), clubv (place key -> [club, members, all outdoors, the Fishing Club]), outd (outdoor place keys), vn (place
+// key -> map name). presenceView reads the moment once (the period and what it holds, flu, weather); on(id): a Settings feature.
+function presenceView(PD, S, on) {
+  const W = S.World || {}, UI = S.$ui || {}, PR = (S.Player || {}).Profile || {}, CS = S.Campus_State || {};
+  const WX = on('weather') && UI.wx && !UI.wx.away && UI.wx.now ? UI.wx : null, FULL = !!WX && WX.mode === 'full';
+  const per = /^P([123]) /.exec(String(W._Period || '')), pIdx = per ? +per[1] - 1 : -1;
+  const election = W.Month === 10 && W.Week === 3 && W.Day === 'Sat' && pIdx === 2;
+  const councilAm = W.Day === 'Sat' && pIdx === 1 && PR.Council && !councilRemedial(S.Commitments, W);
+  const cls = election ? ['Student Council Election', '', ['main courtyard'], 'election'] : councilAm ? ['Student Council', '', ['student council chamber'], 'council']
+    : on('class') && pIdx >= 0 && (PD.tt || {})[W.Day] ? PD.tt[W.Day][pIdx] : null;   // [subject, M|D, venues, class|study|clubs]
+  const gale = FULL && WX.now.wind === 'gale';
+  return { W, UI, PR, NST: CS.NPC_status || {}, GRAD: CS.Graduated || [], Y: Math.max(1, Number(W.Year) || 1), COUNCIL: CS.Council || {}, pIdx, cls,
+    until: PERIOD_END[pIdx], sick: FULL && WX.flu ? (WX.sick || []) : [], gale, bad: FULL && (WX.now.sky === 'Rain' || WX.now.sky === 'Storm' || gale), rain: FULL && WX.now.sky === 'Rain' };
+}
+// NPC id at this moment: gone (graduated, or their cohort has not arrived), st (Campus_State.NPC_status), sick (the flu), busy
+// ([what they are doing, the place keys where that keeps them in sight]: students in class, at Study Hall, voting or at their clubs;
+// a teacher teaching the period's subject). The Council's Saturday morning keeps nobody from anywhere.
+function whereabouts(PD, V, id) {
+  const c = V.cls, k = c ? c[3] : '', stu = !!(PD.stu || {})[id];
+  const teach = k === 'class' && ((PD.teach || {})[id] || []).some(x => x[0] === c[0]);
+  const busy = !c || k === 'council' ? null : teach ? ['teaching ' + c[0] + ' until ' + V.until, c[2]] : !stu ? null
+    : k === 'class' ? ['in class until ' + V.until, []] : k === 'study' ? ['at Study Hall until ' + PERIOD_END[1], c[2]]
+    : k === 'election' ? ['voting in the Main Courtyard until ' + PERIOD_END[2], []] : ['at their club until ' + PERIOD_END[2], []];
+  return { id, gone: V.GRAD.includes(id) ? 'graduated' : ((PD.arr || {})[id] || 1) > V.Y ? 'not at Halvard yet' : '', st: npcStatusOf(V.NST, id), sick: V.sick.includes(id), busy };
+}
+const whereFree = w => !w.gone && !w.sick;   // at Halvard and on their feet
+// who is likely around the place of loc now (the <now> presence block): place, pres (what the period holds), regs (regulars likely
+// here), moved (regulars of an outdoor place moved indoors by the weather), club (clubs meeting here), st ([regular, status] pairs)
+function presenceAt(PD, V, loc) {
+  const place = placeOf(loc), pk = place.toLowerCase().replace(/^the /, ''), c = V.cls, k = c ? c[3] : '', REG = PD.reg || {};
+  const wh = id => whereabouts(PD, V, id), here = id => whereFree(wh(id));
+  let cand = (REG[place.toLowerCase()] || REG[pk] || []).filter(here);
+  if (pk === 'student council chamber') cand = [...new Set([...cand, ...(V.COUNCIL.Members || []).filter(r => r !== V.PR.Name && here(r))])];
+  let regs1 = cand.filter(id => { const b = wh(id).busy; return !b || b[1].includes(pk); });
+  const pres = [], P = PERIOD_END;
+  let clubs = [];
+  if (k === 'class') pres.push('Students are in class until ' + V.until + '.');
+  else if (k === 'study') pres.push(c[2].includes(pk) ? 'Study Hall until ' + P[1] + ': most students are here.' : 'Students are at Study Hall in the Main Library until ' + P[1] + '.');
+  else if (k === 'council') pres.push(c[2].includes(pk) ? 'Student Council meets here until ' + P[1] + '; members attend instead of Study Hall.' : 'Student Council members meet in the Chamber until ' + P[1] + '.');
+  else if (k === 'election') pres.push('Students vote for Student Council President in the Main Courtyard until ' + P[2] + '; ordinary clubs do not meet this afternoon.');
+  else if (c) { clubs = (PD.clubv || {})[pk] || []; if (!clubs.length) pres.push('Students are at their clubs until ' + P[2] + '.'); }
+  let moved = [];
+  if (V.bad && (PD.outd || []).includes(pk) && !((pk === 'boathouse and lake' || pk === 'fishing house') && V.rain && !V.gale)) {   // the Fishing Club likes rain
+    moved = regs1.filter(id => !(V.gale && id === 'Ottavio')); regs1 = regs1.filter(id => V.gale && id === 'Ottavio');
+  }
+  const club = clubs.map(x => {
+    const m = x[1].filter(id => { const w = wh(id); return whereFree(w) && !w.st; });
+    return x[0] + (V.bad && x[2] && (!x[3] || V.gale) ? ': practising indoors (Gymnasium) or cancelled in this weather' : ': meeting here until ' + P[2] + (m.length ? ' (members on record: ' + m.join(', ') + ')' : ''));
+  }).join('; ');
+  return { place, pres, regs: regs1.filter(r => !wh(r).st), moved, club, st: regs1.filter(r => wh(r).st).map(r => [r, wh(r).st]) };
+}
+// ---- end of whereabouts (tools/common.py shared_js(presence=False) leaves the section out of the bracelet, 505 and 506)
 // ---- end of shared.js
