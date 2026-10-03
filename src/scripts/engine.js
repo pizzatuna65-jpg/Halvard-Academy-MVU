@@ -687,7 +687,9 @@ function wxDay(seed, day) {                                    // chain without 
   let prev = null;
   for (let d = day - 3; d < day; d++) prev = wxRollDay(seed, d, prev).blocks[2];
   const r = wxRollDay(seed, day, prev);
-  if (WXC.size > 400) WXC.clear(); WXC.set(key, r);
+  // 1.48.0 (audit 2.9): room for a whole year (happeningOn builds 336 days at once) and the days around it, so that build no longer
+  // empties the cache it has just filled
+  if (WXC.size > 2 * YEAR_DAYS + 64) WXC.clear(); WXC.set(key, r);
   return r;
 }
 function wxText(bk) {
@@ -1181,7 +1183,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.47.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.48.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
 // from the shared context c (the states, the reply's text and the values earlier steps computed) and adds what later steps use.

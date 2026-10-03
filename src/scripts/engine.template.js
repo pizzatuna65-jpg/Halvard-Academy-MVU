@@ -544,7 +544,9 @@ function wxDay(seed, day) {                                    // chain without 
   let prev = null;
   for (let d = day - 3; d < day; d++) prev = wxRollDay(seed, d, prev).blocks[2];
   const r = wxRollDay(seed, day, prev);
-  if (WXC.size > 400) WXC.clear(); WXC.set(key, r);
+  // 1.48.0 (audit 2.9): room for a whole year (happeningOn builds 336 days at once) and the days around it, so that build no longer
+  // empties the cache it has just filled
+  if (WXC.size > 2 * YEAR_DAYS + 64) WXC.clear(); WXC.set(key, r);
   return r;
 }
 function wxText(bk) {

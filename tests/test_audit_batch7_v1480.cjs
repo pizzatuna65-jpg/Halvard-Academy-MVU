@@ -40,3 +40,24 @@ const D = CH[10];   // the campus chain, people present
 ok(Object.values(D.$ui.moods).every(m => Object.keys(m).join() === 'mood') && (D.$ui.now.moods || []).some(l => /mood \(/.test(l)), 'moods keep only the mood; the reasons are in <now>\'s mood lines');
 ok(Object.values(D.$ui.area).every(a => !('walks' in a) && !('near' in a)) && /^Walks from here/.test(D.$ui.now.walk[0]), 'an area keeps no walks of its own: they are <now>\'s line');
 ok(D.$ui.file === undefined || typeof D.$ui.file === 'object', 'the Builder record ($ui.file) stays (DECISIONS §2: it restores the Builder-only fields)');
+
+console.log('Small items (2.9)');
+const EW = new Function(read('src/scripts/engine.js') + '\nreturn { WXC, wxDay, happeningOn, YEAR_DAYS };')();
+for (let d = 0; d < 200; d++) EW.wxDay(12345, 2 * EW.YEAR_DAYS + 100 + d);   // the days a chat has already looked at
+EW.happeningOn(12345, 3 * EW.YEAR_DAYS + 5, 1, 'full');
+ok(EW.WXC.size > 450 && EW.WXC.has('12345|' + (2 * EW.YEAR_DAYS + 100)), `building a year's happenings no longer empties the weather cache (${EW.WXC.size} days kept; it emptied at 400)`);
+{
+  let CHAT = {};
+  global.window = { parent: { document: {} } };
+  global.getVariables = o => (o && o.type === 'chat' ? CHAT : {});
+  global.updateVariablesWith = (fn, o) => { if (o.type === 'chat') CHAT = fn(JSON.parse(JSON.stringify(CHAT))); };
+  global.eventEmit = () => {};
+  const U = new Function(read('src/scripts/ui.js') + '\nreturn { newsMark, newsGet, newsWrite, themed, recolor };')();
+  U.newsWrite({ seen: ['stat:Arcana:1', 'stat:Craft:2'], noticed: [] });
+  U.newsMark(['stat:Arcana:2'], 'seen');
+  ok(U.newsGet().seen.join() === 'stat:Craft:2,stat:Arcana:2', 'eld_seen: a new rank replaces the old rank\'s key');
+  U.newsMark(Array.from({ length: 900 }, (_, i) => 'lore:' + i), 'seen');
+  ok(U.newsGet().seen.length === 800 && U.newsGet().seen.slice(-1)[0] === 'lore:899', 'eld_seen keeps at most 800 keys, the newest');
+  const html = '<p style="color:#1c2230">x</p>';
+  ok(U.themed(html) === html, 'the default theme passes the HTML through untouched');
+}

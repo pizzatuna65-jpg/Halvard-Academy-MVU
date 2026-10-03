@@ -3,14 +3,14 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.47.0** (2026-10-03): audit batch 5. The campus is an Area (`AR.campus` on the Campus Map graph,
-`stepCampus`: walks, owed minutes, stamina on long walks, "Walks from here" in `<now>`); `areaNow` names the area {{user}} is in and
-`awayIn` is built on it; one whereabouts model (`shared.js` `whereabouts` / `presenceAt`) gives `$ui.here` (printed by `<now>`), the
-Map's Regulars, "May be here", initiative and the students met in an area. v1.46.0: batch 4 (outside areas); v1.45.0: batch 3.
-Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
+**Snapshot:** card **v1.48.0** (2026-10-03): audit batch 7, the last of the 2026-10-03 audit. The Cast Sheet is one entry per NPC
+(uid 600+, `@@if` on `$ui.cast`; head 509, tail 599); the engine writes `<now>`'s rule lines (`$ui.now`: area, presence, walks,
+ambience, moods, bond / Trust / Tension) and 505 prints them; the state diet (moods, area walks); `NOW_DIFF` and `renderEntry` in the
+test harness. v1.47.0: batch 5 (campus Area, whereabouts); v1.46.0: batch 4. Live checks: `docs/TEST_CHECKLIST.md` "Open".
+Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** audit batch 7 when the owner says "perbaiki batch 7" (`audit/AUDIT_2026-10-03_3_batch_perbaikan.md`, the last one:
-`$ui.now` can absorb `$ui.here`). Live-check v1.47.0, v1.46.0, v1.45.0 and the earlier "Open" items.
+**Next task:** the audit batches are done. Live-check v1.48.0 back to v1.42.0 (`docs/TEST_CHECKLIST.md` "Open"), then the owner's
+next request (feature ideas: `audit/AUDIT_2026-10-03_2_saran_fitur_dan_arah.md`).
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

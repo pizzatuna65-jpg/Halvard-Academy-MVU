@@ -762,7 +762,8 @@ function recolor(str, map) {
     return `rgba(${rgb}${f && a ? ',' + +(parseFloat(a.slice(1)) * f).toFixed(3) : a || ''})`;
   });
 }
-const themed = s => recolor(s, (THEMES.themes[themeId()] || {}).map);
+// 1.48.0 (audit 2.9): the default palette (Pewter) maps nothing, so the panels' HTML is passed through untouched (no regex over it)
+const themed = s => { const map = (THEMES.themes[themeId()] || {}).map; return map && Object.keys(map).length ? recolor(s, map) : s; };
 function setTheme(id) {
   if (!THEMES.themes[id]) return;
   try { localStorage.setItem(THEME_KEY, id); } catch (e) { toastr.warning('This browser does not allow saving the theme.', 'Eldrasil'); }
@@ -792,6 +793,7 @@ function newsWrite(st) {
 }
 // the first time a chat is seen, everything already open counts as seen (no flood of dots on an older save)
 function newsInit(S) { if (S && S.World && !newsGet()) newsWrite({ seen: newsItems(S, newsFeat(S)).map(([k]) => k), noticed: [] }); }
+const NEWS_MAX = 800;
 function newsMark(keys, level) {
   const st = newsGet(); if (!st) return;
   st.noticed = st.noticed || [];
@@ -799,6 +801,10 @@ function newsMark(keys, level) {
   if (!add.length) return;
   arr.push(...add);
   if (level === 'seen') st.noticed = st.noticed.filter(k => !add.includes(k));
+  // 1.48.0 (audit 2.9): the record stays small: a proficiency's new rank replaces its older keys (they never come back), and at most
+  // NEWS_MAX keys of each kind are kept, the oldest first out (a chat has a few hundred items)
+  if (level === 'seen') for (const k of add) { const m = /^stat:([^:]+):/.exec(k); if (m) st.seen = st.seen.filter(x => x === k || !x.startsWith('stat:' + m[1] + ':')); }
+  st.seen = st.seen.slice(-NEWS_MAX); st.noticed = st.noticed.slice(-NEWS_MAX);
   newsWrite(st);
 }
 // during a render: is this key new? (shown = it is on screen now, so it counts as seen after this render)

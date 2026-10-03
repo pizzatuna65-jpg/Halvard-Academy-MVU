@@ -17,7 +17,7 @@ Build order, generated files and test commands: `docs/BUILD.md`.
 | Save compatibility / field rename | `stepMigrate` (engine), `tests/test_saves.cjs`, `tests/fixtures/make_save.cjs` | a flagged migration in `stepMigrate`, never inside a step |
 | State shape (new field) | `src/scripts/schema.js` (§3), the step that writes it, `data/features.json` if switchable | declare every field (Zod strips unknown keys) |
 | What the narrator is told (rules) | §4 custom entries: 502 update rules, 504 narration rules, 505 `<now>` | EJS gates `on('id')`; `gen_mvu_entries.py` |
-| `<now>` / Cast Sheet / Price Guide text | `src/worldbook/custom/505.template.ejs`, `509.template.ejs`, `506.template.ejs` | never edit `content/505|506|509.txt` |
+| `<now>` / Cast Sheet / Price Guide text | `src/worldbook/custom/505.template.ejs` (1.48.0: the rule lines are the engine's `nowOf`, `$ui.now`), the Cast Sheet `509.template.ejs` (head), `509_sheet.template.ejs` (one entry per NPC, uid 600+, `@@if`), `509_tail.template.ejs` (599), `506.template.ejs` | never edit `content/*.txt`; render an entry as ST does with `tests/harness.cjs` `renderEntry` |
 | UI panel or bracelet | §5 UI map → the part file or `ui.template.js` symbol | `gen_ui.py`; `tests/preview/` for a visual check |
 | Dialogue colours | `data/dialogue_colors.json` (palette and starting colours; `tools/make_dialogue_colors.py` fills new NPCs, keeps edits), `sayCss` / `sayStyle` in `ui.template.js`, the `<say>` regexes in `src/regex/index.json`, the per-scene colour step at the end of `stepCast` (`$ui.say` now, `$ui.sayx` Extras' three colours), the rule in 504 / 510 | `tests/test_say_colors_v1370.cjs` |
 | Red "new" dots | `src/ui/news.shared.js`, `ui.template.js` `newsInit` / `newsMark` / `isNew` | `test_news_v1250.cjs` |
@@ -107,6 +107,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepHere` (8o) | 1.47.0: whereabouts: who is likely around {{user}}'s place now (`$ui.here`, the class line) and "May be here" (`$ui.maybe`: Next plans, appointments) from `shared.js` `whereabouts` / `presenceAt` | `data` via `presence_data`; `<now>` |
 | `stepUi` (9) | discovered places (+ "Castle"), lore named in the narration (`$ui.lore`), unlocks, Next chip (an appointment from `$ui.agenda` when sooner) | bracelet |
 | `stepCommit` (10) | `$eng.abs`, Year 1 date labels, `_Log` | |
+| `stepNow` (11) | 1.48.0 (audit 3.11): `<now>`'s rule lines, `nowOf(S, moods)` → `$ui.now` { area, pres, walk, amb, moods, bond, trust, tension, recent, banter }; then drops the areas' walks (diet) | `tools/common.py` `now_data`; 505 prints them; `NOW_DIFF` in the harness |
 
 Module helpers above `runEngine`: name matching (`formRx`, `speakersIn`, `mentionIn`), time (`parseWhen`, `whenText`, `periodOf`,
 `curfewOf`, `nextUp`), happenings (`happeningOn`), weather (`wxDay`, `wxForecast`, `fluOn`), `canonLocation` (with `yearFloorLocation`), `canonClub`, `gearOf`,
@@ -130,7 +131,8 @@ The starting state is custom entry 500 (`src/worldbook/custom/content/500.txt`).
 | 502 | update rules `[mvu_update]` | `content/502.txt` |
 | 503 | output format, depth 0 | `content/503.txt` |
 | 504 | narration rules `[mvu_plot]` | `content/504.txt` |
-| 505 | `<now>`: clock, curfew, presence, reminders | `505.template.ejs` (generated `content/505.txt`) |
+| 505 | `<now>`: clock, curfew, presence, reminders | `505.template.ejs` (generated `content/505.txt`); its rule lines from engine `$ui.now` |
+| 509, 600+, 599 | 1.48.0: the Cast Sheet: head, one sheet per NPC (`@@if` on `$ui.cast`), tail | `509.template.ejs`, `509_sheet.template.ejs`, `509_tail.template.ejs` |
 | 506 | Price Guide by place | `506.template.ejs` |
 | 507 | `[config_override]` for MVU (disabled) | `content/507.txt` |
 | 508 | {{user}}'s birthday event | `content/508.txt` |

@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.48.0 (audit batch 7): the four checks in its section below.
 - v1.47.0 (audit batch 5): the four checks in its section below.
 - v1.46.0 (audit batch 4): the four checks in its section below.
 - v1.45.0 (audit batch 3): the four checks in its section below.
@@ -87,6 +88,17 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.48.0 — Audit batch 7 (`$ui.now`, the Cast Sheet per NPC)
+
+Continue a chat (re-import the card). The first reply after the update lacks `<now>`'s area, presence, walk, ambience, mood and bond
+lines (the engine writes `$ui.now` on its first run); from the second reply on they are back.
+1. With two or three people present, open the prompt (Prompt Itemization or the Prompt Template debug log): `<cast>` holds exactly their
+   sheets, in name order, then the ties and `</cast>`; no other NPC's sheet is in the prompt, and no line starting with `@@` shows.
+2. With nobody present: no `<cast>` at all; the gate 510 is absent too.
+3. `<now>`: the Bond, Trust, Tension, "Recent with" and mood lines of the people present, and on campus "Likely around" and "Walks from
+   here", read as before; in an outside area its block (place, walks, fares, events) is there.
+4. Generation start feels faster than before with many NPCs in the lorebook (one small template per person present instead of 679 KB).
 
 ### v1.47.0 — Audit batch 5 (the campus as an Area, whereabouts)
 

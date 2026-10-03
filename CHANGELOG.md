@@ -1,7 +1,47 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.48.0 — Audit batch 7: `$ui.now`, the Cast Sheet per NPC, the state diet (2026-10-03)
+
+`audit/AUDIT_2026-10-03_3_batch_perbaikan.md` batch 7, the last (audit part 1, items 2.6, 2.7, 2.9, 3.11). Save fixture v1.47.0. Four
+commits, each proven before the next.
+- **The Cast Sheet, one entry per NPC (2.7).** The 679 KB template is now a head (509: `<cast>` and the shared header), one sheet per
+  NPC (uid 600+, each with the helpers and only its own NPC's data; sources `509_sheet.template.ejs`) and a tail (599: ties, Extras,
+  `</cast>`), all @D1 with orders 300-390 so they join in the same order before `<now>`. Each sheet opens with `@@if <the NPC is in
+  $ui.cast>`. Verified in the sources: ST-Prompt-Template evaluates `@@if` on `WORLDINFO_ENTRIES_LOADED` and drops a failing entry
+  before the scan (`handler.ts` `applyDecorators`, `worldinfo.ts` `isConditionFiltedEntry`), so a generate compiles only the sheets of
+  the people present; SillyTavern strips any leading `@@` line from the content (`world-info.js` `parseDecorators`) and joins one
+  depth's entries with "\n" in ascending order (`script.js`, `world-info.js`). `build_card.py` keeps decorator lines before the block
+  scope. The gate 510 is unchanged.
+- **`<now>`'s rule lines from the engine (3.11).** The new last step `stepNow` writes `$ui.now`: the outside area block, presence and the
+  class line (1.47.0's `$ui.here` is folded in), the campus walks, ambience, moods, and each present character's bond, Trust, Tension,
+  recent moments and teasing. The code is `<now>`'s own, moved verbatim into `nowOf(S)` (with its own `getvar`); `<now>` prints each
+  list in its place and no longer holds those rules or their data (`tools/common.py` `now_data`, `AGE_JS`; the engine template now also
+  goes through `fill_data`).
+- **State diet (2.6).** `$ui.moods` keeps `{ mood }` (the reasons are only in `<now>`'s mood lines); an area's walks and places nearby
+  leave `$ui.area` (they are `<now>`'s lines; the Map walks the shared graph itself). Kept on purpose: `$ui.file` (the Builder record,
+  DECISIONS §2), `grades.why` (only the engine can compute it), `$ui.craft` (only at a craft place; its roll and modifiers are the
+  record), `practice` (tiny). Measured with the new `tests/stress/state_size.cjs` (200 messages of ordinary play, 45 bonds):
+
+  | | stat_data, last message | average | summed over the chat |
+  |---|---|---|---|
+  | 1.47.0 | 42.4 KB | 35.4 KB | 7,083 KB |
+  | `$ui.now` alone | 44.6 KB | 37.0 KB | 7,399 KB |
+  | 1.48.0 (with the diet) | 43.1 KB | 35.4 KB | 7,072 KB |
+- **Small items (2.9).** The weather cache holds two years of days, so building a year's happenings no longer empties it; the red-dot
+  record `eld_seen` drops a proficiency's older rank keys and keeps at most 800 keys; the default theme passes the panels' HTML through
+  untouched.
+- **Proof.** `<cast>`: 240 scenarios byte-identical between 1.47.0's one template and the per-NPC entries (hashes in
+  `tests/fixtures/cast_1470.json`). `<now>`: the new harness option `NOW_DIFF=<older card>` renders `<now>` of both releases on every
+  engine run of the whole suite: 8,200 renders identical (with `ENGINE_DIFF` identical apart from `$ui.now` / `$ui.here`); 112 update
+  chains (campus, forest, Avalon, airship, Sunreach) kept as hashes in `tests/fixtures/now_1470.json`; still identical after the diet.
+- **Tests:** `tests/test_audit_batch7_v1480.cjs`; `harness.cjs` `renderEntry` renders an entry as ST does (the Cast Sheet as a group;
+  17 suites use it); suites that read moved text or the trimmed fields read the engine and `$ui.now`. Full suite.
+- **To confirm with the owner:** nothing new. Not removed although the audit listed them: `$ui.file`, `grades.why`, `$ui.craft` (above).
+- **Live checks:** `docs/TEST_CHECKLIST.md` 1.48.0 (compare the prompt in SillyTavern: `<cast>` and `<now>`). The first reply after
+  updating has `<now>` without the area, presence, walk, ambience, mood and bond lines (the engine writes `$ui.now` on its first run).
 
 ## v1.47.0 — Audit batch 5: the campus as an Area, one whereabouts model (2026-10-03)
 
@@ -145,37 +185,6 @@ commits and this release.
 - **To confirm with the owner:** the competition numbers above (−5 / −10, 5 bond XP) follow the batch's proposal.
 - **Live checks:** `docs/TEST_CHECKLIST.md` 1.44.0.
 
-## v1.43.0 — Audit batch 2: one source (`shared.js`, `rollTable`, texts from data) (2026-10-03)
-
-`audit/AUDIT_2026-10-03_3_batch_perbaikan.md` batch 2 (audit part 1, items 2.2–2.4, 2.8, 3.6). Save fixture v1.42.0. A refactor in
-five commits, then one marked behaviour commit.
-- **`src/scripts/shared.js`**, injected into the engine, the panels, the bracelet, `<now>` (505) and the Price Guide (506) at their
-  `/*@@SHARED@@*/` (`tools/common.py` `shared_js()`): class periods, exam months, seasons, trips and dorm colours (now
-  `data/calendar.json` `periods`, `exam_months`, `seasons`, `dorm_colors`, and a `trip` field on the two trip events); the class
-  role, the Council remedial, Trust/Tension bands, NPC status, `placeOf` / `placeKey` / `locParts`, `itemKey` / `keyIn`; and the
-  seeded draws `hash32`, `rand01`, `roll100`, `d100`, `rollInt`, `pickOf`, `rollTable`. Every copy in the engine, the panels, the
-  bracelet and the EJS entries was replaced (2.2–2.4).
-- **Seeded draws** (3.6): happenings, NPC initiative, the airship's sky / stage / hold, Avalon and Sunreach city life, Expedition
-  encounters, gossip fate, flu, head cold, free periods, the parcel from home, exam and rank rolls and the ambience picks draw through
-  them, with their seeds and order kept (old chats swipe to the same results).
-- **Texts from data** (2.8): the Trip and Competition texts, the Crowning Day, Kingdom and Expedition lines in `<now>` write their times
-  and the prize as `{@file.path}` (`fill_data()`); the Kingdom prize, the Rank 5 perks (`data/mastery.json`), the public roles
-  (`data/public_roles.json`), shop gift tags (`shop.json` `gift_tags`), the practice places for the red dots and the bracelet's
-  shop chip come from data.
-- **Proof.** `ENGINE_DIFF` against 1.42.0 identical over the full suite, a 380-day year and the fuzz run (6,068 engine runs) for
-  every refactor commit. New `tests/snapshot_render.cjs` renders every panel tab, the bracelet and every EJS entry from 17 fixed
-  states (3,638 renders): identical, except (1) the Price Guide's order of equal canon prices, now sorted by name (a Python set
-  had made it change between builds) and (2) the Settings token estimate of the Price Guide (5,559 → 5,534: its template code got
-  shorter; the shared code, never sent, is left out of the count).
-- **Behaviour (marked commit):** Settings > Campus life > Ambient moments now also paces the outside areas' small life (Avalon and
-  Sunreach street sights, people met, pickpockets and hustlers; the airship's sky, stage and hold): Rare ×0.67, Normal ×1, Often
-  ×1.33. Story beats (Tsubaki lost, the Leviathan, raids, scouts) and the Expedition keep their rates. `placeOf` splits at an en
-  dash too ("Canteen – kitchen"). Found on the way: the bracelet's "Shop here" chip knew only the Mall's first four shops; it now
-  shows at every shop the Shop tab knows (Quillfeather's, Tinker's Bench and the rest).
-- **Tests:** `test_one_source_v1430.cjs` (a shared table copied back into a template fails), `test_audit_batch2_v1430.cjs` (the
-  behaviour commit); `test_batch4_seasons_mana` reads the season table from `shared.js`. Full suite.
-- **Live checks:** `docs/TEST_CHECKLIST.md` 1.43.0 (the bracelet, `<now>` and the Price Guide run `shared.js` inside SillyTavern).
-
 ## Release index (one line per release, oldest first)
 
 - All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/archive/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; CHANGELOG 1.2.0/1.2.1).
@@ -299,3 +308,4 @@ five commits, then one marked behaviour commit.
 - **v1.45.0 (2026-10-03):** Audit batch 3: one ledger for Points and Coin, one Bag ledger, `/Purchases` settled by the engine (price, place, season, money), one practice session report with tracks (`/Training` an alias) and one Rank 4 partner rule.
 - **v1.46.0 (2026-10-03):** Audit batch 4: the outside areas as one module (one graph shared with the Map panel, `makeArea` records, one parser, formatter, move, hourly loop and theft, climate profiles as data, `$ui.area` / `$eng.area`, one Map renderer and one `<now>` block).
 - **v1.47.0 (2026-10-03):** Audit batch 5: the campus as an Area (walks, owed minutes and stamina on the Campus Map graph, "Walks from here"), `areaNow`, and one whereabouts model (`$ui.here` for `<now>`, the Map's Regulars, "May be here", initiative and the areas).
+- **v1.48.0 (2026-10-03):** Audit batch 7, the last: the Cast Sheet as one entry per NPC (`@@if`), `<now>`'s rule lines from the engine (`$ui.now`), the state diet (moods, area walks), the weather cache, `eld_seen` and the default theme.
