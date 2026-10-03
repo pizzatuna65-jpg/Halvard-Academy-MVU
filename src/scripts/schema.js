@@ -233,7 +233,8 @@ export const Schema = z.object({
   }), 'Who'),
 
   // Batch 5.1: Where (optional place, enables "Go here"); _When / _Late / $abs are computed by the engine from Due
-  Commitments: Rec(v => ({ Desc: s(v.Desc), Due: s(v.Due), With: s(v.With), Type: s(v.Type), Where: s(v.Where),
+  // 1.49.0: Item = what a favour asks {{user}} to bring (Type "favour"; the engine takes it from the Bag when the favour is kept)
+  Commitments: Rec(v => ({ Desc: s(v.Desc), Due: s(v.Due), With: s(v.With), Type: s(v.Type), Where: s(v.Where), Item: s(v.Item),
     _When: s(v._When), _Late: b(v._Late), $abs: n(v.$abs, -1, 1e9, -1) }), 'Desc'),
 
   // ---- Batch 5.1 conditional modules ----
@@ -419,6 +420,7 @@ export const Schema = z.object({
                                                                       // avalon: { d, owe, met, ts, tsu, mm, wl, sc }, sunreach: { d, owe, met, nb, lev } } (engine)
     exp: z.any().optional(), cap: z.any().optional(), sr: z.any().optional(),   // before 1.46.0; moved by stepMigrate
     comp: z.any().prefault(null).catch(null),                      // 1.44.0: competition results paid { paid: [keys], exp: 0-2 staff expectation } (engine)
+    promise: z.any().prefault(null).catch(null),                   // 1.49.0: { late: ['c:<favour>', 'p:<group assignment>'] } overdue rises already paid (engine)
     profv: Int(0, 1, 0),
     trip: Int(0, 1, 0),                                             // 1.42.0: 1 once {{user}} was off campus during the active Trip (engine)
     initiative: z.any().prefault(null).catch(null),              // 1.7.7 (FP1): latched day/week, chosen NPC and per-NPC cooldown

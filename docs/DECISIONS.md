@@ -71,6 +71,9 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
   by the engine (listed price at its shop and in season; otherwise the narrator's Price as a story price; points on campus, coin away).
   Training is one `/Practice` session with a Track (`/Training` still read); one Rank 4 partner rule for every track in
   `rank4_partners.json` (mana, stamina, study; owner decision, proposal adopted).
+- **Favours and group assignments** (1.49.0, feature batch 1): an NPC's favour is a Commitment `Type "favour"` (from initiative only);
+  kept = a `help` deed through the ordinary bond rules, ignored = Tension once. A group assignment's lateness costs partners Tension
+  once; who let the group down is the story's to play. Derived interactions never double what the narrator reported.
 - **Rumours and stories as Clues** (1.44.0): the player pins hearsay from the Mystery Board (Clue `Source` rumour / story, unconfirmed); Encyclopaedic's weekly lead (`Source` records) is filed by the engine and revealed by the narrator, who writes its content true to the lore (the engine never invents it).
 - **Rival academy teams** (1.30.1, owner playtest): Ashvale, Myrdath and Veyra team members are never on Halvard's grounds; the engine removes one written into a campus scene (not on a trip, not at the Kingdom Competition). Invented characters take their own full names (Extras).
 - **Training**: Mana pool and Stamina, reported in `/Training`; one session +1% of the starting value × (1 + 0.5 per partner in the scene), weekly cap 2.5%, lifetime cap 2× the starting value; jumps (Gavlan gift, Vallie Rank 10) +10% outside the weekly cap. `Mana_max` / `Stamina_max` change only through training or the Builder (other changes are reverted; a Builder change moves the starting value).

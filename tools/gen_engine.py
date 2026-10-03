@@ -244,7 +244,12 @@ _nclub = {}
 from common import load_clubs as _load_clubs
 for _c in _load_clubs(npcs, locs):
     for _m in _c['members']: _nclub.setdefault(_m, _c['name'])
-t = t.replace('/*@@INITIATIVE_ASKS@@*/{}', json.dumps({'asks': _asks, 'cat': _cats, 'club': _nclub, 'places': _askd.get('places', [])}, ensure_ascii=False, separators=(',', ':')))
+# 1.49.0 (audit 4.6): favours, per category but strained; each template names {thing} or {place}
+_fav = _askd['favours']
+assert set(_fav['asks']) <= set(_asks) - {'strained'}, 'favour categories'
+assert all(('{thing}' in x) != ('{place}' in x) for v in _fav['asks'].values() for x in v), 'a favour names {thing} or {place}'
+t = t.replace('/*@@INITIATIVE_ASKS@@*/{}', json.dumps({'asks': _asks, 'cat': _cats, 'club': _nclub, 'places': _askd.get('places', []),
+    'fav': {k: v for k, v in _fav.items() if k != '_note'}}, ensure_ascii=False, separators=(',', ':')))
 # 1.6.1 (N6): campus phases, one line each for <now> while the phase runs (empty until the canon waves)
 PH = json.load(open(P('data/campus_phases.json'), encoding='utf-8'))['phases']
 assert all({'id', 'from', 'to', 'line'} <= set(p) for p in PH), 'campus phase needs id, from, to, line'

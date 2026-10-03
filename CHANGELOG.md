@@ -1,7 +1,30 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.49.0 — Feature batch 1: favours and group assignments (2026-10-03)
+
+`audit/AUDIT_2026-10-03_4_batch_fitur.md` batch 1 (audit part 2, suggestions 4.6 and 4.10). Save fixture v1.48.0. Built only on what
+exists: Commitments and the Agenda, initiative, the `help` / `study` interactions, the Bag ledger and the study pool.
+- **Favours (4.6).** Some initiative days the reason is a favour (`data/initiative_asks.json` `favours`: two generic templates per Tension
+  category, 30% of initiative days, at most two offered a week, never at Tension 70+, never while that NPC has an open favour). `<now>`
+  says how to record one the player accepts: a Commitment `Type "favour"`, `With` the NPC, Due within two days, and `Item` (something
+  they love or like) or `Where` (one of their haunts). New engine step `stepPromises`, run just before `stepBonds`: a favour removed
+  before it was overdue was kept and counts as a `help` interaction (bond XP only with time together, Trust +2 inside the weekly cap,
+  never twice when the narrator also reports it); its `Item` leaves the Bag (`bagTake`; without it in the Bag the favour does not count).
+  Left overdue: the NPC's Tension +5 once, through the ordinary rise rules (category, mood, Trust band). A polite refusal owes nothing.
+- **Group assignments (4.10).** A Project `Kind "assignment"` `With` classmates: Progress 100 on time is +45 minutes of study (as an
+  assignment Commitment); finished late it counts as a skipped class of the subject its name or Goal names; when it turns overdue each
+  partner's Tension +3 once. Who let the group down is the story's to play, in character. A study session in `/Practice` (Study a
+  subject, Group study) with someone present is now a `study` interaction with them, once (time together, so bond XP and the Rank 4
+  study partner bonus). Not built: the batch plan's "+1 XP with the subject's teacher", because bond XP needs time together.
+- **Rules and UI.** 502: the favour Type and `Item`, and how to hand in an assignment (Progress 100, then remove it). 505: the favour
+  line under NPC initiative. Planner: a favour shows what to bring and whether it is in the Bag. Schema: `Commitments.Item`,
+  `$eng.promise` (overdue rises already paid).
+- **Tests:** `tests/test_feature_batch1_v1490.cjs` (24 checks); `test_audit_batch7_v1480` skips the one recorded `<now>` that is now a
+  favour day; `test_batch3_fp11_v1102` accepts favour reasons. Full suite passes.
+- **To confirm with the owner:** the favour templates and numbers (30%, two a week, Tension +5 / +3) are maintainer-written defaults.
 
 ## v1.48.0 — Audit batch 7: `$ui.now`, the Cast Sheet per NPC, the state diet (2026-10-03)
 
@@ -151,40 +174,6 @@ commits and this release.
 - **To confirm with the owner:** none beyond the partner rule above (adopted as proposed). `/Purchases` touches no DECISIONS entry.
 - **Live checks:** `docs/TEST_CHECKLIST.md` 1.45.0.
 
-## v1.44.0 — Audit batch 6: Agenda, information, competition results (2026-10-03)
-
-`audit/AUDIT_2026-10-03_3_batch_perbaikan.md` batch 6 (audit part 1, items 3.10, 3.12, 3.13). Save fixture v1.43.0. Two commits.
-- **Agenda (3.10).** Commitments, Hooks, Next plans, Projects (`Due`), Notices (`Until`) and the letter home share one date marker
-  (`anchorWhen`, `agendaWhen`: a date is parsed once, when its text is new) and one status (`agendaState`: waiting / due / overdue;
-  an undated major Hook left two weeks is `stale`, was "old"). New step `stepAgenda` (8n) gives the one reminder when a thing turns
-  due or overdue and builds one coming-up feed, `$ui.agenda` (yesterday to 14 days ahead, plus anything overdue), which the Planner
-  ("Coming up"), the Notice Board (official postings), the bracelet (Next chip, Overdue / Due today chips) and `<now>` ("Coming up",
-  "Due soon") all read. `$ui.soon` (1.32.0) is gone. State fields are unchanged; Projects' and Next plans' anchored dates live in
-  `$eng.agenda`.
-- **Behaviour.** A Next plan's `Until` ("tomorrow evening") used to be parsed again every turn, so it never passed; now it is
-  anchored and the plan happens off-screen when it does. Projects get reminders: due from the start of the day before (once), and
-  overdue (once, with a toast). An appointment later today takes the bracelet's Next chip when it comes before the next class. The
-  Notice Board no longer posts the Academy Trip twice (its two weeks are one run of days).
-- **Information (3.12).** The Mystery Board lists what {{user}} has heard and not pinned (the rumours going around, the places'
-  stories in `$ui.lore`) and pins one as a Clue to a chosen thread (a hidden player-tool message). A Clue has a new field `Source`:
-  `rumour` / `story` (hearsay, unconfirmed), `records`, or empty. A heard rumour or story now opens the Mystery Board. Encyclopaedic
-  (Knowledge Rank 5): a Clue the story adds in the Main Library or the Archive is the week's lead (`Source` records); a reply spent
-  there without one, the engine files the lead itself (`recordsLead`) on the oldest pinned hearsay not yet looked up, else on the
-  open thread found most recently, and tells the narrator to reveal what the record shows (true to the lore) and rewrite its Detail.
-- **Competition (3.13).** `data/reputation.json` `competition`: a result pays its deed itself, once a year each (Dorm qualified or
-  bracket champion +5, Academy title +15, Kingdom title +25 Academy Rep XP, the approved deed values); the narrator no longer reports
-  those kinds (a report is not counted, with a log). A title's price (owner decision, proposal adopted): the staff expect a defence,
-  and the next elimination at that tier or below costs Academy −5 after an Academy title, −10 after a Kingdom title (losing at a
-  higher tier costs nothing). Teammates (`Competition.Team`) gain 5 bond XP once a year per tier when the team's result at it comes in.
-- **Rules.** 502: the Competition, Clues and reputation-kind lines; 504: the Encyclopaedic line. Settings token estimates: Mystery
-  Board 152 → 198, Competition up by the new sentence.
-- **Tests:** `tests/test_batch6_v1440.cjs` (agenda states, anchored Next plans, reminders and the feed, the letter home and notes,
-  pinning, Encyclopaedic, competition reputation, its price and team XP); `test_calendar_v1320` and `test_world_v110` read the
-  feed and `stale`; `test_saves` treats `$ui.soon` as derived. Full suite. `tests/snapshot_render.cjs` before/after: only the
-  Planner, Notice Board, Mystery Board, Settings estimates and the 502/505 texts differ, as intended.
-- **To confirm with the owner:** the competition numbers above (−5 / −10, 5 bond XP) follow the batch's proposal.
-- **Live checks:** `docs/TEST_CHECKLIST.md` 1.44.0.
-
 ## Release index (one line per release, oldest first)
 
 - All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/archive/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; CHANGELOG 1.2.0/1.2.1).
@@ -309,3 +298,4 @@ commits and this release.
 - **v1.46.0 (2026-10-03):** Audit batch 4: the outside areas as one module (one graph shared with the Map panel, `makeArea` records, one parser, formatter, move, hourly loop and theft, climate profiles as data, `$ui.area` / `$eng.area`, one Map renderer and one `<now>` block).
 - **v1.47.0 (2026-10-03):** Audit batch 5: the campus as an Area (walks, owed minutes and stamina on the Campus Map graph, "Walks from here"), `areaNow`, and one whereabouts model (`$ui.here` for `<now>`, the Map's Regulars, "May be here", initiative and the areas).
 - **v1.48.0 (2026-10-03):** Audit batch 7, the last: the Cast Sheet as one entry per NPC (`@@if`), `<now>`'s rule lines from the engine (`$ui.now`), the state diet (moods, area walks), the weather cache, `eld_seen` and the default theme.
+- **v1.49.0 (2026-10-03):** Feature batch 1: favours asked through NPC initiative (Commitment Type "favour": kept = help, ignored = Tension) and group assignments (study time, a study interaction for each partner, Tension when overdue).

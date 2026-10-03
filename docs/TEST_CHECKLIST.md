@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.49.0 (feature batch 1): the three checks in its section below.
 - v1.48.0 (audit batch 7): the four checks in its section below.
 - v1.47.0 (audit batch 5): the four checks in its section below.
 - v1.46.0 (audit batch 4): the four checks in its section below.
@@ -88,6 +89,15 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.49.0 — Feature batch 1 (favours, group assignments)
+
+1. With a Rank 3+ bond, play some days until `<now>`'s NPC initiative says "The reason is a favour". Accept it in the story: the
+   narrator adds a Commitment with Type "favour", With, Due and Item or Where, and it shows in the Planner (with "bring: …").
+2. Do the favour and let the narrator remove the Commitment: `_Log` says "Favour for X kept", an Item leaves the Bag, Trust rises.
+   Another favour left past its Due: Tension rises once, and the NPC reacts in character.
+3. A group assignment Project (Kind assignment, With a classmate): a Group study session with them in `/Practice` gives bond XP; at
+   Progress 100 `_Log` says "+45 minutes of study".
 
 ### v1.48.0 — Audit batch 7 (`$ui.now`, the Cast Sheet per NPC)
 

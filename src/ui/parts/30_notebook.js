@@ -93,6 +93,7 @@ function nbPlanner(S) {
     const when = c._Late ? '<span class="pill f">overdue</span>' : c._When ? `<span class="pill${/^today/.test(c._When) ? ' w' : ''}">${esc(c._When)}</span>` : (c.Due ? `<span class="pill">${esc(c.Due)}</span>` : '');
     return `<div class="item cm${c._Late ? ' late' : ''}"><div class="row"><span class="t">${esc(k)}</span>${c.Type ? `<span class="pill">${esc(c.Type)}</span>` : ''}${when}</div>
       ${c.Desc ? `<div>${esc(c.Desc)}</div>` : ''}<div class="meta">${c.With ? peopleIn(c.With, S) : ''}${c.Where ? `<span class="sub">at ${esc(c.Where)}</span>` : ''}
+      ${c.Item ? `<span class="sub">bring: ${esc(c.Item)}${Object.keys(S.Inventory || {}).some(k => itemKey(k) === itemKey(c.Item) && num(S.Inventory[k].Qty, 0) > 0) ? ' (in your Bag)' : ' (not in your Bag yet)'}</span>` : ''}
       ${lid && normPlace(S.World.Location) !== normPlace(DATA.locs[lid].name) ? `<button class="btn sm" data-go="${esc(lid)}">Go here</button>` : ''}</div></div>`;
   }).join('') : '<div class="empty">Nothing promised, nothing due. Commitments appear here when you make them in the story.</div>';
   // this week's timetable

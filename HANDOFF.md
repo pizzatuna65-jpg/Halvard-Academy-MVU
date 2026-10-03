@@ -3,14 +3,13 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.48.0** (2026-10-03): audit batch 7, the last of the 2026-10-03 audit. The Cast Sheet is one entry per NPC
-(uid 600+, `@@if` on `$ui.cast`; head 509, tail 599); the engine writes `<now>`'s rule lines (`$ui.now`: area, presence, walks,
-ambience, moods, bond / Trust / Tension) and 505 prints them; the state diet (moods, area walks); `NOW_DIFF` and `renderEntry` in the
-test harness. v1.47.0: batch 5 (campus Area, whereabouts); v1.46.0: batch 4. Live checks: `docs/TEST_CHECKLIST.md` "Open".
+**Snapshot:** card **v1.49.0** (2026-10-03): feature batch 1 of `audit/AUDIT_2026-10-03_4_batch_fitur.md` (audit suggestions 4.6,
+4.10). Favours asked through NPC initiative (Commitment `Type "favour"`: kept = a `help` deed, ignored = Tension once) and group
+assignments (study time, a study interaction per partner present, partners' Tension when overdue), in the new step `stepPromises`
+before `stepBonds`. v1.48.0: audit batch 7 (`$ui.now`, the Cast Sheet per NPC). Live checks: `docs/TEST_CHECKLIST.md` "Open".
 Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** the audit batches are done. Live-check v1.48.0 back to v1.42.0 (`docs/TEST_CHECKLIST.md` "Open"), then the owner's
-next request (feature ideas: `audit/AUDIT_2026-10-03_2_saran_fitur_dan_arah.md`).
+**Next task:** the owner's next "kerjakan batch fitur N" (batch 2: the routine week, 4.5). Live checks v1.49.0 back to v1.42.0 are open.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

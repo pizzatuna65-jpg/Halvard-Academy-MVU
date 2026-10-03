@@ -56,5 +56,34 @@
     "the Boathouse and Lake",
     "the Grassy Field and Hills",
     "the Study Rooms"
-  ]
+  ],
+  "favours": {
+    "_note": "1.49.0 (audit/AUDIT_2026-10-03_4_batch_fitur.md batch 1, audit 4.6): some days an NPC's reason for seeking {{user}} out is a favour. Chance per initiative day 'rate', at most 'per_week' offered a week, never at Tension 70+ (strained) and never while that NPC already has an open favour. {thing} (something they love or like, data/gift_prefs.json) becomes the favour Commitment's Item; {place} (their haunts and common spots) is where to be with them. Due within 'due_days'. Kept (removed before overdue): a help deed (bond XP with time together, Trust +2 inside the weekly cap). Left overdue: Tension +ignored_tension once. Generic, written by the maintainer; not canon for any one character.",
+    "rate": 0.3,
+    "per_week": 2,
+    "due_days": 2,
+    "ignored_tension": 5,
+    "asks": {
+      "withdrawn": [
+        "asks, quietly, whether {{user}} could bring them a {thing} from the shops; they would rather not go themselves",
+        "asks {{user}} to keep them company at {place}, for something they do not want to face alone"
+      ],
+      "social": [
+        "asks {{user}} to pick up a {thing} for them; they will not have time to get there",
+        "asks {{user}} to come to {place} and help them set something up"
+      ],
+      "confrontational": [
+        "wants {{user}} at {place} to hold the line while they try something new",
+        "asks {{user}} to fetch a {thing}, as if it were nothing, and clearly means it"
+      ],
+      "authority": [
+        "asks {{user}} to lend a hand at {place}, as a favour rather than a duty",
+        "asks {{user}} to bring a {thing} by, if it is no trouble"
+      ],
+      "dangerous": [
+        "asks {{user}} to bring them a {thing}, and does not say what for",
+        "wants {{user}} at {place}, and promises it will be worth their while"
+      ]
+    }
+  }
 }

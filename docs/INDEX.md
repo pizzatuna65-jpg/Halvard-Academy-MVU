@@ -86,6 +86,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepFortune` (5c) | seeded d100, Rank 10 suspension | |
 | `stepSchoolWeek` (5d) | attendance (and per-subject classes held; 1.33.0 free periods are not held), today's free periods (`$ui.free`), weekly recap, small scenes, study and exams (mark formula) | `TIMETABLE`, grades, `data/free_periods.json` |
 | `stepNamesInProse` (6a) | names revealed by the prose | `NAME_RX` |
+| `stepPromises` (6-) | 1.49.0 (feature batch 1): favours kept (a `help` interaction, the Item from the Bag) or overdue (Tension once), a `/Practice` study session with someone present as a `study` interaction, group assignments (Project Kind assignment: study time, skipped class, partners' Tension); before the bonds so they land through its rules | `$eng.promise`; `data/initiative_asks.json` `favours` |
 | `stepBonds` (6) | XP, ranks, gates, gifts, rewards, Tension/Trust, rival teams off Halvard's grounds; exports `canon`, `npcAway`, `PACE` | bond data §7 |
 | `stepBondMemory` (6c) | Knows, Imprints, Mind, Next, betrayal spread | |
 | `stepProficiency` (6a) | six stats, XP sources, weekly caps, Practice, crafting, masterwork Projects, Apothecary sales, mastery perks (1.44.0: Encyclopaedic's lead, `recordsLead`) | `data/practice.json`, `club_stats.json`, `crafts.json` |
@@ -97,7 +98,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepClubLife` (8c) | club, competition (Kingdom prize; 1.33.0 Dorm bracket prize), projects, trip | |
 | `stepNewYear` (8e) | new campaign year, cohorts | `data/cohorts.json` |
 | `stepGraduation` / `stepGraduateRewards` (8d, 8d2) | third-years leave; their rewards end | |
-| `stepInitiative` (8e) | optional NPC-initiated contact | `data/initiative_asks.json` |
+| `stepInitiative` (8e) | optional NPC-initiated contact; 1.49.0 some days a favour (`$ui.initiative.favour`, `FAVOURS`) | `data/initiative_asks.json` (`favours`) → 505 |
 | `stepHooks` / `stepGossip` (8f, 8g) | story hooks; rumours | |
 | `stepBag` (8h) | Inventory merge, caps, Sunfizz, clearing bloom wilt | `data/shop.json`, `crafts.json` |
 | `stepCampusEvents` / `stepExtras` / `stepCast` (8j, 8k, 8i) | campus events; invented characters; who gets a Cast Sheet | `$ui.cast` → 509 |

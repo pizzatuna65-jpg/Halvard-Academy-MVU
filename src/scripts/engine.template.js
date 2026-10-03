@@ -117,6 +117,8 @@ const PRACTICAL = ['Potion Crafting', 'Dark Magic Defense', 'Practical Magic', '
 // an A: +10 on a Fortune roll in the subject's field (rule 504 "specialty"), until the next exams
 const TOP_FIELD = Object.fromEntries(SUBJECTS.map(s => [s, PROF_FIELD[SUBJECT_STAT[s]]]));
 const TUTOR_PAY = 40, TUTOR_WEEK = 2, ASSIGNMENT_MIN = 45;
+// 1.49.0 (feature batch 1, audit 4.10): a group assignment left overdue costs each partner this much Tension, once
+const GROUP_LATE_TENSION = 3;
 // 1.30.0 (owner-approved planning/DRAFT_proficiency_practice.md, Batch 6): a mark's score = preparation, the subject's proficiency
 // and attendance, weighted for theory or practical, plus a seeded exam-day roll; Rank 5 in a proficiency opens its mastery perk
 const GRADE_W = { theory: [0.5, 0.3, 0.2], practical: [0.3, 0.5, 0.2] }, GRADE_CUT = [40, 55, 70, 85];
@@ -153,6 +155,8 @@ const PRESENCE = /*@@PRESENCE@@*/{};
 const SAY = /*@@SAY@@*/{ n: 0, start: {}, dist: [] };   // 1.37.1: dialogue colours (data/dialogue_colors.json)
 // 1.10.2 (FP11): why an NPC seeks {{user}} out: templates per Tension category, each NPC's category and club (data/initiative_asks.json)
 const INIT_ASKS = /*@@INITIATIVE_ASKS@@*/{};
+// 1.49.0 (feature batch 1, audit 4.6): favours an NPC who seeks {{user}} out may ask (data/initiative_asks.json favours)
+const FAVOURS = INIT_ASKS.fav || {};
 function tuneOf(S) {
   const u = _.isPlainObject((S.$ui || {}).tune) ? S.$ui.tune : {}, o = {};
   for (const r of TUNING) { const v = Number(u[r.id]); o[r.id] = r.opts.some(([x]) => x === v) ? v : r.def; }
@@ -2572,6 +2576,72 @@ function stepNamesInProse(c) {
   }
 }
 
+// ---- 6-. 1.49.0 (audit/AUDIT_2026-10-03_4_batch_fitur.md, batch 1: audit 4.6, 4.10): promises kept and broken. Read before the
+// bonds (6) so they land through its ordinary rules (bond XP needs time together, Trust inside its weekly cap, Tension by the NPC's
+// category). A favour (Commitment Type "favour", With one NPC) removed before it was overdue was kept: a "help" deed for that NPC,
+// and its Item leaves the Bag; one left overdue raises their Tension once (rises are never capped). A study session in /Practice
+// with someone present is a study Interaction with them. A group assignment (Project Kind "assignment", With classmates) finished
+// (Progress 100) on time is study time like an assignment Commitment; finished late it counts as a skipped class of its subject, and
+// when it turns overdue each partner's Tension rises once. Who let the group down is the story's to play, in character.
+const isFavour = cm => /^favou?r$/i.test(String((cm && cm.Type) || '').trim());
+function stepPromises(c) {
+  const { S, B, log, hasB, toolEdit, absA, elapsed, OFF } = c;
+  if (!hasB || toolEdit) return;
+  const E = S.$eng.promise = _.isPlainObject(S.$eng.promise) ? S.$eng.promise : {};
+  const late = new Set(Array.isArray(E.late) ? E.late : []);
+  const idOf = x => { const k = String(x || '').trim(); return NPC_ALIAS[k.toLowerCase()] || k; };
+  const ids = t => String(t || '').split(/\s*,\s*/).map(idOf).filter(id => id && S.Bonds[id]);
+  const here = id => !!((S.Scene.Present || {})[id] || ((B.Scene || {}).Present || {})[id]);
+  if (!Array.isArray(S.Interactions)) S.Interactions = [];
+  const told = (id, rx) => S.Interactions.some(a => a && idOf(a.With) === id && rx.test(String(a.Kind || '').trim()));
+  const add = (id, Kind, Note) => S.Interactions.push({ With: id, By: '', Kind, Gift: '', Item: '', Rep: '', Why: '', Public: false, Invited: false, Note });
+  const rise = (id, x, why) => { const b = S.Bonds[id]; b.Tension = _.clamp(num(b.Tension, 0) + x, 0, 100); log.push(`${id}: ${why} (Tension +${x}).`); };
+  // favours
+  if (!OFF.has('planner')) {
+    for (const [k, c0] of Object.entries(B.Commitments || {})) {
+      const id = isFavour(c0) && ids(c0.With)[0];
+      if (!id) continue;
+      const cm = (S.Commitments || {})[k];
+      if (cm) {
+        if (agendaState(num(cm.$abs, -1), absA, 'commitment') === 'overdue' && !late.has('c:' + k)) {
+          late.add('c:' + k); rise(id, num(FAVOURS.ignored_tension, 5), `the favour "${k}" was left undone`);
+        }
+        continue;
+      }
+      if (c0._Late || late.has('c:' + k)) continue;               // removed late: the story resolved it; the overdue rise has landed
+      const item = String(c0.Item || '').trim();
+      if (item && !bagKeyOf((B.Inventory || {}), item)) { log.push(`Favour "${k}" for ${id}: the Bag held no ${item}, so it was not counted as kept.`); continue; }
+      if (item) bagTake(c, item, 1);                              // the narrator may have taken it already (bagMove counts that)
+      if (!told(id, /^help$/i)) add(id, 'help', `favour kept: ${k}`);
+      log.push(`Favour for ${id} kept ("${k}"${item ? `, ${item} handed over` : ''}): it counts as help.`);
+    }
+  }
+  // a study session with someone is time together: a study Interaction for each partner present (once, if not already reported)
+  if (elapsed >= 45) for (const r of Array.isArray(S.Practice) ? S.Practice : []) {
+    const a = PRACTICE.find(x => x.study && x.action.toLowerCase() === String((r && r.Action) || '').trim().toLowerCase());
+    if (a) for (const id of ids(r.With)) if (here(id) && !told(id, /^(study|hangout)$/i)) add(id, 'study', `${a.action} together`);
+  }
+  // group assignments
+  if (!OFF.has('projects')) {
+    const W = ((S.$eng.agenda || {}).when) || {}, STd = !OFF.has('study') && _.isPlainObject(S.$eng.study) ? S.$eng.study : null;
+    for (const [k, p] of Object.entries(S.Projects || {})) {
+      if (!/^assignment$/i.test(String(p.Kind || '').trim())) continue;
+      const w = W['p:' + k], abs = w && w[0] === String(p.Due || '').trim() ? num(w[1], -1) : -1;
+      const over = agendaState(abs, absA, 'project') === 'overdue', p0 = (B.Projects || {})[k];
+      if (num(p.Progress, 0) >= 100 && p0 && num(p0.Progress, 0) < 100) {
+        if (!STd) continue;
+        if (!over) { STd.mins = num(STd.mins, 0) + ASSIGNMENT_MIN; log.push(`Assignment "${k}" finished on time: +${ASSIGNMENT_MIN} minutes of study.`); }
+        else { const s = subjectIn(`${k} ${p.Goal || ''}`); if (s) { STd.skip = _.isPlainObject(STd.skip) ? STd.skip : {}; STd.skip[s] = num(STd.skip[s], 0) + 1; log.push(`Assignment "${k}" was finished late: it counts as a skipped ${s} class for the next marks.`); } }
+      } else if (over && num(p.Progress, 0) < 100 && !late.has('p:' + k)) {
+        late.add('p:' + k);
+        for (const id of ids(p.With)) rise(id, GROUP_LATE_TENSION, `the group assignment "${k}" is overdue`);
+      }
+    }
+  }
+  // keep only the marks of records that still exist
+  E.late = [...late].filter(x => x.startsWith('c:') ? (S.Commitments || {})[x.slice(2)] : (S.Projects || {})[x.slice(2)]).slice(-40);
+}
+
 // ---- 6. bonds ----
 function stepBonds(c) {
   const { S, B, log, jnl, hasB, OFF, staleDrop, evs, dayNo, goneNow, dayNoB, WXM, seed, TU, wxNow, V, weekNo, weekNoB, repLv, repAdd, repLevelUp, teamBond } = c;
@@ -3963,10 +4033,22 @@ function stepInitiative(c) {
         });
         const used = I.used[id] || [], fresh = combos.filter(([ti, v]) => !used.includes(ti + '|' + v)), pool = fresh.length ? fresh : combos;
         const pick = pool.length ? pickOf(pool, seed, dayNo, 'ask', id) : null;
-        I.askDay = dayNo; I.askId = id; I.ask = pick ? pick[2] : '';
+        I.askDay = dayNo; I.askId = id; I.ask = pick ? pick[2] : ''; I.fav = null;
         if (pick) I.used[id] = [...used, pick[0] + '|' + pick[1]].slice(-20);
+        // 1.49.0 (audit 4.6): some days the reason is a favour: never while strained, at most one open favour per NPC and
+        // FAVOURS.per_week offered a week; {thing} becomes the Commitment's Item, {place} where to be
+        if (I.fw !== week) { I.fw = week; I.fn = 0; }
+        const open = Object.values(S.Commitments || {}).some(cm => isFavour(cm) && (NPC_ALIAS[String(cm.With || '').trim().toLowerCase()] || String(cm.With || '').trim()) === id);
+        const ftpl = cat === 'strained' || OFF.has('planner') || open || num(I.fn, 0) >= num(FAVOURS.per_week, 2) ? [] : (FAVOURS.asks || {})[cat] || [];
+        const fcombos = [];
+        ftpl.forEach(t => { const k = /\{thing\}/.test(t) ? 'thing' : 'place'; for (const v of fills[k]) fcombos.push([v, t.replace('{' + k + '}', v), k]); });
+        if (fcombos.length && d100(seed, dayNo, 'favour', id) <= Math.round(num(FAVOURS.rate, 0.3) * 100)) {
+          const [v, txt, k] = pickOf(fcombos, seed, dayNo, 'favour-pick', id);
+          I.ask = txt; I.fav = { [k === 'thing' ? 'item' : 'where']: v, days: num(FAVOURS.due_days, 2) }; I.fn = num(I.fn, 0) + 1;
+        }
       }
       if (I.ask) S.$ui.initiative.ask = I.ask;
+      if (I.fav) S.$ui.initiative.favour = I.fav;
     } else S.$ui.initiative = null;
   }
 }
@@ -4878,7 +4960,7 @@ function stepNow(c) {
   for (const a of Object.values(S.$ui.area || {})) if (_.isPlainObject(a)) { delete a.walks; delete a.near; }
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,

@@ -5,7 +5,8 @@ const read = p => fs.readFileSync(path.join(ROOT, p), 'utf8');
 const E = new Function(read('src/scripts/engine.js') + '\nreturn { fromAbs };')();
 const card = JSON.parse(read('dist/Eldrasil_Halvard.json')).data;
 const render = S => ejs.render(card.character_book.entries.find(e => e.id === 505).content, { getvar: k => _.get({ stat_data: S }, k) });
-const ASKS = JSON.parse(read('data/initiative_asks.json')).categories;
+// 1.49.0: a day's reason may be one of the category's favours (data/initiative_asks.json favours)
+const _AD = JSON.parse(read('data/initiative_asks.json')), ASKS = Object.fromEntries(Object.entries(_AD.categories).map(([k, v]) => [k, [...v, ...((_AD.favours.asks || {})[k] || [])]]));
 const DAY = 1440;
 const at = (S, d, hhmm, extra = []) => { const [h, m] = hhmm.split(':').map(Number), T = E.fromAbs(d * DAY + h * 60 + m);
   return applyPatch(S, [...['Year', 'Month', 'Week', 'Day', 'Time'].map(k => ({ op: 'replace', path: '/World/' + k, value: T[k] })), ...extra]); };
