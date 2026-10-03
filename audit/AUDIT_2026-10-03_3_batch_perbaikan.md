@@ -13,7 +13,7 @@ Bila konteks sesi hampir habis sebelum batch selesai, Claude berhenti di titik y
 | 1 | Semua bug: hotfix, aturan gameplay, bug kecil dan laten | 1.1–1.10, tabel Rendah | sedang | – | selesai (1.42.0, commit aa624d1) |
 | 2 | Satu sumber: `shared.js` + `rollTable` (refactor murni) | 2.2–2.4, 2.8, 3.6 | sedang–besar | 1 | selesai (1.43.0, commit 2c8c928) |
 | 3 | Laporan narrator yang diurus engine: ledger, Bag, `/Purchases`, sesi latihan gabungan | 2.5, 3.4, 3.5, 3.9 | sedang | 2 | selesai (1.45.0, commit 93b3ed3) |
-| 4 | Modul Area untuk area luar: Sunreach, Avalon, hutan, airship, iklim, renderer UI | 2.1, 3.1, 3.7 | besar | 2, 3 | belum |
+| 4 | Modul Area untuk area luar: Sunreach, Avalon, hutan, airship, iklim, renderer UI | 2.1, 3.1, 3.7 | besar | 2, 3 | selesai (1.46.0, commit a10842e) |
 | 5 | Kampus sebagai Area + `whereabouts` | 3.2, 3.3, 3.8 | sedang–besar | 4 | belum |
 | 6 | Agenda + jalur informasi + kompetisi | 3.10, 3.12, 3.13 | sedang | 2 | selesai (1.44.0, commit 2759e6d) |
 | 7 | `$ui.now`, Cast Sheet per NPC, diet state | 2.6, 2.7, 2.9, 3.11 | besar | 3, 5, 6 | belum |
