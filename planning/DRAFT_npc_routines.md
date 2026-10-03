@@ -13,9 +13,10 @@ Status: menunggu "proceed" owner. Sumber: `audit/AUDIT_2026-10-03_4_batch_fitur.
 - **`<now>` dan initiative:** "Likely around" memakai rutinitas. Template `{place}` initiative dan bantuan lebih dulu memakai tempat
   rutin.
 - **Benar-benar "biasanya" (owner, 2026-10-04):**
-  - Setiap baris rutinitas di-roll engine sekali per hari per NPC, dengan peluang 70% NPC mengikutinya hari itu.
-  - Roll memakai seed (`hash32(seed, hari, NPC, baris)`), jadi swipe atau replay tetap memberi hasil yang sama. Tidak memakai
-    `Math.random`.
+  - Setiap baris rutinitas di-roll sekali per hari per NPC, dengan peluang 70% NPC mengikutinya hari itu.
+  - Roll memakai undian ber-seed yang sudah ada di `shared.js` (`roll100(seed, hari, NPC, baris) < rate`, keputusan DECISIONS
+    "one source"). Bukan mekanisme baru. Angka 70 disimpan sebagai `rate` di `data/npc_routines.json`. Swipe atau replay tetap
+    memberi hasil yang sama.
   - Kalau gagal (30%), hari itu NPC kembali ke haunts biasa.
   - `<now>` dan initiative memakai hasil roll. Map dan dossier tetap menulis "usually here …".
   - Narator boleh menyimpang kalau cerita menuntut.
