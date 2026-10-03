@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.46.0 (audit batch 4): the four checks in its section below.
 - v1.45.0 (audit batch 3): the four checks in its section below.
 - v1.44.0 (audit batch 6): the four checks in its section below.
 - v1.43.0 (audit batch 2): the three checks in its section below.
@@ -85,6 +86,17 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.46.0 — Audit batch 4 (the outside areas as one module)
+
+Continue a chat that has been to an outside area (re-import the card: new engine, UI, lore gates). The first reply moves the old
+area state; the Map tabs and `<now>` must look as before.
+1. Map panel: the Grand Vast Forest, Avalon and Sunreach Bay tabs show their maps, pins and cards; "Go here" writes "I head to …";
+   the card arrows step through a pin's places; Sunreach switches to the night map from 18:00.
+2. During a flight the Airship tab opens by itself with its four cards; after landing it is gone.
+3. In Avalon (Crowning Day) and in Sunreach Bay: `<now>` names the place, the walks and the fares, and the events of the hour; a hire
+   carriage or water taxi takes its coin (Wallet).
+4. During the Expedition: the forest's lore index (360) is in the prompt, and the weather line says "(rainforest)".
 
 ### v1.45.0 — Audit batch 3 (ledger, Bag, purchases, practice sessions)
 

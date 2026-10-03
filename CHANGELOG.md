@@ -1,7 +1,40 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.46.0 — Audit batch 4: the outside areas as one module (2026-10-03)
+
+`audit/AUDIT_2026-10-03_3_batch_perbaikan.md` batch 4 (audit part 1, items 2.1, 3.1, 3.7). Save fixture v1.45.0. Three code commits and
+this release, each proven before the next.
+- **One graph (2.1).** `shared.js` `areaNb`, `areaRoutes`, `areaPath`, `areaMin`: the one shortest-way search, used by the engine and the
+  Map panel (was seven copies: `expRoutes`, `avRoutes`, `srRoutes` and their paths in the engine, four walk searches in the UI).
+- **One Area module (3.1).** `makeArea` builds one record per data file (`AR.forest`, `avalon`, `airship`, `sunreach`): places, pins, the
+  graph, names and aliases. One place parser (`areaPlace`) and one Location formatter (`areaLoc`) replace eight functions. `areaMove`
+  moves {{user}} in any pin map: on foot, by carriage, water taxi or tour boat, through crowds, with fares through the ledger and the
+  minutes the clock still owes. `areaHours` is the one hourly loop (Avalon, Sunreach, the airship), `areaStreet` the street sight
+  (`rollTable`), `areaTheft` the one theft: Avalon's pickpocket and Sunreach's hustler are now the same mechanic, set by a `theft` block
+  in each data file (where, chance, seen, share, cap, once). `areaSeen`, `areaNear` build the walks and nearby places. The forest keeps
+  its hunt and search hours, Avalon its White Line and muster, the airship its flights, Sunreach its bets and sea.
+- **Climate (3.7).** `data/expedition.json` and `sunreach.json` carry a `climate` profile (sky and rain weights, temperatures, a rare
+  sight, the label, the seed word); `areaWx` replaces `forestWx` and `srWx`; the weather line, the night's sleep and the rare-weather
+  toast read the area {{user}} is in (`c.WA`, `wxWhere`).
+- **State.** `$ui.area.<forest|avalon|airship|sunreach>` and `$eng.area.<forest|avalon|sunreach>`; a save's `$ui.forest`, `capital`,
+  `airship`, `sunreach` and `$eng.exp`, `cap`, `sr` move there in `stepMigrate` (the old keys stay optional in the schema so a save
+  reaches the migration). The lore gates (360, 370, 465, 247) and the 502 area rules read `$ui.area`.
+- **UI and `<now>`.** `gen_ui.py` `DATA.areas` gives every area one shape (the forest's places are its pins; the airship is cards);
+  `20_map.js` `renderArea` draws every outside tab (was four renderers). `<now>` has one block for the outside areas (`AREA`,
+  `AREA_WALK`, `AREA_EV`, was four).
+- **Proof.** `ENGINE_DIFF` against 1.45.0 identical over the full suite, a 380-day year and the fuzz run for the module commits, except
+  Avalon's walk event, which now says `ride: 'carriage'` / `''` (was `true` / `false`) and `tour: false` (new
+  `ENGINE_DIFF_IGNORE` in the harness for explained differences). `snapshot_render` before and after (3,638 renders): only two
+  renders differ, both in `<now>`: Avalon's day plan and the airship's bar, view and cargo now come before the walks (one order for
+  every area). Off the area, a Map card's walk now reads "from the Skyport" (was "from the Skyport (Skyport)").
+- **Tests:** `tests/test_audit_batch4_v1460.cjs` (one search, one record per area, parser and formatter, theft and climate as data,
+  the migration, a hire carriage through the ledger, a refused tour boat, one renderer and one block); the four area suites call the
+  module; `test_saves` reads the moved keys as renamed. Full suite and stress.
+- **To confirm with the owner:** nothing (a refactor).
+- **Live checks:** `docs/TEST_CHECKLIST.md` 1.46.0.
 
 ## v1.45.0 — Audit batch 3: reports the engine settles (ledger, Bag, purchases, practice sessions) (2026-10-03)
 
@@ -141,52 +174,6 @@ Three commits: hotfix, gameplay rules, small bugs. Tests: `tests/test_audit_batc
   `test_world_v110` (XP with the NPC present).
 - **Live checks:** `docs/TEST_CHECKLIST.md` 1.42.0 (the dialogue-colour regexes in SillyTavern, the pinned MVU loading).
 
-## v1.41.0 — Sunreach Bay: the Academy Trip's city, day and night; area indexes (2026-10-03)
-
-FP7 area 3, the last outside map (owner-approved `planning/DRAFT_outside_maps.md`, part 3, after three rounds of owner notes; both
-map images are the owner's, from `planning/MAP_PROMPTS_outside_maps.txt` part 3). Save fixture v1.40.0.
-- **The city.** Sunreach Bay is one city around a turquoise bay with two faces: a seaside paradise by day, and from 18:00 to 06:00
-  the same streets lit by rune-light (glowing glass signs, painted banners under rune lamps, lanterns; no electricity, no screens).
-  Ten pins, 21 places (`data/sunreach.json`, the single source): Skydock; Fisherman's Wharf (Fish Market, Sea Dock); Coral Strand
-  (The Hanabira, Halvard's Yozakuran hotel; Coral Beach); Sunpier (the pier, Tidehouse Aquarium); Sunreach Crossing (the Crossing,
-  Velvet Lanes); Casino Row (The Golden Tide, Plaza Dourada); Cliffside Terraces (The Terraces, Skyrail, Old Fort); Turquoise
-  Lagoon (The Lagoon, Reef Gardens, Shell Cove); West Cliffs (The Lighthouse, Sunset Cliffs, Glowtide Grotto, a sea cave opening
-  into a glowing cavern with a pool); Open Sea.
-- **Two maps.** `map/sunreach_day.webp` and `map/sunreach_night.webp` (same composition, same pins); the Map panel's Sunreach tab and
-  its place cards switch to the night map and the places' night faces at 18:00. Assets pinned to commit `4620b2c` (`505dd35` plus
-  the two maps, verified identical); local copies in `Maps/`.
-- **Engine** (`srPlace`, `srLoc`, `srWindow` in `stepTime`; `stepSunreach` after `stepAirship`). From the landing (M11 W2 Sat 20:00,
-  the airship now lands at "Sunreach Bay — Skydock") to the boarding home (W3 Thu 08:00) `World.Location` is "Sunreach Bay — <place>";
-  short aliases ("the beach", "the casino") count only there. Walks 10–35 minutes between parts (5% stamina an hour); a horse carriage
-  (6 coin) anywhere on land or a water taxi (8 coin) between two shore parts takes half the time, without stamina (`Sunreach.Ride`
-  "carriage" or "boat"); the Open Sea only by tour boat from the Sea Dock (60 min, 15 coin; without the coin {{user}} stays ashore).
-  The teachers' curfew at The Hanabira (22:00–07:00) replaces the dorm curfew; the night side (The Golden Tide, Velvet Lanes) gets a
-  `<now>` reminder only, never a roll or a penalty (owner). Bets at The Golden Tide (`Sunreach.Bet` {Game, Stake}): dice 45% for 2×,
-  cards 48% for 2×, the wheel 8% for 10×, 1–200 coin, settled by the engine (swipe-safe), never by the narrator. Once an hour (seeded,
-  not asleep): a street sight (day or night pool), a hustler (8%), a student of Myrdath, Ashvale or Veyra (25%) and one of Halvard
-  (20%) who would be at that place by personality at that hour (`meet`: day and night places per NPC; still at school, not met today,
-  not in the scene); at sea a sight (50%) and once in a Trip the Leviathan, far off (5%, a Journal line; never a fight). Sunreach has
-  its own warm weather (26–31 °C). The day before, `<now>` reminds that points do not work abroad.
-- **Index pattern** (owner): each outside area now works like the campus (the constant Campus Map, keyword places). Sunreach's index
-  lives in the Academy Trip entry (247: the Trip itself, now with the hotel, the 22:00 curfew, the schedule and the other academies;
-  constant from M11 W1 to the Trip's end, the index only in Sunreach); its 21 places are keyword entries (431–451) in the campus
-  location format (`[Name]`, `Feel:`, and `At night:` / `Feel at night:` only after dark), with no rules for {{user}} in them. Retrofit:
-  the Grand Vast Forest index (360, one line per place) with keyword places (361–369); the Avalon index (370, one line per place)
-  with one keyword entry per place (371–375, 452–464; the Rookery and the Royal Mages stay their own); an airship mini index (465)
-  with keyword places (378–381).
-- **Narrator and UI.** `<now>`: a Sunreach block (where, day or night, the walks and rides, today's schedule, the night-side
-  reminder, the rule at the tables, everything the engine rolled; campus regulars and happenings are left out). 502: the location
-  format, the ride and bet flags. Calendar and the Activities trip card: the Hanabira, the Sunday 09:00 briefing, the Wednesday 19:00
-  farewell dinner, Thursday 08:00 boarding.
-- Tests: new `test_sunreach_v1410.cjs` (46 checks); `test_airship_v1400.cjs`, `test_avalon_v1390.cjs` (the index pattern),
-  `test_world_v110.cjs` (Sunreach's own weather), `test_mapvariants_v1130.cjs` (the new commit); full `npm test` passes; stress passes
-  (the old Topaz fuzz note).
-- To confirm with the owner (invented while applying): the place names (The Hanabira, Tidehouse Aquarium, the Gull Run, Sunreach
-  Crossing, Velvet Lanes, The Golden Tide, Plaza Dourada, Skyrail, Glowtide Grotto and the rest); The Golden Tide as Ottavio's old
-  house (narrator-only); the other academies in Sunreach the same weeks; the schedule (Sunday 09:00 briefing, Wednesday 19:00 farewell
-  dinner, curfew 22:00); the prices (carriage 6, water taxi 8, tour boat 15, bets up to 200); who may be met where (the table in the
-  data, by personality).
-
 ## Release index (one line per release, oldest first)
 
 - All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/archive/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; CHANGELOG 1.2.0/1.2.1).
@@ -308,3 +295,4 @@ map images are the owner's, from `planning/MAP_PROMPTS_outside_maps.txt` part 3)
 - **v1.43.0 (2026-10-03):** Audit batch 2: one source (`shared.js` for the constants, rules and seeded draws every runtime shares; texts read their times and numbers from data); Ambient moments paces the outside areas.
 - **v1.44.0 (2026-10-03):** Audit batch 6: the Agenda (one date marker, status, reminder and coming-up feed `$ui.agenda`), rumours and stories pinned as Clues and Encyclopaedic's filed lead, competition results that pay reputation (with a price) and team bond XP.
 - **v1.45.0 (2026-10-03):** Audit batch 3: one ledger for Points and Coin, one Bag ledger, `/Purchases` settled by the engine (price, place, season, money), one practice session report with tracks (`/Training` an alias) and one Rank 4 partner rule.
+- **v1.46.0 (2026-10-03):** Audit batch 4: the outside areas as one module (one graph shared with the Map panel, `makeArea` records, one parser, formatter, move, hourly loop and theft, climate profiles as data, `$ui.area` / `$eng.area`, one Map renderer and one `<now>` block).
