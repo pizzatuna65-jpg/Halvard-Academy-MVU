@@ -45,27 +45,46 @@ DATA = {'npcs': {}, 'rel': [], 'locs': {}, 'pins': json.load(open(P('data/map_pi
 man = json.load(open(P('data/assets_manifest.json'), encoding='utf-8'))
 DATA['assets'] = {'base': man['base_url'], 'map': man['map'], 'size': man['map_size'],
                   'variants': man.get('map_variants', [])}   # 1.13.0: map by calendar (event, then season)
-# 1.38.0 (owner-approved planning/DRAFT_outside_maps.md, part 1): the Grand Vast Forest map. The cards show the description and the
-# feel; the possible encounters are the narrator's (lore only), so the player explores to learn where a beast lives.
+# 1.46.0 (audit 2.1): the outside areas' Map tabs in one shape for one renderer (20_map.js renderArea): pins (in the forest each place
+# is its own pin), places with their card text (vibe, desc; Sunreach's night face too) and the "I head to ..." words, the legs for the
+# walk search the engine also uses (shared.js), fares, the unit of a walk and where visits start. Built from the areas' data files:
+# 1.38.0 the Grand Vast Forest (the cards show the description and the feel; the possible encounters are the narrator's, lore only),
+# 1.39.0 Avalon (the castle pin hides until a Kingdom win, the Rookery until visited), 1.40.0 the airship (no map image: four places
+# aboard, only during a flight), 1.41.0 Sunreach Bay (a day image and a night image, 18:00-06:00, with the same pins).
+def _cap(s):
+    return s[:1].upper() + s[1:].lower()
+def _go(name, bare=()):
+    """the words for "I head to ..." (an article before a place unless its name is bare)"""
+    return name if name in bare else 'the ' + (name[4:] if name.startswith('The ') else name)
 _exp = json.load(open(P('data/expedition.json'), encoding='utf-8'))
-DATA['forest'] = {'area': _exp['area'], 'map': _exp['map'], 'legs': [l[:3] for l in _exp['legs']],
-                  'places': [{k: p[k] for k in ('id', 'name', 'group', 'x', 'y') if k in p} for p in _exp['places']],
-                  'groups': {g: {'title': G['title'], 'desc': G['desc'], 'feel': G['feel']} for g, G in _exp['groups'].items()}}
-# 1.39.0 (owner-approved planning/DRAFT_outside_maps.md, part 2): the Avalon map: pins that hold places (like the campus map); the
-# castle pin hides until a Kingdom win, the Rookery until it is visited
 _av = json.load(open(P('data/avalon.json'), encoding='utf-8'))
-DATA['capital'] = {'area': _av['area'], 'map': _av['map'], 'legs': _av['legs'], 'fare': _av['rates']['ride_coin'],
-                   'pins': [{k: p[k] for k in ('id', 'name', 'x', 'y', 'locked') if k in p} for p in _av['pins']],
-                   'places': [{k: p[k] for k in ('id', 'name', 'pin', 'in', 'locked', 'hidden', 'desc', 'vibe') if k in p} for p in _av['places']]}
-# 1.40.0 (owner-approved planning/DRAFT_airship.md): the airship tab (no map image): the four places aboard, shown only during a flight
 _air = json.load(open(P('data/airship.json'), encoding='utf-8'))
-DATA['airship'] = {'area': _air['area'], 'places': [{k: p[k] for k in ('id', 'name', 'line', 'desc')} for p in _air['places']]}
-# 1.41.0 (owner-approved planning/DRAFT_outside_maps.md, part 3): the Sunreach Bay map, a day image and a night image (18:00-06:00)
-# with the same pins; the cards show the place's day or night face
 _srm = json.load(open(P('data/sunreach.json'), encoding='utf-8'))
-DATA['sunreach'] = {'area': _srm['area'], 'maps': _srm['maps'], 'night': _srm['night'], 'legs': _srm['legs'],
-                    'fare': {k: _srm['rates'][k] for k in ('carriage', 'boat', 'tour')},
-                    'pins': _srm['pins'], 'places': [{k: p[k] for k in ('id', 'name', 'pin', 'in', 'desc', 'feel', 'night', 'night_feel')} for p in _srm['places']]}
+_tour = next(l for l in _srm['legs'] if len(l) > 3 and l[3])
+_dock = next(p['name'] for p in _srm['places'] if p['pin'] == _tour[0] and 'Dock' in p['name'])
+_AV_BARE = ('Crown Square', 'Spellwright Row', 'Old Town', 'Eldrasil Castle')
+DATA['areas'] = {
+    'forest': {'area': _exp['area'], 'map': _exp['map'], 'unit': 'h', 'arrive': 'base_camp', 'start': 'base_camp', 'reveal': 'near', 'paths': True,
+               'offGo': 'Only during the Expedition', 'offText': 'You are not in the forest now. The map shows what you found on your Expedition.',
+               'legs': [l[:3] for l in _exp['legs']], 'modes': {},
+               'pins': [{k: p[k] for k in ('id', 'name', 'x', 'y')} for p in _exp['places']],
+               'places': [{'id': p['id'], 'name': p['name'], 'pin': p['id'], 'vibe': _cap(_exp['groups'][p['group']]['feel']), 'desc': _exp['groups'][p['group']]['desc'],
+                           'go': p['name'][:4].replace('The ', 'the ') + p['name'][4:]} for p in _exp['places']]},
+    'avalon': {'area': _av['area'], 'map': _av['map'], 'unit': 'min', 'arrive': 'skyport', 'start': 'square',
+               'offGo': 'Only while in Avalon', 'offText': 'You are not in Avalon now. The map shows the city as you saw it.',
+               'legs': _av['legs'], 'modes': {'carriage': {'fare': _av['rates']['ride_coin'], 'name': 'hire carriage'}},
+               'pins': [{k: p[k] for k in ('id', 'name', 'x', 'y', 'locked') if k in p} for p in _av['pins']],
+               'places': [{**{k: p[k] for k in ('id', 'name', 'pin', 'in', 'locked', 'hidden', 'desc', 'vibe') if k in p}, 'go': _go(p['name'], _AV_BARE)} for p in _av['places']]},
+    'sunreach': {'area': _srm['area'], 'maps': _srm['maps'], 'night': _srm['night'], 'unit': 'min', 'arrive': _srm['arrive'], 'start': 'strand',
+                 'offGo': f"Only while in {_srm['area']}", 'offText': f"You are not in {_srm['area']} now. The map shows the city as you saw it.",
+                 'legs': _srm['legs'], 'modes': {'carriage': {'fare': _srm['rates']['carriage'], 'name': 'carriage'}, 'boat': {'fare': _srm['rates']['boat'], 'name': 'water taxi'},
+                                                 'tour': {'fare': _srm['rates']['tour'], 'from': 'the ' + _dock}},
+                 'pins': _srm['pins'],
+                 'places': [{'id': p['id'], 'name': p['name'], 'pin': p['pin'], 'in': p['in'], 'vibe': p['feel'], 'vibe_night': p['night_feel'], 'desc': p['desc'], 'desc_night': p['night'],
+                             'go': 'the open sea' if p['name'] == 'Open Sea' else _go(p['name'])} for p in _srm['places']]},
+    'airship': {'area': _air['area'], 'kind': 'cards', 'legs': [], 'pins': [], 'modes': {},
+                'places': [{'id': p['id'], 'name': p['name'], 'vibe': p['line'], 'desc': p['desc'], 'go': _go(p['name'])} for p in _air['places']]},
+}
 CAST = {}
 for nid, n in npcs.items():
     first = nid

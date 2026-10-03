@@ -1,4 +1,4 @@
-<%_ if ((getvar('stat_data.$ui.capital') || {}).on) { _%>
+<%_ if ((getvar('stat_data.$ui.area.avalon') || {}).on) { _%>
 [AVALON INDEX — the capital. Each place has its own entry when it comes up.]
 Avalon is the capital of Eldrasil and its largest city, some two hours from Halvard by airship. A round city of white stone on a gentle hill, inside one great white wall with four gates; the Great Gate in the south faces the Skyport. Past the wall there are no more walls: the city is laid out in rings by its streets alone, each ring a little higher than the one outside it, rising to Eldrasil Castle on its hill, which can be seen from every street.
 Rings, from the castle out: the Noble Ring, the houses of the noble families on the castle's terraces; the Crown Ring, where the kingdom is run, around Crown Square; and the Lower City, the widest ring by far, where most of Avalon lives, works, shops and plays. Great avenues run from the gates to Crown Square, and the Ring Boulevard circles the Lower City just inside the wall; between them lie homes, workshops and the quarters visitors come for.

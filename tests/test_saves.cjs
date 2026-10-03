@@ -21,8 +21,11 @@ for (const f of files) {
   const P = Schema.parse(_.cloneDeep(old)); runEngine(P, _.cloneDeep(old), ''); const S = Schema.parse(P);
   const L0 = leaves(old), L1 = leaves(S);
   // 1.33.0: the Combat subject is Practical Magic (planning/DRAFT_classes_and_teachers.md); a renamed key is not a lost one
-  const RENAMED = p => p.replace(/(^|\.)Combat(\.|$)/, '$1Practical Magic$2').replace(/(^|\.)Remedial Combat(\.|$)/, '$1Remedial Practical Magic$2');
-  const lost = Object.keys(L0).filter(p => !VOLATILE.test(p) && !(p in L1) && !(RENAMED(p) in L1) && !Object.keys(L1).some(q => q.startsWith(p + '.') || q.startsWith(RENAMED(p) + '.')));
+  // 1.46.0 (audit batch 4): the outside areas moved under $ui.area and $eng.area
+  const AREA_MOVED = [[/^\$ui\.forest(\.|$)/, '$ui.area.forest$1'], [/^\$ui\.capital(\.|$)/, '$ui.area.avalon$1'], [/^\$ui\.sunreach(\.|$)/, '$ui.area.sunreach$1'], [/^\$ui\.airship(\.|$)/, '$ui.area.airship$1'],
+    [/^\$eng\.exp(\.|$)/, '$eng.area.forest$1'], [/^\$eng\.cap(\.|$)/, '$eng.area.avalon$1'], [/^\$eng\.sr(\.|$)/, '$eng.area.sunreach$1']];
+  const RENAMED = p => AREA_MOVED.reduce((x, [rx, to]) => x.replace(rx, to), p.replace(/(^|\.)Combat(\.|$)/, '$1Practical Magic$2').replace(/(^|\.)Remedial Combat(\.|$)/, '$1Remedial Practical Magic$2'));
+  const lost = Object.keys(L0).filter(p => !VOLATILE.test(p) && !(L0[p] === null && AREA_MOVED.some(([rx]) => rx.test(p))) && !(p in L1) && !(RENAMED(p) in L1) && !Object.keys(L1).some(q => q.startsWith(p + '.') || q.startsWith(RENAMED(p) + '.')));
   ok(!lost.length, `${f}: no field is lost (${Object.keys(L0).length} paths)` + (lost.length ? ': ' + lost.slice(0, 8).join(', ') : ''));
   const changed = Object.keys(L0).filter(p => story(p) && p in L1 && L1[p] !== L0[p] && !(typeof L0[p] === 'string' && L1[p] === L0[p].replace(/Combat/g, 'Practical Magic')));
   ok(!changed.length, `${f}: story values unchanged after a no-op update` + (changed.length ? ': ' + changed.slice(0, 8).map(p => `${p} ${JSON.stringify(L0[p])} -> ${JSON.stringify(L1[p])}`).join('; ') : ''));

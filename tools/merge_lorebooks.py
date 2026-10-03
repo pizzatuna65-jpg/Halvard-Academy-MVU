@@ -960,7 +960,7 @@ def beast_names(text):   # every creature in the Magical Beasts list, for one re
 def grand_vast_forest(C, ejs):
     """1.38.0 (owner-approved planning/DRAFT_outside_maps.md, part 1): the Grand Vast Forest from data/expedition.json: an overview
     (neighbours and every shortest walk, computed from the legs), one entry per place group, the Wendigo; the Expedition entry (230)
-    and the beast list (229). Card: constant, behind a gate on $ui.forest.on (nothing outside the Expedition). v39: keyword entries.
+    and the beast list (229). Card: constant, behind a gate on $ui.area.forest.on (nothing outside the Expedition). v39: keyword entries.
     1.41.0 (owner): 360 is the forest's index (constant during the Expedition, one line per place); every place entry is a keyword
     entry, like the campus map (132) and the campus places."""
     X = json.load(open(P('data/expedition.json'), encoding='utf-8'))
@@ -1007,7 +1007,7 @@ def grand_vast_forest(C, ejs):
                 "Shortest walks (hours, the same both ways):\n" + '\n'.join(rows) + "\n"
                 "Walking costs stamina; half a day on foot without rest leaves anyone exhausted. The three Wildwood stretches (west, north, east) "
                 "are one forest in three directions from Base Camp.\n" + rules)
-    gate0, gate1 = "<%_ if ((getvar('stat_data.$ui.forest') || {}).on) { _%>\n", "\n<%_ } _%>"
+    gate0, gate1 = "<%_ if ((getvar('stat_data.$ui.area.forest') || {}).on) { _%>\n", "\n<%_ } _%>"
     def entry(uid, comment, keys, text, index=False):
         assert uid not in C and uid not in N, f'forest uid {uid} is taken'
         e = template_from(C[230], uid=uid, displayIndex=uid, comment=comment, key=keys, content=(gate0 + text + gate1) if ejs and index else text)
@@ -1051,7 +1051,7 @@ def avalon(C, ejs):
     """1.39.0 (owner-approved planning/DRAFT_outside_maps.md, part 2): Avalon, the capital, from data/avalon.json: an overview (rings,
     the White Line, pins and their places, every shortest walk between pins, the Herald Spires, rules for the narrator), one entry per
     part of the city, the Rookery, the Royal Mages on Crowning Day; the World Index, the kingdom, Crowning Day (24) and the Kingdom
-    Competition (19). Card: constant, behind a gate on $ui.capital.on (nothing outside Avalon). v39: keyword entries.
+    Competition (19). Card: constant, behind a gate on $ui.area.avalon.on (nothing outside Avalon). v39: keyword entries.
     1.41.0 (owner): 370 is the city's index (constant in Avalon, one line per place); every place has its own keyword entry in the
     campus location format ([Name] description, Feel), like the campus map (132) and the campus places."""
     A = json.load(open(P('data/avalon.json'), encoding='utf-8'))
@@ -1106,7 +1106,7 @@ def avalon(C, ejs):
                 "Rules for the narrator: what happens in the streets each hour (pickpockets, processions, students of the other academies, a raid) is the "
                 "engine's, listed in <now>; never add trouble or luck of your own. Crowds, sellers, music, smells and colour are yours. Every walk takes "
                 "its minutes on the clock. {{user}} never crosses the White Line unless <now> says the team was summoned.")
-    gate0, gate1 = "<%_ if ((getvar('stat_data.$ui.capital') || {}).on) { _%>\n", "\n<%_ } _%>"
+    gate0, gate1 = "<%_ if ((getvar('stat_data.$ui.area.avalon') || {}).on) { _%>\n", "\n<%_ } _%>"
     def entry(uid, comment, keys, text, index=False):
         assert uid not in C and uid not in N, f'avalon uid {uid} is taken'
         e = template_from(C[230], uid=uid, displayIndex=uid, comment=comment, key=keys, content=(gate0 + text + gate1) if ejs and index else text)
@@ -1148,7 +1148,7 @@ def airship(C, ejs):
     Card: keyword entries (1.41.0, owner), and a small index (465) constant behind a gate on $ui.airship (on during a flight, soon
     in the 90 minutes before one), like the campus map (132) and the campus places. v39: keyword entries."""
     A = json.load(open(P('data/airship.json'), encoding='utf-8'))
-    gate0, gate1 = "<%_ if ((getvar('stat_data.$ui.airship') || {}).on || (getvar('stat_data.$ui.airship') || {}).soon) { _%>\n", "\n<%_ } _%>"
+    gate0, gate1 = "<%_ if ((getvar('stat_data.$ui.area.airship') || {}).on || (getvar('stat_data.$ui.area.airship') || {}).soon) { _%>\n", "\n<%_ } _%>"
     keys = {'promenade_deck': ['Promenade Deck', 'airship promenade'], 'common_room': ['Airship — Common Room', 'airship common room', 'airship bar', 'airship stage'],
             'cabin_deck': ['Cabin Deck', 'bathing stalls'], 'cargo_hold': ['Cargo Hold', 'quartermaster']}
     for uid, p in zip(range(378, 382), A['places']):
@@ -1211,7 +1211,7 @@ def sunreach(C, ejs):
             "Mood: students return tired, sunburnt and poorer than planned.")
     if ejs:
         C[247]['content'] = ("<%_ { const _m = Number(getvar('stat_data.World.Month')) || 0, _w = Number(getvar('stat_data.World.Week')) || 0, "
-                             "_on = (getvar('stat_data.$ui.sunreach') || {}).on; if ((_m === 11 && _w <= 3) || _on) { _%>\n" + trip
+                             "_on = (getvar('stat_data.$ui.area.sunreach') || {}).on; if ((_m === 11 && _w <= 3) || _on) { _%>\n" + trip
                              + "\n<%_ if (_on) { _%>\n" + index + "\n<%_ } } } _%>")
         C[247]['constant'] = True
     else:

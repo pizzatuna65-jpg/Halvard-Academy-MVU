@@ -103,185 +103,103 @@ function hauntKnown(id, S) {
   return f ? fieldUnlocked(id, f, S) : b.Rank >= 1;
 }
 
-// ---- 1.38.0 (owner-approved planning/DRAFT_outside_maps.md, part 1): the Grand Vast Forest map (DATA.forest, engine $ui.forest).
-// A tab next to Halvard once {{user}} has been there; it opens by itself during the Expedition. Points open as you go: the places
-// visited and their neighbours. Cards: the walk from here, the known paths, the description and feel; never the beasts.
-const fz = () => DATA.forest || { places: [], legs: [], groups: {} };
-const fPlace = id => fz().places.find(p => p.id === id);
-function forestKnown(S) {
-  const seen = (((S.$ui || {}).forest || {}).seen || []).filter(fPlace), k = new Set(seen);
-  for (const id of seen) for (const [a, b] of fz().legs) { if (a === id) k.add(b); if (b === id) k.add(a); }
-  return k;
+// ---- 1.46.0 (audit 2.1): the outside areas' tabs, one renderer (DATA.areas from tools/gen_ui.py, engine $ui.area). The Grand Vast Forest
+// (1.38.0), Avalon (1.39.0) and Sunreach Bay (1.41.0, a day and a night image) are maps: pins that hold places (in the forest each
+// place is its own pin), one card at a time; a tab once {{user}} has been there, opened by itself while {{user}} is in the area. The
+// airship (1.40.0) has no map image: a tab only during a flight, its four places as cards. Walks come from the same search the engine
+// uses (shared.js areaRoutes / areaMin). The forest shows only the places visited and their neighbours; Avalon's castle pin only after a
+// Kingdom win, the Rookery only once visited.
+const AZ = k => (DATA.areas || {})[k] || { pins: [], places: [], legs: [], modes: {} };
+const azPlace = (k, id) => AZ(k).places.find(p => p.id === id), azPin = (k, id) => AZ(k).pins.find(p => p.id === id);
+const AZ_NB = {}, AZ_RT = {};
+const azRoutes = (k, from) => { const key = k + ':' + from; if (!AZ_RT[key]) AZ_RT[key] = areaRoutes(AZ_NB[k] || (AZ_NB[k] = areaNb(AZ(k).legs)), from, id => !!(azPin(k, id) || {}).locked); return AZ_RT[key]; };
+const azPL = k => AZ(k).byId || (AZ(k).byId = Object.fromEntries(AZ(k).places.map(p => [p.id, p])));
+const azMin = (k, a, b) => areaMin(azPL(k), from => azRoutes(k, from), a, b);
+const azNight = (k, S) => { const N = AZ(k).night; if (!N) return false; const t = hmMin((S.World || {}).Time); return t != null && (t >= hmMin(N.from) || t < hmMin(N.to)); };
+const azMap = (k, S) => AZ(k).maps ? AZ(k).maps[azNight(k, S) ? 'night' : 'day'] : AZ(k).map;
+// the pins shown: the forest's places visited and their neighbours; elsewhere every pin, a locked one only with the castle open
+function azPins(k, S, A) {
+  if (AZ(k).reveal !== 'near') return AZ(k).pins.filter(p => !p.locked || A.castle);
+  const seen = (A.seen || []).filter(id => azPin(k, id)), known = new Set(seen);
+  for (const id of seen) for (const [a, b] of AZ(k).legs) { if (a === id) known.add(b); if (b === id) known.add(a); }
+  return AZ(k).pins.filter(p => known.has(p.id));
 }
-function forestWalks(from) {
-  const d = { [from]: 0 }, done = new Set();
-  for (;;) {
-    let u = null; for (const k in d) if (!done.has(k) && (u === null || d[k] < d[u])) u = k;
-    if (u === null) break; done.add(u);
-    for (const [a, b, h] of fz().legs) { const v = a === u ? b : b === u ? a : null; if (v && (!(v in d) || d[u] + h < d[v])) d[v] = d[u] + h; }
+const azPlaceOk = (k, A, p) => (!p.locked || A.castle) && (!p.hidden || (A.seen || []).includes(p.id));
+// how far a place is from {{user}} (or, outside the area, from where the area's visits start), and how
+function azWalk(k, id, A) {
+  const Z = AZ(k), from = A.on && A.at ? A.at : Z.arrive, p = azPlace(k, id), f = azPlace(k, from), M = Z.modes || {};
+  if (A.on && A.at === id) return 'You are here';
+  const w = azMin(k, from, id), whence = A.on && A.at ? `from here (${f.name})` : `from ${f.go}`;
+  if (Z.unit === 'h') return `About ${w} h on foot ${whence}`;
+  if (M.tour && (azPin(k, p.pin).sea || azPin(k, f.pin).sea)) return `About ${w} min, by tour boat from ${M.tour.from} (${M.tour.fare} coin)`;
+  const split = f.pin !== p.pin && M.carriage;
+  return `About ${w} min on foot${split ? ` (${Math.round(w / 2)} by ${M.carriage.name}, ${M.carriage.fare} coin)` : ''} ${whence}`;
+}
+function azCard(k, id, S, A, night) {
+  const Z = AZ(k), p = azPlace(k, id), here = A.on && A.at === id;
+  const rows = [['Walk', esc(azWalk(k, id, A))]];
+  if (Z.paths) {   // the forest: the paths from this place, the ones not taken yet only counted
+    const known = new Set(azPins(k, S, A).map(x => x.id)), nb = Z.legs.filter(l => l[0] === id || l[1] === id).map(l => [l[0] === id ? l[1] : l[0], l[2]]);
+    const nbKnown = nb.filter(([v]) => known.has(v)), more = nb.length - nbKnown.length;
+    rows.push(['Paths', esc(nbKnown.map(([v, h]) => `${azPlace(k, v).name} ${h} h`).join(', ') + (more ? `${nbKnown.length ? '; ' : ''}${more} path${more > 1 ? 's' : ''} you have not taken yet` : '') || 'None known')]);
   }
-  return d;
+  const vibe = night && p.vibe_night ? p.vibe_night : p.vibe;
+  return `<article class="lc${here ? ' here' : ''}"><div class="crop" style="${cropStyle(azPin(k, p.pin), S, azMap(k, S))}"><b>${esc(p.name)}</b>${here ? '<span class="you">You are here</span>' : ''}</div>
+    <div class="in">${vibe ? `<p class="vibe">${esc(vibe)}</p>` : ''}
+    <details><summary>Description</summary><p>${esc(p.desc || '')}</p>${night && p.desc_night ? `<p>${esc(p.desc_night)}</p>` : ''}</details>
+    <dl class="kv sm">${rows.map(([a, v]) => `<dt>${a}</dt><dd>${v}</dd>`).join('')}</dl>
+    <button class="btn ${here ? '' : 'pri'} go" data-ago="${esc(k + ':' + id)}" ${here || !A.on ? 'disabled' : ''}>${here ? 'You are here' : A.on ? 'Go here' : esc(Z.offGo)}</button></div></article>`;
 }
-function forestCard(id, S, F, known) {
-  const p = fPlace(id), g = fz().groups[p.group] || {}, here = F.on && F.at === id, from = F.on && F.at ? F.at : 'base_camp';
-  const w = forestWalks(from)[id], fromName = (fPlace(from) || {}).name;
-  const nb = fz().legs.filter(l => l[0] === id || l[1] === id).map(l => [l[0] === id ? l[1] : l[0], l[2]]);
-  const nbKnown = nb.filter(([v]) => known.has(v)), more = nb.length - nbKnown.length;
-  const walk = here ? 'You are here' : F.on && F.at ? `About ${w} h on foot from here (${fromName})` : `About ${w} h on foot from ${fromName}`;
-  const paths = nbKnown.map(([v, h]) => `${fPlace(v).name} ${h} h`).join(', ') + (more ? `${nbKnown.length ? '; ' : ''}${more} path${more > 1 ? 's' : ''} you have not taken yet` : '');
-  const rows = [['Walk', esc(walk)], ['Paths', esc(paths || 'None known')]];
-  return `<article class="lc${here ? ' here' : ''}"><div class="crop" style="${cropStyle(p, S, fz().map)}"><b>${esc(p.name)}</b>${here ? '<span class="you">You are here</span>' : ''}</div>
-    <div class="in">${g.feel ? `<p class="vibe">${esc(_.capitalize(g.feel))}</p>` : ''}
-    <details><summary>Description</summary><p>${esc(g.desc || '')}</p></details>
-    <dl class="kv sm">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
-    <button class="btn ${here ? '' : 'pri'} go" data-fgo="${esc(id)}" ${here || !F.on ? 'disabled' : ''}>${here ? 'You are here' : F.on ? 'Go here' : 'Only during the Expedition'}</button></div></article>`;
-}
-function renderForest(S, tabs) {
-  const F = (S.$ui || {}).forest || {}, known = forestKnown(S);
-  if (!view.fpin || !known.has(view.fpin)) view.fpin = F.on && F.at ? F.at : 'base_camp';
-  const pinHTML = fz().places.filter(p => known.has(p.id)).map(p => {
-    const here = F.on && F.at === p.id, sel = view.fpin === p.id;
-    return `<button class="pin${here ? ' here' : ''}${sel ? ' sel' : ''}" data-fpin="${esc(p.id)}" style="left:${p.x}%;top:${p.y}%" aria-label="${esc(p.name)}${here ? ' (you are here)' : ''}" title="${esc(p.name)}"></button>`
-      + (sel || here ? `<span class="plab${here ? ' here' : ''}${labPos(p)}" style="left:${p.x}%;top:${p.y}%">${esc(p.name)}</span>` : '');
-  }).join('');
-  const P = fPlace(view.fpin), sheet = P ? `<h3>${esc(P.name)}</h3><div class="car">${forestCard(P.id, S, F, known)}</div>` : '';
-  const hunt = F.on && F.tgt ? ` Target: ${F.tgt}${F.res === 'caught' ? ' (caught)' : F.res === 'failed' ? ' (not found)' : ''}.` : '';
-  const where = F.on ? `You are at ${esc(S.World.Location)}.${esc(hunt)}` : 'You are not in the forest now. The map shows what you found on your Expedition.';
-  return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>${esc(fz().area)}</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
-    <div class="bd">${tabs}<div class="mapwrap"><div><div class="mapbox"><div class="mapview${mapView.z > 1 ? ' zin' : ''}"><div class="map" style="width:${mapView.z * 100}%"><img src="${esc(imgURL(fz().map))}" alt="Map of the ${esc(fz().area)}" draggable="false">${pinHTML}</div></div>
-    <div class="zoom"><button data-zoom="1" aria-label="Zoom in" title="Zoom in (or the mouse wheel)" ${mapView.z >= ZOOMS[ZOOMS.length - 1] ? 'disabled' : ''}>+</button><button data-zoom="-1" aria-label="Zoom out" title="Zoom out" ${mapView.z <= 1 ? 'disabled' : ''}>−</button></div></div>
-    <div class="sub" style="margin:6px 0 10px">${where}</div></div><div class="sheet">${sheet}</div></div></div></div>`;
-}
-
-// ---- 1.39.0 (owner-approved planning/DRAFT_outside_maps.md, part 2): Avalon (DATA.capital, engine $ui.capital). A tab once
-// {{user}} has been there; it opens by itself while {{user}} is in the city. Pins hold places like the campus map, one card at a time.
-// Every public pin shows; the castle pin only after a Kingdom win, the Rookery only once visited.
-const cz = () => DATA.capital || { pins: [], places: [], legs: [] };
-const cPlace = id => cz().places.find(p => p.id === id), cPin = id => cz().pins.find(p => p.id === id);
-function capWalks(from) {                                       // minutes between pins; the castle is no way through
-  const d = { [from]: 0 }, done = new Set();
-  for (;;) {
-    let u = null; for (const k in d) if (!done.has(k) && (u === null || d[k] < d[u])) u = k;
-    if (u === null) break; done.add(u);
-    if (u !== from && (cPin(u) || {}).locked) continue;
-    for (const [a, b, m] of cz().legs) { const v = a === u ? b : b === u ? a : null; if (v && (!(v in d) || d[u] + m < d[v])) d[v] = d[u] + m; }
-  }
-  return d;
-}
-const capMin = (a, b) => a === b ? 0 : cPlace(a).pin === cPlace(b).pin ? Math.max(5, num(cPlace(a).in, 5) + num(cPlace(b).in, 5)) : capWalks(cPlace(a).pin)[cPlace(b).pin];
-function capCard(id, S, C) {
-  const p = cPlace(id), here = C.on && C.at === id, from = C.on && C.at ? C.at : 'skyport', m = capMin(from, id), split = cPlace(from).pin !== p.pin;
-  const walk = here ? 'You are here' : `About ${m} min on foot${split ? ` (${Math.round(m / 2)} by hire carriage, ${cz().fare} coin)` : ''} from ${C.on && C.at ? 'here' : 'the Skyport'} (${cPlace(from).name})`;
-  return `<article class="lc${here ? ' here' : ''}"><div class="crop" style="${cropStyle(cPin(p.pin), S, cz().map)}"><b>${esc(p.name)}</b>${here ? '<span class="you">You are here</span>' : ''}</div>
-    <div class="in">${p.vibe ? `<p class="vibe">${esc(p.vibe)}</p>` : ''}
-    <details><summary>Description</summary><p>${esc(p.desc || '')}</p></details>
-    <dl class="kv sm"><dt>Walk</dt><dd>${esc(walk)}</dd></dl>
-    <button class="btn ${here ? '' : 'pri'} go" data-cgo="${esc(id)}" ${here || !C.on ? 'disabled' : ''}>${here ? 'You are here' : C.on ? 'Go here' : 'Only while in Avalon'}</button></div></article>`;
-}
-function renderCapital(S, tabs) {
-  const C = (S.$ui || {}).capital || {}, seen = new Set(C.seen || []);
-  const pinOk = p => !p.locked || C.castle, placeOk = p => (!p.locked || C.castle) && (!p.hidden || seen.has(p.id));
-  const curPin = C.on && C.at ? (cPlace(C.at) || {}).pin : '';
-  if (!view.cpin || !pinOk(cPin(view.cpin) || { locked: true })) view.cpin = curPin || 'square';
-  const pinHTML = cz().pins.filter(pinOk).map(p => {
-    const here = curPin === p.id, sel = view.cpin === p.id;
-    return `<button class="pin${here ? ' here' : ''}${sel ? ' sel' : ''}" data-cpin="${esc(p.id)}" style="left:${p.x}%;top:${p.y}%" aria-label="${esc(p.name)}${here ? ' (you are here)' : ''}" title="${esc(p.name)}"></button>`
-      + (sel || here ? `<span class="plab${here ? ' here' : ''}${labPos(p)}" style="left:${p.x}%;top:${p.y}%">${esc(p.name)}</span>` : '');
-  }).join('');
-  const P = cPin(view.cpin), ids = P ? cz().places.filter(x => x.pin === P.id && placeOk(x)).map(x => x.id) : [];
-  if (view.ccardPin !== view.cpin) view.ccard = Math.max(0, ids.indexOf(C.at));
-  view.ccardPin = view.cpin; view.ccard = _.clamp(view.ccard || 0, 0, Math.max(0, ids.length - 1));
-  const arrows = ids.length > 1 ? `<div class="cnav"><button class="btn sm" data-ccard="-1" aria-label="Previous place" ${view.ccard ? '' : 'disabled'}>‹</button>
-    <span class="sub">${view.ccard + 1} / ${ids.length} · ${esc(cPlace(ids[view.ccard]).name)}</span><button class="btn sm" data-ccard="1" aria-label="Next place" ${view.ccard < ids.length - 1 ? '' : 'disabled'}>›</button></div>` : '';
-  const sheet = P ? `<h3>${esc(P.name)}</h3>${arrows}<div class="car">${ids.length ? capCard(ids[view.ccard], S, C) : ''}</div>` : '';
-  const where = C.on ? `You are at ${esc(S.World.Location)}.${C.muster && !C.muster.missed && C.muster.left > 0 ? ` Muster at the Skyport at ${esc(C.muster.at)}: ${C.muster.left} min left, ${C.muster.back} min on foot from here.` : ''}` : 'You are not in Avalon now. The map shows the city as you saw it.';
-  return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>${esc(cz().area)}</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
-    <div class="bd">${tabs}<div class="mapwrap"><div><div class="mapbox"><div class="mapview${mapView.z > 1 ? ' zin' : ''}"><div class="map" style="width:${mapView.z * 100}%"><img src="${esc(imgURL(cz().map))}" alt="Map of ${esc(cz().area)}" draggable="false">${pinHTML}</div></div>
-    <div class="zoom"><button data-zoom="1" aria-label="Zoom in" title="Zoom in (or the mouse wheel)" ${mapView.z >= ZOOMS[ZOOMS.length - 1] ? 'disabled' : ''}>+</button><button data-zoom="-1" aria-label="Zoom out" title="Zoom out" ${mapView.z <= 1 ? 'disabled' : ''}>−</button></div></div>
-    <div class="sub" style="margin:6px 0 10px">${where}</div></div><div class="sheet">${sheet}</div></div></div></div>`;
-}
-
-// ---- 1.41.0 (owner-approved planning/DRAFT_outside_maps.md, part 3): Sunreach Bay (DATA.sunreach, engine $ui.sunreach). A tab once
-// {{user}} has been there, opened by itself during the Trip. Two images with the same pins: the night map from 18:00 to 06:00, and the
-// cards show each place's night face then.
-const rz = () => DATA.sunreach || { pins: [], places: [], legs: [], maps: {}, fare: {} };
-const rPlace = id => rz().places.find(p => p.id === id), rPin = id => rz().pins.find(p => p.id === id);
-const rMin = t => { const m = /^(\d{1,2}):(\d{2})/.exec(String(t || '')); return m ? +m[1] * 60 + +m[2] : null; };
-const rNight = S => { const t = rMin((S.World || {}).Time), N = rz().night || {}; return t != null && (t >= rMin(N.from) || t < rMin(N.to)); };
-function srWalks(from) {                                        // minutes between pins
-  const d = { [from]: 0 }, done = new Set();
-  for (;;) {
-    let u = null; for (const k in d) if (!done.has(k) && (u === null || d[k] < d[u])) u = k;
-    if (u === null) break; done.add(u);
-    for (const [a, b, m] of rz().legs) { const v = a === u ? b : b === u ? a : null; if (v && (!(v in d) || d[u] + m < d[v])) d[v] = d[u] + m; }
-  }
-  return d;
-}
-const srMinUI = (a, b) => a === b ? 0 : rPlace(a).pin === rPlace(b).pin ? Math.max(5, num(rPlace(a).in, 5) + num(rPlace(b).in, 5)) : srWalks(rPlace(a).pin)[rPlace(b).pin];
-function srCard(id, S, R, night) {
-  const p = rPlace(id), here = R.on && R.at === id, from = R.on && R.at ? R.at : 'skydock', m = srMinUI(from, id), split = rPlace(from).pin !== p.pin;
-  const sea = p.pin === 'sea' || rPlace(from).pin === 'sea', F = rz().fare;
-  const walk = here ? 'You are here' : sea ? `About ${m} min, by tour boat from the Sea Dock (${F.tour} coin)` : `About ${m} min on foot${split ? ` (${Math.round(m / 2)} by carriage, ${F.carriage} coin)` : ''} from ${R.on && R.at ? 'here' : 'the Skydock'} (${rPlace(from).name})`;
-  const map = rz().maps[night ? 'night' : 'day'];
-  return `<article class="lc${here ? ' here' : ''}"><div class="crop" style="${cropStyle(rPin(p.pin), S, map)}"><b>${esc(p.name)}</b>${here ? '<span class="you">You are here</span>' : ''}</div>
-    <div class="in"><p class="vibe">${esc(night ? p.night_feel : p.feel)}</p>
-    <details><summary>Description</summary><p>${esc(p.desc)}</p>${night ? `<p>${esc(p.night)}</p>` : ''}</details>
-    <dl class="kv sm"><dt>Walk</dt><dd>${esc(walk)}</dd></dl>
-    <button class="btn ${here ? '' : 'pri'} go" data-rgo="${esc(id)}" ${here || !R.on ? 'disabled' : ''}>${here ? 'You are here' : R.on ? 'Go here' : 'Only while in Sunreach Bay'}</button></div></article>`;
-}
-function renderSunreach(S, tabs) {
-  const R = (S.$ui || {}).sunreach || {}, night = rNight(S), map = rz().maps[night ? 'night' : 'day'];
-  const curPin = R.on && R.at ? (rPlace(R.at) || {}).pin : '';
-  if (!view.rpin || !rPin(view.rpin)) view.rpin = curPin || 'strand';
-  const pinHTML = rz().pins.map(p => {
-    const here = curPin === p.id, sel = view.rpin === p.id;
-    return `<button class="pin${here ? ' here' : ''}${sel ? ' sel' : ''}" data-rpin="${esc(p.id)}" style="left:${p.x}%;top:${p.y}%" aria-label="${esc(p.name)}${here ? ' (you are here)' : ''}" title="${esc(p.name)}"></button>`
-      + (sel || here ? `<span class="plab${here ? ' here' : ''}${labPos(p)}" style="left:${p.x}%;top:${p.y}%">${esc(p.name)}</span>` : '');
-  }).join('');
-  const P = rPin(view.rpin), ids = P ? rz().places.filter(x => x.pin === P.id).map(x => x.id) : [];
-  if (view.rcardPin !== view.rpin) view.rcard = Math.max(0, ids.indexOf(R.at));
-  view.rcardPin = view.rpin; view.rcard = _.clamp(view.rcard || 0, 0, Math.max(0, ids.length - 1));
-  const arrows = ids.length > 1 ? `<div class="cnav"><button class="btn sm" data-rcard="-1" aria-label="Previous place" ${view.rcard ? '' : 'disabled'}>‹</button>
-    <span class="sub">${view.rcard + 1} / ${ids.length} · ${esc(rPlace(ids[view.rcard]).name)}</span><button class="btn sm" data-rcard="1" aria-label="Next place" ${view.rcard < ids.length - 1 ? '' : 'disabled'}>›</button></div>` : '';
-  const sheet = P ? `<h3>${esc(P.name)}</h3>${arrows}<div class="car">${ids.length ? srCard(ids[view.rcard], S, R, night) : ''}</div>` : '';
-  const where = R.on ? `You are at ${esc(S.World.Location)}. ${night ? 'Night: the city is lit until dawn.' : 'Day.'}` : `You are not in ${esc(rz().area)} now. The map shows the city as you saw it.`;
-  return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>${esc(rz().area)}</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
-    <div class="bd">${tabs}<div class="mapwrap"><div><div class="mapbox"><div class="mapview${mapView.z > 1 ? ' zin' : ''}"><div class="map" style="width:${mapView.z * 100}%"><img src="${esc(imgURL(map))}" alt="Map of ${esc(rz().area)}${night ? ' at night' : ''}" draggable="false">${pinHTML}</div></div>
-    <div class="zoom"><button data-zoom="1" aria-label="Zoom in" title="Zoom in (or the mouse wheel)" ${mapView.z >= ZOOMS[ZOOMS.length - 1] ? 'disabled' : ''}>+</button><button data-zoom="-1" aria-label="Zoom out" title="Zoom out" ${mapView.z <= 1 ? 'disabled' : ''}>−</button></div></div>
-    <div class="sub" style="margin:6px 0 10px">${where}</div></div><div class="sheet">${sheet}</div></div></div></div>`;
-}
-
-// ---- 1.40.0 (owner-approved planning/DRAFT_airship.md): the airship (DATA.airship, engine $ui.airship). A tab only during a flight,
-// opened by itself; no map image (owner): the four places aboard as cards, two minutes apart.
-const az = () => DATA.airship || { places: [] };
-function renderAirship(S, tabs) {
-  const A = (S.$ui || {}).airship || {}, l = num(A.left, 0);
-  const cards = az().places.map(p => {
-    const here = A.at === p.id;
-    return `<article class="lc${here ? ' here' : ''}"><div class="in"><h3>${esc(p.name)}${here ? ' <span class="you">You are here</span>' : ''}</h3><p class="vibe">${esc(p.line)}</p>
+// what the line under the map says while {{user}} is in the area
+const AZ_WHERE = {
+  forest: A => A.tgt ? ` Target: ${A.tgt}${A.res === 'caught' ? ' (caught)' : A.res === 'failed' ? ' (not found)' : ''}.` : '',
+  avalon: A => A.muster && !A.muster.missed && A.muster.left > 0 ? ` Muster at the Skyport at ${A.muster.at}: ${A.muster.left} min left, ${A.muster.back} min on foot from here.` : '',
+  sunreach: (A, night) => ` ${night ? 'Night: the city is lit until dawn.' : 'Day.'}`,
+};
+function renderArea(k, S, tabs) {
+  const Z = AZ(k), A = ((S.$ui || {}).area || {})[k] || {}, close = `${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button>`;
+  if (Z.kind === 'cards') {   // the airship: no map, the places aboard two minutes apart
+    const l = num(A.left, 0), cards = Z.places.map(p => {
+      const here = A.at === p.id;
+      return `<article class="lc${here ? ' here' : ''}"><div class="in"><h3>${esc(p.name)}${here ? ' <span class="you">You are here</span>' : ''}</h3><p class="vibe">${esc(p.vibe)}</p>
       <details><summary>Description</summary><p>${esc(p.desc)}</p></details>
-      <button class="btn ${here ? '' : 'pri'} go" data-ago="${esc(p.id)}" ${here ? 'disabled' : ''}>${here ? 'You are here' : 'Go here (2 min)'}</button></div></article>`;
-  }).join('');
-  const where = `${esc(A.event || '')}: lands at ${esc(A.lands || '')} at ${esc(A.to || '')} (${l >= 60 ? `${Math.floor(l / 60)}h ${l % 60}m` : `${l} min`} left).${A.view ? ` Outside: ${esc(A.view)}.` : ''}`;
-  return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>${esc(az().area)}</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
+      <button class="btn ${here ? '' : 'pri'} go" data-ago="${esc(k + ':' + p.id)}" ${here ? 'disabled' : ''}>${here ? 'You are here' : 'Go here (2 min)'}</button></div></article>`;
+    }).join('');
+    const where = `${esc(A.event || '')}: lands at ${esc(A.lands || '')} at ${esc(A.to || '')} (${l >= 60 ? `${Math.floor(l / 60)}h ${l % 60}m` : `${l} min`} left).${A.view ? ` Outside: ${esc(A.view)}.` : ''}`;
+    return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>${esc(Z.area)}</h2>${close}</div>
     <div class="bd">${tabs}<div class="sub" style="margin:6px 0 10px">${where}</div><div class="car air">${cards}</div></div></div>`;
+  }
+  const night = azNight(k, S), map = azMap(k, S), pins = azPins(k, S, A), curPin = A.on && A.at ? (azPlace(k, A.at) || {}).pin : '';
+  const VA = view.area || (view.area = {}), V = VA[k] || (VA[k] = { pin: '', card: 0, cardPin: '' });
+  if (!V.pin || !pins.some(p => p.id === V.pin)) V.pin = curPin || Z.start;
+  const pinHTML = pins.map(p => {
+    const here = curPin === p.id, sel = V.pin === p.id;
+    return `<button class="pin${here ? ' here' : ''}${sel ? ' sel' : ''}" data-apin="${esc(k + ':' + p.id)}" style="left:${p.x}%;top:${p.y}%" aria-label="${esc(p.name)}${here ? ' (you are here)' : ''}" title="${esc(p.name)}"></button>`
+      + (sel || here ? `<span class="plab${here ? ' here' : ''}${labPos(p)}" style="left:${p.x}%;top:${p.y}%">${esc(p.name)}</span>` : '');
+  }).join('');
+  const P = azPin(k, V.pin), ids = P ? Z.places.filter(x => x.pin === P.id && azPlaceOk(k, A, x)).map(x => x.id) : [];
+  if (V.cardPin !== V.pin) V.card = Math.max(0, ids.indexOf(A.at));
+  V.cardPin = V.pin; V.card = _.clamp(V.card || 0, 0, Math.max(0, ids.length - 1));
+  const arrows = ids.length > 1 ? `<div class="cnav"><button class="btn sm" data-acard="${esc(k)}:-1" aria-label="Previous place" ${V.card ? '' : 'disabled'}>‹</button>
+    <span class="sub">${V.card + 1} / ${ids.length} · ${esc(azPlace(k, ids[V.card]).name)}</span><button class="btn sm" data-acard="${esc(k)}:1" aria-label="Next place" ${V.card < ids.length - 1 ? '' : 'disabled'}>›</button></div>` : '';
+  const sheet = P ? `<h3>${esc(P.name)}</h3>${arrows}<div class="car">${ids.length ? azCard(k, ids[V.card], S, A, night) : ''}</div>` : '';
+  const where = A.on ? `You are at ${esc(S.World.Location)}.${esc((AZ_WHERE[k] || (() => ''))(A, night))}` : esc(Z.offText);
+  return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>${esc(Z.area)}</h2>${close}</div>
+    <div class="bd">${tabs}<div class="mapwrap"><div><div class="mapbox"><div class="mapview${mapView.z > 1 ? ' zin' : ''}"><div class="map" style="width:${mapView.z * 100}%"><img src="${esc(imgURL(map))}" alt="Map of ${Z.reveal === 'near' ? 'the ' : ''}${esc(Z.area)}${night ? ' at night' : ''}" draggable="false">${pinHTML}</div></div>
+    <div class="zoom"><button data-zoom="1" aria-label="Zoom in" title="Zoom in (or the mouse wheel)" ${mapView.z >= ZOOMS[ZOOMS.length - 1] ? 'disabled' : ''}>+</button><button data-zoom="-1" aria-label="Zoom out" title="Zoom out" ${mapView.z <= 1 ? 'disabled' : ''}>−</button></div></div>
+    <div class="sub" style="margin:6px 0 10px">${where}</div></div><div class="sheet">${sheet}</div></div></div></div>`;
 }
 
 PANELS.map = {
   live: true,
   render(S) {
-    // 1.38.0: Halvard / Grand Vast Forest tabs once the forest has been visited; the forest opens by itself while {{user}} is in it.
-    // 1.39.0: an Avalon tab the same way.
-    const F = (S.$ui || {}).forest || {}, hasF = !!(F.seen || []).length, Cp = (S.$ui || {}).capital || {}, hasC = !!(Cp.seen || []).length;
-    const Ar = (S.$ui || {}).airship || {};   // 1.40.0: the Airship tab only during a flight
-    const Sr = (S.$ui || {}).sunreach || {}, hasR = !!(Sr.seen || []).length;   // 1.41.0: Sunreach Bay once visited
-    const maps = [['campus', 'Halvard'], ...(hasF ? [['forest', fz().area]] : []), ...(hasC ? [['capital', cz().area]] : []), ...(hasR ? [['sunreach', rz().area]] : []), ...(Ar.on ? [['airship', az().area]] : [])];
-    const want = view.map || (Ar.on ? 'airship' : F.on ? 'forest' : Cp.on ? 'capital' : Sr.on ? 'sunreach' : 'campus'), which = maps.some(m => m[0] === want) ? want : 'campus';
+    // 1.38.0-1.41.0: a tab for each outside area once {{user}} has been there (the airship only during a flight), opened by itself while
+    // {{user}} is in it; 1.46.0: one renderer (renderArea)
+    const AS = (S.$ui || {}).area || {}, has = k => AZ(k).kind === 'cards' ? !!(AS[k] || {}).on : !!((AS[k] || {}).seen || []).length;
+    const maps = [['campus', 'Halvard'], ...['forest', 'avalon', 'sunreach', 'airship'].filter(has).map(k => [k, AZ(k).area])];
+    const want = view.map || ['airship', 'forest', 'avalon', 'sunreach'].find(k => (AS[k] || {}).on) || 'campus', which = maps.some(m => m[0] === want) ? want : 'campus';
     const tabs = maps.length > 1 ? `<div class="tog maps">${maps.map(([k, n]) => `<button data-map="${k}" class="${which === k ? 'on' : ''}">${esc(n)}</button>`).join('')}</div>` : '';
-    if (which === 'forest') return renderForest(S, tabs);
-    if (which === 'capital') return renderCapital(S, tabs);
-    if (which === 'airship') return renderAirship(S, tabs);
-    if (which === 'sunreach') return renderSunreach(S, tabs);
+    if (which !== 'campus') return renderArea(which, S, tabs);
     const cur = locIdOf(S.World.Location), curPin = cur ? pinOf(cur) : null;
     if (view.pin == null && curPin) view.pin = curPin.pin;
     const pins = DATA.pins.filter(p => p.cluster.some(id => DATA.locs[id] && discovered(S, DATA.locs[id])));
@@ -348,15 +266,9 @@ PANELS.map = {
   click(b, S) {
     if (b.dataset.zoom) { zoomMap(+b.dataset.zoom); return; }
     if (b.dataset.map) { view.map = b.dataset.map; mapView.z = 1; mapView.cx = 0.5; mapView.cy = 0.5; render(); return; }
-    if (b.dataset.fpin) { view.fpin = b.dataset.fpin; render(); return; }
-    if (b.dataset.fgo) { const p = fPlace(b.dataset.fgo); if (p) fillChat(`I head to ${p.name.replace(/^The /, 'the ')}.`); return; }
-    if (b.dataset.cpin) { view.cpin = b.dataset.cpin; view.ccardPin = ''; render(); return; }   // 1.39.0: Avalon
-    if (b.dataset.ccard) { view.ccard = (view.ccard || 0) + +b.dataset.ccard; render(); return; }
-    if (b.dataset.rpin) { view.rpin = b.dataset.rpin; view.rcardPin = ''; render(); return; }   // 1.41.0: Sunreach Bay
-    if (b.dataset.rcard) { view.rcard = (view.rcard || 0) + +b.dataset.rcard; render(); return; }
-    if (b.dataset.rgo) { const p = rPlace(b.dataset.rgo); if (p) fillChat(`I head to ${/^The /.test(p.name) ? p.name.replace(/^The /, 'the ') : p.name === 'Open Sea' ? 'the open sea' : 'the ' + p.name}.`); return; }
-    if (b.dataset.ago) { const p = az().places.find(x => x.id === b.dataset.ago); if (p) fillChat(`I head to the ${p.name}.`); return; }
-    if (b.dataset.cgo) { const p = cPlace(b.dataset.cgo); if (p) fillChat(`I head to ${/^(Crown Square|Spellwright Row|Old Town|Eldrasil Castle)$/.test(p.name) ? p.name : 'the ' + p.name.replace(/^The /, '')}.`); return; }
+    if (b.dataset.apin) { const [k, id] = b.dataset.apin.split(':'), VA = view.area || (view.area = {}); VA[k] = { pin: id, card: 0, cardPin: '' }; render(); return; }   // 1.46.0: an area's pin
+    if (b.dataset.acard) { const [k, d] = b.dataset.acard.split(':'), V = (view.area || {})[k]; if (V) { V.card = (V.card || 0) + +d; render(); } return; }
+    if (b.dataset.ago) { const [k, id] = b.dataset.ago.split(':'), p = azPlace(k, id); if (p) fillChat(`I head to ${p.go}.`); return; }
     if (b.dataset.pin) { view.pin = +b.dataset.pin; view.floor = ''; render(); return; }
     if (b.dataset.card) { view.card += +b.dataset.card; render(); return; }
     if (b.dataset.floor) { view.floor = b.dataset.floor; render(); return; }

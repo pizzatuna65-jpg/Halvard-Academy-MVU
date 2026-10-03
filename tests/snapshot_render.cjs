@@ -37,7 +37,7 @@ if (mode === 'render') {
   global.window = { parent: { document: {} } };
   const U = new Function(fs.readFileSync(uiF || path.join(ROOT, 'src/scripts/ui.js'), 'utf8') + '\nreturn { PANELS, view, renderProfile, renderBuilder, blankDraft, setDraft: d => { draft = d; } };')();
   const NB = ['bag', 'wallet', 'planner', 'journal', 'notices', 'letters', 'mystery', 'forecast'], ACT = ['clubs', 'practice', 'competition', 'shop', 'projects', 'trip'];
-  const PROF = ['overview', 'body', 'studies', 'magic', 'hidden', 'perks', 'log', 'settings'], MAPS = ['campus', 'forest', 'capital', 'airship', 'sunreach'];
+  const PROF = ['overview', 'body', 'studies', 'magic', 'hidden', 'perks', 'log', 'settings'], MAPS = ['campus', 'forest', 'avalon', 'airship', 'sunreach'];
   const tryR = f => { try { return f(); } catch (e) { return 'ERROR ' + e.message; } };
   for (const [k, S] of Object.entries(states)) {
     for (const t of PROF) { U.view.tab = t; snap[`${k}/profile/${t}`] = tryR(() => U.renderProfile(_.cloneDeep(S))); }

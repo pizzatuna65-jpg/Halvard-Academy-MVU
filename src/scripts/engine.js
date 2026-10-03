@@ -686,6 +686,9 @@ function makeArea(key, D, o = {}) {
   A.min = (a, b) => areaMin(A.PL, A.routes, a, b);
   return A;
 }
+const AREA_OLD_UI = [['forest', 'forest'], ['capital', 'avalon'], ['airship', 'airship'], ['sunreach', 'sunreach']], AREA_OLD_ENG = [['exp', 'forest'], ['cap', 'avalon'], ['sr', 'sunreach']];
+// the place {{user}} was at in area key before this reply ($ui.area.<key>.at while on), for the parsers' short aliases
+const areaWas = (B, key) => { const u = (((B || {}).$ui || {}).area || {})[key]; return (_.isPlainObject(u) && u.on && u.at) || ''; };
 const avKey = x => String(x || '').trim().toLowerCase().replace(/[.!]+$/, '').replace(/^the /, '');
 const AR = {
   forest: makeArea('forest', EXP, { salt: 'exp', words: [String(EXP.area || '').toLowerCase()], arrive: 'base_camp' }),
@@ -1108,6 +1111,7 @@ function stepSetup(c) {
   S.$ui = S.$ui || { unlocks: [], discovered: [], toasts: [] };
   for (const k of ['unlocks', 'discovered', 'toasts', 'names', 'archive', 'secrets', 'off', 'rumours_old', 'lore']) if (!Array.isArray(S.$ui[k])) S.$ui[k] = [];
   if (!_.isPlainObject(S.$ui.parked)) S.$ui.parked = {};
+  for (const X of [S.$ui, S.$eng]) if (!_.isPlainObject(X.area)) X.area = {};   // 1.46.0 (audit 3.1): one record per outside area
   if (!['off', 'flavor', 'full'].includes(S.$ui.wxfx)) S.$ui.wxfx = 'full';
   const hasB = !!(B && B.World);
   const fromVer = hasB ? (B.$eng || {}).ver : S.$eng.ver;      // the engine version that wrote the state before this reply
@@ -1123,6 +1127,15 @@ function stepMigrate(c) {
   const { S, hasB, log } = c;
   if (c.fromVer === ENGINE_VER) return;
   const B = c.B = hasB ? _.cloneDeep(c.B) : c.B, both = hasB ? [S, B] : [S];
+  // 1.46.0 (audit batch 4): the outside areas keep their state under one record each, $ui.area.<forest|avalon|airship|sunreach>
+  // (was $ui.forest, capital, airship, sunreach) and $eng.area.<forest|avalon|sunreach> (was $eng.exp, cap, sr)
+  for (const X of both) {
+    const U = X.$ui || (X.$ui = {}), E = X.$eng || (X.$eng = {});
+    if (!_.isPlainObject(U.area)) U.area = {};
+    if (!_.isPlainObject(E.area)) E.area = {};
+    for (const [o, n] of AREA_OLD_UI) { if (U[o] != null && U.area[n] == null) U.area[n] = U[o]; delete U[o]; }
+    for (const [o, n] of AREA_OLD_ENG) { if (E[o] != null && E.area[n] == null) E.area[n] = E[o]; delete E[o]; }
+  }
   // 1.26.0: old chats keep their history. A small class allowance recognises weeks already played;
   // the one-time Studies offer lets the player choose a different starting history.
   if (S.$eng.profv !== 1 && hasB) {
@@ -1341,7 +1354,7 @@ function stepTime(c) {
     if (!S.World[f]) { S.World[f] = (hasB && B.World[f]) || d; if (hasB) log.push(`World.${f} could not be read; it was kept at ${S.World[f]}.`); }
   }
   // 1.38.0: during the Expedition a forest place is written in the forest map's words; elsewhere in the campus map's (1.3.1)
-  const fPrev = hasB ? forestPlace(B.World.Location, (_.isPlainObject((B.$ui || {}).forest) && B.$ui.forest.on && B.$ui.forest.at) || '') : '';
+  const fPrev = hasB ? forestPlace(B.World.Location, areaWas(B, 'forest')) : '';
   // 1.40.0: while a flight is in the air {{user}} is aboard, in the airship's words. An outbound flight boards whoever is still
   // elsewhere (the Common Room, where the crew counts heads); a flight home leaves a place in the forest or Avalon to those maps
   // until the story boards. A Location that still says the airship after landing becomes the flight's destination.
@@ -1362,11 +1375,11 @@ function stepTime(c) {
   const fAt = !sAt && expOnDay(S.World) ? forestPlace(S.World.Location, fPrev) : '';
   // 1.39.0: in Avalon (Crowning Day; the Kingdom Competition days for Halvard's team) a city place is written in the city map's
   // words. Past the White Line (the castle pin) only the Kingdom winners go: anyone else is held at the last place before it.
-  const aPrev = hasB ? areaPlace(AR.avalon, B.World.Location, (_.isPlainObject((B.$ui || {}).capital) && B.$ui.capital.on && B.$ui.capital.at) || '') : '';
+  const aPrev = hasB ? areaPlace(AR.avalon, B.World.Location, areaWas(B, 'avalon')) : '';
   let aAt = !sAt && !fAt && (avCrown(S.World) || avKingdom(S.World, S)) ? areaPlace(AR.avalon, S.World.Location, aPrev) : '', aHeld = '';
   if (aAt && AR.avalon.PL[aAt].locked && !avPass(S)) { aHeld = aAt; aAt = aPrev && !AR.avalon.PL[aPrev].locked ? aPrev : 'crown_square'; }
   // 1.41.0: Sunreach Bay, from the landing to the boarding home, in the city map's words
-  const rPrev = hasB ? areaPlace(AR.sunreach, B.World.Location, (_.isPlainObject((B.$ui || {}).sunreach) && B.$ui.sunreach.on && B.$ui.sunreach.at) || '') : '';
+  const rPrev = hasB ? areaPlace(AR.sunreach, B.World.Location, areaWas(B, 'sunreach')) : '';
   const rAt = !sAt && !fAt && !aAt && srWindow(S.World) ? areaPlace(AR.sunreach, S.World.Location, rPrev) : '';
   if (sAt) S.World.Location = areaLoc(AR.airship, S.World.Location, sAt);
   else if (fAt) S.World.Location = areaLoc(AR.forest, S.World.Location, fAt);
@@ -1929,19 +1942,19 @@ function stepExposure(c) {
 }
 
 // ---- 4c. 1.38.0 (owner-approved planning/DRAFT_outside_maps.md, part 1): the Creature Studies Expedition in the Grand Vast Forest.
-// $eng.exp (this campaign year's hunt): y, tgt, grade, homes, t (hours spent at each place), hrs (hunt hours searched at each place),
-// owe (walking hours the clock has not covered yet), met, caught, carry, res, wen. $ui.forest (UI, <now>, the lore gate): on, at,
+// $eng.area.forest (this campaign year's hunt): y, tgt, grade, homes, t (hours spent at each place), hrs (hunt hours searched at each place),
+// owe (walking hours the clock has not covered yet), met, caught, carry, res, wen. $ui.area.forest (UI, <now>, the lore gate): on, at,
 // seen (places visited, kept across years), hist (each year's result), the target, hours left, walks from here and this update's
 // events. The narrator reports a catch with /Expedition/Caught; it counts only after the engine has brought the target in.
 function stepExpedition(c) {
   const { S, B, log, jnl, hasB, toolEdit, absA, elapsed, seed, V, restedAs, fAt, fPrev, WXM } = c;
-  const R = EXP.rates || {}, Y = num(S.World.Year, 1), U0 = _.isPlainObject(S.$ui.forest) ? S.$ui.forest : {};
+  const R = EXP.rates || {}, Y = num(S.World.Year, 1), U0 = _.isPlainObject(S.$ui.area.forest) ? S.$ui.area.forest : {};
   const F = AR.forest, seen = areaSeen(F, U0), hist = _.isPlainObject(U0.hist) ? _.cloneDeep(U0.hist) : {};
   if (!_.isPlainObject(S.Expedition)) S.Expedition = { Caught: false };
   const ev = expEvent(), onDay = expOnDay(S.World);
-  let X = _.isPlainObject(S.$eng.exp) && S.$eng.exp.y === Y ? S.$eng.exp : null;
-  if (!ev || (!X && !(onDay && fAt))) { S.$ui.forest = { on: false, seen, hist }; S.Expedition.Caught = false; return; }
-  if (!X) X = S.$eng.exp = { y: Y, tgt: '', grade: '', homes: [], t: {}, hrs: {}, owe: 0, met: 0, caught: 0, carry: 0, res: '', wen: 0 };
+  let X = _.isPlainObject(S.$eng.area.forest) && S.$eng.area.forest.y === Y ? S.$eng.area.forest : null;
+  if (!ev || (!X && !(onDay && fAt))) { S.$ui.area.forest = { on: false, seen, hist }; S.Expedition.Caught = false; return; }
+  if (!X) X = S.$eng.area.forest = { y: Y, tgt: '', grade: '', homes: [], t: {}, hrs: {}, owe: 0, met: 0, caught: 0, carry: 0, res: '', wen: 0 };
   const G = id => EXP.groups[F.PL[id].group] || {};
   const nextDay = DAYS[(DAYS.indexOf(EXP.hunt.day) + 1) % 7];
   const hs = toAbs({ Year: Y, Month: ev.m, Week: ev.w, Day: EXP.hunt.day, Time: EXP.hunt.from }), he = hs + num(EXP.hunt.hours, 24) * 60;
@@ -2020,30 +2033,30 @@ function stepExpedition(c) {
     S.$ui.toasts.push(X.res === 'caught' ? `Expedition: ${X.tgt} caught` : 'Expedition: target not found');
   }
   const R0 = fAt ? F.routes(fAt) : {}, left = X.tgt && !X.res ? Math.max(0, Math.round((he - absA) / 6) / 10) : 0;
-  S.$ui.forest = { on: !!fAt, at: fAt, name: fAt ? F.PL[fAt].name : '', seen, hist, tgt: X.tgt, grade: X.grade, res: X.res, met: X.met, left, hs: absA < hs, back: absA < back,
+  S.$ui.area.forest = { on: !!fAt, at: fAt, name: fAt ? F.PL[fAt].name : '', seen, hist, tgt: X.tgt, grade: X.grade, res: X.res, met: X.met, left, hs: absA < hs, back: absA < back,
     here: fAt ? num(X.hrs[fAt], 0) : 0, owe: r1h(X.owe), walks: fAt ? EXP.places.filter(p => p.id !== fAt).map(p => [p.id, p.name, R0[p.id].w]).sort((a, b) => a[2] - b[2]) : [],
     ev: evs, last: hist['Y' + (Y - 1)] || null };
   if (!onDay && !fAt) S.Expedition.Caught = false;
 }
 const r1h = x => Math.round(num(x, 0) * 10) / 10;
 
-// ---- 4d. 1.39.0 (owner-approved planning/DRAFT_outside_maps.md, part 2): Avalon. $eng.cap: d (the day it holds), owe (walking
+// ---- 4d. 1.39.0 (owner-approved planning/DRAFT_outside_maps.md, part 2): Avalon. $eng.area.avalon: d (the day it holds), owe (walking
 // minutes the clock has not covered yet), met (rival students met today), wl (White Line turn-backs today), sc (talent scout day),
 // ts (the year Tsubaki was met lost), mm (the year the muster was missed), tsu (when {{user}} met Tsubaki here before she came to
-// Halvard). $ui.capital (UI, <now>, the lore gate): on, at, pin, seen (places visited, kept), castle (a Kingdom win shows the castle
+// Halvard). $ui.area.avalon (UI, <now>, the lore gate): on, at, pin, seen (places visited, kept), castle (a Kingdom win shows the castle
 // pin), walks to every pin, places nearby, the Crowning Day muster and this update's events.
 const avRep = (S, Kind, Why) => { S.Rep_events = [...(Array.isArray(S.Rep_events) ? S.Rep_events : []), { Kind, Why }]; };
 function stepCapital(c) {
   const { S, log, jnl, hasB, absA, absB, elapsed, seed, aAt, aPrev, aHeld, dayNo, TU } = c;
-  const A = AR.avalon, R = A.R, LX = lifeX(TU), Y = num(S.World.Year, 1), seen = areaSeen(A, S.$ui.capital);
+  const A = AR.avalon, R = A.R, LX = lifeX(TU), Y = num(S.World.Year, 1), seen = areaSeen(A, S.$ui.area.avalon);
   const castle = (S.$eng.prizes || []).some(p => /^Kingdom-Y\d+$/.test(p));
   if (!_.isPlainObject(S.Avalon)) S.Avalon = { Ride: false };
   const ride = !!S.Avalon.Ride; S.Avalon.Ride = false;
   if (!aAt) {   // the day before a visit: points do not work in Avalon, so <now> reminds the narrator about the Banking House
     const tmr = fromAbs((dayNo + 1) * DAY_MIN + 8 * 60), soon = avCrown(tmr) ? 'Independence Crowning Day' : avKingdom(tmr, S) && !avKingdom(S.World, S) ? 'the Kingdom Competition (the team flies out)' : '';
-    S.$ui.capital = { on: false, seen, castle, coin: soon }; if (ride) log.push('Avalon.Ride is only for a hire carriage in Avalon; it was cleared.'); return;
+    S.$ui.area.avalon = { on: false, seen, castle, coin: soon }; if (ride) log.push('Avalon.Ride is only for a hire carriage in Avalon; it was cleared.'); return;
   }
-  const X = _.isPlainObject(S.$eng.cap) ? S.$eng.cap : (S.$eng.cap = {});
+  const X = _.isPlainObject(S.$eng.area.avalon) ? S.$eng.area.avalon : (S.$eng.area.avalon = {});
   if (X.d !== dayNo) Object.assign(X, { d: dayNo, owe: 0, met: [], wl: 0, sc: 0 });
   const crown = avCrown(S.World), kd = !crown && avKingdom(S.World, S), Cr = AV.crowning, evs = [], at = t => dayNo * DAY_MIN + hm(t);
   // the White Line: the Royal Guard turns {{user}} back; a second try the same day is reported (Academy, defied_staff)
@@ -2092,7 +2105,7 @@ function stepCapital(c) {
   });
   for (const id of [aPrev, aAt]) if (id && A.PL[id] && !seen.includes(id)) seen.push(id);
   const pass = avPass(S);
-  S.$ui.capital = { on: true, at: aAt, name: A.PL[aAt].name, ...areaNear(A, aAt, p => !p.locked || pass, p => (!p.locked || pass) && (!p.hidden || seen.includes(p.id))),
+  S.$ui.area.avalon = { on: true, at: aAt, name: A.PL[aAt].name, ...areaNear(A, aAt, p => !p.locked || pass, p => (!p.locked || pass) && (!p.hidden || seen.includes(p.id))),
     seen, castle, pass, crown, kd, owe: num(X.owe, 0), muster, ev: evs };
 }
 
@@ -2104,7 +2117,7 @@ function stepAirship(c) {
   if (!sAt) {
     const t = hm(S.World.Time), nx = t == null ? null : (AIR.flights || []).find(f => f.m === num(S.World.Month, 0) && f.w === num(S.World.Week, 0) && f.d === S.World.Day
       && hm(f.from) > t && hm(f.from) - t <= 90 && (f.who !== 'kingdom' || avKingdom(S.World, S)));
-    S.$ui.airship = nx ? { on: false, soon: { event: nx.event, from: nx.from, lands: nx.lands } } : { on: false };
+    S.$ui.area.airship = nx ? { on: false, soon: { event: nx.event, from: nx.from, lands: nx.lands } } : { on: false };
     return;
   }
   const R = AIR.rates || {}, Bt = AIR.bath || {}, fid = `${num(S.World.Year, 1)}-${sFl.id}`, route = sFl.dir === 'home' ? 'home' : sFl.route, evs = [];
@@ -2118,7 +2131,7 @@ function stepAirship(c) {
     }
   });
   const t = hm(S.World.Time), a = hm(sFl.from), b = hm(sFl.to), key = `${sFl.route}_${sFl.dir}`;
-  S.$ui.airship = { on: true, at: sAt, name: AR.airship.PL[sAt].name, event: sFl.event, from: sFl.from, to: sFl.to, lands: sFl.lands, left: Math.max(0, b - t), bar: !!sFl.bar,
+  S.$ui.area.airship = { on: true, at: sAt, name: AR.airship.PL[sAt].name, event: sFl.event, from: sFl.from, to: sFl.to, lands: sFl.lands, left: Math.max(0, b - t), bar: !!sFl.bar,
     board: sBoard, view: sAt === 'promenade_deck' ? ((AIR.views || {})[key] || [])[Math.min(2, Math.floor((t - a) * 3 / Math.max(1, b - a)))] || '' : '',
     cargo: sAt === 'cargo_hold' ? (AIR.cargo || {})[key] || '' : '', near: AIR.places.filter(p => p.id !== sAt).map(p => p.name), ev: evs };
 }
@@ -2130,7 +2143,7 @@ function stepAirship(c) {
 // there by personality (not met today, not in the scene), the sea and once in a Trip the Leviathan far off. Outside: the day before.
 function stepSunreach(c) {
   const { S, log, jnl, hasB, absA, elapsed, seed, rPrev, dayNo, TU } = c;
-  const A = AR.sunreach, R = A.R, LX = lifeX(TU), Y = num(S.World.Year, 1), seen = areaSeen(A, S.$ui.sunreach);
+  const A = AR.sunreach, R = A.R, LX = lifeX(TU), Y = num(S.World.Year, 1), seen = areaSeen(A, S.$ui.area.sunreach);
   let at = c.rAt;
   if (!_.isPlainObject(S.Sunreach)) S.Sunreach = { Ride: '', Bet: { Game: '', Stake: 0 } };
   const ride = String(S.Sunreach.Ride || '').toLowerCase(), bet = _.isPlainObject(S.Sunreach.Bet) ? S.Sunreach.Bet : {};
@@ -2138,12 +2151,12 @@ function stepSunreach(c) {
   const betAsked = !!(String(bet.Game || '').trim() || num(bet.Stake, 0));
   if (!at) {   // the day before the Trip: points do not work abroad (the Banking House)
     const tmr = fromAbs((dayNo + 1) * DAY_MIN + 8 * 60), Wn = SR.window;
-    S.$ui.sunreach = { on: false, seen, coin: tmr.Month === Wn.m && tmr.Week === Wn.from[0] && tmr.Day === Wn.from[1] ? 'the Academy Trip to Sunreach Bay' : '' };
+    S.$ui.area.sunreach = { on: false, seen, coin: tmr.Month === Wn.m && tmr.Week === Wn.from[0] && tmr.Day === Wn.from[1] ? 'the Academy Trip to Sunreach Bay' : '' };
     if (ride) log.push('Sunreach.Ride is only for a carriage or a water taxi in Sunreach Bay; it was cleared.');
     if (betAsked) log.push('Sunreach.Bet counts only at The Golden Tide in Sunreach Bay; it was cleared.');
     return;
   }
-  const X = _.isPlainObject(S.$eng.sr) ? S.$eng.sr : (S.$eng.sr = {});
+  const X = _.isPlainObject(S.$eng.area.sunreach) ? S.$eng.area.sunreach : (S.$eng.area.sunreach = {});
   if (X.d !== dayNo) Object.assign(X, { d: dayNo, owe: 0, met: [] });
   const evs = [], coinNow = () => num(S.Player.Wallet.Coin, 0);
   // moving: inside a pin a few minutes; between pins the route, on foot or by carriage or water taxi; the Open Sea by tour boat only
@@ -2191,7 +2204,7 @@ function stepSunreach(c) {
   for (const id of [rPrev, at]) if (id && A.PL[id] && !seen.includes(id)) seen.push(id);
   const W = S.World, tnow = hm(W.Time);
   const today = (SR.schedule || []).filter(([w, d, t]) => num(W.Month, 0) === SR.window.m && num(W.Week, 0) === w && W.Day === d && hm(t) >= tnow).map(([, , t, what]) => [t, what]);
-  S.$ui.sunreach = { on: true, at, name: A.PL[at].name, ...areaNear(A, at, () => true, () => true), night: srNight(absA), seen, owe: num(X.owe, 0), off: !!A.PL[at].off, today, ev: evs, coin: '' };
+  S.$ui.area.sunreach = { on: true, at, name: A.PL[at].name, ...areaNear(A, at, () => true, () => true), night: srNight(absA), seen, owe: num(X.owe, 0), off: !!A.PL[at].off, today, ev: evs, coin: '' };
 }
 
 // ---- 5. vitals ----
@@ -2754,7 +2767,7 @@ function stepBonds(c) {
   for (const id of Object.keys(S.Scene.Present)) {
     if (NPC_IDS.has(id) && !(id in S.Bonds) && (ARRIVES[id] || 1) > S.World.Year) {   // v1.0.3: incoming cohort, not here yet
       // 1.39.0: Tsubaki, a Royal Mage before she is a student, may be met in Avalon (lore: the Royal Mages on Crowning Day)
-      if (!(id === 'Tsubaki' && ((S.$ui || {}).capital || {}).on)) log.push(`${id} is not at Halvard yet (arrives as a first-year in Year ${ARRIVES[id]}); no bond was started. Check who this is.`);
+      if (!(id === 'Tsubaki' && (((S.$ui || {}).area || {}).avalon || {}).on)) log.push(`${id} is not at Halvard yet (arrives as a first-year in Year ${ARRIVES[id]}); no bond was started. Check who this is.`);
     } else if (NPC_IDS.has(id) && !(id in S.Bonds) && !NO_BOND.has(id)) {   // 1.3.0: rival academy teams have no bond system
       S.Bonds[id] = { Rank: 0, Progress: 0, Trust: 50, Tension: 0, Title: '', Romance: false, Known_facts: [], Milestones: [], Last_seen: '', _Event_ready: false, $Known_old: [], $xp: 0, $cool: -1 };
       S.$ui.toasts.push(`New acquaintance: {npc:${id}}`);   // {npc:id}: the bar shows the name only once it is known (D14)
@@ -3121,7 +3134,7 @@ function stepBonds(c) {
       const said = notes.join(' ') || (kinds.length ? kinds.join(', ').replace(/^./, c => c.toUpperCase()) + '.' : '');
       let pushed = false;   // 1.10.3: a defining moment is only ever this update's own row
       // 1.39.0: Tsubaki remembers {{user}} from Avalon if they met there on Crowning Day before she came to Halvard
-      const tsu = id === 'Tsubaki' && !b0 && ((S.$eng || {}).cap || {}).tsu;
+      const tsu = id === 'Tsubaki' && !b0 && ((((S.$eng || {}).area || {}).avalon) || {}).tsu;
       if (tsu) b.$Recent.push({ w: tsu, n: 'Met {{user}} in Avalon on Crowning Day, before she came to Halvard: she was lost, and she remembers who helped.', fx: '' });
       if (!b0) b.$Recent.push({ w: stamp(S.World), n: tsu ? `Met again at Halvard, at ${S.World.Location}; she knows {{user}} from Avalon.` : `First met, at ${S.World.Location}.`, fx: b.Rank > 0 ? `Bond starts at Rank ${b.Rank}` : '' });
       else if (acts.length || fx.length && (b.Rank !== rank0 || trw0 !== num(b0.Trust, 50) || tw0 !== num(b0.Tension, 0) || dx > 0)) {

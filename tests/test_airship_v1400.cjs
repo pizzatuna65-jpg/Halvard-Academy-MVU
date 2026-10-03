@@ -22,63 +22,63 @@ ok(T(EXP, '08:00').Day === 'Wed' && T(CROWN, '08:00').Day === 'Tue' && T(TRIP, '
 
 console.log('Crowning Day: boarding, aboard, landing');
 let S = at(initState(), CROWN, '07:00', 'Main Courtyard');
-ok(!S.$ui.airship.on && S.$ui.airship.soon && S.$ui.airship.soon.from === '07:30', 'the speeches: the flight leaves within 90 min (soon)');
+ok(!S.$ui.area.airship.on && S.$ui.area.airship.soon && S.$ui.area.airship.soon.from === '07:30', 'the speeches: the flight leaves within 90 min (soon)');
 S = at(S, CROWN, '07:40', 'Main Courtyard');
-ok(S.World.Location === AIRL + 'Common Room' && S.$ui.airship.on && S._Log.some(l => /is aboard; World\.Location was set to Airship — Common Room/.test(l)), `boarding: ${S.World.Location}`);
-ok(/^Away from campus \(aboard the airship\)/.test(S.World._Curfew) && S.$ui.airship.left === 110 && S.$ui.airship.bar === true, 'aboard: no dorm curfew; lands in 110 min; a holiday, so the bar serves students');
+ok(S.World.Location === AIRL + 'Common Room' && S.$ui.area.airship.on && S._Log.some(l => /is aboard; World\.Location was set to Airship — Common Room/.test(l)), `boarding: ${S.World.Location}`);
+ok(/^Away from campus \(aboard the airship\)/.test(S.World._Curfew) && S.$ui.area.airship.left === 110 && S.$ui.area.airship.bar === true, 'aboard: no dorm curfew; lands in 110 min; a holiday, so the bar serves students');
 let P = at(S, CROWN, '07:50', 'Airship — Promenade Deck — at the bow');
-ok(P.World.Location === AIRL + 'Promenade Deck — at the bow' && /Halvard's grounds falling away/.test(P.$ui.airship.view), `the promenade: the view for the first third (${P.$ui.airship.view.slice(0, 40)}…)`);
+ok(P.World.Location === AIRL + 'Promenade Deck — at the bow' && /Halvard's grounds falling away/.test(P.$ui.area.airship.view), `the promenade: the view for the first third (${P.$ui.area.airship.view.slice(0, 40)}…)`);
 const P2 = at(P, CROWN, '09:10', 'Airship — Promenade Deck');
-ok(/Avalon ahead/.test(P2.$ui.airship.view), 'approaching: Avalon ahead');
+ok(/Avalon ahead/.test(P2.$ui.area.airship.view), 'approaching: Avalon ahead');
 const H = at(S, CROWN, '08:00', 'the hold');
-ok(H.World.Location === AIRL + 'Cargo Hold' && /banners and spare uniforms/.test(H.$ui.airship.cargo) && !H.$ui.airship.view, 'an alias aboard: the Cargo Hold, with this route\'s cargo');
+ok(H.World.Location === AIRL + 'Cargo Hold' && /banners and spare uniforms/.test(H.$ui.area.airship.cargo) && !H.$ui.area.airship.view, 'an alias aboard: the Cargo Hold, with this route\'s cargo');
 const early = at(H, CROWN, '08:30', 'Avalon — Skyport');
-ok(early.World.Location === AIRL + 'Cargo Hold' && early._Log.some(l => /Nobody leaves the airship until it lands \(09:30\)/.test(l)) && !(early.$ui.capital || {}).on, 'nobody leaves before landing: kept aboard, not in Avalon');
+ok(early.World.Location === AIRL + 'Cargo Hold' && early._Log.some(l => /Nobody leaves the airship until it lands \(09:30\)/.test(l)) && !(early.$ui.area.avalon || {}).on, 'nobody leaves before landing: kept aboard, not in Avalon');
 const land = at(at(S, CROWN, '09:20', 'Airship — Common Room'), CROWN, '09:40', 'Airship — Common Room');
-ok(land.World.Location === 'Avalon — Skyport' && land.$ui.capital.on && !land.$ui.airship.on && land._Log.some(l => /has landed \(09:30\)/.test(l)), 'landing: the Location still said the airship, so it becomes the Skyport');
+ok(land.World.Location === 'Avalon — Skyport' && land.$ui.area.avalon.on && !land.$ui.area.airship.on && land._Log.some(l => /has landed \(09:30\)/.test(l)), 'landing: the Location still said the airship, so it becomes the Skyport');
 const land2 = at(at(S, CROWN, '09:20', 'Airship — Common Room'), CROWN, '09:45', 'Avalon — Crown Square');
-ok(land2.World.Location === 'Avalon — Crown Square' && land2.$ui.capital.on, 'the story already wrote Avalon: that stands');
+ok(land2.World.Location === 'Avalon — Crown Square' && land2.$ui.area.avalon.on, 'the story already wrote Avalon: that stands');
 
 console.log('Crowning Day: home');
 let R = at(land, CROWN, '15:20', 'Avalon — Skyport');
 R = at(R, CROWN, '16:05', 'Avalon — Skyport');
-ok(R.World.Location === 'Avalon — Skyport' && !R.$ui.airship.on && R.$ui.capital.on, 'a flight home leaves a place in Avalon to the city until the story boards');
+ok(R.World.Location === 'Avalon — Skyport' && !R.$ui.area.airship.on && R.$ui.area.avalon.on, 'a flight home leaves a place in Avalon to the city until the story boards');
 R = at(R, CROWN, '16:10', 'Airship — Cabin Deck — the bathing stalls', [{ op: 'insert', path: '/Player/Conditions/Soaked', value: { Effect: 'x' } }]);
-ok(R.World.Location === AIRL + 'Cabin Deck — the bathing stalls' && R.$ui.airship.on && !R.$ui.airship.board, 'boarded by the story: the Cabin Deck');
+ok(R.World.Location === AIRL + 'Cabin Deck — the bathing stalls' && R.$ui.area.airship.on && !R.$ui.area.airship.board, 'boarded by the story: the Cabin Deck');
 const R2 = at(R, CROWN, '16:25', 'Airship — Cabin Deck — the bathing stalls');
 ok(!(R2.Player.Conditions || {}).Soaked && R2._Log.some(l => /Soaked ended: a hot bath/.test(l)), 'ten minutes in the bathing stalls: Soaked ends');
 const home = at(R2, CROWN, '18:10', 'Airship — Promenade Deck');
-ok(home.World.Location === 'Grassy Field and Hills' && !home.$ui.airship.on && !/^Away/.test(home.World._Curfew || ''), `home: ${home.World.Location}`);
+ok(home.World.Location === 'Grassy Field and Hills' && !home.$ui.area.airship.on && !/^Away/.test(home.World._Curfew || ''), `home: ${home.World.Location}`);
 
 console.log('Who flies');
 const kNo = at(initState(), KTUE, '08:30', 'Main Courtyard');
-ok(!/Airship/.test(kNo.World.Location) && !kNo.$ui.airship.on, 'the Kingdom flight: not on the team, not aboard');
+ok(!/Airship/.test(kNo.World.Location) && !kNo.$ui.area.airship.on, 'the Kingdom flight: not on the team, not aboard');
 const kYes = at(initState(), KTUE, '08:30', 'Main Courtyard', team);
-ok(kYes.World.Location === AIRL + 'Common Room' && kYes.$ui.airship.bar === false && /Kingdom Competition/.test(kYes.$ui.airship.event), 'the team boards; a weekday, so no alcohol');
+ok(kYes.World.Location === AIRL + 'Common Room' && kYes.$ui.area.airship.bar === false && /Kingdom Competition/.test(kYes.$ui.area.airship.event), 'the team boards; a weekday, so no alcohol');
 const ex = at(at(initState(), EXP, '06:50', 'Fire Dormitory'), EXP, '07:20', 'Fire Dormitory');
-ok(ex.World.Location === AIRL + 'Common Room' && ex.$ui.airship.lands.startsWith('Base Camp'), 'the Expedition flight boards everyone');
+ok(ex.World.Location === AIRL + 'Common Room' && ex.$ui.area.airship.lands.startsWith('Base Camp'), 'the Expedition flight boards everyone');
 const exL = at(at(ex, EXP, '11:30', 'Airship — Promenade Deck'), EXP, '12:10', 'Airship — Promenade Deck');
-ok(exL.World.Location === 'Grand Vast Forest — Base Camp' && exL.$ui.forest.on, 'landing at the forest: Base Camp, and the forest map takes over');
+ok(exL.World.Location === 'Grand Vast Forest — Base Camp' && exL.$ui.area.forest.on, 'landing at the forest: Base Camp, and the forest map takes over');
 
 console.log('The sky, the stage, the hold');
 let Q = at(at(initState(), TRIP, '06:55', 'Main Courtyard'), TRIP, '07:05', 'Airship — Common Room');
 const kinds = new Set(), seen = [];
-for (let h = 8; h <= 19; h++) { Q = at(Q, TRIP, `${String(h).padStart(2, '0')}:10`, h < 14 ? 'Airship — Common Room' : 'Airship — Cargo Hold'); Q.$ui.airship.ev.forEach(e => { kinds.add(e.k); seen.push(e); }); }
+for (let h = 8; h <= 19; h++) { Q = at(Q, TRIP, `${String(h).padStart(2, '0')}:10`, h < 14 ? 'Airship — Common Room' : 'Airship — Cargo Hold'); Q.$ui.area.airship.ev.forEach(e => { kinds.add(e.k); seen.push(e); }); }
 ok([...kinds].every(k => ['sky', 'stage', 'hold'].includes(k)) && kinds.has('stage') && kinds.has('hold'), `a day's flight to Sunreach: ${seen.map(e => e.k).join(', ')}`);
 ok(seen.filter(e => e.k === 'sky').every(e => A.sky.sunreach.includes(e.t)) && seen.filter(e => e.k === 'hold').every(e => A.hold.includes(e.t)), 'the sky from the Sunreach pool; the hold from its own');
 const Q1 = at(at(initState(), TRIP, '07:05', 'Airship — Common Room'), TRIP, '11:10', 'Airship — Common Room');
-ok(JSON.stringify(Q1.$ui.airship.ev) === JSON.stringify(at(at(initState(), TRIP, '07:05', 'Airship — Common Room'), TRIP, '11:10', 'Airship — Common Room').$ui.airship.ev), 'the same hours roll the same (a swipe sees the same flight)');
+ok(JSON.stringify(Q1.$ui.area.airship.ev) === JSON.stringify(at(at(initState(), TRIP, '07:05', 'Airship — Common Room'), TRIP, '11:10', 'Airship — Common Room').$ui.area.airship.ev), 'the same hours roll the same (a swipe sees the same flight)');
 const Qs = at(at(initState(), TRIPH, '08:05', 'Airship — Common Room'), TRIPH, '19:00', 'Airship — Cabin Deck', [{ op: 'replace', path: '/Player/Vitals/Resting', value: 'sleep' }]);
-ok(!Qs.$ui.airship.ev.length, 'asleep: nothing is rolled');
+ok(!Qs.$ui.area.airship.ev.length, 'asleep: nothing is rolled');
 const tl = at(at(initState(), TRIPH, '08:05', 'Airship — Promenade Deck'), TRIPH, '19:30', 'Airship — Promenade Deck');
-ok(/Halvard's towers in the dark/.test(tl.$ui.airship.view) && tl.$ui.airship.lands.startsWith('Halvard'), 'the way home from Sunreach: the coast, then Halvard in the dark');
+ok(/Halvard's towers in the dark/.test(tl.$ui.area.airship.view) && tl.$ui.area.airship.lands.startsWith('Halvard'), 'the way home from Sunreach: the coast, then Halvard in the dark');
 
 console.log('Lore, <now>, update rules and UI');
 const _ = require('lodash'), ejs = require('ejs'), gv = St => k => _.get({ stat_data: St }, k);
 const idx = JSON.parse(read('src/worldbook/index.json'));
 const ae = idx.filter(e => /^(\[mvu_plot\] )?Airship - /.test(e.comment) && e.uid !== 465);
 ok(ae.length === 4 && ae.map(e => e.uid).join() === '378,379,380,381' && ae.every(e => !e.constant), 'four airship place entries (378-381), keyword (1.41.0: like the campus places)');
-ok(idx.find(e => e.uid === 465).constant && /stat_data\.\$ui\.airship/.test(read('src/worldbook/content/465.txt')), '1.41.0: a mini index (465), constant behind a gate on $ui.airship');
+ok(idx.find(e => e.uid === 465).constant && /stat_data\.\$ui\.area\.airship/.test(read('src/worldbook/content/465.txt')), '1.41.0: a mini index (465), constant behind a gate on $ui.area.airship');
 const lore = (uid, St) => ejs.render(read(`src/worldbook/content/${uid}.txt`), { getvar: gv(St) });
 const free = at(land, CROWN, '12:00', 'Avalon — Crown Square');
 ok(/small raised stage/.test(lore(379, S)) && /\[Airship: Cargo Hold\]/.test(lore(381, H)) && /Promenade Deck \(the glassed gallery/.test(lore(465, at(initState(), CROWN, '07:00', 'Main Courtyard'))), 'the place entries when they come up; the index aboard and in the 90 minutes before a flight');
@@ -91,4 +91,4 @@ ok(/Airship: the flight for Independence Crowning Day leaves at 07:30/.test(now(
 const r502 = St => ejs.render(read('src/worldbook/custom/content/502.txt'), { getvar: gv(St) });
 ok(/Airship \(1\.40\.0\)/.test(r502(S)) && !/Airship \(1\.40\.0\)/.test(r502(home)), 'the update rules: the airship Location format only around a flight');
 const ui = read('src/scripts/ui.js');
-ok(/renderAirship/.test(ui) && /"Cargo Hold"/.test(ui) && /data-ago/.test(ui), 'the UI has the Airship tab and its four places');
+ok(/renderArea/.test(ui) && /"Cargo Hold"/.test(ui) && /data-ago/.test(ui), 'the UI has the Airship tab and its four places');

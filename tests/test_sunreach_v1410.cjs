@@ -27,16 +27,16 @@ ok(!E.srWindow(T(SAT, '19:00')) && E.srWindow(T(SAT, '20:30')) && E.srWindow(T(W
 
 console.log('The day before, the flight, the landing');
 let S = at(initState(), FRI, '18:00', 'Main Library');
-ok(S.$ui.sunreach.coin === 'the Academy Trip to Sunreach Bay' && !S.$ui.sunreach.on, 'Friday: the coin reminder');
+ok(S.$ui.area.sunreach.coin === 'the Academy Trip to Sunreach Bay' && !S.$ui.area.sunreach.on, 'Friday: the coin reminder');
 S = at(at(S, SAT, '06:50', 'Main Courtyard', coin(400)), SAT, '07:10', 'Main Courtyard');
 ok(S.World.Location === 'Airship — Common Room', 'Saturday 07:00: aboard');
 S = at(S, SAT, '20:10', 'Airship — Promenade Deck');
-ok(S.World.Location === SB + 'Skydock' && S.$ui.sunreach.on && S.$ui.sunreach.night && !S.$ui.airship.on, `landing: ${S.World.Location}, night`);
+ok(S.World.Location === SB + 'Skydock' && S.$ui.area.sunreach.on && S.$ui.area.sunreach.night && !S.$ui.area.airship.on, `landing: ${S.World.Location}, night`);
 ok(/Sunreach Bay \(warm south\)/.test(S.World._Weather) && /^Away from campus \(Sunreach Bay/.test(S.World._Curfew), `Sunreach weather and hours: ${S.World._Weather}`);
 const late = at(at(S, SAT, '20:40', 'Sunreach Bay — The Hanabira — lobby'), SAT, '22:30', 'Sunreach Bay — Coral Beach');
 ok(/^Hotel curfew \(22:00-07:00\): the teachers' curfew at The Hanabira/.test(late.World._Curfew), 'after 22:00: the teachers\' curfew (a reminder only)');
 let H = at(at(S, SAT, '20:40', 'Sunreach Bay — The Hanabira'), SUN, '08:00', 'Sunreach Bay — The Hanabira — breakfast hall', [{ op: 'replace', path: '/Player/Vitals/Resting', value: 'sleep' }]);
-ok(H.World.Location === SB + 'The Hanabira — breakfast hall' && !H.$ui.sunreach.night && H.$ui.sunreach.today.some(t => t[0] === '09:00' && /briefing/.test(t[1])), 'Sunday morning: day, and the 09:00 briefing is on today\'s list');
+ok(H.World.Location === SB + 'The Hanabira — breakfast hall' && !H.$ui.area.sunreach.night && H.$ui.area.sunreach.today.some(t => t[0] === '09:00' && /briefing/.test(t[1])), 'Sunday morning: day, and the 09:00 briefing is on today\'s list');
 
 console.log('Walks, carriages, water taxis, the tour boat');
 let W = at(H, SUN, '10:00', 'Sunreach Bay — The Hanabira', coin(400));
@@ -57,11 +57,11 @@ ok(poor.World.Location === SB + 'Fish Market' && poor._Log.some(l => /no boat/.t
 console.log('The Golden Tide');
 const G0 = at(W2, SUN, '11:00', 'Sunreach Bay — The Golden Tide');
 const c0 = G0.Player.Wallet.Coin, G1 = at(G0, SUN, '11:10', 'Sunreach Bay — The Golden Tide', bet('dice', 50));
-const b1 = G1.$ui.sunreach.ev.find(e => e.k === 'bet');
+const b1 = G1.$ui.area.sunreach.ev.find(e => e.k === 'bet');
 ok(b1 && G1.Player.Wallet.Coin === c0 + b1.net && (b1.net === 50 || b1.net === -50) && G1.Sunreach.Bet.Game === '', `a bet the engine settles: dice 50, ${b1 && b1.win ? 'won' : 'lost'}`);
-ok(JSON.stringify(at(G0, SUN, '11:10', 'Sunreach Bay — The Golden Tide', bet('dice', 50)).$ui.sunreach.ev) === JSON.stringify(G1.$ui.sunreach.ev), 'a swipe sees the same throw');
+ok(JSON.stringify(at(G0, SUN, '11:10', 'Sunreach Bay — The Golden Tide', bet('dice', 50)).$ui.area.sunreach.ev) === JSON.stringify(G1.$ui.area.sunreach.ev), 'a swipe sees the same throw');
 let wins = 0, n = 0, G = G0;
-for (let k = 0; k < 40; k++) { G = at(G, SUN, `11:${String(11 + k).padStart(2, '0')}`, 'Sunreach Bay — The Golden Tide', [...coin(500), ...bet('cards', 10)]); const e = G.$ui.sunreach.ev.find(x => x.k === 'bet'); if (e) { n++; wins += e.win; } }
+for (let k = 0; k < 40; k++) { G = at(G, SUN, `11:${String(11 + k).padStart(2, '0')}`, 'Sunreach Bay — The Golden Tide', [...coin(500), ...bet('cards', 10)]); const e = G.$ui.area.sunreach.ev.find(x => x.k === 'bet'); if (e) { n++; wins += e.win; } }
 ok(n === 40 && wins > 8 && wins < 32, `forty card bets: ${wins} won (about half)`);
 ok(at(G0, SUN, '11:10', 'Sunreach Bay — The Golden Tide', bet('dice', 500))._Log.some(l => /1 to 200 coin a bet/.test(l)), 'the house limit is 200 a bet');
 ok(at(W, SUN, '10:05', 'Sunreach Bay — The Hanabira', bet('dice', 10))._Log.some(l => /only at The Golden Tide/.test(l)), 'a bet elsewhere is cleared');
@@ -72,7 +72,7 @@ let Q = at(H, SUN, '09:30', 'Sunreach Bay — The Hanabira');
 for (let d = SUN, k = 0; d <= WED; d++) for (let h = 10; h <= 21; h++, k++) {
   const id = places[k % places.length];
   Q = at(Q, d, `${String(h).padStart(2, '0')}:05`, SB + D.places.find(p => p.id === id).name);
-  Q.$ui.sunreach.ev.filter(e => e.k === 'rival' || e.k === 'student').forEach(e => met.push([e.k, e.id, Q.$ui.sunreach.at, Q.$ui.sunreach.night ? 1 : 0]));
+  Q.$ui.area.sunreach.ev.filter(e => e.k === 'rival' || e.k === 'student').forEach(e => met.push([e.k, e.id, Q.$ui.area.sunreach.at, Q.$ui.area.sunreach.night ? 1 : 0]));
 }
 const R = met.filter(m => m[0] === 'rival'), Hs = met.filter(m => m[0] === 'student');
 ok(R.length >= 5 && Hs.length >= 5, `four days in the city: ${R.length} students of other academies, ${Hs.length} of Halvard`);
@@ -80,14 +80,14 @@ ok(met.every(([k, id, p, nt]) => (D.meet[k === 'rival' ? 'rivals' : 'halvard'][i
 ok(!Hs.some(m => ['Tsubaki', 'Linus', 'Aurelian'].includes(m[1])), 'Year 1: nobody who has not come to Halvard yet');
 ok(new Set(met.map(m => m[1])).size >= 6, 'many different faces, not one person again and again');
 let O = at(at(H, SUN, '09:30', 'Sunreach Bay — Fish Market'), SUN, '10:40', 'Sunreach Bay — Open Sea', coin(500)), sights = 0, lev = 0;
-for (let d = SUN; d <= WED; d++) for (let h = 11; h <= 17; h++) { O = at(O, d, `${h}:30`, SB + 'Open Sea'); sights += O.$ui.sunreach.ev.filter(e => e.k === 'sea').length; lev += O.$ui.sunreach.ev.filter(e => e.k === 'leviathan').length; }
+for (let d = SUN; d <= WED; d++) for (let h = 11; h <= 17; h++) { O = at(O, d, `${h}:30`, SB + 'Open Sea'); sights += O.$ui.area.sunreach.ev.filter(e => e.k === 'sea').length; lev += O.$ui.area.sunreach.ev.filter(e => e.k === 'leviathan').length; }
 ok(sights >= 8 && lev <= 1, `the open sea: ${sights} sights in 28 hours, the Leviathan ${lev} time(s) (once in a Trip at most)`);
 const Z = at(at(H, SUN, '09:30', 'Sunreach Bay — Coral Beach'), SUN, '13:05', 'Sunreach Bay — Coral Beach');
-ok(JSON.stringify(Z.$ui.sunreach.ev) === JSON.stringify(at(at(H, SUN, '09:30', 'Sunreach Bay — Coral Beach'), SUN, '13:05', 'Sunreach Bay — Coral Beach').$ui.sunreach.ev), 'the same hours roll the same (a swipe sees the same city)');
+ok(JSON.stringify(Z.$ui.area.sunreach.ev) === JSON.stringify(at(at(H, SUN, '09:30', 'Sunreach Bay — Coral Beach'), SUN, '13:05', 'Sunreach Bay — Coral Beach').$ui.area.sunreach.ev), 'the same hours roll the same (a swipe sees the same city)');
 
 console.log('Going home');
 const home = at(at(H, WED, '21:30', 'Sunreach Bay — The Hanabira'), THU, '08:10', 'Airship — Common Room');
-ok(home.World.Location === 'Airship — Common Room' && !home.$ui.sunreach.on && home.$ui.airship.on, 'Thursday 08:00: boarded, Sunreach off');
+ok(home.World.Location === 'Airship — Common Room' && !home.$ui.area.sunreach.on && home.$ui.area.airship.on, 'Thursday 08:00: boarded, Sunreach off');
 
 console.log('Lore: indexes and keyword places');
 const _ = require('lodash'), ejs = require('ejs'), gv = St => k => _.get({ stat_data: St }, k);
@@ -117,5 +117,5 @@ ok(/Tomorrow: the Academy Trip to Sunreach Bay, abroad/.test(now(at(initState(),
 const r502 = St => ejs.render(read('src/worldbook/custom/content/502.txt'), { getvar: gv(St) });
 ok(/Sunreach Bay \(1\.41\.0\)/.test(r502(day)) && !/Sunreach Bay \(1\.41\.0\)/.test(r502(initState())), '502: the Sunreach Location format around the Trip only');
 const ui = read('src/scripts/ui.js');
-ok(/renderSunreach/.test(ui) && /sunreach_night\.webp/.test(ui) && /sunreach_day\.webp/.test(ui) && /data-rgo/.test(ui), 'the UI: the Sunreach tab with its day and night maps');
+ok(/renderArea/.test(ui) && /sunreach_night\.webp/.test(ui) && /sunreach_day\.webp/.test(ui) && /data-ago/.test(ui), 'the UI: the Sunreach tab with its day and night maps');
 ok(/4620b2ce/.test(JSON.parse(read('data/assets_manifest.json')).base_url), 'assets pinned to the commit with both Sunreach maps');

@@ -28,12 +28,12 @@ ok(E.avPlace('Avalon', '') === 'skyport' && E.avPlace('Halvard — packing for t
 
 console.log('Crowning Day: arrival');
 let S = at(initState(), CROWN, '07:00', 'Main Courtyard');
-ok(!(S.$ui.capital || {}).on && !/Avalon/.test(S.World.Location), 'morning speeches at Halvard: not in Avalon');
+ok(!(S.$ui.area.avalon || {}).on && !/Avalon/.test(S.World.Location), 'morning speeches at Halvard: not in Avalon');
 S = at(S, CROWN, '09:40', 'Avalon — Skyport', coin(S, 200));
-ok(S.World.Location === AVL + 'Skyport' && S.$ui.capital.on && S.$ui.capital.pin === 'gate', `arrival: ${S.World.Location}`);
+ok(S.World.Location === AVL + 'Skyport' && S.$ui.area.avalon.on && S.$ui.area.avalon.pin === 'gate', `arrival: ${S.World.Location}`);
 ok(!S.$ui.wx || (!S.$ui.wx.away && /Avalon/.test(S.World._Weather)), `the kingdom's weather of the day: ${S.World._Weather}`);
-ok(S.$ui.capital.walks.length === 5 && !S.$ui.capital.walks.some(w => w[0] === 'castle') && S.$ui.capital.walks[0][0] === 'square', 'walks to the five open pins; the castle is not among them');
-ok(S.$ui.capital.muster && S.$ui.capital.muster.at === '15:30' && !S.$ui.capital.muster.free, 'the muster is 15:30; free time has not begun');
+ok(S.$ui.area.avalon.walks.length === 5 && !S.$ui.area.avalon.walks.some(w => w[0] === 'castle') && S.$ui.area.avalon.walks[0][0] === 'square', 'walks to the five open pins; the castle is not among them');
+ok(S.$ui.area.avalon.muster && S.$ui.area.avalon.muster.at === '15:30' && !S.$ui.area.avalon.muster.free, 'the muster is 15:30; free time has not begun');
 
 console.log('Walking, crowds and carriages');
 let W = at(at(S, CROWN, '10:05', 'Avalon — Skyport'), CROWN, '10:50', 'Avalon — Crown Square — the Halvard stands');
@@ -47,26 +47,26 @@ let C = at(at(S, CROWN, '11:40', 'Avalon — Crown Square'), CROWN, '13:10', 'Av
 const c0 = C.Player.Wallet.Coin, s0 = C.Player.Vitals.Stamina;
 C = at(C, CROWN, '13:50', 'Avalon — Garden of Avalon — on the flower terraces', [{ op: 'replace', path: '/Avalon/Ride', value: true }]);
 ok(C.Player.Wallet.Coin <= c0 - 10 && C.Avalon.Ride === false && C._Log.some(l => /Hire carriage Crown Square → Garden of Avalon: 38 min, -10 coin/.test(l)), 'a hire carriage: half the time, 10 coin, the flag cleared');
-ok(C.World.Location === AVL + 'Garden of Avalon — on the flower terraces' && C.$ui.capital.near.some(n => n[0] === 'Grand Theatre'), 'the garden pin: the theatre is minutes away');
+ok(C.World.Location === AVL + 'Garden of Avalon — on the flower terraces' && C.$ui.area.avalon.near.some(n => n[0] === 'Grand Theatre'), 'the garden pin: the theatre is minutes away');
 const poor = at(at(S, CROWN, '11:40', 'Avalon — Crown Square', coin(S, 3)), CROWN, '13:00', 'Avalon — Royal Arena', [{ op: 'replace', path: '/Avalon/Ride', value: true }]);
 ok(poor._Log.some(l => /has 3: they walked/.test(l)) && poor.Player.Wallet.Coin <= 3, 'not enough coin for a carriage: they walk');
 
 console.log('The White Line');
 let L = at(S, CROWN, '12:00', 'Avalon — Crown Square');
 L = at(L, CROWN, '12:20', 'Avalon — Eldrasil Castle');
-ok(L.World.Location === AVL + 'Crown Square' && L.$ui.capital.ev.some(e => e.k === 'white') && L._Log.some(l => /Royal Guard turned \{\{user\}\} back/.test(l)), 'the castle is past the White Line: held at Crown Square');
+ok(L.World.Location === AVL + 'Crown Square' && L.$ui.area.avalon.ev.some(e => e.k === 'white') && L._Log.some(l => /Royal Guard turned \{\{user\}\} back/.test(l)), 'the castle is past the White Line: held at Crown Square');
 const L2 = at(L, CROWN, '12:40', 'Avalon — Noble Ring');
-ok(L2.$eng.cap.wl === 2 && L2._Log.some(l => /reported it to the staff/.test(l)), 'a second try is reported (Academy reputation, defied_staff)');
+ok(L2.$eng.area.avalon.wl === 2 && L2._Log.some(l => /reported it to the staff/.test(l)), 'a second try is reported (Academy reputation, defied_staff)');
 
 console.log('The city, once an hour');
 let H = at(S, CROWN, '11:35', 'Avalon — Lantern Market', coin(S, 500));
 const evs = [];
-for (let h = 12; h <= 15; h++) { H = at(H, CROWN, `${h}:05`, h % 2 ? 'Avalon — Lantern Market' : 'Avalon — Spellwright Row'); evs.push(...H.$ui.capital.ev); }
+for (let h = 12; h <= 15; h++) { H = at(H, CROWN, `${h}:05`, h % 2 ? 'Avalon — Lantern Market' : 'Avalon — Spellwright Row'); evs.push(...H.$ui.area.avalon.ev); }
 ok(evs.every(e => ['walk', 'pick', 'procession', 'street', 'rival', 'tsubaki'].includes(e.k)), `events: ${evs.map(e => e.k).join(', ') || 'none this seed'}`);
 const H2 = at(at(S, CROWN, '11:35', 'Avalon — Lantern Market', coin(S, 500)), CROWN, '12:05', 'Avalon — Spellwright Row');
-ok(JSON.stringify(H2.$ui.capital.ev) === JSON.stringify(at(at(S, CROWN, '11:35', 'Avalon — Lantern Market', coin(S, 500)), CROWN, '12:05', 'Avalon — Spellwright Row').$ui.capital.ev), 'the same hour rolls the same (a swipe sees the same street)');
+ok(JSON.stringify(H2.$ui.area.avalon.ev) === JSON.stringify(at(at(S, CROWN, '11:35', 'Avalon — Lantern Market', coin(S, 500)), CROWN, '12:05', 'Avalon — Spellwright Row').$ui.area.avalon.ev), 'the same hour rolls the same (a swipe sees the same street)');
 const P0 = at(S, CROWN, '10:05', 'Avalon — Lantern Market');
-ok(!P0.$ui.capital.ev.some(e => e.k !== 'walk'), 'nothing is rolled during the parade and the speech');
+ok(!P0.$ui.area.avalon.ev.some(e => e.k !== 'walk'), 'nothing is rolled during the parade and the speech');
 // enough hours in many places to see each kind once (seeded, so this is a fixed walk through the city)
 const kinds = new Set(), RIV = new Set();
 let Q = at(S, CROWN, '11:35', 'Avalon — Old Town', coin(S, 2000));
@@ -74,45 +74,45 @@ const route = ['Old Town', 'Skywheel Fair', 'The Great Spire', 'Garden of Avalon
 for (let i = 0; i < 40; i++) {
   const d = CROWN + 28 * 12 * Math.floor(i / 4), hh = 12 + (i % 4);
   Q = at(Q, d, `${hh}:10`, AVL + route[i % route.length], coin(Q, 2000));
-  for (const e of Q.$ui.capital.ev || []) { kinds.add(e.k); if (e.k === 'rival') RIV.add(e.id); }
+  for (const e of Q.$ui.area.avalon.ev || []) { kinds.add(e.k); if (e.k === 'rival') RIV.add(e.id); }
 }
 ok(kinds.has('rival') && kinds.has('street'), `over many years' Crowning Days: ${[...kinds].join(', ')}`);
 ok([...RIV].every(id => A.places && id in E.AV.rivals), `rival students met: ${[...RIV].join(', ')}`);
 
 console.log('The muster');
 let M = at(S, CROWN, '15:00', 'Avalon — Garden of Avalon');
-ok(M.$ui.capital.muster.warn && M.$ui.capital.muster.back === 80, 'half an hour before the muster, 80 min from the Skyport: a warning');
+ok(M.$ui.area.avalon.muster.warn && M.$ui.area.avalon.muster.back === 80, 'half an hour before the muster, 80 min from the Skyport: a warning');
 M = at(M, CROWN, '15:40', 'Avalon — Garden of Avalon');
-ok(M.$ui.capital.muster.missed && M.Journal.some(l => /missed the afternoon muster/.test(l)), 'missed the muster: journaled, a detention\'s worth of Academy reputation');
+ok(M.$ui.area.avalon.muster.missed && M.Journal.some(l => /missed the afternoon muster/.test(l)), 'missed the muster: journaled, a detention\'s worth of Academy reputation');
 const home = at(M, CROWN, '18:30', 'Main Courtyard');
-ok(!home.$ui.capital.on && !/Avalon/.test(home.World.Location) && home.$ui.capital.seen.includes('garden_of_avalon'), 'home: Avalon is off; the places seen are kept');
+ok(!home.$ui.area.avalon.on && !/Avalon/.test(home.World.Location) && home.$ui.area.avalon.seen.includes('garden_of_avalon'), 'home: Avalon is off; the places seen are kept');
 const later = at(home, CROWN + 1, '10:00', 'The Cathedral');
-ok(later.World.Location === 'The Cathedral' && !later.$ui.capital.on, 'the next day the campus Cathedral is the campus Cathedral');
+ok(later.World.Location === 'The Cathedral' && !later.$ui.area.avalon.on, 'the next day the campus Cathedral is the campus Cathedral');
 
 console.log('Tsubaki, before Halvard');
 const TS = at(at(S, CROWN, '12:00', 'Avalon — Old Town'), CROWN, '12:30', 'Avalon — Old Town', [{ op: 'add', path: '/Scene/Present/Tsubaki', value: 'lost, asking the way' }]);
-ok(TS.$eng.cap.tsu && !TS.Bonds.Tsubaki && !TS._Log.some(l => /Tsubaki is not at Halvard yet/.test(l)), 'met in Avalon in Year 1: remembered, no bond yet, no warning');
+ok(TS.$eng.area.avalon.tsu && !TS.Bonds.Tsubaki && !TS._Log.some(l => /Tsubaki is not at Halvard yet/.test(l)), 'met in Avalon in Year 1: remembered, no bond yet, no warning');
 
 console.log('Kingdom Competition');
 const team = [{ op: 'replace', path: '/Competition/Tier', value: 'Kingdom' }, { op: 'replace', path: '/Competition/Status', value: 'selected' }];
 let K = at(initState(), KTUE, '12:00', 'Avalon — Whitestone Hotel', team);
-ok(K.$ui.capital.on && K.$ui.capital.kd && !K.$ui.capital.crown, 'Halvard\'s team at the Whitestone Hotel');
+ok(K.$ui.area.avalon.on && K.$ui.area.avalon.kd && !K.$ui.area.avalon.crown, 'Halvard\'s team at the Whitestone Hotel');
 const notTeam = at(initState(), KTUE, '12:00', 'Avalon — Whitestone Hotel');
-ok(!notTeam.$ui.capital.on, 'not on the team: Avalon is not on (the story keeps it at Halvard)');
+ok(!notTeam.$ui.area.avalon.on, 'not on the team: Avalon is not on (the story keeps it at Halvard)');
 K = at(K, KSAT, '20:00', 'Avalon — Whitestone Hotel', [{ op: 'replace', path: '/Competition/Status', value: 'champion' }]);
 K = at(K, KSAT, '20:30', 'Avalon — Eldrasil Castle — the reception');
-ok(K.World.Location === AVL + 'Eldrasil Castle — the reception' && K.$ui.capital.pass && K.$ui.capital.castle, 'the royal reception: the winners pass the White Line; the castle pin shows from now on');
+ok(K.World.Location === AVL + 'Eldrasil Castle — the reception' && K.$ui.area.avalon.pass && K.$ui.area.avalon.castle, 'the royal reception: the winners pass the White Line; the castle pin shows from now on');
 
 console.log('The day before, and the Kingdom hotel');
 const eve = at(initState(), CROWN - 1, '18:00', 'Main Courtyard');
-ok(eve.$ui.capital.coin === 'Independence Crowning Day', 'the day before Crowning Day: the Banking House reminder');
+ok(eve.$ui.area.avalon.coin === 'Independence Crowning Day', 'the day before Crowning Day: the Banking House reminder');
 ok(/^Hotel curfew/.test(at(K, KSAT, '22:30', 'Avalon — Whitestone Hotel').World._Curfew), 'the team keeps the Whitestone Hotel\'s curfew, not the dorm curfew');
 
 console.log('Lore, <now>, update rules and UI data');
 const _ = require('lodash'), ejs = require('ejs'), gv = St => k => _.get({ stat_data: St }, k);
 const idx = JSON.parse(read('src/worldbook/index.json'));
 const av = idx.filter(e => /^(\[mvu_plot\] )?Avalon( - |$)/.test(e.comment));
-ok(av.length === 21 && av.every(e => e.uid === 370 ? e.constant && /stat_data\.\$ui\.capital/.test(read('src/worldbook/content/370.txt')) : !e.constant), '1.41.0: the index (370) constant behind a gate on $ui.capital; 18 places, the Rookery and the Royal Mages as keyword entries');
+ok(av.length === 21 && av.every(e => e.uid === 370 ? e.constant && /stat_data\.\$ui\.area\.avalon/.test(read('src/worldbook/content/370.txt')) : !e.constant), '1.41.0: the index (370) constant behind a gate on $ui.area.avalon; 18 places, the Rookery and the Royal Mages as keyword entries');
 const lore = (uid, St) => ejs.render(read(`src/worldbook/content/${uid}.txt`), { getvar: gv(St) });
 ok(/Walks between the parts/.test(lore(370, W)) && /Crown Square: Great Gate 25/.test(lore(370, W)) && lore(370, home).trim() === '', 'the overview (with the walk table) prints only in Avalon');
 ok(/Tsubaki Hoshikage this year/.test(lore(377, W)) && /narrator_only/.test(lore(376, W)), 'Year 1: Tsubaki described in the Royal Mages entry; the Rookery\'s way in is narrator-only');
@@ -126,6 +126,6 @@ ok(/Avalon \(Kingdom Competition, with Halvard's team\)/.test(now(K)) && /the Ki
 const r502 = St => ejs.render(read('src/worldbook/custom/content/502.txt'), { getvar: gv(St) });
 ok(/Avalon \(1\.39\.0\)/.test(r502(W)) && !/Avalon \(1\.39\.0\)/.test(r502(later)), 'the update rules: the Avalon location format only around a visit');
 const ui = read('src/scripts/ui.js');
-ok(/avalon\.webp/.test(ui) && /renderCapital/.test(ui) && /"Garden of Avalon"/.test(ui), 'the UI has the Avalon map, its pins and places');
+ok(/avalon\.webp/.test(ui) && /renderArea/.test(ui) && /"Garden of Avalon"/.test(ui), 'the UI has the Avalon map, its pins and places');
 
 module.exports = { at, CROWN, S, W, M, home, K };

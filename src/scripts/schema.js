@@ -398,18 +398,14 @@ export const Schema = z.object({
     agenda: z.any().prefault([]).catch([]),                           // 1.44.0: the Agenda's coming-up feed (engine stepAgenda; Planner, Notice Board, bracelet, <now>)
     portrait: Str(''),                                                // 1.3.4: the student's picture (a SillyTavern user image path)
     tsusp: StrList(40),                                               // 1.4.3: Rank 10 benefits suspended by low Trust (engine)
+    area: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.46.0 (audit 3.1): the outside areas now { forest, avalon, airship, sunreach }: on, at, name, pin,
+                                                                      // seen, walks, near, owe, ev, and each area's own fields (engine; UI Map, <now>, lore gates)
+    forest: z.any().optional(), capital: z.any().optional(), sunreach: z.any().optional(), airship: z.any().optional(),   // before 1.46.0; moved by stepMigrate
     tune: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.3.1: training / reputation settings { id: value } (data/tuning.json; the engine checks the values)
-    forest: z.any().prefault(null).catch(null),                       // 1.38.0: the Grand Vast Forest now { on, at, seen, hist, tgt, left, walks, ev } (engine; UI, <now>, lore gate)
-    capital: z.any().prefault(null).catch(null),                      // 1.39.0: Avalon now { on, at, pin, seen, castle, walks, ev, muster } (engine; UI, <now>, lore gate)
-    sunreach: z.any().prefault(null).catch(null),                     // 1.41.0: Sunreach Bay now { on, at, pin, night, seen, walks, near, today, ev } or { on: false, seen, coin } (engine; UI, <now>, lore gate)
-    airship: z.any().prefault(null).catch(null),                      // 1.40.0: aboard the airship { on, at, event, to, left, bar, view, cargo, ev } or { on: false, soon } (engine; UI, <now>, lore gate)
   }),
 
   $eng: O({
     abs: z.coerce.number().prefault(-1).catch(-1),
-    exp: z.any().prefault(null).catch(null),                       // 1.38.0: this year's Expedition hunt { y, tgt, homes, t, hrs, owe, met, caught, res, wen } (engine)
-    sr: z.any().prefault(null).catch(null),                        // 1.41.0: Sunreach visit state { d, owe, met, nb, lev } (engine)
-    cap: z.any().prefault(null).catch(null),                       // 1.39.0: Avalon visit state { d, owe, met, ts, tsu, mm, wl } (engine)
     late: Num(0, 1e6, 0),
     sleep: z.any().prefault(null).catch(null),
     daily: z.record(z.string(), z.any()).prefault({}).catch({}),
@@ -418,6 +414,9 @@ export const Schema = z.object({
     pactPlay: Str(''),                                              // 1.31.0: the one Spirit Pact made in play (engine)
     home: z.any().prefault(null).catch(null),                      // 1.31.0: the month's letter home, its reply and parcel (engine)
     agenda: z.any().prefault(null).catch(null),                    // 1.44.0: Agenda { when: { id: [text, abs] } for Projects and Next plans, st: last statuses } (engine)
+    area: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.46.0 (audit 3.1): { forest: this year's hunt { y, tgt, homes, t, hrs, owe, met, caught, res, wen },
+                                                                      // avalon: { d, owe, met, ts, tsu, mm, wl, sc }, sunreach: { d, owe, met, nb, lev } } (engine)
+    exp: z.any().optional(), cap: z.any().optional(), sr: z.any().optional(),   // before 1.46.0; moved by stepMigrate
     comp: z.any().prefault(null).catch(null),                      // 1.44.0: competition results paid { paid: [keys], exp: 0-2 staff expectation } (engine)
     profv: Int(0, 1, 0),
     trip: Int(0, 1, 0),                                             // 1.42.0: 1 once {{user}} was off campus during the active Trip (engine)

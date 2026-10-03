@@ -103,16 +103,43 @@ const aged = w => { const a = ageOf(w, W); return a ? w + ', ' + a : w; };
 const SINCE = UI.since || [], MAYBE = UI.maybe || [];
 const STALE = UI.stale || [], PHASE = UI.phase || null;   // 1.6.1 (N4, N6): campus events with no news for a week; the campus phase (engine)
 const INITIATIVE = on('npc_initiative') ? UI.initiative : null;   // 1.7.7 (FP1): optional NPC-initiated contact today
-// 1.38.0 (owner-approved planning/DRAFT_outside_maps.md, part 1): the Creature Studies Expedition in the Grand Vast Forest (engine $ui.forest)
-const FOREST = UI.forest && UI.forest.on ? UI.forest : null, WENDIGO = /*@@WENDIGO@@*/{};
-// 1.39.0 (owner-approved planning/DRAFT_outside_maps.md, part 2): Avalon, the capital (engine $ui.capital); AVD: the carriage fare and the rival students
-const CAPITAL = UI.capital && UI.capital.on ? UI.capital : null, AVD = /*@@AVALON@@*/{};
-// 1.40.0 (owner-approved planning/DRAFT_airship.md): aboard the airship (engine $ui.airship); SOON: a flight leaves within 90 min
-const AIRSHIP = UI.airship && UI.airship.on ? UI.airship : null, SOON = UI.airship && !UI.airship.on ? UI.airship.soon : null;
-// 1.41.0 (owner-approved planning/DRAFT_outside_maps.md, part 3): Sunreach Bay (engine $ui.sunreach); SRD: fares, who may be met
-const SUNREACH = UI.sunreach && UI.sunreach.on ? UI.sunreach : null, SRD = /*@@SUNREACH@@*/{};
+// 1.46.0 (audit batch 4): the outside areas, one block (engine $ui.area: forest 1.38.0, avalon 1.39.0, airship 1.40.0, sunreach 1.41.0,
+// owner-approved planning/DRAFT_outside_maps.md and DRAFT_airship.md). AREA: the one {{user}} is in, with its key; SOON: a flight leaves
+// within 90 min; WENDIGO: the Wendigo's line; AVD: Avalon's carriage fare and the rival students; SRD: Sunreach's fares, who may be met
+const AREAS = UI.area || {}, WENDIGO = /*@@WENDIGO@@*/{}, AVD = /*@@AVALON@@*/{}, SRD = /*@@SUNREACH@@*/{};
+const AREA = ['forest', 'avalon', 'airship', 'sunreach'].map(k => AREAS[k] && AREAS[k].on ? Object.assign({ key: k }, AREAS[k]) : null).find(Boolean) || null;
+const SOON = AREAS.airship && !AREAS.airship.on ? AREAS.airship.soon : null;
 const srWho = id => { const r = (SRD.names || {})[id]; return r ? r[0] + ' (' + r[1] + ')' : id; };
 const avRival = id => { const r = (AVD.rivals || {})[id]; return r ? r[0] + ' (' + r[1] + ', Year ' + Math.min(3, r[2] + Y - 1) + ')' : id; };
+// how {{user}} gets about in each area, the minutes the clock still owes, and every engine event's line for the narrator
+const AREA_WALK = {
+  forest: ['Walks from here (hours on foot, shortest route): ', '', ' Advance the clock by the whole walk.', 'Still on the road: %s h of the last walk are not on the clock yet; searching here starts after that.'],
+  avalon: ['Walks from here (minutes on foot; a hire carriage takes half and costs ' + AVD.fare + ' coin: set Avalon.Ride true in the same update): ', ' In this quarter: ', ' Advance the clock by the whole walk.', 'Still on the way: %s min of the last walk are not on the clock yet.'],
+  sunreach: ['Walks from here (minutes on foot; a horse carriage for ' + SRD.carriage + ' coin, or a water taxi for ' + SRD.boat + ' coin between the shore parts, takes half: set Sunreach.Ride "carriage" or "boat" in the same update; the Open Sea only by tour boat from the Sea Dock, ' + SRD.tour + ' coin each way): ', ' Here too: ', '', 'Still on the way: %s min of the last move are not on the clock yet.'],
+};
+const AREA_EV = (A, e) => ({
+  target: () => 'The target is here (engine): the ' + e.b + ' shows itself this reply, first as fresh signs, then the beast. Play the encounter in full; the catch is not certain.',
+  sign: () => 'Signs (engine): tracks, a kill or droppings of the ' + e.b + ' lead toward ' + e.toName + '. Write them as signs; the beast does not appear.',
+  beast: () => 'Encounter (engine): a ' + e.b + ' (Grade ' + e.g + ') crosses the path of the group this reply. Not the target. ' + (e.g === 'II' && A.grade !== 'II' ? 'It is beyond first- and second-years: running, hiding and the flare are sane choices.' : 'Play it in character; it may be avoided.'),
+  protected: () => 'Seen (engine): a ' + e.b + ', a protected beast; harming one is a crime the Doves investigate.',
+  wendigo: () => 'The Wendigo (engine) is here this reply. ' + WENDIGO.line,
+  caught: () => 'Catch recorded (engine): the ' + A.tgt + ' counts.',
+  failed: () => 'The hunt is over (engine): the group did not bring back its ' + A.tgt + '; the practical is failed.',
+  white: () => 'The White Line (engine): the Royal Guard turns {{user}} back from ' + e.to + (e.n > 1 ? '; a second try, so they report it to the Halvard staff.' : ', politely and firmly.'),
+  pick: () => e.caught ? 'Pickpocket (engine): a hand slips into a pocket of {{user}}, and {{user}} catches it this reply; the thief bolts into the crowd.' : e.lost ? 'Pickpocket (engine): ' + e.lost + ' coin gone from the purse of {{user}}; nobody noticed the hand, and {{user}} finds out later.' : 'Pickpocket (engine): a thief tries the pockets of {{user}} and finds nothing worth taking.',
+  hustle: () => e.caught ? 'A hustler (engine) tries a trick on {{user}}, and {{user}} sees through it this reply.' : e.lost ? 'A hustler (engine): ' + e.lost + ' coin gone from {{user}}, by a trick or a quick hand; {{user}} finds out later.' : 'A hustler (engine) tries {{user}} and finds nothing worth taking.',
+  procession: () => 'Passing by (engine): ' + e.t + '.',
+  street: () => 'In the street (engine, colour only): ' + e.t + '.',
+  rival: () => A.key === 'avalon' ? 'Another academy (engine): ' + avRival(e.id) + ' crosses the path of the group here. Play them from their lore entry.' : 'Another academy (engine): ' + srWho(e.id) + ' is here on their own Trip and crosses the path of the group. Play them from their lore entry, in character.',
+  tsubaki: () => e.first ? 'Tsubaki Hoshikage (engine), the youngest Royal Mage, has lost her ranks after the parade and is lost in the city; the group runs into her here. She is not a Halvard student yet (the Royal Mages entry).' : 'Tsubaki Hoshikage (engine) marched with the Royal Mages and cannot find her way back to the Halvard group; the group runs into her here, lost as ever.',
+  scout: () => 'A talent scout (engine) from a noble house or a hunting company asks {{user}} for a word about the matches.',
+  raid: () => e.caught ? 'Raid (engine): the City Watch storms the Rookery and catches {{user}}; Halvard staff are sent for.' : 'Raid (engine): the City Watch storms the Rookery; the rooks hear it coming and {{user}} gets out in the rush.',
+  sky: () => 'In the sky (engine): ' + e.t + '.', stage: () => 'On the stage (engine): ' + e.t + '.', hold: () => 'In the hold (engine): ' + e.t + '.',
+  bet: () => 'The bet (engine): ' + e.stake + ' coin on ' + e.game + ', and {{user}} ' + (e.win ? 'won ' + e.net + ' coin.' : 'lost it.'),
+  student: () => 'Halvard (engine): ' + srWho(e.id) + ' is here with their own group and runs into {{user}}. Play them in character.',
+  sea: () => 'At sea (engine): ' + e.t + '.',
+  leviathan: () => 'THE LEVIATHAN (engine): ' + e.t + '. A sight for a lifetime, seen only from far off; nobody fights it.',
+}[e.k] || (() => ''))();
 const JAGES = (getvar('stat_data.Journal') || []).slice(-5).reverse().map(l => (/^\[([^\]]+)\]/.exec(String(l)) || [])[1]).filter(w => w && ageOf(w, W));
 // 1.2.2 bonds: for each present NPC, what they will talk about at this rank (openness shifts the early tiers; goals, views of others
 // and the past need the real rank; secrets never come from rank) and what the bond allows
@@ -204,43 +231,23 @@ Council election nominees: <%- CANDIDATES.First %> and <%- CANDIDATES.Second %> 
 <%_ if (cur) { _%>
 Curfew: <%- cur %>
 <%_ } _%>
-<%_ if (FOREST) { _%>
-Grand Vast Forest (Creature Studies Expedition): {{user}} is at <%- FOREST.name %>.
-<%_ if (FOREST.tgt) { _%>
-Target: <%- FOREST.tgt %> (Grade <%- FOREST.grade %>)<%- FOREST.res === 'caught' ? ', caught: the group has it; bring it back to Base Camp by {@expedition.hunt.day:nextday} {@expedition.hunt.back_by:clock}.' : FOREST.res === 'failed' ? ': the hunt is over and the group never found it; the practical is failed. Back to Base Camp by {@expedition.hunt.day:nextday} {@expedition.hunt.back_by:clock}, then home.' : FOREST.met ? ': it has shown itself; the catch is up to the group (set Expedition.Caught only if they actually catch or kill it).' : '. {{user}} knows its name, not where it lives. ' + FOREST.left + ' h of the hunt left (until {@expedition.hunt.day:nextday} {@expedition.hunt.from}). Searched here: ' + FOREST.here + ' h, no sign of it here yet; do not bring it in.' %>
-<%_ } else if (FOREST.hs) { _%>
+<%_ if (AREA) { const _A = AREA, _k = AREA.key, _M = AREA.muster, _l = AREA.left, _W = AREA_WALK[_k]; _%>
+<%_ if (_k === 'forest') { _%>
+Grand Vast Forest (Creature Studies Expedition): {{user}} is at <%- _A.name %>.
+<%_ if (_A.tgt) { _%>
+Target: <%- _A.tgt %> (Grade <%- _A.grade %>)<%- _A.res === 'caught' ? ', caught: the group has it; bring it back to Base Camp by {@expedition.hunt.day:nextday} {@expedition.hunt.back_by:clock}.' : _A.res === 'failed' ? ': the hunt is over and the group never found it; the practical is failed. Back to Base Camp by {@expedition.hunt.day:nextday} {@expedition.hunt.back_by:clock}, then home.' : _A.met ? ': it has shown itself; the catch is up to the group (set Expedition.Caught only if they actually catch or kill it).' : '. {{user}} knows its name, not where it lives. ' + _A.left + ' h of the hunt left (until {@expedition.hunt.day:nextday} {@expedition.hunt.from}). Searched here: ' + _A.here + ' h, no sign of it here yet; do not bring it in.' %>
+<%_ } else if (_A.hs) { _%>
 Target: none yet; Vallie assigns each group its target at {@expedition.hunt.from} on {@expedition.hunt.day:day}.
 <%_ } _%>
-Walks from here (hours on foot, shortest route): <%- FOREST.walks.map(w => w[1] + ' ' + w[2]).join(', ') %>. Advance the clock by the whole walk.
-<%_ if (FOREST.owe) { _%>
-Still on the road: <%- FOREST.owe %> h of the last walk are not on the clock yet; searching here starts after that.
-<%_ } _%>
-<%_ for (const e of FOREST.ev || []) { if (e.k === 'walk') continue; _%>
-<%- e.k === 'target' ? 'The target is here (engine): the ' + e.b + ' shows itself this reply, first as fresh signs, then the beast. Play the encounter in full; the catch is not certain.' : e.k === 'sign' ? 'Signs (engine): tracks, a kill or droppings of the ' + e.b + ' lead toward ' + e.toName + '. Write them as signs; the beast does not appear.' : e.k === 'beast' ? 'Encounter (engine): a ' + e.b + ' (Grade ' + e.g + ') crosses the path of the group this reply. Not the target. ' + (e.g === 'II' && FOREST.grade !== 'II' ? 'It is beyond first- and second-years: running, hiding and the flare are sane choices.' : 'Play it in character; it may be avoided.') : e.k === 'protected' ? 'Seen (engine): a ' + e.b + ', a protected beast; harming one is a crime the Doves investigate.' : e.k === 'wendigo' ? 'The Wendigo (engine) is here this reply. ' + WENDIGO.line : e.k === 'caught' ? 'Catch recorded (engine): the ' + FOREST.tgt + ' counts.' : e.k === 'failed' ? 'The hunt is over (engine): the group did not bring back its ' + FOREST.tgt + '; the practical is failed.' : '' %>
-<%_ } _%>
-<%_ if (FOREST.last) { _%>
-Last year's Expedition: {{user}}'s group <%- FOREST.last.res === 'caught' ? 'brought back its ' + FOREST.last.tgt : 'came back without its ' + FOREST.last.tgt + ' and failed' %>; people remember.
-<%_ } _%>
-<%_ } _%>
-<%_ if (CAPITAL) { const _M = CAPITAL.muster; _%>
-Avalon<%- CAPITAL.crown ? ' (Independence Crowning Day)' : CAPITAL.kd ? ' (Kingdom Competition, with Halvard\'s team)' : '' %>: {{user}} is at <%- CAPITAL.name %><%- CAPITAL.pinName !== CAPITAL.name ? ' (' + CAPITAL.pinName + ')' : '' %>. Bracelet points do not work here: coin only.
-Walks from here (minutes on foot; a hire carriage takes half and costs <%- AVD.fare %> coin: set Avalon.Ride true in the same update): <%- CAPITAL.walks.map(w => w[1] + ' ' + w[2]).join(', ') %>.<%- CAPITAL.near.length ? ' In this quarter: ' + CAPITAL.near.map(n => n[0] + ' ' + n[1]).join(', ') + '.' : '' %> Advance the clock by the whole walk.
-<%_ if (CAPITAL.owe) { _%>
-Still on the way: <%- CAPITAL.owe %> min of the last walk are not on the clock yet.
-<%_ } _%>
+<%_ } else if (_k === 'avalon') { _%>
+Avalon<%- _A.crown ? ' (Independence Crowning Day)' : _A.kd ? ' (Kingdom Competition, with Halvard\'s team)' : '' %>: {{user}} is at <%- _A.name %><%- _A.pinName !== _A.name ? ' (' + _A.pinName + ')' : '' %>. Bracelet points do not work here: coin only.
 <%_ if (_M) { _%>
 Crowning Day plan: parade {@avalon.crowning.parade} on Crown Avenue (the Royal Mages at its head), the King's speech {@avalon.crowning.speech} at Crown Square, free time in groups of four from {@avalon.crowning.free}, muster {@avalon.crowning.muster} at the Skyport, airship home {@avalon.crowning.depart}. <%- _M.missed ? '{{user}} missed the muster: staff and the Doves are out looking for the group; the airship waits for them.' : _M.left > 0 ? 'Muster in ' + _M.left + ' min; the Skyport is ' + _M.back + ' min on foot from here' + (_M.cab !== _M.back ? ' (' + _M.cab + ' by carriage)' : '') + (_M.warn ? '. Time to head back.' : '.') : '' %>
-<%_ } else if (CAPITAL.kd) { _%>
-Kingdom Competition: matches {@avalon.kingdom.matches} at the Royal Arena; free time in the city with the team until {@avalon.kingdom.free_until} (Lower City and Crown Square); curfew {@avalon.kingdom.curfew} at the Whitestone Hotel, Gavlan Haverton on watch.<%- CAPITAL.pass ? ' The team won: the King receives them at Eldrasil Castle tonight, the only time students pass the White Line.' : '' %>
+<%_ } else if (_A.kd) { _%>
+Kingdom Competition: matches {@avalon.kingdom.matches} at the Royal Arena; free time in the city with the team until {@avalon.kingdom.free_until} (Lower City and Crown Square); curfew {@avalon.kingdom.curfew} at the Whitestone Hotel, Gavlan Haverton on watch.<%- _A.pass ? ' The team won: the King receives them at Eldrasil Castle tonight, the only time students pass the White Line.' : '' %>
 <%_ } _%>
-<%_ for (const e of CAPITAL.ev || []) { if (e.k === 'walk' || e.k === 'missed') continue; _%>
-<%- e.k === 'white' ? 'The White Line (engine): the Royal Guard turns {{user}} back from ' + e.to + (e.n > 1 ? '; a second try, so they report it to the Halvard staff.' : ', politely and firmly.') : e.k === 'pick' ? (e.caught ? 'Pickpocket (engine): a hand slips into a pocket of {{user}}, and {{user}} catches it this reply; the thief bolts into the crowd.' : e.lost ? 'Pickpocket (engine): ' + e.lost + ' coin gone from the purse of {{user}}; nobody noticed the hand, and {{user}} finds out later.' : 'Pickpocket (engine): a thief tries the pockets of {{user}} and finds nothing worth taking.') : e.k === 'procession' ? 'Passing by (engine): ' + e.t + '.' : e.k === 'street' ? 'In the street (engine, colour only): ' + e.t + '.' : e.k === 'rival' ? 'Another academy (engine): ' + avRival(e.id) + ' crosses the path of the group here. Play them from their lore entry.' : e.k === 'tsubaki' ? (e.first ? 'Tsubaki Hoshikage (engine), the youngest Royal Mage, has lost her ranks after the parade and is lost in the city; the group runs into her here. She is not a Halvard student yet (the Royal Mages entry).' : 'Tsubaki Hoshikage (engine) marched with the Royal Mages and cannot find her way back to the Halvard group; the group runs into her here, lost as ever.') : e.k === 'scout' ? 'A talent scout (engine) from a noble house or a hunting company asks {{user}} for a word about the matches.' : e.k === 'raid' ? (e.caught ? 'Raid (engine): the City Watch storms the Rookery and catches {{user}}; Halvard staff are sent for.' : 'Raid (engine): the City Watch storms the Rookery; the rooks hear it coming and {{user}} gets out in the rush.') : '' %>
-<%_ } _%>
-On the hour the seven Herald Spires ring a bell and a few bars of music across the city; at noon, the news.
-<%_ } _%>
-<%_ if (AIRSHIP) { const _A = AIRSHIP, _l = _A.left; _%>
+<%_ } else if (_k === 'airship') { _%>
 Aboard the airship (<%- _A.event %>): {{user}} is in the <%- _A.name %>. It lands at <%- _A.lands %> at <%- _A.to %> (in <%- _l >= 60 ? Math.floor(_l / 60) + 'h ' + (_l % 60) + 'm' : _l + ' min' %>); nobody leaves the ship before that.
-Aboard: <%- [_A.name].concat(_A.near).join(' · ') %>, two minutes apart; the galley, the engine room, the bridge and the teachers' forward cabins are crew and staff only (turned back, no harm done). The teachers count heads at boarding and landing.
 The bar (Common Room): <%- _A.bar ? 'today students may drink (the rest day or a holiday); the stewards check the bracelet' : 'no alcohol for students today (only on the rest day and in the holidays); tea, juice and soda' %>. Meals at the canteen counter are in the fare; drinks and sweets cost coin.
 <%_ if (_A.view) { _%>
 View from the promenade now: <%- _A.view %>.
@@ -248,46 +255,54 @@ View from the promenade now: <%- _A.view %>.
 <%_ if (_A.cargo) { _%>
 In the hold this flight: <%- _A.cargo %>.
 <%_ } _%>
-<%_ for (const e of _A.ev || []) { _%>
-<%- e.k === 'sky' ? 'In the sky (engine)' : e.k === 'stage' ? 'On the stage (engine)' : 'In the hold (engine)' %>: <%- e.t %>.
-<%_ } _%>
-<%_ } else if (SOON) { _%>
-Airship: the flight for <%- SOON.event %> leaves at <%- SOON.from %> for <%- SOON.lands %>; everyone boards before then.
-<%_ } _%>
-<%_ if (SUNREACH) { const _S = SUNREACH; _%>
-Sunreach Bay (the Academy Trip, <%- _S.night ? 'night: the whole city lit by rune-light until dawn' : 'day' %>): {{user}} is at <%- _S.name %><%- _S.pinName !== _S.name ? ' (' + _S.pinName + ')' : '' %>. Bracelet points do not work here; coin only.
-Walks from here (minutes on foot; a horse carriage for <%- SRD.carriage %> coin, or a water taxi for <%- SRD.boat %> coin between the shore parts, takes half: set Sunreach.Ride "carriage" or "boat" in the same update; the Open Sea only by tour boat from the Sea Dock, <%- SRD.tour %> coin each way): <%- _S.walks.map(w => w[1] + ' ' + w[2]).join(', ') %>.<%- _S.near.length ? ' Here too: ' + _S.near.map(n => n[0] + ' ' + n[1]).join(', ') + '.' : '' %>
-<%_ if (_S.owe) { _%>
-Still on the way: <%- _S.owe %> min of the last move are not on the clock yet.
-<%_ } _%>
-<%_ for (const _t of _S.today || []) { _%>
+<%_ } else { _%>
+Sunreach Bay (the Academy Trip, <%- _A.night ? 'night: the whole city lit by rune-light until dawn' : 'day' %>): {{user}} is at <%- _A.name %><%- _A.pinName !== _A.name ? ' (' + _A.pinName + ')' : '' %>. Bracelet points do not work here; coin only.
+<%_ for (const _t of _A.today || []) { _%>
 Today at <%- _t[0] %>: <%- _t[1] %>.
 <%_ } _%>
-<%_ if (_S.off) { _%>
+<%_ if (_A.off) { _%>
 Teachers' rule for the Trip: this is the city's night side, out of bounds for Halvard students. A reminder only; nothing follows unless the story brings a teacher.
 <%_ } _%>
-<%_ if (_S.at === 'golden_tide') { _%>
+<%_ if (_A.at === 'golden_tide') { _%>
 The tables: dice, cards and the wheel, <%- SRD.bet_max %> coin at most a bet. When {{user}} bets, set Sunreach.Bet {"Game": "dice" | "cards" | "wheel", "Stake": coin} in that update and play up to the moment of the throw; the engine settles it and the next <now> says how it went. Never decide a bet yourself.
 <%_ } _%>
-<%_ for (const e of _S.ev || []) { if (e.k === 'walk') continue; _%>
-<%- e.k === 'bet' ? 'The bet (engine): ' + e.stake + ' coin on ' + e.game + ', and {{user}} ' + (e.win ? 'won ' + e.net + ' coin.' : 'lost it.') : e.k === 'hustle' ? (e.caught ? 'A hustler (engine) tries a trick on {{user}}, and {{user}} sees through it this reply.' : e.lost ? 'A hustler (engine): ' + e.lost + ' coin gone from {{user}}, by a trick or a quick hand; {{user}} finds out later.' : 'A hustler (engine) tries {{user}} and finds nothing worth taking.') : e.k === 'street' ? 'In the street (engine, colour only): ' + e.t + '.' : e.k === 'rival' ? 'Another academy (engine): ' + srWho(e.id) + ' is here on their own Trip and crosses the path of the group. Play them from their lore entry, in character.' : e.k === 'student' ? 'Halvard (engine): ' + srWho(e.id) + ' is here with their own group and runs into {{user}}. Play them in character.' : e.k === 'sea' ? 'At sea (engine): ' + e.t + '.' : e.k === 'leviathan' ? 'THE LEVIATHAN (engine): ' + e.t + '. A sight for a lifetime, seen only from far off; nobody fights it.' : '' %>
+<%_ } _%>
+<%_ if (_W) { _%>
+<%- _W[0] + _A.walks.map(w => w[1] + ' ' + w[2]).join(', ') + '.' + (_W[1] && _A.near.length ? _W[1] + _A.near.map(n => n[0] + ' ' + n[1]).join(', ') + '.' : '') + _W[2] %>
+<%_ if (_A.owe) { _%>
+<%- _W[3].replace('%s', _A.owe) %>
+<%_ } _%>
+<%_ } else { _%>
+Aboard: <%- [_A.name].concat(_A.near).join(' · ') %>, two minutes apart; the galley, the engine room, the bridge and the teachers' forward cabins are crew and staff only (turned back, no harm done). The teachers count heads at boarding and landing.
+<%_ } _%>
+<%_ for (const e of _A.ev || []) { const _t = AREA_EV(_A, e); if (!_t) continue; _%>
+<%- _t %>
+<%_ } _%>
+<%_ if (_A.last) { _%>
+Last year's Expedition: {{user}}'s group <%- _A.last.res === 'caught' ? 'brought back its ' + _A.last.tgt : 'came back without its ' + _A.last.tgt + ' and failed' %>; people remember.
+<%_ } _%>
+<%_ if (_k === 'avalon') { _%>
+On the hour the seven Herald Spires ring a bell and a few bars of music across the city; at noon, the news.
 <%_ } _%>
 <%_ } _%>
-<%_ if (!SUNREACH && UI.sunreach && UI.sunreach.coin) { _%>
-Tomorrow: <%- UI.sunreach.coin %>, abroad, where bracelet points do not work. Students change points into coin at the Banking House today (1:1); someone may remind {{user}}.
+<%_ if (SOON) { _%>
+Airship: the flight for <%- SOON.event %> leaves at <%- SOON.from %> for <%- SOON.lands %>; everyone boards before then.
 <%_ } _%>
-<%_ if (!CAPITAL && UI.capital && UI.capital.coin) { _%>
-Tomorrow: <%- UI.capital.coin %> in Avalon, where bracelet points do not work. Students change points into coin at the Banking House today (1:1); someone may remind {{user}}.
+<%_ if (AREAS.sunreach && AREAS.sunreach.coin) { _%>
+Tomorrow: <%- AREAS.sunreach.coin %>, abroad, where bracelet points do not work. Students change points into coin at the Banking House today (1:1); someone may remind {{user}}.
+<%_ } _%>
+<%_ if (AREAS.avalon && AREAS.avalon.coin) { _%>
+Tomorrow: <%- AREAS.avalon.coin %> in Avalon, where bracelet points do not work. Students change points into coin at the Banking House today (1:1); someone may remind {{user}}.
 <%_ } _%>
 <%_ if (PHASE && PHASE.line) { _%>
 Campus phase: <%- PHASE.line %>
 <%_ } _%>
-<%_ if (W._Happening && on('happenings') && !FOREST && !CAPITAL && !AIRSHIP && !SUNREACH) { _%>
+<%_ if (W._Happening && on('happenings') && !AREA) { _%>
 Around campus today (optional, use only if it fits): <%- W._Happening %>
 <%_ } _%>
 <%_ if (/CURFEW|LOCKDOWN/.test(cur)) { _%>
 Presence: after curfew most students are in their own dorms; out are staff, patrols, and students sneaking out (only those whose personality allows it).
-<%_ } else if (!FOREST && !CAPITAL && !AIRSHIP && !SUNREACH) { _%>
+<%_ } else if (!AREA) { _%>
 <%_ if (pres.length) { _%>
 <%- pres.join(' ') %>
 <%_ } _%>

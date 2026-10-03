@@ -16,7 +16,7 @@ ok(E.lifeX({ amb_freq: 2 }) === 1 && Math.abs(E.lifeX({ amb_freq: 1 }) - 30 / 45
     let n = 0;
     for (let h = 8; h <= 22; h++) for (const loc of ['Sunreach Bay — Fish Market', 'Sunreach Bay — Coral Beach']) {
       S = W(S, { Time: `${String(h).padStart(2, '0')}:${loc.includes('Fish') ? '05' : '35'}`, Location: loc });
-      n += ((S.$ui.sunreach || {}).ev || []).filter(e => e.k === 'street' || e.k === 'student' || e.k === 'rival').length;
+      n += ((S.$ui.area.sunreach || {}).ev || []).filter(e => e.k === 'street' || e.k === 'student' || e.k === 'rival').length;
     }
     return n;
   };

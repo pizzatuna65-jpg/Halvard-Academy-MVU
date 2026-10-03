@@ -1,3 +1,3 @@
-<%_ if ((getvar('stat_data.$ui.airship') || {}).on || (getvar('stat_data.$ui.airship') || {}).soon) { _%>
+<%_ if ((getvar('stat_data.$ui.area.airship') || {}).on || (getvar('stat_data.$ui.area.airship') || {}).soon) { _%>
 [AIRSHIP INDEX] Aboard the academy's airship: Promenade Deck (the glassed gallery and the view), Common Room (the canteen counter, a small bar, the stage), Cabin Deck (a cabin to each group of four, hot bathing stalls), Cargo Hold (luggage and gear, the most private corner). Two minutes apart; each place has its own entry when it comes up.
 <%_ } _%>
