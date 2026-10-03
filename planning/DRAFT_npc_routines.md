@@ -12,7 +12,13 @@ Status: menunggu "proceed" owner. Sumber: `audit/AUDIT_2026-10-03_4_batch_fitur.
 - **Dossier:** menampilkan rutinitas hanya kalau field Haunts sudah terbuka (Rank 1).
 - **`<now>` dan initiative:** "Likely around" memakai rutinitas. Template `{place}` initiative dan bantuan lebih dulu memakai tempat
   rutin.
-- **Hanya "biasanya", bukan kepastian.** Narator boleh menyimpang kalau cerita menuntut.
+- **Benar-benar "biasanya" (owner, 2026-10-04):**
+  - Setiap baris rutinitas di-roll engine sekali per hari per NPC, dengan peluang 70% NPC mengikutinya hari itu.
+  - Roll memakai seed (`hash32(seed, hari, NPC, baris)`), jadi swipe atau replay tetap memberi hasil yang sama. Tidak memakai
+    `Math.random`.
+  - Kalau gagal (30%), hari itu NPC kembali ke haunts biasa.
+  - `<now>` dan initiative memakai hasil roll. Map dan dossier tetap menulis "usually here …".
+  - Narator boleh menyimpang kalau cerita menuntut.
 - **Yang tidak punya rutinitas:**
   - anggota tim akademi rival (tidak pernah di Halvard);
   - NPC yang belum datang (cohort 2/3, gerbang `arrives`) atau sudah lulus.
