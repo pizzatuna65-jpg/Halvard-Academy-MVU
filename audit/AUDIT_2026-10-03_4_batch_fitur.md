@@ -14,7 +14,7 @@ perintah yang sama.
 | 1 | Tugas dan proyek kelompok + bantuan dan utang budi | 4.10, 4.6 | sedang | – | selesai (1.49.0, commit 0f435ab) |
 | 2 | Minggu rutin (maju cepat mingguan) | 4.5 | besar | 1 | selesai (1.50.0, commit e9cde52) |
 | 3 | Dunia hidup antar-NPC + papan misteri yang hidup | 4.8, 4.9 | sedang | – | selesai (1.51.0, commit ad0302f) |
-| 4 | Jadwal hidup NPC (draft dulu, lalu dibangun) | 4.7 | sedang–besar | – (draft perlu "proceed") | sebagian: draft `planning/DRAFT_npc_routines.md` ditulis, menunggu "proceed" |
+| 4 | Jadwal hidup NPC (draft dulu, lalu dibangun) | 4.7 | sedang–besar | – (draft perlu "proceed") | selesai (1.52.0, commit 60ab913) |
 
 Urutan yang disarankan: 1 → 2 → 3 → 4. Batch 3 boleh kapan saja. Draft batch 4 boleh ditulis lebih awal supaya owner bisa
 membacanya sambil batch lain dikerjakan ("tulis draft batch fitur 4").
