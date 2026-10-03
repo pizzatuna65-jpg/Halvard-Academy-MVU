@@ -2650,7 +2650,7 @@ function routineSpan(c) {
 // one or two moments of the span to play in full: someone {{user}} has a bond with, and a happening
 function routineMoments(c, to) {
   const { S, absA, seed, OFF } = c, d0 = Math.floor(absA / DAY_MIN), d1 = Math.floor(to / DAY_MIN), out = [];
-  const dayIn = (...k) => d0 + (hash32(seed, d0, ...k) % (d1 - d0 + 1));
+  const dayIn = (...k) => rollInt(d0, d1, seed, d0, ...k);   // the shared draw (DECISIONS: one source)
   const PV = presenceNow(S);
   const id = OFF.has('npc_initiative') ? null : rollTable(Object.keys(S.Bonds).sort(), { roll: [seed, d0, 'routine-npc'], p: 0.85, pick: [seed, d0, 'routine-npc-pick'],
     skip: id => { const b = S.Bonds[id]; return !(b.Rank >= 3 && INITIATIVE_STAGES[id] && (ARRIVES[id] || 1) <= S.World.Year && !npcAwayIn(S, id) && !npcOut(PV, S, id)); },
