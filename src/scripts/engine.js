@@ -862,6 +862,36 @@ const SHOP_PRICE = {"sunfizz":[[8,"Commissary"],[8,"The Mall — store"]],"firet
 // the Bag key a reported name means: the exact name first (any case), then the same itemKey, preferring one still held
 const bagKeyOf = (I, name) => { const ks = Object.keys(I || {}), lo = String(name || '').trim().toLowerCase(), k = itemKey(name);
   return ks.find(x => x.toLowerCase() === lo) || ks.find(x => itemKey(x) === k && num((I[x] || {}).Qty, 1) > 0) || ks.find(x => itemKey(x) === k) || ''; };
+// 1.45.0 (audit 3.5): one ledger for Points and Coin. Every payment the engine makes or takes goes through it: the balance (never
+// below 0), one Transactions line, and a record of this reply's engine lines (c.tx), so the "not itemised" and overspend checks
+// (stepHidden) read the narrator's own lines and changes only. The list is cut to its last 20 lines once, in stepCommit, after
+// every check has compared it with the state before the reply.
+function ledger(c, cur, delta, why) {
+  const W = c.S.Player.Wallet, d = Math.round(num(delta, 0)), was = num(W[cur], 0);
+  W[cur] = Math.max(0, was + d);
+  const line = `${d >= 0 ? '+' : '-'}${Math.abs(d)} ${cur === 'Coin' ? 'coin: ' : ''}${why}`;
+  W.Transactions = [...(Array.isArray(W.Transactions) ? W.Transactions : []), line];
+  (c.tx || (c.tx = [])).push({ cur, delta: W[cur] - was, line });
+  return line;
+}
+// 1.45.0 (audit 3.4): one Bag ledger. Every engine change to an item's Qty (used items, gifts, crafting, sales, purchases, the parcel
+// from home, Sunfizz bottles) goes through bagTake / bagGive, keyed by bagKeyOf. The reply's own change to that item counts toward it
+// (a Qty the narrator already lowered is not lowered again, one already raised is not raised again), and several engine changes to
+// one item in a reply add up (c.bagTx). A new item gets kind and note; the Bag key is returned ('' when nothing was there to take).
+function bagMove(c, name, delta, kind, note) {
+  const { S, B } = c, I = _.isPlainObject(S.Inventory) ? S.Inventory : (S.Inventory = {});
+  let k = bagKeyOf(I, name);
+  if (!k) { if (delta <= 0) return ''; k = String(name).trim(); I[k] = { Qty: 0, Kind: kind || 'other', Note: note || '', Plan: '' }; }
+  const BI = (c.hasB && B && B.Inventory) || {}, kb = bagKeyOf(BI, k), M = c.bagTx || (c.bagTx = {}), id = k.trim().toLowerCase();
+  const r = M[id] || (M[id] = { orig: num(I[k].Qty, 0), take: 0, give: 0, done: 0 });
+  if (delta < 0) r.take -= delta; else r.give += delta;
+  const own = r.orig - (kb ? num(BI[kb].Qty, 0) : 0);          // what the reply itself did to this item
+  const want = r.give - Math.min(r.give, Math.max(0, own)) - (r.take - Math.min(r.take, Math.max(0, -own)));
+  I[k].Qty = Math.max(0, num(I[k].Qty, 0) + want - r.done); r.done = want;
+  return k;
+}
+const bagTake = (c, name, n = 1) => bagMove(c, name, -Math.max(0, n));
+const bagGive = (c, name, n, kind, note) => bagMove(c, name, Math.max(0, n), kind, note);
 const fxOf = name => SHOP_FX[itemBase(name)] || SHOP_FX[itemKey(name)] || null;   // itemBase, itemKey: shared.js
 const gearOf = (I, buff, now) => {
   const own = Object.keys(I || {}).filter(k => (I[k] && I[k].Qty) > 0), ks = own.join(' | ');
@@ -1751,16 +1781,12 @@ function stepRest(c) {
   const IB = (hasB && B.Inventory) || {};
   const gifted = (REPORTED.acts || []).filter(a => /^(gift|birthday)$/i.test(String(a.Kind || '').trim()) && a.Item)
     .map(a => bagKeyOf(IB, a.Item)).filter(k => k && num((IB[k] || {}).Qty, 1) > 0);
+  // 1.45.0 (audit 3.4): through the Bag ledger (bagTake), so an item bought in this reply (/Purchases) and used is taken too
   if (hasB && (consumed.length || gifted.length) && _.isPlainObject(S.Inventory)) {
-    const need = _.countBy([...consumed.map(x => bagKeyOf(IB, x)), ...gifted].filter(Boolean)), giftN = _.countBy(gifted);
-    for (const [kb, n] of Object.entries(need)) {
-      const k = bagKeyOf(S.Inventory, kb);
-      if (!k) continue;
-      const extra = n - Math.max(0, num(IB[kb].Qty, 1) - num(S.Inventory[k].Qty, 1));
-      if (extra > 0) {
-        S.Inventory[k].Qty = Math.max(0, num(S.Inventory[k].Qty, 1) - extra);
-        if (giftN[kb]) log.push(`${k}: given as a gift, so the Bag holds one less (${S.Inventory[k].Qty} left).`);
-      }
+    for (const x of consumed) bagTake(c, x, 1);
+    for (const kb of gifted) {
+      const k0 = bagKeyOf(S.Inventory, kb), q0 = k0 ? num(S.Inventory[k0].Qty, 0) : 0, k = bagTake(c, kb, 1);
+      if (k && num(S.Inventory[k].Qty, 0) < q0) log.push(`${k}: given as a gift, so the Bag holds one less (${S.Inventory[k].Qty} left).`);
     }
   }
   V.Resting = 'none';
@@ -1951,7 +1977,7 @@ function stepCapital(c) {
   const X = _.isPlainObject(S.$eng.cap) ? S.$eng.cap : (S.$eng.cap = {});
   if (X.d !== dayNo) Object.assign(X, { d: dayNo, owe: 0, met: [], wl: 0, sc: 0 });
   const crown = avCrown(S.World), kd = !crown && avKingdom(S.World, S), Cr = AV.crowning, evs = [], at = t => dayNo * DAY_MIN + hm(t);
-  const coinNow = () => num(S.Player.Wallet.Coin, 0), spend = (x, why) => { S.Player.Wallet.Coin = Math.max(0, coinNow() - x); S.Player.Wallet.Transactions = [...(S.Player.Wallet.Transactions || []), `-${x} coin: ${why}`].slice(-20); };
+  const coinNow = () => num(S.Player.Wallet.Coin, 0), spend = (x, why) => ledger(c, 'Coin', -x, why);
   // the White Line: the Royal Guard turns {{user}} back; a second try the same day is reported (Academy, defied_staff)
   if (aHeld && hasB) {
     X.wl = num(X.wl, 0) + 1; evs.push({ k: 'white', n: X.wl, to: AV_PL[aHeld].name });
@@ -2083,7 +2109,7 @@ function stepSunreach(c) {
   const X = _.isPlainObject(S.$eng.sr) ? S.$eng.sr : (S.$eng.sr = {});
   if (X.d !== dayNo) Object.assign(X, { d: dayNo, owe: 0, met: [] });
   const evs = [], coinNow = () => num(S.Player.Wallet.Coin, 0);
-  const pay = (x, why) => { S.Player.Wallet.Coin = Math.max(0, coinNow() + x); S.Player.Wallet.Transactions = [...(S.Player.Wallet.Transactions || []), `${x >= 0 ? '+' : ''}${x} coin: ${why}`].slice(-20); };
+  const pay = (x, why) => ledger(c, 'Coin', x, why);
   // moving: inside a pin a few minutes; between pins the route, on foot or by carriage or water taxi; the Open Sea by tour boat only
   if (hasB && !toolEdit && elapsed > 0 && rPrev && SR_PL[rPrev] && rPrev !== at) {
     const pA = SR_PL[rPrev].pin, pB = SR_PL[at].pin, path = pA === pB ? [] : srPinPath(pA, pB);
@@ -2598,8 +2624,7 @@ function stepSchoolWeek(c) {
         if (TW.n >= TUTOR_WEEK) { log.push(`Tutoring: ${TUTOR_WEEK} paid sessions already this week; no pay for another.`); continue; }
         TW.n++;
         c.profTutoring.push(s);
-        S.Player.Wallet.Points = num(S.Player.Wallet.Points, 0) + TUTOR_PAY;
-        S.Player.Wallet.Transactions.push(`+${TUTOR_PAY} tutoring (${s}${t.Student ? ', ' + t.Student : ''})`);
+        ledger(c, 'Points', TUTOR_PAY, `tutoring (${s}${t.Student ? ', ' + t.Student : ''})`);
         repAdd('Student', 2, `tutoring in ${s}`, 'week');
         S.$ui.toasts.push(`Tutoring +${TUTOR_PAY} points`);
       }
@@ -3421,15 +3446,11 @@ function stepProficiency(c) {
     const master = rank >= MASTERY, result = master && band === 'weak' ? 'success' : band;   // Master's hand: nothing comes out rough
     return { name: recipe.name, group: recipe.group, tier: recipe.tier, roll, score, dc, result, master, mishap: roll <= 3, mods: [skill && `Craft +${skill}`, condition && `conditions ${condition}`, tool && `tool +${tool}`, aid && `expert +${aid}`].filter(Boolean).join(', ') };
   };
-  const bagGain = (name, count, kind, note) => {
-    const I = S.Inventory, k = craftItem(I, name) || name, start = craftQty((B || {}).Inventory, name);
-    if (!I[k]) I[k] = { Qty: 0, Kind: kind, Note: note, Plan: '' };
-    I[k].Qty = Math.max(num(I[k].Qty, 0), start + count);
-    I[k].Kind = kind; I[k].Note = note;
+  const bagGain = (name, count, kind, note) => {   // 1.45.0 (audit 3.4): the Bag ledger
+    const k = bagGive(c, name, count, kind, note);
+    if (k) { S.Inventory[k].Kind = kind; S.Inventory[k].Note = note; }
   };
-  const takeMaterials = option => {
-    for (const m of option) { const k = craftItem(S.Inventory, m.item); if (k) S.Inventory[k].Qty = Math.min(num(S.Inventory[k].Qty, 0), craftQty((B || {}).Inventory, m.item) - m.qty); }
-  };
+  const takeMaterials = option => { for (const m of option) bagTake(c, m.item, m.qty); };
   const craftMishap = (made, group) => {
     if (!made.mishap || Object.keys(S.Player.Injuries || {}).some(k => !(((B || {}).Player || {}).Injuries || {})[k])) return;
     const [kind, part, effect] = ((CRAFTS.groups || {})[group] || {}).mishap || ['burn', 'hand', 'tender fingers'];
@@ -3494,7 +3515,7 @@ function stepProficiency(c) {
     gain(stat, xp, a.action);
     if (recipe) {
       takeMaterials(ready.material);
-      if (a.cost) { S.Player.Wallet.Points -= a.cost; S.Player.Wallet.Transactions.push(`-${a.cost} studio practice`); }
+      if (a.cost) ledger(c, 'Points', -a.cost, 'studio practice');
       craftMishap(made, recipe.group);
       if (made.result !== 'failed') {
         const note = `handmade by {{user}}${made.result === 'fine' ? ', fine' : made.result === 'weak' ? ', rough' : ''}`;
@@ -3516,8 +3537,8 @@ function stepProficiency(c) {
       const C = S.$eng.craft || (S.$eng.craft = {}); C.blooms = C.blooms || {}; C.blooms['clearing bloom'] = dayNo;
     }
     if (a.train) S.Training.push({ Track: a.train, Partner: r.With || '' });
-    if (a.cost) { S.Player.Wallet.Points -= a.cost; S.Player.Wallet.Transactions.push(`-${a.cost} studio practice`); }
-    if (a.paid) { P.wk.paid++; S.Player.Wallet.Points += a.paid; S.Player.Wallet.Transactions.push(`+${a.paid} ${a.paidAs || 'paid shift'}`); }
+    if (a.cost) ledger(c, 'Points', -a.cost, 'studio practice');
+    if (a.paid) { P.wk.paid++; ledger(c, 'Points', a.paid, a.paidAs || 'paid shift'); }
     if (a.study && !OFF.has('study') && S.$eng.study) {
       const counted = num(S.$eng.study.mins, 0) - num((((B || {}).$eng || {}).study || {}).mins, 0);
       if (counted < 60) S.$eng.study.mins = num(S.$eng.study.mins, 0) + 60 - Math.max(0, counted);
@@ -3534,9 +3555,8 @@ function stepProficiency(c) {
       log.push('Apothecary sale rejected: sell Healing draught at the Medical Centre, up to three doses per week, from the Bag.');
       continue;
     }
-    S.Inventory[k].Qty -= n; P.wk.sold = num(P.wk.sold, 0) + n;
-    S.Player.Wallet.Points += 15 * n;
-    S.Player.Wallet.Transactions.push(`+${15 * n} Apothecary: ${n} Healing draught${n === 1 ? '' : 's'}`);
+    bagTake(c, k, n); P.wk.sold = num(P.wk.sold, 0) + n;
+    ledger(c, 'Points', 15 * n, `Apothecary: ${n} Healing draught${n === 1 ? '' : 's'}`);
     c.craftSold = [...(c.craftSold || []), name.toLowerCase()];
     log.push(`Medical Centre apothecary bought ${n} Healing draught${n === 1 ? '' : 's'} for ${15 * n} points (${P.wk.sold}/3 this week).`);
   }
@@ -3678,13 +3698,16 @@ function stepHidden(c) {
 
   // 1.12.0 (H3): Points the narrator changed with no Transactions line get one ("not itemised"); a line written later for the same
   // amount replaces it. A new line with no change to Points or Coin changes nothing here: section 8l reminds the narrator.
+  // 1.45.0 (audit 3.5): the engine's own payments (ledger, c.tx) are taken out first: only the narrator's lines and changes count.
   let lineNoPay = '';
+  const WB = ((hasB && B.Player) || {}).Wallet || {}, WS = S.Player.Wallet, TX = c.tx || [];
+  const amt = l => { const m = /^\s*([+−-])\s*([\d,]+)/.exec(String(l)); return m ? (m[1] === '+' ? 1 : -1) * Number(m[2].replace(/,/g, '')) : 0; };
+  const isCoin = l => /\bcoins?\b/i.test(l), engBy = cur => TX.filter(x => x.cur === cur).reduce((a, x) => a + x.delta, 0);
+  const narr = hasB ? newLines([...(WB.Transactions || []), ...TX.map(x => x.line)], WS.Transactions) : [];   // the narrator's new lines
   if (hasB && !toolEdit) {
-    const WB = (B.Player || {}).Wallet || {}, WS = S.Player.Wallet, T0 = new Set(WB.Transactions || []);
-    const amt = l => { const m = /^\s*([+−-])\s*([\d,]+)/.exec(String(l)); return m ? (m[1] === '+' ? 1 : -1) * Number(m[2].replace(/,/g, '')) : 0; };
-    const pts = l => amt(l) && !/\bcoins?\b/i.test(l);
-    const fresh = newLines(WB.Transactions, WS.Transactions).filter(pts);
-    const dP = num(WS.Points, 0) - num(WB.Points, 0), dC = num(WS.Coin, 0) - num(WB.Coin, 0);
+    const T0 = new Set(WB.Transactions || []);
+    const fresh = narr.filter(l => amt(l) && !isCoin(l));
+    const dP = num(WS.Points, 0) - num(WB.Points, 0) - engBy('Points'), dC = num(WS.Coin, 0) - num(WB.Coin, 0) - engBy('Coin');
     if (dP && !fresh.length) WS.Transactions = [...(WS.Transactions || []), `${dP > 0 ? '+' : '-'}${Math.abs(dP)} (not itemised)`];
     else if (!dP && !dC) {
       for (const l of fresh) {
@@ -3695,13 +3718,13 @@ function stepHidden(c) {
   }
   // 1.11.1 (bug hunt): spending more than {{user}} has. The schema stops Points at 0, which made the missing part free; the
   // reply's new Transactions lines show what was spent, so the narrator is told to settle it in the story.
-  if (hasB) {
-    const P0 = num(((B.Player || {}).Wallet || {}).Points, 0);
-    const spent = newLines(((B.Player || {}).Wallet || {}).Transactions, S.Player.Wallet.Transactions).reduce((a, l) => {
-      const m = /^\s*([+−-])\s*([\d,]+)/.exec(String(l)); return m ? a + (m[1] === '+' ? -1 : 1) * Number(m[2].replace(/,/g, '')) : a; }, 0);
-    if (num(S.Player.Wallet.Points, 0) === 0 && spent > P0) {
-      S.$ui.toasts.push('Not enough points');
-      log.push(`{{user}} had ${P0} points but this reply spent ${spent}: the ${spent - P0} missing were not paid (Points stay 0). Settle it in the story (put something back, owe it, pay in coin) and fix Transactions.`);
+  // 1.45.0 (audit 3.5): per currency, from the narrator's own lines, against what {{user}} had after the engine's payments
+  if (hasB) for (const [cur, word] of [['Points', 'points'], ['Coin', 'coin']]) {
+    const P0 = num(WB[cur], 0) + engBy(cur);
+    const spent = narr.filter(l => isCoin(l) === (cur === 'Coin')).reduce((a, l) => a - amt(l), 0);
+    if (num(WS[cur], 0) === 0 && spent > P0) {
+      S.$ui.toasts.push(`Not enough ${word}`);
+      log.push(`{{user}} had ${P0} ${word} but this reply spent ${spent}: the ${spent - P0} missing were not paid (${cur} stay 0). Settle it in the story (put something back, owe it${cur === 'Points' ? ', pay in coin' : ''}) and fix Transactions.`);
     }
   }
   Object.assign(c, { Hd, lineNoPay });
@@ -3719,19 +3742,17 @@ function stepPayout(c) {
       const acad = repLv('Academy');
       if (pay && acad <= -5) pay = Math.floor(pay / 2);          // 1.3.0: academic probation halves the payout
       if (pay) {
-        S.Player.Wallet.Points += pay;
         if (_.isPlainObject(S.$eng.wk)) S.$eng.wk.pay = num(S.$eng.wk.pay, 0) + pay;   // 1.10.0: the routine payout is not news in the recap
-        S.Player.Wallet.Transactions.push(`+${pay} monthly payout (dorm rank ${r || 'unranked'}${acad <= -5 ? ', halved: academic probation' : ''})`);
+        ledger(c, 'Points', pay, `monthly payout (dorm rank ${r || 'unranked'}${acad <= -5 ? ', halved: academic probation' : ''})`);
         log.push(`Monthly payout: +${pay} points (dorm rank ${r || 'unranked'}${acad <= -5 ? ', halved on academic probation' : ''}).`);
       }
       // 1.3.0: Academy +5 bonus, and points from bond rewards (data/bond_rewards.json monthly)
       const extra = [...(acad >= 5 && S.Player.Profile.Dorm !== 'Unsorted' ? [[REP.academy5_monthly, 'honoured student bonus (Academy reputation +5)']] : []),
         ...Object.values(S._Perks || {}).filter(p => p.Kind !== 'memento' && !goneNow(p.From)).map(p => (((REW.npcs || {})[p.From] || {})[p.Kind === 'gift' ? 'gift' : 'r10'] || {}).monthly).filter(Boolean).map(m => REW.monthly[m])];
       for (const [pts, why] of extra) {
-        S.Player.Wallet.Points += pts; if (_.isPlainObject(S.$eng.wk)) S.$eng.wk.pay = num(S.$eng.wk.pay, 0) + pts; S.Player.Wallet.Transactions.push(`+${pts} ${why}`); log.push(`Monthly: +${pts} points, ${why}.`);
+        if (_.isPlainObject(S.$eng.wk)) S.$eng.wk.pay = num(S.$eng.wk.pay, 0) + pts; ledger(c, 'Points', pts, why); log.push(`Monthly: +${pts} points, ${why}.`);
       }
     }
-    S.Player.Wallet.Transactions = S.Player.Wallet.Transactions.slice(-20);
   }
 }
 
@@ -3836,12 +3857,12 @@ function stepRecords(c) {
     if (H.key && !H.given && S.Letters[H.key] && S.Letters[H.key].Status !== 'waiting') {
       H.given = true;
       if (H.parcel && H.parcel.item) {
-        const [n, kind] = H.parcel.item, I = _.isPlainObject(S.Inventory) ? S.Inventory : (S.Inventory = {}), ik = keyIn(I, n) || n;
-        I[ik] = I[ik] || { Qty: 0, Kind: kind, Note: 'from home', Plan: '' }; I[ik].Qty = num(I[ik].Qty, 0) + 1;
+        const [n, kind] = H.parcel.item;
+        bagGive(c, n, 1, kind, 'from home');   // 1.45.0 (audit 3.4)
         log.push(`Parcel from home: ${n} (in the Bag).`); S.$ui.toasts.push(`From home: ${n}`);
       }
       if (H.parcel && H.parcel.coin) {
-        S.Player.Wallet.Coin = num(S.Player.Wallet.Coin, 0) + H.parcel.coin; S.Player.Wallet.Transactions.push(`+${H.parcel.coin} coin from home`);
+        ledger(c, 'Coin', H.parcel.coin, 'from home');
         log.push(`Parcel from home: ${H.parcel.coin} coin.`); S.$ui.toasts.push(`From home: ${H.parcel.coin} coin`);
       }
     }
@@ -3881,8 +3902,7 @@ function stepClubLife(c) {
     const prize = `Kingdom-Y${S.World.Year}`, paid = S.$eng.prizes || (S.$eng.prizes = []);
     if (Co.Tier === 'Kingdom' && Co.Status === 'champion' && !paid.includes(prize)) {   // v1.0.3 (F08): once per year's competition
       paid.push(prize);
-      S.Player.Wallet.Points += KINGDOM_PRIZE;
-      S.Player.Wallet.Transactions = [...S.Player.Wallet.Transactions, `+${KINGDOM_PRIZE} Kingdom Competition prize`].slice(-20);
+      ledger(c, 'Points', KINGDOM_PRIZE, 'Kingdom Competition prize');
       log.push(`Kingdom Competition won: +${KINGDOM_PRIZE} points paid to each member of the team.`);
     }
   }
@@ -3893,8 +3913,7 @@ function stepClubLife(c) {
     const amt = { 1: DORM_PRIZE[0], 2: DORM_PRIZE[1] }[place] || 0, key = `Dorm-Y${S.World.Year}`, paid = S.$eng.prizes || (S.$eng.prizes = []);
     if (amt && !paid.includes(key)) {
       paid.push(key);
-      S.Player.Wallet.Points += amt;
-      S.Player.Wallet.Transactions = [...S.Player.Wallet.Transactions, `+${amt} Dorm Competition prize (${place === 1 ? 'bracket champion' : 'runner-up'})`].slice(-20);
+      ledger(c, 'Points', amt, `Dorm Competition prize (${place === 1 ? 'bracket champion' : 'runner-up'})`);
       log.push(`Dorm Competition: ${place === 1 ? 'bracket champion' : 'runner-up'}, +${amt} points.`);
     }
   }
@@ -4118,14 +4137,13 @@ function stepBag(c) {
       const returned = qty(BI, EB) - qty(I, EB), drank = qty(BI, SF) - qty(I, SF);
       if (returned > 0 && ['commissary', 'the mall', 'mall'].includes(placeOf(S.World.Location).toLowerCase())) {
         const pts = BOTTLE_BACK * returned;
-        S.Player.Wallet.Points += pts;
-        S.Player.Wallet.Transactions = [...S.Player.Wallet.Transactions, `+${pts} returned Sunfizz bottles (${returned})`].slice(-20);
+        ledger(c, 'Points', pts, `returned Sunfizz bottles (${returned})`);
         log.push(`Returned ${returned} Sunfizz bottle${returned > 1 ? 's' : ''}: +${pts} points.`);
       }
       if (drank > 0) {
-        const k = Object.keys(I).find(x => EB.test(x.trim()));
-        if (k) I[k].Qty = Math.min(99, Math.max(0, I[k].Qty) + drank);
-        else I['Empty Sunfizz bottle'] = { Qty: drank, Kind: 'other', Note: 'returnable: 2 points each at the Commissary or the Mall store', Plan: '' };
+        const k = Object.keys(I).find(x => EB.test(x.trim()));   // 1.45.0 (audit 3.4): the Bag ledger
+        const kk = bagGive(c, k || 'Empty Sunfizz bottle', drank, 'other', 'returnable: 2 points each at the Commissary or the Mall store');
+        if (kk) I[kk].Qty = Math.min(99, I[kk].Qty);
       }
     }
     for (const k of Object.keys(I)) if (!(I[k].Qty > 0)) delete I[k];
@@ -4686,6 +4704,7 @@ function stepUi(c) {
 function stepCommit(c) {
   const { S, B, log, hasB, absA } = c;
   S.$eng.abs = absA;
+  if (Array.isArray(S.Player.Wallet.Transactions)) S.Player.Wallet.Transactions = S.Player.Wallet.Transactions.slice(-20);   // 1.45.0 (audit 3.5)
   // 1.7.4: the first update in campaign Year 2 or later dates every line still written in Year 1's plain form ("[M3 W2 Tue]" ->
   // "[Y1 M3 W2 Tue]"); lines of this update already carry their own year (stamp, withYear), so a bare date here is from Year 1.
   if (hasB && (B.World.Year || 1) === 1 && S.World.Year > 1) {
