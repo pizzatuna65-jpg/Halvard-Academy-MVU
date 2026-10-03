@@ -329,7 +329,7 @@ function locCard(id, S, cur, P) {
   // whereabouts (shared.js): a status on record (Campus_State.NPC_status), off sick, or busy elsewhere this period (a student in class,
   // at Study Hall, voting or at their club; a teacher teaching), the same model <now> uses
   const V = presenceView(DATA.presence, S, f => featureOn(S, f)), pk = placeKey(l.name);
-  const note = r => { const w = whereabouts(DATA.presence, V, r); return w.st || (w.sick ? 'off sick' : w.busy && !w.busy[1].includes(pk) ? w.busy[0] : ''); };
+  const note = r => { const w = whereabouts(DATA.presence, V, r); return w.st || (w.sick ? 'off sick' : w.busy && !w.busy[1].includes(pk) ? w.busy[0] : w.rt && w.rt[3] !== pk ? 'usually at ' + w.rt[4] + ' now' : ''); };
   const regIds = id === 'student_council_chamber' ? (((S.Campus_State || {}).Council || {}).Members || []) : l.regulars;
   const regs = regIds.filter(r => atHalvard(r, S) && hauntKnown(r, S)).map(r => (npcOf(r) ? (B[r] ? `<button class="lnk" data-open="npc:${esc(r)}">${esc(nameOf(r, S))}</button>` : esc(nameOf(r, S))) : esc(r))
     + (note(r) ? ` <span class="sub">(${esc(note(r))})</span>` : '')).join(', ');
@@ -340,6 +340,10 @@ function locCard(id, S, cur, P) {
     ['Clubs here', esc(l.clubs.map(c => c.replace(/\s*\(.*\)$/, '')).join(', ') || 'None')],
     ['Regulars', regs || '<span class="sub">Nobody you know yet</span>'],
   ];
+  // 1.52.0 (feature batch 4): the weekly routines here of people whose Haunts you know (data/npc_routines.json, "usually")
+  const usual = Object.entries(DATA.presence.rt || {}).flatMap(([r, rows]) => rows.filter(x => x[3] === pk && atHalvard(r, S) && hauntKnown(r, S))
+    .map(x => `${B[r] ? `<button class="lnk" data-open="npc:${esc(r)}">${esc(nameOf(r, S))}</button>` : esc(nameOf(r, S))} <span class="sub">(usually ${esc(x[6])}${x[5] ? ', ' + esc(x[5]) : ''})</span>`));
+  if (usual.length && featureOn(S, 'npc_routines')) rows.push(['Usually here', usual.join(', ')]);
   // 1.31.0 (owner-approved planning/DRAFT_restore_places.md): a restful place says what resting there restores; where {{user}} is,
   // with the rate the engine set for now
   const rf = (DATA.restful || {})[id], rn = here && (S.$ui || {}).rest;

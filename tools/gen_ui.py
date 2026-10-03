@@ -94,6 +94,13 @@ for nid, n in npcs.items():
         'dc': n.get('dorm_color') or '#6b6b7b', 'd': descriptor(nid, n), 'r': PUBLIC_ROLE.get(nid, ''),
         'p': n['portrait'], 't': n['thumb'], 'fc': n.get('focus') or [50, 25],
         'fl': [[f['label'], f['text'], f['rank']] + ([f['year']] if f.get('year') else []) for f in n['fields']]}   # 1.7.0: [3] = shown from that campaign year
+    # 1.52.0 (feature batch 4): the weekly routine as a dossier field right after Haunts, opened with it
+    _rt = DATA['presence']['rt'].get(nid)
+    if _rt:
+        _fl = DATA['npcs'][nid]['fl']
+        _hi = next((i for i, f in enumerate(_fl) if f[0] == 'Haunts'), None)
+        _row = ['Routine', 'Usually: ' + '; '.join(f"{r[6]} at {r[4]}{', ' + r[5] if r[5] else ''}" for r in _rt) + '.', _fl[_hi][2] if _hi is not None else 1]
+        _fl.insert(_hi + 1 if _hi is not None else len(_fl), _row)
     if n.get('academy') == 'Halvard': DATA['npcs'][nid]['ag'] = 1   # 1.7.4: ages in their fields follow the campaign year (see ageNow)
     CAST[nid] = [n['thumb'], descriptor(nid, n) if nid in ('Irene', 'Caspian') else PUBLIC_ROLE.get(nid) or descriptor(nid, n), first, n.get('dorm_color') or '#6b6b7b']
 for e in json.load(open(P('data/relations.json'), encoding='utf-8')):

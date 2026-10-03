@@ -113,6 +113,9 @@ python tools/audit_chat.py chat.jsonl --out report.md   # optional: character-dr
   4. Rebuild; the engine alias map and UI data regenerate.
   5. Check that `gen_engine.py`'s DENY list doesn't swallow a new name.
 - **Add a feature.**
+  0. First check it is really new and which existing system it plugs into (`docs/INDEX.md`, `src/scripts/shared.js`, DECISIONS):
+     seeded draws, the Agenda, whereabouts, the Area module, `ledger` / `bagTake`, practice sessions, `$ui.now`. Never build a parallel
+     system next to one that exists (owner, 2026-10-04).
   1. Decide the state shape in `schema.js`. Unknown keys are stripped by Zod, so declare every field.
   2. Put engine logic in `engine.template.js`: a new `step*(c)` function in `ENGINE_STEPS`, or a block in the step it belongs to.
   3. Put AI rules in `502` (update rules, `[mvu_update]`) or `504` (narration rules, `[mvu_plot]`).

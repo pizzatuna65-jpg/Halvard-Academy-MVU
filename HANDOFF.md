@@ -3,13 +3,14 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.51.0** (2026-10-04): feature batch 3 of `audit/AUDIT_2026-10-03_4_batch_fitur.md` (audit suggestions 4.8,
-4.9): pair moments from relations {{user}} can see (`pairLine`: Meanwhile, ambience), story relations that fade from Connections
-(`$eng.nrel`, `$ui.relold`), "?" pins and trace beats for open mystery threads. v1.50.0: the routine week; v1.49.0: favours and
-group assignments. Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
+**Snapshot:** card **v1.52.0** (2026-10-04): feature batch 4 of `audit/AUDIT_2026-10-03_4_batch_fitur.md` (audit suggestion 4.7), the
+last of the four feature batches: NPC weekly routines (`data/npc_routines.json`) in the one whereabouts model, held 70% of days by the
+shared `roll100`; `<now>`, the Map's "Usually here", the dossier's Routine field, initiative places; Features `npc_routines`.
+v1.51.0: pair moments and traces; v1.50.0: the routine week; v1.49.0: favours. Live checks: `docs/TEST_CHECKLIST.md` "Open".
+Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** the owner's next "kerjakan batch N" (feature batch 4: NPC routines, 4.7; it starts with a draft and waits for "proceed").
-Live checks v1.51.0 back to v1.42.0 are open.
+**Next task:** the feature batches 4.5–4.10 are done. Live-check v1.52.0 back to v1.42.0 (`docs/TEST_CHECKLIST.md` "Open"), then the
+owner's next request (other suggestions: `audit/AUDIT_2026-10-03_2_saran_fitur_dan_arah.md`).
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

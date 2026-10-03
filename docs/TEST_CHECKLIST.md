@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.52.0 (feature batch 4): the three checks in its section below.
 - v1.51.0 (feature batch 3): the three checks in its section below.
 - v1.50.0 (feature batch 2): the four checks in its section below.
 - v1.49.0 (feature batch 1): the three checks in its section below.
@@ -91,6 +92,13 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.52.0 — Feature batch 4 (NPC routines)
+
+1. Royhan at Rank 1+: open his dossier; a "Routine" line follows Haunts. The Map card for Potion Halls lists him under "Usually here".
+2. Go to the Dovecote on a few Wednesdays around 18:30: on most of them `<now>`'s "Likely around" names Royhan with what he does
+   there; on the others he is not listed. A swipe of the same reply gives the same answer.
+3. Settings → Features → NPC routines off: the "Usually here" row disappears and `<now>` lists only haunts' regulars.
 
 ### v1.51.0 — Feature batch 3 (pair moments, fading story relations, traces)
 

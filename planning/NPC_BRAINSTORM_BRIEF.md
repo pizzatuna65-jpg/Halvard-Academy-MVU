@@ -19,6 +19,8 @@ Rules:
   - **New or fixed lore fields:** `Label: text` lines to add to that NPC's lorebook entry (labels as in the roster: Personality,
     Loves, Hates, Goals, Haunts, Backstory, Relations, Speech, Emotional tells…). Secrets inside `<narrator_only>…</narrator_only>`.
   - **Bond events:** the exact format in §5, one entry per NPC per rank.
+  - **Weekly routine (1.52.0):** 1–3 lines `Days HH:MM–HH:MM Place, what they do` for an NPC who lives at Halvard, from their Haunts,
+    club and role; outside their classes and teaching, students before the 20:00 curfew. They go into `data/npc_routines.json`.
 
 ## 1. World in brief (canon excerpts)
 

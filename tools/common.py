@@ -196,8 +196,26 @@ def presence_data(npcs, locs):
         allout = all(v in out_ids for v in c['venues'])
         for v in c['venues']:
             clubv.setdefault(norm(locs[v]['name']), []).append([c['name'], c['members'], allout, c['key'] == 'Fishing'])
+    # 1.52.0 (owner-approved planning/DRAFT_npc_routines.md, feature batch 4): weekly routines, rt: NPC -> [[days, from, to (minutes),
+    # place key, map name, what they do, the "Mon-Fri 16:00-18:00" label]], rate: the % chance a routine holds on a day (shared roll100)
+    R = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data', 'npc_routines.json'), encoding='utf-8'))
+    W = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    def days(spec):
+        if '-' in spec:
+            a, b = (W.index(x.strip()) for x in spec.split('-'))
+            return [W[(a + i) % 7] for i in range((b - a) % 7 + 1)]
+        return [W[W.index(x.strip())] for x in spec.split(',')]
+    byname = {l['name']: l['name'] for l in locs.values()}
+    mins = lambda s: int(s[:2]) * 60 + int(s[3:])
+    rt = {}
+    for nid, rows in R['npcs'].items():
+        assert nid in npcs and not (npcs[nid].get('group') or '').endswith('team'), nid
+        for d, f, to, place, what in rows:
+            assert place in byname and mins(f) < mins(to), (nid, place, f, to)
+            rt.setdefault(nid, []).append([days(d), mins(f), mins(to), norm(place), place, what, f"{d.replace('-', '–')} {f}–{to}"])
     return {'reg': reg, 'stu': stu, 'arr': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1}, 'teach': teach, 'tt': tt, 'clubv': clubv,
-            'outd': sorted({norm(k) for lid in out_ids for k in place_keys(locs[lid], lid)}), 'vn': {norm(l['name']): l['name'] for l in locs.values()}}
+            'outd': sorted({norm(k) for lid in out_ids for k in place_keys(locs[lid], lid)}), 'vn': {norm(l['name']): l['name'] for l in locs.values()},
+            'rt': rt, 'rate': R['rate']}
 
 
 def campus_map(locs, pins):

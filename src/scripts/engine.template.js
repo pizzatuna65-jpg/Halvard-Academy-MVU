@@ -4190,7 +4190,7 @@ function stepInitiative(c) {
         const gp = ((GIFT_PREFS.npcs || {})[id] || {}).items || {};
         const tomorrow = eventsOn(fromAbs((dayNo + 1) * DAY_MIN));
         const fills = {
-          place: [...String(HAUNT[id] || '').split(/[;,]/).map(x => x.replace(/\(.*?\)/g, '').trim()).filter(Boolean),
+          place: [...(OFF.has('npc_routines') ? [] : ((PRESENCE.rt || {})[id] || []).map(r => r[4])), ...String(HAUNT[id] || '').split(/[;,]/).map(x => x.replace(/\(.*?\)/g, '').trim()).filter(Boolean),   // 1.52.0: routines first
             ...(cat === 'authority' ? [] : INIT_ASKS.places || [])].filter((x, i, a) => a.indexOf(x) === i),
           thing: [...(gp.loved || []), ...(gp.liked || [])],
           club: (INIT_ASKS.club || {})[id] ? [INIT_ASKS.club[id]] : [],
@@ -5129,7 +5129,7 @@ function nowOf(S, moodsFull) {
   if (HERE.pres.length) {
   out.push((HERE.pres.join(' ')));
   }
-  out.push("Likely around " + (HERE.place || 'here') + " (habits, not certainty; an established scene overrides): " + (HERE.regs.length ? HERE.regs.join(', ') : 'no regulars on record'));
+  out.push("Likely around " + (HERE.place || 'here') + " (habits, not certainty; an established scene overrides): " + (HERE.regs.length ? HERE.regs.map(r => (HERE.why || {})[r] ? r + ' (' + HERE.why[r] + ')' : r).join(', ') : 'no regulars on record'));
   if (HERE.moved.length) {
   out.push("Moved indoors in this weather (Gymnasium, Common Rooms): " + (HERE.moved.join(', ')));
   }

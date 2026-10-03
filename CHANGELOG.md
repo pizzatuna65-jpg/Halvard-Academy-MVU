@@ -1,7 +1,31 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.52.0 — Feature batch 4: NPC routines (2026-10-04)
+
+`audit/AUDIT_2026-10-03_4_batch_fitur.md` batch 4 (audit part 2, suggestion 4.7), from the owner-approved
+`planning/DRAFT_npc_routines.md` (now deleted). Save fixture v1.51.0. No new subsystem: the routines are data in the one whereabouts
+model (DECISIONS 1.47.0) and the day's chance is the shared `roll100`.
+- **Data.** `data/npc_routines.json`: 118 light weekly habits for the 59 NPCs who live at Halvard (1–3 each: days, from, to, a Campus
+  Map place, what they do), as approved, including the lore's dawn habits before curfew ends. Rival academy teams have none.
+- **Whereabouts.** `tools/common.py` `presence_data` carries them (`rt`, `rate`); `shared.js` `whereabouts` gives an NPC's routine
+  (`rt`) when no status, sickness, class, teaching, Study Hall, club or the election keeps them and the day's
+  `roll100(seed, day, 'routine', id, row) < rate` (owner: 70, so it is truly "usually"; swipe-safe). `presenceAt`: a regular away on
+  a routine elsewhere is not "Likely around"; someone whose routine is here is, with what they do ("Royhan (stays late near the
+  Dovecote for Dragonchess)").
+- **Uses.** `<now>`'s presence line; initiative and favour `{place}` reach for routine places first; the Map card's new row "Usually
+  here" (people whose Haunts you know) and a regular's note "usually at X now"; the dossier's new "Routine" field, right after Haunts
+  and opened with it (built in `gen_ui.py`, the existing field gate).
+- **Features row `npc_routines`.** Off: NPCs keep to their haunts only, exactly as 1.51.0. The older presence and `<now>` snapshot
+  suites (`test_audit_batch5_v1470`, `test_audit_batch7_v1480`) now run with it off and stay identical; `test_bughunt_v103` F02 moved
+  to 14:00, after Caspian's Sunday-morning routine.
+- **Also** (between 1.51.0 and this release): the routine week's moment day uses the shared `rollInt` instead of a raw hash (same
+  draw); BUILD's "Add a feature" playbook now starts by checking for an existing system to connect to (owner, 2026-10-04).
+- **Tests:** `tests/test_feature_batch4_v1520.cjs` (13 checks: the 70% hold, days outside the routine, the switch, class and
+  teaching first, arrivals, a teacher's routine, the dossier field and its rank, the Map row, initiative places). Full suite passes.
+  UI checked in a local preview (the Map card's "Usually here", the dossier's Routine field).
 
 ## v1.51.0 — Feature batch 3: NPCs seen together, story relations that fade, the living mystery board (2026-10-04)
 
@@ -112,43 +136,6 @@ commits, each proven before the next.
 - **To confirm with the owner:** nothing new. Not removed although the audit listed them: `$ui.file`, `grades.why`, `$ui.craft` (above).
 - **Live checks:** `docs/TEST_CHECKLIST.md` 1.48.0 (compare the prompt in SillyTavern: `<cast>` and `<now>`). The first reply after
   updating has `<now>` without the area, presence, walk, ambience, mood and bond lines (the engine writes `$ui.now` on its first run).
-
-## v1.47.0 — Audit batch 5: the campus as an Area, one whereabouts model (2026-10-03)
-
-`audit/AUDIT_2026-10-03_3_batch_perbaikan.md` batch 5 (audit part 1, items 3.2, 3.3, 3.8). Save fixture v1.46.0. A refactor commit
-(proven identical) and a behaviour commit.
-- **Whereabouts (3.8).** One model answers "where is NPC X now" and "who is likely around here": `shared.js` `presenceView` (the
-  moment: the period and what it holds, flu, weather), `whereabouts` (one NPC: graduated or not arrived yet, a status, off sick, busy
-  in class, at Study Hall, voting, at a club, teaching) and `presenceAt` (a place: the regulars likely here, what the period holds,
-  those the weather moved indoors, clubs meeting here, regulars with a status). Its data is `tools/common.py` `presence_data`. The
-  engine's new `stepHere` writes `$ui.here` (and the class line, `classLineAt`); `<now>` only prints it (the rules and their data left
-  505: `REG`, `STU`, `TEACH`, `TT`, `CLUBV`, `OUTD`, `VN`). The Map card's Regulars use the same `whereabouts`: a teacher now shows
-  "teaching X until …", a sick student "off sick". The section is left out of the bracelet, 505 and 506 (`shared_js(presence=False)`).
-- **Who uses it.** "May be here" (`$ui.maybe`) is `stepHere`'s: a Next plan at this place (its Where read by the campus parser, so "the
-  library" counts), then an appointment within the hour; nobody whose whereabouts keep them away (status, off sick, graduated). NPC
-  initiative skips anyone off sick too. Sunreach's Halvard students and the rival students met in Sunreach and Avalon skip anyone with a
-  status that keeps them away.
-- **The area {{user}} is in (3.3).** `areaNow(S)`: an outside area's key, `campus` on the grounds, `''` off them. `awayIn` is built on it.
-- **The campus as an Area (3.2).** `AR.campus` (a `makeArea` record from `tools/common.py` `campus_map`: every Campus Map place its own
-  node, the `near` minutes as legs, the map pins, the dorm rooms every dorm shares, each dorm's place), parsed by `canonLocation`
-  (`campusPlace`). The new `stepCampus` (4g) walks a move between two campus places the shortest way (each floor climbed a minute; a
-  shared dorm room is in {{user}}'s own dorm): the minutes the clock has not spent are owed (shown in `<now>` until spent, forgiven
-  under 5, cleared at midnight), and a walk of 15 minutes or more costs 5% stamina an hour (owner decision: as in Avalon), with a
-  `_Log` line. `$ui.area.campus`: the walks to the ten nearest map pins plus {{user}}'s own dorm, up to five places close by, the
-  minutes owed. `<now>` lists them ("Walks from here …", "Still on the way …"); 502 has one line on it. Numbers in `data/campus.json`.
-- **Reminders.** R4 reads the campus parser (writing "the Common Rooms" while in one's own dorm no longer triggers it); R3 waits while
-  `<now>` already says a walk is owed.
-- **Proof.** 360 fixture scenarios (`tests/fixtures/presence_scenarios.cjs`: places, periods, Study Hall, clubs, the election, the
-  Council, weather, flu, statuses, graduates, Settings) render a byte-identical `<now>` with 1.46.0's EJS and the new engine; their
-  presence lines are kept in `tests/fixtures/presence_1460.json`. `ENGINE_DIFF` against 1.46.0 identical over the full suite except
-  the new `$ui.here` (the refactor commit).
-- **Tests:** `tests/test_audit_batch5_v1470.cjs` (the presence block against 1.46.0, one model for one NPC, `areaNow`, walks, owed
-  minutes, stamina, `<now>`, R3 and R4, "May be here" and its status filter); `test_map_gates_v1240` and `test_year2_v174` read the
-  class line from the engine. Full suite.
-- **To confirm with the owner:** the stamina threshold (a walk of 15 minutes or more; shorter walks cost nothing) and the five-minute
-  grace before owed minutes show, both in `data/campus.json`.
-- **Live checks:** `docs/TEST_CHECKLIST.md` 1.47.0. The first reply after updating has no presence block (the engine writes `$ui.here`
-  on its first run); every later one has it.
 
 ## Release index (one line per release, oldest first)
 
@@ -277,3 +264,4 @@ commits, each proven before the next.
 - **v1.49.0 (2026-10-03):** Feature batch 1: favours asked through NPC initiative (Commitment Type "favour": kept = help, ignored = Tension) and group assignments (study time, a study interaction for each partner, Tension when overdue).
 - **v1.50.0 (2026-10-03):** Feature batch 2: the routine week (a weekly plan in the Planner, lived in one reply to Sunday evening or the evening before the next event or due date; counted within the weekly limits; one or two moments played).
 - **v1.51.0 (2026-10-04):** Feature batch 3: NPC pair moments from visible relations (Meanwhile, ambience), story relations that fade from Connections, "?" pins and trace beats for open mystery threads.
+- **v1.52.0 (2026-10-04):** Feature batch 4: NPC weekly routines in the one whereabouts model (70% a day by the shared roll; `<now>`, Map "Usually here", the dossier's Routine field, initiative places), switchable in Features.

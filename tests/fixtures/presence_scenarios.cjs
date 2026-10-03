@@ -9,7 +9,7 @@ const PLACES = ['Canteen', 'Main Library', 'Lecture Halls — Floor 2', 'Lecture
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], TIMES = ['07:30', '08:30', '09:40', '11:05', '13:10', '14:20', '15:40', '17:00', '21:00'];
 const ROLES = ['', 'Attack', 'Healing', 'Control, Defense', 'Support'], DORMS = ['Fire', 'Light', 'Sky', 'Viridian', 'Unsorted'];
 const pick = (a, i, k) => a[(i * k + Math.floor(i / a.length)) % a.length];
-function scenario(i, E) {
+function scenario(i, E, off) {   // 1.52.0: off = Features to turn off (the routines, to compare with older releases)
   const S = initState();
   const m = i % 5 === 0 ? 10 + (i % 2) : 1 + (i * 7) % 11, w = 1 + (i * 3) % 4, Y = i % 9 === 0 ? 2 : 1;
   S.World = { ...S.World, Year: Y, Month: m, Week: i % 23 === 0 ? 3 : w, Day: i % 23 === 0 ? 'Sat' : pick(DAYS, i, 3), Time: i % 23 === 0 ? '13:10' : pick(TIMES, i, 5), Location: pick(PLACES, i, 7) };
@@ -19,6 +19,7 @@ function scenario(i, E) {
   if (i % 4 === 0) S.Campus_State.Council = { ...(S.Campus_State.Council || {}), Members: ['Caspian', 'Aria Vale', 'Kanae'] };
   if (i % 13 === 0) S.$ui.off = ['class'];
   if (i % 17 === 0) S.$ui.wxfx = 'flavor';
+  if (off) S.$ui.off = [...(S.$ui.off || []), ...off];
   S.$eng.abs = E.toAbs(S.World);
   const A = Schema.parse(S); runEngine(A); return Schema.parse(A);
 }

@@ -13,7 +13,8 @@ const { scenario, N } = require('./fixtures/presence_scenarios.cjs');
 const REC = JSON.parse(read('tests/fixtures/presence_1460.json'));
 const PRES = /^(Students |Study Hall|Student Council (meets|members)|Likely around|Moved indoors|Club time|Regulars here|Your class now|Free period|Presence:)/;
 const bad = [];
-for (let i = 0; i < N; i++) { const got = now(scenario(i, E)).split('\n').filter(l => PRES.test(l)); if (JSON.stringify(got) !== JSON.stringify(REC[i])) bad.push(i); }
+// 1.52.0: with the NPC routines off (Features), as before them
+for (let i = 0; i < N; i++) { const got = now(scenario(i, E, ['npc_routines'])).split('\n').filter(l => PRES.test(l)); if (JSON.stringify(got) !== JSON.stringify(REC[i])) bad.push(i); }
 ok(REC.length === N && !bad.length, `every scenario's presence block is the same (${N} scenarios: places, periods, Study Hall, clubs, the election, the Council, weather, flu, statuses, graduates, Settings)` + (bad.length ? ': differs in ' + bad.slice(0, 5).join(', ') : ''));
 const lines = REC.flat();
 ok(['Likely around', 'Students are in class', 'Students are at Study Hall', 'Your class', 'Free period', 'Club time', 'Moved indoors', 'Regulars here', 'Students vote', 'Student Council', 'Presence: after']

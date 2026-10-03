@@ -71,6 +71,9 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
   by the engine (listed price at its shop and in season; otherwise the narrator's Price as a story price; points on campus, coin away).
   Training is one `/Practice` session with a Track (`/Training` still read); one Rank 4 partner rule for every track in
   `rank4_partners.json` (mana, stamina, study; owner decision, proposal adopted).
+- **NPC routines** (1.52.0, owner-approved draft): light weekly habits are data in the one whereabouts model, below status, sickness,
+  class, teaching, Study Hall, clubs and the election, above haunts; a routine holds on a day by the shared `roll100` at 70% (owner).
+  Dossier and Map show them as "usually", gated by the Haunts field. Lore dawn habits before curfew ends are kept as written.
 - **NPCs seen together, traces** (1.51.0, feature batch 3): pair moments use only relation lines Connections shows {{user}}, with
   generic public-behaviour wording; a story relation fades after four weeks unrenewed and hides after eight (kept in the state). A
   trace beat only names the open thread; what is found is the narrator's, true to the lore, never a solution.
