@@ -1,7 +1,38 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.52.2 — Preset audit 2, tier 1: one home per rule, a lighter CoT (2026-10-04)
+
+Owner-approved `planning/DRAFT_preset_audit_2.md` (tier 1; deleted, `git show bdcc889:planning/DRAFT_preset_audit_2.md`). Preset only: the card's rules, engine and UI are
+unchanged. Save fixture v1.52.1. Measured as SillyTavern sends it ({{user}} replaced before `{{// }}` notes are removed, macros.js),
+the enabled preset prompts went from **17,245 to 15,444 tokens (−1,801, 10%)**, the depth-0 block after the chat from **5,447 to
+4,435 (−1,012, 19%)**. No toggle changed: owner's 4–7 paragraphs, Embellish, Hybrid POV, Internal Thoughts and Player Input
+Authority stay; adult toggles stay opt-in; Monomania and its gate stay ON (1.11.2 D1); Anti-Comparative and Anti-Therapist untouched.
+- **BOLT CoT (2,511 → 1,812).** It points to the rules instead of restating them: task 1 no longer writes an example each turn,
+  task 4 applies `<prose_rules>` "without listing them" (it used to have the model list them in its reasoning every turn), task 5
+  points to `<npc_voice>` and `<human_vocal_limits>` instead of copying ±420 tokens of them, task 6's "NPC anti-repeat rule" (a name
+  nothing defines) is now "No echoes", task 8 drops the `<colored_dialogue>` check (that toggle stays OFF with this card, 1.37.0),
+  task 9 says the two opt-in adult modes in one sentence. Tasks 0, 2, 7, 10 and rules A–D are unchanged.
+- **Cosmos last-mile gates** (Contrast 282 → 121, Vocation 250 → 161): short reminders at depth 0; their killswitches keep every
+  form, exception and example.
+- **One rule, one home:** full commitment ("hovering hands") in `<realistic_bold_characters>` (dropped from the instinct gate and
+  BOLT); the card outranking style rules in `<card_fidelity>` (dropped from `<npc_voice>`); distinct voices as one `<npc_voice>` line
+  (three bullets and `<scene_engine>`'s idiolect sentence); em dashes in `<banned_constructs>`; narration flow in `<syntax_flow>`,
+  negation-as-description in `<banned_constructs>`, micro-tells in `<do_not_repeat_descriptions>` (all dropped from Cinematic
+  Realism); `<npc_voice>` loses a narration rule that sat in its dialogue-only tag and a line repeating METHOD; jargon in Monomania
+  (dropped from Anti-Omniscient); "never draft in reasoning" in BOLT rule B (dropped from Main); two craft lines of the jailbreak that
+  `<scene_engine>` states word for word.
+- **Internal Thoughts (489 → 363):** our own 1.37.3 text, the same five rules in fewer words.
+- **Measuring.** `tests/token_audit.cjs` stripped `{{// }}` notes before replacing `{{user}}`, so a note holding `{{user}}` left a
+  fragment in the count: the preset was reported ±630 tokens too large (17,877). It now follows ST's order.
+- **Tests:** `test_preset` (one pin moved to Card Fidelity; new: no rule lists or colour check in BOLT, short gates pointing to their
+  killswitches, one home per rule, a size budget of 15,600), `test_npc_thoughts_v1373`, `test_saves` (new 1.52.1 fixture), `qa_static`,
+  `test_tokens_v1110` pass; the preset builds identically twice.
+- **To check live** (TEST_CHECKLIST 1.52.2): shorter reasoning still opening with "Now:"; "not X but Y" and trade talk not rising
+  with the short gates; voices still distinct and NPCs still committing; the thoughts block still before `<UpdateVariable>`.
+- **Next (FUTURE_PLANS):** tier 2 (±900–1,000 more, trims unique upstream text) after the live check.
 
 ## v1.52.1 — Commitment "Where" is the meeting place (2026-10-04)
 
@@ -112,46 +143,6 @@ exists: Commitments and the Agenda, initiative, the `help` / `study` interaction
 - **Tests:** `tests/test_feature_batch1_v1490.cjs` (24 checks); `test_audit_batch7_v1480` skips the one recorded `<now>` that is now a
   favour day; `test_batch3_fp11_v1102` accepts favour reasons. Full suite passes.
 - **To confirm with the owner:** the favour templates and numbers (30%, two a week, Tension +5 / +3) are maintainer-written defaults.
-
-## v1.48.0 — Audit batch 7: `$ui.now`, the Cast Sheet per NPC, the state diet (2026-10-03)
-
-`audit/AUDIT_2026-10-03_3_batch_perbaikan.md` batch 7, the last (audit part 1, items 2.6, 2.7, 2.9, 3.11). Save fixture v1.47.0. Four
-commits, each proven before the next.
-- **The Cast Sheet, one entry per NPC (2.7).** The 679 KB template is now a head (509: `<cast>` and the shared header), one sheet per
-  NPC (uid 600+, each with the helpers and only its own NPC's data; sources `509_sheet.template.ejs`) and a tail (599: ties, Extras,
-  `</cast>`), all @D1 with orders 300-390 so they join in the same order before `<now>`. Each sheet opens with `@@if <the NPC is in
-  $ui.cast>`. Verified in the sources: ST-Prompt-Template evaluates `@@if` on `WORLDINFO_ENTRIES_LOADED` and drops a failing entry
-  before the scan (`handler.ts` `applyDecorators`, `worldinfo.ts` `isConditionFiltedEntry`), so a generate compiles only the sheets of
-  the people present; SillyTavern strips any leading `@@` line from the content (`world-info.js` `parseDecorators`) and joins one
-  depth's entries with "\n" in ascending order (`script.js`, `world-info.js`). `build_card.py` keeps decorator lines before the block
-  scope. The gate 510 is unchanged.
-- **`<now>`'s rule lines from the engine (3.11).** The new last step `stepNow` writes `$ui.now`: the outside area block, presence and the
-  class line (1.47.0's `$ui.here` is folded in), the campus walks, ambience, moods, and each present character's bond, Trust, Tension,
-  recent moments and teasing. The code is `<now>`'s own, moved verbatim into `nowOf(S)` (with its own `getvar`); `<now>` prints each
-  list in its place and no longer holds those rules or their data (`tools/common.py` `now_data`, `AGE_JS`; the engine template now also
-  goes through `fill_data`).
-- **State diet (2.6).** `$ui.moods` keeps `{ mood }` (the reasons are only in `<now>`'s mood lines); an area's walks and places nearby
-  leave `$ui.area` (they are `<now>`'s lines; the Map walks the shared graph itself). Kept on purpose: `$ui.file` (the Builder record,
-  DECISIONS §2), `grades.why` (only the engine can compute it), `$ui.craft` (only at a craft place; its roll and modifiers are the
-  record), `practice` (tiny). Measured with the new `tests/stress/state_size.cjs` (200 messages of ordinary play, 45 bonds):
-
-  | | stat_data, last message | average | summed over the chat |
-  |---|---|---|---|
-  | 1.47.0 | 42.4 KB | 35.4 KB | 7,083 KB |
-  | `$ui.now` alone | 44.6 KB | 37.0 KB | 7,399 KB |
-  | 1.48.0 (with the diet) | 43.1 KB | 35.4 KB | 7,072 KB |
-- **Small items (2.9).** The weather cache holds two years of days, so building a year's happenings no longer empties it; the red-dot
-  record `eld_seen` drops a proficiency's older rank keys and keeps at most 800 keys; the default theme passes the panels' HTML through
-  untouched.
-- **Proof.** `<cast>`: 240 scenarios byte-identical between 1.47.0's one template and the per-NPC entries (hashes in
-  `tests/fixtures/cast_1470.json`). `<now>`: the new harness option `NOW_DIFF=<older card>` renders `<now>` of both releases on every
-  engine run of the whole suite: 8,200 renders identical (with `ENGINE_DIFF` identical apart from `$ui.now` / `$ui.here`); 112 update
-  chains (campus, forest, Avalon, airship, Sunreach) kept as hashes in `tests/fixtures/now_1470.json`; still identical after the diet.
-- **Tests:** `tests/test_audit_batch7_v1480.cjs`; `harness.cjs` `renderEntry` renders an entry as ST does (the Cast Sheet as a group;
-  17 suites use it); suites that read moved text or the trimmed fields read the engine and `$ui.now`. Full suite.
-- **To confirm with the owner:** nothing new. Not removed although the audit listed them: `$ui.file`, `grades.why`, `$ui.craft` (above).
-- **Live checks:** `docs/TEST_CHECKLIST.md` 1.48.0 (compare the prompt in SillyTavern: `<cast>` and `<now>`). The first reply after
-  updating has `<now>` without the area, presence, walk, ambience, mood and bond lines (the engine writes `$ui.now` on its first run).
 
 ## Release index (one line per release, oldest first)
 
@@ -282,3 +273,4 @@ commits, each proven before the next.
 - **v1.51.0 (2026-10-04):** Feature batch 3: NPC pair moments from visible relations (Meanwhile, ambience), story relations that fade from Connections, "?" pins and trace beats for open mystery threads.
 - **v1.52.0 (2026-10-04):** Feature batch 4: NPC weekly routines in the one whereabouts model (70% a day by the shared roll; `<now>`, Map "Usually here", the dossier's Routine field, initiative places), switchable in Features.
 - **v1.52.1 (2026-10-04):** 502: a Commitment's Where is the meeting place, not where it was arranged (Clues and Projects Where clarified too).
+- **v1.52.2 (2026-10-04):** Preset audit 2, tier 1: BOLT points to the rules instead of restating them, short Cosmos last-mile gates, one home per rule, Internal Thoughts tightened (17,245 → 15,444 tokens as sent; depth 0 −19%); `token_audit` counts the preset as ST sends it.

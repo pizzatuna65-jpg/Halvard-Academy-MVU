@@ -34,6 +34,7 @@ They keep a second game state in a hidden HTML block that must sit "at the absol
   - Since 1.6.2 the CoT names no card field outside the `Now:` line; the Bridge is the one Eldrasil-specific prompt.
   - 1.11.2 (preset audit): no DnD d20 rolls next to the card's Fortune roll, no checks for toggles that stay OFF on Gemini (Staccato, Anti-Briefing, Quant Hardening), and the old task 8 is gone, so the tasks run 0-10.
   - The two Gemini-OFF checks are now conditional.
+  - 1.52.2 (preset audit 2): the tasks point to the modules instead of restating them; the model no longer lists the prose rules or writes an example in its reasoning each turn; no check for the colour toggles, which stay OFF with this card. The two Cosmos last-mile gates are short reminders of their killswitches, and each craft rule lives in one module.
 - **Gemini jailbreak:** genre set to "magic academy, slice of life with a mystery, dark where earned". It also respects the card rule that {{user}}'s power level is the player's choice.
 - **Pop in Graphics:** letter, notice and page templates replace phone and terminal. The bracelet and stats are never drawn as graphics.
 - **Colored Dialogue 2.0:** never colours inside `<UpdateVariable>`. Since 1.37.0 the card colours dialogue itself (`<say:Name>`), so both preset colour toggles stay OFF; VectFox's cleaning patterns drop the `<say>` tags too.
@@ -55,7 +56,7 @@ ST runs preset regexes before the card's, so the preset's display regexes cannot
 
 **Settings:** web search OFF (no search grounding in roleplay). Temperature 1.0 and top-p 0.95, following Google's Gemini 3 guidance; the original 0.7 and 0.8 were tuned for Mimo. Reasoning medium, thoughts shown.
 
-**Size:** always-on preset prompt ~23.6k (original) → ~15.9k tokens (1.11.2; it had grown to ~16.9k with the 1.5–1.6 writing rules), and no tracker block in every reply.
+**Size:** always-on preset prompt ~23.6k (original) → ~15.9k tokens (1.11.2; it had grown to ~16.9k with the 1.5–1.6 writing rules), and no tracker block in every reply. 1.52.2 (preset audit 2, tier 1): 17,245 → 15,444 tokens as SillyTavern sends them ({{user}} replaced before `{{// }}` notes go; the older figures counted note fragments), 4,435 of them at depth 0; `test_preset` keeps a budget of 15,600.
 
 **1.11.2 preset audit:** adult lines left in always-on prompts moved to the adult toggles or were removed (adult content is opt-in); the jailbreak no longer names the card's setting or {{user}}'s year, defers to the card's own resolution rule and invents no stakes; duplicate rules merged (Attentional Salience into `<do_not_repeat_descriptions>`, OFF); 18 display regexes that only styled the OFF trackers are disabled. Occupational Monomania and its Vocation Gate stay ON.
 

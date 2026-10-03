@@ -34,6 +34,12 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
   tapi Notebook sudah menampilkan kalender 14 hari dan kalender penuh; kalau mau, ganti dengan info lain (mis. happening besok).
 - **Portrait Hall, Broken Statue, sumpah di Cathedral** (activity yang owner scrap 2026-09-30): tetap tanpa activity.
 
+- **Audit preset ke-2, tingkat 2** (owner 2026-10-04: setelah uji live tingkat 1 di 1.52.2): memangkas isi unik modul upstream,
+  ±900–1.000 token: Don't Speak Like a Therapist (padatkan daftar gerakan dan REDIRECT, ±200), Monomania (tiga contoh perbaikan dan
+  paragraf penutup, ±150), NPC Voice (contoh CAPS dan "grape soda", ±120), Anti-Sycophancy (padatkan prosedur, ±100), Human Vocal
+  Limits, HQ NPC Genesis dan paragraf "Scene end" Scene Engine (±300). Risiko: gaya Gemini bisa bergeser; port RF berikutnya lebih
+  repot. Detail: `git show bdcc889:planning/DRAFT_preset_audit_2.md` (dihapus di 1.52.2).
+
 ## 3. Sisa audit 2026-09-29 (sengaja ditunda)
 - **A8** Cast Sheet 509 (±515 KB EJS): pecah per NPC hanya kalau terbukti ada lag saat prompt dibangun di ST (compile lokal ±7,7 ms).
 - **A10** PNG kartu ±8 MB (JSON disematkan dua kali, `chara` + `ccv3`): `chara` ringkas hanya setelah kompatibilitas pembaca v2 dicek.
@@ -45,7 +51,7 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
   "biarkan dulu".
 - Siswa yang ditahan cerita (dihapus dari `Campus_State.Graduated`) tidak lulus otomatis di tahun berikutnya (roster: "repeating").
 - Review spoiler: `data/field_overrides.json` dan `data/_review_sensitive_flags.json` (tertunda sejak Batch 1).
-- Preset: varian MAX dan Micro CoT belum diadaptasi (hanya BOLT).
+- Preset: varian MAX CoT belum diadaptasi (hanya BOLT). Micro CoT tidak perlu: sejak 1.52.2 BOLT (±1.810 token) sudah tidak lebih berat dari Micro (±1.840).
 
 ## 5. Angka yang bisa disetel setelah playtest
 - Cuaca dan kondisi: bobot cuaca dan rare event, `FC_TRUE` 75, ambang kondisi (20/5/30/60 menit, 0/8/28 °C), peluang Head cold,

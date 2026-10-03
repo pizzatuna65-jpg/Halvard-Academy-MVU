@@ -3,15 +3,17 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.52.1** (2026-10-04): 502 now says a Commitment's Where is the meeting place, not where it was arranged
-(found in the owner's chat). v1.52.0: feature batch 4 of `audit/AUDIT_2026-10-03_4_batch_fitur.md` (audit suggestion 4.7), the
+**Snapshot:** card **v1.52.2** (2026-10-04): preset audit 2, tier 1 (preset only): BOLT points to the rules instead of
+restating them, short Cosmos last-mile gates, one home per rule; 17,245 → 15,444 preset tokens as sent (depth 0 −19%), no toggle
+changed. Narrator-load audit with 8 batches: `audit/AUDIT_2026-10-04_1_beban_narator.md` §6. v1.52.1: 502 says a Commitment's Where
+is the meeting place. v1.52.0: feature batch 4 of `audit/AUDIT_2026-10-03_4_batch_fitur.md` (audit suggestion 4.7), the
 last of the four feature batches: NPC weekly routines (`data/npc_routines.json`) in the one whereabouts model, held 70% of days by the
 shared `roll100`; `<now>`, the Map's "Usually here", the dossier's Routine field, initiative places; Features `npc_routines`.
 v1.51.0: pair moments and traces; v1.50.0: the routine week; v1.49.0: favours. Live checks: `docs/TEST_CHECKLIST.md` "Open".
 Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** the feature batches 4.5–4.10 are done. Live-check v1.52.1 back to v1.42.0 (`docs/TEST_CHECKLIST.md` "Open"), then the
-owner's next request (other suggestions: `audit/AUDIT_2026-10-03_2_saran_fitur_dan_arah.md`).
+**Next task:** live-check v1.52.2 (preset) and the open list in `docs/TEST_CHECKLIST.md`; then the owner's next request, most
+likely a batch of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6 ("kerjakan batch N"). Preset tier 2: `planning/FUTURE_PLANS.md`.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

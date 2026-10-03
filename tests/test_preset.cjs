@@ -31,7 +31,7 @@ ok(!/NPCs are flawed, panic-prone/.test(C('Instincts + VAD')) && /get worse in t
 ok(/<character_calibration>[\s\S]*Personality is a ceiling, not a mood[\s\S]*<\/character_calibration>/.test(C('Instincts + VAD')), 'D2 calibration (with the P8 ceiling line)');
 // 1.36.0: the active <npc_voice> is RF2.2.1's Cosmos (Gemini) edition; the Micro voice is OFF
 const voice = byName('NPC Voice + Dialogue Output: Cosmos');
-ok(enabled('NPC Voice + Dialogue Output: Cosmos') && !enabled('🎤NPC Voice + Dialogue Output') && /outranks every rule in this tag/.test(voice.content) && /Direct people speak directly/.test(voice.content), 'U4 + D3 in the active <npc_voice>');
+ok(enabled('NPC Voice + Dialogue Output: Cosmos') && !enabled('🎤NPC Voice + Dialogue Output') && /Direct people speak directly/.test(voice.content) && /a style rule in this prompt and the card describe the same thing differently, the card's version/.test(C('Card Fidelity')), 'U4 + D3: the active <npc_voice>; the card outranking style rules lives in <card_fidelity> (1.52.2)');
 ok(/unless the card records that they already know them/.test(C('Anti-Omniscient')) && /No foreshadowing narration/.test(C('Anti-Omniscient')), 'U11 + D7 in <anti_omniscient_NPCs>');
 ok(/canon: for a character with a lorebook entry or character sheet/.test(C('Main Prompt')), 'U9 in <NPC_intro>');
 ok(/one question mark per character per reply/.test(C("Don't Speak Like a Therapist")), 'U12: question cap per character');
@@ -115,3 +115,13 @@ ok(['BOLT Chain of Thought', 'Player Input Authority'].every(f => byName(f).role
 ok(enabled('Embellish Mode') && !enabled('Anti-parrot') && !/only 1 or 2 key elements/.test(C('Embellish Mode')) && /follow <input_authority>/.test(C('Embellish Mode')), 'owner: Embellish Mode instead of Anti-parrot, answering the whole input');
 const E3 = ['Card Fidelity', 'Scene Engine', 'Pacing: Cosmos', "Looks at a Stranger's Scale", 'Embellish Mode', 'Anti-Comparative Emphasis: Cosmos', 'Occupational Monomania Killswitch: Cosmos'].map(C).concat(voice.content).map(noNotes).join('\n');
 ok(!CARD.test(E3), '1.36.0 texts are generic' + (CARD.test(E3) ? ': ' + E3.match(CARD)[0] : ''));
+// ---- 1.52.2 preset audit 2 (tier 1): BOLT points to the rules, short last-mile gates, one home per rule, a size guard
+{
+  const sent = t => String(t || '').replace(/\{\{user\}\}/gi, 'Aria').replace(/\{\{\/\/[\s\S]*?\}\}/g, '').replace(/\{\{(setvar|getvar)::[^}]*\}\}/g, '').replace(/\{\{trim\}\}/g, '').replace(/\{\{lastUserMessage\}\}/g, '').trim();
+  ok(!/colored_dialogue|list them concisely|listing the rules briefly|I must provide a brief example/.test(noNotes(bolt)), 'BOLT: no check for the colour toggle that stays OFF, no rule lists or examples in the reasoning');
+  ok(/without listing them/.test(bolt) && /voiced per <npc_voice> and <human_vocal_limits>/.test(bolt), 'BOLT tasks 4 and 5 point to the rules instead of copying them');
+  ok(/per <comparative_emphasis_killswitch>/.test(C('Last-Mile Contrast Gate: Cosmos')) && /per <occupational_monomania_killswitch>/.test(C('Last-Mile Vocation Gate: Cosmos')) && sent(C('Last-Mile Contrast Gate: Cosmos')).length < 600, 'the two Cosmos gates are short reminders of their killswitches');
+  ok(!/hovering hands/.test(C('Instincts + VAD')) && !/Diction Friction|Anti-Smoothing|Em dashes and ellipses allowed/.test(voice.content) && !/distinct idiolect/.test(C('Scene Engine')) && /Distinct voices:/.test(voice.content), 'one home per rule (commitment, voices, em dashes)');
+  const on = new Set(order.filter(o => o.enabled).map(o => o.identifier)), size = Math.round(P.prompts.filter(p => on.has(p.identifier) && p.content && !p.marker).reduce((a, p) => a + sent(p.content).length, 0) / 3.6);
+  ok(size <= 15600, `enabled preset prompts stay within budget (${size} tokens as sent, budget 15600)`);
+}

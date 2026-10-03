@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.52.2 (preset audit 2): the four checks in its section below.
 - v1.52.1 (Commitment Where): the check in its section below.
 - v1.52.0 (feature batch 4): the three checks in its section below.
 - v1.51.0 (feature batch 3): the three checks in its section below.
@@ -93,6 +94,18 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.52.2 — Preset audit 2, tier 1 (preset only)
+
+Import the rebuilt preset (`presets/Realistic_Frankenstein_2_2_Eldrasil.json`) and play ten or so ordinary turns with two or three
+people present.
+1. The reasoning is shorter than before (no list of prose rules, no example line each turn) and still opens with "Now: M? W? Day
+   HH:MM at <place>" (VectFox reads it).
+2. "Not X, but Y" / "It wasn't X. It was Y." and unprompted trade talk do not come back more often than before with the short gates.
+   If they do, say so: the old gates return.
+3. NPCs still sound distinct from each other and still carry out what they decide (no hovering hands), and a nervous character keeps
+   their stalls.
+4. The folded 🧠 Thoughts block still comes after the story and before `<UpdateVariable>`.
 
 ### v1.52.1 — Commitment "Where" is the meeting place
 

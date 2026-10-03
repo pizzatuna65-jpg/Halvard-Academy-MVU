@@ -475,5 +475,85 @@ d['extensions']['regex_scripts'] += [
      'trimStrings': [], 'placement': [2], 'disabled': True, 'markdownOnly': False, 'promptOnly': True, 'runOnEdit': True, 'substituteRegex': 0, 'minDepth': None, 'maxDepth': None}]
 log.append(('REGEX NEW', 'NPC Thoughts: fold (display), drop from older replies (prompt, depth 3+)', '1.37.3'))
 
+# ---- 16. 1.52.2: preset audit 2, tier 1 (owner-approved planning/DRAFT_preset_audit_2.md, in git). Every rule stays, in one home:
+# BOLT points to the rules instead of restating them (and no longer has the model list rules or write examples in its reasoning),
+# the two Cosmos last-mile gates are short reminders of their killswitches, duplicates leave the modules that are not their home.
+def between(s, a, b):
+    i = s.index(a); return s[i:s.index(b, i)]
+t = P[B]['content']
+P[B]['content'] = (t[:t.index('# Reasoning Rules')] + between(t, '# Reasoning Rules', '0. Game state') + between(t, '0. Game state', '1. Strict neutrality')
+    + """1. Strict neutrality: as a neutral model I let {{user}}'s actions succeed or fail, and treat {{user}} and NPCs equally within the simulation. Each NPC chases their own goal, true to their card and current VAD, and carries out what they decide per <realistic_bold_characters>, unless their card makes hesitation part of who they are. If the card gives a roll for uncertain attempts, I use it only as the card's rule says.
+Mode check first: if <freaky_supremacy> is present, taste-independence, agency friction and <instinct_autonomy_gate> are SUSPENDED — NPC wants align eagerly with {{user}}'s, instinct overrides judgment, and I skip the derivation. Otherwise a taste the card leaves blank is derived per <abolish_yesman_behaviour>, never from {{user}}, and kept for the whole chat; for any instinct firing this turn I name what the NPC's own judgment does with it per <instinct_autonomy_gate>, and nothing happens merely because {{user}} repeated a move that worked earlier.
+
+""" + between(t, '2. State update plan', '3. Scope/Knowledge')
+    + """3. Scope/Knowledge: NPCs act only on this scene's physical reality and on what they could know, per <anti_omniscient_NPCs> (anti-bridging, smell, sound, thought and evidence rules). A smell I was about to write must pass <sensory_salience>; if not, I cut it and give the space to action or want.
+
+4. Prose style: I apply <prose_rules>, <syntax_flow> and <do_not_repeat_descriptions> to this scene without listing them: nothing repeated or semantically re-skinned from the last 4 messages, generic patterns outcompeted with lived-in detail, any "not X, it's Y" flip or reflexive triad flattened into one direct line, filler "genuinely/truly" cut (<comparative_emphasis_killswitch>, <break_the_triad>, <resolution_competition>, <emission_limits>, <filler_intensifier>).
+
+5. Natural dialogue: for each NPC who speaks, what they want and feel this instant (<vad_emotion>, active <npc_instincts>), voiced per <npc_voice> and <human_vocal_limits> in their own idiolect, with expressive punctuation and non-lexical sounds (ugh, mmph, shhh) when logical; a character whose card or first message makes nerves part of who they are keeps their stalls, restarts and fragments. Skip if emotions are ordinary.
+
+6. User boundaries: I apply the correct <POV> and <user_autonomy>, and reuse no beat, joke or reaction from earlier replies (No echoes, <realistic_bold_characters>). If <realist_gemini> is present, I follow its instructions to a tee.
+
+""" + between(t, '7. Cast check', '8. Formatting')
+    + """8. Formatting: if <gfx_protocol> is present, is it appropriate for this scene? I note the length range in <formatting_constraints> (if the tag is not present, a logical length; close enough is fine). Output order: the story (any gfx sits inline where it occurs), then, if <internal_npcthoughts> is present, its one <npc_thoughts> block, then, if <update_format> is present, exactly one <UpdateVariable> block as the very last thing. Nothing follows it, and I never emit <details>, internal-states or tracker HTML.
+
+9. Modes: if <freaky_supremacy> is present (Freaky Mode), its <adult_mode> rules apply to every scene; otherwise, if <adult_mode> is present (Realism Mode), I apply it where the scene calls for it. Neither repeats descriptions from the last 4 turns. Skip if neither is present.
+
+""" + between(t, '10. Plot Momentum', 'I am a GM')
+    + "I am a GM running an immersive simulation, not a helpful assistant: bold choices matter more than perfection. Concise task notes only, then I close the reasoning and write the final response immediately.")
+log.append(('EDIT', P[B]['name'], 'audit 2: points to the rules, no rule lists or examples in the reasoning, no <colored_dialogue> check'))
+for frag, tag, text in [
+    ('Last-Mile Contrast Gate: Cosmos', 'final_contrast_gate', 'Silent pre-output check, first line to last, in narration and dialogue alike: no line defines, explains or forecasts something by negating or shrinking a rival version of it ("not X, but Y", "It wasn\'t X. It was Y.", "X will not simply Y"). Delete the negated half and state the true one directly, per <comparative_emphasis_killswitch>. Earlier messages in this chat are not a style license.'),
+    ('Last-Mile Vocation Gate: Cosmos', 'final_vocation_gate', "Silent pre-output check: is anyone's job supplying material the scene did not ask for (trade talk filling an idle turn, the trade's vocabulary used on something outside it, jargon where the people present would say the everyday word, an absent person introduced by a colourful habit)? If nothing on the premises, in the dialogue or pressing this turn called for it, cut it per <occupational_monomania_killswitch> and give the space to what this person wants, feels or is avoiding. Earlier messages in this chat are not a style licence.")]:
+    g = byname(frag); c = g['content']; i = c.index('<' + tag + '>'); j = c.index('</' + tag + '>') + len(tag) + 3
+    g['content'] = c[:i] + '<' + tag + '>\n' + text + '\n</' + tag + '>' + c[j:]
+    log.append(('EDIT', g['name'], 'audit 2: a short reminder; its killswitch holds the detail'))
+NV = 'NPC Voice + Dialogue Output: Cosmos'
+for frag, a, b in [
+    # full commitment: home <realistic_bold_characters>
+    ('Instincts + VAD', ' Whatever the NPC does settle on, they execute it fully per <realistic_bold_characters> — no hovering hands, no half-started reach.', ''),
+    # a mood or trait stamped again: home <do_not_repeat_descriptions> (semantic re-skins)
+    ('Instincts + VAD', '- Once a mood or a trait has been shown, do not stamp it again with synonyms.\n', ''),
+    # the card outranks style rules: home <card_fidelity> (depth 0)
+    (NV, "A character's own card, lorebook entry or character sheet outranks every rule in this tag: their dialogue examples and described voice decide how they talk. A quiet character stays quiet, and a composed one never shouts in capitals because a rule here allows it.\n", ''),
+    # distinct voices: three bullets and <scene_engine>'s idiolect sentence become one line
+    (NV, '- Cadence & Dialect: Every NPC is instantiated with a distinct verbal register, dialect, slang, and vocabulary dictated by their origin, class, age, and subculture. NPCs must be distinguishable in each scene.\n\n- Diction Friction: NPCs must never sound interchangeable. Amplify accents, idioms, and social biases so every character sounds audibly and mentally unique.\n\n- Anti-Smoothing: Never smooth dialogue into a generic or neutral register; preserve unique speech quirks at all times for NPCs.',
+     '- Distinct voices: every NPC keeps a stable idiolect, the register, dialect, slang and vocabulary of their origin, class, age, work, hobbies and subculture, with accents, idioms and quirks never smoothed into a neutral voice, so no two NPCs in a scene sound interchangeable; a specialist metaphor appears only when it fits that speaker and that moment.'),
+    ('Scene Engine', ' Each character keeps a stable, distinct idiolect, with vocabulary drawn from their background, work, hobbies, relationships and habits, and a specialist metaphor appears when it fits that speaker and that moment.', ''),
+    # em dashes: home <banned_constructs>; a narration rule in the dialogue-only tag (its example is a banned phrase already);
+    # the Attitude line repeated METHOD
+    (NV, '-Em dashes and ellipses allowed in spoken NPC dialogue only to create unique speech per NPC.\n\n', ''),
+    (NV, '- De-prioritise action sets in narration where a character does action X, then action Y and then repeats action X again. For example: "mouth opening, closing, opening again". Make sure to use this less and instead focus on not repeating action X, like this: "her mouth opened wide and big to hearing the news but after a while, she closed it back up".\n\n', ''),
+    (NV, '- Each line pursues what the speaker wants in the moment; how warm or heated it runs comes from the four sources in <scene_engine>, sized to what actually caused it.\n', ''),
+    # narration flow: home <syntax_flow>; negation as description: home <banned_constructs>; micro-tells: home <do_not_repeat_descriptions>
+    ('Cinematic Realism', ' You must use Fluid paragraphs / sentences avoiding staccato. Flow: you must write continuous, fluid paragraphs with varied sentence lengths emphasizing syntactic continuity using commas instead of em dashes. Never_use verbless fragments, telegraphic prose, and em-dash fragmentation (e.g., word—word—word) these are all banned.\n\n Force grammatically complete clauses and legato pacing using natural transitional conjunctions rather than dramatic punctuation. Must Weave physical traits into movement. Use Tactile vocab, no romance metaphors. ',
+     ' Paragraph flow follows <syntax_flow>; never verbless fragments or telegraphic prose. Use tactile vocab, no romance metaphors.'),
+    ('Cinematic Realism', ' You must avoid repetitive pronoun-verb usage.', ''),
+    ('Cinematic Realism', '-Rotate sentence structures to maintain natural flow.\n', ''),
+    ('Cinematic Realism', "Ban: micro-expressions. Must Use visible/audible macro actions. You must only narrate what does happen that is observable, not what doesn't. ", ''),
+    ('Cinematic Realism', 'Ban ALL apophasis in responses. \nExample: \nGood = "They look forward and walk."\n Bad = "They don\'t turn around. They don\'t stop."\n\n', ''),
+    # jargon: home <occupational_monomania_killswitch>; never drafting in reasoning: home BOLT rule B
+    ('Anti-Omniscient', ' Avoid military/clinical tone.', ''),
+    ('main', ' *Never draft* full responses in reasoning - only concisely list ideas in bullet point format then output response immediately.', ''),
+    # craft lines <scene_engine> already states almost word for word
+    ('NEW AI Studio Jailbreak', '- Express power, attachment and vulnerability through conduct, action and dialogue. Pressure forces choices.\n- Preserve conflicting motives, private agendas, rough edges and meaningful resistance.\n', '- Pressure forces choices.\n'),
+    ('NEW AI Studio Jailbreak', '- Balance combat, social interaction, exploration and adventure. Everyone has motivations, goals and reasons of their own.', '- Balance combat, social interaction, exploration and adventure.')]:
+    rep(frag, a, b)
+log.append(('EDIT', 'NPC Voice, Cinematic Realism, Scene Engine, NPC Instincts, Anti-Omniscient, Main, Jailbreak', 'audit 2: one rule, one home'))
+# Internal Thoughts: our own text (section 15), the same rules in fewer words
+c = IT['content']; IT['content'] = c[:c.index('<internal_npcthoughts>')] + """<internal_npcthoughts>
+After the narrative, write one thoughts block in exactly this form, in the story's language:
+<npc_thoughts>
+- **Name**: thought
+- **Name** (where they are, what they are doing): thought
+</npc_thoughts>
+1. Who: up to 3 NPCs, present ones first. An absent NPC appears only when they matter to what is happening, at the place and task the card's records or the story already give them; the block never moves anyone or invents a meeting. Never {{user}}: their thoughts belong to the player.
+2. Voice: 1 to 3 short lines each, in the moment, but only as raw as that character is: a thought is never more emotional or dramatic than their card makes them. True to their card, their mood and, when the card keeps one, its record of how they see {{user}}.
+3. Knowledge: only what that character knows. A thought never spells out a secret the story still keeps from {{user}}; such a thing shows only as the character would feel it (unease, a topic they steer away from).
+4. Consistency: the thoughts match the narrative and drive what each NPC does next.
+5. Place: outside the narrative, so the prose never quotes or summarises it; right before the card's state-update block when there is one, and the update block stays last. Never write this instruction's tag name in the reply.
+</internal_npcthoughts>"""
+log.append(('EDIT', IT['name'], 'audit 2: same rules, fewer words'))
+
 json.dump(d, open(os.path.join(HERE, 'Realistic_Frankenstein_2_2_Eldrasil.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=4)
 for l in log: print(' | '.join(l))
