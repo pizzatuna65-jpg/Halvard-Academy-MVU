@@ -39,11 +39,12 @@ PANELS.notebook = {
     return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>Inventory</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
       <nav class="nav">${tabs.map(([id, l]) => `<button data-nb="${id}" class="${view.nb === id ? 'on' : ''}">${l}${badge(id)}${isNew(`tab:notebook:${id}`, view.nb === id) && view.nb !== id ? newsDot() : ''}</button>`).join('')}</nav><div class="bd">${body}</div></div>`;
   },
-  input(el) { if (el.dataset.lt) view.letter[el.dataset.lt] = el.value; if (el.dataset.mk !== undefined) view.markText = el.value; if (el.dataset.pinth) view.pinTh = el.value; },
+  input(el) { if (el.dataset.rp) { rpInput(el); return; } if (el.dataset.lt) view.letter[el.dataset.lt] = el.value; if (el.dataset.mk !== undefined) view.markText = el.value; if (el.dataset.pinth) view.pinTh = el.value; },
   click(b, S) {
     if (b.dataset.nb) { view.nb = b.dataset.nb; render(); ov.querySelector('.bd').scrollTop = 0; return; }
     if (b.dataset.cal) { view.calOff = _.clamp(view.calOff + +b.dataset.cal, 0, 11); render(); return; }
     if (b.dataset.calday) { view.calSel = view.calSel === b.dataset.calday ? '' : b.dataset.calday; view.markText = ((S.$ui || {}).marks || {})[view.calSel] || ''; render(); return; }
+    if (/^rp/.test(b.dataset.act || '')) { rpClick(b, S); return; }
     if (b.dataset.act === 'savemark' || b.dataset.act === 'delmark') {
       const key = view.calSel; if (!key) return;
       const marks = Object.assign({}, (S.$ui || {}).marks || {}), text = b.dataset.act === 'delmark' ? '' : view.markText.trim().slice(0, 200);
@@ -72,6 +73,66 @@ PANELS.notebook = {
     }
   },
 };
+
+// ---------------------------------------------------------------- 1.50.0 routine week (feature batch 2, audit 4.5)
+// The plan ($ui.plan) is the player's: study hours, up to four Practice actions with a count, Saturday club. "Live this week" saves
+// it armed; the engine answers with the span ($ui.routine: until when, what stops it, the moments) or why not, and the chat input is
+// filled for the player to send. The engine counts the plan within the weekly limits; nothing here changes the story.
+view.plan = null;
+const RP_SUBJECTS = Object.values(PROF_SUBJECTS).flatMap(s => s.split(', '));
+const rpKey = a => `${a.loc}|${a.action}`;
+const rpActs = S => (DATA.practice || []).filter(a => !a.partner && !a.materials && !a.pact && practicePlaces(S).includes(a.loc));
+function rpDraft(S) {
+  if (!view.plan) {
+    const p = (S.$ui || {}).plan || {};
+    view.plan = { study: num(p.study, 0), club: !!p.club, acts: (Array.isArray(p.acts) ? p.acts : []).map(x => ({ a: String(x.a || ''), s: String(x.s || ''), n: num(x.n, 1) })).slice(0, 4) };
+  }
+  return view.plan;
+}
+function rpInput(el) {
+  const p = view.plan; if (!p) return;
+  const [k, i] = el.dataset.rp.split(':'), row = p.acts[+i];
+  if (k === 'study') p.study = num(el.value, 0);
+  else if (k === 'club') p.club = !!el.checked;
+  else if (row && k === 'a') { row.a = el.value; row.s = ''; render(); }
+  else if (row && k === 's') row.s = el.value;
+  else if (row && k === 'n') row.n = num(el.value, 1);
+}
+const rpOut = p => ({ study: p.study, club: p.club, acts: p.acts.filter(x => x.a && x.n > 0).map(x => ({ a: x.a, ...(x.s ? { s: x.s } : {}), n: x.n })) });
+async function rpClick(b, S) {
+  const p = rpDraft(S), act = b.dataset.act;
+  if (act === 'rpadd') { if (p.acts.length < 4) p.acts.push({ a: '', s: '', n: 1 }); render(); return; }
+  if (act === 'rpdel') { p.acts.splice(+b.dataset.i, 1); render(); return; }
+  if (act === 'rpsend') { const R = (S.$ui || {}).routine; if (R && R.at) fillChat(`I go about my usual week, as planned, until ${R.at}.`); return; }
+  if (act === 'rpcancel') { await commitSetting([{ op: 'replace', path: '/$ui/plan', value: { ...rpOut(p), run: 0 } }], '🗓️ Routine week cancelled.'); return; }
+  const missing = p.acts.find(x => x.a && ((DATA.practice || []).find(a => rpKey(a) === x.a) || {}).stat === 'subject' && !x.s);
+  if (missing) { toastr.warning('Pick a subject for each study action.', 'Routine week'); return; }
+  const run = act === 'rprun' ? 1 : 0;
+  await commitSetting([{ op: 'replace', path: '/$ui/plan', value: { ...rpOut(p), run } }], run ? '🗓️ Routine week: living the planned week.' : '🗓️ Routine week plan saved.');
+  if (!run) return;
+  const st = latestState(), R = st && ((st.data.stat_data || {}).$ui || {}).routine;
+  if (R && R.at) fillChat(`I go about my usual week, as planned, until ${R.at}.`);
+  else if (R && R.why) toastr.warning(R.why, 'Routine week');
+}
+function rpSection(S) {
+  const p = rpDraft(S), acts = rpActs(S), R = (S.$ui || {}).routine, armed = R && R.at && ((S.$ui || {}).plan || {}).run;
+  const opt = (v, cur, label) => `<option value="${esc(v)}"${String(v) === String(cur) ? ' selected' : ''}>${esc(label)}</option>`;
+  const rows = p.acts.map((x, i) => {
+    const a = acts.find(y => rpKey(y) === x.a);
+    return `<div class="row rp"><select data-rp="a:${i}"><option value="">Choose an activity…</option>${acts.map(y => opt(rpKey(y), x.a, `${y.action} · ${(DATA.locs[y.loc] || {}).name || y.loc}${y.paid ? ` (+${y.paid} points)` : y.cost ? ` (−${y.cost} points)` : ''}`)).join('')}</select>
+      ${a && a.stat === 'subject' ? `<select data-rp="s:${i}"><option value="">Subject…</option>${RP_SUBJECTS.map(s => opt(s, x.s, s)).join('')}</select>` : ''}
+      <select data-rp="n:${i}" aria-label="Times this week">${[1, 2, 3, 4, 5].map(n => opt(n, x.n, `${n}×`)).join('')}</select>
+      <button class="btn sm del" data-act="rpdel" data-i="${i}" aria-label="Remove">✕</button></div>`;
+  }).join('');
+  const state = armed ? `<div class="item"><b>Ready: until ${esc(R.at)}</b> <span class="sub">(stops before ${esc(R.stop)})</span><div>Send your message to live it; the narrator plays ${R.moments && R.moments.length ? R.moments.map(m => `${m.day}: ${m.who || 'a campus moment'}`).join(', ') : 'one ordinary moment'}.</div>
+      <div class="meta"><button class="btn sm pri" data-act="rpsend">Write the message</button><button class="btn sm" data-act="rpcancel" ${view.busy ? 'disabled' : ''}>Cancel</button></div></div>`
+    : R && R.why ? `<div class="sub">Not now: ${esc(R.why)}.</div>` : '';
+  return `<h3>Routine week</h3><p class="hint">Plan an ordinary week and live it in one reply: classes attended, your plan counted within the weekly limits, one or two moments played. It runs to Sunday evening, or to the evening before the next event or due date. No bond progress except in the moments played.</p>${state}
+    <div class="item"><label class="f">Study hours this week<select data-rp="study">${[0, 2, 4, 6, 8, 10, 14, 20].map(n => opt(n, p.study, n ? `${n} hours` : 'None')).join('')}</select></label>
+    ${rows}${p.acts.length < 4 ? `<button class="btn sm" data-act="rpadd">Add an activity</button>` : ''}
+    ${(S.Player.Profile || {}).Club ? `<label class="f"><input type="checkbox" data-rp="club" ${p.club ? 'checked' : ''}> Saturday afternoon at the ${esc(S.Player.Profile.Club)}</label>` : ''}
+    <div class="meta"><button class="btn sm" data-act="rpsave" ${view.busy ? 'disabled' : ''}>Save plan</button><button class="btn sm pri" data-act="rprun" ${view.busy ? 'disabled' : ''}>Live this week</button></div></div>`;
+}
 
 // ---------------------------------------------------------------- planner
 function hapCard(S) {               // 5.3 (F20): today's seeded happening; optional, the player decides whether to go
@@ -145,7 +206,7 @@ function nbPlanner(S) {
       up.splice(_.sortedLastIndexBy(up, { n }, 'n'), 0, { n, on: `M${d.M} W${d.W} ${d.D}`, t: `🎂 ${x.t}`, mine: 1 });
   }
   const upH = up.length ? `<ul class="up">${up.map(u => `<li${u.mine ? ' class="mine"' : ''}><span class="rd">${relDay(u.n)}</span><span class="sub">${esc(u.on)}${u.at ? ' ' + u.at : ''}</span> ${esc(u.t)}</li>`).join('')}</ul>` : '<div class="empty">Nothing on the academy calendar in the next two weeks.</div>';
-  return `${now}${featureOn(S, 'planner') ? `<h3>Commitments</h3>${com}` : ''}<h3>This week</h3>${table}<h3>Coming up</h3>${upH}
+  return `${now}${featureOn(S, 'planner') ? `<h3>Commitments</h3>${com}` : ''}<h3>This week</h3>${table}${featureOn(S, 'routine_week') ? rpSection(S) : ''}<h3>Coming up</h3>${upH}
     <h3 class="calh">Calendar: Month ${mo}${view.calOff ? '' : ' (now)'}<span><button class="btn sm" data-cal="-1" ${view.calOff ? '' : 'disabled'} aria-label="Previous month">‹</button><button class="btn sm" data-cal="1" ${view.calOff >= 11 ? 'disabled' : ''} aria-label="Next month">›</button></span></h3><p class="hint">Tap a day to see what is on it and write yourself a note.</p><div class="cal">${grid}</div>${detail}`;
 }
 

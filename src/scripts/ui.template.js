@@ -674,6 +674,7 @@ ol.jt{list-style:none;margin:0;padding:0 0 0 14px;border-left:2px solid color-mi
 ol.jt li{position:relative;padding:4px 0 8px 6px;border-bottom:1px dashed rgba(255,255,255,.07);font-family:var(--f-text);font-size:16px;line-height:1.5;color:var(--ink)}ol.jt li::before{content:"";position:absolute;left:-20px;top:11px;width:8px;height:8px;border-radius:50%;background:var(--brass);box-shadow:0 0 0 3px var(--sheet)}
 ol.jt li .sub{margin-right:8px;font-family:var(--f-ui)}
 ol.jt li.old{opacity:.55}
+/* 1.50.0 routine week rows: wrap on a phone */.row.rp{flex-wrap:wrap;gap:6px;justify-content:flex-start;margin:6px 0}.row.rp select{min-width:0;max-width:100%}.row.rp select:first-child{flex:1 1 220px}
 .now .hap{margin-top:8px;padding-top:7px;border-top:1px solid color-mix(in srgb,var(--moon) 20%,transparent)}.now .hap .btn{margin-top:5px}
 .board,.clues{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;padding:14px;border-radius:12px;background:#3a2f24/*keep*/ repeating-linear-gradient(45deg,rgba(0,0,0,.05)/*keep*/ 0 3px,transparent 3px 7px);border:1px solid #5a4632/*keep*/;box-shadow:inset 0 2px 8px rgba(0,0,0,.35)/*keep*/}
 .note,.clue{position:relative;padding:13px 13px 11px;border-radius:3px;background:#efe6d2/*keep*/;color:#2b2620/*keep*/;box-shadow:0 3px 8px rgba(0,0,0,.35)/*keep*/;transform:rotate(var(--r,0deg));font-size:var(--fs-m);display:flex;flex-direction:column;gap:4px}

@@ -1,7 +1,35 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.50.0 — Feature batch 2: the routine week (2026-10-03)
+
+`audit/AUDIT_2026-10-03_4_batch_fitur.md` batch 2 (audit part 2, suggestion 4.5). Save fixture v1.49.0. No parallel subsystem: the
+plan is counted by the steps that already count those things, inside their weekly limits.
+- **Plan (Planner, "Routine week").** Study hours (0–20), up to four Practice actions at discovered places with a count (1–5; a
+  study action names its subject; partner, material and pact actions are left out), Saturday club. "Save plan" or "Live this week"
+  write `$ui.plan` through a hidden player-tool message (like Settings). Decided: a weekly plan, not one per day; classes are always
+  attended.
+- **Arming (`stepRoutine`, before the Journal is written).** On "Live this week" the engine works out the span: from now to Sunday
+  20:00, cut to 20:00 the evening before the first stopper (a calendar event that starts later in the span or a day without classes,
+  a dated Commitment, Project, Hook or Next plan, {{user}}'s birthday); at least half a day, else refused with the reason (also away
+  from Halvard, in battle, unsorted, the feature off). It picks the moments to play: someone with a Rank 3+ bond (as initiative
+  picks, their Stage line) and one of the span's happenings. `$ui.routine.line` goes into `<now>`: the span, the plan, the moments,
+  and that only the people in the moments get Interactions. The UI then fills the chat input; the player sends it.
+- **The routine reply (`routineStart` in `stepGuards`, `routineSchool` in `stepSchoolWeek`, `routineProf` in `stepProficiency`).**
+  The clock goes to the span's end whatever the narrator wrote; nights are slept; no "time jumped" warning. Classes held count as
+  attended (the clean-week bonus can be earned); study hours and study actions go into exam preparation and Knowledge; each Practice
+  action gives its XP inside the weekly pace, paid shifts at most two a week (`ledger`), costs are paid, mana and stamina actions are
+  training sessions (`stepTraining`, weekly cap); Saturday club counts. The narrator's own Practice and Training reports are dropped,
+  and Interactions with people outside the moments are not counted (missed reports; bond XP needs time together). A Journal line
+  recaps the week; the plan is disarmed after one run. A plan scaled to a shorter span (days / 7).
+- **Rules, data, UI.** `data/features.json` row `routine_week`; schema `$ui.plan`, `$ui.routine`; 505 prints the line; Planner section
+  (wraps on a phone).
+- **Proof and tests.** `ENGINE_DIFF` against 1.49.0 over the whole suite: every engine run identical except the routine suite
+  itself (ignoring only the new `$ui.on.routine_week`). `tests/test_feature_batch2_v1500.cjs` (25 checks: arming, `<now>`, the run,
+  weekly limits, stoppers, refusals, no plan). Full suite passes. UI checked in a local preview (render, add / change / remove rows).
+- **To confirm with the owner:** the 12-hour minimum span, the 20:00 end, the moment picks (85% a bond moment, one happening).
 
 ## v1.49.0 — Feature batch 1: favours and group assignments (2026-10-03)
 
@@ -136,44 +164,6 @@ this release, each proven before the next.
 - **To confirm with the owner:** nothing (a refactor).
 - **Live checks:** `docs/TEST_CHECKLIST.md` 1.46.0.
 
-## v1.45.0 — Audit batch 3: reports the engine settles (ledger, Bag, purchases, practice sessions) (2026-10-03)
-
-`audit/AUDIT_2026-10-03_3_batch_perbaikan.md` batch 3 (audit part 1, items 2.5, 3.4, 3.5, 3.9). Save fixture v1.44.0. Three engine
-commits and this release.
-- **One ledger (3.5, 2.5).** `ledger(c, 'Points'|'Coin', delta, why)` makes every engine payment (Avalon and Sunreach fares, bets
-  and thefts, tutoring, studio practice, paid shifts, the apothecary, the payout and monthly bonuses, the parcel's coin, competition
-  prizes, Sunfizz bottles, purchases): the balance (never below 0), one Transactions line, and a record of the reply's engine lines.
-  The "not itemised" check and the overspend check now read only the narrator's own lines and changes, so an engine payment in the
-  same reply no longer hides a narrator's unlogged change. The overspend check runs per currency (a coin line no longer counts as
-  points; spending coin {{user}} lacks is caught too, toast "Not enough coin"). Transactions are cut to 20 lines once, in
-  `stepCommit` (was in about 12 places, some never). The parcel's coin line reads "+N coin: from home".
-- **One Bag ledger (3.4).** `bagTake` / `bagGive` (keyed by `bagKeyOf`) for used items, gifts, crafting materials and output, the
-  apothecary sale, the parcel from home, empty Sunfizz bottles and purchases. A change the narrator already made to that item in the
-  reply counts toward it (never taken or given twice), and several engine changes to one item in a reply add up. Behaviour: an item
-  put in the Bag and used in the same reply now leaves the Bag (it used to stay); craft materials bought in the same reply are no
-  longer lost.
-- **`/Purchases` (3.4).** New report list `[{Item, Qty, Shop, Price?, Used?, Kind?}]`, settled by the new step `stepPurchases` (3b,
-  before used items are read). A Price Guide item costs its listed price at a shop that sells it (`SHOP_PRICE` rows now carry the
-  shop's place, seasons and the item name), in season; out of season there it is refused. Elsewhere, or for an unlisted item, the
-  narrator's `Price` is a story price (the line says so); without one the purchase is refused. Points on campus, coin away
-  (`awayIn`). Not enough money: refused, nothing paid. `Used: true` (a meal, a drink at the counter, a service) pays without filling
-  the Bag, and an item with a "When used" effect takes effect. Refusals are `_Log` lines with a toast. The shop reminder stays only
-  for an item put in the Bag at its shop with no purchase reported, and now points to `/Purchases`.
-- **One practice session (3.9).** `/Practice {"Track":"mana|stamina","With":…}` is a training session; `/Training` is still read
-  as one (old habit, old swipes). `stepProficiency` gathers every session (also those of Practice actions that train), `stepTraining`
-  applies them. One fitness check (`unfitToTrain`) and one Rank 4 partner rule (`r4Partner`) for mana, stamina and study (owner
-  decision, proposal adopted: the bonus for every track in `rank4_partners.json`). Behaviour: the study partner bonus (+30 study
-  minutes, +25% bond XP) now also needs Trust 35+, Tension under 70, the partner present and not away; a "Study a subject" Practice
-  with such a partner counts 90 minutes. Weekly limits are unchanged; no migration.
-- **Rules.** 502: Training reports in `/Practice`, the new Buying rule, Points for other income or costs, coin purchases off campus,
-  Inventory and Consumables lines; 503: the example patch buys through `/Purchases`; 506: buying through `/Purchases`.
-- **Tests:** `tests/test_audit_batch3_v1450.cjs` (27 checks: the ledger and the cut, narrator vs engine lines, coin overspend, the Bag
-  ledger, purchases at and away from a shop, story price, refusals, Used, seasons, the session tracks, the partner rule, the fitness
-  check). `ENGINE_DIFF` against 1.44.0 after the ledger commit: identical except the used-item case above. Full suite and stress
-  (the fuzz notice "bond rank jumped (Topaz)" also appears on 1.44.0).
-- **To confirm with the owner:** none beyond the partner rule above (adopted as proposed). `/Purchases` touches no DECISIONS entry.
-- **Live checks:** `docs/TEST_CHECKLIST.md` 1.45.0.
-
 ## Release index (one line per release, oldest first)
 
 - All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/archive/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; CHANGELOG 1.2.0/1.2.1).
@@ -299,3 +289,4 @@ commits and this release.
 - **v1.47.0 (2026-10-03):** Audit batch 5: the campus as an Area (walks, owed minutes and stamina on the Campus Map graph, "Walks from here"), `areaNow`, and one whereabouts model (`$ui.here` for `<now>`, the Map's Regulars, "May be here", initiative and the areas).
 - **v1.48.0 (2026-10-03):** Audit batch 7, the last: the Cast Sheet as one entry per NPC (`@@if`), `<now>`'s rule lines from the engine (`$ui.now`), the state diet (moods, area walks), the weather cache, `eld_seen` and the default theme.
 - **v1.49.0 (2026-10-03):** Feature batch 1: favours asked through NPC initiative (Commitment Type "favour": kept = help, ignored = Tension) and group assignments (study time, a study interaction for each partner, Tension when overdue).
+- **v1.50.0 (2026-10-03):** Feature batch 2: the routine week (a weekly plan in the Planner, lived in one reply to Sunday evening or the evening before the next event or due date; counted within the weekly limits; one or two moments played).

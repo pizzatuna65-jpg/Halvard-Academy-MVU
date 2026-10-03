@@ -100,6 +100,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepGraduation` / `stepGraduateRewards` (8d, 8d2) | third-years leave; their rewards end | |
 | `stepInitiative` (8e) | optional NPC-initiated contact; 1.49.0 some days a favour (`$ui.initiative.favour`, `FAVOURS`) | `data/initiative_asks.json` (`favours`) → 505 |
 | `stepHooks` / `stepGossip` (8f, 8g) | story hooks; rumours | |
+| `stepRoutine` (8g2) | 1.50.0 (feature batch 2): the routine week. Arms a player-tool `$ui.plan.run` (`routineSpan`: end Sunday 20:00, stoppers; `routineMoments`; `routineLine` → `$ui.routine`, printed by 505); after the routine reply, its Journal recap. The run itself: `routineStart` (end of `stepGuards`: clock, sleep, reports dropped), `routineSchool` (`stepSchoolWeek`), `routineProf` (`stepProficiency`), training through `c.sessions` | `$ui.plan`, `$ui.routine`; Planner `rpSection` in `30_notebook.js` |
 | `stepBag` (8h) | Inventory merge, caps, Sunfizz, clearing bloom wilt | `data/shop.json`, `crafts.json` |
 | `stepCampusEvents` / `stepExtras` / `stepCast` (8j, 8k, 8i) | campus events; invented characters; who gets a Cast Sheet | `$ui.cast` → 509 |
 | `stepReminders` (8l) | "missed report" reminders for `<now>` | `$ui.missed` → 505 |

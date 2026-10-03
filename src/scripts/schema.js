@@ -364,7 +364,11 @@ export const Schema = z.object({
     parked: z.record(z.string(), z.any()).prefault({}).catch({}),     // state of features that are off: { id: { path: value } }
     // 1.2.0
     file: z.any().prefault(null).catch(null),                         // the Builder's record of what it last wrote (self-heal, engine §0)
-    marks: z.record(z.string(), z.coerce.string()).prefault({}).catch({}),   // calendar notes the player wrote { "M1 W2 Wed": "text" }
+    marks: z.record(z.string(), z.coerce.string()).prefault({}).catch({}),
+    // 1.50.0: the routine week. plan (player tool): { study: hours, acts: [{ a: 'loc|action', s: subject, n }], club, run: 1 to arm };
+    // routine (engine): the armed span { to, at, stop, days, moments, line } or a refusal { why }
+    plan: z.any().prefault(null).catch(null),
+    routine: z.any().prefault(null).catch(null),   // calendar notes the player wrote { "M1 W2 Wed": "text" }
     // 1.2.2 bonds (Settings) and the engine's view of full bond bars (event ready now / after the cooldown)
     bondpace: Enum(['standard', 'fast', 'brisk', 'slow'], 'standard'),
     romrank: Int(0, 11, 8),                                            // romance opens at this rank (0 any, 11 off)

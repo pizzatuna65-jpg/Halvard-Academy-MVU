@@ -1031,7 +1031,7 @@ const COND = {
   'Head cold': 'Stuffy and slow: stamina capped at 80% of max until it passes or the Medical Centre treats it.',
 };
 // ---- 1.1.0 Features settings (spec §9): which state each feature parks when it is off (data/features.json, injected) ----
-const FEATURES = [{"id":"proficiency","control":"toggle","paths":["Player._Proficiency","$eng.prof"]},{"id":"planner","control":"toggle","paths":["Commitments"],"unlock":"planner"},{"id":"notices","control":"toggle","paths":["Notices"],"unlock":"notices"},{"id":"letters","control":"toggle","paths":["Letters"],"unlock":"letters"},{"id":"mystery","control":"toggle","paths":["Clues","Mysteries"],"unlock":"mystery"},{"id":"competition","control":"toggle","paths":["Competition"],"unlock":"competition"},{"id":"projects","control":"toggle","paths":["Projects"],"unlock":"projects"},{"id":"trip","control":"toggle","paths":["Trip"],"unlock":"trip"},{"id":"battle","control":"toggle","paths":["Battle"],"unlock":"battle"},{"id":"inventory","control":"toggle","paths":["Inventory"],"unlock":"inventory"},{"id":"happenings","control":"levels","field":"happenings"},{"id":"npc_initiative","control":"toggle"},{"id":"weather","control":"levels","field":"wxfx","paths":["Player.Conditions"],"unlock":"conditions"},{"id":"class","control":"toggle"},{"id":"hooks","control":"toggle","paths":["Hooks"]},{"id":"gossip","control":"toggle"},{"id":"fortune","control":"toggle"},{"id":"attendance","control":"toggle"},{"id":"recap","control":"toggle"},{"id":"small_scenes","control":"toggle"},{"id":"ambience","control":"levels","field":"ambience"},{"id":"reminders","control":"toggle"},{"id":"study","control":"toggle"},{"id":"say_colors","control":"toggle"}];
+const FEATURES = [{"id":"proficiency","control":"toggle","paths":["Player._Proficiency","$eng.prof"]},{"id":"planner","control":"toggle","paths":["Commitments"],"unlock":"planner"},{"id":"notices","control":"toggle","paths":["Notices"],"unlock":"notices"},{"id":"letters","control":"toggle","paths":["Letters"],"unlock":"letters"},{"id":"mystery","control":"toggle","paths":["Clues","Mysteries"],"unlock":"mystery"},{"id":"competition","control":"toggle","paths":["Competition"],"unlock":"competition"},{"id":"projects","control":"toggle","paths":["Projects"],"unlock":"projects"},{"id":"trip","control":"toggle","paths":["Trip"],"unlock":"trip"},{"id":"battle","control":"toggle","paths":["Battle"],"unlock":"battle"},{"id":"inventory","control":"toggle","paths":["Inventory"],"unlock":"inventory"},{"id":"happenings","control":"levels","field":"happenings"},{"id":"npc_initiative","control":"toggle"},{"id":"weather","control":"levels","field":"wxfx","paths":["Player.Conditions"],"unlock":"conditions"},{"id":"class","control":"toggle"},{"id":"hooks","control":"toggle","paths":["Hooks"]},{"id":"gossip","control":"toggle"},{"id":"fortune","control":"toggle"},{"id":"attendance","control":"toggle"},{"id":"recap","control":"toggle"},{"id":"routine_week","control":"toggle"},{"id":"small_scenes","control":"toggle"},{"id":"ambience","control":"levels","field":"ambience"},{"id":"reminders","control":"toggle"},{"id":"study","control":"toggle"},{"id":"say_colors","control":"toggle"}];
 const EMPTY = { Commitments: {}, Notices: {}, Letters: {}, Clues: {}, Mysteries: {}, Projects: {}, Inventory: {}, Hooks: {}, 'Player.Conditions': {},
   Competition: { Tier: '', Status: '', Placement: '', Team: [], Results: [] }, Trip: { Active: false, Destination: '', Companions: [], Note: '' },
   Battle: { Active: false, Combatants: {} } };
@@ -1187,7 +1187,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.49.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.50.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
 // from the shared context c (the states, the reply's text and the values earlier steps computed) and adds what later steps use.
@@ -1372,6 +1372,7 @@ function stepGuards(c) {
     V0.Mana = Math.min(V0.Mana, V0.Mana_max); V0.Stamina = Math.min(V0.Stamina, V0.Stamina_max);
   }
   Object.assign(c, { byBuilder, toolEdit });
+  routineStart(c);   // 1.50.0: the routine week's reply
 }
 
 // ---- 0b. 1.1.0 Features settings: a feature that is off has its state parked in $ui.parked (hidden from the AI) and is not processed.
@@ -1528,7 +1529,7 @@ function stepTime(c) {
   Object.assign(S.World, fromAbs(absA));
   const elapsed = hasB ? Math.max(0, absA - absB) : 0;
   // a jump of more than three days is shown to the player, so a mistaken date can be swiped away before it is played on
-  if (elapsed > 3 * DAY_MIN) {
+  if (elapsed > 3 * DAY_MIN && !c.routine) {   // 1.50.0: a routine week is a planned jump
     const days = Math.round(elapsed / DAY_MIN);
     S.$ui.toasts.push(`Time jumped ${days} days`);
     log.push(`Time moved ${days} days in one update (to ${stamp(S.World)}). If the story did not mean a time skip, the date was written wrongly: swipe or correct it.`);
@@ -2790,6 +2791,7 @@ function stepSchoolWeek(c) {
       }
     }
     S.Exam_events = []; S.Tutoring = [];
+    if (c.routine) routineSchool(c, !OFF.has('study') && _.isPlainObject(S.$eng.study) ? S.$eng.study : null, WK);   // 1.50.0: the routine week
     // FP12: on a day with nothing on the calendar, at most TU.scene_cap people with {{user}}; one more takes their leave
     S.$ui.leave = null;
     const hr = Math.floor((absA % DAY_MIN) / 60), perNow = /^P[123] /.test(S.World._Period || '');
@@ -2818,6 +2820,145 @@ function stepNamesInProse(c) {
     // 1.11.1 (bug hunt): a first name that is also a word ("Maple leaves…", "Ruby light…") opening a sentence is no name reveal
     for (const [id, rx] of NAME_RX) if (!names.includes(id) && (ARRIVES[id] || 1) <= S.World.Year && mentionIn(prose, id, rx)) names.push(id);
   }
+}
+
+// ---- 1.50.0 (audit/AUDIT_2026-10-03_4_batch_fitur.md, batch 2: audit 4.5): the routine week. The player plans a week in the Planner
+// ($ui.plan: study hours, Practice actions with counts, Saturday club) and arms it ("Live this week", a player-tool patch). The engine
+// then works out the span (stepRoutine): from now to Sunday 20:00, cut to the evening before the first stopper (a calendar event that
+// starts later in the span or a day without classes, a dated Commitment, Project, Hook or Next plan, {{user}}'s birthday), and picks one
+// or two moments to play. The next story reply is the routine: the engine sets the clock to the end (routineStart), counts the plan
+// through the ordinary rules and weekly limits (classes attended, study time, Practice XP, mana and stamina sessions, paid shifts,
+// Saturday club), and gives no bond XP or Trust except for the people in the moments (missed reports, time together). One run per arm.
+const RT_END = 20 * 60, RT_MIN = 12 * 60;
+const rtKey = a => `${a.loc}|${a.action}`;
+const rtAct = k => PRACTICE.find(a => rtKey(a) === k) || null;
+// the plan as the engine reads it: study hours 0-20, up to four Practice actions (1-5 a week each; a "subject" action names one)
+function planOf(S) {
+  const p = _.isPlainObject((S.$ui || {}).plan) ? S.$ui.plan : {};
+  const acts = (Array.isArray(p.acts) ? p.acts : []).map(x => ({ a: rtAct(String((x || {}).a || '')), s: SUBJECTS.includes((x || {}).s) ? x.s : '', n: _.clamp(Math.round(num((x || {}).n, 0)), 0, 5) }))
+    .filter(x => x.a && x.n > 0 && !x.a.partner && !x.a.materials && !x.a.pact && (x.a.stat !== 'subject' || x.s)).slice(0, 4);
+  return { study: _.clamp(Math.round(num(p.study, 0)), 0, 20), acts, club: !!p.club, run: num(p.run, 0) === 1 };
+}
+// what keeps one planned action from the routine (the place known, the club, the season, the money)
+function rtWhy(S, a) {
+  if (!(S.$ui.discovered || []).some(n => placeKey(n) === placeKey(a.name))) return `${a.name} is not discovered yet`;
+  const club = String(S.Player.Profile.Club || '').toLowerCase();
+  if (a.club && !club.includes(a.club.toLowerCase())) return `${a.club} Club only`;
+  if (a.clubAny && !a.clubAny.some(n => club.includes(n.toLowerCase()))) return `${a.clubAny.join(' or ')} club only`;
+  if (a.seasons && !a.seasons.includes(SEASONS[S.World.Month - 1])) return `${a.seasons.join(' or ')} only`;
+  if (a.dorm && S.Player.Profile.Dorm === 'Unsorted') return 'a dorm first';
+  return '';
+}
+// the span from now: { to, stop } or { why }
+function routineSpan(c) {
+  const { S, absA, OFF } = c;
+  if (OFF.has('routine_week')) return { why: 'the routine week is off in Settings' };
+  if (awayIn(S)) return { why: '{{user}} is away from Halvard' };
+  if (S.Battle && S.Battle.Active) return { why: 'a battle is on' };
+  if (S.Player.Profile.Dorm === 'Unsorted') return { why: '{{user}} has not been sorted into a dorm yet' };
+  const today = Math.floor(absA / DAY_MIN), todayEv = new Set(eventsOn(S.World).map(e => e.t));
+  let end = (today + 6 - DAYS.indexOf(S.World.Day)) * DAY_MIN + RT_END;
+  if (end - absA < RT_MIN) end += 7 * DAY_MIN;
+  let to = end, stop = 'Sunday evening';
+  const cut = (abs, what) => { const at = (Math.floor(abs / DAY_MIN) - 1) * DAY_MIN + RT_END; if (at < to) { to = at; stop = what; } };
+  for (let d = today + 1; d * DAY_MIN <= end; d++) {
+    const W = fromAbs(d * DAY_MIN), e = eventsOn(W).find(x => x.noclass || x.home || x.away || x.lockdown || !todayEv.has(x.t));
+    if (e) { cut(d * DAY_MIN, e.t.split(' (')[0]); break; }
+  }
+  const bd = /^M(\d{1,2}) W([1-4]) (Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/.exec(String(S.Player.Profile.Birthday || '').trim());
+  for (let d = today + 1; bd && d * DAY_MIN <= end; d++) { const W = fromAbs(d * DAY_MIN); if (+bd[1] === W.Month && +bd[2] === W.Week && bd[3] === W.Day) cut(d * DAY_MIN, "{{user}}'s birthday"); }
+  const dated = [...Object.entries(S.Commitments || {}).map(([k, x]) => [num(x.$abs, -1), k]), ...Object.entries(S.Hooks || {}).map(([k, x]) => [num(x.$abs, -1), k]),
+    ...Object.entries(((S.$eng.agenda || {}).when) || {}).map(([k, x]) => [num((x || [])[1], -1), k.startsWith('n:') ? `${k.slice(2)}'s plan` : k.slice(2)])];
+  for (const [abs, what] of dated) if (abs > absA && abs <= end) cut(abs, `"${what}"`);
+  if (to - absA < RT_MIN) return { why: `${stop} is too close (the routine needs at least half a day)` };
+  return { to, stop };
+}
+// one or two moments of the span to play in full: someone {{user}} has a bond with, and a happening
+function routineMoments(c, to) {
+  const { S, absA, seed, OFF } = c, d0 = Math.floor(absA / DAY_MIN), d1 = Math.floor(to / DAY_MIN), out = [];
+  const dayIn = (...k) => d0 + (hash32(seed, d0, ...k) % (d1 - d0 + 1));
+  const PV = presenceNow(S);
+  const id = OFF.has('npc_initiative') ? null : rollTable(Object.keys(S.Bonds).sort(), { roll: [seed, d0, 'routine-npc'], p: 0.85, pick: [seed, d0, 'routine-npc-pick'],
+    skip: id => { const b = S.Bonds[id]; return !(b.Rank >= 3 && INITIATIVE_STAGES[id] && (ARRIVES[id] || 1) <= S.World.Year && !npcAwayIn(S, id) && !npcOut(PV, S, id)); },
+    weight: id => ({ open: 3, normal: 2, guarded: 1, closed: 0.5 })[INITIATIVE_OPENNESS[id] || 'normal'] });
+  if (id) {
+    const b = S.Bonds[id], band = b.Rank <= 5 ? '3-5' : b.Rank <= 8 ? '6-8' : '9-10';
+    out.push({ day: fromAbs(dayIn('npc') * DAY_MIN).Day, who: id, text: `${id} crosses {{user}}'s path. Their Stage at this rank: ${INITIATIVE_STAGES[id][band]}${b.Tension >= 70 ? ' (not friendly at this Tension)' : ''}` });
+  }
+  if (!OFF.has('happenings')) {
+    const rate = HAPPEN_RATE[S.$ui.happenings] ?? HAPPEN_RATE.normal;
+    const hs = _.range(d0, d1 + 1).map(d => [d, happeningOn(S.$eng.seed, d, rate, S.$ui.wxfx)]).filter(x => x[1] && x[1].text);
+    if (hs.length) { const [d, h] = pickOf(hs, seed, d0, 'routine-hap'); out.push({ day: fromAbs(d * DAY_MIN).Day, who: '', text: `${h.where || 'Around campus'}: ${h.text}` }); }
+  }
+  return _.sortBy(out, x => DAYS.indexOf(x.day) - DAYS.indexOf(S.World.Day) + (DAYS.indexOf(x.day) < DAYS.indexOf(S.World.Day) ? 7 : 0));
+}
+// the armed routine's line for <now>
+function routineLine(S, R, plan) {
+  const what = [plan.study ? `${plan.study} hours of study` : '', ...plan.acts.map(x => `${x.a.action}${x.s ? ` (${x.s})` : ''} at ${x.a.name} x${x.n}`),
+    plan.club && S.Player.Profile.Club ? `Saturday club at the ${S.Player.Profile.Club}` : ''].filter(Boolean);
+  return `Routine week: in this reply {{user}} lives their planned routine from now until ${R.at} (the engine sets the clock; it stops before ${R.stop}).`
+    + ` Classes attended${what.length ? '; ' + what.join('; ') : ''}; meals and sleep as usual. Tell the days as a short montage in a few sentences, and play`
+    + (R.moments.length ? ` these moments in full: ${R.moments.map(m => `${m.day}: ${m.text}`).join(' | ')}.` : ' one ordinary moment of your choice in full.')
+    + ` Report Interactions only for ${R.moments.some(m => m.who) ? R.moments.filter(m => m.who).map(m => m.who).join(', ') : 'nobody'} (bond progress needs time played together); no Practice or Training (the engine counts the plan).`;
+}
+// the story reply that runs it: the clock to the end, a night's sleep, reports the plan replaces dropped
+function routineStart(c) {
+  const { S, B, log, hasB, toolEdit } = c;
+  const R = hasB && !toolEdit && planOf(B).run && _.isPlainObject(B.$ui.routine) && num(B.$ui.routine.to, -1) > num((B.$eng || {}).abs, toAbs(B.World)) ? B.$ui.routine : null;
+  if (!R) return;
+  const plan = planOf(B), days = (R.to - num((B.$eng || {}).abs, toAbs(B.World))) / DAY_MIN, f = Math.min(1, days / 7);
+  const n = x => (x > 0 ? Math.max(f >= 0.3 ? 1 : 0, Math.round(x * f)) : 0);
+  const keep = new Set((R.moments || []).map(m => m.who).filter(Boolean));
+  const acts = (S.Interactions || []).filter(a => keep.has(NPC_ALIAS[String((a && a.With) || '').toLowerCase()] || String((a && a.With) || '')));
+  if (acts.length < (S.Interactions || []).length) log.push(`Routine week: interactions with people outside its moments were not counted (no time played together).`);
+  if ((S.Practice || []).length || (S.Training || []).length) log.push('Routine week: Practice and Training reports were dropped; the engine counted the plan.');
+  S.Interactions = acts; S.Practice = []; S.Training = [];
+  const T = fromAbs(R.to);
+  if (stamp(S.World) !== stamp(T)) log.push(`Routine week: the clock was set to ${stamp(T)} (the routine's end).`);
+  Object.assign(S.World, _.pick(T, ['Year', 'Month', 'Week', 'Day', 'Time']));
+  S.Player.Vitals.Resting = 'sleep';
+  const acts2 = plan.acts.map(x => ({ ...x, n: n(x.n), why: rtWhy(S, x.a) }));
+  for (const x of acts2) if (x.why) log.push(`Routine week: ${x.a.action} at ${x.a.name} left out (${x.why}).`);
+  c.routine = { ...R, plan, f, study: n(plan.study) * 60, acts: acts2.filter(x => !x.why && x.n > 0), done: [] };
+}
+// classes, study time and Saturday club (stepSchoolWeek)
+function routineSchool(c, ST, WK) {
+  const { S, absB, absA, repAdd, OFF } = c, R = c.routine, Pf = S.Player.Profile, PY = _.clamp(num(Pf.Year, 1), 1, 3);
+  let held = 0, sat = false;
+  for (let d = Math.floor(absB / DAY_MIN); d <= Math.floor(absA / DAY_MIN); d++) {
+    const Wd = fromAbs(d * DAY_MIN), row = CLASS.tt && CLASS.tt[Wd.Day];
+    if (!row || eventsOn(Wd).some(e => e.noclass || e.home || e.lockdown || e.away)) continue;
+    PERIODS.forEach(([s0, e0], p) => {
+      const cell = row[p]; if (!cell || absB >= d * DAY_MIN + e0 || absA < d * DAY_MIN + e0) return;
+      if (cell[3] === 'class' && !freeWhy(Wd, p, cell[0], teacherOf(cell[0], PY, classRole(Pf)))) held++;
+      if (cell[3] === 'clubs' && Wd.Day === 'Sat' && !(Wd.Month === 10 && Wd.Week === 3)) sat = true;
+    });
+  }
+  if (WK && !OFF.has('attendance')) WK.periods = num(WK.periods, 0) + held;
+  if (held) R.done.push(`${held} class${held === 1 ? '' : 'es'} attended`);
+  const study = R.study + R.acts.filter(x => x.a.study).reduce((t, x) => t + x.n * 60, 0);
+  if (ST && study) { ST.mins = num(ST.mins, 0) + study; R.done.push(`${Math.round(study / 60)} hours of study`); }
+  R.studied = study;
+  if (R.plan.club && Pf.Club && sat) { R.club = true; repAdd('Student', 1, `Saturday time at the ${Pf.Club}`, 'week'); R.done.push(`Saturday at the ${Pf.Club}`); }
+}
+// Practice XP, paid shifts, mana and stamina sessions, study and club proficiency (stepProficiency, inside its weekly limits)
+function routineProf(c, gain, P) {
+  const { S } = c, R = c.routine;
+  for (const x of R.acts) {
+    let did = 0;
+    for (let i = 0; i < x.n; i++) {
+      if (x.a.paid && num(P.wk.paid, 0) >= 2) break;
+      if (x.a.cost && S.Player.Wallet.Points < x.a.cost) break;
+      did++;
+      if (x.a.cost) ledger(c, 'Points', -x.a.cost, `${x.a.action} (routine)`);
+      if (x.a.paid) { P.wk.paid = num(P.wk.paid, 0) + 1; ledger(c, 'Points', x.a.paid, x.a.paidAs || 'paid shift'); }
+    }
+    const stat = x.a.stat === 'subject' ? SUBJECT_STAT[x.s] : x.a.stat;
+    if (did && stat) gain(stat, x.a.xp * did, `routine: ${x.a.action} x${did}`);
+    if (did) R.done.push(`${x.a.action} x${did}`);
+  }
+  if (R.studied >= 120) gain('Knowledge', Math.floor(R.studied / 120), 'study time');
+  if (R.club) { const club = S.Player.Profile.Club || '', stat = PROF.find(k => (CLUB_STATS[k] || []).some(n => club.toLowerCase().includes(n.toLowerCase()))); if (stat) gain(stat, 1, 'Saturday club time'); }
 }
 
 // ---- 6-. 1.49.0 (audit/AUDIT_2026-10-03_4_batch_fitur.md, batch 1: audit 4.6, 4.10): promises kept and broken. Read before the
@@ -3527,6 +3668,7 @@ function stepProficiency(c) {
   S.$ui.craft = [];
   S.$ui.craft_sale = null;
   S.$ui.mastery = null;
+  if (c.routine) for (const x of c.routine.acts) if (x.a.train) for (let i = 0; i < x.n; i++) sessions.push({ Track: x.a.train, With: '' });   // 1.50.0
   if (OFF.has('proficiency')) return;
   const ranks = S.Player._Proficiency || (S.Player._Proficiency = {});
   let P = S.$eng.prof;
@@ -3584,7 +3726,7 @@ function stepProficiency(c) {
     const previous = ((B.Player || {}).Academics || {}).Grades || {};
     for (const [s, mark] of Object.entries(S.Player.Academics.Grades || {})) if (mark !== previous[s] && /^(A|B)$/.test(mark)) gain(SUBJECT_STAT[s], mark === 'A' ? 4 : 2, `${s} exam`, false);
     const studied = Math.max(0, num((S.$eng.study || {}).mins, 0) - num(((B.$eng || {}).study || {}).mins, 0));
-    if (['main library','study rooms','archive'].includes(placeKey(S.World.Location))) {
+    if (['main library','study rooms','archive'].includes(placeKey(S.World.Location)) && !c.routine) {   // 1.50.0: routineProf counts it
       P.study = num(P.study, 0) + studied;
       const n = Math.floor(P.study / 120); if (n) { P.study %= 120; gain('Knowledge', n, 'study time'); }
     }
@@ -3599,6 +3741,7 @@ function stepProficiency(c) {
       if (stat) gain(stat, 1, 'Saturday club time');
     }
   }
+  if (c.routine) routineProf(c, gain, P);   // 1.50.0: the routine week's Practice, shifts, study and club, inside the weekly limits
   const locName = x => placeKey(x.name);
   const here = placeKey(S.World.Location), before = hasB ? placeKey(B.World.Location) : here;
   const inScene = name => Object.keys(S.Scene.Present || {}).some(id => id.toLowerCase() === String(name || '').toLowerCase() || (NPC_ALIAS[String(name || '').toLowerCase()] || '') === id);
@@ -4895,6 +5038,26 @@ function stepAgenda(c) {
     if ((id.startsWith('n:') && !((S.Bonds || {})[id.slice(2)] || {}).Next) || (id.startsWith('p:') && !(S.Projects || {})[id.slice(2)])) delete A.when[id];
 }
 
+// ---- 8g2. 1.50.0 (feature batch 2, audit 4.5), before the Journal is written (8h): the routine week. A player-tool patch with $ui.plan.run arms it: the span and its
+// moments ($ui.routine, with <now>'s line); a refusal says why. The story reply after it ran the routine (routineStart, routineSchool,
+// routineProf): here its recap goes to the Journal and the plan is disarmed. Any other reply leaves nothing armed.
+function stepRoutine(c) {
+  const { S, log, jnl, toolEdit } = c, P = _.isPlainObject(S.$ui.plan) ? S.$ui.plan : null, R = c.routine;
+  if (R) {
+    const from = fromAbs(num((c.B.$eng || {}).abs, toAbs(c.B.World)));
+    jnl.push(`Routine week (${stamp(from)} to ${stamp(S.World)}): ${R.done.length ? R.done.join('; ') : 'an ordinary stretch of days'}.`);
+    S.$ui.toasts.push('Routine week lived');
+  }
+  if (!toolEdit || !P || !P.run) { if (P) P.run = 0; S.$ui.routine = null; return; }
+  const sp = routineSpan(c);
+  if (sp.why) { P.run = 0; S.$ui.routine = { why: sp.why }; S.$ui.toasts.push(`Routine week: ${sp.why}`); return; }
+  const plan = planOf(S), moments = routineMoments(c, sp.to);
+  const Rt = { to: sp.to, at: stamp(fromAbs(sp.to)), stop: sp.stop, days: r2((sp.to - c.absA) / DAY_MIN), moments };
+  Rt.line = routineLine(S, Rt, plan);
+  S.$ui.routine = Rt;
+  log.push(`Routine week armed: until ${Rt.at} (stops before ${sp.stop}).`);
+}
+
 // ---- 8o. 1.47.0 (audit 3.8): whereabouts. "May be here" ($ui.maybe) from the one model in shared.js (whereabouts, presenceAt) that
 // the Map panel's Regulars and <now>'s presence lines (who is likely around {{user}}'s place now, what the period holds, the regulars,
 // those the weather moved indoors, clubs meeting here, regulars with a status, {{user}}'s class line; stepNow, $ui.now.pres) also use.
@@ -5204,7 +5367,7 @@ function stepNow(c) {
   for (const a of Object.values(S.$ui.area || {})) if (_.isPlainObject(a)) { delete a.walks; delete a.near; }
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepRoutine, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,

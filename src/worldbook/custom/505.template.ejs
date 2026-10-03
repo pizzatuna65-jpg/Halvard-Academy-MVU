@@ -184,6 +184,9 @@ Rumours going around: <%- GS.map(g => '"' + g[0] + '" (' + g[1] + ', day ' + g[2
 <%_ if (STALE.length) { _%>
 Campus events with no news for over a week (the world moves on without {{user}}: advance each through talk, a rumour, a notice or a letter when it fits, or remove it once it is over): <%- STALE.map(([k, u]) => k + ' (last news ' + aged(u) + ')').join('; ') %>
 <%_ } _%>
+<%_ if (UI.routine && UI.routine.line && on('routine_week')) { _%>
+<%- UI.routine.line %>
+<%_ } _%>
 <%_ if (INITIATIVE && INITIATIVE.id && INITIATIVE.stage) { _%>
 NPC initiative today: <%- INITIATIVE.id %> may try to reach {{user}}. At this bond rank, their Stage says: <%- INITIATIVE.stage %><%- INITIATIVE.ask ? ' Today\'s reason: ' + INITIATIVE.id + ' ' + INITIATIVE.ask + '.' : '' %> Let the contact take a form that fits their canon, current Trust and Tension, location, time, and existing plans. This is an opening, not an arrival or an obligation; if it cannot fit today, let it pass. Do not move them into Scene.Present until they actually enter the scene.<%- INITIATIVE.strained ? ' The approach is not friendly at this Tension.' : '' %><%- INITIATIVE.favour && on('planner') ? ' The reason is a favour. If {{user}} agrees, add a Commitment with Type "favour", With "' + INITIATIVE.id + '", a Due within ' + INITIATIVE.favour.days + ' days and ' + (INITIATIVE.favour.item ? 'Item "' + INITIATIVE.favour.item + '"' : 'Where "' + INITIATIVE.favour.where + '"') + '. A polite refusal owes nothing.' : '' %>
 <%_ } _%>

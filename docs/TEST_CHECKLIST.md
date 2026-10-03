@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.50.0 (feature batch 2): the four checks in its section below.
 - v1.49.0 (feature batch 1): the three checks in its section below.
 - v1.48.0 (audit batch 7): the four checks in its section below.
 - v1.47.0 (audit batch 5): the four checks in its section below.
@@ -89,6 +90,16 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.50.0 — Feature batch 2 (the routine week)
+
+1. Inventory → Planner → Routine week: add two activities and study hours, "Live this week". A hidden tool message is added, the
+   card shows "Ready: until … (stops before …)" and the chat input is filled. Send it.
+2. The reply tells the days briefly and plays the listed moments; the clock is at the routine's end (Sunday 20:00 or the evening
+   before the stopper). The Journal has the "Routine week (…)" line; Wallet shows at most two paid shifts; Student file shows the XP.
+3. Arming with a Commitment due in two days stops the span the evening before; arming on a Friday before a weekend event is refused
+   with the reason.
+4. Settings → Features → Routine week off: the Planner section disappears and `<now>` has no routine line.
 
 ### v1.49.0 — Feature batch 1 (favours, group assignments)
 

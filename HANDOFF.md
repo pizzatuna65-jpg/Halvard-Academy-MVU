@@ -3,13 +3,13 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.49.0** (2026-10-03): feature batch 1 of `audit/AUDIT_2026-10-03_4_batch_fitur.md` (audit suggestions 4.6,
-4.10). Favours asked through NPC initiative (Commitment `Type "favour"`: kept = a `help` deed, ignored = Tension once) and group
-assignments (study time, a study interaction per partner present, partners' Tension when overdue), in the new step `stepPromises`
-before `stepBonds`. v1.48.0: audit batch 7 (`$ui.now`, the Cast Sheet per NPC). Live checks: `docs/TEST_CHECKLIST.md` "Open".
-Plans: `planning/FUTURE_PLANS.md`.
+**Snapshot:** card **v1.50.0** (2026-10-03): feature batch 2 of `audit/AUDIT_2026-10-03_4_batch_fitur.md` (audit suggestion 4.5),
+the routine week: a weekly plan in the Planner (`$ui.plan`), armed by a player tool (`stepRoutine`: span, stoppers, moments, `<now>`
+line) and lived in one reply (`routineStart`, `routineSchool`, `routineProf`) within the weekly limits. v1.49.0: favours and group
+assignments (`stepPromises`). Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** the owner's next "kerjakan batch fitur N" (batch 2: the routine week, 4.5). Live checks v1.49.0 back to v1.42.0 are open.
+**Next task:** the owner's next "kerjakan batch fitur N" (batch 3: NPC-to-NPC life and the living mystery board, 4.8 and 4.9).
+Live checks v1.50.0 back to v1.42.0 are open.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 
