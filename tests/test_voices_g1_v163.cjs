@@ -3,11 +3,11 @@
 // carries, stage by bond rank band, anchor; Change type). The Cast Sheet prints it: terms and props in INVARIANTS, the voice
 // and anchor on full sheets, only the stage for the current rank on every sheet. A fixed character's Imprints only deepen.
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
-const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
+const { initState, applyPatch, ok, ROOT, renderEntry } = require('./harness.cjs');
 console.log('G1 voices 1.6.3');
 const rd = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const card = JSON.parse(rd('dist/Eldrasil_Halvard.json')).data;
-const R = (uid, S) => ejs.render(card.character_book.entries.find(e => e.id === uid).content, { getvar: k => _.get({ stat_data: S }, k) });
+const R = (uid, S) => renderEntry(card, uid, S);   // 1.48.0: the Cast Sheet is a group
 const C = JSON.parse(rd('data/npc_canon.json')), G1 = ['Etnie', 'Irene', 'Aiden', 'Castor', 'Zara', 'Kanae', 'Rei', 'Caine'];
 ok(G1.every(id => C.voice[id]), 'the 8 G1 voices are in data/npc_canon.json');
 ok(JSON.stringify(Object.fromEntries(G1.map(id => [id, C.change[id]]))) === JSON.stringify({ Etnie: 'fixed', Irene: 'fixed', Aiden: 'shaped', Castor: 'shaped', Zara: 'shaped', Kanae: 'shaped', Rei: 'fixed', Caine: 'shaped' }), 'Change types as approved');

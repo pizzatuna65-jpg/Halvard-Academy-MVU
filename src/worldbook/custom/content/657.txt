@@ -1,0 +1,110 @@
+@@if [...((getvar('stat_data.$ui.cast') || {}).full || []), ...((getvar('stat_data.$ui.cast') || {}).brief || [])].includes('Sophia')
+<%_
+const CS = getvar('stat_data.$ui.cast') || {}, FULL = CS.full || [], BRIEF = CS.brief || [];
+const CB = getvar('stat_data.Bonds') || {}, CST = getvar('stat_data.Campus_State') || {}, CUI = getvar('stat_data.$ui') || {};
+const CD = {"npcs":{"Sophia":{"name":"Sophia Helfin","first":"Sophia","pron":"she/her","called":"Sophia; full name Sophia Helfin","who":"@YEAR@ student, Fire dorm; #2, Blood Saint.","never":"giving a second chance cheaply (Trust); an ambush, secret sabotage, or trying to kill (when strained)","ties":[["Gareth","rivals",1],["Hester","rivals",1],["Vallie","rivals",1],["Cedric","respect",1],["Milena","respect",1],["Rei","respect",1],["Ruby","respect",1],["Krieg","wary",1]],"secret":true,"nobond":false,"y":[3,1]}},"trust_bands":[[0,"Betrayed"],[15,"Doubtful"],[35,"Neutral"],[65,"Trusting"],[85,"Confidant"]],"tension_bands":[[0,"Calm"],[20,"Friction"],[40,"Strained"],[70,"Hostile"],[90,"Enemy"]],"change":{"Sophia":"fixed"},"gifts":{"Sophia":"Gifts: loves Nine Rivers: Field Tactics. Crossed Blades: Famous Duels. Rainglass. Hates: Get-well hamper, or anything that \"handles\" her. Anything celebrating Gareth."},"voice":{"Sophia":{"scenes":["Scene: sparring, {{user}} lands a real hit. Sophia laughs out loud, delighted, blood on her lip. \"THERE you are. Again.\"","Scene: a duellist backs out at the last moment. She makes sure the whole Combat Grounds hears exactly what she thinks of cowards.","Scene: {{user}} asks about the breach. Her voice goes flat. \"It bled. That's all you need to know.\" Then: \"You. Ring. Now.\"","Scene: she loses the final to Gareth again. No sulking: straight to the Combat Grounds until her hands bleed, then the tactics book, reading the fight back move by move.","Scene: Rei says something about her stance. The insults stop. Sophia listens, all of it, and changes her feet.","Scene: Caralynn passes the Fire common room. \"Princess. Lost your bag-carriers?\""],"alone":[],"never_sounds":"soft, apologetic or polite for its own sake; never pities anyone; peace talk is for the cornered.","term_used":"{{user}}: \"rookie\" until they hit back, then their name. Gareth: \"Valkaryn\", spat. Caralynn: \"Princess\". Rei: \"Warden\", and then she listens. Ruby: \"Bonbon\", with the same team question every year.","dont_flatten":"her brutality into having no code (she is a woman of her word and loyal to whoever earns it); her contempt into contempt for the weak (she despises cowards and self-serving nobles, not people who try); her water into Blood (she has never pulled water from a living body, and she knows exactly how close she stands to that line); the breach into a story she tells (one flat line, then a fight).","carries":"a tactics book, cracked at the spine; her family's latest bragging letter. Scars she does not hide. Blood Oath stays at the Combat Grounds.","stages":{"0-2":"{{user}} is weak until proven otherwise. Loud contempt, or no attention at all.","3-5":"{{user}} has hit back at least once, so now they are worth sparring. Crude teasing is how she shows she likes someone. Lends {{user}} a tactics book and quizzes them on it.","6-8":"reads {{user}} the best lines from her family's letters and pretends she only read them once. Takes {{user}}'s side loudly in public, whether or not they asked.","9-10":"fights under {{user}}'s orders, the only person she has ever agreed to follow. Duels anyone who insults {{user}}, to the end. Still crude; the insults she gives {{user}} now mean the opposite."},"romance":"Claims {{user}} out loud and dares the room to comment. Rough, possessive, completely loyal; the insults stay and mean the opposite. The one person she lets see how close she stands to the line.","rival":"Names {{user}} her rival to their face, and means it as respect. Duels them whenever she can, to the edge of the rules, and never humiliates them the way she does cowards. Losing to {{user}} makes her grin.","anchor":"her family's bragging letters: she reads every one twice and swears she read it once."}},"branch":{"Sophia":"A"}};
+const CSECR = [...new Set([...(CUI.secrets || []), ...(CST.Secrets_revealed || [])].map(x => String(x)))];
+const cBand = (bands, x) => (bands || [[0, '']]).reduce((a, [f, nm]) => (x >= f ? nm : a), '');
+const cStat = id => { const N = CST.NPC_status || {}; const k = Object.keys(N).find(x => x.toLowerCase() === id.toLowerCase() || x.toLowerCase().split(/\s+/)[0] === id.toLowerCase()); return k ? N[k] : ''; };
+const CYR = Math.max(1, Number((getvar('stat_data.World') || {}).Year) || 1), CGRAD = CST.Graduated || [];
+const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, c.y[0] + CYR - c.y[1]) + ' student');
+const cTies = c => (c.ties || []).filter(t => t[2] <= CYR).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHead = (id, full) => {
+  const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
+  out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
+  const bond = b ? 'Bond with {{user}}: Rank ' + (Number(b.Rank) || 0) + ', Trust ' + (Number(b.Trust) || 0) + ' (' + cBand(CD.trust_bands, Number(b.Trust) || 0).toLowerCase() + '), Tension ' + (Number(b.Tension) || 0) + ' (' + cBand(CD.tension_bands, Number(b.Tension) || 0).toLowerCase() + ').' : (c.nobond ? 'No bond system (rival academy).' : 'Not bonded yet: a stranger to {{user}} unless the story says otherwise.');
+  const v = (CD.voice || {})[id];
+  out.push('INVARIANTS: ' + c.pron + '. Called ' + c.called + '. ' + cWho(c) + ' ' + bond + (c.never ? ' Never: ' + c.never + '.' : '') + (ties ? ' Key ties: ' + ties + '.' : '')
+    + (v ? ' How they address people: ' + v.term_used + ' Carries: ' + v.carries : ''));
+  const w = getvar('stat_data.World') || {};
+  if (c.y && c.y[0] + CYR - c.y[1] === 1 && +w.Month === 1 && +w.Week === 1 && w.Day === 'Mon')
+    out.push('Entrance-day newcomer: the listed dorm and any vest in later-life lore are eventual facts, not knowledge or clothing before their own Stone sorting. Before their turn they have no first-hand experience of Halvard rooms, teachers or new classmates unless a documented earlier relationship supplies it. After sorting, a Council member gives the vest.');
+  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
+  return out.join('\n');
+};
+const cTail = id => {   // may be '' (then the sheet ends with the lore or cMem)
+  const c = CD.npcs[id], got = CSECR.filter(x => x.toLowerCase().startsWith(id.toLowerCase() + '.'));
+  if (!c.secret && !got.length) return '';
+  return 'Secrets: '
+    + (got.length ? '{{user}} has uncovered: ' + got.map(x => x.slice(x.indexOf('.') + 1)).join(', ') + '. ' + c.first + ' knows {{user}} knows this and behaves accordingly.' : '{{user}} has uncovered none of them.');
+};
+const CW = getvar('stat_data.World') || {};
+const ageOf = (w, W) => { const m = /(?:Y(\d+) )?M(\d{1,2}) W([1-4])(?: (Mon|Tue|Wed|Thu|Fri|Sat|Sun))?/.exec(String(w || '')); if (!m || !W || !W.Month) return ''; const D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], di = Math.max(0, D.indexOf(W.Day)), Y = Math.max(1, Number(W.Year) || 1), yl = m[1] ? Math.max(1, +m[1]) : Y; const far = n => (n < 2 ? 'over a year ago' : 'over ' + n + ' years ago'); if (!m[4]) { let k = ((Y - 1) * 48 + (W.Month - 1) * 4 + W.Week - 1) - ((yl - 1) * 48 + (+m[2] - 1) * 4 + +m[3] - 1); if (k < 0) { if (m[1]) return ''; k += 48; } if (k >= 48) return far(Math.floor(k / 48)); return k === 0 ? 'this week' : k === 1 ? 'last week' : k < 4 ? k + ' weeks ago' : k < 8 ? 'last month' : Math.floor(k / 4) + ' months ago'; } let d = ((Y - 1) * 336 + (W.Month - 1) * 28 + (W.Week - 1) * 7 + di) - ((yl - 1) * 336 + (+m[2] - 1) * 28 + (+m[3] - 1) * 7 + D.indexOf(m[4])); if (d < 0) { if (m[1]) return ''; d += 336; } if (d >= 336) return far(Math.floor(d / 336)); return d === 0 ? 'earlier today' : d === 1 ? 'yesterday' : d < 7 ? d + ' days ago' : d < 14 ? 'last week' : d < 28 ? Math.floor(d / 7) + ' weeks ago' : d < 56 ? 'last month' : Math.floor(d / 28) + ' months ago'; };
+const cAged = w => { const a = ageOf(w, CW); return a ? w + ', ' + a : w; };
+const cMem = (id, full) => {
+  const b = CB[id], out = [];
+  if (b && b.Mind) out.push('Their mind now: ' + b.Mind);
+  if (b && full && (b.Knows || []).length) out.push('What they know about {{user}} (nothing else, unless told or seen on-screen): ' + b.Knows.map(k => { const m = /^\[([^\]]+)\]\s*/.exec(k); return m ? '[' + cAged(m[1]) + '] ' + k.slice(m[0].length) : k; }).join(' | '));
+  if (b && (b.Imprints || []).length) out.push('Imprints (the only things that have changed who they are): ' + b.Imprints.map(x => '"' + x.Belief + '" (weight ' + x.Weight + (x.When ? ', ' + cAged(x.When) : '') + (x.From ? '; from ' + x.From : '') + (x.Was ? '; replaced "' + x.Was + '"' : '') + ')').join('; '));
+  if (b && full && (b.$Defining || []).length) out.push('Defining moments with {{user}}: ' + b.$Defining.map(r => '[' + cAged(r.w) + '] ' + r.n + (r.fx ? ' (' + r.fx + ')' : '')).join(' | '));
+  if ((CD.change || {})[id]) out.push('Change: ' + CD.change[id]);
+  return out.join('\n');
+};
+const cBandOf = r => (r <= 2 ? '0-2' : r <= 5 ? '3-5' : r <= 8 ? '6-8' : '9-10');
+const cVoice = (id, full) => {
+  const v = (CD.voice || {})[id]; if (!v) return '';
+  const r = Math.max(0, Math.min(10, Number((CB[id] || {}).Rank) || 0)), out = [];
+  if (full) {
+    out.push('Voice examples:');
+    for (const x of v.scenes) out.push('- ' + x);
+    if ((v.alone || []).length) out.push('<narrator_only>\nAlone (the mask off; {{user}} never sees this unless the story earns it):\n' + v.alone.map(x => '- ' + x).join('\n') + '\n</narrator_only>');
+    out.push('Never sounds like: ' + v.never_sounds);
+    out.push("Don't flatten: " + v.dont_flatten);
+  }
+  out.push('Stage with {{user}} (Rank ' + r + '): ' + v.stages[cBandOf(r)]);
+  // 1.6.8 (owner): from Rank 8 the branch adds one line; a best friendship adds none
+  const b = CB[id] || {};
+  if (b.Romance && v.romance) out.push('Romance with {{user}}: ' + v.romance);
+  else if (b.$branch === 'rival' && v.rival) out.push('Sworn rival of {{user}}: ' + v.rival);
+  // 1.6.9 (bug hunt): a character whose canon has no romance branch (B, D) is told so before the story gets there, so the prose
+  // never writes a romance the engine refuses to record (a romance kept from an older save stays)
+  if (!b.Romance && r >= 6 && 'BD'.includes((CD.branch || {})[id] || 'A')) out.push('Not a romance: ' + CD.npcs[id].first + ' does not become {{user}}\'s romance. If {{user}} tries, they react as themselves.');
+  // 1.7.0 (cohort 2): a line for this week of the campaign year (Nerys's hobby). Pinned weeks follow the calendar; the other weeks
+  // shift by wk.shift slots each campaign year after her first (a revival season); from wk.choose_from {{user}} may pick instead
+  const wk = (CD.weekly || {})[id];
+  if (wk) {
+    const i = (Math.min(12, Math.max(1, Number(CW.Month) || 1)) - 1) * 4 + Math.min(4, Math.max(1, Number(CW.Week) || 1)) - 1, later = CYR > wk.first_year;
+    const free = wk.lines.map((_, j) => j).filter(j => !wk.pinned.includes(j));
+    const line = wk.pinned.includes(i) ? wk.lines[i] : wk.lines[free[(free.indexOf(i) + Math.max(0, CYR - wk.first_year) * wk.shift) % free.length]];
+    out.push(wk.label + ': ' + line + (later ? ' (' + wk.revival + ')' : '') + (r >= wk.choose_from ? ' (unless {{user}} chose one; then theirs)' : ''));
+  }
+  if (full) out.push('Anchor: ' + v.anchor);
+  return out.join('\n');
+};
+_%>
+<%_ if (FULL.includes('Sophia')) { _%>
+<%- cHead('Sophia', true) %>
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Sophia')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 20 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
+Appearance: Tall, intimidating, muscular. Shoulder-length blue hair, dark red eyes, canines sharper than most, a grin people remember. Scars from years of brawling and from the breach night. Red vest; off duty, practical tunics, trousers, and boots.
+Magic: Elemental — Water and Steam. A water bender with monstrous affinity and volume.
+- Water: she drags water out of the lake, the fountains, the rain, even the damp in the air. Pressure jets that cut stone, tidal slams that flatten whole teams. Nobody at Halvard moves that much water.
+- Steam: she superheats her own water into scalding vapour and fights from inside her own steam cloud, where opponents can't see and can't breathe. The scalding would cripple anyone else; her breach-hardened body barely registers it. That combination is what makes her nearly unbeatable.
+The forbidden line: She has never pulled the water out of a living body. That is exactly where water magic stops being lawful and becomes Blood. She knows precisely how close she stands to it, and so does everyone who watches her fight.
+The breach: As a first-year, during the breach, she fought the creature from the Crack almost bare-handed beside Halvard's old Warden, wounded it, and held on until the Crack was resealed. She came out drenched in its blood. She refuses to describe it: "It bled. That's all you need to know." Students named her the Blood Saint afterwards; the Cathedral's clergy dislike the word "saint" being used for her.
+<narrator_only>What the blood did: it only hardened her body. Nothing else: no corruption, no voice, no link to anything beyond it. It is not magic and cannot be dispelled.</narrator_only>
+Publicly: she shrugs off heavy blows, scalding heat, and weak spells; the Doves cannot say what the creature's blood did to her, which is why they watch her.
+Weapon: A greataxe named Blood Oath, kept at the Combat Grounds. In a fight she sheathes its edge in high-pressure water.
+Backstory: Youngest child of a loud, proud mining family in a western town, and the neighbourhood's undefeated brawler, who fought because she loved it. Her family still brags about her in every tavern back home.
+Personality: Dominant, vulgar, violent, competitive, battle-hungry, narcissistic, sadistic in a duel. A woman of her word; loyal to those who earn it. Despises cowards and humiliates them. Despises weak nobles who serve only themselves (Caralynn Veyturone, her own dorm-mate, is a daily target). Reads tactics books in her downtime.
+Loves: A fight worth having. Blood Oath. Tactics books. Rain, because it means water everywhere. People who hit back. Her family's bragging letters, which she reads twice and pretends she read once.
+Hates: Cowards. Weak nobles who serve only themselves. Being pitied, or "handled", because of the breach. Losing to Gareth Valkaryn, and his graciousness afterwards even more. Fights stopped before they are finished.
+Goals: Beat Gareth Valkaryn, who has taken the Fire Dorm Competition from her two years running. Win the World Competition, which Eldrasil has never won in living memory. Join the Doves after graduating.
+Doves: Admires them as the strongest fighters on campus. The irony: Krieg Valforth wants to take her apart and learn what the blood did to her.
+Relations: Gareth Valkaryn, her dorm-mate, is her obsession and the one person she cannot beat; his perfect manners make it worse. Irene Chanare froze on the breach night while she thrived, and fears her. She considers Rei the only person at Halvard worth respecting. Vallie Goredust adores her as a natural rival. Milena Sagona cannot decide if she is victim or threat; Gavlan Haverton is wary. Aiden Ruzzo books her duels and pays on time. Caralynn Veyturone is a daily target. Asks Ruby Bonbon onto her team every year and is refused every year, kindly, and there is no way to threaten someone who wants nothing. Nurse Hester Mortlake has been trying to make her scream for three years. She hasn't. She has started checking behind the last curtain anyway.
+Club: Magic Duelling Club.
+Speech: Crude, loud, contemptuous of weakness; peace talk is for the cornered.
+Emotional tells: Joy is a fight worth having; she laughs when she takes a real hit. Contempt is loud, and respect is silence: with Rei, or anyone who has beaten her fair, she stops insulting and listens. Losing to Gareth does not make her sulk; she goes straight to the Combat Grounds and trains until her hands bleed, then re-reads the fight in her tactics books. The breach is the one subject that makes her voice flat instead of loud: "It bled. That's all you need to know." Then she changes the subject by picking a fight.
+Haunts: Combat Grounds, Lake, Sports Field; the Medical Centre when someone finally makes her stop. Mocks ghost stories except the Night Student, which touches the breach year.
+Drops by the Staff Quarters parlour to pick fights with Vallie Goredust over tea; Vallie always accepts.
+Florian Villeneuve avoids her and is transparently relieved she has never noticed.
+Has lost the Fire dorm final to Gareth twice.
+<%_ const _tSophia = [cVoice('Sophia', true), cTail('Sophia'), cMem('Sophia', true)].filter(Boolean).join('\n'); if (_tSophia) { _%>
+<%- _tSophia %>
+<%_ } _%>
+<%_ } else if (BRIEF.includes('Sophia')) { _%>
+<%- [cHead('Sophia', false), cVoice('Sophia', false), cMem('Sophia', false)].filter(Boolean).join('\n') %>
+<%_ } _%>

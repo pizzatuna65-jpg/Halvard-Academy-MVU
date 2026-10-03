@@ -4,14 +4,14 @@
 // voice canon, Rank 8 branch, rewards (Linus and Tsubaki carry a training bonus at Rank 10) and Nerys's weekly hobby work from
 // Year 2. A 1.6.11 save loads.
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
-const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
+const { initState, applyPatch, ok, ROOT, renderEntry } = require('./harness.cjs');
 global.window = { parent: { document: {} } };
 global.substitudeMacros = () => 'Aria Vale';
 console.log('Cohort 2 1.7.0');
 const rd = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const card = JSON.parse(rd('dist/Eldrasil_Halvard.json')).data;
 const entry = uid => card.character_book.entries.find(e => e.id === uid).content;
-const R = (uid, S) => ejs.render(entry(uid), { getvar: k => _.get({ stat_data: S }, k) });
+const R = (uid, S) => renderEntry(card, uid, S);   // 1.48.0: the Cast Sheet is a group
 const NEW = ['Linus', 'Maple', 'Nerys', 'Hadrian', 'Wren', 'Tsubaki'];
 const npcs = JSON.parse(rd('data/npcs.json')), C = JSON.parse(rd('data/npc_canon.json')), B = JSON.parse(rd('data/bond_rewards.json')).npcs;
 const COH = JSON.parse(rd('data/cohorts.json')).incoming;

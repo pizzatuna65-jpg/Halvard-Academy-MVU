@@ -2,11 +2,11 @@
 // block in <current_state>, the Bridge's rules in the card, the Main Prompt's random events, gfx and coloured dialogue opt-in, the
 // lore-at-depth TEST card.
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
-const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
+const { initState, applyPatch, ok, ROOT, renderEntry } = require('./harness.cjs');
 const rd = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const card = JSON.parse(rd('dist/Eldrasil_Halvard.json')).data.character_book.entries;
 const entry = id => card.find(x => x.id === id);
-const render = (id, S) => ejs.render(entry(id).content, { getvar: k => _.get({ stat_data: S }, k) });
+const render = (id, S) => renderEntry({ character_book: { entries: card } }, id, S);   // 1.48.0: the Cast Sheet is a group
 const tok = s => Math.round(s.length / 3.6);
 
 console.log('T1 "[…]" runs');

@@ -1,0 +1,106 @@
+@@if [...((getvar('stat_data.$ui.cast') || {}).full || []), ...((getvar('stat_data.$ui.cast') || {}).brief || [])].includes('Yvette')
+<%_
+const CS = getvar('stat_data.$ui.cast') || {}, FULL = CS.full || [], BRIEF = CS.brief || [];
+const CB = getvar('stat_data.Bonds') || {}, CST = getvar('stat_data.Campus_State') || {}, CUI = getvar('stat_data.$ui') || {};
+const CD = {"npcs":{"Yvette":{"name":"Yvette Fallaron","first":"Yvette","pron":"she/her","called":"Yvette; full name Yvette Fallaron","who":"Staff; Magic Theory Y1, Fire Dorm Head.","never":"giving a second chance cheaply (Trust); anything outside their authority: no personal violence, no lies on the record (when strained)","ties":[["Layla","friends",1],["Tilly","protective",1],["Vera","protective",1],["Ezrel","wary",1],["Krieg","dislike",1],["Milena","dislike",1]],"secret":false,"nobond":false,"y":null}},"trust_bands":[[0,"Betrayed"],[15,"Doubtful"],[35,"Neutral"],[65,"Trusting"],[85,"Confidant"]],"tension_bands":[[0,"Calm"],[20,"Friction"],[40,"Strained"],[70,"Hostile"],[90,"Enemy"]],"change":{"Yvette":"fixed"},"gifts":{"Yvette":"Gifts: loves Fallen Stars: Notes on Mana Resonance. A fine enchanted piece to study. Hates: Halvard pennant or any Halvard keepsake."},"voice":{"Yvette":{"scenes":["Scene: a student confesses to her after class. \"That's very sweet. Find someone your own age.\" Brisk and kind, and a blush she will deny.","Scene: {{user}} brings an odd enchanted trinket to the Workshop. Three questions in she has forgotten the time, and her fingers are through her hair.","Scene: someone asks why she never leaves Halvard. She changes the subject smoothly. That evening she is in Layla's rooms.","Scene: a student nearly hurts a classmate through carelessness. Loose strands of her hair lift, the orb crackles, and the class goes quiet before she says a word.","Scene: exam week, {{user}} reaches for Nightwell's Vigil. She hands them an ordinary coffee instead. \"Trust me.\"","Scene: Graduation Day. She watches the graduates walk out of the gates longer than anyone else does."],"alone":[],"never_sounds":"carefree about safety, or fond of Halvard itself; never speaks of the terms of her Oath.","term_used":"{{user}}: their surname in class; their first name off duty. Layla: \"Layla\". Baelin: \"Headmaster\", with a small edge. Ezrel: \"Professor Marionne\", never his first name.","dont_flatten":"her motherliness into softness (she is stern, cautious and paranoid); her hatred of Halvard into coldness toward students (the place is the prison; the students are why she stays sane); the Oath into a mystery she hints at (she cannot speak of it, so she changes the subject).","carries":"her floating orb focus with its protective charms; hair up in a bun at work, loose off duty.","stages":{"0-2":"professional and casual by turns; {{user}} is one more student to keep alive.","3-5":"brings {{user}} into her Workshop research, and points out the exits to them the way other teachers point out the board.","6-8":"lets {{user}} see her off duty and admits Halvard feels like a cage. She never says why, and {{user}} learns not to ask.","9-10":"{{user}}'s enchanted finds go to her first, and she answers for them at any hour. She still cannot tell them about the Oath; {{user}} is simply the one who sees how hard she tries."},"anchor":"her own teacup, waiting on the shelf in Layla's rooms."}},"branch":{"Yvette":"D"}};
+const CSECR = [...new Set([...(CUI.secrets || []), ...(CST.Secrets_revealed || [])].map(x => String(x)))];
+const cBand = (bands, x) => (bands || [[0, '']]).reduce((a, [f, nm]) => (x >= f ? nm : a), '');
+const cStat = id => { const N = CST.NPC_status || {}; const k = Object.keys(N).find(x => x.toLowerCase() === id.toLowerCase() || x.toLowerCase().split(/\s+/)[0] === id.toLowerCase()); return k ? N[k] : ''; };
+const CYR = Math.max(1, Number((getvar('stat_data.World') || {}).Year) || 1), CGRAD = CST.Graduated || [];
+const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, c.y[0] + CYR - c.y[1]) + ' student');
+const cTies = c => (c.ties || []).filter(t => t[2] <= CYR).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHead = (id, full) => {
+  const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
+  out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
+  const bond = b ? 'Bond with {{user}}: Rank ' + (Number(b.Rank) || 0) + ', Trust ' + (Number(b.Trust) || 0) + ' (' + cBand(CD.trust_bands, Number(b.Trust) || 0).toLowerCase() + '), Tension ' + (Number(b.Tension) || 0) + ' (' + cBand(CD.tension_bands, Number(b.Tension) || 0).toLowerCase() + ').' : (c.nobond ? 'No bond system (rival academy).' : 'Not bonded yet: a stranger to {{user}} unless the story says otherwise.');
+  const v = (CD.voice || {})[id];
+  out.push('INVARIANTS: ' + c.pron + '. Called ' + c.called + '. ' + cWho(c) + ' ' + bond + (c.never ? ' Never: ' + c.never + '.' : '') + (ties ? ' Key ties: ' + ties + '.' : '')
+    + (v ? ' How they address people: ' + v.term_used + ' Carries: ' + v.carries : ''));
+  const w = getvar('stat_data.World') || {};
+  if (c.y && c.y[0] + CYR - c.y[1] === 1 && +w.Month === 1 && +w.Week === 1 && w.Day === 'Mon')
+    out.push('Entrance-day newcomer: the listed dorm and any vest in later-life lore are eventual facts, not knowledge or clothing before their own Stone sorting. Before their turn they have no first-hand experience of Halvard rooms, teachers or new classmates unless a documented earlier relationship supplies it. After sorting, a Council member gives the vest.');
+  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
+  return out.join('\n');
+};
+const cTail = id => {   // may be '' (then the sheet ends with the lore or cMem)
+  const c = CD.npcs[id], got = CSECR.filter(x => x.toLowerCase().startsWith(id.toLowerCase() + '.'));
+  if (!c.secret && !got.length) return '';
+  return 'Secrets: '
+    + (got.length ? '{{user}} has uncovered: ' + got.map(x => x.slice(x.indexOf('.') + 1)).join(', ') + '. ' + c.first + ' knows {{user}} knows this and behaves accordingly.' : '{{user}} has uncovered none of them.');
+};
+const CW = getvar('stat_data.World') || {};
+const ageOf = (w, W) => { const m = /(?:Y(\d+) )?M(\d{1,2}) W([1-4])(?: (Mon|Tue|Wed|Thu|Fri|Sat|Sun))?/.exec(String(w || '')); if (!m || !W || !W.Month) return ''; const D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], di = Math.max(0, D.indexOf(W.Day)), Y = Math.max(1, Number(W.Year) || 1), yl = m[1] ? Math.max(1, +m[1]) : Y; const far = n => (n < 2 ? 'over a year ago' : 'over ' + n + ' years ago'); if (!m[4]) { let k = ((Y - 1) * 48 + (W.Month - 1) * 4 + W.Week - 1) - ((yl - 1) * 48 + (+m[2] - 1) * 4 + +m[3] - 1); if (k < 0) { if (m[1]) return ''; k += 48; } if (k >= 48) return far(Math.floor(k / 48)); return k === 0 ? 'this week' : k === 1 ? 'last week' : k < 4 ? k + ' weeks ago' : k < 8 ? 'last month' : Math.floor(k / 4) + ' months ago'; } let d = ((Y - 1) * 336 + (W.Month - 1) * 28 + (W.Week - 1) * 7 + di) - ((yl - 1) * 336 + (+m[2] - 1) * 28 + (+m[3] - 1) * 7 + D.indexOf(m[4])); if (d < 0) { if (m[1]) return ''; d += 336; } if (d >= 336) return far(Math.floor(d / 336)); return d === 0 ? 'earlier today' : d === 1 ? 'yesterday' : d < 7 ? d + ' days ago' : d < 14 ? 'last week' : d < 28 ? Math.floor(d / 7) + ' weeks ago' : d < 56 ? 'last month' : Math.floor(d / 28) + ' months ago'; };
+const cAged = w => { const a = ageOf(w, CW); return a ? w + ', ' + a : w; };
+const cMem = (id, full) => {
+  const b = CB[id], out = [];
+  if (b && b.Mind) out.push('Their mind now: ' + b.Mind);
+  if (b && full && (b.Knows || []).length) out.push('What they know about {{user}} (nothing else, unless told or seen on-screen): ' + b.Knows.map(k => { const m = /^\[([^\]]+)\]\s*/.exec(k); return m ? '[' + cAged(m[1]) + '] ' + k.slice(m[0].length) : k; }).join(' | '));
+  if (b && (b.Imprints || []).length) out.push('Imprints (the only things that have changed who they are): ' + b.Imprints.map(x => '"' + x.Belief + '" (weight ' + x.Weight + (x.When ? ', ' + cAged(x.When) : '') + (x.From ? '; from ' + x.From : '') + (x.Was ? '; replaced "' + x.Was + '"' : '') + ')').join('; '));
+  if (b && full && (b.$Defining || []).length) out.push('Defining moments with {{user}}: ' + b.$Defining.map(r => '[' + cAged(r.w) + '] ' + r.n + (r.fx ? ' (' + r.fx + ')' : '')).join(' | '));
+  if ((CD.change || {})[id]) out.push('Change: ' + CD.change[id]);
+  return out.join('\n');
+};
+const cBandOf = r => (r <= 2 ? '0-2' : r <= 5 ? '3-5' : r <= 8 ? '6-8' : '9-10');
+const cVoice = (id, full) => {
+  const v = (CD.voice || {})[id]; if (!v) return '';
+  const r = Math.max(0, Math.min(10, Number((CB[id] || {}).Rank) || 0)), out = [];
+  if (full) {
+    out.push('Voice examples:');
+    for (const x of v.scenes) out.push('- ' + x);
+    if ((v.alone || []).length) out.push('<narrator_only>\nAlone (the mask off; {{user}} never sees this unless the story earns it):\n' + v.alone.map(x => '- ' + x).join('\n') + '\n</narrator_only>');
+    out.push('Never sounds like: ' + v.never_sounds);
+    out.push("Don't flatten: " + v.dont_flatten);
+  }
+  out.push('Stage with {{user}} (Rank ' + r + '): ' + v.stages[cBandOf(r)]);
+  // 1.6.8 (owner): from Rank 8 the branch adds one line; a best friendship adds none
+  const b = CB[id] || {};
+  if (b.Romance && v.romance) out.push('Romance with {{user}}: ' + v.romance);
+  else if (b.$branch === 'rival' && v.rival) out.push('Sworn rival of {{user}}: ' + v.rival);
+  // 1.6.9 (bug hunt): a character whose canon has no romance branch (B, D) is told so before the story gets there, so the prose
+  // never writes a romance the engine refuses to record (a romance kept from an older save stays)
+  if (!b.Romance && r >= 6 && 'BD'.includes((CD.branch || {})[id] || 'A')) out.push('Not a romance: ' + CD.npcs[id].first + ' does not become {{user}}\'s romance. If {{user}} tries, they react as themselves.');
+  // 1.7.0 (cohort 2): a line for this week of the campaign year (Nerys's hobby). Pinned weeks follow the calendar; the other weeks
+  // shift by wk.shift slots each campaign year after her first (a revival season); from wk.choose_from {{user}} may pick instead
+  const wk = (CD.weekly || {})[id];
+  if (wk) {
+    const i = (Math.min(12, Math.max(1, Number(CW.Month) || 1)) - 1) * 4 + Math.min(4, Math.max(1, Number(CW.Week) || 1)) - 1, later = CYR > wk.first_year;
+    const free = wk.lines.map((_, j) => j).filter(j => !wk.pinned.includes(j));
+    const line = wk.pinned.includes(i) ? wk.lines[i] : wk.lines[free[(free.indexOf(i) + Math.max(0, CYR - wk.first_year) * wk.shift) % free.length]];
+    out.push(wk.label + ': ' + line + (later ? ' (' + wk.revival + ')' : '') + (r >= wk.choose_from ? ' (unless {{user}} chose one; then theirs)' : ''));
+  }
+  if (full) out.push('Anchor: ' + v.anchor);
+  return out.join('\n');
+};
+_%>
+<%_ if (FULL.includes('Yvette')) { _%>
+<%- cHead('Yvette', true) %>
+Role: Teaching first-year Magic Theory for over a decade; Head of the Fire Dormitory, where she lives; advises the Smithing Club, where students craft and study enchanted items. Age <%- 37 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
+Appearance: Tall, athletic, long straight black hair (in a bun at work), light brown eyes, natural fair skin, a little softness at the stomach from stress. Black vest, long-sleeved shirt, trousers; shorts and t-shirts off duty.
+Magic: Elemental — Lightning, from range. Studies enchanted items obsessively and carries a floating orb focus that holds protective charms.
+Personality: Kind, stern, motherly, hard-working, cautious, paranoid. Runs her fingers through her hair when nervous. Casual tone, professional at work.
+Backstory: The only daughter of poor farmers; worked the fields and was flirting with a boy back home when she left for Halvard at 18. She never felt safe at Halvard. As a student she swore an Oath to serve Halvard for twenty years in exchange for the academy paying off her family's debt. The Oath also forbids her from speaking of its terms, so students only see a teacher who never leaves.
+Loves: Her students. Teaching. Researching magic. Long theory discussions with her friend Layla Palegleam, the History teacher.
+Hates: Halvard itself; to her it's a prison.
+Goals: Protect her students and prepare them. Convince Headmaster Baelin Kalvor to release her from the Oath early.
+Relations: Layla Palegleam is her best friend since they were first-years together at Halvard. Headmaster Baelin Kalvor sympathises and still will not release her from the Oath. Tristan Aurelle holds that Oath in his registry and is unfailingly kind to her. Shares Magic Theory with Ezrel Marionne and has not trusted him since she sat in his lectures. Vera Pulsar is the only student who out-questions her. In her own Fire Dormitory: Gareth Valkaryn and Sophia Helfin are the top two, and she dreads the Fire dorm final every year; Caralynn Veyturone tops the first-years and knows it; Tilly Marsh is the student she loses the most sleep over.
+Quirk: Far more popular with students than she wants to be; several have confessed to her, and she always tells them to find someone their own age.
+Headmaster Baelin sympathizes with her but refuses to release her from the Oath.
+Doves: Hates them. To her Halvard is a prison, and the Doves are its jailers, always watching.
+Tristan, the Cathedral steward, holds her Oath in his registry and knows its terms exactly. He has never once brought it up, and is unfailingly kind to her.
+Vera Pulsar is the Smithing Club's most relentless member and the only student who out-questions her.
+Shares Magic Theory with Ezrel Marionne, the Light Dorm Head: she takes the first-years, he keeps the second. She sat in his lectures as a student and has not trusted him since; she checks his golems in the Workshop for anything she cannot account for, and has never found anything.
+Haunts: Workshop, warm end of the Lecture Halls. Judges Ardenne workmanship; steers exam-week students to ordinary coffee over Nightwell's Vigil.
+Keeps her rooms in the Fire Dormitory bare, as if she might be allowed to leave tomorrow. The dormitory door opens only to its own, so her rest-day evenings with Layla are spent in Layla's rooms in the Staff Quarters, where her own teacup waits on the shelf.
+Runs the Magical & Science Fair.
+Emotional tells: Nerves go through her hair. Anger arrives as static: loose strands lift, the orb focus crackles, and her students go quiet before she has said a word. Paranoia is watching the exits and keeping the orb closer than usual. A student's confession gets brisk kindness and a blush she will deny. Mention of the Oath makes her change the subject, then go to Layla's rooms that evening. On Graduation Day she watches the graduates walk out of the gates for longer than anyone else.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+Nerys Silvarenne, a strange first-year in her dorm, once made her jump with a footstep that was not there, and has never done it again. Yvette does not know why and is grateful.
+Wren Marlowe, a deaf first-year in her dorm, sits in the front row of Magic Theory. Yvette writes every word of the lecture on the board for her, and has learned the sign alphabet, badly, in secret.
+<%_ } _%>
+<%_ const _tYvette = [cVoice('Yvette', true), cTail('Yvette'), cMem('Yvette', true)].filter(Boolean).join('\n'); if (_tYvette) { _%>
+<%- _tYvette %>
+<%_ } _%>
+<%_ } else if (BRIEF.includes('Yvette')) { _%>
+<%- [cHead('Yvette', false), cVoice('Yvette', false), cMem('Yvette', false)].filter(Boolean).join('\n') %>
+<%_ } _%>

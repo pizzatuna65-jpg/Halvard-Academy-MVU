@@ -3,14 +3,14 @@
 // opens with the bond of the person whose file tells it ('rank:N@Via'), and a note is that person's side, not the other's.
 // A 1.6.9 save loads with nothing lost.
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
-const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
+const { initState, applyPatch, ok, ROOT, renderEntry } = require('./harness.cjs');
 global.window = { parent: { document: {} } };
 global.substitudeMacros = () => 'Aria Vale';
 console.log('Connections 1.6.10');
 const rd = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const U = new Function(rd('src/scripts/ui.js') + '\nreturn { graphModel, view, DATA, EDGE, PANELS, knowsName };')();
 const card = JSON.parse(rd('dist/Eldrasil_Halvard.json')).data;
-const R = (uid, S) => ejs.render(card.character_book.entries.find(e => e.id === uid).content, { getvar: k => _.get({ stat_data: S }, k) });
+const R = (uid, S) => renderEntry(card, uid, S);   // 1.48.0: the Cast Sheet is a group
 const rels = U.DATA.rel.filter(e => !e[6]);
 const has = (a, b, t) => rels.some(e => e[0] === a && e[1] === b && (!t || e[2] === t));
 const meet = ids => ({ op: 'replace', path: '/Scene/Present', value: Object.fromEntries(ids.map(i => [i, { Note: '' }])) });

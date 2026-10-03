@@ -1,6 +1,6 @@
 // Approved mood, fatigue, wind, gifts and birthdays: behavior and legacy save coverage.
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
-const { Schema, runEngine, initState, applyPatch, ok, ROOT } = require('./harness.cjs');
+const { Schema, runEngine, initState, applyPatch, ok, ROOT, renderEntry } = require('./harness.cjs');
 const read = p => fs.readFileSync(path.join(ROOT,p),'utf8');
 const E = new Function(read('src/scripts/engine.js') + '\nreturn {moodOf, giftTier, windMultiplier, wxDay, fromAbs, toAbs, birthdayParty, NPC_MOODS, GIFT_PREFS, tuneOf, updateSleep};')();
 const clone = x => _.cloneDeep(x), op = (path,value) => ({op:'replace',path,value});
@@ -13,7 +13,7 @@ function base(ids=['Trixie'], mode='full', W={}) {
 }
 const step = (S,mins,extra=[]) => { const W=E.fromAbs(S.$eng.abs+mins); return applyPatch(S,[...Object.entries(W).map(([k,v])=>op('/World/'+k,v)),...extra]); };
 const card=JSON.parse(read('dist/Eldrasil_Halvard.json')).data;
-const render=(uid,S)=>ejs.render(card.character_book.entries.find(e=>e.id===uid).content,{getvar:k=>_.get({stat_data:S},k)});
+const render=(uid,S)=>renderEntry(card,uid,S);   // 1.48.0: the Cast Sheet is a group
 global.window={parent:{document:{}}};
 const U=new Function(read('src/scripts/ui.js')+'\nreturn {PANELS,view,datedItems,fieldUnlocked,npcOf,customRecord,shopsHere};')();
 

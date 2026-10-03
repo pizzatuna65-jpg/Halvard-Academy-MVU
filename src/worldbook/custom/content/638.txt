@@ -1,0 +1,105 @@
+@@if [...((getvar('stat_data.$ui.cast') || {}).full || []), ...((getvar('stat_data.$ui.cast') || {}).brief || [])].includes('Layla')
+<%_
+const CS = getvar('stat_data.$ui.cast') || {}, FULL = CS.full || [], BRIEF = CS.brief || [];
+const CB = getvar('stat_data.Bonds') || {}, CST = getvar('stat_data.Campus_State') || {}, CUI = getvar('stat_data.$ui') || {};
+const CD = {"npcs":{"Layla":{"name":"Layla Palegleam","first":"Layla","pron":"she/her","called":"Layla; full name Layla Palegleam","who":"Staff; History Y1.","never":"holding a grudge in secret or plotting against {{user}} (Trust); anything outside their authority: no personal violence, no lies on the record (when strained)","ties":[["Bobby","friends",1],["Cedric","friends",1],["Yvette","friends",1],["Tilly","softspot",1],["Vera","softspot",1],["Zara","softspot",1],["Irene","protective",1],["Gavlan","respect",1]],"secret":true,"nobond":false,"y":null}},"trust_bands":[[0,"Betrayed"],[15,"Doubtful"],[35,"Neutral"],[65,"Trusting"],[85,"Confidant"]],"tension_bands":[[0,"Calm"],[20,"Friction"],[40,"Strained"],[70,"Hostile"],[90,"Enemy"]],"change":{"Layla":"fixed"},"gifts":{"Layla":"Gifts: loves Founding of the Dovecote (old edition). Old Archive documents. Hates: The Night Student: A True Account."},"voice":{"Layla":{"scenes":["Scene: {{user}} asks her a quick question in the Canteen. Three anecdotes and a detour through a fourth-century tax roll later, she arrives at the answer, and it is exactly right.","Scene: in the lecture hall the tangents vanish. Clear, structured, every date in place.","Scene: a student says \"everyone knows\". \"Source?\"","Scene: {{user}} argues her down with a good case. She claps, delighted. \"Oh, that's marvellous. I'm wrong. Write that down.\"","Scene: Yvette has been quiet all week. Layla puts on a second pot of tea and does not ask the questions she wants to.","Scene: the Remembrance Day speech. She reaches one line, and stops."],"alone":["Scene: alone in her rooms, she checks the dampening charm woven into her gloves, stitch by stitch, the way other people check a lock.","Scene: Yvette laughs at something over tea. Layla watches her a moment longer than the joke needs, and says nothing."],"never_sounds":"brief outside a lecture, bored by a question, or cruel; never takes the gloves off.","term_used":"{{user}}: their first name, and \"my dear\" when she is excited. Yvette: \"Yvette\". Gavlan: \"Professor Haverton\", especially when asking for the interview again. Bobby: \"Bobby\", over lunch.","dont_flatten":"her scatter into a poor memory (her memory for the record is razor sharp); her warmth into a pushover (she wants sources, always); her temper into outbursts (all anyone sees is the gloves being tugged tighter and a trickle of sand).","carries":"a pencil stuck through her bun; half-moon glasses; thin gloves; a wool vest with pockets full of small notes.","stages":{"0-2":"chatty and delighted to have an audience; {{user}} gets anecdotes and debate questions.","3-5":"sets {{user}} her hardest debate questions and cheers when they win one. Opens the Restricted Section to them.","6-8":"shares her theories on the Archmage's missing name and asks {{user}} to help with her true history of Halvard. Admits she is worried about Yvette, without being able to say why.","9-10":"shares everything she has pieced together about Halvard's past. The gloves stay on, and what happened twenty years ago stays hers."},"anchor":"her gloves, always on."}},"branch":{"Layla":"D"}};
+const CSECR = [...new Set([...(CUI.secrets || []), ...(CST.Secrets_revealed || [])].map(x => String(x)))];
+const cBand = (bands, x) => (bands || [[0, '']]).reduce((a, [f, nm]) => (x >= f ? nm : a), '');
+const cStat = id => { const N = CST.NPC_status || {}; const k = Object.keys(N).find(x => x.toLowerCase() === id.toLowerCase() || x.toLowerCase().split(/\s+/)[0] === id.toLowerCase()); return k ? N[k] : ''; };
+const CYR = Math.max(1, Number((getvar('stat_data.World') || {}).Year) || 1), CGRAD = CST.Graduated || [];
+const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, c.y[0] + CYR - c.y[1]) + ' student');
+const cTies = c => (c.ties || []).filter(t => t[2] <= CYR).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHead = (id, full) => {
+  const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
+  out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
+  const bond = b ? 'Bond with {{user}}: Rank ' + (Number(b.Rank) || 0) + ', Trust ' + (Number(b.Trust) || 0) + ' (' + cBand(CD.trust_bands, Number(b.Trust) || 0).toLowerCase() + '), Tension ' + (Number(b.Tension) || 0) + ' (' + cBand(CD.tension_bands, Number(b.Tension) || 0).toLowerCase() + ').' : (c.nobond ? 'No bond system (rival academy).' : 'Not bonded yet: a stranger to {{user}} unless the story says otherwise.');
+  const v = (CD.voice || {})[id];
+  out.push('INVARIANTS: ' + c.pron + '. Called ' + c.called + '. ' + cWho(c) + ' ' + bond + (c.never ? ' Never: ' + c.never + '.' : '') + (ties ? ' Key ties: ' + ties + '.' : '')
+    + (v ? ' How they address people: ' + v.term_used + ' Carries: ' + v.carries : ''));
+  const w = getvar('stat_data.World') || {};
+  if (c.y && c.y[0] + CYR - c.y[1] === 1 && +w.Month === 1 && +w.Week === 1 && w.Day === 'Mon')
+    out.push('Entrance-day newcomer: the listed dorm and any vest in later-life lore are eventual facts, not knowledge or clothing before their own Stone sorting. Before their turn they have no first-hand experience of Halvard rooms, teachers or new classmates unless a documented earlier relationship supplies it. After sorting, a Council member gives the vest.');
+  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
+  return out.join('\n');
+};
+const cTail = id => {   // may be '' (then the sheet ends with the lore or cMem)
+  const c = CD.npcs[id], got = CSECR.filter(x => x.toLowerCase().startsWith(id.toLowerCase() + '.'));
+  if (!c.secret && !got.length) return '';
+  return 'Secrets: '
+    + (got.length ? '{{user}} has uncovered: ' + got.map(x => x.slice(x.indexOf('.') + 1)).join(', ') + '. ' + c.first + ' knows {{user}} knows this and behaves accordingly.' : '{{user}} has uncovered none of them.');
+};
+const CW = getvar('stat_data.World') || {};
+const ageOf = (w, W) => { const m = /(?:Y(\d+) )?M(\d{1,2}) W([1-4])(?: (Mon|Tue|Wed|Thu|Fri|Sat|Sun))?/.exec(String(w || '')); if (!m || !W || !W.Month) return ''; const D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], di = Math.max(0, D.indexOf(W.Day)), Y = Math.max(1, Number(W.Year) || 1), yl = m[1] ? Math.max(1, +m[1]) : Y; const far = n => (n < 2 ? 'over a year ago' : 'over ' + n + ' years ago'); if (!m[4]) { let k = ((Y - 1) * 48 + (W.Month - 1) * 4 + W.Week - 1) - ((yl - 1) * 48 + (+m[2] - 1) * 4 + +m[3] - 1); if (k < 0) { if (m[1]) return ''; k += 48; } if (k >= 48) return far(Math.floor(k / 48)); return k === 0 ? 'this week' : k === 1 ? 'last week' : k < 4 ? k + ' weeks ago' : k < 8 ? 'last month' : Math.floor(k / 4) + ' months ago'; } let d = ((Y - 1) * 336 + (W.Month - 1) * 28 + (W.Week - 1) * 7 + di) - ((yl - 1) * 336 + (+m[2] - 1) * 28 + (+m[3] - 1) * 7 + D.indexOf(m[4])); if (d < 0) { if (m[1]) return ''; d += 336; } if (d >= 336) return far(Math.floor(d / 336)); return d === 0 ? 'earlier today' : d === 1 ? 'yesterday' : d < 7 ? d + ' days ago' : d < 14 ? 'last week' : d < 28 ? Math.floor(d / 7) + ' weeks ago' : d < 56 ? 'last month' : Math.floor(d / 28) + ' months ago'; };
+const cAged = w => { const a = ageOf(w, CW); return a ? w + ', ' + a : w; };
+const cMem = (id, full) => {
+  const b = CB[id], out = [];
+  if (b && b.Mind) out.push('Their mind now: ' + b.Mind);
+  if (b && full && (b.Knows || []).length) out.push('What they know about {{user}} (nothing else, unless told or seen on-screen): ' + b.Knows.map(k => { const m = /^\[([^\]]+)\]\s*/.exec(k); return m ? '[' + cAged(m[1]) + '] ' + k.slice(m[0].length) : k; }).join(' | '));
+  if (b && (b.Imprints || []).length) out.push('Imprints (the only things that have changed who they are): ' + b.Imprints.map(x => '"' + x.Belief + '" (weight ' + x.Weight + (x.When ? ', ' + cAged(x.When) : '') + (x.From ? '; from ' + x.From : '') + (x.Was ? '; replaced "' + x.Was + '"' : '') + ')').join('; '));
+  if (b && full && (b.$Defining || []).length) out.push('Defining moments with {{user}}: ' + b.$Defining.map(r => '[' + cAged(r.w) + '] ' + r.n + (r.fx ? ' (' + r.fx + ')' : '')).join(' | '));
+  if ((CD.change || {})[id]) out.push('Change: ' + CD.change[id]);
+  return out.join('\n');
+};
+const cBandOf = r => (r <= 2 ? '0-2' : r <= 5 ? '3-5' : r <= 8 ? '6-8' : '9-10');
+const cVoice = (id, full) => {
+  const v = (CD.voice || {})[id]; if (!v) return '';
+  const r = Math.max(0, Math.min(10, Number((CB[id] || {}).Rank) || 0)), out = [];
+  if (full) {
+    out.push('Voice examples:');
+    for (const x of v.scenes) out.push('- ' + x);
+    if ((v.alone || []).length) out.push('<narrator_only>\nAlone (the mask off; {{user}} never sees this unless the story earns it):\n' + v.alone.map(x => '- ' + x).join('\n') + '\n</narrator_only>');
+    out.push('Never sounds like: ' + v.never_sounds);
+    out.push("Don't flatten: " + v.dont_flatten);
+  }
+  out.push('Stage with {{user}} (Rank ' + r + '): ' + v.stages[cBandOf(r)]);
+  // 1.6.8 (owner): from Rank 8 the branch adds one line; a best friendship adds none
+  const b = CB[id] || {};
+  if (b.Romance && v.romance) out.push('Romance with {{user}}: ' + v.romance);
+  else if (b.$branch === 'rival' && v.rival) out.push('Sworn rival of {{user}}: ' + v.rival);
+  // 1.6.9 (bug hunt): a character whose canon has no romance branch (B, D) is told so before the story gets there, so the prose
+  // never writes a romance the engine refuses to record (a romance kept from an older save stays)
+  if (!b.Romance && r >= 6 && 'BD'.includes((CD.branch || {})[id] || 'A')) out.push('Not a romance: ' + CD.npcs[id].first + ' does not become {{user}}\'s romance. If {{user}} tries, they react as themselves.');
+  // 1.7.0 (cohort 2): a line for this week of the campaign year (Nerys's hobby). Pinned weeks follow the calendar; the other weeks
+  // shift by wk.shift slots each campaign year after her first (a revival season); from wk.choose_from {{user}} may pick instead
+  const wk = (CD.weekly || {})[id];
+  if (wk) {
+    const i = (Math.min(12, Math.max(1, Number(CW.Month) || 1)) - 1) * 4 + Math.min(4, Math.max(1, Number(CW.Week) || 1)) - 1, later = CYR > wk.first_year;
+    const free = wk.lines.map((_, j) => j).filter(j => !wk.pinned.includes(j));
+    const line = wk.pinned.includes(i) ? wk.lines[i] : wk.lines[free[(free.indexOf(i) + Math.max(0, CYR - wk.first_year) * wk.shift) % free.length]];
+    out.push(wk.label + ': ' + line + (later ? ' (' + wk.revival + ')' : '') + (r >= wk.choose_from ? ' (unless {{user}} chose one; then theirs)' : ''));
+  }
+  if (full) out.push('Anchor: ' + v.anchor);
+  return out.join('\n');
+};
+_%>
+<%_ if (FULL.includes('Layla')) { _%>
+<%- cHead('Layla', true) %>
+Role: Teaches first-year History; advises the Library Assistants. Age <%- 39 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. In the same year as Yvette Fallaron at Halvard; best friends ever since.
+Appearance: Short and plump, curly brown hair forever escaping its bun with a pencil stuck through it, half-moon glasses, ink-stained fingers, thin gloves she almost never removes. A wool vest with many pockets stuffed with small notes.
+Magic: Elemental — Sand. Her sand moves on its own to block what comes at her, so she is difficult to hit and rarely bothers to dodge. It buries, crushes, and holds. She has not used it in anger in twenty years. Hence the gloves.
+Backstory: Daughter of a bookbinder in a dry southern town, and the family's only mage. Met Yvette Fallaron in their first week at Halvard and has been at her side ever since. Twenty years ago, as a student, she used her sand in anger once, and has not used it that way since.
+<narrator_only>What happened: in their second year a group of older students cornered Yvette behind the Potion Halls. Layla's sand answered on its own before she decided anything, and very nearly buried one of them; he lived, barely. The gloves are woven with a dampening charm. Yvette has never mentioned it, and it is part of why Yvette never felt safe at Halvard, and part of why she never felt alone there either.</narrator_only>
+Personality: Warm, chatty, easily sidetracked; her sentences wander through three anecdotes before returning to the point. Loves debate and is happiest when a student argues her down with a good case. Behind the scatter, her memory for the historical record is razor sharp.
+Loves: A student who argues her down with a good case. The Archive's oldest staff rolls. Rest-day tea and theory with Yvette. Campus gossip with Bobby Becket. The Doves' founding legends.
+Hates: "Everyone knows", which is not a source. The Night Student story. Remembrance Day speeches, which she writes every year and cannot finish. Her own temper, which is why the gloves stay on.
+Goals: Teach the Archmage's missing name properly, even if she never solves it. Write a true history of Halvard, the breach included. Find out what binds Yvette. Get Gavlan's interview about the war before one of them runs out of time.
+Academic obsessions: The open, public mysteries: why the Archmage's name is missing from every record, and why a tomb and an elixir needed sealing at all. She teaches these as debate questions. She has no answers and knows nothing of any cult.
+Relations: Rest-day evenings of tea and theory with Yvette in Layla's own rooms in the Staff Quarters, since the Fire Dormitory, where Yvette lives as Dorm Head, admits only its own; she knows Yvette is bound by something, doesn't know what, and is dying to find out, but the Oath forbids Yvette from telling. Irene Chanare is her most diligent Library Assistant, and Layla taught her how to organize archives. Often notices Zara Minallone on the library's top shelves and quietly leaves books up there for her. Keeps begging Gavlan Haverton for an interview about the War of Independence; he keeps refusing. Calls Cedric Amor Fay, who teaches third-year History, "Doom", and brings him cake to prove the world has not ended yet.
+Hook: Before every Remembrance Day she leads a field visit to the monuments on the grounds, which at Halvard now includes the plaque bearing the names of the breach dead. Last year she could not finish her speech.
+Speech: Fast, enthusiastic, full of "oh, and by the way…". In lectures she becomes remarkably clear and structured.
+Emotional tells: Joy is volume and tangents; the more excited she is, the more anecdotes she stacks before the point. "Everyone knows" gets a sharp "Source?". Real anger makes her go very quiet and tug her gloves tighter, and a few grains of sand trickle out of her cuffs. Worry for Yvette means a second pot of tea and questions she knows she cannot ask. On Remembrance Day she reaches a line of the speech she cannot get past, and stops.
+Doves: Admires them. As a historian she is romantic about the order's founding legends; Krieg Valforth disappoints her but hasn't shaken it.
+Adores Vera Pulsar in class and despairs of her margins, which are full of counter-arguments.
+Haunts: Main Library, Archive. Treats the Founder's Hand as evidence of student behaviour.
+Hates the Night Student story, which resurfaces after her Remembrance Day speech; calls the polished Founder's Hand proof nobody dares test the alternative.
+Tilly Marsh argues her wildest theories in office hours; Layla enjoys it enormously.
+Has found the name Ezrel Marionne, Light Dorm Head, in every staff roll the Archive holds, back to the founding. She asked him once; he said yes, it was him. She still cannot decide whether he was joking, and has not dared ask again.
+Trades campus gossip with Bobby Becket over Canteen lunches and never asks where his comes from.
+Opens her first lecture with the Four Who Saved the World, to teach the difference between a myth and a record.
+<%_ const _tLayla = [cVoice('Layla', true), cTail('Layla'), cMem('Layla', true)].filter(Boolean).join('\n'); if (_tLayla) { _%>
+<%- _tLayla %>
+<%_ } _%>
+<%_ } else if (BRIEF.includes('Layla')) { _%>
+<%- [cHead('Layla', false), cVoice('Layla', false), cMem('Layla', false)].filter(Boolean).join('\n') %>
+<%_ } _%>

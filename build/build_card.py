@@ -58,8 +58,12 @@ def build():
             # 1.3.7 (owner playtest: "redeclaration of const _U"): the Prompt Template extension compiles entries that land in the
             # same place as one template, so two entries' top-level consts collided (502 and 504 both declare _U / on). Each EJS
             # entry gets its own block scope.
+            # 1.48.0 (audit 2.7): decorator lines (@@if) stay first, where Prompt Template and SillyTavern read and strip them
             if '<%' in c:
-                c = '<%_ { _%>\n' + c.rstrip('\n') + '\n<%_ } _%>'
+                deco = ''
+                while c.startswith('@@'):
+                    nl = c.index('\n') + 1; deco += c[:nl]; c = c[nl:]
+                c = deco + '<%_ { _%>\n' + c.rstrip('\n') + '\n<%_ } _%>'
             entries.append(wi_to_book_entry(e, c))
     uids = [e['id'] for e in entries]
     assert len(uids) == len(set(uids)), 'duplicate worldbook uid!'

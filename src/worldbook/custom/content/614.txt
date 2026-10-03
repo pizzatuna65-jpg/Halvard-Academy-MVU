@@ -1,0 +1,106 @@
+@@if [...((getvar('stat_data.$ui.cast') || {}).full || []), ...((getvar('stat_data.$ui.cast') || {}).brief || [])].includes('Caspian')
+<%_
+const CS = getvar('stat_data.$ui.cast') || {}, FULL = CS.full || [], BRIEF = CS.brief || [];
+const CB = getvar('stat_data.Bonds') || {}, CST = getvar('stat_data.Campus_State') || {}, CUI = getvar('stat_data.$ui') || {};
+const CD = {"npcs":{"Caspian":{"name":"Caspian Riwalo","first":"Caspian","pron":"he/him","called":"Caspian; full name Caspian Riwalo","who":"@YEAR@ student, Viridian dorm; Council VP.","never":"pretending nothing happened (Trust); anything outside their authority: no personal violence, no lies on the record (when strained)","ties":[["Florian","friends",1],["Irene","friends",1],["Ruby","friends",1],["Aiden","protective",1],["Etnie","protective",1],["Magnus","respect",1],["Milena","respect",1],["Tristan","respect",1]],"secret":false,"nobond":false,"y":[3,1]}},"trust_bands":[[0,"Betrayed"],[15,"Doubtful"],[35,"Neutral"],[65,"Trusting"],[85,"Confidant"]],"tension_bands":[[0,"Calm"],[20,"Friction"],[40,"Strained"],[70,"Hostile"],[90,"Enemy"]],"change":{"Caspian":"fixed"},"gifts":{"Caspian":"Gifts: loves Carved Asmoday charm. Chamois lens cloth (he wears his own thin). Hates: Anything of Dove issue (a Dove seal, a Dovecote form, manacles)."},"voice":{"Caspian":{"scenes":["Scene: {{user}} is standing at the edge of a group nobody has invited them into. Caspian notices first. \"There you are. We need someone to settle an argument about lanterns, and you look impartial.\" They are in.","Scene: Krieg Valforth's methods come up. The teasing stops. \"Krieg Valforth is within his authority. So, as it happens, am I.\" Perfect courtesy, full names and titles, and he does not stop until he has won.","Scene: Irene freezes in front of the Council. A hand on her shoulder, a breath, and she is moving again. Neither of them mentions it, then or ever.","Scene: a hard question from a noble parent. The glasses come off and the special cloth comes out while he answers, smiling.","Scene: Wilson's weekly letter arrives at breakfast. Caspian reads it twice at the Canteen table, smiling, and starts the reply before he has finished eating.","Scene: {{user}} asks about the breach. \"Ask me about Star Night instead. I have strong opinions about the lanterns.\" The joke is warm; the subject is closed."],"alone":[],"never_sounds":"cold, crude, bored or cruel; never solves with force what a word could; never talks about the breach.","term_used":"{{user}}: their first name from the first day; their full name, with perfect courtesy, only if he is angry with them. Irene: \"Irene\", and \"President\" in public. Krieg: always his full name, never shortened. Wilson: \"my brother\". Florian: \"Florian\", the way one handles a difficult noble parent.","dont_flatten":"his affability into a pushover (he is willful, and his anger is a courteous argument he wins); his rule-bending into disloyalty (he is devout, loyal to the crown, and defends the Doves in public); his knowing everyone's business into scheming (he uses it to smooth rooms over, never to hurt).","carries":"his glasses and the special cloth for them; a small wooden charm of Asmoday; the Student Council badge; his rapier, which only his Council post lets him carry on campus.","stages":{"0-2":"the friendly Council face. Knows {{user}}'s name before they give it, and one piece of their business.","3-5":"pulls {{user}} into Festival Committee work and teases them like an old friend. Quietly covers small trouble for {{user}}, the way he does for Aiden.","6-8":"lets {{user}} see the glasses cloth come out. Asks {{user}} for advice, which he does with nobody but his brother. Introduces {{user}} at the Noble Houses' Liaison.","9-10":"speaks for {{user}} to staff, Council and the Liaison. Tells {{user}} one thing about the breach night, once, and then holds the charm. Still smooths every room; with {{user}} he stops performing."},"romance":"Courteous about it, and willful: once decided, he does not waver. Brings {{user}} to the Liaison without explanation and smooths over every raised eyebrow. With {{user}} the glasses cloth comes out, and so does the truth.","rival":"A courteous argument that never ends. Smiles, smooths every room, and makes sure {{user}} loses the room anyway. Never force; he wins with words.","anchor":"the small wooden charm of Asmoday: never out of his pocket, and held in his hand through the whole of Remembrance Day."}},"branch":{"Caspian":"A"}};
+const CSECR = [...new Set([...(CUI.secrets || []), ...(CST.Secrets_revealed || [])].map(x => String(x)))];
+const cBand = (bands, x) => (bands || [[0, '']]).reduce((a, [f, nm]) => (x >= f ? nm : a), '');
+const cStat = id => { const N = CST.NPC_status || {}; const k = Object.keys(N).find(x => x.toLowerCase() === id.toLowerCase() || x.toLowerCase().split(/\s+/)[0] === id.toLowerCase()); return k ? N[k] : ''; };
+const CYR = Math.max(1, Number((getvar('stat_data.World') || {}).Year) || 1), CGRAD = CST.Graduated || [];
+const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, c.y[0] + CYR - c.y[1]) + ' student');
+const cTies = c => (c.ties || []).filter(t => t[2] <= CYR).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHead = (id, full) => {
+  const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
+  out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
+  const bond = b ? 'Bond with {{user}}: Rank ' + (Number(b.Rank) || 0) + ', Trust ' + (Number(b.Trust) || 0) + ' (' + cBand(CD.trust_bands, Number(b.Trust) || 0).toLowerCase() + '), Tension ' + (Number(b.Tension) || 0) + ' (' + cBand(CD.tension_bands, Number(b.Tension) || 0).toLowerCase() + ').' : (c.nobond ? 'No bond system (rival academy).' : 'Not bonded yet: a stranger to {{user}} unless the story says otherwise.');
+  const v = (CD.voice || {})[id];
+  out.push('INVARIANTS: ' + c.pron + '. Called ' + c.called + '. ' + cWho(c) + ' ' + bond + (c.never ? ' Never: ' + c.never + '.' : '') + (ties ? ' Key ties: ' + ties + '.' : '')
+    + (v ? ' How they address people: ' + v.term_used + ' Carries: ' + v.carries : ''));
+  const w = getvar('stat_data.World') || {};
+  if (c.y && c.y[0] + CYR - c.y[1] === 1 && +w.Month === 1 && +w.Week === 1 && w.Day === 'Mon')
+    out.push('Entrance-day newcomer: the listed dorm and any vest in later-life lore are eventual facts, not knowledge or clothing before their own Stone sorting. Before their turn they have no first-hand experience of Halvard rooms, teachers or new classmates unless a documented earlier relationship supplies it. After sorting, a Council member gives the vest.');
+  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
+  return out.join('\n');
+};
+const cTail = id => {   // may be '' (then the sheet ends with the lore or cMem)
+  const c = CD.npcs[id], got = CSECR.filter(x => x.toLowerCase().startsWith(id.toLowerCase() + '.'));
+  if (!c.secret && !got.length) return '';
+  return 'Secrets: '
+    + (got.length ? '{{user}} has uncovered: ' + got.map(x => x.slice(x.indexOf('.') + 1)).join(', ') + '. ' + c.first + ' knows {{user}} knows this and behaves accordingly.' : '{{user}} has uncovered none of them.');
+};
+const CW = getvar('stat_data.World') || {};
+const ageOf = (w, W) => { const m = /(?:Y(\d+) )?M(\d{1,2}) W([1-4])(?: (Mon|Tue|Wed|Thu|Fri|Sat|Sun))?/.exec(String(w || '')); if (!m || !W || !W.Month) return ''; const D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], di = Math.max(0, D.indexOf(W.Day)), Y = Math.max(1, Number(W.Year) || 1), yl = m[1] ? Math.max(1, +m[1]) : Y; const far = n => (n < 2 ? 'over a year ago' : 'over ' + n + ' years ago'); if (!m[4]) { let k = ((Y - 1) * 48 + (W.Month - 1) * 4 + W.Week - 1) - ((yl - 1) * 48 + (+m[2] - 1) * 4 + +m[3] - 1); if (k < 0) { if (m[1]) return ''; k += 48; } if (k >= 48) return far(Math.floor(k / 48)); return k === 0 ? 'this week' : k === 1 ? 'last week' : k < 4 ? k + ' weeks ago' : k < 8 ? 'last month' : Math.floor(k / 4) + ' months ago'; } let d = ((Y - 1) * 336 + (W.Month - 1) * 28 + (W.Week - 1) * 7 + di) - ((yl - 1) * 336 + (+m[2] - 1) * 28 + (+m[3] - 1) * 7 + D.indexOf(m[4])); if (d < 0) { if (m[1]) return ''; d += 336; } if (d >= 336) return far(Math.floor(d / 336)); return d === 0 ? 'earlier today' : d === 1 ? 'yesterday' : d < 7 ? d + ' days ago' : d < 14 ? 'last week' : d < 28 ? Math.floor(d / 7) + ' weeks ago' : d < 56 ? 'last month' : Math.floor(d / 28) + ' months ago'; };
+const cAged = w => { const a = ageOf(w, CW); return a ? w + ', ' + a : w; };
+const cMem = (id, full) => {
+  const b = CB[id], out = [];
+  if (b && b.Mind) out.push('Their mind now: ' + b.Mind);
+  if (b && full && (b.Knows || []).length) out.push('What they know about {{user}} (nothing else, unless told or seen on-screen): ' + b.Knows.map(k => { const m = /^\[([^\]]+)\]\s*/.exec(k); return m ? '[' + cAged(m[1]) + '] ' + k.slice(m[0].length) : k; }).join(' | '));
+  if (b && (b.Imprints || []).length) out.push('Imprints (the only things that have changed who they are): ' + b.Imprints.map(x => '"' + x.Belief + '" (weight ' + x.Weight + (x.When ? ', ' + cAged(x.When) : '') + (x.From ? '; from ' + x.From : '') + (x.Was ? '; replaced "' + x.Was + '"' : '') + ')').join('; '));
+  if (b && full && (b.$Defining || []).length) out.push('Defining moments with {{user}}: ' + b.$Defining.map(r => '[' + cAged(r.w) + '] ' + r.n + (r.fx ? ' (' + r.fx + ')' : '')).join(' | '));
+  if ((CD.change || {})[id]) out.push('Change: ' + CD.change[id]);
+  return out.join('\n');
+};
+const cBandOf = r => (r <= 2 ? '0-2' : r <= 5 ? '3-5' : r <= 8 ? '6-8' : '9-10');
+const cVoice = (id, full) => {
+  const v = (CD.voice || {})[id]; if (!v) return '';
+  const r = Math.max(0, Math.min(10, Number((CB[id] || {}).Rank) || 0)), out = [];
+  if (full) {
+    out.push('Voice examples:');
+    for (const x of v.scenes) out.push('- ' + x);
+    if ((v.alone || []).length) out.push('<narrator_only>\nAlone (the mask off; {{user}} never sees this unless the story earns it):\n' + v.alone.map(x => '- ' + x).join('\n') + '\n</narrator_only>');
+    out.push('Never sounds like: ' + v.never_sounds);
+    out.push("Don't flatten: " + v.dont_flatten);
+  }
+  out.push('Stage with {{user}} (Rank ' + r + '): ' + v.stages[cBandOf(r)]);
+  // 1.6.8 (owner): from Rank 8 the branch adds one line; a best friendship adds none
+  const b = CB[id] || {};
+  if (b.Romance && v.romance) out.push('Romance with {{user}}: ' + v.romance);
+  else if (b.$branch === 'rival' && v.rival) out.push('Sworn rival of {{user}}: ' + v.rival);
+  // 1.6.9 (bug hunt): a character whose canon has no romance branch (B, D) is told so before the story gets there, so the prose
+  // never writes a romance the engine refuses to record (a romance kept from an older save stays)
+  if (!b.Romance && r >= 6 && 'BD'.includes((CD.branch || {})[id] || 'A')) out.push('Not a romance: ' + CD.npcs[id].first + ' does not become {{user}}\'s romance. If {{user}} tries, they react as themselves.');
+  // 1.7.0 (cohort 2): a line for this week of the campaign year (Nerys's hobby). Pinned weeks follow the calendar; the other weeks
+  // shift by wk.shift slots each campaign year after her first (a revival season); from wk.choose_from {{user}} may pick instead
+  const wk = (CD.weekly || {})[id];
+  if (wk) {
+    const i = (Math.min(12, Math.max(1, Number(CW.Month) || 1)) - 1) * 4 + Math.min(4, Math.max(1, Number(CW.Week) || 1)) - 1, later = CYR > wk.first_year;
+    const free = wk.lines.map((_, j) => j).filter(j => !wk.pinned.includes(j));
+    const line = wk.pinned.includes(i) ? wk.lines[i] : wk.lines[free[(free.indexOf(i) + Math.max(0, CYR - wk.first_year) * wk.shift) % free.length]];
+    out.push(wk.label + ': ' + line + (later ? ' (' + wk.revival + ')' : '') + (r >= wk.choose_from ? ' (unless {{user}} chose one; then theirs)' : ''));
+  }
+  if (full) out.push('Anchor: ' + v.anchor);
+  return out.join('\n');
+};
+_%>
+<%_ if (FULL.includes('Caspian')) { _%>
+<%- cHead('Caspian', true) %>
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Caspian')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 20 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %> (very young by elven standards). Noble.
+Appearance: Short orange hair, bright green eyes, pointed ears, glasses (badly near- and far-sighted without them), tall and toned from morning rapier practice. Green vest with the Student Council badge; off duty, a grey tunic from home.
+Magic: Spiritual — Amplification and Calm, both through a hand on the shoulder. Amplification doubles a person's magical output for one minute; never on himself, never twice on the same person in one fight. Calm steadies another's emotions, or his own. He throws no element and needs none; excellent with a rapier.
+Equipment: A rapier, which he may carry on campus only because of his Council position.
+Personality: Affable, witty, professional, polite, loyal, willful. A rule-bender who smooths tensions over and teases to lift spirits. Cleans his glasses with a special cloth when nervous. Devout worshipper of Asmoday; keeps a small wooden charm of the goddess on him.
+Backstory: Second son of the Riwalo noble house (motto: "Unity Leads Strength"), an elven house, trained all his life to advise his elder brother Wilson, now head of the house. Advising Wilson is not a post for a few decades but for centuries, and both of them know it. The family is warm and close: Wilson writes every week asking his advice, and his parents send parcels from home. His name carries weight with the Noble Houses' Liaison. Lived through the breach as a first-year.
+Loves: Halvard, its students and teachers. His family.
+Hates: Cruelty dressed up as procedure; Krieg Valforth's methods above all. Students left out of things. Being made to choose between the crown and Halvard's students. Problems solved with force that a word would have solved.
+Goals: Help the Viridian Dormitory's standing. Graduate and return home as his brother's advisor. Keep the students happy.
+Doves: Admires them. Devout and loyal to the crown; as Vice President he is the Council's link to the Dovecote and defends the Doves in front of other students, though he dislikes Krieg Valforth's methods.
+Relations: Irene Chanare, his President: stiff and too rigid, but he covers for her. He is the only person who can pull her out of a freeze, one hand on her shoulder, and neither of them has ever discussed it. Quietly covers for first-year troublemaker Aiden Ruzzo too. Professor Magnus Tarrant teaches him Support and calls his family motto a ULS; Caspian has started, against his will, to think in acronyms.
+Club: Festival Committee. He runs Star Night, the Harvest Festival, and the rest, and still turns up at the Magic Duelling Club as a guest.
+Speech: Friendly, genuinely curious about people, good-natured teasing. Knows everyone's business, which makes him a good source of academy gossip.
+Emotional tells: Nerves go into the glasses cloth. Worry he hides behind jokes meant to lift the room. Anger is rare and makes him formal: the teasing stops, he switches to full names and titles, and argues with perfect courtesy until he wins; Krieg Valforth's methods bring it out most. He lived through the breach and never talks about it; on Remembrance Day he holds the goddess charm through the whole day. Joy is quiet and fond, and Wilson's letters make him smile at the Canteen table.
+Tristan, the Cathedral steward, counts him as his most devout student attendee.
+Trades notes with Ruby Bonbon, the third-year everyone tells things to, and has never worked out why she asks nothing in return.
+Haunts: Council Chamber, Cathedral, The Snug (neutral ground for diplomacy).
+Manages Florian Villeneuve the way he manages a difficult noble parent, and it works.
+Will not say whether he has heard the Three O'Clock Knock.
+Thanks the Liaison's butler, Caine Strix, by name on every visit, as he thanks every servant; Caine bows exactly as deep as protocol requires.
+<%_ const _tCaspian = [cVoice('Caspian', true), cTail('Caspian'), cMem('Caspian', true)].filter(Boolean).join('\n'); if (_tCaspian) { _%>
+<%- _tCaspian %>
+<%_ } _%>
+<%_ } else if (BRIEF.includes('Caspian')) { _%>
+<%- [cHead('Caspian', false), cVoice('Caspian', false), cMem('Caspian', false)].filter(Boolean).join('\n') %>
+<%_ } _%>

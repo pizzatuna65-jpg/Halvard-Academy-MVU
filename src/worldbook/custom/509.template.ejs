@@ -1,86 +1,9 @@
 <%_
-// Source of custom entry 509 (Cast Sheet, 1.5.1 Batch B: P1, P2 automatic part, P5, P7). tools/gen_mvu_entries.py fills the
-// /*@@…@@*/ data and puts one section per NPC where @@SHEETS@@ stands (their lore text, so EJS inside lore still renders).
-// The engine decides who is present and who gets a full sheet ($ui.cast: full, at most 4, and brief). Edit this file, not 509.txt.
+// Source of custom entry 509, the head of the Cast Sheet (1.5.1 Batch B; 1.48.0 audit 2.7: the sheets are one entry per NPC, uid 600+,
+// and 509_tail.template.ejs closes it). tools/gen_mvu_entries.py fills CAST; edit this file, not 509.txt.
 const CS = getvar('stat_data.$ui.cast') || {}, FULL = CS.full || [], BRIEF = CS.brief || [];
-const CB = getvar('stat_data.Bonds') || {}, CST = getvar('stat_data.Campus_State') || {}, CUI = getvar('stat_data.$ui') || {};
-const CD = /*@@CAST@@*/{};
-const CSECR = [...new Set([...(CUI.secrets || []), ...(CST.Secrets_revealed || [])].map(x => String(x)))];
-const cBand = (bands, x) => (bands || [[0, '']]).reduce((a, [f, nm]) => (x >= f ? nm : a), '');
-const cStat = id => { const N = CST.NPC_status || {}; const k = Object.keys(N).find(x => x.toLowerCase() === id.toLowerCase() || x.toLowerCase().split(/\s+/)[0] === id.toLowerCase()); return k ? N[k] : ''; };
-const CYR = Math.max(1, Number((getvar('stat_data.World') || {}).Year) || 1), CGRAD = CST.Graduated || [];
-// 1.7.0 cohorts: the school year in this campaign year, and ties only with people who are already at Halvard
-const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, c.y[0] + CYR - c.y[1]) + ' student');
-const cTies = c => (c.ties || []).filter(t => t[2] <= CYR).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
-const cHead = (id, full) => {
-  const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
-  out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
-  const bond = b ? 'Bond with {{user}}: Rank ' + (Number(b.Rank) || 0) + ', Trust ' + (Number(b.Trust) || 0) + ' (' + cBand(CD.trust_bands, Number(b.Trust) || 0).toLowerCase() + '), Tension ' + (Number(b.Tension) || 0) + ' (' + cBand(CD.tension_bands, Number(b.Tension) || 0).toLowerCase() + ').' : (c.nobond ? 'No bond system (rival academy).' : 'Not bonded yet: a stranger to {{user}} unless the story says otherwise.');
-  const v = (CD.voice || {})[id];
-  out.push('INVARIANTS: ' + c.pron + '. Called ' + c.called + '. ' + cWho(c) + ' ' + bond + (c.never ? ' Never: ' + c.never + '.' : '') + (ties ? ' Key ties: ' + ties + '.' : '')
-    + (v ? ' How they address people: ' + v.term_used + ' Carries: ' + v.carries : ''));
-  const w = getvar('stat_data.World') || {};
-  if (c.y && c.y[0] + CYR - c.y[1] === 1 && +w.Month === 1 && +w.Week === 1 && w.Day === 'Mon')
-    out.push('Entrance-day newcomer: the listed dorm and any vest in later-life lore are eventual facts, not knowledge or clothing before their own Stone sorting. Before their turn they have no first-hand experience of Halvard rooms, teachers or new classmates unless a documented earlier relationship supplies it. After sorting, a Council member gives the vest.');
-  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
-  const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
-  return out.join('\n');
-};
-const cTail = id => {   // may be '' (then the sheet ends with the lore or cMem)
-  const c = CD.npcs[id], got = CSECR.filter(x => x.toLowerCase().startsWith(id.toLowerCase() + '.'));
-  if (!c.secret && !got.length) return '';
-  return 'Secrets: '
-    + (got.length ? '{{user}} has uncovered: ' + got.map(x => x.slice(x.indexOf('.') + 1)).join(', ') + '. ' + c.first + ' knows {{user}} knows this and behaves accordingly.' : '{{user}} has uncovered none of them.');
-};
-// 1.6.0 (Batch C): the character's side of the bond: Mind, Knows (dated, with their age), Imprints, defining moments, Change
-const CW = getvar('stat_data.World') || {};
-/*@@AGE@@*/
-const cAged = w => { const a = ageOf(w, CW); return a ? w + ', ' + a : w; };
-const cMem = (id, full) => {
-  const b = CB[id], out = [];
-  if (b && b.Mind) out.push('Their mind now: ' + b.Mind);
-  if (b && full && (b.Knows || []).length) out.push('What they know about {{user}} (nothing else, unless told or seen on-screen): ' + b.Knows.map(k => { const m = /^\[([^\]]+)\]\s*/.exec(k); return m ? '[' + cAged(m[1]) + '] ' + k.slice(m[0].length) : k; }).join(' | '));
-  if (b && (b.Imprints || []).length) out.push('Imprints (the only things that have changed who they are): ' + b.Imprints.map(x => '"' + x.Belief + '" (weight ' + x.Weight + (x.When ? ', ' + cAged(x.When) : '') + (x.From ? '; from ' + x.From : '') + (x.Was ? '; replaced "' + x.Was + '"' : '') + ')').join('; '));
-  if (b && full && (b.$Defining || []).length) out.push('Defining moments with {{user}}: ' + b.$Defining.map(r => '[' + cAged(r.w) + '] ' + r.n + (r.fx ? ' (' + r.fx + ')' : '')).join(' | '));
-  if ((CD.change || {})[id]) out.push('Change: ' + CD.change[id]);
-  return out.join('\n');
-};
-// 1.6.1 (Batch D, N5): invented characters present: their Extras record is their card; those seen before without one
 const CX = getvar('stat_data.Extras') || {}, XHERE = (CS.extras || []).filter(x => CX[x]), XNEW = CS.xnew || [];
-const cExtra = x => { const r = CX[x]; return '[' + x + '] ' + r.Who + (r.Looks ? ' Looks: ' + r.Looks + '.' : '') + (r.Manner ? ' Manner: ' + r.Manner + '.' : '') + (r.Calls_user ? ' Calls {{user}} "' + r.Calls_user + '".' : '') + (r.Voice ? ' Voice: ' + r.Voice : ''); };
-// Batch G (owner-approved canon): how they sound (scene examples, never sounds like, don't flatten, anchor; full sheets) and the
-// stage for their current bond rank (every sheet). Masked characters' alone scenes stay <narrator_only>.
-const cBandOf = r => (r <= 2 ? '0-2' : r <= 5 ? '3-5' : r <= 8 ? '6-8' : '9-10');
-const cVoice = (id, full) => {
-  const v = (CD.voice || {})[id]; if (!v) return '';
-  const r = Math.max(0, Math.min(10, Number((CB[id] || {}).Rank) || 0)), out = [];
-  if (full) {
-    out.push('Voice examples:');
-    for (const x of v.scenes) out.push('- ' + x);
-    if ((v.alone || []).length) out.push('<narrator_only>\nAlone (the mask off; {{user}} never sees this unless the story earns it):\n' + v.alone.map(x => '- ' + x).join('\n') + '\n</narrator_only>');
-    out.push('Never sounds like: ' + v.never_sounds);
-    out.push("Don't flatten: " + v.dont_flatten);
-  }
-  out.push('Stage with {{user}} (Rank ' + r + '): ' + v.stages[cBandOf(r)]);
-  // 1.6.8 (owner): from Rank 8 the branch adds one line; a best friendship adds none
-  const b = CB[id] || {};
-  if (b.Romance && v.romance) out.push('Romance with {{user}}: ' + v.romance);
-  else if (b.$branch === 'rival' && v.rival) out.push('Sworn rival of {{user}}: ' + v.rival);
-  // 1.6.9 (bug hunt): a character whose canon has no romance branch (B, D) is told so before the story gets there, so the prose
-  // never writes a romance the engine refuses to record (a romance kept from an older save stays)
-  if (!b.Romance && r >= 6 && 'BD'.includes((CD.branch || {})[id] || 'A')) out.push('Not a romance: ' + CD.npcs[id].first + ' does not become {{user}}\'s romance. If {{user}} tries, they react as themselves.');
-  // 1.7.0 (cohort 2): a line for this week of the campaign year (Nerys's hobby). Pinned weeks follow the calendar; the other weeks
-  // shift by wk.shift slots each campaign year after her first (a revival season); from wk.choose_from {{user}} may pick instead
-  const wk = (CD.weekly || {})[id];
-  if (wk) {
-    const i = (Math.min(12, Math.max(1, Number(CW.Month) || 1)) - 1) * 4 + Math.min(4, Math.max(1, Number(CW.Week) || 1)) - 1, later = CYR > wk.first_year;
-    const free = wk.lines.map((_, j) => j).filter(j => !wk.pinned.includes(j));
-    const line = wk.pinned.includes(i) ? wk.lines[i] : wk.lines[free[(free.indexOf(i) + Math.max(0, CYR - wk.first_year) * wk.shift) % free.length]];
-    out.push(wk.label + ': ' + line + (later ? ' (' + wk.revival + ')' : '') + (r >= wk.choose_from ? ' (unless {{user}} chose one; then theirs)' : ''));
-  }
-  if (full) out.push('Anchor: ' + v.anchor);
-  return out.join('\n');
-};
+const CD = /*@@CAST@@*/{};
 const HERE = [...FULL, ...BRIEF];
 // 1.11.0 (token audit A8): what every sheet shares is said once, and only what the people here need
 const CHEAD = (() => {
@@ -91,8 +14,6 @@ const CHEAD = (() => {
   if (types.length) out.push('Change: ' + types.map(t => DEF[t]).join('; ') + '.');
   return out.length ? 'On these sheets: ' + out.join(' ') : '';
 })();
-const pairs = [];
-for (const a of HERE) for (const b of HERE) if (a !== b && (CD.rel[a] || {})[b]) pairs.push(a + ' → ' + b + ': ' + CD.rel[a][b]);
 _%>
 <%_ if (HERE.length || XHERE.length || XNEW.length) { _%>
 <cast>
@@ -100,21 +21,4 @@ Character sheets for the people present: the truth about each of them. They outr
 <%_ if (CHEAD) { _%>
 <%- CHEAD %>
 <%_ } _%>
-@@SHEETS@@
-<%_ if (pairs.length) { _%>
-Between the people here (the truth, whether or not {{user}} knows it):
-<%_ for (const l of pairs) { _%>
-- <%- l %>
-<%_ } _%>
-<%_ } _%>
-<%_ if (XHERE.length) { _%>
-Invented characters here (their Extras record is their card: the same look, manner and voice every time):
-<%_ for (const x of XHERE) { _%>
-- <%- cExtra(x) %>
-<%_ } _%>
-<%_ } _%>
-<%_ if (XNEW.length) { _%>
-Seen before, with no Extras record yet: <%- XNEW.join(', ') %>. Add their record in this reply's update, true to how they were written before (Who, Looks, Manner, Calls_user, Voice).
-<%_ } _%>
-</cast>
 <%_ } _%>

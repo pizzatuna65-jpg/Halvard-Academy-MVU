@@ -2,13 +2,13 @@
 // 7->8 event was played on, a character with no romance branch says so in their sheet, and the dossier's Rank 8 line follows
 // the romance rank in Settings. A 1.6.8 save with a bond waiting at Rank 7 still loads and takes the right branch.
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
-const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
+const { initState, applyPatch, ok, ROOT, renderEntry } = require('./harness.cjs');
 global.window = { parent: { document: {} } };
 global.substitudeMacros = () => 'Aria Vale';
 console.log('Bug hunt 1.6.9');
 const rd = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const card = JSON.parse(rd('dist/Eldrasil_Halvard.json')).data;
-const R = (uid, S) => ejs.render(card.character_book.entries.find(e => e.id === uid).content, { getvar: k => _.get({ stat_data: S }, k) });
+const R = (uid, S) => renderEntry(card, uid, S);   // 1.48.0: the Cast Sheet is a group
 const U = new Function(rd('src/scripts/ui.js') + '\nreturn { view, PANELS };')();
 const clone = o => JSON.parse(JSON.stringify(o));
 const T = (S, time, extra = []) => applyPatch(S, [{ op: 'replace', path: '/World/Time', value: time }, ...extra]);

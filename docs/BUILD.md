@@ -43,7 +43,7 @@ python tools/audit_chat.py chat.jsonl --out report.md   # optional: character-dr
 | `src/scripts/ui.js` | `ui.template.js` + `shared.js` + `src/ui/parts/*` |
 | `src/ui/statusbar.html` | `statusbar.template.html` + `shared.js` |
 | `src/worldbook/*` | `tools/merge_lorebooks.py` |
-| `src/worldbook/custom/index.json`, `content/505.txt`, `content/506.txt`, `content/509.txt` | `tools/gen_mvu_entries.py` (505 from `custom/505.template.ejs`, 509 from `custom/509.template.ejs` + NPC lore) |
+| `src/worldbook/custom/index.json`, `content/505.txt`, `content/506.txt`, `content/509.txt`, `content/599.txt`, `content/600.txt`… | `tools/gen_mvu_entries.py` (505 from `custom/505.template.ejs`; the Cast Sheet (1.48.0): 509 head from `509.template.ejs`, one sheet per NPC 600+ from `509_sheet.template.ejs` + NPC lore, 599 tail from `509_tail.template.ejs`) |
 | `data/feature_cost.json` | `tools/feature_cost.py` (run by `gen_mvu_entries.py`) |
 | `data/npcs.json`, `locations.json`, `relations.json`, `map_pins.json` | `curate_data.py` |
 | `dist/*` | the build |

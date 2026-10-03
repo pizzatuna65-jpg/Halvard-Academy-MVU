@@ -3,13 +3,13 @@
 // INVARIANTS, secret status and the lines between the people present; their keyword entry is empty meanwhile. P6: who spoke
 // without being present, who was only mentioned (<now>). D1: the last-mile cast gate (510 @D0) only with people present.
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
-const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
+const { initState, applyPatch, ok, ROOT, renderEntry } = require('./harness.cjs');
 console.log('Cast Sheet 1.5.1');
 const card = JSON.parse(fs.readFileSync(path.join(ROOT, 'dist/Eldrasil_Halvard.json'), 'utf8')).data;
 const E = uid => card.character_book.entries.find(e => e.id === uid);
 const npcs = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/npcs.json'), 'utf8'));
 const gv = S => k => require('lodash').get({ stat_data: S }, k);
-const R = (uid, S) => ejs.render(E(uid).content, { getvar: gv(S) });
+const R = (uid, S) => renderEntry(card, uid, S, gv(S));   // 1.48.0: the Cast Sheet is a group
 const meet = (ids, text, extra = []) => [{ op: 'replace', path: '/Scene/Present', value: Object.fromEntries(ids.map(i => [i, { Note: '' }])) }, ...extra];
 const at = (S, time, ids, text, extra) => applyPatch(S, [{ op: 'replace', path: '/World/Time', value: time }, ...meet(ids, text, extra)], { text: text || '' });
 const sheetOf = (t, id) => { const m = t.match(new RegExp('\\[' + npcs[id].name + '\\] (full|brief) sheet')); return m ? m[1] : ''; };

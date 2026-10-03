@@ -3,11 +3,11 @@
 // bittersweet (reference: Isshuukan Friends): her alone scenes are narrator-only, and her Rank 10 benefit no longer cures the
 // forgetting ("she still meets them as a stranger, but only for the length of one page").
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
-const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
+const { initState, applyPatch, ok, ROOT, renderEntry } = require('./harness.cjs');
 console.log('G2 voices 1.6.4');
 const rd = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const card = JSON.parse(rd('dist/Eldrasil_Halvard.json')).data;
-const R = (uid, S) => ejs.render(card.character_book.entries.find(e => e.id === uid).content, { getvar: k => _.get({ stat_data: S }, k) });
+const R = (uid, S) => renderEntry(card, uid, S);   // 1.48.0: the Cast Sheet is a group
 const C = JSON.parse(rd('data/npc_canon.json')), G2 = ['Caralynn', 'Percival', 'Trixie', 'Vera', 'Alyssa'];
 ok(G2.every(id => C.voice[id]), 'the 5 G2 voices are in data/npc_canon.json');
 ok(JSON.stringify(Object.fromEntries(G2.map(id => [id, C.change[id]]))) === JSON.stringify({ Caralynn: 'shaped', Percival: 'fixed', Trixie: 'fluid', Vera: 'fixed', Alyssa: 'fixed' }), 'Change types as approved');

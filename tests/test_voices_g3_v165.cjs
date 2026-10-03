@@ -3,11 +3,11 @@
 // scenes are narrator-only. Dante stays fanatically lawful with no exceptions (owner): his Rank 5 gift and Rank 10 benefit no
 // longer have him hide {{user}} from patrols or look away from broken rules.
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
-const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
+const { initState, applyPatch, ok, ROOT, renderEntry } = require('./harness.cjs');
 console.log('G3 voices 1.6.5');
 const rd = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const card = JSON.parse(rd('dist/Eldrasil_Halvard.json')).data;
-const R = (uid, S) => ejs.render(card.character_book.entries.find(e => e.id === uid).content, { getvar: k => _.get({ stat_data: S }, k) });
+const R = (uid, S) => renderEntry(card, uid, S);   // 1.48.0: the Cast Sheet is a group
 const C = JSON.parse(rd('data/npc_canon.json')), G3 = ['Lenna', 'Saffi', 'Idris', 'Dante', 'Florian', 'Tilly'];
 ok(G3.every(id => C.voice[id]), 'the 6 G3 voices are in data/npc_canon.json');
 ok(JSON.stringify(Object.fromEntries(G3.map(id => [id, C.change[id]]))) === JSON.stringify({ Lenna: 'shaped', Saffi: 'fixed', Idris: 'shaped', Dante: 'fixed', Florian: 'fluid', Tilly: 'fixed' }), 'Change types as approved');

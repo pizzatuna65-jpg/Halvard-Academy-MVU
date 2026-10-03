@@ -90,4 +90,16 @@ function extractPatch(text) {
 let fails = 0;
 const ok = (cond, msg) => { console.log((cond ? '  ✓ ' : '  ✗ ') + msg); if (!cond) fails++; };
 process.on('exit', () => { if (fails) { console.log(`${fails} FAILED`); process.exitCode = 1; } else console.log('ALL PASSED'); });
-module.exports = { Schema, runEngine, initState, applyPatch, extractPatch, ok, ROOT };
+// 1.48.0 (audit 2.7): a worldbook entry as SillyTavern and Prompt Template render it. An entry's leading @@ lines are decorators
+// (stripped); "@@if <expr>" drops the entry before the scan unless <expr> holds (ST-Prompt-Template handler.ts applyDecorators).
+// The Cast Sheet (509) is a group: its head 509, the per-NPC sheets (600+) still standing and its tail 599, in insertion order and
+// joined with "\n" as SillyTavern joins one depth's entries (script.js worldInfoDepth), then rendered as one template.
+// card: the parsed card (or its data); S: the state; gv: a getvar to use instead of reading S.
+function renderEntry(card, uid, S, gv) {
+  const ejs = require('ejs'), E = (card.data || card).character_book.entries, getvar = gv || (k => _.get({ stat_data: S }, k));
+  const strip = e => { let c = e.content, keep = true; while (c.startsWith('@@')) { const nl = c.indexOf('\n'), line = c.slice(0, nl);
+    if (line.startsWith('@@if ')) keep = keep && ejs.render(`<%- !!(${line.slice(5)}) %>`, { getvar }) === 'true'; c = c.slice(nl + 1); } return keep ? c : null; };
+  const group = uid === 509 ? E.filter(e => e.id === 509 || e.id === 599 || (e.id >= 600 && e.id < 700)).sort((a, b) => a.insertion_order - b.insertion_order) : [E.find(e => e.id === uid)];
+  return ejs.render(group.map(strip).filter(c => c !== null).join('\n'), { getvar });
+}
+module.exports = { Schema, runEngine, initState, applyPatch, extractPatch, ok, ROOT, renderEntry };

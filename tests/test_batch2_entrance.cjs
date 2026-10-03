@@ -1,10 +1,10 @@
 // Batch 2: entrance order, cohort knowledge and a stable roster-first tour trio.
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
-const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
+const { initState, applyPatch, ok, ROOT, renderEntry } = require('./harness.cjs');
 const read = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const card = JSON.parse(read('dist/Eldrasil_Halvard.json')).data;
 const entry = id => card.character_book.entries.find(e => e.id === id).content;
-const render = (id, S) => ejs.render(entry(id), { getvar: k => _.get({ stat_data: S }, k) });
+const render = (id, S) => renderEntry(card, id, S);   // 1.48.0: the Cast Sheet is a group
 const npcs = JSON.parse(read('data/npcs.json'));
 const yearOf = (id, Y) => npcs[id].year + Y - (npcs[id].arrives || 1);
 const world = (S, Time, more = []) => applyPatch(S, [{ op: 'replace', path: '/World/Time', value: Time }, ...more]);

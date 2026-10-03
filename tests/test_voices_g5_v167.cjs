@@ -4,11 +4,11 @@
 // the owner's approval: Yvette answers the Fire Dormitory's door (the dorm admits only its own), and Layla's line about
 // Yvette moved to the secret side (it was <narrator_only> lore).
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
-const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
+const { initState, applyPatch, ok, ROOT, renderEntry } = require('./harness.cjs');
 console.log('G5 voices 1.6.7');
 const rd = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const card = JSON.parse(rd('dist/Eldrasil_Halvard.json')).data;
-const R = (uid, S) => ejs.render(card.character_book.entries.find(e => e.id === uid).content, { getvar: k => _.get({ stat_data: S }, k) });
+const R = (uid, S) => renderEntry(card, uid, S);   // 1.48.0: the Cast Sheet is a group
 const C = JSON.parse(rd('data/npc_canon.json')), B = JSON.parse(rd('data/bond_rewards.json')).npcs;
 const G5 = ['Gavlan', 'Yvette', 'Baelin', 'Layla', 'Vallie', 'Kuroo', 'Mimosa', 'Althair', 'Ezrel', 'Ottavio', 'Krieg', 'Milena', 'Tristan', 'Bobby'];
 ok(G5.every(id => C.voice[id]) && Object.keys(B).every(id => C.voice[id]), 'the 14 G5 voices are in, and every bonded NPC now has a voice');

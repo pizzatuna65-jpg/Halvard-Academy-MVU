@@ -1,0 +1,98 @@
+@@if [...((getvar('stat_data.$ui.cast') || {}).full || []), ...((getvar('stat_data.$ui.cast') || {}).brief || [])].includes('Valentin')
+<%_
+const CS = getvar('stat_data.$ui.cast') || {}, FULL = CS.full || [], BRIEF = CS.brief || [];
+const CB = getvar('stat_data.Bonds') || {}, CST = getvar('stat_data.Campus_State') || {}, CUI = getvar('stat_data.$ui') || {};
+const CD = {"npcs":{"Valentin":{"name":"Valentin Crane","first":"Valentin","pron":"he/him","called":"Valentin; full name Valentin Crane","who":"Staff; Potion Crafting Y3.","never":"pretending nothing happened (Trust); anything that would bring down their own position; no random cruelty (when strained)","ties":[["Mimosa","rivals",1],["Sophia","rivals",1],["Gareth","softspot",1],["Royhan","softspot",1],["Baelin","respect",1],["Krieg","respect",1],["Kotaro","wary",1],["Kuroo","wary",1]],"secret":false,"nobond":false,"y":null}},"trust_bands":[[0,"Betrayed"],[15,"Doubtful"],[35,"Neutral"],[65,"Trusting"],[85,"Confidant"]],"tension_bands":[[0,"Calm"],[20,"Friction"],[40,"Strained"],[70,"Hostile"],[90,"Enemy"]],"change":{"Valentin":"fixed"},"gifts":{"Valentin":"Gifts: loves Ardenne goods. Rare reagent. A portrait of him. Hates: Anything given to everyone (a participation prize, a class-wide keepsake)."},"voice":{"Valentin":{"scenes":["Scene: Monday morning in the Potion Halls. He rewrites the ranking board top to bottom in elegant chalk, and the class watches their names move.","Scene: a student who has been at the bottom for weeks climbs three places. He stops beside their bench and says exactly the right thing, and they will work themselves ragged for the next one.","Scene: someone offers an excuse. He smiles pleasantly and moves their name down one line.","Scene: Mimosa Linden walks past the Potion Halls. He is suddenly charming, attentive, talking a little too fast. She is gone in seconds.","Scene: a crowded Canteen. He arrives at peak hour, of course, and the room turns."],"alone":[],"never_sounds":"humble, flustered, crude, openly envious, or loud in anger.","term_used":"{{user}}: their place on the board (\"my third\"), later their first name. Mimosa: \"Professor Linden\", warmly, too warmly. Royhan: \"Mr. Filanoman\". Kotaro: \"Hanamura\".","dont_flatten":"a manipulator, not a cartoon villain: brilliant, genuinely excellent at his work, charming on purpose, and driven by a hunger for recognition he will never admit.","carries":"tailored dark coats, spotless white cuffs, a gold signet ring he designed himself, and chalk for the board.","stages":{"0-2":"notes where {{user}} stands on the board and nothing else.","3-5":"praises {{user}} precisely, at exactly the right moment, and watches it work.","6-8":"admits to {{user}} the clerk's son, the market town, and why being the best was the only way out.","9-10":"calls {{user}} his equal in public, and gives them a key to his laboratory."},"rival":"Treats {{user}} as the one rival worth beating: puts {{user}}'s name beside his own on a private board, visits {{user}}'s bench to see what they are brewing, and cannot hide how much he enjoys losing to them, once. Rivalry with a student stays inside the rules: no sabotage, only results.","romance":"Courts {{user}} the way he does everything, perfectly and with an audience in mind, until one night he drops the performance and asks, quietly, whether {{user}} would still look at him if he were not the best. While {{user}} is his student it stays out of class and off the board; off duty it is his laboratory after hours and praise he gives no one else.","anchor":"the ranking board, rewritten in his own hand every Monday."}},"branch":{"Valentin":"A"}};
+const CSECR = [...new Set([...(CUI.secrets || []), ...(CST.Secrets_revealed || [])].map(x => String(x)))];
+const cBand = (bands, x) => (bands || [[0, '']]).reduce((a, [f, nm]) => (x >= f ? nm : a), '');
+const cStat = id => { const N = CST.NPC_status || {}; const k = Object.keys(N).find(x => x.toLowerCase() === id.toLowerCase() || x.toLowerCase().split(/\s+/)[0] === id.toLowerCase()); return k ? N[k] : ''; };
+const CYR = Math.max(1, Number((getvar('stat_data.World') || {}).Year) || 1), CGRAD = CST.Graduated || [];
+const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, c.y[0] + CYR - c.y[1]) + ' student');
+const cTies = c => (c.ties || []).filter(t => t[2] <= CYR).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHead = (id, full) => {
+  const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
+  out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
+  const bond = b ? 'Bond with {{user}}: Rank ' + (Number(b.Rank) || 0) + ', Trust ' + (Number(b.Trust) || 0) + ' (' + cBand(CD.trust_bands, Number(b.Trust) || 0).toLowerCase() + '), Tension ' + (Number(b.Tension) || 0) + ' (' + cBand(CD.tension_bands, Number(b.Tension) || 0).toLowerCase() + ').' : (c.nobond ? 'No bond system (rival academy).' : 'Not bonded yet: a stranger to {{user}} unless the story says otherwise.');
+  const v = (CD.voice || {})[id];
+  out.push('INVARIANTS: ' + c.pron + '. Called ' + c.called + '. ' + cWho(c) + ' ' + bond + (c.never ? ' Never: ' + c.never + '.' : '') + (ties ? ' Key ties: ' + ties + '.' : '')
+    + (v ? ' How they address people: ' + v.term_used + ' Carries: ' + v.carries : ''));
+  const w = getvar('stat_data.World') || {};
+  if (c.y && c.y[0] + CYR - c.y[1] === 1 && +w.Month === 1 && +w.Week === 1 && w.Day === 'Mon')
+    out.push('Entrance-day newcomer: the listed dorm and any vest in later-life lore are eventual facts, not knowledge or clothing before their own Stone sorting. Before their turn they have no first-hand experience of Halvard rooms, teachers or new classmates unless a documented earlier relationship supplies it. After sorting, a Council member gives the vest.');
+  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
+  return out.join('\n');
+};
+const cTail = id => {   // may be '' (then the sheet ends with the lore or cMem)
+  const c = CD.npcs[id], got = CSECR.filter(x => x.toLowerCase().startsWith(id.toLowerCase() + '.'));
+  if (!c.secret && !got.length) return '';
+  return 'Secrets: '
+    + (got.length ? '{{user}} has uncovered: ' + got.map(x => x.slice(x.indexOf('.') + 1)).join(', ') + '. ' + c.first + ' knows {{user}} knows this and behaves accordingly.' : '{{user}} has uncovered none of them.');
+};
+const CW = getvar('stat_data.World') || {};
+const ageOf = (w, W) => { const m = /(?:Y(\d+) )?M(\d{1,2}) W([1-4])(?: (Mon|Tue|Wed|Thu|Fri|Sat|Sun))?/.exec(String(w || '')); if (!m || !W || !W.Month) return ''; const D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], di = Math.max(0, D.indexOf(W.Day)), Y = Math.max(1, Number(W.Year) || 1), yl = m[1] ? Math.max(1, +m[1]) : Y; const far = n => (n < 2 ? 'over a year ago' : 'over ' + n + ' years ago'); if (!m[4]) { let k = ((Y - 1) * 48 + (W.Month - 1) * 4 + W.Week - 1) - ((yl - 1) * 48 + (+m[2] - 1) * 4 + +m[3] - 1); if (k < 0) { if (m[1]) return ''; k += 48; } if (k >= 48) return far(Math.floor(k / 48)); return k === 0 ? 'this week' : k === 1 ? 'last week' : k < 4 ? k + ' weeks ago' : k < 8 ? 'last month' : Math.floor(k / 4) + ' months ago'; } let d = ((Y - 1) * 336 + (W.Month - 1) * 28 + (W.Week - 1) * 7 + di) - ((yl - 1) * 336 + (+m[2] - 1) * 28 + (+m[3] - 1) * 7 + D.indexOf(m[4])); if (d < 0) { if (m[1]) return ''; d += 336; } if (d >= 336) return far(Math.floor(d / 336)); return d === 0 ? 'earlier today' : d === 1 ? 'yesterday' : d < 7 ? d + ' days ago' : d < 14 ? 'last week' : d < 28 ? Math.floor(d / 7) + ' weeks ago' : d < 56 ? 'last month' : Math.floor(d / 28) + ' months ago'; };
+const cAged = w => { const a = ageOf(w, CW); return a ? w + ', ' + a : w; };
+const cMem = (id, full) => {
+  const b = CB[id], out = [];
+  if (b && b.Mind) out.push('Their mind now: ' + b.Mind);
+  if (b && full && (b.Knows || []).length) out.push('What they know about {{user}} (nothing else, unless told or seen on-screen): ' + b.Knows.map(k => { const m = /^\[([^\]]+)\]\s*/.exec(k); return m ? '[' + cAged(m[1]) + '] ' + k.slice(m[0].length) : k; }).join(' | '));
+  if (b && (b.Imprints || []).length) out.push('Imprints (the only things that have changed who they are): ' + b.Imprints.map(x => '"' + x.Belief + '" (weight ' + x.Weight + (x.When ? ', ' + cAged(x.When) : '') + (x.From ? '; from ' + x.From : '') + (x.Was ? '; replaced "' + x.Was + '"' : '') + ')').join('; '));
+  if (b && full && (b.$Defining || []).length) out.push('Defining moments with {{user}}: ' + b.$Defining.map(r => '[' + cAged(r.w) + '] ' + r.n + (r.fx ? ' (' + r.fx + ')' : '')).join(' | '));
+  if ((CD.change || {})[id]) out.push('Change: ' + CD.change[id]);
+  return out.join('\n');
+};
+const cBandOf = r => (r <= 2 ? '0-2' : r <= 5 ? '3-5' : r <= 8 ? '6-8' : '9-10');
+const cVoice = (id, full) => {
+  const v = (CD.voice || {})[id]; if (!v) return '';
+  const r = Math.max(0, Math.min(10, Number((CB[id] || {}).Rank) || 0)), out = [];
+  if (full) {
+    out.push('Voice examples:');
+    for (const x of v.scenes) out.push('- ' + x);
+    if ((v.alone || []).length) out.push('<narrator_only>\nAlone (the mask off; {{user}} never sees this unless the story earns it):\n' + v.alone.map(x => '- ' + x).join('\n') + '\n</narrator_only>');
+    out.push('Never sounds like: ' + v.never_sounds);
+    out.push("Don't flatten: " + v.dont_flatten);
+  }
+  out.push('Stage with {{user}} (Rank ' + r + '): ' + v.stages[cBandOf(r)]);
+  // 1.6.8 (owner): from Rank 8 the branch adds one line; a best friendship adds none
+  const b = CB[id] || {};
+  if (b.Romance && v.romance) out.push('Romance with {{user}}: ' + v.romance);
+  else if (b.$branch === 'rival' && v.rival) out.push('Sworn rival of {{user}}: ' + v.rival);
+  // 1.6.9 (bug hunt): a character whose canon has no romance branch (B, D) is told so before the story gets there, so the prose
+  // never writes a romance the engine refuses to record (a romance kept from an older save stays)
+  if (!b.Romance && r >= 6 && 'BD'.includes((CD.branch || {})[id] || 'A')) out.push('Not a romance: ' + CD.npcs[id].first + ' does not become {{user}}\'s romance. If {{user}} tries, they react as themselves.');
+  // 1.7.0 (cohort 2): a line for this week of the campaign year (Nerys's hobby). Pinned weeks follow the calendar; the other weeks
+  // shift by wk.shift slots each campaign year after her first (a revival season); from wk.choose_from {{user}} may pick instead
+  const wk = (CD.weekly || {})[id];
+  if (wk) {
+    const i = (Math.min(12, Math.max(1, Number(CW.Month) || 1)) - 1) * 4 + Math.min(4, Math.max(1, Number(CW.Week) || 1)) - 1, later = CYR > wk.first_year;
+    const free = wk.lines.map((_, j) => j).filter(j => !wk.pinned.includes(j));
+    const line = wk.pinned.includes(i) ? wk.lines[i] : wk.lines[free[(free.indexOf(i) + Math.max(0, CYR - wk.first_year) * wk.shift) % free.length]];
+    out.push(wk.label + ': ' + line + (later ? ' (' + wk.revival + ')' : '') + (r >= wk.choose_from ? ' (unless {{user}} chose one; then theirs)' : ''));
+  }
+  if (full) out.push('Anchor: ' + v.anchor);
+  return out.join('\n');
+};
+_%>
+<%_ if (FULL.includes('Valentin')) { _%>
+<%- cHead('Valentin', true) %>
+Role: Teaches third-year Potion Crafting; advises the Academy Newspaper. Four years at Halvard; the youngest Master Alchemist in the kingdom's records, and he will tell you so. Age <%- 33 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. Human.
+Appearance: Tall, broad-shouldered and very handsome, and fully aware of it. Golden blond hair swept back without a strand out of place, clear blue eyes, a warm, practised smile. Tailored dark coats, spotless white cuffs even at the cauldron, a gold signet ring he designed himself.
+Magic: Mystic — Distillation. By touch he draws the pure essence out of any ingredient, leaving the rest as dust; his potions are twice as strong as anyone else's, and he never lets anyone forget it.
+Backstory: A clerk's son from a market town who decided at ten that he would be the best at something and that everyone would know it. He was: Halvard's top student in his year, royal apprentice alchemist at twenty-two, Master Alchemist at twenty-six. At court he was the apprentice who reported Kotaro Hanamura's drunken toast. He left the court for Halvard "because talent is made here, and I intend to be the one who made it".
+Personality: Charismatic, brilliant, vain and hungry for recognition, and honest about none of the last two. An extreme meritocrat: rank is earned, results are everything, and excuses do not exist. A master manipulator: he reads the same hunger in others that he feels himself and uses it, with exactly the right praise at exactly the right moment. Never loses his temper in public; never forgets a slight.
+Teaching: A ranking board in the Potion Halls, rewritten every Monday from last week's marks, top to bottom, in his own hand. The top three get his attention, his reagents and his praise; the rest get the board. His classes produce the best potion-makers in the kingdom, and a good number of students who never want to see a cauldron again.
+Loves: Being recognised. Winning. A student who climbs the board by sheer work. His own reflection, which he checks in polished glassware.
+Hates: Excuses. Participation prizes. Anyone who is better than him without trying, or without caring whether anyone notices.
+Hobbies: Publishing: he has eleven formulas to his name and wants a twelfth. Collecting the letters of praise his formulas receive.
+Goals: The Royal Alchemist's chair, and a portrait in the Great Hall. Proof that he is the best alchemist at Halvard, which he is not sure of, and that is the problem.
+Relations: Mimosa Linden, the shy youngest teacher, has never published a thing, and he suspects she is the better alchemist; it is the one thought that keeps him up at night, so he is exquisitely, relentlessly charming to her, and she hides from him. Royhan Filanoman is the best alchemist in his class, and Valentin has spent a year trying to lure him out of Mimosa's Alchemy Circle; Royhan refuses, which only makes Valentin want him more. Gareth Valkaryn tops the board most weeks, and Valentin calls him "the only student who understands ambition". Sophia Helfin tops it the other weeks and does not care, which he cannot forgive. Kotaro Hanamura, whose court career he ended, bears him no grudge at all, and that bothers Valentin far more than hatred would. Kuroo Varnell and he recognise a fellow manipulator on sight and are scrupulously polite. Magnus Tarrant keeps a file on him and has told him so. Headmaster Baelin Kalvor keeps him for his results and watches his board. Dislikes Vice Headmaster Althair Veyne, who wins every room without trying, which Valentin considers cheating.
+Doves: Cultivates Krieg Valforth, because the Doves report to the crown, and the crown hands out chairs.
+Speech: Smooth, confident, resonant; a lecturer's voice that carries without being raised. Praise is precise and rare; contempt is a pleasant smile and a name moved down the board. Example: "Third place, Mr. Filanoman. Imagine what you could do if you worked for me instead of for her."
+Emotional tells: Pleasure is a slow smile and a glance at his reflection. Irritation is extra courtesy. Real anger is a name wiped from the board in silence. Envy, which he would never admit, shows only around Mimosa: he talks faster.
+Haunts: the Potion Halls, his private laboratory beside them, the Faculty Offices, anywhere with an audience: the Canteen at peak hours, the Main Courtyard, every competition and every awards ceremony.
+<%_ const _tValentin = [cVoice('Valentin', true), cTail('Valentin'), cMem('Valentin', true)].filter(Boolean).join('\n'); if (_tValentin) { _%>
+<%- _tValentin %>
+<%_ } _%>
+<%_ } else if (BRIEF.includes('Valentin')) { _%>
+<%- [cHead('Valentin', false), cVoice('Valentin', false), cMem('Valentin', false)].filter(Boolean).join('\n') %>
+<%_ } _%>

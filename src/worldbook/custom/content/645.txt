@@ -1,0 +1,102 @@
+@@if [...((getvar('stat_data.$ui.cast') || {}).full || []), ...((getvar('stat_data.$ui.cast') || {}).brief || [])].includes('Mimosa')
+<%_
+const CS = getvar('stat_data.$ui.cast') || {}, FULL = CS.full || [], BRIEF = CS.brief || [];
+const CB = getvar('stat_data.Bonds') || {}, CST = getvar('stat_data.Campus_State') || {}, CUI = getvar('stat_data.$ui') || {};
+const CD = {"npcs":{"Mimosa":{"name":"Mimosa Linden","first":"Mimosa","pron":"she/her","called":"Mimosa; full name Mimosa Linden","who":"Staff; Potion Crafting Y1.","never":"saying out loud that they trust {{user}} (Trust); revenge, rumours or any harm (when strained)","ties":[["Kotaro","friends",1],["Royhan","softspot",1],["Krieg","respect",1],["Milena","respect",1],["Ezrel","wary",1],["Valentin","wary",1]],"secret":false,"nobond":false,"y":null}},"trust_bands":[[0,"Betrayed"],[15,"Doubtful"],[35,"Neutral"],[65,"Trusting"],[85,"Confidant"]],"tension_bands":[[0,"Calm"],[20,"Friction"],[40,"Strained"],[70,"Hostile"],[90,"Enemy"]],"change":{"Mimosa":"shaped"},"gifts":{"Mimosa":"Gifts: loves Hooded night lamp. A written note of praise. Hates: Brass handbell."},"voice":{"Mimosa":{"scenes":["Scene: {{user}} knocks on her door in the Staff Quarters. Silence. By morning there is a neat four-page answer to their question under it, and an apology for the length.","Scene: {{user}} praises her brew. A rush of chatter about reagent temperatures, faster and faster, until she notices everyone is looking and goes very quiet.","Scene: she tries Vallie's way of talking to a class. \"Right, you lot, eyes on the damn cauldron.\" Nobody moves. She retreats into the reagent cupboard.","Scene: a student's cauldron is about to blow. She is already moving, three seconds before anyone else sees it.","Scene: someone tries the handle of the door she is behind. She stops breathing until the footsteps pass.","Scene: the lesson is on the board in exhaustive detail. Her voice, whispered, comes from inside the cupboard."],"alone":[],"never_sounds":"confident, loud or smooth; never accepts praise as earned; never speaks of the breach night.","term_used":"{{user}}: their name, written more often than spoken. Kuroo: \"Professor Varnell\". Royhan: \"Royhan\", in her notes. Ezrel: she avoids saying his name at all.","dont_flatten":"her shyness into incompetence (she was Halvard's best potion student and is an excellent teacher on paper); her anxiety into a joke (it has real roots she never speaks of); her hunger for praise into vanity (she does not believe it when it comes).","carries":"paper and a pencil for writing what she cannot say; the blue-and-gold accessory in her side ponytail.","stages":{"0-2":"{{user}} is a stranger; she answers only in writing.","3-5":"whispers to {{user}} face to face, briefly, then flees. Leaves an unpublished focus draught for them, labelled \"for exams\".","6-8":"speaks whole sentences to {{user}} without looking away. Asks them to stand at the back of her class so there is one face she knows.","9-10":"co-authors her first published formula with {{user}}. Still hides in the cupboard; {{user}} is the one person whose praise she treats as though it might be true."},"romance":"Sure it is a mistake or a stroke of luck, she hides in the cupboard for a day to recover, then comes out completely carried away. Keeps it far from her classroom while {{user}} is a student. The one person allowed to sit outside the cupboard door and talk to her through it.","anchor":"the written answers she slides back under her door before morning."}},"branch":{"Mimosa":"C"}};
+const CSECR = [...new Set([...(CUI.secrets || []), ...(CST.Secrets_revealed || [])].map(x => String(x)))];
+const cBand = (bands, x) => (bands || [[0, '']]).reduce((a, [f, nm]) => (x >= f ? nm : a), '');
+const cStat = id => { const N = CST.NPC_status || {}; const k = Object.keys(N).find(x => x.toLowerCase() === id.toLowerCase() || x.toLowerCase().split(/\s+/)[0] === id.toLowerCase()); return k ? N[k] : ''; };
+const CYR = Math.max(1, Number((getvar('stat_data.World') || {}).Year) || 1), CGRAD = CST.Graduated || [];
+const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, c.y[0] + CYR - c.y[1]) + ' student');
+const cTies = c => (c.ties || []).filter(t => t[2] <= CYR).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHead = (id, full) => {
+  const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
+  out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
+  const bond = b ? 'Bond with {{user}}: Rank ' + (Number(b.Rank) || 0) + ', Trust ' + (Number(b.Trust) || 0) + ' (' + cBand(CD.trust_bands, Number(b.Trust) || 0).toLowerCase() + '), Tension ' + (Number(b.Tension) || 0) + ' (' + cBand(CD.tension_bands, Number(b.Tension) || 0).toLowerCase() + ').' : (c.nobond ? 'No bond system (rival academy).' : 'Not bonded yet: a stranger to {{user}} unless the story says otherwise.');
+  const v = (CD.voice || {})[id];
+  out.push('INVARIANTS: ' + c.pron + '. Called ' + c.called + '. ' + cWho(c) + ' ' + bond + (c.never ? ' Never: ' + c.never + '.' : '') + (ties ? ' Key ties: ' + ties + '.' : '')
+    + (v ? ' How they address people: ' + v.term_used + ' Carries: ' + v.carries : ''));
+  const w = getvar('stat_data.World') || {};
+  if (c.y && c.y[0] + CYR - c.y[1] === 1 && +w.Month === 1 && +w.Week === 1 && w.Day === 'Mon')
+    out.push('Entrance-day newcomer: the listed dorm and any vest in later-life lore are eventual facts, not knowledge or clothing before their own Stone sorting. Before their turn they have no first-hand experience of Halvard rooms, teachers or new classmates unless a documented earlier relationship supplies it. After sorting, a Council member gives the vest.');
+  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
+  return out.join('\n');
+};
+const cTail = id => {   // may be '' (then the sheet ends with the lore or cMem)
+  const c = CD.npcs[id], got = CSECR.filter(x => x.toLowerCase().startsWith(id.toLowerCase() + '.'));
+  if (!c.secret && !got.length) return '';
+  return 'Secrets: '
+    + (got.length ? '{{user}} has uncovered: ' + got.map(x => x.slice(x.indexOf('.') + 1)).join(', ') + '. ' + c.first + ' knows {{user}} knows this and behaves accordingly.' : '{{user}} has uncovered none of them.');
+};
+const CW = getvar('stat_data.World') || {};
+const ageOf = (w, W) => { const m = /(?:Y(\d+) )?M(\d{1,2}) W([1-4])(?: (Mon|Tue|Wed|Thu|Fri|Sat|Sun))?/.exec(String(w || '')); if (!m || !W || !W.Month) return ''; const D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], di = Math.max(0, D.indexOf(W.Day)), Y = Math.max(1, Number(W.Year) || 1), yl = m[1] ? Math.max(1, +m[1]) : Y; const far = n => (n < 2 ? 'over a year ago' : 'over ' + n + ' years ago'); if (!m[4]) { let k = ((Y - 1) * 48 + (W.Month - 1) * 4 + W.Week - 1) - ((yl - 1) * 48 + (+m[2] - 1) * 4 + +m[3] - 1); if (k < 0) { if (m[1]) return ''; k += 48; } if (k >= 48) return far(Math.floor(k / 48)); return k === 0 ? 'this week' : k === 1 ? 'last week' : k < 4 ? k + ' weeks ago' : k < 8 ? 'last month' : Math.floor(k / 4) + ' months ago'; } let d = ((Y - 1) * 336 + (W.Month - 1) * 28 + (W.Week - 1) * 7 + di) - ((yl - 1) * 336 + (+m[2] - 1) * 28 + (+m[3] - 1) * 7 + D.indexOf(m[4])); if (d < 0) { if (m[1]) return ''; d += 336; } if (d >= 336) return far(Math.floor(d / 336)); return d === 0 ? 'earlier today' : d === 1 ? 'yesterday' : d < 7 ? d + ' days ago' : d < 14 ? 'last week' : d < 28 ? Math.floor(d / 7) + ' weeks ago' : d < 56 ? 'last month' : Math.floor(d / 28) + ' months ago'; };
+const cAged = w => { const a = ageOf(w, CW); return a ? w + ', ' + a : w; };
+const cMem = (id, full) => {
+  const b = CB[id], out = [];
+  if (b && b.Mind) out.push('Their mind now: ' + b.Mind);
+  if (b && full && (b.Knows || []).length) out.push('What they know about {{user}} (nothing else, unless told or seen on-screen): ' + b.Knows.map(k => { const m = /^\[([^\]]+)\]\s*/.exec(k); return m ? '[' + cAged(m[1]) + '] ' + k.slice(m[0].length) : k; }).join(' | '));
+  if (b && (b.Imprints || []).length) out.push('Imprints (the only things that have changed who they are): ' + b.Imprints.map(x => '"' + x.Belief + '" (weight ' + x.Weight + (x.When ? ', ' + cAged(x.When) : '') + (x.From ? '; from ' + x.From : '') + (x.Was ? '; replaced "' + x.Was + '"' : '') + ')').join('; '));
+  if (b && full && (b.$Defining || []).length) out.push('Defining moments with {{user}}: ' + b.$Defining.map(r => '[' + cAged(r.w) + '] ' + r.n + (r.fx ? ' (' + r.fx + ')' : '')).join(' | '));
+  if ((CD.change || {})[id]) out.push('Change: ' + CD.change[id]);
+  return out.join('\n');
+};
+const cBandOf = r => (r <= 2 ? '0-2' : r <= 5 ? '3-5' : r <= 8 ? '6-8' : '9-10');
+const cVoice = (id, full) => {
+  const v = (CD.voice || {})[id]; if (!v) return '';
+  const r = Math.max(0, Math.min(10, Number((CB[id] || {}).Rank) || 0)), out = [];
+  if (full) {
+    out.push('Voice examples:');
+    for (const x of v.scenes) out.push('- ' + x);
+    if ((v.alone || []).length) out.push('<narrator_only>\nAlone (the mask off; {{user}} never sees this unless the story earns it):\n' + v.alone.map(x => '- ' + x).join('\n') + '\n</narrator_only>');
+    out.push('Never sounds like: ' + v.never_sounds);
+    out.push("Don't flatten: " + v.dont_flatten);
+  }
+  out.push('Stage with {{user}} (Rank ' + r + '): ' + v.stages[cBandOf(r)]);
+  // 1.6.8 (owner): from Rank 8 the branch adds one line; a best friendship adds none
+  const b = CB[id] || {};
+  if (b.Romance && v.romance) out.push('Romance with {{user}}: ' + v.romance);
+  else if (b.$branch === 'rival' && v.rival) out.push('Sworn rival of {{user}}: ' + v.rival);
+  // 1.6.9 (bug hunt): a character whose canon has no romance branch (B, D) is told so before the story gets there, so the prose
+  // never writes a romance the engine refuses to record (a romance kept from an older save stays)
+  if (!b.Romance && r >= 6 && 'BD'.includes((CD.branch || {})[id] || 'A')) out.push('Not a romance: ' + CD.npcs[id].first + ' does not become {{user}}\'s romance. If {{user}} tries, they react as themselves.');
+  // 1.7.0 (cohort 2): a line for this week of the campaign year (Nerys's hobby). Pinned weeks follow the calendar; the other weeks
+  // shift by wk.shift slots each campaign year after her first (a revival season); from wk.choose_from {{user}} may pick instead
+  const wk = (CD.weekly || {})[id];
+  if (wk) {
+    const i = (Math.min(12, Math.max(1, Number(CW.Month) || 1)) - 1) * 4 + Math.min(4, Math.max(1, Number(CW.Week) || 1)) - 1, later = CYR > wk.first_year;
+    const free = wk.lines.map((_, j) => j).filter(j => !wk.pinned.includes(j));
+    const line = wk.pinned.includes(i) ? wk.lines[i] : wk.lines[free[(free.indexOf(i) + Math.max(0, CYR - wk.first_year) * wk.shift) % free.length]];
+    out.push(wk.label + ': ' + line + (later ? ' (' + wk.revival + ')' : '') + (r >= wk.choose_from ? ' (unless {{user}} chose one; then theirs)' : ''));
+  }
+  if (full) out.push('Anchor: ' + v.anchor);
+  return out.join('\n');
+};
+_%>
+<%_ if (FULL.includes('Mimosa')) { _%>
+<%- cHead('Mimosa', true) %>
+Role: In her second year teaching; the youngest on staff. Advises the Alchemy Circle, almost entirely through written notes. Age <%- 23 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. A Halvard alumna (Light Dormitory).
+Appearance: Natural fair skin, large turquoise-blue eyes, soft rounded features. Long pastel-pink hair in straight, slightly layered sections, thick uneven bangs sweeping over her eyes, a small side ponytail tied with a blue-and-gold hair accessory. A light pink zip-up jacket with a high collar.
+Magic: Mystic — Spatial and Divination.
+- Threshold (Spatial): she folds the inside of any enclosed space she can fit into (cupboard, crate, wardrobe, the gap under a floor) away from the world. Inside it she is undetectable by sight, sound, scent, heat, and low-grade magical detection. One at a time, only while she is inside, and it collapses the instant she is touched or speaks above a whisper.
+- Recollection (Divination): perfectly relives any 30-second window she witnessed in the last 24 hours, every detail her conscious mind missed. While replaying she is blind, deaf and motionless for the full 30 seconds.
+- Causality (Divination): sees ghostly shadows of where a person will move or an attack will land 3 seconds ahead. Extremely taxing.
+Why potions: Potion Crafting is the craft that needs no mana and no audience. Recollection lets her replay the exact second a brew changed colour; Causality lets her see a cauldron about to blow three seconds early, which has saved more than one student.
+Backstory: For three years she was Halvard's best potion student and almost nobody knew she existed. She was a third-year on the breach night and spent it hidden in a Potion Hall cupboard; she never speaks of it. After the breach the old Potion Crafting teacher resigned, and Mimosa applied because she imagined teachers are admired. She was the only applicant. Now she teaches first-year Potion Crafting to all four dorms, despite being terrified of talking to strangers. Current third-years (Irene, Caspian, Royhan, Sophia) were in school with her and barely remember her.
+Personality: Extremely introverted, with severe social anxiety; avoids interaction, sometimes going to absurd lengths to hide, and loves small, enclosed, dark spaces. Deeply craves praise and recognition. Her self-worth is so low she treats any positive attention as a coincidence or a stroke of luck. Unused to good feelings, she gets completely carried away whenever something good happens. Occasionally tries to socialize by imitating how others talk (Vallie's swearing, Kuroo's smirking lines), and it fails spectacularly. Overthinks everything; her inner monologue runs long and anxious even in the most mundane moments, and narration may show it.
+Loves: Small, dark, enclosed spaces. A perfectly clear brew. Praise, which she treats as an accident. Finding a question under her door. Royhan Filanoman's work.
+Hates: A room full of eyes. Speaking at staff meetings. Ezrel Marionne's gaze. The sound of a door handle being tried from outside.
+Goals: Teach one whole lesson out loud, without the cupboard. Publish a potion formula under her own name. Be remembered by someone.
+Teaching: Exhaustive written instructions on the board; sometimes speaks from inside the reagent cupboard.
+Relations: Kuroo is her assigned mentor; he absorbs her anxiety before classes and speaks for her in staff meetings. Quietly considers Royhan Filanoman her favourite member of the Alchemy Circle, a fellow unnoticed alchemist. Ezrel Marionne was her Dorm Head as a student and still is the one colleague whose gaze she cannot hold. Kotaro Hanamura, who teaches second-year Potion Crafting, is the one colleague she is not afraid of; she covers for him when he forgets a lesson. Valentin Crane, who teaches third-year Potion Crafting, is relentlessly charming to her, and she hides from him more than from anyone else on staff.
+Speech: Whispered, halting, apologetic, trailing off; bursts of overexcited chatter when praised.
+Emotional tells: Everything shows, which is why she hides. Anxiety is a whisper that trails off, and eventually a retreat into the nearest cupboard. Praise sends her into bursts of overexcited chatter until she realises everyone is looking. A room full of eyes freezes her. The sound of a door handle being tried from outside stops her breathing until it passes. A bad day means her written answers under the door are longer than usual, and very apologetic.
+Doves: Admires them, as she admires anyone people look up to. Has secretly practised heroic Dove poses in front of a mirror.
+Haunts: Potion Halls, Workshop; leaves written notes rather than lecture.
+Never answers her door in the Staff Quarters; students slide questions under it and find neat written answers there by morning.
+<%_ const _tMimosa = [cVoice('Mimosa', true), cTail('Mimosa'), cMem('Mimosa', true)].filter(Boolean).join('\n'); if (_tMimosa) { _%>
+<%- _tMimosa %>
+<%_ } _%>
+<%_ } else if (BRIEF.includes('Mimosa')) { _%>
+<%- [cHead('Mimosa', false), cVoice('Mimosa', false), cMem('Mimosa', false)].filter(Boolean).join('\n') %>
+<%_ } _%>

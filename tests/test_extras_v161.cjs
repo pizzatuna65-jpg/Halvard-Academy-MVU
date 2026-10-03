@@ -3,7 +3,7 @@
 // that gives a record back, the player's Keep pin). N4 Campus_State.Events { Text, Updated } with stale events in <now>.
 // N6 campus phases (the framework; the phase lines are canon and stay empty until the owner approves them).
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
-const { Schema, initState, applyPatch, ok, ROOT } = require('./harness.cjs');
+const { Schema, initState, applyPatch, ok, ROOT, renderEntry } = require('./harness.cjs');
 global.window = { parent: { document: {} } };
 global.substitudeMacros = () => 'Aria Vale';
 const U = new Function(fs.readFileSync(path.join(ROOT, 'src/scripts/ui.js'), 'utf8') + '\nreturn { keepOps, nbJournal };')();
@@ -12,7 +12,7 @@ const rd = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const card = JSON.parse(rd('dist/Eldrasil_Halvard.json')).data;
 const E = uid => card.character_book.entries.find(e => e.id === uid);
 const gv = S => k => _.get({ stat_data: S }, k);
-const R = (uid, S) => ejs.render(E(uid).content, { getvar: gv(S) });
+const R = (uid, S) => renderEntry(card, uid, S, gv(S));   // 1.48.0: the Cast Sheet is a group
 const here = (o) => ({ op: 'replace', path: '/Scene/Present', value: Object.fromEntries(Object.entries(o).map(([k, v]) => [k, { Note: v }])) });
 let S = initState();
 const at = (time, ops, day) => { S = applyPatch(S, [...(day ? [{ op: 'replace', path: '/World/Day', value: day }] : []), { op: 'replace', path: '/World/Time', value: time }, ...ops]); return S; };

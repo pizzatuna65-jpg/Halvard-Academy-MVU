@@ -2,7 +2,7 @@
 // 5+, at most 5, Change rules), $Defining (engine, 5), Next (Rank 3+: since you last saw them, lapses into $Recent, may be here),
 // Meanwhile (Rank 7+ unseen a week), N13 ages in words, D6 / P8 / V1 rules, the dossier shows defining moments but never Mind.
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
-const { Schema, initState, applyPatch, ok, ROOT } = require('./harness.cjs');
+const { Schema, initState, applyPatch, ok, ROOT, renderEntry } = require('./harness.cjs');
 global.window = { parent: { document: {} } };
 global.substitudeMacros = () => 'Aria Vale';
 const U = new Function(fs.readFileSync(path.join(ROOT, 'src/scripts/ui.js'), 'utf8') + '\nreturn { PANELS, view };')();
@@ -10,7 +10,7 @@ console.log('NPC memory 1.6.0');
 const rd = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const card = JSON.parse(rd('dist/Eldrasil_Halvard.json')).data, E = uid => card.character_book.entries.find(e => e.id === uid).content;
 const gv = S => k => require('lodash').get({ stat_data: S }, k);
-const R = (uid, S) => ejs.render(E(uid), { getvar: gv(S) });
+const R = (uid, S) => renderEntry(card, uid, S, gv(S));   // 1.48.0: the Cast Sheet is a group
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 let S = initState({ etnie: true });
 const P = (time, ops, text, day) => { S = applyPatch(S, [...(day ? [{ op: 'replace', path: '/World/Day', value: day }] : []), { op: 'replace', path: '/World/Time', value: time }, ...ops], { text: text || '' }); return S; };

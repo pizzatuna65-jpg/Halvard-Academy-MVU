@@ -3,11 +3,11 @@
 // opens only under the Rank 8 Trust gate; a C or D bond waits for the gate instead. Romance is refused for B and D. The branch the
 // bond took is recorded once at Rank 8 ($branch), and the Cast Sheet adds that branch's line.
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
-const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
+const { initState, applyPatch, ok, ROOT, renderEntry } = require('./harness.cjs');
 console.log('Rank 8 branches 1.6.8');
 const rd = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const card = JSON.parse(rd('dist/Eldrasil_Halvard.json')).data;
-const R = (uid, S) => ejs.render(card.character_book.entries.find(e => e.id === uid).content, { getvar: k => _.get({ stat_data: S }, k) });
+const R = (uid, S) => renderEntry(card, uid, S);   // 1.48.0: the Cast Sheet is a group
 const C = JSON.parse(rd('data/npc_canon.json'));
 const clone = o => JSON.parse(JSON.stringify(o));
 const T = (S, time, extra = []) => applyPatch(S, [{ op: 'replace', path: '/World/Time', value: time }, ...extra]);

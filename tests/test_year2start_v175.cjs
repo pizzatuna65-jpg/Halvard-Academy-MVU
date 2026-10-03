@@ -2,14 +2,14 @@
 // who take a group of new first-years round the campus; (2) a TEST card (dist/test/Eldrasil_TEST_Year2) starts the campaign in Year 2
 // with bonds of different ranks from Year 1 and none with the new first-years. A 1.7.4 save loads.
 const fs = require('fs'), path = require('path'), ejs = require('ejs'), YAML = require('yaml');
-const { Schema, runEngine, initState, applyPatch, ok, ROOT } = require('./harness.cjs');
+const { Schema, runEngine, initState, applyPatch, ok, ROOT, renderEntry } = require('./harness.cjs');
 global.window = { parent: { document: {} } };
 global.substitudeMacros = () => 'Aria Vale';
 console.log('Year 2 start 1.7.5');
 const rd = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const ver = JSON.parse(rd('src/card/card.json')).character_version;
 const card = JSON.parse(rd('dist/Eldrasil_Halvard.json')).data;
-const R = (c, uid, S) => ejs.render(c.character_book.entries.find(e => e.id === uid).content, { getvar: k => _.get({ stat_data: S }, k) });
+const R = (c, uid, S) => renderEntry(c, uid, S);   // 1.48.0: the Cast Sheet is a group
 const W = (S, w, ops = []) => applyPatch(S, [...Object.entries(w).map(([k, v]) => ({ op: 'replace', path: '/World/' + k, value: v })), ...ops]);
 const U = new Function(rd('src/scripts/ui.js') + '\nreturn { TEMPLATES, blankDraft, buildOps };')();
 

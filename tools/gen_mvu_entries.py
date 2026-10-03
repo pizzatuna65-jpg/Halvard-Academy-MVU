@@ -96,23 +96,45 @@ CAST['branch'] = CANON['branch']
 # 1.7.0 (cohort 2, owner): a line per week of the campaign year for some NPCs (Nerys's hobby), printed in their Cast Sheet
 CAST['weekly'] = CANON.get('weekly', {})
 assert all(k in npcs and len(w['lines']) == 48 and all(0 <= i < 48 for i in w['pinned']) for k, w in CAST['weekly'].items()), 'npc_canon.json weekly: 48 lines per NPC'   # 1.6.9: the sheet of a character with no romance branch (B, D) says so from Rank 6
-sheets = []
+# 1.48.0 (audit 2.7): the Cast Sheet is one entry per NPC (uid CAST_UID + i, order 301 + i, after the head 509 and before the tail 599,
+# all @D1 before <now>), each opening with an @@if line: Prompt Template drops the entry before the scan unless the engine put the NPC
+# in $ui.cast, so a generate compiles only the sheets of the people here (was one 679 KB template). The entries join with "\n" in
+# order, as SillyTavern joins one depth's entries; each carries the helpers and only its own NPC's data.
+CAST_UID, CAST_ORDER = 600, 301
+sheets = {}
 for nid, n in sorted(npcs.items()):
     raw = open(P(f"src/worldbook/content/{n['uid_card']}.txt"), encoding='utf-8').read()
     m = GATE_RX.match(raw); assert m and m.group(1) == nid, f'NPC entry {n["uid_card"]} ({nid}) has no Cast Sheet gate (merge_lorebooks.py)'
     lore = re.sub(r'^\[[^\]\n]+\]\n', '', m.group(2).strip('\n'))
     CAST['npcs'][nid] = cast_npc(nid, n); CAST['npcs'][nid]['secret'] = '<narrator_only>' in lore
-    sheets.append(f"<%_ if (FULL.includes('{nid}')) {{ _%>\n<%- cHead('{nid}', true) %>\n{lore}\n<%_ const _t{nid} = [cVoice('{nid}', true), cTail('{nid}'), cMem('{nid}', true)].filter(Boolean).join('\\n'); if (_t{nid}) {{ _%>\n<%- _t{nid} %>\n<%_ }} _%>\n"
-                  f"<%_ }} else if (BRIEF.includes('{nid}')) {{ _%>\n<%- [cHead('{nid}', false), cVoice('{nid}', false), cMem('{nid}', false)].filter(Boolean).join('\\n') %>\n<%_ }} _%>")
+    sheets[nid] = (f"<%_ if (FULL.includes('{nid}')) {{ _%>\n<%- cHead('{nid}', true) %>\n{lore}\n<%_ const _t{nid} = [cVoice('{nid}', true), cTail('{nid}'), cMem('{nid}', true)].filter(Boolean).join('\\n'); if (_t{nid}) {{ _%>\n<%- _t{nid} %>\n<%_ }} _%>\n"
+                   f"<%_ }} else if (BRIEF.includes('{nid}')) {{ _%>\n<%- [cHead('{nid}', false), cVoice('{nid}', false), cMem('{nid}', false)].filter(Boolean).join('\\n') %>\n<%_ }} _%>")
+assert len(sheets) <= 89, 'the Cast Sheet orders 301-389 are full: move the tail (599) and the head'
 for r in rels:
     if r['from'] in npcs and r['to'] in npcs:
         CAST['rel'].setdefault(r['from'], {}).setdefault(r['to'], r['type'] + (('. ' + r['notes'][0]) if r.get('notes') else ''))
-cs = open(P('src/worldbook/custom/509.template.ejs'), encoding='utf-8').read()
-cs = re.sub(r'^// .*\n', '', cs, flags=re.M)
-assert '/*@@CAST@@*/{}' in cs and '@@SHEETS@@' in cs
-cs = cs.replace('/*@@CAST@@*/{}', J(CAST)).replace('@@SHEETS@@', '\n'.join(sheets)).replace('/*@@AGE@@*/', AGE_JS)
-assert '@@' not in cs
-open(P('src/worldbook/custom/content/509.txt'), 'w', encoding='utf-8').write(cs)
+def cast_part(name, data, **subs):
+    s = open(P('src/worldbook/custom/' + name), encoding='utf-8').read()
+    s = re.sub(r'^// .*\n', '', s, flags=re.M)
+    assert s.count('/*@@CAST@@*/{}') == 1, name
+    s = s.replace('/*@@CAST@@*/{}', J(data)).replace('/*@@AGE@@*/', AGE_JS)
+    for k, v in subs.items(): s = s.replace('@@' + k + '@@', v)
+    assert '@@' not in s, name
+    return s
+CC = P('src/worldbook/custom/content')
+for f in os.listdir(CC):   # the sheets of an earlier build (an NPC may be gone)
+    if re.match(r'^\d+\.txt$', f) and CAST_UID <= int(f[:-4]) < CAST_UID + 100: os.remove(os.path.join(CC, f))
+open(os.path.join(CC, '509.txt'), 'w', encoding='utf-8', newline='\n').write(cast_part('509.template.ejs', {'change': CAST['change'], 'voice': {k: 1 for k in CAST['voice']},
+    'npcs': {k: {'secret': True} for k, v in CAST['npcs'].items() if v['secret']}}))
+open(os.path.join(CC, '599.txt'), 'w', encoding='utf-8', newline='\n').write(cast_part('509_tail.template.ejs', {'rel': CAST['rel']}))
+CAST_ENTRIES = []
+for i, nid in enumerate(sheets):
+    one = {'npcs': {nid: CAST['npcs'][nid]}, 'trust_bands': CAST['trust_bands'], 'tension_bands': CAST['tension_bands'],
+           **{k: {nid: CAST[k][nid]} for k in ('change', 'gifts', 'voice', 'branch', 'weekly') if nid in CAST[k]}}
+    cond = f"[...((getvar('stat_data.$ui.cast') || {{}}).full || []), ...((getvar('stat_data.$ui.cast') || {{}}).brief || [])].includes('{nid}')"
+    body = cast_part('509_sheet.template.ejs', one, SHEET=sheets[nid])
+    open(os.path.join(CC, f'{CAST_UID + i}.txt'), 'w', encoding='utf-8', newline='\n').write(f'@@if {cond}\n' + body)
+    CAST_ENTRIES.append((CAST_UID + i, f"[mvu_plot] Cast Sheet — {npcs[nid]['name']} (EJS, only while present)", CAST_ORDER + i))
 shop = json.load(open(P('data/shop.json'), encoding='utf-8'))['items']
 # 1.17.0 (audit T2): the Price Guide lists the shop {{user}} is at (in season), the canon prices, and one line per other shop; the
 # whole list used to arrive (~3.7k tokens) whenever a message said "cost" or "shop"
@@ -158,9 +180,11 @@ idx = [
     mk(506, '[mvu_plot] Price Guide (EJS, by place)', False, False, 1, 4, 503, keys=['buy', 'buys', 'bought', 'price', 'prices', 'afford', 'shop', 'shopping', 'Commissary', 'Mall', 'bakery', 'store', 'points for', 'how much', 'Banking House', 'special order'], whole=True, scan=2),   # 1.17.0 (audit T2): no 'cost' / 'order', whole words, the last two messages
     mk(507, '[config_override]', False, True, 1, 4, 999),   # MVU card config override (5.3): disabled on purpose, read by MVU
     mk(508, "[mvu_plot] Event — {{user}}'s Birthday (EJS, only on the day)", True, False, 1, 4, 85),   # 1.2.0: hand-written, gated on Profile.Birthday
-    mk(509, '[mvu_plot] Cast Sheet — present characters (EJS)', True, False, 4, 1, 498),   # 1.5.1: generated from 509.template.ejs + lore
+    mk(509, '[mvu_plot] Cast Sheet — opens <cast> (EJS)', True, False, 4, 1, 300),   # 1.5.1: 509.template.ejs; 1.48.0 the head, sheets 600+
     mk(510, '[mvu_plot] Last-mile cast gate (EJS, only with people present)', True, False, 4, 0, 899),   # 1.5.1 (D1): hand-written; before 503
+    mk(599, '[mvu_plot] Cast Sheet — ties and Extras, closes </cast> (EJS)', True, False, 4, 1, 390),   # 1.48.0 (audit 2.7)
 ]
+idx[-1:-1] = [mk(u, c, True, False, 4, 1, o) for u, c, o in CAST_ENTRIES]   # 1.48.0 (audit 2.7): one Cast Sheet per NPC
 json.dump(idx, open(P('src/worldbook/custom/index.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 exec(open(P('tools/feature_cost.py'), encoding='utf-8').read())   # v1.1.0: writes data/feature_cost.json
 print('custom entries:', [e['uid'] for e in idx])

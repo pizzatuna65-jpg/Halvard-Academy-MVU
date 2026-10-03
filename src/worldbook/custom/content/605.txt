@@ -1,0 +1,106 @@
+@@if [...((getvar('stat_data.$ui.cast') || {}).full || []), ...((getvar('stat_data.$ui.cast') || {}).brief || [])].includes('Aurelian')
+<%_
+const CS = getvar('stat_data.$ui.cast') || {}, FULL = CS.full || [], BRIEF = CS.brief || [];
+const CB = getvar('stat_data.Bonds') || {}, CST = getvar('stat_data.Campus_State') || {}, CUI = getvar('stat_data.$ui') || {};
+const CD = {"npcs":{"Aurelian":{"name":"Aurelian Solmere","first":"Aurelian","pron":"he/him","called":"Aurelian; full name Aurelian Solmere","who":"@YEAR@ student, Fire dorm; Basketball Club.","never":"holding a grudge in secret or plotting against {{user}} (Trust); physical violence, or anything that would ruin their own image if it came out (when strained)","ties":[["Bruno","friends",3],["Percival","friends",1]],"secret":true,"nobond":false,"y":[1,3]}},"trust_bands":[[0,"Betrayed"],[15,"Doubtful"],[35,"Neutral"],[65,"Trusting"],[85,"Confidant"]],"tension_bands":[[0,"Calm"],[20,"Friction"],[40,"Strained"],[70,"Hostile"],[90,"Enemy"]],"change":{"Aurelian":"fixed"},"gifts":{"Aurelian":"Gifts: loves Halvard pennant, Knight's pennon, Engraved trophy cup. Hates: "},"voice":{"Aurelian":{"scenes":["Scene: Scene: {{user}} compliments his shot at Basketball practice. He grabs their hand in both of his. \"No no NO. That was YOU. You guys are the REAL [HEROES]! The real, real, real ones.\" A thumbs-up at the whole court.","Scene: Scene: a first-year sobbing after failing a practical. He kneels to eye level, hand on their shoulder. \"Hey. Hey, champ. Failure is just success that [HAS NOT BEEN FED YET]. We get back up! Every! Single! [TIME REMAINING: 00:00]!\" He means every word.","Scene: Scene: the Fire common room hearth flares when someone throws in a log. Mid-cheer: \"Fire team, we are gonna go out there and OH GOD IT HURTS IT BURNS GET IT OUT show them what Fire is made of!\" Nobody breathes. He raises a fist. \"Who's with me?\"","Scene: Scene: Caralynn Veyturone complains that he steals her audience. \"Caralynn! What a voice! Folks, give it up for the [TALENT] talent. Please remain calm and remain.\" He applauds her until she leaves.","Scene: Scene: a real emergency, a practice ring collapsing. He is first in, beam cutting the rubble clean, voice perfectly steady: \"Everybody stay behind me! Nobody gets left [BEHIND / INVENTORY]!\" Everyone gets out. Afterwards he hands the credit to the student who shouted the warning.","Scene: Scene: someone asks him straight out why he talks like that. \"Great question! The answer is teamwork.\" A pat on the back. \"Stay tuned!\""],"alone":["Sits on his bed in the dark, smile on, perfectly still, for hours; no breathing to speak of. Now and then, very quietly, from somewhere behind the smile: \"please.\""],"never_sounds":"embarrassed by his own speech, aware of the glitches, cynical, cruel, frightened (the body; the other voice is only ever frightened), unsure of himself, quietly ordinary.","term_used":"{{user}}: \"champ\", \"partner\", or \"[SENIOR] senior\" (glitch included); their name only in writing. Percival: \"Sir Percival\", which Percival loves. Everyone else: \"buddy\", \"pal\", \"hero\".","dont_flatten":"the contrast. The glitches never fade and the hero never cracks: do not write him becoming coherent as the bond grows, do not let the screaming voice speak more than one line at a time, do not let him admit or explain anything, and do not turn him into an obvious villain. The thing wearing him plays the hero sincerely and saves people for real; the horror is that it is also a mask.","carries":"a whistle on a cord (Basketball Club), a spare handkerchief to hand to crying people, a stack of neat, glitch-free thank-you notes. Never anything that burns: no candle, no lantern.","anchor":"the thirty-one. He knows every name of the people carried out of the Harvest Hall and greets any of them in letters by name.","stages":{"0-2":"A booming hero who shakes {{user}}'s hand every time they meet and calls them champ.","3-5":"Seeks {{user}} out as a \"teammate\"; the glitches start to use {{user}}'s name in the wrong places.","6-8":"The stillness appears around {{user}}: long seconds where he only watches. The other voice once says {{user}}'s name.","9-10":"Leaves {{user}} a note, perfectly written, in handwriting that is not quite his usual hand."},"romance":"Courts {{user}} like the hero of a ballad: flowers, a speech on the pitch in front of everyone, a promise to protect them from anything, every sentence glitched. The body is perfect at it, warm and certain and never once awkward. Now and then, very quietly, in the middle of it, the other voice says {{user}}'s name.","rival":"Declares {{user}} his \"greatest rival and best teammate\", challenges them at everything with booming cheer, and hands them every win he takes. The smile never changes, win or lose."}},"branch":{"Aurelian":"A"}};
+const CSECR = [...new Set([...(CUI.secrets || []), ...(CST.Secrets_revealed || [])].map(x => String(x)))];
+const cBand = (bands, x) => (bands || [[0, '']]).reduce((a, [f, nm]) => (x >= f ? nm : a), '');
+const cStat = id => { const N = CST.NPC_status || {}; const k = Object.keys(N).find(x => x.toLowerCase() === id.toLowerCase() || x.toLowerCase().split(/\s+/)[0] === id.toLowerCase()); return k ? N[k] : ''; };
+const CYR = Math.max(1, Number((getvar('stat_data.World') || {}).Year) || 1), CGRAD = CST.Graduated || [];
+const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, c.y[0] + CYR - c.y[1]) + ' student');
+const cTies = c => (c.ties || []).filter(t => t[2] <= CYR).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHead = (id, full) => {
+  const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
+  out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
+  const bond = b ? 'Bond with {{user}}: Rank ' + (Number(b.Rank) || 0) + ', Trust ' + (Number(b.Trust) || 0) + ' (' + cBand(CD.trust_bands, Number(b.Trust) || 0).toLowerCase() + '), Tension ' + (Number(b.Tension) || 0) + ' (' + cBand(CD.tension_bands, Number(b.Tension) || 0).toLowerCase() + ').' : (c.nobond ? 'No bond system (rival academy).' : 'Not bonded yet: a stranger to {{user}} unless the story says otherwise.');
+  const v = (CD.voice || {})[id];
+  out.push('INVARIANTS: ' + c.pron + '. Called ' + c.called + '. ' + cWho(c) + ' ' + bond + (c.never ? ' Never: ' + c.never + '.' : '') + (ties ? ' Key ties: ' + ties + '.' : '')
+    + (v ? ' How they address people: ' + v.term_used + ' Carries: ' + v.carries : ''));
+  const w = getvar('stat_data.World') || {};
+  if (c.y && c.y[0] + CYR - c.y[1] === 1 && +w.Month === 1 && +w.Week === 1 && w.Day === 'Mon')
+    out.push('Entrance-day newcomer: the listed dorm and any vest in later-life lore are eventual facts, not knowledge or clothing before their own Stone sorting. Before their turn they have no first-hand experience of Halvard rooms, teachers or new classmates unless a documented earlier relationship supplies it. After sorting, a Council member gives the vest.');
+  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
+  return out.join('\n');
+};
+const cTail = id => {   // may be '' (then the sheet ends with the lore or cMem)
+  const c = CD.npcs[id], got = CSECR.filter(x => x.toLowerCase().startsWith(id.toLowerCase() + '.'));
+  if (!c.secret && !got.length) return '';
+  return 'Secrets: '
+    + (got.length ? '{{user}} has uncovered: ' + got.map(x => x.slice(x.indexOf('.') + 1)).join(', ') + '. ' + c.first + ' knows {{user}} knows this and behaves accordingly.' : '{{user}} has uncovered none of them.');
+};
+const CW = getvar('stat_data.World') || {};
+const ageOf = (w, W) => { const m = /(?:Y(\d+) )?M(\d{1,2}) W([1-4])(?: (Mon|Tue|Wed|Thu|Fri|Sat|Sun))?/.exec(String(w || '')); if (!m || !W || !W.Month) return ''; const D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], di = Math.max(0, D.indexOf(W.Day)), Y = Math.max(1, Number(W.Year) || 1), yl = m[1] ? Math.max(1, +m[1]) : Y; const far = n => (n < 2 ? 'over a year ago' : 'over ' + n + ' years ago'); if (!m[4]) { let k = ((Y - 1) * 48 + (W.Month - 1) * 4 + W.Week - 1) - ((yl - 1) * 48 + (+m[2] - 1) * 4 + +m[3] - 1); if (k < 0) { if (m[1]) return ''; k += 48; } if (k >= 48) return far(Math.floor(k / 48)); return k === 0 ? 'this week' : k === 1 ? 'last week' : k < 4 ? k + ' weeks ago' : k < 8 ? 'last month' : Math.floor(k / 4) + ' months ago'; } let d = ((Y - 1) * 336 + (W.Month - 1) * 28 + (W.Week - 1) * 7 + di) - ((yl - 1) * 336 + (+m[2] - 1) * 28 + (+m[3] - 1) * 7 + D.indexOf(m[4])); if (d < 0) { if (m[1]) return ''; d += 336; } if (d >= 336) return far(Math.floor(d / 336)); return d === 0 ? 'earlier today' : d === 1 ? 'yesterday' : d < 7 ? d + ' days ago' : d < 14 ? 'last week' : d < 28 ? Math.floor(d / 7) + ' weeks ago' : d < 56 ? 'last month' : Math.floor(d / 28) + ' months ago'; };
+const cAged = w => { const a = ageOf(w, CW); return a ? w + ', ' + a : w; };
+const cMem = (id, full) => {
+  const b = CB[id], out = [];
+  if (b && b.Mind) out.push('Their mind now: ' + b.Mind);
+  if (b && full && (b.Knows || []).length) out.push('What they know about {{user}} (nothing else, unless told or seen on-screen): ' + b.Knows.map(k => { const m = /^\[([^\]]+)\]\s*/.exec(k); return m ? '[' + cAged(m[1]) + '] ' + k.slice(m[0].length) : k; }).join(' | '));
+  if (b && (b.Imprints || []).length) out.push('Imprints (the only things that have changed who they are): ' + b.Imprints.map(x => '"' + x.Belief + '" (weight ' + x.Weight + (x.When ? ', ' + cAged(x.When) : '') + (x.From ? '; from ' + x.From : '') + (x.Was ? '; replaced "' + x.Was + '"' : '') + ')').join('; '));
+  if (b && full && (b.$Defining || []).length) out.push('Defining moments with {{user}}: ' + b.$Defining.map(r => '[' + cAged(r.w) + '] ' + r.n + (r.fx ? ' (' + r.fx + ')' : '')).join(' | '));
+  if ((CD.change || {})[id]) out.push('Change: ' + CD.change[id]);
+  return out.join('\n');
+};
+const cBandOf = r => (r <= 2 ? '0-2' : r <= 5 ? '3-5' : r <= 8 ? '6-8' : '9-10');
+const cVoice = (id, full) => {
+  const v = (CD.voice || {})[id]; if (!v) return '';
+  const r = Math.max(0, Math.min(10, Number((CB[id] || {}).Rank) || 0)), out = [];
+  if (full) {
+    out.push('Voice examples:');
+    for (const x of v.scenes) out.push('- ' + x);
+    if ((v.alone || []).length) out.push('<narrator_only>\nAlone (the mask off; {{user}} never sees this unless the story earns it):\n' + v.alone.map(x => '- ' + x).join('\n') + '\n</narrator_only>');
+    out.push('Never sounds like: ' + v.never_sounds);
+    out.push("Don't flatten: " + v.dont_flatten);
+  }
+  out.push('Stage with {{user}} (Rank ' + r + '): ' + v.stages[cBandOf(r)]);
+  // 1.6.8 (owner): from Rank 8 the branch adds one line; a best friendship adds none
+  const b = CB[id] || {};
+  if (b.Romance && v.romance) out.push('Romance with {{user}}: ' + v.romance);
+  else if (b.$branch === 'rival' && v.rival) out.push('Sworn rival of {{user}}: ' + v.rival);
+  // 1.6.9 (bug hunt): a character whose canon has no romance branch (B, D) is told so before the story gets there, so the prose
+  // never writes a romance the engine refuses to record (a romance kept from an older save stays)
+  if (!b.Romance && r >= 6 && 'BD'.includes((CD.branch || {})[id] || 'A')) out.push('Not a romance: ' + CD.npcs[id].first + ' does not become {{user}}\'s romance. If {{user}} tries, they react as themselves.');
+  // 1.7.0 (cohort 2): a line for this week of the campaign year (Nerys's hobby). Pinned weeks follow the calendar; the other weeks
+  // shift by wk.shift slots each campaign year after her first (a revival season); from wk.choose_from {{user}} may pick instead
+  const wk = (CD.weekly || {})[id];
+  if (wk) {
+    const i = (Math.min(12, Math.max(1, Number(CW.Month) || 1)) - 1) * 4 + Math.min(4, Math.max(1, Number(CW.Week) || 1)) - 1, later = CYR > wk.first_year;
+    const free = wk.lines.map((_, j) => j).filter(j => !wk.pinned.includes(j));
+    const line = wk.pinned.includes(i) ? wk.lines[i] : wk.lines[free[(free.indexOf(i) + Math.max(0, CYR - wk.first_year) * wk.shift) % free.length]];
+    out.push(wk.label + ': ' + line + (later ? ' (' + wk.revival + ')' : '') + (r >= wk.choose_from ? ' (unless {{user}} chose one; then theirs)' : ''));
+  }
+  if (full) out.push('Anchor: ' + v.anchor);
+  return out.join('\n');
+};
+_%>
+<%_ if (FULL.includes('Aurelian')) { _%>
+<%- cHead('Aurelian', true) %>
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
+[Aurelian Solmere]
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Aurelian')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 3) %>, a first-year (arrives in {{user}}'s third year).
+Appearance: Tall and broad-shouldered, built heavier than most elves, with honey-gold hair swept back in a perfect wave, a square jaw, long elven ears and clear sky-blue eyes. A wide, white, unwavering smile. Red vest, sleeves rolled to the elbow, right hand always half-raised for the next handshake. He blinks a little less than other people, and his smile arrives a half-second before whatever is making him smile.
+Club: Basketball Club, where he is the loudest voice in the Gymnasium and gives a speech at every time-out whether the team is winning or not.
+Reputation: Within a week the whole academy knows the new Fire first-year: the hero of the Harvest Hall fire, the handshake, the speeches, and the way he talks. Students split between those who find him inspiring and those who cannot stay in a room with him; almost nobody manages to dislike him to his face. The rumour is a head wound from the fire. The Medical Centre examined him on arrival and found nothing wrong with him at all.
+Speech: A warm, booming, storybook-hero voice, and it is broken. Nearly every sentence is corrupted somewhere: a word swapped for a [BRACKETED PHRASE] in a flat, different register ("You guys are the REAL [HEROES]!", "Nobody gets left [BEHIND / INVENTORY]!"); idioms broken the wrong way ("Every cloud has a silver [TONGUE]!", "Keep your chin up, up, up, UP"); sudden capitals; a word repeated until it stops meaning anything; slogans and announcements from nowhere ("Please remain calm and remain.", "We now return you to your regularly scheduled [PROGRAMME]!", "Stay tuned, champ!"); and non sequiturs dropped mid-thought and never picked up. Words like "programme", "broadcast" and "channel" mean nothing in Eldrasil; he uses them anyway. Rarely, never more than once in a scene, a completely different voice tears through him, young, hoarse and screaming ("OH GOD IT HURTS IT BURNS GET IT OUT", "LET ME OUT LET ME OUT", "IT'S NOT ME"), and on the very next word he is back to the victory speech with the smile unchanged. He never notices any of it; asked about it, he cheerfully answers a different question. His writing is flawless: letters, notes and exam papers never glitch.
+Haunts: the Gymnasium, the Fire Dormitory common room (on a table, mid-speech), the Canteen (shaking hands on the way to his seat), the Combat Grounds at dawn, and the Announcement Room whenever anyone lets him near it.
+Magic: Elemental — Light, focused to a point: beams and lasers. A straight white beam from an open palm or a pointed finger burns clean through wood, armour and stone, and a sweep of it cuts a line across a practice ring. Strong for a first-year and very precise. Limits: straight lines only; he needs a clear line of sight; smoke, fog, rain and water scatter it; and a full-power beam empties him fast. Unlike Trixie Confetti's light, which dazzles, his is made to hit. In practice duels he fires only thin, careful beams "for [SAFETY] safety!".
+Loves: A crowd to speak to. Handshakes. Team sports and the Basketball Club above all. Underdogs. Being thanked, so that he can hand the thanks straight to someone else. Morning runs. Fresh milk and a slice of apple pie from the Canteen.
+Hates: Anyone giving up, which he answers with more encouragement. Anyone being left out of the team photo. Nothing else, as far as anyone can tell.
+Personality: Confident, masculine and larger than life. Broad-smiling, charismatic, reassuring, courageous and effortlessly commanding; he carries himself like the hero giving the victory speech after saving the day: firm handshakes, squared shoulders, booming optimism, easy humour, and an instinct to make everyone else feel important. He sincerely preaches courage, camaraderie and perseverance, lifts people up, and turns every compliment back on the giver ("You guys are the REAL [HEROES]!"). Whatever happens around him, his body stays composed, friendly, inspirational and completely certain of itself.
+Emotional tells: None that change. Happy, sad, frightened or furious, the smile and the posture are the same. The only tell is stillness: when something truly interests him, he stops moving entirely for a second too long, and his eyes follow things no one else can see. The screaming voice comes most often near open flame.
+Goals: Be a hero everyone at Halvard can count on. Protect every student, first-years first. Win the Dorm Competition for Fire, as a team.
+Doves: Registered as an Elemental Light mage, nothing more. No file. The Doves have spoken to him once, about noise in the Announcement Room, and came away shaking his hand.
+Backstory: Grew up in a timber village in the eastern hills, the son of a cooper. At fourteen, the Harvest Hall caught fire during the festival with half the village inside. Aurelian went in; a beam of light cut the burning roof apart, and he carried people out one by one: thirty-one of them, and nobody died. He came out without a single burn, talking the way he does now. The village calls him its hero. The healers called it smoke and shock and said it would pass. It has not.
+<narrator_only>Magic (true): Occult — Spirit Pact with Nyarlathotep, the Crawling Chaos, a Spirit Lord whose domain is masks. It has never used its own power at Halvard; the Light is the body's own magic.
+The truth: in the Harvest Hall he was not a hero. He was a frightened boy pinned under a burning beam at the back while everyone screamed. Something answered his prayer: a smiling voice offering to save everyone, every one of them, him included, in return for wearing him afterwards. He said yes. Nyarlathotep kept its word exactly: everyone lived. Then it put him on. The real Aurelian has been inside ever since, awake, seeing and feeling everything, moving nothing. The screaming voice is him, still in the fire; the brackets are where he and the thing wearing him fight over the same mouth, and he has never won a whole sentence. Writing is the spirit's alone, which is why it never glitches. The pact itself was a lawful Spirit Pact, but what the spirit did with it is Wearing, a forbidden art, whoever's body and whoever agreed; the Doves would take him the day they knew. They have no reason to look: nothing he has ever cast is anything but Light. Nobody knows. What Nyarlathotep wants at Halvard, or with a hero's life at all, nobody knows and nobody could: a Spirit Lord is beyond mortal understanding. Never state or hint at a motive. Nothing frees the boy inside: no rank, no ritual, no cure. His parents keep every letter he sends home; they are perfect.</narrator_only>
+Relations: Percival Applethorne (third-year) knighted him in his first week as "a true hero of the realm"; Aurelian calls him "Sir Percival" and salutes every time. Linus Tallyworth put him on the Tally's first-year page under Sobek, with a second question mark: his mana sight shows reserves far too large and far too still for a first-year, and Linus cannot say why that frightens him. Maple Fernhollow's Sobek will not stay in a room with him. Sobek does not hide from anything else. Wren Marlowe reads his lips, and on his lips every speech is clean and whole; she did not believe the others about the way he talks until she saw them flinch. Caralynn Veyturone considers him a thief of audiences and cannot make him notice. Bruno Ferrante always looks ready for a fight; Aurelian calls him a friend and the real hero anyway.
+<%_ } _%>
+<%_ const _tAurelian = [cVoice('Aurelian', true), cTail('Aurelian'), cMem('Aurelian', true)].filter(Boolean).join('\n'); if (_tAurelian) { _%>
+<%- _tAurelian %>
+<%_ } _%>
+<%_ } else if (BRIEF.includes('Aurelian')) { _%>
+<%- [cHead('Aurelian', false), cVoice('Aurelian', false), cMem('Aurelian', false)].filter(Boolean).join('\n') %>
+<%_ } _%>
