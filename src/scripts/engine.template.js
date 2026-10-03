@@ -1915,7 +1915,7 @@ function stepCapital(c) {
 // per hour in the air a moment in the sky (the route's pool, or the way home's), and in the Common Room the stage, in the Cargo Hold
 // the hold (seeded by the flight and the hour, so a swipe sees the same flight). Outside a flight: whether one leaves within 90 min.
 function stepAirship(c) {
-  const { S, log, hasB, toolEdit, absA, absB, elapsed, seed, restedAs, Cn, sAt, sPrev, sFl, sBoard, TU } = c;
+  const { S, log, hasB, toolEdit, elapsed, seed, Cn, sAt, sPrev, sFl, sBoard, TU } = c;
   if (!sAt) {
     const t = hm(S.World.Time), nx = t == null ? null : (AIR.flights || []).find(f => f.m === num(S.World.Month, 0) && f.w === num(S.World.Week, 0) && f.d === S.World.Day
       && hm(f.from) > t && hm(f.from) - t <= 90 && (f.who !== 'kingdom' || avKingdom(S.World, S)));
@@ -1925,15 +1925,13 @@ function stepAirship(c) {
   const R = AIR.rates || {}, Bt = AIR.bath || {}, fid = `${num(S.World.Year, 1)}-${sFl.id}`, route = sFl.dir === 'home' ? 'home' : sFl.route, evs = [];
   if (hasB && !toolEdit && sAt === Bt.place && sPrev === Bt.place && elapsed >= num(Bt.min, 10) && new RegExp(Bt.words || 'bath', 'i').test(S.World.Location))
     for (const k of Bt.clears || []) if (Cn[k]) { delete Cn[k]; S.$ui.toasts.push(`${k}: over`); log.push(`${k} ended: a hot bath in the airship's bathing stalls.`); }
-  if (hasB && !toolEdit && elapsed > 0 && sPrev && restedAs !== 'sleep') {
-    const h1 = Math.floor(absA / 60), got = new Set();
-    for (let h = Math.max(Math.floor(absB / 60) + 1, h1 - num(R.max_rolls, 6) + 1); h <= h1; h++) {
-      for (const [k, pool, ok] of [['sky', (AIR.sky || {})[route], true], ['stage', AIR.stage, sAt === 'common_room'], ['hold', AIR.hold, sAt === 'cargo_hold']]) {
-        const t = ok && !got.has(k) ? rollTable(pool, { roll: [seed, 'air', fid, h, k], pct: num(R[k], 0) * lifeX(TU), pick: [seed, 'air', fid, h, k + 't'] }) : null;
-        if (t !== null) { got.add(k); evs.push({ k, t }); }
-      }
+  const got = new Set();   // 1.46.0 (audit 3.1): the area's hourly loop; the airship's rolls are seeded by the flight, not the place
+  areaHours(c, AR.airship, sPrev, h => {
+    for (const [k, pool, ok] of [['sky', (AIR.sky || {})[route], true], ['stage', AIR.stage, sAt === 'common_room'], ['hold', AIR.hold, sAt === 'cargo_hold']]) {
+      const t = ok && !got.has(k) ? rollTable(pool, { roll: [seed, AR.airship.salt, fid, h, k], pct: num(R[k], 0) * lifeX(TU), pick: [seed, AR.airship.salt, fid, h, k + 't'] }) : null;
+      if (t !== null) { got.add(k); evs.push({ k, t }); }
     }
-  }
+  });
   const t = hm(S.World.Time), a = hm(sFl.from), b = hm(sFl.to), key = `${sFl.route}_${sFl.dir}`;
   S.$ui.airship = { on: true, at: sAt, name: AR.airship.PL[sAt].name, event: sFl.event, from: sFl.from, to: sFl.to, lands: sFl.lands, left: Math.max(0, b - t), bar: !!sFl.bar,
     board: sBoard, view: sAt === 'promenade_deck' ? ((AIR.views || {})[key] || [])[Math.min(2, Math.floor((t - a) * 3 / Math.max(1, b - a)))] || '' : '',
