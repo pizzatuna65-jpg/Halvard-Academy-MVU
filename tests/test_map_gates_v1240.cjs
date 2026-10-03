@@ -44,7 +44,8 @@ for (let i = 0; i < 40 && !heard; i++) {
 ok(heard && heard.$ui.lore.length === 1 && /^(The Lucky Roll|Sunfizz|Firetooth)\. /.test(heard.$ui.amb.beat.text) && heard.$ui.toasts.some(x => /^Heard at /.test(x)),
   `overheard in the Canteen or the Commissary: ${heard ? heard.$ui.amb.beat.text.slice(0, 60) : 'never'}`);
 const now = read('src/worldbook/custom/content/505.txt');
-ok(/AMB\.beat\.kind === 'lore' \? "Overheard \(weave it into this reply/.test(now), '<now> tells the narrator to weave the overheard story in');
+ok(/AMB\.beat\.kind === 'lore' \? "Overheard \(weave it into this reply/.test(read('src/scripts/engine.js')),   // 1.48.0: <now>'s ambience lines are the engine's
+   '<now> tells the narrator to weave the overheard story in');
 S = at(set(S0, [['/$ui/ambience', 'off']]), 36, '10:00', "Founder's Statue and Park");
 ok(S.$ui.lore.includes('223') && S.$ui.lore.includes('342'), 'with Ambience off, a place\'s stories come with the first visit');
 ok(Object.keys(E.PLACE_LORE).length >= 20 && E.PLACE_LORE['mall'].some(x => x[1] === 'Oracle Shell'), 'PLACE_LORE: names as prose writes them');
@@ -95,7 +96,7 @@ console.log('Year-floor locations in the engine (1.24.3)');
   ok(r.every(x => x.$eng.wk.skipped === 0) && r.slice(0, 3).every(x => x.World.Location === 'Lecture Halls — Floor 3') && stay('Study Rooms — Floor 3').$eng.wk.skipped === 1,
     'attendance: present in the Lecture Halls on any floor wording (unknown room names get the benefit of the doubt), absent in the Study Rooms');
   const now = read('src/worldbook/custom/content/505.txt'), upd = read('src/worldbook/custom/content/502.txt');
-  ok(/pk === 'lecture halls' \? ' — Floor ' \+ \(PY \+ 1\)/.test(read('src/scripts/engine.js')) && /HERE\.cls/.test(now) &&   // 1.47.0: the class line is the engine's ($ui.here)
+  ok(/pk === 'lecture halls' \? ' — Floor ' \+ \(PY \+ 1\)/.test(read('src/scripts/engine.js')) && /NOW\.pres/.test(now) &&   // 1.47.0: the class line is the engine's ($ui.here)
      /"Lecture Halls — Floor 3" \(Floor 2 first-years, 3 second-years, 4 third-years\)/.test(upd), '<now> names the class floor; the update rules show the year-floor form');
 }
 ok(/addEventListener\('wheel', e => \{\s*const step/.test(read('src/ui/parts/20_map.js')) && !/if \(!e\.ctrlKey\) return/.test(read('src/ui/parts/20_map.js')), 'the mouse wheel zooms without Ctrl');

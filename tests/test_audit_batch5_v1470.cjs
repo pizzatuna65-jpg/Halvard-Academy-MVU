@@ -19,7 +19,7 @@ const lines = REC.flat();
 ok(['Likely around', 'Students are in class', 'Students are at Study Hall', 'Your class', 'Free period', 'Club time', 'Moved indoors', 'Regulars here', 'Students vote', 'Student Council', 'Presence: after']
   .every(k => lines.some(l => l.startsWith(k))), 'the scenarios reach every kind of presence line');
 const tmpl = read('src/worldbook/custom/505.template.ejs');
-ok(!/REG|TEACH|CLUBV|OUTD/.test(tmpl.replace(/\/\/.*$/gm, '')) && /HERE\.regs/.test(tmpl), '<now> no longer carries the presence rules or their data: it prints $ui.here');
+ok(!/REG|TEACH|CLUBV|OUTD/.test(tmpl.replace(/\/\/.*$/gm, '')) && /NOW\.pres/.test(tmpl), '<now> no longer carries the presence rules or their data: it prints the engine\'s lines ($ui.now.pres since 1.48.0)');
 ok(!/whereabouts/.test(read('src/ui/statusbar.html')) && /function whereabouts/.test(read('src/scripts/ui.js')), 'the whereabouts code goes to the engine and the panels, not the bracelet');
 
 console.log('One model for one NPC');

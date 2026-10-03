@@ -4808,9 +4808,9 @@ function stepAgenda(c) {
     if ((id.startsWith('n:') && !((S.Bonds || {})[id.slice(2)] || {}).Next) || (id.startsWith('p:') && !(S.Projects || {})[id.slice(2)])) delete A.when[id];
 }
 
-// ---- 8o. 1.47.0 (audit 3.8): whereabouts. Who is likely around {{user}}'s place now ($ui.here: what the period holds, the regulars,
-// those the weather moved indoors, clubs meeting here, regulars with a status, {{user}}'s class line), from the one model in shared.js
-// (whereabouts, presenceAt) that the Map panel's Regulars also use. <now> prints it; nothing here changes the story.
+// ---- 8o. 1.47.0 (audit 3.8): whereabouts. "May be here" ($ui.maybe) from the one model in shared.js (whereabouts, presenceAt) that
+// the Map panel's Regulars and <now>'s presence lines (who is likely around {{user}}'s place now, what the period holds, the regulars,
+// those the weather moved indoors, clubs meeting here, regulars with a status, {{user}}'s class line; stepNow, $ui.now.pres) also use.
 const presenceNow = S => presenceView(PRESENCE, S, id => uiOn(S.$ui, id));
 // 1.33.0 (owner-approved planning/DRAFT_classes_and_teachers.md): Practical Magic is one class per combat role (all dorms, by year;
 // {{user}} attends the class of the first role in Combat_role); a free period ($ui.free) means the class is not held
@@ -4832,7 +4832,6 @@ const npcOut = (V, S, id) => { const w = whereabouts(PRESENCE, V, id); return !w
 function stepHere(c) {
   const { S, absA, OFF, canon } = c;
   const V = presenceNow(S), here = placeKey(canonLocation(S.World.Location)), present = S.Scene.Present || {};
-  S.$ui.here = { ...presenceAt(PRESENCE, V, S.World.Location), cls: classLineAt(PRESENCE, V, S.World.Location) };
   // "May be here": a Next plan at this place (Rank 5+ bonds, until it lapses), then an appointment here within the hour (1.18.0 I8)
   const maybe = [];
   for (const [id, b] of Object.entries(S.Bonds || {})) {
@@ -4907,7 +4906,213 @@ function stepCommit(c) {
   if (log.length) S._Log = [...(S._Log || []), ...log.map(l => `[${stamp(S.World)}] ${l}`)].slice(-12);
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit];
+// ---- 11. 1.48.0 (audit 3.11): <now>'s lines that apply engine rules, made here so the rules live once and are tested in Node: the
+// outside area (the place, walks, fares, every engine event), presence and {{user}}'s class (whereabouts, 1.47.0), the campus walks,
+// ambience, moods, and for each present character their bond (what they share at this rank and Trust), Trust, Tension, recent
+// moments and how they take teasing. The code is <now>'s own (1.47.0 505), run on the state the engine leaves: it reads it through a
+// getvar of its own. $ui.now: { area, pres, walk, amb, moods, bond, trust, tension, recent, banter }; <now> prints each in its place.
+const NOW_D = {"BOND":{"share":[[0,"how they look and their public role"],[1,"their name, age, club and where they spend time"],[2,"the magic and skills they use openly"],[3,"likes, dislikes, hobbies and birthday"],[4,"their personality and what shows when they are upset"],[5,"their goals"],[6,"what they think of other people and of the Doves"],[7,"their past and family"]],"real":5,"perks":{"1":"greets {{user}} and can be found at their usual places","2":"may accept a genuine invitation; first accepted invited hangout each week grants one extra bond XP","3":"sometimes seeks {{user}} out; remembers the birthday","4":"may actively help with their listed mana, stamina or study activities; ordinary shared work gets a modest bonus","5":"shares their goal and may ask for help with it","6":"may introduce {{user}} to a new roster NPC, whose bond starts at Rank 1","7":"may escort {{user}} into their dorm, or receive an unscheduled worksite visit if staff","8":"closest bond: best friend, romance or sworn rival, as far as this character and lived story allow","9":"may publicly vouch for {{user}} once per month, softening one related reputation loss by up to 5 XP","10":"would sacrifice for {{user}}"},"off":{"Trixie":2,"Etnie":2,"Percival":2,"Ruby":2,"Bobby":2,"Althair":2,"Layla":2,"Saffi":2,"Vera":2,"Tilly":2,"Dante":2,"Vallie":2,"Caralynn":2,"Aiden":2,"Florian":2,"Linus":2,"Hadrian":2,"Tsubaki":2,"Hester":2,"Dorian":2,"Kotaro":2,"Aurelian":2,"William":2,"Bianca":2,"Rigel":2,"Topaz":2,"Faye":2,"Irene":-1,"Idris":-1,"Zara":-1,"Lenna":-1,"Castor":-1,"Sophia":-1,"Yvette":-1,"Gavlan":-1,"Rei":-1,"Tristan":-1,"Baelin":-1,"Kanae":-1,"Anya":-1,"Krieg":-2,"Ottavio":-2,"Mimosa":-2,"Caine":-2,"Ines":-2},"recent_now":5,"tag":{"Trixie":"open","Etnie":"open","Percival":"open","Ruby":"open","Bobby":"open","Althair":"open","Layla":"open","Saffi":"open","Vera":"open","Tilly":"open","Dante":"open","Vallie":"open","Caralynn":"open","Aiden":"open","Florian":"open","Linus":"open","Hadrian":"open","Tsubaki":"open","Hester":"open","Dorian":"open","Kotaro":"open","Aurelian":"open","William":"open","Bianca":"open","Rigel":"open","Topaz":"open","Faye":"open","Irene":"guarded","Idris":"guarded","Zara":"guarded","Lenna":"guarded","Castor":"guarded","Sophia":"guarded","Yvette":"guarded","Gavlan":"guarded","Rei":"guarded","Tristan":"guarded","Baelin":"guarded","Kanae":"guarded","Anya":"guarded","Krieg":"closed","Ottavio":"closed","Mimosa":"closed","Caine":"closed","Ines":"closed"}},"TRUST":{"bands":[[0,"Betrayed"],[15,"Doubtful"],[35,"Neutral"],[65,"Trusting"],[85,"Confidant"]],"share":{"Betrayed":null,"Doubtful":-1,"Neutral":0,"Trusting":1,"Confidant":2},"early":1,"gates":{"6":35,"7":50,"8":50,"9":65,"10":65},"susp":35,"cats":{"open":{"name":"Open","bands":{"Doubtful":"still friendly on the surface, but checks what {{user}} says against others and no longer shares anything important","Betrayed":"openly hurt and bewildered; tells friends what {{user}} did, because they cannot understand it","Confidant":"tells {{user}} everything, often too much; takes {{user}}'s word over anyone's"},"never":"holding a grudge in secret or plotting against {{user}}"},"normal":{"name":"Normal","bands":{"Doubtful":"polite but careful: keeps plans vague, asks for things in writing, does not lend or cover","Betrayed":"cold and formal; answers only what they must and keeps their distance","Confidant":"relies on {{user}} and says so; asks {{user}}'s opinion before anyone else's"},"never":"pretending nothing happened"},"guarded":{"name":"Guarded","bands":{"Doubtful":"says nothing personal; watches {{user}}'s hands, not {{user}}'s face; tests {{user}} with small things","Betrayed":"closes completely: {{user}} becomes one more person they were right not to trust","Confidant":"lets the guard down only with {{user}}: a rare, quiet honesty that others never see"},"never":"giving a second chance cheaply"},"closed":{"name":"Closed","bands":{"Doubtful":"assumes {{user}} wants something; every kindness is weighed for its price","Betrayed":"files {{user}} as a threat and acts on it, within their position and nature","Confidant":"treats {{user}} as the one exception to a lifelong rule; would deny it if asked"},"never":"saying out loud that they trust {{user}}"}},"npcs":{"Trixie":"open","Etnie":"open","Percival":"open","Ruby":"open","Bobby":"open","Althair":"open","Layla":"open","Saffi":"open","Vera":"open","Tilly":"open","Dante":"open","Vallie":"open","Caralynn":"open","Aiden":"open","Florian":"open","Linus":"open","Hadrian":"open","Tsubaki":"open","Hester":"open","Dorian":"open","Kotaro":"open","Aurelian":"open","William":"open","Bianca":"open","Rigel":"open","Topaz":"open","Faye":"open","Irene":"guarded","Idris":"guarded","Zara":"guarded","Lenna":"guarded","Castor":"guarded","Sophia":"guarded","Yvette":"guarded","Gavlan":"guarded","Rei":"guarded","Tristan":"guarded","Baelin":"guarded","Kanae":"guarded","Anya":"guarded","Krieg":"closed","Ottavio":"closed","Mimosa":"closed","Caine":"closed","Ines":"closed"},"overrides":{"Etnie":{"text":"Etnie cannot stop trusting her \"little sibling\": her Trust never falls below 50 and her perks never wait on it; a betrayal wounds her instead (the engine turns the rest of the drop into Tension).","no_gates":true},"Kanae":{"text":"Kanae's trust feeds on {{user}} pulling away from others for her: when {{user}} turns someone down or distances themselves from a friend for her, report {\"With\": \"Kanae\", \"Kind\": \"choose\"}. While her Plan is hidden she never counts {{user}} as a betrayer.","until_secret":true},"Althair":{"text":"Althair trusts no one and needs no one's trust: his Trust stays 50 and his perks never wait on it; betraying him only entertains him (the engine turns it into bond XP).","no_gates":true},"Caine":{"text":"Caine despises mages, {{user}} included: his Trust cannot pass 64 until his own secret has come out and {{user}} still treats him the same.","until_secret":true},"Topaz":{"text":"Topaz's trust grows when {{user}} takes her seriously: accepting her challenge and giving it their all → report {\"With\": \"Topaz\", \"Kind\": \"challenge\"}. Losing to {{user}} never lowers it; letting her win on purpose, once she notices, is a betrayal."}},"dorm_head":{"Ottavio":{"dorm":"Sky","category":"open","text":"{{user}} is one of Ottavio's Sky students: he forgives them faster, trusts them sooner, and it shows."}}},"SUNREACH":{"carriage":6,"boat":8,"tour":15,"bet_max":200,"names":{"Lucius":["Lucius Vortigern","Myrdath"],"Ines":["Ines Vauclair","Myrdath"],"Bram":["Bram Holloway","Myrdath"],"Dex":["Dex Harlow","Myrdath"],"Elion":["Elion Villeneuve","Ashvale"],"Kira":["Kira Brannock","Ashvale"],"Mirelle":["Mirelle Lullwyn","Ashvale"],"Theodore":["Theodore Wrenfield","Ashvale"],"Bellatrix":["Bellatrix Ardenne","Veyra"],"Cassius":["Cassius Rhavel","Veyra"],"Morgana":["Morgana Vess","Veyra"],"Pip":["Pip Althorne","Veyra"],"Irene":["Irene Chanare","Halvard"],"Caspian":["Caspian Riwalo","Halvard"],"Etnie":["Etnie","Halvard"],"Royhan":["Royhan Filanoman","Halvard"],"Lenna":["Lenna Greenwind","Halvard"],"Saffi":["Saffi Tamberlane","Halvard"],"Kanae":["Kanae Quveno","Halvard"],"Idris":["Idris Ainsworth","Halvard"],"Aiden":["Aiden Ruzzo","Halvard"],"Caralynn":["Caralynn Veyturone","Halvard"],"Zara":["Zara Minallone","Halvard"],"Percival":["Percival Applethorne","Halvard"],"Sophia":["Sophia Helfin","Halvard"],"Gareth":["Gareth Valkaryn","Halvard"],"Trixie":["Trixie Confetti","Halvard"],"Vera":["Vera Pulsar","Halvard"],"Dante":["Dante Kleinn","Halvard"],"Castor":["Castor Moretti","Halvard"],"Ruby":["Ruby Bonbon","Halvard"],"Florian":["Florian Villeneuve","Halvard"],"Alyssa":["Alyssa Edelweiss","Halvard"],"Tilly":["Tilly Marsh","Halvard"],"Linus":["Linus Tallyworth","Halvard"],"Maple":["Maple Fernhollow","Halvard"],"Nerys":["Nerys Silvarenne","Halvard"],"Hadrian":["Hadrian Quelloris","Halvard"],"Wren":["Wren Marlowe","Halvard"],"Tsubaki":["Tsubaki Hoshikage","Halvard"],"Aurelian":["Aurelian Solmere","Halvard"],"William":["William Beckett","Halvard"],"Bruno":["Bruno Ferrante","Halvard"],"Bianca":["Bianca Ferrante","Halvard"],"Rigel":["Rigel Ardenne","Halvard"],"Topaz":["Topaz Vasquelle","Halvard"],"Faye":["Faye Driftwell","Halvard"]}},"TENSION":{"bands":[[0,"Calm"],[20,"Friction"],[40,"Strained"],[70,"Hostile"],[90,"Enemy"]],"categories":{"withdrawn":{"name":"Withdrawn","bands":{"Friction":"quieter than usual around {{user}}; answers short, smiles late","Strained":"avoids {{user}}: leaves when {{user}} arrives, declines invitations politely, confides in someone else","Hostile":"openly hurt: cries or goes silent, asks {{user}} to leave them alone; their friends notice and cool toward {{user}}","Enemy":"cuts {{user}} out entirely (seats, study groups, even routes across campus) and grieves the friendship; does not retaliate"},"never":"revenge, rumours or any harm","eases":"forgives easily: a sincere apology eases it a lot","decay":2,"apology":{"private":-20,"public":-20},"kind_ease":{"help":-5,"keep":-5,"defend":-5},"banter":"light teasing is fine; mockery of what they care about, or rough play, hurts"},"social":{"name":"Social","bands":{"Friction":"barbed compliments and pointed jokes at {{user}}'s expense","Strained":"snubs {{user}} in public; leaves {{user}} out of plans and the good gossip","Hostile":"works the room against {{user}}: rumours, mockery, turning mutual friends","Enemy":"runs a campaign: humiliates {{user}} in front of a crowd and makes sure the story spreads"},"never":"physical violence, or anything that would ruin their own image if it came out","eases":"pride first: a public apology counts, a private one barely","decay":0.5,"enemy_rep":{"Student":-5},"apology":{"private":-5,"public":-15},"kind_ease":{"defend_public":-5},"banter":"enjoys witty banter in private; being mocked in public is an offence"},"confrontational":{"name":"Confrontational","bands":{"Friction":"blunt and challenging: calls {{user}} out, dares {{user}} to prove it","Strained":"picks arguments; demands a spar or a contest to settle it","Hostile":"open rivalry: goes after {{user}} in class, in training, in competitions","Enemy":"a formal challenge or a grudge match in front of witnesses; will not let it rest until it is settled"},"never":"an ambush, secret sabotage, or trying to kill","eases":"words are cheap: a fight settles it (every spar, duel or contest with them, whoever wins; report it as a fight interaction); an apology barely counts","decay":0.34,"apology":{"private":-5,"public":-5},"kind_ease":{},"banter":"loves it, shoves included: people who hit back are the best kind"},"authority":{"name":"Authority","bands":{"Friction":"cooler and more formal with {{user}}; watches for mistakes","Strained":"holds {{user}} strictly to the rules: marks down, refuses favours, catches every lateness","Hostile":"uses the office: detention, reports to the Dorm Head, requests denied, a word with other staff","Enemy":"formal action: a disciplinary hearing, a letter home, pushing for probation"},"never":"anything outside their authority: no personal violence, no lies on the record","eases":"an apology is accepted formally; visible good conduct and hard work count more","decay":1,"apology":{"private":-10,"public":-10},"kind_ease":{"help":-3,"keep":-3,"defend":-3},"banter":"tolerates light teasing from those they trust (Trust 65+); horseplay and mockery are offences"},"dangerous":{"name":"Dangerous","bands":{"Friction":"polite and attentive: remembers {{user}}'s name and asks one question too many","Strained":"watches {{user}}: questions friends, checks {{user}}'s record, leaves small reminders of their reach","Hostile":"moves against {{user}} quietly: leverage, pressure on the people around {{user}}, an investigation opened","Enemy":"strikes with everything their position allows"},"never":"anything that would bring down their own position; no random cruelty","eases":"holds a grudge: an apology changes nothing; only a real service, a bargain, or something they need","decay":0,"apology":{"private":0,"public":0},"kind_ease":{},"banter":"nobody teases them; it is an offence unless they started it"}},"npcs":{"Ruby":"withdrawn","Zara":"withdrawn","Mimosa":"withdrawn","Royhan":"withdrawn","Alyssa":"withdrawn","Vera":"withdrawn","Trixie":"withdrawn","Tilly":"withdrawn","Lenna":"withdrawn","Caralynn":"social","Florian":"social","Aiden":"social","Idris":"social","Bobby":"social","Milena":"social","Sophia":"confrontational","Percival":"confrontational","Saffi":"confrontational","Vallie":"confrontational","Irene":"authority","Caspian":"authority","Baelin":"authority","Yvette":"authority","Gavlan":"authority","Layla":"authority","Kuroo":"authority","Ottavio":"authority","Rei":"authority","Krieg":"dangerous","Caine":"dangerous","Tristan":"dangerous","Castor":"dangerous","Dante":"dangerous","Gareth":"dangerous","Linus":"social","Maple":"withdrawn","Nerys":"social","Hadrian":"social","Wren":"withdrawn","Tsubaki":"confrontational","Hester":"authority","Anselm":"authority","Magnus":"authority","Dorian":"social","Cedric":"authority","Anya":"authority","Kotaro":"withdrawn","Valentin":"dangerous","Aurelian":"social","William":"social","Bruno":"confrontational","Bianca":"social","Rigel":"social","Topaz":"social","Faye":"social"},"peaks":{"Krieg":"a Dovecote examination or an arrest on a pretext","Caine":"every door the Noble Houses control closes to {{user}}, and {{user}} is quietly noted for the Choir","Tristan":"a binding oath or a debt in his registry is called due","Castor":"misfortune follows {{user}}: a curse worked through something taken from them, never traced to him","Dante":"judges {{user}} a wrongdoer: the warmth goes out for good; he gathers proof for the Doves and is merciless once he has it","Gareth":"files it away behind the smile: {{user}}'s standing is sabotaged (a ruined casting, a lost place), never traceable, while he stays warm to {{user}}'s face","Valentin":"{{user}}'s name comes off his board for good, and every door he can close in potion-making closes: suppliers, recommendations, a word in the right ear at court"},"overrides":{"Etnie":{"name":"Devoted","bands":{"Friction":"clingier and anxious, checking {{user}}'s mood every few minutes","Strained":"follows {{user}}'s scent everywhere; jealous of anyone near {{user}}","Hostile":"breaks down: clones appear when she panics; she begs rather than argues","Enemy":"a crisis like the one after the breach: she stops eating and attending class; Kuroo steps in"},"never":"harming {{user}} or leaving {{user}}","eases":"one warm moment with {{user}} eases it a lot","decay":2,"apology":{"private":-25,"public":-25},"kind_ease":{"help":-5,"keep":-5,"defend":-5},"banter":"any attention from {{user}} is a gift, teasing included"},"Kanae":{"name":"Devoted (mask)","exempt":true,"bands":{"Friction":"sweeter than ever, the smile held a beat too long; she blames whoever came between them, never {{user}}","Strained":"clings through kindness: small gifts, and readings that warn {{user}} about the people involved","Hostile":"turns her displeasure on the people around {{user}}: rumours about them, rigged readings, quiet damage to their friendships with {{user}}","Enemy":"her plan to isolate {{user}} moves openly: {{user}}'s other bonds are poisoned one by one while she stays the one who never leaves"},"never":"turning on {{user}}; her affection for {{user}} never lessens","eases":"{{user}}'s attention eases it quickly","decay":2,"apology":{"private":-20,"public":-20},"kind_ease":{"help":-5,"keep":-5,"defend":-5},"banter":"sweet about it, but notes who else {{user}} jokes with"},"Althair":{"name":"Delighted","lock":true,"convert":0.5,"daily_cap":10,"text":"Althair enjoys being disliked: hostility from {{user}} delights him and draws him closer. His Tension stays 0; the engine turns every rise into bond XP. React in character: beaming, curious, friendlier the ruder {{user}} is.","kind_ease":{},"banter":"delighted: the ruder, the better"},"Ezrel":{"name":"Apathetic","rise_mult":0.5,"bands":{"Friction":"does not care, pleasantly","Strained":"does not care, pleasantly; does the minimum for {{user}}","Hostile":"does not care, pleasantly; stops going out of his way for {{user}}","Enemy":"stops helping {{user}} at all, pleasantly and completely"},"never":"drama, raised voices or revenge","eases":"only time; apologies change nothing","decay":1,"apology":{"private":0,"public":0},"kind_ease":{},"banter":"does not notice"},"Rigel":{"name":"Forgiving, for a price","bands":{"Friction":"forgives {{user}} warmly on the spot, then asks, just as warmly, when they will pay the Ardenne price","Strained":"keeps forgiving and keeps reminding; writes the debt in his ledger in front of {{user}} and offers an Oath to settle it","Hostile":"hurt and baffled that a friend will not pay; very polite, stops buying for {{user}}, and writes home about it","Enemy":"strikes {{user}} from the ledger; perfectly courteous in public, and tells Bella, who remembers at the Kingdom Competition"},"never":"taking the price himself, or hurting {{user}} with his own hands","eases":"a kept promise or a sincere Oath eases it a lot; a paid price would end it at once, and nobody pays","decay":1,"apology":{"private":-5,"public":-5},"kind_ease":{"defend_public":-5},"banter":"teasing delights him; he rarely notices it is teasing and answers literally"},"Topaz":{"name":"Rival (clingy)","bands":{"Friction":"challenges {{user}} more often and sulks between challenges; turns up anyway","Strained":"follows {{user}} everywhere \"to study them\"; loudly challenges anyone else who takes their time","Hostile":"a formal written challenge; if {{user}} refuses, she shadows them for days, silent and hurt, and trains until the Medical Centre sends her to bed","Enemy":"announces in front of everyone that {{user}} is no longer her rival, then still appears wherever they are, pretending not to look"},"never":"cheating, sabotage, or truly leaving {{user}}","eases":"{{user}} accepting a challenge, or calling her their rival, eases it a lot","decay":2,"apology":{"private":-20,"public":-25},"kind_ease":{"defend_public":-5},"banter":"teasing is a challenge accepted; she fires straight back, red-eared"}},"apology_npc":{"Sophia":{"private":10,"public":10,"note":"an apology only makes her angrier: she despises cowards; only a fight settles it"}}},"WENDIGO":{"line":"The Wendigo (Grade I): a gaunt humanoid about three metres tall, grey-white skin tight over bone, a deer's skull for a head with antlers and a dim light in the sockets, long clawed fingers; the air turns cold, frost forms where it stands, it smells of rot and speaks in voices it has heard. It stalks first and calls in borrowed voices, then tests the intruders and drives them out; it does not follow anyone out of the Gloaming. Every spell of a kind that has already hit it this fight does a fifth less than the one before (100%, 80%, 60%, 40%, then 20%, never less); a new kind starts at full; weapons do not make it adapt, but its hide is Grade I hard. Students cannot beat it: running, hiding and the flare are the sane choices."},"AVALON":{"fare":10,"rivals":{"Bellatrix":["Bellatrix Ardenne","Veyra",1],"Bram":["Bram Holloway","Myrdath",1],"Cassius":["Cassius Rhavel","Veyra",3],"Dex":["Dex Harlow","Myrdath",2],"Elion":["Elion Villeneuve","Ashvale",1],"Ines":["Ines Vauclair","Myrdath",3],"Kira":["Kira Brannock","Ashvale",2],"Lucius":["Lucius Vortigern","Myrdath",2],"Mirelle":["Mirelle Lullwyn","Ashvale",3],"Morgana":["Morgana Vess","Veyra",2],"Pip":["Pip Althorne","Veyra",1],"Theodore":["Theodore Wrenfield","Ashvale",3]}}};   // tools/common.py now_data: BOND, TRUST, TENSION (bands and texts), WENDIGO, AVALON, SUNREACH
+const ageOf = (w, W) => { const m = /(?:Y(\d+) )?M(\d{1,2}) W([1-4])(?: (Mon|Tue|Wed|Thu|Fri|Sat|Sun))?/.exec(String(w || '')); if (!m || !W || !W.Month) return ''; const D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], di = Math.max(0, D.indexOf(W.Day)), Y = Math.max(1, Number(W.Year) || 1), yl = m[1] ? Math.max(1, +m[1]) : Y; const far = n => (n < 2 ? 'over a year ago' : 'over ' + n + ' years ago'); if (!m[4]) { let k = ((Y - 1) * 48 + (W.Month - 1) * 4 + W.Week - 1) - ((yl - 1) * 48 + (+m[2] - 1) * 4 + +m[3] - 1); if (k < 0) { if (m[1]) return ''; k += 48; } if (k >= 48) return far(Math.floor(k / 48)); return k === 0 ? 'this week' : k === 1 ? 'last week' : k < 4 ? k + ' weeks ago' : k < 8 ? 'last month' : Math.floor(k / 4) + ' months ago'; } let d = ((Y - 1) * 336 + (W.Month - 1) * 28 + (W.Week - 1) * 7 + di) - ((yl - 1) * 336 + (+m[2] - 1) * 28 + (+m[3] - 1) * 7 + D.indexOf(m[4])); if (d < 0) { if (m[1]) return ''; d += 336; } if (d >= 336) return far(Math.floor(d / 336)); return d === 0 ? 'earlier today' : d === 1 ? 'yesterday' : d < 7 ? d + ' days ago' : d < 14 ? 'last week' : d < 28 ? Math.floor(d / 7) + ' weeks ago' : d < 56 ? 'last month' : Math.floor(d / 28) + ' months ago'; };
+function nowOf(S) {
+  const getvar = k => _.get({ stat_data: S }, k);
+  const W = getvar('stat_data.World') || {}, UI = getvar('stat_data.$ui') || {}, PR = getvar('stat_data.Player.Profile') || {};
+  const on = id => uiOn(UI, id);
+  const WX = on('weather') && UI.wx && !UI.wx.away && UI.wx.now ? UI.wx : null;
+  const Y = Math.max(1, Number(W.Year) || 1);
+  const cur = String(W._Curfew || '');
+  const PRES = Object.keys(getvar('stat_data.Scene.Present') || {});
+  const aged = w => { const a = ageOf(w, W); return a ? w + ', ' + a : w; };
+  const V = presenceNow(S), HERE = { ...presenceAt(PRESENCE, V, W.Location), cls: classLineAt(PRESENCE, V, W.Location) };
+  const moods = on('weather') ? PRES.filter(id => (UI.moods || {})[id]).map(id => { const m = UI.moods[id]; return id + ': ' + m.mood.toLowerCase() + ' mood' + (m.reasons.length ? ' (' + m.reasons.join(', ') + ')' : '') + '. Mood colours their manner; keep them in character.'; }) : [];
+  if (WX && PRES.includes('Idris')) { if (/cold|freezing/.test(WX.now.label)) moods.push('Idris is cold-blooded: sluggish and short-tempered in this cold.'); else if (WX.now.sky === 'Clear' && WX.block !== 2 && WX.now.temp >= 15) moods.push('Idris is cold-blooded and loves the sun: he is soaking it up, livelier than usual.'); }
+  const AREAS = UI.area || {}, WENDIGO = NOW_D.WENDIGO, AVD = NOW_D.AVALON, SRD = NOW_D.SUNREACH;
+  const AREA = ['forest', 'avalon', 'airship', 'sunreach'].map(k => AREAS[k] && AREAS[k].on ? Object.assign({ key: k }, AREAS[k]) : null).find(Boolean) || null;
+  const SOON = AREAS.airship && !AREAS.airship.on ? AREAS.airship.soon : null;
+  const srWho = id => { const r = (SRD.names || {})[id]; return r ? r[0] + ' (' + r[1] + ')' : id; };
+  const avRival = id => { const r = (AVD.rivals || {})[id]; return r ? r[0] + ' (' + r[1] + ', Year ' + Math.min(3, r[2] + Y - 1) + ')' : id; };
+  // how {{user}} gets about in each area, the minutes the clock still owes, and every engine event's line for the narrator
+  const AREA_WALK = {
+    forest: ['Walks from here (hours on foot, shortest route): ', '', ' Advance the clock by the whole walk.', 'Still on the road: %s h of the last walk are not on the clock yet; searching here starts after that.'],
+    avalon: ['Walks from here (minutes on foot; a hire carriage takes half and costs ' + AVD.fare + ' coin: set Avalon.Ride true in the same update): ', ' In this quarter: ', ' Advance the clock by the whole walk.', 'Still on the way: %s min of the last walk are not on the clock yet.'],
+    sunreach: ['Walks from here (minutes on foot; a horse carriage for ' + SRD.carriage + ' coin, or a water taxi for ' + SRD.boat + ' coin between the shore parts, takes half: set Sunreach.Ride "carriage" or "boat" in the same update; the Open Sea only by tour boat from the Sea Dock, ' + SRD.tour + ' coin each way): ', ' Here too: ', '', 'Still on the way: %s min of the last move are not on the clock yet.'],
+  };
+  const AREA_EV = (A, e) => ({
+    target: () => 'The target is here (engine): the ' + e.b + ' shows itself this reply, first as fresh signs, then the beast. Play the encounter in full; the catch is not certain.',
+    sign: () => 'Signs (engine): tracks, a kill or droppings of the ' + e.b + ' lead toward ' + e.toName + '. Write them as signs; the beast does not appear.',
+    beast: () => 'Encounter (engine): a ' + e.b + ' (Grade ' + e.g + ') crosses the path of the group this reply. Not the target. ' + (e.g === 'II' && A.grade !== 'II' ? 'It is beyond first- and second-years: running, hiding and the flare are sane choices.' : 'Play it in character; it may be avoided.'),
+    protected: () => 'Seen (engine): a ' + e.b + ', a protected beast; harming one is a crime the Doves investigate.',
+    wendigo: () => 'The Wendigo (engine) is here this reply. ' + WENDIGO.line,
+    caught: () => 'Catch recorded (engine): the ' + A.tgt + ' counts.',
+    failed: () => 'The hunt is over (engine): the group did not bring back its ' + A.tgt + '; the practical is failed.',
+    white: () => 'The White Line (engine): the Royal Guard turns {{user}} back from ' + e.to + (e.n > 1 ? '; a second try, so they report it to the Halvard staff.' : ', politely and firmly.'),
+    pick: () => e.caught ? 'Pickpocket (engine): a hand slips into a pocket of {{user}}, and {{user}} catches it this reply; the thief bolts into the crowd.' : e.lost ? 'Pickpocket (engine): ' + e.lost + ' coin gone from the purse of {{user}}; nobody noticed the hand, and {{user}} finds out later.' : 'Pickpocket (engine): a thief tries the pockets of {{user}} and finds nothing worth taking.',
+    hustle: () => e.caught ? 'A hustler (engine) tries a trick on {{user}}, and {{user}} sees through it this reply.' : e.lost ? 'A hustler (engine): ' + e.lost + ' coin gone from {{user}}, by a trick or a quick hand; {{user}} finds out later.' : 'A hustler (engine) tries {{user}} and finds nothing worth taking.',
+    procession: () => 'Passing by (engine): ' + e.t + '.',
+    street: () => 'In the street (engine, colour only): ' + e.t + '.',
+    rival: () => A.key === 'avalon' ? 'Another academy (engine): ' + avRival(e.id) + ' crosses the path of the group here. Play them from their lore entry.' : 'Another academy (engine): ' + srWho(e.id) + ' is here on their own Trip and crosses the path of the group. Play them from their lore entry, in character.',
+    tsubaki: () => e.first ? 'Tsubaki Hoshikage (engine), the youngest Royal Mage, has lost her ranks after the parade and is lost in the city; the group runs into her here. She is not a Halvard student yet (the Royal Mages entry).' : 'Tsubaki Hoshikage (engine) marched with the Royal Mages and cannot find her way back to the Halvard group; the group runs into her here, lost as ever.',
+    scout: () => 'A talent scout (engine) from a noble house or a hunting company asks {{user}} for a word about the matches.',
+    raid: () => e.caught ? 'Raid (engine): the City Watch storms the Rookery and catches {{user}}; Halvard staff are sent for.' : 'Raid (engine): the City Watch storms the Rookery; the rooks hear it coming and {{user}} gets out in the rush.',
+    sky: () => 'In the sky (engine): ' + e.t + '.', stage: () => 'On the stage (engine): ' + e.t + '.', hold: () => 'In the hold (engine): ' + e.t + '.',
+    bet: () => 'The bet (engine): ' + e.stake + ' coin on ' + e.game + ', and {{user}} ' + (e.win ? 'won ' + e.net + ' coin.' : 'lost it.'),
+    student: () => 'Halvard (engine): ' + srWho(e.id) + ' is here with their own group and runs into {{user}}. Play them in character.',
+    sea: () => 'At sea (engine): ' + e.t + '.',
+    leviathan: () => 'THE LEVIATHAN (engine): ' + e.t + '. A sight for a lifetime, seen only from far off; nobody fights it.',
+  }[e.k] || (() => ''))();
+  const BOND = NOW_D.BOND, TRUST = NOW_D.TRUST, TEN = NOW_D.TENSION;
+  const BONDS = getvar('stat_data.Bonds') || {};
+  const CLOSE = UI.close || [];   // 1.5.0 (N3a): bonds with XP at 80% or more of the next rank (engine)
+  // 1.4.3 Trust shifts what they share (Doubtful -1, Trusting +1, Confidant +2 and the real tiers one rank early; Betrayed: nothing
+  // new) and holds back the perks that need it (data/trust.json perk_gates)
+  const SECR = [...(UI.secrets || []), ...((getvar('stat_data.Campus_State') || {}).Secrets_revealed || [])].map(x => String(x).toLowerCase());
+  const trBand = x => bandOf(TRUST.bands, x);
+  const trOver = id => { const o = (TRUST.overrides || {})[id]; return o && !(o.until_secret && SECR.some(x => x.startsWith(id.toLowerCase() + '.'))) ? o : null; };
+  const bondLines = PRES.filter(id => BONDS[id] && BOND.share).map(id => {
+    const r = Math.max(0, Math.min(10, Number(BONDS[id].Rank) || 0)), tr = Math.max(0, Math.min(100, Number(BONDS[id].Trust) || 0)), tb = trBand(tr);
+    const sh = (TRUST.share || {})[tb], early = tb === 'Confidant' ? TRUST.early || 0 : 0, o = (BOND.off[id] || 0) + (sh || 0);
+    const ok = BOND.share.filter(([t]) => (t < BOND.real ? t <= Math.max(0, r + o) : t <= r + early));
+    const next = BOND.share.find(([t]) => !ok.some(x => x[0] === t));
+    const og = trOver(id), gated = og && og.no_gates ? [] : Object.entries(TRUST.gates || {}).filter(([g, need]) => +g <= r && +g !== 8 && tr < need && BOND.perks[g]).map(([g, need]) => BOND.perks[g] + ' (needs Trust ' + need + ')');
+    const susp = (UI.tsusp || []).filter(k => ((getvar('stat_data._Perks') || {})[k] || {}).From === id);
+    return id + ' (Rank ' + r + (BOND.tag[id] ? ', ' + BOND.tag[id] : '') + ', Trust ' + tr + ' ' + tb.toLowerCase() + (CLOSE.includes(id) ? ', close' : '') + '): '
+      + (sh === null ? 'shares nothing new with {{user}}; keeps to what {{user}} already knows' : 'shares ' + ok.map(x => x[1]).join('; ')
+      + (next ? '. Not yet: ' + next[1] + ' and beyond; asked about it, deflects in character (pushing too soon adds Tension)' : ''))
+      + (r > 0 && BOND.perks[String(r)] ? '. At this rank: ' + BOND.perks[String(r)] : '')
+      + (gated.length ? '. Held back by low Trust: ' + gated.join('; ') : '') + (susp.length ? '. Suspended until Trust ' + TRUST.susp + ': ' + susp.join(', ') : '') + '.';
+  });
+  // 1.4.3 how each present character carries their Trust: a personal rule (always), else only the telling bands
+  const trustLines = PRES.filter(id => BONDS[id]).map(id => {
+    const og = trOver(id), dh = (TRUST.dorm_head || {})[id];
+    const mine = dh && PR.Dorm === dh.dorm, cat = mine ? dh.category : (TRUST.npcs || {})[id] || 'normal', C = (TRUST.cats || {})[cat];
+    const tr = Math.max(0, Math.min(100, Number(BONDS[id].Trust) || 0)), tb = trBand(tr);
+    const parts = [og && og.text, mine && dh.text, C && C.bands[tb] ? id + ' (Trust ' + tr + ', ' + tb.toLowerCase() + '; ' + C.name.toLowerCase() + '): ' + C.bands[tb] + '. Never: ' + C.never + '.' : ''].filter(Boolean);
+    return parts.join(' ');
+  }).filter(Boolean);
+  const tensionLines = PRES.filter(id => BONDS[id]).map(id => {
+    const o = (TEN.overrides || {})[id], P = o || (TEN.categories || {})[(TEN.npcs || {})[id]];
+    if (!P) return '';
+    if (o && o.lock) return id + ': ' + o.text;
+    const t = Math.max(0, Math.min(100, Number(BONDS[id].Tension) || 0));
+    if (t < 20) return '';
+    const band = bandOf(TEN.bands, t);
+    const peak = band === 'Enemy' && (TEN.peaks || {})[id] ? ' (' + TEN.peaks[id] + ')' : '';
+    const an = (TEN.apology_npc || {})[id];
+    return id + ' (Tension ' + t + ', ' + band.toLowerCase() + '): ' + P.bands[band] + peak + '. Never: ' + P.never + '. Eases: ' + (an && an.note ? an.note : P.eases) + '.';
+  }).filter(Boolean);
+  const recentLines = PRES.filter(id => BONDS[id] && (BONDS[id].$Recent || []).length).map(id => id + ' (newest first): ' + BONDS[id].$Recent.slice(-(BOND.recent_now || 5)).reverse()
+    .map(r => '[' + aged(r.w) + '] ' + r.n + (r.fx ? ' (' + r.fx + ')' : '')).join(' | '));
+  // 1.4.4 (owner): how each present character takes teasing and play-fighting (tension category or override: banter)
+  const banterLine = PRES.filter(id => BONDS[id]).map(id => { const o = (TEN.overrides || {})[id], P = (o && o.banter) ? o : (TEN.categories || {})[(TEN.npcs || {})[id]]; return P && P.banter ? id + ' ' + P.banter : ''; }).filter(Boolean).join('; ');
+  const NOW = { moods, bond: bondLines, trust: trustLines, tension: tensionLines, recent: recentLines, banter: banterLine };
+  let out;
+  NOW.area = out = [];
+  if (AREA) { const _A = AREA, _k = AREA.key, _M = AREA.muster, _l = AREA.left, _W = AREA_WALK[_k];
+  if (_k === 'forest') {
+  out.push("Grand Vast Forest (Creature Studies Expedition): {{user}} is at " + (_A.name) + ".");
+  if (_A.tgt) {
+  out.push("Target: " + (_A.tgt) + " (Grade " + (_A.grade) + ")" + (_A.res === 'caught' ? ', caught: the group has it; bring it back to Base Camp by Friday noon.' : _A.res === 'failed' ? ': the hunt is over and the group never found it; the practical is failed. Back to Base Camp by Friday noon, then home.' : _A.met ? ': it has shown itself; the catch is up to the group (set Expedition.Caught only if they actually catch or kill it).' : '. {{user}} knows its name, not where it lives. ' + _A.left + ' h of the hunt left (until Friday 08:00). Searched here: ' + _A.here + ' h, no sign of it here yet; do not bring it in.'));
+  } else if (_A.hs) {
+  out.push("Target: none yet; Vallie assigns each group its target at 08:00 on Thursday.");
+  }
+  } else if (_k === 'avalon') {
+  out.push("Avalon" + (_A.crown ? ' (Independence Crowning Day)' : _A.kd ? ' (Kingdom Competition, with Halvard\'s team)' : '') + ": {{user}} is at " + (_A.name) + (_A.pinName !== _A.name ? ' (' + _A.pinName + ')' : '') + ". Bracelet points do not work here: coin only.");
+  if (_M) {
+  out.push("Crowning Day plan: parade 10:00 on Crown Avenue (the Royal Mages at its head), the King's speech 11:00 at Crown Square, free time in groups of four from 11:30, muster 15:30 at the Skyport, airship home 16:00. " + (_M.missed ? '{{user}} missed the muster: staff and the Doves are out looking for the group; the airship waits for them.' : _M.left > 0 ? 'Muster in ' + _M.left + ' min; the Skyport is ' + _M.back + ' min on foot from here' + (_M.cab !== _M.back ? ' (' + _M.cab + ' by carriage)' : '') + (_M.warn ? '. Time to head back.' : '.') : ''));
+  } else if (_A.kd) {
+  out.push("Kingdom Competition: matches 09:00-18:00 at the Royal Arena; free time in the city with the team until 21:00 (Lower City and Crown Square); curfew 22:00 at the Whitestone Hotel, Gavlan Haverton on watch." + (_A.pass ? ' The team won: the King receives them at Eldrasil Castle tonight, the only time students pass the White Line.' : ''));
+  }
+  } else if (_k === 'airship') {
+  out.push("Aboard the airship (" + (_A.event) + "): {{user}} is in the " + (_A.name) + ". It lands at " + (_A.lands) + " at " + (_A.to) + " (in " + (_l >= 60 ? Math.floor(_l / 60) + 'h ' + (_l % 60) + 'm' : _l + ' min') + "); nobody leaves the ship before that.");
+  out.push("The bar (Common Room): " + (_A.bar ? 'today students may drink (the rest day or a holiday); the stewards check the bracelet' : 'no alcohol for students today (only on the rest day and in the holidays); tea, juice and soda') + ". Meals at the canteen counter are in the fare; drinks and sweets cost coin.");
+  if (_A.view) {
+  out.push("View from the promenade now: " + (_A.view) + ".");
+  }
+  if (_A.cargo) {
+  out.push("In the hold this flight: " + (_A.cargo) + ".");
+  }
+  } else {
+  out.push("Sunreach Bay (the Academy Trip, " + (_A.night ? 'night: the whole city lit by rune-light until dawn' : 'day') + "): {{user}} is at " + (_A.name) + (_A.pinName !== _A.name ? ' (' + _A.pinName + ')' : '') + ". Bracelet points do not work here; coin only.");
+  for (const _t of _A.today || []) {
+  out.push("Today at " + (_t[0]) + ": " + (_t[1]) + ".");
+  }
+  if (_A.off) {
+  out.push("Teachers' rule for the Trip: this is the city's night side, out of bounds for Halvard students. A reminder only; nothing follows unless the story brings a teacher.");
+  }
+  if (_A.at === 'golden_tide') {
+  out.push("The tables: dice, cards and the wheel, " + (SRD.bet_max) + " coin at most a bet. When {{user}} bets, set Sunreach.Bet {\"Game\": \"dice\" | \"cards\" | \"wheel\", \"Stake\": coin} in that update and play up to the moment of the throw; the engine settles it and the next <now> says how it went. Never decide a bet yourself.");
+  }
+  }
+  if (_W) {
+  out.push((_W[0] + _A.walks.map(w => w[1] + ' ' + w[2]).join(', ') + '.' + (_W[1] && _A.near.length ? _W[1] + _A.near.map(n => n[0] + ' ' + n[1]).join(', ') + '.' : '') + _W[2]));
+  if (_A.owe) {
+  out.push((_W[3].replace('%s', _A.owe)));
+  }
+  } else {
+  out.push("Aboard: " + ([_A.name].concat(_A.near).join(' · ')) + ", two minutes apart; the galley, the engine room, the bridge and the teachers' forward cabins are crew and staff only (turned back, no harm done). The teachers count heads at boarding and landing.");
+  }
+  for (const e of _A.ev || []) { const _t = AREA_EV(_A, e); if (!_t) continue;
+  out.push((_t));
+  }
+  if (_A.last) {
+  out.push("Last year's Expedition: {{user}}'s group " + (_A.last.res === 'caught' ? 'brought back its ' + _A.last.tgt : 'came back without its ' + _A.last.tgt + ' and failed') + "; people remember.");
+  }
+  if (_k === 'avalon') {
+  out.push("On the hour the seven Herald Spires ring a bell and a few bars of music across the city; at noon, the news.");
+  }
+  }
+  if (SOON) {
+  out.push("Airship: the flight for " + (SOON.event) + " leaves at " + (SOON.from) + " for " + (SOON.lands) + "; everyone boards before then.");
+  }
+  if (AREAS.sunreach && AREAS.sunreach.coin) {
+  out.push("Tomorrow: " + (AREAS.sunreach.coin) + ", abroad, where bracelet points do not work. Students change points into coin at the Banking House today (1:1); someone may remind {{user}}.");
+  }
+  if (AREAS.avalon && AREAS.avalon.coin) {
+  out.push("Tomorrow: " + (AREAS.avalon.coin) + " in Avalon, where bracelet points do not work. Students change points into coin at the Banking House today (1:1); someone may remind {{user}}.");
+  }
+  NOW.pres = out = [];
+  if (/CURFEW|LOCKDOWN/.test(cur)) {
+  out.push("Presence: after curfew most students are in their own dorms; out are staff, patrols, and students sneaking out (only those whose personality allows it).");
+  } else if (!AREA && HERE) {
+  if (HERE.pres.length) {
+  out.push((HERE.pres.join(' ')));
+  }
+  out.push("Likely around " + (HERE.place || 'here') + " (habits, not certainty; an established scene overrides): " + (HERE.regs.length ? HERE.regs.join(', ') : 'no regulars on record'));
+  if (HERE.moved.length) {
+  out.push("Moved indoors in this weather (Gymnasium, Common Rooms): " + (HERE.moved.join(', ')));
+  }
+  if (HERE.club) {
+  out.push("Club time: " + (HERE.club));
+  }
+  if (HERE.st.length) {
+  out.push("Regulars here with a status on record (it overrides their habits): " + (HERE.st.map(([r, s]) => r + ': ' + s).join('; ')));
+  }
+  if (HERE.cls) {
+  out.push((HERE.cls));
+  }
+  }
+  NOW.walk = out = [];
+  const CW = !AREA && AREAS.campus && AREAS.campus.on ? AREAS.campus : null; if (CW) {
+  out.push("Walks from here (minutes on foot, the shortest way on the Campus Map): " + (CW.walks.map(w => w[0] + ' ' + w[1]).join(', ')) + "." + (CW.near.length ? ' Close by' + (CW.pin ? ' (' + CW.pin + ')' : '') + ': ' + CW.near.map(n => n[0] + ' ' + n[1]).join(', ') + '.' : '') + " When {{user}} goes somewhere, advance the clock by the walk.");
+  if (CW.owe) {
+  out.push("Still on the way: " + (CW.owe) + " min of the last walk are not on the clock yet.");
+  }
+  }
+  NOW.amb = out = [];
+  const AMB = on('ambience') ? UI.amb : null; if (AMB) {
+  if (AMB.crowd || AMB.cue) {
+  out.push("Ambience at " + (AMB.place) + ": " + ([AMB.crowd, AMB.light].filter(Boolean).join(', ')) + "." + (AMB.cue ? ' Sensory cue (write your own detail, once): ' + AMB.cue + '.' : ''));
+  } if (AMB.beat) {
+  out.push((AMB.beat.kind === 'lore' ? "Overheard (weave it into this reply: a line or two of talk from students nearby, or a companion bringing it up; hearsay, never confirmed; {{user}} now knows it)" : AMB.beat.kind === 'brush' ?'Brushes {{user}} (small, harmless, changes nothing; {{user}} may ignore it)' : 'Nearby (optional, one clause, unnamed people; skip it if the scene is intense)') + ": " + (AMB.beat.text) + ".");
+  } if (AMB.unc) {
+  out.push("Uncanny (narrator only, secret; " + (AMB.unc.title) + "): " + (AMB.unc.text) + ". Never confirm or explain it, leave a mundane reading possible, no harm; everyone reacts in character.");
+  } }
+  return NOW;
+}
+function stepNow(c) {
+  c.S.$ui.now = nowOf(c.S);
+}
+
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,

@@ -10,42 +10,14 @@ from common import effect_text
 npcs = json.load(open(P('data/npcs.json'), encoding='utf-8'))
 GIFTS = json.load(open(P('data/gift_prefs.json'), encoding='utf-8'))['npcs']
 J = lambda o: json.dumps(o, ensure_ascii=False, separators=(',', ':'))
-# 1.6.0 (N13): the age of a dated line ("M2 W1 Tue ..." or "M2 W1") against the world clock, in words; unreadable -> ''.
-# One campus year is 12 months x 4 weeks x 7 days. 1.7.4: a line dated with its year ("Y1 M2 W1 Tue", the engine's form from campaign
-# Year 2) is aged exactly ("over a year ago"; a date still ahead gets no age); a line without a year is from the last 12 months.
-AGE_JS = ("const ageOf = (w, W) => { const m = /(?:Y(\\d+) )?M(\\d{1,2}) W([1-4])(?: (Mon|Tue|Wed|Thu|Fri|Sat|Sun))?/.exec(String(w || '')); if (!m || !W || !W.Month) return '';"
-          " const D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], di = Math.max(0, D.indexOf(W.Day)), Y = Math.max(1, Number(W.Year) || 1), yl = m[1] ? Math.max(1, +m[1]) : Y;"
-          " const far = n => (n < 2 ? 'over a year ago' : 'over ' + n + ' years ago');"
-          " if (!m[4]) { let k = ((Y - 1) * 48 + (W.Month - 1) * 4 + W.Week - 1) - ((yl - 1) * 48 + (+m[2] - 1) * 4 + +m[3] - 1); if (k < 0) { if (m[1]) return ''; k += 48; } if (k >= 48) return far(Math.floor(k / 48));"
-          " return k === 0 ? 'this week' : k === 1 ? 'last week' : k < 4 ? k + ' weeks ago' : k < 8 ? 'last month' : Math.floor(k / 4) + ' months ago'; }"
-          " let d = ((Y - 1) * 336 + (W.Month - 1) * 28 + (W.Week - 1) * 7 + di) - ((yl - 1) * 336 + (+m[2] - 1) * 28 + (+m[3] - 1) * 7 + D.indexOf(m[4])); if (d < 0) { if (m[1]) return ''; d += 336; } if (d >= 336) return far(Math.floor(d / 336));"
-          " return d === 0 ? 'earlier today' : d === 1 ? 'yesterday' : d < 7 ? d + ' days ago' : d < 14 ? 'last week' : d < 28 ? Math.floor(d / 7) + ' weeks ago' : d < 56 ? 'last month' : Math.floor(d / 28) + ' months ago'; };")
+from common import AGE_JS, now_data   # 1.48.0: shared with the engine (its <now> lines, audit 3.11)
 ejs = open(P('src/worldbook/custom/505.template.ejs'), encoding='utf-8').read()
 ejs = re.sub(r'^// Source of custom entry 505.*\n', '', ejs, flags=re.M)
-# 1.2.2 bonds: what a present NPC shares at their rank (openness shifts the first tiers), what the rank allows, the event text
-BR = json.load(open(P('data/bond_rules.json'), encoding='utf-8'))
 OPN = json.load(open(P('data/bond_openness.json'), encoding='utf-8'))
-off = {nid: BR['openness'][tag] for tag in ('open', 'guarded', 'closed') for nid in OPN[tag]}
-assert all(nid in npcs for nid in off), [nid for nid in off if nid not in npcs]
-BOND = {'share': BR['share'], 'real': BR['share_real_from'], 'perks': BR['perks'], 'off': off, 'recent_now': BR['recent']['now'],
-        'tag': {nid: tag for tag in ('open', 'guarded', 'closed') for nid in OPN[tag]}}
-# 1.4.3 Trust for the Now entry: bands, share shifts, perk gates, category texts (category = openness), personal rules, Dorm Heads
-_tru = json.load(open(P('data/trust.json'), encoding='utf-8'))
-TRUST = {'bands': _tru['bands'], 'share': _tru['effects']['share'], 'early': _tru['effects']['confidant_real_early'], 'gates': _tru['perk_gates'],
-         'susp': _tru['suspend_r10_below'], 'cats': {k: {'name': v['name'], 'bands': v['bands'], 'never': v['never']} for k, v in _tru['categories'].items()},
-         'npcs': {nid: tag for tag in ('open', 'guarded', 'closed') for nid in OPN[tag]},
-         'overrides': {k: {x: o[x] for x in ('text', 'until_secret', 'no_gates') if x in o} for k, o in _tru['overrides'].items() if o.get('text') or o.get('no_gates')},
-         'dorm_head': {k: {x: v[x] for x in ('dorm', 'category', 'text')} for k, v in _tru['dorm_head'].items()}}
 REPD = json.load(open(P('data/reputation.json'), encoding='utf-8'))   # 1.3.0
 REPD = {'reps': REPD['reps'], 'effects': REPD['effects']}
-# 1.41.0: Sunreach Bay for <now>: fares, the bet limit, and the names of everyone who may be met there
-_srd = json.load(open(P('data/sunreach.json'), encoding='utf-8'))
-SRD = {**{k: _srd['rates'][k] for k in ('carriage', 'boat', 'tour', 'bet_max')},
-       'names': {nid: [npcs[nid]['name'], npcs[nid]['group'].replace(' team', '') if npcs[nid].get('group', '').endswith('team') else 'Halvard']
-                 for g in _srd['meet'].values() for nid in g}}
-for k, v in {'BDAYS': {k:v['birthday'] for k,v in GIFTS.items() if v['birthday']}, 'REP': REPD, 'BOND': BOND, 'RANK4': json.load(open(P('data/rank4_partners.json'), encoding='utf-8'))['npcs'], 'TRUST': TRUST, 'ARR': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1},
-             'WENDIGO': {'line': json.load(open(P('data/expedition.json'), encoding='utf-8'))['wendigo']['line']}, 'SUNREACH': SRD, 'AVALON': {'fare': json.load(open(P('data/avalon.json'), encoding='utf-8'))['rates']['ride_coin'], 'rivals': {nid: [n['name'], n['group'].replace(' team', ''), n['year']] for nid, n in sorted(npcs.items()) if (n.get('group') or '').endswith('team')}}, 'PRON': {nid: {'F': 'she/her', 'M': 'he/him'}.get(n.get('gender'), 'they/them') for nid, n in sorted(npcs.items())},
-             'TENSION': {k: v for k, v in json.load(open(P('data/tension.json'), encoding='utf-8')).items() if k in ('bands', 'categories', 'npcs', 'peaks', 'overrides', 'apology_npc')}}.items():   # 1.3.8 (+1.4.0 apology_npc)
+for k, v in {'BDAYS': {k:v['birthday'] for k,v in GIFTS.items() if v['birthday']}, 'REP': REPD, 'RANK4': json.load(open(P('data/rank4_partners.json'), encoding='utf-8'))['npcs'], 'ARR': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1},
+             'PRON': {nid: {'F': 'she/her', 'M': 'he/him'}.get(n.get('gender'), 'they/them') for nid, n in sorted(npcs.items())}}.items():   # 1.3.8 (+1.4.0 apology_npc)
     ph = '/*@@' + k + '@@*/' + ('[]' if isinstance(v, list) else '{}')
     assert ph in ejs, ph
     ejs = ejs.replace(ph, J(v))

@@ -10,7 +10,7 @@ const card = JSON.parse(fs.readFileSync(path.join(ROOT, 'dist/Eldrasil_Halvard.j
 const EJS = card.character_book.entries.filter(e => /<%/.test(e.content));
 
 // ---- EJS: entries that land together are compiled as one template by the Prompt Template extension
-ok(EJS.length >= 7 && EJS.every(e => e.content.startsWith('<%_ { _%>\n') && e.content.endsWith('\n<%_ } _%>')), `every EJS entry has its own block scope (${EJS.length})`);
+ok(EJS.length >= 7 && EJS.every(e => e.content.replace(/^(@@[^\n]*\n)+/, '').startsWith('<%_ { _%>\n') && e.content.endsWith('\n<%_ } _%>')), `every EJS entry has its own block scope (${EJS.length})`);
 let S = applyPatch(initState({ etnie: true }), [{ op: 'replace', path: '/World/Location', value: 'Gymnasium' }]);
 const gv = k => _.get({ stat_data: S }, k);
 let err = ''; try { ejs.render(EJS.map(e => e.content).join('\n'), { getvar: gv }); } catch (e) { err = e.message.split('\n').slice(-1)[0]; }

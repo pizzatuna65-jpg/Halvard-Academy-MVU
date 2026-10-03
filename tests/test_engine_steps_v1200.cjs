@@ -8,7 +8,7 @@ const clone = x => JSON.parse(JSON.stringify(x));
 console.log('Engine steps');
 const names = E.ENGINE_STEPS.map(f => f.name);
 ok(names.length >= 30 && names.every(n => /^step[A-Z]/.test(n)) && new Set(names).size === names.length, `${names.length} distinct steps`);
-ok(names[0] === 'stepSetup' && names[1] === 'stepMigrate' && names[names.length - 1] === 'stepCommit', 'setup and migrations first, commit last');
+ok(names[0] === 'stepSetup' && names[1] === 'stepMigrate' && names[names.length - 2] === 'stepCommit' && names[names.length - 1] === 'stepNow', 'setup and migrations first, commit, then <now>\'s lines (1.48.0) last');
 const order = ['stepTime', 'stepWeather', 'stepMagic', 'stepRest', 'stepReputation', 'stepSchoolWeek', 'stepNamesInProse', 'stepBonds', 'stepTraining', 'stepReminders', 'stepUi'];
 ok(order.every((n, i) => i === 0 || names.indexOf(order[i - 1]) < names.indexOf(n)), 'sections keep their old order');
 ok(!/^function runEngine[\s\S]{0,400}fillShape/.test(src) && /for \(const step of ENGINE_STEPS\) step\(c\);/.test(src), 'runEngine only runs the steps');

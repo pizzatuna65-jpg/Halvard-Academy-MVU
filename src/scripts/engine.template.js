@@ -4564,9 +4564,9 @@ function stepAgenda(c) {
     if ((id.startsWith('n:') && !((S.Bonds || {})[id.slice(2)] || {}).Next) || (id.startsWith('p:') && !(S.Projects || {})[id.slice(2)])) delete A.when[id];
 }
 
-// ---- 8o. 1.47.0 (audit 3.8): whereabouts. Who is likely around {{user}}'s place now ($ui.here: what the period holds, the regulars,
-// those the weather moved indoors, clubs meeting here, regulars with a status, {{user}}'s class line), from the one model in shared.js
-// (whereabouts, presenceAt) that the Map panel's Regulars also use. <now> prints it; nothing here changes the story.
+// ---- 8o. 1.47.0 (audit 3.8): whereabouts. "May be here" ($ui.maybe) from the one model in shared.js (whereabouts, presenceAt) that
+// the Map panel's Regulars and <now>'s presence lines (who is likely around {{user}}'s place now, what the period holds, the regulars,
+// those the weather moved indoors, clubs meeting here, regulars with a status, {{user}}'s class line; stepNow, $ui.now.pres) also use.
 const presenceNow = S => presenceView(PRESENCE, S, id => uiOn(S.$ui, id));
 // 1.33.0 (owner-approved planning/DRAFT_classes_and_teachers.md): Practical Magic is one class per combat role (all dorms, by year;
 // {{user}} attends the class of the first role in Combat_role); a free period ($ui.free) means the class is not held
@@ -4588,7 +4588,6 @@ const npcOut = (V, S, id) => { const w = whereabouts(PRESENCE, V, id); return !w
 function stepHere(c) {
   const { S, absA, OFF, canon } = c;
   const V = presenceNow(S), here = placeKey(canonLocation(S.World.Location)), present = S.Scene.Present || {};
-  S.$ui.here = { ...presenceAt(PRESENCE, V, S.World.Location), cls: classLineAt(PRESENCE, V, S.World.Location) };
   // "May be here": a Next plan at this place (Rank 5+ bonds, until it lapses), then an appointment here within the hour (1.18.0 I8)
   const maybe = [];
   for (const [id, b] of Object.entries(S.Bonds || {})) {
@@ -4663,7 +4662,213 @@ function stepCommit(c) {
   if (log.length) S._Log = [...(S._Log || []), ...log.map(l => `[${stamp(S.World)}] ${l}`)].slice(-12);
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit];
+// ---- 11. 1.48.0 (audit 3.11): <now>'s lines that apply engine rules, made here so the rules live once and are tested in Node: the
+// outside area (the place, walks, fares, every engine event), presence and {{user}}'s class (whereabouts, 1.47.0), the campus walks,
+// ambience, moods, and for each present character their bond (what they share at this rank and Trust), Trust, Tension, recent
+// moments and how they take teasing. The code is <now>'s own (1.47.0 505), run on the state the engine leaves: it reads it through a
+// getvar of its own. $ui.now: { area, pres, walk, amb, moods, bond, trust, tension, recent, banter }; <now> prints each in its place.
+const NOW_D = /*@@NOW_DATA@@*/{};   // tools/common.py now_data: BOND, TRUST, TENSION (bands and texts), WENDIGO, AVALON, SUNREACH
+/*@@AGE@@*/
+function nowOf(S) {
+  const getvar = k => _.get({ stat_data: S }, k);
+  const W = getvar('stat_data.World') || {}, UI = getvar('stat_data.$ui') || {}, PR = getvar('stat_data.Player.Profile') || {};
+  const on = id => uiOn(UI, id);
+  const WX = on('weather') && UI.wx && !UI.wx.away && UI.wx.now ? UI.wx : null;
+  const Y = Math.max(1, Number(W.Year) || 1);
+  const cur = String(W._Curfew || '');
+  const PRES = Object.keys(getvar('stat_data.Scene.Present') || {});
+  const aged = w => { const a = ageOf(w, W); return a ? w + ', ' + a : w; };
+  const V = presenceNow(S), HERE = { ...presenceAt(PRESENCE, V, W.Location), cls: classLineAt(PRESENCE, V, W.Location) };
+  const moods = on('weather') ? PRES.filter(id => (UI.moods || {})[id]).map(id => { const m = UI.moods[id]; return id + ': ' + m.mood.toLowerCase() + ' mood' + (m.reasons.length ? ' (' + m.reasons.join(', ') + ')' : '') + '. Mood colours their manner; keep them in character.'; }) : [];
+  if (WX && PRES.includes('Idris')) { if (/cold|freezing/.test(WX.now.label)) moods.push('Idris is cold-blooded: sluggish and short-tempered in this cold.'); else if (WX.now.sky === 'Clear' && WX.block !== 2 && WX.now.temp >= 15) moods.push('Idris is cold-blooded and loves the sun: he is soaking it up, livelier than usual.'); }
+  const AREAS = UI.area || {}, WENDIGO = NOW_D.WENDIGO, AVD = NOW_D.AVALON, SRD = NOW_D.SUNREACH;
+  const AREA = ['forest', 'avalon', 'airship', 'sunreach'].map(k => AREAS[k] && AREAS[k].on ? Object.assign({ key: k }, AREAS[k]) : null).find(Boolean) || null;
+  const SOON = AREAS.airship && !AREAS.airship.on ? AREAS.airship.soon : null;
+  const srWho = id => { const r = (SRD.names || {})[id]; return r ? r[0] + ' (' + r[1] + ')' : id; };
+  const avRival = id => { const r = (AVD.rivals || {})[id]; return r ? r[0] + ' (' + r[1] + ', Year ' + Math.min(3, r[2] + Y - 1) + ')' : id; };
+  // how {{user}} gets about in each area, the minutes the clock still owes, and every engine event's line for the narrator
+  const AREA_WALK = {
+    forest: ['Walks from here (hours on foot, shortest route): ', '', ' Advance the clock by the whole walk.', 'Still on the road: %s h of the last walk are not on the clock yet; searching here starts after that.'],
+    avalon: ['Walks from here (minutes on foot; a hire carriage takes half and costs ' + AVD.fare + ' coin: set Avalon.Ride true in the same update): ', ' In this quarter: ', ' Advance the clock by the whole walk.', 'Still on the way: %s min of the last walk are not on the clock yet.'],
+    sunreach: ['Walks from here (minutes on foot; a horse carriage for ' + SRD.carriage + ' coin, or a water taxi for ' + SRD.boat + ' coin between the shore parts, takes half: set Sunreach.Ride "carriage" or "boat" in the same update; the Open Sea only by tour boat from the Sea Dock, ' + SRD.tour + ' coin each way): ', ' Here too: ', '', 'Still on the way: %s min of the last move are not on the clock yet.'],
+  };
+  const AREA_EV = (A, e) => ({
+    target: () => 'The target is here (engine): the ' + e.b + ' shows itself this reply, first as fresh signs, then the beast. Play the encounter in full; the catch is not certain.',
+    sign: () => 'Signs (engine): tracks, a kill or droppings of the ' + e.b + ' lead toward ' + e.toName + '. Write them as signs; the beast does not appear.',
+    beast: () => 'Encounter (engine): a ' + e.b + ' (Grade ' + e.g + ') crosses the path of the group this reply. Not the target. ' + (e.g === 'II' && A.grade !== 'II' ? 'It is beyond first- and second-years: running, hiding and the flare are sane choices.' : 'Play it in character; it may be avoided.'),
+    protected: () => 'Seen (engine): a ' + e.b + ', a protected beast; harming one is a crime the Doves investigate.',
+    wendigo: () => 'The Wendigo (engine) is here this reply. ' + WENDIGO.line,
+    caught: () => 'Catch recorded (engine): the ' + A.tgt + ' counts.',
+    failed: () => 'The hunt is over (engine): the group did not bring back its ' + A.tgt + '; the practical is failed.',
+    white: () => 'The White Line (engine): the Royal Guard turns {{user}} back from ' + e.to + (e.n > 1 ? '; a second try, so they report it to the Halvard staff.' : ', politely and firmly.'),
+    pick: () => e.caught ? 'Pickpocket (engine): a hand slips into a pocket of {{user}}, and {{user}} catches it this reply; the thief bolts into the crowd.' : e.lost ? 'Pickpocket (engine): ' + e.lost + ' coin gone from the purse of {{user}}; nobody noticed the hand, and {{user}} finds out later.' : 'Pickpocket (engine): a thief tries the pockets of {{user}} and finds nothing worth taking.',
+    hustle: () => e.caught ? 'A hustler (engine) tries a trick on {{user}}, and {{user}} sees through it this reply.' : e.lost ? 'A hustler (engine): ' + e.lost + ' coin gone from {{user}}, by a trick or a quick hand; {{user}} finds out later.' : 'A hustler (engine) tries {{user}} and finds nothing worth taking.',
+    procession: () => 'Passing by (engine): ' + e.t + '.',
+    street: () => 'In the street (engine, colour only): ' + e.t + '.',
+    rival: () => A.key === 'avalon' ? 'Another academy (engine): ' + avRival(e.id) + ' crosses the path of the group here. Play them from their lore entry.' : 'Another academy (engine): ' + srWho(e.id) + ' is here on their own Trip and crosses the path of the group. Play them from their lore entry, in character.',
+    tsubaki: () => e.first ? 'Tsubaki Hoshikage (engine), the youngest Royal Mage, has lost her ranks after the parade and is lost in the city; the group runs into her here. She is not a Halvard student yet (the Royal Mages entry).' : 'Tsubaki Hoshikage (engine) marched with the Royal Mages and cannot find her way back to the Halvard group; the group runs into her here, lost as ever.',
+    scout: () => 'A talent scout (engine) from a noble house or a hunting company asks {{user}} for a word about the matches.',
+    raid: () => e.caught ? 'Raid (engine): the City Watch storms the Rookery and catches {{user}}; Halvard staff are sent for.' : 'Raid (engine): the City Watch storms the Rookery; the rooks hear it coming and {{user}} gets out in the rush.',
+    sky: () => 'In the sky (engine): ' + e.t + '.', stage: () => 'On the stage (engine): ' + e.t + '.', hold: () => 'In the hold (engine): ' + e.t + '.',
+    bet: () => 'The bet (engine): ' + e.stake + ' coin on ' + e.game + ', and {{user}} ' + (e.win ? 'won ' + e.net + ' coin.' : 'lost it.'),
+    student: () => 'Halvard (engine): ' + srWho(e.id) + ' is here with their own group and runs into {{user}}. Play them in character.',
+    sea: () => 'At sea (engine): ' + e.t + '.',
+    leviathan: () => 'THE LEVIATHAN (engine): ' + e.t + '. A sight for a lifetime, seen only from far off; nobody fights it.',
+  }[e.k] || (() => ''))();
+  const BOND = NOW_D.BOND, TRUST = NOW_D.TRUST, TEN = NOW_D.TENSION;
+  const BONDS = getvar('stat_data.Bonds') || {};
+  const CLOSE = UI.close || [];   // 1.5.0 (N3a): bonds with XP at 80% or more of the next rank (engine)
+  // 1.4.3 Trust shifts what they share (Doubtful -1, Trusting +1, Confidant +2 and the real tiers one rank early; Betrayed: nothing
+  // new) and holds back the perks that need it (data/trust.json perk_gates)
+  const SECR = [...(UI.secrets || []), ...((getvar('stat_data.Campus_State') || {}).Secrets_revealed || [])].map(x => String(x).toLowerCase());
+  const trBand = x => bandOf(TRUST.bands, x);
+  const trOver = id => { const o = (TRUST.overrides || {})[id]; return o && !(o.until_secret && SECR.some(x => x.startsWith(id.toLowerCase() + '.'))) ? o : null; };
+  const bondLines = PRES.filter(id => BONDS[id] && BOND.share).map(id => {
+    const r = Math.max(0, Math.min(10, Number(BONDS[id].Rank) || 0)), tr = Math.max(0, Math.min(100, Number(BONDS[id].Trust) || 0)), tb = trBand(tr);
+    const sh = (TRUST.share || {})[tb], early = tb === 'Confidant' ? TRUST.early || 0 : 0, o = (BOND.off[id] || 0) + (sh || 0);
+    const ok = BOND.share.filter(([t]) => (t < BOND.real ? t <= Math.max(0, r + o) : t <= r + early));
+    const next = BOND.share.find(([t]) => !ok.some(x => x[0] === t));
+    const og = trOver(id), gated = og && og.no_gates ? [] : Object.entries(TRUST.gates || {}).filter(([g, need]) => +g <= r && +g !== 8 && tr < need && BOND.perks[g]).map(([g, need]) => BOND.perks[g] + ' (needs Trust ' + need + ')');
+    const susp = (UI.tsusp || []).filter(k => ((getvar('stat_data._Perks') || {})[k] || {}).From === id);
+    return id + ' (Rank ' + r + (BOND.tag[id] ? ', ' + BOND.tag[id] : '') + ', Trust ' + tr + ' ' + tb.toLowerCase() + (CLOSE.includes(id) ? ', close' : '') + '): '
+      + (sh === null ? 'shares nothing new with {{user}}; keeps to what {{user}} already knows' : 'shares ' + ok.map(x => x[1]).join('; ')
+      + (next ? '. Not yet: ' + next[1] + ' and beyond; asked about it, deflects in character (pushing too soon adds Tension)' : ''))
+      + (r > 0 && BOND.perks[String(r)] ? '. At this rank: ' + BOND.perks[String(r)] : '')
+      + (gated.length ? '. Held back by low Trust: ' + gated.join('; ') : '') + (susp.length ? '. Suspended until Trust ' + TRUST.susp + ': ' + susp.join(', ') : '') + '.';
+  });
+  // 1.4.3 how each present character carries their Trust: a personal rule (always), else only the telling bands
+  const trustLines = PRES.filter(id => BONDS[id]).map(id => {
+    const og = trOver(id), dh = (TRUST.dorm_head || {})[id];
+    const mine = dh && PR.Dorm === dh.dorm, cat = mine ? dh.category : (TRUST.npcs || {})[id] || 'normal', C = (TRUST.cats || {})[cat];
+    const tr = Math.max(0, Math.min(100, Number(BONDS[id].Trust) || 0)), tb = trBand(tr);
+    const parts = [og && og.text, mine && dh.text, C && C.bands[tb] ? id + ' (Trust ' + tr + ', ' + tb.toLowerCase() + '; ' + C.name.toLowerCase() + '): ' + C.bands[tb] + '. Never: ' + C.never + '.' : ''].filter(Boolean);
+    return parts.join(' ');
+  }).filter(Boolean);
+  const tensionLines = PRES.filter(id => BONDS[id]).map(id => {
+    const o = (TEN.overrides || {})[id], P = o || (TEN.categories || {})[(TEN.npcs || {})[id]];
+    if (!P) return '';
+    if (o && o.lock) return id + ': ' + o.text;
+    const t = Math.max(0, Math.min(100, Number(BONDS[id].Tension) || 0));
+    if (t < 20) return '';
+    const band = bandOf(TEN.bands, t);
+    const peak = band === 'Enemy' && (TEN.peaks || {})[id] ? ' (' + TEN.peaks[id] + ')' : '';
+    const an = (TEN.apology_npc || {})[id];
+    return id + ' (Tension ' + t + ', ' + band.toLowerCase() + '): ' + P.bands[band] + peak + '. Never: ' + P.never + '. Eases: ' + (an && an.note ? an.note : P.eases) + '.';
+  }).filter(Boolean);
+  const recentLines = PRES.filter(id => BONDS[id] && (BONDS[id].$Recent || []).length).map(id => id + ' (newest first): ' + BONDS[id].$Recent.slice(-(BOND.recent_now || 5)).reverse()
+    .map(r => '[' + aged(r.w) + '] ' + r.n + (r.fx ? ' (' + r.fx + ')' : '')).join(' | '));
+  // 1.4.4 (owner): how each present character takes teasing and play-fighting (tension category or override: banter)
+  const banterLine = PRES.filter(id => BONDS[id]).map(id => { const o = (TEN.overrides || {})[id], P = (o && o.banter) ? o : (TEN.categories || {})[(TEN.npcs || {})[id]]; return P && P.banter ? id + ' ' + P.banter : ''; }).filter(Boolean).join('; ');
+  const NOW = { moods, bond: bondLines, trust: trustLines, tension: tensionLines, recent: recentLines, banter: banterLine };
+  let out;
+  NOW.area = out = [];
+  if (AREA) { const _A = AREA, _k = AREA.key, _M = AREA.muster, _l = AREA.left, _W = AREA_WALK[_k];
+  if (_k === 'forest') {
+  out.push("Grand Vast Forest (Creature Studies Expedition): {{user}} is at " + (_A.name) + ".");
+  if (_A.tgt) {
+  out.push("Target: " + (_A.tgt) + " (Grade " + (_A.grade) + ")" + (_A.res === 'caught' ? ', caught: the group has it; bring it back to Base Camp by {@expedition.hunt.day:nextday} {@expedition.hunt.back_by:clock}.' : _A.res === 'failed' ? ': the hunt is over and the group never found it; the practical is failed. Back to Base Camp by {@expedition.hunt.day:nextday} {@expedition.hunt.back_by:clock}, then home.' : _A.met ? ': it has shown itself; the catch is up to the group (set Expedition.Caught only if they actually catch or kill it).' : '. {{user}} knows its name, not where it lives. ' + _A.left + ' h of the hunt left (until {@expedition.hunt.day:nextday} {@expedition.hunt.from}). Searched here: ' + _A.here + ' h, no sign of it here yet; do not bring it in.'));
+  } else if (_A.hs) {
+  out.push("Target: none yet; Vallie assigns each group its target at {@expedition.hunt.from} on {@expedition.hunt.day:day}.");
+  }
+  } else if (_k === 'avalon') {
+  out.push("Avalon" + (_A.crown ? ' (Independence Crowning Day)' : _A.kd ? ' (Kingdom Competition, with Halvard\'s team)' : '') + ": {{user}} is at " + (_A.name) + (_A.pinName !== _A.name ? ' (' + _A.pinName + ')' : '') + ". Bracelet points do not work here: coin only.");
+  if (_M) {
+  out.push("Crowning Day plan: parade {@avalon.crowning.parade} on Crown Avenue (the Royal Mages at its head), the King's speech {@avalon.crowning.speech} at Crown Square, free time in groups of four from {@avalon.crowning.free}, muster {@avalon.crowning.muster} at the Skyport, airship home {@avalon.crowning.depart}. " + (_M.missed ? '{{user}} missed the muster: staff and the Doves are out looking for the group; the airship waits for them.' : _M.left > 0 ? 'Muster in ' + _M.left + ' min; the Skyport is ' + _M.back + ' min on foot from here' + (_M.cab !== _M.back ? ' (' + _M.cab + ' by carriage)' : '') + (_M.warn ? '. Time to head back.' : '.') : ''));
+  } else if (_A.kd) {
+  out.push("Kingdom Competition: matches {@avalon.kingdom.matches} at the Royal Arena; free time in the city with the team until {@avalon.kingdom.free_until} (Lower City and Crown Square); curfew {@avalon.kingdom.curfew} at the Whitestone Hotel, Gavlan Haverton on watch." + (_A.pass ? ' The team won: the King receives them at Eldrasil Castle tonight, the only time students pass the White Line.' : ''));
+  }
+  } else if (_k === 'airship') {
+  out.push("Aboard the airship (" + (_A.event) + "): {{user}} is in the " + (_A.name) + ". It lands at " + (_A.lands) + " at " + (_A.to) + " (in " + (_l >= 60 ? Math.floor(_l / 60) + 'h ' + (_l % 60) + 'm' : _l + ' min') + "); nobody leaves the ship before that.");
+  out.push("The bar (Common Room): " + (_A.bar ? 'today students may drink (the rest day or a holiday); the stewards check the bracelet' : 'no alcohol for students today (only on the rest day and in the holidays); tea, juice and soda') + ". Meals at the canteen counter are in the fare; drinks and sweets cost coin.");
+  if (_A.view) {
+  out.push("View from the promenade now: " + (_A.view) + ".");
+  }
+  if (_A.cargo) {
+  out.push("In the hold this flight: " + (_A.cargo) + ".");
+  }
+  } else {
+  out.push("Sunreach Bay (the Academy Trip, " + (_A.night ? 'night: the whole city lit by rune-light until dawn' : 'day') + "): {{user}} is at " + (_A.name) + (_A.pinName !== _A.name ? ' (' + _A.pinName + ')' : '') + ". Bracelet points do not work here; coin only.");
+  for (const _t of _A.today || []) {
+  out.push("Today at " + (_t[0]) + ": " + (_t[1]) + ".");
+  }
+  if (_A.off) {
+  out.push("Teachers' rule for the Trip: this is the city's night side, out of bounds for Halvard students. A reminder only; nothing follows unless the story brings a teacher.");
+  }
+  if (_A.at === 'golden_tide') {
+  out.push("The tables: dice, cards and the wheel, " + (SRD.bet_max) + " coin at most a bet. When {{user}} bets, set Sunreach.Bet {\"Game\": \"dice\" | \"cards\" | \"wheel\", \"Stake\": coin} in that update and play up to the moment of the throw; the engine settles it and the next <now> says how it went. Never decide a bet yourself.");
+  }
+  }
+  if (_W) {
+  out.push((_W[0] + _A.walks.map(w => w[1] + ' ' + w[2]).join(', ') + '.' + (_W[1] && _A.near.length ? _W[1] + _A.near.map(n => n[0] + ' ' + n[1]).join(', ') + '.' : '') + _W[2]));
+  if (_A.owe) {
+  out.push((_W[3].replace('%s', _A.owe)));
+  }
+  } else {
+  out.push("Aboard: " + ([_A.name].concat(_A.near).join(' · ')) + ", two minutes apart; the galley, the engine room, the bridge and the teachers' forward cabins are crew and staff only (turned back, no harm done). The teachers count heads at boarding and landing.");
+  }
+  for (const e of _A.ev || []) { const _t = AREA_EV(_A, e); if (!_t) continue;
+  out.push((_t));
+  }
+  if (_A.last) {
+  out.push("Last year's Expedition: {{user}}'s group " + (_A.last.res === 'caught' ? 'brought back its ' + _A.last.tgt : 'came back without its ' + _A.last.tgt + ' and failed') + "; people remember.");
+  }
+  if (_k === 'avalon') {
+  out.push("On the hour the seven Herald Spires ring a bell and a few bars of music across the city; at noon, the news.");
+  }
+  }
+  if (SOON) {
+  out.push("Airship: the flight for " + (SOON.event) + " leaves at " + (SOON.from) + " for " + (SOON.lands) + "; everyone boards before then.");
+  }
+  if (AREAS.sunreach && AREAS.sunreach.coin) {
+  out.push("Tomorrow: " + (AREAS.sunreach.coin) + ", abroad, where bracelet points do not work. Students change points into coin at the Banking House today (1:1); someone may remind {{user}}.");
+  }
+  if (AREAS.avalon && AREAS.avalon.coin) {
+  out.push("Tomorrow: " + (AREAS.avalon.coin) + " in Avalon, where bracelet points do not work. Students change points into coin at the Banking House today (1:1); someone may remind {{user}}.");
+  }
+  NOW.pres = out = [];
+  if (/CURFEW|LOCKDOWN/.test(cur)) {
+  out.push("Presence: after curfew most students are in their own dorms; out are staff, patrols, and students sneaking out (only those whose personality allows it).");
+  } else if (!AREA && HERE) {
+  if (HERE.pres.length) {
+  out.push((HERE.pres.join(' ')));
+  }
+  out.push("Likely around " + (HERE.place || 'here') + " (habits, not certainty; an established scene overrides): " + (HERE.regs.length ? HERE.regs.join(', ') : 'no regulars on record'));
+  if (HERE.moved.length) {
+  out.push("Moved indoors in this weather (Gymnasium, Common Rooms): " + (HERE.moved.join(', ')));
+  }
+  if (HERE.club) {
+  out.push("Club time: " + (HERE.club));
+  }
+  if (HERE.st.length) {
+  out.push("Regulars here with a status on record (it overrides their habits): " + (HERE.st.map(([r, s]) => r + ': ' + s).join('; ')));
+  }
+  if (HERE.cls) {
+  out.push((HERE.cls));
+  }
+  }
+  NOW.walk = out = [];
+  const CW = !AREA && AREAS.campus && AREAS.campus.on ? AREAS.campus : null; if (CW) {
+  out.push("Walks from here (minutes on foot, the shortest way on the Campus Map): " + (CW.walks.map(w => w[0] + ' ' + w[1]).join(', ')) + "." + (CW.near.length ? ' Close by' + (CW.pin ? ' (' + CW.pin + ')' : '') + ': ' + CW.near.map(n => n[0] + ' ' + n[1]).join(', ') + '.' : '') + " When {{user}} goes somewhere, advance the clock by the walk.");
+  if (CW.owe) {
+  out.push("Still on the way: " + (CW.owe) + " min of the last walk are not on the clock yet.");
+  }
+  }
+  NOW.amb = out = [];
+  const AMB = on('ambience') ? UI.amb : null; if (AMB) {
+  if (AMB.crowd || AMB.cue) {
+  out.push("Ambience at " + (AMB.place) + ": " + ([AMB.crowd, AMB.light].filter(Boolean).join(', ')) + "." + (AMB.cue ? ' Sensory cue (write your own detail, once): ' + AMB.cue + '.' : ''));
+  } if (AMB.beat) {
+  out.push((AMB.beat.kind === 'lore' ? "Overheard (weave it into this reply: a line or two of talk from students nearby, or a companion bringing it up; hearsay, never confirmed; {{user}} now knows it)" : AMB.beat.kind === 'brush' ?'Brushes {{user}} (small, harmless, changes nothing; {{user}} may ignore it)' : 'Nearby (optional, one clause, unnamed people; skip it if the scene is intense)') + ": " + (AMB.beat.text) + ".");
+  } if (AMB.unc) {
+  out.push("Uncanny (narrator only, secret; " + (AMB.unc.title) + "): " + (AMB.unc.text) + ". Never confirm or explain it, leave a mundane reading possible, no harm; everyone reacts in character.");
+  } }
+  return NOW;
+}
+function stepNow(c) {
+  c.S.$ui.now = nowOf(c.S);
+}
+
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,

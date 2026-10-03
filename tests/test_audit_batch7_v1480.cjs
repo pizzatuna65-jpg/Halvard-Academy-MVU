@@ -22,3 +22,15 @@ ok(REC.length === N && !bad.length, `every scenario's <cast> is the same text as
 const S1 = applyPatch(initState(), [{ op: 'replace', path: '/Scene/Present', value: { Irene: { Note: 'here' } } }]);
 const kept = ENT.filter(e => e.id >= 600 && e.id < 700).filter(e => require('ejs').render('<%- !!(' + e.content.split('\n')[0].slice(5) + ') %>', { getvar: k => _.get({ stat_data: S1 }, k) }) === 'true');
 ok(kept.length === 1 && /Irene/.test(kept[0].comment), 'with one person here, only their sheet survives the @@if');
+
+console.log('<now> from the engine (3.11)');
+// tests/fixtures/now_1470.json: <now> as 1.47.0 rendered it (its EJS rules on its engine's state) along update chains on the campus
+// with people present, in the forest, Avalon, aboard and in Sunreach Bay; the same chains now print the engine's $ui.now. The whole
+// suite was also run with NOW_DIFF (harness): 8,200 <now> renders identical to 1.47.0.
+const { chains } = require('./fixtures/now_scenarios.cjs');
+const ver = JSON.parse(read('src/card/card.json')).character_version, NREC = JSON.parse(read('tests/fixtures/now_1470.json'));
+const CH = chains(runEngine, ver), nbad = [];
+CH.forEach((S, i) => { const t = renderEntry(card, 505, S); if (crypto.createHash('sha1').update(t).digest('hex').slice(0, 16) + ' ' + t.length !== NREC[i]) nbad.push(i); });
+ok(CH.length === NREC.length && !nbad.length, `every chain's <now> is the same text as 1.47.0's (${CH.length} updates)` + (nbad.length ? ': differs in ' + nbad.slice(0, 5).join(', ') : ''));
+const tmpl = read('src/worldbook/custom/505.template.ejs');
+ok(['area', 'pres', 'walk', 'amb'].every(k => tmpl.includes('NOW.' + k)) && !/AREA_EV|AREA_WALK|bandOf\(TEN|TRUST\.cats|BOND\.share/.test(tmpl), '<now> prints the engine\'s lines and no longer holds those rules');

@@ -42,4 +42,4 @@ ok(!/Bond event available/.test(now505) && /rankCues/.test(now505), '<now> uses 
 
 // ---- the built card carries the same text
 const card = JSON.parse(rd('dist/Eldrasil_Halvard.json')).data, E = uid => card.character_book.entries.find(e => e.id === uid).content;
-ok(E(504).includes('Canon over memory') && E(505).includes('UI.close'), 'built card has the 1.5.0 rules');
+ok(E(504).includes('Canon over memory') && rd('src/scripts/engine.js').includes('UI.close') && E(505).includes('NOW.bond'), 'built card has the 1.5.0 rules (1.48.0: the bond lines are the engine\'s)');

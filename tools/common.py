@@ -212,6 +212,48 @@ def campus_map(locs, pins):
             'dorms': {d: f'{d.lower()}_dormitory' for d in ('Fire', 'Light', 'Sky', 'Viridian') if f'{d.lower()}_dormitory' in locs}}
 
 
+# 1.6.0 (N13): the age of a dated line ("M2 W1 Tue ..." or "M2 W1") against the world clock, in words; unreadable -> ''.
+# One campus year is 12 months x 4 weeks x 7 days. 1.7.4: a line dated with its year ("Y1 M2 W1 Tue", the engine's form from campaign
+# Year 2) is aged exactly ("over a year ago"; a date still ahead gets no age); a line without a year is from the last 12 months.
+AGE_JS = ("const ageOf = (w, W) => { const m = /(?:Y(\\d+) )?M(\\d{1,2}) W([1-4])(?: (Mon|Tue|Wed|Thu|Fri|Sat|Sun))?/.exec(String(w || '')); if (!m || !W || !W.Month) return '';"
+          " const D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], di = Math.max(0, D.indexOf(W.Day)), Y = Math.max(1, Number(W.Year) || 1), yl = m[1] ? Math.max(1, +m[1]) : Y;"
+          " const far = n => (n < 2 ? 'over a year ago' : 'over ' + n + ' years ago');"
+          " if (!m[4]) { let k = ((Y - 1) * 48 + (W.Month - 1) * 4 + W.Week - 1) - ((yl - 1) * 48 + (+m[2] - 1) * 4 + +m[3] - 1); if (k < 0) { if (m[1]) return ''; k += 48; } if (k >= 48) return far(Math.floor(k / 48));"
+          " return k === 0 ? 'this week' : k === 1 ? 'last week' : k < 4 ? k + ' weeks ago' : k < 8 ? 'last month' : Math.floor(k / 4) + ' months ago'; }"
+          " let d = ((Y - 1) * 336 + (W.Month - 1) * 28 + (W.Week - 1) * 7 + di) - ((yl - 1) * 336 + (+m[2] - 1) * 28 + (+m[3] - 1) * 7 + D.indexOf(m[4])); if (d < 0) { if (m[1]) return ''; d += 336; } if (d >= 336) return far(Math.floor(d / 336));"
+          " return d === 0 ? 'earlier today' : d === 1 ? 'yesterday' : d < 7 ? d + ' days ago' : d < 14 ? 'last week' : d < 28 ? Math.floor(d / 7) + ' weeks ago' : d < 56 ? 'last month' : Math.floor(d / 28) + ' months ago'; };")
+
+def now_data(npcs):
+    """1.48.0 (audit 3.11): the data <now>'s engine-made lines read (engine NOW_D): BOND, TRUST, TENSION (bands, categories, personal
+    texts), WENDIGO, AVALON (the carriage fare, the rival students), SUNREACH (fares, the bet limit, who may be met)."""
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    _p = lambda *a: os.path.join(root, *a)
+    # 1.2.2 bonds: what a present NPC shares at their rank (openness shifts the first tiers), what the rank allows, the event text
+    BR = json.load(open(_p('data/bond_rules.json'), encoding='utf-8'))
+    OPN = json.load(open(_p('data/bond_openness.json'), encoding='utf-8'))
+    off = {nid: BR['openness'][tag] for tag in ('open', 'guarded', 'closed') for nid in OPN[tag]}
+    assert all(nid in npcs for nid in off), [nid for nid in off if nid not in npcs]
+    BOND = {'share': BR['share'], 'real': BR['share_real_from'], 'perks': BR['perks'], 'off': off, 'recent_now': BR['recent']['now'],
+            'tag': {nid: tag for tag in ('open', 'guarded', 'closed') for nid in OPN[tag]}}
+    # 1.4.3 Trust for the Now entry: bands, share shifts, perk gates, category texts (category = openness), personal rules, Dorm Heads
+    _tru = json.load(open(_p('data/trust.json'), encoding='utf-8'))
+    TRUST = {'bands': _tru['bands'], 'share': _tru['effects']['share'], 'early': _tru['effects']['confidant_real_early'], 'gates': _tru['perk_gates'],
+             'susp': _tru['suspend_r10_below'], 'cats': {k: {'name': v['name'], 'bands': v['bands'], 'never': v['never']} for k, v in _tru['categories'].items()},
+             'npcs': {nid: tag for tag in ('open', 'guarded', 'closed') for nid in OPN[tag]},
+             'overrides': {k: {x: o[x] for x in ('text', 'until_secret', 'no_gates') if x in o} for k, o in _tru['overrides'].items() if o.get('text') or o.get('no_gates')},
+             'dorm_head': {k: {x: v[x] for x in ('dorm', 'category', 'text')} for k, v in _tru['dorm_head'].items()}}
+    # 1.41.0: Sunreach Bay for <now>: fares, the bet limit, and the names of everyone who may be met there
+    _srd = json.load(open(_p('data/sunreach.json'), encoding='utf-8'))
+    SRD = {**{k: _srd['rates'][k] for k in ('carriage', 'boat', 'tour', 'bet_max')},
+           'names': {nid: [npcs[nid]['name'], npcs[nid]['group'].replace(' team', '') if npcs[nid].get('group', '').endswith('team') else 'Halvard']
+                     for g in _srd['meet'].values() for nid in g}}
+    return {'BOND': BOND, 'TRUST': TRUST, 'SUNREACH': SRD,
+            'TENSION': {k: v for k, v in json.load(open(_p('data/tension.json'), encoding='utf-8')).items() if k in ('bands', 'categories', 'npcs', 'peaks', 'overrides', 'apology_npc')},
+            'WENDIGO': {'line': json.load(open(_p('data/expedition.json'), encoding='utf-8'))['wendigo']['line']},
+            'AVALON': {'fare': json.load(open(_p('data/avalon.json'), encoding='utf-8'))['rates']['ride_coin'],
+                       'rivals': {nid: [n['name'], n['group'].replace(' team', ''), n['year']] for nid, n in sorted(npcs.items()) if (n.get('group') or '').endswith('team')}}}
+
+
 _DATA_REF = re.compile(r'\{@([a-z_]+)\.([A-Za-z0-9_.]+)(?::([a-z]+))?\}')
 _DAY_FULL = {'Mon': 'Monday', 'Tue': 'Tuesday', 'Wed': 'Wednesday', 'Thu': 'Thursday', 'Fri': 'Friday', 'Sat': 'Saturday', 'Sun': 'Sunday'}
 

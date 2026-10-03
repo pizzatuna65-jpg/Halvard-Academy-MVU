@@ -50,4 +50,5 @@ ok(R.World.Location === 'Sunreach Bay — The Hanabira' && R._Log.some(l => /The
 
 console.log('one Map renderer, one <now> block');
 ok(/function renderArea\(/.test(ui) && !/function render(Forest|Capital|Sunreach|Airship)\(/.test(ui), 'the Map panel: one renderArea for every area tab');
-ok((now.match(/<%_ if \(AREA\) \{/g) || []).length === 1 && !/FOREST|CAPITAL|SUNREACH\b(?! Bay)/.test(now.replace(/\/\*@@[A-Z]+@@\*\//g, '')), '<now>: one block for the outside areas');
+const nowFn = rd('src/scripts/engine.js').split('function nowOf(')[1].split('\nfunction stepNow')[0];   // 1.48.0: the area block is the engine's ($ui.now.area)
+ok((nowFn.match(/\bif \(AREA\) \{/g) || []).length === 1 && /NOW\.area/.test(now) && !/FOREST|CAPITAL|SUNREACH\b(?! Bay)/.test(now.replace(/\/\*@@[A-Z]+@@\*\//g, '')), '<now>: one block for the outside areas');

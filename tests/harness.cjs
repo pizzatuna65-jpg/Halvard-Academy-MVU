@@ -29,6 +29,8 @@ function diffEngine(run, oldFile) {
     return ign ? null : `${at}: key order or undefined values differ`;   // with ENGINE_DIFF_IGNORE, only ignored children differed
   };
   process.on('exit', () => console.error(`ENGINE_DIFF: ${calls} engine runs identical to ${path.basename(oldFile)}`));
+  const nowDiff = { n: 0 };
+  if (process.env.NOW_DIFF) process.on('exit', () => console.error(`NOW_DIFF: ${nowDiff.n} <now> renders identical`));
   return (S, B, ...rest) => {
     const [S2, B2] = _.cloneDeep([S, B]);   // one copy keeps objects S and B share (a test may pass a parsed save and its source)
     let e1 = null, e2 = null;
@@ -36,6 +38,15 @@ function diffEngine(run, oldFile) {
     try { run(S, B, ...rest); } catch (e) { e2 = e; }
     const d = String(e1 && e1.message) !== String(e2 && e2.message) ? `error: ${e1 && e1.message} vs ${e2 && e2.message}` : firstDiff(S2, S, 'after') || firstDiff(B2, B, 'before');
     if (d) { console.error(`ENGINE_DIFF mismatch (run ${calls + 1}, old vs new) ${d}`); process.exit(3); }
+    // 1.48.0: NOW_DIFF=<the older engine's card .json> also renders <now> (505) of that card on the older engine's state and of the
+    // current card on the new state, and stops at the first run whose text differs (for moving <now> rules into the engine)
+    if (process.env.NOW_DIFF && !e1 && !e2 && S.World && S2.World) {
+      nowDiff.old = nowDiff.old || JSON.parse(fs.readFileSync(process.env.NOW_DIFF, 'utf8'));
+      nowDiff.cur = nowDiff.cur || JSON.parse(fs.readFileSync(path.join(ROOT, 'dist/Eldrasil_Halvard.json'), 'utf8'));
+      const a = renderEntry(nowDiff.old, 505, S2), b = renderEntry(nowDiff.cur, 505, S);
+      if (a !== b) { const al = a.split('\n'), bl = b.split('\n'); console.error(`NOW_DIFF mismatch (run ${calls + 1}): ${JSON.stringify(al.filter(x => !bl.includes(x)).slice(0, 3))} vs ${JSON.stringify(bl.filter(x => !al.includes(x)).slice(0, 3))}`.slice(0, 900)); process.exit(3); }
+      nowDiff.n++;
+    }
     calls++;
     if (e2) throw e2;
   };
