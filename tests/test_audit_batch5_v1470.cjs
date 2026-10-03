@@ -42,7 +42,8 @@ console.log('The campus as an Area: walks');
 const W0 = (S, ops, text) => applyPatch(S, ops, { text: text || '' });
 let C = W0(initState(), [op('/Player/Profile/Dorm', 'Fire'), op('/World/Month', 2), op('/World/Week', 1), op('/World/Day', 'Sun'), op('/World/Time', '10:00'), op('/World/Location', 'Canteen')]);
 const CA = () => C.$ui.area.campus, rates = JSON.parse(read('data/campus.json'));
-ok(CA().on && CA().at === 'canteen' && CA().walks.length >= rates.walks_listed && CA().walks.some(([n]) => n === 'Fire Dormitory') && CA().near.length,
+const walks = () => ((C.$ui.now.walk || [])[0] || '').replace(/^.*?\): /, '').split(/\.(?: |$)/)[0].split(', ');   // 1.48.0: <now>'s line ($ui.now.walk)
+ok(CA().on && CA().at === 'canteen' && walks().length >= rates.walks_listed && walks().some(w => /^Fire Dormitory \d+$/.test(w)) && /Close by \(Castle\): Main Library 1/.test(C.$ui.now.walk[0]),
   'on the grounds: the walks to the nearest map pins, the own dorm always among them, and the places close by');
 const st0 = C.Player.Vitals.Stamina;
 C = W0(C, [op('/World/Time', '10:01'), op('/World/Location', 'Main Library')]);

@@ -27,7 +27,8 @@ ok(!(S.$ui.area.forest || {}).on, 'not in the forest before the flight');
 S = at(S, WED, '13:00', 'Grand Vast Forest, Base Camp');
 ok(S.World.Location === GVF + 'Base Camp' && S.$ui.area.forest.on && S.$ui.area.forest.seen.includes('base_camp'), `arrival: ${S.World.Location}`);
 ok(/rainforest/.test(S.World._Weather) && S.$ui.wx && S.$ui.wx.forest && !S.$ui.wx.away, `the rainforest's own weather: ${S.World._Weather}`);
-ok(S.$ui.area.forest.walks[0][2] === 2 && S.$ui.area.forest.walks.length === 9, 'walks from here to the nine other places');
+const walksIn = (lines) => ((lines || []).find(l => /^Walks from here/.test(l)) || '').replace(/^.*?\): /, '').split(/\.(?: |$)/)[0].split(', ');   // 1.48.0: the walks are <now>'s line ($ui.now)
+ok(/ 2$/.test(walksIn(S.$ui.now.area)[0]) && walksIn(S.$ui.now.area).length === 9, 'walks from here to the nine other places');
 ok(!S.$ui.area.forest.tgt, 'no target before Thursday morning');
 S = at(S, WED, '18:00', 'Grand Vast Forest — Base Camp — by the fire');
 ok(S.World.Location === GVF + 'Base Camp — by the fire', 'details after the place are kept');

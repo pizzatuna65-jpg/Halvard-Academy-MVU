@@ -34,3 +34,9 @@ CH.forEach((S, i) => { const t = renderEntry(card, 505, S); if (crypto.createHas
 ok(CH.length === NREC.length && !nbad.length, `every chain's <now> is the same text as 1.47.0's (${CH.length} updates)` + (nbad.length ? ': differs in ' + nbad.slice(0, 5).join(', ') : ''));
 const tmpl = read('src/worldbook/custom/505.template.ejs');
 ok(['area', 'pres', 'walk', 'amb'].every(k => tmpl.includes('NOW.' + k)) && !/AREA_EV|AREA_WALK|bandOf\(TEN|TRUST\.cats|BOND\.share/.test(tmpl), '<now> prints the engine\'s lines and no longer holds those rules');
+
+console.log('The state diet (2.6)');
+const D = CH[10];   // the campus chain, people present
+ok(Object.values(D.$ui.moods).every(m => Object.keys(m).join() === 'mood') && (D.$ui.now.moods || []).some(l => /mood \(/.test(l)), 'moods keep only the mood; the reasons are in <now>\'s mood lines');
+ok(Object.values(D.$ui.area).every(a => !('walks' in a) && !('near' in a)) && /^Walks from here/.test(D.$ui.now.walk[0]), 'an area keeps no walks of its own: they are <now>\'s line');
+ok(D.$ui.file === undefined || typeof D.$ui.file === 'object', 'the Builder record ($ui.file) stays (DECISIONS §2: it restores the Builder-only fields)');

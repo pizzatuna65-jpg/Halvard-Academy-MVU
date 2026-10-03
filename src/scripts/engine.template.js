@@ -1439,11 +1439,14 @@ function stepWeather(c) {
     }
   }
 
+  // 1.48.0 (audit 2.6): the state keeps each mood ({ mood }: the bracelet, gifts); the reasons are only in <now>'s lines (c.moods)
   S.$ui.moods = {};
-  if (WXM !== 'off') for (const id of Object.keys(NPC_MOODS)) if ((ARRIVES[id] || 1) <= S.World.Year && (S.Bonds[id] || (S.Scene.Present || {})[id]))
-    S.$ui.moods[id] = moodOf(id, S, S.$ui.wx && !S.$ui.wx.away ? S.$ui.wx.now : null, dayNo);
+  const moods = {};
+  if (WXM !== 'off') for (const id of Object.keys(NPC_MOODS)) if ((ARRIVES[id] || 1) <= S.World.Year && (S.Bonds[id] || (S.Scene.Present || {})[id])) {
+    moods[id] = moodOf(id, S, S.$ui.wx && !S.$ui.wx.away ? S.$ui.wx.now : null, dayNo); S.$ui.moods[id] = { mood: moods[id].mood };
+  }
   S.$ui.party = birthdayParty(S);
-  Object.assign(c, { WXM, seed, TU, wxNow, WA });
+  Object.assign(c, { WXM, seed, TU, wxNow, WA, moods });
 }
 
 // ---- 2. magic: casts ----
@@ -4669,9 +4672,10 @@ function stepCommit(c) {
 // getvar of its own. $ui.now: { area, pres, walk, amb, moods, bond, trust, tension, recent, banter }; <now> prints each in its place.
 const NOW_D = /*@@NOW_DATA@@*/{};   // tools/common.py now_data: BOND, TRUST, TENSION (bands and texts), WENDIGO, AVALON, SUNREACH
 /*@@AGE@@*/
-function nowOf(S) {
+function nowOf(S, moodsFull) {
   const getvar = k => _.get({ stat_data: S }, k);
-  const W = getvar('stat_data.World') || {}, UI = getvar('stat_data.$ui') || {}, PR = getvar('stat_data.Player.Profile') || {};
+  const W = getvar('stat_data.World') || {}, PR = getvar('stat_data.Player.Profile') || {};
+  const UI = moodsFull ? { ...(getvar('stat_data.$ui') || {}), moods: moodsFull } : getvar('stat_data.$ui') || {};   // the moods with their reasons (stepWeather)
   const on = id => uiOn(UI, id);
   const WX = on('weather') && UI.wx && !UI.wx.away && UI.wx.now ? UI.wx : null;
   const Y = Math.max(1, Number(W.Year) || 1);
@@ -4865,7 +4869,11 @@ function nowOf(S) {
   return NOW;
 }
 function stepNow(c) {
-  c.S.$ui.now = nowOf(c.S);
+  const { S } = c;
+  S.$ui.now = nowOf(S, c.moods);
+  // 1.48.0 (audit 2.6): what <now> has in its lines is not kept twice: the walks and places nearby of an area (the Map panel walks
+  // the same graph itself)
+  for (const a of Object.values(S.$ui.area || {})) if (_.isPlainObject(a)) { delete a.walks; delete a.near; }
 }
 
 const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];

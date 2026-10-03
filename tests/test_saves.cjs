@@ -8,8 +8,8 @@ const ver = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/card/card.json'), 'u
 console.log('Saves from earlier releases load in ' + ver);
 const dir = path.join(__dirname, 'fixtures/saves'), files = fs.readdirSync(dir).filter(f => /^save_.*\.json$/.test(f)).sort();
 ok(files.length >= 1, 'at least one earlier save fixture: ' + files.join(', '));
-// 1.48.0: $ui.now (and 1.47.0's $ui.here) is <now>'s text, made each update; $ui.craft and an area's walks are trimmed (audit 2.6)
-const VOLATILE = /^(_Log|\$ui\.toasts|\$ui\.moods|\$ui\.here|\$ui\.now|\$ui\.craft|\$ui\.area\.\w+\.(walks|near)|\$ui\.wx|\$ui\.amb|\$ui\.say|\$ui\.soon#?|Interactions|Rep_events|Training|Perk_use|Exposure)(\.|$)/;   // per-update lists the engine empties; weather-derived UI (1.9.4 rebaselined the seasons); $ui.amb is the next reply's ambience (1.16.0), rolled fresh each update; $ui.say is the dialogue colour of the people present (1.37.2), recomputed each update; $ui.soon (1.32.0) is the Agenda feed $ui.agenda since 1.44.0, rebuilt each update
+// 1.48.0: $ui.now (and 1.47.0's $ui.here) is <now>'s text, made each update; an area's walks are in its <now> lines only (audit 2.6)
+const VOLATILE = /^(_Log|\$ui\.toasts|\$ui\.moods|\$ui\.here|\$ui\.now|\$ui\.area\.\w+\.(walks|near)#?|\$ui\.wx|\$ui\.amb|\$ui\.say|\$ui\.soon#?|Interactions|Rep_events|Training|Perk_use|Exposure)(\.|$)/;   // per-update lists the engine empties; weather-derived UI (1.9.4 rebaselined the seasons); $ui.amb is the next reply's ambience (1.16.0), rolled fresh each update; $ui.say is the dialogue colour of the people present (1.37.2), recomputed each update; $ui.soon (1.32.0) is the Agenda feed $ui.agenda since 1.44.0, rebuilt each update
 function leaves(o, pre = '', out = {}) {
   if (_.isPlainObject(o)) { if (!Object.keys(o).length && pre) out[pre] = '{}'; for (const [k, v] of Object.entries(o)) leaves(v, pre ? pre + '.' + k : k, out); }
   else if (Array.isArray(o)) { out[pre + '#'] = o.length; o.forEach((v, i) => leaves(v, pre + '.' + i, out)); }

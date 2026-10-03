@@ -32,7 +32,8 @@ ok(!(S.$ui.area.avalon || {}).on && !/Avalon/.test(S.World.Location), 'morning s
 S = at(S, CROWN, '09:40', 'Avalon — Skyport', coin(S, 200));
 ok(S.World.Location === AVL + 'Skyport' && S.$ui.area.avalon.on && S.$ui.area.avalon.pin === 'gate', `arrival: ${S.World.Location}`);
 ok(!S.$ui.wx || (!S.$ui.wx.away && /Avalon/.test(S.World._Weather)), `the kingdom's weather of the day: ${S.World._Weather}`);
-ok(S.$ui.area.avalon.walks.length === 5 && !S.$ui.area.avalon.walks.some(w => w[0] === 'castle') && S.$ui.area.avalon.walks[0][0] === 'square', 'walks to the five open pins; the castle is not among them');
+const walksIn = (lines) => ((lines || []).find(l => /^Walks from here/.test(l)) || '').replace(/^.*?\): /, '').split(/\.(?: |$)/)[0].split(', ');   // 1.48.0: the walks are <now>'s line ($ui.now)
+ok(walksIn(S.$ui.now.area).length === 5 && !walksIn(S.$ui.now.area).some(w => /Castle/.test(w)) && /^Crown Square \d+$/.test(walksIn(S.$ui.now.area)[0]), 'walks to the five open pins; the castle is not among them');
 ok(S.$ui.area.avalon.muster && S.$ui.area.avalon.muster.at === '15:30' && !S.$ui.area.avalon.muster.free, 'the muster is 15:30; free time has not begun');
 
 console.log('Walking, crowds and carriages');
@@ -47,7 +48,7 @@ let C = at(at(S, CROWN, '11:40', 'Avalon — Crown Square'), CROWN, '13:10', 'Av
 const c0 = C.Player.Wallet.Coin, s0 = C.Player.Vitals.Stamina;
 C = at(C, CROWN, '13:50', 'Avalon — Garden of Avalon — on the flower terraces', [{ op: 'replace', path: '/Avalon/Ride', value: true }]);
 ok(C.Player.Wallet.Coin <= c0 - 10 && C.Avalon.Ride === false && C._Log.some(l => /Hire carriage Crown Square → Garden of Avalon: 38 min, -10 coin/.test(l)), 'a hire carriage: half the time, 10 coin, the flag cleared');
-ok(C.World.Location === AVL + 'Garden of Avalon — on the flower terraces' && C.$ui.area.avalon.near.some(n => n[0] === 'Grand Theatre'), 'the garden pin: the theatre is minutes away');
+ok(C.World.Location === AVL + 'Garden of Avalon — on the flower terraces' && C.$ui.now.area.some(l => /In this quarter: [^\n]*Grand Theatre \d+/.test(l)), 'the garden pin: the theatre is minutes away');
 const poor = at(at(S, CROWN, '11:40', 'Avalon — Crown Square', coin(S, 3)), CROWN, '13:00', 'Avalon — Royal Arena', [{ op: 'replace', path: '/Avalon/Ride', value: true }]);
 ok(poor._Log.some(l => /has 3: they walked/.test(l)) && poor.Player.Wallet.Coin <= 3, 'not enough coin for a carriage: they walk');
 
