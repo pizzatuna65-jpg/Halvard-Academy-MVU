@@ -299,9 +299,15 @@ export const Schema = z.object({
   // 1.2.2: interactions this reply, reported by the narrator; the engine turns them into bond XP and empties the list
   Interactions: z.array(z.any().transform(v => (typeof v === 'object' && v !== null
     ? { With: s(v.With), By: s(v.By), Kind: s(v.Kind).trim().toLowerCase(), Gift: s(v.Gift).trim().toLowerCase(), Item: s(v.Item).slice(0, 160), Rep: s(v.Rep), Why: s(v.Why), Public: b(v.Public), Invited: b(v.Invited), Note: s(v.Note).slice(0, 200) } : { With: s(v), By: '', Kind: 'talk', Gift: '', Public: false, Invited: false, Note: '' }))).prefault([]).catch([]),
+  // 1.45.0 (audit 3.9): Track mana | stamina is a training session (no Action needed); /Training is still read as one
   Practice: z.array(z.any().transform(v => typeof v === 'object' && v !== null
-    ? { Action: s(v.Action).slice(0, 100), Subject: s(v.Subject).slice(0, 80), With: s(v.With).slice(0, 80), Aim: s(v.Aim).slice(0, 120) }
-    : { Action: s(v).slice(0, 100), Subject: '', With: '', Aim: '' })).prefault([]).catch([]),
+    ? { Action: s(v.Action).slice(0, 100), Subject: s(v.Subject).slice(0, 80), With: s(v.With || v.Partner).slice(0, 80), Aim: s(v.Aim).slice(0, 120), Track: s(v.Track).trim().toLowerCase().slice(0, 20) }
+    : { Action: s(v).slice(0, 100), Subject: '', With: '', Aim: '', Track: '' })).prefault([]).catch([]),
+  // 1.45.0 (audit 3.4): what {{user}} buys this reply (narrator); the engine checks price, place, season and money, pays through the
+  // ledger, fills the Bag (or applies an item Used at once) and empties the list. Price: only for an item not on the Price Guide.
+  Purchases: z.array(z.any().transform(v => typeof v === 'object' && v !== null
+    ? { Item: s(v.Item).slice(0, 100), Qty: Math.round(n(v.Qty, 1, 99, 1)), Shop: s(v.Shop).slice(0, 100), Price: n(v.Price, -1, 100000, -1), Used: b(v.Used), Kind: s(v.Kind).trim().toLowerCase().slice(0, 20) }
+    : { Item: s(v).slice(0, 100), Qty: 1, Shop: '', Price: -1, Used: false, Kind: '' })).prefault([]).catch([]),
   Craft_sales: z.array(z.any().transform(v => typeof v === 'object' && v !== null
     ? { Item: s(v.Item).slice(0, 100), Qty: Math.round(n(v.Qty, 1, 99, 1)) }
     : { Item: s(v).slice(0, 100), Qty: 1 })).prefault([]).catch([]),

@@ -100,9 +100,10 @@ t = t.replace('/*@@OUTDOOR@@*/[]', json.dumps(outdoor, ensure_ascii=False))
 shop_fx = {i['item'].lower(): {k: i[k] for k in ('gear', 'use') if k in i} for i in json.load(open(P('data/shop.json'), encoding='utf-8'))['items'] if i.get('gear') or i.get('use')}
 shop_fx.update({i['name'].lower(): {k: i[k] for k in ('gear', 'use') if k in i} for i in crafts['recipes'] if i.get('gear') or i.get('use')})
 t = t.replace('/*@@SHOP_FX@@*/{}', json.dumps(shop_fx, ensure_ascii=False, separators=(',', ':')))
-shop_prices = {}
+shop_prices = {}   # 1.45.0 (audit 3.4): [price, shop, the shop's place key (engine placeKey), seasons or 0, item name]
 for i in json.load(open(P('data/shop.json'), encoding='utf-8'))['items']:
-    shop_prices.setdefault(i['item'].lower(), []).append([i['price'], i['shop']])
+    place = re.sub(r'^the ', '', locs[i['loc']]['name'].lower())
+    shop_prices.setdefault(i['item'].lower(), []).append([i['price'], i['shop'], place, 0 if i.get('season', 'all') == 'all' else i['season'], i['item']])
 t = t.replace('/*@@SHOP_PRICE@@*/{}', json.dumps(shop_prices, ensure_ascii=False, separators=(',', ':')))
 # v1.1.0 (spec §9): Features settings, single source data/features.json (the engine needs id, control, field, paths, unlock)
 feats = json.load(open(P('data/features.json'), encoding='utf-8'))['features']

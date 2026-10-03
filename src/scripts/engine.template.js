@@ -790,7 +790,11 @@ const GEAR = { umbrella: /umbrella/i, waterproof: /waterproof|oilskin|rain cloak
 // 1.9.5 (playtest Batch 5): shop items with an effect (data/shop.json gear / use, by lowercase name); gear also by exact item name,
 // and a used charm's timed protection (wxs.buff: { kind: until abs minute })
 const SHOP_FX = /*@@SHOP_FX@@*/{};
+// by lowercase item name: [[price, shop, the shop's place key, seasons or 0 for all year, item name], ...] (1.45.0: place, seasons, name)
 const SHOP_PRICE = /*@@SHOP_PRICE@@*/{};
+const SHOP_KEY = Object.fromEntries(Object.keys(SHOP_PRICE).map(k => [itemKey(k), k]));
+const shopRows = name => SHOP_PRICE[itemBase(name)] || SHOP_PRICE[SHOP_KEY[itemKey(name)]] || [];
+const INV_KINDS = ['food', 'drink', 'gear', 'gift', 'book', 'reagent', 'other'];
 // 1.42.0 (audit 1.3): one item-name key (itemKey, shared.js) for the Consumables filter, the Qty decrease (H2), gifts and the R2
 // reminder: "a Quick-dry powder" is the Bag's "Quick-dry powder"
 // the Bag key a reported name means: the exact name first (any case), then the same itemKey, preferring one still held
@@ -869,7 +873,7 @@ const SHAPE = {
   Trip: { Active: false, Destination: '', Companions: [], Note: '' }, Expedition: { Caught: false }, Avalon: { Ride: false }, Sunreach: { Ride: '', Bet: { Game: '', Stake: 0 } }, Battle: { Active: false, Combatants: {} }, _Log: [],
   Inventory: {}, Hooks: {},   // 1.1.0
   Extras: {},   // 1.6.1
-  _Perks: {}, Rep_events: [], Training: [], Practice: [], Perk_use: [],   // 1.3.0 / 1.27.0
+  _Perks: {}, Rep_events: [], Training: [], Practice: [], Purchases: [], Perk_use: [],   // 1.3.0 / 1.27.0
   Exam_events: [], Tutoring: [],   // 1.15.0
 };
 function fillShape(o, shape) {
@@ -1551,6 +1555,44 @@ function stepMagic(c) {
   Object.assign(c, { V, M, regenLeft, startedNow });
 }
 
+// ---- 3b. 1.45.0 (audit 3.4): purchases. The narrator reports what {{user}} buys in /Purchases; the engine settles it before the
+// used items are read (4), so a drink bought and drunk in one reply works. A listed item (data/shop.json) costs its listed price at
+// a shop that sells it, in season; elsewhere, or for an item not listed, the narrator's Price is a story price. Points on campus,
+// coin away from Halvard (awayIn). The payment goes through the ledger and the item into the Bag (bagGive), unless it was Used at
+// once (a meal, a service, a drink at the counter): then it is paid, not kept, and an item with a "When used" effect takes effect.
+// A purchase that cannot be paid, or has no price, is refused in _Log; nothing is bought.
+function stepPurchases(c) {
+  const { S, hasB, log } = c;
+  const list = Array.isArray(S.Purchases) ? S.Purchases : [];
+  S.Purchases = [];
+  if (!hasB || c.toolEdit || !list.length) return;
+  const here = placeKey(S.World.Location), season = SEASON_OF(S.World.Month), away = awayIn(S), cur = away ? 'Coin' : 'Points';
+  for (const p of list) {
+    const asked = String(p.Item || '').trim(), qty = Math.max(1, Math.round(num(p.Qty, 1)));
+    if (!asked) continue;
+    const rows = shopRows(asked), name = rows.length ? rows[0][4] : asked;
+    const atShop = rows.filter(x => x[2] === here || placeKey(x[1]) === here), sold = atShop.find(x => !x[3] || x[3].includes(season));
+    const story = num(p.Price, -1);
+    let price = -1, shop = '', why = '';
+    if (!away && sold) { price = sold[0]; shop = sold[1]; }
+    else if (!away && atShop.length) why = `${name} is sold here only in ${atShop[0][3].join(' and ')}`;
+    else if (story >= 0) { price = Math.round(story); shop = String(p.Shop || '').trim() || placeOf(S.World.Location); }
+    else why = rows.length && !away ? `${name} is sold at ${[...new Set(rows.map(x => x[1]))].join(', ')}, not here; give a Price if another seller sells it` : `${name} has no listed price; give its Price`;
+    const total = price * qty, have = num(S.Player.Wallet[cur], 0);
+    if (!why && total > have) why = `it costs ${total} ${cur === 'Coin' ? 'coin' : 'points'} and {{user}} has ${have}`;
+    if (why) { log.push(`Purchase ${name}${qty > 1 ? ' x' + qty : ''} refused: ${why}. Nothing was bought.`); S.$ui.toasts.push(`Not bought: ${name}`); continue; }
+    if (total) ledger(c, cur, -total, `${name}${qty > 1 ? ' x' + qty : ''} (${shop}${sold && !away ? '' : ', story price'})`);
+    if (p.Used) {
+      const fx = fxOf(name);
+      if (fx && fx.use && !(S.Consumables || []).some(x => itemKey(x) === itemKey(name))) S.Consumables = [...(S.Consumables || []), name];
+      c.boughtUsed = [...(c.boughtUsed || []), itemKey(name)];
+    } else {
+      const fx = fxOf(name), kind = INV_KINDS.includes(p.Kind) ? p.Kind : fx && fx.gear ? 'gear' : 'other';
+      bagGive(c, name, qty, kind, '');
+    }
+  }
+}
+
 // ---- 4. rest & recovery (1.1.0: Soaked halves stamina recovery; sleep quality follows the night's weather, Full only) ----
 // 1.12.0 (H1): a night skipped in one update (5 to 24 hours, 4 of them between 00:00 and 06:00) with no Resting written was
 // slept, not stayed up: indoors (or on a trip), not in a battle, not under The Vigil. "awake" is a deliberate all-nighter.
@@ -1616,7 +1658,8 @@ function stepRest(c) {
     .map(a => bagKeyOf(IB, a.Item)).filter(k => k && num((IB[k] || {}).Qty, 1) > 0);
   // 1.45.0 (audit 3.4): through the Bag ledger (bagTake), so an item bought in this reply (/Purchases) and used is taken too
   if (hasB && (consumed.length || gifted.length) && _.isPlainObject(S.Inventory)) {
-    for (const x of consumed) bagTake(c, x, 1);
+    const usedNow = [...(c.boughtUsed || [])];                 // bought and used at once (3b): never in the Bag
+    for (const x of consumed) { const i = usedNow.indexOf(itemKey(x)); if (i >= 0) usedNow.splice(i, 1); else bagTake(c, x, 1); }
     for (const kb of gifted) {
       const k0 = bagKeyOf(S.Inventory, kb), q0 = k0 ? num(S.Inventory[k0].Qty, 0) : 0, k = bagTake(c, kb, 1);
       if (k && num(S.Inventory[k].Qty, 0) < q0) log.push(`${k}: given as a gift, so the Bag holds one less (${S.Inventory[k].Qty} left).`);
@@ -4182,16 +4225,18 @@ function stepReminders(c) {
       const newTx = newLines(((B.Player || {}).Wallet || {}).Transactions, S.Player.Wallet.Transactions).join(' | ').toLowerCase();
       const shopAt = placeKey(S.World.Location);
       let expected = 0; const acquired = [];
+      // 1.45.0 (audit 3.4): purchases are settled by the engine (3b); this catches an item put in the Bag at its shop without one
+      const shopOf = name => shopRows(name).find(x => x[2] === shopAt || placeKey(x[1]) === shopAt);
       for (const [name, item] of Object.entries(bag1)) {
-        const row = SHOP_PRICE[name.toLowerCase()], before = keyIn(bag0, name);
-        const qty = Math.max(0, num(item && item.Qty, 0) - num(before && bag0[before] && bag0[before].Qty, 0));
-        if (!row || !qty || !row.some(x => placeKey(x[1]) === shopAt)) continue;
-        expected += qty * row.find(x => placeKey(x[1]) === shopAt)[0]; acquired.push(name);
+        const row = shopOf(name), before = keyIn(bag0, name), engine = (c.bagTx || {})[name.trim().toLowerCase()];
+        const qty = Math.max(0, num(item && item.Qty, 0) - num(before && bag0[before] && bag0[before].Qty, 0) - (engine ? Math.max(0, engine.done) : 0));
+        if (!row || !qty) continue;
+        expected += qty * row[0]; acquired.push(name);
       }
       if (expected) {
-        const paid = Math.max(0, num(((B.Player || {}).Wallet || {}).Points, 0) - num(S.Player.Wallet.Points, 0));
+        const paid = Math.max(0, num(((B.Player || {}).Wallet || {}).Points, 0) - num(S.Player.Wallet.Points, 0) + (c.tx || []).filter(x => x.cur === 'Points').reduce((a, x) => a + x.delta, 0));
         const named = acquired.every(x => newTx.includes(x.toLowerCase()));
-        if (paid < expected || !named) add(`shop:${acquired.join('|')}:${dayNo}`, `${acquired.join(', ')} entered the Bag at a shop (listed total ${expected} points), but the Points decrease was ${paid}${named ? '' : ' and a matching Transaction is missing'}. If bought, report the full payment; if gifted or found, make that clear in the story.`);
+        if (paid < expected || !named) add(`shop:${acquired.join('|')}:${dayNo}`, `${acquired.join(', ')} entered the Bag at a shop (listed total ${expected} points) with no purchase reported. If bought, report it in /Purchases/- (the engine pays and fills the Bag); if gifted or found, make that clear in the story.`);
       }
       for (const [name, injury] of Object.entries(S.Player.Injuries || {})) {
         const by = num(((S.$eng.heals || {})[name] || {}).abs, -1);
@@ -4555,7 +4600,7 @@ function stepCommit(c) {
   if (log.length) S._Log = [...(S._Log || []), ...log.map(l => `[${stamp(S.World)}] ${l}`)].slice(-12);
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepAgenda, stepUi, stepCommit];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepAgenda, stepUi, stepCommit];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,
@@ -4616,7 +4661,7 @@ function patchCommands(ops) {
 // (MagVarUpdate update_variables.ts: COMMAND_PARSED listeners run before COMMAND_PARSED_for_zod; json_patch paths are
 // ["a"]["b"] bracket paths, which pathFixPass leaves alone).
 const ROOT_LISTS = new Set(['Inventory', 'Commitments', 'Notices', 'Letters', 'Competition', 'Projects', 'Trip', 'Journal', 'Clues',
-  'Mysteries', 'Battle', 'Hooks', 'Extras', 'Interactions', 'Practice', 'Craft_sales', 'Rep_events', 'Training', 'Perk_use',
+  'Mysteries', 'Battle', 'Hooks', 'Extras', 'Interactions', 'Practice', 'Purchases', 'Craft_sales', 'Rep_events', 'Training', 'Perk_use',
   'Exam_events', 'Tutoring', 'Consumables', 'Exposure']);
 function fixStrayPaths(commands) {
   const moved = [];
