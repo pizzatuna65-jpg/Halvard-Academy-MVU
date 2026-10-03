@@ -155,12 +155,16 @@ function graphModel(S) {
   // 1.4.2: a group-rule line (e[6]: Caine and mages, views of the Doves) is drawn only to people you have met
   const shown = e => met.includes(viaOf(e)) && arrived(e[0], S) && arrived(e[1], S) && edgeVisible(e, S) && ((e[4] !== 'public' && !e[6]) || met.includes(e[1]));
   for (const e of DATA.rel) if (shown(e)) for (const t of e[3]) if (view.gtypes.has(t)) add(e[0], e[1], t, e[5][0], e[0]);   // 1.0.3: no incoming students yet
+  // 1.51.0 (feature batch 3, audit 4.8): a story line not renewed for four weeks fades, after eight it is no longer drawn ($ui.relold)
+  const relold = (S.$ui || {}).relold || {}, faded = new Set();
   if (view.gtypes.has('story')) for (const [k, v] of Object.entries((S.Campus_State || {}).New_relations || {})) {
+    if (relold[k] >= 2) continue;
     const [a, c] = k.split(/\s*(?:→|->)\s*/).map(x => (x || '').trim());
     const ida = Object.keys(DATA.npcs).find(i => i.toLowerCase() === (a || '').toLowerCase().split(' ')[0]) || a;
     const idc = Object.keys(DATA.npcs).find(i => i.toLowerCase() === (c || '').toLowerCase().split(' ')[0]) || c;
-    if (ida && idc) add(ida, idc, 'story', v, 'story');
+    if (ida && idc) { add(ida, idc, 'story', v, 'story'); if (relold[k] === 1) faded.add(ida + '>' + idc); }
   }
+  for (const k of faded) { const L = links.get(k); if (L && L.types.size === 1) L.faded = true; }
   const ids = new Set(met);
   for (const L of links.values()) { ids.add(L.source); ids.add(L.target); }
   const nodes = [{ id: '__you', you: true }, ...[...ids].map(id => ({ id, met: met.includes(id) }))];
@@ -274,7 +278,7 @@ async function drawGraph(S) {
     .attr('stroke', d => d.type === 'bond' ? themed('#c9a364') : d.type === 'group' ? GROUP[d.grp][0] : EDGE[d.type][0])
     .attr('stroke-width', d => d.type === 'bond' ? 1.5 + d.rank * 0.45 : d.mine ? 2.2 + d.rank * 0.45 : d.type === 'romance' ? 2.2 : d.type === 'group' ? 1 : d.type === 'softspot' ? 1.6 : 2.2)
     .attr('stroke-dasharray', d => d.type === 'group' ? '2 4' : d.type === 'softspot' && !d.mine ? '6 3' : null)
-    .attr('stroke-opacity', d => d.type === 'bond' ? 0.55 : d.mine || d.type === 'romance' ? 0.85 : d.type === 'group' ? 0.55 : d.type === 'softspot' ? 0.6 : 0.85)
+    .attr('stroke-opacity', d => d.faded ? 0.25 : d.type === 'bond' ? 0.55 : d.mine || d.type === 'romance' ? 0.85 : d.type === 'group' ? 0.55 : d.type === 'softspot' ? 0.6 : 0.85)
     .attr('marker-end', d => (d.arrow ? `url(#eg-arw-${d.type})` : null)).style('cursor', 'pointer')
     .on('click', (ev, d) => {
       if (!info) return;

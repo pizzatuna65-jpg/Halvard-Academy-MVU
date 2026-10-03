@@ -595,6 +595,7 @@ const CSS = `
 .nav button.err{color:var(--danger)}
 /* 1.25.0 red "new" dot (news.shared.js): on a tab, a person, a story heard; map pins keep fixed colours */
 .nd{display:inline-block;width:8px;height:8px;margin:0 0 1px 6px;border-radius:50%;background:var(--notify);vertical-align:middle}
+/* 1.51.0: a place tied to an open mystery thread */.pin.clue::before{content:"?";position:absolute;top:-9px;left:-9px;width:13px;height:13px;border-radius:50%;font:700 9px/13px sans-serif;text-align:center;color:#1d1a15/*keep*/;background:#e8c46a/*keep*/;box-shadow:0 0 0 2px #1d1a15/*keep*/}.clueh{color:var(--warn);font-weight:700}
 .pin.new::after{content:"";position:absolute;top:-5px;right:-5px;width:9px;height:9px;border-radius:50%;background:#ee3b2b/*keep*/;box-shadow:0 0 0 2px #1d1a15/*keep*/}
 /* 1.23.0 Builder: numbered steps (the only panel whose tabs are a sequence) */
 .nav.steps{gap:18px}
@@ -2060,12 +2061,16 @@ function graphModel(S) {
   // 1.4.2: a group-rule line (e[6]: Caine and mages, views of the Doves) is drawn only to people you have met
   const shown = e => met.includes(viaOf(e)) && arrived(e[0], S) && arrived(e[1], S) && edgeVisible(e, S) && ((e[4] !== 'public' && !e[6]) || met.includes(e[1]));
   for (const e of DATA.rel) if (shown(e)) for (const t of e[3]) if (view.gtypes.has(t)) add(e[0], e[1], t, e[5][0], e[0]);   // 1.0.3: no incoming students yet
+  // 1.51.0 (feature batch 3, audit 4.8): a story line not renewed for four weeks fades, after eight it is no longer drawn ($ui.relold)
+  const relold = (S.$ui || {}).relold || {}, faded = new Set();
   if (view.gtypes.has('story')) for (const [k, v] of Object.entries((S.Campus_State || {}).New_relations || {})) {
+    if (relold[k] >= 2) continue;
     const [a, c] = k.split(/\s*(?:→|->)\s*/).map(x => (x || '').trim());
     const ida = Object.keys(DATA.npcs).find(i => i.toLowerCase() === (a || '').toLowerCase().split(' ')[0]) || a;
     const idc = Object.keys(DATA.npcs).find(i => i.toLowerCase() === (c || '').toLowerCase().split(' ')[0]) || c;
-    if (ida && idc) add(ida, idc, 'story', v, 'story');
+    if (ida && idc) { add(ida, idc, 'story', v, 'story'); if (relold[k] === 1) faded.add(ida + '>' + idc); }
   }
+  for (const k of faded) { const L = links.get(k); if (L && L.types.size === 1) L.faded = true; }
   const ids = new Set(met);
   for (const L of links.values()) { ids.add(L.source); ids.add(L.target); }
   const nodes = [{ id: '__you', you: true }, ...[...ids].map(id => ({ id, met: met.includes(id) }))];
@@ -2179,7 +2184,7 @@ async function drawGraph(S) {
     .attr('stroke', d => d.type === 'bond' ? themed('#c9a364') : d.type === 'group' ? GROUP[d.grp][0] : EDGE[d.type][0])
     .attr('stroke-width', d => d.type === 'bond' ? 1.5 + d.rank * 0.45 : d.mine ? 2.2 + d.rank * 0.45 : d.type === 'romance' ? 2.2 : d.type === 'group' ? 1 : d.type === 'softspot' ? 1.6 : 2.2)
     .attr('stroke-dasharray', d => d.type === 'group' ? '2 4' : d.type === 'softspot' && !d.mine ? '6 3' : null)
-    .attr('stroke-opacity', d => d.type === 'bond' ? 0.55 : d.mine || d.type === 'romance' ? 0.85 : d.type === 'group' ? 0.55 : d.type === 'softspot' ? 0.6 : 0.85)
+    .attr('stroke-opacity', d => d.faded ? 0.25 : d.type === 'bond' ? 0.55 : d.mine || d.type === 'romance' ? 0.85 : d.type === 'group' ? 0.55 : d.type === 'softspot' ? 0.6 : 0.85)
     .attr('marker-end', d => (d.arrow ? `url(#eg-arw-${d.type})` : null)).style('cursor', 'pointer')
     .on('click', (ev, d) => {
       if (!info) return;
@@ -2262,6 +2267,16 @@ const normPlace = s => placeOf(s).toLowerCase().replace(/^the\s+/, '');   // pla
 // library") via DATA.palias (tools/common.py place_aliases), and a sub-spot that is itself a place wins ("… — Fishing House").
 const plSegs = s => locParts(s).map(x => x.trim().toLowerCase().replace(/[.!]+$/, '').replace(/^the\s+/, '')).filter(Boolean);
 const sharedLoc = id => DATA.pins.filter(p => p.cluster.includes(id)).length > 1;
+// 1.51.0 (feature batch 3, audit 4.9): the places a Clue of an open thread names (Clues Where): loc id -> threads; a solved or cold
+// thread marks nothing
+function clueLocs(S) {
+  const out = {}; if (!featureOn(S, 'mystery')) return out;
+  for (const cl of Object.values(S.Clues || {})) {
+    const m = cl && (S.Mysteries || {})[cl.Thread]; if (!cl || !String(cl.Where || '').trim() || (m && m.Status !== 'open')) continue;
+    const id = locIdOf(cl.Where); if (id && !(out[id] = out[id] || []).includes(cl.Thread)) out[id].push(cl.Thread);
+  }
+  return out;
+}
 function locIdOf(place) {
   const segs = plSegs(place); if (!segs.length) return '';
   const exact = p => Object.keys(DATA.locs).find(id => normPlace(DATA.locs[id].name) === p) || Object.keys(DATA.locs).find(id => id.replace(/_/g, ' ') === p) || '';
@@ -2459,11 +2474,13 @@ PANELS.map = {
     const cur = locIdOf(S.World.Location), curPin = cur ? pinOf(cur) : null;
     if (view.pin == null && curPin) view.pin = curPin.pin;
     const pins = DATA.pins.filter(p => p.cluster.some(id => DATA.locs[id] && discovered(S, DATA.locs[id])));
+    const CL = clueLocs(S);
     const pinHTML = pins.map(p => {
       const here = curPin && curPin.pin === p.pin, sel = view.pin === p.pin;
       // 1.25.0: a red dot on a marker whose places hold a story heard but not read yet
       const fresh = p.cluster.some(id => DATA.locs[id] && discovered(S, DATA.locs[id]) && DATA.locs[id].lore.some(x => isNew(`lore:${x.uid}`)));
-      return `<button class="pin${here ? ' here' : ''}${sel ? ' sel' : ''}${fresh ? ' new' : ''}" data-pin="${p.pin}" style="left:${p.x}%;top:${p.y}%" aria-label="${esc(p.label)}${here ? ' (you are here)' : ''}" title="${esc(p.label)}"></button>`
+      const clue = p.cluster.some(id => CL[id] && DATA.locs[id] && discovered(S, DATA.locs[id]));
+      return `<button class="pin${here ? ' here' : ''}${sel ? ' sel' : ''}${fresh ? ' new' : ''}${clue ? ' clue' : ''}" data-pin="${p.pin}" style="left:${p.x}%;top:${p.y}%" aria-label="${esc(p.label)}${here ? ' (you are here)' : ''}${clue ? ' (an open mystery thread)' : ''}" title="${esc(p.label)}"></button>`
         + (sel || here ? `<span class="plab${here ? ' here' : ''}${labPos(p)}" style="left:${p.x}%;top:${p.y}%">${esc(p.label)}</span>` : '');
     }).join('');
     let sheet = '<p class="hint">Tap a marker to see what is there.</p>';
@@ -2483,12 +2500,13 @@ PANELS.map = {
       view.focusLoc = ''; view.cardPin = P.pin + '|' + view.floor; view.card = _.clamp(view.card, 0, Math.max(0, ids.length - 1));
       const arrows = ids.length > 1 ? `<div class="cnav"><button class="btn sm" data-card="-1" aria-label="Previous place" ${view.card ? '' : 'disabled'}>‹</button>
         <span class="sub">${view.card + 1} / ${ids.length} · ${esc(nameOn(ids[view.card], view.floor))}</span><button class="btn sm" data-card="1" aria-label="Next place" ${view.card < ids.length - 1 ? '' : 'disabled'}>›</button></div>` : '';
-      sheet = `<h3>${esc(P.label)}</h3>${tabs}${arrows}<div class="car">${ids.length ? locCard(ids[view.card], S, cur, P) : '<div class="empty">Nothing here you know of yet.</div>'}</div>`;
+      const th = ids.filter(id => CL[id]).map(id => `${DATA.locs[id].name}: ${CL[id].join(', ')}`);
+      sheet = `<h3>${esc(P.label)}</h3>${tabs}${arrows}${th.length ? `<div class="sub"><span class="clueh">?</span> Open on your Mystery Board: ${esc(th.join('; '))}</div>` : ''}<div class="car">${ids.length ? locCard(ids[view.card], S, cur, P) : '<div class="empty">Nothing here you know of yet.</div>'}</div>`;
     }
     return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>Halvard</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
       <div class="bd">${tabs}<div class="mapwrap"><div><div class="mapbox"><div class="mapview${mapView.z > 1 ? ' zin' : ''}"><div class="map" style="width:${mapView.z * 100}%"><img src="${esc(imgURL(mapFor(S)))}" alt="Map of Halvard Academy" draggable="false" data-fb="" data-fbclass="mapfb"${mapFor(S) !== DATA.assets.map ? ` data-alt="${esc(imgURL(DATA.assets.map))}"` : ''}>${pinHTML}</div></div>
       <div class="zoom"><button data-zoom="1" aria-label="Zoom in" title="Zoom in (or the mouse wheel)" ${mapView.z >= ZOOMS[ZOOMS.length - 1] ? 'disabled' : ''}>+</button><button data-zoom="-1" aria-label="Zoom out" title="Zoom out" ${mapView.z <= 1 ? 'disabled' : ''}>−</button></div></div>
-      <div class="sub" style="margin:6px 0 10px">You are at ${esc(S.World.Location)}.</div></div><div class="sheet">${sheet}</div></div></div></div>`;
+      <div class="sub" style="margin:6px 0 10px">You are at ${esc(S.World.Location)}.${Object.keys(CL).length ? ' <span class="clueh">?</span> marks a place tied to an open thread on your Mystery Board.' : ''}</div></div><div class="sheet">${sheet}</div></div></div></div>`;
   },
   // 1.24.0: the zoomed map keeps its centre (mapView) through re-renders; drag with the mouse to pan; on touch the view scrolls by
   // itself. 1.24.2 (owner): the mouse wheel zooms (toward the pointer, one step at a time); at 100% scrolling down scrolls the panel

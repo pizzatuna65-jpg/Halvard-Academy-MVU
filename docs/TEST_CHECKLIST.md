@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.51.0 (feature batch 3): the three checks in its section below.
 - v1.50.0 (feature batch 2): the four checks in its section below.
 - v1.49.0 (feature batch 1): the three checks in its section below.
 - v1.48.0 (audit batch 7): the four checks in its section below.
@@ -90,6 +91,15 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.51.0 — Feature batch 3 (pair moments, fading story relations, traces)
+
+1. Over a few in-game weeks with Rank 7 bonds who are friends or rivals (as Connections shows them), the Journal gets a "Meanwhile: X
+   and Y …" line now and then, and a "Nearby" line in `<now>` sometimes names two people {{user}} knows; the narrator keeps it light.
+2. A Clue with a Where (or a pinned rumour with a place) in a thread still open: the Map pin shows "?", the place sheet names the
+   thread. Walking there: `<now>` has a "Trace" line once that week; the narrator shows a small sign, not a solution. Mark the thread
+   solved: the "?" goes away.
+3. A story relation (Campus_State.New_relations) left alone for four in-game weeks is pale in Connections; after eight it is gone.
 
 ### v1.50.0 — Feature batch 2 (the routine week)
 

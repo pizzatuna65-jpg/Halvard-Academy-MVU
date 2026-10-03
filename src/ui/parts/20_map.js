@@ -6,6 +6,16 @@ const normPlace = s => placeOf(s).toLowerCase().replace(/^the\s+/, '');   // pla
 // library") via DATA.palias (tools/common.py place_aliases), and a sub-spot that is itself a place wins ("… — Fishing House").
 const plSegs = s => locParts(s).map(x => x.trim().toLowerCase().replace(/[.!]+$/, '').replace(/^the\s+/, '')).filter(Boolean);
 const sharedLoc = id => DATA.pins.filter(p => p.cluster.includes(id)).length > 1;
+// 1.51.0 (feature batch 3, audit 4.9): the places a Clue of an open thread names (Clues Where): loc id -> threads; a solved or cold
+// thread marks nothing
+function clueLocs(S) {
+  const out = {}; if (!featureOn(S, 'mystery')) return out;
+  for (const cl of Object.values(S.Clues || {})) {
+    const m = cl && (S.Mysteries || {})[cl.Thread]; if (!cl || !String(cl.Where || '').trim() || (m && m.Status !== 'open')) continue;
+    const id = locIdOf(cl.Where); if (id && !(out[id] = out[id] || []).includes(cl.Thread)) out[id].push(cl.Thread);
+  }
+  return out;
+}
 function locIdOf(place) {
   const segs = plSegs(place); if (!segs.length) return '';
   const exact = p => Object.keys(DATA.locs).find(id => normPlace(DATA.locs[id].name) === p) || Object.keys(DATA.locs).find(id => id.replace(/_/g, ' ') === p) || '';
@@ -203,11 +213,13 @@ PANELS.map = {
     const cur = locIdOf(S.World.Location), curPin = cur ? pinOf(cur) : null;
     if (view.pin == null && curPin) view.pin = curPin.pin;
     const pins = DATA.pins.filter(p => p.cluster.some(id => DATA.locs[id] && discovered(S, DATA.locs[id])));
+    const CL = clueLocs(S);
     const pinHTML = pins.map(p => {
       const here = curPin && curPin.pin === p.pin, sel = view.pin === p.pin;
       // 1.25.0: a red dot on a marker whose places hold a story heard but not read yet
       const fresh = p.cluster.some(id => DATA.locs[id] && discovered(S, DATA.locs[id]) && DATA.locs[id].lore.some(x => isNew(`lore:${x.uid}`)));
-      return `<button class="pin${here ? ' here' : ''}${sel ? ' sel' : ''}${fresh ? ' new' : ''}" data-pin="${p.pin}" style="left:${p.x}%;top:${p.y}%" aria-label="${esc(p.label)}${here ? ' (you are here)' : ''}" title="${esc(p.label)}"></button>`
+      const clue = p.cluster.some(id => CL[id] && DATA.locs[id] && discovered(S, DATA.locs[id]));
+      return `<button class="pin${here ? ' here' : ''}${sel ? ' sel' : ''}${fresh ? ' new' : ''}${clue ? ' clue' : ''}" data-pin="${p.pin}" style="left:${p.x}%;top:${p.y}%" aria-label="${esc(p.label)}${here ? ' (you are here)' : ''}${clue ? ' (an open mystery thread)' : ''}" title="${esc(p.label)}"></button>`
         + (sel || here ? `<span class="plab${here ? ' here' : ''}${labPos(p)}" style="left:${p.x}%;top:${p.y}%">${esc(p.label)}</span>` : '');
     }).join('');
     let sheet = '<p class="hint">Tap a marker to see what is there.</p>';
@@ -227,12 +239,13 @@ PANELS.map = {
       view.focusLoc = ''; view.cardPin = P.pin + '|' + view.floor; view.card = _.clamp(view.card, 0, Math.max(0, ids.length - 1));
       const arrows = ids.length > 1 ? `<div class="cnav"><button class="btn sm" data-card="-1" aria-label="Previous place" ${view.card ? '' : 'disabled'}>‹</button>
         <span class="sub">${view.card + 1} / ${ids.length} · ${esc(nameOn(ids[view.card], view.floor))}</span><button class="btn sm" data-card="1" aria-label="Next place" ${view.card < ids.length - 1 ? '' : 'disabled'}>›</button></div>` : '';
-      sheet = `<h3>${esc(P.label)}</h3>${tabs}${arrows}<div class="car">${ids.length ? locCard(ids[view.card], S, cur, P) : '<div class="empty">Nothing here you know of yet.</div>'}</div>`;
+      const th = ids.filter(id => CL[id]).map(id => `${DATA.locs[id].name}: ${CL[id].join(', ')}`);
+      sheet = `<h3>${esc(P.label)}</h3>${tabs}${arrows}${th.length ? `<div class="sub"><span class="clueh">?</span> Open on your Mystery Board: ${esc(th.join('; '))}</div>` : ''}<div class="car">${ids.length ? locCard(ids[view.card], S, cur, P) : '<div class="empty">Nothing here you know of yet.</div>'}</div>`;
     }
     return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>Halvard</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
       <div class="bd">${tabs}<div class="mapwrap"><div><div class="mapbox"><div class="mapview${mapView.z > 1 ? ' zin' : ''}"><div class="map" style="width:${mapView.z * 100}%"><img src="${esc(imgURL(mapFor(S)))}" alt="Map of Halvard Academy" draggable="false" data-fb="" data-fbclass="mapfb"${mapFor(S) !== DATA.assets.map ? ` data-alt="${esc(imgURL(DATA.assets.map))}"` : ''}>${pinHTML}</div></div>
       <div class="zoom"><button data-zoom="1" aria-label="Zoom in" title="Zoom in (or the mouse wheel)" ${mapView.z >= ZOOMS[ZOOMS.length - 1] ? 'disabled' : ''}>+</button><button data-zoom="-1" aria-label="Zoom out" title="Zoom out" ${mapView.z <= 1 ? 'disabled' : ''}>−</button></div></div>
-      <div class="sub" style="margin:6px 0 10px">You are at ${esc(S.World.Location)}.</div></div><div class="sheet">${sheet}</div></div></div></div>`;
+      <div class="sub" style="margin:6px 0 10px">You are at ${esc(S.World.Location)}.${Object.keys(CL).length ? ' <span class="clueh">?</span> marks a place tied to an open thread on your Mystery Board.' : ''}</div></div><div class="sheet">${sheet}</div></div></div></div>`;
   },
   // 1.24.0: the zoomed map keeps its centre (mapView) through re-renders; drag with the mouse to pan; on touch the view scrolls by
   // itself. 1.24.2 (owner): the mouse wheel zooms (toward the pointer, one step at a time); at 100% scrolling down scrolls the panel

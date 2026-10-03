@@ -204,6 +204,16 @@ t = t.replace('/*@@TRAINING@@*/{}', json.dumps(strip(json.load(open(P('data/trai
 grp = lambda n: 'rival' if (n.get('group') or '').endswith('team') else 'staff' if n.get('group') == 'Staff' else 'student' if re.match(r'^Year \d$', n.get('group') or '') else 'other'
 t = t.replace('/*@@NPC_GROUP@@*/{}', json.dumps({nid: grp(n) for nid, n in sorted(npcs.items())}, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@HAUNTS@@*/{}', json.dumps(haunt, ensure_ascii=False, separators=(',', ':')))
+# 1.51.0 (feature batch 3, audit 4.8): lines between NPCs for pair moments: [from, to, type, rank to see it (0 public, 99 a secret), via]
+_pairs = []
+for _e in json.load(open(P('data/relations.json'), encoding='utf-8')):
+    _ty = next((x for x in ('rivals', 'friends', 'dislike') if x in _e['types']), None)
+    if _e.get('rule') or not _ty: continue
+    _v = _e['visibility']
+    assert _v == 'public' or _v.startswith('rank:'), _v
+    _pairs.append([_e['from'], _e['to'], _ty, 0 if _v == 'public' else int(_v.split(':')[1]), _e.get('via') or _e['from']])
+assert all(x[0] in npcs and x[1] in npcs and x[4] in npcs for x in _pairs)
+t = t.replace('/*@@REL_PAIRS@@*/[]', json.dumps(_pairs, ensure_ascii=False, separators=(',', ':')))
 # 1.3.8 Tension (data/tension.json): every bonded NPC has a category or an override
 ten = strip(json.load(open(P('data/tension.json'), encoding='utf-8')))
 bonded = [nid for nid, n in npcs.items() if grp(n) != 'rival']

@@ -104,7 +104,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepBag` (8h) | Inventory merge, caps, Sunfizz, clearing bloom wilt | `data/shop.json`, `crafts.json` |
 | `stepCampusEvents` / `stepExtras` / `stepCast` (8j, 8k, 8i) | campus events; invented characters; who gets a Cast Sheet | `$ui.cast` → 509 |
 | `stepReminders` (8l) | "missed report" reminders for `<now>` | `$ui.missed` → 505 |
-| `stepAmbience` (8m) | crowd, light, cue, beat (1.24.0: overheard lore, `hearLore`), uncanny moment | `data/ambience.json`, `PLACE_LORE` |
+| `stepAmbience` (8m) | crowd, light, cue, beat (1.24.0: overheard lore, `hearLore`; 1.51.0: a pair moment, `pairLine`), uncanny moment; 1.51.0 the trace beat (`$ui.amb.trace`) at a place an open thread's Clue names | `data/ambience.json`, `PLACE_LORE` |
 | `stepAgenda` (8n) | 1.44.0: the Agenda: one status for Commitments, Hooks, Next plans, Projects, Notices and the letter home (`anchorWhen`, `agendaState`, `agendaWhen` = `$eng.agenda.when`), one reminder per change, the coming-up feed `$ui.agenda` | Planner, Notice Board, bracelet, `<now>` "Coming up" / "Due soon" |
 | `stepHere` (8o) | 1.47.0: whereabouts: who is likely around {{user}}'s place now (`$ui.here`, the class line) and "May be here" (`$ui.maybe`: Next plans, appointments) from `shared.js` `whereabouts` / `presenceAt` | `data` via `presence_data`; `<now>` |
 | `stepUi` (9) | discovered places (+ "Castle"), lore named in the narration (`$ui.lore`), unlocks, Next chip (an appointment from `$ui.agenda` when sooner) | bracelet |

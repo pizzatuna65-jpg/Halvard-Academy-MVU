@@ -30,8 +30,9 @@ console.log('<now> from the engine (3.11)');
 const { chains } = require('./fixtures/now_scenarios.cjs');
 const ver = JSON.parse(read('src/card/card.json')).character_version, NREC = JSON.parse(read('tests/fixtures/now_1470.json'));
 const CH = chains(runEngine, ver), nbad = [];
-// 1.49.0 (feature batch 1): a day whose initiative reason is a favour reads differently by design; every other update is unchanged
-CH.forEach((S, i) => { const t = renderEntry(card, 505, S); if (crypto.createHash('sha1').update(t).digest('hex').slice(0, 16) + ' ' + t.length !== NREC[i] && !((S.$ui || {}).initiative || {}).favour) nbad.push(i); });
+// 1.49.0 (feature batch 1): a day whose initiative reason is a favour reads differently by design, 1.51.0 (batch 3) so does a
+// "nearby" beat that became a pair moment; every other update is unchanged
+CH.forEach((S, i) => { const t = renderEntry(card, 505, S); if (crypto.createHash('sha1').update(t).digest('hex').slice(0, 16) + ' ' + t.length !== NREC[i] && !((S.$ui || {}).initiative || {}).favour && !(((S.$ui || {}).amb || {}).beat || {}).pair) nbad.push(i); });
 ok(CH.length === NREC.length && !nbad.length, `every chain's <now> is the same text as 1.47.0's (${CH.length} updates)` + (nbad.length ? ': differs in ' + nbad.slice(0, 5).join(', ') : ''));
 const tmpl = read('src/worldbook/custom/505.template.ejs');
 ok(['area', 'pres', 'walk', 'amb'].every(k => tmpl.includes('NOW.' + k)) && !/AREA_EV|AREA_WALK|bandOf\(TEN|TRUST\.cats|BOND\.share/.test(tmpl), '<now> prints the engine\'s lines and no longer holds those rules');

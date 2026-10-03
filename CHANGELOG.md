@@ -1,7 +1,26 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.51.0 — Feature batch 3: NPCs seen together, story relations that fade, the living mystery board (2026-10-04)
+
+`audit/AUDIT_2026-10-03_4_batch_fitur.md` batch 3 (audit part 2, suggestions 4.8 and 4.9). Save fixture v1.50.0.
+- **Pair moments (4.8).** Two NPCs seen together the way Connections shows them to {{user}}: a friends, rivals or dislike line of
+  `data/relations.json` that {{user}} can see there (both met, the teller's rank, or a revealed relationship secret), both free by
+  whereabouts and neither in the scene; at most one a day (`$eng.pair`), 50% when one fits. A Meanwhile Journal line (Rank 7+ bond
+  unseen for a week, no Next plan) may be one ("Meanwhile: Cedric and Layla shared a table at the Lecture Halls."); a "nearby"
+  ambience beat at a place one of them haunts may be one ("Kotaro and Mimosa passing together, one teasing the other"). Templates in
+  `data/ambience.json` `pairs` (public behaviour only); the engine's relation list is `REL_PAIRS` (`gen_engine.py`).
+- **Story relations fade (4.8).** A `Campus_State.New_relations` line is renewed when the narrator rewrites it or the two share a
+  scene (`$eng.nrel`); four weeks without that, its Connections line fades; eight, it is no longer drawn (`$ui.relold`). The record stays.
+- **Traces (4.9).** The Map marks a pin "?" when a Clue of a thread that is not solved or cold names one of its places (`Clues.Where`),
+  with a hint under the map and the threads in the place sheet. Arriving at such a place may bring a trace beat (`data/ambience.json`
+  `trace_chance` 50%, once per thread per week): `<now>` names the thread and asks for one small sign true to the lore and the clues
+  found, never a solution and never new canon (DECISIONS "Rumours and stories as Clues": the engine invents no content).
+- **Tests:** `tests/test_feature_batch3_v1510.cjs` (14 checks); `test_audit_batch7_v1480` also skips the two recorded `<now>` whose
+  beat became a pair moment (marked `pair: 1`). Full suite passes. UI checked in a local preview (the "?" pin, the hint, the sheet line).
+- **To confirm with the owner:** the pair templates and rates (50%, one a day), the 4 / 8 week fade, the 50% trace chance.
 
 ## v1.50.0 — Feature batch 2: the routine week (2026-10-03)
 
@@ -131,39 +150,6 @@ commits, each proven before the next.
 - **Live checks:** `docs/TEST_CHECKLIST.md` 1.47.0. The first reply after updating has no presence block (the engine writes `$ui.here`
   on its first run); every later one has it.
 
-## v1.46.0 — Audit batch 4: the outside areas as one module (2026-10-03)
-
-`audit/AUDIT_2026-10-03_3_batch_perbaikan.md` batch 4 (audit part 1, items 2.1, 3.1, 3.7). Save fixture v1.45.0. Three code commits and
-this release, each proven before the next.
-- **One graph (2.1).** `shared.js` `areaNb`, `areaRoutes`, `areaPath`, `areaMin`: the one shortest-way search, used by the engine and the
-  Map panel (was seven copies: `expRoutes`, `avRoutes`, `srRoutes` and their paths in the engine, four walk searches in the UI).
-- **One Area module (3.1).** `makeArea` builds one record per data file (`AR.forest`, `avalon`, `airship`, `sunreach`): places, pins, the
-  graph, names and aliases. One place parser (`areaPlace`) and one Location formatter (`areaLoc`) replace eight functions. `areaMove`
-  moves {{user}} in any pin map: on foot, by carriage, water taxi or tour boat, through crowds, with fares through the ledger and the
-  minutes the clock still owes. `areaHours` is the one hourly loop (Avalon, Sunreach, the airship), `areaStreet` the street sight
-  (`rollTable`), `areaTheft` the one theft: Avalon's pickpocket and Sunreach's hustler are now the same mechanic, set by a `theft` block
-  in each data file (where, chance, seen, share, cap, once). `areaSeen`, `areaNear` build the walks and nearby places. The forest keeps
-  its hunt and search hours, Avalon its White Line and muster, the airship its flights, Sunreach its bets and sea.
-- **Climate (3.7).** `data/expedition.json` and `sunreach.json` carry a `climate` profile (sky and rain weights, temperatures, a rare
-  sight, the label, the seed word); `areaWx` replaces `forestWx` and `srWx`; the weather line, the night's sleep and the rare-weather
-  toast read the area {{user}} is in (`c.WA`, `wxWhere`).
-- **State.** `$ui.area.<forest|avalon|airship|sunreach>` and `$eng.area.<forest|avalon|sunreach>`; a save's `$ui.forest`, `capital`,
-  `airship`, `sunreach` and `$eng.exp`, `cap`, `sr` move there in `stepMigrate` (the old keys stay optional in the schema so a save
-  reaches the migration). The lore gates (360, 370, 465, 247) and the 502 area rules read `$ui.area`.
-- **UI and `<now>`.** `gen_ui.py` `DATA.areas` gives every area one shape (the forest's places are its pins; the airship is cards);
-  `20_map.js` `renderArea` draws every outside tab (was four renderers). `<now>` has one block for the outside areas (`AREA`,
-  `AREA_WALK`, `AREA_EV`, was four).
-- **Proof.** `ENGINE_DIFF` against 1.45.0 identical over the full suite, a 380-day year and the fuzz run for the module commits, except
-  Avalon's walk event, which now says `ride: 'carriage'` / `''` (was `true` / `false`) and `tour: false` (new
-  `ENGINE_DIFF_IGNORE` in the harness for explained differences). `snapshot_render` before and after (3,638 renders): only two
-  renders differ, both in `<now>`: Avalon's day plan and the airship's bar, view and cargo now come before the walks (one order for
-  every area). Off the area, a Map card's walk now reads "from the Skyport" (was "from the Skyport (Skyport)").
-- **Tests:** `tests/test_audit_batch4_v1460.cjs` (one search, one record per area, parser and formatter, theft and climate as data,
-  the migration, a hire carriage through the ledger, a refused tour boat, one renderer and one block); the four area suites call the
-  module; `test_saves` reads the moved keys as renamed. Full suite and stress.
-- **To confirm with the owner:** nothing (a refactor).
-- **Live checks:** `docs/TEST_CHECKLIST.md` 1.46.0.
-
 ## Release index (one line per release, oldest first)
 
 - All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/archive/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; CHANGELOG 1.2.0/1.2.1).
@@ -290,3 +276,4 @@ this release, each proven before the next.
 - **v1.48.0 (2026-10-03):** Audit batch 7, the last: the Cast Sheet as one entry per NPC (`@@if`), `<now>`'s rule lines from the engine (`$ui.now`), the state diet (moods, area walks), the weather cache, `eld_seen` and the default theme.
 - **v1.49.0 (2026-10-03):** Feature batch 1: favours asked through NPC initiative (Commitment Type "favour": kept = help, ignored = Tension) and group assignments (study time, a study interaction for each partner, Tension when overdue).
 - **v1.50.0 (2026-10-03):** Feature batch 2: the routine week (a weekly plan in the Planner, lived in one reply to Sunday evening or the evening before the next event or due date; counted within the weekly limits; one or two moments played).
+- **v1.51.0 (2026-10-04):** Feature batch 3: NPC pair moments from visible relations (Meanwhile, ambience), story relations that fade from Connections, "?" pins and trace beats for open mystery threads.

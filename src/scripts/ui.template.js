@@ -452,6 +452,7 @@ const CSS = `
 .nav button.err{color:var(--danger)}
 /* 1.25.0 red "new" dot (news.shared.js): on a tab, a person, a story heard; map pins keep fixed colours */
 .nd{display:inline-block;width:8px;height:8px;margin:0 0 1px 6px;border-radius:50%;background:var(--notify);vertical-align:middle}
+/* 1.51.0: a place tied to an open mystery thread */.pin.clue::before{content:"?";position:absolute;top:-9px;left:-9px;width:13px;height:13px;border-radius:50%;font:700 9px/13px sans-serif;text-align:center;color:#1d1a15/*keep*/;background:#e8c46a/*keep*/;box-shadow:0 0 0 2px #1d1a15/*keep*/}.clueh{color:var(--warn);font-weight:700}
 .pin.new::after{content:"";position:absolute;top:-5px;right:-5px;width:9px;height:9px;border-radius:50%;background:#ee3b2b/*keep*/;box-shadow:0 0 0 2px #1d1a15/*keep*/}
 /* 1.23.0 Builder: numbered steps (the only panel whose tabs are a sequence) */
 .nav.steps{gap:18px}

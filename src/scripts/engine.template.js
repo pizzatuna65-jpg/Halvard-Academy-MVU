@@ -139,6 +139,24 @@ const teacherOf = (subj, py, role) => Object.keys(CLASS.teach || {}).find(id => 
 const BR = /*@@BOND_RULES@@*/{};
 const START = BR.start || {};   // 1.3.1: bonds that begin above Rank 0 (data/bond_rules.json start)
 const HAUNT = /*@@HAUNTS@@*/{};
+// 1.51.0 (audit/AUDIT_2026-10-03_4_batch_fitur.md, batch 3: audit 4.8): two NPCs seen together. Only a line the Connections panel shows
+// {{user}} (both met, the teller's rank or a revealed relationship secret), both free by whereabouts and not in the scene; one a day.
+const REL_PAIRS = /*@@REL_PAIRS@@*/[];
+const relSeen = (S, [a, b, , r, via]) => !!(S.Bonds[a] && S.Bonds[b] && S.Bonds[via]) && (r === 0 || (r >= 99
+  ? [...(S.$ui.secrets || []), ...((S.Campus_State || {}).Secrets_revealed || [])].some(x => String(x).toLowerCase() === via.toLowerCase() + '.relationship')
+  : S.Bonds[via].Rank >= r));
+function pairLine(c, ids, set, tag) {
+  const { S, seed, dayNo } = c, PA = AMB.pairs || {}, T = PA[set] || {};
+  const E = S.$eng.pair = _.isPlainObject(S.$eng.pair) ? S.$eng.pair : {};
+  if (E.d === dayNo) return '';
+  const PV = presenceNow(S), free = x => !npcOut(PV, S, x) && !npcAwayIn(S, x) && !(S.Scene.Present || {})[x];
+  const pool = REL_PAIRS.filter(e => ids.some(id => e[0] === id || (e[1] === id && e[2] !== 'dislike')) && (T[e[2]] || []).length && relSeen(S, e) && free(e[0]) && free(e[1]));
+  const e = rollTable(pool, { roll: [seed, dayNo, 'pair', tag], p: num(PA.rate, 0.5), pick: [seed, dayNo, 'pair-pick', tag] });
+  if (!e) return '';
+  E.d = dayNo;
+  const place = String(HAUNT[e[0]] || HAUNT[e[1]] || '').split(/[;,]/)[0].replace(/\(.*?\)/g, '').trim() || 'campus';
+  return pickOf(T[e[2]], seed, dayNo, 'pair-text', tag).replace('{a}', e[0]).replace('{b}', e[1]).replace('{place}', place);
+}
 // 1.3.0 (owner brainstorm 2026-09-25): bond rewards (Rank 5 gift, Rank 10 benefit, mask -> truth, Krieg), reputation, training.
 // Single sources data/bond_rewards.json, reputation.json, training.json; NPC_GROUP: staff | student | other | rival (no bond system).
 const REW = /*@@BOND_REWARDS@@*/{};
@@ -3310,7 +3328,8 @@ function stepBondMemory(c) {
       if (hasB && b.Rank >= MEANWHILE_RANK && !presentIds.has(id) && b.$seen >= 0 && dayNo - b.$seen >= 7 && b.$mw !== wk && !awayIn(S)) {
         b.$mw = wk;
         const what = b.Next ? b.Next.What : (HAUNT[id] ? 'was seen around ' + HAUNT[id].split(/[;,]/)[0].trim() : 'kept to their own business');
-        jnl.push(`Meanwhile: ${id} ${b.Next ? 'is busy with ' + what.replace(/^./, c => c.toLowerCase()) : what}.`);
+        const pair = !b.Next && pairLine(c, [id], 'seen', 'mw:' + id);   // 1.51.0 (audit 4.8): seen with someone {{user}} knows them by
+        jnl.push(`Meanwhile: ${pair || `${id} ${b.Next ? 'is busy with ' + what.replace(/^./, c => c.toLowerCase()) : what}`}.`);
       }
     }
     S.$ui.since = since;   // 1.47.0: "May be here" ($ui.maybe) is stepHere's, from whereabouts
@@ -3926,6 +3945,16 @@ function stepRecords(c) {
       if (!late) { STd.mins = num(STd.mins, 0) + ASSIGNMENT_MIN; log.push(`Assignment "${k}" done on time: +${ASSIGNMENT_MIN} minutes of study.`); }
       else { const s = subjectIn(`${k} ${c0.Desc || ''}`); if (s) { STd.skip = _.isPlainObject(STd.skip) ? STd.skip : {}; STd.skip[s] = num(STd.skip[s], 0) + 1; log.push(`Assignment "${k}" was overdue: it counts as a skipped ${s} class for the next marks.`); } }
     }
+  }
+  // 1.51.0 (feature batch 3, audit 4.8): a story relation (Campus_State.New_relations) is renewed when the narrator rewrites it or the
+  // two are in a scene together; four weeks without that fades its line in Connections, eight hide it ($ui.relold; the record stays)
+  {
+    const NR = (S.Campus_State || {}).New_relations || {}, R0 = _.isPlainObject(S.$eng.nrel) ? S.$eng.nrel : {}, NR0 = (hasB && (B.Campus_State || {}).New_relations) || {}, R = {};
+    const pres = new Set(Object.keys(S.Scene.Present || {})), idOf = x => { const k = String(x || '').trim().toLowerCase(); return NPC_ALIAS[k] || NPC_ALIAS[k.split(' ')[0]] || String(x || '').trim(); };
+    for (const [k, v] of Object.entries(NR)) R[k] = !(R0[k] >= 0) || NR0[k] !== v || k.split(/\s*(?:→|->)\s*/).every(x => pres.has(idOf(x))) ? c.dayNo : R0[k];
+    S.$eng.nrel = R;
+    const old = _.pickBy(_.mapValues(R, d => (c.dayNo - d >= 56 ? 2 : c.dayNo - d >= 28 ? 1 : 0)));
+    S.$ui.relold = _.isEmpty(old) ? null : old;
   }
   // notices: stamp, expire, cap
   const BN = (hasB && B.Notices) || {};
@@ -4709,7 +4738,24 @@ function stepAmbience(c) {
           }
           AE.beat[cat] = bh.slice(-30);
         }
+        // 1.51.0 (audit 4.8): a "nearby" moment may be two people {{user}} knows, one of them a regular of this place
+        if (kind === 'tex' && crowd > 0 && !curfewOut) {
+          const regs = Object.keys(S.Bonds).filter(id => String(HAUNT[id] || '').toLowerCase().split(/[;,]/).some(h => { const k = placeKey(h.replace(/\(.*?\)/g, '').trim()); return k && inPlace(pk, k); })).sort();
+          const pl = regs.length ? pairLine(c, regs, 'near', 'amb') : '';
+          if (pl) beat = { kind, text: pl, pair: 1 };
+        }
       }
+    }
+    // 1.51.0 (feature batch 3, audit 4.9): arriving at a place a Clue of an open thread names (Clues Where), a trace beat for that
+    // thread, once a week per thread; <now> only says the thread touches this place (the engine never invents what is found)
+    let trace = null;
+    if (!OFF.has('mystery') && !battle && pk !== pkB) {
+      const T = _.isPlainObject(AE.trace) ? AE.trace : (AE.trace = {});
+      const open = th => { const m = (S.Mysteries || {})[th]; return !m || m.Status === 'open'; };
+      const ths = _.uniq(Object.values(S.Clues || {}).filter(cl => cl && String(cl.Where || '').trim() && open(cl.Thread)
+        && inPlace(pk, placeKey(canonLocation(cl.Where)))).map(cl => cl.Thread)).filter(th => T[th] !== weekNo).sort();
+      if (ths.length && d100(seed, 'trace', S.$eng.turn, absA) <= num(AMB.trace_chance, 50)) { trace = pickOf(ths, seed, 'trace-pick', absA); T[trace] = weekNo; }
+      for (const k of Object.keys(T).slice(0, -40)) delete T[k];
     }
     // the uncanny moment: a small seeded chance where and when one of the ghost stories can happen; at most one a week, the
     // same story not within 30 days; doubled in fog and during the Thinning (indoors), and for a story's own season or day
@@ -4731,7 +4777,7 @@ function stepAmbience(c) {
         if (d100(seed, 'uncanny', S.$eng.turn, absA) <= ch) { U.w = weekNo; U.last[u.id] = dayNo; unc = { id: u.id, title: u.title, text: u.text }; }
       }
     }
-    if (fresh || beat || unc) S.$ui.amb = { place: placeOf(S.World.Location), crowd: crowd >= 0 ? AMB_LEVELS[crowd] : '', light, cue, beat, unc };
+    if (fresh || beat || unc || trace) S.$ui.amb = { place: placeOf(S.World.Location), crowd: crowd >= 0 ? AMB_LEVELS[crowd] : '', light, cue, beat, unc, ...(trace ? { trace } : {}) };
   }
 }
 
@@ -5112,6 +5158,8 @@ function nowOf(S, moodsFull) {
   out.push((AMB.beat.kind === 'lore' ? "Overheard (weave it into this reply: a line or two of talk from students nearby, or a companion bringing it up; hearsay, never confirmed; {{user}} now knows it)" : AMB.beat.kind === 'brush' ?'Brushes {{user}} (small, harmless, changes nothing; {{user}} may ignore it)' : 'Nearby (optional, one clause, unnamed people; skip it if the scene is intense)') + ": " + (AMB.beat.text) + ".");
   } if (AMB.unc) {
   out.push("Uncanny (narrator only, secret; " + (AMB.unc.title) + "): " + (AMB.unc.text) + ". Never confirm or explain it, leave a mundane reading possible, no harm; everyone reacts in character.");
+  } if (AMB.trace) {
+  out.push("Trace (the open thread \"" + (AMB.trace) + "\" on {{user}}'s Mystery Board touches this place): if it fits the scene, let {{user}} notice one small sign true to the lore and to the clues already found (a detail, a remark, something out of place). Never a solution and never new canon beyond the lore; skip it if nothing fits.");
   } }
   return NOW;
 }

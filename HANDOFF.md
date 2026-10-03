@@ -3,13 +3,13 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.50.0** (2026-10-03): feature batch 2 of `audit/AUDIT_2026-10-03_4_batch_fitur.md` (audit suggestion 4.5),
-the routine week: a weekly plan in the Planner (`$ui.plan`), armed by a player tool (`stepRoutine`: span, stoppers, moments, `<now>`
-line) and lived in one reply (`routineStart`, `routineSchool`, `routineProf`) within the weekly limits. v1.49.0: favours and group
-assignments (`stepPromises`). Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
+**Snapshot:** card **v1.51.0** (2026-10-04): feature batch 3 of `audit/AUDIT_2026-10-03_4_batch_fitur.md` (audit suggestions 4.8,
+4.9): pair moments from relations {{user}} can see (`pairLine`: Meanwhile, ambience), story relations that fade from Connections
+(`$eng.nrel`, `$ui.relold`), "?" pins and trace beats for open mystery threads. v1.50.0: the routine week; v1.49.0: favours and
+group assignments. Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** the owner's next "kerjakan batch fitur N" (batch 3: NPC-to-NPC life and the living mystery board, 4.8 and 4.9).
-Live checks v1.50.0 back to v1.42.0 are open.
+**Next task:** the owner's next "kerjakan batch N" (feature batch 4: NPC routines, 4.7; it starts with a draft and waits for "proceed").
+Live checks v1.51.0 back to v1.42.0 are open.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 
