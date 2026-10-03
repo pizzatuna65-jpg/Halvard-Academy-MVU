@@ -12,7 +12,7 @@ perintah yang sama.
 | Batch | Isi | Dari saran | Ukuran | Bergantung pada | Status |
 |-------|-----|-----------|--------|-----------------|--------|
 | 1 | Tugas dan proyek kelompok + bantuan dan utang budi | 4.10, 4.6 | sedang | – | selesai (1.49.0, commit 0f435ab) |
-| 2 | Minggu rutin (maju cepat mingguan) | 4.5 | besar | 1 | belum |
+| 2 | Minggu rutin (maju cepat mingguan) | 4.5 | besar | 1 | selesai (1.50.0, commit e9cde52) |
 | 3 | Dunia hidup antar-NPC + papan misteri yang hidup | 4.8, 4.9 | sedang | – | belum |
 | 4 | Jadwal hidup NPC (draft dulu, lalu dibangun) | 4.7 | sedang–besar | – (draft perlu "proceed") | belum |
 
