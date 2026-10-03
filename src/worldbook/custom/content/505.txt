@@ -341,6 +341,12 @@ Regulars here with a status on record (it overrides their habits): <%- HERE.st.m
 <%- HERE.cls %>
 <%_ } _%>
 <%_ } _%>
+<%_ const CW = !AREA && AREAS.campus && AREAS.campus.on ? AREAS.campus : null; if (CW) { _%>
+Walks from here (minutes on foot, the shortest way on the Campus Map): <%- CW.walks.map(w => w[0] + ' ' + w[1]).join(', ') %>.<%- CW.near.length ? ' Close by' + (CW.pin ? ' (' + CW.pin + ')' : '') + ': ' + CW.near.map(n => n[0] + ' ' + n[1]).join(', ') + '.' : '' %> When {{user}} goes somewhere, advance the clock by the walk.
+<%_ if (CW.owe) { _%>
+Still on the way: <%- CW.owe %> min of the last walk are not on the clock yet.
+<%_ } _%>
+<%_ } _%>
 <%_ const AMB = on('ambience') ? UI.amb : null; if (AMB) { _%>
 <%_ if (AMB.crowd || AMB.cue) { _%>
 Ambience at <%- AMB.place %>: <%- [AMB.crowd, AMB.light].filter(Boolean).join(', ') %>.<%- AMB.cue ? ' Sensory cue (write your own detail, once): ' + AMB.cue + '.' : '' %>

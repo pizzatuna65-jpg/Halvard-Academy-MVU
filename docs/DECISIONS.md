@@ -63,6 +63,10 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
   names, modes, `theft`, `climate`); its state lives in `$ui.area.<key>` and `$eng.area.<key>`. The engine and the Map panel use the one
   graph search in `shared.js`; a new area adds its data, an `AR` record, its own step for what is truly its own, a Map tab entry
   (`gen_ui.py` `DATA['areas']`) and its lines in the 505 area block. Seed words (`salt`) of the four areas stay as they were.
+- **The campus is an Area; one whereabouts model** (1.47.0, audit batch 5): moves between campus places are walked on the Campus Map's
+  graph (`AR.campus`, `stepCampus`): owed minutes in `<now>`, 5% stamina an hour on walks of 15 min or more (owner decision, numbers in
+  `data/campus.json`). Where an NPC is now comes only from `shared.js` `whereabouts` / `presenceAt` (engine `$ui.here` for `<now>`, the
+  Map's Regulars, "May be here", initiative, students met in an area); `<now>` prints it and computes no presence rules itself.
   `bagTake` / `bagGive` (the narrator's own change in the reply counts toward it). Purchases are reported in `/Purchases` and settled
   by the engine (listed price at its shop and in season; otherwise the narrator's Price as a story price; points on campus, coin away).
   Training is one `/Practice` session with a Track (`/Training` still read); one Rank 4 partner rule for every track in

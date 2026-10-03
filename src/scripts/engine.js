@@ -908,6 +908,26 @@ function srWindow(W) {                                           // from the lan
   const at = ([w, d, tm]) => toAbs({ Year: Y, Month: Wn.m, Week: w, Day: d, Time: tm });
   return t >= at(Wn.from) && t < at(Wn.to);
 }
+// ---- the campus (1.47.0, audit 3.2): the Halvard grounds as the first Area. Each Campus Map place is its own node; the legs are the
+// Campus Map's walking minutes (data/locations.json near), so the engine and the Map panel walk the same graph. The parser is
+// canonLocation (with yearFloorLocation): a Location in the map's words names one place. stepCampus charges a move's minutes (owed
+// to the clock while the narration has not spent them) and, on a long walk, stamina; <now> lists the walks from here.
+const CR = CAMPUS_MAP.rates || {};
+AR.campus = makeArea('campus', CAMPUS_MAP, { salt: 'cp' });
+const campusPlace = loc => AR.campus.NAME[avKey(placeOf(canonLocation(loc)))] || '';
+// the node a place is walked from: a dorm room every dorm shares (Common Rooms, Laundry, the bathhouse) is in {{user}}'s own dorm
+const campusNode = (S, id) => (CAMPUS_MAP.shared.includes(id) && CAMPUS_MAP.dorms[(((S || {}).Player || {}).Profile || {}).Dorm]) || id;
+// the floor a Location names on a place with year floors (Lecture Halls, Study Rooms, the lockers), else its own floor; legs reach a
+// place's own floor and each floor climbed adds a minute (lore 132), as on the Map panel
+const floorNo = f => +((/^Floor (\d)$/.exec(f || '') || [])[1] || 0);
+const campusFloor = (loc, id) => { const P = AR.campus.PL[id], m = /\bFloor (\d)\b/.exec(String(loc || '')); return P.floors && m && P.floors.includes('Floor ' + m[1]) ? +m[1] : floorNo(P.floor); };
+function campusWalk(S, locA, locB) {
+  const A = AR.campus, a = campusPlace(locA), b = campusPlace(locB);
+  if (!a || !b) return null;
+  const na = campusNode(S, a), nb = campusNode(S, b), fa = campusFloor(locA, a), fb = campusFloor(locB, b), up = id => floorNo(A.PL[id].floor);
+  const climb = na === nb ? Math.abs(fa - fb) : (A.PL[a].floors ? Math.abs(fa - up(a)) : 0) + (A.PL[b].floors ? Math.abs(fb - up(b)) : 0);
+  return { a, b, na, nb, min: A.min(na, nb) + climb };
+}
 // 1.47.0 (audit 3.3): the area {{user}} is in, from World.Location as stepTime left it: an outside area's key (aboard the airship,
 // Avalon, Sunreach Bay; the Expedition's forest on its days), 'campus' on the Halvard grounds, '' off them
 function areaNow(S) {
@@ -1161,7 +1181,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.46.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.47.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
 // from the shared context c (the states, the reply's text and the values earlier steps computed) and adds what later steps use.
@@ -2162,7 +2182,7 @@ function stepCapital(c) {
     areaStreet(c, A, h, aAt, (AV.street || {})[aAt], got, evs);
     if (crown && X.ts !== Y && inW('tsubaki') && roll('tsu') < num(R.tsubaki, 10)) { X.ts = Y; evs.push({ k: 'tsubaki', first: Y < (ARRIVES.Tsubaki || 1) }); }
     else if ((crown ? inW('rival_crowning') : kd && inW('rival_kingdom')) && roll('riv') < num(R.rival, 25) * LX) {
-      const pool = Object.keys(AV.rivals || {}).filter(id => AV.rivals[id] + Y - 1 <= 3 && !(X.met || []).includes(id)).sort();
+      const pool = Object.keys(AV.rivals || {}).filter(id => AV.rivals[id] + Y - 1 <= 3 && !(X.met || []).includes(id) && !AWAY_RX.test(npcStatusIn(S, id))).sort();
       if (pool.length) { const id = pick(pool, 'rivp'); X.met = [...(X.met || []), id]; evs.push({ k: 'rival', id }); }
     }
     if (kd && !X.sc && ['Thu', 'Fri', 'Sat'].includes(S.World.Day) && inW('scout') && (S.Competition || {}).Status !== 'eliminated' && roll('scout') < num(R.scout, 15)) { X.sc = 1; evs.push({ k: 'scout' }); }
@@ -2248,7 +2268,7 @@ function stepSunreach(c) {
     }
   }
   // the city, once an hour
-  const present = new Set(Object.keys((S.Scene || {}).Present || {})), grad = new Set((S.Campus_State || {}).Graduated || []);
+  const present = new Set(Object.keys((S.Scene || {}).Present || {})), PV = presenceNow(S);
   const M = SR.meet || {}, got = new Set();
   areaHours(c, A, rPrev && at === c.rAt, h => {
     const nt = srNight(h * 60) ? 1 : 0, roll = k => areaRoll(c, A, h, at, k), pick = (a, k) => pickOf(a, seed, A.salt, h, at, k);
@@ -2260,8 +2280,8 @@ function stepSunreach(c) {
       if (!pool.length) return;
       const id = pick(pool, kind + 'p'); got.add(kind); X.met = [...X.met, id]; evs.push({ k: kind, id });
     };
-    meetOne('rival', M.rivals, id => AV.rivals[id] !== undefined && AV.rivals[id] + Y - 1 <= 3);
-    meetOne('student', M.halvard, id => !!STUDENTS[id] && yearOf(id, Y) >= 1 && yearOf(id, Y) <= 3 && !grad.has(id));
+    meetOne('rival', M.rivals, id => AV.rivals[id] !== undefined && AV.rivals[id] + Y - 1 <= 3 && !AWAY_RX.test(npcStatusIn(S, id)));
+    meetOne('student', M.halvard, id => !!STUDENTS[id] && yearOf(id, Y) <= 3 && !npcOut(PV, S, id));   // 1.47.0 (audit 3.8): whereabouts
     if (at === 'open_sea') {
       if (X.lev !== Y && roll('lev') < num(R.leviathan, 5)) {
         X.lev = Y; got.add('sea'); evs.push({ k: 'leviathan', t: SR.leviathan });
@@ -2273,6 +2293,35 @@ function stepSunreach(c) {
   const W = S.World, tnow = hm(W.Time);
   const today = (SR.schedule || []).filter(([w, d, t]) => num(W.Month, 0) === SR.window.m && num(W.Week, 0) === w && W.Day === d && hm(t) >= tnow).map(([, , t, what]) => [t, what]);
   S.$ui.area.sunreach = { on: true, at, name: A.PL[at].name, ...areaNear(A, at, () => true, () => true), night: srNight(absA), seen, owe: num(X.owe, 0), off: !!A.PL[at].off, today, ev: evs, coin: '' };
+}
+
+// ---- 4g. 1.47.0 (audit 3.2): the campus as an Area. A move between two campus places since the last update is walked the shortest
+// way on the Campus Map: the minutes the clock has not spent yet are owed (shown in <now> until spent, forgiven below rates.owe_min,
+// cleared at midnight), and a walk of rates.far_min or more costs rates.walk_pct stamina an hour (data/campus.json). $ui.area.campus:
+// where {{user}} is, the walks to the nearest map pins (and {{user}}'s own dorm) and to the places close by, the minutes still owed.
+function stepCampus(c) {
+  const { S, B, hasB, toolEdit, elapsed, log, V, dayNo } = c;
+  const A = AR.campus, E = S.$eng.area, X = E.campus = _.isPlainObject(E.campus) ? E.campus : { d: dayNo, owe: 0 };
+  if (X.d !== dayNo) Object.assign(X, { d: dayNo, owe: 0 });
+  const at = areaNow(S) === 'campus' && !awayIn(S) ? campusPlace(S.World.Location) : '';
+  if (!at) { X.owe = 0; S.$ui.area.campus = { on: false }; return; }
+  const was = hasB && !toolEdit && areaNow(B) === 'campus' && !awayIn(B) ? campusPlace(B.World.Location) : '';
+  const w = was ? campusWalk(S, B.World.Location, S.World.Location) : null, minOwe = num(CR.owe_min, 5);
+  if (w && w.min > 0) {
+    const cost = w.min >= num(CR.far_min, 15) ? w.min / 60 * num(CR.walk_pct, 5) : 0;
+    if (cost) V.Stamina -= cost / 100 * num(V.Stamina_max, 100);
+    X.owe = Math.max(0, Math.round(w.min + num(X.owe, 0) - elapsed));
+    if (X.owe < minOwe) X.owe = 0;
+    if (cost || X.owe) log.push(`Walked ${A.PL[w.a].name} → ${A.PL[w.b].name}: ${w.min} min on foot${cost ? `, -${Math.round(cost)}% stamina` : ''}${X.owe ? `; ${X.owe} min of the way are still ahead (the clock moved ${Math.round(elapsed)})` : ''}.`);
+  } else if (hasB && elapsed > 0) { X.owe = Math.max(0, num(X.owe, 0) - elapsed); if (X.owe < minOwe) X.owe = 0; }
+  const node = campusNode(S, at), R0 = A.routes(node), mins = ids => Math.min(...ids.map(id => (R0[id] || { w: 999 }).w));
+  const own = CAMPUS_MAP.dorms[(S.Player.Profile || {}).Dorm];
+  const pins = CAMPUS_MAP.map.filter(([, ids]) => ids.length && !ids.includes(node)).map(([nm, ids]) => [nm, mins(ids), ids.includes(own)]).sort((a, b) => a[1] - b[1]);
+  const nWalks = num(CR.walks_listed, 10), walks = pins.filter((p, i) => i < nWalks || p[2]).map(([nm, m]) => [nm, m]);
+  const mine = CAMPUS_MAP.map.find(([, ids]) => ids.includes(node)) || ['', []];
+  const near = mine[1].filter(id => id !== node).map(id => [A.PL[id].name, R0[id].w]).sort((a, b) => a[1] - b[1]).slice(0, 5);
+  S.$ui.area.campus = { on: true, at, name: A.PL[at].name, pin: mine[0], walks, near, owe: X.owe };
+  c.campusOwe = X.owe;
 }
 
 // ---- 5. vitals ----
@@ -3245,7 +3294,7 @@ function stepBondMemory(c) {
   {
     const presentIds = new Set(Object.keys(S.Scene.Present || {}));
     const wasHere = new Set(Object.keys((hasB && B.Scene && B.Scene.Present) || {}));
-    const since = [], mayBe = [];
+    const since = [];
     for (const [id, b] of Object.entries(S.Bonds)) {
       const b0 = BB[id] || null;
       b.Knows = (Array.isArray(b.Knows) ? b.Knows : []).map(k => String(k).trim()).filter(Boolean);
@@ -3281,7 +3330,7 @@ function stepBondMemory(c) {
         since.push([id, nx.What + (nx.Where ? ' (' + nx.Where + ')' : ''), nx.Until]); nx = null;
       } else if (nx && until >= 0 && until < absA && !presentIds.has(id)) {
         b.$Recent = [...b.$Recent, { w: String(nx.Until || stamp(S.World)), n: `(Off-screen) ${nx.What}${nx.Where ? ' (' + nx.Where + ')' : ''}.`, fx: '' }].slice(-num((BR.recent || {}).keep, 10)); nx = null;
-      } else if (nx && !presentIds.has(id) && nx.Where && placeOf(canonLocation(nx.Where)).toLowerCase() === placeOf(S.World.Location).toLowerCase() && (until < 0 || absA <= until)) mayBe.push([id, nx.What]);
+      }
       b.Next = nx;
       // Meanwhile
       if (presentIds.has(id)) b.$seen = dayNo;
@@ -3292,7 +3341,7 @@ function stepBondMemory(c) {
         jnl.push(`Meanwhile: ${id} ${b.Next ? 'is busy with ' + what.replace(/^./, c => c.toLowerCase()) : what}.`);
       }
     }
-    S.$ui.since = since; S.$ui.maybe = mayBe;
+    S.$ui.since = since;   // 1.47.0: "May be here" ($ui.maybe) is stepHere's, from whereabouts
   }
   // 1.4.3: word of a betrayal reaches the NPC's friends (their Friends lines), once; then the Rank 10 benefits Trust suspends
   for (const id of spreadFrom) {
@@ -3882,19 +3931,6 @@ function stepRecords(c) {
     c.$abs = abs; c._When = whenText(abs, absA);
     c._Late = agendaState(abs, absA, 'commitment') === 'overdue';
   }
-  // 1.18.0 (I8): an imminent appointment at this place can put its named partner in "May be here".
-  if (!OFF.has('planner') && !awayIn(S)) {
-    const maybe = Array.isArray(S.$ui.maybe) ? S.$ui.maybe : [];
-    const here = placeKey(S.World.Location);
-    for (const [title, c] of Object.entries(S.Commitments || {})) {
-      if (!c || !c.With || !c.Where || c.$abs < absA || c.$abs > absA + 60 || placeKey(c.Where) !== here) continue;
-      for (const name of String(c.With).split(/,|\band\b/i).map(x => canon(x.trim())).filter(Boolean)) {
-        if (npcAwayIn(S, name) || (S.Scene.Present || {})[name] || maybe.some(x => x[0] === name)) continue;
-        maybe.push([name, `appointment: ${title}`]);
-      }
-    }
-    S.$ui.maybe = maybe;
-  }
   // 1.15.0 (planning/DRAFT_grades_exams.md): a commitment removed before it was overdue was done. An assignment done on time is
   // study time; one removed overdue counts as a skipped class of the subject it names. A remedial attended turns its F into a D.
   const STd = !OFF.has('study') && _.isPlainObject(S.$eng.study) ? S.$eng.study : null;
@@ -4127,10 +4163,11 @@ function stepInitiative(c) {
       I.day = dayNo; I.id = ''; I.done = false;
       if (!off && !awayIn(S) && !/LOCKDOWN/.test(S.World._Curfew || '') && I.count < IR[1]
       ) {
+        const PV = presenceNow(S);   // 1.47.0 (audit 3.8): whereabouts: not off sick either
         const id = rollTable(Object.keys(S.Bonds).sort(), { roll: [seed, dayNo, 'npc-initiative-roll'], p: IR[0], pick: [seed, dayNo, 'npc-initiative-pick'],
           skip: id => { const b = S.Bonds[id];
             return !(b.Rank >= 3 && INITIATIVE_STAGES[id] && (ARRIVES[id] || 1) <= S.World.Year
-              && !npcAwayIn(S, id) && !S.Scene.Present[id]   // 1.16.1 (audit B4): only a status that keeps them away
+              && !npcAwayIn(S, id) && !npcOut(PV, S, id) && !S.Scene.Present[id]   // 1.16.1 (audit B4): only a status that keeps them away
               && dayNo - num(I.last[id], -1000) >= IR[2]); },
           weight: id => ({ open: 3, normal: 2, guarded: 1, closed: 0.5 })[INITIATIVE_OPENNESS[id] || 'normal'] });
         if (id) { I.id = id; I.last[id] = dayNo; I.count++; }
@@ -4554,12 +4591,13 @@ function stepReminders(c) {
       if (text) {
         // R3: the narration skips time, the clock hardly moved
         const tm = MISS_TIME_RX.exec(narr);
-        if (tm && elapsed < 30) add(`time:${absA}`, `The narration moves time on ("${tm[0]}") but the clock moved only ${Math.round(elapsed)} min: set World.Time (and Day) to match.`);
+        if (tm && elapsed < 30 && !c.campusOwe) add(`time:${absA}`, `The narration moves time on ("${tm[0]}") but the clock moved only ${Math.round(elapsed)} min: set World.Time (and Day) to match.`);
         // R4: the narration has {{user}} arrive at a map place that Location does not show
         let arr = '';
         for (const m of narr.matchAll(MISS_ARRIVE_RX)) arr = (m[1] || m[2] || m[3] || '').replace(/\s+(?:of|and|&)$/, '');
-        const nm = arr && (plName(arr) || PLACE_ALIAS[plKey(arr)] || PLACE_ALIAS[plKey(arr).replace(/^the /, '')] || '');
-        if (nm && !awayIn(S) && placeKey(nm) !== placeKey(S.World.Location))
+        // 1.47.0 (audit 3.2): both read by the campus parser (a shared dorm room is the own dorm's)
+        const aid = arr ? campusPlace(arr) : '', nm = aid ? AR.campus.PL[aid].name : '';
+        if (nm && !awayIn(S) && campusNode(S, aid) !== campusNode(S, campusPlace(S.World.Location)))
           add(`loc:${placeKey(nm)}:${absA}`, `The narration has {{user}} arriving at ${nm}, but Location is ${placeOf(S.World.Location) || 'unset'}: update it if {{user}} is there now.`);
         // R10: an hour or more at a training place, training words, no training session reported
         if (elapsed >= 50 && !REPORTED.training && MISS_TRAIN_AT.includes(placeKey(S.World.Location)) && !/^P[123] /.test(S.World._Period || '')
@@ -4789,10 +4827,26 @@ function classLineAt(PD, V, loc) {
     : 'Your class now: ' + c[0] + ' [' + c[1] + '] (Year ' + PY + ', ' + (c[1] === 'D' ? (dorm === 'Unsorted' ? 'dorm not yet sorted' : dorm + ' only') : 'all dorms')
     + ') at ' + ((PD.vn || {})[pk] || place) + (pk === 'lecture halls' ? ' — Floor ' + (PY + 1) + ' (the Year ' + PY + ' floor)' : '') + ' — teacher ' + (tch || 'not on record: create one, and keep them the same person every lesson') + '; classmates on record: ' + (mates.join(', ') || 'none');
 }
+// whereabouts in the engine: an NPC who cannot turn up now (graduated, not arrived, a status that keeps them away, off sick)
+const npcOut = (V, S, id) => { const w = whereabouts(PRESENCE, V, id); return !whereFree(w) || AWAY_RX.test(npcStatusIn(S, id)); };
 function stepHere(c) {
-  const { S } = c;
-  const V = presenceNow(S);
+  const { S, absA, OFF, canon } = c;
+  const V = presenceNow(S), here = placeKey(canonLocation(S.World.Location)), present = S.Scene.Present || {};
   S.$ui.here = { ...presenceAt(PRESENCE, V, S.World.Location), cls: classLineAt(PRESENCE, V, S.World.Location) };
+  // "May be here": a Next plan at this place (Rank 5+ bonds, until it lapses), then an appointment here within the hour (1.18.0 I8)
+  const maybe = [];
+  for (const [id, b] of Object.entries(S.Bonds || {})) {
+    const nx = b && b.Next;
+    if (!nx || !nx.Where || present[id] || npcOut(V, S, id) || placeKey(canonLocation(nx.Where)) !== here) continue;
+    const until = agendaWhen(c)('n:' + id, nx.Until);
+    if (until < 0 || absA <= until) maybe.push([id, nx.What]);
+  }
+  if (!OFF.has('planner') && !awayIn(S)) for (const [title, x] of Object.entries(S.Commitments || {})) {
+    if (!x || !x.With || !x.Where || x.$abs < absA || x.$abs > absA + 60 || placeKey(canonLocation(x.Where)) !== here) continue;
+    for (const name of String(x.With).split(/,|\band\b/i).map(y => canon(y.trim())).filter(Boolean))
+      if (!present[name] && !npcOut(V, S, name) && !maybe.some(y => y[0] === name)) maybe.push([name, `appointment: ${title}`]);
+  }
+  S.$ui.maybe = maybe;
 }
 
 function stepUi(c) {
@@ -4853,7 +4907,7 @@ function stepCommit(c) {
   if (log.length) S._Log = [...(S._Log || []), ...log.map(l => `[${stamp(S.World)}] ${l}`)].slice(-12);
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,

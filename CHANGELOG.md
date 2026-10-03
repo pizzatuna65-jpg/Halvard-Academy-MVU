@@ -1,7 +1,44 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.47.0 — Audit batch 5: the campus as an Area, one whereabouts model (2026-10-03)
+
+`audit/AUDIT_2026-10-03_3_batch_perbaikan.md` batch 5 (audit part 1, items 3.2, 3.3, 3.8). Save fixture v1.46.0. A refactor commit
+(proven identical) and a behaviour commit.
+- **Whereabouts (3.8).** One model answers "where is NPC X now" and "who is likely around here": `shared.js` `presenceView` (the
+  moment: the period and what it holds, flu, weather), `whereabouts` (one NPC: graduated or not arrived yet, a status, off sick, busy
+  in class, at Study Hall, voting, at a club, teaching) and `presenceAt` (a place: the regulars likely here, what the period holds,
+  those the weather moved indoors, clubs meeting here, regulars with a status). Its data is `tools/common.py` `presence_data`. The
+  engine's new `stepHere` writes `$ui.here` (and the class line, `classLineAt`); `<now>` only prints it (the rules and their data left
+  505: `REG`, `STU`, `TEACH`, `TT`, `CLUBV`, `OUTD`, `VN`). The Map card's Regulars use the same `whereabouts`: a teacher now shows
+  "teaching X until …", a sick student "off sick". The section is left out of the bracelet, 505 and 506 (`shared_js(presence=False)`).
+- **Who uses it.** "May be here" (`$ui.maybe`) is `stepHere`'s: a Next plan at this place (its Where read by the campus parser, so "the
+  library" counts), then an appointment within the hour; nobody whose whereabouts keep them away (status, off sick, graduated). NPC
+  initiative skips anyone off sick too. Sunreach's Halvard students and the rival students met in Sunreach and Avalon skip anyone with a
+  status that keeps them away.
+- **The area {{user}} is in (3.3).** `areaNow(S)`: an outside area's key, `campus` on the grounds, `''` off them. `awayIn` is built on it.
+- **The campus as an Area (3.2).** `AR.campus` (a `makeArea` record from `tools/common.py` `campus_map`: every Campus Map place its own
+  node, the `near` minutes as legs, the map pins, the dorm rooms every dorm shares, each dorm's place), parsed by `canonLocation`
+  (`campusPlace`). The new `stepCampus` (4g) walks a move between two campus places the shortest way (each floor climbed a minute; a
+  shared dorm room is in {{user}}'s own dorm): the minutes the clock has not spent are owed (shown in `<now>` until spent, forgiven
+  under 5, cleared at midnight), and a walk of 15 minutes or more costs 5% stamina an hour (owner decision: as in Avalon), with a
+  `_Log` line. `$ui.area.campus`: the walks to the ten nearest map pins plus {{user}}'s own dorm, up to five places close by, the
+  minutes owed. `<now>` lists them ("Walks from here …", "Still on the way …"); 502 has one line on it. Numbers in `data/campus.json`.
+- **Reminders.** R4 reads the campus parser (writing "the Common Rooms" while in one's own dorm no longer triggers it); R3 waits while
+  `<now>` already says a walk is owed.
+- **Proof.** 360 fixture scenarios (`tests/fixtures/presence_scenarios.cjs`: places, periods, Study Hall, clubs, the election, the
+  Council, weather, flu, statuses, graduates, Settings) render a byte-identical `<now>` with 1.46.0's EJS and the new engine; their
+  presence lines are kept in `tests/fixtures/presence_1460.json`. `ENGINE_DIFF` against 1.46.0 identical over the full suite except
+  the new `$ui.here` (the refactor commit).
+- **Tests:** `tests/test_audit_batch5_v1470.cjs` (the presence block against 1.46.0, one model for one NPC, `areaNow`, walks, owed
+  minutes, stamina, `<now>`, R3 and R4, "May be here" and its status filter); `test_map_gates_v1240` and `test_year2_v174` read the
+  class line from the engine. Full suite.
+- **To confirm with the owner:** the stamina threshold (a walk of 15 minutes or more; shorter walks cost nothing) and the five-minute
+  grace before owed minutes show, both in `data/campus.json`.
+- **Live checks:** `docs/TEST_CHECKLIST.md` 1.47.0. The first reply after updating has no presence block (the engine writes `$ui.here`
+  on its first run); every later one has it.
 
 ## v1.46.0 — Audit batch 4: the outside areas as one module (2026-10-03)
 
@@ -139,41 +176,6 @@ five commits, then one marked behaviour commit.
   behaviour commit); `test_batch4_seasons_mana` reads the season table from `shared.js`. Full suite.
 - **Live checks:** `docs/TEST_CHECKLIST.md` 1.43.0 (the bracelet, `<now>` and the Price Guide run `shared.js` inside SillyTavern).
 
-## v1.42.0 — Audit batch 1: every bug from the 2026-10-03 audit (2026-10-03)
-
-`audit/AUDIT_2026-10-03_3_batch_perbaikan.md` batch 1 (audit part 1, items 1.1–1.10 and the "Rendah" table). Save fixture v1.41.0.
-Three commits: hotfix, gameplay rules, small bugs. Tests: `tests/test_audit_batch1_v1420.cjs` (one check per bug); full suite.
-- **Hotfix.** The dialogue-colour regexes "stray tags" and "strip tags from older replies" held a JSON `` (a backspace) and
-  never matched: `<say:…>` tags now leave old replies in the prompt and stray tags leave the display. One item-name key (`itemKey`,
-  `bagKeyOf`) for the Consumables filter, the Qty decrease and the R2 reminder ("a Quick-dry powder" now lowers the Bag). New
-  Transactions lines are counted as a multiset (`newLines`), so the same line on another day ("-3 tea at the Snug", "+40 tutoring
-  (History)") no longer adds a false "(not itemised)". A Bag over 40 kinds names what it left behind (toast and log). The MVU bundle
-  and `mvu_zod.js` are pinned to commits (`438f9ff`, `276040b`; byte-identical to what loaded on 2026-10-03).
-- **Gameplay rules** (behaviour changes):
-  - One "away" test (`awayIn`): Trip.Active, an outside area (airship, the Expedition's forest, Avalon, Sunreach), or off the
-    grounds on a calendar "away" day. It replaces every `Trip.Active` check (rest, attendance, small scenes, Meanwhile, visits,
-    the planner's "may be here", initiative, curfew and arrival reminders, the birthday party). A Trip left Active ends by itself,
-    with a log line, once {{user}} was off campus during it and is back at a campus place on a day with no "away" event.
-  - A gift (Kind gift or birthday) whose Item was in the Bag lowers its Qty, unless the reply already did (as H2). Kind
-    rank_gift is the NPC's Rank 5 handover to {{user}}, so it never lowers the Bag.
-  - Talk, hangout, study, help and gift XP (and the weather bonus) need the NPC in the scene now or at the reply's start; the log
-    says when an interaction gave nothing. A gift from afar still records the NPC's taste. Owner decision as proposed: letters and
-    messages from afar give no XP.
-  - An update over six hours within one day, between two places the map knows, counts the class periods whose venue neither end
-    is at as skipped. Owner decision as proposed: yes. Unknown places and jumps into another day still follow the routine.
-  - A Day written one or two days back in the same week, with no time-skip words in the prose, keeps the clock (with a log line)
-    instead of jumping six days ahead.
-  - Narrator rules (502): Trip (the engine knows the outside maps, ends a stale Trip) and Interactions (only with the NPC there).
-- **Small bugs.** Sleep quality and the rare-weather toast read Sunreach's own weather. The UI timetable gives a Council member
-  Saturday P2 at the Student Council, as the engine. The dossier finds an NPC_status keyed by full name. The Battle panel prices a
-  cast as the engine does (wind ×, Arcane scholar, a pact partner who must be here; `$ui.wx.wind`). The Proficiency panel's Fortune
-  bonus shows the engine's +10 cap. A parked feature's values are no longer overwritten by schema defaults (`mergePark` gets only
-  what the reply wrote). `$ui.names` and `$ui.lore` hold 200. Dead code removed (`MON_SAT`, `tensionBand`, `normP`, `wxBlk`, an
-  unused `OFF`, `pips`).
-- **Older tests updated** to the new rules: `test_batch1_fp7_v1100` (long same-day update), `test_tension_v138` and
-  `test_world_v110` (XP with the NPC present).
-- **Live checks:** `docs/TEST_CHECKLIST.md` 1.42.0 (the dialogue-colour regexes in SillyTavern, the pinned MVU loading).
-
 ## Release index (one line per release, oldest first)
 
 - All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/archive/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; CHANGELOG 1.2.0/1.2.1).
@@ -296,3 +298,4 @@ Three commits: hotfix, gameplay rules, small bugs. Tests: `tests/test_audit_batc
 - **v1.44.0 (2026-10-03):** Audit batch 6: the Agenda (one date marker, status, reminder and coming-up feed `$ui.agenda`), rumours and stories pinned as Clues and Encyclopaedic's filed lead, competition results that pay reputation (with a price) and team bond XP.
 - **v1.45.0 (2026-10-03):** Audit batch 3: one ledger for Points and Coin, one Bag ledger, `/Purchases` settled by the engine (price, place, season, money), one practice session report with tracks (`/Training` an alias) and one Rank 4 partner rule.
 - **v1.46.0 (2026-10-03):** Audit batch 4: the outside areas as one module (one graph shared with the Map panel, `makeArea` records, one parser, formatter, move, hourly loop and theft, climate profiles as data, `$ui.area` / `$eng.area`, one Map renderer and one `<now>` block).
+- **v1.47.0 (2026-10-03):** Audit batch 5: the campus as an Area (walks, owed minutes and stamina on the Campus Map graph, "Walks from here"), `areaNow`, and one whereabouts model (`$ui.here` for `<now>`, the Map's Regulars, "May be here", initiative and the areas).

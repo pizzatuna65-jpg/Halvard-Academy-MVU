@@ -3,14 +3,14 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.46.0** (2026-10-03): audit batch 4. The outside areas are one module: `makeArea` records (`AR.forest`,
-`avalon`, `airship`, `sunreach`) with one parser, formatter, move (fares through the ledger), hourly loop and theft; climate profiles
-as data (`areaWx`); one graph search in `shared.js` for the engine and the Map panel; state in `$ui.area` / `$eng.area` (migrated);
-one Map renderer (`renderArea`) and one `<now>` block. v1.45.0: batch 3 (ledger, Bag, `/Purchases`, sessions); v1.44.0: batch 6.
+**Snapshot:** card **v1.47.0** (2026-10-03): audit batch 5. The campus is an Area (`AR.campus` on the Campus Map graph,
+`stepCampus`: walks, owed minutes, stamina on long walks, "Walks from here" in `<now>`); `areaNow` names the area {{user}} is in and
+`awayIn` is built on it; one whereabouts model (`shared.js` `whereabouts` / `presenceAt`) gives `$ui.here` (printed by `<now>`), the
+Map's Regulars, "May be here", initiative and the students met in an area. v1.46.0: batch 4 (outside areas); v1.45.0: batch 3.
 Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** audit batch 5 when the owner says "perbaiki batch 5" (`audit/AUDIT_2026-10-03_3_batch_perbaikan.md`; then 7 last).
-Live-check v1.46.0, v1.45.0, v1.44.0 and the earlier "Open" items.
+**Next task:** audit batch 7 when the owner says "perbaiki batch 7" (`audit/AUDIT_2026-10-03_3_batch_perbaikan.md`, the last one:
+`$ui.now` can absorb `$ui.here`). Live-check v1.47.0, v1.46.0, v1.45.0 and the earlier "Open" items.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

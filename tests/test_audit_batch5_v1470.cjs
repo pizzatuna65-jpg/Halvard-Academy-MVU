@@ -37,3 +37,42 @@ const off = _.cloneDeep(S0); off.World.Location = 'Riverside Inn';
 ok(E.areaNow(off) === '' && !E.awayIn(off), 'off the grounds on an ordinary day: no area, not away');
 const sky = _.cloneDeep(S0); sky.World.Location = 'Airship — Common Room';
 ok(E.areaNow(sky) === 'airship' && E.awayIn(sky), 'aboard the airship: an outside area, away');
+
+console.log('The campus as an Area: walks');
+const W0 = (S, ops, text) => applyPatch(S, ops, { text: text || '' });
+let C = W0(initState(), [op('/Player/Profile/Dorm', 'Fire'), op('/World/Month', 2), op('/World/Week', 1), op('/World/Day', 'Sun'), op('/World/Time', '10:00'), op('/World/Location', 'Canteen')]);
+const CA = () => C.$ui.area.campus, rates = JSON.parse(read('data/campus.json'));
+ok(CA().on && CA().at === 'canteen' && CA().walks.length >= rates.walks_listed && CA().walks.some(([n]) => n === 'Fire Dormitory') && CA().near.length,
+  'on the grounds: the walks to the nearest map pins, the own dorm always among them, and the places close by');
+const st0 = C.Player.Vitals.Stamina;
+C = W0(C, [op('/World/Time', '10:01'), op('/World/Location', 'Main Library')]);
+ok(CA().owe === 0 && C.Player.Vitals.Stamina === st0 && !/Walked/.test(C._Log.join(' ')), 'a minute\'s walk in the castle: nothing owed, no stamina, no log');
+C = W0(C, [op('/World/Time', '10:06'), op('/World/Location', 'Boathouse and Lake')]);
+const lake = CA().owe;
+ok(lake > 20 && /Walked Main Library → Boathouse and Lake: \d+ min on foot, -3% stamina; \d+ min of the way are still ahead/.test(C._Log.slice(-1)[0]) && C.Player.Vitals.Stamina < st0,
+  'a long walk the clock has not spent: the minutes are owed, and it costs stamina (5% an hour)');
+ok(/Walks from here \(minutes on foot[^\n]*Fishing House 3/.test(now(C)) && new RegExp(`Still on the way: ${lake} min of the last walk`).test(now(C)), '<now>: the walks from here and the minutes still owed');
+C = W0(C, [op('/World/Time', '10:16')]);
+ok(CA().owe === lake - 10, 'time that passes pays the walk off');
+C = W0(C, [op('/World/Time', '10:20')], 'Two hours later, she sits by the water.');
+ok(!(C.$ui.missed || []).some(x => /moves time on/.test(x)), 'R3 is not doubled while <now> already says the walk is owed');
+C = W0(C, [op('/World/Time', '11:30')]);
+ok(CA().owe === 0 && !/Still on the way/.test(now(C)), 'paid off: nothing owed');
+C = W0(C, [op('/World/Time', '11:31'), op('/World/Location', 'Fire Dormitory — Common Rooms')]);
+C = W0(C, [op('/World/Time', '12:20')], 'She walks into the Common Rooms and drops onto a sofa.');
+ok(CA().at === 'fire_dormitory' && !(C.$ui.missed || []).some(x => /arriving at/.test(x)), 'R4 reads the campus parser: the Common Rooms are in {{user}}\'s own dorm');
+C = W0(C, [op('/World/Time', '12:21')], 'She walks into the Gymnasium.');
+ok((C.$ui.missed || []).some(x => /arriving at Gymnasium, but Location is Fire Dormitory/.test(x)), 'R4 still catches a place Location does not show');
+const fl = W0(W0(C, [op('/World/Time', '12:30'), op('/World/Location', 'Lecture Halls — Floor 2')]), [op('/World/Time', '13:30'), op('/World/Location', 'Lecture Halls — Floor 4')]);
+ok(/Walked Lecture Halls → Lecture Halls/.test(fl._Log.join(' ')) === false && fl.$ui.area.campus.at === 'lecture_halls', 'two floors up in the Lecture Halls is a short climb, not a walk on record');
+ok(!applyPatch(C, [op('/World/Location', 'Riverside Inn')]).$ui.area.campus.on, 'off the grounds the campus area is off');
+
+console.log('Whereabouts for Next plans, appointments, initiative and the areas');
+let N0 = initState({ etnie: true });
+N0 = applyPatch(N0, [op('/World/Time', '12:00'), op('/Bonds/Etnie/Next', { What: 'Reading', Where: 'the library', Until: 'M1 W1 Mon 18:00' })]);
+N0 = applyPatch(N0, [op('/World/Time', '12:30'), op('/World/Location', 'Main Library')]);
+ok(N0.$ui.maybe.some(([id]) => id === 'Etnie'), 'a Next plan at this place (written "the library") puts them in "May be here"');
+const N1 = applyPatch(N0, [op('/World/Time', '12:35'), op('/Campus_State/NPC_status', { Etnie: 'in the hospital wing, unconscious' })]);
+ok(!N1.$ui.maybe.some(([id]) => id === 'Etnie'), 'a status that keeps them away keeps them out of "May be here"');
+const src = read('src/scripts/engine.template.js');
+ok(/!npcOut\(PV, S, id\) && !S\.Scene\.Present\[id\]/.test(src) && /meetOne\('student', M\.halvard, id => [^\n]*!npcOut\(PV, S, id\)/.test(src), 'NPC initiative and the Halvard students met in Sunreach Bay ask the same whereabouts (not off sick, not away)');

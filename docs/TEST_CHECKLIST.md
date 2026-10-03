@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.47.0 (audit batch 5): the four checks in its section below.
 - v1.46.0 (audit batch 4): the four checks in its section below.
 - v1.45.0 (audit batch 3): the four checks in its section below.
 - v1.44.0 (audit batch 6): the four checks in its section below.
@@ -86,6 +87,18 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.47.0 — Audit batch 5 (the campus as an Area, whereabouts)
+
+Continue a campus chat (re-import the card). The first reply after the update has no presence block in `<now>` (the engine writes
+`$ui.here` on its first run); from the second reply on it is back.
+1. `<now>` on campus: "Likely around …", the class line, club time and the weather's "Moved indoors" read as before; a new line "Walks
+   from here (minutes on foot …)" lists the nearest map pins and {{user}}'s own dorm.
+2. Have {{user}} walk from the Canteen to the Boathouse in one short reply: `_Log` says "Walked … 33 min on foot, -3% stamina; … still
+   ahead", `<now>` says "Still on the way", and the narrator advances the clock; once it has, the line is gone.
+3. Map panel: a place's Regulars show "(teaching … until …)" for a teacher in their period and "(off sick)" on a flu day.
+4. A bond with a Next plan "at the library": standing in the Main Library, `<now>` lists them under "May be here"; with an
+   `NPC_status` that keeps them away, it does not.
 
 ### v1.46.0 — Audit batch 4 (the outside areas as one module)
 
