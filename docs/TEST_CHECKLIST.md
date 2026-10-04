@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.54.0 (narrator-load batch 3): the three checks in its section below.
 - v1.53.0 (narrator-load batch 1): the five checks in its section below.
 - v1.52.2 (preset audit 2): the four checks in its section below.
 - v1.52.1 (Commitment Where): the check in its section below.
@@ -95,6 +96,12 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.54.0 — Narrator-load batch 3 (situational rule cards)
+
+- [ ] At the Mail Tower, with a Project open or in an exam week, `<rule_cards>` shows that topic's full rule just before `<now>`.
+- [ ] A letter or competition that comes up unexpectedly is still recorded from 502's core line, and its card shows the next turn.
+- [ ] The alcohol rule (entry 512) comes in when drinking or Barrow & Vine is mentioned.
 
 ### v1.53.0 — Narrator-load batch 1 (quick fixes)
 

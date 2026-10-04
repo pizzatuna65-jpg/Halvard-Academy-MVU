@@ -3,14 +3,12 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.53.1** (2026-10-04): narrator-load batch 2 (tools only): `tools/audit_chat.py --mechanics` with
-`tools/replay_chat.cjs` measures how the narrator handled the engine in an exported chat (block size, engine work done by hand, the
-current engine's corrections); the "before" baseline is `audit/AUDIT_2026-10-04_2_baseline_mekanik.md`. v1.53.0: narrator-load batch 1
-(first-pact gate, 503 example and 3-line Analysis, plain dates written back, one engine list, deed pairs, remedial by presence).
-Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
+**Snapshot:** card **v1.54.0** (2026-10-04): narrator-load batch 3: situational rule cards. 502 keeps a core line per topic;
+the full rules (Letters, Projects, Competition, Exams, Tutoring, Trip, Pacts, first pact) are cards in `data/rule_cards.json`, listed
+by engine `ruleCards` (`$ui.now.rules`) and printed by entry 511 before `<now>`; the alcohol rule is keyword entry 512. v1.53.1: the
+mechanics audit tool and baseline. v1.53.0: narrator-load batch 1. Live checks: `docs/TEST_CHECKLIST.md` "Open".
 
-**Next task:** live-check v1.53.0 and the open list; after some play, export the chat and run `audit_chat.py --mechanics` for the
-"after" numbers. Then the owner's next request, most likely narrator-load batch 3 (situational rule cards, U1 stage 1).
+**Next task:** narrator-load batch 4 (the remaining cards and a tighter 502/504 core), then live checks.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 
