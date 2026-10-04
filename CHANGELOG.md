@@ -46,6 +46,11 @@ DECISIONS §8. Save fixture v1.56.0.
   505, the Journal or Bonds passes.
 - **Bugs found while testing, fixed:** the tour line could fire, misdated, after a jump of days from Entrance morning; it is now
   written only within a day of the tour's end. The engine's notes now take the Year prefix in Year 2, like the Journal.
+- **Docs after the release:** `docs/ECOSYSTEM.md`'s VectFox section was rewritten as a complete reference, so VectFox's repository
+  and an export are no longer needed to understand it. It covers what VectFox is and its role here, how EventBase works (cleaning,
+  windows, extraction, validation, storage with an event example, retrieval and re-ranking, injection), what the default prompt did
+  on this card, a full settings table, text cleaning, and the card's extraction prompt itself (`test_narrator_batch6_v1570` checks it
+  matches the .txt). The table adds Skip Already-Visible Events = 20 (the chat already shows the latest ~24 messages).
 - **To check live** (TEST_CHECKLIST 1.57.0): Journal lines are turning points, not scene summaries; at a notable place a second visit
   plays as a return; after pasting the prompt into VectFox and re-vectorizing, fewer and cleaner events.
 

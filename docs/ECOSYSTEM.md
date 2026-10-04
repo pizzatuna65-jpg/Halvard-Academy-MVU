@@ -1,13 +1,14 @@
 # Eldrasil ecosystem: card + Realistic Frankenstein 2.2 (Gemini) + VectFox
 
-Card v1.0.2 (VectFox notes updated through 1.6.0) · preset `Realistic_Frankenstein_2_2_Eldrasil.json` · VectFox (checked at commit 3623dc8) · model Gemini 3.8 Flash.
+Card v1.0.2 (VectFox section rewritten for 1.57.0) · preset `Realistic_Frankenstein_2_2_Eldrasil.json` · VectFox (checked at commit 3623dc8) · model Gemini 3.8 Flash.
 
 ## Who owns what
 | Job | Owner | Not done by |
 |---|---|---|
 | Game state: time, calendar, vitals, mana, money, bonds, secrets, campus changes, journal, commitments, clues | **Card** (MVU + engine) | preset trackers (all OFF) |
 | Prose style, POV, NPC voice and behaviour, anti-slop, reasoning (CoT) | **Preset** | card (since 1.4.6 the card sets no prose style, point of view, tense or length) |
-| Long-term memory of past scenes | **VectFox** (EventBase) | preset notebook / Chekhov (OFF); card keeps only the recent Journal |
+| Details of past scenes | **VectFox** (EventBase) | preset notebook / Chekhov (OFF) |
+| Hard facts (who, bonds, who knows what, promises, items) and the story's spine (Journal) | **Card** state, shown by condition | VectFox (recall depends on the latest messages) |
 | Lorebook activation | **SillyTavern** (keywords) | VectFox semantic lorebook (do not use on this card) |
 | Status display | **Card** bracelet and panels | preset Internal States HTML (OFF) |
 
@@ -61,63 +62,256 @@ ST runs preset regexes before the card's, so the preset's display regexes cannot
 **1.11.2 preset audit:** adult lines left in always-on prompts moved to the adult toggles or were removed (adult content is opt-in); the jailbreak no longer names the card's setting or {{user}}'s year, defers to the card's own resolution rule and invents no stakes; duplicate rules merged (Attentional Salience into `<do_not_repeat_descriptions>`, OFF); 18 display regexes that only styled the OFF trackers are disabled. Occupational Monomania and its Vocation Gate stay ON.
 
 ## VectFox (chat memory)
-Checked against VectFox 3.6.9, commit 3623dc8 (2026-09-21), reading its source; the owner's own settings were re-checked for card 1.11.3. **Compatible**, with one setting to avoid and a few to adjust.
 
-### Works as is
-- **No interference with MVU, Tavern Helper or EJS.** VectFox's extraction and planner calls go straight to the backend API, not through SillyTavern's generation, so they trigger no card scripts, lore or MVU parsing.
-- **Hidden messages are skipped.** The Student Builder and Settings notes (hidden system messages) are never stored as memories.
-- **Swipes are safe.** Auto-sync holds back the latest turn until a newer one supersedes it, so re-rolls leave no stale events, and it reads each message after MVU has finished with it.
+Everything below was checked against VectFox's source at commit 3623dc8 (github.com/KritBlade/VectFox, the GitHub HEAD on
+2026-10-04; v3.6.9) and against the owner's own EventBase export (`vectfox_charles_halvard_fixed.json`, 46 events, from before the card
+used MVU). It is meant to be complete: a session should not need the repository or an export to understand what VectFox does here.
+File names in brackets are VectFox's.
 
-### Avoid: Semantic Lorebook on this card's lorebook
-Do **not** vectorize the "Eldrasil — Halvard Academy" lorebook for VectFox's Semantic World Info. VectFox injects matched entries' raw text through its own prompt slot, outside SillyTavern's World Info pipeline:
-- EJS entries could arrive as template code instead of rendered text (the calendar, the "Now" line, the Cast Sheet).
-- In MVU's extra-model mode, the `[mvu_update]` rules would reach the story model, bypassing MVU's filtering.
-- Entries already triggered by keywords would be sent twice.
+### What VectFox is, and what it does on this card
+- **A SillyTavern extension for long-term chat memory.** It stores what happened in a chat in a vector database and, before each
+  generation, injects the stored items most related to the current scene. It has several modes (chat chunks, documents, a semantic
+  lorebook, a lorebook "reformat"). This card uses one: **EventBase**, memory of the chat as events.
+- **Its job here: recalling the details of old scenes** (who said what, what happened, why) once the chat itself has scrolled out
+  of the narrator's context (the card's trim regex keeps the latest ~24 messages).
+- **What it is not good at, by design:**
+  - recall is triggered by similarity to the latest messages, so a fact that matters but is not being talked about may not come back;
+  - each extraction call sees only its own window of messages, so it cannot judge what matters to the whole campaign, and cannot
+    tell whether an open matter was already opened or closed earlier;
+  - its summarizer (off here) compresses again and again, so hard facts wear away in it.
+- **So the work is split:**
 
-The card's lore is designed around keywords and a few constant entries; let SillyTavern handle it. Use VectFox for **chat memory (EventBase)**.
+| What | Kept by | Reaches the narrator |
+|---|---|---|
+| Hard facts: who people are, bonds, who knows what, promises with a date, items, money, memberships, campus changes | The card's state (MVU + engine) | Always, or by condition (a sheet while someone is present, a rule card when its topic applies) |
+| The story's spine: turning points, matters still open, first visits, the Entrance tour, off-screen events | The Journal (30 lines) | Every turn |
+| Canon: places, people, history, rules | The lorebook | By keyword, or by the engine for people present |
+| Details of old scenes | **VectFox EventBase** | The ~10 events most related to the current scene |
+
+### How EventBase works
+1. **Text cleaning** [`core/text-cleaning.js`]: each message is cleaned before extraction. The ticked built-in rules run first, then
+   the custom patterns in list order.
+2. **Windows** [`core/eventbase-workflow.js`]: auto-sync takes the chat in windows of N turns (1 turn = the player's message and the
+   reply, `eventbase_autosync_window_turns`). It holds back the latest turn until a newer one replaces it (`eventbase_autosync_settle_lag`),
+   so swipes leave nothing stale. Hidden (system) messages are skipped. A manual "Vectorize" uses its own window size in messages
+   (`eventbase_window_size`) and an optional overlap.
+3. **Extraction** [`core/eventbase-extractor.js`]: one LLM call per window, through VectFox's own provider settings (`chat_provider`,
+   `chat_model`). The call goes straight to the API, not through SillyTavern's generation, so no card script, lore or MVU parsing
+   runs for it. The prompt is the custom **Extraction Prompt** (`eventbase_custom_prompt`), or VectFox's default when it is empty.
+   VectFox fills only `{{text}}` (the excerpt) and `{{maxCount}}` (`eventbase_max_events_per_window`) [`buildExtractionPrompt`]; SillyTavern
+   macros such as `{{user}}` are not filled. It prepends a detected-language line. The excerpt is "Speaker: text" per message, and a
+   message's stored reasoning, when the API returned any, is added as a block marked "CONTEXT ONLY" (dates and places, never events).
+4. **Validation** [`core/eventbase-schema.js`]: an unknown `event_type` becomes `other`; `importance` is clamped to 1-10 (5 if missing);
+   `should_persist` is true only when the model wrote exactly `true`; concepts are merged into keywords. Events below
+   `eventbase_min_importance_store` (default 3) are dropped before storing.
+5. **Storage** [`core/eventbase-store.js`]: each event is embedded as this text [`buildEmbedText`] and stored (Qdrant here) with its
+   fields as metadata:
+   ```
+   [promise_or_oath] Trixie raced Charles through the rain to the Fire Wing porch and won. Charles owes her glazed sugar braids …
+   SCENE_TIME: M1 W1 Mon 13:05
+   CAUSE: Trixie challenged Charles to a race to the dorm, loser buys breakfast.
+   RESULT: Charles owes Trixie pastries.
+   CHARS: Charles, Trixie
+   LOCS: Main Courtyard, Fire Wing
+   ITEMS: glazed sugar braids
+   KEYS: race, bet, rain, pastries, sugar braids, Mall bakery, breakfast, porch
+   THREADS: Charles owes Trixie glazed sugar braids, agreed M1 W1 Mon
+   ```
+   Factions are kept as metadata but left out of the embedded text. Other metadata: `importance`, `should_persist`, `concepts`,
+   `source_window_start` / `end` (message indexes), `timeline_sort_key`, `event_id`, `chat_uuid`.
+6. **Retrieval** [`core/eventbase-retrieval.js`], before each generation:
+   - the search text is the raw text of the last `query` messages (default 2: the player's message and the last reply, update block
+     included); the keyword query is the player's last message;
+   - hybrid search: vector similarity plus keyword (BM25) matching;
+   - events under `eventbase_retrieval_min_importance` are dropped;
+   - each event is re-ranked: 0.55 similarity + 0.20 importance/10 + 0.15 if `should_persist` + 0.10 recency (half-life 20% of the
+     chat's length, at least 40 messages), plus `eventbase_anchor_boost` (0.20) when one of its keywords appears in the player's message;
+   - near-duplicates closer than `eventbase_dedup_window_gap` messages (default 10) are dropped; events from the last
+     `deduplication_depth` messages ("Skip Already-Visible Events") are dropped because the chat still shows them;
+   - the best `eventbase_retrieval_top_k` (default 10) are kept.
+7. **Injection** [`core/eventbase-injection.js`]: the events are written in one of three formats (`eventbase_injection_format`):
+   *DenseText* (every field, keywords included), *JSONArray*, or *Summary Only* (summary and time). An optional `rag_context` line
+   comes first, the whole is wrapped in `<VectFoxMemory>` (`rag_xml_tag`) and placed by `position` / `depth`.
+
+### What VectFox's default prompt did on this card
+From the owner's export (46 events over messages 0-145, all on M1 W1 Mon), with VectFox's default extraction prompt:
+- one event for almost every window, whatever happened in it: 16 of 46 (35%) were `travel` or `location_change` ("walked to …");
+- importance mostly 4-5 (a walk scored 4, Etnie declaring herself {{user}}'s "big sister" scored 5; only two events reached 7-8), and
+  every event `should_persist: true`, so the importance and persist parts of the ranking separated almost nothing;
+- 39 open threads, each written once and never carried or closed, mostly speculative ("Will the rain mentioned by Zara arrive
+  soon?"); the one real debt (pastries owed to Trixie) was stored twice, with different terms, because the race fell across two windows;
+- about 930 characters (~250 tokens) per event, so ten recalled events cost ~2,500 tokens a turn in DenseText.
+
+The card's extraction prompt below addresses each of these.
 
 ### Settings
-1. **Text Cleaning (Custom): keep the in-world time.** VectFox runs the ticked built-ins first and the custom patterns after them, in list order (`core/text-cleaning.js`), so:
-   - untick **Strip <UpdateVariable> Tags (MVU)**: otherwise the block, the only place the in-world date appears in the text, is gone before any custom pattern sees it;
-   - delete any older custom pattern that would touch the block first, such as a catch-all "strip every HTML tag" (`<\/?[a-z][^>]*>`), and never replace `
-{3,}` with nothing (that glues paragraphs together; VectFox already turns 3+ newlines into one blank line);
-   - import `vectfox_cleaning_patterns.json` (Text Cleaning → Import; all seven pass VectFox's import check and are appended in order).
+Settings keys are in brackets, for searching the VectFox panel or its settings file.
 
-   Each reply then reaches EventBase as its prose plus one line such as `[In-world time: Y2 M1 W2 Wed 13:40, at Courtyards]`: the patterns drop the update block and the `<StatusPlaceHolderImpl/>` tag, remove colored-dialogue tags (keeping the words), drop NPC thoughts and unwrap in-story graphics (keeping their text). Since 1.11.3 the time pattern also reads the year (Year 2+), a place written without an arrow ("Courtyards (unchanged)"), time and place on two lines, and "->" arrows; `tests/test_vectfox_v1113.cjs` checks them.
-2. **EventBase: ON, with the card's extraction prompt.** It is the only source of the details of old scenes.
-   - What it stores (checked in the owner's export and in VectFox's source, `core/eventbase-extractor.js`, `eventbase-schema.js`,
-     `eventbase-retrieval.js`): not the prose, but events an LLM extracts from each window of messages: a type, an importance
-     1-10, a 2-8 sentence summary, cause, result, characters, places, keywords, open threads and `should_persist`. Retrieval ranks
-     them by similarity (0.55) plus importance (0.20), `should_persist` (0.15) and recency (0.10).
-   - What the default prompt does on this card (the owner's 46-event export, 1.x): it extracts something from almost every window
-     (35% were "walked to …"), scores nearly everything 4-5 and marks it all `should_persist`, so the importance and persist parts
-     of the ranking stop separating anything; its open threads are speculative one-offs ("Will the rain arrive soon?") that are never
-     carried or closed; a moment split across two windows is stored twice; and each event costs about 250 tokens when recalled.
-   - **Use `docs/vectfox_eventbase_prompt.txt`** (1.57.0): VectFox → EventBase tab → **Extraction Prompt**
-     (`eventbase_custom_prompt`; empty = VectFox's default). Paste the whole file. Its reset button brings VectFox's own prompt back,
-     so after a VectFox update that asks you to reset, paste this file again. It keeps VectFox's output schema, event types and the
-     only two placeholders VectFox fills, `{{text}}` and `{{maxCount}}` (`buildExtractionPrompt`), and adds what this card needs: skip
-     routine (walking, ordinary meals and classes, weather, game numbers), score importance against the whole campaign, set
-     `should_persist` false for passing moments, keep summaries to 2-4 sentences, read the card's `[In-world time: …]` line into
-     `scene_time`, never record the card's name as a character, and write open threads only for stated promises, debts and questions.
-     Re-vectorize the chat afterwards so old events follow it. `tests/test_narrator_batch6_v1570.cjs` checks the file against VectFox.
-   - **Division of labour:** VectFox recalls scene details. The card keeps hard facts as state, shown by condition (sheets while
-     someone is present, bonds, Commitments, Knows…), and the Journal is the story's spine: turning points, matters still open, first
-     visits and the engine's off-screen events, read every turn, so they never depend on what recall happens to bring back.
-3. **Summarizer Injection: OFF** (since card 1.6.0). The card keeps the story's memory itself: the Journal (the spine, 1.57.0), each bond's recent and defining moments, and what each character knows and feels about you (Mind, Knows, Imprints, Next). A VectFox summary would repeat it and can contradict it, and a summary is compressed again and again, so hard facts wear away in it; state does not. If you still want it, keep it to about 3,000 characters.
-4. **Ghosting or the card's trim regex: use one.** Ghosting works only while Summarizer Injection is ON too (`core/summarizer-injection.js`); with Summarizer Injection OFF (recommended) the Ghosting switch does nothing, and the card's regex "Eldrasil — State-as-memory: trim far chat (prompt)" does the trimming. With Summarizer Injection + Ghosting on, disable that card regex (Ghosting only removes messages already stored in memory; the card's regex trims by depth regardless).
-5. **Injection position:** keep **After Main Prompt**, or **In-Chat @ Depth** 2 or more, never 0–1 (EventBase and the summary share the settings `position` and `depth`, used by `core/eventbase-workflow.js`). The card puts the Cast Sheet at depth 1 and the cast gate at depth 0 so canon is the last thing the model reads; recalled prose at depth 0 or 1 would sit closer than canon and bring back drift.
+| Setting | VectFox default | For this card | Why |
+|---|---|---|---|
+| EventBase | – | **ON** | The only source of the details of old scenes |
+| Extraction Prompt (`eventbase_custom_prompt`) | empty (VectFox's own) | **the card's prompt** (below; also `docs/vectfox_eventbase_prompt.txt`) | Built for this card. VectFox's reset button brings its own prompt back: after a VectFox update that asks you to reset, paste the card's again |
+| Extraction model (`chat_model`) | – | the owner's choice | The prompt is long and asks for strict JSON: use a model that follows it (the owner found Gemini 3.1 Flash Lite accurate; Gemini 3.5+ needs a current VectFox). Check with the debug query below |
+| Don't think during extraction (`should_disable_thinking`) | ON | ON | Extraction needs no reasoning; cheaper and faster |
+| Extraction temperature (`eventbase_temperature`) | 0.2 | 0.2 | |
+| Minimum importance to store (`eventbase_min_importance_store`) | 3 | **3** | The card's prompt scores routine 1-2, so it is never stored |
+| Events per window (`eventbase_max_events_per_window`) | 3 | 3 | Few events that hold every key point recall best |
+| Auto-sync window (`eventbase_autosync_window_turns`) | 1 turn | **2 turns** | A moment split across two windows is stored twice less often, and extraction costs about half; the card's replies are long, so 2 turns is still a small window |
+| Vectorize window (`eventbase_window_size`) | 2 messages | **4 messages** when re-vectorizing | The same span as auto-sync |
+| Window overlap (`eventbase_window_overlap`) | 0 | 0 | Overlap stores more duplicates |
+| Settle lag (`eventbase_autosync_settle_lag`) | ON | ON | Swipes leave no stale events |
+| Retrieval top-k (`eventbase_retrieval_top_k`) | 10 | 10 | With routine gone, 10 holds what matters |
+| Minimum importance to recall (`eventbase_retrieval_min_importance`) | 1 | 1 | Everything stored is already 3+ |
+| Skip Already-Visible Events (`deduplication_depth`) | 0 | **20** | The card keeps the latest ~24 messages in the chat; recalling them again only costs tokens |
+| Query messages (`query`) | 2 | 2 | The player's message and the last reply |
+| Injection format (`eventbase_injection_format`) | DenseText | **Summary Only** | DenseText also sends 8-15 keywords per event; the card's summaries already say who, why and what changed |
+| Injection position / depth (`position`, `depth`) | in prompt, 2 | **After Main Prompt**, or **In-Chat @ Depth** 2 or more, never 0-1 | The card puts the Cast Sheet at depth 1 and the cast gate at depth 0 so canon is read last; recalled memory there would sit closer than canon and bring back drift |
+| Re-rank weights (`eventbase_rerank_w_*`) | 0.55 / 0.20 / 0.15 / 0.10 | unchanged | With the card's prompt, importance and persist finally mean something |
+| RAG context line (`rag_context`) | empty | optional: "Past events recalled from chat memory: the past, not now." | Backs up rule 504 (below) |
+| Summarizer Injection (`summarizer_injection_enabled`) | OFF | **OFF** | The card keeps the summary itself (Journal, bonds, Knows); a VectFox summary repeats it, can contradict it, and wears hard facts away by compressing again and again. If you still want it, keep it to about 3,000 characters |
+| Ghosting (`eventbase_ghost_enabled`) | OFF | **OFF** | Ghosting works only with Summarizer Injection ON [`core/summarizer-injection.js`]; the card's regex "Eldrasil — State-as-memory: trim far chat (prompt)" does the trimming. If you ever turn on both Summarizer Injection and Ghosting, disable that card regex |
+| Semantic World Info (`enabled_world_info`) | OFF | **OFF** | See "Avoid" below |
+| Agentic retrieval (`agentic_retrieval_enabled`) | OFF | OFF | A planner LLM call and up to six searches per turn; turn it on only if the debug query shows recall missing |
+| Embedding model and backend | – | keep yours (the owner's export: `qwen/qwen3-embedding-8b` through OpenRouter, Qdrant) | Changing the embedding model means re-vectorizing the chat |
+| Collections | – | one chat, one collection | A collection locked to one chat must not also be listed for another (an older copy of the chat): opening that one mixes its events in |
 
-6. **Retrieval size and cost:** EventBase retrieval top-k defaults to 10 events a turn; each event costs prompt tokens every turn, so keep it near 10–15 (with the card's prompt the summaries are shorter and routine is not stored, so 10 recalls more that matters). The injection format "Summary Only" (EventBase tab) sends each event's summary and time without its keyword lists; with the card's prompt the summary already says who, why and what changed, so it is the leaner choice. Agentic retrieval (off by default) adds a planner LLM call and up to its maximum queries per turn through the chat provider: more recall, more cost and delay.
-7. **One chat, one collection.** A collection locked to one chat should not also be listed for another (an older copy of the chat): opening that one mixes its events in.
+**Setting it up:** update VectFox → paste the card's prompt into EventBase → Extraction Prompt → set the table above → import the text
+cleaning patterns (below) → re-vectorize the chat → test with Action → debug query: type what you would write next in the story and
+"Run All Pipelines"; the event that matters most should come back with the highest score (F12 console shows the scores).
 
-Bonus: the CoT's first reasoning line (`Now: …`) gives VectFox a second source for the in-world time; VectFox reads a message's stored reasoning for dates and places when the API returns thoughts.
+### Text cleaning
+VectFox runs the ticked built-ins first and the custom patterns after them, in list order, so:
+- untick **Strip <UpdateVariable> Tags (MVU)**: otherwise the update block, the only place the in-world date appears in the text,
+  is gone before the card's patterns see it;
+- delete any older custom pattern that would touch the block first, such as a catch-all "strip every HTML tag" (`<\/?[a-z][^>]*>`),
+  and never replace `\n{3,}` with nothing (that glues paragraphs together; VectFox already turns 3+ newlines into one blank line);
+- import `docs/vectfox_cleaning_patterns.json` (Text Cleaning → Import; all seven pass VectFox's import check and are appended in order).
+
+Each reply then reaches extraction as its prose plus one line such as `[In-world time: Y2 M1 W2 Wed 13:40, at Courtyards]`, which the
+card's prompt reads into `scene_time`. The patterns:
+1. turn the update block's `<Analysis>` Time line into that line (the year from Year 2, a place written without an arrow, time and
+   place on two lines, "->" arrows; this is why 503 keeps the full date in the Time line);
+2. drop any update block left;
+3. drop the `<StatusPlaceHolderImpl/>` tag;
+4. drop the card's dialogue-colour tags (`<say:Name>`), keeping the words;
+5. drop the preset's Colored Dialogue tags, keeping the words;
+6. drop NPC thoughts (`<npc_thoughts>`, the preset's Internal Thoughts);
+7. unwrap in-story graphics (Pop in Graphics), keeping their text.
+
+So Mind, Knows, Next and Extras (inside the update block) and NPC thoughts never enter VectFox memory. `tests/test_vectfox_v1113.cjs`
+checks the patterns. The preset CoT's first reasoning line (`Now: …`) gives VectFox a second source for the date when the API returns
+reasoning.
+
+### The card's extraction prompt
+Paste this whole block into VectFox → EventBase → Extraction Prompt (the same text is in `docs/vectfox_eventbase_prompt.txt`;
+`tests/test_narrator_batch6_v1570.cjs` checks that both are the same and that the prompt keeps VectFox's schema, event types and
+placeholders).
+
+````text
+You are the event archivist for "Eldrasil — Halvard Academy", a long slice-of-life roleplay at a magic academy where the player's character is a student. Extract the story events from the excerpt below that will still matter later in the campaign.
+
+=========================
+WHAT THIS ARCHIVE IS FOR
+=========================
+The card already keeps, outside this archive: the clock and the place, money and purchases, ranks, XP and other numbers, each character's bond with the player's character, the timetable and classes, the weather, dated promises (the Planner) and a short Journal of the story's turning points.
+This archive holds what those do not: the DETAILS of what happened between people and in the world, so a later scene can recall them. Store what was said, done, learned, revealed, promised or changed, and why.
+
+=========================
+ABSOLUTE RULES (DO NOT BREAK)
+=========================
+1. LANGUAGE: every string field is in English. Proper nouns keep their exact form from the excerpt; never translate or respell names.
+
+2. EVENT COUNT: at most {{maxCount}} events. Return only events that actually happened; never invent, never pad, never record the same event twice under different wording.
+
+3. WHAT TO EXTRACT:
+   Extract when the excerpt changes what someone knows, feels, owes, plans or believes, or shows the world:
+   - a real conversation that reveals something about a character (a fear, a goal, a past, an opinion, a secret);
+   - a relationship moving (closer, colder, a quarrel, an apology, a rivalry, a romance);
+   - a promise, a debt, a bet, a threat or a favour asked or agreed, with its concrete terms (who, what, when);
+   - lore or world information learned (places, history, magic, rules, who runs what);
+   - a discovery or clue about a hidden truth;
+   - a fight, an injury, a punishment, a success or failure that has consequences;
+   - a character met for the first time (who they are, how they came across).
+   Return [] when the excerpt holds only routine: walking between places, buying or eating ordinary food, an ordinary class period, small talk that reveals nothing, the weather, or an out-of-character note.
+
+   SEXUAL / INTIMATE SCENES: never extract the encounter itself. Extract only a consequence that would still stand without the scene (a promise, a confession, a revelation, a stated change in the relationship); otherwise return [].
+
+4. LINES THAT ARE NOT STORY:
+   - A line "[In-world time: <date>, at <place>]" is the card's clock. Copy its date and time into scene_time exactly as written, and its place into locations. It is never an event.
+   - A block marked "[REASONING — CONTEXT ONLY, for date/time/location; NOT a source of events]" is the author's private planning. Use it only for scene_time and locations when the story text does not give them. Never extract an event from it, never copy its text, and treat anything found only there as not having happened.
+   - The speaker label of the narrator's messages is the card's name, not a character: never list "Eldrasil" or "Halvard Academy" in characters.
+   - Numbers from the game (points, ranks, XP, HP, Trust, Tension) are not events; never put them in summary, cause or result.
+
+=========================
+OUTPUT SCHEMA
+=========================
+Return ONLY a valid JSON array. No prose, no markdown, no code fences.
+
+Each event object has these fields:
+- event_type: one of [main_quest_update, side_quest_update, combat, travel, discovery, dialogue_significant, relationship_change, character_introduction, character_state_change, item_acquired, item_lost, faction_change, location_change, revelation, promise_or_oath, betrayal, death, other]
+- importance: integer 1-10, judged against the WHOLE campaign (school years), not this scene. Most events are 3-6; reserve 7+ for what will still shape the story weeks later.
+    travel / location_change: 1-2 (moving about; usually do not extract at all), 3-4 (arriving somewhere that opens new story: the Expedition forest, Avalon, Sunreach Bay, a sealed or forbidden place)
+    dialogue_significant: 3-4 (a character opens up a little), 5-6 (a real confession, confrontation or defining talk)
+    relationship_change: 4-6 (a step closer or colder, a quarrel, an apology), 7-9 (a lasting turn: a sworn rival, a romance, a friendship broken or sealed)
+    character_introduction: 3-4 (a new person met), 5-6 (someone central to a mystery or to the player's character's life)
+    promise_or_oath / side_quest_update: 3-5 (a bet, a favour, a small promise), 6-8 (an oath or a promise with serious stakes)
+    discovery / revelation: 3-5 (lore or a small clue), 6-8 (a hidden truth about a character, the academy, the seal or forbidden magic), 9-10 (a truth that reframes the story)
+    character_state_change: 3-5 (an injury, a punishment, a new club, a dorm or role assignment), 6-8 (a lasting change: a pact, magic exposed, an expulsion)
+    combat: 2-4 (a spar or a minor fight), 5-7 (a fight with real consequences or a named rival), 8-10 (a life-changing fight)
+    faction_change: 5-8 (standing with the staff, the students, the Council or the Doves visibly shifts)
+    item_acquired / item_lost: 1-2 (ordinary), 4-6 (a unique gift, a keepsake, a plot-relevant object)
+    betrayal: 6-10; death: 6-10; main_quest_update: 5-10; other: 1-5.
+- should_persist: false for anything that leaves no lasting trace (moving about, a passing joke, a routine moment); true otherwise.
+- summary: 2-4 sentences: WHO did WHAT, the key detail (exact terms, names, places), why, and what changed. Write it so it makes sense on its own months later.
+- cause: why it happened (may be "").
+- result: what is different now (may be "").
+- characters: the names as the text writes them (no titles added; never the card's name).
+- locations: place names as written, including the "at <place>" of the clock line.
+- factions: dorms, clubs, the Student Council, the Doves and other groups involved.
+- DateTime: null (the academy calendar is not a real calendar).
+- scene_time: the clock line's date and time verbatim (e.g. "M1 W2 Wed 13:40", "Y2 M3 W1 Mon 09:10"); "" if there is none.
+- items: objects that matter to the event.
+- concepts: 1-3 abstract themes the event is about (trust, rivalry, belonging, secrecy, duty, the cost of power). Never a name, a place, an object or an action.
+- keywords: 6-10 distinctive search terms a later scene might use (rare nouns, names of things, key actions). No generic filler.
+- open_threads: only matters stated in the excerpt that remain open: a promise or debt with its terms ("Charles owes Trixie glazed sugar braids, agreed M1 W1 Mon"), a question a character asked and left unanswered, a threat, a planned meeting. Never speculative "Will X ...?" questions about how things might turn out. [] when there are none.
+
+=========================
+VALID OUTPUT EXAMPLES
+=========================
+Routine only (walking to the Canteen and ordering lunch):
+[]
+
+One event:
+[{"event_type":"promise_or_oath","importance":4,"summary":"Trixie raced Charles through the rain to the Fire Wing porch and won. By the bet they made, Charles owes her glazed sugar braids from the Mall bakery tomorrow morning; she insists the deal is binding.","cause":"Trixie challenged Charles to a race to the dorm, loser buys breakfast.","result":"Charles owes Trixie pastries.","characters":["Charles","Trixie"],"locations":["Main Courtyard","Fire Wing"],"factions":["Fire Dormitory"],"DateTime":null,"scene_time":"M1 W1 Mon 13:05","items":["glazed sugar braids"],"concepts":["rivalry","play"],"keywords":["race","bet","rain","pastries","sugar braids","Mall bakery","breakfast","porch"],"open_threads":["Charles owes Trixie glazed sugar braids, agreed M1 W1 Mon"],"should_persist":true}]
+
+=========================
+EXCERPT
+=========================
+{{text}}
+
+=========================
+Return ONLY the JSON array now. Begin your reply with [ and end it with ].
+````
+
+### Works as is
+- **No interference with MVU, Tavern Helper or EJS**: extraction and planner calls go straight to the API.
+- **Hidden messages are skipped**: the Student Builder and Settings notes (hidden system messages) are never stored.
+- **Swipes are safe**: auto-sync holds back the latest turn, and it reads each message after MVU has finished with it.
+
+### Avoid: Semantic Lorebook on this card's lorebook
+Do **not** vectorize the "Eldrasil — Halvard Academy" lorebook for VectFox's Semantic World Info. VectFox injects matched entries' raw
+text through its own prompt slot, outside SillyTavern's World Info pipeline:
+- EJS entries could arrive as template code instead of rendered text (the calendar, the "Now" line, the Cast Sheet);
+- in MVU's extra-model mode, the `[mvu_update]` rules would reach the story model, bypassing MVU's filtering;
+- entries already triggered by keywords would be sent twice.
 
 ### Good to know
-- Deleting or editing an older message does not remove events already extracted from it; re-vectorize the chat if you rewrite history. The card's variables are unaffected either way.
-- VectFox builds its semantic query from the raw recent messages; the keyword query uses your own last message. Anchoring your message with story words ("the scorched ledger", "Irene's warning") helps recall.
-- The card tells the narrator that recalled memories are the past and `<current_state>` is now, so a recalled "300 points" never overrides the current wallet. Rule 504 adds that a memory tells what happened, not who knows it, and that a character's Cast Sheet outranks a memory's description of them.
-- Mind, Knows, Next and Extras sit inside `<UpdateVariable>`, which the cleaning patterns drop, so NPCs' thoughts and secrets never enter VectFox memory. If recall gets worse as the update block grows, the long fields can move to the end of the patch.
+- Deleting or editing an older message does not remove events already extracted from it; re-vectorize the chat if you rewrite
+  history. The card's variables are unaffected either way.
+- The keyword query is your own last message: anchoring it with story words ("the scorched ledger", "Irene's warning") helps recall.
+- Rule 504 tells the narrator that recalled memories are the past and `<current_state>` is now (a recalled "300 points" never
+  overrides the wallet), that a memory tells what happened, not who knows it, and that a character's Cast Sheet outranks a memory's
+  description of them.
 
 ## If you change things later
 - The MAX and Micro CoT variants were not adapted; stay on BOLT or ask for them to be converted.

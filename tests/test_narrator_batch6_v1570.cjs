@@ -77,5 +77,7 @@ console.log('The VectFox EventBase prompt (docs/vectfox_eventbase_prompt.txt)');
   const ex = JSON.parse(p.match(/^\[\{"event_type".*\}\]$/m)[0])[0];
   const F = ['event_type', 'importance', 'summary', 'cause', 'result', 'characters', 'locations', 'factions', 'DateTime', 'scene_time', 'items', 'concepts', 'keywords', 'open_threads', 'should_persist'];
   ok(F.every(k => k in ex) && TYPES.includes(ex.event_type) && Number.isInteger(ex.importance) && ex.DateTime === null && ex.should_persist === true, 'the example event has every field VectFox validates');
+  const eco = rd('docs/ECOSYSTEM.md'), blk = (eco.match(/````text\n([\s\S]*?)````/) || [])[1];
+  ok(blk === p, 'docs/ECOSYSTEM.md carries the same prompt as docs/vectfox_eventbase_prompt.txt');
   ok(/\[In-world time: <date>, at <place>\]/.test(p) && /never list "Eldrasil"/.test(p) && /Never speculative "Will X/.test(p), 'it reads the card\'s clock line, skips the card name, and keeps open threads to stated matters');
 }
