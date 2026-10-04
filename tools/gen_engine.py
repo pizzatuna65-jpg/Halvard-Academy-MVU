@@ -276,6 +276,14 @@ assert all({'id', 'from', 'to', 'line'} <= set(p) for p in PH), 'campus phase ne
 t = t.replace('/*@@PHASES@@*/[]', json.dumps(PH, ensure_ascii=False, separators=(',', ':')))
 assert all(x in npcs for x in MENTION_DENY)
 t = t.replace('/*@@MENTION_DENY@@*/[]', json.dumps(MENTION_DENY))
+# 1.60.0: Lore_changes subjects -> their lore entry (common.lore_names, the names build_card's overlay matches); NPC entries apart
+from common import lore_names
+_lnames, _lnpc = {}, []
+for _e in json.load(open(P('src/worldbook/index.json'), encoding='utf-8')):
+    for _n in lore_names(_e): _lnames.setdefault(_n, _e['uid'])
+    if lore_names(_e) and re.match(r'^(\[[^\]]*\]\s*)?NPC\s+[—–-]', _e.get('comment', '')): _lnpc.append(_e['uid'])
+assert t.count('/*@@LORE_NAMES@@*/{}') == 1 and _lnpc
+t = t.replace('/*@@LORE_NAMES@@*/{}', json.dumps({'names': _lnames, 'npc': _lnpc}, ensure_ascii=False, separators=(',', ':')))
 open(P('src/scripts/engine.js'), 'w', encoding='utf-8').write(t.replace('/*@@NPC_ALIAS@@*/{}', json.dumps(alias, ensure_ascii=False, separators=(',', ':'))))
 assert '/*@@' not in open(P('src/scripts/engine.js'), encoding='utf-8').read(), 'unreplaced placeholder in engine.js'
 print('aliases:', len(alias), '| outdoor names:', len(outdoor), '| features:', len(feats))

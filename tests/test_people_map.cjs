@@ -74,9 +74,9 @@ ok(/data-loccard="reception_and_gatehouse"/.test(mh) && /You are here/.test(mh),
 ok(U.goText('The Mall') === 'I head to the Mall.' && U.goText("Founder's Statue and Park") === "I head to the Founder's Statue and Park.", 'Go here text');
 const cs = U.cropStyle(U.pinOf('mall'));
 ok(/background-size:400% auto;background-position:[\d.]+% clamp\(100%, calc\([\d.]+% \+ -?[\d.]+px\), 0px\)$/.test(cs), `map crop style (any card width, 1.24.0): ${cs.split(';').pop()}`);
-// Location_changes surface on the card
-const S5 = JSON.parse(JSON.stringify(S)); S5.Campus_State.Location_changes = { 'Reception and Gatehouse': 'a second checkpoint after the break-in' };
-ok(/Changed: a second checkpoint/.test(U.PANELS.map.render(S5)), 'Campus_State.Location_changes shown on the card');
+// lasting changes to a place surface on the card (1.60.0: Lore_changes, was Location_changes)
+const S5 = JSON.parse(JSON.stringify(S)); S5.Campus_State.Lore_changes = { 'Reception and Gatehouse': { Now: 'a second checkpoint after the break-in', Cause: 'the break-in' } };
+ok(/Changed: a second checkpoint/.test(U.PANELS.map.render(S5)), 'Campus_State.Lore_changes shown on the card');
 U.view.ptab = 'bonds'; const ph = U.PANELS.people.render(S);
 ok(/data-open="npc:Irene"/.test(ph) && /here now/.test(ph), 'bonds list with "here now"');
 ok(!U.knowsName('Sophia', S) && U.knowsName('Sophia', S3), 'a learned connection (Irene fears Sophia) reveals Sophia\'s name');

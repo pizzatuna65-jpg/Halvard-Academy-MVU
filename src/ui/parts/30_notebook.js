@@ -58,6 +58,13 @@ PANELS.notebook = {
       commitSetting([{ op: 'replace', path: `/Clues/${x.key}`, value: { Thread: view.pinTh || 'Unsorted clues', Detail: x.d, Where: x.w, Links: [], Source: x.src } }], `📌 Pinned as a clue: ${x.key}`);
       return;
     }
+    if (b.dataset.lcundo !== undefined) {   // 1.60.0: the player removes a lasting change (a hidden player-tool message, like Settings)
+      const L = Object.assign({}, (S.Campus_State || {}).Lore_changes || {}), k = Object.keys(L).filter(x => L[x] && L[x].Now)[+b.dataset.lcundo];
+      if (!k) return;
+      delete L[k];
+      commitSetting([{ op: 'replace', path: '/Campus_State/Lore_changes', value: L }], `↩️ Lasting change undone: ${k}. The lore applies again.`);
+      return;
+    }
     if (b.dataset.go) { const l = DATA.locs[b.dataset.go]; if (l) fillChat(goText(l.name)); return; }
     if (b.dataset.fill) { fillChat(b.dataset.fill); return; }
     if (b.dataset.reply !== undefined) {
@@ -248,10 +255,13 @@ function nbJournal(S) {
   const months = [...new Set([...J].reverse().map(e => e.g))];
   const tl = J.length ? months.map(g => { const e0 = groups[g][0]; return `<h4>${e0.M ? `${years ? `Year ${e0.Y}, ` : ''}Month ${e0.M}` : 'Undated'}</h4><ol class="jt">${groups[g].map(e => `<li${e.note ? ' class="old" title="Engine note: kept for you; the narrator reads it from the state instead"' : e.old ? ' class="old" title="Archived: the narrator no longer reads this line"' : ''}>${e.W ? `<span class="sub">W${e.W} ${e.D}</span>` : ''}${esc(e.t)}</li>`).join('')}</ol>`; }).join('') : '<div class="empty">Nothing written yet.</div>';
   const CS = S.Campus_State || {}, ev = Object.entries(CS.Events || {}), ru = [...(CS.Rumours || [])].reverse();
+  // 1.60.0: lasting changes to the world's facts (Campus_State.Lore_changes) and what caused them; Undo is the player's veto
+  const LC = Object.entries(CS.Lore_changes || {}).filter(([, v]) => v && v.Now);
+  const lcHtml = LC.length ? `<h3>Lasting changes</h3><p class="sub">Facts of the world that changed in your story; they override the lore from now on. Undo one the story never earned.</p><dl class="kv">${LC.map(([k, v], i) => `<dt>${esc(k)}</dt><dd>${esc(v.Now)}${v.Cause ? `<span class="sub"> · because ${esc(v.Cause)}</span>` : ''}${v.Since ? `<span class="sub"> · ${esc(v.Since)}</span>` : ''} <button class="btn sm" data-lcundo="${i}">Undo</button></dd>`).join('')}</dl>` : '';
   // 1.1.0 (spec §3): how far each rumour has spread; rumours that died out stay, faded
   const gs = featureOn(S, 'gossip') ? Object.fromEntries(((S.$ui || {}).gossip || []).map(g => [g[0], g])) : {}, old = [...((S.$ui || {}).rumours_old || [])].reverse();
   return `<p class="lead">The turning points of your year, written as they happen. The narrator reads the latest 30 lines as the story's spine; scene details come from chat memory. Faded lines are kept for you only: older entries, and the engine's notes (ranks, reputation, marks, recaps).</p>${tl}
-    <h3>Campus news</h3>${ev.length ? `<dl class="kv">${ev.map(([k, v]) => { const o = v && typeof v === 'object' ? v : { Text: v }; return `<dt>${esc(k)}</dt><dd>${esc(o.Text || '')}${o.Updated ? `<span class="sub"> · ${esc(o.Updated)}</span>` : ''}</dd>`; }).join('')}</dl>` : '<div class="empty">Nothing has changed on campus yet.</div>'}
+    ${lcHtml}<h3>Campus news</h3>${ev.length ? `<dl class="kv">${ev.map(([k, v]) => { const o = v && typeof v === 'object' ? v : { Text: v }; return `<dt>${esc(k)}</dt><dd>${esc(o.Text || '')}${o.Updated ? `<span class="sub"> · ${esc(o.Updated)}</span>` : ''}</dd>`; }).join('')}</dl>` : '<div class="empty">Nothing has changed on campus yet.</div>'}
     ${ru.length || old.length ? `<h3>Rumours</h3><ul class="log">${ru.map(r => `<li>${esc(r)}${gs[r] ? `<span class="reach">${esc(gs[r][1])} · day ${gs[r][2]}</span>` : ''}</li>`).join('')}${old.map(r => `<li class="old" title="Died out">${esc(r)}</li>`).join('')}</ul>` : ''}`;
 }
 

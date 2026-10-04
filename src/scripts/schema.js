@@ -218,7 +218,11 @@ export const Schema = z.object({
     // The engine stamps Updated when the Text changes ($d: that day number) and flags events with no news for over a week.
     Events: Rec(v => ({ Text: s(v.Text), Updated: s(v.Updated), $d: n(v.$d, -1, 1e9, -1) }), 'Text'),
     Rumours: StrList(15),
-    Location_changes: StrRec(),
+    Location_changes: StrRec(),   // before 1.60.0; the engine moves anything written here into Lore_changes
+    // 1.60.0: lasting changes to the world's facts in this campaign, by subject (a lore entry's name, or something new). The engine
+    // accepts one only when the story shows it (stepLoreChanges); Since and $uid (the subject's lore entry, -1 none) are the engine's.
+    Lore_changes: Rec(v => ({ Now: s(v.Now).slice(0, 400), Cause: s(v.Cause).slice(0, 240), Since: s(v.Since), Replace: b(v.Replace),
+      $uid: n(v.$uid, -1, 1e6, -1) }), 'Now'),
     NPC_status: StrRec(),
     New_relations: StrRec(),
     Secrets_revealed: StrList(80),

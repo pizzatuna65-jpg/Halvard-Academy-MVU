@@ -159,6 +159,23 @@ def npc_aliases(npcs):
     return alias
 
 
+def lore_key(s):
+    """1.60.0: a Lore_changes subject or a lore entry name as one key; the engine (lcKey) and build_card's EJS do the same."""
+    return re.sub(r'\s+', ' ', re.sub(r'^the\s+', '', str(s).strip().lower()))
+
+
+def lore_names(e):
+    """1.60.0: the names a Lore_changes subject may use for a lore entry: its title's last part (an NPC's first name too) and its
+    plain keys. [] for an entry a change never attaches to (constant, disabled, custom uid 500+)."""
+    if e.get('constant') or e.get('disable') or e['uid'] >= 500:
+        return []
+    title = re.sub(r'^\[[^\]]*\]\s*', '', e.get('comment', ''))
+    parts = re.split(r'\s+[—–-]\s+', title)
+    names = [parts[-1]] + ([parts[-1].split()[0]] if parts[0] == 'NPC' else [])
+    names += [k for k in e.get('key', []) if not k.startswith('/') and len(k) >= 3]
+    return list(dict.fromkeys(n for n in map(lore_key, names) if n))
+
+
 def shared_js(presence=True):
     """1.43.0 (audit batch 2): src/scripts/shared.js with its data filled in (data/calendar.json), for the engine, the panels,
     the bracelet and the <now> entry (each template marks the spot with a SHARED placeholder). presence=False (1.47.0) leaves out

@@ -113,4 +113,7 @@ function renderEntry(card, uid, S, gv) {
   const group = uid === 509 ? E.filter(e => e.id === 509 || e.id === 599 || (e.id >= 600 && e.id < 700)).sort((a, b) => a.insertion_order - b.insertion_order) : [E.find(e => e.id === uid)];
   return ejs.render(group.map(strip).filter(c => c !== null).join('\n'), { getvar });
 }
-module.exports = { Schema, runEngine, initState, applyPatch, extractPatch, ok, ROOT, renderEntry };
+// 1.60.0: a built lore entry's own text, without build_card's Lore_changes overlay (LORE_OPEN … LORE_CLOSE)
+const LORE_OPEN_RX = /^((?:@@[^\n]*\n)*)<%_ \{ const _lc = getvar\('stat_data\.Campus_State\.Lore_changes'\)[^\n]*\n[^\n]*\n<%_ \} if \(!\(_lx && _lx\.Replace\)\) \{ _%>\n/;
+const loreOf = c => { const m = LORE_OPEN_RX.exec(String(c)); return m ? m[1] + String(c).slice(m[0].length).replace(/\n<%_ \} \} _%>$/, '') : c; };
+module.exports = { Schema, runEngine, initState, applyPatch, extractPatch, ok, ROOT, renderEntry, loreOf };

@@ -1,7 +1,33 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.60.0 — Lore changes: the narrator changes a fact of the world, only from the story (2026-10-05)
+
+The owner asked for a general way for the narrator to change persistent facts (not only places or people), on the condition that
+a change follows from the story or {{user}}'s actions, never from the narrator's own whim. Save fixture v1.59.0.
+- **`Campus_State.Lore_changes`** `{"<subject>": {"Now", "Cause", "Replace"}}`: any lasting change to a fact of the world, keyed by
+  the name its lore uses (or a new name). State, not the lorebook: per chat, and a swipe takes it back.
+- **The engine guards the condition** (`stepLoreChanges`, before the Journal step): a new or rewritten change is kept only with a
+  Cause and only when the reply's prose or the player's message names the subject (or any name of its lore entry); 2 new a reply,
+  40 on record. A refused one goes back to what it was and the report says why. A person's lore is never replaced (Replace set back
+  to false). The narrator cannot remove a change (put back); the player can. A kept change gets its date (`Since`), a toast and a
+  Journal line.
+- **Every lore entry prints a change on record over its text** (`build/build_card.py` `LORE_OPEN`, names from `tools/common.py`
+  `lore_names`: the title's last part, an NPC's first name, the plain keys): "[Changed in this campaign, <date>; this overrides the
+  lore below] …"; with Replace the old text is left out. A person's Cast Sheet carries it too. `<current_state>` lists changes that
+  have an entry by name only (`Lore_changed_in_entries`) and prints the rest in full.
+- **Player:** Journal > "Lasting changes" lists each change with its cause and date, and Undo (a hidden player-tool message, like
+  Settings). The Map card's "Changed:" line reads Lore_changes.
+- **Location_changes is folded in:** `stepMigrate` moves an older chat's records over ("recorded before 1.60.0"); a write there by
+  old habit is read as a Lore change and needs a Cause like any other.
+- **Rules:** one 502 line (Lore_changes) in place of Location_changes; 504's off-screen line says news becomes a Lore change only
+  once the story shows it to {{user}}. About +150 constant tokens.
+- Tests: new `test_lore_changes_v1600` (31); harness `loreOf` (an entry's text without the overlay) used by `test_ambience_v1160`,
+  `test_nations_v172`, `test_worldmyth_v171`; `test_playtest_v137` accepts the overlay as an entry's block scope; `test_people_map`
+  reads Lore_changes. Full `npm test` and `npm run lint` pass; the Journal panel was checked in a browser preview (no errors).
+- **To check live (owner):** `docs/TEST_CHECKLIST.md` 1.60.0. **Invented, to confirm:** the limits (2 new a reply, 40 on record).
 
 ## v1.59.0 — Narrator-load batch 8: Trust and Tension by severity word (2026-10-04)
 
@@ -168,23 +194,6 @@ Batch 4 of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6 (U1 stage 2). Save fi
 - **To check live** (TEST_CHECKLIST 1.55.0): with a friend present the trust scale and Interactions rules show and Trust drops are
   still written; alone, a Tension rise is still reported from the core line.
 
-## v1.54.0 — Narrator-load batch 3: situational rule cards, stage 1 (2026-10-04)
-
-Batch 3 of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6 (U1 stage 1). Save fixture v1.53.1.
-- 502 keeps one core line per topic (path, data shape, main ban). The full rules of Letters, Projects, Competition, Exams, Tutoring,
-  Trip, Pacts and the first pact are moved verbatim to `data/rule_cards.json`. The engine (`ruleCards`, `$ui.now.rules`) lists a card
-  while its topic applies: from the state, the calendar (7 days ahead), the place, or a word in the last reply or the player's message.
-  The new entry 511 (`[mvu_update]`, depth 1, before `<now>`) prints the listed cards. If the engine has made no list yet, it prints
-  every card.
-- The alcohol rule is now keyword entry 512, plus one CORE FACTS line in the World Index.
-- Measured on 502 + 511: −860 tokens per turn in an ordinary scene (save, one card), −800 on a new chat.
-- Features cost (`feature_cost.py`) counts only the always-on core line; the else-branch of a gate now counts against its feature.
-- Fixed tests that 1.53.0 had broken without notice (`test_newbond_v1611`, `test_trust_v143`, `test_tokens_v1110`: rule wording).
-- **Tests:** new `test_narrator_batch3_v1540` (24 checks). `test_feature_batch1_v1490`, `test_grades_v1150`, `test_narrator_batch1_v1530`,
-  `test_world_v110` and `test_saves` were updated or pass, along with every suite that reads 502.
-- **To check live:** a card shows when its topic comes up (Mail Tower, a Project, exam week); a letter that arrives unexpectedly is
-  still recorded from the core line.
-
 ## Release index (one line per release, oldest first)
 
 - All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/archive/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; CHANGELOG 1.2.0/1.2.1).
@@ -323,3 +332,4 @@ Batch 3 of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6 (U1 stage 1). Save fi
 - **v1.57.0 (2026-10-04):** Narrator-load batch 6: the Journal as the story's spine (engine bookkeeping to `$ui.jnotes`), first visits and the Entrance tour remembered, a compact `<current_state>` (−577 tokens with 8 bonds), the card's own VectFox EventBase prompt.
 - **v1.58.0 (2026-10-04):** Narrator-load batch 7: ready for MVU's extra-model mode (506 untagged, no update rule points at `<cast>`, MVU 438f9ff verified), `audit_chat.py --compare` for the A/B test; one-call mode stays the default.
 - **v1.59.0 (2026-10-04):** Narrator-load batch 8: Trust drops and Tension rises reported by severity word (`letdown`, `offence`), sized by the engine from `trust.json` / `tension.json` with the old card's ranges (DECISIONS §6, owner-approved).
+- **v1.60.0 (2026-10-05):** Lore changes: the narrator may change any fact of the lore for this campaign (`Campus_State.Lore_changes`), kept by the engine only with a Cause and only when the reply shows it; printed over every lore entry with that name; Journal Undo; Location_changes folded in.

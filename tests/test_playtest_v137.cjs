@@ -10,7 +10,9 @@ const card = JSON.parse(fs.readFileSync(path.join(ROOT, 'dist/Eldrasil_Halvard.j
 const EJS = card.character_book.entries.filter(e => /<%/.test(e.content));
 
 // ---- EJS: entries that land together are compiled as one template by the Prompt Template extension
-ok(EJS.length >= 7 && EJS.every(e => e.content.replace(/^(@@[^\n]*\n)+/, '').startsWith('<%_ { _%>\n') && e.content.endsWith('\n<%_ } _%>')), `every EJS entry has its own block scope (${EJS.length})`);
+// 1.60.0: a lore entry's Lore_changes overlay is its block scope ("<%_ { const _lc …" … "<%_ } } _%>")
+const scoped = c => { c = c.replace(/^(@@[^\n]*\n)+/, ''); return (c.startsWith('<%_ { _%>\n') && c.endsWith('\n<%_ } _%>')) || (c.startsWith('<%_ { const _lc = ') && c.endsWith('\n<%_ } } _%>')); };
+ok(EJS.length >= 7 && EJS.every(e => scoped(e.content)), `every EJS entry has its own block scope (${EJS.length})`);
 let S = applyPatch(initState({ etnie: true }), [{ op: 'replace', path: '/World/Location', value: 'Gymnasium' }]);
 const gv = k => _.get({ stat_data: S }, k);
 let err = ''; try { ejs.render(EJS.map(e => e.content).join('\n'), { getvar: gv }); } catch (e) { err = e.message.split('\n').slice(-1)[0]; }

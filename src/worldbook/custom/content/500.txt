@@ -54,7 +54,7 @@ Campus_State:
     Members: [Irene, Caspian, Florian, Dante]
   Events: {}
   Rumours: []
-  Location_changes: {}
+  Lore_changes: {}
   NPC_status: {}
   New_relations: {}
   Secrets_revealed: []

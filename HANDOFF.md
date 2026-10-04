@@ -3,13 +3,13 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.59.0** (2026-10-04): narrator-load batch 8, the last: Trust drops and Tension rises are reported as
-`letdown` / `offence` interactions by severity word and sized by the engine (`data/trust.json` `letdown`, `data/tension.json` `offence`;
-DECISIONS §6). 1.58.0: ready for MVU's extra-model mode, `audit_chat.py --compare`. 1.53–1.57: rule cards, one place per fact, the
-Journal spine. Live checks: `docs/TEST_CHECKLIST.md` "Open".
+**Snapshot:** card **v1.60.0** (2026-10-05): lore changes. The narrator may change any fact of the lore for this campaign
+(`Campus_State.Lore_changes`), only as a consequence of the story: the engine keeps a change only with a Cause and only when the reply
+shows it (`stepLoreChanges`, DECISIONS §2); every lore entry prints a change on record over its text; the player can undo one in the
+Journal. 1.53–1.59: the narrator-load batches. Live checks: `docs/TEST_CHECKLIST.md` "Open".
 
-**Next task:** every narrator-load batch is done. The owner plays 1.59, exports the chat and compares with the baseline
-(`audit_chat.py --mechanics`, `--compare`); the extra-model A/B test decides DECISIONS §9; live-check 1.53–1.59.
+**Next task:** the owner plays 1.60 (live-check lore changes and 1.53–1.59), exports the chat and compares with the baseline
+(`audit_chat.py --mechanics`, `--compare`); the extra-model A/B test decides DECISIONS §9.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

@@ -268,6 +268,13 @@ function canonLocation(loc) {
 }
 const onCampus = loc => { const p = placeOf(loc).toLowerCase(); return !p || CAMPUS.some(c => p === c || p.startsWith(c + ' ') || p.startsWith(c + ',')); };
 const CAP = { Notices: 10, Letters: 12, Clues: 40, Journal: 30 };
+// 1.60.0: Lore_changes subjects -> lore entry uid (tools/common.py lore_names; build_card prints a change in that entry), NPC entries
+const LORE = /*@@LORE_NAMES@@*/{};
+const LC = { max: 40, perReply: 2 };   // lasting changes on record; new ones a reply may add
+const lcKey = s => String(s == null ? '' : s).trim().toLowerCase().replace(/^the\s+/, '').replace(/\s+/g, ' ');   // = common.lore_key
+const loreUidOf = s => { const u = ((LORE.names || {})[lcKey(s)]); return u === undefined ? -1 : u; };
+// a reply's prose: without its update block (closed or not) and tags
+const proseOf = text => String(text || '').replace(/<UpdateVariable>[\s\S]*?(?:<\/UpdateVariable>|$)/gi, ' ').replace(/<[^>]+>/g, ' ');
 // Batch 5.2: the Kingdom prize (lore Competitions: 5,000 points per winning member) is avalon.json kingdom.prize (KINGDOM_PRIZE,
 // below AV); the trips are TRIPS in shared.js
 const DORM_PRIZE = [100, 50];   // 1.33.0: a Dorm Competition role bracket's champion and runner-up
@@ -954,7 +961,7 @@ const SHAPE = {
   Player: { Profile: { Council: false, Reputation: {} }, Vitals: {}, Injuries: {}, Wallet: { Points: 0, Coin: 0, Transactions: [] }, Academics: { Grades: {}, Exams: {} }, _Proficiency: {}, Conditions: {} },
   Magic: { _Techniques: {}, _Affinity: { Types: [], Dominant: '', Specialties: [], Preset: '' }, Active: {}, Casts: [], Pacts: {} },
   Hidden: { _True_magic: '', Known_by: [], Dove_attention: 0 },
-  Bonds: {}, Campus_State: { Entrance_tour: { Year: 0, Guide: '', FirstYears: [] }, Council: { Candidates: { '1': { First: 'Florian', Second: 'Dante' } }, Results: {}, President: 'Irene', VicePresident: 'Caspian', PresidentElect: '', VicePresidentElect: '', Members: ['Irene','Caspian','Florian','Dante'] }, Events: {}, Rumours: [], Location_changes: {}, NPC_status: {}, New_relations: {}, Secrets_revealed: [], Graduated: [] },
+  Bonds: {}, Campus_State: { Entrance_tour: { Year: 0, Guide: '', FirstYears: [] }, Council: { Candidates: { '1': { First: 'Florian', Second: 'Dante' } }, Results: {}, President: 'Irene', VicePresident: 'Caspian', PresidentElect: '', VicePresidentElect: '', Members: ['Irene','Caspian','Florian','Dante'] }, Events: {}, Rumours: [], Location_changes: {}, Lore_changes: {}, NPC_status: {}, New_relations: {}, Secrets_revealed: [], Graduated: [] },
   Commitments: {}, Notices: {}, Letters: {}, Journal: [], Clues: {}, Mysteries: {},
   Competition: { Tier: '', Status: '', Placement: '', Team: [], Results: [] }, Projects: {},
   Trip: { Active: false, Destination: '', Companions: [], Note: '' }, Expedition: { Caught: false }, Avalon: { Ride: false }, Sunreach: { Ride: '', Bet: { Game: '', Stake: 0 } }, Battle: { Active: false, Combatants: {} }, _Log: [],
@@ -1038,6 +1045,14 @@ function stepMigrate(c) {
       if (k === 'Journal') X.Journal = keep; else U.archive = keep;
     }
     if (moved.length) U.jnotes = [...new Set([...(Array.isArray(U.jnotes) ? U.jnotes : []), ...moved])].slice(-JOURNAL_ARCHIVE);
+  }
+  // 1.60.0: Location_changes became Lore_changes (any fact of the lore, not only places); a change from before keeps its words
+  for (const X of both) {
+    const CS = X.Campus_State;
+    if (!_.isPlainObject(CS)) continue;
+    const L = _.isPlainObject(CS.Lore_changes) ? CS.Lore_changes : (CS.Lore_changes = {});
+    for (const [k, v] of Object.entries(CS.Location_changes || {})) if (String(v).trim() && !keyIn(L, k)) L[k] = { Now: String(v).trim(), Cause: 'recorded before 1.60.0', Since: '', Replace: false, $uid: loreUidOf(k) };
+    CS.Location_changes = {};
   }
   // 1.26.0: old chats keep their history. A small class allowance recognises weeks already played;
   // the one-time Studies offer lets the player choose a different starting history.
@@ -3964,6 +3979,53 @@ function stepPayout(c) {
   }
 }
 
+// ---- 8b0. 1.60.0 (before 8b, which writes the Journal): lasting changes to the world's facts,
+// Campus_State.Lore_changes { "<subject>": { Now, Cause, Since, Replace } }. The narrator may change any fact of the lore for this campaign, but only as a consequence of the story, never on its own whim:
+// a new or rewritten change needs a Cause and must be shown in the reply that records it (its subject, or a name of the subject's
+// lore entry, in the prose or in the player's message). At most LC.perReply new ones a reply and LC.max on record; a person's lore
+// is added to, never replaced. A refused change goes back to what it was, with the reason in the report. Only the player removes
+// one (the Journal's Undo, a player tool); the narrator's removal is put back. Kept changes get Since (the day) and $uid (their
+// lore entry, where build_card prints them over the lore; -1: none, <current_state> carries them). Location_changes is read as one.
+function stepLoreChanges(c) {
+  const { S, B, hasB, log, jnl, toolEdit } = c;
+  const CS = S.Campus_State, L = CS.Lore_changes = _.isPlainObject(CS.Lore_changes) ? CS.Lore_changes : {};
+  const L0 = (hasB && _.isPlainObject((B.Campus_State || {}).Lore_changes) && B.Campus_State.Lore_changes) || {};
+  const rec = v => { const o = _.isPlainObject(v) ? v : { Now: v }; return { Now: String(o.Now || '').trim(), Cause: String(o.Cause || '').trim(), Since: String(o.Since || ''), Replace: o.Replace === true || o.Replace === 'true', $uid: num(o.$uid, -1) }; };
+  for (const [k, v] of Object.entries(CS.Location_changes || {})) if (String(v).trim() && !keyIn(L, k)) L[k] = { Now: String(v) };
+  CS.Location_changes = {};
+  for (const k of Object.keys(L)) {   // a subject written in another case is the change on record
+    const k0 = Object.keys(L0).find(x => x !== k && lcKey(x) === lcKey(k));
+    if (k0) { L[k0] = L[k]; delete L[k]; }
+  }
+  const said = proseOf(c.text) + '\n' + String(c.userText || '');
+  const shown = k => {
+    const uid = loreUidOf(k), names = [lcKey(k), ...(uid >= 0 ? Object.keys(LORE.names).filter(n => LORE.names[n] === uid) : [])];
+    return names.some(n => n && new RegExp(`(^|[^\\p{L}\\p{N}])${_.escapeRegExp(n)}($|[^\\p{L}\\p{N}])`, 'iu').test(said));
+  };
+  const n0 = Object.keys(L0).length;
+  let fresh = 0;
+  for (const k of Object.keys(L)) {
+    const v = rec(L[k]), p = k in L0 ? rec(L0[k]) : null, uid = loreUidOf(k);
+    if (p && v.Now === p.Now && v.Replace === p.Replace) { L[k] = { ...p, $uid: uid }; continue; }   // nothing new: kept as it was
+    if ((LORE.npc || []).includes(uid)) v.Replace = false;
+    const why = !hasB || toolEdit ? ''
+      : !v.Now ? 'Now is empty. The story never erases a change; if it undoes one, rewrite its Now'
+      : !v.Cause ? 'it has no Cause (what happened in the story, or what {{user}} did, that changed it)'
+      : !shown(k) ? `this reply does not show it ("${k}" is not in the scene). Record a lasting change in the reply that shows it happening or its aftermath`
+      : !p && n0 + fresh >= LC.max ? `${LC.max} changes are on record; rewrite one that is already there instead`
+      : !p && fresh >= LC.perReply ? `at most ${LC.perReply} new changes a reply` : '';
+    if (why) { if (p) L[k] = { ...p, $uid: uid }; else delete L[k]; log.push(`Lore change "${k}" was not recorded: ${why}.`); continue; }
+    if (!v.Now) { delete L[k]; continue; }
+    if (!p) fresh++;
+    L[k] = { ...v, Since: hasB || !v.Since ? dstamp(S.World) : v.Since, $uid: uid };
+    if (hasB && !toolEdit) { S.$ui.toasts.push(`The world changed: ${k}`); jnl.push(`${k}, changed for good: ${v.Now}`.slice(0, 220)); }
+  }
+  if (hasB && !toolEdit) for (const k of Object.keys(L0)) if (!(k in L)) {
+    L[k] = { ...rec(L0[k]), $uid: loreUidOf(k) };
+    log.push(`Lore change "${k}" stays on record: only the player removes a change. If the story undoes it, rewrite its Now.`);
+  }
+}
+
 // ---- 8b. Batch 5.1 records: commitments, notices, letters, clues, journal ----
 // 1.18.0 (I4): relative Heals_by dates are anchored once, like Commitment.Due.
 function stepRecords(c) {
@@ -5321,7 +5383,7 @@ function stepNow(c) {
   for (const a of Object.values(S.$ui.area || {})) if (_.isPlainObject(a)) { delete a.walks; delete a.near; }
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,

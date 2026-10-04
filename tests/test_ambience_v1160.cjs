@@ -1,11 +1,11 @@
 // 1.16.0 (owner-approved planning/DRAFT_dynamic_ambience.md): ambience (crowd, light, cue), seeded beats, the secret uncanny roll,
 // the ten new ghost stories, Tilly's journal and the Scene Engine clause.
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
-const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
+const { initState, applyPatch, ok, ROOT, loreOf } = require('./harness.cjs');
 const read = p => fs.readFileSync(path.join(ROOT, p), 'utf8');
 const E = new Function(read('src/scripts/engine.js') + '\nreturn { fromAbs, EVENTS };')();
 const card = JSON.parse(read('dist/Eldrasil_Halvard.json')).data;
-const entry = uid => (card.character_book.entries.find(e => e.id === uid) || {}).content || '';
+const entry = uid => loreOf((card.character_book.entries.find(e => e.id === uid) || {}).content || '');   // 1.60.0: without the overlay
 const render = (uid, S) => ejs.render(entry(uid), { getvar: k => _.get({ stat_data: S }, k) });
 const DAY = 1440;
 const at = (S, d, hhmm, loc, extra = []) => { const [h, m] = hhmm.split(':').map(Number), T = E.fromAbs(d * DAY + h * 60 + m);

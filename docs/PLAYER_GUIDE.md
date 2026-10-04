@@ -79,6 +79,7 @@ Write actions in the chat as usual. Each reply ends with a folded "📜 State up
 - **Gear.** Weather gear works from your Bag by name: an **umbrella** keeps you dry unless it is windy; an **oilskin rain cloak** always does; a **wool scarf and mittens** or a **lined winter cloak** keep the cold off; a **straw sun hat** helps in summer heat. The shop sells them in their season; out-of-season items are greyed out.
 - **The Bag.** The first tab of **Inventory**. Things you buy, receive or find and keep go into the Bag, with a plan if you give one ("a Star Cookie for tonight"). The buttons Use, Give and Drop only draft the action. Sunfizz comes in returnable bottles: return empties at the Commissary or the Mall store for 2 points each.
 - **Gossip.** Rumours spread: first only the witnesses know, then the source's dorm and club, then most of campus, then it is old news; some fizzle out after a couple of days, some fly round the campus at once. The Journal shows how far each one has got; rumours that died out stay there, faded.
+- **The world can change.** What your story does can change the world for good: a hall wrecked in a duel, a teacher who resigns, a custom the Council adopts. The narrator records such a change only when the story shows it happening (never on its own whim), and from then on it overrides the lorebook in this chat. Inventory > Journal > **Lasting changes** lists them with their cause; **Undo** removes one the story never earned.
 
 ## 6. Settings, themes, features and token cost
 

@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.60.0 (lore changes): the four checks in its section below.
 - v1.59.0 (narrator-load batch 8): the three checks in its section below.
 - v1.58.0 (narrator-load batch 7): the A/B test of MVU's extra-model mode in its section below.
 - v1.57.0 (narrator-load batch 6): the three checks in its section below.
@@ -101,6 +102,16 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.60.0 — Lore changes (the narrator changes a fact of the world, only from the story)
+
+- [ ] Wreck a place in a fight (or bring about a lasting change on purpose): the narrator records a `Lore_changes` entry with a Cause
+      in the reply that shows it, a toast "The world changed: …" appears, and the Journal has its line.
+- [ ] Later, mention the place again: the narrator writes it as changed (its lore entry now opens with "[Changed in this campaign …]").
+- [ ] Over a few days of ordinary play the narrator makes no change of its own; any refused one shows up in the report (`_Log`) with
+      its reason (`audit_chat.py --mechanics`).
+- [ ] Journal > Lasting changes > Undo removes a change, and the next reply follows the lore again. A swipe of the reply that made a
+      change takes it back too.
 
 ### v1.59.0 — Narrator-load batch 8 (Trust and Tension by severity word)
 

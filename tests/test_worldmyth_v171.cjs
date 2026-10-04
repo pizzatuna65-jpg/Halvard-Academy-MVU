@@ -3,11 +3,11 @@
 // know they exist (WORLD INDEX, Kingdom, Veyra, Magic Theory, History, Dark Magic Defense, Main Library, Cathedral, Spirit Tiers,
 // the Morning Choir and Lucifer) and in five NPC files. Lucifer stays unnamed outside narrator_only text. A 1.7.0 save loads.
 const fs = require('fs'), path = require('path');
-const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
+const { initState, applyPatch, ok, ROOT, loreOf } = require('./harness.cjs');
 console.log('World Myth 1.7.1');
 const rd = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const card = JSON.parse(rd('dist/Eldrasil_Halvard.json')).data;
-const E = card.character_book.entries, byId = uid => E.find(e => e.id === uid);
+const E = card.character_book.entries.map(e => ({ ...e, content: loreOf(e.content) })), byId = uid => E.find(e => e.id === uid);
 const strip = t => t.replace(/<narrator_only>[\s\S]*?<\/narrator_only>/g, '');
 const MYTHS = { 273: 'The Devoured Kingdom', 274: 'The Four Who Saved the World', 275: 'The First Bargain', 276: 'The Holy Grail', 277: 'The Shaping of the World' };
 const sup = byId(222);

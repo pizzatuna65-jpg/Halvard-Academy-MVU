@@ -323,7 +323,7 @@ function locCard(id, S, cur, P) {
   const escorted = dorm && (ra.dorms || []).includes(dorm[1]) && !(S.Trip || {}).Active && !/LOCKDOWN|CURFEW/.test((S.World || {})._Curfew || '');
   const visitStaff = (ra.staff || []).filter(n => (l.regulars || []).includes(n));
   const accessText = escorted ? `A trusted resident here can escort you into the common areas. ${l.access || ''}` : visitStaff.length ? `You may visit ${visitStaff.join(', ')} here without an appointment if available. ${l.access || ''}` : l.access || 'Open to students';
-  const change = Object.entries((S.Campus_State || {}).Location_changes || {}).filter(([k]) => normPlace(k) === normPlace(l.name)).map(([, v]) => v);
+  const change = Object.entries((S.Campus_State || {}).Lore_changes || {}).filter(([k, v]) => v && v.Now && normPlace(k) === normPlace(l.name)).map(([, v]) => v.Now);   // 1.60.0
   const B = S.Bonds || {};
   // 1.0.3: graduates and not-yet-arrived students are not regulars. 1.47.0 (audit 3.8): each regular's note is the engine's
   // whereabouts (shared.js): a status on record (Campus_State.NPC_status), off sick, or busy elsewhere this period (a student in class,

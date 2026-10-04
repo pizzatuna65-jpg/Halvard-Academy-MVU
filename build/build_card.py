@@ -18,6 +18,16 @@ def load(path, default=None):
     return json.load(open(path, encoding='utf-8')) if os.path.exists(path) else default
 
 POS_NAME = {0: 'before_char', 1: 'after_char'}
+sys.path.insert(0, P('tools'))
+from common import lore_names   # 1.60.0: the names a Lore_changes subject may use for an entry (the engine's LORE map too)
+# 1.60.0: every lore entry opens with this. A change recorded for one of its names (Campus_State.Lore_changes, the subject as
+# common.lore_key / the engine's lcKey writes it) is printed first; with Replace the entry's own text is left out.
+LORE_OPEN = ("<%_ { const _lc = getvar('stat_data.Campus_State.Lore_changes') || {}, _ln = @@NAMES@@, "
+             "_lk = Object.keys(_lc).find(k => _ln.includes(String(k).trim().toLowerCase().replace(/^the\\s+/, '').replace(/\\s+/g, ' '))), "
+             "_lx = _lk && _lc[_lk] && _lc[_lk].Now ? _lc[_lk] : null; if (_lx) { _%>\n"
+             "[Changed in this campaign<%- _lx.Since ? ', ' + _lx.Since : '' %>; this overrides the lore<%- _lx.Replace ? '' : ' below' %>] "
+             "<%- _lk %>: <%- _lx.Now %>\n<%_ } if (!(_lx && _lx.Replace)) { _%>\n")
+LORE_CLOSE = "\n<%_ } } _%>"
 
 def wi_to_book_entry(e, content):
     return {
@@ -59,11 +69,15 @@ def build():
             # same place as one template, so two entries' top-level consts collided (502 and 504 both declare _U / on). Each EJS
             # entry gets its own block scope.
             # 1.48.0 (audit 2.7): decorator lines (@@if) stay first, where Prompt Template and SillyTavern read and strip them
-            if '<%' in c:
+            # 1.60.0: a lore entry opens with the Lore_changes overlay (a change on record for its subject is printed over its lore,
+            # Replace: instead of it); the overlay is that entry's block scope
+            names = lore_names(e) if cdir.endswith('worldbook/content') else []
+            if names or '<%' in c:
                 deco = ''
                 while c.startswith('@@'):
                     nl = c.index('\n') + 1; deco += c[:nl]; c = c[nl:]
-                c = deco + '<%_ { _%>\n' + c.rstrip('\n') + '\n<%_ } _%>'
+                c = deco + (LORE_OPEN.replace('@@NAMES@@', json.dumps(names, ensure_ascii=False)) + c.rstrip('\n') + LORE_CLOSE if names
+                            else '<%_ { _%>\n' + c.rstrip('\n') + '\n<%_ } _%>')
             entries.append(wi_to_book_entry(e, c))
     uids = [e['id'] for e in entries]
     assert len(uids) == len(set(uids)), 'duplicate worldbook uid!'

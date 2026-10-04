@@ -3,11 +3,11 @@
 // the WORLD INDEX, Kingdom and World Competition lines. Tilly's secret now has Velmora's bloody succession and her mother behind it;
 // Tsubaki's and Rei's blades come from Yozakura; Kanae's crystal ball is Norvaine starglass. A 1.7.1 save loads.
 const fs = require('fs'), path = require('path');
-const { applyPatch, ok, ROOT } = require('./harness.cjs');
+const { applyPatch, ok, ROOT, loreOf } = require('./harness.cjs');
 console.log('Nations 1.7.2');
 const rd = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const card = JSON.parse(rd('dist/Eldrasil_Halvard.json')).data;
-const E = card.character_book.entries, byId = uid => E.find(e => e.id === uid), txt = uid => byId(uid).content;
+const E = card.character_book.entries.map(e => ({ ...e, content: loreOf(e.content) })), byId = uid => E.find(e => e.id === uid), txt = uid => byId(uid).content;
 const strip = t => t.replace(/<narrator_only>[\s\S]*?<\/narrator_only>/g, '');
 const NATIONS = { 278: 'Arslan Sultanate', 279: 'Norvaine', 333: 'Velmora', 334: 'Caelmar', 335: 'Yozakura' };
 const sun = byId(246);
