@@ -63,7 +63,7 @@ ok(Y.Bonds.Sophia.Rank >= 1 && Y.Bonds.Irene.Tension < 100 && Y.Bonds.Ruby.Tensi
 
 // ---- narrator rules and <now>
 const rules = (fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/502.txt'), 'utf8') + Object.values(JSON.parse(fs.readFileSync(path.join(ROOT, 'data/rule_cards.json'), 'utf8')).cards).map(c => c.text).join(' '));
-ok(/by what the character believes \{\{user\}\} meant/.test(rules) && /Teasing, mock insults and play-fighting that both sides enjoy are not offences/.test(rules) && /A consensual spar is a fight, not violence/.test(rules) && /\|understood\|birthday\|birthday_party"\}/.test(rules),
+ok(/by what the character believes \{\{user\}\} meant/.test(rules) && /Teasing, mock insults and play-fighting that both sides enjoy are not offences/.test(rules) && /A consensual spar is a fight, not violence/.test(rules) && /\|understood\|letdown\|offence\|birthday\|birthday_party"\}/.test(rules),
   'rule 502: intent, teasing, consent, the understood kind');
 const now505 = fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/505.txt'), 'utf8');
 const nw = ejs.render(now505, { getvar: k => require('lodash').get({ stat_data: S }, k) });

@@ -299,7 +299,7 @@ export const Schema = z.object({
 
   // 1.2.2: interactions this reply, reported by the narrator; the engine turns them into bond XP and empties the list
   Interactions: z.array(z.any().transform(v => (typeof v === 'object' && v !== null
-    ? { With: s(v.With), By: s(v.By), Kind: s(v.Kind).trim().toLowerCase(), Gift: s(v.Gift).trim().toLowerCase(), Item: s(v.Item).slice(0, 160), Rep: s(v.Rep), Why: s(v.Why), Public: b(v.Public), Invited: b(v.Invited), Note: s(v.Note).slice(0, 200) } : { With: s(v), By: '', Kind: 'talk', Gift: '', Public: false, Invited: false, Note: '' }))).prefault([]).catch([]),
+    ? { With: s(v.With), By: s(v.By), Kind: s(v.Kind).trim().toLowerCase(), Gift: s(v.Gift).trim().toLowerCase(), Item: s(v.Item).slice(0, 160), Rep: s(v.Rep), Why: s(v.Why), Public: b(v.Public), Invited: b(v.Invited), Note: s(v.Note).slice(0, 200), Weight: s(v.Weight).trim().toLowerCase().slice(0, 20), Meant: s(v.Meant).trim().toLowerCase().slice(0, 20) } : { With: s(v), By: '', Kind: 'talk', Gift: '', Public: false, Invited: false, Note: '', Weight: '', Meant: '' }))).prefault([]).catch([]),
   // 1.45.0 (audit 3.9): Track mana | stamina is a training session (no Action needed); /Training is still read as one
   Practice: z.array(z.any().transform(v => typeof v === 'object' && v !== null
     ? { Action: s(v.Action).slice(0, 100), Subject: s(v.Subject).slice(0, 80), With: s(v.With || v.Partner).slice(0, 80), Aim: s(v.Aim).slice(0, 120), Track: s(v.Track).trim().toLowerCase().slice(0, 20) }

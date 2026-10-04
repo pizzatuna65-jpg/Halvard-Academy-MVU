@@ -329,5 +329,26 @@
    "public": 10,
    "note": "an apology only makes her angrier: she despises cowards; only a fight settles it"
   }
+ },
+ "offence": {
+  "_note": "1.59.0 (narrator-load audit U8, owner-approved 2026-10-04): the narrator reports an offence as an interaction {With, Kind: 'offence', Weight} and the engine draws the Tension rise from these ranges (rollInt, seeded), then applies the character's multipliers as for a written rise. Every offence counts and several add up (rises are never capped); a rise the narrator also wrote directly is not added twice (the larger one counts). The ranges are the 1.55.0 rule card's numbers: slight = a slight or a sharp word; insult = an insult, a humiliation or a broken promise; violence = a punch or a spell against them; jealous = flirting with someone else in front of a romantic partner.",
+  "weights": {
+   "slight": [
+    3,
+    5
+   ],
+   "jealous": [
+    5,
+    10
+   ],
+   "insult": [
+    10,
+    15
+   ],
+   "violence": [
+    20,
+    30
+   ]
+  }
  }
 }

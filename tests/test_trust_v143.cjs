@@ -130,7 +130,7 @@ ok(/Bond \([^)]*betrayed\): shares nothing new with \{\{user\}\}/.test(PP(N, 'Ca
 ok(/Bond \([^)]*confidant\): shares [^\n]*what they think of other people/.test(PP(N, 'Ruby')), 'Now: a confidant shares the real tiers one rank early (goals and views at Rank 5)');
 ok(/Trust: Etnie cannot stop trusting/.test(PP(N, 'Etnie')) && /Trust: Althair trusts no one/.test(PP(N, 'Althair')) && /report \{"With": "Kanae", "Kind": "choose"\}/.test(PP(N, 'Kanae')), 'Now: the personal rules of Etnie, Althair and Kanae');
 const rules = (fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/502.txt'), 'utf8') + Object.values(JSON.parse(fs.readFileSync(path.join(ROOT, 'data/rule_cards.json'), 'utf8')).cards).map(c => c.text).join(' '));
-ok(/A rise comes from the deed reported as an interaction \(keep, secret, defend, confide, help\)/.test(rules) && /Trust rises/.test(rules) && /keep\|secret\|defend\|confide/.test(rules) && /betrayal \(reporting them, siding with their enemy, selling them out\) −25–40/.test(rules), 'rule 502: report rises, write drops by size');
+ok(/It rises from deeds reported as interactions \(keep, secret, defend, confide, help\)/.test(rules) && /keep\|secret\|defend\|confide/.test(rules) && /"Kind": "letdown"/.test(rules) && /betrayal: reporting them, siding with their enemy, selling them out/.test(rules), 'rule 502: report rises, and drops as a letdown by size (1.59.0)');
 
 // ---- the UI
 U.view.arg = 'Irene';

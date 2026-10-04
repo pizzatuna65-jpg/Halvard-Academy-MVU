@@ -1,7 +1,32 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show de4e746:CHANGELOG.md` (1.53.0), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.59.0 — Narrator-load batch 8: Trust and Tension by severity word (2026-10-04)
+
+Batch 8 of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6 (U8), the last one. The owner approved the change to DECISIONS §6 (Trust,
+Tension). Save fixture v1.58.0.
+- **The narrator no longer picks Trust or Tension numbers.** A drop is an interaction `{"With", "Kind": "letdown", "Weight":
+  "small|broken|secret_told|betrayal"}`, a rise `{"With", "Kind": "offence", "Weight": "slight|jealous|insult|violence"}`.
+  - The engine draws the size (`rollInt`, seeded, replay-safe) from new data: `data/trust.json` `letdown`, `data/tension.json`
+    `offence`. The ranges are the old rule card's own numbers (no new balance); `jealous` is the card's flirting case (+5–10).
+  - `"Meant": "no_harm"` on a letdown takes the card's smaller sizes (a failed try 0–3, a clash of promises after a warning 3–5, a slipped
+    secret 8–10; a careless betrayal 8–10, which is new); `"Meant": "forced"` loses no Trust and says so in the Log.
+  - Then everything as before: the category's drop, Tension multipliers (mood, category, Trust band, Ezrel, the Dorm Head), Etnie's
+    floor, Althair's lock, word spreading to friends, apologies. Several letdowns or offences add up; Tension rises stay uncapped.
+  - A number written directly still works (old habit, old chats); when the narrator writes one and reports the word too, the larger
+    counts, never both. An unknown Weight changes nothing and is logged. Krieg's filter lets letdowns and offences through.
+  - `$Recent` words: "let them down", "offended them" (`data/bond_rules.json`).
+- **Rule text:** the 502 core line says "never write their numbers" and lists both kinds; the Trust/Tension card defines each word
+  and the `Meant` cases instead of number ranges; the Interactions card lists the two kinds.
+- **Tokens:** about +20 a turn with someone here, not the −400 the audit estimated: defining the words costs what the numbers did. The
+  gain is one channel for every social effect and no number to choose (and simpler work for an update model in extra-model mode).
+- Tests: new `test_narrator_batch8_v1590` (21); wording updated in `test_trust_v143`, `test_tension_v138`, `test_apology_v140`,
+  `test_greyarea_v144`, `test_newbond_v1611`, `test_playtest_v137`. Full `npm test` passes; with `ENGINE_DIFF` against the 1.58.0
+  engine (its version stamp set to 1.59.0, so `stepMigrate` behaves the same) every engine run is identical except the new test's
+  letdown run.
+- **To check live (owner):** `docs/TEST_CHECKLIST.md` 1.59.0. **Invented, to confirm:** the careless-betrayal size (8–10).
 
 ## v1.58.0 — Narrator-load batch 7: ready for MVU's extra-model mode, and an A/B tool (2026-10-04)
 
@@ -160,31 +185,6 @@ Batch 3 of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6 (U1 stage 1). Save fi
 - **To check live:** a card shows when its topic comes up (Mail Tower, a Project, exam week); a letter that arrives unexpectedly is
   still recorded from the core line.
 
-## v1.53.1 — Narrator-load batch 2: the mechanics audit and its baseline (2026-10-04)
-
-Batch 2 of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6 (U10). Tools only: the card's rules, engine and UI are unchanged (the version
-is bumped by the release rule). Save fixture v1.53.0.
-- **`tools/audit_chat.py --mechanics`** (with `--no-drift` to skip the character-drift checks). It reports per reply with an update
-  block: operations, lines, about-tokens, Analysis lines, and engine work the narrator did itself. That covers a Rank, XP or bond record
-  written, sums in the Analysis, stamina taken for the weather, the calendar turned by hand, a legacy reputation entry, a "_" or "$"
-  path, and Points changed next to a purchase.
-- **`tools/replay_chat.cjs`** replays every block through the current engine, from the first state the chat stored, or else the card's
-  starting state. It reads blocks the way MVU does, with the engine's recovery for malformed ones, the stray-path fix, and "_" paths
-  dropped. It returns what the engine corrected: blocks repaired or unreadable, lists moved from /Player, changes the schema dropped,
-  `_Log` corrections (time, a new bond's Trust, reverted writes, unknown names, refused reports), reminders, and the minutes each reply
-  moved. It costs 0 prompt tokens.
-- **Baseline** (`audit/AUDIT_2026-10-04_2_baseline_mekanik.md`, untracked like the audit). The owner's raw chats 2026-09-30 (rules 1.30.0)
-  and 2026-10-01 (1.34.2) give 49 blocks, all on day 1:
-  - blocks average 4.0 operations, 17.6 lines and ±233 tokens (max 487);
-  - `<Analysis>` averages 5.2 lines and is **34%** of the block (±79 tokens);
-  - stamina was taken for the weather in **7 of 13** replies of the rainy chat (T5);
-  - a whole bond record was inserted 4 times, and the engine replaced the written Trust each time;
-  - the engine repaired 8 malformed blocks (7 of 13 under 1.30.0, 1 of 36 under 1.34.2) and moved 2 lists from /Player.
-  1.53.0 targets the first four, so measure again on a new chat.
-- **Tests:** new `test_mechanics_audit_v1531` (a made-up chat: sizes, the engine-work flags, a repaired block, a stray path, a reverted
-  Rank, a replaced Trust). `test_audit_tool` and `test_saves` (new 1.53.0 fixture) pass.
-- **To check live:** nothing. Play on 1.53.x, export the chat, and run the tool again for the after numbers.
-
 ## Release index (one line per release, oldest first)
 
 - All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/archive/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; CHANGELOG 1.2.0/1.2.1).
@@ -322,3 +322,4 @@ is bumped by the release rule). Save fixture v1.53.0.
 - **v1.56.0 (2026-10-04):** Narrator-load batch 5: one place per fact (each present character's engine lines are one "Now with {{user}}" block in their Cast Sheet, band words instead of numbers, Recent 3 in words, rules said once); entry 512 tagged `[mvu_plot]` (−524 tokens a turn with three present).
 - **v1.57.0 (2026-10-04):** Narrator-load batch 6: the Journal as the story's spine (engine bookkeeping to `$ui.jnotes`), first visits and the Entrance tour remembered, a compact `<current_state>` (−577 tokens with 8 bonds), the card's own VectFox EventBase prompt.
 - **v1.58.0 (2026-10-04):** Narrator-load batch 7: ready for MVU's extra-model mode (506 untagged, no update rule points at `<cast>`, MVU 438f9ff verified), `audit_chat.py --compare` for the A/B test; one-call mode stays the default.
+- **v1.59.0 (2026-10-04):** Narrator-load batch 8: Trust drops and Tension rises reported by severity word (`letdown`, `offence`), sized by the engine from `trust.json` / `tension.json` with the old card's ranges (DECISIONS §6, owner-approved).

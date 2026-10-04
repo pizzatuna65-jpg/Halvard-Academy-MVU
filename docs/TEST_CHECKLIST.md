@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.59.0 (narrator-load batch 8): the three checks in its section below.
 - v1.58.0 (narrator-load batch 7): the A/B test of MVU's extra-model mode in its section below.
 - v1.57.0 (narrator-load batch 6): the three checks in its section below.
 - v1.56.0 (narrator-load batch 5): the two checks in its section below.
@@ -100,6 +101,13 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.59.0 — Narrator-load batch 8 (Trust and Tension by severity word)
+
+- [ ] A broken promise, an insult or a betrayal in the story comes back as `letdown` / `offence` interactions with a Weight, not as a
+      written Trust or Tension number (`audit_chat.py --mechanics`: no unknown-Weight lines in the corrections).
+- [ ] A clear accident gets `"Meant": "no_harm"`, a forced act `"Meant": "forced"`, and the character reacts in character either way.
+- [ ] Teasing both sides enjoy is reported as talk or hangout, never as an offence.
 
 ### v1.58.0 — Narrator-load batch 7 (MVU extra-model mode, A/B)
 

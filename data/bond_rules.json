@@ -213,7 +213,9 @@
    "defend": "stood up for them",
    "confide": "confided a secret",
    "understood": "they understood",
-   "choose": "chose them over someone else"
+   "choose": "chose them over someone else",
+   "letdown": "let them down",
+   "offence": "offended them"
   }
  },
  "_note_recent": "1.4.4 (owner): each bond keeps its latest `keep` moments with {{user}} (Bonds.<id>.$Recent: when, one sentence, effect), shown in the dossier newest first; <now> gives the narrator the newest `now` of them for each present character (1.56.0, owner-approved narrator-load audit U2: 3, was 5; in their Cast Sheet, the effect in words). The sentence is the Note the narrator adds to an interaction; without one, the kinds (phrases).",

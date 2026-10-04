@@ -180,5 +180,44 @@
    "text": "{{user}} is one of Ottavio's Sky students: he forgives them faster, trusts them sooner, and it shows."
   }
  },
- "understood_days": 30
+ "understood_days": 30,
+ "letdown": {
+  "_note": "1.59.0 (narrator-load audit U8, owner-approved 2026-10-04): the narrator reports a letdown as an interaction {With, Kind: 'letdown', Weight, Meant} and the engine draws the Trust drop from these ranges (rollInt, seeded), then applies the category's drop as for a written drop. Every letdown counts (no cap); a drop the narrator also wrote directly is not added twice (the larger one counts). The ranges are the 1.55.0 rule card's numbers. Meant: '' = meant it; 'no_harm' = carelessness or good intent (a real try that failed, a slipped secret, a lie to protect them or for a surprise, a clash of promises after a warning); 'forced' = they know {{user}} had no choice: no drop.",
+  "weights": {
+   "small": [
+    3,
+    5
+   ],
+   "broken": [
+    10,
+    15
+   ],
+   "secret_told": [
+    20,
+    20
+   ],
+   "betrayal": [
+    25,
+    40
+   ]
+  },
+  "no_harm": {
+   "small": [
+    0,
+    3
+   ],
+   "broken": [
+    3,
+    5
+   ],
+   "secret_told": [
+    8,
+    10
+   ],
+   "betrayal": [
+    8,
+    10
+   ]
+  }
+ }
 }

@@ -187,6 +187,7 @@ const MASK = new Set(REW.mask || []);
 // (Etnie, Kanae, Althair, Ezrel). Quiet days ease it by the category's decay; a fight eases a confrontational NPC.
 const TEN = /*@@TENSION@@*/{};
 const TE = TEN.effects || {};
+const OFFENCE = TEN.offence || {};   // 1.59.0 (U8)
 function tensionProfile(id) {
   const o = (TEN.overrides || {})[id];
   if (o) return { ...o, cat: 'override', decay: num(o.decay, 0), riseMult: o.rise_mult || 1 };
@@ -199,6 +200,7 @@ function tensionProfile(id) {
 // Althair, Ezrel, Caine, Krieg), and a Dorm Head is easier on their own students (Ottavio and Sky).
 const TRU = /*@@TRUST@@*/{};
 const TRE = TRU.effects || {};
+const LETDOWN = TRU.letdown || {};   // 1.59.0 (U8)
 const trustBand = x => bandOf(TRU.bands, x);
 function trustProfile(id, S, secretOut) {
   const dh = (TRU.dorm_head || {})[id], mine = !!(dh && S && S.Player && S.Player.Profile && S.Player.Profile.Dorm === dh.dorm);
@@ -3056,7 +3058,7 @@ function stepBonds(c) {
     // 1.3.0 Krieg (model B): Rank 1 from his introduction (the 0 -> 1 event is ready at once); then +weekly_xp every Monday while
     // Doves reputation >= min_doves (with hidden magic, also Dove attention <= max_attention), else Tension +1. Nothing from interactions.
     if (id === KR.id) {
-      byId[id] = (byId[id] || []).filter(a => /^(gift|apology|birthday)$/.test(a.Kind));
+      byId[id] = (byId[id] || []).filter(a => /^(gift|apology|birthday|letdown|offence)$/.test(a.Kind));
       if (b.Rank === 0) xp = need;
       else if (b0 && b.Rank < 10) for (let k = 0; k < weeksNew; k++) {
         if (repLv('Doves') >= KR.min_doves && !(S.Hidden._True_magic && num(S.Hidden.Dove_attention, 0) > KR.max_attention)) gain += KR.weekly_xp;
@@ -3120,7 +3122,18 @@ function stepBonds(c) {
     let tr = num(b.Trust, 50), tdropped = 0, trXP = 0;
     if (b0) {
       if (tr > tr0) { log.push(`${id}'s Trust cannot be raised directly (${tr0} -> ${tr} undone): report the deed as an interaction (keep, secret, defend, confide).`); tr = tr0; }
-      const written = tr; let tback = 0; tr = tr0;
+      // 1.59.0 (narrator-load audit U8, owner): a letdown is reported in words (Kind letdown, Weight, Meant) and the engine draws its
+      // size (data/trust.json letdown); every one counts; a drop also written directly is not added twice (the larger counts)
+      let wdrop = 0;
+      (byId[id] || []).forEach((a, i) => {
+        if (String((a && a.Kind) || '').trim().toLowerCase() !== 'letdown') return;
+        const wt = String(a.Weight || '').trim().toLowerCase(), meant = String(a.Meant || '').trim().toLowerCase();
+        if (meant === 'forced') { log.push(`${id} knows {{user}} had no choice: Trust does not fall.`); return; }
+        const r = ((meant === 'no_harm' ? LETDOWN.no_harm : LETDOWN.weights) || {})[wt];
+        if (!r) { log.push(`${id}: letdown Weight "${wt}" is unknown (small, broken, secret_told, betrayal); Trust unchanged.`); return; }
+        wdrop += rollInt(r[0], r[1], seed, dayNo, S.World.Time, id, i, 'letdown');
+      });
+      const written = Math.min(tr, tr0 - wdrop); let tback = 0; tr = tr0;
       // 1.4.4 (owner): once they understand {{user}} meant no harm, part of the last drop comes back (by nature, once, within 30 days)
       if ((byId[id] || []).some(a => /^understood$/i.test(String((a && a.Kind) || '').trim())) && RO.lock == null) {
         const back = Math.round(num(b.$tlast, 0) * num(RP.C.understood, 0));
@@ -3173,6 +3186,16 @@ function stepBonds(c) {
     // ---- 1.3.8 Tension: Althair's lock, Ezrel's half rises, fights, quiet-day decay, then its effects
     const TP = tensionProfile(id), t0 = b0 ? num(b0.Tension, 0) : num(b.Tension, 0);
     let t = num(b.Tension, 0), tgain = 0;
+    // 1.59.0 (narrator-load audit U8, owner): an offence is reported in words (Kind offence, Weight) and the engine draws its size
+    // (data/tension.json offence); several add up, never capped; a rise also written directly is not added twice (the larger counts)
+    let wrise = 0;
+    (byId[id] || []).forEach((a, i) => {
+      if (String((a && a.Kind) || '').trim().toLowerCase() !== 'offence') return;
+      const wt = String(a.Weight || '').trim().toLowerCase(), r = (OFFENCE.weights || {})[wt];
+      if (!r) { log.push(`${id}: offence Weight "${wt}" is unknown (slight, jealous, insult, violence); Tension unchanged.`); return; }
+      wrise += rollInt(r[0], r[1], seed, dayNo, S.World.Time, id, i, 'offence');
+    });
+    if (wrise > 0) { const direct = Math.max(0, tw0 - (b0 ? t0 : 0)); if (wrise > direct) t = _.clamp(t + wrise - direct, 0, 100); }
     if (b0 && t > t0) {
       if (TP.lock) {                                             // Althair: every rise becomes bond XP (/2, rounded up, capped a day)
         const add = Math.min(Math.ceil((t - t0) * (TP.convert || 0.5)), Math.max(0, num(TP.daily_cap, 10) - num(d.tx, 0)));
