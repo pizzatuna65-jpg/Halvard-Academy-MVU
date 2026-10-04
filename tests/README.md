@@ -17,6 +17,7 @@ Build first with `python tools/build_all.py`. Run all suites with `npm test`; ru
 | The airship (1.40.0) | `test_airship_v1400.cjs` (flights and who flies, boarding, kept aboard, landing at the destination, the bathing stalls, the seeded sky / stage / hold, the bar's rule, lore gate, `<now>`, 502, the Airship tab) |
 | Sunreach Bay (1.41.0) | `test_sunreach_v1410.cjs` (routes and names, the window, landing, the teachers' curfew, walks, carriages, water taxis, the tour boat, bets, who is met where by personality, the sea and the Leviathan, the index pattern for Sunreach, the forest, Avalon and the airship, `<now>`, 502, the day/night map tab) |
 | Engine integration audit | `test_audit_b1_v1161.cjs`, `test_audit_b2_v1170.cjs`, `test_integrations_v1180.cjs` |
+| Memory: nothing forgotten silently (1.61.0) | `test_memory_batch1_v1610.cjs` (open clues kept and the clue archive, Journal repeats and routine lines first, Extras' short records, the floor MVU replays, VectFox's year and turning points) |
 | Narrator load (1.53.0) | `test_narrator_batch1_v1530.cjs` (first-pact gate, 503 example and Analysis, the 502 engine list, plain dates written back, a bond from a fact, deed pairs, the remedial by presence, the Extras request in `<now>`, Journal dates once) |
 | Journal spine, first visits, compact state, VectFox prompt (1.57.0) | `test_narrator_batch6_v1570.cjs` |
 | One place per fact (1.56.0) | `test_narrator_batch5_v1560.cjs` (the Now block in the Cast Sheet, numbers once, Recent in words, rules said once, 512 tagged) |

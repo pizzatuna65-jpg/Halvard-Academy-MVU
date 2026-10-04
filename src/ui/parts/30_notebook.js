@@ -325,13 +325,16 @@ function linkChip(x, S) {
 function nbMystery(S) {
   const Cl = Object.entries(S.Clues || {}), My = S.Mysteries || {};
   const order = { open: 0, cold: 1, solved: 2 };
-  const threads = Object.keys(My).filter(t => Cl.some(([, c]) => c.Thread === t) || My[t].Summary).sort((a, b) => order[My[a].Status] - order[My[b].Status]);
+  // 1.61.0 (memory audit M1): clues past the cap of 40 ($ui.cluearch, the engine's), under their thread
+  const CA = Object.entries((S.$ui || {}).cluearch || {}).filter(([, c]) => c && c.Thread);
+  const threads = Object.keys(My).filter(t => Cl.some(([, c]) => c.Thread === t) || CA.some(([, c]) => c.Thread === t) || My[t].Summary).sort((a, b) => order[My[a].Status] - order[My[b].Status]);
   const board = threads.map(t => {
-    const m = My[t], cs = Cl.filter(([, c]) => c.Thread === t);
+    const m = My[t], cs = Cl.filter(([, c]) => c.Thread === t), olds = CA.filter(([, c]) => c.Thread === t).reverse();
+    const oldH = olds.length ? `<details class="old"><summary>${olds.length} older clue${olds.length === 1 ? '' : 's'}, kept on file</summary><ul class="log">${olds.map(([k, c]) => `<li><b>${esc(k)}</b>: ${esc(c.Detail || '')}${[c.Found, c.Where].filter(Boolean).length ? ` <span class="sub">${esc([c.Found, c.Where].filter(Boolean).join(' · '))}</span>` : ''}</li>`).join('')}</ul></details>` : '';
     return `<section class="thread ${m.Status}"><div class="row"><span class="t">${esc(t)}</span><span class="pill ${m.Status === 'open' ? 'w' : m.Status === 'solved' ? 'g' : ''}">${m.Status}</span></div>
       <p class="sum">${esc(m.Summary || 'Nothing pieced together yet.')}</p><div class="clues">${cs.map(([k, c], i) => `<div class="clue" style="--r:${[-1, .7, -.4, 1][i % 4]}deg"><b>${esc(k)}</b><div>${esc(c.Detail)}</div>
       <div class="sub">${esc([c.Found, c.Where, CLUE_SRC[c.Source]].filter(Boolean).join(' · '))}</div>${c.Links.length ? `<div class="meta">${c.Links.map(x => linkChip(x, S)).join('')}</div>` : ''}
-      ${m.Status === 'open' ? `<button class="btn sm" data-fill="${esc(`I follow up on the clue "${k}": `)}">Follow up</button>` : ''}</div>`).join('')}</div></section>`;
+      ${m.Status === 'open' ? `<button class="btn sm" data-fill="${esc(`I follow up on the clue "${k}": `)}">Follow up</button>` : ''}</div>`).join('')}</div>${oldH}</section>`;
   }).join('');
   const sec = _.groupBy(secretsOf(S), x => String(x).split('.')[0]);
   const truths = Object.entries(sec).map(([who, xs]) => {

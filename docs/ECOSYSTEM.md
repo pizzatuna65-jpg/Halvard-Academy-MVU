@@ -185,18 +185,26 @@ VectFox runs the ticked built-ins first and the custom patterns after them, in l
   is gone before the card's patterns see it;
 - delete any older custom pattern that would touch the block first, such as a catch-all "strip every HTML tag" (`<\/?[a-z][^>]*>`),
   and never replace `\n{3,}` with nothing (that glues paragraphs together; VectFox already turns 3+ newlines into one blank line);
-- import `docs/vectfox_cleaning_patterns.json` (Text Cleaning → Import; all seven pass VectFox's import check and are appended in order).
+- import `docs/vectfox_cleaning_patterns.json` (Text Cleaning → Import; all nine pass VectFox's import check and are appended in order).
+  After a card update that changes the file, delete the card's old "Eldrasil:" patterns first, then import it again.
 
 Each reply then reaches extraction as its prose plus one line such as `[In-world time: Y2 M1 W2 Wed 13:40, at Courtyards]`, which the
-card's prompt reads into `scene_time`. The patterns:
-1. turn the update block's `<Analysis>` Time line into that line (the year from Year 2, a place written without an arrow, time and
+card's prompt reads into `scene_time`, and, when the narrator wrote a Journal line in that reply, a line `[Turning point: …]`. The
+patterns:
+1. (1.61.0) copy the Journal line the narrator wrote in the update block (`/Journal/-`) into a `[Turning point: …]` line before the
+   block; the card's prompt stores it as one event of importance 6+ that persists, so VectFox's idea of what matters follows the
+   story's spine;
+2. turn the update block's `<Analysis>` Time line into the time line (the year from Year 2, a place written without an arrow, time and
    place on two lines, "->" arrows; this is why 503 keeps the full date in the Time line);
-2. drop any update block left;
-3. drop the `<StatusPlaceHolderImpl/>` tag;
-4. drop the card's dialogue-colour tags (`<say:Name>`), keeping the words;
-5. drop the preset's Colored Dialogue tags, keeping the words;
-6. drop NPC thoughts (`<npc_thoughts>`, the preset's Internal Thoughts);
-7. unwrap in-story graphics (Pop in Graphics), keeping their text.
+3. (1.61.0) give a Year 1 date its year (`Y1 M1 W2 …`): the narrator writes the year only from Year 2, and a stored event cannot be
+   changed later, so without it every Year 1 date would be ambiguous once Year 2 starts (504 reads a recalled date without a year
+   as Year 1, for events stored before 1.61.0);
+4. drop any update block left;
+5. drop the `<StatusPlaceHolderImpl/>` tag;
+6. drop the card's dialogue-colour tags (`<say:Name>`), keeping the words;
+7. drop the preset's Colored Dialogue tags, keeping the words;
+8. drop NPC thoughts (`<npc_thoughts>`, the preset's Internal Thoughts);
+9. unwrap in-story graphics (Pop in Graphics), keeping their text.
 
 So Mind, Knows, Next and Extras (inside the update block) and NPC thoughts never enter VectFox memory. `tests/test_vectfox_v1113.cjs`
 checks the patterns. The preset CoT's first reasoning line (`Now: …`) gives VectFox a second source for the date when the API returns
@@ -237,7 +245,8 @@ ABSOLUTE RULES (DO NOT BREAK)
    SEXUAL / INTIMATE SCENES: never extract the encounter itself. Extract only a consequence that would still stand without the scene (a promise, a confession, a revelation, a stated change in the relationship); otherwise return [].
 
 4. LINES THAT ARE NOT STORY:
-   - A line "[In-world time: <date>, at <place>]" is the card's clock. Copy its date and time into scene_time exactly as written, and its place into locations. It is never an event.
+   - A line "[In-world time: <date>, at <place>]" is the card's clock. Copy its date and time into scene_time exactly as written (the date starts with the campaign year, Y1, Y2 or Y3), and its place into locations. It is never an event.
+   - A line "[Turning point: <text>]" is the narrator's own note that the excerpt holds a turning point of the story. Extract that turning point as one event, importance 6 or more and should_persist true, with its details from the story text; never record it twice. The player's character appears in that line as a placeholder in double braces: use their name from the story text instead.
    - A block marked "[REASONING — CONTEXT ONLY, for date/time/location; NOT a source of events]" is the author's private planning. Use it only for scene_time and locations when the story text does not give them. Never extract an event from it, never copy its text, and treat anything found only there as not having happened.
    - The speaker label of the narrator's messages is the card's name, not a character: never list "Eldrasil" or "Halvard Academy" in characters.
    - Numbers from the game (points, ranks, XP, HP, Trust, Tension) are not events; never put them in summary, cause or result.
@@ -269,11 +278,11 @@ Each event object has these fields:
 - locations: place names as written, including the "at <place>" of the clock line.
 - factions: dorms, clubs, the Student Council, the Doves and other groups involved.
 - DateTime: null (the academy calendar is not a real calendar).
-- scene_time: the clock line's date and time verbatim (e.g. "M1 W2 Wed 13:40", "Y2 M3 W1 Mon 09:10"); "" if there is none.
+- scene_time: the clock line's date and time verbatim (e.g. "Y1 M1 W2 Wed 13:40", "Y2 M3 W1 Mon 09:10"); "" if there is none.
 - items: objects that matter to the event.
 - concepts: 1-3 abstract themes the event is about (trust, rivalry, belonging, secrecy, duty, the cost of power). Never a name, a place, an object or an action.
 - keywords: 6-10 distinctive search terms a later scene might use (rare nouns, names of things, key actions). No generic filler.
-- open_threads: only matters stated in the excerpt that remain open: a promise or debt with its terms ("Charles owes Trixie glazed sugar braids, agreed M1 W1 Mon"), a question a character asked and left unanswered, a threat, a planned meeting. Never speculative "Will X ...?" questions about how things might turn out. [] when there are none.
+- open_threads: only matters stated in the excerpt that remain open: a promise or debt with its terms ("Charles owes Trixie glazed sugar braids, agreed Y1 M1 W1 Mon"), a question a character asked and left unanswered, a threat, a planned meeting. Never speculative "Will X ...?" questions about how things might turn out. [] when there are none.
 
 =========================
 VALID OUTPUT EXAMPLES
@@ -282,7 +291,7 @@ Routine only (walking to the Canteen and ordering lunch):
 []
 
 One event:
-[{"event_type":"promise_or_oath","importance":4,"summary":"Trixie raced Charles through the rain to the Fire Wing porch and won. By the bet they made, Charles owes her glazed sugar braids from the Mall bakery tomorrow morning; she insists the deal is binding.","cause":"Trixie challenged Charles to a race to the dorm, loser buys breakfast.","result":"Charles owes Trixie pastries.","characters":["Charles","Trixie"],"locations":["Main Courtyard","Fire Wing"],"factions":["Fire Dormitory"],"DateTime":null,"scene_time":"M1 W1 Mon 13:05","items":["glazed sugar braids"],"concepts":["rivalry","play"],"keywords":["race","bet","rain","pastries","sugar braids","Mall bakery","breakfast","porch"],"open_threads":["Charles owes Trixie glazed sugar braids, agreed M1 W1 Mon"],"should_persist":true}]
+[{"event_type":"promise_or_oath","importance":4,"summary":"Trixie raced Charles through the rain to the Fire Wing porch and won. By the bet they made, Charles owes her glazed sugar braids from the Mall bakery tomorrow morning; she insists the deal is binding.","cause":"Trixie challenged Charles to a race to the dorm, loser buys breakfast.","result":"Charles owes Trixie pastries.","characters":["Charles","Trixie"],"locations":["Main Courtyard","Fire Wing"],"factions":["Fire Dormitory"],"DateTime":null,"scene_time":"Y1 M1 W1 Mon 13:05","items":["glazed sugar braids"],"concepts":["rivalry","play"],"keywords":["race","bet","rain","pastries","sugar braids","Mall bakery","breakfast","porch"],"open_threads":["Charles owes Trixie glazed sugar braids, agreed Y1 M1 W1 Mon"],"should_persist":true}]
 
 =========================
 EXCERPT
@@ -306,8 +315,15 @@ text through its own prompt slot, outside SillyTavern's World Info pipeline:
 - entries already triggered by keywords would be sent twice.
 
 ### Good to know
-- Deleting or editing an older message does not remove events already extracted from it; re-vectorize the chat if you rewrite
-  history. The card's variables are unaffected either way.
+- **Rewriting history leaves "ghost memories".** VectFox never removes an event when the message it came from is deleted or edited
+  [`core/eventbase-store.js`: events keep `source_message_hashes` and `deleteEventByHash` exists, but nothing calls it on a deletion
+  or an edit]; an edited window is extracted again, so the old and new versions both stay. After you delete or rewrite older messages
+  (a rollback of a few turns included):
+  - open the chunk visualizer, sort by `message_order`, and bulk-delete the events from the first message that changed onwards; or
+  - re-vectorize the chat from that message.
+
+  After a **branch**: re-vectorize the branch, or lock the parent's collection to the parent and delete the branch's events after the
+  branch point. The card's variables are unaffected either way (MVU keeps them per message).
 - The keyword query is your own last message: anchoring it with story words ("the scorched ledger", "Irene's warning") helps recall.
 - Rule 504 tells the narrator that recalled memories are the past and `<current_state>` is now (a recalled "300 points" never
   overrides the wallet), that a memory tells what happened, not who knows it, and that a character's Cast Sheet outranks a memory's

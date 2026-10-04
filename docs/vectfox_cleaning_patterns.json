@@ -1,8 +1,22 @@
 [
  {
+  "name": "Eldrasil: the narrator's Journal line as a turning-point note (card 1.61.0; before the time pattern)",
+  "pattern": "<UpdateVariable>(?=(?:(?!</UpdateVariable>)[\\s\\S])*?\"path\"\\s*:\\s*\"/Journal/(?:-|\\d+)\"\\s*,\\s*\"value\"\\s*:\\s*\"([^\\n]*?)\"\\s*\\})",
+  "replacement": "[Turning point: $1]\n<UpdateVariable>",
+  "flags": "g",
+  "enabled": true
+ },
+ {
   "name": "Eldrasil: keep in-world time (and place), drop the MVU update block",
   "pattern": "<UpdateVariable>(?=[\\s\\S]*?Time:[^\\n]*?(?:→|->)\\s*((?:Y\\d{1,2} )?M\\d{1,2} W\\d [A-Z][a-z]{2} \\d{1,2}:\\d{2}))(?=(?:[\\s\\S]*?Location:\\s*(?:[^\\n|]*?(?:→|->)\\s*)?([^\\n|(]+?)\\s*(?:\\(|\\||\\n))?)[\\s\\S]*?</UpdateVariable>",
   "replacement": "[In-world time: $1, at $2]",
+  "flags": "g",
+  "enabled": true
+ },
+ {
+  "name": "Eldrasil: a Year 1 date gets its year (card 1.61.0)",
+  "pattern": "\\[In-world time: (?=M\\d)",
+  "replacement": "[In-world time: Y1 ",
   "flags": "g",
   "enabled": true
  },

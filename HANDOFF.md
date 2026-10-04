@@ -3,13 +3,14 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.60.0** (2026-10-05): lore changes. The narrator may change any fact of the lore for this campaign
-(`Campus_State.Lore_changes`), only as a consequence of the story: the engine keeps a change only with a Cause and only when the reply
-shows it (`stepLoreChanges`, DECISIONS §2); every lore entry prints a change on record over its text; the player can undo one in the
-Journal. 1.53–1.59: the narrator-load batches. Live checks: `docs/TEST_CHECKLIST.md` "Open".
+**Snapshot:** card **v1.61.0** (2026-10-05): memory batch 1 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6. Nothing important is
+forgotten silently: open mysteries' clues outlive solved ones and leave into `$ui.cluearch`; Journal repeats are dropped and routine
+lines leave first; forgotten Extras keep a short record (`$ui.xgone`); the MVU hook reads the floor being replayed (`floorOf`) and
+warns of a far snapshot (`snapGap`); VectFox dates carry the year and Journal lines become turning points. 1.60.0: lore changes.
+Live checks: `docs/TEST_CHECKLIST.md` "Open".
 
-**Next task:** the owner plays 1.60 (live-check lore changes and 1.53–1.59), exports the chat and compares with the baseline
-(`audit_chat.py --mechanics`, `--compare`); the extra-model A/B test decides DECISIONS §9.
+**Next task:** memory batch 2 (M13: memory report and soak test), then batch 3 (pins; M4 needs the owner's yes/no). The owner plays
+in MVU extra-model mode; the card default switches only in batch 9.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

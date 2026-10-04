@@ -102,11 +102,18 @@ The **story hooks** are the narrator's private notes on promises and planted det
 
 ## 7. Memory
 
-To keep long campaigns affordable, the narrator reads only the **latest ~24 messages**; older ones reach it as `[…]`. What it remembers of the rest is the game state: the Journal (latest 30 turning points), the latest 10 known facts per bond, milestones, campus news and rumours, commitments, letters and clues. Older journal lines and facts leave the narrator's view but stay visible to you in the Notebook and dossiers, faded or listed first. That archive is large but not endless: the latest 300 journal lines and 40 older facts per bond. Secrets you have uncovered are kept for good, so a dossier never locks again.
+To keep long campaigns affordable, the narrator reads only the **latest ~24 messages**; older ones reach it as `[…]`. What it remembers of the rest is the game state: the Journal (latest 30 turning points), the latest 10 known facts per bond, milestones, campus news and rumours, commitments, letters and clues. Older journal lines and facts leave the narrator's view but stay visible to you in the Notebook and dossiers, faded or listed first. That archive is large but not endless: the latest 120 journal lines and 20 older facts per bond. Clues past the 40 the narrator reads stay on file in the Mystery panel (clues of solved or cold mysteries leave the narrator's list first). Secrets you have uncovered are kept for good, so a dossier never locks again.
 
 To send more chat, open the Regex extension and raise the **Min Depth** of "Eldrasil — State-as-memory: trim far chat (prompt)", or disable it to send everything.
 
 **Memory extensions.** VectFox works with this card as chat memory. Do not vectorize the card's own lorebook for semantic World Info, and use either VectFox ghosting or the card's trim regex, not both. Settings and ready-made cleaning patterns: `docs/ECOSYSTEM.md` (VectFox section) and `docs/vectfox_cleaning_patterns.json`. A compatible Gemini edit of the Realistic Frankenstein 2.2 preset and how the three fit together: `docs/ECOSYSTEM.md`.
+
+**Long campaigns (thousands of messages).** SillyTavern loads and saves the whole chat file on every message, and MVU keeps a full copy of the game state on every message it still has variables for. Some settings keep that manageable:
+- **MVU → Automatic variable cleanup: keep it ON.** It keeps the variables of the latest 20 messages plus one snapshot every 50 (*Snapshot retention interval*). Without it the chat file grows by the whole state on every message, which reaches gigabytes over a long campaign.
+- **Snapshot retention interval 50 → 100-200** for a long chat makes the file smaller. The price: rebuilding the state after a deep deletion replays more messages (a few seconds per hundred).
+- **After a branch, or deleting far back**, MVU may take the state from the last snapshot (up to 49 messages back), and the updates in between are missing. The engine notices and says so in a toast and the Log. Fix it with **MVU panel → Compatibility → Show legacy features → Replay floor**, accepting both suggested floors.
+- **SillyTavern backups:** the server keeps up to 50 backups per chat (`backups.common.numberOfBackups` in `config.yaml`). For a chat of tens of megabytes, lower it to 10-20 and keep an eye on disk space.
+- **VectFox:** after deleting or rewriting older messages, remove their events too (`docs/ECOSYSTEM.md` VectFox → Good to know); otherwise memories of the undone story come back.
 
 **Preset toggles that change how you play (Eldrasil preset, 1.5.0).** "🎮 Player Input Authority" is ON: you write what your student thinks, says and tries, and the world decides how others react and whether it works ("she agrees" in your message is a wish, not a fact). Turn it OFF if you want to direct the story yourself. "🌐 Output language" is OFF; turn it ON and change the language name in it to read the story in another language.
 

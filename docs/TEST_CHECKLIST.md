@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.61.0 (memory batch 1): the three checks in its section below.
 - v1.60.0 (lore changes): the four checks in its section below.
 - v1.59.0 (narrator-load batch 8): the three checks in its section below.
 - v1.58.0 (narrator-load batch 7): the A/B test of MVU's extra-model mode in its section below.
@@ -102,6 +103,15 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.61.0 — Memory batch 1 (nothing important forgotten silently)
+
+- [ ] Re-import `docs/vectfox_cleaning_patterns.json` (delete the old "Eldrasil:" patterns first) and re-paste the extraction prompt;
+      VectFox → debug query on a Year 1 reply shows `[In-world time: Y1 …]`, and a reply with a Journal line shows `[Turning point: …]`
+      before it and stores that event with importance 6+.
+- [ ] Branch from an older message (or delete far back) and send a message: if the state came from a far snapshot, the toast "State
+      came from message N" appears; MVU → Compatibility → Show legacy features → Replay floor, accepting both floors, rebuilds it.
+- [ ] Inventory → Mystery Board: once a chat has more than 40 clues, solved threads show "older clues, kept on file".
 
 ### v1.60.0 — Lore changes (the narrator changes a fact of the world, only from the story)
 

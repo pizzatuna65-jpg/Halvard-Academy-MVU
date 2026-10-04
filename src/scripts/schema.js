@@ -270,7 +270,8 @@ export const Schema = z.object({
   // 1.41.0: Sunreach Bay; Ride "carriage" or "boat" for this move, Bet {Game: dice|cards|wheel, Stake} at The Golden Tide (the engine
   // charges and settles them, then clears them)
   Sunreach: O({ Ride: Str(''), Bet: O({ Game: Str(''), Stake: Num(0, 100000, 0) }) }),
-  Journal: StrList(30),   // "[M1 W1 Mon] turning point" — long-term memory (used by state-as-memory in 5.3)
+  Journal: StrList(40),   // "[M1 W1 Mon] turning point" — long-term memory (used by state-as-memory in 5.3). 1.61.0: the engine keeps 30
+                          // (CAP.Journal); the schema allows 40 so the engine sees a reply's new lines and chooses which old line leaves (M2)
   Clues: Rec(v => ({
     Thread: s(v.Thread) || 'Unsorted clues', Detail: s(v.Detail), Where: s(v.Where), Found: s(v.Found),
     // 1.44.0: rumour / story = hearsay {{user}} pinned (player tool; unconfirmed); records = Encyclopaedic's real lead; '' = seen in play
@@ -400,6 +401,8 @@ export const Schema = z.object({
     since: z.any().prefault([]).catch([]), maybe: z.any().prefault([]).catch([]),   // 1.6.0 (N4): Next plans met again / that may bring someone here (engine)
     now: z.any().prefault(null).catch(null),                          // 1.48.0 (audit 3.11): <now>'s engine-made lines (stepNow; 1.47.0's $ui.here is in now.pres)
     xold: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.6.1 (N5): Extras records that left the full list; given back if they return (engine)
+    xgone: z.record(z.string(), z.any()).prefault({}).catch({}),      // 1.61.0 (memory audit M8): short records of Extras past xold { Who, Looks, Voice } (engine)
+    cluearch: z.record(z.string(), z.any()).prefault({}).catch({}),   // 1.61.0 (memory audit M1): clues past the cap, for the Mystery panel (engine)
     say: z.record(z.string(), z.number().int().min(0).max(63)).prefault({}).catch({}),   // 1.37.1: dialogue colour of each character present now (engine)
     sayx: z.record(z.string(), z.array(z.number().int().min(0).max(63)).max(3)).prefault({}).catch({}),   // 1.37.2: an Extras character's three dialogue colours (engine)
     stale: z.any().prefault([]).catch([]), phase: z.any().prefault(null).catch(null),   // 1.6.1: campus events with no news for a week; the campus phase (engine)
@@ -440,6 +443,7 @@ export const Schema = z.object({
     auth: Str(''),   // 'builder' only inside a Student Builder patch; lets it write the read-only fields once
     tool: z.coerce.number().prefault(0).catch(0),   // 1.11.1: 1 inside a player-tool patch (Builder, Settings): not a story turn (engine resets it)
     seed: z.coerce.number().prefault(0).catch(0),   // 5.3: chat seed for happenings, set once by the engine
+    floor: z.coerce.number().prefault(-1).catch(-1),   // 1.61.0 (memory audit M9): the chat floor this state was made on (the MVU hook)
     prizes: StrList(20),   // 1.0.3: competition prizes already paid ("Kingdom-Y1")
     grads: StrList(10),    // 1.0.3: campaign years whose graduates already left ("Y1")
     bdays: StrList(10),    // 1.7.4: campaign years in which {{user}}'s birthday already added a year to Player.Profile.Age ("Y2")

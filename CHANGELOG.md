@@ -1,7 +1,38 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.61.0 — Memory batch 1: nothing important forgotten silently (2026-10-05)
+
+Batch 1 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6 (M1, M2, M8, M9, M10a, M10b, M10d, M12). Built and tested for MVU's
+extra-model mode as well; nothing here is written by the AI, so neither model's load changes. Save fixture v1.60.0.
+- **Clues (M1, a bug):** over 40, the oldest clue left even when its mystery was still open, while clues of a solved one stayed.
+  Now clues of a solved or cold mystery leave first; an open one leaves only when none is left. A clue that leaves goes to
+  `$ui.cluearch` (120) and the Mystery panel lists it under its thread ("N older clues, kept on file"); written again, it comes back.
+- **Journal (M2):** a new line that says what an earlier line says (ignoring date, articles, punctuation) is dropped, whoever wrote it
+  (the owner's chat had the sorting line twice); a repeat already in a save goes on its next update. Over 30 lines, the engine's
+  routine lines from earlier replies (Meanwhile, a first visit) leave before the oldest turning point. The schema's Journal list
+  allows 40 (the engine keeps 30), so the engine sees a reply's new lines before choosing what leaves.
+- **Extras (M8):** an invented character past `$ui.xold` (40) leaves a short record in `$ui.xgone` (Who, Looks, Voice, cut short;
+  120) instead of vanishing, and comes back from it with the same face and voice.
+- **Replay (M9):** the MVU hook now finds the floor MVU is processing (`floorOf`: COMMAND_PARSED hands over that message's `mes`) and
+  reads the player's words and the seed hint from it, not from the chat's end; during MVU's restore or "Replay floor",
+  `stepLoreChanges` and the reminders now see the right player message. `$eng.floor` stamps the floor of each state; when the state
+  before a message came from more than 3 floors back (a snapshot after a branch or a deep deletion), the Log and a toast say so and
+  how to rebuild it (`snapGap`).
+- **VectFox (M10a, b, d):** two new cleaning patterns (nine in all): a Year 1 date gets `Y1` (stored events cannot be changed later,
+  so this must be in place before Year 2), and the narrator's Journal line in a reply becomes a `[Turning point: …]` line that the
+  card's prompt stores as one event of importance 6+ that persists. 504: a recalled date without a year is Year 1 (events stored
+  before). ECOSYSTEM: how to clear "ghost memories" after deleting, rewriting or branching.
+- **Long chats (M12):** PLAYER_GUIDE §7 "Long campaigns" (MVU cleanup ON, snapshot interval, Replay floor, ST backups, VectFox
+  hygiene; the archive sizes corrected to 120 journal lines and 20 facts); DECISIONS §11 three new verified rows (MVU cleanup,
+  restore and replay at 438f9ff; ST whole-file saves and backups; VectFox at scale), §8 the M1, M2, M8 rules.
+- Tests: new `test_memory_batch1_v1610` (24); `test_vectfox_v1113` expects `Y1` on Year 1 dates. Full `npm test` passes; the Mystery
+  panel was checked in a browser preview (no errors).
+- **To check live (owner):** `docs/TEST_CHECKLIST.md` 1.61.0. Re-import the VectFox cleaning patterns and re-paste the extraction
+  prompt (both changed). **Invented, to confirm:** the archive sizes (clues 120, short Extras records 120) and the gap that triggers
+  the warning (more than 3 floors).
 
 ## v1.60.0 — Lore changes: the narrator changes a fact of the world, only from the story (2026-10-05)
 
@@ -130,69 +161,6 @@ DECISIONS §8. Save fixture v1.56.0.
   matches the .txt). The table adds Skip Already-Visible Events = 20 (the chat already shows the latest ~24 messages).
 - **To check live** (TEST_CHECKLIST 1.57.0): Journal lines are turning points, not scene summaries; at a notable place a second visit
   plays as a return; after pasting the prompt into VectFox and re-vectorizing, fewer and cleaner events.
-
-## v1.56.0 — Narrator-load batch 5: one place per fact (2026-10-04)
-
-Batch 5 of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6 (U2). The owner approved the two changes to decisions on 2026-10-04.
-Save fixture v1.55.0.
-- **One block per person (DECISIONS §6, changed with approval).** The engine still makes each present character's lines (mood, bond,
-  Trust, Tension, recent moments, teasing, rank cue, Rank 4 company, gift). They are now one list, `$ui.now.people[id]`, printed in
-  that character's Cast Sheet as "Now with {{user}}". They were ±8 separate `<now>` lines per person. `<now>` prints a block only for
-  someone present without a sheet. The decision now reads "505 and the Cast Sheet print them".
-- **Numbers once.** Rank, Trust and Tension numbers appear only in `<current_state>`. The sheet's invariants and the block use band
-  words ("Bond with {{user}}: neutral trust, calm tension"), and "Stage with {{user}}" no longer carries the rank. The bands and their
-  effects (DECISIONS §6 Trust/Tension) are unchanged.
-- **Recent: 3 moments, effects in words (`bond_rules.json` `recent.now`, the 1.4.4 owner value, 5 → 3).** "Rank 2 → 3, XP +6,
-  Trust +3" now reads "grew closer, trust grew" (`fxWords`, shared through `AGE_JS`). Defining moments read the same way. The dossier
-  keeps 10 moments with their numbers.
-- **Said once:**
-  - the mood tail ("Mood colours their manner…") is no longer repeated per person;
-  - "deflects in character (pushing too soon adds Tension)" is said once, in 504;
-  - the ban on announcing ranks or perks is said once, in 504 (it left 502);
-  - "never who they are" is only in 504 (the Cast Sheet head explains the block instead);
-  - the shared tiers read "the highest tier and everything before";
-  - 506 lists prices, and how to report a purchase is 502's;
-  - the area place names are no longer listed in 502 (the lore index and "Walks from here" name them).
-  The rule cards that pointed to `<now>` for these lines now point to the Cast Sheet.
-- **Fix (DECISIONS §1 D2):** entry 512 (the alcohol rule, 1.54.0) was untagged and is now `[mvu_plot]`.
-- **Measured** with three bonded characters at the Canteen (1.55.0 engine and card against 1.56.0): `<now>` 1,696 → 631, Cast Sheet
-  6,223 → 6,874, 506 881 → 774, 502/504 about level; **−524 tokens a turn** (the audit expected −400 to −700).
-- **Tests:** new `test_narrator_batch5_v1560`. The Cast Sheet record was renewed (`tests/fixtures/cast_1560.json`; 1.47.0's record
-  proved the 1.48.0 split, and this text changed on purpose). Older suites that read the per-person `<now>` lines or the rank in the
-  stage line now read the person's block (apology, bonds, castsheet, greyarea, memory, recent, rules, tension, trust, world, the five
-  voice suites, cohort2: its sheet budget went from 3.6k to 3.8k with the block, batch5_shops, audit_batch7). `test_saves` (new 1.55.0
-  fixture) passes.
-- **To check live** (TEST_CHECKLIST 1.56.0): characters still keep to what they share and how they carry Trust and Tension with the
-  numbers gone from their sheets; nobody mentions a rank or a number in prose.
-
-## v1.55.0 — Narrator-load batch 4: the remaining rule cards and a tighter 502 core (2026-10-04)
-
-Batch 4 of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6 (U1 stage 2). Save fixture v1.54.0.
-- **Eleven more cards** in `data/rule_cards.json`, moved verbatim from 502, each with its trigger in engine `ruleCards`:
-  - Interactions: anyone here, someone mentioned, or a letter or message;
-  - Trust/Judging/Tension and Imprints: someone {{user}} has a bond with is here; Trust/Tension also on words such as a broken
-    promise, betrayal, a secret, a lie or an apology;
-  - the Old Hut custom: at the Old Hut;
-  - Training and Practice: a practice place listed in `<now>`, or training talk;
-  - the Arbiter Stone's dorm rule: not sorted yet, or Entrance morning;
-  - Combat_role: empty;
-  - favours: one pending, or offered today;
-  - Notices: at the Notice Board;
-  - the Vigil's effect: in the Bag or active.
-- **502 keeps a core line for each.** Interactions keeps its rank add-ons (Rank 5 gift, introduction, vouch) in 502 behind their
-  rank gates. When nobody {{user}} knows is here, Trust and Tension are summed up in two lines.
-- **Tighter core:**
-  - the restful-place list is gone (one clause stays; `<now>` gives the rate where {{user}} is);
-  - the Council meeting time is said once, in 504 (502 had it twice);
-  - the Romance line stays in the core, because it is about 40 tokens and depends on the player's setting.
-- **Measured** on 502 + 511 against 1.53.1 (before the cards): alone **−2,460 to −2,620 tokens per turn** (about 30% of 502); with a
-  bonded character here −1,130 (the bond cards are 1,330 tokens).
-- **Tests:** new `test_narrator_batch4_v1550`. Nine older suites that read 502's text now also read the cards (`test_apology_v140`,
-  `test_greyarea_v144`, `test_newbond_v1611`, `test_playtest_v137`, `test_recent_v145`, `test_tension_v138`, `test_trust_v143`,
-  `test_narrator_batch3_v1540`; `test_split_v146` led to the Note wording in the Interactions core). Every suite that reads 502 passes,
-  and so does `test_saves` (new 1.54.0 fixture).
-- **To check live** (TEST_CHECKLIST 1.55.0): with a friend present the trust scale and Interactions rules show and Trust drops are
-  still written; alone, a Tension rise is still reported from the core line.
 
 ## Release index (one line per release, oldest first)
 
@@ -333,3 +301,4 @@ Batch 4 of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6 (U1 stage 2). Save fi
 - **v1.58.0 (2026-10-04):** Narrator-load batch 7: ready for MVU's extra-model mode (506 untagged, no update rule points at `<cast>`, MVU 438f9ff verified), `audit_chat.py --compare` for the A/B test; one-call mode stays the default.
 - **v1.59.0 (2026-10-04):** Narrator-load batch 8: Trust drops and Tension rises reported by severity word (`letdown`, `offence`), sized by the engine from `trust.json` / `tension.json` with the old card's ranges (DECISIONS §6, owner-approved).
 - **v1.60.0 (2026-10-05):** Lore changes: the narrator may change any fact of the lore for this campaign (`Campus_State.Lore_changes`), kept by the engine only with a Cause and only when the reply shows it; printed over every lore entry with that name; Journal Undo; Location_changes folded in.
+- **v1.61.0 (2026-10-05):** Memory batch 1: open mysteries' clues outlive solved ones and leave into an archive, Journal repeats dropped and routine lines leave first, short records for forgotten Extras, the MVU hook reads the floor being replayed (and warns of a far snapshot), VectFox dates with the year and turning points, long-chat guidance.

@@ -27,7 +27,8 @@ ABSOLUTE RULES (DO NOT BREAK)
    SEXUAL / INTIMATE SCENES: never extract the encounter itself. Extract only a consequence that would still stand without the scene (a promise, a confession, a revelation, a stated change in the relationship); otherwise return [].
 
 4. LINES THAT ARE NOT STORY:
-   - A line "[In-world time: <date>, at <place>]" is the card's clock. Copy its date and time into scene_time exactly as written, and its place into locations. It is never an event.
+   - A line "[In-world time: <date>, at <place>]" is the card's clock. Copy its date and time into scene_time exactly as written (the date starts with the campaign year, Y1, Y2 or Y3), and its place into locations. It is never an event.
+   - A line "[Turning point: <text>]" is the narrator's own note that the excerpt holds a turning point of the story. Extract that turning point as one event, importance 6 or more and should_persist true, with its details from the story text; never record it twice. The player's character appears in that line as a placeholder in double braces: use their name from the story text instead.
    - A block marked "[REASONING — CONTEXT ONLY, for date/time/location; NOT a source of events]" is the author's private planning. Use it only for scene_time and locations when the story text does not give them. Never extract an event from it, never copy its text, and treat anything found only there as not having happened.
    - The speaker label of the narrator's messages is the card's name, not a character: never list "Eldrasil" or "Halvard Academy" in characters.
    - Numbers from the game (points, ranks, XP, HP, Trust, Tension) are not events; never put them in summary, cause or result.
@@ -59,11 +60,11 @@ Each event object has these fields:
 - locations: place names as written, including the "at <place>" of the clock line.
 - factions: dorms, clubs, the Student Council, the Doves and other groups involved.
 - DateTime: null (the academy calendar is not a real calendar).
-- scene_time: the clock line's date and time verbatim (e.g. "M1 W2 Wed 13:40", "Y2 M3 W1 Mon 09:10"); "" if there is none.
+- scene_time: the clock line's date and time verbatim (e.g. "Y1 M1 W2 Wed 13:40", "Y2 M3 W1 Mon 09:10"); "" if there is none.
 - items: objects that matter to the event.
 - concepts: 1-3 abstract themes the event is about (trust, rivalry, belonging, secrecy, duty, the cost of power). Never a name, a place, an object or an action.
 - keywords: 6-10 distinctive search terms a later scene might use (rare nouns, names of things, key actions). No generic filler.
-- open_threads: only matters stated in the excerpt that remain open: a promise or debt with its terms ("Charles owes Trixie glazed sugar braids, agreed M1 W1 Mon"), a question a character asked and left unanswered, a threat, a planned meeting. Never speculative "Will X ...?" questions about how things might turn out. [] when there are none.
+- open_threads: only matters stated in the excerpt that remain open: a promise or debt with its terms ("Charles owes Trixie glazed sugar braids, agreed Y1 M1 W1 Mon"), a question a character asked and left unanswered, a threat, a planned meeting. Never speculative "Will X ...?" questions about how things might turn out. [] when there are none.
 
 =========================
 VALID OUTPUT EXAMPLES
@@ -72,7 +73,7 @@ Routine only (walking to the Canteen and ordering lunch):
 []
 
 One event:
-[{"event_type":"promise_or_oath","importance":4,"summary":"Trixie raced Charles through the rain to the Fire Wing porch and won. By the bet they made, Charles owes her glazed sugar braids from the Mall bakery tomorrow morning; she insists the deal is binding.","cause":"Trixie challenged Charles to a race to the dorm, loser buys breakfast.","result":"Charles owes Trixie pastries.","characters":["Charles","Trixie"],"locations":["Main Courtyard","Fire Wing"],"factions":["Fire Dormitory"],"DateTime":null,"scene_time":"M1 W1 Mon 13:05","items":["glazed sugar braids"],"concepts":["rivalry","play"],"keywords":["race","bet","rain","pastries","sugar braids","Mall bakery","breakfast","porch"],"open_threads":["Charles owes Trixie glazed sugar braids, agreed M1 W1 Mon"],"should_persist":true}]
+[{"event_type":"promise_or_oath","importance":4,"summary":"Trixie raced Charles through the rain to the Fire Wing porch and won. By the bet they made, Charles owes her glazed sugar braids from the Mall bakery tomorrow morning; she insists the deal is binding.","cause":"Trixie challenged Charles to a race to the dorm, loser buys breakfast.","result":"Charles owes Trixie pastries.","characters":["Charles","Trixie"],"locations":["Main Courtyard","Fire Wing"],"factions":["Fire Dormitory"],"DateTime":null,"scene_time":"Y1 M1 W1 Mon 13:05","items":["glazed sugar braids"],"concepts":["rivalry","play"],"keywords":["race","bet","rain","pastries","sugar braids","Mall bakery","breakfast","porch"],"open_threads":["Charles owes Trixie glazed sugar braids, agreed Y1 M1 W1 Mon"],"should_persist":true}]
 
 =========================
 EXCERPT

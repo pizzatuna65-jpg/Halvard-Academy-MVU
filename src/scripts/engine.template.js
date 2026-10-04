@@ -20,7 +20,7 @@ const INITIATIVE_STAGES = /*@@INITIATIVE_STAGES@@*/{};      // 1.7.7 (FP1): appr
 const INITIATIVE_OPENNESS = /*@@INITIATIVE_OPENNESS@@*/{};  // scheduling weight only; never personality
 const canRomance = id => 'AC'.includes(BRANCH[id] || 'A'), canRival = id => 'AB'.includes(BRANCH[id] || 'A');
 const MENTION_DENY = new Set(/*@@MENTION_DENY@@*/[]);
-const EXTRAS_MAX = 20, EXTRAS_ARCHIVE = 40, STALE_DAYS = 7;   // 1.6.1 (Batch D): invented characters kept; campus events without news
+const EXTRAS_MAX = 20, EXTRAS_ARCHIVE = 40, EXTRAS_GONE = 120, STALE_DAYS = 7;   // 1.6.1 (Batch D): invented characters kept; campus events without news
 const PHASES = /*@@PHASES@@*/[];   // 1.6.1 (N6): campus phases (data/campus_phases.json; empty until the canon waves)
 const QUOTE_RX = /["“][^"”]*["”]/g;
 // 1.12.0 (section 8l): reminders of what an update may have left out
@@ -268,6 +268,7 @@ function canonLocation(loc) {
 }
 const onCampus = loc => { const p = placeOf(loc).toLowerCase(); return !p || CAMPUS.some(c => p === c || p.startsWith(c + ' ') || p.startsWith(c + ',')); };
 const CAP = { Notices: 10, Letters: 12, Clues: 40, Journal: 30 };
+const CLUE_ARCHIVE = 120;   // 1.61.0 (memory audit M1): clues past the cap, for the Mystery panel ($ui.cluearch)
 // 1.60.0: Lore_changes subjects -> lore entry uid (tools/common.py lore_names; build_card prints a change in that entry), NPC entries
 const LORE = /*@@LORE_NAMES@@*/{};
 const LC = { max: 40, perReply: 2 };   // lasting changes on record; new ones a reply may add
@@ -300,6 +301,8 @@ const lifeX = TU => (100 - (AMB_CALM[TU.amb_freq] || AMB_CALM[2])) / (100 - AMB_
 const HAPPEN_RATE = { off: 0, rare: 0.2, normal: 0.4, often: 0.65 };
 // hash32, rand01, roll100, d100, rollInt, pickOf and rollTable: shared.js (seeded draws)
 const JOURNAL_ARCHIVE = 120;
+// 1.61.0 (memory audit M2): the engine's routine Journal lines, which leave the window first (stepRecords)
+const JOURNAL_LOW = /^(?:\[[^\]]*\]\s*)?(?:Meanwhile: |First visit to )/;
 // 1.57.0 (narrator-load audit U3, owner-approved): the Journal the narrator reads is the story's spine (turning points, matters still
 // open, the engine's off-screen events). The engine's bookkeeping (rank and reputation changes, marks, proficiency ranks, week
 // recaps, perk use, a remedial attended, coin stolen) goes to $ui.jnotes: the player's Journal panel shows it, the narrator does not.
@@ -4163,7 +4166,14 @@ function stepRecords(c) {
   for (const [k, my] of Object.entries(S.Mysteries || {})) {
     if (my.Status === 'solved' && (!BMy[k] || BMy[k].Status !== 'solved') && hasB) { jnl.push(`Solved: ${k}${my.Summary ? ` (${my.Summary})` : ''}.`); S.$ui.toasts.push(`Mystery solved: ${k}`); }
   }
-  capRecord(S.Clues, CAP.Clues);
+  // 1.61.0 (memory audit M1): over the cap, clues of a solved or cold mystery leave first (oldest first), never an open one while
+  // such a clue is left; a clue that leaves goes to $ui.cluearch (the Mystery panel shows it), never deleted outright
+  const C0 = { ...(S.Clues || {}) };
+  capRecord(S.Clues, CAP.Clues, cl => ((S.Mysteries || {})[cl.Thread] || {}).Status !== 'open');
+  const CA = S.$ui.cluearch = _.isPlainObject(S.$ui.cluearch) ? S.$ui.cluearch : {};
+  for (const k of Object.keys(C0)) if (!(k in S.Clues)) { delete CA[k]; CA[k] = C0[k]; }
+  for (const k of Object.keys(S.Clues)) delete CA[k];   // the story wrote it again
+  capRecord(CA, CLUE_ARCHIVE);
 }
 
 // ---- 8c. Batch 5.2: club, competition, projects, trip ----
@@ -4490,14 +4500,25 @@ function stepBag(c) {
   S.Journal = (S.Journal || []).map(line => (J0.has(line) ? line : /^\[(Y\d+ )?M\d/.test(line) ? (S.World.Year > 1 ? withYear(line, S.World.Year) : line) : `[${dstamp(S.World)}] ${line}`));
   // 1.35.2 (owner playtest): the narrator journaled the sorting in its own words and the engine added its line too. An engine
   // line replaces a narrator line from this reply that says the same thing (ignoring the date, articles and punctuation).
+  const jkey = l => String(l).replace(/^\[[^\]]*\]\s*/, '').toLowerCase().replace(/\b(the|a|an)\b/g, ' ').replace(/[^a-z0-9]+/g, ' ').trim();
   if (jnl.length) {
-    const jkey = l => String(l).replace(/^\[[^\]]*\]\s*/, '').toLowerCase().replace(/\b(the|a|an)\b/g, ' ').replace(/[^a-z0-9]+/g, ' ').trim();
     const mine = new Set(jnl.map(jkey));
     S.Journal = S.Journal.filter(l => J0.has(l) || !mine.has(jkey(l)));
   }
   for (const line of jnl) S.Journal.push(`[${dstamp(S.World)}] ${line}`);
   if (c.notes.length) S.$ui.jnotes = [...(S.$ui.jnotes || []), ...c.notes.map(l => `[${dstamp(S.World)}] ${l}`)].slice(-JOURNAL_ARCHIVE);   // 1.57.0
-  S.Journal = [...new Set(S.Journal)].slice(-CAP.Journal);
+  // 1.61.0 (memory audit M2; the owner's chat had "Sorted into (the) Fire Dormitory by the Arbiter Stone." twice): a new line that
+  // says what an earlier line in the Journal says is dropped, whoever wrote it (the earliest stays, with its date)
+  {
+    const seen = new Set();
+    S.Journal = S.Journal.filter(l => { const k = jkey(l); if (seen.has(k)) return false; seen.add(k); return true; });
+  }
+  // over the cap, the engine's routine lines from earlier replies (Meanwhile, a first visit) leave before the oldest turning point
+  if (S.Journal.length > CAP.Journal) {
+    const low = S.Journal.filter(l => J0.has(l) && JOURNAL_LOW.test(l)).slice(0, S.Journal.length - CAP.Journal), drop = new Set(low);
+    S.Journal = S.Journal.filter(l => !drop.has(l));
+  }
+  S.Journal = S.Journal.slice(-CAP.Journal);
   // F21 state-as-memory: the narrator reads the last CAP.Journal lines; older ones (and lines the AI removed) move to $ui.archive
   if (hasB) {
     const kept = new Set(S.Journal), arch = S.$ui.archive || (S.$ui.archive = []);
@@ -4574,7 +4595,15 @@ function stepExtras(c) {
     }
     const ext = Object.keys(P).filter(id => !NPC_IDS.has(id));
     const XO = S.$ui.xold = _.isPlainObject(S.$ui.xold) ? S.$ui.xold : {};
-    for (const id of ext) if (!(id in X)) { const o = id in XO ? id : xMatch(id, Object.keys(XO)); if (o) { X[id] = XO[o]; delete XO[o]; } }
+    // 1.61.0 (memory audit M8): past the archive an invented character leaves a short record in $ui.xgone (who they are, how they
+    // look and sound, cut short); one who turns up again later comes back from it with the same face and voice
+    const XG = S.$ui.xgone = _.isPlainObject(S.$ui.xgone) ? S.$ui.xgone : {};
+    for (const id of ext) if (!(id in X)) {
+      const o = id in XO ? id : xMatch(id, Object.keys(XO));
+      if (o) { X[id] = XO[o]; delete XO[o]; continue; }
+      const g = id in XG ? id : xMatch(id, Object.keys(XG));
+      if (g) { X[id] = { ...XG[g] }; delete XG[g]; }
+    }
     const bp = Object.keys((hasB && B.Scene && B.Scene.Present) || {}).filter(id => !NPC_IDS.has(id));
     const wasL = new Set(bp.map(k => k.trim().toLowerCase())), wasF = new Set(bp.map(first));
     const XS = S.$eng.xs = _.isPlainObject(S.$eng.xs) ? S.$eng.xs : {};
@@ -4592,7 +4621,12 @@ function stepExtras(c) {
     for (const k of Object.keys(X)) if (num(X[k].$seen, -1) < 0) X[k].$seen = absA;   // written now: seen now
     const out = Object.keys(X).filter(k => !X[k].Keep && !ext.includes(k)).sort((a, b) => num(X[a].$seen, -1) - num(X[b].$seen, -1));
     for (const k of out.slice(0, Math.max(0, Object.keys(X).length - EXTRAS_MAX))) { XO[k] = X[k]; delete X[k]; }
-    for (const k of Object.keys(XO).sort((a, b) => num(XO[b].$seen, -1) - num(XO[a].$seen, -1)).slice(EXTRAS_ARCHIVE)) delete XO[k];
+    for (const k of Object.keys(XO).sort((a, b) => num(XO[b].$seen, -1) - num(XO[a].$seen, -1)).slice(EXTRAS_ARCHIVE)) {
+      const r = XO[k], cut = (v, n) => { const t = String(v || '').trim(); return t.length > n ? t.slice(0, n - 1).replace(/\s+\S*$/, '') + '…' : t; };
+      delete XG[k]; XG[k] = _.pickBy({ Who: cut(r.Who, 80), Looks: cut(r.Looks, 80), Voice: cut(r.Voice, 60) }, Boolean);
+      delete XO[k];
+    }
+    capRecord(XG, EXTRAS_GONE);
     xHere = ext.filter(id => id in X && String(X[id].Who || '').trim());
     xNew = ext.filter(id => (id in X && !String(X[id].Who || '').trim()) || (!(id in X) && num((XS[xsKey[id]] || {}).n, 0) >= 2));
   }
@@ -5466,6 +5500,27 @@ function fixStrayPaths(commands) {
   }
   return [...new Set(moved)];
 }
+// 1.61.0 (memory audit M9): the floor MVU is processing is the message whose text it parsed (COMMAND_PARSED hands over that
+// message's `mes`, MagVarUpdate 438f9ff updateVariables). It is the chat's last message in play, an earlier one while MVU replays
+// floors (its restore after a deletion, "Replay floor"). The player's words and the seed hint come from that floor; the newest copy
+// of the text wins (a repeated identical message is the latest one).
+function floorOf(chat, content) {
+  let at = chat.length - 1;
+  if (content) for (let i = chat.length - 1; i >= 0; i--) if (chat[i] && String(chat[i].mes || '') === content) { at = i; break; }
+  let said = '';
+  for (let i = at; i >= 0; i--) { const x = chat[i] || {}; if (x.is_user && !x.is_system && !/\(player tool\)/.test(String(x.mes || ''))) { said = String(x.mes || ''); break; } }
+  return { at, said, sent: String((chat[at] || {}).send_date || '') };
+}
+// The state before this floor normally comes from the floor just before it. MVU takes the newest earlier floor that still holds
+// data (getLastValidVariable), so after a branch or a deep deletion it can be a snapshot up to 49 floors back, and every update in
+// between is missing. $eng.floor stamps the floor each state was made on.
+const SNAP_GAP = 3;
+function snapGap(before, at) {
+  const bf = before && before.$eng ? Number(before.$eng.floor) : NaN, k = at - bf;
+  if (!(at >= 0) || !(bf >= 0) || !(k > SNAP_GAP)) return null;
+  return { log: `The state before this message came from message ${bf}, ${k} messages back (MVU keeps the variables of only some older messages), so the updates in between are missing. To rebuild them: MVU panel → Compatibility → Show legacy features → Replay floor, accepting both suggested floors.`,
+    toast: `State came from message ${bf} (${k} back): MVU → Show legacy features → Replay floor` };
+}
 if (typeof eventOn === 'function' && typeof waitGlobalInitialized === 'function') {
   (async () => {
     await waitGlobalInitialized('Mvu');
@@ -5487,18 +5542,23 @@ if (typeof eventOn === 'function' && typeof waitGlobalInitialized === 'function'
       if (moved.length) repaired = [repaired, `Wrong path moved to the root (${moved.join(', ')}): these lists are top-level, e.g. /Inventory/<item>.`].filter(Boolean).join(' ');
     });
     eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, (variables, variables_before) => {
-      let hint = '', said = '';
-      try { const c = SillyTavern.chat || [], m = c[c.length - 1] || {}; hint = String(m.send_date || '') + '|' + (SillyTavern.getCurrentChatId ? SillyTavern.getCurrentChatId() : ''); } catch (e) { /* seed falls back to world time */ }
-      // 1.12.0: the player's last visible message (not a hidden player-tool entry), for the reminders of section 8l
-      try { const c = SillyTavern.chat || []; for (let i = c.length - 1; i >= 0; i--) { const x = c[i] || {}; if (x.is_user && !x.is_system && !/\(player tool\)/.test(String(x.mes || ''))) { said = String(x.mes || ''); break; } } } catch (e) { /* no reminders from the player's words */ }
+      let hint = '', said = '', at = -1;
+      // 1.12.0: the player's last visible message (not a hidden player-tool entry), for the reminders of section 8l. 1.61.0: of the
+      // floor being processed (floorOf), which is not the chat's last message while MVU replays
+      try { const F = floorOf(SillyTavern.chat || [], text); at = F.at; said = F.said; hint = F.sent + '|' + (SillyTavern.getCurrentChatId ? SillyTavern.getCurrentChatId() : ''); } catch (e) { /* seed falls back to world time */ }
       // 1.16.1 (audit B8): the engine edits the state in place. If it fails halfway, the state goes back to what it was before
       // this reply (a half-run engine must not be saved), and the player is told so: swipe, or report the error.
       const before = variables_before && variables_before.stat_data;
       const snap = _.cloneDeep(before && before.World ? before : variables.stat_data);
       try {
         runEngine(variables.stat_data, before, text, hint, said); text = '';
+        const S = variables.stat_data, gap = snapGap(before, at);
+        if (at >= 0 && S.$eng) S.$eng.floor = at;
+        if (gap) {
+          S._Log = [...(Array.isArray(S._Log) ? S._Log : []), gap.log].slice(-12);
+          if (S.$ui && Array.isArray(S.$ui.toasts)) S.$ui.toasts.push(gap.toast);
+        }
         if (repaired) {
-          const S = variables.stat_data;
           S._Log = [...(Array.isArray(S._Log) ? S._Log : []), repaired].slice(-12);
           if (/could not be read/.test(repaired) && S.$ui && Array.isArray(S.$ui.toasts)) S.$ui.toasts.push('Update block unreadable: swipe the reply');
           repaired = '';
