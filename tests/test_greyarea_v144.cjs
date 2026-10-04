@@ -3,6 +3,7 @@
 // intent, teasing and the other grey areas (rule 502, the Teasing line in <now>).
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
 const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
+const PP = (X, id) => ((((X || {}).$ui || {}).now || {}).people || {})[id] ? X.$ui.now.people[id].join('\n') : '';   // 1.56.0 (U2): a person's block (their Cast Sheet)
 console.log('Grey areas 1.4.4');
 const clone = o => JSON.parse(JSON.stringify(o));
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -66,5 +67,5 @@ ok(/by what the character believes \{\{user\}\} meant/.test(rules) && /Teasing, 
   'rule 502: intent, teasing, consent, the understood kind');
 const now505 = fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/505.txt'), 'utf8');
 const nw = ejs.render(now505, { getvar: k => require('lodash').get({ stat_data: S }, k) });
-ok(/Teasing \(how each present character takes it\): [^\n]*Sophia loves it, shoves included/.test(nw) && /Irene tolerates light teasing from those they trust/.test(nw) && /Etnie any attention from \{\{user\}\} is a gift/.test(nw),
+ok(/Teasing: loves it, shoves included/.test(PP(S, 'Sophia')) && /Teasing: tolerates light teasing from those they trust/.test(PP(S, 'Irene')) && /Teasing: any attention from \{\{user\}\} is a gift/.test(PP(S, 'Etnie')),
   '<now>: how each present character takes teasing');

@@ -3,14 +3,13 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.55.0** (2026-10-04): narrator-load batches 3–4: situational rule cards. 502 keeps a core line per topic;
-19 full rules are cards in `data/rule_cards.json` (Letters, Projects, Competition, Exams, Tutoring, Trip, Pacts, first pact,
-Interactions, Trust/Tension, Imprints, Old Hut, Training, Practice, Dorm, Combat_role, favours, Notices, the Vigil), listed by engine
-`ruleCards` (`$ui.now.rules`) and printed by entry 511 before `<now>`; alcohol is keyword entry 512. Against 1.53.1: −2,500 tokens a
-turn alone. v1.53.1: `audit_chat.py --mechanics` and its baseline. Live checks: `docs/TEST_CHECKLIST.md` "Open".
+**Snapshot:** card **v1.56.0** (2026-10-04): narrator-load batch 5 (U2): each present character's engine lines are one
+"Now with {{user}}" block in their Cast Sheet (`$ui.now.people`), with band words; Rank/Trust/Tension numbers only in
+`<current_state>`; Recent 3 moments in words; rules said once. 1.54–1.55: situational rule cards (`data/rule_cards.json`, engine
+`ruleCards`, entry 511). 1.53.1: `audit_chat.py --mechanics`. Live checks: `docs/TEST_CHECKLIST.md` "Open".
 
-**Next task:** live-check 1.53–1.55 and measure a new chat with `audit_chat.py --mechanics`; then narrator-load batch 5 (U2, one
-place per fact; touches DECISIONS §6) or batch 6 (U3; needs the owner's OK on the Journal window).
+**Next task:** live-check 1.53–1.56 and measure a new chat with `audit_chat.py --mechanics`. Narrator-load batch 6 (U3, compact
+`<current_state>`) needs the owner's OK on the Journal window (DECISIONS §8); batch 7 (extra-model mode), batch 8 (U8, §6).
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

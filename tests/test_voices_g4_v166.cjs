@@ -23,17 +23,17 @@ ok(/<narrator_only>\nAlone[^\n]*\n- Scene: someone has crossed him\.[^\n]*\n- Sc
 ok(/Never sounds like: \(glasses on\) boastful, crude, impatient or unkind/.test(t), 'Gareth: never sounds like, glasses on');
 const pub = Object.values(C.voice.Gareth.stages).join(' ') + C.voice.Gareth.scenes.join(' ') + C.voice.Gareth.term_used + C.voice.Gareth.carries;
 ok(!/sabotag|ruin|kindest to|sees? through/i.test(pub), 'Gareth: no public line names the sabotage or what he does to people who see through him');
-ok(/Stage with \{\{user\}\} \(Rank 10\): \{\{user\}\} is his one exception to coming first/.test(at('Gareth', 10)), 'Gareth at Rank 10: the 9-10 stage matches his benefit');
+ok(/Stage with \{\{user\}\}: \{\{user\}\} is his one exception to coming first/.test(at('Gareth', 10)), 'Gareth at Rank 10: the 9-10 stage matches his benefit');
 
 // Sophia: never Blood
 t = at('Sophia');
 ok(/she has never pulled water from a living body/.test(t) && /Carries: a tactics book/.test(t), 'Sophia: the Blood line and her props');
-ok(/Stage with \{\{user\}\} \(Rank 4\): \{\{user\}\} has hit back at least once/.test(at('Sophia', 4)), 'Sophia at Rank 4: the 3-5 stage');
+ok(/Stage with \{\{user\}\}: \{\{user\}\} has hit back at least once/.test(at('Sophia', 4)), 'Sophia at Rank 4: the 3-5 stage');
 
 // Royhan: prejudice, nothing more
 ok(/never imply he is anything from the Crack/.test(at('Royhan')) && /Change: shaped\b/.test(at('Royhan')), 'Royhan: the horns are prejudice only; shaped');
 ok(/Krieg: always his full name, never shortened/.test(at('Caspian')) && !/Commander/.test(JSON.stringify(C.voice.Caspian)), 'Caspian: Krieg by full name, no invented title');
-ok(/Stage with \{\{user\}\} \(Rank 9\): tells everyone who will listen that \{\{user\}\} is her friend/.test(at('Ruby', 9)), 'Ruby at Rank 9: the 9-10 stage');
+ok(/Stage with \{\{user\}\}: tells everyone who will listen that \{\{user\}\} is her friend/.test(at('Ruby', 9)), 'Ruby at Rank 9: the 9-10 stage');
 
 // size: one G4 NPC alone, full sheet
 const sizes = G4.map(id => [id, Math.round(at(id).length / 4)]);

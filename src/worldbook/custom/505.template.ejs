@@ -14,7 +14,7 @@ const COUNCIL = getvar('stat_data.Campus_State.Council') || {};
 const CANDIDATES = (COUNCIL.Candidates || {})[String(Y)] || {};
 const sick = FULL && WX.flu ? (WX.sick || []) : [];
 // 1.48.0 (audit 3.11): the lines the engine makes for <now> (engine stepNow, $ui.now): the outside area, presence and the class, the
-// campus walks, ambience, moods, and each present character's bond, Trust, Tension, recent moments and teasing
+// campus walks, ambience (each present character's lines are in their Cast Sheet since 1.56.0)
 const NOW = UI.now || {};
 const cur = String(W._Curfew || '');
 // 1.44.0 (Agenda): one feed (engine stepAgenda): the academy events of the next seven days (not one running today, not the Month 12
@@ -27,7 +27,6 @@ const HK = on('hooks') ? Object.entries(getvar('stat_data.Hooks') || {}).filter(
 const hDue = HK.filter(([k, h]) => h._State === 'due' || h._State === 'overdue'), hOld = HK.filter(([k, h]) => h._State === 'stale' && h.Weight >= 2);
 const GS = on('gossip') ? (UI.gossip || []).slice(-5).reverse() : [];
 const PRES = Object.keys(getvar('stat_data.Scene.Present') || {});
-const moods = NOW.moods || [];   // 1.48.0 (audit 3.11): engine $ui.now
 const BT = getvar('stat_data.Battle') || {};
 // 1.5.1 (P6): who spoke in the last reply without being in Scene.Present, and who was only mentioned (engine $ui.cast)
 const CAST = UI.cast || {}, PRON = /*@@PRON@@*/{};
@@ -43,18 +42,11 @@ const INITIATIVE = on('npc_initiative') ? UI.initiative : null;   // 1.7.7 (FP1)
 const AREAS = UI.area || {};
 const AREA = ['forest', 'avalon', 'airship', 'sunreach'].some(k => AREAS[k] && AREAS[k].on);
 const JAGES = [...new Set((getvar('stat_data.Journal') || []).slice(-5).reverse().map(l => (/^\[([^\]]+)\]/.exec(String(l)) || [])[1]).filter(w => w && ageOf(w, W)))];   // 1.53.0: each date once
-// 1.2.2 bonds: for each present NPC, what they will talk about at this rank (openness shifts the early tiers; goals, views of others
-// and the past need the real rank; secrets never come from rank) and what the bond allows
-const RANK4 = /*@@RANK4@@*/{};
+// 1.56.0 (narrator-load audit U2): each present character's bond, Trust, Tension, mood, recent moments and teasing are one block in
+// their Cast Sheet (engine $ui.now.people); <now> prints it only for someone present without a sheet
 const BDAYS = /*@@BDAYS@@*/{};
 const BONDS = getvar('stat_data.Bonds') || {};
-const bondLines = NOW.bond || [], trustLines = NOW.trust || [];   // 1.48.0 (audit 3.11): engine $ui.now
-const rankCues = (UI.rank_cues || []).filter(x => x && PRES.includes(x.id));
 const access = UI.rank_access || {};
-// 1.3.8 Tension: how each present character carries it (data/tension.json: category or personal override), from Friction (20) up
-const tensionLines = NOW.tension || [];
-// 1.4.4 (owner): each present character's latest moments with {{user}} (Bonds.<id>.$Recent, newest first) for consistency
-const recentLines = NOW.recent || [], banterLine = NOW.banter || '';
 // 1.3.0 reputation: what each non-zero level means for how staff, students and the Doves treat {{user}}
 const REPD = /*@@REP@@*/{};
 const RPN = PR.Reputation || {};
@@ -157,8 +149,6 @@ Sleep: <%- UI.sleep.vigil ? 'The Vigil is active.' : 'Sleep debt: ' + UI.sleep.l
 Outdoor casting fights the wind: mist and smoke scatter, sound carries away, fire runs downwind, aimed spells drift. NPCs face the same wind in-story. An active wind-blocking barrier shelters casting behind it.
 <%_ } if (UI.party) { _%>
 Birthday surprise (narrator only): <%- UI.party.host %> organises a party at <%- UI.party.where %>, 18:00 until curfew. Guests: <%- UI.party.guests.join(', ') || 'none on record' %>. Keep it secret in the morning; small clues and excuses are fine. Only report birthday_party for guests actually attending, with Scene.Present and Location updated.
-<%_ } for (const m of moods) { _%>
-<%- m %>
 <%_ } _%>
 <%_ if (FULL && BT.Active && WX.field && on('battle')) { _%>
 Battle field (outdoors): <%- WX.field %>.
@@ -214,29 +204,8 @@ May be here by their own plans or appointments: <%- MAYBE.map(([id, what]) => id
 <%_ if (JAGES.length) { _%>
 Journal dates, newest first: <%- JAGES.map(w => w + ' = ' + ageOf(w, W)).join('; ') %>
 <%_ } _%>
-<%_ for (const l of bondLines) { _%>
-Bond: <%- l %>
-<%_ } _%>
-<%_ for (const l of tensionLines) { _%>
-Tension: <%- l %>
-<%_ } _%>
-<%_ for (const l of trustLines) { _%>
-Trust: <%- l %>
-<%_ } _%>
-<%_ for (const l of recentLines) { _%>
-Recent with {{user}}: <%- l %>
-<%_ } _%>
-<%_ if (banterLine) { _%>
-Teasing (how each present character takes it): <%- banterLine %>
-<%_ } _%>
-<%_ for (const x of rankCues) { _%>
-<%- x.id %> has grown closer through this ordinary interaction. Let one small change in conduct show naturally when it fits; never announce a rank, unlock, XP, or perk.
-<%_ } _%>
-<%_ for (const id of PRES.filter(id => BONDS[id] && BONDS[id].Rank >= 4 && RANK4[id])) { _%>
-<%- id %> can actively accompany: <%- RANK4[id].join(', ') %>. Count the Rank 4 bonus only when appropriate shared study or training actually happens; do not mention the multiplier.
-<%_ } _%>
-<%_ for (const id of PRES.filter(id => BONDS[id] && BONDS[id].$gift_pending)) { _%>
-<%- id %>'s unique gift awaits a natural handover in the story. Once actually given, report /Interactions/- {"With":"<%- id %>","Kind":"rank_gift"}; do not conjure it into inventory beforehand.
+<%_ for (const id of Object.keys(NOW.people || {}).filter(id => !(CAST.full || []).includes(id) && !(CAST.brief || []).includes(id))) { _%>
+Now with {{user}}, <%- id %>: <%- NOW.people[id].join(' ') %>
 <%_ } _%>
 <%_ if ((access.dorms || []).length) { _%>
 Accompanied dorm visits available today: <%- access.dorms.join(', ') %>. The host must remain beside {{user}}; curfew, lockdown and private rooms still apply.

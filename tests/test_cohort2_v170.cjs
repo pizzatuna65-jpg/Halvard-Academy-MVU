@@ -50,7 +50,7 @@ ok(!S.Bonds.Linus && !(S.$ui.cast.full || []).includes('Linus'), 'Year 1: Linus 
 S = T(Y2, [here(['Linus', 'Maple', 'Tsubaki'])]);
 ok(S.Bonds.Linus.Trust === 60 && S.Bonds.Maple.Trust === 50 && S.Bonds.Tsubaki.Trust === 60, 'Year 2: bonds start at their own Trust (open 60, normal 50)');
 let cs = R(509, S);
-ok(/\[Linus Tallyworth\] full sheet/.test(cs) && /Year 1 student, Viridian dorm/.test(cs) && /Stage with \{\{user\}\} \(Rank 0\): \{\{user\}\} is a page in the Tally/.test(cs), 'Year 2: Linus has a full sheet as a Year 1 student, with his stage');
+ok(/\[Linus Tallyworth\] full sheet/.test(cs) && /Year 1 student, Viridian dorm/.test(cs) && /Stage with \{\{user\}\}: \{\{user\}\} is a page in the Tally/.test(cs), 'Year 2: Linus has a full sheet as a Year 1 student, with his stage');
 ok(/Linus → Tsubaki: respect/.test(cs) && /Tsubaki → Linus: rivals/.test(cs), 'the lines between the people present');
 const aid = s => R(509, T(s, [here(['Aiden'])]));
 ok(/Year 1 student, Light dorm/.test(aid(Y1)) && !/Key ties:[^\n]*(Linus|Nerys|Hadrian|Tsubaki)/.test(aid(Y1)), "Year 1: Aiden's sheet names no one from cohort 2");
@@ -104,4 +104,5 @@ ok(L.$eng.ver === JSON.parse(rd('src/card/card.json')).character_version && Obje
 const sizes = NEW.map(id => [id, Math.round(R(509, T(Y2, [here([id])])).length / 4)]);
 console.log('  Cast Sheet tokens with one cohort 2 NPC present:', sizes.map(([a, b]) => a + ' ' + b).join(', '));
 // The approved lore is long: Hadrian's sheet (~3.45k) is over the ~3.2k the waves kept to; flagged to the owner, not cut.
-ok(sizes.every(([, n]) => n < 3600), 'each full sheet stays under ~3.6k tokens (Hadrian the largest)');
+// 1.56.0 (U2): the sheet now holds the person's "Now with {{user}}" block (it left <now>), about 150 tokens
+ok(sizes.every(([, n]) => n < 3800), 'each full sheet stays under ~3.8k tokens with its Now block (Hadrian the largest)');

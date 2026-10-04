@@ -4,6 +4,7 @@
 // Kanae, Althair, Ezrel, Caine, Krieg) and Ottavio's Sky students.
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
 const { initState: initBase, applyPatch, ok, ROOT } = require('./harness.cjs');
+const PP = (X, id) => ((((X || {}).$ui || {}).now || {}).people || {})[id] ? X.$ui.now.people[id].join('\n') : '';   // 1.56.0 (U2): a person's block (their Cast Sheet)
 // Isolate the original system's numeric rules from optional mood and sleep modifiers.
 const initState = opts => { const S = initBase(opts); S.$ui.wxfx = 'off'; return S; };
 global.window = { parent: { document: {} } };
@@ -123,11 +124,11 @@ const gv = St => k => require('lodash').get({ stat_data: St }, k);
 let N = set(set(set(S, 'Irene', { Trust: 20, Rank: 7 }), 'Caspian', { Trust: 10 }), 'Ruby', { Trust: 90, Rank: 5 });
 N = T(N, '10:30');
 const nw = ejs.render(now505, { getvar: gv(N) });
-ok(/Trust: Irene \(Trust 20, doubtful; guarded\): says nothing personal/.test(nw) && /Trust: Ruby \(Trust 90, confidant; open\)/.test(nw), 'Now: how a doubtful and a confidant character carry it');
-ok(/Bond: Irene \(Rank 7, guarded, Trust 20 doubtful\)[^\n]*Held back by low Trust: may introduce \{\{user\}\} to a new roster NPC[^\n]*needs Trust 35/.test(nw), 'Now: the perks low Trust holds back');
-ok(/Bond: Caspian \([^)]*Trust 10 betrayed\): shares nothing new with \{\{user\}\}/.test(nw), 'Now: Betrayed shares nothing new');
-ok(/Bond: Ruby \([^)]*Trust 90 confidant\): shares [^\n]*their goals; what they think of other people/.test(nw), 'Now: a confidant shares the real tiers one rank early (goals and views at Rank 5)');
-ok(/Trust: Etnie cannot stop trusting/.test(nw) && /Trust: Althair trusts no one/.test(nw) && /report \{"With": "Kanae", "Kind": "choose"\}/.test(nw), 'Now: the personal rules of Etnie, Althair and Kanae');
+ok(/Trust \(doubtful; guarded\): says nothing personal/.test(PP(N, 'Irene')) && /Trust \(confidant; open\)/.test(PP(N, 'Ruby')), 'Now: how a doubtful and a confidant character carry it');
+ok(/Bond \(guarded, doubtful\)[^\n]*Held back by low Trust: may introduce \{\{user\}\} to a new roster NPC[^\n]*needs Trust 35/.test(PP(N, 'Irene')), 'Now: the perks low Trust holds back');
+ok(/Bond \([^)]*betrayed\): shares nothing new with \{\{user\}\}/.test(PP(N, 'Caspian')), 'Now: Betrayed shares nothing new');
+ok(/Bond \([^)]*confidant\): shares [^\n]*what they think of other people/.test(PP(N, 'Ruby')), 'Now: a confidant shares the real tiers one rank early (goals and views at Rank 5)');
+ok(/Trust: Etnie cannot stop trusting/.test(PP(N, 'Etnie')) && /Trust: Althair trusts no one/.test(PP(N, 'Althair')) && /report \{"With": "Kanae", "Kind": "choose"\}/.test(PP(N, 'Kanae')), 'Now: the personal rules of Etnie, Althair and Kanae');
 const rules = (fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/502.txt'), 'utf8') + Object.values(JSON.parse(fs.readFileSync(path.join(ROOT, 'data/rule_cards.json'), 'utf8')).cards).map(c => c.text).join(' '));
 ok(/A rise comes from the deed reported as an interaction \(keep, secret, defend, confide, help\)/.test(rules) && /Trust rises/.test(rules) && /keep\|secret\|defend\|confide/.test(rules) && /betrayal \(reporting them, siding with their enemy, selling them out\) −25–40/.test(rules), 'rule 502: report rises, write drops by size');
 

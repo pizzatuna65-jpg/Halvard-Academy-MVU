@@ -26,7 +26,7 @@ const pub = id => { const v = C.voice[id]; return v.scenes.join(' ') + Object.va
 let t = at('Ezrel');
 ok(/<narrator_only>\nAlone[^\n]*\n- Scene: mid-sentence, he stops\.[^\n]*\n- Scene: a student asks him something while his attention is elsewhere\.[^\n]*\n<\/narrator_only>/.test(t), 'Ezrel: both alone scenes stay narrator-only');
 ok(!/golem\b[^.]*\bhimself|this body|stock line|eleven seconds/i.test(pub('Ezrel')), 'Ezrel: no public line hints at what he is');
-ok(/Stage with \{\{user\}\} \(Rank 10\): builds \{\{user\}\} a Mannequin/.test(at('Ezrel', 10)) && /Full names too/i.test(t), 'Ezrel at Rank 10: the Mannequin stage; full names');
+ok(/Stage with \{\{user\}\}: builds \{\{user\}\} a Mannequin/.test(at('Ezrel', 10)) && /Full names too/i.test(t), 'Ezrel at Rank 10: the Mannequin stage; full names');
 t = at('Baelin');
 ok(/<narrator_only>\nAlone[^\n]*\n- Scene: a routine report on Tilly Marsh[^\n]*\n- Scene: something he cannot fix by letter\. Aura[^\n]*\n<\/narrator_only>/.test(t), 'Baelin: Tilly and Aura only inside narrator-only');
 ok(!/Tilly|Velmora/.test(pub('Baelin')) && !/Velmora/.test(JSON.stringify(C.voice.Baelin)), 'Baelin: no public line names Tilly; Velmora named nowhere');
@@ -40,12 +40,12 @@ const built = rd('dist/Eldrasil_Halvard.json') + rd('src/scripts/engine.js');
 ok(!/Her rooms in the Fire Dormitory become the one door/.test(built) && !/the way they once cornered Yvette/.test(built), 'the old wording is gone from the built card and engine');
 
 // the rest: a line from each group
-ok(/Stage with \{\{user\}\} \(Rank 10\):[^\n]*He still searches, questions and watches them like everyone else/.test(at('Krieg', 10)), 'Krieg at Rank 10: still watches {{user}}, as his benefit says');
+ok(/Stage with \{\{user\}\}:[^\n]*He still searches, questions and watches them like everyone else/.test(at('Krieg', 10)), 'Krieg at Rank 10: still watches {{user}}, as his benefit says');
 ok(/Krieg: "Commander"/.test(at('Milena')) && /Change: shaped\b/.test(at('Milena')), 'Milena: "Commander" (lore), shaped');
-ok(/Stage with \{\{user\}\} \(Rank 1\): "kid", a nod[^\n]*Sky student/.test(at('Ottavio', 1)) && /Carries: round black-tinted glasses; a worn casino coin/.test(at('Ottavio')), 'Ottavio at Rank 1: Sky students are already his; coin and glasses');
+ok(/Stage with \{\{user\}\}: "kid", a nod[^\n]*Sky student/.test(at('Ottavio', 1)) && /Carries: round black-tinted glasses; a worn casino coin/.test(at('Ottavio')), 'Ottavio at Rank 1: Sky students are already his; coin and glasses');
 ok(/Hostility only makes him friendlier/.test(at('Althair', 2)) && /Anchor: his clothes: never formal/.test(at('Althair')), 'Althair: the Delighted override in his stage; the anchor');
 ok(/Change: shaped\b/.test(at('Mimosa')) && /Kuroo: "Professor Varnell"/.test(at('Mimosa')), 'Mimosa: shaped; terms');
-ok(/Stage with \{\{user\}\} \(Rank 9\): \{\{user\}\} is the protégé he was looking for/.test(at('Gavlan', 9)), 'Gavlan at Rank 9: the protégé stage');
+ok(/Stage with \{\{user\}\}: \{\{user\}\} is the protégé he was looking for/.test(at('Gavlan', 9)), 'Gavlan at Rank 9: the protégé stage');
 
 // size: one G5 NPC alone, full sheet
 const sizes = G5.map(id => [id, Math.round(at(id).length / 4)]);

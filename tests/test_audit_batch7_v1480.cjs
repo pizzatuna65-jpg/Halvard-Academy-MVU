@@ -13,9 +13,10 @@ ok([X(509), X(599), ...sheets].every(e => at(e) === '4,1,true,true') && sheets.e
   && X(599).insertion_order < X(505).insertion_order && new Set(sheets.map(e => e.insertion_order)).size === sheets.length,
   'all @D1, constant, outside the budget: the head 509, the sheets in id order, the tail 599, then <now>');
 ok(sheets.every(e => e.content.length < 40000) && X(509).content.length < 10000, `no entry is large any more (the biggest sheet ${Math.max(...sheets.map(e => e.content.length))} chars; was one 679 KB template)`);
-// tests/fixtures/cast_1470.json: each scenario's Cast Sheet as 1.47.0's one 509 template rendered it (sha1 and length)
+// tests/fixtures/cast_1560.json: each scenario's Cast Sheet as 1.56.0 renders it (sha1 and length). 1.47.0's record (cast_1470.json)
+// proved the 1.48.0 split; 1.56.0 (U2) changed the text on purpose (the Now block, band words), so the record was renewed then.
 const { scenario, N } = require('./fixtures/cast_scenarios.cjs');
-const REC = JSON.parse(read('tests/fixtures/cast_1470.json'));
+const REC = JSON.parse(read('tests/fixtures/cast_1560.json'));
 const bad = [];
 for (let i = 0; i < N; i++) { const t = renderEntry(card, 509, scenario(i)); if (crypto.createHash('sha1').update(t).digest('hex').slice(0, 16) + ' ' + t.length !== REC[i]) bad.push(i); }
 ok(REC.length === N && !bad.length, `every scenario's <cast> is the same text as before (${N} scenarios: full and brief sheets, ties, Extras, secrets, memory, Year 2, Entrance morning)` + (bad.length ? ': differs in ' + bad.slice(0, 5).join(', ') : ''));
@@ -42,7 +43,7 @@ ok(['area', 'pres', 'walk', 'amb'].every(k => tmpl.includes('NOW.' + k)) && !/AR
 
 console.log('The state diet (2.6)');
 const D = CH[10];   // the campus chain, people present
-ok(Object.values(D.$ui.moods).every(m => Object.keys(m).join() === 'mood') && (D.$ui.now.moods || []).some(l => /mood \(/.test(l)), 'moods keep only the mood; the reasons are in <now>\'s mood lines');
+ok(Object.values(D.$ui.moods).every(m => Object.keys(m).join() === 'mood') && Object.values(D.$ui.now.people || {}).some(L => L.some(l => /^Mood: \w+ \(/.test(l))), 'moods keep only the mood; the reasons are in each person\'s block (1.56.0)');
 ok(Object.values(D.$ui.area).every(a => !('walks' in a) && !('near' in a)) && /^Walks from here/.test(D.$ui.now.walk[0]), 'an area keeps no walks of its own: they are <now>\'s line');
 ok(D.$ui.file === undefined || typeof D.$ui.file === 'object', 'the Builder record ($ui.file) stays (DECISIONS §2: it restores the Builder-only fields)');
 

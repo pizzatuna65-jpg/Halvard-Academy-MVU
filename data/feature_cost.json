@@ -13,7 +13,7 @@
   "happenings": 73,
   "npc_routines": 0,
   "npc_initiative": 0,
-  "weather": 487,
+  "weather": 491,
   "class": 0,
   "hooks": 147,
   "gossip": 19,
@@ -27,9 +27,9 @@
   "study": 54,
   "say_colors": 183
  },
- "core_rules": 8345,
+ "core_rules": 8204,
  "lore": 9050,
- "price_guide": 5568,
+ "price_guide": 5461,
  "live": {
   "class": 40,
   "weather": 25

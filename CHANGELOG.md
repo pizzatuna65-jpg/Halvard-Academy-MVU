@@ -1,7 +1,41 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.56.0 — Narrator-load batch 5: one place per fact (2026-10-04)
+
+Batch 5 of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6 (U2). The owner approved the two changes to decisions on 2026-10-04.
+Save fixture v1.55.0.
+- **One block per person (DECISIONS §6, changed with approval).** The engine still makes each present character's lines (mood, bond,
+  Trust, Tension, recent moments, teasing, rank cue, Rank 4 company, gift). They are now one list, `$ui.now.people[id]`, printed in
+  that character's Cast Sheet as "Now with {{user}}". They were ±8 separate `<now>` lines per person. `<now>` prints a block only for
+  someone present without a sheet. The decision now reads "505 and the Cast Sheet print them".
+- **Numbers once.** Rank, Trust and Tension numbers appear only in `<current_state>`. The sheet's invariants and the block use band
+  words ("Bond with {{user}}: neutral trust, calm tension"), and "Stage with {{user}}" no longer carries the rank. The bands and their
+  effects (DECISIONS §6 Trust/Tension) are unchanged.
+- **Recent: 3 moments, effects in words (`bond_rules.json` `recent.now`, the 1.4.4 owner value, 5 → 3).** "Rank 2 → 3, XP +6,
+  Trust +3" now reads "grew closer, trust grew" (`fxWords`, shared through `AGE_JS`). Defining moments read the same way. The dossier
+  keeps 10 moments with their numbers.
+- **Said once:**
+  - the mood tail ("Mood colours their manner…") is no longer repeated per person;
+  - "deflects in character (pushing too soon adds Tension)" is said once, in 504;
+  - the ban on announcing ranks or perks is said once, in 504 (it left 502);
+  - "never who they are" is only in 504 (the Cast Sheet head explains the block instead);
+  - the shared tiers read "the highest tier and everything before";
+  - 506 lists prices, and how to report a purchase is 502's;
+  - the area place names are no longer listed in 502 (the lore index and "Walks from here" name them).
+  The rule cards that pointed to `<now>` for these lines now point to the Cast Sheet.
+- **Fix (DECISIONS §1 D2):** entry 512 (the alcohol rule, 1.54.0) was untagged and is now `[mvu_plot]`.
+- **Measured** with three bonded characters at the Canteen (1.55.0 engine and card against 1.56.0): `<now>` 1,696 → 631, Cast Sheet
+  6,223 → 6,874, 506 881 → 774, 502/504 about level; **−524 tokens a turn** (the audit expected −400 to −700).
+- **Tests:** new `test_narrator_batch5_v1560`. The Cast Sheet record was renewed (`tests/fixtures/cast_1560.json`; 1.47.0's record
+  proved the 1.48.0 split, and this text changed on purpose). Older suites that read the per-person `<now>` lines or the rank in the
+  stage line now read the person's block (apology, bonds, castsheet, greyarea, memory, recent, rules, tension, trust, world, the five
+  voice suites, cohort2: its sheet budget went from 3.6k to 3.8k with the block, batch5_shops, audit_batch7). `test_saves` (new 1.55.0
+  fixture) passes.
+- **To check live** (TEST_CHECKLIST 1.56.0): characters still keep to what they share and how they carry Trust and Tension with the
+  numbers gone from their sheets; nobody mentions a rank or a number in prose.
 
 ## v1.55.0 — Narrator-load batch 4: the remaining rule cards and a tighter 502 core (2026-10-04)
 
@@ -152,46 +186,6 @@ Authority stay; adult toggles stay opt-in; Monomania and its gate stay ON (1.11.
   with the short gates; voices still distinct and NPCs still committing; the thoughts block still before `<UpdateVariable>`.
 - **Next (FUTURE_PLANS):** tier 2 (±900–1,000 more, trims unique upstream text) after the live check.
 
-## v1.52.1 — Commitment "Where" is the meeting place (2026-10-04)
-
-From the owner's 1.34.2 chat: Tilly arranged a 22:45 meeting "by the founding plaque in the first-floor corridor" while both sat in
-the Arbiter Hall, and the narrator wrote `Where: "The Arbiter Hall"`, the place where the plan was made. Save fixture v1.52.0.
-- **Cause: the instruction, not the engine.** The engine and UI already read `Commitments.Where` as the place to be at Due
-  (`stepHere`'s "May be here" in the hour before, the Planner's "at …" and "Go here"); 502 only said `"place (optional)"`.
-- **502.** Commitments `Where`: "where {{user}} must be at Due", never where the plan was made, a Campus Map place with the exact
-  spot after a dash ("Notice Board — by the founding plaque"). Clues `Where` "where it was observed", Projects `Where` "where the
-  work is done" (the same ambiguity; the Map pins clues and the Activities panel works projects there).
-- **The owner's chat** (a fixed copy, not in the repo): Ruby's misfiled fact about {{user}}'s village removed, her duplicated parting
-  at 08:35 removed (Last_seen 08:20), the commitment's Where `Notice Board — by the founding plaque` (the castle's Floor 1 entrance
-  hall at the foot of the main stair; the plaque itself is narrator invention).
-- **Tests:** `test_saves` (with the new 1.52.0 fixture), `test_tokens_v1110`, `test_audit_b2_v1170`, `test_audit_batch7_v1480`,
-  `test_calendar_state_v1190`, `test_memory_v160` pass. The fixed chat loads in 1.52.1 with no story value lost, and Tilly shows as
-  "may be here" at the Notice Board at 22:10 (not at the Arbiter Hall).
-
-## v1.52.0 — Feature batch 4: NPC routines (2026-10-04)
-
-`audit/AUDIT_2026-10-03_4_batch_fitur.md` batch 4 (audit part 2, suggestion 4.7), from the owner-approved
-`planning/DRAFT_npc_routines.md` (now deleted). Save fixture v1.51.0. No new subsystem: the routines are data in the one whereabouts
-model (DECISIONS 1.47.0) and the day's chance is the shared `roll100`.
-- **Data.** `data/npc_routines.json`: 118 light weekly habits for the 59 NPCs who live at Halvard (1–3 each: days, from, to, a Campus
-  Map place, what they do), as approved, including the lore's dawn habits before curfew ends. Rival academy teams have none.
-- **Whereabouts.** `tools/common.py` `presence_data` carries them (`rt`, `rate`); `shared.js` `whereabouts` gives an NPC's routine
-  (`rt`) when no status, sickness, class, teaching, Study Hall, club or the election keeps them and the day's
-  `roll100(seed, day, 'routine', id, row) < rate` (owner: 70, so it is truly "usually"; swipe-safe). `presenceAt`: a regular away on
-  a routine elsewhere is not "Likely around"; someone whose routine is here is, with what they do ("Royhan (stays late near the
-  Dovecote for Dragonchess)").
-- **Uses.** `<now>`'s presence line; initiative and favour `{place}` reach for routine places first; the Map card's new row "Usually
-  here" (people whose Haunts you know) and a regular's note "usually at X now"; the dossier's new "Routine" field, right after Haunts
-  and opened with it (built in `gen_ui.py`, the existing field gate).
-- **Features row `npc_routines`.** Off: NPCs keep to their haunts only, exactly as 1.51.0. The older presence and `<now>` snapshot
-  suites (`test_audit_batch5_v1470`, `test_audit_batch7_v1480`) now run with it off and stay identical; `test_bughunt_v103` F02 moved
-  to 14:00, after Caspian's Sunday-morning routine.
-- **Also** (between 1.51.0 and this release): the routine week's moment day uses the shared `rollInt` instead of a raw hash (same
-  draw); BUILD's "Add a feature" playbook now starts by checking for an existing system to connect to (owner, 2026-10-04).
-- **Tests:** `tests/test_feature_batch4_v1520.cjs` (13 checks: the 70% hold, days outside the routine, the switch, class and
-  teaching first, arrivals, a teacher's routine, the dossier field and its rank, the Map row, initiative places). Full suite passes.
-  UI checked in a local preview (the Map card's "Usually here", the dossier's Routine field).
-
 ## Release index (one line per release, oldest first)
 
 - All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/archive/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; CHANGELOG 1.2.0/1.2.1).
@@ -326,3 +320,4 @@ model (DECISIONS 1.47.0) and the day's chance is the shared `roll100`.
 - **v1.53.1 (2026-10-04):** Narrator-load batch 2: `audit_chat.py --mechanics` and `replay_chat.cjs` (how the narrator handled the engine, replayed through the current engine); baseline from the owner's chats (Analysis 34% of the block, weather stamina in 7 of 13 rainy replies).
 - **v1.54.0 (2026-10-04):** Narrator-load batch 3: situational rule cards (entry 511, `data/rule_cards.json`, engine `ruleCards`) for Letters, Projects, Competition, Exams, Tutoring, Trip, Pacts and the first pact; alcohol rule as keyword entry 512 (−800 tokens per turn in ordinary scenes).
 - **v1.55.0 (2026-10-04):** Narrator-load batch 4: eleven more rule cards (Interactions, Trust/Tension, Imprints, Old Hut, Training, Practice, Dorm, Combat_role, favours, Notices, the Vigil) and a tighter 502 core (−2,500 tokens per turn alone against 1.53.1).
+- **v1.56.0 (2026-10-04):** Narrator-load batch 5: one place per fact (each present character's engine lines are one "Now with {{user}}" block in their Cast Sheet, band words instead of numbers, Recent 3 in words, rules said once); entry 512 tagged `[mvu_plot]` (−524 tokens a turn with three present).

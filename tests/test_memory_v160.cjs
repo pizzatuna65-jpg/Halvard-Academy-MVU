@@ -3,6 +3,7 @@
 // Meanwhile (Rank 7+ unseen a week), N13 ages in words, D6 / P8 / V1 rules, the dossier shows defining moments but never Mind.
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
 const { Schema, initState, applyPatch, ok, ROOT, renderEntry } = require('./harness.cjs');
+const PP = (X, id) => ((((X || {}).$ui || {}).now || {}).people || {})[id] ? X.$ui.now.people[id].join('\n') : '';   // 1.56.0 (U2): a person's block (their Cast Sheet)
 global.window = { parent: { document: {} } };
 global.substitudeMacros = () => 'Aria Vale';
 const U = new Function(fs.readFileSync(path.join(ROOT, 'src/scripts/ui.js'), 'utf8') + '\nreturn { PANELS, view };')();
@@ -93,7 +94,7 @@ S = applyPatch(S, [here(['Irene', 'Royhan', 'Aiden', 'Castor', 'Kanae'])]);
 let t = R(509, S);
 ok(/Their mind now: Warier of \{\{user\}\} than she shows\./.test(t) && /What they know about \{\{user\}\}[^\n]*\[M1 W1 Mon, [a-z0-9 ]+\] fact/.test(t), 'full sheet: Mind and Knows with their age');
 ok(/Imprints \(the only things that have changed who they are\): [^\n]*"G" \(weight 10, M1 W1 Mon, [a-z0-9 ]+; from test; replaced "A"\)/.test(t) && /Defining moments with \{\{user\}\}: \[M1 W1 Mon 11:00, [a-z0-9 ]+\] Read her private letter aloud/.test(t), 'full sheet: Imprints and defining moments');
-ok(/Recent with \{\{user\}\}: Irene \(newest first\): \[M1 W\d \w{3} [\d:]+, [a-z0-9 ]+\]/.test(R(505, S)), '<now>: recent rows carry their age');
+ok(/Recent with \{\{user\}\} \(newest first\): \[M1 W\d \w{3} [\d:]+, [a-z0-9 ]+\]/.test(PP(S, 'Irene')), 'her block: recent rows carry their age');
 ok(/Journal dates, newest first: M1 W\d \w{3} = /.test(R(505, S)), '<now>: the age of the newest Journal dates');
 const r504 = R(504, S), r502 = E(502);
 ok(/Only an Imprint changes who a character is/.test(r504) && /Arrivals follow the Time rule/.test(r504) && /use the age <now> gives it; never guess/.test(r504), '504: P8 imprint line, D6 plausible travel, N13 age rule');

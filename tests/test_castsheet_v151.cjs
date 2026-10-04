@@ -22,7 +22,7 @@ S = at(S, '09:00', ['Irene']);
 let t = R(509, S);
 ok(/<cast>/.test(t) && sheetOf(t, 'Irene') === 'full', 'Irene present: full sheet');
 ok(/INVARIANTS: she\/her\. Called Irene; full name Irene Chanare\. Year 3 student, Light dorm; Council President\./.test(t), 'automatic invariants: pronouns, names, who she is');
-ok(/Bond with \{\{user\}\}: Rank 0, Trust \d+ \(\w+\), Tension 0 \(calm\)/.test(t), 'bond bands in the invariants');
+ok(/Bond with \{\{user\}\}: \w+ trust, calm tension\./.test(t), 'bond bands in the invariants (1.56.0: words, the numbers are in <current_state>)');
 ok(/Never: giving a second chance cheaply \(Trust\)/.test(t) && /Key ties: [^.]*Aiden \(rivals\)/.test(t), 'Never lines and key ties');
 ok(/Personality: Collected, strict, by-the-book/.test(t) && /Emotional tells: Composure is her armour/.test(t), 'the full canon lore is in the sheet');
 ok(!/Secrets:/.test(t), 'no secrets line for a character without <narrator_only> lore');

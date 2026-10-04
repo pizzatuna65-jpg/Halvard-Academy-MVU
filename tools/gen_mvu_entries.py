@@ -16,7 +16,7 @@ ejs = re.sub(r'^// Source of custom entry 505.*\n', '', ejs, flags=re.M)
 OPN = json.load(open(P('data/bond_openness.json'), encoding='utf-8'))
 REPD = json.load(open(P('data/reputation.json'), encoding='utf-8'))   # 1.3.0
 REPD = {'reps': REPD['reps'], 'effects': REPD['effects']}
-for k, v in {'BDAYS': {k:v['birthday'] for k,v in GIFTS.items() if v['birthday']}, 'REP': REPD, 'RANK4': json.load(open(P('data/rank4_partners.json'), encoding='utf-8'))['npcs'], 'ARR': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1},
+for k, v in {'BDAYS': {k:v['birthday'] for k,v in GIFTS.items() if v['birthday']}, 'REP': REPD, 'ARR': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1},
              'PRON': {nid: {'F': 'she/her', 'M': 'he/him'}.get(n.get('gender'), 'they/them') for nid, n in sorted(npcs.items())}}.items():   # 1.3.8 (+1.4.0 apology_npc)
     ph = '/*@@' + k + '@@*/' + ('[]' if isinstance(v, list) else '{}')
     assert ph in ejs, ph
@@ -163,7 +163,7 @@ idx = [
     mk(509, '[mvu_plot] Cast Sheet — opens <cast> (EJS)', True, False, 4, 1, 300),   # 1.5.1: 509.template.ejs; 1.48.0 the head, sheets 600+
     mk(510, '[mvu_plot] Last-mile cast gate (EJS, only with people present)', True, False, 4, 0, 899),   # 1.5.1 (D1): hand-written; before 503
     mk(511, '[mvu_update] Rule cards — the update rules for what is going on now (EJS)', True, False, 4, 1, 498),   # 1.54.0 (U1): before <now>
-    mk(512, 'Student rule — alcohol and tobacco', False, False, 1, 4, 504, keys=['alcohol', 'alcoholic', 'wine', 'ale', 'beer', 'mead', 'liquor', 'drink', 'drinks', 'drinking', 'drunk', 'tipsy', 'tobacco', 'smoke', 'smoking', 'cigar', 'cigarette', 'bar', 'tavern', 'Barrow & Vine'], whole=True, scan=2),   # 1.54.0 (U1): hand-written, was in 502
+    mk(512, '[mvu_plot] Student rule — alcohol and tobacco', False, False, 1, 4, 504, keys=['alcohol', 'alcoholic', 'wine', 'ale', 'beer', 'mead', 'liquor', 'drink', 'drinks', 'drinking', 'drunk', 'tipsy', 'tobacco', 'smoke', 'smoking', 'cigar', 'cigarette', 'bar', 'tavern', 'Barrow & Vine'], whole=True, scan=2),   # 1.54.0 (U1): hand-written, was in 502
     mk(599, '[mvu_plot] Cast Sheet — ties and Extras, closes </cast> (EJS)', True, False, 4, 1, 390),   # 1.48.0 (audit 2.7)
 ]
 idx[-1:-1] = [mk(u, c, True, False, 4, 1, o) for u, c, o in CAST_ENTRIES]   # 1.48.0 (audit 2.7): one Cast Sheet per NPC

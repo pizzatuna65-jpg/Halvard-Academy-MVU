@@ -137,7 +137,7 @@ The starting state is custom entry 500 (`src/worldbook/custom/content/500.txt`).
 | 502 | update rules `[mvu_update]` | `content/502.txt` |
 | 503 | output format, depth 0 | `content/503.txt` |
 | 504 | narration rules `[mvu_plot]` | `content/504.txt` |
-| 505 | `<now>`: clock, curfew, presence, reminders | `505.template.ejs` (generated `content/505.txt`); its rule lines from engine `$ui.now` |
+| 505 | `<now>`: clock, curfew, presence, reminders | `505.template.ejs` (generated `content/505.txt`); its rule lines from engine `$ui.now` (each present person's block, `$ui.now.people`, is printed by their Cast Sheet since 1.56.0) |
 | 509, 600+, 599 | 1.48.0: the Cast Sheet: head, one sheet per NPC (`@@if` on `$ui.cast`), tail | `509.template.ejs`, `509_sheet.template.ejs`, `509_tail.template.ejs` |
 | 506 | Price Guide by place | `506.template.ejs` |
 | 507 | `[config_override]` for MVU (disabled) | `content/507.txt` |

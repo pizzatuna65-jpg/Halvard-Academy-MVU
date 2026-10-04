@@ -4998,7 +4998,7 @@ function stepCommit(c) {
 // outside area (the place, walks, fares, every engine event), presence and {{user}}'s class (whereabouts, 1.47.0), the campus walks,
 // ambience, moods, and for each present character their bond (what they share at this rank and Trust), Trust, Tension, recent
 // moments and how they take teasing. The code is <now>'s own (1.47.0 505), run on the state the engine leaves: it reads it through a
-// getvar of its own. $ui.now: { area, pres, walk, amb, moods, bond, trust, tension, recent, banter }; <now> prints each in its place.
+// getvar of its own. $ui.now: { area, pres, walk, amb, people, rules }; <now> prints each in its place, the Cast Sheet prints people[id].
 const NOW_D = /*@@NOW_DATA@@*/{};   // tools/common.py now_data: BOND, TRUST, TENSION (bands and texts), WENDIGO, AVALON, SUNREACH
 /*@@AGE@@*/
 function nowOf(S, moodsFull) {
@@ -5012,8 +5012,11 @@ function nowOf(S, moodsFull) {
   const PRES = Object.keys(getvar('stat_data.Scene.Present') || {});
   const aged = w => { const a = ageOf(w, W); return a ? w + ', ' + a : w; };
   const V = presenceNow(S), HERE = { ...presenceAt(PRESENCE, V, W.Location), cls: classLineAt(PRESENCE, V, W.Location) };
-  const moods = on('weather') ? PRES.filter(id => (UI.moods || {})[id]).map(id => { const m = UI.moods[id]; return id + ': ' + m.mood.toLowerCase() + ' mood' + (m.reasons.length ? ' (' + m.reasons.join(', ') + ')' : '') + '. Mood colours their manner; keep them in character.'; }) : [];
-  if (WX && PRES.includes('Idris')) { if (/cold|freezing/.test(WX.now.label)) moods.push('Idris is cold-blooded: sluggish and short-tempered in this cold.'); else if (WX.now.sky === 'Clear' && WX.block !== 2 && WX.now.temp >= 15) moods.push('Idris is cold-blooded and loves the sun: he is soaking it up, livelier than usual.'); }
+  // 1.56.0 (narrator-load audit U2): each present character's lines are one block, printed in their Cast Sheet ("Now with {{user}}"),
+  // with band words instead of numbers (the numbers are in <current_state> only); people[id] = [lines]
+  const people = {}, put = (id, l) => { if (l) (people[id] = people[id] || []).push(l); };
+  if (on('weather')) for (const id of PRES.filter(id => (UI.moods || {})[id])) { const m = UI.moods[id]; put(id, 'Mood: ' + m.mood.toLowerCase() + (m.reasons.length ? ' (' + m.reasons.join(', ') + ')' : '') + '.'); }
+  if (WX && PRES.includes('Idris')) { if (/cold|freezing/.test(WX.now.label)) put('Idris', 'Cold-blooded: sluggish and short-tempered in this cold.'); else if (WX.now.sky === 'Clear' && WX.block !== 2 && WX.now.temp >= 15) put('Idris', 'Cold-blooded and loves the sun: he is soaking it up, livelier than usual.'); }
   const AREAS = UI.area || {}, WENDIGO = NOW_D.WENDIGO, AVD = NOW_D.AVALON, SRD = NOW_D.SUNREACH;
   const AREA = ['forest', 'avalon', 'airship', 'sunreach'].map(k => AREAS[k] && AREAS[k].on ? Object.assign({ key: k }, AREAS[k]) : null).find(Boolean) || null;
   const SOON = AREAS.airship && !AREAS.airship.on ? AREAS.airship.soon : null;
@@ -5056,43 +5059,48 @@ function nowOf(S, moodsFull) {
   const SECR = [...(UI.secrets || []), ...((getvar('stat_data.Campus_State') || {}).Secrets_revealed || [])].map(x => String(x).toLowerCase());
   const trBand = x => bandOf(TRUST.bands, x);
   const trOver = id => { const o = (TRUST.overrides || {})[id]; return o && !(o.until_secret && SECR.some(x => x.startsWith(id.toLowerCase() + '.'))) ? o : null; };
-  const bondLines = PRES.filter(id => BONDS[id] && BOND.share).map(id => {
+  PRES.filter(id => BONDS[id] && BOND.share).forEach(id => {
     const r = Math.max(0, Math.min(10, Number(BONDS[id].Rank) || 0)), tr = Math.max(0, Math.min(100, Number(BONDS[id].Trust) || 0)), tb = trBand(tr);
     const sh = (TRUST.share || {})[tb], early = tb === 'Confidant' ? TRUST.early || 0 : 0, o = (BOND.off[id] || 0) + (sh || 0);
     const ok = BOND.share.filter(([t]) => (t < BOND.real ? t <= Math.max(0, r + o) : t <= r + early));
     const next = BOND.share.find(([t]) => !ok.some(x => x[0] === t));
     const og = trOver(id), gated = og && og.no_gates ? [] : Object.entries(TRUST.gates || {}).filter(([g, need]) => +g <= r && +g !== 8 && tr < need && BOND.perks[g]).map(([g, need]) => BOND.perks[g] + ' (needs Trust ' + need + ')');
     const susp = (UI.tsusp || []).filter(k => ((getvar('stat_data._Perks') || {})[k] || {}).From === id);
-    return id + ' (Rank ' + r + (BOND.tag[id] ? ', ' + BOND.tag[id] : '') + ', Trust ' + tr + ' ' + tb.toLowerCase() + (CLOSE.includes(id) ? ', close' : '') + '): '
-      + (sh === null ? 'shares nothing new with {{user}}; keeps to what {{user}} already knows' : 'shares ' + ok.map(x => x[1]).join('; ')
-      + (next ? '. Not yet: ' + next[1] + ' and beyond; asked about it, deflects in character (pushing too soon adds Tension)' : ''))
+    const top = ok.length ? ok[ok.length - 1][1] + (ok.length > 1 ? ' and everything before' : '') : '';
+    put(id, 'Bond (' + [BOND.tag[id], tb.toLowerCase(), CLOSE.includes(id) && 'close'].filter(Boolean).join(', ') + '): '
+      + (sh === null ? 'shares nothing new with {{user}}; keeps to what {{user}} already knows' : 'shares ' + (top || 'nothing personal yet')
+      + (next ? '. Not yet: ' + next[1] + ' and beyond' : ''))
       + (r > 0 && BOND.perks[String(r)] ? '. At this rank: ' + BOND.perks[String(r)] : '')
-      + (gated.length ? '. Held back by low Trust: ' + gated.join('; ') : '') + (susp.length ? '. Suspended until Trust ' + TRUST.susp + ': ' + susp.join(', ') : '') + '.';
+      + (gated.length ? '. Held back by low Trust: ' + gated.join('; ') : '') + (susp.length ? '. Suspended until Trust ' + TRUST.susp + ': ' + susp.join(', ') : '') + '.');
   });
   // 1.4.3 how each present character carries their Trust: a personal rule (always), else only the telling bands
-  const trustLines = PRES.filter(id => BONDS[id]).map(id => {
+  PRES.filter(id => BONDS[id]).forEach(id => {
     const og = trOver(id), dh = (TRUST.dorm_head || {})[id];
     const mine = dh && PR.Dorm === dh.dorm, cat = mine ? dh.category : (TRUST.npcs || {})[id] || 'normal', C = (TRUST.cats || {})[cat];
     const tr = Math.max(0, Math.min(100, Number(BONDS[id].Trust) || 0)), tb = trBand(tr);
-    const parts = [og && og.text, mine && dh.text, C && C.bands[tb] ? id + ' (Trust ' + tr + ', ' + tb.toLowerCase() + '; ' + C.name.toLowerCase() + '): ' + C.bands[tb] + '. Never: ' + C.never + '.' : ''].filter(Boolean);
-    return parts.join(' ');
-  }).filter(Boolean);
-  const tensionLines = PRES.filter(id => BONDS[id]).map(id => {
+    const parts = [og && og.text, mine && dh.text, C && C.bands[tb] ? '(' + tb.toLowerCase() + '; ' + C.name.toLowerCase() + '): ' + C.bands[tb] + '. Never: ' + C.never + '.' : ''].filter(Boolean);
+    if (parts.length) put(id, 'Trust' + (parts[0].startsWith('(') ? ' ' : ': ') + parts.join(' '));
+  });
+  PRES.filter(id => BONDS[id]).forEach(id => put(id, (() => {
     const o = (TEN.overrides || {})[id], P = o || (TEN.categories || {})[(TEN.npcs || {})[id]];
     if (!P) return '';
-    if (o && o.lock) return id + ': ' + o.text;
+    if (o && o.lock) return 'Tension: ' + o.text;
     const t = Math.max(0, Math.min(100, Number(BONDS[id].Tension) || 0));
     if (t < 20) return '';
     const band = bandOf(TEN.bands, t);
     const peak = band === 'Enemy' && (TEN.peaks || {})[id] ? ' (' + TEN.peaks[id] + ')' : '';
     const an = (TEN.apology_npc || {})[id];
-    return id + ' (Tension ' + t + ', ' + band.toLowerCase() + '): ' + P.bands[band] + peak + '. Never: ' + P.never + '. Eases: ' + (an && an.note ? an.note : P.eases) + '.';
-  }).filter(Boolean);
-  const recentLines = PRES.filter(id => BONDS[id] && (BONDS[id].$Recent || []).length).map(id => id + ' (newest first): ' + BONDS[id].$Recent.slice(-(BOND.recent_now || 5)).reverse()
-    .map(r => '[' + aged(r.w) + '] ' + r.n + (r.fx ? ' (' + r.fx + ')' : '')).join(' | '));
+    return 'Tension (' + band.toLowerCase() + '): ' + P.bands[band] + peak + '. Never: ' + P.never + '. Eases: ' + (an && an.note ? an.note : P.eases) + '.';
+  })()));
+  PRES.filter(id => BONDS[id] && (BONDS[id].$Recent || []).length).forEach(id => put(id, 'Recent with {{user}} (newest first): ' + BONDS[id].$Recent.slice(-(BOND.recent_now || 3)).reverse()
+    .map(r => { const f = fxWords(r.fx); return '[' + aged(r.w) + '] ' + r.n + (f ? ' (' + f + ')' : ''); }).join(' | ')));
   // 1.4.4 (owner): how each present character takes teasing and play-fighting (tension category or override: banter)
-  const banterLine = PRES.filter(id => BONDS[id]).map(id => { const o = (TEN.overrides || {})[id], P = (o && o.banter) ? o : (TEN.categories || {})[(TEN.npcs || {})[id]]; return P && P.banter ? id + ' ' + P.banter : ''; }).filter(Boolean).join('; ');
-  const NOW = { moods, bond: bondLines, trust: trustLines, tension: tensionLines, recent: recentLines, banter: banterLine };
+  PRES.filter(id => BONDS[id]).forEach(id => { const o = (TEN.overrides || {})[id], P = (o && o.banter) ? o : (TEN.categories || {})[(TEN.npcs || {})[id]]; if (P && P.banter) put(id, 'Teasing: ' + P.banter + '.'); });
+  // 1.56.0 (U2): the bond cues that were separate <now> lines join the block (the rule never to announce ranks is said once, in 504)
+  for (const x of (UI.rank_cues || []).filter(x => x && PRES.includes(x.id))) put(x.id, 'Has grown closer through this ordinary interaction: let one small change in conduct show when it fits.');
+  for (const id of PRES.filter(id => BONDS[id] && BONDS[id].Rank >= 4 && RANK4_PARTNERS[id])) put(id, 'Can actively accompany: ' + RANK4_PARTNERS[id].join(', ') + ' (count it only when shared study or training actually happens).');
+  for (const id of PRES.filter(id => BONDS[id] && BONDS[id].$gift_pending)) put(id, 'Their unique gift awaits a natural handover in the story. Once actually given, report /Interactions/- {"With":"' + id + '","Kind":"rank_gift"}; do not put it in the Bag beforehand.');
+  const NOW = { people };
   let out;
   NOW.area = out = [];
   if (AREA) { const _A = AREA, _k = AREA.key, _M = AREA.muster, _l = AREA.left, _W = AREA_WALK[_k];

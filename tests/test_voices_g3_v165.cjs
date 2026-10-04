@@ -35,7 +35,7 @@ ok(/<narrator_only>\nAlone[^\n]*\n- Scene: writing to "her father the miller" in
 ok(!/Velmora|Ottilie|princess/i.test(C.voice.Tilly.scenes.join(' ') + C.voice.Tilly.term_used + C.voice.Tilly.carries + Object.values(C.voice.Tilly.stages).join(' ')), 'Tilly\'s public voice lines never name her real identity');
 
 // the others
-ok(/Stage with \{\{user\}\} \(Rank 7\): lets a serious moment stay serious/.test(at('Lenna', 7)), 'Lenna at Rank 7: the 6-8 stage');
+ok(/Stage with \{\{user\}\}: lets a serious moment stay serious/.test(at('Lenna', 7)), 'Lenna at Rank 7: the 6-8 stage');
 ok(/Voice examples:/.test(at('Saffi')) && /Change: shaped\b/.test(at('Idris')) && /Change: fluid\b/.test(at('Florian')), 'Saffi voice, Idris shaped, Florian fluid');
 
 // size: one G3 NPC alone, full sheet

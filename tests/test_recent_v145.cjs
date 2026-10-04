@@ -3,6 +3,7 @@
 // newest first; <now> gives the narrator the newest 5 for each present character. $Recent is hidden from the state dump.
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
 const { initState: initBase, applyPatch, ok, ROOT } = require('./harness.cjs');
+const PP = (X, id) => ((((X || {}).$ui || {}).now || {}).people || {})[id] ? X.$ui.now.people[id].join('\n') : '';   // 1.56.0 (U2): a person's block (their Cast Sheet)
 // Isolate the original system's numeric rules from optional mood and sleep modifiers.
 const initState = opts => { const S = initBase(opts); S.$ui.wxfx = 'off'; return S; };
 global.window = { parent: { document: {} } };
@@ -41,9 +42,9 @@ const card = fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/501.t
 ok(/k\.startsWith\('\$'\)/.test(card) && Object.keys(S.Bonds.Ruby).includes('$Recent'), '$Recent is a $ field (the <current_state> entry omits $ keys)');
 const now505 = fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/505.txt'), 'utf8');
 const nw = ejs.render(now505, { getvar: k => require('lodash').get({ stat_data: S }, k) });
-const line = (nw.match(/Recent with \{\{user\}\}: Ruby[^\n]*/) || [''])[0];
-ok(/^Recent with \{\{user\}\}: Ruby \(newest first\): \[M1 W1 Thu 14:50(, [a-z0-9 ]+)?\] Moment 12\./.test(line) && (line.match(/\[M1/g) || []).length === 5 && !/Moment 7\./.test(line), '<now>: the 5 newest, newest first');
-ok(/Recent with \{\{user\}\}: Irene[^\n]*Told the Council about her late-night patrols\. \(Trust −15, Tension \+10\)/.test(nw), '<now>: the note and its effect');
+const line = (PP(S, 'Ruby').match(/Recent with \{\{user\}\}[^\n]*/) || [''])[0];
+ok(/^Recent with \{\{user\}\} \(newest first\): \[M1 W1 Thu 14:50(, [a-z0-9 ]+)?\] Moment 12\./.test(line) && (line.match(/\[M1/g) || []).length === 3 && !/Moment 9\./.test(line), 'her block: the 3 newest, newest first (1.56.0, was 5)');
+ok(/Recent with \{\{user\}\}[^\n]*Told the Council about her late-night patrols\. \(trust shaken, tension rose\)/.test(PP(S, 'Irene')), 'her block: the note and its effect in words');
 U.view.arg = 'Ruby';
 const dos = U.PANELS.npc.render(S);
 const rows = dos.split('<table class="rt">')[1] || '';

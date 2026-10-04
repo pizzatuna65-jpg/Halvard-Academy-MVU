@@ -35,7 +35,7 @@ console.log('Playtest Batch 5: seasonal stock');
   // 1.17.0 (audit T2): the Price Guide lists the shop {{user}} is at, in season
   const pg = JSON.parse(read('dist/Eldrasil_Halvard.json')).data.character_book.entries.find(e => e.id === 506).content;
   const guide = require('ejs').render(pg, { getvar: k => _.get({ stat_data: { World: { Month: 8, Location: "The Tinker's Bench" } } }, k) });
-  ok(/- Ember pouch: 15 pts; The Tinker's Bench;.*in season: Autumn, Winter; When used: warm: holds off Chilled for 4 hours/.test(guide) && /insert its exact name into \/Consumables\/-/.test(guide), 'Price Guide states season and effect, and how to report use');
+  ok(/- Ember pouch: 15 pts; The Tinker's Bench;.*in season: Autumn, Winter; When used: warm: holds off Chilled for 4 hours/.test(guide) && /insert its exact name into \/Consumables\/-/.test(read('src/worldbook/custom/content/502.txt')), 'Price Guide states season and effect; how to report use is 502\'s (1.56.0)');
   ok(/whose Price Guide line says "When used"/.test(read('src/worldbook/custom/content/502.txt')), 'narrator rule: report used items in /Consumables');
   // the shop greys out-of-season stock and shows effects
   U.view.act = 'shop'; U.view.shop = 'All';

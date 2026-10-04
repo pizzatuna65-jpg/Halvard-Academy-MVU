@@ -100,7 +100,7 @@ const COUNCIL = getvar('stat_data.Campus_State.Council') || {};
 const CANDIDATES = (COUNCIL.Candidates || {})[String(Y)] || {};
 const sick = FULL && WX.flu ? (WX.sick || []) : [];
 // 1.48.0 (audit 3.11): the lines the engine makes for <now> (engine stepNow, $ui.now): the outside area, presence and the class, the
-// campus walks, ambience, moods, and each present character's bond, Trust, Tension, recent moments and teasing
+// campus walks, ambience (each present character's lines are in their Cast Sheet since 1.56.0)
 const NOW = UI.now || {};
 const cur = String(W._Curfew || '');
 // 1.44.0 (Agenda): one feed (engine stepAgenda): the academy events of the next seven days (not one running today, not the Month 12
@@ -113,11 +113,11 @@ const HK = on('hooks') ? Object.entries(getvar('stat_data.Hooks') || {}).filter(
 const hDue = HK.filter(([k, h]) => h._State === 'due' || h._State === 'overdue'), hOld = HK.filter(([k, h]) => h._State === 'stale' && h.Weight >= 2);
 const GS = on('gossip') ? (UI.gossip || []).slice(-5).reverse() : [];
 const PRES = Object.keys(getvar('stat_data.Scene.Present') || {});
-const moods = NOW.moods || [];   // 1.48.0 (audit 3.11): engine $ui.now
 const BT = getvar('stat_data.Battle') || {};
 // 1.5.1 (P6): who spoke in the last reply without being in Scene.Present, and who was only mentioned (engine $ui.cast)
 const CAST = UI.cast || {}, PRON = {"Aiden":"he/him","Althair":"he/him","Alyssa":"she/her","Anselm":"he/him","Anya":"she/her","Aurelian":"he/him","Baelin":"he/him","Bellatrix":"she/her","Bianca":"she/her","Bobby":"he/him","Bram":"he/him","Bruno":"he/him","Caine":"he/him","Caralynn":"she/her","Caspian":"he/him","Cassius":"he/him","Castor":"he/him","Cedric":"he/him","Dante":"he/him","Dex":"he/him","Dorian":"he/him","Elion":"he/him","Etnie":"she/her","Ezrel":"he/him","Faye":"she/her","Florian":"he/him","Gareth":"he/him","Gavlan":"he/him","Hadrian":"he/him","Hester":"she/her","Idris":"he/him","Ines":"she/her","Irene":"she/her","Kanae":"she/her","Kira":"she/her","Kotaro":"he/him","Krieg":"he/him","Kuroo":"he/him","Layla":"she/her","Lenna":"she/her","Linus":"he/him","Lucius":"he/him","Magnus":"he/him","Maple":"she/her","Milena":"she/her","Mimosa":"she/her","Mirelle":"she/her","Morgana":"she/her","Nerys":"she/her","Ottavio":"he/him","Percival":"he/him","Pip":"he/him","Rei":"she/her","Rigel":"he/him","Royhan":"he/him","Ruby":"she/her","Saffi":"she/her","Sophia":"she/her","Theodore":"he/him","Tilly":"she/her","Topaz":"she/her","Tristan":"he/him","Trixie":"she/her","Tsubaki":"she/her","Valentin":"he/him","Vallie":"she/her","Vera":"she/her","William":"he/him","Wren":"she/her","Yvette":"she/her","Zara":"she/her"};
 // 1.6.0 (N13): the age of dated lines in words; (N4) Next plans: met again, or may bring someone here now
+const fxWords = fx => { const s = String(fx || ''), w = []; if (/Rank \d+ → /.test(s)) w.push('grew closer'); else if (/Rank fell/.test(s)) w.push('drifted apart'); if (/Trust −/.test(s)) w.push('trust shaken'); else if (/Trust \+/.test(s)) w.push('trust grew'); if (/Tension \+/.test(s)) w.push('tension rose'); else if (/Tension −/.test(s)) w.push('tension eased'); if (/romance/.test(s)) w.push('romance began'); return w.join(', '); };   // 1.56.0 (U2): a moment's effect in words, never numbers
 const ageOf = (w, W) => { const m = /(?:Y(\d+) )?M(\d{1,2}) W([1-4])(?: (Mon|Tue|Wed|Thu|Fri|Sat|Sun))?/.exec(String(w || '')); if (!m || !W || !W.Month) return ''; const D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], di = Math.max(0, D.indexOf(W.Day)), Y = Math.max(1, Number(W.Year) || 1), yl = m[1] ? Math.max(1, +m[1]) : Y; const far = n => (n < 2 ? 'over a year ago' : 'over ' + n + ' years ago'); if (!m[4]) { let k = ((Y - 1) * 48 + (W.Month - 1) * 4 + W.Week - 1) - ((yl - 1) * 48 + (+m[2] - 1) * 4 + +m[3] - 1); if (k < 0) { if (m[1]) return ''; k += 48; } if (k >= 48) return far(Math.floor(k / 48)); return k === 0 ? 'this week' : k === 1 ? 'last week' : k < 4 ? k + ' weeks ago' : k < 8 ? 'last month' : Math.floor(k / 4) + ' months ago'; } let d = ((Y - 1) * 336 + (W.Month - 1) * 28 + (W.Week - 1) * 7 + di) - ((yl - 1) * 336 + (+m[2] - 1) * 28 + (+m[3] - 1) * 7 + D.indexOf(m[4])); if (d < 0) { if (m[1]) return ''; d += 336; } if (d >= 336) return far(Math.floor(d / 336)); return d === 0 ? 'earlier today' : d === 1 ? 'yesterday' : d < 7 ? d + ' days ago' : d < 14 ? 'last week' : d < 28 ? Math.floor(d / 7) + ' weeks ago' : d < 56 ? 'last month' : Math.floor(d / 28) + ' months ago'; };
 const aged = w => { const a = ageOf(w, W); return a ? w + ', ' + a : w; };
 const SINCE = UI.since || [], MAYBE = UI.maybe || [];
@@ -129,18 +129,11 @@ const INITIATIVE = on('npc_initiative') ? UI.initiative : null;   // 1.7.7 (FP1)
 const AREAS = UI.area || {};
 const AREA = ['forest', 'avalon', 'airship', 'sunreach'].some(k => AREAS[k] && AREAS[k].on);
 const JAGES = [...new Set((getvar('stat_data.Journal') || []).slice(-5).reverse().map(l => (/^\[([^\]]+)\]/.exec(String(l)) || [])[1]).filter(w => w && ageOf(w, W)))];   // 1.53.0: each date once
-// 1.2.2 bonds: for each present NPC, what they will talk about at this rank (openness shifts the early tiers; goals, views of others
-// and the past need the real rank; secrets never come from rank) and what the bond allows
-const RANK4 = {"Irene":["mana","study"],"Caspian":["mana","study"],"Etnie":["mana","stamina","study"],"Royhan":["mana","study"],"Sophia":["mana","stamina"],"Gareth":["mana","stamina","study"],"Ruby":["study"],"Lenna":["mana","stamina","study"],"Saffi":["mana","stamina"],"Kanae":["mana","study"],"Idris":["mana","study"],"Tilly":["stamina","study"],"Dante":["mana","study"],"Florian":["mana","stamina"],"Aiden":["mana","study"],"Caralynn":["mana","study"],"Zara":["mana","study"],"Percival":["mana","stamina","study"],"Trixie":["mana","stamina"],"Vera":["mana","study"],"Castor":["mana","study"],"Alyssa":["mana","study"],"Linus":["mana","study"],"Maple":["mana","study"],"Nerys":["mana","study"],"Hadrian":["mana","study"],"Wren":["mana","study"],"Tsubaki":["mana","stamina"],"Gavlan":["mana","stamina","study"],"Yvette":["mana","stamina","study"],"Krieg":["mana","stamina"],"Milena":["mana","stamina","study"],"Baelin":["mana","stamina","study"],"Layla":["mana","study"],"Vallie":["mana","stamina"],"Rei":["mana","stamina","study"],"Kuroo":["mana","study"],"Mimosa":["mana","study"],"Tristan":["mana","study"],"Althair":["mana","study"],"Ezrel":["mana","study"],"Ottavio":["mana","study"],"Caine":["study"],"Bobby":["stamina","study"],"Hester":["study"],"Anselm":["mana","study"],"Magnus":["mana","study"],"Dorian":["mana"],"Cedric":["study"],"Anya":["study"],"Kotaro":["stamina"],"Valentin":["mana","study"],"Aurelian":["mana","stamina"],"William":["mana","study"],"Bruno":["stamina"],"Bianca":["study","mana"],"Rigel":["study","mana"],"Topaz":["mana","study"],"Faye":["stamina","mana"]};
+// 1.56.0 (narrator-load audit U2): each present character's bond, Trust, Tension, mood, recent moments and teasing are one block in
+// their Cast Sheet (engine $ui.now.people); <now> prints it only for someone present without a sheet
 const BDAYS = {"Irene":"M11 W3 Thu","Caspian":"M10 W3 Sat","Etnie":"M2 W2 Sat","Royhan":"M5 W1 Sat","Sophia":"M4 W3 Tue","Gareth":"M5 W2 Wed","Ruby":"M3 W3 Mon","Lenna":"M6 W1 Sun","Saffi":"M6 W3 Thu","Kanae":"M1 W3 Thu","Idris":"M7 W1 Tue","Tilly":"M10 W2 Thu","Dante":"M11 W2 Tue","Florian":"M9 W4 Tue","Aiden":"M9 W2 Mon","Caralynn":"M8 W3 Mon","Zara":"M11 W1 Thu","Percival":"M6 W2 Mon","Trixie":"M8 W2 Tue","Vera":"M3 W2 Wed","Castor":"M1 W2 Thu","Alyssa":"M10 W3 Mon","Linus":"M6 W4 Mon","Maple":"M10 W4 Tue","Nerys":"M4 W1 Thu","Hadrian":"M8 W1 Wed","Wren":"M5 W3 Thu","Tsubaki":"M2 W4 Sun","Gavlan":"M3 W1 Tue","Yvette":"M3 W4 Tue","Krieg":"M4 W2 Thu","Milena":"M7 W2 Fri","Baelin":"M4 W4 Sun","Layla":"M9 W3 Wed","Vallie":"M3 W3 Sat","Rei":"M7 W4 Mon","Kuroo":"M1 W4 Tue","Mimosa":"M2 W1 Mon","Tristan":"M10 W1 Fri","Althair":"M8 W4 Mon","Ottavio":"M8 W1 Sun","Caine":"M2 W3 Mon","Bobby":"M9 W1 Thu","Hester":"M7 W3 Fri","Anselm":"M6 W2 Sun","Magnus":"M2 W2 Tue","Dorian":"M9 W2 Fri","Cedric":"M12 W4 Sun","Anya":"M10 W1 Tue","Kotaro":"M8 W2 Thu","Valentin":"M9 W3 Sat","Aurelian":"M7 W1 Sat","William":"M3 W1 Sat","Bruno":"M4 W1 Sat","Bianca":"M4 W1 Sat","Rigel":"M2 W4 Wed","Topaz":"M5 W2 Fri","Faye":"M6 W1 Wed"};
 const BONDS = getvar('stat_data.Bonds') || {};
-const bondLines = NOW.bond || [], trustLines = NOW.trust || [];   // 1.48.0 (audit 3.11): engine $ui.now
-const rankCues = (UI.rank_cues || []).filter(x => x && PRES.includes(x.id));
 const access = UI.rank_access || {};
-// 1.3.8 Tension: how each present character carries it (data/tension.json: category or personal override), from Friction (20) up
-const tensionLines = NOW.tension || [];
-// 1.4.4 (owner): each present character's latest moments with {{user}} (Bonds.<id>.$Recent, newest first) for consistency
-const recentLines = NOW.recent || [], banterLine = NOW.banter || '';
 // 1.3.0 reputation: what each non-zero level means for how staff, students and the Doves treat {{user}}
 const REPD = {"reps":["Academy","Student","Doves"],"effects":{"Academy":[[-5,-5,"Academic probation: a formal hearing before Baelin Kalvor, the monthly points payout halved, and one more serious offence means expulsion proceedings."],[-4,-3,"Staff assume the worst: minor offences earn detention instead of a warning; requests (club signatures, permits, schedule changes) are refused. Staff NPCs warm up more slowly."],[-2,-1,"{{user}} is \"one to watch\": teachers call on them to catch them out, and patrols stop them more often after curfew."],[0,0,"An ordinary student; staff treat {{user}} by the rules."],[1,2,"Teachers give {{user}} the benefit of the doubt: a first minor offence is a warning, and office-hour requests are welcome."],[3,4,"Staff trust {{user}} with responsibility: supervised access to restricted rooms, sign-off to found a club, invitations to staff-run events. Staff NPCs warm up faster."],[5,5,"{{user}}'s portrait hangs in the Portrait Hall among Halvard's honoured students, and the academy adds a monthly points bonus on top of the rank payout. Staff quietly overlook one serious offence per semester."]],"Student":[[-5,-5,"{{user}} is shunned across the academy: nobody sits with them, their belongings go missing, and student NPCs below Rank 3 avoid them entirely."],[-4,-3,"Rooms go quiet when {{user}} walks in; nobody will team up, study together or cover for them. Student NPCs warm up more slowly."],[-2,-1,"Students are cool towards {{user}} and keep them out of the good gossip and the good seats."],[0,0,"{{user}} is one student among hundreds."],[1,2,"People save {{user}} a seat, share notes and gossip, and will cover for them once in a small way."],[3,4,"{{user}} is someone people rally behind: teams are easy to form, and students stand up for them. Student NPCs warm up faster."],[5,5,"{{user}} is Halvard's favourite: students take real risks for them (a false alibi, a shared punishment), and crowds turn out to cheer them at every competition."]],"Doves":[[-5,-5,"{{user}} is taken to the Dovecote for a week of \"examination\", as Idris Ainsworth was; afterwards they are escorted between classes for the rest of the month. Anti-Dove NPCs warm to {{user}}; pro-Dove NPCs keep their distance."],[-4,-3,"Weekly searches of {{user}}'s room and belongings, a patrol that follows them after dark, and Krieg Valforth knows their name. Anti-Dove NPCs (Lenna, Idris, Zara, Gavlan, Yvette, Kuroo, Ottavio) warm to {{user}}; pro-Dove NPCs (Saffi, Layla, Florian, Mimosa, Vallie, Ruby) keep their distance."],[-2,-1,"Doves stop and question {{user}} more often, and any talisman, potion or odd item they carry is inspected."],[0,0,"{{user}} is one mage among hundreds; routine checks only."],[1,2,"Doves greet {{user}} by name, and routine checks end at a polite question."],[3,4,"{{user}} gets the benefit of the doubt: rumours about them are ignored, and Milena Sagona or another Dove will tip them off about coming searches. Anti-Dove NPCs (Lenna, Idris, Zara, Gavlan, Yvette, Kuroo, Ottavio) grow wary of {{user}}."],[5,5,"The Dovecote treats {{user}} as an ally: they are asked to help on cases, their word is trusted against anyone else's, and a recruitment offer waits for them after graduation. Anti-Dove NPCs call {{user}} \"one of the Doves\"."]]}};
 const RPN = PR.Reputation || {};
@@ -243,8 +236,6 @@ Sleep: <%- UI.sleep.vigil ? 'The Vigil is active.' : 'Sleep debt: ' + UI.sleep.l
 Outdoor casting fights the wind: mist and smoke scatter, sound carries away, fire runs downwind, aimed spells drift. NPCs face the same wind in-story. An active wind-blocking barrier shelters casting behind it.
 <%_ } if (UI.party) { _%>
 Birthday surprise (narrator only): <%- UI.party.host %> organises a party at <%- UI.party.where %>, 18:00 until curfew. Guests: <%- UI.party.guests.join(', ') || 'none on record' %>. Keep it secret in the morning; small clues and excuses are fine. Only report birthday_party for guests actually attending, with Scene.Present and Location updated.
-<%_ } for (const m of moods) { _%>
-<%- m %>
 <%_ } _%>
 <%_ if (FULL && BT.Active && WX.field && on('battle')) { _%>
 Battle field (outdoors): <%- WX.field %>.
@@ -300,29 +291,8 @@ May be here by their own plans or appointments: <%- MAYBE.map(([id, what]) => id
 <%_ if (JAGES.length) { _%>
 Journal dates, newest first: <%- JAGES.map(w => w + ' = ' + ageOf(w, W)).join('; ') %>
 <%_ } _%>
-<%_ for (const l of bondLines) { _%>
-Bond: <%- l %>
-<%_ } _%>
-<%_ for (const l of tensionLines) { _%>
-Tension: <%- l %>
-<%_ } _%>
-<%_ for (const l of trustLines) { _%>
-Trust: <%- l %>
-<%_ } _%>
-<%_ for (const l of recentLines) { _%>
-Recent with {{user}}: <%- l %>
-<%_ } _%>
-<%_ if (banterLine) { _%>
-Teasing (how each present character takes it): <%- banterLine %>
-<%_ } _%>
-<%_ for (const x of rankCues) { _%>
-<%- x.id %> has grown closer through this ordinary interaction. Let one small change in conduct show naturally when it fits; never announce a rank, unlock, XP, or perk.
-<%_ } _%>
-<%_ for (const id of PRES.filter(id => BONDS[id] && BONDS[id].Rank >= 4 && RANK4[id])) { _%>
-<%- id %> can actively accompany: <%- RANK4[id].join(', ') %>. Count the Rank 4 bonus only when appropriate shared study or training actually happens; do not mention the multiplier.
-<%_ } _%>
-<%_ for (const id of PRES.filter(id => BONDS[id] && BONDS[id].$gift_pending)) { _%>
-<%- id %>'s unique gift awaits a natural handover in the story. Once actually given, report /Interactions/- {"With":"<%- id %>","Kind":"rank_gift"}; do not conjure it into inventory beforehand.
+<%_ for (const id of Object.keys(NOW.people || {}).filter(id => !(CAST.full || []).includes(id) && !(CAST.brief || []).includes(id))) { _%>
+Now with {{user}}, <%- id %>: <%- NOW.people[id].join(' ') %>
 <%_ } _%>
 <%_ if ((access.dorms || []).length) { _%>
 Accompanied dorm visits available today: <%- access.dorms.join(', ') %>. The host must remain beside {{user}}; curfew, lockdown and private rooms still apply.

@@ -2,6 +2,7 @@
 // class-aware presence, hooks, gossip, weather-aware happenings. Uses the same schema + engine path as MVU (tests/harness.cjs).
 const fs = require('fs'), path = require('path'), ejs = require('ejs'), YAML = require('yaml');
 const { initState, applyPatch, ok, ROOT } = require('./harness.cjs');
+const PP = (X, id) => ((((X || {}).$ui || {}).now || {}).people || {})[id] ? X.$ui.now.people[id].join('\n') : '';   // 1.56.0 (U2): a person's block (their Cast Sheet)
 const E = new Function(fs.readFileSync(path.join(ROOT, 'src/scripts/engine.js'), 'utf8')
   + '\nreturn { wxDay, wxForecast, rawHappening, fromAbs, blockOf, fluOn, HAPPENINGS, hash32, OUTDOOR, airFlight };')();
 const card = JSON.parse(fs.readFileSync(path.join(ROOT, 'dist/Eldrasil_Halvard.json'), 'utf8')).data;
@@ -306,7 +307,7 @@ console.log('Weather in the Now entry: indoor schedules, flu, moods, battle fiel
   const likely = /Likely around[^:]*: (.*)/.exec(ft)[1];
   ok(F.$ui.wx.sick.every(id => !likely.includes(id)), 'the sick are not "likely around"');
   const coldD = find(1, b => b.temp <= 7);
-  ok(/Idris is cold-blooded: sluggish/.test(render(505, at(S0, coldD, '14:00', 'Canteen', [{ op: 'replace', path: '/Scene/Present', value: { Idris: { Note: '' } } }]))), 'canon weather mood: Idris in the cold');
+  ok(/Cold-blooded: sluggish/.test(PP(at(S0, coldD, '14:00', 'Canteen', [{ op: 'replace', path: '/Scene/Present', value: { Idris: { Note: '' } } }]), 'Idris')), 'canon weather mood: Idris in the cold (his block)');
   const windD = find(1, b => !!b.wind && b.sky !== 'Rain');
   const bt = at(S0, windD, '14:00', 'Combat Grounds', [{ op: 'replace', path: '/Battle', value: { Active: true, Combatants: { Sophia: { HP: 100 } } } }]);
   ok(/Battle field \(outdoors\): .*gusts/.test(render(505, bt)), `outdoor fight: field line (${bt.$ui.wx.field})`);

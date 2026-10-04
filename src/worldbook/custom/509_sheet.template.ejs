@@ -16,13 +16,15 @@ const cTies = c => (c.ties || []).filter(t => t[2] <= CYR).slice(0, 4).map(t => 
 const cHead = (id, full) => {
   const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
   out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
-  const bond = b ? 'Bond with {{user}}: Rank ' + (Number(b.Rank) || 0) + ', Trust ' + (Number(b.Trust) || 0) + ' (' + cBand(CD.trust_bands, Number(b.Trust) || 0).toLowerCase() + '), Tension ' + (Number(b.Tension) || 0) + ' (' + cBand(CD.tension_bands, Number(b.Tension) || 0).toLowerCase() + ').' : (c.nobond ? 'No bond system (rival academy).' : 'Not bonded yet: a stranger to {{user}} unless the story says otherwise.');
+  const bond = b ? 'Bond with {{user}}: ' + cBand(CD.trust_bands, Number(b.Trust) || 0).toLowerCase() + ' trust, ' + cBand(CD.tension_bands, Number(b.Tension) || 0).toLowerCase() + ' tension.' : (c.nobond ? 'No bond system (rival academy).' : 'Not bonded yet: a stranger to {{user}} unless the story says otherwise.');
   const v = (CD.voice || {})[id];
   out.push('INVARIANTS: ' + c.pron + '. Called ' + c.called + '. ' + cWho(c) + ' ' + bond + (c.never ? ' Never: ' + c.never + '.' : '') + (ties ? ' Key ties: ' + ties + '.' : '')
     + (v ? ' How they address people: ' + v.term_used + ' Carries: ' + v.carries : ''));
   const w = getvar('stat_data.World') || {};
   if (c.y && c.y[0] + CYR - c.y[1] === 1 && +w.Month === 1 && +w.Week === 1 && w.Day === 'Mon')
     out.push('Entrance-day newcomer: the listed dorm and any vest in later-life lore are eventual facts, not knowledge or clothing before their own Stone sorting. Before their turn they have no first-hand experience of Halvard rooms, teachers or new classmates unless a documented earlier relationship supplies it. After sorting, a Council member gives the vest.');
+  const pn = ((CUI.now || {}).people || {})[id];   // 1.56.0 (U2): the engine's lines for this person, one block, no numbers
+  if (pn && pn.length) out.push('Now with {{user}}:\n- ' + pn.join('\n- '));
   if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
   const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
   return out.join('\n');
@@ -42,7 +44,7 @@ const cMem = (id, full) => {
   if (b && b.Mind) out.push('Their mind now: ' + b.Mind);
   if (b && full && (b.Knows || []).length) out.push('What they know about {{user}} (nothing else, unless told or seen on-screen): ' + b.Knows.map(k => { const m = /^\[([^\]]+)\]\s*/.exec(k); return m ? '[' + cAged(m[1]) + '] ' + k.slice(m[0].length) : k; }).join(' | '));
   if (b && (b.Imprints || []).length) out.push('Imprints (the only things that have changed who they are): ' + b.Imprints.map(x => '"' + x.Belief + '" (weight ' + x.Weight + (x.When ? ', ' + cAged(x.When) : '') + (x.From ? '; from ' + x.From : '') + (x.Was ? '; replaced "' + x.Was + '"' : '') + ')').join('; '));
-  if (b && full && (b.$Defining || []).length) out.push('Defining moments with {{user}}: ' + b.$Defining.map(r => '[' + cAged(r.w) + '] ' + r.n + (r.fx ? ' (' + r.fx + ')' : '')).join(' | '));
+  if (b && full && (b.$Defining || []).length) out.push('Defining moments with {{user}}: ' + b.$Defining.map(r => { const f = fxWords(r.fx); return '[' + cAged(r.w) + '] ' + r.n + (f ? ' (' + f + ')' : ''); }).join(' | '));
   if ((CD.change || {})[id]) out.push('Change: ' + CD.change[id]);
   return out.join('\n');
 };
@@ -59,7 +61,7 @@ const cVoice = (id, full) => {
     out.push('Never sounds like: ' + v.never_sounds);
     out.push("Don't flatten: " + v.dont_flatten);
   }
-  out.push('Stage with {{user}} (Rank ' + r + '): ' + v.stages[cBandOf(r)]);
+  out.push('Stage with {{user}}: ' + v.stages[cBandOf(r)]);
   // 1.6.8 (owner): from Rank 8 the branch adds one line; a best friendship adds none
   const b = CB[id] || {};
   if (b.Romance && v.romance) out.push('Romance with {{user}}: ' + v.romance);

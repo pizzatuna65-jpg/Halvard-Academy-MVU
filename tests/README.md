@@ -18,6 +18,7 @@ Build first with `python tools/build_all.py`. Run all suites with `npm test`; ru
 | Sunreach Bay (1.41.0) | `test_sunreach_v1410.cjs` (routes and names, the window, landing, the teachers' curfew, walks, carriages, water taxis, the tour boat, bets, who is met where by personality, the sea and the Leviathan, the index pattern for Sunreach, the forest, Avalon and the airship, `<now>`, 502, the day/night map tab) |
 | Engine integration audit | `test_audit_b1_v1161.cjs`, `test_audit_b2_v1170.cjs`, `test_integrations_v1180.cjs` |
 | Narrator load (1.53.0) | `test_narrator_batch1_v1530.cjs` (first-pact gate, 503 example and Analysis, the 502 engine list, plain dates written back, a bond from a fact, deed pairs, the remedial by presence, the Extras request in `<now>`, Journal dates once) |
+| One place per fact (1.56.0) | `test_narrator_batch5_v1560.cjs` (the Now block in the Cast Sheet, numbers once, Recent in words, rules said once, 512 tagged) |
 | Rule cards (1.54.0, 1.55.0) | `test_narrator_batch4_v1550.cjs` (stage-2 cards, the tighter core); `test_narrator_batch3_v1540.cjs` (core lines in 502, each card's trigger, Features, fail-open, entries 511 / 512) |
 | Narrator mechanics tool (1.53.1) | `test_mechanics_audit_v1531.cjs` (`audit_chat.py --mechanics` and the replay on a made-up chat) |
 | Engine steps and save migrations | `test_engine_steps_v1200.cjs`, `test_saves.cjs`; any suite with `ENGINE_DIFF=<older engine.js>` compares every engine run with that build |

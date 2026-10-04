@@ -3,6 +3,7 @@
 // Social's gossip campaign, Krieg at 100, fights easing confrontational NPCs, quiet-day decay.
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
 const { initState: initBase, applyPatch, ok, ROOT } = require('./harness.cjs');
+const PP = (X, id) => ((((X || {}).$ui || {}).now || {}).people || {})[id] ? X.$ui.now.people[id].join('\n') : '';   // 1.56.0 (U2): a person's block (their Cast Sheet)
 // Isolate the original system's numeric rules from optional mood and sleep modifiers.
 const initState = opts => { const S = initBase(opts); S.$ui.wxfx = 'off'; return S; };
 global.window = { parent: { document: {} } };
@@ -77,9 +78,9 @@ const card = JSON.parse(fs.readFileSync(path.join(ROOT, 'dist/Eldrasil_Halvard.j
 const now = X => ejs.render(card.character_book.entries.find(e => e.id === 505).content, { getvar: k => _.get({ stat_data: X }, k) });
 let N = T(S, '10:00', [ten('Sophia', 95), ten('Ruby', 25), ten('Gareth', 92), meet(['Sophia', 'Ruby', 'Gareth', 'Althair', 'Irene'])]);
 const out = now(N);
-ok(/Tension: Sophia \(Tension 95, enemy\): a formal challenge or a grudge match[^\n]*Never: an ambush/.test(out), 'Now: Sophia at Enemy, played as a confrontational character');
-ok(/Tension: Ruby \(Tension 25, friction\): quieter than usual/.test(out) && /Tension: Gareth \(Tension 92, enemy\): strikes with everything their position allows \(files it away/.test(out), 'Now: Ruby (withdrawn, friction), Gareth (dangerous) with his peak');
-ok(/Tension: Althair: Althair enjoys being disliked/.test(out) && !/Tension: Irene/.test(out), 'Now: Althair always explained; Irene at 0 costs nothing');
+ok(/Tension \(enemy\): a formal challenge or a grudge match[^\n]*Never: an ambush/.test(PP(N, 'Sophia')), 'Now: Sophia at Enemy, played as a confrontational character');
+ok(/Tension \(friction\): quieter than usual/.test(PP(N, 'Ruby')) && /Tension \(enemy\): strikes with everything their position allows \(files it away/.test(PP(N, 'Gareth')), 'Now: Ruby (withdrawn, friction), Gareth (dangerous) with his peak');
+ok(/Tension: Althair enjoys being disliked/.test(PP(N, 'Althair')) && !/Tension/.test(PP(N, 'Irene')), 'Now: Althair always explained; Irene at 0 costs nothing');
 U.view.arg = 'Sophia'; const dos = U.PANELS.npc.render(N);
 ok(/Tension 95 · Enemy/.test(dos) && /cannot grow until the tension eases/.test(dos), 'dossier: the band and what it does to the bond');
 U.view.arg = 'Althair'; ok(/Hostility only makes him fonder of you/.test(U.PANELS.npc.render(N)), "Althair's dossier explains his lock");

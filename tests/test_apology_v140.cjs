@@ -2,6 +2,7 @@
 // same week count half, Sophia takes it as weakness (it raises Tension).
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
 const { initState: initBase, applyPatch, ok, ROOT } = require('./harness.cjs');
+const PP = (X, id) => ((((X || {}).$ui || {}).now || {}).people || {})[id] ? X.$ui.now.people[id].join('\n') : '';   // 1.56.0 (U2): a person's block (their Cast Sheet)
 // Isolate the original system's numeric rules from optional mood and sleep modifiers.
 const initState = opts => { const S = initBase(opts); S.$ui.wxfx = 'off'; return S; };
 console.log('Apologies 1.4.0');
@@ -26,5 +27,5 @@ let N = day(R, 'Mon'); N = applyPatch(N, [{ op: 'replace', path: '/World/Week', 
 ok(T(N, '13:00', [AP('Ruby')]).Bonds.Ruby.Tension === 40, 'a new week: full value again');
 const card = JSON.parse(fs.readFileSync(path.join(ROOT, 'dist/Eldrasil_Halvard.json'), 'utf8')).data;
 const out = ejs.render(card.character_book.entries.find(e => e.id === 505).content, { getvar: k => _.get({ stat_data: S }, k) });
-ok(/Tension: Sophia \([^)]*\): [^\n]*Eases: an apology only makes her angrier/.test(out) && /Tension: Krieg [^\n]*Eases: holds a grudge/.test(out), 'Now: Sophia and Krieg tell the narrator how apologies land');
+ok(/Tension \([^)]*\): [^\n]*Eases: an apology only makes her angrier/.test(PP(S, 'Sophia')) && /Tension[^\n]*Eases: holds a grudge/.test(PP(S, 'Krieg')), 'Now (their Cast Sheet block): Sophia and Krieg tell the narrator how apologies land');
 ok(/report an apology as an apology interaction/.test(fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/502.txt'), 'utf8')) && /report it as an apology interaction/.test(fs.readFileSync(path.join(ROOT, 'data/rule_cards.json'), 'utf8')), 'rule 502: the narrator reports apologies instead of lowering Tension');

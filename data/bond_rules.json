@@ -200,7 +200,7 @@
  "_note_you_line": "1.4.2 (owner): People -> Connections, your own line to someone takes a kind from the bond. Romance first (Bonds.<id>.Romance), then the first rule here whose conditions all hold (tension_from, trust_below, trust_from, rank_from, title = a word in Bonds.<id>.Title); none = a plain gold bond line. arrow: the line is their view of you (them -> you); otherwise it is shared. The line is thicker with rank. 1.4.3: the Trust thresholds follow data/trust.json (Doubtful under 35, Trusting from 65).",
  "recent": {
   "keep": 10,
-  "now": 5,
+  "now": 3,
   "phrases": {
    "talk": "talked",
    "hangout": "spent time together",
@@ -216,7 +216,7 @@
    "choose": "chose them over someone else"
   }
  },
- "_note_recent": "1.4.4 (owner): each bond keeps its latest `keep` moments with {{user}} (Bonds.<id>.$Recent: when, one sentence, effect), shown in the dossier newest first; <now> gives the narrator the newest `now` of them for each present character. The sentence is the Note the narrator adds to an interaction; without one, the kinds (phrases).",
+ "_note_recent": "1.4.4 (owner): each bond keeps its latest `keep` moments with {{user}} (Bonds.<id>.$Recent: when, one sentence, effect), shown in the dossier newest first; <now> gives the narrator the newest `now` of them for each present character (1.56.0, owner-approved narrator-load audit U2: 3, was 5; in their Cast Sheet, the effect in words). The sentence is the Note the narrator adds to an interaction; without one, the kinds (phrases).",
  "gift_hated_tension": 10,
  "birthday": {
   "gift_mult": 2,

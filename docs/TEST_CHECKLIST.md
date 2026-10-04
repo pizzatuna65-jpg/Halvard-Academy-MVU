@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.56.0 (narrator-load batch 5): the two checks in its section below.
 - v1.55.0 (narrator-load batch 4): the two checks in its section below.
 - v1.54.0 (narrator-load batch 3): the three checks in its section below.
 - v1.53.0 (narrator-load batch 1): the five checks in its section below.
@@ -97,6 +98,12 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.56.0 — Narrator-load batch 5 (one place per fact)
+
+- [ ] With friends present, each keeps to what they share and how they carry Trust and Tension, now read from the "Now with {{user}}"
+      block in their Cast Sheet (band words, no numbers).
+- [ ] No rank, XP or Trust number appears in the prose; Recent moments still keep continuity.
 
 ### v1.55.0 — Narrator-load batch 4 (the remaining rule cards)
 

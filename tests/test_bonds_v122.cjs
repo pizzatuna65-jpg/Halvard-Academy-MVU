@@ -1,6 +1,7 @@
 // Bond XP from interactions, daily/weekly limits, rising XP per rank, cooldown, and automatic progression.
 const fs = require('fs'), path = require('path'), ejs = require('ejs'), { execFileSync } = require('child_process');
 const { Schema, initState: initBase, applyPatch, ok, ROOT } = require('./harness.cjs');
+const PP = (X, id) => ((((X || {}).$ui || {}).now || {}).people || {})[id] ? X.$ui.now.people[id].join('\n') : '';   // 1.56.0 (U2): a person's block (their Cast Sheet)
 // Isolate the original system's numeric rules from optional mood and sleep modifiers.
 const initState = opts => { const S = initBase(opts); S.$ui.wxfx = 'off'; return S; };
 global.window = { parent: { document: {} } };
@@ -83,12 +84,12 @@ ok(away.Bonds.Trixie.Rank === 0 && away.Bonds.Trixie.$xp === 10, 'an absent NPC 
 const now505 = fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/505.txt'), 'utf8');
 const gv = St => k => _.get({ stat_data: St }, k);
 const n1 = ejs.render(now505, { getvar: gv(R1) });
-ok(/Bond: Trixie \(Rank 1, open, Trust 63 neutral\): shares [^\n]*likes, dislikes, hobbies and birthday/.test(n1) && /Not yet: their personality/.test(n1) && /At this rank: greets/.test(n1), 'Now: an open NPC at Rank 1 shares up to Rank 3 topics; the next tier is deflected');
+ok(/Bond \(open, neutral\): shares [^\n]*likes, dislikes, hobbies and birthday/.test(PP(R1, 'Trixie')) && /Not yet: their personality/.test(PP(R1, 'Trixie')) && /At this rank: greets/.test(PP(R1, 'Trixie')), 'Now: an open NPC at Rank 1 shares up to Rank 3 topics; the next tier is deflected');
 const n0 = ejs.render(now505, { getvar: gv(A) });
 ok(!/Bond event available|raise \/Bonds\/Trixie\/Rank by 1/.test(n0), 'Now: no rank-up event or manual rank instruction');
 const Ir = T(S, '12:50', [{ op: 'replace', path: '/Scene/Present', value: { Irene: { Note: '' } } }]);
 const ni = ejs.render(now505, { getvar: gv(Ir) });
-ok(/Bond: Irene \(Rank 0, guarded, Trust 40 neutral\): shares how they look and their public role\. Not yet: their name/.test(ni), 'Now: a guarded NPC at Rank 0 shares only the public tier');
+ok(/Bond \(guarded, neutral\): shares how they look and their public role\. Not yet: their name/.test(PP(Ir, 'Irene')), 'Now: a guarded NPC at Rank 0 shares only the public tier');
 
 // ---- UI
 U.view.ptab = 'bonds'; let h = U.PANELS.people.render(A);
