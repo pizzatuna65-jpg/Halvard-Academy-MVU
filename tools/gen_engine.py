@@ -76,6 +76,10 @@ t = t.replace('/*@@PLACE_SHARED@@*/[]', json.dumps(shared, ensure_ascii=False))
 # 1.47.0 (audit batch 5): the campus as an Area (3.2: the walking graph, the pins, data/campus.json) and whereabouts (3.8)
 from common import presence_data, campus_map
 from common import now_data, AGE_JS, fill_data   # 1.48.0 (audit 3.11): <now>'s engine-made lines
+# 1.54.0 (narrator-load audit U1): the rule cards' ids and features (their texts go only to entry 511, gen_mvu_entries.py)
+_rc = json.load(open(P('data/rule_cards.json'), encoding='utf-8'))['cards']
+assert t.count('/*@@RULE_CARDS@@*/{}') == 1
+t = t.replace('/*@@RULE_CARDS@@*/{}', json.dumps({k: v['feature'] for k, v in _rc.items()}, separators=(',', ':')))
 assert t.count('/*@@NOW_DATA@@*/{}') == 1 and t.count('/*@@AGE@@*/') == 1
 t = fill_data(t.replace('/*@@NOW_DATA@@*/{}', json.dumps(now_data(npcs), ensure_ascii=False, separators=(',', ':'))).replace('/*@@AGE@@*/', AGE_JS))
 for ph, v in (('CAMPUS_MAP', {**campus_map(locs, pins), 'rates': json.load(open(P('data/campus.json'), encoding='utf-8'))}), ('PRESENCE', presence_data(npcs, locs))):

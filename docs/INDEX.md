@@ -16,7 +16,7 @@ Build order, generated files and test commands: `docs/BUILD.md`.
 | Engine refactor | §2; `tests/harness.cjs` `diffEngine` | tests with `ENGINE_DIFF=<old engine.js>` must stay identical |
 | Save compatibility / field rename | `stepMigrate` (engine), `tests/test_saves.cjs`, `tests/fixtures/make_save.cjs` | a flagged migration in `stepMigrate`, never inside a step |
 | State shape (new field) | `src/scripts/schema.js` (§3), the step that writes it, `data/features.json` if switchable | declare every field (Zod strips unknown keys) |
-| What the narrator is told (rules) | §4 custom entries: 502 update rules, 504 narration rules, 505 `<now>` | EJS gates `on('id')`; `gen_mvu_entries.py` |
+| What the narrator is told (rules) | §4 custom entries: 502 update rules (a core line per topic), 511 rule cards (`data/rule_cards.json`, engine `ruleCards`; 1.54.0), 504 narration rules, 505 `<now>` | EJS gates `on('id')`; `gen_mvu_entries.py` |
 | `<now>` / Cast Sheet / Price Guide text | `src/worldbook/custom/505.template.ejs` (1.48.0: the rule lines are the engine's `nowOf`, `$ui.now`), the Cast Sheet `509.template.ejs` (head), `509_sheet.template.ejs` (one entry per NPC, uid 600+, `@@if`), `509_tail.template.ejs` (599), `506.template.ejs` | never edit `content/*.txt`; render an entry as ST does with `tests/harness.cjs` `renderEntry` |
 | UI panel or bracelet | §5 UI map → the part file or `ui.template.js` symbol | `gen_ui.py`; `tests/preview/` for a visual check |
 | Dialogue colours | `data/dialogue_colors.json` (palette and starting colours; `tools/make_dialogue_colors.py` fills new NPCs, keeps edits), `sayCss` / `sayStyle` in `ui.template.js`, the `<say>` regexes in `src/regex/index.json`, the per-scene colour step at the end of `stepCast` (`$ui.say` now, `$ui.sayx` Extras' three colours), the rule in 504 / 510 | `tests/test_say_colors_v1370.cjs` |
@@ -143,6 +143,8 @@ The starting state is custom entry 500 (`src/worldbook/custom/content/500.txt`).
 | 508 | {{user}}'s birthday event | `content/508.txt` |
 | 509 | Cast Sheet of present characters | `509.template.ejs` + NPC lore |
 | 510 | last-mile cast gate, depth 0 | `content/510.txt` |
+| 511 | rule cards: the full update rule of a topic while it applies, depth 1 before `<now>` `[mvu_update]` | `511.template.ejs` + `data/rule_cards.json` (generated `content/511.txt`); the list is engine `ruleCards` → `$ui.now.rules` |
+| 512 | the student alcohol and tobacco rule (keyword) | `content/512.txt` |
 
 Lore entries below uid 500 are generated (`src/worldbook/content/<uid>.txt`); edit them through §6.
 

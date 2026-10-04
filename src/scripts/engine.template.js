@@ -5199,9 +5199,34 @@ function nowOf(S, moodsFull) {
   } }
   return NOW;
 }
+// 1.54.0 (narrator-load audit U1, stage 1): situational rule cards. 502 keeps a core line per topic (path, data shape, the main ban);
+// a topic's full rule (data/rule_cards.json, printed by entry 511 next to <now>) is listed while it applies: by the state, the calendar
+// or the place, and fail-open by a word in the last reply or the player's message (a topic that came up gets its rule next turn).
+const RULE_CARDS = /*@@RULE_CARDS@@*/{};   // id -> the feature that must be on ('' = always)
+function ruleCards(c) {
+  const { S, OFF, absA } = c, W = S.World, M = S.Magic || {};
+  const said = String(c.text || '').replace(/<UpdateVariable>[\s\S]*?(?:<\/UpdateVariable>|$)/gi, ' ') + '\n' + String(c.userText || '');
+  const ahead = (fn, days) => _.range(0, days + 1).some(d => eventsOn(fromAbs(absA + d * DAY_MIN)).some(fn));
+  const pacts = Object.keys(M.Pacts || {}), comp = S.Competition || {};
+  const test = {
+    letters: () => placeOf(canonLocation(W.Location)) === 'Mail Tower' || Object.values(S.Letters || {}).some(l => /^(waiting|sent)$/.test(String((l || {}).Status)))
+      || /\b(letters?|mail|parcels?)\b|\bwrite home\b/i.test(said),
+    projects: () => !_.isEmpty(S.Projects) || ((S.$ui || {}).craft || []).length > 0 || /\b(projects?|assignments?|commissions?)\b/i.test(said),
+    competition: () => (!!comp.Tier && !/^(eliminated|champion)$/.test(String(comp.Status || ''))) || ahead(e => /Competition/.test(e.t || ''), 7)
+      || /\b(competitions?|tournaments?|brackets?)\b/i.test(said),
+    exams: () => ahead(e => /exams|Results|Science Fair|Expedition/.test(e.t || ''), 7) || /\b(exams?|midterms?|finals)\b/i.test(said),
+    tutoring: () => Object.values(((S.Player || {}).Academics || {}).Grades || {}).some(g => /^A/.test(String(g))) || /\btutor/i.test(said),
+    trip: () => !!(S.Trip || {}).Active || awayIn(S) || ahead(e => e.away || e.trip || /\bflies\b/.test(e.t || ''), 1) || /\b(trips?|journey)\b/i.test(said),
+    pacts: () => pacts.length > 0 && (pacts.some(k => { const p = M.Pacts[k] || {}; return p.Summoned || p.Presence === 'terms' || (M.Active || {})[k]; })
+      || new RegExp('\\b(summon\\w*|pacts?|' + pacts.map(_.escapeRegExp).join('|') + ')\\b', 'i').test(said)),
+    first_pact: () => ((M._Affinity || {}).Types || []).includes('Occult') && !S.$eng.pactPlay && (placeKey(W.Location) === 'spirit path' || /\b(spirits?|pacts?)\b/i.test(said)),
+  };
+  return Object.keys(RULE_CARDS).filter(id => (!RULE_CARDS[id] || !OFF.has(RULE_CARDS[id])) && test[id] && test[id]());
+}
 function stepNow(c) {
   const { S } = c;
   S.$ui.now = nowOf(S, c.moods);
+  S.$ui.now.rules = ruleCards(c);
   // 1.48.0 (audit 2.6): what <now> has in its lines is not kept twice: the walks and places nearby of an area (the Map panel walks
   // the same graph itself)
   for (const a of Object.values(S.$ui.area || {})) if (_.isPlainObject(a)) { delete a.walks; delete a.near; }

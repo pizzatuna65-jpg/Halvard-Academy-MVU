@@ -43,6 +43,7 @@ Dorm ladder: students stay in one dorm for all three years and climb its ranked 
 Academic year: three years of two semesters each; repeating a year needs the Headmaster's approval and is rare.
 Staff: Headmaster; Vice Headmaster and Warden; teaching staff and Dorm Heads; other staff.
 Student Council: a President, a Vice President and members from all four dorms; meets Saturday mornings; handles club administration, events, discipline and cross-dorm mediation; the President is elected in M10W3.
+Alcohol and tobacco: students may buy them, but drink or smoke only on Sundays, in the Mid-Year Break (M5 W4) and in Month 12; staff enforce it like curfew.
 Clubs: about thirty; the one place the four dorms mix freely; founding takes a teacher's signature and five members; sport clubs ban magic in play.
 Competitions: Dorm (solo, a bracket per combat role), Academy (teams of four covering the roles), Kingdom (one team per academy, in Avalon, the capital), World (a national four picked from every Kingdom entrant). Losing ends a student's competitive year.
 Airships: the kingdom's long-distance transport, hired for the Expedition, the Academy Trip, the long breaks and the Kingdom and World Competitions.

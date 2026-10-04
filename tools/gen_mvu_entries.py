@@ -134,6 +134,14 @@ assert '/*@@PG@@*/{}' in pg
 craft_sale = [[i['name'], i['sale']] for i in json.load(open(P('data/crafts.json'), encoding='utf-8'))['recipes'] if i.get('sale')]
 assert '/*@@CRAFT_SALE@@*/[]' in pg
 open(P('src/worldbook/custom/content/506.txt'), 'w', encoding='utf-8', newline='\n').write(pg.replace('/*@@PG@@*/{}', J(PG)).replace('/*@@CRAFT_SALE@@*/[]', J(craft_sale)))
+# 1.54.0 (narrator-load audit U1, stage 1): the rule cards entry prints the cards the engine listed ($ui.now.rules); with no list
+# (a state the engine has not run on yet) it prints every card whose feature is on (fail-open)
+RC = json.load(open(P('data/rule_cards.json'), encoding='utf-8'))['cards']
+_feat_ids = {f['id'] for f in json.load(open(P('data/features.json'), encoding='utf-8'))['features']}
+assert all(not v['feature'] or v['feature'] in _feat_ids for v in RC.values()), 'rule_cards.json: unknown feature'
+rc = open(P('src/worldbook/custom/511.template.ejs'), encoding='utf-8').read()
+assert rc.count('/*@@RULE_CARDS@@*/{}') == 1
+open(P('src/worldbook/custom/content/511.txt'), 'w', encoding='utf-8', newline='\n').write(rc.replace('/*@@RULE_CARDS@@*/{}', J(RC)))
 base = json.load(open(P('src/worldbook/index.json')))[0]
 def mk(uid, comment, constant, disable, position, depth, order, keys=(), whole=None, scan=None):
     e = dict(base)
@@ -154,6 +162,8 @@ idx = [
     mk(508, "[mvu_plot] Event — {{user}}'s Birthday (EJS, only on the day)", True, False, 1, 4, 85),   # 1.2.0: hand-written, gated on Profile.Birthday
     mk(509, '[mvu_plot] Cast Sheet — opens <cast> (EJS)', True, False, 4, 1, 300),   # 1.5.1: 509.template.ejs; 1.48.0 the head, sheets 600+
     mk(510, '[mvu_plot] Last-mile cast gate (EJS, only with people present)', True, False, 4, 0, 899),   # 1.5.1 (D1): hand-written; before 503
+    mk(511, '[mvu_update] Rule cards — the update rules for what is going on now (EJS)', True, False, 4, 1, 498),   # 1.54.0 (U1): before <now>
+    mk(512, 'Student rule — alcohol and tobacco', False, False, 1, 4, 504, keys=['alcohol', 'alcoholic', 'wine', 'ale', 'beer', 'mead', 'liquor', 'drink', 'drinks', 'drinking', 'drunk', 'tipsy', 'tobacco', 'smoke', 'smoking', 'cigar', 'cigarette', 'bar', 'tavern', 'Barrow & Vine'], whole=True, scan=2),   # 1.54.0 (U1): hand-written, was in 502
     mk(599, '[mvu_plot] Cast Sheet — ties and Extras, closes </cast> (EJS)', True, False, 4, 1, 390),   # 1.48.0 (audit 2.7)
 ]
 idx[-1:-1] = [mk(u, c, True, False, 4, 1, o) for u, c, o in CAST_ENTRIES]   # 1.48.0 (audit 2.7): one Cast Sheet per NPC

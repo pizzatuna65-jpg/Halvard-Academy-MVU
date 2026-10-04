@@ -18,7 +18,7 @@ ok(/Entrance morning \(Month 1 Week 1 Monday\)/.test(R(97, entrance)) && !/Entra
 const withCast = S => set(S, [['$ui.cast', { full: ['Etnie'], brief: [] }]]);
 ok(/On Entrance morning, check each first-year/.test(R(510, withCast(entrance))) && !/On Entrance morning/.test(R(510, withCast(ordinary))), '510 Entrance check only on Entrance day');
 ok(/debate Friday 16:00-18:00/.test(R(502, set(S0, [['World.Month', 10]]))) && !/debate Friday/.test(R(502, ordinary)) && /election is Month 10 Week 3 \(details that month\)/.test(R(502, ordinary)), 'Council details in Months 9-10, one line otherwise');
-ok(!/- Pacts \(set by the Student Builder/.test(R(502, ordinary)) && /- Pacts \(set by the Student Builder/.test(R(502, set(ordinary, [['Magic.Pacts', { Ember: { Kind: 'Spirit' } }]]))), 'Pacts rule only with a pact');
+ok(!/- Pacts \(key = /.test(R(502, ordinary)) && /- Pacts \(key = /.test(R(502, set(ordinary, [['Magic.Pacts', { Ember: { Kind: 'Spirit' } }]]))), 'Pacts rule only with a pact (1.54.0: its core line; the full rule is a card)');
 ok(!/Dove_attention 0–100/.test(R(502, ordinary)) && /Dove_attention 0–100/.test(R(502, set(ordinary, [['Hidden._True_magic', 'Effigy']]))), 'Hidden rules only with hidden magic');
 ok(!/- _Perks:/.test(R(502, ordinary)) && /- _Perks:/.test(R(502, set(ordinary, [['_Perks', { Ribbon: { From: 'Etnie', Kind: 'gift', Effect: 'x', Uses: 0 } }]]))), '_Perks rule only with a perk');
 const r5 = set(ordinary, [['Bonds.Etnie.Rank', 5]]), r9 = set(ordinary, [['Bonds.Etnie.Rank', 9]]);
@@ -27,8 +27,8 @@ ok(!/- Graduated \(list\)/.test(R(502, ordinary)) && /- Graduated \(list\)/.test
 
 console.log('One copy of each rule (A1, A2, A7, A9, A10)');
 const r502 = R(502, ordinary), r504 = R(504, ordinary);
-ok(r502.trim().endsWith('</variable_update_rules>') && /Students may buy alcohol/.test(r502) && !/\+1 XP|×1\.5|−10% stamina ceiling/.test(r502), 'every 502 rule is inside the tag, without engine arithmetic');
-ok(/On consuming The Vigil, insert "The Vigil"/.test(r502) && /blocks wind shelters casts/.test(r502) && /Birthdays: remembering someone's birthday matters/.test(r502), 'what the narrator must do from those blocks is kept');
+ok(r502.trim().endsWith('</variable_update_rules>') && !/Students may buy alcohol/.test(r502) && /Students may buy alcohol/.test(fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/512.txt'), 'utf8')) && !/\+1 XP|×1\.5|−10% stamina ceiling/.test(r502), 'every 502 rule is inside the tag, without engine arithmetic');
+ok(/on consuming The Vigil, insert "The Vigil"/i.test(r502) && /blocks wind shelters casts/.test(r502) && /Birthdays: remembering someone's birthday matters/.test(r502), 'what the narrator must do from those blocks is kept');
 ok(r502.indexOf('  - Doves kinds:') < r502.indexOf('- Exams: the engine marks') && r502.indexOf('- Reputation:') < r502.indexOf('  - Academy kinds:'), 'Exams no longer splits the reputation list');
 ok(!/Before setting Time or narrating lateness/.test(r504) && /Arrivals follow the Time rule/.test(r504) && (r504.match(/In a class period/g) || []).length === 1, '504: one travel bullet, one class-period sentence');
 ok(!/Magic Duelling Club/.test(r504), '504: the duelling-club correction lives in the lore and the cast gate');

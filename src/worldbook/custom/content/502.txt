@@ -75,8 +75,7 @@ Player.Profile
   - Student kinds: student_notice_help<%- on('study') ? ' (not paid tutoring: /Tutoring)' : '' %><%- on('attendance') ? '' : ', club_time' %>, club_office, founded_club, club_festival_win, memorable_performance, community_event, defended_student / defended_student_from_doves, famous_prank, covered_classmate; dropped_student_request, public_snub, reported_student_to_staff, quit_club_midseason, bullying / severe_bullying, reported_student_to_doves, caught_cheating.
   - Doves kinds: cooperated_with_dove, attentive_in_dmd, helped_dove_case / major_dove_case, reported_forbidden_magic; suspicious_item, insulted_dove, defied_doves_publicly, restricted_area, lied_to_doves, obstructed_search. If a public defense angered the Doves, also report defied_doves_publicly; if a prank or cover-up was caught, also report caught_pranking or caught_covering_classmate (the second side of a report to staff or the Doves is the engine's).<%- on('study') ? '' : ' With Study off, report a top Dark Magic Defense exam +8 through legacy Rep_events.' %>
 <%_ if (on('study')) { _%>
-- Exams: the engine marks each subject (A top of the year, B above average, C passed, D weak pass, F failed) and posts the marks; in exam week <now> gives the expected marks: play each exam to its mark. A deciding moment (Fortune, a Month 9 Science Fair prize for Magic Theory, the Expedition for Creature Studies) may move one subject one step: insert {"Subject": "<subject>", "Shift": 1 or -1, "Why": "max 8 words"} into /Exam_events/- ("Fail": true instead of Shift only for cheating caught, walking out or skipping the exam). Never write Player.Academics; teachers and classmates know its Grades (the latest marks). A remedial is attended when {{user}} is at its place within three hours of its start (the engine removes it); remove it yourself if they attended it anywhere else.
-- Tutoring: with an A in a subject {{user}} can tutor it for pay; for each session played insert {"Subject": "<subject>", "Student": "name"} into /Tutoring/- (the engine pays and counts it; add no Points or Rep_events for it).
+- Exams: the engine marks each subject and posts the marks; never write Player.Academics (teachers and classmates know its Grades). A deciding moment may move one subject one step through /Exam_events/- (the rule shows in <rule_cards> in exam weeks). A remedial is attended when {{user}} is at its place within three hours of its start (the engine removes it); remove it yourself if they attended it anywhere else.
 <%_ } else { _%>
 
 Player.Academics: Grades {"Magic Theory": "B+"}, Exams {"Midterm M3": "result"}.
@@ -90,10 +89,10 @@ Magic
 - _Techniques is {{user}}'s fixed technique list (read-only). When {{user}} uses one, insert {"Technique": "<exact key>", "Times": n} into /Magic/Casts/-. The engine charges the cost and empties Casts. For a hybrid technique that is running (in Active), each triggered use is also a Casts entry; the engine charges its trigger cost.
 - Sustained effects (summons, shields, lingering spells): when one starts, add /Magic/Active/<effect name> = {"Technique": "<key>", "Note": ""}; that entry is the cast (it pays the activation), so do not also add a Casts entry for starting it (a sustained technique reported only in Casts is started as an Active entry). Remove it when {{user}} ends it, in the update where it ends, before any time skip. The engine charges upkeep per in-world minute and ends the effect itself if mana runs out (reported in _Log).
 <%_ if (_pacts) { _%>
-- Pacts (set by the Student Builder; key = the partner's name, Kind = Spirit, Demon, Monster, Animal or Human): when {{user}} summons a pact partner, set /Magic/Pacts/<name>/Summoned true AND add /Magic/Active/<name> = {"Technique": "Summon <name>"}. The partner can use only its own abilities, each a technique "<name>: <ability>" in _Techniques (a Casts entry, or Active if lasting); an older pact with none listed pays each ability as a Casts entry for "Summon <name>". On dismissal set Summoned false and remove the Active entry (the engine keeps the two in step when one is missing). Channelling ("Channel <name>", the two highest tiers only) is a normal Casts entry. Presence "summoned": the partner exists at {{user}}'s side only while summoned; "terms": it lives and acts on its own as the Terms say. Any Kind but Spirit is the forbidden art of Pacting.
+- Pacts (key = the partner's name): to summon a partner set /Magic/Pacts/<name>/Summoned true AND add /Magic/Active/<name> = {"Technique": "Summon <name>"}; on dismissal set Summoned false and remove the Active entry. The full rule shows in <rule_cards> while a partner is out or named.
 <%_ } _%>
 <%_ if (_pact1) { _%>
-- A first pact in play: a student with Occult magic may form a Spirit Pact with one lesser spirit at the Spirit Path, only when the scene has played it out (the spirit chose them). Add /Magic/Pacts/<name> with Kind "Spirit", Tier "Lesser", Presence "summoned" and Terms naming what it can do (a lesser spirit is small and simple: it helps, fetches, keeps watch, comforts; it does not fight well); the engine writes its Summon technique. One such pact in play, ever; the engine removes any other.
+- A first Spirit Pact in play is made only at the Spirit Path; its rule shows in <rule_cards> there.
 <%_ } _%>
 
 <%_ if (_hid) { _%>
@@ -159,7 +158,7 @@ Notices (the Notice Board, castle Floor 1 entrance hall): {"<title>": {"Text": "
 <%_ } _%>
 
 <%_ if (on('letters')) { _%>
-Letters (Mail Tower: birds carry them, numbered lockers hold them until collected): an arriving letter is {"<short title>": {"From": "", "To": "{{user}}", "Gist": "max 30 words", "Status": "waiting"}}; set "read" when {{user}} collects and reads it (write the letter in the story), "replied" once answered. When {{user}} sends one: {"From": "{{user}}", "To": "", "Gist": "", "Status": "sent"}. Letters take at least a day each way. A letter home (To a family member or "home"), written at the Mail Tower, gets one reply a month: the engine delivers it about a week later, sometimes with a small parcel it hands over when {{user}} reads it; never add the reply or the parcel yourself, and write the family's letter in the story.
+Letters (Mail Tower): {"<short title>": {"From": "", "To": "", "Gist": "max 30 words", "Status": "waiting|read|replied|sent"}}. The engine delivers the family's reply to a letter home; do not write that reply. The full rule shows in <rule_cards> while letters are in play.
 <%_ } _%>
 
 Journal (list): insert one line, max 25 words, for each real turning point (a first, a fight, a discovery, a promise made or broken, a loss). Not routine events. Old chat is trimmed from your context, so the Journal is the story's long memory: write each line so it makes sense on its own (who, what, where). The engine adds the date and some entries itself.
@@ -170,15 +169,15 @@ Mysteries {"<thread>": {"Status": "open|solved|cold", "Summary": "what {{user}} 
 <%_ } _%>
 
 <%_ if (on('competition')) { _%>
-Competition: {"Tier": "Dorm|Academy|Kingdom|World", "Status": "entered|qualified|eliminated|champion|selected", "Placement": "e.g. 7th of 40", "Team": ["teammates' first names"], "Results": ["R1: beat X"]}. Update as rounds are fought. At the Dorm tier {{user}} fights in their role's bracket: Placement is the place in that bracket (e.g. "2nd of 12, Defense bracket"). A bracket champion earns 100 points and the runner-up 50, and winning the Kingdom Competition pays 5,000 points each; the engine pays {{user}}. The engine also adds the result's reputation (qualifying from the Dorm tier, an Academy or Kingdom title) and bond XP for the Team once a tier: never report those in Rep_events or Interactions. After a title the staff expect {{user}} to defend it: teachers and coaches hold {{user}} to it, and the next early elimination costs Academy reputation (the engine charges it).
+Competition: {"Tier": "Dorm|Academy|Kingdom|World", "Status": "entered|qualified|eliminated|champion|selected", "Placement": "", "Team": [], "Results": []}. The engine pays prizes, the result's reputation and the team's bond XP; never report them. The full rule shows in <rule_cards> while a competition is on.
 <%_ } _%>
 
 <%_ if (on('projects')) { _%>
-Projects: {"<name>": {"Kind": "potion|smithing|tailoring|enchantment|cooking|painting|carving|calligraphy|craft|research|assignment|club|other", "Goal": "", "Progress": 0-100, "Needs": "what is still missing", "Where": "where the work is done", "Due": "", "With": ""}}. Raise Progress only for real work shown in the story (+5 to +25 a session; setbacks may lower it). Remove it once handed in, used or abandoned. An assignment (Kind "assignment", With the classmates working on it) handed in: set Progress 100 first, then remove it next reply; the engine counts it as study time, or as a skipped class when late, and an overdue group assignment costs each partner Tension (who let the group down is the story's to play, in character). A study session in /Practice with partners counts as a study interaction with each one present. A finished craft Project (potion to craft in Kind) is judged as a masterwork at Craft Rank 4: the engine puts the piece in the Bag and closes the Project.
+Projects: {"<name>": {"Kind": "potion|smithing|tailoring|enchantment|cooking|painting|carving|calligraphy|craft|research|assignment|club|other", "Goal": "", "Progress": 0-100, "Needs": "", "Where": "", "Due": "", "With": ""}}: raise Progress only for real work shown in the story; remove it once handed in, used or abandoned. The full rule shows in <rule_cards> while a Project is open.
 <%_ } _%>
 
 <%_ if (on('trip')) { _%>
-Trip: when {{user}} departs on a trip (including the Kingdom Competition stay in the capital, if {{user}} is on Halvard's team) set {"Active": true, "Destination": "", "Companions": ["the group of four"], "Note": ""}; set Active false on return. The engine already treats the outside maps (the airship, the forest, Avalon, Sunreach Bay) as away, and ends a Trip left Active once {{user}} is back at a campus place.
+Trip: when {{user}} departs on a trip set {"Active": true, "Destination": "", "Companions": [], "Note": ""}; set Active false on return. The full rule shows in <rule_cards> around trip days.
 <%_ } _%>
 
 <%_ if (on('battle')) { _%>
@@ -194,5 +193,5 @@ Hooks (your notes; hidden from the player) {"<title>": {"Note": "", "Who": "", "
 <%_ if (on('weather')) { _%>
 Sleep and wind: on consuming The Vigil, insert "The Vigil" into /Consumables/- (the engine lowers its Qty): it holds off sleep debt for 48 hours, then {{user}} crashes until two full nights are slept; buying or gifting it does not activate it. For consecutive sleep updates, report Resting sleep on each elapsed segment. An Active barrier whose Note says it blocks wind shelters casts behind it.
 <%_ } _%>
-Students may buy alcohol and tobacco and receive them as gifts, but may drink or smoke only on the rest day (Sunday), during Mid-Year Break (M5 W4), and in Month 12. Festival nights do not count, and academy feasts serve students no alcohol. Staff enforce it like curfew: a student caught drinking or smoking on a class day loses points and gets a mark on their record. Barrow & Vine asks for the bracelet and says so at the counter. Forbidden-magic gifts are dangerous to hold; Dante, Krieg and Milena confiscate them and question {{user}}.
+Forbidden-magic gifts are dangerous to hold; Dante, Krieg and Milena confiscate them and question {{user}}.
 </variable_update_rules>

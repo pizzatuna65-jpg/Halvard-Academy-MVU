@@ -129,7 +129,7 @@ ok(/Bond: Caspian \([^)]*Trust 10 betrayed\): shares nothing new with \{\{user\}
 ok(/Bond: Ruby \([^)]*Trust 90 confidant\): shares [^\n]*their goals; what they think of other people/.test(nw), 'Now: a confidant shares the real tiers one rank early (goals and views at Rank 5)');
 ok(/Trust: Etnie cannot stop trusting/.test(nw) && /Trust: Althair trusts no one/.test(nw) && /report \{"With": "Kanae", "Kind": "choose"\}/.test(nw), 'Now: the personal rules of Etnie, Althair and Kanae');
 const rules = fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/502.txt'), 'utf8');
-ok(/Never raise Trust yourself/.test(rules) && /keep\|secret\|defend\|confide/.test(rules) && /betrayal \(reporting them, siding with their enemy, selling them out\) −25–40/.test(rules), 'rule 502: report rises, write drops by size');
+ok(/A rise comes from the deed reported as an interaction \(keep, secret, defend, confide, help\)/.test(rules) && /Trust rises/.test(rules) && /keep\|secret\|defend\|confide/.test(rules) && /betrayal \(reporting them, siding with their enemy, selling them out\) −25–40/.test(rules), 'rule 502: report rises, write drops by size');
 
 // ---- the UI
 U.view.arg = 'Irene';

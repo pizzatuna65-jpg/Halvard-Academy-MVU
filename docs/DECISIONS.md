@@ -112,6 +112,10 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **Dorm Competition brackets** (1.33.0, owner-approved): five solo brackets per dorm, one per role, judged by the role teachers (formats in lore 19). 16 per dorm qualify for the Academy Competition by role (Attack 4, Defense 3, Healing 3, Support 3, Control 3) without having to win; a bracket champion earns 100 points and the runner-up 50 (engine, once a year, from `Competition.Placement`). The Academy Competition itself is unchanged.
 
 ## 6. Social systems, UI rules and versioning (from 1.3.1)
+- **Situational rule cards** (1.54.0, narrator-load audit U1): 502 keeps a core line per topic (path, data shape, the main ban) so an
+  unexpected event can still be recorded; a topic's full rule is a card (`data/rule_cards.json`) that the engine lists while it applies
+  (state, calendar, place, or a word in the last reply or the player's message) and entry 511 prints next to `<now>`. Fail-open: with
+  no list, every card shows. A new situational rule goes into a card, not into 502.
 - **One source** (1.43.0, audit batch 2): a constant or small rule that more than one runtime (engine, panels, bracelet, 505, 506)
   uses lives in `src/scripts/shared.js`, its data in `data/*.json`; a player- or narrator-facing text names a time or number from
   the data as `{@file.path}`. Every seeded chance and pick goes through the shared draws (`roll100`, `pickOf`, `rollInt`,

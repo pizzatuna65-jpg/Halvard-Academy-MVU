@@ -26,7 +26,7 @@ ok(A.Bonds.Trixie.Trust === 45, `the next reply, a lie found out (60 -> 45): Tru
 // the narrator is told
 const f503 = rd('src/worldbook/custom/content/503.txt'), f502 = rd('src/worldbook/custom/content/502.txt');
 ok(!/"\/Bonds\/\w+", "value": \{[^}]*"Trust"/.test(f503), 'the output format example inserts a bond without a Trust number');
-ok(/A new record starts at the character's own Trust \(engine\): leave Trust out when you insert one\./.test(f502), 'rule 502 says a new record starts at their own Trust');
+ok(/A new record starts at the character's own Trust\./.test(f502) && /a record starts by itself when a roster character is first in Scene\.Present/.test(f502), 'rule 502 says a new record starts at their own Trust');
 // a 1.6.10 save loads
 const save = JSON.parse(rd('tests/fixtures/saves/save_1.6.10.json'));
 const L = T(save, '17:00', []);

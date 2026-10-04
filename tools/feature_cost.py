@@ -22,6 +22,8 @@ def gated_chars(src):
         # the Settings estimate is the ordinary, no-craft-place cost. 1.30.0: mastery lines likewise (Rank 5 only).
         if re.match(r'^if \(_U\.(?:craft(?:_sale)?(?: && _U\.craft\.length)?|mastery)\) \{$', code): stack.append('$dynamic'); continue
         if code == '}': stack.pop(); continue
+        if code == '} else {' and stack:   # 1.54.0: the else branch of a feature gate counts against it (shown when off)
+            f = stack.pop(); stack.append(None if not f or f == '$dynamic' else f[1:] if f.startswith('!') else '!' + f); continue
         for ch in code:
             if ch == '{': stack.append(None)
             elif ch == '}' and stack: stack.pop()

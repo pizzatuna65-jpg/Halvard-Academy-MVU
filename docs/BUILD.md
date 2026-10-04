@@ -124,6 +124,8 @@ python tools/audit_chat.py chat.jsonl --mechanics --no-drift --out report.md   #
   5. Add tests (and a row in `tests/README.md`) and update `docs/PLAYER_GUIDE.md`.
   6. Check the token cost with `token_audit.cjs`.
   7. If it should be switchable: add a row to `data/features.json` (paths it parks, its unlock), gate its rules with `<%_ if (on('id')) { _%>` in 502/504/505, hide its UI with `featureOn(S, 'id')`. `feature_cost.py` measures it on the next build.
+  8. A rule needed only in some situations (1.54.0): keep one core line in 502 and put the full rule in `data/rule_cards.json` (its
+     `feature`), with its trigger in engine `ruleCards` (state, calendar, place, a word in the reply); entry 511 prints it.
 - **Change prices or happenings.** Edit `data/shop.json` or `data/happenings.json`, then run `gen_mvu_entries.py`, `gen_engine.py`, `gen_ui.py`, and the build.
 - **Preset work.** Edit `presets/edit_preset.py`, not the output JSON. Every replacement asserts that its anchor text still exists. Read the preset's in-prompt `{{// }}` notes, which contain the author's per-model guidance.
 - **Measure character drift.** Export the chat from SillyTavern (.jsonl) and run `python tools/audit_chat.py <chat> --out report.md`.

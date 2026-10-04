@@ -3,6 +3,23 @@
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
 details: `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
 
+## v1.54.0 — Narrator-load batch 3: situational rule cards, stage 1 (2026-10-04)
+
+Batch 3 of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6 (U1 stage 1). Save fixture v1.53.1.
+- 502 keeps one core line per topic (path, data shape, main ban). The full rules of Letters, Projects, Competition, Exams, Tutoring,
+  Trip, Pacts and the first pact are moved verbatim to `data/rule_cards.json`. The engine (`ruleCards`, `$ui.now.rules`) lists a card
+  while its topic applies: from the state, the calendar (7 days ahead), the place, or a word in the last reply or the player's message.
+  The new entry 511 (`[mvu_update]`, depth 1, before `<now>`) prints the listed cards. If the engine has made no list yet, it prints
+  every card.
+- The alcohol rule is now keyword entry 512, plus one CORE FACTS line in the World Index.
+- Measured on 502 + 511: −860 tokens per turn in an ordinary scene (save, one card), −800 on a new chat.
+- Features cost (`feature_cost.py`) counts only the always-on core line; the else-branch of a gate now counts against its feature.
+- Fixed tests that 1.53.0 had broken without notice (`test_newbond_v1611`, `test_trust_v143`, `test_tokens_v1110`: rule wording).
+- **Tests:** new `test_narrator_batch3_v1540` (24 checks). `test_feature_batch1_v1490`, `test_grades_v1150`, `test_narrator_batch1_v1530`,
+  `test_world_v110` and `test_saves` were updated or pass, along with every suite that reads 502.
+- **To check live:** a card shows when its topic comes up (Mail Tower, a Project, exam week); a letter that arrives unexpectedly is
+  still recorded from the core line.
+
 ## v1.53.1 — Narrator-load batch 2: the mechanics audit and its baseline (2026-10-04)
 
 Batch 2 of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6 (U10). Tools only: the card's rules, engine and UI are unchanged (the version
@@ -297,3 +314,4 @@ model (DECISIONS 1.47.0) and the day's chance is the shared `roll100`.
 - **v1.52.2 (2026-10-04):** Preset audit 2, tier 1: BOLT points to the rules instead of restating them, short Cosmos last-mile gates, one home per rule, Internal Thoughts tightened (17,245 → 15,444 tokens as sent; depth 0 −19%); `token_audit` counts the preset as ST sends it.
 - **v1.53.0 (2026-10-04):** Narrator-load batch 1: the first-pact rule reaches Occult students (T6), a correct 503 example and a 3-line Analysis, plain dates written back as calendar dates, one "the engine does these" list, deed pairs and the remedial taken by the engine, the Extras request in `<now>`.
 - **v1.53.1 (2026-10-04):** Narrator-load batch 2: `audit_chat.py --mechanics` and `replay_chat.cjs` (how the narrator handled the engine, replayed through the current engine); baseline from the owner's chats (Analysis 34% of the block, weather stamina in 7 of 13 rainy replies).
+- **v1.54.0 (2026-10-04):** Narrator-load batch 3: situational rule cards (entry 511, `data/rule_cards.json`, engine `ruleCards`) for Letters, Projects, Competition, Exams, Tutoring, Trip, Pacts and the first pact; alcohol rule as keyword entry 512 (−800 tokens per turn in ordinary scenes).

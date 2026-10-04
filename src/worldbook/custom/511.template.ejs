@@ -1,0 +1,10 @@
+<%_ const _U = getvar('stat_data.$ui') || {}, _OFF = _U.off || []; const on = id => typeof (_U.on || {})[id] === 'boolean' ? _U.on[id] : (id === 'happenings' ? _U.happenings !== 'off' : id === 'weather' ? (_U.wxfx || 'full') !== 'off' : id === 'ambience' ? (_U.ambience || 'full') !== 'off' : id === 'wxfull' ? (_U.wxfx || 'full') === 'full' : !_OFF.includes(id)); _%>
+<%_ const _CARDS = /*@@RULE_CARDS@@*/{}, _R = (_U.now || {}).rules; const _show = Object.keys(_CARDS).filter(id => (Array.isArray(_R) ? _R.includes(id) : true) && (!_CARDS[id].feature || on(_CARDS[id].feature))); _%>
+<%_ if (_show.length) { _%>
+<rule_cards>
+The update rules for what is going on now (they complete the core lines of <variable_update_rules>):
+<%_ for (const id of _show) { _%>
+<%- _CARDS[id].text %>
+<%_ } _%>
+</rule_cards>
+<%_ } _%>

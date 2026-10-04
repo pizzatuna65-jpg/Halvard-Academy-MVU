@@ -92,7 +92,7 @@ console.log('initiative: a favour some days');
 
 console.log('rules and data');
 {
-  const r502 = rd('src/worldbook/custom/content/502.txt');
+  const r502 = rd('src/worldbook/custom/content/502.txt') + Object.values(JSON.parse(rd('data/rule_cards.json')).cards).map(c => c.text).join(' ');   // 1.54.0: a topic's full rule is a rule card
   ok(/assignment\|promise\|appointment\|club\|favour/.test(r502) && /A favour \(Type "favour"/.test(r502) && /Kind "assignment", With the classmates/.test(r502), '502: favours and group assignments');
   const d = JSON.parse(rd('data/initiative_asks.json')).favours;
   ok(d && d.rate > 0 && d.per_week === 2 && d.ignored_tension > 0, 'data/initiative_asks.json favours');

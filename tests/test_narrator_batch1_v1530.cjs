@@ -12,10 +12,10 @@ const occ = S => { const X = _.cloneDeep(S); X.Magic._Affinity = { ...(X.Magic._
 console.log('T6 the first pact');
 {
   const r = S => renderEntry(card, 502, S);
-  ok(/A first pact in play/.test(r(occ(S0))), 'an Occult student with no pact sees the first-pact rule');
-  ok(!/A first pact in play/.test(r(S0)), 'a student without Occult magic does not');
+  ok(/A first Spirit Pact in play is made only at the Spirit Path/.test(r(occ(S0))), 'an Occult student with no pact sees the first-pact line (1.54.0: the full rule is a card at the Spirit Path)');
+  ok(!/A first (Spirit )?[Pp]act in play/.test(r(S0)), 'a student without Occult magic does not');
   const done = occ(S0); done.$eng.pactPlay = 'Pip';
-  ok(!/A first pact in play/.test(r(done)) && !/- Pacts \(set by/.test(r(done)), 'after a pact made in play the first-pact rule is gone');
+  ok(!/A first (Spirit )?[Pp]act in play/.test(r(done)) && !/- Pacts \(/.test(r(done)), 'after a pact made in play the first-pact rule is gone');
 }
 
 console.log('U4 / U6 the format and the engine list');
