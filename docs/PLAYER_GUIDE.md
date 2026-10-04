@@ -111,7 +111,15 @@ To send more chat, open the Regex extension and raise the **Min Depth** of "Eldr
 
 ## 8. MVU mode
 
-The card asks MVU to update variables **together with the AI's reply**, one request per turn. You can switch to MVU's "extra model analysis" mode in the MVU panel under the current card's config; the card's entries are tagged for both modes. In the tool-call response format, names mentioned only in story prose will not unlock early in dossiers, because the update then arrives without the prose.
+The card asks MVU to update variables **together with the AI's reply**, one request per turn. MVU also has an **extra-model parsing** mode: one request writes the story, a second one reads it and writes the update (two requests per turn; the story model no longer reads the update rules). The card's entries are tagged for both modes.
+
+To try it:
+1. Open the MVU panel (Extensions → MVU Variable Framework). In **Current character-card settings (overriding)**, set **Variable update method** to **Extra-model parsing** (the card's setting overrides your own, so change it here). This edits the card's `[config_override]` entry, so a fresh import of the card sets it back.
+2. Under **Variable update method → Extra-model parsing**, pick a **Model source**: *Same as current connection* (the same model does both) or *Custom* (a cheaper, faster model for the update, with its own API address, key and model name). Leave **Jailbreak strategy** on *Use built-in jailbreak* and **Response format** on *Chat message*.
+3. With *Custom*, open **Advanced parameters** and set **Chat history entries** to 3, so the update model also sees the previous reply (the default 2 is your message and the new reply).
+4. Play. Each reply now appears first, then a "parsing" notice, then the update is appended under the prose and the bracelet refreshes. If an update fails, use **Retry extra-model parsing** in the panel, or swipe.
+
+To go back, set **Variable update method** in the character-card settings to **Alongside AI output**.
 
 ## 9. Troubleshooting
 

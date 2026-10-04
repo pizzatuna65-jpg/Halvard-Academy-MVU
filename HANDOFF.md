@@ -3,14 +3,13 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.57.0** (2026-10-04): narrator-load batch 6: the Journal is the story's spine (engine bookkeeping in
-`$ui.jnotes`, shown only in the panel), first visits to notable places and the Entrance tour are remembered (`stepVisits`, `$eng.first`,
-`<now>` visit line), `<current_state>` is compact (absent bonds one line, techniques one line), and the card has its own VectFox
-EventBase prompt (`docs/vectfox_eventbase_prompt.txt`, `docs/ECOSYSTEM.md`). 1.53–1.56: rule cards, one place per fact, the mechanics
+**Snapshot:** card **v1.58.0** (2026-10-04): narrator-load batch 7: the card is ready for MVU's extra-model mode (506 Price Guide
+untagged, no update rule points at `<cast>`, MVU 438f9ff verified in DECISIONS §11) and `audit_chat.py --compare` measures an A/B
+test; one-call mode stays the default (DECISIONS §9). 1.53–1.57: rule cards, one place per fact, the Journal spine, the mechanics
 audit. Live checks: `docs/TEST_CHECKLIST.md` "Open".
 
-**Next task:** the owner pastes the VectFox prompt and re-vectorizes; live-check 1.53–1.57 and measure a new chat with
-`audit_chat.py --mechanics`. Narrator-load batch 7 (extra-model mode) or 8 (U8, Trust/Tension by severity; DECISIONS §6).
+**Next task:** the owner runs the extra-model A/B test (`docs/TEST_CHECKLIST.md` 1.58.0) and decides DECISIONS §9; live-check
+1.53–1.57. Narrator-load batch 8 (U8, Trust/Tension by severity; DECISIONS §6) is the last one.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

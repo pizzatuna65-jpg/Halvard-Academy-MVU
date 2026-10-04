@@ -1,7 +1,33 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show de4e746:CHANGELOG.md` (1.53.0), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.58.0 — Narrator-load batch 7: ready for MVU's extra-model mode, and an A/B tool (2026-10-04)
+
+Batch 7 of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6 (U9). The card stays in one-call mode (DECISIONS §9 unchanged); this release
+prepares the card and the measurement so the owner can test MVU's extra-model mode and decide. Save fixture v1.57.0.
+- **Verified against MVU 438f9ff** (the pinned commit), Tavern Helper and Prompt Template; written into DECISIONS §11:
+  - the story request drops `[mvu_update]` entries and every earlier `<UpdateVariable>` in the history;
+  - the update request drops `[mvu_plot]` entries and sends persona, card description, World Info (with @D entries placed inside the
+    history), the last 2 messages (setting "Chat history entries", shown only for a Custom model source) and MVU's task;
+  - its reply is appended under the prose in every response format, tool call included, so the reason recorded in §9 for keeping the
+    one-call mode no longer holds (the decision itself is the owner's, after the test);
+  - 501 and 505 show the state before the reply (Prompt Template clones the previous message's variables);
+  - the card's `[config_override]` overrides the player's own update method, so the switch is made in the panel's character-card settings.
+- **Tags (DECISIONS §1, D2):** 506 Price Guide is untagged, so the update model sees the exact item names and "When used" lines it
+  writes into `/Purchases` and `/Consumables`. Untagged set: 0, 20, 97, 131, 132, 134, 501, 505, 506.
+- **Update rules no longer point at `<cast>`** (the update model does not get it):
+  - 502 Extras: "When `<now>` asks" (the request has been in 505 since 1.53.0);
+  - the Imprints card names the change type of those here, with its meaning ("Change type of those here: Etnie fixed (fixed: …)");
+  - the Trust card judges teasing from the Cast Sheet "and how the story shows them taking it".
+- **A/B tool:** `audit_chat.py A.jsonl --compare B.jsonl` puts the mechanics of two chats side by side (counts per 10 blocks), and the
+  mechanics report now also counts replies with no update block or more than one, and the story prose per reply.
+- **Player guide §8:** how to switch to extra-model mode and back.
+- Tests: new `test_narrator_batch7_v1580` (10); `qa_static`, `test_extras_v161` (wording), `test_saves`, `test_mechanics_audit_v1531`,
+  `test_audit_tool`, the narrator batch suites 1, 3–6 and the other 502 suites pass.
+- **To check live (owner):** the A/B test in `docs/TEST_CHECKLIST.md` 1.58.0. **To confirm with the owner:** after the test, whether
+  extra-model mode becomes the recommended mode (DECISIONS §9).
 
 ## v1.57.0 — Narrator-load batch 6: the Journal as the story's spine, first visits, a compact state, a VectFox prompt (2026-10-04)
 
@@ -159,53 +185,6 @@ is bumped by the release rule). Save fixture v1.53.0.
   Rank, a replaced Trust). `test_audit_tool` and `test_saves` (new 1.53.0 fixture) pass.
 - **To check live:** nothing. Play on 1.53.x, export the chat, and run the tool again for the after numbers.
 
-## v1.53.0 — Narrator-load batch 1: quick fixes (2026-10-04)
-
-Batch 1 of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6 (T6, U4, U5, U6, U7, T10, Journal dates). No feature was switched off and no
-balance number changed. Save fixture v1.52.2.
-- **T6, the first pact (bug since 1.31.0).** The "first pact in play" rule now shows to a student with Occult magic who has not made a
-  pact in play yet (`$eng.pactPlay`), pact or no pact. Before, it showed only to players who already had a pact. The summon and
-  dismiss rules still show only when `Magic.Pacts` has an entry.
-- **U4, 503.** The example uses a named deed (`student_notice_help`) instead of the legacy form, adds a fact to a bond
-  (`/Bonds/Irene/Known_facts/-`) instead of inserting a whole record with Rank, and writes a Commitment with a plain date ("tomorrow
-  16:00"). `<Analysis>` has at most 3 lines: Time | Location, Present, Reports. The "Points: current + delta" line and the Vitals line
-  are gone: the engine does the sums. The Time line keeps its full date, because VectFox's cleaning pattern reads it for EventBase's
-  in-world time (`docs/ECOSYSTEM.md`, `test_vectfox_v1113`).
-- **U5, plain words, engine-made dates.** 502 asks only for the new Day and Time; the engine turns the week, month and year (Week
-  and Month only for a skip of more than a week). Due, Until and Heals_by may be written plainly. New: after the engine pins such a
-  date (as it has since 1.44.0), it writes it back once as the calendar date (`absWhen`: "tomorrow after class" becomes "M2 W2 Tue
-  after class"). This covers Commitments, Notices, Hooks, Next plans, Projects and injuries, so no stale "tomorrow" stays in the state.
-  The text is kept as written if the rewrite would not read back to the same minute. Bonds: a record starts by itself when a roster
-  character is first in Scene.Present; 502 says to add to it field by field, never to insert a whole record. Location: short names are
-  fine (the engine matches them to the map).
-- **U6, one engine list.** One line in 502 lists what the engine does and the narrator never writes: technique mana and regeneration;
-  stamina from walks, weather and conditions (missing before, T5: the playtest's double Chilled penalty); rest and restful places;
-  weather conditions; Mana_max / Stamina_max; proficiency and craft results; payouts, purchases, sales, tutoring pay; bond XP, Rank and
-  Trust rises; quiet-day Tension easing; marks, attendance, reputation levels; Dove decay; the calendar. Each item is gated by its
-  feature. About twelve scattered "never add it yourself" clauses are gone.
-- **U7, reports the engine can take.** `data/reputation.json` `also`: a report to staff brings `helped_staff_report`, a report to the
-  Doves `helped_doves_report`. The engine adds the second side unless it was reported too, so it is counted once either way. A remedial
-  is attended when {{user}} is at its place (Where; new remedials carry "Main Library", the Saturday Study Hall's place, which is also
-  the fallback for older ones) within three hours of its start. The engine removes the Commitment, and the F counts as a D as before.
-  The narrator may still remove it.
-- **T10.** The empty `on('class')` gate in 504 is gone. The narration half of 502's "Mood, sleep and wind" (moods colour without
-  replacing personality, a collapsed {{user}} cannot interact, NPC magic follows the weather) moved to 504's weather lines. The request
-  for an Extras record ("Seen before, with no Extras record yet…") moved from the Cast Sheet tail, tagged `[mvu_plot]`, to `<now>`,
-  which has no tag, so an update model in extra-model mode sees it too (U9 preparation).
-- **Journal dates** in `<now>` name each date once.
-- **Not in this batch:** alcohol moves to keyword lore in batch 3 (situational rule cards). 502 is about the same size as before (the
-  engine list replaces the scattered clauses). The token savings are U1–U3, batches 3–6.
-- **Tests:** new `test_narrator_batch1_v1530` (24 checks). `test_extras_v161` (request now in `<now>`) and `test_audit_batch7_v1480`
-  (a Journal with a repeated date reads shorter by design) were updated. `test_saves` (new 1.52.2 fixture), `test_grades_v1150`,
-  `test_pacts_v132`, `test_vectfox_v1113`, `test_playtest_v1301`, the audit and feature batch suites and every suite touching dates,
-  deeds, Extras or bond facts pass.
-- **To check live** (TEST_CHECKLIST 1.53.0): the narrator writes only Day and Time across midnight; a plain Due is shown as a date
-  next turn; `insert /Bonds/<name>/Known_facts/-` on a first meeting is accepted by real MVU (the harness copies MVU creating the
-  missing container); Analysis stays at 3 lines and no stamina is taken for Chilled; an Occult student is offered the first pact at
-  the Spirit Path.
-- **To confirm with the owner:** the remedial's place. The lore names no room for make-up sessions, so the engine uses the Main
-  Library (the Saturday Study Hall slot the session replaces). A narrator who plays it elsewhere still removes it by hand.
-
 ## Release index (one line per release, oldest first)
 
 - All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/archive/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; CHANGELOG 1.2.0/1.2.1).
@@ -342,3 +321,4 @@ balance number changed. Save fixture v1.52.2.
 - **v1.55.0 (2026-10-04):** Narrator-load batch 4: eleven more rule cards (Interactions, Trust/Tension, Imprints, Old Hut, Training, Practice, Dorm, Combat_role, favours, Notices, the Vigil) and a tighter 502 core (−2,500 tokens per turn alone against 1.53.1).
 - **v1.56.0 (2026-10-04):** Narrator-load batch 5: one place per fact (each present character's engine lines are one "Now with {{user}}" block in their Cast Sheet, band words instead of numbers, Recent 3 in words, rules said once); entry 512 tagged `[mvu_plot]` (−524 tokens a turn with three present).
 - **v1.57.0 (2026-10-04):** Narrator-load batch 6: the Journal as the story's spine (engine bookkeeping to `$ui.jnotes`), first visits and the Entrance tour remembered, a compact `<current_state>` (−577 tokens with 8 bonds), the card's own VectFox EventBase prompt.
+- **v1.58.0 (2026-10-04):** Narrator-load batch 7: ready for MVU's extra-model mode (506 untagged, no update rule points at `<cast>`, MVU 438f9ff verified), `audit_chat.py --compare` for the A/B test; one-call mode stays the default.

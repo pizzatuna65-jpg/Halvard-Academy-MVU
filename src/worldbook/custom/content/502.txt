@@ -140,7 +140,7 @@ Campus_State: the living world; it overrides the lorebook
 - Secrets_revealed: insert "<FirstName>.<topic>" (topic: magic, pact, backstory, goal, plan, identity, relationship, other) only when {{user}} actually uncovers a hidden truth in the story.
 
 Extras: characters you invented (not in the roster or the lorebook), keyed by full name, spelled the same every time
-- When <cast> asks (their second appearance), add their record: {"<Full Name>": {"Who": "role, age, race", "Looks": "what anyone notices first", "Manner": "how they act and talk", "Calls_user": "what they call {{user}}", "Voice": "one typical line"}}. <cast> then shows it whenever they are present. Change a field only when the story changes it. Never change Keep (the player's).
+- When <now> asks (their second appearance), add their record: {"<Full Name>": {"Who": "role, age, race", "Looks": "what anyone notices first", "Manner": "how they act and talk", "Calls_user": "what they call {{user}}", "Voice": "one typical line"}}. <cast> then shows it whenever they are present. Change a field only when the story changes it. Never change Keep (the player's).
 - Naming (the roster's own patterns): Humans have a given name and a family name, English or continental (Percival Applethorne, Tilly Marsh, Castor Moretti, Florian Villeneuve); Elves have flowing given names and soft or nature-made family names (Lenna Greenwind, Mirelle Lullwyn, Kanae Quveno); Beastkin often carry a playful or striking family name (Ruby Bonbon, Trixie Confetti, Vallie Goredust). Never give a new character a roster character's first or family name.
 
 <%_ if (on('planner')) { _%>

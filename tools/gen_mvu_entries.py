@@ -141,7 +141,9 @@ _feat_ids = {f['id'] for f in json.load(open(P('data/features.json'), encoding='
 assert all(not v['feature'] or v['feature'] in _feat_ids for v in RC.values()), 'rule_cards.json: unknown feature'
 rc = open(P('src/worldbook/custom/511.template.ejs'), encoding='utf-8').read()
 assert rc.count('/*@@RULE_CARDS@@*/{}') == 1
-open(P('src/worldbook/custom/content/511.txt'), 'w', encoding='utf-8', newline='\n').write(rc.replace('/*@@RULE_CARDS@@*/{}', J(RC)))
+assert rc.count('/*@@CHANGE@@*/{}') == 1
+# 1.58.0 (U9): the Imprints card names the change type of those here, so an update model without <cast> can follow it
+open(P('src/worldbook/custom/content/511.txt'), 'w', encoding='utf-8', newline='\n').write(rc.replace('/*@@RULE_CARDS@@*/{}', J(RC)).replace('/*@@CHANGE@@*/{}', J({'type': CAST['change'], 'def': CHANGE_TEXT})))
 base = json.load(open(P('src/worldbook/index.json')))[0]
 def mk(uid, comment, constant, disable, position, depth, order, keys=(), whole=None, scan=None):
     e = dict(base)
@@ -157,7 +159,7 @@ idx = [
     mk(503, '[mvu_update] MVU — Output Format', True, False, 4, 0, 900),
     mk(504, '[mvu_plot] Campus Rules — State, Presence, Cognitive Isolation', True, False, 1, 4, 502),
     mk(505, 'Now — Clock, Curfew & Presence (EJS)', True, False, 4, 1, 499),
-    mk(506, '[mvu_plot] Price Guide (EJS, by place)', False, False, 1, 4, 503, keys=['buy', 'buys', 'bought', 'price', 'prices', 'afford', 'shop', 'shopping', 'Commissary', 'Mall', 'bakery', 'store', 'points for', 'how much', 'Banking House', 'special order'], whole=True, scan=2),   # 1.17.0 (audit T2): no 'cost' / 'order', whole words, the last two messages
+    mk(506, 'Price Guide (EJS, by place)', False, False, 1, 4, 503, keys=['buy', 'buys', 'bought', 'price', 'prices', 'afford', 'shop', 'shopping', 'Commissary', 'Mall', 'bakery', 'store', 'points for', 'how much', 'Banking House', 'special order'], whole=True, scan=2),   # 1.17.0 (audit T2): no 'cost' / 'order', whole words, the last two messages; 1.58.0 (U9): untagged, the update model writes /Purchases with its names
     mk(507, '[config_override]', False, True, 1, 4, 999),   # MVU card config override (5.3): disabled on purpose, read by MVU
     mk(508, "[mvu_plot] Event — {{user}}'s Birthday (EJS, only on the day)", True, False, 1, 4, 85),   # 1.2.0: hand-written, gated on Profile.Birthday
     mk(509, '[mvu_plot] Cast Sheet — opens <cast> (EJS)', True, False, 4, 1, 300),   # 1.5.1: 509.template.ejs; 1.48.0 the head, sheets 600+

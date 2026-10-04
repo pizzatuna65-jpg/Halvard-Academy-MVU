@@ -5,6 +5,10 @@
 The update rules for what is going on now (they complete the core lines of <variable_update_rules>):
 <%_ for (const id of _show) { _%>
 <%- _CARDS[id].text %>
+<%_ if (id === 'imprints') { const _CH = /*@@CHANGE@@*/{}, _CS = _U.cast || {}, _HERE = [...(_CS.full || []), ...(_CS.brief || [])].filter(n => _CH.type[n]); _%>
+<%_ if (_HERE.length) { _%>
+  Change type of those here: <%- _HERE.map(n => n + ' ' + _CH.type[n]).join(', ') %> (<%- [...new Set(_HERE.map(n => _CH.type[n]))].map(t => t + ': ' + _CH.def[t]).join(' ') %>)
+<%_ } } _%>
 <%_ } _%>
 </rule_cards>
 <%_ } _%>

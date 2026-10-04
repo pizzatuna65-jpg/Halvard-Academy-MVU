@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.58.0 (narrator-load batch 7): the A/B test of MVU's extra-model mode in its section below.
 - v1.57.0 (narrator-load batch 6): the three checks in its section below.
 - v1.56.0 (narrator-load batch 5): the two checks in its section below.
 - v1.55.0 (narrator-load batch 4): the two checks in its section below.
@@ -99,6 +100,17 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.58.0 — Narrator-load batch 7 (MVU extra-model mode, A/B)
+
+How: `docs/PLAYER_GUIDE.md` §8. Same opening (a save or the same first message), same model and preset, about 15 replies each:
+A = one-call mode (as shipped), B = extra-model mode. Export both chats and run
+`python tools/audit_chat.py A.jsonl --compare B.jsonl`.
+- [ ] B: every reply gets exactly one update block, appended under the prose ("with more than one" = 0: the story model wrote none).
+- [ ] B: names spoken only in the prose still unlock in dossiers, and the bracelet refreshes after the update arrives.
+- [ ] B against A: fewer engine corrections and "did itself" counts per 10 blocks, purchases with the Price Guide's exact names, and
+      the prose reads at least as well (the story model no longer reads the update rules).
+- [ ] B: the wait and the cost of two requests per turn are acceptable (owner's call; decides DECISIONS §9).
 
 ### v1.57.0 — Narrator-load batch 6 (Journal spine, first visits, compact state, VectFox prompt)
 
