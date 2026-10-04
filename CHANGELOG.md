@@ -1,7 +1,30 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.61.1 — Memory batch 2: measuring memory (2026-10-05)
+
+Batch 2 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6 (M13). Tools only: the card plays exactly as 1.61.0. Save fixture v1.61.0.
+- **`tools/audit_chat.py --memory`** replays an exported chat through the current engine (`tools/replay_chat.cjs --memory`) and
+  reports, per memory list (Journal, Knows, Known_facts, Clues, Extras): what the narrator wrote, what left its view, what an
+  archive kept and what was lost for good (and what the story removed itself); clues of an open mystery that left; the open Hooks'
+  ages; `<current_state>`'s tokens over the chat; the state's size, what MVU stores per floor, and a rough chat-file projection at
+  5,000 / 20,000 / 50,000 messages (with and without MVU's cleanup).
+- **`--vectfox <export.json>`** checks a VectFox EventBase export against the chat: ghost events (a source message deleted or edited;
+  VectFox's own `_djb2` hash of "name:message", checked on the owner's export), dates without a campaign year, near-duplicates,
+  events per window, importance (6+ = turning points) and types.
+- **`tools/memory_lists.cjs`** (`memDiff`, `memEnd`, `tok501`): one definition of the lists, their archives and what counts as lost,
+  shared by the report and the soak test; later batches add pins and folds to its `LISTS`.
+- **`tests/stress/memory_soak.cjs [N]`**: a synthetic chat that writes memory like the narrator (faster, so every list overflows),
+  checking on every update that no open mystery's clue leaves while a closed one is on record and that whatever leaves the view
+  reaches its archive, with a budget for the state (200 KB) and 501 (8,000 tokens). 10,000 updates in about a minute.
+- **Baseline** (`audit/AUDIT_2026-10-05_2_baseline_memori.md`, untracked like the audits): the soak at 3,000 and 10,000 updates
+  (148 KB, 501 at most 5,434 tokens with 12 bonds; 94% of Known_facts written are lost for good once `$Known_old` is full: the
+  target of batches 3 and 4), the owner's chat (Known_facts 36 per 100 replies) and VectFox export (no ghosts).
+- Tests: new `test_memory_tools_v1611` (12; runs the soak for 400 updates). Full `npm test` and `npm run lint` pass.
+- **To check (owner):** nothing in SillyTavern. After the next session, send the chat export (and the VectFox export) for
+  `--memory --vectfox`.
 
 ## v1.61.0 — Memory batch 1: nothing important forgotten silently (2026-10-05)
 
@@ -110,57 +133,6 @@ prepares the card and the measurement so the owner can test MVU's extra-model mo
   `test_audit_tool`, the narrator batch suites 1, 3–6 and the other 502 suites pass.
 - **To check live (owner):** the A/B test in `docs/TEST_CHECKLIST.md` 1.58.0. **To confirm with the owner:** after the test, whether
   extra-model mode becomes the recommended mode (DECISIONS §9).
-
-## v1.57.0 — Narrator-load batch 6: the Journal as the story's spine, first visits, a compact state, a VectFox prompt (2026-10-04)
-
-Batch 6 of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6 (U3). Reshaped with the owner after reviewing VectFox: the owner's EventBase
-export (46 events), VectFox's source (commit 3623dc8) and the owner's talk with VectFox's author. The owner approved the change to
-DECISIONS §8. Save fixture v1.56.0.
-- **The Journal is the story's spine (DECISIONS §8).**
-  - The 30 lines the narrator reads now hold turning points, matters still open (closed by a later line), first visits, the Entrance
-    tour and the engine's off-screen events.
-  - The engine's bookkeeping goes to a new `$ui.jnotes`: rank and reputation changes, marks, proficiency ranks, week recaps, perk use,
-    a remedial attended, coin stolen. The Journal panel shows these notes faded, in date order. In the owner's 1.56.0 save the
-    narrator's Journal went from 30 lines to 20 story lines; 27 notes moved out.
-  - `stepMigrate` moves such lines from old saves, from the Journal and its archive alike. `test_saves` now checks that every Journal
-    line is still somewhere: Journal, archive or notes.
-  - The 502 rule now reads: a line only for a turning point that changes what comes after (who, what, why, what is different now);
-    not a scene summary (chat memory recalls scene detail); a dated promise goes in Commitments; close a matter with a new line.
-- **First visits and the Entrance tour** (the owner's VectFox note: "the group acted as if they had never toured"):
-  - new `stepVisits` writes "Toured the grounds on Entrance Day with …, guided by …" when the tour ends;
-  - it writes "First visit to <place>, with …" for a notable place: one with an access rule in `data/locations.json` or the sealed
-    site, not the student's own dorm, the Gatehouse or Combat Grounds. The date is kept in `$eng.first`;
-  - at such a place `<now>` says whether {{user}} came for the first time today or has been there before (when, and with whom).
-- **A compact `<current_state>`:**
-  - someone not here is one line (Rank, Trust, Tension above 0, Title, Next), with their latest facts only when the last reply
-    mentioned them or they may come;
-  - each technique is one line (exact key, type, cost, effect, limits, hidden or forbidden);
-  - the latest three Transactions are shown;
-  - hidden: the Entrance tour after Entrance day, Council candidates outside Months 9–10, clues of a solved mystery (this was
-    FUTURE_PLANS "Hemat token", now removed there), rumours `<now>` already prints, and a record holding only a default 0.
-  - In the owner's 1.56.0 save (8 bonds): 501 went from 1,844 to 1,267 tokens (−577); a save with 20–30 bonds saves more.
-- **VectFox, made for this card:**
-  - `docs/vectfox_eventbase_prompt.txt` goes in VectFox → EventBase → Extraction Prompt. It keeps VectFox's schema, event types and
-    its two placeholders (`{{text}}`, `{{maxCount}}`; no `{{user}}`, which VectFox would not fill).
-  - On this card it skips routine, scores importance against the whole campaign, sets `should_persist` false for passing moments,
-    keeps summaries to 2–4 sentences, reads the `[In-world time: …]` line, never lists the card's name as a character, and writes
-    open threads only for stated promises, debts and questions.
-  - `docs/ECOSYSTEM.md` corrects how EventBase stores events (LLM-extracted events, not prose), explains what the default prompt did
-    on this card, sets out the division of labour (state for hard facts, Journal for the spine, VectFox for scene detail), and
-    suggests "Summary Only" injection.
-- **Tests:** new `test_narrator_batch6_v1570`. These suites were adjusted for notes now in `$ui.jnotes`, one-line absent bonds and
-  the `<now>` visit line: `test_saves`, `test_batch1_fp7`, `test_grades`, `test_rewards`, `test_tension`, `test_year2`, `test_cohort2`,
-  `test_nations`, `test_origins`, `test_worldmyth`, `test_tokens`, `test_audit_b2`, `test_audit_batch7`. Every suite that reads 501,
-  505, the Journal or Bonds passes.
-- **Bugs found while testing, fixed:** the tour line could fire, misdated, after a jump of days from Entrance morning; it is now
-  written only within a day of the tour's end. The engine's notes now take the Year prefix in Year 2, like the Journal.
-- **Docs after the release:** `docs/ECOSYSTEM.md`'s VectFox section was rewritten as a complete reference, so VectFox's repository
-  and an export are no longer needed to understand it. It covers what VectFox is and its role here, how EventBase works (cleaning,
-  windows, extraction, validation, storage with an event example, retrieval and re-ranking, injection), what the default prompt did
-  on this card, a full settings table, text cleaning, and the card's extraction prompt itself (`test_narrator_batch6_v1570` checks it
-  matches the .txt). The table adds Skip Already-Visible Events = 20 (the chat already shows the latest ~24 messages).
-- **To check live** (TEST_CHECKLIST 1.57.0): Journal lines are turning points, not scene summaries; at a notable place a second visit
-  plays as a return; after pasting the prompt into VectFox and re-vectorizing, fewer and cleaner events.
 
 ## Release index (one line per release, oldest first)
 
@@ -302,3 +274,4 @@ DECISIONS §8. Save fixture v1.56.0.
 - **v1.59.0 (2026-10-04):** Narrator-load batch 8: Trust drops and Tension rises reported by severity word (`letdown`, `offence`), sized by the engine from `trust.json` / `tension.json` with the old card's ranges (DECISIONS §6, owner-approved).
 - **v1.60.0 (2026-10-05):** Lore changes: the narrator may change any fact of the lore for this campaign (`Campus_State.Lore_changes`), kept by the engine only with a Cause and only when the reply shows it; printed over every lore entry with that name; Journal Undo; Location_changes folded in.
 - **v1.61.0 (2026-10-05):** Memory batch 1: open mysteries' clues outlive solved ones and leave into an archive, Journal repeats dropped and routine lines leave first, short records for forgotten Extras, the MVU hook reads the floor being replayed (and warns of a far snapshot), VectFox dates with the year and turning points, long-chat guidance.
+- **v1.61.1 (2026-10-05):** Memory batch 2: `audit_chat.py --memory` (what each memory list kept and lost, 501 tokens, state size and file projection) and `--vectfox` (ghost events, dates without a year, near-duplicates), `tools/memory_lists.cjs`, `tests/stress/memory_soak.cjs`, the memory baseline.

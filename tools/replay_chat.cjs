@@ -1,6 +1,9 @@
 // 1.53.1 (narrator-load audit U10): replays the update blocks of an exported SillyTavern chat (.jsonl) through the CURRENT engine and
 // prints, per narrator reply, what the engine had to correct. Offline; tools/audit_chat.py --mechanics runs it and writes the report.
-//   node tools/replay_chat.cjs <chat.jsonl>   -> JSON on stdout
+//   node tools/replay_chat.cjs <chat.jsonl> [--memory]   -> JSON on stdout
+// 1.61.1 (memory audit M13): --memory also reports, per reply, what left each memory list (Journal, Knows, Known_facts, Clues, Extras)
+// and where it went (an archive, or gone for good), the state's size, <current_state>'s tokens (every few replies), and at the end
+// the open Hooks' ages. tools/audit_chat.py --memory writes the report; tests/stress/memory_soak.cjs uses memDiff on a synthetic chat.
 // The replay starts from the first state stored in the chat (MVU keeps one per message), else from the card's starting state. Each
 // block is read as MVU reads it (a complete <JSONPatch> list), else as the engine's recovery reads a malformed one; a top-level list
 // written under /Player is moved back to the root as the engine does; paths starting with "_" are dropped like MVU's zod helper.
@@ -10,8 +13,9 @@ const { initState, applyPatch, Schema } = require('../tests/harness.cjs');
 const ROOT = path.join(__dirname, '..');
 const E = new Function(fs.readFileSync(path.join(ROOT, 'src/scripts/engine.js'), 'utf8') + '\nreturn { recoverPatch, ROOT_LISTS };')();
 
-const file = process.argv[2];
-if (!file) { console.error('usage: node tools/replay_chat.cjs <chat.jsonl>'); process.exit(2); }
+const { memDiff, memEnd, tok501 } = require('./memory_lists.cjs');
+const file = process.argv[2], MEM = process.argv.includes('--memory');
+if (!file) { console.error('usage: node tools/replay_chat.cjs <chat.jsonl> [--memory]'); process.exit(2); }
 const lines = fs.readFileSync(file, 'utf8').split(/\r?\n/).filter(l => l.trim());
 const msgs = lines.slice(1).map(l => JSON.parse(l));
 const stateOf = m => {
@@ -50,6 +54,8 @@ for (let i = 0; i < msgs.length && (first < 0 || i < first); i++) if (stateOf(ms
 let S = start >= 0 ? Schema.parse(_.cloneDeep(stateOf(msgs[start]))) : initState();
 const out = { chat: path.basename(file), start: start >= 0 ? `message ${start + 1}` : 'the card\'s starting state', replies: [] };
 let said = '';
+const every = Math.max(1, Math.round(msgs.filter(hasBlock).length / 40));
+if (MEM) out.memory = { t0: tok501(S), bytes0: JSON.stringify(S).length, text: _.sum(msgs.map(m => JSON.stringify(m).length - JSON.stringify(m.variables || null).length)) / Math.max(1, msgs.length) };
 msgs.forEach((m, i) => {
   if (m.is_user && !m.is_system) said = String(m.mes || '');
   if (!hasBlock(m)) return;
@@ -66,9 +72,17 @@ msgs.forEach((m, i) => {
     r.missed = ((N.$ui || {}).missed || []).slice();
     r.minutes = abs0 >= 0 && N.$eng && N.$eng.abs >= 0 ? N.$eng.abs - abs0 : 0;
     r.at = stampOf(N.World);
+    if (MEM) { r.mem = memDiff(S, N, ops); r.bytes = JSON.stringify(N).length; if (out.replies.length % every === 0) r.t501 = tok501(N); }
     S = N;
   } catch (e) { r.error = 'engine: ' + String(e.message || e).slice(0, 120); }
   out.replies.push(r);
 });
 function num(v) { const x = Number(v); return Number.isFinite(x) ? x : -1; }
+if (MEM) {
+  // what MVU stores per floor (stat_data and its display and delta copies) against stat_data alone, from the newest floor that has it
+  const last = [...msgs].reverse().find(stateOf), v = last && (Array.isArray(last.variables) ? last.variables[Math.min(last.swipe_id || 0, last.variables.length - 1)] : last.variables);
+  const floor = v ? JSON.stringify(v).length : 0, stat = v ? JSON.stringify(v.stat_data).length : 0;
+  Object.assign(out.memory, memEnd(S), { t1: tok501(S), bytes1: JSON.stringify(S).length, floor_ratio: stat ? floor / stat : 2.5,
+    floors_with_state: msgs.filter(stateOf).length, messages: msgs.length });
+}
 process.stdout.write(JSON.stringify(out));

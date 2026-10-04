@@ -1,0 +1,71 @@
+// 1.61.1 (memory audit M13): what each update did to the card's memory lists. Used by tools/replay_chat.cjs --memory (a real chat)
+// and tests/stress/memory_soak.cjs (a synthetic one). Needs the test harness's globals (lodash) and a built card for tok501.
+//   memDiff(S, N, ops) -> { <list>: { written, left, kept, gone, story, cut? }, openClues }   S = state before, N = after, ops = the block
+//   memEnd(S)          -> { sizes: {...}, hooks: [{ key, days, weight, state }] }
+//   tok501(S)          -> <current_state> (entry 501) as rendered, in tokens (chars / 3.6, as tests/token_audit.cjs)
+// A list's entries are "in view" (the narrator reads them) or "kept" (an archive only the UI reads, or a short record for Extras).
+// left = left the view this update; kept = of those, now in an archive; gone = lost for good this update (left the view without an
+// archive, or dropped out of an archive); story = removed by an explicit "remove" in the block (the story's choice, not forgetting).
+// Later memory batches (pins, folds) add their lists to LISTS.
+const fs = require('fs'), path = require('path');
+const ROOT = path.join(__dirname, '..');
+
+const arr = v => (Array.isArray(v) ? v.map(String) : []);
+const keys = v => (v && typeof v === 'object' && !Array.isArray(v) ? Object.keys(v) : []);
+const bondLines = (S, field) => Object.entries((S && S.Bonds) || {}).flatMap(([id, b]) => arr(b && b[field]).map(l => `${id}\u0000${l}`));
+// each list: what is in view, what is kept, and which "remove" paths count as the story's own
+const LISTS = {
+  Journal: { view: S => arr(S.Journal), kept: S => arr((S.$ui || {}).archive), story: /^\/Journal\// },
+  Knows: { view: S => bondLines(S, 'Knows'), kept: S => bondLines(S, '$Knows_old'), story: /^\/Bonds\/[^/]+\/Knows\// },
+  Known_facts: { view: S => bondLines(S, 'Known_facts'), kept: S => bondLines(S, '$Known_old'), story: /^\/Bonds\/[^/]+\/Known_facts\// },
+  Clues: { view: S => keys(S.Clues), kept: S => keys((S.$ui || {}).cluearch), story: /^\/Clues\// },
+  Extras: { view: S => keys(S.Extras), kept: S => [...keys((S.$ui || {}).xold), ...keys((S.$ui || {}).xgone)], story: /^\/Extras\// },
+};
+// what the block itself wrote to a list (an insert or a new key), for the narrator's writing rate
+const WRITES = { Journal: /^\/Journal\/(?:-|\d+)$/, Knows: /^\/Bonds\/[^/]+\/Knows\/(?:-|\d+)$/, Known_facts: /^\/Bonds\/[^/]+\/Known_facts\/(?:-|\d+)$/,
+  Clues: /^\/Clues\/[^/]+$/, Extras: /^\/Extras\/[^/]+$/ };
+
+function memDiff(S, N, ops) {
+  ops = (ops || []).filter(o => o && typeof o.path === 'string');
+  const removedByStory = name => ops.some(o => o.op === 'remove' && LISTS[name].story.test(o.path));
+  const out = {};
+  for (const [name, L] of Object.entries(LISTS)) {
+    const v0 = new Set(L.view(S)), v1 = new Set(L.view(N)), k0 = new Set(L.kept(S)), k1 = new Set(L.kept(N));
+    const left = [...v0].filter(x => !v1.has(x)), story = removedByStory(name);
+    const kept = left.filter(x => k1.has(x)).length;
+    const gone = left.filter(x => !k1.has(x)).length + [...k0].filter(x => !k1.has(x) && !v1.has(x)).length;
+    const written = ops.filter(o => (o.op === 'insert' || o.op === 'add' || (o.op === 'replace' && name !== 'Journal')) && WRITES[name].test(o.path)
+      && (name !== 'Clues' && name !== 'Extras' ? true : !v0.has(decodeURIComponent(o.path.split('/')[2] || '')))).length;
+    out[name] = { written, left: story ? 0 : left.length, kept: story ? 0 : kept, gone: story ? 0 : gone, story: story ? left.length : 0 };
+  }
+  // Extras squeezed from a full archived record into a short one (Who, Looks, Voice)
+  const xo0 = new Set(keys((S.$ui || {}).xold)), xg1 = new Set(keys((N.$ui || {}).xgone));
+  out.Extras.cut = [...xo0].filter(k => xg1.has(k) && !keys((S.$ui || {}).xgone).includes(k)).length;
+  // a clue that left while its mystery was still open (and the story did not remove it)
+  const my = (N && N.Mysteries) || {};
+  out.openClues = removedByStory('Clues') ? 0 : keys(S.Clues).filter(k => !(k in ((N && N.Clues) || {})) && ((my[(S.Clues[k] || {}).Thread] || {}).Status || 'open') === 'open').length;
+  return out;
+}
+
+function memEnd(S) {
+  const B = Object.values(S.Bonds || {});
+  const max = f => Math.max(0, ...B.map(b => arr(b && b[f]).length));
+  const now = Number((S.$eng || {}).abs);
+  const hooks = Object.entries(S.Hooks || {}).map(([key, h]) => ({ key, days: now >= 0 && Number(h.$born) >= 0 ? Math.round((now - h.$born) / 1440) : null,
+    weight: h.Weight, state: h._State || '' }));
+  return {
+    sizes: { Journal: arr(S.Journal).length, journal_archive: arr((S.$ui || {}).archive).length, Knows_max: max('Knows'), Knows_old_max: max('$Knows_old'),
+      Known_facts_max: max('Known_facts'), Known_old_max: max('$Known_old'), Clues: keys(S.Clues).length, clue_archive: keys((S.$ui || {}).cluearch).length,
+      Extras: keys(S.Extras).length, xold: keys((S.$ui || {}).xold).length, xgone: keys((S.$ui || {}).xgone).length, Hooks: hooks.length, bonds: B.length },
+    hooks,
+  };
+}
+
+let CARD = null;
+function tok501(S) {
+  const { renderEntry } = require('../tests/harness.cjs');
+  CARD = CARD || JSON.parse(fs.readFileSync(path.join(ROOT, 'dist/Eldrasil_Halvard.json'), 'utf8'));
+  try { return Math.round(renderEntry(CARD, 501, S).length / 3.6); } catch (e) { return null; }
+}
+
+module.exports = { LISTS, memDiff, memEnd, tok501 };

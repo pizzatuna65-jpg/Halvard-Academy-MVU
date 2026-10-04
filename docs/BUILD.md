@@ -32,6 +32,8 @@ node tests/fixtures/make_save.cjs    # BEFORE changing anything in a release: wr
 node tests/fixtures/make_save_yearend.cjs   # 1.7.4: the same save played to the end of Year 1 (after make_save.cjs)
 python tools/audit_chat.py chat.jsonl --out report.md   # optional: character-drift report for an exported chat
 python tools/audit_chat.py chat.jsonl --mechanics --no-drift --out report.md   # 1.53.1: how the narrator handled the engine (replays every block)
+python tools/audit_chat.py chat.jsonl --memory --no-drift [--vectfox export.json] --out report.md   # 1.61.1: memory kept and lost, VectFox health
+node tests/stress/memory_soak.cjs 3000   # 1.61.1: memory invariants and budget on a long synthetic chat
 ```
 
 ## 2. Generated files
@@ -135,6 +137,11 @@ python tools/audit_chat.py chat.jsonl --mechanics --no-drift --out report.md   #
   size, Analysis lines, engine work the narrator did itself, and what the current engine corrects when `tools/replay_chat.cjs` replays
   every block (needs node). Baseline before the narrator diet: `audit/AUDIT_2026-10-04_2_baseline_mekanik.md`.
   Add an NPC's "never" patterns to `data/voice_rules.json` once their voice canon is approved.
+- **Measure memory** (1.61.1, memory audit M13). `python tools/audit_chat.py <chat> --memory --no-drift [--vectfox <export.json>]`:
+  per memory list what the narrator wrote, what left its view, what was kept and what was lost for good, 501 tokens, the state and
+  file size; with a VectFox export, ghost events and dates without a year. `node tests/stress/memory_soak.cjs [N]` checks the memory
+  invariants over N synthetic updates. A memory batch adds its list or archive to `tools/memory_lists.cjs` `LISTS` and its invariant
+  to the soak. Baseline: `audit/AUDIT_2026-10-05_2_baseline_memori.md`.
 - **Compare with another AI.** Give both the same zip and the same task. Useful yardsticks:
   - `npm test` still passes
   - no decision in `docs/DECISIONS.md` is broken

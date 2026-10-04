@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.61.1 (memory batch 2): the check in its section below.
 - v1.61.0 (memory batch 1): the three checks in its section below.
 - v1.60.0 (lore changes): the four checks in its section below.
 - v1.59.0 (narrator-load batch 8): the three checks in its section below.
@@ -103,6 +104,11 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.61.1 — Memory batch 2 (measuring memory)
+
+- [ ] After a session on 1.61, export the chat (and VectFox's EventBase export) and run `python tools/audit_chat.py <chat> --memory
+      --no-drift --vectfox <export>`: no ghost events unless messages were deleted or edited, and Year 1 dates carry `Y1`.
 
 ### v1.61.0 — Memory batch 1 (nothing important forgotten silently)
 

@@ -5,6 +5,7 @@ Usage:
   python3 tools/audit_chat.py <chat.jsonl> [--window 25] [--out report.md] [--json findings.json] [--user-name NAME] [--voice rules.json]
                               [--mechanics] [--no-drift]
   python3 tools/audit_chat.py <A.jsonl> --compare <B.jsonl>
+  python3 tools/audit_chat.py <chat.jsonl> --memory [--vectfox <export.json>] [--no-drift]
 
 Reads the canon from the project (data/npcs.json, src/worldbook/content/<uid>.txt, data/voice_rules.json) and reports, per NPC
 and per window of messages, where the narrator drifted:
@@ -27,6 +28,12 @@ Trust, reverted writes, unknown names, refused reports), the reminders it raised
 --compare B.jsonl (1.58.0, U9) puts the mechanics of two chats side by side, for an A/B test such as MVU's extra-model mode against
 the default one-call mode (play the same opening in both). It also counts replies with no update block or with more than one (in
 extra-model mode the story model should write none; the update model's block is appended after the prose).
+--memory (1.61.1, memory audit M13) replays the chat through the CURRENT engine (tools/replay_chat.cjs --memory) and reports the card's
+memory: per list (Journal, Knows, Known_facts, Clues, Extras) what the narrator wrote, what left the narrator's view, what an archive
+kept and what was lost for good; clues of an open mystery that left; the open Hooks' ages; <current_state>'s tokens over time; the
+state's size and a rough projection of the chat file at 5,000 / 20,000 / 50,000 messages.
+--vectfox <export.json> (with --memory or alone) checks a VectFox EventBase export against the chat: ghost events (a source message
+no longer in the chat: deleted or edited), dates without a campaign year, near-duplicates, events per window, importance and types.
 
 Works with old non-MVU chats too (pronoun, name, secret and voice checks run; present and locked need the MVU state, read from
 the message's variables or, failing that, from the <UpdateVariable> patches in the text).
@@ -406,6 +413,158 @@ def mechanics_md(mx):
     return '\n'.join(out) + '\n'
 
 
+# ---------------------------------------------------------------- memory (1.61.1, memory audit M13)
+MEM_LISTS = ['Journal', 'Knows', 'Known_facts', 'Clues', 'Extras']
+
+
+def replay_memory(path):
+    try:
+        r = subprocess.run(['node', P('tools', 'replay_chat.cjs'), path, '--memory'], capture_output=True, text=True, encoding='utf-8', timeout=3600)
+        return json.loads(r.stdout) if r.returncode == 0 and r.stdout.strip() else {'error': (r.stderr or '').strip()[-300:]}
+    except (OSError, ValueError, subprocess.TimeoutExpired) as e:
+        return {'error': str(e)[:300]}
+
+
+def memory(path):
+    rp = replay_memory(path)
+    if 'memory' not in rp:
+        return {'chat': os.path.basename(path), 'error': rp.get('error', 'no replay')}
+    M, R = rp['memory'], rp['replies']
+    tot = {k: Counter() for k in MEM_LISTS}
+    open_clues = 0
+    for r in R:
+        for k in MEM_LISTS:
+            tot[k].update((r.get('mem') or {}).get(k) or {})
+        open_clues += (r.get('mem') or {}).get('openClues', 0)
+    t501 = [(r['msg'], r['t501']) for r in R if r.get('t501') is not None]
+    by = [r['bytes'] for r in R if r.get('bytes')]
+    return {'chat': os.path.basename(path), 'start': rp.get('start'), 'replies': len(R), 'messages': M.get('messages', 0),
+            'totals': {k: dict(v) for k, v in tot.items()}, 'open_clues': open_clues, 'sizes': M.get('sizes', {}), 'hooks': M.get('hooks', []),
+            't501': {'start': M.get('t0'), 'end': M.get('t1'), 'max': max([t for _, t in t501] + [M.get('t1') or 0]), 'samples': t501},
+            'bytes': {'start': M.get('bytes0'), 'end': M.get('bytes1'), 'max': max(by + [M.get('bytes1') or 0])},
+            'text': round(M.get('text') or 0), 'floor_ratio': M.get('floor_ratio') or 2.5}
+
+
+def projection(mm, counts=(5000, 20000, 50000), keep=20, every=50):
+    """Rough chat-file size: text per message x messages + MVU's kept floors (the latest `keep` and every `every`th) x the stored floor
+    size (stat_data x the measured display/delta factor). The state keeps growing with the campaign, so treat it as a floor."""
+    floor = (mm['bytes']['end'] or 0) * mm['floor_ratio']
+    rows = []
+    for n in counts:
+        text, snaps = mm['text'] * n, (keep + n // every) * floor
+        rows.append((n, text / 1e6, snaps / 1e6, (text + snaps) / 1e6, (text + n * floor) / 1e6))
+    return floor, rows
+
+
+def memory_md(mm):
+    if 'error' in mm:
+        return f"## Memory\n\nReplay failed: {mm['error']}\n"
+    n = mm['replies'] or 1
+    out = ['## Memory (what the card remembers and forgets)', '',
+           f"{mm['replies']} replies with an update block, replayed through the current engine from {mm['start']}.", '',
+           '| List | Narrator wrote | Left the view | Kept (archive) | Lost for good | Removed by the story | Written per 100 replies |',
+           '|---|---|---|---|---|---|---|']
+    for k in MEM_LISTS:
+        t = mm['totals'].get(k, {})
+        cut = f" ({t['cut']} cut to a short record)" if t.get('cut') else ''
+        out.append(f"| {k} | {t.get('written', 0)} | {t.get('left', 0)} | {t.get('kept', 0)}{cut} | "
+                   f"{t.get('gone', 0)} | {t.get('story', 0)} | {round(t.get('written', 0) * 100 / n, 1)} |")
+    sz = mm['sizes']
+    out += ['', f"Clues of an open mystery that left the view: **{mm['open_clues']}** (should be 0 while a solved or cold one is on record).", '',
+            '| At the end | Value |', '|---|---|',
+            f"| Journal / its archive | {sz.get('Journal', 0)} / {sz.get('journal_archive', 0)} |",
+            f"| Knows / older (most in one bond) | {sz.get('Knows_max', 0)} / {sz.get('Knows_old_max', 0)} |",
+            f"| Known_facts / older (most in one bond) | {sz.get('Known_facts_max', 0)} / {sz.get('Known_old_max', 0)} |",
+            f"| Clues / archived | {sz.get('Clues', 0)} / {sz.get('clue_archive', 0)} |",
+            f"| Extras / archived / short records | {sz.get('Extras', 0)} / {sz.get('xold', 0)} / {sz.get('xgone', 0)} |",
+            f"| Bonds | {sz.get('bonds', 0)} |"]
+    hk = [h for h in mm['hooks'] if h.get('days') is not None]
+    out += ['', f"Open Hooks: {len(mm['hooks'])}" + (f"; oldest {max(h['days'] for h in hk)} days, median {sorted(h['days'] for h in hk)[len(hk) // 2]} days"
+            f"; stale: {sum(1 for h in mm['hooks'] if h.get('state') in ('stale', 'overdue'))}" if hk else '') + '.']
+    t = mm['t501']
+    out += ['', f"`<current_state>` (501): {t['start']} tokens at the start, {t['end']} at the end, {t['max']} at most."]
+    if len(t['samples']) > 2:
+        step = max(1, len(t['samples']) // 10)
+        out += ['', '| msg | ' + ' | '.join(str(m) for m, _ in t['samples'][::step]) + ' |', '|---|' + '---|' * len(t['samples'][::step]),
+                '| tokens | ' + ' | '.join(str(v) for _, v in t['samples'][::step]) + ' |']
+    b = mm['bytes']
+    floor, rows = projection(mm)
+    out += ['', f"State (`stat_data`): {b['start']:,} bytes at the start, {b['end']:,} at the end, {b['max']:,} at most; MVU stores about "
+            f"{floor / 1000:.0f} KB per floor that keeps variables (×{mm['floor_ratio']:.1f} for its display and delta copies). Text: about "
+            f"{mm['text'] / 1000:.1f} KB per message (swipes and reasoning included).", '',
+            '| Messages | Text | Kept floors (MVU default: latest 20 + every 50th) | Total | Without MVU cleanup |', '|---|---|---|---|---|']
+    out += [f'| {n:,} | {a:.0f} MB | {c:.0f} MB | {d:.0f} MB | {e:,.0f} MB |' for n, a, c, d, e in rows]
+    out += ['', 'The projection uses the state as it is now; a longer campaign has a bigger state, so read it as a lower bound.']
+    return '\n'.join(out) + '\n'
+
+
+# ---------------------------------------------------------------- VectFox EventBase export (1.61.1, memory audit M13)
+def djb2(s):
+    """VectFox's message hash (3623dc8 core/eventbase-workflow.js _djb2 over "name:mes.trim()", JS UTF-16 code units)."""
+    h, b = 5381, s.encode('utf-16-le')
+    for i in range(0, len(b), 2):
+        h = (((h << 5) + h) & 0xFFFFFFFF) ^ (b[i] | (b[i + 1] << 8))
+    return h
+
+
+WORDS = re.compile(r"[a-z][a-z']+")
+
+
+def vectfox(export_path, chat_path=None):
+    d = json.load(open(export_path, encoding='utf-8'))
+    ev = [c.get('metadata') or {} for c in d.get('chunks', []) if (c.get('metadata') or {}).get('eventbase')]
+    res = {'export': os.path.basename(export_path), 'events': len(ev)}
+    if not ev:
+        return res
+    if chat_path:
+        _, msgs = read_chat(chat_path)
+        have = {djb2(f"{m.get('name', '')}:{(m.get('mes') or '').strip()}") for m in msgs}
+        ghosts = [e for e in ev if e.get('source_message_hashes') and not all(h in have for h in e['source_message_hashes'])]
+        res['ghosts'] = len(ghosts)
+        res['ghost_examples'] = [f"{e.get('scene_time', '')}: {(e.get('summary') or '')[:120]}" for e in ghosts[:5]]
+    st = [str(e.get('scene_time') or '') for e in ev]
+    res['no_year'] = sum(1 for t in st if t and not re.search(r'\bY\d+\b|\bYear\s*\d+', t))
+    res['no_time'] = sum(1 for t in st if not t)
+    wins = Counter(e.get('source_window_start') for e in ev)
+    res['windows'] = len(wins)
+    res['per_window'] = (round(len(ev) / len(wins), 2), max(wins.values()))
+    res['importance'] = dict(sorted(Counter(int(e.get('importance') or 0) for e in ev).items()))
+    res['types'] = Counter(e.get('event_type') or 'other' for e in ev).most_common(8)
+    res['persist'] = sum(1 for e in ev if e.get('should_persist') is True)
+    res['turning'] = sum(1 for e in ev if int(e.get('importance') or 0) >= 6)
+    # near-duplicates: same type, characters overlapping 60% or more (VectFox's own rule), summaries sharing half their words
+    groups, dup = defaultdict(list), 0
+    for e in ev:
+        groups[e.get('event_type')].append((set(map(str.lower, e.get('characters') or [])), set(WORDS.findall((e.get('summary') or '').lower()))))
+    for g in groups.values():
+        for i in range(len(g)):
+            for j in range(i + 1, len(g)):
+                (c1, w1), (c2, w2) = g[i], g[j]
+                if c1 and c2 and len(c1 & c2) / max(len(c1), len(c2)) >= 0.6 and w1 and w2 and len(w1 & w2) / len(w1 | w2) >= 0.5:
+                    dup += 1
+    res['near_duplicates'] = dup
+    return res
+
+
+def vectfox_md(v):
+    out = [f"## VectFox EventBase export: {v['export']}", '', f"{v['events']} events.", '']
+    if not v['events']:
+        return '\n'.join(out) + '\n'
+    out += ['| Check | Value |', '|---|---|']
+    if 'ghosts' in v:
+        out.append(f"| Ghost events (a source message deleted or edited) | {v['ghosts']} |")
+    out += [f"| Dates without a campaign year / without a date | {v['no_year']} / {v['no_time']} |",
+            f"| Windows with events / events per window (avg, max) | {v['windows']} / {v['per_window'][0]}, {v['per_window'][1]} |",
+            f"| Importance (count per value) | {', '.join(f'{k}: {c}' for k, c in v['importance'].items())} |",
+            f"| Importance 6+ (turning points) | {v['turning']} |",
+            f"| should_persist true | {v['persist']} |",
+            f"| Near-duplicate pairs (same type, same people, half the words) | {v['near_duplicates']} |",
+            f"| Types (most common) | {', '.join(f'{k} {c}' for k, c in v['types'])} |"]
+    if v.get('ghost_examples'):
+        out += ['', 'Ghost events (first five):', ''] + [f'- {x}' for x in v['ghost_examples']]
+    return '\n'.join(out) + '\n'
+
+
 # ---------------------------------------------------------------- report
 def report_md(res):
     F, W = res['findings'], res['window']
@@ -440,6 +599,8 @@ def main(argv=None):
     ap.add_argument('--mechanics', action='store_true', help='add the mechanics report (replays the blocks through the current engine)')
     ap.add_argument('--no-drift', action='store_true', help='skip the character-drift checks')
     ap.add_argument('--compare', metavar='B.jsonl', help='A/B: the mechanics of this chat and of B side by side (no drift checks)')
+    ap.add_argument('--memory', action='store_true', help='add the memory report (replays the chat through the current engine)')
+    ap.add_argument('--vectfox', metavar='export.json', help='check a VectFox EventBase export against this chat')
     a = ap.parse_args(argv)
     if a.compare:
         md = compare_md(mechanics(a.chat), mechanics(a.compare))
@@ -453,6 +614,12 @@ def main(argv=None):
     if a.mechanics:
         res['mechanics'] = mechanics(a.chat)
         md = (md + '\n' if md else f"# Mechanics audit: {res['chat']}\n\n") + mechanics_md(res['mechanics'])
+    if a.memory:
+        res['memory'] = memory(a.chat)
+        md = (md + '\n' if md else f"# Memory audit: {res['chat']}\n\n") + memory_md(res['memory'])
+    if a.vectfox:
+        res['vectfox'] = vectfox(a.vectfox, a.chat)
+        md = (md + '\n' if md else f"# Memory audit: {res['chat']}\n\n") + vectfox_md(res['vectfox'])
     if a.out:
         open(a.out, 'w', encoding='utf-8', newline='\n').write(md)
     else:

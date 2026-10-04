@@ -1,0 +1,86 @@
+// 1.61.1 (memory audit M13): a long synthetic chat that writes memory the way the narrator does (Known_facts, Knows, Journal lines,
+// clues of several mysteries that open and get solved, invented characters who come and go, hooks), faster than the owner's chat so
+// every list fills and overflows. Checks the memory invariants on every update and reports what was lost for good.
+// Usage: node tests/stress/memory_soak.cjs [updates=3000] [--quiet]   (exit 1 when an invariant breaks)
+// Invariants: a clue of an open mystery never leaves while a clue of a solved or cold one is on record; whatever leaves the
+// narrator's view of a list goes to its archive (it is lost only when the archive itself overflows); the state and <current_state>
+// stay within the budget below. Later memory batches add theirs (pins never leave, nothing is deleted before it is folded).
+const fs = require('fs'), path = require('path');
+const { Schema, runEngine, initState, ROOT } = require('../harness.cjs');
+const { memDiff, memEnd, tok501, LISTS } = require('../../tools/memory_lists.cjs');
+const N = +(process.argv.find(a => /^\d+$/.test(a)) || 3000), QUIET = process.argv.includes('--quiet');
+// measured at 1.61.1 on this soak: 3,000 updates 131 KB of stat_data and 4,200 tokens of 501 at most; 10,000 updates 148 KB and
+// 5,400 (12 bonds; the owner's chat will have more). The budget leaves room; a memory batch that grows them past it says so here
+const BUDGET = { bytes: 200000, t501: 8000 };
+// owner's chat (1.34.2, 37 replies): Journal 1, Knows 1, Known_facts 13. Here: Known_facts as the owner, the rest several times faster
+const RATE = { fact: 35, knows: 10, journal: 8, clue: 6, extra: 5, hook: 3, solve: 0.4 };
+let seed = 12345;
+const rnd = () => (seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648;   // deterministic (never Math.random)
+const chance = p => rnd() * 100 < p, pick = a => a[Math.floor(rnd() * a.length)];
+const FRIENDS = ['Etnie', 'Irene', 'Castor', 'Kanae', 'Zara', 'Aiden', 'Rei', 'Caine', 'Saffi', 'Gareth', 'Ruby', 'Kuroo'];
+const PLACES = ['Canteen', 'Main Library', 'Courtyards', 'Gardens', 'Gymnasium', 'The Mall', 'Boathouse and Lake'];
+const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+function apply(S, ops) {   // JSON patch as MVU's commands do it (replace / insert / remove), then the schema once
+  const X = _.cloneDeep(S);
+  for (const o of ops) {
+    const segs = o.path.replace(/^\//, '').split('/'), last = segs.pop(), parent = segs.length ? _.get(X, segs) : X;
+    if (o.op === 'remove') { if (Array.isArray(parent)) parent.splice(+last, 1); else if (parent) delete parent[last]; continue; }
+    if (o.op === 'insert' && Array.isArray(parent)) { last === '-' ? parent.push(o.value) : parent.splice(+last, 0, o.value); continue; }
+    _.set(X, [...segs, last], _.cloneDeep(o.value));
+  }
+  return Schema.parse(X);
+}
+let S = initState({ etnie: true }), abs = 8 * 60;
+S = apply(S, [{ op: 'replace', path: '/Player/Profile/Dorm', value: 'Fire' }]);
+const threads = ['The scorched ledger', 'The bell at midnight', 'The empty locker', 'The violet ink', 'The sealed stair', 'The Arbiter Stone\'s crack'];
+let nThread = threads.length, nClue = 0, nFact = 0, nExtra = 0, nHook = 0, broken = 0;
+const tot = Object.fromEntries(Object.keys(LISTS).map(k => [k, { written: 0, left: 0, kept: 0, gone: 0, story: 0 }]));
+let maxBytes = 0, max501 = 0, cut = 0;
+const t0 = Date.now();
+const fail = (i, msg) => { broken++; if (broken <= 10) console.log(`  ✗ update ${i}: ${msg}`); };
+for (let i = 0; i < N; i++) {
+  abs += 10 + Math.floor(rnd() * 20);
+  if (abs % 1440 > 23 * 60) abs = (Math.floor(abs / 1440) + 1) * 1440 + 7 * 60;
+  const d = Math.floor(abs / 1440), doy = d % 336, tm = abs % 1440;
+  const W = { Year: 1 + Math.floor(d / 336), Month: 1 + Math.floor(doy / 28), Week: 1 + Math.floor(doy % 28 / 7), Day: DAYS[doy % 7],
+    Time: `${String(Math.floor(tm / 60)).padStart(2, '0')}:${String(tm % 60).padStart(2, '0')}`, Location: PLACES[Math.floor(i / 6) % PLACES.length] };
+  const who = _.uniq([pick(FRIENDS), ...(chance(50) ? [pick(FRIENDS)] : []), ...(chance(20) ? [pick(FRIENDS)] : [])]);
+  const present = Object.fromEntries(who.map(w => [w, { Note: 'here' }]));
+  const ops = Object.entries(W).map(([k, v]) => ({ op: 'replace', path: '/World/' + k, value: v }));
+  if (chance(RATE.extra)) { const x = chance(30) && nExtra > 5 ? `Clerk ${Math.floor(rnd() * nExtra)}` : `Clerk ${nExtra++}`; present[x] = { Note: 'at the counter' };
+    ops.push({ op: 'replace', path: `/Extras/${x}`, value: { Who: `a clerk of the Registry, the ${x.split(' ')[1]}th`, Looks: 'grey coat, ink-stained fingers', Voice: 'clipped' } }); }
+  ops.push({ op: 'replace', path: '/Scene/Present', value: present });
+  ops.push(...who.map(w => ({ op: 'insert', path: '/Interactions/-', value: { With: w, Kind: 'talk' } })));
+  for (const w of who) {
+    if (S.Bonds[w] && chance(RATE.fact)) ops.push({ op: 'insert', path: `/Bonds/${w}/Known_facts/-`, value: `Fact ${nFact++}: ${w} likes the ${pick(['east', 'west', 'north'])} stairs` });
+    if (S.Bonds[w] && chance(RATE.knows)) ops.push({ op: 'insert', path: `/Bonds/${w}/Knows/-`, value: `saw {{user}} at the ${W.Location} (${nFact})` });
+  }
+  if (chance(RATE.journal)) ops.push({ op: 'insert', path: '/Journal/-', value: `Turning point ${i}: ${who.join(' and ')} at the ${W.Location}.` });
+  if (chance(RATE.clue)) { const open = Object.keys(S.Mysteries || {}).filter(t => S.Mysteries[t].Status === 'open'); const th = open.length && chance(85) ? pick(open) : pick(threads);
+    ops.push({ op: 'replace', path: `/Clues/Clue ${nClue++}`, value: { Thread: th, Detail: `a detail seen at the ${W.Location}`, Where: W.Location } }); }
+  if (chance(RATE.solve)) { const open = Object.keys(S.Mysteries || {}).filter(t => S.Mysteries[t].Status === 'open');
+    if (open.length > 1) { const t = pick(open); ops.push({ op: 'replace', path: `/Mysteries/${t}`, value: { Status: chance(70) ? 'solved' : 'cold', Summary: 'settled' } }); threads.push(`New mystery ${nThread++}`); } }
+  if (chance(RATE.hook)) ops.push({ op: 'replace', path: `/Hooks/Hook ${nHook++}`, value: { Note: `something ${who[0]} said`, Who: who[0], Kind: 'detail', Weight: 1 + Math.floor(rnd() * 3) } });
+  const B = S, P = apply(B, ops);
+  runEngine(P, B, `They talk at the ${W.Location}.`, 'soak', 'I talk with them.');
+  const Nx = Schema.parse(P);
+  const md = memDiff(B, Nx, ops);
+  for (const k of Object.keys(LISTS)) for (const f of Object.keys(tot[k])) tot[k][f] += md[k][f] || 0;
+  cut += md.Extras.cut || 0;
+  if (md.openClues && Object.values(Nx.Clues || {}).some(c => ((Nx.Mysteries || {})[c.Thread] || {}).Status !== 'open')) fail(i, `${md.openClues} open clue(s) left while a closed one is on record`);
+  for (const k of Object.keys(LISTS)) if (md[k].left !== md[k].kept) fail(i, `${k}: ${md[k].left - md[k].kept} left the view without reaching the archive`);
+  const bytes = JSON.stringify(Nx).length; maxBytes = Math.max(maxBytes, bytes);
+  if (i % 250 === 249 || i === N - 1) { const t = tok501(Nx); max501 = Math.max(max501, t || 0); if (!QUIET) console.log(`  update ${i + 1} (${Nx.World.Year > 1 ? 'Y' + Nx.World.Year + ' ' : ''}M${Nx.World.Month}): state ${Math.round(bytes / 1000)} KB, 501 ${t} tokens`); }
+  S = Nx;
+}
+if (maxBytes > BUDGET.bytes) fail(N, `state ${maxBytes} bytes over the budget ${BUDGET.bytes}`);
+if (max501 > BUDGET.t501) fail(N, `<current_state> ${max501} tokens over the budget ${BUDGET.t501}`);
+const E = memEnd(S);
+console.log(`${N} updates in ${((Date.now() - t0) / 1000).toFixed(0)} s; state max ${Math.round(maxBytes / 1000)} KB, 501 max ${max501} tokens`);
+console.log('per list (written / left the view / kept / lost for good):');
+for (const [k, t] of Object.entries(tot)) console.log(`  ${k}: ${t.written} / ${t.left} / ${t.kept} / ${t.gone}${k === 'Extras' ? ` (${cut} cut to a short record)` : ''}`);
+console.log('at the end', JSON.stringify(E.sizes), `open Hooks ${E.hooks.length}, oldest ${Math.max(0, ...E.hooks.map(h => h.days || 0))} days`);
+console.log(broken ? `${broken} INVARIANT FAILURES` : 'invariants held');
+process.exitCode = broken ? 1 : 0;
+module.exports = { tot, maxBytes, max501, broken };
