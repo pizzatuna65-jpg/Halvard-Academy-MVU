@@ -25,7 +25,6 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
   pengingat curfew, tanpa hukuman otomatis.
 - **Kerja paruh waktu terjadwal** (E7, 2026-09-28): shift tetap sebagai sumber uang untuk dorm rank rendah.
 - **Kelas minggu pertama yang di-script** (M1 W1 Tue–Sat, 14 sesi; per asrama untuk kelas [D]; PR opsional ke Commitments).
-- **Hemat token:** sembunyikan Clues dari thread misteri yang sudah selesai.
 - **Gate map lain** (saran 1.24.0; owner 1.24.1 hanya memilih Fishing House, Mall dan kastil dibatalkan): Swimming Pool ← Gymnasium;
   Ring Dining Hall/Portrait Hall ← Arbiter Hall; Sparring Pavilion ← Combat Grounds; Undercroft seperti Rooftop; Broken Statue
   setelah didengar.

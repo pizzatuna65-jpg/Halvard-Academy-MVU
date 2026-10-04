@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.57.0 (narrator-load batch 6): the three checks in its section below.
 - v1.56.0 (narrator-load batch 5): the two checks in its section below.
 - v1.55.0 (narrator-load batch 4): the two checks in its section below.
 - v1.54.0 (narrator-load batch 3): the three checks in its section below.
@@ -98,6 +99,13 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.57.0 — Narrator-load batch 6 (Journal spine, first visits, compact state, VectFox prompt)
+
+- [ ] New Journal lines are turning points with what changed, not scene summaries; a settled matter gets a closing line.
+- [ ] At a notable place (the Rooftop, the Restricted Section, another dorm) a second visit plays as a return, never as a first.
+- [ ] VectFox: after pasting `docs/vectfox_eventbase_prompt.txt` into EventBase → Extraction Prompt and re-vectorizing, fewer
+      events, no "walked to …" entries, open threads only for real promises (Action tab → debug query shows the scores).
 
 ### v1.56.0 — Narrator-load batch 5 (one place per fact)
 

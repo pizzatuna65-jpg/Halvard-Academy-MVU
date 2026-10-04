@@ -34,9 +34,10 @@ const ver = JSON.parse(read('src/card/card.json')).character_version, NREC = JSO
 const CH = chains((S, B, t) => { S.$ui.off = [...new Set([...(S.$ui.off || []), 'npc_routines'])]; return runEngine(S, B, t); }, ver), nbad = [];
 // 1.49.0 (feature batch 1): a day whose initiative reason is a favour reads differently by design, 1.51.0 (batch 3) so does a
 // "nearby" beat that became a pair moment; every other update is unchanged
+// 1.57.0 (U3): a chain whose Journal lost engine notes to $ui.jnotes, or at a notable place (the visit line), reads differently too
 // 1.53.0 (narrator-load batch 1): "Journal dates" names each date once, so a Journal with a repeated date reads shorter
 const dupJ = S => { const d = (S.Journal || []).slice(-5).map(l => (/^\[([^\]]+)\]/.exec(String(l)) || [])[1]).filter(Boolean); return new Set(d).size < d.length; };
-CH.forEach((S, i) => { const t = renderEntry(card, 505, S); if (crypto.createHash('sha1').update(t).digest('hex').slice(0, 16) + ' ' + t.length !== NREC[i] && !((S.$ui || {}).initiative || {}).favour && !(((S.$ui || {}).amb || {}).beat || {}).pair && !dupJ(S)) nbad.push(i); });
+CH.forEach((S, i) => { const t = renderEntry(card, 505, S); if (crypto.createHash('sha1').update(t).digest('hex').slice(0, 16) + ' ' + t.length !== NREC[i] && !((S.$ui || {}).initiative || {}).favour && !(((S.$ui || {}).amb || {}).beat || {}).pair && !dupJ(S) && !((S.$ui || {}).now || {}).visit && !((S.$ui || {}).jnotes || []).length) nbad.push(i); });
 ok(CH.length === NREC.length && !nbad.length, `every chain's <now> is the same text as 1.47.0's (${CH.length} updates)` + (nbad.length ? ': differs in ' + nbad.slice(0, 5).join(', ') : ''));
 const tmpl = read('src/worldbook/custom/505.template.ejs');
 ok(['area', 'pres', 'walk', 'amb'].every(k => tmpl.includes('NOW.' + k)) && !/AREA_EV|AREA_WALK|bandOf\(TEN|TRUST\.cats|BOND\.share/.test(tmpl), '<now> prints the engine\'s lines and no longer holds those rules');

@@ -16,7 +16,9 @@ function leaves(o, pre = '', out = {}) {
   else out[pre] = o;
   return out;
 }
-const story = p => !VOLATILE.test(p) && !p.split('.').some(s => s.startsWith('_') || s.startsWith('$'));
+const story = p => !VOLATILE.test(p) && !JOURNALISH.test(p) && !p.split('.').some(s => s.startsWith('_') || s.startsWith('$'));
+// 1.57.0 (U3): the engine's bookkeeping lines move from the Journal (and its archive) to $ui.jnotes; checked as one set below
+const JOURNALISH = /^(Journal|\$ui\.archive|\$ui\.jnotes)(\.|#|$)/;
 for (const f of files) {
   const old = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
   const P = Schema.parse(_.cloneDeep(old)); runEngine(P, _.cloneDeep(old), ''); const S = Schema.parse(P);
@@ -26,7 +28,10 @@ for (const f of files) {
   const AREA_MOVED = [[/^\$ui\.forest(\.|$)/, '$ui.area.forest$1'], [/^\$ui\.capital(\.|$)/, '$ui.area.avalon$1'], [/^\$ui\.sunreach(\.|$)/, '$ui.area.sunreach$1'], [/^\$ui\.airship(\.|$)/, '$ui.area.airship$1'],
     [/^\$eng\.exp(\.|$)/, '$eng.area.forest$1'], [/^\$eng\.cap(\.|$)/, '$eng.area.avalon$1'], [/^\$eng\.sr(\.|$)/, '$eng.area.sunreach$1']];
   const RENAMED = p => AREA_MOVED.reduce((x, [rx, to]) => x.replace(rx, to), p.replace(/(^|\.)Combat(\.|$)/, '$1Practical Magic$2').replace(/(^|\.)Remedial Combat(\.|$)/, '$1Remedial Practical Magic$2'));
-  const lost = Object.keys(L0).filter(p => !VOLATILE.test(p) && !(L0[p] === null && AREA_MOVED.some(([rx]) => rx.test(p))) && !(p in L1) && !(RENAMED(p) in L1) && !Object.keys(L1).some(q => q.startsWith(p + '.') || q.startsWith(RENAMED(p) + '.')));
+  const lines = X => [...(X.Journal || []), ...((X.$ui || {}).archive || []), ...((X.$ui || {}).jnotes || [])].map(l => String(l).replace(/^\[Y1 /, '['));
+  const now = new Set(lines(S)), gone = lines(old).filter(l => !now.has(l));
+  ok(!gone.length, `${f}: every Journal line is kept (Journal, archive or engine notes)` + (gone.length ? ': ' + gone.slice(0, 3).join(' | ') : ''));
+  const lost = Object.keys(L0).filter(p => !VOLATILE.test(p) && !JOURNALISH.test(p) && !(L0[p] === null && AREA_MOVED.some(([rx]) => rx.test(p))) && !(p in L1) && !(RENAMED(p) in L1) && !Object.keys(L1).some(q => q.startsWith(p + '.') || q.startsWith(RENAMED(p) + '.')));
   ok(!lost.length, `${f}: no field is lost (${Object.keys(L0).length} paths)` + (lost.length ? ': ' + lost.slice(0, 8).join(', ') : ''));
   const changed = Object.keys(L0).filter(p => story(p) && p in L1 && L1[p] !== L0[p] && !(typeof L0[p] === 'string' && L1[p] === L0[p].replace(/Combat/g, 'Practical Magic')));
   ok(!changed.length, `${f}: story values unchanged after a no-op update` + (changed.length ? ': ' + changed.slice(0, 8).map(p => `${p} ${JSON.stringify(L0[p])} -> ${JSON.stringify(L1[p])}`).join('; ') : ''));

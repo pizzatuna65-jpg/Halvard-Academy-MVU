@@ -3,13 +3,14 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.56.0** (2026-10-04): narrator-load batch 5 (U2): each present character's engine lines are one
-"Now with {{user}}" block in their Cast Sheet (`$ui.now.people`), with band words; Rank/Trust/Tension numbers only in
-`<current_state>`; Recent 3 moments in words; rules said once. 1.54–1.55: situational rule cards (`data/rule_cards.json`, engine
-`ruleCards`, entry 511). 1.53.1: `audit_chat.py --mechanics`. Live checks: `docs/TEST_CHECKLIST.md` "Open".
+**Snapshot:** card **v1.57.0** (2026-10-04): narrator-load batch 6: the Journal is the story's spine (engine bookkeeping in
+`$ui.jnotes`, shown only in the panel), first visits to notable places and the Entrance tour are remembered (`stepVisits`, `$eng.first`,
+`<now>` visit line), `<current_state>` is compact (absent bonds one line, techniques one line), and the card has its own VectFox
+EventBase prompt (`docs/vectfox_eventbase_prompt.txt`, `docs/ECOSYSTEM.md`). 1.53–1.56: rule cards, one place per fact, the mechanics
+audit. Live checks: `docs/TEST_CHECKLIST.md` "Open".
 
-**Next task:** live-check 1.53–1.56 and measure a new chat with `audit_chat.py --mechanics`. Narrator-load batch 6 (U3, compact
-`<current_state>`) needs the owner's OK on the Journal window (DECISIONS §8); batch 7 (extra-model mode), batch 8 (U8, §6).
+**Next task:** the owner pastes the VectFox prompt and re-vectorizes; live-check 1.53–1.57 and measure a new chat with
+`audit_chat.py --mechanics`. Narrator-load batch 7 (extra-model mode) or 8 (U8, Trust/Tension by severity; DECISIONS §6).
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 
@@ -51,7 +52,7 @@ docs/INDEX.md              task → files and symbols; engine, UI, state, entrie
 docs/DECISIONS.md          established decisions (owner approval needed to change) + verified external facts
 docs/BUILD.md              build order, generated vs hand-written files, test commands, playbooks
 docs/TEST_CHECKLIST.md     live SillyTavern checks (Open list at the top, newest release first)
-docs/PLAYER_GUIDE.md, ECOSYSTEM.md, rentry/, vectfox_cleaning_patterns.json   player-facing docs (linked from the card)
+docs/PLAYER_GUIDE.md, ECOSYSTEM.md, rentry/, vectfox_cleaning_patterns.json, vectfox_eventbase_prompt.txt   player-facing docs
 planning/FUTURE_PLANS.md   everything not done yet: owner plans, unchosen ideas, pending decisions, tunables
 planning/NPC_BRAINSTORM_BRIEF.md   brief for designing NPCs with another AI (kept by hand)
 planning/NPC_ROSTER.md     every NPC in one file: quick table + full profiles (generated; for NPC brainstorms)

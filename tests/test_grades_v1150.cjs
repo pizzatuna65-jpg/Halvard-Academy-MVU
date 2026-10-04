@@ -37,7 +37,7 @@ const G = S => S.Player.Academics.Grades;
 ok(Object.values(G(solid)).length === 7 && Object.values(G(solid)).every(m => m === 'B'), `excellent preparation, Rank 2, no skips: B in every subject (${JSON.stringify(G(solid))})`);
 ok(/^Magic Theory B, History B, .*Creature Studies B$/.test(solid.Player.Academics.Exams['Y1 M3 Midterm']), 'the Midterm line is recorded under "Y1 M3 Midterm"');
 ok(acad(solid) - acad(at(good(S0), MID + 3, '17:00')) === 8, 'average B: Academy +8 (above average)');
-ok(/Marks posted \(Y1 M3 Midterm\): Magic Theory B/.test(render(505, solid)) && solid.Journal.some(l => /Y1 M3 Midterm marks/.test(l)), '<now> and the Journal announce the marks');
+ok(/Marks posted \(Y1 M3 Midterm\): Magic Theory B/.test(render(505, solid)) && [...solid.Journal, ...(solid.$ui.jnotes || [])].some(l => /Y1 M3 Midterm marks/.test(l)), '<now> and the Journal announce the marks');
 const thu = at(week(good(S0)), MID + 4, '12:00', 'Canteen');
 ok(!/Marks posted/.test(render(505, thu)) && thu.Player.Academics.Exams['Y1 M3 Midterm'], 'posted once');
 const none = week(hours(S0, 0));

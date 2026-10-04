@@ -1,7 +1,53 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.57.0 — Narrator-load batch 6: the Journal as the story's spine, first visits, a compact state, a VectFox prompt (2026-10-04)
+
+Batch 6 of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6 (U3). Reshaped with the owner after reviewing VectFox: the owner's EventBase
+export (46 events), VectFox's source (commit 3623dc8) and the owner's talk with VectFox's author. The owner approved the change to
+DECISIONS §8. Save fixture v1.56.0.
+- **The Journal is the story's spine (DECISIONS §8).**
+  - The 30 lines the narrator reads now hold turning points, matters still open (closed by a later line), first visits, the Entrance
+    tour and the engine's off-screen events.
+  - The engine's bookkeeping goes to a new `$ui.jnotes`: rank and reputation changes, marks, proficiency ranks, week recaps, perk use,
+    a remedial attended, coin stolen. The Journal panel shows these notes faded, in date order. In the owner's 1.56.0 save the
+    narrator's Journal went from 30 lines to 20 story lines; 27 notes moved out.
+  - `stepMigrate` moves such lines from old saves, from the Journal and its archive alike. `test_saves` now checks that every Journal
+    line is still somewhere: Journal, archive or notes.
+  - The 502 rule now reads: a line only for a turning point that changes what comes after (who, what, why, what is different now);
+    not a scene summary (chat memory recalls scene detail); a dated promise goes in Commitments; close a matter with a new line.
+- **First visits and the Entrance tour** (the owner's VectFox note: "the group acted as if they had never toured"):
+  - new `stepVisits` writes "Toured the grounds on Entrance Day with …, guided by …" when the tour ends;
+  - it writes "First visit to <place>, with …" for a notable place: one with an access rule in `data/locations.json` or the sealed
+    site, not the student's own dorm, the Gatehouse or Combat Grounds. The date is kept in `$eng.first`;
+  - at such a place `<now>` says whether {{user}} came for the first time today or has been there before (when, and with whom).
+- **A compact `<current_state>`:**
+  - someone not here is one line (Rank, Trust, Tension above 0, Title, Next), with their latest facts only when the last reply
+    mentioned them or they may come;
+  - each technique is one line (exact key, type, cost, effect, limits, hidden or forbidden);
+  - the latest three Transactions are shown;
+  - hidden: the Entrance tour after Entrance day, Council candidates outside Months 9–10, clues of a solved mystery (this was
+    FUTURE_PLANS "Hemat token", now removed there), rumours `<now>` already prints, and a record holding only a default 0.
+  - In the owner's 1.56.0 save (8 bonds): 501 went from 1,844 to 1,267 tokens (−577); a save with 20–30 bonds saves more.
+- **VectFox, made for this card:**
+  - `docs/vectfox_eventbase_prompt.txt` goes in VectFox → EventBase → Extraction Prompt. It keeps VectFox's schema, event types and
+    its two placeholders (`{{text}}`, `{{maxCount}}`; no `{{user}}`, which VectFox would not fill).
+  - On this card it skips routine, scores importance against the whole campaign, sets `should_persist` false for passing moments,
+    keeps summaries to 2–4 sentences, reads the `[In-world time: …]` line, never lists the card's name as a character, and writes
+    open threads only for stated promises, debts and questions.
+  - `docs/ECOSYSTEM.md` corrects how EventBase stores events (LLM-extracted events, not prose), explains what the default prompt did
+    on this card, sets out the division of labour (state for hard facts, Journal for the spine, VectFox for scene detail), and
+    suggests "Summary Only" injection.
+- **Tests:** new `test_narrator_batch6_v1570`. These suites were adjusted for notes now in `$ui.jnotes`, one-line absent bonds and
+  the `<now>` visit line: `test_saves`, `test_batch1_fp7`, `test_grades`, `test_rewards`, `test_tension`, `test_year2`, `test_cohort2`,
+  `test_nations`, `test_origins`, `test_worldmyth`, `test_tokens`, `test_audit_b2`, `test_audit_batch7`. Every suite that reads 501,
+  505, the Journal or Bonds passes.
+- **Bugs found while testing, fixed:** the tour line could fire, misdated, after a jump of days from Entrance morning; it is now
+  written only within a day of the tour's end. The engine's notes now take the Year prefix in Year 2, like the Journal.
+- **To check live** (TEST_CHECKLIST 1.57.0): Journal lines are turning points, not scene summaries; at a notable place a second visit
+  plays as a return; after pasting the prompt into VectFox and re-vectorizing, fewer and cleaner events.
 
 ## v1.56.0 — Narrator-load batch 5: one place per fact (2026-10-04)
 
@@ -155,37 +201,6 @@ balance number changed. Save fixture v1.52.2.
 - **To confirm with the owner:** the remedial's place. The lore names no room for make-up sessions, so the engine uses the Main
   Library (the Saturday Study Hall slot the session replaces). A narrator who plays it elsewhere still removes it by hand.
 
-## v1.52.2 — Preset audit 2, tier 1: one home per rule, a lighter CoT (2026-10-04)
-
-Owner-approved `planning/DRAFT_preset_audit_2.md` (tier 1; deleted, `git show bdcc889:planning/DRAFT_preset_audit_2.md`). Preset only: the card's rules, engine and UI are
-unchanged. Save fixture v1.52.1. Measured as SillyTavern sends it ({{user}} replaced before `{{// }}` notes are removed, macros.js),
-the enabled preset prompts went from **17,245 to 15,444 tokens (−1,801, 10%)**, the depth-0 block after the chat from **5,447 to
-4,435 (−1,012, 19%)**. No toggle changed: owner's 4–7 paragraphs, Embellish, Hybrid POV, Internal Thoughts and Player Input
-Authority stay; adult toggles stay opt-in; Monomania and its gate stay ON (1.11.2 D1); Anti-Comparative and Anti-Therapist untouched.
-- **BOLT CoT (2,511 → 1,812).** It points to the rules instead of restating them: task 1 no longer writes an example each turn,
-  task 4 applies `<prose_rules>` "without listing them" (it used to have the model list them in its reasoning every turn), task 5
-  points to `<npc_voice>` and `<human_vocal_limits>` instead of copying ±420 tokens of them, task 6's "NPC anti-repeat rule" (a name
-  nothing defines) is now "No echoes", task 8 drops the `<colored_dialogue>` check (that toggle stays OFF with this card, 1.37.0),
-  task 9 says the two opt-in adult modes in one sentence. Tasks 0, 2, 7, 10 and rules A–D are unchanged.
-- **Cosmos last-mile gates** (Contrast 282 → 121, Vocation 250 → 161): short reminders at depth 0; their killswitches keep every
-  form, exception and example.
-- **One rule, one home:** full commitment ("hovering hands") in `<realistic_bold_characters>` (dropped from the instinct gate and
-  BOLT); the card outranking style rules in `<card_fidelity>` (dropped from `<npc_voice>`); distinct voices as one `<npc_voice>` line
-  (three bullets and `<scene_engine>`'s idiolect sentence); em dashes in `<banned_constructs>`; narration flow in `<syntax_flow>`,
-  negation-as-description in `<banned_constructs>`, micro-tells in `<do_not_repeat_descriptions>` (all dropped from Cinematic
-  Realism); `<npc_voice>` loses a narration rule that sat in its dialogue-only tag and a line repeating METHOD; jargon in Monomania
-  (dropped from Anti-Omniscient); "never draft in reasoning" in BOLT rule B (dropped from Main); two craft lines of the jailbreak that
-  `<scene_engine>` states word for word.
-- **Internal Thoughts (489 → 363):** our own 1.37.3 text, the same five rules in fewer words.
-- **Measuring.** `tests/token_audit.cjs` stripped `{{// }}` notes before replacing `{{user}}`, so a note holding `{{user}}` left a
-  fragment in the count: the preset was reported ±630 tokens too large (17,877). It now follows ST's order.
-- **Tests:** `test_preset` (one pin moved to Card Fidelity; new: no rule lists or colour check in BOLT, short gates pointing to their
-  killswitches, one home per rule, a size budget of 15,600), `test_npc_thoughts_v1373`, `test_saves` (new 1.52.1 fixture), `qa_static`,
-  `test_tokens_v1110` pass; the preset builds identically twice.
-- **To check live** (TEST_CHECKLIST 1.52.2): shorter reasoning still opening with "Now:"; "not X but Y" and trade talk not rising
-  with the short gates; voices still distinct and NPCs still committing; the thoughts block still before `<UpdateVariable>`.
-- **Next (FUTURE_PLANS):** tier 2 (±900–1,000 more, trims unique upstream text) after the live check.
-
 ## Release index (one line per release, oldest first)
 
 - All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/archive/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; CHANGELOG 1.2.0/1.2.1).
@@ -321,3 +336,4 @@ Authority stay; adult toggles stay opt-in; Monomania and its gate stay ON (1.11.
 - **v1.54.0 (2026-10-04):** Narrator-load batch 3: situational rule cards (entry 511, `data/rule_cards.json`, engine `ruleCards`) for Letters, Projects, Competition, Exams, Tutoring, Trip, Pacts and the first pact; alcohol rule as keyword entry 512 (−800 tokens per turn in ordinary scenes).
 - **v1.55.0 (2026-10-04):** Narrator-load batch 4: eleven more rule cards (Interactions, Trust/Tension, Imprints, Old Hut, Training, Practice, Dorm, Combat_role, favours, Notices, the Vigil) and a tighter 502 core (−2,500 tokens per turn alone against 1.53.1).
 - **v1.56.0 (2026-10-04):** Narrator-load batch 5: one place per fact (each present character's engine lines are one "Now with {{user}}" block in their Cast Sheet, band words instead of numbers, Recent 3 in words, rules said once); entry 512 tagged `[mvu_plot]` (−524 tokens a turn with three present).
+- **v1.57.0 (2026-10-04):** Narrator-load batch 6: the Journal as the story's spine (engine bookkeeping to `$ui.jnotes`), first visits and the Entrance tour remembered, a compact `<current_state>` (−577 tokens with 8 bonds), the card's own VectFox EventBase prompt.

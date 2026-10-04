@@ -238,15 +238,19 @@ function datedItems(S) {
 function nbJournal(S) {
   // 1.7.4: from campaign Year 2 lines carry their year ("[Y2 M1 W1 Mon]"); a line without one is from Year 1. Groups are year + month.
   const parse = (l, old) => { const m = /^\[(?:Y(\d+) )?M(\d+) W(\d) (\w{3})\]\s*(.*)$/.exec(l); return m ? { Y: +(m[1] || 1), M: +m[2], W: +m[3], D: m[4], t: m[5], old, g: `${+(m[1] || 1)}-${+m[2]}` } : { M: 0, t: l, old, g: '0' }; };
-  // 5.3 (F21): archived lines (the narrator no longer reads them) stay in the player's journal, shown faded
-  const J = [...((S.$ui || {}).archive || []).map(l => parse(l, true)), ...(S.Journal || []).map(l => parse(l, false))];
+  // 5.3 (F21): archived lines (the narrator no longer reads them) stay in the player's journal, shown faded. 1.57.0 (U3): the engine's
+  // notes (rank and reputation changes, marks, recaps; $ui.jnotes) join them in date order, faded too: the narrator reads neither
+  const DI = { Mon: 0, Tue: 1, Wed: 2, Thu: 3, Fri: 4, Sat: 5, Sun: 6 };
+  const key = e => (e.M ? ((e.Y - 1) * 12 + e.M) * 100 + e.W * 10 + (DI[e.D] || 0) : 0);
+  const J0 = [...((S.$ui || {}).archive || []).map(l => parse(l, true)), ...(S.Journal || []).map(l => parse(l, false)), ...((S.$ui || {}).jnotes || []).map(l => ({ ...parse(l, true), note: true }))];
+  const J = J0.map((e, i) => [e, i]).sort((a, b) => key(a[0]) - key(b[0]) || a[1] - b[1]).map(x => x[0]);
   const groups = _.groupBy([...J].reverse(), 'g'), years = J.some(e => e.Y > 1);
   const months = [...new Set([...J].reverse().map(e => e.g))];
-  const tl = J.length ? months.map(g => { const e0 = groups[g][0]; return `<h4>${e0.M ? `${years ? `Year ${e0.Y}, ` : ''}Month ${e0.M}` : 'Undated'}</h4><ol class="jt">${groups[g].map(e => `<li${e.old ? ' class="old" title="Archived: the narrator no longer reads this line"' : ''}>${e.W ? `<span class="sub">W${e.W} ${e.D}</span>` : ''}${esc(e.t)}</li>`).join('')}</ol>`; }).join('') : '<div class="empty">Nothing written yet.</div>';
+  const tl = J.length ? months.map(g => { const e0 = groups[g][0]; return `<h4>${e0.M ? `${years ? `Year ${e0.Y}, ` : ''}Month ${e0.M}` : 'Undated'}</h4><ol class="jt">${groups[g].map(e => `<li${e.note ? ' class="old" title="Engine note: kept for you; the narrator reads it from the state instead"' : e.old ? ' class="old" title="Archived: the narrator no longer reads this line"' : ''}>${e.W ? `<span class="sub">W${e.W} ${e.D}</span>` : ''}${esc(e.t)}</li>`).join('')}</ol>`; }).join('') : '<div class="empty">Nothing written yet.</div>';
   const CS = S.Campus_State || {}, ev = Object.entries(CS.Events || {}), ru = [...(CS.Rumours || [])].reverse();
   // 1.1.0 (spec §3): how far each rumour has spread; rumours that died out stay, faded
   const gs = featureOn(S, 'gossip') ? Object.fromEntries(((S.$ui || {}).gossip || []).map(g => [g[0], g])) : {}, old = [...((S.$ui || {}).rumours_old || [])].reverse();
-  return `<p class="lead">The turning points of your year, written as they happen. The narrator reads the latest 30 lines as the story's memory; older chat is trimmed from its context. Faded lines are archived: kept for you, no longer read by the narrator.</p>${tl}
+  return `<p class="lead">The turning points of your year, written as they happen. The narrator reads the latest 30 lines as the story's spine; scene details come from chat memory. Faded lines are kept for you only: older entries, and the engine's notes (ranks, reputation, marks, recaps).</p>${tl}
     <h3>Campus news</h3>${ev.length ? `<dl class="kv">${ev.map(([k, v]) => { const o = v && typeof v === 'object' ? v : { Text: v }; return `<dt>${esc(k)}</dt><dd>${esc(o.Text || '')}${o.Updated ? `<span class="sub"> · ${esc(o.Updated)}</span>` : ''}</dd>`; }).join('')}</dl>` : '<div class="empty">Nothing has changed on campus yet.</div>'}
     ${ru.length || old.length ? `<h3>Rumours</h3><ul class="log">${ru.map(r => `<li>${esc(r)}${gs[r] ? `<span class="reach">${esc(gs[r][1])} · day ${gs[r][2]}</span>` : ''}</li>`).join('')}${old.map(r => `<li class="old" title="Died out">${esc(r)}</li>`).join('')}</ul>` : ''}`;
 }

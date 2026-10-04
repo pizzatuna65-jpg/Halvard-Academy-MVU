@@ -26,7 +26,7 @@ ok(old.$eng.ver === '1.7.3' && old.World.Year === 1 && old.World.Month === 12 &&
 let S = W(old, { Year: 2, Month: 1, Week: 1, Day: 'Mon', Time: '07:30' }, [{ op: 'insert', path: '/Journal/-', value: '[M1 W1 Mon] Back at the gate for Year 2.' },
   { op: 'replace', path: '/Bonds/Kanae/Knows', value: [...old.Bonds.Kanae.Knows, '[M1 W1 Mon] {{user}} came back for a second year.'] }]);
 ok(S.$eng.ver === ver && Object.keys(old.Bonds).every(id => S.Bonds[id] && S.Bonds[id].Rank === old.Bonds[id].Rank && S.Bonds[id].Trust === old.Bonds[id].Trust), 'every bond keeps its rank and Trust');
-ok(old.Journal.every(l => S.Journal.includes(l.replace(/^\[M/, '[Y1 M')) || (S.$ui.archive || []).includes(l.replace(/^\[M/, '[Y1 M'))), "every Year 1 Journal line is kept, dated Y1");
+ok(old.Journal.every(l => S.Journal.includes(l.replace(/^\[M/, '[Y1 M')) || [...(S.$ui.archive || []), ...(S.$ui.jnotes || [])].includes(l.replace(/^\[M/, '[Y1 M'))), "every Year 1 Journal line is kept, dated Y1");
 ok(S.Journal.includes('[Y2 M1 W1 Mon] Back at the gate for Year 2.') && S.Journal.some(l => /^\[Y2 M1 W1 Mon\] A new class of first-years arrived/.test(l)), 'lines written in Year 2 carry Y2 (the narrator\'s own date too)');
 ok(S.Bonds.Etnie.Knows.every(k => /^\[Y1 M/.test(k)) && /^Y1 M11 W4 Sun/.test(S.Bonds.Etnie.Last_seen) && S.Bonds.Etnie.$Recent.every(r => /^Y1 /.test(r.w)), "Etnie's Knows, Last seen and Recent are dated Y1");
 ok(S.Bonds.Kanae.Knows.slice(-1)[0] === '[Y2 M1 W1 Mon] {{user}} came back for a second year.' && S.Bonds.Kanae.Knows.slice(0, -1).every(k => /^\[Y1 /.test(k)), "Kanae: the old lines Y1, the new one Y2");

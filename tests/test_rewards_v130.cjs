@@ -26,7 +26,7 @@ let A = T(S, '09:00', [RE('Academy', 2), RE('Academy', 2), RE('Academy', 2)]);
 ok(A.Player.Profile.Reputation.$xp.Academy === 5 && A._Log.some(l => /weekly limit/.test(l)), `repeatable Rep XP is capped at +${REP.weekly_cap} a week (${A.Player.Profile.Reputation.$xp.Academy})`);
 A = T(A, '10:00', [RE('academy', 15, 'event')]);
 ok(A.Player.Profile.Reputation.$xp.Academy === 20 && A.Player.Profile.Reputation._Academy === 1, 'an event is uncapped; 20 Rep XP = level +1');
-ok(A.$ui.toasts.some(t => /Academy reputation rose to \+1/.test(t)) && A.Journal.some(l => /Academy reputation rose/.test(l)), 'a level change is toasted and journaled');
+ok(A.$ui.toasts.some(t => /Academy reputation rose to \+1/.test(t)) && [...A.Journal, ...(A.$ui.jnotes || [])].some(l => /Academy reputation rose/.test(l)), 'a level change is toasted and journaled');
 A = T(A, '11:00', [RE('Academy', -8)]);
 ok(A.Player.Profile.Reputation.$xp.Academy === 12 && A.Player.Profile.Reputation._Academy === 0, 'losses are never capped and a level drops again below its threshold');
 A = nextWeek(A, [RE('Academy', 3)]);
@@ -115,7 +115,7 @@ ok(!Q._Perks['Kuroo (Rank 10)'] && Q.Player.Profile.Reputation._Academy === -1 &
   `used from -2: one level toward 0 (${Q.Player.Profile.Reputation.$xp.Academy}), spent and recorded`);
 let U = clone(B); U._Perks['Council pardon'] = { From: 'Irene', Kind: 'gift', Effect: 'x', Uses: 1 };
 U = T(U, '12:40', [{ op: 'insert', path: '/Perk_use/-', value: 'Council pardon' }]);
-ok(!U._Perks['Council pardon'] && U.Journal.some(l => /used Council pardon/.test(l)), 'a one-use gift is spent');
+ok(!U._Perks['Council pardon'] && [...U.Journal, ...(U.$ui.jnotes || [])].some(l => /used Council pardon/.test(l)), 'a one-use gift is spent');
 let MP = clone(B); MP.Player.Profile.Dorm = 'Fire'; MP._Perks["Asmoday's Mercy stipend"] = { From: 'Tristan', Kind: 'gift', Effect: 'x', Uses: 0 };
 MP.Player.Profile.Reputation.$xp.Academy = 125;
 const pts0 = MP.Player.Wallet.Points;

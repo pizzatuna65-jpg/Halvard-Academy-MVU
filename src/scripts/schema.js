@@ -347,6 +347,7 @@ export const Schema = z.object({
     hap: z.any().prefault(null).catch(null),                          // 5.3: today's happening, structured for the UI
     rest: z.any().prefault(null).catch(null),                         // 1.31.0: the restful place here and its multiplier now (engine)
     archive: StrList(300),                                            // 5.3: journal lines the narrator no longer reads
+    jnotes: StrList(300),                                             // 1.57.0 (U3): the engine's Journal notes (UI only)
     secrets: StrList(500),                                            // 1.0.3: permanent ledger of Secrets_revealed (unlocks read it)
     // 1.1.0
     wxfx: Enum(['off', 'flavor', 'full'], 'full'),                    // Weather effects setting (Features panel)
@@ -427,6 +428,7 @@ export const Schema = z.object({
     comp: z.any().prefault(null).catch(null),                      // 1.44.0: competition results paid { paid: [keys], exp: 0-2 staff expectation } (engine)
     promise: z.any().prefault(null).catch(null),
     pair: z.any().prefault(null).catch(null),                      // 1.51.0: { d: the day of the last pair moment } (engine)
+    first: z.record(z.string(), z.any()).prefault({}).catch({}),    // 1.57.0 (U3): notable place -> [first visit date, who was there] (engine)
     nrel: z.record(z.string(), z.any()).prefault({}).catch({}),     // 1.51.0: New_relations key -> day last renewed (engine)                   // 1.49.0: { late: ['c:<favour>', 'p:<group assignment>'] } overdue rises already paid (engine)
     profv: Int(0, 1, 0),
     trip: Int(0, 1, 0),                                             // 1.42.0: 1 once {{user}} was off campus during the active Trip (engine)

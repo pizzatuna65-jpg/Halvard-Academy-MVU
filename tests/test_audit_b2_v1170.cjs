@@ -43,7 +43,7 @@ console.log('T3 a lighter Bonds block');
     { op: 'insert', path: '/Bonds/Etnie/Mind', value: 'Proud of her little sibling.' }, { op: 'insert', path: '/Bonds/Etnie/Known_facts/-', value: 'f2' }, { op: 'insert', path: '/Bonds/Etnie/Known_facts/-', value: 'f3' }, { op: 'insert', path: '/Bonds/Etnie/Known_facts/-', value: 'f4' }]);
   const cs = render(501, S);
   const bo = cs.slice(cs.indexOf('\nBonds:'), cs.indexOf('\nCampus_State')), etnie = bo.slice(bo.indexOf('  Etnie:'), bo.indexOf('  Irene:')), irene = bo.slice(bo.indexOf('  Irene:'));
-  ok(!/Mind|Knows/.test(etnie) && /Rank: 3/.test(etnie) && (etnie.match(/^\s+- /gm) || []).length <= 6, 'someone not here: standing, plans and the latest facts only');
+  ok(!/Mind|Knows|f2/.test(etnie) && /Etnie: "?Rank 3; Trust \d+/.test(etnie), 'someone not here: one line of standing and plans (1.57.0; their facts only when mentioned or coming)');
   ok(!/Mind:|Knows:/.test(irene) && /Watching the new student/.test(render(509, S)), 'someone here: Mind and Knows only in <cast>');
   const re = applyPatch(S, [{ op: 'replace', path: '/Bonds/Etnie', value: { Rank: 3, Trust: 70, Title: 'Big sister' } }]);
   ok(re.Bonds.Etnie.Mind === 'Proud of her little sibling.' && re.Bonds.Etnie.Known_facts.length >= 4, 'a whole-record rewrite keeps Mind and the facts it could not see');

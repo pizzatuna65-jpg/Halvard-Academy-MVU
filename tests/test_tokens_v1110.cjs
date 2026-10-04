@@ -41,7 +41,7 @@ const st = R(501, save), lines = st.split('\n'), end = lines.indexOf('</current_
 let parsed; try { parsed = YAML.parse(lines.slice(3, end).join('\n')); } catch (e) { parsed = null; }
 ok(parsed && parsed.World.Time === save.World.Time && parsed.Player.Wallet.Points === save.Player.Wallet.Points, 'the state is valid YAML with the same values');
 const keysDeep = o => (o && typeof o === 'object' ? Object.entries(o).flatMap(([k, v]) => [k, ...keysDeep(v)]) : []);
-ok(!keysDeep(parsed).some(k => k.startsWith('$')) && !Object.values(parsed.Bonds).some(b => 'Progress' in b || '_Event_ready' in b), 'no $ keys and no retired bond fields');
+ok(!keysDeep(parsed).some(k => k.startsWith('$')) && !Object.values(parsed.Bonds).some(b => b && typeof b === 'object' && ('Progress' in b || '_Event_ready' in b)), 'no $ keys and no retired bond fields');
 ok(!/: ""$|: \[\]$|: \{\}$|: false$/m.test(st), 'no empty values printed');
 const omit = o => (Array.isArray(o) ? o.map(omit) : o && typeof o === 'object' ? Object.fromEntries(Object.entries(o).filter(([k]) => !k.startsWith('$')).map(([k, v]) => [k, omit(v)])) : o);
 const before = YAML.stringify(omit(save)).length, after = lines.slice(3, end).join('\n').length;

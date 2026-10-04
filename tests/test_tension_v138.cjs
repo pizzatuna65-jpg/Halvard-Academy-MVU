@@ -37,7 +37,7 @@ ok(T(H, '09:40', [ten('Ruby', 60)]).Bonds.Ruby._Event_ready, 'below 70 the event
 // ---- rank drop at 100 (and the milestone reputation is paid only once per rank)
 let R = clone(S); R.Bonds.Irene.Rank = 5; R.Bonds.Irene.$ms = [5];
 R = T(R, '10:00', [ten('Irene', 100)]);
-ok(R.Bonds.Irene.Rank === 4 && R.Bonds.Irene.$xp === 0 && R.$ui.toasts.some(t => /fell to Rank 4/.test(t)) && R.Journal.some(l => /broke down to Rank 4/.test(l)), 'Tension 100: the bond falls a rank (bar emptied, toast, journal)');
+ok(R.Bonds.Irene.Rank === 4 && R.Bonds.Irene.$xp === 0 && R.$ui.toasts.some(t => /fell to Rank 4/.test(t)) && [...R.Journal, ...(R.$ui.jnotes || [])].some(l => /broke down to Rank 4/.test(l)), 'Tension 100: the bond falls a rank (bar emptied, toast, journal)');
 ok(xpr(R, 'Student') === -15, `Irene (a student) at 100: Student -5 -10 (${xpr(R, 'Student')})`);
 R = T(R, '10:05', [ten('Irene', 20)]); Object.assign(R.Bonds.Irene, { $xp: 999, _Event_ready: true, $cool: -1 });
 R = T(R, '10:10', [meet(['Irene']), IA('Irene', 'talk')]);

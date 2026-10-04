@@ -444,6 +444,13 @@ const lifeX = TU => (100 - (AMB_CALM[TU.amb_freq] || AMB_CALM[2])) / (100 - AMB_
 const HAPPEN_RATE = { off: 0, rare: 0.2, normal: 0.4, often: 0.65 };
 // hash32, rand01, roll100, d100, rollInt, pickOf and rollTable: shared.js (seeded draws)
 const JOURNAL_ARCHIVE = 120;
+// 1.57.0 (narrator-load audit U3, owner-approved): the Journal the narrator reads is the story's spine (turning points, matters still
+// open, the engine's off-screen events). The engine's bookkeeping (rank and reputation changes, marks, proficiency ranks, week
+// recaps, perk use, a remedial attended, coin stolen) goes to $ui.jnotes: the player's Journal panel shows it, the narrator does not.
+const ENGINE_NOTE = /^(?:\[[^\]]*\]\s*)?(?:Bond with .+ deepened to Rank \d+\.|The bond with .+ broke down to Rank \d+\.|Week recap \(|(?:Academy|Student|Doves) reputation (?:rose|fell) to |.+ reached Rank \d+ \(.+\)\.$|.+ marks: |.+ attended: the .+ F counts as a D\.|\{\{user\}\} used .+ \(from |.+ took \d+ coin from \{\{user\}\} at )/;
+// 1.57.0: places a first visit is worth remembering (data/locations.json: an access rule, or the sealed site); the student's own dorm
+// is everyday life
+const NOTABLE = new Set(["Detention Tower", "Faculty Offices", "Fire Dormitory", "Forest", "Headmaster's Office", "Light Dormitory", "Restricted Section", "Rooftop", "Sky Dormitory", "Spirit Path", "Staff Quarters", "Staff Room", "The Dovecote", "The Noble Houses' Liaison", "The Ring Dining Hall", "The Royal Inspectorate", "The Seal Chamber", "The Warden's Office", "Viridian Dormitory", "Willow Island"]);
 const FACTS_VISIBLE = 10;      // 5.4 token budget: the narrator reads each bond's latest 10 Known_facts; older ones go to $Known_old   // $ui.archive: journal lines the narrator no longer reads (UI only)
 
 // ---------- helpers ----------
@@ -855,14 +862,14 @@ function areaStreet(c, A, h, at, pool, got, evs) {
 // 3.1: one theft (Avalon's pickpockets, Sunreach's hustlers; D.theft: where, rate, seen, min, max, cap, once, the event and its
 // wording): seen through half the time; otherwise a share of the coin {{user}} carries, through the ledger
 function areaTheft(c, A, h, at, got, evs) {
-  const T = A.D.theft || {}, [kr, ks, ka] = A.theft, { S, seed, jnl } = c;
+  const T = A.D.theft || {}, [kr, ks, ka] = A.theft, { S, seed, notes } = c;
   if (!(T.where || []).includes(at) || (T.once && got.has('theft')) || areaRoll(c, A, h, at, kr) >= num(T.rate, 8) * lifeX(c.TU)) return;
   if (T.once) got.add('theft');
   const caught = areaRoll(c, A, h, at, ks) < num(T.seen, 50), pct = rollInt(num(T.min, 10), num(T.max, 25), seed, A.salt, h, ka);
   const lost = caught ? 0 : Math.min(num(T.cap, 300), Math.round(num(S.Player.Wallet.Coin, 0) * pct / 100));
   if (lost) {
     ledger(c, 'Coin', -lost, T.why);
-    jnl.push(`${A.area}: ${T.who} took ${lost} coin from {{user}} at ${A.PL[at].name}.`); S.$ui.toasts.push(`${T.toast}: -${lost} coin`);
+    notes.push(`${A.area}: ${T.who} took ${lost} coin from {{user}} at ${A.PL[at].name}.`); S.$ui.toasts.push(`${T.toast}: -${lost} coin`);
   }
   evs.push({ k: T.ev, caught, lost, empty: !caught && !lost });
 }
@@ -1230,7 +1237,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.56.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.57.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
 // from the shared context c (the states, the reply's text and the values earlier steps computed) and adds what later steps use.
@@ -1243,10 +1250,10 @@ function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the
 function stepSetup(c) {
   const { S, B } = c;
   fillShape(S, SHAPE);
-  const log = [], jnl = [];                                    // jnl: journal lines the engine adds itself (5.1)
+  const log = [], jnl = [], notes = [];                       // jnl: journal lines the engine adds itself (5.1); notes: its bookkeeping (1.57.0)
   S.$eng = S.$eng || { abs: -1, daily: {} };
   S.$ui = S.$ui || { unlocks: [], discovered: [], toasts: [] };
-  for (const k of ['unlocks', 'discovered', 'toasts', 'names', 'archive', 'secrets', 'off', 'rumours_old', 'lore']) if (!Array.isArray(S.$ui[k])) S.$ui[k] = [];
+  for (const k of ['unlocks', 'discovered', 'toasts', 'names', 'archive', 'secrets', 'off', 'rumours_old', 'lore', 'jnotes']) if (!Array.isArray(S.$ui[k])) S.$ui[k] = [];
   if (!_.isPlainObject(S.$ui.parked)) S.$ui.parked = {};
   for (const X of [S.$ui, S.$eng]) if (!_.isPlainObject(X.area)) X.area = {};   // 1.46.0 (audit 3.1): one record per outside area
   if (!['off', 'flavor', 'full'].includes(S.$ui.wxfx)) S.$ui.wxfx = 'full';
@@ -1254,7 +1261,7 @@ function stepSetup(c) {
   const fromVer = hasB ? (B.$eng || {}).ver : S.$eng.ver;      // the engine version that wrote the state before this reply
   S.$eng.ver = ENGINE_VER;
   if (hasB) S.$ui.toasts = [];                                  // toasts = what happened in THIS update only
-  Object.assign(c, { log, jnl, hasB, fromVer });
+  Object.assign(c, { log, jnl, notes, hasB, fromVer });
 }
 
 // 1.20.0 (audit A5): save migrations, run on the first update after the card version changes (and on a new chat's first run).
@@ -1272,6 +1279,17 @@ function stepMigrate(c) {
     if (!_.isPlainObject(E.area)) E.area = {};
     for (const [o, n] of AREA_OLD_UI) { if (U[o] != null && U.area[n] == null) U.area[n] = U[o]; delete U[o]; }
     for (const [o, n] of AREA_OLD_ENG) { if (E[o] != null && E.area[n] == null) E.area[n] = E[o]; delete E[o]; }
+  }
+  // 1.57.0 (U3): the engine's bookkeeping leaves the narrator's Journal window for the player's notes ($ui.jnotes), in date order
+  for (const X of both) {
+    const U = X.$ui || (X.$ui = {}), moved = [];
+    for (const k of ['Journal', 'archive']) {
+      const L = k === 'Journal' ? X.Journal : U.archive;
+      if (!Array.isArray(L)) continue;
+      const keep = L.filter(l => !(ENGINE_NOTE.test(String(l)) && moved.push(l)));
+      if (k === 'Journal') X.Journal = keep; else U.archive = keep;
+    }
+    if (moved.length) U.jnotes = [...new Set([...(Array.isArray(U.jnotes) ? U.jnotes : []), ...moved])].slice(-JOURNAL_ARCHIVE);
   }
   // 1.26.0: old chats keep their history. A small class allowance recognises weeks already played;
   // the one-time Studies offer lets the player choose a different starting history.
@@ -2415,7 +2433,7 @@ function stepVitals(c) {
 // triggers are capped at REP.weekly_cap a week per reputation, events and losses are not. Bond milestones and high Tension are
 // counted by the engine (§6). A pre-1.3.0 save's Public / Dorm meters became Academy / Student XP in stepMigrate.
 function stepReputation(c) {
-  const { S, B, log, jnl, hasB, dayNo, goneNow, dayNoB, TU } = c;
+  const { S, B, log, jnl, hasB, dayNo, goneNow, dayNoB, TU, notes } = c;
   const RP = S.Player.Profile.Reputation || (S.Player.Profile.Reputation = {});
   const RPB = hasB ? ((((B.Player || {}).Profile || {}).Reputation) || {}) : null;
   const rx = {};
@@ -2508,7 +2526,7 @@ function stepReputation(c) {
       RP['_' + r] = L;
       if (announce && hasB && L !== L0) {
         const t = `${r} reputation ${L > L0 ? 'rose' : 'fell'} to ${L > 0 ? '+' : ''}${L}`;
-        S.$ui.toasts.push(t); jnl.push(t + '.'); log.push(`${t}: ${repBand(r, L)}`);
+        S.$ui.toasts.push(t); notes.push(t + '.'); log.push(`${t}: ${repBand(r, L)}`);
         if (_.isPlainObject(S.$eng.wk)) (S.$eng.wk.rep = S.$eng.wk.rep || []).push(`${r} ${L > 0 ? '+' : ''}${L}`);   // 1.10.0 recap
       }
     }
@@ -2547,7 +2565,7 @@ function stepFortune(c) {
 
 // ---- 5d. 1.10.0 (owner-approved planning/DRAFT_batch_fp7_fp11.md, Batch 1): FP7 attendance, FP10 weekly recap, FP12 small scenes ----
 function stepSchoolWeek(c) {
-  const { S, B, log, jnl, hasB, byBuilder, OFF, REPORTED, absB, absA, elapsed, evs, dayNo, goneNow, dayNoB, seed, TU, V, restedAs, weekNo, weekNoB, repLv, repAdd } = c;
+  const { S, B, log, jnl, hasB, byBuilder, OFF, REPORTED, absB, absA, elapsed, evs, dayNo, goneNow, dayNoB, seed, TU, V, restedAs, weekNo, weekNoB, repLv, repAdd, notes } = c;
   {
     const Pf = S.Player.Profile, PY = _.clamp(num(Pf.Year, 1), 1, 3), pts = x => num(((x || {}).Wallet || {}).Points, 0);
     let WK = _.isPlainObject(S.$eng.wk) ? S.$eng.wk : null;
@@ -2563,7 +2581,7 @@ function stepSchoolWeek(c) {
         if (Math.abs(net) >= 300) parts.push(`points ${net > 0 ? '+' : ''}${net.toLocaleString('en')} net`);
         if (!OFF.has('recap') && (parts.length || TU.recap_mode === 2)) {
           const Wd = fromAbs(weekNoB * 7 * DAY_MIN);
-          jnl.push(`Week recap (M${Wd.Month} W${Wd.Week}): ${parts.length ? parts.join('; ') : 'a quiet week'}.`);
+          notes.push(`Week recap (M${Wd.Month} W${Wd.Week}): ${parts.length ? parts.join('; ') : 'a quiet week'}.`);
         }
       }
       WK = S.$eng.wk = { w: weekNo, p0: hasB ? pts(B.Player) : pts(S.Player), ranks: [], rep: [], skipped: 0, periods: 0 };
@@ -2773,7 +2791,7 @@ function stepSchoolWeek(c) {
           ST.rem[k] = sess; rem.push({ s, t, due });
         }
         S.$ui.posted = { label, line, rem };
-        jnl.push(`${label} marks: ${line}.`);
+        notes.push(`${label} marks: ${line}.`);
         S.$ui.toasts.push(`${c.fin ? 'Final' : 'Midterm'} marks posted`);
         log.push(`${label} marks posted: ${line} (average ${avg.toFixed(1)} of 4).`);
         (WK.ranks = WK.ranks || []).push(`${label} marks posted`);
@@ -3078,7 +3096,7 @@ function stepPromises(c) {
 
 // ---- 6. bonds ----
 function stepBonds(c) {
-  const { S, B, log, jnl, hasB, OFF, staleDrop, evs, dayNo, goneNow, dayNoB, WXM, seed, TU, wxNow, V, weekNo, weekNoB, repLv, repAdd, repLevelUp, teamBond } = c;
+  const { S, B, log, jnl, hasB, OFF, staleDrop, evs, dayNo, goneNow, dayNoB, WXM, seed, TU, wxNow, V, weekNo, weekNoB, repLv, repAdd, repLevelUp, teamBond, notes } = c;
   const canon = k => NPC_ALIAS[String(k).toLowerCase()] || k;
   // v1.0.3 (F09): when both an alias key and the canonical key exist, the alias record's real changes merge into the canonical one
   // (fields that differ from the empty record; lists are unioned). Engine-owned "_" / "$" fields are never taken from the alias.
@@ -3274,7 +3292,7 @@ function stepBonds(c) {
     if (eligible && genuine) {
       b.Rank++; xp = 0; b._Event_ready = false; b.$cool = dayNo + coolDays(b.Rank, PACE);
       // 1.16.1 (audit T4): no generic "grew closer" Milestone: $Recent records the rank, Milestones are the story's own
-      jnl.push(`Bond with ${id} deepened to Rank ${b.Rank}.`);
+      notes.push(`Bond with ${id} deepened to Rank ${b.Rank}.`);
       if (_.isPlainObject(S.$eng.wk)) (S.$eng.wk.ranks = S.$eng.wk.ranks || []).push(`${id} reached Rank ${b.Rank}`);   // 1.10.0 recap
       rankedUp(id, b); rankTrust = num(TRU.rank_up, 0);
       S.$ui.rank_cues.push({ id, rank: b.Rank });
@@ -3471,7 +3489,7 @@ function stepBonds(c) {
     if (b.Tension < num(TE.rank_drop_rearm, 70)) b.$tbrk = 0;   // 1.4.4: re-armed once it has really cooled
     if (cross(num(TE.rank_drop_at, 100)) && !TP.exempt && !TP.lock && b.Rank > 0 && !b.$tbrk) {   // maximum Tension breaks a rank (once per blow-up)
       b.$tbrk = 1; b.Rank -= 1; xp = 0; b._Event_ready = false; b.$cool = dayNo + coolDays(b.Rank, PACE); need = needXP(b.Rank, PACE);
-      S.$ui.toasts.push(`Bond with {npc:${id}} fell to Rank ${b.Rank}`); jnl.push(`The bond with ${id} broke down to Rank ${b.Rank}.`);
+      S.$ui.toasts.push(`Bond with {npc:${id}} fell to Rank ${b.Rank}`); notes.push(`The bond with ${id} broke down to Rank ${b.Rank}.`);
       log.push(`Maximum Tension with ${id}: the bond fell to Rank ${b.Rank}.`);
     }
     // what Tension does to the bond (everyone the same, but Kanae and Althair): Strained halves XP, Enemy stops it
@@ -3701,7 +3719,7 @@ function stepTraining(c) {
 // 1.26–1.27: six broad abilities. Only this step writes ranks and XP. A practice report is
 // checked against both ends of the move, the actual elapsed time and the week's limits.
 function stepProficiency(c) {
-  const { S, B, log, jnl, hasB, byBuilder, OFF, REPORTED, elapsed, absB, absA, dayNo, weekNo, TU } = c;
+  const { S, B, log, jnl, hasB, byBuilder, OFF, REPORTED, elapsed, absB, absA, dayNo, weekNo, TU, notes } = c;
   // 1.45.0 (audit 3.9): one session report. A /Practice entry with a Track and no Action (or Action "train") is a mana or stamina
   // session; /Training is still read as one. Practice actions that train add theirs below; stepTraining applies them all.
   const sessions = c.sessions = (Array.isArray(S.Training) ? S.Training : []).map(x => ({ Track: x.Track, With: x.Partner || '' }));
@@ -3747,7 +3765,7 @@ function stepProficiency(c) {
     if (rank > ranks[k]) {
       ranks[k] = rank;
       const line = `${k} reached Rank ${rank} (${PROF_NAMES[k][rank]}).`;
-      jnl.push(line); S.$ui.toasts.push(rank >= MASTERY ? `Mastery: ${PROF_NAMES[k][MASTERY]}` : `${k}: ${PROF_NAMES[k][rank]} (Rank ${rank})`);
+      notes.push(line); S.$ui.toasts.push(rank >= MASTERY ? `Mastery: ${PROF_NAMES[k][MASTERY]}` : `${k}: ${PROF_NAMES[k][rank]} (Rank ${rank})`);
     }
     log.push(`${k} proficiency +${add} (${why}); ${P.xp[k]}/150 XP.`);
     return add;
@@ -4063,7 +4081,7 @@ function recordsLead(S, MS, where) {
 
 // ---- 6c. 1.3.0 one-use perks spent this reply (/Perk_use). Kuroo's and Milena's Rank 10 favours lift a negative reputation one level.
 function stepPerkUse(c) {
-  const { S, log, jnl, goneNow, repw, repLv, repLevelUp, repSync } = c;
+  const { S, log, jnl, goneNow, repw, repLv, repLevelUp, repSync, notes } = c;
   for (const key of (Array.isArray(S.Perk_use) ? S.Perk_use : [])) {
     const k = Object.keys(S._Perks || {}).find(x => x === key) || Object.keys(S._Perks || {}).find(x => x.toLowerCase() === String(key).trim().toLowerCase());
     if (!k) { log.push(`Perk "${key}" is not held; nothing was spent.`); continue; }
@@ -4077,7 +4095,7 @@ function stepPerkUse(c) {
     }
     p.Uses -= 1;
     if (p.Uses <= 0) { delete S._Perks[k]; S.$ui.perks_used = [...(S.$ui.perks_used || []), `${k} (${p.From}), ${dstamp(S.World)}`].slice(-60); }
-    S.$ui.toasts.push(`Used: ${k}`); jnl.push(`{{user}} used ${k} (from ${p.From}).`);
+    S.$ui.toasts.push(`Used: ${k}`); notes.push(`{{user}} used ${k} (from ${p.From}).`);
   }
   S.Perk_use = [];
   repSync(true);
@@ -4180,7 +4198,7 @@ function stepPayout(c) {
 // ---- 8b. Batch 5.1 records: commitments, notices, letters, clues, journal ----
 // 1.18.0 (I4): relative Heals_by dates are anchored once, like Commitment.Due.
 function stepRecords(c) {
-  const { S, B, log, jnl, hasB, toolEdit, OFF, absA, canon } = c;
+  const { S, B, log, jnl, hasB, toolEdit, OFF, absA, canon, notes } = c;
   {
     const prior = _.isPlainObject(S.$eng.heals) ? S.$eng.heals : {}, next = {};
     for (const [name, injury] of Object.entries(S.Player.Injuries || {})) {
@@ -4228,7 +4246,7 @@ function stepRecords(c) {
       const Ac = S.Player.Academics, lab = Object.keys(Ac.Exams || {}).find(x => x.replace(/ (Midterm|Finals)$/, '').replace(' ', '') === sess);
       if (lab) Ac.Exams[lab] = String(Ac.Exams[lab]).replace(`${s} F`, `${s} D (make-up)`);
       if (Ac.Grades && Ac.Grades[s] === 'F') Ac.Grades[s] = 'D';
-      jnl.push(`${k} attended: the ${s} F counts as a D.`); S.$ui.toasts.push(`${s}: F -> D (make-up)`);
+      notes.push(`${k} attended: the ${s} F counts as a D.`); S.$ui.toasts.push(`${s}: F -> D (make-up)`);
     } else if (/^assignment$/i.test(String(c0.Type || '').trim())) {
       if (!late) { STd.mins = num(STd.mins, 0) + ASSIGNMENT_MIN; log.push(`Assignment "${k}" done on time: +${ASSIGNMENT_MIN} minutes of study.`); }
       else { const s = subjectIn(`${k} ${c0.Desc || ''}`); if (s) { STd.skip = _.isPlainObject(STd.skip) ? STd.skip : {}; STd.skip[s] = num(STd.skip[s], 0) + 1; log.push(`Assignment "${k}" was overdue: it counts as a skipped ${s} class for the next marks.`); } }
@@ -4557,6 +4575,26 @@ function stepGossip(c) {
 }
 
 // ---- 8h. 1.1.0 inventory (the Bag): merge case duplicates, remove at Qty 0, Sunfizz bottles, cap 40 (never gear) ----
+// 1.57.0 (narrator-load audit U3): the Entrance tour and first visits to notable places become Journal lines (before stepBag, which
+// writes the Journal); stepUi then adds the place to $ui.discovered
+function stepVisits(c) {
+  const { S } = c, place = placeOf(S.World.Location);
+  // 1.57.0 (U3, the owner's VectFox notes: "the group acted as if they had never toured"): the Entrance tour, once over, and a first
+  // visit to a notable place are Journal lines with who was there, so the story knows {{user}} has been there; $eng.first keeps the date
+  const who = () => Object.keys(S.Scene.Present || {}).filter(id => !/\s/.test(id) || (S.Extras || {})[id]);
+  if (place && plName(place) && !S.$ui.discovered.includes(place) && c.hasB && !c.toolEdit && NOTABLE.has(plName(place)) && !new RegExp('^' + (S.Player.Profile.Dorm || '-') + ' Dormitory$').test(plName(place))) {
+    const w = who(); S.$eng.first = { ...(S.$eng.first || {}), [plName(place)]: [dstamp(S.World), w] };
+    c.jnl.push(`First visit to ${plName(place)}${w.length ? ', with ' + w.join(', ') : ''}.`);
+  }
+  {
+    const T0 = c.hasB && c.B.Campus_State && c.B.Campus_State.Entrance_tour, end = toAbs({ ...S.World, Month: 1, Week: 1, Day: 'Mon', Time: '18:00' });
+    if (T0 && T0.Year === (S.World.Year || 1) && (T0.FirstYears || []).length && c.absB < end && c.absA >= end && c.absA - end < DAY_MIN && !c.toolEdit) {
+      const fy = T0.FirstYears.join(' and ');
+      c.jnl.push(T0.Guide === '{{user}}' ? `Guided the new first-years ${fy} round the grounds on Entrance Day.` : `Toured the grounds on Entrance Day with ${fy}, guided by ${T0.Guide}.`);
+    }
+  }
+}
+
 function stepBag(c) {
   const { S, B, log, jnl, hasB, dayNo } = c;
   {
@@ -4627,6 +4665,7 @@ function stepBag(c) {
     S.Journal = S.Journal.filter(l => J0.has(l) || !mine.has(jkey(l)));
   }
   for (const line of jnl) S.Journal.push(`[${dstamp(S.World)}] ${line}`);
+  if (c.notes.length) S.$ui.jnotes = [...(S.$ui.jnotes || []), ...c.notes.map(l => `[${dstamp(S.World)}] ${l}`)].slice(-JOURNAL_ARCHIVE);   // 1.57.0
   S.Journal = [...new Set(S.Journal)].slice(-CAP.Journal);
   // F21 state-as-memory: the narrator reads the last CAP.Journal lines; older ones (and lines the AI removed) move to $ui.archive
   if (hasB) {
@@ -5237,6 +5276,7 @@ function stepCommit(c) {
     const y1 = x => (typeof x === 'string' ? withYear(x, 1) : x);
     S.Journal = (S.Journal || []).map(y1);
     if (Array.isArray(S.$ui.archive)) S.$ui.archive = S.$ui.archive.map(y1);
+    if (Array.isArray(S.$ui.jnotes)) S.$ui.jnotes = S.$ui.jnotes.map(y1);   // 1.57.0: the engine's notes are dated like the Journal
     for (const b of Object.values(S.Bonds || {})) {
       b.Last_seen = y1(b.Last_seen);
       for (const f of ['Knows', '$Knows_old']) if (Array.isArray(b[f])) b[f] = b[f].map(y1);
@@ -5272,6 +5312,10 @@ function nowOf(S, moodsFull) {
   const people = {}, put = (id, l) => { if (l) (people[id] = people[id] || []).push(l); };
   if (on('weather')) for (const id of PRES.filter(id => (UI.moods || {})[id])) { const m = UI.moods[id]; put(id, 'Mood: ' + m.mood.toLowerCase() + (m.reasons.length ? ' (' + m.reasons.join(', ') + ')' : '') + '.'); }
   if (WX && PRES.includes('Idris')) { if (/cold|freezing/.test(WX.now.label)) put('Idris', 'Cold-blooded: sluggish and short-tempered in this cold.'); else if (WX.now.sky === 'Clear' && WX.block !== 2 && WX.now.temp >= 15) put('Idris', 'Cold-blooded and loves the sun: he is soaking it up, livelier than usual.'); }
+  // 1.57.0 (U3): at a notable place, whether {{user}} has been here before (and with whom), so a second visit never reads as a first
+  const here0 = plName(placeOf(W.Location) || '') || '', fv = ((S.$eng || {}).first || {})[here0];
+  const visit = !NOTABLE.has(here0) ? '' : fv ? (fv[0] === dstamp(W) ? 'First visit: {{user}} came to ' + here0 + ' for the first time today' + (fv[1].length ? ', with ' + fv[1].join(', ') : '') + '.' : '{{user}} has been to ' + here0 + ' before (first on ' + fv[0] + (fv[1].length ? ', with ' + fv[1].join(', ') : '') + ').')
+    : (UI.discovered || []).includes(here0) ? '{{user}} has been to ' + here0 + ' before.' : '';
   const AREAS = UI.area || {}, WENDIGO = NOW_D.WENDIGO, AVD = NOW_D.AVALON, SRD = NOW_D.SUNREACH;
   const AREA = ['forest', 'avalon', 'airship', 'sunreach'].map(k => AREAS[k] && AREAS[k].on ? Object.assign({ key: k }, AREAS[k]) : null).find(Boolean) || null;
   const SOON = AREAS.airship && !AREAS.airship.on ? AREAS.airship.soon : null;
@@ -5355,7 +5399,7 @@ function nowOf(S, moodsFull) {
   for (const x of (UI.rank_cues || []).filter(x => x && PRES.includes(x.id))) put(x.id, 'Has grown closer through this ordinary interaction: let one small change in conduct show when it fits.');
   for (const id of PRES.filter(id => BONDS[id] && BONDS[id].Rank >= 4 && RANK4_PARTNERS[id])) put(id, 'Can actively accompany: ' + RANK4_PARTNERS[id].join(', ') + ' (count it only when shared study or training actually happens).');
   for (const id of PRES.filter(id => BONDS[id] && BONDS[id].$gift_pending)) put(id, 'Their unique gift awaits a natural handover in the story. Once actually given, report /Interactions/- {"With":"' + id + '","Kind":"rank_gift"}; do not put it in the Bag beforehand.');
-  const NOW = { people };
+  const NOW = { people, visit };
   let out;
   NOW.area = out = [];
   if (AREA) { const _A = AREA, _k = AREA.key, _M = AREA.muster, _l = AREA.left, _W = AREA_WALK[_k];
@@ -5509,7 +5553,7 @@ function stepNow(c) {
   for (const a of Object.values(S.$ui.area || {})) if (_.isPlainObject(a)) { delete a.walks; delete a.near; }
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepRoutine, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,

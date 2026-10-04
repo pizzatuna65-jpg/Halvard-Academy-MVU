@@ -83,13 +83,32 @@ The card's lore is designed around keywords and a few constant entries; let Sill
 {3,}` with nothing (that glues paragraphs together; VectFox already turns 3+ newlines into one blank line);
    - import `vectfox_cleaning_patterns.json` (Text Cleaning → Import; all seven pass VectFox's import check and are appended in order).
 
-   Each reply is then stored as its prose plus one line such as `[In-world time: Y2 M1 W2 Wed 13:40, at Courtyards]`: the patterns drop the update block and the `<StatusPlaceHolderImpl/>` tag, remove colored-dialogue tags (keeping the words), drop NPC thoughts and unwrap in-story graphics (keeping their text). Since 1.11.3 the time pattern also reads the year (Year 2+), a place written without an arrow ("Courtyards (unchanged)"), time and place on two lines, and "->" arrows; `tests/test_vectfox_v1113.cjs` checks them.
-2. **EventBase: ON.** It is the only source of the details of old scenes.
-3. **Summarizer Injection: OFF** (since card 1.6.0). The card keeps the story's memory itself: the Journal, each bond's recent and defining moments, and what each character knows and feels about you (Mind, Knows, Imprints, Next). A VectFox summary would repeat it and can contradict it. If you still want it, keep it to about 3,000 characters.
+   Each reply then reaches EventBase as its prose plus one line such as `[In-world time: Y2 M1 W2 Wed 13:40, at Courtyards]`: the patterns drop the update block and the `<StatusPlaceHolderImpl/>` tag, remove colored-dialogue tags (keeping the words), drop NPC thoughts and unwrap in-story graphics (keeping their text). Since 1.11.3 the time pattern also reads the year (Year 2+), a place written without an arrow ("Courtyards (unchanged)"), time and place on two lines, and "->" arrows; `tests/test_vectfox_v1113.cjs` checks them.
+2. **EventBase: ON, with the card's extraction prompt.** It is the only source of the details of old scenes.
+   - What it stores (checked in the owner's export and in VectFox's source, `core/eventbase-extractor.js`, `eventbase-schema.js`,
+     `eventbase-retrieval.js`): not the prose, but events an LLM extracts from each window of messages: a type, an importance
+     1-10, a 2-8 sentence summary, cause, result, characters, places, keywords, open threads and `should_persist`. Retrieval ranks
+     them by similarity (0.55) plus importance (0.20), `should_persist` (0.15) and recency (0.10).
+   - What the default prompt does on this card (the owner's 46-event export, 1.x): it extracts something from almost every window
+     (35% were "walked to …"), scores nearly everything 4-5 and marks it all `should_persist`, so the importance and persist parts
+     of the ranking stop separating anything; its open threads are speculative one-offs ("Will the rain arrive soon?") that are never
+     carried or closed; a moment split across two windows is stored twice; and each event costs about 250 tokens when recalled.
+   - **Use `docs/vectfox_eventbase_prompt.txt`** (1.57.0): VectFox → EventBase tab → **Extraction Prompt**
+     (`eventbase_custom_prompt`; empty = VectFox's default). Paste the whole file. Its reset button brings VectFox's own prompt back,
+     so after a VectFox update that asks you to reset, paste this file again. It keeps VectFox's output schema, event types and the
+     only two placeholders VectFox fills, `{{text}}` and `{{maxCount}}` (`buildExtractionPrompt`), and adds what this card needs: skip
+     routine (walking, ordinary meals and classes, weather, game numbers), score importance against the whole campaign, set
+     `should_persist` false for passing moments, keep summaries to 2-4 sentences, read the card's `[In-world time: …]` line into
+     `scene_time`, never record the card's name as a character, and write open threads only for stated promises, debts and questions.
+     Re-vectorize the chat afterwards so old events follow it. `tests/test_narrator_batch6_v1570.cjs` checks the file against VectFox.
+   - **Division of labour:** VectFox recalls scene details. The card keeps hard facts as state, shown by condition (sheets while
+     someone is present, bonds, Commitments, Knows…), and the Journal is the story's spine: turning points, matters still open, first
+     visits and the engine's off-screen events, read every turn, so they never depend on what recall happens to bring back.
+3. **Summarizer Injection: OFF** (since card 1.6.0). The card keeps the story's memory itself: the Journal (the spine, 1.57.0), each bond's recent and defining moments, and what each character knows and feels about you (Mind, Knows, Imprints, Next). A VectFox summary would repeat it and can contradict it, and a summary is compressed again and again, so hard facts wear away in it; state does not. If you still want it, keep it to about 3,000 characters.
 4. **Ghosting or the card's trim regex: use one.** Ghosting works only while Summarizer Injection is ON too (`core/summarizer-injection.js`); with Summarizer Injection OFF (recommended) the Ghosting switch does nothing, and the card's regex "Eldrasil — State-as-memory: trim far chat (prompt)" does the trimming. With Summarizer Injection + Ghosting on, disable that card regex (Ghosting only removes messages already stored in memory; the card's regex trims by depth regardless).
 5. **Injection position:** keep **After Main Prompt**, or **In-Chat @ Depth** 2 or more, never 0–1 (EventBase and the summary share the settings `position` and `depth`, used by `core/eventbase-workflow.js`). The card puts the Cast Sheet at depth 1 and the cast gate at depth 0 so canon is the last thing the model reads; recalled prose at depth 0 or 1 would sit closer than canon and bring back drift.
 
-6. **Retrieval size and cost:** EventBase retrieval top-k defaults to 10 events a turn; each event costs prompt tokens every turn, so keep it near 10–15. Agentic retrieval (off by default) adds a planner LLM call and up to its maximum queries per turn through the chat provider: more recall, more cost and delay.
+6. **Retrieval size and cost:** EventBase retrieval top-k defaults to 10 events a turn; each event costs prompt tokens every turn, so keep it near 10–15 (with the card's prompt the summaries are shorter and routine is not stored, so 10 recalls more that matters). The injection format "Summary Only" (EventBase tab) sends each event's summary and time without its keyword lists; with the card's prompt the summary already says who, why and what changed, so it is the leaner choice. Agentic retrieval (off by default) adds a planner LLM call and up to its maximum queries per turn through the chat provider: more recall, more cost and delay.
 7. **One chat, one collection.** A collection locked to one chat should not also be listed for another (an older copy of the chat): opening that one mixes its events in.
 
 Bonus: the CoT's first reasoning line (`Now: …`) gives VectFox a second source for the in-world time; VectFox reads a message's stored reasoning for dates and places when the API returns thoughts.

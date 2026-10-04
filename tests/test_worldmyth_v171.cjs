@@ -72,5 +72,5 @@ const save = JSON.parse(rd('tests/fixtures/saves/save_1.7.0.json'));
 const L = applyPatch(save, [{ op: 'replace', path: '/World/Time', value: '09:00' }]);
 ok(L.$eng.ver === JSON.parse(rd('src/card/card.json')).character_version
   && Object.keys(save.Bonds).every(id => L.Bonds[id] && L.Bonds[id].Rank === save.Bonds[id].Rank && L.Bonds[id].Trust === save.Bonds[id].Trust)
-  && L.Journal.length >= save.Journal.length, 'the 1.7.0 save loads with every bond, rank, Trust and the journal kept');
+  && L.Journal.length + (L.$ui.jnotes || []).length >= save.Journal.length, 'the 1.7.0 save loads with every bond, rank, Trust and the journal kept');
 ok(initState().$eng !== undefined, 'a new game still starts');

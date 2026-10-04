@@ -95,6 +95,9 @@ Around campus today (optional, use only if it fits): <%- W._Happening %>
 <%_ for (const _l of NOW.pres || []) { _%>
 <%- _l %>
 <%_ } _%>
+<%_ if (NOW.visit) { _%>
+<%- NOW.visit %>
+<%_ } _%>
 <%_ for (const _l of NOW.walk || []) { _%>
 <%- _l %>
 <%_ } _%>

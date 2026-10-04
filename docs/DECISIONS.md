@@ -192,7 +192,14 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **Map by calendar** (1.13.0, owner): `map_variants` in `data/assets_manifest.json`, first match wins: an event map while the event is on (optionally in its hours), then a season map, then the default. Every variant is 1536×1024 with the default's layout (pins and card crops are percent positions on it); a variant that fails to load shows the default. UI only: no state, no rule.
 - **Assets** live in `github.com/pizzatuna65-jpg/eldrasil-assets`, served via jsDelivr. They are **pinned to commit 4620b2c** (1.41.0: the two Sunreach maps added to 1.39.0's 505dd35, which added the Avalon map to 1.38.0's 288b5a6, which added the Grand Vast Forest map to 1.34.2's f42990c; nothing else changed), and `base_url` exists in one place only: `data/assets_manifest.json`. Never ship `@main`.
 - **State-as-memory**: the narrator reads the latest ~24 messages (card regex, promptOnly, minDepth 24).
-  - The Journal keeps the latest 30 lines for the AI. Older lines move to `$ui.archive`.
+  - The Journal keeps the latest 30 lines for the AI. Older lines move to `$ui.archive`. Since 1.57.0 (owner-approved narrator-load
+    audit U3, after the VectFox review) those 30 lines are the story's spine: turning points, matters still open (closed by a later
+    line), first visits to notable places, the Entrance tour and the engine's off-screen events. Scene detail is VectFox's; dated
+    promises are Commitments'. The engine's bookkeeping (rank and reputation changes, marks, proficiency ranks, recaps, perk use)
+    goes to `$ui.jnotes`, shown in the Journal panel only.
+  - 1.57.0: `<current_state>` shows a bond of someone not here as one line (its facts only when they were just mentioned or may
+    come), each technique as one line, the latest three Transactions, and hides records that are over (Entrance tour, Council
+    candidates out of season, clues of a solved mystery, rumours `<now>` already prints).
   - Bonds show the latest 10 `Known_facts` to the AI. Older facts move to `$Known_old`.
   - The UI shows everything.
   - 1.6.0: Knows keeps 15 lines per bond (older in `$Knows_old`), Imprints 5, `$Defining` 5. Mind, Knows and Imprints are the narrator's; the dossier never shows them.

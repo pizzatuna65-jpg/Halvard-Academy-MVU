@@ -43,14 +43,14 @@ ok(stud(club) === stud(at(S0, SAT, '12:55', 'Combat Grounds')) + 1, 'an hour at 
 console.log('FP7 clean week + FP10 recap');
 const nextMon = TUE + 6;
 const clean = at(go, nextMon, '09:00', 'Lecture Halls');
-ok(acad(clean) === acad(go) + 2 && clean.Journal.some(j => /Week recap \(M2 W2\): .*a clean week/.test(j)), 'a week with lessons and no skip: Academy +2 and a recap line');
+ok(acad(clean) === acad(go) + 2 && [...clean.Journal, ...(clean.$ui.jnotes || [])].some(j => /Week recap \(M2 W2\): .*a clean week/.test(j)), 'a week with lessons and no skip: Academy +2 and a recap line');
 const dirty = at(skip, nextMon, '09:00', 'Lecture Halls');
-ok(acad(dirty) === acad(skip) && dirty.Journal.some(j => /Week recap \(M2 W2\): .*skipped 1 class/.test(j)), 'a skipped class: no clean week; the recap says so');
+ok(acad(dirty) === acad(skip) && [...dirty.Journal, ...(dirty.$ui.jnotes || [])].some(j => /Week recap \(M2 W2\): .*skipped 1 class/.test(j)), 'a skipped class: no clean week; the recap says so');
 const paid = at(at(S0, 30, '17:00', 'Canteen'), TUE, '17:00', 'Canteen');   // after the month's payout, so the week has no big point change
 const quiet = at(paid, nextMon, '17:00', 'Canteen');
 ok(!quiet.Journal.some(j => /Week recap/.test(j)), 'a week with nothing notable (no lessons seen; the monthly payout is not news): no recap line');
 const every = at(applyPatch(paid, [{ op: 'replace', path: '/$ui/tune', value: { recap_mode: 2 } }]), nextMon, '17:00', 'Canteen');
-ok(every.Journal.some(j => /Week recap \(M2 W2\): a quiet week\./.test(j)), 'Settings "Every week": a quiet week is recorded too');
+ok([...every.Journal, ...(every.$ui.jnotes || [])].some(j => /Week recap \(M2 W2\): a quiet week\./.test(j)), 'Settings "Every week": a quiet week is recorded too');
 ok(JSON.stringify(at(go, nextMon, '09:00', 'Lecture Halls')) === JSON.stringify(clean), 'swipe/replay of the rollover gives the same state');
 
 console.log('FP12 small scenes');

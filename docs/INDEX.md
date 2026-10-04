@@ -55,6 +55,8 @@ Build order, generated files and test commands: `docs/BUILD.md`.
 | Preset | `presets/edit_preset.py` (numbered sections; §13 ports RF2.2.1 from `presets/original/`; §15 the NPC Thoughts block and its two regexes, styled by `thoughtsCss` in `ui.template.js`; §16 preset audit 2: one home per rule), card-vs-preset test in `CLAUDE.md` | never edit the output JSON; `build_all.py --preset` |
 | Token cost | `node tests/token_audit.cjs`; the rule entries 501–510 | |
 | Character drift in a real chat | `tools/audit_chat.py`, `data/voice_rules.json` | |
+| The Journal as the story's spine, first visits, a compact `<current_state>` (1.57.0) | engine `ENGINE_NOTE` / `c.notes` → `$ui.jnotes` (stepMigrate moves old lines), `stepVisits` (`NOTABLE` from `data/locations.json`, `$eng.first`, the Entrance tour line), `nowOf` `visit`; `501.txt` (absent bonds, techniques, Transactions, records that are over); 502 Journal rule; `30_notebook.js` `nbJournal` | `test_narrator_batch6_v1570.cjs` |
+| VectFox EventBase prompt for this card (1.57.0) | `docs/vectfox_eventbase_prompt.txt`, `docs/ECOSYSTEM.md` VectFox §2 | `test_narrator_batch6_v1570.cjs` |
 | Narrator mechanics in a real chat (1.53.1) | `tools/audit_chat.py --mechanics` (`block_stats`, `DID`, `FIX`), `tools/replay_chat.cjs` (replays the blocks through the current engine); baseline `audit/AUDIT_2026-10-04_2_baseline_mekanik.md` | `test_mechanics_audit_v1531.cjs` |
 | Live SillyTavern check to record | `docs/TEST_CHECKLIST.md`: its "Open" list and the newest section only | add a section at the top of "By release" |
 | Release bookkeeping | `CLAUDE.md` "Every release"; the newest `CHANGELOG.md` entry | |
