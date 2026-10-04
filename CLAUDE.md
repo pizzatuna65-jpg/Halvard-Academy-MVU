@@ -69,6 +69,6 @@ Drafts (`planning/DRAFT_*.md`) are written in Indonesian; the English text block
   d3, eslint). The folder is a local git repository (no remote): commit each release. Deleted drafts and older changelog details
   are recoverable from git (`git show b62d182:<path>`).
 - Keep text files LF.
-- `tools/audit_chat.py` measures character drift in an exported chat (.jsonl).
+- `tools/audit_chat.py` measures character drift in an exported chat (.jsonl); `--mechanics` measures how the narrator handled the engine.
 - Portraits are hosted on jsDelivr, pinned to a commit in `data/assets_manifest.json`; `tools/process_assets.py` needs the
   original PNGs, which are not in this repo. Only needed for new portraits.

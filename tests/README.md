@@ -18,6 +18,7 @@ Build first with `python tools/build_all.py`. Run all suites with `npm test`; ru
 | Sunreach Bay (1.41.0) | `test_sunreach_v1410.cjs` (routes and names, the window, landing, the teachers' curfew, walks, carriages, water taxis, the tour boat, bets, who is met where by personality, the sea and the Leviathan, the index pattern for Sunreach, the forest, Avalon and the airship, `<now>`, 502, the day/night map tab) |
 | Engine integration audit | `test_audit_b1_v1161.cjs`, `test_audit_b2_v1170.cjs`, `test_integrations_v1180.cjs` |
 | Narrator load (1.53.0) | `test_narrator_batch1_v1530.cjs` (first-pact gate, 503 example and Analysis, the 502 engine list, plain dates written back, a bond from a fact, deed pairs, the remedial by presence, the Extras request in `<now>`, Journal dates once) |
+| Narrator mechanics tool (1.53.1) | `test_mechanics_audit_v1531.cjs` (`audit_chat.py --mechanics` and the replay on a made-up chat) |
 | Engine steps and save migrations | `test_engine_steps_v1200.cjs`, `test_saves.cjs`; any suite with `ENGINE_DIFF=<older engine.js>` compares every engine run with that build |
 
 Stress scenarios live under `tests/stress/`; `sim_year.cjs 336` measures a full campaign year's state size and update time. Browser panel smoke checks live under `tests/preview/`.

@@ -1,7 +1,32 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.53.1 — Narrator-load batch 2: the mechanics audit and its baseline (2026-10-04)
+
+Batch 2 of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6 (U10). Tools only: the card's rules, engine and UI are unchanged (the version
+is bumped by the release rule). Save fixture v1.53.0.
+- **`tools/audit_chat.py --mechanics`** (with `--no-drift` to skip the character-drift checks). It reports per reply with an update
+  block: operations, lines, about-tokens, Analysis lines, and engine work the narrator did itself. That covers a Rank, XP or bond record
+  written, sums in the Analysis, stamina taken for the weather, the calendar turned by hand, a legacy reputation entry, a "_" or "$"
+  path, and Points changed next to a purchase.
+- **`tools/replay_chat.cjs`** replays every block through the current engine, from the first state the chat stored, or else the card's
+  starting state. It reads blocks the way MVU does, with the engine's recovery for malformed ones, the stray-path fix, and "_" paths
+  dropped. It returns what the engine corrected: blocks repaired or unreadable, lists moved from /Player, changes the schema dropped,
+  `_Log` corrections (time, a new bond's Trust, reverted writes, unknown names, refused reports), reminders, and the minutes each reply
+  moved. It costs 0 prompt tokens.
+- **Baseline** (`audit/AUDIT_2026-10-04_2_baseline_mekanik.md`, untracked like the audit). The owner's raw chats 2026-09-30 (rules 1.30.0)
+  and 2026-10-01 (1.34.2) give 49 blocks, all on day 1:
+  - blocks average 4.0 operations, 17.6 lines and ±233 tokens (max 487);
+  - `<Analysis>` averages 5.2 lines and is **34%** of the block (±79 tokens);
+  - stamina was taken for the weather in **7 of 13** replies of the rainy chat (T5);
+  - a whole bond record was inserted 4 times, and the engine replaced the written Trust each time;
+  - the engine repaired 8 malformed blocks (7 of 13 under 1.30.0, 1 of 36 under 1.34.2) and moved 2 lists from /Player.
+  1.53.0 targets the first four, so measure again on a new chat.
+- **Tests:** new `test_mechanics_audit_v1531` (a made-up chat: sizes, the engine-work flags, a repaired block, a stray path, a reverted
+  Rank, a replaced Trust). `test_audit_tool` and `test_saves` (new 1.53.0 fixture) pass.
+- **To check live:** nothing. Play on 1.53.x, export the chat, and run the tool again for the after numbers.
 
 ## v1.53.0 — Narrator-load batch 1: quick fixes (2026-10-04)
 
@@ -140,34 +165,6 @@ model (DECISIONS 1.47.0) and the day's chance is the shared `roll100`.
   beat became a pair moment (marked `pair: 1`). Full suite passes. UI checked in a local preview (the "?" pin, the hint, the sheet line).
 - **To confirm with the owner:** the pair templates and rates (50%, one a day), the 4 / 8 week fade, the 50% trace chance.
 
-## v1.50.0 — Feature batch 2: the routine week (2026-10-03)
-
-`audit/AUDIT_2026-10-03_4_batch_fitur.md` batch 2 (audit part 2, suggestion 4.5). Save fixture v1.49.0. No parallel subsystem: the
-plan is counted by the steps that already count those things, inside their weekly limits.
-- **Plan (Planner, "Routine week").** Study hours (0–20), up to four Practice actions at discovered places with a count (1–5; a
-  study action names its subject; partner, material and pact actions are left out), Saturday club. "Save plan" or "Live this week"
-  write `$ui.plan` through a hidden player-tool message (like Settings). Decided: a weekly plan, not one per day; classes are always
-  attended.
-- **Arming (`stepRoutine`, before the Journal is written).** On "Live this week" the engine works out the span: from now to Sunday
-  20:00, cut to 20:00 the evening before the first stopper (a calendar event that starts later in the span or a day without classes,
-  a dated Commitment, Project, Hook or Next plan, {{user}}'s birthday); at least half a day, else refused with the reason (also away
-  from Halvard, in battle, unsorted, the feature off). It picks the moments to play: someone with a Rank 3+ bond (as initiative
-  picks, their Stage line) and one of the span's happenings. `$ui.routine.line` goes into `<now>`: the span, the plan, the moments,
-  and that only the people in the moments get Interactions. The UI then fills the chat input; the player sends it.
-- **The routine reply (`routineStart` in `stepGuards`, `routineSchool` in `stepSchoolWeek`, `routineProf` in `stepProficiency`).**
-  The clock goes to the span's end whatever the narrator wrote; nights are slept; no "time jumped" warning. Classes held count as
-  attended (the clean-week bonus can be earned); study hours and study actions go into exam preparation and Knowledge; each Practice
-  action gives its XP inside the weekly pace, paid shifts at most two a week (`ledger`), costs are paid, mana and stamina actions are
-  training sessions (`stepTraining`, weekly cap); Saturday club counts. The narrator's own Practice and Training reports are dropped,
-  and Interactions with people outside the moments are not counted (missed reports; bond XP needs time together). A Journal line
-  recaps the week; the plan is disarmed after one run. A plan scaled to a shorter span (days / 7).
-- **Rules, data, UI.** `data/features.json` row `routine_week`; schema `$ui.plan`, `$ui.routine`; 505 prints the line; Planner section
-  (wraps on a phone).
-- **Proof and tests.** `ENGINE_DIFF` against 1.49.0 over the whole suite: every engine run identical except the routine suite
-  itself (ignoring only the new `$ui.on.routine_week`). `tests/test_feature_batch2_v1500.cjs` (25 checks: arming, `<now>`, the run,
-  weekly limits, stoppers, refusals, no plan). Full suite passes. UI checked in a local preview (render, add / change / remove rows).
-- **To confirm with the owner:** the 12-hour minimum span, the 20:00 end, the moment picks (85% a bond moment, one happening).
-
 ## Release index (one line per release, oldest first)
 
 - All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/archive/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; CHANGELOG 1.2.0/1.2.1).
@@ -299,3 +296,4 @@ plan is counted by the steps that already count those things, inside their weekl
 - **v1.52.1 (2026-10-04):** 502: a Commitment's Where is the meeting place, not where it was arranged (Clues and Projects Where clarified too).
 - **v1.52.2 (2026-10-04):** Preset audit 2, tier 1: BOLT points to the rules instead of restating them, short Cosmos last-mile gates, one home per rule, Internal Thoughts tightened (17,245 → 15,444 tokens as sent; depth 0 −19%); `token_audit` counts the preset as ST sends it.
 - **v1.53.0 (2026-10-04):** Narrator-load batch 1: the first-pact rule reaches Occult students (T6), a correct 503 example and a 3-line Analysis, plain dates written back as calendar dates, one "the engine does these" list, deed pairs and the remedial taken by the engine, the Extras request in `<now>`.
+- **v1.53.1 (2026-10-04):** Narrator-load batch 2: `audit_chat.py --mechanics` and `replay_chat.cjs` (how the narrator handled the engine, replayed through the current engine); baseline from the owner's chats (Analysis 34% of the block, weather stamina in 7 of 13 rainy replies).

@@ -3,15 +3,14 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.53.0** (2026-10-04): narrator-load batch 1 of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6: the
-first-pact rule reaches Occult students who need it (T6 bug), a correct 503 example and a 3-line Analysis, the narrator writes only
-Day and Time and plain dates (the engine writes them back as calendar dates, `absWhen`), one "the engine does these" list in 502,
-deed pairs (`reputation.json` `also`) and the remedial by presence taken by the engine, the Extras request in `<now>`. v1.52.2:
-preset audit 2 tier 1. v1.52.0: NPC weekly routines. Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
+**Snapshot:** card **v1.53.1** (2026-10-04): narrator-load batch 2 (tools only): `tools/audit_chat.py --mechanics` with
+`tools/replay_chat.cjs` measures how the narrator handled the engine in an exported chat (block size, engine work done by hand, the
+current engine's corrections); the "before" baseline is `audit/AUDIT_2026-10-04_2_baseline_mekanik.md`. v1.53.0: narrator-load batch 1
+(first-pact gate, 503 example and 3-line Analysis, plain dates written back, one engine list, deed pairs, remedial by presence).
+Live checks: `docs/TEST_CHECKLIST.md` "Open". Plans: `planning/FUTURE_PLANS.md`.
 
-**Next task:** live-check v1.53.0 and the open list in `docs/TEST_CHECKLIST.md`; then the owner's next request, most likely the
-next batch of the narrator-load audit §6 ("kerjakan batch N"; batch 2 = U10 measuring tool, batch 3 = situational rule cards).
-Preset tier 2: `planning/FUTURE_PLANS.md`.
+**Next task:** live-check v1.53.0 and the open list; after some play, export the chat and run `audit_chat.py --mechanics` for the
+"after" numbers. Then the owner's next request, most likely narrator-load batch 3 (situational rule cards, U1 stage 1).
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

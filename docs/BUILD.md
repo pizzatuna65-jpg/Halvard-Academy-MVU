@@ -31,6 +31,7 @@ python presets/edit_preset.py       # regenerates the edited preset from presets
 node tests/fixtures/make_save.cjs    # BEFORE changing anything in a release: writes the current release's save fixture
 node tests/fixtures/make_save_yearend.cjs   # 1.7.4: the same save played to the end of Year 1 (after make_save.cjs)
 python tools/audit_chat.py chat.jsonl --out report.md   # optional: character-drift report for an exported chat
+python tools/audit_chat.py chat.jsonl --mechanics --no-drift --out report.md   # 1.53.1: how the narrator handled the engine (replays every block)
 ```
 
 ## 2. Generated files
@@ -128,6 +129,9 @@ python tools/audit_chat.py chat.jsonl --out report.md   # optional: character-dr
 - **Measure character drift.** Export the chat from SillyTavern (.jsonl) and run `python tools/audit_chat.py <chat> --out report.md`.
   The report lists findings per NPC per 25 messages and the message where each NPC first drifted. Every check is a heuristic:
   read the lines it points to. The Scene.Present and rank checks need an MVU chat (state in the message variables or patches).
+- **Measure the narrator's mechanics** (1.53.1, U10). `python tools/audit_chat.py <chat> --mechanics --no-drift --out report.md`: block
+  size, Analysis lines, engine work the narrator did itself, and what the current engine corrects when `tools/replay_chat.cjs` replays
+  every block (needs node). Baseline before the narrator diet: `audit/AUDIT_2026-10-04_2_baseline_mekanik.md`.
   Add an NPC's "never" patterns to `data/voice_rules.json` once their voice canon is approved.
 - **Compare with another AI.** Give both the same zip and the same task. Useful yardsticks:
   - `npm test` still passes

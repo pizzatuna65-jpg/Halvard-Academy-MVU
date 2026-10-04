@@ -3,6 +3,7 @@
 
 Usage:
   python3 tools/audit_chat.py <chat.jsonl> [--window 25] [--out report.md] [--json findings.json] [--user-name NAME] [--voice rules.json]
+                              [--mechanics] [--no-drift]
 
 Reads the canon from the project (data/npcs.json, src/worldbook/content/<uid>.txt, data/voice_rules.json) and reports, per NPC
 and per window of messages, where the narrator drifted:
@@ -15,10 +16,18 @@ and per window of messages, where the narrator drifted:
   voice     an NPC's line matches a "never" pattern in data/voice_rules.json (filled by the canon waves, Batch G)
 Every check is a heuristic: the report is a list of places to read, not a verdict.
 
+--mechanics (1.53.1, narrator-load audit U10) adds how the narrator handled the engine, per reply with an update block: its size
+(operations, lines, about-tokens, Analysis lines), engine work the narrator did itself (a Rank or bond record written, sums in the
+Analysis, stamina taken for the weather, the calendar turned by hand, a legacy reputation entry, a read-only path), and, by replaying
+every block through the CURRENT engine (tools/replay_chat.cjs, needs node), what the engine had to correct: a malformed block it
+repaired or could not read, a list written under /Player, a change the schema dropped, and its _Log corrections (time, a new bond's
+Trust, reverted writes, unknown names, refused reports), the reminders it raised and the time each reply moved. 0 prompt tokens.
+--no-drift skips the character-drift checks.
+
 Works with old non-MVU chats too (pronoun, name, secret and voice checks run; present and locked need the MVU state, read from
 the message's variables or, failing that, from the <UpdateVariable> patches in the text).
 """
-import argparse, glob, json, os, re, sys
+import argparse, glob, json, os, re, subprocess, sys
 from collections import Counter, defaultdict
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -238,6 +247,124 @@ def audit(path, window=25, user_name=None, voice_path=None):
     return {'chat': os.path.basename(path), 'messages': len(msgs), 'window': window, 'mvu_state': tr.seen_state, 'findings': findings}
 
 
+# ---------------------------------------------------------------- mechanics (1.53.1, U10)
+UPDATE = re.compile(r'<UpdateVariable>(.*?)(?:</UpdateVariable>|$)', re.S | re.I)
+ANALYSIS = re.compile(r'<Analysis>(.*?)</Analysis>', re.S | re.I)
+SUM = re.compile(r'\d+(?:\.\d+)?\s*[+\-\u2212]\s*\d+(?:\.\d+)?\s*=\s*-?\d')
+WEATHERY = re.compile(r'\b(?:chilled|overheated|cold|wind|gale|weather|rain|snow|soaked)\b', re.I)
+# engine work the narrator did itself, judged from the block alone
+DID = [
+    ('rank', 'wrote a bond Rank, XP or Progress', lambda o, a: re.fullmatch(r'/Bonds/[^/]+/(?:Rank|XP|Progress)', o['path'])),
+    ('bond_record', 'inserted a whole bond record', lambda o, a: re.fullmatch(r'/Bonds/[^/]+', o['path']) and isinstance(o.get('value'), dict)),
+    ('max', 'wrote Mana_max or Stamina_max', lambda o, a: re.search(r'/Vitals/(?:Mana|Stamina)_max$', o['path'])),
+    ('calendar', 'turned Week, Month or Year by hand', lambda o, a: re.fullmatch(r'/World/(?:Week|Month|Year)', o['path'])),
+    ('legacy_rep', 'used the legacy reputation form (XP)', lambda o, a: o['path'].startswith('/Rep_events') and isinstance(o.get('value'), dict) and 'XP' in o['value']),
+    ('readonly', 'wrote a "_" or "$" field', lambda o, a: any(x[:1] in '_$' for x in o['path'].strip('/').split('/') if x)),
+]
+DID_TEXT = {k: t for k, t, _ in DID}
+DID_TEXT.update({'sums': 'did sums in the Analysis', 'weather_stamina': 'took stamina for the weather', 'paid_twice': 'changed Points next to a /Purchases entry'})
+# the engine's _Log lines that are corrections, first match wins; any other line is information
+FIX = [('time', 'time or date corrected', re.compile(r'cannot move backwards|went back from|was not reset|Time moved \d+ days|could not be read', re.I)),
+       ('bond_new', 'a new bond\'s written Trust replaced', re.compile(r'is new: Trust starts', re.I)),
+       ('reverted', 'a write reverted', re.compile(r'reverted|read-only|grows only through', re.I)),
+       ('unknown', 'an unknown name or kind', re.compile(r'\bunknown\b|names no known', re.I)),
+       ('refused', 'a report or record refused', re.compile(r'not recorded|was not kept|not counted|was removed|removed from Scene|were kept|nothing was|nothing changed', re.I))]
+FIX_TEXT = {k: t for k, t, _ in FIX}
+
+
+def block_stats(text):
+    m = UPDATE.search(text or '')
+    if not m:
+        return None
+    body = m.group(1)
+    an = ANALYSIS.search(body)
+    alines = [l for l in (an.group(1).splitlines() if an else []) if l.strip()]
+    ops = [o for o in patch_ops(text) if isinstance(o, dict) and isinstance(o.get('path'), str)]
+    did = Counter()
+    for o in ops:
+        for k, _, f in DID:
+            if f(o, alines):
+                did[k] += 1
+    atext = '\n'.join(alines)
+    if SUM.search(atext):
+        did['sums'] += 1
+    if any('stamina' in l.lower() and WEATHERY.search(l) for l in alines):
+        did['weather_stamina'] += 1
+    if any(o['path'].startswith('/Purchases') for o in ops) and any(o['path'] == '/Player/Wallet/Points' for o in ops):
+        did['paid_twice'] += 1
+    return {'lines': len([l for l in body.splitlines() if l.strip()]), 'chars': len(body), 'analysis': len(alines), 'ops_text': len(ops), 'did': dict(did)}
+
+
+def replay(path):
+    try:
+        r = subprocess.run(['node', P('tools', 'replay_chat.cjs'), path], capture_output=True, text=True, encoding='utf-8', timeout=900)
+        return json.loads(r.stdout) if r.returncode == 0 and r.stdout.strip() else {'error': (r.stderr or '').strip()[-300:]}
+    except (OSError, ValueError, subprocess.TimeoutExpired) as e:
+        return {'error': str(e)[:300]}
+
+
+def fix_kind(line):
+    return next((k for k, _, rx in FIX if rx.search(line)), None)
+
+
+def mechanics(path, use_replay=True):
+    _, msgs = read_chat(path)
+    rows = {}
+    for i, m in enumerate(msgs, start=1):
+        if m.get('is_user') or m.get('is_system'):
+            continue
+        st = block_stats(m.get('mes'))
+        if st:
+            rows[i] = {'msg': i, **st}
+    rp = replay(path) if use_replay else {'error': 'not run'}
+    for r in rp.get('replies', []):
+        row = rows.setdefault(r['msg'], {'msg': r['msg'], 'did': {}})
+        fixes = Counter(k for k in (fix_kind(l) for l in r.get('log', [])) if k)
+        row.update({'read': r.get('read'), 'ops': r.get('ops'), 'stray': len(r.get('stray', [])), 'dropped': len(r.get('dropped', [])),
+                    'fixes': dict(fixes), 'fix_lines': [l for l in r.get('log', []) if fix_kind(l)], 'missed': len(r.get('missed', [])),
+                    'minutes': r.get('minutes', 0), 'at': r.get('at', ''), 'error': r.get('error', '')})
+    return {'chat': os.path.basename(path), 'replay': 'from ' + rp['start'] if 'start' in rp else 'skipped: ' + rp.get('error', ''),
+            'rows': [rows[k] for k in sorted(rows)]}
+
+
+def mechanics_md(mx):
+    R = mx['rows']
+    out = ['## Mechanics (how the narrator handled the engine)', '',
+           f"{len(R)} replies with an update block. Replay through the current engine: {mx['replay']}.", '']
+    if not R:
+        return '\n'.join(out) + '\n'
+    avg = lambda xs: round(sum(xs) / len(xs), 1) if xs else 0
+    g = lambda k: [r.get(k) for r in R if isinstance(r.get(k), (int, float))]
+    did, fixes = Counter(), Counter()
+    for r in R:
+        did.update(r.get('did') or {}); fixes.update(r.get('fixes') or {})
+    reads = Counter(r.get('read') for r in R if r.get('read'))
+    mins = g('minutes')
+    out += ['| Measure | Value |', '|---|---|',
+            f"| operations per block | avg {avg(g('ops') or g('ops_text'))}, max {max(g('ops') or g('ops_text') or [0])} |",
+            f"| block lines | avg {avg(g('lines'))}, max {max(g('lines') or [0])} |",
+            f"| block size (about tokens, chars / 3.6) | avg {round(avg(g('chars')) / 3.6)}, max {round(max(g('chars') or [0]) / 3.6)} |",
+            f"| Analysis lines | avg {avg(g('analysis'))}, max {max(g('analysis') or [0])} |",
+            f"| blocks repaired by the engine / unreadable | {reads.get('repaired', 0)} / {reads.get('unreadable', 0)} |",
+            f"| lists written under /Player (moved) | {sum(g('stray'))} |",
+            f"| changes the schema dropped | {sum(g('dropped'))} |",
+            f"| reminders raised (possibly missed) | {sum(g('missed'))} |",
+            f"| time per reply (minutes) | avg {avg(mins)}, max {max(mins or [0])} |", '']
+    out += ['| Engine work the narrator did itself | Replies |', '|---|---|'] + \
+           ([f'| {DID_TEXT.get(k, k)} | {v} |' for k, v in did.most_common()] or ['| none | 0 |']) + ['']
+    out += ['| Engine corrections (replay _Log) | Count |', '|---|---|'] + \
+           ([f'| {FIX_TEXT.get(k, k)} | {v} |' for k, v in fixes.most_common()] or ['| none | 0 |']) + ['']
+    out += ['### Per reply', '', '| msg | ops | lines | Analysis | read | did itself | corrections | reminders | min |', '|---|---|---|---|---|---|---|---|---|']
+    for r in R:
+        out.append(f"| {r['msg']} | {r.get('ops', r.get('ops_text', ''))} | {r.get('lines', '')} | {r.get('analysis', '')} | {r.get('read', '')} | "
+                   f"{', '.join(f'{k} {v}' for k, v in (r.get('did') or {}).items())} | {', '.join(f'{k} {v}' for k, v in (r.get('fixes') or {}).items())} | "
+                   f"{r.get('missed', '') or ''} | {r.get('minutes', '')} |")
+    lines = [(r['msg'], l) for r in R for l in r.get('fix_lines', [])]
+    if lines:
+        out += ['', '### Correction lines', ''] + [f'- msg {m}: {l[:200]}' for m, l in lines]
+    return '\n'.join(out) + '\n'
+
+
 # ---------------------------------------------------------------- report
 def report_md(res):
     F, W = res['findings'], res['window']
@@ -269,16 +396,22 @@ def main(argv=None):
     ap.add_argument('chat'); ap.add_argument('--window', type=int, default=25)
     ap.add_argument('--out'); ap.add_argument('--json'); ap.add_argument('--user-name')
     ap.add_argument('--voice', help='voice rules file (default data/voice_rules.json)')
+    ap.add_argument('--mechanics', action='store_true', help='add the mechanics report (replays the blocks through the current engine)')
+    ap.add_argument('--no-drift', action='store_true', help='skip the character-drift checks')
     a = ap.parse_args(argv)
-    res = audit(a.chat, a.window, a.user_name, a.voice)
-    md = report_md(res)
+    res = {'chat': os.path.basename(a.chat), 'findings': []} if a.no_drift else audit(a.chat, a.window, a.user_name, a.voice)
+    md = '' if a.no_drift else report_md(res)
+    if a.mechanics:
+        res['mechanics'] = mechanics(a.chat)
+        md = (md + '\n' if md else f"# Mechanics audit: {res['chat']}\n\n") + mechanics_md(res['mechanics'])
     if a.out:
         open(a.out, 'w', encoding='utf-8', newline='\n').write(md)
     else:
         sys.stdout.write(md)
     if a.json:
         open(a.json, 'w', encoding='utf-8', newline='\n').write(json.dumps(res, ensure_ascii=False, indent=1))
-    print(f"audit: {len(res['findings'])} findings in {res['messages']} messages", file=sys.stderr)
+    print(f"audit: {len(res['findings'])} findings" + (f" in {res['messages']} messages" if 'messages' in res else '')
+          + (f", {len(res['mechanics']['rows'])} update blocks" if 'mechanics' in res else ''), file=sys.stderr)
 
 
 if __name__ == '__main__':
