@@ -17,7 +17,7 @@ let err = ''; try { ejs.render(EJS.map(e => e.content).join('\n'), { getvar: gv 
 ok(!err, `all EJS entries rendered as one template: no redeclaration (${err || 'ok'})`);
 err = ''; try { ejs.render([502, 504, 505].map(i => EJS.find(e => e.id === i).content).join('\n') + '\n' + EJS.find(e => e.id === 502).content, { getvar: gv }); } catch (e) { err = e.message; }
 ok(!err, 'even the same entry twice in one template');
-const src502 = fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/502.txt'), 'utf8');
+const src502 = (fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/502.txt'), 'utf8') + Object.values(JSON.parse(fs.readFileSync(path.join(ROOT, 'data/rule_cards.json'), 'utf8')).cards).map(c => c.text).join(' '));
 ok(/violence against them \(a punch, a spell\) \+20–30/.test(src502) && /insult, humiliation or broken promise \+10–15/.test(src502), 'rule 502 gives the narrator sizes for Tension');
 
 // ---- Connections: a public line (a teacher / mentor tie since 1.4.1) to someone not met is not drawn until both are met

@@ -61,7 +61,7 @@ for (let i = 0; i < 28; i++) {
 ok(Y.Bonds.Sophia.Rank >= 1 && Y.Bonds.Irene.Tension < 100 && Y.Bonds.Ruby.Tension < 30, `tsundere, 4 weeks: Sophia loses one rank at most (Rank ${Y.Bonds.Sophia.Rank}), Irene stays under 100 (${Y.Bonds.Irene.Tension}), Ruby eases (${Y.Bonds.Ruby.Tension})`);
 
 // ---- narrator rules and <now>
-const rules = fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/502.txt'), 'utf8');
+const rules = (fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/502.txt'), 'utf8') + Object.values(JSON.parse(fs.readFileSync(path.join(ROOT, 'data/rule_cards.json'), 'utf8')).cards).map(c => c.text).join(' '));
 ok(/by what the character believes \{\{user\}\} meant/.test(rules) && /Teasing, mock insults and play-fighting that both sides enjoy are not offences/.test(rules) && /A consensual spar is a fight, not violence/.test(rules) && /\|understood\|birthday\|birthday_party"\}/.test(rules),
   'rule 502: intent, teasing, consent, the understood kind');
 const now505 = fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/505.txt'), 'utf8');

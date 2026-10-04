@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.55.0 (narrator-load batch 4): the two checks in its section below.
 - v1.54.0 (narrator-load batch 3): the three checks in its section below.
 - v1.53.0 (narrator-load batch 1): the five checks in its section below.
 - v1.52.2 (preset audit 2): the four checks in its section below.
@@ -96,6 +97,11 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.55.0 — Narrator-load batch 4 (the remaining rule cards)
+
+- [ ] With a friend present, `<rule_cards>` shows Interactions and the trust scale; a broken promise still brings a Trust drop.
+- [ ] Alone (or with strangers), a slight to someone {{user}} knows is still reported as Tension from 502's core line.
 
 ### v1.54.0 — Narrator-load batch 3 (situational rule cards)
 

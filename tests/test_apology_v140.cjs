@@ -27,4 +27,4 @@ ok(T(N, '13:00', [AP('Ruby')]).Bonds.Ruby.Tension === 40, 'a new week: full valu
 const card = JSON.parse(fs.readFileSync(path.join(ROOT, 'dist/Eldrasil_Halvard.json'), 'utf8')).data;
 const out = ejs.render(card.character_book.entries.find(e => e.id === 505).content, { getvar: k => _.get({ stat_data: S }, k) });
 ok(/Tension: Sophia \([^)]*\): [^\n]*Eases: an apology only makes her angrier/.test(out) && /Tension: Krieg [^\n]*Eases: holds a grudge/.test(out), 'Now: Sophia and Krieg tell the narrator how apologies land');
-ok(/report it as an apology interaction/.test(fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/502.txt'), 'utf8')), 'rule 502: the narrator reports apologies instead of lowering Tension');
+ok(/report an apology as an apology interaction/.test(fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/502.txt'), 'utf8')) && /report it as an apology interaction/.test(fs.readFileSync(path.join(ROOT, 'data/rule_cards.json'), 'utf8')), 'rule 502: the narrator reports apologies instead of lowering Tension');

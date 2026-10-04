@@ -20,7 +20,8 @@ console.log('Core lines in 502, full rules in cards');
   ok(!/Students may buy alcohol/.test(r) && /Forbidden-magic gifts are dangerous to hold/.test(r), 'the alcohol rule left 502; the forbidden-gift line stays');
   ok(/A remedial is attended when/.test(r) && !/A remedial is attended/.test(RC.exams.text), 'the remedial line stays in the core (any week)');
   ok(Object.values(RC).every(c => !/<%/.test(c.text)), 'card texts are plain text');
-  ok(cards(S0).length === 0 && r511(S0) === '', `a quiet morning: no card, entry 511 prints nothing (${cards(S0)})`);
+  const ST1 = ['letters', 'projects', 'competition', 'exams', 'tutoring', 'trip', 'pacts', 'first_pact'];   // 1.55.0: stage 2 adds Entrance-day cards
+ok(!cards(S0).some(id => ST1.includes(id)) && !/Letters \(Mail Tower: birds/.test(r511(S0)), `a quiet morning: no stage-1 card (${cards(S0)})`);
 }
 
 console.log('Each card when it applies');

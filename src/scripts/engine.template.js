@@ -5199,7 +5199,7 @@ function nowOf(S, moodsFull) {
   } }
   return NOW;
 }
-// 1.54.0 (narrator-load audit U1, stage 1): situational rule cards. 502 keeps a core line per topic (path, data shape, the main ban);
+// 1.54.0 (narrator-load audit U1, stage 1; 1.55.0 stage 2: bonds, practice, profile, notices, favours, the Vigil): situational rule cards. 502 keeps a core line per topic (path, data shape, the main ban);
 // a topic's full rule (data/rule_cards.json, printed by entry 511 next to <now>) is listed while it applies: by the state, the calendar
 // or the place, and fail-open by a word in the last reply or the player's message (a topic that came up gets its rule next turn).
 const RULE_CARDS = /*@@RULE_CARDS@@*/{};   // id -> the feature that must be on ('' = always)
@@ -5207,7 +5207,10 @@ function ruleCards(c) {
   const { S, OFF, absA } = c, W = S.World, M = S.Magic || {};
   const said = String(c.text || '').replace(/<UpdateVariable>[\s\S]*?(?:<\/UpdateVariable>|$)/gi, ' ') + '\n' + String(c.userText || '');
   const ahead = (fn, days) => _.range(0, days + 1).some(d => eventsOn(fromAbs(absA + d * DAY_MIN)).some(fn));
-  const pacts = Object.keys(M.Pacts || {}), comp = S.Competition || {};
+  const pacts = Object.keys(M.Pacts || {}), comp = S.Competition || {}, here = placeOf(canonLocation(W.Location)), PR = (S.Player || {}).Profile || {};
+  // 1.55.0 (stage 2): someone {{user}} has a bond with is here
+  const bonded = () => Object.keys((S.Scene || {}).Present || {}).some(k => (S.Bonds || {})[NPC_ALIAS[String(k).toLowerCase()] || k]);
+  const practising = () => ((S.$ui || {}).practice || []).some(x => x && !x.locked) || /\b(train\w*|practi[cs]\w*|drill\w*|spar\w*|craft\w*|brew\w*|study session)\b/i.test(said);
   const test = {
     letters: () => placeOf(canonLocation(W.Location)) === 'Mail Tower' || Object.values(S.Letters || {}).some(l => /^(waiting|sent)$/.test(String((l || {}).Status)))
       || /\b(letters?|mail|parcels?)\b|\bwrite home\b/i.test(said),
@@ -5220,6 +5223,17 @@ function ruleCards(c) {
     pacts: () => pacts.length > 0 && (pacts.some(k => { const p = M.Pacts[k] || {}; return p.Summoned || p.Presence === 'terms' || (M.Active || {})[k]; })
       || new RegExp('\\b(summon\\w*|pacts?|' + pacts.map(_.escapeRegExp).join('|') + ')\\b', 'i').test(said)),
     first_pact: () => ((M._Affinity || {}).Types || []).includes('Occult') && !S.$eng.pactPlay && (placeKey(W.Location) === 'spirit path' || /\b(spirits?|pacts?)\b/i.test(said)),
+    interactions: () => !_.isEmpty((S.Scene || {}).Present) || (((S.$ui || {}).cast || {}).ment || []).length > 0 || /\b(letters?|messages?)\b/i.test(said),
+    trust_tension: () => bonded() || /\b(promis\w*|betray\w*|secrets?|lie[ds]?|lying|apolog\w*|insult\w*|punch\w*|humiliat\w*|forgiv\w*)\b/i.test(said),
+    imprints: () => bonded(),
+    old_hut: () => here === 'Old Hut' || /\bold hut\b/i.test(said),
+    training: practising,
+    practice: practising,
+    dorm: () => !String(PR.Dorm || '').trim() || (W.Month === 1 && W.Week === 1 && W.Day === 'Mon') || /\b(sorting|arbiter stone)\b/i.test(said),
+    combat_role: () => !String(PR.Combat_role || '').trim() || /\b(combat role|role class|reassign\w*)\b/i.test(said),
+    favour: () => Object.values(S.Commitments || {}).some(x => /^favou?r$/i.test(String((x || {}).Type || '').trim())) || !!(((S.$ui || {}).initiative || {}).favour) || /\bfavou?rs?\b/i.test(said),
+    notices: () => here === 'Notice Board' || /\b(notices?|notice board|flyers?)\b/i.test(said),
+    vigil: () => Object.keys(S.Inventory || {}).some(k => /vigil/i.test(k)) || num(((S.$eng || {}).sleep || {}).vigilUntil, -1) > absA || /\bvigil\b/i.test(said),
   };
   return Object.keys(RULE_CARDS).filter(id => (!RULE_CARDS[id] || !OFF.has(RULE_CARDS[id])) && test[id] && test[id]());
 }

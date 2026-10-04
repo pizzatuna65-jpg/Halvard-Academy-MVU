@@ -49,5 +49,5 @@ const dos = U.PANELS.npc.render(S);
 const rows = dos.split('<table class="rt">')[1] || '';
 ok(/<h3>Recent with you<\/h3>/.test(dos) && (rows.match(/<tr>/g) || []).length === 11 && rows.indexOf('Moment 12.') < rows.indexOf('Moment 11.'), 'dossier: a table of 10, newest on top');
 ok(/<span class="up">XP \+\d+<\/span>/.test(rows), 'dossier: effects coloured');
-const rules = fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/502.txt'), 'utf8');
+const rules = (fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/502.txt'), 'utf8') + Object.values(JSON.parse(fs.readFileSync(path.join(ROOT, 'data/rule_cards.json'), 'utf8')).cards).map(c => c.text).join(' '));
 ok(/Add "Note": one short sentence of what happened between them/.test(rules) && /"Kind": "other", "Note"/.test(rules), 'rule 502 asks for the Note');

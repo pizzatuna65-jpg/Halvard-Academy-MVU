@@ -1,5 +1,5 @@
 {
- "_note": "1.54.0 (narrator-load audit U1, stage 1): situational rule cards. 502 keeps a core line per topic (path, data shape, the main ban); a card holds the topic's full rule. The engine lists the cards that apply now in $ui.now.rules (ruleCards in engine.template.js: the state, the calendar, the place, or a word in the last reply or the player's message); entry 511 prints them next to <now>. feature: the Features id that must be on (\"\" = always). Texts are moved verbatim from 502.",
+ "_note": "1.54.0 / 1.55.0 (narrator-load audit U1, stages 1 and 2): situational rule cards. 502 keeps a core line per topic (path, data shape, the main ban); a card holds the topic's full rule. The engine lists the cards that apply now in $ui.now.rules (ruleCards in engine.template.js: the state, the calendar, the place, or a word in the last reply or the player's message); entry 511 prints them next to <now>. feature: the Features id that must be on (\"\" = always). Texts are moved verbatim from 502.",
  "cards": {
   "letters": {
    "feature": "letters",
@@ -32,6 +32,50 @@
   "first_pact": {
    "feature": "",
    "text": "- A first pact in play: a student with Occult magic may form a Spirit Pact with one lesser spirit at the Spirit Path, only when the scene has played it out (the spirit chose them). Add /Magic/Pacts/<name> with Kind \"Spirit\", Tier \"Lesser\", Presence \"summoned\" and Terms naming what it can do (a lesser spirit is small and simple: it helps, fetches, keeps watch, comforts; it does not fight well); the engine writes its Summon technique. One such pact in play, ever; the engine removes any other."
+  },
+  "interactions": {
+   "feature": "",
+   "text": "Interactions: for each real interaction in this reply insert into /Interactions/- {\"With\": \"<roster first name>\", \"Kind\": \"talk|hangout|study|gift|help|fight|apology|keep|secret|defend|confide|understood|birthday|birthday_party\"}. Add \"Note\": one short sentence of what happened between them, in the past tense (shared history). When no listed kind fits, use {\"With\": \"<first name>\", \"Kind\": \"other\", \"Note\": \"...\"}. talk is a real conversation; hangout is time spent together; study is active shared learning and uses the hangout daily slot. At Rank 2+, add \"Invited\": true to the first accepted hangout you actually proposed that week. gift also needs Item and Gift (loved|liked|neutral|disliked|hated), though the engine resolves NPC tastes first. help is real help; fight includes a spar; apology may have Public:true; keep, secret, defend and confide describe actual deeds; understood is a real repaired misunderstanding; birthday means a greeting or gift; birthday_party requires actual attendance. Passing greetings add nothing. talk, hangout, study, help and gift count only with the NPC in the scene; a letter or a message from afar is Kind \"other\". Report shared acts once."
+  },
+  "trust_tension": {
+   "feature": "",
+   "text": "- Trust 0–100: how sure they are that {{user}} can be relied on (closeness is Rank). A new record starts at the character's own Trust. A rise comes from the deed reported as an interaction (keep, secret, defend, confide, help); the engine adds it slowly, by the character's nature, and a little for each rank earned. Lower it yourself, in the same reply as the deed: late for or forgetting something small that was promised −3–5; a real promise broken, or a lie found out −10–15; their secret told, or something they said in private used against them −20; betrayal (reporting them, siding with their enemy, selling them out) −25–40. No cap: several betrayals add up, and word of a big one reaches their friends. Low Trust holds back what the bond would give (keeping {{user}}'s secrets from Rank 6, real risks from Rank 7, a best friendship or romance at Rank 8, Rank 9–10); <now> says what is held back and how each present character carries it.\n- Judging a deed (Trust and Tension): by what the character believes {{user}} meant, not by the harm alone. Carelessness without malice (a real try that fails, a secret that slips out by accident) is small: Trust −3 for a failure, −8–10 for a slipped secret, and Tension only if it truly cost them something. Teasing, mock insults and play-fighting that both sides enjoy are not offences: report them as talk or hangout; whether a character enjoys them is theirs (<now>, \"Teasing\"). Harsh words from someone they trust (Trust 65+) who plainly means well are not offences either. Only count what the character saw or later learns of. If they know {{user}} had no choice (forced, charmed, protecting them), Trust does not fall; a lie to protect them or for a surprise, once understood, is −0–3. A quarrel between friends is not siding with an enemy (−3–5 at most). A consensual spar is a fight, not violence, unless {{user}} fought dirty or kept going after they yielded. Letting them down over a clash of promises: −3–5 if {{user}} warned them first. Flirting with someone else in front of a romantic partner: their Tension +5–10, as their nature takes it.\n- Tension 0–100: follows conflict and unresolved friction. Move it in the same reply as the deed, by its weight: a slight or a sharp word +3–5; an insult, humiliation or broken promise +10–15; violence against them (a punch, a spell) +20–30. Never lower Tension yourself for an apology: report it as an apology interaction and the engine applies what that character's nature allows (some forgive easily, some hold grudges, some take it as weakness). Quiet days ease it too (engine); a great deed (saving them, a real sacrifice) may lower it directly. These are sizes, not limits: unlike bond XP, Tension has no daily or weekly cap, several offences in one reply add up, and one bad day can make an enemy. Mending is slower than harm: an apology never undoes more than part of what the offence did. How each character carries tension, and what eases it, is in <now> for those present. The engine counts the rest: from 40 bond XP is halved, from 70 rank growth pauses and reputation suffers, from 90 no bond XP, at 100 the bond loses a rank."
+  },
+  "imprints": {
+   "feature": "",
+   "text": "- Imprints: only after an experience with {{user}} that changes who they are (weight 5–10 of 10: a rescue, a great betrayal, a sacrifice), insert {\"Belief\": \"what they now believe, in their words\", \"Weight\": 5-10, \"From\": \"what caused it\"}. Write the belief, not the event (\"Rules can bend for someone who has earned it\"). At most 5; follow their Change line in <cast>: a fixed character only deepens a belief they hold (raise its Weight). The engine keeps the rest."
+  },
+  "old_hut": {
+   "feature": "",
+   "text": "- The Old Hut custom (what is said inside stays there): a confidence shared there, reported as confide or secret as usual, counts a little more; the engine adds it, once a month for each person. Report it only when it truly happened, true to the character."
+  },
+  "training": {
+   "feature": "",
+   "text": "- Training: when {{user}} spends a real session (about an hour or more) drilling to grow their mana pool or stamina, insert {\"Track\":\"mana|stamina\",\"With\":\"<first name>\"} into /Practice/-. Omit With for solo sessions. The engine raises Mana_max / Stamina_max within existing limits. A Rank 4+ NPC actively helping with a track listed in <now> (mana, stamina or study) adds a small bonus; a personal training gift may add more. Being in the room alone is not participation."
+  },
+  "practice": {
+   "feature": "proficiency",
+   "text": "- Practice: when {{user}} spends real time practising or crafting at a place (Practice here in <now>), report {\"Action\":\"<listed action>\",\"Subject\":\"<subject, for study>\",\"With\":\"<person, if any>\",\"Aim\":\"<intention or item>\"} in /Practice/-. Report the attempt once, whatever the result. The engine checks place, time, company, requirements and the weekly limit, then clears the report. A listed action that trains mana or stamina counts as that training session; do not report the training separately."
+  },
+  "dorm": {
+   "feature": "",
+   "text": "- Dorm is set once, by the Arbiter Stone sorting. The Stone reads only Magic._Affinity.Dominant (Elemental→Fire, Mystic→Light, Spiritual→Viridian, Occult→Sky); it cannot see subtypes, or whether magic is hidden or forbidden."
+  },
+  "combat_role": {
+   "feature": "",
+   "text": "- Combat_role: empty until {{user}}'s first Practical Magic class (Month 1 Week 1 Thursday, a joint assessment). There the five role teachers watch {{user}} in drills and assign one or two roles (Attack, Defense, Healing, Support, Control) that fit the techniques and how {{user}} actually fought; set it then (e.g. \"Defense, Control\"). With two roles, {{user}} picks the one class they want most; write that role first. Change it later only when a teacher reassigns it or {{user}} switches class."
+  },
+  "favour": {
+   "feature": "planner",
+   "text": "- A favour (Type \"favour\", With one character) is a promise to that character. Remove it when {{user}} has done it (an Item must be in the Bag; the engine hands it over and counts the favour as help, so do not report it again). Left overdue, it costs Tension; the character reacts in character."
+  },
+  "notices": {
+   "feature": "notices",
+   "text": "Notices (the Notice Board, castle Floor 1 entrance hall): {\"<title>\": {\"Text\": \"max 25 words\", \"By\": \"who posted it\", \"Until\": \"M? W? Day\"}}. Only notices {{user}} has seen that matter: paid work, club recruitment, a warning, a dare, a lost item. Official calendar postings are shown automatically; never add them. The engine dates and expires notices."
+  },
+  "vigil": {
+   "feature": "weather",
+   "text": "The Vigil: it holds off sleep debt for 48 hours, then {{user}} crashes until two full nights are slept; buying or gifting it does not activate it."
   }
  }
 }

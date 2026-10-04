@@ -1,7 +1,36 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.55.0 — Narrator-load batch 4: the remaining rule cards and a tighter 502 core (2026-10-04)
+
+Batch 4 of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6 (U1 stage 2). Save fixture v1.54.0.
+- **Eleven more cards** in `data/rule_cards.json`, moved verbatim from 502, each with its trigger in engine `ruleCards`:
+  - Interactions: anyone here, someone mentioned, or a letter or message;
+  - Trust/Judging/Tension and Imprints: someone {{user}} has a bond with is here; Trust/Tension also on words such as a broken
+    promise, betrayal, a secret, a lie or an apology;
+  - the Old Hut custom: at the Old Hut;
+  - Training and Practice: a practice place listed in `<now>`, or training talk;
+  - the Arbiter Stone's dorm rule: not sorted yet, or Entrance morning;
+  - Combat_role: empty;
+  - favours: one pending, or offered today;
+  - Notices: at the Notice Board;
+  - the Vigil's effect: in the Bag or active.
+- **502 keeps a core line for each.** Interactions keeps its rank add-ons (Rank 5 gift, introduction, vouch) in 502 behind their
+  rank gates. When nobody {{user}} knows is here, Trust and Tension are summed up in two lines.
+- **Tighter core:**
+  - the restful-place list is gone (one clause stays; `<now>` gives the rate where {{user}} is);
+  - the Council meeting time is said once, in 504 (502 had it twice);
+  - the Romance line stays in the core, because it is about 40 tokens and depends on the player's setting.
+- **Measured** on 502 + 511 against 1.53.1 (before the cards): alone **−2,460 to −2,620 tokens per turn** (about 30% of 502); with a
+  bonded character here −1,130 (the bond cards are 1,330 tokens).
+- **Tests:** new `test_narrator_batch4_v1550`. Nine older suites that read 502's text now also read the cards (`test_apology_v140`,
+  `test_greyarea_v144`, `test_newbond_v1611`, `test_playtest_v137`, `test_recent_v145`, `test_tension_v138`, `test_trust_v143`,
+  `test_narrator_batch3_v1540`; `test_split_v146` led to the Note wording in the Interactions core). Every suite that reads 502 passes,
+  and so does `test_saves` (new 1.54.0 fixture).
+- **To check live** (TEST_CHECKLIST 1.55.0): with a friend present the trust scale and Interactions rules show and Trust drops are
+  still written; alone, a Tension rise is still reported from the core line.
 
 ## v1.54.0 — Narrator-load batch 3: situational rule cards, stage 1 (2026-10-04)
 
@@ -163,25 +192,6 @@ model (DECISIONS 1.47.0) and the day's chance is the shared `roll100`.
   teaching first, arrivals, a teacher's routine, the dossier field and its rank, the Map row, initiative places). Full suite passes.
   UI checked in a local preview (the Map card's "Usually here", the dossier's Routine field).
 
-## v1.51.0 — Feature batch 3: NPCs seen together, story relations that fade, the living mystery board (2026-10-04)
-
-`audit/AUDIT_2026-10-03_4_batch_fitur.md` batch 3 (audit part 2, suggestions 4.8 and 4.9). Save fixture v1.50.0.
-- **Pair moments (4.8).** Two NPCs seen together the way Connections shows them to {{user}}: a friends, rivals or dislike line of
-  `data/relations.json` that {{user}} can see there (both met, the teller's rank, or a revealed relationship secret), both free by
-  whereabouts and neither in the scene; at most one a day (`$eng.pair`), 50% when one fits. A Meanwhile Journal line (Rank 7+ bond
-  unseen for a week, no Next plan) may be one ("Meanwhile: Cedric and Layla shared a table at the Lecture Halls."); a "nearby"
-  ambience beat at a place one of them haunts may be one ("Kotaro and Mimosa passing together, one teasing the other"). Templates in
-  `data/ambience.json` `pairs` (public behaviour only); the engine's relation list is `REL_PAIRS` (`gen_engine.py`).
-- **Story relations fade (4.8).** A `Campus_State.New_relations` line is renewed when the narrator rewrites it or the two share a
-  scene (`$eng.nrel`); four weeks without that, its Connections line fades; eight, it is no longer drawn (`$ui.relold`). The record stays.
-- **Traces (4.9).** The Map marks a pin "?" when a Clue of a thread that is not solved or cold names one of its places (`Clues.Where`),
-  with a hint under the map and the threads in the place sheet. Arriving at such a place may bring a trace beat (`data/ambience.json`
-  `trace_chance` 50%, once per thread per week): `<now>` names the thread and asks for one small sign true to the lore and the clues
-  found, never a solution and never new canon (DECISIONS "Rumours and stories as Clues": the engine invents no content).
-- **Tests:** `tests/test_feature_batch3_v1510.cjs` (14 checks); `test_audit_batch7_v1480` also skips the two recorded `<now>` whose
-  beat became a pair moment (marked `pair: 1`). Full suite passes. UI checked in a local preview (the "?" pin, the hint, the sheet line).
-- **To confirm with the owner:** the pair templates and rates (50%, one a day), the 4 / 8 week fade, the 50% trace chance.
-
 ## Release index (one line per release, oldest first)
 
 - All planned batches (1–5) are complete, plus post-release compatibility work, a bug-hunt round (v1.0.3), the world-systems release (v1.1.0: `docs/archive/SPEC_v1_1_0_world_systems.md`) and the fixes from the owner's first playtest notes (v1.2.0: Builder, bracelet, shop, calendar, map; v1.2.1: second round; CHANGELOG 1.2.0/1.2.1).
@@ -315,3 +325,4 @@ model (DECISIONS 1.47.0) and the day's chance is the shared `roll100`.
 - **v1.53.0 (2026-10-04):** Narrator-load batch 1: the first-pact rule reaches Occult students (T6), a correct 503 example and a 3-line Analysis, plain dates written back as calendar dates, one "the engine does these" list, deed pairs and the remedial taken by the engine, the Extras request in `<now>`.
 - **v1.53.1 (2026-10-04):** Narrator-load batch 2: `audit_chat.py --mechanics` and `replay_chat.cjs` (how the narrator handled the engine, replayed through the current engine); baseline from the owner's chats (Analysis 34% of the block, weather stamina in 7 of 13 rainy replies).
 - **v1.54.0 (2026-10-04):** Narrator-load batch 3: situational rule cards (entry 511, `data/rule_cards.json`, engine `ruleCards`) for Letters, Projects, Competition, Exams, Tutoring, Trip, Pacts and the first pact; alcohol rule as keyword entry 512 (−800 tokens per turn in ordinary scenes).
+- **v1.55.0 (2026-10-04):** Narrator-load batch 4: eleven more rule cards (Interactions, Trust/Tension, Imprints, Old Hut, Training, Practice, Dorm, Combat_role, favours, Notices, the Vigil) and a tighter 502 core (−2,500 tokens per turn alone against 1.53.1).

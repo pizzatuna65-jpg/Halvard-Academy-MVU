@@ -1,8 +1,8 @@
 {
  "rules": {
-  "proficiency": 245,
-  "planner": 234,
-  "notices": 98,
+  "proficiency": 105,
+  "planner": 152,
+  "notices": 54,
   "letters": 76,
   "mystery": 203,
   "competition": 87,
@@ -13,7 +13,7 @@
   "happenings": 73,
   "npc_routines": 0,
   "npc_initiative": 0,
-  "weather": 525,
+  "weather": 487,
   "class": 0,
   "hooks": 147,
   "gossip": 19,
@@ -27,7 +27,7 @@
   "study": 54,
   "say_colors": 183
  },
- "core_rules": 9916,
+ "core_rules": 8345,
  "lore": 9050,
  "price_guide": 5568,
  "live": {
