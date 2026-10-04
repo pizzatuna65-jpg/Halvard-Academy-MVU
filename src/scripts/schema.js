@@ -184,7 +184,8 @@ export const Schema = z.object({
     Milestones: Array.isArray(v.Milestones) ? v.Milestones.map(s).slice(-20) : [],
     Last_seen: s(v.Last_seen), _Event_ready: b(v._Event_ready),
     $xp: n(v.$xp, 0, 9999, 0), $cool: n(v.$cool, -1, 1e9, -1),   // 1.2.2: bond XP toward the next rank, first day the next event may start (engine)
-    $Known_old: Array.isArray(v.$Known_old) ? v.$Known_old.map(s).slice(-40) : [],   // 5.4: older facts, hidden from the AI, shown in the dossier
+    $Known_old: Array.isArray(v.$Known_old) ? v.$Known_old.map(s).slice(-100) : [],   // 5.4: older facts, hidden from the AI, shown in the dossier
+    $Known_q: Math.round(n(v.$Known_q, 0, 100, 0)),   // 1.63.0 (memory audit M5): how many of the newest $Known_old lines wait for a fold (engine)
     $tf: n(v.$tf, 0, 100, 0),   // 1.3.8: Tension decay carried between days (engine)
     $ms: Array.isArray(v.$ms) ? v.$ms.map(Number).filter(Number.isFinite).slice(-11) : [],   // 1.3.8: ranks whose reputation milestone was already paid
     $tdrop: n(v.$tdrop, -99, 1e9, -99),   // 1.4.3: day of the last Trust drop (a quiet week recovers it; engine)
@@ -197,7 +198,8 @@ export const Schema = z.object({
     Knows: Array.isArray(v.Knows) ? v.Knows.map(s).filter(Boolean).slice(-30) : [],   // what they know about {{user}}, and how (engine dates and trims to 15)
     Imprints: Array.isArray(v.Imprints) ? v.Imprints.filter(x => x && typeof x === 'object').map(x => ({ Belief: s(x.Belief), Weight: n(x.Weight, 0, 10, 5), When: s(x.When), From: s(x.From), Was: s(x.Was) })).slice(-8) : [],
     Next: v.Next && typeof v.Next === 'object' && !Array.isArray(v.Next) ? { What: s(v.Next.What), Where: s(v.Next.Where), Until: s(v.Next.Until) } : null,
-    $Knows_old: Array.isArray(v.$Knows_old) ? v.$Knows_old.map(s).slice(-40) : [],   // older Knows lines (engine)
+    $Knows_old: Array.isArray(v.$Knows_old) ? v.$Knows_old.map(s).slice(-100) : [],   // older Knows lines (engine)
+    $Knows_q: Math.round(n(v.$Knows_q, 0, 100, 0)),   // 1.63.0 (memory audit M5): how many of the newest $Knows_old lines wait for a fold (engine)
     $Defining: Array.isArray(v.$Defining) ? v.$Defining.filter(r => r && typeof r === 'object').map(r => ({ w: s(r.w), n: s(r.n), fx: s(r.fx), s: Number(r.s) || 0 })).slice(-5) : [],   // defining moments (engine)
     $seen: n(v.$seen, -1, 1e9, -1), $mw: n(v.$mw, -1, 1e9, -1),   // last day present; week of the last "Meanwhile" line (engine)
     $gifts: v.$gifts && typeof v.$gifts === 'object' && !Array.isArray(v.$gifts) ? Object.fromEntries(Object.entries(v.$gifts).slice(-24).map(([k,t]) => [k, ['loved','liked','neutral','disliked','hated'].includes(t) ? t : 'neutral'])) : {},
@@ -270,6 +272,11 @@ export const Schema = z.object({
   // 1.41.0: Sunreach Bay; Ride "carriage" or "boat" for this move, Bet {Game: dice|cards|wheel, Stake} at The Golden Tide (the engine
   // charges and settles them, then clears them)
   Sunreach: O({ Ride: Str(''), Bet: O({ Game: Str(''), Stake: Num(0, 100000, 0) }) }),
+  // 1.63.0 (memory audit M5): the story so far, older than the Journal: folds of Journal lines (L1), of folds (L2), one per campaign
+  // year (L3), written by the update model through the fold rule card and dated by the engine. 1.62.0 (M3): the pinned (!) lines that
+  // left the Journal's window. Both read-only for the AI (engine-written)
+  _Chronicle: StrList(60),
+  _Kept_from_earlier: StrList(20),
   Journal: StrList(40),   // "[M1 W1 Mon] turning point" — long-term memory (used by state-as-memory in 5.3). 1.61.0: the engine keeps 30
                           // (CAP.Journal); the schema allows 40 so the engine sees a reply's new lines and chooses which old line leaves (M2)
   Clues: Rec(v => ({
@@ -340,6 +347,7 @@ export const Schema = z.object({
     Effect: s(v.Effect), Uses: Math.round(n(v.Uses, 0, 99, 0)) }), 'Effect'),
 
   _Log: StrList(12),
+  Fold: z.coerce.string().prefault('').catch(''),   // 1.63.0 (memory audit M5): the fold the rule card asked for, this reply only (the engine stores it and empties it)
 
   $ui: O({
     unlocks: StrList(60),
@@ -402,6 +410,7 @@ export const Schema = z.object({
     now: z.any().prefault(null).catch(null),                          // 1.48.0 (audit 3.11): <now>'s engine-made lines (stepNow; 1.47.0's $ui.here is in now.pres)
     xold: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.6.1 (N5): Extras records that left the full list; given back if they return (engine)
     xgone: z.record(z.string(), z.any()).prefault({}).catch({}),      // 1.61.0 (memory audit M8): short records of Extras past xold { Who, Looks, Voice } (engine)
+    fold: z.any().prefault(null).catch(null),                         // 1.63.0 (memory audit M5): the fold request the rule card prints { k, who, label, max, lines, n, sig } (engine)
     cluearch: z.record(z.string(), z.any()).prefault({}).catch({}),   // 1.61.0 (memory audit M1): clues past the cap, for the Mystery panel (engine)
     say: z.record(z.string(), z.number().int().min(0).max(63)).prefault({}).catch({}),   // 1.37.1: dialogue colour of each character present now (engine)
     sayx: z.record(z.string(), z.array(z.number().int().min(0).max(63)).max(3)).prefault({}).catch({}),   // 1.37.2: an Extras character's three dialogue colours (engine)
@@ -443,6 +452,9 @@ export const Schema = z.object({
     auth: Str(''),   // 'builder' only inside a Student Builder patch; lets it write the read-only fields once
     tool: z.coerce.number().prefault(0).catch(0),   // 1.11.1: 1 inside a player-tool patch (Builder, Settings): not a story turn (engine resets it)
     seed: z.coerce.number().prefault(0).catch(0),   // 5.3: chat seed for happenings, set once by the engine
+    jq: z.array(z.coerce.string()).prefault([]).catch([]),        // 1.63.0 (memory audit M5): Journal lines that left the window, waiting for a fold (engine)
+    chron: z.array(z.any()).prefault([]).catch([]),               // 1.63.0: one { L: 1|2|3, y: campaign year } per _Chronicle entry (engine)
+    fold: z.any().prefault(null).catch(null),                     // 1.63.0: { sig, n } replies the current fold request has waited (engine)
     floor: z.coerce.number().prefault(-1).catch(-1),   // 1.61.0 (memory audit M9): the chat floor this state was made on (the MVU hook)
     prizes: StrList(20),   // 1.0.3: competition prizes already paid ("Kingdom-Y1")
     grads: StrList(10),    // 1.0.3: campaign years whose graduates already left ("Y1")

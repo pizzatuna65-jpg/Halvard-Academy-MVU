@@ -1,0 +1,1973 @@
+{
+ "World": {
+  "Year": 1,
+  "Month": 2,
+  "Week": 2,
+  "Day": "Sun",
+  "Time": "22:00",
+  "Location": "Viridian Dormitory",
+  "_Period": "Sunday (no classes)",
+  "_Curfew": "CURFEW (20:00-07:00): students must be in their own dorms",
+  "_Event_today": "",
+  "_Happening": "",
+  "_Season": "Spring",
+  "_Weather": "Night, spring: cloudy, 11 °C (cool)"
+ },
+ "Scene": {
+  "Present": {}
+ },
+ "Player": {
+  "Profile": {
+   "Name": "Aria Vale",
+   "Pronouns": "",
+   "Age": 18,
+   "Race": "Beastkin",
+   "Beast_type": "fox",
+   "Appearance": "",
+   "Personality": "Charming, curious, keeps every promise to the letter.",
+   "Background": "Merchant family",
+   "Birthday": "",
+   "Year": 1,
+   "Dorm": "Viridian",
+   "Dorm_rank": 0,
+   "Club": "",
+   "Council": false,
+   "Combat_role": "",
+   "Goal": "Earn a pact with a Greater spirit before graduation.",
+   "Reputation": {
+    "_Academy": 0,
+    "_Student": 1,
+    "_Doves": 0,
+    "$xp": {
+     "Academy": 0,
+     "Student": 18,
+     "Doves": 0
+    }
+   }
+  },
+  "Vitals": {
+   "HP": 100,
+   "HP_max": 100,
+   "Stamina": 100,
+   "Stamina_max": 100,
+   "Mana": 137.15,
+   "Mana_max": 137.15,
+   "Lethal_flag": false,
+   "Resting": "none",
+   "_Condition": "Healthy",
+   "_Fatigue": "Fresh"
+  },
+  "Injuries": {},
+  "Wallet": {
+   "Points": 600,
+   "Coin": 0,
+   "Transactions": [
+    "+300 starting allowance (first-year)",
+    "+300 monthly payout (dorm rank unranked)"
+   ]
+  },
+  "Academics": {
+   "Grades": {},
+   "Exams": {}
+  },
+  "_Proficiency": {
+   "Knowledge": 0,
+   "Arcana": 0,
+   "Craft": 0,
+   "Prowess": 0,
+   "Society": 2,
+   "Nature": 0
+  },
+  "Conditions": {},
+  "$Training": {
+   "mana": {
+    "base": 130,
+    "gain": 7.15,
+    "w": 5,
+    "wg": 1.3
+   },
+   "stamina": {
+    "base": 100,
+    "gain": 0,
+    "w": -1,
+    "wg": 0
+   }
+  }
+ },
+ "Magic": {
+  "_Techniques": {
+   "Glamour Veil": {
+    "Type": "Occult",
+    "Subtype": "Glamour",
+    "Effect": "A light illusion over your own face and clothes.",
+    "Cannot_do": "Fools the eye only; touch and Spirit Sight see through it.",
+    "Cost_mode": "sustained",
+    "Activation": 4,
+    "Upkeep_per_min": 0.1,
+    "Trigger": 0,
+    "Hidden": false,
+    "Forbidden": false,
+    "Notes": ""
+   },
+   "Summon Ember": {
+    "Type": "Occult",
+    "Subtype": "Spirit Pact",
+    "Effect": "Summons Ember (spirit pact, Basic). Ember is with you only while summoned. Ember's abilities: Flame Lash, Scent of Danger, Hearth Glow (each its own technique).",
+    "Cannot_do": "A spirit killed in combat takes an hour to a week to call back.",
+    "Cost_mode": "sustained",
+    "Activation": 10,
+    "Upkeep_per_min": 0.3,
+    "Trigger": 0,
+    "Hidden": false,
+    "Forbidden": false,
+    "Notes": "[pact] Ember"
+   },
+   "Ember: Flame Lash": {
+    "Type": "Occult",
+    "Subtype": "Spirit Pact",
+    "Effect": "A whip of fire from Ember, a few metres long; burns and drives back.",
+    "Cannot_do": "Nothing at range beyond about five metres.",
+    "Cost_mode": "per_use",
+    "Activation": 6,
+    "Upkeep_per_min": 0,
+    "Trigger": 0,
+    "Hidden": false,
+    "Forbidden": false,
+    "Notes": "[pact] Ember"
+   },
+   "Ember: Scent of Danger": {
+    "Type": "Occult",
+    "Subtype": "Spirit Pact",
+    "Effect": "Ember sniffs out hostile intent, smoke or poison within about twenty metres and warns you.",
+    "Cannot_do": "Only a sense of danger, never who or why.",
+    "Cost_mode": "per_use",
+    "Activation": 3,
+    "Upkeep_per_min": 0,
+    "Trigger": 0,
+    "Hidden": false,
+    "Forbidden": false,
+    "Notes": "[pact] Ember"
+   },
+   "Ember: Hearth Glow": {
+    "Type": "Occult",
+    "Subtype": "Spirit Pact",
+    "Effect": "Ember gives off steady light and warmth around you (dries clothes, keeps off the cold).",
+    "Cannot_do": "Not enough heat to hurt anyone.",
+    "Cost_mode": "sustained",
+    "Activation": 3,
+    "Upkeep_per_min": 0.15,
+    "Trigger": 0,
+    "Hidden": false,
+    "Forbidden": false,
+    "Notes": "[pact] Ember"
+   }
+  },
+  "_Affinity": {
+   "Types": [
+    "Occult"
+   ],
+   "Dominant": "Occult",
+   "Specialties": [
+    "Spirit Pact",
+    "Illusion"
+   ],
+   "Preset": "",
+   "Custom": {}
+  },
+  "Active": {},
+  "Casts": [],
+  "Pacts": {
+   "Ember": {
+    "Spirit": "Ember",
+    "Kind": "Spirit",
+    "Tier": "Basic",
+    "Presence": "summoned",
+    "Summoned": false,
+    "Terms": "Ember lends her fire and her nose for danger; in return a candle is lit for her every night.",
+    "Note": ""
+   }
+  }
+ },
+ "Hidden": {
+  "_True_magic": "",
+  "Cover_magic": "",
+  "Concealment": "",
+  "Known_by": [],
+  "Dove_attention": 0,
+  "_Stage": "Unnoticed"
+ },
+ "Bonds": {
+  "Etnie": {
+   "Rank": 4,
+   "Progress": 0,
+   "Trust": 73,
+   "Tension": 0,
+   "Title": "Self-declared big sister",
+   "Romance": false,
+   "Known_facts": [
+    "Third-year, Viridian (dog beastkin); insists she is {{user}}'s big sister"
+   ],
+   "Milestones": [
+    "Etnie decided {{user}} is her little sibling"
+   ],
+   "Last_seen": "M2 W2 Fri 18:00 at Boathouse and Lake",
+   "_Event_ready": false,
+   "$xp": 22,
+   "$cool": 33,
+   "$Known_old": [],
+   "$tf": 0,
+   "$ms": [],
+   "$tdrop": -99,
+   "$tlast": 0,
+   "$tbrk": 0,
+   "$hut": "",
+   "$Recent": [
+    {
+     "w": "M1 W2 Sat 16:30",
+     "n": "talked with Etnie on day 12 spent the afternoon with Etnie",
+     "fx": "XP +4"
+    },
+    {
+     "w": "M1 W3 Tue 16:30",
+     "n": "talked with Etnie on day 15 spent the afternoon with Etnie",
+     "fx": "XP +5"
+    },
+    {
+     "w": "M1 W3 Fri 16:30",
+     "n": "talked with Etnie on day 18 spent the afternoon with Etnie",
+     "fx": "XP +5"
+    },
+    {
+     "w": "M1 W4 Mon 16:30",
+     "n": "talked with Etnie on day 21 spent the afternoon with Etnie",
+     "fx": "XP +5"
+    },
+    {
+     "w": "M1 W4 Thu 16:30",
+     "n": "talked with Etnie on day 24 spent the afternoon with Etnie",
+     "fx": "XP +2"
+    },
+    {
+     "w": "M1 W4 Sun 16:30",
+     "n": "talked with Etnie on day 27 spent the afternoon with Etnie",
+     "fx": ""
+    },
+    {
+     "w": "M2 W1 Wed 16:30",
+     "n": "talked with Etnie on day 30 spent the afternoon with Etnie",
+     "fx": "Rank 3 → 4, XP +7, Trust +3"
+    },
+    {
+     "w": "M2 W1 Sat 16:30",
+     "n": "talked with Etnie on day 33 spent the afternoon with Etnie",
+     "fx": "XP +5"
+    },
+    {
+     "w": "M2 W2 Tue 16:30",
+     "n": "talked with Etnie on day 36 spent the afternoon with Etnie",
+     "fx": "XP +4"
+    },
+    {
+     "w": "M2 W2 Fri 16:30",
+     "n": "talked with Etnie on day 39 spent the afternoon with Etnie",
+     "fx": "XP +6"
+    }
+   ],
+   "Mind": "",
+   "Knows": [],
+   "Imprints": [],
+   "Next": null,
+   "$Knows_old": [],
+   "$Defining": [
+    {
+     "w": "M2 W1 Wed 16:30",
+     "n": "talked with Etnie on day 30 spent the afternoon with Etnie",
+     "fx": "Rank 3 → 4, XP +7, Trust +3",
+     "s": 3
+    }
+   ],
+   "$seen": 39,
+   "$mw": -1,
+   "$gifts": {},
+   "$branch": "",
+   "$gift_pending": false
+  },
+  "Kanae": {
+   "Rank": 2,
+   "Progress": 0,
+   "Trust": 46,
+   "Tension": 0,
+   "Title": "",
+   "Romance": false,
+   "Known_facts": [],
+   "Milestones": [],
+   "Last_seen": "M2 W2 Fri 18:00 at Boathouse and Lake",
+   "_Event_ready": true,
+   "$xp": 30,
+   "$cool": 20,
+   "$Known_old": [],
+   "$tf": 0,
+   "$ms": [],
+   "$tdrop": -99,
+   "$tlast": 0,
+   "$tbrk": 0,
+   "$hut": "",
+   "$Recent": [
+    {
+     "w": "M1 W2 Sat 16:30",
+     "n": "talked with Kanae on day 12 spent the afternoon with Kanae",
+     "fx": "XP +6"
+    },
+    {
+     "w": "M1 W3 Tue 16:30",
+     "n": "talked with Kanae on day 15 spent the afternoon with Kanae",
+     "fx": "XP +3"
+    },
+    {
+     "w": "M1 W3 Fri 16:30",
+     "n": "talked with Kanae on day 18 spent the afternoon with Kanae",
+     "fx": "Rank 1 → 2, XP +3, Trust +3"
+    },
+    {
+     "w": "M1 W4 Mon 16:30",
+     "n": "talked with Kanae on day 21 spent the afternoon with Kanae",
+     "fx": "XP +3"
+    },
+    {
+     "w": "M1 W4 Thu 16:30",
+     "n": "talked with Kanae on day 24 spent the afternoon with Kanae",
+     "fx": "XP +5"
+    },
+    {
+     "w": "M1 W4 Sun 16:30",
+     "n": "talked with Kanae on day 27 spent the afternoon with Kanae",
+     "fx": ""
+    },
+    {
+     "w": "M2 W1 Wed 16:30",
+     "n": "talked with Kanae on day 30 spent the afternoon with Kanae",
+     "fx": "XP +5"
+    },
+    {
+     "w": "M2 W1 Sat 16:30",
+     "n": "talked with Kanae on day 33 spent the afternoon with Kanae",
+     "fx": "XP +5"
+    },
+    {
+     "w": "M2 W2 Tue 16:30",
+     "n": "talked with Kanae on day 36 spent the afternoon with Kanae",
+     "fx": "XP +6"
+    },
+    {
+     "w": "M2 W2 Fri 16:30",
+     "n": "talked with Kanae on day 39 spent the afternoon with Kanae",
+     "fx": "XP +3"
+    }
+   ],
+   "Mind": "",
+   "Knows": [],
+   "Imprints": [],
+   "Next": null,
+   "$Knows_old": [],
+   "$Defining": [
+    {
+     "w": "M1 W1 Sun 16:30",
+     "n": "talked with Kanae on day 6 spent the afternoon with Kanae",
+     "fx": "Rank 0 → 1, XP +6, Trust +3",
+     "s": 3
+    },
+    {
+     "w": "M1 W3 Fri 16:30",
+     "n": "talked with Kanae on day 18 spent the afternoon with Kanae",
+     "fx": "Rank 1 → 2, XP +3, Trust +3",
+     "s": 3
+    }
+   ],
+   "$seen": 39,
+   "$mw": -1,
+   "$gifts": {},
+   "$branch": "",
+   "$gift_pending": false
+  },
+  "Rei": {
+   "Rank": 3,
+   "Progress": 0,
+   "Trust": 49,
+   "Tension": 0,
+   "Title": "",
+   "Romance": false,
+   "Known_facts": [],
+   "Milestones": [],
+   "Last_seen": "M2 W2 Fri 18:00 at Boathouse and Lake",
+   "_Event_ready": false,
+   "$xp": 6,
+   "$cool": 42,
+   "$Known_old": [],
+   "$tf": 0,
+   "$ms": [],
+   "$tdrop": -99,
+   "$tlast": 0,
+   "$tbrk": 0,
+   "$hut": "",
+   "$Recent": [
+    {
+     "w": "M1 W2 Sat 16:30",
+     "n": "talked with Rei on day 12 spent the afternoon with Rei",
+     "fx": "XP +4"
+    },
+    {
+     "w": "M1 W3 Tue 16:30",
+     "n": "talked with Rei on day 15 spent the afternoon with Rei",
+     "fx": "XP +5"
+    },
+    {
+     "w": "M1 W3 Fri 16:30",
+     "n": "talked with Rei on day 18 spent the afternoon with Rei",
+     "fx": "Rank 1 → 2, XP +7, Trust +3"
+    },
+    {
+     "w": "M1 W4 Mon 16:30",
+     "n": "talked with Rei on day 21 spent the afternoon with Rei",
+     "fx": "XP +5"
+    },
+    {
+     "w": "M1 W4 Thu 16:30",
+     "n": "talked with Rei on day 24 spent the afternoon with Rei",
+     "fx": "XP +5"
+    },
+    {
+     "w": "M1 W4 Sun 16:30",
+     "n": "talked with Rei on day 27 spent the afternoon with Rei",
+     "fx": ""
+    },
+    {
+     "w": "M2 W1 Wed 16:30",
+     "n": "talked with Rei on day 30 spent the afternoon with Rei",
+     "fx": "XP +5"
+    },
+    {
+     "w": "M2 W1 Sat 16:30",
+     "n": "talked with Rei on day 33 spent the afternoon with Rei",
+     "fx": "XP +7"
+    },
+    {
+     "w": "M2 W2 Tue 16:30",
+     "n": "talked with Rei on day 36 spent the afternoon with Rei",
+     "fx": "XP +1"
+    },
+    {
+     "w": "M2 W2 Fri 16:30",
+     "n": "talked with Rei on day 39 spent the afternoon with Rei",
+     "fx": "Rank 2 → 3, XP +6, Trust +3"
+    }
+   ],
+   "Mind": "",
+   "Knows": [],
+   "Imprints": [],
+   "Next": null,
+   "$Knows_old": [],
+   "$Defining": [
+    {
+     "w": "M1 W1 Sun 16:30",
+     "n": "talked with Rei on day 6 spent the afternoon with Rei",
+     "fx": "Rank 0 → 1, XP +6, Trust +3",
+     "s": 3
+    },
+    {
+     "w": "M1 W3 Fri 16:30",
+     "n": "talked with Rei on day 18 spent the afternoon with Rei",
+     "fx": "Rank 1 → 2, XP +7, Trust +3",
+     "s": 3
+    },
+    {
+     "w": "M2 W2 Fri 16:30",
+     "n": "talked with Rei on day 39 spent the afternoon with Rei",
+     "fx": "Rank 2 → 3, XP +6, Trust +3",
+     "s": 3
+    }
+   ],
+   "$seen": 39,
+   "$mw": -1,
+   "$gifts": {},
+   "$branch": "",
+   "$gift_pending": false
+  },
+  "Castor": {
+   "Rank": 3,
+   "Progress": 0,
+   "Trust": 49,
+   "Tension": 0,
+   "Title": "",
+   "Romance": false,
+   "Known_facts": [],
+   "Milestones": [],
+   "Last_seen": "M2 W2 Sat 18:00 at Canteen",
+   "_Event_ready": false,
+   "$xp": 12,
+   "$cool": 40,
+   "$Known_old": [],
+   "$tf": 0,
+   "$ms": [],
+   "$tdrop": -99,
+   "$tlast": 0,
+   "$tbrk": 0,
+   "$hut": "",
+   "$Recent": [
+    {
+     "w": "M1 W2 Sun 16:30",
+     "n": "talked with Castor on day 13 spent the afternoon with Castor",
+     "fx": "XP +5"
+    },
+    {
+     "w": "M1 W3 Wed 16:30",
+     "n": "talked with Castor on day 16 spent the afternoon with Castor",
+     "fx": "XP +1"
+    },
+    {
+     "w": "M1 W3 Sat 16:30",
+     "n": "talked with Castor on day 19 spent the afternoon with Castor",
+     "fx": "Rank 1 → 2, XP +8, Trust +3"
+    },
+    {
+     "w": "M1 W4 Tue 16:30",
+     "n": "talked with Castor on day 22 spent the afternoon with Castor",
+     "fx": "XP +3"
+    },
+    {
+     "w": "M1 W4 Fri 16:30",
+     "n": "talked with Castor on day 25 spent the afternoon with Castor",
+     "fx": "XP +6"
+    },
+    {
+     "w": "M2 W1 Mon 16:30",
+     "n": "talked with Castor on day 28 spent the afternoon with Castor",
+     "fx": "XP +7"
+    },
+    {
+     "w": "M2 W1 Thu 16:30",
+     "n": "talked with Castor on day 31 spent the afternoon with Castor",
+     "fx": "XP +5"
+    },
+    {
+     "w": "M2 W1 Sun 16:30",
+     "n": "talked with Castor on day 34 spent the afternoon with Castor",
+     "fx": "XP +1"
+    },
+    {
+     "w": "M2 W2 Wed 16:30",
+     "n": "talked with Castor on day 37 spent the afternoon with Castor",
+     "fx": "Rank 2 → 3, XP +7, Trust +3"
+    },
+    {
+     "w": "M2 W2 Sat 16:30",
+     "n": "talked with Castor on day 40 spent the afternoon with Castor",
+     "fx": "XP +5"
+    }
+   ],
+   "Mind": "",
+   "Knows": [],
+   "Imprints": [],
+   "Next": null,
+   "$Knows_old": [],
+   "$Defining": [
+    {
+     "w": "M1 W2 Mon 16:30",
+     "n": "talked with Castor on day 7 spent the afternoon with Castor",
+     "fx": "Rank 0 → 1, XP +5, Trust +3",
+     "s": 3
+    },
+    {
+     "w": "M1 W3 Sat 16:30",
+     "n": "talked with Castor on day 19 spent the afternoon with Castor",
+     "fx": "Rank 1 → 2, XP +8, Trust +3",
+     "s": 3
+    },
+    {
+     "w": "M2 W2 Wed 16:30",
+     "n": "talked with Castor on day 37 spent the afternoon with Castor",
+     "fx": "Rank 2 → 3, XP +7, Trust +3",
+     "s": 3
+    }
+   ],
+   "$seen": 40,
+   "$mw": -1,
+   "$gifts": {},
+   "$branch": "",
+   "$gift_pending": false
+  },
+  "Aiden": {
+   "Rank": 3,
+   "Progress": 0,
+   "Trust": 69,
+   "Tension": 0,
+   "Title": "",
+   "Romance": false,
+   "Known_facts": [],
+   "Milestones": [],
+   "Last_seen": "M2 W2 Sat 18:00 at Canteen",
+   "_Event_ready": false,
+   "$xp": 5,
+   "$cool": 43,
+   "$Known_old": [],
+   "$tf": 0,
+   "$ms": [],
+   "$tdrop": -99,
+   "$tlast": 0,
+   "$tbrk": 0,
+   "$hut": "",
+   "$Recent": [
+    {
+     "w": "M1 W2 Sun 16:30",
+     "n": "talked with Aiden on day 13 spent the afternoon with Aiden",
+     "fx": "XP +5"
+    },
+    {
+     "w": "M1 W3 Wed 16:30",
+     "n": "talked with Aiden on day 16 spent the afternoon with Aiden",
+     "fx": "XP +5"
+    },
+    {
+     "w": "M1 W3 Sat 16:30",
+     "n": "talked with Aiden on day 19 spent the afternoon with Aiden",
+     "fx": "XP +1"
+    },
+    {
+     "w": "M1 W4 Tue 16:30",
+     "n": "talked with Aiden on day 22 spent the afternoon with Aiden",
+     "fx": "Rank 1 → 2, XP +5, Trust +3"
+    },
+    {
+     "w": "M1 W4 Fri 16:30",
+     "n": "talked with Aiden on day 25 spent the afternoon with Aiden",
+     "fx": "XP +6"
+    },
+    {
+     "w": "M2 W1 Mon 16:30",
+     "n": "talked with Aiden on day 28 spent the afternoon with Aiden",
+     "fx": "XP +5"
+    },
+    {
+     "w": "M2 W1 Thu 16:30",
+     "n": "talked with Aiden on day 31 spent the afternoon with Aiden",
+     "fx": "XP +5"
+    },
+    {
+     "w": "M2 W1 Sun 16:30",
+     "n": "talked with Aiden on day 34 spent the afternoon with Aiden",
+     "fx": "XP +6"
+    },
+    {
+     "w": "M2 W2 Wed 16:30",
+     "n": "talked with Aiden on day 37 spent the afternoon with Aiden",
+     "fx": "XP +3"
+    },
+    {
+     "w": "M2 W2 Sat 16:30",
+     "n": "talked with Aiden on day 40 spent the afternoon with Aiden",
+     "fx": "Rank 2 → 3, XP +5, Trust +3"
+    }
+   ],
+   "Mind": "",
+   "Knows": [],
+   "Imprints": [],
+   "Next": null,
+   "$Knows_old": [],
+   "$Defining": [
+    {
+     "w": "M1 W2 Mon 16:30",
+     "n": "talked with Aiden on day 7 spent the afternoon with Aiden",
+     "fx": "Rank 0 → 1, XP +5, Trust +3",
+     "s": 3
+    },
+    {
+     "w": "M1 W4 Tue 16:30",
+     "n": "talked with Aiden on day 22 spent the afternoon with Aiden",
+     "fx": "Rank 1 → 2, XP +5, Trust +3",
+     "s": 3
+    },
+    {
+     "w": "M2 W2 Sat 16:30",
+     "n": "talked with Aiden on day 40 spent the afternoon with Aiden",
+     "fx": "Rank 2 → 3, XP +5, Trust +3",
+     "s": 3
+    }
+   ],
+   "$seen": 40,
+   "$mw": -1,
+   "$gifts": {},
+   "$branch": "",
+   "$gift_pending": false
+  },
+  "Irene": {
+   "Rank": 3,
+   "Progress": 0,
+   "Trust": 49,
+   "Tension": 0,
+   "Title": "",
+   "Romance": false,
+   "Known_facts": [],
+   "Milestones": [],
+   "Last_seen": "M2 W2 Sun 18:00 at Main Library",
+   "_Event_ready": false,
+   "$xp": 6,
+   "$cool": 44,
+   "$Known_old": [],
+   "$tf": 0,
+   "$ms": [],
+   "$tdrop": -99,
+   "$tlast": 0,
+   "$tbrk": 0,
+   "$hut": "",
+   "$Recent": [
+    {
+     "w": "M1 W3 Mon 16:30",
+     "n": "talked with Irene on day 14 spent the afternoon with Irene",
+     "fx": "XP +6"
+    },
+    {
+     "w": "M1 W3 Thu 16:30",
+     "n": "talked with Irene on day 17 spent the afternoon with Irene",
+     "fx": "XP +4"
+    },
+    {
+     "w": "M1 W3 Sun 16:30",
+     "n": "talked with Irene on day 20 spent the afternoon with Irene",
+     "fx": "Rank 1 → 2, XP +8, Trust +3"
+    },
+    {
+     "w": "M1 W4 Wed 16:30",
+     "n": "talked with Irene on day 23 spent the afternoon with Irene",
+     "fx": ""
+    },
+    {
+     "w": "M1 W4 Sat 16:30",
+     "n": "talked with Irene on day 26 spent the afternoon with Irene",
+     "fx": ""
+    },
+    {
+     "w": "M2 W1 Tue 16:30",
+     "n": "talked with Irene on day 29 spent the afternoon with Irene",
+     "fx": "XP +3"
+    },
+    {
+     "w": "M2 W1 Fri 16:30",
+     "n": "talked with Irene on day 32 spent the afternoon with Irene",
+     "fx": "XP +7"
+    },
+    {
+     "w": "M2 W2 Mon 16:30",
+     "n": "talked with Irene on day 35 spent the afternoon with Irene",
+     "fx": "XP +8"
+    },
+    {
+     "w": "M2 W2 Thu 16:30",
+     "n": "talked with Irene on day 38 spent the afternoon with Irene",
+     "fx": "XP +4"
+    },
+    {
+     "w": "M2 W2 Sun 16:30",
+     "n": "talked with Irene on day 41 spent the afternoon with Irene",
+     "fx": "Rank 2 → 3, XP +6, Trust +3"
+    }
+   ],
+   "Mind": "",
+   "Knows": [],
+   "Imprints": [],
+   "Next": null,
+   "$Knows_old": [],
+   "$Defining": [
+    {
+     "w": "M1 W2 Tue 16:30",
+     "n": "talked with Irene on day 8 spent the afternoon with Irene",
+     "fx": "Rank 0 → 1, XP +5, Trust +3",
+     "s": 3
+    },
+    {
+     "w": "M1 W3 Sun 16:30",
+     "n": "talked with Irene on day 20 spent the afternoon with Irene",
+     "fx": "Rank 1 → 2, XP +8, Trust +3",
+     "s": 3
+    },
+    {
+     "w": "M2 W2 Sun 16:30",
+     "n": "talked with Irene on day 41 spent the afternoon with Irene",
+     "fx": "Rank 2 → 3, XP +6, Trust +3",
+     "s": 3
+    }
+   ],
+   "$seen": 41,
+   "$mw": -1,
+   "$gifts": {},
+   "$branch": "",
+   "$gift_pending": false
+  },
+  "Zara": {
+   "Rank": 2,
+   "Progress": 0,
+   "Trust": 46,
+   "Tension": 0,
+   "Title": "",
+   "Romance": false,
+   "Known_facts": [],
+   "Milestones": [],
+   "Last_seen": "M2 W2 Sun 18:00 at Main Library",
+   "_Event_ready": false,
+   "$xp": 20,
+   "$cool": 34,
+   "$Known_old": [],
+   "$tf": 0,
+   "$ms": [],
+   "$tdrop": -99,
+   "$tlast": 0,
+   "$tbrk": 0,
+   "$hut": "",
+   "$Recent": [
+    {
+     "w": "M1 W3 Mon 16:30",
+     "n": "talked with Zara on day 14 spent the afternoon with Zara",
+     "fx": "XP +6"
+    },
+    {
+     "w": "M1 W3 Thu 16:30",
+     "n": "talked with Zara on day 17 spent the afternoon with Zara",
+     "fx": "XP +3"
+    },
+    {
+     "w": "M1 W3 Sun 16:30",
+     "n": "talked with Zara on day 20 spent the afternoon with Zara",
+     "fx": "XP +6"
+    },
+    {
+     "w": "M1 W4 Wed 16:30",
+     "n": "talked with Zara on day 23 spent the afternoon with Zara",
+     "fx": ""
+    },
+    {
+     "w": "M1 W4 Sat 16:30",
+     "n": "talked with Zara on day 26 spent the afternoon with Zara",
+     "fx": ""
+    },
+    {
+     "w": "M2 W1 Tue 16:30",
+     "n": "talked with Zara on day 29 spent the afternoon with Zara",
+     "fx": "XP +2"
+    },
+    {
+     "w": "M2 W1 Fri 16:30",
+     "n": "talked with Zara on day 32 spent the afternoon with Zara",
+     "fx": "Rank 1 → 2, XP +3, Trust +3"
+    },
+    {
+     "w": "M2 W2 Mon 16:30",
+     "n": "talked with Zara on day 35 spent the afternoon with Zara",
+     "fx": "XP +6"
+    },
+    {
+     "w": "M2 W2 Thu 16:30",
+     "n": "talked with Zara on day 38 spent the afternoon with Zara",
+     "fx": "XP +5"
+    },
+    {
+     "w": "M2 W2 Sun 16:30",
+     "n": "talked with Zara on day 41 spent the afternoon with Zara",
+     "fx": "XP +6"
+    }
+   ],
+   "Mind": "",
+   "Knows": [],
+   "Imprints": [],
+   "Next": null,
+   "$Knows_old": [],
+   "$Defining": [
+    {
+     "w": "M1 W2 Fri 16:30",
+     "n": "talked with Zara on day 11 spent the afternoon with Zara",
+     "fx": "Rank 0 → 1, XP +3, Trust +3",
+     "s": 3
+    },
+    {
+     "w": "M2 W1 Fri 16:30",
+     "n": "talked with Zara on day 32 spent the afternoon with Zara",
+     "fx": "Rank 1 → 2, XP +3, Trust +3",
+     "s": 3
+    }
+   ],
+   "$seen": 41,
+   "$mw": -1,
+   "$gifts": {},
+   "$branch": "",
+   "$gift_pending": false
+  },
+  "Caine": {
+   "Rank": 2,
+   "Progress": 0,
+   "Trust": 36,
+   "Tension": 0,
+   "Title": "",
+   "Romance": false,
+   "Known_facts": [],
+   "Milestones": [],
+   "Last_seen": "M2 W2 Sun 18:00 at Main Library",
+   "_Event_ready": true,
+   "$xp": 30,
+   "$cool": 22,
+   "$Known_old": [],
+   "$tf": 0,
+   "$ms": [],
+   "$tdrop": -99,
+   "$tlast": 0,
+   "$tbrk": 0,
+   "$hut": "",
+   "$Recent": [
+    {
+     "w": "M1 W3 Mon 16:30",
+     "n": "talked with Caine on day 14 spent the afternoon with Caine",
+     "fx": "XP +6"
+    },
+    {
+     "w": "M1 W3 Thu 16:30",
+     "n": "talked with Caine on day 17 spent the afternoon with Caine",
+     "fx": "XP +4"
+    },
+    {
+     "w": "M1 W3 Sun 16:30",
+     "n": "talked with Caine on day 20 spent the afternoon with Caine",
+     "fx": "Rank 1 → 2, XP +6, Trust +3"
+    },
+    {
+     "w": "M1 W4 Wed 16:30",
+     "n": "talked with Caine on day 23 spent the afternoon with Caine",
+     "fx": ""
+    },
+    {
+     "w": "M1 W4 Sat 16:30",
+     "n": "talked with Caine on day 26 spent the afternoon with Caine",
+     "fx": ""
+    },
+    {
+     "w": "M2 W1 Tue 16:30",
+     "n": "talked with Caine on day 29 spent the afternoon with Caine",
+     "fx": "XP +5"
+    },
+    {
+     "w": "M2 W1 Fri 16:30",
+     "n": "talked with Caine on day 32 spent the afternoon with Caine",
+     "fx": "XP +5"
+    },
+    {
+     "w": "M2 W2 Mon 16:30",
+     "n": "talked with Caine on day 35 spent the afternoon with Caine",
+     "fx": "XP +6"
+    },
+    {
+     "w": "M2 W2 Thu 16:30",
+     "n": "talked with Caine on day 38 spent the afternoon with Caine",
+     "fx": "XP +7"
+    },
+    {
+     "w": "M2 W2 Sun 16:30",
+     "n": "talked with Caine on day 41 spent the afternoon with Caine",
+     "fx": "XP +1"
+    }
+   ],
+   "Mind": "",
+   "Knows": [],
+   "Imprints": [],
+   "Next": null,
+   "$Knows_old": [],
+   "$Defining": [
+    {
+     "w": "M1 W2 Tue 16:30",
+     "n": "talked with Caine on day 8 spent the afternoon with Caine",
+     "fx": "Rank 0 → 1, XP +5, Trust +3",
+     "s": 3
+    },
+    {
+     "w": "M1 W3 Sun 16:30",
+     "n": "talked with Caine on day 20 spent the afternoon with Caine",
+     "fx": "Rank 1 → 2, XP +6, Trust +3",
+     "s": 3
+    }
+   ],
+   "$seen": 41,
+   "$mw": -1,
+   "$gifts": {},
+   "$branch": "",
+   "$gift_pending": false
+  }
+ },
+ "Campus_State": {
+  "Entrance_tour": {
+   "Year": 1,
+   "Guide": "Etnie",
+   "FirstYears": [
+    "Zara"
+   ]
+  },
+  "Council": {
+   "Candidates": {
+    "1": {
+     "First": "Florian",
+     "Second": "Dante"
+    }
+   },
+   "Results": {},
+   "Members": [
+    "Irene",
+    "Caspian",
+    "Florian",
+    "Dante"
+   ],
+   "President": "Irene",
+   "VicePresident": "Caspian",
+   "PresidentElect": "",
+   "VicePresidentElect": ""
+  },
+  "Events": {
+   "Library flood": {
+    "Text": "The west wing of the Main Library is closed after a burst pipe.",
+    "Updated": "M1 W1 Thu",
+    "$d": 3
+   }
+  },
+  "Rumours": [],
+  "Location_changes": {},
+  "Lore_changes": {},
+  "NPC_status": {},
+  "New_relations": {},
+  "Secrets_revealed": [],
+  "Graduated": []
+ },
+ "Extras": {},
+ "Commitments": {
+  "Herbology essay": {
+   "Desc": "two pages",
+   "Due": "M2 W2 Mon 09:00",
+   "With": "",
+   "Type": "assignment",
+   "Where": "",
+   "Item": "",
+   "_When": "overdue",
+   "_Late": true,
+   "$abs": 50940
+  }
+ },
+ "Notices": {},
+ "Letters": {},
+ "Competition": {
+  "Tier": "",
+  "Status": "",
+  "Placement": "",
+  "Team": [],
+  "Results": []
+ },
+ "Projects": {},
+ "Trip": {
+  "Active": false,
+  "Destination": "",
+  "Companions": [],
+  "Note": ""
+ },
+ "Expedition": {
+  "Caught": false
+ },
+ "Avalon": {
+  "Ride": false
+ },
+ "Sunreach": {
+  "Ride": "",
+  "Bet": {
+   "Game": "",
+   "Stake": 0
+  }
+ },
+ "Journal": [
+  "[M1 W2 Sat] day 12",
+  "[M1 W2 Sun] day 13",
+  "[M1 W3 Mon] day 14",
+  "[M1 W3 Tue] day 15",
+  "[M1 W3 Wed] day 16",
+  "[M1 W3 Thu] day 17",
+  "[M1 W3 Fri] day 18",
+  "[M1 W3 Sat] day 19",
+  "[M1 W3 Sun] day 20",
+  "[M1 W4 Mon] day 21",
+  "[M1 W4 Tue] day 22",
+  "[M1 W4 Wed] day 23",
+  "[M1 W4 Thu] day 24",
+  "[M1 W4 Fri] day 25",
+  "[M1 W4 Sat] day 26",
+  "[M1 W4 Sun] day 27",
+  "[M2 W1 Mon] day 28",
+  "[M2 W1 Tue] day 29",
+  "[M2 W1 Wed] day 30",
+  "[M2 W1 Thu] day 31",
+  "[M2 W1 Fri] day 32",
+  "[M2 W1 Sat] day 33",
+  "[M2 W1 Sun] day 34",
+  "[M2 W2 Mon] day 35",
+  "[M2 W2 Tue] day 36",
+  "[M2 W2 Wed] day 37",
+  "[M2 W2 Thu] day 38",
+  "[M2 W2 Fri] day 39",
+  "[M2 W2 Sat] day 40",
+  "[M2 W2 Sun] day 41"
+ ],
+ "Clues": {
+  "Wet footprints": {
+   "Thread": "Unsorted clues",
+   "Detail": "",
+   "Where": "",
+   "Found": "M1 W1 Thu",
+   "Source": "",
+   "Links": []
+  }
+ },
+ "Mysteries": {
+  "Unsorted clues": {
+   "Status": "open",
+   "Summary": ""
+  }
+ },
+ "Battle": {
+  "Active": false,
+  "Combatants": {}
+ },
+ "Inventory": {
+  "Sunfizz": {
+   "Qty": 2,
+   "Kind": "other",
+   "Note": "",
+   "Plan": ""
+  }
+ },
+ "Hooks": {},
+ "Interactions": [],
+ "Practice": [],
+ "Purchases": [],
+ "Craft_sales": [],
+ "Rep_events": [],
+ "Training": [],
+ "Perk_use": [],
+ "Exam_events": [],
+ "Tutoring": [],
+ "Consumables": [],
+ "Exposure": [],
+ "_Perks": {},
+ "_Log": [
+  "[M2 W2 Thu 18:00] Rank change for Irene reverted: the engine deepens bonds after a real interaction, never by a direct rank write.",
+  "[M2 W2 Fri 16:30] Walked Viridian Dormitory → Boathouse and Lake: 24 min on foot, -2% stamina.",
+  "[M2 W2 Fri 16:30] Society proficiency +1 (social interaction); 35/150 XP.",
+  "[M2 W2 Fri 18:00] {{user}} is now Soaked (caught out in the rain).",
+  "[M2 W2 Fri 18:00] {{user}} is now Chilled (8 °C outdoors).",
+  "[M2 W2 Fri 18:00] Rank change for Kanae reverted: the engine deepens bonds after a real interaction, never by a direct rank write.",
+  "[M2 W2 Fri 22:00] Walked Boathouse and Lake → Viridian Dormitory: 24 min on foot, -2% stamina.",
+  "[M2 W2 Sat 16:30] {{user}} slept through the night (read from the time skip; write Resting \"awake\" for an all-nighter).",
+  "[M2 W2 Sat 16:30] Society proficiency +1 (social interaction); 36/150 XP.",
+  "[M2 W2 Sun 16:30] {{user}} slept through the night (read from the time skip; write Resting \"awake\" for an all-nighter).",
+  "[M2 W2 Sun 18:00] Rank change for Caine reverted: the engine deepens bonds after a real interaction, never by a direct rank write.",
+  "[M2 W2 Sun 18:00] Knowledge proficiency +1 (study time); 8/150 XP."
+ ],
+ "$ui": {
+  "unlocks": [
+   "pacts",
+   "notices",
+   "planner",
+   "mystery",
+   "inventory",
+   "conditions"
+  ],
+  "discovered": [
+   "Reception and Gatehouse",
+   "Canteen",
+   "Viridian Dormitory",
+   "Main Library",
+   "Courtyards",
+   "Boathouse and Lake"
+  ],
+  "lore": [
+   "207",
+   "208",
+   "224",
+   "211"
+  ],
+  "toasts": [],
+  "built": true,
+  "names": [],
+  "happenings": "normal",
+  "hap": null,
+  "rest": null,
+  "archive": [
+   "[M1 W1 Mon] Arrived at Halvard Academy as a first-year.",
+   "[M1 W1 Mon] Sorted into the Viridian Dormitory by the Arbiter Stone.",
+   "[M1 W1 Mon] Etnie decided {{user}} is her little sibling.",
+   "[M1 W1 Mon] Toured the grounds on Entrance Day with Zara, guided by Etnie.",
+   "[M1 W1 Mon] day 0",
+   "[M1 W1 Tue] day 1",
+   "[M1 W1 Wed] day 2",
+   "[M1 W1 Thu] day 3",
+   "[M1 W1 Fri] day 4",
+   "[M1 W1 Sat] day 5",
+   "[M1 W1 Sun] day 6",
+   "[M1 W2 Mon] day 7",
+   "[M1 W2 Tue] day 8",
+   "[M1 W2 Wed] day 9",
+   "[M1 W2 Thu] day 10",
+   "[M1 W2 Fri] day 11"
+  ],
+  "jnotes": [
+   "[M1 W1 Sun] Bond with Kanae deepened to Rank 1.",
+   "[M1 W1 Sun] Bond with Rei deepened to Rank 1.",
+   "[M1 W2 Mon] Week recap (M1 W1): Kanae reached Rank 1; Rei reached Rank 1.",
+   "[M1 W2 Mon] Bond with Castor deepened to Rank 1.",
+   "[M1 W2 Mon] Bond with Aiden deepened to Rank 1.",
+   "[M1 W2 Tue] Bond with Irene deepened to Rank 1.",
+   "[M1 W2 Tue] Bond with Caine deepened to Rank 1.",
+   "[M1 W2 Thu] Society reached Rank 1 (Minds the forms).",
+   "[M1 W2 Fri] Bond with Zara deepened to Rank 1.",
+   "[M1 W3 Mon] Week recap (M1 W2): Castor reached Rank 1; Aiden reached Rank 1; Irene reached Rank 1; Caine reached Rank 1; Zara reached Rank 1.",
+   "[M1 W3 Fri] Bond with Kanae deepened to Rank 2.",
+   "[M1 W3 Fri] Bond with Rei deepened to Rank 2.",
+   "[M1 W3 Sat] Bond with Castor deepened to Rank 2.",
+   "[M1 W3 Sun] Bond with Irene deepened to Rank 2.",
+   "[M1 W3 Sun] Bond with Caine deepened to Rank 2.",
+   "[M1 W4 Mon] Week recap (M1 W3): Kanae reached Rank 2; Rei reached Rank 2; Castor reached Rank 2; Irene reached Rank 2; Caine reached Rank 2.",
+   "[M1 W4 Tue] Bond with Aiden deepened to Rank 2.",
+   "[M2 W1 Mon] Week recap (M1 W4): Aiden reached Rank 2.",
+   "[M2 W1 Wed] Bond with Etnie deepened to Rank 4.",
+   "[M2 W1 Fri] Bond with Zara deepened to Rank 2.",
+   "[M2 W1 Sat] Society reached Rank 2 (Poised).",
+   "[M2 W2 Mon] Week recap (M2 W1): Etnie reached Rank 4; Zara reached Rank 2.",
+   "[M2 W2 Mon] Student reputation rose to +1.",
+   "[M2 W2 Wed] Bond with Castor deepened to Rank 3.",
+   "[M2 W2 Fri] Bond with Rei deepened to Rank 3.",
+   "[M2 W2 Sat] Bond with Aiden deepened to Rank 3.",
+   "[M2 W2 Sun] Bond with Irene deepened to Rank 3."
+  ],
+  "secrets": [],
+  "wxfx": "full",
+  "ambience": "full",
+  "amb": {
+   "place": "Viridian Dormitory",
+   "crowd": "busy",
+   "light": "lanterns at their night burn",
+   "cue": "the fire or lamps in the common room",
+   "beat": null,
+   "unc": null
+  },
+  "moods": {
+   "Irene": {
+    "mood": "Bad"
+   },
+   "Etnie": {
+    "mood": "Bad"
+   },
+   "Kanae": {
+    "mood": "Good"
+   },
+   "Aiden": {
+    "mood": "Good"
+   },
+   "Zara": {
+    "mood": "Normal"
+   },
+   "Castor": {
+    "mood": "Bad"
+   },
+   "Rei": {
+    "mood": "Normal"
+   },
+   "Caine": {
+    "mood": "Normal"
+   }
+  },
+  "sleep": {
+   "late": 0,
+   "loss": 0,
+   "vigil": false,
+   "nights": 0,
+   "flavor": false
+  },
+  "party": null,
+  "training": "",
+  "wx": {
+   "mode": "full",
+   "season": "Spring",
+   "away": false,
+   "forest": false,
+   "block": 2,
+   "now": {
+    "sky": "Cloudy",
+    "rain": "",
+    "snow": false,
+    "wind": "",
+    "rare": "",
+    "temp": 11,
+    "label": "cool"
+   },
+   "text": "cloudy",
+   "blocks": [
+    {
+     "sky": "Rain",
+     "rain": "steady",
+     "snow": false,
+     "wind": "",
+     "rare": "",
+     "temp": 11,
+     "label": "cool"
+    },
+    {
+     "sky": "Rain",
+     "rain": "light",
+     "snow": false,
+     "wind": "",
+     "rare": "",
+     "temp": 17,
+     "label": "mild"
+    },
+    {
+     "sky": "Cloudy",
+     "rain": "",
+     "snow": false,
+     "wind": "",
+     "rare": "",
+     "temp": 11,
+     "label": "cool"
+    }
+   ],
+   "fc": {
+    "day": 42,
+    "tomorrow": true,
+    "blocks": [
+     {
+      "sky": "Cloudy",
+      "text": "cloudy",
+      "label": "cool"
+     },
+     {
+      "sky": "Cloudy",
+      "text": "cloudy",
+      "label": "cool"
+     },
+     {
+      "sky": "Rain",
+      "text": "rain",
+      "label": "cold"
+     }
+    ]
+   },
+   "flu": false,
+   "sick": [],
+   "field": "",
+   "wind": ""
+  },
+  "rumours_old": [],
+  "gossip": [],
+  "off": [],
+  "on": {
+   "proficiency": true,
+   "planner": true,
+   "notices": true,
+   "letters": true,
+   "mystery": true,
+   "competition": true,
+   "projects": true,
+   "trip": true,
+   "battle": true,
+   "inventory": true,
+   "happenings": true,
+   "npc_routines": true,
+   "npc_initiative": true,
+   "weather": true,
+   "class": true,
+   "hooks": true,
+   "gossip": true,
+   "fortune": true,
+   "attendance": true,
+   "recap": true,
+   "routine_week": true,
+   "small_scenes": true,
+   "ambience": true,
+   "reminders": true,
+   "study": true,
+   "say_colors": true,
+   "wxfull": true
+  },
+  "parked": {},
+  "file": {
+   "Mana_max": 130,
+   "Affinity": {
+    "Types": [
+     "Occult"
+    ],
+    "Dominant": "Occult",
+    "Specialties": [
+     "Spirit Pact",
+     "Illusion"
+    ],
+    "Preset": "",
+    "Custom": {}
+   },
+   "Techniques": {
+    "Glamour Veil": {
+     "Type": "Occult",
+     "Subtype": "Glamour",
+     "Effect": "A light illusion over your own face and clothes.",
+     "Cannot_do": "Fools the eye only; touch and Spirit Sight see through it.",
+     "Cost_mode": "sustained",
+     "Activation": 4,
+     "Upkeep_per_min": 0.1,
+     "Trigger": 0,
+     "Hidden": false,
+     "Forbidden": false,
+     "Notes": ""
+    },
+    "Summon Ember": {
+     "Type": "Occult",
+     "Subtype": "Spirit Pact",
+     "Cost_mode": "sustained",
+     "Effect": "Summons Ember (spirit pact, Basic). Ember is with you only while summoned. Ember's abilities: Flame Lash, Scent of Danger, Hearth Glow (each its own technique).",
+     "Cannot_do": "A spirit killed in combat takes an hour to a week to call back.",
+     "Activation": 10,
+     "Upkeep_per_min": 0.3,
+     "Trigger": 0,
+     "Hidden": false,
+     "Forbidden": false,
+     "Notes": "[pact] Ember"
+    },
+    "Ember: Flame Lash": {
+     "Type": "Occult",
+     "Subtype": "Spirit Pact",
+     "Effect": "A whip of fire from Ember, a few metres long; burns and drives back.",
+     "Cannot_do": "Nothing at range beyond about five metres.",
+     "Cost_mode": "per_use",
+     "Activation": 6,
+     "Upkeep_per_min": 0,
+     "Trigger": 0,
+     "Hidden": false,
+     "Forbidden": false,
+     "Notes": "[pact] Ember"
+    },
+    "Ember: Scent of Danger": {
+     "Type": "Occult",
+     "Subtype": "Spirit Pact",
+     "Effect": "Ember sniffs out hostile intent, smoke or poison within about twenty metres and warns you.",
+     "Cannot_do": "Only a sense of danger, never who or why.",
+     "Cost_mode": "per_use",
+     "Activation": 3,
+     "Upkeep_per_min": 0,
+     "Trigger": 0,
+     "Hidden": false,
+     "Forbidden": false,
+     "Notes": "[pact] Ember"
+    },
+    "Ember: Hearth Glow": {
+     "Type": "Occult",
+     "Subtype": "Spirit Pact",
+     "Effect": "Ember gives off steady light and warmth around you (dries clothes, keeps off the cold).",
+     "Cannot_do": "Not enough heat to hurt anyone.",
+     "Cost_mode": "sustained",
+     "Activation": 3,
+     "Upkeep_per_min": 0.15,
+     "Trigger": 0,
+     "Hidden": false,
+     "Forbidden": false,
+     "Notes": "[pact] Ember"
+    }
+   },
+   "True_magic": ""
+  },
+  "marks": {},
+  "plan": null,
+  "relold": null,
+  "routine": null,
+  "bondpace": "standard",
+  "romrank": 8,
+  "bev": {},
+  "rank_cues": [],
+  "rank_access": {
+   "dorms": [],
+   "staff": []
+  },
+  "close": [
+   "Kanae",
+   "Caine"
+  ],
+  "initiative": null,
+  "exam": null,
+  "ranknews": null,
+  "grades": {
+   "label": "Y1 M3 Midterm",
+   "set": false,
+   "tier": "excellent",
+   "h": 39,
+   "marks": {
+    "Magic Theory": "B",
+    "History": "B",
+    "Etiquette": "B",
+    "Potion Crafting": "C",
+    "Dark Magic Defense": "C",
+    "Practical Magic": "C",
+    "Creature Studies": "C"
+   },
+   "why": {
+    "Magic Theory": "excellent preparation 50 · Arcana Rank 0 0 · attended 100% 20 = 70: B",
+    "History": "excellent preparation 50 · Knowledge Rank 0 0 · attended 100% 20 = 70: B",
+    "Etiquette": "excellent preparation 50 · Society Rank 2 12 · attended 100% 20 = 82: B",
+    "Potion Crafting": "excellent preparation 30 · Craft Rank 0 0 · attended 100% 20 = 50: D; no class skipped: at least C",
+    "Dark Magic Defense": "excellent preparation 30 · Arcana Rank 0 0 · attended 100% 20 = 50: D; no class skipped: at least C",
+    "Practical Magic": "excellent preparation 30 · Prowess Rank 0 0 · attended 100% 20 = 50: D; no class skipped: at least C",
+    "Creature Studies": "excellent preparation 30 · Nature Rank 0 0 · attended 100% 20 = 50: D; no class skipped: at least C"
+   },
+   "run": "",
+   "stand": {}
+  },
+  "posted": null,
+  "absent": null,
+  "free": null,
+  "leave": null,
+  "missed": [],
+  "fortune": {
+   "roll": 100,
+   "fail": 10,
+   "part": 35,
+   "mods": [
+    "with students +5",
+    "proficiency: Society +6"
+   ],
+   "active": []
+  },
+  "practice": [
+   {
+    "action": "Knit or sew, sketch or paint, carve, calligraphy",
+    "stat": "Craft",
+    "locked": "materials in Bag"
+   }
+  ],
+  "craft": [],
+  "craft_sale": null,
+  "mastery": null,
+  "prof_offer": false,
+  "since": [],
+  "maybe": [],
+  "now": {
+   "people": {},
+   "visit": "{{user}} has been to Viridian Dormitory before.",
+   "area": [],
+   "pres": [
+    "Presence: after curfew most students are in their own dorms; out are staff, patrols, and students sneaking out (only those whose personality allows it)."
+   ],
+   "walk": [
+    "Walks from here (minutes on foot, the shortest way on the Campus Map): Light Dormitory 3, Arbiter Hall 4, Staff Quarters 4, Gardens 4, Main Courtyard 6, Archery Range 6, Founder's Park 6, Menagerie 7, Medical Centre 8, Mail Tower 8. When {{user}} goes somewhere, advance the clock by the walk."
+   ],
+   "amb": [
+    "Ambience at Viridian Dormitory: busy, lanterns at their night burn. Sensory cue (write your own detail, once): the fire or lamps in the common room."
+   ],
+   "rules": [
+    "exams",
+    "combat_role"
+   ]
+  },
+  "xold": {},
+  "xgone": {},
+  "cluearch": {},
+  "say": {},
+  "sayx": {},
+  "stale": [
+   [
+    "Library flood",
+    "M1 W1 Thu"
+   ]
+  ],
+  "phase": null,
+  "cast": {
+   "full": [],
+   "brief": [],
+   "spoke": [],
+   "gone": [],
+   "ment": [],
+   "where": {},
+   "extras": [],
+   "xnew": []
+  },
+  "perks_used": [],
+  "perks_grad": {},
+  "next": null,
+  "agenda": [
+   {
+    "d": -6,
+    "k": "commitment",
+    "t": "Herbology essay",
+    "on": "M2 W2 Mon",
+    "at": "09:00",
+    "s": "overdue"
+   },
+   {
+    "d": 3,
+    "k": "event",
+    "t": "Creature Studies Expedition (off-grounds, Grade III country)",
+    "on": "M2 W3 Wed",
+    "to": "Fri",
+    "te": 5
+   }
+  ],
+  "portrait": "",
+  "tsusp": [],
+  "area": {
+   "forest": {
+    "on": false,
+    "seen": [],
+    "hist": {}
+   },
+   "avalon": {
+    "on": false,
+    "seen": [],
+    "castle": false,
+    "coin": ""
+   },
+   "airship": {
+    "on": false
+   },
+   "sunreach": {
+    "on": false,
+    "seen": [],
+    "coin": ""
+   },
+   "campus": {
+    "on": true,
+    "at": "viridian_dormitory",
+    "name": "Viridian Dormitory",
+    "pin": "Viridian Dormitory",
+    "owe": 0
+   }
+  },
+  "tune": {}
+ },
+ "$eng": {
+  "abs": 60360,
+  "late": 0,
+  "sleep": {
+   "awake": 0,
+   "run": 0,
+   "paid": false,
+   "vigilUntil": -1,
+   "crash": 0,
+   "lastNight": -1
+  },
+  "daily": {
+   "Irene": {
+    "day": 41,
+    "talk": 1,
+    "hangout": 1,
+    "wx": 1
+   },
+   "Zara": {
+    "day": 41,
+    "talk": 1,
+    "hangout": 1,
+    "wx": 1
+   },
+   "Caine": {
+    "day": 41,
+    "talk": 1,
+    "hangout": 1,
+    "wx": 1
+   }
+  },
+  "prof": {
+   "xp": {
+    "Knowledge": 8,
+    "Arcana": 0,
+    "Craft": 0,
+    "Prowess": 0,
+    "Society": 36,
+    "Nature": 0
+   },
+   "wk": {
+    "w": 5,
+    "classes": {
+     "Magic Theory": true,
+     "History": true,
+     "Practical Magic": true,
+     "Dark Magic Defense": true,
+     "Potion Crafting": true,
+     "Etiquette": true,
+     "Creature Studies": true
+    },
+    "missed": {},
+    "paid": 0,
+    "Society": 6,
+    "Knowledge": 2
+   },
+   "days": {
+    "society": 41
+   },
+   "picked": true,
+   "mastery": {},
+   "study": 30
+  },
+  "craft": null,
+  "pactPlay": "",
+  "home": {},
+  "agenda": {
+   "when": {},
+   "st": {
+    "c:Herbology essay": "overdue"
+   }
+  },
+  "area": {
+   "campus": {
+    "d": 41,
+    "owe": 0
+   }
+  },
+  "comp": null,
+  "promise": {
+   "late": []
+  },
+  "pair": {},
+  "first": {},
+  "nrel": {},
+  "profv": 1,
+  "trip": 0,
+  "initiative": {
+   "last": {
+    "Etnie": 37,
+    "Castor": 38
+   },
+   "week": 5,
+   "count": 2,
+   "day": 41,
+   "id": "",
+   "done": false,
+   "used": {
+    "Etnie": [
+     "0|the Grassy Field and Hills",
+     "0|the Main Courtyard",
+     "5|the Study Rooms",
+     "0|Main Library",
+     "5|the Main Courtyard"
+    ],
+    "Castor": [
+     "0|the Gardens"
+    ]
+   },
+   "askDay": 38,
+   "askId": "Castor",
+   "ask": "wants something from {{user}} and chooses the Gardens to ask for it",
+   "fav": null,
+   "fw": 5,
+   "fn": 0
+  },
+  "auth": "",
+  "tool": 0,
+  "seed": 431180970,
+  "floor": -1,
+  "prizes": [],
+  "grads": [],
+  "bdays": [],
+  "cohorts": [],
+  "ver": "1.61.1",
+  "repw": {
+   "w": 5,
+   "Student": 4
+  },
+  "doveweek": {
+   "w": 5,
+   "raised": false
+  },
+  "heals": {},
+  "repv": 1,
+  "rum": {},
+  "wxs": {
+   "wet": 0,
+   "cold": 0,
+   "hot": 0,
+   "dry": 3000,
+   "exp": 39,
+   "hc": -1000000000,
+   "buff": {}
+  },
+  "mrem": 0,
+  "turn": 128,
+  "missed": {},
+  "att": {
+   "p": {},
+   "c": {},
+   "done": {}
+  },
+  "wk": {
+   "w": 5,
+   "p0": 600,
+   "ranks": [
+    "Castor reached Rank 3",
+    "Rei reached Rank 3",
+    "Aiden reached Rank 3",
+    "Irene reached Rank 3"
+   ],
+   "rep": [
+    "Student +1"
+   ],
+   "skipped": 0,
+   "periods": 0
+  },
+  "wkloss": -1,
+  "amb": {
+   "cue": {
+    "canteen": [
+     [
+      19,
+      40
+     ],
+     [
+      2,
+      40
+     ]
+    ],
+    "viridian dormitory": [
+     [
+      4,
+      39
+     ],
+     [
+      20,
+      40
+     ],
+     [
+      21,
+      41
+     ]
+    ],
+    "main library": [
+     [
+      10,
+      41
+     ],
+     [
+      11,
+      41
+     ]
+    ],
+    "courtyards": [
+     [
+      23,
+      38
+     ],
+     [
+      24,
+      38
+     ]
+    ],
+    "boathouse and lake": [
+     [
+      40,
+      39
+     ],
+     [
+      5,
+      39
+     ]
+    ]
+   },
+   "beat": {
+    "gate": [
+     [
+      71,
+      0
+     ]
+    ],
+    "dining": [
+     [
+      35,
+      36
+     ]
+    ],
+    "dorm_social": [
+     [
+      5,
+      35
+     ],
+     [
+      41,
+      36
+     ],
+     [
+      0,
+      38
+     ],
+     [
+      40,
+      40
+     ]
+    ],
+    "lake": [
+     [
+      95,
+      39
+     ],
+     [
+      93,
+      39
+     ]
+    ],
+    "study": [
+     [
+      23,
+      33
+     ]
+    ],
+    "hub": [
+     [
+      2,
+      34
+     ],
+     [
+      9,
+      34
+     ]
+    ]
+   },
+   "unc": {
+    "last": {
+     "library_sleep": 17
+    },
+    "w": 2
+   },
+   "last": 60360,
+   "trace": {},
+   "lore": 24
+  },
+  "study": {
+   "key": "Y1M3",
+   "mins": 2310,
+   "grace": false,
+   "hist": {},
+   "skip": {},
+   "cap": {},
+   "shift": {},
+   "res": {},
+   "marks": {},
+   "stand": {},
+   "rem": {},
+   "held": {
+    "Dark Magic Defense": 18,
+    "Magic Theory": 22,
+    "Potion Crafting": 6,
+    "Etiquette": 18,
+    "Creature Studies": 6,
+    "History": 10,
+    "Practical Magic": 10
+   },
+   "tw": {
+    "w": 5,
+    "n": 0
+   }
+  },
+  "bweek": {},
+  "vouch": {},
+  "bondv": 2,
+  "tenv": 1,
+  "xs": {},
+  "lore": "1.61.1"
+ }
+}

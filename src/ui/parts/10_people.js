@@ -130,7 +130,8 @@ PANELS.npc = {
     const sec = revealed(S, id);
     if (sec.length) h += `<h3>Secrets uncovered</h3><div>${sec.map(t => `<span class="pill f">${esc(t)}</span>`).join('')}</div>`;
     const facts = b ? [...(b.$Known_old || []), ...(b.Known_facts || [])] : [];   // 5.4: older facts are kept in $Known_old
-    if (facts.length) h += `<h3>What you know</h3><ul class="log">${facts.map(f => `<li>${esc(f)}</li>`).join('')}</ul>`;
+    // 1.62.0 (memory audit M3): a pinned fact ("!") is shown with a pin
+    if (facts.length) h += `<h3>What you know</h3><ul class="log">${facts.map(f => `<li>${/^!\s*/.test(f) ? '<span title="Pinned: always kept in view">📌 </span>' + esc(f.replace(/^!\s*/, '')) : esc(f)}</li>`).join('')}</ul>`;
     if (b && b.Milestones.length) h += `<h3>Milestones</h3><ul class="log">${b.Milestones.map(f => `<li>${esc(f)}</li>`).join('')}</ul>`;
     const stNow = npcStatus(S)(id);   // 1.42.0: the shared lookup (a full-name key matches too)
     if (stNow) h += `<div class="warn">Now: ${esc(stNow)}</div>`;

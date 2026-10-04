@@ -1,7 +1,27 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.62.0 — Memory batch 3: pins, and open matters in Hooks (2026-10-05)
+
+Batch 3 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6 (M3, M4). M4 was the audit's open owner decision (suggestion: yes); the
+owner went on to batches 3 and 4 without objecting, so it is built as proposed. Touches DECISIONS §8. Save fixture v1.61.1.
+- **Pins (M3):** a line that starts with `!` (after its date) never leaves the narrator's view.
+  - Journal: a pinned line that leaves the window of 30 stays in view in `_Kept_from_earlier` (read-only for the AI, printed by
+    `<current_state>` just before the Journal), at most 20; past that the oldest leaves (batch 4 folds it). The engine pins its own
+    landmarks: a mystery solved, a lasting change to the world, a hidden truth uncovered, a new school year, the graduation, Rank 10
+    and a new romance (new Journal line "Romance began with X.").
+  - Knows and Known_facts keep their latest 15 / 10 plus the newest five pinned lines of that character. "Learned {{user}}'s true
+    magic." is written pinned; `stepMigrate` pins it in older saves.
+  - 502: one sentence for the Journal (rare: a death, a betrayal, a sworn bond, a secret that changes everything), one for Knows and
+    Known_facts. The Journal panel and the dossier show a pin.
+- **Open matters in Hooks (M4):** the 502 Journal rule now says a matter that stays open also goes in Hooks (removed once settled),
+  so the Journal holds turning points only; with Hooks off in Features the old wording stays ("close it with a new line").
+- **Measuring:** `tools/memory_lists.cjs` counts `_Kept_from_earlier` as in view and reports pinned lines lost while their list had
+  room; the soak writes pins and checks that (3,000 updates: invariants held).
+- Tests: new `test_memory_batch3_v1620` (15); `test_narrator_batch6_v1570` reads the new Journal wording. Full `npm test` passes.
+- **To check live (owner):** `docs/TEST_CHECKLIST.md` 1.62.0. About +70 constant tokens (502); each pinned line in view adds its own.
 
 ## v1.61.1 — Memory batch 2: measuring memory (2026-10-05)
 
@@ -107,32 +127,6 @@ Tension). Save fixture v1.58.0.
   engine (its version stamp set to 1.59.0, so `stepMigrate` behaves the same) every engine run is identical except the new test's
   letdown run.
 - **To check live (owner):** `docs/TEST_CHECKLIST.md` 1.59.0. **Invented, to confirm:** the careless-betrayal size (8–10).
-
-## v1.58.0 — Narrator-load batch 7: ready for MVU's extra-model mode, and an A/B tool (2026-10-04)
-
-Batch 7 of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6 (U9). The card stays in one-call mode (DECISIONS §9 unchanged); this release
-prepares the card and the measurement so the owner can test MVU's extra-model mode and decide. Save fixture v1.57.0.
-- **Verified against MVU 438f9ff** (the pinned commit), Tavern Helper and Prompt Template; written into DECISIONS §11:
-  - the story request drops `[mvu_update]` entries and every earlier `<UpdateVariable>` in the history;
-  - the update request drops `[mvu_plot]` entries and sends persona, card description, World Info (with @D entries placed inside the
-    history), the last 2 messages (setting "Chat history entries", shown only for a Custom model source) and MVU's task;
-  - its reply is appended under the prose in every response format, tool call included, so the reason recorded in §9 for keeping the
-    one-call mode no longer holds (the decision itself is the owner's, after the test);
-  - 501 and 505 show the state before the reply (Prompt Template clones the previous message's variables);
-  - the card's `[config_override]` overrides the player's own update method, so the switch is made in the panel's character-card settings.
-- **Tags (DECISIONS §1, D2):** 506 Price Guide is untagged, so the update model sees the exact item names and "When used" lines it
-  writes into `/Purchases` and `/Consumables`. Untagged set: 0, 20, 97, 131, 132, 134, 501, 505, 506.
-- **Update rules no longer point at `<cast>`** (the update model does not get it):
-  - 502 Extras: "When `<now>` asks" (the request has been in 505 since 1.53.0);
-  - the Imprints card names the change type of those here, with its meaning ("Change type of those here: Etnie fixed (fixed: …)");
-  - the Trust card judges teasing from the Cast Sheet "and how the story shows them taking it".
-- **A/B tool:** `audit_chat.py A.jsonl --compare B.jsonl` puts the mechanics of two chats side by side (counts per 10 blocks), and the
-  mechanics report now also counts replies with no update block or more than one, and the story prose per reply.
-- **Player guide §8:** how to switch to extra-model mode and back.
-- Tests: new `test_narrator_batch7_v1580` (10); `qa_static`, `test_extras_v161` (wording), `test_saves`, `test_mechanics_audit_v1531`,
-  `test_audit_tool`, the narrator batch suites 1, 3–6 and the other 502 suites pass.
-- **To check live (owner):** the A/B test in `docs/TEST_CHECKLIST.md` 1.58.0. **To confirm with the owner:** after the test, whether
-  extra-model mode becomes the recommended mode (DECISIONS §9).
 
 ## Release index (one line per release, oldest first)
 
@@ -275,3 +269,4 @@ prepares the card and the measurement so the owner can test MVU's extra-model mo
 - **v1.60.0 (2026-10-05):** Lore changes: the narrator may change any fact of the lore for this campaign (`Campus_State.Lore_changes`), kept by the engine only with a Cause and only when the reply shows it; printed over every lore entry with that name; Journal Undo; Location_changes folded in.
 - **v1.61.0 (2026-10-05):** Memory batch 1: open mysteries' clues outlive solved ones and leave into an archive, Journal repeats dropped and routine lines leave first, short records for forgotten Extras, the MVU hook reads the floor being replayed (and warns of a far snapshot), VectFox dates with the year and turning points, long-chat guidance.
 - **v1.61.1 (2026-10-05):** Memory batch 2: `audit_chat.py --memory` (what each memory list kept and lost, 501 tokens, state size and file projection) and `--vectfox` (ghost events, dates without a year, near-duplicates), `tools/memory_lists.cjs`, `tests/stress/memory_soak.cjs`, the memory baseline.
+- **v1.62.0 (2026-10-05):** Memory batch 3: pinned (`!`) lines never leave the narrator's view (Journal → `_Kept_from_earlier`, 20; Knows / Known_facts: five per character; engine landmarks pinned), open matters go in Hooks (M4).

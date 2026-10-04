@@ -3,15 +3,13 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.61.1** (2026-10-05): memory batches 1–2 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6. 1.61.0: nothing
-important is forgotten silently (open mysteries' clues kept, clue archive, Journal repeats, Extras' short records, the MVU hook reads
-the replayed floor, VectFox dates with the year and turning points). 1.61.1: memory measuring (`audit_chat.py --memory` / `--vectfox`,
-`tools/memory_lists.cjs`, `tests/stress/memory_soak.cjs`); baseline `audit/AUDIT_2026-10-05_2_baseline_memori.md`.
-Live checks: `docs/TEST_CHECKLIST.md` "Open".
+**Snapshot:** card **v1.62.0** (2026-10-05): memory batches 1–3 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6. 1.62.0: pinned
+(`!`) lines never leave the narrator's view (`_Kept_from_earlier`, five per character in Knows / Known_facts), open matters go in
+Hooks. 1.61.1: memory measuring (`audit_chat.py --memory` / `--vectfox`, `tests/stress/memory_soak.cjs`). 1.61.0: nothing important
+forgotten silently. Live checks: `docs/TEST_CHECKLIST.md` "Open".
 
-**Next task:** memory batch 3 (pins `!` for Journal, Knows, Known_facts; M4 open matters into Hooks only on the owner's yes), then
-batch 4 (folds). The owner plays in MVU extra-model mode; the card default switches only in batch 9. Compare each batch with the
-baseline (soak and `--memory`).
+**Next task:** memory batch 4 (folds: Chronicle L1–L3, Knows / Known_facts folds through an `[mvu_update]` fold card). The owner
+plays in MVU extra-model mode; the card default switches only in batch 9.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

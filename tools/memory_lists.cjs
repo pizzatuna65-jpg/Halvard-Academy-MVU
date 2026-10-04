@@ -15,7 +15,7 @@ const keys = v => (v && typeof v === 'object' && !Array.isArray(v) ? Object.keys
 const bondLines = (S, field) => Object.entries((S && S.Bonds) || {}).flatMap(([id, b]) => arr(b && b[field]).map(l => `${id}\u0000${l}`));
 // each list: what is in view, what is kept, and which "remove" paths count as the story's own
 const LISTS = {
-  Journal: { view: S => arr(S.Journal), kept: S => arr((S.$ui || {}).archive), story: /^\/Journal\// },
+  Journal: { view: S => [...arr(S.Journal), ...arr(S._Kept_from_earlier)], kept: S => arr((S.$ui || {}).archive), story: /^\/Journal\// },   // 1.62.0: pinned lines kept in view
   Knows: { view: S => bondLines(S, 'Knows'), kept: S => bondLines(S, '$Knows_old'), story: /^\/Bonds\/[^/]+\/Knows\// },
   Known_facts: { view: S => bondLines(S, 'Known_facts'), kept: S => bondLines(S, '$Known_old'), story: /^\/Bonds\/[^/]+\/Known_facts\// },
   Clues: { view: S => keys(S.Clues), kept: S => keys((S.$ui || {}).cluearch), story: /^\/Clues\// },
@@ -44,6 +44,13 @@ function memDiff(S, N, ops) {
   // a clue that left while its mystery was still open (and the story did not remove it)
   const my = (N && N.Mysteries) || {};
   out.openClues = removedByStory('Clues') ? 0 : keys(S.Clues).filter(k => !(k in ((N && N.Clues) || {})) && ((my[(S.Clues[k] || {}).Thread] || {}).Status || 'open') === 'open').length;
+  // 1.62.0 (memory audit M3): pinned lines that left the view although their list had room (the Journal keeps 20, a bond list 5)
+  const pin = l => /^(?:\[[^\]]*\]\s*)?!/.test(l), v1 = new Set(LISTS.Journal.view(N));
+  out.pinsLost = !removedByStory('Journal') && LISTS.Journal.view(S).some(l => pin(l) && !v1.has(l)) && arr(N._Kept_from_earlier).length < 20 ? 1 : 0;
+  for (const [id, b] of Object.entries((S && S.Bonds) || {})) for (const f of ['Knows', 'Known_facts']) {
+    const nb = ((N && N.Bonds) || {})[id] || {}, now = new Set(arr(nb[f]));
+    if (arr(b[f]).some(l => pin(l) && !now.has(l)) && arr(nb[f]).filter(pin).length < 5 && !removedByStory(f)) out.pinsLost++;
+  }
   return out;
 }
 
@@ -54,7 +61,7 @@ function memEnd(S) {
   const hooks = Object.entries(S.Hooks || {}).map(([key, h]) => ({ key, days: now >= 0 && Number(h.$born) >= 0 ? Math.round((now - h.$born) / 1440) : null,
     weight: h.Weight, state: h._State || '' }));
   return {
-    sizes: { Journal: arr(S.Journal).length, journal_archive: arr((S.$ui || {}).archive).length, Knows_max: max('Knows'), Knows_old_max: max('$Knows_old'),
+    sizes: { Journal: arr(S.Journal).length, kept_pinned: arr(S._Kept_from_earlier).length, journal_archive: arr((S.$ui || {}).archive).length, Knows_max: max('Knows'), Knows_old_max: max('$Knows_old'),
       Known_facts_max: max('Known_facts'), Known_old_max: max('$Known_old'), Clues: keys(S.Clues).length, clue_archive: keys((S.$ui || {}).cluearch).length,
       Extras: keys(S.Extras).length, xold: keys((S.$ui || {}).xold).length, xgone: keys((S.$ui || {}).xgone).length, Hooks: hooks.length, bonds: B.length },
     hooks,

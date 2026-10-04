@@ -15,7 +15,7 @@
   "npc_initiative": 0,
   "weather": 491,
   "class": 0,
-  "hooks": 147,
+  "hooks": 154,
   "gossip": 19,
   "fortune": 200,
   "attendance": -3,
@@ -27,7 +27,7 @@
   "study": 54,
   "say_colors": 183
  },
- "core_rules": 8527,
+ "core_rules": 8586,
  "lore": 9050,
  "price_guide": 5461,
  "live": {

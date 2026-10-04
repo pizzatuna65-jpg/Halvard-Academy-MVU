@@ -249,11 +249,13 @@ function nbJournal(S) {
   // notes (rank and reputation changes, marks, recaps; $ui.jnotes) join them in date order, faded too: the narrator reads neither
   const DI = { Mon: 0, Tue: 1, Wed: 2, Thu: 3, Fri: 4, Sat: 5, Sun: 6 };
   const key = e => (e.M ? ((e.Y - 1) * 12 + e.M) * 100 + e.W * 10 + (DI[e.D] || 0) : 0);
-  const J0 = [...((S.$ui || {}).archive || []).map(l => parse(l, true)), ...(S.Journal || []).map(l => parse(l, false)), ...((S.$ui || {}).jnotes || []).map(l => ({ ...parse(l, true), note: true }))];
+  // 1.62.0 (memory audit M3): a pinned line ("!") stays in the narrator's view after it leaves the window (_Kept_from_earlier)
+  const KP = new Set(S._Kept_from_earlier || []), pin = e => (/^!\s*/.test(e.t) ? { ...e, t: e.t.replace(/^!\s*/, ''), pin: true } : e);
+  const J0 = [...((S.$ui || {}).archive || []).map(l => parse(l, !KP.has(l))), ...(S.Journal || []).map(l => parse(l, false)), ...((S.$ui || {}).jnotes || []).map(l => ({ ...parse(l, true), note: true }))].map(pin);
   const J = J0.map((e, i) => [e, i]).sort((a, b) => key(a[0]) - key(b[0]) || a[1] - b[1]).map(x => x[0]);
   const groups = _.groupBy([...J].reverse(), 'g'), years = J.some(e => e.Y > 1);
   const months = [...new Set([...J].reverse().map(e => e.g))];
-  const tl = J.length ? months.map(g => { const e0 = groups[g][0]; return `<h4>${e0.M ? `${years ? `Year ${e0.Y}, ` : ''}Month ${e0.M}` : 'Undated'}</h4><ol class="jt">${groups[g].map(e => `<li${e.note ? ' class="old" title="Engine note: kept for you; the narrator reads it from the state instead"' : e.old ? ' class="old" title="Archived: the narrator no longer reads this line"' : ''}>${e.W ? `<span class="sub">W${e.W} ${e.D}</span>` : ''}${esc(e.t)}</li>`).join('')}</ol>`; }).join('') : '<div class="empty">Nothing written yet.</div>';
+  const tl = J.length ? months.map(g => { const e0 = groups[g][0]; return `<h4>${e0.M ? `${years ? `Year ${e0.Y}, ` : ''}Month ${e0.M}` : 'Undated'}</h4><ol class="jt">${groups[g].map(e => `<li${e.note ? ' class="old" title="Engine note: kept for you; the narrator reads it from the state instead"' : e.old ? ' class="old" title="Archived: the narrator no longer reads this line"' : ''}>${e.W ? `<span class="sub">W${e.W} ${e.D}</span>` : ''}${e.pin ? '<span title="Pinned: the narrator always keeps this in view">📌 </span>' : ''}${esc(e.t)}</li>`).join('')}</ol>`; }).join('') : '<div class="empty">Nothing written yet.</div>';
   const CS = S.Campus_State || {}, ev = Object.entries(CS.Events || {}), ru = [...(CS.Rumours || [])].reverse();
   // 1.60.0: lasting changes to the world's facts (Campus_State.Lore_changes) and what caused them; Undo is the player's veto
   const LC = Object.entries(CS.Lore_changes || {}).filter(([, v]) => v && v.Now);

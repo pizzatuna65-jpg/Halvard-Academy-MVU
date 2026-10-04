@@ -4,7 +4,8 @@
 // Usage: node tests/stress/memory_soak.cjs [updates=3000] [--quiet]   (exit 1 when an invariant breaks)
 // Invariants: a clue of an open mystery never leaves while a clue of a solved or cold one is on record; whatever leaves the
 // narrator's view of a list goes to its archive (it is lost only when the archive itself overflows); the state and <current_state>
-// stay within the budget below. Later memory batches add theirs (pins never leave, nothing is deleted before it is folded).
+// stay within the budget below; 1.62.0: a pinned line never leaves the view while its list has room (Journal 20, a bond list 5).
+// Later memory batches add theirs (nothing is deleted before it is folded).
 const fs = require('fs'), path = require('path');
 const { Schema, runEngine, initState, ROOT } = require('../harness.cjs');
 const { memDiff, memEnd, tok501, LISTS } = require('../../tools/memory_lists.cjs');
@@ -13,7 +14,7 @@ const N = +(process.argv.find(a => /^\d+$/.test(a)) || 3000), QUIET = process.ar
 // 5,400 (12 bonds; the owner's chat will have more). The budget leaves room; a memory batch that grows them past it says so here
 const BUDGET = { bytes: 200000, t501: 8000 };
 // owner's chat (1.34.2, 37 replies): Journal 1, Knows 1, Known_facts 13. Here: Known_facts as the owner, the rest several times faster
-const RATE = { fact: 35, knows: 10, journal: 8, clue: 6, extra: 5, hook: 3, solve: 0.4 };
+const RATE = { fact: 35, knows: 10, journal: 8, clue: 6, extra: 5, hook: 3, solve: 0.4, pin: 10 };   // pin: % of Journal lines (a fifth of that for facts)
 let seed = 12345;
 const rnd = () => (seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648;   // deterministic (never Math.random)
 const chance = p => rnd() * 100 < p, pick = a => a[Math.floor(rnd() * a.length)];
@@ -56,7 +57,8 @@ for (let i = 0; i < N; i++) {
     if (S.Bonds[w] && chance(RATE.fact)) ops.push({ op: 'insert', path: `/Bonds/${w}/Known_facts/-`, value: `Fact ${nFact++}: ${w} likes the ${pick(['east', 'west', 'north'])} stairs` });
     if (S.Bonds[w] && chance(RATE.knows)) ops.push({ op: 'insert', path: `/Bonds/${w}/Knows/-`, value: `saw {{user}} at the ${W.Location} (${nFact})` });
   }
-  if (chance(RATE.journal)) ops.push({ op: 'insert', path: '/Journal/-', value: `Turning point ${i}: ${who.join(' and ')} at the ${W.Location}.` });
+  if (chance(RATE.journal)) ops.push({ op: 'insert', path: '/Journal/-', value: `${chance(RATE.pin) ? '! ' : ''}Turning point ${i}: ${who.join(' and ')} at the ${W.Location}.` });
+  if (S.Bonds[who[0]] && chance(RATE.pin / 5)) ops.push({ op: 'insert', path: `/Bonds/${who[0]}/Known_facts/-`, value: `! A fact ${who[0]} must never forget (${i})` });
   if (chance(RATE.clue)) { const open = Object.keys(S.Mysteries || {}).filter(t => S.Mysteries[t].Status === 'open'); const th = open.length && chance(85) ? pick(open) : pick(threads);
     ops.push({ op: 'replace', path: `/Clues/Clue ${nClue++}`, value: { Thread: th, Detail: `a detail seen at the ${W.Location}`, Where: W.Location } }); }
   if (chance(RATE.solve)) { const open = Object.keys(S.Mysteries || {}).filter(t => S.Mysteries[t].Status === 'open');
@@ -70,6 +72,7 @@ for (let i = 0; i < N; i++) {
   cut += md.Extras.cut || 0;
   if (md.openClues && Object.values(Nx.Clues || {}).some(c => ((Nx.Mysteries || {})[c.Thread] || {}).Status !== 'open')) fail(i, `${md.openClues} open clue(s) left while a closed one is on record`);
   for (const k of Object.keys(LISTS)) if (md[k].left !== md[k].kept) fail(i, `${k}: ${md[k].left - md[k].kept} left the view without reaching the archive`);
+  if (md.pinsLost) fail(i, `${md.pinsLost} pinned line(s) left the view while their list had room`);
   const bytes = JSON.stringify(Nx).length; maxBytes = Math.max(maxBytes, bytes);
   if (i % 250 === 249 || i === N - 1) { const t = tok501(Nx); max501 = Math.max(max501, t || 0); if (!QUIET) console.log(`  update ${i + 1} (${Nx.World.Year > 1 ? 'Y' + Nx.World.Year + ' ' : ''}M${Nx.World.Month}): state ${Math.round(bytes / 1000)} KB, 501 ${t} tokens`); }
   S = Nx;

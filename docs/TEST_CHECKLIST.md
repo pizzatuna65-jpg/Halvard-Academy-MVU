@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.62.0 (memory batch 3): the two checks in its section below.
 - v1.61.1 (memory batch 2): the check in its section below.
 - v1.61.0 (memory batch 1): the three checks in its section below.
 - v1.60.0 (lore changes): the four checks in its section below.
@@ -104,6 +105,12 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.62.0 — Memory batch 3 (pins, open matters in Hooks)
+
+- [ ] A death, a betrayal or a sworn bond in the story: the narrator writes that Journal line with `!` (and rarely otherwise); after
+      30 more lines it is still in `<current_state>` under `_Kept_from_earlier`, and the Journal panel shows it with a pin.
+- [ ] A promise or question left open gets a Hook as well as (or instead of) a Journal line, and the Hook is removed once settled.
 
 ### v1.61.1 — Memory batch 2 (measuring memory)
 

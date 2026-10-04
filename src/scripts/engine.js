@@ -456,6 +456,13 @@ const HAPPEN_RATE = { off: 0, rare: 0.2, normal: 0.4, often: 0.65 };
 const JOURNAL_ARCHIVE = 120;
 // 1.61.0 (memory audit M2): the engine's routine Journal lines, which leave the window first (stepRecords)
 const JOURNAL_LOW = /^(?:\[[^\]]*\]\s*)?(?:Meanwhile: |First visit to )/;
+// 1.62.0 (memory audit M3): a pinned line starts with "!" (after its date). The narrator pins rarely; the engine pins its landmarks
+// (a mystery solved, a lasting change to the world, a hidden truth uncovered, a new school year, the graduation, a romance, Rank 10).
+// A pinned Journal line that leaves the window stays in view in _Kept_from_earlier (KEPT_MAX); in Knows and Known_facts the newest
+// PIN_MAX pinned lines of a character stay in view past the cap.
+const PINNED = /^(?:\[[^\]]*\]\s*)?!/;
+const JOURNAL_LANDMARK = /^(?:Solved: |.+, changed for good: |Uncovered a hidden truth about |Began Year \d+ at Halvard\.|The third-years graduated |Romance began with |Rank 10 with )/;
+const KEPT_MAX = 20, PIN_MAX = 5;
 // 1.57.0 (narrator-load audit U3, owner-approved): the Journal the narrator reads is the story's spine (turning points, matters still
 // open, the engine's off-screen events). The engine's bookkeeping (rank and reputation changes, marks, proficiency ranks, week
 // recaps, perk use, a remedial attended, coin stolen) goes to $ui.jnotes: the player's Journal panel shows it, the narrator does not.
@@ -1249,7 +1256,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.61.1";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.62.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
 // from the shared context c (the states, the reply's text and the values earlier steps computed) and adds what later steps use.
@@ -1311,6 +1318,9 @@ function stepMigrate(c) {
     for (const [k, v] of Object.entries(CS.Location_changes || {})) if (String(v).trim() && !keyIn(L, k)) L[k] = { Now: String(v).trim(), Cause: 'recorded before 1.60.0', Since: '', Replace: false, $uid: loreUidOf(k) };
     CS.Location_changes = {};
   }
+  // 1.62.0 (memory audit M3): the line a keeper of the true magic got is pinned
+  for (const X of both) for (const bd of Object.values(X.Bonds || {})) for (const f of ['Knows', '$Knows_old']) if (Array.isArray((bd || {})[f]))
+    bd[f] = bd[f].map(l => (/learned .*true magic/i.test(String(l)) && !PINNED.test(String(l)) ? String(l).replace(/^((?:\[[^\]]*\]\s*)?)/, '$1! ') : l));
   // 1.26.0: old chats keep their history. A small class allowance recognises weeks already played;
   // the one-time Studies offer lets the player choose a different starting history.
   if (S.$eng.profv !== 1 && hasB) {
@@ -3558,7 +3568,7 @@ function stepBonds(c) {
     // 1.6.9 (bug hunt): decided by the Trust the 7->8 event was played on (before this reply's +3 for the rank), so a rivalry the
     // narrator was told to play at Trust 47-49 is not recorded as a best friendship.
     const tr8 = num(b0 && b0.Rank < 8 ? b0.Trust : b.Trust, 50);
-    if (hasB && b.Romance && !(b0 && b0.Romance)) b.$branch = 'romance';
+    if (hasB && b.Romance && !(b0 && b0.Romance)) { b.$branch = 'romance'; jnl.push(`Romance began with ${id}.`); }   // 1.62.0 (M3): a Journal landmark
     else if (hasB && b.Rank >= 8 && !b.$branch) b.$branch = b.Romance ? 'romance' : canRival(id) && tr8 < trustGate(id, 8) ? 'rival' : 'friend';
     else if (b.Rank < 8 && b.$branch) b.$branch = '';
     // 1.4.4 (owner): the bond's recent history with {{user}}: when, one sentence (the narrator's Note, else the kinds), the effect.
@@ -3602,6 +3612,15 @@ function stepBonds(c) {
 // again ("since you last saw them") or, once it lapses unseen, moved into $Recent. Meanwhile: Rank MEANWHILE_RANK+ bonds unseen
 // for a week get one Journal line a week about their own life.
 // 1.18.0 (I6): a newly confirmed keeper of the true magic also remembers learning it.
+// 1.62.0 (memory audit M3): Knows and Known_facts keep their latest `max` lines in view plus the newest PIN_MAX pinned ("!") lines;
+// the rest move to the hidden list (oldKey), which keeps the latest 20.
+function capPinned(b, key, oldKey, max) {
+  const L = (Array.isArray(b[key]) ? b[key] : []).map(String);
+  const pins = new Set(L.filter(l => PINNED.test(l)).slice(-PIN_MAX)), plain = L.filter(l => !pins.has(l));
+  const over = new Set(plain.slice(0, Math.max(0, plain.length - max)));
+  b[key] = L.filter(l => !over.has(l));
+  b[oldKey] = [...(Array.isArray(b[oldKey]) ? b[oldKey] : []), ...L.filter(l => over.has(l))].slice(-20);
+}
 function stepBondMemory(c) {
   const { S, B, log, jnl, hasB, absA, dayNo, weekNo, canon, BB, daily, PACE, bweek, npcAway, spreadFrom } = c;
   if (hasB && S.Hidden._True_magic) {
@@ -3611,7 +3630,7 @@ function stepBondMemory(c) {
       if (id && !known0.has(id) && b) {
         b.Knows = Array.isArray(b.Knows) ? b.Knows : [];
         if (![...b.Knows, ...(b.$Knows_old || [])].some(x => /learned .*true magic/i.test(String(x))))
-          b.Knows.push(`Learned {{user}}'s true magic.`);
+          b.Knows.push(`! Learned {{user}}'s true magic.`);   // 1.62.0 (M3): pinned
       }
     }
   }
@@ -3624,8 +3643,7 @@ function stepBondMemory(c) {
       b.Knows = (Array.isArray(b.Knows) ? b.Knows : []).map(k => String(k).trim()).filter(Boolean);
       const old0 = new Set(b0 ? [...(b0.Knows || []), ...(b0.$Knows_old || [])] : []);
       b.Knows = [...new Set(b.Knows)].map(k => (old0.has(k) ? k : /^\[(Y\d+ )?M\d{1,2} W[1-4]/.test(k) ? (S.World.Year > 1 ? withYear(k, S.World.Year) : k) : `[${dstamp(S.World)}] ${k}`));
-      if (b.Knows.length > KNOWS_VISIBLE) { b.$Knows_old = [...b.$Knows_old, ...b.Knows.slice(0, b.Knows.length - KNOWS_VISIBLE)].slice(-20); b.Knows = b.Knows.slice(-KNOWS_VISIBLE); }
-      b.$Knows_old = (b.$Knows_old || []).slice(-20); // diet legacy saves on their first update too
+      capPinned(b, 'Knows', '$Knows_old', KNOWS_VISIBLE);
       // Imprints
       const I0 = b0 ? (b0.Imprints || []) : [], key = x => String(x.Belief || '').trim().toLowerCase();
       let I = (Array.isArray(b.Imprints) ? b.Imprints : []).filter(x => x && String(x.Belief || '').trim());
@@ -3688,13 +3706,7 @@ function stepBondMemory(c) {
     dorms: accessDay ? [...new Set(visiting.filter(([id]) => NPC_GROUP[id] === 'student' && (S.Scene.Present || {})[id]).map(([id]) => NPC_DORMS[id]).filter(Boolean))] : [],
     staff: accessDay ? visiting.filter(([id]) => NPC_GROUP[id] === 'staff' || id === 'Bobby' || id === 'Milena').map(([id]) => id) : []
   };
-  for (const b of Object.values(S.Bonds)) {
-    if ((b.Known_facts || []).length > FACTS_VISIBLE) {
-      const over = b.Known_facts.slice(0, b.Known_facts.length - FACTS_VISIBLE);
-      b.$Known_old = [...(b.$Known_old || []), ...over].slice(-20); b.Known_facts = b.Known_facts.slice(-FACTS_VISIBLE);
-    }
-    b.$Known_old = (b.$Known_old || []).slice(-20);
-  }
+  for (const b of Object.values(S.Bonds)) capPinned(b, 'Known_facts', '$Known_old', FACTS_VISIBLE);
   for (const id of Object.keys(daily)) if (daily[id].day !== dayNo) delete daily[id];
   S.$eng.daily = daily;
 }
@@ -4759,7 +4771,7 @@ function stepBag(c) {
     const mine = new Set(jnl.map(jkey));
     S.Journal = S.Journal.filter(l => J0.has(l) || !mine.has(jkey(l)));
   }
-  for (const line of jnl) S.Journal.push(`[${dstamp(S.World)}] ${line}`);
+  for (const line of jnl) S.Journal.push(`[${dstamp(S.World)}] ${JOURNAL_LANDMARK.test(line) ? '! ' : ''}${line}`);
   if (c.notes.length) S.$ui.jnotes = [...(S.$ui.jnotes || []), ...c.notes.map(l => `[${dstamp(S.World)}] ${l}`)].slice(-JOURNAL_ARCHIVE);   // 1.57.0
   // 1.61.0 (memory audit M2; the owner's chat had "Sorted into (the) Fire Dormitory by the Arbiter Stone." twice): a new line that
   // says what an earlier line in the Journal says is dropped, whoever wrote it (the earliest stays, with its date)
@@ -4768,11 +4780,18 @@ function stepBag(c) {
     S.Journal = S.Journal.filter(l => { const k = jkey(l); if (seen.has(k)) return false; seen.add(k); return true; });
   }
   // over the cap, the engine's routine lines from earlier replies (Meanwhile, a first visit) leave before the oldest turning point
+  const capped = [];
   if (S.Journal.length > CAP.Journal) {
     const low = S.Journal.filter(l => J0.has(l) && JOURNAL_LOW.test(l)).slice(0, S.Journal.length - CAP.Journal), drop = new Set(low);
-    S.Journal = S.Journal.filter(l => !drop.has(l));
+    S.Journal = S.Journal.filter(l => !drop.has(l)); capped.push(...low);
   }
+  capped.push(...S.Journal.slice(0, Math.max(0, S.Journal.length - CAP.Journal)));
   S.Journal = S.Journal.slice(-CAP.Journal);
+  // 1.62.0 (memory audit M3): a pinned line that leaves the window stays in view; past KEPT_MAX the oldest leaves for good
+  const K = S._Kept_from_earlier = (S._Kept_from_earlier || []).filter(l => !S.Journal.includes(l));
+  for (const l of capped) if (PINNED.test(l) && !K.includes(l)) K.push(l);
+  const keptOut = K.splice(0, Math.max(0, K.length - KEPT_MAX));
+  Object.assign(c, { jCapped: capped.filter(l => !PINNED.test(l)).concat(keptOut) });
   // F21 state-as-memory: the narrator reads the last CAP.Journal lines; older ones (and lines the AI removed) move to $ui.archive
   if (hasB) {
     const kept = new Set(S.Journal), arch = S.$ui.archive || (S.$ui.archive = []);
@@ -5394,6 +5413,7 @@ function stepCommit(c) {
   if (hasB && (B.World.Year || 1) === 1 && S.World.Year > 1) {
     const y1 = x => (typeof x === 'string' ? withYear(x, 1) : x);
     S.Journal = (S.Journal || []).map(y1);
+    S._Kept_from_earlier = (S._Kept_from_earlier || []).map(y1);   // 1.62.0
     if (Array.isArray(S.$ui.archive)) S.$ui.archive = S.$ui.archive.map(y1);
     if (Array.isArray(S.$ui.jnotes)) S.$ui.jnotes = S.$ui.jnotes.map(y1);   // 1.57.0: the engine's notes are dated like the Journal
     for (const b of Object.values(S.Bonds || {})) {

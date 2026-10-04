@@ -21,7 +21,7 @@ console.log('The Journal is the story\'s spine');
   ok(M.Journal.length === 1 && /Lied to Irene/.test(M.Journal[0]), `an old save: bookkeeping leaves the Journal, the story line stays (${M.Journal.length})`);
   ok(['deepened to Rank 4', 'Week recap', 'reached Rank 1'].every(t => M.$ui.jnotes.some(l => l.includes(t))) && !M.$ui.archive.length, 'and goes to the notes, from the archive too');
   const r = renderEntry(card, 502, S0);
-  ok(/Journal \(list\): the story's spine/.test(r) && /Not a scene summary: scene details are recalled from the chat memory/.test(r) && /close it with a new line/.test(r), '502: the Journal rule (spine, not scene detail, close matters)');
+  ok(/Journal \(list\): the story's spine/.test(r) && /Not a scene summary: scene details are recalled from the chat memory/.test(r) && /stays open also goes in Hooks; remove the Hook once it is settled/.test(r), '502: the Journal rule (spine, not scene detail; 1.62.0: open matters go in Hooks)');
   let CHAT = {};   // the UI script's SillyTavern globals, as test_audit_batch7_v1480 stubs them
   global.window = { parent: { document: {} } };
   global.getVariables = o => (o && o.type === 'chat' ? CHAT : {});

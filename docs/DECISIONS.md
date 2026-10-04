@@ -200,7 +200,7 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **State-as-memory**: the narrator reads the latest ~24 messages (card regex, promptOnly, minDepth 24).
   - The Journal keeps the latest 30 lines for the AI. Older lines move to `$ui.archive`. Since 1.57.0 (owner-approved narrator-load
     audit U3, after the VectFox review) those 30 lines are the story's spine: turning points, matters still open (closed by a later
-    line), first visits to notable places, the Entrance tour and the engine's off-screen events. Scene detail is VectFox's; dated
+    line; 1.62.0: also a Hook while Hooks are on), first visits to notable places, the Entrance tour and the engine's off-screen events. Scene detail is VectFox's; dated
     promises are Commitments'. The engine's bookkeeping (rank and reputation changes, marks, proficiency ranks, recaps, perk use)
     goes to `$ui.jnotes`, shown in the Journal panel only.
   - 1.61.0 (memory audit M2): a new Journal line that says what an earlier line says (ignoring date, articles, punctuation) is
@@ -213,6 +213,10 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
   - The UI shows everything.
   - 1.6.0: Knows keeps 15 lines per bond (older in `$Knows_old`), Imprints 5, `$Defining` 5. Mind, Knows and Imprints are the narrator's; the dossier never shows them.
   - 1.6.1: Extras keeps 20 invented characters (least recently seen leave into `$ui.xold`, 40, and come back if they return; Keep is the player's). `Campus_State.Events` are `{Text, Updated}`; the engine owns Updated.
+  - 1.62.0 (memory audit M3, M4; M4 built on silence-is-approval): a line that starts with `!` is pinned. A pinned Journal line
+    that leaves the window stays in view in `_Kept_from_earlier` (20); the engine pins its landmarks (solved, changed for good,
+    hidden truth, new year, graduation, Rank 10, romance). Knows / Known_facts keep five pinned lines per character past the cap. A
+    matter a Journal line opens that stays open also goes in Hooks (with Hooks off, a later line closes it).
   - 1.61.0 (memory audit M1, M8): over 40 Clues, clues of a solved or cold mystery leave first, never an open one while such a clue
     is left; clues that leave stay in `$ui.cluearch` (Mystery panel, 120). An Extra past `$ui.xold` leaves a short record in
     `$ui.xgone` (Who, Looks, Voice, 120) and comes back from it with the same face and voice.
