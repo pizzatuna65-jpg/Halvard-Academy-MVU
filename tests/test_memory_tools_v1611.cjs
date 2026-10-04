@@ -25,7 +25,7 @@ console.log('audit_chat.py --memory');
   ok(M.totals.Known_facts.written === 1 && M.hooks.length === 1 && M.hooks[0].days === 0, 'Known_facts written, the open Hook and its age');
   ok(M.t501.start > 0 && M.t501.end >= M.t501.start && M.bytes.end > 0 && M.text > 0, `501 tokens (${M.t501.start} → ${M.t501.end}) and the state's size (${M.bytes.end} bytes)`);
   const t = fs.readFileSync(md, 'utf8');
-  ok(/## Memory \(what the card remembers and forgets\)/.test(t) && /\| Journal \| 32 \| 1 \| 1 \| 0 \| 0 \|/.test(t) && /\| 20,000 \|/.test(t) && /Open Hooks: 1/.test(t), 'the report: the list table, the projection, the Hooks');
+  ok(/## Memory \(what the card remembers and forgets\)/.test(t) && /\| Journal \| 32 \| 1 \| 1 \| 0 \| 0 \| 0 \| 0 \|/.test(t) && /\| 20,000 \|/.test(t) && /Open Hooks: 1/.test(t), 'the report: the list table, the projection, the Hooks');
 }
 
 console.log('the memory lists (memDiff)');

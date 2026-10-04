@@ -3,13 +3,13 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.62.0** (2026-10-05): memory batches 1–3 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6. 1.62.0: pinned
-(`!`) lines never leave the narrator's view (`_Kept_from_earlier`, five per character in Knows / Known_facts), open matters go in
-Hooks. 1.61.1: memory measuring (`audit_chat.py --memory` / `--vectfox`, `tests/stress/memory_soak.cjs`). 1.61.0: nothing important
-forgotten silently. Live checks: `docs/TEST_CHECKLIST.md` "Open".
+**Snapshot:** card **v1.63.0** (2026-10-05): memory batches 1–4 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6. 1.63.0: folds
+("Summaryception mini"): Journal lines → `_Chronicle` L1/L2/L3, a character's older Knows / Known_facts → one `[until …]` line,
+written by the update model through the `fold` rule card (`/Fold`); nothing is dropped before it is folded. 1.62.0: pins (`!`),
+open matters in Hooks. 1.61.1: memory measuring. 1.61.0: nothing forgotten silently. Live checks: `docs/TEST_CHECKLIST.md` "Open".
 
-**Next task:** memory batch 4 (folds: Chronicle L1–L3, Knows / Known_facts folds through an `[mvu_update]` fold card). The owner
-plays in MVU extra-model mode; the card default switches only in batch 9.
+**Next task:** memory batch 5 (recall per character and place from the archives, M6) or 6 (`<current_state>` by relevance, M7;
+501 reached 7,400 tokens in the 10,000-update soak). The owner plays in MVU extra-model mode; the card default switches in batch 9.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

@@ -310,6 +310,16 @@ const JOURNAL_LOW = /^(?:\[[^\]]*\]\s*)?(?:Meanwhile: |First visit to )/;
 const PINNED = /^(?:\[[^\]]*\]\s*)?!/;
 const JOURNAL_LANDMARK = /^(?:Solved: |.+, changed for good: |Uncovered a hidden truth about |Began Year \d+ at Halvard\.|The third-years graduated |Romance began with |Rank 10 with )/;
 const KEPT_MAX = 20, PIN_MAX = 5;
+// 1.63.0 (memory audit M5, owner-approved "Summaryception mini"): older memory is folded, never dropped. Journal lines that leave the
+// window (and pinned lines past KEPT_MAX) wait in $eng.jq; every FOLD.l1 of them become one Chronicle entry (L1, at most FOLD.w1
+// words); past FOLD.l1max L1 (or L2) entries the oldest FOLD.l2 become one L2 entry (FOLD.w2); when a campaign year is over, its L1 and L2
+// entries become one L3 entry (FOLD.w3). A character's Knows and Known_facts lines that leave the view wait at the end of
+// $Knows_old / $Known_old ($Knows_q / $Known_q of them); once FOLD.bond wait and the character is on a full Cast Sheet, they (with the
+// list's earlier fold line) become one fold line "[until <date>] …" (FOLD.wb words) that stays first in view. The engine asks for one
+// fold at a time through the fold rule card (511, [mvu_update]: the update model writes /Fold in extra-model mode, the narrator in
+// one-call mode); a fold not written after FOLD.patience replies with an update block is made plainly by the engine.
+const FOLD = { l1: 10, w1: 50, l1max: 12, l2: 4, w2: 70, w3: 100, bond: 5, bondTake: 12, wb: 40, patience: 8, waitMax: 60 };
+const FOLDED = /^\[until [^\]]*\]/;
 // 1.57.0 (narrator-load audit U3, owner-approved): the Journal the narrator reads is the story's spine (turning points, matters still
 // open, the engine's off-screen events). The engine's bookkeeping (rank and reputation changes, marks, proficiency ranks, week
 // recaps, perk use, a remedial attended, coin stolen) goes to $ui.jnotes: the player's Journal panel shows it, the narrator does not.
@@ -1003,6 +1013,7 @@ function canonClub(c) {
 const BOND0 = { $gifts: {}, Rank: 0, Progress: 0, Trust: 50, Tension: 0, Title: '', Romance: false, Known_facts: [], Milestones: [], Last_seen: '' };
 /*@@MOOD_GIFTS_SOURCE@@*/
 const ENGINE_VER = '@@VERSION@@';   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const verLt = (a, b) => { const p = v => String(v || '0').split('.').map(x => parseInt(x, 10) || 0), x = p(a), y = p(b); for (let i = 0; i < 3; i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) < (y[i] || 0); return false; };   // 1.63.0
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
 // from the shared context c (the states, the reply's text and the values earlier steps computed) and adds what later steps use.
@@ -1063,6 +1074,15 @@ function stepMigrate(c) {
     const L = _.isPlainObject(CS.Lore_changes) ? CS.Lore_changes : (CS.Lore_changes = {});
     for (const [k, v] of Object.entries(CS.Location_changes || {})) if (String(v).trim() && !keyIn(L, k)) L[k] = { Now: String(v).trim(), Cause: 'recorded before 1.60.0', Since: '', Replace: false, $uid: loreUidOf(k) };
     CS.Location_changes = {};
+  }
+  // 1.63.0 (memory audit M5): what an older save already moved out of view waits for a fold (nothing older is lost any more)
+  if (verLt(c.fromVer, '1.63.0')) for (const X of both) {
+    const E = X.$eng || (X.$eng = {}), inView = new Set([...(X.Journal || []), ...(X._Kept_from_earlier || [])]);
+    if (!(Array.isArray(E.jq) && E.jq.length)) E.jq = ((X.$ui || {}).archive || []).filter(l => !inView.has(l));
+    for (const bd of Object.values(X.Bonds || {})) if (bd) {
+      if (!(num(bd.$Knows_q, 0) > 0)) bd.$Knows_q = Math.min(FOLD.waitMax, (bd.$Knows_old || []).length);
+      if (!(num(bd.$Known_q, 0) > 0)) bd.$Known_q = Math.min(FOLD.waitMax, (bd.$Known_old || []).length);
+    }
   }
   // 1.62.0 (memory audit M3): the line a keeper of the true magic got is pinned
   for (const X of both) for (const bd of Object.values(X.Bonds || {})) for (const f of ['Knows', '$Knows_old']) if (Array.isArray((bd || {})[f]))
@@ -3359,13 +3379,19 @@ function stepBonds(c) {
 // for a week get one Journal line a week about their own life.
 // 1.18.0 (I6): a newly confirmed keeper of the true magic also remembers learning it.
 // 1.62.0 (memory audit M3): Knows and Known_facts keep their latest `max` lines in view plus the newest PIN_MAX pinned ("!") lines;
-// the rest move to the hidden list (oldKey), which keeps the latest 20.
+// the rest move to the hidden list (oldKey), which keeps the latest 20. 1.63.0 (M5): plus the list's fold line, always first; lines
+// that move wait for a fold (qKey counts them at the end of oldKey, which never drops one still waiting).
 function capPinned(b, key, oldKey, max) {
-  const L = (Array.isArray(b[key]) ? b[key] : []).map(String);
+  const qKey = key === 'Knows' ? '$Knows_q' : '$Known_q';
+  const L0 = (Array.isArray(b[key]) ? b[key] : []).map(String), folds = L0.filter(l => FOLDED.test(l));
+  const L = L0.filter(l => !FOLDED.test(l));
   const pins = new Set(L.filter(l => PINNED.test(l)).slice(-PIN_MAX)), plain = L.filter(l => !pins.has(l));
   const over = new Set(plain.slice(0, Math.max(0, plain.length - max)));
-  b[key] = L.filter(l => !over.has(l));
-  b[oldKey] = [...(Array.isArray(b[oldKey]) ? b[oldKey] : []), ...L.filter(l => over.has(l))].slice(-20);
+  b[key] = [...folds.slice(-1), ...L.filter(l => !over.has(l))];
+  const moved = [...folds.slice(0, -1), ...L.filter(l => over.has(l))];
+  const old = [...(Array.isArray(b[oldKey]) ? b[oldKey] : []), ...moved];
+  b[qKey] = Math.min(FOLD.waitMax, num(b[qKey], 0) + moved.length, old.length);
+  b[oldKey] = old.slice(-Math.max(20, b[qKey]));
 }
 function stepBondMemory(c) {
   const { S, B, log, jnl, hasB, absA, dayNo, weekNo, canon, BB, daily, PACE, bweek, npcAway, spreadFrom } = c;
@@ -4537,7 +4563,9 @@ function stepBag(c) {
   const K = S._Kept_from_earlier = (S._Kept_from_earlier || []).filter(l => !S.Journal.includes(l));
   for (const l of capped) if (PINNED.test(l) && !K.includes(l)) K.push(l);
   const keptOut = K.splice(0, Math.max(0, K.length - KEPT_MAX));
-  Object.assign(c, { jCapped: capped.filter(l => !PINNED.test(l)).concat(keptOut) });
+  // 1.63.0 (M5): they wait for a fold; the archive (UI) keeps them too
+  const JQ = S.$eng.jq = Array.isArray(S.$eng.jq) ? S.$eng.jq : [];
+  for (const l of capped.filter(l => !PINNED.test(l)).concat(keptOut)) if (!JQ.includes(l)) JQ.push(l);
   // F21 state-as-memory: the narrator reads the last CAP.Journal lines; older ones (and lines the AI removed) move to $ui.archive
   if (hasB) {
     const kept = new Set(S.Journal), arch = S.$ui.archive || (S.$ui.archive = []);
@@ -4650,6 +4678,90 @@ function stepExtras(c) {
     xNew = ext.filter(id => (id in X && !String(X[id].Who || '').trim()) || (!(id in X) && num((XS[xsKey[id]] || {}).n, 0) >= 2));
   }
   Object.assign(c, { xHere, xNew });
+}
+
+// ---- 8i2. 1.63.0 (memory audit M5): folds. The request the rule card showed for this reply is the one the engine left before it
+// (B's $ui.fold; Prompt Template renders the entries on the state before the reply in both MVU modes). /Fold answers it; then the
+// next request is made. Deterministic: the fold text is in the reply's block, so a replay repeats it.
+const chronLine = (a, b, t) => `[${a === b ? a : `${a} – ${b}`}] ${t}`;
+const fullDate = (l, Y) => { const m = /^\[([^\]]*)\]/.exec(String(l)); const d = m ? m[1].replace(/^until\s+/, '') : ''; return !d ? '' : /^Y\d/.test(d) ? d : `Y${Y} ${d}`; };
+const entryEnds = (e, Y) => { const m = /^\[([^\]]*)\]/.exec(String(e)); if (!m) return ['', '']; const p = m[1].split(' – '); return [fullDate(`[${p[0]}]`, Y), fullDate(`[${p[p.length - 1]}]`, Y)]; };
+const yearOfDate = (d, Y) => { const m = /^Y(\d+)/.exec(d || ''); return m ? +m[1] : Y; };
+function chronMeta(S) {
+  const C = S._Chronicle = Array.isArray(S._Chronicle) ? S._Chronicle : [];
+  let M = Array.isArray(S.$eng.chron) ? S.$eng.chron : [];
+  if (M.length !== C.length) M = C.map(e => (/^\[Year \d+\]/.test(e) ? { L: 3, y: +/\d+/.exec(e)[0] } : { L: 1, y: yearOfDate(entryEnds(e, S.World.Year || 1)[1], S.World.Year || 1) }));
+  return (S.$eng.chron = M);
+}
+function foldRequest(S) {
+  const Y = S.World.Year || 1, C = S._Chronicle || [], M = chronMeta(S), JQ = S.$eng.jq || [];
+  const past = M.map((m, i) => [m, i]).filter(([m]) => m.L < 3 && m.y < Y);
+  const req = (k, who, label, max, lines, n) => ({ k, who, label, max, lines, n, sig: `${k}|${who}|${lines[0] || ''}` });
+  if (past.length) { const y = Math.min(...past.map(([m]) => m.y)), ix = past.filter(([m]) => m.y === y).map(([, i]) => i);
+    return req('year', '', `the story of the campaign's Year ${y}, from its Chronicle entries`, FOLD.w3, ix.map(i => C[i]), ix.length); }
+  // past FOLD.l1max entries of one level, its oldest FOLD.l2 become one L2 entry (L2 entries fold into L2 again within a year)
+  for (const L of [2, 1]) {
+    const lv = M.map((m, i) => [m, i]).filter(([m]) => m.L === L);
+    if (lv.length > FOLD.l1max) { const ix = lv.slice(0, FOLD.l2).map(([, i]) => i);
+      return req('chronicle', '', 'the oldest Chronicle entries, into one', FOLD.w2, ix.map(i => C[i]), ix.length); }
+  }
+  if (JQ.length >= FOLD.l1) return req('journal', '', 'Journal lines that left the window, into one Chronicle entry', FOLD.w1, JQ.slice(0, FOLD.l1), FOLD.l1);
+  for (const id of ((S.$ui || {}).cast || {}).full || []) {
+    const b = (S.Bonds || {})[id]; if (!b) continue;
+    for (const [key, oldKey, qKey, k, label] of [['Known_facts', '$Known_old', '$Known_q', 'facts', `what {{user}} knows about ${id}`], ['Knows', '$Knows_old', '$Knows_q', 'knows', `what ${id} knows about {{user}}`]]) {
+      const q = num(b[qKey], 0), old = b[oldKey] || [];
+      if (q < FOLD.bond) continue;
+      const wait = old.slice(old.length - q).slice(0, FOLD.bondTake), prev = (b[key] || []).find(l => FOLDED.test(l));
+      return req(k, id, label, FOLD.wb, [...(prev ? [`(earlier fold) ${prev}`] : []), ...wait], wait.length);
+    }
+  }
+  return null;
+}
+const foldText = (t, max) => {
+  const w = String(t || '').replace(/^\s*\[[^\]]*\]\s*/, '').replace(/\s+/g, ' ').trim().split(' ').filter(Boolean);
+  return { text: (w.length > max * 1.5 ? [...w.slice(0, max), '…'] : w).join(' '), cut: w.length > max * 1.5 };
+};
+const plainFold = R => R.lines.map(l => String(l).replace(/^\(earlier fold\)\s*/, '').replace(/^\[[^\]]*\]\s*/, '').replace(/^!\s*/, '').split(/\s+/).slice(0, 12).join(' ').replace(/[.;,]+$/, '')).join('; ') + '.';
+function applyFold(S, R, raw, log) {
+  const Y = S.World.Year || 1, { text, cut } = foldText(raw, R.max);
+  if (!text) return false;
+  if (cut) log.push(`The fold was longer than ${R.max} words and was cut; keep a fold short.`);
+  const C = S._Chronicle = Array.isArray(S._Chronicle) ? S._Chronicle : [], M = chronMeta(S);
+  if (R.k === 'journal') {
+    const JQ = S.$eng.jq || [];
+    if (!R.lines.every((l, i) => JQ[i] === l)) return false;
+    const a = fullDate(R.lines[0], Y), z = fullDate(R.lines[R.lines.length - 1], Y);
+    JQ.splice(0, R.lines.length); C.push(chronLine(a, z, text)); M.push({ L: 1, y: yearOfDate(z, Y) });
+    return true;
+  }
+  if (R.k === 'chronicle' || R.k === 'year') {
+    const ix = R.lines.map(l => C.indexOf(l));
+    if (ix.some(i => i < 0)) return false;
+    const y = M[ix[0]].y, e = R.k === 'year' ? `[Year ${y}] ${text}` : chronLine(entryEnds(R.lines[0], Y)[0], entryEnds(R.lines[R.lines.length - 1], Y)[1], text);
+    const at = Math.min(...ix);
+    for (const i of [...ix].sort((p, q) => q - p)) { C.splice(i, 1); M.splice(i, 1); }
+    C.splice(at, 0, e); M.splice(at, 0, { L: R.k === 'year' ? 3 : 2, y });
+    return true;
+  }
+  const b = (S.Bonds || {})[R.who], key = R.k === 'knows' ? 'Knows' : 'Known_facts', qKey = R.k === 'knows' ? '$Knows_q' : '$Known_q';
+  if (!b || num(b[qKey], 0) < R.n) return false;
+  const W = S.World;
+  b[key] = [`[until ${W.Year > 1 ? `Y${W.Year} ` : 'Y1 '}M${W.Month} W${W.Week}] ${text}`, ...(b[key] || []).filter(l => !FOLDED.test(l))];
+  b[qKey] = num(b[qKey], 0) - R.n;
+  return true;
+}
+function stepFold(c) {
+  const { S, B, hasB, log, toolEdit } = c;
+  const R = hasB && B.$ui && _.isPlainObject(B.$ui.fold) ? B.$ui.fold : null, ans = String(S.Fold || '').trim();
+  S.Fold = '';
+  if (R && ans) { if (applyFold(S, R, ans, log)) S.$eng.fold = null; }
+  else if (R && !toolEdit && /<UpdateVariable/i.test(String(c.text || ''))) {
+    const w = S.$eng.fold && S.$eng.fold.sig === R.sig ? num(S.$eng.fold.n, 0) + 1 : 1;
+    S.$eng.fold = { sig: R.sig, n: w };
+    if (w >= FOLD.patience && applyFold(S, R, plainFold(R), log)) { S.$eng.fold = null; log.push(`The fold the rule card asked for was not written for ${w} replies; the engine folded those lines plainly.`); }
+  } else if (!R && ans && hasB) log.push('A /Fold was written with no fold asked for; it was not kept.');
+  chronMeta(S);
+  S.$ui.fold = foldRequest(S);
 }
 
 // ---- 8i. 1.5.1 (Batch B, P1/P6): the cast. Who among the present gets their full canon sheet in the Cast Sheet (509; their
@@ -5160,6 +5272,7 @@ function stepCommit(c) {
     const y1 = x => (typeof x === 'string' ? withYear(x, 1) : x);
     S.Journal = (S.Journal || []).map(y1);
     S._Kept_from_earlier = (S._Kept_from_earlier || []).map(y1);   // 1.62.0
+    if (Array.isArray(S.$eng.jq)) S.$eng.jq = S.$eng.jq.map(y1);       // 1.63.0
     if (Array.isArray(S.$ui.archive)) S.$ui.archive = S.$ui.archive.map(y1);
     if (Array.isArray(S.$ui.jnotes)) S.$ui.jnotes = S.$ui.jnotes.map(y1);   // 1.57.0: the engine's notes are dated like the Journal
     for (const b of Object.values(S.Bonds || {})) {
@@ -5424,6 +5537,7 @@ function ruleCards(c) {
     combat_role: () => !String(PR.Combat_role || '').trim() || /\b(combat role|role class|reassign\w*)\b/i.test(said),
     favour: () => Object.values(S.Commitments || {}).some(x => /^favou?r$/i.test(String((x || {}).Type || '').trim())) || !!(((S.$ui || {}).initiative || {}).favour) || /\bfavou?rs?\b/i.test(said),
     notices: () => here === 'Notice Board' || /\b(notices?|notice board|flyers?)\b/i.test(said),
+    fold: () => !!(S.$ui || {}).fold,   // 1.63.0 (memory audit M5)
     vigil: () => Object.keys(S.Inventory || {}).some(k => /vigil/i.test(k)) || num(((S.$eng || {}).sleep || {}).vigilUntil, -1) > absA || /\bvigil\b/i.test(said),
   };
   return Object.keys(RULE_CARDS).filter(id => (!RULE_CARDS[id] || !OFF.has(RULE_CARDS[id])) && test[id] && test[id]());
@@ -5437,7 +5551,7 @@ function stepNow(c) {
   for (const a of Object.values(S.$ui.area || {})) if (_.isPlainObject(a)) { delete a.walks; delete a.near; }
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepFold, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,

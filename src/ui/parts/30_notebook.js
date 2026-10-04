@@ -251,7 +251,8 @@ function nbJournal(S) {
   const key = e => (e.M ? ((e.Y - 1) * 12 + e.M) * 100 + e.W * 10 + (DI[e.D] || 0) : 0);
   // 1.62.0 (memory audit M3): a pinned line ("!") stays in the narrator's view after it leaves the window (_Kept_from_earlier)
   const KP = new Set(S._Kept_from_earlier || []), pin = e => (/^!\s*/.test(e.t) ? { ...e, t: e.t.replace(/^!\s*/, ''), pin: true } : e);
-  const J0 = [...((S.$ui || {}).archive || []).map(l => parse(l, !KP.has(l))), ...(S.Journal || []).map(l => parse(l, false)), ...((S.$ui || {}).jnotes || []).map(l => ({ ...parse(l, true), note: true }))].map(pin);
+  const AR = (S.$ui || {}).archive || [], ARs = new Set(AR);
+  const J0 = [...AR.map(l => parse(l, !KP.has(l))), ...[...KP].filter(l => !ARs.has(l)).map(l => parse(l, false)), ...(S.Journal || []).map(l => parse(l, false)), ...((S.$ui || {}).jnotes || []).map(l => ({ ...parse(l, true), note: true }))].map(pin);
   const J = J0.map((e, i) => [e, i]).sort((a, b) => key(a[0]) - key(b[0]) || a[1] - b[1]).map(x => x[0]);
   const groups = _.groupBy([...J].reverse(), 'g'), years = J.some(e => e.Y > 1);
   const months = [...new Set([...J].reverse().map(e => e.g))];
@@ -262,7 +263,10 @@ function nbJournal(S) {
   const lcHtml = LC.length ? `<h3>Lasting changes</h3><p class="sub">Facts of the world that changed in your story; they override the lore from now on. Undo one the story never earned.</p><dl class="kv">${LC.map(([k, v], i) => `<dt>${esc(k)}</dt><dd>${esc(v.Now)}${v.Cause ? `<span class="sub"> · because ${esc(v.Cause)}</span>` : ''}${v.Since ? `<span class="sub"> · ${esc(v.Since)}</span>` : ''} <button class="btn sm" data-lcundo="${i}">Undo</button></dd>`).join('')}</dl>` : '';
   // 1.1.0 (spec §3): how far each rumour has spread; rumours that died out stay, faded
   const gs = featureOn(S, 'gossip') ? Object.fromEntries(((S.$ui || {}).gossip || []).map(g => [g[0], g])) : {}, old = [...((S.$ui || {}).rumours_old || [])].reverse();
-  return `<p class="lead">The turning points of your year, written as they happen. The narrator reads the latest 30 lines as the story's spine; scene details come from chat memory. Faded lines are kept for you only: older entries, and the engine's notes (ranks, reputation, marks, recaps).</p>${tl}
+  // 1.63.0 (memory audit M5): the Chronicle, older lines folded into dated entries the narrator reads (newest first)
+  const CH = [...(S._Chronicle || [])].reverse(), chr = e => { const m = /^\[([^\]]*)\]\s*(.*)$/.exec(String(e)); return m ? `<li><span class="sub">${esc(m[1])}</span> ${esc(m[2])}</li>` : `<li>${esc(e)}</li>`; };
+  const chHtml = CH.length ? `<h3>The story so far</h3><p class="sub">Older pages of the journal, folded into a few lines the narrator keeps reading. The original lines stay below, faded.</p><ol class="jt">${CH.map(chr).join('')}</ol>` : '';
+  return `<p class="lead">The turning points of your year, written as they happen. The narrator reads the latest 30 lines as the story's spine; scene details come from chat memory. Faded lines are kept for you only: older entries, and the engine's notes (ranks, reputation, marks, recaps).</p>${chHtml}${tl}
     ${lcHtml}<h3>Campus news</h3>${ev.length ? `<dl class="kv">${ev.map(([k, v]) => { const o = v && typeof v === 'object' ? v : { Text: v }; return `<dt>${esc(k)}</dt><dd>${esc(o.Text || '')}${o.Updated ? `<span class="sub"> · ${esc(o.Updated)}</span>` : ''}</dd>`; }).join('')}</dl>` : '<div class="empty">Nothing has changed on campus yet.</div>'}
     ${ru.length || old.length ? `<h3>Rumours</h3><ul class="log">${ru.map(r => `<li>${esc(r)}${gs[r] ? `<span class="reach">${esc(gs[r][1])} · day ${gs[r][2]}</span>` : ''}</li>`).join('')}${old.map(r => `<li class="old" title="Died out">${esc(r)}</li>`).join('')}</ul>` : ''}`;
 }

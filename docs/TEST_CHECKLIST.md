@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.63.0 (memory batch 4): the three checks in its section below.
 - v1.62.0 (memory batch 3): the two checks in its section below.
 - v1.61.1 (memory batch 2): the check in its section below.
 - v1.61.0 (memory batch 1): the three checks in its section below.
@@ -105,6 +106,14 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.63.0 — Memory batch 4 (folds)
+
+- [ ] In extra-model mode, once 10 Journal lines have left the window, the update model's reply contains `/Fold`; the next
+      `<current_state>` shows a dated `_Chronicle` entry that keeps the names and promises of those lines (Journal → The story so far).
+- [ ] With a close friend present, after their eleventh new fact, a fold of their older facts appears first in their Known_facts as
+      `[until …]`, and the narrator's later scenes stay consistent with it.
+- [ ] One-call mode: the narrator writes the fold too, and the story prose does not mention it.
 
 ### v1.62.0 — Memory batch 3 (pins, open matters in Hooks)
 

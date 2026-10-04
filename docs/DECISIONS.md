@@ -213,6 +213,13 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
   - The UI shows everything.
   - 1.6.0: Knows keeps 15 lines per bond (older in `$Knows_old`), Imprints 5, `$Defining` 5. Mind, Knows and Imprints are the narrator's; the dossier never shows them.
   - 1.6.1: Extras keeps 20 invented characters (least recently seen leave into `$ui.xold`, 40, and come back if they return; Keep is the player's). `Campus_State.Events` are `{Text, Updated}`; the engine owns Updated.
+  - **Folds** (1.63.0, memory audit M5, owner-approved 2026-10-05, "Summaryception mini"): nothing in the Journal, Knows or
+    Known_facts is dropped before it is folded. Journal lines out of the window → Chronicle L1 (10 lines, 50 words) → L2 (4 entries,
+    70 words) → L3 (a finished campaign year, 100 words), dated by the engine, `_Chronicle` read-only and printed before the Journal.
+    A character's waiting Knows / Known_facts lines (5+, on a full sheet) → one `[until …]` line first in view. The fold is written by
+    the AI through the `fold` rule card (`[mvu_update]`: the update model in extra-model mode), which carries the exact lines; the
+    engine checks and stores it, or folds plainly after 8 replies. Folds rewrite curated lines, never raw chat (not VectFox's
+    summarizer); the originals stay in the UI archives.
   - 1.62.0 (memory audit M3, M4; M4 built on silence-is-approval): a line that starts with `!` is pinned. A pinned Journal line
     that leaves the window stays in view in `_Kept_from_earlier` (20); the engine pins its landmarks (solved, changed for good,
     hidden truth, new year, graduation, Rank 10, romance). Knows / Known_facts keep five pinned lines per character past the cap. A

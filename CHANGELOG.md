@@ -1,7 +1,39 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.63.0 — Memory batch 4: folds, the story so far (2026-10-05)
+
+Batch 4 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6 (M5, "Summaryception mini", owner-approved 2026-10-05; new DECISIONS §8
+rule). Built for MVU's extra-model mode: the update model writes the folds. Save fixture v1.62.0.
+- **Nothing in the Journal, Knows or Known_facts is dropped any more before it is folded.**
+  - Journal lines that leave the window (and pinned lines past the 20 kept) wait in `$eng.jq`. Every 10 become one Chronicle entry
+    (L1, at most 50 words); past 12 entries of a level the oldest 4 become one L2 entry (70 words); when a campaign year is over its
+    entries become one L3 entry `[Year N]` (100 words). `_Chronicle` (read-only for the AI) is printed by `<current_state>` before
+    `_Kept_from_earlier` and the Journal; the engine dates every entry (`[Y1 M1 W1 Mon – Y1 M2 W3 Fri]`).
+  - A character's Knows / Known_facts lines that leave the view wait at the end of `$Knows_old` / `$Known_old` (`$Knows_q`,
+    `$Known_q`; the hidden list never drops a line still waiting). Five or more waiting and the character on a full Cast Sheet: they
+    and the list's earlier fold line become one line `[until Y1 M3 W2] …` (40 words) that stays first in view.
+- **Who writes it:** the new rule card `fold` (511, `[mvu_update]`) appears only when a fold is due and prints the exact lines, so
+  the update model needs no chat history (extra-model mode; the narrator in one-call mode). It writes `/Fold` (a new per-reply
+  field the engine empties). The engine answers the request it left before the reply (Prompt Template renders 511 on that state in
+  both modes), checks the length (over 1.5× the limit: cut, with a Log line) and stores the fold; a fold not written for 8 replies
+  with an update block is made plainly by the engine (the lines' first words), so memory never waits for ever. Deterministic: the
+  fold is in the reply's block, so a replay repeats it.
+- **Older saves:** `stepMigrate` puts what they already moved out of view (the Journal archive, `$Knows_old`, `$Known_old`) in the
+  queues, so their older story comes back as folds over the next replies.
+- **Player:** Journal → "The story so far" lists the Chronicle; the original lines stay below, faded. (Also fixed: a pinned line
+  pushed out in the reply that wrote it now shows in the panel.)
+- **Measuring:** `memory_lists.cjs` counts lines folded and lines lost before a fold (QUEUES); `--memory` shows both, the Chronicle
+  by level and the waiting lines; the soak answers 80% of the folds and fails on any line lost before a fold. Soak 10,000 updates:
+  0 lost (7,113 facts, 1,678 Knows lines, 800 Journal lines folded); state 163 KB, 501 at most 7,400 tokens (budget raised to 9,000;
+  batch 6 trims 501).
+- Tests: new `test_memory_batch4_v1630` (25); `test_memory_tools_v1611` reads the new report columns. Full `npm test` and `npm run
+  lint` pass; the Journal panel was checked in a browser preview.
+- **To check live (owner):** `docs/TEST_CHECKLIST.md` 1.63.0. Token cost: 0 until a fold is due; the fold card with its lines about
+  300-450 tokens on those replies only (update model in extra-model mode); a mature Chronicle about +500-1,100 in `<current_state>`.
+  **Invented, to confirm:** the patience of 8 replies before a plain fold.
 
 ## v1.62.0 — Memory batch 3: pins, and open matters in Hooks (2026-10-05)
 
@@ -102,31 +134,6 @@ a change follows from the story or {{user}}'s actions, never from the narrator's
   `test_nations_v172`, `test_worldmyth_v171`; `test_playtest_v137` accepts the overlay as an entry's block scope; `test_people_map`
   reads Lore_changes. Full `npm test` and `npm run lint` pass; the Journal panel was checked in a browser preview (no errors).
 - **To check live (owner):** `docs/TEST_CHECKLIST.md` 1.60.0. **Invented, to confirm:** the limits (2 new a reply, 40 on record).
-
-## v1.59.0 — Narrator-load batch 8: Trust and Tension by severity word (2026-10-04)
-
-Batch 8 of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6 (U8), the last one. The owner approved the change to DECISIONS §6 (Trust,
-Tension). Save fixture v1.58.0.
-- **The narrator no longer picks Trust or Tension numbers.** A drop is an interaction `{"With", "Kind": "letdown", "Weight":
-  "small|broken|secret_told|betrayal"}`, a rise `{"With", "Kind": "offence", "Weight": "slight|jealous|insult|violence"}`.
-  - The engine draws the size (`rollInt`, seeded, replay-safe) from new data: `data/trust.json` `letdown`, `data/tension.json`
-    `offence`. The ranges are the old rule card's own numbers (no new balance); `jealous` is the card's flirting case (+5–10).
-  - `"Meant": "no_harm"` on a letdown takes the card's smaller sizes (a failed try 0–3, a clash of promises after a warning 3–5, a slipped
-    secret 8–10; a careless betrayal 8–10, which is new); `"Meant": "forced"` loses no Trust and says so in the Log.
-  - Then everything as before: the category's drop, Tension multipliers (mood, category, Trust band, Ezrel, the Dorm Head), Etnie's
-    floor, Althair's lock, word spreading to friends, apologies. Several letdowns or offences add up; Tension rises stay uncapped.
-  - A number written directly still works (old habit, old chats); when the narrator writes one and reports the word too, the larger
-    counts, never both. An unknown Weight changes nothing and is logged. Krieg's filter lets letdowns and offences through.
-  - `$Recent` words: "let them down", "offended them" (`data/bond_rules.json`).
-- **Rule text:** the 502 core line says "never write their numbers" and lists both kinds; the Trust/Tension card defines each word
-  and the `Meant` cases instead of number ranges; the Interactions card lists the two kinds.
-- **Tokens:** about +20 a turn with someone here, not the −400 the audit estimated: defining the words costs what the numbers did. The
-  gain is one channel for every social effect and no number to choose (and simpler work for an update model in extra-model mode).
-- Tests: new `test_narrator_batch8_v1590` (21); wording updated in `test_trust_v143`, `test_tension_v138`, `test_apology_v140`,
-  `test_greyarea_v144`, `test_newbond_v1611`, `test_playtest_v137`. Full `npm test` passes; with `ENGINE_DIFF` against the 1.58.0
-  engine (its version stamp set to 1.59.0, so `stepMigrate` behaves the same) every engine run is identical except the new test's
-  letdown run.
-- **To check live (owner):** `docs/TEST_CHECKLIST.md` 1.59.0. **Invented, to confirm:** the careless-betrayal size (8–10).
 
 ## Release index (one line per release, oldest first)
 
@@ -270,3 +277,4 @@ Tension). Save fixture v1.58.0.
 - **v1.61.0 (2026-10-05):** Memory batch 1: open mysteries' clues outlive solved ones and leave into an archive, Journal repeats dropped and routine lines leave first, short records for forgotten Extras, the MVU hook reads the floor being replayed (and warns of a far snapshot), VectFox dates with the year and turning points, long-chat guidance.
 - **v1.61.1 (2026-10-05):** Memory batch 2: `audit_chat.py --memory` (what each memory list kept and lost, 501 tokens, state size and file projection) and `--vectfox` (ghost events, dates without a year, near-duplicates), `tools/memory_lists.cjs`, `tests/stress/memory_soak.cjs`, the memory baseline.
 - **v1.62.0 (2026-10-05):** Memory batch 3: pinned (`!`) lines never leave the narrator's view (Journal → `_Kept_from_earlier`, 20; Knows / Known_facts: five per character; engine landmarks pinned), open matters go in Hooks (M4).
+- **v1.63.0 (2026-10-05):** Memory batch 4: folds ("Summaryception mini"): Journal lines → Chronicle L1/L2/L3 (`_Chronicle`), Knows / Known_facts → one fold line per character, written by the update model through the `fold` rule card (`/Fold`), plain fold after 8 replies; nothing dropped before it is folded.

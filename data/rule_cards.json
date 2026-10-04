@@ -76,6 +76,10 @@
   "vigil": {
    "feature": "weather",
    "text": "The Vigil: it holds off sleep debt for 48 hours, then {{user}} crashes until two full nights are slept; buying or gifting it does not activate it."
+  },
+  "fold": {
+   "feature": "",
+   "text": "Fold (memory; this reply only, besides the usual update): the game keeps older memory by folding several old records into one. Write {\"op\": \"replace\", \"path\": \"/Fold\", \"value\": \"<the fold>\"}: one plain entry, within the words given below, that keeps who did what, why and what changed; keep every name, promise, debt, death and secret the lines hold; add nothing they do not say, and no date (the game adds it). Fold exactly these lines:"
   }
  }
 }

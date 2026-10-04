@@ -9,6 +9,11 @@ The update rules for what is going on now (they complete the core lines of <vari
 <%_ if (_HERE.length) { _%>
   Change type of those here: <%- _HERE.map(n => n + ' ' + _CH.type[n]).join(', ') %> (<%- [...new Set(_HERE.map(n => _CH.type[n]))].map(t => t + ': ' + _CH.def[t]).join(' ') %>)
 <%_ } } _%>
+<%_ if (id === 'fold' && _U.fold && Array.isArray(_U.fold.lines)) { _%>
+  Fold <%- _U.fold.label %>, at most <%- _U.fold.max %> words:
+<%_ for (const _l of _U.fold.lines) { _%>
+  - <%- _l %>
+<%_ } } _%>
 <%_ } _%>
 </rule_cards>
 <%_ } _%>

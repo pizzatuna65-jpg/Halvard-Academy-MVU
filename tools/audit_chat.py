@@ -462,17 +462,20 @@ def memory_md(mm):
     n = mm['replies'] or 1
     out = ['## Memory (what the card remembers and forgets)', '',
            f"{mm['replies']} replies with an update block, replayed through the current engine from {mm['start']}.", '',
-           '| List | Narrator wrote | Left the view | Kept (archive) | Lost for good | Removed by the story | Written per 100 replies |',
-           '|---|---|---|---|---|---|---|']
+           '| List | Narrator wrote | Left the view | Kept (archive) | Folded | Lost before a fold | Dropped from the archive | Removed by the story | Written per 100 replies |',
+           '|---|---|---|---|---|---|---|---|---|']
     for k in MEM_LISTS:
         t = mm['totals'].get(k, {})
         cut = f" ({t['cut']} cut to a short record)" if t.get('cut') else ''
-        out.append(f"| {k} | {t.get('written', 0)} | {t.get('left', 0)} | {t.get('kept', 0)}{cut} | "
+        fl = (t.get('folded', 0), t.get('lost', 0)) if k in ('Journal', 'Knows', 'Known_facts') else ('–', '–')
+        out.append(f"| {k} | {t.get('written', 0)} | {t.get('left', 0)} | {t.get('kept', 0)}{cut} | {fl[0]} | {fl[1]} | "
                    f"{t.get('gone', 0)} | {t.get('story', 0)} | {round(t.get('written', 0) * 100 / n, 1)} |")
     sz = mm['sizes']
     out += ['', f"Clues of an open mystery that left the view: **{mm['open_clues']}** (should be 0 while a solved or cold one is on record).", '',
             '| At the end | Value |', '|---|---|',
-            f"| Journal / its archive | {sz.get('Journal', 0)} / {sz.get('journal_archive', 0)} |",
+            f"| Journal / pinned kept in view / waiting for a fold / its archive | {sz.get('Journal', 0)} / {sz.get('kept_pinned', 0)} / {sz.get('journal_waiting', 0)} / {sz.get('journal_archive', 0)} |",
+            f"| Chronicle entries by level | {', '.join(f'{k} {v}' for k, v in sorted((sz.get('chronicle') or {}).items())) or '0'} |",
+            f"| Knows / Known_facts lines waiting for a fold (most in one bond) | {sz.get('knows_waiting_max', 0)} / {sz.get('facts_waiting_max', 0)} |",
             f"| Knows / older (most in one bond) | {sz.get('Knows_max', 0)} / {sz.get('Knows_old_max', 0)} |",
             f"| Known_facts / older (most in one bond) | {sz.get('Known_facts_max', 0)} / {sz.get('Known_old_max', 0)} |",
             f"| Clues / archived | {sz.get('Clues', 0)} / {sz.get('clue_archive', 0)} |",
