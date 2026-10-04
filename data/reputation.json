@@ -58,6 +58,8 @@
   "lied_to_doves": ["Doves", -10, "loss"],
   "obstructed_search": ["Doves", -15, "loss"]
  },
+ "_also": "1.53.0 (narrator-load audit U7): a deed whose second side always comes with it; the engine adds that side itself (same Why) unless it was reported too.",
+ "also": {"reported_student_to_staff": "helped_staff_report", "reported_student_to_doves": "helped_doves_report"},
  "competition": {
   "_note": "1.44.0 (audit 3.13, owner decision by silence): the engine pays a competition result's deed itself when Competition.Status changes, once a year each ('Tier:Status' -> deed; the narrator no longer reports these kinds). A title has a price: the staff expect {{user}} to defend it, and the next elimination at that tier or below costs Academy Rep XP (expect, by the title's tier). Teammates (Competition.Team) gain team_xp bond XP once a year per tier, when the team's result at that tier comes in (qualified, eliminated or champion).",
   "pay": {

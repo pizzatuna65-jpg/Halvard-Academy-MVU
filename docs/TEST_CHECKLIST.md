@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.53.0 (narrator-load batch 1): the five checks in its section below.
 - v1.52.2 (preset audit 2): the four checks in its section below.
 - v1.52.1 (Commitment Where): the check in its section below.
 - v1.52.0 (feature batch 4): the three checks in its section below.
@@ -94,6 +95,15 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.53.0 — Narrator-load batch 1 (quick fixes)
+
+- [ ] Across midnight the narrator writes only Day and Time (no Week/Month sums), and the date rolls correctly.
+- [ ] A Commitment written with "tomorrow 16:00" shows as "M? W? Day 16:00" in the state on the next turn.
+- [ ] On a first meeting, `insert /Bonds/<name>/Known_facts/-` is accepted by real MVU (it creates the missing record) and the bond
+      starts with the character's own Trust.
+- [ ] `<Analysis>` stays at about 3 lines with no Points sum; outdoors while Chilled the narrator takes no stamina for it.
+- [ ] An Occult student without a pact is offered the first pact at the Spirit Path, and the pact is recorded.
 
 ### v1.52.2 — Preset audit 2, tier 1 (preset only)
 

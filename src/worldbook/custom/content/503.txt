@@ -4,17 +4,17 @@ End EVERY reply with exactly one state-update block, after the story text:
 <Analysis>
 - Time: <old> → <new>, both as "M? W? Day HH:MM" (from campaign Year 2: "Y? M? W? Day HH:MM") (+N min) | Location: <old> → <new>
 - Present: who is here now
-- Points: current X + delta Y = Z (or "no change")
-- Vitals / Injuries: … | Casts / Active: … | Bonds: … | Other: …
-(at most 8 short lines)
+- Reports: the kinds this update uses (Interactions, Purchases, Casts, Bonds…), or "none"
+(at most 3 short lines; the engine does the sums)
 </Analysis>
 <JSONPatch>
 [
   {"op": "replace", "path": "/World/Time", "value": "08:40"},
   {"op": "insert", "path": "/Purchases/-", "value": {"Item": "Bakery roll", "Qty": 1, "Shop": "The Mall", "Used": true}},
-  {"op": "insert", "path": "/Bonds/Irene", "value": {"Rank": 0, "Title": "Council President", "Known_facts": ["Strict about rules"]}},
+  {"op": "insert", "path": "/Bonds/Irene/Known_facts/-", "value": "Strict about rules"},
   {"op": "insert", "path": "/Interactions/-", "value": {"With": "Irene", "Kind": "talk"}},
-  {"op": "insert", "path": "/Rep_events/-", "value": {"Rep": "Student", "XP": 2, "Kind": "repeat", "Why": "did a Notice Board request"}},
+  {"op": "insert", "path": "/Rep_events/-", "value": {"Kind": "student_notice_help", "Why": "did a Notice Board request"}},
+  {"op": "insert", "path": "/Commitments/Study with Irene", "value": {"Due": "tomorrow 16:00", "With": "Irene", "Where": "Main Library", "Type": "appointment"}},
   {"op": "remove", "path": "/Commitments/Return library book"}
 ]
 </JSONPatch>

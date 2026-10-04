@@ -1,7 +1,54 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.53.0 — Narrator-load batch 1: quick fixes (2026-10-04)
+
+Batch 1 of `audit/AUDIT_2026-10-04_1_beban_narator.md` §6 (T6, U4, U5, U6, U7, T10, Journal dates). No feature was switched off and no
+balance number changed. Save fixture v1.52.2.
+- **T6, the first pact (bug since 1.31.0).** The "first pact in play" rule now shows to a student with Occult magic who has not made a
+  pact in play yet (`$eng.pactPlay`), pact or no pact. Before, it showed only to players who already had a pact. The summon and
+  dismiss rules still show only when `Magic.Pacts` has an entry.
+- **U4, 503.** The example uses a named deed (`student_notice_help`) instead of the legacy form, adds a fact to a bond
+  (`/Bonds/Irene/Known_facts/-`) instead of inserting a whole record with Rank, and writes a Commitment with a plain date ("tomorrow
+  16:00"). `<Analysis>` has at most 3 lines: Time | Location, Present, Reports. The "Points: current + delta" line and the Vitals line
+  are gone: the engine does the sums. The Time line keeps its full date, because VectFox's cleaning pattern reads it for EventBase's
+  in-world time (`docs/ECOSYSTEM.md`, `test_vectfox_v1113`).
+- **U5, plain words, engine-made dates.** 502 asks only for the new Day and Time; the engine turns the week, month and year (Week
+  and Month only for a skip of more than a week). Due, Until and Heals_by may be written plainly. New: after the engine pins such a
+  date (as it has since 1.44.0), it writes it back once as the calendar date (`absWhen`: "tomorrow after class" becomes "M2 W2 Tue
+  after class"). This covers Commitments, Notices, Hooks, Next plans, Projects and injuries, so no stale "tomorrow" stays in the state.
+  The text is kept as written if the rewrite would not read back to the same minute. Bonds: a record starts by itself when a roster
+  character is first in Scene.Present; 502 says to add to it field by field, never to insert a whole record. Location: short names are
+  fine (the engine matches them to the map).
+- **U6, one engine list.** One line in 502 lists what the engine does and the narrator never writes: technique mana and regeneration;
+  stamina from walks, weather and conditions (missing before, T5: the playtest's double Chilled penalty); rest and restful places;
+  weather conditions; Mana_max / Stamina_max; proficiency and craft results; payouts, purchases, sales, tutoring pay; bond XP, Rank and
+  Trust rises; quiet-day Tension easing; marks, attendance, reputation levels; Dove decay; the calendar. Each item is gated by its
+  feature. About twelve scattered "never add it yourself" clauses are gone.
+- **U7, reports the engine can take.** `data/reputation.json` `also`: a report to staff brings `helped_staff_report`, a report to the
+  Doves `helped_doves_report`. The engine adds the second side unless it was reported too, so it is counted once either way. A remedial
+  is attended when {{user}} is at its place (Where; new remedials carry "Main Library", the Saturday Study Hall's place, which is also
+  the fallback for older ones) within three hours of its start. The engine removes the Commitment, and the F counts as a D as before.
+  The narrator may still remove it.
+- **T10.** The empty `on('class')` gate in 504 is gone. The narration half of 502's "Mood, sleep and wind" (moods colour without
+  replacing personality, a collapsed {{user}} cannot interact, NPC magic follows the weather) moved to 504's weather lines. The request
+  for an Extras record ("Seen before, with no Extras record yet…") moved from the Cast Sheet tail, tagged `[mvu_plot]`, to `<now>`,
+  which has no tag, so an update model in extra-model mode sees it too (U9 preparation).
+- **Journal dates** in `<now>` name each date once.
+- **Not in this batch:** alcohol moves to keyword lore in batch 3 (situational rule cards). 502 is about the same size as before (the
+  engine list replaces the scattered clauses). The token savings are U1–U3, batches 3–6.
+- **Tests:** new `test_narrator_batch1_v1530` (24 checks). `test_extras_v161` (request now in `<now>`) and `test_audit_batch7_v1480`
+  (a Journal with a repeated date reads shorter by design) were updated. `test_saves` (new 1.52.2 fixture), `test_grades_v1150`,
+  `test_pacts_v132`, `test_vectfox_v1113`, `test_playtest_v1301`, the audit and feature batch suites and every suite touching dates,
+  deeds, Extras or bond facts pass.
+- **To check live** (TEST_CHECKLIST 1.53.0): the narrator writes only Day and Time across midnight; a plain Due is shown as a date
+  next turn; `insert /Bonds/<name>/Known_facts/-` on a first meeting is accepted by real MVU (the harness copies MVU creating the
+  missing container); Analysis stays at 3 lines and no stamina is taken for Chilled; an Occult student is offered the first pact at
+  the Spirit Path.
+- **To confirm with the owner:** the remedial's place. The lore names no room for make-up sessions, so the engine uses the Main
+  Library (the Saturday Study Hall slot the session replaces). A narrator who plays it elsewhere still removes it by hand.
 
 ## v1.52.2 — Preset audit 2, tier 1: one home per rule, a lighter CoT (2026-10-04)
 
@@ -120,29 +167,6 @@ plan is counted by the steps that already count those things, inside their weekl
   itself (ignoring only the new `$ui.on.routine_week`). `tests/test_feature_batch2_v1500.cjs` (25 checks: arming, `<now>`, the run,
   weekly limits, stoppers, refusals, no plan). Full suite passes. UI checked in a local preview (render, add / change / remove rows).
 - **To confirm with the owner:** the 12-hour minimum span, the 20:00 end, the moment picks (85% a bond moment, one happening).
-
-## v1.49.0 — Feature batch 1: favours and group assignments (2026-10-03)
-
-`audit/AUDIT_2026-10-03_4_batch_fitur.md` batch 1 (audit part 2, suggestions 4.6 and 4.10). Save fixture v1.48.0. Built only on what
-exists: Commitments and the Agenda, initiative, the `help` / `study` interactions, the Bag ledger and the study pool.
-- **Favours (4.6).** Some initiative days the reason is a favour (`data/initiative_asks.json` `favours`: two generic templates per Tension
-  category, 30% of initiative days, at most two offered a week, never at Tension 70+, never while that NPC has an open favour). `<now>`
-  says how to record one the player accepts: a Commitment `Type "favour"`, `With` the NPC, Due within two days, and `Item` (something
-  they love or like) or `Where` (one of their haunts). New engine step `stepPromises`, run just before `stepBonds`: a favour removed
-  before it was overdue was kept and counts as a `help` interaction (bond XP only with time together, Trust +2 inside the weekly cap,
-  never twice when the narrator also reports it); its `Item` leaves the Bag (`bagTake`; without it in the Bag the favour does not count).
-  Left overdue: the NPC's Tension +5 once, through the ordinary rise rules (category, mood, Trust band). A polite refusal owes nothing.
-- **Group assignments (4.10).** A Project `Kind "assignment"` `With` classmates: Progress 100 on time is +45 minutes of study (as an
-  assignment Commitment); finished late it counts as a skipped class of the subject its name or Goal names; when it turns overdue each
-  partner's Tension +3 once. Who let the group down is the story's to play, in character. A study session in `/Practice` (Study a
-  subject, Group study) with someone present is now a `study` interaction with them, once (time together, so bond XP and the Rank 4
-  study partner bonus). Not built: the batch plan's "+1 XP with the subject's teacher", because bond XP needs time together.
-- **Rules and UI.** 502: the favour Type and `Item`, and how to hand in an assignment (Progress 100, then remove it). 505: the favour
-  line under NPC initiative. Planner: a favour shows what to bring and whether it is in the Bag. Schema: `Commitments.Item`,
-  `$eng.promise` (overdue rises already paid).
-- **Tests:** `tests/test_feature_batch1_v1490.cjs` (24 checks); `test_audit_batch7_v1480` skips the one recorded `<now>` that is now a
-  favour day; `test_batch3_fp11_v1102` accepts favour reasons. Full suite passes.
-- **To confirm with the owner:** the favour templates and numbers (30%, two a week, Tension +5 / +3) are maintainer-written defaults.
 
 ## Release index (one line per release, oldest first)
 
@@ -274,3 +298,4 @@ exists: Commitments and the Agenda, initiative, the `help` / `study` interaction
 - **v1.52.0 (2026-10-04):** Feature batch 4: NPC weekly routines in the one whereabouts model (70% a day by the shared roll; `<now>`, Map "Usually here", the dossier's Routine field, initiative places), switchable in Features.
 - **v1.52.1 (2026-10-04):** 502: a Commitment's Where is the meeting place, not where it was arranged (Clues and Projects Where clarified too).
 - **v1.52.2 (2026-10-04):** Preset audit 2, tier 1: BOLT points to the rules instead of restating them, short Cosmos last-mile gates, one home per rule, Internal Thoughts tightened (17,245 → 15,444 tokens as sent; depth 0 −19%); `token_audit` counts the preset as ST sends it.
+- **v1.53.0 (2026-10-04):** Narrator-load batch 1: the first-pact rule reaches Occult students (T6), a correct 503 example and a 3-line Analysis, plain dates written back as calendar dates, one "the engine does these" list, deed pairs and the remedial taken by the engine, the Extras request in `<now>`.

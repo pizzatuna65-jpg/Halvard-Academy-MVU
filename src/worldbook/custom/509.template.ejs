@@ -2,7 +2,7 @@
 // Source of custom entry 509, the head of the Cast Sheet (1.5.1 Batch B; 1.48.0 audit 2.7: the sheets are one entry per NPC, uid 600+,
 // and 509_tail.template.ejs closes it). tools/gen_mvu_entries.py fills CAST; edit this file, not 509.txt.
 const CS = getvar('stat_data.$ui.cast') || {}, FULL = CS.full || [], BRIEF = CS.brief || [];
-const CX = getvar('stat_data.Extras') || {}, XHERE = (CS.extras || []).filter(x => CX[x]), XNEW = CS.xnew || [];
+const CX = getvar('stat_data.Extras') || {}, XHERE = (CS.extras || []).filter(x => CX[x]);
 const CD = /*@@CAST@@*/{};
 const HERE = [...FULL, ...BRIEF];
 // 1.11.0 (token audit A8): what every sheet shares is said once, and only what the people here need
@@ -15,7 +15,7 @@ const CHEAD = (() => {
   return out.length ? 'On these sheets: ' + out.join(' ') : '';
 })();
 _%>
-<%_ if (HERE.length || XHERE.length || XNEW.length) { _%>
+<%_ if (HERE.length || XHERE.length) { _%>
 <cast>
 Character sheets for the people present: the truth about each of them. They outrank the lorebook text and anything earlier in the chat. Rank, Trust and Tension change how a character treats {{user}}, never who they are.
 <%_ if (CHEAD) { _%>

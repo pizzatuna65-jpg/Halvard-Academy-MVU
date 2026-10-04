@@ -128,7 +128,7 @@ const INITIATIVE = on('npc_initiative') ? UI.initiative : null;   // 1.7.7 (FP1)
 // within 90 min; WENDIGO: the Wendigo's line; AVD: Avalon's carriage fare and the rival students; SRD: Sunreach's fares, who may be met
 const AREAS = UI.area || {};
 const AREA = ['forest', 'avalon', 'airship', 'sunreach'].some(k => AREAS[k] && AREAS[k].on);
-const JAGES = (getvar('stat_data.Journal') || []).slice(-5).reverse().map(l => (/^\[([^\]]+)\]/.exec(String(l)) || [])[1]).filter(w => w && ageOf(w, W));
+const JAGES = [...new Set((getvar('stat_data.Journal') || []).slice(-5).reverse().map(l => (/^\[([^\]]+)\]/.exec(String(l)) || [])[1]).filter(w => w && ageOf(w, W)))];   // 1.53.0: each date once
 // 1.2.2 bonds: for each present NPC, what they will talk about at this rank (openness shifts the early tiers; goals, views of others
 // and the past need the real rank; secrets never come from rank) and what the bond allows
 const RANK4 = {"Irene":["mana","study"],"Caspian":["mana","study"],"Etnie":["mana","stamina","study"],"Royhan":["mana","study"],"Sophia":["mana","stamina"],"Gareth":["mana","stamina","study"],"Ruby":["study"],"Lenna":["mana","stamina","study"],"Saffi":["mana","stamina"],"Kanae":["mana","study"],"Idris":["mana","study"],"Tilly":["stamina","study"],"Dante":["mana","study"],"Florian":["mana","stamina"],"Aiden":["mana","study"],"Caralynn":["mana","study"],"Zara":["mana","study"],"Percival":["mana","stamina","study"],"Trixie":["mana","stamina"],"Vera":["mana","study"],"Castor":["mana","study"],"Alyssa":["mana","study"],"Linus":["mana","study"],"Maple":["mana","study"],"Nerys":["mana","study"],"Hadrian":["mana","study"],"Wren":["mana","study"],"Tsubaki":["mana","stamina"],"Gavlan":["mana","stamina","study"],"Yvette":["mana","stamina","study"],"Krieg":["mana","stamina"],"Milena":["mana","stamina","study"],"Baelin":["mana","stamina","study"],"Layla":["mana","study"],"Vallie":["mana","stamina"],"Rei":["mana","stamina","study"],"Kuroo":["mana","study"],"Mimosa":["mana","study"],"Tristan":["mana","study"],"Althair":["mana","study"],"Ezrel":["mana","study"],"Ottavio":["mana","study"],"Caine":["study"],"Bobby":["stamina","study"],"Hester":["study"],"Anselm":["mana","study"],"Magnus":["mana","study"],"Dorian":["mana"],"Cedric":["study"],"Anya":["study"],"Kotaro":["stamina"],"Valentin":["mana","study"],"Aurelian":["mana","stamina"],"William":["mana","study"],"Bruno":["stamina"],"Bianca":["study","mana"],"Rigel":["study","mana"],"Topaz":["mana","study"],"Faye":["stamina","mana"]};
@@ -281,6 +281,9 @@ Possibly missed in the last update. Report each in this reply's update only if i
 <%_ for (const m of MISSED) { _%>
 - <%- m %>
 <%_ } _%>
+<%_ } _%>
+<%_ if ((CAST.xnew || []).length) { _%>
+Seen before, with no Extras record yet: <%- CAST.xnew.join(', ') %>. Add their record (Extras) in this reply's update, true to how they were written before (Who, Looks, Manner, Calls_user, Voice).
 <%_ } _%>
 <%_ for (const id of (CAST.gone || [])) { _%>
 <%- id %> spoke in the last reply but is not in Scene.Present: add them if they are still here; otherwise they are gone and stay silent.

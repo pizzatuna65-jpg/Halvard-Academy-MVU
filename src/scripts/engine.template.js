@@ -373,6 +373,20 @@ function whenText(abs, absNow) {
   if (dd < 7) return `in ${dd} days (${T.Day}${tm})`;
   return `${T.Year !== fromAbs(absNow).Year ? `Y${T.Year} ` : ''}M${T.Month} W${T.Week} ${T.Day}${tm}`;
 }
+// 1.53.0 (narrator-load audit U5): a date written without its month and week ("tomorrow 09:00", "Fri 16:00", "in two days") is written
+// back once as the absolute date it was anchored to, so no stale "tomorrow" stays in the state. Words that are not part of the date
+// stay ("tomorrow after class" -> "M2 W2 Tue after class"); the text is kept as written when the rewrite would not read back the same.
+const WHEN_WORDS = [/\b(?:today|tonight|tomorrow)\b/gi, /\bin\s+(?:a|an|one|two|three|four|five|six|seven|\d{1,2})\s+(?:days?|weeks?)\b/gi,
+  /\bnext week\b/gi, /\b(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)(?:s|[a-z]*day)?\b/gi, /\b\d{1,2}(?::\d{2})?\s*(?:am|pm)\b/gi, /\b\d{1,2}:\d{2}\b/g,
+  /\b(?:noon|midday|midnight|morning|afternoon|evening)\b/gi];
+function absWhen(text, abs, W, absNow) {
+  const s = String(text || '').trim();
+  if (abs < 0 || !s || /\b(?:M|Month\s*)\d{1,2}\b|\b(?:W|Week\s*)[1-4]\b/i.test(s)) return s;
+  let rest = WHEN_WORDS.reduce((x, rx) => x.replace(rx, ' '), s).replace(/[\s,]+/g, ' ').trim();
+  if (/^(?:(?:at|by|on|before|until|till|around|about|this|the|from|in|of)\b\s*)*$/i.test(rest)) rest = '';
+  const T = fromAbs(abs), out = `${T.Year > 1 ? `Y${T.Year} ` : ''}M${T.Month} W${T.Week} ${T.Day}${T.Time === '23:59' ? '' : ' ' + T.Time}${rest ? ' ' + rest : ''}`;
+  return parseWhen(out, W, absNow) === abs ? out : s;
+}
 const capRecord = (obj, max, dropFirst) => {                   // drop the oldest keys (insertion order), preferring dropFirst(v)
   let keys = Object.keys(obj || {}); if (keys.length <= max) return;
   const order = dropFirst ? [...keys.filter(k => dropFirst(obj[k])), ...keys.filter(k => !dropFirst(obj[k]))] : keys;
@@ -392,9 +406,10 @@ function agendaWhen(c) {
   if (c.agWhen) return c.agWhen;
   const { S, absA } = c, A = S.$eng.agenda = _.isPlainObject(S.$eng.agenda) ? S.$eng.agenda : {};
   const W = A.when = _.isPlainObject(A.when) ? A.when : {};
-  return (c.agWhen = (id, text) => {
+  return (c.agWhen = (id, text, rec, key) => {
     text = String(text || '').trim(); if (!text) { delete W[id]; return -1; }
     const p = W[id], abs = anchorWhen(text, p && p[0], p ? num(p[1], -1) : -1, S.World, absA);
+    if (rec) text = rec[key] = absWhen(text, abs, S.World, absA);   // 1.53.0 (U5)
     W[id] = [text, abs]; return abs;
   });
 }
@@ -2181,7 +2196,13 @@ function stepReputation(c) {
   const vouchMonth = `Y${S.World.Year}M${S.World.Month}`, usedVouch = new Set();
   const vouchLedger = S.$eng.vouch = _.isPlainObject(S.$eng.vouch) ? S.$eng.vouch : {};
   const CP = REP.competition || {}, compKinds = new Set(Object.values(CP.pay || {}));
-  for (const e of (Array.isArray(S.Rep_events) ? S.Rep_events : [])) {
+  // 1.53.0 (narrator-load audit U7): a deed whose other side always comes with it (REP.also) brings that side itself, unless reported
+  const REV = Array.isArray(S.Rep_events) ? S.Rep_events.filter(e => e && typeof e === 'object') : [], kindOf = e => String(e.Kind || '').trim().toLowerCase();
+  for (const [a, b] of Object.entries(REP.also || {})) {
+    const extra = REV.filter(e => kindOf(e) === a).length - REV.filter(e => kindOf(e) === b).length;
+    REV.filter(e => kindOf(e) === a).slice(0, Math.max(0, extra)).forEach(e => REV.push({ Kind: b, Why: e.Why || '' }));
+  }
+  for (const e of REV) {
     const kind = String(e.Kind || '').trim().toLowerCase(), deed = (REP.deeds || {})[kind];
     if (compKinds.has(kind)) { log.push(`Reputation deed "${kind}" is paid by the engine from Competition (Tier and Status); it was not counted here.`); continue; }
     if (!deed && kind && !['repeat', 'event'].includes(kind)) { log.push(`Reputation deed "${kind}" is unknown; use a listed Kind or an explicit repeat/event entry.`); continue; }
@@ -2494,7 +2515,7 @@ function stepSchoolWeek(c) {
         for (const s of fails) {
           const k = `Remedial ${s}`, t = Object.keys(CLASS.teach || {}).find(id => teaches(id, s, PY, classRole(S.Player.Profile)) && !goneNow(id)) || '';
           const due = stamp(fromAbs(((weekNo + 1) * 7 + 5) * DAY_MIN + 600));
-          S.Commitments[k] = { Desc: `Make-up session for the ${s} F (${label}); attending turns it into a D for the dorm ranking`, Due: due, With: t, Where: '', Type: 'appointment' };
+          S.Commitments[k] = { Desc: `Make-up session for the ${s} F (${label}); attending turns it into a D for the dorm ranking`, Due: due, With: t, Where: 'Main Library', Type: 'appointment' };
           ST.rem[k] = sess; rem.push({ s, t, due });
         }
         S.$ui.posted = { label, line, rem };
@@ -3315,7 +3336,7 @@ function stepBondMemory(c) {
       // Next
       let nx = b.Next && typeof b.Next === 'object' && String(b.Next.What || '').trim() ? { What: String(b.Next.What).trim(), Where: String(b.Next.Where || '').trim(), Until: String(b.Next.Until || '').trim() } : null;
       if (nx && b.Rank < NEXT_RANK) { if (!(b0 && b0.Next)) log.push(`Next plans are kept for bonds of Rank ${NEXT_RANK} or more; ${id}'s was not kept.`); nx = null; }
-      const until = agendaWhen(c)('n:' + id, nx ? nx.Until : '');   // 1.44.0 (Agenda): parsed once; "tomorrow" no longer moves on
+      const until = agendaWhen(c)('n:' + id, nx ? nx.Until : '', nx, 'Until');   // 1.44.0 (Agenda): parsed once; "tomorrow" no longer moves on
       if (nx && presentIds.has(id) && !wasHere.has(id) && b0 && b0.Next) {
         since.push([id, nx.What + (nx.Where ? ' (' + nx.Where + ')' : ''), nx.Until]); nx = null;
       } else if (nx && until >= 0 && until < absA && !presentIds.has(id)) {
@@ -3911,16 +3932,29 @@ function stepRecords(c) {
     for (const [name, injury] of Object.entries(S.Player.Injuries || {})) {
       const by = String((injury || {}).Heals_by || '');
       next[name] = prior[name] && prior[name].text === by ? prior[name] : { text: by, abs: parseWhen(by, S.World, absA) };
+      if (injury && by) next[name].text = injury.Heals_by = absWhen(by, next[name].abs, S.World, absA);   // 1.53.0 (U5)
     }
     S.$eng.heals = next;
   }
   const newKeys = (cur, prev) => Object.keys(cur || {}).filter(k => !(prev && k in prev));
+  // 1.53.0 (narrator-load audit U7): a remedial session is attended when {{user}} is at its place (Where; the Saturday Study Hall's
+  // Main Library when empty) during its first three hours; the engine then removes the Commitment as the narrator would
+  if (hasB && !toolEdit && !OFF.has('study') && _.isPlainObject((S.$eng.study || {}).rem)) {
+    const here = placeOf(canonLocation(S.World.Location));
+    for (const k of Object.keys(S.$eng.study.rem)) {
+      const cm = (S.Commitments || {})[k], at = cm ? num(cm.$abs, -1) : -1;
+      if (at >= 0 && absA >= at && absA <= at + 180 && here === placeOf(canonLocation(cm.Where || 'Main Library'))) {
+        delete S.Commitments[k]; log.push(`${k}: {{user}} was there, so it counts as attended.`);
+      }
+    }
+  }
   // commitments: computed due text, overdue flag (1.44.0: the Agenda (8n) reminds once, when it turns overdue)
   const BC = (hasB && B.Commitments) || {};
   for (const [k, c] of Object.entries(S.Commitments || {})) {
     // v1.0.3 (A#2/F04): parse Due once (new record or new Due text) and keep that target; "tomorrow" must not drift every turn
     const c0 = BC[k];
     const abs = anchorWhen(c.Due, c0 && c0.Due, c0 ? num(c0.$abs, -1) : -1, S.World, absA);
+    if (c.Due) c.Due = absWhen(c.Due, abs, S.World, absA);   // 1.53.0 (U5)
     c.$abs = abs; c._When = whenText(abs, absA);
     c._Late = agendaState(abs, absA, 'commitment') === 'overdue';
   }
@@ -3961,6 +3995,7 @@ function stepRecords(c) {
   for (const k of newKeys(S.Notices, BN)) { if (!S.Notices[k].Posted) S.Notices[k].Posted = dstamp(S.World); if (hasB) S.$ui.toasts.push(`New notice: ${k}`); }
   for (const [k, nt] of Object.entries(S.Notices || {})) {
     const n0 = BN[k], u = anchorWhen(nt.Until, n0 && n0.Until, n0 ? num(n0.$abs, -1) : -1, S.World, absA);
+    if (nt.Until) nt.Until = absWhen(nt.Until, u, S.World, absA);   // 1.53.0 (U5)
     nt.$abs = u;
     if (agendaState(u, absA, 'notice') === 'overdue') delete S.Notices[k];   // an hour after its last day ends
   }
@@ -4236,6 +4271,7 @@ function stepHooks(c) {
       if (!(hk.$born >= 0)) hk.$born = absA;
       if (!hk.Planted) hk.Planted = (h0 && h0.Planted) || dstamp(S.World);
       const abs = hk.Due ? anchorWhen(hk.Due, h0 && h0.Due, h0 ? num(h0.$abs, -1) : -1, S.World, absA) : -1;
+      if (hk.Due) hk.Due = absWhen(hk.Due, abs, S.World, absA);   // 1.53.0 (U5)
       hk.$abs = abs;
       hk.Who = canonList(String(hk.Who || '').split(/\s*,\s*/).filter(Boolean)).join(', ');
       // 1.44.0 (Agenda): one status set; an undated major hook left two weeks is stale (was "old"); the Agenda (8n) reminds
@@ -4808,7 +4844,7 @@ function stepAgenda(c) {
   for (const [k, hk] of Object.entries(S.Hooks || {}))
     if (turned('h:' + k, hk._State) && hk._State === 'due') log.push(`Hook due now: "${k}"${hk.Who ? ` (${hk.Who})` : ''}. Pay it off, break it, or drop it.`);
   for (const [k, pj] of Object.entries(S.Projects || {})) {
-    const p = num(pj.Progress, 0), abs = at('p:' + k, p < 100 ? pj.Due : ''), s = agendaState(abs, absA, 'project');
+    const p = num(pj.Progress, 0), abs = at('p:' + k, p < 100 ? pj.Due : '', p < 100 ? pj : null, 'Due'), s = agendaState(abs, absA, 'project');
     put('project', `${k} due`, abs, s, pj.With ? { w: pj.With } : {});
     if (!turned('p:' + k, s)) continue;
     if (s === 'due') log.push(`Project "${k}" is due ${whenText(abs, absA)} (Progress ${p}%).`);

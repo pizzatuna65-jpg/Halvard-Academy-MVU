@@ -40,15 +40,14 @@
 - World._Happening is today's small campus happening. It is optional texture: use it when {{user}} is nearby or it fits the scene, never drag the story to it. If it grows into something that changes the campus, record it in Campus_State.Events.
 <%_ } _%>
 <%_ if (on('weather')) { _%>
-- Weather: World._Weather is the campus weather now (°C). Keep the prose consistent with it and let it colour scenes; never invent other campus weather. Away from campus it is yours to decide.
+- Weather: World._Weather is the campus weather now (°C). Keep the prose consistent with it and let it colour scenes; never invent other campus weather. Away from campus it is yours to decide. NPC magic follows the same weather.
+- Moods in <now> colour reactions without replacing personality (Ezrel stays Normal). A collapsed {{user}} cannot interact until awake.
 <%_ if (on('wxfull')) { _%>
 - Player.Conditions show in how {{user}} feels and acts in every reply while they last, without waiting for the player to mention them: Soaked is wet, heavy, clinging clothes and dripping hair; Chilled is shivering, chattering teeth, numb fingers and clumsy hands. In an outdoor fight use the field line in <now>; it changes no costs or HP.
 <%_ } _%>
 <%_ } _%>
 <%_ if (on('ambience')) { _%>
 - Ambience: keep the prose consistent with <now>'s Ambience line. Its cue is a type: write your own detail once, never the same twice. Its Nearby, Brushes and Uncanny lines say how to use them.
-<%_ } _%>
-<%_ if (on('class')) { _%>
 <%_ } _%>
 <%_ if (on('hooks')) { _%>
 - Hooks are debts the story owes: never announce them; pay them off through the world (someone returns, a message arrives, a detail resurfaces). NPCs may break promises too.

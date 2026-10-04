@@ -1,6 +1,6 @@
 <%_
 const CS = getvar('stat_data.$ui.cast') || {}, FULL = CS.full || [], BRIEF = CS.brief || [];
-const CX = getvar('stat_data.Extras') || {}, XHERE = (CS.extras || []).filter(x => CX[x]), XNEW = CS.xnew || [];
+const CX = getvar('stat_data.Extras') || {}, XHERE = (CS.extras || []).filter(x => CX[x]);
 const CD = {"change":{"Etnie":"fixed","Irene":"fixed","Aiden":"shaped","Castor":"shaped","Zara":"shaped","Kanae":"shaped","Rei":"fixed","Caine":"shaped","Caralynn":"shaped","Percival":"fixed","Trixie":"fluid","Vera":"fixed","Alyssa":"fixed","Lenna":"shaped","Saffi":"fixed","Idris":"shaped","Dante":"fixed","Florian":"fluid","Tilly":"fixed","Caspian":"fixed","Royhan":"shaped","Sophia":"fixed","Gareth":"fixed","Ruby":"fixed","Gavlan":"fixed","Yvette":"fixed","Baelin":"fixed","Layla":"fixed","Vallie":"fixed","Kuroo":"fixed","Mimosa":"shaped","Althair":"fixed","Ezrel":"fixed","Ottavio":"fixed","Krieg":"fixed","Milena":"shaped","Tristan":"fixed","Bobby":"shaped","Linus":"shaped","Maple":"shaped","Nerys":"fixed","Hadrian":"fixed","Wren":"shaped","Tsubaki":"shaped","Hester":"fixed","Anselm":"fixed","Magnus":"fixed","Dorian":"fixed","Cedric":"fixed","Anya":"fixed","Kotaro":"fixed","Valentin":"fixed","Aurelian":"fixed","William":"shaped","Bruno":"shaped","Bianca":"shaped","Rigel":"shaped","Topaz":"shaped","Faye":"shaped"},"voice":{"Etnie":1,"Irene":1,"Aiden":1,"Castor":1,"Zara":1,"Kanae":1,"Rei":1,"Caine":1,"Caralynn":1,"Percival":1,"Trixie":1,"Vera":1,"Alyssa":1,"Lenna":1,"Saffi":1,"Idris":1,"Dante":1,"Florian":1,"Tilly":1,"Caspian":1,"Royhan":1,"Sophia":1,"Gareth":1,"Ruby":1,"Gavlan":1,"Yvette":1,"Baelin":1,"Layla":1,"Vallie":1,"Kuroo":1,"Mimosa":1,"Althair":1,"Ezrel":1,"Ottavio":1,"Krieg":1,"Milena":1,"Tristan":1,"Bobby":1,"Linus":1,"Maple":1,"Nerys":1,"Hadrian":1,"Wren":1,"Tsubaki":1,"Hester":1,"Anselm":1,"Magnus":1,"Dorian":1,"Cedric":1,"Anya":1,"Kotaro":1,"Valentin":1,"Aurelian":1,"William":1,"Bruno":1,"Bianca":1,"Rigel":1,"Topaz":1,"Faye":1},"npcs":{"Althair":{"secret":true},"Alyssa":{"secret":true},"Aurelian":{"secret":true},"Baelin":{"secret":true},"Caine":{"secret":true},"Castor":{"secret":true},"Dante":{"secret":true},"Etnie":{"secret":true},"Ezrel":{"secret":true},"Gareth":{"secret":true},"Hadrian":{"secret":true},"Hester":{"secret":true},"Kanae":{"secret":true},"Krieg":{"secret":true},"Layla":{"secret":true},"Lucius":{"secret":true},"Milena":{"secret":true},"Ottavio":{"secret":true},"Percival":{"secret":true},"Rei":{"secret":true},"Rigel":{"secret":true},"Sophia":{"secret":true},"Tilly":{"secret":true},"Tristan":{"secret":true},"Zara":{"secret":true}}};
 const HERE = [...FULL, ...BRIEF];
 const CHEAD = (() => {
@@ -12,7 +12,7 @@ const CHEAD = (() => {
   return out.length ? 'On these sheets: ' + out.join(' ') : '';
 })();
 _%>
-<%_ if (HERE.length || XHERE.length || XNEW.length) { _%>
+<%_ if (HERE.length || XHERE.length) { _%>
 <cast>
 Character sheets for the people present: the truth about each of them. They outrank the lorebook text and anything earlier in the chat. Rank, Trust and Tension change how a character treats {{user}}, never who they are.
 <%_ if (CHEAD) { _%>
