@@ -10,7 +10,8 @@
 2. `docs/INDEX.md`: find the task, then open **only** the files and symbols it names. Grep for the symbol and read about 150 lines
    around it; never read a whole large file (the engine, the UI template, CHANGELOG, TEST_CHECKLIST, lore content).
 3. Only when the task touches them: the matching section of `docs/DECISIONS.md`, `docs/BUILD.md` (build, generated files,
-   playbooks), the newest `CHANGELOG.md` entry, the "Open" list of `docs/TEST_CHECKLIST.md`, `planning/FUTURE_PLANS.md`.
+   playbooks), the newest `CHANGELOG.md` entry, "Where you are" and the current act of the quest log `docs/TEST_CHECKLIST.md`,
+   `planning/FUTURE_PLANS.md`.
 
 Drafts (`planning/DRAFT_*.md`) are written in Indonesian; the English text blocks inside them are the approved wording.
 
@@ -23,8 +24,9 @@ Drafts (`planning/DRAFT_*.md`) are written in Indonesian; the English text block
   owner can download the card and preset straight from the repo. No zip unless the owner asks.
 - `CHANGELOG.md`: a new entry at the top (what changed, tests, anything to confirm with the owner) and one line in the release
   index at the bottom. Keep details for about the five newest releases; older details leave the file (git keeps them).
-- `HANDOFF.md`: replace the snapshot and "Next task" (a few lines, no history). Live-only checks go into
-  `docs/TEST_CHECKLIST.md` (new section at the top of "By release", plus a line in its "Open" list).
+- `HANDOFF.md`: replace the snapshot and "Next task" (a few lines, no history). Live-only checks go into the quest log
+  `docs/TEST_CHECKLIST.md`: into the quest where the owner's campaign first gets to see them, tagged with the release (with no date:
+  a Milestone or a Side quest).
 - Keep the docs current, not historical: a new engine step, file or data file gets its row in `docs/INDEX.md`; a new standing
   decision gets one or two lines in `docs/DECISIONS.md`; a draft applied in this release is **deleted** and anything it left open
   moves to `planning/FUTURE_PLANS.md`; a plan that is done is removed from `FUTURE_PLANS.md`.

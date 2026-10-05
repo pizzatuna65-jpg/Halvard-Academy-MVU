@@ -6,9 +6,11 @@ or document a task needs without reading the whole project: `docs/INDEX.md`.
 **Snapshot:** card **v1.67.0** (2026-10-05): the memory audit (`audit/AUDIT_2026-10-05_1_sistem_memori.md` §6) is done except
 batch 8. 1.67.0: MVU extra-model mode is the card's default (507). 1.66.0: VectFox from the card's side (scene marker, timeline,
 gist). 1.65.0: `<current_state>` by relevance. 1.64.0: recall by person and place. 1.63.0: folds. 1.62.0: pins. Live checks:
-`docs/TEST_CHECKLIST.md` "Open".
+the campaign quest log `docs/TEST_CHECKLIST.md` (every open check in the order the campaign reaches it; the owner plays it from the
+Charles chat, Y1 M1 W1 Mon 10:10).
 
-**Next task:** whatever the owner's next playtest brings. Batch 8 (chapters, a new chat file without losing memory) is planned in
+**Next task:** the owner plays the quest log; their reports and chat exports bring the playtest fixes (tick what passed, run
+`tools/audit_chat.py` on the export, move "Where you are"). Batch 8 (chapters, a new chat file without losing memory) is planned in
 `planning/DRAFT_bab_baru.md`: build it at about 20,000 messages, slow saves or a chat file near 100 MB.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
@@ -50,7 +52,7 @@ CHANGELOG.md               newest releases in detail, then a one-line index of e
 docs/INDEX.md              task → files and symbols; engine, UI, state, entries and data maps   (read before opening code)
 docs/DECISIONS.md          established decisions (owner approval needed to change) + verified external facts
 docs/BUILD.md              build order, generated vs hand-written files, test commands, playbooks
-docs/TEST_CHECKLIST.md     live SillyTavern checks (Open list at the top, newest release first)
+docs/TEST_CHECKLIST.md     live SillyTavern checks as a campaign quest log (in-game order, "Where you are" at the top)
 docs/PLAYER_GUIDE.md, ECOSYSTEM.md, rentry/, vectfox_cleaning_patterns.json, vectfox_eventbase_prompt.txt   player-facing docs
 planning/FUTURE_PLANS.md   everything not done yet: owner plans, unchosen ideas, pending decisions, tunables
 planning/NPC_BRAINSTORM_BRIEF.md   brief for designing NPCs with another AI (kept by hand)
