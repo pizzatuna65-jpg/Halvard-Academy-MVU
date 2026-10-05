@@ -533,10 +533,15 @@ The first academy flight (the airship), then the Grand Vast Forest.
 - [ ] Send the chat export (and VectFox's EventBase export now and then): `audit_chat.py --mechanics --memory --vectfox` finds no ghost
       events unless messages were deleted or edited, every Year 1 date carries `Y1`, and the narrator did no engine work (no weather
       stamina, no Trust written) [1.61.1, 1.53.1].
+      2026-10-05, the 1.35 chat re-vectorized (74 messages → 24 events): 0 ghost events, every date `Y1`. The engine-work half waits
+      for new play.
 - [ ] VectFox events: the scene time reads like "Y1 M1 W2 Tue 13:40 t1"; a reply with a Journal line is stored as a turning point of
       importance 6+; fewer events than before, no "walked to …" entries, open threads only for real promises; nothing from the update
       block, the Cast Sheet or the NPC thoughts; swiping a reply twice leaves no duplicates; Builder and Settings notes never become events
       [1.57, 1.61, 1.66].
+      2026-10-05 re-vectorize: no travel or location events, no near-duplicates, nothing from the update block, colour tags or
+      thoughts; the sorting (Journal line) is importance 7, but the arrival line came out as an ordinary introduction (4). Old messages
+      carry no scene marker, so `t1` appears only on new messages.
 - [ ] The scene marker: a sent message shows as you wrote it, its raw text ends with `(scene: … · <place> · t1)`, the narrator's prompt does
       not have it, and VectFox's debug query shows it in the search text [1.66].
 - [ ] VectFox → Action → debug query with `query` 2, then 1: the event that matters most comes back first; keep the better setting [1.66].
