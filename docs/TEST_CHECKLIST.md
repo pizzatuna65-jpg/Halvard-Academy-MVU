@@ -4,7 +4,7 @@ Every check that needs a real SillyTavern session (the narrator API, the card's 
 quests in the order the campaign reaches them. `npm test` covers the engine, schema, lore, UI and old-save loading headless; this log
 covers what only a live session can show. Playing the route is also the cross-batch smoke playtest.
 
-**Where you are:** Act 1 · Q1.1. Y1 M1 W1 Mon 10:10, Courtyards: Charles Chevalier (Fire Dormitory) on the Entrance tour with Kanae
+**Where you are:** Act 1 · Q1.1. Y1 M1 W1 Mon 10:13, Courtyards (the Divination and Tailoring booths): Charles Chevalier (Fire Dormitory) on the Entrance tour with Kanae
 (guide) and Zara; Tilly's ghost hunt is booked for 22:45. The Charles chat last played on 1.35 (74 messages, state written on 1.34.2).
 
 ## How to play it
@@ -57,13 +57,16 @@ it. *Update*: the folded block MVU appends under the reply. *Log*: Student file 
 
 ### Q0.2 The first replies on 1.67
 *Do:* write on from "yeah we will see".
-- [ ] Nothing is lost: the Fire Dormitory, 300 points, the bonds with Ruby, Percival, Zara, Tilly and Kanae, the two Journal lines, the
+- [x] Nothing is lost: the Fire Dormitory, 300 points, the bonds with Ruby, Percival, Zara, Tilly and Kanae, the two Journal lines, the
       lemon and honey sweet in the Bag, Tilly's 22:45 meeting in the Planner [1.42].
 - [ ] Right after loading no bracelet button has a red dot [1.25].
 - [ ] The first reply may lack some `<now>` lines (presence, walks, ambience): the engine writes them on its first run. From the second
       reply on they are there [1.47, 1.48].
 - [ ] Each reply: the prose arrives, then the update is appended under it and the bracelet refreshes. Exactly one update block, and the
       prose never carries one of its own [1.67, 1.58].
+      ✗ msg 75 (1.67.0): the prose ended with an `<UpdateVariable>` of its own, written as YAML of the state, above the real update.
+      The state took only the update model's block (10:13, not 10:15), so nothing broke. 1.67.1 tells the story model in 504 that
+      without `<update_format>` it writes no update; check again on the next replies.
 - [ ] Two requests a turn: the wait and the cost are acceptable. If not: a cheaper update model (PLAYER_GUIDE §8) [1.58].
 - [ ] No "Engine error" line in the Log and no `[Eldrasil engine]` error in the console. If one ever appears: the toast "Engine error",
       the state unchanged, and a swipe works [1.20, 1.16.1].
@@ -74,7 +77,7 @@ it. *Update*: the folded block MVU appends under the reply. *Log*: Student file 
       `<card_fidelity>`; the card's `<final_cast_gate>` (only when someone is present) is the last text [1.36].
 - [ ] The reasoning opens with `Now: M1 W1 Mon HH:MM at <place>`, stays short (no list of prose rules, no example line) and has no "User
       rolls / NPC rolls" line [1.52.2, 1.11.2].
-- [ ] The folded 🧠 Thoughts block (brass border) sits after the story and before the update: up to three NPCs, bold names, never
+- [x] The folded 🧠 Thoughts block (brass border) sits after the story and before the update: up to three NPCs, bold names, never
       Charles, no secret the story has not revealed. A calm or reserved character (Zara) thinks as calmly as they speak [1.37.3, 1.37.4,
       1.52.2].
 - [ ] The bracelet shows Spring beside the date and cool spring temperatures (not −2 °C); the weather chip shows the sky and its tooltip
@@ -96,6 +99,7 @@ show the newcomers their dorm rooms.
       `<say:Kanae>"…"</say>`. A clerk or passing student speaks in the shared grey until their Extras record (second appearance), then in
       a colour of their own. With four or five speakers every colour is clearly different; someone who changed colour on arrival keeps it
       for the scene and is back to their usual one next time [1.37, 1.37.1, 1.37.2].
+      msg 75: the raw message has `<say:Kanae>` and `<say:Zara:whisper>` (the whisper style is supported); colours on screen still to see.
 - [ ] Four or more replies later the prompt holds those quotes without `<say…>` tags; a stray `</say>` never shows in the chat [1.42].
 - [ ] Prose (preset): the reply opens with Charles's action and words expanded (Embellish); the others answer as themselves and nothing is
       decided for Charles beyond what you wrote; about 4–7 paragraphs; no "not X, but Y" or "It wasn't X. It was Y."; NPCs sound distinct,
@@ -456,7 +460,8 @@ The first academy flight (the airship), then the Grand Vast Forest.
 ### MS1 The first twenty replies
 - [ ] The update writes `/Gist` in most replies; after about 15 replies `<current_state>` has `_Recent_story` lines that match what
       happened just before the chat the narrator sees [1.66, 1.67].
-- [ ] The update's `<Analysis>` stays at about three lines, with no Points sum [1.53].
+      msg 75: `/Gist` written; `_Recent_story` comes after about 15 replies.
+- [x] The update's `<Analysis>` stays at about three lines, with no Points sum [1.53].
 - [ ] New Journal lines are turning points that say what changed, not scene summaries; a settled matter gets a closing line [1.57].
 - [ ] No rank, XP or Trust number appears in the prose [1.56].
 - [ ] Names spoken only in the prose still unlock in the dossiers [1.58].

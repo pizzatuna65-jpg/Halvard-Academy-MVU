@@ -1,7 +1,18 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.67.1 — The story model writes no update of its own (2026-10-05)
+
+Playtest fix from the owner's first reply on 1.67.0 (the Charles chat, msg 75): in extra-model mode the story model ended its prose with
+an `<UpdateVariable>` of its own, YAML of the state, above the update model's block. The state took only the update model's block
+(MVU), so nothing was lost, but it costs output tokens and a second block confuses the reader. Save fixture v1.67.0.
+- **504 (`[mvu_plot]`, the story request):** write an `<UpdateVariable>` block only when `<update_format>` is in the prompt; without it
+  a second request writes the update, so the reply is the story (and the thoughts block) and nothing else. One-call mode still sends
+  503 with 504, so nothing changes there. Same condition as the preset's BOLT task.
+- Tests: the suites that read 504, `test_saves`, `qa_static`, `test_narrator_batch7_v1580` and `token_audit` pass.
+- **To check live (owner):** `docs/TEST_CHECKLIST.md` Q0.2, the "Each reply" check on the next replies.
 
 ## v1.67.0 — Memory batch 9: extra-model mode by default (2026-10-05)
 
@@ -78,38 +89,6 @@ Batch 5 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6 (M6). Save fixture v1
   `test_calendar_state_v1190` reads the new archive cap. Full `npm test` passes.
 - **To check live (owner):** `docs/TEST_CHECKLIST.md` 1.64.0. Token cost: 0 until old lines exist; then about 30 tokens a recalled
   line (at most 3 per full sheet and 2 for the place).
-
-## v1.63.0 — Memory batch 4: folds, the story so far (2026-10-05)
-
-Batch 4 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6 (M5, "Summaryception mini", owner-approved 2026-10-05; new DECISIONS §8
-rule). Built for MVU's extra-model mode: the update model writes the folds. Save fixture v1.62.0.
-- **Nothing in the Journal, Knows or Known_facts is dropped any more before it is folded.**
-  - Journal lines that leave the window (and pinned lines past the 20 kept) wait in `$eng.jq`. Every 10 become one Chronicle entry
-    (L1, at most 50 words); past 12 entries of a level the oldest 4 become one L2 entry (70 words); when a campaign year is over its
-    entries become one L3 entry `[Year N]` (100 words). `_Chronicle` (read-only for the AI) is printed by `<current_state>` before
-    `_Kept_from_earlier` and the Journal; the engine dates every entry (`[Y1 M1 W1 Mon – Y1 M2 W3 Fri]`).
-  - A character's Knows / Known_facts lines that leave the view wait at the end of `$Knows_old` / `$Known_old` (`$Knows_q`,
-    `$Known_q`; the hidden list never drops a line still waiting). Five or more waiting and the character on a full Cast Sheet: they
-    and the list's earlier fold line become one line `[until Y1 M3 W2] …` (40 words) that stays first in view.
-- **Who writes it:** the new rule card `fold` (511, `[mvu_update]`) appears only when a fold is due and prints the exact lines, so
-  the update model needs no chat history (extra-model mode; the narrator in one-call mode). It writes `/Fold` (a new per-reply
-  field the engine empties). The engine answers the request it left before the reply (Prompt Template renders 511 on that state in
-  both modes), checks the length (over 1.5× the limit: cut, with a Log line) and stores the fold; a fold not written for 8 replies
-  with an update block is made plainly by the engine (the lines' first words), so memory never waits for ever. Deterministic: the
-  fold is in the reply's block, so a replay repeats it.
-- **Older saves:** `stepMigrate` puts what they already moved out of view (the Journal archive, `$Knows_old`, `$Known_old`) in the
-  queues, so their older story comes back as folds over the next replies.
-- **Player:** Journal → "The story so far" lists the Chronicle; the original lines stay below, faded. (Also fixed: a pinned line
-  pushed out in the reply that wrote it now shows in the panel.)
-- **Measuring:** `memory_lists.cjs` counts lines folded and lines lost before a fold (QUEUES); `--memory` shows both, the Chronicle
-  by level and the waiting lines; the soak answers 80% of the folds and fails on any line lost before a fold. Soak 10,000 updates:
-  0 lost (7,113 facts, 1,678 Knows lines, 800 Journal lines folded); state 163 KB, 501 at most 7,400 tokens (budget raised to 9,000;
-  batch 6 trims 501).
-- Tests: new `test_memory_batch4_v1630` (25); `test_memory_tools_v1611` reads the new report columns. Full `npm test` and `npm run
-  lint` pass; the Journal panel was checked in a browser preview.
-- **To check live (owner):** `docs/TEST_CHECKLIST.md` 1.63.0. Token cost: 0 until a fold is due; the fold card with its lines about
-  300-450 tokens on those replies only (update model in extra-model mode); a mature Chronicle about +500-1,100 in `<current_state>`.
-  **Invented, to confirm:** the patience of 8 replies before a plain fold.
 
 ## Release index (one line per release, oldest first)
 
@@ -258,3 +237,4 @@ rule). Built for MVU's extra-model mode: the update model writes the folds. Save
 - **v1.65.0 (2026-10-05):** Memory batch 6: `<current_state>` by relevance (`$ui.now.focus`; clue threads, Extras, NPC_status, New_relations, Secrets_revealed in full only when they touch the scene, the rest `…_not_shown` index lines; −35% of 501 on a mature state).
 - **v1.66.0 (2026-10-05):** Memory batch 7: VectFox from the card's side: a hidden scene marker on player messages (who, place, timeline) for VectFox's query, timeline numbers that void rewound memories, repeated meetings as routine, the reply gist (`_Recent_story`), VectFox settings for large collections.
 - **v1.67.0 (2026-10-05):** Memory batch 9: the card plays in MVU's extra-model mode by default (507 `更新方式 = 额外模型解析`); one-call mode stays available (PLAYER_GUIDE §8).
+- **v1.67.1 (2026-10-05):** Playtest fix: in extra-model mode the story model writes no `<UpdateVariable>` of its own (504).
