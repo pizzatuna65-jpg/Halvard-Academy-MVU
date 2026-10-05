@@ -1,5 +1,12 @@
 [
  {
+  "name": "Eldrasil: the scene marker becomes the timeline line (card 1.66.0)",
+  "pattern": "\\s*\\(scene: [^()\\n]*\\bt(\\d+)\\)[ \\t]*$",
+  "replacement": "\n[Timeline: t$1]",
+  "flags": "gm",
+  "enabled": true
+ },
+ {
   "name": "Eldrasil: the narrator's Journal line as a turning-point note (card 1.61.0; before the time pattern)",
   "pattern": "<UpdateVariable>(?=(?:(?!</UpdateVariable>)[\\s\\S])*?\"path\"\\s*:\\s*\"/Journal/(?:-|\\d+)\"\\s*,\\s*\"value\"\\s*:\\s*\"([^\\n]*?)\"\\s*\\})",
   "replacement": "[Turning point: $1]\n<UpdateVariable>",

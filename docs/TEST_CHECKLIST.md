@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.66.0 (memory batch 7): the four checks in its section below.
 - v1.65.0 (memory batch 6): the two checks in its section below.
 - v1.64.0 (memory batch 5): the two checks in its section below.
 - v1.63.0 (memory batch 4): the three checks in its section below.
@@ -108,6 +109,19 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.66.0 — Memory batch 7 (VectFox from the card's side)
+
+First, in VectFox: delete the old "Eldrasil:" cleaning patterns and import `docs/vectfox_cleaning_patterns.json` again; paste the new
+extraction prompt (`docs/vectfox_eventbase_prompt.txt`); set the duplicate window (`eventbase_dedup_window_gap`) to 40.
+- [ ] Send a message: it shows as you wrote it, but its raw text (Edit) ends with `(scene: … · place · t1)`; the narrator's prompt
+      (prompt inspector) does not have it; VectFox's debug query shows it in the search text.
+- [ ] Delete back a few messages and write on: the next marker says `t2`, and `<now>` has "Rewound story: … t1 (or with no t) from
+      message_order N on never happened"; a memory of the deleted scene recalled after that is not treated as real.
+- [ ] After about 15 replies `<current_state>` has `_Recent_story` lines (in extra-model mode the update model writes `/Gist`), and
+      they match what happened just before the chat the narrator sees.
+- [ ] VectFox debug query (Action → debug query): with `query` 2 and then 1, the event that matters most comes back first; keep the
+      better one (ECOSYSTEM).
 
 ### v1.65.0 — Memory batch 6 (`<current_state>` by relevance)
 

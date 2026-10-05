@@ -279,6 +279,8 @@ export const Schema = z.object({
   _Kept_from_earlier: StrList(20),
   Journal: StrList(40),   // "[M1 W1 Mon] turning point" — long-term memory (used by state-as-memory in 5.3). 1.61.0: the engine keeps 30
                           // (CAP.Journal); the schema allows 40 so the engine sees a reply's new lines and chooses which old line leaves (M2)
+  // 1.66.0 (M11d): the latest reply gists that left the chat the narrator still reads (engine-written, read-only for the AI)
+  _Recent_story: StrList(12),
   Clues: Rec(v => ({
     Thread: s(v.Thread) || 'Unsorted clues', Detail: s(v.Detail), Where: s(v.Where), Found: s(v.Found),
     // 1.44.0: rumour / story = hearsay {{user}} pinned (player tool; unconfirmed); records = Encyclopaedic's real lead; '' = seen in play
@@ -347,7 +349,8 @@ export const Schema = z.object({
     Effect: s(v.Effect), Uses: Math.round(n(v.Uses, 0, 99, 0)) }), 'Effect'),
 
   _Log: StrList(12),
-  Fold: z.coerce.string().prefault('').catch(''),   // 1.63.0 (memory audit M5): the fold the rule card asked for, this reply only (the engine stores it and empties it)
+  Fold: z.coerce.string().prefault('').catch(''),
+  Gist: z.coerce.string().prefault('').catch(''),   // 1.66.0 (memory audit M11d): one line on what happened this reply (the engine keeps it and empties it)   // 1.63.0 (memory audit M5): the fold the rule card asked for, this reply only (the engine stores it and empties it)
 
   $ui: O({
     unlocks: StrList(60),
@@ -455,6 +458,8 @@ export const Schema = z.object({
     jq: z.array(z.coerce.string()).prefault([]).catch([]),        // 1.63.0 (memory audit M5): Journal lines that left the window, waiting for a fold (engine)
     chron: z.array(z.any()).prefault([]).catch([]),               // 1.63.0: one { L: 1|2|3, y: campaign year } per _Chronicle entry (engine)
     fold: z.any().prefault(null).catch(null),                     // 1.63.0: { sig, n } replies the current fold request has waited (engine)
+    gist: z.array(z.coerce.string()).prefault([]).catch([]),   // 1.66.0 (M11d): one entry per reply with an update block ('' = no gist), latest GIST.keep (engine)
+    tl: z.any().prefault(null).catch(null),                   // 1.66.0 (M11b): { t, void } of the chat's timeline, stamped by the MVU hook from the chat variable eld_tl
     floor: z.coerce.number().prefault(-1).catch(-1),   // 1.61.0 (memory audit M9): the chat floor this state was made on (the MVU hook)
     prizes: StrList(20),   // 1.0.3: competition prizes already paid ("Kingdom-Y1")
     grads: StrList(10),    // 1.0.3: campaign years whose graduates already left ("Y1")

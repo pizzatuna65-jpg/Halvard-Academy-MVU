@@ -97,8 +97,8 @@ console.log('M10: VectFox gets the year of a Year 1 date and the narrator\'s tur
   out = clean(msg('Y2 M1 W2 Wed 13:30 → Y2 M1 W2 Wed 13:40', [{ op: 'replace', path: '/World/Time', value: '13:40' }]));
   ok(out === 'Irene sighs.\n\n[In-world time: Y2 M1 W2 Wed 13:40, at Courtyards]', 'a Year 2 date keeps its own year; no Journal line, no note');
   const REDOS_MOTIF_RE = /\([^)]*[+*][^)]*\)\s*[+*]|\([^)]*\|[^)]*\)\s*[+*]/;
-  ok(pats.length === 9 && pats.every(p => p.pattern.length <= 300 && !REDOS_MOTIF_RE.test(p.pattern)), 'nine patterns, every one passes VectFox\'s import check');
+  ok(pats.length === 10 && pats.every(p => p.pattern.length <= 300 && !REDOS_MOTIF_RE.test(p.pattern)), 'ten patterns (1.66.0: the scene marker), every one passes VectFox\'s import check');
   const p = rd('docs/vectfox_eventbase_prompt.txt');
-  ok(/\[Turning point: <text>\]/.test(p) && /importance 6 or more and should_persist true/.test(p) && /"Y1 M1 W2 Wed 13:40"/.test(p) && !/\{\{user\}\}/.test(p), 'the extraction prompt reads the note and dates with the year');
+  ok(/\[Turning point: <text>\]/.test(p) && /importance 6 or more and should_persist true/.test(p) && /"Y1 M1 W2 Wed 13:40 t1"/.test(p) && !/\{\{user\}\}/.test(p), 'the extraction prompt reads the note and dates with the year');
   ok(/A recalled date without a year \("M3 W2 Mon"\) is from Year 1\./.test(renderEntry(card, 504, S0)), '504: an old recalled date without a year is Year 1');
 }

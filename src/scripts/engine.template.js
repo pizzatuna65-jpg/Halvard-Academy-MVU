@@ -1021,6 +1021,7 @@ const verLt = (a, b) => { const p = v => String(v || '0').split('.').map(x => pa
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
 // from the shared context c (the states, the reply's text and the values earlier steps computed) and adds what later steps use.
 function runEngine(S, B, text, seedHint, userText) {   // 1.12.0: userText = the player's message this reply answers (section 8l)
+  userText = String(userText || '').replace(SCENE_MARK_RX, '');   // 1.66.0: the scene marker is for VectFox, never the story
   if (!S || !S.World) return;
   const c = { S, B, text, seedHint, userText };
   for (const step of ENGINE_STEPS) step(c);
@@ -4767,6 +4768,25 @@ function stepFold(c) {
   S.$ui.fold = foldRequest(S);
 }
 
+// ---- 8i3. 1.66.0 (memory audit M11d): the gist of each reply (/Gist, written by the update model in extra-model mode), the bottom
+// layer below the Journal: chat → gist → Journal → Chronicle. One entry per reply with an update block ('' when none was written), the
+// latest GIST.keep; _Recent_story shows the gists older than the chat the narrator still reads (GIST.window replies ≈ the 24 messages
+// of the trim regex), at most GIST.show. A player tool counts as no reply.
+const GIST = { words: 20, keep: 40, window: 12, show: 12 };
+function stepGist(c) {
+  const { S, OFF, toolEdit } = c;
+  const raw = String(S.Gist || '').replace(/\s+/g, ' ').trim();
+  S.Gist = '';
+  const L = S.$eng.gist = Array.isArray(S.$eng.gist) ? S.$eng.gist : [];
+  if (OFF.has('gist')) { S._Recent_story = []; return; }
+  if (!toolEdit && /<UpdateVariable/i.test(String(c.text || ''))) {
+    const w = raw.replace(/^\[[^\]]*\]\s*/, '').split(' ').filter(Boolean);
+    L.push(w.length ? `[${dstamp(S.World)} ${S.World.Time}] ${(w.length > GIST.words * 1.5 ? [...w.slice(0, GIST.words), '…'] : w).join(' ')}` : '');
+    L.splice(0, Math.max(0, L.length - GIST.keep));
+  }
+  S._Recent_story = L.slice(0, Math.max(0, L.length - GIST.window)).filter(Boolean).slice(-GIST.show);
+}
+
 // ---- 8i. 1.5.1 (Batch B, P1/P6): the cast. Who among the present gets their full canon sheet in the Cast Sheet (509; their
 // keyword lore entry stays empty meanwhile): those who spoke in the last reply first, then the highest bond rank, at most
 // CAST_FULL; the others get a brief sheet. From the reply's prose: who spoke without being in Scene.Present, who was mentioned.
@@ -5601,13 +5621,15 @@ function stepNow(c) {
   S.$ui.now = nowOf(S, c.moods);
   S.$ui.now.focus = focusOf(c, fprev);
   S.$ui.now.rules = ruleCards(c);
+  // 1.66.0 (M11b): events VectFox recalls from a timeline the story rewound
+  { const TL = S.$eng.tl; if (TL && Array.isArray(TL.void) && TL.void.length) S.$ui.now.tl = TL.void.map(v => `t${v.t}${v.t === 1 ? ' (or with no t)' : ''} from message_order ${v.from} on`); }
   { const r = recallOf(S); if (Object.keys(r.earlier).length) S.$ui.now.earlier = r.earlier; if (r.place.length) { S.$ui.now.recall = r.place; S.$ui.now.recallAt = r.placeName; } }
   // 1.48.0 (audit 2.6): what <now> has in its lines is not kept twice: the walks and places nearby of an area (the Map panel walks
   // the same graph itself)
   for (const a of Object.values(S.$ui.area || {})) if (_.isPlainObject(a)) { delete a.walks; delete a.near; }
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepFold, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepFold, stepGist, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,
@@ -5705,6 +5727,27 @@ function floorOf(chat, content) {
 // data (getLastValidVariable), so after a branch or a deep deletion it can be a snapshot up to 49 floors back, and every update in
 // between is missing. $eng.floor stamps the floor each state was made on.
 const SNAP_GAP = 3;
+// 1.66.0 (memory audit M11a, M11b): VectFox searches with the raw last messages (DECISIONS §11), so the card appends one short line
+// to each player message as it is sent: who is here, the place and the timeline number, "(scene: Irene, Kaito · Courtyards · t2)".
+// The display and the story prompt drop it (card regexes), so does the engine (runEngine); VectFox's cleaning pattern turns it into
+// a [Timeline: tN] line for its extraction. The timeline is a chat variable (eld_tl { t, top, void }) outside the per-message state,
+// so it survives a rollback (and a branch copies it: ST saveChat merges chat_metadata). A player message sent at a floor the chat
+// already had (messages were deleted back to it) starts timeline t+1, and VectFox events of the old timeline from that message on
+// never happened (<now> says so). Messages Tavern Helper inserts (player tools) emit MESSAGE_SENT with 'extension': not counted.
+const TL_VAR = 'eld_tl', TL_VOID = 10;
+const SCENE_MARK_RX = /\s*\(scene: [^()\n]*\bt\d+\)\s*$/;
+const tlNorm = v => { const o = v && typeof v === 'object' ? v : {};
+  return { t: Math.max(1, Math.floor(num(o.t, 1))), top: Math.floor(num(o.top, -1)), void: (Array.isArray(o.void) ? o.void : []).filter(x => x && num(x.t, 0) >= 1 && num(x.from, -1) >= 0).slice(-TL_VOID) }; };
+function tlSent(tl, id) {   // a player message at chat index id; true when it starts a new timeline
+  const cut = id >= 0 && id <= tl.top;
+  if (cut) { tl.void = [...tl.void, { t: tl.t, from: id }].slice(-TL_VOID); tl.t++; }
+  tl.top = Math.max(cut ? id : tl.top, id);
+  return cut;
+}
+const sceneMark = (S, t) => {
+  const who = Object.keys(((S || {}).Scene || {}).Present || {}).slice(0, 6), pl = placeOf(((S || {}).World || {}).Location);
+  return `(scene: ${[who.join(', '), pl].filter(Boolean).concat('t' + t).join(' · ')})`;
+};
 function snapGap(before, at) {
   const bf = before && before.$eng ? Number(before.$eng.floor) : NaN, k = at - bf;
   if (!(at >= 0) || !(bf >= 0) || !(k > SNAP_GAP)) return null;
@@ -5731,6 +5774,22 @@ if (typeof eventOn === 'function' && typeof waitGlobalInitialized === 'function'
       const moved = fixStrayPaths(commands);
       if (moved.length) repaired = [repaired, `Wrong path moved to the root (${moved.join(', ')}): these lists are top-level, e.g. /Inventory/<item>.`].filter(Boolean).join(' ');
     });
+    // 1.66.0 (M11a, M11b): mark each player message as it is sent (eventMakeFirst: before MVU and VectFox read it; ST awaits
+    // MESSAGE_SENT listeners before it generates, and saves the message with the reply)
+    const tlGet = () => { try { return tlNorm((getVariables({ type: 'chat' }) || {})[TL_VAR]); } catch (e) { return tlNorm(null); } };
+    const tlPut = tl => { try { updateVariablesWith(v => { v[TL_VAR] = tl; return v; }, { type: 'chat' }); } catch (e) { console.warn('[Eldrasil timeline]', e); } };
+    const stateBefore = id => { for (let i = id - 1; i >= 0; i--) { try { const v = getVariables({ type: 'message', message_id: i }); if (v && v.stat_data && v.stat_data.World) return v.stat_data; } catch (e) { /* none */ } } return null; };
+    if (typeof tavern_events === 'object' && tavern_events) {
+      (typeof eventMakeFirst === 'function' ? eventMakeFirst : eventOn)(tavern_events.MESSAGE_SENT, (id, from) => {
+        try {
+          const m = (SillyTavern.chat || [])[id];
+          if (from === 'extension' || !m || !m.is_user || m.is_system) return;
+          const tl = tlGet(); tlSent(tl, id); tlPut(tl);
+          if (!SCENE_MARK_RX.test(String(m.mes || ''))) m.mes = String(m.mes || '').replace(/\s+$/, '') + '\n' + sceneMark(stateBefore(id), tl.t);
+        } catch (e) { console.warn('[Eldrasil scene marker]', e); }
+      });
+      eventOn(tavern_events.MESSAGE_RECEIVED, (id, from) => { if (from === 'extension') return; const tl = tlGet(); if (id > tl.top) { tl.top = id; tlPut(tl); } });
+    }
     eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, (variables, variables_before) => {
       let hint = '', said = '', at = -1;
       // 1.12.0: the player's last visible message (not a hidden player-tool entry), for the reminders of section 8l. 1.61.0: of the
@@ -5741,6 +5800,7 @@ if (typeof eventOn === 'function' && typeof waitGlobalInitialized === 'function'
       const before = variables_before && variables_before.stat_data;
       const snap = _.cloneDeep(before && before.World ? before : variables.stat_data);
       try {
+        if (variables.stat_data && variables.stat_data.$eng) { const tl = tlGet(); variables.stat_data.$eng.tl = { t: tl.t, void: tl.void }; }
         runEngine(variables.stat_data, before, text, hint, said); text = '';
         const S = variables.stat_data, gap = snapGap(before, at);
         if (at >= 0 && S.$eng) S.$eng.floor = at;

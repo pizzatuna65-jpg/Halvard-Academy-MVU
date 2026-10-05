@@ -160,10 +160,11 @@ Settings keys are in brackets, for searching the VectFox panel or its settings f
 | Vectorize window (`eventbase_window_size`) | 2 messages | **4 messages** when re-vectorizing | The same span as auto-sync |
 | Window overlap (`eventbase_window_overlap`) | 0 | 0 | Overlap stores more duplicates |
 | Settle lag (`eventbase_autosync_settle_lag`) | ON | ON | Swipes leave no stale events |
-| Retrieval top-k (`eventbase_retrieval_top_k`) | 10 | 10 | With routine gone, 10 holds what matters |
+| Retrieval top-k (`eventbase_retrieval_top_k`) | 10 | 10 | With routine gone, 10 holds what matters. 1.66.0: raise it to 12-15 only if the debug query shows the right event at places 11-15 |
+| Duplicate window (`eventbase_dedup_window_gap`) | 10 | **40** (1.66.0) | A large collection holds the same kind of scene with the same people many times; a wider window keeps them from filling the top-k |
 | Minimum importance to recall (`eventbase_retrieval_min_importance`) | 1 | 1 | Everything stored is already 3+ |
 | Skip Already-Visible Events (`deduplication_depth`) | 0 | **20** | The card keeps the latest ~24 messages in the chat; recalling them again only costs tokens |
-| Query messages (`query`) | 2 | 2 | The player's message and the last reply |
+| Query messages (`query`) | 2 | 2 | The player's message (with the card's scene marker, 1.66.0) and the last reply. Try **1** with the debug query: the search is then only your message and the marker (who is here, the place), clean of the update block, at the price of the last reply's prose |
 | Injection format (`eventbase_injection_format`) | DenseText | **Summary Only** | DenseText also sends 8-15 keywords per event; the card's summaries already say who, why and what changed |
 | Injection position / depth (`position`, `depth`) | in prompt, 2 | **After Main Prompt**, or **In-Chat @ Depth** 2 or more, never 0-1 | The card puts the Cast Sheet at depth 1 and the cast gate at depth 0 so canon is read last; recalled memory there would sit closer than canon and bring back drift |
 | Re-rank weights (`eventbase_rerank_w_*`) | 0.55 / 0.20 / 0.15 / 0.10 | unchanged | With the card's prompt, importance and persist finally mean something |
@@ -171,7 +172,7 @@ Settings keys are in brackets, for searching the VectFox panel or its settings f
 | Summarizer Injection (`summarizer_injection_enabled`) | OFF | **OFF** | The card keeps the summary itself (Journal, bonds, Knows); a VectFox summary repeats it, can contradict it, and wears hard facts away by compressing again and again. If you still want it, keep it to about 3,000 characters |
 | Ghosting (`eventbase_ghost_enabled`) | OFF | **OFF** | Ghosting works only with Summarizer Injection ON [`core/summarizer-injection.js`]; the card's regex "Eldrasil — State-as-memory: trim far chat (prompt)" does the trimming. If you ever turn on both Summarizer Injection and Ghosting, disable that card regex |
 | Semantic World Info (`enabled_world_info`) | OFF | **OFF** | See "Avoid" below |
-| Agentic retrieval (`agentic_retrieval_enabled`) | OFF | OFF | A planner LLM call and up to six searches per turn; turn it on only if the debug query shows recall missing |
+| Agentic retrieval (`agentic_retrieval_enabled`) | OFF | OFF | A planner LLM call and up to six searches per turn; turn it on only if the debug query shows recall missing (1.66.0: worth a trial past about 2,000 events) |
 | Embedding model and backend | – | keep yours (the owner's export: `qwen/qwen3-embedding-8b` through OpenRouter, Qdrant) | Changing the embedding model means re-vectorizing the chat |
 | Collections | – | one chat, one collection | A collection locked to one chat must not also be listed for another (an older copy of the chat): opening that one mixes its events in |
 
@@ -185,12 +186,14 @@ VectFox runs the ticked built-ins first and the custom patterns after them, in l
   is gone before the card's patterns see it;
 - delete any older custom pattern that would touch the block first, such as a catch-all "strip every HTML tag" (`<\/?[a-z][^>]*>`),
   and never replace `\n{3,}` with nothing (that glues paragraphs together; VectFox already turns 3+ newlines into one blank line);
-- import `docs/vectfox_cleaning_patterns.json` (Text Cleaning → Import; all nine pass VectFox's import check and are appended in order).
+- import `docs/vectfox_cleaning_patterns.json` (Text Cleaning → Import; all ten pass VectFox's import check and are appended in order).
   After a card update that changes the file, delete the card's old "Eldrasil:" patterns first, then import it again.
 
 Each reply then reaches extraction as its prose plus one line such as `[In-world time: Y2 M1 W2 Wed 13:40, at Courtyards]`, which the
 card's prompt reads into `scene_time`, and, when the narrator wrote a Journal line in that reply, a line `[Turning point: …]`. The
 patterns:
+0. (1.66.0) turn the card's scene marker at the end of each player message, `(scene: Irene, Kaito · Courtyards · t2)`, into a line
+   `[Timeline: t2]`; the card's prompt adds the timeline number to `scene_time` ("Y1 M3 W2 Mon 13:40 t2");
 1. (1.61.0) copy the Journal line the narrator wrote in the update block (`/Journal/-`) into a `[Turning point: …]` line before the
    block; the card's prompt stores it as one event of importance 6+ that persists, so VectFox's idea of what matters follows the
    story's spine;
@@ -205,6 +208,14 @@ patterns:
 7. drop the preset's Colored Dialogue tags, keeping the words;
 8. drop NPC thoughts (`<npc_thoughts>`, the preset's Internal Thoughts);
 9. unwrap in-story graphics (Pop in Graphics), keeping their text.
+
+**The scene marker and the timeline (1.66.0).** VectFox searches with the raw text of the last messages, update block included, and
+its keyword query is your last message (DECISIONS §11). So when you send a message the card appends one short line to it: who is
+here, the place and the timeline number. You do not see it (a display regex hides it) and the narrator does not (a prompt regex drops
+it); VectFox's search and keyword boost do, so recall leans toward the people and the place of the scene. The timeline number grows
+when you delete messages and write on from an earlier point (a rollback or a branch); `<now>` then tells the narrator that recalled
+memories of the old timeline from that point on never happened, so a rewound scene stops coming back as memory. Editing an old
+message is not caught: clean those events by hand (Good to know, below).
 
 So Mind, Knows, Next and Extras (inside the update block) and NPC thoughts never enter VectFox memory. `tests/test_vectfox_v1113.cjs`
 checks the patterns. The preset CoT's first reasoning line (`Now: …`) gives VectFox a second source for the date when the API returns
@@ -240,12 +251,13 @@ ABSOLUTE RULES (DO NOT BREAK)
    - a discovery or clue about a hidden truth;
    - a fight, an injury, a punishment, a success or failure that has consequences;
    - a character met for the first time (who they are, how they came across).
-   Return [] when the excerpt holds only routine: walking between places, buying or eating ordinary food, an ordinary class period, small talk that reveals nothing, the weather, or an out-of-character note.
+   Return [] when the excerpt holds only routine: walking between places, buying or eating ordinary food, an ordinary class period, small talk that reveals nothing, the weather, or an out-of-character note. A meeting that repeats with the same people (the weekly study session, the usual lunch table) is routine too, unless something new is said, learned or changed in it.
 
    SEXUAL / INTIMATE SCENES: never extract the encounter itself. Extract only a consequence that would still stand without the scene (a promise, a confession, a revelation, a stated change in the relationship); otherwise return [].
 
 4. LINES THAT ARE NOT STORY:
    - A line "[In-world time: <date>, at <place>]" is the card's clock. Copy its date and time into scene_time exactly as written (the date starts with the campaign year, Y1, Y2 or Y3), and its place into locations. It is never an event.
+   - A line "[Timeline: tN]" is the story's timeline number (the story was rewound and replayed when it grows). Add " tN" at the end of the scene_time of every event in the excerpt (e.g. "Y1 M3 W2 Mon 13:40 t2"). It is never an event.
    - A line "[Turning point: <text>]" is the narrator's own note that the excerpt holds a turning point of the story. Extract that turning point as one event, importance 6 or more and should_persist true, with its details from the story text; never record it twice. The player's character appears in that line as a placeholder in double braces: use their name from the story text instead.
    - A block marked "[REASONING — CONTEXT ONLY, for date/time/location; NOT a source of events]" is the author's private planning. Use it only for scene_time and locations when the story text does not give them. Never extract an event from it, never copy its text, and treat anything found only there as not having happened.
    - The speaker label of the narrator's messages is the card's name, not a character: never list "Eldrasil" or "Halvard Academy" in characters.
@@ -278,7 +290,7 @@ Each event object has these fields:
 - locations: place names as written, including the "at <place>" of the clock line.
 - factions: dorms, clubs, the Student Council, the Doves and other groups involved.
 - DateTime: null (the academy calendar is not a real calendar).
-- scene_time: the clock line's date and time verbatim (e.g. "Y1 M1 W2 Wed 13:40", "Y2 M3 W1 Mon 09:10"); "" if there is none.
+- scene_time: the clock line's date and time verbatim, then the timeline number when the excerpt has one (e.g. "Y1 M1 W2 Wed 13:40 t1", "Y2 M3 W1 Mon 09:10 t2"); "" if there is no clock line.
 - items: objects that matter to the event.
 - concepts: 1-3 abstract themes the event is about (trust, rivalry, belonging, secrecy, duty, the cost of power). Never a name, a place, an object or an action.
 - keywords: 6-10 distinctive search terms a later scene might use (rare nouns, names of things, key actions). No generic filler.

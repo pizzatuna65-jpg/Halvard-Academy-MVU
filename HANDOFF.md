@@ -3,14 +3,13 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.65.0** (2026-10-05): memory batches 1–6 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6. 1.65.0:
-`<current_state>` by relevance (`$ui.now.focus`; records that do not touch the scene are `…_not_shown` index lines, −35% on a
-mature state). 1.64.0: recall by person and place (older Journal lines back in the sheet and `<now>`; archive 240). 1.63.0: folds
-(`_Chronicle`, `fold` rule card). 1.62.0: pins. 1.61.x: nothing forgotten silently, memory measuring. Live checks:
-`docs/TEST_CHECKLIST.md` "Open".
+**Snapshot:** card **v1.66.0** (2026-10-05): memory batches 1–7 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6. 1.66.0:
+VectFox from the card's side (hidden scene marker on player messages, timeline numbers voiding rewound memories, reply gist
+`_Recent_story`). 1.65.0: `<current_state>` by relevance. 1.64.0: recall by person and place. 1.63.0: folds. 1.62.0: pins.
+Live checks: `docs/TEST_CHECKLIST.md` "Open".
 
-**Next task:** memory batch 7 (VectFox from the card's side: M11 scene markers, timeline numbers, gist; M10c settings with the
-owner's debug query), then 9 (switch the card default to MVU extra-model mode; batch 8, chapters, only when the numbers call for it).
+**Next task:** memory batch 9 (switch the card default to MVU extra-model mode). Batch 8 (chapters) is planned in
+`planning/DRAFT_bab_baru.md`, to build at about 20,000 messages.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 
