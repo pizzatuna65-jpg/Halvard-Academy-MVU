@@ -220,6 +220,11 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
     the AI through the `fold` rule card (`[mvu_update]`: the update model in extra-model mode), which carries the exact lines; the
     engine checks and stores it, or folds plainly after 8 replies. Folds rewrite curated lines, never raw chat (not VectFox's
     summarizer); the originals stay in the UI archives.
+  - **By relevance** (1.65.0, memory audit M7): `<current_state>` prints in full only the records that touch the scene (the engine's
+    `$ui.now.focus`: people here, named in the reply or the player's message, or expected; Extras here or named; clue threads tied
+    to them, the place, the prose, a new clue or the trace beat). The rest is one `…_not_shown` index line each: other threads by
+    their clue names (a cold one by count), Extras by name and Who, NPC_status and New_relations by name or key, Secrets_revealed by
+    count. A person here has their status and secrets in their Cast Sheet only. Nothing leaves the state.
   - **Recall** (1.64.0, memory audit M6): Journal lines out of view (`$ui.archive` minus the Journal and `_Kept_from_earlier`)
     that name someone on a full Cast Sheet (3, newest first; their sheet) or {{user}}'s place (2; `<now>`) come back, by exact
     name (`mentionIn`, the place's own names and aliases). Not from the Chronicle (printed whole already). The archive keeps 240

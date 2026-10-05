@@ -12,8 +12,8 @@ const { memDiff, memEnd, tok501, LISTS } = require('../../tools/memory_lists.cjs
 const N = +(process.argv.find(a => /^\d+$/.test(a)) || 3000), QUIET = process.argv.includes('--quiet');
 // measured at 1.61.1 on this soak: 3,000 updates 131 KB of stat_data and 4,200 tokens of 501 at most; 10,000 updates 148 KB and
 // 5,400 (12 bonds; the owner's chat will have more). 1.63.0 (pins kept in view, the Chronicle): 10,000 updates 163 KB and 7,400
-// (22 Chronicle entries, 20 kept pinned lines; the soak writes the Journal three times faster than the owner). Batch 6 (M7) trims
-// 501 by relevance. The budget leaves room; a memory batch that grows them past it says so here
+// (22 Chronicle entries, 20 kept pinned lines; the soak writes the Journal three times faster than the owner). 1.65.0 (M7, 501 by
+// relevance): 10,000 updates 6,980 (this soak writes no statuses, relations or secrets; a mature state saves about a third). The budget leaves room; a memory batch that grows them past it says so here
 const BUDGET = { bytes: 200000, t501: 9000 };
 // owner's chat (1.34.2, 37 replies): Journal 1, Knows 1, Known_facts 13. Here: Known_facts as the owner, the rest several times faster
 const RATE = { fact: 35, knows: 10, journal: 8, clue: 6, extra: 5, hook: 3, solve: 0.4, pin: 10, fold: 80 };   // pin: % of Journal lines (a fifth of that for facts)

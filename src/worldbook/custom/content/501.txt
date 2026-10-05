@@ -1,6 +1,6 @@
 <current_state>
 The present moment of the story. Read it before writing; it is the source of truth.
-Fields starting with "_" are computed by the game engine: rely on them, never patch them. Empty fields are not shown; they still exist and follow the update rules. A bond of someone who is not here is one line of standing and plans (with their latest facts when they were just mentioned or may come); <cast> gives the people here in full.
+Fields starting with "_" are computed by the game engine: rely on them, never patch them. Empty fields are not shown; they still exist and follow the update rules. A bond of someone who is not here is one line of standing and plans (with their latest facts when they were just mentioned or may come); <cast> gives the people here in full. A "…_not_shown" line indexes records on file that do not touch this scene (shown in full when their people are here, named or expected, at their place, or in play); each record still exists under its own path, the index line is not a field.
 <%_ { // 1.11.0 (token audit B1/A6): the state as YAML without $ keys, empty values and retired bond fields; the variables themselves are unchanged
 const _E = v => v === '' || v === false || v == null || (Array.isArray(v) && !v.length) || (typeof v === 'object' && !Array.isArray(v) && !Object.keys(v).length);
 const _P = (v, path) => { if (Array.isArray(v)) { const a = v.map(x => _P(x, path)).filter(x => !_E(x)); return a; }
@@ -64,5 +64,47 @@ if (_S.Clues && _sol.length) { for (const [k, x] of Object.entries(_S.Clues)) if
 // the rumours <now> prints with their reach are not printed twice
 const _gs = (getvar('stat_data.$ui.on') || {}).gossip === false ? [] : (getvar('stat_data.$ui.gossip') || []).slice(-5).map(g => g[0]);
 if (Array.isArray(_C.Rumours) && _gs.length) { _C.Rumours = _C.Rumours.filter(r => !_gs.includes(r)); if (!_C.Rumours.length) delete _C.Rumours; }
+// 1.65.0 (memory audit M7): a record that does not touch this scene is one index line (the engine's $ui.now.focus); still on file
+const _F = (getvar('stat_data.$ui.now') || {}).focus;
+if (_F) {
+  const _lo = x => String(x).trim().toLowerCase(), _ids = (_F.ids || []).map(_lo), _hid = _here.map(_lo), _xs = (_F.x || []).map(_lo);
+  const _is = (k, L) => { const w = _lo(k); return L.includes(w) || L.includes(w.split(/\s+/)[0]); };
+  const _put = (o, after, k, v) => { const e = Object.entries(o), i = e.findIndex(([x]) => x === after); e.splice(i < 0 ? e.length : i + 1, 0, [k, v]); for (const [x] of e) delete o[x]; for (const [x, y] of e) o[x] = y; };
+  // Clues: the threads in play in full; every other thread one line with its clues' names (a cold thread only its count)
+  if (_S.Clues) {
+    const _ix = {}, _MY = _S.Mysteries || {};
+    for (const [k, x] of Object.entries(_S.Clues)) if (x && !(_F.th || []).includes(x.Thread)) { (_ix[x.Thread] = _ix[x.Thread] || []).push(k); delete _S.Clues[k]; }
+    const _l = Object.entries(_ix).map(([t, ks]) => (((_MY[t] || {}).Status === 'cold') ? t + ' (cold) — ' + ks.length + (ks.length > 1 ? ' clues' : ' clue') : t + ' — ' + ks.join('; ')));
+    if (_l.length) _put(_S, 'Clues', 'Clues_not_shown', _l);
+    if (!Object.keys(_S.Clues).length) delete _S.Clues;
+  }
+  // Extras: those here or named in full; the others by name and who they are
+  if (_S.Extras) {
+    const _l = [];
+    for (const [k, v] of Object.entries(_S.Extras)) if (!_xs.includes(_lo(k))) { _l.push(k + (v && v.Who ? ' (' + v.Who + ')' : '')); delete _S.Extras[k]; }
+    if (_l.length) _put(_S, 'Extras', 'Extras_not_shown', _l);
+    if (!Object.keys(_S.Extras).length) delete _S.Extras;
+  }
+  // NPC_status: someone here has it in their Cast Sheet; named or expected in full; the others by name
+  if (_C.NPC_status) {
+    const _l = [];
+    for (const k of Object.keys(_C.NPC_status)) { if (_is(k, _hid)) delete _C.NPC_status[k]; else if (!_is(k, _ids) && !_xs.includes(_lo(k))) { _l.push(k); delete _C.NPC_status[k]; } }
+    if (_l.length) _put(_C, 'NPC_status', 'NPC_status_not_shown', _l.join(', '));
+    if (!Object.keys(_C.NPC_status).length) delete _C.NPC_status;
+  }
+  // New_relations ("A→B"): in full when either side is here, named or expected; the others by their keys
+  if (_C.New_relations) {
+    const _l = [], _all = [..._ids, ..._xs];
+    for (const k of Object.keys(_C.New_relations)) if (!String(k).split(/\s*(?:→|->|&|,|\band\b)\s*/).some(p => p && _is(p, _all))) { _l.push(k); delete _C.New_relations[k]; }
+    if (_l.length) _put(_C, 'New_relations', 'New_relations_not_shown', _l.join(', '));
+    if (!Object.keys(_C.New_relations).length) delete _C.New_relations;
+  }
+  // Secrets_revealed ("First.topic"): someone here has theirs in their Cast Sheet; named or expected in full; the rest a count
+  if (Array.isArray(_C.Secrets_revealed)) {
+    const _all = _C.Secrets_revealed, _sh = _all.filter(x => _is(String(x).split('.')[0], _ids) && !_is(String(x).split('.')[0], _hid)), _n = _all.filter(x => !_is(String(x).split('.')[0], _ids)).length;
+    if (_n) _put(_C, 'Secrets_revealed', 'Secrets_revealed_not_shown', _n + ' more on file (a character\'s show in their Cast Sheet when they are here)');
+    if (_sh.length) _C.Secrets_revealed = _sh; else delete _C.Secrets_revealed;
+  }
+}
 _%><%- _Y(_S, '') %><% } %>
 </current_state>

@@ -1269,7 +1269,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.64.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.65.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 const verLt = (a, b) => { const p = v => String(v || '0').split('.').map(x => parseInt(x, 10) || 0), x = p(a), y = p(b); for (let i = 0; i < 3; i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) < (y[i] || 0); return false; };   // 1.63.0
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
@@ -5828,9 +5828,33 @@ function recallOf(S) {
   const place = prx ? old.filter(l => !used.has(l) && prx.test(l.replace(/^\[[^\]]*\]\s*/, ''))).slice(0, RECALL.place).map(aged) : [];
   return { earlier, place, placeName: place.length ? here : '' };
 }
+// 1.65.0 (memory audit M7): what in <current_state> touches this scene, so 501 prints it in full and the rest as one index line.
+// ids: the people here (their Cast Sheet prints their own status and secrets), named in the last reply or the player's message, or
+// expected ($ui.maybe). x: the Extras here or named. th: the clue threads a clue (name, Detail, Where) or the thread's name ties to
+// those people or Extras, the place, the prose, a clue new this reply, or the trace beat. Names from the prose are kept from the last
+// reply when an update has none (a player tool).
+const wordRx = n => new RegExp(`(^|[^\\p{L}\\p{N}])${_.escapeRegExp(n)}($|[^\\p{L}\\p{N}])`, 'iu');
+function focusOf(c, prev) {
+  const { S, B, hasB, text, userText } = c;
+  const CS = S.$ui.cast || {}, prose = text ? proseOf(text) + '\n' + String(userText || '') : null, P0 = prev || {};
+  const xs = Object.keys(S.Extras || {});
+  const xn = prose == null ? (P0.xn || []).filter(n => xs.includes(n)) : xs.filter(n => n.length >= 3 && wordRx(n).test(prose));
+  const x = _.uniq([...(CS.extras || []).filter(n => xs.includes(n)), ...xn]);
+  const ids = _.uniq([...(CS.full || []), ...(CS.brief || []), ...(CS.ment || []), ...(S.$ui.maybe || []).map(m => m[0])]);
+  const here = plName(placeOf(S.World.Location)) || placeOf(S.World.Location), prx = here && placeWords(here);
+  const tn = prose == null ? (P0.tn || []) : _.uniq(Object.entries(S.Clues || {}).filter(([k, cl]) => cl && [cl.Thread, k].some(n => String(n).length >= 4 && wordRx(String(n)).test(prose))).map(([, cl]) => cl.Thread));
+  const C0 = (hasB && B.Clues) || {}, trace = ((S.$ui.amb || {}).trace) || '';
+  const ties = (k, cl) => { const t = [k, cl.Detail, cl.Where, cl.Thread, ((S.Mysteries || {})[cl.Thread] || {}).Summary].join(' \n ');
+    return ids.some(id => { const rx = NAME_RX_OF.get(id); return rx ? mentionIn(t, id, rx) : wordRx(id).test(t); }) || x.some(n => wordRx(n).test(t))
+      || (prx && prx.test(String(cl.Where || '') + ' ' + String(cl.Detail || ''))) || !_.isEqual(C0[k], cl); };
+  const th = _.uniq([...tn, ...(trace ? [trace] : []), ...Object.entries(S.Clues || {}).filter(([k, cl]) => cl && ties(k, cl)).map(([, cl]) => cl.Thread)]).sort();
+  return { ids, x, th, xn, tn };
+}
 function stepNow(c) {
   const { S } = c;
+  const fprev = (S.$ui.now || {}).focus;
   S.$ui.now = nowOf(S, c.moods);
+  S.$ui.now.focus = focusOf(c, fprev);
   S.$ui.now.rules = ruleCards(c);
   { const r = recallOf(S); if (Object.keys(r.earlier).length) S.$ui.now.earlier = r.earlier; if (r.place.length) { S.$ui.now.recall = r.place; S.$ui.now.recallAt = r.placeName; } }
   // 1.48.0 (audit 2.6): what <now> has in its lines is not kept twice: the walks and places nearby of an area (the Map panel walks

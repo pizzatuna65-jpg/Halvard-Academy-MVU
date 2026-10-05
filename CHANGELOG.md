@@ -1,7 +1,25 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.65.0 — Memory batch 6: `<current_state>` by relevance (2026-10-05)
+
+Batch 6 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6 (M7, an extension of 1.57.0's U3; DECISIONS §8). Save fixture v1.64.0.
+- **The engine marks what touches the scene** (`focusOf` in `stepNow` → `$ui.now.focus`): the people here, named in the reply or in
+  the player's message, or expected (`$ui.maybe`); the Extras here or named; the clue threads tied to them, to the place, named in
+  the prose, given a clue this reply, or the trace beat's. An update with no reply (a player tool) keeps the last prose's names.
+- **`<current_state>` prints those in full and indexes the rest** (`…_not_shown`, one line each; nothing leaves the state):
+  - Clues: a thread in play with all its clues; every other thread one line with its clues' names, a cold thread its count.
+  - Extras: here or named in full; the rest by name and who they are.
+  - NPC_status: named or expected in full; someone here only in their Cast Sheet (it already printed it); the rest by name.
+  - New_relations: in full when either side is here, named or expected; the rest by key. Secrets_revealed: named or expected in
+    full, someone here in their sheet, the rest a count.
+  - The 501 header says what an index line is (the record still exists under its own path).
+- **Tokens:** a mature state (40 clues in 6 threads, 20 Extras, 15 statuses, 14 relations, 30 secrets, two people here) 6,451 →
+  4,173 tokens of 501 (−35%); the 10,000-update soak, which writes none of the last three, 7,401 → 6,978 at most.
+- Tests: new `test_memory_batch6_v1650` (16). Full `npm test` and `npm run lint` pass.
+- **To check live (owner):** `docs/TEST_CHECKLIST.md` 1.65.0.
 
 ## v1.64.0 — Memory batch 5: recall by person and place (2026-10-05)
 
@@ -95,37 +113,6 @@ Batch 2 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6 (M13). Tools only: th
 - Tests: new `test_memory_tools_v1611` (12; runs the soak for 400 updates). Full `npm test` and `npm run lint` pass.
 - **To check (owner):** nothing in SillyTavern. After the next session, send the chat export (and the VectFox export) for
   `--memory --vectfox`.
-
-## v1.61.0 — Memory batch 1: nothing important forgotten silently (2026-10-05)
-
-Batch 1 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6 (M1, M2, M8, M9, M10a, M10b, M10d, M12). Built and tested for MVU's
-extra-model mode as well; nothing here is written by the AI, so neither model's load changes. Save fixture v1.60.0.
-- **Clues (M1, a bug):** over 40, the oldest clue left even when its mystery was still open, while clues of a solved one stayed.
-  Now clues of a solved or cold mystery leave first; an open one leaves only when none is left. A clue that leaves goes to
-  `$ui.cluearch` (120) and the Mystery panel lists it under its thread ("N older clues, kept on file"); written again, it comes back.
-- **Journal (M2):** a new line that says what an earlier line says (ignoring date, articles, punctuation) is dropped, whoever wrote it
-  (the owner's chat had the sorting line twice); a repeat already in a save goes on its next update. Over 30 lines, the engine's
-  routine lines from earlier replies (Meanwhile, a first visit) leave before the oldest turning point. The schema's Journal list
-  allows 40 (the engine keeps 30), so the engine sees a reply's new lines before choosing what leaves.
-- **Extras (M8):** an invented character past `$ui.xold` (40) leaves a short record in `$ui.xgone` (Who, Looks, Voice, cut short;
-  120) instead of vanishing, and comes back from it with the same face and voice.
-- **Replay (M9):** the MVU hook now finds the floor MVU is processing (`floorOf`: COMMAND_PARSED hands over that message's `mes`) and
-  reads the player's words and the seed hint from it, not from the chat's end; during MVU's restore or "Replay floor",
-  `stepLoreChanges` and the reminders now see the right player message. `$eng.floor` stamps the floor of each state; when the state
-  before a message came from more than 3 floors back (a snapshot after a branch or a deep deletion), the Log and a toast say so and
-  how to rebuild it (`snapGap`).
-- **VectFox (M10a, b, d):** two new cleaning patterns (nine in all): a Year 1 date gets `Y1` (stored events cannot be changed later,
-  so this must be in place before Year 2), and the narrator's Journal line in a reply becomes a `[Turning point: …]` line that the
-  card's prompt stores as one event of importance 6+ that persists. 504: a recalled date without a year is Year 1 (events stored
-  before). ECOSYSTEM: how to clear "ghost memories" after deleting, rewriting or branching.
-- **Long chats (M12):** PLAYER_GUIDE §7 "Long campaigns" (MVU cleanup ON, snapshot interval, Replay floor, ST backups, VectFox
-  hygiene; the archive sizes corrected to 120 journal lines and 20 facts); DECISIONS §11 three new verified rows (MVU cleanup,
-  restore and replay at 438f9ff; ST whole-file saves and backups; VectFox at scale), §8 the M1, M2, M8 rules.
-- Tests: new `test_memory_batch1_v1610` (24); `test_vectfox_v1113` expects `Y1` on Year 1 dates. Full `npm test` passes; the Mystery
-  panel was checked in a browser preview (no errors).
-- **To check live (owner):** `docs/TEST_CHECKLIST.md` 1.61.0. Re-import the VectFox cleaning patterns and re-paste the extraction
-  prompt (both changed). **Invented, to confirm:** the archive sizes (clues 120, short Extras records 120) and the gap that triggers
-  the warning (more than 3 floors).
 
 ## Release index (one line per release, oldest first)
 
@@ -271,3 +258,4 @@ extra-model mode as well; nothing here is written by the AI, so neither model's 
 - **v1.62.0 (2026-10-05):** Memory batch 3: pinned (`!`) lines never leave the narrator's view (Journal → `_Kept_from_earlier`, 20; Knows / Known_facts: five per character; engine landmarks pinned), open matters go in Hooks (M4).
 - **v1.63.0 (2026-10-05):** Memory batch 4: folds ("Summaryception mini"): Journal lines → Chronicle L1/L2/L3 (`_Chronicle`), Knows / Known_facts → one fold line per character, written by the update model through the `fold` rule card (`/Fold`), plain fold after 8 replies; nothing dropped before it is folded.
 - **v1.64.0 (2026-10-05):** Memory batch 5: recall by person and place (older Journal lines that name someone on a full sheet, 3, or the place, 2), archive 240 lines.
+- **v1.65.0 (2026-10-05):** Memory batch 6: `<current_state>` by relevance (`$ui.now.focus`; clue threads, Extras, NPC_status, New_relations, Secrets_revealed in full only when they touch the scene, the rest `…_not_shown` index lines; −35% of 501 on a mature state).

@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.65.0 (memory batch 6): the two checks in its section below.
 - v1.64.0 (memory batch 5): the two checks in its section below.
 - v1.63.0 (memory batch 4): the three checks in its section below.
 - v1.62.0 (memory batch 3): the two checks in its section below.
@@ -107,6 +108,14 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.65.0 — Memory batch 6 (`<current_state>` by relevance)
+
+- [ ] With several mysteries open, `<current_state>` shows in full only the thread tied to the scene (someone here or named, this
+      place); the others are `Clues_not_shown` lines. The narrator adds no duplicate clue to a thread shown as an index line, and a
+      clue it adds there lands under the right thread.
+- [ ] Name an absent character whose NPC_status is on record: the next `<current_state>` shows that status in full, and the
+      narrator's prose respects it (in extra-model mode too).
 
 ### v1.64.0 — Memory batch 5 (recall by person and place)
 
