@@ -180,6 +180,17 @@ Settings keys are in brackets, for searching the VectFox panel or its settings f
 cleaning patterns (below) → re-vectorize the chat → test with Action → debug query: type what you would write next in the story and
 "Run All Pipelines"; the event that matters most should come back with the highest score (F12 console shows the scores).
 
+**Where each setting is** (VectFox 3623dc8, `ui/ui-manager.js`): SillyTavern's Extensions panel → the drawer **"VectFox - Advanced
+RAG"**, whose tabs are Action, Core, EventBase, ChunkBase, AutoSync, WorldInfo, RAG and AgentMode. The panel's labels differ from the
+keys:
+- **Action:** Vectorize Content (re-vectorize; its dialog holds **Window Size** and Parallel Windows), Debug Query, **Text Cleaning**
+  (the pattern manager with Import).
+- **Core:** Turn off model thinking; Retrieval: **Query Depth** (`query`), **Injection Position** / Injection Depth, **Skip
+  Already-Visible Events** (`deduplication_depth`), **Dedup Window Gap** (`eventbase_dedup_window_gap`).
+- **EventBase:** the extraction prompt, Min Importance to Store, Retrieve Top-K, **Injection Format** (Summary Only).
+- **AutoSync:** Auto-sync window, **Summarizer Injection**, **Ghost vectorized messages**.
+- **WorldInfo:** Semantic World Info. **RAG:** Global Context Prompt (`rag_context`). **AgentMode:** Enable AgentMode.
+
 ### Text cleaning
 VectFox runs the ticked built-ins first and the custom patterns after them, in list order, so:
 - untick **Strip <UpdateVariable> Tags (MVU)**: otherwise the update block, the only place the in-world date appears in the text,
