@@ -8,6 +8,7 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
 
 | Rencana | Label | Paling lambat | Alasan |
 |---|---|---|---|
+| Bab baru (memory audit M14, batch 8): pindah ke file chat baru tanpa kehilangan memori | **[±20.000 PESAN]** | saat chat ±20.000 pesan, simpan > ±2 detik, atau file > ±100 MB | Rencana lengkap, sudah diputuskan: `planning/DRAFT_bab_baru.md`. "Kerjakan batch 8" = kerjakan draft itu. |
 | FP4 Anggota baru tim rival | **[YEAR 2]** | Year 2 M9 W4 (Kingdom Competition) | Tim rival baru benar-benar tampil di Kingdom Competition. Sebelum itu entry tim hanya menulis "none on record yet". |
 
 ### FP4. Anggota baru tim akademi rival dari Year 2 [YEAR 2]
