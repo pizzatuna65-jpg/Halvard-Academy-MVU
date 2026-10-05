@@ -300,7 +300,10 @@ const AMB_CALM = { 1: 70, 2: 55, 3: 40 };
 const lifeX = TU => (100 - (AMB_CALM[TU.amb_freq] || AMB_CALM[2])) / (100 - AMB_CALM[2]);
 const HAPPEN_RATE = { off: 0, rare: 0.2, normal: 0.4, often: 0.65 };
 // hash32, rand01, roll100, d100, rollInt, pickOf and rollTable: shared.js (seeded draws)
-const JOURNAL_ARCHIVE = 120;
+const JOURNAL_ARCHIVE = 120;   // the engine's notes ($ui.jnotes)
+// 1.64.0 (memory audit M6, from batch 2's numbers): the Journal lines that left the narrator's view ($ui.archive) are kept for the
+// panel and for recall; 240 lines are about 8,000 of the owner's replies and about 20 KB a stored floor. Older ones live on as folds.
+const ARCHIVE_MAX = 240;
 // 1.61.0 (memory audit M2): the engine's routine Journal lines, which leave the window first (stepRecords)
 const JOURNAL_LOW = /^(?:\[[^\]]*\]\s*)?(?:Meanwhile: |First visit to )/;
 // 1.62.0 (memory audit M3): a pinned line starts with "!" (after its date). The narrator pins rarely; the engine pins its landmarks
@@ -4571,7 +4574,7 @@ function stepBag(c) {
     const kept = new Set(S.Journal), arch = S.$ui.archive || (S.$ui.archive = []);
     const have = new Set(arch);
     for (const l of B.Journal || []) if (!kept.has(l) && !have.has(l)) { arch.push(l); have.add(l); }
-    S.$ui.archive = arch.slice(-JOURNAL_ARCHIVE);
+    S.$ui.archive = arch.slice(-ARCHIVE_MAX);
   }
 }
 
@@ -5542,10 +5545,39 @@ function ruleCards(c) {
   };
   return Object.keys(RULE_CARDS).filter(id => (!RULE_CARDS[id] || !OFF.has(RULE_CARDS[id])) && test[id] && test[id]());
 }
+// 1.64.0 (memory audit M6): recall by person and place. The Journal lines that left the narrator's view (the archive, without what
+// is still in view: the Journal and _Kept_from_earlier) that name someone on a full Cast Sheet (RECALL.who, newest first; their sheet
+// prints them) or the place {{user}} is at (RECALL.place; <now> prints them). The Chronicle is printed whole in <current_state>, so
+// only the original lines are recalled. Exact names, as the Zep-style half of a hybrid memory; VectFox brings the similar scenes.
+const RECALL = { who: 3, place: 2 };
+const NAME_RX_OF = new Map(NAME_RX), PLACE_WORDS = new Map();
+const placeWords = nm => {
+  if (PLACE_WORDS.has(nm)) return PLACE_WORDS.get(nm);
+  const lo = nm.toLowerCase().replace(/^the /, ''), own = v => String(v).toLowerCase().replace(/^the /, '') === lo;
+  const ws = _.uniq([lo, ...Object.entries({ ...PLACE_NAMES, ...PLACE_ALIAS }).filter(([, v]) => own(v)).map(([k]) => k.replace(/^the /, ''))])
+    .filter(w => w.length >= 3).sort((a, b) => b.length - a.length);
+  const rx = ws.length ? new RegExp('(^|[^a-z])(' + ws.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')(?![a-z])', 'i') : null;
+  PLACE_WORDS.set(nm, rx); return rx;
+};
+function recallOf(S) {
+  const W = S.World, inView = new Set([...(S.Journal || []), ...(S._Kept_from_earlier || [])]);
+  const old = (S.$ui.archive || []).filter(l => !inView.has(l) && !/^(?:\[[^\]]*\]\s*)?First visit to /.test(l)).reverse();
+  const aged = l => { const m = /^\[([^\]]+)\]\s*/.exec(l), a = m && ageOf(m[1], W); return a ? `[${m[1]}, ${a}] ${l.slice(m[0].length)}` : l; };
+  const earlier = {}, used = new Set();
+  for (const id of ((S.$ui.cast || {}).full || [])) {
+    const rx = NAME_RX_OF.get(id); if (!rx) continue;
+    const hit = old.filter(l => mentionIn(l, id, rx)).slice(0, RECALL.who);
+    if (hit.length) { earlier[id] = hit.map(aged); hit.forEach(l => used.add(l)); }
+  }
+  const here = plName(placeOf(W.Location)) || placeOf(W.Location), prx = here && placeWords(here);
+  const place = prx ? old.filter(l => !used.has(l) && prx.test(l.replace(/^\[[^\]]*\]\s*/, ''))).slice(0, RECALL.place).map(aged) : [];
+  return { earlier, place, placeName: place.length ? here : '' };
+}
 function stepNow(c) {
   const { S } = c;
   S.$ui.now = nowOf(S, c.moods);
   S.$ui.now.rules = ruleCards(c);
+  { const r = recallOf(S); if (Object.keys(r.earlier).length) S.$ui.now.earlier = r.earlier; if (r.place.length) { S.$ui.now.recall = r.place; S.$ui.now.recallAt = r.placeName; } }
   // 1.48.0 (audit 2.6): what <now> has in its lines is not kept twice: the walks and places nearby of an area (the Map panel walks
   // the same graph itself)
   for (const a of Object.values(S.$ui.area || {})) if (_.isPlainObject(a)) { delete a.walks; delete a.near; }

@@ -33,7 +33,7 @@ S = applyPatch(S, [{op:'replace',path:'/Scene/Present',value:{Sophia:{Note:''}}}
 ok(S.$ui.moods.Sophia && !S.$ui.moods.Trixie, 'present NPC has mood without storing all NPC moods');
 for (let i=0; i<330; i++) S.Journal.push(`[M1 W1 Mon] archived line ${i}`);
 S = applyPatch(S, []);
-ok(S.$ui.archive.length <= 120, 'journal archive is bounded to 120 lines');
+ok(S.$ui.archive.length <= 240, 'journal archive is bounded to 240 lines (1.64.0)');
 const bonded = Object.keys(S.Bonds)[0];
 S.Bonds[bonded].$Known_old = Array.from({length:35},(_,i)=>`fact ${i}`);
 S.Bonds[bonded].$Knows_old = Array.from({length:35},(_,i)=>`memory ${i}`);

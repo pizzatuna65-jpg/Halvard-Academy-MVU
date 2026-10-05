@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.64.0 (memory batch 5): the two checks in its section below.
 - v1.63.0 (memory batch 4): the three checks in its section below.
 - v1.62.0 (memory batch 3): the two checks in its section below.
 - v1.61.1 (memory batch 2): the check in its section below.
@@ -106,6 +107,13 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.64.0 — Memory batch 5 (recall by person and place)
+
+- [ ] Once a friend's old Journal lines have left the window, bring them into a scene: their Cast Sheet shows "Earlier, from the
+      record" with up to three of those lines, and the narrator's callbacks match them (no invented past).
+- [ ] Go back to a place an old Journal line names (the boathouse, the library): `<now>` shows "Earlier here, from the record", and
+      the prose may nod to it without retelling it.
 
 ### v1.63.0 — Memory batch 4 (folds)
 

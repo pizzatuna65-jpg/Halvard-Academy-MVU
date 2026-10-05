@@ -185,6 +185,9 @@ Around campus today (optional, use only if it fits): <%- W._Happening %>
 <%_ if (NOW.visit) { _%>
 <%- NOW.visit %>
 <%_ } _%>
+<%_ if ((NOW.recall || []).length) { _%>
+Earlier here, from the record (Journal lines that name <%- NOW.recallAt %>, older than the Journal): <%- NOW.recall.join(' | ') %>
+<%_ } _%>
 <%_ for (const _l of NOW.walk || []) { _%>
 <%- _l %>
 <%_ } _%>

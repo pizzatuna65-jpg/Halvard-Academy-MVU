@@ -79,6 +79,10 @@ for (let i = 0; i < N; i++) {
   for (const k of ['Clues', 'Extras']) if (md[k].left !== md[k].kept) fail(i, `${k}: ${md[k].left - md[k].kept} left the view without reaching the archive`);
   for (const k of ['Journal', 'Knows', 'Known_facts']) if (md[k].lost) fail(i, `${k}: ${md[k].lost} line(s) gone before they were folded`);
   if (md.pinsLost) fail(i, `${md.pinsLost} pinned line(s) left the view while their list had room`);
+  // 1.64.0 (M6): what is recalled is never a line still in view, and stays within its cap
+  { const nw = Nx.$ui.now || {}, inView = new Set([...(Nx.Journal || []), ...(Nx._Kept_from_earlier || [])]), strip = l => l.replace(/^\[([^\],]*)(?:, [^\]]*)?\]/, '[$1]');
+    const rc = [...Object.values(nw.earlier || {}).flat(), ...(nw.recall || [])];
+    if (rc.some(l => inView.has(strip(l))) || Object.values(nw.earlier || {}).some(a => a.length > 3) || (nw.recall || []).length > 2) fail(i, 'recall printed a line still in view, or more than its cap'); }
   const bytes = JSON.stringify(Nx).length; maxBytes = Math.max(maxBytes, bytes);
   if (i % 250 === 249 || i === N - 1) { const t = tok501(Nx); max501 = Math.max(max501, t || 0); if (!QUIET) console.log(`  update ${i + 1} (${Nx.World.Year > 1 ? 'Y' + Nx.World.Year + ' ' : ''}M${Nx.World.Month}): state ${Math.round(bytes / 1000)} KB, 501 ${t} tokens`); }
   S = Nx;

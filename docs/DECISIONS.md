@@ -220,6 +220,10 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
     the AI through the `fold` rule card (`[mvu_update]`: the update model in extra-model mode), which carries the exact lines; the
     engine checks and stores it, or folds plainly after 8 replies. Folds rewrite curated lines, never raw chat (not VectFox's
     summarizer); the originals stay in the UI archives.
+  - **Recall** (1.64.0, memory audit M6): Journal lines out of view (`$ui.archive` minus the Journal and `_Kept_from_earlier`)
+    that name someone on a full Cast Sheet (3, newest first; their sheet) or {{user}}'s place (2; `<now>`) come back, by exact
+    name (`mentionIn`, the place's own names and aliases). Not from the Chronicle (printed whole already). The archive keeps 240
+    lines (batch 2's numbers: about 20 KB a stored floor; the text of the chat dominates the file).
   - 1.62.0 (memory audit M3, M4; M4 built on silence-is-approval): a line that starts with `!` is pinned. A pinned Journal line
     that leaves the window stays in view in `_Kept_from_earlier` (20); the engine pins its landmarks (solved, changed for good,
     hidden truth, new year, graduation, Rank 10, romance). Knows / Known_facts keep five pinned lines per character past the cap. A

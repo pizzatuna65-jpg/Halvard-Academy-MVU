@@ -47,6 +47,9 @@ const cMem = (id, full) => {
   if (b && b.Mind) out.push('Their mind now: ' + b.Mind);
   if (b && full && (b.Knows || []).length) out.push('What they know about {{user}} (nothing else, unless told or seen on-screen): ' + b.Knows.map(k => { const m = /^\[([^\]]+)\]\s*/.exec(k); return m ? '[' + cAged(m[1]) + '] ' + k.slice(m[0].length) : k; }).join(' | '));
   if (b && (b.Imprints || []).length) out.push('Imprints (the only things that have changed who they are): ' + b.Imprints.map(x => '"' + x.Belief + '" (weight ' + x.Weight + (x.When ? ', ' + cAged(x.When) : '') + (x.From ? '; from ' + x.From : '') + (x.Was ? '; replaced "' + x.Was + '"' : '') + ')').join('; '));
+  // 1.64.0 (memory audit M6): Journal lines about them that left the narrator's view (the engine picks them, $ui.now.earlier)
+  const ea = full && ((CUI.now || {}).earlier || {})[id];
+  if (ea && ea.length) out.push('Earlier, from the record (Journal lines that name them, older than the Journal): ' + ea.join(' | '));
   if (b && full && (b.$Defining || []).length) out.push('Defining moments with {{user}}: ' + b.$Defining.map(r => { const f = fxWords(r.fx); return '[' + cAged(r.w) + '] ' + r.n + (f ? ' (' + f + ')' : ''); }).join(' | '));
   if ((CD.change || {})[id]) out.push('Change: ' + CD.change[id]);
   return out.join('\n');

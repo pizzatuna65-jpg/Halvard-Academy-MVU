@@ -1,7 +1,25 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.64.0 — Memory batch 5: recall by person and place (2026-10-05)
+
+Batch 5 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6 (M6). Save fixture v1.63.0.
+- **Recall by person:** for everyone on a full Cast Sheet, up to three Journal lines that left the narrator's view and name them
+  come back in their sheet, newest first and with their age: "Earlier, from the record (Journal lines that name them, older than the
+  Journal)". Exact names through the engine's `mentionIn`, as Zep-style entity recall beside VectFox's similarity.
+- **Recall by place:** up to two such lines that name the place {{user}} is at (its own names and aliases, so "the lake" finds
+  Boathouse and Lake) in `<now>`, after the visit line. A line already recalled for someone here is not printed twice.
+- Lines still in view (the Journal, `_Kept_from_earlier`) are never recalled, nor "First visit" lines; the Chronicle is not a
+  source (it is printed whole in `<current_state>`). Computed by the engine (`recallOf` in `stepNow`), so both MVU modes and a
+  replay see the same lines; read by the story model only.
+- **Archive retention** (decided from batch 2's numbers): `$ui.archive` keeps 240 Journal lines (was 120; about 8,000 of the owner's
+  replies, about +20 KB a stored floor, small next to the chat's own text). Older lines live on as folds.
+- Tests: new `test_memory_batch5_v1640` (12); the soak checks that recall never prints a line in view and stays within its caps;
+  `test_calendar_state_v1190` reads the new archive cap. Full `npm test` passes.
+- **To check live (owner):** `docs/TEST_CHECKLIST.md` 1.64.0. Token cost: 0 until old lines exist; then about 30 tokens a recalled
+  line (at most 3 per full sheet and 2 for the place).
 
 ## v1.63.0 — Memory batch 4: folds, the story so far (2026-10-05)
 
@@ -108,32 +126,6 @@ extra-model mode as well; nothing here is written by the AI, so neither model's 
 - **To check live (owner):** `docs/TEST_CHECKLIST.md` 1.61.0. Re-import the VectFox cleaning patterns and re-paste the extraction
   prompt (both changed). **Invented, to confirm:** the archive sizes (clues 120, short Extras records 120) and the gap that triggers
   the warning (more than 3 floors).
-
-## v1.60.0 — Lore changes: the narrator changes a fact of the world, only from the story (2026-10-05)
-
-The owner asked for a general way for the narrator to change persistent facts (not only places or people), on the condition that
-a change follows from the story or {{user}}'s actions, never from the narrator's own whim. Save fixture v1.59.0.
-- **`Campus_State.Lore_changes`** `{"<subject>": {"Now", "Cause", "Replace"}}`: any lasting change to a fact of the world, keyed by
-  the name its lore uses (or a new name). State, not the lorebook: per chat, and a swipe takes it back.
-- **The engine guards the condition** (`stepLoreChanges`, before the Journal step): a new or rewritten change is kept only with a
-  Cause and only when the reply's prose or the player's message names the subject (or any name of its lore entry); 2 new a reply,
-  40 on record. A refused one goes back to what it was and the report says why. A person's lore is never replaced (Replace set back
-  to false). The narrator cannot remove a change (put back); the player can. A kept change gets its date (`Since`), a toast and a
-  Journal line.
-- **Every lore entry prints a change on record over its text** (`build/build_card.py` `LORE_OPEN`, names from `tools/common.py`
-  `lore_names`: the title's last part, an NPC's first name, the plain keys): "[Changed in this campaign, <date>; this overrides the
-  lore below] …"; with Replace the old text is left out. A person's Cast Sheet carries it too. `<current_state>` lists changes that
-  have an entry by name only (`Lore_changed_in_entries`) and prints the rest in full.
-- **Player:** Journal > "Lasting changes" lists each change with its cause and date, and Undo (a hidden player-tool message, like
-  Settings). The Map card's "Changed:" line reads Lore_changes.
-- **Location_changes is folded in:** `stepMigrate` moves an older chat's records over ("recorded before 1.60.0"); a write there by
-  old habit is read as a Lore change and needs a Cause like any other.
-- **Rules:** one 502 line (Lore_changes) in place of Location_changes; 504's off-screen line says news becomes a Lore change only
-  once the story shows it to {{user}}. About +150 constant tokens.
-- Tests: new `test_lore_changes_v1600` (31); harness `loreOf` (an entry's text without the overlay) used by `test_ambience_v1160`,
-  `test_nations_v172`, `test_worldmyth_v171`; `test_playtest_v137` accepts the overlay as an entry's block scope; `test_people_map`
-  reads Lore_changes. Full `npm test` and `npm run lint` pass; the Journal panel was checked in a browser preview (no errors).
-- **To check live (owner):** `docs/TEST_CHECKLIST.md` 1.60.0. **Invented, to confirm:** the limits (2 new a reply, 40 on record).
 
 ## Release index (one line per release, oldest first)
 
@@ -278,3 +270,4 @@ a change follows from the story or {{user}}'s actions, never from the narrator's
 - **v1.61.1 (2026-10-05):** Memory batch 2: `audit_chat.py --memory` (what each memory list kept and lost, 501 tokens, state size and file projection) and `--vectfox` (ghost events, dates without a year, near-duplicates), `tools/memory_lists.cjs`, `tests/stress/memory_soak.cjs`, the memory baseline.
 - **v1.62.0 (2026-10-05):** Memory batch 3: pinned (`!`) lines never leave the narrator's view (Journal → `_Kept_from_earlier`, 20; Knows / Known_facts: five per character; engine landmarks pinned), open matters go in Hooks (M4).
 - **v1.63.0 (2026-10-05):** Memory batch 4: folds ("Summaryception mini"): Journal lines → Chronicle L1/L2/L3 (`_Chronicle`), Knows / Known_facts → one fold line per character, written by the update model through the `fold` rule card (`/Fold`), plain fold after 8 replies; nothing dropped before it is folded.
+- **v1.64.0 (2026-10-05):** Memory batch 5: recall by person and place (older Journal lines that name someone on a full sheet, 3, or the place, 2), archive 240 lines.
