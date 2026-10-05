@@ -6,6 +6,7 @@ new section at the top of **By release**, not as a new file.
 
 ## Open
 
+- v1.67.0 (memory batch 9): the three checks in its section below.
 - v1.66.0 (memory batch 7): the four checks in its section below.
 - v1.65.0 (memory batch 6): the two checks in its section below.
 - v1.64.0 (memory batch 5): the two checks in its section below.
@@ -15,7 +16,7 @@ new section at the top of **By release**, not as a new file.
 - v1.61.0 (memory batch 1): the three checks in its section below.
 - v1.60.0 (lore changes): the four checks in its section below.
 - v1.59.0 (narrator-load batch 8): the three checks in its section below.
-- v1.58.0 (narrator-load batch 7): the A/B test of MVU's extra-model mode in its section below.
+- v1.58.0 (narrator-load batch 7): the A/B test of MVU's extra-model mode in its section below (optional since 1.67.0: the owner chose extra-model).
 - v1.57.0 (narrator-load batch 6): the three checks in its section below.
 - v1.56.0 (narrator-load batch 5): the two checks in its section below.
 - v1.55.0 (narrator-load batch 4): the two checks in its section below.
@@ -109,6 +110,14 @@ new section at the top of **By release**, not as a new file.
   portraits and thumbnails.
 
 ## By release
+
+### v1.67.0 — Memory batch 9 (extra-model mode by default)
+
+- [ ] Import the card (or update it) and start or continue a chat: MVU's character-card settings show **Extra-model parsing**; each
+      reply shows the prose first, then the update is appended and the bracelet refreshes.
+- [ ] The story prose never contains an `<UpdateVariable>` block of its own (the story model writes prose only); the appended update
+      has `/Gist` most replies and, when the rule card asks, `/Fold`.
+- [ ] Switch back to **Alongside AI output** in the character-card settings: one request per turn works as before.
 
 ### v1.66.0 — Memory batch 7 (VectFox from the card's side)
 

@@ -26,7 +26,7 @@ repaired or could not read, a list written under /Player, a change the schema dr
 Trust, reverted writes, unknown names, refused reports), the reminders it raised and the time each reply moved. 0 prompt tokens.
 --no-drift skips the character-drift checks.
 --compare B.jsonl (1.58.0, U9) puts the mechanics of two chats side by side, for an A/B test such as MVU's extra-model mode against
-the default one-call mode (play the same opening in both). It also counts replies with no update block or with more than one (in
+the one-call mode (play the same opening in both; extra-model is the card's default since 1.67.0). It also counts replies with no update block or with more than one (in
 extra-model mode the story model should write none; the update model's block is appended after the prose).
 --memory (1.61.1, memory audit M13) replays the chat through the CURRENT engine (tools/replay_chat.cjs --memory) and reports the card's
 memory: per list (Journal, Knows, Known_facts, Clues, Extras) what the narrator wrote, what left the narrator's view, what an archive

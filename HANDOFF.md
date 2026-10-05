@@ -3,13 +3,13 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.66.0** (2026-10-05): memory batches 1–7 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6. 1.66.0:
-VectFox from the card's side (hidden scene marker on player messages, timeline numbers voiding rewound memories, reply gist
-`_Recent_story`). 1.65.0: `<current_state>` by relevance. 1.64.0: recall by person and place. 1.63.0: folds. 1.62.0: pins.
-Live checks: `docs/TEST_CHECKLIST.md` "Open".
+**Snapshot:** card **v1.67.0** (2026-10-05): the memory audit (`audit/AUDIT_2026-10-05_1_sistem_memori.md` §6) is done except
+batch 8. 1.67.0: MVU extra-model mode is the card's default (507). 1.66.0: VectFox from the card's side (scene marker, timeline,
+gist). 1.65.0: `<current_state>` by relevance. 1.64.0: recall by person and place. 1.63.0: folds. 1.62.0: pins. Live checks:
+`docs/TEST_CHECKLIST.md` "Open".
 
-**Next task:** memory batch 9 (switch the card default to MVU extra-model mode). Batch 8 (chapters) is planned in
-`planning/DRAFT_bab_baru.md`, to build at about 20,000 messages.
+**Next task:** whatever the owner's next playtest brings. Batch 8 (chapters, a new chat file without losing memory) is planned in
+`planning/DRAFT_bab_baru.md`: build it at about 20,000 messages, slow saves or a chat file near 100 MB.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

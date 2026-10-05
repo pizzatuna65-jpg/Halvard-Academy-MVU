@@ -13,7 +13,7 @@ console.log('Tags for the two models');
 {
   ok(!/\[mvu_(plot|update)\]/.test(byId(506).comment), '506 Price Guide is untagged: the update model writes /Purchases with its exact names');
   const co = JSON.parse(E.find(e => e.comment.trim() === '[config_override]').content);
-  ok(co['更新方式'] === '随AI输出', '507 still sets the one-call mode (DECISIONS §9 unchanged until the owner decides)');
+  ok(co['更新方式'] === '额外模型解析', '1.67.0 (memory batch 9, owner 2026-10-05): 507 sets the extra-model mode (DECISIONS §9)');
   const upd = E.filter(e => e.enabled && /\[mvu_update\]/.test(e.comment)).map(e => e.id);
   ok(upd.every(id => !/<cast>[^.]*\b(asks|line)\b/.test(renderEntry(card, id, S0))), `no update-only entry sends the update model to <cast> (${upd})`);
 }
