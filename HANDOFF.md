@@ -3,8 +3,9 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.67.1** (2026-10-05): the owner started the quest log (Charles chat on 1.67, msg 75); 1.67.1: the story
-model writes no update of its own in extra-model mode (504). The memory audit (`audit/AUDIT_2026-10-05_1_sistem_memori.md` §6) is done except
+**Snapshot:** card **v1.67.2** (2026-10-06): the owner is playing the quest log (Charles chat, msg 76). 1.67.1–1.67.2: in
+extra-model mode the story model is never asked for an update (504, card description) and the update model treats
+`<VectFoxMemory>` as the past (503). The memory audit (`audit/AUDIT_2026-10-05_1_sistem_memori.md` §6) is done except
 batch 8. 1.67.0: MVU extra-model mode is the card's default (507). 1.66.0: VectFox from the card's side (scene marker, timeline,
 gist). 1.65.0: `<current_state>` by relevance. 1.64.0: recall by person and place. 1.63.0: folds. 1.62.0: pins. Live checks:
 the campaign quest log `docs/TEST_CHECKLIST.md` (every open check in the order the campaign reaches it; the owner plays it from the

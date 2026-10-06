@@ -23,6 +23,7 @@ Rules:
 - The JSONPatch must be a valid JSON array inside both tags, <JSONPatch>[ … ]</JSONPatch>: without them the whole update is lost. Double quotes, no comments, no trailing commas.
 - ops: replace | delta (numbers only) | insert (new key, or append to a list with "/-"; "add" also works) | remove | move.
 - Never patch a field whose name starts with "_" or "$".
+- Time: <old> is World.Time in <current_state>; <new> is <old> plus the minutes the reply took (the example's 08:40 is only an example). <VectFoxMemory> is recalled past: never take a time, place, value or presence from it.
 - If nothing else changed, still output the block with at least the Time update.
 - An out-of-character (OOC) answer to the player is not a story turn: output no block, and never move time for it.
 - The block is bookkeeping, not story: never mention it in the narration.

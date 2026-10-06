@@ -67,6 +67,10 @@ it. *Update*: the folded block MVU appends under the reply. *Log*: Student file 
       ✗ msg 75 (1.67.0): the prose ended with an `<UpdateVariable>` of its own, written as YAML of the state, above the real update.
       The state took only the update model's block (10:13, not 10:15), so nothing broke. 1.67.1 tells the story model in 504 that
       without `<update_format>` it writes no update; check again on the next replies.
+      ✗ msg 76 swipe 3 (1.67.1, xiaomi/mimo-v2.5): again a block of its own (JSON). Its reasoning quotes the card description,
+      "Every reply ends with the <UpdateVariable> block", which reaches the story request: 1.67.2 makes it conditional. The update
+      model wrote Time 08:38 → 08:45 (a recalled VectFox event's time); the engine kept the clock at 10:10. 1.67.2: 503 says the old
+      time is World.Time and `<VectFoxMemory>` is the past.
 - [ ] Two requests a turn: the wait and the cost are acceptable. If not: a cheaper update model (PLAYER_GUIDE §8) [1.58].
 - [ ] No "Engine error" line in the Log and no `[Eldrasil engine]` error in the console. If one ever appears: the toast "Engine error",
       the state unchanged, and a swipe works [1.20, 1.16.1].

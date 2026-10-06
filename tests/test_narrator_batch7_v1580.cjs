@@ -18,6 +18,21 @@ console.log('Tags for the two models');
   ok(upd.every(id => !/<cast>[^.]*\b(asks|line)\b/.test(renderEntry(card, id, S0))), `no update-only entry sends the update model to <cast> (${upd})`);
 }
 
+console.log('The story model is never told to write an update');
+{
+  // 1.67.2 (owner's playtest, Charles chat msg 76): the card description still said "Every reply ends with the <UpdateVariable>
+  // block", which reaches the story request too, so the story model wrote a block of its own above the update model's.
+  const d = card.data.description;
+  ok(!/Every reply ends with the <UpdateVariable>/.test(d) && /When the rules include <update_format>.*second request writes the update/.test(d),
+    'the card description asks for an update block only when <update_format> is in the prompt');
+  ok(!/updates with the AI's reply/.test(card.data.creator_notes), 'creator notes name the extra-model mode');
+  ok(/write an <UpdateVariable> block only when <update_format> is in this prompt/.test(renderEntry(card, 504, S0)), '504 (story only): no update without <update_format> (1.67.1)');
+  // 1.67.2: Tavern Helper's generateRaw (87ca341, generate/generateRaw.ts) injects every extension prompt it does not know, VectFox's
+  // <VectFoxMemory> included, into the update request at depth 0; the update model took a recalled event's 08:38 as now.
+  ok(/<old> is World\.Time in <current_state>/.test(byId(503).content) && /<VectFoxMemory> is recalled past/.test(byId(503).content),
+    '503 (update only): the old time comes from <current_state>, and recalled memory is the past');
+}
+
 console.log('Update rules readable without <cast>');
 {
   const rules = renderEntry(card, 502, S0);

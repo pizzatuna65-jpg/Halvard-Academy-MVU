@@ -338,6 +338,9 @@ text through its own prompt slot, outside SillyTavern's World Info pipeline:
 - entries already triggered by keywords would be sent twice.
 
 ### Good to know
+- **The update model sees recalled memory too.** In MVU's extra-model mode the update request is built by Tavern Helper, which
+  adds VectFox's `<VectFoxMemory>` block whatever its injection position (DECISIONS §11). The card's 503 tells the update model
+  that block is the past (1.67.2). A large Retrieve Top-K makes that block, and the update request, bigger: keep it at 10.
 - **Rewriting history leaves "ghost memories".** VectFox never removes an event when the message it came from is deleted or edited
   [`core/eventbase-store.js`: events keep `source_message_hashes` and `deleteEventByHash` exists, but nothing calls it on a deletion
   or an edit]; an edited window is extracted again, so the old and new versions both stay. After you delete or rewrite older messages

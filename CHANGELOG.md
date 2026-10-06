@@ -1,7 +1,21 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.67.2 — The story model is never asked for an update; recalled memory stays the past (2026-10-06)
+
+Playtest fix (the Charles chat, msg 76, third swipe on 1.67.1 with xiaomi/mimo-v2.5). Save fixture v1.67.1.
+- **The card description** said "Every reply ends with the <UpdateVariable> block described in the rules". It reaches the story request
+  too, and the story model's reasoning quoted it before writing a block of its own (JSON this time) above the update model's. It now
+  asks for the block only when the rules include `<update_format>`; the creator notes name the extra-model mode.
+- **503 (update only):** the old time is `World.Time` in `<current_state>`, the new one that plus the reply's minutes; `<VectFoxMemory>`
+  is recalled past, never a source of time, place, value or presence. The update model had written 08:38 → 08:45, the time of a
+  recalled event: Tavern Helper's `generateRaw` puts VectFox's block into the update request at depth 0 (verified, DECISIONS §11). The
+  engine had kept the clock (time never moves backwards), so only the reply's minutes were lost.
+- Tests: `test_narrator_batch7_v1580` checks the description, the creator notes, 504 and 503; the suites that read 503/504,
+  `test_saves`, `qa_static` and `token_audit` pass.
+- **To check live (owner):** `docs/TEST_CHECKLIST.md` Q0.2 "Each reply" (one block, a time that moves on from now).
 
 ## v1.67.1 — The story model writes no update of its own (2026-10-05)
 
@@ -71,24 +85,6 @@ Batch 6 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6 (M7, an extension of 
   4,173 tokens of 501 (−35%); the 10,000-update soak, which writes none of the last three, 7,401 → 6,978 at most.
 - Tests: new `test_memory_batch6_v1650` (16). Full `npm test` and `npm run lint` pass.
 - **To check live (owner):** `docs/TEST_CHECKLIST.md` 1.65.0.
-
-## v1.64.0 — Memory batch 5: recall by person and place (2026-10-05)
-
-Batch 5 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6 (M6). Save fixture v1.63.0.
-- **Recall by person:** for everyone on a full Cast Sheet, up to three Journal lines that left the narrator's view and name them
-  come back in their sheet, newest first and with their age: "Earlier, from the record (Journal lines that name them, older than the
-  Journal)". Exact names through the engine's `mentionIn`, as Zep-style entity recall beside VectFox's similarity.
-- **Recall by place:** up to two such lines that name the place {{user}} is at (its own names and aliases, so "the lake" finds
-  Boathouse and Lake) in `<now>`, after the visit line. A line already recalled for someone here is not printed twice.
-- Lines still in view (the Journal, `_Kept_from_earlier`) are never recalled, nor "First visit" lines; the Chronicle is not a
-  source (it is printed whole in `<current_state>`). Computed by the engine (`recallOf` in `stepNow`), so both MVU modes and a
-  replay see the same lines; read by the story model only.
-- **Archive retention** (decided from batch 2's numbers): `$ui.archive` keeps 240 Journal lines (was 120; about 8,000 of the owner's
-  replies, about +20 KB a stored floor, small next to the chat's own text). Older lines live on as folds.
-- Tests: new `test_memory_batch5_v1640` (12); the soak checks that recall never prints a line in view and stays within its caps;
-  `test_calendar_state_v1190` reads the new archive cap. Full `npm test` passes.
-- **To check live (owner):** `docs/TEST_CHECKLIST.md` 1.64.0. Token cost: 0 until old lines exist; then about 30 tokens a recalled
-  line (at most 3 per full sheet and 2 for the place).
 
 ## Release index (one line per release, oldest first)
 
@@ -238,3 +234,4 @@ Batch 5 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6 (M6). Save fixture v1
 - **v1.66.0 (2026-10-05):** Memory batch 7: VectFox from the card's side: a hidden scene marker on player messages (who, place, timeline) for VectFox's query, timeline numbers that void rewound memories, repeated meetings as routine, the reply gist (`_Recent_story`), VectFox settings for large collections.
 - **v1.67.0 (2026-10-05):** Memory batch 9: the card plays in MVU's extra-model mode by default (507 `更新方式 = 额外模型解析`); one-call mode stays available (PLAYER_GUIDE §8).
 - **v1.67.1 (2026-10-05):** Playtest fix: in extra-model mode the story model writes no `<UpdateVariable>` of its own (504).
+- **v1.67.2 (2026-10-06):** Playtest fix: the card description asks for an update block only with `<update_format>`; 503 takes the old time from the state and treats `<VectFoxMemory>` as the past.
