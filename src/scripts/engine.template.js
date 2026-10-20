@@ -13,6 +13,7 @@ const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const CAST_FULL = 4;
 const KNOWS_VISIBLE = 15, IMPRINT_MAX = 5, DEFINING_MAX = 5, NEXT_RANK = 3, MEANWHILE_RANK = 7;   // 1.6.0 (Batch C)
 const APART_RANK = 2, APART_DAYS = 7, ASK_RANK = 3, ASK_DAYS = 10;   // 1.73.0: time apart (stepBondMemory), asking after (stepAgenda)
+const WORD_DAYS = 2, TIES_RANK = 6;   // 1.74.0: word gets around (stepBonds -> stepBondMemory), ties ({{user}}'s close bonds, nowOf)
 const CHANGE = /*@@CHANGE@@*/{};   // 1.6.0 (N2): fixed | shaped | fluid per NPC (data/npc_canon.json; empty until the canon waves)
 // 1.6.8 (owner): which Rank 8 branches each NPC allows (data/npc_canon.json branch): A all, B best friend or rival, C best friend
 // or romance, D best friend only. An NPC with no entry (a new one) allows all three until its canon says otherwise.
@@ -3388,6 +3389,14 @@ function stepBonds(c) {
         const r = b.$Recent[b.$Recent.length - 1];
         b.$Defining = [...b.$Defining, { w: r.w, n: r.n, fx: r.fx, s: Math.round(big * 10) / 10 }];
         while (b.$Defining.length > DEFINING_MAX) { let lo = 0; b.$Defining.forEach((x, i) => { if (x.s < b.$Defining[lo].s) lo = i; }); b.$Defining.splice(lo, 1); }
+        // 1.74.0: word gets around. A loud moment (Trust moved 15+, Tension rose 20+, a romance began) told by someone who talks
+        // about themselves (Trust category open or normal, data/bond_openness.json) reaches their friends (TRU.friends, the
+        // betrayal spread's list) WORD_DAYS later as a Knows line (stepBondMemory). A betrayal spreads on its own (spreadFrom).
+        const loud = Math.abs(dT) >= 15 || dX >= 20 || (b.Romance && !b0.Romance);
+        if (loud && r.n !== '(no note)' && !spreadFrom.includes(id) && ['open', 'normal'].includes((TRU.npcs || {})[id] || 'normal')) {
+          const to = ((TRU.friends || {})[id] || []).filter(f => f !== id && !(S.Scene.Present || {})[f]);   // those here saw it
+          if (to.length) S.$eng.word = [...(Array.isArray(S.$eng.word) ? S.$eng.word : []), { from: id, n: r.n, due: dayNo + WORD_DAYS, to }].slice(-40);
+        }
       }
     }
   }
@@ -3433,6 +3442,12 @@ function stepBondMemory(c) {
     const presentIds = new Set(Object.keys(S.Scene.Present || {}));
     const wasHere = new Set(Object.keys((hasB && B.Scene && B.Scene.Present) || {}));
     const since = [];
+    // 1.74.0: word that has travelled (stepBonds) lands in the friends' Knows, dated below like any new line
+    S.$eng.word = (Array.isArray(S.$eng.word) ? S.$eng.word : []).filter(x => {
+      if (num(x.due, 0) > dayNo) return true;
+      for (const f of x.to || []) { const fb = S.Bonds[f]; if (fb) fb.Knows = [...(Array.isArray(fb.Knows) ? fb.Knows : []), `Heard from ${x.from}: ${x.n}`]; }
+      return false;
+    });
     for (const [id, b] of Object.entries(S.Bonds)) {
       const b0 = BB[id] || null;
       b.Knows = (Array.isArray(b.Knows) ? b.Knows : []).map(k => String(k).trim()).filter(Boolean);
@@ -5232,6 +5247,10 @@ function askAfter(c, A, cur, dayLabel) {
       AK[key] = { t, due, h: first ? [] : PRS.filter(id => !ws.includes(id)), end: -1, a: {} };
     } else if (x.end < 0 && due >= 0) x.due = due;
   }
+  // 1.74.0: an injury of {{user}}'s (moderate or worse) is news to everyone who was not there; it lasts while it is on record
+  const INJ = S.Player.Injuries || {}, inj0 = ((c.B && c.B.Player) || {}).Injuries || {};
+  if (c.hasB) for (const [k, v] of Object.entries(INJ)) if (!(k in inj0) && v && v.Severity !== 'minor' && !AK['i:' + k])
+    AK['i:' + k] = { t: k, due: absA, h: Object.keys(S.Bonds).filter(id => !PRS.includes(id) && !NO_BOND.has(id)), end: dayNo, a: {}, ev: 1 };
   const asks = {};
   for (const key of Object.keys(AK).sort((a, b) => num(AK[b].end, -1) - num(AK[a].end, -1))) {
     const x = AK[key];
@@ -5241,14 +5260,16 @@ function askAfter(c, A, cur, dayLabel) {
       if (!gone && absA < num(x.due, 0)) continue;
       x.end = dayNo; x.h = (x.h || []).filter(id => !PRS.includes(id));   // those there when it happened saw it
     }
-    if (dayNo - x.end > ASK_DAYS) { delete AK[key]; continue; }
+    if (dayNo - x.end > ASK_DAYS || (x.ev && !INJ[key.slice(2)])) { delete AK[key]; continue; }
     if (!_.isPlainObject(x.a)) x.a = {};
     if (!OFF.has('npc_initiative')) x.h = x.h.filter(id => {
       const b = S.Bonds[id], here = PRS.includes(id);
       if (!b) return false;
       if (x.a[id] == null) { if (!here || b.Rank < ASK_RANK || asks[id]) return true; x.a[id] = dayNo; }
       else if (!here || x.a[id] !== dayNo) return false;
-      if (!asks[id]) asks[id] = `Knew about {{user}}'s "${x.t}" (${dayLabel(Math.floor(num(x.due, 0) / DAY_MIN))}) and has not heard how it went: may ask, if that is like them.`;
+      const on = dayLabel(Math.floor(num(x.due, 0) / DAY_MIN));
+      if (!asks[id]) asks[id] = x.ev ? `Has not seen {{user}} since the injury (${x.t}, ${on}): may notice it or ask, if that is like them.`
+        : `Knew about {{user}}'s "${x.t}" (${on}) and has not heard how it went: may ask, if that is like them.`;
       return true;
     });
     if (!x.h.length) delete AK[key];
@@ -5486,6 +5507,20 @@ function nowOf(S, moodsFull) {
   PRES.filter(id => BONDS[id] && Number(BONDS[id].$apart) > 0).forEach(id => { const n = Number(BONDS[id].$apart);
     put(id, 'Apart: last saw {{user}} ' + (n >= 14 ? Math.round(n / 7) + ' weeks' : n + ' days') + ' ago. The time apart is real to them; whether and how it shows is up to them, in character.'); });
   PRES.filter(id => (UI.asks || {})[id]).forEach(id => put(id, UI.asks[id]));
+  // 1.74.0: ties. Someone {{user}} is close to (Rank TIES_RANK+ or a romance), seen through this character's own line to them
+  // (REL_PAIRS: friends and rivals either way, dislike from them); the strongest two, dislike first
+  const TIE_ORDER = ['dislike', 'rivals', 'friends'];
+  PRES.filter(id => BONDS[id]).forEach(id => {
+    const ties = {};
+    for (const e of REL_PAIRS) {
+      const y = e[0] === id ? e[1] : e[1] === id && e[2] !== 'dislike' ? e[0] : '';
+      if (!y || y === id || !BONDS[y] || !(Number(BONDS[y].Rank) >= TIES_RANK || BONDS[y].Romance)) continue;
+      if (!ties[y] || TIE_ORDER.indexOf(e[2]) < TIE_ORDER.indexOf(ties[y])) ties[y] = e[2];
+    }
+    const top = Object.entries(ties).sort((a, b) => TIE_ORDER.indexOf(a[1]) - TIE_ORDER.indexOf(b[1]) || a[0].localeCompare(b[0])).slice(0, 2);
+    if (top.length) put(id, 'Ties: knows {{user}} is close to ' + top.map(([y, t]) => (t === 'dislike' ? y + ', whom they dislike' : t === 'rivals' ? 'their rival ' + y : 'their friend ' + y)).join(', and to ')
+      + '. How that colours their view of {{user}} is up to them, in character.');
+  });
   // 1.4.4 (owner): how each present character takes teasing and play-fighting (tension category or override: banter)
   PRES.filter(id => BONDS[id]).forEach(id => { const o = (TEN.overrides || {})[id], P = (o && o.banter) ? o : (TEN.categories || {})[(TEN.npcs || {})[id]]; if (P && P.banter) put(id, 'Teasing: ' + P.banter + '.'); });
   // 1.56.0 (U2): the bond cues that were separate <now> lines join the block (the rule never to announce ranks is said once, in 504)

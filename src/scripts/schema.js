@@ -449,6 +449,7 @@ export const Schema = z.object({
     exp: z.any().optional(), cap: z.any().optional(), sr: z.any().optional(),   // before 1.46.0; moved by stepMigrate
     comp: z.any().prefault(null).catch(null),                      // 1.44.0: competition results paid { paid: [keys], exp: 0-2 staff expectation } (engine)
     promise: z.any().prefault(null).catch(null),
+    word: z.array(z.any()).prefault([]).catch([]),                // 1.74.0: { from, n, due, to } a loud moment on its way to friends (engine)
     pair: z.any().prefault(null).catch(null),                      // 1.51.0: { d: the day of the last pair moment } (engine)
     first: z.record(z.string(), z.any()).prefault({}).catch({}),    // 1.57.0 (U3): notable place -> [first visit date, who was there] (engine)
     nrel: z.record(z.string(), z.any()).prefault({}).catch({}),     // 1.51.0: New_relations key -> day last renewed (engine)                   // 1.49.0: { late: ['c:<favour>', 'p:<group assignment>'] } overdue rises already paid (engine)

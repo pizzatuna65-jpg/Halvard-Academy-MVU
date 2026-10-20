@@ -7,7 +7,7 @@ const EDGE = {
   rivals: ['#e0a24a', 'Rivals'], wary: ['#9b7fd1', 'Wary'], dislike: ['#e0645a', 'Dislike'], story: ['#e8d3a8', 'From the story'],
 };
 const GROUP = { dorm: ['#c9c5bc', 'Dorms'], club: ['#d9b36a', 'Clubs'], faction: ['#8fb3d9', 'Factions'] };
-view.ptab = 'bonds'; view.gtypes = new Set(Object.keys(EDGE)); view.ggroups = new Set(); view.gpos = {};
+view.ptab = 'bonds'; view.psort = 'close'; view.gtypes = new Set(Object.keys(EDGE)); view.ggroups = new Set(); view.gpos = {};
 const YEARW = { 1: 'First-year', 2: 'Second-year', 3: 'Third-year' };
 const publicRole = (id, S) => {
   const c = ((S.Campus_State || {}).Council || {}), old = graduated(S).has(id);
@@ -55,6 +55,7 @@ PANELS.people = {
   },
   click(b, S) {
     if (b.dataset.ptab) { view.ptab = b.dataset.ptab; render(); return; }
+    if (b.dataset.psort) { view.psort = b.dataset.psort; render(); return; }
     if (b.dataset.gtype) { const t = b.dataset.gtype; view.gtypes.has(t) ? view.gtypes.delete(t) : view.gtypes.add(t); render(); }
     if (b.dataset.ggroup) { const t = b.dataset.ggroup; view.ggroups.has(t) ? view.ggroups.delete(t) : view.ggroups.add(t); render(); }
     if (b.dataset.gunpin) { view.gpos = {}; render(); }
@@ -69,17 +70,38 @@ function bondMeters(id, b, S) {
       <span class="m" title="${esc(trustTxt(id, b))}"><span class="ml">Trust<b>${id in TRD.lock ? 'fixed' : b.Trust}</b></span>${mini(b.Trust, '#3f9f69')}</span>
       <span class="m" title="${esc(tensionTxt(id, b))}"><span class="ml">Tension<b>${TEND.lock.includes(id) ? '—' : esc(tensionBand(b.Tension))}</b></span>${mini(b.Tension, '#e0645a')}</span>`;
 }
+// 1.74.0 (owner): the order of the people cards: closest (the default), not seen lately, name, dorm, year; dorm and year in groups
+const PSORT = [['close', 'Closest'], ['seen', 'Not seen lately'], ['name', 'Name'], ['dorm', 'Dorm'], ['year', 'Year']];
+function peopleGroup(id, S, by) {
+  const n = npcOf(id);
+  if (!n) return 'Others';
+  const student = n.g.startsWith('Year'), gone = graduated(S).has(id);
+  if (by === 'dorm') return n.dm ? `${n.dm} Dormitory` : n.g === 'Staff' ? 'Staff' : 'Others';
+  return student ? (gone ? 'Former students' : `${YEARW[Math.min(3, yearNow(id, S))] || 'Student'}s`) : n.g === 'Staff' ? 'Staff' : 'Others';
+}
 function peopleListHTML(S) {
-  const B = S.Bonds || {}, here = Object.keys((S.Scene || {}).Present || {});
-  const ids = Object.keys(B).sort((a, b) => (here.includes(b) - here.includes(a)) || (B[b].Rank - B[a].Rank) || (num(B[b].$xp) - num(B[a].$xp)));
+  const B = S.Bonds || {}, here = Object.keys((S.Scene || {}).Present || {}), by = view.psort || 'close';
+  const today = Math.floor(num((S.$eng || {}).abs, 0) / 1440), seen = id => (here.includes(id) ? today : num(B[id].$seen, -1));
+  const close = (a, b) => (here.includes(b) - here.includes(a)) || (B[b].Rank - B[a].Rank) || (num(B[b].$xp) - num(B[a].$xp));
+  const nm = (a, b) => nameOf(a, S, true).localeCompare(nameOf(b, S, true));
+  const GO = ['First-years', 'Second-years', 'Third-years', 'Former students', 'Staff', 'Others'], gi = g => (GO.includes(g) ? GO.indexOf(g) : -1);
+  const grp = id => peopleGroup(id, S, by);
+  const ids = Object.keys(B).sort(by === 'seen' ? (a, b) => (seen(a) - seen(b)) || close(a, b) : by === 'name' ? nm
+    : by === 'dorm' || by === 'year' ? (a, b) => (gi(grp(a)) - gi(grp(b))) || grp(a).localeCompare(grp(b)) || nm(a, b) : close);
   if (!ids.length) return '<div class="empty">You have not met anyone yet.</div>';
+  const ago = id => { const d = today - seen(id); return here.includes(id) ? 'here now' : seen(id) < 0 ? '' : d <= 0 ? 'seen today' : d === 1 ? 'seen yesterday' : `seen ${d} days ago`; };
+  const sorter = `<div class="tog psort"><span class="sub" style="align-self:center">Order:</span>${PSORT.map(([k, l]) => `<button data-psort="${k}" class="${by === k ? 'on' : ''}" aria-pressed="${by === k}">${l}</button>`).join('')}</div>`;
   // 1.23.0 (UI overhaul): cards in a grid; the rank is a brass medal, XP, Trust and Tension are three labelled meters, and a
   // moonglass dot on the portrait says who is here now
-  return `<p class="lead">${ids.length} ${ids.length === 1 ? 'person' : 'people'} you have met. Time together deepens each bond; once the bar fills, the next genuine encounter can deepen it further.</p><div class="plist">` + ids.map(id => {
-    const b = B[id], n = npcOf(id);
+  let last = '';
+  return `<p class="lead">${ids.length} ${ids.length === 1 ? 'person' : 'people'} you have met. Time together deepens each bond; once the bar fills, the next genuine encounter can deepen it further.</p>${sorter}<div class="plist">` + ids.map(id => {
+    const b = B[id], n = npcOf(id), g = by === 'dorm' || by === 'year' ? grp(id) : '';
+    const head = g && g !== last ? `<h3 class="pgh" style="grid-column:1/-1;margin:6px 0 0">${esc(g)}</h3>` : '';
+    last = g || last;
     const dot = here.includes(id) ? '<i class="here" role="img" aria-label="here now" title="here now"></i>' : '';
-    return `<button class="pr" data-open="npc:${esc(id)}"><span class="pav">${avatar(id, S, 'av lg')}${dot}</span><span class="pm">
-      <span class="pn">${esc(nameOf(id, S, true))}${isNew(`npc:${id}`) ? newsDot() : ''}${b.Romance ? ' <span class="pill r">romance</span>' : ''}</span><span class="sub">${esc(b.Title || (n ? publicRole(id, S) || whoLine(id, S) : ''))}</span></span>
+    const sub = b.Title || (n ? publicRole(id, S) || whoLine(id, S) : '');
+    return `${head}<button class="pr" data-open="npc:${esc(id)}"><span class="pav">${avatar(id, S, 'av lg')}${dot}</span><span class="pm">
+      <span class="pn">${esc(nameOf(id, S, true))}${isNew(`npc:${id}`) ? newsDot() : ''}${b.Romance ? ' <span class="pill r">romance</span>' : ''}</span><span class="sub">${esc(by === 'seen' && ago(id) ? [ago(id), sub].filter(Boolean).join(' · ') : sub)}</span></span>
       <span class="medal" title="Rank ${b.Rank} of 10">${b.Rank}</span>
       <span class="pmt">${bondMeters(id, b, S)}</span></button>`;
   }).join('') + '</div>';

@@ -72,7 +72,8 @@ function acClubs(S) {
     // 1.0.3: graduates have left their clubs; incoming first-years are not members before they arrive
     const ids = (c.name === 'Student Council' ? ((S.Campus_State || {}).Council || {}).Members || []
       : [...c.advisors, ...c.members.filter(m => !c.advisors.includes(m)), ...(withFollowers ? c.follows || [] : [])]).filter(id => atHalvard(id, S));
-    const known = ids.filter(id => c.name === 'Student Council' || clubFieldOpen(id, S) || (withFollowers && (c.follows || []).includes(id)));
+    // 1.74.0 (owner): Council members are placed like any club's (their Club field), unless {{user}} sits on the Council
+    const known = ids.filter(id => (c.name === 'Student Council' && P.Council) || clubFieldOpen(id, S) || (withFollowers && (c.follows || []).includes(id)));
     const more = ids.length - known.length;
     return `${known.map(id => `<button class="who" data-open="npc:${esc(id)}">${avatar(id, S, 'av xs')}<span>${esc(nameOf(id, S))}${c.advisors.includes(id) ? ' (advisor)' : (c.follows || []).includes(id) ? ' (followed you in)' : ''}</span></button>`).join('')}${more > 0 ? `<span class="sub">+${more} you have not placed yet</span>` : ''}`;
   };

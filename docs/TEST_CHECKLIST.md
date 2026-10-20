@@ -160,6 +160,8 @@ show the newcomers their dorm rooms.
       Saturday afternoon adds Student reputation [1.16.1].
 - [ ] The Magic Duelling Club duels with spells in warded rings, not padded staffs or swords; Combat Class is practical spellcasting
       [1.9.3].
+- [ ] Activities → Clubs: the Student Council lists only the members Charles has met (Irene, Caspian once met), the rest as "+N you
+      have not placed yet", like every other club [1.74].
 - [ ] Optional, the Student Council (besides a club): Saturday 10:00–12:00 the bracelet and `<now>` point to the Council Chamber,
       attendance and study time count there, an F remedial comes first, and the afternoon club still meets [1.34].
 
@@ -552,6 +554,14 @@ The first academy flight (the airship), then the Grand Vast Forest.
 - [ ] A close friend's eleventh new fact: a fold of their older facts comes first in their Known_facts as `[until …]`, and later scenes stay
       consistent with it [1.63].
 
+- [ ] A loud moment with someone who talks about themselves (a big quarrel, a rescue, a romance begins): two days later a friend of
+      theirs has "Heard from <name>: …" in their Knows, and the narrator lets it show when they meet Charles; with Irene it stays
+      with her [1.74].
+- [ ] Once Charles is Rank 6+ with someone, a person who dislikes them or is their rival gets "Ties: knows {{user}} is close to …" in
+      their Cast Sheet, and reacts in their own way (no forced Tension) [1.74].
+- [ ] Charles hurt (moderate or worse): the first time a Rank 3+ friend who was not there meets him within 10 days, their Cast Sheet has
+      "Has not seen {{user}} since the injury (…)"; once it heals the line is gone [1.74].
+
 ### MS3 Story events
 - [ ] A broken promise, an insult or a betrayal: the update reports `letdown` / `offence` interactions with a Weight, never a Trust or
       Tension number. An accident gets `"Meant": "no_harm"`, a forced act `"Meant": "forced"`, and the character reacts in character
@@ -673,6 +683,8 @@ The first academy flight (the airship), then the Grand Vast Forest.
       glass, the panel buttons in a 3-column grid, and collapsing leaves the glass and the buttons; the zoomed map scrolls with a finger;
       Studies' chart, the recipe rows and the masterwork line fit [1.21, 1.22, 1.24, 1.27, 1.28, 1.29].
 - [ ] Only if starting a reply ever feels slow with many people present: time the prompt build (Prompt Template) [1.19, 1.48].
+
+- [ ] People → Bonds → Order: Closest, Not seen lately ("seen N days ago", whoever is here last), Name, Dorm and Year (in groups) [1.74].
 
 ### SQ4 Throwaway chats and test cards (what Charles cannot show)
 - [ ] A new chat: the collapsed bracelet with no student still offers "Create your student" and opens the Builder with numbered steps; the

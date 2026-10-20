@@ -1,7 +1,33 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.74.0 — Word gets around, ties, asking after an injury; People sorting; the Council placed like a club (2026-10-21)
+
+Owner's requests (2026-10-21): points A, B, C and F2 of the "combine what exists" suggestions, and a playtest note on the Student
+Council in Activities → Clubs. Engine, data and UI only, no new canon. Save fixture v1.73.0.
+- **Word gets around** (`stepBonds` → `$eng.word` → `stepBondMemory`): a loud moment with someone (Trust moved 15+, Tension rose 20+, a
+  romance began) reaches that person's friends two days later as a Knows line: "Heard from Aiden: {{user}} shoved Aiden into the
+  fountain." Only a teller who talks about themselves tells (Trust category open or normal, from `data/bond_openness.json`: Irene,
+  guarded, keeps it to herself); the friends are `TRU.friends`, the list a betrayal already spreads through (a betrayal keeps its own
+  spread, not both). Friends who were in the scene saw it; a friend without a bond hears nothing on record.
+- **Ties** (`nowOf`, from `REL_PAIRS`): a present character whose own line runs to someone {{user}} is close to (Rank 6+ or a romance)
+  gets "Ties: knows {{user}} is close to Althair, whom they dislike, and to their rival Irene. How that colours their view of {{user}}
+  is up to them, in character." Dislike first, then rivals, then friends; two at most.
+- **Asking after an injury** (`askAfter`): a new injury of {{user}}'s (moderate or worse) is news to every bonded character who was not
+  there: "Has not seen {{user}} since the injury (Sprained wrist, M4 W2 Wed): may notice it or ask, if that is like them." Rank 3+,
+  within 10 days, while the injury is on record; spent after that day's scene, like the 1.73 lines.
+- **People → Bonds order** (`PSORT`, `peopleGroup` in `10_people.js`): Closest (the old order), Not seen lately (with "seen 12 days
+  ago"; whoever is here counts as seen today), Name, Dorm and Year (in groups: each dorm, Staff, Others; First-years to Third-years,
+  Former students, Staff, Others).
+- **Student Council in Activities → Clubs** (`acClubs`): its members are placed like any club's (their Club field, Rank 1), shown all
+  only when {{user}} sits on the Council; the rest are "+N you have not placed yet".
+- Not built: F3 (birthdays on the Planner calendar) was already there: the calendar shows every birthday a dossier has opened.
+- Tunables: `WORD_DAYS 2`, `TIES_RANK 6` (engine constants).
+- Tests: new `test_word_ties_v1740.cjs`; `test_saves`, the 1.72/1.73 suites, Cast Sheet, initiative, memory, narrator, scene card and UI
+  suites and lint pass. Browser check (mock chat): the five orders and the Council's "+2 you have not placed yet".
+- **To check live (owner):** `docs/TEST_CHECKLIST.md` Q1.2, MS2, SQ3 [1.74].
 
 ## v1.73.0 — Time apart and asking after: NPCs notice the gap and follow up on {{user}}'s plans (2026-10-21)
 
@@ -92,18 +118,6 @@ now get a full portrait under the narration, their true thoughts beside it and t
   suites, `snapshot_render`, `test_saves` and lint pass. Browser check in a mock chat at 900 px and 375 px: three cards, the fold
   hidden, no console error, no sideways scroll.
 - **To check live (owner):** `docs/TEST_CHECKLIST.md` Q1.1 [1.70].
-
-## v1.69.0 — One model per turn: back to one-call MVU mode (2026-10-20)
-
-Owner's request: call one model only, no extra model in MVU. Save fixture v1.68.0.
-- **The card's `[config_override]` (507) sets `更新方式 = 随AI输出`** (Alongside AI output): one request a turn; the narrator writes
-  the story, then the `<UpdateVariable>` block (folds and gists included). Checked at the pinned MVU 438f9ff: in this mode
-  `filterEntries` returns at once, so every entry, `[mvu_update]` rules included, reaches the narrator. The card description, 504
-  and the preset's BOLT already ask for the block exactly when `<update_format>` is in the prompt, which it now always is (503).
-- Extra-model parsing stays supported: MVU → Current character-card settings → Variable update method (PLAYER_GUIDE §8).
-- Creator notes, DECISIONS §9, PLAYER_GUIDE §8, INDEX and the quest log (Q0.1, Q0.2) name the new default.
-- Tests: `qa_static`, `test_narrator_batch7_v1580` (507 value, creator notes) and `test_saves` pass.
-- **To check live (owner):** `docs/TEST_CHECKLIST.md` Q0.1 (the mode) and Q0.2 (one block per reply, folds and gists by the narrator).
 
 ## Release index (one line per release, oldest first)
 
@@ -260,3 +274,4 @@ Owner's request: call one model only, no extra model in MVU. Save fixture v1.68.
 - **v1.71.0 (2026-10-20):** Scene card actions (practice partners, Rank 4 tracks, invitations, gifts from the Bag, favours, Rank 5–7 perks, amends; drafts only); the other dorms leave the campus map except on their Dorm Day or inside; a brass rule under the bracelet.
 - **v1.72.0 (2026-10-21):** Special days: each NPC's own mood on their birthday, canon calendar days (Remembrance Day, Star Night, the Circus…) and personal dates with {{user}} a year on (Imprints, the day they met, Rank 8), the last known only to the narrator and the NPC.
 - **v1.73.0 (2026-10-21):** Time apart and asking after: a character back after a week or more carries the gap; one who heard of {{user}}'s plan may ask how it went once its day has passed.
+- **v1.74.0 (2026-10-21):** Word gets around among friends, ties to the people {{user}} is close to, asking after an injury; People sorted five ways; the Council's members placed like any club's.
