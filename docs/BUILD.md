@@ -52,7 +52,7 @@ node tests/stress/memory_soak.cjs 3000   # 1.61.1: memory invariants and budget 
 | `dist/*` | the build |
 | `data/themes.json` | `tools/make_themes.py` (1.3.1) |
 | `planning/NPC_ROSTER.md` | `tools/make_npc_roster.cjs` (1.32.0; run by `build_all.py --lore`) |
-| `presets/Realistic_Frankenstein_2_2_Eldrasil.json` | `edit_preset.py` |
+| `presets/Realistic_Frankenstein_2_2_1_3_Eldrasil.json` | `edit_preset.py` (from `presets/original/Realistic_Frankenstein_2_2_1_3_Realistic_Gemini_BOLT.json`) |
 
 ## 3. Hand-written single sources
 
@@ -130,6 +130,9 @@ node tests/stress/memory_soak.cjs 3000   # 1.61.1: memory invariants and budget 
      `feature`), with its trigger in engine `ruleCards` (state, calendar, place, a word in the reply); entry 511 prints it.
 - **Change prices or happenings.** Edit `data/shop.json` or `data/happenings.json`, then run `gen_mvu_entries.py`, `gen_engine.py`, `gen_ui.py`, and the build.
 - **Preset work.** Edit `presets/edit_preset.py`, not the output JSON. Every replacement asserts that its anchor text still exists. Read the preset's in-prompt `{{// }}` notes, which contain the author's per-model guidance.
+  Since 1.68.0 the script keeps the upstream configuration as it ships and applies a closed list of deviations; `tests/test_preset.cjs`
+  fails if any other prompt, toggle, setting or regex differs from upstream. **A new upstream release:** put its Gemini configuration in
+  `presets/original/` under an ASCII name, point `SRC` at it, read every changed prompt, re-check each deviation's reason, then build.
 - **Measure character drift.** Export the chat from SillyTavern (.jsonl) and run `python tools/audit_chat.py <chat> --out report.md`.
   The report lists findings per NPC per 25 messages and the message where each NPC first drifted. Every check is a heuristic:
   read the lines it points to. The Scene.Present and rank checks need an MVU chat (state in the message variables or patches).

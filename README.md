@@ -7,7 +7,8 @@ a deterministic game engine and an in-chat UI. Current release: **1.34.0** (see 
 
 ## Download
 - Card: `dist/Eldrasil_Halvard.png` (it installs its own lorebook on first open). Standalone lorebook: `dist/lorebook_v39/`.
-- Preset: `presets/Realistic_Frankenstein_2_2_Eldrasil.json` (Realistic Frankenstein 2.2, edited for this card and Gemini).
+- Preset: `presets/Realistic_Frankenstein_2_2_1_3_Eldrasil.json` (Realistic Frankenstein 2.2.1.3, Realistic Gemini BOLT, as it ships plus
+  what this card needs).
 - Test cards: `dist/test/` (every bond at Rank 7; a campaign that starts in Year 2).
 - Players: `docs/PLAYER_GUIDE.md`. Card + preset + VectFox setup: `docs/ECOSYSTEM.md`.
 

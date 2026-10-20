@@ -46,8 +46,10 @@ it. *Update*: the folded block MVU appends under the reply. *Log*: Student file 
 - [ ] Update the card to 1.67 (`dist/Eldrasil_Halvard.png`) and accept the lorebook update: the popup does not ask for a new chat
       [1.11.1], the bracelet shows no "old lorebook" warning, and the MVU panel shows the card's settings as overriding [basics].
 - [ ] MVU → character-card settings: **Variable update method = Extra-model parsing** [1.67]. Model source and history: PLAYER_GUIDE §8.
-- [ ] Re-import `presets/Realistic_Frankenstein_2_2_Eldrasil.json`, select it and leave its toggles as shipped; the adult toggles are
-      OFF after the import [1.11].
+- [ ] Import `presets/Realistic_Frankenstein_2_2_1_3_Eldrasil.json` (a new preset; the old "Realistic_Frankenstein_2_2_Eldrasil" can be
+      deleted), select it and leave its toggles as shipped: Realism Mode and the NSFW register ON, Internal States family, Time and Place
+      and Colored Dialogue OFF, Staccato OFF, Embellish ON [1.68]. When SillyTavern asks whether the preset's regexes may run, answer yes;
+      then Extensions → Regex shows them ON (they can switch off on a preset change) [1.68].
 - [ ] VectFox, as `docs/ECOSYSTEM.md` → VectFox says: the settings table ("For this card"); Text Cleaning in Custom mode with "Strip
       <UpdateVariable> Tags (MVU)" unticked, the old "Eldrasil:" patterns and the catch-alls "Rapikan baris kosong" and "Cadangan: hapus
       semua tag HTML" deleted, `docs/vectfox_cleaning_patterns.json` imported (ten patterns); the extraction prompt
@@ -77,15 +79,33 @@ it. *Update*: the folded block MVU appends under the reply. *Log*: Student file 
 - [ ] Prompt: the chat older than about 24 messages is one "[… N earlier messages …]" line [1.17, basics]; `<current_state>` is YAML
       without empty fields and holds only this update's `_Log` lines [1.11, 1.16.1]; no `<%` anywhere; no `<variable_update_rules>`,
       `<update_format>` or `<rule_cards>` (the update request carries those) [1.67].
-- [ ] Prompt, the end: the depth-0 tail has the preset's `<input_authority>`, BOLT, the contrast, vocation and banned-vocabulary gates and
-      `<card_fidelity>`; the card's `<final_cast_gate>` (only when someone is present) is the last text [1.36].
-- [ ] The reasoning opens with `Now: M1 W1 Mon HH:MM at <place>`, stays short (no list of prose rules, no example line) and has no "User
-      rolls / NPC rolls" line [1.52.2, 1.11.2].
+- [ ] Prompt, the end: after your message one assistant message holds `<input_authority>` and BOLT; then the system part: the therapist,
+      scene-detail, banned-vocabulary, door, contrast, vocation, scent gates, `<card_fidelity>` and the card's `<final_cast_gate>` (only when
+      someone is present); the Post-History line is the last text [1.68].
+- [ ] The reasoning follows BOLT's tasks 0–11: it lists the prose rules, writes a short dialogue example when feelings run high, and picks
+      one of three ways the scene goes, naming the card's source when the world brings something (else AMBIENT) [1.68].
 - [x] The folded 🧠 Thoughts block (brass border) sits after the story and before the update: up to three NPCs, bold names, never
       Charles, no secret the story has not revealed. A calm or reserved character (Zara) thinks as calmly as they speak [1.37.3, 1.37.4,
       1.52.2].
 - [ ] The bracelet shows Spring beside the date and cool spring temperatures (not −2 °C); the weather chip shows the sky and its tooltip
       the full line; the Map shows the Spring map [1.9.4, 1.14.3].
+
+### Q0.3 The first replies on the 1.68 preset (RF 2.2.1.3)
+- [ ] No reply holds an Internal States, FATE & ROUTINE, BONDS or GM's Notebook block, a Time and Place header or a `<gold>`-style colour
+      tag; dialogue is in `<say:…>` only; the 🧠 Thoughts block is still folded [1.68].
+- [ ] Smells are rare: only food at a meal, a strong source close by or a rite; no "the air carried…" opener, nothing smelled on
+      entering a room [1.68].
+- [ ] A quiet turn: someone brings up what is on their own mind (Pacing), one ordinary thing changes, nobody is pushed into an event
+      that the card's sources do not bring; right after something happened the next replies read as aftermath [1.68].
+- [ ] A known person who walks in gets no head-to-toe description again; a stranger gets one at the scale a passer-by would notice [1.68].
+- [ ] Impersonate (the ✨ button): only Charles's words and actions, in his own person, with no NPC lines and no thoughts block [1.68].
+- [ ] No reply is blocked or refused by Gemini's filter; tell me if one is (Realism Mode and the Post-History line are ON) [1.68].
+- [ ] The characters keep their edges: they disagree, misjudge, lie when it suits them [1.68].
+- [ ] No error 400 "Requests ending with a model turn" (BOLT and Player Input Authority are assistant-role; the system gates follow
+      them in SillyTavern, but OpenRouter's handling of later system messages is undocumented) [1.68].
+- [ ] No empty or cut-off replies (Gemini's separate filter); if they come often, try a swipe, then streaming OFF [1.68].
+- [ ] An ordinary scene does not drift towards sex or sudden threats (Realism Mode is ON; Gemini leans that way); if it does, turn
+      Realism Mode and the NSFW register OFF and note the message [1.68].
 
 ## Act 1 — Entrance Day (M1 W1 Mon, from 10:10)
 

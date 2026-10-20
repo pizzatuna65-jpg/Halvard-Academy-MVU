@@ -1,6 +1,6 @@
-# Eldrasil ecosystem: card + Realistic Frankenstein 2.2 (Gemini) + VectFox
+# Eldrasil ecosystem: card + Realistic Frankenstein 2.2.1.3 (Gemini) + VectFox
 
-Card v1.0.2 (VectFox section rewritten for 1.57.0) · preset `Realistic_Frankenstein_2_2_Eldrasil.json` · VectFox (checked at commit 3623dc8) · model Gemini 3.8 Flash.
+Card v1.68.0 (VectFox section rewritten for 1.57.0, preset section for 1.68.0) · preset `Realistic_Frankenstein_2_2_1_3_Eldrasil.json` · VectFox (checked at commit 3623dc8) · model Gemini 3.8 Flash.
 
 ## Who owns what
 | Job | Owner | Not done by |
@@ -12,54 +12,66 @@ Card v1.0.2 (VectFox section rewritten for 1.57.0) · preset `Realistic_Frankens
 | Lorebook activation | **SillyTavern** (keywords) | VectFox semantic lorebook (do not use on this card) |
 | Status display | **Card** bracelet and panels | preset Internal States HTML (OFF) |
 
-## Preset changes (vs the original 2.2 "Nuts & Bolts")
-**Turned OFF: overlapping trackers.** Internal States (master), Relationships RPG, GM's Notebook, Internal Agenda, Chekhov's Gun, World Sim, Fate & Routine.
-They keep a second game state in a hidden HTML block that must sit "at the absolute end of every response", which competes with the card's `<UpdateVariable>` block, duplicates Bonds, Campus_State, Journal and Clues, and costs thousands of output tokens per reply.
+## The preset (1.68.0: the Eldrasil edition of RF 2.2.1.3)
 
-**Turned OFF / ON for Gemini, following the preset's own notes.**
-- OFF: Staccato Chop Killswitch, Anti-Briefing Register, Last-Mile Legato Gate, Last-Mile Register Gate. The preset marks these "keep OFF on Gemini".
-- ON: Gemini "Don't Speak Like a Therapist", the new AI Studio jailbreak for Gemini 3.8 Flash, and the "Really Did It" fix for Western models.
+**Base.** `presets/edit_preset.py` loads `presets/original/Realistic_Frankenstein_2_2_1_3_Realistic_Gemini_BOLT.json`, the creator's
+tuned configuration for Gemini 3.8 Flash, and keeps it as it ships: every prompt's text, the prompt order, roles, depths, triggers, the
+toggles, settings (reasoning medium; Gemini 3.8 ignores temperature and top-p, per Google's model guide) and the 59 regexes. Only the list below differs. The full audit behind
+it (every prompt, how RF works, why the old edit felt different) is `audit/AUDIT_2026-10-14_1_preset_RF2213.md`. Before 1.68.0 the edit
+sat on RF 2.2 with a partial RF 2.2.1 port and about ninety text replacements (in git: `git show 4a811c0:presets/edit_preset.py`).
 
-**New: 🏫 Eldrasil × MVU × VectFox Bridge** (right after the Main Prompt). It establishes that the card state is the only tracker. It replaces the disabled trackers with state-free guidance: off-screen lives, and setups and payoffs recorded as Clues, Commitments or Journal lines. "⏰ Time and Place" is locked OFF: the card computes time and weather itself. Since 1.11.2 the card says the rest itself (rule 504: recalled memories are the past; World Index: no phones, metric units), so the card works with any preset.
+**How RF works, in short** (verified in SillyTavern's `openai.js` and `PromptManager.js`):
+- The Main Prompt empties about 38 variables every turn; toggles below it fill them and the modules further down paste them in. With
+  Smell & Taste Rules OFF (Gemini), no prompt mentions smell except the Scent Killswitch and its gate: for Gemini a sentence that forbids
+  a smell still works as a reminder. Cinematic Realism tells Gemini "seen, felt, touched".
+- Model-specific editions share one XML tag, so the CoTs and the gates reach whichever edition is ON. Gemini runs the Cosmos editions.
+- Each stubborn pattern has a killswitch in the system prompt and a short "Last-Mile" gate at depth 0, after the chat history.
+- At depth 0 SillyTavern sends one message per role, assistant first, then user, then system. BOLT is assistant-role, so the model reads
+  the plan as its own; the depth-0 system gates, Card Fidelity and the card's entry 510 follow it, and the Post-History Instructions
+  (relative, under Chat History) come last.
+- Prompts that shape the narrator's reply skip Impersonate (their trigger list); the Impersonation Turn and seven regexes take over then.
 
-**Back ON (1.37.3, owner): 🧠 Internal Thoughts** as a block of its own, `<npc_thoughts>`, right before `<UpdateVariable>`: up to three NPCs' raw thoughts, never {{user}}'s, never an unrevealed secret. Two preset regexes fold it on screen and drop it from older replies in the prompt (a third, OFF, drops it from every reply if characters drift); the card draws it in brass; a VectFox pattern keeps it out of memory. Turn it OFF in the preset to hide it.
+**What differs from RF, and why**
+- OFF because the card keeps the only game state (DECISIONS §10): Fate & Routine, Internal Agenda, GM's Notebook, Relationships RPG,
+  World Sim, Chekhov's Gun, Internal States, and Turn Dice (it prints their dice). Their hidden tracker block would duplicate and
+  contradict the card's state, and rule 504 forbids another tracker.
+- OFF because the card keeps the clock and the weather: Time and Place, with its two "FF5 Delete / Catch - Untagged Thoughts" regexes,
+  which delete everything before any line starting with `[... Time` (tested: a player message ending in `[Time skip: two hours later]`
+  reached the model as only that bracket).
+- OFF because the card colours dialogue itself (`<say:Name>`, 1.37.0): Colored Dialogue 2.0. Two colour formats in one reply would fight.
+- OFF as its own note says for Gemini: the Staccato Chop Killswitch ("MUST stay OFF on Gemini"; the configuration ships it ON while its
+  Legato gate is OFF; the owner's preset library calls it a configuration slip and reports chop bans flattening Gemini's prose).
+- Ordinary Turns (below) leaves out step 7's "dialogue share 60-75 percent", which contradicts BOLT's 30-50 percent.
+- 🧠 Internal Thoughts (owner, 1.37.3) writes its own `<npc_thoughts>` block before the card's update block (upstream's version only
+  fills a section of Internal States). Three regexes: fold it on screen, drop it from replies at depth 3+, and (OFF) drop it from every
+  reply. A VectFox pattern keeps it out of memory.
+- Three sentences no longer ask for an Internal States block: the Main Prompt's random events (the card's state records them), the
+  Post-History Instructions (its "ensure internal states" clause is gone), and Plot Momentum in every CoT (with no fate engine a turn is
+  AMBIENT unless one of the card's sources of world events falls due).
+- Pointer fixes: the CoTs name `<comparative_emphasis_killswitch>` (upstream still wrote the retired `<say_it_straight>`), Realism Mode
+  names the Gemini edition's `<abolish_yesman_behaviour>`, the instinct list says [8].
+- The owner's toggles: 🧂 Embellish Mode instead of Anti-parrot (the narrator writes {{user}}'s words and actions from what the player
+  wrote) and 📝 Total Output Length ON at roughly 4 to 7 paragraphs (upstream ships it OFF).
+- Added, generic (they name no card data): 🎮 Player Input Authority (the player writes only {{user}}; what the message says about others
+  or outcomes is a wish; it repeats `{{lastUserMessage}}`; assistant role at depth 0 right above BOLT, so ST joins the two into one
+  message; OFF = director play); 🌐 Output language (OFF); 🎲 Ordinary Turns (Fate & Routine's steps 0, 7 and 7a without the tracker:
+  quiet turns run on needs and the clock, one thing changes, NPCs may decline the bait, the aftermath of a happening).
+- The README prompt (never sent) carries the same list.
 
-**Edited prompts**
-- **Main:** removed the `<think>` wrapper, which the author says is only for Mimo via Crof. Random events are now recorded in the card state.
-- **BOLT CoT:**
-  - Task 0 starts reasoning with `Now: M? W? Day HH:MM at <place>`, from campaign Year 2 `Now: Y? M? W? Day HH:MM at <place>` (1.11.2; VectFox reads it), then reads the card's state and, since 1.6.2, the character sheets of the people present.
-  - Task 2 plans the MVU patch instead of Internal States. Since 1.4.6 it points to the card's own update rules instead of copying them (the old copy taught the 1.0 bond rules).
-  - Task 7 (1.6.2) is a cast check for each character who acts (what they know, what pulls them, what their personality allows, shown versus meant, what they carry), then "the loudest reaction, then how this person usually handles it", a name-swap test, and the slop review.
-  - Task 9 puts `<UpdateVariable>` last.
-  - Task 10 (Plot Momentum; task 11 before 1.11.2) draws world events only from the sources the card allows (the card lists them; since 1.6.2 the CoT no longer copies the list) and nobody arrives without the time to get there.
-  - Since 1.6.2 the CoT names no card field outside the `Now:` line; the Bridge is the one Eldrasil-specific prompt.
-  - 1.11.2 (preset audit): no DnD d20 rolls next to the card's Fortune roll, no checks for toggles that stay OFF on Gemini (Staccato, Anti-Briefing, Quant Hardening), and the old task 8 is gone, so the tasks run 0-10.
-  - The two Gemini-OFF checks are now conditional.
-  - 1.52.2 (preset audit 2): the tasks point to the modules instead of restating them; the model no longer lists the prose rules or writes an example in its reasoning each turn; no check for the colour toggles, which stay OFF with this card. The two Cosmos last-mile gates are short reminders of their killswitches, and each craft rule lives in one module.
-- **Gemini jailbreak:** genre set to "magic academy, slice of life with a mystery, dark where earned". It also respects the card rule that {{user}}'s power level is the player's choice.
-- **Pop in Graphics:** letter, notice and page templates replace phone and terminal. The bracelet and stats are never drawn as graphics.
-- **Colored Dialogue 2.0:** never colours inside `<UpdateVariable>`. Since 1.37.0 the card colours dialogue itself (`<say:Name>`), so both preset colour toggles stay OFF; VectFox's cleaning patterns drop the `<say>` tags too.
-- **NPC Instincts:** bond records describe history and never force compliance. This replaces "there is no affection meter", which contradicted the card's bond ranks.
+**Kept from RF that the old edit had changed or turned off:** the Scene Detail & Evidence lines (a place described through what someone
+touches or uses; how NPCs can know things), Pacing Cosmos (Gemini's per-reply motor), Attentional Salience, the Cosmos banned list at depth 0, Realism Mode and the
+NSFW register (active only in an NSFW scene), Pop in Graphics, the long Cosmos gates, the full BOLT (rule lists and dialogue examples in
+the reasoning), the per-reply question cap, and the 18 display regexes of Internal States (harmless without the block).
 
-**Writing rules (1.5.0, character consistency; generic, they name no card data):**
-- **🎮 Player Input Authority (simulation) 📨** (new, ON, depth 0 just before BOLT): the player writes only {{user}}; what the message says about other characters or outcomes is a wish the world answers in character. It also repeats the newest player message (`{{lastUserMessage}}`) so the model knows which text is the input. Turn it OFF to play as a director.
-- **🌐 Output language** (new, OFF, after Total Output Length): turn ON and name a language to have the story written in it; OFF follows the card (English).
-- Realistic NPCs: no spotlight, no echoes. Scene Engine: simulate, do not dramatise; a quiet turn may end on something ordinary (HOLD). NPC Instincts + VAD: stress shows in the character's own way, plus a `<character_calibration>` block (reaction size, personality is a ceiling, ordinary help keeps its ordinary meaning). NPC Voice: a character's own card outranks the tag (the dialogue ratio is per scene), direct speech versus subtext. Anti-Omniscient: known people are not strangers; no foreshadowing narration. Main `<NPC_intro>`: canon appearance only, no sweep for people {{user}} knows. Anti-Therapist: one question mark per character. Anti-Cliché: no fake specificity, no organ autonomy.
+**Regexes:** when SillyTavern asks whether the preset's regexes may run, answer yes, and check Extensions → Regex after switching
+presets: preset regexes have been reported to switch off on a preset change (the NPC Thoughts fold and trims depend on them).
 
-**Card data (1.6.2):** HQ NPC Genesis follows the card's naming guide and its record for invented characters (the card's Extras) when there is one; the Scene Engine treats that record as the invented character's card. The Bridge says the `<cast>` block is the truth about the people present, invented characters keep their Extras card, off-screen people follow their Next plans and the campus phase, and arrivals take the walk time.
+**Card side (1.68.0):** no ambience cue or beat names a smell any more (`data/ambience.json`; RF's Scent Killswitch allows smells only
+for food at a meal, a strong source close by or a rite), and rule 504 says that someone {{user}} already knows is not introduced again.
 
-**Length (1.4.6):** "📝 Total Output Length" is ON at roughly 4 to 7 paragraphs (3 to 6 before 1.36.0). The card used to carry this default; it now lives here so players can change it.
-
-**RF2.2.1 port (1.36.0):** 🎭 Card Fidelity (ON, depth 0); the Gemini (Cosmos) comparative-emphasis and occupational-monomania killswitches with their gates replace the regular pairs; the Cosmos NPC Voice replaces the Micro voice (a per-line method, no 30-50% ratio); the rebuilt Scene Engine; a banned-vocabulary gate, door sounds and "Looks at a Stranger's Scale" (ON); Pacing (OFF). 🧂 Embellish Mode is ON instead of Anti-parrot (owner): the narrator writes {{user}}'s words and actions from the player's message. Not used: assistant-role CoTs and the smell package (the card's ambience cues name smells).
-
-**Regex:** "FF5 Delete / Catch - Untagged Thoughts" are OFF. They serve the Time-and-Place header, which is off, and they delete everything before any line starting with `[... Time`. Tested: a player message ending in `[Time skip: two hours later]` reached the model as only that bracket.
-ST runs preset regexes before the card's, so the preset's display regexes cannot touch the bracelet.
-
-**Settings:** web search OFF (no search grounding in roleplay). Temperature 1.0 and top-p 0.95, following Google's Gemini 3 guidance; the original 0.7 and 0.8 were tuned for Mimo. Reasoning medium, thoughts shown.
-
-**Size:** always-on preset prompt ~23.6k (original) → ~15.9k tokens (1.11.2; it had grown to ~16.9k with the 1.5–1.6 writing rules), and no tracker block in every reply. 1.52.2 (preset audit 2, tier 1): 17,245 → 15,444 tokens as SillyTavern sends them ({{user}} replaced before `{{// }}` notes go; the older figures counted note fragments), 4,435 of them at depth 0; `test_preset` keeps a budget of 15,600.
-
-**1.11.2 preset audit:** adult lines left in always-on prompts moved to the adult toggles or were removed (adult content is opt-in); the jailbreak no longer names the card's setting or {{user}}'s year, defers to the card's own resolution rule and invents no stakes; duplicate rules merged (Attentional Salience into `<do_not_repeat_descriptions>`, OFF); 18 display regexes that only styled the OFF trackers are disabled. Occupational Monomania and its Vocation Gate stay ON.
+**Size:** about 18,200 tokens a normal turn as SillyTavern sends them (5,350 at depth 0), against 15,450 for the old edit and about 30,300
+for RF as shipped with its trackers; `test_preset` keeps a budget of 18,600. The part above the chat history stays the same from turn to
+turn, so providers can cache it. Reasoning is longer than before (BOLT lists the prose rules and writes dialogue examples).
 
 ## VectFox (chat memory)
 
@@ -229,8 +241,8 @@ memories of the old timeline from that point on never happened, so a rewound sce
 message is not caught: clean those events by hand (Good to know, below).
 
 So Mind, Knows, Next and Extras (inside the update block) and NPC thoughts never enter VectFox memory. `tests/test_vectfox_v1113.cjs`
-checks the patterns. The preset CoT's first reasoning line (`Now: …`) gives VectFox a second source for the date when the API returns
-reasoning.
+checks the patterns. Since 1.68.0 the preset's CoT is upstream's and names no card block, so the update block's Time line is the date's only source in
+the text (the model's own reasoning, when the API returns it, may still mention the clock).
 
 ### The card's extraction prompt
 Paste this whole block into VectFox → EventBase → Extraction Prompt (the same text is in `docs/vectfox_eventbase_prompt.txt`;

@@ -3,14 +3,14 @@
 const fs = require('fs'), path = require('path');
 const { ok, ROOT } = require('./harness.cjs');
 console.log('NPC Thoughts (1.37.3)');
-const P = JSON.parse(fs.readFileSync(path.join(ROOT, 'presets/Realistic_Frankenstein_2_2_Eldrasil.json'), 'utf8'));
+const P = JSON.parse(fs.readFileSync(path.join(ROOT, 'presets/Realistic_Frankenstein_2_2_1_3_Eldrasil.json'), 'utf8'));
 const byName = frag => P.prompts.find(p => (p.name || '').includes(frag));
 const on = frag => P.prompt_order[0].order.find(o => o.identifier === byName(frag).identifier).enabled;
 const IT = byName('Internal Thoughts').content;
 ok(on('Internal Thoughts') && !on('Internal States 💾'), 'Internal Thoughts ON, Internal States stays OFF');
 ok(IT.includes('<npc_thoughts>') && !/thoughtsTemplate|Eldrasil|Bond|Mind\b/.test(IT), 'its own block, no Internal States template, no card data');
 ok(/Never \{\{user\}\}/.test(IT) && /never spells out a secret/.test(IT) && /update block stays last/.test(IT), 'never {{user}}, no spoiled secrets, the update block stays last');
-ok(/then, if <internal_npcthoughts> is present, its one <npc_thoughts> block, then, if <update_format> is present/.test(byName('BOLT Chain of Thought').content), 'BOLT output order puts the thoughts before <UpdateVariable>');
+ok(/right before the card's state-update block when there is one, and the update block stays last/.test(IT) && !byName('Internal Thoughts').injection_trigger.includes('impersonate'), 'the block sits before the update block; it skips Impersonate (1.68.0: upstream triggers)');
 
 const rx = name => { const r = P.extensions.regex_scripts.find(x => x.scriptName.includes(name)); const m = r.findRegex.match(/^\/([\s\S]*)\/([a-z]*)$/); return [r, new RegExp(m[1], m[2])]; };
 const reply = 'Irene looks up.\n\n<npc_thoughts>\n- **Irene**: late again. Why do I care.\n</npc_thoughts>\n\n<UpdateVariable>\n[]\n</UpdateVariable>';

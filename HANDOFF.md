@@ -3,13 +3,11 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.67.2** (2026-10-06): the owner is playing the quest log (Charles chat, msg 76). 1.67.1–1.67.2: in
-extra-model mode the story model is never asked for an update (504, card description) and the update model treats
-`<VectFoxMemory>` as the past (503). The memory audit (`audit/AUDIT_2026-10-05_1_sistem_memori.md` §6) is done except
-batch 8. 1.67.0: MVU extra-model mode is the card's default (507). 1.66.0: VectFox from the card's side (scene marker, timeline,
-gist). 1.65.0: `<current_state>` by relevance. 1.64.0: recall by person and place. 1.63.0: folds. 1.62.0: pins. Live checks:
-the campaign quest log `docs/TEST_CHECKLIST.md` (every open check in the order the campaign reaches it; the owner plays it from the
-Charles chat, Y1 M1 W1 Mon 10:10).
+**Snapshot:** card **v1.68.0** (2026-10-20): the preset is rebuilt on Realistic Frankenstein 2.2.1.3 (Realistic Gemini BOLT) as
+its creator ships it, plus a closed list of card deviations (`presets/edit_preset.py`, `docs/ECOSYSTEM.md` preset section, audit
+`audit/AUDIT_2026-10-14_1_preset_RF2213.md`); no ambience cue names a smell. 1.67.x: extra-model mode is the card's default and the
+story model is never asked for an update. The memory audit is done except batch 8. Live checks: the campaign quest log
+`docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: import the new preset, Q0.3).
 
 **Next task:** the owner plays the quest log; their reports and chat exports bring the playtest fixes (tick what passed, run
 `tools/audit_chat.py` on the export, move "Where you are"). Batch 8 (chapters, a new chat file without losing memory) is planned in
@@ -34,8 +32,8 @@ underneath. The player is a first-year student. The card combines:
   training, grades, hidden magic, payouts, journal, ambience and more.
 - **A UI**: an in-chat "bracelet" status bar (a regex replaces MVU's placeholder) and a Tavern Helper script with panels: Student
   Builder, Student file (with Settings → Features), People (dossiers, relationship graph), Map, Inventory (Bag, Wallet, planner, journal), Activities, Battle.
-- **Ecosystem compatibility** with the owner's memory extension (VectFox) and prompt preset (Realistic Frankenstein 2.2 with an RF2.2.1
-  port, edited for Gemini): `docs/ECOSYSTEM.md`.
+- **Ecosystem compatibility** with the owner's memory extension (VectFox) and prompt preset (Realistic Frankenstein 2.2.1.3, the
+  Realistic Gemini BOLT configuration as it ships plus what the card needs): `docs/ECOSYSTEM.md`.
 
 **Division of labour (do not blur it):**
 

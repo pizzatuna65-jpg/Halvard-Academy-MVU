@@ -115,7 +115,7 @@ To send more chat, open the Regex extension and raise the **Min Depth** of "Eldr
 - **SillyTavern backups:** the server keeps up to 50 backups per chat (`backups.common.numberOfBackups` in `config.yaml`). For a chat of tens of megabytes, lower it to 10-20 and keep an eye on disk space.
 - **VectFox:** after deleting or rewriting older messages, remove their events too (`docs/ECOSYSTEM.md` VectFox → Good to know); otherwise memories of the undone story come back.
 
-**Preset toggles that change how you play (Eldrasil preset, 1.5.0).** "🎮 Player Input Authority" is ON: you write what your student thinks, says and tries, and the world decides how others react and whether it works ("she agrees" in your message is a wish, not a fact). Turn it OFF if you want to direct the story yourself. "🌐 Output language" is OFF; turn it ON and change the language name in it to read the story in another language.
+**Preset toggles that change how you play (Eldrasil edition of Realistic Frankenstein 2.2.1.3, 1.68.0).** "🎮 Player Input Authority" is ON: you write what your student thinks, says and tries, and the world decides how others react and whether it works ("she agrees" in your message is a wish, not a fact). Turn it OFF if you want to direct the story yourself. "🌐 Output language" is OFF; turn it ON and change the language name in it to read the story in another language.
 
 ## 8. MVU mode
 

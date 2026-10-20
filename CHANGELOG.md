@@ -1,7 +1,38 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.68.0 — The preset rebuilt on Realistic Frankenstein 2.2.1.3, as its creator ships it (2026-10-20)
+
+Owner-approved audit `audit/AUDIT_2026-10-14_1_preset_RF2213.md` (every prompt and regex of RF 2.2.1.3 read, SillyTavern's prompt
+assembly checked in its source). The owner felt the Eldrasil preset differed from the original; the old edit sat on RF 2.2 with a
+partial RF 2.2.1 port and about ninety replacements, so the preset is rebuilt rather than patched. Save fixture v1.67.2.
+- **Preset.** `presets/edit_preset.py` is rewritten: it loads the Realistic Gemini BOLT configuration of RF 2.2.1.3
+  (`presets/original/Realistic_Frankenstein_2_2_1_3_Realistic_Gemini_BOLT.json`) and keeps every prompt, order, role, depth, trigger,
+  toggle, setting and regex as it ships (Gemini 3.8 ignores the temperature and top-p values, per Google's model guide). Back from upstream: the assistant-role BOLT with its rule lists and
+  dialogue examples, the Gemini smell path (no prompt names smell except the Scent Killswitch and its gate), Scene Detail in full, Pacing,
+  Attentional Salience, the Cosmos banned list at depth 0, the long Cosmos gates, Realism Mode, the NSFW register, Pop in
+  Graphics, Post-History, the Impersonation Turn with its seven regexes and the narrator prompts' Impersonate triggers. Output:
+  `presets/Realistic_Frankenstein_2_2_1_3_Eldrasil.json` (a new preset in SillyTavern).
+- **The deviations, each for a reason:** the Internal States family and Turn Dice OFF (the card is the only tracker); Time and Place and
+  its two Untagged Thoughts regexes OFF (the card keeps the clock and the weather); Colored Dialogue OFF (the card's `<say:Name>`); Internal
+  Thoughts writes its own `<npc_thoughts>` block; the Staccato Chop Killswitch OFF (it ships ON against its own "MUST stay OFF on
+  Gemini" note; the owner's preset library, Buku 02 and 19, agrees); three sentences point to the card's state instead of an Internal States block (Main
+  random events, Post-History, Plot Momentum without a fate engine in every CoT); three pointer fixes; the owner's Embellish Mode and 4-7
+  paragraphs. Added: Player Input Authority (now assistant-role, joined right above BOLT), Output language (OFF) and Ordinary Turns
+  (Fate & Routine steps 0, 7, 7a without the tracker, and without step 7's 60-75% dialogue share, which contradicts BOLT's 30-50%). Dropped: the Card State Bridge, the RF 2.2 jailbreaks, the "Now:" reasoning line,
+  the Duo calibration block and the other pre-2.2.1.3 craft additions (the audit's §5.5 says what covers each).
+- **Card.** No ambience cue or beat names a smell any more (eight cues and one beat reworded in `data/ambience.json`); rule 504: someone
+  {{user}} already knows is not introduced again; creator notes name the new preset.
+- **Docs.** DECISIONS §9 "Preset = upstream as it ships" replaces "Preset rules live once"; "Preset base", §10 and Ambience updated;
+  ECOSYSTEM's preset section rewritten (how RF works, every deviation); INDEX, BUILD (upgrade playbook), README, PLAYER_GUIDE.
+- **Size:** preset prompts about 18,200 tokens a normal turn (old edit 15,450; RF as shipped with its trackers about 30,300).
+- **Tests:** `test_preset.cjs` rewritten (anything that differs from upstream outside the list fails); `test_ambience_v1160`,
+  `test_audit_b2_v1170`, `test_npc_thoughts_v1373`, `test_split_v146`, `test_tokens_v1110` and `token_audit` follow the new preset;
+  `npm test` passes.
+- **To check live (owner):** `docs/TEST_CHECKLIST.md` Q0.1 (import the new preset) and Q0.3 (the first replies on the 1.68 preset).
+  Reasoning effort stays medium as the file ships; your own RF Multi-POV and NPC POV copies run max, which you can set in SillyTavern.
 
 ## v1.67.2 — The story model is never asked for an update; recalled memory stays the past (2026-10-06)
 
@@ -67,24 +98,6 @@ first (DECISIONS §11: ST release 06bde93, Tavern Helper 87ca341, VectFox 3623dc
   `npm test` and `npm run lint` pass.
 - **To check live (owner):** `docs/TEST_CHECKLIST.md` 1.66.0 (re-import the VectFox patterns and prompt first). Tokens: about +90
   constant (502 Gist line, 504), up to about +300 for `_Recent_story` in a long chat, about +25 output a reply for the gist.
-
-## v1.65.0 — Memory batch 6: `<current_state>` by relevance (2026-10-05)
-
-Batch 6 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6 (M7, an extension of 1.57.0's U3; DECISIONS §8). Save fixture v1.64.0.
-- **The engine marks what touches the scene** (`focusOf` in `stepNow` → `$ui.now.focus`): the people here, named in the reply or in
-  the player's message, or expected (`$ui.maybe`); the Extras here or named; the clue threads tied to them, to the place, named in
-  the prose, given a clue this reply, or the trace beat's. An update with no reply (a player tool) keeps the last prose's names.
-- **`<current_state>` prints those in full and indexes the rest** (`…_not_shown`, one line each; nothing leaves the state):
-  - Clues: a thread in play with all its clues; every other thread one line with its clues' names, a cold thread its count.
-  - Extras: here or named in full; the rest by name and who they are.
-  - NPC_status: named or expected in full; someone here only in their Cast Sheet (it already printed it); the rest by name.
-  - New_relations: in full when either side is here, named or expected; the rest by key. Secrets_revealed: named or expected in
-    full, someone here in their sheet, the rest a count.
-  - The 501 header says what an index line is (the record still exists under its own path).
-- **Tokens:** a mature state (40 clues in 6 threads, 20 Extras, 15 statuses, 14 relations, 30 secrets, two people here) 6,451 →
-  4,173 tokens of 501 (−35%); the 10,000-update soak, which writes none of the last three, 7,401 → 6,978 at most.
-- Tests: new `test_memory_batch6_v1650` (16). Full `npm test` and `npm run lint` pass.
-- **To check live (owner):** `docs/TEST_CHECKLIST.md` 1.65.0.
 
 ## Release index (one line per release, oldest first)
 
@@ -235,3 +248,4 @@ Batch 6 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6 (M7, an extension of 
 - **v1.67.0 (2026-10-05):** Memory batch 9: the card plays in MVU's extra-model mode by default (507 `更新方式 = 额外模型解析`); one-call mode stays available (PLAYER_GUIDE §8).
 - **v1.67.1 (2026-10-05):** Playtest fix: in extra-model mode the story model writes no `<UpdateVariable>` of its own (504).
 - **v1.67.2 (2026-10-06):** Playtest fix: the card description asks for an update block only with `<update_format>`; 503 takes the old time from the state and treats `<VectFoxMemory>` as the past.
+- **v1.68.0 (2026-10-20):** The preset is rebuilt on Realistic Frankenstein 2.2.1.3 (Realistic Gemini BOLT) as it ships, with a closed list of card deviations, the owner's toggles and three Eldrasil prompts (Player Input Authority, Output language, Ordinary Turns); no ambience cue names a smell.

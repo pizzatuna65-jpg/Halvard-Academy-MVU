@@ -49,15 +49,14 @@ console.log('T3 a lighter Bonds block');
   ok(re.Bonds.Etnie.Mind === 'Proud of her little sibling.' && re.Bonds.Etnie.Known_facts.length >= 4, 'a whole-record rewrite keeps Mind and the facts it could not see');
 }
 
-console.log('P1, P2, T8 preset and card');
+console.log('P1, P2 preset and card (1.68.0: RF 2.2.1.3 base)');
 {
-  const P = JSON.parse(rd('presets/Realistic_Frankenstein_2_2_Eldrasil.json')), order = P.prompt_order[0].order;
+  const P = JSON.parse(rd('presets/Realistic_Frankenstein_2_2_1_3_Eldrasil.json')), order = P.prompt_order[0].order;
   const C = frag => P.prompts.find(p => (p.name || '').includes(frag));
   const on = frag => order.find(o => o.identifier === C(frag).identifier).enabled;
-  ok(!/Campus_State|<cast>|Extras|Eldrasil/.test(C('Card State Bridge').content.replace(/\{\{\/\/[\s\S]*?\}\}/g, '')), 'P1: the Bridge names no card field');
   ok(/Off-screen people keep their own lives/.test(entry(504).content), 'P1: rule 504 has the living-world lines');
-  ok(/only from the sources the card allows/.test(C('Main Prompt').content) && !/\(Campus_State\)/.test(C('Main Prompt').content), 'P2: random events only from the card\'s sources');
-  ok(!on('Pop in Graphics') && !on('Colored Dialogue 2.0'), 'T8: inline graphics and coloured dialogue are opt-in');
+  ok(/when the card keeps its own game state, that state records them and no separate tracker block is written/.test(C('Main Prompt').content) && !/track via internal states|Campus_State/.test(C('Main Prompt').content), 'P2: random events are recorded by the card\'s state, never a tracker block');
+  ok(on('Pop in Graphics') && !on('Colored Dialogue 2.0'), '1.68.0: inline graphics ON as upstream ships them; the card colours dialogue itself');
 }
 
 console.log('T6 lore at depth (TEST card)');

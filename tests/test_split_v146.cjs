@@ -19,12 +19,11 @@ const leaks = rules.filter(e => TASTE.test(DATA_FORMAT.reduce((t, rx) => t.repla
 ok(!leaks.length, 'no card rule entry sets taste' + (leaks.length ? ': ' + leaks.join(',') : ''));
 
 // ---- preset: generated from edit_preset.py, deterministic facts about it
-const P = JSON.parse(fs.readFileSync(path.join(ROOT, 'presets/Realistic_Frankenstein_2_2_Eldrasil.json'), 'utf8'));
+const P = JSON.parse(fs.readFileSync(path.join(ROOT, 'presets/Realistic_Frankenstein_2_2_1_3_Eldrasil.json'), 'utf8'));
 const byName = frag => P.prompts.find(p => (p.name || '').includes(frag));
 const enabled = frag => { const p = byName(frag); const o = P.prompt_order[0].order.find(x => x.identifier === p.identifier); return !!(o && o.enabled); };
 const bolt = byName('BOLT Chain of Thought').content;
 ok(!/bond Progress|\+2 significant/.test(bolt), 'BOLT step 2 no longer teaches the 1.0 bond rules');
-ok(/following the card's own update rules exactly/.test(bolt), "BOLT step 2 points to the card's update rules");
-ok(bolt.includes('my first reasoning line is exactly "Now: M? W? Day HH:MM at <place>"'), 'BOLT keeps the "Now:" first line (VectFox reads dates from reasoning)');
+ok(!/<UpdateVariable>|<now>|<current_state>/.test(bolt.replace(/\{\{\/\/[\s\S]*?\}\}/g, '')), '1.68.0: BOLT is upstream\'s and names no card block (the card\'s own rules say how the state is updated)');
 ok(enabled('Total Output Length') && /roughly 4 to 7 paragraphs/.test(byName('Total Output Length').content), 'Total Output Length is ON at 4-7 paragraphs (the length moved here from the card; 4-7 since 1.36.0)');
 ok(enabled('Hybrid POV') && enabled('Embellish Mode') && !enabled('Anti-parrot'), 'point of view and whether the AI writes {{user}} are preset toggles (1.36.0, owner: Embellish Mode)');

@@ -1,127 +1,105 @@
-// The edited preset (presets/edit_preset.py -> Realistic_Frankenstein_2_2_Eldrasil.json), checked release by release.
-// Rule of the split (planning/DRAFT_card_vs_preset.md): the preset carries only generic writing craft and points to the card's
-// rules; it never copies card data. 1.5.0: Batch E1 writing rules and the two new toggles.
+// The Eldrasil edition of Realistic Frankenstein 2.2.1.3 (presets/edit_preset.py -> Realistic_Frankenstein_2_2_1_3_Eldrasil.json).
+// 1.68.0 (owner-approved audit/AUDIT_2026-10-14_1_preset_RF2213.md §5): upstream's Realistic Gemini BOLT configuration as it ships,
+// plus a closed list of deviations. Everything not on that list must stay byte for byte what the creator tuned.
 const fs = require('fs'), path = require('path');
 const { ok, ROOT } = require('./harness.cjs');
-console.log('Edited preset (Eldrasil)');
-const P = JSON.parse(fs.readFileSync(path.join(ROOT, 'presets/Realistic_Frankenstein_2_2_Eldrasil.json'), 'utf8'));
-const order = P.prompt_order[0].order;
-const byName = frag => P.prompts.find(p => (p.name || '').includes(frag));
-const pos = frag => order.findIndex(o => o.identifier === byName(frag).identifier);
-const enabled = frag => { const p = byName(frag); const o = order.find(x => x.identifier === p.identifier); return !!(o && o.enabled); };
-const C = frag => byName(frag).content;
+console.log('Edited preset (Eldrasil edition of RF 2.2.1.3)');
+const read = rel => JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8'));
+const U = read('presets/original/Realistic_Frankenstein_2_2_1_3_Realistic_Gemini_BOLT.json');
+const P = read('presets/Realistic_Frankenstein_2_2_1_3_Eldrasil.json');
+const ord = x => x.prompt_order.find(po => po.character_id === 100001).order;
+const UO = ord(U), O = ord(P);
+const UP = Object.fromEntries(U.prompts.map(p => [p.identifier, p])), PP = Object.fromEntries(P.prompts.map(p => [p.identifier, p]));
+const on = id => !!(O.find(o => o.identifier === id) || {}).enabled;
+const pos = id => O.findIndex(o => o.identifier === id);
+const noNotes = t => String(t || '').replace(/\{\{\/\/[\s\S]*?\}\}/g, '');
+const ID = {
+  main: 'main', phi: 'jailbreak', readme: '27e5541f-4af3-4920-ae49-a91e025425d7', time: '019f62e8-892f-7002-8fcf-eea637bd577b',
+  realism: '019f62e8-892f-700c-9795-53ecb3381d7d', parrot: '019f62e8-892f-700f-93e0-640159f4d52a', embellish: '019f62e8-892f-7010-bf59-e7b17fd4476f',
+  length: '019f62e8-892f-7012-98b4-8de29f11aa1d', instincts: '019f62e8-892f-7016-a021-aa24f58271d6', color2: '019f7a10-0000-7c00-9a10-000000000201',
+  fate: 'a39a979a-e777-4935-9d24-5d858ef7daa5', agenda: '019f67b4-7381-7000-bcc4-496b2e6ed920', notebook: '019f67ad-c0b1-7000-aca4-0e2480fa02db',
+  relations: '019f62e8-892f-7023-825d-9351eca0347f', worldsim: '019f62e8-892f-7024-a40f-b906fceb58d2', chekhov: '019f62e8-892f-7025-be65-8859e7730ee0',
+  thoughts: '019f62e8-892f-7026-92ea-34ff510c244b', states: '019f62e8-892f-7027-93ef-159f3d55c410', bolt: '634ecfec-1862-4ce0-821e-e31057acadfa',
+  dice: '486813c8-3587-456b-b5aa-84585afb3e89', scent: '87068689-deb5-4798-9cc1-e96aa7f9abaf', scentGate: '5feac112-ad26-4eca-b5c5-1b03263cc915',
+  smellRules: 'ffb2498c-2054-4e79-9f72-2ae7c51b60f3', staccato: '5f285f06-57fe-49f1-9e9b-84c4d6d30d78', legato: '1409b26b-b408-4f19-965c-5eb56e37d621', impersonate: '431bb92b-7112-4695-978f-1936f6c7ec90',
+  pia: 'eldrasil-input-authority', lang: 'eldrasil-output-language', ordinary: 'eldrasil-ordinary-turns',
+};
 
-// ---- carried over from 1.4.6
-const bolt = C('BOLT Chain of Thought');
-ok(bolt.includes('my first reasoning line is exactly "Now: M? W? Day HH:MM at <place>"'), 'BOLT keeps the "Now:" first line (VectFox reads dates from reasoning)');
-ok(!/bond Progress|\+2 significant/.test(bolt), 'BOLT does not teach old bond rules');
+// ---- the base is upstream as it ships
+ok(Object.keys(U).filter(k => !['prompts', 'prompt_order', 'extensions'].includes(k)).every(k => JSON.stringify(U[k]) === JSON.stringify(P[k])), 'every setting is upstream\'s (sampling 0.7 / 0.8, reasoning medium, group nudge)');
+ok(P.temperature === 0.7 && P.top_p === 0.8, 'sampling values as shipped (Gemini 3.8 ignores them; nothing to tune here)');
+const EDITED = [ID.main, ID.phi, ID.readme, ID.realism, ID.length, ID.instincts, ID.thoughts];   // + the CoTs below (pointer and Plot Momentum lines)
+const COTS = U.prompts.filter(p => /impact tier and open pursuit, not by interest/.test(p.content || '')).map(p => p.identifier);
+const changed = Object.keys(UP).filter(id => JSON.stringify(UP[id]) !== JSON.stringify(PP[id]));
+ok(changed.every(id => EDITED.includes(id) || COTS.includes(id)) && COTS.includes(ID.bolt), 'only the listed prompts differ from upstream' + (changed.filter(id => !EDITED.includes(id) && !COTS.includes(id)).length ? ': ' + changed.filter(id => !EDITED.includes(id) && !COTS.includes(id)).map(id => UP[id].name).join(', ') : ''));
+ok(changed.every(id => ['role', 'injection_position', 'injection_depth', 'injection_order', 'injection_trigger', 'name'].every(k => JSON.stringify(UP[id][k]) === JSON.stringify(PP[id][k]))), 'no edited prompt changes role, position, depth, order, trigger or name');
+const added = P.prompts.filter(p => !UP[p.identifier]).map(p => p.identifier).sort();
+ok(JSON.stringify(added) === JSON.stringify([ID.pia, ID.lang, ID.ordinary].sort()), 'three Eldrasil prompts are added, nothing else');
+ok(JSON.stringify(O.map(o => o.identifier).filter(id => UP[id])) === JSON.stringify(UO.map(o => o.identifier)), 'upstream\'s prompt order is kept');
+const flips = UO.filter(o => on(o.identifier) !== o.enabled).map(o => o.identifier).sort();
+const FLIPS = [ID.fate, ID.agenda, ID.notebook, ID.relations, ID.worldsim, ID.chekhov, ID.states, ID.dice, ID.time, ID.color2, ID.staccato, ID.parrot, ID.embellish, ID.length].sort();
+ok(JSON.stringify(flips) === JSON.stringify(FLIPS), 'toggles differ from upstream only where the card or the owner needs it' + (JSON.stringify(flips) !== JSON.stringify(FLIPS) ? ': ' + flips.map(id => UP[id].name).join(', ') : ''));
 
-// ---- 1.5.0 E1: Player Input Authority (N1 + D5), one toggle, depth 0, right before BOLT
-const IA = byName('Player Input Authority');
-ok(IA && enabled('Player Input Authority'), 'Player Input Authority exists and is ON');
-ok(IA.injection_position === 1 && IA.injection_depth === 0 && pos('Player Input Authority') === pos('BOLT Chain of Thought') - 1, 'it sits at depth 0 right before BOLT');
-ok(/<input_authority>[\s\S]*is a wish, not a fact[\s\S]*<\/input_authority>/.test(IA.content) && /<latest_input>\{\{lastUserMessage\}\}<\/latest_input>/.test(IA.content), 'input authority and the latest-input marker are one toggle');
-// ---- Output language: OFF, next to Total Output Length
-ok(byName('Output language') && !enabled('Output language') && pos('Output language') === pos('Total Output Length') + 1, 'Output language exists, OFF, after Total Output Length');
-ok(enabled('Total Output Length') && /roughly 4 to 7 paragraphs/.test(C('Total Output Length')), 'Total Output Length ON at 4-7 paragraphs (owner, 1.36.0)');
-// ---- craft edits (every rep() in edit_preset.py asserts its anchor; these check the result landed where the CoT looks)
-ok(/No spotlight:[\s\S]*No echoes:/.test(C('Realistic NPCs')), 'N7 no spotlight, no echoes in <realistic_bold_characters>');
-ok(/Simulate, do not dramatise/.test(C('Scene Engine')) && /holding, stepping back and leaving something unsaid are valid endings/.test(C('Scene Engine')), 'P12 + D8 in <scene_engine>');
-ok(!/NPCs are flawed, panic-prone/.test(C('Instincts + VAD')) && /get worse in their own way, inside the limits their card sets/.test(C('Instincts + VAD')), 'U5: stress in their own way');
-ok(/<character_calibration>[\s\S]*Personality is a ceiling, not a mood[\s\S]*<\/character_calibration>/.test(C('Instincts + VAD')), 'D2 calibration (with the P8 ceiling line)');
-// 1.36.0: the active <npc_voice> is RF2.2.1's Cosmos (Gemini) edition; the Micro voice is OFF
-const voice = byName('NPC Voice + Dialogue Output: Cosmos');
-ok(enabled('NPC Voice + Dialogue Output: Cosmos') && !enabled('🎤NPC Voice + Dialogue Output') && /Direct people speak directly/.test(voice.content) && /a style rule in this prompt and the card describe the same thing differently, the card's version/.test(C('Card Fidelity')), 'U4 + D3: the active <npc_voice>; the card outranking style rules lives in <card_fidelity> (1.52.2)');
-ok(/unless the card records that they already know them/.test(C('Anti-Omniscient')) && /No foreshadowing narration/.test(C('Anti-Omniscient')), 'U11 + D7 in <anti_omniscient_NPCs>');
-ok(/canon: for a character with a lorebook entry or character sheet/.test(C('Main Prompt')), 'U9 in <NPC_intro>');
-ok(/one question mark per character per reply/.test(C("Don't Speak Like a Therapist")), 'U12: question cap per character');
-ok(/No fake specificity/.test(C('Anti-Cliché Moves')) && /never "his hand moved on its own"/.test(C('Anti-Cliché Moves')), 'optional: fake specificity and organ autonomy banned');
+// ---- D1-D4: the card is the only tracker and keeps the clock, the weather and the dialogue colours
+ok([ID.fate, ID.agenda, ID.notebook, ID.relations, ID.worldsim, ID.chekhov, ID.states, ID.dice, ID.time, ID.color2].every(id => !on(id)), 'Internal States family, Turn Dice, Time and Place, Colored Dialogue OFF');
+const onText = P.prompts.filter(p => on(p.identifier)).map(p => noNotes(p.content)).join('\n');
+ok(!/track via internal states|Ensure internal states created|<internal_states_module>/.test(onText), 'no enabled prompt asks for an Internal States block');
+ok(/that state records them and no separate tracker block is written/.test(PP.main.content), 'D6: the Main Prompt\'s random events are the card state\'s');
+ok(/OOC: no need verbally to respond to this message\. Do directly respond to all OOCs before this response\./.test(PP.jailbreak.content) && on(ID.phi) && PP.jailbreak.injection_position === 0, 'D7: Post-History ON as upstream (relative, under Chat History), no internal-states line');
+ok(COTS.length >= 5 && COTS.every(id => /With no fate engine in this chat, a turn is AMBIENT unless something the card lists as a source of world events falls due in this scene/.test(PP[id].content)), 'D8: Plot Momentum in every CoT follows the card\'s sources when no fate engine runs');
+const RX = P.extensions.regex_scripts, URX = U.extensions.regex_scripts;
+ok(RX.length === URX.length + 3 && URX.every((r, i) => JSON.stringify(r) === JSON.stringify(RX[i]) || /Untagged Thoughts/.test(r.scriptName)), 'upstream regexes kept as they ship, three Eldrasil regexes appended');
+ok(RX.filter(r => /Untagged Thoughts/.test(r.scriptName)).every(r => r.disabled) && RX.filter(r => /^RF2\.2\.1 — Impersonation/.test(r.scriptName)).length === 7, 'the Untagged Thoughts pair is OFF (it serves the header); the seven Impersonation regexes stay');
 
-// ---- generic: the E1 texts name no card data (Eldrasil, its fields or characters)
-const E1 = [IA.content, C('Output language'), C('Realistic NPCs'), C('Scene Engine'), C('Instincts + VAD'), voice.content, C('Anti-Omniscient'), C("Don't Speak Like a Therapist")].join('\n');
-const CARD = /Eldrasil|Halvard|<now>|<cast>|Scene\.Present|Bonds|Campus_State|_Event|\b(Irene|Etnie|Aiden|Castor|Zara|Kanae|Rei|Caine)\b/;
-ok(!CARD.test(E1), 'E1 texts are generic (no card data or character names)' + (CARD.test(E1) ? ': ' + E1.match(CARD)[0] : ''));
+// ---- D5: NPC Thoughts (owner 1.37.3) keeps upstream's place and triggers
+ok(on(ID.thoughts) && /<npc_thoughts>/.test(PP[ID.thoughts].content) && !/thoughtsTemplate/.test(PP[ID.thoughts].content) && !PP[ID.thoughts].injection_trigger.includes('impersonate'), 'Internal Thoughts writes its own block and skips Impersonate');
 
-// ---- 1.6.2 E2: the CoT reads what the card now provides, and still names none of it (U2, U3, U6, U7, U8, U10, D4, D6, V4)
-const step = n => (bolt.match(new RegExp('\\n' + n + '\\. [\\s\\S]*?(?=\\n\\n\\d+\\. |\\n\\nI am a GM)')) || [''])[0];
-ok(step(0).includes('my first reasoning line is exactly "Now: M? W? Day HH:MM at <place>" (from campaign Year 2: "Now: Y? M? W? Day HH:MM at <place>"), copied from <now>.'), 'V4: the "Now:" first line is unchanged, first in step 0');
-ok(/If the card provides character sheets for the people present, I read them now\./.test(step(0)), 'U2: step 0 reads the character sheets');
-ok(/Cast check and slop review: for each character who will act, from their character sheet or card: \(a\) what they know here[\s\S]*\(e\) what they carry/.test(step(7)), 'U3: step 7 is a runnable cast check');
-ok(/the loudest version of their reaction, then the way this person usually handles it/.test(step(7)) && /Name-swap test/.test(step(7)), 'D4: the usual-version and name-swap tests');
-ok(/<banned_vocabulary>/.test(step(7)) && /<abolish_yesman_behaviour>/.test(step(7)), 'step 7 keeps the slop review');
-ok(/World-side material comes only from the sources the card allows; on most turns the world stays quiet\. Nobody arrives without the time to get there/.test(step(10)), 'U10 + D6: step 10 (Plot Momentum) points to the card\'s sources');
-const boltRest = bolt.replace('"Now: M? W? Day HH:MM at <place>" (from campaign Year 2: "Now: Y? M? W? Day HH:MM at <place>"), copied from <now>', '');
-const FIELD = /Eldrasil|Halvard|<now>|<cast>|<current_state>|Scene\.Present|Bonds|Campus_State|Extras|_Event|_Period|_Curfew|_Happening|_Log|Vitals|Commitments|Mysteries|\b(Irene|Etnie|Aiden|Castor|Zara|Kanae|Rei|Caine)\b/;
-ok(!FIELD.test(boltRest), 'BOLT names no card field outside the "Now:" line' + (FIELD.test(boltRest) ? ': ' + boltRest.match(FIELD)[0] : ''));
-// every tag the CoT refers to exists in another preset prompt or in the card
-const cardText = JSON.parse(fs.readFileSync(path.join(ROOT, 'dist/Eldrasil_Halvard.json'), 'utf8')).data.character_book.entries.map(e => e.content).join('\n');
-const noNotes = t => String(t || '').replace(/\{\{\/\/[\s\S]*?\}\}/g, '');   // 1.6.9: ST strips {{// }} notes, so a tag named only there does not count
-const others = P.prompts.filter(p => p.identifier !== byName('BOLT Chain of Thought').identifier).map(p => noNotes(p.content)).join('\n');
-const tags = [...new Set([...bolt.matchAll(/<([A-Za-z_]+)>/g)].map(m => m[1]))].filter(x => !['place', 'details'].includes(x));
-const missing = tags.filter(x => !others.includes('<' + x + '>') && !cardText.includes('<' + x + '>') && !cardText.includes('<' + x + ' '));
-ok(!missing.length, 'every tag the CoT refers to exists in the preset or the card (' + tags.length + ')' + (missing.length ? ': missing ' + missing.join(', ') : ''));
-const gen = C('HQ NPC Genesis');
-ok(/if the card gives a naming guide, follow it/.test(gen) && /Banned Names: Elara, Vane, Vance, Seraphina/.test(gen) && /If the card keeps a record for invented characters, that record is their card/.test(gen), 'U6: the card\'s naming guide and record first; banned names stay');
-ok(/the card's record for invented characters as their card when the card keeps one/.test(C('Scene Engine')), 'U7: the Scene Engine\'s generated-character sentence');
-const E2 = [step(0).replace('"Now: M? W? Day HH:MM at <place>" (from campaign Year 2: "Now: Y? M? W? Day HH:MM at <place>"), copied from <now>', ''), step(7), step(10), gen].join('\n');
-ok(!CARD.test(E2), 'E2 texts are generic' + (CARD.test(E2) ? ': ' + E2.match(CARD)[0] : ''));
-const br = C('Card State Bridge');
-// 1.17.0 (audit P1): the card works with any preset, so the Bridge's Eldrasil rules moved into rule 504; the Bridge is generic
-ok(/only game state and the only tracker/.test(br) && !CARD.test(noNotes(br)) && !FIELD.test(noNotes(br)), 'P1: the Bridge is a generic division of labour');
-ok(/Off-screen people keep their own lives/.test(cardText) && /never write another tracker/.test(cardText) && /becomes a Clue/.test(cardText), 'P1: rule 504 carries what the Bridge used to say');
+// ---- P: pointer fixes
+const bolt = PP[ID.bolt].content;
+ok(PP[ID.bolt].role === 'assistant' && PP[ID.bolt].injection_depth === 0 && on(ID.bolt), 'BOLT is upstream\'s assistant-role CoT at depth 0');
+ok(!/<say_it_straight>/.test(P.prompts.filter(p => p.role === 'assistant').map(p => noNotes(p.content)).join('\n')) && /\(<comparative_emphasis_killswitch>, <break_the_triad>,/.test(bolt), 'P: the CoTs point to <comparative_emphasis_killswitch>');
+ok(/<abolish_yesman_behaviour>/.test(PP[ID.realism].content) && /instincts \[8\]:/.test(PP[ID.instincts].content), 'P: Realism Mode names the active yes-man tag; eight instincts');
+const cardText = read('dist/Eldrasil_Halvard.json').data.character_book.entries.map(e => e.content).join('\n');
+const presetText = P.prompts.map(p => noNotes(p.content)).join('\n');
+const UPSTREAM_JB = ['realist_gemini', 'roleplay_isnt_reality', 'Prefill', 'professional_legality'];   // RF 2.2's jailbreak tags, named only "if present"
+const tags = [...new Set([...noNotes(bolt).matchAll(/<([A-Za-z_]+)>/g)].map(m => m[1]))];
+const missing = tags.filter(x => !UPSTREAM_JB.includes(x) && !presetText.replace(noNotes(bolt), '').includes('<' + x + '>') && !cardText.includes('<' + x + '>') && !cardText.includes('<' + x + ' '));
+ok(!missing.length, `every tag BOLT names exists in the preset or the card, apart from RF 2.2's conditional jailbreak tags (${tags.length})` + (missing.length ? ': missing ' + missing.join(', ') : ''));
 
-// ---- 1.6.9 bug hunt: pointers the model can follow
-const lastTask = Math.max(...[...bolt.matchAll(/\n(\d+)\. /g)].map(m => +m[1]));
-ok(bolt.includes(`all 0-${lastTask} tasks below`) && bolt.includes(`Never reason beyond the ${lastTask}th Task`), `BOLT's rule C covers every task (0-${lastTask})`);
-ok(!/<say_it_straight>/.test(noNotes(bolt)) && /<comparative_emphasis_killswitch>, <break_the_triad>/.test(bolt), 'BOLT step 4 points to the Comparative Emphasis Killswitch');
-const onText = P.prompts.filter(p => { const o = order.find(x => x.identifier === p.identifier); return o && o.enabled; }).map(p => noNotes(p.content)).join('\n');
-const jbList = (C('NEW AI Studio Jailbreak').match(/follow these directives from the preset: ([^\n]*)/) || ['', ''])[1];
-const jbTags = [...jbList.matchAll(/<([a-z_]+)>/g)].map(m => m[1]), jbMiss = jbTags.filter(x => !new RegExp('<' + x + '>[\\s\\S]*</' + x + '>').test(onText));
-ok(jbTags.length > 10 && !jbMiss.length, `every directive the jailbreak lists is in an enabled prompt (${jbTags.length})` + (jbMiss.length ? ': missing ' + jbMiss.join(', ') : ''));
-ok(!/<avoid_yesman_behaviour>/.test(C('Realism Mode / Jailbreak')) && /<abolish_yesman_behaviour>/.test(C('Realism Mode / Jailbreak')), 'Realism Mode names the real yes-man tag');
+// ---- O: the owner's toggles
+ok(on(ID.embellish) && !on(ID.parrot) && JSON.stringify(PP[ID.embellish]) === JSON.stringify(UP[ID.embellish]), 'owner: Embellish Mode (upstream text) instead of Anti-parrot');
+ok(on(ID.length) && /roughly 4 to 7 paragraphs \(excluding headers, the thoughts block and the state-update block\)/.test(PP[ID.length].content), 'owner: Total Output Length ON at 4-7 paragraphs');
 
-// ---- 1.11.2 preset audit (planning/DRAFT_preset_audit.md): contradictions fixed, stale text gone, duplicates merged
-const onPrompts = P.prompts.filter(p => { const o = order.find(x => x.identifier === p.identifier); return o && o.enabled; });
-const ADULT = /pussy|cock\b|non-con|moan through intimacy|explicit anatomical|# Intimate Scenes/i;
-const adultOn = onPrompts.filter(p => ADULT.test(noNotes(p.content))).map(p => p.name);
-ok(!adultOn.length, 'A1: no adult lines in always-on prompts (adult content is opt-in)' + (adultOn.length ? ': ' + adultOn.join(', ') : ''));
-ok(/# Intimate Scenes[\s\S]*<\/adult_mode>/.test(C('Realism Mode / Jailbreak')), 'A1: the intimacy craft returns with Realism Mode');
-const jb = noNotes(C('NEW AI Studio Jailbreak'));
-ok(!/first-year|magic academy|Failure is absolute|introduce plot twists|an ambush, a lockdown/.test(jb) && /When the card defines how uncertain attempts resolve, its rule decides/.test(jb), 'A2-A4: the jailbreak names no card data and defers to the card\'s resolution rule');
-ok(!/only 1 or 2 key elements/.test(C('Anti-parrot')) && !/You must ban character thoughts,/.test(C('Cinematic Realism')), 'A5-A6: answer the whole input; NPC interiority as <scene_engine> allows');
-ok(!/\{\{roll::/.test(bolt) && !/quant_hardening|staccato_chop_killswitch|anti_briefing_register|professional_legality/.test(noNotes(bolt)), 'B2-B3: no DnD rolls and no checks for toggles that stay OFF on Gemini');
-ok(!/calls\/evidence/.test(C('Anti-Omniscient')) && /instincts \[8\]/.test(C('Instincts + VAD')), 'B4-B5: no phone calls; eight instincts');
-ok(P.extensions.regex_scripts.filter(r => /Menu (Orange|Teal|Purple|Master)|Relationship Bars|GM Notebook Highlights/.test(r.scriptName)).every(r => r.disabled), 'B6: tracker display regexes are off');
-ok(!enabled('Attentional Salience') && /Micro-tells/.test(C('Main Prompt')), 'C1: Attentional Salience merged into <do_not_repeat_descriptions>');
-ok(!/Anti-Therapy Register|Ban tricolons|depends on four sources/.test(voice.content) && !/Figurative Economy/.test(C('Cinematic Realism')), 'C2-C5: duplicates removed from <npc_voice> and <prose_rules>');
-ok(!/Recalled memories|no phones|metric units/i.test(noNotes(br)), 'C7: the Bridge leaves memory and setting facts to the card');
-ok(/No phones, computers or recording devices[\s\S]*Units are metric/.test(cardText), 'C7: the card\'s World Index states them');
+// ---- E: the three Eldrasil prompts
+const pia = PP[ID.pia];
+ok(on(ID.pia) && pia.role === 'assistant' && pia.injection_position === 1 && pia.injection_depth === 0 && pia.injection_order === PP[ID.bolt].injection_order && pos(ID.pia) === pos(ID.bolt) - 1,
+  'E1: Player Input Authority shares BOLT\'s role, depth and order, right above it (ST joins them into one assistant message)');
+ok(/<input_authority>[\s\S]*is a wish, not a fact[\s\S]*<\/input_authority>/.test(pia.content) && /<latest_input>\{\{lastUserMessage\}\}<\/latest_input>/.test(pia.content) && !pia.injection_trigger.includes('impersonate'), 'E1: input authority and the latest input in one toggle; it skips Impersonate');
+ok(!on(ID.lang) && pos(ID.lang) === pos(ID.length) + 1, 'E2: Output language OFF, after Total Output Length');
+const ot = PP[ID.ordinary];
+ok(on(ID.ordinary) && pos(ID.ordinary) === pos(ID.fate) + 1 && !ot.injection_trigger.includes('impersonate') && ot.injection_position === 0, 'E3: Ordinary Turns ON, right after the OFF Fate & Routine, skips Impersonate');
+const otText = noNotes(ot.content), fateText = UP[ID.fate].content;
+const SAME = ['Small stays small.', 'Exactly one thing must change:', 'NPCs may decline to engage.', 'NPC-to-NPC exchanges that exclude {{user}} are encouraged.', 'This is where the relationship writing lives.', 'It governs only what the world does on its own.'];
+ok(SAME.every(s => otText.includes(s) && fateText.includes(s)) && !/\bq\b|Residue|World register|impact roll|FATE & ROUTINE|Bullet/.test(otText), 'E3: upstream\'s steps 0, 7 and 7a, without the tracker');
+ok(!/60-75 percent/.test(otText) && /30-50%/.test(bolt), 'E3: no 60-75% dialogue share next to BOLT\'s 30-50% (one number, no contradiction)');
+ok(!on(ID.staccato) && !on(ID.legato) && /MUST stay OFF on Gemini/.test(PP[ID.staccato].content), 'D11: Staccato Chop Killswitch OFF as its own note says for Gemini; its Legato gate stays OFF');
+const CARD = /Eldrasil|Halvard|<now>|<cast>|<current_state>|Scene\.Present|Bonds|Campus_State|_Event|Extras|\b(Irene|Etnie|Aiden|Castor|Zara|Kanae|Rei|Caine)\b/;
+const E = [pia.content, PP[ID.lang].content, ot.content, PP[ID.thoughts].content].map(noNotes).join('\n');
+ok(!CARD.test(E), 'the Eldrasil prompts are generic (no card data or character names)' + (CARD.test(E) ? ': ' + E.match(CARD)[0] : ''));
+ok(/ELDRASIL EDITION/.test(PP[ID.readme].content) && !on(ID.readme), 'the README (never sent) lists what this edition changes');
 
-// ---- 1.36.0: port from RF2.2.1 (Realistic Gemini BOLT configuration), owner-approved
-const at0 = frag => { const p = byName(frag); return p.injection_position === 1 && p.injection_depth === 0; };
-ok(enabled('Card Fidelity') && at0('Card Fidelity') && /lorebook entry or character sheet that defines them/.test(C('Card Fidelity')), 'Card Fidelity ON at depth 0; a character sheet counts as the card');
-ok(enabled('Anti-Comparative Emphasis: Cosmos') && enabled('Last-Mile Contrast Gate: Cosmos') && !enabled('⚖️ Comparative Emphasis Killswitch') && !enabled('Last-Mile Contrast Gate ⚖️'), 'comparative emphasis: the Cosmos pair replaces the regular pair');
-ok(enabled('Occupational Monomania Killswitch: Cosmos') && enabled('Last-Mile Vocation Gate: Cosmos') && !enabled('🧰 Occupational Monomania Killswitch') && !enabled('Last-Mile Vocation Gate 🧰'), 'occupational monomania: the Cosmos pair replaces the regular pair');
-const se = C('Scene Engine');
-ok(/Causality: an event lands before anyone answers it/.test(se) && /Simulate, do not dramatise/.test(se) && /one light touch of the setting/.test(se) && /Stop before any decision or reaction that belongs to \{\{user\}\}/.test(se), 'Scene Engine is the RF2.2.1 rebuild with the Eldrasil edits');
-ok(byName('Pacing: Cosmos') && !enabled('Pacing: Cosmos') && !/what fate or someone's agenda brings/.test(C('Pacing: Cosmos')), 'Pacing ships OFF and follows the card\'s sources');
-ok(/METHOD \(no menu; derive per line\), applied to every line/.test(voice.content) && !/<nsfw_register>|moan through intimacy/.test(noNotes(voice.content)), 'Cosmos voice: per-line method, no NSFW pointers');
-ok(!/30-50%/.test(bolt) && /keeps their stalls, restarts and fragments/.test(bolt) && /without copying the list into this reasoning/.test(bolt), 'BOLT: no dialogue ratio, nervous characters keep their stalls, banned words checked without reciting');
-ok(enabled('Last-Mile Gemini Banned Vocab Check') && /upholstery/.test(C('🚫Banned Word List')) && /A hyphen or a suffix does not make it a different word/.test(C('🚫Banned Word List')), 'banned words: scope line, upholstery, depth-0 gate');
-ok(enabled("Looks at a Stranger's Scale") && !/touches or uses/.test(C("Looks at a Stranger's Scale")), 'Scene Detail ported without the line that contradicts the ambience touch');
-ok(!P.prompts.some(p => /Scent Killswitch|Smell & Taste Rules/.test(p.name)), 'the smell package is not ported (the card\'s ambience cues name smells)');
-ok(enabled('More Diverse Door Sounds') && /Group chat with \{\{group\}\}/.test(P.group_nudge_prompt), 'door sounds and the group nudge');
-ok(['BOLT Chain of Thought', 'Player Input Authority'].every(f => byName(f).role === 'user'), 'BOLT and Player Input Authority stay user-role (not RF2.2.1\'s assistant role)');
-ok(enabled('Embellish Mode') && !enabled('Anti-parrot') && !/only 1 or 2 key elements/.test(C('Embellish Mode')) && /follow <input_authority>/.test(C('Embellish Mode')), 'owner: Embellish Mode instead of Anti-parrot, answering the whole input');
-const E3 = ['Card Fidelity', 'Scene Engine', 'Pacing: Cosmos', "Looks at a Stranger's Scale", 'Embellish Mode', 'Anti-Comparative Emphasis: Cosmos', 'Occupational Monomania Killswitch: Cosmos'].map(C).concat(voice.content).map(noNotes).join('\n');
-ok(!CARD.test(E3), '1.36.0 texts are generic' + (CARD.test(E3) ? ': ' + E3.match(CARD)[0] : ''));
-// ---- 1.52.2 preset audit 2 (tier 1): BOLT points to the rules, short last-mile gates, one home per rule, a size guard
+// ---- Gemini's smell path (upstream's design: no smell talk anywhere but the killswitch and its gate)
+ok(on(ID.scent) && on(ID.scentGate) && !on(ID.smellRules), 'Scent Killswitch and its depth-0 gate ON, Smell & Taste Rules OFF');
+const sent = t => String(t || '').replace(/\{\{user\}\}/gi, 'Aria').replace(/\{\{\/\/[\s\S]*?\}\}/g, '').replace(/\{\{(setvar|getvar)::[^}]*\}\}/g, '').replace(/\{\{trim\}\}/g, '').replace(/\{\{lastUserMessage\}\}/g, '').trim();
+const smelly = P.prompts.filter(p => on(p.identifier) && ![ID.scent, ID.scentGate].includes(p.identifier) && /\bsmell|\bscent/i.test(sent(p.content))).map(p => p.name);
+ok(!smelly.length, 'no other enabled prompt names smell' + (smelly.length ? ': ' + smelly.join(', ') : ''));
+ok(/what can be seen, felt, touched \(observable details only\)/.test(sent(P.prompts.find(p => /Cinematic Realism/.test(p.name)).content)), 'Cinematic Realism gives Gemini "seen, felt, touched"');
+
+// ---- Impersonate: upstream's path
+ok(on(ID.impersonate) && JSON.stringify(PP[ID.impersonate].injection_trigger) === '["impersonate"]', 'Impersonation Turn ON, fires only on Impersonate');
+
+// ---- size: as SillyTavern sends it ({{user}} replaced, notes removed, empty macros send nothing)
 {
-  const sent = t => String(t || '').replace(/\{\{user\}\}/gi, 'Aria').replace(/\{\{\/\/[\s\S]*?\}\}/g, '').replace(/\{\{(setvar|getvar)::[^}]*\}\}/g, '').replace(/\{\{trim\}\}/g, '').replace(/\{\{lastUserMessage\}\}/g, '').trim();
-  ok(!/colored_dialogue|list them concisely|listing the rules briefly|I must provide a brief example/.test(noNotes(bolt)), 'BOLT: no check for the colour toggle that stays OFF, no rule lists or examples in the reasoning');
-  ok(/without listing them/.test(bolt) && /voiced per <npc_voice> and <human_vocal_limits>/.test(bolt), 'BOLT tasks 4 and 5 point to the rules instead of copying them');
-  ok(/per <comparative_emphasis_killswitch>/.test(C('Last-Mile Contrast Gate: Cosmos')) && /per <occupational_monomania_killswitch>/.test(C('Last-Mile Vocation Gate: Cosmos')) && sent(C('Last-Mile Contrast Gate: Cosmos')).length < 600, 'the two Cosmos gates are short reminders of their killswitches');
-  ok(!/hovering hands/.test(C('Instincts + VAD')) && !/Diction Friction|Anti-Smoothing|Em dashes and ellipses allowed/.test(voice.content) && !/distinct idiolect/.test(C('Scene Engine')) && /Distinct voices:/.test(voice.content), 'one home per rule (commitment, voices, em dashes)');
-  const on = new Set(order.filter(o => o.enabled).map(o => o.identifier)), size = Math.round(P.prompts.filter(p => on.has(p.identifier) && p.content && !p.marker).reduce((a, p) => a + sent(p.content).length, 0) / 3.6);
-  ok(size <= 15600, `enabled preset prompts stay within budget (${size} tokens as sent, budget 15600)`);
+  const size = Math.round(P.prompts.filter(p => on(p.identifier) && p.content && !p.marker && p.identifier !== ID.impersonate).reduce((a, p) => a + sent(p.content).length, 0) / 3.6);
+  ok(size <= 18600, `enabled preset prompts stay within budget (${size} tokens a normal turn, budget 18600; RF as shipped ±30,300 with its trackers)`);
 }
