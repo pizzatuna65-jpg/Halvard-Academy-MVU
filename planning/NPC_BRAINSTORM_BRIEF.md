@@ -442,7 +442,7 @@ This brief: ~7,800 tokens.
 
 ## Approved mood, gifts and birthdays (v1.8.0, 2026-09-28)
 
-Implemented in 1.8.0 (1.34.0: 59 with cohort 3). All bonded NPCs have profiles in `data/npc_moods.json` and `data/gift_prefs.json`. The latter is the full source for all four personal taste lists, exact items, category matches and universal fallbacks. Birthday and taste discovery in the player UI still follows bond knowledge. Ezrel has no birthday.
+Implemented in 1.8.0 (1.34.0: 59 with cohort 3). All bonded NPCs have profiles in `data/npc_moods.json` and `data/gift_prefs.json`. The latter is the full source for all four personal taste lists, exact items, category matches and universal fallbacks. Birthday and taste discovery in the player UI still follows bond knowledge. Ezrel has no birthday. 1.72.0: a profile may add `days` (special days: how they take their birthday, canon calendar days that matter to them, each with a `tone` word and one `how` line); a new NPC with a canon reason for a date (a death, a festival they run) should get a row.
 
 | NPC | Birthday | Loves | Hates |
 |---|---|---|---|

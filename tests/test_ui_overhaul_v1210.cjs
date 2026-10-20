@@ -48,7 +48,7 @@ for (const sel of ['.ov[hidden]', '.dlg.wide', '.nav button.on', '.pin.here', '.
 const barT = fs.readFileSync(path.join(ROOT, 'src/ui/statusbar.template.html'), 'utf8');
 ok(/\.glass\{[^}]*box-shadow:[^}]*var\(--brass-lo\)/.test(barCss) && /class="dy"/.test(barT) && /<small>points<\/small>/.test(barT), 'bracelet: brass bezel on the glass, the day apart from the clock, points labelled');
 ok(/class=\\"gem\\"|class="gem"/.test(barT) && /\.gem\{/.test(barCss), 'bracelet: the dorm shows as a gem and crest');
-ok(/class=\\"md\\"|class="md"/.test(barT) && !/[☀☁]/.test(barT), 'bracelet: the mood is a Font Awesome badge on the portrait (no Unicode glyphs)');
+ok(/class=\\"md\\"|class="md"|class="md' \+/.test(barT) && !/[☀☁]/.test(barT), 'bracelet: the mood is a Font Awesome badge on the portrait (no Unicode glyphs)');
 ok(/style="--ring:' \+ c\[3\]/.test(barT) && /sp\.style\.cssText = img\.style\.cssText/.test(barT), 'bracelet: portrait rings take the dorm colour, and the fallback keeps it');
 ok(/h = h\.slice\(0, low\) \+ '<div class="low">'/.test(barT) && /\.band\.collapsed [^{]*\.low/.test(barCss), 'bracelet: who is here and the news share a row that collapses');
 ok(/@media \(max-width:540px\)\{[\s\S]*?\.actions\{display:grid;grid-template-columns:repeat\(3/.test(barCss), 'bracelet: on a phone the charms become a 3-column grid');

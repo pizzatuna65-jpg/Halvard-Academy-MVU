@@ -24,6 +24,12 @@ t = t.replace('/*@@SHARED@@*/', shared_js())   # 1.43.0 (audit batch 2): the rul
 for key, file in [('NPC_MOODS', 'npc_moods'), ('GIFT_PREFS', 'gift_prefs'), ('WIND_CASTING', 'wind_casting')]:
     obj = json.load(open(P('data/' + file + '.json'), encoding='utf-8'))
     if key == 'NPC_MOODS': obj = obj['npcs']
+    if key == 'NPC_MOODS':   # 1.72.0: every special day names a birthday, a calendar event (start of its title) or a date
+        _titles = [e['t'] for e in json.load(open(P('data/calendar.json'), encoding='utf-8'))['events']]
+        for _id, _p in obj.items():
+            for _d in _p.get('days', []):
+                assert _d['on'] == 'birthday' or re.match(r'^M(1[0-2]|[1-9]) W[1-4]( (Mon|Tue|Wed|Thu|Fri|Sat|Sun))?$', _d['on']) or any(x.startswith(_d['on']) for x in _titles), (_id, _d['on'])
+                assert _d.get('tone') and _d.get('how') and _d.get('fix', 'Good') in ('Good', 'Normal', 'Bad') and _d.get('lean', 0) in (-1, 0, 1), (_id, _d)
     if key == 'GIFT_PREFS':
         # Shop provenance is part of category matching (Merryhew's goods, books, food, raw reagents).
         obj['catalog'] = {}

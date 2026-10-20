@@ -43,7 +43,7 @@ it. *Update*: the folded block MVU appends under the reply. *Log*: Student file 
 ## Act 0 — Before the next reply (once)
 
 ### Q0.1 Update everything
-- [ ] Update the card to 1.71 (`dist/Eldrasil_Halvard.png`) and accept the lorebook update: the popup does not ask for a new chat
+- [ ] Update the card to 1.72 (`dist/Eldrasil_Halvard.png`) and accept the lorebook update: the popup does not ask for a new chat
       [1.11.1], the bracelet shows no "old lorebook" warning, and the MVU panel shows the card's settings as overriding [basics].
 - [ ] MVU → character-card settings shows **Variable update method = Alongside AI output** (one model, one
       request a turn) [1.69].
@@ -270,6 +270,9 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
 ## Act 3 — The rest of Month 1 (W2–W4)
 
 ### Q3.1 Monday, M1 W2
+- [ ] W2 Thu, Castor's birthday, with Castor present: his Cast Sheet's Mood line ends "Birthday (glad): warmer to anyone who remembers
+      it.", and the narrator plays it in his quiet way; on the scene card the "glad · birthday" chip shows only once his dossier has
+      opened his birthday [1.72].
 - [ ] Inventory → Journal shows the engine's "Week recap (M1 W1): …", with "a clean week" if no class was skipped [1.10].
 - [ ] Practical Magic: `<now>` names Charles's role class and its teacher (for Healing, Hester in the Healing Ward), and the narrator
       writes a mixed-dorm class of that role, not Gavlan's old Combat Class [1.33].
@@ -313,6 +316,8 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
       with the cook there [1.29].
 
 ### Q3.5 Star Night (W3 Sat evening to Sun dawn)
+- [ ] Caspian, Kanae, Lenna or Bobby present: their Mood line names Star Night with their own tone (busy, radiant, hopeful, in
+      demand) and how they take it; their bracelet mood badge has the bright ring, its tooltip the tone [1.72].
 - [ ] A clear, calm day, and no 20:00 curfew that night [1.30.3].
 - [ ] From Saturday 20:00 the Map panel and every location card header show the magical-lit map, the pins on their buildings; from Sunday
       06:00 the default map is back [1.13, 1.14.3].
@@ -436,6 +441,9 @@ The first academy flight (the airship), then the Grand Vast Forest.
 - [ ] The Forest Clearing is still green and in flower [1.13.2].
 
 ### Q9.2 Remembrance Day (W1 Tue)
+- [ ] The day before, Baelin present: "Before Remembrance Day (grave): rereads the condolence letters…"; from M9 W4, Rei: "on edge" [1.72].
+- [ ] On the day, Caspian, Etnie, Rei, Irene, Cedric or Layla present: Mood bad on a fine day too, each with their own tone and canon
+      (the charm in Caspian's hand, Etnie asleep near Charles's door, no rose on Cedric's desk); Hadrian (Year 2+) oblivious [1.72].
 - [ ] In the evening the Headmaster, the Vice Headmaster and Rei speak before the lanterns; Rei is short and plain, and in conversation
       afterwards as blunt as ever, not withdrawn [1.15.2].
 
@@ -471,6 +479,12 @@ The first academy flight (the airship), then the Grand Vast Forest.
 - [ ] At the feast the Headmaster and Vice Headmaster speak before the food [1.15.1].
 
 ## Act 11 — Year 2
+
+### Q11.0 Personal dates (any day of Year 2)
+- [ ] On the date of a Year 1 Imprint (an experience that changed someone), with them present: their Mood line says "A year today:
+      <what happened> (warm/sore/bittersweet)" and that they remember; whether they say so fits them. The planner and the bracelet show
+      nothing of it (owner: the narrator's and theirs only) [1.72].
+- [ ] A Rank 5+ friend on the day Charles met them a year before: "A year since <name> met {{user}} (fond)" [1.72].
 
 ### Q11.1 The Entrance as a guide (Y2 M1 W1 Mon)
 - [ ] 07:30–08:59: the roster first-years are new to Halvard: no dorm vest, and no first-hand dorm, teacher or classmate stories before

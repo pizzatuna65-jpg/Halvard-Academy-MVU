@@ -10,7 +10,21 @@
    "clock": "M",
    "exams": 1,
    "trials": 0,
-   "reason": "cleans her room every morning, good grades"
+   "reason": "cleans her room every morning, good grades",
+   "days": [
+    {
+     "on": "Remembrance Day",
+     "fix": "Bad",
+     "tone": "rigid",
+     "how": "more formal than ever, every rule to the letter; the friends the Doves took to the Dovecote are on her mind and never on her lips."
+    },
+    {
+     "on": "birthday",
+     "lean": 1,
+     "tone": "formal",
+     "how": "a fuss makes her more formal, not less; a letter from home gets the private smile."
+    }
+   ]
   },
   "Caspian": {
    "loves": [
@@ -22,7 +36,27 @@
    "clock": "",
    "exams": 0,
    "trials": 0,
-   "reason": "outdoor festivals he runs; storms cancel them"
+   "reason": "outdoor festivals he runs; storms cancel them",
+   "days": [
+    {
+     "on": "Remembrance Day",
+     "fix": "Bad",
+     "tone": "sombre",
+     "how": "holds the goddess charm in his hand all day; still smooths every room, and steers every joke away from the breach."
+    },
+    {
+     "on": "Star Night",
+     "lean": 1,
+     "tone": "busy",
+     "how": "he runs it: everywhere at once, happiest with a clipboard and a crowd."
+    },
+    {
+     "on": "Harvest Festival",
+     "lean": 1,
+     "tone": "busy",
+     "how": "he runs it: everywhere at once, happiest with a clipboard and a crowd."
+    }
+   ]
   },
   "Etnie": {
    "loves": [
@@ -34,7 +68,21 @@
    "clock": "",
    "exams": 0,
    "trials": 0,
-   "reason": "a dog in snow; thunder"
+   "reason": "a dog in snow; thunder",
+   "days": [
+    {
+     "on": "Remembrance Day",
+     "fix": "Bad",
+     "tone": "lost",
+     "how": "she vanishes for the day and is found asleep near {{user}}'s door; the moon-eyed boy she doted on died on the breach night."
+    },
+    {
+     "on": "birthday",
+     "lean": 1,
+     "tone": "glowing",
+     "how": "an orphan who never had a birthday kept: remembered by {{user}}, she is all tail and no shame about it; forgotten, she says birthdays are for kids."
+    }
+   ]
   },
   "Royhan": {
    "loves": [
@@ -61,7 +109,21 @@
    "clock": "",
    "exams": 0,
    "trials": 1,
-   "reason": "rain means water everywhere; battle-hungry"
+   "reason": "rain means water everywhere; battle-hungry",
+   "days": [
+    {
+     "on": "Remembrance Day",
+     "fix": "Bad",
+     "tone": "flat",
+     "how": "the one subject that flattens her voice is everywhere today; pity, or being \"handled\", gets a hard look."
+    },
+    {
+     "on": "birthday",
+     "lean": 1,
+     "tone": "rowdy",
+     "how": "wants a brawl or a feast, ideally both; reads her family's bragging letter twice."
+    }
+   ]
   },
   "Gareth": {
    "loves": [
@@ -96,7 +158,15 @@
    "clock": "N",
    "exams": -1,
    "trials": 0,
-   "reason": "naps; mornings are the enemy; courageous"
+   "reason": "naps; mornings are the enemy; courageous",
+   "days": [
+    {
+     "on": "Star Night",
+     "lean": 1,
+     "tone": "hopeful",
+     "how": "wants to spend it with someone special, and will not be the one to say so."
+    }
+   ]
   },
   "Saffi": {
    "loves": [
@@ -122,7 +192,21 @@
    "clock": "N",
    "exams": 1,
    "trials": 0,
-   "reason": "stars from the Observation Tower; top grades"
+   "reason": "stars from the Observation Tower; top grades",
+   "days": [
+    {
+     "on": "Star Night",
+     "lean": 1,
+     "tone": "radiant",
+     "how": "stars from the Observation Tower, and the longest queue on campus is for her readings."
+    },
+    {
+     "on": "birthday",
+     "lean": 1,
+     "tone": "sweet",
+     "how": "sweetness on display all day; she notes exactly who remembered and who did not."
+    }
+   ]
   },
   "Idris": {
    "loves": [
@@ -148,7 +232,14 @@
    "clock": "N",
    "exams": 0,
    "trials": 1,
-   "reason": "ghost weather; walks toward danger"
+   "reason": "ghost weather; walks toward danger",
+   "days": [
+    {
+     "on": "Remembrance Day",
+     "tone": "hushed",
+     "how": "the Night Student story resurfaces today; she listens for it and writes it down, quietly."
+    }
+   ]
   },
   "Dante": {
    "loves": [],
@@ -168,7 +259,15 @@
    "clock": "N",
    "exams": 0,
    "trials": 1,
-   "reason": "being looked at, winning"
+   "reason": "being looked at, winning",
+   "days": [
+    {
+     "on": "birthday",
+     "lean": 1,
+     "tone": "basking",
+     "how": "expects to be the centre of the room and usually is; the only thanks he does not perform is for a gift for Hades."
+    }
+   ]
   },
   "Aiden": {
    "loves": [
@@ -193,7 +292,15 @@
    "clock": "",
    "exams": -1,
    "trials": 1,
-   "reason": "the spotlight; her hair"
+   "reason": "the spotlight; her hair",
+   "days": [
+    {
+     "on": "birthday",
+     "lean": 1,
+     "tone": "on stage",
+     "how": "her birthday is a production with an audience; the letter from her father sits unopened again."
+    }
+   ]
   },
   "Zara": {
    "loves": [
@@ -219,7 +326,21 @@
    "clock": "M",
    "exams": -1,
    "trials": 1,
-   "reason": "heroic weather; a chance for glory"
+   "reason": "heroic weather; a chance for glory",
+   "days": [
+    {
+     "on": "Independence Crowning Day",
+     "lean": 1,
+     "tone": "grand",
+     "how": "names the ruler and the coronation he \"attended\", whether or not Eldrasil ever had them."
+    },
+    {
+     "on": "birthday",
+     "lean": 1,
+     "tone": "grand",
+     "how": "holds court as Grand Commander and demands a feast in the old style."
+    }
+   ]
   },
   "Trixie": {
    "loves": [
@@ -233,7 +354,27 @@
    "clock": "M",
    "exams": -1,
    "trials": 1,
-   "reason": "outdoor shows; sitting still; excitement"
+   "reason": "outdoor shows; sitting still; excitement",
+   "days": [
+    {
+     "on": "Traveling Circus",
+     "fix": "Good",
+     "tone": "home",
+     "how": "her family's circus is here; every waking minute is at the tents."
+    },
+    {
+     "on": "M8 W3",
+     "lean": -1,
+     "tone": "homesick",
+     "how": "the circus has gone; she writes twice as many letters this week."
+    },
+    {
+     "on": "birthday",
+     "lean": 1,
+     "tone": "showtime",
+     "how": "turns her birthday into a show for everyone; the circus is two days away."
+    }
+   ]
   },
   "Vera": {
    "loves": [
@@ -264,7 +405,15 @@
    "clock": "M",
    "exams": 0,
    "trials": 0,
-   "reason": "quiet mornings"
+   "reason": "quiet mornings",
+   "days": [
+    {
+     "on": "birthday",
+     "lean": 1,
+     "tone": "touched",
+     "how": "her notebook tells her who remembered; she writes it down as one true thing."
+    }
+   ]
   },
   "Linus": {
    "loves": [
@@ -298,7 +447,14 @@
    "clock": "",
    "exams": 0,
    "trials": 0,
-   "reason": "\"nobody there\"; no feelings about the rest"
+   "reason": "\"nobody there\"; no feelings about the rest",
+   "days": [
+    {
+     "on": "birthday",
+     "tone": "indifferent",
+     "how": "does not mention it and may not know it is today: \"Next.\""
+    }
+   ]
   },
   "Hadrian": {
    "loves": [
@@ -311,7 +467,20 @@
    "clock": "",
    "exams": 1,
    "trials": -1,
-   "reason": "a warm coat, being right; risk"
+   "reason": "a warm coat, being right; risk",
+   "days": [
+    {
+     "on": "Remembrance Day",
+     "tone": "oblivious",
+     "how": "takes the front seat reserved for families, because nobody was using it yet."
+    },
+    {
+     "on": "birthday",
+     "lean": 1,
+     "tone": "entitled",
+     "how": "expects the day to arrange itself around him."
+    }
+   ]
   },
   "Wren": {
    "loves": [
@@ -336,7 +505,15 @@
    "clock": "M",
    "exams": -1,
    "trials": 1,
-   "reason": "open sky; lectures she can't follow; a good opponent"
+   "reason": "open sky; lectures she can't follow; a good opponent",
+   "days": [
+    {
+     "on": "Star Night",
+     "lean": 1,
+     "tone": "keen",
+     "how": "her sky magic is at its greatest of the year tonight, and she wants a match more than ever."
+    }
+   ]
   },
   "Gavlan": {
    "loves": [],
@@ -346,7 +523,15 @@
    "clock": "M",
    "exams": 0,
    "trials": 1,
-   "reason": "thunder and war nightmares; an old officer under pressure"
+   "reason": "thunder and war nightmares; an old officer under pressure",
+   "days": [
+    {
+     "on": "Remembrance Day",
+     "lean": -1,
+     "tone": "stern",
+     "how": "makes sure the breach never repeats on his watch; his hand goes to his journal more often today."
+    }
+   ]
   },
   "Yvette": {
    "loves": [],
@@ -356,7 +541,20 @@
    "clock": "",
    "exams": 0,
    "trials": -1,
-   "reason": "paranoid"
+   "reason": "paranoid",
+   "days": [
+    {
+     "on": "Magical & Science Fair",
+     "lean": -1,
+     "tone": "harried",
+     "how": "she runs the Fair and checks every stand twice, sure something will go wrong."
+    },
+    {
+     "on": "Graduation",
+     "tone": "wistful",
+     "how": "watches the graduates walk out of the gates for longer than anyone else."
+    }
+   ]
   },
   "Krieg": {
    "loves": [
@@ -366,7 +564,20 @@
    "clock": "M",
    "exams": 0,
    "trials": 1,
-   "reason": "doubled patrols in fog; the Thinning is his element"
+   "reason": "doubled patrols in fog; the Thinning is his element",
+   "days": [
+    {
+     "on": "The Thinning",
+     "lean": 1,
+     "tone": "in his element",
+     "how": "doubled patrols, a locked academy, and every rule his to enforce."
+    },
+    {
+     "on": "birthday",
+     "tone": "unmarked",
+     "how": "files his report as on any other day."
+    }
+   ]
   },
   "Milena": {
    "loves": [
@@ -391,7 +602,33 @@
    "clock": "M",
    "exams": 0,
    "trials": 0,
-   "reason": "rest-day mornings at the Elder Oak; enormous patience"
+   "reason": "rest-day mornings at the Elder Oak; enormous patience",
+   "days": [
+    {
+     "on": "Remembrance Day",
+     "before": 1,
+     "lean": -1,
+     "tone": "grave",
+     "how": "rereads the condolence letters he keeps, one by one, alone."
+    },
+    {
+     "on": "Remembrance Day",
+     "fix": "Bad",
+     "tone": "grave",
+     "how": "the breach happened on his watch; the tea goes cold untouched."
+    },
+    {
+     "on": "The Thinning",
+     "lean": -1,
+     "tone": "watchful",
+     "how": "his greatest fear is a second breach; he checks on the seal more than he admits."
+    },
+    {
+     "on": "birthday",
+     "tone": "forgetful",
+     "how": "forgets it entirely until someone reminds him; then he is delighted, and the tea goes cold."
+    }
+   ]
   },
   "Layla": {
    "loves": [
@@ -401,7 +638,26 @@
    "clock": "",
    "exams": 0,
    "trials": 0,
-   "reason": "archive days and tea"
+   "reason": "archive days and tea",
+   "days": [
+    {
+     "on": "Remembrance Day",
+     "before": 1,
+     "tone": "preoccupied",
+     "how": "leads the field visit to the monuments and the plaque of the breach dead; the speech is still unfinished."
+    },
+    {
+     "on": "Remembrance Day",
+     "fix": "Bad",
+     "tone": "stalled",
+     "how": "reaches the line of her speech she cannot get past, and stops; the Night Student story afterwards angers her."
+    },
+    {
+     "on": "birthday",
+     "tone": "private",
+     "how": "the gloves stay on; her thanks are brief and real."
+    }
+   ]
   },
   "Vallie": {
    "loves": [
@@ -413,7 +669,15 @@
    "clock": "N",
    "exams": 0,
    "trials": 1,
-   "reason": "always happy to test her strength"
+   "reason": "always happy to test her strength",
+   "days": [
+    {
+     "on": "Academy Founder Day",
+     "lean": -1,
+     "tone": "watched",
+     "how": "a Myrdath alumna; on Founder Day the looks follow her, and she meets every one."
+    }
+   ]
   },
   "Rei": {
    "loves": [
@@ -425,7 +689,32 @@
    "clock": "N",
    "exams": 0,
    "trials": 1,
-   "reason": "the Rooftop at hours nobody is awake; zero drama when it matters"
+   "reason": "the Rooftop at hours nobody is awake; zero drama when it matters",
+   "days": [
+    {
+     "on": "Remembrance Day",
+     "before": 7,
+     "lean": -1,
+     "tone": "on edge",
+     "how": "Month 10 is coming: she smokes more."
+    },
+    {
+     "on": "Remembrance Day",
+     "fix": "Bad",
+     "tone": "silent",
+     "how": "gives the speech she hates, lights no lantern of her own, and stays until the last one is gone."
+    },
+    {
+     "on": "The Thinning",
+     "tone": "focused",
+     "how": "the seal is hers this week; zero drama, everywhere and nowhere."
+    },
+    {
+     "on": "birthday",
+     "tone": "unmarked",
+     "how": "tells no one; a fuss gets a new cigarette and silence."
+    }
+   ]
   },
   "Kuroo": {
    "loves": [],
@@ -447,7 +736,21 @@
    "clock": "N",
    "exams": 0,
    "trials": -1,
-   "reason": "small, dim, enclosed; a room full of eyes"
+   "reason": "small, dim, enclosed; a room full of eyes",
+   "days": [
+    {
+     "on": "Remembrance Day",
+     "fix": "Bad",
+     "tone": "hidden",
+     "how": "she spent the breach night in a Potion Hall cupboard; today her door stays shut and her answers come in writing."
+    },
+    {
+     "on": "birthday",
+     "lean": 1,
+     "tone": "hopeful",
+     "how": "quietly hopes to be admired, and cannot accept a single compliment as earned."
+    }
+   ]
   },
   "Tristan": {
    "loves": [],
@@ -466,7 +769,15 @@
    "clock": "",
    "exams": 0,
    "trials": 1,
-   "reason": "relentlessly cheerful, never Bad from weather; a good game"
+   "reason": "relentlessly cheerful, never Bad from weather; a good game",
+   "days": [
+    {
+     "on": "birthday",
+     "lean": 1,
+     "tone": "cheerful",
+     "how": "turns up to his own birthday in his usual clothes and makes a game of it."
+    }
+   ]
   },
   "Ezrel": {
    "loves": [],
@@ -495,7 +806,14 @@
    "clock": "",
    "exams": 0,
    "trials": 0,
-   "reason": "silence"
+   "reason": "silence",
+   "days": [
+    {
+     "on": "birthday",
+     "tone": "unmarked",
+     "how": "silence, as on any other day."
+    }
+   ]
   },
   "Bobby": {
    "loves": [
@@ -505,7 +823,21 @@
    "clock": "",
    "exams": 0,
    "trials": 0,
-   "reason": "storms mean repair jobs"
+   "reason": "storms mean repair jobs",
+   "days": [
+    {
+     "on": "Secret Fools Day",
+     "lean": 1,
+     "tone": "in demand",
+     "how": "peak season: props, distractions and elaborate reveals; booked, smug and discreet."
+    },
+    {
+     "on": "Star Night",
+     "lean": 1,
+     "tone": "in demand",
+     "how": "peak season: invitations, surprises and confessions; booked, smug and discreet."
+    }
+   ]
   },
   "Hester": {
    "loves": [
@@ -519,7 +851,15 @@
    "clock": "N",
    "exams": 0,
    "trials": 1,
-   "reason": "night rounds and a good storm for a ghost story; busy ward days"
+   "reason": "night rounds and a good storm for a ghost story; busy ward days",
+   "days": [
+    {
+     "on": "Remembrance Day",
+     "fix": "Bad",
+     "tone": "brittle",
+     "how": "she was on the ward that night; any mention of it stops her mid-sentence and she turns to tea."
+    }
+   ]
   },
   "Anselm": {
    "loves": [
@@ -552,7 +892,15 @@
    "clock": "",
    "exams": 1,
    "trials": 1,
-   "reason": "exam and competition weeks are his best sales"
+   "reason": "exam and competition weeks are his best sales",
+   "days": [
+    {
+     "on": "Academy Bazaar",
+     "fix": "Good",
+     "tone": "in his element",
+     "how": "runs the biggest stall at the Bazaar, as he does every year."
+    }
+   ]
   },
   "Cedric": {
    "loves": [
@@ -563,7 +911,15 @@
    "clock": "M",
    "exams": 0,
    "trials": 0,
-   "reason": "an early start and a quiet grey morning in the Gardens"
+   "reason": "an early start and a quiet grey morning in the Gardens",
+   "days": [
+    {
+     "on": "Remembrance Day",
+     "fix": "Bad",
+     "tone": "silent",
+     "how": "says nothing at all; the rose on his desk is gone for the day."
+    }
+   ]
   },
   "Anya": {
    "loves": [
@@ -576,7 +932,14 @@
    "clock": "",
    "exams": 0,
    "trials": 0,
-   "reason": "quiet, grey, still days; dusk by the Lake"
+   "reason": "quiet, grey, still days; dusk by the Lake",
+   "days": [
+    {
+     "on": "birthday",
+     "tone": "still",
+     "how": "her birthday falls on Remembrance Day; she has never minded the quiet, and the smile does not change."
+    }
+   ]
   },
   "Kotaro": {
    "loves": [
@@ -590,7 +953,33 @@
    "clock": "N",
    "exams": -1,
    "trials": 1,
-   "reason": "festival nights; mornings are the enemy"
+   "reason": "festival nights; mornings are the enemy",
+   "days": [
+    {
+     "on": "Independence Crowning Day",
+     "lean": -1,
+     "tone": "rueful",
+     "how": "the day he once toasted the wrong person: he laughs it off a little too often, and the flask comes out early."
+    },
+    {
+     "on": "Star Night",
+     "lean": 1,
+     "tone": "festive",
+     "how": "festival nights: \"Ahh, youth.\""
+    },
+    {
+     "on": "Harvest Festival",
+     "lean": 1,
+     "tone": "festive",
+     "how": "festival nights: \"Ahh, youth.\""
+    },
+    {
+     "on": "birthday",
+     "lean": 1,
+     "tone": "festive",
+     "how": "his birthday falls on the circus's opening night: \"Ahh, youth\", and the flask."
+    }
+   ]
   },
   "Valentin": {
    "loves": [
@@ -602,7 +991,21 @@
    "clock": "M",
    "exams": 1,
    "trials": 1,
-   "reason": "rankings day and an audience"
+   "reason": "rankings day and an audience",
+   "days": [
+    {
+     "on": "Results & Dorm Ranking",
+     "lean": 1,
+     "tone": "in his element",
+     "how": "rankings day, and an audience."
+    },
+    {
+     "on": "Results & Final Ranking",
+     "lean": 1,
+     "tone": "in his element",
+     "how": "rankings day, and an audience."
+    }
+   ]
   },
   "Aurelian": {
    "loves": [
@@ -613,7 +1016,20 @@
    "clock": "M",
    "exams": 0,
    "trials": 1,
-   "reason": "a sunny pitch and a crowd; nothing visibly bothers him"
+   "reason": "a sunny pitch and a crowd; nothing visibly bothers him",
+   "days": [
+    {
+     "on": "Harvest Festival",
+     "tone": "bright",
+     "how": "the hero of the Harvest Hall fire at a harvest festival: more speeches, more handshakes, a perfect smile; the thirty-one names are on his mind."
+    },
+    {
+     "on": "birthday",
+     "lean": 1,
+     "tone": "gracious",
+     "how": "a perfect speech of thanks; his parents keep the letter he writes them about it."
+    }
+   ]
   },
   "William": {
    "loves": [
@@ -652,7 +1068,15 @@
    "clock": "N",
    "exams": -1,
    "trials": 0,
-   "reason": "parties outdoors and Star Night; rain ruins her hair and her plans"
+   "reason": "parties outdoors and Star Night; rain ruins her hair and her plans",
+   "days": [
+    {
+     "on": "Star Night",
+     "lean": 1,
+     "tone": "festive",
+     "how": "an outdoor party under the stars is her idea of a perfect night."
+    }
+   ]
   },
   "Rigel": {
    "loves": [
@@ -689,7 +1113,15 @@
    "clock": "",
    "exams": 0,
    "trials": 0,
-   "reason": "a warm afternoon on the hills is best, but anything is fine"
+   "reason": "a warm afternoon on the hills is best, but anything is fine",
+   "days": [
+    {
+     "on": "The Thinning",
+     "tone": "unbothered",
+     "how": "the one person the lockdown does not rattle; she waves at the patrols."
+    }
+   ]
   }
- }
+ },
+ "_days": "1.72.0 (owner-approved planning/DRAFT_hari_istimewa_npc.md): days = a character's special days. on: 'birthday' (data/gift_prefs.json), a calendar event's title start, or a date 'M8 W3' / 'M8 W3 Mon'; before: N = the N days before it; fix sets the mood, lean (+1/-1/0) moves it; tone = their own word for the day; how = one line for the narrator. Every character with a birthday and no 'birthday' row gets lean +1, tone 'glad'."
 }

@@ -3364,6 +3364,12 @@ function sceneActions(id, S) {
   return out.length ? `<div class="acts">${out.join('')}</div>` : '';
 }
 
+// 1.72.0: a special day's tone beside the mood: a calendar day always, a birthday once the dossier has opened it
+function moodDay(id, mood, n, S) {
+  const bd = mood.bd && n && n.fl.some(f => f[0] === 'Birthday' && fieldUnlocked(id, f, S));
+  return [mood.day ? [mood.tone, mood.day] : null, bd ? [mood.bd, 'birthday'] : null].filter(Boolean)
+    .map(([t, d]) => `<span class="chip mood" title="${esc(d)}">${esc(t)} · ${esc(d)}</span>`).join('');
+}
 function sceneCard(id, v, th, S, hasBlock) {
   const n = npcOf(id), b = (S.Bonds || {})[id], ui = S.$ui || {}, known = !n || knowsName(id, S);
   const sub = !n ? 'Invented character' : known ? (b && b.Title) || publicRole(id, S) || whoLine(id, S) : whoLine(id, S);
@@ -3373,7 +3379,7 @@ function sceneCard(id, v, th, S, hasBlock) {
   const thought = th ? `<div class="lbl">true thoughts${th.where ? ` <span>· ${esc(th.where)}</span>` : ''}</div><blockquote class="thought">${th.lines.map(l => `<p>${esc(l)}</p>`).join('')}</blockquote>`
     : hasBlock ? '<div class="none">No thoughts shown this turn.</div>' : '';
   const stats = b ? `<div class="top"><span class="medal" title="Rank ${b.Rank} of 10">${b.Rank}</span><span class="rk"><b>Rank ${b.Rank}</b><span>of 10${b.Romance ? ' · romance' : ''}</span></span></div>${bondMeters(id, b, S)}`
-    + (mood ? `<div class="chips"><span class="chip mood">${esc(mood.mood)} mood</span></div>` : '')
+    + (mood ? `<div class="chips"><span class="chip mood">${esc(mood.mood)} mood</span>${moodDay(id, mood, n, S)}</div>` : '')
     : `<div class="top"><span class="medal">–</span><span class="rk"><b>${n ? 'Not met yet' : 'Passing through'}</b><span>${n ? 'no bond' : pin ? 'kept in the record' : 'not kept'}</span></span></div>`;
   const act = n ? `<button type="button" class="dos" data-eld-open="npc:${esc(id)}">Dossier</button>`
     : `<button type="button" class="dos" data-eld-keep="${esc(id)}" title="${pin ? 'Let them leave the record of invented characters' : 'Keep them in the record of invented characters'}">${pin ? 'Let go' : 'Keep in record'}</button>`;

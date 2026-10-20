@@ -360,6 +360,7 @@ const num = (v, d = 0) => { const x = Number(v); return Number.isFinite(x) ? x :
 const newLines = (before, after) => { const n = _.countBy(Array.isArray(before) ? before : []), seen = {};
   return (Array.isArray(after) ? after : []).filter(l => (seen[l] = (seen[l] || 0) + 1) > (n[l] || 0)); };
 const dstamp = W => `${yPre(W)}M${W.Month} W${W.Week} ${W.Day}`;
+const ydate = W => `Y${W.Year || 1} M${W.Month} W${W.Week} ${W.Day}`;   // 1.72.0: always with its year ($met, $b8)
 // Parses a due/until text written by the AI ("M2 W1 Tue 14:00", "Month 3 Week 2", "Fri 18:00", "tomorrow 9am", "M4") into an
 // absolute minute, relative to the current world time W. Missing parts: day -> Sunday of that week (or the next such weekday),
 // week -> week 4 when only a month is given, time -> 23:59. Returns -1 when nothing date-like is found.
@@ -1170,6 +1171,16 @@ function stepMigrate(c) {
       if (S.$eng.tenv !== 1) b.$ms = [...new Set([...(b.$ms || []), ...Object.keys(REP.bond_milestone_xp || {}).map(Number).filter(r => r <= b.Rank)])];
     }
   }
+  // 1.72.0: a bond from before has no $met (the day they met): its oldest dated line stands in (Recent moments, Defining moments,
+  // Knows, Imprints, Known facts), else none; a Rank 8 bond's $b8 is not known and stays empty
+  if (verLt(c.fromVer, '1.72.0')) for (const X of both) for (const b of Object.values(X.Bonds || {})) if (b && typeof b === 'object' && !b.$met) {
+    const W = X.World || S.World, ds = [...(b.$Recent || []).map(r => r && r.w), ...(b.$Defining || []).map(r => r && r.w), ...(b.Knows || []), ...(b.$Knows_old || []),
+      ...(b.Imprints || []).map(x => x && x.When), ...(b.Known_facts || []), ...(b.$Known_old || [])];
+    let lo = null;
+    for (const s of ds) { const m = DAY_ON_RX.exec(String(s || '')); if (!m || !m[4]) continue;
+      const d = { Year: +(m[1] || W.Year || 1), Month: +m[2], Week: +m[3], Day: m[4] }; if (!lo || toAbs(d) < toAbs(lo)) lo = d; }
+    b.$met = lo ? ydate(lo) : '';
+  }
   S.$eng.bondv = 2;
   S.$eng.tenv = 1;
   S.$ui.bev = {};                                               // obsolete event hints of older saves
@@ -1555,7 +1566,11 @@ function stepWeather(c) {
   S.$ui.moods = {};
   const moods = {};
   if (WXM !== 'off') for (const id of Object.keys(NPC_MOODS)) if ((ARRIVES[id] || 1) <= S.World.Year && (S.Bonds[id] || (S.Scene.Present || {})[id])) {
-    moods[id] = moodOf(id, S, S.$ui.wx && !S.$ui.wx.away ? S.$ui.wx.now : null, dayNo); S.$ui.moods[id] = { mood: moods[id].mood };
+    moods[id] = moodOf(id, S, S.$ui.wx && !S.$ui.wx.away ? S.$ui.wx.now : null, dayNo);
+    // 1.72.0: the bracelet and scene card see a calendar day (day, tone) and a birthday's tone (bd: the UI shows it once the birthday
+    // is known); the personal dates with {{user}} stay the narrator's
+    const sd = moods[id].days.find(d => !d.personal && !d.bd), bd = moods[id].days.find(d => d.bd);
+    S.$ui.moods[id] = { mood: moods[id].mood, ...(sd ? { day: sd.label, tone: sd.tone } : {}), ...(bd ? { bd: bd.tone } : {}) };
   }
   S.$ui.party = birthdayParty(S);
   Object.assign(c, { WXM, seed, TU, wxNow, WA, moods });
@@ -3059,6 +3074,8 @@ function stepBonds(c) {
     b.$gifts = _.cloneDeep(b0 ? b0.$gifts || {} : b.$gifts || {});
     b.$gift_pending = b0 ? !!b0.$gift_pending : !!b.$gift_pending;
     b.$branch = b0 ? String(b0.$branch || '') : String(b.$branch || '');   // 1.6.8 engine-owned: friend | romance | rival from Rank 8
+    b.$met = b0 ? String(b0.$met || '') : ydate(S.World);   // 1.72.0 engine-owned: the day they met, and the day of Rank 8
+    b.$b8 = b0 ? String(b0.$b8 || '') : '';
     if (!b.$branch && b0 && b0.Rank >= 8) b.$branch = b0.Romance ? 'romance' : /rival/i.test(String(b0.Title || '')) ? 'rival' : 'friend';   // saves from before 1.6.8
     b.$Knows_old = b0 ? [...(b0.$Knows_old || [])] : [...(b.$Knows_old || [])]; b.$seen = b0 ? num(b0.$seen, -1) : num(b.$seen, -1); b.$mw = b0 ? num(b0.$mw, -1) : num(b.$mw, -1);
     const acts = [...(byId[id] || [])], rank0 = b0 ? b0.Rank : b.Rank, tw0 = num(b.Tension, 0), trw0 = num(b.Trust, 50);
@@ -3338,9 +3355,9 @@ function stepBonds(c) {
     // 1.6.9 (bug hunt): decided by the Trust the 7->8 event was played on (before this reply's +3 for the rank), so a rivalry the
     // narrator was told to play at Trust 47-49 is not recorded as a best friendship.
     const tr8 = num(b0 && b0.Rank < 8 ? b0.Trust : b.Trust, 50);
-    if (hasB && b.Romance && !(b0 && b0.Romance)) { b.$branch = 'romance'; jnl.push(`Romance began with ${id}.`); }   // 1.62.0 (M3): a Journal landmark
-    else if (hasB && b.Rank >= 8 && !b.$branch) b.$branch = b.Romance ? 'romance' : canRival(id) && tr8 < trustGate(id, 8) ? 'rival' : 'friend';
-    else if (b.Rank < 8 && b.$branch) b.$branch = '';
+    if (hasB && b.Romance && !(b0 && b0.Romance)) { b.$branch = 'romance'; b.$b8 = ydate(S.World); jnl.push(`Romance began with ${id}.`); }   // 1.62.0 (M3): a Journal landmark
+    else if (hasB && b.Rank >= 8 && !b.$branch) { b.$branch = b.Romance ? 'romance' : canRival(id) && tr8 < trustGate(id, 8) ? 'rival' : 'friend'; b.$b8 = ydate(S.World); }
+    else if (b.Rank < 8 && b.$branch) { b.$branch = ''; b.$b8 = ''; }
     // 1.4.4 (owner): the bond's recent history with {{user}}: when, one sentence (the narrator's Note, else the kinds), the effect.
     // Only what {{user}} did or reported: quiet-day easing and weekly recovery write no row.
     if (hasB) {
@@ -3439,7 +3456,8 @@ function stepBondMemory(c) {
             : `${id} already holds ${IMPRINT_MAX} Imprints; "${x.Belief}" (weight ${num(x.Weight, 0)}) does not outweigh the lightest one, so it was not kept.`);
         } else { x.Was = lo.Belief; I = I.filter(y => y !== lo); log.push(`${id}'s Imprint "${lo.Belief}" gave way to "${x.Belief}".`); }
       }
-      b.Imprints = I.map(x => ({ Belief: String(x.Belief).trim(), Weight: _.clamp(Math.round(num(x.Weight, 5)), 5, 10), When: String(x.When || ''), From: String(x.From || ''), Was: String(x.Was || '') }));
+      b.Imprints = I.map(x => ({ Belief: String(x.Belief).trim(), Weight: _.clamp(Math.round(num(x.Weight, 5)), 5, 10), When: String(x.When || ''), From: String(x.From || ''), Was: String(x.Was || ''),
+        Feel: feelOf(x.Feel || (I0.find(y => key(y) === key(x)) || {}).Feel) }));   // 1.72.0 (a rewrite without it keeps the old one)
       // Next
       let nx = b.Next && typeof b.Next === 'object' && String(b.Next.What || '').trim() ? { What: String(b.Next.What).trim(), Where: String(b.Next.Where || '').trim(), Until: String(b.Next.Until || '').trim() } : null;
       if (nx && b.Rank < NEXT_RANK) { if (!(b0 && b0.Next)) log.push(`Next plans are kept for bonds of Rank ${NEXT_RANK} or more; ${id}'s was not kept.`); nx = null; }
@@ -5330,7 +5348,8 @@ function nowOf(S, moodsFull) {
   // 1.56.0 (narrator-load audit U2): each present character's lines are one block, printed in their Cast Sheet ("Now with {{user}}"),
   // with band words instead of numbers (the numbers are in <current_state> only); people[id] = [lines]
   const people = {}, put = (id, l) => { if (l) (people[id] = people[id] || []).push(l); };
-  if (on('weather')) for (const id of PRES.filter(id => (UI.moods || {})[id])) { const m = UI.moods[id]; put(id, 'Mood: ' + m.mood.toLowerCase() + (m.reasons.length ? ' (' + m.reasons.join(', ') + ')' : '') + '.'); }
+  if (on('weather')) for (const id of PRES.filter(id => (UI.moods || {})[id])) { const m = UI.moods[id]; put(id, 'Mood: ' + m.mood.toLowerCase() + ((m.reasons || []).length ? ' (' + m.reasons.join(', ') + ')' : '') + '.'
+    + (m.days || []).map(d => ` ${d.label} (${d.tone}): ${d.how}`).join('')); }   // 1.72.0: special days
   if (WX && PRES.includes('Idris')) { if (/cold|freezing/.test(WX.now.label)) put('Idris', 'Cold-blooded: sluggish and short-tempered in this cold.'); else if (WX.now.sky === 'Clear' && WX.block !== 2 && WX.now.temp >= 15) put('Idris', 'Cold-blooded and loves the sun: he is soaking it up, livelier than usual.'); }
   // 1.57.0 (U3): at a notable place, whether {{user}} has been here before (and with whom), so a second visit never reads as a first
   const here0 = plName(placeOf(W.Location) || '') || '', fv = ((S.$eng || {}).first || {})[here0];

@@ -43,7 +43,7 @@
   },
   "imprints": {
    "feature": "",
-   "text": "- Imprints: only after an experience with {{user}} that changes who they are (weight 5–10 of 10: a rescue, a great betrayal, a sacrifice), insert {\"Belief\": \"what they now believe, in their words\", \"Weight\": 5-10, \"From\": \"what caused it\"}. Write the belief, not the event (\"Rules can bend for someone who has earned it\"). At most 5. Follow their change type (below): a fixed character only deepens a belief they hold (raise its Weight). The engine keeps the rest."
+   "text": "- Imprints: only after an experience with {{user}} that changes who they are (weight 5–10 of 10: a rescue, a great betrayal, a sacrifice), insert {\"Belief\": \"what they now believe, in their words\", \"Weight\": 5-10, \"From\": \"what caused it\", \"Feel\": \"warm | sore | bittersweet\" (how remembering it feels)}. Write the belief, not the event (\"Rules can bend for someone who has earned it\"). At most 5. Follow their change type (below): a fixed character only deepens a belief they hold (raise its Weight). The engine keeps the rest."
   },
   "old_hut": {
    "feature": "",

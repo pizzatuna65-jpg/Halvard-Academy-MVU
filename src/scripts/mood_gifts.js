@@ -22,7 +22,7 @@ function giftTier(id, item, fallback, note = '') {
 }
 function moodOf(id, S, wx, day) {
   const p = NPC_MOODS[id], W = S.World, hour = Number(W.Time.split(':')[0]), block = hour < 6 || hour >= 18 ? 2 : hour < 12 ? 0 : 1;
-  if (!p || id === 'Ezrel') return { mood: 'Normal', score: 0, reasons: [] };
+  if (!p || id === 'Ezrel') return { mood: 'Normal', score: 0, reasons: [], days: [] };
   let score = 0; const reasons = [], add = (v, why) => { if (v) { score += v; reasons.push(why); } };
   const match = k => {
     if (!wx) return false;
@@ -43,7 +43,48 @@ function moodOf(id, S, wx, day) {
   const status = Object.entries(S.Campus_State.NPC_status || {}).filter(([k]) => moodCanon(k) === id).map(([,v]) => v).join(' ');
   if (/sick|ill\b|injur|wound|griev|grief|bereav|mourning|hurt|head cold/i.test(status)) add(-1, 'unwell or grieving');
   const roll = rand01(S.$eng.seed, day, id, 'mood'); add(roll < 0.1 ? -1 : roll >= 0.9 ? 1 : 0, 'how the day feels');
-  return { mood: score >= 1 ? 'Good' : score <= -1 ? 'Bad' : 'Normal', score, reasons };
+  const days = specialDays(id, S), fix = (days.find(d => d.fix) || {}).fix || '';
+  for (const d of days) if (!d.fix) score += d.lean;
+  // a fixed day overrides the weather, so its reasons would only contradict it
+  return { mood: fix || (score >= 1 ? 'Good' : score <= -1 ? 'Bad' : 'Normal'), score, reasons: fix ? [] : reasons, days };
+}
+// 1.72.0 (owner-approved planning/DRAFT_hari_istimewa_npc.md): a character's special days. data/npc_moods.json `days`: `on` a
+// birthday (data/gift_prefs.json), a calendar event by the start of its title, or a date ("M8 W3", "M8 W3 Mon"); `before: N` = the
+// N days before it; `fix` sets the mood (the first one wins), `lean` moves the score; `tone` is their own word for the day. A
+// birthday without a row of its own is lean +1, "glad". Halvard's calendar days do not reach someone away. Then the personal dates
+// with {{user}}, a year or more later: a surviving Imprint's date (its Feel and Weight say how), the day they met ($met, from Rank 5
+// and below Tension 40) and the day the bond reached Rank 8 ($b8). Those are `personal`: the narrator's and the character's only.
+const DAY_ON_RX = /^\[?(?:Y(\d+) )?M(\d{1,2}) W([1-4])(?: (Mon|Tue|Wed|Thu|Fri|Sat|Sun))?/;
+const dayOn = (on, W, id) => { if (on === 'birthday') return npcBirthday(id, W);
+  const m = DAY_ON_RX.exec(on); if (m) return +m[2] === W.Month && +m[3] === W.Week && (!m[4] || m[4] === W.Day);
+  return eventsOn(W).some(e => e.t.startsWith(on)); };
+const feelOf = f => (['warm', 'sore', 'bittersweet'].includes(String(f || '').trim().toLowerCase()) ? String(f).trim().toLowerCase() : 'bittersweet');
+const remembers = id => `${id} remembers what day it is; whether to say so is up to ${id}, in character.`;
+function specialDays(id, S) {
+  const W = S.World, out = [], rows = [...((NPC_MOODS[id] || {}).days || [])];
+  if ((GIFT_PREFS.npcs[id] || {}).birthday && !rows.some(d => d.on === 'birthday')) rows.push({ on: 'birthday', lean: 1, tone: 'glad', how: 'warmer to anyone who remembers it.' });
+  const away = AWAY_RX.test(npcStatusIn(S, id)), noon = toAbs({ ...W, Time: '12:00' });
+  for (const d of rows) {
+    if (away && d.on !== 'birthday') continue;
+    const hit = d.before ? _.range(1, d.before + 1).some(k => dayOn(d.on, fromAbs(noon + k * DAY_MIN), id)) : dayOn(d.on, W, id);
+    if (hit) out.push({ label: d.on === 'birthday' ? 'Birthday' : d.before ? `Before ${d.on}` : d.on, fix: d.fix || '', lean: d.lean || 0, tone: d.tone, how: d.how, bd: d.on === 'birthday' });
+  }
+  const b = (S.Bonds || {})[id];
+  if (!b) return out;
+  const years = s => { const m = DAY_ON_RX.exec(String(s || '')), y = m && +(m[1] || W.Year);
+    return m && m[4] && +m[2] === W.Month && +m[3] === W.Week && m[4] === W.Day && y < W.Year ? W.Year - y : 0; };
+  const ago = n => (n > 1 ? `${n} years` : 'A year');
+  for (const x of b.Imprints || []) {
+    const n = years(x.When); if (!n) continue;
+    const feel = feelOf(x.Feel), sign = { warm: 1, sore: -1 }[feel] || 0;
+    out.push({ label: `${ago(n)} today: ${x.From || x.Belief}`, fix: sign && num(x.Weight, 5) >= 8 ? (sign > 0 ? 'Good' : 'Bad') : '', lean: sign, tone: feel, how: remembers(id), personal: true });
+  }
+  const met = num(b.Rank, 0) >= 5 && num(b.Tension, 0) < 40 && years(b.$met);
+  if (met) out.push({ label: `${ago(met)} since ${id} met {{user}}`, fix: '', lean: 1, tone: 'fond', how: remembers(id), personal: true });
+  const b8 = b.$branch && years(b.$b8), rival = b.$branch === 'rival';
+  if (b8) out.push({ label: `${ago(b8)} since the bond became ${rival ? 'a sworn rivalry' : b.$branch === 'romance' ? 'a romance' : 'a best friendship'}`,
+    fix: '', lean: rival ? -1 : 1, tone: rival ? 'bitter' : 'fond', how: remembers(id), personal: true });
+  return out;
 }
 function windMultiplier(subtype, custom, wind) {
   if (!wind) return 1;

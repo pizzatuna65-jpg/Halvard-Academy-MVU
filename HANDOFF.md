@@ -3,12 +3,12 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.71.0** (2026-10-20): the scene cards (1.70.0: full portrait, true thoughts from the preset's
-`<npc_thoughts>`, bond meters for each person present) now carry actions, each a system the engine already runs for that person
-(practice partners, Rank 4 tracks, invitations, gifts, favours, Rank 5–7 perks, amends; they only draft chat text); the other dorms
-leave the campus map except on their Dorm Day or inside; a brass rule under the bracelet. 1.69.0: one model per turn; 1.68.0: the
-preset is Realistic Frankenstein 2.2.1.3 as it ships. The memory audit is done except batch 8. Live checks: the campaign quest log
-`docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the card, Q0.1).
+**Snapshot:** card **v1.72.0** (2026-10-21): special days. Each NPC has a mood of their own on their birthday, on canon calendar
+days (Remembrance Day, Star Night, the Circus, the Thinning…) and on personal dates with {{user}} a year on (a surviving Imprint, the
+day they met, Rank 8); the personal ones are known only to the narrator and the NPC. 1.71.0/1.70.0: scene cards with actions under
+the newest reply; 1.69.0: one model per turn; 1.68.0: the preset is Realistic Frankenstein 2.2.1.3 as it ships. The memory audit is
+done except batch 8. Live checks: the campaign quest log `docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat, Y1 M1 W1
+Mon 10:13; first Act 0: update the card, Q0.1).
 
 **Next task:** the owner plays the quest log; their reports and chat exports bring the playtest fixes (tick what passed, run
 `tools/audit_chat.py` on the export, move "Where you are"). Batch 8 (chapters, a new chat file without losing memory) is planned in

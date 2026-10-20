@@ -196,7 +196,7 @@ export const Schema = z.object({
     // 1.6.0 (Batch C, P4/N4): the character's side, written by the narrator (not shown in the player's dossier)
     Mind: s(v.Mind).slice(0, 400),                                                  // how they feel about {{user}} now, what is on their mind
     Knows: Array.isArray(v.Knows) ? v.Knows.map(s).filter(Boolean).slice(-30) : [],   // what they know about {{user}}, and how (engine dates and trims to 15)
-    Imprints: Array.isArray(v.Imprints) ? v.Imprints.filter(x => x && typeof x === 'object').map(x => ({ Belief: s(x.Belief), Weight: n(x.Weight, 0, 10, 5), When: s(x.When), From: s(x.From), Was: s(x.Was) })).slice(-8) : [],
+    Imprints: Array.isArray(v.Imprints) ? v.Imprints.filter(x => x && typeof x === 'object').map(x => ({ Belief: s(x.Belief), Weight: n(x.Weight, 0, 10, 5), When: s(x.When), From: s(x.From), Was: s(x.Was), Feel: s(x.Feel) })).slice(-8) : [],   // 1.72.0: Feel warm | sore | bittersweet
     Next: v.Next && typeof v.Next === 'object' && !Array.isArray(v.Next) ? { What: s(v.Next.What), Where: s(v.Next.Where), Until: s(v.Next.Until) } : null,
     $Knows_old: Array.isArray(v.$Knows_old) ? v.$Knows_old.map(s).slice(-100) : [],   // older Knows lines (engine)
     $Knows_q: Math.round(n(v.$Knows_q, 0, 100, 0)),   // 1.63.0 (memory audit M5): how many of the newest $Knows_old lines wait for a fold (engine)
@@ -204,6 +204,7 @@ export const Schema = z.object({
     $seen: n(v.$seen, -1, 1e9, -1), $mw: n(v.$mw, -1, 1e9, -1),   // last day present; week of the last "Meanwhile" line (engine)
     $gifts: v.$gifts && typeof v.$gifts === 'object' && !Array.isArray(v.$gifts) ? Object.fromEntries(Object.entries(v.$gifts).slice(-24).map(([k,t]) => [k, ['loved','liked','neutral','disliked','hated'].includes(t) ? t : 'neutral'])) : {},
     $branch: ['friend', 'romance', 'rival'].includes(v.$branch) ? v.$branch : '',   // 1.6.8: the branch the bond took at Rank 8 (engine)
+    $met: s(v.$met), $b8: s(v.$b8),   // 1.72.0: the day they met, the day of Rank 8 ("Y1 M1 W1 Mon"; engine)
     $gift_pending: b(v.$gift_pending),
   }), 'Title'),
 
