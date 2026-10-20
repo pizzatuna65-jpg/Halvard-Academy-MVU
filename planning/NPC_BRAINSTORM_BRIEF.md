@@ -226,12 +226,12 @@ Student Council membership is separate from the afternoon club: members meet Sat
   - 7→8: A turning point: the bond becomes best friends, romance or a sworn rivalry, and the event lets {{user}} choose.
   - 8→9: They start to let their guard down about what they hide; the story opens a way to the truth (never revealed by rank alone).
   - 9→10: The peak of the bond: a moment that proves it, and what they would give up for {{user}}.
-- **Rewards (decided 2026-09-25; full list in `bond_rewards.md`):**
+- **Rewards (decided 2026-09-25; full list in `data/bond_rewards.json`):**
   - Rank 1–4 events are pure story; no items or perks.
   - The **4→5** event gives the NPC's **exclusive gift**: an item sold nowhere, and always useful, never just a memento.
   - The **9→10** event gives the NPC's **unique Rank 10 benefit** (gameplay, QoL, points, reputation or story).
   - There are no endings of any kind in this campaign; high ranks open information, never a "route".
-- **Special bond models** (details in `bond_rewards.md`):
+- **Special bond models** (details in `data/bond_rewards.json`):
   - **Mask → truth** (Castor, Kanae, Caine): the 7→8 event gives a **nudge**, one Fact pointing at the NPC's arc. The 8→9
     event can only run once their truth has come out in play; without that, the bond stays at Rank 8, and that is fine.
   - **Krieg:** Rank 1 comes from his introduction. After that his bond gains **+14 XP every Monday**, only while {{user}}'s
@@ -244,7 +244,7 @@ Student Council membership is separate from the afternoon club: members meet Sat
   Idris, Dante, Florian, Caspian, Royhan, Sophia, Gareth, Vallie, Kuroo, Milena, Valentin, Aurelian, William, Bruno, Bianca, Rigel, Topaz; B Krieg, Tristan; C Etnie, Zara, Trixie, Vera,
   Alyssa, Tilly, Ruby, Mimosa, Bobby, Hester, Anya, Faye; D Gavlan, Yvette, Baelin, Layla, Althair, Ezrel, Ottavio, Anselm, Magnus, Dorian, Cedric, Kotaro. Staff who can have a romance keep
   it out of class while {{user}} is their student (their own lines say how). A new bonded NPC needs its branch and lines.
-- **Reputation** (Academy, Student, Doves; −5 to +5, tiered Rep XP; full rules in `reputation.md`) modifies bond XP: staff
+- **Reputation** (Academy, Student, Doves; −5 to +5, tiered Rep XP; full rules in `data/reputation.json`) modifies bond XP: staff
   NPCs at Academy ±3, student NPCs at Student ±3/+5, and anti-Dove NPCs react against high Doves reputation.
 
 ## 5. Bond event format
@@ -425,6 +425,9 @@ The 2026-09 pass filled every gap for Halvard students, staff, Doves, Cathedral 
 
 ## 8. Group lore files (attach only what the discussion needs)
 
+The `lore_<group>.md` files without a path are in `source_original/npc_lore_2026-09-25/` (the owner's first NPC pass); every NPC as the
+card has them now is in `planning/NPC_ROSTER.md`.
+
 - `lore_year1.md` — Halvard students — Year 1: Aiden, Caralynn, Zara, Percival, Trixie, Vera, Castor, Alyssa (~7,700 tokens)
 - `lore_year2.md` — Halvard students — Year 2: Lenna, Saffi, Kanae, Idris, Dante, Florian, Tilly (~5,700 tokens)
 - `lore_year3.md` — Halvard students — Year 3: Irene, Caspian, Etnie, Royhan, Sophia, Gareth, Ruby (~6,400 tokens)
@@ -433,9 +436,9 @@ The 2026-09 pass filled every gap for Halvard students, staff, Doves, Cathedral 
 - `source_original/npc_lore_cohort2_2026-09-26/lore_cohort2.md` — cohort 2 (arrive in campaign Year 2): Linus, Maple, Nerys, Hadrian, Wren, Tsubaki; `lore_cohort2_additions.md` beside it holds the lines they added to older NPCs' files (shown from Year 2)
 - `source_original/npc_lore_cohort3_2026-10-01/lore_cohort3.md` — cohort 3 (arrive in campaign Year 3): Aurelian, William, Bruno, Bianca, Rigel, Topaz, Faye; `lore_cohort3_additions.md` carries their lines for existing NPCs, plus Year 2 Council membership.
 - `lore_rivals.md` — Rival academy teams (Myrdath, Veyra, Ashvale): Lucius, Elion, Bellatrix, Kira, Mirelle, Theodore, Ines, Bram, Dex, Cassius, Morgana, Pip (~5,400 tokens)
-- `bond_rewards.md` — Rank 5 gift and Rank 10 benefit for every bonded NPC, plus the mask → truth and Krieg bond models
-- `reputation.md` — Academy / Student / Doves reputation: levels, Rep XP triggers, effects per level
-- `training.md` — Mana pool and Stamina training: capped gains (at most 2× the starting value in total, about one academic year to max), partner bonuses
+- `data/bond_rewards.json` — Rank 5 gift and Rank 10 benefit for every bonded NPC, plus the mask → truth and Krieg bond models
+- `data/reputation.json` — Academy / Student / Doves reputation: levels, Rep XP triggers, effects per level
+- `data/training.json` — Mana pool and Stamina training: capped gains (at most 2× the starting value in total, about one academic year to max), partner bonuses
 
 This brief: ~7,800 tokens.
 

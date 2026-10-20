@@ -34,6 +34,19 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
   tapi Notebook sudah menampilkan kalender 14 hari dan kalender penuh; kalau mau, ganti dengan info lain (mis. happening besok).
 - **Portrait Hall, Broken Statue, sumpah di Cathedral** (activity yang owner scrap 2026-09-30): tetap tanpa activity.
 
+Sisa saran audit fitur 2026-10-03 (4.5–4.10 sudah dibuat di 1.49–1.52; 4.16 ada di §4):
+- **Area baru cukup dari data** (4.1): World Competition di luar negeri, kota terdekat untuk hari Minggu, variasi Expedition Year 2/3
+  (bobot tabel lain). Syarat: tanpa kode baru di modul Area; kalau butuh kode, modulnya yang diperluas.
+- **"Cari seseorang"** (4.2): baris "Kemungkinan sekarang" plus Go here dan waktu jalan di dossier/People dari `whereabouts` (Map sudah
+  punya "Usually here"); gerbang Haunts tetap berlaku.
+- **Petunjuk hadiah di Shop** (sisa 4.3): tandai item yang diketahui disukai NPC dekat. Daftar hadiah di scene card sudah menampilkan
+  reaksi yang pernah terlihat (1.71.0).
+- **Tawar-menawar dan pasar musiman** (4.4): Fortune roll di Bazaar, Avalon, Sunreach; stok musiman dan penjual keliling dari
+  `rollTable`; harga hasil tawar dibatasi.
+- **Kompetisi lanjutan** (4.11): persiapan tim lewat sesi latihan bersama, scouting lawan, ekspektasi staf naik setelah juara.
+- **Alat UI tanpa biaya prompt** (4.12–4.15): panel kesehatan save (versi, ukuran state, error terakhir, telemetri revert dan
+  reminder), ringkasan "Sebelumnya…" saat membuka chat lama, ekspor/impor Student file, validator dan pratinjau data area dan tabel roll.
+
 - **Audit preset ke-2, tingkat 2** (owner 2026-10-04: setelah uji live tingkat 1 di 1.52.2): memangkas isi unik modul upstream,
   ±900–1.000 token: Don't Speak Like a Therapist (padatkan daftar gerakan dan REDIRECT, ±200), Monomania (tiga contoh perbaikan dan
   paragraf penutup, ±150), NPC Voice (contoh CAPS dan "grape soda", ±120), Anti-Sycophancy (padatkan prosedur, ±100), Human Vocal
@@ -45,8 +58,6 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
 - **A10** PNG kartu ±8 MB (JSON disematkan dua kali, `chara` + `ccv3`): `chara` ringkas hanya setelah kompatibilitas pembaca v2 dicek.
 
 ## 4. Keputusan yang masih menunggu owner
-- Pin dependensi MVU / mvu_zod ke commit yang sudah dites (`schema.js` dan `mvu_loader.js` memuat default branch; F12 menunjukkan
-  perubahan helper bisa diam-diam mengubah perilaku). Perlu pasangan commit yang dites di ST dulu.
 - Siklus hidup {{user}} setelah Year 3 (lulus / dikeluarkan / mengulang). Sejak 1.7.4 Year naik otomatis; payout tetap jalan. Owner:
   "biarkan dulu".
 - Siswa yang ditahan cerita (dihapus dari `Campus_State.Graduated`) tidak lulus otomatis di tahun berikutnya (roster: "repeating").

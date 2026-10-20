@@ -117,14 +117,14 @@ node tests/stress/memory_soak.cjs 3000   # 1.61.1: memory invariants and budget 
   4. Rebuild; the engine alias map and UI data regenerate.
   5. Check that `gen_engine.py`'s DENY list doesn't swallow a new name.
 - **Add a feature.**
-  0. First check it is really new and which existing system it plugs into (`docs/INDEX.md`, `src/scripts/shared.js`, DECISIONS):
+  0. First check it is really new and which existing system it plugs into (`docs/FEATURES.md`, `src/scripts/shared.js`, DECISIONS):
      seeded draws, the Agenda, whereabouts, the Area module, `ledger` / `bagTake`, practice sessions, `$ui.now`. Never build a parallel
      system next to one that exists (owner, 2026-10-04).
   1. Decide the state shape in `schema.js`. Unknown keys are stripped by Zod, so declare every field.
   2. Put engine logic in `engine.template.js`: a new `step*(c)` function in `ENGINE_STEPS`, or a block in the step it belongs to.
   3. Put AI rules in `502` (update rules, `[mvu_update]`) or `504` (narration rules, `[mvu_plot]`).
   4. Put UI in `src/ui/parts/` and add an unlock in `stepUi` (9) if the feature is conditional.
-  5. Add tests (and a row in `tests/README.md`) and update `docs/PLAYER_GUIDE.md`.
+  5. Add tests, give the feature its line in `docs/FEATURES.md` (with the `T:` suite) and update `docs/PLAYER_GUIDE.md`.
   6. Check the token cost with `token_audit.cjs`.
   7. If it should be switchable: add a row to `data/features.json` (paths it parks, its unlock), gate its rules with `<%_ if (on('id')) { _%>` in 502/504/505, hide its UI with `featureOn(S, 'id')`. `feature_cost.py` measures it on the next build.
   8. A rule needed only in some situations (1.54.0): keep one core line in 502 and put the full rule in `data/rule_cards.json` (its

@@ -51,6 +51,7 @@ underneath. The player is a first-year student. The card combines:
 CLAUDE.md, HANDOFF.md      working rules; this snapshot
 CHANGELOG.md               newest releases in detail, then a one-line index of every release
 docs/INDEX.md              task → files and symbols; engine, UI, state, entries and data maps   (read before opening code)
+docs/FEATURES.md           every feature, one line each: what it does, its code, data, toggle and tests (grep it)
 docs/DECISIONS.md          established decisions (owner approval needed to change) + verified external facts
 docs/BUILD.md              build order, generated vs hand-written files, test commands, playbooks
 docs/TEST_CHECKLIST.md     live SillyTavern checks as a campaign quest log (in-game order, "Where you are" at the top)
@@ -59,6 +60,7 @@ planning/FUTURE_PLANS.md   everything not done yet: owner plans, unchosen ideas,
 planning/NPC_BRAINSTORM_BRIEF.md   brief for designing NPCs with another AI (kept by hand)
 planning/NPC_ROSTER.md     every NPC in one file: quick table + full profiles (generated; for NPC brainstorms)
 planning/DRAFT_*.md        only while a draft awaits approval or is being applied; deleted in the release that applies it
+audit/                     owner-ordered audits (Indonesian, mostly untracked); a bare "kerjakan batch N" = memory audit-batch-plan
 source_original/           owner's lorebook v38 and NPC lore passes (canon, pipeline input, never edited)
 src/                       card sources: worldbook/ (generated lore + hand-written custom/ 500–510), scripts/, ui/, regex/, card/,
                            vectfox/ (the VectFox cleaning patterns and extraction prompt; copied to dist/)

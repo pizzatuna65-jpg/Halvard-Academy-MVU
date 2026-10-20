@@ -7,7 +7,8 @@
    tool call of any task, open and read **every** file it lists (they are short). They hold the owner's corrections, above all:
    silence = approval, never repeat an unanswered question, no obvious `[?]` questions.
 1. `HANDOFF.md` (short): snapshot, next task, what the project is, repository map.
-2. `docs/INDEX.md`: find the task, then open **only** the files and symbols it names. Grep for the symbol and read about 150 lines
+2. `docs/INDEX.md`: find the task, then open **only** the files and symbols it names. A feature idea, a recommendation or
+   "does X exist?": grep `docs/FEATURES.md` first (the whole file only when recommending features). Grep for the symbol and read about 150 lines
    around it; never read a whole large file (the engine, the UI template, CHANGELOG, TEST_CHECKLIST, lore content).
 3. Only when the task touches them: the matching section of `docs/DECISIONS.md`, `docs/BUILD.md` (build, generated files,
    playbooks), the newest `CHANGELOG.md` entry, "Where you are" and the current act of the quest log `docs/TEST_CHECKLIST.md`,
@@ -27,7 +28,8 @@ Drafts (`planning/DRAFT_*.md`) are written in Indonesian; the English text block
 - `HANDOFF.md`: replace the snapshot and "Next task" (a few lines, no history). Live-only checks go into the quest log
   `docs/TEST_CHECKLIST.md`: into the quest where the owner's campaign first gets to see them, tagged with the release (with no date:
   a Milestone or a Side quest).
-- Keep the docs current, not historical: a new engine step, file or data file gets its row in `docs/INDEX.md`; a new standing
+- Keep the docs current, not historical: a new or changed feature gets its line in `docs/FEATURES.md` (code, data, toggle,
+  `T:` suite); a new engine step, file or data file gets its row in `docs/INDEX.md`; a new standing
   decision gets one or two lines in `docs/DECISIONS.md`; a draft applied in this release is **deleted** and anything it left open
   moves to `planning/FUTURE_PLANS.md`; a plan that is done is removed from `FUTURE_PLANS.md`.
 - Commit the release (local git, no remote).
