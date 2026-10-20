@@ -12,6 +12,7 @@ const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 // are people being talked to or about. MENTION_DENY: first names that are also ordinary words; at a sentence start they are no mention.
 const CAST_FULL = 4;
 const KNOWS_VISIBLE = 15, IMPRINT_MAX = 5, DEFINING_MAX = 5, NEXT_RANK = 3, MEANWHILE_RANK = 7;   // 1.6.0 (Batch C)
+const APART_RANK = 2, APART_DAYS = 7, ASK_RANK = 3, ASK_DAYS = 10;   // 1.73.0: time apart (stepBondMemory), asking after (stepAgenda)
 const CHANGE = /*@@CHANGE@@*/{};   // 1.6.0 (N2): fixed | shaped | fluid per NPC (data/npc_canon.json; empty until the canon waves)
 // 1.6.8 (owner): which Rank 8 branches each NPC allows (data/npc_canon.json branch): A all, B best friend or rival, C best friend
 // or romance, D best friend only. An NPC with no entry (a new one) allows all three until its canon says otherwise.
@@ -3078,6 +3079,7 @@ function stepBonds(c) {
     b.$b8 = b0 ? String(b0.$b8 || '') : '';
     if (!b.$branch && b0 && b0.Rank >= 8) b.$branch = b0.Romance ? 'romance' : /rival/i.test(String(b0.Title || '')) ? 'rival' : 'friend';   // saves from before 1.6.8
     b.$Knows_old = b0 ? [...(b0.$Knows_old || [])] : [...(b.$Knows_old || [])]; b.$seen = b0 ? num(b0.$seen, -1) : num(b.$seen, -1); b.$mw = b0 ? num(b0.$mw, -1) : num(b.$mw, -1);
+    b.$apart = b0 ? num(b0.$apart, 0) : 0; b.$apartd = b0 ? num(b0.$apartd, -1) : -1;   // 1.73.0 engine-owned (stepBondMemory)
     const acts = [...(byId[id] || [])], rank0 = b0 ? b0.Rank : b.Rank, tw0 = num(b.Tension, 0), trw0 = num(b.Trust, 50);
     let rankTrust = 0;
     // 1.4.3: a new bond starts at the character's own Trust (owner: start by category). 1.6.11 (owner playtest: Trixie met for the
@@ -3468,6 +3470,10 @@ function stepBondMemory(c) {
         b.$Recent = [...b.$Recent, { w: String(nx.Until || stamp(S.World)), n: `(Off-screen) ${nx.What}${nx.Where ? ' (' + nx.Where + ')' : ''}.`, fx: '' }].slice(-num((BR.recent || {}).keep, 10)); nx = null;
       }
       b.Next = nx;
+      // 1.73.0: time apart. A Rank APART_RANK+ character who comes back into the scene after APART_DAYS+ days unseen carries the
+      // gap ($apart days, nowOf's "Apart" line) for the rest of that day's scene; it ends when they leave or the day changes
+      if (hasB && presentIds.has(id) && !wasHere.has(id) && b.Rank >= APART_RANK && b.$seen >= 0 && dayNo - b.$seen >= APART_DAYS) { b.$apart = dayNo - b.$seen; b.$apartd = dayNo; }
+      else if (!presentIds.has(id) || b.$apartd !== dayNo) { b.$apart = 0; b.$apartd = -1; }
       // Meanwhile
       if (presentIds.has(id)) b.$seen = dayNo;
       const wk = Math.floor(dayNo / 7);
@@ -5160,7 +5166,7 @@ function stepAgenda(c) {
   const first = !_.isPlainObject(A.st), st0 = first ? {} : A.st, st = {};
   const Y = S.World.Year || 1, dayLabel = n => { const T = fromAbs(n * DAY_MIN); return `${T.Year !== Y ? `Y${T.Year} ` : ''}M${T.Month} W${T.Week} ${T.Day}`; };
   const turned = (id, s) => { st[id] = s; return !first && !!s && st0[id] !== s; };   // the first run after an update only records
-  const items = [];
+  const items = [], cur = {};   // 1.73.0: cur = {{user}}'s dated matters now, for asking after
   const put = (k, t, abs, s, extra) => {
     if (abs < 0) return;
     const n = Math.floor(abs / DAY_MIN), d = n - dayNo, tm = fromAbs(abs).Time;
@@ -5169,6 +5175,7 @@ function stepAgenda(c) {
   for (const [k, cm] of Object.entries(S.Commitments || {})) {
     const abs = num(cm.$abs, -1), s = agendaState(abs, absA, 'commitment');
     put('commitment', k, abs, s, cm.With ? { w: cm.With } : {});
+    if (abs >= 0) cur['c:' + k] = [k, abs, cm.With];
     if (turned('c:' + k, s) && s === 'overdue') { log.push(`"${k}" is overdue (was due ${cm.Due}${cm.With ? `, with ${cm.With}` : ''}): resolve it in the story, then remove it.`); S.$ui.toasts.push(`Overdue: ${k}`); }
   }
   for (const [k, hk] of Object.entries(S.Hooks || {}))
@@ -5176,6 +5183,7 @@ function stepAgenda(c) {
   for (const [k, pj] of Object.entries(S.Projects || {})) {
     const p = num(pj.Progress, 0), abs = at('p:' + k, p < 100 ? pj.Due : '', p < 100 ? pj : null, 'Due'), s = agendaState(abs, absA, 'project');
     put('project', `${k} due`, abs, s, pj.With ? { w: pj.With } : {});
+    if (abs >= 0) cur['p:' + k] = [`${k} (a project)`, abs, pj.With]; else if (p >= 100) cur['p:' + k] = [`${k} (a project)`, -2, pj.With];   // -2: handed in
     if (!turned('p:' + k, s)) continue;
     if (s === 'due') log.push(`Project "${k}" is due ${whenText(abs, absA)} (Progress ${p}%).`);
     if (s === 'overdue') { log.push(`Project "${k}" was due ${pj.Due} and is not finished (Progress ${p}%): hand it in late, ask for more time, or drop it in the story.`); S.$ui.toasts.push(`Overdue: ${k}`); }
@@ -5202,8 +5210,50 @@ function stepAgenda(c) {
   const KO = ['event', 'birthday', 'commitment', 'project', 'notice', 'letter', 'note'];
   S.$ui.agenda = _.sortBy(items, [x => x.d, x => x.at || '99', x => KO.indexOf(x.k)]);
   A.st = st;
+  askAfter(c, A, cur, dayLabel);
   if (_.isPlainObject(A.when)) for (const id of Object.keys(A.when))
     if ((id.startsWith('n:') && !((S.Bonds || {})[id.slice(2)] || {}).Next) || (id.startsWith('p:') && !(S.Projects || {})[id.slice(2)])) delete A.when[id];
+}
+
+// 1.73.0: asking after. A Commitment or Project of {{user}}'s that appears while characters are in the scene is something they
+// heard about (A.ask: key -> { t, due, h: who heard, end, a: day each was shown it }). It ends once its time has passed, or when it
+// leaves the record on or after its day (a project also when handed in); whoever is in the scene then saw it. Each of the others, at
+// Rank ASK_RANK+ and not the one it was with, may ask how it went in the first scene they share with {{user}} within ASK_DAYS: the
+// line stays for that day's scene, then is spent. Gone before its day (cancelled, or done early): nobody asks. One line a person.
+function askAfter(c, A, cur, dayLabel) {
+  const { S, absA, dayNo, OFF, canon } = c;
+  const first = !_.isPlainObject(A.ask), AK = A.ask = first ? {} : A.ask;   // the first run (an older save) records, nobody heard
+  const PRS = Object.keys(S.Scene.Present || {}).filter(id => S.Bonds[id]);
+  for (const [key, [t, due, w]] of Object.entries(cur)) {
+    const x = AK[key];
+    if (!x) {
+      if (due === -2) continue;
+      const ws = String(w || '').split(/\s*(?:,|&|\band\b)\s*/).filter(Boolean).map(canon);
+      AK[key] = { t, due, h: first ? [] : PRS.filter(id => !ws.includes(id)), end: -1, a: {} };
+    } else if (x.end < 0 && due >= 0) x.due = due;
+  }
+  const asks = {};
+  for (const key of Object.keys(AK).sort((a, b) => num(AK[b].end, -1) - num(AK[a].end, -1))) {
+    const x = AK[key];
+    if (num(x.end, -1) < 0) {
+      const gone = !(key in cur) || cur[key][1] === -2;
+      if (gone && !(cur[key] && cur[key][1] === -2) && Math.floor(num(x.due, 0) / DAY_MIN) > dayNo) { delete AK[key]; continue; }
+      if (!gone && absA < num(x.due, 0)) continue;
+      x.end = dayNo; x.h = (x.h || []).filter(id => !PRS.includes(id));   // those there when it happened saw it
+    }
+    if (dayNo - x.end > ASK_DAYS) { delete AK[key]; continue; }
+    if (!_.isPlainObject(x.a)) x.a = {};
+    if (!OFF.has('npc_initiative')) x.h = x.h.filter(id => {
+      const b = S.Bonds[id], here = PRS.includes(id);
+      if (!b) return false;
+      if (x.a[id] == null) { if (!here || b.Rank < ASK_RANK || asks[id]) return true; x.a[id] = dayNo; }
+      else if (!here || x.a[id] !== dayNo) return false;
+      if (!asks[id]) asks[id] = `Knew about {{user}}'s "${x.t}" (${dayLabel(Math.floor(num(x.due, 0) / DAY_MIN))}) and has not heard how it went: may ask, if that is like them.`;
+      return true;
+    });
+    if (!x.h.length) delete AK[key];
+  }
+  S.$ui.asks = asks;
 }
 
 // ---- 8g2. 1.50.0 (feature batch 2, audit 4.5), before the Journal is written (8h): the routine week. A player-tool patch with $ui.plan.run arms it: the span and its
@@ -5432,6 +5482,10 @@ function nowOf(S, moodsFull) {
   })()));
   PRES.filter(id => BONDS[id] && (BONDS[id].$Recent || []).length).forEach(id => put(id, 'Recent with {{user}} (newest first): ' + BONDS[id].$Recent.slice(-(BOND.recent_now || 3)).reverse()
     .map(r => { const f = fxWords(r.fx); return '[' + aged(r.w) + '] ' + r.n + (f ? ' (' + f + ')' : ''); }).join(' | ')));
+  // 1.73.0: back after time apart (stepBondMemory, $apart) and what they may ask after (stepAgenda, $ui.asks)
+  PRES.filter(id => BONDS[id] && Number(BONDS[id].$apart) > 0).forEach(id => { const n = Number(BONDS[id].$apart);
+    put(id, 'Apart: last saw {{user}} ' + (n >= 14 ? Math.round(n / 7) + ' weeks' : n + ' days') + ' ago. The time apart is real to them; whether and how it shows is up to them, in character.'); });
+  PRES.filter(id => (UI.asks || {})[id]).forEach(id => put(id, UI.asks[id]));
   // 1.4.4 (owner): how each present character takes teasing and play-fighting (tension category or override: banter)
   PRES.filter(id => BONDS[id]).forEach(id => { const o = (TEN.overrides || {})[id], P = (o && o.banter) ? o : (TEN.categories || {})[(TEN.npcs || {})[id]]; if (P && P.banter) put(id, 'Teasing: ' + P.banter + '.'); });
   // 1.56.0 (U2): the bond cues that were separate <now> lines join the block (the rule never to announce ranks is said once, in 504)

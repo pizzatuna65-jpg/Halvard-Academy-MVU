@@ -202,6 +202,7 @@ export const Schema = z.object({
     $Knows_q: Math.round(n(v.$Knows_q, 0, 100, 0)),   // 1.63.0 (memory audit M5): how many of the newest $Knows_old lines wait for a fold (engine)
     $Defining: Array.isArray(v.$Defining) ? v.$Defining.filter(r => r && typeof r === 'object').map(r => ({ w: s(r.w), n: s(r.n), fx: s(r.fx), s: Number(r.s) || 0 })).slice(-5) : [],   // defining moments (engine)
     $seen: n(v.$seen, -1, 1e9, -1), $mw: n(v.$mw, -1, 1e9, -1),   // last day present; week of the last "Meanwhile" line (engine)
+    $apart: n(v.$apart, 0, 1e5, 0), $apartd: n(v.$apartd, -1, 1e9, -1),   // 1.73.0: days apart before this scene, and its day (engine)
     $gifts: v.$gifts && typeof v.$gifts === 'object' && !Array.isArray(v.$gifts) ? Object.fromEntries(Object.entries(v.$gifts).slice(-24).map(([k,t]) => [k, ['loved','liked','neutral','disliked','hated'].includes(t) ? t : 'neutral'])) : {},
     $branch: ['friend', 'romance', 'rival'].includes(v.$branch) ? v.$branch : '',   // 1.6.8: the branch the bond took at Rank 8 (engine)
     $met: s(v.$met), $b8: s(v.$b8),   // 1.72.0: the day they met, the day of Rank 8 ("Y1 M1 W1 Mon"; engine)
@@ -410,6 +411,7 @@ export const Schema = z.object({
     craft_sale: z.any().prefault(null).catch(null),                // 1.28.0: Apothecary's remaining weekly buying capacity
     mastery: z.any().prefault(null).catch(null),                   // 1.30.0: Rank 5 stats and whether the week's lead is open here
     prof_offer: Bool(false),
+    asks: z.record(z.string(), z.string()).prefault({}).catch({}),   // 1.73.0: what a present character may ask after (engine, stepAgenda)
     since: z.any().prefault([]).catch([]), maybe: z.any().prefault([]).catch([]),   // 1.6.0 (N4): Next plans met again / that may bring someone here (engine)
     now: z.any().prefault(null).catch(null),                          // 1.48.0 (audit 3.11): <now>'s engine-made lines (stepNow; 1.47.0's $ui.here is in now.pres)
     xold: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.6.1 (N5): Extras records that left the full list; given back if they return (engine)

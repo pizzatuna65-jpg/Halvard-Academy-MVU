@@ -286,6 +286,11 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
       reason [1.50].
 
 ### Q3.3 Letters, projects, appointments, rumours
+- [ ] Arrange something with one person while a Rank 3+ friend is in the scene (a duel, a date, an exam to sit), then let its day
+      pass without that friend. The next time the friend is with Charles (within 10 days), their Cast Sheet has "Knew about {{user}}'s
+      "…" (…) and has not heard how it went: may ask, if that is like them."; the next day it is gone [1.73].
+- [ ] A Rank 2+ person Charles has not seen for a week or more walks back in: their Cast Sheet has "Apart: last saw {{user}} N days
+      ago…", and the narrator lets it show (or not) in their own way, never as a report [1.73].
 - [ ] At the Mail Tower, write a letter home: the update records it, a week later a reply waits at the Mail Tower, and any parcel lands in
       the Bag or the Wallet [1.31, 1.54].
 - [ ] A Project with a Due date: the day before, the Log reminds once and `<now>` lists it under "Due soon" [1.44].
