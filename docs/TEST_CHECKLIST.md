@@ -74,8 +74,10 @@ it. *Update*: the folded block MVU appends under the reply. *Log*: Student file 
       "Every reply ends with the <UpdateVariable> block", which reaches the story request: 1.67.2 makes it conditional. The update
       model wrote Time 08:38 → 08:45 (a recalled VectFox event's time); the engine kept the clock at 10:10. 1.67.2: 503 says the old
       time is World.Time and `<VectFoxMemory>` is the past.
-- [ ] One request a turn (1.69): no "parsing" notice; each reply ends with exactly one `<UpdateVariable>` block after the story and
+- [x] One request a turn (1.69): no "parsing" notice; each reply ends with exactly one `<UpdateVariable>` block after the story and
       the thoughts block, the bracelet refreshes, and the clock moves on from the state's time [1.69, 1.67.2].
+      ✓ new chat 2026-10-20 22:07, msg 4 (Gemini 4 Argon): one request of 33,654 in / 1,388 out, against 27,204 + 17,949 in and
+      1,207 + 201 out for the two requests on 1.68 (about −25% input); one block, 07:30 → 08:09, the Gist written.
 - [ ] The narrator writes the folds and the gist when `<now>` asks, and the prose never mentions them [1.69, 1.63, 1.66].
 - [ ] No "Engine error" line in the Log and no `[Eldrasil engine]` error in the console. If one ever appears: the toast "Engine error",
       the state unchanged, and a swipe works [1.20, 1.16.1].
