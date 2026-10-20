@@ -33,6 +33,49 @@ const scenePic = (id, S, cls) => {
   return src ? `<img class="${cls}" src="${esc(imgURL(src))}" alt="" style="${pos}" data-fb="${esc(label)}">` : `<span class="${cls} fb">${esc(label)}</span>`;
 };
 
+// 1.71.0 (owner, mockup v2): actions, each the doorway to a system the engine already runs for THIS person, here, now. A button
+// only drafts the action into the chat box (D3/D6: the UI never moves the story); the engine settles it with its own limits, and
+// the narrator plays the answer in character. Nothing shows that cannot work now (another dorm's spar, a rank not reached).
+function sceneActions(id, S) {
+  const n = npcOf(id), b = (S.Bonds || {})[id]; if (!n || !b) return '';
+  const W = S.World || {}, P = (S.Player || {}).Profile || {}, staff = n.g === 'Staff';
+  const nm = knowsName(id, S) ? id : 'the ' + (n.r || n.d.charAt(0).toLowerCase() + n.d.slice(1));
+  const his = n.gn === 'F' ? 'her' : n.gn === 'M' ? 'his' : 'their';
+  const btn = (label, small, text, cls) => `<button type="button" class="act${cls ? ' ' + cls : ''}" data-eld-fill="${esc(text)}">${esc(label)}${small ? ` <small>${esc(small)}</small>` : ''}</button>`;
+  const out = [];
+  // a favour this person asked of {{user}} (Commitment Type "favour", 1.49.0): kept = a help deed
+  Object.entries(S.Commitments || {}).filter(([, c]) => c && c.Type === 'favour' && sceneIdOf(c.With || '', [id]) === id)
+    .forEach(([k, c]) => out.push(btn(`Do ${nm}'s favour`, `"${k}"${c.Due ? ' · due ' + c.Due : ''}`, `I take care of ${nm}'s favour, "${k}": `)));
+  // Practice with a partner at this place (data/practice.json; the engine's live list says what is still open today)
+  const here = locIdOf(W.Location), live = (S.$ui || {}).practice || [];
+  (DATA.practice || []).filter(a => a.partner && a.loc === here).forEach(a => {
+    const l = live.find(x => x.action === a.action); if (!l || l.locked) return;
+    if (a.dorm && n.dm !== P.Dorm && !/Training Week/i.test(W._Event_today || '')) return;   // sparring: the same dorm (engine rule)
+    const place = DATA.locs[a.loc].name, stat = a.stat === 'subject' ? 'a subject' : a.stat;
+    const label = /a partner/.test(a.action) ? a.action.replace('a partner', nm) : `${a.action}, with ${nm}`;
+    out.push(btn(label, `${stat} +${a.xp}`, a.stat === 'subject' ? `I ask ${nm} to join me at ${place} for ${a.action.toLowerCase()} on [subject]: ` : `I ask ${nm} to join me at ${place} and ${a.action.toLowerCase().replace('a partner', nm)}: `));
+  });
+  // Rank 4: this person's own training tracks (data/rank4_partners.json, +25% a session)
+  if (b.Rank >= 4) rank4For(id).forEach(t => out.push(t === 'study' ? btn('Study together', '+25%', `I ask ${nm} to study with me: `)
+    : btn(`${t === 'mana' ? 'Mana' : 'Stamina'} training`, '+25%', `I ask ${nm} to join me for a ${t} training session: `)));
+  if (b.Rank >= 2) out.push(btn(`Invite ${nm}`, '+1 XP, first each week', `I invite ${nm} to `));
+  const bag = Object.keys(S.Inventory || {});
+  if (bag.length) {
+    const G = b.$gifts || {};
+    out.push(`<span class="gift"><button type="button" class="act" data-eld-gift="1" aria-haspopup="menu">Give a gift ▾</button><span class="pop" role="menu"><span class="h">From your Bag${Object.keys(G).length ? ` · what you know ${nm} thinks` : ''}</span>${bag.map(item =>
+      `<button type="button" role="menuitem" data-eld-fill="${esc(`I give ${nm} the ${item}: `)}">${esc(item)}${(S.Inventory[item] || {}).Qty > 1 ? ` ×${S.Inventory[item].Qty}` : ''}<span class="t ${esc(G[item] || '')}">${esc(G[item] || 'not tried')}</span></button>`).join('')}</span></span>`);
+  }
+  if (b.Rank >= 5) out.push(btn(`Help with ${his} goal`, 'Rank 5', `I offer to help ${nm} with ${his} goal: `));
+  if (b.Rank >= 6) out.push(btn(`Meet ${his} friends`, 'Rank 6', `I ask ${nm} to introduce me to one of ${his} friends: `));
+  if (b.Rank >= 7) {
+    if (staff) out.push(btn(`Visit ${nm} at work`, 'Rank 7', `I drop by to see ${nm} at work: `));
+    else if (n.dm && n.dm !== P.Dorm) out.push(btn(`Visit the ${n.dm} Dormitory`, 'Rank 7', `I ask ${nm} to take me inside the ${n.dm} Dormitory: `));
+  }
+  // an apology eases Tension (once a day, by the person's category); from Friction up
+  if (!TEND.lock.includes(id) && num(b.Tension) >= ((TEND.bands || [])[1] || [20])[0]) out.push(btn('Make amends', `Tension: ${tensionBand(b.Tension)}`, `I apologise to ${nm}: `, 'soft'));
+  return out.length ? `<div class="acts">${out.join('')}</div>` : '';
+}
+
 function sceneCard(id, v, th, S, hasBlock) {
   const n = npcOf(id), b = (S.Bonds || {})[id], ui = S.$ui || {}, known = !n || knowsName(id, S);
   const sub = !n ? 'Invented character' : known ? (b && b.Title) || publicRole(id, S) || whoLine(id, S) : whoLine(id, S);
@@ -48,7 +91,7 @@ function sceneCard(id, v, th, S, hasBlock) {
     : `<button type="button" class="dos" data-eld-keep="${esc(id)}" title="${pin ? 'Let them leave the record of invented characters' : 'Keep them in the record of invented characters'}">${pin ? 'Let go' : 'Keep in record'}</button>`;
   return `<section class="sc" style="--ring:${n ? n.dc : '#4a546c'}" aria-label="${esc(known ? nameOf(id, S, true) : 'Someone you have not met')}">
     <div class="pic">${scenePic(id, S, 'portrait')}<div class="cap"><div class="nm">${esc(n ? (known ? n.n : nameOf(id, S, true)) : id)}</div><div class="rl">${esc(sub)}</div></div></div>
-    <div class="th">${note}${thought}</div>
+    <div class="th">${note}${thought}${sceneActions(id, S)}</div>
     <div class="st">${stats}${act}</div></section>`;
 }
 
@@ -70,15 +113,15 @@ function sceneHTML(S, text) {
 
 const SCENE_CSS = `
 .eld-scene{--sheet:#1c2230;--well:#10141d;--card:#242b3b;--rule:#353e52;--rule2:#4a546c;--brass:#c9a364;--brass-hi:#ecd49f;--brass-lo:#7d5f34;
-  --moon:#a3e6db;--ink:#ece7db;--ink2:#c3beb2;--ink3:#aaa69b;--head:#f3e8cf;--good:#8fd0b4;
+  --moon:#a3e6db;--ink:#ece7db;--ink2:#c3beb2;--ink3:#aaa69b;--head:#f3e8cf;--good:#8fd0b4;--warn:#f0bd78;--rom:#f2b6cb;
   --f-ui:"Alegreya Sans",system-ui,sans-serif;--f-text:"Alegreya",Georgia,serif;--f-sc:"Alegreya SC","Alegreya",Georgia,serif;
   container-type:inline-size;display:flex;flex-direction:column;gap:10px;margin:14px 0 8px;font-family:var(--f-ui);font-size:15px;line-height:1.45;color:var(--ink);text-align:left}
 .eld-scene *{box-sizing:border-box}
 .eld-scene .hd{display:flex;align-items:center;gap:10px;font-family:var(--f-sc);font-size:13px;letter-spacing:.1em;color:var(--brass);text-transform:lowercase}
 .eld-scene .hd::before,.eld-scene .hd::after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,var(--brass-lo),transparent)}
 .eld-scene .sc{--ring:#4a546c;display:grid;grid-template-columns:minmax(140px,190px) minmax(0,1fr) 205px;grid-template-areas:"pic th st";
-  background:linear-gradient(180deg,color-mix(in srgb,var(--ring) 9%,var(--sheet)),var(--sheet) 55%);border:1px solid var(--rule);border-radius:14px;overflow:hidden}
-.eld-scene .pic{grid-area:pic;position:relative;aspect-ratio:2/3;max-width:100%;background:var(--well);box-shadow:inset -1px 0 0 var(--rule)}
+  background:linear-gradient(180deg,color-mix(in srgb,var(--ring) 9%,var(--sheet)),var(--sheet) 55%);border:1px solid var(--rule);border-radius:14px}
+.eld-scene .pic{grid-area:pic;position:relative;aspect-ratio:2/3;max-width:100%;background:var(--well);box-shadow:inset -1px 0 0 var(--rule);border-radius:13px 0 0 13px;overflow:hidden}
 .eld-scene .pic .portrait{display:block;width:100%;height:100%;margin:0;border:0;border-radius:0;max-width:none;object-fit:cover;object-position:50% 20%}
 .eld-scene .pic .portrait.fb{display:grid;place-items:center;font-family:var(--f-text);font-size:56px;color:var(--rule2);background:radial-gradient(circle at 50% 38%,#2a2f3b,var(--well) 70%)}
 .eld-scene .pic::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ring) 55%,transparent);pointer-events:none}
@@ -94,7 +137,7 @@ const SCENE_CSS = `
   font-family:var(--f-text);font-style:italic;font-size:16.5px;line-height:1.6;color:var(--ink);display:flex;flex-direction:column;gap:6px}
 .eld-scene .thought p{margin:0}
 .eld-scene .none{color:var(--ink3);font-style:italic;font-size:14px}
-.eld-scene .st{grid-area:st;padding:16px 16px 14px;border-left:1px solid var(--rule);display:flex;flex-direction:column;gap:11px;background:rgba(16,20,29,.35)}
+.eld-scene .st{grid-area:st;padding:16px 16px 14px;border-left:1px solid var(--rule);display:flex;flex-direction:column;gap:11px;background:rgba(16,20,29,.35);border-radius:0 13px 13px 0}
 .eld-scene .top{display:flex;align-items:center;gap:10px}
 .eld-scene .medal{width:44px;height:44px;flex:none;border-radius:50%;display:grid;place-items:center;font-family:var(--f-text);font-weight:700;font-size:20px;line-height:1;color:var(--brass-hi);font-variant-numeric:lining-nums;
   background:radial-gradient(circle at 35% 28%,color-mix(in srgb,var(--brass) 30%,var(--card)) 0%,var(--card) 70%);box-shadow:inset 0 0 0 1.5px var(--brass),inset 0 0 0 4px var(--card),inset 0 0 0 5px var(--brass-lo)}
@@ -113,6 +156,22 @@ const SCENE_CSS = `
 .eld-scene .dos{margin-top:auto;align-self:flex-start;font-size:13px;color:var(--brass-hi);background:transparent;border:1px solid var(--brass-lo);border-radius:8px;padding:4px 12px}
 .eld-scene .dos:hover{background:color-mix(in srgb,var(--brass) 12%,transparent)}
 .eld-scene button:focus-visible{outline:2px solid var(--moon);outline-offset:2px}
+.eld-scene .acts{margin-top:auto;display:flex;flex-wrap:wrap;gap:6px;padding-top:12px;border-top:1px solid rgba(53,62,82,.7)}
+.eld-scene .act{display:inline-flex;align-items:baseline;gap:6px;font-size:13.5px;line-height:1.3;color:var(--brass-hi);background:color-mix(in srgb,var(--brass) 6%,transparent);
+  border:1px solid var(--brass-lo);border-radius:8px;padding:4px 11px;text-align:left}
+.eld-scene .act small{font-size:11.5px;color:var(--ink3)}
+.eld-scene .act:hover{background:color-mix(in srgb,var(--brass) 14%,transparent)}
+.eld-scene .act.soft{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 50%,transparent);background:transparent}
+.eld-scene .gift{position:relative;display:inline-block}
+.eld-scene .pop{display:none;position:absolute;left:0;bottom:calc(100% + 6px);z-index:5;width:270px;max-width:75vw;max-height:260px;overflow-y:auto;background:var(--card);
+  border:1px solid var(--brass-lo);border-radius:10px;padding:6px;box-shadow:0 14px 30px rgba(0,0,0,.45)}
+.eld-scene .gift.open .pop{display:block}
+.eld-scene .pop .h{display:block;font-size:12px;color:var(--ink3);padding:4px 8px 6px;border-bottom:1px solid var(--rule)}
+.eld-scene .pop button{display:flex;width:100%;justify-content:space-between;align-items:center;gap:8px;font-size:13.5px;color:var(--ink);background:none;border:0;border-radius:6px;padding:6px 8px;text-align:left}
+.eld-scene .pop button:hover{background:rgba(255,255,255,.05)}
+.eld-scene .pop .t{font-size:11.5px;border-radius:99px;padding:0 7px;border:1px solid var(--rule2);color:var(--ink3);white-space:nowrap}
+.eld-scene .pop .t.loved{color:var(--rom);border-color:var(--rom)}.eld-scene .pop .t.liked{color:var(--good);border-color:var(--good)}
+.eld-scene .pop .t.disliked,.eld-scene .pop .t.hated{color:var(--warn);border-color:var(--warn)}
 .eld-scene .face{width:38px;height:38px;flex:none;border-radius:50%;margin:0;border:0;max-width:none;object-fit:cover;object-position:50% 25%;background:var(--well);
   box-shadow:0 0 0 2px var(--sheet),0 0 0 3.5px var(--ring,var(--rule2));display:grid;place-items:center;font-weight:700;font-size:13px;color:var(--ink2)}
 .eld-scene .also{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:8px 12px;border:1px solid var(--rule);border-radius:12px;background:rgba(28,34,48,.7)}
@@ -127,6 +186,7 @@ const SCENE_CSS = `
   .eld-scene .sc{grid-template-columns:118px minmax(0,1fr);grid-template-areas:"pic st" "th th"}
   .eld-scene .st{border-left:0;background:transparent;padding:12px 12px 10px;gap:9px}
   .eld-scene .th{border-top:1px solid var(--rule);padding:12px 14px}
+  .eld-scene .pic{border-radius:13px 0 0 0}
   .eld-scene .cap{padding:24px 8px 7px}.eld-scene .nm{font-size:15px}.eld-scene .rl{display:none}
   .eld-scene .thought{font-size:15.5px}
   .eld-scene .dos{margin-top:2px}
@@ -180,7 +240,11 @@ function sceneRender() {
 const sceneBoot = _.debounce(sceneRender, 250);
 // one listener on SillyTavern's document: the cards are rebuilt often, so nothing is bound to them
 function sceneClick(e) {
-  const b = e.target.closest && e.target.closest('.eld-scene button'); if (!b) return;
+  const b = e.target.closest && e.target.closest('.eld-scene button');
+  PD.querySelectorAll('.eld-scene .gift.open').forEach(g => { if (!b || !g.contains(b)) g.classList.remove('open'); });   // any click closes an open gift list
+  if (!b) return;
+  if (b.dataset.eldGift) { b.parentNode.classList.toggle('open'); return; }
+  if (b.dataset.eldFill) { b.closest('.gift') && b.closest('.gift').classList.remove('open'); fillChat(b.dataset.eldFill); return; }
   if (b.dataset.eldOpen) open(b.dataset.eldOpen);
   else if (b.dataset.eldKeep) toggleKeep(b.dataset.eldKeep);
 }

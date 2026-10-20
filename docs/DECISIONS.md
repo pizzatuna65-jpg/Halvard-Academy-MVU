@@ -166,6 +166,11 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **Scene cards** (1.70.0, owner): who is here shows as cards under the newest reply (full portrait, true thoughts, bond meters),
   written by the UI script into the message; the bracelet's portrait strip shows only without that script. The thoughts are read
   from the preset's optional `<npc_thoughts>` block; the cards never need it (the card works with any preset).
+- **Scene card actions** (1.71.0, owner): every button on a scene card is a system the engine already runs for that person and
+  shows only when it can work now (practice partner here, own Rank 4 tracks, Rank 2/5/6/7 perks, gifts from the Bag, an open favour,
+  amends from Friction); no generic "talk" button, no "next rank" teaser. Buttons only draft chat text (D3/D6).
+- **Other dorms off the campus map** (1.71.0, owner; extends "Gated places"): once {{user}} has a dorm, another dorm's pin shows only
+  on its Dorm Day or while {{user}} is inside it. UI only; the narrator still knows every place.
 - **Gated places** (1.24.0, 1.24.1, owner; 1.30.1 owner playtest): far-grounds places show on the Map only while {{user}} is in
   their area, at the place that leads to them or another place behind the same gate, and hide again back on the main grounds
   (`curate_data.py` `GATES`: Willow Island and Fishing House ← Boathouse, Forest Clearing ← Forest, Observation Tower and Old Hut ←

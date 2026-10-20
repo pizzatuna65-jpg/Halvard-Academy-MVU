@@ -22,6 +22,9 @@ body{margin:0;font-family:var(--f-ui);color:var(--ink);font-size:14px;line-heigh
   border:1px solid var(--brass-lo);box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 -2px 0 rgba(0,0,0,.22)}
 .band::before{content:"";position:absolute;left:20px;right:20px;top:-1px;height:3px;border-radius:0 0 3px 3px;background:var(--dorm);box-shadow:0 0 10px color-mix(in srgb,var(--dorm) 70%,transparent)}
 .band.stale{display:none}
+/* 1.71.0 (owner): a brass rule between the bracelet and the story, the same line the scene cards open with */
+.sep{height:1px;margin:14px 0 4px;background:linear-gradient(90deg,transparent,var(--brass-lo),transparent)}
+.band.stale+.sep{display:none}
 .top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px}
 .glass{position:relative;min-width:0;margin:3px;border-radius:12px;padding:9px 13px 10px;
   background:radial-gradient(130% 150% at 12% 0%,var(--glass-hi) 0%,var(--glass) 55%,var(--glass-lo) 100%);
@@ -100,6 +103,7 @@ button.chip{font:inherit;font-size:13px;cursor:pointer}button.chip:hover{filter:
 </head>
 <body>
 <div class="band" id="band"><div class="waiting">Syncing the bracelet…</div></div>
+<div class="sep" aria-hidden="true"></div>
 <script>
 (function(){
   const PH = '<Status' + 'PlaceHolderImpl/>';

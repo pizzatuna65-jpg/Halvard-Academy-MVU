@@ -91,7 +91,7 @@ CAST = {}
 for nid, n in npcs.items():
     first = nid
     DATA['npcs'][nid] = {'n': n['name'], 'g': n.get('group') or '', 'y': n.get('year') or 0, 'a': n.get('arrives', 1), 'dm': n.get('dorm') or '',
-        'dc': n.get('dorm_color') or '#6b6b7b', 'd': descriptor(nid, n), 'r': PUBLIC_ROLE.get(nid, ''),
+        'gn': n.get('gender') or '', 'dc': n.get('dorm_color') or '#6b6b7b', 'd': descriptor(nid, n), 'r': PUBLIC_ROLE.get(nid, ''),
         'p': n['portrait'], 't': n['thumb'], 'fc': n.get('focus') or [50, 25],
         'fl': [[f['label'], f['text'], f['rank']] + ([f['year']] if f.get('year') else []) for f in n['fields']]}   # 1.7.0: [3] = shown from that campaign year
     # 1.52.0 (feature batch 4): the weekly routine as a dossier field right after Haunts, opened with it

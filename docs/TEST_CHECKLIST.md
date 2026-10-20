@@ -43,7 +43,7 @@ it. *Update*: the folded block MVU appends under the reply. *Log*: Student file 
 ## Act 0 — Before the next reply (once)
 
 ### Q0.1 Update everything
-- [ ] Update the card to 1.70 (`dist/Eldrasil_Halvard.png`) and accept the lorebook update: the popup does not ask for a new chat
+- [ ] Update the card to 1.71 (`dist/Eldrasil_Halvard.png`) and accept the lorebook update: the popup does not ask for a new chat
       [1.11.1], the bracelet shows no "old lorebook" warning, and the MVU panel shows the card's settings as overriding [basics].
 - [ ] MVU → character-card settings shows **Variable update method = Alongside AI output** (one model, one
       request a turn) [1.69].
@@ -123,6 +123,10 @@ show the newcomers their dorm rooms.
       phone the portrait sits beside the stats with the thoughts below [1.70].
 - [ ] Someone not yet named shows their role, not their name; a passer-by has "Keep in record"; with four or more present, three
       cards and an "also here" row; a thought about someone absent is an "elsewhere" line [1.70].
+- [ ] A brass rule sits between the bracelet and the story [1.71].
+- [ ] Card actions: no generic buttons; Kanae and Zara get only what their rank and this place open (at Rank 0 usually just Give a
+      gift, which lists the Bag with "not tried"). A button only fills the chat box; edit and send, and the engine counts it as usual [1.71].
+- [ ] Map: as a Fire student, the Sky, Light and Viridian Dormitory pins are gone; the Fire Dormitory and everything else shows [1.71].
 - [ ] `<now>` has the "Entrance tour assignment (keep these same people through 18:00)" line and `<campus_rules>` the Entrance lines;
       the same three stay together through several places and a swipe. From Tuesday both are gone [1.9.2, 1.11].
 - [ ] A clear sky all day (an event day) and the Notice Board forecast agrees; an ordinary day after it can rain again [1.30.3].
@@ -292,6 +296,8 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
       rumour)", and the narrator treats it as unconfirmed [1.44].
 
 ### Q3.4 Practice and crafting
+- [ ] At the Combat Grounds with a Fire student present: their card has "Spar with <name> · Prowess +2"; a Light/Sky/Viridian
+      student has none; after one session today the button is gone. A Rank 4 friend's card shows only their own training tracks [1.71].
 - [ ] A full Practice session at a valid place: the update reports `/Practice` with Action, Subject, With and Aim, and the XP comes once. A
       short session, one in class hours and a repeat the same day are each refused in the Log [1.27].
 - [ ] The Potion Halls with ingredients: Activities → Practice shows recipes whose bands match `Crafting now` in `<now>`. Brew a Warming
@@ -312,6 +318,7 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
       06:00 the default map is back [1.13, 1.14.3].
 
 ### Q3.6 Spiritual Dorm Day (W4 Sun) and the month's end
+- [ ] On the day the Viridian Dormitory's pin is back on the map, and gone again on Monday [1.71].
 - [ ] From the Wednesday before, `<now>` shows "Coming up … W4 Sun: Spiritual Dorm Day", and now and then a student mentions it in passing,
       in character, not everyone [1.32].
 - [ ] Sunday night into Monday: the date lands on M2 W1 Mon even if the narrator forgot the Week. If the date ever jumps more than three

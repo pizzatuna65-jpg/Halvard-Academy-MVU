@@ -30,6 +30,18 @@ function locIdOf(place) {
 const beenAt = (S, name) => normPlace((S.World || {}).Location) === normPlace(name) || ((S.$ui || {}).discovered || []).some(d => normPlace(d) === normPlace(name));
 const gateOpen = (S, g) => { const cur = locIdOf((S.World || {}).Location); return !!cur && (cur === g || (DATA.locs[cur] || {}).gate === g); };
 const discovered = (S, l) => l.discoverable ? beenAt(S, l.name) : !l.gate || gateOpen(S, l.gate);
+// 1.71.0 (owner): once {{user}} belongs to a dorm, the other dorms leave the campus map. One shows again on its Dorm Day (the
+// calendar's open house) or while {{user}} is inside it (a visit, e.g. escorted by a Rank 7 friend). Unsorted: every dorm shows.
+function dormDayToday(S) {
+  const W = S.World || {}, e = (CAL.EVENTS || []).find(x => /Dorm Day$/.test(x.t) && x.m === W.Month && x.w === W.Week && (x.d || []).includes(W.Day));
+  const m = e && /^(Fire|Light|Sky|Viridian) Dormitory/.exec(e.s || '');
+  return m ? DORM_ID[m[1]] : '';
+}
+function pinShown(p, S) {
+  const home = p.cluster[0]; if (!Object.values(DORM_ID).includes(home)) return true;
+  const own = DORM_ID[((S.Player || {}).Profile || {}).Dorm];
+  return !own || home === own || home === dormDayToday(S) || locIdOf((S.World || {}).Location) === home;
+}
 // 1.24.0 (owner playtest: labels at the map's edge were cut off): a label near the right or left edge grows inward, near the top below
 const labPos = p => (p.x > 82 ? ' r' : p.x < 12 ? ' l' : '') + (p.y < 12 ? ' b' : '');
 // 1.24.0 (owner playtest): zoom and its centre, kept in the script while the page is open, so closing and opening the map keeps
@@ -210,9 +222,12 @@ PANELS.map = {
     const want = view.map || ['airship', 'forest', 'avalon', 'sunreach'].find(k => (AS[k] || {}).on) || 'campus', which = maps.some(m => m[0] === want) ? want : 'campus';
     const tabs = maps.length > 1 ? `<div class="tog maps">${maps.map(([k, n]) => `<button data-map="${k}" class="${which === k ? 'on' : ''}">${esc(n)}</button>`).join('')}</div>` : '';
     if (which !== 'campus') return renderArea(which, S, tabs);
-    const cur = locIdOf(S.World.Location), curPin = cur ? pinOf(cur) : null;
-    if (view.pin == null && curPin) view.pin = curPin.pin;
-    const pins = DATA.pins.filter(p => p.cluster.some(id => DATA.locs[id] && discovered(S, DATA.locs[id])));
+    const cur = locIdOf(S.World.Location);
+    // a room every dorm shares (Common Rooms, Laundry, Bathhouse) is the player's own dorm's pin
+    let curPin = cur ? pinOf(cur) : null;
+    if (curPin && !pinShown(curPin, S)) curPin = DATA.pins.find(p => p.cluster[0] === DORM_ID[S.Player.Profile.Dorm]) || null;
+    if ((view.pin == null || !DATA.pins.some(p => p.pin === view.pin && pinShown(p, S))) && curPin) view.pin = curPin.pin;
+    const pins = DATA.pins.filter(p => pinShown(p, S) && p.cluster.some(id => DATA.locs[id] && discovered(S, DATA.locs[id])));
     const CL = clueLocs(S);
     const pinHTML = pins.map(p => {
       const here = curPin && curPin.pin === p.pin, sel = view.pin === p.pin;
@@ -223,7 +238,7 @@ PANELS.map = {
         + (sel || here ? `<span class="plab${here ? ' here' : ''}${labPos(p)}" style="left:${p.x}%;top:${p.y}%">${esc(p.label)}</span>` : '');
     }).join('');
     let sheet = '<p class="hint">Tap a marker to see what is there.</p>';
-    const P = DATA.pins.find(p => p.pin === view.pin);
+    const P = DATA.pins.find(p => p.pin === view.pin && pinShown(p, S));
     if (P) {
       let ids = P.cluster.filter(id => DATA.locs[id] && discovered(S, DATA.locs[id]));
       let tabs = '';

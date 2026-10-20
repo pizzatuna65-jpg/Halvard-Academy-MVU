@@ -1,7 +1,28 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.71.0 — Scene card actions; the other dorms leave the map; a rule under the bracelet (2026-10-20)
+
+Owner's requests, from mockup v2 of "Halvard Scene Cards" (the owner dropped its "Rank N next" line and "Spend real time" button).
+Save fixture v1.70.0.
+- **Actions on the scene cards** (`sceneActions` in `src/ui/parts/50_scene.js`), at the foot of the middle column. Each button is a
+  system the engine already runs for that person, shown only when it can work now: a partner Practice action open at this place today
+  (`data/practice.json`, `$ui.practice`; "Spar with Sophia" only within the dorm, except in Training Week); the person's own Rank 4
+  tracks (`rank4_partners.json`, +25%); Rank 2 Invite; Give a gift (a list of the Bag, each item with the reaction {{user}} has already
+  seen, from `$gifts`, else "not tried"); Rank 5 Help with his/her goal; Rank 6 Meet his/her friends; Rank 7 Visit the X Dormitory
+  (another dorm) or Visit X at work (staff); an open favour (Commitment `favour`); Make amends from Friction. A button only drafts the
+  action into the chat box (`fillChat`, DECISIONS §7 D3/D6). An unnamed person is "the <role or descriptor>" in the draft; Extras get
+  none. `DATA.npcs[id].gn` (gender, from `data/npcs.json`) gives his/her.
+- **Map** (`pinShown`, `dormDayToday` in `20_map.js`): once {{user}} has a dorm, the other dorms' pins leave the campus map; one shows
+  again on its Dorm Day (the calendar's open house) or while {{user}} is inside it. Unsorted: all four show.
+- **Bracelet**: a brass rule under it, between the bracelet and the story (hidden with a stale bracelet).
+- Not built: a gifts-left-this-week count (the week number lives only in the engine) and a birthday highlight; the engine still applies
+  both limits and the birthday bonus.
+- Tests: new `test_scene_actions_v1710.cjs`; `test_scene_cards_v1700`, `test_map_gates_v1240`, `test_playtest_v1301`, the UI and
+  bracelet suites, `test_saves` and lint pass. Browser check in a mock chat: the three cards' buttons and the open gift list.
+- **To check live (owner):** `docs/TEST_CHECKLIST.md` Q1.1, Q3.4, Q3.6 [1.71].
 
 ## v1.70.0 — Scene cards: the people present, under the reply (2026-10-20)
 
@@ -82,17 +103,6 @@ Playtest fix (the Charles chat, msg 76, third swipe on 1.67.1 with xiaomi/mimo-v
 - Tests: `test_narrator_batch7_v1580` checks the description, the creator notes, 504 and 503; the suites that read 503/504,
   `test_saves`, `qa_static` and `token_audit` pass.
 - **To check live (owner):** `docs/TEST_CHECKLIST.md` Q0.2 "Each reply" (one block, a time that moves on from now).
-
-## v1.67.1 — The story model writes no update of its own (2026-10-05)
-
-Playtest fix from the owner's first reply on 1.67.0 (the Charles chat, msg 75): in extra-model mode the story model ended its prose with
-an `<UpdateVariable>` of its own, YAML of the state, above the update model's block. The state took only the update model's block
-(MVU), so nothing was lost, but it costs output tokens and a second block confuses the reader. Save fixture v1.67.0.
-- **504 (`[mvu_plot]`, the story request):** write an `<UpdateVariable>` block only when `<update_format>` is in the prompt; without it
-  a second request writes the update, so the reply is the story (and the thoughts block) and nothing else. One-call mode still sends
-  503 with 504, so nothing changes there. Same condition as the preset's BOLT task.
-- Tests: the suites that read 504, `test_saves`, `qa_static`, `test_narrator_batch7_v1580` and `token_audit` pass.
-- **To check live (owner):** `docs/TEST_CHECKLIST.md` Q0.2, the "Each reply" check on the next replies.
 
 ## Release index (one line per release, oldest first)
 
@@ -246,3 +256,4 @@ an `<UpdateVariable>` of its own, YAML of the state, above the update model's bl
 - **v1.68.0 (2026-10-20):** The preset is rebuilt on Realistic Frankenstein 2.2.1.3 (Realistic Gemini BOLT) as it ships, with a closed list of card deviations, the owner's toggles and three Eldrasil prompts (Player Input Authority, Output language, Ordinary Turns); no ambience cue names a smell.
 - **v1.69.0 (2026-10-20):** Back to one-call MVU mode (507 `更新方式 = 随AI输出`): one model per turn writes the story and the update; extra-model parsing stays optional.
 - **v1.70.0 (2026-10-20):** Scene cards under the newest reply: full portrait, true thoughts (from the preset's `<npc_thoughts>` block) and bond meters for each person present; the bracelet's portrait strip steps aside.
+- **v1.71.0 (2026-10-20):** Scene card actions (practice partners, Rank 4 tracks, invitations, gifts from the Bag, favours, Rank 5–7 perks, amends; drafts only); the other dorms leave the campus map except on their Dorm Day or inside; a brass rule under the bracelet.
