@@ -43,9 +43,10 @@ it. *Update*: the folded block MVU appends under the reply. *Log*: Student file 
 ## Act 0 — Before the next reply (once)
 
 ### Q0.1 Update everything
-- [ ] Update the card to 1.67 (`dist/Eldrasil_Halvard.png`) and accept the lorebook update: the popup does not ask for a new chat
+- [ ] Update the card to 1.69 (`dist/Eldrasil_Halvard.png`) and accept the lorebook update: the popup does not ask for a new chat
       [1.11.1], the bracelet shows no "old lorebook" warning, and the MVU panel shows the card's settings as overriding [basics].
-- [ ] MVU → character-card settings: **Variable update method = Extra-model parsing** [1.67]. Model source and history: PLAYER_GUIDE §8.
+- [ ] MVU → character-card settings shows **Variable update method = Alongside AI output** (one model, one
+      request a turn) [1.69].
 - [ ] Import `dist/Realistic_Frankenstein_2_2_1_3_Eldrasil.json` (a new preset; the old "Realistic_Frankenstein_2_2_Eldrasil" can be
       deleted), select it and leave its toggles as shipped: Realism Mode and the NSFW register ON, Internal States family, Time and Place
       and Colored Dialogue OFF, Staccato OFF, Embellish ON [1.68]. When SillyTavern asks whether the preset's regexes may run, answer yes;
@@ -57,15 +58,15 @@ it. *Update*: the folded block MVU appends under the reply. *Log*: Student file 
 - [ ] The old chat "Halvard Academy - 2026-09-16" is mapped to the same memory: keep it closed while VectFox is on, or unlink it [1.11.3].
 - [ ] Browser console (F12) on load: MVU comes from `MagVarUpdate@438f9ff…` and `tavern_resource@276040b…`, with no import error [1.42].
 
-### Q0.2 The first replies on 1.67
+### Q0.2 The first replies on 1.69
 *Do:* write on from "yeah we will see".
 - [x] Nothing is lost: the Fire Dormitory, 300 points, the bonds with Ruby, Percival, Zara, Tilly and Kanae, the two Journal lines, the
       lemon and honey sweet in the Bag, Tilly's 22:45 meeting in the Planner [1.42].
 - [ ] Right after loading no bracelet button has a red dot [1.25].
 - [ ] The first reply may lack some `<now>` lines (presence, walks, ambience): the engine writes them on its first run. From the second
       reply on they are there [1.47, 1.48].
-- [ ] Each reply: the prose arrives, then the update is appended under it and the bracelet refreshes. Exactly one update block, and the
-      prose never carries one of its own [1.67, 1.58].
+- [-] (extra-model, 1.67–1.68; replaced by the one-call check below) Each reply: the prose arrives, then the update is appended
+      under it and the bracelet refreshes. Exactly one update block, and the prose never carries one of its own [1.67, 1.58].
       ✗ msg 75 (1.67.0): the prose ended with an `<UpdateVariable>` of its own, written as YAML of the state, above the real update.
       The state took only the update model's block (10:13, not 10:15), so nothing broke. 1.67.1 tells the story model in 504 that
       without `<update_format>` it writes no update; check again on the next replies.
@@ -73,12 +74,14 @@ it. *Update*: the folded block MVU appends under the reply. *Log*: Student file 
       "Every reply ends with the <UpdateVariable> block", which reaches the story request: 1.67.2 makes it conditional. The update
       model wrote Time 08:38 → 08:45 (a recalled VectFox event's time); the engine kept the clock at 10:10. 1.67.2: 503 says the old
       time is World.Time and `<VectFoxMemory>` is the past.
-- [ ] Two requests a turn: the wait and the cost are acceptable. If not: a cheaper update model (PLAYER_GUIDE §8) [1.58].
+- [ ] One request a turn (1.69): no "parsing" notice; each reply ends with exactly one `<UpdateVariable>` block after the story and
+      the thoughts block, the bracelet refreshes, and the clock moves on from the state's time [1.69, 1.67.2].
+- [ ] The narrator writes the folds and the gist when `<now>` asks, and the prose never mentions them [1.69, 1.63, 1.66].
 - [ ] No "Engine error" line in the Log and no `[Eldrasil engine]` error in the console. If one ever appears: the toast "Engine error",
       the state unchanged, and a swipe works [1.20, 1.16.1].
 - [ ] Prompt: the chat older than about 24 messages is one "[… N earlier messages …]" line [1.17, basics]; `<current_state>` is YAML
-      without empty fields and holds only this update's `_Log` lines [1.11, 1.16.1]; no `<%` anywhere; no `<variable_update_rules>`,
-      `<update_format>` or `<rule_cards>` (the update request carries those) [1.67].
+      without empty fields and holds only this update's `_Log` lines [1.11, 1.16.1]; no `<%` anywhere; `<variable_update_rules>`,
+      `<update_format>` and `<rule_cards>` are there (one-call: the narrator writes the update) [1.69].
 - [ ] Prompt, the end: after your message one assistant message holds `<input_authority>` and BOLT; then the system part: the therapist,
       scene-detail, banned-vocabulary, door, contrast, vocation, scent gates, `<card_fidelity>` and the card's `<final_cast_gate>` (only when
       someone is present); the Post-History line is the last text [1.68].
@@ -595,10 +598,8 @@ The first academy flight (the airship), then the Grand Vast Forest.
 - [ ] In a throwaway branch (branch from an older message, or delete far back there): if the state came from a far snapshot, the toast
       "State came from message N" appears; MVU → Compatibility → Show legacy features → Replay floor, accepting both floors, rebuilds it
       [1.61].
-- [ ] A few replies in one-call mode (MVU → Current character-card settings → Variable update method → Alongside AI output): one request a
-      turn works, the narrator writes the folds too and the prose never mentions them; at the Mail Tower, with a Project open or in an
-      exam week, the prompt's `<rule_cards>` shows that topic's rule before `<now>`, and with a friend present Interactions and the trust
-      scale. Then back to Extra-model parsing [1.67, 1.63, 1.54, 1.55].
+- [ ] In one-call mode (the default since 1.69): at the Mail Tower, with a Project open or in an exam week, the prompt's `<rule_cards>`
+      shows that topic's rule before `<now>`, and with a friend present Interactions and the trust scale [1.69, 1.54, 1.55].
 
 ### SQ2 Settings and features
 - [ ] Planner, Weather and Ambience off and on: the rule text, `<now>` and the panels follow; a feature's data comes back when it is
@@ -667,8 +668,7 @@ Checks of the old list that no longer apply (their text: `git show dc2ecad:docs/
   not prose.
 - 1.13 #2 (the map before the upload): the maps are uploaded and pinned.
 - 1.19 #4 (v2-only card readers): tracked as `planning/FUTURE_PLANS.md` §3 A10.
-- 1.58, the A/B comparison: optional since 1.67 made extra-model parsing the default (the owner's choice); its extra-model checks are in
-  Q0.2 and MS1.
+- 1.58, the A/B comparison: optional; since 1.69 the owner plays one-call (extra-model parsing was the default in 1.67–1.68).
 - The "Year 1 / Year 2 smoke playtest" line: playing this route is that playtest.
 - Before this log, 1.16.1–1.19 had checks but no line in the old "Open" list; they are in the route now.
 

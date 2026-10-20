@@ -243,14 +243,17 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
     `$ui.xgone` (Who, Looks, Voice, 120) and comes back from it with the same face and voice.
 
 ## 9. Card configuration
-- **MVU card config override** is uid 507 `[config_override]`, a disabled entry: `更新方式 = 额外模型解析` (extra-model parsing) and
-  `兼容性.更新到聊天变量 = false`.
-  - 1.67.0 (owner, 2026-10-05; memory audit batch 9): the card plays in MVU's **extra-model mode** by default: the story model writes
+- **MVU card config override** is uid 507 `[config_override]`, a disabled entry: `更新方式 = 随AI输出` (one-call: alongside AI
+  output) and `兼容性.更新到聊天变量 = false`.
+  - 1.69.0 (owner, 2026-10-20): back to **one-call mode**: one model, one request a turn; the narrator writes the story and then the
+    `<UpdateVariable>` block. In this mode MVU filters no entries (`filter_entries.ts` returns at once for `随AI输出`, 438f9ff), so
+    `[mvu_update]` cards (rules, folds, gists) reach the narrator. Extra-model parsing stays supported (below); the player picks it
+    in MVU's character-card settings (PLAYER_GUIDE §8).
+  - 1.67.0–1.68.0 (owner, 2026-10-05; memory audit batch 9): the card played in MVU's **extra-model mode** by default: the story model writes
     prose only, a second request writes the update (DECISIONS §11). Why: the story model no longer reads the update rules, and memory
     work (folds, gists) is written by the update model from self-contained `[mvu_update]` cards. The card sets only the mode; the
     model source (default "same as the connection"), chat history and the rest stay the player's (the override schema at 438f9ff
-    allows only `更新方式`, `额外模型解析配置.启用自动请求`, the entry regexes and `兼容性`). One-call mode (`随AI输出`) keeps working:
-    the player switches back in MVU's character-card settings (PLAYER_GUIDE §8).
+    allows only `更新方式`, `额外模型解析配置.启用自动请求`, the entry regexes and `兼容性`).
   - Before 1.58.0 the reason for one-call was that tool-call updates arrived without prose; at 438f9ff every response format
     appends the update after the prose.
   - Update rules in `[mvu_update]` entries never depend on `<cast>` (the update model does not get it); what they need from a sheet is

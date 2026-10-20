@@ -13,7 +13,7 @@ console.log('Tags for the two models');
 {
   ok(!/\[mvu_(plot|update)\]/.test(byId(506).comment), '506 Price Guide is untagged: the update model writes /Purchases with its exact names');
   const co = JSON.parse(E.find(e => e.comment.trim() === '[config_override]').content);
-  ok(co['更新方式'] === '额外模型解析', '1.67.0 (memory batch 9, owner 2026-10-05): 507 sets the extra-model mode (DECISIONS §9)');
+  ok(co['更新方式'] === '随AI输出', '1.69.0 (owner 2026-10-20): 507 sets one-call mode, one model per turn (DECISIONS §9; 1.67.0-1.68.0 was extra-model)');
   const upd = E.filter(e => e.enabled && /\[mvu_update\]/.test(e.comment)).map(e => e.id);
   ok(upd.every(id => !/<cast>[^.]*\b(asks|line)\b/.test(renderEntry(card, id, S0))), `no update-only entry sends the update model to <cast> (${upd})`);
 }
@@ -25,7 +25,7 @@ console.log('The story model is never told to write an update');
   const d = card.data.description;
   ok(!/Every reply ends with the <UpdateVariable>/.test(d) && /When the rules include <update_format>.*second request writes the update/.test(d),
     'the card description asks for an update block only when <update_format> is in the prompt');
-  ok(!/updates with the AI's reply/.test(card.data.creator_notes), 'creator notes name the extra-model mode');
+  ok(/MVU mode: one request per turn/.test(card.data.creator_notes), 'creator notes name the one-call mode (1.69.0)');
   ok(/write an <UpdateVariable> block only when <update_format> is in this prompt/.test(renderEntry(card, 504, S0)), '504 (story only): no update without <update_format> (1.67.1)');
   // 1.67.2: Tavern Helper's generateRaw (87ca341, generate/generateRaw.ts) injects every extension prompt it does not know, VectFox's
   // <VectFoxMemory> included, into the update request at depth 0; the update model took a recalled event's 08:38 as now.

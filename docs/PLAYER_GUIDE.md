@@ -119,12 +119,13 @@ To send more chat, open the Regex extension and raise the **Min Depth** of "Eldr
 
 ## 8. MVU mode
 
-Since 1.67.0 the card asks MVU for **extra-model parsing**: one request writes the story, a second one reads it and writes the
-update (two requests per turn). The story model no longer reads the update rules, and the update model writes the game's memory
-(folds, the reply gist) from rule cards that carry everything it needs. Each reply appears first, then a "parsing" notice, then the
-update is appended under the prose and the bracelet refreshes.
+Since 1.69.0 the card asks MVU for **Alongside AI output**: one model, one request per turn. The narrator writes the story, then
+the `<UpdateVariable>` block (and the game's memory: folds, the reply gist) at the end of the same reply; MVU applies it and the
+bracelet refreshes. 1.67.0–1.68.0 used extra-model parsing by default.
 
-Settings worth a look (MVU panel → Extensions → MVU Variable Framework → **Variable update method → Extra-model parsing**):
+**Extra-model parsing (optional):** one request writes the story, a second one reads it and writes the update (two requests per
+turn); the story model then no longer reads the update rules. To use it: MVU panel → **Current character-card settings
+(overriding)** → **Variable update method → Extra-model parsing**. Settings worth a look:
 1. **Model source**: *Same as current connection* (the default: the same model does both) or *Custom* (a cheaper, faster model for
    the update, with its own API address, key and model name). Leave **Jailbreak strategy** on *Use built-in jailbreak* and
    **Response format** on *Chat message*.
@@ -132,9 +133,8 @@ Settings worth a look (MVU panel → Extensions → MVU Variable Framework → *
    reply (the default 2 is your message and the new reply; the card's rule cards do not need more).
 3. If an update fails, use **Retry extra-model parsing** in the panel, or swipe.
 
-**Back to one request per turn:** in **Current character-card settings (overriding)**, set **Variable update method** to
-**Alongside AI output**. The card works in both modes. This edits the card's `[config_override]` entry, so a fresh import of the
-card sets extra-model parsing again.
+The card works in both modes. Switching edits the card's `[config_override]` entry, so a fresh import of the card sets Alongside AI
+output again.
 
 ## 9. Troubleshooting
 

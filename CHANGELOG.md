@@ -1,7 +1,19 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.69.0 — One model per turn: back to one-call MVU mode (2026-10-20)
+
+Owner's request: call one model only, no extra model in MVU. Save fixture v1.68.0.
+- **The card's `[config_override]` (507) sets `更新方式 = 随AI输出`** (Alongside AI output): one request a turn; the narrator writes
+  the story, then the `<UpdateVariable>` block (folds and gists included). Checked at the pinned MVU 438f9ff: in this mode
+  `filterEntries` returns at once, so every entry, `[mvu_update]` rules included, reaches the narrator. The card description, 504
+  and the preset's BOLT already ask for the block exactly when `<update_format>` is in the prompt, which it now always is (503).
+- Extra-model parsing stays supported: MVU → Current character-card settings → Variable update method (PLAYER_GUIDE §8).
+- Creator notes, DECISIONS §9, PLAYER_GUIDE §8, INDEX and the quest log (Q0.1, Q0.2) name the new default.
+- Tests: `qa_static`, `test_narrator_batch7_v1580` (507 value, creator notes) and `test_saves` pass.
+- **To check live (owner):** `docs/TEST_CHECKLIST.md` Q0.1 (the mode) and Q0.2 (one block per reply, folds and gists by the narrator).
 
 ## v1.68.0 — The preset rebuilt on Realistic Frankenstein 2.2.1.3, as its creator ships it (2026-10-20)
 
@@ -74,30 +86,6 @@ extra-model mode; batch 8, chapters, is planned for about 20,000 messages in `pl
 - Tests: `qa_static` and `test_narrator_batch7_v1580` read the new mode. Full `npm test` passes.
 - **To check live (owner):** `docs/TEST_CHECKLIST.md` 1.67.0. Cost: two requests a turn; the story request no longer carries the
   update rules (502, 503, 511), the update request carries them and the state.
-
-## v1.66.0 — Memory batch 7: VectFox from the card's side (2026-10-05)
-
-Batch 7 of `audit/AUDIT_2026-10-05_1_sistem_memori.md` §6 (M11, M10c; VectFox itself unchanged). Upstream facts checked in source
-first (DECISIONS §11: ST release 06bde93, Tavern Helper 87ca341, VectFox 3623dc8). Save fixture v1.65.0.
-- **Scene marker (M11a):** when a player message is sent, the card appends `(scene: Irene, Kaito · Courtyards · t2)`: who is here,
-  the place, the timeline number. VectFox searches with the raw last messages and boosts the keywords of the player's message, so
-  recall now leans toward the scene's people and place. A display regex hides it, a prompt regex keeps it from the narrator, the
-  engine drops it from the player's text; VectFox's new cleaning pattern 0 turns it into `[Timeline: tN]`. Messages Tavern Helper
-  inserts (player tools, `'extension'`) are not marked.
-- **Timeline number (M11b):** the chat variable `eld_tl` (outside the per-message state, so a rollback keeps it; a branch copies it)
-  grows when a message is sent at a floor the chat already had. The extraction prompt adds ` tN` to `scene_time`; `<now>` says
-  recalled memories of the old timeline from that message_order on never happened; 504: a recalled memory dated after now never
-  happened. Not caught: editing an old message (clean by hand, ECOSYSTEM).
-- **Fewer look-alike events (M11c):** the extraction prompt treats a repeated meeting with the same people as routine unless something
-  new happens; ECOSYSTEM: duplicate window 10 → 40, top-k 12–15 only on the debug query's evidence, `query` 1 to try, agentic
-  retrieval past ~2,000 events (M10c).
-- **Gist (M11d):** every reply's update writes `/Gist` (20 words; 502, `[mvu_update]`: the update model in extra-model mode). The
-  engine keeps 40; `_Recent_story` (after the Journal) shows those older than the chat the narrator reads (12 replies back, at most
-  12): chat → gist → Journal → Chronicle. Features → "Story gist" switches it off.
-- Tests: new `test_memory_batch7_v1660` (19); `test_memory_batch1_v1610` reads ten patterns and the new scene_time example. Full
-  `npm test` and `npm run lint` pass.
-- **To check live (owner):** `docs/TEST_CHECKLIST.md` 1.66.0 (re-import the VectFox patterns and prompt first). Tokens: about +90
-  constant (502 Gist line, 504), up to about +300 for `_Recent_story` in a long chat, about +25 output a reply for the gist.
 
 ## Release index (one line per release, oldest first)
 
@@ -249,3 +237,4 @@ first (DECISIONS §11: ST release 06bde93, Tavern Helper 87ca341, VectFox 3623dc
 - **v1.67.1 (2026-10-05):** Playtest fix: in extra-model mode the story model writes no `<UpdateVariable>` of its own (504).
 - **v1.67.2 (2026-10-06):** Playtest fix: the card description asks for an update block only with `<update_format>`; 503 takes the old time from the state and treats `<VectFoxMemory>` as the past.
 - **v1.68.0 (2026-10-20):** The preset is rebuilt on Realistic Frankenstein 2.2.1.3 (Realistic Gemini BOLT) as it ships, with a closed list of card deviations, the owner's toggles and three Eldrasil prompts (Player Input Authority, Output language, Ordinary Turns); no ambience cue names a smell.
+- **v1.69.0 (2026-10-20):** Back to one-call MVU mode (507 `更新方式 = 随AI输出`): one model per turn writes the story and the update; extra-model parsing stays optional.

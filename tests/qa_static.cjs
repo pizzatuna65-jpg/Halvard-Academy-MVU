@@ -20,7 +20,7 @@ ok(!dead.length, 'no enabled non-constant entry without keys' + (dead.length ? '
 const untagged = E.filter(e => e.enabled && !/\[mvu_(update|plot)\]/i.test(e.comment)).map(e => e.id).sort((a, b) => a - b);
 ok(JSON.stringify(untagged) === JSON.stringify([0, 20, 97, 131, 132, 134, 501, 505, 506]), `untagged entries (sent to both models) are the planned set: ${untagged}`);
 const co = E.filter(e => e.comment.trim().toLowerCase() === '[config_override]');
-ok(co.length === 1 && !co[0].enabled && JSON.parse(co[0].content)['更新方式'] === '额外模型解析', 'exactly one disabled [config_override] with valid JSON');
+ok(co.length === 1 && !co[0].enabled && JSON.parse(co[0].content)['更新方式'] === '随AI输出', 'exactly one disabled [config_override] with valid JSON');
 const init = E.find(e => /\[initvar\]/.test(e.comment));
 ok(init && !init.enabled, '[initvar] present and disabled');
 
