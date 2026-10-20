@@ -78,5 +78,5 @@ const A = JSON.parse(read('data/ambience.json'));
 ok(A.uncanny_chance === 5 && A.uncanny.length === 17 && !A.uncanny.some(x => x.id === 'walking_lantern' && x.x2), 'uncanny: 5%, 17 stories, the Walking Lantern not tied to Remembrance Day');
 // 1.68.0: the preset is RF 2.2.1.3 as it ships (its Scene Engine adds detail only when it changes something; its Scent Killswitch
 // keeps smells to food, a strong source close by or a rite), so the card's rule 504 alone asks for the cue, and no cue names a smell
-ok(!/one light touch of the setting/.test(read('presets/Realistic_Frankenstein_2_2_1_3_Eldrasil.json')) && /Ambience: keep the prose consistent with <now>'s Ambience line/.test(read('src/worldbook/custom/content/504.txt')), 'the ambience cue is the card\'s rule (504), not a preset clause');
+ok(!/one light touch of the setting/.test(read('dist/Realistic_Frankenstein_2_2_1_3_Eldrasil.json')) && /Ambience: keep the prose consistent with <now>'s Ambience line/.test(read('src/worldbook/custom/content/504.txt')), 'the ambience cue is the card\'s rule (504), not a preset clause');
 ok(![...A.cues, ...A.beats].some(x => /smell|scent|whiff|odou?r|aroma/i.test(x[2])), '1.68.0: no cue or beat names a smell (a named smell primes Gemini)');

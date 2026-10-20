@@ -3,7 +3,7 @@
 const fs = require('fs'), path = require('path');
 const { ok, ROOT } = require('./harness.cjs');
 console.log('NPC Thoughts (1.37.3)');
-const P = JSON.parse(fs.readFileSync(path.join(ROOT, 'presets/Realistic_Frankenstein_2_2_1_3_Eldrasil.json'), 'utf8'));
+const P = JSON.parse(fs.readFileSync(path.join(ROOT, 'dist/Realistic_Frankenstein_2_2_1_3_Eldrasil.json'), 'utf8'));
 const byName = frag => P.prompts.find(p => (p.name || '').includes(frag));
 const on = frag => P.prompt_order[0].order.find(o => o.identifier === byName(frag).identifier).enabled;
 const IT = byName('Internal Thoughts').content;
@@ -20,7 +20,7 @@ ok(fold.markdownOnly && /<details data-npc-thoughts="1"[^>]*><summary[^>]*>🧠 
 const sent = reply.replace(T, trim.replaceString);
 ok(trim.promptOnly && trim.minDepth === 3 && sent === 'Irene looks up.\n\n<UpdateVariable>\n[]\n</UpdateVariable>', 'prompt: older replies lose the block, the newest two keep it');
 
-const pats = JSON.parse(fs.readFileSync(path.join(ROOT, 'docs/vectfox_cleaning_patterns.json'), 'utf8'));
+const pats = JSON.parse(fs.readFileSync(path.join(ROOT, 'dist/vectfox_cleaning_patterns.json'), 'utf8'));
 const clean = pats.filter(p => p.enabled !== false).reduce((s, p) => s.replace(new RegExp(p.pattern, p.flags || 'g'), p.replacement || ''), reply);
 ok(!/late again|npc_thoughts/.test(clean) && clean.includes('Irene looks up.'), 'VectFox: thoughts never enter memory, the prose stays');
 const ui = fs.readFileSync(path.join(ROOT, 'src/scripts/ui.template.js'), 'utf8');

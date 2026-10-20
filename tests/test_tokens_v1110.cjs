@@ -49,7 +49,7 @@ ok(after < before * 0.85, `the state is shorter (${Math.round(after / 3.6)} vs $
 ok(/Empty fields are not shown; they still exist/.test(st), 'the narrator is told empty fields still exist');
 
 console.log('Preset (C1; 1.68.0: RF 2.2.1.3 as it ships)');
-const PS = JSON.parse(read('presets/Realistic_Frankenstein_2_2_1_3_Eldrasil.json'));
+const PS = JSON.parse(read('dist/Realistic_Frankenstein_2_2_1_3_Eldrasil.json'));
 const onP = new Set(PS.prompt_order[0].order.filter(o => o.enabled).map(o => o.identifier));
 const named = frag => PS.prompts.find(p => (p.name || '').includes(frag));
 ok(onP.has(named('Realism Mode / Jailbreak').identifier) && onP.has(named('NSFW Anti-Slop Register').identifier) && !onP.has(named('Freaky Mode').identifier), '1.68.0: Realism Mode and its NSFW register ON as upstream ships them (active only in an NSFW scene), Freaky Mode OFF');

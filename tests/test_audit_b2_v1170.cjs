@@ -51,7 +51,7 @@ console.log('T3 a lighter Bonds block');
 
 console.log('P1, P2 preset and card (1.68.0: RF 2.2.1.3 base)');
 {
-  const P = JSON.parse(rd('presets/Realistic_Frankenstein_2_2_1_3_Eldrasil.json')), order = P.prompt_order[0].order;
+  const P = JSON.parse(rd('dist/Realistic_Frankenstein_2_2_1_3_Eldrasil.json')), order = P.prompt_order[0].order;
   const C = frag => P.prompts.find(p => (p.name || '').includes(frag));
   const on = frag => order.find(o => o.identifier === C(frag).identifier).enabled;
   ok(/Off-screen people keep their own lives/.test(entry(504).content), 'P1: rule 504 has the living-world lines');

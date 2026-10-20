@@ -1,0 +1,72 @@
+[
+ {
+  "name": "Eldrasil: the scene marker becomes the timeline line (card 1.66.0)",
+  "pattern": "\\s*\\(scene: [^()\\n]*\\bt(\\d+)\\)[ \\t]*$",
+  "replacement": "\n[Timeline: t$1]",
+  "flags": "gm",
+  "enabled": true
+ },
+ {
+  "name": "Eldrasil: the narrator's Journal line as a turning-point note (card 1.61.0; before the time pattern)",
+  "pattern": "<UpdateVariable>(?=(?:(?!</UpdateVariable>)[\\s\\S])*?\"path\"\\s*:\\s*\"/Journal/(?:-|\\d+)\"\\s*,\\s*\"value\"\\s*:\\s*\"([^\\n]*?)\"\\s*\\})",
+  "replacement": "[Turning point: $1]\n<UpdateVariable>",
+  "flags": "g",
+  "enabled": true
+ },
+ {
+  "name": "Eldrasil: keep in-world time (and place), drop the MVU update block",
+  "pattern": "<UpdateVariable>(?=[\\s\\S]*?Time:[^\\n]*?(?:→|->)\\s*((?:Y\\d{1,2} )?M\\d{1,2} W\\d [A-Z][a-z]{2} \\d{1,2}:\\d{2}))(?=(?:[\\s\\S]*?Location:\\s*(?:[^\\n|]*?(?:→|->)\\s*)?([^\\n|(]+?)\\s*(?:\\(|\\||\\n))?)[\\s\\S]*?</UpdateVariable>",
+  "replacement": "[In-world time: $1, at $2]",
+  "flags": "g",
+  "enabled": true
+ },
+ {
+  "name": "Eldrasil: a Year 1 date gets its year (card 1.61.0)",
+  "pattern": "\\[In-world time: (?=M\\d)",
+  "replacement": "[In-world time: Y1 ",
+  "flags": "g",
+  "enabled": true
+ },
+ {
+  "name": "Eldrasil: drop any remaining MVU update block",
+  "pattern": "<UpdateVariable>[\\s\\S]*?</UpdateVariable>",
+  "replacement": "",
+  "flags": "g",
+  "enabled": true
+ },
+ {
+  "name": "Eldrasil: drop the status bar placeholder",
+  "pattern": "<StatusPlaceHolderImpl\\s*/>",
+  "replacement": "",
+  "flags": "g",
+  "enabled": true
+ },
+ {
+  "name": "Eldrasil: drop dialogue-colour speaker tags, keep the dialogue (card 1.37.0)",
+  "pattern": "</?say\\b[^<>\\n]{0,60}>",
+  "replacement": "",
+  "flags": "gi",
+  "enabled": true
+ },
+ {
+  "name": "Eldrasil: drop colored-dialogue tags, keep the dialogue (preset Colored Dialogue 2.0)",
+  "pattern": "</?(?:cyan|pink|teal|orange|gold|violet|salmon|orchid|yellow|plum)(?::(?:shout|whisper|measured|tremble))?>",
+  "replacement": "",
+  "flags": "gi",
+  "enabled": true
+ },
+ {
+  "name": "Eldrasil: drop NPC thoughts (preset Internal Thoughts, 1.37.3)",
+  "pattern": "<npc_thoughts>[\\s\\S]*?</npc_thoughts>",
+  "replacement": "",
+  "flags": "gi",
+  "enabled": true
+ },
+ {
+  "name": "Eldrasil: unwrap in-story graphics, keep their text (preset Pop in Graphics)",
+  "pattern": "<!--\\s*GFX_(?:START|END)\\s*-->|</?(?:div|span|p)\\b[^>]*>|<br\\s*/?>",
+  "replacement": "\n",
+  "flags": "gi",
+  "enabled": true
+ }
+]

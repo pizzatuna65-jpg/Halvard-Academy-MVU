@@ -265,6 +265,8 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **The card is the only tracker.** The preset's Internal States family stays OFF: Bonds/Relationships RPG, GM Notebook, Agenda, Chekhov, World Sim, Fate & Routine, Internal States, and Turn Dice with them; three upstream sentences that would still ask for an Internal States block point to the card's state instead (Main random events, Post-History, Plot Momentum). Fate & Routine's ordinary-turn craft (steps 0, 7, 7a) stays as the state-free Ordinary Turns prompt (1.68.0). Exception (1.37.3, owner): Internal Thoughts is ON as its own `<npc_thoughts>` block. It keeps no state (a per-reply view, folded, dropped from older replies and from VectFox), never writes {{user}}, never spells out an unrevealed secret, and sits before `<UpdateVariable>`.
 - Do **not** vectorize the card's lorebook for VectFox Semantic World Info. It injects raw text, so EJS stays unrendered, MVU filtering is bypassed, and lore is duplicated.
 - Use **either** VectFox ghosting **or** the card's trim regex, not both.
+- **One download folder** (owner, 2026-10-20): everything the player imports (card, preset, VectFox cleaning patterns and extraction
+  prompt) is written to `dist/`. Sources stay elsewhere (`presets/edit_preset.py`, `src/vectfox/`); never put a download anywhere else.
 
 ## 11. Externally verified facts (and where they came from)
 

@@ -19,7 +19,7 @@ const leaks = rules.filter(e => TASTE.test(DATA_FORMAT.reduce((t, rx) => t.repla
 ok(!leaks.length, 'no card rule entry sets taste' + (leaks.length ? ': ' + leaks.join(',') : ''));
 
 // ---- preset: generated from edit_preset.py, deterministic facts about it
-const P = JSON.parse(fs.readFileSync(path.join(ROOT, 'presets/Realistic_Frankenstein_2_2_1_3_Eldrasil.json'), 'utf8'));
+const P = JSON.parse(fs.readFileSync(path.join(ROOT, 'dist/Realistic_Frankenstein_2_2_1_3_Eldrasil.json'), 'utf8'));
 const byName = frag => P.prompts.find(p => (p.name || '').includes(frag));
 const enabled = frag => { const p = byName(frag); const o = P.prompt_order[0].order.find(x => x.identifier === p.identifier); return !!(o && o.enabled); };
 const bolt = byName('BOLT Chain of Thought').content;

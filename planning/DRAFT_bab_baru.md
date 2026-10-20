@@ -104,7 +104,7 @@ sama. Satu sumber, tanpa salinan logika di dua tempat (pakai sistem yang sudah a
 - Jembatan dibungkus `<chapter_bridge>…</chapter_bridge>`.
 - Regex kartu (display, `markdownOnly`): blok itu jadi `<details>` terlipat "Previously (chapter N−1)".
 - Prompt tetap mengirim isinya utuh, karena narator butuh adegan terakhir.
-- `docs/vectfox_cleaning_patterns.json`: satu pola yang membuang `<chapter_bridge>[\s\S]*?</chapter_bridge>` sebelum ekstraksi.
+- `src/vectfox/vectfox_cleaning_patterns.json`: satu pola yang membuang `<chapter_bridge>[\s\S]*?</chapter_bridge>` sebelum ekstraksi.
   Tanpa pola itu, VectFox mengekstrak adegan yang sama dua kali (sekali di bab lama, sekali di jembatan).
 
 ## 5. Jembatan

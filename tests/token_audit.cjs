@@ -28,6 +28,6 @@ const y=YAML.stringify(omit$(S)); const parts=Object.fromEntries(Object.keys(omi
 // 1.5.0: the edited preset's enabled prompts ({{// }} notes removed, as SillyTavern drops them), biggest first. 1.52.2: as ST does
 // (macros.js: env macros such as {{user}} before the comment macro), a note that holds {{user}} is removed whole; empty setvar/getvar
 // and {{trim}} send nothing
-{ const PS=JSON.parse(fs.readFileSync(require('path').join(__dirname,'..','presets/Realistic_Frankenstein_2_2_1_3_Eldrasil.json'),'utf8')), ids=new Set(PS.prompt_order[0].order.filter(o=>o.enabled).map(o=>o.identifier));
+{ const PS=JSON.parse(fs.readFileSync(require('path').join(__dirname,'..','dist/Realistic_Frankenstein_2_2_1_3_Eldrasil.json'),'utf8')), ids=new Set(PS.prompt_order[0].order.filter(o=>o.enabled).map(o=>o.identifier));
   const on=PS.prompts.filter(p=>ids.has(p.identifier)&&p.content).map(p=>[p.name,tok(p.content.replace(/\{\{user\}\}/gi,'Aria').replace(/\{\{\/\/[\s\S]*?\}\}/g,'').replace(/\{\{(setvar|getvar)::[^}]*\}\}/g,'').replace(/\{\{trim\}\}/g,'').trim())]).sort((a,b)=>b[1]-a[1]);
   console.log('preset enabled prompts ~', on.reduce((a,x)=>a+x[1],0), 'tokens; biggest', JSON.stringify(on.slice(0,6))); }

@@ -49,10 +49,11 @@ node tests/stress/memory_soak.cjs 3000   # 1.61.1: memory invariants and budget 
 | `src/worldbook/custom/index.json`, `content/505.txt`, `content/506.txt`, `content/509.txt`, `content/599.txt`, `content/600.txt`… | `tools/gen_mvu_entries.py` (505 from `custom/505.template.ejs`; the Cast Sheet (1.48.0): 509 head from `509.template.ejs`, one sheet per NPC 600+ from `509_sheet.template.ejs` + NPC lore, 599 tail from `509_tail.template.ejs`) |
 | `data/feature_cost.json` | `tools/feature_cost.py` (run by `gen_mvu_entries.py`) |
 | `data/npcs.json`, `locations.json`, `relations.json`, `map_pins.json` | `curate_data.py` |
-| `dist/*` | the build |
+| `dist/*` | the build. `dist/` is the one download folder: the card (`Eldrasil_Halvard.png`/`.json`), the preset and the VectFox files; TEST cards in `dist/test/`, the standalone lorebook in `dist/lorebook_v39/` |
+| `dist/vectfox_cleaning_patterns.json`, `dist/vectfox_eventbase_prompt.txt` | copied by `build_card.py` from `src/vectfox/` (hand-written; edit them there) |
 | `data/themes.json` | `tools/make_themes.py` (1.3.1) |
 | `planning/NPC_ROSTER.md` | `tools/make_npc_roster.cjs` (1.32.0; run by `build_all.py --lore`) |
-| `presets/Realistic_Frankenstein_2_2_1_3_Eldrasil.json` | `edit_preset.py` (from `presets/original/Realistic_Frankenstein_2_2_1_3_Realistic_Gemini_BOLT.json`) |
+| `dist/Realistic_Frankenstein_2_2_1_3_Eldrasil.json` | `presets/edit_preset.py` (from `presets/original/Realistic_Frankenstein_2_2_1_3_Realistic_Gemini_BOLT.json`) |
 
 ## 3. Hand-written single sources
 

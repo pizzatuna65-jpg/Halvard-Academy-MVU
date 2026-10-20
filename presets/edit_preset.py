@@ -14,7 +14,7 @@ sys.stdout.reconfigure(encoding='utf-8')
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(HERE, 'original', 'Realistic_Frankenstein_2_2_1_3_Realistic_Gemini_BOLT.json')
-OUT = os.path.join(HERE, 'Realistic_Frankenstein_2_2_1_3_Eldrasil.json')
+OUT = os.path.join(os.path.dirname(HERE), 'dist', 'Realistic_Frankenstein_2_2_1_3_Eldrasil.json')   # every download sits in dist/
 d = json.load(open(SRC, encoding='utf-8'))
 P = {p['identifier']: p for p in d['prompts']}
 order = next(po for po in d['prompt_order'] if po['character_id'] == 100001)['order']

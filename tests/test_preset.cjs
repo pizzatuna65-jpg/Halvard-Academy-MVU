@@ -6,7 +6,7 @@ const { ok, ROOT } = require('./harness.cjs');
 console.log('Edited preset (Eldrasil edition of RF 2.2.1.3)');
 const read = rel => JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8'));
 const U = read('presets/original/Realistic_Frankenstein_2_2_1_3_Realistic_Gemini_BOLT.json');
-const P = read('presets/Realistic_Frankenstein_2_2_1_3_Eldrasil.json');
+const P = read('dist/Realistic_Frankenstein_2_2_1_3_Eldrasil.json');
 const ord = x => x.prompt_order.find(po => po.character_id === 100001).order;
 const UO = ord(U), O = ord(P);
 const UP = Object.fromEntries(U.prompts.map(p => [p.identifier, p])), PP = Object.fromEntries(P.prompts.map(p => [p.identifier, p]));

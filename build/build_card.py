@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Eldrasil card assembler.
-Reads src/ + data/ and writes dist/Eldrasil_Halvard.json (ccv3) and dist/Eldrasil_Halvard.png.
+Reads src/ + data/ and writes dist/Eldrasil_Halvard.json (ccv3) and dist/Eldrasil_Halvard.png, and copies src/vectfox/ into dist/.
 Source layout:
   src/card/card.json            -> name, description, first_mes, alternate_greetings, creator_notes, tags...
   src/card/avatar.png           -> card image (falls back to a plain placeholder)
@@ -10,7 +10,7 @@ Source layout:
   src/regex/index.json          -> [{...ST regex script fields..., replace_file?}]
 Usage: python3 build/build_card.py
 """
-import json, os, re, base64, uuid, struct, zlib, time, sys
+import json, os, re, base64, uuid, struct, zlib, time, sys, shutil
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 P = lambda *a: os.path.join(ROOT, *a)
 
@@ -120,6 +120,8 @@ def build():
     os.makedirs(P('dist'), exist_ok=True)
     json.dump(v3, open(P('dist/Eldrasil_Halvard.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     write_png(v2, v3)
+    for f in os.listdir(P('src/vectfox')):   # the VectFox files sit next to the card and the preset: one download folder
+        shutil.copyfile(P('src/vectfox', f), P('dist', f))
     print(f'built: {len(entries)} wb entries, {len(scripts)} scripts, {len(regexes)} regex')
 
 def chunk(t, body):

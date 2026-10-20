@@ -6,9 +6,12 @@ a deterministic game engine and an in-chat UI. Current release: **1.34.0** (see 
 **New session or another AI? Read `CLAUDE.md`, then `HANDOFF.md`, then `docs/INDEX.md`.**
 
 ## Download
+Everything to import sits in `dist/`.
 - Card: `dist/Eldrasil_Halvard.png` (it installs its own lorebook on first open). Standalone lorebook: `dist/lorebook_v39/`.
-- Preset: `presets/Realistic_Frankenstein_2_2_1_3_Eldrasil.json` (Realistic Frankenstein 2.2.1.3, Realistic Gemini BOLT, as it ships plus
+- Preset: `dist/Realistic_Frankenstein_2_2_1_3_Eldrasil.json` (Realistic Frankenstein 2.2.1.3, Realistic Gemini BOLT, as it ships plus
   what this card needs).
+- VectFox: `dist/vectfox_cleaning_patterns.json` (Text Cleaning → Import) and `dist/vectfox_eventbase_prompt.txt` (EventBase →
+  Extraction Prompt).
 - Test cards: `dist/test/` (every bond at Rank 7; a campaign that starts in Year 2).
 - Players: `docs/PLAYER_GUIDE.md`. Card + preset + VectFox setup: `docs/ECOSYSTEM.md`.
 
@@ -23,7 +26,7 @@ a deterministic game engine and an in-chat UI. Current release: **1.34.0** (see 
 | `data/` | curated single sources: NPCs, locations, calendar, shop, happenings, bonds, reputation, asset manifest |
 | `tools/`, `build/` | generators and the card assembler (`tools/build_all.py`) |
 | `tests/` | node suites (`test_*.cjs`, index in `tests/README.md`), save fixtures, stress tests, browser previews |
-| `presets/` | the edited preset, its generator and the original |
+| `presets/` | the preset generator and the original (the edited preset is written to `dist/`) |
 | `source_original/` | the owner's lorebook v38 and NPC lore passes (canon, pipeline input) |
 | `planning/` | `FUTURE_PLANS.md` (open work), the NPC brainstorm brief, drafts awaiting approval |
 | `docs/` | player guide, ecosystem, live test checklist, public rentry guide |

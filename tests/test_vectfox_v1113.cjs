@@ -1,9 +1,9 @@
-// 1.11.3: the VectFox cleaning patterns (docs/vectfox_cleaning_patterns.json) keep the in-world time and place for EventBase
+// 1.11.3: the VectFox cleaning patterns (dist/vectfox_cleaning_patterns.json) keep the in-world time and place for EventBase
 // in every form the narrator writes the Analysis line (rule 503), from Year 2 with its year, and pass VectFox's import check.
 // 1.61.0 (memory audit M10a): a Year 1 date gets Y1 (pattern 3), so it stays unambiguous after Year 2 starts.
 const fs = require('fs'), path = require('path');
 const { ok, ROOT } = require('./harness.cjs');
-const pats = JSON.parse(fs.readFileSync(path.join(ROOT, 'docs/vectfox_cleaning_patterns.json'), 'utf8'));
+const pats = JSON.parse(fs.readFileSync(path.join(ROOT, 'dist/vectfox_cleaning_patterns.json'), 'utf8'));
 const clean = t => pats.filter(p => p.enabled !== false).reduce((s, p) => s.replace(new RegExp(p.pattern, p.flags || 'g'), p.replacement || ''), t).replace(/\n{3,}/g, '\n\n').trim();
 const msg = a => `<StatusPlaceHolderImpl/>\n\nIrene looks up.\n\n<gold:measured>"Curfew is at eight,"</gold:measured> she says.\n\n<!-- GFX_START -->\n<div style="x">NOTICE: Library closed.</div>\n<!-- GFX_END -->\n\n<UpdateVariable>\n<Analysis>\n${a}\n- Present: Irene\n</Analysis>\n<JSONPatch>\n[{"op": "replace", "path": "/World/Time", "value": "13:40"}]\n</JSONPatch>\n</UpdateVariable>`;
 const cases = [

@@ -46,14 +46,14 @@ it. *Update*: the folded block MVU appends under the reply. *Log*: Student file 
 - [ ] Update the card to 1.67 (`dist/Eldrasil_Halvard.png`) and accept the lorebook update: the popup does not ask for a new chat
       [1.11.1], the bracelet shows no "old lorebook" warning, and the MVU panel shows the card's settings as overriding [basics].
 - [ ] MVU → character-card settings: **Variable update method = Extra-model parsing** [1.67]. Model source and history: PLAYER_GUIDE §8.
-- [ ] Import `presets/Realistic_Frankenstein_2_2_1_3_Eldrasil.json` (a new preset; the old "Realistic_Frankenstein_2_2_Eldrasil" can be
+- [ ] Import `dist/Realistic_Frankenstein_2_2_1_3_Eldrasil.json` (a new preset; the old "Realistic_Frankenstein_2_2_Eldrasil" can be
       deleted), select it and leave its toggles as shipped: Realism Mode and the NSFW register ON, Internal States family, Time and Place
       and Colored Dialogue OFF, Staccato OFF, Embellish ON [1.68]. When SillyTavern asks whether the preset's regexes may run, answer yes;
       then Extensions → Regex shows them ON (they can switch off on a preset change) [1.68].
 - [ ] VectFox, as `docs/ECOSYSTEM.md` → VectFox says: the settings table ("For this card"); Text Cleaning in Custom mode with "Strip
       <UpdateVariable> Tags (MVU)" unticked, the old "Eldrasil:" patterns and the catch-alls "Rapikan baris kosong" and "Cadangan: hapus
-      semua tag HTML" deleted, `docs/vectfox_cleaning_patterns.json` imported (ten patterns); the extraction prompt
-      `docs/vectfox_eventbase_prompt.txt` pasted; then re-vectorize the chat [1.11.3, 1.37, 1.37.3, 1.61, 1.66].
+      semua tag HTML" deleted, `dist/vectfox_cleaning_patterns.json` imported (ten patterns); the extraction prompt
+      `dist/vectfox_eventbase_prompt.txt` pasted; then re-vectorize the chat [1.11.3, 1.37, 1.37.3, 1.61, 1.66].
 - [ ] The old chat "Halvard Academy - 2026-09-16" is mapped to the same memory: keep it closed while VectFox is on, or unlink it [1.11.3].
 - [ ] Browser console (F12) on load: MVU comes from `MagVarUpdate@438f9ff…` and `tavern_resource@276040b…`, with no import error [1.42].
 

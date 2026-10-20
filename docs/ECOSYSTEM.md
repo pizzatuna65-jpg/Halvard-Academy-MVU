@@ -162,7 +162,7 @@ Settings keys are in brackets, for searching the VectFox panel or its settings f
 | Setting | VectFox default | For this card | Why |
 |---|---|---|---|
 | EventBase | – | **ON** | The only source of the details of old scenes |
-| Extraction Prompt (`eventbase_custom_prompt`) | empty (VectFox's own) | **the card's prompt** (below; also `docs/vectfox_eventbase_prompt.txt`) | Built for this card. VectFox's reset button brings its own prompt back: after a VectFox update that asks you to reset, paste the card's again |
+| Extraction Prompt (`eventbase_custom_prompt`) | empty (VectFox's own) | **the card's prompt** (below; also `dist/vectfox_eventbase_prompt.txt`) | Built for this card. VectFox's reset button brings its own prompt back: after a VectFox update that asks you to reset, paste the card's again |
 | Extraction model (`chat_model`) | – | the owner's choice | The prompt is long and asks for strict JSON: use a model that follows it (the owner found Gemini 3.1 Flash Lite accurate; Gemini 3.5+ needs a current VectFox). Check with the debug query below |
 | Don't think during extraction (`should_disable_thinking`) | ON | ON | Extraction needs no reasoning; cheaper and faster |
 | Extraction temperature (`eventbase_temperature`) | 0.2 | 0.2 | |
@@ -209,7 +209,7 @@ VectFox runs the ticked built-ins first and the custom patterns after them, in l
   is gone before the card's patterns see it;
 - delete any older custom pattern that would touch the block first, such as a catch-all "strip every HTML tag" (`<\/?[a-z][^>]*>`),
   and never replace `\n{3,}` with nothing (that glues paragraphs together; VectFox already turns 3+ newlines into one blank line);
-- import `docs/vectfox_cleaning_patterns.json` (Text Cleaning → Import; all ten pass VectFox's import check and are appended in order).
+- import `dist/vectfox_cleaning_patterns.json` (Text Cleaning → Import; all ten pass VectFox's import check and are appended in order).
   After a card update that changes the file, delete the card's old "Eldrasil:" patterns first, then import it again.
 
 Each reply then reaches extraction as its prose plus one line such as `[In-world time: Y2 M1 W2 Wed 13:40, at Courtyards]`, which the
@@ -245,7 +245,7 @@ checks the patterns. Since 1.68.0 the preset's CoT is upstream's and names no ca
 the text (the model's own reasoning, when the API returns it, may still mention the clock).
 
 ### The card's extraction prompt
-Paste this whole block into VectFox → EventBase → Extraction Prompt (the same text is in `docs/vectfox_eventbase_prompt.txt`;
+Paste this whole block into VectFox → EventBase → Extraction Prompt (the same text is in `dist/vectfox_eventbase_prompt.txt`;
 `tests/test_narrator_batch6_v1570.cjs` checks that both are the same and that the prompt keeps VectFox's schema, event types and
 placeholders).
 
