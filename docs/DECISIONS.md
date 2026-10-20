@@ -163,6 +163,9 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **Restful places** (1.31.0, owner): resting for the whole elapsed time recovers faster at three stamina places (Founder's Park x1.5, Medical Centre ward x1.75, own Bathhouse x2) and three mana places (Cathedral x1.25, Meditation Rooms x2, Forest Clearing x3), each with its own rules by hour, week and weather (`data/restore_places.json`); no daily cap, time is the cost. Not while training, practising, fighting or on a trip. HP stays with the story (rule 502 Healing).
 - **Location activities** (1.31.0, owner): Row on the lake, Run the hills, Read the sky, Sit under the willow (Arcana); a paid bell-keeper's shift (30, inside the two paid shifts a week); the Old Hut custom (a confidence there: Trust +1, once a month per person, outside the weekly cap); a letter home from the Mail Tower once a month gets a reply a week later with a rolled parcel (`data/letters_home.json`); in the bathhouse and laundry, lore and rumours are overheard at 60%. Scrapped by the owner: the Cathedral oath registry, Portrait Hall scouting, Broken Statue theories.
 - **The status bar shows only on the latest message** (F22).
+- **Scene cards** (1.70.0, owner): who is here shows as cards under the newest reply (full portrait, true thoughts, bond meters),
+  written by the UI script into the message; the bracelet's portrait strip shows only without that script. The thoughts are read
+  from the preset's optional `<npc_thoughts>` block; the cards never need it (the card works with any preset).
 - **Gated places** (1.24.0, 1.24.1, owner; 1.30.1 owner playtest): far-grounds places show on the Map only while {{user}} is in
   their area, at the place that leads to them or another place behind the same gate, and hide again back on the main grounds
   (`curate_data.py` `GATES`: Willow Island and Fishing House ← Boathouse, Forest Clearing ← Forest, Observation Tower and Old Hut ←

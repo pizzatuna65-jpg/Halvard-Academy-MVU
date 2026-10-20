@@ -401,7 +401,9 @@ const uiOn = (UI, id) => { const U = UI || {}; return typeof (U.on || {})[id] ==
 
     const low = h.length;   // 1.22.0: who is here and the latest news share one row (.low)
     const here = Object.entries((S.Scene || {}).Present || {});
-    if (here.length) {
+    // 1.70.0: while the Eldrasil UI script runs, the scene cards under the reply show who is here (portrait, thoughts, bond)
+    let cards = false; try { cards = !!window.parent.__eldrasilScene; } catch (e) { /* no parent */ }
+    if (here.length && !cards) {
       h += '<div class="cast" aria-label="Here with you">' + here.map(([id, v]) => {
         const c = CAST[id], b = (S.Bonds || {})[id];
         const known = c && ((b && b.Rank >= 1) || (ui.names || []).includes(id));

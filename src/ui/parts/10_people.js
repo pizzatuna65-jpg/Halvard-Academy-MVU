@@ -62,6 +62,13 @@ PANELS.people = {
   after(S) { if (view.ptab === 'graph') drawGraph(S); },
 };
 
+// 1.23.0: XP, Trust and Tension as three labelled meters (1.70.0: shared by the people cards and the scene cards)
+function bondMeters(id, b, S) {
+  const need = bondNeed(S, b.Rank), x = Math.min(num(b.$xp), need);
+  return `<span class="m" title="${b.Rank >= 10 ? 'max rank' : `${x} / ${need} XP to Rank ${b.Rank + 1}`}"><span class="ml">XP<b>${b.Rank >= 10 ? 'max' : `${x}/${need}`}</b></span><span class="mini xp"><i style="width:${b.Rank >= 10 ? 100 : need ? x / need * 100 : 0}%"></i></span></span>
+      <span class="m" title="${esc(trustTxt(id, b))}"><span class="ml">Trust<b>${id in TRD.lock ? 'fixed' : b.Trust}</b></span>${mini(b.Trust, '#3f9f69')}</span>
+      <span class="m" title="${esc(tensionTxt(id, b))}"><span class="ml">Tension<b>${TEND.lock.includes(id) ? '—' : esc(tensionBand(b.Tension))}</b></span>${mini(b.Tension, '#e0645a')}</span>`;
+}
 function peopleListHTML(S) {
   const B = S.Bonds || {}, here = Object.keys((S.Scene || {}).Present || {});
   const ids = Object.keys(B).sort((a, b) => (here.includes(b) - here.includes(a)) || (B[b].Rank - B[a].Rank) || (num(B[b].$xp) - num(B[a].$xp)));
@@ -69,14 +76,12 @@ function peopleListHTML(S) {
   // 1.23.0 (UI overhaul): cards in a grid; the rank is a brass medal, XP, Trust and Tension are three labelled meters, and a
   // moonglass dot on the portrait says who is here now
   return `<p class="lead">${ids.length} ${ids.length === 1 ? 'person' : 'people'} you have met. Time together deepens each bond; once the bar fills, the next genuine encounter can deepen it further.</p><div class="plist">` + ids.map(id => {
-    const b = B[id], n = npcOf(id), need = bondNeed(S, b.Rank), x = Math.min(num(b.$xp), need);
+    const b = B[id], n = npcOf(id);
     const dot = here.includes(id) ? '<i class="here" role="img" aria-label="here now" title="here now"></i>' : '';
     return `<button class="pr" data-open="npc:${esc(id)}"><span class="pav">${avatar(id, S, 'av lg')}${dot}</span><span class="pm">
       <span class="pn">${esc(nameOf(id, S, true))}${isNew(`npc:${id}`) ? newsDot() : ''}${b.Romance ? ' <span class="pill r">romance</span>' : ''}</span><span class="sub">${esc(b.Title || (n ? publicRole(id, S) || whoLine(id, S) : ''))}</span></span>
       <span class="medal" title="Rank ${b.Rank} of 10">${b.Rank}</span>
-      <span class="pmt"><span class="m" title="${b.Rank >= 10 ? 'max rank' : `${x} / ${need} XP to Rank ${b.Rank + 1}`}"><span class="ml">XP<b>${b.Rank >= 10 ? 'max' : `${x}/${need}`}</b></span><span class="mini xp"><i style="width:${b.Rank >= 10 ? 100 : need ? x / need * 100 : 0}%"></i></span></span>
-      <span class="m" title="${esc(trustTxt(id, b))}"><span class="ml">Trust<b>${id in TRD.lock ? 'fixed' : b.Trust}</b></span>${mini(b.Trust, '#3f9f69')}</span>
-      <span class="m" title="${esc(tensionTxt(id, b))}"><span class="ml">Tension<b>${TEND.lock.includes(id) ? '—' : esc(tensionBand(b.Tension))}</b></span>${mini(b.Tension, '#e0645a')}</span></span></button>`;
+      <span class="pmt">${bondMeters(id, b, S)}</span></button>`;
   }).join('') + '</div>';
 }
 

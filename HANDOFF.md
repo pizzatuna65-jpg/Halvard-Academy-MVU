@@ -3,11 +3,12 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.69.0** (2026-10-20): back to MVU's one-call mode (507 `更新方式 = 随AI输出`, owner): one model per turn
-writes the story and the `<UpdateVariable>` block; extra-model parsing stays optional (PLAYER_GUIDE §8). 1.68.0: the preset is
-Realistic Frankenstein 2.2.1.3 (Realistic Gemini BOLT) as it ships plus a closed deviation list (`presets/edit_preset.py`). The memory
-audit is done except batch 8. Live checks: the campaign quest log `docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat,
-Y1 M1 W1 Mon 10:13; first Act 0: update the card and import the preset, Q0.1).
+**Snapshot:** card **v1.70.0** (2026-10-20): scene cards (owner): under the newest reply, each person present gets a card with the
+full portrait, their true thoughts (read from the preset's `<npc_thoughts>` block) and their bond meters; the bracelet's portrait
+strip steps aside (`src/ui/parts/50_scene.js`). 1.69.0: one model per turn (507 `更新方式 = 随AI输出`); 1.68.0: the preset is
+Realistic Frankenstein 2.2.1.3 as it ships plus a closed deviation list. The memory audit is done except batch 8. Live checks: the
+campaign quest log `docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the
+card and import the preset, Q0.1).
 
 **Next task:** the owner plays the quest log; their reports and chat exports bring the playtest fixes (tick what passed, run
 `tools/audit_chat.py` on the export, move "Where you are"). Batch 8 (chapters, a new chat file without losing memory) is planned in

@@ -776,7 +776,7 @@ function themeSwatch(id) {
   const m = (THEMES.themes[id] || {}).map || {}, c = rgb => `rgb(${m[rgb] || rgb})/*keep*/`;
   return `<span class="pv" style="background:${c('28,34,48')}"><i style="background:linear-gradient(180deg,${c('102,110,128')},${c('42,47,59')})"></i><i style="background:radial-gradient(${c('31,74,79')},${c('14,33,36')});box-shadow:inset 0 0 0 2px ${c('201,163,100')}"></i></span>`;
 }
-function applyTheme() { const st = root && root.querySelector('style'); if (st) st.textContent = themed(CSS); render(); }
+function applyTheme() { const st = root && root.querySelector('style'); if (st) st.textContent = themed(CSS); if (PD.getElementById('eldrasil-scene-css')) sceneStyle(); render(); }
 
 // ---------------------------------------------------------------- host
 const PD = window.parent.document;
@@ -813,13 +813,15 @@ function newsMark(keys, level) {
 const isNew = (key, shown) => { const n = newsNow.unseen.has(key); if (n && shown) newsNow.shown.push(key); return n; };
 let draft = null, draftBuilt = false, chosenTemplate = '';
 
+function ensureFonts() {   // 1.70.0: also for the scene cards in the chat
+  if (PD.getElementById('eldrasil-ui-fonts')) return;
+  const l = PD.createElement('link'); l.id = 'eldrasil-ui-fonts'; l.rel = 'stylesheet';
+  l.href = 'https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Alegreya+SC:wght@500;700&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap';
+  PD.head.appendChild(l);
+}
 function ensureHost() {
   if (host && PD.body.contains(host)) return;
-  if (!PD.getElementById('eldrasil-ui-fonts')) {
-    const l = PD.createElement('link'); l.id = 'eldrasil-ui-fonts'; l.rel = 'stylesheet';
-    l.href = 'https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Alegreya+SC:wght@500;700&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap';
-    PD.head.appendChild(l);
-  }
+  ensureFonts();
   host = PD.createElement('div'); host.id = 'eldrasil-ui-host'; PD.body.appendChild(host);
   root = host.attachShadow({ mode: 'open' });
   root.innerHTML = `<style>${themed(CSS)}</style><div class="ov" hidden role="dialog" aria-modal="true"></div>`;
@@ -1787,7 +1789,17 @@ if (typeof eventOn === 'function' && typeof getButtonEvent === 'function') {
     const sayBoot = _.debounce(sayStyle, 300);   // 1.37.0: dialogue colours follow new Extras and the chat theme
     ['MESSAGE_RECEIVED', 'MESSAGE_SWIPED', 'MESSAGE_UPDATED', 'CHAT_CHANGED'].forEach(k => tavern_events[k] && eventOn(tavern_events[k], sayBoot));
     setTimeout(sayStyle, 1500);
-    waitGlobalInitialized('Mvu').then(() => eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, () => { setTimeout(refresh, 400); newsBoot(); sayBoot(); }));
-    $(window).on('pagehide', () => { delete window.parent.__eldrasilUI; if (host) host.remove(); const s = PD.getElementById('eldrasil-say'); if (s) s.remove(); });
+    // 1.70.0: the scene cards under the newest reply (50_scene.js); the bracelet drops its portrait strip while they run
+    window.parent.__eldrasilScene = true;
+    ['MESSAGE_RECEIVED', 'MESSAGE_SENT', 'MESSAGE_DELETED', 'MESSAGE_SWIPED', 'MESSAGE_UPDATED', 'MESSAGE_EDITED', 'CHARACTER_MESSAGE_RENDERED', 'CHAT_CHANGED'].forEach(k => tavern_events[k] && eventOn(tavern_events[k], sceneBoot));
+    eventOn('eldrasil:state', sceneBoot);
+    PD.addEventListener('click', sceneClick); PD.addEventListener('error', sceneImgError, true);
+    setTimeout(sceneRender, 1500);
+    try { eventEmit('eldrasil:state'); } catch (e) { /* the bracelet redraws on its own events */ }
+    waitGlobalInitialized('Mvu').then(() => eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, () => { setTimeout(refresh, 400); newsBoot(); sayBoot(); setTimeout(sceneBoot, 400); }));
+    $(window).on('pagehide', () => {
+      delete window.parent.__eldrasilUI; delete window.parent.__eldrasilScene; if (host) host.remove(); const s = PD.getElementById('eldrasil-say'); if (s) s.remove();
+      PD.removeEventListener('click', sceneClick); PD.removeEventListener('error', sceneImgError, true); sceneClear(null); const c = PD.getElementById('eldrasil-scene-css'); if (c) c.remove();
+    });
   });
 }

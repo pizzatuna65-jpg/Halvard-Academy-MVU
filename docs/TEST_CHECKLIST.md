@@ -43,7 +43,7 @@ it. *Update*: the folded block MVU appends under the reply. *Log*: Student file 
 ## Act 0 — Before the next reply (once)
 
 ### Q0.1 Update everything
-- [ ] Update the card to 1.69 (`dist/Eldrasil_Halvard.png`) and accept the lorebook update: the popup does not ask for a new chat
+- [ ] Update the card to 1.70 (`dist/Eldrasil_Halvard.png`) and accept the lorebook update: the popup does not ask for a new chat
       [1.11.1], the bracelet shows no "old lorebook" warning, and the MVU panel shows the card's settings as overriding [basics].
 - [ ] MVU → character-card settings shows **Variable update method = Alongside AI output** (one model, one
       request a turn) [1.69].
@@ -117,6 +117,12 @@ it. *Update*: the folded block MVU appends under the reply. *Log*: Student file 
 ### Q1.1 The tour with Kanae and Zara (until 18:00)
 *Do:* follow the tour: the club booths, the Canteen at lunch, the Library, Founder's Park, the lake; late in the afternoon the seniors
 show the newcomers their dorm rooms.
+- [ ] Scene cards: under each new reply, one card per person present (Kanae, Zara): the full portrait, "Now:", their true thoughts,
+      the rank medal and XP, Trust, Tension. That reply has no folded 🧠 Thoughts (older replies keep theirs); the bracelet has no small
+      portraits. Dossier opens their file. A swipe moves the cards to the new reply; editing a reply hides them until it is saved; on a
+      phone the portrait sits beside the stats with the thoughts below [1.70].
+- [ ] Someone not yet named shows their role, not their name; a passer-by has "Keep in record"; with four or more present, three
+      cards and an "also here" row; a thought about someone absent is an "elsewhere" line [1.70].
 - [ ] `<now>` has the "Entrance tour assignment (keep these same people through 18:00)" line and `<campus_rules>` the Entrance lines;
       the same three stay together through several places and a swipe. From Tuesday both are gone [1.9.2, 1.11].
 - [ ] A clear sky all day (an event day) and the Notice Board forecast agrees; an ordinary day after it can rain again [1.30.3].
