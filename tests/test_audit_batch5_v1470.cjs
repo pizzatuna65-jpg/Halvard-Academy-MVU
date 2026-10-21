@@ -15,13 +15,19 @@ const PRES = /^(Students |Study Hall|Student Council (meets|members)|Likely arou
 const bad = [];
 // 1.52.0: with the NPC routines off (Features), as before them
 // 1.83.0: on a break day (the Mid-Year Break) most students have gone home (shared.js breakStays): those scenarios may only lose names
-const brk = [];
+const brk = [], fd = [];
 for (let i = 0; i < N; i++) {
   const sc = scenario(i, E, ['npc_routines']), got = now(sc).split('\n').filter(l => PRES.test(l));
   if (E.breakOf(sc.World)) {
     brk.push(i);
     const same = (l, r) => l === r || (l.split(': ')[0] === r.split(': ')[0] && l.split(': ').slice(1).join(': ').replace(/no regulars on record/, '').split(/,\s*/).filter(Boolean).every(w => r.includes(w)));
     if (got.length !== REC[i].length || got.some((l, k) => !same(l, REC[i][k]))) bad.push(i);
+    continue;
+  }
+  // 1.86.0: Founder Day has no classes (lore 25, calendar noclass): its timetable, the Saturday club block included, is suspended
+  if (/Academy Founder Day/.test(sc.World._Event_today || '') && /Timetable suspended/.test(sc.World._Period || '')) {
+    fd.push(i);
+    if (got.some(l => /^(Students are at their clubs|Club time)/.test(l))) bad.push(i);
     continue;
   }
   if (JSON.stringify(got) !== JSON.stringify(REC[i])) bad.push(i);

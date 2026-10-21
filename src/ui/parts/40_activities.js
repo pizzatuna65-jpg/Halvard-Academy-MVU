@@ -272,6 +272,8 @@ function acEvent(S) {
   const nm = id => (id ? `<button class="who" data-open="npc:${esc(id)}">${esc(nameOf(id, S))}</button>` : 'a dorm-mate the story will introduce');
   const fools = live && live.fools ? `<div class="item"><div class="row"><span class="t">The name-draw</span></div><div>If you joined in, the name you drew is ${nm(live.fools.to)}.</div>`
     + `<div class="sub">${(hmMin(S.World.Time) || 0) >= 20 * 60 ? `Who drew yours: ${nm(live.fools.by)}.` : 'Who drew yours: you will know by tonight, or when they strike.'}</div></div>` : '';
+  // 1.86.0: Founder Day's treasure hunt: how many clues you have solved (never where the next one leads)
+  const hunt = live && live.hunt ? `<div class="item"><div class="row"><span class="t">The treasure hunt</span><span class="pill ${live.hunt.at >= live.hunt.of ? 'g' : ''}">${live.hunt.at} of ${live.hunt.of} clues</span></div><div class="sub">Optional, alone or with friends; everyone starts from the same first clue after the rite. Solved clues go on the Mystery Board.</div>${live.hunt.next && !live.hunt.at ? '<div class="meta"><button class="btn sm" data-fill="I take the first clue and join the treasure hunt.">Draft</button></div>' : ''}</div>` : '';
   const sale = e.sale ? `<div class="item"><div class="row"><span class="t">${esc(e.sale.shop)}: ${e.sale.pct}% off everything</span><span class="pill">${n <= 0 ? 'today' : whenLabel(n)}</span></div></div>` : '';
   let brk = '';
   if (e.kind === 'holiday') {
@@ -282,7 +284,7 @@ function acEvent(S) {
         : `${R.home && R.why ? `<div class="warn">Going home: ${esc(R.why)}.</div>` : ''}<div class="meta"><button class="btn sm" data-home="go">Go home for the break</button></div>`);
   }
   return `<p class="lead"><b>${esc(e.t.split(' (')[0])}</b> · ${esc(span)} · ${esc(n <= 0 ? (live ? `today${live.of > 1 ? `, day ${live.n} of ${live.of}` : ''}` : 'on now') : whenLabel(n))}</p>
-    ${ways ? `<div class="meta">${ways}</div>` : ''}${nowBlock}${fools}${sale}${brk}<h3>Plan</h3>${plan}${chHTML}`;
+    ${ways ? `<div class="meta">${ways}</div>` : ''}${nowBlock}${fools}${hunt}${sale}${brk}<h3>Plan</h3>${plan}${chHTML}`;
 }
 
 // ---------------------------------------------------------------- shop

@@ -2,63 +2,368 @@
   "_note": "1.81.0 (owner-approved planning/DRAFT_event_frame.md, release A1): the shared event frame's data. chances: optional things {{user}} may do at an event (data/calendar.json event id -> list), never required and never reminded. Each is done once a campaign year (max: how many times). how: at (place keys, lowercase without 'the'), day (the event day it belongs to, else any of its days), from / to ('HH:MM'; 'to' may pass 24:00 into the next event day), min (minutes the reply covers there), said (a regex the reply's text must match), club ({{user}} is in a club), trip (the Trip is active or the Location matches this regex), practice (a /Practice action accepted this reply), other_dorm (its partner is from another dorm), deed (a /Rep_events kind reported this reply). reward: prof [Field, XP] ('club' = the club's Field; uncapped, as the 1.26.0 event XP was), moment (a line in the Recent moments of every Rank 3+ bond present), or nothing (the chance only marks it done). legacy: the key the 1.26.0 event XP used ($eng.prof.days 'event:<year>:<key>'), read as done so a save never pays twice. Engine: stepProficiency (eventChances); UI: the Activities Event tab.",
   "chances": {
     "entrance": [
-      { "id": "feast", "text": "Be at the Entrance Feast in the Ring Dining Hall", "how": { "at": ["ring dining hall"], "from": "19:00", "min": 45 }, "reward": { "prof": ["Society", 2] }, "legacy": "Entrance feast" }
+      {
+        "id": "feast",
+        "text": "Be at the Entrance Feast in the Ring Dining Hall",
+        "how": {
+          "at": [
+            "ring dining hall"
+          ],
+          "from": "19:00",
+          "min": 45
+        },
+        "reward": {
+          "prof": [
+            "Society",
+            2
+          ]
+        },
+        "legacy": "Entrance feast"
+      }
     ],
     "star_night": [
-      { "id": "evening", "text": "Spend the evening on the Grassy Field and Hills", "how": { "at": ["grassy field and hills"], "day": "Sat", "from": "20:00", "min": 45 }, "reward": { "prof": ["Arcana", 2] }, "legacy": "Star Night" },
-      { "id": "meteor", "text": "Watch the great meteor shower from the Grassy Field and Hills at midnight", "how": { "at": ["grassy field and hills"], "day": "Sat", "from": "23:30", "to": "24:30" }, "reward": { "moment": "Watched the great meteor shower on Star Night with {{user}}." } }
+      {
+        "id": "evening",
+        "text": "Spend the evening on the Grassy Field and Hills",
+        "how": {
+          "at": [
+            "grassy field and hills"
+          ],
+          "day": "Sat",
+          "from": "20:00",
+          "min": 45
+        },
+        "reward": {
+          "prof": [
+            "Arcana",
+            2
+          ]
+        },
+        "legacy": "Star Night"
+      },
+      {
+        "id": "meteor",
+        "text": "Watch the great meteor shower from the Grassy Field and Hills at midnight",
+        "how": {
+          "at": [
+            "grassy field and hills"
+          ],
+          "day": "Sat",
+          "from": "23:30",
+          "to": "24:30"
+        },
+        "reward": {
+          "moment": "Watched the great meteor shower on Star Night with {{user}}."
+        }
+      }
     ],
     "warding_rite": [
-      { "id": "working", "text": "Stand with the dorm in the Main Courtyard for the shared working", "how": { "at": ["courtyards", "main courtyard"], "day": "Fri", "from": "18:30", "min": 45 }, "reward": { "prof": ["Arcana", 2] }, "legacy": "Warding Rite" }
+      {
+        "id": "working",
+        "text": "Stand with the dorm in the Main Courtyard for the shared working",
+        "how": {
+          "at": [
+            "courtyards",
+            "main courtyard"
+          ],
+          "day": "Fri",
+          "from": "18:30",
+          "min": 45
+        },
+        "reward": {
+          "prof": [
+            "Arcana",
+            2
+          ]
+        },
+        "legacy": "Warding Rite"
+      }
     ],
     "expedition": [
-      { "id": "hunt", "text": "Take part in the hunt", "how": { "trip": "forest|expedition", "min": 45 }, "reward": { "prof": ["Nature", 3] }, "legacy": "Creature Studies Expedition" }
+      {
+        "id": "hunt",
+        "text": "Take part in the hunt",
+        "how": {
+          "trip": "forest|expedition",
+          "min": 45
+        },
+        "reward": {
+          "prof": [
+            "Nature",
+            3
+          ]
+        },
+        "legacy": "Creature Studies Expedition"
+      }
     ],
     "club_festival": [
-      { "id": "stand", "text": "Help run the club's stand for an hour", "how": { "at": ["courtyards", "main courtyard"], "club": true, "said": "\\b(stand|stall|booth)s?\\b", "from": "09:00", "to": "18:00", "min": 45 }, "reward": { "prof": ["club", 2] }, "legacy": "Club Festival stand" },
-      { "id": "perform", "text": "Win the crowd at an exhibition match or demonstration", "how": { "deed": "memorable_performance" }, "reward": {} }
+      {
+        "id": "stand",
+        "text": "Help run the club's stand for an hour",
+        "how": {
+          "at": [
+            "courtyards",
+            "main courtyard"
+          ],
+          "club": true,
+          "said": "\\b(stand|stall|booth)s?\\b",
+          "from": "09:00",
+          "to": "18:00",
+          "min": 45
+        },
+        "reward": {
+          "prof": [
+            "club",
+            2
+          ]
+        },
+        "legacy": "Club Festival stand"
+      },
+      {
+        "id": "perform",
+        "text": "Win the crowd at an exhibition match or demonstration",
+        "how": {
+          "deed": "memorable_performance"
+        },
+        "reward": {}
+      }
     ],
     "training_week": [
-      { "id": "watch", "text": "Spend an evening at the sparring on the Combat Grounds", "how": { "at": ["combat grounds"], "from": "16:00", "min": 45 }, "max": 3, "reward": { "prof": ["Prowess", 3], "once": true, "scout": 2 }, "legacy": "Training Week" },
-      { "id": "spar", "text": "Spar with a student from another dorm", "how": { "practice": "Spar with a partner", "other_dorm": true }, "reward": {} }
+      {
+        "id": "watch",
+        "text": "Spend an evening at the sparring on the Combat Grounds",
+        "how": {
+          "at": [
+            "combat grounds"
+          ],
+          "from": "16:00",
+          "min": 45
+        },
+        "max": 3,
+        "reward": {
+          "prof": [
+            "Prowess",
+            3
+          ],
+          "once": true,
+          "scout": 2
+        },
+        "legacy": "Training Week"
+      },
+      {
+        "id": "spar",
+        "text": "Spar with a student from another dorm",
+        "how": {
+          "practice": "Spar with a partner",
+          "other_dorm": true
+        },
+        "reward": {}
+      }
     ],
     "bazaar": [
-      { "id": "stall", "text": "Run a stall, or help at one, for an hour", "how": { "at": ["courtyards", "main courtyard"], "said": "\\b(stand|stall|booth)s?\\b", "from": "09:00", "to": "18:00", "min": 45 }, "reward": { "prof": ["Craft", 2] }, "legacy": "Academy Bazaar stand" }
+      {
+        "id": "stall",
+        "text": "Run a stall, or help at one, for an hour",
+        "how": {
+          "at": [
+            "courtyards",
+            "main courtyard"
+          ],
+          "said": "\\b(stand|stall|booth)s?\\b",
+          "from": "09:00",
+          "to": "18:00",
+          "min": 45
+        },
+        "reward": {
+          "prof": [
+            "Craft",
+            2
+          ]
+        },
+        "legacy": "Academy Bazaar stand"
+      }
     ],
     "founder_day": [
-      { "id": "feast", "text": "Be at the Founder Day feast in the Ring Dining Hall", "how": { "at": ["ring dining hall"], "from": "19:00", "min": 45 }, "reward": { "prof": ["Society", 2] }, "legacy": "Founder Day feast" }
+      {
+        "id": "feast",
+        "text": "Be at the Founder Day feast in the Ring Dining Hall",
+        "how": {
+          "at": [
+            "ring dining hall"
+          ],
+          "from": "19:00",
+          "min": 45
+        },
+        "reward": {
+          "prof": [
+            "Society",
+            2
+          ]
+        },
+        "legacy": "Founder Day feast"
+      }
     ]
   },
   "contest": {
     "_note": "1.82.0 (planning/DRAFT_event_frame.md section 3, release A2): the Dorm Competition, computed from the seed and never stored (shared.js contest section; tools/common.py presence_data hands it to the engine and the panels as PD.ct). roles: a Halvard student's combat role in the brackets (owner-approved draft table 3.4; Castor by his public magic). pins: only what the lore says (str: strength added; lose: the round they go out in, 'semi' = the semi-final; tie: 'first' wins the tie for the better of the places shared by that round's losers; years: campaign years the pin holds). dorm: bracket size per role per dorm, qualifying places (lore 19), each role's format and the rounds' times. strength: an entrant's (base + per_year x (school year - 1) + 0..spread), {{user}}'s (user_base + user_per_year x (Year - 1) + user_per_prowess x Prowess rank); a bout between two entrants the narrator does not play goes to A with 50 + (A - B) percent, clamped; edge: the gap that makes an opponent stronger or weaker (Fortune -10 / +10). vote: the Club Festival coin vote, drawn at the close weighted by (named members + base), with {{user}}'s club boosted for each of its chances done.",
     "roles": {
-      "Gareth": "Attack", "Sophia": "Attack", "Caralynn": "Attack", "Wren": "Attack", "Aurelian": "Attack", "Bruno": "Attack", "Lenna": "Defense", "Nerys": "Support", "Trixie": "Control", "Tilly": "Control",
-      "Tsubaki": "Attack", "Topaz": "Attack", "Irene": "Defense", "Kanae": "Support", "Aiden": "Support", "Hadrian": "Support", "Dante": "Control", "Bianca": "Control",
-      "Florian": "Attack", "Idris": "Attack", "William": "Attack", "Zara": "Defense", "Maple": "Defense", "Ruby": "Healing", "Alyssa": "Support", "Royhan": "Control", "Rigel": "Control",
-      "Etnie": "Attack", "Saffi": "Attack", "Faye": "Defense", "Percival": "Healing", "Vera": "Healing", "Castor": "Healing", "Caspian": "Support", "Linus": "Support"
+      "Gareth": "Attack",
+      "Sophia": "Attack",
+      "Caralynn": "Attack",
+      "Wren": "Attack",
+      "Aurelian": "Attack",
+      "Bruno": "Attack",
+      "Lenna": "Defense",
+      "Nerys": "Support",
+      "Trixie": "Control",
+      "Tilly": "Control",
+      "Tsubaki": "Attack",
+      "Topaz": "Attack",
+      "Irene": "Defense",
+      "Kanae": "Support",
+      "Aiden": "Support",
+      "Hadrian": "Support",
+      "Dante": "Control",
+      "Bianca": "Control",
+      "Florian": "Attack",
+      "Idris": "Attack",
+      "William": "Attack",
+      "Zara": "Defense",
+      "Maple": "Defense",
+      "Ruby": "Healing",
+      "Alyssa": "Support",
+      "Royhan": "Control",
+      "Rigel": "Control",
+      "Etnie": "Attack",
+      "Saffi": "Attack",
+      "Faye": "Defense",
+      "Percival": "Healing",
+      "Vera": "Healing",
+      "Castor": "Healing",
+      "Caspian": "Support",
+      "Linus": "Support"
     },
     "pins": {
-      "Gareth": { "str": 25 },
-      "Sophia": { "str": 20 },
-      "Ruby": { "lose": 1 },
-      "Royhan": { "lose": "semi", "tie": "first", "years": [1] },
-      "Dante": { "lose": 2 }
+      "Gareth": {
+        "str": 25
+      },
+      "Sophia": {
+        "str": 20
+      },
+      "Ruby": {
+        "lose": 1
+      },
+      "Royhan": {
+        "lose": "semi",
+        "tie": "first",
+        "years": [
+          1
+        ]
+      },
+      "Dante": {
+        "lose": 2
+      }
     },
     "dorm": {
-      "size": [10, 16],
-      "quota": { "Attack": 4, "Defense": 3, "Healing": 3, "Support": 3, "Control": 3 },
-      "format": { "Attack": "knockout", "Control": "knockout", "Defense": "heats", "Healing": "heats", "Support": "paired" },
-      "times": { "knockout": [["Sat", "09:30"], ["Sat", "14:00"], ["Sun", "10:00"], ["Sun", "15:00"]], "heats": [["Sat", "10:00"], ["Sun", "14:00"]] },
-      "end": ["Sun", "18:00"],
+      "size": [
+        10,
+        16
+      ],
+      "quota": {
+        "Attack": 4,
+        "Defense": 3,
+        "Healing": 3,
+        "Support": 3,
+        "Control": 3
+      },
+      "format": {
+        "Attack": "knockout",
+        "Control": "knockout",
+        "Defense": "heats",
+        "Healing": "heats",
+        "Support": "paired"
+      },
+      "times": {
+        "knockout": [
+          [
+            "Sat",
+            "09:30"
+          ],
+          [
+            "Sat",
+            "14:00"
+          ],
+          [
+            "Sun",
+            "10:00"
+          ],
+          [
+            "Sun",
+            "15:00"
+          ]
+        ],
+        "heats": [
+          [
+            "Sat",
+            "10:00"
+          ],
+          [
+            "Sun",
+            "14:00"
+          ]
+        ]
+      },
+      "end": [
+        "Sun",
+        "18:00"
+      ],
       "heat_size": 6,
       "heat_up": 2
     },
-    "strength": { "base": 25, "per_year": 15, "spread": 30, "user_base": 30, "user_per_year": 10, "user_per_prowess": 10, "clamp": [10, 90], "edge": 15, "fortune": 10 },
-    "vote": { "club_festival": { "close": ["Sat", "18:00"], "base": 4, "boost": { "stand": 0.5, "perform": 0.5 } } }
+    "strength": {
+      "base": 25,
+      "per_year": 15,
+      "spread": 30,
+      "user_base": 30,
+      "user_per_year": 10,
+      "user_per_prowess": 10,
+      "clamp": [
+        10,
+        90
+      ],
+      "edge": 15,
+      "fortune": 10
+    },
+    "vote": {
+      "club_festival": {
+        "close": [
+          "Sat",
+          "18:00"
+        ],
+        "base": 4,
+        "boost": {
+          "stand": 0.5,
+          "perform": 0.5
+        }
+      },
+      "election": {
+        "close": [
+          "Sat",
+          "16:00"
+        ],
+        "base": 4
+      }
+    }
   },
   "breaks": {
     "_note": "1.83.0 (planning/DRAFT_event_frame.md 4.3, release B): who of the Halvard students stays on campus over a break (a calendar event with home: the Mid-Year Break, the Month 12 holiday; lore 238: staying is 'allowed and common'). stay: those whose lore leaves them no home to go to or keeps them here (Etnie, a street orphan; Dante, raised in an orphanage and the Doves' errand-runner; Lenna, whose village and parents the Blightfire took; Castor, whose home is Halvard's Mail Tower; Tilly, whose 'far northern province' is a cover for Velmora). Everyone else stays with chance percent, drawn per student, campaign year and break. The others are away (whereabouts 'home for the break').",
-    "stay": ["Etnie", "Dante", "Lenna", "Castor", "Tilly"],
+    "stay": [
+      "Etnie",
+      "Dante",
+      "Lenna",
+      "Castor",
+      "Tilly"
+    ],
     "chance": 20
   },
   "fools": {
@@ -68,27 +373,186 @@
   "kingdom": {
     "_note": "1.84.0 (owner-approved planning/DRAFT_kingdom_competition.md): the Kingdom Competition in three rounds, run by the engine (stepKingdom) from the seed and what the story reported. teams: the four academies in order (Halvard first); tactic: how each team plays (from its members' lore: Veyra hunts, Bellatrix; Myrdath slips past, Ines and Lucius; Ashvale holds what it takes, Elion's new team), tact: what a tactic changes (ambush: the chance to attack a holder, times; guard: guards left in held rooms, plus or minus; retreat: % a team backs out of a meeting instead of fighting; retake: a held room of another team is a target); pins: strength added to a rival (each academy's Rank 1); rival: strength added to every rival team member (each team is its academy's best, as Halvard's is). r1: the Kingsmeadow hunt (Wed): three Kingsblooms planted on spots by the seed, one hour a tick from `from`: find (% a team without one finds one in the field), sign (% a Halvard team searching gets a sign of one), ambush (% a team attacks a holder), warn (minutes before sunset <now> warns); the judges take one bloom a team at `to` (sunset). r2: the Undercroft (Thu): ten rooms with a bound beast's grade, beasts per grade (the Expedition's names), boss (a beast's strength by grade), every `tick` minutes; a room is taken by downing its beast and being the only team in it for `hold` minutes (the count stops while another team is inside); the two teams holding `win` rooms at the same time go through; group: strength a member adds to a group; boss_seal: % a seal breaks in a failed fight with a beast. r3: the final on the sand (Sat), off-screen decided at `rolled`. credit: what each deed adds to a competitor's record (the World panel picks `world` competitors, one per combat role, by record and strength).",
     "event": "kingdom_comp",
-    "teams": ["Halvard", "Ashvale", "Myrdath", "Veyra"],
-    "tactic": {"Halvard": "even", "Ashvale": "hold", "Myrdath": "sneak", "Veyra": "hunt"},
-    "tact": {
-      "even": {"ambush": 1, "guard": 0, "retreat": 0, "retake": false},
-      "hold": {"ambush": 1, "guard": 0, "retreat": 20, "retake": false},
-      "sneak": {"ambush": 0.5, "guard": 0, "retreat": 60, "retake": false},
-      "hunt": {"ambush": 1.5, "guard": -1, "retreat": 0, "retake": true}
+    "teams": [
+      "Halvard",
+      "Ashvale",
+      "Myrdath",
+      "Veyra"
+    ],
+    "tactic": {
+      "Halvard": "even",
+      "Ashvale": "hold",
+      "Myrdath": "sneak",
+      "Veyra": "hunt"
     },
-    "pins": {"Elion": 15, "Bellatrix": 15, "Lucius": 15}, "rival": 10,
-    "r1": {"day": "Wed", "from": "07:00", "to": "18:00", "flowers": 3, "pavilion": "judges_pavilion",
-      "spots": ["long_meadow", "willow_brook", "old_orchard", "bramble_hollow", "standing_stones", "reed_marsh", "beacon_hill"],
-      "find": 25, "sign": 40, "ambush": 25, "warn": 60},
-    "r2": {"day": "Thu", "from": "08:00", "to": "18:00", "tick": 15, "hold": 15, "win": 4, "gates": "undercroft_gates",
-      "rooms": [["undercroft_room_1", "IV"], ["undercroft_room_2", "IV"], ["undercroft_room_3", "IV"], ["undercroft_room_4", "III"], ["undercroft_room_5", "III"],
-        ["undercroft_room_6", "III"], ["undercroft_room_7", "III"], ["undercroft_room_8", "II"], ["undercroft_room_9", "II"], ["undercroft_room_10", "II"]],
-      "beasts": {"IV": ["goblin hound", "thorn creeper", "chime toad"],
-        "III": ["dire wolf", "thornstag", "owlbear", "forest troll", "giant spider", "mist wolf", "gargoyle", "lesser drake", "giant centipede"],
-        "II": ["ironback boar", "dire bear", "ogre", "cave troll", "griffin", "wyvern", "manticore"]},
-      "boss": {"IV": 30, "III": 55, "II": 80}, "group": 5, "boss_seal": 40},
-    "r3": {"day": "Sat", "from": "09:00", "to": "18:00", "rolled": "11:00"},
-    "credit": {"find": 3, "take": 2, "seal": 1, "boss": 3, "room": 2, "final": 3},
+    "tact": {
+      "even": {
+        "ambush": 1,
+        "guard": 0,
+        "retreat": 0,
+        "retake": false
+      },
+      "hold": {
+        "ambush": 1,
+        "guard": 0,
+        "retreat": 20,
+        "retake": false
+      },
+      "sneak": {
+        "ambush": 0.5,
+        "guard": 0,
+        "retreat": 60,
+        "retake": false
+      },
+      "hunt": {
+        "ambush": 1.5,
+        "guard": -1,
+        "retreat": 0,
+        "retake": true
+      }
+    },
+    "pins": {
+      "Elion": 15,
+      "Bellatrix": 15,
+      "Lucius": 15
+    },
+    "rival": 10,
+    "r1": {
+      "day": "Wed",
+      "from": "07:00",
+      "to": "18:00",
+      "flowers": 3,
+      "pavilion": "judges_pavilion",
+      "spots": [
+        "long_meadow",
+        "willow_brook",
+        "old_orchard",
+        "bramble_hollow",
+        "standing_stones",
+        "reed_marsh",
+        "beacon_hill"
+      ],
+      "find": 25,
+      "sign": 40,
+      "ambush": 25,
+      "warn": 60
+    },
+    "r2": {
+      "day": "Thu",
+      "from": "08:00",
+      "to": "18:00",
+      "tick": 15,
+      "hold": 15,
+      "win": 4,
+      "gates": "undercroft_gates",
+      "rooms": [
+        [
+          "undercroft_room_1",
+          "IV"
+        ],
+        [
+          "undercroft_room_2",
+          "IV"
+        ],
+        [
+          "undercroft_room_3",
+          "IV"
+        ],
+        [
+          "undercroft_room_4",
+          "III"
+        ],
+        [
+          "undercroft_room_5",
+          "III"
+        ],
+        [
+          "undercroft_room_6",
+          "III"
+        ],
+        [
+          "undercroft_room_7",
+          "III"
+        ],
+        [
+          "undercroft_room_8",
+          "II"
+        ],
+        [
+          "undercroft_room_9",
+          "II"
+        ],
+        [
+          "undercroft_room_10",
+          "II"
+        ]
+      ],
+      "beasts": {
+        "IV": [
+          "goblin hound",
+          "thorn creeper",
+          "chime toad"
+        ],
+        "III": [
+          "dire wolf",
+          "thornstag",
+          "owlbear",
+          "forest troll",
+          "giant spider",
+          "mist wolf",
+          "gargoyle",
+          "lesser drake",
+          "giant centipede"
+        ],
+        "II": [
+          "ironback boar",
+          "dire bear",
+          "ogre",
+          "cave troll",
+          "griffin",
+          "wyvern",
+          "manticore"
+        ]
+      },
+      "boss": {
+        "IV": 30,
+        "III": 55,
+        "II": 80
+      },
+      "group": 5,
+      "boss_seal": 40
+    },
+    "r3": {
+      "day": "Sat",
+      "from": "09:00",
+      "to": "18:00",
+      "rolled": "11:00"
+    },
+    "credit": {
+      "find": 3,
+      "take": 2,
+      "seal": 1,
+      "boss": 3,
+      "room": 2,
+      "final": 3
+    },
     "world": 4
+  },
+  "hunt": {
+    "_note": "1.86.0 (planning/DRAFT_event_frame.md 4.7, release E): Founder Day's treasure hunt (lore 25). stops clues, drawn each campaign year from the campus places with lore (data/locations.json lore) except exclude (location ids: private, out of bounds or the dorms), all different; from / to: the hunt's hours on the day (after the rite until the evening). A clue counts as solved when {{user}} is at its place within the hours and the reply speaks of the clue, riddle or hunt (said). Computed, never stored; $eng.hunt keeps how far {{user}} got.",
+    "stops": 6,
+    "from": "09:30",
+    "to": "18:00",
+    "said": "\\b(clues?|riddles?|hunt|charter)\\b",
+    "exclude": [
+      "forest",
+      "rooftop",
+      "bathhouse_and_washrooms",
+      "common_rooms",
+      "fire_dormitory",
+      "light_dormitory",
+      "sky_dormitory",
+      "viridian_dormitory"
+    ]
   }
 }

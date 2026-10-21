@@ -1,5 +1,5 @@
 {
-  "_note": "Class periods, exam months, seasons by month and the dorm colours: shared by the engine, the panels, the bracelet and <now> through src/scripts/shared.js (1.43.0). 1.81.0 (planning/DRAFT_event_frame.md): every event has a unique id (data/event_frame.json, shop.json ev, happenings.json ev name it) and a kind (contest, showcase, festival, rite, trip, exam, day, holiday) that only chooses what the Event tab and <now> show; behaviour stays in the other fields. 1.85.0: family 1 = families visit on every day of the event (the Event line in <now> says whose family comes).",
+  "_note": "Class periods, exam months, seasons by month and the dorm colours: shared by the engine, the panels, the bracelet and <now> through src/scripts/shared.js (1.43.0). 1.81.0 (planning/DRAFT_event_frame.md): every event has a unique id (data/event_frame.json, shop.json ev, happenings.json ev name it) and a kind (contest, showcase, festival, rite, trip, exam, day, holiday) that only chooses what the Event tab and <now> show; behaviour stays in the other fields. 1.85.0: family 1 = families visit on every day of the event (the Event line in <now> says whose family comes). 1.86.0: haggle {clean, partial} = a stall's listed price is the opening offer; the price paid follows the reply's first Fortune number (percent of the listed price; a failure pays it in full).",
   "periods": [
     [
       "08:00",
@@ -479,6 +479,10 @@
       "t": "Academy Bazaar",
       "id": "bazaar",
       "kind": "festival",
+      "haggle": {
+        "clean": 80,
+        "partial": 90
+      },
       "s": "09:00–18:00 invited traders fill the Main Courtyard (stalls take points, haggling expected); traders logged at the Gatehouse, the Doves watch the stock and the crowd",
       "fair": 1
     },
@@ -491,6 +495,7 @@
       "t": "Academy Founder Day",
       "id": "founder_day",
       "kind": "festival",
+      "noclass": 1,
       "s": "09:00 speeches from the Headmaster and Vice Headmaster in the Arbiter Hall, then a short rite at the Founder's Statue; all day: the optional treasure hunt across the campus; 19:00 speeches from the Headmaster and Vice Headmaster, then the feast in the Ring Dining Hall",
       "fair": 1,
       "curfew": 22

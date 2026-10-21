@@ -11,6 +11,7 @@
   "academy_competition_win": ["Academy", 15, "event"],
   "kingdom_competition_win": ["Academy", 25, "event"],
   "fair_prize": ["Academy", 8, "event"],
+  "founder_hunt": ["Academy", 10, "event"],
   "crisis_help": ["Academy", 5, "event"],
   "crisis_help_major": ["Academy", 10, "event"],
   "caught_after_curfew": ["Academy", -5, "loss"],

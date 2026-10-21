@@ -267,6 +267,13 @@ Today <%- e.sale.shop %> sells everything at <%- e.sale.pct %>% off (the engine 
 <%_ if (e.fair) { _%>
 <%- e.fair.m ? "The panel scored {{user}}'s stand " + e.fair.m + " (the engine's mark; the partners share it)." : e.fair.k ? "{{user}}'s stand: \"" + e.fair.k + "\" (Progress " + e.fair.p + "). On Saturday the staff panel questions and scores every stand; the engine sets the mark at the close." : "If {{user}} builds a stand, record it as a Project with Kind \"fair\" (With the partners, Due \"M7 W2 Sat\"); the panel's mark is the engine's." %>
 <%_ } _%>
+<%_ if (e.hunt && e.hunt.fin === 1) { _%>
+Founder Day hunt finished. Tonight the Headmaster names {{user}} at the feast, and says nothing of the prize. Afterwards {{user}} is taken to the Archive and shown the original charter, kept locked and never displayed: in the margin of its last page is one line in the founding warden's hand, "A school that keeps the seal and loses its students has kept nothing." Beneath the charter is a short roll of those who finished; the last name on it is decades old. {{user}}'s name is added. They are asked not to repeat the line, only that they finished.
+<%_ } else if (e.hunt && e.hunt.fin === 2) { _%>
+Founder Day hunt finished again. Tonight the Headmaster names {{user}} at the feast once more; the charter and the roll are already known to {{user}}.
+<%_ } else if (e.hunt && e.hunt.next) { _%>
+<%- e.hunt.at ? '' : "Founder Day hunt (optional): everyone got the same first clue after the rite; {{user}} hunts, alone or with others, only if the player says so. Other groups hunt too (invent them); the staff give no hints. " %>Founder Day hunt: {{user}} holds clue <%- e.hunt.at + 1 %> of <%- e.hunt.of %>. Its answer is the <%- e.hunt.next.replace(/^The /, '') %>; write the riddle from that place's lore, and let {{user}} work it out or not. The engine gives the next clue when {{user}} reaches the place.
+<%_ } _%>
 <%_ if (e.family) { _%>
 Families are visiting today. {{user}}'s family comes only if the player says so; anyone else's family follows their lore, or stays unnamed.
 <%_ } _%>

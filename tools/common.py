@@ -285,6 +285,14 @@ def contest_data(stu):
     assert all(av.get(i, {}).get('kc') == 2 for i in [R2['gates'], *(r for r, _g in R2['rooms'])]), 'event_frame.json kingdom.r2: not an Undercroft place'
     assert all(g in R2['beasts'] and g in R2['boss'] for _r, g in R2['rooms']) and R2['win'] * 2 <= len(R2['rooms']) < R2['win'] * 3, 'event_frame.json kingdom.r2: grades, or rooms for exactly two holders'
     ct['kingdom'] = kd
+    # 1.86.0 (planning/DRAFT_event_frame.md 4.7): Founder Day's hunt, its places [place key, name] (campus places with lore)
+    hu = {k: v for k, v in ef['hunt'].items() if not k.startswith('_')}
+    locs = json.load(open(os.path.join(root, 'data/locations.json'), encoding='utf-8'))
+    assert all(x in locs for x in hu['exclude']), 'event_frame.json hunt.exclude: not a location'
+    hu['places'] = [[re.sub(r'^the ', '', l['name'].lower()), l['name']] for i, l in sorted(locs.items()) if l.get('lore') and i not in hu['exclude']]
+    assert len(hu['places']) >= hu['stops'] * 2, 'event_frame.json hunt: too few places'
+    del hu['exclude']
+    ct['hunt'] = hu
     return ct
 
 

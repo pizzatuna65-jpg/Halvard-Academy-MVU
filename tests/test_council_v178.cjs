@@ -17,6 +17,8 @@ ok(/ordinary clubs do not meet/.test(now(S)) && !/Club time:/.test(now(S)), '<no
 const rep = applyPatch(S, [{ op: 'insert', path: '/Rep_events/-', value: { Rep: 'Student', XP: 1, Kind: 'repeat', Why: 'club time' } }]);
 ok(rep.Player.Profile.Reputation.$xp.Student === S.Player.Profile.Reputation.$xp.Student, 'club attendance reputation is suppressed on election Saturday');
 S = at(S, 'Sat', '17:00', [{ op: 'replace', path: '/Campus_State/Council/Results/1', value: { President: 'Dante' } }]);
-ok(S.Campus_State.Council.Results['1'].VicePresident === 'Florian' && S.Campus_State.Council.President === 'Irene', 'Dante wins, Florian is chosen VP, Irene remains President');
+// 1.86.0 (planning/DRAFT_event_frame.md, release E): two other students' election is counted by the engine; the story's result gives way
+const W1 = S.Campus_State.Council.Results['1'], L1 = W1 && (W1.President === 'Florian' ? 'Dante' : 'Florian');
+ok(W1 && ['Florian', 'Dante'].includes(W1.President) && W1.VicePresident === L1 && S.Campus_State.Council.President === 'Irene', `the engine counted: ${W1 && W1.President} wins, ${L1} is chosen VP, Irene remains President`);
 S = applyPatch(S, [{ op: 'replace', path: '/World/Year', value: 2 }, { op: 'replace', path: '/World/Month', value: 1 }, { op: 'replace', path: '/World/Week', value: 1 }, { op: 'replace', path: '/World/Day', value: 'Mon' }]);
-ok(S.Campus_State.Council.President === 'Dante' && S.Campus_State.Council.VicePresident === 'Florian', 'Year 2 handover follows the recorded result');
+ok(S.Campus_State.Council.President === W1.President && S.Campus_State.Council.VicePresident === L1, 'Year 2 handover follows the recorded result');

@@ -1,7 +1,37 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.86.0 — The Bazaar's haggling, Founder Day's hunt, the Council vote, the Harvest and Graduation stalls (2026-10-21)
+
+Owner's request (2026-10-21, "proceed batch d dan e"): release E of `planning/DRAFT_event_frame.md` (§4.1 Bazaar, Harvest and the
+Graduation market, §4.7, the vote format for the Council Election). Engine, shared code, schema, data, generators, 502, 505, 506 and the
+Event tab. Save fixture v1.85.0.
+- **The Bazaar** (lore 243): ten traders' items in the Courtyards, Thu–Sat 09:00–18:00 (Yozakuran green tea 14, blossom sweets 10, a
+  Yozakuran katana 3,000; Norvaine starglass lens 80, scrying crystal 150; Caelmari mana lantern 60, rune heater 45, rune lock 30;
+  Velmoran orchard preserves 12, court gloves 70). **Haggling** (calendar `haggle`): the listed price is the opening offer; the price
+  paid follows the first Fortune number `<now>` gave that reply (as crafting reads it): clean 80%, partial or costly 90%, a failure the
+  full price; with Fortune off, the listed price. The Price Guide says so at the stalls.
+- **Founder Day's treasure hunt** (lore 25; `stepHunt`, shared.js `huntStops`, `event_frame.json` `hunt`): six different campus places
+  with lore drawn per campaign year (not the dorms, the common rooms, the bathhouse, the Forest or the Rooftop). From 09:30 to 18:00
+  `<now>` says the hunt is optional and gives the answer place of the clue {{user}} holds; the narrator writes the riddle from that
+  place's lore. Reaching the place while the reply speaks of the clue (riddle, hunt, charter) solves it: a Clue on the Mystery Board
+  (thread "Founder Day hunt Y<n>"), the next place in `<now>`, a count on the Event tab. The sixth: `founder_hunt` (new deed, Academy
+  +10, once a campaign; a reported one is not counted), a Journal line, and in the next `<now>` only the prize as the draft wrote it
+  (the charter in the Archive, the founding warden's line, the roll of names). Unfinished at 18:00 the thread goes cold.
+- **Founder Day has no classes** (lore 25 "No classes"; it lacked `noclass`, so Saturday Etiquette counted as skipped: −2 Academy).
+- **The Council election** (the vote format): when both nominees are other students the engine counts the ballots at Saturday 16:00,
+  seeded and weighted by each nominee's dorm (its roster students that year, plus 4); a result the story wrote gives way (logged).
+  With {{user}} a nominee (Year 2) the story still decides. 502's Council rule says so. `test_council_v178` now expects the count.
+- **The Harvest Festival** (lore 245; Fri 17:00–23:00, Sat 09:00–23:00, Sun 09:00–20:00): pumpkin soup in a bread bowl 7, hot spiced
+  cider 6, honey cake 5, a carved lantern 8, a paper monster mask 3. **Graduation's farewell winter market** (Sun 12:00–19:00): hot
+  spiced cider 6, cocoa 5, a gingerbread star 4, a knitted dorm scarf 30 (warm, by its name), a Farewell Pine ribbon 2.
+- Tests: new `test_bazaar_hunt_v1860.cjs`; `test_council_v178` updated; `test_audit_batch5_v1470` (the 1.46.0 presence record) treats Founder Day as a day without the club block; `test_saves` (v1.85.0), the event frame, Fair, breaks, contest,
+  Kingdom, ambience, grades, shops, calendar, cohort 3, tokens, preset and the suites that grep the changed wording pass; `npm test`.
+- **To confirm with the owner:** the Bazaar items and prices (the katana at 3,000); the hunt's excluded places and its hours; the
+  election's weighting by dorm; the Harvest and winter-market items.
+- **To check live:** `docs/TEST_CHECKLIST.md` Q8.1, Q8.2, Q9.4 and Q10.2 [1.86].
 
 ## v1.85.0 — The Fair's mark, the Thinning's beats, the Circus stalls, family visits (2026-10-21)
 
@@ -119,37 +149,6 @@ the Club Festival). Engine, shared code, data, 502, 505, the rule card and the C
   Checked in a browser preview: the bracket on the Competition tab.
 - **To confirm with the owner:** the bracket sizes (10–16), the strength numbers and the off-screen rule are mine (draft §9).
 - **To check live:** `docs/TEST_CHECKLIST.md` Q5.3a, Q5.3 [1.82].
-
-## v1.81.0 — The event frame: an Event line, the Event tab, event chances, the Star Night market (2026-10-21)
-
-Owner's request (2026-10-21): "proceed" on `planning/DRAFT_event_frame.md`; this is its release A1 (the draft stays until releases
-A2–E are in). Engine, data, 505, 506, the Activities panel and the bracelet. Save fixture v1.80.0.
-- **Every event has an id and a kind.** `data/calendar.json`: 44 unique ids (`star_night`, `dorm_comp`, …) and a kind (contest, showcase,
-  festival, rite, trip, exam, day, holiday) that only chooses what is shown; `gen_engine.py` checks both.
-- **The Event line.** `<now>` prints "Event: Star Night, day 1 of 2. Now: … Next: midnight …" for each event today in place of the Today
-  line (a birthday stays there). The engine makes it (`$ui.ev`, `stepCampusEvents`) from the day plan: `eventBlocks` also reads
-  "08:00: …", "from 17:00 …" and "midnight: …", so the bracelet's Next now sees those too (never "24:00").
-- **Activities → Event** (new tab, from seven days before an event to its last day): the days and their plan, Now / Next, the chances
-  with Open / Open now / Done and a Draft button, a way to the stalls, and for a contest the Competition tab. The bracelet's event chip
-  opens it. New Features toggle **Event chances** (on).
-- **Event chances** (`data/event_frame.json`, `stepEventChances`): optional, once a campaign year, read from what the reply reports (the
-  place and hours, the time spent there across replies, the reply's words, an accepted Practice, a reported deed, the Trip). `<now>` prints
-  only those open here and now, as the player's choice. They replace the 1.26.0 event XP: the same eight events and XP, and a save whose
-  event XP was paid is not paid again. New: Star Night's meteor shower (a Recent moment for each Rank 3+ bond present), the Club Festival
-  stand pays 2 in the club's own Field (was Craft for any club), and "win the crowd" and "spar with another dorm" are marked when they
-  happen.
-- **Fix:** the event XP at the Main Courtyard (Warding Rite, Club Festival, Bazaar) never fired, because the engine writes the Main
-  Courtyard as Courtyards; the chances name both.
-- **Event stalls** (`data/shop.json` rows with `ev`, `day`, `from`, `to`): they sell only then and there (`stallOpen` in `stepPurchases`),
-  the Price Guide lists them ("Event stalls here" / "Event stalls today"), the Shop tab opens at them and the bracelet shows "Stalls here".
-  First: the Star Night market (Sat 20:00–24:00 on the hills): hot spiced cider 6 and a mug of cocoa 5 (both clear Chilled), roasted
-  chestnuts 4, a honey-glazed skewer 7, a star chart 15.
-- `data/happenings.json` items may carry `ev` (only on that event's days); none do yet.
-- Tests: new `test_event_frame_v1810.cjs`; `npm test` (every suite, `qa_static`, lint) passes, `test_saves` loads the v1.80.0 fixture.
-  Checked in a browser preview: the Event tab, the stall list, the two chips.
-- **To confirm with the owner:** the draft's Star Night reward was an Imprint; Imprints are beliefs the narrator writes (with their cap and
-  "fixed" characters), so the engine adds a Recent moment instead. The five stall items, their notes and prices (draft §4.1).
-- **To check live:** `docs/TEST_CHECKLIST.md` Q1.1, Q1.3, Q3.5, Q4.1 [1.81].
 
 ## Release index (one line per release, oldest first)
 
@@ -320,3 +319,4 @@ A2–E are in). Engine, data, 505, 506, the Activities panel and the bracelet. S
 - **v1.83.0 (2026-10-21):** Breaks (draft B): who stays (the lore's five and one in five), going home in one reply, the home-and-family line; Secret Fools Day's draw and Merryhew's 25% sale.
 - **v1.84.0 (2026-10-21):** The Kingdom Competition in three rounds (owner's design): the Kingsmeadow hunt for three Kingsblooms, the Undercroft's ten rooms, the final; the other teams by the engine, the World panel's pick from every competitor's record.
 - **v1.85.0 (2026-10-21):** Draft release D: the Magical & Science Fair's mark (a `fair` Project, replaces the Month 9 Magic Theory midterm if better), the Thinning's own beats, the Circus stalls (hours by day), the family-visit line.
+- **v1.86.0 (2026-10-21):** Draft release E: the Bazaar's traders and haggling by the Fortune number, Founder Day's treasure hunt (six computed clues, the prize; no classes that day), the Council election counted by the engine between two other students, the Harvest and Graduation stalls.

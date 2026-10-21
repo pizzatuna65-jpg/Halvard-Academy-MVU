@@ -3,19 +3,20 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.85.0** (2026-10-21): release D of `planning/DRAFT_event_frame.md`: the Magical & Science Fair's mark (a
-Project with Kind `fair`, scored by the engine at Saturday's close; it replaces the Month 9 Magic Theory midterm if better), the
-Thinning's own ambience beats, the Circus stalls (hours by day), the family-visit line on the Showcase and Harvest days. 1.84.0: the
-Kingdom Competition in three rounds. 1.81.0–1.83.0: the event frame, the Dorm Competition brackets, breaks and Secret Fools Day. The
-memory audit is done except batch 8. Live checks: the campaign quest log `docs/TEST_CHECKLIST.md` (the owner plays it from the Charles
-chat, Y1 M1 W1 Mon 10:13; first Act 0: update the card, Q0.1).
+**Snapshot:** card **v1.86.0** (2026-10-21): release E of `planning/DRAFT_event_frame.md`: the Bazaar's traders and haggling (the
+price follows the first Fortune number), Founder Day's treasure hunt (six computed clues, the Mystery Board, the prize in the Archive;
+Founder Day now has no classes), the Council election counted by the engine when both nominees are other students, the Harvest and
+Graduation stalls. 1.85.0: release D (the Fair's mark, the Thinning's beats, the Circus stalls, family visits). 1.84.0: the Kingdom
+Competition in three rounds. 1.81.0–1.83.0: the event frame, the Dorm Competition brackets, breaks and Secret Fools Day. The memory
+audit is done except batch 8. Live checks: the campaign quest log `docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat,
+Y1 M1 W1 Mon 10:13; first Act 0: update the card, Q0.1).
 
-**Next task:** release E of `planning/DRAFT_event_frame.md` (Bazaar stalls and haggling, Founder Day's hunt, the Council Election
-vote, the Harvest and Graduation stalls) before the campaign reaches M9 W2, and release C (`tally` for Sports Day and the Showcase; the
-Academy tier, whose computed winner becomes Halvard's Kingdom team in `sh:kcTeams`) before M6 W3. Meanwhile the owner plays the quest
-log; their reports and chat exports bring the playtest fixes (tick what passed, run `tools/audit_chat.py` on the export, move "Where
-you are"). MS3 stage 2 and the NPC dialogue audit's U1, U3–U5 wait in `planning/FUTURE_PLANS.md` §2 for a campaign export. Batch 8
-(chapters) is planned in `planning/DRAFT_bab_baru.md`: build it at about 20,000 messages, slow saves or a chat file near 100 MB.
+**Next task:** release C of `planning/DRAFT_event_frame.md`, the last one (`tally` for Sports Day and the Showcase; the Academy tier,
+whose computed winner becomes Halvard's Kingdom team in `sh:kcTeams`), before the campaign reaches M6 W3; then delete the draft.
+Meanwhile the owner plays the quest log; their reports and chat exports bring the playtest fixes (tick what passed, run
+`tools/audit_chat.py` on the export, move "Where you are"). MS3 stage 2 and the NPC dialogue audit's U1, U3–U5 wait in
+`planning/FUTURE_PLANS.md` §2 for a campaign export. Batch 8 (chapters) is planned in `planning/DRAFT_bab_baru.md`: build it at about
+20,000 messages, slow saves or a chat file near 100 MB.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

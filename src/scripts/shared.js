@@ -252,6 +252,13 @@ function foolsDraw(PD, seed, year, dorm) {
   const by = rollTable(mates, { roll: [seed, year, 'fools-by'], pct, pick: [seed, year, 'fools-by-pick'], skip: id => id === to }) || '';
   return { to, by };
 }
+// Founder Day's treasure hunt (1.86.0, planning/DRAFT_event_frame.md 4.7, lore 25): the year's chain of clues, PD.ct.hunt.stops
+// different places drawn from PD.ct.hunt.places ([place key, name]: campus places with lore), rewritten each campaign year
+function huntStops(PD, seed, year) {
+  const H = (PD.ct || {}).hunt || {}, pool = (H.places || []).slice(), out = [];
+  for (let i = 0; i < (Number(H.stops) || 0) && pool.length; i++) { const p = pickOf(pool, seed, year, 'hunt', i); out.push(p); pool.splice(pool.indexOf(p), 1); }
+  return out;
+}
 // ---- contest (1.82.0, owner-approved planning/DRAFT_event_frame.md section 3): the Dorm Competition, computed from the seed and
 // never stored (DECISIONS §7 "computed, not stored"). PD.ct is data/event_frame.json contest (tools/common.py contest_data). A role's
 // bracket in a dorm is a pure function of (seed, campaign year, dorm, role) and the bouts the story decided, so the engine (bouts in

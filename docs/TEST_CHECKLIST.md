@@ -494,9 +494,15 @@ The first academy flight (the airship), then the Grand Vast Forest.
 
 ### Q8.1 The Academy Bazaar (W2 Thu–Sat)
 - [ ] Ask what the foreign traders sell: the narrator names the five nations' goods [1.13.1].
+- [ ] In the Courtyards the Price Guide lists the Bazaar traders' stalls and the haggling rule; buying one thing, the narrator plays the
+      haggling to the Fortune number and the Wallet is charged 80%, 90% or the full price to match [1.86].
 
 ### Q8.2 Founder Day (W3 Sat)
 - [ ] At the feast the Headmaster and Vice Headmaster speak before the food [1.15.1].
+- [ ] No class counts as skipped on Founder Day morning [1.86].
+- [ ] From 09:30 `<now>` offers the hunt as optional; joining, the narrator writes a riddle that leads to the place `<now>` names; arriving
+      there and speaking of the clue puts "Founder Day hunt Y1: clue 1" on the Mystery Board and `<now>` gives the next place; the
+      Event tab counts the clues [1.86].
 
 ### Q8.3 Kingdom Competition week (W4), Charles not on the team
 - [ ] Tuesday to Sunday the classes run as usual, Gavlan is away with the team, and nobody from the rival teams turns up on campus [1.32].
@@ -536,6 +542,11 @@ The first academy flight (the airship), then the Grand Vast Forest.
 - [ ] A swipe of the soaking reply gives the same conditions and the same mana [1.9.4].
 - [ ] Hot spiced tea or mulled apple cider at the Mall: the Log or a toast reports the cleared condition, and the shivering stops [1.9.5].
 
+### Q9.4 The Council election and the Harvest Festival (W3 Sat, W4 Fri–Sun)
+- [ ] Saturday after 16:00 the Journal names the President-elect (Florian or Dante, counted by the engine) and `<now>` lists the incoming
+      leaders; the narrator announces that result, not another [1.86].
+- [ ] Harvest Friday from 17:00 in the Courtyards: the Harvest Festival stalls in the Price Guide and the Shop tab [1.86].
+
 ## Act 10 — Month 11
 
 ### Q10.1 The Academy Trip: Sunreach Bay (W2 Fri to W3 Thu)
@@ -554,6 +565,7 @@ The first academy flight (the airship), then the Grand Vast Forest.
 - [ ] Thursday 08:00 boarding; back at Halvard the Sunreach lore and block are gone [1.41, 1.32].
 
 ### Q10.2 Graduation (W4 Sun)
+- [ ] From 12:00 in the Courtyards the farewell winter market's stalls are open (a knitted dorm scarf, cocoa) [1.86].
 - [ ] The afternoon in the Main Courtyard and Founder's Park (the Music Club on a small stage by the statue): stalls, the Farewell Pine with
       ribbons, snowmen only if it snowed; the Map shows the winter Graduation map; at dusk the airship moors above the Grassy Field
       [1.14.1, 1.14.2, 1.34.2, 1.14.3].

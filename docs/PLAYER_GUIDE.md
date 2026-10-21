@@ -114,6 +114,12 @@ scores it. The mark depends on how far the stand got, your Arcana and the day, a
 it is better (Student file → Studies shows it). The Traveling Circus (Month 8) has stalls of its own in the Courtyards, and on the
 Showcase and Harvest Festival days families visit: yours only if you say so.
 
+**The Academy Bazaar** (Month 9, Week 2): foreign traders fill the Courtyards. Their prices are opening offers; how well you haggle
+follows the reply's luck (up to a fifth off). **Founder Day** (Month 9, Week 3) has an optional treasure hunt: everyone gets the same
+first clue after the rite, each solved clue leads somewhere else on campus, and the solved ones go on your Mystery Board. Nobody has
+finished in years, and the prize is never announced. The Harvest Festival and Graduation's farewell winter market have stalls of their
+own. In the Student Council election the school votes: unless you are a nominee, you have one vote like everyone else.
+
 **Student file → Settings → Appearance** changes the colours of the panels and the bracelet: Pewter (the default), Midnight (darker), Rosewood (warm dark), Parchment (light) and Frost (light, cool). The choice is kept in this browser and is not written to the chat.
 
 

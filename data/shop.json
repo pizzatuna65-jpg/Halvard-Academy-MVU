@@ -2241,6 +2241,356 @@
      "22:00"
     ]
    }
+  },
+  {
+   "shop": "Bazaar traders",
+   "loc": "courtyards",
+   "item": "Yozakuran green tea (tin)",
+   "price": 14,
+   "note": "Yozakuran traders under paper lanterns",
+   "canon": false,
+   "season": "all",
+   "ev": "bazaar",
+   "from": "09:00",
+   "to": "18:00",
+   "gift_tags": [
+    "food"
+   ]
+  },
+  {
+   "shop": "Bazaar traders",
+   "loc": "courtyards",
+   "item": "Blossom sweets (box)",
+   "price": 10,
+   "note": "pale pink, from the Yozakuran stall",
+   "canon": false,
+   "season": "all",
+   "ev": "bazaar",
+   "from": "09:00",
+   "to": "18:00",
+   "gift_tags": [
+    "sweets and baked goods"
+   ]
+  },
+  {
+   "shop": "Bazaar traders",
+   "loc": "courtyards",
+   "item": "Yozakuran katana",
+   "price": 3000,
+   "note": "a smith's blade far more students admire than can afford",
+   "canon": false,
+   "season": "all",
+   "ev": "bazaar",
+   "from": "09:00",
+   "to": "18:00"
+  },
+  {
+   "shop": "Bazaar traders",
+   "loc": "courtyards",
+   "item": "Starglass lens",
+   "price": 80,
+   "note": "Norvaine work; clear as cold water",
+   "canon": false,
+   "season": "all",
+   "ev": "bazaar",
+   "from": "09:00",
+   "to": "18:00"
+  },
+  {
+   "shop": "Bazaar traders",
+   "loc": "courtyards",
+   "item": "Scrying crystal",
+   "price": 150,
+   "note": "Norvaine; what it shows is up to the user",
+   "canon": false,
+   "season": "all",
+   "ev": "bazaar",
+   "from": "09:00",
+   "to": "18:00",
+   "gift_tags": [
+    "enchanted"
+   ]
+  },
+  {
+   "shop": "Bazaar traders",
+   "loc": "courtyards",
+   "item": "Caelmari mana lantern",
+   "price": 60,
+   "note": "burns on a trickle of mana",
+   "canon": false,
+   "season": "all",
+   "ev": "bazaar",
+   "from": "09:00",
+   "to": "18:00",
+   "gift_tags": [
+    "enchanted"
+   ]
+  },
+  {
+   "shop": "Bazaar traders",
+   "loc": "courtyards",
+   "item": "Caelmari rune heater",
+   "price": 45,
+   "note": "warms a room, sold by the crate",
+   "canon": false,
+   "season": "all",
+   "ev": "bazaar",
+   "from": "09:00",
+   "to": "18:00",
+   "gift_tags": [
+    "enchanted"
+   ]
+  },
+  {
+   "shop": "Bazaar traders",
+   "loc": "courtyards",
+   "item": "Caelmari rune lock",
+   "price": 30,
+   "note": "opens to one touch",
+   "canon": false,
+   "season": "all",
+   "ev": "bazaar",
+   "from": "09:00",
+   "to": "18:00"
+  },
+  {
+   "shop": "Bazaar traders",
+   "loc": "courtyards",
+   "item": "Velmoran orchard preserves (jar)",
+   "price": 12,
+   "note": "green and ivory label",
+   "canon": false,
+   "season": "all",
+   "ev": "bazaar",
+   "from": "09:00",
+   "to": "18:00",
+   "gift_tags": [
+    "food"
+   ]
+  },
+  {
+   "shop": "Bazaar traders",
+   "loc": "courtyards",
+   "item": "Velmoran court gloves",
+   "price": 70,
+   "note": "the fashion at the Velmoran court",
+   "canon": false,
+   "season": "all",
+   "ev": "bazaar",
+   "from": "09:00",
+   "to": "18:00"
+  },
+  {
+   "shop": "Harvest Festival stalls",
+   "loc": "courtyards",
+   "item": "Pumpkin soup in a bread bowl",
+   "price": 7,
+   "note": "from a dorm-floor café, on a brazier",
+   "canon": false,
+   "season": "all",
+   "ev": "harvest",
+   "days": {
+    "Fri": [
+     "17:00",
+     "23:00"
+    ],
+    "Sat": [
+     "09:00",
+     "23:00"
+    ],
+    "Sun": [
+     "09:00",
+     "20:00"
+    ]
+   },
+   "gift_tags": [
+    "good meal"
+   ]
+  },
+  {
+   "shop": "Harvest Festival stalls",
+   "loc": "courtyards",
+   "item": "Hot spiced cider",
+   "price": 6,
+   "note": "steaming in a tin cup",
+   "canon": false,
+   "season": "all",
+   "ev": "harvest",
+   "days": {
+    "Fri": [
+     "17:00",
+     "23:00"
+    ],
+    "Sat": [
+     "09:00",
+     "23:00"
+    ],
+    "Sun": [
+     "09:00",
+     "20:00"
+    ]
+   },
+   "use": {
+    "clears": [
+     "Chilled"
+    ]
+   }
+  },
+  {
+   "shop": "Harvest Festival stalls",
+   "loc": "courtyards",
+   "item": "Honey cake slice",
+   "price": 5,
+   "note": "a year group's bake stall",
+   "canon": false,
+   "season": "all",
+   "ev": "harvest",
+   "days": {
+    "Fri": [
+     "17:00",
+     "23:00"
+    ],
+    "Sat": [
+     "09:00",
+     "23:00"
+    ],
+    "Sun": [
+     "09:00",
+     "20:00"
+    ]
+   },
+   "gift_tags": [
+    "sweets and baked goods"
+   ]
+  },
+  {
+   "shop": "Harvest Festival stalls",
+   "loc": "courtyards",
+   "item": "Carved lantern",
+   "price": 8,
+   "note": "a small carved face, candle included",
+   "canon": false,
+   "season": "all",
+   "ev": "harvest",
+   "days": {
+    "Fri": [
+     "17:00",
+     "23:00"
+    ],
+    "Sat": [
+     "09:00",
+     "23:00"
+    ],
+    "Sun": [
+     "09:00",
+     "20:00"
+    ]
+   }
+  },
+  {
+   "shop": "Harvest Festival stalls",
+   "loc": "courtyards",
+   "item": "Paper monster mask",
+   "price": 3,
+   "note": "the cheaper and sillier the better",
+   "canon": false,
+   "season": "all",
+   "ev": "harvest",
+   "days": {
+    "Fri": [
+     "17:00",
+     "23:00"
+    ],
+    "Sat": [
+     "09:00",
+     "23:00"
+    ],
+    "Sun": [
+     "09:00",
+     "20:00"
+    ]
+   }
+  },
+  {
+   "shop": "Farewell winter market",
+   "loc": "courtyards",
+   "item": "Hot spiced cider",
+   "price": 6,
+   "note": "for the cold walk between the stalls",
+   "canon": false,
+   "season": "all",
+   "ev": "graduation",
+   "day": "Sun",
+   "from": "12:00",
+   "to": "19:00",
+   "use": {
+    "clears": [
+     "Chilled"
+    ]
+   }
+  },
+  {
+   "shop": "Farewell winter market",
+   "loc": "courtyards",
+   "item": "Mug of cocoa",
+   "price": 5,
+   "note": "by the Farewell Pine",
+   "canon": false,
+   "season": "all",
+   "ev": "graduation",
+   "day": "Sun",
+   "from": "12:00",
+   "to": "19:00",
+   "use": {
+    "clears": [
+     "Chilled"
+    ]
+   },
+   "gift_tags": [
+    "sweets and baked goods"
+   ]
+  },
+  {
+   "shop": "Farewell winter market",
+   "loc": "courtyards",
+   "item": "Gingerbread star",
+   "price": 4,
+   "note": "iced with the year of the leavers",
+   "canon": false,
+   "season": "all",
+   "ev": "graduation",
+   "day": "Sun",
+   "from": "12:00",
+   "to": "19:00",
+   "gift_tags": [
+    "sweets and baked goods"
+   ]
+  },
+  {
+   "shop": "Farewell winter market",
+   "loc": "courtyards",
+   "item": "Knitted dorm scarf",
+   "price": 30,
+   "note": "in your dorm's colours, a first-year's knitting",
+   "canon": false,
+   "season": "all",
+   "ev": "graduation",
+   "day": "Sun",
+   "from": "12:00",
+   "to": "19:00"
+  },
+  {
+   "shop": "Farewell winter market",
+   "loc": "courtyards",
+   "item": "Farewell Pine ribbon",
+   "price": 2,
+   "note": "tied to the Farewell Pine with a wish for the leavers",
+   "canon": false,
+   "season": "all",
+   "ev": "graduation",
+   "day": "Sun",
+   "from": "12:00",
+   "to": "19:00"
   }
  ]
 }

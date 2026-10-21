@@ -21,10 +21,13 @@ Today: <%- e.sale.shop %> sells everything at <%- e.sale.pct %>% off its listed 
 <%_ for (const e of _ev) { const g = _PG.ev[e.id]; if (e.stall) { _%>
 Event stalls here (<%- g.shop %>, <%- g.hours %>):
 <%- g.rows.join('\n') %>
+<%_ if (e.haggle) { _%>
+Haggling: each price above is the trader's opening offer. What {{user}} pays follows this reply's first Fortune number: clean <%- e.haggle.clean %>% of it, partial or costly <%- e.haggle.partial %>%, a failure the full price; play the haggling to that, and the engine charges it.
+<%_ } _%>
 <%_ } else { _%>
 Event stalls today: <%- g.shop %> at <%- g.place %>, <%- g.hours %>.
 <%_ } } _%>
 <%- _PG.canon %>
 Other shops: <%- _else.join(' | ') %>
-Paid work pays 20-40 points a shift. The Banking House changes points and coin 1:1. At the Academy Bazaar prices are whatever the trader says. The engine pays these prices.
+Paid work pays 20-40 points a shift. The Banking House changes points and coin 1:1. At the Academy Bazaar the traders' stalls list opening offers, and haggling is expected. The engine pays these prices.
 Student-made craft sale guide: <%- _CS.map(([n,p]) => n + ' ' + p + ' pts').join('; ') %>. Other handmade work sells at a stand at the Club Festival or the Academy Bazaar, or to someone who wants it. The Medical Centre apothecary buys at most three Healing draughts per week.

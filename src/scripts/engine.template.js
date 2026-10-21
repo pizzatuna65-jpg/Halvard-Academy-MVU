@@ -1510,6 +1510,20 @@ function stepTime(c) {
         if (pair.First || pair.Second) log.push(`Council candidates for Year ${key} must be two different named students eligible to attend the next year.`);
       } else C.Candidates[key] = { First: ids[0], Second: ids[1] };
     }
+    // 1.86.0 (planning/DRAFT_event_frame.md, release E: the vote format): when both nominees are other students the engine counts the
+    // ballots at the close of voting (Sat 16:00), drawn from the seed and weighted by each nominee's dorm (its roster students at
+    // Halvard that year, plus vote.base); a result the story wrote gives way. With {{user}} a nominee the story decides
+    {
+      const y = S.World.Year, key = String(y), pair = C.Candidates[key], EV = (CT.vote || {}).election;
+      if (EV && hasB && pair && pair.First && pair.Second && ![pair.First, pair.Second].includes(playerName) && !((BC.Results || {})[key] || {}).President && S.World.Month === 10
+        && toAbs(S.World) >= toAbs({ Year: y, Month: 10, Week: 3, Day: EV.close[0], Time: EV.close[1] })) {
+        const dorm = id => (PRESENCE.stu[id] || [])[2], mates = id => Object.keys(PRESENCE.stu).filter(x => dorm(x) === dorm(id) && yearOf(x, y) >= 1 && yearOf(x, y) <= 3).length;
+        const won = rollTable([pair.First, pair.Second], { pick: [num(S.$eng.seed, 0), y, 'council-vote'], weight: id => mates(id) + num(EV.base, 0) });
+        const said = (C.Results[key] || {}).President;
+        if (said && (NPC_ALIAS[String(said).toLowerCase()] || said) !== won) log.push(`Council election: the ballots are counted by the engine; ${won} won (not ${said}).`);
+        C.Results[key] = { President: won };
+      }
+    }
     for (const [key, result] of Object.entries(C.Results)) {
       const y = Number(key), prev = (BC.Results || {})[key], pair = C.Candidates[key];
       if (prev && prev.President && prev.VicePresident) { C.Results[key] = prev; continue; }
@@ -1811,6 +1825,11 @@ function stepPurchases(c) {
   if (!hasB || c.toolEdit || !list.length) return;
   const here = placeKey(S.World.Location), season = SEASON_OF(S.World.Month), away = awayIn(S), cur = away ? 'Coin' : 'Points';
   const sale = (eventsOn(S.World).find(e => e.sale) || {}).sale;   // 1.83.0: a shop's sale day (Merryhew's on Secret Fools Day, lore 235)
+  // 1.86.0 (planning/DRAFT_event_frame.md 4.1, lore 243 "haggling expected"): at an event with haggle (the Bazaar) a stall's listed
+  // price is the opening offer; the price paid follows the first Fortune number <now> gave this reply (as crafting reads it): clean
+  // haggle.clean percent, partial or costly haggle.partial, a failure the full price. Fortune off: the listed price
+  const hagE = eventsOn(S.World).find(e => e.haggle), FB = hagE ? ((c.B || {}).$ui || {}).fortune : null;
+  const hagPct = FB && Array.isArray(FB.rolls) ? (num(FB.rolls[0], 0) <= num(FB.fail, 10) ? 100 : num(FB.rolls[0], 0) <= num(FB.part, 35) ? hagE.haggle.partial : hagE.haggle.clean) : 100;
   for (const p of list) {
     const asked = String(p.Item || '').trim(), qty = Math.max(1, Math.round(num(p.Qty, 1)));
     if (!asked) continue;
@@ -1818,7 +1837,8 @@ function stepPurchases(c) {
     const atShop = rows.filter(x => (x[2] === here || placeKey(x[1]) === here) && (!x[5] || stallOpen(x[5], S.World))), sold = atShop.find(x => !x[3] || x[3].includes(season));   // 1.81.0: a stall only while open
     const story = num(p.Price, -1);
     let price = -1, shop = '', why = '';
-    if (!away && sold) { price = sold[0]; shop = sold[1]; if (sale && String(sold[1]).startsWith(sale.shop)) { price = Math.round(price * (100 - sale.pct) / 100); shop += `, ${sale.pct}% off today`; } }
+    if (!away && sold) { price = sold[0]; shop = sold[1]; if (sale && String(sold[1]).startsWith(sale.shop)) { price = Math.round(price * (100 - sale.pct) / 100); shop += `, ${sale.pct}% off today`; }
+      if (hagE && sold[5] && sold[5][0] === hagE.id && hagPct < 100) { price = Math.round(price * hagPct / 100); shop += `, haggled to ${hagPct}%`; } }
     else if (!away && atShop.length) why = `${name} is sold here only in ${atShop[0][3].join(' and ')}`;
     else if (story >= 0) { price = Math.round(story); shop = String(p.Shop || '').trim() || placeOf(S.World.Location); }
     else why = rows.length && !away ? `${name} is sold at ${[...new Set(rows.map(x => x[1]))].join(', ')}, not here; give a Price if another seller sells it` : `${name} has no listed price; give its Price`;
@@ -2857,6 +2877,7 @@ function stepReputation(c) {
     const kind = String(e.Kind || '').trim().toLowerCase(), deed = (REP.deeds || {})[kind];
     if (compKinds.has(kind)) { log.push(`Reputation deed "${kind}" is paid by the engine from Competition (Tier and Status); it was not counted here.`); continue; }
     if (kind === 'founded_club') { log.push('Reputation deed "founded_club" is paid by the engine when Campus_State.Founded_club is founded; it was not counted here.'); continue; }   // 1.75.0
+    if (kind === 'founder_hunt') { log.push('Reputation deed "founder_hunt" is paid by the engine when {{user}} solves the last clue of the Founder Day hunt; it was not counted here.'); continue; }   // 1.86.0
     if (kind === 'fair_prize' && !c.OFF.has('study')) { log.push('Reputation deed "fair_prize" is paid by the engine from the Fair stand\'s mark (a Project with Kind "fair"); it was not counted here.'); continue; }   // 1.85.0
     if (!deed && kind && !['repeat', 'event'].includes(kind)) { log.push(`Reputation deed "${kind}" is unknown; use a listed Kind or an explicit repeat/event entry.`); continue; }
     const r = deed ? deed[0] : REP.reps.find(x => x.toLowerCase() === String(e.Rep || '').trim().toLowerCase());
@@ -5429,6 +5450,44 @@ function stepBag(c) {
   }
 }
 
+// ---- 8i2. 1.86.0 (owner-approved planning/DRAFT_event_frame.md 4.7, lore 25): Founder Day's treasure hunt. The chain of clues is
+// computed (sh:huntStops, new each campaign year); $eng.hunt { y, at: clues solved this year, fin: the campaign year {{user}} first
+// finished } is all that is kept. A clue is solved when {{user}} is at its place within the hours and the reply speaks of it
+// (hunt.said): a Clue on the Mystery Board (thread "Founder Day hunt Y<n>") and <now> gives the next place. The last one: the deed
+// founder_hunt (once a campaign), a Journal line and, in the next <now> only, the prize. Unfinished at the close, the thread goes cold.
+function stepHunt(c) {
+  const { S, hasB, toolEdit, OFF, log, jnl, text } = c, HU = CT.hunt || {};
+  c.hunt = null;
+  const y = S.World.Year, H = S.$eng.hunt = _.isPlainObject(S.$eng.hunt) ? S.$eng.hunt : {};
+  if (H.y !== y) { H.y = y; H.at = 0; }
+  const e = eventsOn(S.World).find(x => x.id === 'founder_day');
+  if (!e || OFF.has('event_chances') || !num(HU.stops, 0)) return;
+  const stops = huntStops(PRESENCE, num(S.$eng.seed, 0), y), th = `Founder Day hunt Y${y}`, n = stops.length;
+  const t = hm(S.World.Time), open = t != null && t >= hm(HU.from) && t < hm(HU.to), pk = placeKey(S.World.Location);
+  const atStop = k => pk === k || pk.startsWith(k + ' ') || pk.startsWith(k + ',');
+  const board = !OFF.has('mystery');
+  if (board) { if (!_.isPlainObject(S.Clues)) S.Clues = {}; if (!_.isPlainObject(S.Mysteries)) S.Mysteries = {}; }
+  let fin = 0;
+  if (hasB && !toolEdit && open && num(H.at, 0) < n && atStop(stops[H.at][0]) && new RegExp(HU.said, 'i').test(proseOf(text))) {
+    const name = stops[H.at][1];
+    H.at = num(H.at, 0) + 1;
+    if (board) {
+      S.Clues[`${th}: clue ${H.at}`] = { Thread: th, Detail: `Clue ${H.at} of ${n} solved at the ${name.replace(/^The /, '')}${H.at < n ? '; it points onward' : '; it was the last'}.`, Where: name, Found: stamp(S.World), Source: '', Links: [] };
+      if (!S.Mysteries[th]) S.Mysteries[th] = { Status: 'open', Summary: `The Founder Day treasure hunt, Year ${y}: ${n} clues across the campus; nobody has finished in years.` };
+    }
+    log.push(`Founder Day hunt: clue ${H.at} of ${n} solved at the ${name.replace(/^The /, '')}.`);
+    S.$ui.toasts.push(`Treasure hunt: clue ${H.at} of ${n}`);
+    if (H.at === n) {
+      fin = H.fin ? 2 : 1;
+      if (!H.fin) { H.fin = y; const dz = (REP.deeds || {}).founder_hunt; if (dz && c.repAdd) { c.repAdd(dz[0], dz[1], 'finished the Founder Day treasure hunt', ''); c.repSync(true); } }
+      if (board) S.Mysteries[th].Status = 'solved';
+      jnl.push(fin === 1 ? 'Finished the Founder Day treasure hunt, the first in years; the Headmaster named {{user}} at the feast.' : 'Finished the Founder Day treasure hunt again.');
+    }
+  }
+  if (board && t != null && t >= hm(HU.to) && num(H.at, 0) > 0 && num(H.at, 0) < n && S.Mysteries[th] && S.Mysteries[th].Status === 'open') S.Mysteries[th].Status = 'cold';
+  c.hunt = { at: num(H.at, 0), of: n, ...(open && num(H.at, 0) < n ? { next: stops[H.at][1] } : {}), ...(fin ? { fin } : {}) };
+}
+
 // ---- 8j. 1.6.1 (Batch D, N4): campus events. Updated is stamped when an event's Text changes (a new event, or news about it);
 // events with no news for STALE_DAYS are listed in <now> ($ui.stale), so the world moves them on or closes them. A bare string
 // (the AI's shorthand, or a save from before 1.6.1) is the Text.
@@ -5473,7 +5532,8 @@ function stepCampusEvents(c) {
       const FR = e.id === 'science_fair' && !c.OFF.has('study') ? ((S.$eng.study || {}).fair || {}) : null;
       const fair = FR ? (FR.y !== S.World.Year ? {} : FR.m != null ? { m: MARKS[FR.m] } : FR.k ? { k: FR.k, p: num(FR.p, 0) } : {}) : null;
       return { id: e.id, t: e.t.split(' (')[0], kind: e.kind || '', n: e.d.indexOf(S.World.Day) + 1, of: e.d.length, now: cur ? cur.what : '', next: nx ? [clock(nx.at), nx.what] : null, ch, stall, ...(e.id === 'club_festival' && vote ? { vote } : {}),
-        ...(fools ? { fools } : {}), ...(e.sale ? { sale: e.sale } : {}), ...(stay ? { stay } : {}), ...(fair ? { fair } : {}), ...(e.family ? { family: 1 } : {}) };
+        ...(fools ? { fools } : {}), ...(e.sale ? { sale: e.sale } : {}), ...(stay ? { stay } : {}), ...(fair ? { fair } : {}), ...(e.family ? { family: 1 } : {}),
+        ...(e.id === 'founder_day' && c.hunt ? { hunt: c.hunt } : {}), ...(e.haggle && stall ? { haggle: e.haggle } : {}) };
     });
   }
 }
@@ -6592,7 +6652,7 @@ function stepNow(c) {
   for (const a of Object.values(S.$ui.area || {})) if (_.isPlainObject(a)) { delete a.walks; delete a.near; }
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepContest, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepBondMemory, stepProficiency, stepEventChances, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepFold, stepGist, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepContest, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepBondMemory, stepProficiency, stepEventChances, stepHunt, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepFold, stepGist, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,
