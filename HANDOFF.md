@@ -3,31 +3,19 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.84.0** (2026-10-21): the Kingdom Competition in three rounds (the owner's design, DECISIONS "Kingdom
-Competition in three rounds"): the Kingsmeadow hunt for three Kingsblooms, the Undercroft's ten rooms, the final; the other teams
-played by the engine from the seed, the World panel's pick from every competitor's record. 1.83.0: release B of
-`planning/DRAFT_event_frame.md`: breaks (who stays, going home in one reply) and Secret Fools Day's draw with Merryhew's sale. 1.82.0: release A2: the Dorm Competition's brackets drawn
-from the seed ({{user}}'s bouts in `<now>`, Placement and Status by the engine, Training Week scout, the bracket on the Competition
-tab) and the Club Festival coin vote. 1.81.0: the event frame, release A1: every calendar event has an
-id and a kind, `<now>` gets one Event line per event today (now, next), Activities → Event, event chances (the old event XP moved
-there) and the Star Night market stalls. 1.80.0: `<now>` brings back older record lines named in the player's own new message, and
-`audit_chat.py --mechanics` lists Clues and planted details the story never showed (Megumin Suite audit batch 3: MS4, MS3 stage 1).
-1.79.0: the bracelet's "This reply" fold (batch 2). 1.78.0: `<now>` gives three Fortune numbers, one per
-attempt in order, and an Extras record's Looks describe an ordinary day (batch 1: MS2, MS5). 1.77.1: a Cast Sheet's Carries line says the things come up
-when the scene calls for them. 1.77.0: a Lore change may last a while (Until), and `<now>` says how {{user}} looks. 1.76.0: the roster
-spread over more clubs (Camping Club). 1.75.0: a club {{user}} founds is a club like any other. 1.74.0: word gets around, ties; 1.73.0:
-time apart; 1.72.0: special days; 1.70.0/1.71.0: scene cards; 1.69.0: one model per turn; 1.68.0: the preset is Realistic Frankenstein
-2.2.1.3 as it ships. The memory audit is done except batch 8. Live checks: the campaign quest log `docs/TEST_CHECKLIST.md` (the owner
-plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the card, Q0.1).
+**Snapshot:** card **v1.85.0** (2026-10-21): release D of `planning/DRAFT_event_frame.md`: the Magical & Science Fair's mark (a
+Project with Kind `fair`, scored by the engine at Saturday's close; it replaces the Month 9 Magic Theory midterm if better), the
+Thinning's own ambience beats, the Circus stalls (hours by day), the family-visit line on the Showcase and Harvest days. 1.84.0: the
+Kingdom Competition in three rounds. 1.81.0–1.83.0: the event frame, the Dorm Competition brackets, breaks and Secret Fools Day. The
+memory audit is done except batch 8. Live checks: the campaign quest log `docs/TEST_CHECKLIST.md` (the owner plays it from the Charles
+chat, Y1 M1 W1 Mon 10:13; first Act 0: update the card, Q0.1).
 
-**Next task:** `planning/DRAFT_event_frame.md` release C (`tally` for Sports Day and the Showcase; the Academy tier, whose computed
-winner then becomes Halvard's Kingdom team in `sh:kcTeams`) before the campaign reaches M6 W3; then D–E by their dates (§7); the draft has no open question left. Meanwhile the owner plays
-the quest log; their reports and chat exports bring the playtest fixes (tick what passed, run
-`tools/audit_chat.py` on the export, move "Where you are"). The Megumin Suite audit (`audit/AUDIT_2026-10-21_2_megumin_suite.md`
-§6): all three batches are in (1.78.0–1.80.0); MS3 stage 2 waits in `planning/FUTURE_PLANS.md` §2 until an
-export shows Clues the story never showed. Batch 8
-(chapters) is planned in `planning/DRAFT_bab_baru.md`: build it at about 20,000 messages, slow saves or a chat file near 100 MB. The
-NPC dialogue audit: U1 and U3–U5 wait in `planning/FUTURE_PLANS.md` §2; the first campaign export on 1.77.1+ is their baseline.
+**Next task:** release E of `planning/DRAFT_event_frame.md` (Bazaar stalls and haggling, Founder Day's hunt, the Council Election
+vote, the Harvest and Graduation stalls) before the campaign reaches M9 W2, and release C (`tally` for Sports Day and the Showcase; the
+Academy tier, whose computed winner becomes Halvard's Kingdom team in `sh:kcTeams`) before M6 W3. Meanwhile the owner plays the quest
+log; their reports and chat exports bring the playtest fixes (tick what passed, run `tools/audit_chat.py` on the export, move "Where
+you are"). MS3 stage 2 and the NPC dialogue audit's U1, U3–U5 wait in `planning/FUTURE_PLANS.md` §2 for a campaign export. Batch 8
+(chapters) is planned in `planning/DRAFT_bab_baru.md`: build it at about 20,000 messages, slow saves or a chat file near 100 MB.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

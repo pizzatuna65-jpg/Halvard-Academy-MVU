@@ -1,5 +1,5 @@
 {
-  "_note": "Class periods, exam months, seasons by month and the dorm colours: shared by the engine, the panels, the bracelet and <now> through src/scripts/shared.js (1.43.0). 1.81.0 (planning/DRAFT_event_frame.md): every event has a unique id (data/event_frame.json, shop.json ev, happenings.json ev name it) and a kind (contest, showcase, festival, rite, trip, exam, day, holiday) that only chooses what the Event tab and <now> show; behaviour stays in the other fields.",
+  "_note": "Class periods, exam months, seasons by month and the dorm colours: shared by the engine, the panels, the bracelet and <now> through src/scripts/shared.js (1.43.0). 1.81.0 (planning/DRAFT_event_frame.md): every event has a unique id (data/event_frame.json, shop.json ev, happenings.json ev name it) and a kind (contest, showcase, festival, rite, trip, exam, day, holiday) that only chooses what the Event tab and <now> show; behaviour stays in the other fields. 1.85.0: family 1 = families visit on every day of the event (the Event line in <now> says whose family comes).",
   "periods": [
     [
       "08:00",
@@ -427,6 +427,7 @@
       "t": "Academy Showcase",
       "id": "showcase",
       "kind": "showcase",
+      "family": 1,
       "s": {
         "Thu": "09:00–18:00 acts on the Main Courtyard stage; parents and guardians visit (logged at the Gatehouse)",
         "Fri": "09:00–18:00 acts on the Main Courtyard stage; families visit",
@@ -594,6 +595,7 @@
       "t": "Harvest Festival (Fri evening to Sun)",
       "id": "harvest",
       "kind": "festival",
+      "family": 1,
       "curfew": {
         "Fri": 23,
         "Sat": 23

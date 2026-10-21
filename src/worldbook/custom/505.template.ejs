@@ -100,6 +100,12 @@ Secret Fools Day: if {{user}} drew a name this morning, it was <%- e.fools.to ||
 <%_ if (e.sale) { _%>
 Today <%- e.sale.shop %> sells everything at <%- e.sale.pct %>% off (the engine charges the sale price).
 <%_ } _%>
+<%_ if (e.fair) { _%>
+<%- e.fair.m ? "The panel scored {{user}}'s stand " + e.fair.m + " (the engine's mark; the partners share it)." : e.fair.k ? "{{user}}'s stand: \"" + e.fair.k + "\" (Progress " + e.fair.p + "). On Saturday the staff panel questions and scores every stand; the engine sets the mark at the close." : "If {{user}} builds a stand, record it as a Project with Kind \"fair\" (With the partners, Due \"M7 W2 Sat\"); the panel's mark is the engine's." %>
+<%_ } _%>
+<%_ if (e.family) { _%>
+Families are visiting today. {{user}}'s family comes only if the player says so; anyone else's family follows their lore, or stays unnamed.
+<%_ } _%>
 <%_ if (e.stay) { _%>
 Most students have gone home for the break. Students on record who stayed: <%- e.stay.length ? e.stay.join(', ') : 'none' %>; the rest are away until it ends.
 <%_ } _%>

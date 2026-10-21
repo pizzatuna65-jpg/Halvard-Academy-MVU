@@ -5,7 +5,7 @@ memiliki tujuan nanti ada ui quest/objective"). Jawaban yang disepakati di chat:
 ditambah modul per **jenis** event; modul khusus satu event hanya kalau event itu punya keputusan yang tidak ada di event lain.
 
 **Status:** disetujui owner ("proceed", 2026-10-21; diam = setuju untuk §10: pertanyaan 1 = engine, pertanyaan 2 = usulan (a) + (c),
-teksnya di §10). **Rilis A1 selesai di 1.81.0, A2 di 1.82.0, B di 1.83.0; Kingdom dan pilihan World (bagian dari C) di 1.84.0.** Berikutnya C (`tally`, Academy/Kingdom/World) sebelum Sports Day M6 W3. Draf ini dihapus setelah rilis E. Dibangun bertahap (§7), tiap rilis siap sebelum event pertamanya di kampanye
+teksnya di §10). **Rilis A1 selesai di 1.81.0, A2 di 1.82.0, B di 1.83.0; Kingdom dan pilihan World (bagian dari C) di 1.84.0; D di 1.85.0.** Berikutnya C (`tally`, Academy/Kingdom/World) sebelum Sports Day M6 W3. Draf ini dihapus setelah rilis E. Dibangun bertahap (§7), tiap rilis siap sebelum event pertamanya di kampanye
 Charles (sekarang Y1 M1 W1). Pilihan yang wajar sudah diputuskan di draft ini; yang benar-benar terbuka ada di §10.
 Owner 2026-10-21: bagian kompetisi tidak ada masalah; tujuh celah event lain (§4) ditambahkan atas permintaan owner.
 

@@ -2092,6 +2092,155 @@
    "gift_tags": [
     "book"
    ]
+  },
+  {
+   "shop": "Circus stalls",
+   "loc": "courtyards",
+   "item": "Candied apple",
+   "price": 5,
+   "note": "glossy red, on a stick",
+   "canon": false,
+   "season": "all",
+   "ev": "circus",
+   "days": {
+    "Thu": [
+     "18:00",
+     "22:00"
+    ],
+    "Fri": [
+     "13:00",
+     "22:00"
+    ],
+    "Sat": [
+     "13:00",
+     "22:00"
+    ],
+    "Sun": [
+     "09:00",
+     "22:00"
+    ]
+   },
+   "gift_tags": [
+    "sweets and baked goods"
+   ]
+  },
+  {
+   "shop": "Circus stalls",
+   "loc": "courtyards",
+   "item": "Spun-sugar cloud",
+   "price": 4,
+   "note": "pink, gone in three bites",
+   "canon": false,
+   "season": "all",
+   "ev": "circus",
+   "days": {
+    "Thu": [
+     "18:00",
+     "22:00"
+    ],
+    "Fri": [
+     "13:00",
+     "22:00"
+    ],
+    "Sat": [
+     "13:00",
+     "22:00"
+    ],
+    "Sun": [
+     "09:00",
+     "22:00"
+    ]
+   },
+   "gift_tags": [
+    "sweets and baked goods"
+   ]
+  },
+  {
+   "shop": "Circus stalls",
+   "loc": "courtyards",
+   "item": "Salted pretzel knot",
+   "price": 4,
+   "note": "warm from the wagon oven",
+   "canon": false,
+   "season": "all",
+   "ev": "circus",
+   "days": {
+    "Thu": [
+     "18:00",
+     "22:00"
+    ],
+    "Fri": [
+     "13:00",
+     "22:00"
+    ],
+    "Sat": [
+     "13:00",
+     "22:00"
+    ],
+    "Sun": [
+     "09:00",
+     "22:00"
+    ]
+   },
+   "gift_tags": [
+    "food"
+   ]
+  },
+  {
+   "shop": "Circus stalls",
+   "loc": "courtyards",
+   "item": "Painted carnival mask",
+   "price": 12,
+   "note": "crimson and cream, like the great tent",
+   "canon": false,
+   "season": "all",
+   "ev": "circus",
+   "days": {
+    "Thu": [
+     "18:00",
+     "22:00"
+    ],
+    "Fri": [
+     "13:00",
+     "22:00"
+    ],
+    "Sat": [
+     "13:00",
+     "22:00"
+    ],
+    "Sun": [
+     "09:00",
+     "22:00"
+    ]
+   }
+  },
+  {
+   "shop": "Circus stalls",
+   "loc": "courtyards",
+   "item": "Fortune teller's card",
+   "price": 8,
+   "note": "one card turned and inked for the buyer; what it says is the fortune teller's",
+   "canon": false,
+   "season": "all",
+   "ev": "circus",
+   "days": {
+    "Thu": [
+     "18:00",
+     "22:00"
+    ],
+    "Fri": [
+     "13:00",
+     "22:00"
+    ],
+    "Sat": [
+     "13:00",
+     "22:00"
+    ],
+    "Sun": [
+     "09:00",
+     "22:00"
+    ]
+   }
   }
  ]
 }

@@ -2857,6 +2857,7 @@ function stepReputation(c) {
     const kind = String(e.Kind || '').trim().toLowerCase(), deed = (REP.deeds || {})[kind];
     if (compKinds.has(kind)) { log.push(`Reputation deed "${kind}" is paid by the engine from Competition (Tier and Status); it was not counted here.`); continue; }
     if (kind === 'founded_club') { log.push('Reputation deed "founded_club" is paid by the engine when Campus_State.Founded_club is founded; it was not counted here.'); continue; }   // 1.75.0
+    if (kind === 'fair_prize' && !c.OFF.has('study')) { log.push('Reputation deed "fair_prize" is paid by the engine from the Fair stand\'s mark (a Project with Kind "fair"); it was not counted here.'); continue; }   // 1.85.0
     if (!deed && kind && !['repeat', 'event'].includes(kind)) { log.push(`Reputation deed "${kind}" is unknown; use a listed Kind or an explicit repeat/event entry.`); continue; }
     const r = deed ? deed[0] : REP.reps.find(x => x.toLowerCase() === String(e.Rep || '').trim().toLowerCase());
     if (!r) { log.push(`Reputation "${e.Rep}" is unknown (use Academy, Student or Doves); nothing was changed.`); continue; }
@@ -3098,6 +3099,11 @@ function stepSchoolWeek(c) {
           const p = PRACTICAL.filter(s => marks[s] < 4 && !(ST.cap[s] || {}).ex).sort((a, b) => marks[a] - marks[b])[0];
           if (p) { marks[p]++; why[p].push("Alyssa's Foresight +1"); }
         }
+        // 1.85.0 (lore 240): the Fair mark stands in for the Month 9 Magic Theory midterm when it is better
+        const cf = sessOf(ST.key), FM = ST.fair;
+        if (cf && cf.M === 9 && _.isPlainObject(FM) && FM.y === cf.Y && FM.m != null && FM.m > marks['Magic Theory']) {
+          marks['Magic Theory'] = FM.m; why['Magic Theory'].push(`the Fair mark ${MARKS[FM.m]} replaces the written paper`);
+        }
         for (const s of SUBJECTS) {
           const sh = ST.shift[s];
           if (sh && sh.fail) { marks[s] = 0; why[s].push(`failed (${sh.why || 'the story'})`); continue; }
@@ -3106,6 +3112,31 @@ function stepSchoolWeek(c) {
         }
         return { marks, why };
       };
+      // 1.85.0 (planning/DRAFT_event_frame.md 4.4, lore 240): a Magical & Science Fair stand is a Project with Kind "fair"; the staff
+      // panel scores it at the close of judging (Saturday 18:00) from its Progress (the preparation, a tier per 25), Arcana and the
+      // day's roll (EXAM_DAY); a stand short of 100 is shown unfinished, one mark lower. The partners (With) share the mark; an A is
+      // fair_prize (the engine's); markUp uses the mark for the Month 9 Magic Theory midterm when it is better
+      {
+        const FE = EVENTS.find(e => e.id === 'science_fair'), Y = Wn.Year;
+        if (!_.isPlainObject(ST.fair) || ST.fair.y !== Y) ST.fair = { y: Y };
+        const FR = ST.fair, close = FE ? toAbs({ Year: Y, Month: FE.m, Week: FE.w, Day: 'Sat', Time: '18:00' }) : -1;
+        const fk = Object.keys(S.Projects || {}).find(k => /^fair$/i.test(String((S.Projects[k] || {}).Kind || '').trim()));
+        if (fk && FR.m == null && close >= 0 && (absA <= close || (hasB && absB < close))) Object.assign(FR, { k: fk, p: num(S.Projects[fk].Progress, 0), w: String(S.Projects[fk].With || '') });
+        if (FR.k && FR.m == null && hasB && close >= 0 && absA >= close) {
+          const rank = profOn ? profRankOf(S, SUBJECT_STAT['Magic Theory']) : -1, prep = Math.min(4, Math.floor(num(FR.p, 0) / 25)) * 25;
+          const roll = d100(seed, `Y${Y}`, 'fair'), [, day, dayWord] = EXAM_DAY.find(([hi]) => roll <= hi);
+          const score = r1(0.6 * prep + 0.4 * (rank >= 0 ? rank * 20 : prep) + day);
+          let m = GRADE_CUT.filter(x => score >= x).length;
+          if (num(FR.p, 0) < 100) m = Math.max(0, m - 1);
+          FR.m = m;
+          FR.why = `Progress ${FR.p}${rank >= 0 ? `, Arcana Rank ${rank}` : ''}${dayWord ? `, ${dayWord}` : ''} = ${score}${num(FR.p, 0) < 100 ? ', unfinished -1' : ''}: ${MARKS[m]}`;
+          jnl.push(`Magical & Science Fair: the panel scored "${FR.k}" ${MARKS[m]}${FR.w ? ` (a group stand with ${FR.w})` : ''}.`);
+          S.$ui.toasts.push(`Fair stand scored ${MARKS[m]}`);
+          log.push(`Magical & Science Fair: "${FR.k}" scored ${MARKS[m]} (${FR.why}); it replaces the Month 9 Magic Theory midterm if better.`);
+          const dz = (REP.deeds || {}).fair_prize;
+          if (m === 4 && dz) repAdd(dz[0], dz[1], 'Magical & Science Fair: an A', '');
+        }
+      }
       // the condition {{user}} sits each exam in: read on the first update after it starts
       const cs = sessOf(ST.key);
       if (cs && hasB) {
@@ -3229,7 +3260,8 @@ function stepSchoolWeek(c) {
       const nx = sessOf(ST.key), fc = markUp(), run = nx.fin ? runOf(ST.key) : null;
       S.$ui.grades = { label: labelOf(nx), set: !!(ST.res[ST.key] || ST.marks[ST.key]), tier: TIERS[tierOf()], h: Math.round(num(ST.mins, 0) / 60),
         marks: _.mapValues(fc.marks, m => MARKS[m]), why: _.mapValues(fc.why, r => r.join('; ')), run: run ? `${DAYS[run.d]} ${pad(run.h)}:00` : '',
-        stand: _.mapValues(ST.stand, m => MARKS[m]) };
+        stand: _.mapValues(ST.stand, m => MARKS[m]),
+        ...(ST.fair && ST.fair.m != null && (Wn.Month < 9 || (Wn.Month === 9 && Wn.Week === 1)) ? { fair: MARKS[ST.fair.m] } : {}) };
       const examWeek = EXAMS.includes(Wn.Month) && Wn.Week === 1 && ['Mon', 'Tue', 'Wed', 'Thu'].includes(Wn.Day) && !evs.some(e => e.home);
       if (examWeek) {
         const di = DAYS.indexOf(Wn.Day), today = SUBJECTS.filter(s => (nx.fin ? run.d === di : (MID_SLOTS[s] || [])[0] === di));
@@ -5437,8 +5469,11 @@ function stepCampusEvents(c) {
       // sale, and on a break the roster students who stayed
       const dorm = String(S.Player.Profile.Dorm || ''), fools = e.id === 'fools_day' && /^(Fire|Light|Sky|Viridian)$/.test(dorm) ? foolsDraw(PRESENCE, num(S.$eng.seed, 0), S.World.Year, dorm) : null;
       const stay = e.home ? breakStaysNow(PRESENCE, S) : null;
+      // 1.85.0: Fair week, {{user}}'s stand (stepSchoolWeek's record: its name and Progress, then the panel's mark)
+      const FR = e.id === 'science_fair' && !c.OFF.has('study') ? ((S.$eng.study || {}).fair || {}) : null;
+      const fair = FR ? (FR.y !== S.World.Year ? {} : FR.m != null ? { m: MARKS[FR.m] } : FR.k ? { k: FR.k, p: num(FR.p, 0) } : {}) : null;
       return { id: e.id, t: e.t.split(' (')[0], kind: e.kind || '', n: e.d.indexOf(S.World.Day) + 1, of: e.d.length, now: cur ? cur.what : '', next: nx ? [clock(nx.at), nx.what] : null, ch, stall, ...(e.id === 'club_festival' && vote ? { vote } : {}),
-        ...(fools ? { fools } : {}), ...(e.sale ? { sale: e.sale } : {}), ...(stay ? { stay } : {}) };
+        ...(fools ? { fools } : {}), ...(e.sale ? { sale: e.sale } : {}), ...(stay ? { stay } : {}), ...(fair ? { fair } : {}), ...(e.family ? { family: 1 } : {}) };
     });
   }
 }
@@ -5872,7 +5907,7 @@ function stepAmbience(c) {
     const flu = !!(S.$ui.wx && S.$ui.wx.flu);
     const fits = (w, beat) => (w.out === undefined || w.out === out) && (!w.tb || w.tb.some(x => tbs.has(x))) && (!w.wx || w.wx.some(x => wtags.has(x)))
       && (!w.season || w.season.includes(season)) && (w.min === undefined || crowd >= w.min) && (w.max === undefined || crowd <= w.max)
-      && (!w.exam || exam) && (!w.flu || flu) && (!beat || crowd > 0 || w.far) && (!beat || !curfewOut || w.curfew);
+      && (!w.exam || exam) && (!w.flu || flu) && (!beat || crowd > 0 || w.far) && (!beat || !curfewOut || w.curfew) && (!w.ev || w.ev.some(id => evs.some(e => e.id === id)));
     // one cue type per new place or time block, not the same one at this place within three days
     const fresh = pk !== pkB || blk !== blkB || dayNo !== dayNoB || elapsed > 360;
     // the place's own types come first (7 or 6 times in 10), so the shared ones do not crowd them out
@@ -5917,7 +5952,10 @@ function stepAmbience(c) {
           beat = { kind, text: special('overheard') };
         } else {
           const bh = (AE.beat[cat] || []).filter(([, dd]) => dayNo - dd < 7);
-          const pool = placeFirst(AMB.beats.map((b, i) => [b, i]).filter(([b, i]) => (b[0] === '*' || b[0] === cat) && b[1] === kind && fits(b[3], true) && !bh.some(([j]) => j === i) && (!b[3].special || special(b[3].special))), 6, 'beat');
+          // 1.85.0 (planning/DRAFT_event_frame.md 4.5): an event's own beats (ev: the Thinning week) come first six times in ten
+          const cand = AMB.beats.map((b, i) => [b, i]).filter(([b, i]) => (b[0] === '*' || b[0] === cat) && b[1] === kind && fits(b[3], true) && !bh.some(([j]) => j === i) && (!b[3].special || special(b[3].special)));
+          const evPool = cand.filter(([b]) => b[3].ev);
+          const pool = evPool.length && rollInt(0, 9, seed, 'evbeat', absA) < 6 ? evPool : placeFirst(cand, 6, 'beat');
           if (pool.length) {
             const [b, i] = pickOf(pool, seed, 'beat', pk, absA);
             beat = { kind, text: b[3].special ? special(b[3].special) : b[2] }; bh.push([i, dayNo]);

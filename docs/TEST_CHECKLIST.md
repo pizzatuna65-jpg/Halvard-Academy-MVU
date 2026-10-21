@@ -479,7 +479,16 @@ The first academy flight (the airship), then the Grand Vast Forest.
 
 ### Q7.2 Autumn and The Thinning (M7)
 - [ ] M7: the Autumn map, and the autumn stock (the Ember pouch) [1.14.3, 1.9.5].
-- [ ] The Thinning week (M7 W3) has its own event map [1.14.3].
+- [ ] Fair week (M7 W2): without a stand `<now>` says how to record one; building one, the narrator keeps it as a Project with Kind
+      "fair" and raises its Progress; Saturday after 18:00 the Journal has the panel's mark, `<now>` says it, and the Studies tab shows
+      "Fair mark" (in M8–M9 W1 the Magic Theory forecast uses it when it is better) [1.85].
+- [ ] The Thinning week (M7 W3) has its own event map [1.14.3]; indoors its own beats come up (the ward flickering on the outer wall, no
+      birdsong, knocking in the wall), never a breach or a Clue [1.85].
+
+### Q7.3 The Circus and the Showcase (M8 W2–W3)
+- [ ] Circus Thursday after 18:00 in the Courtyards: the bracelet's "Stalls here" chip, the Price Guide's Circus stalls with their hours,
+      and a candied apple costs 5 points; at 15:00 the stalls are not open yet [1.85].
+- [ ] Showcase days: `<now>` says families are visiting; Charles's family comes only if the player says so [1.85].
 
 ## Act 8 — Month 9
 

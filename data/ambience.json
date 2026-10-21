@@ -1,5 +1,5 @@
 {
- "_note": "1.16.0 (owner-approved planning/DRAFT_dynamic_ambience.md). Single source for the engine's ambience (gen_engine.py injects it). levels: 0 empty, 1 quiet, 2 some people, 3 busy, 4 packed. blocks: 00-06, 06-08, P1 08-10, P2 10-12, lunch 12-13, P3 13-16, 16-18, 18-20, 20-24. rhythm: class = Mon-Fri with classes, sat = Saturday (optional), free = Sunday and days without classes. places: lowercase place names as the engine's placeKey gives them. sun: mid-month sunrise and sunset in minutes (about 48 degrees north, sun time, no daylight saving; M1 = March). cues/beats: [category or *, kind, type text, conditions]. Types, not finished sentences: the narrator writes the detail each time (owner). Conditions: out (true outdoors / false indoors), tb (time bands dawn, morning, day, evening, night), wx (rain, snow, wind, fog, storm, heat, cold, clear), season, min/max (crowd), far (allowed at an empty place), curfew (allowed outside the dorms after curfew), exam (exam week), flu, special (overheard, weather_turn, event_echo). uncanny: the secret roll's stories (lore uids), with where and when.",
+ "_note": "1.16.0 (owner-approved planning/DRAFT_dynamic_ambience.md). Single source for the engine's ambience (gen_engine.py injects it). levels: 0 empty, 1 quiet, 2 some people, 3 busy, 4 packed. blocks: 00-06, 06-08, P1 08-10, P2 10-12, lunch 12-13, P3 13-16, 16-18, 18-20, 20-24. rhythm: class = Mon-Fri with classes, sat = Saturday (optional), free = Sunday and days without classes. places: lowercase place names as the engine's placeKey gives them. sun: mid-month sunrise and sunset in minutes (about 48 degrees north, sun time, no daylight saving; M1 = March). cues/beats: [category or *, kind, type text, conditions]. Types, not finished sentences: the narrator writes the detail each time (owner). Conditions: out (true outdoors / false indoors), tb (time bands dawn, morning, day, evening, night), wx (rain, snow, wind, fog, storm, heat, cold, clear), season, min/max (crowd), far (allowed at an empty place), curfew (allowed outside the dorms after curfew), exam (exam week), flu, special (overheard, weather_turn, event_echo). 1.85.0: ev (event ids: only on that event's days, and then picked first six times in ten; the Thinning's beats, lore 9: never a breach or a Clue). uncanny: the secret roll's stories (lore uids), with where and when.",
  "uncanny_chance": 5,
  "_lore_chance": "1.24.0 (owner playtest): percent chance that a non-calm ambience beat at a place with lore {{user}} has not heard becomes that lore, overheard (once a day at most).",
  "lore_chance": 35,
@@ -188,7 +188,16 @@
   ["forest", "tex", "something moving unseen in the undergrowth", {"far": true}],
   ["forest", "tex", "tracks in the snow that are not a deer's", {"far": true, "wx": ["snow"]}],
   ["forest", "tex", "an offering left on a stump by someone who ate here", {"far": true}],
-  ["forest", "brush", "a branch, a bramble or a root catches {{user}}", {}]
+  ["forest", "brush", "a branch, a bramble or a root catches {{user}}", {}],
+  ["*", "tex", "the ward along the outer wall flickers, faint as breath on glass", {"ev": ["thinning"], "far": true, "curfew": true}],
+  ["*", "tex", "no birdsong anywhere on the grounds", {"ev": ["thinning"], "far": true, "curfew": true}],
+  ["*", "tex", "something knocks inside the wall three times, then never again", {"ev": ["thinning"], "far": true, "curfew": true}],
+  ["*", "tex", "every lamp in the corridor dims together, then comes back", {"ev": ["thinning"], "far": true, "curfew": true}],
+  ["*", "tex", "a draught moves through a room with every window shut", {"ev": ["thinning"], "far": true, "curfew": true}],
+  ["*", "tex", "a staff patrol counting heads at the end of the corridor", {"ev": ["thinning"], "far": true, "curfew": true}],
+  ["*", "tex", "someone asking, too casually, whether anyone else heard that", {"ev": ["thinning"], "far": true, "curfew": true}],
+  ["*", "tex", "the common room talking low, nobody quite wanting to go to bed", {"ev": ["thinning"], "far": true, "curfew": true}],
+  ["*", "tex", "a door down the hall that was shut now standing open", {"ev": ["thinning"], "far": true, "curfew": true}]
  ],
  "uncanny": [
   {"id": "third_stall", "uid": 205, "title": "The Third Stall", "places": ["bathhouse and washrooms"], "from": 1200, "to": 360, "text": "the Third Stall answers {{user}}'s knock, or its latch moves by itself"},

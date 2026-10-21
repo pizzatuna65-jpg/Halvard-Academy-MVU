@@ -134,7 +134,7 @@ PG['ev'] = {}
 for i in shop_all:
     if not i.get('ev'): continue
     fx = effect_text(i)
-    g = PG['ev'].setdefault(i['ev'], {'shop': i['shop'], 'place': locs[i['loc']]['name'], 'hours': f"{i.get('day', '') + ' ' if i.get('day') else ''}{i.get('from', '00:00')}–{i.get('to', '24:00')}", 'rows': []})
+    g = PG['ev'].setdefault(i['ev'], {'shop': i['shop'], 'place': locs[i['loc']]['name'], 'hours': ', '.join(f"{d} {f0}–{t0}" for d, (f0, t0) in i['days'].items()) if i.get('days') else f"{i.get('day', '') + ' ' if i.get('day') else ''}{i.get('from', '00:00')}–{i.get('to', '24:00')}", 'rows': []})
     g['rows'].append(f"- {i['item']}: {i['price']:,} pts{'; ' + i['note'] if i['note'] else ''}{'; ' + fx if fx else ''}")
 pg = open(P('src/worldbook/custom/506.template.ejs'), encoding='utf-8').read()
 assert pg.count('/*@@SHARED@@*/') == 1

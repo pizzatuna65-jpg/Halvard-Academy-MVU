@@ -1,7 +1,33 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.85.0 — The Fair's mark, the Thinning's beats, the Circus stalls, family visits (2026-10-21)
+
+Owner's request (2026-10-21, "proceed batch d dan e"): release D of `planning/DRAFT_event_frame.md` (§4.4, §4.5, the Circus stalls of
+§4.1, §4.6). Engine, data, generators, 502, 505, the rule cards and the Studies tab. Save fixture v1.84.0.
+- **Magical & Science Fair** (lore 240; DECISIONS "Grades and exams"): a stand is a Project with Kind `fair` (the Kind is new in 502
+  and the projects card). `stepSchoolWeek` keeps its name, Progress and partners through the week (`$eng.study.fair`) and scores it at
+  the close of judging, M7 W2 Sat 18:00: 0.6 × preparation (a tier per 25 Progress) + 0.4 × Arcana (rank × 20; preparation with
+  Proficiency off) + the day's roll (`EXAM_DAY`); a stand short of 100 is shown unfinished, one mark lower. The partners share the
+  mark; an A pays `fair_prize` (now the engine's: a reported one is not counted while Study is on). The mark replaces the Month 9 Magic
+  Theory midterm when it is better (`markUp`), shown in the forecast's reasons and on the Studies tab ("Fair mark"). The exams card no
+  longer offers "a Science Fair prize" as a deciding moment. Fair week's Event line tells the narrator how to record a stand, then its
+  Progress, then the panel's mark.
+- **The Thinning** (lore 9): nine beats of its own in `data/ambience.json` (`ev: ["thinning"]`: the ward on the outer wall, no birdsong,
+  knocking inside a wall, lamps dimming together, a draught with the windows shut, a staff patrol counting heads, …), only that week and
+  then picked first six times in ten; never a breach or a Clue. The uncanny chance was already doubled that week (1.16.0).
+- **Circus stalls** (lore 241, Courtyards): candied apple 5, spun-sugar cloud 4, salted pretzel knot 4, painted carnival mask 12,
+  fortune teller's card 8. A stall row may now give each event day its own hours (`days`): Thu 18:00–22:00, Fri and Sat 13:00–22:00
+  (classes in the morning), Sun 09:00–22:00.
+- **Family visits** (§4.6): the Showcase and the Harvest Festival have `family`; their Event line says families are visiting,
+  {{user}}'s only if the player says so, anyone else's by their lore or unnamed.
+- Tests: new `test_fair_thinning_v1850.cjs`; `test_saves` (v1.84.0), event frame, breaks, contest, Kingdom, ambience, grades,
+  mastery, tokens, preset and the suites that grep the changed wording pass.
+- **To confirm with the owner:** the Fair formula (0.6 / 0.4, unfinished −1) and that a first-year's finished stand scores about C;
+  the nine Thinning beats (five are the draft's); the Circus items, prices and hours.
+- **To check live:** `docs/TEST_CHECKLIST.md` Q7.2 and Q7.3 [1.85].
 
 ## v1.84.0 — The Kingdom Competition in three rounds (2026-10-21)
 
@@ -124,27 +150,6 @@ A2–E are in). Engine, data, 505, 506, the Activities panel and the bracelet. S
 - **To confirm with the owner:** the draft's Star Night reward was an Imprint; Imprints are beliefs the narrator writes (with their cap and
   "fixed" characters), so the engine adds a Recent moment instead. The five stall items, their notes and prices (draft §4.1).
 - **To check live:** `docs/TEST_CHECKLIST.md` Q1.1, Q1.3, Q3.5, Q4.1 [1.81].
-
-## v1.80.0 — Recall from the player's own message; records the story never showed (2026-10-21)
-
-Owner's request (2026-10-21): batch 3 of the Megumin Suite audit (`audit/AUDIT_2026-10-21_2_megumin_suite.md`, untracked): MS4 and MS3
-stage 1. Card text (505), generators and the chat audit tool; the engine is unchanged. Save fixture v1.79.0.
-- **Recall from the player's message (MS4).** The engine runs after a reply, so the player's new message reached the card only through
-  keyword lore and VectFox. Verified in Prompt Template's source (`src/function/ejs.ts`, d6f520d; DECISIONS §11): an EJS entry can read
-  `lastUserMessage`. 505 now matches it (without the scene marker) against the record: a roster name of someone not here (any form the
-  engine knows; Pip, Ruby, Maple and Wren only in full), an Extra not here, or a place in `$ui.discovered`, and prints up to two older
-  archive lines, dated with their age, as "Earlier, from the record (named in the player's message: …)". Lines already in the Journal,
-  Kept, or another recall are skipped; a player-tool entry asks nothing. 0 tokens unless it fires (about 40-80 when it does).
-- **One source for name forms.** `tools/common.py` `name_forms` and `MENTION_DENY` (were in `gen_engine.py`) feed both the engine and
-  505's `NAMES`; the built engine is byte-identical apart from its version.
-- **Records the story never showed (MS3 stage 1).** `tools/audit_chat.py --mechanics` lists each Clue, or Hook for a planted detail, that
-  a block records with no word of it in that reply's story (Megumin's clue check: no names, four letters or more, first five letters
-  compared), with a count in the summary. 0 prompt tokens. Stage 2 (the engine flags such a Clue) waits in `planning/FUTURE_PLANS.md`
-  until an export shows the need; the 2026-10-05 campaign chat has none.
-- Tests: new `test_megumin_b3_v1800.cjs`; `test_saves`, `test_mechanics_audit_v1531`, `test_audit_tool`, `test_memory_tools_v1611`,
-  `test_narrator_batch7_v1580`, `test_memory_batch5_v1640`, `test_audit_batch7_v1480`, `test_one_source_v1430`, `test_reply_delta_v1790`,
-  `test_engine_steps_v1200`, `qa_static` and lint pass.
-- **To check live:** `docs/TEST_CHECKLIST.md` Milestones MS4 and MS5 [1.80].
 
 ## Release index (one line per release, oldest first)
 
@@ -314,3 +319,4 @@ stage 1. Card text (505), generators and the chat audit tool; the engine is unch
 - **v1.82.0 (2026-10-21):** The Dorm Competition's brackets from the seed (draft A2): {{user}}'s bouts in `<now>`, Placement and Status by the engine, canon pins, Fortune edge, Training Week scout, the bracket on the Competition tab; the Club Festival coin vote.
 - **v1.83.0 (2026-10-21):** Breaks (draft B): who stays (the lore's five and one in five), going home in one reply, the home-and-family line; Secret Fools Day's draw and Merryhew's 25% sale.
 - **v1.84.0 (2026-10-21):** The Kingdom Competition in three rounds (owner's design): the Kingsmeadow hunt for three Kingsblooms, the Undercroft's ten rooms, the final; the other teams by the engine, the World panel's pick from every competitor's record.
+- **v1.85.0 (2026-10-21):** Draft release D: the Magical & Science Fair's mark (a `fair` Project, replaces the Month 9 Magic Theory midterm if better), the Thinning's own beats, the Circus stalls (hours by day), the family-visit line.

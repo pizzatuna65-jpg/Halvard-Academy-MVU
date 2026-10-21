@@ -109,6 +109,11 @@ place and whether you qualify are worked out for you. At the Club Festival every
 uses what you have written about them. On Secret Fools Day the Event tab shows whose name you drew (if you join in), and Merryhew's
 sells everything at a quarter off.
 
+**The Magical & Science Fair** (Month 7, Week 2): build a stand through the week, alone or with friends; on Saturday the staff panel
+scores it. The mark depends on how far the stand got, your Arcana and the day, and it replaces your Month 9 Magic Theory midterm if
+it is better (Student file → Studies shows it). The Traveling Circus (Month 8) has stalls of its own in the Courtyards, and on the
+Showcase and Harvest Festival days families visit: yours only if you say so.
+
 **Student file → Settings → Appearance** changes the colours of the panels and the bracelet: Pewter (the default), Midnight (darker), Rosewood (warm dark), Parchment (light) and Frost (light, cool). The choice is kept in this browser and is not written to the chat.
 
 

@@ -159,6 +159,10 @@ shop_prices = {}   # 1.45.0 (audit 3.4): [price, shop, the shop's place key (eng
 for i in json.load(open(P('data/shop.json'), encoding='utf-8'))['items']:
     place = re.sub(r'^the ', '', locs[i['loc']]['name'].lower())
     row = [i['price'], i['shop'], place, 0 if i.get('season', 'all') == 'all' else i['season'], i['item']]
+    if i.get('ev') and i.get('days'):   # 1.85.0: hours that differ by day ({"Thu": [from, to], ...}): one row for each day
+        assert i['ev'] in EV_IDS and all(d in _ef_days[i['ev']] for d in i['days']), f"shop.json: {i['item']}: unknown event or day"
+        for d, (f0, t0) in i['days'].items(): shop_prices.setdefault(i['item'].lower(), []).append(row + [[i['ev'], d, f0, t0]])
+        continue
     if i.get('ev'):   # 1.81.0: an event stall, [event id, day, from, to] (planning/DRAFT_event_frame.md §4.1)
         assert i['ev'] in EV_IDS and i.get('day', _ef_days[i['ev']][0]) in _ef_days[i['ev']], f"shop.json: {i['item']}: unknown event or day"
         row.append([i['ev'], i.get('day', ''), i.get('from', '00:00'), i.get('to', '24:00')])
@@ -181,6 +185,7 @@ _bad = [n for c in amb['cats'].values() for n in c['places'] if n not in _lnames
 assert not _bad, f'ambience.json: unknown places {_bad}'
 assert all(len(c[k]) == 9 for c in amb['cats'].values() for k in ('class', 'free', 'sat') if k in c) and len(amb['sun']) == 12, 'ambience.json: rhythm or sun table'
 assert all(b[0] == '*' or b[0] in amb['cats'] for b in amb['cues'] + amb['beats']), 'ambience.json: unknown category'
+assert all(x in EV_IDS for b in amb['beats'] for x in b[3].get('ev', [])), 'ambience.json: a beat ev names an unknown event'   # 1.85.0
 t = t.replace('/*@@AMBIENCE@@*/{}', json.dumps({k: v for k, v in amb.items() if not k.startswith('_')}, ensure_ascii=False, separators=(',', ':')))
 # 1.31.0 restful places (keyed by the place's lowercase name) and letters home; their items must be shop items
 _rest = json.load(open(P('data/restore_places.json'), encoding='utf-8'))['places']

@@ -69,7 +69,7 @@ Player.Profile
 <%_ if (!on('attendance')) { _%>
   - With Attendance off, report skipped period −2, a clean week (no skipped class, no curfew break) +2, and Saturday club time +1 in Rep_events.
 <%_ } _%>
-  - Academy kinds: staff_job, fair_prize, crisis_help / crisis_help_major; caught_after_curfew, detention / detention_tower, lied_to_staff, defied_staff, property_damage / serious_property_damage, fight_outside_ward / serious_fight_outside_ward, public_scandal.<%- on('study') ? '' : ' With Study off, report exam top of the year +15, above average +8, passed +3; dorm rank up on Results day +5; failed exam −8, several −15 through legacy Rep_events.' %>
+  - Academy kinds: staff_job, <%- on('study') ? '' : 'fair_prize, ' %>crisis_help / crisis_help_major; caught_after_curfew, detention / detention_tower, lied_to_staff, defied_staff, property_damage / serious_property_damage, fight_outside_ward / serious_fight_outside_ward, public_scandal.<%- on('study') ? '' : ' With Study off, report exam top of the year +15, above average +8, passed +3; dorm rank up on Results day +5; failed exam −8, several −15 through legacy Rep_events.' %>
   - Student kinds: student_notice_help<%- on('study') ? ' (not paid tutoring: /Tutoring)' : '' %><%- on('attendance') ? '' : ', club_time' %>, club_office, club_festival_win, memorable_performance, community_event, defended_student / defended_student_from_doves, famous_prank, covered_classmate; dropped_student_request, public_snub, reported_student_to_staff, quit_club_midseason, bullying / severe_bullying, reported_student_to_doves, caught_cheating.
   - Doves kinds: cooperated_with_dove, attentive_in_dmd, helped_dove_case / major_dove_case, reported_forbidden_magic; suspicious_item, insulted_dove, defied_doves_publicly, restricted_area, lied_to_doves, obstructed_search. If a public defense angered the Doves, also report defied_doves_publicly; if a prank or cover-up was caught, also report caught_pranking or caught_covering_classmate (the second side of a report to staff or the Doves is the engine's).<%- on('study') ? '' : ' With Study off, report a top Dark Magic Defense exam +8 through legacy Rep_events.' %>
 <%_ if (on('study')) { _%>
@@ -172,7 +172,7 @@ Competition: {"Tier": "Dorm|Academy|Kingdom|World", "Status": "entered|qualified
 <%_ } _%>
 
 <%_ if (on('projects')) { _%>
-Projects: {"<name>": {"Kind": "potion|smithing|tailoring|enchantment|cooking|painting|carving|calligraphy|craft|research|assignment|club|other", "Goal": "", "Progress": 0-100, "Needs": "", "Where": "", "Due": "", "With": ""}}: raise Progress only for real work shown in the story; remove it once handed in, used or abandoned. The full rule shows in <rule_cards> while a Project is open.
+Projects: {"<name>": {"Kind": "potion|smithing|tailoring|enchantment|cooking|painting|carving|calligraphy|craft|research|assignment|fair|club|other", "Goal": "", "Progress": 0-100, "Needs": "", "Where": "", "Due": "", "With": ""}}: raise Progress only for real work shown in the story; remove it once handed in, used or abandoned. The full rule shows in <rule_cards> while a Project is open.
 <%_ } _%>
 
 <%_ if (on('trip')) { _%>

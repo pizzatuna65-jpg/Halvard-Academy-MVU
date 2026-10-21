@@ -6,7 +6,7 @@
   "letters": 76,
   "mystery": 203,
   "competition": 116,
-  "projects": 108,
+  "projects": 109,
   "trip": 53,
   "battle": 72,
   "inventory": 249,
@@ -26,12 +26,12 @@
   "small_scenes": 0,
   "ambience": 54,
   "reminders": 34,
-  "study": 54,
+  "study": 50,
   "say_colors": 183
  },
- "core_rules": 9063,
+ "core_rules": 9060,
  "lore": 9424,
- "price_guide": 5740,
+ "price_guide": 5876,
  "live": {
   "class": 40,
   "weather": 25
