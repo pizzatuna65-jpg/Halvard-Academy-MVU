@@ -38,10 +38,16 @@ atau lebih.
 
 | Openness | Publik | Dalam | Lebih dalam | NPC |
 |---|---|---|---|---|
-| open | 0 | 1 | 2 | 27 (Trixie, Etnie, Ruby, …) |
-| normal | 1 | 2 | 4 | yang tidak terdaftar |
+| open | 0 | 1 | 2 | 22 (Trixie, Etnie, Ruby, …) |
+| normal | 1 | 2 | 4 | 31, yang tidak terdaftar (Caspian, Kuroo, Gareth, Ezrel, …) |
 | guarded | 2 | 3 | 5 | 13 (Irene, Zara, Kanae, …) |
 | closed | 2 | 3 | 6 | 5 (Krieg, Ottavio, Mimosa, Caine, Ines) |
+
+**Lima NPC pindah dari open ke normal** (owner bertanya 2026-10-22; lorenya menunjukkan mereka banyak bicara tetapi tidak
+membuka diri): William (siang hari berpura-pura lemah, menyangkal bahwa dialah "the Crow"), Aiden ("a gifted liar", jujur hanya
+kepada teman), Florian ("stingy with sincerity"), Hadrian (memelintir semua hal demi dirinya, menjual siapa pun), Dorian ("every
+conversation is a sale"). Openness juga menentukan kategori Trust (`trust.json`): bond baru dengan mereka mulai di 50, bukan 60, dan
+ukuran turunnya ikut kategori normal. Trust bond yang sudah ada tidak berubah. Hasilnya: open 22, normal 31, guarded 13, closed 5.
 
 **Per NPC** (`data/info_layers.json`, baru): sebuah NPC boleh punya rank lapisannya sendiri dan boleh memindahkan field ke lapisan lain.
 Contoh untuk Trixie:
