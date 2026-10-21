@@ -1,7 +1,30 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 0e1e5a2:CHANGELOG.md` (1.87.0), `git show e6f2c37:CHANGELOG.md` (1.86.0), `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show ce178fb:CHANGELOG.md` (1.88.0), `git show 0e1e5a2:CHANGELOG.md` (1.87.0), `git show e6f2c37:CHANGELOG.md` (1.86.0), `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.92.0 — The weekly club client (2026-10-22)
+
+Owner's design (2026-10-22, "proceed" on `planning/DRAFT_kerja_club.md`, now deleted), release 3 of 3 (§4.7): "once a week, randomly,
+if {{user}} is in a club that offers services, an NPC comes to the club to ask for one; a chance, not certain". `data/club_work.json`
+`client`, engine `cwClient` (in `stepClubWork`), schema `$eng.client`. Save fixture v1.89.0.
+- **The draw**, like NPC initiative (`rollTable`): once a week 40% (by the week's Monday) when {{user}} is in the Tailoring, Smithing
+  or Fishing Club or the Library Assistants. The client is a roster student who has arrived and not graduated, is not a member, and
+  whose Tension with {{user}} is under 70 (they go elsewhere); any rank, so it is a way to meet people. Weight 1, +1 when they know
+  {{user}}, +2 when their haunts and tastes match the club (cloth and balls for Tailoring, blades and tools for Smithing, the lake for
+  Fishing, books for the Library). They come 45 minutes after one of the club's service sessions opens (Tailoring and Smithing
+  Saturday 13:45, the dock 06:45, the Library 16:45 or Saturday 13:45).
+- **The ask**: five templates per club, filled from the student's loves and likes `{thing}`, the coming events `{event}` or a subject
+  `{subject}`, never one of their last 20 (draft: also a weapon field; the engine has no such field, so Smithing's asks use tastes).
+- **At the club then**: `<now>` "Club client: Caralynn (whom {{user}} has not met) comes to the Workshop and has torn a sleeve and needs
+  it mended before anyone notices. {{user}} can take the job (a Practice craft session here; done, it is a help Interaction with
+  Caralynn) or leave it to another member. Play Caralynn in their own character." A bad result adds no Tension; the reward is the
+  existing help interaction and the Practice's Craft XP; the service's price goes to the club.
+- **Not there**: once the session is over, the Journal: "<student> came to the Tailoring Club and <ask>; <member> took the job."
+- The draft is applied and deleted; Beast Handling's and Warding Study's ideas are in `planning/FUTURE_PLANS.md`.
+- Tests: new `test_club_clients_v1920.cjs` (50 of 120 seeds bring a client; never a member; Tension 70+; one a week; the visit; the
+  Journal line; the Library and the dock; the toggle); full `npm test` passes; `test_saves` loads v1.89.0.
+- **To check live:** `docs/TEST_CHECKLIST.md` Q2.7 [1.92].
 
 ## v1.91.0 — Club services: visit a club for its work (2026-10-22)
 
@@ -25,7 +48,7 @@ Clubs tab, the Map card, the bracelet. Save fixture v1.89.0 (no data of 1.90.0 n
   {{user}}'s next Dorm Competition bout day.
 - **A member pays half** for their own club's services (Math.round: Mend 3 for a Tailoring member).
 - **How {{user}} learns of them**: the directory's "Services (place, hours): …" line, the Map card's Clubs here row ("· services: …",
-  the cards keep the same rows, DECISIONS §7), the "Services here" chip, `<now>` "Tailoring Club services here until 16:00: …" while
+  the cards keep the same rows, owner 1.2.0), the "Services here" chip, `<now>` "Tailoring Club services here until 16:00: …" while
   there (every visit, not only the first: shorter than a separate first-visit rule), the Price Guide's "Club stalls here", the
   Agenda ("ready to collect at the Workshop", "return Library book: …"), Activities → Clubs → Your orders.
 - Tests: new `test_club_services_v1910.cjs`; full `npm test` passes; `test_saves` loads v1.89.0.
@@ -99,20 +122,6 @@ to read. Cause: the light themes recoloured the caption's dark scrim and its tex
   with an empty Bag at Founder's Park has none; nothing changed.
 - Tests: new `test_scene_caption_v1881.cjs` (every theme); the scene card suites and `test_saves` pass.
 - **To check live:** `docs/TEST_CHECKLIST.md` Q1.1 scene cards [1.88.1].
-
-## v1.88.0 — Club advisors stay hidden until {{user}} knows them (2026-10-22)
-
-Owner's playtest note (2026-10-22, screenshot of Activities → Clubs: "semua teacher di club ke unlock"): every club showed its teacher
-advisor in a new game, before {{user}} had met any of them. Cause: 1.75.0 read a teacher's advisorship from their Role line ("advises
-the X"), which is open at Rank 0, so it broke the 1.6.11 rule (a club shows someone once their Club field, Rank 1, is open). UI only
-(`40_activities.js` `advisorKnown`, `clubFieldOpen`, `roleShown`; `10_people.js`). Save fixture v1.87.0.
-- An advisor with no Club field shows in Activities → Clubs and the People graph once {{user}} knows it: their bond is Rank 1 (as a
-  student's Club field), {{user}} is a member of that club, or a known fact names the club. Until then the club says "+N you have not
-  placed yet".
-- The dossier's Role line keeps "; advises the X" back until the same point (the rest of the line stays public).
-- Tests: new `test_advisor_known_v1880.cjs`; `test_newbond_v1611` follows the new `clubFieldOpen(id, S, c)`; the club suites and
-  `test_saves` pass (quick check, not the full suite).
-- **To check live:** `docs/TEST_CHECKLIST.md` Q1.2 [1.88].
 
 ## Release index (one line per release, oldest first)
 
@@ -290,3 +299,4 @@ the X"), which is open at Rank 0, so it broke the 1.6.11 rule (a club shows some
 - **v1.89.0 (2026-10-22):** Info layers (owner's design): Public, Deep, Deeper per NPC by openness (open 0/1/2 … closed 2/3/6), per-NPC moves, five open NPCs now normal; the narrator's Bond line names the lore headings it holds back.
 - **v1.90.0 (2026-10-22):** Club work (owner's design, release 1 of 3): the Academy Newspaper's Monday issue, club stalls (the Saturday bake, the potion table, free flu remedies, Greenwick's herbs), Groundskeeping's snow, the Festival Committee's postings, "For the campus" lines; toggle Club work.
 - **v1.91.0 (2026-10-22):** Club services (release 2 of 3): Tailoring and Smithing orders, mending and repairs at the Workshop (collected a week later), the Fishing Club's dawn (fish, a guest session), the Library Assistants' book loan and records search; members pay half; directory, Map, chip, Agenda.
+- **v1.92.0 (2026-10-22):** The weekly club client (release 3 of 3, draft deleted): in a service club, a 40% weekly chance that a non-member student comes with an ask from their own data; `<now>` at the club (a help Interaction), else a Journal line.

@@ -1462,7 +1462,7 @@ const shopRows = name => SHOP_PRICE[itemBase(name)] || SHOP_PRICE[SHOP_KEY[itemK
 // 1.90.0 (owner-approved planning/DRAFT_kerja_club.md §3): a club's row has ['', day, from, to, when] there; it sells while Club work
 // is on and its condition holds (flu: a flu day, Weather Full; bake / bakefail: the Saturday bake's seeded batch; club: always)
 const STALLS = Object.values(SHOP_PRICE).flat().filter(x => x[5]);
-const CLUB_WORK = {"newspaper":{"day":"Mon","at":"07:00","keep":3,"now_days":["Mon","Tue","Wed"],"ghost":["The Long Corridor","The Third Stall","The Night Student","Taken"]},"bake":{"good":70},"snow":{"slow":50,"clear":"07:00","far_until":"15:00","far":["grassy_field_and_hills","observation_tower","old_hut","forest","forest_clearing","spirit_path","boathouse_and_lake","fishing_house","willow_island"]},"names":{"Academy Newspaper":"Newspaper","Alchemy Circle":"Alchemy","Brewing Club":"Brewing","Cooking Club":"Cooking","Divination Society":"Divination","Festival Committee":"Festival Committee","Gardening Club":"Gardening","Groundskeeping":"Groundskeeping","Medical Centre Volunteers":"Medical Centre Volunteers"}};
+const CLUB_WORK = {"newspaper":{"day":"Mon","at":"07:00","keep":3,"now_days":["Mon","Tue","Wed"],"ghost":["The Long Corridor","The Third Stall","The Night Student","Taken"]},"bake":{"good":70},"snow":{"slow":50,"clear":"07:00","far_until":"15:00","far":["grassy_field_and_hills","observation_tower","old_hut","forest","forest_clearing","spirit_path","boathouse_and_lake","fishing_house","willow_island"]},"client":{"pct":40,"window_min":45,"clubs":{"Tailoring":"Tailoring Club","Smithing":"Smithing Club","Fishing":"Fishing Club","Library Assistants":"Library Assistants"},"match":{"Tailoring":"cloth|dress|silk|coat|cloak|fashion|tailor|vest|scarf|ball|outfit|wardrobe","Smithing":"blade|sword|knife|dagger|weapon|tool|forge|metal|armou?r|spear|axe|shield","Fishing":"fish|lake|boathouse|dock|pond|shore","Library Assistants":"book|librar|archive|stud|notes|history|scroll"},"asks":{"Tailoring":["wants something altered to fit before {event}","has torn a sleeve and needs it mended before anyone notices","wants an outfit made for {event} and has very particular ideas","wants a garment made as a present, something to go with {thing}","brings a coat they love that no longer fits and asks whether it can be saved"],"Smithing":["needs a blade sharpened and its balance checked","wants a small tool forged for a hobby that needs {thing}","brings a buckle and hinge that snapped and needs them by {event}","wants something engraved as a present and cannot decide what","asks whether the club can repair an heirloom that has seen better days"],"Fishing":["wants to learn to fish and has never held a rod","wants a fish for a dinner they are planning","asks to borrow tackle for a quiet morning by the lake","wants to know where the big ones are, for a bet","brings {thing} and asks whether it works as bait"],"Library Assistants":["needs a book on {subject} that the catalogue says is out","wants help finding an old record in the Archive","asks for a reading list on {subject} before the next exam","has lost track of a borrowed book and wants to sort it out quietly","wants something to read about {thing}"]}},"names":{"Academy Newspaper":"Newspaper","Alchemy Circle":"Alchemy","Brewing Club":"Brewing","Cooking Club":"Cooking","Divination Society":"Divination","Festival Committee":"Festival Committee","Fishing Club":"Fishing","Gardening Club":"Gardening","Groundskeeping":"Groundskeeping","Library Assistants":"Library Assistants","Medical Centre Volunteers":"Medical Centre Volunteers","Smithing Club":"Smithing","Tailoring Club":"Tailoring"}};
 const cwBakeGood = (S, W) => roll100(num(S.$eng.seed, 0), Math.floor(toAbs(W) / DAY_MIN), 'cw-bake') < num((CLUB_WORK.bake || {}).good, 70);
 const cwCond = (when, S, W) => uiOn(S.$ui, 'clubwork') && (when === 'flu' ? !!((S.$ui || {}).wx || {}).flu
   : when === 'bake' ? cwBakeGood(S, W) : when === 'bakefail' ? !cwBakeGood(S, W) : true);
@@ -1789,7 +1789,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.91.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.92.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 const verLt = (a, b) => { const p = v => String(v || '0').split('.').map(x => parseInt(x, 10) || 0), x = p(a), y = p(b); for (let i = 0; i < 3; i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) < (y[i] || 0); return false; };   // 1.63.0
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
@@ -6173,6 +6173,58 @@ function stepHooks(c) {
 // (cwNews), the newest rumour that has reached campus (printed: stepGossip keeps it newspaper.keep days longer), the week's events
 // and a ghost story. $ui.cw: the issue for the Notice Board, the club rows open here (open; stall = at a place that is no shop) and
 // the <now> lines (the issue, the bake, the flu table, the snow, a line for {{user}}'s own club on its day)
+// 1.92.0 (owner-approved planning/DRAFT_kerja_club.md §4.7): the weekly club client. When {{user}} is in a service club, once a week
+// client.pct percent (roll100 by the week) that a student who is not a member comes to the club on one of its service days: drawn by
+// rollTable like NPC initiative (arrived, at Halvard, not graduated, Tension under 70; weight 1, +1 known to {{user}}, +2 when their
+// haunts and tastes match the club). The ask is a template filled from their data (never one of their last 20). $eng.client
+// { week, club, id, day, at, to, ask, seen, done }: <now> tells the narrator while {{user}} is at the club then; otherwise, once the
+// session is over, the Journal says another member took the job. The job done is a help interaction (the favour path).
+function cwClient(c, mon, mine, here) {
+  const { S, dayNo, seed, absA } = c, CC = CLUB_WORK.client || {}, club = mine && (CC.clubs || {})[mine];
+  const E = S.$eng, W = S.World, Y = num(W.Year, 1);
+  if (!club || awayIn(S)) return '';
+  let CL = _.isPlainObject(E.client) ? E.client : null;
+  if (!CL || CL.week !== mon || CL.club !== club) {
+    const used = (CL && CL.used) || {};
+    CL = E.client = { week: mon, club, id: '', used };
+    const slots = Object.values(SHOP_PRICE).flat().filter(x => x[1] === club && x[5] && !x[5][0] && x[5][1]).map(x => [x[5][1], x[5][2], x[5][3], x[2]]);
+    const days = _.uniqBy(slots, s => s[0]).filter(s => mon + Math.max(0, DAYS.indexOf(s[0])) >= dayNo);
+    if (days.length && roll100(seed, mon, 'cw-client') < num(CC.pct, 40)) {
+      const rx = new RegExp(String((CC.match || {})[mine] || '^$'), 'i'), members = clubMembersNow(S, club);
+      const taste = id => { const g = ((GIFT_PREFS.npcs || {})[id] || {}).items || {}; return [HAUNT[id], ...(g.loved || []), ...(g.liked || [])].join(' '); };
+      const id = rollTable(Object.keys(STUDENTS).sort(), { pick: [seed, mon, 'cw-client-pick'],
+        skip: id => (STUDENTS[id][1] || 1) > Y || yearOf(id, Y) < 1 || yearOf(id, Y) > 3 || (S.Campus_State.Graduated || []).includes(id) || members.includes(id)
+          || num((S.Bonds[id] || {}).Tension, 0) >= 70,
+        weight: id => 1 + (num((S.Bonds[id] || {}).Rank, 0) >= 1 ? 1 : 0) + (rx.test(taste(id)) ? 2 : 0) });
+      if (id) {
+        const s = pickOf(days, seed, mon, 'cw-client-day'), g = ((GIFT_PREFS.npcs || {})[id] || {}).items || {};
+        const evs = []; for (let d = mon; d < mon + 21; d++) for (const e of eventsOn(fromAbs(d * DAY_MIN))) { const n = e.t.split(' (')[0]; if (e.id && !evs.includes(n)) evs.push(n); }
+        const fills = { thing: [...(g.loved || []), ...(g.liked || [])], event: evs.slice(0, 3), subject: SUBJECTS };
+        const opts = ((CC.asks || {})[mine] || []).flatMap(tp => { const k = (tp.match(/\{(\w+)\}/) || [])[1]; return !k ? [tp] : (fills[k] || []).map(v => tp.replace(`{${k}}`, String(v).toLowerCase())); });
+        const last = used[id] || [], fresh = opts.filter(o => !last.includes(o)), ask = fresh.length ? pickOf(fresh, seed, mon, id, 'cw-client-ask') : '';
+        if (ask) {
+          used[id] = [...last, ask].slice(-20);
+          const at = hm(s[1]) + num(CC.window_min, 45);
+          Object.assign(CL, { id, day: mon + DAYS.indexOf(s[0]), at, to: hm(s[2]), loc: s[3], ask, seen: false, done: false });
+        }
+      }
+    }
+  }
+  if (!CL.id || CL.done) return '';
+  const start = CL.day * DAY_MIN + CL.at, end = CL.day * DAY_MIN + CL.to, PV = presenceNow(S);
+  if (dayNo === CL.day && absA >= start && absA < end && here === CL.loc) {
+    if (npcAwayIn(S, CL.id) || npcOut(PV, S, CL.id)) { CL.done = true; return ''; }
+    CL.seen = true;
+    const met = num((S.Bonds[CL.id] || {}).Rank, -1) >= 0 && S.Bonds[CL.id];
+    return `Club client: ${CL.id}${met ? '' : ' (whom {{user}} has not met)'} comes to the ${plName(CL.loc) || CL.loc} and ${CL.ask}. {{user}} can take the job (a Practice craft session here; done, it is a help Interaction with ${CL.id}) or leave it to another member. Play ${CL.id} in their own character.`;
+  }
+  if (absA >= end) {
+    CL.done = true;
+    if (!CL.seen) { const m = clubMembersNow(S, CL.club).filter(id => id !== CL.id); c.jnl.push(`${CL.id} came to the ${CL.club} and ${CL.ask}; ${m.length ? pickOf(m, seed, CL.week, 'cw-client-m') : 'another member'} took the job.`); }
+  }
+  return '';
+}
+
 function stepClubWork(c) {
   const { S, OFF, dayNo, seed } = c, W = S.World, t = hm(W.Time);
   if (OFF.has('clubwork')) { S.$ui.cw = null; return; }
@@ -6227,6 +6279,8 @@ function stepClubWork(c) {
   const ready = O.filter(o => absA >= o.ready && here !== o.loc);
   if (ready.length) now.push(`Ready to collect: ${ready.map(o => `${o.item} at the ${o.where}`).join('; ')}.`);
   if (cwGuest(S) && !/fishing/i.test(String(S.Player.Profile.Club || ''))) now.push("The Fishing Club's dawn session: {{user}} may borrow a rod and fish with them (Practice).");
+  const client = cwClient(c, mon, mine, here);   // 1.92.0 (§4.7)
+  if (client) now.push(client);
   S.$ui.cw = { paper, open, stall: open.length > svc.length && !shopHere, svc: svc.length > 0, now, orders: O.map(o => ({ item: o.item, where: o.where, ready: cwDay(Math.floor(o.ready / DAY_MIN)), ok: absA >= o.ready })),
     loan: L && L.item ? { item: L.item, due: cwDay(L.due) } : null };
 }

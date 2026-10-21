@@ -120,6 +120,8 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **Club services** (1.91.0): what a club makes or mends for anyone is a shop row with `svc`, bought through `/Purchases` (design in
   `Note`); an order is collected at the club, never delivered; a member pays half for their own club's services. Map cards keep the
   same rows: services join the Clubs here row.
+- **Club clients** (1.92.0): a member of a service club gets at most one client a week (a chance, never certain); the client may be
+  a student {{user}} has not met; the reward is the existing help interaction and Craft XP, never pay or a new XP source.
 - **Conditions** (`Player.Conditions`) come from the weather; the engine adds and clears them, the story may remove one.
 - **The Bag** (`Inventory`): Plan is free text, no reminders; gear works by item name; Sunfizz bottles return for 2 points (canon) at the Commissary or The Mall. Qty 0 removes an item (schema 0–99, see CHANGELOG).
 - **Story hooks** (`Hooks`) are narrator notes and never appear in the player's UI.

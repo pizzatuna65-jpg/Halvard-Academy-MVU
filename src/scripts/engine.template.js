@@ -5505,6 +5505,58 @@ function stepHooks(c) {
 // (cwNews), the newest rumour that has reached campus (printed: stepGossip keeps it newspaper.keep days longer), the week's events
 // and a ghost story. $ui.cw: the issue for the Notice Board, the club rows open here (open; stall = at a place that is no shop) and
 // the <now> lines (the issue, the bake, the flu table, the snow, a line for {{user}}'s own club on its day)
+// 1.92.0 (owner-approved planning/DRAFT_kerja_club.md §4.7): the weekly club client. When {{user}} is in a service club, once a week
+// client.pct percent (roll100 by the week) that a student who is not a member comes to the club on one of its service days: drawn by
+// rollTable like NPC initiative (arrived, at Halvard, not graduated, Tension under 70; weight 1, +1 known to {{user}}, +2 when their
+// haunts and tastes match the club). The ask is a template filled from their data (never one of their last 20). $eng.client
+// { week, club, id, day, at, to, ask, seen, done }: <now> tells the narrator while {{user}} is at the club then; otherwise, once the
+// session is over, the Journal says another member took the job. The job done is a help interaction (the favour path).
+function cwClient(c, mon, mine, here) {
+  const { S, dayNo, seed, absA } = c, CC = CLUB_WORK.client || {}, club = mine && (CC.clubs || {})[mine];
+  const E = S.$eng, W = S.World, Y = num(W.Year, 1);
+  if (!club || awayIn(S)) return '';
+  let CL = _.isPlainObject(E.client) ? E.client : null;
+  if (!CL || CL.week !== mon || CL.club !== club) {
+    const used = (CL && CL.used) || {};
+    CL = E.client = { week: mon, club, id: '', used };
+    const slots = Object.values(SHOP_PRICE).flat().filter(x => x[1] === club && x[5] && !x[5][0] && x[5][1]).map(x => [x[5][1], x[5][2], x[5][3], x[2]]);
+    const days = _.uniqBy(slots, s => s[0]).filter(s => mon + Math.max(0, DAYS.indexOf(s[0])) >= dayNo);
+    if (days.length && roll100(seed, mon, 'cw-client') < num(CC.pct, 40)) {
+      const rx = new RegExp(String((CC.match || {})[mine] || '^$'), 'i'), members = clubMembersNow(S, club);
+      const taste = id => { const g = ((GIFT_PREFS.npcs || {})[id] || {}).items || {}; return [HAUNT[id], ...(g.loved || []), ...(g.liked || [])].join(' '); };
+      const id = rollTable(Object.keys(STUDENTS).sort(), { pick: [seed, mon, 'cw-client-pick'],
+        skip: id => (STUDENTS[id][1] || 1) > Y || yearOf(id, Y) < 1 || yearOf(id, Y) > 3 || (S.Campus_State.Graduated || []).includes(id) || members.includes(id)
+          || num((S.Bonds[id] || {}).Tension, 0) >= 70,
+        weight: id => 1 + (num((S.Bonds[id] || {}).Rank, 0) >= 1 ? 1 : 0) + (rx.test(taste(id)) ? 2 : 0) });
+      if (id) {
+        const s = pickOf(days, seed, mon, 'cw-client-day'), g = ((GIFT_PREFS.npcs || {})[id] || {}).items || {};
+        const evs = []; for (let d = mon; d < mon + 21; d++) for (const e of eventsOn(fromAbs(d * DAY_MIN))) { const n = e.t.split(' (')[0]; if (e.id && !evs.includes(n)) evs.push(n); }
+        const fills = { thing: [...(g.loved || []), ...(g.liked || [])], event: evs.slice(0, 3), subject: SUBJECTS };
+        const opts = ((CC.asks || {})[mine] || []).flatMap(tp => { const k = (tp.match(/\{(\w+)\}/) || [])[1]; return !k ? [tp] : (fills[k] || []).map(v => tp.replace(`{${k}}`, String(v).toLowerCase())); });
+        const last = used[id] || [], fresh = opts.filter(o => !last.includes(o)), ask = fresh.length ? pickOf(fresh, seed, mon, id, 'cw-client-ask') : '';
+        if (ask) {
+          used[id] = [...last, ask].slice(-20);
+          const at = hm(s[1]) + num(CC.window_min, 45);
+          Object.assign(CL, { id, day: mon + DAYS.indexOf(s[0]), at, to: hm(s[2]), loc: s[3], ask, seen: false, done: false });
+        }
+      }
+    }
+  }
+  if (!CL.id || CL.done) return '';
+  const start = CL.day * DAY_MIN + CL.at, end = CL.day * DAY_MIN + CL.to, PV = presenceNow(S);
+  if (dayNo === CL.day && absA >= start && absA < end && here === CL.loc) {
+    if (npcAwayIn(S, CL.id) || npcOut(PV, S, CL.id)) { CL.done = true; return ''; }
+    CL.seen = true;
+    const met = num((S.Bonds[CL.id] || {}).Rank, -1) >= 0 && S.Bonds[CL.id];
+    return `Club client: ${CL.id}${met ? '' : ' (whom {{user}} has not met)'} comes to the ${plName(CL.loc) || CL.loc} and ${CL.ask}. {{user}} can take the job (a Practice craft session here; done, it is a help Interaction with ${CL.id}) or leave it to another member. Play ${CL.id} in their own character.`;
+  }
+  if (absA >= end) {
+    CL.done = true;
+    if (!CL.seen) { const m = clubMembersNow(S, CL.club).filter(id => id !== CL.id); c.jnl.push(`${CL.id} came to the ${CL.club} and ${CL.ask}; ${m.length ? pickOf(m, seed, CL.week, 'cw-client-m') : 'another member'} took the job.`); }
+  }
+  return '';
+}
+
 function stepClubWork(c) {
   const { S, OFF, dayNo, seed } = c, W = S.World, t = hm(W.Time);
   if (OFF.has('clubwork')) { S.$ui.cw = null; return; }
@@ -5559,6 +5611,8 @@ function stepClubWork(c) {
   const ready = O.filter(o => absA >= o.ready && here !== o.loc);
   if (ready.length) now.push(`Ready to collect: ${ready.map(o => `${o.item} at the ${o.where}`).join('; ')}.`);
   if (cwGuest(S) && !/fishing/i.test(String(S.Player.Profile.Club || ''))) now.push("The Fishing Club's dawn session: {{user}} may borrow a rod and fish with them (Practice).");
+  const client = cwClient(c, mon, mine, here);   // 1.92.0 (§4.7)
+  if (client) now.push(client);
   S.$ui.cw = { paper, open, stall: open.length > svc.length && !shopHere, svc: svc.length > 0, now, orders: O.map(o => ({ item: o.item, where: o.where, ready: cwDay(Math.floor(o.ready / DAY_MIN)), ok: absA >= o.ready })),
     loan: L && L.item ? { item: L.item, due: cwDay(L.due) } : null };
 }

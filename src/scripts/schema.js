@@ -496,6 +496,7 @@ export const Schema = z.object({
     orders: z.any().prefault([]).catch([]),                      // 1.91.0: club orders to collect [{ item, qty, note, kind, loc, where, club, ready, q }]
     loan: z.any().prefault(null).catch(null),                    // 1.91.0: the Library book on loan { item, due, ban }
     records: z.any().prefault(null).catch(null),                 // 1.91.0: the Archive records search { ready, used }
+    client: z.any().prefault(null).catch(null),                  // 1.92.0: the weekly club client { week, club, id, day, at, to, loc, ask, seen, done, used }
     wxs: z.any().prefault(null).catch(null),                     // 1.1.0: weather exposure counters and head-cold bookkeeping
     mrem: z.coerce.number().prefault(0).catch(0),                // 1.9.4: mana rounding remainder carried between turns (passive regeneration)
     turn: z.coerce.number().prefault(0).catch(0),                // 1.9.8: updates so far (seeds the Fortune roll)

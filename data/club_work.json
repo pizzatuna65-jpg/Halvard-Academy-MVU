@@ -1,5 +1,5 @@
 {
-  "_note": "1.90.0 (owner-approved planning/DRAFT_kerja_club.md §3): what clubs do for the whole campus, whether {{user}} is a member or not (feature clubwork). clubs: by club key (tools/common.py load_clubs 'key'), the Clubs directory's 'For the campus' line. The club stalls (cold remedies, the Saturday bake, the potion table, Greenwick's herbs) are data/shop.json rows with 'club' (and when / day / from / to). newspaper: issued Monday 07:00 (not in a break week); keep = days a printed rumour lives longer, and it never fizzles; ghost = the Newspaper's ghost-story pieces (lore). bake: the Saturday bake's good batch chance (percent, roll100 by day). committee: the events the Festival Committee runs (its Notice Board posting, with the event's chances as the programme). snow: the morning after snow (wxFits 'snow'), campus walks take slow percent more until clear; walks with an end in far keep it until far_until. Weather effects Full only.",
+  "_note": "1.90.0 (owner-approved planning/DRAFT_kerja_club.md §3): what clubs do for the whole campus, whether {{user}} is a member or not (feature clubwork). clubs: by club key (tools/common.py load_clubs 'key'), the Clubs directory's 'For the campus' line. The club stalls (cold remedies, the Saturday bake, the potion table, Greenwick's herbs) are data/shop.json rows with 'club' (and when / day / from / to). newspaper: issued Monday 07:00 (not in a break week); keep = days a printed rumour lives longer, and it never fizzles; ghost = the Newspaper's ghost-story pieces (lore). bake: the Saturday bake's good batch chance (percent, roll100 by day). client (1.92.0, §4.7): once a week a pct% chance, when {{user}} is in one of these service clubs, that a student who is not a member comes to the club on one of its service days for one of its asks (filled from gift_prefs {thing}, the calendar {event}, a subject {subject}; never the same ask twice in the NPC's last 20); match = a regex on the NPC's haunts and tastes that doubles the weight; window_min = minutes after the service opens that the client arrives. committee: the events the Festival Committee runs (its Notice Board posting, with the event's chances as the programme). snow: the morning after snow (wxFits 'snow'), campus walks take slow percent more until clear; walks with an end in far keep it until far_until. Weather effects Full only.",
   "clubs": {
     "Divination": "Posts tomorrow's skies on the Notice Board every morning at 07:00, right about three times in four.",
     "Newspaper": "Prints the Academy Newspaper every Monday at 07:00: last week's results, the rumour everyone is repeating, the week ahead and a ghost story.",
@@ -14,6 +14,18 @@
   "newspaper": {"day": "Mon", "at": "07:00", "keep": 3, "now_days": ["Mon", "Tue", "Wed"],
     "ghost": ["The Long Corridor", "The Third Stall", "The Night Student", "Taken"]},
   "committee": ["star_night", "bazaar", "founder_day", "harvest", "club_festival"],
+  "client": {"pct": 40, "window_min": 45,
+    "clubs": {"Tailoring": "Tailoring Club", "Smithing": "Smithing Club", "Fishing": "Fishing Club", "Library Assistants": "Library Assistants"},
+    "match": {"Tailoring": "cloth|dress|silk|coat|cloak|fashion|tailor|vest|scarf|ball|outfit|wardrobe",
+      "Smithing": "blade|sword|knife|dagger|weapon|tool|forge|metal|armou?r|spear|axe|shield",
+      "Fishing": "fish|lake|boathouse|dock|pond|shore",
+      "Library Assistants": "book|librar|archive|stud|notes|history|scroll"},
+    "asks": {
+      "Tailoring": ["wants something altered to fit before {event}", "has torn a sleeve and needs it mended before anyone notices", "wants an outfit made for {event} and has very particular ideas", "wants a garment made as a present, something to go with {thing}", "brings a coat they love that no longer fits and asks whether it can be saved"],
+      "Smithing": ["needs a blade sharpened and its balance checked", "wants a small tool forged for a hobby that needs {thing}", "brings a buckle and hinge that snapped and needs them by {event}", "wants something engraved as a present and cannot decide what", "asks whether the club can repair an heirloom that has seen better days"],
+      "Fishing": ["wants to learn to fish and has never held a rod", "wants a fish for a dinner they are planning", "asks to borrow tackle for a quiet morning by the lake", "wants to know where the big ones are, for a bet", "brings {thing} and asks whether it works as bait"],
+      "Library Assistants": ["needs a book on {subject} that the catalogue says is out", "wants help finding an old record in the Archive", "asks for a reading list on {subject} before the next exam", "has lost track of a borrowed book and wants to sort it out quietly", "wants something to read about {thing}"]
+    }},
   "bake": {"good": 70},
   "snow": {"slow": 50, "clear": "07:00", "far_until": "15:00",
     "far": ["grassy_field_and_hills", "observation_tower", "old_hut", "forest", "forest_clearing", "spirit_path", "boathouse_and_lake", "fishing_house", "willow_island"]}

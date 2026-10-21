@@ -32,6 +32,9 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
   `stepReminders` mengingatkan sekali, Mystery Board menampilkannya redup; Clue `Source` `records` dikecualikan.
 - **Club buatan sendiri, lanjutan** (sisa DRAFT_club_sendiri §6, 1.75.0): aksi Practice khusus di ruang club-nya (sekarang hanya Saturday
   club time yang memberi XP Field); status club olahraga (larangan sihir, bracket Sports Day); anggaran club.
+- **Kerja club, lanjutan** (sisa DRAFT_kerja_club §5, 1.90.0–1.92.0): Beast Handling menangkap makhluk lepas (happening `loose
+  creature` yang menunggu ditangkap), Warding Study memperbaiki rune hangat kolam yang rusak; keduanya butuh sistem dulu. Club hobi
+  (Tea, Card, Board Game, Drawing, Calligraphy, Specialized Magic, Camping) tidak punya layanan di lore.
 - **Patroli jam malam** (E2, 2026-09-28): risiko tertangkap yang di-seed saat {{user}} di luar setelah curfew. Sejak 1.18.0 hanya ada
   pengingat curfew, tanpa hukuman otomatis.
 - **Kerja paruh waktu terjadwal** (E7, 2026-09-28): shift tetap sebagai sumber uang untuk dorm rank rendah.

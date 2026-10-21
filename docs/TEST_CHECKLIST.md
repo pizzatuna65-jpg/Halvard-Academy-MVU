@@ -309,6 +309,9 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
 - [ ] A weekday 16:00–19:00 at the Main Library: borrow a book (the narrator writes the subject in Note): "Library book: <subject>" in
       the Bag, due back in seven days; studying with it in the dorm counts; kept too long, it is recalled and loans stop for 14 days.
       An Archive records search gives Fortune "Archive records +5" on Charles's next Competition bout day [1.91].
+- [ ] In a service club (Tailoring, Smithing, Fishing, Library Assistants), some weeks (about two in five): at the club on its day,
+      `<now>` "Club client: <student> comes to the … and <ask>"; the narrator plays them in character (an unmet student is introduced),
+      and a job done is recorded as a help Interaction. A week Charles skips it, the Journal says another member took the job [1.92].
 - [ ] On a Sunday (students may drink only on Sundays, in the Mid-Year Break and in Month 12), mention drinking or Barrow & Vine: the
       alcohol rule (entry 512) is in the prompt [1.54].
 
