@@ -834,6 +834,11 @@ const expNight = abs => { const h = Math.floor((abs % DAY_MIN) / 60), R = EXP.ra
 const KINGDOM_PRIZE = AV.kingdom.prize;   // 1.43.0: one source with the Activities panel's Competition text
 const avCrown = W => eventsOn(W).some(e => String(e.t || '').startsWith(AV.crowning.event));
 const avKingdom = (W, S) => eventsOn(W).some(e => e.kingdom) && ((S && S.Competition) || {}).Tier === 'Kingdom';
+// 1.84.0: a Kingdom round's ground (kc 1 the Kingsmeadow, kc 2 the Undercroft) is open on that round's day while Halvard is still in it
+const CT_KC = (PRESENCE.ct || {}).kingdom || {};
+const kcOpen = (S, k) => { const R = k === 1 ? (CT_KC.r1 || {}) : (CT_KC.r2 || {}), st = (S.$eng || {}).kc || {};
+  if (!avKingdom(S.World, S) || S.World.Day !== R.day || S.Competition.Status === 'eliminated' && !(st.y === num(S.World.Year, 1) && st.on)) return false;
+  return st.y === num(S.World.Year, 1) && st.on ? (k === 1 || (st.r >= 2 && st.x1 !== 'Halvard')) : k === 1; };
 const avPass = S => ((S.$eng && S.$eng.prizes) || []).includes(`Kingdom-Y${num(S.World.Year, 1)}`) && avKingdom(S.World, S);
 // ---- the airship (1.40.0, owner-approved planning/DRAFT_airship.md): every academy flight. While a flight is in the air
 // World.Location is "Airship — <place>" (Promenade Deck, Common Room, Cabin Deck, Cargo Hold): a closed place until it lands.
@@ -1399,6 +1404,9 @@ function stepTime(c) {
   const aPrev = hasB ? areaPlace(AR.avalon, B.World.Location, areaWas(B, 'avalon')) : '';
   let aAt = !sAt && !fAt && (avCrown(S.World) || avKingdom(S.World, S)) ? areaPlace(AR.avalon, S.World.Location, aPrev) : '', aHeld = '';
   if (aAt && AR.avalon.PL[aAt].locked && !avPass(S)) { aHeld = aAt; aAt = aPrev && !AR.avalon.PL[aPrev].locked ? aPrev : 'crown_square'; }
+  // 1.84.0 (planning/DRAFT_kingdom_competition.md): the Kingsmeadow (kc 1) and the Undercroft (kc 2) are open only on their round's day
+  // to Halvard's team while it is still in; otherwise {{user}} stays where they were (or at the Skyport / the arena)
+  else if (aAt && AR.avalon.PL[aAt].kc && !kcOpen(S, AR.avalon.PL[aAt].kc)) { aHeld = aAt; aAt = aPrev && !AR.avalon.PL[aPrev].kc && !AR.avalon.PL[aPrev].locked ? aPrev : AR.avalon.PL[aAt].kc === 1 ? 'skyport' : 'royal_arena'; }
   // 1.41.0: Sunreach Bay, from the landing to the boarding home, in the city map's words
   const rPrev = hasB ? areaPlace(AR.sunreach, B.World.Location, areaWas(B, 'sunreach')) : '';
   const rAt = !sAt && !fAt && !aAt && srWindow(S.World) ? areaPlace(AR.sunreach, S.World.Location, rPrev) : '';
@@ -2089,7 +2097,8 @@ function stepCapital(c) {
   if (X.d !== dayNo) Object.assign(X, { d: dayNo, owe: 0, met: [], wl: 0, sc: 0 });
   const crown = avCrown(S.World), kd = !crown && avKingdom(S.World, S), Cr = AV.crowning, evs = [], at = t => dayNo * DAY_MIN + hm(t);
   // the White Line: the Royal Guard turns {{user}} back; a second try the same day is reported (Academy, defied_staff)
-  if (aHeld && hasB) {
+  if (aHeld && hasB && A.PL[aHeld].kc) log.push(`${A.PL[aHeld].name} is open only during round ${A.PL[aHeld].kc === 1 ? 'one' : 'two'} of the Kingdom Competition, to the teams still in: World.Location was kept at ${A.PL[aAt].name}.`);
+  else if (aHeld && hasB) {
     X.wl = num(X.wl, 0) + 1; evs.push({ k: 'white', n: X.wl, to: A.PL[aHeld].name });
     log.push(`${A.PL[aHeld].name} is past the White Line, closed to students: the Royal Guard turned {{user}} back${X.wl > 1 ? ' again and reported it to the staff' : ''}. World.Location was kept at ${A.PL[aAt].name}.`);
     if (X.wl === 2) avRep(S, 'defied_staff', 'tried twice to cross the White Line in Avalon');
@@ -2134,8 +2143,9 @@ function stepCapital(c) {
   });
   for (const id of [aPrev, aAt]) if (id && A.PL[id] && !seen.includes(id)) seen.push(id);
   const pass = avPass(S);
-  S.$ui.area.avalon = { on: true, at: aAt, name: A.PL[aAt].name, ...areaNear(A, aAt, p => !p.locked || pass, p => (!p.locked || pass) && (!p.hidden || seen.includes(p.id))),
-    seen, castle, pass, crown, kd, owe: num(X.owe, 0), muster, ev: evs };
+  const kco = [1, 2].filter(k => kcOpen(S, k));   // 1.84.0: the Kingdom round grounds open now
+  S.$ui.area.avalon = { on: true, at: aAt, name: A.PL[aAt].name, ...areaNear(A, aAt, p => (!p.locked || pass) && (!p.kc || kco.includes(p.kc)), p => (!p.locked || pass) && (!p.kc || kco.includes(p.kc)) && (!p.hidden || seen.includes(p.id))),
+    seen, castle, pass, crown, kd, kc: kco, owe: num(X.owe, 0), muster, ev: evs };
 }
 
 // 1.40.0 (owner-approved planning/DRAFT_airship.md): aboard the airship. A hot bath on the Cabin Deck ends Soaked and Chilled; once
@@ -2313,10 +2323,374 @@ function ctUserBout(K, r) {
   return m ? { m, me, opp: m.a === me ? m.b : m.a } : null;
 }
 const ctEdge = (d, n) => (d >= n ? 'stronger' : d <= -n ? 'weaker' : 'even');
+// ---- 5a2. the Kingdom Competition (1.84.0, owner-approved planning/DRAFT_kingdom_competition.md) ----
+// Three rounds in and around Avalon (lore 19): Wednesday the Kingsmeadow hunt (three Kingsblooms; at sunset the judges take one a
+// team, and the team without one goes out), Thursday the Undercroft under the arena (ten rooms; a team takes a room by downing its
+// beast and then being the only team in it for 15 minutes, the count stopping while another team is inside; the two teams holding
+// four rooms at the same time go through), Saturday the final on the sand. Every competitor wears a ward seal; a broken seal is out
+// for the rest of the round. The engine plays the other teams once an hour (round one) or every 15 minutes (round two), seeded by the
+// minute since Wednesday 00:00, from what the story reported for Halvard's team. With {{user}} on the team the rounds live in
+// $eng.kc (a swipe starts again from the state before the reply, so it sees the same rounds); without, the whole competition is
+// computed from the seed and never stored, and <now> and the Competition tab tell only what has happened by now. A competitor's
+// record (credit) is what the World panel picks the national four from.
+const KC = CT.kingdom || {};
+const KC_RX = new RegExp('\\b(' + (KC.teams || ['Halvard']).join('|') + ')\\b', 'i');
+const KC_ROOM = id => ((KC.r2 || {}).rooms || []).findIndex(r => r[0] === id);
+const kcClamp = p => Math.min(CT.strength.clamp[1], Math.max(CT.strength.clamp[0], p));
+const kcTeam = (st, k) => st.T.find(t => t.k === k) || { k, m: [] };
+const kcUp = (st, k) => kcTeam(st, k).m.filter(e => !(st.out[k] || []).includes(e.id));
+const kcS = ms => (ms.length ? ms.reduce((a, e) => a + e.s, 0) / ms.length + num(KC.r2.group, 5) * (ms.length - 1) : 0);
+const kcIn = (st, r) => st.T.map(t => t.k).filter(k => !(r >= 2 && k === st.x1) && !(r >= 3 && k === st.x2));
+const kcTac = k => KC.tact[KC.tactic[k]] || {};
+const kcCredit = (st, id, kind) => { if (id) st.cr[id] = num(st.cr[id], 0) + num(KC.credit[kind], 0); };
+const kcEv = (st, ev) => { st.ev = [...(st.ev || []), ev].slice(-24); };
+// a team beaten back out of a room keeps away from it for half an hour (two ticks)
+const kcBar = (st, k, i, at) => { st.bar = { ...(st.bar || {}), [k + ':' + i]: at + 2 * num(KC.r2.tick, 15) }; };
+const kcBarred = (st, k, i, at) => num((st.bar || {})[k + ':' + i], 0) > at;
+// {{user}} still plays this round with the team (the story tells it); once {{user}}'s seal breaks the engine plays the rest
+const kcMine = st => !!st.on && kcIn(st, st.r).includes('Halvard') && !(st.out.Halvard || []).includes('{{user}}');
+// the members of team k in room i (round two): Halvard's as the story placed them while {{user}} plays, everyone else's by the engine
+const kcHere = (st, k, i) => kcUp(st, k).filter(e => (k === 'Halvard' && kcMine(st) ? (st.hp || []).some(h => h[0] === e.id && h[1] === i) : num((st.pos[k] || {})[e.id], -1) === i));
+const kcMember = (st, name, ks) => { const n = String(name || '').trim().toLowerCase().replace(/^the /, ''); if (!n) return null;
+  for (const k of ks) for (const e of kcTeam(st, k).m) { const nm = kcName(e).toLowerCase(); if (nm === n || nm.split(' ')[0] === n.split(' ')[0] || (e.user && (/^(\{\{user\}\}|me|i|you)$/.test(n) || (st.un && (n === st.un || n === st.un.split(' ')[0]))))) return [k, e]; } return null; };
+function kcInit(seed, y, S, on) {
+  const R1 = KC.r1, R2 = KC.r2;
+  const spots = [...R1.spots].sort((a, b) => roll100(seed, y, 'kc-spot', a) - roll100(seed, y, 'kc-spot', b) || (a < b ? -1 : 1)).slice(0, R1.flowers);
+  return { y, on: on ? 1 : 0, T: kcTeams(PRESENCE, seed, y, on ? S : null), r: 1, t: hm(R1.from), out: {}, f: spots.map(at => ({ h: '', at })), sign: '',
+    x1: '', x2: '', end1: 0, end2: 0, rm: R2.rooms.map(() => ({ b: 0, o: '', m: {} })), pos: {}, hp: [], enc: null, fin: [], win: '', end3: 0, cr: {}, ev: [],
+    beast: R2.rooms.map(([_id, g], i) => pickOf(R2.beasts[g], seed, y, 'kc-beast', i)), w: [], ws: 0 };
+}
+// a meeting of teams a and b (b defends) in round r (room i in round two): {{user}}'s team's meetings are the story's (st.enc, played
+// off-screen at the next tick if nobody reported them); the others are drawn: the defender may slip away (its tactic's retreat),
+// else the stronger side usually wins: the loser drops a Kingsbloom it carries (round one) or leaves the room (round two), and one of
+// its seals breaks
+function kcMeet(st, seed, at, a, b, r, i) {
+  if ((a === 'Halvard' || b === 'Halvard') && kcMine(st)) { if (!st.enc) st.enc = { r, t: a === 'Halvard' ? b : a, by: a, at, i: i == null ? -1 : i }; return; }
+  kcFight(st, seed, at, a, b, r, i);
+}
+function kcFight(st, seed, at, a, b, r, i) {
+  const y = st.y, side = k => (r === 2 ? kcHere(st, k, i) : kcUp(st, k));
+  const A = side(a), Bm = side(b);
+  if (!A.length || !Bm.length) return;
+  if (roll100(seed, y, 'kc-ret', r, at, a, b) < num(kcTac(b).retreat, 0)) {
+    if (r === 2) { for (const e of Bm) st.pos[b] = { ...(st.pos[b] || {}), [e.id]: -1 }; kcBar(st, b, i, at); }
+    kcEv(st, [r, at, 'slip', b, a]); return;
+  }
+  const win = roll100(seed, y, 'kc-fight', r, at, a, b) < kcClamp(50 + kcS(A) - kcS(Bm)) ? a : b, lose = win === a ? b : a;
+  const W1 = win === a ? A : Bm, L1 = win === a ? Bm : A;
+  let took = 0;
+  if (r === 1) { const f = st.f.find(x => x.h === lose); if (f) { f.h = win; took = 1; kcCredit(st, pickOf(W1, seed, y, 'kc-tw', at, win).id, 'take'); } }
+  const v = pickOf(L1, seed, y, 'kc-vic', r, at, lose);
+  st.out[lose] = [...(st.out[lose] || []), v.id];
+  kcCredit(st, pickOf(W1, seed, y, 'kc-sw', r, at, win).id, 'seal');
+  if (r === 2) { for (const e of L1) if (lose === 'Halvard' && st.on) st.hp = (st.hp || []).filter(h => h[0] !== e.id); else st.pos[lose] = { ...(st.pos[lose] || {}), [e.id]: -1 }; kcBar(st, lose, i, at); }
+  kcEv(st, [r, at, 'fight', win, lose, kcName(v), took]);
+}
+// an unreported meeting of {{user}}'s team: played off-screen like any other
+function kcSettle(st, seed, at, log, Co) {
+  const E = st.enc; st.enc = null;
+  if (!E) return;
+  const n = (st.ev || []).length;
+  if (E.r === 2) st.pos.Halvard = Object.fromEntries((st.hp || []).map(h => [h[0], h[1]]));
+  st.on = 0; kcFight(st, seed, E.at, E.by, E.by === 'Halvard' ? E.t : 'Halvard', E.r, E.i < 0 ? null : E.i); st.on = 1;
+  if (E.r === 2) { st.hp = Object.entries(st.pos.Halvard || {}).filter(h => h[1] >= 0); delete st.pos.Halvard; }
+  const ev = (st.ev || []).length > n ? st.ev[st.ev.length - 1] : null;
+  const line = !ev ? `met ${E.t}` : ev[2] === 'slip' ? `${ev[3] === 'Halvard' ? 'slipped away from' : 'let'} ${E.t}${ev[3] === 'Halvard' ? '' : ' slip away'}` : ev[3] === 'Halvard' ? `drove off ${E.t}${ev[6] ? ' and took a Kingsbloom' : ''} (${ev[5]}'s seal broke)` : `lost to ${E.t}${ev[6] ? ', and the Kingsbloom with it' : ''} (${ev[5]} out)`;
+  Co.Results = [...(Co.Results || []), `Kingdom R${E.r}: ${line} (off-screen)`].slice(-12);
+  log.push(`Kingdom Competition: the meeting with ${E.t} was not reported before the next turn of the round: played off-screen (${line}).`);
+}
+function kcR1Tick(st, seed, at, log, Co) {
+  const y = st.y, R = KC.r1, H = Math.floor(at / 60);
+  if (st.enc) kcSettle(st, seed, at, log, Co);
+  const ks = kcIn(st, 1).sort((a, b) => roll100(seed, y, 'kc1-ord', H, a) - roll100(seed, y, 'kc1-ord', H, b) || (a < b ? -1 : 1));
+  for (const k of ks) {
+    const up = kcUp(st, k), held = st.f.filter(f => f.h === k).length, field = st.f.filter(f => !f.h), tac = kcTac(k);
+    if (!up.length) continue;
+    if (k === 'Halvard' && kcMine(st)) {   // the story finds it: the engine only shows signs
+      if (!held && field.length && roll100(seed, y, 'kc1-sign', H) < R.sign) st.sign = pickOf(field, seed, y, 'kc1-sp', H).at;
+      continue;
+    }
+    if (!held && field.length) {
+      if (roll100(seed, y, 'kc1-find', H, k) < R.find + (kcS(up) - 50) / 2) {
+        const f = pickOf(field, seed, y, 'kc1-fp', H, k); f.h = k;
+        kcCredit(st, pickOf(up, seed, y, 'kc1-fw', H, k).id, 'find'); kcEv(st, [1, at, 'find', k]);
+        if (st.sign === f.at) st.sign = '';
+      }
+      continue;
+    }
+    if (held) continue;   // a team carrying one keeps it (taking a second to spoil another team is the story's choice)
+    const prey = ks.filter(u => u !== k && st.f.some(f => f.h === u) && kcUp(st, u).length);
+    if (prey.length && roll100(seed, y, 'kc1-amb', H, k) < R.ambush * num(tac.ambush, 1) * (held ? 0.5 : 1)) kcMeet(st, seed, at, k, pickOf(prey, seed, y, 'kc1-prey', H, k), 1);
+  }
+}
+// sunset: one Kingsbloom a team; if fewer than three teams carry one, the flowerless with the most seals left (then strength) fill up
+function kcEndR1(st, seed, at) {
+  const ks = kcIn(st, 1), go = ks.filter(k => st.f.some(f => f.h === k));
+  const rest = ks.filter(k => !go.includes(k)).sort((a, b) => kcUp(st, b).length - kcUp(st, a).length || kcS(kcTeam(st, b).m) - kcS(kcTeam(st, a).m) || roll100(seed, st.y, 'kc1-tie', a) - roll100(seed, st.y, 'kc1-tie', b));
+  while (go.length < KC.r1.flowers && rest.length) go.push(rest.shift());
+  st.x1 = ks.find(k => !go.includes(k)) || ''; st.r = 2; st.out = {}; st.enc = null; st.sign = ''; st.end1 = at; st.hp = []; st.pos = {};
+  kcEv(st, [1, at, 'out', st.x1]);
+}
+function kcR2Tick(st, seed, at, log, Co) {
+  const y = st.y, R = KC.r2, q = Math.floor(at / R.tick), ks = kcIn(st, 2), held = k => st.rm.filter(r => r.o === k).length;
+  if (st.enc) kcSettle(st, seed, at, log, Co);
+  for (const k of [...ks].sort((a, b) => roll100(seed, y, 'kc2-ord', q, a) - roll100(seed, y, 'kc2-ord', q, b) || (a < b ? -1 : 1))) {
+    if (k === 'Halvard' && kcMine(st)) continue;
+    if (k === 'Halvard' && st.on && !st.pos.Halvard) st.pos.Halvard = Object.fromEntries((st.hp || []).map(h => [h[0], h[1]]));   // the engine takes over where the story left them
+    const up = kcUp(st, k), tac = kcTac(k), P = st.pos[k] = { ...(st.pos[k] || {}) };
+    if (!up.length) continue;
+    // guards: the weakest standing members, one in each room the team holds; the rest move as one group
+    const own = st.rm.map((r, i) => (r.o === k ? i : -1)).filter(i => i >= 0);
+    const nG = Math.max(0, Math.min(own.length, up.length - 1 + num(tac.guard, 0)));
+    const byS = [...up].sort((a, b) => a.s - b.s || (a.id < b.id ? -1 : 1)), guards = byS.slice(0, nG), grp = up.filter(e => !guards.includes(e));
+    guards.forEach((e, i) => { P[e.id] = own[i]; });
+    if (!grp.length) continue;
+    let g = num(P[grp[0].id], -1);
+    const cur = g >= 0 ? st.rm[g] : null;
+    if (!cur || cur.o === k || (cur.b && ks.some(u => u !== k && kcHere(st, u, g).length) && roll100(seed, y, 'kc2-stay', q, k) < num(tac.retreat, 0))) {
+      const others = i => ks.some(u => u !== k && kcHere(st, u, i).length);
+      const ok = i => !kcBarred(st, k, i, at) && !(num(tac.retreat, 0) >= 50 && others(i));   // a team that slips past avoids rooms with others in them
+      const alive = st.rm.map((r, i) => i).filter(i => !st.rm[i].b && ok(i));
+      const free = st.rm.map((r, i) => i).filter(i => st.rm[i].b && !st.rm[i].o && ok(i));
+      const theirs = st.rm.map((r, i) => i).filter(i => st.rm[i].b && st.rm[i].o && st.rm[i].o !== k && ok(i));
+      const pref = (tac.retake ? [theirs, free, alive] : [free, alive, theirs]).find(x => x.length);
+      if (!pref) continue;
+      g = pickOf(pref.slice(0, 3), seed, y, 'kc2-to', q, k);
+      grp.forEach(e => { P[e.id] = g; });
+    }
+    const r = st.rm[g];
+    if (!r.b) {   // the room's beast, bound by the panel
+      const grade = R.rooms[g][1];
+      if (roll100(seed, y, 'kc2-boss', q, k) < kcClamp(50 + kcS(grp) - R.boss[grade])) { r.b = 1; kcCredit(st, pickOf(grp, seed, y, 'kc2-bw', q, k).id, 'boss'); kcEv(st, [2, at, 'beast', k, g]); }
+      else if (roll100(seed, y, 'kc2-bs', q, k) < R.boss_seal) { const v = pickOf(grp, seed, y, 'kc2-bv', q, k); st.out[k] = [...(st.out[k] || []), v.id]; kcEv(st, [2, at, 'mauled', k, kcName(v), g]); }
+    }
+  }
+  // the counts: one team alone in a room whose beast is down counts on; anyone of another team inside stops it (and they meet)
+  for (let i = 0; i < st.rm.length; i++) {
+    const r = st.rm[i], here = ks.filter(k => kcHere(st, k, i).length);
+    if (here.length > 1) { const [a, b] = [...here].sort((x, z) => roll100(seed, y, 'kc2-mt', q, i, x) - roll100(seed, y, 'kc2-mt', q, i, z) || (x < z ? -1 : 1)); kcMeet(st, seed, at, a, b, 2, i); continue; }
+    if (here.length === 1 && r.b && r.o !== here[0]) {
+      const k = here[0]; r.m = { ...r.m, [k]: num(r.m[k], 0) + R.tick };
+      if (r.m[k] >= R.hold) { r.o = k; r.m = {}; kcHere(st, k, i).forEach(e => kcCredit(st, e.id, 'room')); kcEv(st, [2, at, 'room', k, i]); }
+    }
+  }
+  const top = ks.filter(k => held(k) >= R.win);
+  if (top.length >= 2) kcEndR2(st, seed, at, top);
+}
+// round two ends when two teams hold four rooms at the same time; at the end of the day, by rooms held, then the minutes counted
+function kcEndR2(st, seed, at, top) {
+  const ks = kcIn(st, 2), held = k => st.rm.filter(r => r.o === k).length, mins = k => st.rm.reduce((a, r) => a + num(r.m[k], 0), 0);
+  const order = top || [...ks].sort((a, b) => held(b) - held(a) || mins(b) - mins(a) || kcS(kcTeam(st, b).m) - kcS(kcTeam(st, a).m) || roll100(seed, st.y, 'kc2-tie', a) - roll100(seed, st.y, 'kc2-tie', b));
+  st.fin = ks.filter(k => order.slice(0, 2).includes(k)); st.x2 = ks.find(k => !st.fin.includes(k)) || '';
+  st.r = 3; st.out = {}; st.enc = null; st.end2 = at; st.hp = []; st.pos = {}; st.bar = {};
+  kcEv(st, [2, at, 'out', st.x2]);
+}
+function kcFinal(st, seed, at, win) {
+  const [a, b] = st.fin;
+  st.win = win || (roll100(seed, st.y, 'kc3') < kcClamp(50 + kcS(kcTeam(st, a).m) - kcS(kcTeam(st, b).m)) ? a : b);
+  st.r = 4; st.end3 = at; st.enc = null;
+  kcTeam(st, st.win).m.forEach(e => kcCredit(st, e.id, 'final'));
+  kcEv(st, [3, at, 'win', st.win]);
+  // the World panel: the best record (then strength) of each combat role across all sixteen, winners and losers alike
+  const all = st.T.flatMap(t => t.m.map(e => ({ ...e, k: t.k }))).sort((x, z) => num(st.cr[z.id], 0) * 10 + z.s - (num(st.cr[x.id], 0) * 10 + x.s) || (x.id < z.id ? -1 : 1));
+  const w = [];
+  for (const e of all) if (w.length < num(KC.world, 4) && !w.some(x => x.role === e.role)) w.push(e);
+  st.w = w.map(e => [kcName(e), e.k, e.role]);
+}
+// every tick from st.t up to minute `to` (since Wednesday 00:00)
+function kcAdvance(st, seed, to, log, Co) {
+  const R1 = KC.r1, R2 = KC.r2, R3 = KC.r3, wed = 0, day = d => (DAYS.indexOf(d) - DAYS.indexOf(R1.day)) * DAY_MIN;
+  for (let guard = 0; guard < 400; guard++) {
+    if (st.enc && !st.enc.seen) break;   // a meeting the story has not seen yet: the round waits for it (<now> shows it this reply)
+    if (st.r === 1) {
+      const end = wed + day(R1.day) + hm(R1.to), next = Math.max(st.t + 1, Math.floor(st.t / 60) * 60 + 60);
+      if (Math.min(next, end) > to) break;
+      st.t = Math.min(next, end); kcR1Tick(st, seed, st.t, log, Co);
+      if (st.t >= end) kcEndR1(st, seed, end);
+    } else if (st.r === 2) {
+      const from = day(R2.day) + hm(R2.from), end = day(R2.day) + hm(R2.to), t0 = Math.max(st.t, from), next = Math.floor(t0 / R2.tick) * R2.tick + R2.tick;
+      if (Math.min(next, end) > to) { st.t = Math.max(st.t, Math.min(to, from)); break; }
+      st.t = Math.min(next, end); kcR2Tick(st, seed, st.t, log, Co);
+      if (st.r === 2 && st.t >= end) kcEndR2(st, seed, end, null);
+    } else if (st.r === 3) {
+      const mine = st.on && st.fin.includes('Halvard'), at = day(R3.day) + hm(mine ? R3.to : R3.rolled);
+      if (at > to) break;
+      st.t = at; kcFinal(st, seed, at, '');
+      if (mine) { Co.Results = [...(Co.Results || []), `Kingdom R3: ${st.win === 'Halvard' ? 'won' : 'lost'} the final (off-screen)`].slice(-12); log.push('Kingdom Competition: the final was not reported by the end of the day: played off-screen.'); }
+    } else break;
+  }
+}
+// what the story reported for Halvard's team this reply ("Kingdom R1: found a Kingsbloom", ...)
+function kcReports(st, seed, lines, at, log, jnl) {
+  const rivals = () => kcIn(st, st.r).filter(k => k !== 'Halvard');
+  for (const l of lines) {
+    const m = /^\s*Kingdom\s+R([123])\s*:\s*(.+)$/i.exec(String(l));
+    if (!m || /\(off-screen\)/i.test(m[2])) continue;
+    const r = +m[1], t = m[2].trim(), ak = ((KC_RX.exec(t) || [])[1] || '').toLowerCase(), A = (KC.teams || []).find(k => k.toLowerCase() === ak && k !== 'Halvard') || '';
+    if (r !== st.r) { log.push(`"${l}" is not about the round being played (round ${Math.min(3, st.r)}); the engine did not use it.`); continue; }
+    if (st.enc && A && A === st.enc.t) st.enc = null;   // the meeting the story played
+    let x;
+    if (r === 3) { if (/\b(won|win|wins|beat)\b/i.test(t)) kcFinal(st, seed, at, 'Halvard'); else if (/\b(lost|loses)\b/i.test(t)) kcFinal(st, seed, at, st.fin.find(k => k !== 'Halvard')); continue; }
+    if ((x = /broke\s+(.+?)['’]s?\s+seal/i.exec(t))) {
+      const hit = kcMember(st, x[1], rivals());
+      if (hit && !(st.out[hit[0]] || []).includes(hit[1].id)) { st.out[hit[0]] = [...(st.out[hit[0]] || []), hit[1].id]; kcCredit(st, '{{user}}', 'seal'); kcEv(st, [r, at, 'fight', 'Halvard', hit[0], kcName(hit[1]), 0]); }
+      else if (!hit) log.push(`"${l}": no competitor of the other teams still in this round has that name.`);
+      if (r === 2 && hit) st.pos[hit[0]] = { ...(st.pos[hit[0]] || {}), [hit[1].id]: -1 };
+      continue;
+    }
+    if (r === 1 && /\bfound\b/i.test(t)) {
+      const field = st.f.filter(f => !f.h), f = field.find(z => z.at === st.at) || field.find(z => z.at === st.sign) || field[0];
+      if (st.f.some(z => z.h === 'Halvard')) log.push(`"${l}": Halvard's team already carries a Kingsbloom; the judges take one a team.`);
+      if (f) { f.h = 'Halvard'; st.sign = ''; kcCredit(st, '{{user}}', 'find'); kcEv(st, [1, at, 'find', 'Halvard']); jnl.push('Kingdom Competition: Halvard\'s team found a Kingsbloom in the Kingsmeadow.'); }
+      else log.push(`"${l}": no Kingsbloom is left in the field; every one is carried by a team.`);
+      continue;
+    }
+    if (r === 1 && A && /\b(took|stole|seized|won)\b/i.test(t)) {
+      const f = st.f.find(z => z.h === A);
+      if (f) { f.h = 'Halvard'; kcCredit(st, '{{user}}', 'take'); kcEv(st, [1, at, 'fight', 'Halvard', A, '', 1]); } else log.push(`"${l}": ${A} carries no Kingsbloom.`);
+      continue;
+    }
+    if (r === 1 && A && /\blost\b/i.test(t)) {
+      const f = st.f.find(z => z.h === 'Halvard');
+      if (f) { f.h = A; kcEv(st, [1, at, 'fight', A, 'Halvard', '', 1]); } else log.push(`"${l}": Halvard's team carries no Kingsbloom.`);
+      continue;
+    }
+    if (r === 2 && (x = /room\s*(\d+)\D*?beast\s*(?:is\s*)?(?:down|dead|beaten|defeated)|beast\s*(?:of|in)?\s*room\s*(\d+)\s*(?:is\s*)?(?:down|dead|beaten|defeated)/i.exec(t))) {
+      const i = +(x[1] || x[2]) - 1;
+      if (st.rm[i] && !st.rm[i].b) { st.rm[i].b = 1; kcCredit(st, '{{user}}', 'boss'); kcEv(st, [2, at, 'beast', 'Halvard', i]); }
+      else log.push(`"${l}": ${st.rm[i] ? 'that room\'s beast is already down' : 'the Undercroft has rooms 1 to ' + st.rm.length}.`);
+      continue;
+    }
+    if (r === 2 && A && (x = /drove\s+.+?\s+out\s+of\s+(?:undercroft\s+)?room\s*(\d+)/i.exec(t))) {
+      const i = +x[1] - 1; for (const e of kcHere(st, A, i)) st.pos[A] = { ...(st.pos[A] || {}), [e.id]: -1 };
+      kcBar(st, A, i, at);
+      continue;
+    }
+    if ((x = /^(.+?)\s+(?:is\s+)?out\b|^(.+?)['’]s?\s+seal\s+(?:is\s+)?broke/i.exec(t)) && !A) {
+      const hit = kcMember(st, x[1] || x[2], ['Halvard']);
+      if (hit && !(st.out.Halvard || []).includes(hit[1].id)) { st.out.Halvard = [...(st.out.Halvard || []), hit[1].id]; st.hp = (st.hp || []).filter(h => h[0] !== hit[1].id); }
+      else if (!hit) log.push(`"${l}": no one of Halvard's team has that name.`);
+      continue;
+    }
+  }
+}
+// Halvard's members in the Undercroft while {{user}} plays: {{user}} where World.Location is, the others as Competition.Rooms says
+function kcPlace(st, S, aAt) {
+  const hp = [], me = KC_ROOM(aAt);
+  if (me >= 0) hp.push(['{{user}}', me]);
+  for (const l of S.Competition.Rooms || []) {
+    const m = /^(.+?)\s*[:—-]\s*(?:undercroft\s+)?room\s*(\d+)/i.exec(String(l)), hit = m && kcMember(st, m[1], ['Halvard']);
+    if (hit && !hit[1].user && st.rm[+m[2] - 1]) hp.push([hit[1].id, +m[2] - 1]);
+  }
+  st.hp = hp;
+}
+// the multiset of lines in a that b does not have (a line written twice in one reply counts twice)
+const kcNewLines = (a, b) => { const n = _.countBy(b || []); return (a || []).filter(l => !(n[l] > 0 && n[l]--)); };
+function stepKingdom(c) {
+  const { S, B, hasB, toolEdit, log, jnl, seed, OFF, absA, dayNo, aAt } = c;
+  const W = S.World, y = num(W.Year, 1), Co = S.Competition;
+  if (_.isPlainObject(S.$eng.kc) && S.$eng.kc.y !== y) S.$eng.kc = null;
+  let st = _.isPlainObject(S.$eng.kc) ? S.$eng.kc : null;
+  S.$ui.kc = null;
+  if (!KC.r1 || OFF.has('competition')) return;
+  const wk = eventsOn(W).some(e => e.kingdom), wed = (dayNo + DAYS.indexOf(KC.r1.day) - DAYS.indexOf(W.Day)) * DAY_MIN, now = absA - wed;
+  if (!wk) {   // after the week: {{user}} picked for the national four
+    if (st && st.r >= 4 && !st.ws && hasB && !toolEdit) {
+      st.ws = 1;
+      if (st.on && st.w.some(w => w[0] === '{{user}}')) { Co.Tier = 'World'; Co.Status = 'selected'; Co.Placement = ''; log.push('The World panel picked {{user}} for the national four (the Kingdom Competition record): Competition is now World, selected.'); }
+      S.$eng.kc = { y, r: 4, on: st.on, x1: st.x1, x2: st.x2, fin: st.fin, win: st.win, w: st.w, ws: 1, T: [], cr: {}, ev: [] };
+    }
+    return;
+  }
+  const onTeam = Co.Tier === 'Kingdom' && Co.Status !== 'eliminated' && !!contestUser(PRESENCE, S);
+  if (!st && onTeam) { st = kcInit(seed, y, S, true); jnl.push(`Kingdom Competition: Halvard's team is ${kcTeam(st, 'Halvard').m.map(kcName).join(', ')}.`); }
+  if (!st || !st.on) {   // {{user}} is not on the team: the whole competition from the seed, told as far as it has come
+    const all = kcInit(seed, y, null, false);
+    kcAdvance(all, seed, 7 * DAY_MIN, [], { Results: [] });
+    kcPublish(c, all, now, false);
+    return;
+  }
+  if (hasB && !toolEdit) {
+    st.at = aAt || ''; st.un = String(S.Player.Profile.Name || '').trim().toLowerCase();
+    kcReports(st, seed, kcNewLines(Co.Results, (B.Competition || {}).Results), st.t, log, jnl);
+    if (st.r === 2 && kcMine(st)) kcPlace(st, S, aAt);
+    kcAdvance(st, seed, now, log, Co);
+  }
+  // Placement and Status are the engine's once the rounds have decided them
+  const P1 = st.x1 === 'Halvard' ? '4th of 4' : st.x2 === 'Halvard' ? '3rd of 4' : st.win ? (st.win === 'Halvard' ? '1st of 4' : '2nd of 4') : '';
+  if (P1) {
+    if (hasB && !toolEdit && Co.Placement && Co.Placement !== P1 && Co.Placement !== (B.Competition || {}).Placement) log.push(`Competition Placement "${Co.Placement}" is the engine's: ${P1}.`);
+    Co.Tier = 'Kingdom'; Co.Placement = P1; Co.Status = P1 === '1st of 4' ? 'champion' : 'eliminated';
+  }
+  S.$eng.kc = st;
+  kcPublish(c, st, now, true);
+}
+// <now> and the Competition tab ($ui.kc): Halvard's own round as the team lives it, and what the news has told by now
+function kcPublish(c, st, now, mine) {
+  const { S } = c, R1 = KC.r1, R2 = KC.r2, R3 = KC.r3, day = d => (DAYS.indexOf(d) - DAYS.indexOf(R1.day)) * DAY_MIN;
+  const told = (r, at) => at && now >= at && (r === 1 ? st.end1 : r === 2 ? st.end2 : st.end3);
+  const r = !told(1, st.end1) ? 1 : !told(2, st.end2) ? 2 : !told(3, st.end3) ? 3 : 4;
+  const PL = AR.avalon.PL, names = k => kcTeam(st, k).m.map(kcName), lines = [];
+  const outOf = k => (k === st.x1 && told(1, st.end1) ? 'out in round one' : k === st.x2 && told(2, st.end2) ? 'out in round two' : st.win && told(3, st.end3) ? (k === st.win ? 'champions' : st.fin.includes(k) ? 'runners-up' : '') : '');
+  const held = k => st.rm.filter(x => x.o === k).length;
+  const live = mine && kcIn(st, st.r).includes('Halvard') && st.r <= 3;
+  if (live && st.r === 1 && now >= hm(R1.from) - 120 && now < day(R1.day) + hm(R1.to)) {
+    const mineF = st.f.filter(f => f.h === 'Halvard').length, field = st.f.filter(f => !f.h).length;
+    lines.push(`Kingdom Competition, round one: the Kingsmeadow hunt, ${R1.from} to sunset at ${R1.to}. Three Kingsblooms are planted in the field; at sunset the judges at the ${PL[R1.pavilion].name} take one from each team, and the team without one goes out. Halvard's team (${names('Halvard').join(', ')}) carries ${mineF ? (mineF > 1 ? mineF + ' Kingsblooms (only one counts)' : 'a Kingsbloom') : 'no Kingsbloom yet'}; ${field} still in the field.${(st.out.Halvard || []).length ? ` Seals broken: ${(st.out.Halvard || []).map(id => kcName(kcTeam(st, 'Halvard').m.find(e => e.id === id) || { id })).join(', ')} (out of the round).` : ''}`);
+    if (!kcMine(st)) lines.push("{{user}}'s seal is broken: {{user}} is out of this round and waits at the Judges' Pavilion; the engine plays Halvard's team to sunset.");
+    else {
+      const here = st.f.find(f => !f.h && f.at === st.at);
+      if (here) lines.push(`A Kingsbloom grows here at ${PL[here.at].name}: whether the team finds it is the story's.`);
+      else if (st.sign && !mineF) lines.push(`Signs of a Kingsbloom (trampled grass, the panel's ward-glow) lead toward ${PL[st.sign].name}.`);
+      const left = day(R1.day) + hm(R1.to) - now;
+      if (mineF && left <= R1.warn) lines.push(`Sunset in ${left} min: the team must be at the ${PL[R1.pavilion].name} by ${R1.to} to hand in its Kingsbloom.`);
+      lines.push(`Report in Competition.Results: "Kingdom R1: found a Kingsbloom", "Kingdom R1: took a Kingsbloom from <academy>", "Kingdom R1: lost the Kingsbloom to <academy>", "Kingdom R1: drove off <academy>", "Kingdom R1: broke <name>'s seal", "Kingdom R1: <name> out" (a Halvard seal broken). The other teams are the engine's.`);
+    }
+  } else if (live && st.r === 2 && now >= day(R2.day) + hm(R2.from) - 120) {
+    const rooms = kcIn(st, 2).map(k => `${k} ${held(k)}${held(k) ? ' (' + st.rm.map((x, i) => (x.o === k ? i + 1 : 0)).filter(Boolean).join(', ') + ')' : ''}`).join(', ');
+    lines.push(`Kingdom Competition, round two: the Undercroft, ${R2.from} to ${R2.to}. Ten rooms, each with a beast the panel has bound; a team takes a room by downing its beast and then being the only team in it for ${R2.hold} minutes (one member is enough; the count stops while anyone from another team is inside). The two teams holding ${R2.win} rooms at the same time go through. Rooms held (the sigil board): ${rooms}.${(st.out.Halvard || []).length ? ` Halvard seals broken: ${(st.out.Halvard || []).map(id => kcName(kcTeam(st, 'Halvard').m.find(e => e.id === id) || { id })).join(', ')}.` : ''}`);
+    if (!kcMine(st)) lines.push("{{user}}'s seal is broken: {{user}} is out of this round and waits at the Undercroft Gates; the engine plays Halvard's team.");
+    else {
+      for (const [id, i] of st.hp || []) {
+        const x = st.rm[i], others = kcIn(st, 2).filter(k => k !== 'Halvard' && kcHere(st, k, i).length), who = id === '{{user}}' ? '{{user}}' : id;
+        const bits = [!x.b ? `its beast is up: ${st.beast[i]} (Grade ${R2.rooms[i][1]}), bound by the panel` : x.o === 'Halvard' ? 'held by Halvard' : others.length ? 'the count stops' : `Halvard alone, ${num(x.m.Halvard, 0)} of ${R2.hold} minutes`];
+        if (others.length) bits.push(others.map(k => `${k} is here (${kcHere(st, k, i).map(kcName).join(', ')})`).join('; '));
+        lines.push(`Room ${i + 1} (${who}): ${bits.join('; ')}.`);
+      }
+      lines.push(`Keep Competition.Rooms as where Halvard's other members are ("<name>: Room <n>"; {{user}}'s room is World.Location). Report in Competition.Results: "Kingdom R2: Room <n> beast down", "Kingdom R2: broke <name>'s seal", "Kingdom R2: drove <academy> out of Room <n>", "Kingdom R2: <name> out" (a Halvard seal broken). The other teams are the engine's.`);
+    }
+  } else if (live && st.r === 3 && now >= day(R3.day) + hm(R3.from) - 180) {
+    const o = st.fin.find(k => k !== 'Halvard'), edge = ctEdge(kcS(kcTeam(st, o).m) - kcS(kcTeam(st, 'Halvard').m), CT.strength.edge);
+    lines.push(`Kingdom Competition, the final: ${R3.from} on the arena sand, Halvard against ${o} (${names(o).join(', ')}; ${edge} than Halvard's team). A team wins when the other has no seal left. Report "Kingdom R3: won" or "Kingdom R3: lost"; the engine sets Placement and Status.`);
+  }
+  if (st.enc && mine) {
+    const o = st.enc.t, edge = ctEdge(kcS(kcUp(st, o)) - kcS(kcUp(st, 'Halvard')), CT.strength.edge);
+    lines.push(`Now: ${o}'s team (${kcUp(st, o).map(kcName).join(', ')}; ${edge} than Halvard's) ${st.enc.by === o ? (st.enc.r === 1 ? "comes at Halvard's team for its Kingsbloom" : `comes into Room ${st.enc.i + 1}`) : st.enc.r === 1 ? 'is in reach, carrying a Kingsbloom' : `is in Room ${st.enc.i + 1} with Halvard`}. Play it with Fortune and report how it ends (the lines above); unreported, it is played off-screen at the next turn of the round.`);
+    c.contest = { edge, at: [S.World.Day, S.World.Time] };
+    st.enc.seen = 1;
+  }
+  // the news: what has happened by now (the Herald Spires, the broadsheets, the crystals over the arena)
+  const news = [];
+  if (told(1, st.end1)) news.push(`round one went to ${kcIn(st, 2).join(', ')}; ${st.x1} went out without a Kingsbloom`);
+  if (told(2, st.end2)) news.push(`round two: ${st.fin.join(' and ')} held ${R2.win} rooms each; ${st.x2} went out`);
+  if (told(3, st.end3)) news.push(`the final: ${st.win} beat ${st.fin.find(k => k !== st.win)}${st.w.length ? `; the World panel's national four: ${st.w.map(w => `${w[0]} (${w[1]}, ${w[2]})`).join(', ')}` : ''}`);
+  if (!mine) {
+    const today = (DAYS.indexOf(S.World.Day) - DAYS.indexOf(R1.day)) * DAY_MIN;
+    const playing = today === day(R1.day) ? 'round one, the hunt in the Kingsmeadow beyond the city wall' : today === day(R2.day) ? 'round two, in the Undercroft under the Royal Arena' : today === day(R3.day) && !told(3, st.end3) ? 'the final on the arena sand' : '';
+    if (playing || news.length) lines.push(`Kingdom Competition in Avalon (Halvard's team: ${names('Halvard').join(', ')})${playing ? `: today ${playing}` : ''}${news.length ? `. News so far: ${news.join('; ')}.` : '; the news comes with the evening broadsheets.'}`);
+  } else if (news.length && !lines.length) lines.push(`Kingdom Competition: ${news.join('; ')}.`);
+  if (lines.length) S.$ui.contest = { lines: [...((S.$ui.contest || {}).lines || []), ...lines] };
+  S.$ui.kc = { r, mine: mine ? 1 : 0, live: live ? 1 : 0,
+    teams: st.T.map(t => [t.k, t.m.map(e => [kcName(e), e.role, (st.out[t.k] || []).includes(e.id) && live ? 1 : 0, e.named ? 1 : 0]), outOf(t.k)]),
+    bloom: live && st.r === 1 ? st.f.filter(f => f.h === 'Halvard').length : -1,
+    rooms: (live && st.r === 2) || told(2, st.end2) ? st.rm.map((x, i) => [i + 1, x.o, x.b, PL[R2.rooms[i][0]].brief || '']) : [],
+    news, world: told(3, st.end3) ? st.w : [] };
+}
 function stepContest(c) {
   const { S, B, hasB, toolEdit, log, seed, OFF } = c;
   stepVote(c);
   S.$ui.contest = null; c.contest = null;
+  stepKingdom(c);   // 1.84.0: the Kingdom Competition (its lines join S.$ui.contest)
   const Co = S.Competition, C0 = (hasB && B.Competition) || {}, y = S.World.Year, ev = eventsOn(S.World).find(e => e.id === 'dorm_comp');
   if (!ev) {
     if (hasB && C0.Tier === 'Dorm' && Co.Tier === 'Dorm' && /^(qualified|eliminated|champion)$/.test(String(C0.Status || '')) && (Co.Placement !== C0.Placement || Co.Status !== C0.Status)) {
@@ -5985,7 +6359,7 @@ function nowOf(S, moodsFull) {
   if (_M) {
   out.push("Crowning Day plan: parade {@avalon.crowning.parade} on Crown Avenue (the Royal Mages at its head), the King's speech {@avalon.crowning.speech} at Crown Square, free time in groups of four from {@avalon.crowning.free}, muster {@avalon.crowning.muster} at the Skyport, airship home {@avalon.crowning.depart}. " + (_M.missed ? '{{user}} missed the muster: staff and the Doves are out looking for the group; the airship waits for them.' : _M.left > 0 ? 'Muster in ' + _M.left + ' min; the Skyport is ' + _M.back + ' min on foot from here' + (_M.cab !== _M.back ? ' (' + _M.cab + ' by carriage)' : '') + (_M.warn ? '. Time to head back.' : '.') : ''));
   } else if (_A.kd) {
-  out.push("Kingdom Competition: matches {@avalon.kingdom.matches} at the Royal Arena; free time in the city with the team until {@avalon.kingdom.free_until} (Lower City and Crown Square); curfew {@avalon.kingdom.curfew} at the Whitestone Hotel, Gavlan Haverton on watch." + (_A.pass ? ' The team won: the King receives them at Eldrasil Castle tonight, the only time students pass the White Line.' : ''));
+  out.push("Kingdom Competition: round one {@event_frame.kingdom.r1.day:day} {@event_frame.kingdom.r1.from}–{@event_frame.kingdom.r1.to} in the Kingsmeadow, round two {@event_frame.kingdom.r2.day:day} {@event_frame.kingdom.r2.from}–{@event_frame.kingdom.r2.to} in the Undercroft, the final {@event_frame.kingdom.r3.day:day} {@event_frame.kingdom.r3.from} on the arena sand; free time in the city with the team until {@avalon.kingdom.free_until} (Lower City and Crown Square); curfew {@avalon.kingdom.curfew} at the Whitestone Hotel, Gavlan Haverton on watch." + (_A.pass ? ' The team won: the King receives them at Eldrasil Castle tonight, the only time students pass the White Line.' : ''));
   }
   } else if (_k === 'airship') {
   out.push("Aboard the airship (" + (_A.event) + "): {{user}} is in the " + (_A.name) + ". It lands at " + (_A.lands) + " at " + (_A.to) + " (in " + (_l >= 60 ? Math.floor(_l / 60) + 'h ' + (_l % 60) + 'm' : _l + ' min') + "); nobody leaves the ship before that.");

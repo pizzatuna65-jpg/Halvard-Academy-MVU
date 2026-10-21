@@ -267,6 +267,24 @@ def contest_data(stu):
     assert all(nid in stu for nid in ct['pins']), 'event_frame.json contest.pins: not a Halvard student'
     assert set(ct['dorm']['format']) == roles5 == set(ct['dorm']['quota']), 'event_frame.json contest.dorm: every role needs a format and a quota'
     assert all(len(ct['dorm']['times'][f]) >= 1 for f in ('knockout', 'heats')), 'event_frame.json contest.dorm.times'
+    # 1.84.0 (planning/DRAFT_kingdom_competition.md): the Kingdom Competition's rounds, and the rival teams from data/npcs.json
+    # (academy: [[id, team role, lorebook school year]]); its places are Avalon's (kc 1: the Kingsmeadow, kc 2: the Undercroft)
+    kd = {k: v for k, v in ef['kingdom'].items() if not k.startswith('_')}
+    npcs = json.load(open(os.path.join(root, 'data/npcs.json'), encoding='utf-8'))
+    kd['rivals'] = {}
+    for nid, n in sorted(npcs.items()):
+        if (n.get('group') or '').endswith('team') and n.get('team_role'):
+            kd['rivals'].setdefault(n['academy'], []).append([nid, n['team_role'], n['year']])
+    av = {p['id']: p for p in json.load(open(os.path.join(root, 'data/avalon.json'), encoding='utf-8'))['places']}
+    assert kd['teams'][0] == 'Halvard' and set(kd['teams'][1:]) == set(kd['rivals']), 'event_frame.json kingdom.teams: Halvard and the rival academies'
+    assert all(len(v) == 4 and {r for _i, r, _y in v} <= roles5 for v in kd['rivals'].values()), 'npcs.json: a rival team needs four members with combat roles'
+    assert set(kd['tactic']) == set(kd['teams']) and set(kd['tactic'].values()) <= set(kd['tact']), 'event_frame.json kingdom.tactic'
+    assert all(any(nid == x[0] for v in kd['rivals'].values() for x in v) for nid in kd['pins']), 'event_frame.json kingdom.pins: not a rival team member'
+    R1, R2 = kd['r1'], kd['r2']
+    assert all(av.get(i, {}).get('kc') == 1 for i in [R1['pavilion'], *R1['spots']]) and len(R1['spots']) >= R1['flowers'], 'event_frame.json kingdom.r1: not a Kingsmeadow place'
+    assert all(av.get(i, {}).get('kc') == 2 for i in [R2['gates'], *(r for r, _g in R2['rooms'])]), 'event_frame.json kingdom.r2: not an Undercroft place'
+    assert all(g in R2['beasts'] and g in R2['boss'] for _r, g in R2['rooms']) and R2['win'] * 2 <= len(R2['rooms']) < R2['win'] * 3, 'event_frame.json kingdom.r2: grades, or rooms for exactly two holders'
+    ct['kingdom'] = kd
     return ct
 
 

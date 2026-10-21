@@ -264,6 +264,7 @@ export const Schema = z.object({
     Placement: Str(''),
     Team: StrList(4),       // teammates (not {{user}})
     Results: StrList(12),
+    Rooms: StrList(4),      // 1.84.0: the Kingdom Competition's round two: where {{user}}'s teammates are ("Gareth: Room 3")
   }),
   Projects: Rec(v => ({
     Kind: s(v.Kind) || 'other', Goal: s(v.Goal), Progress: Math.round(n(v.Progress, 0, 100, 0)),
@@ -426,6 +427,7 @@ export const Schema = z.object({
     sayx: z.record(z.string(), z.array(z.number().int().min(0).max(63)).max(3)).prefault({}).catch({}),   // 1.37.2: an Extras character's three dialogue colours (engine)
     stale: z.any().prefault([]).catch([]), phase: z.any().prefault(null).catch(null),   // 1.6.1: campus events with no news for a week; the campus phase (engine)
     contest: z.any().prefault(null).catch(null),                      // 1.82.0: the Dorm Competition's <now> lines { lines } (engine stepContest)
+    kc: z.any().prefault(null).catch(null),                           // 1.84.0: the Kingdom Competition for the Competition tab (engine stepKingdom)
     ev: z.any().prefault([]).catch([]),                               // 1.81.0: today's events [{ id, t, kind, n, of, now, next, ch, stall }] (engine stepCampusEvents)
     cast: z.any().prefault({}).catch({}),                             // 1.5.1 (P1/P6): { full, brief, spoke, gone, ment } for the Cast Sheet (engine)
     perks_used: StrList(60),                                          // 1.3.0: one-use perks already spent ("Council pardon (Irene), M3 W2 Tue")
@@ -475,6 +477,7 @@ export const Schema = z.object({
     floor: z.coerce.number().prefault(-1).catch(-1),   // 1.61.0 (memory audit M9): the chat floor this state was made on (the MVU hook)
     chance: z.record(z.string(), z.any()).prefault({}).catch({}),   // 1.81.0: event chances done this year { "Y1:star_night:meteor": times } (engine)
     scout: z.any().prefault(null).catch(null),                     // 1.82.0: Training Week's scouted Dorm Competition entrants { y, ids } (engine)
+    kc: z.any().prefault(null).catch(null),                        // 1.84.0: the Kingdom Competition's rounds while {{user}} is on the team (engine stepKingdom)
     vote: z.record(z.string(), z.any()).prefault({}).catch({}),     // 1.82.0: the Club Festival coin vote's winner { Y1: club } (engine)
     prizes: StrList(20),   // 1.0.3: competition prizes already paid ("Kingdom-Y1")
     grads: StrList(10),    // 1.0.3: campaign years whose graduates already left ("Y1")

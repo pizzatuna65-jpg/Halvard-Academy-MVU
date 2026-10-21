@@ -9,7 +9,7 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
 | Rencana | Label | Paling lambat | Alasan |
 |---|---|---|---|
 | Bab baru (memory audit M14, batch 8): pindah ke file chat baru tanpa kehilangan memori | **[±20.000 PESAN]** | saat chat ±20.000 pesan, simpan > ±2 detik, atau file > ±100 MB | Rencana lengkap, sudah diputuskan: `planning/DRAFT_bab_baru.md`. "Kerjakan batch 8" = kerjakan draft itu. |
-| FP4 Anggota baru tim rival | **[YEAR 2]** | Year 2 M9 W4 (Kingdom Competition) | Tim rival baru benar-benar tampil di Kingdom Competition. Sebelum itu entry tim hanya menulis "none on record yet". |
+| FP4 Anggota baru tim rival | **[YEAR 2]** | Year 2 M9 W4 (Kingdom Competition) | Tim rival baru benar-benar tampil di Kingdom Competition. Sebelum itu entry tim hanya menulis "none on record yet". Sejak 1.84.0 tempat anggota yang lulus diisi peserta karangan narator dengan role yang sama (`sh:kcTeams`); FP4 menggantinya dengan anggota yang dirancang. |
 
 ### FP4. Anggota baru tim akademi rival dari Year 2 [YEAR 2]
 - Dicatat: 2026-09-27, oleh ras ("tim akademi rival yg year 3 ikut lulus jadi nanti year 2 tim baru yg gk pake year 3 dari year
@@ -63,6 +63,10 @@ Sisa saran audit fitur 2026-10-03 (4.5–4.10 sudah dibuat di 1.49–1.52; 4.16 
   Limits, HQ NPC Genesis dan paragraf "Scene end" Scene Engine (±300). Risiko: gaya Gemini bisa bergeser; port RF berikutnya lebih
   repot. Detail: `git show bdcc889:planning/DRAFT_preset_audit_2.md` (dihapus di 1.52.2).
 
+- **Kingdom Competition di kampus** (sisa `DRAFT_kingdom_competition.md` §7, 1.84.0 membuat baris berita saja): peluang event selama
+  minggu Kingdom untuk {{user}} yang tidak ikut tim (berita siang di announcement pillar, buku taruhan Aiden, broadsheet keluarga Linus
+  lore 410) lewat `data/event_frame.json` `chances` `kingdom_comp`.
+
 ## 3. Sisa audit 2026-09-29 (sengaja ditunda)
 - **A8** Cast Sheet 509 (±515 KB EJS): pecah per NPC hanya kalau terbukti ada lag saat prompt dibangun di ST (compile lokal ±7,7 ms).
 - **A10** PNG kartu ±8 MB (JSON disematkan dua kali, `chara` + `ccv3`): `chara` ringkas hanya setelah kompatibilitas pembaca v2 dicek.
@@ -80,6 +84,9 @@ Sisa saran audit fitur 2026-10-03 (4.5–4.10 sudah dibuat di 1.49–1.52; 4.16 
 - Sistem: ambang/cap reputasi dan bonus Academy +5, Tension tinggi 70, Krieg +14, persen training (sebagian bisa diubah pemain di
   Settings, `data/tuning.json`), payout, cap bond harian, pemulihan tidur/istirahat, cap 40 HP, kenaikan Dove attention, jeda bertemu (Rank 2, 7 hari) dan
   tanya kabar (Rank 3, jendela 10 hari; 1.73.0), kabar ke teman (2 hari) dan ikatan (Rank 6; 1.74.0).
+- Kingdom Competition (1.84.0, `data/event_frame.json` `kingdom`): peluang menemukan 25, tanda 40, menyergap 25, taktik (hunt 1,5; sneak
+  mundur 60; hold 20), kekuatan beast IV/III/II 30/55/80, gagal melawan beast mematahkan segel 40%, tambahan rival +10 dan Rank 1 +15.
+  Hasil 100 seed: juara Halvard 27, Ashvale 29, Myrdath 32, Veyra 12; ronde dua selesai sebelum 18:00 di 51.
 - Memori: `HAPPEN_RATE`, kedalaman trim 24, jendela Journal 30, `FACTS_VISIBLE` 10, cap Clues 40.
 - Proficiency dan crafting (draft proficiency 1.25–1.30): ambang XP (10/30/60/100/150), cap mingguan 6 dan pace, XP per sumber,
   modifier Fortune per rank dan cap +20, DC dan band crafting, dosis dan yield, harga jual, upah menagerie, bobot grade 50/30/20 dan

@@ -17,7 +17,7 @@ const A = JSON.parse(read('data/avalon.json'));
 const coin = (S, n) => [{ op: 'replace', path: '/Player/Wallet/Coin', value: n }];
 
 console.log('Data and routes');
-ok(A.pins.length === 7 && A.places.length === 19 && A.pins.filter(p => p.locked).map(p => p.id).join() === 'castle', 'seven pins (the castle locked), nineteen places');
+ok(A.pins.length === 9 && A.places.length === 38 && A.pins.filter(p => p.locked).map(p => p.id).join() === 'castle' && A.pins.filter(p => p.kc).map(p => p.id).join() === 'meadow,undercroft', 'nine pins (the castle locked; 1.84.0: the Kingsmeadow and the Undercroft for the Kingdom rounds), 38 places');
 const R = E.avRoutes('gate');
 ok(R.square.w === 25 && R.garden.w === 80 && R.oldtown.w === 90 && R.castle.w === 70, 'walks from the Great Gate match the approved table (Garden 80, Old Town 90)');
 ok(E.avRoutes('oldtown').arena.w === 95 && E.avRoutes('lantern').garden.w === 100, 'the castle is never a way through (Old Town to the Arena 95, round the ring)');
@@ -113,7 +113,7 @@ console.log('Lore, <now>, update rules and UI data');
 const _ = require('lodash'), ejs = require('ejs'), gv = St => k => _.get({ stat_data: St }, k);
 const idx = JSON.parse(read('src/worldbook/index.json'));
 const av = idx.filter(e => /^(\[mvu_plot\] )?Avalon( - |$)/.test(e.comment));
-ok(av.length === 21 && av.every(e => e.uid === 370 ? e.constant && /stat_data\.\$ui\.area\.avalon/.test(read('src/worldbook/content/370.txt')) : !e.constant), '1.41.0: the index (370) constant behind a gate on $ui.area.avalon; 18 places, the Rookery and the Royal Mages as keyword entries');
+ok(av.length === 23 && av.every(e => e.uid === 370 ? e.constant && /stat_data\.\$ui\.area\.avalon/.test(read('src/worldbook/content/370.txt')) : !e.constant), '1.41.0: the index (370) constant behind a gate on $ui.area.avalon; 18 places, the Rookery, the Royal Mages and (1.84.0) the Kingsmeadow and the Undercroft as keyword entries');
 const lore = (uid, St) => ejs.render(read(`src/worldbook/content/${uid}.txt`), { getvar: gv(St) });
 ok(/Walks between the parts/.test(lore(370, W)) && /Crown Square: Great Gate 25/.test(lore(370, W)) && lore(370, home).trim() === '', 'the overview (with the walk table) prints only in Avalon');
 ok(/Tsubaki Hoshikage this year/.test(lore(377, W)) && /narrator_only/.test(lore(376, W)), 'Year 1: Tsubaki described in the Royal Mages entry; the Rookery\'s way in is narrator-only');

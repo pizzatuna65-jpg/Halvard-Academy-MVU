@@ -491,6 +491,18 @@ The first academy flight (the airship), then the Grand Vast Forest.
 
 ### Q8.3 Kingdom Competition week (W4), Charles not on the team
 - [ ] Tuesday to Sunday the classes run as usual, Gavlan is away with the team, and nobody from the rival teams turns up on campus [1.32].
+- [ ] Wednesday morning `<now>` says today is round one in the Kingsmeadow and names Halvard's team; that evening (and Thursday, Saturday)
+  it brings the news of the round just over, and Activities → Competition shows the four teams, who went out and, on Saturday night,
+  the national four. Nothing is told before it has happened [1.84].
+
+### Side quest S8.3a Kingdom Competition with Charles on the team (any year Charles reaches the Kingdom tier) [1.84]
+- [ ] Wednesday: the Kingsmeadow opens ("Avalon — Long Meadow" and the other places), `<now>` gives signs of a Kingsbloom, "Kingdom R1:
+  found a Kingsbloom" makes the team carry one, and a rival team that comes for it shows as a "Now:" line before anything is decided.
+- [ ] Sunset: the judges take one bloom a team; one team goes out; the news line names it.
+- [ ] Thursday in the Undercroft: a room's beast is named in `<now>`; after "Room <n> beast down" and 15 minutes alone the room is
+  Halvard's on the sigil board (Competition tab); another team inside stops the count; Competition.Rooms places the teammates.
+- [ ] Saturday: the final against the right team; "Kingdom R3: won" pays 5,000 points, and the next Monday Charles is World, selected,
+  if the panel picked them.
 
 ## Act 9 — Month 10 (winter)
 

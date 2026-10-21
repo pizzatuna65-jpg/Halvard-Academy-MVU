@@ -271,9 +271,11 @@ function contestUser(PD, S) {
 }
 // one role's entrants in one dorm: its roster students there this year, {{user}} when it is theirs, unnamed students up to the
 // bracket's size; each { id, y, s, named, user, label }
+// a contestant's strength this campaign year (the Dorm brackets and the Kingdom Competition's teams)
+const ctStr = (PD, seed, year, id, y) => { const ST = (PD.ct || {}).strength || {}; return ST.base + ST.per_year * (y - 1) + rollInt(0, ST.spread, seed, year, 'ct-str', id) + (Number((ctPin(PD, id, year) || {}).str) || 0); };
 function contestField(PD, seed, year, dorm, role, user) {
-  const CT = PD.ct || {}, D = CT.dorm || {}, ST = CT.strength || {};
-  const str = (id, y) => ST.base + ST.per_year * (y - 1) + rollInt(0, ST.spread, seed, year, 'ct-str', id) + (Number((ctPin(PD, id, year) || {}).str) || 0);
+  const CT = PD.ct || {}, D = CT.dorm || {};
+  const str = (id, y) => ctStr(PD, seed, year, id, y);
   const E = Object.keys(CT.roles || {}).filter(id => CT.roles[id] === role && ((PD.stu || {})[id] || [])[2] === dorm)
     .map(id => { const st = PD.stu[id]; return { id, y: st[0] + year - (st[1] || 1), named: true }; })
     .filter(e => e.y >= 1 && e.y <= 3).map(e => ({ ...e, s: str(e.id, e.y) }));
@@ -379,5 +381,50 @@ function contestResults(lines, tier) {
 const ctTime = (PD, fmt, r) => { const T = (((PD.ct || {}).dorm || {}).times || {})[fmt === 'heats' ? 'heats' : 'knockout'] || []; return T[Math.min(r, T.length) - 1] || null; };
 const ctReached = (W, at) => !!at && (DAYS.indexOf(W.Day) > DAYS.indexOf(at[0]) || (W.Day === at[0] && hmMin(W.Time) >= hmMin(at[1])));
 const ctName = e => (!e ? 'a bye' : e.user ? '{{user}}' : e.named ? e.id : e.label);
+// ---- the Kingdom Competition (1.84.0, owner-approved planning/DRAFT_kingdom_competition.md): the four teams. PD.ct.kingdom is
+// data/event_frame.json kingdom with the rival teams from data/npcs.json. Halvard's team is {{user}} and Competition.Team while
+// {{user}} is at the Kingdom tier; otherwise the four roster students the Academy Competition would most likely send (the strongest
+// of four different combat roles with every school year among them). A rival who has graduated leaves a student the narrator
+// invents in their role. A rival team is its academy's best, as Halvard's is: K.rival is added to its members' strength. Each member
+// { id, role, y, s, named, user, label }; the engine (stepKingdom) runs the rounds.
+function kcTeams(PD, seed, year, S) {
+  const K = (PD.ct || {}).kingdom || {}, roles = (PD.ct || {}).roles || {}, stu = PD.stu || {}, pin = id => Number((K.pins || {})[id]) || 0;
+  const yNow = id => { const st = stu[id]; return st ? st[0] + year - (st[1] || 1) : 0; };
+  const anon = (key, role, y) => ({ id: `${key}:${role}`, role, y, s: ctStr(PD, seed, year, `${key}:${role}`, y), label: `${key} Y${y} student` });
+  const out = [];
+  for (const key of K.teams || []) {
+    if (key !== 'Halvard') {
+      out.push({ k: key, m: ((K.rivals || {})[key] || []).map(([id, role, y0]) => { const y = y0 + year - 1;
+        return y > 3 ? { ...anon(key, role, 1), s: ctStr(PD, seed, year, `${key}:${role}`, 1) + (Number(K.rival) || 0) } : { id, role, y, s: ctStr(PD, seed, year, id, y) + pin(id) + (Number(K.rival) || 0), named: true }; }) });
+      continue;
+    }
+    const Co = (S && S.Competition) || {}, U = S && Co.Tier === 'Kingdom' ? contestUser(PD, S) : null;
+    let m;
+    if (U) {
+      m = [{ id: '{{user}}', role: U.role, y: U.y, s: U.s, user: true }];
+      for (const id of (Co.Team || []).slice(0, 3)) {
+        const free = ROLES5.filter(r => !m.some(x => x.role === r)), r0 = roles[id];
+        const role = r0 && free.includes(r0) ? r0 : free[0] || r0 || 'Attack';
+        if (stu[id]) m.push({ id, role, y: Math.min(3, Math.max(1, yNow(id))), s: ctStr(PD, seed, year, id, Math.min(3, Math.max(1, yNow(id)))), named: true });
+        else { const y = rollInt(1, 3, seed, year, 'kc-y', id); m.push({ id, role, y, s: ctStr(PD, seed, year, id, y), label: id }); }
+      }
+      for (const r of ROLES5) if (m.length < 4 && !m.some(x => x.role === r)) m.push(anon('Halvard', r, [1, 2, 3].find(y => !m.some(x => x.y === y)) || 2));
+    } else {
+      const pool = Object.keys(roles).filter(id => yNow(id) >= 1 && yNow(id) <= 3).map(id => ({ id, role: roles[id], y: yNow(id), s: ctStr(PD, seed, year, id, yNow(id)), named: true }))
+        .sort((a, b) => b.s - a.s || (a.id < b.id ? -1 : 1));
+      const top = ROLES5.flatMap(r => pool.filter(e => e.role === r).slice(0, 3));
+      let best = null, bs = -1;
+      const pick = (i, cur) => {
+        if (cur.length === 4) { const ys = new Set(cur.map(e => e.y)), sc = cur.reduce((a, e) => a + e.s, 0) + (ys.size === 3 ? 1000 : 0); if (sc > bs) { bs = sc; best = cur; } return; }
+        for (let j = i; j < top.length; j++) if (!cur.some(e => e.role === top[j].role)) pick(j + 1, [...cur, top[j]]);
+      };
+      pick(0, []);
+      m = best || pool.slice(0, 4);
+    }
+    out.push({ k: key, m });
+  }
+  return out;
+}
+const kcName = e => (e.user ? '{{user}}' : e.named ? e.id : e.label);
 // ---- end of whereabouts (tools/common.py shared_js(presence=False) leaves the section out of the bracelet, 505 and 506)
 // ---- end of shared.js

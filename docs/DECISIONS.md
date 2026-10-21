@@ -133,6 +133,11 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
   `Placement` and `Status`; a bout nobody reported is played off-screen at the next round. Bouts between other entrants are the engine's
   (draft §10 question 1, settled by silence); canon pins hold (Ruby out early, Royhan's Year 1 place, Dante middling). Most entrants are
   students the narrator invents.
+- **Kingdom Competition in three rounds** (1.84.0, owner-approved `planning/DRAFT_kingdom_competition.md`; owner's own design): lore 19's
+  Kingdom tier is a Kingsmeadow hunt for three Kingsblooms (the team without one at sunset goes out), the Undercroft (ten rooms; a room is
+  taken by downing its beast and then being the only team inside for 15 minutes, the count stopping while another team is in; the two
+  teams holding four rooms at once go through) and the final. Ward seals: out for the round. The other teams are the engine's, from the
+  seed; the story reports Halvard's part; a meeting waits until the story has seen it. The World panel picks from every competitor's record.
 
 ## 6. Social systems, UI rules and versioning (from 1.3.1)
 - **Situational rule cards** (1.54.0, narrator-load audit U1): 502 keeps a core line per topic (path, data shape, the main ban) so an

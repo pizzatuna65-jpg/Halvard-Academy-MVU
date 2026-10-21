@@ -1,7 +1,40 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.84.0 — The Kingdom Competition in three rounds (2026-10-21)
+
+Owner's design (chat 2026-10-21, "proceed" on `planning/DRAFT_kingdom_competition.md`): a plain four-team knockout used too little
+of the roster. Engine, shared code, data, lore, the rule card, 505 and the Competition tab. Save fixture v1.83.0.
+- **Three rounds** (lore 19 rewritten; DECISIONS "Kingdom Competition in three rounds"): Wednesday the Kingsmeadow beyond the Great
+  Gate, a hunt from 07:00 for three Kingsblooms (the judges take one a team at sunset, 18:00; the team without one goes out); Thursday
+  the Undercroft under the Royal Arena, ten rooms each with a bound beast (the Expedition's beasts by grade): down the beast, then be the
+  only team inside for 15 minutes, one member is enough, the count stopping while another team is in; a taken room can be taken again;
+  the two teams holding four rooms at once go through; Saturday the final on the sand. Friday stays free. Ward seals: a broken seal is
+  out for the rest of the round.
+- **The other teams are the engine's** (`stepKingdom`, from `stepContest`): once an hour in round one, every 15 minutes in round two,
+  seeded, with each team's tactic from its members' lore (Veyra hunts, Myrdath slips past, Ashvale holds what it takes); rivals are
+  their academy's best (+10, Rank 1 +15). {{user}}'s team is what the story reports (`Kingdom R1:` / `R2:` / `R3:` Results lines,
+  `Competition.Rooms` for the teammates in round two); `<now>` gives signs of a Kingsbloom, a room's beast, the count, the sigil board.
+  A meeting with a rival team waits until the story has seen it ("Now:" line, Fortune edge) and is played off-screen only if the next
+  reply leaves it out; a beaten team keeps away from the room for half an hour. The engine sets Placement (4th to 1st of 4) and
+  Status; the prize, the deed and team bond XP follow as before.
+- **The World panel** picks the national four, one per combat role, from every competitor's record (finds, seals, beasts, rooms, the
+  final) and strength; after the week a picked {{user}} becomes World, selected. The rounds then leave the state.
+- **Without {{user}} on the team** the whole competition is computed from the seed (Halvard's team: the four strongest roster students
+  of four roles with every year, until release C computes the Academy winner) and never stored; `<now>` on campus and the Competition
+  tab tell it as news, nothing before it happened.
+- **The round grounds are Avalon places** (`kc`): the Kingsmeadow (the Judges' Pavilion and seven spots) and the Undercroft (its Gates
+  and ten rooms), walks, weather and the map as in the rest of the city, open only on their round's day to a team still in. Lore 466,
+  467; the city index and the Royal Arena entry (the scrying crystals) name them.
+- Tests: new `test_kingdom_v1840.cjs` (teams, the whole competition over 100 seeds: every team can win and go out first, round two
+  ends early in about half; one tick's rules; round one, two and the final with {{user}}; the World pick; the campus news);
+  `test_avalon_v1390` and `test_sunreach_v1410` count the new places and entries; `npm test` passes, `test_saves` loads v1.83.0.
+  Checked in a browser preview: the Competition tab in round two.
+- **To confirm with the owner:** the names Kingsmeadow, Kingsbloom and Undercroft, the scrying crystals, the times (07:00, sunset
+  18:00, 08:00, 09:00), the final won by the last team with a seal; the tactics read from the team lore; the rooms' descriptions.
+- **To check live:** `docs/TEST_CHECKLIST.md` Q8.3 and side quest S8.3a [1.84].
 
 ## v1.83.0 — Breaks: who stays, going home; Secret Fools Day's draw and Merryhew's sale (2026-10-21)
 
@@ -112,27 +145,6 @@ stage 1. Card text (505), generators and the chat audit tool; the engine is unch
   `test_narrator_batch7_v1580`, `test_memory_batch5_v1640`, `test_audit_batch7_v1480`, `test_one_source_v1430`, `test_reply_delta_v1790`,
   `test_engine_steps_v1200`, `qa_static` and lint pass.
 - **To check live:** `docs/TEST_CHECKLIST.md` Milestones MS4 and MS5 [1.80].
-
-## v1.79.0 — "This reply": what the engine changed, on the bracelet (2026-10-21)
-
-Owner's request (2026-10-21): batch 2 of the Megumin Suite audit (`audit/AUDIT_2026-10-21_2_megumin_suite.md`, untracked): MS1. UI and
-shared code only; no prompt change. Save fixture v1.78.0.
-- **The fold.** Under the news row the bracelet has a folded "This reply (n changes)", in groups: People (bond XP, a rank change, Trust
-  and Tension moves), Money (each new Transactions line, the net when there are several), Body (Health, Stamina, Mana and their
-  maximums; injuries and weather conditions that came or went), Studies (reputation XP and level, proficiency XP and rank), Bag (in and
-  out by quantity), Records (new and finished Planner entries, Journal lines). Names as the player knows them. Hooks, hidden magic and
-  engine bookkeeping never show. The toasts above it stay as they were.
-- **Computed, not stored** (new DECISIONS §7 line): the bracelet reads its own message's state and the newest earlier one
-  (`stateAt`, `prevState`, through `getVariables` as `readState` already did) and compares them with `replyDelta` (shared.js). Nothing
-  goes into the state, so the chat file does not grow and the narrator never sees it. It stays open while the bracelet redraws (in
-  memory only, no browser storage) and hides with the collapsed bracelet.
-- `newLines` (the multiset difference of two lists) moved from the engine to shared.js, written without lodash; the engine uses it as
-  before.
-- Tests: new `test_reply_delta_v1790.cjs` (the rows from a real engine reply, by-hand changes, Hooks never listed, the bracelet with and
-  without a state before it); `test_saves`, `test_ui_overhaul_v1210`, `test_one_source_v1430`, `test_audit_batch1_v1420`,
-  `test_batch5_shops`, `test_news_v1250`, `test_batch1_swipe`, `test_audit_batch5_v1470`, `test_map_gates_v1240`, `qa_static` and lint
-  pass. Seen in the browser pane at desktop and phone width (a mock of two messages).
-- **To check live:** `docs/TEST_CHECKLIST.md` Q1.1 [1.79].
 
 ## Release index (one line per release, oldest first)
 
@@ -301,3 +313,4 @@ shared code only; no prompt change. Save fixture v1.78.0.
 - **v1.81.0 (2026-10-21):** The event frame (draft A1): event ids and kinds, the `<now>` Event line, Activities → Event, event chances (the 1.26.0 event XP moved there; the Main Courtyard ones now fire), the Star Night market stalls.
 - **v1.82.0 (2026-10-21):** The Dorm Competition's brackets from the seed (draft A2): {{user}}'s bouts in `<now>`, Placement and Status by the engine, canon pins, Fortune edge, Training Week scout, the bracket on the Competition tab; the Club Festival coin vote.
 - **v1.83.0 (2026-10-21):** Breaks (draft B): who stays (the lore's five and one in five), going home in one reply, the home-and-family line; Secret Fools Day's draw and Merryhew's 25% sale.
+- **v1.84.0 (2026-10-21):** The Kingdom Competition in three rounds (owner's design): the Kingsmeadow hunt for three Kingsblooms, the Undercroft's ten rooms, the final; the other teams by the engine, the World panel's pick from every competitor's record.

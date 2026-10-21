@@ -1077,7 +1077,9 @@ def avalon(C, ejs):
              'skywheel_fair': 'the fairground and its giant wheel', 'great_spire': 'the tallest Herald Spire, open to climb',
              'garden_of_avalon': 'the great garden and the Archmage statue', 'grand_theatre': 'the domed opera house',
              'royal_arena': 'the Kingdom Competition\'s stadium', 'whitestone_hotel': 'where the four academies\' teams stay'}
-    pin_line = lambda p: p['name'] + ': ' + ', '.join(f"{x['name']} ({brief[x['id']]})" for x in A['places'] if x['pin'] == p['id'] and not x.get('hidden')) + '.'
+    # 1.84.0 (planning/DRAFT_kingdom_competition.md): the Kingdom Competition's round grounds (kc) carry their own brief and say when they open
+    kc_when = {1: " (beyond the Great Gate; open only for the Kingdom Competition's round one)", 2: " (under the Royal Arena; open only for the Kingdom Competition's round two)"}
+    pin_line = lambda p: p['name'] + kc_when.get(p.get('kc'), '') + ': ' + ', '.join(f"{x['name']} ({brief.get(x['id']) or x['brief']})" for x in A['places'] if x['pin'] == p['id'] and not x.get('hidden')) + '.'
     rows = []
     for i, a in enumerate(ids[:-1]):
         d = walks(a)
@@ -1116,10 +1118,18 @@ def avalon(C, ejs):
     entry(370, 'Avalon', ['Avalon', 'the capital', 'Herald Spire', 'White Line'], overview, index=True)
     uids = iter([371, 372, 373, 374, 375] + list(range(452, 465)))
     for q in A['places']:
-        if q['id'] == 'rookery': continue
+        if q['id'] == 'rookery' or q.get('kc'): continue
         nm = q['name']
         entry(next(uids), 'Avalon - ' + nm, list(dict.fromkeys([nm, nm[4:] if nm.startswith('The ') else nm])),
               f"[{nm}] {q['desc']}" + (f"\nFeel: {q['vibe']}" if q.get('vibe') else ''))
+    # 1.84.0: one keyword entry for each Kingdom round's ground, every place in it
+    for uid, k in ((466, 1), (467, 2)):
+        pin = next(x for x in A['pins'] if x.get('kc') == k)
+        qs = [q for q in A['places'] if q.get('kc') == k]
+        head = ("[Avalon — the Kingsmeadow] The crown's meadowland beyond the Great Gate, thirty minutes' walk from the Skyport road: grass, a brook, an old orchard and a stone ring, warded at its edges by the competition panel. Round one of the Kingdom Competition is fought here, from dawn to sunset; on other days it is closed crown land." if k == 1 else
+                "[Avalon — the Undercroft] The old vaults under the Royal Arena, down a stair from the arena's west side: ten rooms around the Undercroft Gates, each holding a beast the competition panel has bound there for the day, the wards on every wall. Round two of the Kingdom Competition is fought here; on other days the stair is locked.")
+        entry(uid, 'Avalon - ' + pin['name'], list(dict.fromkeys([pin['name'], pin['name'][4:] if pin['name'].startswith('The ') else pin['name'], *(q['name'] for q in qs)])),
+              head + '\n' + '\n'.join(f"{q['name']}: {q['desc']}" for q in qs))
     entry(376, 'Avalon - The Rookery', ['Rookery', 'rooks', 'Drowned Rat'],
           '[Avalon — The Rookery]\nThe Rookery: ' + PL['rookery']['desc'] + ' Buying or practising a forbidden art there is still arrest, as everywhere; being caught there is a serious offence for a student.\n'
           '<narrator_only>The way in: the cellar door behind the bar of the Drowned Rat, a tavern on the lowest lane of Old Town; the barkeep opens it for anyone who asks for "the cellar wine". '
@@ -1142,7 +1152,14 @@ def avalon(C, ejs):
         f"Then free time from {Cr['free']} until the muster at the Skyport at {Cr['muster']} (markets, food, sights; the city's own entries). Groups of four only. Points do not work; students carry coin.\n"
         f"Late afternoon: the airship leaves at {Cr['depart']}, back before dark, passenger lists counted twice. A student late for the muster is searched for, and punished as for a detention.")
     rep(C[19], "3. Kingdom. One team per academy, four in total, knockout, at the arena in the capital. Each member of the winning team earns 5,000 points. Only the teams travel: they arrive the day before and stay at a hotel near the arena, and fly home the day after.",
-        "3. Kingdom. One team per academy, four in total, knockout, at the Royal Arena in Avalon, the capital. Each member of the winning team earns 5,000 points, and the winning team is received by the King at Eldrasil Castle on the last evening. Only the teams travel: they arrive the day before and stay at the Whitestone Hotel beside the arena, and fly home the day after. Evenings are free in the city until 21:00, the hotel by 22:00.")
+        "3. Kingdom. One team per academy, four in total, at the Royal Arena in Avalon, the capital. Each member of the winning team earns 5,000 points, and the winning team is received by the King at Eldrasil Castle on the last evening. Only the teams travel: they arrive the day before and stay at the Whitestone Hotel beside the arena, and fly home the day after. Evenings are free in the city until 21:00, the hotel by 22:00.")
+    # 1.84.0 (owner-approved planning/DRAFT_kingdom_competition.md): three rounds instead of a plain knockout
+    rep(C[19], "3. Kingdom. One team per academy, four in total, at the Royal Arena in Avalon, the capital. ",
+        "3. Kingdom. One team per academy, four in total, over three rounds in and around Avalon, the capital. Every competitor wears a ward seal; when it breaks they are pulled out for the rest of the round. "
+        "Round one, outdoors in the Kingsmeadow beyond the city wall: from morning each team hunts for a Kingsbloom, and only three are planted; the judges take one per team at sunset, and the team without one goes out. "
+        "Round two, in the Undercroft beneath the Royal Arena: ten rooms, each guarded by a bound beast; a team takes a room by defeating its beast and then being the only team inside for fifteen minutes, one member is enough, "
+        "and the count stops while anyone from another team is in the room; a taken room can be taken again the same way. The two teams that hold four rooms at the same time go through. "
+        "Round three, the final, on the arena sand: one team against the other. Great scrying crystals over the arena show the crowd the rounds fought away from the sand. ")
 
 def airship(C, ejs):
     """1.40.0 (owner-approved planning/DRAFT_airship.md): the four places aboard the academy's airship, from data/airship.json (378-381).

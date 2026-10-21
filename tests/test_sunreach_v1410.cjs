@@ -103,7 +103,7 @@ ok(byUid[247].constant && /SUNREACH BAY INDEX/.test(lore(247, day)) && /The Hana
 ok(/^\[Academy Trip\]/.test(lore(247, at(initState(), FRI, '12:00', 'Main Library')).trim()) && !/SUNREACH BAY INDEX/.test(lore(247, at(initState(), FRI, '12:00', 'Main Library'))), 'the week before: the Trip, not yet the index');
 ok(byUid[360].constant && /GRAND VAST FOREST INDEX/.test(read('src/worldbook/content/360.txt')) && [361, 362, 363, 364, 365, 366, 367, 368, 369].every(u => !byUid[u].constant), 'the forest: an index (360) and keyword places');
 const av = idx.filter(e => /^(\[mvu_plot\] )?Avalon - /.test(e.comment));
-ok(byUid[370].constant && /AVALON INDEX/.test(read('src/worldbook/content/370.txt')) && av.length === 20 && av.every(e => !e.constant), 'Avalon: an index (370), 18 place entries, the Rookery and the Royal Mages, all keyword');
+ok(byUid[370].constant && /AVALON INDEX/.test(read('src/worldbook/content/370.txt')) && av.length === 22 && av.every(e => !e.constant), 'Avalon: an index (370), 18 place entries, the Rookery, the Royal Mages and the two Kingdom round grounds, all keyword');
 ok(/\(the grey old quarter\)/.test(read('src/worldbook/content/370.txt')) && /^\[Crown Square\]/.test(read(`src/worldbook/content/${av.find(e => /Crown Square/.test(e.comment)).uid}.txt`)), 'the Avalon index has a line per place; a place entry in the campus format');
 ok(byUid[465].constant && /AIRSHIP INDEX/.test(read('src/worldbook/content/465.txt')) && [378, 379, 380, 381].every(u => !byUid[u].constant), 'the airship: a mini index (465) and keyword places');
 

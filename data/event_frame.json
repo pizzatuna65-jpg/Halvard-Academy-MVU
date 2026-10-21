@@ -64,5 +64,31 @@
   "fools": {
     "_note": "1.83.0 (planning/DRAFT_event_frame.md 4.2): Secret Fools Day's dorm name-draw for {{user}} (lore 235): the name {{user}} draws and who drew {{user}}, each a roster dorm-mate at Halvard this year with named percent, else a dorm-mate the narrator invents. Computed, never stored.",
     "named": 70
+  },
+  "kingdom": {
+    "_note": "1.84.0 (owner-approved planning/DRAFT_kingdom_competition.md): the Kingdom Competition in three rounds, run by the engine (stepKingdom) from the seed and what the story reported. teams: the four academies in order (Halvard first); tactic: how each team plays (from its members' lore: Veyra hunts, Bellatrix; Myrdath slips past, Ines and Lucius; Ashvale holds what it takes, Elion's new team), tact: what a tactic changes (ambush: the chance to attack a holder, times; guard: guards left in held rooms, plus or minus; retreat: % a team backs out of a meeting instead of fighting; retake: a held room of another team is a target); pins: strength added to a rival (each academy's Rank 1); rival: strength added to every rival team member (each team is its academy's best, as Halvard's is). r1: the Kingsmeadow hunt (Wed): three Kingsblooms planted on spots by the seed, one hour a tick from `from`: find (% a team without one finds one in the field), sign (% a Halvard team searching gets a sign of one), ambush (% a team attacks a holder), warn (minutes before sunset <now> warns); the judges take one bloom a team at `to` (sunset). r2: the Undercroft (Thu): ten rooms with a bound beast's grade, beasts per grade (the Expedition's names), boss (a beast's strength by grade), every `tick` minutes; a room is taken by downing its beast and being the only team in it for `hold` minutes (the count stops while another team is inside); the two teams holding `win` rooms at the same time go through; group: strength a member adds to a group; boss_seal: % a seal breaks in a failed fight with a beast. r3: the final on the sand (Sat), off-screen decided at `rolled`. credit: what each deed adds to a competitor's record (the World panel picks `world` competitors, one per combat role, by record and strength).",
+    "event": "kingdom_comp",
+    "teams": ["Halvard", "Ashvale", "Myrdath", "Veyra"],
+    "tactic": {"Halvard": "even", "Ashvale": "hold", "Myrdath": "sneak", "Veyra": "hunt"},
+    "tact": {
+      "even": {"ambush": 1, "guard": 0, "retreat": 0, "retake": false},
+      "hold": {"ambush": 1, "guard": 0, "retreat": 20, "retake": false},
+      "sneak": {"ambush": 0.5, "guard": 0, "retreat": 60, "retake": false},
+      "hunt": {"ambush": 1.5, "guard": -1, "retreat": 0, "retake": true}
+    },
+    "pins": {"Elion": 15, "Bellatrix": 15, "Lucius": 15}, "rival": 10,
+    "r1": {"day": "Wed", "from": "07:00", "to": "18:00", "flowers": 3, "pavilion": "judges_pavilion",
+      "spots": ["long_meadow", "willow_brook", "old_orchard", "bramble_hollow", "standing_stones", "reed_marsh", "beacon_hill"],
+      "find": 25, "sign": 40, "ambush": 25, "warn": 60},
+    "r2": {"day": "Thu", "from": "08:00", "to": "18:00", "tick": 15, "hold": 15, "win": 4, "gates": "undercroft_gates",
+      "rooms": [["undercroft_room_1", "IV"], ["undercroft_room_2", "IV"], ["undercroft_room_3", "IV"], ["undercroft_room_4", "III"], ["undercroft_room_5", "III"],
+        ["undercroft_room_6", "III"], ["undercroft_room_7", "III"], ["undercroft_room_8", "II"], ["undercroft_room_9", "II"], ["undercroft_room_10", "II"]],
+      "beasts": {"IV": ["goblin hound", "thorn creeper", "chime toad"],
+        "III": ["dire wolf", "thornstag", "owlbear", "forest troll", "giant spider", "mist wolf", "gargoyle", "lesser drake", "giant centipede"],
+        "II": ["ironback boar", "dire bear", "ogre", "cave troll", "griffin", "wyvern", "manticore"]},
+      "boss": {"IV": 30, "III": 55, "II": 80}, "group": 5, "boss_seal": 40},
+    "r3": {"day": "Sat", "from": "09:00", "to": "18:00", "rolled": "11:00"},
+    "credit": {"find": 3, "take": 2, "seal": 1, "boss": 3, "room": 2, "final": 3},
+    "world": 4
   }
 }

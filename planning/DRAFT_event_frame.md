@@ -5,7 +5,7 @@ memiliki tujuan nanti ada ui quest/objective"). Jawaban yang disepakati di chat:
 ditambah modul per **jenis** event; modul khusus satu event hanya kalau event itu punya keputusan yang tidak ada di event lain.
 
 **Status:** disetujui owner ("proceed", 2026-10-21; diam = setuju untuk §10: pertanyaan 1 = engine, pertanyaan 2 = usulan (a) + (c),
-teksnya di §10). **Rilis A1 selesai di 1.81.0, A2 di 1.82.0, B di 1.83.0.** Berikutnya C (`tally`, Academy/Kingdom/World) sebelum Sports Day M6 W3. Draf ini dihapus setelah rilis E. Dibangun bertahap (§7), tiap rilis siap sebelum event pertamanya di kampanye
+teksnya di §10). **Rilis A1 selesai di 1.81.0, A2 di 1.82.0, B di 1.83.0; Kingdom dan pilihan World (bagian dari C) di 1.84.0.** Berikutnya C (`tally`, Academy/Kingdom/World) sebelum Sports Day M6 W3. Draf ini dihapus setelah rilis E. Dibangun bertahap (§7), tiap rilis siap sebelum event pertamanya di kampanye
 Charles (sekarang Y1 M1 W1). Pilihan yang wajar sudah diputuskan di draft ini; yang benar-benar terbuka ada di §10.
 Owner 2026-10-21: bagian kompetisi tidak ada masalah; tujuh celah event lain (§4) ditambahkan atas permintaan owner.
 
@@ -277,7 +277,7 @@ Tab Competition (`p40:acCompetition`) mendapat blok **Bracket** di atas "The lad
   rekaman Extra dari Dorm Competition dipakai lagi kalau orangnya lolos. Tim lain dihitung dari yang lolos dengan syarat lore 19 (setiap angkatan ada, role sebisanya tertutup).
   Pin: Ruby menolak setiap tim (lore 130; dia memang tersingkir awal); Royhan tidak diambil tim mana pun (lore 101) kecuali {{user}}
   merekrutnya, sebuah kail cerita yang sudah ada di lore.
-- **Kingdom** (M9 W4): tim Halvard (tim {{user}} atau tim pemenang yang dihitung) lawan Ashvale, Myrdath, Veyra (`team_role`
+- **Kingdom** (M9 W4): **dibuat di 1.84.0 sebagai tiga fase** (owner, 2026-10-21; DECISIONS "Kingdom Competition in three rounds"); sampai rilis C, tim Halvard tanpa {{user}} = empat mahasiswa roster terkuat (`sh:kcTeams`), rilis C menggantinya dengan pemenang Academy yang dihitung. Tim Halvard (tim {{user}} atau tim pemenang yang dihitung) lawan Ashvale, Myrdath, Veyra (`team_role`
   sudah ada); semifinal Rabu–Kamis, final Jumat/Sabtu sesuai rencana hari. Ini menutup celah sekarang: bila {{user}} tidak ikut,
   siapa wakil Halvard belum terdefinisi.
 - **World** (M11 W4): tanpa bracket; national four dipilih panel (lore 19) dari peserta Kingdom terkuat per role, dihitung dan
@@ -449,7 +449,7 @@ Founder Day hunt: {{user}} holds clue <n> of 6. Its answer is <place>; write the
 | A1 (1.81.0) | Kerangka event §2 (peluang, `eventXP` dipindah), mekanisme stand §4.1 dengan daftar Star Night | Star Night M1 W3 |
 | A2 (1.82.0) | Contest §3.1–3.9 untuk Dorm Competition, format `vote` untuk koin Club Festival | Club Festival M3 W2 |
 | B (1.83.0) | Fools Day §4.2 dengan sale Merryhew's, libur §4.3 | Fools Day M4 W1 |
-| C (1.84.0) | Format `tally` (Sports Day, Showcase), Academy, Kingdom, World §3.10 | Sports Day M6 W3 |
+| C | Format `tally` (Sports Day, Showcase), Academy §3.10 (Kingdom dan pilihan panel World sudah di 1.84.0; tim Halvard di `sh:kcTeams` lalu diambil dari pemenang Academy yang dihitung) | Sports Day M6 W3 |
 | D (1.85.0) | Fair §4.4, Thinning §4.5, stand Circus, kunjungan keluarga §4.6 | Fair M7 W2 |
 | E (1.86.0) | Stand dan tawar Bazaar, Founder Day §4.7, `vote` Council Election, stand Harvest dan pasar musim dingin | Bazaar M9 W2 |
 

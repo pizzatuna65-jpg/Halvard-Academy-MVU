@@ -141,12 +141,12 @@ const azNight = (k, S) => { const N = AZ(k).night; if (!N) return false; const t
 const azMap = (k, S) => AZ(k).maps ? AZ(k).maps[azNight(k, S) ? 'night' : 'day'] : AZ(k).map;
 // the pins shown: the forest's places visited and their neighbours; elsewhere every pin, a locked one only with the castle open
 function azPins(k, S, A) {
-  if (AZ(k).reveal !== 'near') return AZ(k).pins.filter(p => !p.locked || A.castle);
+  if (AZ(k).reveal !== 'near') return AZ(k).pins.filter(p => (!p.locked || A.castle) && (!p.kc || (A.kc || []).includes(p.kc)));   // 1.84.0: a Kingdom round's ground only while open
   const seen = (A.seen || []).filter(id => azPin(k, id)), known = new Set(seen);
   for (const id of seen) for (const [a, b] of AZ(k).legs) { if (a === id) known.add(b); if (b === id) known.add(a); }
   return AZ(k).pins.filter(p => known.has(p.id));
 }
-const azPlaceOk = (k, A, p) => (!p.locked || A.castle) && (!p.hidden || (A.seen || []).includes(p.id));
+const azPlaceOk = (k, A, p) => (!p.locked || A.castle) && (!p.kc || (A.kc || []).includes(p.kc)) && (!p.hidden || (A.seen || []).includes(p.id));
 // how far a place is from {{user}} (or, outside the area, from where the area's visits start), and how
 function azWalk(k, id, A) {
   const Z = AZ(k), from = A.on && A.at ? A.at : Z.arrive, p = azPlace(k, id), f = azPlace(k, from), M = Z.modes || {};

@@ -103,7 +103,7 @@ Today <%- e.sale.shop %> sells everything at <%- e.sale.pct %>% off (the engine 
 <%_ if (e.stay) { _%>
 Most students have gone home for the break. Students on record who stayed: <%- e.stay.length ? e.stay.join(', ') : 'none' %>; the rest are away until it ends.
 <%_ } _%>
-<%_ if (e.id === 'dorm_comp' && UI.contest && (UI.contest.lines || []).length) { _%>
+<%_ if ((e.id === 'dorm_comp' || e.id === 'kingdom_comp') && UI.contest && (UI.contest.lines || []).length) { _%>
 <%- UI.contest.lines.join('\n') %>
 <%_ } _%>
 <%_ if (on('event_chances') && (e.ch || []).length) { _%>
