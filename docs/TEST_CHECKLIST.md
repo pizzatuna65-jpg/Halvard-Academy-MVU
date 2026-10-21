@@ -477,6 +477,13 @@ The first academy flight (the airship), then the Grand Vast Forest.
 - [ ] Staying instead: `<now>` and the Event tab name the students who stayed (Etnie, Dante, Lenna, Castor, Tilly and a few more); the
       others are not around (the Map's Regulars, `<now>`'s presence lines), and nobody gone home seeks Charles out [1.83].
 
+### Q7.1b Sports Day and the Academy Competition (M6 W3–W4) [1.87]
+- [ ] Sports Day: Activities → Event offers "Enter an event"; after 18:00 the Journal gives the medals by dorm and `<now>` says who
+      took the most [1.87].
+- [ ] Academy Competition Wednesday: if Charles qualified, Competition is Academy, entered, Team names his three teammates, and `<now>`
+      names the first match and how to report it; each day the next match; the Competition tab draws the bracket. If he did not, `<now>`
+      brings the news a round at a time and the Journal names the winners on Saturday [1.87].
+
 ### Q7.2 Autumn and The Thinning (M7)
 - [ ] M7: the Autumn map, and the autumn stock (the Ember pouch) [1.14.3, 1.9.5].
 - [ ] Fair week (M7 W2): without a stand `<now>` says how to record one; building one, the narrator keeps it as a Project with Kind
@@ -489,6 +496,7 @@ The first academy flight (the airship), then the Grand Vast Forest.
 - [ ] Circus Thursday after 18:00 in the Courtyards: the bracelet's "Stalls here" chip, the Price Guide's Circus stalls with their hours,
       and a candied apple costs 5 points; at 15:00 the stalls are not open yet [1.85].
 - [ ] Showcase days: `<now>` says families are visiting; Charles's family comes only if the player says so [1.85].
+- [ ] Saturday after 19:00 the Journal names the most talented dorm by points [1.87].
 
 ## Act 8 — Month 9
 

@@ -202,10 +202,57 @@
         },
         "legacy": "Founder Day feast"
       }
+    ],
+    "sports_day": [
+      {
+        "id": "compete",
+        "text": "Enter an event (no magic allowed)",
+        "how": {
+          "at": [
+            "sports field",
+            "courtyards",
+            "main courtyard",
+            "boathouse and lake",
+            "combat grounds"
+          ],
+          "said": "\\b(races?|relay|heats?|medals?|throws?|jumps?|matche?s?|events?)\\b",
+          "from": "09:00",
+          "to": "18:00",
+          "min": 30
+        },
+        "reward": {
+          "prof": [
+            "Prowess",
+            2
+          ]
+        }
+      }
+    ],
+    "showcase": [
+      {
+        "id": "perform",
+        "text": "Perform an act on the Main Courtyard stage",
+        "how": {
+          "at": [
+            "courtyards",
+            "main courtyard"
+          ],
+          "said": "\\b(acts?|perform\\w*|stage|songs?|sang|danced?|dancing|played)\\b",
+          "from": "09:00",
+          "to": "18:00",
+          "min": 20
+        },
+        "reward": {
+          "prof": [
+            "Society",
+            2
+          ]
+        }
+      }
     ]
   },
   "contest": {
-    "_note": "1.82.0 (planning/DRAFT_event_frame.md section 3, release A2): the Dorm Competition, computed from the seed and never stored (shared.js contest section; tools/common.py presence_data hands it to the engine and the panels as PD.ct). roles: a Halvard student's combat role in the brackets (owner-approved draft table 3.4; Castor by his public magic). pins: only what the lore says (str: strength added; lose: the round they go out in, 'semi' = the semi-final; tie: 'first' wins the tie for the better of the places shared by that round's losers; years: campaign years the pin holds). dorm: bracket size per role per dorm, qualifying places (lore 19), each role's format and the rounds' times. strength: an entrant's (base + per_year x (school year - 1) + 0..spread), {{user}}'s (user_base + user_per_year x (Year - 1) + user_per_prowess x Prowess rank); a bout between two entrants the narrator does not play goes to A with 50 + (A - B) percent, clamped; edge: the gap that makes an opponent stronger or weaker (Fortune -10 / +10). vote: the Club Festival coin vote, drawn at the close weighted by (named members + base), with {{user}}'s club boosted for each of its chances done.",
+    "_note": "1.82.0 (planning/DRAFT_event_frame.md section 3, release A2): the Dorm Competition, computed from the seed and never stored (shared.js contest section; tools/common.py presence_data hands it to the engine and the panels as PD.ct). roles: a Halvard student's combat role in the brackets (owner-approved draft table 3.4; Castor by his public magic). pins: only what the lore says (str: strength added; lose: the round they go out in, 'semi' = the semi-final; tie: 'first' wins the tie for the better of the places shared by that round's losers; years: campaign years the pin holds). dorm: bracket size per role per dorm, qualifying places (lore 19), each role's format and the rounds' times. strength: an entrant's (base + per_year x (school year - 1) + 0..spread), {{user}}'s (user_base + user_per_year x (Year - 1) + user_per_prowess x Prowess rank); a bout between two entrants the narrator does not play goes to A with 50 + (A - B) percent, clamped; edge: the gap that makes an opponent stronger or weaker (Fortune -10 / +10). vote: the Club Festival coin vote, drawn at the close weighted by (named members + base), with {{user}}'s club boosted for each of its chances done. 1.87.0 (release C): pins noteam = no team takes them at the Academy Competition (Royhan, lore 101, unless {{user}} recruits him; Ruby, lore 130). academy: the Academy Competition (lore 19): the Dorm qualifiers form teams of size with every school year among them and the roles covered as far as they go; a knockout of teams, one round a day at times, the strength of a team its members' mean.",
     "roles": {
       "Gareth": "Attack",
       "Sophia": "Attack",
@@ -251,14 +298,16 @@
         "str": 20
       },
       "Ruby": {
-        "lose": 1
+        "lose": 1,
+        "noteam": true
       },
       "Royhan": {
         "lose": "semi",
         "tie": "first",
         "years": [
           1
-        ]
+        ],
+        "noteam": true
       },
       "Dante": {
         "lose": 2
@@ -353,6 +402,32 @@
         ],
         "base": 4
       }
+    },
+    "academy": {
+      "times": [
+        [
+          "Wed",
+          "09:00"
+        ],
+        [
+          "Thu",
+          "09:00"
+        ],
+        [
+          "Fri",
+          "09:00"
+        ],
+        [
+          "Sat",
+          "10:00"
+        ]
+      ],
+      "end": [
+        "Sat",
+        "18:00"
+      ],
+      "teams": 16,
+      "size": 4
     }
   },
   "breaks": {
@@ -554,5 +629,45 @@
       "sky_dormitory",
       "viridian_dormitory"
     ]
+  },
+  "tally": {
+    "_note": "1.87.0 (planning/DRAFT_event_frame.md 3.1, release C): the tally format, scores by dorm at an event's close (lore: Sports Day's medals, the Academy Showcase's scores). n events (or acts), each giving gold, silver and copper (3, 2, 1 points) to three different dorms, drawn from the seed weighted by base + the dorm's roster students at Halvard that year in clubs (Sports Day: the sport clubs, magic banned; the Showcase: the stage clubs) + boost for each of {{user}}'s chances done there (for {{user}}'s dorm). by: medals (gold first) or points. Computed; $eng.tally keeps only that the Journal has it.",
+    "sports_day": {
+      "n": 12,
+      "by": "medals",
+      "close": [
+        "Sat",
+        "18:00"
+      ],
+      "base": 3,
+      "clubs": [
+        "Soccer Club",
+        "Running Club",
+        "Archery Club",
+        "Swimming Club",
+        "Gymnastics Club",
+        "Basketball Club"
+      ],
+      "boost": {
+        "compete": 2
+      }
+    },
+    "showcase": {
+      "n": 10,
+      "by": "points",
+      "close": [
+        "Sat",
+        "19:00"
+      ],
+      "base": 3,
+      "clubs": [
+        "Music Club",
+        "Theatre Troupe",
+        "Magic Duelling Club"
+      ],
+      "boost": {
+        "perform": 2
+      }
+    }
   }
 }

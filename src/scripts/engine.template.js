@@ -2376,7 +2376,7 @@ const kcMember = (st, name, ks) => { const n = String(name || '').trim().toLower
 function kcInit(seed, y, S, on) {
   const R1 = KC.r1, R2 = KC.r2;
   const spots = [...R1.spots].sort((a, b) => roll100(seed, y, 'kc-spot', a) - roll100(seed, y, 'kc-spot', b) || (a < b ? -1 : 1)).slice(0, R1.flowers);
-  return { y, on: on ? 1 : 0, T: kcTeams(PRESENCE, seed, y, on ? S : null), r: 1, t: hm(R1.from), out: {}, f: spots.map(at => ({ h: '', at })), sign: '',
+  return { y, on: on ? 1 : 0, T: kcTeams(PRESENCE, seed, y, S), r: 1, t: hm(R1.from), out: {}, f: spots.map(at => ({ h: '', at })), sign: '',
     x1: '', x2: '', end1: 0, end2: 0, rm: R2.rooms.map(() => ({ b: 0, o: '', m: {} })), pos: {}, hp: [], enc: null, fin: [], win: '', end3: 0, cr: {}, ev: [],
     beast: R2.rooms.map(([_id, g], i) => pickOf(R2.beasts[g], seed, y, 'kc-beast', i)), w: [], ws: 0 };
 }
@@ -2622,10 +2622,15 @@ function stepKingdom(c) {
     }
     return;
   }
+  // 1.87.0 (release C): the Academy Competition's winning team represents Halvard (lore 19)
+  if (Co.Tier === 'Academy' && Co.Status === 'champion' && !toolEdit && contestUser(PRESENCE, S)) {
+    Object.assign(Co, { Tier: 'Kingdom', Status: 'entered', Placement: '' });
+    log.push("Kingdom Competition: {{user}}'s Academy team represents Halvard; Competition is now Kingdom, entered.");
+  }
   const onTeam = Co.Tier === 'Kingdom' && Co.Status !== 'eliminated' && !!contestUser(PRESENCE, S);
   if (!st && onTeam) { st = kcInit(seed, y, S, true); jnl.push(`Kingdom Competition: Halvard's team is ${kcTeam(st, 'Halvard').m.map(kcName).join(', ')}.`); }
   if (!st || !st.on) {   // {{user}} is not on the team: the whole competition from the seed, told as far as it has come
-    const all = kcInit(seed, y, null, false);
+    const all = kcInit(seed, y, S, false);   // 1.87.0: S for the Academy Competition's winners
     kcAdvance(all, seed, 7 * DAY_MIN, [], { Results: [] });
     kcPublish(c, all, now, false);
     return;
@@ -2711,6 +2716,8 @@ function stepContest(c) {
   stepVote(c);
   S.$ui.contest = null; c.contest = null;
   stepKingdom(c);   // 1.84.0: the Kingdom Competition (its lines join S.$ui.contest)
+  stepAcademy(c);   // 1.87.0: the Academy Competition (its lines join S.$ui.contest)
+  stepTally(c);     // 1.87.0: Sports Day's medals and the Showcase's scores
   const Co = S.Competition, C0 = (hasB && B.Competition) || {}, y = S.World.Year, ev = eventsOn(S.World).find(e => e.id === 'dorm_comp');
   if (!ev) {
     if (hasB && C0.Tier === 'Dorm' && Co.Tier === 'Dorm' && /^(qualified|eliminated|champion)$/.test(String(C0.Status || '')) && (Co.Placement !== C0.Placement || Co.Status !== C0.Status)) {
@@ -2798,6 +2805,109 @@ function stepContest(c) {
   if (lines.length && Object.keys(S.Scene.Present || {}).some(k => (NPC_ALIAS[k.toLowerCase()] || k) === 'Aiden')) lines.push("Aiden's betting book has odds on every bracket today.");
   S.$ui.contest = lines.length ? { lines } : null;
   c.contest = next && next.edge ? { edge: next.edge, at: next.at } : null;
+}
+// 1.87.0 (owner-approved planning/DRAFT_event_frame.md 3.10, release C; lore 19): the Academy Competition, computed from the seed
+// (shared.js academyContest): sixteen cross-dorm teams of four from the Dorm qualifiers, a knockout, a round a day. A qualified
+// {{user}} enters on its first day (Tier Academy, entered); their team is {{user}} and Competition.Team (written once from the draw:
+// roster names and the labels of students the narrator invents). The story reports {{user}}'s team's matches ("Academy R<n>: beat
+// <team>"); one left unreported is played off-screen once the next round has begun; Placement and Status are the engine's. The
+// winners represent Halvard at the Kingdom Competition (stepKingdom; kcTeams when {{user}} is not among them).
+const acBout = (AC, r) => { const ms = (AC.rounds || [])[r - 1] || [], m = ms.find(x => (x.a && x.a.user) || (x.b && x.b.user)); return m ? { m, me: m.a && m.a.user ? m.a : m.b, opp: m.a && m.a.user ? m.b : m.a } : null; };
+const acTeamText = tm => `${tm.k} (${tm.m.map(e => `${acMember(e)}${e.named || e.user ? '' : ' (invented)'}`).join(', ')})`;
+function stepAcademy(c) {
+  const { S, B, hasB, toolEdit, log, jnl, seed, OFF } = c, A = CT.academy, ST = CT.strength;
+  const W = S.World, y = num(W.Year, 1), Co = S.Competition, C0 = (hasB && B.Competition) || {};
+  const TS = S.$eng.tally = _.isPlainObject(S.$eng.tally) && S.$eng.tally.y === y ? S.$eng.tally : { y };
+  const ev = eventsOn(W).find(e => e.id === 'academy_comp');
+  if (!A || !ev || OFF.has('competition')) {
+    if (hasB && C0.Tier === 'Academy' && Co.Tier === 'Academy' && /^(eliminated|champion)$/.test(String(C0.Status || '')) && (Co.Placement !== C0.Placement || Co.Status !== C0.Status)) {
+      Co.Placement = C0.Placement; Co.Status = C0.Status;
+      log.push("The Academy Competition result is the engine's: its Placement and Status stay as they were.");
+    }
+    return;
+  }
+  const U = contestUser(PRESENCE, S);
+  if (U && Co.Tier === 'Dorm' && /^(qualified|champion)$/.test(String(Co.Status || ''))) {
+    Object.assign(Co, { Tier: 'Academy', Status: 'entered', Placement: '' });
+    log.push('{{user}} qualified at the Dorm Competition: Competition is now Academy, entered.');
+  }
+  const inIt = !!U && Co.Tier === 'Academy';
+  if (inIt) Co.Results = (Co.Results || []).map(l => (/^\s*R\d\s*:/i.test(String(l)) ? 'Academy ' + String(l).trim() : l));
+  let AC = academyContest(PRESENCE, seed, y, S);
+  let mine = inIt ? AC.E.find(t => t.user) : null;
+  if (mine && !(Co.Team || []).length) { Co.Team = mine.m.filter(e => !e.user).map(acMember); AC = academyContest(PRESENCE, seed, y, S); mine = AC.E.find(t => t.user); }
+  const { res } = contestResults(Co.Results, 'Academy');
+  const reached = r => ctReached(W, r < AC.R ? acTime(PRESENCE, r + 1) : A.end);
+  // a match nobody reported, once the next round has begun: played off-screen
+  for (let r = 1; mine && r <= AC.R && hasB && !toolEdit; r++) {
+    if (res[r - 1] !== undefined) continue;
+    if (!reached(r)) break;
+    const b = acBout(AC, r);
+    if (!b || !b.opp) { if (b) continue; break; }
+    const won = roll100(seed, y, 'ac-off', r, b.opp.id) < Math.min(ST.clamp[1], Math.max(ST.clamp[0], 50 + b.me.s - b.opp.s));
+    res[r - 1] = won;
+    const line = `${won ? 'beat' : 'lost to'} ${b.opp.k}`;
+    Co.Results = [...Co.Results, `Academy R${r}: ${line} (off-screen)`].slice(-12);
+    log.push(`Academy Competition round ${r} was not reported before the next round: played off-screen (${line}).`);
+    AC = academyContest(PRESENCE, seed, y, S); mine = AC.E.find(t => t.user);
+  }
+  const lines = [], who = e => (e ? e.k : 'a bye');
+  let next = null;
+  if (mine) {
+    const place = AC.place(mine), n = AC.E.length;
+    const P1 = place ? `${CT_ORD(place)} of ${n} teams` : '', S1 = !place ? 'entered' : place === 1 ? 'champion' : 'eliminated';
+    if (hasB && !toolEdit && Co.Placement && Co.Placement !== P1 && Co.Placement !== C0.Placement) log.push(`Competition Placement "${Co.Placement}" is the engine's: ${P1 || 'not decided yet'}.`);
+    Co.Placement = P1; Co.Status = S1;
+    const head = `Contest: Academy Competition (${n} cross-dorm teams of four, a knockout, a round a day). {{user}}'s team: ${mine.m.filter(e => !e.user).map(e => `${acMember(e)} (${e.dorm || 'Halvard'} Y${e.y}, ${e.role})`).join(', ')}`;
+    const inv = mine.m.filter(e => !e.user && !e.named && !e.given);
+    if (place) lines.push(`${head}. The team finished ${CT_ORD(place)}${place === 1 ? ': it won, and represents Halvard at the Kingdom Competition' : ''}.`);
+    else for (let r = 1; r <= AC.R; r++) {
+      if (res[r - 1] !== undefined) continue;
+      const b = acBout(AC, r);
+      if (b && !b.opp) continue;
+      if (b) {
+        next = { r, at: acTime(PRESENCE, r), opp: b.opp, edge: ctEdge(b.opp.s - b.me.s, ST.edge) };
+        lines.push(`${head}. Round ${r} of ${AC.R}: ${next.at[0]} ${next.at[1]}, against ${acTeamText(b.opp)}, ${next.edge} than {{user}}'s team.`);
+        if (inv.length) lines.push(`${inv.map(e => e.label).join(', ')} on {{user}}'s team ${inv.length > 1 ? 'are' : 'is'} not a roster character: invent them, Halvard students of that dorm and year, and put the name you give in Competition.Team in place of the label.`);
+        if (b.opp.m.some(e => !e.named)) lines.push(`The other team's unnamed members are yours to invent, students of their dorm and year.`);
+        lines.push(`Report the match in Competition.Results as "R${r}: beat ${b.opp.k}" or "R${r}: lost to ${b.opp.k}". The engine sets Placement and Status.`);
+      }
+      break;
+    }
+  }
+  // the round just over (the named teams first); without {{user}}: the news as far as it has come
+  let rr = 0; for (let r = 1; r <= AC.R; r++) if (reached(r)) rr = r;
+  const mb = mine && rr ? acBout(AC, rr) : null;
+  const done = rr ? AC.rounds[rr - 1].filter(m => m.a && m.b && m.w && !(mb && mb.m === m)).sort((a, b) => (b.a.named || b.b.named ? 1 : 0) - (a.a.named || a.b.named ? 1 : 0)).slice(0, mine ? 3 : 4) : [];
+  if (done.length) lines.push(`${mine ? 'Elsewhere at the Academy Competition' : 'Academy Competition news'} (round ${rr}${rr === AC.R ? ', the final' : ''}): ${done.map(m => `${who(m.w)} beat ${who(m.w === m.a ? m.b : m.a)}`).join('; ')}.`);
+  if (AC.champ && rr === AC.R && !mine) lines.push(`The Academy Competition went to ${acTeamText(AC.champ)}; they represent Halvard at the Kingdom Competition.`);
+  if (AC.champ && rr === AC.R && !TS.academy && hasB && !toolEdit) {
+    TS.academy = 1;
+    jnl.push(`Academy Competition: ${AC.champ.user ? "{{user}}'s team" : AC.champ.k} won (${AC.champ.m.map(acMember).join(', ')}) and will represent Halvard at the Kingdom Competition.`);
+  }
+  if (lines.length) S.$ui.contest = { lines: [...((S.$ui.contest || {}).lines || []), ...lines] };
+  if (next && next.edge) c.contest = { edge: next.edge, at: next.at };
+}
+// 1.87.0 (draft 3.1, release C): the tally format at the close of Sports Day and the Showcase (shared.js eventTally); {{user}}'s
+// dorm gains the chance's boost for each of its chances done; computed, and $eng.tally only marks that the Journal has it
+function tallyOf(c, id) {
+  const { S, seed } = c, T = (CT.tally || {})[id], e = EVENTS.find(x => x.id === id), dorm = String(S.Player.Profile.Dorm || '');
+  const boost = Object.entries((T || {}).boost || {}).reduce((a, [ch, x]) => a + (e && chanceDone(S, e, { id: ch }) ? x : 0), 0);
+  return eventTally(PRESENCE, seed, S.World.Year, id, boost && /^(Fire|Light|Sky|Viridian)$/.test(dorm) ? { [dorm]: boost } : {});
+}
+const tallyText = R => (R.by === 'medals' ? `gold-silver-copper: ${R.rows.map(r => `${r[0]} ${r[1]}-${r[2]}-${r[3]}`).join(', ')}` : `points: ${R.rows.map(r => `${r[0]} ${r[4]}`).join(', ')}`);
+function stepTally(c) {
+  const { S, hasB, toolEdit, jnl, absA } = c, y = S.World.Year, TS = S.$eng.tally = _.isPlainObject(S.$eng.tally) && S.$eng.tally.y === y ? S.$eng.tally : { y };
+  for (const [id, T] of Object.entries(CT.tally || {})) {
+    const e = EVENTS.find(x => x.id === id);
+    if (!e || TS[id] || !hasB || toolEdit) continue;
+    const close = toAbs({ Year: y, Month: e.m, Week: e.w, Day: T.close[0], Time: T.close[1] });
+    if (absA < close || absA - close > 7 * DAY_MIN) continue;
+    const R = tallyOf(c, id);
+    TS[id] = R.win;
+    jnl.push(id === 'sports_day' ? `Sports Day: ${R.win} took the most medals (${tallyText(R)}).` : `Academy Showcase: ${R.win} was named the most talented dorm (${tallyText(R)}).`);
+    S.$ui.toasts.push(`${e.t.split(' (')[0]}: ${R.win} won`);
+  }
 }
 // the Club Festival coin vote (lore: everyone drops a gold coin at the best stand, never their own club's; the winner is announced
 // at the close): drawn once a year when the close has come, weighted by the clubs' named members plus vote.base, {{user}}'s club
@@ -5533,7 +5643,8 @@ function stepCampusEvents(c) {
       const fair = FR ? (FR.y !== S.World.Year ? {} : FR.m != null ? { m: MARKS[FR.m] } : FR.k ? { k: FR.k, p: num(FR.p, 0) } : {}) : null;
       return { id: e.id, t: e.t.split(' (')[0], kind: e.kind || '', n: e.d.indexOf(S.World.Day) + 1, of: e.d.length, now: cur ? cur.what : '', next: nx ? [clock(nx.at), nx.what] : null, ch, stall, ...(e.id === 'club_festival' && vote ? { vote } : {}),
         ...(fools ? { fools } : {}), ...(e.sale ? { sale: e.sale } : {}), ...(stay ? { stay } : {}), ...(fair ? { fair } : {}), ...(e.family ? { family: 1 } : {}),
-        ...(e.id === 'founder_day' && c.hunt ? { hunt: c.hunt } : {}), ...(e.haggle && stall ? { haggle: e.haggle } : {}) };
+        ...(e.id === 'founder_day' && c.hunt ? { hunt: c.hunt } : {}), ...(e.haggle && stall ? { haggle: e.haggle } : {}),
+        ...((CT.tally || {})[e.id] && (S.$eng.tally || {})[e.id] && S.$eng.tally.y === S.World.Year ? { tally: (() => { const R = tallyOf(c, e.id); return { win: R.win, text: tallyText(R) }; })() } : {}) };
     });
   }
 }

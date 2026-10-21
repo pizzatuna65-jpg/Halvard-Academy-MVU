@@ -293,6 +293,14 @@ def contest_data(stu):
     assert len(hu['places']) >= hu['stops'] * 2, 'event_frame.json hunt: too few places'
     del hu['exclude']
     ct['hunt'] = hu
+    # 1.87.0 (planning/DRAFT_event_frame.md 3.1, release C): the tally format, its clubs as members (data/npcs.json through load_clubs)
+    npcs_all = json.load(open(os.path.join(root, 'data/npcs.json'), encoding='utf-8'))
+    clubs = {c['name']: c['members'] for c in load_clubs(npcs_all, locs)}
+    ct['tally'] = {}
+    for k, v in ef['tally'].items():
+        if k.startswith('_'): continue
+        assert all(x in clubs for x in v['clubs']), f'event_frame.json tally.{k}: unknown club'
+        ct['tally'][k] = {**{x: y for x, y in v.items() if x != 'clubs'}, 'members': sorted({m for x in v['clubs'] for m in clubs[x] if m in stu})}
     return ct
 
 

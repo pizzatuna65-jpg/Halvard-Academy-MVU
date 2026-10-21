@@ -280,7 +280,10 @@ Families are visiting today. {{user}}'s family comes only if the player says so;
 <%_ if (e.stay) { _%>
 Most students have gone home for the break. Students on record who stayed: <%- e.stay.length ? e.stay.join(', ') : 'none' %>; the rest are away until it ends.
 <%_ } _%>
-<%_ if ((e.id === 'dorm_comp' || e.id === 'kingdom_comp') && UI.contest && (UI.contest.lines || []).length) { _%>
+<%_ if (e.tally) { _%>
+<%- e.id === 'sports_day' ? 'Sports Day: the medals went to ' + e.tally.win : 'The Showcase named ' + e.tally.win + ' the most talented dorm' %> (<%- e.tally.text %>).
+<%_ } _%>
+<%_ if ((e.id === 'dorm_comp' || e.id === 'kingdom_comp' || e.id === 'academy_comp') && UI.contest && (UI.contest.lines || []).length) { _%>
 <%- UI.contest.lines.join('\n') %>
 <%_ } _%>
 <%_ if (on('event_chances') && (e.ch || []).length) { _%>

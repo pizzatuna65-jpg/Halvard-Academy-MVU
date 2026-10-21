@@ -168,7 +168,7 @@ Mysteries {"<thread>": {"Status": "open|solved|cold", "Summary": "what {{user}} 
 <%_ } _%>
 
 <%_ if (on('competition')) { _%>
-Competition: {"Tier": "Dorm|Academy|Kingdom|World", "Status": "entered|qualified|eliminated|champion|selected", "Placement": "", "Team": [], "Results": []}. The engine pays prizes, the result's reputation and the team's bond XP; never report them. At the Dorm Competition the engine also sets Placement and Status: report only each bout, as <now> says. The full rule shows in <rule_cards> while a competition is on.
+Competition: {"Tier": "Dorm|Academy|Kingdom|World", "Status": "entered|qualified|eliminated|champion|selected", "Placement": "", "Team": [], "Results": []}. The engine pays prizes, the result's reputation and the team's bond XP; never report them. At the Dorm and Academy Competitions the engine also sets Placement and Status (and forms the Academy teams): report only each bout or match, as <now> says. The full rule shows in <rule_cards> while a competition is on.
 <%_ } _%>
 
 <%_ if (on('projects')) { _%>

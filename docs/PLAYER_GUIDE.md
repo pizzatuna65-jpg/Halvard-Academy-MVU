@@ -109,6 +109,11 @@ place and whether you qualify are worked out for you. At the Club Festival every
 uses what you have written about them. On Secret Fools Day the Event tab shows whose name you drew (if you join in), and Merryhew's
 sells everything at a quarter off.
 
+**Sports Day and the Academy Competition** (Month 6): on Sports Day (no magic) you can enter an event; the medals are counted by dorm
+at the end of the day. If you qualified at the Dorm Competition you join a cross-dorm team of four for the Academy Competition
+(Activities → Competition shows the team and the bracket); you play each match, and the winning team goes to the Kingdom Competition.
+The Showcase (Month 8) names the most talented dorm on its last evening.
+
 **The Magical & Science Fair** (Month 7, Week 2): build a stand through the week, alone or with friends; on Saturday the staff panel
 scores it. The mark depends on how far the stand got, your Arcana and the day, and it replaces your Month 9 Magic Theory midterm if
 it is better (Student file → Studies shows it). The Traveling Circus (Month 8) has stalls of its own in the Courtyards, and on the

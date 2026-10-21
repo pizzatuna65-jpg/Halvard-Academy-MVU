@@ -16,7 +16,10 @@ console.log('Teams');
 const T = E.kcTeams(PD, 42, 1, null);
 ok(T.map(t => t.k).join() === 'Halvard,Ashvale,Myrdath,Veyra' && T.every(t => t.m.length === 4), 'four teams of four');
 ok(T.slice(1).every(t => t.m.every(e => e.named)) && T.find(t => t.k === 'Veyra').m.some(e => e.id === 'Bellatrix'), 'Year 1: the rival teams are their lore members');
-ok(seeds.every(s => { const H = E.kcTeams(PD, s, 1, null)[0].m; return new Set(H.map(e => e.role)).size === 4 && new Set(H.map(e => e.y)).size === 3 && H.every(e => e.named); }), "Halvard's team without {{user}}: four roster students, four roles, every school year");
+// 1.87.0 (release C): without {{user}}, Halvard's team is the Academy Competition's computed winners (every school year, lore 19)
+const EA = new Function(read('src/scripts/engine.js') + '\nreturn { academyContest };')();
+ok(seeds.every(s => { const H = E.kcTeams(PD, s, 1, null)[0].m, W = EA.academyContest(PD, s, 1, null).champ.m;
+  return JSON.stringify(H.map(e => e.id)) === JSON.stringify(W.map(e => e.id)) && new Set(H.map(e => e.y)).size === 3; }), "Halvard's team without {{user}}: the Academy Competition's winners, every school year");
 const Y3 = E.kcTeams(PD, 42, 3, null).find(t => t.k === 'Ashvale').m;
 ok(Y3.some(e => !e.named && /^Ashvale Y1 student$/.test(e.label)) && Y3.some(e => e.id === 'Elion'), 'Year 3: a graduated rival leaves a student the narrator invents in their role');
 

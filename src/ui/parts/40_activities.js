@@ -184,6 +184,26 @@ function dormBracket(S) {
   }
   return `<h3>Dorm Competition: your bracket</h3><p class="hint">${esc(U.dorm)} · ${esc(U.role)} · ${K.E.length} entrants · ${fmt === 'heats' ? `heats of up to ${D.heat_size}, the top ${D.heat_up} of each to the final` : fmt === 'paired' ? "judged on your Attack partner's bouts" : 'knockout'}; the top ${D.quota[U.role]} qualify for the Academy Competition. Most entrants are students the story will introduce.${place ? ` You finished <b>${CT_ORD(place)}</b>.` : ''}</p>${body}${champs}`;
 }
+// 1.87.0 (owner-approved planning/DRAFT_event_frame.md 3.10, release C): the Academy Competition, drawn by the shared section as the
+// engine draws it: from Training Week of Month 6 (a week before) to the end of the month; your team, then each round's matches once
+// the next round has begun (your own as soon as you report it)
+function academyBlock(S) {
+  const PD = DATA.presence, W = S.World, Y = W.Year, seed = Number((S.$eng || {}).seed) || 0, ac = CAL.EVENTS.find(e => e.id === 'academy_comp');
+  if (!ac || !PD.ct || !PD.ct.academy || !featureOn(S, 'competition')) return '';
+  const today = dayIdx(W.Month, W.Week, W.Day), d0 = dayIdx(ac.m, ac.w, ac.d[0]), d1 = dayIdx(ac.m, ac.w, ac.d[ac.d.length - 1]);
+  if (today < d0 - 7 || W.Month > ac.m) return '';
+  const AC = academyContest(PD, seed, Y, S), mine = AC.E.find(t => t.user), after = today > d1;
+  const shown = r => after || (today >= d0 && ctReached(W, r < AC.R ? acTime(PD, r + 1) : PD.ct.academy.end));
+  const mem = e => (e.user ? '<b>You</b>' : e.named ? `<button class="who" data-open="npc:${esc(e.id)}">${esc(nameOf(e.id, S))}</button>` : esc(e.label));
+  const team = tm => (tm === null ? '<span class="sub">bye</span>' : tm === undefined ? '<span class="sub">to be decided</span>' : tm.user ? '<b>Your team</b>' : esc(tm.k));
+  const rounds = AC.rounds.map((ms, i) => `<div class="item"><div class="row"><span class="t">${i === AC.R - 1 ? 'Final' : i === AC.R - 2 ? 'Semi-finals' : 'Round ' + (i + 1)}</span><span class="sub">${esc((acTime(PD, i + 1) || []).join(' '))}</span></div><ul class="log">${ms.filter(m => m.a || m.b).map(m => {
+    const own = mine && (m.a === mine || m.b === mine), done = m.w && (shown(i + 1) || own);
+    return `<li${own ? ' style="font-weight:600"' : ''}>${team(m.a)} · ${team(m.b)}${done && m.a && m.b ? ` <span class="pill ${own && m.w === mine ? 'g' : ''}">${m.w.user ? 'You' : esc(m.w.k)}</span>` : ''}</li>`;
+  }).join('')}</ul></div>`).join('');
+  const champ = after && AC.champ ? `<p class="hint">Winners: <b>${AC.champ.user ? 'your team' : esc(AC.champ.k)}</b> (${AC.champ.m.map(mem).join(', ')}): they represent Halvard at the Kingdom Competition.</p>` : '';
+  const you = mine ? `<div class="item"><div class="row"><span class="t">Your team</span></div><div class="meta">${mine.m.map(e => `<span class="who">${mem(e)} <span class="sub">· ${esc(e.role)} · Y${e.y}</span></span>`).join('')}</div></div>` : '';
+  return `<h3>Academy Competition</h3><p class="hint">${AC.E.length} cross-dorm teams of four from the Dorm qualifiers, every year level in each; a knockout, one round a day.${mine ? '' : " You did not qualify this year: the bracket is the school's news."}</p>${you}${champ}${rounds}`;
+}
 // 1.84.0 (owner-approved planning/DRAFT_kingdom_competition.md): the Kingdom Competition from the engine's $ui.kc: the four teams and
 // how far each got, Halvard's Kingsbloom in round one, the Undercroft's sigil board in round two, the news, the World panel's pick
 function kingdomBlock(S) {
@@ -233,7 +253,7 @@ function acCompetition(S) {
     const g = _.groupBy(Object.keys(DATA.npcs).filter(id => /team$/.test(DATA.npcs[id].g)), id => DATA.npcs[id].g);
     rivals = `<h3>Rival academies</h3>${Object.entries(g).map(([name, ids]) => `<div class="item"><b>${esc(name)}</b><div class="meta">${ids.map(id => `<button class="who" data-open="npc:${esc(id)}">${avatar(id, S, 'av xs')}<span>${esc(nameOf(id, S))}${DATA.npcs[id].tr ? ` · ${DATA.npcs[id].tr}` : ''}</span></button>`).join('')}</div></div>`).join('')}`;
   }
-  return `${status}${kingdomBlock(S)}${dormBracket(S)}<h3>The ladder</h3><ol class="ladder">${ladder}</ol>${team}${rivals}`;
+  return `${status}${kingdomBlock(S)}${academyBlock(S)}${dormBracket(S)}<h3>The ladder</h3><ol class="ladder">${ladder}</ol>${team}${rivals}`;
 }
 
 // ---------------------------------------------------------------- event

@@ -479,6 +479,7 @@ export const Schema = z.object({
     scout: z.any().prefault(null).catch(null),                     // 1.82.0: Training Week's scouted Dorm Competition entrants { y, ids } (engine)
     kc: z.any().prefault(null).catch(null),                        // 1.84.0: the Kingdom Competition's rounds while {{user}} is on the team (engine stepKingdom)
     vote: z.record(z.string(), z.any()).prefault({}).catch({}),     // 1.82.0: the Club Festival coin vote's winner { Y1: club } (engine)
+    tally: z.any().prefault(null).catch(null),                     // 1.87.0: this year's tallies and the Academy winner already in the Journal { y, sports_day: dorm, showcase: dorm, academy: 1 } (engine)
     hunt: z.any().prefault(null).catch(null),                      // 1.86.0: Founder Day's hunt { y, at: clues solved, fin: year first finished } (engine)
     prizes: StrList(20),   // 1.0.3: competition prizes already paid ("Kingdom-Y1")
     grads: StrList(10),    // 1.0.3: campaign years whose graduates already left ("Y1")

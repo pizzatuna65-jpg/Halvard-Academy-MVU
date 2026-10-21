@@ -133,6 +133,17 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
   `Placement` and `Status`; a bout nobody reported is played off-screen at the next round. Bouts between other entrants are the engine's
   (draft §10 question 1, settled by silence); canon pins hold (Ruby out early, Royhan's Year 1 place, Dante middling). Most entrants are
   students the narrator invents.
+- **Academy Competition** (1.87.0, owner-approved draft release C; lore 19): computed from the seed, never stored. The Dorm
+  qualifiers form cross-dorm teams of four with every school year in each (lore 19 as written: teams form while a student of every
+  year is left, at most 16; first-years qualify rarely, so there are usually about 5–13 teams and the knockout has byes; the rest
+  are reserves); the roles covered as far as they go; a knockout of teams, a round a day (team strength = its members' mean).
+  {{user}}'s team is {{user}} and `Competition.Team` (written once from the draw; a label the narrator replaces with a name keeps its
+  slot); the story reports its matches, the engine sets Placement and Status, plays an unreported match off-screen and pays nothing new.
+  No team takes Royhan in Year 1 (lore 101) unless {{user}} names him, nor Ruby (lore 130). The winners are Halvard's Kingdom team
+  (`kcTeams`); an Academy champion {{user}} becomes Kingdom, entered, in the Kingdom week.
+- **The tally format** (1.87.0, draft §3.1): Sports Day's medals and the Showcase's scores by dorm are drawn at the close (n events, gold
+  silver copper to three dorms, weighted by the dorm's roster students in the sport or stage clubs; {{user}}'s dorm gains a little for
+  each of {{user}}'s chances done there). Bragging rights only, no reward.
 - **Kingdom Competition in three rounds** (1.84.0, owner-approved `planning/DRAFT_kingdom_competition.md`; owner's own design): lore 19's
   Kingdom tier is a Kingsmeadow hunt for three Kingsblooms (the team without one at sunset goes out), the Undercroft (ten rooms; a room is
   taken by downing its beast and then being the only team inside for 15 minutes, the count stopping while another team is in; the two

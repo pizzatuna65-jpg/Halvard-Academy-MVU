@@ -1,7 +1,36 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.87.0 — The Academy Competition; Sports Day's medals and the Showcase's scores (2026-10-21)
+
+Owner's request (2026-10-21, "lanjutkan rilis c"): release C, the last of `planning/DRAFT_event_frame.md` (§3.1 `tally`, §3.10 the
+Academy tier); the draft is applied and deleted. Shared code, engine, schema, data, the rule card, 502, 505 and the Competition tab.
+Save fixture v1.86.0.
+- **The Academy Competition** (lore 19; DECISIONS "Academy Competition"): the Dorm qualifiers (each dorm's top places by role, the
+  quotas) form cross-dorm teams of four. Lore 19 asks for every school year in each team, and first-years seldom qualify (5 to 13 a
+  year in the tests), so teams form while a student of every year is left, at most 16: usually 5 to 13 teams, the knockout with byes,
+  the rest reserves. Within that the roles are covered as far as they go. A round a day, Wed 09:00 to Sat 10:00; a team's strength is
+  its members' mean. A qualified {{user}} becomes Academy, entered, on the first day; `Competition.Team` is written once from the draw
+  (roster names and labels such as "Light Y2 student": the narrator invents them and may replace the label with the name). `<now>`
+  names the next match, the other team (its members) and how to report it ("R<n>: beat <team>"), plus the round just over; a match
+  left unreported is played off-screen; Placement ("3rd of 10 teams") and Status are the engine's and stay after the week. Without
+  {{user}}, `<now>` brings the news a round at a time and the Journal names the winners. No team takes Royhan in Year 1 (lore 101)
+  unless {{user}} names him, nor Ruby (lore 130).
+- **The winners are Halvard's Kingdom team** (`kcTeams` → `kcAcademyTeam`), replacing 1.84.0's "four strongest roster students"; an
+  Academy champion {{user}} becomes Kingdom, entered, when the Kingdom week begins (the rounds of 1.84.0 follow).
+- **The tally format**: at Sports Day's close (Sat 18:00) twelve events' gold, silver and copper are drawn for three dorms each,
+  weighted by 3 + the dorm's roster students in the sport clubs (Soccer, Running, Archery, Swimming, Gymnastics, Basketball; magic is
+  banned); at the Showcase's close (Sat 19:00) ten acts' scores, by the stage clubs (Music, Theatre, Magic Duelling). New chances:
+  Sports Day `compete` (Prowess 2), the Showcase `perform` (Society 2); each done adds 2 to {{user}}'s dorm. The Journal and the
+  Event line give the result; bragging rights only.
+- The competition rule card and 502 say the Academy tier is the engine's.
+- Tests: new `test_academy_tally_v1870.cjs`; `test_kingdom_v1840` now expects the Academy winners as Halvard's team; `npm test` passes; `test_saves` loads v1.86.0. The Competition tab's Academy block was
+  rendered in node (team, byes, rounds), not in a browser.
+- **To confirm with the owner:** the team rule as lore 19 words it (fewer than 16 teams when first-years are few); a round a day
+  from Wed 09:00; the tally's events (12 and 10), clubs and weights; the two chances.
+- **To check live:** `docs/TEST_CHECKLIST.md` Q7.1b and Q7.3 [1.87].
 
 ## v1.86.0 — The Bazaar's haggling, Founder Day's hunt, the Council vote, the Harvest and Graduation stalls (2026-10-21)
 
@@ -118,37 +147,6 @@ breaks). Engine, shared code, data, 505, 506 and the Activities panel. Save fixt
 - **To confirm with the owner:** the five who always stay and the 20% (draft §4.3 left the list to the build; there is no origin field,
   so it comes from each Backstory); the 18:00 return; the letter now and then.
 - **To check live:** `docs/TEST_CHECKLIST.md` Q6.1a, Q7.1a [1.83].
-
-## v1.82.0 — The Dorm Competition's brackets; the Club Festival coin vote (2026-10-21)
-
-Owner's request (2026-10-21): release A2 of `planning/DRAFT_event_frame.md` (§3.1–3.9 for the Dorm Competition, the `vote` format for
-the Club Festival). Engine, shared code, data, 502, 505, the rule card and the Competition tab. Save fixture v1.81.0.
-- **Brackets from the seed** (shared.js contest section, `dormContest`): each dorm's five role brackets (10–16 entrants), knockout
-  for Attack and Control, heats for Defense and Healing, Support judged on a random same-dorm Attack partner's bouts (lore 19). Computed
-  in the engine and the panels alike, never stored. Roster students carry the roles of the draft's table 3.4
-  (`data/event_frame.json` `contest.roles`) and are seeded apart, so most early bouts are against students the narrator invents.
-- **Canon pins:** Gareth +25 and Sophia +20 strength; Ruby never gets out of her heat; in campaign Year 1 Royhan takes the last Control
-  place of Sky (lore 101); Dante goes out in round 2. Bouts between other entrants are the engine's (draft §10 question 1, by silence).
-- **{{user}}'s bouts.** On the day every student is entered. `<now>` names the next bout (time, opponent, how strong against {{user}}),
-  asks the narrator to invent an unnamed opponent, and gives the Results form ("R2: beat <name>", heats "R1: advanced" / "R2: placed 2",
-  Support "R1: partner beat <name>"); also the paired Support, the round just over elsewhere, and a line when Aiden is there. The
-  engine adds the tier to the line, and sets **Placement and Status** itself (champion / qualified by the lore's quotas / eliminated);
-  prizes and deeds are unchanged and now read that. A bout nobody reported by the next round's start is played off-screen. Afterwards
-  the Dorm result stays as the engine set it.
-- **Fortune:** from an hour before a bout, a stronger opponent is −10 and a weaker one +10 (even: nothing).
-- **Training Week scout:** each of up to three evenings at the sparring scouts two possible opponents; the Prowess XP only once.
-- **Competition tab:** the bracket (rounds with their times, {{user}}'s bouts outlined, results only once the next round has started,
-  strength for the scouted and the one being faced, names only as {{user}} knows them), and afterwards each dorm's champions.
-- **Club Festival coin vote** (`stepVote`): drawn at Saturday's close, weighted by the clubs' named members, {{user}}'s club boosted for
-  each of its chances done; the winner goes in the Journal and `<now>`; `club_festival_win` is paid only from it (a reported one is not
-  counted). The coin is symbolic.
-- **Fix (1.81.0 chances):** a chance's hours now count from when {{user}} arrived, so arriving after the window does not reach back into it.
-- 502's Competition line and the `competition` rule card say the engine sets Placement and Status and that most entrants are the
-  narrator's to invent.
-- Tests: new `test_contest_v1820.cjs`; `npm test` (every suite, `qa_static`, lint) passes, `test_saves` loads the v1.81.0 fixture.
-  Checked in a browser preview: the bracket on the Competition tab.
-- **To confirm with the owner:** the bracket sizes (10–16), the strength numbers and the off-screen rule are mine (draft §9).
-- **To check live:** `docs/TEST_CHECKLIST.md` Q5.3a, Q5.3 [1.82].
 
 ## Release index (one line per release, oldest first)
 
@@ -320,3 +318,4 @@ the Club Festival). Engine, shared code, data, 502, 505, the rule card and the C
 - **v1.84.0 (2026-10-21):** The Kingdom Competition in three rounds (owner's design): the Kingsmeadow hunt for three Kingsblooms, the Undercroft's ten rooms, the final; the other teams by the engine, the World panel's pick from every competitor's record.
 - **v1.85.0 (2026-10-21):** Draft release D: the Magical & Science Fair's mark (a `fair` Project, replaces the Month 9 Magic Theory midterm if better), the Thinning's own beats, the Circus stalls (hours by day), the family-visit line.
 - **v1.86.0 (2026-10-21):** Draft release E: the Bazaar's traders and haggling by the Fortune number, Founder Day's treasure hunt (six computed clues, the prize; no classes that day), the Council election counted by the engine between two other students, the Harvest and Graduation stalls.
+- **v1.87.0 (2026-10-21):** Draft release C (the last; draft deleted): the Academy Competition from the seed (cross-dorm teams with every year, a knockout, the winners as Halvard's Kingdom team) and the tally format (Sports Day's medals, the Showcase's scores).

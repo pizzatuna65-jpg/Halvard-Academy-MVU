@@ -388,6 +388,87 @@ function contestResults(lines, tier) {
 const ctTime = (PD, fmt, r) => { const T = (((PD.ct || {}).dorm || {}).times || {})[fmt === 'heats' ? 'heats' : 'knockout'] || []; return T[Math.min(r, T.length) - 1] || null; };
 const ctReached = (W, at) => !!at && (DAYS.indexOf(W.Day) > DAYS.indexOf(at[0]) || (W.Day === at[0] && hmMin(W.Time) >= hmMin(at[1])));
 const ctName = e => (!e ? 'a bye' : e.user ? '{{user}}' : e.named ? e.id : e.label);
+// ---- the Academy Competition (1.87.0, owner-approved planning/DRAFT_event_frame.md 3.10, lore 19), computed, never stored. The Dorm
+// Competition's qualifiers (each dorm's top places by role, PD.ct.dorm.quota) form teams of four with every school year among them and
+// the roles covered as far as they go; a knockout of teams, one round a day. {{user}}'s team: {{user}} and Competition.Team (a name
+// that is no qualifier is a student the narrator invented, in a slot of its own); the rest are drawn. A pin with noteam is taken by no
+// team (Royhan, lore 101; Ruby, lore 130) unless {{user}} names them. Every entrant { id, y, s, role, dorm, named, user, label }.
+const CT_DORMS = ['Fire', 'Light', 'Sky', 'Viridian'];
+function academyQualifiers(PD, seed, year, S) {
+  const D = (PD.ct || {}).dorm || {}, Co = ((S || {}).Competition) || {}, U = S ? contestUser(PD, S) : null, inU = !!(U && Co.Tier);
+  const res = contestResults(Co.Results, 'Dorm').res, out = [];
+  for (const dorm of CT_DORMS) for (const role of ROLES5) {
+    const mine = inU && dorm === U.dorm;
+    let K = dormContest(PD, seed, year, dorm, role, mine ? U : null, mine && role === U.role ? { '{{user}}': res } : {});
+    if (K.E.some(e => !K.place(e))) K = dormContest(PD, seed, year, dorm, role, null, {});   // {{user}}'s bracket left unfinished
+    for (const e of K.E) { const p = K.place(e); if (p && p <= (D.quota || {})[role]) out.push({ ...e, role, dorm }); }
+  }
+  return out;
+}
+function academyTeams(PD, seed, year, S) {
+  const A = (PD.ct || {}).academy || {}, size = Number(A.size) || 4, n = Number(A.teams) || 16;
+  const Q = academyQualifiers(PD, seed, year, S), Co = ((S || {}).Competition) || {}, U = Q.find(e => e.user);
+  const no = id => !!(ctPin(PD, id, year) || {}).noteam;
+  const named = (Co.Team || []).map(x => String(x).trim()).filter(Boolean);
+  let pool = Q.filter(e => !e.user && !(e.named && no(e.id) && !(U && named.includes(e.id))));
+  const take = e => { pool = pool.filter(x => x !== e); return e; };
+  const fill = (m, k) => {
+    while (m.length < size && pool.length) {
+      const ys = [1, 2, 3].filter(y => !m.some(e => e.y === y)), rs = ROLES5.filter(r => !m.some(e => e.role === r)), left = size - m.length;
+      const fit = pool.filter(e => left > ys.length || ys.includes(e.y)), from = fit.length ? fit : pool;
+      const sc = e => (ys.includes(e.y) ? 100 : 0) + (rs.includes(e.role) ? 50 : 0) + e.s / 10 + rollInt(0, 9, seed, year, 'ac-pick', k, e.id);
+      m.push(take([...from].sort((a, b) => sc(b) - sc(a) || (a.id < b.id ? -1 : 1))[0]));
+    }
+    for (let i = 0; m.length < size; i++) { const id = `Halvard:${k}:${i}`, y = [1, 2, 3].find(v => !m.some(e => e.y === v)) || 2;
+      m.push({ id, y, s: ctStr(PD, seed, year, id, y), role: ROLES5.find(r => !m.some(e => e.role === r)) || 'Attack', label: `Halvard Y${y} student` }); }
+    return m;
+  };
+  const teams = [];
+  if (U) {
+    const m = [U];
+    named.slice(0, size - 1).forEach((nm, i) => {
+      // a roster qualifier by first name, or (the label the engine wrote) the strongest unnamed qualifier with that label
+      const q = pool.find(e => e.named && e.id.toLowerCase() === nm.toLowerCase().split(' ')[0])
+        || [...pool].sort((a, b) => b.s - a.s || (a.id < b.id ? -1 : 1)).find(e => !e.named && e.label === nm);
+      if (q) { m.push(take(q)); return; }
+      const id = `Halvard:you:${i}`, y = rollInt(1, 3, seed, year, 'ac-y', id);
+      m.push({ id, y, s: ctStr(PD, seed, year, id, y), role: ROLES5.find(r => !m.some(e => e.role === r)) || 'Attack', label: nm, given: 1 });
+    });
+    teams.push({ m: fill(m, 'you'), user: true });
+  }
+  pool.sort((a, b) => b.s - a.s || (a.id < b.id ? -1 : 1));
+  // lore 19 "at least one student from each year level": teams form while every year is left among the qualifiers (at most n); the
+  // rest are reserves and do not compete (first-years qualify rarely, so there are often fewer than n teams and the knockout has byes)
+  while (teams.length < n && [1, 2, 3].every(v => pool.some(e => e.y === v))) { const k = 't' + teams.length; teams.push({ m: fill([take(pool[0])], k) }); }
+  // a team's name: its strongest roster member's, else its number
+  return teams.map((t, i) => {
+    const lead = t.m.filter(e => e.named).sort((a, b) => b.s - a.s)[0];
+    const k = t.user ? "{{user}}'s team" : lead ? `${lead.id}'s team` : `Team ${i + 1}`;
+    return { id: k, label: k, k, m: t.m, s: Math.round(t.m.reduce((a, e) => a + e.s, 0) / t.m.length), named: !!lead, user: !!t.user };
+  });
+}
+// the knockout, with {{user}}'s team's matches as the story reported them ("Academy R2: beat Gareth's team")
+function academyContest(PD, seed, year, S) {
+  const T = academyTeams(PD, seed, year, S), res = contestResults((((S || {}).Competition) || {}).Results, 'Academy').res;
+  return { ...contestKnockout(PD, seed, year, 'Academy', 'team', T, { "{{user}}'s team": res }), E: T };
+}
+const acTime = (PD, r) => { const T = (((PD.ct || {}).academy || {}).times) || []; return T[Math.min(r, T.length) - 1] || null; };
+const acMember = e => (e.user ? '{{user}}' : e.named ? e.id : e.label);
+// the tally format (1.87.0, draft 3.1): Sports Day's medals and the Showcase's scores by dorm. boost: { dorm: weight added }
+function eventTally(PD, seed, year, id, boost) {
+  const T = (((PD.ct || {}).tally) || {})[id];
+  if (!T) return null;
+  const here = x => { const st = (PD.stu || {})[x]; if (!st) return false; const y = st[0] + year - (st[1] || 1); return y >= 1 && y <= 3; };
+  const w = Object.fromEntries(CT_DORMS.map(d => [d, T.base + (T.members || []).filter(x => here(x) && PD.stu[x][2] === d).length + Number((boost || {})[d] || 0)]));
+  const rows = Object.fromEntries(CT_DORMS.map(d => [d, [0, 0, 0]]));
+  for (let i = 0; i < T.n; i++) {
+    let left = [...CT_DORMS];
+    for (let k = 0; k < 3; k++) { const d = rollTable(left, { pick: [seed, year, 'tally', id, i, k], weight: x => w[x] }); rows[d][k]++; left = left.filter(x => x !== d); }
+  }
+  const pts = d => rows[d][0] * 3 + rows[d][1] * 2 + rows[d][2];
+  const order = [...CT_DORMS].sort((a, b) => (T.by === 'medals' ? rows[b][0] - rows[a][0] || rows[b][1] - rows[a][1] : 0) || pts(b) - pts(a) || rows[b][0] - rows[a][0] || (a < b ? -1 : 1));
+  return { by: T.by, rows: order.map(d => [d, ...rows[d], pts(d)]), win: order[0] };
+}
 // ---- the Kingdom Competition (1.84.0, owner-approved planning/DRAFT_kingdom_competition.md): the four teams. PD.ct.kingdom is
 // data/event_frame.json kingdom with the rival teams from data/npcs.json. Halvard's team is {{user}} and Competition.Team while
 // {{user}} is at the Kingdom tier; otherwise the four roster students the Academy Competition would most likely send (the strongest
@@ -416,6 +497,8 @@ function kcTeams(PD, seed, year, S) {
         else { const y = rollInt(1, 3, seed, year, 'kc-y', id); m.push({ id, role, y, s: ctStr(PD, seed, year, id, y), label: id }); }
       }
       for (const r of ROLES5) if (m.length < 4 && !m.some(x => x.role === r)) m.push(anon('Halvard', r, [1, 2, 3].find(y => !m.some(x => x.y === y)) || 2));
+    } else if ((m = kcAcademyTeam(PD, seed, year, S))) {
+      // 1.87.0 (release C): the Academy Competition's computed winner
     } else {
       const pool = Object.keys(roles).filter(id => yNow(id) >= 1 && yNow(id) <= 3).map(id => ({ id, role: roles[id], y: yNow(id), s: ctStr(PD, seed, year, id, yNow(id)), named: true }))
         .sort((a, b) => b.s - a.s || (a.id < b.id ? -1 : 1));
@@ -433,5 +516,11 @@ function kcTeams(PD, seed, year, S) {
   return out;
 }
 const kcName = e => (e.user ? '{{user}}' : e.named ? e.id : e.label);
+// the Academy Competition's winners as Halvard's Kingdom team (null when it has no winner: {{user}}'s team still to report a match)
+function kcAcademyTeam(PD, seed, year, S) {
+  const AC = academyContest(PD, seed, year, S), ch = AC.champ;
+  if (!ch || ch.user) return null;
+  return ch.m.map(e => ({ id: e.id, role: e.role, y: e.y, s: e.s, ...(e.named ? { named: true } : { label: e.label }) }));
+}
 // ---- end of whereabouts (tools/common.py shared_js(presence=False) leaves the section out of the bracelet, 505 and 506)
 // ---- end of shared.js
