@@ -117,6 +117,9 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **Club work** (1.90.0, owner "proceed" on `planning/DRAFT_kerja_club.md`): clubs whose lore names a service work for the whole
   campus from the seed, members or not; a member gets a role line, never a new XP source. Club stalls are shop rows with `club`
   (`stallOpen`). Only club work adds a cost (the snow walk); with the toggle off nothing changes.
+- **Club services** (1.91.0): what a club makes or mends for anyone is a shop row with `svc`, bought through `/Purchases` (design in
+  `Note`); an order is collected at the club, never delivered; a member pays half for their own club's services. Map cards keep the
+  same rows: services join the Clubs here row.
 - **Conditions** (`Player.Conditions`) come from the weather; the engine adds and clears them, the story may remove one.
 - **The Bag** (`Inventory`): Plan is free text, no reminders; gear works by item name; Sunfizz bottles return for 2 points (canon) at the Commissary or The Mall. Qty 0 removes an item (schema 0–99, see CHANGELOG).
 - **Story hooks** (`Hooks`) are narrator notes and never appear in the player's UI.

@@ -92,7 +92,20 @@ function acPractice(S) {
 
 // ---------------------------------------------------------------- clubs
 // 1.90.0 (owner-approved planning/DRAFT_kerja_club.md §3): what a club does for the whole campus (data/club_work.json)
-const cwLine = (S, c) => { const l = featureOn(S, 'clubwork') && c.key ? ((DATA.clubwork || {}).clubs || {})[c.key] : ''; return l ? `<div class="sub">For the campus: ${esc(l)}</div>` : ''; };
+const cwLine = (S, c) => { const l = featureOn(S, 'clubwork') && c.key ? ((DATA.clubwork || {}).clubs || {})[c.key] : ''; return (l ? `<div class="sub">For the campus: ${esc(l)}</div>` : '') + cwServices(S, c); };
+// 1.91.0 (§4): what anyone can get at the club, its hours and prices (data/shop.json rows with club and svc or hours)
+const cwHours = i => i.days ? Object.entries(i.days).map(([d, [f, t]]) => `${d} ${f}–${t}`).join(', ') : `${i.day ? i.day + ' ' : ''}${i.from || ''}–${i.to || ''}`;
+function cwServices(S, c) {
+  const rows = featureOn(S, 'clubwork') && c.key ? (DATA.shop || []).filter(i => i.club === c.key && (i.svc || (i.club === 'Fishing' && i.days))) : [];
+  if (!rows.length) return '';
+  const where = (DATA.locs[rows[0].loc] || { name: rows[0].loc }).name;
+  return `<div class="sub">Services (${esc(where)}, ${esc(cwHours(rows[0]))}): ${esc(rows.map(i => `${i.item} ${i.price ? i.price + ' pts' : 'free'}`).join(' · '))}${c.key === 'Fishing' ? ' · a borrowed rod at the Saturday dawn session' : ''}</div>`;
+}
+// 1.91.0: {{user}}'s club orders (engine $ui.cw.orders) and the Library book on loan
+function cwOrders(S) {
+  const cw = (S.$ui || {}).cw; if (!featureOn(S, 'clubwork') || !cw || (!(cw.orders || []).length && !cw.loan)) return '';
+  return `<h3>Your orders</h3>${(cw.orders || []).map(o => `<div class="item"><div class="row"><span class="t">${esc(o.item)}</span><span class="pill${o.ok ? ' g' : ''}">${o.ok ? 'ready' : 'from ' + esc(o.ready)}</span></div><div class="sub">Collect at the ${esc(o.where)}</div></div>`).join('')}${cw.loan ? `<div class="item"><div class="row"><span class="t">${esc(cw.loan.item)}</span><span class="pill">due back ${esc(cw.loan.due)}</span></div><div class="sub">Return it to the Main Library (take it out of the Bag there)</div></div>` : ''}`;
+}
 function acClubs(S) {
   const mine = clubOf(S), P = S.Player.Profile, fest = eventDay(/^Club Festival/);
   const electionDay = S.World.Month === 10 && S.World.Week === 3 && S.World.Day === 'Sat';
@@ -121,6 +134,7 @@ function acClubs(S) {
   if (P.Council) h += `<div class="item mine"><div class="row"><span class="t">Student Council</span><span class="pill g">member</span></div><div class="sub">Saturday 10:00–12:00 · Student Council Chamber</div><div class="meta"><button class="btn sm" data-fill="I attend the Student Council meeting in the Chamber: ">Council meeting</button></div></div>`;
   if (electionDay) h += '<div class="warn">Student Council election: voting in the Main Courtyard replaces every club meeting this afternoon, ' + PERIOD_TEXT[2].replace('-', '–') + '.</div>';
   if (fest) { const n = daysTo(S, fest.di); if (n >= -1 && n <= 21) h += `<div class="warn">Club Festival ${n < 0 ? 'was yesterday' : n === 0 ? 'is today' : `in ${n} days`} (M3 W2, Fri afternoon and Sat): every club runs a stand in the Main Courtyard; one gold coin each to vote for the best stand.</div>`; }
+  h += cwOrders(S);
   h += `<h3>Directory</h3><div class="clubs">${clubsNow(S).filter(c => !mine || c.name !== mine.name).map(c => `<div class="club"><b>${esc(c.name)}</b><div class="sub">${esc(venueNames(c).join(' · '))}${c.sport ? ' · sport, no magic in play' : ''} · ${esc(meets(c))}</div>${cwLine(S, c)}
     <div class="meta">${people(c, false)}</div>
     <div class="meta">${(c.name === 'Student Council' ? !P.Council : !P.Club) ? `<button class="btn sm" data-fill="${esc(`I go to the ${c.name} at ${venueNames(c)[0]} and ask about joining.`)}">Ask to join</button>` : ''}${c.venues[0] && !hereIs(S, c.venues[0]) ? `<button class="btn sm" data-go="${esc(c.venues[0])}">Go</button>` : ''}</div></div>`).join('')}</div>
@@ -326,7 +340,7 @@ function shopsHere(S) {
   const stalls = ((S.$ui || {}).ev || []).filter(e => e && e.stall).map(e => e.id);   // 1.81.0: an event stall open here (engine)
   // 1.90.0: a club's row with hours or a condition sells while the engine says it is open here ($ui.cw.open); one without, as its shop does
   const cw = (S.$ui || {}).cw, cwOpen = featureOn(S, 'clubwork') && cw ? cw.open || [] : [];
-  return (DATA.shop || []).filter(i => i.ev ? stalls.includes(i.ev) && i.loc === here : i.club && (i.when || i.from || i.day) ? cwOpen.includes(i.item) && i.loc === here
+  return (DATA.shop || []).filter(i => i.ev ? stalls.includes(i.ev) && i.loc === here : i.club && (i.when || i.from || i.day || i.days) ? cwOpen.includes(i.item) && i.loc === here
     : group.includes(i.loc) && (!i.club || featureOn(S, 'clubwork')) || (i.club && i.loc === here && cwOpen.includes(i.item)));
 }
 function shopFocus(S) {             // the shop named in the location ("The Mall — Merryhew's"), if any

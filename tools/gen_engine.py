@@ -174,9 +174,15 @@ for i in json.load(open(P('data/shop.json'), encoding='utf-8'))['items']:
     if i.get('ev'):   # 1.81.0: an event stall, [event id, day, from, to] (planning/DRAFT_event_frame.md §4.1)
         assert i['ev'] in EV_IDS and i.get('day', _ef_days[i['ev']][0]) in _ef_days[i['ev']], f"shop.json: {i['item']}: unknown event or day"
         row.append([i['ev'], i.get('day', ''), i.get('from', '00:00'), i.get('to', '24:00')])
-    elif i.get('club'):   # 1.90.0 (planning/DRAFT_kerja_club.md §3): a club's row, ['', day, from, to, when] (when: flu, bake, bakefail; else 'club')
+    elif i.get('club'):   # 1.90.0 (planning/DRAFT_kerja_club.md §3): a club's row, ['', day, from, to, when, svc] (when: flu, bake, bakefail; else 'club')
         assert i['club'] in CLUB_KEYS and i.get('when', 'club') in ('club', 'flu', 'bake', 'bakefail'), f"shop.json: {i['item']}: unknown club or when"
-        row.append(['', i.get('day', ''), i.get('from', '00:00'), i.get('to', '24:00'), i.get('when', 'club')])
+        # 1.91.0 (§4): a club service (svc: order / mend / repair / service / loan / records), hours by day like an event stall's
+        sv = i.get('svc') or 0
+        assert not sv or sv['k'] in ('order', 'mend', 'repair', 'service', 'loan', 'records'), f"shop.json: {i['item']}: unknown service"
+        for d, (f0, t0) in (i.get('days') or {i.get('day', ''): [i.get('from', '00:00'), i.get('to', '24:00')]}).items():
+            assert d in ('', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'), f"shop.json: {i['item']}: unknown day {d}"
+            shop_prices.setdefault(i['item'].lower(), []).append(row + [['', d, f0, t0, i.get('when', 'club'), sv]])
+        continue
     shop_prices.setdefault(i['item'].lower(), []).append(row)
 t = t.replace('/*@@SHOP_PRICE@@*/{}', json.dumps(shop_prices, ensure_ascii=False, separators=(',', ':')))
 # v1.1.0 (spec §9): Features settings, single source data/features.json (the engine needs id, control, field, paths, unlock)

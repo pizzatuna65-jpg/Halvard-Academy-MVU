@@ -328,8 +328,8 @@ export const Schema = z.object({
   // 1.45.0 (audit 3.4): what {{user}} buys this reply (narrator); the engine checks price, place, season and money, pays through the
   // ledger, fills the Bag (or applies an item Used at once) and empties the list. Price: only for an item not on the Price Guide.
   Purchases: z.array(z.any().transform(v => typeof v === 'object' && v !== null
-    ? { Item: s(v.Item).slice(0, 100), Qty: Math.round(n(v.Qty, 1, 99, 1)), Shop: s(v.Shop).slice(0, 100), Price: n(v.Price, -1, 100000, -1), Used: b(v.Used), Kind: s(v.Kind).trim().toLowerCase().slice(0, 20) }
-    : { Item: s(v).slice(0, 100), Qty: 1, Shop: '', Price: -1, Used: false, Kind: '' })).prefault([]).catch([]),
+    ? { Item: s(v.Item).slice(0, 100), Qty: Math.round(n(v.Qty, 1, 99, 1)), Shop: s(v.Shop).slice(0, 100), Price: n(v.Price, -1, 100000, -1), Used: b(v.Used), Kind: s(v.Kind).trim().toLowerCase().slice(0, 20), Note: s(v.Note).slice(0, 160) }
+    : { Item: s(v).slice(0, 100), Qty: 1, Shop: '', Price: -1, Used: false, Kind: '', Note: '' })).prefault([]).catch([]),
   Craft_sales: z.array(z.any().transform(v => typeof v === 'object' && v !== null
     ? { Item: s(v.Item).slice(0, 100), Qty: Math.round(n(v.Qty, 1, 99, 1)) }
     : { Item: s(v).slice(0, 100), Qty: 1 })).prefault([]).catch([]),
@@ -493,6 +493,9 @@ export const Schema = z.object({
     repv: z.coerce.number().prefault(0).catch(0),                // 1.3.0: 1 once the pre-1.3.0 Public / Dorm meters were migrated
     rum: z.record(z.string(), z.any()).prefault({}).catch({}),   // 1.1.0: rumour metadata { text: { born, fate } }
     paper: z.any().prefault(null).catch(null),                   // 1.90.0: the Academy Newspaper { log: [[day, result]], wk, issue }
+    orders: z.any().prefault([]).catch([]),                      // 1.91.0: club orders to collect [{ item, qty, note, kind, loc, where, club, ready, q }]
+    loan: z.any().prefault(null).catch(null),                    // 1.91.0: the Library book on loan { item, due, ban }
+    records: z.any().prefault(null).catch(null),                 // 1.91.0: the Archive records search { ready, used }
     wxs: z.any().prefault(null).catch(null),                     // 1.1.0: weather exposure counters and head-cold bookkeeping
     mrem: z.coerce.number().prefault(0).catch(0),                // 1.9.4: mana rounding remainder carried between turns (passive regeneration)
     turn: z.coerce.number().prefault(0).catch(0),                // 1.9.8: updates so far (seeds the Fortune roll)

@@ -350,9 +350,11 @@ function locCard(id, S, cur, P) {
     + (note(r) ? ` <span class="sub">(${esc(note(r))})</span>` : '')).join(', ');
   // 1.2.0 (owner): every card has the same rows, in the same order. 1.30.6 (owner): no "Connected to" row; the map shows the
   // neighbours, and the AI reads them in the Campus Map lore
+  const cwSvcText = (S, id) => { const sv = featureOn(S, 'clubwork') ? (DATA.shop || []).filter(i => i.club && i.loc === id && (i.svc || i.days)) : [];
+    return sv.length ? ' · services: ' + esc([...new Set(sv.map(i => `${i.shop} (${cwHours(i)})`))].join('; ')) : ''; };
   const rows = [
     ['Walk', esc(walkText(id, cur, S))], ['Access', esc(accessText)],
-    ['Clubs here', esc([...l.clubs.map(c => c.replace(/\s*\(.*\)$/, '')), ...clubsNow(S).filter(c => c.founded && c.venues.includes(id)).map(c => c.name)].join(', ') || 'None')],   // 1.75.0: the founded club
+    ['Clubs here', esc([...l.clubs.map(c => c.replace(/\s*\(.*\)$/, '')), ...clubsNow(S).filter(c => c.founded && c.venues.includes(id)).map(c => c.name)].join(', ') || 'None') + cwSvcText(S, id)],   // 1.75.0: the founded club; 1.91.0: club services (same rows on every card)
     ['Regulars', regs || '<span class="sub">Nobody you know yet</span>'],
   ];
   // 1.52.0 (feature batch 4): the weekly routines here of people whose Haunts you know (data/npc_routines.json, "usually")

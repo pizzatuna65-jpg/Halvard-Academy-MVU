@@ -52,6 +52,9 @@ Player.Injuries: {"<injury>": {"Severity": "minor|moderate|serious|critical", "B
 
 Player.Wallet
 - Buying: report each purchase in /Purchases/- as {"Item":"<Price Guide name>","Qty":1,"Shop":"<shop>"}. Add "Used":true when it is eaten, drunk or used at once (a meal, a drink at the counter, a service), and "Price":<n> only for something the Price Guide does not list or another seller sells. The engine checks the place, the season and the money, pays, writes Transactions and fills the Bag; a refused purchase is in _Log (play it as not bought).
+<%_ if (on('clubwork')) { _%>
+- Club services (the Price Guide's "Club stalls here"): buy them the same way, with {{user}}'s design or the subject in "Note" (a made-to-measure coat: cut, cloth, colour; a Library book loan: the subject). The engine keeps an order and puts it in the Bag when {{user}} collects it at the club; mending and repairs happen at once.
+<%_ } _%>
 - Points: for any other income or cost (a fine, a wager, a refund, a gift of money) use delta and insert a line into Transactions ("-10 library fine"); a change with no line is logged as not itemised.
 - Coin: real money. The Banking House exchanges points and coin 1:1; family money arrives as coin. Only coin works off campus (Avalon, the capital; Sunreach Bay): purchases there are paid in coin. Log any other coin change in Transactions too.
 - Prices: follow the Price Guide; a price marked canon never changes.

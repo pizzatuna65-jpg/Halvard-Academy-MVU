@@ -2708,6 +2708,298 @@
     "Autumn"
    ],
    "club": "Gardening"
+  },
+  {
+   "shop": "Tailoring Club",
+   "loc": "workshop",
+   "item": "Mend damaged clothing",
+   "price": 5,
+   "note": "while you wait, half an hour",
+   "canon": false,
+   "season": "all",
+   "club": "Tailoring",
+   "svc": {
+    "k": "mend"
+   },
+   "day": "Sat",
+   "from": "13:00",
+   "to": "16:00"
+  },
+  {
+   "shop": "Tailoring Club",
+   "loc": "workshop",
+   "item": "Alteration",
+   "price": 15,
+   "note": "refit or restyle a garment, while you wait, an hour",
+   "canon": false,
+   "season": "all",
+   "club": "Tailoring",
+   "svc": {
+    "k": "service"
+   },
+   "day": "Sat",
+   "from": "13:00",
+   "to": "16:00"
+  },
+  {
+   "shop": "Tailoring Club",
+   "loc": "workshop",
+   "item": "Made-to-measure garment",
+   "price": 30,
+   "note": "made to {{user}}'s design; ready next Saturday",
+   "canon": false,
+   "season": "all",
+   "club": "Tailoring",
+   "svc": {
+    "k": "order",
+    "w": 1,
+    "kind": "other"
+   },
+   "day": "Sat",
+   "from": "13:00",
+   "to": "16:00"
+  },
+  {
+   "shop": "Tailoring Club",
+   "loc": "workshop",
+   "item": "Made-to-measure warm garment",
+   "price": 50,
+   "note": "a coat, cloak or knitted set to {{user}}'s design; ready next Saturday",
+   "canon": false,
+   "season": "all",
+   "club": "Tailoring",
+   "svc": {
+    "k": "order",
+    "w": 1,
+    "kind": "gear"
+   },
+   "gear": "warm",
+   "day": "Sat",
+   "from": "13:00",
+   "to": "16:00"
+  },
+  {
+   "shop": "Tailoring Club",
+   "loc": "workshop",
+   "item": "Made-to-measure summer garment",
+   "price": 40,
+   "note": "light and loose, to {{user}}'s design; ready next Saturday",
+   "canon": false,
+   "season": "all",
+   "club": "Tailoring",
+   "svc": {
+    "k": "order",
+    "w": 1,
+    "kind": "gear"
+   },
+   "gear": "sun",
+   "day": "Sat",
+   "from": "13:00",
+   "to": "16:00"
+  },
+  {
+   "shop": "Tailoring Club",
+   "loc": "workshop",
+   "item": "Made-to-measure formal wear",
+   "price": 90,
+   "note": "silk, to {{user}}'s design; ready in two Saturdays",
+   "canon": false,
+   "season": "all",
+   "club": "Tailoring",
+   "svc": {
+    "k": "order",
+    "w": 2,
+    "kind": "gift"
+   },
+   "day": "Sat",
+   "from": "13:00",
+   "to": "16:00"
+  },
+  {
+   "shop": "Smithing Club",
+   "loc": "workshop",
+   "item": "Repair a damaged item",
+   "price": 10,
+   "note": "done the same afternoon",
+   "canon": false,
+   "season": "all",
+   "club": "Smithing",
+   "svc": {
+    "k": "repair"
+   },
+   "day": "Sat",
+   "from": "13:00",
+   "to": "16:00"
+  },
+  {
+   "shop": "Smithing Club",
+   "loc": "workshop",
+   "item": "Hooks and nails",
+   "price": 8,
+   "note": "forged to order; ready next Saturday",
+   "canon": false,
+   "season": "all",
+   "club": "Smithing",
+   "svc": {
+    "k": "order",
+    "w": 1,
+    "kind": "other"
+   },
+   "day": "Sat",
+   "from": "13:00",
+   "to": "16:00"
+  },
+  {
+   "shop": "Smithing Club",
+   "loc": "workshop",
+   "item": "Balanced blade",
+   "price": 40,
+   "note": "forged to order, engraved to {{user}}'s wish; ready next Saturday",
+   "canon": false,
+   "season": "all",
+   "club": "Smithing",
+   "svc": {
+    "k": "order",
+    "w": 1,
+    "kind": "other"
+   },
+   "day": "Sat",
+   "from": "13:00",
+   "to": "16:00"
+  },
+  {
+   "shop": "Smithing Club",
+   "loc": "workshop",
+   "item": "Small forged tool",
+   "price": 60,
+   "note": "forged to order; ready next Saturday",
+   "canon": false,
+   "season": "all",
+   "club": "Smithing",
+   "svc": {
+    "k": "order",
+    "w": 1,
+    "kind": "other"
+   },
+   "day": "Sat",
+   "from": "13:00",
+   "to": "16:00"
+  },
+  {
+   "shop": "Smithing Club",
+   "loc": "workshop",
+   "item": "Forged fittings",
+   "price": 60,
+   "note": "forged to order; ready next Saturday",
+   "canon": false,
+   "season": "all",
+   "club": "Smithing",
+   "svc": {
+    "k": "order",
+    "w": 1,
+    "kind": "other"
+   },
+   "day": "Sat",
+   "from": "13:00",
+   "to": "16:00"
+  },
+  {
+   "shop": "Fishing Club",
+   "loc": "fishing_house",
+   "item": "Smoked river fish",
+   "price": 4,
+   "note": "the club's own catch, smoked at the Fishing House",
+   "canon": false,
+   "season": "all",
+   "club": "Fishing",
+   "days": {
+    "Sat": [
+     "06:00",
+     "08:00"
+    ],
+    "Sun": [
+     "06:00",
+     "08:00"
+    ]
+   }
+  },
+  {
+   "shop": "Library Assistants",
+   "loc": "main_library",
+   "item": "Library book loan",
+   "price": 0,
+   "note": "one book at a time, for seven days; name the subject",
+   "canon": false,
+   "season": "all",
+   "club": "Library Assistants",
+   "svc": {
+    "k": "loan"
+   },
+   "days": {
+    "Mon": [
+     "16:00",
+     "19:00"
+    ],
+    "Tue": [
+     "16:00",
+     "19:00"
+    ],
+    "Wed": [
+     "16:00",
+     "19:00"
+    ],
+    "Thu": [
+     "16:00",
+     "19:00"
+    ],
+    "Fri": [
+     "16:00",
+     "19:00"
+    ],
+    "Sat": [
+     "13:00",
+     "16:00"
+    ]
+   }
+  },
+  {
+   "shop": "Library Assistants",
+   "loc": "main_library",
+   "item": "Archive records search",
+   "price": 0,
+   "note": "past dorm standings and competition brackets; ready tomorrow",
+   "canon": false,
+   "season": "all",
+   "club": "Library Assistants",
+   "svc": {
+    "k": "records"
+   },
+   "days": {
+    "Mon": [
+     "16:00",
+     "19:00"
+    ],
+    "Tue": [
+     "16:00",
+     "19:00"
+    ],
+    "Wed": [
+     "16:00",
+     "19:00"
+    ],
+    "Thu": [
+     "16:00",
+     "19:00"
+    ],
+    "Fri": [
+     "16:00",
+     "19:00"
+    ],
+    "Sat": [
+     "13:00",
+     "16:00"
+    ]
+   }
   }
  ]
 }

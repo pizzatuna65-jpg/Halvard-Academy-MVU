@@ -280,6 +280,8 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
 - [ ] An hour's rest in the Meditation Rooms or the Bathhouse: `<now>` names the rate, the Map card's Restores row agrees, recovery is
       faster than in the Library, and the narrator adds no bonus of its own [1.31].
 - [ ] The same places over a few days: the ambience details differ [1.16].
+- [ ] A Saturday 06:00–08:00 at the Fishing House: smoked river fish for 4, "Services here", and (not a member) "Fish the pond or the
+      lake" is open for the dawn session; on Sunday dawn it is members only again. The Map card's Clubs here row names the services [1.91].
 
 ### Q2.6 An ordinary evening, and a rainy day (any time in M1–M3)
 - [ ] More people around Charles on an ordinary day than a scene holds: `<now>` names one who takes their leave, and they go in the next
@@ -300,6 +302,13 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
 - [ ] Saturday 15:00–17:00 in the Canteen: `<now>` says whether the Cooking Club's bake worked (honey bread, 3 points, stamina) or went
       wrong (free failures); the bracelet shows "Stalls here" and Activities → Shop lists it. 14:00–18:00 in the Potion Halls: the
       Brewing and Alchemy table (Warming and Cooling draught 12, Cold remedy 15); on Sunday both are gone [1.90].
+- [ ] Saturday 13:00–16:00 at the Workshop: "Services here"; `<now>` and the Price Guide list the Tailoring and Smithing services.
+      Order a made-to-measure coat with a design: 50 points (25 for a Tailoring member), nothing in the Bag, the Agenda and Activities
+      → Clubs → Your orders say "ready to collect at the Workshop" next Saturday; collected then with the design in its Note, and it
+      keeps Charles warm. A damaged coat or item in the Bag: Mend 5 / Repair 10, at once [1.91].
+- [ ] A weekday 16:00–19:00 at the Main Library: borrow a book (the narrator writes the subject in Note): "Library book: <subject>" in
+      the Bag, due back in seven days; studying with it in the dorm counts; kept too long, it is recalled and loans stop for 14 days.
+      An Archive records search gives Fortune "Archive records +5" on Charles's next Competition bout day [1.91].
 - [ ] On a Sunday (students may drink only on Sundays, in the Mid-Year Break and in Month 12), mention drinking or Barrow & Vine: the
       alcohol rule (entry 512) is in the prompt [1.54].
 

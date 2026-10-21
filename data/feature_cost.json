@@ -19,7 +19,7 @@
   "gist": 62,
   "hooks": 154,
   "gossip": 19,
-  "clubwork": 0,
+  "clubwork": 92,
   "fortune": 224,
   "attendance": -3,
   "recap": 0,
@@ -30,9 +30,9 @@
   "study": 50,
   "say_colors": 183
  },
- "core_rules": 9114,
+ "core_rules": 9115,
  "lore": 9424,
- "price_guide": 6886,
+ "price_guide": 7544,
  "live": {
   "class": 40,
   "weather": 25

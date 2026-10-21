@@ -942,6 +942,52 @@ const cwCond = (when, S, W) => uiOn(S.$ui, 'clubwork') && (when === 'flu' ? !!((
   : when === 'bake' ? cwBakeGood(S, W) : when === 'bakefail' ? !cwBakeGood(S, W) : true);
 const stallOpen = (st, W, S) => (st[0] ? eventsOn(W).some(e => e.id === st[0]) : cwCond(st[4], S, W)) && (!st[1] || W.Day === st[1])
   && hm(W.Time) != null && hm(W.Time) >= hm(st[2] || '00:00') && hm(W.Time) < hm(st[3] || '24:00');
+// 1.91.0 (owner-approved planning/DRAFT_kerja_club.md §4): club services. A damaged item in the Bag (clothing only, for mending;
+// crafting's repair and mend targets too); a service row's spec is its stall tuple's sixth part { k, w, kind }
+const isDamaged = (I, k, clothes) => (!clothes || CRAFT_CLOTHES.test(k)) && /\bdamaged\b/i.test(String(((I || {})[k] || {}).Note || ''));
+const damagedKey = (I, clothes) => Object.keys(I || {}).find(k => num(I[k].Qty, 0) > 0 && isDamaged(I, k, clothes)) || '';
+const cwDay = d => { const T = fromAbs(d * DAY_MIN); return `M${T.Month} W${T.Week} ${T.Day}`; };
+const cwHas = (S, item) => { const k = bagKeyOf(S.Inventory, item); return !!k && num(S.Inventory[k].Qty, 0) > 0; };
+// why a service cannot be bought now ('' = it can): mending needs damaged clothing, a repair a damaged item, a loan the subject (in
+// Note), no other book out and no ban; a records search one at a time
+function cwSvcWhy(c, sv, p) {
+  const { S, dayNo } = c;
+  if (sv.k === 'mend' || sv.k === 'repair') return damagedKey(S.Inventory, sv.k === 'mend') ? '' : `there is no damaged ${sv.k === 'mend' ? 'clothing' : 'item'} in the Bag`;
+  if (sv.k === 'loan') {
+    const L = S.$eng.loan || {}, subj = SUBJECTS.find(s => String(p.Note || '').toLowerCase().includes(s.toLowerCase()));
+    if (L.item && cwHas(S, L.item)) return `one book at a time: ${L.item} is due back ${cwDay(L.due)}`;
+    if (num(L.ban, -1) > dayNo) return `no loans until ${cwDay(L.ban)} (a book came back late)`;
+    return subj ? '' : `name the subject in Note (${SUBJECTS.join(', ')})`;
+  }
+  if (sv.k === 'records') return S.$eng.records && S.$eng.records.used == null ? 'a records search is already under way or waiting to be used' : '';
+  return '';
+}
+// what a paid service does: mends or repairs at once, records an order (ready on the club's day w weeks later, collected there),
+// lends a book (the Bag, seven days), starts a records search (ready tomorrow); a plain service only charges
+function cwSvcDo(c, sv, p, name, st, qty) {
+  const { S, dayNo, log, seed } = c, I = S.Inventory;
+  if (sv.k === 'mend' || sv.k === 'repair') {
+    const k = damagedKey(I, sv.k === 'mend');
+    I[k].Note = String(I[k].Note || '').replace(/\bdamaged\b/ig, '').replace(/^[\s,;.]+|[\s,;]+$/g, '').trim();
+    log.push(`${st[1]}: ${k} ${sv.k === 'mend' ? 'mended' : 'repaired'} (no longer damaged).`); S.$ui.toasts.push(`${sv.k === 'mend' ? 'Mended' : 'Repaired'}: ${k}`);
+  } else if (sv.k === 'order') {
+    const O = S.$eng.orders = Array.isArray(S.$eng.orders) ? S.$eng.orders : [], ready = (dayNo + 7 * num(sv.w, 1)) * DAY_MIN + hm(st[5][2] || '00:00');
+    const r = roll100(seed, 'cw-order', dayNo, name, O.length), q = r < 15 ? 'fine work' : r >= 90 ? 'uneven work' : '';
+    O.push({ item: name, qty, note: String(p.Note || '').trim().slice(0, 160), kind: sv.kind || 'other', loc: st[2], where: plName(st[2]) || st[2], club: st[1], ready, q });
+    log.push(`${st[1]}: ordered ${name}${p.Note ? ` (${String(p.Note).trim()})` : ''}; ready to collect at ${plName(st[2]) || st[2]} from ${cwDay(Math.floor(ready / DAY_MIN))} ${fromAbs(ready).Time}.`);
+    S.$ui.toasts.push(`Ordered: ${name}`);
+  } else if (sv.k === 'loan') {
+    const subj = SUBJECTS.find(s => String(p.Note || '').toLowerCase().includes(s.toLowerCase())), item = `Library book: ${subj}`;
+    const k = bagGive(c, item, 1, 'book', `due back ${cwDay(dayNo + 7)}`); if (k) I[k].Note = `due back ${cwDay(dayNo + 7)}`;
+    S.$eng.loan = { item, due: dayNo + 7 };
+    log.push(`Library Assistants: lent ${item}, due back ${cwDay(dayNo + 7)}; with it, studying in a dorm counts half as much as in the Library.`);
+  } else if (sv.k === 'records') {
+    S.$eng.records = { ready: dayNo + 1 };
+    log.push(`Library Assistants: a search of the Archive's past brackets and dorm standings, ready ${cwDay(dayNo + 1)}: Fortune +5 in {{user}}'s next Competition bouts (one day of them).`);
+  }
+}
+// the Fishing Club's guest session: Saturday dawn at the Fishing House anyone may fish with a borrowed rod
+const cwGuest = S => uiOn(S.$ui, 'clubwork') && S.World.Day === 'Sat' && hm(S.World.Time) >= 360 && hm(S.World.Time) < 480 && placeKey(S.World.Location) === 'fishing house';
 // 1.90.0: an engine result the Academy Newspaper prints in Monday's issue ($eng.paper.log: [day, line], two weeks kept)
 function cwNews(S, line) {
   const P = S.$eng.paper = _.isPlainObject(S.$eng.paper) ? S.$eng.paper : {}, d = Math.floor(toAbs(S.World) / DAY_MIN);
@@ -1862,10 +1908,15 @@ function stepPurchases(c) {
     else if (!away && atShop.length) why = `${name} is sold here only in ${atShop[0][3].join(' and ')}`;
     else if (story >= 0) { price = Math.round(story); shop = String(p.Shop || '').trim() || placeOf(S.World.Location); }
     else why = rows.length && !away ? `${name} is sold at ${[...new Set(rows.map(x => x[1]))].join(', ')}, not here; give a Price if another seller sells it` : `${name} has no listed price; give its Price`;
+    // 1.91.0: a member pays half for their own club's services
+    if (!why && price > 0 && !away && sold && sold[5] && sold[5][5] && canonClub(S.Player.Profile.Club, S) === sold[1]) { price = Math.round(price / 2); shop += ', half price for a member'; }
     const total = price * qty, have = num(S.Player.Wallet[cur], 0);
     if (!why && total > have) why = `it costs ${total} ${cur === 'Coin' ? 'coin' : 'points'} and {{user}} has ${have}`;
+    const sv = !away && sold && sold[5] ? sold[5][5] || 0 : 0;   // 1.91.0: a club service (planning/DRAFT_kerja_club.md §4)
+    if (!why && sv) why = cwSvcWhy(c, sv, p);
     if (why) { log.push(`Purchase ${name}${qty > 1 ? ' x' + qty : ''} refused: ${why}. Nothing was bought.`); S.$ui.toasts.push(`Not bought: ${name}`); continue; }
     if (total) ledger(c, cur, -total, `${name}${qty > 1 ? ' x' + qty : ''} (${shop}${sold && !away ? '' : ', story price'})`);
+    if (sv) { cwSvcDo(c, sv, p, name, sold, qty); continue; }
     if (p.Used) {
       const fx = fxOf(name);
       if (fx && fx.use && !(S.Consumables || []).some(x => itemKey(x) === itemKey(name))) S.Consumables = [...(S.Consumables || []), name];
@@ -3094,6 +3145,9 @@ function stepFortune(c) {
     // 1.82.0 (planning/DRAFT_event_frame.md 3.6): a Dorm Competition bout from an hour before it: the opponent's edge
     const CB = c.contest;
     if (CB && CB.edge !== 'even' && S.World.Day === CB.at[0] && hm(S.World.Time) >= hm(CB.at[1]) - 60) mods.push(`opponent ${CB.edge} ${CB.edge === 'stronger' ? '-' : '+'}${CT.strength.fortune}`);
+    // 1.91.0: the Library Assistants' Archive records (past brackets), on {{user}}'s first bout day after they are ready
+    const RS = S.$eng.records;
+    if (CB && RS && num(RS.ready, 1e9) <= c.dayNo && (RS.used == null || RS.used === c.dayNo) && S.World.Day === CB.at[0] && hm(S.World.Time) >= hm(CB.at[1]) - 60) { RS.used = c.dayNo; mods.push('Archive records +5'); }
     const active = Object.entries(M.Active || {}).map(([k, e]) => e.Technique && e.Technique !== k ? `${k} (${e.Technique})` : k);
     // 1.78.0 (Megumin audit MS2): three numbers, one per attempt in order, so two risky attempts in one reply never share a fate;
     // roll stays the first (crafting reads it)
@@ -3329,7 +3383,10 @@ function stepSchoolWeek(c) {
         const SP = ['main library', 'study rooms', 'archive'];
         const atStudy = (X, pk) => SP.includes(pk) || (Pf.Council && pk === 'student council chamber' && X.World.Day === 'Sat'
           && hm(X.World.Time) >= P2[0] && hm(X.World.Time) < P2[1] && !councilRemedial(S.Commitments, X.World));
-        const f = (atStudy(hasB ? B : S, pkB) ? 0.5 : 0) + (atStudy(S, pkA) ? 0.5 : 0);
+        // 1.91.0: with a Library book on loan in the Bag, studying (the reply says so) in a dorm counts half a study place's rate
+        const book = uiOn(S.$ui, 'clubwork') && !!(S.$eng.loan || {}).item && cwHas(S, S.$eng.loan.item) && /\b(stud(?:y|ies|ied|ying)|read(?:s|ing)?|revis(?:e|es|ed|ing))\b/i.test(proseOf(c.text));
+        const per = (X, pk) => atStudy(X, pk) ? 0.5 : book && /dormitory/.test(pk) ? 0.25 : 0;
+        const f = per(hasB ? B : S, pkB) + per(S, pkA);
         let lesson = 0;
         for (let d = dayNoB; d <= dayNo; d++) {
           const Wd = fromAbs(d * DAY_MIN), row = CLASS.tt && CLASS.tt[Wd.Day];
@@ -4560,7 +4617,8 @@ function stepProficiency(c) {
     const partnerId = NPC_ALIAS[String(withName || '').toLowerCase()] || withName;
     const helpingMember = withName && inScene(withName) && clubMembersNow(S, a.club + ' Club').includes(partnerId);
     const kitchenPermission = a.club === 'Cooking' && withName && inScene(withName) && /cook|chef/i.test(withName);
-    if (a.club && !club.toLowerCase().includes(a.club.toLowerCase()) && !helpingMember && !kitchenPermission) return `${a.club} Club`;
+    const guest = a.club === 'Fishing' && cwGuest(S);   // 1.91.0: the Fishing Club's Saturday dawn guest session
+    if (a.club && !club.toLowerCase().includes(a.club.toLowerCase()) && !helpingMember && !kitchenPermission && !guest) return `${a.club} Club`;
     if (a.clubAny && !a.clubAny.some(n => club.toLowerCase().includes(n.toLowerCase()))) return `${a.clubAny.join(', ')} club`;
     if (a.partner && (report ? (!withName || !inScene(withName)) : !Object.keys(S.Scene.Present || {}).length)) return 'a partner present';
     if (a.action === 'Spar with a partner' && withName && NPC_DORMS[NPC_ALIAS[withName.toLowerCase()] || withName] !== S.Player.Profile.Dorm && !/Training Week/i.test(S.World._Event_today || '')) return 'a partner from your dorm';
@@ -4579,8 +4637,7 @@ function stepProficiency(c) {
   const craftTarget = (I, recipe, named) => {
     if (!recipe.target) return '';
     const items = named ? [craftItem(I, named)].filter(Boolean) : Object.keys(I || {});
-    return items.find(k => recipe.target === 'repair' ? /\bdamaged\b/i.test(String(I[k].Note || ''))
-      : recipe.target === 'mend' ? CRAFT_CLOTHES.test(k) && /\bdamaged\b/i.test(String(I[k].Note || ''))
+    return items.find(k => recipe.target === 'repair' || recipe.target === 'mend' ? isDamaged(I, k, recipe.target === 'mend')   // 1.91.0: shared with club services
       : CRAFT_CLOTHES.test(k) && !/enchanted/i.test(String(I[k].Note || ''))) || '';
   };
   const craftReady = (recipe, state, report) => {
@@ -5483,7 +5540,27 @@ function stepClubWork(c) {
     Alchemy: sat ? 'selling the week\'s surplus potions in the Potion Halls' : '', 'Medical Centre Volunteers': (S.$ui.wx || {}).flu ? 'handing out cold remedies at the Medical Centre' : '',
     Groundskeeping: SL && t != null && t < hm(SN.clear || '07:00') ? 'clearing the snow from the paths' : '' }[mine];
   if (role) now.push(`{{user}}'s club is ${role} today; {{user}} can lend a hand.`);
-  S.$ui.cw = { paper, open, stall: open.length > 0 && !shopHere, now };
+  // 1.91.0 (§4): orders ready here go into the Bag; the loaned book comes back (gone from the Bag) or is recalled once overdue
+  const absA = c.absA, O = Array.isArray(S.$eng.orders) ? S.$eng.orders : [];
+  for (const o of O.filter(o => absA >= o.ready && here === o.loc)) {
+    const k = bagGive(c, o.item, num(o.qty, 1), o.kind, ''), note = [o.note, o.q].filter(Boolean).join('; ');
+    if (k && note) S.Inventory[k].Note = note;
+    c.jnl.push(`Collected ${o.item}${o.note ? ` (${o.note})` : ''} from the ${o.club}${o.q ? `: ${o.q}` : ''}.`); S.$ui.toasts.push(`Collected: ${o.item}`);
+    O.splice(O.indexOf(o), 1);
+  }
+  const L = S.$eng.loan;
+  if (L && L.item) {
+    if (!cwHas(S, L.item)) { c.log.push(`${L.item} is back with the Library Assistants.`); L.item = ''; }
+    else if (dayNo > L.due) { bagTake(c, L.item, 9); c.log.push(`${L.item} was overdue: the Library Assistants took it back; no loans for 14 days.`); S.$ui.toasts.push('Library book recalled'); Object.assign(L, { item: '', ban: dayNo + 14 }); }
+  }
+  const svc = Object.values(SHOP_PRICE).flat().filter(x => x[5] && x[5][5] && x[2] === here && open.includes(x[4]));
+  const byClub = _.groupBy(svc, x => x[1]);
+  for (const [cl, xs] of Object.entries(byClub)) now.push(`${cl} services here until ${xs[0][5][3]}: ${xs.map(x => `${x[4]} ${x[0]}`).join(', ')} points (the Price Guide has them; an order is collected here when ready).`);
+  const ready = O.filter(o => absA >= o.ready && here !== o.loc);
+  if (ready.length) now.push(`Ready to collect: ${ready.map(o => `${o.item} at the ${o.where}`).join('; ')}.`);
+  if (cwGuest(S) && !/fishing/i.test(String(S.Player.Profile.Club || ''))) now.push("The Fishing Club's dawn session: {{user}} may borrow a rod and fish with them (Practice).");
+  S.$ui.cw = { paper, open, stall: open.length > svc.length && !shopHere, svc: svc.length > 0, now, orders: O.map(o => ({ item: o.item, where: o.where, ready: cwDay(Math.floor(o.ready / DAY_MIN)), ok: absA >= o.ready })),
+    loan: L && L.item ? { item: L.item, due: cwDay(L.due) } : null };
 }
 
 function stepGossip(c) {
@@ -6282,6 +6359,10 @@ function stepAgenda(c) {
     if (s === 'overdue') { log.push(`Project "${k}" was due ${pj.Due} and is not finished (Progress ${p}%): hand it in late, ask for more time, or drop it in the story.`); S.$ui.toasts.push(`Overdue: ${k}`); }
   }
   for (const [k, nt] of Object.entries(S.Notices || {})) put('notice', `last day: ${k}`, num(nt.$abs, -1), agendaState(num(nt.$abs, -1), absA, 'notice'));
+  if (!OFF.has('clubwork')) {   // 1.91.0: club orders to collect, the loaned book to return
+    for (const o of Array.isArray(S.$eng.orders) ? S.$eng.orders : []) put('order', `${o.item}: ready to collect at the ${o.where}`, o.ready, '');
+    const L = S.$eng.loan; if (L && L.item) put('order', `return ${L.item} to the Main Library`, L.due * DAY_MIN + 19 * 60, agendaState(L.due * DAY_MIN + 19 * 60, absA, 'commitment'));
+  }
   for (const [k, lc] of Object.entries((S.Campus_State || {}).Lore_changes || {})) put('lore', `last day changed: ${k}`, num((lc || {}).$abs, -1), '');   // 1.75.0
   const H = S.$eng.home;
   if (!OFF.has('letters') && _.isPlainObject(H) && num(H.due, -1) >= 0 && !H.key) put('letter', `Reply from ${H.from || 'home'} expected`, Math.floor(H.due / DAY_MIN) * DAY_MIN + DAY_MIN - 1, '');
