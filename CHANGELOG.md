@@ -1,7 +1,41 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.75.0 — A club {{user}} founds is a club like any other (2026-10-21)
+
+Owner's request (2026-10-21): founding a club felt half-built; the owner approved `planning/DRAFT_club_sendiri.md` (now applied and
+deleted) and decided its canon. Engine, data, UI and card text. Save fixture v1.74.0.
+- **Before:** a club not in the directory was only text in `Player.Profile.Club`: no room, members or advisor, so Saturday attendance
+  never counted (live play gave nothing while the routine week gave +1 Student), Saturday XP only by a lucky word in the name, one
+  empty card in Activities, nothing on the map, in `<now>`, presence or the graph, and the founding itself was not tracked.
+- **One club model** (`shared.js` `foundedClub`, `movedToFounded`; engine `clubVenues`, `clubField`, `clubMembersNow`): the founded club
+  (`Campus_State.Founded_club` {Name, Field, Venue, Advisor, Members, Status, Since}) is read next to the build's club list by `canonClub`,
+  attendance, Saturday and routine XP, `whyLocked`, NPC initiative, presence (`presenceAt`: it meets at its room; its members leave
+  their lore clubs), Activities (`clubsNow`, `clubOf`), the map card's "Clubs here", the graph's club groups and the dossier's Club field.
+- **Founding** (`stepFounding`, called by `stepClubLife`): a club not on record that the narrator writes in `Profile.Club` starts one
+  (`{{user}}` stays in their club until it is founded). Owner's rules: a teacher who already answers for a club never signs (all 16
+  roster teachers have one, so the narrator introduces a teacher; `CLUB_FOUNDING.staff` / `.sign`), the Headmaster, Vice Headmaster and
+  Doves are not teaching staff; a roster student joins only on screen (`Scene.Present` or named in the reply) and leaves their old club
+  once it is founded (an engine-written Lore change on their entry; leaving lifts it), never two clubs, the Student Council apart;
+  Etnie and Topaz (the "whichever club" students, `CLUB_FOUNDING.follow`) follow by themselves; the room is a campus place outside the
+  dormitories. With a signature, five members ({{user}} included) and a room it is founded: Journal, toast, `Profile.Club`, and
+  founded_club (+8 Student) paid once by the engine (a reported founded_club is not counted). One a campaign; a founded club keeps
+  its name and never disbands; graduates leave it. Invented advisors and members are kept in Extras (`Keep`).
+- **Activities → Clubs:** the founding checklist (signature, members n/5, room) with the Field buttons (a player tool) and "Work on
+  it"; the founded club's full card (room, founded by you, the Field it trains, advisor, members, Club time). Card text: 502 (Club line,
+  a `Founded_club` line, founded_club left out of the reported kinds), rule card `founding` (while it forms, or when a new club comes up).
+- **Advisors fixed** (`tools/common.py` `load_clubs`): a teacher's Role "advises the X" is read; before, 15 of 16 advisors never showed
+  "(advisor)" in Activities or on the graph. An advisor shows once that Role line is open (`clubFieldOpen`; Kuroo's at Rank 0).
+- **Migration** (`stepMigrate`): a club not on record from before 1.75.0 becomes the founded club (founded, room and advisor not on
+  record yet); no reputation paid again.
+- Tests: new `test_founded_club_v1750.cjs` (founding, signatures, members on screen, the room, founded_club once, Lore changes, name kept,
+  Saturday at the room with its Field, presence, leaving, migration, the Activities card and graph); `test_audit_b1_v1161` (an unknown
+  club is now being founded), `test_connections_v141` (Kuroo's open Role), `test_newbond_v1611` updated. `tests/fixtures/cast_1560.json`
+  renewed: 1.74.0's Ties line had changed 35 Cast Sheet scenarios without renewing the record (renders checked identical to the 1.74.0
+  engine). Full `npm test` and lint pass. Browser check (mock chat): the forming checklist and the founded club's card.
+- **To confirm with the owner:** nothing new in canon beyond the decisions above. **To check live:** `docs/TEST_CHECKLIST.md` MS3 [1.75].
 
 ## v1.74.0 — Word gets around, ties, asking after an injury; People sorting; the Council placed like a club (2026-10-21)
 
@@ -95,29 +129,6 @@ Save fixture v1.70.0.
 - Tests: new `test_scene_actions_v1710.cjs`; `test_scene_cards_v1700`, `test_map_gates_v1240`, `test_playtest_v1301`, the UI and
   bracelet suites, `test_saves` and lint pass. Browser check in a mock chat: the three cards' buttons and the open gift list.
 - **To check live (owner):** `docs/TEST_CHECKLIST.md` Q1.1, Q3.4, Q3.6 [1.71].
-
-## v1.70.0 — Scene cards: the people present, under the reply (2026-10-20)
-
-Owner's request, built from the approved mockup "Halvard Scene Cards": the bracelet's portraits were too small; the people present
-now get a full portrait under the narration, their true thoughts beside it and their stats beside that. Save fixture v1.69.0.
-- **Scene cards** (`src/ui/parts/50_scene.js`): under the narration of the newest reply, one card per person in `Scene.Present`: the
-  full portrait (`portraits/`, not the thumbnail) with name and role; "Now:" (their Present note) and their true thoughts; the rank
-  medal, the people card's XP, Trust and Tension meters (now `bondMeters` in `10_people.js`, shared by both) and the mood chip at
-  Rank 4+; Dossier. Someone not yet named stays nameless (role or descriptor, as everywhere); an invented character gets "Keep in
-  record" (the strip's pin). Three full cards, people with thoughts first; anyone else present goes on an "also here" row. A thought
-  about someone absent shows as an "elsewhere" row.
-- **True thoughts** come from the preset's `<npc_thoughts>` block of the same reply, matched by name. That reply's folded 🧠 block is
-  hidden; older replies keep theirs. Without the block (the toggle off, another preset) the cards show without thoughts.
-- **How.** The Eldrasil UI script writes the cards into SillyTavern's own message, before the thoughts block and the 📜 state update,
-  styled from `<head>` and re-coloured by the theme. It puts them back when SillyTavern or Tavern Helper rewrites the message
-  (SillyTavern's `updateMessageBlock` and Tavern Helper's macro rendering both replace `.mes_text`; checked in the installed source) and
-  shows none while the reply is being edited. One click listener on the document opens the dossier or keeps an Extra.
-- **Bracelet.** Its portrait strip steps aside while the UI script runs (`__eldrasilScene`); without the script it shows as before.
-- Tests: new `test_scene_cards_v1700.cjs` (the block's two forms, name matching, hidden names, Extras, the crowd row, no block, the
-  bracelet flag, the theme); `test_ui_overhaul_v1210`, `test_news_v1250`, `test_say_colors_v1370`, `test_extras_v161`, the bracelet
-  suites, `snapshot_render`, `test_saves` and lint pass. Browser check in a mock chat at 900 px and 375 px: three cards, the fold
-  hidden, no console error, no sideways scroll.
-- **To check live (owner):** `docs/TEST_CHECKLIST.md` Q1.1 [1.70].
 
 ## Release index (one line per release, oldest first)
 
@@ -275,4 +286,5 @@ now get a full portrait under the narration, their true thoughts beside it and t
 - **v1.72.0 (2026-10-21):** Special days: each NPC's own mood on their birthday, canon calendar days (Remembrance Day, Star Night, the Circus…) and personal dates with {{user}} a year on (Imprints, the day they met, Rank 8), the last known only to the narrator and the NPC.
 - **v1.73.0 (2026-10-21):** Time apart and asking after: a character back after a week or more carries the gap; one who heard of {{user}}'s plan may ask how it went once its day has passed.
 - **v1.74.0 (2026-10-21):** Word gets around among friends, ties to the people {{user}} is close to, asking after an injury; People sorted five ways; the Council's members placed like any club's.
+- **v1.75.0 (2026-10-21):** A club {{user}} founds is a club like any other: tracked founding (a teacher with no club, five members, a room), members who move leave their lore club, its room, Field and members in every system; canon advisors shown.
 - Docs (2026-10-21, no card change): `docs/FEATURES.md`, every feature with its code, data, toggle and tests; `docs/INDEX.md` keeps the workflows and maps (−13 KB); stale docs fixed (PLAYER_GUIDE, README, tests/README, FUTURE_PLANS, the NPC brief); the finished 2026-10-03 batch plans and `tools/make_npc_brief.py` removed.

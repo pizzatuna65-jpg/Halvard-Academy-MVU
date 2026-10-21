@@ -72,6 +72,14 @@ _SAY = json.load(open(P('data/dialogue_colors.json'), encoding='utf-8'))   # 1.3
 t = t.replace('/*@@SAY@@*/{ n: 0, start: {}, dist: [] }', json.dumps({'n': len(_SAY['palette']), 'start': _SAY['npcs'], 'dist': _SAY['dist']}, separators=(',', ':')))
 t = t.replace('/*@@CLASS@@*/{}', json.dumps({'tt': _TT, 'teach': _TEACH, 'clubs': _CLUBS, 'calias': _CALIAS}, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@CLUB_MEMBERS@@*/{}', json.dumps({c['name']: c['members'] for c in load_clubs(npcs, locs)}, ensure_ascii=False, separators=(',', ':')))
+# 1.75.0 (owner-approved planning/DRAFT_club_sendiri.md): who may sign for the club {{user}} founds. staff: teacher -> the club they
+# already answer for (a teacher signs for one club only); sign: teaching staff on the roster with no club (the Headmaster, the Vice
+# Headmaster and the Doves are not teaching staff). Today every teacher has a club, so the narrator introduces one. follow: the
+# students whose lore puts them in whichever club {{user}} is in.
+_staff = {a: c['name'] for c in load_clubs(npcs, locs) for a in c['advisors']}
+_sign = sorted(i for i, v in npcs.items() if v.get('teaches') and v['group'] == 'Staff' and i not in _staff
+               and not any(re.search(r'headmaster', x, re.I) for x in v.get('public_tags') or []))
+t = t.replace('/*@@CLUB_FOUNDING@@*/{}', json.dumps({'staff': _staff, 'sign': _sign, 'follow': sorted({f for c in load_clubs(npcs, locs) for f in c.get('follows', [])})}, ensure_ascii=False, separators=(',', ':')))
 # 1.3.1: place names for World.Location normalisation (engine canonLocation); dorm rooms every dorm shares are never promoted
 pnames = {k: l['name'] for lid, l in sorted(locs.items()) for k in place_keys(l, lid)}
 t = t.replace('/*@@PLACE_NAMES@@*/{}', json.dumps(pnames, ensure_ascii=False, separators=(',', ':')))

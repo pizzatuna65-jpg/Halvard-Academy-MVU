@@ -80,6 +80,10 @@
   "fold": {
    "feature": "",
    "text": "Fold (memory; this reply only, besides the usual update): the game keeps older memory by folding several old records into one. Write {\"op\": \"replace\", \"path\": \"/Fold\", \"value\": \"<the fold>\"}: one plain entry, within the words given below, that keeps who did what, why and what changed; keep every name, promise, debt, death and secret the lines hold; add nothing they do not say, and no date (the game adds it). Fold exactly these lines:"
+  },
+  "founding": {
+   "feature": "",
+   "text": "Founding a club (Campus_State.Founded_club {\"Name\": \"\", \"Venue\": \"a campus place\", \"Advisor\": \"\", \"Members\": [\"students other than {{user}}\"]}): founding takes a teaching staff signature and five members, {{user}} included; the Student Council assigns a room from whatever is left. Every teacher on record already answers for one club and signs for no second: the advisor is a teacher of your own making (one of Halvard's many teachers not yet named), introduced like any new character. A student joins only on screen and only if they would; one who joins leaves their old club (the Student Council is kept). Etnie and Topaz follow {{user}} into any club. Once the signature, five members and the room are in place the engine marks the club founded and makes {{user}} its member; it sets Status, pays the reputation (never report founded_club) and records each member's move."
   }
  }
 }

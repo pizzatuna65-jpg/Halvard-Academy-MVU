@@ -16,7 +16,8 @@ for (const [club, want] of [['Soccer Club', 1], ['Soccer', 1], ['soccer club', 1
   T = at(T, { Time: '15:30' });
   const got = T.Player.Profile.Reputation.$xp.Student - x0;
   if (club === 'Theatre') ok(T.Player.Profile.Club === 'Theatre Troupe' && got === 1, '"Theatre" is the Theatre Troupe and its Saturday time counts');
-  else if (club === 'Chess Club') ok(T.Player.Profile.Club === 'Chess Club' && got === 0 && T._Log.some(l => /not a club on record/.test(l)), 'an unknown club is kept as written, logged, and earns nothing');
+  // 1.75.0: an unknown club is one {{user}} founds (tests/test_founded_club_v1750.cjs); {{user}} joins it once it is founded
+  else if (club === 'Chess Club') ok(T.Player.Profile.Club === '' && T.Campus_State.Founded_club.Name === 'Chess Club' && got === 0 && T._Log.some(l => /not a club yet/.test(l)), 'an unknown club is being founded, logged, and earns nothing yet');
   else ok(T.Player.Profile.Club === 'Soccer Club' && got === want, `"${club}" becomes the Soccer Club and its Saturday time counts`);
 }
 

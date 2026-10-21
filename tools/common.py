@@ -21,6 +21,13 @@ def load_clubs(npcs, locs):
     for base, c in clubs.items():
         c.update(name=CLUB_NAME.get(base, base + ' Club'), key=base, sport=base in SPORT and base != 'Magic Duelling Club', practice=base in SPORT, members=[], advisors=[])
     for nid, n in npcs.items():
+        # 1.75.0: a teacher's Role says which club they answer for ("advises the Smithing Club"); before, only a student's
+        # "advised by X" was read, so 15 of the 16 teachers never showed as advisors
+        role = next((f['text'] for f in n['fields'] if f['label'].lower() == 'role'), '')
+        adv = re.search(r'\badvises the ([^.;,]+)', role, re.I)
+        if adv:
+            for base, c in clubs.items():
+                if re.search(r'\b' + re.escape(base) + r'\b', adv.group(1), re.I) and nid not in c['advisors']: c['advisors'].append(nid)
         f = next((f for f in n['fields'] if f['label'].lower() == 'club'), None)
         if not f: continue
         first = re.split(r'[.,;]', f['text'])[0]

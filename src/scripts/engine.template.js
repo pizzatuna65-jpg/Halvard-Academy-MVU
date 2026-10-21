@@ -90,6 +90,7 @@ const SUBJECT_STAT = { History: 'Knowledge', 'Magic Theory': 'Arcana', 'Dark Mag
 const PROF_FIELD = { Knowledge: 'history, sciences, numbers, geography, nations, languages, records and puzzles', Arcana: 'magic, curses, wards, traps and precise spellwork', Craft: 'making, brewing, mending, cooking and handiwork', Prowess: 'duels, sport, climbing, running and strength', Society: 'formal dealings, manners, bargaining, performance and reading a room', Nature: 'beasts, plants, weather, tracks and the outdoors' };
 const CLUB_STATS = /*@@CLUB_STATS@@*/{};
 const CLUB_MEMBERS = /*@@CLUB_MEMBERS@@*/{};
+const CLUB_FOUNDING = /*@@CLUB_FOUNDING@@*/{};   // 1.75.0: { staff: teacher -> their club, sign: roster teachers free to sign, follow }
 const PRACTICE = /*@@PRACTICE@@*/[];
 // 1.31.0 (owner-approved planning/DRAFT_restore_places.md): restful places {place key: {restores, usual, rules, clears}} (data/restore_places.json)
 const RESTFUL = /*@@RESTFUL@@*/{};
@@ -1009,13 +1010,22 @@ const npcStatusIn = (S, id) => npcStatusOf((S.Campus_State || {}).NPC_status, id
 const npcAwayIn = (S, id) => ((S.Campus_State || {}).Graduated || []).includes(id) || AWAY_RX.test(npcStatusIn(S, id));
 // 1.16.1 (audit B1): Player.Profile.Club in the club list's own words ("Soccer", "soccer club" -> "Soccer Club"; "Theatre" ->
 // "Theatre Troupe"), so Saturday club time is counted; a club the list does not know is kept as written
-function canonClub(c) {
+function canonClub(c, S) {
   const s = String(c || '').trim(), k = s.toLowerCase().replace(/^the\s+/, '').replace(/\s+/g, ' ');
   if (!k) return '';
+  const F = S ? foundedClub(S) : null;   // 1.75.0: the club {{user}} founds (shared.js)
+  if (F && F.name.toLowerCase().replace(/^the\s+/, '').replace(/\s+/g, ' ') === k) return F.name;
   if (/^duel+ing club$/.test(k)) return 'Magic Duelling Club';
   const names = Object.keys(CLASS.clubs || {}), base = x => x.toLowerCase().replace(/\s+club$/, '');
   return names.find(n => n.toLowerCase() === k) || (CLASS.calias || {})[base(k)] || names.find(n => base(n) === base(k)) || s;
 }
+// 1.75.0 (owner-approved planning/DRAFT_club_sendiri.md): one answer for every club, the founded one included: where it meets (place
+// keys), the proficiency its Saturday time trains, its members now (students who moved to the founded club have left their lore club)
+const isFounded = (F, name) => !!F && F.founded && name === F.name;
+const clubVenues = (S, name) => { const F = foundedClub(S); return isFounded(F, name) ? (F.vkey ? [F.vkey] : []) : (CLASS.clubs || {})[name] || []; };
+const clubField = (S, name) => { const F = foundedClub(S), n = String(name || '').toLowerCase(); return isFounded(F, name) ? F.field : PROF.find(k => (CLUB_STATS[k] || []).some(x => n.includes(x.toLowerCase()))) || ''; };
+const clubMembersNow = (S, name) => { const F = foundedClub(S); return isFounded(F, name) ? F.members : (CLUB_MEMBERS[name] || []).filter(id => !movedToFounded(F, id)); };
+const loreClubOf = id => Object.keys(CLUB_MEMBERS).find(k => CLUB_MEMBERS[k].includes(id)) || '';
 const BOND0 = { $gifts: {}, Rank: 0, Progress: 0, Trust: 50, Tension: 0, Title: '', Romance: false, Known_facts: [], Milestones: [], Last_seen: '' };
 /*@@MOOD_GIFTS_SOURCE@@*/
 const ENGINE_VER = '@@VERSION@@';   // the card version (src/card/card.json, set by tools/gen_engine.py)
@@ -1183,6 +1193,16 @@ function stepMigrate(c) {
       const d = { Year: +(m[1] || W.Year || 1), Month: +m[2], Week: +m[3], Day: m[4] }; if (!lo || toAbs(d) < toAbs(lo)) lo = d; }
     b.$met = lo ? ydate(lo) : '';
   }
+  // 1.75.0 (owner-approved planning/DRAFT_club_sendiri.md): a club not on record that {{user}} already belongs to was founded in the
+  // story: it becomes the founded club (its room and advisor not on record yet); the founding reputation is not paid again
+  if (verLt(c.fromVer, '1.75.0')) for (const X of both) {
+    const P = (X.Player || {}).Profile || {}, club = canonClub(P.Club), CS = X.Campus_State || (X.Campus_State = {});
+    const FC = CS.Founded_club = _.isPlainObject(CS.Founded_club) ? CS.Founded_club : {};
+    if (!club || String(FC.Name || '').trim() || Object.keys(CLASS.clubs || {}).includes(club)) continue;
+    Object.assign(FC, { Name: club, Status: 'founded', Since: '', Members: Array.isArray(FC.Members) ? FC.Members : [] });
+    P.Club = club; S.$eng.founded = true;
+    if (X === S) log.push(`The ${club} is now on record as the club {{user}} founded; its room (Founded_club.Venue) and advisor are not on record yet.`);
+  }
   S.$eng.bondv = 2;
   S.$eng.tenv = 1;
   S.$ui.bev = {};                                               // obsolete event hints of older saves
@@ -1206,13 +1226,21 @@ function stepGuards(c) {
   S.$eng.tool = 0;
   // 1.16.1 (audit B1): the club in the club list's words, before attendance (5d) reads it
   {
-    const P = S.Player.Profile, raw = String(P.Club || ''), c = canonClub(raw);
+    const P = S.Player.Profile, raw = String(P.Club || ''), c = canonClub(raw, S);
     if (c === 'Student Council') {
       P.Council = true;
       P.Club = hasB && B.Player.Profile.Club !== 'Student Council' ? B.Player.Profile.Club : '';
     } else P.Club = c;
-    const was = hasB ? canonClub(((B.Player || {}).Profile || {}).Club) : c;
-    if (c && c !== was && !Object.keys(CLASS.clubs || {}).includes(c)) log.push(`Club "${c}" is not a club on record (${Object.keys(CLASS.clubs || {}).join(', ')}); Saturday club time is only counted for one of them.`);
+    const was = hasB ? canonClub(((B.Player || {}).Profile || {}).Club, B) : c, F = foundedClub(S);
+    if (c && c !== was && !Object.keys(CLASS.clubs || {}).includes(c) && !isFounded(F, c)) {
+      // 1.75.0 (owner-approved planning/DRAFT_club_sendiri.md): a club not on record is one {{user}} founds; they join it once founded
+      if (!F || F.name === c) {
+        const CS = S.Campus_State, FC = CS.Founded_club = _.isPlainObject(CS.Founded_club) ? CS.Founded_club : {};
+        if (!F) FC.Name = c;
+        P.Club = hasB ? was : '';
+        log.push(`The ${c} is not a club yet: {{user}} is founding it (Campus_State.Founded_club) and joins it once the engine marks it founded.`);
+      } else log.push(`Club "${c}" is not a club on record (${Object.keys(CLASS.clubs || {}).join(', ')}, or the ${F.name} {{user}} founds); Saturday club time is only counted for one of them.`);
+    }
   }
   let healedMax = false;
   // 1.2.0 (owner playtest: a reload came back with the student's magic empty): the Builder keeps its own record in $ui.file.
@@ -2294,6 +2322,7 @@ function stepReputation(c) {
   for (const e of REV) {
     const kind = String(e.Kind || '').trim().toLowerCase(), deed = (REP.deeds || {})[kind];
     if (compKinds.has(kind)) { log.push(`Reputation deed "${kind}" is paid by the engine from Competition (Tier and Status); it was not counted here.`); continue; }
+    if (kind === 'founded_club') { log.push('Reputation deed "founded_club" is paid by the engine when Campus_State.Founded_club is founded; it was not counted here.'); continue; }   // 1.75.0
     if (!deed && kind && !['repeat', 'event'].includes(kind)) { log.push(`Reputation deed "${kind}" is unknown; use a listed Kind or an explicit repeat/event entry.`); continue; }
     const r = deed ? deed[0] : REP.reps.find(x => x.toLowerCase() === String(e.Rep || '').trim().toLowerCase());
     if (!r) { log.push(`Reputation "${e.Rep}" is unknown (use Academy, Student or Doves); nothing was changed.`); continue; }
@@ -2453,7 +2482,7 @@ function stepSchoolWeek(c) {
           } else if (cell[3] === 'study' && Wd.Day === 'Sat' && Pf.Council && !councilRemedial(S.Commitments, Wd)) {
             ATT.c[key] = num(ATT.c[key], 0) + share(['student council chamber']);
           } else if (cell[3] === 'clubs' && Pf.Club && !elect) {
-            const v = (CLASS.clubs || {})[Pf.Club] || [];
+            const v = clubVenues(S, Pf.Club);   // 1.75.0: the founded club's venue too
             ATT.c[key] = num(ATT.c[key], 0) + share(v);
             if (!ATT.done[key] && ATT.c[key] >= 60) { ATT.done[key] = true; repAdd('Student', 1, `Saturday time at the ${Pf.Club}`, 'week'); }
           }
@@ -2823,7 +2852,8 @@ function routineSchool(c, ST, WK) {
   const study = R.study + R.acts.filter(x => x.a.study).reduce((t, x) => t + x.n * 60, 0);
   if (ST && study) { ST.mins = num(ST.mins, 0) + study; R.done.push(`${Math.round(study / 60)} hours of study`); }
   R.studied = study;
-  if (R.plan.club && Pf.Club && sat) { R.club = true; repAdd('Student', 1, `Saturday time at the ${Pf.Club}`, 'week'); R.done.push(`Saturday at the ${Pf.Club}`); }
+  // 1.75.0: only a club live play counts too (one with a meeting place)
+  if (R.plan.club && Pf.Club && sat && clubVenues(S, Pf.Club).length) { R.club = true; repAdd('Student', 1, `Saturday time at the ${Pf.Club}`, 'week'); R.done.push(`Saturday at the ${Pf.Club}`); }
 }
 // Practice XP, paid shifts, mana and stamina sessions, study and club proficiency (stepProficiency, inside its weekly limits)
 function routineProf(c, gain, P) {
@@ -2842,7 +2872,7 @@ function routineProf(c, gain, P) {
     if (did) R.done.push(`${x.a.action} x${did}`);
   }
   if (R.studied >= 120) gain('Knowledge', Math.floor(R.studied / 120), 'study time');
-  if (R.club) { const club = S.Player.Profile.Club || '', stat = PROF.find(k => (CLUB_STATS[k] || []).some(n => club.toLowerCase().includes(n.toLowerCase()))); if (stat) gain(stat, 1, 'Saturday club time'); }
+  if (R.club) { const stat = clubField(S, S.Player.Profile.Club || ''); if (stat) gain(stat, 1, 'Saturday club time'); }
 }
 
 // ---- 6-. 1.49.0 (audit/AUDIT_2026-10-03_4_batch_fitur.md, batch 1: audit 4.6, 4.10): promises kept and broken. Read before the
@@ -3672,8 +3702,7 @@ function stepProficiency(c) {
     for (const s of c.profTutoring || []) gain(SUBJECT_STAT[s], 1, 'tutoring');
     if (S.World.Day === 'Sat' && num(((S.$eng.att || {}).c || {})[`${dayNo}:2`], 0) >= 60 && P.days.club !== dayNo) {
       P.days.club = dayNo;
-      const club = S.Player.Profile.Club || '';
-      const stat = PROF.find(k => (CLUB_STATS[k] || []).some(n => club.toLowerCase().includes(n.toLowerCase())));
+      const stat = clubField(S, S.Player.Profile.Club || '');   // 1.75.0: the founded club's Field
       if (stat) gain(stat, 1, 'Saturday club time');
     }
   }
@@ -3693,7 +3722,7 @@ function stepProficiency(c) {
     if (a.seasons && !a.seasons.includes(SEASONS[S.World.Month - 1])) return `${a.seasons.join(' or ')} only`;
     if (a.dorm && (S.Player.Profile.Dorm === 'Unsorted' || ['Fire','Light','Sky','Viridian'].some(dm => new RegExp(`\\b${dm}\\b`, 'i').test(S.World.Location) && dm !== S.Player.Profile.Dorm))) return 'your dorm area';
     const partnerId = NPC_ALIAS[String(withName || '').toLowerCase()] || withName;
-    const helpingMember = withName && inScene(withName) && (CLUB_MEMBERS[a.club + ' Club'] || []).includes(partnerId);
+    const helpingMember = withName && inScene(withName) && clubMembersNow(S, a.club + ' Club').includes(partnerId);
     const kitchenPermission = a.club === 'Cooking' && withName && inScene(withName) && /cook|chef/i.test(withName);
     if (a.club && !club.toLowerCase().includes(a.club.toLowerCase()) && !helpingMember && !kitchenPermission) return `${a.club} Club`;
     if (a.clubAny && !a.clubAny.some(n => club.toLowerCase().includes(n.toLowerCase()))) return `${a.clubAny.join(', ')} club`;
@@ -4258,11 +4287,113 @@ function stepRecords(c) {
 }
 
 // ---- 8c. Batch 5.2: club, competition, projects, trip ----
+// 1.75.0 (owner-approved planning/DRAFT_club_sendiri.md): the club {{user}} founds (Campus_State.Founded_club). It takes a teaching
+// staff signature from a teacher who answers for no club (on the roster that is nobody today, so the narrator introduces one), five
+// members with {{user}} and a room the Council assigns. Then the engine marks it founded, {{user}} joins it and founded_club is paid
+// once. A roster student joins only on screen; once the club is founded they have left their lore club (a Lore change says so), the
+// Council apart. The "whichever club" students (CLUB_FOUNDING.follow) follow {{user}} by themselves. One founded club a campaign.
+const FOUND_MIN = 5;
+function stepFounding(c) {
+  const { S, B, log, jnl, hasB, toolEdit, text } = c;
+  const CS = S.Campus_State, F = CS.Founded_club = _.isPlainObject(CS.Founded_club) ? CS.Founded_club : {};
+  const F0 = (hasB && _.isPlainObject((B.Campus_State || {}).Founded_club) && B.Campus_State.Founded_club) || {};
+  if (hasB) { F.Status = String(F0.Status || ''); F.Since = String(F0.Since || ''); }   // the engine's fields
+  F.Name = String(F.Name || '').trim();
+  if (hasB && F.Status === 'founded' && F.Name !== String(F0.Name || '')) { F.Name = String(F0.Name || ''); log.push(`A founded club keeps its name: the ${F.Name}.`); }
+  if (!F.Name) {
+    if (F0.Name) { jnl.push(`Gave up founding the ${F0.Name}.`); log.push(`The founding of the ${F0.Name} was dropped (Founded_club.Name is empty).`); }
+    for (const k of ['Field', 'Venue', 'Advisor', 'Status', 'Since']) F[k] = '';
+    F.Members = [];
+    return;
+  }
+  if (!F.Status) F.Status = 'forming';
+  const ali = x => NPC_ALIAS[String(x || '').trim().toLowerCase()] || '';
+  F.Field = PROF.find(k => k.toLowerCase() === String(F.Field || '').trim().toLowerCase()) || clubField(S, F.Name) || 'Society';
+  // the room: a campus place outside the dormitories (the Council assigns whatever is left)
+  const v = String(F.Venue || '').trim();
+  if (v && v !== String(F0.Venue || '')) {
+    const nm = placeOf(canonLocation(v)), pk = nm.toLowerCase().replace(/^the /, '');
+    if (CAMPUS.some(x => x.replace(/^the /, '') === pk) && !/dormitor/.test(pk)) F.Venue = nm;
+    else { F.Venue = String(F0.Venue || ''); log.push(`Founded_club.Venue "${v}" is not a campus place a club can meet in (a place on the map, outside the dormitories); it was not recorded.`); }
+  }
+  // the signature: a teacher who answers for no club
+  const adv = String(F.Advisor || '').trim(), aid = ali(adv);
+  if (adv && (aid || adv) !== String(F0.Advisor || '')) {
+    if (aid && !(CLUB_FOUNDING.sign || []).includes(aid)) {
+      const has = (CLUB_FOUNDING.staff || {})[aid];
+      F.Advisor = String(F0.Advisor || '');
+      log.push(`${aid} cannot sign for the ${F.Name}: ${has ? `they already answer for the ${has}, and a teacher signs for one club only` : 'they are not teaching staff'}. Halvard has more teachers than are on record: introduce one as its advisor.`);
+    } else F.Advisor = aid || adv;
+  }
+  // the members: students other than {{user}}
+  const prose = proseOf(text), was = new Set(F0.Members || []), follow = CLUB_FOUNDING.follow || [], present = S.Scene.Present || {};
+  const away = id => (CS.Graduated || []).includes(id) || (ARRIVES[id] || 1) > S.World.Year;
+  const userName = String(S.Player.Profile.Name || '').trim().toLowerCase(), out = [], joined = [];
+  for (const raw of Array.isArray(F.Members) ? F.Members : []) {
+    const nm = String(raw || '').trim(), id = ali(nm) || nm;
+    if (!nm || out.includes(id) || /\{\{user\}\}/i.test(nm) || nm.toLowerCase() === userName) continue;
+    if (ali(nm)) {
+      if (away(id)) continue;   // graduated members leave, as from any club
+      if (!was.has(id) && !follow.includes(id)) {
+        const rx = NAME_RX_OF.get(id);
+        const why = !(PRESENCE.stu || {})[id] ? 'they are not a Halvard student'
+          : hasB && !toolEdit && !present[id] && !(rx && mentionIn(prose, id, rx)) ? 'they are not in this reply (a student joins where the story shows it, and only if they would)' : '';
+        if (why) { log.push(`${id} did not join the ${F.Name}: ${why}.`); continue; }
+        joined.push(id);
+      }
+    }
+    out.push(id);
+  }
+  for (const id of follow) if (!out.includes(id) && (PRESENCE.stu || {})[id] && !away(id)) out.push(id);
+  F.Members = out.slice(0, 16);
+  // an invented advisor or member stays on record
+  const X = _.isPlainObject(S.Extras) ? S.Extras : {};
+  for (const nm of [F.Advisor, ...F.Members.filter(m => !ali(m))]) { const k = nm && keyIn(X, nm); if (k && X[k] && !X[k].Keep) X[k].Keep = true; }
+  const day = dstamp(S.World), E = S.$eng, J = E.fjoin = _.isPlainObject(E.fjoin) ? E.fjoin : {};
+  for (const id of joined) J[id] = day;
+  if (F.Status === 'forming' && F.Advisor && F.Venue && 1 + F.Members.length >= FOUND_MIN) {
+    F.Status = 'founded'; F.Since = day;
+    S.Player.Profile.Club = F.Name;
+    jnl.push(`Founded the ${F.Name} (${F.Venue}, advisor ${F.Advisor}) with ${F.Members.join(', ')}.`);
+    S.$ui.toasts.push(`Club founded: ${F.Name}`);
+    if (!E.founded && c.repAdd) {
+      E.founded = true;
+      const deed = (REP.deeds || {}).founded_club || ['Student', 8, 'event'], got = c.repAdd(deed[0], deed[1], `founded the ${F.Name}`, '');
+      log.push(`The ${F.Name} is founded: ${deed[0]} reputation +${got} Rep XP (founded_club).`);
+      c.repSync(true);
+    }
+  } else if (F.Status === 'forming' && hasB && !_.isEqual(F, F0)) {
+    const need = [F.Advisor ? '' : 'a teacher to sign', 1 + F.Members.length >= FOUND_MIN ? '' : `${FOUND_MIN - 1 - F.Members.length} more member(s)`, F.Venue ? '' : 'a room from the Student Council'].filter(Boolean);
+    if (need.length) log.push(`Founding the ${F.Name}: ${1 + F.Members.length}/${FOUND_MIN} members; still needs ${need.join(', ')}.`);
+  }
+  // a roster student in the founded club has left their lore club: a Lore change on their entry says so (only the membership lifts it)
+  if (F.Status !== 'founded') return;
+  const L = CS.Lore_changes = _.isPlainObject(CS.Lore_changes) ? CS.Lore_changes : {};
+  const mine = new RegExp(`\\s*(?:Left the [^.]*? for |Joined ){{user}}'s ${_.escapeRegExp(F.Name)} \\([^)]*\\)\\.`);
+  const moved = new Set(F.Members.filter(id => ali(id) && !follow.includes(id)));
+  for (const id of moved) {
+    const old = loreClubOf(id), when = J[id] || F.Since, line = `${old ? `Left the ${old} for ` : 'Joined '}{{user}}'s ${F.Name} (${when}).`;
+    const k = Object.keys(L).find(x => lcKey(x) === lcKey(id)), r = k ? L[k] : null;
+    if (r && String(r.Now || '').includes(line)) continue;
+    const now = `${String((r && r.Now) || '').replace(mine, '').trim()} ${line}`.trim().slice(0, 400);
+    L[k || id] = { ...(r || {}), Now: now, Cause: (r && r.Cause) || `recruited by {{user}} into the ${F.Name}`, Since: (r && r.Since) || when, Replace: false, $uid: loreUidOf(id) };
+    if (hasB && !toolEdit) { jnl.push(`${id} ${old ? `left the ${old} for` : 'joined'} the ${F.Name}.`); S.$ui.toasts.push(`${id} joined the ${F.Name}`); }
+  }
+  for (const k of Object.keys(L)) {
+    const id = ali(k) || k;
+    if (moved.has(id) || !mine.test(String((L[k] || {}).Now || ''))) continue;
+    const now = String(L[k].Now).replace(mine, '').trim();
+    if (now) L[k] = { ...L[k], Now: now }; else delete L[k];
+    if (hasB && !toolEdit) jnl.push(`${id} left the ${F.Name}.`);
+  }
+}
+
 function stepClubLife(c) {
   const { S, B, log, jnl, hasB } = c;
+  stepFounding(c);
   const canonList = a => [...new Set((a || []).map(x => NPC_ALIAS[String(x).toLowerCase()] || x))];
   if (hasB) {
-    const c0 = canonClub(B.Player.Profile.Club), c1 = S.Player.Profile.Club || '';
+    const c0 = canonClub(B.Player.Profile.Club, B), c1 = S.Player.Profile.Club || '';
     if (c0 !== c1) jnl.push(c1 ? `Joined the ${c1}.` : `Left the ${c0}.`);
   }
   const Co = S.Competition, Co0 = (hasB && B.Competition) || {};
@@ -4422,7 +4553,7 @@ function stepInitiative(c) {
           place: [...(OFF.has('npc_routines') ? [] : ((PRESENCE.rt || {})[id] || []).map(r => r[4])), ...String(HAUNT[id] || '').split(/[;,]/).map(x => x.replace(/\(.*?\)/g, '').trim()).filter(Boolean),   // 1.52.0: routines first
             ...(cat === 'authority' ? [] : INIT_ASKS.places || [])].filter((x, i, a) => a.indexOf(x) === i),
           thing: [...(gp.loved || []), ...(gp.liked || [])],
-          club: (INIT_ASKS.club || {})[id] ? [INIT_ASKS.club[id]] : [],
+          club: [movedToFounded(foundedClub(S), id) ? foundedClub(S).name : (INIT_ASKS.club || {})[id]].filter(Boolean),   // 1.75.0
           event: [...evs, ...tomorrow].map(e => e.t.split(' (')[0]).filter((x, i, a) => a.indexOf(x) === i),
         };
         const combos = [];
@@ -5669,6 +5800,7 @@ function ruleCards(c) {
     favour: () => Object.values(S.Commitments || {}).some(x => /^favou?r$/i.test(String((x || {}).Type || '').trim())) || !!(((S.$ui || {}).initiative || {}).favour) || /\bfavou?rs?\b/i.test(said),
     notices: () => here === 'Notice Board' || /\b(notices?|notice board|flyers?)\b/i.test(said),
     fold: () => !!(S.$ui || {}).fold,   // 1.63.0 (memory audit M5)
+    founding: () => ((S.Campus_State || {}).Founded_club || {}).Status === 'forming' || /\b(new club|start(ing)? a club|found(ing)? (a|my|our) club)\b/i.test(said),   // 1.75.0
     vigil: () => Object.keys(S.Inventory || {}).some(k => /vigil/i.test(k)) || num(((S.$eng || {}).sleep || {}).vigilUntil, -1) > absA || /\bvigil\b/i.test(said),
   };
   return Object.keys(RULE_CARDS).filter(id => (!RULE_CARDS[id] || !OFF.has(RULE_CARDS[id])) && test[id] && test[id]());

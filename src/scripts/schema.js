@@ -231,6 +231,9 @@ export const Schema = z.object({
     New_relations: StrRec(),
     Secrets_revealed: StrList(80),
     Graduated: StrList(60),   // 1.0.3: students who have left campus after Graduation (engine adds the year's third-years)
+    // 1.75.0 (owner-approved planning/DRAFT_club_sendiri.md): the club {{user}} founds, one a campaign. Members are students other
+    // than {{user}}; Field is the proficiency its Saturday time trains; Status ('forming' / 'founded') and Since are the engine's
+    Founded_club: O({ Name: Str(''), Field: Str(''), Venue: Str(''), Advisor: Str(''), Members: StrList(16), Status: Str(''), Since: Str('') }),
   }),
 
   // 1.6.1 (Batch D, N5): characters the narrator invented, recorded on their second appearance so they stay the same person.
@@ -450,6 +453,8 @@ export const Schema = z.object({
     comp: z.any().prefault(null).catch(null),                      // 1.44.0: competition results paid { paid: [keys], exp: 0-2 staff expectation } (engine)
     promise: z.any().prefault(null).catch(null),
     word: z.array(z.any()).prefault([]).catch([]),                // 1.74.0: { from, n, due, to } a loud moment on its way to friends (engine)
+    founded: Bool(false),                                          // 1.75.0: founded_club paid (or a club founded before 1.75.0) (engine)
+    fjoin: z.record(z.string(), z.any()).prefault({}).catch({}),   // 1.75.0: roster student -> the day they joined the founded club (engine)
     pair: z.any().prefault(null).catch(null),                      // 1.51.0: { d: the day of the last pair moment } (engine)
     first: z.record(z.string(), z.any()).prefault({}).catch({}),    // 1.57.0 (U3): notable place -> [first visit date, who was there] (engine)
     nrel: z.record(z.string(), z.any()).prefault({}).catch({}),     // 1.51.0: New_relations key -> day last renewed (engine)                   // 1.49.0: { late: ['c:<favour>', 'p:<group assignment>'] } overdue rises already paid (engine)

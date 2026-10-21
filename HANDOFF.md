@@ -3,12 +3,12 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.74.0** (2026-10-21): NPCs connected to each other. A loud moment reaches the teller's friends as
-"Heard from …"; a present character sees {{user}}'s close bonds through their own ties (dislike, rivals, friends); an injury is news to
-those who were not there. People → Bonds sorts five ways; the Council's members are placed like any club's. 1.73.0: time apart and
-asking after; 1.72.0: special days in an NPC's mood; 1.71.0/1.70.0: scene cards; 1.69.0: one model per turn; 1.68.0: the preset is
-Realistic Frankenstein 2.2.1.3 as it ships. The memory audit is done except batch 8. Live checks: the campaign quest log
-`docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the card, Q0.1).
+**Snapshot:** card **v1.75.0** (2026-10-21): a club {{user}} founds is a club like any other. `Campus_State.Founded_club` tracks the
+founding (a teacher with no club, so an introduced one; five members with {{user}}; a room); then its room, Field and members work in
+attendance, XP, presence, Activities, the map, the graph and dossiers, and a recruited student leaves their lore club. Canon advisors now
+show. 1.74.0: word gets around, ties; 1.73.0: time apart; 1.72.0: special days; 1.70.0/1.71.0: scene cards; 1.69.0: one model per
+turn; 1.68.0: the preset is Realistic Frankenstein 2.2.1.3 as it ships. The memory audit is done except batch 8. Live checks: the
+campaign quest log `docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the card, Q0.1).
 
 **Next task:** the owner plays the quest log; their reports and chat exports bring the playtest fixes (tick what passed, run
 `tools/audit_chat.py` on the export, move "Where you are"). Batch 8 (chapters, a new chat file without losing memory) is planned in

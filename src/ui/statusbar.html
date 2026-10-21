@@ -196,6 +196,17 @@ const areaMin = (PL, routesOf, a, b) => a === b ? 0 : PL[a].pin === PL[b].pin ? 
 // a Settings feature is on, read from $ui as the engine left it ($ui.on; older saves: off, happenings, wxfx, ambience)
 const uiOn = (UI, id) => { const U = UI || {}; return typeof (U.on || {})[id] === 'boolean' ? U.on[id] : id === 'happenings' ? U.happenings !== 'off' : id === 'weather' ? (U.wxfx || 'full') !== 'off'
   : id === 'ambience' ? (U.ambience || 'full') !== 'off' : !(U.off || []).includes(id); };
+// ---- the founded club (1.75.0, owner-approved planning/DRAFT_club_sendiri.md): Campus_State.Founded_club as every runtime reads it
+// next to the build's club list; null until it has a name. vkey: its venue as a place key; members: the students besides the player
+// (roster ids, as the engine keeps them); founded: the engine marked it founded. Once it is, a member has left their lore club for it
+// (movedToFounded); the Student Council is apart.
+function foundedClub(S) {
+  const F = ((S || {}).Campus_State || {}).Founded_club;
+  if (!F || typeof F !== 'object' || !String(F.Name || '').trim()) return null;
+  return { name: String(F.Name).trim(), field: String(F.Field || ''), venue: placeOf(F.Venue), vkey: placeKey(F.Venue), advisor: String(F.Advisor || '').trim(),
+    members: (Array.isArray(F.Members) ? F.Members : []).map(x => String(x || '').trim()).filter(Boolean), founded: F.Status === 'founded', since: String(F.Since || '') };
+}
+const movedToFounded = (F, id) => !!F && F.founded && F.members.includes(id);
 // ---- end of shared.js
 
   const DORM = DORM_COLOR;   // shared.js

@@ -596,6 +596,10 @@ The first academy flight (the airship), then the Grand Vast Forest.
       story: a masterwork in the Bag, and the Project closes [1.29].
 - [ ] Knowledge Rank 5 (Encyclopaedic): a reply in the Main Library files a "Records: …" clue, and the next reply reveals what the record
       shows [1.44].
+- [ ] Found a club: say {{user}} wants to start one. Activities → Clubs shows the founding checklist; a canon teacher asked to sign turns it
+      down (the Log says why) and the narrator brings in a new teacher; a student joins only in a scene; with five members and a room the
+      club is founded (+8 Student, a Journal line), {{user}} is in it, a recruited student's dossier shows the new club, and on Saturday
+      afternoon `<now>` has the club meeting in its room [1.75].
 
 ### MS4 A long Journal (some in-game months in)
 - [ ] Once ten Journal lines have left the window, the update has `/Fold`, and the next `<current_state>` shows a dated `_Chronicle` entry

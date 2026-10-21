@@ -352,7 +352,7 @@ function locCard(id, S, cur, P) {
   // neighbours, and the AI reads them in the Campus Map lore
   const rows = [
     ['Walk', esc(walkText(id, cur, S))], ['Access', esc(accessText)],
-    ['Clubs here', esc(l.clubs.map(c => c.replace(/\s*\(.*\)$/, '')).join(', ') || 'None')],
+    ['Clubs here', esc([...l.clubs.map(c => c.replace(/\s*\(.*\)$/, '')), ...clubsNow(S).filter(c => c.founded && c.venues.includes(id)).map(c => c.name)].join(', ') || 'None')],   // 1.75.0: the founded club
     ['Regulars', regs || '<span class="sub">Nobody you know yet</span>'],
   ];
   // 1.52.0 (feature batch 4): the weekly routines here of people whose Haunts you know (data/npc_routines.json, "usually")

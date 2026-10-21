@@ -84,6 +84,17 @@ const areaMin = (PL, routesOf, a, b) => a === b ? 0 : PL[a].pin === PL[b].pin ? 
 // a Settings feature is on, read from $ui as the engine left it ($ui.on; older saves: off, happenings, wxfx, ambience)
 const uiOn = (UI, id) => { const U = UI || {}; return typeof (U.on || {})[id] === 'boolean' ? U.on[id] : id === 'happenings' ? U.happenings !== 'off' : id === 'weather' ? (U.wxfx || 'full') !== 'off'
   : id === 'ambience' ? (U.ambience || 'full') !== 'off' : !(U.off || []).includes(id); };
+// ---- the founded club (1.75.0, owner-approved planning/DRAFT_club_sendiri.md): Campus_State.Founded_club as every runtime reads it
+// next to the build's club list; null until it has a name. vkey: its venue as a place key; members: the students besides the player
+// (roster ids, as the engine keeps them); founded: the engine marked it founded. Once it is, a member has left their lore club for it
+// (movedToFounded); the Student Council is apart.
+function foundedClub(S) {
+  const F = ((S || {}).Campus_State || {}).Founded_club;
+  if (!F || typeof F !== 'object' || !String(F.Name || '').trim()) return null;
+  return { name: String(F.Name).trim(), field: String(F.Field || ''), venue: placeOf(F.Venue), vkey: placeKey(F.Venue), advisor: String(F.Advisor || '').trim(),
+    members: (Array.isArray(F.Members) ? F.Members : []).map(x => String(x || '').trim()).filter(Boolean), founded: F.Status === 'founded', since: String(F.Since || '') };
+}
+const movedToFounded = (F, id) => !!F && F.founded && F.members.includes(id);
 // ---- whereabouts (1.47.0, audit 3.8): one answer to "where is NPC X now" and "who is likely around this place" for the engine
 // (it writes $ui.here for <now>; NPC initiative, Next plans and appointments, the students met in an outside area) and the Map
 // panel's Regulars. PD is the presence data each runtime is given (tools/common.py presence_data): reg (place key -> regulars),
@@ -101,7 +112,7 @@ function presenceView(PD, S, on) {
   const gale = FULL && WX.now.wind === 'gale';
   return { W, UI, PR, NST: CS.NPC_status || {}, GRAD: CS.Graduated || [], Y: Math.max(1, Number(W.Year) || 1), COUNCIL: CS.Council || {}, pIdx, cls,
     until: PERIOD_END[pIdx], sick: FULL && WX.flu ? (WX.sick || []) : [], gale, bad: FULL && (WX.now.sky === 'Rain' || WX.now.sky === 'Storm' || gale), rain: FULL && WX.now.sky === 'Rain',
-    min: hmMin(W.Time), dkey: [W.Year || 1, W.Month, W.Week, W.Day].join('-'), seed: Number((S.$eng || {}).seed) || 0, rton: on('npc_routines') };   // 1.52.0: the routine roll
+    min: hmMin(W.Time), dkey: [W.Year || 1, W.Month, W.Week, W.Day].join('-'), seed: Number((S.$eng || {}).seed) || 0, rton: on('npc_routines'), FC: foundedClub(S) };   // 1.52.0: the routine roll
 }
 // NPC id at this moment: gone (graduated, or their cohort has not arrived), st (Campus_State.NPC_status), sick (the flu), busy
 // ([what they are doing, the place keys where that keeps them in sight]: students in class, at Study Hall, voting or at their clubs;
@@ -138,7 +149,12 @@ function presenceAt(PD, V, loc) {
   else if (k === 'study') pres.push(c[2].includes(pk) ? 'Study Hall until ' + P[1] + ': most students are here.' : 'Students are at Study Hall in the Main Library until ' + P[1] + '.');
   else if (k === 'council') pres.push(c[2].includes(pk) ? 'Student Council meets here until ' + P[1] + '; members attend instead of Study Hall.' : 'Student Council members meet in the Chamber until ' + P[1] + '.');
   else if (k === 'election') pres.push('Students vote for Student Council President in the Main Courtyard until ' + P[2] + '; ordinary clubs do not meet this afternoon.');
-  else if (c) { clubs = (PD.clubv || {})[pk] || []; if (!clubs.length) pres.push('Students are at their clubs until ' + P[2] + '.'); }
+  else if (c) {   // 1.75.0: the founded club meets at its venue, and its members have left their lore clubs
+    const FC = V.FC && V.FC.founded ? V.FC : null;
+    clubs = ((PD.clubv || {})[pk] || []).map(x => FC ? [x[0], x[1].filter(id => !FC.members.includes(id)), x[2], x[3]] : x);
+    if (FC && FC.vkey === pk) clubs = [...clubs, [FC.name, FC.members, false, false]];
+    if (!clubs.length) pres.push('Students are at their clubs until ' + P[2] + '.');
+  }
   let moved = [];
   if (V.bad && (PD.outd || []).includes(pk) && !((pk === 'boathouse and lake' || pk === 'fishing house') && V.rain && !V.gale)) {   // the Fishing Club likes rain
     moved = regs1.filter(id => !(V.gale && id === 'Ottavio')); regs1 = regs1.filter(id => V.gale && id === 'Ottavio');

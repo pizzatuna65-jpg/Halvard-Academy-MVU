@@ -92,6 +92,17 @@ const areaMin = (PL, routesOf, a, b) => a === b ? 0 : PL[a].pin === PL[b].pin ? 
 // a Settings feature is on, read from $ui as the engine left it ($ui.on; older saves: off, happenings, wxfx, ambience)
 const uiOn = (UI, id) => { const U = UI || {}; return typeof (U.on || {})[id] === 'boolean' ? U.on[id] : id === 'happenings' ? U.happenings !== 'off' : id === 'weather' ? (U.wxfx || 'full') !== 'off'
   : id === 'ambience' ? (U.ambience || 'full') !== 'off' : !(U.off || []).includes(id); };
+// ---- the founded club (1.75.0, owner-approved planning/DRAFT_club_sendiri.md): Campus_State.Founded_club as every runtime reads it
+// next to the build's club list; null until it has a name. vkey: its venue as a place key; members: the students besides the player
+// (roster ids, as the engine keeps them); founded: the engine marked it founded. Once it is, a member has left their lore club for it
+// (movedToFounded); the Student Council is apart.
+function foundedClub(S) {
+  const F = ((S || {}).Campus_State || {}).Founded_club;
+  if (!F || typeof F !== 'object' || !String(F.Name || '').trim()) return null;
+  return { name: String(F.Name).trim(), field: String(F.Field || ''), venue: placeOf(F.Venue), vkey: placeKey(F.Venue), advisor: String(F.Advisor || '').trim(),
+    members: (Array.isArray(F.Members) ? F.Members : []).map(x => String(x || '').trim()).filter(Boolean), founded: F.Status === 'founded', since: String(F.Since || '') };
+}
+const movedToFounded = (F, id) => !!F && F.founded && F.members.includes(id);
 // ---- whereabouts (1.47.0, audit 3.8): one answer to "where is NPC X now" and "who is likely around this place" for the engine
 // (it writes $ui.here for <now>; NPC initiative, Next plans and appointments, the students met in an outside area) and the Map
 // panel's Regulars. PD is the presence data each runtime is given (tools/common.py presence_data): reg (place key -> regulars),
@@ -109,7 +120,7 @@ function presenceView(PD, S, on) {
   const gale = FULL && WX.now.wind === 'gale';
   return { W, UI, PR, NST: CS.NPC_status || {}, GRAD: CS.Graduated || [], Y: Math.max(1, Number(W.Year) || 1), COUNCIL: CS.Council || {}, pIdx, cls,
     until: PERIOD_END[pIdx], sick: FULL && WX.flu ? (WX.sick || []) : [], gale, bad: FULL && (WX.now.sky === 'Rain' || WX.now.sky === 'Storm' || gale), rain: FULL && WX.now.sky === 'Rain',
-    min: hmMin(W.Time), dkey: [W.Year || 1, W.Month, W.Week, W.Day].join('-'), seed: Number((S.$eng || {}).seed) || 0, rton: on('npc_routines') };   // 1.52.0: the routine roll
+    min: hmMin(W.Time), dkey: [W.Year || 1, W.Month, W.Week, W.Day].join('-'), seed: Number((S.$eng || {}).seed) || 0, rton: on('npc_routines'), FC: foundedClub(S) };   // 1.52.0: the routine roll
 }
 // NPC id at this moment: gone (graduated, or their cohort has not arrived), st (Campus_State.NPC_status), sick (the flu), busy
 // ([what they are doing, the place keys where that keeps them in sight]: students in class, at Study Hall, voting or at their clubs;
@@ -146,7 +157,12 @@ function presenceAt(PD, V, loc) {
   else if (k === 'study') pres.push(c[2].includes(pk) ? 'Study Hall until ' + P[1] + ': most students are here.' : 'Students are at Study Hall in the Main Library until ' + P[1] + '.');
   else if (k === 'council') pres.push(c[2].includes(pk) ? 'Student Council meets here until ' + P[1] + '; members attend instead of Study Hall.' : 'Student Council members meet in the Chamber until ' + P[1] + '.');
   else if (k === 'election') pres.push('Students vote for Student Council President in the Main Courtyard until ' + P[2] + '; ordinary clubs do not meet this afternoon.');
-  else if (c) { clubs = (PD.clubv || {})[pk] || []; if (!clubs.length) pres.push('Students are at their clubs until ' + P[2] + '.'); }
+  else if (c) {   // 1.75.0: the founded club meets at its venue, and its members have left their lore clubs
+    const FC = V.FC && V.FC.founded ? V.FC : null;
+    clubs = ((PD.clubv || {})[pk] || []).map(x => FC ? [x[0], x[1].filter(id => !FC.members.includes(id)), x[2], x[3]] : x);
+    if (FC && FC.vkey === pk) clubs = [...clubs, [FC.name, FC.members, false, false]];
+    if (!clubs.length) pres.push('Students are at their clubs until ' + P[2] + '.');
+  }
   let moved = [];
   if (V.bad && (PD.outd || []).includes(pk) && !((pk === 'boathouse and lake' || pk === 'fishing house') && V.rain && !V.gale)) {   // the Fishing Club likes rain
     moved = regs1.filter(id => !(V.gale && id === 'Ottavio')); regs1 = regs1.filter(id => V.gale && id === 'Ottavio');
@@ -243,6 +259,7 @@ const SUBJECT_STAT = { History: 'Knowledge', 'Magic Theory': 'Arcana', 'Dark Mag
 const PROF_FIELD = { Knowledge: 'history, sciences, numbers, geography, nations, languages, records and puzzles', Arcana: 'magic, curses, wards, traps and precise spellwork', Craft: 'making, brewing, mending, cooking and handiwork', Prowess: 'duels, sport, climbing, running and strength', Society: 'formal dealings, manners, bargaining, performance and reading a room', Nature: 'beasts, plants, weather, tracks and the outdoors' };
 const CLUB_STATS = {"Prowess":["Magic Duelling","Soccer","Running","Archery","Swimming","Gymnastics","Basketball","Walking"],"Nature":["Beast Handling","Gardening","Fishing","Groundskeeping"],"Craft":["Alchemy","Brewing","Smithing","Tailoring","Cooking","Drawing","Calligraphy"],"Society":["Music","Tea","Theatre","Card","Board Game","Festival Committee","Student Council","Medical Centre Volunteers"],"Arcana":["Warding Study","Divination","Specialized Magic"],"Knowledge":["Library Assistants","Newspaper"]};
 const CLUB_MEMBERS = {"Academy Newspaper":["Castor","Linus"],"Alchemy Circle":["Royhan"],"Archery Club":[],"Basketball Club":["Aurelian"],"Beast Handling Club":["Lenna"],"Board Game Club":["Gareth","William"],"Brewing Club":[],"Calligraphy Club":[],"Card Club":["Aiden"],"Cooking Club":["Nerys"],"Divination Society":["Kanae"],"Drawing Club":["Alyssa"],"Festival Committee":["Caspian","Rigel"],"Fishing Club":["Ottavio","Wren"],"Gardening Club":["Idris","Maple"],"Groundskeeping":["Dante"],"Gymnastics Club":[],"Library Assistants":["Irene","Tilly"],"Magic Duelling Club":["Sophia","Tsubaki","Bruno"],"Medical Centre Volunteers":[],"Music Club":["Caralynn","Ruby"],"Running Club":["Saffi"],"Smithing Club":["Vera"],"Soccer Club":["Percival"],"Specialized Magic Club":["Hadrian"],"Student Council":[],"Swimming Club":["Bianca"],"Tailoring Club":["Zara"],"Tea Club":["Florian"],"Theatre Troupe":["Trixie","Ezrel"],"Walking Club":["Faye"],"Warding Study Group":[]};
+const CLUB_FOUNDING = {"staff":{"Valentin":"Academy Newspaper","Mimosa":"Alchemy Circle","Vallie":"Beast Handling Club","Magnus":"Board Game Club","Kotaro":"Brewing Club","Kuroo":"Card Club","Ottavio":"Fishing Club","Cedric":"Gardening Club","Layla":"Library Assistants","Gavlan":"Magic Duelling Club","Hester":"Medical Centre Volunteers","Yvette":"Smithing Club","Dorian":"Specialized Magic Club","Anya":"Tea Club","Ezrel":"Theatre Troupe","Anselm":"Warding Study Group"},"sign":[],"follow":["Etnie","Topaz"]};   // 1.75.0: { staff: teacher -> their club, sign: roster teachers free to sign, follow }
 const PRACTICE = [{"loc":"potion_halls","action":"Brew a potion","stat":"Craft","xp":2,"afterClass":true,"until":1200,"dorm":true,"name":"Potion Halls"},{"loc":"potion_halls","action":"Reagent drill","stat":"Craft","xp":1,"name":"Potion Halls"},{"loc":"main_library","action":"Study a subject","stat":"subject","xp":2,"study":true,"name":"Main Library"},{"loc":"study_rooms","action":"Group study","stat":"subject","xp":2,"partner":true,"study":true,"name":"Study Rooms"},{"loc":"archive","action":"Dig through the records","stat":"Knowledge","xp":2,"name":"Archive"},{"loc":"seminar_rooms","action":"Practise wards and counter-curses","stat":"Arcana","xp":2,"afterClass":true,"name":"Seminar Rooms"},{"loc":"observation_tower","action":"Chart the stars","stat":"Arcana","xp":2,"night":true,"clear":true,"name":"Observation Tower"},{"loc":"meditation_rooms","action":"Will-focus meditation","stat":"Arcana","xp":1,"train":"mana","name":"Meditation Rooms"},{"loc":"spirit_path","action":"Watch the spirits","stat":"Nature","xp":1,"name":"Spirit Path"},{"loc":"spirit_path","action":"Walk with your spirit","stat":"Arcana","xp":1,"pact":true,"name":"Spirit Path"},{"loc":"willow_island","action":"Sit under the willow","stat":"Arcana","xp":1,"daylight":true,"name":"Willow Island"},{"loc":"club_rooms","action":"Specialized Magic practice","stat":"Arcana","xp":2,"club":"Specialized Magic","name":"Club Rooms"},{"loc":"combat_grounds","action":"Drill","stat":"Prowess","xp":1,"dorm":true,"train":"stamina","name":"Combat Grounds"},{"loc":"combat_grounds","action":"Spar with a partner","stat":"Prowess","xp":2,"dorm":true,"partner":true,"name":"Combat Grounds"},{"loc":"sparring_pavilion","action":"Take a challenge from the board","stat":"Prowess","xp":3,"club":"Magic Duelling","name":"The Sparring Pavilion"},{"loc":"gymnasium","action":"Train","stat":"Prowess","xp":1,"train":"stamina","name":"Gymnasium"},{"loc":"sports_field","action":"Train","stat":"Prowess","xp":1,"train":"stamina","name":"Sports Field"},{"loc":"archery_range","action":"Train","stat":"Prowess","xp":1,"train":"stamina","name":"Archery Range"},{"loc":"swimming_pool","action":"Train","stat":"Prowess","xp":1,"train":"stamina","name":"Swimming Pool"},{"loc":"gardens","action":"Tend the reagent beds","stat":"Nature","xp":1,"daylight":true,"club":"Gardening","name":"Gardens"},{"loc":"menagerie","action":"Help with the animals","stat":"Nature","xp":2,"daylight":true,"partner":true,"name":"Menagerie"},{"loc":"menagerie","action":"Muck out the pens (paid)","stat":"Nature","xp":1,"paid":40,"paidAs":"animal care shift","name":"Menagerie"},{"loc":"bell_tower","action":"Bell-keeper's shift (paid)","stat":"Craft","xp":1,"paid":30,"paidAs":"bell-keeper's shift","until":1080,"name":"Bell Tower"},{"loc":"boathouse_and_lake","action":"Row on the lake","stat":"Prowess","xp":1,"train":"stamina","daylight":true,"calm":true,"name":"Boathouse and Lake"},{"loc":"grassy_field_and_hills","action":"Run the hills","stat":"Prowess","xp":1,"train":"stamina","calm":true,"name":"Grassy Field and Hills"},{"loc":"grassy_field_and_hills","action":"Read the sky","stat":"Nature","xp":1,"name":"Grassy Field and Hills"},{"loc":"forest","action":"Fieldwork: tracks and signs","stat":"Nature","xp":2,"daylight":true,"name":"Forest"},{"loc":"forest","action":"Forage","stat":"Nature","xp":1,"name":"Forest"},{"loc":"forest_clearing","action":"Gather clearing blooms","stat":"Nature","xp":1,"name":"Forest Clearing"},{"loc":"fishing_house","action":"Fish the pond or the lake","stat":"Nature","xp":1,"club":"Fishing","name":"Fishing House"},{"loc":"mall","action":"Dance and deportment","stat":"Society","xp":2,"cost":15,"name":"The Mall"},{"loc":"mall","action":"Music practice","stat":"Society","xp":2,"cost":15,"name":"The Mall"},{"loc":"mall","action":"Art studio","stat":"Craft","xp":2,"cost":15,"name":"The Mall"},{"loc":"common_rooms","action":"Practise forms of address","stat":"Society","xp":1,"partner":true,"name":"Common Rooms"},{"loc":"club_rooms","action":"Music, Tea, Theatre practice","stat":"Society","xp":2,"clubAny":["Music","Tea","Theatre"],"name":"Club Rooms"},{"loc":"club_rooms","action":"Drawing, Calligraphy, Tailoring practice","stat":"Craft","xp":2,"clubAny":["Drawing","Calligraphy","Tailoring"],"name":"Club Rooms"},{"loc":"workshop","action":"Runes and talismans","stat":"Craft","xp":2,"name":"Workshop"},{"loc":"workshop","action":"Enchant or repair","stat":"Craft","xp":2,"name":"Workshop"},{"loc":"workshop","action":"Brewing Club bench","stat":"Craft","xp":2,"club":"Brewing","name":"Workshop"},{"loc":"workshop","action":"Smithing","stat":"Craft","xp":2,"club":"Smithing","name":"Workshop"},{"loc":"workshop","action":"Tailoring","stat":"Craft","xp":2,"club":"Tailoring","name":"Workshop"},{"loc":"canteen","action":"Cook or bake","stat":"Craft","xp":2,"club":"Cooking","name":"Canteen"},{"loc":"common_rooms","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Common Rooms"},{"loc":"courtyards","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Courtyards"},{"loc":"gardens","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Gardens"},{"loc":"fire_dormitory","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Fire Dormitory"},{"loc":"light_dormitory","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Light Dormitory"},{"loc":"sky_dormitory","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Sky Dormitory"},{"loc":"viridian_dormitory","action":"Knit or sew, sketch or paint, carve, calligraphy","stat":"Craft","xp":1,"materials":true,"name":"Viridian Dormitory"}];
 // 1.31.0 (owner-approved planning/DRAFT_restore_places.md): restful places {place key: {restores, usual, rules, clears}} (data/restore_places.json)
 const RESTFUL = {"founder's statue and park":{"restores":"stamina","usual":1.5,"summary":"Stamina x1.5 while resting in fair daylight; x1.75 on a warm sunny afternoon; nothing extra in rain, snow, fog, cold or after dark","rules":[{"if":{"dark":true},"mult":1,"why":"after dark"},{"if":{"sky":["Overcast","Fog","Rain","Storm"]},"mult":1,"why":"the weather"},{"if":{"snow":true},"mult":1,"why":"snow"},{"if":{"tempMax":4},"mult":1,"why":"too cold to lie on the grass"},{"if":{"sky":["Clear"],"tempMin":15,"tempMax":27,"from":660,"to":960},"mult":1.75,"why":"a warm sunny afternoon"}]},"medical centre":{"restores":"stamina","usual":1.75,"summary":"Stamina x1.75 while resting in the ward; x1.25 in exam weeks, competition weeks and the week after the Thinning","rules":[{"if":{"weeks":[[3,1],[5,1],[9,1],[11,1],[3,4],[6,4],[9,4],[7,4]]},"mult":1.25,"why":"a busy week: the beds go to the injured first"}]},"bathhouse and washrooms":{"restores":"stamina","usual":2,"clears":{"Chilled":30},"summary":"Stamina x2 while resting in your own dorm's bathhouse; x2.5 on a cold day or when you come in chilled or soaked; 30 minutes ends Chilled","rules":[{"if":{"arrivedCold":true},"mult":2.5,"why":"warming up after the cold"},{"if":{"tempMax":5},"mult":2.5,"why":"a cold day outside"}]},"cathedral":{"restores":"mana","usual":1.25,"summary":"Mana x1.25 while sitting quietly on the pews; x1.75 during the Sunday service (09:00-11:00)","rules":[{"if":{"days":["Sun"],"from":540,"to":660},"mult":1.75,"why":"the Sunday service"}]},"meditation rooms":{"restores":"mana","usual":2,"summary":"Mana x2 while resting; x2.5 in the quiet morning (07:00-09:00); x1.75 in exam weeks, when every room is full","rules":[{"if":{"weeks":[[3,1],[5,1],[9,1],[11,1]]},"mult":1.75,"why":"exam week: every room is full"},{"if":{"from":420,"to":540},"mult":2.5,"why":"the quiet morning"}]},"forest clearing":{"restores":"mana","usual":3,"summary":"Mana x3 while resting among the Elder Oak's roots; x3.5 in full sun; x2 after dark","rules":[{"if":{"dark":true},"mult":2,"why":"after dark"},{"if":{"sky":["Clear"]},"mult":3.5,"why":"full sun on the oak"}]}};
@@ -1162,13 +1179,22 @@ const npcStatusIn = (S, id) => npcStatusOf((S.Campus_State || {}).NPC_status, id
 const npcAwayIn = (S, id) => ((S.Campus_State || {}).Graduated || []).includes(id) || AWAY_RX.test(npcStatusIn(S, id));
 // 1.16.1 (audit B1): Player.Profile.Club in the club list's own words ("Soccer", "soccer club" -> "Soccer Club"; "Theatre" ->
 // "Theatre Troupe"), so Saturday club time is counted; a club the list does not know is kept as written
-function canonClub(c) {
+function canonClub(c, S) {
   const s = String(c || '').trim(), k = s.toLowerCase().replace(/^the\s+/, '').replace(/\s+/g, ' ');
   if (!k) return '';
+  const F = S ? foundedClub(S) : null;   // 1.75.0: the club {{user}} founds (shared.js)
+  if (F && F.name.toLowerCase().replace(/^the\s+/, '').replace(/\s+/g, ' ') === k) return F.name;
   if (/^duel+ing club$/.test(k)) return 'Magic Duelling Club';
   const names = Object.keys(CLASS.clubs || {}), base = x => x.toLowerCase().replace(/\s+club$/, '');
   return names.find(n => n.toLowerCase() === k) || (CLASS.calias || {})[base(k)] || names.find(n => base(n) === base(k)) || s;
 }
+// 1.75.0 (owner-approved planning/DRAFT_club_sendiri.md): one answer for every club, the founded one included: where it meets (place
+// keys), the proficiency its Saturday time trains, its members now (students who moved to the founded club have left their lore club)
+const isFounded = (F, name) => !!F && F.founded && name === F.name;
+const clubVenues = (S, name) => { const F = foundedClub(S); return isFounded(F, name) ? (F.vkey ? [F.vkey] : []) : (CLASS.clubs || {})[name] || []; };
+const clubField = (S, name) => { const F = foundedClub(S), n = String(name || '').toLowerCase(); return isFounded(F, name) ? F.field : PROF.find(k => (CLUB_STATS[k] || []).some(x => n.includes(x.toLowerCase()))) || ''; };
+const clubMembersNow = (S, name) => { const F = foundedClub(S); return isFounded(F, name) ? F.members : (CLUB_MEMBERS[name] || []).filter(id => !movedToFounded(F, id)); };
+const loreClubOf = id => Object.keys(CLUB_MEMBERS).find(k => CLUB_MEMBERS[k].includes(id)) || '';
 const BOND0 = { $gifts: {}, Rank: 0, Progress: 0, Trust: 50, Tension: 0, Title: '', Romance: false, Known_facts: [], Milestones: [], Last_seen: '' };
 // Source helpers for the approved mood / gifts release, injected by gen_engine.py.
 const NPC_MOODS = {"Irene":{"loves":["Clear"],"hates":["Storm"],"clock":"M","exams":1,"trials":0,"reason":"cleans her room every morning, good grades","days":[{"on":"Remembrance Day","fix":"Bad","tone":"rigid","how":"more formal than ever, every rule to the letter; the friends the Doves took to the Dovecote are on her mind and never on her lips."},{"on":"birthday","lean":1,"tone":"formal","how":"a fuss makes her more formal, not less; a letter from home gets the private smile."}]},"Caspian":{"loves":["Clear"],"hates":["Storm"],"clock":"","exams":0,"trials":0,"reason":"outdoor festivals he runs; storms cancel them","days":[{"on":"Remembrance Day","fix":"Bad","tone":"sombre","how":"holds the goddess charm in his hand all day; still smooths every room, and steers every joke away from the breach."},{"on":"Star Night","lean":1,"tone":"busy","how":"he runs it: everywhere at once, happiest with a clipboard and a crowd."},{"on":"Harvest Festival","lean":1,"tone":"busy","how":"he runs it: everywhere at once, happiest with a clipboard and a crowd."}]},"Etnie":{"loves":["Snow"],"hates":["Storm"],"clock":"","exams":0,"trials":0,"reason":"a dog in snow; thunder","days":[{"on":"Remembrance Day","fix":"Bad","tone":"lost","how":"she vanishes for the day and is found asleep near {{user}}'s door; the moon-eyed boy she doted on died on the breach night."},{"on":"birthday","lean":1,"tone":"glowing","how":"an orphan who never had a birthday kept: remembered by {{user}}, she is all tail and no shame about it; forgotten, she says birthdays are for kids."}]},"Royhan":{"loves":["Cool"],"hates":["Hot","Heatwave"],"clock":"M","exams":0,"trials":0,"reason":"farm-raised; steady"},"Sophia":{"loves":["Rain","Storm"],"hates":["Hot","Heatwave"],"clock":"","exams":0,"trials":1,"reason":"rain means water everywhere; battle-hungry","days":[{"on":"Remembrance Day","fix":"Bad","tone":"flat","how":"the one subject that flattens her voice is everywhere today; pity, or being \"handled\", gets a hard look."},{"on":"birthday","lean":1,"tone":"rowdy","how":"wants a brawl or a feast, ideally both; reads her family's bragging letter twice."}]},"Gareth":{"loves":["Clear"],"hates":[],"clock":"M","exams":1,"trials":1,"reason":"winning"},"Ruby":{"loves":["Clear","Mild"],"hates":["Storm"],"clock":"","exams":0,"trials":-1,"reason":"hates fighting of any kind"},"Lenna":{"loves":["Rain"],"hates":["Hot"],"clock":"N","exams":-1,"trials":0,"reason":"naps; mornings are the enemy; courageous","days":[{"on":"Star Night","lean":1,"tone":"hopeful","how":"wants to spend it with someone special, and will not be the one to say so."}]},"Saffi":{"loves":["Clear","Warm"],"hates":["Rain"],"clock":"M","exams":-1,"trials":1,"reason":"a cat and water; can't sit still in class, lives to move"},"Kanae":{"loves":["Clear night"],"hates":["Overcast","Fog"],"clock":"N","exams":1,"trials":0,"reason":"stars from the Observation Tower; top grades","days":[{"on":"Star Night","lean":1,"tone":"radiant","how":"stars from the Observation Tower, and the longest queue on campus is for her readings."},{"on":"birthday","lean":1,"tone":"sweet","how":"sweetness on display all day; she notes exactly who remembered and who did not."}]},"Idris":{"loves":["Clear by day ≥15 °C"],"hates":["Cold","Freezing","Windy","Gale"],"clock":"","exams":0,"trials":0,"reason":"cold-blooded"},"Tilly":{"loves":["Fog","Storm"],"hates":[],"clock":"N","exams":0,"trials":1,"reason":"ghost weather; walks toward danger","days":[{"on":"Remembrance Day","tone":"hushed","how":"the Night Student story resurfaces today; she listens for it and writes it down, quietly."}]},"Dante":{"loves":[],"hates":[],"clock":"M","exams":0,"trials":1,"reason":"order under pressure"},"Florian":{"loves":["Clear"],"hates":["Rain"],"clock":"N","exams":0,"trials":1,"reason":"being looked at, winning","days":[{"on":"birthday","lean":1,"tone":"basking","how":"expects to be the centre of the room and usually is; the only thanks he does not perform is for a gift for Hades."}]},"Aiden":{"loves":["Fog"],"hates":[],"clock":"N","exams":1,"trials":1,"reason":"curfew routes; exam and contest weeks are betting season"},"Caralynn":{"loves":["Clear"],"hates":["Rain","Storm","Windy","Gale"],"clock":"","exams":-1,"trials":1,"reason":"the spotlight; her hair","days":[{"on":"birthday","lean":1,"tone":"on stage","how":"her birthday is a production with an audience; the letter from her father sits unopened again."}]},"Zara":{"loves":["Cold","Snow"],"hates":["Hot","Windy","Gale"],"clock":"","exams":0,"trials":-1,"reason":"sitting by a fire; being stared at"},"Percival":{"loves":["Storm","Gale"],"hates":[],"clock":"M","exams":-1,"trials":1,"reason":"heroic weather; a chance for glory","days":[{"on":"Independence Crowning Day","lean":1,"tone":"grand","how":"names the ruler and the coronation he \"attended\", whether or not Eldrasil ever had them."},{"on":"birthday","lean":1,"tone":"grand","how":"holds court as Grand Commander and demands a feast in the old style."}]},"Trixie":{"loves":["Clear","Snow","Windy"],"hates":["Rain"],"clock":"M","exams":-1,"trials":1,"reason":"outdoor shows; sitting still; excitement","days":[{"on":"Traveling Circus","fix":"Good","tone":"home","how":"her family's circus is here; every waking minute is at the tents."},{"on":"M8 W3","lean":-1,"tone":"homesick","how":"the circus has gone; she writes twice as many letters this week."},{"on":"birthday","lean":1,"tone":"showtime","how":"turns her birthday into a show for everyone; the circus is two days away."}]},"Vera":{"loves":["Storm"],"hates":[],"clock":"N","exams":0,"trials":0,"reason":"lightning; one tiny experiment all night"},"Castor":{"loves":["Fog","Overcast"],"hates":[],"clock":"M","exams":0,"trials":0,"reason":"unnoticed; the Gardens early"},"Alyssa":{"loves":["Clear"],"hates":[],"clock":"M","exams":0,"trials":0,"reason":"quiet mornings","days":[{"on":"birthday","lean":1,"tone":"touched","how":"her notebook tells her who remembered; she writes it down as one true thing."}]},"Linus":{"loves":["Clear"],"hates":[],"clock":"","exams":0,"trials":1,"reason":"brackets and matchups"},"Maple":{"loves":["Clear","Mild"],"hates":["Storm","Gale"],"clock":"M","exams":0,"trials":-1,"reason":"climbing trees; fights, and Sobek near them"},"Nerys":{"loves":["Fog"],"hates":[],"clock":"","exams":0,"trials":0,"reason":"\"nobody there\"; no feelings about the rest","days":[{"on":"birthday","tone":"indifferent","how":"does not mention it and may not know it is today: \"Next.\""}]},"Hadrian":{"loves":["Mild"],"hates":["Rain","Cold"],"clock":"","exams":1,"trials":-1,"reason":"a warm coat, being right; risk","days":[{"on":"Remembrance Day","tone":"oblivious","how":"takes the front seat reserved for families, because nobody was using it yet."},{"on":"birthday","lean":1,"tone":"entitled","how":"expects the day to arrange itself around him."}]},"Wren":{"loves":["Clear"],"hates":["Fog"],"clock":"M","exams":0,"trials":0,"reason":"the dock at dawn; bad light defeats lip-reading"},"Tsubaki":{"loves":["Clear night","Snow"],"hates":["Fog"],"clock":"M","exams":-1,"trials":1,"reason":"open sky; lectures she can't follow; a good opponent","days":[{"on":"Star Night","lean":1,"tone":"keen","how":"her sky magic is at its greatest of the year tonight, and she wants a match more than ever."}]},"Gavlan":{"loves":[],"hates":["Storm"],"clock":"M","exams":0,"trials":1,"reason":"thunder and war nightmares; an old officer under pressure","days":[{"on":"Remembrance Day","lean":-1,"tone":"stern","how":"makes sure the breach never repeats on his watch; his hand goes to his journal more often today."}]},"Yvette":{"loves":[],"hates":["Fog"],"clock":"","exams":0,"trials":-1,"reason":"paranoid","days":[{"on":"Magical & Science Fair","lean":-1,"tone":"harried","how":"she runs the Fair and checks every stand twice, sure something will go wrong."},{"on":"Graduation","tone":"wistful","how":"watches the graduates walk out of the gates for longer than anyone else."}]},"Krieg":{"loves":["Fog"],"hates":[],"clock":"M","exams":0,"trials":1,"reason":"doubled patrols in fog; the Thinning is his element","days":[{"on":"The Thinning","lean":1,"tone":"in his element","how":"doubled patrols, a locked academy, and every rule his to enforce."},{"on":"birthday","tone":"unmarked","how":"files his report as on any other day."}]},"Milena":{"loves":["Clear","Warm"],"hates":["Cold","Snow","Gale"],"clock":"M","exams":0,"trials":0,"reason":"a southerner from Salaffos"},"Baelin":{"loves":["Clear"],"hates":[],"clock":"M","exams":0,"trials":0,"reason":"rest-day mornings at the Elder Oak; enormous patience","days":[{"on":"Remembrance Day","before":1,"lean":-1,"tone":"grave","how":"rereads the condolence letters he keeps, one by one, alone."},{"on":"Remembrance Day","fix":"Bad","tone":"grave","how":"the breach happened on his watch; the tea goes cold untouched."},{"on":"The Thinning","lean":-1,"tone":"watchful","how":"his greatest fear is a second breach; he checks on the seal more than he admits."},{"on":"birthday","tone":"forgetful","how":"forgets it entirely until someone reminds him; then he is delighted, and the tea goes cold."}]},"Layla":{"loves":["Rain"],"hates":[],"clock":"","exams":0,"trials":0,"reason":"archive days and tea","days":[{"on":"Remembrance Day","before":1,"tone":"preoccupied","how":"leads the field visit to the monuments and the plaque of the breach dead; the speech is still unfinished."},{"on":"Remembrance Day","fix":"Bad","tone":"stalled","how":"reaches the line of her speech she cannot get past, and stops; the Night Student story afterwards angers her."},{"on":"birthday","tone":"private","how":"the gloves stay on; her thanks are brief and real."}]},"Vallie":{"loves":["Storm","Snow","Gale"],"hates":[],"clock":"N","exams":0,"trials":1,"reason":"always happy to test her strength","days":[{"on":"Academy Founder Day","lean":-1,"tone":"watched","how":"a Myrdath alumna; on Founder Day the looks follow her, and she meets every one."}]},"Rei":{"loves":["Fog"],"hates":["Heatwave"],"clock":"N","exams":0,"trials":1,"reason":"the Rooftop at hours nobody is awake; zero drama when it matters","days":[{"on":"Remembrance Day","before":7,"lean":-1,"tone":"on edge","how":"Month 10 is coming: she smokes more."},{"on":"Remembrance Day","fix":"Bad","tone":"silent","how":"gives the speech she hates, lights no lantern of her own, and stays until the last one is gone."},{"on":"The Thinning","tone":"focused","how":"the seal is hers this week; zero drama, everywhere and nowhere."},{"on":"birthday","tone":"unmarked","how":"tells no one; a fuss gets a new cigarette and silence."}]},"Kuroo":{"loves":[],"hates":[],"clock":"N","exams":0,"trials":1,"reason":"Card Club evenings; the moment a student finally tries"},"Mimosa":{"loves":["Rain","Overcast"],"hates":["Clear","Hot"],"clock":"N","exams":0,"trials":-1,"reason":"small, dim, enclosed; a room full of eyes","days":[{"on":"Remembrance Day","fix":"Bad","tone":"hidden","how":"she spent the breach night in a Potion Hall cupboard; today her door stays shut and her answers come in writing."},{"on":"birthday","lean":1,"tone":"hopeful","how":"quietly hopes to be admired, and cannot accept a single compliment as earned."}]},"Tristan":{"loves":[],"hates":[],"clock":"","exams":0,"trials":0,"reason":"nothing rattles him"},"Althair":{"loves":["Storm","Gale"],"hates":[],"clock":"","exams":0,"trials":1,"reason":"relentlessly cheerful, never Bad from weather; a good game","days":[{"on":"birthday","lean":1,"tone":"cheerful","how":"turns up to his own birthday in his usual clothes and makes a game of it."}]},"Ezrel":{"loves":[],"hates":[],"clock":"","exams":0,"trials":0,"reason":"always Normal (apathetic)"},"Ottavio":{"loves":["Rain","Fog"],"hates":[],"clock":"M","exams":0,"trials":0,"reason":"the fishing dock at dawn"},"Caine":{"loves":["Overcast"],"hates":[],"clock":"","exams":0,"trials":0,"reason":"silence","days":[{"on":"birthday","tone":"unmarked","how":"silence, as on any other day."}]},"Bobby":{"loves":["Storm"],"hates":[],"clock":"","exams":0,"trials":0,"reason":"storms mean repair jobs","days":[{"on":"Secret Fools Day","lean":1,"tone":"in demand","how":"peak season: props, distractions and elaborate reveals; booked, smug and discreet."},{"on":"Star Night","lean":1,"tone":"in demand","how":"peak season: invitations, surprises and confessions; booked, smug and discreet."}]},"Hester":{"loves":["Storm","Fog","Clear night"],"hates":["Heatwave"],"clock":"N","exams":0,"trials":1,"reason":"night rounds and a good storm for a ghost story; busy ward days","days":[{"on":"Remembrance Day","fix":"Bad","tone":"brittle","how":"she was on the ward that night; any mention of it stops her mid-sentence and she turns to tea."}]},"Anselm":{"loves":["Clear","Mild"],"hates":["Storm"],"clock":"","exams":0,"trials":-1,"reason":"noon sun on a park bench; competition days mean students hurting each other"},"Magnus":{"loves":[],"hates":[],"clock":"N","exams":0,"trials":1,"reason":"a competition is a puzzle he gets to solve"},"Dorian":{"loves":["Clear"],"hates":["Rain"],"clock":"","exams":1,"trials":1,"reason":"exam and competition weeks are his best sales","days":[{"on":"Academy Bazaar","fix":"Good","tone":"in his element","how":"runs the biggest stall at the Bazaar, as he does every year."}]},"Cedric":{"loves":["Overcast","Rain"],"hates":[],"clock":"M","exams":0,"trials":0,"reason":"an early start and a quiet grey morning in the Gardens","days":[{"on":"Remembrance Day","fix":"Bad","tone":"silent","how":"says nothing at all; the rose on his desk is gone for the day."}]},"Anya":{"loves":["Fog","Overcast"],"hates":["Heatwave"],"clock":"","exams":0,"trials":0,"reason":"quiet, grey, still days; dusk by the Lake","days":[{"on":"birthday","tone":"still","how":"her birthday falls on Remembrance Day; she has never minded the quiet, and the smile does not change."}]},"Kotaro":{"loves":["Warm","Clear night"],"hates":["Cold","Freezing"],"clock":"N","exams":-1,"trials":1,"reason":"festival nights; mornings are the enemy","days":[{"on":"Independence Crowning Day","lean":-1,"tone":"rueful","how":"the day he once toasted the wrong person: he laughs it off a little too often, and the flask comes out early."},{"on":"Star Night","lean":1,"tone":"festive","how":"festival nights: \"Ahh, youth.\""},{"on":"Harvest Festival","lean":1,"tone":"festive","how":"festival nights: \"Ahh, youth.\""},{"on":"birthday","lean":1,"tone":"festive","how":"his birthday falls on the circus's opening night: \"Ahh, youth\", and the flask."}]},"Valentin":{"loves":["Clear"],"hates":["Rain"],"clock":"M","exams":1,"trials":1,"reason":"rankings day and an audience","days":[{"on":"Results & Dorm Ranking","lean":1,"tone":"in his element","how":"rankings day, and an audience."},{"on":"Results & Final Ranking","lean":1,"tone":"in his element","how":"rankings day, and an audience."}]},"Aurelian":{"loves":["Clear","Warm"],"hates":[],"clock":"M","exams":0,"trials":1,"reason":"a sunny pitch and a crowd; nothing visibly bothers him","days":[{"on":"Harvest Festival","tone":"bright","how":"the hero of the Harvest Hall fire at a harvest festival: more speeches, more handshakes, a perfect smile; the thirty-one names are on his mind."},{"on":"birthday","lean":1,"tone":"gracious","how":"a perfect speech of thanks; his parents keep the letter he writes them about it."}]},"William":{"loves":["Storm","Fog"],"hates":["Mild"],"clock":"N","exams":0,"trials":1,"reason":"dramatic weather means something is about to happen; filler weather; tournaments are the best arc"},"Bruno":{"loves":["Storm","Hot"],"hates":["Overcast"],"clock":"","exams":-1,"trials":1,"reason":"noise and heat; grey, still days bore him; tests are not fights"},"Bianca":{"loves":["Warm","Clear night"],"hates":["Rain"],"clock":"N","exams":-1,"trials":0,"reason":"parties outdoors and Star Night; rain ruins her hair and her plans","days":[{"on":"Star Night","lean":1,"tone":"festive","how":"an outdoor party under the stars is her idea of a perfect night."}]},"Rigel":{"loves":["Overcast","Cool"],"hates":["Heatwave"],"clock":"M","exams":0,"trials":0,"reason":"fish bite on grey mornings; heat folds his ears"},"Topaz":{"loves":["Clear"],"hates":["Fog"],"clock":"M","exams":1,"trials":1,"reason":"outdoor duels; can't see her rival in fog; every test is a chance to beat {{user}}'s old marks"},"Faye":{"loves":["Mild","Warm","Clear"],"hates":[],"clock":"","exams":0,"trials":0,"reason":"a warm afternoon on the hills is best, but anything is fine","days":[{"on":"The Thinning","tone":"unbothered","how":"the one person the lockdown does not rattle; she waves at the patrols."}]}};
@@ -1313,7 +1339,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.74.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.75.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 const verLt = (a, b) => { const p = v => String(v || '0').split('.').map(x => parseInt(x, 10) || 0), x = p(a), y = p(b); for (let i = 0; i < 3; i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) < (y[i] || 0); return false; };   // 1.63.0
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
@@ -1478,6 +1504,16 @@ function stepMigrate(c) {
       const d = { Year: +(m[1] || W.Year || 1), Month: +m[2], Week: +m[3], Day: m[4] }; if (!lo || toAbs(d) < toAbs(lo)) lo = d; }
     b.$met = lo ? ydate(lo) : '';
   }
+  // 1.75.0 (owner-approved planning/DRAFT_club_sendiri.md): a club not on record that {{user}} already belongs to was founded in the
+  // story: it becomes the founded club (its room and advisor not on record yet); the founding reputation is not paid again
+  if (verLt(c.fromVer, '1.75.0')) for (const X of both) {
+    const P = (X.Player || {}).Profile || {}, club = canonClub(P.Club), CS = X.Campus_State || (X.Campus_State = {});
+    const FC = CS.Founded_club = _.isPlainObject(CS.Founded_club) ? CS.Founded_club : {};
+    if (!club || String(FC.Name || '').trim() || Object.keys(CLASS.clubs || {}).includes(club)) continue;
+    Object.assign(FC, { Name: club, Status: 'founded', Since: '', Members: Array.isArray(FC.Members) ? FC.Members : [] });
+    P.Club = club; S.$eng.founded = true;
+    if (X === S) log.push(`The ${club} is now on record as the club {{user}} founded; its room (Founded_club.Venue) and advisor are not on record yet.`);
+  }
   S.$eng.bondv = 2;
   S.$eng.tenv = 1;
   S.$ui.bev = {};                                               // obsolete event hints of older saves
@@ -1501,13 +1537,21 @@ function stepGuards(c) {
   S.$eng.tool = 0;
   // 1.16.1 (audit B1): the club in the club list's words, before attendance (5d) reads it
   {
-    const P = S.Player.Profile, raw = String(P.Club || ''), c = canonClub(raw);
+    const P = S.Player.Profile, raw = String(P.Club || ''), c = canonClub(raw, S);
     if (c === 'Student Council') {
       P.Council = true;
       P.Club = hasB && B.Player.Profile.Club !== 'Student Council' ? B.Player.Profile.Club : '';
     } else P.Club = c;
-    const was = hasB ? canonClub(((B.Player || {}).Profile || {}).Club) : c;
-    if (c && c !== was && !Object.keys(CLASS.clubs || {}).includes(c)) log.push(`Club "${c}" is not a club on record (${Object.keys(CLASS.clubs || {}).join(', ')}); Saturday club time is only counted for one of them.`);
+    const was = hasB ? canonClub(((B.Player || {}).Profile || {}).Club, B) : c, F = foundedClub(S);
+    if (c && c !== was && !Object.keys(CLASS.clubs || {}).includes(c) && !isFounded(F, c)) {
+      // 1.75.0 (owner-approved planning/DRAFT_club_sendiri.md): a club not on record is one {{user}} founds; they join it once founded
+      if (!F || F.name === c) {
+        const CS = S.Campus_State, FC = CS.Founded_club = _.isPlainObject(CS.Founded_club) ? CS.Founded_club : {};
+        if (!F) FC.Name = c;
+        P.Club = hasB ? was : '';
+        log.push(`The ${c} is not a club yet: {{user}} is founding it (Campus_State.Founded_club) and joins it once the engine marks it founded.`);
+      } else log.push(`Club "${c}" is not a club on record (${Object.keys(CLASS.clubs || {}).join(', ')}, or the ${F.name} {{user}} founds); Saturday club time is only counted for one of them.`);
+    }
   }
   let healedMax = false;
   // 1.2.0 (owner playtest: a reload came back with the student's magic empty): the Builder keeps its own record in $ui.file.
@@ -2589,6 +2633,7 @@ function stepReputation(c) {
   for (const e of REV) {
     const kind = String(e.Kind || '').trim().toLowerCase(), deed = (REP.deeds || {})[kind];
     if (compKinds.has(kind)) { log.push(`Reputation deed "${kind}" is paid by the engine from Competition (Tier and Status); it was not counted here.`); continue; }
+    if (kind === 'founded_club') { log.push('Reputation deed "founded_club" is paid by the engine when Campus_State.Founded_club is founded; it was not counted here.'); continue; }   // 1.75.0
     if (!deed && kind && !['repeat', 'event'].includes(kind)) { log.push(`Reputation deed "${kind}" is unknown; use a listed Kind or an explicit repeat/event entry.`); continue; }
     const r = deed ? deed[0] : REP.reps.find(x => x.toLowerCase() === String(e.Rep || '').trim().toLowerCase());
     if (!r) { log.push(`Reputation "${e.Rep}" is unknown (use Academy, Student or Doves); nothing was changed.`); continue; }
@@ -2748,7 +2793,7 @@ function stepSchoolWeek(c) {
           } else if (cell[3] === 'study' && Wd.Day === 'Sat' && Pf.Council && !councilRemedial(S.Commitments, Wd)) {
             ATT.c[key] = num(ATT.c[key], 0) + share(['student council chamber']);
           } else if (cell[3] === 'clubs' && Pf.Club && !elect) {
-            const v = (CLASS.clubs || {})[Pf.Club] || [];
+            const v = clubVenues(S, Pf.Club);   // 1.75.0: the founded club's venue too
             ATT.c[key] = num(ATT.c[key], 0) + share(v);
             if (!ATT.done[key] && ATT.c[key] >= 60) { ATT.done[key] = true; repAdd('Student', 1, `Saturday time at the ${Pf.Club}`, 'week'); }
           }
@@ -3118,7 +3163,8 @@ function routineSchool(c, ST, WK) {
   const study = R.study + R.acts.filter(x => x.a.study).reduce((t, x) => t + x.n * 60, 0);
   if (ST && study) { ST.mins = num(ST.mins, 0) + study; R.done.push(`${Math.round(study / 60)} hours of study`); }
   R.studied = study;
-  if (R.plan.club && Pf.Club && sat) { R.club = true; repAdd('Student', 1, `Saturday time at the ${Pf.Club}`, 'week'); R.done.push(`Saturday at the ${Pf.Club}`); }
+  // 1.75.0: only a club live play counts too (one with a meeting place)
+  if (R.plan.club && Pf.Club && sat && clubVenues(S, Pf.Club).length) { R.club = true; repAdd('Student', 1, `Saturday time at the ${Pf.Club}`, 'week'); R.done.push(`Saturday at the ${Pf.Club}`); }
 }
 // Practice XP, paid shifts, mana and stamina sessions, study and club proficiency (stepProficiency, inside its weekly limits)
 function routineProf(c, gain, P) {
@@ -3137,7 +3183,7 @@ function routineProf(c, gain, P) {
     if (did) R.done.push(`${x.a.action} x${did}`);
   }
   if (R.studied >= 120) gain('Knowledge', Math.floor(R.studied / 120), 'study time');
-  if (R.club) { const club = S.Player.Profile.Club || '', stat = PROF.find(k => (CLUB_STATS[k] || []).some(n => club.toLowerCase().includes(n.toLowerCase()))); if (stat) gain(stat, 1, 'Saturday club time'); }
+  if (R.club) { const stat = clubField(S, S.Player.Profile.Club || ''); if (stat) gain(stat, 1, 'Saturday club time'); }
 }
 
 // ---- 6-. 1.49.0 (audit/AUDIT_2026-10-03_4_batch_fitur.md, batch 1: audit 4.6, 4.10): promises kept and broken. Read before the
@@ -3967,8 +4013,7 @@ function stepProficiency(c) {
     for (const s of c.profTutoring || []) gain(SUBJECT_STAT[s], 1, 'tutoring');
     if (S.World.Day === 'Sat' && num(((S.$eng.att || {}).c || {})[`${dayNo}:2`], 0) >= 60 && P.days.club !== dayNo) {
       P.days.club = dayNo;
-      const club = S.Player.Profile.Club || '';
-      const stat = PROF.find(k => (CLUB_STATS[k] || []).some(n => club.toLowerCase().includes(n.toLowerCase())));
+      const stat = clubField(S, S.Player.Profile.Club || '');   // 1.75.0: the founded club's Field
       if (stat) gain(stat, 1, 'Saturday club time');
     }
   }
@@ -3988,7 +4033,7 @@ function stepProficiency(c) {
     if (a.seasons && !a.seasons.includes(SEASONS[S.World.Month - 1])) return `${a.seasons.join(' or ')} only`;
     if (a.dorm && (S.Player.Profile.Dorm === 'Unsorted' || ['Fire','Light','Sky','Viridian'].some(dm => new RegExp(`\\b${dm}\\b`, 'i').test(S.World.Location) && dm !== S.Player.Profile.Dorm))) return 'your dorm area';
     const partnerId = NPC_ALIAS[String(withName || '').toLowerCase()] || withName;
-    const helpingMember = withName && inScene(withName) && (CLUB_MEMBERS[a.club + ' Club'] || []).includes(partnerId);
+    const helpingMember = withName && inScene(withName) && clubMembersNow(S, a.club + ' Club').includes(partnerId);
     const kitchenPermission = a.club === 'Cooking' && withName && inScene(withName) && /cook|chef/i.test(withName);
     if (a.club && !club.toLowerCase().includes(a.club.toLowerCase()) && !helpingMember && !kitchenPermission) return `${a.club} Club`;
     if (a.clubAny && !a.clubAny.some(n => club.toLowerCase().includes(n.toLowerCase()))) return `${a.clubAny.join(', ')} club`;
@@ -4553,11 +4598,113 @@ function stepRecords(c) {
 }
 
 // ---- 8c. Batch 5.2: club, competition, projects, trip ----
+// 1.75.0 (owner-approved planning/DRAFT_club_sendiri.md): the club {{user}} founds (Campus_State.Founded_club). It takes a teaching
+// staff signature from a teacher who answers for no club (on the roster that is nobody today, so the narrator introduces one), five
+// members with {{user}} and a room the Council assigns. Then the engine marks it founded, {{user}} joins it and founded_club is paid
+// once. A roster student joins only on screen; once the club is founded they have left their lore club (a Lore change says so), the
+// Council apart. The "whichever club" students (CLUB_FOUNDING.follow) follow {{user}} by themselves. One founded club a campaign.
+const FOUND_MIN = 5;
+function stepFounding(c) {
+  const { S, B, log, jnl, hasB, toolEdit, text } = c;
+  const CS = S.Campus_State, F = CS.Founded_club = _.isPlainObject(CS.Founded_club) ? CS.Founded_club : {};
+  const F0 = (hasB && _.isPlainObject((B.Campus_State || {}).Founded_club) && B.Campus_State.Founded_club) || {};
+  if (hasB) { F.Status = String(F0.Status || ''); F.Since = String(F0.Since || ''); }   // the engine's fields
+  F.Name = String(F.Name || '').trim();
+  if (hasB && F.Status === 'founded' && F.Name !== String(F0.Name || '')) { F.Name = String(F0.Name || ''); log.push(`A founded club keeps its name: the ${F.Name}.`); }
+  if (!F.Name) {
+    if (F0.Name) { jnl.push(`Gave up founding the ${F0.Name}.`); log.push(`The founding of the ${F0.Name} was dropped (Founded_club.Name is empty).`); }
+    for (const k of ['Field', 'Venue', 'Advisor', 'Status', 'Since']) F[k] = '';
+    F.Members = [];
+    return;
+  }
+  if (!F.Status) F.Status = 'forming';
+  const ali = x => NPC_ALIAS[String(x || '').trim().toLowerCase()] || '';
+  F.Field = PROF.find(k => k.toLowerCase() === String(F.Field || '').trim().toLowerCase()) || clubField(S, F.Name) || 'Society';
+  // the room: a campus place outside the dormitories (the Council assigns whatever is left)
+  const v = String(F.Venue || '').trim();
+  if (v && v !== String(F0.Venue || '')) {
+    const nm = placeOf(canonLocation(v)), pk = nm.toLowerCase().replace(/^the /, '');
+    if (CAMPUS.some(x => x.replace(/^the /, '') === pk) && !/dormitor/.test(pk)) F.Venue = nm;
+    else { F.Venue = String(F0.Venue || ''); log.push(`Founded_club.Venue "${v}" is not a campus place a club can meet in (a place on the map, outside the dormitories); it was not recorded.`); }
+  }
+  // the signature: a teacher who answers for no club
+  const adv = String(F.Advisor || '').trim(), aid = ali(adv);
+  if (adv && (aid || adv) !== String(F0.Advisor || '')) {
+    if (aid && !(CLUB_FOUNDING.sign || []).includes(aid)) {
+      const has = (CLUB_FOUNDING.staff || {})[aid];
+      F.Advisor = String(F0.Advisor || '');
+      log.push(`${aid} cannot sign for the ${F.Name}: ${has ? `they already answer for the ${has}, and a teacher signs for one club only` : 'they are not teaching staff'}. Halvard has more teachers than are on record: introduce one as its advisor.`);
+    } else F.Advisor = aid || adv;
+  }
+  // the members: students other than {{user}}
+  const prose = proseOf(text), was = new Set(F0.Members || []), follow = CLUB_FOUNDING.follow || [], present = S.Scene.Present || {};
+  const away = id => (CS.Graduated || []).includes(id) || (ARRIVES[id] || 1) > S.World.Year;
+  const userName = String(S.Player.Profile.Name || '').trim().toLowerCase(), out = [], joined = [];
+  for (const raw of Array.isArray(F.Members) ? F.Members : []) {
+    const nm = String(raw || '').trim(), id = ali(nm) || nm;
+    if (!nm || out.includes(id) || /\{\{user\}\}/i.test(nm) || nm.toLowerCase() === userName) continue;
+    if (ali(nm)) {
+      if (away(id)) continue;   // graduated members leave, as from any club
+      if (!was.has(id) && !follow.includes(id)) {
+        const rx = NAME_RX_OF.get(id);
+        const why = !(PRESENCE.stu || {})[id] ? 'they are not a Halvard student'
+          : hasB && !toolEdit && !present[id] && !(rx && mentionIn(prose, id, rx)) ? 'they are not in this reply (a student joins where the story shows it, and only if they would)' : '';
+        if (why) { log.push(`${id} did not join the ${F.Name}: ${why}.`); continue; }
+        joined.push(id);
+      }
+    }
+    out.push(id);
+  }
+  for (const id of follow) if (!out.includes(id) && (PRESENCE.stu || {})[id] && !away(id)) out.push(id);
+  F.Members = out.slice(0, 16);
+  // an invented advisor or member stays on record
+  const X = _.isPlainObject(S.Extras) ? S.Extras : {};
+  for (const nm of [F.Advisor, ...F.Members.filter(m => !ali(m))]) { const k = nm && keyIn(X, nm); if (k && X[k] && !X[k].Keep) X[k].Keep = true; }
+  const day = dstamp(S.World), E = S.$eng, J = E.fjoin = _.isPlainObject(E.fjoin) ? E.fjoin : {};
+  for (const id of joined) J[id] = day;
+  if (F.Status === 'forming' && F.Advisor && F.Venue && 1 + F.Members.length >= FOUND_MIN) {
+    F.Status = 'founded'; F.Since = day;
+    S.Player.Profile.Club = F.Name;
+    jnl.push(`Founded the ${F.Name} (${F.Venue}, advisor ${F.Advisor}) with ${F.Members.join(', ')}.`);
+    S.$ui.toasts.push(`Club founded: ${F.Name}`);
+    if (!E.founded && c.repAdd) {
+      E.founded = true;
+      const deed = (REP.deeds || {}).founded_club || ['Student', 8, 'event'], got = c.repAdd(deed[0], deed[1], `founded the ${F.Name}`, '');
+      log.push(`The ${F.Name} is founded: ${deed[0]} reputation +${got} Rep XP (founded_club).`);
+      c.repSync(true);
+    }
+  } else if (F.Status === 'forming' && hasB && !_.isEqual(F, F0)) {
+    const need = [F.Advisor ? '' : 'a teacher to sign', 1 + F.Members.length >= FOUND_MIN ? '' : `${FOUND_MIN - 1 - F.Members.length} more member(s)`, F.Venue ? '' : 'a room from the Student Council'].filter(Boolean);
+    if (need.length) log.push(`Founding the ${F.Name}: ${1 + F.Members.length}/${FOUND_MIN} members; still needs ${need.join(', ')}.`);
+  }
+  // a roster student in the founded club has left their lore club: a Lore change on their entry says so (only the membership lifts it)
+  if (F.Status !== 'founded') return;
+  const L = CS.Lore_changes = _.isPlainObject(CS.Lore_changes) ? CS.Lore_changes : {};
+  const mine = new RegExp(`\\s*(?:Left the [^.]*? for |Joined ){{user}}'s ${_.escapeRegExp(F.Name)} \\([^)]*\\)\\.`);
+  const moved = new Set(F.Members.filter(id => ali(id) && !follow.includes(id)));
+  for (const id of moved) {
+    const old = loreClubOf(id), when = J[id] || F.Since, line = `${old ? `Left the ${old} for ` : 'Joined '}{{user}}'s ${F.Name} (${when}).`;
+    const k = Object.keys(L).find(x => lcKey(x) === lcKey(id)), r = k ? L[k] : null;
+    if (r && String(r.Now || '').includes(line)) continue;
+    const now = `${String((r && r.Now) || '').replace(mine, '').trim()} ${line}`.trim().slice(0, 400);
+    L[k || id] = { ...(r || {}), Now: now, Cause: (r && r.Cause) || `recruited by {{user}} into the ${F.Name}`, Since: (r && r.Since) || when, Replace: false, $uid: loreUidOf(id) };
+    if (hasB && !toolEdit) { jnl.push(`${id} ${old ? `left the ${old} for` : 'joined'} the ${F.Name}.`); S.$ui.toasts.push(`${id} joined the ${F.Name}`); }
+  }
+  for (const k of Object.keys(L)) {
+    const id = ali(k) || k;
+    if (moved.has(id) || !mine.test(String((L[k] || {}).Now || ''))) continue;
+    const now = String(L[k].Now).replace(mine, '').trim();
+    if (now) L[k] = { ...L[k], Now: now }; else delete L[k];
+    if (hasB && !toolEdit) jnl.push(`${id} left the ${F.Name}.`);
+  }
+}
+
 function stepClubLife(c) {
   const { S, B, log, jnl, hasB } = c;
+  stepFounding(c);
   const canonList = a => [...new Set((a || []).map(x => NPC_ALIAS[String(x).toLowerCase()] || x))];
   if (hasB) {
-    const c0 = canonClub(B.Player.Profile.Club), c1 = S.Player.Profile.Club || '';
+    const c0 = canonClub(B.Player.Profile.Club, B), c1 = S.Player.Profile.Club || '';
     if (c0 !== c1) jnl.push(c1 ? `Joined the ${c1}.` : `Left the ${c0}.`);
   }
   const Co = S.Competition, Co0 = (hasB && B.Competition) || {};
@@ -4717,7 +4864,7 @@ function stepInitiative(c) {
           place: [...(OFF.has('npc_routines') ? [] : ((PRESENCE.rt || {})[id] || []).map(r => r[4])), ...String(HAUNT[id] || '').split(/[;,]/).map(x => x.replace(/\(.*?\)/g, '').trim()).filter(Boolean),   // 1.52.0: routines first
             ...(cat === 'authority' ? [] : INIT_ASKS.places || [])].filter((x, i, a) => a.indexOf(x) === i),
           thing: [...(gp.loved || []), ...(gp.liked || [])],
-          club: (INIT_ASKS.club || {})[id] ? [INIT_ASKS.club[id]] : [],
+          club: [movedToFounded(foundedClub(S), id) ? foundedClub(S).name : (INIT_ASKS.club || {})[id]].filter(Boolean),   // 1.75.0
           event: [...evs, ...tomorrow].map(e => e.t.split(' (')[0]).filter((x, i, a) => a.indexOf(x) === i),
         };
         const combos = [];
@@ -5933,7 +6080,7 @@ function nowOf(S, moodsFull) {
 // 1.54.0 (narrator-load audit U1, stage 1; 1.55.0 stage 2: bonds, practice, profile, notices, favours, the Vigil): situational rule cards. 502 keeps a core line per topic (path, data shape, the main ban);
 // a topic's full rule (data/rule_cards.json, printed by entry 511 next to <now>) is listed while it applies: by the state, the calendar
 // or the place, and fail-open by a word in the last reply or the player's message (a topic that came up gets its rule next turn).
-const RULE_CARDS = {"letters":"letters","projects":"projects","competition":"competition","exams":"study","tutoring":"study","trip":"trip","pacts":"","first_pact":"","interactions":"","trust_tension":"","imprints":"","old_hut":"","training":"","practice":"proficiency","dorm":"","combat_role":"","favour":"planner","notices":"notices","vigil":"weather","fold":""};   // id -> the feature that must be on ('' = always)
+const RULE_CARDS = {"letters":"letters","projects":"projects","competition":"competition","exams":"study","tutoring":"study","trip":"trip","pacts":"","first_pact":"","interactions":"","trust_tension":"","imprints":"","old_hut":"","training":"","practice":"proficiency","dorm":"","combat_role":"","favour":"planner","notices":"notices","vigil":"weather","fold":"","founding":""};   // id -> the feature that must be on ('' = always)
 function ruleCards(c) {
   const { S, OFF, absA } = c, W = S.World, M = S.Magic || {};
   const said = String(c.text || '').replace(/<UpdateVariable>[\s\S]*?(?:<\/UpdateVariable>|$)/gi, ' ') + '\n' + String(c.userText || '');
@@ -5965,6 +6112,7 @@ function ruleCards(c) {
     favour: () => Object.values(S.Commitments || {}).some(x => /^favou?r$/i.test(String((x || {}).Type || '').trim())) || !!(((S.$ui || {}).initiative || {}).favour) || /\bfavou?rs?\b/i.test(said),
     notices: () => here === 'Notice Board' || /\b(notices?|notice board|flyers?)\b/i.test(said),
     fold: () => !!(S.$ui || {}).fold,   // 1.63.0 (memory audit M5)
+    founding: () => ((S.Campus_State || {}).Founded_club || {}).Status === 'forming' || /\b(new club|start(ing)? a club|found(ing)? (a|my|our) club)\b/i.test(said),   // 1.75.0
     vigil: () => Object.keys(S.Inventory || {}).some(k => /vigil/i.test(k)) || num(((S.$eng || {}).sleep || {}).vigilUntil, -1) > absA || /\bvigil\b/i.test(said),
   };
   return Object.keys(RULE_CARDS).filter(id => (!RULE_CARDS[id] || !OFF.has(RULE_CARDS[id])) && test[id] && test[id]());

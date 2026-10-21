@@ -143,7 +143,10 @@ PANELS.npc = {
     if (dm.length) h += `<h3>Defining moments</h3><ul class="log">${dm.map(r => `<li><span class="sub">${esc(r.w)}</span> ${esc(youText(r.n, S))}${r.fx ? ` <span class="sub">(${esc(r.fx)})</span>` : ''}</li>`).join('')}</ul>`;
     if (n) {
       const open = n.fl.filter(f => fieldUnlocked(id, f, S) && !(/^(full )?name$/i.test(f[0]) && !knowsName(id, S)));
-      if (open.length) h += `<dl class="file">${open.map(f => `<dt>${esc(f[0])}${f[2] >= 99 ? ' <span class="pill f">uncovered</span>' : ''}</dt><dd class="fv">${esc(ageNow(n, f, S))}</dd>`).join('')}</dl>`;
+      // 1.75.0: a student who moved to the club {{user}} founded shows it in place of their lore club
+      const FC = foundedClub(S), moved = movedToFounded(FC, id);
+      const fv = f => moved && /^club$/i.test(f[0]) ? `${FC.name}, the club you founded${(((S.$eng || {}).fjoin || {})[id] || FC.since) ? ` (since ${((S.$eng || {}).fjoin || {})[id] || FC.since})` : ''}. Before: ${ageNow(n, f, S)}` : ageNow(n, f, S);
+      if (open.length) h += `<dl class="file">${open.map(f => `<dt>${esc(f[0])}${f[2] >= 99 ? ' <span class="pill f">uncovered</span>' : ''}</dt><dd class="fv">${esc(fv(f))}</dd>`).join('')}</dl>`;
       const locked = _.groupBy(n.fl.filter(f => f[2] < 99 && !(f[3] > curYear(S)) && !fieldUnlocked(id, f, S)), f => f[2]);   // 1.7.0: a later cohort's lines are not even hinted
       const lk = Object.keys(locked).sort((a, c) => a - c);
       if (lk.length) h += `<h3>Still to learn</h3>${lk.map(r => `<div class="lock">Rank ${r}: ${esc(_.uniq(locked[r].map(f => f[0])).join(', '))}</div>`).join('')}`;
@@ -250,10 +253,11 @@ function groupsOf(S) {
   }
   // 1.6.11 (owner playtest: Ottavio at Rank 0 already showed his club): someone shows in a club once their Club field is open
   // (Rank 1), the same rule as the club list in Activities (clubFieldOpen)
-  if (view.ggroups.has('club')) for (const c of DATA.clubs || []) {
+  // 1.75.0: the clubs as they are now (clubsNow): students who moved to the club {{user}} founded are shown there; invented people are not on the graph
+  if (view.ggroups.has('club')) for (const c of clubsNow(S)) {
     const ownClub = String(P.Club || '').toLowerCase() === 'duelling club' ? 'magic duelling club' : String(P.Club || '').toLowerCase();
-    const mine = !!ownClub && (ownClub.includes(String(c.key).toLowerCase()) || ownClub === String(c.name).toLowerCase());
-    out.push(['club:' + c.key, c.name, [...(c.members || []), ...(c.advisors || [])].filter(id => clubFieldOpen(id, S)), mine]);
+    const mine = !!ownClub && (c.founded ? ownClub === c.name.toLowerCase() : ownClub.includes(String(c.key).toLowerCase()) || ownClub === String(c.name).toLowerCase());
+    out.push(['club:' + c.key, c.name, [...(c.members || []), ...(c.advisors || [])].filter(id => npcOf(id) && (c.founded || clubFieldOpen(id, S))), mine]);
   }
   if (view.ggroups.has('faction')) for (const f of DATA.factions || []) {
     const m = f.secret && f.secret.length ? f.members.filter(id => revealed(S, id).some(t => f.secret.includes(String(t).toLowerCase()))) : f.members;

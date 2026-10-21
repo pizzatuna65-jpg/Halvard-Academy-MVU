@@ -22,6 +22,8 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
 - Terbuka [?]: berapa NPC per tahun; kapten baru; apakah mereka juga butuh voice canon.
 
 ## 2. Ide yang dicatat tapi tidak dipilih (butuh "proceed" owner kalau mau dibuat)
+- **Club buatan sendiri, lanjutan** (sisa DRAFT_club_sendiri §6, 1.75.0): aksi Practice khusus di ruang club-nya (sekarang hanya Saturday
+  club time yang memberi XP Field); status club olahraga (larangan sihir, bracket Sports Day); anggaran club.
 - **Patroli jam malam** (E2, 2026-09-28): risiko tertangkap yang di-seed saat {{user}} di luar setelah curfew. Sejak 1.18.0 hanya ada
   pengingat curfew, tanpa hukuman otomatis.
 - **Kerja paruh waktu terjadwal** (E7, 2026-09-28): shift tetap sebagai sumber uang untuk dorm rank rendah.

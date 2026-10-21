@@ -10,11 +10,24 @@ const COMP_TIERS = [
   ['Kingdom', 'Kingdom Competition', 'One team per academy, four in all, knockout, at the arena in the capital. Only the teams travel (Halvard\'s with Gavlan Haverton): they arrive the day before, stay at a hotel and fly home the day after. Each member of the winning team earns {@avalon.kingdom.prize:n} points.'],
   ['World', 'World Competition', 'Abroad. A panel picks the national four from the best individuals of the Kingdom Competition, winners and losers alike. Being picked off a losing team is a great honour.'],
 ];
-const clubOf = S => { const raw = String(((S.Player || {}).Profile || {}).Club || '').toLowerCase(); const c = raw === 'duelling club' ? 'magic duelling club' : raw; return c ? (DATA.clubs || []).find(x => c.includes(x.key.toLowerCase())) : null; };
+// 1.75.0 (owner-approved planning/DRAFT_club_sendiri.md): the clubs as they are now: the build's list without the students who moved
+// to the club {{user}} founded, and that club once founded (shared.js foundedClub), with its room, advisor and members
+const clubsNow = S => {
+  const F = foundedClub(S), list = (DATA.clubs || []).map(c => F && F.founded ? { ...c, members: c.members.filter(id => !F.members.includes(id)) } : c);
+  if (!F || !F.founded) return list;
+  const lid = F.venue ? locIdOf(F.venue) : '';
+  return [...list, { name: F.name, key: F.name.replace(/\s+club$/i, ''), venues: lid ? [lid] : [], sport: false, practice: false, founded: true,
+    members: F.members, advisors: F.advisor ? [F.advisor] : [], follows: [], field: F.field, since: F.since, venue: F.venue }];
+};
+const clubOf = S => {
+  const raw = String(((S.Player || {}).Profile || {}).Club || '').toLowerCase(), c = raw === 'duelling club' ? 'magic duelling club' : raw, all = clubsNow(S);
+  return c ? all.find(x => x.founded && x.name.toLowerCase() === c) || all.find(x => !x.founded && c.includes(x.key.toLowerCase())) || null : null;
+};
 const eventDay = rx => { const e = CAL.EVENTS.find(x => rx.test(x.t)); return e ? { e, di: dayIdx(e.m, e.w, e.d[0]) } : null; };
 const daysTo = (S, di) => di - dayIdx(S.World.Month, S.World.Week, S.World.Day);
 const whenLabel = n => n < 0 ? 'past' : relDay(n);
-const clubFieldOpen = (id, S) => { const n = npcOf(id); const f = n && n.fl.find(x => x[0].toLowerCase() === 'club'); return !!(f && fieldUnlocked(id, f, S)); };
+// a member shows once their Club field is open; an advisor once the Role line that names their club is (1.75.0)
+const clubFieldOpen = (id, S) => { const n = npcOf(id); const f = n && (n.fl.find(x => x[0].toLowerCase() === 'club') || n.fl.find(x => x[0].toLowerCase() === 'role' && /\badvises the\b/i.test(x[1]))); return !!(f && fieldUnlocked(id, f, S)); };
 const hereIs = (S, lid) => !!lid && locIdOf(S.World.Location) === lid;
 const aan = w => (/^[aeiou]/i.test(w) ? 'an ' : 'a ') + w;
 
@@ -32,7 +45,8 @@ PANELS.activities = {
     if (b.dataset.actab) { view.act = b.dataset.actab; render(); ov.querySelector('.bd').scrollTop = 0; return; }
     if (b.dataset.shop) { view.shop = b.dataset.shop; render(); return; }
     if (b.dataset.go) { const l = DATA.locs[b.dataset.go]; if (l) fillChat(goText(l.name)); return; }
-    if (b.dataset.fill) fillChat(b.dataset.fill);
+    if (b.dataset.fill) { fillChat(b.dataset.fill); return; }
+    if (b.dataset.ffield) commitSetting([{ op: 'replace', path: '/Campus_State/Founded_club/Field', value: b.dataset.ffield }], `🏛️ The club {{user}} founds trains ${b.dataset.ffield}.`);   // 1.75.0
   },
 };
 
@@ -73,17 +87,18 @@ function acClubs(S) {
     const ids = (c.name === 'Student Council' ? ((S.Campus_State || {}).Council || {}).Members || []
       : [...c.advisors, ...c.members.filter(m => !c.advisors.includes(m)), ...(withFollowers ? c.follows || [] : [])]).filter(id => atHalvard(id, S));
     // 1.74.0 (owner): Council members are placed like any club's (their Club field), unless {{user}} sits on the Council
-    const known = ids.filter(id => (c.name === 'Student Council' && P.Council) || clubFieldOpen(id, S) || (withFollowers && (c.follows || []).includes(id)));
-    const more = ids.length - known.length;
-    return `${known.map(id => `<button class="who" data-open="npc:${esc(id)}">${avatar(id, S, 'av xs')}<span>${esc(nameOf(id, S))}${c.advisors.includes(id) ? ' (advisor)' : (c.follows || []).includes(id) ? ' (followed you in)' : ''}</span></button>`).join('')}${more > 0 ? `<span class="sub">+${more} you have not placed yet</span>` : ''}`;
+    const known = ids.filter(id => c.founded || (c.name === 'Student Council' && P.Council) || clubFieldOpen(id, S) || (withFollowers && (c.follows || []).includes(id)));
+    const more = ids.length - known.length, tag = id => c.advisors.includes(id) ? ' (advisor)' : (c.follows || []).includes(id) ? ' (followed you in)' : '';
+    return `${known.map(id => npcOf(id) ? `<button class="who" data-open="npc:${esc(id)}">${avatar(id, S, 'av xs')}<span>${esc(nameOf(id, S))}${tag(id)}</span></button>`
+      : `<span class="who">${avatar(id, S, 'av xs')}<span>${esc(id)}${tag(id)}</span></span>`).join('')}${more > 0 ? `<span class="sub">+${more} you have not placed yet</span>` : ''}`;
   };
-  const meets = c => c.name === 'Student Council' ? `Meets Saturday ${PERIOD_TEXT[1].replace('-', '–')} in place of Study Hall. Members keep their afternoon club; required remedial takes priority.`
+  const meets = c => c.founded && !c.venues.length ? `Meets Saturday ${PERIOD_TEXT[2].replace('-', '–')}; its room is not on record yet.` : c.name === 'Student Council' ? `Meets Saturday ${PERIOD_TEXT[1].replace('-', '–')} in place of Study Hall. Members keep their afternoon club; required remedial takes priority.`
     : `Meets Saturday ${PERIOD_TEXT[2].replace('-', '–')}${c.practice ? `; also practises informally after ${PERIOD_END[2]} on other days` : ''}.${c.sport ? ' Magic is banned during play.' : ''}`;
   let h = '';
   if (mine) {
     const v0 = mine.venues[0];
     h += `<div class="item mine"><div class="row"><span class="t">${esc(mine.name)}</span><span class="pill g">your club</span></div>
-      <div class="sub">${esc(venueNames(mine).join(' · '))}</div><div>${esc(meets(mine))}</div><div class="meta">${people(mine, true)}</div>
+      <div class="sub">${esc(venueNames(mine).join(' · '))}${mine.founded ? `${mine.venues.length ? ' · ' : ''}founded by you${mine.since ? ' ' + esc(mine.since) : ''} · trains ${esc(mine.field)}` : ''}</div><div>${esc(meets(mine))}</div><div class="meta">${people(mine, true)}</div>
       <div class="meta">${v0 && !hereIs(S, v0) ? `<button class="btn sm" data-go="${esc(v0)}">Go to the club</button>` : ''}
       ${electionDay ? '' : `<button class="btn sm" data-fill="${esc(`I spend the afternoon at the ${mine.name}: `)}">Club time</button>`}</div></div>`;
   } else if (P.Club) h += `<div class="item mine"><div class="row"><span class="t">${esc(P.Club)}</span><span class="pill g">your club</span></div><div class="sub">A club not in the directory, founded or found in play.</div></div>`;
@@ -91,12 +106,25 @@ function acClubs(S) {
   if (P.Council) h += `<div class="item mine"><div class="row"><span class="t">Student Council</span><span class="pill g">member</span></div><div class="sub">Saturday 10:00–12:00 · Student Council Chamber</div><div class="meta"><button class="btn sm" data-fill="I attend the Student Council meeting in the Chamber: ">Council meeting</button></div></div>`;
   if (electionDay) h += '<div class="warn">Student Council election: voting in the Main Courtyard replaces every club meeting this afternoon, ' + PERIOD_TEXT[2].replace('-', '–') + '.</div>';
   if (fest) { const n = daysTo(S, fest.di); if (n >= -1 && n <= 21) h += `<div class="warn">Club Festival ${n < 0 ? 'was yesterday' : n === 0 ? 'is today' : `in ${n} days`} (M3 W2, Fri afternoon and Sat): every club runs a stand in the Main Courtyard; one gold coin each to vote for the best stand.</div>`; }
-  h += `<h3>Directory</h3><div class="clubs">${(DATA.clubs || []).filter(c => c !== mine).map(c => `<div class="club"><b>${esc(c.name)}</b><div class="sub">${esc(venueNames(c).join(' · '))}${c.sport ? ' · sport, no magic in play' : ''} · ${esc(meets(c))}</div>
+  h += `<h3>Directory</h3><div class="clubs">${clubsNow(S).filter(c => !mine || c.name !== mine.name).map(c => `<div class="club"><b>${esc(c.name)}</b><div class="sub">${esc(venueNames(c).join(' · '))}${c.sport ? ' · sport, no magic in play' : ''} · ${esc(meets(c))}</div>
     <div class="meta">${people(c, false)}</div>
     <div class="meta">${(c.name === 'Student Council' ? !P.Council : !P.Club) ? `<button class="btn sm" data-fill="${esc(`I go to the ${c.name} at ${venueNames(c)[0]} and ask about joining.`)}">Ask to join</button>` : ''}${c.venues[0] && !hereIs(S, c.venues[0]) ? `<button class="btn sm" data-go="${esc(c.venues[0])}">Go</button>` : ''}</div></div>`).join('')}</div>
-    <h3>Found your own</h3><p class="hint">A new club needs a teaching staff signature and five members; one teacher is responsible for it. The Student Council allocates rooms, and a new club gets whatever is left.</p>
-    <button class="btn sm" data-fill="I want to found a new club: ">Start a club in the story</button>`;
+    <h3>Found your own</h3>${founding(S)}`;
   return h;
+}
+
+// 1.75.0 (owner-approved planning/DRAFT_club_sendiri.md): the founding as the engine counts it (stepFounding): a signature from a teacher
+// who answers for no club, five members with {{user}}, a room from the Council, and the proficiency its Saturday time trains
+function founding(S) {
+  const F = foundedClub(S);
+  const rules = '<p class="hint">A new club needs a teaching staff signature and five members, you included. Every teacher on record already answers for one club, so the signature comes from one of the many teachers not yet named. The Student Council allocates rooms, and a new club gets whatever is left. A student who joins leaves their old club (the Student Council is kept).</p>';
+  if (!F) return `${rules}<button class="btn sm" data-fill="I want to found a new club: ">Start a club in the story</button>`;
+  if (F.founded) return `<p class="hint">You founded the ${esc(F.name)}${F.since ? ` (${esc(F.since)})` : ''}. One club a campaign.</p>`;
+  const n = 1 + F.members.length, step = (done, t) => `<li class="${done ? 'done' : ''}">${done ? '✓' : '·'} ${t}</li>`;
+  return `<div class="item"><div class="row"><span class="t">${esc(F.name)}</span><span class="pill w">founding</span></div>
+    <ul class="log">${step(!!F.advisor, `Signature: ${F.advisor ? esc(F.advisor) : 'no teacher yet'}`)}${step(n >= 5, `Members: ${n}/5 (you${F.members.length ? ', ' + F.members.map(esc).join(', ') : ''})`)}${step(!!F.venue, `Room: ${F.venue ? esc(F.venue) : 'not assigned'}`)}</ul>
+    <div class="meta"><span class="sub">Trains:</span>${PROF_STATS.map(k => `<button class="btn sm ${F.field === k ? 'on' : ''}" data-ffield="${k}" ${F.field === k ? 'disabled' : ''}>${k}</button>`).join('')}</div>
+    <div class="meta"><button class="btn sm" data-fill="${esc(`I work on founding the ${F.name}: `)}">Work on it</button></div></div>${rules}`;
 }
 
 // ---------------------------------------------------------------- competition

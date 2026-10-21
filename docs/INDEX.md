@@ -83,7 +83,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepPayout` (8) | monthly payout | |
 | `stepLoreChanges` (8b0) | 1.60.0: lasting changes to the world's facts (`Campus_State.Lore_changes`): kept only with a Cause and only when the reply or the player's message names the subject (`LORE`, `lcKey`, `loreUidOf`, `proseOf`); 2 new a reply, 40 on record; never Replace for a person; the narrator's removal put back; Journal line and toast; Location_changes folded in | `tools/common.py` `lore_names`, gen_engine `LORE_NAMES`, build_card `LORE_OPEN`, 501, 509 sheet `cLore`, Journal `lcHtml` / `data-lcundo`, `test_lore_changes_v1600` |
 | `stepRecords` (8b) | Commitments, Notices, Letters (letters home and their parcel, `$eng.home`), Clues, Journal, Heals_by | `data/letters_home.json` |
-| `stepClubLife` (8c) | club, competition (Kingdom prize; 1.33.0 Dorm bracket prize), projects, trip | |
+| `stepClubLife` (8c) | club, competition (Kingdom prize; 1.33.0 Dorm bracket prize), projects, trip; 1.75.0 `stepFounding` (the club {{user}} founds, `CLUB_FOUNDING`) | `data/rule_cards.json` (`founding`) |
 | `stepNewYear` (8e) | new campaign year, cohorts | `data/cohorts.json` |
 | `stepGraduation` / `stepGraduateRewards` (8d, 8d2) | third-years leave; their rewards end | |
 | `stepInitiative` (8e) | optional NPC-initiated contact; 1.49.0 some days a favour (`$ui.initiative.favour`, `FAVOURS`) | `data/initiative_asks.json` (`favours`) → 505 |
