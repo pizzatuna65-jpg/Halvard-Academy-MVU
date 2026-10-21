@@ -117,6 +117,10 @@ it. *Update*: the folded block MVU appends under the reply. *Log*: Student file 
 ### Q1.1 The tour with Kanae and Zara (until 18:00)
 *Do:* follow the tour: the club booths, the Canteen at lunch, the Library, Founder's Park, the lake; late in the afternoon the seniors
 show the newcomers their dorm rooms.
+- [ ] `<now>` has "Event: Entrance Event. Now: … Next: 19:00 Entrance Feast …" in place of the Today line, and the narrator keeps to
+      the day's plan [1.81].
+- [ ] The bracelet's Entrance Event chip opens Activities → Event: the plan, Now / Next, and the chance "Be at the Entrance Feast in
+      the Ring Dining Hall" (Open) [1.81].
 - [ ] Scene cards: under each new reply, one card per person present (Kanae, Zara): the full portrait, "Now:", their true thoughts,
       the rank medal and XP, Trust, Tension. That reply has no folded 🧠 Thoughts (older replies keep theirs); the bracelet has no small
       portraits. Dossier opens their file. A swipe moves the cards to the new reply; editing a reply hides them until it is saved; on a
@@ -176,6 +180,8 @@ show the newcomers their dorm rooms.
       attendance and study time count there, an F remedial comes first, and the afternoon club still meets [1.34].
 
 ### Q1.3 The Entrance Feast (19:00, Ring Dining Hall)
+- [ ] After 45 minutes at the feast (one reply or several) the Log shows "Event chance done: Be at the Entrance Feast …" with Society +2,
+      and the Event tab marks it Done; it never comes back this year [1.81].
 - [ ] The Headmaster and Vice Headmaster speak before the food is served [1.15.1].
 - [ ] Past 20:00 `<now>` shows no curfew until 22:00, and the hall is not described as empty [1.35.2].
 
@@ -340,6 +346,12 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
       with the cook there [1.29].
 
 ### Q3.5 Star Night (W3 Sat evening to Sun dawn)
+- [ ] On the hills from 20:00 the bracelet shows "Stalls here"; Activities → Shop lists the Star Night market (cider 6, cocoa 5,
+      chestnuts 4, skewer 7, star chart 15) and buying one costs exactly that; the Price Guide in the Prompt lists "Event stalls here".
+      Away from the hills it says "Event stalls today: … at Grassy Field and Hills"; on Sunday the stalls are gone [1.81].
+- [ ] `<now>` names the chances only while they are open there, as "the player's choice"; the narrator does not steer toward
+      them. An evening on the hills gives Arcana +2 once; being there when the meteor shower starts (23:30) marks it Done and anyone
+      with a Rank 3+ bond who is present keeps "Watched the great meteor shower on Star Night with {{user}}" in their Recent moments [1.81].
 - [ ] Caspian, Kanae, Lenna or Bobby present: their Mood line names Star Night with their own tone (busy, radiant, hopeful, in
       demand) and how they take it; their bracelet mood badge has the bright ring, its tooltip the tone [1.72].
 - [ ] A clear, calm day, and no 20:00 curfew that night [1.30.3].
@@ -356,6 +368,8 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
 ## Act 4 — Month 2
 
 ### Q4.1 The Warding Rite (W1 Fri dusk to Sat dawn)
+- [ ] Forty-five minutes in the Main Courtyard from 18:30 gives Arcana +2 once ("Event chance done: Stand with the dorm …"); before
+      1.81 this never fired, because the engine writes the Main Courtyard as Courtyards [1.81].
 - [ ] At the feast the Headmaster and Vice Headmaster speak before the food [1.15.1].
 
 ### Q4.2 The Creature Studies Expedition (W3 Wed–Fri)

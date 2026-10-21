@@ -69,6 +69,22 @@ const EVENTS = /*@@CAL_EVENTS@@*/[];
 const TIMETABLE = /*@@CAL_TIMETABLE@@*/{};
 const ENTR_BACK = '{{user}} is a returning student and the assigned senior guide: never sorted again; watches the speeches and sorting from the gallery, then tours 10:00–18:00 with the two new first-years recorded in Campus_State.Entrance_tour';
 const schedOf = (e, day) => (!e.s ? '' : typeof e.s === 'string' ? e.s : e.s[day] || '');
+// 1.81.0 (owner-approved planning/DRAFT_event_frame.md): the event frame's data (data/event_frame.json chances), from gen_engine
+const EVENT_FRAME = /*@@EVENT_FRAME@@*/{};
+// an event day's timed items ("09:00–18:00 judging", "08:00: …", "from 17:00 cafés", "dusk (about 18:30): …", "midnight: …") as
+// { at, to (-1: until the next), what }, read by nextUp (the bracelet's Next) and the event line (stepCampusEvents, $ui.ev)
+function eventBlocks(e, day) {
+  const out = [], cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  for (const part of String(schedOf(e, day) || '').split(/;\s+/)) {
+    const p = part.trim(); let m = /^(?:from\s+)?(\d{1,2}):(\d{2})(?:\s*[–-]\s*(\d{1,2}):(\d{2}))?:?\s+(.+)$/i.exec(p);
+    if (m) { const at = +m[1] * 60 + +m[2], z = m[3] ? +m[3] * 60 + +m[4] : -1; out.push({ at, to: z < 0 ? -1 : z <= at ? z + DAY_MIN : z, what: cap(m[5]) }); continue; }
+    m = /^(.*?)\(about (\d{1,2}):(\d{2})\):?\s*(.*)$/.exec(p);
+    if (m) { out.push({ at: +m[2] * 60 + +m[3], to: -1, what: cap((m[4] || m[1]).trim()) }); continue; }
+    m = /^midnight:?\s+(.+)$/i.exec(p);
+    if (m) out.push({ at: DAY_MIN, to: -1, what: cap(m[1]) });
+  }
+  return out;
+}
 const curfewHour = (e, day) => (e.curfew && typeof e.curfew === 'object' ? e.curfew[day] : e.curfew);
 const timetableFor = (W, S) => {
   const row = TIMETABLE[W.Day]; if (!row) return row;
@@ -500,13 +516,8 @@ function curfewOf(W, evs, S) {
 // Arbiter Stone…", "dusk (about 17:00): …"), a class period, curfew. Nothing left today -> null.
 function nextUp(W, evs, S) {
   const now = hm(W.Time); if (now == null) return null;
-  const items = [], cap = s => s.charAt(0).toUpperCase() + s.slice(1);
-  for (const e of evs) for (const part of String(schedOf(e, W.Day) || '').split(/;\s+/)) {
-    const p = part.trim(); let m = /^(\d{1,2}):(\d{2})(?:\s*[–-]\s*(\d{1,2}):(\d{2}))?\s+(.+)$/.exec(p);
-    if (m) { items.push({ at: +m[1] * 60 + +m[2], what: cap(m[5]), kind: 'event' }); continue; }
-    m = /^(.*?)\(about (\d{1,2}):(\d{2})\):?\s*(.*)$/.exec(p);
-    if (m) items.push({ at: +m[2] * 60 + +m[3], what: cap((m[4] || m[1]).trim()), kind: 'event' });
-  }
+  const items = [];
+  for (const e of evs) for (const b of eventBlocks(e, W.Day)) if (b.at < DAY_MIN) items.push({ at: b.at, what: b.what, kind: 'event' });   // 1.81.0
   const tt = timetableFor(W, S), stop = evs.some(e => e.noclass || e.home || e.lockdown || e.away);
   if (tt && !stop) PERIODS.forEach(([at], i) => items.push({ at, what: String(tt[i]).replace(/\s*\[[MD]\]/g, ''), kind: /^(Study Hall|Clubs)/.test(tt[i]) ? 'club' : 'class' }));
   const noCurfew = evs.some(e => e.lockdown || e.home || (e.nocurfew && W.Day === e.d[0])) || /^Away/.test(W._Curfew || '');
@@ -524,6 +535,7 @@ function happeningFits(h, P) {
   if (Array.isArray(d) && !d.includes(P.Day)) return false;
   if (h.months && (P.Month < h.months[0] || P.Month > h.months[1])) return false;
   if (h.weeks && !h.weeks.includes(P.Week)) return false;
+  if (h.ev && !eventsOn(P).some(e => h.ev.includes(e.id))) return false;   // 1.81.0: an event's own happening, only on its days
   return true;
 }
 // 1.1.0: weather (wxm = the Weather effects level). Full: outdoor items skip heavy weather, weather-only items need their weather,
@@ -914,6 +926,11 @@ const SHOP_FX = /*@@SHOP_FX@@*/{};
 const SHOP_PRICE = /*@@SHOP_PRICE@@*/{};
 const SHOP_KEY = Object.fromEntries(Object.keys(SHOP_PRICE).map(k => [itemKey(k), k]));
 const shopRows = name => SHOP_PRICE[itemBase(name)] || SHOP_PRICE[SHOP_KEY[itemKey(name)]] || [];
+// 1.81.0 (planning/DRAFT_event_frame.md §4.1): an event stall is a shop row with [event id, day, from, to] in its sixth place; it sells
+// only on that event's day (or any of its days) within its hours
+const STALLS = Object.values(SHOP_PRICE).flat().filter(x => x[5]);
+const stallOpen = (st, W) => eventsOn(W).some(e => e.id === st[0]) && (!st[1] || W.Day === st[1])
+  && hm(W.Time) != null && hm(W.Time) >= hm(st[2] || '00:00') && hm(W.Time) < hm(st[3] || '24:00');
 const INV_KINDS = ['food', 'drink', 'gear', 'gift', 'book', 'reagent', 'other'];
 // 1.42.0 (audit 1.3): one item-name key (itemKey, shared.js) for the Consumables filter, the Qty decrease (H2), gifts and the R2
 // reminder: "a Quick-dry powder" is the Bag's "Quick-dry powder"
@@ -1787,7 +1804,7 @@ function stepPurchases(c) {
     const asked = String(p.Item || '').trim(), qty = Math.max(1, Math.round(num(p.Qty, 1)));
     if (!asked) continue;
     const rows = shopRows(asked), name = rows.length ? rows[0][4] : asked;
-    const atShop = rows.filter(x => x[2] === here || placeKey(x[1]) === here), sold = atShop.find(x => !x[3] || x[3].includes(season));
+    const atShop = rows.filter(x => (x[2] === here || placeKey(x[1]) === here) && (!x[5] || stallOpen(x[5], S.World))), sold = atShop.find(x => !x[3] || x[3].includes(season));   // 1.81.0: a stall only while open
     const story = num(p.Price, -1);
     let price = -1, shop = '', why = '';
     if (!away && sold) { price = sold[0]; shop = sold[1]; }
@@ -2324,6 +2341,7 @@ function stepReputation(c) {
     const extra = REV.filter(e => kindOf(e) === a).length - REV.filter(e => kindOf(e) === b).length;
     REV.filter(e => kindOf(e) === a).slice(0, Math.max(0, extra)).forEach(e => REV.push({ Kind: b, Why: e.Why || '' }));
   }
+  c.deedsNow = REV.map(kindOf);   // 1.81.0: the kinds this reply reported (stepEventChances: a chance done by a deed)
   for (const e of REV) {
     const kind = String(e.Kind || '').trim().toLowerCase(), deed = (REP.deeds || {})[kind];
     if (compKinds.has(kind)) { log.push(`Reputation deed "${kind}" is paid by the engine from Competition (Tier and Status); it was not counted here.`); continue; }
@@ -3597,6 +3615,73 @@ function trainJump(c, k, why) {
   if (add > 0) S.$ui.toasts.push(`${TRN.tracks[k].label} +${add}`);
 }
 
+// ---- 6a2. 1.81.0 (owner-approved planning/DRAFT_event_frame.md, release A1): event chances. Optional things {{user}} may do at an
+// event (data/event_frame.json chances), read from what the reply already reports: the place and the clock, the reply's words, an
+// accepted /Practice, a /Rep_events kind, the Trip. Each is done once a campaign year (max), never required and never reminded. They
+// replace the 1.26.0 event XP: its mark in $eng.prof.days ("event:<year>:<key>", the chance's legacy) counts as done, so no save is
+// paid twice. $eng.chance: { "Y<year>:<event id>:<chance id>": times done }, this year's keys only.
+const chanceDone = (S, e, ch) => num((S.$eng.chance || {})[`Y${S.World.Year}:${e.id}:${ch.id}`], 0)
+  || (ch.legacy && ((S.$eng.prof || {}).days || {})[`event:${S.World.Year}:${ch.legacy}`] ? 1 : 0);
+// the chance's hours overlap [a0, a1]: on the event day it names (else any of the event's days), today or the day before (a window
+// past midnight, Star Night's meteor shower); no hours: any time of the event
+function chanceHours(S, e, h, a0, a1) {
+  if (!h.from) return true;
+  const t = DAYS.indexOf(S.World.Day), today = Math.floor(a1 / DAY_MIN);
+  return (h.day ? [h.day] : e.d).some(d => {
+    const off = DAYS.indexOf(d) - t, o = off > 0 ? off - 7 : off;
+    if (o < -1) return false;
+    const d0 = (today + o) * DAY_MIN;
+    return a1 > d0 + hm(h.from) && a0 < d0 + (h.to ? hm(h.to) : DAY_MIN);
+  });
+}
+const otherDorm = (S, who) => { const d = NPC_DORMS[NPC_ALIAS[String(who || '').toLowerCase()] || who]; return !!d && d !== S.Player.Profile.Dorm; };
+function chanceMet(c, e, h) {
+  const { S, absA, absB, elapsed, text } = c, here = placeKey(S.World.Location);
+  if (h.min && Math.max(elapsed, num(c.stayed, 0)) < h.min) return false;   // this reply, or the replies spent here in a row
+  if (h.at && !h.at.includes(here)) return false;
+  if (!chanceHours(S, e, h, absB, absA)) return false;
+  if (h.said && !new RegExp(h.said, 'i').test(proseOf(text))) return false;
+  if (h.club && !String(S.Player.Profile.Club || '').trim()) return false;
+  if (h.trip && !(S.Trip.Active || new RegExp(h.trip, 'i').test(String(S.World.Location || '')))) return false;
+  if (h.practice && !(c.practiced || []).some(p => p.action === h.practice && (!h.other_dorm || otherDorm(S, p.with)))) return false;
+  if (h.deed && !(c.deedsNow || []).includes(h.deed)) return false;
+  return true;
+}
+// open now and here, for <now> and the Event tab: its place and hours (a practice chance: at that action's place); a chance done by a
+// deed alone is never printed in <now>, so the narrator is never pointed at it
+function chanceOpen(S, e, h, absA) {
+  const here = placeKey(S.World.Location);
+  if (h.at) { if (!h.at.includes(here)) return false; }
+  else if (h.practice) { if (!PRACTICE.some(a => a.action === h.practice && placeKey(a.name) === here)) return false; }
+  else if (!h.trip) return false;
+  if (h.club && !String(S.Player.Profile.Club || '').trim()) return false;
+  return chanceHours(S, e, h, absA, absA + 1);
+}
+function stepEventChances(c) {
+  const { S, B, hasB, log, OFF, toolEdit, absA } = c;
+  const D = S.$eng.chance = _.isPlainObject(S.$eng.chance) ? S.$eng.chance : {}, pre = `Y${S.World.Year}:`;
+  for (const k of Object.keys(D)) if (!k.startsWith(pre) && k !== '$here') delete D[k];
+  if (!hasB || toolEdit) return;
+  // $here: [place, since]: how long {{user}} has been where they are, across replies (a chance's min); a move counts from its end
+  const here = placeKey(S.World.Location), H = Array.isArray(D.$here) ? D.$here : null;
+  const since = H && H[0] === here && placeKey(B.World.Location) === here ? num(H[1], absA) : absA;
+  D.$here = [here, since]; c.stayed = absA - since;
+  if (OFF.has('event_chances')) return;
+  for (const e of eventsOn(S.World)) for (const ch of (EVENT_FRAME.chances || {})[e.id] || []) {
+    const done = chanceDone(S, e, ch);
+    if (done >= num(ch.max, 1) || !chanceMet(c, e, ch.how || {})) continue;
+    D[`${pre}${e.id}:${ch.id}`] = done + 1;
+    const R = ch.reward || {}, name = e.t.split(' (')[0];
+    if (R.prof && c.profGain) c.profGain(R.prof[0] === 'club' ? clubField(S, S.Player.Profile.Club) || 'Society' : R.prof[0], num(R.prof[1], 0), `${name}: ${ch.text.toLowerCase()}`, false);
+    if (R.moment) for (const k of Object.keys(S.Scene.Present || {})) {
+      const id = NPC_ALIAS[k.toLowerCase()] || k, b = S.Bonds[id];
+      if (b && num(b.Rank, 0) >= 3) b.$Recent = [...(b.$Recent || []), { w: stamp(S.World), n: R.moment, fx: '' }].slice(-num((BR.recent || {}).keep, 10));
+    }
+    log.push(`Event chance done: ${ch.text} (${name}).`);
+    S.$ui.toasts.push(`${name}: ${ch.text}`);
+  }
+}
+
 // ---- 6b. 1.3.0 training: Mana pool (Mana_max) and Stamina (Stamina_max). The narrator reports sessions in /Training. One session
 // adds TRN.session_pct % of the starting value x (1 + partner bonuses), at most TRN.weekly_pct % a week and TRN.total_pct % in all.
 // Partners: an NPC whose Rank 5 gift is a training bonus for that track, in the scene. Jumps (rewards) skip the weekly limit only.
@@ -3676,6 +3761,7 @@ function stepProficiency(c) {
     log.push(`${k} proficiency +${add} (${why}); ${P.xp[k]}/150 XP.`);
     return add;
   };
+  c.profGain = gain;   // 1.81.0: an event chance's prof reward (stepEventChances)
   if (oldWeek.w !== weekNo) {
     P.wk = { w: weekNo, classes: {}, missed: {}, paid: 0 };
     if (oldWeek.w >= 0 && oldWeek.w === weekNo - 1)
@@ -3853,6 +3939,7 @@ function stepProficiency(c) {
     }
     if (why) { log.push(`Practice ${r.Action}: ${why}; no proficiency XP.`); continue; }
     done.add(key); P.days[key] = true;
+    (c.practiced || (c.practiced = [])).push({ action: a.action, with: String(r.With || '') });   // 1.81.0 (stepEventChances)
     const priorCraft = recipe && ((((B || {}).$ui || {}).craft || []).find(x => x.name === recipe.name));
     const made = recipe && (priorCraft || craftResult(B, recipe));
     const xp = recipe ? (made.result === 'failed' ? 1 : a.xp) : a.study && a.action === 'Study a subject' ? Math.min(2, Math.floor(elapsed / 60)) : a.xp;
@@ -3906,21 +3993,7 @@ function stepProficiency(c) {
     log.push(`Medical Centre apothecary bought ${n} Healing draught${n === 1 ? '' : 's'} for ${15 * n} points (${P.wk.sold}/3 this week).`);
   }
   for (const t of sessions) if (/stam/i.test(t.Track || '') && !unfitToTrain(S, 'stamina')) gain('Prowess', 1, 'stamina training');
-  if (hasB && elapsed >= 45 && !c.toolEdit) {
-    const event = String(S.World._Event_today || ''), place = here, hour = hm(S.World.Time) || 0, textNow = String(c.text || '');
-    const eventXP = (key, stat, xp, attended) => {
-      const mark = `event:${S.World.Year}:${key}`;
-      if (attended && !P.days[mark]) { P.days[mark] = true; gain(stat, xp, key, false); }
-    };
-    eventXP('Training Week', 'Prowess', 3, /Training Week/.test(event) && place === 'combat grounds' && hour >= P3[1]);
-    eventXP('Creature Studies Expedition', 'Nature', 3, /Creature Studies Expedition/.test(event) && (S.Trip.Active || /forest|expedition/i.test(S.World.Location)));
-    eventXP('Warding Rite', 'Arcana', 2, /Warding Rite/.test(event) && place === 'main courtyard' && hour >= 1110);
-    eventXP('Star Night', 'Arcana', 2, /Star Night/.test(event) && /grassy field|hill/i.test(place) && hour >= 1200);
-    eventXP('Club Festival stand', 'Craft', 2, /Club Festival/.test(event) && place === 'main courtyard' && /stand|stall|booth/i.test(textNow));
-    eventXP('Academy Bazaar stand', 'Craft', 2, /Academy Bazaar/.test(event) && place === 'main courtyard' && /stand|stall|booth/i.test(textNow));
-    eventXP('Entrance feast', 'Society', 2, /Entrance Event/.test(event) && place === 'ring dining hall' && hour >= 1140);
-    eventXP('Founder Day feast', 'Society', 2, /Academy Founder Day/.test(event) && place === 'ring dining hall' && hour >= 1140);
-  }
+  // 1.81.0: the 1.26.0 event XP (eight events) became event chances (data/event_frame.json, stepEventChances)
   for (const k of Object.keys(P.days)) if (/^\d+:/.test(k) && +k.split(':')[0] < dayNo - 14) delete P.days[k];
   S.$ui.practice = PRACTICE.filter(a => locName(a) === here).map(a => {
     const stat = a.stat === 'subject' ? '' : a.stat;
@@ -4793,6 +4866,20 @@ function stepCampusEvents(c) {
     const d = dayNo % YEAR_DAYS;
     const ph = PHASES.find(p => { const a = doyOf(p.from), z = doyOf(p.to); return a >= 0 && z >= 0 && (a <= z ? d >= a && d <= z : d >= a || d <= z); });
     S.$ui.phase = ph ? { id: ph.id, line: ph.line } : null;
+  }
+  // 1.81.0 (owner-approved planning/DRAFT_event_frame.md): today's events for the event line in <now>, the Event tab, the Price Guide
+  // and the bracelet: its name, which day of how many, what is on now and next (eventBlocks), the chances open here and now (two at
+  // most), and whether one of its stalls is open here (shop rows with ev)
+  {
+    const now = hm(S.World.Time), here = placeKey(S.World.Location), off = c.OFF.has('event_chances');
+    const clock = a => (a >= DAY_MIN ? 'midnight' : `${pad(Math.floor(a / 60))}:${pad(a % 60)}`);
+    S.$ui.ev = eventsOn(S.World).filter(e => e.id).map(e => {
+      const bl = now == null ? [] : eventBlocks(e, S.World.Day);
+      const cur = bl.filter(b => b.at <= now && (b.to < 0 || b.to > now)).pop(), nx = bl.find(b => b.at > now);
+      const ch = off ? [] : ((EVENT_FRAME.chances || {})[e.id] || []).filter(x => chanceDone(S, e, x) < num(x.max, 1) && chanceOpen(S, e, x.how || {}, c.absA)).map(x => x.text).slice(0, 2);
+      const stall = STALLS.some(x => x[5][0] === e.id && x[2] === here && stallOpen(x[5], S.World));
+      return { id: e.id, t: e.t.split(' (')[0], kind: e.kind || '', n: e.d.indexOf(S.World.Day) + 1, of: e.d.length, now: cur ? cur.what : '', next: nx ? [clock(nx.at), nx.what] : null, ch, stall };
+    });
   }
 }
 
@@ -5897,7 +5984,7 @@ function stepNow(c) {
   for (const a of Object.values(S.$ui.area || {})) if (_.isPlainObject(a)) { delete a.walks; delete a.near; }
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepBondMemory, stepProficiency, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepFold, stepGist, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepBondMemory, stepProficiency, stepEventChances, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepFold, stepGist, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,

@@ -1,0 +1,32 @@
+{
+  "_note": "1.81.0 (owner-approved planning/DRAFT_event_frame.md, release A1): the shared event frame's data. chances: optional things {{user}} may do at an event (data/calendar.json event id -> list), never required and never reminded. Each is done once a campaign year (max: how many times). how: at (place keys, lowercase without 'the'), day (the event day it belongs to, else any of its days), from / to ('HH:MM'; 'to' may pass 24:00 into the next event day), min (minutes the reply covers there), said (a regex the reply's text must match), club ({{user}} is in a club), trip (the Trip is active or the Location matches this regex), practice (a /Practice action accepted this reply), other_dorm (its partner is from another dorm), deed (a /Rep_events kind reported this reply). reward: prof [Field, XP] ('club' = the club's Field; uncapped, as the 1.26.0 event XP was), moment (a line in the Recent moments of every Rank 3+ bond present), or nothing (the chance only marks it done). legacy: the key the 1.26.0 event XP used ($eng.prof.days 'event:<year>:<key>'), read as done so a save never pays twice. Engine: stepProficiency (eventChances); UI: the Activities Event tab.",
+  "chances": {
+    "entrance": [
+      { "id": "feast", "text": "Be at the Entrance Feast in the Ring Dining Hall", "how": { "at": ["ring dining hall"], "from": "19:00", "min": 45 }, "reward": { "prof": ["Society", 2] }, "legacy": "Entrance feast" }
+    ],
+    "star_night": [
+      { "id": "evening", "text": "Spend the evening on the Grassy Field and Hills", "how": { "at": ["grassy field and hills"], "day": "Sat", "from": "20:00", "min": 45 }, "reward": { "prof": ["Arcana", 2] }, "legacy": "Star Night" },
+      { "id": "meteor", "text": "Watch the great meteor shower from the Grassy Field and Hills at midnight", "how": { "at": ["grassy field and hills"], "day": "Sat", "from": "23:30", "to": "24:30" }, "reward": { "moment": "Watched the great meteor shower on Star Night with {{user}}." } }
+    ],
+    "warding_rite": [
+      { "id": "working", "text": "Stand with the dorm in the Main Courtyard for the shared working", "how": { "at": ["courtyards", "main courtyard"], "day": "Fri", "from": "18:30", "min": 45 }, "reward": { "prof": ["Arcana", 2] }, "legacy": "Warding Rite" }
+    ],
+    "expedition": [
+      { "id": "hunt", "text": "Take part in the hunt", "how": { "trip": "forest|expedition", "min": 45 }, "reward": { "prof": ["Nature", 3] }, "legacy": "Creature Studies Expedition" }
+    ],
+    "club_festival": [
+      { "id": "stand", "text": "Help run the club's stand for an hour", "how": { "at": ["courtyards", "main courtyard"], "club": true, "said": "\\b(stand|stall|booth)s?\\b", "from": "09:00", "to": "18:00", "min": 45 }, "reward": { "prof": ["club", 2] }, "legacy": "Club Festival stand" },
+      { "id": "perform", "text": "Win the crowd at an exhibition match or demonstration", "how": { "deed": "memorable_performance" }, "reward": {} }
+    ],
+    "training_week": [
+      { "id": "watch", "text": "Spend an evening at the sparring on the Combat Grounds", "how": { "at": ["combat grounds"], "from": "16:00", "min": 45 }, "reward": { "prof": ["Prowess", 3] }, "legacy": "Training Week" },
+      { "id": "spar", "text": "Spar with a student from another dorm", "how": { "practice": "Spar with a partner", "other_dorm": true }, "reward": {} }
+    ],
+    "bazaar": [
+      { "id": "stall", "text": "Run a stall, or help at one, for an hour", "how": { "at": ["courtyards", "main courtyard"], "said": "\\b(stand|stall|booth)s?\\b", "from": "09:00", "to": "18:00", "min": 45 }, "reward": { "prof": ["Craft", 2] }, "legacy": "Academy Bazaar stand" }
+    ],
+    "founder_day": [
+      { "id": "feast", "text": "Be at the Founder Day feast in the Ring Dining Hall", "how": { "at": ["ring dining hall"], "from": "19:00", "min": 45 }, "reward": { "prof": ["Society", 2] }, "legacy": "Founder Day feast" }
+    ]
+  }
+}

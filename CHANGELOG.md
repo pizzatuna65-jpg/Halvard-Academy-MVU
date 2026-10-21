@@ -1,7 +1,38 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.81.0 — The event frame: an Event line, the Event tab, event chances, the Star Night market (2026-10-21)
+
+Owner's request (2026-10-21): "proceed" on `planning/DRAFT_event_frame.md`; this is its release A1 (the draft stays until releases
+A2–E are in). Engine, data, 505, 506, the Activities panel and the bracelet. Save fixture v1.80.0.
+- **Every event has an id and a kind.** `data/calendar.json`: 44 unique ids (`star_night`, `dorm_comp`, …) and a kind (contest, showcase,
+  festival, rite, trip, exam, day, holiday) that only chooses what is shown; `gen_engine.py` checks both.
+- **The Event line.** `<now>` prints "Event: Star Night, day 1 of 2. Now: … Next: midnight …" for each event today in place of the Today
+  line (a birthday stays there). The engine makes it (`$ui.ev`, `stepCampusEvents`) from the day plan: `eventBlocks` also reads
+  "08:00: …", "from 17:00 …" and "midnight: …", so the bracelet's Next now sees those too (never "24:00").
+- **Activities → Event** (new tab, from seven days before an event to its last day): the days and their plan, Now / Next, the chances
+  with Open / Open now / Done and a Draft button, a way to the stalls, and for a contest the Competition tab. The bracelet's event chip
+  opens it. New Features toggle **Event chances** (on).
+- **Event chances** (`data/event_frame.json`, `stepEventChances`): optional, once a campaign year, read from what the reply reports (the
+  place and hours, the time spent there across replies, the reply's words, an accepted Practice, a reported deed, the Trip). `<now>` prints
+  only those open here and now, as the player's choice. They replace the 1.26.0 event XP: the same eight events and XP, and a save whose
+  event XP was paid is not paid again. New: Star Night's meteor shower (a Recent moment for each Rank 3+ bond present), the Club Festival
+  stand pays 2 in the club's own Field (was Craft for any club), and "win the crowd" and "spar with another dorm" are marked when they
+  happen.
+- **Fix:** the event XP at the Main Courtyard (Warding Rite, Club Festival, Bazaar) never fired, because the engine writes the Main
+  Courtyard as Courtyards; the chances name both.
+- **Event stalls** (`data/shop.json` rows with `ev`, `day`, `from`, `to`): they sell only then and there (`stallOpen` in `stepPurchases`),
+  the Price Guide lists them ("Event stalls here" / "Event stalls today"), the Shop tab opens at them and the bracelet shows "Stalls here".
+  First: the Star Night market (Sat 20:00–24:00 on the hills): hot spiced cider 6 and a mug of cocoa 5 (both clear Chilled), roasted
+  chestnuts 4, a honey-glazed skewer 7, a star chart 15.
+- `data/happenings.json` items may carry `ev` (only on that event's days); none do yet.
+- Tests: new `test_event_frame_v1810.cjs`; `npm test` (every suite, `qa_static`, lint) passes, `test_saves` loads the v1.80.0 fixture.
+  Checked in a browser preview: the Event tab, the stall list, the two chips.
+- **To confirm with the owner:** the draft's Star Night reward was an Imprint; Imprints are beliefs the narrator writes (with their cap and
+  "fixed" characters), so the engine adds a Recent moment instead. The five stall items, their notes and prices (draft §4.1).
+- **To check live:** `docs/TEST_CHECKLIST.md` Q1.1, Q1.3, Q3.5, Q4.1 [1.81].
 
 ## v1.80.0 — Recall from the player's own message; records the story never showed (2026-10-21)
 
@@ -74,26 +105,6 @@ only, no canon change. Save fixture v1.77.0.
 - Tests: the five voice suites (`test_voices_g1_v163` … `test_voices_g5_v167`) accept the new label; they, `test_saves` and
   `qa_static` pass.
 - **To check live:** `docs/TEST_CHECKLIST.md` Q1.1 [1.77.1].
-
-## v1.77.0 — Lore changes that last a while; how {{user}} looks in `<now>` (2026-10-21)
-
-Owner's request (2026-10-21): two narrator-side features from the suggestion list (no. 1 and no. 3). Engine, schema, card text and the
-Journal. Save fixture v1.76.0.
-- **Temporary Lore changes.** A Lore change may carry `Until` (its last day as a calendar date): a bridge closed until it is repaired, a
-  fountain drained for cleaning. `stepLoreChanges` parses it once (`anchorWhen`, written back by `absWhen`: "Thursday" becomes "M1 W1
-  Thu"), keeps the end in `$abs`, and removes the change when that day is over (`agendaState` 'notice': an hour after the day ends) with
-  the Journal line "…, as it was again" and a toast. An Until that is no date, or already past, is refused with the reason in the report;
-  a longer Until is a rewrite, kept only when the reply shows it; Until taken out makes the change lasting. Printed as "until …" over the
-  lore (`build_card.py` `LORE_OPEN`), in a person's Cast Sheet (`cLore`), in `<current_state>` (501) and in the Journal's Lasting
-  changes; the Planner feed lists its last day (agenda kind `lore`). 502's Lore_changes line names Until.
-- **How {{user}} looks.** `<now>` has one line of what anyone near can see: each injury (severity, body part), weather conditions (wet
-  through, shivering, flushed, a head cold), fatigue (tired, visibly exhausted) and lost sleep. `nowOf` → `$ui.now.looks` (words in
-  `LOOK`), printed by 505 after the visit line. Never hidden magic, a sustained technique or a pact; no line when there is nothing to see.
-- Tests: new `test_lore_until_looks_v1770.cjs`; `test_audit_batch7_v1480` lets a chain with the Looks line read differently (as with the
-  visit line). Full `npm test` and lint pass.
-- **To confirm with the owner:** the Looks words are mine (UI descriptors, no canon). The uniform and dorm vest are left out: the lore
-  never says when the uniform must be worn.
-- **To check live:** `docs/TEST_CHECKLIST.md` Q2.6 [1.77].
 
 ## Release index (one line per release, oldest first)
 
@@ -259,3 +270,4 @@ Journal. Save fixture v1.76.0.
 - **v1.78.0 (2026-10-21):** Three Fortune numbers per reply, one per attempt in order; Extras Looks as on an ordinary day (Megumin Suite audit batch 1: MS2, MS5).
 - **v1.79.0 (2026-10-21):** "This reply" on the bracelet: everything a reply changed, computed from the message states, nothing stored (Megumin Suite audit batch 2: MS1).
 - **v1.80.0 (2026-10-21):** Recall from the player's own message in `<now>`; `audit_chat.py --mechanics` lists Clues and planted details the story never showed (Megumin Suite audit batch 3: MS4, MS3 stage 1).
+- **v1.81.0 (2026-10-21):** The event frame (draft A1): event ids and kinds, the `<now>` Event line, Activities → Event, event chances (the 1.26.0 event XP moved there; the Main Courtyard ones now fire), the Star Night market stalls.

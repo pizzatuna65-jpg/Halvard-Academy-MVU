@@ -1,6 +1,6 @@
 // ================================================================ 5.2 Activities: Clubs, Competition, Shop, Projects, Trip (F18, F19) + Battle panel
 view.act = 'clubs'; view.shop = 'All';
-const ACT_TABS = [['clubs', 'Clubs'], ['practice', 'Practice', '', ['proficiency']], ['competition', 'Competition', 'competition', ['competition']], ['shop', 'Shop'], ['projects', 'Projects', 'projects', ['projects']], ['trip', 'Trips', 'trip', ['trip']]];
+const ACT_TABS = [['event', 'Event'], ['clubs', 'Clubs'], ['practice', 'Practice', '', ['proficiency']], ['competition', 'Competition', 'competition', ['competition']], ['shop', 'Shop'], ['projects', 'Projects', 'projects', ['projects']], ['trip', 'Trips', 'trip', ['trip']]];
 const practicePlaces = S => [...new Set((DATA.practice || []).map(a => a.loc))].filter(id => {
   const l = DATA.locs[id]; return l && ((S.$ui || {}).discovered || []).some(n => normPlace(n) === normPlace(l.name));
 });
@@ -35,9 +35,9 @@ PANELS.activities = {
   live: true,
   render(S) {
     if (view.arg && ACT_TABS.some(t => t[0] === view.arg)) { view.act = view.arg; view.arg = ''; }
-    const tabs = ACT_TABS.filter(t => unlockedTab(S, t) && (t[0] !== 'shop' || shopsHere(S).length) && (t[0] !== 'practice' || practicePlaces(S).length));
+    const tabs = ACT_TABS.filter(t => unlockedTab(S, t) && (t[0] !== 'shop' || shopsHere(S).length) && (t[0] !== 'practice' || practicePlaces(S).length) && (t[0] !== 'event' || eventSoon(S)));   // 1.81.0: Event only around an event
     if (!tabs.some(t => t[0] === view.act)) view.act = 'clubs';
-    const body = ({ clubs: acClubs, practice: acPractice, competition: acCompetition, shop: acShop, projects: acProjects, trip: acTrip })[view.act](S);
+    const body = ({ event: acEvent, clubs: acClubs, practice: acPractice, competition: acCompetition, shop: acShop, projects: acProjects, trip: acTrip })[view.act](S);
     return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>Activities</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
       <nav class="nav">${tabs.map(([id, l]) => `<button data-actab="${id}" class="${view.act === id ? 'on' : ''}">${l}${isNew(`tab:activities:${id}`, view.act === id) && view.act !== id ? newsDot() : ''}</button>`).join('')}</nav><div class="bd">${body}</div></div>`;
   },
@@ -163,13 +163,50 @@ function acCompetition(S) {
   return `${status}<h3>The ladder</h3><ol class="ladder">${ladder}</ol>${team}${rivals}`;
 }
 
+// ---------------------------------------------------------------- event
+// 1.81.0 (owner-approved planning/DRAFT_event_frame.md): the event today, or the next one within a week: its days and their plan,
+// what is on now and next (engine $ui.ev), its chances (data/event_frame.json) with Open / Done, and the way to its stalls or, for a
+// contest, the Competition tab. Buttons only draft (DECISIONS §7).
+const EVENT_SOON = 7;
+const eventSoon = S => {
+  const today = dayIdx(S.World.Month, S.World.Week, S.World.Day);
+  let best = null;
+  for (const e of CAL.EVENTS) {
+    if (!e.id) continue;
+    const d0 = dayIdx(e.m, e.w, e.d[0]), d1 = dayIdx(e.m, e.w, e.d[e.d.length - 1]);
+    if (d1 >= today && d0 - today <= EVENT_SOON && (!best || d0 < best.d0)) best = { e, d0 };
+  }
+  return best;
+};
+const chanceDoneUI = (S, e, ch) => Number(((S.$eng || {}).chance || {})[`Y${S.World.Year}:${e.id}:${ch.id}`] || 0)
+  || (ch.legacy && (((S.$eng || {}).prof || {}).days || {})[`event:${S.World.Year}:${ch.legacy}`] ? 1 : 0);
+function acEvent(S) {
+  const soon = eventSoon(S);
+  if (!soon) return '<div class="empty">No academy event in the next seven days.</div>';
+  const { e, d0 } = soon, n = d0 - dayIdx(S.World.Month, S.World.Week, S.World.Day), live = ((S.$ui || {}).ev || []).find(x => x && x.id === e.id);
+  const span = `M${e.m} W${e.w} ${e.d[0]}${e.d.length > 1 ? '–' + e.d[e.d.length - 1] : ''}`;
+  const plan = typeof e.s === 'string' || !e.s ? `<p>${esc(e.s || 'No set plan: the day runs as the story has it.')}</p>`
+    : `<ul class="log">${e.d.map(d => `<li><b>${esc(d)}</b> ${esc(CAL.schedOf(e, d) || '')}</li>`).join('')}</ul>`;
+  const nowBlock = live && (live.now || live.next) ? `<div class="item">${live.now ? `<div class="row"><span class="t">Now</span></div><div>${esc(live.now)}</div>` : ''}${live.next ? `<div class="row"><span class="t">Next · ${esc(live.next[0])}</span></div><div>${esc(live.next[1])}</div>` : ''}</div>` : '';
+  const chs = featureOn(S, 'event_chances') ? ((DATA.chances || {})[e.id] || []) : [];
+  const chHTML = chs.length ? `<h3>Chances</h3><p class="hint">Optional, once a year each; nobody will push you toward them.</p>${chs.map(ch => {
+    const done = chanceDoneUI(S, e, ch) >= (ch.max || 1), open = !done && live && (live.ch || []).includes(ch.text);
+    const fill = `I'd like to ${ch.text.charAt(0).toLowerCase() + ch.text.slice(1)}.`;
+    return `<div class="item"><div class="row"><span class="t">${esc(ch.text)}</span><span class="pill ${done ? 'g' : open ? 'w' : ''}">${done ? 'Done' : open ? 'Open now' : 'Open'}</span></div>${done ? '' : `<div class="meta"><button class="btn sm" data-fill="${esc(fill)}">Draft</button></div>`}</div>`;
+  }).join('')}` : '';
+  const ways = [live && live.stall ? '<button class="btn sm" data-actab="shop">Stalls here</button>' : '', e.kind === 'contest' && unlockedTab(S, ['competition', '', 'competition', ['competition']]) ? '<button class="btn sm" data-actab="competition">Competition</button>' : ''].filter(Boolean).join(' ');
+  return `<p class="lead"><b>${esc(e.t.split(' (')[0])}</b> · ${esc(span)} · ${esc(n <= 0 ? (live ? `today${live.of > 1 ? `, day ${live.n} of ${live.of}` : ''}` : 'on now') : whenLabel(n))}</p>
+    ${ways ? `<div class="meta">${ways}</div>` : ''}${nowBlock}<h3>Plan</h3>${plan}${chHTML}`;
+}
+
 // ---------------------------------------------------------------- shop
 // 1.2.0 (owner): the Shop tab appears only at a shop: the Commissary (with Ardenne's special orders), or the Mall and the
 // shops inside it. "The Mall — Nightwell" (or "Nightwell") opens on that shop.
 const MALL_SHOPS = DATA.mallShops || ['mall', 'nightwell', 'merryhews', 'snug'];
 function shopsHere(S) {
   const here = locIdOf(S.World.Location), group = MALL_SHOPS.includes(here) ? MALL_SHOPS : here === 'commissary' ? ['commissary'] : [];
-  return (DATA.shop || []).filter(i => group.includes(i.loc));
+  const stalls = ((S.$ui || {}).ev || []).filter(e => e && e.stall).map(e => e.id);   // 1.81.0: an event stall open here (engine)
+  return (DATA.shop || []).filter(i => i.ev ? stalls.includes(i.ev) && i.loc === here : group.includes(i.loc));
 }
 function shopFocus(S) {             // the shop named in the location ("The Mall — Merryhew's"), if any
   const detail = String(S.World.Location || '').toLowerCase(), here = locIdOf(S.World.Location);

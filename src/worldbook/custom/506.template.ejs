@@ -7,12 +7,20 @@ const _pl = placeOf(_W.Location).toLowerCase(), _at = _PG.names[_pl] || _PG.name
 const _se = SEASON_OF(_W.Month);   // shared.js
 const _here = _at && _PG.rows[_at] ? [_at] : [];   // The Mall's own counters; its shops (Nightwell, Quillfeather's…) are places of their own
 const _rows = _here.flatMap(l => _PG.rows[l]).filter(([, s]) => s === 'all' || s.includes(_se)).map(([t]) => t);
-const _else = Object.keys(_PG.dir).filter(l => !_here.includes(l)).map(l => _PG.dir[l]); _%>
+const _else = Object.keys(_PG.dir).filter(l => !_here.includes(l)).map(l => _PG.dir[l]);
+// 1.81.0: today's event stalls (engine $ui.ev: stall = one is open where {{user}} is)
+const _ev = (getvar('stat_data.$ui.ev') || []).filter(e => e && (_PG.ev || {})[e.id]); _%>
 [Price Guide] What things cost, in points. Use these prices; an item not listed costs what a comparable listed item costs.
 <%_ if (_rows.length) { _%>
 Here (<%- _se %> stock; out-of-season items are not stocked):
 <%- _rows.join('\n') %>
 <%_ } _%>
+<%_ for (const e of _ev) { const g = _PG.ev[e.id]; if (e.stall) { _%>
+Event stalls here (<%- g.shop %>, <%- g.hours %>):
+<%- g.rows.join('\n') %>
+<%_ } else { _%>
+Event stalls today: <%- g.shop %> at <%- g.place %>, <%- g.hours %>.
+<%_ } } _%>
 <%- _PG.canon %>
 Other shops: <%- _else.join(' | ') %>
 Paid work pays 20-40 points a shift. The Banking House changes points and coin 1:1. At the Academy Bazaar prices are whatever the trader says. The engine pays these prices.

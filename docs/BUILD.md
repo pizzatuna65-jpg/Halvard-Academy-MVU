@@ -61,7 +61,8 @@ node tests/stress/memory_soak.cjs 3000   # 1.61.1: memory invariants and budget 
 - `data/crafts.json` (1.28.0 magical recipes, material alternatives, crafted effects and sale guides)
 - `data/bond_rewards.json`, `data/reputation.json`, `data/training.json` (1.3.0), `data/bond_rules.json` (1.3.1: `start`), `data/bond_openness.json`, `data/tuning.json` (1.3.1 Settings rows)
 - `source_original/npc_lore_2026-09-25/` (NPC entries that replace v38's; edit lore there or add a newer pass the same way); `source_original/npc_lore_staff_2026-10-01/` (1.33.0: the new teachers and the lines they add to older NPCs)
-- `data/happenings.json` (seeded campus events; `where` must be a real location name)
+- `data/happenings.json` (seeded campus events; `where` must be a real location name; 1.81.0: `ev` = only on that event's days)
+- `data/event_frame.json` (1.81.0: event chances by calendar event id; `gen_engine.py` checks every event, place, Field, Practice action and deed)
 - `data/field_overrides.json`, `focus_overrides.json`, `thumb_overrides.json`, `assets_manifest.json`
 - `data/features.json` (Features settings rows, parked paths, unlocks), `data/npc_moods.json` (44 mood profiles), `data/wind_casting.json` (subtype costs), `data/gift_prefs.json` (tastes and birthdays), `data/gift_shops.json` (Mall shop lore), `data/free_periods.json` (1.33.0: teacher absence chance and reasons)
 - `src/worldbook/custom/505.template.ejs` (the Now entry)

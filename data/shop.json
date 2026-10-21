@@ -1,5 +1,5 @@
 {
- "_note": "canon=true: price fixed by the lorebook. canon=false: guide price made for the card; edit freely, then re-run tools/gen_ui.py and tools/gen_mvu_entries.py. season: 'all' or a list of seasons (Winter, Spring, Summer, Autumn); v1.1.0 seasonal items are guide prices (canon false). Weather gear works through the Bag by item name (umbrella / oilskin, rain cloak = waterproof / wool, scarf, winter cloak, mittens = warm / sun hat, straw hat = sun). 1.9.5 (playtest Batch 5): gear = umbrella | waterproof | warm | sun (worn from the Bag, by exact item name as well as the name patterns); use = what reporting the item in /Consumables does: clears (conditions), stamina (+n), buff + mins (timed gear), cure ('Head cold' ends by the next day), heal (one injury). Crafted effects live in data/crafts.json. tools/common.py effect_text() words effects for the shop, the Bag and the Price Guide.",
+ "_note": "canon=true: price fixed by the lorebook. canon=false: guide price made for the card; edit freely, then re-run tools/gen_ui.py and tools/gen_mvu_entries.py. season: 'all' or a list of seasons (Winter, Spring, Summer, Autumn); v1.1.0 seasonal items are guide prices (canon false). Weather gear works through the Bag by item name (umbrella / oilskin, rain cloak = waterproof / wool, scarf, winter cloak, mittens = warm / sun hat, straw hat = sun). 1.9.5 (playtest Batch 5): gear = umbrella | waterproof | warm | sun (worn from the Bag, by exact item name as well as the name patterns); use = what reporting the item in /Consumables does: clears (conditions), stamina (+n), buff + mins (timed gear), cure ('Head cold' ends by the next day), heal (one injury). Crafted effects live in data/crafts.json. tools/common.py effect_text() words effects for the shop, the Bag and the Price Guide. 1.81.0 (planning/DRAFT_event_frame.md 4.1): an event stall has ev (a data/calendar.json event id), day (one of its days; else any) and from / to ('HH:MM'): it sells only then, and it is not a shop on other days (no Shop here chip, not in the Price Guide's shop list).",
  "items": [
   {
    "shop": "Commissary",
@@ -2002,6 +2002,93 @@
    "note": "action serial, a new volume every month",
    "canon": false,
    "season": "all",
+   "gift_tags": [
+    "book"
+   ]
+  },
+  {
+   "shop": "Star Night market",
+   "loc": "grassy_field_and_hills",
+   "item": "Hot spiced cider",
+   "price": 6,
+   "note": "a student stall, steaming in a tin cup",
+   "canon": false,
+   "season": "all",
+   "ev": "star_night",
+   "day": "Sat",
+   "from": "20:00",
+   "to": "24:00",
+   "use": {
+    "clears": [
+     "Chilled"
+    ]
+   }
+  },
+  {
+   "shop": "Star Night market",
+   "loc": "grassy_field_and_hills",
+   "item": "Mug of cocoa",
+   "price": 5,
+   "note": "thick and sweet, from a mall vendor",
+   "canon": false,
+   "season": "all",
+   "ev": "star_night",
+   "day": "Sat",
+   "from": "20:00",
+   "to": "24:00",
+   "use": {
+    "clears": [
+     "Chilled"
+    ]
+   },
+   "gift_tags": [
+    "sweets and baked goods"
+   ]
+  },
+  {
+   "shop": "Star Night market",
+   "loc": "grassy_field_and_hills",
+   "item": "Roasted chestnuts (paper cone)",
+   "price": 4,
+   "note": "hot from a brazier",
+   "canon": false,
+   "season": "all",
+   "ev": "star_night",
+   "day": "Sat",
+   "from": "20:00",
+   "to": "24:00",
+   "gift_tags": [
+    "food"
+   ]
+  },
+  {
+   "shop": "Star Night market",
+   "loc": "grassy_field_and_hills",
+   "item": "Honey-glazed skewer",
+   "price": 7,
+   "note": "grilled over coals",
+   "canon": false,
+   "season": "all",
+   "ev": "star_night",
+   "day": "Sat",
+   "from": "20:00",
+   "to": "24:00",
+   "gift_tags": [
+    "food"
+   ]
+  },
+  {
+   "shop": "Star Night market",
+   "loc": "grassy_field_and_hills",
+   "item": "Star chart of the season",
+   "price": 15,
+   "note": "tonight's sky, hand-inked by a student",
+   "canon": false,
+   "season": "all",
+   "ev": "star_night",
+   "day": "Sat",
+   "from": "20:00",
+   "to": "24:00",
    "gift_tags": [
     "book"
    ]

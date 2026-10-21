@@ -1,5 +1,5 @@
 {
-  "_note": "Class periods, exam months, seasons by month and the dorm colours: shared by the engine, the panels, the bracelet and <now> through src/scripts/shared.js (1.43.0).",
+  "_note": "Class periods, exam months, seasons by month and the dorm colours: shared by the engine, the panels, the bracelet and <now> through src/scripts/shared.js (1.43.0). 1.81.0 (planning/DRAFT_event_frame.md): every event has a unique id (data/event_frame.json, shop.json ev, happenings.json ev name it) and a kind (contest, showcase, festival, rite, trip, exam, day, holiday) that only chooses what the Event tab and <now> show; behaviour stays in the other fields.",
   "periods": [
     [
       "08:00",
@@ -49,6 +49,8 @@
         "Mon"
       ],
       "t": "Entrance Event (Arbiter Stone sorting)",
+      "id": "entrance",
+      "kind": "rite",
       "noclass": 1,
       "entr": 1,
       "s": "07:00–09:00 arrivals at Reception and Gatehouse; 09:00 Headmaster and Vice Headmaster speeches in the Arbiter Hall, then Stone sorting until 10:00 (Council hands out each dorm vest; sorted students remain seated with their dorm); 10:00–18:00 assigned tour groups of two new first-years and one senior, meeting in the hall, visit campus and club booths (sign-up open until Friday 18:00); late afternoon: seniors show new students their dorm rooms; 19:00 Entrance Feast in the Ring Dining Hall, opened by speeches from the Headmaster and Vice Headmaster before dinner; curfew moves to 22:00 tonight; classes begin tomorrow, Tuesday, first period 08:00",
@@ -65,6 +67,8 @@
         "Fri"
       ],
       "t": "Club sign-up week (club booths after classes)",
+      "id": "club_signup",
+      "kind": "festival",
       "s": {
         "Tue": "Classes as usual; 16:00–18:00 club booths across the academy",
         "Wed": "Classes as usual; 16:00–18:00 club booths across the academy",
@@ -80,6 +84,8 @@
         "Sun"
       ],
       "t": "Star Night (Sat evening to Sun dawn; no 8pm curfew)",
+      "id": "star_night",
+      "kind": "festival",
       "nocurfew": 1,
       "s": {
         "Sat": "Sunset to sunrise, no 8pm curfew; 20:00–00:00 night market near the Grassy Field and Hills (students and mall vendors); stargazing on the hills, tents and bedrolls; midnight: the great meteor shower (a wish made during it is believed to come true)",
@@ -94,6 +100,8 @@
         "Sun"
       ],
       "t": "Spiritual Dorm Day",
+      "id": "dorm_day_spiritual",
+      "kind": "day",
       "s": "Viridian Dormitory: 09:00–18:00 open house: the common room shows the dorm's history and the founding warden is honoured with a small rite at the entrance; upperclassmen showcase casting in the courtyard, first-years run booths, a public lesson for outsiders, food stalls, type contests open to all and the dorm tournament; 19:00 dorm-only closing dinner, first-years welcomed with a token of belonging",
       "fair": 1
     },
@@ -105,6 +113,8 @@
         "Sat"
       ],
       "t": "Warding Rite (Fri dusk to Sat dawn; the whole academy renews the wards)",
+      "id": "warding_rite",
+      "kind": "rite",
       "s": {
         "Fri": "Classes as usual while staff build a giant magic circle in the Main Courtyard all day; dusk (about 18:30): the Bell Tower rings a special pattern and every student gathers in the courtyard; speeches from the Headmaster, the Vice Headmaster and the Warden; the Dorm Heads lead each dorm through the shared working; then a feast in the Ring Dining Hall, opened by speeches from the Headmaster and Vice Headmaster",
         "Sat": "Until dawn: the feast runs late after the working"
@@ -122,6 +132,8 @@
         "Fri"
       ],
       "t": "Creature Studies Expedition (off-grounds, Grade III country)",
+      "id": "expedition",
+      "kind": "trip",
       "noclass": 1,
       "away": 1,
       "s": {
@@ -141,6 +153,8 @@
         "Thu"
       ],
       "t": "Midterm exams",
+      "id": "midterms_1",
+      "kind": "exam",
       "noclass": 1,
       "s": {
         "Mon": "08:00 Magic Theory, 10:00 Etiquette (written papers); afternoon free",
@@ -158,6 +172,8 @@
         "Sat"
       ],
       "t": "Club Festival",
+      "id": "club_festival",
+      "kind": "showcase",
       "s": {
         "Fri": "Classes in the morning; 13:00–18:00 every club runs a stand in the Main Courtyard: demonstrations, exhibition matches, sales, food",
         "Sat": "09:00–18:00 stands and exhibition matches all day; everyone drops one gold coin at the best stand (never their own club); the winner is announced at the close, 18:00"
@@ -176,6 +192,8 @@
         "Sat"
       ],
       "t": "Training Week (cross-dorm sparring allowed; curfew 21:00)",
+      "id": "training_week",
+      "kind": "day",
       "curfew": 21,
       "s": "Classes as usual; from 16:00 the Combat Grounds, duelling rings and practice halls stay open and supervised into the evening; sparring across years and dorms; curfew 21:00"
     },
@@ -187,6 +205,8 @@
         "Sun"
       ],
       "t": "Dorm Competition (solo, five role brackets, 16 per dorm qualify)",
+      "id": "dorm_comp",
+      "kind": "contest",
       "noclass": 1,
       "s": {
         "Sat": "09:00–18:00 solo bouts inside each dorm in five brackets, one per combat role (Attack, Defense, Healing, Support, Control), each judged by its Practical Magic teacher",
@@ -202,6 +222,8 @@
         "Wed"
       ],
       "t": "Secret Fools Day (prank day, dorm name-draw)",
+      "id": "fools_day",
+      "kind": "festival",
       "s": "Morning: participants draw a dorm-mate's name in secret, then prank them without warning all day; classes still run; Merryhew's biggest sale of the year",
       "fair": 1
     },
@@ -212,6 +234,8 @@
         "Tue"
       ],
       "t": "Independence Crowning Day (airship trip to Avalon, the capital; fireworks on campus at night; curfew 22:00)",
+      "id": "crowning_day",
+      "kind": "trip",
       "noclass": 1,
       "curfew": 22,
       "away": 1,
@@ -225,6 +249,8 @@
         "Sun"
       ],
       "t": "Mystic Dorm Day",
+      "id": "dorm_day_mystic",
+      "kind": "day",
       "s": "Light Dormitory: 09:00–18:00 open house: the common room shows the dorm's history and the founding warden is honoured with a small rite at the entrance; upperclassmen showcase casting in the courtyard, first-years run booths, a public lesson for outsiders, food stalls, type contests open to all and the dorm tournament; 19:00 dorm-only closing dinner, first-years welcomed with a token of belonging",
       "fair": 1
     },
@@ -238,6 +264,8 @@
         "Thu"
       ],
       "t": "End of Semester exams",
+      "id": "finals_1",
+      "kind": "exam",
       "noclass": 1,
       "s": "08:00–18:00 the single practical trial, one student at a time: theory door, beast, potion, cursed room, examiner in role, duel with a staff member; Royal Inspectorate examiners watch from the gallery",
       "mood": "exam"
@@ -249,6 +277,8 @@
         "Fri"
       ],
       "t": "Results & Dorm Ranking (Player.Profile.Dorm_rank is updated today)",
+      "id": "results_1",
+      "kind": "exam",
       "ranking": 1,
       "s": "09:00 assembly in the Arbiter Hall, opened by speeches from the Headmaster and Vice Headmaster: trial results stage by stage, then the new dorm ranking read aloud last; 19:00 speeches from the Headmaster and Vice Headmaster, then the feast in the Ring Dining Hall",
       "mood": "exam",
@@ -268,6 +298,8 @@
         "Sun"
       ],
       "t": "Mid-Year Break (students go home)",
+      "id": "midyear_break",
+      "kind": "holiday",
       "home": 1,
       "s": {
         "Mon": "Morning: airships leave; staying is allowed (the canteen runs short hours, half the mall is closed)",
@@ -284,7 +316,9 @@
         "Thu",
         "Fri"
       ],
-      "t": "Return Week"
+      "t": "Return Week",
+      "id": "return_week",
+      "kind": "day"
     },
     {
       "m": 6,
@@ -293,6 +327,8 @@
         "Sat"
       ],
       "t": "Sports Day (magic banned outright)",
+      "id": "sports_day",
+      "kind": "contest",
       "s": "09:00–18:00 events, no magic: running and team events on the Sports Field, crowd contests in the Main Courtyard, the rest at the lake and the Combat Grounds; medals tallied by dorm at the day's end",
       "fair": 1
     },
@@ -306,6 +342,8 @@
         "Sat"
       ],
       "t": "Academy Competition (cross-dorm teams of 4)",
+      "id": "academy_comp",
+      "kind": "contest",
       "s": "09:00–18:00 knockout matches between the cross-dorm teams of four; the winning team represents the academy",
       "mood": "trial",
       "fair": 1
@@ -323,6 +361,8 @@
         "Sun"
       ],
       "t": "Magical & Science Fair week",
+      "id": "science_fair",
+      "kind": "showcase",
       "s": {
         "Mon": "Stands are built in the Main Courtyard through the week; classes as usual",
         "Tue": "Stands are built in the Main Courtyard; classes as usual",
@@ -345,6 +385,8 @@
         "Sun"
       ],
       "t": "The Thinning: the seal is at its weakest; academy locked down all week",
+      "id": "thinning",
+      "kind": "rite",
       "lockdown": 1,
       "s": "All week: absolute curfew, academy locked, nobody outside",
       "mood": "trial"
@@ -359,6 +401,8 @@
         "Sun"
       ],
       "t": "Traveling Circus visits (Thu evening to Sun)",
+      "id": "circus",
+      "kind": "festival",
       "curfew": 22,
       "s": {
         "Thu": "Evening: the great tent opens in the Main Courtyard; stands, games, sideshows and fortune tellers across the grounds (stalls take points); curfew 22:00",
@@ -377,6 +421,8 @@
         "Sat"
       ],
       "t": "Academy Showcase",
+      "id": "showcase",
+      "kind": "showcase",
       "s": {
         "Thu": "09:00–18:00 acts on the Main Courtyard stage; parents and guardians visit (logged at the Gatehouse)",
         "Fri": "09:00–18:00 acts on the Main Courtyard stage; families visit",
@@ -391,6 +437,8 @@
         "Sun"
       ],
       "t": "Elemental Dorm Day",
+      "id": "dorm_day_elemental",
+      "kind": "day",
       "s": "Fire Dormitory: 09:00–18:00 open house: the common room shows the dorm's history and the founding warden is honoured with a small rite at the entrance; upperclassmen showcase casting in the courtyard, first-years run booths, a public lesson for outsiders, food stalls, type contests open to all and the dorm tournament; 19:00 dorm-only closing dinner, first-years welcomed with a token of belonging",
       "fair": 1
     },
@@ -404,6 +452,8 @@
         "Thu"
       ],
       "t": "Midterm exams",
+      "id": "midterms_2",
+      "kind": "exam",
       "noclass": 1,
       "s": {
         "Mon": "08:00 Magic Theory, 10:00 Etiquette (written papers); afternoon free",
@@ -422,6 +472,8 @@
         "Sat"
       ],
       "t": "Academy Bazaar",
+      "id": "bazaar",
+      "kind": "festival",
       "s": "09:00–18:00 invited traders fill the Main Courtyard (stalls take points, haggling expected); traders logged at the Gatehouse, the Doves watch the stock and the crowd",
       "fair": 1
     },
@@ -432,6 +484,8 @@
         "Sat"
       ],
       "t": "Academy Founder Day",
+      "id": "founder_day",
+      "kind": "festival",
       "s": "09:00 speeches from the Headmaster and Vice Headmaster in the Arbiter Hall, then a short rite at the Founder's Statue; all day: the optional treasure hunt across the campus; 19:00 speeches from the Headmaster and Vice Headmaster, then the feast in the Ring Dining Hall",
       "fair": 1,
       "curfew": 22
@@ -443,6 +497,8 @@
         "Tue"
       ],
       "t": "Halvard's Kingdom Competition team flies to the capital",
+      "id": "kingdom_fly_out",
+      "kind": "contest",
       "s": "Only the team and Gavlan Haverton, its escort, travel: morning airship to Avalon, the rest of the day settling in at the Whitestone Hotel beside the Royal Arena, where all four academies' teams stay; everyone else at Halvard has classes as usual",
       "kingdom": 1
     },
@@ -456,6 +512,8 @@
         "Sat"
       ],
       "t": "Kingdom Competition (four academies, one team each)",
+      "id": "kingdom_comp",
+      "kind": "contest",
       "s": "09:00–18:00 knockout matches between the four academies' teams at the Royal Arena in Avalon; each member of the winning team earns 5,000 points, and the winners are received by the King at Eldrasil Castle on Saturday evening. Only the teams travel: Halvard's team stays at the Whitestone Hotel with Gavlan Haverton, its escort (evenings free in the city until 21:00, the hotel by 22:00); everyone else at Halvard has classes as usual and follows the news",
       "mood": "trial",
       "fair": 1,
@@ -468,6 +526,8 @@
         "Sun"
       ],
       "t": "Halvard's Kingdom Competition team flies home",
+      "id": "kingdom_fly_home",
+      "kind": "contest",
       "s": "The team and Gavlan Haverton check out of the Whitestone Hotel and fly home by airship, back at Halvard by evening",
       "kingdom": 1
     },
@@ -478,6 +538,8 @@
         "Tue"
       ],
       "t": "Remembrance Day",
+      "id": "remembrance",
+      "kind": "rite",
       "s": "All day: nothing loud (no clubs, duelling, music, games or sport); classes run quietly, the Bell Tower keeps a slow pattern, bouquets line the halls; evening (about 19:00) on the Grassy Field and Hills: speeches from the Headmaster, the Vice Headmaster and Acting Warden Rei, then the lantern release, one lantern each",
       "fair": 1,
       "curfew": 21
@@ -489,6 +551,8 @@
         "Sun"
       ],
       "t": "Occult Dorm Day",
+      "id": "dorm_day_occult",
+      "kind": "day",
       "s": "Sky Dormitory: 09:00–18:00 open house: the common room shows the dorm's history and the founding warden is honoured with a small rite at the entrance; upperclassmen showcase casting in the courtyard, first-years run booths, a public lesson for outsiders, food stalls, type contests open to all and the dorm tournament; 19:00 dorm-only closing dinner, first-years welcomed with a token of belonging",
       "fair": 1
     },
@@ -504,6 +568,8 @@
         "Sat"
       ],
       "t": "Student Council Election week",
+      "id": "election",
+      "kind": "contest",
       "s": {
         "Mon": "Classes as usual; after classes the two Council nominees begin campaigning across the dorms with brochures, posters and conversations",
         "Tue": "Classes as usual; outside class the Council nominees continue their campaigns, distributing brochures and speaking to students",
@@ -522,6 +588,8 @@
         "Sun"
       ],
       "t": "Harvest Festival (Fri evening to Sun)",
+      "id": "harvest",
+      "kind": "festival",
       "curfew": {
         "Fri": 23,
         "Sat": 23
@@ -543,6 +611,8 @@
         "Thu"
       ],
       "t": "End of Semester exams",
+      "id": "finals_2",
+      "kind": "exam",
       "noclass": 1,
       "s": "08:00–18:00 the single practical trial, one student at a time: theory door, beast, potion, cursed room, examiner in role, duel with a staff member; Royal Inspectorate examiners watch from the gallery",
       "mood": "exam"
@@ -554,6 +624,8 @@
         "Mon"
       ],
       "t": "Results & Final Ranking (Player.Profile.Dorm_rank is updated today)",
+      "id": "results_2",
+      "kind": "exam",
       "ranking": 1,
       "s": "09:00 assembly in the Arbiter Hall, opened by speeches from the Headmaster and Vice Headmaster: trial results stage by stage, then the final dorm ranking read aloud last; 19:00 speeches from the Headmaster and Vice Headmaster, then the feast in the Ring Dining Hall",
       "mood": "exam",
@@ -568,6 +640,8 @@
         "Sun"
       ],
       "t": "Academy Trip (Sunreach Bay, abroad)",
+      "id": "academy_trip",
+      "kind": "trip",
       "noclass": 1,
       "away": 1,
       "s": {
@@ -586,6 +660,8 @@
         "Thu"
       ],
       "t": "Academy Trip (Sunreach Bay, abroad)",
+      "id": "academy_trip_b",
+      "kind": "trip",
       "noclass": 1,
       "away": 1,
       "s": {
@@ -605,6 +681,8 @@
         "Sat"
       ],
       "t": "World Competition abroad (the national four)",
+      "id": "world_comp",
+      "kind": "contest",
       "away": 1,
       "s": "Abroad: the national four compete; the rest of the academy follows the news",
       "mood": "trial"
@@ -616,6 +694,8 @@
         "Sun"
       ],
       "t": "Graduation (everyone attends; third-years leave by airship next morning)",
+      "id": "graduation",
+      "kind": "rite",
       "noclass": 1,
       "grad": 1,
       "s": "09:00 ceremony in the Arbiter Hall: the Headmaster and Vice Headmaster speak, the Dorm Heads read out their graduates, each touches the Arbiter Stone a last time; afternoon: recruitment tables (noble houses, the Royal Inspectorate, the Dovecote, the Bank, hunting companies, guilds); from 12:00 the farewell winter market in the Main Courtyard and Founder's Park (stalls, snowmen if there is snow, the Farewell Pine, the Music Club on a small stage by the statue); dusk: the airship for the graduates moors above the Grassy Field; 19:00 the Headmaster and Vice Headmaster speak once more, then the farewell feast",
@@ -635,6 +715,8 @@
         "Sun"
       ],
       "t": "Kingdom-wide holiday: students go home",
+      "id": "holiday_1",
+      "kind": "holiday",
       "home": 1
     },
     {
@@ -650,6 +732,8 @@
         "Sun"
       ],
       "t": "Kingdom-wide holiday: students go home",
+      "id": "holiday_2",
+      "kind": "holiday",
       "home": 1
     },
     {
@@ -665,6 +749,8 @@
         "Sun"
       ],
       "t": "Kingdom-wide holiday: students go home",
+      "id": "holiday_3",
+      "kind": "holiday",
       "home": 1
     },
     {
@@ -680,6 +766,8 @@
         "Sun"
       ],
       "t": "Kingdom-wide holiday: students go home",
+      "id": "holiday_4",
+      "kind": "holiday",
       "home": 1
     }
   ],

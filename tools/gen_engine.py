@@ -11,6 +11,29 @@ t = open(P('src/scripts/engine.template.js'), encoding='utf-8').read()
 cal = json.load(open(P('data/calendar.json'), encoding='utf-8'))
 t = t.replace('/*@@CAL_EVENTS@@*/[]', json.dumps(cal['events'], ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@CAL_TIMETABLE@@*/{}', json.dumps(cal['timetable'], ensure_ascii=False, separators=(',', ':')))
+# 1.81.0 (planning/DRAFT_event_frame.md): every event has a unique id and a kind; data/event_frame.json chances name real events,
+# places, Fields, practice actions and deeds
+EV_IDS = [e.get('id') for e in cal['events']]
+assert all(EV_IDS) and len(set(EV_IDS)) == len(EV_IDS), 'calendar.json: every event needs a unique id'
+assert all(e.get('kind') in ('contest', 'showcase', 'festival', 'rite', 'trip', 'exam', 'day', 'holiday') for e in cal['events']), 'calendar.json: unknown event kind'
+_ef = json.load(open(P('data/event_frame.json'), encoding='utf-8'))
+_ef_places = {re.sub(r'^the ', '', l['name'].lower()) for l in json.load(open(P('data/locations.json'), encoding='utf-8')).values()} | {'main courtyard'}
+_ef_acts = {a['action'] for a in json.load(open(P('data/practice.json'), encoding='utf-8'))}
+_ef_deeds = set(json.load(open(P('data/reputation.json'), encoding='utf-8'))['deeds'])
+_ef_days = {e['id']: e['d'] for e in cal['events']}
+for _eid, _chs in _ef['chances'].items():
+    assert _eid in _ef_days, f'event_frame.json: unknown event {_eid}'
+    assert len({x['id'] for x in _chs}) == len(_chs) <= 3, f'event_frame.json: {_eid}: ids must be unique, at most 3 chances'
+    for _x in _chs:
+        _h, _r = _x.get('how', {}), _x.get('reward', {})
+        assert any(k in _h for k in ('at', 'trip', 'practice', 'deed')), f'event_frame.json: {_eid}.{_x["id"]} has no condition'
+        assert all(p in _ef_places for p in _h.get('at', [])), f'event_frame.json: {_eid}.{_x["id"]}: unknown place'
+        assert _h.get('day', _ef_days[_eid][0]) in _ef_days[_eid], f'event_frame.json: {_eid}.{_x["id"]}: day is not one of the event days'
+        assert all(re.match(r'^\d{2}:\d{2}$', _h[k]) for k in ('from', 'to') if k in _h), f'event_frame.json: {_eid}.{_x["id"]}: hours are HH:MM'
+        assert _h.get('practice', 'Spar with a partner') in _ef_acts, f'event_frame.json: {_eid}.{_x["id"]}: unknown practice action'
+        assert _h.get('deed', 'community_event') in _ef_deeds, f'event_frame.json: {_eid}.{_x["id"]}: unknown deed'
+        assert set(_r) <= {'prof', 'moment'} and ('prof' not in _r or _r['prof'][0] in ('club', 'Knowledge', 'Arcana', 'Craft', 'Prowess', 'Society', 'Nature')), f'event_frame.json: {_eid}.{_x["id"]}: reward'
+t = t.replace('/*@@EVENT_FRAME@@*/{}', json.dumps({k: v for k, v in _ef.items() if not k.startswith('_')}, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@CLUB_STATS@@*/{}', json.dumps(json.load(open(P('data/club_stats.json'), encoding='utf-8')), ensure_ascii=False, separators=(',', ':')))
 _plocs = json.load(open(P('data/locations.json'), encoding='utf-8'))
 t = t.replace('/*@@PRACTICE@@*/[]', json.dumps([{**a, 'name': _plocs[a['loc']]['name']} for a in json.load(open(P('data/practice.json'), encoding='utf-8'))], ensure_ascii=False, separators=(',', ':')))
@@ -135,7 +158,11 @@ t = t.replace('/*@@SHOP_FX@@*/{}', json.dumps(shop_fx, ensure_ascii=False, separ
 shop_prices = {}   # 1.45.0 (audit 3.4): [price, shop, the shop's place key (engine placeKey), seasons or 0, item name]
 for i in json.load(open(P('data/shop.json'), encoding='utf-8'))['items']:
     place = re.sub(r'^the ', '', locs[i['loc']]['name'].lower())
-    shop_prices.setdefault(i['item'].lower(), []).append([i['price'], i['shop'], place, 0 if i.get('season', 'all') == 'all' else i['season'], i['item']])
+    row = [i['price'], i['shop'], place, 0 if i.get('season', 'all') == 'all' else i['season'], i['item']]
+    if i.get('ev'):   # 1.81.0: an event stall, [event id, day, from, to] (planning/DRAFT_event_frame.md §4.1)
+        assert i['ev'] in EV_IDS and i.get('day', _ef_days[i['ev']][0]) in _ef_days[i['ev']], f"shop.json: {i['item']}: unknown event or day"
+        row.append([i['ev'], i.get('day', ''), i.get('from', '00:00'), i.get('to', '24:00')])
+    shop_prices.setdefault(i['item'].lower(), []).append(row)
 t = t.replace('/*@@SHOP_PRICE@@*/{}', json.dumps(shop_prices, ensure_ascii=False, separators=(',', ':')))
 # v1.1.0 (spec §9): Features settings, single source data/features.json (the engine needs id, control, field, paths, unlock)
 feats = json.load(open(P('data/features.json'), encoding='utf-8'))['features']
@@ -145,6 +172,7 @@ WX_KINDS = {'snow', 'after_storm', 'dense_fog', 'clear_night'}
 assert all(h.get('weather') in (None, *WX_KINDS) for h in hap), 'unknown happening weather'
 locnames = {l['name'] for l in locs.values()}
 assert all(h['where'] in locnames or h['where'] == '' for h in hap), [h['where'] for h in hap if h['where'] not in locnames]
+assert all(x in EV_IDS for h in hap for x in h.get('ev', [])), 'happenings.json: ev names an unknown event'   # 1.81.0
 t = t.replace('/*@@HAPPENINGS@@*/[]', json.dumps(hap, ensure_ascii=False, separators=(',', ':')))
 # 1.16.0 ambience (planning/DRAFT_dynamic_ambience.md): every place a category names must be a known place
 amb = json.load(open(P('data/ambience.json'), encoding='utf-8'))

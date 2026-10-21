@@ -91,6 +91,13 @@ Write actions in the chat as usual. Each reply ends with a folded "📜 State up
 
 The bracelet shows what comes **next** today: the next class, the next item of an event's plan ("Next 09:00 · Sorting at the Arbiter Stone in the Arbiter Hall") or curfew.
 
+**Events.** From a week before an academy event, **Activities → Event** shows its days and plan, what is on now and next, and its
+*chances*: small optional things to do there (an evening on the hills on Star Night, watching the meteor shower, helping at your club's
+stand). Each counts once a year and pays a little proficiency or leaves a shared memory with the people beside you; nobody pushes you
+toward them, and the narrator only hears of one while it is open where you are. On some events stalls open (the Star Night market
+first): the bracelet shows "Stalls here", and Activities → Shop lists what they sell, only on that day and in their hours. The
+event chip on the bracelet opens the Event tab. Settings → Features → Event chances switches the chances off.
+
 **Student file → Settings → Appearance** changes the colours of the panels and the bracelet: Pewter (the default), Midnight (darker), Rosewood (warm dark), Parchment (light) and Frost (light, cool). The choice is kept in this browser and is not written to the chat.
 
 

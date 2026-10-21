@@ -109,7 +109,8 @@ for i, nid in enumerate(sheets):
     body = cast_part('509_sheet.template.ejs', one, SHEET=sheets[nid])
     open(os.path.join(CC, f'{CAST_UID + i}.txt'), 'w', encoding='utf-8', newline='\n').write(f'@@if {cond}\n' + body)
     CAST_ENTRIES.append((CAST_UID + i, f"[mvu_plot] Cast Sheet — {npcs[nid]['name']} (EJS, only while present)", CAST_ORDER + i))
-shop = json.load(open(P('data/shop.json'), encoding='utf-8'))['items']
+shop_all = json.load(open(P('data/shop.json'), encoding='utf-8'))['items']
+shop = [i for i in shop_all if not i.get('ev')]   # 1.81.0: event stalls are listed on their own (PG.ev), only on their day
 # 1.17.0 (audit T2): the Price Guide lists the shop {{user}} is at (in season), the canon prices, and one line per other shop; the
 # whole list used to arrive (~3.7k tokens) whenever a message said "cost" or "shop"
 rows = {}
@@ -127,6 +128,14 @@ def shop_line(l):
 PG = {'rows': rows, 'names': {k: l for l in rows for k in {locs[l]['name'].lower(), re.sub(r'^the ', '', locs[l]['name'].lower())}},
       'dir': {l: shop_line(l) for l in rows},
       'canon': 'Canon prices (never change): ' + '; '.join(f"{n} {p:,}" for n, p in canon) + '.'}
+# 1.81.0 (planning/DRAFT_event_frame.md 4.1): event stalls by event id { shop, place, hours, rows }; 506 prints them while the engine
+# says a stall of that event is open where {{user}} is ($ui.ev[].stall), else one "Event stalls today" line
+PG['ev'] = {}
+for i in shop_all:
+    if not i.get('ev'): continue
+    fx = effect_text(i)
+    g = PG['ev'].setdefault(i['ev'], {'shop': i['shop'], 'place': locs[i['loc']]['name'], 'hours': f"{i.get('day', '') + ' ' if i.get('day') else ''}{i.get('from', '00:00')}–{i.get('to', '24:00')}", 'rows': []})
+    g['rows'].append(f"- {i['item']}: {i['price']:,} pts{'; ' + i['note'] if i['note'] else ''}{'; ' + fx if fx else ''}")
 pg = open(P('src/worldbook/custom/506.template.ejs'), encoding='utf-8').read()
 assert pg.count('/*@@SHARED@@*/') == 1
 pg = pg.replace('/*@@SHARED@@*/', shared_js(presence=False))   # 1.43.0 (audit batch 2)

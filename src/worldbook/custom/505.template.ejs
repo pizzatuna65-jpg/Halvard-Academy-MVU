@@ -84,8 +84,20 @@ _%>
 <%_ if (Y > 1) { _%>
 Campaign Year <%- Y %> ({{user}}: Year <%- Math.max(1, Math.min(3, Number(PR.Year) || 1)) %>). Lore calls students first-, second- or third-years, and says "this year", as of the year they were introduced (Year 1; the newer first-years: the year they arrived); their school year now is in the NPC roster. Ages in lore are current. Graduates (Campus_State.Graduated) have left Halvard.
 <%_ } _%>
-<%_ if (W._Event_today) { _%>
-Today: <%- String(W._Event_today).split(' | ').map(x => x.split(' — ')[0]).join(' | ') %> (plan in World._Event_today)
+<%_ if (W._Event_today) {
+  // 1.81.0 (planning/DRAFT_event_frame.md): an event of today gets its own line from the engine ($ui.ev: day n of m, now, next and
+  // the chances open here); whatever else is today (a birthday) stays on the Today line
+  const EVL = (Array.isArray(UI.ev) ? UI.ev : []).filter(e => e && e.t);
+  const TODAY = String(W._Event_today).split(' | ').filter(x => !EVL.some(e => x.startsWith(e.t))); _%>
+<%_ if (TODAY.length) { _%>
+Today: <%- TODAY.map(x => x.split(' — ')[0]).join(' | ') %><%- TODAY.some(x => x.includes(' — ')) ? ' (plan in World._Event_today)' : '' %>
+<%_ } _%>
+<%_ for (const e of EVL) { _%>
+Event: <%- e.t %><%- e.of > 1 ? ', day ' + e.n + ' of ' + e.of : '' %>.<%- e.now ? ' Now: ' + e.now + '.' : '' %><%- e.next ? ' Next: ' + e.next[0] + ' ' + e.next[1] + '.' : '' %> (plan in World._Event_today)
+<%_ if (on('event_chances') && (e.ch || []).length) { _%>
+Open at this event, the player's choice (never steer the scene toward it): <%- e.ch.join('; ') %>.
+<%_ } _%>
+<%_ } _%>
 <%_ } _%>
 <%_ if (COMING.length) { _%>
 Coming up (next seven days; students and staff may bring these up when it fits who they are: plans, nerves, rumours, who goes with whom): <%- COMING.join('; ') %>
