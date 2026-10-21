@@ -22,6 +22,11 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
 - Terbuka [?]: berapa NPC per tahun; kapten baru; apakah mereka juga butuh voice canon.
 
 ## 2. Ide yang dicatat tapi tidak dipilih (butuh "proceed" owner kalau mau dibuat)
+- **Sisa audit dialog NPC 2026-10-21** (`audit/AUDIT_2026-10-21_1_slop_dialog_npc.md`; owner memilih U2 saja, selesai di 1.77.1): U1 mode
+  `--prose` di `tools/audit_chat.py` (pertanyaan menu dan barang bawaan per NPC, salinan adegan contoh, 6-gram berulang, negasi
+  kontrastif; 0 token prompt; prototipe `audit/slop_scan_prototype_2026-10-21.py`); U3 toggle preset E4 untuk pertanyaan menu "X, atau Y?" di akhir giliran NPC,
+  hanya bila ekspor 1.77.1 masih menunjukkannya (menyentuh DECISIONS §9); U4 `never_sounds` juga di lembar ringkas (NPC kelima dan
+  seterusnya); U5 alat perbaikan pengulangan di riwayat (Chat Repetition Refactor, WH Editor), setelah kodenya dicek terhadap MVU.
 - **Club buatan sendiri, lanjutan** (sisa DRAFT_club_sendiri §6, 1.75.0): aksi Practice khusus di ruang club-nya (sekarang hanya Saturday
   club time yang memberi XP Field); status club olahraga (larangan sihir, bracket Sports Day); anggaran club.
 - **Patroli jam malam** (E2, 2026-09-28): risiko tertangkap yang di-seed saat {{user}} di luar setelah curfew. Sejak 1.18.0 hanya ada

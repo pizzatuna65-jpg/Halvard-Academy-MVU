@@ -31,7 +31,7 @@ ok(!/looks the other way on any rule/.test(rd('dist/Eldrasil_Halvard.json')) && 
 
 // Tilly: the princess stays secret
 t = at('Tilly');
-ok(/<narrator_only>\nAlone[^\n]*\n- Scene: writing to "her father the miller" in cipher/.test(t) && /Carries: Halvard Unexplained/.test(t), 'Tilly: cipher letters narrator-only; the journal in her props');
+ok(/<narrator_only>\nAlone[^\n]*\n- Scene: writing to "her father the miller" in cipher/.test(t) && /Carries[^:]*: Halvard Unexplained/.test(t), 'Tilly: cipher letters narrator-only; the journal in her props');
 ok(!/Velmora|Ottilie|princess/i.test(C.voice.Tilly.scenes.join(' ') + C.voice.Tilly.term_used + C.voice.Tilly.carries + Object.values(C.voice.Tilly.stages).join(' ')), 'Tilly\'s public voice lines never name her real identity');
 
 // the others

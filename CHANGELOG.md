@@ -1,7 +1,19 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.77.1 — An NPC's things come up when the scene calls for them (2026-10-21)
+
+Owner's request (2026-10-21): U2 of the NPC dialogue audit (`audit/AUDIT_2026-10-21_1_slop_dialog_npc.md`, untracked). Card text
+only, no canon change. Save fixture v1.77.0.
+- **Carries.** Every Cast Sheet printed `Carries: …` in its INVARIANTS line each reply, and Gemini read it as "show it": in the
+  Entrance Day chat (played on 1.35) Zara's sketchbook, which her canon says she hides, was in 11 of her 14 replies and Ruby's mug in
+  12 of 17. The label is now `Carries (shown when the scene calls for it):` on full and brief sheets (`509_sheet.template.ejs`
+  `cHead`); the `carries` lines in `data/npc_canon.json` are unchanged.
+- Tests: the five voice suites (`test_voices_g1_v163` … `test_voices_g5_v167`) accept the new label; they, `test_saves` and
+  `qa_static` pass.
+- **To check live:** `docs/TEST_CHECKLIST.md` Q1.1 [1.77.1].
 
 ## v1.77.0 — Lore changes that last a while; how {{user}} looks in `<now>` (2026-10-21)
 
@@ -101,26 +113,6 @@ Council in Activities → Clubs. Engine, data and UI only, no new canon. Save fi
 - Tests: new `test_word_ties_v1740.cjs`; `test_saves`, the 1.72/1.73 suites, Cast Sheet, initiative, memory, narrator, scene card and UI
   suites and lint pass. Browser check (mock chat): the five orders and the Council's "+2 you have not placed yet".
 - **To check live (owner):** `docs/TEST_CHECKLIST.md` Q1.2, MS2, SQ3 [1.74].
-
-## v1.73.0 — Time apart and asking after: NPCs notice the gap and follow up on {{user}}'s plans (2026-10-21)
-
-Owner's request (2026-10-21, points 1 and 2 of the "NPCs that feel alive, cheaply" suggestions): two lines in a present character's
-Cast Sheet block ("Now with {{user}}"), each only when it applies. Engine and data only, no new canon. Save fixture v1.72.0.
-- **Time apart** (`stepBondMemory`, bond `$apart`/`$apartd`): a Rank 2+ character who comes back into the scene after 7+ days unseen
-  (the existing `$seen`) gets "Apart: last saw {{user}} 12 days ago (3 weeks from 14 days). The time apart is real to them; whether and
-  how it shows is up to them, in character." It stays for the rest of that day's scene, then is spent.
-- **Asking after** (`askAfter`, called by `stepAgenda`; `$eng.agenda.ask`, `$ui.asks`): a Commitment or Project of {{user}}'s that
-  appears while characters are in the scene counts as heard by them (not the one it is With). Once its time has passed, or it leaves the
-  record on or after its day (a project also when handed in), each of them who was not there may ask in the first scene shared with
-  {{user}} within 10 days (Rank 3+): "Knew about {{user}}'s "Duel with Ruby" (M4 W2 Fri) and has not heard how it went: may ask, if
-  that is like them." One line a person; spent after that day's scene. Removed before its day (cancelled or done early): nobody asks.
-  Settings → Features → NPC initiative switches it off (its description says so now).
-- Both are permissions, never orders, like the 1.72 special days. Tunables: `APART_RANK 2`, `APART_DAYS 7`, `ASK_RANK 3`, `ASK_DAYS 10`
-  (engine constants).
-- **Saves:** no migration; an older save's Agenda is recorded on the first turn without inventing who heard it.
-- Tests: new `test_npc_apart_asks_v1730.cjs`; `test_saves`, `test_npc_days_v1720`, the Cast Sheet, initiative, Agenda, memory and
-  narrator suites and lint pass.
-- **To check live (owner):** `docs/TEST_CHECKLIST.md` Q3.3 [1.73].
 
 ## Release index (one line per release, oldest first)
 
@@ -281,4 +273,5 @@ Cast Sheet block ("Now with {{user}}"), each only when it applies. Engine and da
 - **v1.75.0 (2026-10-21):** A club {{user}} founds is a club like any other: tracked founding (a teacher with no club, five members, a room), members who move leave their lore club, its room, Field and members in every system; canon advisors shown.
 - **v1.76.0 (2026-10-21):** The roster spread over more clubs: Lenna in Archery, Dorian advising Calligraphy; the Camping Club (Faye) replaces the Walking Club.
 - **v1.77.0 (2026-10-21):** Lore changes that last a while (Until, ended by the engine); a "How {{user}} looks" line in `<now>` (injuries, conditions, fatigue, lost sleep).
+- **v1.77.1 (2026-10-21):** An NPC's things come up when the scene calls for them: the Cast Sheet's Carries label (NPC dialogue audit 2026-10-21, U2).
 - Docs (2026-10-21, no card change): `docs/FEATURES.md`, every feature with its code, data, toggle and tests; `docs/INDEX.md` keeps the workflows and maps (−13 KB); stale docs fixed (PLAYER_GUIDE, README, tests/README, FUTURE_PLANS, the NPC brief); the finished 2026-10-03 batch plans and `tools/make_npc_brief.py` removed.

@@ -22,7 +22,7 @@ ok(/Voice examples:\n- Scene: the first day of a new week/.test(t), 'Alyssa: the
 ok(/<narrator_only>\nAlone \(the mask off; \{\{user\}\} never sees this unless the story earns it\):\n- Scene: the morning after the rest day[^\n]*\n- Scene: in the Canteen she sets down a second cup[^\n]*\n<\/narrator_only>/.test(t), 'Alyssa: both alone scenes stay narrator-only');
 ok(/Don't flatten: her story is somber and bittersweet: quiet loss, small warmth, no melodrama\./.test(t) && /no rank, feeling or kiss cures it/.test(t) && /never as memories/.test(t), 'Alyssa: the tone, no cure, shared moments only as notes');
 ok(/Stage with \{\{user\}\}: \{\{user\}\}'s page is a name, a sketch and one line\./.test(t), 'Alyssa at Rank 0: the 0-2 stage');
-ok(/How they address people: \{\{user\}\}: their name, after a glance at the notebook/.test(t) && /Carries: the small leather notebook/.test(t), 'Alyssa: terms and props in the invariants');
+ok(/How they address people: \{\{user\}\}: their name, after a glance at the notebook/.test(t) && /Carries[^:]*: the small leather notebook/.test(t), 'Alyssa: terms and props in the invariants');
 S.Bonds.Alyssa.Rank = 7; S = applyPatch(S, [{ op: 'replace', path: '/World/Time', value: '09:00' }]);
 ok(/Stage with \{\{user\}\}: the page fills both sides\. If the story has already shown \{\{user\}\} the pattern/.test(R(509, S)), 'Alyssa at Rank 7: she admits the pattern only once the story has shown it');
 

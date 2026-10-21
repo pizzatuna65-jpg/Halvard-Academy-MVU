@@ -143,6 +143,8 @@ show the newcomers their dorm rooms.
 - [ ] Prose (preset): the reply opens with Charles's action and words expanded (Embellish); the others answer as themselves and nothing is
       decided for Charles beyond what you wrote; about 4–7 paragraphs; no "not X, but Y" or "It wasn't X. It was Y."; NPCs sound distinct,
       act on what they decide, and a nervous one keeps their stalls; jobs and jargon do not take over idle talk [1.36, 1.52.2].
+- [ ] What people carry comes up when the scene uses it: Zara's sketchbook (she hides it) and Kanae's things are not in every reply;
+      each sheet in `<cast>` reads "Carries (shown when the scene calls for it):" [1.77.1].
 - [ ] A quick greeting keeps the clock or moves it a minute; a real ten-minute talk moves it about ten [1.9.3].
 - [ ] A new roster character: short first lines, then they sound like their sheet [1.35.2]. The update starts their bond with
       `insert /Bonds/<name>/Known_facts/-` (no full record, no Trust), real MVU accepts it, and the bond starts at the character's own Trust

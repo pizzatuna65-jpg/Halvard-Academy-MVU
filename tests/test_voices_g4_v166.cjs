@@ -27,7 +27,7 @@ ok(/Stage with \{\{user\}\}: \{\{user\}\} is his one exception to coming first/.
 
 // Sophia: never Blood
 t = at('Sophia');
-ok(/she has never pulled water from a living body/.test(t) && /Carries: a tactics book/.test(t), 'Sophia: the Blood line and her props');
+ok(/she has never pulled water from a living body/.test(t) && /Carries[^:]*: a tactics book/.test(t), 'Sophia: the Blood line and her props');
 ok(/Stage with \{\{user\}\}: \{\{user\}\} has hit back at least once/.test(at('Sophia', 4)), 'Sophia at Rank 4: the 3-5 stage');
 
 // Royhan: prejudice, nothing more

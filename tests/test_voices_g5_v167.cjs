@@ -42,7 +42,7 @@ ok(!/Her rooms in the Fire Dormitory become the one door/.test(built) && !/the w
 // the rest: a line from each group
 ok(/Stage with \{\{user\}\}:[^\n]*He still searches, questions and watches them like everyone else/.test(at('Krieg', 10)), 'Krieg at Rank 10: still watches {{user}}, as his benefit says');
 ok(/Krieg: "Commander"/.test(at('Milena')) && /Change: shaped\b/.test(at('Milena')), 'Milena: "Commander" (lore), shaped');
-ok(/Stage with \{\{user\}\}: "kid", a nod[^\n]*Sky student/.test(at('Ottavio', 1)) && /Carries: round black-tinted glasses; a worn casino coin/.test(at('Ottavio')), 'Ottavio at Rank 1: Sky students are already his; coin and glasses');
+ok(/Stage with \{\{user\}\}: "kid", a nod[^\n]*Sky student/.test(at('Ottavio', 1)) && /Carries[^:]*: round black-tinted glasses; a worn casino coin/.test(at('Ottavio')), 'Ottavio at Rank 1: Sky students are already his; coin and glasses');
 ok(/Hostility only makes him friendlier/.test(at('Althair', 2)) && /Anchor: his clothes: never formal/.test(at('Althair')), 'Althair: the Delighted override in his stage; the anchor');
 ok(/Change: shaped\b/.test(at('Mimosa')) && /Kuroo: "Professor Varnell"/.test(at('Mimosa')), 'Mimosa: shaped; terms');
 ok(/Stage with \{\{user\}\}: \{\{user\}\} is the protégé he was looking for/.test(at('Gavlan', 9)), 'Gavlan at Rank 9: the protégé stage');

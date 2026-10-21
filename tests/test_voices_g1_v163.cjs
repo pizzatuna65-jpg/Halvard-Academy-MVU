@@ -18,7 +18,7 @@ ok(!/\[\?\]/.test(JSON.stringify(C.voice)), 'no open-question marks left in the 
 const here = ids => ({ op: 'replace', path: '/Scene/Present', value: Object.fromEntries(ids.map(i => [i, { Note: '' }])) });
 let S = applyPatch(initState(), [here(['Irene'])]);
 let t = R(509, S);
-ok(/INVARIANTS: [^\n]*How they address people: \{\{user\}\}: by their family name until Rank 4[^\n]* Carries: the Student Council badge/.test(t), 'terms of address and props in the invariants');
+ok(/INVARIANTS: [^\n]*How they address people: \{\{user\}\}: by their family name until Rank 4[^\n]* Carries[^:]*: the Student Council badge/.test(t), 'terms of address and props in the invariants');
 ok(/Voice examples:\n- Scene: \{\{user\}\} is out after curfew\./.test(t) && /Never sounds like: slang, gushing/.test(t) && /Don't flatten: her strictness into coldness/.test(t) && /Anchor: her family's weekly letters/.test(t), 'full sheet: scenes, never sounds like, don\'t flatten, anchor');
 ok(/Stage with \{\{user\}\}: correct, pleasant, entirely official\./.test(t) && (t.match(/Stage with \{\{user\}\}/g) || []).length === 1, 'only the stage for her rank (0-2)');
 ok(/Change: fixed\n|Change: fixed$/.test(t) && /fixed = experience deepens who they are, never rewrites them/.test(t), 'her Change line');
