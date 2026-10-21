@@ -322,6 +322,9 @@ Campus phase: <%- PHASE.line %>
 <%_ if (W._Happening && on('happenings') && !AREA) { _%>
 Around campus today (optional, use only if it fits): <%- W._Happening %>
 <%_ } _%>
+<%_ if (on('clubwork') && !AREA) for (const _l of (UI.cw || {}).now || []) { _%>
+Club work: <%- _l %>
+<%_ } _%>
 <%_ for (const _l of NOW.pres || []) { _%>
 <%- _l %>
 <%_ } _%>

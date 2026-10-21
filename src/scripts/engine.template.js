@@ -933,9 +933,29 @@ const SHOP_KEY = Object.fromEntries(Object.keys(SHOP_PRICE).map(k => [itemKey(k)
 const shopRows = name => SHOP_PRICE[itemBase(name)] || SHOP_PRICE[SHOP_KEY[itemKey(name)]] || [];
 // 1.81.0 (planning/DRAFT_event_frame.md §4.1): an event stall is a shop row with [event id, day, from, to] in its sixth place; it sells
 // only on that event's day (or any of its days) within its hours
+// 1.90.0 (owner-approved planning/DRAFT_kerja_club.md §3): a club's row has ['', day, from, to, when] there; it sells while Club work
+// is on and its condition holds (flu: a flu day, Weather Full; bake / bakefail: the Saturday bake's seeded batch; club: always)
 const STALLS = Object.values(SHOP_PRICE).flat().filter(x => x[5]);
-const stallOpen = (st, W) => eventsOn(W).some(e => e.id === st[0]) && (!st[1] || W.Day === st[1])
+const CLUB_WORK = /*@@CLUB_WORK@@*/{};
+const cwBakeGood = (S, W) => roll100(num(S.$eng.seed, 0), Math.floor(toAbs(W) / DAY_MIN), 'cw-bake') < num((CLUB_WORK.bake || {}).good, 70);
+const cwCond = (when, S, W) => uiOn(S.$ui, 'clubwork') && (when === 'flu' ? !!((S.$ui || {}).wx || {}).flu
+  : when === 'bake' ? cwBakeGood(S, W) : when === 'bakefail' ? !cwBakeGood(S, W) : true);
+const stallOpen = (st, W, S) => (st[0] ? eventsOn(W).some(e => e.id === st[0]) : cwCond(st[4], S, W)) && (!st[1] || W.Day === st[1])
   && hm(W.Time) != null && hm(W.Time) >= hm(st[2] || '00:00') && hm(W.Time) < hm(st[3] || '24:00');
+// 1.90.0: an engine result the Academy Newspaper prints in Monday's issue ($eng.paper.log: [day, line], two weeks kept)
+function cwNews(S, line) {
+  const P = S.$eng.paper = _.isPlainObject(S.$eng.paper) ? S.$eng.paper : {}, d = Math.floor(toAbs(S.World) / DAY_MIN);
+  P.log = [...(Array.isArray(P.log) ? P.log : []).filter(r => Array.isArray(r) && d - r[0] < 14 && r[1] !== line), [d, line]].slice(-12);
+}
+// 1.90.0: the morning after snow (the 'snow' happening's test), Weather Full and Club work on: a campus walk takes snow.slow percent
+// longer until Groundskeeping has the main paths clear, and a walk with an end in the far grounds until far_until; null on other days
+function snowSlow(S, dayNo) {
+  const SN = CLUB_WORK.snow || {}, seed = num(S.$eng.seed, 0);
+  if (!uiOn(S.$ui, 'clubwork') || (S.$ui.wxfx || 'full') !== 'full') return null;
+  if (!(wxDay(seed, dayNo - 1).blocks[2].snow || wxDay(seed, dayNo).blocks[0].snow)) return null;
+  return (ids, t) => t != null && (t < hm(SN.clear || '07:00') || (t < hm(SN.far_until || '15:00') && ids.some(id => (SN.far || []).includes(id))))
+    ? 1 + num(SN.slow, 50) / 100 : 1;
+}
 const INV_KINDS = ['food', 'drink', 'gear', 'gift', 'book', 'reagent', 'other'];
 // 1.42.0 (audit 1.3): one item-name key (itemKey, shared.js) for the Consumables filter, the Qty decrease (H2), gifts and the R2
 // reminder: "a Quick-dry powder" is the Bag's "Quick-dry powder"
@@ -1535,7 +1555,7 @@ function stepTime(c) {
         if (result.President) log.push(`Council result for Year ${key} waits until Saturday voting closes and must name one of that year's two candidates.`);
       } else {
         C.Results[key] = { President: winner, VicePresident: other };
-        if (!prev || !prev.President) jnl.push(`Student Council election: ${winner} was elected President for Year ${y + 1} and named ${other} Vice President.`);
+        if (!prev || !prev.President) { jnl.push(`Student Council election: ${winner} was elected President for Year ${y + 1} and named ${other} Vice President.`); cwNews(S, jnl[jnl.length - 1]); }
       }
     }
     if (S.World.Year > 1 && !C.Results['1']) {
@@ -1834,7 +1854,7 @@ function stepPurchases(c) {
     const asked = String(p.Item || '').trim(), qty = Math.max(1, Math.round(num(p.Qty, 1)));
     if (!asked) continue;
     const rows = shopRows(asked), name = rows.length ? rows[0][4] : asked;
-    const atShop = rows.filter(x => (x[2] === here || placeKey(x[1]) === here) && (!x[5] || stallOpen(x[5], S.World))), sold = atShop.find(x => !x[3] || x[3].includes(season));   // 1.81.0: a stall only while open
+    const atShop = rows.filter(x => (x[2] === here || placeKey(x[1]) === here) && (!x[5] || stallOpen(x[5], S.World, S))), sold = atShop.find(x => !x[3] || x[3].includes(season));   // 1.81.0: a stall only while open
     const story = num(p.Price, -1);
     let price = -1, shop = '', why = '';
     if (!away && sold) { price = sold[0]; shop = sold[1]; if (sale && String(sold[1]).startsWith(sale.shop)) { price = Math.round(price * (100 - sale.pct) / 100); shop += `, ${sale.pct}% off today`; }
@@ -2277,20 +2297,22 @@ function stepCampus(c) {
   const at = areaNow(S) === 'campus' && !awayIn(S) ? campusPlace(S.World.Location) : '';
   if (!at) { X.owe = 0; S.$ui.area.campus = { on: false }; return; }
   const was = hasB && !toolEdit && areaNow(B) === 'campus' && !awayIn(B) ? campusPlace(B.World.Location) : '';
-  const w = was ? campusWalk(S, B.World.Location, S.World.Location) : null, minOwe = num(CR.owe_min, 5);
+  const SL = snowSlow(S, dayNo), w0 = was ? campusWalk(S, B.World.Location, S.World.Location) : null, minOwe = num(CR.owe_min, 5);
+  const w = w0 && SL && SL([w0.a, w0.b], hm(B.World.Time)) > 1 ? { ...w0, min: Math.round(w0.min * SL([w0.a, w0.b], hm(B.World.Time))), snow: 1 } : w0;   // 1.90.0
   if (w && w.min > 0) {
     const cost = w.min >= num(CR.far_min, 15) ? w.min / 60 * num(CR.walk_pct, 5) : 0;
     if (cost) V.Stamina -= cost / 100 * num(V.Stamina_max, 100);
     X.owe = Math.max(0, Math.round(w.min + num(X.owe, 0) - elapsed));
     if (X.owe < minOwe) X.owe = 0;
-    if (cost || X.owe) log.push(`Walked ${A.PL[w.a].name} → ${A.PL[w.b].name}: ${w.min} min on foot${cost ? `, -${Math.round(cost)}% stamina` : ''}${X.owe ? `; ${X.owe} min of the way are still ahead (the clock moved ${Math.round(elapsed)})` : ''}.`);
+    if (cost || X.owe) log.push(`Walked ${A.PL[w.a].name} → ${A.PL[w.b].name}: ${w.min} min on foot${w.snow ? ' through the snow' : ''}${cost ? `, -${Math.round(cost)}% stamina` : ''}${X.owe ? `; ${X.owe} min of the way are still ahead (the clock moved ${Math.round(elapsed)})` : ''}.`);
   } else if (hasB && elapsed > 0) { X.owe = Math.max(0, num(X.owe, 0) - elapsed); if (X.owe < minOwe) X.owe = 0; }
-  const node = campusNode(S, at), R0 = A.routes(node), mins = ids => Math.min(...ids.map(id => (R0[id] || { w: 999 }).w));
+  const tnow = hm(S.World.Time), slow = ids => (SL ? SL([at, ...ids], tnow) : 1);   // 1.90.0: snow
+  const node = campusNode(S, at), R0 = A.routes(node), mins = ids => Math.round(Math.min(...ids.map(id => (R0[id] || { w: 999 }).w)) * slow(ids));
   const own = CAMPUS_MAP.dorms[(S.Player.Profile || {}).Dorm];
   const pins = CAMPUS_MAP.map.filter(([, ids]) => ids.length && !ids.includes(node)).map(([nm, ids]) => [nm, mins(ids), ids.includes(own)]).sort((a, b) => a[1] - b[1]);
   const nWalks = num(CR.walks_listed, 10), walks = pins.filter((p, i) => i < nWalks || p[2]).map(([nm, m]) => [nm, m]);
   const mine = CAMPUS_MAP.map.find(([, ids]) => ids.includes(node)) || ['', []];
-  const near = mine[1].filter(id => id !== node).map(id => [A.PL[id].name, R0[id].w]).sort((a, b) => a[1] - b[1]).slice(0, 5);
+  const near = mine[1].filter(id => id !== node).map(id => [A.PL[id].name, Math.round(R0[id].w * slow([id]))]).sort((a, b) => a[1] - b[1]).slice(0, 5);
   S.$ui.area.campus = { on: true, at, name: A.PL[at].name, pin: mine[0], walks, near, owe: X.owe };
   c.campusOwe = X.owe;
 }
@@ -2628,7 +2650,7 @@ function stepKingdom(c) {
     log.push("Kingdom Competition: {{user}}'s Academy team represents Halvard; Competition is now Kingdom, entered.");
   }
   const onTeam = Co.Tier === 'Kingdom' && Co.Status !== 'eliminated' && !!contestUser(PRESENCE, S);
-  if (!st && onTeam) { st = kcInit(seed, y, S, true); jnl.push(`Kingdom Competition: Halvard's team is ${kcTeam(st, 'Halvard').m.map(kcName).join(', ')}.`); }
+  if (!st && onTeam) { st = kcInit(seed, y, S, true); jnl.push(`Kingdom Competition: Halvard's team is ${kcTeam(st, 'Halvard').m.map(kcName).join(', ')}.`); cwNews(S, jnl[jnl.length - 1]); }
   if (!st || !st.on) {   // {{user}} is not on the team: the whole competition from the seed, told as far as it has come
     const all = kcInit(seed, y, S, false);   // 1.87.0: S for the Academy Competition's winners
     kcAdvance(all, seed, 7 * DAY_MIN, [], { Results: [] });
@@ -2884,6 +2906,7 @@ function stepAcademy(c) {
   if (AC.champ && rr === AC.R && !TS.academy && hasB && !toolEdit) {
     TS.academy = 1;
     jnl.push(`Academy Competition: ${AC.champ.user ? "{{user}}'s team" : AC.champ.k} won (${AC.champ.m.map(acMember).join(', ')}) and will represent Halvard at the Kingdom Competition.`);
+    cwNews(S, jnl[jnl.length - 1]);
   }
   if (lines.length) S.$ui.contest = { lines: [...((S.$ui.contest || {}).lines || []), ...lines] };
   if (next && next.edge) c.contest = { edge: next.edge, at: next.at };
@@ -2906,6 +2929,7 @@ function stepTally(c) {
     const R = tallyOf(c, id);
     TS[id] = R.win;
     jnl.push(id === 'sports_day' ? `Sports Day: ${R.win} took the most medals (${tallyText(R)}).` : `Academy Showcase: ${R.win} was named the most talented dorm (${tallyText(R)}).`);
+    cwNews(S, jnl[jnl.length - 1]);
     S.$ui.toasts.push(`${e.t.split(' (')[0]}: ${R.win} won`);
   }
 }
@@ -2932,6 +2956,7 @@ function stepVote(c) {
   if (!won) return;
   VS[key] = won;
   jnl.push(`The ${won} won the Club Festival coin vote.`);
+  cwNews(S, jnl[jnl.length - 1]);
   S.$ui.toasts.push(`Club Festival: the ${won} won the coin vote`);
   if (won === mine) avRep(S, 'club_festival_win', `the ${won} won the Club Festival coin vote`);
 }
@@ -5418,6 +5443,49 @@ function stepHooks(c) {
 }
 
 // ---- 8g. 1.1.0 gossip: each rumour's fate and reach by age; fizzled (day 3) and old (day 21) ones leave Campus_State.Rumours ----
+// ---- 8f. 1.90.0 (owner-approved planning/DRAFT_kerja_club.md §3): club work for the whole campus (feature clubwork). The Academy
+// Newspaper's Monday issue ($eng.paper: wk = the Monday's day number, issue; not in a break week): last week's engine results
+// (cwNews), the newest rumour that has reached campus (printed: stepGossip keeps it newspaper.keep days longer), the week's events
+// and a ghost story. $ui.cw: the issue for the Notice Board, the club rows open here (open; stall = at a place that is no shop) and
+// the <now> lines (the issue, the bake, the flu table, the snow, a line for {{user}}'s own club on its day)
+function stepClubWork(c) {
+  const { S, OFF, dayNo, seed } = c, W = S.World, t = hm(W.Time);
+  if (OFF.has('clubwork')) { S.$ui.cw = null; return; }
+  const CN = CLUB_WORK.newspaper || {}, P = S.$eng.paper = _.isPlainObject(S.$eng.paper) ? S.$eng.paper : {};
+  const mon = dayNo - Math.max(0, DAYS.indexOf(W.Day)), monW = fromAbs(mon * DAY_MIN);
+  if (P.wk !== mon && (dayNo > mon || (t != null && t >= hm(CN.at || '07:00'))) && !eventsOn(monW).some(e => e.home)) {
+    const R = _.isPlainObject(S.$eng.rum) ? S.$eng.rum : {};
+    const aged = (S.Campus_State.Rumours || []).filter(r => R[r] && R[r].paper == null).map(r => [r, dayNo - R[r].born]).filter(([r, a]) => /campus/.test(REACH(R[r], a)));
+    const young = aged.length ? Math.min(...aged.map(x => x[1])) : 0;
+    const head = aged.length ? pickOf(aged.filter(x => x[1] === young).map(x => x[0]).sort(), seed, mon, 'cw-paper') : '';
+    if (head) { R[head].paper = mon; if (R[head].fate === 'fizzle') R[head].fate = 'normal'; }
+    const soon = [];
+    for (let d = mon; d < mon + 7; d++) for (const e of eventsOn(fromAbs(d * DAY_MIN))) { const n = e.t.split(' (')[0]; if (!soon.includes(n)) soon.push(n); }
+    const G = CN.ghost || [];
+    P.wk = mon;
+    P.issue = { on: `Y${monW.Year} M${monW.Month} W${monW.Week}`, head, res: (P.log || []).filter(r => r[0] >= mon - 7 && r[0] < mon).map(r => r[1]),
+      soon: soon.slice(0, 6), ghost: G.length ? G[Math.floor(mon / 7) % G.length] : '' };
+  }
+  const paper = P.issue && dayNo - num(P.wk, -99) < 7 ? P.issue : null;
+  const here = placeKey(W.Location), season = SEASON_OF(W.Month), now = [];
+  const open = STALLS.filter(x => !x[5][0] && x[2] === here && stallOpen(x[5], W, S) && (!x[3] || x[3].includes(season))).map(x => x[4]);
+  const shopHere = Object.values(SHOP_PRICE).flat().some(x => !x[5] && x[2] === here);
+  if (paper && (CN.now_days || []).includes(W.Day)) now.push(`This week's Academy Newspaper (on the Notice Board since Monday 07:00) leads with ${paper.head ? `the rumour "${paper.head}"` : paper.res.length ? paper.res[0] : `the week ahead: ${paper.soon.join(', ') || 'a quiet week'}`}; students talk about it.`);
+  const sat = W.Day === 'Sat' && t != null && t >= 12 * 60 && t < 17 * 60 && !awayIn(S) && !eventsOn(W).some(e => e.home);
+  if (sat) now.push(cwBakeGood(S, W) ? "The Cooking Club's Saturday bake (Canteen kitchen, 15:00–17:00) has worked today: honey bread, 3 points a loaf." : "The Cooking Club's Saturday bake (Canteen kitchen, 15:00–17:00) has gone wrong today: they are giving the failures away.");
+  if ((S.$ui.wx || {}).flu && t != null && t < 19 * 60) now.push('Flu days: the Medical Centre Volunteers hand out free cold remedies at the Medical Centre until 19:00, one each.');
+  const SL = snowSlow(S, dayNo), SN = CLUB_WORK.snow || {};
+  if (SL && t != null && t < hm(SN.far_until || '15:00')) now.push(t < hm(SN.clear || '07:00') ? `Snow overnight: every path is deep until Groundskeeping clears the main ones by ${SN.clear}; walks take half again as long.`
+    : `Snow overnight: Groundskeeping has the main paths clear; the far grounds (the Hills, the Forest, the Lake) stay deep until ${SN.far_until}, and walks there take half again as long.`);
+  const mine = (CLUB_WORK.names || {})[canonClub(S.Player.Profile.Club, S)] || '';
+  const role = { Newspaper: W.Day === 'Sun' && t != null && t >= 17 * 60 ? 'putting tomorrow\'s Academy Newspaper together tonight' : '',
+    Cooking: sat ? 'running the Saturday bake in the Canteen kitchen' : '', Brewing: sat ? 'selling the week\'s surplus potions in the Potion Halls' : '',
+    Alchemy: sat ? 'selling the week\'s surplus potions in the Potion Halls' : '', 'Medical Centre Volunteers': (S.$ui.wx || {}).flu ? 'handing out cold remedies at the Medical Centre' : '',
+    Groundskeeping: SL && t != null && t < hm(SN.clear || '07:00') ? 'clearing the snow from the paths' : '' }[mine];
+  if (role) now.push(`{{user}}'s club is ${role} today; {{user}} can lend a hand.`);
+  S.$ui.cw = { paper, open, stall: open.length > 0 && !shopHere, now };
+}
+
 function stepGossip(c) {
   const { S, log, OFF, dayNo, seed, TU } = c;
   if (OFF.has('gossip')) S.$ui.gossip = [];
@@ -5428,13 +5496,15 @@ function stepGossip(c) {
     for (const r of live) {
       if (!R[r]) { const d20 = rollInt(1, 20, seed, r, 'rum'); R[r] = { born: dayNo, fate: d20 <= 3 ? 'fizzle' : d20 >= 18 ? 'fast' : 'normal' }; }
       const age = dayNo - R[r].born;
-      if ((R[r].fate === 'fizzle' && age >= 3) || age >= TU.gossip_life) { gone.push(r); delete R[r]; } else keep.push(r);   // 1.9.9: lifetime from Settings > Campus life
+      const kept = R[r].paper != null ? num((CLUB_WORK.newspaper || {}).keep, 3) : 0;   // 1.90.0: printed in the Academy Newspaper
+      if ((R[r].fate === 'fizzle' && age >= 3) || age >= TU.gossip_life + kept) { gone.push(r); delete R[r]; } else keep.push(r);   // 1.9.9: lifetime from Settings > Campus life
     }
     if (gone.length) {
       S.Campus_State.Rumours = keep; S.$ui.rumours_old = [...S.$ui.rumours_old, ...gone].slice(-50);
       log.push(`Rumours that have died out (removed; do not bring them back unless something revives them): ${gone.map(r => `\"${r}\"`).join('; ')}.`);
     }
-    S.$ui.gossip = keep.map(r => [r, REACH(R[r], dayNo - R[r].born), dayNo - R[r].born]);
+    const reach = (m, a) => { const x = REACH(m, a); return m.paper != null && /campus|dorm/.test(x) ? 'all over campus (in the Newspaper)' : x; };
+    S.$ui.gossip = keep.map(r => [r, reach(R[r], dayNo - R[r].born), dayNo - R[r].born]);
   }
 }
 
@@ -5632,7 +5702,7 @@ function stepCampusEvents(c) {
       const bl = now == null ? [] : eventBlocks(e, S.World.Day);
       const cur = bl.filter(b => b.at <= now && (b.to < 0 || b.to > now)).pop(), nx = bl.find(b => b.at > now);
       const ch = off ? [] : ((EVENT_FRAME.chances || {})[e.id] || []).filter(x => chanceDone(S, e, x) < num(x.max, 1) && chanceOpen(S, e, x.how || {}, c.absA)).map(x => x.text).slice(0, 2);
-      const stall = STALLS.some(x => x[5][0] === e.id && x[2] === here && stallOpen(x[5], S.World));
+      const stall = STALLS.some(x => x[5][0] === e.id && x[2] === here && stallOpen(x[5], S.World, S));
       const vote = ((S.$eng.vote || {})[`Y${S.World.Year}`]) || '';   // 1.82.0: the Club Festival coin vote, once drawn
       // 1.83.0: Secret Fools Day's draw for {{user}} (to: the name drawn, by: who drew {{user}}; '' = a dorm-mate to invent), the day's
       // sale, and on a break the roster students who stayed
@@ -6229,7 +6299,7 @@ function stepAgenda(c) {
     const last = runs.find(x => x.e.t === e.t && x.to === d - 1);
     if (last) last.to = d; else runs.push({ e, d, to: d });
   }
-  for (const { e, d, to } of runs) items.push({ d, k: 'event', t: e.t.replace(/\s*\(Player\.Profile[^)]*\)/, ''), on: dayLabel(dayNo + d),
+  for (const { e, d, to } of runs) items.push({ d, k: 'event', t: e.t.replace(/\s*\(Player\.Profile[^)]*\)/, ''), on: dayLabel(dayNo + d), ...(e.id ? { id: e.id } : {}),   // 1.90.0: id for the Festival Committee's postings
     ...(to > d ? { to: fromAbs((dayNo + to) * DAY_MIN).Day, te: to } : {}), ...(e.home ? { h: 1 } : {}), ...(e.ranking ? { r: 1 } : {}) });
   const KO = ['event', 'birthday', 'commitment', 'project', 'notice', 'letter', 'note'];
   S.$ui.agenda = _.sortBy(items, [x => x.d, x => x.at || '99', x => KO.indexOf(x.k)]);
@@ -6767,7 +6837,7 @@ function stepNow(c) {
   for (const a of Object.values(S.$ui.area || {})) if (_.isPlainObject(a)) { delete a.walks; delete a.near; }
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepContest, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepBondMemory, stepProficiency, stepEventChances, stepHunt, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepFold, stepGist, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepContest, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepBondMemory, stepProficiency, stepEventChances, stepHunt, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepClubWork, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepFold, stepGist, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,

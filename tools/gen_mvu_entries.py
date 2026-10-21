@@ -110,7 +110,8 @@ for i, nid in enumerate(sheets):
     open(os.path.join(CC, f'{CAST_UID + i}.txt'), 'w', encoding='utf-8', newline='\n').write(f'@@if {cond}\n' + body)
     CAST_ENTRIES.append((CAST_UID + i, f"[mvu_plot] Cast Sheet — {npcs[nid]['name']} (EJS, only while present)", CAST_ORDER + i))
 shop_all = json.load(open(P('data/shop.json'), encoding='utf-8'))['items']
-shop = [i for i in shop_all if not i.get('ev')]   # 1.81.0: event stalls are listed on their own (PG.ev), only on their day
+cw_timed = lambda i: i.get('club') and (i.get('when') or i.get('from') or i.get('day'))   # 1.90.0: a club stall with hours or a condition
+shop = [i for i in shop_all if not i.get('ev') and not cw_timed(i)]   # 1.81.0: event stalls are listed on their own (PG.ev), only on their day; 1.90.0 club stalls (PG.cw)
 # 1.17.0 (audit T2): the Price Guide lists the shop {{user}} is at (in season), the canon prices, and one line per other shop; the
 # whole list used to arrive (~3.7k tokens) whenever a message said "cost" or "shop"
 rows = {}
@@ -136,6 +137,15 @@ for i in shop_all:
     fx = effect_text(i)
     g = PG['ev'].setdefault(i['ev'], {'shop': i['shop'], 'place': locs[i['loc']]['name'], 'hours': ', '.join(f"{d} {f0}–{t0}" for d, (f0, t0) in i['days'].items()) if i.get('days') else f"{i.get('day', '') + ' ' if i.get('day') else ''}{i.get('from', '00:00')}–{i.get('to', '24:00')}", 'rows': []})
     g['rows'].append(f"- {i['item']}: {i['price']:,} pts{'; ' + i['note'] if i['note'] else ''}{'; ' + fx if fx else ''}")
+# 1.90.0 (planning/DRAFT_kerja_club.md §3): club stalls by place { loc: [[item, text]] }; 506 prints the ones the engine says are open
+# where {{user}} is ($ui.cw.open)
+PG['cw'] = {}
+for i in shop_all:
+    if not cw_timed(i): continue
+    fx = effect_text(i)
+    hrs = f"{i.get('day', '') + ' ' if i.get('day') else ''}{i.get('from', '00:00')}–{i.get('to', '24:00')}"
+    PG['cw'].setdefault(i['loc'], []).append([i['item'], f"- {i['item']}: {i['price']:,} pts; {i['shop']}, {hrs}{'; ' + i['note'] if i['note'] else ''}{'; ' + fx if fx else ''}"])
+    for k in {locs[i['loc']]['name'].lower(), re.sub(r'^the ', '', locs[i['loc']]['name'].lower())}: PG['names'].setdefault(k, i['loc'])
 pg = open(P('src/worldbook/custom/506.template.ejs'), encoding='utf-8').read()
 assert pg.count('/*@@SHARED@@*/') == 1
 pg = pg.replace('/*@@SHARED@@*/', shared_js(presence=False))   # 1.43.0 (audit batch 2)

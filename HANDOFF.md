@@ -3,15 +3,17 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.89.0** (2026-10-22): info layers (owner's design): what each person tells opens by Public, Deep and Deeper
-layers whose ranks follow their openness (`data/bond_rules.json` `layers`, `data/info_layers.json`); the narrator's Bond line names the
-held-back lore headings. 1.88.0–1.88.1: playtest fixes (club advisors hidden until known; the scene card's name on light themes).
-1.81.0–1.87.0: the event frame. The memory audit is done except batch 8. Live checks: the campaign quest log `docs/TEST_CHECKLIST.md`.
+**Snapshot:** card **v1.90.0** (2026-10-22): club work, release 1 of 3 of `planning/DRAFT_kerja_club.md` (approved): the Academy Newspaper's
+Monday issue, club stalls (the Saturday bake, the potion table, free flu remedies, Greenwick's herbs), Groundskeeping's snow, the
+Festival Committee's postings, "For the campus" lines, toggle Club work. 1.89.0: info layers per NPC by openness. 1.88.0–1.88.1: club
+advisors hidden until known; the scene card's name on light themes. 1.81.0–1.87.0: the event frame. The memory audit is done except
+batch 8. Live checks: the campaign quest log `docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat, Y1 M1 W1 Mon 10:13;
+first Act 0: update the card, Q0.1).
 
-**Next task:** the owner plays the quest log; their reports and chat exports bring the playtest fixes (tick what passed, run
-`tools/audit_chat.py` on the export, move "Where you are"). MS3 stage 2 and the NPC dialogue audit's U1, U3–U5 wait in
-`planning/FUTURE_PLANS.md` §2 for a campaign export. Batch 8 (chapters) is planned in `planning/DRAFT_bab_baru.md`: build it at about
-20,000 messages, slow saves or a chat file near 100 MB.
+**Next task:** the draft's release 2 (§4: club services, orders to collect, how {{user}} learns of them) and release 3 (§4.7: the
+weekly club client), then delete the draft. After that the owner plays the quest log; MS3 stage 2 and the NPC dialogue audit's U1,
+U3–U5 wait in `planning/FUTURE_PLANS.md` §2 for a campaign export. Batch 8 (chapters) is planned in `planning/DRAFT_bab_baru.md`: build it at
+about 20,000 messages, slow saves or a chat file near 100 MB.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

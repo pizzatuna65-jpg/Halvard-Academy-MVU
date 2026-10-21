@@ -91,6 +91,8 @@ function acPractice(S) {
 }
 
 // ---------------------------------------------------------------- clubs
+// 1.90.0 (owner-approved planning/DRAFT_kerja_club.md §3): what a club does for the whole campus (data/club_work.json)
+const cwLine = (S, c) => { const l = featureOn(S, 'clubwork') && c.key ? ((DATA.clubwork || {}).clubs || {})[c.key] : ''; return l ? `<div class="sub">For the campus: ${esc(l)}</div>` : ''; };
 function acClubs(S) {
   const mine = clubOf(S), P = S.Player.Profile, fest = eventDay(/^Club Festival/);
   const electionDay = S.World.Month === 10 && S.World.Week === 3 && S.World.Day === 'Sat';
@@ -111,7 +113,7 @@ function acClubs(S) {
   if (mine) {
     const v0 = mine.venues[0];
     h += `<div class="item mine"><div class="row"><span class="t">${esc(mine.name)}</span><span class="pill g">your club</span></div>
-      <div class="sub">${esc(venueNames(mine).join(' · '))}${mine.founded ? `${mine.venues.length ? ' · ' : ''}founded by you${mine.since ? ' ' + esc(mine.since) : ''} · trains ${esc(mine.field)}` : ''}</div><div>${esc(meets(mine))}</div><div class="meta">${people(mine, true)}</div>
+      <div class="sub">${esc(venueNames(mine).join(' · '))}${mine.founded ? `${mine.venues.length ? ' · ' : ''}founded by you${mine.since ? ' ' + esc(mine.since) : ''} · trains ${esc(mine.field)}` : ''}</div><div>${esc(meets(mine))}</div>${cwLine(S, mine)}<div class="meta">${people(mine, true)}</div>
       <div class="meta">${v0 && !hereIs(S, v0) ? `<button class="btn sm" data-go="${esc(v0)}">Go to the club</button>` : ''}
       ${electionDay ? '' : `<button class="btn sm" data-fill="${esc(`I spend the afternoon at the ${mine.name}: `)}">Club time</button>`}</div></div>`;
   } else if (P.Club) h += `<div class="item mine"><div class="row"><span class="t">${esc(P.Club)}</span><span class="pill g">your club</span></div><div class="sub">A club not in the directory, founded or found in play.</div></div>`;
@@ -119,7 +121,7 @@ function acClubs(S) {
   if (P.Council) h += `<div class="item mine"><div class="row"><span class="t">Student Council</span><span class="pill g">member</span></div><div class="sub">Saturday 10:00–12:00 · Student Council Chamber</div><div class="meta"><button class="btn sm" data-fill="I attend the Student Council meeting in the Chamber: ">Council meeting</button></div></div>`;
   if (electionDay) h += '<div class="warn">Student Council election: voting in the Main Courtyard replaces every club meeting this afternoon, ' + PERIOD_TEXT[2].replace('-', '–') + '.</div>';
   if (fest) { const n = daysTo(S, fest.di); if (n >= -1 && n <= 21) h += `<div class="warn">Club Festival ${n < 0 ? 'was yesterday' : n === 0 ? 'is today' : `in ${n} days`} (M3 W2, Fri afternoon and Sat): every club runs a stand in the Main Courtyard; one gold coin each to vote for the best stand.</div>`; }
-  h += `<h3>Directory</h3><div class="clubs">${clubsNow(S).filter(c => !mine || c.name !== mine.name).map(c => `<div class="club"><b>${esc(c.name)}</b><div class="sub">${esc(venueNames(c).join(' · '))}${c.sport ? ' · sport, no magic in play' : ''} · ${esc(meets(c))}</div>
+  h += `<h3>Directory</h3><div class="clubs">${clubsNow(S).filter(c => !mine || c.name !== mine.name).map(c => `<div class="club"><b>${esc(c.name)}</b><div class="sub">${esc(venueNames(c).join(' · '))}${c.sport ? ' · sport, no magic in play' : ''} · ${esc(meets(c))}</div>${cwLine(S, c)}
     <div class="meta">${people(c, false)}</div>
     <div class="meta">${(c.name === 'Student Council' ? !P.Council : !P.Club) ? `<button class="btn sm" data-fill="${esc(`I go to the ${c.name} at ${venueNames(c)[0]} and ask about joining.`)}">Ask to join</button>` : ''}${c.venues[0] && !hereIs(S, c.venues[0]) ? `<button class="btn sm" data-go="${esc(c.venues[0])}">Go</button>` : ''}</div></div>`).join('')}</div>
     <h3>Found your own</h3>${founding(S)}`;
@@ -322,7 +324,10 @@ const MALL_SHOPS = DATA.mallShops || ['mall', 'nightwell', 'merryhews', 'snug'];
 function shopsHere(S) {
   const here = locIdOf(S.World.Location), group = MALL_SHOPS.includes(here) ? MALL_SHOPS : here === 'commissary' ? ['commissary'] : [];
   const stalls = ((S.$ui || {}).ev || []).filter(e => e && e.stall).map(e => e.id);   // 1.81.0: an event stall open here (engine)
-  return (DATA.shop || []).filter(i => i.ev ? stalls.includes(i.ev) && i.loc === here : group.includes(i.loc));
+  // 1.90.0: a club's row with hours or a condition sells while the engine says it is open here ($ui.cw.open); one without, as its shop does
+  const cw = (S.$ui || {}).cw, cwOpen = featureOn(S, 'clubwork') && cw ? cw.open || [] : [];
+  return (DATA.shop || []).filter(i => i.ev ? stalls.includes(i.ev) && i.loc === here : i.club && (i.when || i.from || i.day) ? cwOpen.includes(i.item) && i.loc === here
+    : group.includes(i.loc) && (!i.club || featureOn(S, 'clubwork')) || (i.club && i.loc === here && cwOpen.includes(i.item)));
 }
 function shopFocus(S) {             // the shop named in the location ("The Mall — Merryhew's"), if any
   const detail = String(S.World.Location || '').toLowerCase(), here = locIdOf(S.World.Location);

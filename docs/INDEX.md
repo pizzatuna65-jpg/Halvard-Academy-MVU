@@ -94,6 +94,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepNewYear` (8e) | new campaign year, cohorts | `data/cohorts.json` |
 | `stepGraduation` / `stepGraduateRewards` (8d, 8d2) | third-years leave; their rewards end | |
 | `stepInitiative` (8e) | optional NPC-initiated contact; 1.49.0 some days a favour (`$ui.initiative.favour`, `FAVOURS`) | `data/initiative_asks.json` (`favours`) → 505 |
+| `stepClubWork` (8f) | 1.90.0: club work for the campus: the Academy Newspaper's issue (`$eng.paper`, results from `cwNews`), the club stalls open here, `<now>` lines (`$ui.cw`); the stall test `stallOpen`/`cwCond`, the snow on walks `snowSlow` (in `stepCampus`) | `data/club_work.json`, `data/shop.json` rows with `club` |
 | `stepHooks` / `stepGossip` (8f, 8g) | story hooks; rumours | |
 | `stepRoutine` (8g2) | 1.50.0 (feature batch 2): the routine week. Arms a player-tool `$ui.plan.run` (`routineSpan`: end Sunday 20:00, stoppers; `routineMoments`; `routineLine` → `$ui.routine`, printed by 505); after the routine reply, its Journal recap. The run itself: `routineStart` (end of `stepGuards`: clock, sleep, reports dropped), `routineSchool` (`stepSchoolWeek`), `routineProf` (`stepProficiency`), training through `c.sessions` | `$ui.plan`, `$ui.routine`; Planner `rpSection` in `30_notebook.js` |
 | `stepBag` (8h) | Inventory merge, caps, Sunfizz, clearing bloom wilt | `data/shop.json`, `crafts.json` |
@@ -170,7 +171,7 @@ Hand-written single sources (edit these): `shop.json`, `happenings.json`, `calen
 *Per NPC* (a new NPC needs a row): `bond_rewards.json`, `bond_rules.json` (1.89.0 `layers`), `bond_openness.json`, `info_layers.json` (1.89.0, only where a field is public in the lore), `tension.json`, `trust.json`,
 `npc_moods.json`, `gift_prefs.json`, `npc_canon.json` (voices, stages, Rank 8 branch), `rank4_partners.json`, `relations_curated.json`,
 `voice_rules.json`, `initiative_asks.json`, `npc_routines.json` (1.52.0; rival teams none), `dialogue_colors.json` (1.37.0; new NPCs via `make_dialogue_colors.py`), `field_overrides.json`, `focus_overrides.json`, `thumb_overrides.json`.
-Systems: `reputation.json`, `training.json`, `club_stats.json`, `practice.json`, `crafts.json`, `factions.json`, `gift_shops.json`.
+Systems: `reputation.json`, `training.json`, `club_stats.json`, `club_work.json` (1.90.0), `practice.json`, `crafts.json`, `factions.json`, `gift_shops.json`.
 Generated (never edit): `npcs.json`, `locations.json`, `relations.json`, `map_pins.json` (curate_data), `themes.json` (make_themes),
 `feature_cost.json` (feature_cost). Review lists: `_review_sensitive_flags.json`; `uid_remap_npc.json`, `pins_pct.json` are pipeline data.
 

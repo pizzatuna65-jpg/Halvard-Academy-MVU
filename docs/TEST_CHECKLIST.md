@@ -181,6 +181,9 @@ show the newcomers their dorm rooms.
 - [ ] The directory: the Camping Club on the Hills (no Walking Club); no teacher shows as an advisor before Charles knows it (Rank 1 with
       them, a member of their club, or told: then by their class until their name is known), and a teacher's dossier Role line leaves
       out "advises the" until then; the narrator puts Lenna at the Archery Range, not the Menagerie, when the Archery Club meets [1.75, 1.76, 1.88].
+- [ ] The directory: the Newspaper, the Divination Society, the Cooking, Brewing and Gardening clubs, the Alchemy Circle, the Medical
+      Centre Volunteers, Groundskeeping and the Festival Committee show a "For the campus:" line; Settings → Features → Club work off
+      hides it [1.90].
 - [ ] Optional, the Student Council (besides a club): Saturday 10:00–12:00 the bracelet and `<now>` point to the Council Chamber,
       attendance and study time count there, an F remedial comes first, and the afternoon club still meets [1.34].
 
@@ -294,12 +297,18 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
 ### Q2.7 Saturday and Sunday
 - [ ] Saturday afternoon at the club adds Student reputation (Q1.2) [1.16.1].
 - [ ] Sunday 07:30: "Morning, no classes today" [1.30.2].
+- [ ] Saturday 15:00–17:00 in the Canteen: `<now>` says whether the Cooking Club's bake worked (honey bread, 3 points, stamina) or went
+      wrong (free failures); the bracelet shows "Stalls here" and Activities → Shop lists it. 14:00–18:00 in the Potion Halls: the
+      Brewing and Alchemy table (Warming and Cooling draught 12, Cold remedy 15); on Sunday both are gone [1.90].
 - [ ] On a Sunday (students may drink only on Sundays, in the Mid-Year Break and in Month 12), mention drinking or Barrow & Vine: the
       alcohol rule (entry 512) is in the prompt [1.54].
 
 ## Act 3 — The rest of Month 1 (W2–W4)
 
 ### Q3.1 Monday, M1 W2
+- [ ] From 07:00 the Notice Board has the Academy Newspaper (front page: a rumour that is all over campus, or a result; the week ahead;
+      a ghost corner); `<now>` Monday to Wednesday says what it leads with, and NPCs may bring it up. A rumour it printed shows "(in the
+      Newspaper)" in the Journal's gossip and lasts three days longer [1.90].
 - [ ] W2 Thu, Castor's birthday, with Castor present: his Cast Sheet's Mood line ends "Birthday (glad): warmer to anyone who remembers
       it.", and the narrator plays it in his quiet way; on the scene card the "glad · birthday" chip shows only once his dossier has
       opened his birthday [1.72].
@@ -351,6 +360,8 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
       with the cook there [1.29].
 
 ### Q3.5 Star Night (W3 Sat evening to Sun dawn)
+- [ ] Before it (from W2): the Notice Board's Star Night posting is signed "Festival Committee" and lists the programme (the event's
+      chances); the Bazaar, Founder Day, the Harvest Festival and the Club Festival are posted the same way [1.90].
 - [ ] On the hills from 20:00 the bracelet shows "Stalls here"; Activities → Shop lists the Star Night market (cider 6, cocoa 5,
       chestnuts 4, skewer 7, star chart 15) and buying one costs exactly that; the Price Guide in the Prompt lists "Event stalls here".
       Away from the hills it says "Event stalls today: … at Grassy Field and Hills"; on Sunday the stalls are gone [1.81].
@@ -539,6 +550,10 @@ The first academy flight (the airship), then the Grand Vast Forest.
 - [ ] The Old Hut, the Swimming Pool and the Canteen: the snowed-in hut, the steaming pool, the winter menu; each Map card shows its Winter
       line [1.14].
 - [ ] The Forest Clearing is still green and in flower [1.13.2].
+- [ ] The first morning after snow: before 07:00 `<now>` says every path is deep and walks take half again as long; after 07:00
+      Groundskeeping has the main paths clear and only the Hills, Forest and Lake stay slow until 15:00 [1.90].
+- [ ] A flu day (some days in M10–M11, students off sick): the Notice Board's "Head colds are going round"; at the Medical Centre until
+      19:00 a free Cold remedy ("Stalls here") that ends a head cold [1.90].
 
 ### Q9.2 Remembrance Day (W1 Tue)
 - [ ] The day before, Baelin present: "Before Remembrance Day (grave): rereads the condolence letters…"; from M9 W4, Rei: "on edge" [1.72].

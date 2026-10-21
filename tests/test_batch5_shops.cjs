@@ -20,8 +20,10 @@ const use = name => ({ op: 'insert', path: '/Consumables/-', value: name });
 
 console.log('Playtest Batch 5: seasonal stock');
 {
-  const seasonal = shop.filter(i => Array.isArray(i.season));
-  ok(seasonal.every(i => i.gear || i.use) && U.DATA.shop.filter(i => Array.isArray(i.season)).every(i => i.effect), 'every seasonal item has a mechanical effect, worded for the shop');
+  // 1.90.0: a crafting material in season (Greenwick's herbs, the Gardening Club's) works through the recipes that use it
+  const MAT = new Set(JSON.parse(read('data/crafts.json')).recipes.flatMap(r => (r.materials || []).flat().map(m => m.item)));
+  const seasonal = shop.filter(i => Array.isArray(i.season) && !MAT.has(i.item));
+  ok(seasonal.every(i => i.gear || i.use) && U.DATA.shop.filter(i => Array.isArray(i.season) && !MAT.has(i.item)).every(i => i.effect), 'every seasonal item has a mechanical effect, worded for the shop (or is a crafting material)');
   for (const s of E.SEASONS.filter((x, i, a) => a.indexOf(x) === i)) {
     const inS = seasonal.filter(i => i.season.includes(s)), shops = new Set(inS.map(i => i.shop.split(' — ')[0]));
     ok(inS.length >= 5 && shops.size >= 3, `${s}: ${inS.length} useful seasonal items in ${shops.size} shops`);

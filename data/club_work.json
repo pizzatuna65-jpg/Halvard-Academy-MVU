@@ -1,0 +1,20 @@
+{
+  "_note": "1.90.0 (owner-approved planning/DRAFT_kerja_club.md §3): what clubs do for the whole campus, whether {{user}} is a member or not (feature clubwork). clubs: by club key (tools/common.py load_clubs 'key'), the Clubs directory's 'For the campus' line. The club stalls (cold remedies, the Saturday bake, the potion table, Greenwick's herbs) are data/shop.json rows with 'club' (and when / day / from / to). newspaper: issued Monday 07:00 (not in a break week); keep = days a printed rumour lives longer, and it never fizzles; ghost = the Newspaper's ghost-story pieces (lore). bake: the Saturday bake's good batch chance (percent, roll100 by day). committee: the events the Festival Committee runs (its Notice Board posting, with the event's chances as the programme). snow: the morning after snow (wxFits 'snow'), campus walks take slow percent more until clear; walks with an end in far keep it until far_until. Weather effects Full only.",
+  "clubs": {
+    "Divination": "Posts tomorrow's skies on the Notice Board every morning at 07:00, right about three times in four.",
+    "Newspaper": "Prints the Academy Newspaper every Monday at 07:00: last week's results, the rumour everyone is repeating, the week ahead and a ghost story.",
+    "Medical Centre Volunteers": "In flu weeks, hands out free cold remedies at the Medical Centre, 07:00–19:00, one each.",
+    "Cooking": "Bakes in the Canteen kitchen on Saturdays, 15:00–17:00: honey bread when it works, free failures when it does not.",
+    "Brewing": "Sells the week's surplus simple potions with the Alchemy Circle in the Potion Halls on Saturdays, 14:00–18:00.",
+    "Alchemy": "Sells the week's surplus simple potions with the Brewing Club in the Potion Halls on Saturdays, 14:00–18:00.",
+    "Gardening": "Supplies Greenwick's with fresh-cut reagent herbs from spring to autumn.",
+    "Groundskeeping": "Clears the main paths of snow before the seven o'clock bell; the far grounds stay deep until the afternoon.",
+    "Festival Committee": "Posts the programme of every festival it runs on the Notice Board ten days ahead."
+  },
+  "newspaper": {"day": "Mon", "at": "07:00", "keep": 3, "now_days": ["Mon", "Tue", "Wed"],
+    "ghost": ["The Long Corridor", "The Third Stall", "The Night Student", "Taken"]},
+  "committee": ["star_night", "bazaar", "founder_day", "harvest", "club_festival"],
+  "bake": {"good": 70},
+  "snow": {"slow": 50, "clear": "07:00", "far_until": "15:00",
+    "far": ["grassy_field_and_hills", "observation_tower", "old_hut", "forest", "forest_clearing", "spirit_path", "boathouse_and_lake", "fishing_house", "willow_island"]}
+}

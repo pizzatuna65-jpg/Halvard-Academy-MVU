@@ -19,6 +19,7 @@
   "gist": 62,
   "hooks": 154,
   "gossip": 19,
+  "clubwork": 0,
   "fortune": 224,
   "attendance": -3,
   "recap": 0,
@@ -31,7 +32,7 @@
  },
  "core_rules": 9114,
  "lore": 9424,
- "price_guide": 6458,
+ "price_guide": 6886,
  "live": {
   "class": 40,
   "weather": 25

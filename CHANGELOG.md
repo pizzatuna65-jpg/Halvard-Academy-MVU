@@ -1,7 +1,36 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show e6f2c37:CHANGELOG.md` (1.86.0), `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.90.0 — Club work: what clubs do for the whole campus (2026-10-22)
+
+Owner's design (2026-10-22, "proceed" on `planning/DRAFT_kerja_club.md`), release 1 of 3 (§3; services §4 and the weekly clients §4.7
+follow): clubs whose lore names a service now work for everyone, members or not, as the Divination Society's forecast already did.
+`data/club_work.json` (new), `data/shop.json` (club rows), engine `stepClubWork`, `stallOpen`/`cwCond`, `cwNews`, `snowSlow`, 505, 506,
+the Notice Board, the Shop tab, the Clubs directory, the bracelet. Save fixture v1.89.0.
+- **The Academy Newspaper**, Monday 07:00 on the Notice Board (none in a break week): last week's results (the Council election, the
+  Academy Competition, Sports Day, the Showcase, the Club Festival vote, the Kingdom team, recorded by `cwNews`), the newest rumour that
+  has reached campus (printed: "all over campus (in the Newspaper)" and three days longer to live), the week ahead, a ghost story.
+  `<now>` Monday to Wednesday says what it leads with.
+- **Club stalls** (shop rows with `club`, opened by the engine, `$ui.cw.open`; "Stalls here", the Shop tab, the Price Guide's "Club
+  stalls here"): the Cooking Club's Saturday bake in the Canteen 15:00–17:00 (70% honey bread, 3 points, stamina +15; else free
+  failures, by the seed); the Brewing and Alchemy table in the Potion Halls, Saturday 14:00–18:00 (Warming and Cooling draught 12,
+  Cold remedy 15: the three simple drinks, so the draft's weekly rotation is all three every week); free cold remedies at the Medical
+  Centre 07:00–19:00 on flu days, with a Notice Board posting; Foraged reagent at Greenwick's, 12 points, spring to autumn.
+- **Groundskeeping**: the morning after snow (Weather Full) campus walks take 50% longer until 07:00, walks with an end in the Hills,
+  Forest or Lake until 15:00; `<now>` says so. Nothing slows walks with Club work off.
+- **The Festival Committee** signs the Notice Board postings of Star Night, the Bazaar, Founder Day, the Harvest Festival and the Club
+  Festival and lists their programme (the event's chances). Agenda event items carry the event id.
+- **The directory**: a "For the campus:" line for the nine clubs with work; a member's club gets a `<now>` line on its day ("{{user}}'s
+  club is running the Saturday bake…; {{user}} can lend a hand"), no new XP.
+- **Settings → Features → Club work** (on by default) turns all of it off.
+- Tests: new `test_clubwork_v1900.cjs`; `test_batch5_shops` exempts crafting materials from "every seasonal item has an effect"; full
+  `npm test` passes; `test_saves` loads v1.89.0.
+- **To confirm with the owner:** the Committee's festivals (Star Night, Bazaar, Founder Day, Harvest Festival, Club Festival); the
+  Tailoring Club's services will use the Workshop (lore: "crafting space for the Smithing, Tailoring and Brewing clubs"), though it
+  meets in the Club Rooms.
+- **To check live:** `docs/TEST_CHECKLIST.md` Q1.2, Q2.7, Q3.1, Q3.5, Q9.1 [1.90].
 
 ## v1.89.0 — Info layers: what each person tells, by their own openness (2026-10-22)
 
@@ -83,36 +112,6 @@ Save fixture v1.86.0.
 - **To confirm with the owner:** the team rule as lore 19 words it (fewer than 16 teams when first-years are few); a round a day
   from Wed 09:00; the tally's events (12 and 10), clubs and weights; the two chances.
 - **To check live:** `docs/TEST_CHECKLIST.md` Q7.1b and Q7.3 [1.87].
-
-## v1.86.0 — The Bazaar's haggling, Founder Day's hunt, the Council vote, the Harvest and Graduation stalls (2026-10-21)
-
-Owner's request (2026-10-21, "proceed batch d dan e"): release E of `planning/DRAFT_event_frame.md` (§4.1 Bazaar, Harvest and the
-Graduation market, §4.7, the vote format for the Council Election). Engine, shared code, schema, data, generators, 502, 505, 506 and the
-Event tab. Save fixture v1.85.0.
-- **The Bazaar** (lore 243): ten traders' items in the Courtyards, Thu–Sat 09:00–18:00 (Yozakuran green tea 14, blossom sweets 10, a
-  Yozakuran katana 3,000; Norvaine starglass lens 80, scrying crystal 150; Caelmari mana lantern 60, rune heater 45, rune lock 30;
-  Velmoran orchard preserves 12, court gloves 70). **Haggling** (calendar `haggle`): the listed price is the opening offer; the price
-  paid follows the first Fortune number `<now>` gave that reply (as crafting reads it): clean 80%, partial or costly 90%, a failure the
-  full price; with Fortune off, the listed price. The Price Guide says so at the stalls.
-- **Founder Day's treasure hunt** (lore 25; `stepHunt`, shared.js `huntStops`, `event_frame.json` `hunt`): six different campus places
-  with lore drawn per campaign year (not the dorms, the common rooms, the bathhouse, the Forest or the Rooftop). From 09:30 to 18:00
-  `<now>` says the hunt is optional and gives the answer place of the clue {{user}} holds; the narrator writes the riddle from that
-  place's lore. Reaching the place while the reply speaks of the clue (riddle, hunt, charter) solves it: a Clue on the Mystery Board
-  (thread "Founder Day hunt Y<n>"), the next place in `<now>`, a count on the Event tab. The sixth: `founder_hunt` (new deed, Academy
-  +10, once a campaign; a reported one is not counted), a Journal line, and in the next `<now>` only the prize as the draft wrote it
-  (the charter in the Archive, the founding warden's line, the roll of names). Unfinished at 18:00 the thread goes cold.
-- **Founder Day has no classes** (lore 25 "No classes"; it lacked `noclass`, so Saturday Etiquette counted as skipped: −2 Academy).
-- **The Council election** (the vote format): when both nominees are other students the engine counts the ballots at Saturday 16:00,
-  seeded and weighted by each nominee's dorm (its roster students that year, plus 4); a result the story wrote gives way (logged).
-  With {{user}} a nominee (Year 2) the story still decides. 502's Council rule says so. `test_council_v178` now expects the count.
-- **The Harvest Festival** (lore 245; Fri 17:00–23:00, Sat 09:00–23:00, Sun 09:00–20:00): pumpkin soup in a bread bowl 7, hot spiced
-  cider 6, honey cake 5, a carved lantern 8, a paper monster mask 3. **Graduation's farewell winter market** (Sun 12:00–19:00): hot
-  spiced cider 6, cocoa 5, a gingerbread star 4, a knitted dorm scarf 30 (warm, by its name), a Farewell Pine ribbon 2.
-- Tests: new `test_bazaar_hunt_v1860.cjs`; `test_council_v178` updated; `test_audit_batch5_v1470` (the 1.46.0 presence record) treats Founder Day as a day without the club block; `test_saves` (v1.85.0), the event frame, Fair, breaks, contest,
-  Kingdom, ambience, grades, shops, calendar, cohort 3, tokens, preset and the suites that grep the changed wording pass; `npm test`.
-- **To confirm with the owner:** the Bazaar items and prices (the katana at 3,000); the hunt's excluded places and its hours; the
-  election's weighting by dorm; the Harvest and winter-market items.
-- **To check live:** `docs/TEST_CHECKLIST.md` Q8.1, Q8.2, Q9.4 and Q10.2 [1.86].
 
 ## Release index (one line per release, oldest first)
 
@@ -288,3 +287,4 @@ Event tab. Save fixture v1.85.0.
 - **v1.88.0 (2026-10-22):** Club advisors stay hidden until {{user}} knows them (Rank 1, a member of the club, or a known fact), in the Clubs list, the graph and the dossier's Role line.
 - **v1.88.1 (2026-10-22):** The scene card's name and role line keep a dark scrim and light text on every theme (Frost and Parchment were unreadable).
 - **v1.89.0 (2026-10-22):** Info layers (owner's design): Public, Deep, Deeper per NPC by openness (open 0/1/2 … closed 2/3/6), per-NPC moves, five open NPCs now normal; the narrator's Bond line names the lore headings it holds back.
+- **v1.90.0 (2026-10-22):** Club work (owner's design, release 1 of 3): the Academy Newspaper's Monday issue, club stalls (the Saturday bake, the potion table, free flu remedies, Greenwick's herbs), Groundskeeping's snow, the Festival Committee's postings, "For the campus" lines; toggle Club work.

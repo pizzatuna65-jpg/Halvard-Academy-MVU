@@ -274,15 +274,18 @@ function nbJournal(S) {
 // ---------------------------------------------------------------- notice board
 // 1.44.0: the Agenda feed's academy events from yesterday to ten days ahead (the Month 12 holiday is not posted)
 function officialNotices(S) {
-  return agendaOf(S).filter(x => x.k === 'event' && !x.h && x.d <= 10).map(x => ({ n: x.d, on: x.on, t: x.r ? 'Results and dorm rankings' : shortEv(x.t), x: x.t }));
+  // 1.90.0 (planning/DRAFT_kerja_club.md §3.7): the Festival Committee posts the festivals it runs, with the event's chances as the programme
+  const FC = featureOn(S, 'clubwork') ? ((DATA.clubwork || {}).committee || []) : [];
+  return agendaOf(S).filter(x => x.k === 'event' && !x.h && x.d <= 10).map(x => ({ n: x.d, on: x.on, t: x.r ? 'Results and dorm rankings' : shortEv(x.t), x: x.t,
+    by: FC.includes(x.id) ? 'Festival Committee' : 'Academy Administration', prog: FC.includes(x.id) ? ((DATA.chances || {})[x.id] || []).map(c => c.text) : [] }));
 }
 function nbNotices(S) {
-  const off = officialNotices(S).map(o => `<div class="note off"><b>${esc(o.t)}</b><div>${esc(o.x)}</div><div class="sub">${esc(`${relDay(o.n)} · ${o.on}`)} · Academy Administration</div></div>`).join('');
+  const off = officialNotices(S).map(o => `<div class="note off"><b>${esc(o.t)}</b><div>${esc(o.x)}</div>${o.prog.length ? `<div>On the programme: ${esc(o.prog.join('; '))}.</div>` : ''}<div class="sub">${esc(`${relDay(o.n)} · ${o.on}`)} · ${esc(o.by)}</div></div>`).join('');
   const N = featureOn(S, 'notices') ? Object.entries(S.Notices || {}).reverse() : [];
   const own = N.map(([k, v], i) => `<div class="note" style="--r:${[-1.2, .8, -.5, 1.1, -.9][i % 5]}deg"><b>${esc(k)}</b><div>${esc(v.Text)}</div>
     <div class="sub">${esc([v.By && `Posted by ${v.By}`, v.Posted, v.Until && `until ${v.Until}`].filter(Boolean).join(' · '))}</div>
     <button class="btn sm" data-fill="${esc(`About the notice "${k}" on the board: `)}">Act on it</button></div>`).join('');
-  const fc = forecastCard(S);
+  const fc = forecastCard(S) + paperCard(S) + fluCard(S);
   return `<p class="lead">The long wall of boards in the castle's Floor 1 entrance hall. Official postings go up ahead of every event; the rest is what students pin up, and it rarely stays long.</p>
     <h3>Official</h3>${off || fc ? `<div class="board">${fc}${off}</div>` : '<div class="empty">No official postings this fortnight.</div>'}
     ${featureOn(S, 'notices') ? `<h3>Pinned by students and staff</h3>${own ? `<div class="board">${own}</div>` : '<div class="empty">Nothing you have noticed yet. Paid work, club recruitment and lost items appear here once you have seen them.</div>'}` : ''}`;
@@ -294,6 +297,20 @@ function forecastCard(S) {
   return `<div class="note off fc"><b>Divination Society — ${wx.fc.tomorrow ? "tomorrow's" : "today's"} skies</b>
     <div class="fcb">${wx.fc.blocks.map((b, i) => `<span>${B[i]}</span><span>${esc(b.text)}, ${esc(b.label)}</span>`).join('')}</div>
     <div class="dis">The Society accepts no responsibility for umbrellas.</div><div class="sub">Posted ${wx.fc.tomorrow ? 'this morning' : 'yesterday'} at 07:00 · Divination Society</div></div>`;
+}
+
+// 1.90.0 (owner-approved planning/DRAFT_kerja_club.md §3): the Academy Newspaper's Monday issue (engine stepClubWork, $ui.cw.paper)
+// and the Medical Centre Volunteers' flu notice
+function paperCard(S) {
+  const P = ((S.$ui || {}).cw || {}).paper; if (!featureOn(S, 'clubwork') || !P) return '';
+  const row = (k, v) => v ? `<span>${k}</span><span>${esc(v)}</span>` : '';
+  return `<div class="note off fc"><b>Academy Newspaper — ${esc(P.on)}</b>
+    <div class="fcb">${row('Front page', P.head ? `"${P.head}"` : P.res[0] || '')}${row('Results', P.res.join(' '))}${row('This week', P.soon.join(', ') || 'a quiet week')}${row('Ghost corner', P.ghost ? `${P.ghost}, retold` : '')}</div>
+    <div class="dis">Printed on the Announcement Room's press. Theories are not news.</div><div class="sub">Posted Monday at 07:00 · Academy Newspaper</div></div>`;
+}
+function fluCard(S) {
+  const wx = (S.$ui || {}).wx; if (!featureOn(S, 'clubwork') || !wx || !wx.flu) return '';
+  return `<div class="note off"><b>Head colds are going round</b><div>The Medical Centre Volunteers hand out cold remedies at the Medical Centre until 19:00, one each.</div><div class="sub">Today · Medical Centre Volunteers</div></div>`;
 }
 
 // ---------------------------------------------------------------- letters

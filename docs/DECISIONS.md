@@ -114,6 +114,9 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **Weather** is a pure function of (`$eng.seed`, day) (1.30.3, owner: on a special occasion, `data/calendar.json` `"fair"`, the roll is suspended: clear and calm all day and night, the temperature still seasonal; exam weeks, long weeks, breaks, away days and the Thinning keep ordinary weather): northern seasons, sky per morning / afternoon / night, wind, rare weather, °C, metric everywhere (the card's World Index states metric units since 1.11.2; before that the preset's Bridge asked for metric prose; "Time and Place" stays OFF). Weather **never** changes technique costs (D11; weather attunement was rejected) and never removes HP by itself (D13).
 - **Weather effects setting** Off / Flavor / Full (`$ui.wxfx`, default Full). Flavor = weather shown, no effects. Away from campus there is no campus weather.
 - **Forecast**: the Divination Society (never a member's name) posts tomorrow's skies at 07:00 on the Notice Board, ~75% right (`FC_TRUE`), rare events never forecast; only the Notice Board and `<now>` show it.
+- **Club work** (1.90.0, owner "proceed" on `planning/DRAFT_kerja_club.md`): clubs whose lore names a service work for the whole
+  campus from the seed, members or not; a member gets a role line, never a new XP source. Club stalls are shop rows with `club`
+  (`stallOpen`). Only club work adds a cost (the snow walk); with the toggle off nothing changes.
 - **Conditions** (`Player.Conditions`) come from the weather; the engine adds and clears them, the story may remove one.
 - **The Bag** (`Inventory`): Plan is free text, no reminders; gear works by item name; Sunfizz bottles return for 2 points (canon) at the Commissary or The Mall. Qty 0 removes an item (schema 0–99, see CHANGELOG).
 - **Story hooks** (`Hooks`) are narrator notes and never appear in the player's UI.

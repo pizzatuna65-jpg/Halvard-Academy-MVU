@@ -155,6 +155,14 @@ t = t.replace('/*@@OUTDOOR@@*/[]', json.dumps(outdoor, ensure_ascii=False))
 shop_fx = {i['item'].lower(): {k: i[k] for k in ('gear', 'use') if k in i} for i in json.load(open(P('data/shop.json'), encoding='utf-8'))['items'] if i.get('gear') or i.get('use')}
 shop_fx.update({i['name'].lower(): {k: i[k] for k in ('gear', 'use') if k in i} for i in crafts['recipes'] if i.get('gear') or i.get('use')})
 t = t.replace('/*@@SHOP_FX@@*/{}', json.dumps(shop_fx, ensure_ascii=False, separators=(',', ':')))
+# 1.90.0 (owner-approved planning/DRAFT_kerja_club.md): club work for the whole campus (data/club_work.json)
+from common import load_clubs
+CLUB_KEYS = {c['key'] for c in load_clubs(npcs, locs)}
+_cw = json.load(open(P('data/club_work.json'), encoding='utf-8'))
+assert all(k in CLUB_KEYS for k in _cw['clubs']), 'club_work.json: unknown club'
+assert all(l in locs for l in _cw['snow']['far']), 'club_work.json: snow.far names an unknown location'
+assert all(e in EV_IDS for e in _cw['committee']), 'club_work.json: committee names an unknown event'
+t = t.replace('/*@@CLUB_WORK@@*/{}', json.dumps({**{k: _cw[k] for k in ('newspaper', 'bake', 'snow')}, 'names': {c['name']: c['key'] for c in load_clubs(npcs, locs) if c['key'] in _cw['clubs']}}, ensure_ascii=False, separators=(',', ':')))
 shop_prices = {}   # 1.45.0 (audit 3.4): [price, shop, the shop's place key (engine placeKey), seasons or 0, item name]
 for i in json.load(open(P('data/shop.json'), encoding='utf-8'))['items']:
     place = re.sub(r'^the ', '', locs[i['loc']]['name'].lower())
@@ -166,6 +174,9 @@ for i in json.load(open(P('data/shop.json'), encoding='utf-8'))['items']:
     if i.get('ev'):   # 1.81.0: an event stall, [event id, day, from, to] (planning/DRAFT_event_frame.md §4.1)
         assert i['ev'] in EV_IDS and i.get('day', _ef_days[i['ev']][0]) in _ef_days[i['ev']], f"shop.json: {i['item']}: unknown event or day"
         row.append([i['ev'], i.get('day', ''), i.get('from', '00:00'), i.get('to', '24:00')])
+    elif i.get('club'):   # 1.90.0 (planning/DRAFT_kerja_club.md §3): a club's row, ['', day, from, to, when] (when: flu, bake, bakefail; else 'club')
+        assert i['club'] in CLUB_KEYS and i.get('when', 'club') in ('club', 'flu', 'bake', 'bakefail'), f"shop.json: {i['item']}: unknown club or when"
+        row.append(['', i.get('day', ''), i.get('from', '00:00'), i.get('to', '24:00'), i.get('when', 'club')])
     shop_prices.setdefault(i['item'].lower(), []).append(row)
 t = t.replace('/*@@SHOP_PRICE@@*/{}', json.dumps(shop_prices, ensure_ascii=False, separators=(',', ':')))
 # v1.1.0 (spec §9): Features settings, single source data/features.json (the engine needs id, control, field, paths, unlock)

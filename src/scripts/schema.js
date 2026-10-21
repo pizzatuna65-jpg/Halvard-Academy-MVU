@@ -429,6 +429,7 @@ export const Schema = z.object({
     contest: z.any().prefault(null).catch(null),                      // 1.82.0: the Dorm Competition's <now> lines { lines } (engine stepContest)
     kc: z.any().prefault(null).catch(null),                           // 1.84.0: the Kingdom Competition for the Competition tab (engine stepKingdom)
     ev: z.any().prefault([]).catch([]),                               // 1.81.0: today's events [{ id, t, kind, n, of, now, next, ch, stall }] (engine stepCampusEvents)
+    cw: z.any().prefault(null).catch(null),                           // 1.90.0: club work { paper, open, stall, now } (engine stepClubWork)
     cast: z.any().prefault({}).catch({}),                             // 1.5.1 (P1/P6): { full, brief, spoke, gone, ment } for the Cast Sheet (engine)
     perks_used: StrList(60),                                          // 1.3.0: one-use perks already spent ("Council pardon (Irene), M3 W2 Tue")
     perks_grad: z.record(z.string(), z.any()).prefault({}).catch({}),   // 1.7.6: rewards of graduates as they were ({name: perk}), restored if the story keeps them
@@ -491,6 +492,7 @@ export const Schema = z.object({
     heals: z.record(z.string(), z.any()).prefault({}).catch({}), // 1.18.0: anchored Heals_by dates
     repv: z.coerce.number().prefault(0).catch(0),                // 1.3.0: 1 once the pre-1.3.0 Public / Dorm meters were migrated
     rum: z.record(z.string(), z.any()).prefault({}).catch({}),   // 1.1.0: rumour metadata { text: { born, fate } }
+    paper: z.any().prefault(null).catch(null),                   // 1.90.0: the Academy Newspaper { log: [[day, result]], wk, issue }
     wxs: z.any().prefault(null).catch(null),                     // 1.1.0: weather exposure counters and head-cold bookkeeping
     mrem: z.coerce.number().prefault(0).catch(0),                // 1.9.4: mana rounding remainder carried between turns (passive regeneration)
     turn: z.coerce.number().prefault(0).catch(0),                // 1.9.8: updates so far (seeds the Fortune roll)

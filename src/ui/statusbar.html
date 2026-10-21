@@ -471,7 +471,7 @@ const movedToFounded = (F, id) => !!F && F.founded && F.members.includes(id);
       Object.entries((S.Player || {}).Conditions || {}).forEach(([k, v]) => c.push(chip(k, CI[k] || 'fa-circle-exclamation', 'warn', (v && v.Effect) || k, 'profile')));
     }
     if (W._Event_today) c.push(chip(W._Event_today.split(/ \| |;/)[0].split(' — ')[0].split(' (')[0], 'fa-star', 'glow', W._Event_today, (ui.ev || []).length ? 'activities:event' : ''));   // 1.81.0: opens the Event tab
-    if ((ui.ev || []).some(e => e && e.stall)) c.push(chip('Stalls here', 'fa-store', '', 'Open the event stalls', 'activities:shop'));   // 1.81.0
+    if ((ui.ev || []).some(e => e && e.stall) || (ui.cw && ui.cw.stall)) c.push(chip('Stalls here', 'fa-store', '', 'Open the stalls here', 'activities:shop'));   // 1.81.0; 1.90.0 club stalls
     // 1.3.4 (owner): what comes next today (engine $ui.next): an event's timed item, a class, curfew; 1.44.0 an appointment
     const nx = ui.next;
     if (nx && nx.at) c.push(chip('Next ' + nx.at + ' · ' + nx.what, nx.kind === 'curfew' ? 'fa-moon' : nx.kind === 'class' ? 'fa-book-open' : nx.kind === 'plan' ? 'fa-thumbtack' : 'fa-clock', nx.kind === 'event' ? 'glow' : '', 'Next today: ' + nx.at + ', ' + nx.what, 'notebook:planner'));

@@ -2591,6 +2591,123 @@
    "day": "Sun",
    "from": "12:00",
    "to": "19:00"
+  },
+  {
+   "shop": "Medical Centre Volunteers",
+   "loc": "medical_centre",
+   "item": "Cold remedy",
+   "price": 0,
+   "note": "free in flu weeks, one each",
+   "canon": false,
+   "season": "all",
+   "club": "Medical Centre Volunteers",
+   "when": "flu",
+   "from": "07:00",
+   "to": "19:00",
+   "use": {
+    "cure": "Head cold"
+   }
+  },
+  {
+   "shop": "Cooking Club bake",
+   "loc": "canteen",
+   "item": "Cooking Club honey bread",
+   "price": 3,
+   "note": "warm from the Canteen kitchen",
+   "canon": false,
+   "season": "all",
+   "club": "Cooking",
+   "when": "bake",
+   "day": "Sat",
+   "from": "15:00",
+   "to": "17:00",
+   "use": {
+    "stamina": 15
+   }
+  },
+  {
+   "shop": "Cooking Club bake",
+   "loc": "canteen",
+   "item": "Cooking Club failed batch",
+   "price": 0,
+   "note": "free, and you will see why",
+   "canon": false,
+   "season": "all",
+   "club": "Cooking",
+   "when": "bakefail",
+   "day": "Sat",
+   "from": "15:00",
+   "to": "17:00"
+  },
+  {
+   "shop": "Brewing and Alchemy clubs' table",
+   "loc": "potion_halls",
+   "item": "Warming draught",
+   "price": 12,
+   "note": "a student brew from the week",
+   "canon": false,
+   "season": "all",
+   "club": "Brewing",
+   "day": "Sat",
+   "from": "14:00",
+   "to": "18:00",
+   "use": {
+    "clears": [
+     "Chilled"
+    ],
+    "buff": "warm",
+    "mins": 240
+   }
+  },
+  {
+   "shop": "Brewing and Alchemy clubs' table",
+   "loc": "potion_halls",
+   "item": "Cooling draught",
+   "price": 12,
+   "note": "a student brew from the week",
+   "canon": false,
+   "season": "all",
+   "club": "Brewing",
+   "day": "Sat",
+   "from": "14:00",
+   "to": "18:00",
+   "use": {
+    "clears": [
+     "Overheated"
+    ],
+    "buff": "sun",
+    "mins": 240
+   }
+  },
+  {
+   "shop": "Brewing and Alchemy clubs' table",
+   "loc": "potion_halls",
+   "item": "Cold remedy",
+   "price": 15,
+   "note": "a student brew from the week",
+   "canon": false,
+   "season": "all",
+   "club": "Brewing",
+   "day": "Sat",
+   "from": "14:00",
+   "to": "18:00",
+   "use": {
+    "cure": "Head cold"
+   }
+  },
+  {
+   "shop": "Greenwick's",
+   "loc": "greenwicks",
+   "item": "Foraged reagent",
+   "price": 12,
+   "note": "cut this week by the Gardening Club",
+   "canon": false,
+   "season": [
+    "Spring",
+    "Summer",
+    "Autumn"
+   ],
+   "club": "Gardening"
   }
  ]
 }
