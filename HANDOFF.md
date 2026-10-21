@@ -19,8 +19,8 @@ time apart; 1.72.0: special days; 1.70.0/1.71.0: scene cards; 1.69.0: one model 
 plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the card, Q0.1).
 
 **Next task:** `planning/DRAFT_event_frame.md` release C (`tally` for Sports Day and the Showcase; the Academy, Kingdom and World
-tiers) before the campaign reaches M6 W3; then D–E by their dates (§7). Founder Day's prize (§10 question 2) needs the owner's fact before
-release E. Meanwhile the owner plays the quest log; their reports and chat exports bring the playtest fixes (tick what passed, run
+tiers) before the campaign reaches M6 W3; then D–E by their dates (§7); the draft has no open question left. Meanwhile the owner plays
+the quest log; their reports and chat exports bring the playtest fixes (tick what passed, run
 `tools/audit_chat.py` on the export, move "Where you are"). The Megumin Suite audit (`audit/AUDIT_2026-10-21_2_megumin_suite.md`
 §6): all three batches are in (1.78.0–1.80.0); MS3 stage 2 waits in `planning/FUTURE_PLANS.md` §2 until an
 export shows Clues the story never showed. Batch 8

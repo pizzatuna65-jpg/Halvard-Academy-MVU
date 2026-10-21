@@ -4,8 +4,8 @@ Dicatat: 2026-10-21, atas permintaan owner ("setiap bulan ada tanggal istimewa .
 memiliki tujuan nanti ada ui quest/objective"). Jawaban yang disepakati di chat: satu kerangka event yang dipakai semua event,
 ditambah modul per **jenis** event; modul khusus satu event hanya kalau event itu punya keputusan yang tidak ada di event lain.
 
-**Status:** disetujui owner ("proceed", 2026-10-21; diam = setuju untuk §10: pertanyaan 1 = engine, pertanyaan 2 menunggu owner
-menulis faktanya sebelum rilis E). **Rilis A1 selesai di 1.81.0, A2 di 1.82.0, B di 1.83.0.** Berikutnya C (`tally`, Academy/Kingdom/World) sebelum Sports Day M6 W3. Draf ini dihapus setelah rilis E. Dibangun bertahap (§7), tiap rilis siap sebelum event pertamanya di kampanye
+**Status:** disetujui owner ("proceed", 2026-10-21; diam = setuju untuk §10: pertanyaan 1 = engine, pertanyaan 2 = usulan (a) + (c),
+teksnya di §10). **Rilis A1 selesai di 1.81.0, A2 di 1.82.0, B di 1.83.0.** Berikutnya C (`tally`, Academy/Kingdom/World) sebelum Sports Day M6 W3. Draf ini dihapus setelah rilis E. Dibangun bertahap (§7), tiap rilis siap sebelum event pertamanya di kampanye
 Charles (sekarang Y1 M1 W1). Pilihan yang wajar sudah diputuskan di draft ini; yang benar-benar terbuka ada di §10.
 Owner 2026-10-21: bagian kompetisi tidak ada masalah; tujuh celah event lain (§4) ditambahkan atas permintaan owner.
 
@@ -409,7 +409,7 @@ pernah diumumkan. Asal-usulnya: warden pendiri menyembunyikan piagam akademi.
   berikutnya ke narator di `<now>`. Sulitnya datang dari jarak jalan (`campusWalk`) dan waktu yang dihabiskan narator per teka-teki:
   enam perhentian dalam delapan setengah jam memang mungkin, tapi tidak longgar.
 - Kelompok lain ikut berburu (peserta tanpa nama, dikarang narator); staf tidak memberi petunjuk.
-- Selesai → hadiah: §10 pertanyaan 2.
+- Selesai → hadiah: §10 pertanyaan 2 (diputuskan).
 - State: `$eng.hunt = { y, at }` (perhentian yang sudah dicapai). Catatan pemain ada di Mystery Board (batas 40 yang sudah ada).
 - Toggle: ikut `[f:event_chances]`.
 
@@ -451,7 +451,7 @@ Founder Day hunt: {{user}} holds clue <n> of 6. Its answer is <place>; write the
 | B (1.83.0) | Fools Day §4.2 dengan sale Merryhew's, libur §4.3 | Fools Day M4 W1 |
 | C (1.84.0) | Format `tally` (Sports Day, Showcase), Academy, Kingdom, World §3.10 | Sports Day M6 W3 |
 | D (1.85.0) | Fair §4.4, Thinning §4.5, stand Circus, kunjungan keluarga §4.6 | Fair M7 W2 |
-| E (1.86.0) | Stand dan tawar Bazaar, Founder Day §4.7 (sesudah §10 pertanyaan 2), `vote` Council Election, stand Harvest dan pasar musim dingin | Bazaar M9 W2 |
+| E (1.86.0) | Stand dan tawar Bazaar, Founder Day §4.7, `vote` Council Election, stand Harvest dan pasar musim dingin | Bazaar M9 W2 |
 
 Nomor versi menyesuaikan kalau ada rilis lain di sela-selanya (mis. perbaikan dari playtest).
 
@@ -482,17 +482,24 @@ Nomor versi menyesuaikan kalau ada rilis lain di sela-selanya (mis. perbaikan da
 
 ## 10. Pertanyaan terbuka
 
-1. [?] **Hasil NPC lawan NPC ditentukan engine** (diundi dari kekuatan, sama di setiap swipe) supaya bracket, Gossip dan Word gets
-   around punya hasil yang tetap. Alternatifnya: narator yang menentukan setiap bout NPC yang ia mainkan, engine hanya mengisi yang
-   tidak dimainkan. Usulan: engine, karena bracket yang dihitung tidak bisa ditimpa satu balasan tanpa menyimpan hasilnya.
-2. [?] **Hadiah Founder Day** bila {{user}} menyelesaikan perburuan. Lore 25 hanya bilang hadiahnya tidak pernah diumumkan dan piagam
-   warden pendiri adalah asal-usulnya, jadi ini canon milik owner. Pilihan:
-   (a) **informasi**: satu fakta tersegel tentang pendirian atau piagam itu, owner yang menulis isinya (cocok dengan prinsip "high
-   ranks open information, never an ending");
-   (b) **hadiah praktis**: sesuatu yang berguna dan tidak terlalu kuat, mis. akses ke satu tempat yang biasanya tertutup;
-   (c) **reputasi saja**: deed Academy baru (mis. +10) dan pengakuan di depan semua orang saat feast malam itu.
-   Usulan: (a) ditambah (c), karena hadiah yang tidak pernah diumumkan paling masuk akal berupa sesuatu yang hanya diketahui yang
-   selesai. Kalau (a), owner perlu menulis faktanya.
+Semua sudah diputuskan (diam = setuju, 2026-10-21); tidak ada `[?]` yang tersisa.
+
+1. **Hasil NPC lawan NPC ditentukan engine** (diundi dari kekuatan, sama di setiap swipe). Dibangun di 1.82.0.
+2. **Hadiah Founder Day = (a) + (c).** Teks fakta (a) saya tulis di bawah; owner boleh menggantinya kapan saja sebelum rilis E, dan
+   kalau tidak ada komentar, teks ini yang dipakai. Fakta ini tidak membuka rahasia segel atau misteri; ia hanya menjelaskan hadiah yang
+   tidak pernah diumumkan.
+   - (a) Yang menyelesaikan perburuan dibawa malam itu juga ke Archive dan diperlihatkan piagam asli, yang disimpan terkunci dan tidak
+     pernah dipamerkan. Di pinggir halaman terakhirnya ada satu baris tulisan tangan warden pendiri. Di bawah piagam ada daftar pendek
+     nama-nama yang pernah selesai; nama terakhir di sana sudah puluhan tahun lalu. Nama {{user}} ditambahkan, dan mereka diminta tidak
+     menceritakan isi baris itu (boleh menceritakan bahwa mereka selesai).
+   - (c) Deed baru `founder_hunt` (Academy +10, event, sekali seumur kampanye) dan Kepala Sekolah menyebut nama {{user}} di feast
+     malam itu tanpa menyebut hadiahnya.
+
+   Teks kartu (EN), dicetak `<now>` sekali saat perhentian keenam tercapai:
+
+```
+Founder Day hunt finished. Tonight the Headmaster names {{user}} at the feast, and says nothing of the prize. Afterwards {{user}} is taken to the Archive and shown the original charter, kept locked and never displayed: in the margin of its last page is one line in the founding warden's hand, "A school that keeps the seal and loses its students has kept nothing." Beneath the charter is a short roll of those who finished; the last name on it is decades old. {{user}}'s name is added. They are asked not to repeat the line, only that they finished.
+```
 
 ## Lampiran A. Pembagian 44 event menurut `kind`
 
