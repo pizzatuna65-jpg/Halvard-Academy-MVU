@@ -4,9 +4,9 @@ import json, os, re
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 P = lambda *a: os.path.join(ROOT, *a)
 npcs = json.load(open(P('data/npcs.json'), encoding='utf-8'))
-from common import npc_aliases
+from common import npc_aliases, name_forms, MENTION_DENY
 alias = npc_aliases(npcs)   # 1.37.0: shared with gen_ui.py (dialogue colours)
-forms = {nid: sorted({f for f in [nid, n['name'], n.get('nickname')] if f and len(f) > 1}, key=len, reverse=True) for nid, n in npcs.items()}
+forms = name_forms(npcs)   # 1.80.0: shared with gen_mvu_entries.py (505's player-message recall)
 t = open(P('src/scripts/engine.template.js'), encoding='utf-8').read()
 cal = json.load(open(P('data/calendar.json'), encoding='utf-8'))
 t = t.replace('/*@@CAL_EVENTS@@*/[]', json.dumps(cal['events'], ensure_ascii=False, separators=(',', ':')))
@@ -257,8 +257,7 @@ for e in json.load(open(P('data/relations.json'), encoding='utf-8')):
 tru['friends'] = {k: sorted(v) for k, v in sorted(fr.items())}
 t = t.replace('/*@@TRUST@@*/{}', json.dumps(tru, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@NAME_FORMS@@*/{}', json.dumps(forms, ensure_ascii=False, separators=(',', ':')))
-# 1.5.1 (P6): first names that are also ordinary words; a sentence-initial one is not counted as a mention
-MENTION_DENY = ['Pip', 'Ruby', 'Maple', 'Wren']   # 1.7.0: maple (the tree), wren (the bird)
+# 1.5.1 (P6): first names that are also ordinary words (MENTION_DENY, tools/common.py since 1.80.0)
 # 1.6.0 (N2): stability type per NPC (owner canon; empty until the canon waves)
 CANON = json.load(open(P('data/npc_canon.json'), encoding='utf-8'))
 assert all(k in npcs for k in CANON['change']) and set(CANON['change'].values()) <= {'fixed', 'shaped', 'fluid'}

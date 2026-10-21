@@ -27,6 +27,9 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
   kontrastif; 0 token prompt; prototipe `audit/slop_scan_prototype_2026-10-21.py`); U3 toggle preset E4 untuk pertanyaan menu "X, atau Y?" di akhir giliran NPC,
   hanya bila ekspor 1.77.1 masih menunjukkannya (menyentuh DECISIONS §9); U4 `never_sounds` juga di lembar ringkas (NPC kelima dan
   seterusnya); U5 alat perbaikan pengulangan di riwayat (Chat Repetition Refactor, WH Editor), setelah kodenya dicek terhadap MVU.
+- **Megumin audit MS3 tahap 2** (`audit/AUDIT_2026-10-21_2_megumin_suite.md`; tahap 1 di 1.80.0): hanya bila laporan
+  `audit_chat.py --mechanics` dari ekspor kampanye mencantumkan beberapa "Records not in the story": engine menandai Clue itu `_Unseen`,
+  `stepReminders` mengingatkan sekali, Mystery Board menampilkannya redup; Clue `Source` `records` dikecualikan.
 - **Club buatan sendiri, lanjutan** (sisa DRAFT_club_sendiri §6, 1.75.0): aksi Practice khusus di ruang club-nya (sekarang hanya Saturday
   club time yang memberi XP Field); status club olahraga (larangan sihir, bracket Sports Day); anggaran club.
 - **Patroli jam malam** (E2, 2026-09-28): risiko tertangkap yang di-seed saat {{user}} di luar setelah curfew. Sejak 1.18.0 hanya ada

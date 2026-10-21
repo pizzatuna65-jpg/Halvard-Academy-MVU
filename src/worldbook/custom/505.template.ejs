@@ -34,6 +34,32 @@ const CAST = UI.cast || {}, PRON = /*@@PRON@@*/{};
 /*@@AGE@@*/
 const aged = w => { const a = ageOf(w, W); return a ? w + ', ' + a : w; };
 const SINCE = UI.since || [], MAYBE = UI.maybe || [];
+// 1.80.0 (audit/AUDIT_2026-10-21_2_megumin_suite.md, MS4): the player's NEW message brings back older record lines about someone who
+// is not here (a roster name, an Extra) or a place {{user}} has found. The engine runs after a reply, so only this entry, rendered
+// with the player's message already in the chat (Prompt Template's lastUserMessage), can see it. A player-tool entry asks nothing.
+const NAMES = /*@@NAMES@@*/{};
+const ASKED = (() => {
+  const raw = typeof lastUserMessage === 'string' ? lastUserMessage : '';
+  if (!raw.trim() || /<UpdateVariable>/i.test(raw)) return null;
+  const um = raw.replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, '');
+  const esc = s => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const rxOf = (f, fl) => new RegExp('(^|[^\\p{L}\\p{N}])' + esc(f) + '(?![\\p{L}\\p{N}])', 'u' + (fl || ''));
+  const here = new Set([...PRES, ...(CAST.full || []), ...(CAST.brief || [])]);
+  const terms = [
+    ...Object.entries(NAMES).filter(([id, fs]) => !here.has(id) && (ARR[id] || 1) <= Y && fs.some(f => rxOf(f).test(um))).map(([id, fs]) => [fs[0], fs.map(f => rxOf(f))]),
+    ...Object.keys(getvar('stat_data.Extras') || {}).filter(n => n.length >= 3 && !here.has(n) && rxOf(n).test(um)).map(n => [n, [rxOf(n)]]),
+    ...(UI.discovered || []).filter(p => String(p).length >= 5 && rxOf(p, 'i').test(um)).map(p => [p, [rxOf(p, 'i')]]),
+  ];
+  if (!terms.length) return null;
+  const body = l => String(l).replace(/^\[[^\]]*\]\s*/, '');
+  const seen = new Set([...(getvar('stat_data.Journal') || []), ...(getvar('stat_data._Kept_from_earlier') || []), ...(NOW.recall || []),
+    ...Object.values(NOW.earlier || {}).flat()].map(body));
+  const old = (UI.archive || []).filter(l => !seen.has(body(l)) && !/^First visit to /.test(body(l))).reverse();
+  const lines = [], used = new Set();
+  for (const [, rxs] of terms) { const l = old.find(x => !used.has(x) && rxs.some(r => r.test(body(x)))); if (l) { used.add(l); lines.push(l); } if (lines.length >= 2) break; }
+  const hit = terms.filter(([, rxs]) => lines.some(l => rxs.some(r => r.test(body(l))))).map(([t]) => t);
+  return lines.length ? { who: hit, lines: lines.map(l => { const m = /^\[([^\]]+)\]\s*/.exec(l), a = m && ageOf(m[1], W); return a ? '[' + m[1] + ', ' + a + '] ' + body(l) : l; }) } : null;
+})();
 const STALE = UI.stale || [], PHASE = UI.phase || null;   // 1.6.1 (N4, N6): campus events with no news for a week; the campus phase (engine)
 const INITIATIVE = on('npc_initiative') ? UI.initiative : null;   // 1.7.7 (FP1): optional NPC-initiated contact today
 // 1.46.0 (audit batch 4): the outside areas, one block (engine $ui.area: forest 1.38.0, avalon 1.39.0, airship 1.40.0, sunreach 1.41.0,
@@ -106,6 +132,9 @@ Rewound story: recalled memories whose scene_time is marked <%- NOW.tl.join('; '
 <%_ } _%>
 <%_ if ((NOW.recall || []).length) { _%>
 Earlier here, from the record (Journal lines that name <%- NOW.recallAt %>, older than the Journal): <%- NOW.recall.join(' | ') %>
+<%_ } _%>
+<%_ if (ASKED) { _%>
+Earlier, from the record (named in the player's message: <%- ASKED.who.join(', ') %>; older than the Journal): <%- ASKED.lines.join(' | ') %>
 <%_ } _%>
 <%_ for (const _l of NOW.walk || []) { _%>
 <%- _l %>

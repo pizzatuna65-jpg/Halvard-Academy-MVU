@@ -166,6 +166,13 @@ def npc_aliases(npcs):
     return alias
 
 
+def name_forms(npcs):
+    """Proper-case name forms (id, full name, nickname), longest first: the engine's NAME_FORMS and 505's player-message recall (1.80.0)."""
+    return {nid: sorted({f for f in [nid, n['name'], n.get('nickname')] if f and len(f) > 1}, key=len, reverse=True) for nid, n in npcs.items()}
+
+# 1.5.1 (P6): first names that are also ordinary words; a sentence-initial one is not a mention. 1.7.0: maple (the tree), wren (the bird)
+MENTION_DENY = ['Pip', 'Ruby', 'Maple', 'Wren']
+
 def lore_key(s):
     """1.60.0: a Lore_changes subject or a lore entry name as one key; the engine (lcKey) and build_card's EJS do the same."""
     return re.sub(r'\s+', ' ', re.sub(r'^the\s+', '', str(s).strip().lower()))

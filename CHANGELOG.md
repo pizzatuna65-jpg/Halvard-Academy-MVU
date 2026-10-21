@@ -1,7 +1,28 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.80.0 — Recall from the player's own message; records the story never showed (2026-10-21)
+
+Owner's request (2026-10-21): batch 3 of the Megumin Suite audit (`audit/AUDIT_2026-10-21_2_megumin_suite.md`, untracked): MS4 and MS3
+stage 1. Card text (505), generators and the chat audit tool; the engine is unchanged. Save fixture v1.79.0.
+- **Recall from the player's message (MS4).** The engine runs after a reply, so the player's new message reached the card only through
+  keyword lore and VectFox. Verified in Prompt Template's source (`src/function/ejs.ts`, d6f520d; DECISIONS §11): an EJS entry can read
+  `lastUserMessage`. 505 now matches it (without the scene marker) against the record: a roster name of someone not here (any form the
+  engine knows; Pip, Ruby, Maple and Wren only in full), an Extra not here, or a place in `$ui.discovered`, and prints up to two older
+  archive lines, dated with their age, as "Earlier, from the record (named in the player's message: …)". Lines already in the Journal,
+  Kept, or another recall are skipped; a player-tool entry asks nothing. 0 tokens unless it fires (about 40-80 when it does).
+- **One source for name forms.** `tools/common.py` `name_forms` and `MENTION_DENY` (were in `gen_engine.py`) feed both the engine and
+  505's `NAMES`; the built engine is byte-identical apart from its version.
+- **Records the story never showed (MS3 stage 1).** `tools/audit_chat.py --mechanics` lists each Clue, or Hook for a planted detail, that
+  a block records with no word of it in that reply's story (Megumin's clue check: no names, four letters or more, first five letters
+  compared), with a count in the summary. 0 prompt tokens. Stage 2 (the engine flags such a Clue) waits in `planning/FUTURE_PLANS.md`
+  until an export shows the need; the 2026-10-05 campaign chat has none.
+- Tests: new `test_megumin_b3_v1800.cjs`; `test_saves`, `test_mechanics_audit_v1531`, `test_audit_tool`, `test_memory_tools_v1611`,
+  `test_narrator_batch7_v1580`, `test_memory_batch5_v1640`, `test_audit_batch7_v1480`, `test_one_source_v1430`, `test_reply_delta_v1790`,
+  `test_engine_steps_v1200`, `qa_static` and lint pass.
+- **To check live:** `docs/TEST_CHECKLIST.md` Milestones MS4 and MS5 [1.80].
 
 ## v1.79.0 — "This reply": what the engine changed, on the bracelet (2026-10-21)
 
@@ -73,25 +94,6 @@ Journal. Save fixture v1.76.0.
 - **To confirm with the owner:** the Looks words are mine (UI descriptors, no canon). The uniform and dorm vest are left out: the lore
   never says when the uniform must be worn.
 - **To check live:** `docs/TEST_CHECKLIST.md` Q2.6 [1.77].
-
-## v1.76.0 — The roster spread over more clubs; the Camping Club replaces the Walking Club (2026-10-21)
-
-Owner's request (2026-10-21): spread the roster widely, so a club with both an advisor and named students gives one to a club with
-nobody; the Walking Club was too close to the Running Club. Owner-approved `planning/DRAFT_sebaran_club.md` (applied and deleted). Lore,
-data and a save migration. Save fixture v1.75.0.
-- **Lenna → Archery Club** (her Skills already named archery on the range); Beast Handling keeps Vallie as its advisor. Her Haunts add
-  the Archery Range (the Menagerie stays hers), her weekday routine is Archery Club practice on the range.
-- **Dorian → Calligraphy Club** ("where the hand that keeps his immaculate ledger sets the standard"); Specialized Magic keeps Hadrian.
-- **Walking Club → Camping Club** (Grassy Field and Hills, trains Nature): Faye's Club line, roster tag and Rank 3–5 invitation, the
-  Campus Map venue line and the Walking Lantern ("the Camping Club pitches on the lower slope after dusk and will not say why").
-  `stepMigrate` and `canonClub` move a save or a narrator line in the Walking Club to the Camping Club (never a club to found).
-- **Gymnastics** keeps unnamed students (owner: none of the candidates fit). Clubs with no named person in the whole campaign: from three
-  to one (Gymnastics; the Student Council keeps its own list).
-- Lore edits through `tools/merge_lorebooks.py` `club_spread` (both exports); `data/npc_routines.json`, `data/npc_canon.json`,
-  `data/club_stats.json`; `planning/NPC_BRAINSTORM_BRIEF.md`.
-- Tests: new `test_club_spread_v1760.cjs`; `tests/fixtures/cast_1560.json` renewed for the Lenna and Dorian lines (23 scenarios, checked
-  against the 1.75.0 renders: only those lines differ). Full `npm test` and lint pass.
-- **To check live:** `docs/TEST_CHECKLIST.md` Q1.2 [1.76].
 
 ## Release index (one line per release, oldest first)
 
@@ -256,3 +258,4 @@ data and a save migration. Save fixture v1.75.0.
 - Docs (2026-10-21, no card change): `docs/FEATURES.md`, every feature with its code, data, toggle and tests; `docs/INDEX.md` keeps the workflows and maps (−13 KB); stale docs fixed (PLAYER_GUIDE, README, tests/README, FUTURE_PLANS, the NPC brief); the finished 2026-10-03 batch plans and `tools/make_npc_brief.py` removed.
 - **v1.78.0 (2026-10-21):** Three Fortune numbers per reply, one per attempt in order; Extras Looks as on an ordinary day (Megumin Suite audit batch 1: MS2, MS5).
 - **v1.79.0 (2026-10-21):** "This reply" on the bracelet: everything a reply changed, computed from the message states, nothing stored (Megumin Suite audit batch 2: MS1).
+- **v1.80.0 (2026-10-21):** Recall from the player's own message in `<now>`; `audit_chat.py --mechanics` lists Clues and planted details the story never showed (Megumin Suite audit batch 3: MS4, MS3 stage 1).

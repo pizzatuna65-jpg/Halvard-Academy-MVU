@@ -3,8 +3,9 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.79.0** (2026-10-21): the bracelet has a folded "This reply" with everything the reply changed, computed
-from the message states and never stored (Megumin Suite audit batch 2: MS1). 1.78.0: `<now>` gives three Fortune numbers, one per
+**Snapshot:** card **v1.80.0** (2026-10-21): `<now>` brings back older record lines named in the player's own new message, and
+`audit_chat.py --mechanics` lists Clues and planted details the story never showed (Megumin Suite audit batch 3: MS4, MS3 stage 1).
+1.79.0: the bracelet's "This reply" fold (batch 2). 1.78.0: `<now>` gives three Fortune numbers, one per
 attempt in order, and an Extras record's Looks describe an ordinary day (batch 1: MS2, MS5). 1.77.1: a Cast Sheet's Carries line says the things come up
 when the scene calls for them. 1.77.0: a Lore change may last a while (Until), and `<now>` says how {{user}} looks. 1.76.0: the roster
 spread over more clubs (Camping Club). 1.75.0: a club {{user}} founds is a club like any other. 1.74.0: word gets around, ties; 1.73.0:
@@ -14,8 +15,8 @@ plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the card
 
 **Next task:** the owner plays the quest log; their reports and chat exports bring the playtest fixes (tick what passed, run
 `tools/audit_chat.py` on the export, move "Where you are"). The Megumin Suite audit (`audit/AUDIT_2026-10-21_2_megumin_suite.md`
-§6): batch 1 is in 1.78.0, batch 2 in 1.79.0; batch 3 (MS3 clue check in `audit_chat.py`, MS4 recall from the
-player's message after verifying how EJS reads it) waits for "kerjakan batch 3". Batch 8
+§6): all three batches are in (1.78.0–1.80.0); MS3 stage 2 waits in `planning/FUTURE_PLANS.md` §2 until an
+export shows Clues the story never showed. Batch 8
 (chapters) is planned in `planning/DRAFT_bab_baru.md`: build it at about 20,000 messages, slow saves or a chat file near 100 MB. The
 NPC dialogue audit: U1 and U3–U5 wait in `planning/FUTURE_PLANS.md` §2; the first campaign export on 1.77.1+ is their baseline.
 

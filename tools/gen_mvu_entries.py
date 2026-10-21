@@ -10,14 +10,16 @@ from common import effect_text
 npcs = json.load(open(P('data/npcs.json'), encoding='utf-8'))
 GIFTS = json.load(open(P('data/gift_prefs.json'), encoding='utf-8'))['npcs']
 J = lambda o: json.dumps(o, ensure_ascii=False, separators=(',', ':'))
-from common import AGE_JS, now_data   # 1.48.0: shared with the engine (its <now> lines, audit 3.11)
+from common import AGE_JS, now_data, name_forms, MENTION_DENY   # 1.48.0: shared with the engine (its <now> lines, audit 3.11)
 ejs = open(P('src/worldbook/custom/505.template.ejs'), encoding='utf-8').read()
 ejs = re.sub(r'^// Source of custom entry 505.*\n', '', ejs, flags=re.M)
 OPN = json.load(open(P('data/bond_openness.json'), encoding='utf-8'))
 REPD = json.load(open(P('data/reputation.json'), encoding='utf-8'))   # 1.3.0
 REPD = {'reps': REPD['reps'], 'effects': REPD['effects']}
 for k, v in {'BDAYS': {k:v['birthday'] for k,v in GIFTS.items() if v['birthday']}, 'REP': REPD, 'ARR': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1},
-             'PRON': {nid: {'F': 'she/her', 'M': 'he/him'}.get(n.get('gender'), 'they/them') for nid, n in sorted(npcs.items())}}.items():   # 1.3.8 (+1.4.0 apology_npc)
+             'PRON': {nid: {'F': 'she/her', 'M': 'he/him'}.get(n.get('gender'), 'they/them') for nid, n in sorted(npcs.items())},
+             # 1.80.0 (Megumin audit MS4): the engine's name forms; a first name that is also a word (MENTION_DENY) counts only in full
+             'NAMES': {nid: [f for f in fs if not (nid in MENTION_DENY and f == nid)] for nid, fs in sorted(name_forms(npcs).items())}}.items():   # 1.3.8 (+1.4.0 apology_npc)
     ph = '/*@@' + k + '@@*/' + ('[]' if isinstance(v, list) else '{}')
     assert ph in ejs, ph
     ejs = ejs.replace(ph, J(v))

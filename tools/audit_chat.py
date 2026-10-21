@@ -24,6 +24,8 @@ Analysis, stamina taken for the weather, the calendar turned by hand, a legacy r
 every block through the CURRENT engine (tools/replay_chat.cjs, needs node), what the engine had to correct: a malformed block it
 repaired or could not read, a list written under /Player, a change the schema dropped, and its _Log corrections (time, a new bond's
 Trust, reverted writes, unknown names, refused reports), the reminders it raised and the time each reply moved. 0 prompt tokens.
+1.80.0 (Megumin audit MS3): it also lists each Clue, or Hook for a planted detail, that a block records but whose words are nowhere
+in that reply's story (a record with nothing on the page behind it).
 --no-drift skips the character-drift checks.
 --compare B.jsonl (1.58.0, U9) puts the mechanics of two chats side by side, for an A/B test such as MVU's extra-model mode against
 the one-call mode (play the same opening in both; extra-model is the card's default since 1.67.0). It also counts replies with no update block or with more than one (in
@@ -319,6 +321,45 @@ def fix_kind(line):
     return next((k for k, _, rx in FIX if rx.search(line)), None)
 
 
+# 1.80.0 (audit/AUDIT_2026-10-21_2_megumin_suite.md MS3, after Megumin's clueInProse): a Clue, or a Hook for a planted detail, the
+# narrator records in a reply should be in that reply's story. Its words (not names: capitalised words; four letters or more; no small
+# words) are compared on their first five letters; a record that shares none is listed. Engine-made clues never pass through here.
+REC_STOP = set(('the a an and or but of to in on at by for with from into onto over under about after before this that these those there '
+                'their they them then than his her hers him she he its it\'s was were is are be been being has have had not no never only '
+                'just very some any all each every what when where which who whom why how story turn clue page reply shows showed shown '
+                'says said scene moment').split())
+REC_WORD = re.compile(r"[^\W\d_][\w'’-]*")
+
+
+def _rec_words(text):
+    ws = [re.sub(r"['’]s$", '', w.lower()) for w in REC_WORD.findall(str(text or '')) if not w[:1].isupper()]
+    return [w for w in ws if len(w) >= 4 and w not in REC_STOP]
+
+
+def unseen_records(mes):
+    """[(kind, key, text, shared, of)] for each Clue or detail Hook this reply's block records whose words are not in its story."""
+    have = {re.sub(r"['’]s$", '', w.lower())[:5] for w in REC_WORD.findall(story_text(mes))}
+    out = []
+    for o in patch_ops(mes):
+        if not isinstance(o, dict) or o.get('op') not in ('add', 'insert', 'replace') or not isinstance(o.get('path'), str):
+            continue
+        m = re.fullmatch(r'/(Clues|Hooks)/([^/]+)', o['path'])
+        if not m:
+            continue
+        v = o.get('value')
+        if m.group(1) == 'Clues':
+            text = v.get('Detail', '') if isinstance(v, dict) else str(v or '')
+        elif isinstance(v, dict) and str(v.get('Kind') or 'detail').strip().lower() == 'detail':
+            text = v.get('Note', '')
+        else:
+            continue
+        want = _rec_words(m.group(2) + ' ' + str(text))
+        hit = sum(1 for w in want if w[:5] in have)
+        if want and not hit:
+            out.append((m.group(1)[:-1], m.group(2), str(text)[:160], hit, len(want)))
+    return out
+
+
 def mechanics(path, use_replay=True):
     _, msgs = read_chat(path)
     rows, replies, no_block, multi, prose = {}, 0, 0, 0, []
@@ -332,7 +373,7 @@ def mechanics(path, use_replay=True):
         prose.append(len(story_text(m.get('mes')).strip()))
         st = block_stats(m.get('mes'))
         if st:
-            rows[i] = {'msg': i, **st}
+            rows[i] = {'msg': i, **st, 'unseen': unseen_records(m.get('mes'))}
     rp = replay(path) if use_replay else {'error': 'not run'}
     for r in rp.get('replies', []):
         row = rows.setdefault(r['msg'], {'msg': r['msg'], 'did': {}})
@@ -365,6 +406,7 @@ def mechanics_summary(mx):
             ('lists written under /Player (moved)', f"{sum(g('stray'))}"),
             ('changes the schema dropped', f"{sum(g('dropped'))}"),
             ('reminders raised (possibly missed)', f"{sum(g('missed'))}"),
+            ('Clues / detail Hooks recorded but not in the story of their reply (1.80.0)', f"{sum(len(r.get('unseen') or []) for r in R)}"),
             ('time per reply (minutes)', f"avg {_avg(mins)}, max {max(mins or [0])}")]
 
 
@@ -410,6 +452,10 @@ def mechanics_md(mx):
     lines = [(r['msg'], l) for r in R for l in r.get('fix_lines', [])]
     if lines:
         out += ['', '### Correction lines', ''] + [f'- msg {m}: {l[:200]}' for m, l in lines]
+    un = [(r['msg'], u) for r in R for u in r.get('unseen') or []]
+    if un:
+        out += ['', '### Records not in the story (a Clue or planted detail the prose never shows)', '']
+        out += [f'- msg {m}: {k} "{key}": {txt}' for m, (k, key, txt, _h, _n) in un]
     return '\n'.join(out) + '\n'
 
 

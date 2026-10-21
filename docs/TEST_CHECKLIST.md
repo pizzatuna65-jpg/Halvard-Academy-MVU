@@ -625,11 +625,15 @@ The first academy flight (the airship), then the Grand Vast Forest.
       to three of those lines, and the narrator's callbacks match them [1.64].
 - [ ] At a place an old Journal line names, `<now>` shows "Earlier here, from the record", and the prose may nod to it without retelling it
       [1.64].
+- [ ] Ask someone about a friend who is not here, or about a place, whose old lines have left the Journal ("Did Zara ever come back to
+      the Boathouse?"): that same reply's `<now>` has "Earlier, from the record (named in the player's message: …)" with up to two dated
+      lines, and the answer agrees with them. A Builder or Settings change right before a swipe brings no such line [1.80].
 
 ### MS5 After a session: the export and VectFox
 - [ ] Send the chat export (and VectFox's EventBase export now and then): `audit_chat.py --mechanics --memory --vectfox` finds no ghost
       events unless messages were deleted or edited, every Year 1 date carries `Y1`, and the narrator did no engine work (no weather
-      stamina, no Trust written) [1.61.1, 1.53.1].
+      stamina, no Trust written) [1.61.1, 1.53.1]. The mechanics report's "Records not in the story" is empty, or lists only Clues and
+      planted details the prose really never showed (if it lists several, tell me: MS3 stage 2 makes the engine flag them) [1.80].
       2026-10-05, the 1.35 chat re-vectorized (74 messages → 24 events): 0 ghost events, every date `Y1`. The engine-work half waits
       for new play.
 - [ ] VectFox events: the scene time reads like "Y1 M1 W2 Tue 13:40 t1"; a reply with a Journal line is stored as a turning point of
