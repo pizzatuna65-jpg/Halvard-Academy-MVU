@@ -234,7 +234,7 @@ Announce at the Results assembly: {{user}} is now #<%- UI.ranknews.to %> in the 
 More than <%- UI.leave.cap %> people are with {{user}} on an ordinary day: <%- UI.leave.id %> takes their leave in this reply for a reason that fits them, then leaves Scene.Present.
 <%_ } _%>
 <%_ const FT = on('fortune') ? UI.fortune : null; if (FT && FT.roll) { _%>
-Fortune (important uncertain attempts only): <%- FT.roll %>; after modifiers <%- FT.fail %> or less fails, <%- FT.fail + 1 %>-<%- FT.part %> partial or costly, <%- FT.part + 1 %>+ clean.<%- FT.mods.length ? ' Modifiers: ' + FT.mods.join('; ') + '.' : '' %><%- FT.active.length ? ' Active magic: ' + FT.active.join(', ') + '.' : '' %>
+Fortune (important uncertain attempts only; one number per attempt, in order): <%- (Array.isArray(FT.rolls) && FT.rolls.length ? FT.rolls : [FT.roll]).join(', then ') %>; after modifiers <%- FT.fail %> or less fails, <%- FT.fail + 1 %>-<%- FT.part %> partial or costly, <%- FT.part + 1 %>+ clean.<%- FT.mods.length ? ' Modifiers: ' + FT.mods.join('; ') + '.' : '' %><%- FT.active.length ? ' Active magic: ' + FT.active.join(', ') + '.' : '' %>
 <%_ } _%>
 <%_ if (on('proficiency') && UI.practice && UI.practice.length) { const _p = UI.practice.filter(x => !x.locked); if (_p.length) { _%>
 Practice here: <%- _p.map(x => x.action + ' (' + x.stat + ')').join(', ') %>. Report in /Practice.

@@ -2407,7 +2407,10 @@ function stepFortune(c) {
     if (S.$ui.sleep && S.$ui.sleep.loss >= 0.2 && !S.$ui.sleep.flavor) mods.push('short on sleep -5');
     for (const [r, who] of [['Academy', 'staff'], ['Student', 'students'], ['Doves', 'Doves']]) { const L = repLv(r); if (L) mods.push(`with ${who} ${L > 0 ? '+' : ''}${L * 5}`); }
     const active = Object.entries(M.Active || {}).map(([k, e]) => e.Technique && e.Technique !== k ? `${k} (${e.Technique})` : k);
-    S.$ui.fortune = { roll: d100(seed, 'fortune', S.$eng.turn, absA), fail: band[0], part: band[1], mods, active };
+    // 1.78.0 (Megumin audit MS2): three numbers, one per attempt in order, so two risky attempts in one reply never share a fate;
+    // roll stays the first (crafting reads it)
+    const rolls = [1, 2, 3].map(i => (i === 1 ? d100(seed, 'fortune', S.$eng.turn, absA) : d100(seed, 'fortune', S.$eng.turn, absA, i)));
+    S.$ui.fortune = { roll: rolls[0], rolls, fail: band[0], part: band[1], mods, active };
   }
 
   // 1.16.1 (audit B5): Rank 10 benefits suspended by low Trust, from the Trust before this reply, for the sections before the

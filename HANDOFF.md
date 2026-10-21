@@ -3,18 +3,20 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.77.1** (2026-10-21): a Cast Sheet's Carries line says the things come up when the scene calls for them
-(NPC dialogue audit U2). 1.77.0: a Lore change may last a while (Until; the engine ends it after that day), and `<now>`
-says how {{user}} looks (injuries, conditions, fatigue, lost sleep). 1.76.0: the roster spread over more clubs (Camping Club). 1.75.0: a club {{user}} founds is a club like
-any other (tracked founding, then its room, Field and members in every system; canon advisors shown). 1.74.0: word gets around, ties; 1.73.0: time apart; 1.72.0: special days; 1.70.0/1.71.0: scene cards; 1.69.0: one model per
-turn; 1.68.0: the preset is Realistic Frankenstein 2.2.1.3 as it ships. The memory audit is done except batch 8. Live checks: the
-campaign quest log `docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the card, Q0.1).
+**Snapshot:** card **v1.78.0** (2026-10-21): `<now>` gives three Fortune numbers, one per attempt in order, and an Extras record's
+Looks describe an ordinary day (Megumin Suite audit batch 1: MS2, MS5). 1.77.1: a Cast Sheet's Carries line says the things come up
+when the scene calls for them. 1.77.0: a Lore change may last a while (Until), and `<now>` says how {{user}} looks. 1.76.0: the roster
+spread over more clubs (Camping Club). 1.75.0: a club {{user}} founds is a club like any other. 1.74.0: word gets around, ties; 1.73.0:
+time apart; 1.72.0: special days; 1.70.0/1.71.0: scene cards; 1.69.0: one model per turn; 1.68.0: the preset is Realistic Frankenstein
+2.2.1.3 as it ships. The memory audit is done except batch 8. Live checks: the campaign quest log `docs/TEST_CHECKLIST.md` (the owner
+plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the card, Q0.1).
 
 **Next task:** the owner plays the quest log; their reports and chat exports bring the playtest fixes (tick what passed, run
-`tools/audit_chat.py` on the export, move "Where you are"). Batch 8 (chapters, a new chat file without losing memory) is planned in
-`planning/DRAFT_bab_baru.md`: build it at about 20,000 messages, slow saves or a chat file near 100 MB. The NPC dialogue audit
-(`audit/AUDIT_2026-10-21_1_slop_dialog_npc.md`): U2 is in 1.77.1; U1 and U3–U5 wait in `planning/FUTURE_PLANS.md` §2, and the first
-campaign export on 1.77.1 is their baseline.
+`tools/audit_chat.py` on the export, move "Where you are"). The Megumin Suite audit (`audit/AUDIT_2026-10-21_2_megumin_suite.md`
+§6): batch 1 is in 1.78.0; batch 2 (MS1, the "This reply" fold on the bracelet, UI only) and batch 3 (MS3 clue check in
+`audit_chat.py`, MS4 recall from the player's message after verifying how EJS reads it) wait for "kerjakan batch 2/3". Batch 8
+(chapters) is planned in `planning/DRAFT_bab_baru.md`: build it at about 20,000 messages, slow saves or a chat file near 100 MB. The
+NPC dialogue audit: U1 and U3–U5 wait in `planning/FUTURE_PLANS.md` §2; the first campaign export on 1.77.1+ is their baseline.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

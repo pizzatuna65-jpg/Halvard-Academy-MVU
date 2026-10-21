@@ -18,7 +18,7 @@
   "gist": 62,
   "hooks": 154,
   "gossip": 19,
-  "fortune": 200,
+  "fortune": 224,
   "attendance": -3,
   "recap": 0,
   "routine_week": 0,
@@ -28,7 +28,7 @@
   "study": 54,
   "say_colors": 183
  },
- "core_rules": 9055,
+ "core_rules": 9063,
  "lore": 9050,
  "price_guide": 5461,
  "live": {

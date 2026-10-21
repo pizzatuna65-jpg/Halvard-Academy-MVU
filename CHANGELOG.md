@@ -1,7 +1,25 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.78.0 — Fortune numbers for each attempt; Extras look as on an ordinary day (2026-10-21)
+
+Owner's request (2026-10-21): batch 1 of the Megumin Suite audit (`audit/AUDIT_2026-10-21_2_megumin_suite.md`, untracked): MS2 and
+MS5. Engine and card text, no canon change. Save fixture v1.77.1.
+- **Fortune, one number per attempt (MS2).** `stepFortune` rolls three seeded numbers (`$ui.fortune.rolls`, the same on every swipe);
+  `roll` stays the first, so crafting and old saves read what they read before. `<now>` prints "one number per attempt, in order: 37,
+  then 82, then 14"; 504 says to take the next unused number and to roll no more once they run out. Two risky attempts in one reply no
+  longer share one fate or get a made-up second number (Megumin's dice hand the model a list for the same reason). A state from before
+  1.78.0 still renders its one roll. About +25 tokens a turn while Fortune is on.
+- **Extras Looks (MS5).** 502 asks for `"Looks": "what anyone would notice about them on an ordinary day"` (was "what anyone notices
+  first"): the record is written at a second appearance, often mid-scene, and outlives the scene (`$ui.xold`, `$ui.xgone`).
+- **Test record renewed.** `tests/fixtures/cast_1560.json`: 1.77.1's Carries label had left `test_audit_batch7_v1480` failing; all 220
+  scenarios that differed differed only by that label.
+- Tests: `test_fortune_v198` (three numbers, seeded, the rule, an old state), `test_extras_v161` (the Looks wording); they and
+  `test_saves`, `test_grades_v1150`, `test_proficiency_v1260`, `test_crafting_v1280`, `test_bughunt_v1111`, `test_audit_batch1_v1420`,
+  `test_audit_batch7_v1480`, `test_one_source_v1430`, `qa_static` and lint pass.
+- **To check live:** `docs/TEST_CHECKLIST.md` Q1.1 and Q1.4 [1.78].
 
 ## v1.77.1 — An NPC's things come up when the scene calls for them (2026-10-21)
 
@@ -87,32 +105,6 @@ deleted) and decided its canon. Engine, data, UI and card text. Save fixture v1.
   renewed: 1.74.0's Ties line had changed 35 Cast Sheet scenarios without renewing the record (renders checked identical to the 1.74.0
   engine). Full `npm test` and lint pass. Browser check (mock chat): the forming checklist and the founded club's card.
 - **To confirm with the owner:** nothing new in canon beyond the decisions above. **To check live:** `docs/TEST_CHECKLIST.md` MS3 [1.75].
-
-## v1.74.0 — Word gets around, ties, asking after an injury; People sorting; the Council placed like a club (2026-10-21)
-
-Owner's requests (2026-10-21): points A, B, C and F2 of the "combine what exists" suggestions, and a playtest note on the Student
-Council in Activities → Clubs. Engine, data and UI only, no new canon. Save fixture v1.73.0.
-- **Word gets around** (`stepBonds` → `$eng.word` → `stepBondMemory`): a loud moment with someone (Trust moved 15+, Tension rose 20+, a
-  romance began) reaches that person's friends two days later as a Knows line: "Heard from Aiden: {{user}} shoved Aiden into the
-  fountain." Only a teller who talks about themselves tells (Trust category open or normal, from `data/bond_openness.json`: Irene,
-  guarded, keeps it to herself); the friends are `TRU.friends`, the list a betrayal already spreads through (a betrayal keeps its own
-  spread, not both). Friends who were in the scene saw it; a friend without a bond hears nothing on record.
-- **Ties** (`nowOf`, from `REL_PAIRS`): a present character whose own line runs to someone {{user}} is close to (Rank 6+ or a romance)
-  gets "Ties: knows {{user}} is close to Althair, whom they dislike, and to their rival Irene. How that colours their view of {{user}}
-  is up to them, in character." Dislike first, then rivals, then friends; two at most.
-- **Asking after an injury** (`askAfter`): a new injury of {{user}}'s (moderate or worse) is news to every bonded character who was not
-  there: "Has not seen {{user}} since the injury (Sprained wrist, M4 W2 Wed): may notice it or ask, if that is like them." Rank 3+,
-  within 10 days, while the injury is on record; spent after that day's scene, like the 1.73 lines.
-- **People → Bonds order** (`PSORT`, `peopleGroup` in `10_people.js`): Closest (the old order), Not seen lately (with "seen 12 days
-  ago"; whoever is here counts as seen today), Name, Dorm and Year (in groups: each dorm, Staff, Others; First-years to Third-years,
-  Former students, Staff, Others).
-- **Student Council in Activities → Clubs** (`acClubs`): its members are placed like any club's (their Club field, Rank 1), shown all
-  only when {{user}} sits on the Council; the rest are "+N you have not placed yet".
-- Not built: F3 (birthdays on the Planner calendar) was already there: the calendar shows every birthday a dossier has opened.
-- Tunables: `WORD_DAYS 2`, `TIES_RANK 6` (engine constants).
-- Tests: new `test_word_ties_v1740.cjs`; `test_saves`, the 1.72/1.73 suites, Cast Sheet, initiative, memory, narrator, scene card and UI
-  suites and lint pass. Browser check (mock chat): the five orders and the Council's "+2 you have not placed yet".
-- **To check live (owner):** `docs/TEST_CHECKLIST.md` Q1.2, MS2, SQ3 [1.74].
 
 ## Release index (one line per release, oldest first)
 
@@ -275,3 +267,4 @@ Council in Activities → Clubs. Engine, data and UI only, no new canon. Save fi
 - **v1.77.0 (2026-10-21):** Lore changes that last a while (Until, ended by the engine); a "How {{user}} looks" line in `<now>` (injuries, conditions, fatigue, lost sleep).
 - **v1.77.1 (2026-10-21):** An NPC's things come up when the scene calls for them: the Cast Sheet's Carries label (NPC dialogue audit 2026-10-21, U2).
 - Docs (2026-10-21, no card change): `docs/FEATURES.md`, every feature with its code, data, toggle and tests; `docs/INDEX.md` keeps the workflows and maps (−13 KB); stale docs fixed (PLAYER_GUIDE, README, tests/README, FUTURE_PLANS, the NPC brief); the finished 2026-10-03 batch plans and `tools/make_npc_brief.py` removed.
+- **v1.78.0 (2026-10-21):** Three Fortune numbers per reply, one per attempt in order; Extras Looks as on an ordinary day (Megumin Suite audit batch 1: MS2, MS5).

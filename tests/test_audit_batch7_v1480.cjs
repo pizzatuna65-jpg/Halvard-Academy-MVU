@@ -15,7 +15,8 @@ ok([X(509), X(599), ...sheets].every(e => at(e) === '4,1,true,true') && sheets.e
 ok(sheets.every(e => e.content.length < 40000) && X(509).content.length < 10000, `no entry is large any more (the biggest sheet ${Math.max(...sheets.map(e => e.content.length))} chars; was one 679 KB template)`);
 // tests/fixtures/cast_1560.json: each scenario's Cast Sheet as 1.56.0 renders it (sha1 and length). 1.47.0's record (cast_1470.json)
 // proved the 1.48.0 split; 1.56.0 (U2) changed the text on purpose (the Now block, band words), so the record was renewed then;
-// 1.75.0 renewed it for the Ties line 1.74.0 added; 1.76.0 for the Lenna and Dorian club lines (club spread).
+// 1.75.0 renewed it for the Ties line 1.74.0 added; 1.76.0 for the Lenna and Dorian club lines (club spread); 1.78.0 for 1.77.1's
+// Carries label (220 scenarios differed, every one only by that label).
 const { scenario, N } = require('./fixtures/cast_scenarios.cjs');
 const REC = JSON.parse(read('tests/fixtures/cast_1560.json'));
 const bad = [];

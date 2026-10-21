@@ -40,8 +40,18 @@ ok(/with staff \+10/.test(M) && /with Doves -5/.test(M) && !/with students/.test
 ok(hurt.$ui.fortune.active.some(a => /Veil/.test(a)), 'active magic is listed for the situational bonus: ' + hurt.$ui.fortune.active.join(', '));
 
 const now = render(505, hurt), rules = render(504, hurt);
-ok(/Fortune \(important uncertain attempts only\): \d+; after modifiers 10 or less fails, 11-35 partial or costly, 36\+ clean\. Modifiers: .*Chilled -10/.test(now) && /Active magic: Veil/.test(now), '<now> shows the number, bands, modifiers and active magic');
+ok(/Fortune \(important uncertain attempts only; one number per attempt, in order\): \d+, then \d+, then \d+; after modifiers 10 or less fails, 11-35 partial or costly, 36\+ clean\. Modifiers: .*Chilled -10/.test(now) && /Active magic: Veil/.test(now), '<now> shows the number, bands, modifiers and active magic');
 ok(/- Fortune: only for an important, genuinely uncertain attempt/.test(rules) && /invisibility while sneaking past people who cannot sense it \+40, or no roll if they cannot notice/.test(rules) && /never naming the number|without naming the number/.test(rules), 'rule 504: important moments only, fitting magic (invisibility) outweighs plain sneaking, number never shown');
 
 const off = at(applyPatch(S, [{ op: 'replace', path: '/$ui/off', value: ['fortune'] }]), '08:15');
 ok(off.$ui.fortune === null && !/Fortune/.test(render(505, off)) && !/- Fortune:/.test(render(504, off)), 'Features off: no roll, no <now> line, no rule');
+
+console.log('1.78.0 (Megumin audit MS2): one number per attempt');
+const R = S.$ui.fortune.rolls;
+ok(Array.isArray(R) && R.length === 3 && R[0] === S.$ui.fortune.roll && R.every(r => r >= 1 && r <= 100), `three numbers, the first is the roll crafting reads (${R})`);
+ok(_.isEqual(again.$ui.fortune.rolls, R), 'all three are seeded: the same on every swipe');
+const all = []; for (let i = 0; i < 200; i++) { X = at(X, `${String(14 + Math.floor(i / 60)).padStart(2, '0')}:${String(i % 60).padStart(2, '0')}`); all.push(X.$ui.fortune.rolls); }
+ok(all.filter(r => r[0] === r[1] && r[1] === r[2]).length < 3 && new Set(all.map(r => r[1])).size > 60, 'the later numbers vary on their own');
+ok(/next unused Fortune number in <now> \(one per attempt, in order; when they run out, no more rolls this reply\)/.test(rules), 'rule 504: one number per attempt, in order');
+const legacy = _.cloneDeep(hurt); delete legacy.$ui.fortune.rolls;
+ok(render(505, legacy).includes(`in order): ${legacy.$ui.fortune.roll}; after modifiers`), 'a state from before 1.78.0 (one roll) still renders');

@@ -1343,7 +1343,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.77.1";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.78.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 const verLt = (a, b) => { const p = v => String(v || '0').split('.').map(x => parseInt(x, 10) || 0), x = p(a), y = p(b); for (let i = 0; i < 3; i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) < (y[i] || 0); return false; };   // 1.63.0
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
@@ -2718,7 +2718,10 @@ function stepFortune(c) {
     if (S.$ui.sleep && S.$ui.sleep.loss >= 0.2 && !S.$ui.sleep.flavor) mods.push('short on sleep -5');
     for (const [r, who] of [['Academy', 'staff'], ['Student', 'students'], ['Doves', 'Doves']]) { const L = repLv(r); if (L) mods.push(`with ${who} ${L > 0 ? '+' : ''}${L * 5}`); }
     const active = Object.entries(M.Active || {}).map(([k, e]) => e.Technique && e.Technique !== k ? `${k} (${e.Technique})` : k);
-    S.$ui.fortune = { roll: d100(seed, 'fortune', S.$eng.turn, absA), fail: band[0], part: band[1], mods, active };
+    // 1.78.0 (Megumin audit MS2): three numbers, one per attempt in order, so two risky attempts in one reply never share a fate;
+    // roll stays the first (crafting reads it)
+    const rolls = [1, 2, 3].map(i => (i === 1 ? d100(seed, 'fortune', S.$eng.turn, absA) : d100(seed, 'fortune', S.$eng.turn, absA, i)));
+    S.$ui.fortune = { roll: rolls[0], rolls, fail: band[0], part: band[1], mods, active };
   }
 
   // 1.16.1 (audit B5): Rank 10 benefits suspended by low Trust, from the Trust before this reply, for the sections before the

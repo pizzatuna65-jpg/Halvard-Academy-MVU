@@ -139,6 +139,8 @@ show the newcomers their dorm rooms.
       a colour of their own. With four or five speakers every colour is clearly different; someone who changed colour on arrival keeps it
       for the scene and is back to their usual one next time [1.37, 1.37.1, 1.37.2].
       msg 75: the raw message has `<say:Kanae>` and `<say:Zara:whisper>` (the whisper style is supported); colours on screen still to see.
+- [ ] That clerk's or student's Extras record: Looks is how they look on any ordinary day, not the scene they were met in (soaked, muddy,
+      out of breath) [1.78].
 - [ ] Four or more replies later the prompt holds those quotes without `<say…>` tags; a stray `</say>` never shows in the chat [1.42].
 - [ ] Prose (preset): the reply opens with Charles's action and words expanded (Embellish); the others answer as themselves and nothing is
       decided for Charles beyond what you wrote; about 4–7 paragraphs; no "not X, but Y" or "It wasn't X. It was Y."; NPCs sound distinct,
@@ -181,6 +183,8 @@ show the newcomers their dorm rooms.
 - [ ] Invite a rule-breaker (Aiden) and a rule-keeper (Irene) along: the first may come, the second refuses in character [1.35.2].
 - [ ] Slipping past a patrol is settled by the Fortune number in `<now>` without naming it, and a swipe changes only the wording; a
       technique that clearly helps (Voltaic Core's speed) makes it far easier. Walking somewhere or a light spell is never rolled [1.9.8].
+- [ ] Two risky attempts in one reply (slip past the patrol, then get through a locked door): `<now>` lists three Fortune numbers, and
+      the reasoning takes the first for the first attempt and the second for the next, never one number for both [1.78].
 - [ ] By the lake or another story's place after dark: when an Uncanny line comes in `<now>`, the narrator plays the ghost story's moment
       without naming or explaining it, Tilly reacts in character, and nothing shows in the UI or the Journal [1.16].
 - [ ] Ask Tilly about the Night Swimmer or the Polite Walker: she knows it and has a theory [1.16].
