@@ -124,7 +124,8 @@ show the newcomers their dorm rooms.
 - [ ] Scene cards: under each new reply, one card per person present (Kanae, Zara): the full portrait, "Now:", their true thoughts,
       the rank medal and XP, Trust, Tension. That reply has no folded 🧠 Thoughts (older replies keep theirs); the bracelet has no small
       portraits. Dossier opens their file. A swipe moves the cards to the new reply; editing a reply hides them until it is saved; on a
-      phone the portrait sits beside the stats with the thoughts below [1.70].
+      phone the portrait sits beside the stats with the thoughts below [1.70]. On Frost and Parchment the name and the line under it
+      stay light on a dark band and read easily [1.88.1].
 - [ ] Someone not yet named shows their role, not their name; a passer-by has "Keep in record"; with four or more present, three
       cards and an "also here" row; a thought about someone absent is an "elsewhere" line [1.70].
 - [ ] The bracelet has a folded "This reply (n changes)": open it after a reply with Kanae or Zara; it lists their bond XP (and any

@@ -131,9 +131,10 @@ const SCENE_CSS = `
 .eld-scene .pic .portrait{display:block;width:100%;height:100%;margin:0;border:0;border-radius:0;max-width:none;object-fit:cover;object-position:50% 20%}
 .eld-scene .pic .portrait.fb{display:grid;place-items:center;font-family:var(--f-text);font-size:56px;color:var(--rule2);background:radial-gradient(circle at 50% 38%,#2a2f3b,var(--well) 70%)}
 .eld-scene .pic::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ring) 55%,transparent);pointer-events:none}
-.eld-scene .cap{position:absolute;left:0;right:0;bottom:0;padding:34px 12px 10px;background:linear-gradient(180deg,transparent,rgba(10,13,20,.92) 60%)}
-.eld-scene .nm{font-family:var(--f-text);font-weight:700;font-size:19px;line-height:1.15;color:var(--head)}
-.eld-scene .rl{font-size:12.5px;color:var(--ink2);line-height:1.3;margin-top:2px}
+/* 1.88.0 (owner: unreadable on Frost and Parchment): the caption sits on the portrait, not the panel, so a theme leaves its colours alone */
+.eld-scene .cap{position:absolute;left:0;right:0;bottom:0;padding:34px 12px 10px;background:linear-gradient(180deg,transparent,rgba(10,13,20,.92)/*keep*/ 60%)}
+.eld-scene .nm{font-family:var(--f-text);font-weight:700;font-size:19px;line-height:1.15;color:#f3e8cf/*keep*/;text-shadow:0 1px 3px rgba(0,0,0,.7)/*keep*/}
+.eld-scene .rl{font-size:12.5px;color:#c3beb2/*keep*/;line-height:1.3;margin-top:2px}
 .eld-scene .th{grid-area:th;padding:16px 20px;display:flex;flex-direction:column;gap:10px;min-width:0}
 .eld-scene .lbl{font-family:var(--f-sc);font-size:12.5px;letter-spacing:.09em;color:var(--brass);text-transform:lowercase}
 .eld-scene .lbl span{letter-spacing:0;text-transform:none;font-family:var(--f-ui);color:var(--ink3)}
