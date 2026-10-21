@@ -163,6 +163,9 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **Pact abilities** (1.3.2, owner): a pact partner has a list of abilities like a creature's moves; each is its own technique `<partner>: <ability>` with its own cost, and Summon only pays for the partner being there (a pact without abilities keeps the old hybrid Summon). The engine charges an ability only while the partner is here.
 
 ## 7. Map and UI
+- **What a reply changed is computed, not stored** (1.79.0, Megumin audit MS1): the bracelet's "This reply" fold compares its message's
+  state with the one before it (`replyDelta` in shared.js). Never a `$ui` field for it: every byte in the state is copied into every
+  message of the chat file (batch 8). Hooks, hidden magic and engine bookkeeping are never listed.
 - **Inventory panel** (1.32.0, owner): the Notebook button became Inventory (Bag, Wallet, Planner, Journal, Notice Board, Letters, Mystery Board); the Bag and Wallet left the Student file. The panel id stays `notebook`.
 - **The UI never moves the story itself** (D3/D6). State changes happen through MVU commands in chat. Buttons such as "Go here" only fill the chat input for the player to edit and send. Player-tool writes (Builder, Settings) go through a hidden user message carrying an MVU patch.
 - **Practice tab** (1.27.0): Activities shows it once a practice place appears in `$ui.discovered`; Here lists local actions and their locks, Elsewhere links to discovered places. Practice buttons only draft chat text. A new place or rank may show a red dot through the chat-level seen ledger.

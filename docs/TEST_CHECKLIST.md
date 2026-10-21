@@ -123,6 +123,10 @@ show the newcomers their dorm rooms.
       phone the portrait sits beside the stats with the thoughts below [1.70].
 - [ ] Someone not yet named shows their role, not their name; a passer-by has "Keep in record"; with four or more present, three
       cards and an "also here" row; a thought about someone absent is an "elsewhere" line [1.70].
+- [ ] The bracelet has a folded "This reply (n changes)": open it after a reply with Kanae or Zara; it lists their bond XP (and any
+      Trust or Tension move), points spent with what for, Bag in and out, new Planner entries and Journal lines, and agrees with the
+      People panel and the Wallet. It stays open while the bracelet redraws, is gone when the bracelet is collapsed, and a swipe shows
+      the new reply's own changes [1.79].
 - [ ] A brass rule sits between the bracelet and the story [1.71].
 - [ ] Card actions: no generic buttons; Kanae and Zara get only what their rank and this place open (at Rank 0 usually just Give a
       gift, which lists the Bag with "not tried"). A button only fills the chat box; edit and send, and the engine counts it as usual [1.71].

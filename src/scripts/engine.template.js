@@ -359,9 +359,8 @@ const eventsOn = W => EVENTS.filter(e => e.m === W.Month && e.w === W.Week && e.
 const pctOf = (v, max) => (max > 0 ? (v / max) * 100 : 0);
 const num = (v, d = 0) => { const x = Number(v); return Number.isFinite(x) ? x : d; };
 // 1.42.0 (audit 1.5): the lines a list gained, counted as a multiset: a line written again ("-3 tea at the Snug" on another
-// day, "+40 tutoring (History)" next week) is new even though the same text is already in the list
-const newLines = (before, after) => { const n = _.countBy(Array.isArray(before) ? before : []), seen = {};
-  return (Array.isArray(after) ? after : []).filter(l => (seen[l] = (seen[l] || 0) + 1) > (n[l] || 0)); };
+// day, "+40 tutoring (History)" next week) is new even though the same text is already in the list: newLines, in shared.js since
+// 1.79.0 (the bracelet's "This reply" fold uses it too)
 const dstamp = W => `${yPre(W)}M${W.Month} W${W.Week} ${W.Day}`;
 const ydate = W => `Y${W.Year || 1} M${W.Month} W${W.Week} ${W.Day}`;   // 1.72.0: always with its year ($met, $b8)
 // Parses a due/until text written by the AI ("M2 W1 Tue 14:00", "Month 3 Week 2", "Fri 18:00", "tomorrow 9am", "M4") into an

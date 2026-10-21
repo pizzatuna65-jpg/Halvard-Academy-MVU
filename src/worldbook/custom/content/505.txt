@@ -39,6 +39,72 @@ const itemBase = x => String(x || '').trim().toLowerCase().replace(/^(an?|the)\s
 const itemKey = x => itemBase(x).replace(/\s*\(.*\)$/, '');
 // the key of a record (the Bag, perks) written in any case: the name as stored, or undefined
 const keyIn = (O, name) => { const lo = String(name == null ? '' : name).toLowerCase(); return Object.keys(O || {}).find(k => k.toLowerCase() === lo); };
+// the lines of a list that are new in after (a multiset difference: a repeated line counts once per repeat; Transactions, Journal)
+const newLines = (before, after) => { const n = {}, seen = {};
+  for (const l of Array.isArray(before) ? before : []) n[l] = (n[l] || 0) + 1;
+  return (Array.isArray(after) ? after : []).filter(l => (seen[l] = (seen[l] || 0) + 1) > (n[l] || 0)); };
+// 1.79.0 (Megumin audit MS1): what a reply changed, from the state before it (A) to the state after it (B), as [group, text] rows
+// for the bracelet's "This reply" fold. People rows name the NPC as {npc:id} (the reader puts in the name the player knows). The
+// engine's own bookkeeping ($ keys other than bond and proficiency XP), Hooks and hidden magic are never listed.
+const DELTA_GROUPS = ['People', 'Money', 'Body', 'Studies', 'Bag', 'Records'];
+function replyDelta(A, B) {
+  const out = [], o = x => (x && typeof x === 'object' ? x : {}), nm = (x, d) => { const v = Number(x); return Number.isFinite(v) ? v : d; };
+  const sg = d => (d > 0 ? '+' : '−') + Math.abs(d), add = (g, t) => out.push([g, t]);
+  const dif = (a, b) => Math.round(nm(b, 0) - nm(a, 0));
+  // People: one row per bond that moved
+  const BA = o(A && A.Bonds), BB = o(B && B.Bonds);
+  for (const id of Object.keys(BB)) {
+    const a = BA[id], b = o(BB[id]), bits = [];
+    if (!a) bits.push('new bond, Rank ' + nm(b.Rank, 0));
+    else if (nm(b.Rank, 0) !== nm(a.Rank, 0)) bits.push('Rank ' + nm(a.Rank, 0) + ' → ' + nm(b.Rank, 0));
+    else if (dif(a.$xp, b.$xp)) bits.push('bond XP ' + sg(dif(a.$xp, b.$xp)));
+    if (a && dif(a.Trust, b.Trust)) bits.push('Trust ' + sg(dif(a.Trust, b.Trust)));
+    if (a && dif(a.Tension, b.Tension)) bits.push('Tension ' + sg(dif(a.Tension, b.Tension)));
+    if (bits.length) add('People', '{npc:' + id + '}: ' + bits.join(', '));
+  }
+  const PA = o(A && A.Player), PB = o(B && B.Player);
+  // Money: each new Transactions line (they carry their sign and reason), then the net when it is more than one line
+  const WA = o(PA.Wallet), WB = o(PB.Wallet), tx = newLines(WA.Transactions, WB.Transactions);
+  for (const l of tx.slice(-6)) add('Money', l);
+  for (const k of ['Points', 'Coin']) { const d = dif(WA[k], WB[k]); if (d && tx.length !== 1) add('Money', k + ' ' + sg(d) + ' in all'); }
+  // Body: vitals and their maximums, injuries and weather conditions
+  const VA = o(PA.Vitals), VB = o(PB.Vitals);
+  const vit = [['HP', 'Health'], ['Stamina', 'Stamina'], ['Mana', 'Mana']].map(([k, label]) => {
+    const d = dif(VA[k], VB[k]), m = dif(VA[k + '_max'], VB[k + '_max']);
+    return (d ? label + ' ' + sg(d) : '') + (m ? (d ? ' (' : label + ' ') + 'max ' + sg(m) + (d ? ')' : '') : '');
+  }).filter(Boolean);
+  if (vit.length) add('Body', vit.join(' · '));
+  const IA = o(PA.Injuries), IB = o(PB.Injuries);
+  for (const k of Object.keys(IB)) if (!IA[k]) add('Body', 'Injury: ' + k + (o(IB[k]).Severity ? ' (' + IB[k].Severity + ')' : ''));
+  for (const k of Object.keys(IA)) if (!IB[k]) add('Body', 'Healed: ' + k);
+  const CA = o(PA.Conditions), CB = o(PB.Conditions);
+  for (const k of Object.keys(CB)) if (!CA[k]) add('Body', 'Now ' + k);
+  for (const k of Object.keys(CA)) if (!CB[k]) add('Body', 'No longer ' + k);
+  // Studies: reputation, proficiency
+  const RA = o(o(PA.Profile).Reputation), RB = o(o(PB.Profile).Reputation);
+  for (const k of ['Academy', 'Student', 'Doves']) {
+    const d = dif(o(RA.$xp)[k], o(RB.$xp)[k]), la = nm(RA['_' + k], 0), lb = nm(RB['_' + k], 0);
+    if (d || la !== lb) add('Studies', k + ' reputation ' + (d ? sg(d) + ' XP' : '') + (la !== lb ? (d ? ', ' : '') + 'level ' + la + ' → ' + lb : ''));
+  }
+  const RkA = o(PA._Proficiency), RkB = o(PB._Proficiency), XA = o(o(o(A && A.$eng).prof).xp), XB = o(o(o(B && B.$eng).prof).xp);
+  for (const k of Object.keys(Object.assign({}, RkB, XB))) {
+    const r0 = nm(RkA[k], 0), r1 = nm(RkB[k], 0), d = dif(XA[k], XB[k]);
+    if (r1 !== r0) add('Studies', k + ': Rank ' + r0 + ' → ' + r1); else if (d > 0) add('Studies', k + ' ' + sg(d) + ' XP');
+  }
+  // Bag: what came in or went out, by quantity
+  const GA = o(A && A.Inventory), GB = o(B && B.Inventory);
+  for (const k of Object.keys(Object.assign({}, GA, GB))) {
+    const d = dif(GA[k] ? nm(o(GA[k]).Qty, 1) : 0, GB[k] ? nm(o(GB[k]).Qty, 1) : 0);
+    if (d) add('Bag', sg(d) + ' ' + k);
+  }
+  // Records: new promises and deadlines, Journal lines
+  const CmA = o(A && A.Commitments), CmB = o(B && B.Commitments);
+  for (const k of Object.keys(CmB)) if (!CmA[k]) add('Records', 'Planner: ' + k + (o(CmB[k]).Due ? ' (' + CmB[k].Due + ')' : ''));
+  for (const k of Object.keys(CmA)) if (!CmB[k]) add('Records', 'Planner done: ' + k);
+  const jn = newLines(A && A.Journal, B && B.Journal).length;
+  if (jn) add('Records', 'Journal ' + sg(jn) + ' line' + (jn > 1 ? 's' : ''));
+  return out.sort((x, y) => DELTA_GROUPS.indexOf(x[0]) - DELTA_GROUPS.indexOf(y[0]));
+}
 // ---- seeded draws (1.43.0, audit 3.6). Every seeded chance and pick goes through these, so a swipe or a replay of the same
 // update draws the same: each is a pure function of its parts (the chat seed, the day or hour, the place, a salt naming the draw).
 const hash32 = (...parts) => {

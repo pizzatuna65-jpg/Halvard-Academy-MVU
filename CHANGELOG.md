@@ -1,7 +1,28 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.79.0 — "This reply": what the engine changed, on the bracelet (2026-10-21)
+
+Owner's request (2026-10-21): batch 2 of the Megumin Suite audit (`audit/AUDIT_2026-10-21_2_megumin_suite.md`, untracked): MS1. UI and
+shared code only; no prompt change. Save fixture v1.78.0.
+- **The fold.** Under the news row the bracelet has a folded "This reply (n changes)", in groups: People (bond XP, a rank change, Trust
+  and Tension moves), Money (each new Transactions line, the net when there are several), Body (Health, Stamina, Mana and their
+  maximums; injuries and weather conditions that came or went), Studies (reputation XP and level, proficiency XP and rank), Bag (in and
+  out by quantity), Records (new and finished Planner entries, Journal lines). Names as the player knows them. Hooks, hidden magic and
+  engine bookkeeping never show. The toasts above it stay as they were.
+- **Computed, not stored** (new DECISIONS §7 line): the bracelet reads its own message's state and the newest earlier one
+  (`stateAt`, `prevState`, through `getVariables` as `readState` already did) and compares them with `replyDelta` (shared.js). Nothing
+  goes into the state, so the chat file does not grow and the narrator never sees it. It stays open while the bracelet redraws (in
+  memory only, no browser storage) and hides with the collapsed bracelet.
+- `newLines` (the multiset difference of two lists) moved from the engine to shared.js, written without lodash; the engine uses it as
+  before.
+- Tests: new `test_reply_delta_v1790.cjs` (the rows from a real engine reply, by-hand changes, Hooks never listed, the bracelet with and
+  without a state before it); `test_saves`, `test_ui_overhaul_v1210`, `test_one_source_v1430`, `test_audit_batch1_v1420`,
+  `test_batch5_shops`, `test_news_v1250`, `test_batch1_swipe`, `test_audit_batch5_v1470`, `test_map_gates_v1240`, `qa_static` and lint
+  pass. Seen in the browser pane at desktop and phone width (a mock of two messages).
+- **To check live:** `docs/TEST_CHECKLIST.md` Q1.1 [1.79].
 
 ## v1.78.0 — Fortune numbers for each attempt; Extras look as on an ordinary day (2026-10-21)
 
@@ -71,40 +92,6 @@ data and a save migration. Save fixture v1.75.0.
 - Tests: new `test_club_spread_v1760.cjs`; `tests/fixtures/cast_1560.json` renewed for the Lenna and Dorian lines (23 scenarios, checked
   against the 1.75.0 renders: only those lines differ). Full `npm test` and lint pass.
 - **To check live:** `docs/TEST_CHECKLIST.md` Q1.2 [1.76].
-
-## v1.75.0 — A club {{user}} founds is a club like any other (2026-10-21)
-
-Owner's request (2026-10-21): founding a club felt half-built; the owner approved `planning/DRAFT_club_sendiri.md` (now applied and
-deleted) and decided its canon. Engine, data, UI and card text. Save fixture v1.74.0.
-- **Before:** a club not in the directory was only text in `Player.Profile.Club`: no room, members or advisor, so Saturday attendance
-  never counted (live play gave nothing while the routine week gave +1 Student), Saturday XP only by a lucky word in the name, one
-  empty card in Activities, nothing on the map, in `<now>`, presence or the graph, and the founding itself was not tracked.
-- **One club model** (`shared.js` `foundedClub`, `movedToFounded`; engine `clubVenues`, `clubField`, `clubMembersNow`): the founded club
-  (`Campus_State.Founded_club` {Name, Field, Venue, Advisor, Members, Status, Since}) is read next to the build's club list by `canonClub`,
-  attendance, Saturday and routine XP, `whyLocked`, NPC initiative, presence (`presenceAt`: it meets at its room; its members leave
-  their lore clubs), Activities (`clubsNow`, `clubOf`), the map card's "Clubs here", the graph's club groups and the dossier's Club field.
-- **Founding** (`stepFounding`, called by `stepClubLife`): a club not on record that the narrator writes in `Profile.Club` starts one
-  (`{{user}}` stays in their club until it is founded). Owner's rules: a teacher who already answers for a club never signs (all 16
-  roster teachers have one, so the narrator introduces a teacher; `CLUB_FOUNDING.staff` / `.sign`), the Headmaster, Vice Headmaster and
-  Doves are not teaching staff; a roster student joins only on screen (`Scene.Present` or named in the reply) and leaves their old club
-  once it is founded (an engine-written Lore change on their entry; leaving lifts it), never two clubs, the Student Council apart;
-  Etnie and Topaz (the "whichever club" students, `CLUB_FOUNDING.follow`) follow by themselves; the room is a campus place outside the
-  dormitories. With a signature, five members ({{user}} included) and a room it is founded: Journal, toast, `Profile.Club`, and
-  founded_club (+8 Student) paid once by the engine (a reported founded_club is not counted). One a campaign; a founded club keeps
-  its name and never disbands; graduates leave it. Invented advisors and members are kept in Extras (`Keep`).
-- **Activities → Clubs:** the founding checklist (signature, members n/5, room) with the Field buttons (a player tool) and "Work on
-  it"; the founded club's full card (room, founded by you, the Field it trains, advisor, members, Club time). Card text: 502 (Club line,
-  a `Founded_club` line, founded_club left out of the reported kinds), rule card `founding` (while it forms, or when a new club comes up).
-- **Advisors fixed** (`tools/common.py` `load_clubs`): a teacher's Role "advises the X" is read; before, 15 of 16 advisors never showed
-  "(advisor)" in Activities or on the graph. An advisor shows once that Role line is open (`clubFieldOpen`; Kuroo's at Rank 0).
-- **Migration** (`stepMigrate`): a club not on record from before 1.75.0 becomes the founded club (founded, room and advisor not on
-  record yet); no reputation paid again.
-- Tests: new `test_founded_club_v1750.cjs` (founding, signatures, members on screen, the room, founded_club once, Lore changes, name kept,
-  Saturday at the room with its Field, presence, leaving, migration, the Activities card and graph); `test_audit_b1_v1161` (an unknown
-  club is now being founded), `test_connections_v141` (Kuroo's open Role), `test_newbond_v1611` updated. `tests/fixtures/cast_1560.json`
-  renewed: 1.74.0's Ties line had changed 35 Cast Sheet scenarios without renewing the record (renders checked identical to the 1.74.0
-  engine). Full `npm test` and lint pass. Browser check (mock chat): the forming checklist and the founded club's card.
-- **To confirm with the owner:** nothing new in canon beyond the decisions above. **To check live:** `docs/TEST_CHECKLIST.md` MS3 [1.75].
 
 ## Release index (one line per release, oldest first)
 
@@ -268,3 +255,4 @@ deleted) and decided its canon. Engine, data, UI and card text. Save fixture v1.
 - **v1.77.1 (2026-10-21):** An NPC's things come up when the scene calls for them: the Cast Sheet's Carries label (NPC dialogue audit 2026-10-21, U2).
 - Docs (2026-10-21, no card change): `docs/FEATURES.md`, every feature with its code, data, toggle and tests; `docs/INDEX.md` keeps the workflows and maps (−13 KB); stale docs fixed (PLAYER_GUIDE, README, tests/README, FUTURE_PLANS, the NPC brief); the finished 2026-10-03 batch plans and `tools/make_npc_brief.py` removed.
 - **v1.78.0 (2026-10-21):** Three Fortune numbers per reply, one per attempt in order; Extras Looks as on an ordinary day (Megumin Suite audit batch 1: MS2, MS5).
+- **v1.79.0 (2026-10-21):** "This reply" on the bracelet: everything a reply changed, computed from the message states, nothing stored (Megumin Suite audit batch 2: MS1).
