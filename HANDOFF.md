@@ -3,7 +3,8 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.87.0** (2026-10-21): the last release of the event frame (the draft is applied and deleted): the Academy
+**Snapshot:** card **v1.88.0** (2026-10-22): a playtest fix: club advisors stay hidden in Activities → Clubs, the graph and the
+dossier until {{user}} knows them (Rank 1, a member of the club, or a known fact). 1.87.0: the last release of the event frame (the draft is applied and deleted): the Academy
 Competition computed from the seed (the Dorm qualifiers' cross-dorm teams, every year in each; a knockout a round a day; the winners
 are Halvard's Kingdom team) and the tally format (Sports Day's medals, the Showcase's scores). 1.86.0: the Bazaar's haggling, Founder
 Day's hunt, the Council vote, more stalls. 1.85.0: the Fair's mark, the Thinning's beats, the Circus, family visits. 1.84.0: the

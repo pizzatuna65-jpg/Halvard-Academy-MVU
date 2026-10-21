@@ -26,8 +26,16 @@ const clubOf = S => {
 const eventDay = rx => { const e = CAL.EVENTS.find(x => rx.test(x.t)); return e ? { e, di: dayIdx(e.m, e.w, e.d[0]) } : null; };
 const daysTo = (S, di) => di - dayIdx(S.World.Month, S.World.Week, S.World.Day);
 const whenLabel = n => n < 0 ? 'past' : relDay(n);
-// a member shows once their Club field is open; an advisor once the Role line that names their club is (1.75.0)
-const clubFieldOpen = (id, S) => { const n = npcOf(id); const f = n && (n.fl.find(x => x[0].toLowerCase() === 'club') || n.fl.find(x => x[0].toLowerCase() === 'role' && /\badvises the\b/i.test(x[1]))); return !!(f && fieldUnlocked(id, f, S)); };
+// a member shows once their Club field is open (Rank 1)
+// 1.88.0 (owner playtest): a teacher's Role line ("advises the X", 1.75.0) is open at Rank 0, so every advisor showed unmet; an advisor
+// with no Club field now shows once {{user}} knows it: Rank 1 as a student's Club field, a member of that club, or a known fact names it
+const advisorKnown = (id, S, c) => {
+  const b = (S.Bonds || {})[id], facts = b ? [...(b.Known_facts || []), ...(b.$Known_old || [])].join(' ') : '';
+  return (b ? b.Rank : 0) >= 1 || (clubOf(S) || {}).name === c.name || new RegExp('\\b' + _.escapeRegExp(c.key) + '\\b', 'i').test(facts);
+};
+const clubFieldOpen = (id, S, c) => { const n = npcOf(id), f = n && n.fl.find(x => x[0].toLowerCase() === 'club'); return f ? fieldUnlocked(id, f, S) : !!c && (c.advisors || []).includes(id) && advisorKnown(id, S, c); };
+// the dossier's Role line keeps "; advises the X" back until advisorKnown
+const roleShown = (id, text, S) => { const c = clubsNow(S).find(x => !x.founded && (x.advisors || []).includes(id)); return c && !advisorKnown(id, S, c) ? String(text).replace(/;\s*advises the [^.;]*/i, '') : text; };
 const hereIs = (S, lid) => !!lid && locIdOf(S.World.Location) === lid;
 const aan = w => (/^[aeiou]/i.test(w) ? 'an ' : 'a ') + w;
 
@@ -92,7 +100,7 @@ function acClubs(S) {
     const ids = (c.name === 'Student Council' ? ((S.Campus_State || {}).Council || {}).Members || []
       : [...c.advisors, ...c.members.filter(m => !c.advisors.includes(m)), ...(withFollowers ? c.follows || [] : [])]).filter(id => atHalvard(id, S));
     // 1.74.0 (owner): Council members are placed like any club's (their Club field), unless {{user}} sits on the Council
-    const known = ids.filter(id => c.founded || (c.name === 'Student Council' && P.Council) || clubFieldOpen(id, S) || (withFollowers && (c.follows || []).includes(id)));
+    const known = ids.filter(id => c.founded || (c.name === 'Student Council' && P.Council) || clubFieldOpen(id, S, c) || (withFollowers && (c.follows || []).includes(id)));
     const more = ids.length - known.length, tag = id => c.advisors.includes(id) ? ' (advisor)' : (c.follows || []).includes(id) ? ' (followed you in)' : '';
     return `${known.map(id => npcOf(id) ? `<button class="who" data-open="npc:${esc(id)}">${avatar(id, S, 'av xs')}<span>${esc(nameOf(id, S))}${tag(id)}</span></button>`
       : `<span class="who">${avatar(id, S, 'av xs')}<span>${esc(id)}${tag(id)}</span></span>`).join('')}${more > 0 ? `<span class="sub">+${more} you have not placed yet</span>` : ''}`;

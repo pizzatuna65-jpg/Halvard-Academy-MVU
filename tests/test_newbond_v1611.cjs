@@ -42,4 +42,4 @@ ok(!club(O, 'Ottavio'), 'Ottavio at Rank 0: no club line');
 O.Bonds.Ottavio.Rank = 1;
 ok(club(O, 'Ottavio'), 'Ottavio at Rank 1 (Club field open): the Fishing Club line');
 const src = rd('src/ui/parts/10_people.js');
-ok(/\.filter\(id => npcOf\(id\) && \(c\.founded \|\| clubFieldOpen\(id, S\)\)\)/.test(src), 'the graph uses the same rule as the club list in Activities (clubFieldOpen)');
+ok(/\.filter\(id => npcOf\(id\) && \(c\.founded \|\| clubFieldOpen\(id, S, c\)\)\)/.test(src), 'the graph uses the same rule as the club list in Activities (clubFieldOpen)');

@@ -145,7 +145,7 @@ PANELS.npc = {
       const open = n.fl.filter(f => fieldUnlocked(id, f, S) && !(/^(full )?name$/i.test(f[0]) && !knowsName(id, S)));
       // 1.75.0: a student who moved to the club {{user}} founded shows it in place of their lore club
       const FC = foundedClub(S), moved = movedToFounded(FC, id);
-      const fv = f => moved && /^club$/i.test(f[0]) ? `${FC.name}, the club you founded${(((S.$eng || {}).fjoin || {})[id] || FC.since) ? ` (since ${((S.$eng || {}).fjoin || {})[id] || FC.since})` : ''}. Before: ${ageNow(n, f, S)}` : ageNow(n, f, S);
+      const fv = f => moved && /^club$/i.test(f[0]) ? `${FC.name}, the club you founded${(((S.$eng || {}).fjoin || {})[id] || FC.since) ? ` (since ${((S.$eng || {}).fjoin || {})[id] || FC.since})` : ''}. Before: ${ageNow(n, f, S)}` : /^role$/i.test(f[0]) ? roleShown(id, ageNow(n, f, S), S) : ageNow(n, f, S);   // 1.88.0
       if (open.length) h += `<dl class="file">${open.map(f => `<dt>${esc(f[0])}${f[2] >= 99 ? ' <span class="pill f">uncovered</span>' : ''}</dt><dd class="fv">${esc(fv(f))}</dd>`).join('')}</dl>`;
       const locked = _.groupBy(n.fl.filter(f => f[2] < 99 && !(f[3] > curYear(S)) && !fieldUnlocked(id, f, S)), f => f[2]);   // 1.7.0: a later cohort's lines are not even hinted
       const lk = Object.keys(locked).sort((a, c) => a - c);
@@ -257,7 +257,7 @@ function groupsOf(S) {
   if (view.ggroups.has('club')) for (const c of clubsNow(S)) {
     const ownClub = String(P.Club || '').toLowerCase() === 'duelling club' ? 'magic duelling club' : String(P.Club || '').toLowerCase();
     const mine = !!ownClub && (c.founded ? ownClub === c.name.toLowerCase() : ownClub.includes(String(c.key).toLowerCase()) || ownClub === String(c.name).toLowerCase());
-    out.push(['club:' + c.key, c.name, [...(c.members || []), ...(c.advisors || [])].filter(id => npcOf(id) && (c.founded || clubFieldOpen(id, S))), mine]);
+    out.push(['club:' + c.key, c.name, [...(c.members || []), ...(c.advisors || [])].filter(id => npcOf(id) && (c.founded || clubFieldOpen(id, S, c))), mine]);
   }
   if (view.ggroups.has('faction')) for (const f of DATA.factions || []) {
     const m = f.secret && f.secret.length ? f.members.filter(id => revealed(S, id).some(t => f.secret.includes(String(t).toLowerCase()))) : f.members;

@@ -2436,7 +2436,7 @@ PANELS.npc = {
       const open = n.fl.filter(f => fieldUnlocked(id, f, S) && !(/^(full )?name$/i.test(f[0]) && !knowsName(id, S)));
       // 1.75.0: a student who moved to the club {{user}} founded shows it in place of their lore club
       const FC = foundedClub(S), moved = movedToFounded(FC, id);
-      const fv = f => moved && /^club$/i.test(f[0]) ? `${FC.name}, the club you founded${(((S.$eng || {}).fjoin || {})[id] || FC.since) ? ` (since ${((S.$eng || {}).fjoin || {})[id] || FC.since})` : ''}. Before: ${ageNow(n, f, S)}` : ageNow(n, f, S);
+      const fv = f => moved && /^club$/i.test(f[0]) ? `${FC.name}, the club you founded${(((S.$eng || {}).fjoin || {})[id] || FC.since) ? ` (since ${((S.$eng || {}).fjoin || {})[id] || FC.since})` : ''}. Before: ${ageNow(n, f, S)}` : /^role$/i.test(f[0]) ? roleShown(id, ageNow(n, f, S), S) : ageNow(n, f, S);   // 1.88.0
       if (open.length) h += `<dl class="file">${open.map(f => `<dt>${esc(f[0])}${f[2] >= 99 ? ' <span class="pill f">uncovered</span>' : ''}</dt><dd class="fv">${esc(fv(f))}</dd>`).join('')}</dl>`;
       const locked = _.groupBy(n.fl.filter(f => f[2] < 99 && !(f[3] > curYear(S)) && !fieldUnlocked(id, f, S)), f => f[2]);   // 1.7.0: a later cohort's lines are not even hinted
       const lk = Object.keys(locked).sort((a, c) => a - c);
@@ -2548,7 +2548,7 @@ function groupsOf(S) {
   if (view.ggroups.has('club')) for (const c of clubsNow(S)) {
     const ownClub = String(P.Club || '').toLowerCase() === 'duelling club' ? 'magic duelling club' : String(P.Club || '').toLowerCase();
     const mine = !!ownClub && (c.founded ? ownClub === c.name.toLowerCase() : ownClub.includes(String(c.key).toLowerCase()) || ownClub === String(c.name).toLowerCase());
-    out.push(['club:' + c.key, c.name, [...(c.members || []), ...(c.advisors || [])].filter(id => npcOf(id) && (c.founded || clubFieldOpen(id, S))), mine]);
+    out.push(['club:' + c.key, c.name, [...(c.members || []), ...(c.advisors || [])].filter(id => npcOf(id) && (c.founded || clubFieldOpen(id, S, c))), mine]);
   }
   if (view.ggroups.has('faction')) for (const f of DATA.factions || []) {
     const m = f.secret && f.secret.length ? f.members.filter(id => revealed(S, id).some(t => f.secret.includes(String(t).toLowerCase()))) : f.members;
@@ -3448,8 +3448,16 @@ const clubOf = S => {
 const eventDay = rx => { const e = CAL.EVENTS.find(x => rx.test(x.t)); return e ? { e, di: dayIdx(e.m, e.w, e.d[0]) } : null; };
 const daysTo = (S, di) => di - dayIdx(S.World.Month, S.World.Week, S.World.Day);
 const whenLabel = n => n < 0 ? 'past' : relDay(n);
-// a member shows once their Club field is open; an advisor once the Role line that names their club is (1.75.0)
-const clubFieldOpen = (id, S) => { const n = npcOf(id); const f = n && (n.fl.find(x => x[0].toLowerCase() === 'club') || n.fl.find(x => x[0].toLowerCase() === 'role' && /\badvises the\b/i.test(x[1]))); return !!(f && fieldUnlocked(id, f, S)); };
+// a member shows once their Club field is open (Rank 1)
+// 1.88.0 (owner playtest): a teacher's Role line ("advises the X", 1.75.0) is open at Rank 0, so every advisor showed unmet; an advisor
+// with no Club field now shows once {{user}} knows it: Rank 1 as a student's Club field, a member of that club, or a known fact names it
+const advisorKnown = (id, S, c) => {
+  const b = (S.Bonds || {})[id], facts = b ? [...(b.Known_facts || []), ...(b.$Known_old || [])].join(' ') : '';
+  return (b ? b.Rank : 0) >= 1 || (clubOf(S) || {}).name === c.name || new RegExp('\\b' + _.escapeRegExp(c.key) + '\\b', 'i').test(facts);
+};
+const clubFieldOpen = (id, S, c) => { const n = npcOf(id), f = n && n.fl.find(x => x[0].toLowerCase() === 'club'); return f ? fieldUnlocked(id, f, S) : !!c && (c.advisors || []).includes(id) && advisorKnown(id, S, c); };
+// the dossier's Role line keeps "; advises the X" back until advisorKnown
+const roleShown = (id, text, S) => { const c = clubsNow(S).find(x => !x.founded && (x.advisors || []).includes(id)); return c && !advisorKnown(id, S, c) ? String(text).replace(/;\s*advises the [^.;]*/i, '') : text; };
 const hereIs = (S, lid) => !!lid && locIdOf(S.World.Location) === lid;
 const aan = w => (/^[aeiou]/i.test(w) ? 'an ' : 'a ') + w;
 
@@ -3514,7 +3522,7 @@ function acClubs(S) {
     const ids = (c.name === 'Student Council' ? ((S.Campus_State || {}).Council || {}).Members || []
       : [...c.advisors, ...c.members.filter(m => !c.advisors.includes(m)), ...(withFollowers ? c.follows || [] : [])]).filter(id => atHalvard(id, S));
     // 1.74.0 (owner): Council members are placed like any club's (their Club field), unless {{user}} sits on the Council
-    const known = ids.filter(id => c.founded || (c.name === 'Student Council' && P.Council) || clubFieldOpen(id, S) || (withFollowers && (c.follows || []).includes(id)));
+    const known = ids.filter(id => c.founded || (c.name === 'Student Council' && P.Council) || clubFieldOpen(id, S, c) || (withFollowers && (c.follows || []).includes(id)));
     const more = ids.length - known.length, tag = id => c.advisors.includes(id) ? ' (advisor)' : (c.follows || []).includes(id) ? ' (followed you in)' : '';
     return `${known.map(id => npcOf(id) ? `<button class="who" data-open="npc:${esc(id)}">${avatar(id, S, 'av xs')}<span>${esc(nameOf(id, S))}${tag(id)}</span></button>`
       : `<span class="who">${avatar(id, S, 'av xs')}<span>${esc(id)}${tag(id)}</span></span>`).join('')}${more > 0 ? `<span class="sub">+${more} you have not placed yet</span>` : ''}`;
