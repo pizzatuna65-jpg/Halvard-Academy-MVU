@@ -2,7 +2,7 @@
 const fs = require('fs'), path = require('path'), ejs = require('ejs');
 const { Schema, runEngine, initState, applyPatch, ok, ROOT } = require('./harness.cjs');
 const read = p => fs.readFileSync(path.join(ROOT, p), 'utf8');
-const E = new Function(read('src/scripts/engine.js') + '\nreturn {toAbs, areaNow, awayIn, whereabouts, presenceNow, PRESENCE};')();
+const E = new Function(read('src/scripts/engine.js') + '\nreturn {toAbs, areaNow, awayIn, whereabouts, presenceNow, PRESENCE, breakOf};')();
 const now = S => ejs.render(JSON.parse(read('dist/Eldrasil_Halvard.json')).data.character_book.entries.find(e => e.id === 505).content, { getvar: k => _.get({ stat_data: S }, k) });
 const op = (p, value) => ({ op: 'replace', path: p, value });
 
@@ -14,7 +14,19 @@ const REC = JSON.parse(read('tests/fixtures/presence_1460.json'));
 const PRES = /^(Students |Study Hall|Student Council (meets|members)|Likely around|Moved indoors|Club time|Regulars here|Your class now|Free period|Presence:)/;
 const bad = [];
 // 1.52.0: with the NPC routines off (Features), as before them
-for (let i = 0; i < N; i++) { const got = now(scenario(i, E, ['npc_routines'])).split('\n').filter(l => PRES.test(l)); if (JSON.stringify(got) !== JSON.stringify(REC[i])) bad.push(i); }
+// 1.83.0: on a break day (the Mid-Year Break) most students have gone home (shared.js breakStays): those scenarios may only lose names
+const brk = [];
+for (let i = 0; i < N; i++) {
+  const sc = scenario(i, E, ['npc_routines']), got = now(sc).split('\n').filter(l => PRES.test(l));
+  if (E.breakOf(sc.World)) {
+    brk.push(i);
+    const same = (l, r) => l === r || (l.split(': ')[0] === r.split(': ')[0] && l.split(': ').slice(1).join(': ').replace(/no regulars on record/, '').split(/,\s*/).filter(Boolean).every(w => r.includes(w)));
+    if (got.length !== REC[i].length || got.some((l, k) => !same(l, REC[i][k]))) bad.push(i);
+    continue;
+  }
+  if (JSON.stringify(got) !== JSON.stringify(REC[i])) bad.push(i);
+}
+ok(brk.length > 0, `the break-day scenarios (${brk.join(', ')}) only lose the students who went home`);
 ok(REC.length === N && !bad.length, `every scenario's presence block is the same (${N} scenarios: places, periods, Study Hall, clubs, the election, the Council, weather, flu, statuses, graduates, Settings)` + (bad.length ? ': differs in ' + bad.slice(0, 5).join(', ') : ''));
 const lines = REC.flat();
 ok(['Likely around', 'Students are in class', 'Students are at Study Hall', 'Your class', 'Free period', 'Club time', 'Moved indoors', 'Regulars here', 'Students vote', 'Student Council', 'Presence: after']

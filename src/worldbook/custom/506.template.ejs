@@ -15,6 +15,9 @@ const _ev = (getvar('stat_data.$ui.ev') || []).filter(e => e && (_PG.ev || {})[e
 Here (<%- _se %> stock; out-of-season items are not stocked):
 <%- _rows.join('\n') %>
 <%_ } _%>
+<%_ for (const e of (getvar('stat_data.$ui.ev') || []).filter(x => x && x.sale)) { _%>
+Today: <%- e.sale.shop %> sells everything at <%- e.sale.pct %>% off its listed prices.
+<%_ } _%>
 <%_ for (const e of _ev) { const g = _PG.ev[e.id]; if (e.stall) { _%>
 Event stalls here (<%- g.shop %>, <%- g.hours %>):
 <%- g.rows.join('\n') %>

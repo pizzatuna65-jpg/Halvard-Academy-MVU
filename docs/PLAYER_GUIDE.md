@@ -103,6 +103,11 @@ the evening sparring in Training Week lets you size up a couple of possible oppo
 next; you play the bout, and your result moves the bracket on. Most entrants are students the story introduces as you meet them. Your
 place and whether you qualify are worked out for you. At the Club Festival everyone's coin vote is counted at the close on Saturday.
 
+**Breaks.** On the Mid-Year Break and in Month 12 most students go home; the Event tab shows who stayed. You stay unless you choose
+**Go home for the break** there: the next reply takes you home and back in one go. Your home and family are yours: the narrator
+uses what you have written about them. On Secret Fools Day the Event tab shows whose name you drew (if you join in), and Merryhew's
+sells everything at a quarter off.
+
 **Student file → Settings → Appearance** changes the colours of the panels and the bracelet: Pewter (the default), Midnight (darker), Rosewood (warm dark), Parchment (light) and Frost (light, cool). The choice is kept in this browser and is not written to the chat.
 
 

@@ -224,6 +224,10 @@
       "t": "Secret Fools Day (prank day, dorm name-draw)",
       "id": "fools_day",
       "kind": "festival",
+      "sale": {
+        "shop": "Merryhew's",
+        "pct": 25
+      },
       "s": "Morning: participants draw a dorm-mate's name in secret, then prank them without warning all day; classes still run; Merryhew's biggest sale of the year",
       "fair": 1
     },

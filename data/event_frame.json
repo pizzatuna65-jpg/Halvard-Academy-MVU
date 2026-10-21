@@ -55,5 +55,14 @@
     },
     "strength": { "base": 25, "per_year": 15, "spread": 30, "user_base": 30, "user_per_year": 10, "user_per_prowess": 10, "clamp": [10, 90], "edge": 15, "fortune": 10 },
     "vote": { "club_festival": { "close": ["Sat", "18:00"], "base": 4, "boost": { "stand": 0.5, "perform": 0.5 } } }
+  },
+  "breaks": {
+    "_note": "1.83.0 (planning/DRAFT_event_frame.md 4.3, release B): who of the Halvard students stays on campus over a break (a calendar event with home: the Mid-Year Break, the Month 12 holiday; lore 238: staying is 'allowed and common'). stay: those whose lore leaves them no home to go to or keeps them here (Etnie, a street orphan; Dante, raised in an orphanage and the Doves' errand-runner; Lenna, whose village and parents the Blightfire took; Castor, whose home is Halvard's Mail Tower; Tilly, whose 'far northern province' is a cover for Velmora). Everyone else stays with chance percent, drawn per student, campaign year and break. The others are away (whereabouts 'home for the break').",
+    "stay": ["Etnie", "Dante", "Lenna", "Castor", "Tilly"],
+    "chance": 20
+  },
+  "fools": {
+    "_note": "1.83.0 (planning/DRAFT_event_frame.md 4.2): Secret Fools Day's dorm name-draw for {{user}} (lore 235): the name {{user}} draws and who drew {{user}}, each a roster dorm-mate at Halvard this year with named percent, else a dorm-mate the narrator invents. Computed, never stored.",
+    "named": 70
   }
 }

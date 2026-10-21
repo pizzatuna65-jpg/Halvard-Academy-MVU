@@ -1,7 +1,34 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.83.0 — Breaks: who stays, going home; Secret Fools Day's draw and Merryhew's sale (2026-10-21)
+
+Owner's request (2026-10-21): release B of `planning/DRAFT_event_frame.md` (§4.2 Secret Fools Day with Merryhew's sale, §4.3 the
+breaks). Engine, shared code, data, 505, 506 and the Activities panel. Save fixture v1.82.0.
+- **Who stays for a break** (shared.js `breakStays`, data `event_frame.json` `breaks`): on the Mid-Year Break and the Month 12 holiday
+  (one holiday) most Halvard students go home. Five stay whose lore leaves them no home to go to: Etnie (a street orphan), Dante (an
+  orphanage, the Doves' errands), Lenna (the Blightfire took her village), Castor (his home is the Mail Tower), Tilly (her province is a
+  cover). Anyone else stays with 20%, drawn per student, year and break; computed, never stored. Those gone are away for whereabouts
+  (the Map's Regulars, `<now>`'s presence lines: "home for the break") and for everything that asks `npcAwayIn` (initiative, the
+  routine's moments, bonds). `<now>` and the Event tab name the students who stayed.
+- **Going home** (`homeSpan`): Activities → Event → "Go home for the break" (a player tool, armed like the routine week) from the day
+  before a break; the next reply takes {{user}} home and back on the break's last day at 18:00 (the airships, lore 238) in one montage,
+  with a letter from a close friend now and then; no Interactions, Practice or Training count; a Journal line. Its `<now>` line prints
+  even with the routine week off. A Trip whose Destination says home gets the line "{{user}}'s home and family are the player's: use
+  what the player has written, ask nothing about them, invent as little as the scene needs."
+- **Secret Fools Day** (`foolsDraw`): the name {{user}} drew and who drew them, each a roster dorm-mate (70%) or one the narrator invents;
+  `<now>` gives both (the prankster hidden until the story shows them; pranks stay in character), the Event tab the drawn name and, after
+  20:00, the prankster.
+- **Merryhew's sale** (`calendar.json` `fools_day` `sale`, lore 235): everything 25% off that day, charged by `stepPurchases`, said in
+  `<now>` and the Price Guide, shown in the Shop tab.
+- Tests: new `test_breaks_fools_v1830.cjs`; `test_audit_batch5_v1470` now lets its six break-day scenarios lose the students who went
+  home (and print "no regulars on record"); `npm test` (every suite, `qa_static`, lint) passes, `test_saves` loads the v1.82.0 fixture.
+  Checked in a browser preview: the Event tab on the first day of the Mid-Year Break.
+- **To confirm with the owner:** the five who always stay and the 20% (draft §4.3 left the list to the build; there is no origin field,
+  so it comes from each Backstory); the 18:00 return; the letter now and then.
+- **To check live:** `docs/TEST_CHECKLIST.md` Q6.1a, Q7.1a [1.83].
 
 ## v1.82.0 — The Dorm Competition's brackets; the Club Festival coin vote (2026-10-21)
 
@@ -106,24 +133,6 @@ shared code only; no prompt change. Save fixture v1.78.0.
   `test_batch5_shops`, `test_news_v1250`, `test_batch1_swipe`, `test_audit_batch5_v1470`, `test_map_gates_v1240`, `qa_static` and lint
   pass. Seen in the browser pane at desktop and phone width (a mock of two messages).
 - **To check live:** `docs/TEST_CHECKLIST.md` Q1.1 [1.79].
-
-## v1.78.0 — Fortune numbers for each attempt; Extras look as on an ordinary day (2026-10-21)
-
-Owner's request (2026-10-21): batch 1 of the Megumin Suite audit (`audit/AUDIT_2026-10-21_2_megumin_suite.md`, untracked): MS2 and
-MS5. Engine and card text, no canon change. Save fixture v1.77.1.
-- **Fortune, one number per attempt (MS2).** `stepFortune` rolls three seeded numbers (`$ui.fortune.rolls`, the same on every swipe);
-  `roll` stays the first, so crafting and old saves read what they read before. `<now>` prints "one number per attempt, in order: 37,
-  then 82, then 14"; 504 says to take the next unused number and to roll no more once they run out. Two risky attempts in one reply no
-  longer share one fate or get a made-up second number (Megumin's dice hand the model a list for the same reason). A state from before
-  1.78.0 still renders its one roll. About +25 tokens a turn while Fortune is on.
-- **Extras Looks (MS5).** 502 asks for `"Looks": "what anyone would notice about them on an ordinary day"` (was "what anyone notices
-  first"): the record is written at a second appearance, often mid-scene, and outlives the scene (`$ui.xold`, `$ui.xgone`).
-- **Test record renewed.** `tests/fixtures/cast_1560.json`: 1.77.1's Carries label had left `test_audit_batch7_v1480` failing; all 220
-  scenarios that differed differed only by that label.
-- Tests: `test_fortune_v198` (three numbers, seeded, the rule, an old state), `test_extras_v161` (the Looks wording); they and
-  `test_saves`, `test_grades_v1150`, `test_proficiency_v1260`, `test_crafting_v1280`, `test_bughunt_v1111`, `test_audit_batch1_v1420`,
-  `test_audit_batch7_v1480`, `test_one_source_v1430`, `qa_static` and lint pass.
-- **To check live:** `docs/TEST_CHECKLIST.md` Q1.1 and Q1.4 [1.78].
 
 ## Release index (one line per release, oldest first)
 
@@ -291,3 +300,4 @@ MS5. Engine and card text, no canon change. Save fixture v1.77.1.
 - **v1.80.0 (2026-10-21):** Recall from the player's own message in `<now>`; `audit_chat.py --mechanics` lists Clues and planted details the story never showed (Megumin Suite audit batch 3: MS4, MS3 stage 1).
 - **v1.81.0 (2026-10-21):** The event frame (draft A1): event ids and kinds, the `<now>` Event line, Activities → Event, event chances (the 1.26.0 event XP moved there; the Main Courtyard ones now fire), the Star Night market stalls.
 - **v1.82.0 (2026-10-21):** The Dorm Competition's brackets from the seed (draft A2): {{user}}'s bouts in `<now>`, Placement and Status by the engine, canon pins, Fortune edge, Training Week scout, the bracket on the Competition tab; the Club Festival coin vote.
+- **v1.83.0 (2026-10-21):** Breaks (draft B): who stays (the lore's five and one in five), going home in one reply, the home-and-family line; Secret Fools Day's draw and Merryhew's 25% sale.

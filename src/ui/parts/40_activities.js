@@ -46,6 +46,11 @@ PANELS.activities = {
     if (b.dataset.shop) { view.shop = b.dataset.shop; render(); return; }
     if (b.dataset.go) { const l = DATA.locs[b.dataset.go]; if (l) fillChat(goText(l.name)); return; }
     if (b.dataset.fill) { fillChat(b.dataset.fill); return; }
+    if (b.dataset.home) {   // 1.83.0: going home for a break (armed like the routine week; DECISIONS §7 player tools)
+      const P = ((((latestState() || {}).data || {}).stat_data || {}).$ui || {}).plan;
+      commitSetting([{ op: 'replace', path: '/$ui/plan', value: { ...(_.isPlainObject(P) ? P : {}), run: 0, home: b.dataset.home === 'go' ? 1 : 0 } }], b.dataset.home === 'go' ? '🏠 Going home for the break.' : '🏠 Staying at Halvard for the break.');
+      return;
+    }
     if (b.dataset.ffield) commitSetting([{ op: 'replace', path: '/Campus_State/Founded_club/Field', value: b.dataset.ffield }], `🏛️ The club {{user}} founds trains ${b.dataset.ffield}.`);   // 1.75.0
   },
 };
@@ -248,8 +253,21 @@ function acEvent(S) {
     return `<div class="item"><div class="row"><span class="t">${esc(ch.text)}</span><span class="pill ${done ? 'g' : open ? 'w' : ''}">${done ? 'Done' : open ? 'Open now' : 'Open'}</span></div>${done ? '' : `<div class="meta"><button class="btn sm" data-fill="${esc(fill)}">Draft</button></div>`}</div>`;
   }).join('')}` : '';
   const ways = [live && live.stall ? '<button class="btn sm" data-actab="shop">Stalls here</button>' : '', e.kind === 'contest' && unlockedTab(S, ['competition', '', 'competition', ['competition']]) ? '<button class="btn sm" data-actab="competition">Competition</button>' : ''].filter(Boolean).join(' ');
+  // 1.83.0: Secret Fools Day's draw (the name you drew; who drew you after curfew), a sale, the break plan and who stayed
+  const nm = id => (id ? `<button class="who" data-open="npc:${esc(id)}">${esc(nameOf(id, S))}</button>` : 'a dorm-mate the story will introduce');
+  const fools = live && live.fools ? `<div class="item"><div class="row"><span class="t">The name-draw</span></div><div>If you joined in, the name you drew is ${nm(live.fools.to)}.</div>`
+    + `<div class="sub">${(hmMin(S.World.Time) || 0) >= 20 * 60 ? `Who drew yours: ${nm(live.fools.by)}.` : 'Who drew yours: you will know by tonight, or when they strike.'}</div></div>` : '';
+  const sale = e.sale ? `<div class="item"><div class="row"><span class="t">${esc(e.sale.shop)}: ${e.sale.pct}% off everything</span><span class="pill">${n <= 0 ? 'today' : whenLabel(n)}</span></div></div>` : '';
+  let brk = '';
+  if (e.kind === 'holiday') {
+    const R = (S.$ui || {}).routine || {}, armed = R.home && R.at;
+    brk = `<h3>The break</h3><p class="hint">Staying is allowed and common; you stay unless you go home. Going home takes one reply: you leave, spend the break at home and are back on its last evening. Your home and family are yours to describe.</p>`
+      + (live && live.stay ? `<div class="item"><div class="row"><span class="t">Staying at Halvard</span></div><div class="meta">${live.stay.length ? live.stay.map(id => `<span class="who">${nm(id)}</span>`).join('') : '<span class="sub">nobody on record</span>'}</div></div>` : '')
+      + (armed ? `<div class="item"><div class="row"><span class="t">Going home</span><span class="pill g">back ${esc(R.at)}</span></div><div class="meta"><button class="btn sm" data-fill="I go home for the break.">Draft</button><button class="btn sm" data-home="stay">Stay after all</button></div></div>`
+        : `${R.home && R.why ? `<div class="warn">Going home: ${esc(R.why)}.</div>` : ''}<div class="meta"><button class="btn sm" data-home="go">Go home for the break</button></div>`);
+  }
   return `<p class="lead"><b>${esc(e.t.split(' (')[0])}</b> · ${esc(span)} · ${esc(n <= 0 ? (live ? `today${live.of > 1 ? `, day ${live.n} of ${live.of}` : ''}` : 'on now') : whenLabel(n))}</p>
-    ${ways ? `<div class="meta">${ways}</div>` : ''}${nowBlock}<h3>Plan</h3>${plan}${chHTML}`;
+    ${ways ? `<div class="meta">${ways}</div>` : ''}${nowBlock}${fools}${sale}${brk}<h3>Plan</h3>${plan}${chHTML}`;
 }
 
 // ---------------------------------------------------------------- shop
@@ -275,7 +293,9 @@ function acShop(S) {
   const list = items.filter(i => view.shop === 'All' || i.shop.split(' — ')[0] === view.shop);
   const bazaar = eventDay(/^Academy Bazaar/), bn = bazaar ? daysTo(S, bazaar.di) : 99;
   const season = SEASON_OF(S.World.Month);   // 1.1.0 (spec §4.9): off-season items are greyed out
-  const rows = list.map(i => {
+  const sale = (((S.$ui || {}).ev || []).find(e => e && e.sale) || {}).sale;   // 1.83.0: a sale day
+  const rows = list.map(i0 => {
+    const off = sale && i0.price != null && String(i0.shop).startsWith(sale.shop), i = off ? { ...i0, price: Math.round(i0.price * (100 - sale.pct) / 100), note: `${sale.pct}% off today (was ${i0.price})${i0.note ? '; ' + i0.note : ''}` } : i0;
     const at = hereIs(S, i.loc) || (i.loc === 'mall' && locIdOf(S.World.Location) === 'mall'), place = (DATA.locs[i.loc] || { name: i.shop }).name;
     const oos = Array.isArray(i.season) && !i.season.includes(season);
     const afford = !oos && (i.price == null || W.Points >= i.price);

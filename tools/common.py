@@ -198,8 +198,10 @@ def shared_js(presence=True):
     cal = json.load(open(os.path.join(root, 'data/calendar.json'), encoding='utf-8'))
     data = {k: cal[k] for k in ('periods', 'exam_months', 'seasons', 'dorm_colors')}
     data['trips'] = [{'m': e['m'], 'w': e['w'], 'd': e['d'][0], 'name': e['trip']} for e in cal['events'] if e.get('trip')]
+    # 1.83.0: the breaks (events with home), one key per break (the Month 12 weeks are one holiday)
+    data['breaks'] = [{'key': re.sub(r'_\d+$', '', e['id']), 'm': e['m'], 'w': e['w'], 'd': e['d'], 'name': e['t'].split(' (')[0].split(':')[0]} for e in cal['events'] if e.get('home')]
     src = open(os.path.join(root, 'src/scripts/shared.js'), encoding='utf-8').read()
-    ph = "/*@@SHARED_DATA@@*/{ periods: [], exam_months: [], seasons: [], trips: [], dorm_colors: {} }"
+    ph = "/*@@SHARED_DATA@@*/{ periods: [], exam_months: [], seasons: [], trips: [], dorm_colors: {}, breaks: [] }"
     assert ph in src, 'shared.js lost its data placeholder'
     if not presence:
         s, e = src.index('// ---- whereabouts ('), src.index('// ---- end of whereabouts')
@@ -254,7 +256,12 @@ def contest_data(stu):
     (data/event_frame.json contest without its notes), checked: every role names a Halvard student and a combat role, every pin a
     student, every role a format."""
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    ct = {k: v for k, v in json.load(open(os.path.join(root, 'data/event_frame.json'), encoding='utf-8'))['contest'].items() if not k.startswith('_')}
+    ef = json.load(open(os.path.join(root, 'data/event_frame.json'), encoding='utf-8'))
+    ct = {k: v for k, v in ef['contest'].items() if not k.startswith('_')}
+    # 1.83.0: the break stayers and the Fools Day draw ride along (planning/DRAFT_event_frame.md 4.2, 4.3)
+    ct['breaks'] = {k: v for k, v in ef['breaks'].items() if not k.startswith('_')}
+    ct['fools'] = {k: v for k, v in ef['fools'].items() if not k.startswith('_')}
+    assert all(nid in stu for nid in ct['breaks']['stay']) and 0 <= ct['breaks']['chance'] <= 100, 'event_frame.json breaks'
     roles5 = {'Attack', 'Defense', 'Healing', 'Support', 'Control'}
     assert all(nid in stu and r in roles5 for nid, r in ct['roles'].items()), 'event_frame.json contest.roles: a non-student or an unknown role'
     assert all(nid in stu for nid in ct['pins']), 'event_frame.json contest.pins: not a Halvard student'

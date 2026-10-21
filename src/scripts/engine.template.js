@@ -1026,7 +1026,9 @@ function fillShape(o, shape) {
 // initiative and birthday parties (each had its own list of words). A status is found by the NPC's id, alias or first word.
 const AWAY_RX = /away|abroad|absent|missing|dead|confined|hospital|unconscious|expelled|unavailable|left campus|left halvard|out of town/i;
 const npcStatusIn = (S, id) => npcStatusOf((S.Campus_State || {}).NPC_status, id, NPC_ALIAS);   // shared.js
-const npcAwayIn = (S, id) => ((S.Campus_State || {}).Graduated || []).includes(id) || AWAY_RX.test(npcStatusIn(S, id));
+// 1.83.0: a Halvard student who went home for today's break (shared.js breakStays) is away too
+const breakAwayIn = (S, id) => { if (!(PRESENCE.stu || {})[id]) return false; const st = breakStaysNow(PRESENCE, S); return !!st && !st.includes(id); };
+const npcAwayIn = (S, id) => ((S.Campus_State || {}).Graduated || []).includes(id) || AWAY_RX.test(npcStatusIn(S, id)) || breakAwayIn(S, id);
 // 1.16.1 (audit B1): Player.Profile.Club in the club list's own words ("Soccer", "soccer club" -> "Soccer Club"; "Theatre" ->
 // "Theatre Troupe"), so Saturday club time is counted; a club the list does not know is kept as written
 function canonClub(c, S) {
@@ -1800,6 +1802,7 @@ function stepPurchases(c) {
   S.Purchases = [];
   if (!hasB || c.toolEdit || !list.length) return;
   const here = placeKey(S.World.Location), season = SEASON_OF(S.World.Month), away = awayIn(S), cur = away ? 'Coin' : 'Points';
+  const sale = (eventsOn(S.World).find(e => e.sale) || {}).sale;   // 1.83.0: a shop's sale day (Merryhew's on Secret Fools Day, lore 235)
   for (const p of list) {
     const asked = String(p.Item || '').trim(), qty = Math.max(1, Math.round(num(p.Qty, 1)));
     if (!asked) continue;
@@ -1807,7 +1810,7 @@ function stepPurchases(c) {
     const atShop = rows.filter(x => (x[2] === here || placeKey(x[1]) === here) && (!x[5] || stallOpen(x[5], S.World))), sold = atShop.find(x => !x[3] || x[3].includes(season));   // 1.81.0: a stall only while open
     const story = num(p.Price, -1);
     let price = -1, shop = '', why = '';
-    if (!away && sold) { price = sold[0]; shop = sold[1]; }
+    if (!away && sold) { price = sold[0]; shop = sold[1]; if (sale && String(sold[1]).startsWith(sale.shop)) { price = Math.round(price * (100 - sale.pct) / 100); shop += `, ${sale.pct}% off today`; } }
     else if (!away && atShop.length) why = `${name} is sold here only in ${atShop[0][3].join(' and ')}`;
     else if (story >= 0) { price = Math.round(story); shop = String(p.Shop || '').trim() || placeOf(S.World.Location); }
     else why = rows.length && !away ? `${name} is sold at ${[...new Set(rows.map(x => x[1]))].join(', ')}, not here; give a Price if another seller sells it` : `${name} has no listed price; give its Price`;
@@ -2968,6 +2971,25 @@ function routineMoments(c, to) {
   }
   return _.sortBy(out, x => DAYS.indexOf(x.day) - DAYS.indexOf(S.World.Day) + (DAYS.indexOf(x.day) < DAYS.indexOf(S.World.Day) ? 7 : 0));
 }
+// 1.83.0 (owner-approved planning/DRAFT_event_frame.md 4.3): going home for a break, armed from the Event tab like the routine week:
+// one reply from now (a break day or the day before one) to the break's last day at 18:00, when the airships are back (lore 238)
+function homeSpan(c) {
+  const { S, absA, seed } = c, today = Math.floor(absA / DAY_MIN), at = d => breakOf(fromAbs(d * DAY_MIN));
+  if (awayIn(S)) return { why: '{{user}} is away from Halvard' };
+  if (S.Battle && S.Battle.Active) return { why: 'a battle is on' };
+  const b = breakOf(S.World) || at(today + 1);
+  if (!b) return { why: 'there is no break today or tomorrow' };
+  let d = breakOf(S.World) ? today : today + 1;
+  while (at(d + 1) && at(d + 1).key === b.key) d++;
+  const to = d * DAY_MIN + 18 * 60;
+  if (to - absA < RT_MIN) return { why: 'the break is nearly over' };
+  const letter = rollTable(Object.keys(S.Bonds).sort(), { roll: [seed, today, 'home-letter'], p: 0.7, pick: [seed, today, 'home-letter-pick'], skip: id => num(S.Bonds[id].Rank, 0) < 4 });
+  return { to, name: b.name, letter: letter || '' };
+}
+const homeLine = R => `Going home for the ${R.name}: in this reply {{user}} leaves Halvard, spends the break at home and is back on ${R.at}`
+  + ' (the engine sets the clock). Tell it as a short montage of a few sentences. {{user}}\'s home and family are the player\'s: use what the player'
+  + ` has written, ask nothing about them, invent as little as the scene needs.${R.letter ? ` A letter from ${R.letter} reaches {{user}} there (a line of it is enough).` : ''}`
+  + ' No Interactions, Practice or Training: nobody from Halvard is there.';
 // the armed routine's line for <now>
 function routineLine(S, R, plan) {
   const what = [plan.study ? `${plan.study} hours of study` : '', ...plan.acts.map(x => `${x.a.action}${x.s ? ` (${x.s})` : ''} at ${x.a.name} x${x.n}`),
@@ -2982,11 +3004,11 @@ function routineStart(c) {
   const { S, B, log, hasB, toolEdit } = c;
   const R = hasB && !toolEdit && planOf(B).run && _.isPlainObject(B.$ui.routine) && num(B.$ui.routine.to, -1) > num((B.$eng || {}).abs, toAbs(B.World)) ? B.$ui.routine : null;
   if (!R) return;
-  const plan = planOf(B), days = (R.to - num((B.$eng || {}).abs, toAbs(B.World))) / DAY_MIN, f = Math.min(1, days / 7);
+  const plan = R.home ? { study: 0, acts: [], club: false, run: true } : planOf(B), days = (R.to - num((B.$eng || {}).abs, toAbs(B.World))) / DAY_MIN, f = Math.min(1, days / 7);   // 1.83.0: home
   const n = x => (x > 0 ? Math.max(f >= 0.3 ? 1 : 0, Math.round(x * f)) : 0);
   const keep = new Set((R.moments || []).map(m => m.who).filter(Boolean));
   const acts = (S.Interactions || []).filter(a => keep.has(NPC_ALIAS[String((a && a.With) || '').toLowerCase()] || String((a && a.With) || '')));
-  if (acts.length < (S.Interactions || []).length) log.push(`Routine week: interactions with people outside its moments were not counted (no time played together).`);
+  if (acts.length < (S.Interactions || []).length) log.push(R.home ? 'Home for the break: interactions were not counted (nobody from Halvard is there).' : `Routine week: interactions with people outside its moments were not counted (no time played together).`);
   if ((S.Practice || []).length || (S.Training || []).length) log.push('Routine week: Practice and Training reports were dropped; the engine counted the plan.');
   S.Interactions = acts; S.Practice = []; S.Training = [];
   const T = fromAbs(R.to);
@@ -5037,7 +5059,12 @@ function stepCampusEvents(c) {
       const ch = off ? [] : ((EVENT_FRAME.chances || {})[e.id] || []).filter(x => chanceDone(S, e, x) < num(x.max, 1) && chanceOpen(S, e, x.how || {}, c.absA)).map(x => x.text).slice(0, 2);
       const stall = STALLS.some(x => x[5][0] === e.id && x[2] === here && stallOpen(x[5], S.World));
       const vote = ((S.$eng.vote || {})[`Y${S.World.Year}`]) || '';   // 1.82.0: the Club Festival coin vote, once drawn
-      return { id: e.id, t: e.t.split(' (')[0], kind: e.kind || '', n: e.d.indexOf(S.World.Day) + 1, of: e.d.length, now: cur ? cur.what : '', next: nx ? [clock(nx.at), nx.what] : null, ch, stall, ...(e.id === 'club_festival' && vote ? { vote } : {}) };
+      // 1.83.0: Secret Fools Day's draw for {{user}} (to: the name drawn, by: who drew {{user}}; '' = a dorm-mate to invent), the day's
+      // sale, and on a break the roster students who stayed
+      const dorm = String(S.Player.Profile.Dorm || ''), fools = e.id === 'fools_day' && /^(Fire|Light|Sky|Viridian)$/.test(dorm) ? foolsDraw(PRESENCE, num(S.$eng.seed, 0), S.World.Year, dorm) : null;
+      const stay = e.home ? breakStaysNow(PRESENCE, S) : null;
+      return { id: e.id, t: e.t.split(' (')[0], kind: e.kind || '', n: e.d.indexOf(S.World.Day) + 1, of: e.d.length, now: cur ? cur.what : '', next: nx ? [clock(nx.at), nx.what] : null, ch, stall, ...(e.id === 'club_festival' && vote ? { vote } : {}),
+        ...(fools ? { fools } : {}), ...(e.sale ? { sale: e.sale } : {}), ...(stay ? { stay } : {}) };
     });
   }
 }
@@ -5683,8 +5710,18 @@ function stepRoutine(c) {
   const { S, log, jnl, toolEdit } = c, P = _.isPlainObject(S.$ui.plan) ? S.$ui.plan : null, R = c.routine;
   if (R) {
     const from = fromAbs(num((c.B.$eng || {}).abs, toAbs(c.B.World)));
-    jnl.push(`Routine week (${stamp(from)} to ${stamp(S.World)}): ${R.done.length ? R.done.join('; ') : 'an ordinary stretch of days'}.`);
-    S.$ui.toasts.push('Routine week lived');
+    if (R.home) { jnl.push(`Home for the ${R.name} (${stamp(from)} to ${stamp(S.World)}).`); S.$ui.toasts.push(`Back from the ${R.name}`); }
+    else jnl.push(`Routine week (${stamp(from)} to ${stamp(S.World)}): ${R.done.length ? R.done.join('; ') : 'an ordinary stretch of days'}.`);
+    if (!R.home) S.$ui.toasts.push('Routine week lived');
+  }
+  if (P && P.home && toolEdit) {   // 1.83.0: going home for a break
+    const sp = homeSpan(c); P.home = 0;
+    if (sp.why) { P.run = 0; S.$ui.routine = { why: sp.why, home: true }; S.$ui.toasts.push(`Going home: ${sp.why}`); return; }
+    P.run = 1;
+    const Rt = { home: true, to: sp.to, at: stamp(fromAbs(sp.to)), stop: `the end of the ${sp.name}`, name: sp.name, letter: sp.letter, moments: [] };
+    Rt.line = homeLine(Rt); S.$ui.routine = Rt;
+    log.push(`Going home for the ${sp.name}: back on ${Rt.at}.`);
+    return;
   }
   if (!toolEdit || !P || !P.run) { if (P) P.run = 0; S.$ui.routine = null; return; }
   const sp = routineSpan(c);

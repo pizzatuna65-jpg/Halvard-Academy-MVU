@@ -2,7 +2,7 @@
 // ---- shared.js (1.43.0, audit batch 2): one source for the constants and small rules the engine, the panels (ui.js), the bracelet
 // (statusbar.html) and the <now> entry (505) all use. tools/common.py shared_js() fills SH from data/calendar.json and each generator
 // puts this file at its template's SHARED placeholder. Edit it here only. Plain ES2017: no lodash, no DOM, no state.
-const SH = {"periods":[["08:00","10:00"],["10:00","12:00"],["13:00","16:00"]],"exam_months":[3,5,9,11],"seasons":["Spring","Spring","Spring","Summer","Summer","Summer","Autumn","Autumn","Autumn","Winter","Winter","Winter"],"dorm_colors":{"Fire":"#d0583f","Light":"#dcb342","Sky":"#4d86d6","Viridian":"#3f9f69","Unsorted":"#9aa3ad"},"trips":[{"m":4,"w":2,"d":"Tue","name":"the capital (Crowning Day)"},{"m":11,"w":2,"d":"Sat","name":"Sunreach Bay (Academy Trip)"}]};
+const SH = {"periods":[["08:00","10:00"],["10:00","12:00"],["13:00","16:00"]],"exam_months":[3,5,9,11],"seasons":["Spring","Spring","Spring","Summer","Summer","Summer","Autumn","Autumn","Autumn","Winter","Winter","Winter"],"dorm_colors":{"Fire":"#d0583f","Light":"#dcb342","Sky":"#4d86d6","Viridian":"#3f9f69","Unsorted":"#9aa3ad"},"trips":[{"m":4,"w":2,"d":"Tue","name":"the capital (Crowning Day)"},{"m":11,"w":2,"d":"Sat","name":"Sunreach Bay (Academy Trip)"}],"breaks":[{"key":"midyear_break","m":5,"w":4,"d":["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],"name":"Mid-Year Break"},{"key":"holiday","m":12,"w":1,"d":["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],"name":"Kingdom-wide holiday"},{"key":"holiday","m":12,"w":2,"d":["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],"name":"Kingdom-wide holiday"},{"key":"holiday","m":12,"w":3,"d":["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],"name":"Kingdom-wide holiday"},{"key":"holiday","m":12,"w":4,"d":["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],"name":"Kingdom-wide holiday"}]};
 const hmMin = t => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(t || '').trim()); return m ? +m[1] * 60 + +m[2] : null; };
 // class periods: P1, P2, P3 as [from, to] minutes of the day; their "HH:MM-HH:MM" and end times
 const PERIODS = SH.periods.map(p => p.map(hmMin));
@@ -258,6 +258,15 @@ Today: <%- TODAY.map(x => x.split(' — ')[0]).join(' | ') %><%- TODAY.some(x =>
 <%_ } _%>
 <%_ for (const e of EVL) { _%>
 Event: <%- e.t %><%- e.of > 1 ? ', day ' + e.n + ' of ' + e.of : '' %>.<%- e.now ? ' Now: ' + e.now + '.' : '' %><%- e.next ? ' Next: ' + e.next[0] + ' ' + e.next[1] + '.' : '' %><%- e.vote ? ' The coin vote went to the ' + e.vote + '.' : '' %> (plan in World._Event_today)
+<%_ if (e.fools) { _%>
+Secret Fools Day: if {{user}} drew a name this morning, it was <%- e.fools.to || 'a dorm-mate you invent' %>. Whoever drew {{user}}: <%- e.fools.by || 'a dorm-mate you invent' %>; keep it hidden until the story shows it. Pranks stay in character: someone who would never prank does something gentle, or nothing at all.
+<%_ } _%>
+<%_ if (e.sale) { _%>
+Today <%- e.sale.shop %> sells everything at <%- e.sale.pct %>% off (the engine charges the sale price).
+<%_ } _%>
+<%_ if (e.stay) { _%>
+Most students have gone home for the break. Students on record who stayed: <%- e.stay.length ? e.stay.join(', ') : 'none' %>; the rest are away until it ends.
+<%_ } _%>
 <%_ if (e.id === 'dorm_comp' && UI.contest && (UI.contest.lines || []).length) { _%>
 <%- UI.contest.lines.join('\n') %>
 <%_ } _%>
@@ -394,7 +403,10 @@ Rumours going around: <%- GS.map(g => '"' + g[0] + '" (' + g[1] + ', day ' + g[2
 <%_ if (STALE.length) { _%>
 Campus events with no news for over a week (the world moves on without {{user}}: advance each through talk, a rumour, a notice or a letter when it fits, or remove it once it is over): <%- STALE.map(([k, u]) => k + ' (last news ' + aged(u) + ')').join('; ') %>
 <%_ } _%>
-<%_ if (UI.routine && UI.routine.line && on('routine_week')) { _%>
+<%_ if ((getvar('stat_data.Trip') || {}).Active && /\bhome\b/i.test(String((getvar('stat_data.Trip') || {}).Destination || ''))) { _%>
+{{user}} is home for the break. Their home and family are the player's: use what the player has written, ask nothing about them, invent as little as the scene needs.
+<%_ } _%>
+<%_ if (UI.routine && UI.routine.line && (UI.routine.home || on('routine_week'))) { _%>
 <%- UI.routine.line %>
 <%_ } _%>
 <%_ if (INITIATIVE && INITIATIVE.id && INITIATIVE.stage) { _%>

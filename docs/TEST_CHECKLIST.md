@@ -430,6 +430,12 @@ The first academy flight (the airship), then the Grand Vast Forest.
 - [ ] The season beside the date turns Summer (Autumn in M7, Winter in M10); the Map shows the default map (M4–M6); the Straw sun hat is in
       stock and the spring-only rows are greyed [1.9.4, 1.14.3, 1.9.5].
 
+### Q6.1a Secret Fools Day (W1 Wed)
+- [ ] Activities → Event shows the name Charles drew (if he joins in) and, after 20:00, who drew his; `<now>` gives the narrator both and
+      asks to keep the prankster hidden until the story shows them; someone who would never prank does something gentle or nothing [1.83].
+- [ ] At Merryhew's everything is 25% off: the Shop tab shows the sale price, the Price Guide says so, and a purchase is charged it;
+      the next day the price is back [1.83].
+
 ### Q6.2 W2 Monday: Charles's birthday, and the Banking House
 - [ ] `<now>` says points do not work in Avalon tomorrow, and someone mentions the Banking House; change points into coin (Wallet) [1.39].
 
@@ -464,6 +470,12 @@ The first academy flight (the airship), then the Grand Vast Forest.
 - [ ] The final marks are announced stage by stage before the dorm rank, the rank matches the Log line's marks, and the next payout follows
       it [1.15, 1.10.1].
 - [ ] At the feast the Headmaster and Vice Headmaster speak before the food [1.15.1].
+
+### Q7.1a The Mid-Year Break (M5 W4)
+- [ ] From M5 W3 Activities → Event offers "Go home for the break"; armed, the next reply takes Charles home and back on M5 W4 Sun 18:00
+      in one montage, with nothing invented about his family beyond what the player wrote, and a Journal line [1.83].
+- [ ] Staying instead: `<now>` and the Event tab name the students who stayed (Etnie, Dante, Lenna, Castor, Tilly and a few more); the
+      others are not around (the Map's Regulars, `<now>`'s presence lines), and nobody gone home seeks Charles out [1.83].
 
 ### Q7.2 Autumn and The Thinning (M7)
 - [ ] M7: the Autumn map, and the autumn stock (the Ember pouch) [1.14.3, 1.9.5].

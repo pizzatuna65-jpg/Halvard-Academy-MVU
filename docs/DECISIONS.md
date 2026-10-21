@@ -158,6 +158,11 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
   and never one done by a deed alone. They replaced the 1.26.0 event XP with the same XP.
 - **The Club Festival coin vote is drawn by the engine** (1.82.0): at Saturday's close, weighted by the clubs' named members, {{user}}'s
   club boosted by its chances done; the coin is symbolic; `club_festival_win` is paid only from the vote.
+- **Breaks** (1.83.0, owner-approved draft §4.3): on a break most Halvard students are away; the lore's stayers and a seeded one in five
+  stay (computed, never stored). {{user}} stays unless they go home; going home is one reply armed from the Event tab like the routine
+  week. {{user}}'s home and family belong to the player: the narrator uses what the player wrote and invents as little as it can.
+- **Secret Fools Day** (1.83.0): {{user}}'s draw is computed (a roster dorm-mate 70%, else invented); pranks stay in character.
+  Merryhew's sale is 25% (an event's `sale`).
 - **Event stalls are shop rows with `ev`** (1.81.0): they sell only on their event's day and hours (`stallOpen`), at their place, with
   effects of kinds that already exist; the Price Guide lists them only then.
 - **Settings** for training and reputation live in `$ui.tune` (rows in `data/tuning.json`, defaults asserted equal to training.json / reputation.json). Tension 70 costs −5 and Tension 100 another −10 of the matching reputation (Milena → Doves included).

@@ -1,7 +1,7 @@
 // ---- shared.js (1.43.0, audit batch 2): one source for the constants and small rules the engine, the panels (ui.js), the bracelet
 // (statusbar.html) and the <now> entry (505) all use. tools/common.py shared_js() fills SH from data/calendar.json and each generator
 // puts this file at its template's SHARED placeholder. Edit it here only. Plain ES2017: no lodash, no DOM, no state.
-const SH = /*@@SHARED_DATA@@*/{ periods: [], exam_months: [], seasons: [], trips: [], dorm_colors: {} };
+const SH = /*@@SHARED_DATA@@*/{ periods: [], exam_months: [], seasons: [], trips: [], dorm_colors: {}, breaks: [] };
 const hmMin = t => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(t || '').trim()); return m ? +m[1] * 60 + +m[2] : null; };
 // class periods: P1, P2, P3 as [from, to] minutes of the day; their "HH:MM-HH:MM" and end times
 const PERIODS = SH.periods.map(p => p.map(hmMin));
@@ -178,7 +178,8 @@ function presenceView(PD, S, on) {
   const gale = FULL && WX.now.wind === 'gale';
   return { W, UI, PR, NST: CS.NPC_status || {}, GRAD: CS.Graduated || [], Y: Math.max(1, Number(W.Year) || 1), COUNCIL: CS.Council || {}, pIdx, cls,
     until: PERIOD_END[pIdx], sick: FULL && WX.flu ? (WX.sick || []) : [], gale, bad: FULL && (WX.now.sky === 'Rain' || WX.now.sky === 'Storm' || gale), rain: FULL && WX.now.sky === 'Rain',
-    min: hmMin(W.Time), dkey: [W.Year || 1, W.Month, W.Week, W.Day].join('-'), seed: Number((S.$eng || {}).seed) || 0, rton: on('npc_routines'), FC: foundedClub(S) };   // 1.52.0: the routine roll
+    min: hmMin(W.Time), dkey: [W.Year || 1, W.Month, W.Week, W.Day].join('-'), seed: Number((S.$eng || {}).seed) || 0, rton: on('npc_routines'), FC: foundedClub(S),   // 1.52.0: the routine roll
+    brk: breakStaysNow(PD, S) };   // 1.83.0: a break's stayers (null: no break today)
 }
 // NPC id at this moment: gone (graduated, or their cohort has not arrived), st (Campus_State.NPC_status), sick (the flu), busy
 // ([what they are doing, the place keys where that keeps them in sight]: students in class, at Study Hall, voting or at their clubs;
@@ -191,7 +192,7 @@ function whereabouts(PD, V, id) {
   const busy = !c || k === 'council' ? null : teach ? ['teaching ' + c[0] + ' until ' + V.until, c[2]] : !stu ? null
     : k === 'class' ? ['in class until ' + V.until, []] : k === 'study' ? ['at Study Hall until ' + PERIOD_END[1], c[2]]
     : k === 'election' ? ['voting in the Main Courtyard until ' + PERIOD_END[2], []] : ['at their club until ' + PERIOD_END[2], []];
-  const gone = V.GRAD.includes(id) ? 'graduated' : ((PD.arr || {})[id] || 1) > V.Y ? 'not at Halvard yet' : '', st = npcStatusOf(V.NST, id), sick = V.sick.includes(id);
+  const gone = V.GRAD.includes(id) ? 'graduated' : ((PD.arr || {})[id] || 1) > V.Y ? 'not at Halvard yet' : V.brk && stu && !V.brk.includes(id) ? 'home for the break' : '', st = npcStatusOf(V.NST, id), sick = V.sick.includes(id);
   const rt = !V.rton || gone || sick || st || busy || V.min == null ? null : ((PD.rt || {})[id] || []).find((r, i) => r[0].includes(V.W.Day) && V.min >= r[1] && V.min < r[2]
     && roll100(V.seed, V.dkey, 'routine', id, i) < (PD.rate == null ? 70 : PD.rate)) || null;
   return { id, gone, st, sick, busy, rt };
@@ -230,6 +231,26 @@ function presenceAt(PD, V, loc) {
     return x[0] + (V.bad && x[2] && (!x[3] || V.gale) ? ': practising indoors (Gymnasium) or cancelled in this weather' : ': meeting here until ' + P[2] + (m.length ? ' (members on record: ' + m.join(', ') + ')' : ''));
   }).join('; ');
   return { place, pres, regs: regs1.filter(r => !wh(r).st), moved, club, st: regs1.filter(r => wh(r).st).map(r => [r, wh(r).st]), why };
+}
+// ---- breaks and Secret Fools Day (1.83.0, owner-approved planning/DRAFT_event_frame.md 4.2, 4.3), computed, never stored.
+// A break is a calendar event with home (SH.breaks: the Mid-Year Break; the Month 12 weeks are one holiday). Most Halvard students go
+// home; PD.ct.breaks.stay stay (their lore leaves them no home to go to), and anyone else with PD.ct.breaks.chance percent, drawn per
+// student, campaign year and break. The others are away (whereabouts: 'home for the break'; the engine's npcAwayIn).
+const breakOf = W => (SH.breaks || []).find(b => b.m === W.Month && b.w === W.Week && b.d.includes(W.Day)) || null;
+function breakStays(PD, seed, year, key) {
+  const B = (PD.ct || {}).breaks || {}, stay = B.stay || [];
+  return Object.keys(PD.stu || {}).filter(id => { const st = PD.stu[id], y = st[0] + year - (st[1] || 1); return y >= 1 && y <= 3; })
+    .filter(id => stay.includes(id) || roll100(seed, year, 'break', key, id) < (Number(B.chance) || 0)).sort();
+}
+const breakStaysNow = (PD, S) => { const W = (S || {}).World || {}, b = breakOf(W); return b ? breakStays(PD, Number(((S || {}).$eng || {}).seed) || 0, Math.max(1, Number(W.Year) || 1), b.key) : null; };
+// Secret Fools Day's dorm name-draw for {{user}} (lore 235): the name {{user}} draws (to) and who drew {{user}} (by), each a roster
+// dorm-mate at Halvard this year (PD.ct.fools.named percent) or '' (a dorm-mate the narrator invents)
+function foolsDraw(PD, seed, year, dorm) {
+  const mates = Object.keys(PD.stu || {}).filter(id => { const st = PD.stu[id], y = st[0] + year - (st[1] || 1); return st[2] === dorm && y >= 1 && y <= 3; }).sort();
+  const pct = Number(((PD.ct || {}).fools || {}).named) || 0;
+  const to = rollTable(mates, { roll: [seed, year, 'fools-to'], pct, pick: [seed, year, 'fools-to-pick'] }) || '';
+  const by = rollTable(mates, { roll: [seed, year, 'fools-by'], pct, pick: [seed, year, 'fools-by-pick'], skip: id => id === to }) || '';
+  return { to, by };
 }
 // ---- contest (1.82.0, owner-approved planning/DRAFT_event_frame.md section 3): the Dorm Competition, computed from the seed and
 // never stored (DECISIONS §7 "computed, not stored"). PD.ct is data/event_frame.json contest (tools/common.py contest_data). A role's
