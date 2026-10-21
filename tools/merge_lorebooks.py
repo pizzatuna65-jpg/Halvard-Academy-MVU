@@ -74,7 +74,7 @@ COHORT_ROSTER = {2: ['Linus (Viridian, M, ash-brown, loud, Academy Newspaper, th
                  3: ['Aurelian (Fire, Elf, M, honey-gold, hero, Basketball Club)', 'William (Sky, crow B, M, dark teal, dramatic, Board Game Club)',
                      'Bruno (Fire, M, blue-black, brawler, Duelling Club)', 'Bianca (Light, F, blue-black, social, Swimming Club, Council)',
                      'Rigel (Sky, rabbit B, M, white, Ardenne, Festival Committee)', 'Topaz (Light, Elf, F, orange, rival, follows {{user}} into their club)',
-                     'Faye (Viridian, Elf, F, periwinkle, calm, Walking Club)']}
+                     'Faye (Viridian, Elf, F, periwinkle, calm, Camping Club)']}
 # Regulars entries (by the place in "Regulars — <place>") that gain a cohort's names, from each new NPC's Haunts
 COHORT_REGULARS = {2: {'Announcement Room': ['Linus'], 'The Sparring Pavilion': ['Linus', 'Tsubaki'], 'Combat Grounds': ['Linus', 'Maple', 'Tsubaki'],
                        'Archive': ['Linus'], 'Common Rooms and Canteen': ['Linus', 'Nerys', 'Hadrian', 'Wren'], 'Gardens': ['Maple', 'Nerys'],
@@ -828,7 +828,7 @@ GHOST_STORIES = [   # 1.16.0 (owner-approved planning/DRAFT_dynamic_ambience.md 
     (338, 'The Night Swimmer', ['Night Swimmer', 'swimmer in the steam'],
      '[The Night Swimmer]\nWhere: the Swimming Pool after dark, most often in winter when the rune-warmed water steams.\nStory: someone swims steady lengths through the steam, the lane rope lifting as they pass, but when the steam clears the water is empty and still.\nRule: never swim alone after dark, and do not call out to them.\nKnown for: the Swimming Club claims the fastest lap on record and will not say who swam it.\n'),
     (339, 'The Walking Lantern', ['Walking Lantern', 'lantern on the ridge'],
-     '[The Walking Lantern]\nWhere: the Grassy Field and Hills, after dark.\nStory: a single lantern light crosses the ridge at walking pace with no one carrying it, and stops when anyone stops to watch.\nRule: do not walk toward it, and do not follow it towards the Forest.\nKnown for: the Walking Club keeps to the lower path after dusk and will not say why.\n'),
+     '[The Walking Lantern]\nWhere: the Grassy Field and Hills, after dark.\nStory: a single lantern light crosses the ridge at walking pace with no one carrying it, and stops when anyone stops to watch.\nRule: do not walk toward it, and do not follow it towards the Forest.\nKnown for: the Camping Club pitches on the lower slope after dusk and will not say why.\n'),
     (340, 'Breath on the Glass', ['Breath on the Glass', 'handprint on the glass'],
      "[Breath on the Glass]\nWhere: inside the Gardens' greenhouses, in the late afternoon and evening.\nStory: the glass fogs from the inside, as if someone warm stood close to it, around a handprint that belongs to nobody present.\nRule: do not press your own hand over it, and do not sleep in the greenhouses.\nKnown for: the Gardening Club blames the heat pipes, and still leaves in pairs.\n"),
     (341, 'When the Pens Go Quiet', ['Pens Go Quiet', 'pens go quiet', 'animals fell silent'],
@@ -1244,6 +1244,20 @@ def calendar_timetable_lore(core_entries):
         core_entries[131]['content'] = re.sub(r'^- ' + label + r': .*$', '- ' + label + ': ' + row,
                                                core_entries[131]['content'], count=1, flags=re.M)
 
+# 1.76.0 (owner-approved planning/DRAFT_sebaran_club.md): the roster spread wider over the clubs. A club with both an advisor and
+# named students gives one of them to a club that had nobody: Lenna to the Archery Club (her Skills already name the range), Dorian to
+# the Calligraphy Club; the Walking Club (too close to the Running Club) becomes the Camping Club, Faye with it. Gymnastics keeps
+# unnamed students (owner).
+def club_spread(C, N):
+    npc = lambda first: next(e for e in N.values() if re.match(r'NPC . ' + first + r'\b', e['comment']))
+    rep(npc('Lenna'), "Club: Beast Handling Club.", "Club: Archery Club. Magic is banned on the range, and she likes that; she still visits the Menagerie's animals on her own.")
+    rep(npc('Lenna'), "Haunts: the far Gardens, Menagerie, Forest;", "Haunts: the Archery Range, the far Gardens, the Menagerie, the Forest;")
+    rep(npc('Dorian'), "advises the Specialized Magic Club", "advises the Calligraphy Club, where the hand that keeps his immaculate ledger sets the standard")
+    rep(npc('Faye'), "Club: Walking Club, which walks the Hills every Saturday and, under Faye, arrives wherever it arrives whenever it gets there.",
+        "Club: Camping Club, which pitches its tents on the Hills every Saturday and, under Faye, spends most of the afternoon stringing hammocks and brewing tea; the tents go up eventually.")
+    venues = next(e for e in C.values() if 'Walking – Hills' in e['content'])
+    rep(venues, 'Walking – Hills', 'Camping – Hills')
+
 # ================= v39 standalone =================
 C39, N39 = copy.deepcopy(C), copy.deepcopy(N)
 apply_lore_edits(C39, N39)
@@ -1270,6 +1284,7 @@ formal_and_far_grounds(C39, N39)   # 1.15.1
 ghost_stories(C39, N39)   # 1.16.0
 practical_magic_class(C39)   # 1.33.0
 staff_regulars(N39)   # 1.33.0
+club_spread(C39, N39)   # 1.76.0
 grand_vast_forest(C39, False)   # 1.38.0
 avalon(C39, False)   # 1.39.0
 airship(C39, False)   # 1.40.0
@@ -1430,6 +1445,7 @@ formal_and_far_grounds(Cc, Nc)   # 1.15.1
 ghost_stories(Cc, Nc)   # 1.16.0
 practical_magic_class(Cc)   # 1.33.0
 staff_regulars(Nc)   # 1.33.0
+club_spread(Cc, Nc)   # 1.76.0
 grand_vast_forest(Cc, True)   # 1.38.0
 avalon(Cc, True)   # 1.39.0
 airship(Cc, True)   # 1.40.0

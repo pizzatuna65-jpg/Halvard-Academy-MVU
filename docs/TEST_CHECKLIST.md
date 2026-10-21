@@ -162,6 +162,8 @@ show the newcomers their dorm rooms.
       [1.9.3].
 - [ ] Activities → Clubs: the Student Council lists only the members Charles has met (Irene, Caspian once met), the rest as "+N you
       have not placed yet", like every other club [1.74].
+- [ ] The directory: the Camping Club on the Hills (no Walking Club), the teachers shown as advisors (by their class until their name is
+      known); the narrator puts Lenna at the Archery Range, not the Menagerie, when the Archery Club meets [1.75, 1.76].
 - [ ] Optional, the Student Council (besides a club): Saturday 10:00–12:00 the bracelet and `<now>` point to the Council Chamber,
       attendance and study time count there, an F remedial comes first, and the afternoon club still meets [1.34].
 

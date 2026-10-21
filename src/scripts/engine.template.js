@@ -1016,6 +1016,7 @@ function canonClub(c, S) {
   const F = S ? foundedClub(S) : null;   // 1.75.0: the club {{user}} founds (shared.js)
   if (F && F.name.toLowerCase().replace(/^the\s+/, '').replace(/\s+/g, ' ') === k) return F.name;
   if (/^duel+ing club$/.test(k)) return 'Magic Duelling Club';
+  if (/^walking( club)?$/.test(k)) return 'Camping Club';   // 1.76.0: the Walking Club became the Camping Club
   const names = Object.keys(CLASS.clubs || {}), base = x => x.toLowerCase().replace(/\s+club$/, '');
   return names.find(n => n.toLowerCase() === k) || (CLASS.calias || {})[base(k)] || names.find(n => base(n) === base(k)) || s;
 }
@@ -1193,6 +1194,8 @@ function stepMigrate(c) {
       const d = { Year: +(m[1] || W.Year || 1), Month: +m[2], Week: +m[3], Day: m[4] }; if (!lo || toAbs(d) < toAbs(lo)) lo = d; }
     b.$met = lo ? ydate(lo) : '';
   }
+  // 1.76.0 (owner-approved planning/DRAFT_sebaran_club.md): the Walking Club became the Camping Club
+  if (verLt(c.fromVer, '1.76.0')) for (const X of both) { const P = (X.Player || {}).Profile || {}; if (P.Club && canonClub(P.Club) === 'Camping Club') P.Club = 'Camping Club'; }
   // 1.75.0 (owner-approved planning/DRAFT_club_sendiri.md): a club not on record that {{user}} already belongs to was founded in the
   // story: it becomes the founded club (its room and advisor not on record yet); the founding reputation is not paid again
   if (verLt(c.fromVer, '1.75.0')) for (const X of both) {

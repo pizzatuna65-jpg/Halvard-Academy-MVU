@@ -1,6 +1,6 @@
 {
-  "Prowess": ["Magic Duelling", "Soccer", "Running", "Archery", "Swimming", "Gymnastics", "Basketball", "Walking"],
-  "Nature": ["Beast Handling", "Gardening", "Fishing", "Groundskeeping"],
+  "Prowess": ["Magic Duelling", "Soccer", "Running", "Archery", "Swimming", "Gymnastics", "Basketball"],
+  "Nature": ["Beast Handling", "Gardening", "Fishing", "Groundskeeping", "Camping"],
   "Craft": ["Alchemy", "Brewing", "Smithing", "Tailoring", "Cooking", "Drawing", "Calligraphy"],
   "Society": ["Music", "Tea", "Theatre", "Card", "Board Game", "Festival Committee", "Student Council", "Medical Centre Volunteers"],
   "Arcana": ["Warding Study", "Divination", "Specialized Magic"],

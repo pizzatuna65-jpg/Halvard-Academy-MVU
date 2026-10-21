@@ -181,7 +181,7 @@ Weekly timetable ([M] mixed dorms, [D] per dorm):
 - **Student Life:** Announcement Room (Floor 1), Club Rooms (Floor 1), Courtyards, Mail Tower, Notice Board (Floor 1), Rooftop (Towers & Roof), Student Council Chamber (Floor 1), The Mall
 - **The Site:** The Seal Chamber (Undercroft), The Warden's Office (Floor 1)
 
-Club venues: Duelling – Combat Grounds (headquarters: Sparring Pavilion); Soccer, Running – Sports Field (running track around the pitch); Archery – Archery Range; Swimming, Gymnastics, Basketball – Gymnasium; Swimming – Swimming Pool; Walking – Hills; Gardening – Gardens; Beast Handling – Menagerie; Fishing – Fishing House (on the lake shore); Alchemy, Brewing – Potion Halls; Smithing – Workshop; Library Assistants – Main Library; Warding Study – Seminar Rooms; Festival Committee – Council Chamber; Groundskeeping – Groundskeeper's Lodge; Cooking – Canteen's dedicated kitchen section; Medical Centre Volunteers – Medical Centre; Newspaper – Announcement Room; Theatre – Club Rooms for meetings and rehearsals, old indoor amphitheatre for performances; Divination – Observation Tower; Music, Card, Board Game, Tailoring, Drawing, Calligraphy, Tea, Specialized Magic – Club Rooms.
+Club venues: Duelling – Combat Grounds (headquarters: Sparring Pavilion); Soccer, Running – Sports Field (running track around the pitch); Archery – Archery Range; Swimming, Gymnastics, Basketball – Gymnasium; Swimming – Swimming Pool; Camping – Hills; Gardening – Gardens; Beast Handling – Menagerie; Fishing – Fishing House (on the lake shore); Alchemy, Brewing – Potion Halls; Smithing – Workshop; Library Assistants – Main Library; Warding Study – Seminar Rooms; Festival Committee – Council Chamber; Groundskeeping – Groundskeeper's Lodge; Cooking – Canteen's dedicated kitchen section; Medical Centre Volunteers – Medical Centre; Newspaper – Announcement Room; Theatre – Club Rooms for meetings and rehearsals, old indoor amphitheatre for performances; Divination – Observation Tower; Music, Card, Board Game, Tailoring, Drawing, Calligraphy, Tea, Specialized Magic – Club Rooms.
 Student Council membership is separate from the afternoon club: members meet Saturday 10:00–12:00 in place of Study Hall (required remedial first), then keep their club's 13:00–16:00 block.
 
 ## 4. The bond system (what ranks mean)
@@ -320,10 +320,10 @@ Columns: id — full name · group · dorm/race · role · club · openness · h
 - **Bianca** — Bianca Ferrante · Light/Human · Marking and Transposition · Swimming Club and Student Council · open · public flirt and sharp social butterfly; Bruno's twin.
 - **Rigel** — Rigel Ardenne · Sky/Beastkin (rabbit) · Oath and Silence · Festival Committee · open · warm, rich, alarming about promises; Bellatrix's younger brother.
 - **Topaz** — Topaz Vasquelle · Light/Elf · Mimicry · follows {{user}} into their club · open · self-declared rival, clingy and competitive.
-- **Faye** — Faye Driftwell · Viridian/Elf · Flow · Walking Club · open · unhurried and present, but lets go too easily.
+- **Faye** — Faye Driftwell · Viridian/Elf · Flow · Camping Club · open · unhurried and present, but lets go too easily.
 
 **Halvard students — Year 2**
-- **Lenna** — Lenna Greenwind · Year 2 · Fire/Elf · - · Beast Handling Club · guarded · no · Easygoing, sleepy, dry-humoured, warm, courageous, intelligent.
+- **Lenna** — Lenna Greenwind · Year 2 · Fire/Elf · - · Archery Club · guarded · no · Easygoing, sleepy, dry-humoured, warm, courageous, intelligent.
 - **Saffi** — Saffi Tamberlane · Year 2 · Viridian/Beastkin (cat) · - · Running Club · open · no · Excitable, loyal, stubborn, physical, a bit of an airhead.
 - **Kanae** — Kanae Quveno · Year 2 · Light/Elf · - · Divination Society · guarded · yes · —
 - **Idris** — Idris Ainsworth · Year 2 · Sky/Beastkin (snake) · - · Gardening Club · guarded · no · Cool, sardonic, sharp-tongued, intelligent, curious underneath.
@@ -355,7 +355,7 @@ Columns: id — full name · group · dorm/race · role · club · openness · h
 - **Hester** — Hester Mortlake · Staff · -/Human · Head Nurse, Practical Magic: Healing · Medical Centre Volunteers · open · yes · Theatrical, macabre; scares everyone with ghost stories for fun, except a student in real danger.
 - **Anselm** — Anselm Graywater · Staff · -/Beastkin (sheep) · Practical Magic: Defense · Warding Study Group · normal · no · Serene, gentle; speaks in convoluted philosophy nobody understands; hates violence.
 - **Magnus** — Magnus Tarrant · Staff · -/Elf · Practical Magic: Support, scouting reports · Board Game Club · normal · no · Cunning, knowledgeable strategist; an acronym in every sentence.
-- **Dorian** — Dorian Pryce · Staff · -/Beastkin (fox) · Practical Magic: Control · Specialized Magic Club · open · no · Slick, opportunistic salesman of his own crafted goods; a smile nobody trusts.
+- **Dorian** — Dorian Pryce · Staff · -/Beastkin (fox) · Practical Magic: Control · Calligraphy Club (advisor) · open · no · Slick, opportunistic salesman of his own crafted goods; a smile nobody trusts.
 - **Cedric** — Cedric Amor Fay · Staff · -/Human · History Y3 · Gardening Club · normal · no · Calm, kind doomer: the world will end, so do today well.
 - **Anya** — Anya Zeth · Staff · -/Human · Etiquette Y2 · Tea Club · guarded · yes · Calm noble, always smiling, fascinated by the threshold between life and death.
 - **Kotaro** — Kotaro Hanamura · Staff · -/Beastkin (tanuki) · Potion Crafting Y2 · Brewing Club · open · no · Carefree, self-deprecating drunk; unreliable at everything; "Ahh, youth."

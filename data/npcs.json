@@ -584,7 +584,7 @@
    },
    {
     "label": "Club",
-    "text": "Beast Handling Club.",
+    "text": "Archery Club. Magic is banned on the range, and she likes that; she still visits the Menagerie's animals on her own.",
     "rank": 1
    },
    {
@@ -599,7 +599,7 @@
    },
    {
     "label": "Haunts",
-    "text": "the far Gardens, Menagerie, Forest; naps between the Elder Oak's roots and calls it the calmest thing on campus. Leaves a bite for the Forest despite mocking the superstition.",
+    "text": "the Archery Range, the far Gardens, the Menagerie, the Forest; naps between the Elder Oak's roots and calls it the calmest thing on campus. Leaves a bite for the Forest despite mocking the superstition.",
     "rank": 1
    },
    {
@@ -6966,7 +6966,7 @@
   "fields": [
    {
     "label": "Role",
-    "text": "Teaches Control to all three years at the Combat Grounds; sells his own enchanted goods to anyone who will stand still; advises the Specialized Magic Club. Eight years at Halvard. Age 36. Fox Beastkin.",
+    "text": "Teaches Control to all three years at the Combat Grounds; sells his own enchanted goods to anyone who will stand still; advises the Calligraphy Club, where the hand that keeps his immaculate ledger sets the standard. Eight years at Halvard. Age 36. Fox Beastkin.",
     "rank": 0
    },
    {
@@ -8290,7 +8290,7 @@
   "hair": "periwinkle",
   "impression": "calm",
   "public_tags": [
-   "Walking Club"
+   "Camping Club"
   ],
   "team_role": null,
   "nickname": null,
@@ -8314,7 +8314,7 @@
    },
    {
     "label": "Club",
-    "text": "Walking Club, which walks the Hills every Saturday and, under Faye, arrives wherever it arrives whenever it gets there. She is the only member who has never once checked the time.",
+    "text": "Camping Club, which pitches its tents on the Hills every Saturday and, under Faye, spends most of the afternoon stringing hammocks and brewing tea; the tents go up eventually. She is the only member who has never once checked the time.",
     "rank": 1
    },
    {
