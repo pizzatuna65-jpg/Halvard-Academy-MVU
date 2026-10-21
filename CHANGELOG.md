@@ -1,7 +1,27 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.77.0 — Lore changes that last a while; how {{user}} looks in `<now>` (2026-10-21)
+
+Owner's request (2026-10-21): two narrator-side features from the suggestion list (no. 1 and no. 3). Engine, schema, card text and the
+Journal. Save fixture v1.76.0.
+- **Temporary Lore changes.** A Lore change may carry `Until` (its last day as a calendar date): a bridge closed until it is repaired, a
+  fountain drained for cleaning. `stepLoreChanges` parses it once (`anchorWhen`, written back by `absWhen`: "Thursday" becomes "M1 W1
+  Thu"), keeps the end in `$abs`, and removes the change when that day is over (`agendaState` 'notice': an hour after the day ends) with
+  the Journal line "…, as it was again" and a toast. An Until that is no date, or already past, is refused with the reason in the report;
+  a longer Until is a rewrite, kept only when the reply shows it; Until taken out makes the change lasting. Printed as "until …" over the
+  lore (`build_card.py` `LORE_OPEN`), in a person's Cast Sheet (`cLore`), in `<current_state>` (501) and in the Journal's Lasting
+  changes; the Planner feed lists its last day (agenda kind `lore`). 502's Lore_changes line names Until.
+- **How {{user}} looks.** `<now>` has one line of what anyone near can see: each injury (severity, body part), weather conditions (wet
+  through, shivering, flushed, a head cold), fatigue (tired, visibly exhausted) and lost sleep. `nowOf` → `$ui.now.looks` (words in
+  `LOOK`), printed by 505 after the visit line. Never hidden magic, a sustained technique or a pact; no line when there is nothing to see.
+- Tests: new `test_lore_until_looks_v1770.cjs`; `test_audit_batch7_v1480` lets a chain with the Looks line read differently (as with the
+  visit line). Full `npm test` and lint pass.
+- **To confirm with the owner:** the Looks words are mine (UI descriptors, no canon). The uniform and dorm vest are left out: the lore
+  never says when the uniform must be worn.
+- **To check live:** `docs/TEST_CHECKLIST.md` Q2.6 [1.77].
 
 ## v1.76.0 — The roster spread over more clubs; the Camping Club replaces the Walking Club (2026-10-21)
 
@@ -101,32 +121,6 @@ Cast Sheet block ("Now with {{user}}"), each only when it applies. Engine and da
 - Tests: new `test_npc_apart_asks_v1730.cjs`; `test_saves`, `test_npc_days_v1720`, the Cast Sheet, initiative, Agenda, memory and
   narrator suites and lint pass.
 - **To check live (owner):** `docs/TEST_CHECKLIST.md` Q3.3 [1.73].
-
-## v1.72.0 — Special days: an NPC's own mood on birthdays, canon days and personal dates (2026-10-21)
-
-Owner's request (2026-10-20): a mood of its own for each NPC on their birthday and the dates that matter to them, so moods move with
-more than the weather; planning/DRAFT_hari_istimewa_npc.md, approved ("proceed") and deleted. Save fixture v1.71.0.
-- **Days in the data** (`data/npc_moods.json` `days`): `on` a birthday, a calendar event (start of its title) or a date; `before: N`;
-  `fix` (sets the mood: grief days) or `lean` ±1 (weather still counts); `tone`, the character's own word; `how`, one line for the
-  narrator. 35 characters have rows from their lore: Remembrance Day for the breach survivors and staff (Caspian's charm, Etnie at
-  {{user}}'s door, Rei's lantern, Cedric's rose, Layla's speech; Baelin the day before, Rei the week before), Star Night, the Circus
-  (Trixie, then a homesick week), the Bazaar (Dorian), Crowning Day (Percival, Kotaro), the Thinning (Baelin, Krieg, Rei, Faye), rankings
-  day (Valentin) and 21 birthdays of their own (Nerys does not notice, Rei tells no one, Kanae notes who forgot). Every other birthday
-  leans +1, "glad". Ezrel stays Normal. Halvard's calendar days do not reach someone away; a birthday does.
-- **Personal dates with {{user}}** (owner, 2026-10-20/21), a year or more later: a surviving Imprint's date (the Imprint rule already
-  decides what is worth remembering: weight 5+, at most five); its new `Feel` (warm, sore, bittersweet; rule card `imprints`) gives
-  the direction and weight 8+ fixes the mood. Also the day they met (`$met`, from Rank 5 and below Tension 40) and the day of Rank 8
-  (`$b8`; a sworn rivalry is bitter). The line carries what happened and "remembers what day it is; whether to say so is up to them".
-  Only the narrator and the NPC know: not on the planner calendar, not on the bracelet (owner); the player may note a date by hand.
-- **Shown:** the Cast Sheet's Mood line (`Mood: bad. Remembrance Day (sombre): …`; a fixed day drops the weather reasons); the bracelet
-  mood badge gets a bright ring and the tone in its tooltip on a calendar day; the scene card a tone chip (a birthday's once the dossier
-  has opened it). No new numbers: Full mode's effects come only through Good/Normal/Bad.
-- **Saves:** `stepMigrate` gives each bond a `$met` from its oldest dated line; `$b8` starts empty.
-- Tests: new `test_npc_days_v1720.cjs`; `test_saves`, `test_mood_gifts_v180`, the Cast Sheet, memory, Trust/Tension, narrator rule-card
-  and UI suites and lint pass (`test_ui_overhaul_v1210` now accepts the badge's extra class). Browser check: the Remembrance Day bracelet.
-- **To confirm with the owner:** the 21 birthday lines and a few calendar-day lines are mine, drawn from each character's canon (the
-  draft's §6); Anya's birthday falls on Remembrance Day and Kotaro's on the Circus's opening night, used as they are.
-- **To check live (owner):** `docs/TEST_CHECKLIST.md` Q3.1, Q3.5, Q9.2, Q11.0 [1.72].
 
 ## Release index (one line per release, oldest first)
 
@@ -286,4 +280,5 @@ more than the weather; planning/DRAFT_hari_istimewa_npc.md, approved ("proceed")
 - **v1.74.0 (2026-10-21):** Word gets around among friends, ties to the people {{user}} is close to, asking after an injury; People sorted five ways; the Council's members placed like any club's.
 - **v1.75.0 (2026-10-21):** A club {{user}} founds is a club like any other: tracked founding (a teacher with no club, five members, a room), members who move leave their lore club, its room, Field and members in every system; canon advisors shown.
 - **v1.76.0 (2026-10-21):** The roster spread over more clubs: Lenna in Archery, Dorian advising Calligraphy; the Camping Club (Faye) replaces the Walking Club.
+- **v1.77.0 (2026-10-21):** Lore changes that last a while (Until, ended by the engine); a "How {{user}} looks" line in `<now>` (injuries, conditions, fatigue, lost sleep).
 - Docs (2026-10-21, no card change): `docs/FEATURES.md`, every feature with its code, data, toggle and tests; `docs/INDEX.md` keeps the workflows and maps (−13 KB); stale docs fixed (PLAYER_GUIDE, README, tests/README, FUTURE_PLANS, the NPC brief); the finished 2026-10-03 batch plans and `tools/make_npc_brief.py` removed.

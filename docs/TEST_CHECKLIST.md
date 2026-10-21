@@ -264,6 +264,11 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
       [1.47, 1.53].
 - [ ] Use a Rain-ward charm before going out into the rain: the update puts "Rain-ward charm" in `/Consumables/-` and the Bag count drops;
       half an hour in the rain does not soak Charles [1.9.5].
+- [ ] Soaked (or hurt, or worn out) with someone present: `<now>` has "How Charles looks (anyone near can see it …): wet through"; someone
+      may notice it in the narration, nobody has to; once he is dry the words leave the line [1.77].
+- [ ] A storm or a happening that shuts something for a while (a flooded path, a closed room): the update writes a Lore change with
+      `"Until"`; the Journal says "changed until …", the Planner lists its last day, the place reads "until …" in its lore, and the
+      morning after that day the change is gone with "… as it was again" [1.77].
 
 ### Q2.7 Saturday and Sunday
 - [ ] Saturday afternoon at the club adds Student reputation (Q1.2) [1.16.1].

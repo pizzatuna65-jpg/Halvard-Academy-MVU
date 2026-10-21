@@ -55,7 +55,7 @@ if (_C.Council && !(+_w.Month >= 9 && +_w.Month <= 10)) delete _C.Council.Candid
 // only its name. A change with no entry is printed here in full (Now only).
 if (_C.Lore_changes) {
   const _lin = [], _L$ = getvar('stat_data.Campus_State.Lore_changes') || {};   // $uid: the copy above has no $ keys
-  for (const [k, v] of Object.entries(_C.Lore_changes)) { if (Number((_L$[k] || {}).$uid) >= 0) { _lin.push(k); delete _C.Lore_changes[k]; } else _C.Lore_changes[k] = String((v || {}).Now || ''); }
+  for (const [k, v] of Object.entries(_C.Lore_changes)) { if (Number((_L$[k] || {}).$uid) >= 0) { _lin.push(k); delete _C.Lore_changes[k]; } else _C.Lore_changes[k] = String((v || {}).Now || '') + ((v || {}).Until ? ' (until ' + v.Until + ')' : ''); }
   if (!Object.keys(_C.Lore_changes).length) delete _C.Lore_changes;
   if (_lin.length) _C.Lore_changed_in_entries = _lin;
 }

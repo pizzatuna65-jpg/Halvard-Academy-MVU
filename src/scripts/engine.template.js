@@ -957,6 +957,9 @@ const gearOf = (I, buff, now) => {
   return _.mapValues(GEAR, (rx, g) => rx.test(ks) || own.some(k => (fxOf(k) || {}).gear === g || new RegExp(`\\benchanted ${g}\\b`, 'i').test(String(I[k].Note || ''))) || ((buff || {})[g] > now));
 };
 const EXPO = { soaked: 'Soaked', drenched: 'Soaked', wet: 'Soaked', chilled: 'Chilled', frozen: 'Chilled', frostbitten: 'Chilled' };   // 1.9.4: /Exposure kinds
+// 1.75.0: how a condition, fatigue and lost sleep look to others (<now>'s "How {{user}} looks", nowOf)
+const LOOK = { cond: { Soaked: 'wet through', Chilled: 'shivering with cold', Overheated: 'flushed and sweating', 'Head cold': 'sniffling with a head cold' },
+  fatigue: { Tired: 'tired', Exhausted: 'visibly exhausted', Collapsed: 'collapsed' }, sleep: 'shadows under the eyes from lost sleep' };
 const COND = {
   Soaked: 'Wet through: rest and sleep restore half the usual stamina. Dries after an hour indoors.',
   Chilled: 'Cold to the bone: -10 stamina per hour outdoors. Warms up after an hour indoors or a hot drink.',
@@ -4102,11 +4105,14 @@ function stepPayout(c) {
 // is added to, never replaced. A refused change goes back to what it was, with the reason in the report. Only the player removes
 // one (the Journal's Undo, a player tool); the narrator's removal is put back. Kept changes get Since (the day) and $uid (their
 // lore entry, where build_card prints them over the lore; -1: none, <current_state> carries them). Location_changes is read as one.
+// 1.75.0: a change with Until (a calendar date) is temporary: $abs is its end, parsed once (anchorWhen), and the engine removes it
+// when that day is over (agendaState 'notice'), with a Journal line; until then the Planner shows when it ends.
 function stepLoreChanges(c) {
-  const { S, B, hasB, log, jnl, toolEdit } = c;
+  const { S, B, hasB, log, jnl, toolEdit, absA } = c;
   const CS = S.Campus_State, L = CS.Lore_changes = _.isPlainObject(CS.Lore_changes) ? CS.Lore_changes : {};
   const L0 = (hasB && _.isPlainObject((B.Campus_State || {}).Lore_changes) && B.Campus_State.Lore_changes) || {};
-  const rec = v => { const o = _.isPlainObject(v) ? v : { Now: v }; return { Now: String(o.Now || '').trim(), Cause: String(o.Cause || '').trim(), Since: String(o.Since || ''), Replace: o.Replace === true || o.Replace === 'true', $uid: num(o.$uid, -1) }; };
+  const rec = v => { const o = _.isPlainObject(v) ? v : { Now: v }; return { Now: String(o.Now || '').trim(), Cause: String(o.Cause || '').trim(), Since: String(o.Since || ''), Replace: o.Replace === true || o.Replace === 'true',
+    Until: String(o.Until || '').trim(), $abs: num(o.$abs, -1), $uid: num(o.$uid, -1) }; };
   for (const [k, v] of Object.entries(CS.Location_changes || {})) if (String(v).trim() && !keyIn(L, k)) L[k] = { Now: String(v) };
   CS.Location_changes = {};
   for (const k of Object.keys(L)) {   // a subject written in another case is the change on record
@@ -4122,23 +4128,33 @@ function stepLoreChanges(c) {
   let fresh = 0;
   for (const k of Object.keys(L)) {
     const v = rec(L[k]), p = k in L0 ? rec(L0[k]) : null, uid = loreUidOf(k);
-    if (p && v.Now === p.Now && v.Replace === p.Replace) { L[k] = { ...p, $uid: uid }; continue; }   // nothing new: kept as it was
+    if (p && v.Now === p.Now && v.Replace === p.Replace && v.Until === p.Until) { L[k] = { ...p, $uid: uid }; continue; }   // nothing new: kept as it was
     if ((LORE.npc || []).includes(uid)) v.Replace = false;
+    const end = v.Until ? anchorWhen(v.Until, p && p.Until, p ? p.$abs : -1, S.World, absA) : -1;
     const why = !hasB || toolEdit ? ''
       : !v.Now ? 'Now is empty. The story never erases a change; if it undoes one, rewrite its Now'
       : !v.Cause ? 'it has no Cause (what happened in the story, or what {{user}} did, that changed it)'
+      : v.Until && end < 0 ? `its Until "${v.Until}" is not a date (write the last day it lasts, such as "M3 W2 Fri", or leave Until out for a lasting change)`
+      : v.Until && end < absA ? `its Until "${v.Until}" has already passed`
       : !shown(k) ? `this reply does not show it ("${k}" is not in the scene). Record a lasting change in the reply that shows it happening or its aftermath`
       : !p && n0 + fresh >= LC.max ? `${LC.max} changes are on record; rewrite one that is already there instead`
       : !p && fresh >= LC.perReply ? `at most ${LC.perReply} new changes a reply` : '';
     if (why) { if (p) L[k] = { ...p, $uid: uid }; else delete L[k]; log.push(`Lore change "${k}" was not recorded: ${why}.`); continue; }
     if (!v.Now) { delete L[k]; continue; }
     if (!p) fresh++;
-    L[k] = { ...v, Since: hasB || !v.Since ? dstamp(S.World) : v.Since, $uid: uid };
-    if (hasB && !toolEdit) { S.$ui.toasts.push(`The world changed: ${k}`); jnl.push(`${k}, changed for good: ${v.Now}`.slice(0, 220)); }
+    const Until = v.Until && end >= 0 ? absWhen(v.Until, end, S.World, absA) : '';
+    L[k] = { ...v, Until, $abs: Until ? end : -1, Since: hasB || !v.Since ? dstamp(S.World) : v.Since, $uid: uid };
+    if (hasB && !toolEdit) { S.$ui.toasts.push(`The world changed: ${k}`); jnl.push(`${k}, changed ${Until ? 'until ' + Until : 'for good'}: ${v.Now}`.slice(0, 220)); }
   }
   if (hasB && !toolEdit) for (const k of Object.keys(L0)) if (!(k in L)) {
     L[k] = { ...rec(L0[k]), $uid: loreUidOf(k) };
     log.push(`Lore change "${k}" stays on record: only the player removes a change. If the story undoes it, rewrite its Now.`);
+  }
+  if (hasB) for (const k of Object.keys(L)) {   // 1.75.0: a temporary change ends when its last day is over
+    const e = num((L[k] || {}).$abs, -1);
+    if (e < 0 || agendaState(e, absA, 'notice') !== 'overdue') continue;
+    jnl.push(`${k}, as it was again: the change until ${L[k].Until} is over (${L[k].Now})`.slice(0, 220));
+    S.$ui.toasts.push(`As it was again: ${k}`); delete L[k];
   }
 }
 
@@ -5306,7 +5322,7 @@ function stepAmbience(c) {
 // ---- 8n. 1.44.0 (audit 3.10) Agenda. Commitments, Hooks, Next plans, Projects (Due), Notices (Until) and the letter home share one
 // date marker (anchorWhen / agendaWhen) and one status (agendaState). This step gives the one reminder when a thing turns due or
 // overdue, and builds the one "coming up" feed ($ui.agenda) that the Planner, the Notice Board, the bracelet and <now> read. Item:
-// { d: days from today, k: event | commitment | project | notice | letter | birthday | note, t, on: "M3 W2 Mon", to / te: last day
+// { d: days from today, k: event | commitment | project | notice | lore | letter | birthday | note, t, on: "M3 W2 Mon", to / te: last day
 // (name / days from today) of a run of event days, at: "HH:MM" when timed, s: status, w: with whom, h: 1 the Month 12 holiday, r: 1 a results day }. Window:
 // yesterday to AGENDA.days ahead, plus anything overdue. Hooks and Next plans are the narrator's: reminded, never in the feed.
 function stepAgenda(c) {
@@ -5338,6 +5354,7 @@ function stepAgenda(c) {
     if (s === 'overdue') { log.push(`Project "${k}" was due ${pj.Due} and is not finished (Progress ${p}%): hand it in late, ask for more time, or drop it in the story.`); S.$ui.toasts.push(`Overdue: ${k}`); }
   }
   for (const [k, nt] of Object.entries(S.Notices || {})) put('notice', `last day: ${k}`, num(nt.$abs, -1), agendaState(num(nt.$abs, -1), absA, 'notice'));
+  for (const [k, lc] of Object.entries((S.Campus_State || {}).Lore_changes || {})) put('lore', `last day changed: ${k}`, num((lc || {}).$abs, -1), '');   // 1.75.0
   const H = S.$eng.home;
   if (!OFF.has('letters') && _.isPlainObject(H) && num(H.due, -1) >= 0 && !H.key) put('letter', `Reply from ${H.from || 'home'} expected`, Math.floor(H.due / DAY_MIN) * DAY_MIN + DAY_MIN - 1, '');
   // {{user}}'s birthday and the player's own calendar notes ($ui.marks "Y1 M3 W2 Thu"; the narrator never reads them)
@@ -5661,7 +5678,13 @@ function nowOf(S, moodsFull) {
   for (const x of (UI.rank_cues || []).filter(x => x && PRES.includes(x.id))) put(x.id, 'Has grown closer through this ordinary interaction: let one small change in conduct show when it fits.');
   for (const id of PRES.filter(id => BONDS[id] && BONDS[id].Rank >= 4 && RANK4_PARTNERS[id])) put(id, 'Can actively accompany: ' + RANK4_PARTNERS[id].join(', ') + ' (count it only when shared study or training actually happens).');
   for (const id of PRES.filter(id => BONDS[id] && BONDS[id].$gift_pending)) put(id, 'Their unique gift awaits a natural handover in the story. Once actually given, report /Interactions/- {"With":"' + id + '","Kind":"rank_gift"}; do not put it in the Bag beforehand.');
-  const NOW = { people, visit };
+  // 1.75.0: what anyone near {{user}} can see (injuries, weather conditions, tiredness, lost sleep), one line so those present can
+  // notice it; never hidden magic, a sustained technique or a pact (not on {{user}}'s body, and not always seen)
+  const PV = getvar('stat_data.Player.Vitals') || {};
+  const look = [...Object.entries(getvar('stat_data.Player.Injuries') || {}).map(([k, v]) => { const o = v || {}, bp = String(o.Body_part || '').trim();
+    return k + ' (' + [o.Severity || 'minor', bp && !k.toLowerCase().includes(bp.toLowerCase()) ? bp : ''].filter(Boolean).join(', ') + ')'; }),
+    ...Object.keys(getvar('stat_data.Player.Conditions') || {}).map(k => LOOK.cond[k]), LOOK.fatigue[PV._Fatigue], num((UI.sleep || {}).loss, 0) > 0 ? LOOK.sleep : ''].filter(Boolean);
+  const NOW = { people, visit, ...(look.length ? { looks: 'How {{user}} looks (anyone near can see it; let someone present notice when it fits): ' + look.join('; ') + '.' } : {}) };
   let out;
   NOW.area = out = [];
   if (AREA) { const _A = AREA, _k = AREA.key, _M = AREA.muster, _l = AREA.left, _W = AREA_WALK[_k];

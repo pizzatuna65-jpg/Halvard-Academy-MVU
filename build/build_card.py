@@ -25,7 +25,7 @@ from common import lore_names   # 1.60.0: the names a Lore_changes subject may u
 LORE_OPEN = ("<%_ { const _lc = getvar('stat_data.Campus_State.Lore_changes') || {}, _ln = @@NAMES@@, "
              "_lk = Object.keys(_lc).find(k => _ln.includes(String(k).trim().toLowerCase().replace(/^the\\s+/, '').replace(/\\s+/g, ' '))), "
              "_lx = _lk && _lc[_lk] && _lc[_lk].Now ? _lc[_lk] : null; if (_lx) { _%>\n"
-             "[Changed in this campaign<%- _lx.Since ? ', ' + _lx.Since : '' %>; this overrides the lore<%- _lx.Replace ? '' : ' below' %>] "
+             "[Changed in this campaign<%- _lx.Since ? ', ' + _lx.Since : '' %><%- _lx.Until ? ', until ' + _lx.Until : '' %>; this overrides the lore<%- _lx.Replace ? '' : ' below' %>] "
              "<%- _lk %>: <%- _lx.Now %>\n<%_ } if (!(_lx && _lx.Replace)) { _%>\n")
 LORE_CLOSE = "\n<%_ } } _%>"
 

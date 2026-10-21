@@ -3,8 +3,8 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.76.0** (2026-10-21): the roster spread over more clubs (Lenna in Archery, Dorian advising Calligraphy; the
-Camping Club with Faye replaces the Walking Club; only Gymnastics has no named member). 1.75.0: a club {{user}} founds is a club like
+**Snapshot:** card **v1.77.0** (2026-10-21): a Lore change may last a while (Until; the engine ends it after that day), and `<now>`
+says how {{user}} looks (injuries, conditions, fatigue, lost sleep). 1.76.0: the roster spread over more clubs (Camping Club). 1.75.0: a club {{user}} founds is a club like
 any other (tracked founding, then its room, Field and members in every system; canon advisors shown). 1.74.0: word gets around, ties; 1.73.0: time apart; 1.72.0: special days; 1.70.0/1.71.0: scene cards; 1.69.0: one model per
 turn; 1.68.0: the preset is Realistic Frankenstein 2.2.1.3 as it ships. The memory audit is done except batch 8. Live checks: the
 campaign quest log `docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the card, Q0.1).

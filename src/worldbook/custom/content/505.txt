@@ -196,6 +196,9 @@ Around campus today (optional, use only if it fits): <%- W._Happening %>
 <%_ if (NOW.visit) { _%>
 <%- NOW.visit %>
 <%_ } _%>
+<%_ if (NOW.looks) { _%>
+<%- NOW.looks %>
+<%_ } _%>
 <%_ if ((NOW.tl || []).length) { _%>
 Rewound story: recalled memories whose scene_time is marked <%- NOW.tl.join('; ') %> never happened; the story was taken back there and went on differently.
 <%_ } _%>

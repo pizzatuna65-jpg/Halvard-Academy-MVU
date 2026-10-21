@@ -260,7 +260,7 @@ function nbJournal(S) {
   const CS = S.Campus_State || {}, ev = Object.entries(CS.Events || {}), ru = [...(CS.Rumours || [])].reverse();
   // 1.60.0: lasting changes to the world's facts (Campus_State.Lore_changes) and what caused them; Undo is the player's veto
   const LC = Object.entries(CS.Lore_changes || {}).filter(([, v]) => v && v.Now);
-  const lcHtml = LC.length ? `<h3>Lasting changes</h3><p class="sub">Facts of the world that changed in your story; they override the lore from now on. Undo one the story never earned.</p><dl class="kv">${LC.map(([k, v], i) => `<dt>${esc(k)}</dt><dd>${esc(v.Now)}${v.Cause ? `<span class="sub"> · because ${esc(v.Cause)}</span>` : ''}${v.Since ? `<span class="sub"> · ${esc(v.Since)}</span>` : ''} <button class="btn sm" data-lcundo="${i}">Undo</button></dd>`).join('')}</dl>` : '';
+  const lcHtml = LC.length ? `<h3>Lasting changes</h3><p class="sub">Facts of the world that changed in your story; they override the lore from now on. Undo one the story never earned.</p><dl class="kv">${LC.map(([k, v], i) => `<dt>${esc(k)}</dt><dd>${esc(v.Now)}${v.Cause ? `<span class="sub"> · because ${esc(v.Cause)}</span>` : ''}${v.Since ? `<span class="sub"> · ${esc(v.Since)}</span>` : ''}${v.Until ? `<span class="sub"> · until ${esc(v.Until)}</span>` : ''} <button class="btn sm" data-lcundo="${i}">Undo</button></dd>`).join('')}</dl>` : '';
   // 1.1.0 (spec §3): how far each rumour has spread; rumours that died out stay, faded
   const gs = featureOn(S, 'gossip') ? Object.fromEntries(((S.$ui || {}).gossip || []).map(g => [g[0], g])) : {}, old = [...((S.$ui || {}).rumours_old || [])].reverse();
   // 1.63.0 (memory audit M5): the Chronicle, older lines folded into dated entries the narrator reads (newest first)

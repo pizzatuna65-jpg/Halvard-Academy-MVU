@@ -81,7 +81,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepPerkUse` (6c) | one-use perks | `_Perks` |
 | `stepHidden` (7) | Dove attention, hidden magic, Points without Transactions | |
 | `stepPayout` (8) | monthly payout | |
-| `stepLoreChanges` (8b0) | 1.60.0: lasting changes to the world's facts (`Campus_State.Lore_changes`): kept only with a Cause and only when the reply or the player's message names the subject (`LORE`, `lcKey`, `loreUidOf`, `proseOf`); 2 new a reply, 40 on record; never Replace for a person; the narrator's removal put back; Journal line and toast; Location_changes folded in | `tools/common.py` `lore_names`, gen_engine `LORE_NAMES`, build_card `LORE_OPEN`, 501, 509 sheet `cLore`, Journal `lcHtml` / `data-lcundo`, `test_lore_changes_v1600` |
+| `stepLoreChanges` (8b0) | 1.60.0: lasting changes to the world's facts (`Campus_State.Lore_changes`): kept only with a Cause and only when the reply or the player's message names the subject (`LORE`, `lcKey`, `loreUidOf`, `proseOf`); 2 new a reply, 40 on record; never Replace for a person; the narrator's removal put back; 1.77.0 `Until` ends a change after its last day (`$abs`, agenda kind `lore`); Journal line and toast; Location_changes folded in | `tools/common.py` `lore_names`, gen_engine `LORE_NAMES`, build_card `LORE_OPEN`, 501, 509 sheet `cLore`, Journal `lcHtml` / `data-lcundo`, `test_lore_changes_v1600` |
 | `stepRecords` (8b) | Commitments, Notices, Letters (letters home and their parcel, `$eng.home`), Clues, Journal, Heals_by | `data/letters_home.json` |
 | `stepClubLife` (8c) | club, competition (Kingdom prize; 1.33.0 Dorm bracket prize), projects, trip; 1.75.0 `stepFounding` (the club {{user}} founds, `CLUB_FOUNDING`) | `data/rule_cards.json` (`founding`) |
 | `stepNewYear` (8e) | new campaign year, cohorts | `data/cohorts.json` |
@@ -97,7 +97,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepHere` (8o) | 1.47.0: whereabouts: who is likely around {{user}}'s place now (`$ui.here`, the class line) and "May be here" (`$ui.maybe`: Next plans, appointments) from `shared.js` `whereabouts` / `presenceAt` | `data` via `presence_data`; `<now>` |
 | `stepUi` (9) | discovered places (+ "Castle"), lore named in the narration (`$ui.lore`), unlocks, Next chip (an appointment from `$ui.agenda` when sooner) | bracelet |
 | `stepCommit` (10) | `$eng.abs`, Year 1 date labels, `_Log` | |
-| `stepNow` (11) | 1.48.0 (audit 3.11): `<now>`'s rule lines, `nowOf(S, moods)` → `$ui.now` { area, pres, walk, amb, moods, bond, trust, tension, recent, banter }; then drops the areas' walks (diet) | `tools/common.py` `now_data`; 505 prints them; `NOW_DIFF` in the harness |
+| `stepNow` (11) | 1.48.0 (audit 3.11): `<now>`'s rule lines, `nowOf(S, moods)` → `$ui.now` { area, pres, walk, amb, moods, bond, trust, tension, recent, banter, looks (1.77.0, `LOOK`) }; then drops the areas' walks (diet) | `tools/common.py` `now_data`; 505 prints them; `NOW_DIFF` in the harness |
 
 Module helpers above `runEngine`: name matching (`formRx`, `speakersIn`, `mentionIn`), time (`parseWhen`, `whenText`, `periodOf`,
 `curfewOf`, `nextUp`), happenings (`happeningOn`), weather (`wxDay`, `wxForecast`, `fluOn`), `canonLocation` (with `yearFloorLocation`), `canonClub`, `gearOf`,
