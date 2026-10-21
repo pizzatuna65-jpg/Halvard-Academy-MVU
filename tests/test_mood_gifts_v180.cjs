@@ -94,9 +94,9 @@ ok(_.isEqual(rewritten.Bonds.Trixie.$gifts,log.Bonds.Trixie.$gifts),'whole bond 
 const birthday=base(['Trixie'],'off',{Month:8,Week:2,Day:'Tue'});birthday.Bonds.Trixie.Tension=30;
 const bdayA=applyPatch(birthday,[act('Trixie','birthday')]);
 ok(bdayA.Bonds.Trixie.Trust===52 && applyPatch(bdayA,[act('Trixie','birthday')]).Bonds.Trixie.Trust===52,'greeting remembers birthday once');
-const learned=base(['Irene'],'off');const bf=U.npcOf('Irene').fl.find(f=>f[0]==='Birthday');learned.Bonds.Irene.Rank=3;
-ok(!U.fieldUnlocked('Irene',bf,learned),'guarded birthday stays hidden at Rank 3');
-learned.Bonds.Irene.Rank=4;ok(U.fieldUnlocked('Irene',bf,learned),'guarded birthday opens Rank 4');
+const learned=base(['Irene'],'off');const bf=U.npcOf('Irene').fl.find(f=>f[0]==='Birthday');learned.Bonds.Irene.Rank=2;
+ok(!U.fieldUnlocked('Irene',bf,learned),'guarded birthday stays hidden at Rank 2');
+learned.Bonds.Irene.Rank=3;ok(U.fieldUnlocked('Irene',bf,learned),'guarded birthday opens Rank 3 (her Deep layer, 1.89.0)');
 learned.Bonds.Irene.Rank=0;learned.Bonds.Irene.Known_facts=['Her birthday is '+bf[1]];
 ok(U.fieldUnlocked('Irene',bf,learned) && Object.values(U.datedItems(learned)).flat().some(x=>/birthday/.test(x.t)),'learned birthday fact opens dossier and calendar early');
 ok(/Gifts: loves/.test(render(509,applyPatch(base(['Sophia']),[]))),'present Cast Sheet includes gift tastes');

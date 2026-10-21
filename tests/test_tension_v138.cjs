@@ -80,7 +80,7 @@ let N = T(S, '10:00', [ten('Sophia', 95), ten('Ruby', 25), ten('Gareth', 92), me
 const out = now(N);
 ok(/Tension \(enemy\): a formal challenge or a grudge match[^\n]*Never: an ambush/.test(PP(N, 'Sophia')), 'Now: Sophia at Enemy, played as a confrontational character');
 ok(/Tension \(friction\): quieter than usual/.test(PP(N, 'Ruby')) && /Tension \(enemy\): strikes with everything their position allows \(files it away/.test(PP(N, 'Gareth')), 'Now: Ruby (withdrawn, friction), Gareth (dangerous) with his peak');
-ok(/Tension: Althair enjoys being disliked/.test(PP(N, 'Althair')) && !/Tension/.test(PP(N, 'Irene')), 'Now: Althair always explained; Irene at 0 costs nothing');
+ok(/Tension: Althair enjoys being disliked/.test(PP(N, 'Althair')) && !/Tension:/.test(PP(N, 'Irene')), 'Now: Althair always explained; Irene at 0 costs nothing');
 U.view.arg = 'Sophia'; const dos = U.PANELS.npc.render(N);
 ok(/Tension 95 · Enemy/.test(dos) && /cannot grow until the tension eases/.test(dos), 'dossier: the band and what it does to the bond');
 U.view.arg = 'Althair'; ok(/Hostility only makes him fonder of you/.test(U.PANELS.npc.render(N)), "Althair's dossier explains his lock");

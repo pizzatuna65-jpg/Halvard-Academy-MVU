@@ -84,12 +84,12 @@ ok(away.Bonds.Trixie.Rank === 0 && away.Bonds.Trixie.$xp === 10, 'an absent NPC 
 const now505 = fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/505.txt'), 'utf8');
 const gv = St => k => _.get({ stat_data: St }, k);
 const n1 = ejs.render(now505, { getvar: gv(R1) });
-ok(/Bond \(open, neutral\): shares [^\n]*likes, dislikes, hobbies and birthday/.test(PP(R1, 'Trixie')) && /Not yet: their personality/.test(PP(R1, 'Trixie')) && /At this rank: greets/.test(PP(R1, 'Trixie')), 'Now: an open NPC at Rank 1 shares up to Rank 3 topics; the next tier is deflected');
+ok(/Bond \(open, neutral\): tells freely what their lore lists under [^\n]*Backstory[^\n]*Loves/.test(PP(R1, 'Trixie')) && /Held back for now[^\n]*Doves, Relations \(Rank 2\)/.test(PP(R1, 'Trixie')) && /At this rank: greets/.test(PP(R1, 'Trixie')), 'Now (1.89.0): open Trixie at Rank 1 names her Public and Deep headings, Doves and Relations held back to Rank 2');
 const n0 = ejs.render(now505, { getvar: gv(A) });
 ok(!/Bond event available|raise \/Bonds\/Trixie\/Rank by 1/.test(n0), 'Now: no rank-up event or manual rank instruction');
 const Ir = T(S, '12:50', [{ op: 'replace', path: '/Scene/Present', value: { Irene: { Note: '' } } }]);
 const ni = ejs.render(now505, { getvar: gv(Ir) });
-ok(/Bond \(guarded, neutral\): shares how they look and their public role\. Not yet: their name/.test(PP(Ir, 'Irene')), 'Now: a guarded NPC at Rank 0 shares only the public tier');
+ok(/Bond \(guarded, neutral\): tells freely what their lore lists under their public role\. Held back for now[^\n]*Club[^\n]*\(Rank 1\)[^\n]*Backstory[^\n]*\(Rank 5\)/.test(PP(Ir, 'Irene')), 'Now (1.89.0): guarded Irene at Rank 0 holds back her headings, each with the rank that opens it');
 
 // ---- UI
 U.view.ptab = 'bonds'; let h = U.PANELS.people.render(A);

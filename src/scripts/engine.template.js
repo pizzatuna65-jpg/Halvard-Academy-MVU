@@ -6482,22 +6482,26 @@ function nowOf(S, moodsFull) {
   const BOND = NOW_D.BOND, TRUST = NOW_D.TRUST, TEN = NOW_D.TENSION;
   const BONDS = getvar('stat_data.Bonds') || {};
   const CLOSE = UI.close || [];   // 1.5.0 (N3a): bonds with XP at 80% or more of the next rank (engine)
-  // 1.4.3 Trust shifts what they share (Doubtful -1, Trusting +1, Confidant +2 and the real tiers one rank early; Betrayed: nothing
-  // new) and holds back the perks that need it (data/trust.json perk_gates)
+  // 1.4.3 Trust shifts what they share (Doubtful one rank less, Trusting one more, Confidant two; Betrayed: nothing new) and holds back
+  // the perks that need it (data/trust.json perk_gates)
+  // 1.89.0 (owner, info layers): what they share is named by their own lore headings, from the same field ranks the dossier opens
+  // (BOND.fields); held back, grouped by the rank that opens it at this Trust (owner playtest: "and beyond" let Trixie tell all at Rank 0)
   const SECR = [...(UI.secrets || []), ...((getvar('stat_data.Campus_State') || {}).Secrets_revealed || [])].map(x => String(x).toLowerCase());
   const trBand = x => bandOf(TRUST.bands, x);
   const trOver = id => { const o = (TRUST.overrides || {})[id]; return o && !(o.until_secret && SECR.some(x => x.startsWith(id.toLowerCase() + '.'))) ? o : null; };
-  PRES.filter(id => BONDS[id] && BOND.share).forEach(id => {
+  const yNow = Math.max(1, Number((getvar('stat_data.World') || {}).Year) || 1);
+  PRES.filter(id => BONDS[id] && (BOND.fields || {})[id]).forEach(id => {
     const r = Math.max(0, Math.min(10, Number(BONDS[id].Rank) || 0)), tr = Math.max(0, Math.min(100, Number(BONDS[id].Trust) || 0)), tb = trBand(tr);
-    const sh = (TRUST.share || {})[tb], early = tb === 'Confidant' ? TRUST.early || 0 : 0, o = (BOND.off[id] || 0) + (sh || 0);
-    const ok = BOND.share.filter(([t]) => (t < BOND.real ? t <= Math.max(0, r + o) : t <= r + early));
-    const next = BOND.share.find(([t]) => !ok.some(x => x[0] === t));
+    const sh = (TRUST.share || {})[tb], F = BOND.fields[id].filter(f => !f[2] || f[2] <= yNow);
+    const free = _.uniq(F.filter(f => f[0] <= r + (sh || 0) && !(BOND.seen || []).includes(f[1])).map(f => f[1]));
+    const held = _.groupBy(_.uniqBy(F.filter(f => f[0] > r + (sh || 0) && !free.includes(f[1])), f => f[1]), f => Math.max(r + 1, f[0] - (sh || 0)));
     const og = trOver(id), gated = og && og.no_gates ? [] : Object.entries(TRUST.gates || {}).filter(([g, need]) => +g <= r && +g !== 8 && tr < need && BOND.perks[g]).map(([g, need]) => BOND.perks[g] + ' (needs Trust ' + need + ')');
     const susp = (UI.tsusp || []).filter(k => ((getvar('stat_data._Perks') || {})[k] || {}).From === id);
-    const top = ok.length ? ok[ok.length - 1][1] + (ok.length > 1 ? ' and everything before' : '') : '';
+    const heldTxt = Object.keys(held).sort((a, b) => a - b).map(k => held[k].map(f => f[1]).join(', ') + ' (Rank ' + k + ')').join('; ');
     put(id, 'Bond (' + [BOND.tag[id], tb.toLowerCase(), CLOSE.includes(id) && 'close'].filter(Boolean).join(', ') + '): '
-      + (sh === null ? 'shares nothing new with {{user}}; keeps to what {{user}} already knows' : 'shares ' + (top || 'nothing personal yet')
-      + (next ? '. Not yet: ' + next[1] + ' and beyond' : ''))
+      + (sh === null ? 'shares nothing new with {{user}}; keeps to what {{user}} already knows'
+        : 'tells freely what their lore lists under ' + (free.length ? free.join(', ') : 'their public role') + (heldTxt
+          ? '. Held back for now, deflected in their own way if asked (pushing adds Tension): ' + heldTxt : '; nothing held back but their secrets'))
       + (r > 0 && BOND.perks[String(r)] ? '. At this rank: ' + BOND.perks[String(r)] : '')
       + (gated.length ? '. Held back by low Trust: ' + gated.join('; ') : '') + (susp.length ? '. Suspended until Trust ' + TRUST.susp + ': ' + susp.join(', ') : '') + '.');
   });

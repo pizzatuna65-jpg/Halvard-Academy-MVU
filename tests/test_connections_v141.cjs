@@ -27,9 +27,9 @@ let G = U.graphModel(S);
 const gl = id => G.links.filter(l => l.type === 'group' && l.source === id).map(l => l.target).sort().join();
 ok(gl('grp:dorm:Sky') === 'Ruby,__you' && gl('grp:dorm:Viridian') === 'Caspian,Castor,Kuroo', `dorms: Sky (you, Ruby), Viridian (Caspian, Castor and the Dorm Head Kuroo): ${gl('grp:dorm:Sky')} / ${gl('grp:dorm:Viridian')}`);
 ok(gl('grp:faction:council') === 'Caspian,Irene' && gl('grp:faction:staff') === 'Kuroo' && !G.nodes.some(n => n.id === 'grp:faction:choir'), 'factions: Student Council, staff; the Morning Choir stays hidden');
-// 1.75.0: an advisor shows once the Role line naming their club is open (Kuroo's is at Rank 0); a student's Club field opens at Rank 1
-ok(G.nodes.filter(n => n.id.startsWith('grp:club:')).map(n => n.id).join() === 'grp:club:Card' && gl('grp:club:Card') === 'Kuroo',
-  '1.6.11: at Rank 0 no student\'s club shows yet (the Club field opens at Rank 1); Kuroo\'s open Role names the Card Club he advises');
+// 1.88.0: an advisor shows once {{user}} knows it (not from the public Role line); 1.89.0: a Club field is public, Rank 0 for an open NPC
+ok(G.nodes.filter(n => n.id.startsWith('grp:club:')).map(n => n.id).join() === 'grp:club:Music' && gl('grp:club:Music') === 'Ruby',
+  'at Rank 0 only an open NPC\'s club shows (Ruby, Music Club); Kuroo is not yet placed as the Card Club\'s advisor');
 const S1 = JSON.parse(JSON.stringify(S)); for (const id of Object.keys(S1.Bonds)) S1.Bonds[id].Rank = 1;
 ok(U.graphModel(S1).nodes.some(n => n.id.startsWith('grp:club:')), 'clubs appear for members you have met, from Rank 1');
 const S2 = applyPatch(S, [{ op: 'insert', path: '/Campus_State/Secrets_revealed/-', value: 'Castor.cult' }]);

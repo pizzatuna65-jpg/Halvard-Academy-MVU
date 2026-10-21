@@ -167,7 +167,7 @@ In `merge_lorebooks.py`: `rep(entry, old, new)` (asserting text edits), `apply_l
 
 Hand-written single sources (edit these): `shop.json`, `happenings.json`, `calendar.json`, `event_frame.json` (1.81.0), `features.json`, `tuning.json`,
 `ambience.json` (1.31.0: `lore_places`), `restore_places.json` and `letters_home.json` (1.31.0), `free_periods.json` (1.33.0), `mastery.json` and `public_roles.json` (1.43.0), `expedition.json` (1.38.0), `avalon.json` (1.39.0), `airship.json` (1.40.0), `sunreach.json` (1.41.0), `campus.json` (1.47.0: campus walks), `wind_casting.json`, `assets_manifest.json`, `cohorts.json`, `campus_phases.json` (empty until canon waves).
-*Per NPC* (a new NPC needs a row): `bond_rewards.json`, `bond_rules.json`, `bond_openness.json`, `tension.json`, `trust.json`,
+*Per NPC* (a new NPC needs a row): `bond_rewards.json`, `bond_rules.json` (1.89.0 `layers`), `bond_openness.json`, `info_layers.json` (1.89.0, only where a field is public in the lore), `tension.json`, `trust.json`,
 `npc_moods.json`, `gift_prefs.json`, `npc_canon.json` (voices, stages, Rank 8 branch), `rank4_partners.json`, `relations_curated.json`,
 `voice_rules.json`, `initiative_asks.json`, `npc_routines.json` (1.52.0; rival teams none), `dialogue_colors.json` (1.37.0; new NPCs via `make_dialogue_colors.py`), `field_overrides.json`, `focus_overrides.json`, `thumb_overrides.json`.
 Systems: `reputation.json`, `training.json`, `club_stats.json`, `practice.json`, `crafts.json`, `factions.json`, `gift_shops.json`.

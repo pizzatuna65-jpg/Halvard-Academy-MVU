@@ -333,16 +333,19 @@ def now_data(npcs):
     texts), WENDIGO, AVALON (the carriage fare, the rival students), SUNREACH (fares, the bet limit, who may be met)."""
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     _p = lambda *a: os.path.join(root, *a)
-    # 1.2.2 bonds: what a present NPC shares at their rank (openness shifts the first tiers), what the rank allows, the event text
+    # 1.2.2 bonds: what a present NPC shares at their rank, what the rank allows, the event text
+    # 1.89.0 (info layers): what they share is their own dossier fields by rank ([rank, lore heading, from campaign year]), the same
+    # data the dossier opens (tools/curate_data.py); story-only secrets (99) and the unlabelled Notes are left out
     BR = json.load(open(_p('data/bond_rules.json'), encoding='utf-8'))
     OPN = json.load(open(_p('data/bond_openness.json'), encoding='utf-8'))
-    off = {nid: BR['openness'][tag] for tag in ('open', 'guarded', 'closed') for nid in OPN[tag]}
-    assert all(nid in npcs for nid in off), [nid for nid in off if nid not in npcs]
-    BOND = {'share': BR['share'], 'real': BR['share_real_from'], 'perks': BR['perks'], 'off': off, 'recent_now': BR['recent']['now'],
-            'tag': {nid: tag for tag in ('open', 'guarded', 'closed') for nid in OPN[tag]}}
+    tag = {nid: t for t in ('open', 'guarded', 'closed') for nid in OPN[t]}
+    assert all(nid in npcs for nid in tag), [nid for nid in tag if nid not in npcs]
+    flds = {nid: [[f['rank'], re.sub(r'\s*\(.*\)$', '', f['label']), f.get('year', 0)] for f in n['fields'] if f['rank'] < 99 and f['label'] != 'Notes']
+            for nid, n in sorted(npcs.items())}
+    BOND = {'fields': flds, 'seen': BR['layers']['seen'], 'perks': BR['perks'], 'recent_now': BR['recent']['now'], 'tag': tag}
     # 1.4.3 Trust for the Now entry: bands, share shifts, perk gates, category texts (category = openness), personal rules, Dorm Heads
     _tru = json.load(open(_p('data/trust.json'), encoding='utf-8'))
-    TRUST = {'bands': _tru['bands'], 'share': _tru['effects']['share'], 'early': _tru['effects']['confidant_real_early'], 'gates': _tru['perk_gates'],
+    TRUST = {'bands': _tru['bands'], 'share': _tru['effects']['share'], 'gates': _tru['perk_gates'],
              'susp': _tru['suspend_r10_below'], 'cats': {k: {'name': v['name'], 'bands': v['bands'], 'never': v['never']} for k, v in _tru['categories'].items()},
              'npcs': {nid: tag for tag in ('open', 'guarded', 'closed') for nid in OPN[tag]},
              'overrides': {k: {x: o[x] for x in ('text', 'until_secret', 'no_gates') if x in o} for k, o in _tru['overrides'].items() if o.get('text') or o.get('no_gates')},

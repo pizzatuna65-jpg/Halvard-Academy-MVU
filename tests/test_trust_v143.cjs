@@ -127,7 +127,7 @@ const nw = ejs.render(now505, { getvar: gv(N) });
 ok(/Trust \(doubtful; guarded\): says nothing personal/.test(PP(N, 'Irene')) && /Trust \(confidant; open\)/.test(PP(N, 'Ruby')), 'Now: how a doubtful and a confidant character carry it');
 ok(/Bond \(guarded, doubtful\)[^\n]*Held back by low Trust: may introduce \{\{user\}\} to a new roster NPC[^\n]*needs Trust 35/.test(PP(N, 'Irene')), 'Now: the perks low Trust holds back');
 ok(/Bond \([^)]*betrayed\): shares nothing new with \{\{user\}\}/.test(PP(N, 'Caspian')), 'Now: Betrayed shares nothing new');
-ok(/Bond \([^)]*confidant\): shares [^\n]*what they think of other people/.test(PP(N, 'Ruby')), 'Now: a confidant shares the real tiers one rank early (goals and views at Rank 5)');
+ok(/Bond \([^)]*confidant\): tells freely [^\n]*Relations[^\n]*nothing held back but their secrets/.test(PP(N, 'Ruby')), 'Now (1.89.0): a confidant at Rank 5 tells every layer');
 ok(/Trust: Etnie cannot stop trusting/.test(PP(N, 'Etnie')) && /Trust: Althair trusts no one/.test(PP(N, 'Althair')) && /report \{"With": "Kanae", "Kind": "choose"\}/.test(PP(N, 'Kanae')), 'Now: the personal rules of Etnie, Althair and Kanae');
 const rules = (fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/502.txt'), 'utf8') + Object.values(JSON.parse(fs.readFileSync(path.join(ROOT, 'data/rule_cards.json'), 'utf8')).cards).map(c => c.text).join(' '));
 ok(/It rises from deeds reported as interactions \(keep, secret, defend, confide, help\)/.test(rules) && /keep\|secret\|defend\|confide/.test(rules) && /"Kind": "letdown"/.test(rules) && /betrayal: reporting them, siding with their enemy, selling them out/.test(rules), 'rule 502: report rises, and drops as a letdown by size (1.59.0)');

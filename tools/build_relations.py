@@ -49,7 +49,7 @@ for nid, n in npcs.items():
                 # people who were already there (Sophia graduated) must not reach older lines before that year
                 if f.get('year') and max(ARR(nid), ARR(t)) < f['year']: continue
                 typ = next((ty for ty, rx in TYPE_RULES if re.search(rx, sent, re.I)), 'knows')
-                vis = 'rank:99' if f['rank'] >= 99 else ('public' if typ in PUBLIC_T else f'rank:{max(f["rank"], 5)}')
+                vis = 'rank:99' if f['rank'] >= 99 else ('public' if typ in PUBLIC_T else f'rank:{f["rank"]}')   # 1.89.0: the field's own layer rank (no Rank 5 floor)
                 e = edges.setdefault((nid, t), {'from': nid, 'to': t, 'types': [], 'notes': [], 'visibility': vis, 'frank': f['rank']})
                 e['frank'] = min(e['frank'], f['rank'])
                 if typ not in e['types']: e['types'].append(typ)
@@ -77,7 +77,7 @@ for key, e in src.items():
         back, typ, pick = bool(m.group(1)), m.group(2), m.group(3)
         assert not pick or max(map(int, pick)) < len(e['notes']), (k, v, e['notes'])
         a, b = (key[1], key[0]) if back else key
-        vis = 'rank:99' if e['frank'] >= 99 else ('public' if k in CUR['public'] else f"rank:{max(e['frank'], 5)}")
+        vis = 'rank:99' if e['frank'] >= 99 else ('public' if k in CUR['public'] else f"rank:{e['frank']}")
         edges[(a, b, key[0])] = {'from': a, 'to': b, 'types': [typ], 'type': typ, 'notes': [e['notes'][int(i)] for i in pick] if pick else e['notes'], 'visibility': vis, 'via': key[0]}
 # 1.4.2 (owner): someone everyone at Halvard dislikes (one way): every Halvard person gets a dislike line to them (the lore note
 # when there is one, else the curated note, opening at Rank 5), and none of their own lines is a dislike

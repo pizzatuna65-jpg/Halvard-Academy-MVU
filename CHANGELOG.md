@@ -1,7 +1,34 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.89.0 — Info layers: what each person tells, by their own openness (2026-10-22)
+
+Owner's design (2026-10-22, "proceed" on `planning/DRAFT_lapisan_info.md`, now deleted), after the playtest where Trixie told her
+Goals, her view of the Doves and her Backstory at Rank 0: info rewards by layer, the layers' ranks by openness and per NPC. Data,
+`tools/curate_data.py`, `tools/build_relations.py`, `tools/common.py`, `tools/gen_ui.py`, the engine's Bond line, `fieldUnlocked`.
+Save fixture v1.88.1.
+- **Three layers** (`data/bond_rules.json` `layers`): Public (Role, Appearance, Age, Club, Speech, Haunts, Magic, Skills…), Deep
+  (Birthday, Loves, Hates, Personality, Emotional tells, Notes, Goals, Current trouble…), Deeper (Relations, Doves, Backstory, Family,
+  Home, Trauma…). Their ranks by openness: open 0/1/2, normal 1/2/4, guarded 2/3/5, closed 2/3/6. Secrets (`field_overrides.json` 99)
+  stay story-only. No field opens later than before (802 field ranks moved, none later); the graph's lines follow their field's rank
+  (the old Rank 5 floor is gone). Before a bond only Role and Appearance show.
+- **Per NPC** (`data/info_layers.json`, new): Trixie's Backstory and Goals are Public (everyone knows her circus; her goal is sincere),
+  Dex's Doves view is Public ("loudly and publicly"), Ezrel's Personality is Public ("makes no secret of it").
+- **Openness**: William, Aiden, Florian, Hadrian and Dorian moved from open to normal (they talk a lot but do not open up): new bonds
+  with them start at Trust 50 and take the normal category's Trust texts.
+- **The narrator's Bond line** names their own lore headings: "tells freely what their lore lists under Age, Magic, Backstory, Goals,
+  Club, Speech, Haunts. Held back for now, deflected in their own way if asked (pushing adds Tension): Personality, Loves, Hates,
+  Emotional tells, Birthday (Rank 1); Doves, Relations (Rank 2)." Trust still moves it by a rank (Doubtful one less, Trusting one more,
+  Confidant two); Betrayed tells nothing new. The Rank 5 perk now reads "may ask for help with their goal".
+- CLAUDE.md design principles: personal information opens by layer; high ranks open perks and story secrets.
+- Tests: new `test_info_layers_v1890.cjs` (the dossier and the Bond line name the same fields; Trust shifts; nothing before a bond);
+  `test_bonds_v122`, `test_trust_v143`, `test_tension_v138`, `test_people_map`, `test_connections_v141`, `test_connections_v1610`,
+  `test_mood_gifts_v180` follow the new ranks; the cast record was renewed (208 scenarios differed, each only by the Bond line, the
+  Rank 5 perk text or the moved NPCs' Trust category); full `npm test` passes; `test_saves` loads v1.88.1.
+- **To confirm with the owner:** the per-NPC moves (Trixie, Dex, Ezrel); Trauma joins the Deeper layer (Irene's at Rank 5, was 8).
+- **To check live:** `docs/TEST_CHECKLIST.md` Q1.1 [1.89].
 
 ## v1.88.1 — The scene card's name readable on the light themes (2026-10-22)
 
@@ -86,32 +113,6 @@ Event tab. Save fixture v1.85.0.
 - **To confirm with the owner:** the Bazaar items and prices (the katana at 3,000); the hunt's excluded places and its hours; the
   election's weighting by dorm; the Harvest and winter-market items.
 - **To check live:** `docs/TEST_CHECKLIST.md` Q8.1, Q8.2, Q9.4 and Q10.2 [1.86].
-
-## v1.85.0 — The Fair's mark, the Thinning's beats, the Circus stalls, family visits (2026-10-21)
-
-Owner's request (2026-10-21, "proceed batch d dan e"): release D of `planning/DRAFT_event_frame.md` (§4.4, §4.5, the Circus stalls of
-§4.1, §4.6). Engine, data, generators, 502, 505, the rule cards and the Studies tab. Save fixture v1.84.0.
-- **Magical & Science Fair** (lore 240; DECISIONS "Grades and exams"): a stand is a Project with Kind `fair` (the Kind is new in 502
-  and the projects card). `stepSchoolWeek` keeps its name, Progress and partners through the week (`$eng.study.fair`) and scores it at
-  the close of judging, M7 W2 Sat 18:00: 0.6 × preparation (a tier per 25 Progress) + 0.4 × Arcana (rank × 20; preparation with
-  Proficiency off) + the day's roll (`EXAM_DAY`); a stand short of 100 is shown unfinished, one mark lower. The partners share the
-  mark; an A pays `fair_prize` (now the engine's: a reported one is not counted while Study is on). The mark replaces the Month 9 Magic
-  Theory midterm when it is better (`markUp`), shown in the forecast's reasons and on the Studies tab ("Fair mark"). The exams card no
-  longer offers "a Science Fair prize" as a deciding moment. Fair week's Event line tells the narrator how to record a stand, then its
-  Progress, then the panel's mark.
-- **The Thinning** (lore 9): nine beats of its own in `data/ambience.json` (`ev: ["thinning"]`: the ward on the outer wall, no birdsong,
-  knocking inside a wall, lamps dimming together, a draught with the windows shut, a staff patrol counting heads, …), only that week and
-  then picked first six times in ten; never a breach or a Clue. The uncanny chance was already doubled that week (1.16.0).
-- **Circus stalls** (lore 241, Courtyards): candied apple 5, spun-sugar cloud 4, salted pretzel knot 4, painted carnival mask 12,
-  fortune teller's card 8. A stall row may now give each event day its own hours (`days`): Thu 18:00–22:00, Fri and Sat 13:00–22:00
-  (classes in the morning), Sun 09:00–22:00.
-- **Family visits** (§4.6): the Showcase and the Harvest Festival have `family`; their Event line says families are visiting,
-  {{user}}'s only if the player says so, anyone else's by their lore or unnamed.
-- Tests: new `test_fair_thinning_v1850.cjs`; `test_saves` (v1.84.0), event frame, breaks, contest, Kingdom, ambience, grades,
-  mastery, tokens, preset and the suites that grep the changed wording pass.
-- **To confirm with the owner:** the Fair formula (0.6 / 0.4, unfinished −1) and that a first-year's finished stand scores about C;
-  the nine Thinning beats (five are the draft's); the Circus items, prices and hours.
-- **To check live:** `docs/TEST_CHECKLIST.md` Q7.2 and Q7.3 [1.85].
 
 ## Release index (one line per release, oldest first)
 
@@ -286,3 +287,4 @@ Owner's request (2026-10-21, "proceed batch d dan e"): release D of `planning/DR
 - **v1.87.0 (2026-10-21):** Draft release C (the last; draft deleted): the Academy Competition from the seed (cross-dorm teams with every year, a knockout, the winners as Halvard's Kingdom team) and the tally format (Sports Day's medals, the Showcase's scores).
 - **v1.88.0 (2026-10-22):** Club advisors stay hidden until {{user}} knows them (Rank 1, a member of the club, or a known fact), in the Clubs list, the graph and the dossier's Role line.
 - **v1.88.1 (2026-10-22):** The scene card's name and role line keep a dark scrim and light text on every theme (Frost and Parchment were unreadable).
+- **v1.89.0 (2026-10-22):** Info layers (owner's design): Public, Deep, Deeper per NPC by openness (open 0/1/2 … closed 2/3/6), per-NPC moves, five open NPCs now normal; the narrator's Bond line names the lore headings it holds back.

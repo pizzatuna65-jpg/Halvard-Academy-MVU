@@ -30,12 +30,12 @@ ok(L('Kuroo', 'Mimosa').notes.every(x => x.src === 'Kuroo' && !/imitating/.test(
 
 // ---- a turned line opens with the bond of the person whose file tells it
 const ce = rels.filter(e => e[0] === 'Caspian' && e[1] === 'Etnie');
-ok(ce.length === 1 && ce[0][2] === 'protective' && ce[0][4] === 'rank:6@Etnie' && !has('Etnie', 'Caspian', 'protective'), `Caspian -> Etnie protective, told by Etnie's file (${ce.map(e => e[4])})`);
+ok(ce.length === 1 && ce[0][2] === 'protective' && ce[0][4] === 'rank:2@Etnie' && !has('Etnie', 'Caspian', 'protective'), `Caspian -> Etnie protective, told by Etnie's file (${ce.map(e => e[4])})`);
 let T = applyPatch(initState(), [meet(['Etnie', 'Caspian'])]);
-T.Bonds.Etnie.Rank = 6; G = U.graphModel(T);
-ok(L('Caspian', 'Etnie') && L('Caspian', 'Etnie').arrow, 'Etnie at Rank 6: the line shows');
-T.Bonds.Etnie.Rank = 5; T.Bonds.Caspian.Rank = 9; G = U.graphModel(T);
-ok(!L('Caspian', 'Etnie'), 'Etnie at Rank 5 hides it, even with Caspian at Rank 9 (his own file does not say it)');
+T.Bonds.Etnie.Rank = 2; G = U.graphModel(T);
+ok(L('Caspian', 'Etnie') && L('Caspian', 'Etnie').arrow, 'Etnie at Rank 2 (open: her Relations, 1.89.0): the line shows');
+T.Bonds.Etnie.Rank = 1; T.Bonds.Caspian.Rank = 9; G = U.graphModel(T);
+ok(!L('Caspian', 'Etnie'), 'Etnie at Rank 1 hides it, even with Caspian at Rank 9 (his own file does not say it)');
 const T2 = applyPatch(initState(), [meet(['Etnie'])]); T2.Bonds.Etnie.Rank = 6; G = U.graphModel(T2);
 ok(L('Caspian', 'Etnie') && U.knowsName('Caspian', T2), 'someone not met yet appears through what Etnie told you, and is named');
 U.view.arg = 'Caspian'; T.Bonds.Etnie.Rank = 6;

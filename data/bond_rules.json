@@ -114,53 +114,107 @@
    "Off"
   ]
  ],
- "openness": {
-  "open": 2,
-  "normal": 0,
-  "guarded": -1,
-  "closed": -2
- },
- "share": [
-  [
-   0,
-   "how they look and their public role"
-  ],
-  [
-   1,
-   "their name, age, club and where they spend time"
-  ],
-  [
-   2,
-   "the magic and skills they use openly"
-  ],
-  [
-   3,
-   "likes, dislikes, hobbies and birthday"
-  ],
-  [
-   4,
-   "their personality and what shows when they are upset"
-  ],
-  [
-   5,
-   "their goals"
-  ],
-  [
-   6,
-   "what they think of other people and of the Doves"
-  ],
-  [
-   7,
-   "their past and family"
+ "layers": {
+  "_note": "1.89.0 (owner, planning/DRAFT_lapisan_info.md): every dossier field sits in a layer; the layer's rank follows the NPC's openness (data/bond_openness.json; not listed = normal), so Deep = Public + 1 and Deeper = Deep + 1 or more. data/info_layers.json gives one NPC its own ranks or moves a field to another layer. A field never opens later than its old rank (tools/curate_data.py). Secrets (data/field_overrides.json 99) stay story-only. \"seen\": the only fields shown before {{user}} has a bond (Rank 0 without one).",
+  "ranks": {
+   "open": [
+    0,
+    1,
+    2
+   ],
+   "normal": [
+    1,
+    2,
+    4
+   ],
+   "guarded": [
+    2,
+    3,
+    5
+   ],
+   "closed": [
+    2,
+    3,
+    6
+   ]
+  },
+  "of": {
+   "public": [
+    "Role",
+    "Teaching",
+    "Duties",
+    "Work",
+    "Appearance",
+    "Name",
+    "Full name",
+    "Nickname",
+    "Age",
+    "Club",
+    "Speech",
+    "Haunts",
+    "Stigma",
+    "Standing",
+    "Reputation",
+    "Magic",
+    "Skills",
+    "Weapon",
+    "Equipment",
+    "Pact",
+    "Business",
+    "Consultations",
+    "Fee",
+    "Peak season"
+   ],
+   "deep": [
+    "Birthday",
+    "Loves",
+    "Hates",
+    "Hobby",
+    "Hobbies",
+    "Quirk",
+    "Inventory",
+    "Cupid",
+    "Personality",
+    "Traits",
+    "Emotional tells",
+    "Notes",
+    "Serious mode",
+    "Discretion",
+    "Flaw",
+    "Competing clients",
+    "Goals",
+    "Now",
+    "Current trouble",
+    "Current case"
+   ],
+   "deeper": [
+    "Relations",
+    "Doves",
+    "Politics",
+    "Conflicts",
+    "Quietly distrusts",
+    "Backstory",
+    "Family",
+    "Home",
+    "History",
+    "Trauma"
+   ]
+  },
+  "other": "deep",
+  "seen": [
+   "Role",
+   "Teaching",
+   "Duties",
+   "Work",
+   "Appearance"
   ]
- ],
- "share_real_from": 5,
+ },
  "perks": {
   "1": "greets {{user}} and can be found at their usual places",
   "2": "may accept a genuine invitation; first accepted invited hangout each week grants one extra bond XP",
   "3": "sometimes seeks {{user}} out; remembers the birthday",
   "4": "may actively help with their listed mana, stamina or study activities; ordinary shared work gets a modest bonus",
-  "5": "shares their goal and may ask for help with it",
+  "5": "may ask for help with their goal",
   "6": "may introduce {{user}} to a new roster NPC, whose bond starts at Rank 1",
   "7": "may escort {{user}} into their dorm, or receive an unscheduled worksite visit if staff",
   "8": "closest bond: best friend, romance or sworn rival, as far as this character and lived story allow",

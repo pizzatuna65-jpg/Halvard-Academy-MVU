@@ -1,0 +1,22 @@
+{
+ "_note": "1.89.0 (owner, planning/DRAFT_lapisan_info.md): per NPC, own layer ranks (\"ranks\": [public, deep, deeper]) or fields moved to another layer (\"move\": {label: public | deep | deeper}), only where the default layer goes against the lore. Read by tools/curate_data.py. To confirm with the owner.",
+ "Trixie": {
+  "move": {
+   "Backstory": "public",
+   "Goals": "public"
+  },
+  "why": "Her lore: everyone at Halvard knows her, the circus that visits in Month 8 is her family's, and her goal is completely sincere."
+ },
+ "Dex": {
+  "move": {
+   "Doves": "public"
+  },
+  "why": "His lore: hates the Doves loudly and publicly."
+ },
+ "Ezrel": {
+  "move": {
+   "Personality": "public"
+  },
+  "why": "His lore: apathetic, and makes no secret of it."
+ }
+}

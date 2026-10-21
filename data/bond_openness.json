@@ -1,5 +1,5 @@
 {
- "_note": "1.2.2 DRAFT for the owner to review: how readily each NPC talks about themselves (open +2, normal 0, guarded -1, closed -2 ranks for what they share; goals, views of others and the past always need the real rank; secrets never come from rank). Anyone not listed is normal. Based on each lorebook Personality.",
+ "_note": "How readily each NPC talks about themselves: open, normal (not listed), guarded, closed. Since 1.89.0 it sets the rank of each info layer (data/bond_rules.json layers) and stays the Trust category (data/trust.json). 1.89.0 (owner): William, Aiden, Florian, Hadrian and Dorian moved from open to normal: they talk a lot but do not open up.",
  "open": [
   "Trixie",
   "Etnie",
@@ -14,16 +14,11 @@
   "Dante",
   "Vallie",
   "Caralynn",
-  "Aiden",
-  "Florian",
   "Linus",
-  "Hadrian",
   "Tsubaki",
   "Hester",
-  "Dorian",
   "Kotaro",
   "Aurelian",
-  "William",
   "Bianca",
   "Rigel",
   "Topaz",

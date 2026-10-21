@@ -16,8 +16,9 @@ runEngine(S, B, 'Irene Chanare adjusted her badge.');
 ok(U.knowsName('Irene', S), 'once the story names Irene, the UI does too');
 // dossier gating
 U.view.arg = 'Etnie'; let h = U.PANELS.npc.render(S);
-ok(/<dt>Appearance/.test(h) && /<dt>Hates/.test(h) && !/<dt>Personality/.test(h), 'Etnie at Rank 3: Hates visible, Personality (Rank 4) locked');
-ok(/Rank 4: [^<]*Personality/.test(h), 'locked fields listed as "Still to learn"');
+ok(/<dt>Hates/.test(h) && /<dt>Personality/.test(h) && /<dt>Backstory/.test(h), 'Etnie (open) at Rank 3: every layer open (Deeper at Rank 2)');
+const SI = JSON.parse(JSON.stringify(S)); SI.Bonds.Irene.Rank = 3; U.view.arg = 'Irene'; h = U.PANELS.npc.render(SI);
+ok(/<dt>Hates/.test(h) && !/<dt>Backstory/.test(h) && /Rank 5: [^<]*Backstory/.test(h), 'Irene (guarded) at Rank 3: Hates open, Backstory listed under "Still to learn" at Rank 5');
 U.view.arg = 'Irene'; h = U.PANELS.npc.render(S);
 ok(/<dt>Appearance/.test(h) && !/<dt>Speech/.test(h), 'Irene at Rank 0: appearance only');
 // story-only (rank 99) field needs Secrets_revealed
@@ -27,7 +28,7 @@ ok(!U.fieldUnlocked(sid, f99, S), `${sid}.${f99[0]} hidden before discovery`);
 const S2 = JSON.parse(JSON.stringify(S)); S2.Campus_State.Secrets_revealed = [`${sid}.${/magic/i.test(f99[0]) ? 'magic' : /goal/i.test(f99[0]) ? 'goal' : /pact/i.test(f99[0]) ? 'pact' : 'other'}`];
 ok(U.fieldUnlocked(sid, f99, S2), `${sid}.${f99[0]} unlocked by Secrets_revealed`);
 // edges
-const e5 = U.DATA.rel.find(e => e[0] === 'Irene' && e[4] === 'rank:6');
+const e5 = U.DATA.rel.find(e => e[0] === 'Irene' && e[4] === 'rank:5');   // 1.89.0: a guarded NPC's Relations field is Rank 5
 ok(e5 && !U.edgeVisible(e5, S), 'Irene\'s views hidden at Rank 0');
 const S3 = JSON.parse(JSON.stringify(S)); S3.Bonds.Irene.Rank = 6;
 ok(U.edgeVisible(e5, S3), 'visible at Rank 6');
@@ -68,7 +69,9 @@ ok(/data-loccard="reception_and_gatehouse"/.test(mh) && /You are here/.test(mh),
   ok(['Walk', 'Access', 'Clubs here', 'Regulars'].every(k => sf.includes(`<dt>${k}</dt>`)) && !sf.includes('<dt>Connected to</dt>') && /Nobody you know yet/.test(sf) && /Soccer, Running/.test(sf), 'every card has the same rows; regulars empty before you know anyone');
   const K = JSON.parse(JSON.stringify(S)); K.Bonds.Saffi = { Rank: 1, Progress: 0, Trust: 50, Tension: 0, Title: '', Romance: false, Known_facts: [], Milestones: [], Last_seen: '', _Event_ready: false, $Known_old: [] };
   ok(/data-open="npc:Saffi"/.test(U.PANELS.map.render(K)), 'a regular appears once their Haunts entry unlocks');
-  K.Bonds.Saffi.Rank = 0; ok(!/npc:Saffi/.test(U.PANELS.map.render(K)), 'met but below the Haunts rank: not listed yet');
+  // 1.89.0: Saffi is open, so her Haunts are public (Rank 0) once met; never before
+  K.Bonds.Saffi.Rank = 0; ok(/npc:Saffi/.test(U.PANELS.map.render(K)), 'open Saffi met at Rank 0: listed (her Haunts are public)');
+  delete K.Bonds.Saffi; ok(!/npc:Saffi/.test(U.PANELS.map.render(K)), 'not met: not listed yet');
   U.view.pin = null;
 }
 ok(U.goText('The Mall') === 'I head to the Mall.' && U.goText("Founder's Statue and Park") === "I head to the Founder's Statue and Park.", 'Go here text');

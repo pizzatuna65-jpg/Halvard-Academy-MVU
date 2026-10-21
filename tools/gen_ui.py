@@ -148,11 +148,7 @@ DATA['shop'] = [{**i, 'effect': effect_text(i)} for i in json.load(open(P('data/
 for nid, n in npcs.items():
     if n.get('team_role'): DATA['npcs'][nid]['tr'] = n['team_role']
 # v1.1.0 Features settings (spec §9): rows from data/features.json, rule costs measured by tools/feature_cost.py
-OPN = json.load(open(P('data/bond_openness.json'), encoding='utf-8'))
-DATA['birthdayOffsets'] = {nid: shift for tag,shift in [('open',2), ('guarded',-1), ('closed',-2)] for nid in OPN[tag]}
-for nid, n in DATA['npcs'].items():
-    for f in n['fl']:
-        if f[0] == 'Birthday': f[2] = max(1, 3 - DATA['birthdayOffsets'].get(nid, 0))
+# 1.89.0: the Birthday field's rank comes from its info layer (tools/curate_data.py), no longer an openness offset here
 DATA['bond'] = {k: v for k, v in json.load(open(P('data/bond_rules.json'), encoding='utf-8')).items() if not k.startswith('_')}   # 1.2.2
 DATA['rank4'] = json.load(open(P('data/rank4_partners.json'), encoding='utf-8'))['npcs']
 DATA['branch'] = json.load(open(P('data/npc_canon.json'), encoding='utf-8')).get('branch', {})   # 1.6.8: Rank 8 branches A-D

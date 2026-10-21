@@ -193,23 +193,22 @@ Student Council membership is separate from the afternoon club: members meet Sat
 - A full bar opens that rank's **bond event**; when it has played out, the rank rises by 1 (choices change Trust, never block
   the rank). After a rank there is a short wait before the next event.
 - Romance becomes official from Rank 8 by default (player setting); feelings may grow earlier in the story.
-- **What the NPC shares** at each rank (openness shifts the first tiers: open +2, guarded −1, closed −2; tiers from Rank
-  5 need the real rank; secrets never):
-  - Rank 0: how they look and their public role
-  - Rank 1: their name, age, club and where they spend time
-  - Rank 2: the magic and skills they use openly
-  - Rank 3: likes, dislikes and hobbies
-  - Rank 4: their personality and what shows when they are upset
-  - Rank 5: their goals
-  - Rank 6: what they think of other people and of the Doves
-  - Rank 7: their past and family
-- **Dossier fields unlock by rank** (what the player reads): Appearance/Role 0 · Age, Speech, Club, Haunts 1 · Magic, Skills, Equipment 2 · Loves, Hates, Hobby 3 · Personality, Emotional tells, Notes 4 · Goals, Current trouble 5 · Relations, Doves 6 · Backstory, Family, Home 7 · Trauma 8 (optional; most NPCs have none). So a rank-up event is the natural moment the player learns that rank's fields.
+- **What the NPC shares** (1.89.0, info layers): every dossier field sits in a layer, and the narrator is told the same fields by
+  their lore headings ("tells freely … Held back for now …"). Default layers: Public (Role, Appearance, Age, Club, Speech, Haunts,
+  Magic, Skills, Equipment…), Deep (Birthday, Loves, Hates, Hobby, Personality, Emotional tells, Notes, Goals, Current trouble),
+  Deeper (Relations, Doves, Backstory, Family, Home, Trauma). The layers' ranks follow openness: open 0/1/2, normal 1/2/4, guarded
+  2/3/5, closed 2/3/6 (`data/bond_rules.json` layers). `data/info_layers.json` gives one NPC its own ranks or moves a field to
+  another layer where the lore says it is public (Trixie's circus). Secrets never come from rank.
+- **Dossier fields unlock** at those ranks, never later than the old table (Appearance/Role 0 · Age, Speech, Club, Haunts 1 ·
+  Magic 2 · Loves, Hates 3 · Personality 4 · Goals 5 · Relations, Doves 6 · Backstory 7 · Trauma 8). Before any bond only
+  Role and Appearance show. So a new NPC needs its openness tag, and an `info_layers.json` line only where a field is public in
+  their lore.
 - **What the rank allows** (told to the narrator):
   - Rank 1: greets {{user}} and can be found at their usual places
   - Rank 2: accepts invitations (a meal, study, a walk)
   - Rank 3: sometimes seeks {{user}} out; remembers the birthday
   - Rank 4: will spar, study or team up (competition teams included)
-  - Rank 5: shares their goal and may ask for help with it
+  - Rank 5: may ask for help with their goal
   - Rank 6: introduces {{user}} to friends; keeps {{user}}'s secrets
   - Rank 7: takes real risks for {{user}}: covers, lends points, backs {{user}} up with staff
   - Rank 8: closest bond: best friend, romance or sworn rival (the rank 8 event decides)
@@ -399,7 +398,7 @@ The 2026-09 pass filled every gap for Halvard students, staff, Doves, Cathedral 
   sides enjoy is no offence (each Tension category and override has a `banter` line: how they take teasing), kindness (help,
   keep, defend) eases Tension by category (`kind_ease`), `understood` gives back part of a Trust drop, and maximum Tension breaks
   one rank per blow-up. A new NPC with an override needs `banter` and `kind_ease` too.
-- **Etnie:** her past is now an ordinary `Backstory` field, so it unlocks at Rank 7 like everyone else's; only the plan to
+- **Etnie:** her past is now an ordinary `Backstory` field, so it unlocks with her Deeper layer like everyone else's; only the plan to
   fail her third year stays in `<narrator_only>`.
   Since 1.3.1 (owner playtest) she is not bonded in message 1: her bond starts at Rank 3 the first time she and {{user}} meet
   (`data/bond_rules.json` `start`).

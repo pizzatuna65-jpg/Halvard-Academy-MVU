@@ -23,6 +23,17 @@ RANK = {'Role': 0, 'Teaching': 0, 'Duties': 0, 'Appearance': 0, 'Full name': 1, 
 STORY_ONLY = 99  # revealed only through Campus_State.Secrets_revealed ('<npc>.<label>')
 FOVR = json.load(open(P('data/field_overrides.json'))) if os.path.exists(P('data/field_overrides.json')) else {}
 MIN_RANK_ANY = 4  # unknown labels
+# 1.89.0 (owner, info layers): a field opens at its layer's rank for this NPC (data/bond_rules.json layers, by openness; per NPC
+# data/info_layers.json), never later than its RANK above, so no save sees a field lock again
+_LAY = json.load(open(P('data/bond_rules.json'), encoding='utf-8'))['layers']
+_OPN = json.load(open(P('data/bond_openness.json'), encoding='utf-8'))
+_ILAY = {k: v for k, v in json.load(open(P('data/info_layers.json'), encoding='utf-8')).items() if not k.startswith('_')}
+LAYER_OF = {lab: lay for lay, labs in _LAY['of'].items() for lab in labs}
+def layer_rank(nid, base):
+    own, tag = _ILAY.get(nid, {}), next((t for t in ('open', 'guarded', 'closed') if nid in _OPN[t]), 'normal')
+    ranks = own.get('ranks') or _LAY['ranks'][tag]
+    lay = own.get('move', {}).get(base) or LAYER_OF.get(base, _LAY['other'])
+    return min(ranks[('public', 'deep', 'deeper').index(lay)], RANK.get(base, MIN_RANK_ANY))
 def parse_attr_block(seg):
     """'Gareth (Fire, Elf, M, red, kind, #1)' or team style 'Ines Vauclair (Attack, Y3, F, ash-grey, expressionless, Captain)'."""
     m = re.match(r"\s*([^()]+?)\s*\((.*)\)\s*$", seg)
@@ -101,13 +112,13 @@ for u, e in sorted(N.items()):
     for label, val, *y_from in split_fields(clean) + [['Relations', ' '.join(v), y] for y, v in sorted(later.items())]:
         val = re.sub(r'\s{2,}', ' ', val).strip()
         if not val: continue
-        base = re.sub(r"\s*\(.*\)$", "", label); rank = RANK.get(base, MIN_RANK_ANY)
+        base = re.sub(r"\s*\(.*\)$", "", label); rank = layer_rank(nid, base)
         for k in (f'{nid}.{base}', f'{nid}.{label}'):
             if k in FOVR: rank = FOVR[k]
         fields.append({'label': label, 'text': val, 'rank': rank, **({'year': y_from[0]} if y_from else {})})
         for m in SENSITIVE.finditer(val):
             flags.append(f"{nid}.{label}: …{val[max(0, m.start()-50):m.end()+50]}…")
-    if GIFTS.get(nid, {}).get('birthday'): fields.append({'label': 'Birthday', 'text': GIFTS[nid]['birthday'], 'rank': 3})
+    if GIFTS.get(nid, {}).get('birthday'): fields.append({'label': 'Birthday', 'text': GIFTS[nid]['birthday'], 'rank': layer_rank(nid, 'Birthday')})
     r = roster.get(nid, {})
     a = MAN['npcs'].get(nid) or {'portrait': None, 'thumb': None, 'focus': [50, 25]}   # 1.7.0: a new NPC may have no portrait yet (UI shows initials)
     npcs[nid] = {

@@ -16,7 +16,8 @@ ok(sheets.every(e => e.content.length < 40000) && X(509).content.length < 10000,
 // tests/fixtures/cast_1560.json: each scenario's Cast Sheet as 1.56.0 renders it (sha1 and length). 1.47.0's record (cast_1470.json)
 // proved the 1.48.0 split; 1.56.0 (U2) changed the text on purpose (the Now block, band words), so the record was renewed then;
 // 1.75.0 renewed it for the Ties line 1.74.0 added; 1.76.0 for the Lenna and Dorian club lines (club spread); 1.78.0 for 1.77.1's
-// Carries label (220 scenarios differed, every one only by that label).
+// Carries label (220 scenarios differed, every one only by that label). 1.89.0 renewed it for the info layers: 208 scenarios differed,
+// each only by the Bond line, the Rank 5 perk text, or the Trust category of the NPCs moved from open to normal (Florian, Aiden, Dorian, Hadrian).
 const { scenario, N } = require('./fixtures/cast_scenarios.cjs');
 const REC = JSON.parse(read('tests/fixtures/cast_1560.json'));
 const bad = [];

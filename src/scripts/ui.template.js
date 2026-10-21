@@ -1704,9 +1704,10 @@ function fieldUnlocked(id, f, S) {   // f = [label, text, rank, from campaign ye
   if (f[0] === 'Birthday') {
     const facts = b ? [...(b.Known_facts || []), ...(b.$Known_old || [])].join(' ') : '';
     const told = /birthday|born/i.test(facts) && facts.includes(f[1]);
-    return told || revealed(S,id).includes('birthday') || !!b && b.Rank + ((DATA.birthdayOffsets || {})[id] || 0) >= 3;
+    return told || revealed(S,id).includes('birthday') || !!b && b.Rank >= f[2];
   }
-  return f[2] <= (b ? b.Rank : 0);
+  // 1.89.0: an open NPC's public layer is Rank 0, but before a bond only what anyone can see shows (DATA.bond.layers.seen)
+  return b ? f[2] <= b.Rank : f[2] === 0 && ((DATA.bond.layers || {}).seen || []).includes(f[0].replace(/\s*\(.*\)$/, ''));
 }
 // 1.6.10 (owner): a line is how FROM sees TO; 'rank:N@Via' when another person's file (and bond) tells you, often TO's own
 const viaOf = e => e[4].split('@')[1] || e[0];

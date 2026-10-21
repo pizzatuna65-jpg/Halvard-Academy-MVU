@@ -52,7 +52,8 @@ Drafts (`planning/DRAFT_*.md`) are written in Indonesian; the English text block
   `planning/NPC_BRAINSTORM_BRIEF.md` when NPCs change, then delete the draft. Code, UI and engine fixes from playtest notes go in
   directly (no draft); list any canon you had to invent under "to confirm with the owner".
 - **Design principles.**
-  - The campaign has **no endings** and no routes; high ranks open information, never an ending.
+  - The campaign has **no endings** and no routes; personal information opens by info layer (1.89.0), high ranks open perks and
+    story secrets, never an ending.
   - Rewards must be useful, not mementos, and neither too conditional nor too broken.
   - Systems are anti-grind: tiered XP, weekly caps, about one semester of play to max.
   - Enemies are easier to make than friends: Tension rises are never capped.
