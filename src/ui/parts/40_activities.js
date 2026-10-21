@@ -128,6 +128,59 @@ function founding(S) {
 }
 
 // ---------------------------------------------------------------- competition
+// 1.82.0 (owner-approved planning/DRAFT_event_frame.md 3.9): {{user}}'s Dorm Competition bracket, drawn by the shared contest section
+// from the seed exactly as the engine draws it. Shown from Training Week; a round's results appear once the next round has started
+// (or the competition is over), never before; strength only for an entrant Training Week scouted and the opponent being faced.
+// After the competition: each dorm's bracket champions.
+function dormBracket(S) {
+  const PD = DATA.presence, U = contestUser(PD, S), W = S.World, Y = W.Year, seed = Number((S.$eng || {}).seed) || 0;
+  const dc = CAL.EVENTS.find(e => e.id === 'dorm_comp');
+  if (!U || !dc || !PD.ct || !featureOn(S, 'competition')) return '';
+  const today = dayIdx(W.Month, W.Week, W.Day), d0 = dayIdx(dc.m, dc.w, dc.d[0]), d1 = dayIdx(dc.m, dc.w, dc.d[dc.d.length - 1]);
+  if (today < d0 - 7) return '';
+  const on = today >= d0 && today <= d1, after = today > d1, D = PD.ct.dorm, fmt = D.format[U.role];
+  const R = contestResults((S.Competition || {}).Results, 'Dorm'), K = dormContest(PD, seed, Y, U.dorm, U.role, U, { '{{user}}': R.res });
+  const shown = r => after || (on && ctReached(W, r < K.R ? ctTime(PD, fmt, r + 1) : D.end));
+  const scouted = new Set(((S.$eng || {}).scout || {}).y === Y ? (S.$eng.scout.ids || []) : []);
+  const me = K.E.find(e => e.user), ref = fmt === 'paired' ? K.partner['{{user}}'] : me;
+  if (fmt !== 'heats') {   // the opponent being faced: their strength shows too
+    const KK = fmt === 'paired' ? K.K : K, m = KK.rounds.flat().find(x => (x.a === ref || x.b === ref) && x.a && x.b && x.w === undefined);
+    if (m) scouted.add((m.a === ref ? m.b : m.a).id);
+  }
+  const nm = (e, r) => {
+    if (!e) return '<span class="sub">bye</span>';
+    if (e.user) return '<b>You</b>';
+    const given = r && R.who[r - 1] && fmt !== 'heats' ? R.who[r - 1] : '';
+    const lab = scouted.has(e.id) && ref ? ` <span class="pill">${ctEdgeUI(e.s - ref.s)}</span>` : '';
+    return (e.named ? `<button class="who" data-open="npc:${esc(e.id)}">${esc(nameOf(e.id, S))}</button>` : esc(given || e.label)) + lab;
+  };
+  let body = '';
+  const knock = (KK, mine) => `<div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:6px">${KK.rounds.map((ms, i) => `<div style="min-width:170px"><div class="sub">${i === KK.R - 1 ? 'Final' : i === KK.R - 2 ? 'Semi-finals' : 'Round ' + (i + 1)}${(ctTime(PD, fmt, i + 1) || []).length ? ' · ' + esc(ctTime(PD, fmt, i + 1).join(' ')) : ''}</div>${ms.filter(m => m.a || m.b).map(m => {
+    const own = mine && (m.a === mine || m.b === mine), done = m.w && (shown(i + 1) || own);
+    const side = e => `<div${done && m.w === e ? ' style="font-weight:600"' : done && e ? ' style="opacity:.55"' : ''}>${m.a === undefined && e === m.a || m.b === undefined && e === m.b ? '<span class="sub">to be decided</span>' : nm(e, own && e !== mine ? i + 1 : 0)}</div>`;
+    return `<div class="item"${own ? ' style="border-color:var(--accent,#c9a227)"' : ''}>${side(m.a)}${side(m.b)}</div>`;
+  }).join('')}</div>`).join('')}</div>`;
+  if (fmt === 'heats') {
+    body = K.heats.map((x, i) => `<div class="item"><div class="row"><span class="t">Heat ${i + 1}</span><span class="sub">${esc((ctTime(PD, fmt, 1) || []).join(' '))}</span></div><div class="meta">${x.h.map(e => {
+      const up = x.ranked && (shown(1) || x.h.includes(me)) && x.ranked.slice(0, D.heat_up).includes(e);
+      return `<span class="who">${nm(e)}${up ? ' <span class="pill g">to the final</span>' : ''}</span>`;
+    }).join('')}</div></div>`).join('') + (K.fin && (shown(2) || R.res[1] !== undefined) ? `<div class="item"><div class="row"><span class="t">Final heat</span></div><ol>${K.fin.map(e => `<li>${nm(e)}</li>`).join('')}</ol></div>` : '');
+  } else if (fmt === 'paired') {
+    body = `<p class="hint">Support is judged on a partner's bouts: you are paired with ${nm(K.partner['{{user}}'])} (Attack). Their bracket:</p>${knock(K.K, K.partner['{{user}}'])}`;
+  } else body = knock(K, me);
+  const place = K.place(me);
+  let champs = '';
+  if (after) {
+    const roles = ROLES5;
+    champs = `<h3>Bracket champions</h3><table class="tbl"><tr><th></th>${roles.map(r => `<th>${r}</th>`).join('')}</tr>${['Fire', 'Light', 'Sky', 'Viridian'].map(dm => `<tr><td><b>${dm}</b></td>${roles.map(r => {
+      const KD = dormContest(PD, seed, Y, dm, r, U, dm === U.dorm && r === U.role ? { '{{user}}': R.res } : {}), w = KD.E.find(e => KD.place(e) === 1);
+      return `<td>${w ? nm(w) : '<span class="sub">—</span>'}</td>`;
+    }).join('')}</tr>`).join('')}</table>`;
+  }
+  return `<h3>Dorm Competition: your bracket</h3><p class="hint">${esc(U.dorm)} · ${esc(U.role)} · ${K.E.length} entrants · ${fmt === 'heats' ? `heats of up to ${D.heat_size}, the top ${D.heat_up} of each to the final` : fmt === 'paired' ? "judged on your Attack partner's bouts" : 'knockout'}; the top ${D.quota[U.role]} qualify for the Academy Competition. Most entrants are students the story will introduce.${place ? ` You finished <b>${CT_ORD(place)}</b>.` : ''}</p>${body}${champs}`;
+}
+const ctEdgeUI = d => { const n = ((DATA.presence.ct || {}).strength || {}).edge || 15; return d >= n ? 'stronger' : d <= -n ? 'weaker' : 'even'; };
+
 function acCompetition(S) {
   const Co = S.Competition || {}, P = S.Player.Profile;
   const dates = { Dorm: eventDay(/^Dorm Competition/), Academy: eventDay(/^Academy Competition/), Kingdom: eventDay(/^Kingdom Competition/), World: eventDay(/World Competition/) };
@@ -160,7 +213,7 @@ function acCompetition(S) {
     const g = _.groupBy(Object.keys(DATA.npcs).filter(id => /team$/.test(DATA.npcs[id].g)), id => DATA.npcs[id].g);
     rivals = `<h3>Rival academies</h3>${Object.entries(g).map(([name, ids]) => `<div class="item"><b>${esc(name)}</b><div class="meta">${ids.map(id => `<button class="who" data-open="npc:${esc(id)}">${avatar(id, S, 'av xs')}<span>${esc(nameOf(id, S))}${DATA.npcs[id].tr ? ` · ${DATA.npcs[id].tr}` : ''}</span></button>`).join('')}</div></div>`).join('')}`;
   }
-  return `${status}<h3>The ladder</h3><ol class="ladder">${ladder}</ol>${team}${rivals}`;
+  return `${status}${dormBracket(S)}<h3>The ladder</h3><ol class="ladder">${ladder}</ol>${team}${rivals}`;
 }
 
 // ---------------------------------------------------------------- event

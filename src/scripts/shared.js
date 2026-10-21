@@ -231,5 +231,132 @@ function presenceAt(PD, V, loc) {
   }).join('; ');
   return { place, pres, regs: regs1.filter(r => !wh(r).st), moved, club, st: regs1.filter(r => wh(r).st).map(r => [r, wh(r).st]), why };
 }
+// ---- contest (1.82.0, owner-approved planning/DRAFT_event_frame.md section 3): the Dorm Competition, computed from the seed and
+// never stored (DECISIONS §7 "computed, not stored"). PD.ct is data/event_frame.json contest (tools/common.py contest_data). A role's
+// bracket in a dorm is a pure function of (seed, campaign year, dorm, role) and the bouts the story decided, so the engine (bouts in
+// <now>, Placement and Status), the Competition tab and every swipe agree. Most entrants are unnamed ('Fire Y2 student'): the
+// narrator invents them; roster students are seeded apart, so they tend to meet late. Formats (lore 19): knockout (Attack, Control),
+// heats (Defense, Healing), paired (Support, judged on a same-dorm Attack partner's bouts). It runs in the engine and the panels only.
+const CT_ORD = n => n + ((n % 100 >= 11 && n % 100 <= 13) ? 'th' : ['th', 'st', 'nd', 'rd'][n % 10] || 'th');
+const ctPin = (PD, id, year) => { const p = ((PD.ct || {}).pins || {})[id]; return p && (!p.years || p.years.includes(year)) ? p : null; };
+const ctSlots = n => { let s = [1]; while (s.length < n) { const m = s.length * 2 + 1; s = s.flatMap(x => [x, m - x]); } return s; };
+const ctOrder = E => [...E].sort((a, b) => (b.named ? 1 : 0) - (a.named ? 1 : 0) || b.s - a.s || (a.id < b.id ? -1 : 1));
+// {{user}} as an entrant: the dorm, the role (the first in Combat_role; none on record: Attack), the school year and the strength
+function contestUser(PD, S) {
+  const PR = (S.Player || {}).Profile || {}, ST = (PD.ct || {}).strength || {}, dorm = String(PR.Dorm || '');
+  if (!/^(Fire|Light|Sky|Viridian)$/.test(dorm)) return null;
+  const y = Math.min(3, Math.max(1, Number(PR.Year) || 1)), pr = Number(((S.Player || {})._Proficiency || {}).Prowess) || 0;
+  return { dorm, role: classRoleOf(PR) || 'Attack', y, s: ST.user_base + ST.user_per_year * (y - 1) + ST.user_per_prowess * pr };
+}
+// one role's entrants in one dorm: its roster students there this year, {{user}} when it is theirs, unnamed students up to the
+// bracket's size; each { id, y, s, named, user, label }
+function contestField(PD, seed, year, dorm, role, user) {
+  const CT = PD.ct || {}, D = CT.dorm || {}, ST = CT.strength || {};
+  const str = (id, y) => ST.base + ST.per_year * (y - 1) + rollInt(0, ST.spread, seed, year, 'ct-str', id) + (Number((ctPin(PD, id, year) || {}).str) || 0);
+  const E = Object.keys(CT.roles || {}).filter(id => CT.roles[id] === role && ((PD.stu || {})[id] || [])[2] === dorm)
+    .map(id => { const st = PD.stu[id]; return { id, y: st[0] + year - (st[1] || 1), named: true }; })
+    .filter(e => e.y >= 1 && e.y <= 3).map(e => ({ ...e, s: str(e.id, e.y) }));
+  if (user && user.dorm === dorm && user.role === role) E.push({ id: '{{user}}', y: user.y, s: user.s, user: true });
+  const size = Math.max(E.length, rollInt(D.size[0], D.size[1], seed, year, 'ct-size', dorm, role));
+  for (let i = 0; E.length < size; i++) { const id = `${dorm}:${role}:${i}`, y = rollInt(1, 3, seed, year, 'ct-y', id); E.push({ id, y, s: str(id, y), label: `${dorm} Y${y} student` }); }
+  return E;
+}
+// knockout. res: { id: [true | false | undefined per round] }, the bouts the story decided ({{user}}'s, or a Support {{user}}'s
+// partner's); one still to report is pending (w undefined), and so is all that follows from it. Byes are null.
+function contestKnockout(PD, seed, year, dorm, role, E, res) {
+  const ST = (PD.ct || {}).strength || {}, order = ctOrder(E), R = Math.max(1, Math.ceil(Math.log2(order.length)));
+  const loseAt = id => { const p = ctPin(PD, id, year); return !p || p.lose == null ? 0 : p.lose === 'semi' ? R - 1 : Number(p.lose); };
+  const win = (a, b, r) => {
+    for (const [x, y] of [[a, b], [b, a]]) if (res[x.id]) { const f = res[x.id][r - 1]; return f === undefined ? undefined : f ? x : y; }
+    const la = loseAt(a.id), lb = loseAt(b.id);
+    if (la === r && lb !== r) return b;
+    if (lb === r && la !== r) return a;
+    if (la > r && !(lb > r)) return a;
+    if (lb > r && !(la > r)) return b;
+    return roll100(seed, year, 'ct-ko', dorm, role, r, a.id, b.id) < Math.min(ST.clamp[1], Math.max(ST.clamp[0], 50 + a.s - b.s)) ? a : b;
+  };
+  const rounds = [];
+  let cur = ctSlots(2 ** R).map(k => order[k - 1] || null);
+  for (let r = 1; r <= R; r++) {
+    const ms = [];
+    for (let i = 0; i < cur.length; i += 2) {
+      const a = cur[i], b = cur[i + 1];
+      ms.push({ r, a, b, w: a === undefined || b === undefined ? undefined : !a || !b ? a || b : win(a, b, r) });
+    }
+    rounds.push(ms); cur = ms.map(m => m.w);
+  }
+  const lost = {}, champ = rounds[R - 1][0].w || null;
+  for (const ms of rounds) for (const m of ms) if (m.w && m.a && m.b) lost[(m.w === m.a ? m.b : m.a).id] = m.r;
+  const reach = e => (champ && champ.id === e.id ? R + 1 : lost[e.id] || 0);   // 0: still in
+  const tie = x => ((ctPin(PD, x.id, year) || {}).tie === 'first' ? 1 : 0);
+  const cmp = (x, y) => tie(y) - tie(x) || y.s - x.s || (x.id < y.id ? -1 : 1);
+  // the place: every entrant still in or out later comes first, then the same round's losers by pin and strength
+  const place = e => { const k = reach(e); return k ? 1 + E.filter(x => x !== e && (!reach(x) || reach(x) > k || (reach(x) === k && cmp(x, e) < 0))).length : 0; };
+  return { fmt: 'knockout', R, rounds, place, champ };
+}
+// heats: snake-seeded heats of up to heat_size (so the roster spreads), the top heat_up of each go to one final heat. {{user}}'s
+// res: [advanced (true) or out (false), the place in the final]
+function contestHeats(PD, seed, year, dorm, role, E, res) {
+  const D = (PD.ct || {}).dorm || {}, UP = D.heat_up, order = ctOrder(E), H = Math.max(1, Math.ceil(order.length / D.heat_size));
+  const heats = Array.from({ length: H }, () => []);
+  order.forEach((e, i) => heats[Math.floor(i / H) % 2 ? H - 1 - i % H : i % H].push(e));
+  const sc = (e, r) => ((ctPin(PD, e.id, year) || {}).lose == 1 ? -1 : e.s + rollInt(0, 40, seed, year, 'ct-heat', dorm, role, r, e.id));
+  const by = r => (a, b) => sc(b, r) - sc(a, r) || (a.id < b.id ? -1 : 1);
+  const r1 = heats.map(h => {
+    const u = h.find(e => res[e.id]), f = u ? res[u.id][0] : null, rest = h.filter(e => e !== u).sort(by(1));
+    if (u && f === undefined) return { h, ranked: null };
+    return { h, ranked: !u ? rest : f ? [u, ...rest] : [...rest.slice(0, UP), u, ...rest.slice(UP)] };
+  });
+  const ready = r1.every(x => x.ranked), up = ready ? r1.flatMap(x => x.ranked.slice(0, UP)) : [];
+  let fin = null;
+  if (ready) {
+    const u = up.find(e => res[e.id]), k = u ? res[u.id][1] : 0;
+    if (!u || typeof k === 'number') {
+      const rest = up.filter(e => e !== u).sort(by(2)), at = Math.max(0, Math.min(Number(k) || 1, up.length) - 1);
+      fin = u ? [...rest.slice(0, at), u, ...rest.slice(at)] : rest;
+    }
+  }
+  const outs = ready ? r1.flatMap(x => x.ranked.slice(UP).map((e, i) => [e, i])).sort((a, b) => a[1] - b[1] || b[0].s - a[0].s || (a[0].id < b[0].id ? -1 : 1)).map(x => x[0]) : [];
+  const place = e => { const i = fin ? fin.indexOf(e) : -1, j = outs.indexOf(e); return i >= 0 ? i + 1 : j >= 0 ? up.length + j + 1 : 0; };
+  return { fmt: 'heats', R: 2, heats: r1, up, fin, place };
+}
+// Support: each entrant is paired at random with an Attack fighter of the same dorm (each once while there are enough) and placed by
+// that partner's run; a Support {{user}}'s bouts are their partner's
+function contestPaired(PD, seed, year, dorm, E, user, res) {
+  const A = contestField(PD, seed, year, dorm, 'Attack', user);
+  const pool = [...A].sort((a, b) => roll100(seed, year, 'ct-pair', dorm, a.id) - roll100(seed, year, 'ct-pair', dorm, b.id) || (a.id < b.id ? -1 : 1));
+  const partner = {}, ures = { ...res };
+  ctOrder(E).forEach((e, i) => { partner[e.id] = pool[i % pool.length]; });
+  const U = E.find(e => e.user);
+  if (U && res[U.id]) { ures[partner[U.id].id] = res[U.id]; delete ures[U.id]; }
+  const K = contestKnockout(PD, seed, year, dorm, 'Attack', A, ures), pp = e => K.place(partner[e.id]);
+  const place = e => { const p = pp(e); return p ? 1 + E.filter(x => x !== e && (!pp(x) || pp(x) < p || (pp(x) === p && (x.s > e.s || (x.s === e.s && x.id < e.id))))).length : 0; };
+  return { fmt: 'paired', R: K.R, K, partner, place };
+}
+// one role's bracket in one dorm, with the bouts the story decided ({{user}}'s results as res['{{user}}'])
+function dormContest(PD, seed, year, dorm, role, user, res) {
+  const E = contestField(PD, seed, year, dorm, role, user), fmt = (((PD.ct || {}).dorm || {}).format || {})[role] || 'knockout';
+  const K = fmt === 'heats' ? contestHeats(PD, seed, year, dorm, role, E, res || {}) : fmt === 'paired' ? contestPaired(PD, seed, year, dorm, E, user, res || {})
+    : contestKnockout(PD, seed, year, dorm, role, E, res || {});
+  return { ...K, E, dorm, role };
+}
+// {{user}}'s reported bouts at a tier ("Dorm R2: beat Sophia"; the tier may be left out): res [true | false | a place in a heats
+// final, per round] and the names they gave their opponents
+function contestResults(lines, tier) {
+  const res = [], who = [];
+  for (const l of lines || []) {
+    const m = /^\s*(?:(Dorm|Academy|Kingdom|World)\s+)?R(\d)\s*:\s*(.+)$/i.exec(String(l));
+    if (!m || (m[1] && m[1].toLowerCase() !== String(tier).toLowerCase())) continue;
+    const r = +m[2] - 1, t = m[3], pl = /\bplaced\s+(\d+)/i.exec(t);
+    res[r] = pl ? +pl[1] : /\b(beat|won|wins|advanced)\b/i.test(t) ? true : /\b(lost|out|eliminated|forfeited)\b/i.test(t) ? false : res[r];
+    const nm = /\b(?:beat|lost to)\s+(.+?)\s*(?:\(.*\))?\s*$/i.exec(t);
+    if (nm) who[r] = nm[1].trim();
+  }
+  return { res, who };
+}
+// the start of round r ([day, 'HH:MM']), and whether it has come on a day of the competition (Saturday, then Sunday)
+const ctTime = (PD, fmt, r) => { const T = (((PD.ct || {}).dorm || {}).times || {})[fmt === 'heats' ? 'heats' : 'knockout'] || []; return T[Math.min(r, T.length) - 1] || null; };
+const ctReached = (W, at) => !!at && (DAYS.indexOf(W.Day) > DAYS.indexOf(at[0]) || (W.Day === at[0] && hmMin(W.Time) >= hmMin(at[1])));
+const ctName = e => (!e ? 'a bye' : e.user ? '{{user}}' : e.named ? e.id : e.label);
 // ---- end of whereabouts (tools/common.py shared_js(presence=False) leaves the section out of the bracelet, 505 and 506)
 // ---- end of shared.js

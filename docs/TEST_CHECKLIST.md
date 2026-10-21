@@ -409,7 +409,17 @@ The first academy flight (the airship), then the Grand Vast Forest.
 - [ ] With an A: tutor a classmate in it: `/Tutoring` (no Points or Rep_events of its own), the points rise by 40, a third session that
       week is not paid, and a risky attempt in that field shows "top mark in …" among the Fortune modifiers [1.15].
 
+### Q5.3a The Club Festival (W2 Fri–Sat)
+- [ ] After Saturday 18:00 the Journal says which club won the coin vote and `<now>`'s Event line names it; if it is Charles's club,
+      Student reputation rises once without a Rep_events report [1.82].
+
 ### Q5.3 Training Week (W3, curfew 21:00) and the Dorm Competition (W4 Sat–Sun)
+- [ ] An evening at the sparring on the Combat Grounds: the Log says opponents were scouted, and Activities → Competition shows their
+      strength (stronger / even / weaker) in Charles's bracket [1.82].
+- [ ] On Saturday `<now>` has "Contest: Dorm Competition, <role> bracket … {{user}}'s next bout: Sat 09:30, against …" and how to
+      report it; an unnamed opponent gets a name, a look and a style from the narrator, who writes one Results line per bout [1.82].
+- [ ] After each reported bout the next one is named; Placement and Status are set by the engine when Charles's run ends, and the
+      Competition tab's bracket matches what the story showed. A bout left unreported is played off-screen at the next round [1.82].
 - [ ] Charles qualifies with a teammate: Academy reputation +5 Rep XP and the teammate's bond XP +5, with no Rep_events report; a later
       title, then an elimination at or below its tier, costs Academy reputation once [1.44]. If he does not qualify: the Academy
       Competition (M6 W4) gives another chance.

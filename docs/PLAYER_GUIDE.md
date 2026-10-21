@@ -98,6 +98,11 @@ toward them, and the narrator only hears of one while it is open where you are. 
 first): the bracelet shows "Stalls here", and Activities → Shop lists what they sell, only on that day and in their hours. The
 event chip on the bracelet opens the Event tab. Settings → Features → Event chances switches the chances off.
 
+**The Dorm Competition** (Month 3) is drawn for you: Activities → Competition shows your role's bracket from Training Week on. Watching
+the evening sparring in Training Week lets you size up a couple of possible opponents. On the day the narrator is told whom you face
+next; you play the bout, and your result moves the bracket on. Most entrants are students the story introduces as you meet them. Your
+place and whether you qualify are worked out for you. At the Club Festival everyone's coin vote is counted at the close on Saturday.
+
 **Student file → Settings → Appearance** changes the colours of the panels and the bracelet: Pewter (the default), Midnight (darker), Rosewood (warm dark), Parchment (light) and Frost (light, cool). The choice is kept in this browser and is not written to the chat.
 
 

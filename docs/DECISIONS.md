@@ -128,6 +128,11 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **Classes and teachers** (1.33.0, owner-approved planning/DRAFT_classes_and_teachers.md): the one-year rule holds only for Magic Theory, History, Etiquette and Potion Crafting (Y1/Y2/Y3: Yvette/Ezrel/Althair, Layla/Baelin/Cedric, Kuroo/Anya/Ottavio, Mimosa/Kotaro/Valentin); Creature Studies (Vallie), Dark Magic Defense (Milena) and Practical Magic have one teacher for every year. **Practical Magic** (was Combat Class) is five classes at the same slot (Mon, Thu P3), one per combat role, mixing the dorms by year: Attack Gavlan, Defense Anselm, Healing Hester (Healing Ward), Support Magnus, Control Dorian. A student with two roles attends the one they want most (listed first in Combat_role). The timetable is unchanged; Grades are unchanged (one Practical Magic mark → Prowess). Each new teacher advises one club. `teaches` in `data/npcs.json`: `[subject, year]`, year 0 = every year, `["Practical Magic", 0, role]`.
 - **Free periods** (1.33.0, owner-approved): a teacher now and then cannot come (`data/free_periods.json`: 5% per class period, Kotaro 20%, reasons per teacher); seeded per day and period, never on a calendar event day or in M1 W1. The class is not held: no absence, not counted in attendance, the hour is free; `<now>` and the planner say why.
 - **Dorm Competition brackets** (1.33.0, owner-approved): five solo brackets per dorm, one per role, judged by the role teachers (formats in lore 19). 16 per dorm qualify for the Academy Competition by role (Attack 4, Defense 3, Healing 3, Support 3, Control 3) without having to win; a bracket champion earns 100 points and the runner-up 50 (engine, once a year, from `Competition.Placement`). The Academy Competition itself is unchanged.
+  1.82.0 (owner-approved `planning/DRAFT_event_frame.md` §3): the brackets are drawn from the seed and never stored (shared.js contest
+  section), every student is entered, the narrator reports only {{user}}'s bouts in the form `<now>` gives, and the engine sets
+  `Placement` and `Status`; a bout nobody reported is played off-screen at the next round. Bouts between other entrants are the engine's
+  (draft §10 question 1, settled by silence); canon pins hold (Ruby out early, Royhan's Year 1 place, Dante middling). Most entrants are
+  students the narrator invents.
 
 ## 6. Social systems, UI rules and versioning (from 1.3.1)
 - **Situational rule cards** (1.54.0, narrator-load audit U1): 502 keeps a core line per topic (path, data shape, the main ban) so an
@@ -151,6 +156,8 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **Event chances are not quests** (1.81.0): optional, done once a campaign year, read from what the reply already reports, rewarded
   through existing systems and their limits, never reminded; `<now>` prints only those open here and now, as the player's choice,
   and never one done by a deed alone. They replaced the 1.26.0 event XP with the same XP.
+- **The Club Festival coin vote is drawn by the engine** (1.82.0): at Saturday's close, weighted by the clubs' named members, {{user}}'s
+  club boosted by its chances done; the coin is symbolic; `club_festival_win` is paid only from the vote.
 - **Event stalls are shop rows with `ev`** (1.81.0): they sell only on their event's day and hours (`stallOpen`), at their place, with
   effects of kinds that already exist; the Price Guide lists them only then.
 - **Settings** for training and reputation live in `$ui.tune` (rows in `data/tuning.json`, defaults asserted equal to training.json / reputation.json). Tension 70 costs −5 and Tension 100 another −10 of the matching reputation (Milena → Doves included).

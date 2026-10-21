@@ -246,7 +246,21 @@ def presence_data(npcs, locs):
             rt.setdefault(nid, []).append([days(d), mins(f), mins(to), norm(place), place, what, f"{d.replace('-', '–')} {f}–{to}"])
     return {'reg': reg, 'stu': stu, 'arr': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1}, 'teach': teach, 'tt': tt, 'clubv': clubv,
             'outd': sorted({norm(k) for lid in out_ids for k in place_keys(locs[lid], lid)}), 'vn': {norm(l['name']): l['name'] for l in locs.values()},
-            'rt': rt, 'rate': R['rate']}
+            'rt': rt, 'rate': R['rate'], 'ct': contest_data(stu)}
+
+
+def contest_data(stu):
+    """1.82.0 (planning/DRAFT_event_frame.md section 3): the Dorm Competition data the shared contest section reads as PD.ct
+    (data/event_frame.json contest without its notes), checked: every role names a Halvard student and a combat role, every pin a
+    student, every role a format."""
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    ct = {k: v for k, v in json.load(open(os.path.join(root, 'data/event_frame.json'), encoding='utf-8'))['contest'].items() if not k.startswith('_')}
+    roles5 = {'Attack', 'Defense', 'Healing', 'Support', 'Control'}
+    assert all(nid in stu and r in roles5 for nid, r in ct['roles'].items()), 'event_frame.json contest.roles: a non-student or an unknown role'
+    assert all(nid in stu for nid in ct['pins']), 'event_frame.json contest.pins: not a Halvard student'
+    assert set(ct['dorm']['format']) == roles5 == set(ct['dorm']['quota']), 'event_frame.json contest.dorm: every role needs a format and a quota'
+    assert all(len(ct['dorm']['times'][f]) >= 1 for f in ('knockout', 'heats')), 'event_frame.json contest.dorm.times'
+    return ct
 
 
 def campus_map(locs, pins):

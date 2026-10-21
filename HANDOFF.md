@@ -3,7 +3,9 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.81.0** (2026-10-21): the event frame, release A1 of `planning/DRAFT_event_frame.md`: every calendar event has an
+**Snapshot:** card **v1.82.0** (2026-10-21): release A2 of `planning/DRAFT_event_frame.md`: the Dorm Competition's brackets drawn
+from the seed ({{user}}'s bouts in `<now>`, Placement and Status by the engine, Training Week scout, the bracket on the Competition
+tab) and the Club Festival coin vote. 1.81.0: the event frame, release A1: every calendar event has an
 id and a kind, `<now>` gets one Event line per event today (now, next), Activities → Event, event chances (the old event XP moved
 there) and the Star Night market stalls. 1.80.0: `<now>` brings back older record lines named in the player's own new message, and
 `audit_chat.py --mechanics` lists Clues and planted details the story never showed (Megumin Suite audit batch 3: MS4, MS3 stage 1).
@@ -15,8 +17,8 @@ time apart; 1.72.0: special days; 1.70.0/1.71.0: scene cards; 1.69.0: one model 
 2.2.1.3 as it ships. The memory audit is done except batch 8. Live checks: the campaign quest log `docs/TEST_CHECKLIST.md` (the owner
 plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the card, Q0.1).
 
-**Next task:** `planning/DRAFT_event_frame.md` release A2 (the Contest module for the Dorm Competition, the Club Festival coin vote)
-before the campaign reaches M3 W2; then B–E by their dates (§7). Founder Day's prize (§10 question 2) needs the owner's fact before
+**Next task:** `planning/DRAFT_event_frame.md` release B (Fools Day draw and Merryhew's sale, the break plan) before the campaign
+reaches M4 W1; then C–E by their dates (§7). Founder Day's prize (§10 question 2) needs the owner's fact before
 release E. Meanwhile the owner plays the quest log; their reports and chat exports bring the playtest fixes (tick what passed, run
 `tools/audit_chat.py` on the export, move "Where you are"). The Megumin Suite audit (`audit/AUDIT_2026-10-21_2_megumin_suite.md`
 §6): all three batches are in (1.78.0–1.80.0); MS3 stage 2 waits in `planning/FUTURE_PLANS.md` §2 until an

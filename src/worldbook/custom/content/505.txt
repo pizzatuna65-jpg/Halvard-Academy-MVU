@@ -257,7 +257,10 @@ Campaign Year <%- Y %> ({{user}}: Year <%- Math.max(1, Math.min(3, Number(PR.Yea
 Today: <%- TODAY.map(x => x.split(' — ')[0]).join(' | ') %><%- TODAY.some(x => x.includes(' — ')) ? ' (plan in World._Event_today)' : '' %>
 <%_ } _%>
 <%_ for (const e of EVL) { _%>
-Event: <%- e.t %><%- e.of > 1 ? ', day ' + e.n + ' of ' + e.of : '' %>.<%- e.now ? ' Now: ' + e.now + '.' : '' %><%- e.next ? ' Next: ' + e.next[0] + ' ' + e.next[1] + '.' : '' %> (plan in World._Event_today)
+Event: <%- e.t %><%- e.of > 1 ? ', day ' + e.n + ' of ' + e.of : '' %>.<%- e.now ? ' Now: ' + e.now + '.' : '' %><%- e.next ? ' Next: ' + e.next[0] + ' ' + e.next[1] + '.' : '' %><%- e.vote ? ' The coin vote went to the ' + e.vote + '.' : '' %> (plan in World._Event_today)
+<%_ if (e.id === 'dorm_comp' && UI.contest && (UI.contest.lines || []).length) { _%>
+<%- UI.contest.lines.join('\n') %>
+<%_ } _%>
 <%_ if (on('event_chances') && (e.ch || []).length) { _%>
 Open at this event, the player's choice (never steer the scene toward it): <%- e.ch.join('; ') %>.
 <%_ } _%>

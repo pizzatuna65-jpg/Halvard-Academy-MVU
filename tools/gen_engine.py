@@ -32,7 +32,7 @@ for _eid, _chs in _ef['chances'].items():
         assert all(re.match(r'^\d{2}:\d{2}$', _h[k]) for k in ('from', 'to') if k in _h), f'event_frame.json: {_eid}.{_x["id"]}: hours are HH:MM'
         assert _h.get('practice', 'Spar with a partner') in _ef_acts, f'event_frame.json: {_eid}.{_x["id"]}: unknown practice action'
         assert _h.get('deed', 'community_event') in _ef_deeds, f'event_frame.json: {_eid}.{_x["id"]}: unknown deed'
-        assert set(_r) <= {'prof', 'moment'} and ('prof' not in _r or _r['prof'][0] in ('club', 'Knowledge', 'Arcana', 'Craft', 'Prowess', 'Society', 'Nature')), f'event_frame.json: {_eid}.{_x["id"]}: reward'
+        assert set(_r) <= {'prof', 'moment', 'once', 'scout'} and ('prof' not in _r or _r['prof'][0] in ('club', 'Knowledge', 'Arcana', 'Craft', 'Prowess', 'Society', 'Nature')), f'event_frame.json: {_eid}.{_x["id"]}: reward'
 t = t.replace('/*@@EVENT_FRAME@@*/{}', json.dumps({k: v for k, v in _ef.items() if not k.startswith('_')}, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@CLUB_STATS@@*/{}', json.dumps(json.load(open(P('data/club_stats.json'), encoding='utf-8')), ensure_ascii=False, separators=(',', ':')))
 _plocs = json.load(open(P('data/locations.json'), encoding='utf-8'))

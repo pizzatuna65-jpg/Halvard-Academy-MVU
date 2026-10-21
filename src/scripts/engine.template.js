@@ -2295,6 +2295,140 @@ function stepVitals(c) {
   if (hasB && B.Player.Vitals._Condition !== V._Condition) S.$ui.toasts.push(`Condition: ${V._Condition}`);
 }
 
+// ---- 5a. 1.82.0 (owner-approved planning/DRAFT_event_frame.md section 3, release A2): the Dorm Competition and the Club Festival
+// coin vote, before reputation so a result's deed is paid in the same reply.
+// Dorm Competition (M3 W4 Sat-Sun): every student is entered (lore 19: open to the whole dorm; Ruby enters "because it is required").
+// The brackets are the shared contest section's (dormContest), drawn from the seed; <now> names {{user}}'s next bout, the narrator
+// reports it in Competition.Results in the form <now> gives, and the engine sets Placement and Status (DECISIONS §5 "Dorm Competition
+// brackets": numbers, quotas and prizes unchanged). A bout nobody reported by the time the next round starts (or the competition ends)
+// is played off-screen with the odds of any other. Afterwards the Dorm tier's Placement and Status stay as the engine set them.
+const CT = PRESENCE.ct || {};
+// {{user}}'s entrant ({{user}} themself, or a Support {{user}}'s Attack partner) and their bout in round r: { m, me, opp } or null
+function ctUserBout(K, r) {
+  const KK = K.fmt === 'paired' ? K.K : K, me = K.fmt === 'paired' ? K.partner['{{user}}'] : K.E.find(e => e.user);
+  const m = me && (KK.rounds[r - 1] || []).find(x => x.a === me || x.b === me);
+  return m ? { m, me, opp: m.a === me ? m.b : m.a } : null;
+}
+const ctEdge = (d, n) => (d >= n ? 'stronger' : d <= -n ? 'weaker' : 'even');
+function stepContest(c) {
+  const { S, B, hasB, toolEdit, log, seed, OFF } = c;
+  stepVote(c);
+  S.$ui.contest = null; c.contest = null;
+  const Co = S.Competition, C0 = (hasB && B.Competition) || {}, y = S.World.Year, ev = eventsOn(S.World).find(e => e.id === 'dorm_comp');
+  if (!ev) {
+    if (hasB && C0.Tier === 'Dorm' && Co.Tier === 'Dorm' && /^(qualified|eliminated|champion)$/.test(String(C0.Status || '')) && (Co.Placement !== C0.Placement || Co.Status !== C0.Status)) {
+      Co.Placement = C0.Placement; Co.Status = C0.Status;
+      log.push('The Dorm Competition result is the engine\'s: its Placement and Status stay as they were.');
+    }
+    return;
+  }
+  const U = contestUser(PRESENCE, S);
+  if (!U || OFF.has('competition')) return;
+  const D = CT.dorm, ST = CT.strength, fmt = D.format[U.role];
+  Co.Tier = 'Dorm';
+  Co.Results = (Co.Results || []).map(l => (/^\s*R\d\s*:/i.test(String(l)) ? 'Dorm ' + String(l).trim() : l));
+  let { res } = contestResults(Co.Results, 'Dorm'), K = dormContest(PRESENCE, seed, y, U.dorm, U.role, U, { '{{user}}': res });
+  const me = () => K.E.find(e => e.user);
+  // a bout nobody reported, once the next round has started (or the competition has ended): played off-screen
+  for (let r = 1; r <= K.R && !toolEdit && hasB; r++) {
+    if (res[r - 1] !== undefined) continue;
+    if (!ctReached(S.World, r < K.R ? ctTime(PRESENCE, fmt, r + 1) : D.end)) break;
+    let line = '';
+    if (fmt === 'heats') {
+      const H = r === 1 ? (K.heats.find(x => x.h.includes(me())) || {}).h : res[0] === true ? K.up : null;
+      if (!H) break;
+      const mine = U.s + rollInt(0, 40, seed, y, 'ct-off', r, '{{user}}'), ahead = H.filter(e => !e.user && e.s + rollInt(0, 40, seed, y, 'ct-off', r, e.id) > mine).length;
+      res[r - 1] = r === 1 ? ahead < D.heat_up : ahead + 1;
+      line = r === 1 ? (res[0] ? 'advanced' : 'out') : `placed ${res[1]}`;
+    } else {
+      const b = ctUserBout(K, r);
+      if (!b) break;
+      if (!b.opp) continue;   // a bye
+      const p = Math.min(ST.clamp[1], Math.max(ST.clamp[0], 50 + b.me.s - b.opp.s)), won = roll100(seed, y, 'ct-off', r, b.opp.id) < p;
+      res[r - 1] = won;
+      line = `${fmt === 'paired' ? 'partner ' : ''}${won ? 'beat' : 'lost to'} ${ctName(b.opp)}`;
+    }
+    Co.Results = [...Co.Results, `Dorm R${r}: ${line} (off-screen)`].slice(-12);
+    log.push(`Dorm Competition round ${r} was not reported before the next round: played off-screen (${line}).`);
+    K = dormContest(PRESENCE, seed, y, U.dorm, U.role, U, { '{{user}}': res });
+  }
+  // Placement and Status are the engine's
+  const place = K.place(me()), n = K.E.length;
+  const P1 = place ? `${CT_ORD(place)} of ${n}, ${U.role} bracket` : '', S1 = !place ? 'entered' : place === 1 ? 'champion' : place <= D.quota[U.role] ? 'qualified' : 'eliminated';
+  if (hasB && !toolEdit && (Co.Placement || '') !== P1 && Co.Placement && Co.Placement !== C0.Placement) log.push(`Competition Placement "${Co.Placement}" is the engine's: ${P1 || 'not decided yet'}.`);
+  Co.Placement = P1; Co.Status = S1;
+  // the next bout, for <now> and Fortune
+  const lines = [], who = n2 => (n2 && n2.named ? n2.id : n2 ? n2.label : '');
+  let next = null;
+  if (!place) for (let r = 1; r <= K.R; r++) {
+    if (res[r - 1] !== undefined) continue;
+    const at = ctTime(PRESENCE, fmt, r);
+    if (fmt === 'heats') {
+      const H = r === 1 ? K.heats.find(x => x.h.includes(me())) : res[0] === true ? { h: K.up } : null;
+      if (H) next = { r, at, heat: r === 1 ? K.heats.indexOf(H) + 1 : 0, of: K.heats.length, field: H.h.filter(e => !e.user) };
+    } else {
+      const b = ctUserBout(K, r);
+      if (b && !b.opp) continue;
+      if (b) next = { r, at, opp: b.opp, me: b.me, edge: ctEdge(b.opp.s - b.me.s, ST.edge) };
+    }
+    break;
+  }
+  const head = `Contest: Dorm Competition, ${U.role} bracket (${n} entrants)`;
+  if (place) lines.push(`${head}: {{user}} finished ${CT_ORD(place)}${S1 === 'eliminated' ? '' : `, ${S1 === 'champion' ? 'the bracket champion, and ' : ''}qualifying for the Academy Competition`}.`);
+  else if (next && fmt === 'heats') {
+    const named = next.field.filter(e => e.named).map(e => e.id), rest = next.field.length - named.length;
+    lines.push(`${head}, round ${next.r} of 2. {{user}}'s next round: ${next.at[0]} ${next.at[1]}, ${next.heat ? `heat ${next.heat} of ${next.of}` : 'the final heat'} with ${next.field.length} others${named.length ? ` (${named.join(', ')}, and ${rest} students you invent)` : ', all students you invent'}${next.heat ? `; the top ${D.heat_up} go to the final` : ''}.`);
+    lines.push(`Report it in Competition.Results as ${next.r === 1 ? '"R1: advanced" or "R1: out"' : '"R2: placed <place>"'}. The engine sets Placement and Status.`);
+  } else if (next) {
+    const sup = fmt === 'paired', mate = sup ? next.me.id === '{{user}}' ? '' : who(next.me) : '';
+    lines.push(`${head}, round ${next.r} of ${K.R}. ${sup ? `{{user}} supports ${mate} (Attack); their next bout` : "{{user}}'s next bout"}: ${next.at[0]} ${next.at[1]}, against ${who(next.opp)} (${U.dorm} Y${next.opp.y}, ${next.edge} than ${sup ? mate : '{{user}}'}).`);
+    if (sup && !next.me.named) lines.push(`${next.me.label} ({{user}}'s Attack partner) is not a roster character: invent them, a Halvard student of that dorm and year.`);
+    if (!next.opp.named) lines.push(`${next.opp.label} is not a roster character: invent them (a name, a look, how they fight, how they carry themselves), a Halvard student of that dorm and year, and use the name you give in the Results line.`);
+    lines.push(`Report the bout in Competition.Results as "R${next.r}: ${sup ? 'partner beat' : 'beat'} <name>" or "R${next.r}: ${sup ? 'partner lost to' : 'lost to'} <name>". The engine sets Placement and Status.`);
+  }
+  if (!place && U.role === 'Attack') {
+    const SK = dormContest(PRESENCE, seed, y, U.dorm, 'Support', U, {}), mate = SK.E.find(e => SK.partner[e.id] && SK.partner[e.id].user);
+    if (mate && lines.length) lines[0] += ` Paired Support: ${who(mate)}${mate.named ? '' : ' (a student you invent)'}.`;
+  }
+  // the round just over in {{user}}'s bracket, the named first
+  const KK = K.fmt === 'paired' ? K.K : K.fmt === 'knockout' ? K : null;
+  if (KK) {
+    let rr = 0; for (let r = 1; r <= KK.R; r++) if (ctReached(S.World, r < KK.R ? ctTime(PRESENCE, fmt, r + 1) : D.end)) rr = r;
+    const mine = ctUserBout(K, rr);
+    const done = rr ? KK.rounds[rr - 1].filter(m => m.a && m.b && m.w && !(mine && mine.m === m)).sort((a, b) => (b.a.named || b.b.named ? 1 : 0) - (a.a.named || a.b.named ? 1 : 0)).slice(0, 3) : [];
+    if (done.length) lines.push(`Elsewhere in {{user}}'s bracket (round ${rr}): ${done.map(m => `${who(m.w)} beat ${who(m.w === m.a ? m.b : m.a)}`).join('; ')}.`);
+  }
+  if (lines.length && Object.keys(S.Scene.Present || {}).some(k => (NPC_ALIAS[k.toLowerCase()] || k) === 'Aiden')) lines.push("Aiden's betting book has odds on every bracket today.");
+  S.$ui.contest = lines.length ? { lines } : null;
+  c.contest = next && next.edge ? { edge: next.edge, at: next.at } : null;
+}
+// the Club Festival coin vote (lore: everyone drops a gold coin at the best stand, never their own club's; the winner is announced
+// at the close): drawn once a year when the close has come, weighted by the clubs' named members plus vote.base, {{user}}'s club
+// boosted for each of its chances done; the coin is symbolic (nothing charged). club_festival_win is the engine's from now on.
+function stepVote(c) {
+  const { S, hasB, toolEdit, log, jnl, seed, absA } = c, V = (CT.vote || {}).club_festival, e = EVENTS.find(x => x.id === 'club_festival');
+  if (!V || !e) return;
+  if (Array.isArray(S.Rep_events) && S.Rep_events.some(x => x && /^club_festival_win$/i.test(String(x.Kind || '').trim()))) {
+    S.Rep_events = S.Rep_events.filter(x => !(x && /^club_festival_win$/i.test(String(x.Kind || '').trim())));
+    log.push('Reputation deed "club_festival_win" is paid by the engine from the Club Festival coin vote; it was not counted here.');
+  }
+  const y = S.World.Year, key = `Y${y}`, VS = S.$eng.vote = _.isPlainObject(S.$eng.vote) ? S.$eng.vote : {};
+  for (const k of Object.keys(VS)) if (k !== key) delete VS[k];
+  if (!hasB || toolEdit || VS[key]) return;
+  const close = toAbs({ Year: y, Month: e.m, Week: e.w, Day: V.close[0], Time: V.close[1] });
+  if (absA < close || absA - close > 7 * DAY_MIN) return;
+  const F = foundedClub(S), mine = canonClub(S.Player.Profile.Club, S);
+  const clubs = [...Object.keys(CLASS.clubs || {}), ...(F && F.founded ? [F.name] : [])];
+  const boost = Object.entries(V.boost || {}).reduce((a, [id, x]) => a + (chanceDone(S, e, { id }) ? x : 0), 0);
+  const size = k => (F && k === F.name ? F.members.length + 1 : (CLUB_MEMBERS[k] || []).length) + V.base;
+  const won = rollTable(clubs, { pick: [seed, y, 'cf-vote'], weight: k => size(k) * (k === mine ? 1 + boost : 1) });
+  if (!won) return;
+  VS[key] = won;
+  jnl.push(`The ${won} won the Club Festival coin vote.`);
+  S.$ui.toasts.push(`Club Festival: the ${won} won the coin vote`);
+  if (won === mine) avRep(S, 'club_festival_win', `the ${won} won the Club Festival coin vote`);
+}
+
 // ---- 5b. 1.3.0 reputation: Academy (staff and the institution), Student (the student body), Doves (the Dovecote). Signed Rep XP
 // (engine-owned, in $xp) sets the level -5..+5. The narrator reports what earned or cost reputation in /Rep_events: repeatable
 // triggers are capped at REP.weekly_cap a week per reputation, events and losses are not. Bond milestones and high Tension are
@@ -2423,6 +2557,9 @@ function stepFortune(c) {
     if (sev.some(x => /serious|critical/.test(x))) mods.push('seriously injured -20'); else if (sev.includes('moderate')) mods.push('injured -10');
     if (S.$ui.sleep && S.$ui.sleep.loss >= 0.2 && !S.$ui.sleep.flavor) mods.push('short on sleep -5');
     for (const [r, who] of [['Academy', 'staff'], ['Student', 'students'], ['Doves', 'Doves']]) { const L = repLv(r); if (L) mods.push(`with ${who} ${L > 0 ? '+' : ''}${L * 5}`); }
+    // 1.82.0 (planning/DRAFT_event_frame.md 3.6): a Dorm Competition bout from an hour before it: the opponent's edge
+    const CB = c.contest;
+    if (CB && CB.edge !== 'even' && S.World.Day === CB.at[0] && hm(S.World.Time) >= hm(CB.at[1]) - 60) mods.push(`opponent ${CB.edge} ${CB.edge === 'stronger' ? '-' : '+'}${CT.strength.fortune}`);
     const active = Object.entries(M.Active || {}).map(([k, e]) => e.Technique && e.Technique !== k ? `${k} (${e.Technique})` : k);
     // 1.78.0 (Megumin audit MS2): three numbers, one per attempt in order, so two risky attempts in one reply never share a fate;
     // roll stays the first (crafting reads it)
@@ -3639,7 +3776,9 @@ function chanceMet(c, e, h) {
   const { S, absA, absB, elapsed, text } = c, here = placeKey(S.World.Location);
   if (h.min && Math.max(elapsed, num(c.stayed, 0)) < h.min) return false;   // this reply, or the replies spent here in a row
   if (h.at && !h.at.includes(here)) return false;
-  if (!chanceHours(S, e, h, absB, absA)) return false;
+  // the hours count from when {{user}} was there: the whole reply when they stayed, its end when they arrived in it
+  const a0 = h.at && placeKey(((c.B || {}).World || {}).Location) !== here ? absA : absB;
+  if (!chanceHours(S, e, h, a0, absA)) return false;
   if (h.said && !new RegExp(h.said, 'i').test(proseOf(text))) return false;
   if (h.club && !String(S.Player.Profile.Club || '').trim()) return false;
   if (h.trip && !(S.Trip.Active || new RegExp(h.trip, 'i').test(String(S.World.Location || '')))) return false;
@@ -3657,6 +3796,24 @@ function chanceOpen(S, e, h, absA) {
   if (h.club && !String(S.Player.Profile.Club || '').trim()) return false;
   return chanceHours(S, e, h, absA, absA + 1);
 }
+// 1.82.0 (planning/DRAFT_event_frame.md 3.7): Training Week's scout: up to n possible opponents in {{user}}'s Dorm Competition bracket
+// (the first bout's, then the next ones', strongest first), whose strength the Competition tab shows from then on ($eng.scout { y, ids })
+function scoutAdd(c, n) {
+  const { S, seed, log } = c, U = contestUser(PRESENCE, S), y = S.World.Year;
+  if (!U || !n) return;
+  const SC = S.$eng.scout = _.isPlainObject(S.$eng.scout) && S.$eng.scout.y === y && Array.isArray(S.$eng.scout.ids) ? S.$eng.scout : { y, ids: [] };
+  const K = dormContest(PRESENCE, seed, y, U.dorm, U.role, U, {}), byS = (a, b) => b.s - a.s;
+  let cand = [];
+  if (K.fmt === 'heats') cand = ((K.heats.find(x => x.h.some(e => e.user)) || { h: [] }).h).filter(e => !e.user).sort(byS);
+  else {
+    const KK = K.fmt === 'paired' ? K.K : K, me = K.fmt === 'paired' ? K.partner['{{user}}'] : K.E.find(e => e.user);
+    const r1 = KK.rounds[0], i = r1.findIndex(m => m.a === me || m.b === me), pair = j => (r1[j] ? [r1[j].a, r1[j].b].filter(Boolean).sort(byS) : []);
+    if (i >= 0) cand = [r1[i].a === me ? r1[i].b : r1[i].a, ...pair(i ^ 1), ...pair(i ^ 2), ...pair(i ^ 3)].filter(e => e && e !== me);
+  }
+  const add = cand.map(e => e.id).filter(id => id !== '{{user}}' && !SC.ids.includes(id)).slice(0, n);
+  SC.ids.push(...add);
+  if (add.length) log.push(`Scouted for the Dorm Competition: ${add.length} possible opponent${add.length > 1 ? 's' : ''} (the Competition tab shows how strong).`);
+}
 function stepEventChances(c) {
   const { S, B, hasB, log, OFF, toolEdit, absA } = c;
   const D = S.$eng.chance = _.isPlainObject(S.$eng.chance) ? S.$eng.chance : {}, pre = `Y${S.World.Year}:`;
@@ -3672,11 +3829,12 @@ function stepEventChances(c) {
     if (done >= num(ch.max, 1) || !chanceMet(c, e, ch.how || {})) continue;
     D[`${pre}${e.id}:${ch.id}`] = done + 1;
     const R = ch.reward || {}, name = e.t.split(' (')[0];
-    if (R.prof && c.profGain) c.profGain(R.prof[0] === 'club' ? clubField(S, S.Player.Profile.Club) || 'Society' : R.prof[0], num(R.prof[1], 0), `${name}: ${ch.text.toLowerCase()}`, false);
+    if (R.prof && c.profGain && !(R.once && done)) c.profGain(R.prof[0] === 'club' ? clubField(S, S.Player.Profile.Club) || 'Society' : R.prof[0], num(R.prof[1], 0), `${name}: ${ch.text.toLowerCase()}`, false);
     if (R.moment) for (const k of Object.keys(S.Scene.Present || {})) {
       const id = NPC_ALIAS[k.toLowerCase()] || k, b = S.Bonds[id];
       if (b && num(b.Rank, 0) >= 3) b.$Recent = [...(b.$Recent || []), { w: stamp(S.World), n: R.moment, fx: '' }].slice(-num((BR.recent || {}).keep, 10));
     }
+    if (R.scout) scoutAdd(c, num(R.scout, 0));   // 1.82.0
     log.push(`Event chance done: ${ch.text} (${name}).`);
     S.$ui.toasts.push(`${name}: ${ch.text}`);
   }
@@ -4878,7 +5036,8 @@ function stepCampusEvents(c) {
       const cur = bl.filter(b => b.at <= now && (b.to < 0 || b.to > now)).pop(), nx = bl.find(b => b.at > now);
       const ch = off ? [] : ((EVENT_FRAME.chances || {})[e.id] || []).filter(x => chanceDone(S, e, x) < num(x.max, 1) && chanceOpen(S, e, x.how || {}, c.absA)).map(x => x.text).slice(0, 2);
       const stall = STALLS.some(x => x[5][0] === e.id && x[2] === here && stallOpen(x[5], S.World));
-      return { id: e.id, t: e.t.split(' (')[0], kind: e.kind || '', n: e.d.indexOf(S.World.Day) + 1, of: e.d.length, now: cur ? cur.what : '', next: nx ? [clock(nx.at), nx.what] : null, ch, stall };
+      const vote = ((S.$eng.vote || {})[`Y${S.World.Year}`]) || '';   // 1.82.0: the Club Festival coin vote, once drawn
+      return { id: e.id, t: e.t.split(' (')[0], kind: e.kind || '', n: e.d.indexOf(S.World.Day) + 1, of: e.d.length, now: cur ? cur.what : '', next: nx ? [clock(nx.at), nx.what] : null, ch, stall, ...(e.id === 'club_festival' && vote ? { vote } : {}) };
     });
   }
 }
@@ -5984,7 +6143,7 @@ function stepNow(c) {
   for (const a of Object.values(S.$ui.area || {})) if (_.isPlainObject(a)) { delete a.walks; delete a.near; }
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepBondMemory, stepProficiency, stepEventChances, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepFold, stepGist, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepContest, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepBondMemory, stepProficiency, stepEventChances, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepFold, stepGist, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,
