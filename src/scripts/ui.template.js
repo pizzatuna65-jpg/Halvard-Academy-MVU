@@ -577,7 +577,9 @@ th{color:var(--ink2);font-weight:500;font-size:var(--fs-s)}
 /* 1.93.0 the Order row (a dropdown and ascending / descending) with room below it; pinned people: a star on each card */
 .psort{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:0 0 16px}
 .pso{display:flex;align-items:center;gap:8px;font-size:var(--fs-s);color:var(--ink2)}.pso select{width:auto;min-width:150px;padding:6px 10px}
-.prw{position:relative;display:flex}.prw>.pr{flex:1 1 auto}.pr.pinned{border-color:var(--brass-lo)}
+.prw{position:relative;display:flex}.prw>.pr{flex:1 1 auto}
+/* 1.93.1 (owner): a pinned card has a gold line and a soft gold glow */
+.pr.pinned,.pr.pinned:hover{border-color:var(--brass);box-shadow:0 0 0 1px color-mix(in srgb,var(--brass) 45%,transparent),0 0 14px color-mix(in srgb,var(--brass) 30%,transparent)}
 .pinb{position:absolute;top:4px;right:6px;width:26px;height:26px;padding:0;border:0;background:none;cursor:pointer;font-size:17px;line-height:1;color:var(--ink3);opacity:.7}
 .pinb:hover{opacity:1;color:var(--brass-hi)}.pinb.on{color:var(--brass-hi);opacity:1}
 .nmr{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.pind{flex:0 0 auto}.pind.on{border-color:var(--brass);color:var(--brass-hi)}
