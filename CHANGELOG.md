@@ -1,7 +1,36 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show de4303e:CHANGELOG.md` (1.89.0), `git show 4ace903:CHANGELOG.md` (1.88.1), `git show ce178fb:CHANGELOG.md` (1.88.0), `git show 0e1e5a2:CHANGELOG.md` (1.87.0), `git show e6f2c37:CHANGELOG.md` (1.86.0), `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 6065e5c:CHANGELOG.md` (1.90.0), `git show de4303e:CHANGELOG.md` (1.89.0), `git show 4ace903:CHANGELOG.md` (1.88.1), `git show ce178fb:CHANGELOG.md` (1.88.0), `git show 0e1e5a2:CHANGELOG.md` (1.87.0), `git show e6f2c37:CHANGELOG.md` (1.86.0), `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.95.0 — Letters that get answered, and letters that come unasked (2026-10-22)
+
+Owner's design (2026-10-22, "proceed" on `planning/DRAFT_surat.md`, now deleted). Save fixture v1.94.0.
+- **Posting.** A letter {{user}} writes away from the Mail Tower is no longer lost: it waits ("Post it at the Mail Tower" toast,
+  "not posted yet" in the Letters panel, a Post it button at the Tower) and the engine posts it the next time {{user}} is there. A
+  letter home works the same way, so "from the Mail Tower" (DECISIONS, Location activities) still holds.
+- **Every letter can be answered.** Posting rolls once (seeded, swipe-safe) whether and when a reply comes, by who it is for:
+  a roster NPC at Halvard 2–3 days, chance 90 − Tension × 0.6 (at least 25); far (not arrived yet, away or graduated, another
+  academy's team) 5–8 days, 70%; anyone else ("Roy's mother", an office, a stranger) 3–5 days, 80%. A letter home keeps its rule
+  (7 days, one a month, the parcel). The reply waits at the Mail Tower as "Reply from <name>"; `<now>` tells the narrator what it
+  answers ("To write when {{user}} reads it: …"). No reply means nothing is said; the Planner only shows "A reply from X may come"
+  until the window closes. A campus friend met before writing back answers in person (Log line; no letter). A second letter to the
+  same person before the reply: one reply answers both. Letters still give no Bond XP (Kind "other").
+- **Family writes first.** In a month {{user}} has not written home (and no family letter came, and {{user}} did not go home on a
+  break), a 60% draw on Monday of Week 3 brings a letter from home that week, with the same parcel roll. It is that month's
+  exchange: {{user}}'s answer reaches them, the next reply comes from next month's letter.
+- **A friend writes first.** One draw a week (35%): a bond of Rank 3+ with Tension under 50, not seen for 7 days (3 while {{user}}
+  is away), at most once in 28 days, weighted by Rank; the reason goes to the narrator. `never_first` (empty) lists who never writes first.
+- **Data:** `data/letters.json` (was `letters_home.json`): `home` as before, `reply`, `family_first`, `npc_first`, `never_first`,
+  `sort_hour` (letters arrive at the 08:00 sort, the letter home too). Engine: `stepMail`, `mailPost`, `mailKind`, `mailWhy`, `mailUi`
+  before `stepRecords`; `$eng.mail`, `$ui.mail`, Bonds `$mail`. Rule card `letters` and the 502 core line say the engine owns
+  replies and the letters family and bonded people write first; a letter the story needs from anyone else the narrator may still add.
+- **Migration:** a letter {{user}} sent in the week before 1.95.0 (not home) is posted on the day it was sent, so its reply can still come.
+- One small change from the draft: "met before writing back" is read from Scene.Present (the friend in a scene), not from an Interaction.
+- Tests: new `test_letters_v1950.cjs` (who a letter is for, swipe-stable rolls, replies or silence, the hint in 505, met in person,
+  posting later, one reply per person, family first, a friend first with its Rank and Tension gates, the migration);
+  `test_locations_v1310` updated (a letter written elsewhere now waits); the full suite passes.
+- **To check live:** `docs/TEST_CHECKLIST.md` Q3.3 [1.95].
 
 ## v1.94.0 — Your own notes on each person (2026-10-22)
 
@@ -95,35 +124,6 @@ Clubs tab, the Map card, the bracelet. Save fixture v1.89.0 (no data of 1.90.0 n
 - **To confirm with the owner:** the Tailoring Club works in the Workshop (it meets in the Club Rooms); the guest session is Saturday
   dawn only; the book helps all study.
 - **To check live:** `docs/TEST_CHECKLIST.md` Q2.5, Q2.7 [1.91].
-
-## v1.90.0 — Club work: what clubs do for the whole campus (2026-10-22)
-
-Owner's design (2026-10-22, "proceed" on `planning/DRAFT_kerja_club.md`), release 1 of 3 (§3; services §4 and the weekly clients §4.7
-follow): clubs whose lore names a service now work for everyone, members or not, as the Divination Society's forecast already did.
-`data/club_work.json` (new), `data/shop.json` (club rows), engine `stepClubWork`, `stallOpen`/`cwCond`, `cwNews`, `snowSlow`, 505, 506,
-the Notice Board, the Shop tab, the Clubs directory, the bracelet. Save fixture v1.89.0.
-- **The Academy Newspaper**, Monday 07:00 on the Notice Board (none in a break week): last week's results (the Council election, the
-  Academy Competition, Sports Day, the Showcase, the Club Festival vote, the Kingdom team, recorded by `cwNews`), the newest rumour that
-  has reached campus (printed: "all over campus (in the Newspaper)" and three days longer to live), the week ahead, a ghost story.
-  `<now>` Monday to Wednesday says what it leads with.
-- **Club stalls** (shop rows with `club`, opened by the engine, `$ui.cw.open`; "Stalls here", the Shop tab, the Price Guide's "Club
-  stalls here"): the Cooking Club's Saturday bake in the Canteen 15:00–17:00 (70% honey bread, 3 points, stamina +15; else free
-  failures, by the seed); the Brewing and Alchemy table in the Potion Halls, Saturday 14:00–18:00 (Warming and Cooling draught 12,
-  Cold remedy 15: the three simple drinks, so the draft's weekly rotation is all three every week); free cold remedies at the Medical
-  Centre 07:00–19:00 on flu days, with a Notice Board posting; Foraged reagent at Greenwick's, 12 points, spring to autumn.
-- **Groundskeeping**: the morning after snow (Weather Full) campus walks take 50% longer until 07:00, walks with an end in the Hills,
-  Forest or Lake until 15:00; `<now>` says so. Nothing slows walks with Club work off.
-- **The Festival Committee** signs the Notice Board postings of Star Night, the Bazaar, Founder Day, the Harvest Festival and the Club
-  Festival and lists their programme (the event's chances). Agenda event items carry the event id.
-- **The directory**: a "For the campus:" line for the nine clubs with work; a member's club gets a `<now>` line on its day ("{{user}}'s
-  club is running the Saturday bake…; {{user}} can lend a hand"), no new XP.
-- **Settings → Features → Club work** (on by default) turns all of it off.
-- Tests: new `test_clubwork_v1900.cjs`; `test_batch5_shops` exempts crafting materials from "every seasonal item has an effect"; full
-  `npm test` passes; `test_saves` loads v1.89.0.
-- **To confirm with the owner:** the Committee's festivals (Star Night, Bazaar, Founder Day, Harvest Festival, Club Festival); the
-  Tailoring Club's services will use the Workshop (lore: "crafting space for the Smithing, Tailoring and Brewing clubs"), though it
-  meets in the Club Rooms.
-- **To check live:** `docs/TEST_CHECKLIST.md` Q1.2, Q2.7, Q3.1, Q3.5, Q9.1 [1.90].
 
 ## Release index (one line per release, oldest first)
 
@@ -305,3 +305,4 @@ the Notice Board, the Shop tab, the Clubs directory, the bracelet. Save fixture 
 - **v1.93.0 (2026-10-22):** UI from the owner's notes: event plans as a time | what table (Event tab, Planner), short points for long explanations, the Bonds order as a dropdown with ascending / descending, pinned people kept on top (UI only).
 - **v1.93.1 (2026-10-22):** A pinned person's Bonds card has a gold line and glow.
 - **v1.94.0 (2026-10-22):** Your own notes on each person: a notes box in the dossier and a 📝 mark on the Bonds card (UI only, chat variable `eld_notes`).
+- **v1.95.0 (2026-10-22):** Letters (owner's design): every letter posted at the Mail Tower gets a reply on a timer or none (campus 2–3 days, far 5–8, other 3–5), family writes first in a month {{user}} has not, a close friend now and then; a letter written elsewhere waits to be posted.

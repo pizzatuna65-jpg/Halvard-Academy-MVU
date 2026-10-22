@@ -209,10 +209,15 @@ t = t.replace('/*@@AMBIENCE@@*/{}', json.dumps({k: v for k, v in amb.items() if 
 _rest = json.load(open(P('data/restore_places.json'), encoding='utf-8'))['places']
 assert all(lid in locs for lid in _rest), 'restore_places.json: unknown place'
 t = t.replace('/*@@RESTFUL@@*/{}', json.dumps({re.sub(r'^the ', '', locs[lid]['name'].lower()): v for lid, v in _rest.items()}, ensure_ascii=False, separators=(',', ':')))
-_home = {k: v for k, v in json.load(open(P('data/letters_home.json'), encoding='utf-8')).items() if not k.startswith('_')}
+# 1.95.0 (owner-approved planning/DRAFT_surat.md): data/letters.json (was letters_home.json): `home` is HOME, the rest is MAIL
+_let = {k: v for k, v in json.load(open(P('data/letters.json'), encoding='utf-8')).items() if not k.startswith('_')}
+_home = _let.pop('home')
 _shopnames = {i['item'] for i in json.load(open(P('data/shop.json'), encoding='utf-8'))['items']}
-assert all(n in _shopnames for n, _ in _home['items']), 'letters_home.json: not a shop item'
+assert all(n in _shopnames for n, _ in _home['items']), 'letters.json: home: not a shop item'
+assert all(k in json.load(open(P('data/npcs.json'), encoding='utf-8')) for k in _let['never_first']), 'letters.json: never_first: unknown NPC'
+assert set(_let['reply']) == {'campus', 'far', 'other'}, 'letters.json: reply needs campus, far, other'
 t = t.replace('/*@@HOME@@*/{}', json.dumps(_home, ensure_ascii=False, separators=(',', ':')))
+t = t.replace('/*@@MAIL@@*/{}', json.dumps(_let, ensure_ascii=False, separators=(',', ':')))
 # 1.33.0 (owner-approved planning/DRAFT_classes_and_teachers.md): free periods, the chance and the reasons per teacher
 _free = {k: v for k, v in json.load(open(P('data/free_periods.json'), encoding='utf-8')).items() if not k.startswith('_')}
 assert all(k in json.load(open(P('data/npcs.json'), encoding='utf-8')) for k in _free['npcs']), 'free_periods.json: unknown NPC'

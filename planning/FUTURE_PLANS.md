@@ -66,6 +66,10 @@ Sisa saran audit fitur 2026-10-03 (4.5–4.10 sudah dibuat di 1.49–1.52; 4.16 
   Limits, HQ NPC Genesis dan paragraf "Scene end" Scene Engine (±300). Risiko: gaya Gemini bisa bergeser; port RF berikutnya lebih
   repot. Detail: `git show bdcc889:planning/DRAFT_preset_audit_2.md` (dihapus di 1.52.2).
 
+- **Mail Tower dan Morning Choir** (sisa `DRAFT_surat.md` §9, kanon): keeper Mail Tower adalah ayah Castor, anggota Choir, dan Castor
+  memakai Mail Tower sebagai sumber berita kampus (lore 129). Ide: Choir diam-diam membaca surat {{user}}, jadi petunjuk Mystery Board.
+  Butuh keputusan kanon owner.
+
 - **Kingdom Competition di kampus** (sisa `DRAFT_kingdom_competition.md` §7, 1.84.0 membuat baris berita saja): peluang event selama
   minggu Kingdom untuk {{user}} yang tidak ikut tim (berita siang di announcement pillar, buku taruhan Aiden, broadsheet keluarga Linus
   lore 410) lewat `data/event_frame.json` `chances` `kingdom_comp`.
@@ -95,7 +99,9 @@ Sisa saran audit fitur 2026-10-03 (4.5–4.10 sudah dibuat di 1.49–1.52; 4.16 
   modifier Fortune per rank dan cap +20, DC dan band crafting, dosis dan yield, harga jual, upah menagerie, bobot grade 50/30/20 dan
   30/50/20, roll hari ujian (±4/±8), batas A/B/C/D, bonus bond Society, XP masterwork 3, daftar bangsawan untuk Consummate.
 - Lokasi (1.31.0): pengali tempat pemulihan dan aturannya (`data/restore_places.json`), paket surat ke rumah (50/30/20, 10–30
-  coin, `data/letters_home.json`), upah bell-keeper 30, gosip 60% (`ambience.json` `lore_places`), Trust Old Hut +1 per bulan.
+  coin, `data/letters.json` `home`), upah bell-keeper 30, gosip 60% (`ambience.json` `lore_places`), Trust Old Hut +1 per bulan.
+- Surat (1.95.0, `data/letters.json`): balasan kampus 2–3 hari (90 − Tension × 0,6, minimal 25), jauh 5–8 (70%), lain 3–5 (80%);
+  keluarga duluan minggu 3, 60%; teman duluan 35% per minggu, Rank 3, Tension < 50, tak bertemu 7 hari (3 saat pergi), jeda 28 hari.
 - Expedition (1.38.0, `data/expedition.json` `rates`, `weather`): peluang target 3% + 3%/jam (maks 24%), malam ×0.5, jejak 20%,
   encounter 10%/15%, Wendigo 1%, jalan 8%/jam, mencari 3%/jam, pengali spora/panjat/menyeret 1.5, hujan/malam 1.25, cuaca hutan
   (24–29 °C, hujan sore 70%), glimpse beast dilindungi 15%/jam di Old Heart, jam-jam jalan antar tempat.

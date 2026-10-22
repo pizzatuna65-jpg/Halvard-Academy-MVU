@@ -347,6 +347,12 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
       ago…", and the narrator lets it show (or not) in their own way, never as a report [1.73].
 - [ ] At the Mail Tower, write a letter home: the update records it, a week later a reply waits at the Mail Tower, and any parcel lands in
       the Bag or the Wallet [1.31, 1.54].
+- [ ] Write a letter to a friend in the dorm (not at the Mail Tower): a "Post it at the Mail Tower" toast and "not posted yet" in Letters;
+      at the Tower it goes. Two or three days later a "Reply from …" may wait; reading it, the narrator writes it in the friend's own voice
+      and it answers what Charles wrote. The narrator never adds a reply itself [1.95].
+- [ ] A month Charles has not written home: some time in Week 3 a letter from home may wait (the family as the player wrote them).
+      A Rank 3+ friend Charles has not seen for a week may write unasked; the letter sounds like them (a short note for someone who
+      rarely writes) [1.95].
 - [ ] A Project with a Due date: the day before, the Log reminds once and `<now>` lists it under "Due soon" [1.44].
 - [ ] A group assignment (Kind assignment, With a classmate): a group study session with them in `/Practice` gives bond XP; at Progress 100
       the Log says "+45 minutes of study"; left overdue, Tension rises [1.49].

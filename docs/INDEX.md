@@ -89,7 +89,8 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepHidden` (7) | Dove attention, hidden magic, Points without Transactions | |
 | `stepPayout` (8) | monthly payout | |
 | `stepLoreChanges` (8b0) | 1.60.0: lasting changes to the world's facts (`Campus_State.Lore_changes`): kept only with a Cause and only when the reply or the player's message names the subject (`LORE`, `lcKey`, `loreUidOf`, `proseOf`); 2 new a reply, 40 on record; never Replace for a person; the narrator's removal put back; 1.77.0 `Until` ends a change after its last day (`$abs`, agenda kind `lore`); Journal line and toast; Location_changes folded in | `tools/common.py` `lore_names`, gen_engine `LORE_NAMES`, build_card `LORE_OPEN`, 501, 509 sheet `cLore`, Journal `lcHtml` / `data-lcundo`, `test_lore_changes_v1600` |
-| `stepRecords` (8b) | Commitments, Notices, Letters (letters home and their parcel, `$eng.home`), Clues, Journal, Heals_by | `data/letters_home.json` |
+| `stepMail` (8a2, called from `stepRecords`) | 1.95.0: the Mail Tower: posting (`$eng.mail.post`), every reply on a timer (`mailPost`, `mailKind`), family and friends who write first (`mailWhy`), the narrator's hints (`mailUi` → `$ui.mail`) | `data/letters.json` |
+| `stepRecords` (8b) | Commitments, Notices, Letters (letters home and their parcel, `$eng.home`; the rest in `stepMail`), Clues, Journal, Heals_by | `data/letters.json` |
 | `stepClubLife` (8c) | club, competition (Kingdom prize; 1.33.0 Dorm bracket prize), projects, trip; 1.75.0 `stepFounding` (the club {{user}} founds, `CLUB_FOUNDING`) | `data/rule_cards.json` (`founding`) |
 | `stepNewYear` (8e) | new campaign year, cohorts | `data/cohorts.json` |
 | `stepGraduation` / `stepGraduateRewards` (8d, 8d2) | third-years leave; their rewards end | |
@@ -169,7 +170,7 @@ In `merge_lorebooks.py`: `rep(entry, old, new)` (asserting text edits), `apply_l
 ## 7. Data files (`data/`)
 
 Hand-written single sources (edit these): `shop.json`, `happenings.json`, `calendar.json`, `event_frame.json` (1.81.0), `features.json`, `tuning.json`,
-`ambience.json` (1.31.0: `lore_places`), `restore_places.json` and `letters_home.json` (1.31.0), `free_periods.json` (1.33.0), `mastery.json` and `public_roles.json` (1.43.0), `expedition.json` (1.38.0), `avalon.json` (1.39.0), `airship.json` (1.40.0), `sunreach.json` (1.41.0), `campus.json` (1.47.0: campus walks), `wind_casting.json`, `assets_manifest.json`, `cohorts.json`, `campus_phases.json` (empty until canon waves).
+`ambience.json` (1.31.0: `lore_places`), `restore_places.json` and `letters.json` (1.31.0 as `letters_home.json`; 1.95.0 every letter), `free_periods.json` (1.33.0), `mastery.json` and `public_roles.json` (1.43.0), `expedition.json` (1.38.0), `avalon.json` (1.39.0), `airship.json` (1.40.0), `sunreach.json` (1.41.0), `campus.json` (1.47.0: campus walks), `wind_casting.json`, `assets_manifest.json`, `cohorts.json`, `campus_phases.json` (empty until canon waves).
 *Per NPC* (a new NPC needs a row): `bond_rewards.json`, `bond_rules.json` (1.89.0 `layers`), `bond_openness.json`, `info_layers.json` (1.89.0, only where a field is public in the lore), `tension.json`, `trust.json`,
 `npc_moods.json`, `gift_prefs.json`, `npc_canon.json` (voices, stages, Rank 8 branch), `rank4_partners.json`, `relations_curated.json`,
 `voice_rules.json`, `initiative_asks.json`, `npc_routines.json` (1.52.0; rival teams none), `dialogue_colors.json` (1.37.0; new NPCs via `make_dialogue_colors.py`), `field_overrides.json`, `focus_overrides.json`, `thumb_overrides.json`.

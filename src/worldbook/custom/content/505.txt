@@ -409,6 +409,9 @@ Due soon: <%- due.map(x => x.t + ' (' + (x.s === 'overdue' ? 'OVERDUE' : (x.d ==
 <%_ } _%>
 <%_ if (mail) { _%>
 Mail Tower: <%- mail %> letter<%- mail > 1 ? 's' : '' %> waiting for {{user}} to collect.
+<%_ if (((UI.mail || {}).hint || []).length) { _%>
+To write when {{user}} reads it: <%- UI.mail.hint.join(' | ') %>
+<%_ } _%>
 <%_ } _%>
 <%_ if (hDue.length) { _%>
 Hooks due now: <%- hDue.map(([k, h]) => k + (h._State === 'overdue' ? ' (overdue)' : '') + ' (' + (h.Who ? h.Who + ': ' : '') + h.Note + ')').join('; ') %>

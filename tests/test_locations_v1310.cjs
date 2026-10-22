@@ -89,7 +89,7 @@ const readIt = at(later, 20, '10:30', 'Mail Tower', [{ op: 'replace', path: '/Le
 const coin = readIt.Player.Wallet.Coin - later.Player.Wallet.Coin, item = H.parcel && H.parcel.item && readIt.Inventory[H.parcel.item[0]];
 ok(H.given && (H.parcel ? (H.parcel.coin ? coin === H.parcel.coin : !!item) : coin === 0), `read, its parcel is handed over (${JSON.stringify(H.parcel)})`);
 const elsewhere = at(at(S0, 12, '10:00', 'Main Library'), 12, '10:20', 'Main Library', [{ op: 'insert', path: '/Letters/To Dad', value: { From: '{{user}}', To: 'Dad', Gist: 'hi', Status: 'sent' } }]);
-ok(!(elsewhere.$eng.home || {}).month && elsewhere._Log.some(x => /from the Mail Tower/.test(x)), 'written away from the Mail Tower: no reply');
+ok(!(elsewhere.$eng.home || {}).month && elsewhere.$eng.mail.post.includes('To Dad') && elsewhere._Log.some(x => /next at the Mail Tower/.test(x)), 'written away from the Mail Tower: it waits to be posted (1.95.0)');
 
 console.log('Talk under running water');
 const AMB = JSON.parse(read('data/ambience.json'));

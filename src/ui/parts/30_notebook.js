@@ -317,15 +317,19 @@ function fluCard(S) {
 function nbLetters(S) {
   const L = Object.entries(S.Letters || {}).reverse();
   const atTower = normPlace(S.World.Location) === 'mail tower';
+  const MU = (S.$ui || {}).mail || {}, unposted = new Set(MU.post || []), maybe = Object.fromEntries((MU.pend || []).map(p => [p.t, p.by]));   // 1.95.0
   const card = ([k, l]) => {
-    const out = l.Status === 'sent', who = out ? l.To : l.From;
-    const act = l.Status === 'waiting'
+    const out = l.Status === 'sent', who = out ? l.To : l.From, held = out && unposted.has(k);
+    const act = held ? (atTower ? `<button class="btn sm pri" data-fill="${esc(`I hand my letter to ${l.To || 'its reader'} in on the sorting floor.`)}">Post it</button>` : '')
+      : l.Status === 'waiting'
       ? `<button class="btn sm pri" data-fill="${esc(atTower ? `I collect the letter${l.From ? ` from ${l.From}` : ''} from my locker and read it.` : `I head to the Mail Tower to collect my letter${l.From ? ` from ${l.From}` : ''}.`)}">${atTower ? 'Collect and read' : 'Go and collect'}</button>`
       : l.Status === 'read' ? `<button class="btn sm" data-reply="${esc(l.From)}">Reply</button>` : '';
-    const st = { waiting: '<span class="pill w">waiting at the Mail Tower</span>', read: '<span class="pill">read</span>', replied: '<span class="pill g">answered</span>', sent: '<span class="pill">sent</span>' }[l.Status];
+    const st = held ? '<span class="pill w">not posted yet</span>'
+      : { waiting: '<span class="pill w">waiting at the Mail Tower</span>', read: '<span class="pill">read</span>', replied: '<span class="pill g">answered</span>', sent: '<span class="pill">sent</span>' }[l.Status];
+    const note = held ? `<div class="sub">It goes when you are next at the Mail Tower.</div>` : out && maybe[k] ? `<div class="sub">A reply may come by ${esc(maybe[k])}.</div>` : '';
     return `<div class="item letter ${l.Status}"><div class="row"><span class="t">${esc(k)}</span>${st}</div>
       <div class="meta"><span class="sub">${out ? 'To' : 'From'}</span>${peopleIn(who, S) || '<span class="sub">unknown</span>'}<span class="sub">${esc(l.Date)}</span></div>
-      ${l.Status === 'waiting' ? '<div class="sub">Sealed. Collect it to learn what it says.</div>' : `<div class="gist">${esc(l.Gist)}</div>`}${act ? `<div style="margin-top:8px">${act}</div>` : ''}</div>`;
+      ${l.Status === 'waiting' ? '<div class="sub">Sealed. Collect it to learn what it says.</div>' : `<div class="gist">${esc(l.Gist)}</div>`}${note}${act ? `<div style="margin-top:8px">${act}</div>` : ''}</div>`;
   };
   const inb = L.filter(([, l]) => l.Status !== 'sent'), sent = L.filter(([, l]) => l.Status === 'sent');
   const known = Object.keys(S.Bonds || {}).filter(id => knowsName(id, S)).map(id => (npcOf(id) || { n: id }).n);

@@ -1,0 +1,84 @@
+{
+ "_note": "The Mail Tower. home (1.31.0, owner-approved planning/DRAFT_location_activities.md): a letter home (To a family member or 'home'), posted at the Mail Tower, gets one reply a month `days` later; the engine rolls its parcel once (percent: none, item, coin) and hands it over when {{user}} reads the reply. Items are shop items with their Bag kind; coin is a range. 1.95.0 (owner-approved planning/DRAFT_surat.md): reply = every other letter {{user}} posts, by who it is for (campus: a roster NPC at Halvard, chance base - Tension x per_tension, at least min; far: a roster NPC not at Halvard or on another academy's team; other: anyone else), days a range, rolled once when posted. family_first: in a month {{user}} has not written home, family writes first from Monday of `week`. npc_first: one draw a week; a bond of Rank `rank`+ with Tension below `tension`, not seen for `unseen_days` (or `away_days` while {{user}} is away), at most once per `cooldown_days`; never_first: roster ids who never write first. Letters arrive at the morning sort, `sort_hour`.",
+ "sort_hour": 8,
+ "home": {
+  "days": 7,
+  "roll": {
+   "none": 50,
+   "item": 30,
+   "coin": 20
+  },
+  "coin": [
+   10,
+   30
+  ],
+  "to": "home|family|mother|father|mum|mom|dad|mama|papa|parents?|grand(?:ma|pa|mother|father|parents)|sister|brother|aunt|uncle|guardian|cousin",
+  "items": [
+   [
+    "Firetooth (tin)",
+    "food"
+   ],
+   [
+    "Honey bun",
+    "food"
+   ],
+   [
+    "Smoked river fish",
+    "food"
+   ],
+   [
+    "Elderflower cold syrup",
+    "drink"
+   ],
+   [
+    "Vigour tonic",
+    "drink"
+   ],
+   [
+    "Ember pouch",
+    "gear"
+   ],
+   [
+    "Rain-ward charm",
+    "gear"
+   ],
+   [
+    "Hearthstone hand-warmer",
+    "gear"
+   ],
+   [
+    "Letter paper set",
+    "other"
+   ]
+  ]
+ },
+ "reply": {
+  "campus": {
+   "days": [2, 3],
+   "base": 90,
+   "per_tension": 0.6,
+   "min": 25
+  },
+  "far": {
+   "days": [5, 8],
+   "pct": 70
+  },
+  "other": {
+   "days": [3, 5],
+   "pct": 80
+  }
+ },
+ "family_first": {
+  "week": 3,
+  "pct": 60
+ },
+ "npc_first": {
+  "pct": 35,
+  "rank": 3,
+  "tension": 50,
+  "unseen_days": 7,
+  "away_days": 3,
+  "cooldown_days": 28
+ },
+ "never_first": []
+}

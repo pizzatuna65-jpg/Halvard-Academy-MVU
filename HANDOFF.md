@@ -3,7 +3,9 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.94.0** (2026-10-22): 1.94.0 your own notes on each person (dossier box, 📝 on the card; chat variable
+**Snapshot:** card **v1.95.0** (2026-10-22): 1.95.0 letters: every letter posted at the Mail Tower gets a reply on a timer or none,
+family and close friends sometimes write first, a letter written elsewhere waits to be posted (`data/letters.json`, `stepMail`).
+1.94.0 your own notes on each person (dossier box, 📝 on the card; chat variable
 `eld_notes`). 1.93.1: a gold glow on pinned cards. 1.93.0: UI fixes from the owner's notes: event plans as a time | what table (Event tab,
 Planner), short points for long explanations, the Bonds order as a dropdown with ascending / descending, pinned people on top (UI
 only, chat variable `eld_pins`). 1.92.0: the weekly club client (a non-member student comes to {{user}}'s service club some weeks). 1.91.0: club services (Tailoring and Smithing orders and mending at

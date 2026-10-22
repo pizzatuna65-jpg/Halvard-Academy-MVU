@@ -638,6 +638,8 @@ const PRACTICE = [{"loc":"potion_halls","action":"Brew a potion","stat":"Craft",
 const RESTFUL = {"founder's statue and park":{"restores":"stamina","usual":1.5,"summary":"Stamina x1.5 while resting in fair daylight; x1.75 on a warm sunny afternoon; nothing extra in rain, snow, fog, cold or after dark","rules":[{"if":{"dark":true},"mult":1,"why":"after dark"},{"if":{"sky":["Overcast","Fog","Rain","Storm"]},"mult":1,"why":"the weather"},{"if":{"snow":true},"mult":1,"why":"snow"},{"if":{"tempMax":4},"mult":1,"why":"too cold to lie on the grass"},{"if":{"sky":["Clear"],"tempMin":15,"tempMax":27,"from":660,"to":960},"mult":1.75,"why":"a warm sunny afternoon"}]},"medical centre":{"restores":"stamina","usual":1.75,"summary":"Stamina x1.75 while resting in the ward; x1.25 in exam weeks, competition weeks and the week after the Thinning","rules":[{"if":{"weeks":[[3,1],[5,1],[9,1],[11,1],[3,4],[6,4],[9,4],[7,4]]},"mult":1.25,"why":"a busy week: the beds go to the injured first"}]},"bathhouse and washrooms":{"restores":"stamina","usual":2,"clears":{"Chilled":30},"summary":"Stamina x2 while resting in your own dorm's bathhouse; x2.5 on a cold day or when you come in chilled or soaked; 30 minutes ends Chilled","rules":[{"if":{"arrivedCold":true},"mult":2.5,"why":"warming up after the cold"},{"if":{"tempMax":5},"mult":2.5,"why":"a cold day outside"}]},"cathedral":{"restores":"mana","usual":1.25,"summary":"Mana x1.25 while sitting quietly on the pews; x1.75 during the Sunday service (09:00-11:00)","rules":[{"if":{"days":["Sun"],"from":540,"to":660},"mult":1.75,"why":"the Sunday service"}]},"meditation rooms":{"restores":"mana","usual":2,"summary":"Mana x2 while resting; x2.5 in the quiet morning (07:00-09:00); x1.75 in exam weeks, when every room is full","rules":[{"if":{"weeks":[[3,1],[5,1],[9,1],[11,1]]},"mult":1.75,"why":"exam week: every room is full"},{"if":{"from":420,"to":540},"mult":2.5,"why":"the quiet morning"}]},"forest clearing":{"restores":"mana","usual":3,"summary":"Mana x3 while resting among the Elder Oak's roots; x3.5 in full sun; x2 after dark","rules":[{"if":{"dark":true},"mult":2,"why":"after dark"},{"if":{"sky":["Clear"]},"mult":3.5,"why":"full sun on the oak"}]}};
 // 1.31.0 (owner-approved planning/DRAFT_location_activities.md): a letter home once a month, the reply and its parcel (data/letters_home.json)
 const HOME = {"days":7,"roll":{"none":50,"item":30,"coin":20},"coin":[10,30],"to":"home|family|mother|father|mum|mom|dad|mama|papa|parents?|grand(?:ma|pa|mother|father|parents)|sister|brother|aunt|uncle|guardian|cousin","items":[["Firetooth (tin)","food"],["Honey bun","food"],["Smoked river fish","food"],["Elderflower cold syrup","drink"],["Vigour tonic","drink"],["Ember pouch","gear"],["Rain-ward charm","gear"],["Hearthstone hand-warmer","gear"],["Letter paper set","other"]]};
+// 1.95.0 (owner-approved planning/DRAFT_surat.md): every other letter's reply, family and friends who write first (data/letters.json)
+const MAIL = {"sort_hour":8,"reply":{"campus":{"days":[2,3],"base":90,"per_tension":0.6,"min":25},"far":{"days":[5,8],"pct":70},"other":{"days":[3,5],"pct":80}},"family_first":{"week":3,"pct":60},"npc_first":{"pct":35,"rank":3,"tension":50,"unseen_days":7,"away_days":3,"cooldown_days":28},"never_first":[]};
 // 1.33.0 (owner-approved planning/DRAFT_classes_and_teachers.md): free periods (data/free_periods.json). Now and then a teacher
 // cannot come; the class is not held and counts against no one. Seeded per class period and day; never on a calendar event day
 // or in Month 1 Week 1. Returns the reason, or '' when the class runs.
@@ -1789,7 +1791,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.94.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.95.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 const verLt = (a, b) => { const p = v => String(v || '0').split('.').map(x => parseInt(x, 10) || 0), x = p(a), y = p(b); for (let i = 0; i < 3; i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) < (y[i] || 0); return false; };   // 1.63.0
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
@@ -1955,6 +1957,18 @@ function stepMigrate(c) {
     b.$met = lo ? ydate(lo) : '';
   }
   // 1.76.0 (owner-approved planning/DRAFT_sebaran_club.md): the Walking Club became the Camping Club
+  // 1.95.0 (owner-approved planning/DRAFT_surat.md): a letter {{user}} sent in the week before (not home: that had its rule) is
+  // posted on the day it was sent, so its reply can still come; older letters are settled
+  if (verLt(c.fromVer, '1.95.0') && _.isPlainObject(S.Letters) && !(S.$eng.mail && S.$eng.mail.mig)) {
+    const me = MAIL_ME(S), now = toAbs(S.World);
+    for (const [k, L] of Object.entries(S.Letters)) {
+      const m = L && L.Status === 'sent' && me.has(String(L.From).trim().toLowerCase()) && DAY_ON_RX.exec(String(L.Date || ''));
+      if (!m || mailKind(S, L.To, k).kind === 'home') continue;
+      const at = toAbs({ Year: m[1] ? +m[1] : 1, Month: +m[2], Week: +m[3], Day: m[4] || 'Mon', Time: '12:00' });
+      if (at <= now && now - at <= 7 * DAY_MIN) mailPost(c, k, L, at);
+    }
+    mailOf(S).mig = 1;
+  }
   if (verLt(c.fromVer, '1.76.0')) for (const X of both) { const P = (X.Player || {}).Profile || {}; if (P.Club && canonClub(P.Club) === 'Camping Club') P.Club = 'Camping Club'; }
   // 1.75.0 (owner-approved planning/DRAFT_club_sendiri.md): a club not on record that {{user}} already belongs to was founded in the
   // story: it becomes the founded club (its room and advisor not on record yet); the founding reputation is not paid again
@@ -5700,6 +5714,154 @@ function stepLoreChanges(c) {
   }
 }
 
+// ---- 8a2. 1.95.0 (owner-approved planning/DRAFT_surat.md): the Mail Tower. A letter {{user}} sends goes from the Tower (written
+// elsewhere, it waits in $eng.mail.post until {{user}} is there). Posting rolls once whether and when a reply comes: a letter home
+// keeps its own rule (HOME, one reply a month with a parcel); any other by who it is for (MAIL.reply campus, far, other). A campus
+// friend who meets {{user}} before writing back answers in person. Family writes first in a month {{user}} has not
+// (MAIL.family_first), a close friend now and then (MAIL.npc_first, one draw a week). The narrator writes every letter's words;
+// $eng.mail.hint tells it what each engine letter answers until {{user}} reads it.
+const MAIL_ME = S => new Set(['{{user}}', 'you', 'me', 'i', String(((S.Player || {}).Profile || {}).Name || '').toLowerCase()].filter(Boolean).map(x => x.toLowerCase()));
+const mailDay = d => d * DAY_MIN + num(MAIL.sort_hour, 8) * 60;   // the morning sort of day d
+const mailOf = S => {
+  const M = S.$eng.mail = _.isPlainObject(S.$eng.mail) ? S.$eng.mail : {};
+  if (!Array.isArray(M.post)) M.post = [];
+  if (!Array.isArray(M.pend)) M.pend = [];
+  if (!_.isPlainObject(M.hint)) M.hint = {};
+  return M;
+};
+const homeOf = S => (S.$eng.home = _.isPlainObject(S.$eng.home) ? S.$eng.home : {});
+const mailKey = (L, k) => { let x = k.slice(0, 60), n = 2; while (x in L) x = `${k.slice(0, 55)} (${n++})`; return x; };
+const monthOf = W => `${W.Year || 1}-${W.Month}`;
+// who a letter is for: home (family, HOME.to; "Roy's mother" is someone else's), a roster NPC at Halvard (campus), one who is not
+// (far: not arrived yet, away or graduated, another academy's team), anyone else (other)
+function mailKind(S, to, title) {
+  const t = String(to || '').trim();
+  if (!/\b[\w-]+['’]s\s/i.test(t) && new RegExp(`\\b(?:${HOME.to})\\b`, 'i').test(`${t} ${title}`)) return { kind: 'home', name: t || 'home' };
+  const words = t.toLowerCase().replace(/[^\p{L}\s'-]/gu, ' ').split(/\s+/).filter(Boolean);
+  const id = NPC_ALIAS[words.join(' ')] || words.map(w => NPC_ALIAS[w]).find(Boolean) || '';
+  if (!id) return { kind: 'other', name: t };
+  const far = NO_BOND.has(id) || (ARRIVES[id] || 1) > num(S.World.Year, 1) || npcAwayIn(S, id);
+  return { kind: far ? 'far' : 'campus', name: id, id };
+}
+// post one letter at minute `at`: a letter home starts its month's reply (HOME); any other rolls its reply once (MAIL.reply)
+function mailPost(c, k, L, at) {
+  const { S, log } = c, seed = num(S.$eng.seed, 0), M = mailOf(S), day = Math.floor(at / DAY_MIN), r = mailKind(S, L.To, k);
+  if (r.kind === 'home') {
+    const H = homeOf(S), month = monthOf(fromAbs(at));
+    if (H.month === month) { log.push(`Letter "${k}" reaches ${r.name}; this month's letters home are already exchanged, so the next reply comes from next month's letter.`); return; }
+    const d = d100(seed, 'home', month), R = HOME.roll;
+    const parcel = d <= R.none ? null : d <= R.none + R.item ? { item: pickOf(HOME.items, seed, 'homeitem', month) }
+      : { coin: rollInt(HOME.coin[0], HOME.coin[1], seed, 'homecoin', month) };
+    Object.assign(H, { month, due: mailDay(day + HOME.days), from: r.name, parcel, key: '', given: false });
+    log.push(`Letter home sent: a reply arrives in about ${HOME.days} days.`);
+    return;
+  }
+  if (!r.name) { log.push(`Letter "${k}" has no addressee (To): it went, but no reply can come.`); return; }
+  if (M.pend.some(p => p.to.toLowerCase() === r.name.toLowerCase())) { log.push(`Letter "${k}": ${r.name} has not answered {{user}}'s last letter yet; one reply will answer both.`); return; }
+  const R = MAIL.reply[r.kind], salt = `${k}|${day}`;
+  const pct = r.kind === 'campus' ? _.clamp(R.base - num((S.Bonds[r.id] || {}).Tension, 0) * R.per_tension, R.min, R.base) : R.pct;
+  M.pend.push({ to: r.name, id: r.id || '', kind: r.kind, of: k, on: dstamp(fromAbs(at)), gist: String(L.Gist || '').slice(0, 160), at,
+    due: mailDay(day + rollInt(R.days[0], R.days[1], seed, 'mail-days', salt)), end: mailDay(day + R.days[1]), ok: roll100(seed, 'mail-reply', salt) < pct });
+  log.push(`Letter "${k}" posted to ${r.name}: a reply, if ${r.name} writes one, takes about ${R.days[0]}–${R.days[1]} days.`);
+}
+// a bond who would write first now, and why ('' = not now)
+function mailWhy(S, id, today) {
+  const N = MAIL.npc_first, b = S.Bonds[id], M = mailOf(S);
+  if (!b || NO_BOND.has(id) || (MAIL.never_first || []).includes(id) || num(b.Rank, 0) < N.rank || num(b.Tension, 0) >= N.tension) return '';
+  if (num(b.$mail, -1) >= 0 && today - b.$mail < N.cooldown_days) return '';
+  if (M.pend.some(p => p.id === id) || Object.values(S.Letters || {}).some(l => l && l.Status === 'waiting' && l.From === id)) return '';
+  const m = DAY_ON_RX.exec(String(b.Last_seen || ''));
+  if (!m) return '';
+  const gap = today - Math.floor(toAbs({ Year: m[1] ? +m[1] : 1, Month: +m[2], Week: +m[3], Day: m[4] || 'Mon', Time: '00:00' }) / DAY_MIN), away = awayIn(S);
+  if (gap >= N.unseen_days) return `${away ? '{{user}} has been away; ' : ''}they have not seen {{user}} for ${gap} days`;
+  return away && gap >= N.away_days ? `{{user}} is away (not seen for ${gap} days)` : '';
+}
+function stepMail(c, fresh) {
+  const { S, log, absA } = c, seed = num(S.$eng.seed, 0), M = mailOf(S), H = homeOf(S), W = S.World, today = Math.floor(absA / DAY_MIN);
+  const toast = from => S.$ui.toasts.push(`Letter waiting at the Mail Tower (from ${from})`);
+  // posting
+  const atTower = placeKey(W.Location) === 'mail tower';
+  for (const k of fresh) {
+    if (S.Letters[k].Status !== 'sent' || M.post.includes(k)) continue;
+    if (atTower) { mailPost(c, k, S.Letters[k], absA); continue; }
+    M.post.push(k); S.$ui.toasts.push(`Post it at the Mail Tower: ${k}`);
+    log.push(`Letter "${k}" is written but not posted: it goes when {{user}} is next at the Mail Tower.`);
+  }
+  if (atTower) for (const k of M.post.splice(0)) if (S.Letters[k] && !fresh.includes(k)) { log.push(`Letter "${k}" posted at the Mail Tower.`); mailPost(c, k, S.Letters[k], absA); }
+  M.post = M.post.filter(k => S.Letters[k]);
+  // the reply home
+  if (num(H.due, -1) >= 0 && !H.key && absA >= H.due) {
+    H.key = mailKey(S.Letters, `Reply from ${H.from}`); H.got = monthOf(W);
+    const with_ = H.parcel ? (H.parcel.item ? `, with a small parcel: ${H.parcel.item[0]}` : `, with ${H.parcel.coin} coin folded inside`) : '';
+    S.Letters[H.key] = { From: H.from, To: '{{user}}', Gist: `A reply from home${with_}.`, Date: dstamp(fromAbs(H.due)), Status: 'waiting' };
+    toast(H.from);
+  }
+  // replies from anyone else
+  for (const p of [...M.pend]) {
+    const drop = () => M.pend.splice(M.pend.indexOf(p), 1);
+    if (p.kind === 'campus' && p.id && p.at < absA && (S.Scene.Present || {})[p.id]) {
+      drop(); log.push(`${p.id} met {{user}} before writing back: no letter will come; if ${p.id} answers "${p.of}", it is in person.`); continue;
+    }
+    if (p.ok && absA >= p.due) {
+      drop(); const key = mailKey(S.Letters, `Reply from ${p.to}`);
+      S.Letters[key] = { From: p.to, To: '{{user}}', Gist: `A reply to {{user}}'s letter of ${p.on}.`, Date: dstamp(fromAbs(p.due)), Status: 'waiting' };
+      M.hint[key] = `answers {{user}}'s letter of ${p.on}${p.gist ? `: "${p.gist}"` : ''}`; toast(p.to);
+    } else if (!p.ok && absA >= p.end) drop();   // no reply: nothing to say, silence is the answer
+  }
+  // family writes first: one draw a month, from Monday of MAIL.family_first.week
+  const F = MAIL.family_first, month = monthOf(W);
+  if (num(W.Week, 1) >= F.week && H.fm !== month) {
+    H.fm = month;
+    if (H.month !== month && H.got !== month && H.visit !== month && roll100(seed, 'home-first', month) < F.pct) {
+      const d0 = Math.floor(toAbs({ ...W, Week: F.week, Day: 'Mon', Time: '00:00' }) / DAY_MIN);
+      H.first = Math.max(mailDay(d0 + rollInt(0, 6, seed, 'home-first-day', month)), absA);
+    }
+  }
+  if (num(H.first, -1) >= 0 && absA >= H.first) {
+    const m = H.fm, at = H.first; H.first = -1;
+    const busy = (num(H.due, -1) >= 0 && !H.key) || (H.key && !H.given && S.Letters[H.key]);   // a reply on its way, a parcel not yet read
+    if (H.month !== m && H.got !== m && H.visit !== m && !busy) {
+      const d = d100(seed, 'home', m), R = HOME.roll, from = H.from || 'home';
+      const parcel = d <= R.none ? null : d <= R.none + R.item ? { item: pickOf(HOME.items, seed, 'homeitem', m) }
+        : { coin: rollInt(HOME.coin[0], HOME.coin[1], seed, 'homecoin', m) };
+      Object.assign(H, { month: m, got: m, due: -1, from, parcel, given: false });
+      H.key = mailKey(S.Letters, `Letter from ${from}`);
+      const with_ = parcel ? (parcel.item ? `, with a small parcel: ${parcel.item[0]}` : `, with ${parcel.coin} coin folded inside`) : '';
+      S.Letters[H.key] = { From: from, To: '{{user}}', Gist: `A letter from home, written unasked${with_}.`, Date: dstamp(fromAbs(at)), Status: 'waiting' };
+      M.hint[H.key] = 'written unasked: {{user}} had not written home this month';
+      toast(from); log.push(`A letter from home (${from}) waits at the Mail Tower: this month's letters home are exchanged.`);
+    }
+  }
+  // a close friend writes first: one draw a week (weeks start on Monday, day 0 is Y1 M1 W1 Mon)
+  const N = MAIL.npc_first, wk = Math.floor(today / 7);
+  if (M.wk !== wk) {
+    M.wk = wk;
+    if (!M.first && roll100(seed, 'mail-first', wk) < N.pct) {
+      const id = rollTable(Object.keys(S.Bonds).sort(), { pick: [seed, 'mail-first-pick', wk], skip: x => !mailWhy(S, x, today), weight: x => Math.max(1, num(S.Bonds[x].Rank, 0)) });
+      if (id) M.first = { id, due: Math.max(mailDay(wk * 7 + rollInt(0, 6, seed, 'mail-first-day', wk)), absA) };
+    }
+  }
+  if (M.first && absA >= M.first.due) {
+    const { id } = M.first, why = mailWhy(S, id, today); M.first = null;
+    if (why) {
+      S.Bonds[id].$mail = today;
+      const key = mailKey(S.Letters, `Letter from ${id}`);
+      S.Letters[key] = { From: id, To: '{{user}}', Gist: `${id} wrote unasked.`, Date: dstamp(W), Status: 'waiting' };
+      M.hint[key] = `written unasked: ${why}`; toast(id);
+    }
+  }
+}
+// the Mail Tower's lines for <now> and the Letters panel (S.$ui.mail)
+function mailUi(S) {
+  const M = mailOf(S);
+  for (const k of Object.keys(M.hint)) if (!S.Letters[k] || S.Letters[k].Status !== 'waiting') delete M.hint[k];
+  S.$ui.mail = {
+    hint: Object.entries(M.hint).map(([k, t]) => `${k} (from ${S.Letters[k].From}; ${t})`),
+    post: M.post.slice(),
+    pend: M.pend.map(p => ({ t: p.of, to: p.to, by: dstamp(fromAbs(p.end)) })),
+  };
+}
+
 // ---- 8b. Batch 5.1 records: commitments, notices, letters, clues, journal ----
 // 1.18.0 (I4): relative Heals_by dates are anchored once, like Commitment.Due.
 function stepRecords(c) {
@@ -5777,39 +5939,21 @@ function stepRecords(c) {
     if (agendaState(u, absA, 'notice') === 'overdue') delete S.Notices[k];   // an hour after its last day ends
   }
   capRecord(S.Notices, CAP.Notices);
-  // letters: stamp, direction, cap (read/sent ones go first)
+  // letters: stamp, direction, cap (read/sent ones go first; one not yet posted stays)
   const BL = (hasB && B.Letters) || {};
-  const me = new Set(['{{user}}', 'you', 'me', 'i', String(S.Player.Profile.Name || '').toLowerCase()].filter(Boolean).map(x => x.toLowerCase()));
-  for (const k of newKeys(S.Letters, BL)) {
+  const me = MAIL_ME(S), fresh = newKeys(S.Letters, BL);
+  for (const k of fresh) {
     const L = S.Letters[k];
     if (!L.Date) L.Date = dstamp(S.World);
     if (me.has(String(L.From).trim().toLowerCase())) L.Status = 'sent';
     else if (L.Status === 'waiting' && hasB) S.$ui.toasts.push(`Letter waiting at the Mail Tower${L.From ? ` (from ${L.From})` : ''}`);
   }
-  // 1.31.0 (owner-approved planning/DRAFT_location_activities.md): letters home. One a month counts, sent from the Mail Tower to
-  // family or home; the reply arrives HOME.days later with a parcel rolled once (none, a shop item, a little coin), handed over when
-  // {{user}} reads it. The narrator writes the letter itself.
-  if (!OFF.has('letters') && _.isPlainObject(S.Letters) && hasB && !toolEdit) {
-    const H = S.$eng.home = _.isPlainObject(S.$eng.home) ? S.$eng.home : {};
-    const month = `${S.World.Year || 1}-${S.World.Month}`, homeRx = new RegExp(`\\b(?:${HOME.to})\\b`, 'i'), seed = c.seed;
-    for (const k of newKeys(S.Letters, BL)) {
-      const L = S.Letters[k];
-      if (L.Status !== 'sent' || !homeRx.test(`${L.To} ${k}`)) continue;
-      if (H.month === month) { log.push(`Letter "${k}": one letter home a month gets a reply; this one is on its way, but no parcel will come of it.`); continue; }
-      if (placeKey(S.World.Location) !== 'mail tower') { log.push(`Letter "${k}": letters home go from the Mail Tower; no reply is on its way yet.`); continue; }
-      const r = d100(seed, 'home', month), R = HOME.roll;
-      const parcel = r <= R.none ? null : r <= R.none + R.item ? { item: pickOf(HOME.items, seed, 'homeitem', month) }
-        : { coin: rollInt(HOME.coin[0], HOME.coin[1], seed, 'homecoin', month) };
-      Object.assign(H, { month, due: absA + HOME.days * DAY_MIN, from: String(L.To || '').trim() || 'home', parcel, key: '', given: false });
-      log.push(`Letter home sent: a reply arrives in about ${HOME.days} days.`);
-    }
-    if (num(H.due, -1) >= 0 && !H.key && absA >= H.due) {
-      H.key = `Reply from ${H.from}`.slice(0, 60);
-      const with_ = H.parcel ? (H.parcel.item ? `, with a small parcel: ${H.parcel.item[0]}` : `, with ${H.parcel.coin} coin folded inside`) : '';
-      S.Letters[H.key] = { From: H.from, To: '{{user}}', Gist: `A reply from home${with_}.`, Date: dstamp(S.World), Status: 'waiting' };
-      S.$ui.toasts.push(`Letter waiting at the Mail Tower (from ${H.from})`);
-    }
-    if (H.key && !H.given && S.Letters[H.key] && S.Letters[H.key].Status !== 'waiting') {
+  // 1.31.0 letters home, 1.95.0 every letter (stepMail): posted at the Mail Tower, replies on a timer, family and friends who write
+  // first; a parcel from home is handed over when {{user}} reads the letter it came with. The narrator writes the letters themselves.
+  if (!OFF.has('letters') && _.isPlainObject(S.Letters)) {
+    if (hasB && !toolEdit) stepMail(c, fresh);
+    const H = S.$eng.home;
+    if (_.isPlainObject(H) && H.key && !H.given && S.Letters[H.key] && S.Letters[H.key].Status !== 'waiting') {
       H.given = true;
       if (H.parcel && H.parcel.item) {
         const [n, kind] = H.parcel.item;
@@ -5821,8 +5965,10 @@ function stepRecords(c) {
         log.push(`Parcel from home: ${H.parcel.coin} coin.`); S.$ui.toasts.push(`From home: ${H.parcel.coin} coin`);
       }
     }
-  }
-  capRecord(S.Letters, CAP.Letters, L => L.Status !== 'waiting');
+    mailUi(S);
+  } else S.$ui.mail = null;
+  const unposted = new Set(((S.$eng.mail || {}).post || []).map(k => S.Letters[k]).filter(Boolean));
+  capRecord(S.Letters, CAP.Letters, L => L.Status !== 'waiting' && !unposted.has(L));
   // clues and mysteries
   const BCl = (hasB && B.Clues) || {}, BMy = (hasB && B.Mysteries) || {};
   for (const k of newKeys(S.Clues, BCl)) {
@@ -7088,6 +7234,8 @@ function stepAgenda(c) {
   for (const [k, lc] of Object.entries((S.Campus_State || {}).Lore_changes || {})) put('lore', `last day changed: ${k}`, num((lc || {}).$abs, -1), '');   // 1.75.0
   const H = S.$eng.home;
   if (!OFF.has('letters') && _.isPlainObject(H) && num(H.due, -1) >= 0 && !H.key) put('letter', `Reply from ${H.from || 'home'} expected`, Math.floor(H.due / DAY_MIN) * DAY_MIN + DAY_MIN - 1, '');
+  // 1.95.0: a reply that may come, by the last day it could (whether one comes is never shown)
+  if (!OFF.has('letters')) for (const p of ((S.$eng.mail || {}).pend || [])) put('letter', `A reply from ${p.to} may come`, Math.floor(p.end / DAY_MIN) * DAY_MIN + DAY_MIN - 1, '');
   // {{user}}'s birthday and the player's own calendar notes ($ui.marks "Y1 M3 W2 Thu"; the narrator never reads them)
   const dayOfKey = (y, m, w, dd) => (y - 1) * YEAR_DAYS + (m - 1) * 28 + (w - 1) * 7 + DAYS.indexOf(dd);
   const bd = /^M(\d{1,2}) W([1-4]) (Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/.exec(String(S.Player.Profile.Birthday || '').trim());
@@ -7166,7 +7314,7 @@ function stepRoutine(c) {
   const { S, log, jnl, toolEdit } = c, P = _.isPlainObject(S.$ui.plan) ? S.$ui.plan : null, R = c.routine;
   if (R) {
     const from = fromAbs(num((c.B.$eng || {}).abs, toAbs(c.B.World)));
-    if (R.home) { jnl.push(`Home for the ${R.name} (${stamp(from)} to ${stamp(S.World)}).`); S.$ui.toasts.push(`Back from the ${R.name}`); }
+    if (R.home) { jnl.push(`Home for the ${R.name} (${stamp(from)} to ${stamp(S.World)}).`); S.$ui.toasts.push(`Back from the ${R.name}`); homeOf(S).visit = monthOf(S.World); }   // 1.95.0
     else jnl.push(`Routine week (${stamp(from)} to ${stamp(S.World)}): ${R.done.length ? R.done.join('; ') : 'an ordinary stretch of days'}.`);
     if (!R.home) S.$ui.toasts.push('Routine week lived');
   }

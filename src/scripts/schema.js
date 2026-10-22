@@ -192,6 +192,7 @@ export const Schema = z.object({
     $tlast: n(v.$tlast, 0, 100, 0),       // 1.4.4: size of that drop, for an 'understood' (engine)
     $tbrk: n(v.$tbrk, 0, 1, 0),           // 1.4.4: maximum Tension already broke a rank; re-armed below 70 (engine)
     $hut: s(v.$hut),                      // 1.31.0: month of the last Old Hut confidence (engine)
+    $mail: n(v.$mail, -1, 1e9, -1),       // 1.95.0: day of the last letter this bond wrote first (engine)
     $Recent: Array.isArray(v.$Recent) ? v.$Recent.filter(r => r && typeof r === 'object').map(r => ({ w: s(r.w), n: s(r.n), fx: s(r.fx) })).slice(-10) : [],   // 1.4.4: latest moments with {{user}} (engine)
     // 1.6.0 (Batch C, P4/N4): the character's side, written by the narrator (not shown in the player's dossier)
     Mind: s(v.Mind).slice(0, 400),                                                  // how they feel about {{user}} now, what is on their mind
@@ -435,6 +436,7 @@ export const Schema = z.object({
     perks_grad: z.record(z.string(), z.any()).prefault({}).catch({}),   // 1.7.6: rewards of graduates as they were ({name: perk}), restored if the story keeps them
     next: z.any().prefault(null).catch(null),                         // 1.3.4: the next thing on today's schedule (engine; bracelet)
     agenda: z.any().prefault([]).catch([]),                           // 1.44.0: the Agenda's coming-up feed (engine stepAgenda; Planner, Notice Board, bracelet, <now>)
+    mail: z.any().prefault(null).catch(null),                         // 1.95.0: { hint, post, pend } for <now> and the Letters panel (engine stepMail)
     portrait: Str(''),                                                // 1.3.4: the student's picture (a SillyTavern user image path)
     tsusp: StrList(40),                                               // 1.4.3: Rank 10 benefits suspended by low Trust (engine)
     area: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.46.0 (audit 3.1): the outside areas now { forest, avalon, airship, sunreach }: on, at, name, pin,
@@ -452,6 +454,7 @@ export const Schema = z.object({
     craft: z.any().prefault(null).catch(null),                     // 1.28.0: clearing bloom's harvest day
     pactPlay: Str(''),                                              // 1.31.0: the one Spirit Pact made in play (engine)
     home: z.any().prefault(null).catch(null),                      // 1.31.0: the month's letter home, its reply and parcel (engine)
+    mail: z.any().prefault(null).catch(null),                      // 1.95.0: the Mail Tower { post, pend, hint, wk, first, mig } (engine)
     agenda: z.any().prefault(null).catch(null),                    // 1.44.0: Agenda { when: { id: [text, abs] } for Projects and Next plans, st: last statuses } (engine)
     area: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.46.0 (audit 3.1): { forest: this year's hunt { y, tgt, homes, t, hrs, owe, met, caught, res, wen },
                                                                       // avalon: { d, owe, met, ts, tsu, mm, wl, sc }, sunreach: { d, owe, met, nb, lev } } (engine)

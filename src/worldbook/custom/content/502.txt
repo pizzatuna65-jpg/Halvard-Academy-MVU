@@ -157,7 +157,7 @@ Notices: {"<title>": {"Text": "max 25 words", "By": "who posted it", "Until": "M
 <%_ } _%>
 
 <%_ if (on('letters')) { _%>
-Letters (Mail Tower): {"<short title>": {"From": "", "To": "", "Gist": "max 30 words", "Status": "waiting|read|replied|sent"}}. The engine delivers the family's reply to a letter home; do not write that reply. The full rule shows in <rule_cards> while letters are in play.
+Letters (Mail Tower): {"<short title>": {"From": "", "To": "", "Gist": "max 30 words", "Status": "waiting|read|replied|sent"}}. The engine delivers every reply to {{user}}'s letters and the letters family and bonded people write first; never write those yourself. The full rule shows in <rule_cards> while letters are in play.
 <%_ } _%>
 
 <%_ if (on('gist')) { _%>

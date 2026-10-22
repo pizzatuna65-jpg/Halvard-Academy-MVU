@@ -108,7 +108,7 @@ INDEX §4) · `lore N` generated lore entry uid · `T:` `tests/test_<name>.cjs` 
 - **Bag** [f:inventory]: food, drinks, gear, gifts, books, reagents, other; a cap; a plan per item; Use/Give/Drop only draft; Sunfizz bottles return for 2 points. `stepBag`, `bagMove` (`bagTake`, `bagGive`, `c.bagTx`); `ui:pBag`. T:audit_batch1_v1420.
 - **Item names** (1.42.0): `itemKey`, `bagKeyOf` (Consumables filter, the gift Bag decrease in `stepRest`, reminder R2), `newLines` (multiset diff of Transactions lines). T:audit_batch1_v1420.
 - **Stray paths** (1.35.1): items written under /Player/Inventory or /Bag move to the Bag. `fixStrayPaths`. T:stray_paths_v1351.
-- **Letters home** (1.31.0): a reply with a parcel (item or coin). `stepRecords` (`$eng.home`), `D/letters_home.json`.
+- **Letters home** (1.31.0): a reply with a parcel (item or coin), one a month; 1.95.0: family writes first in a month {{user}} has not (Week 3, 60%). `stepMail` (`$eng.home`), `D/letters.json` `home`, `family_first`. T:locations_v1310, T:letters_v1950.
 - **Earning**: paid-work happenings, Apothecary sales (capped, `stepProficiency`), tutoring pay, monthly payout, Rank 10 / monthly bond rewards.
 
 ## 8. Proficiency, practice, crafting, training
@@ -159,7 +159,7 @@ INDEX §4) · `lore N` generated lore entry uid · `T:` `tests/test_<name>.cjs` 
 
 - **Planner** [f:planner]: Commitments (promises, appointments, deadlines; Where is the meeting place) with due times and overdue reminders; calendar notes the narrator never reads. `stepRecords`, `stepAgenda`, `p30:nbPlanner`.
 - **Notice Board** [f:notices]: story notices plus official postings and the forecast. `p30:nbNotices`, `p30:officialNotices`.
-- **Letters** [f:letters]: Mail Tower letters in and out, waiting reminders, letters home. `stepRecords`, `p30:nbLetters`.
+- **Letters** [f:letters]: Mail Tower letters in and out, waiting reminders, letters home. 1.95.0: posted at the Mail Tower (one written elsewhere waits), every reply on a timer or none by who it is for (campus, far, other), a campus friend met first answers in person, a close friend writes first now and then (Rank 3+, one draw a week), the narrator told what each engine letter answers. `stepMail`, `mailPost`, `mailKind`, `mailWhy`, `$eng.mail`, `$ui.mail`, `D/letters.json`, `p30:nbLetters`, WB505. T:letters_v1950.
 - **Mystery Board** [f:mystery]: Clues (40 read, archive 120) and Mysteries; rumours and stories pinned as Clues (1.44.0). `stepRecords` (`capRecord`, `CLUE_ARCHIVE` → `$ui.cluearch`), `p30:nbMystery`, `p30:heardOf`.
 - **Journal**: the story's spine (engine bookkeeping in `$ui.jnotes`), "The story so far" (folds), Lasting changes with Undo. `p30:nbJournal`. Memory side: §14.
 - **Clubs**: directory with advisors (1.75.0: a teacher's Role "advises the X"; 1.88.0: shown only once known, `advisorKnown`, `roleShown`, T:advisor_known_v1880), sign-up week (booths until Friday 18:00), Saturday club time, membership; the roster spread so only Gymnastics has no named member (1.76.0: `tools/merge_lorebooks.py` `club_spread`, Walking Club became the Camping Club, T:club_spread_v1760). `p40:acClubs`, `p40:clubsNow`, `CLUB_MEMBERS`, `canonClub`, `clubVenues`, `clubField`, `clubMembersNow`, `stepClubLife`, `tools/common.py` `load_clubs`.
