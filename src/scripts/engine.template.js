@@ -507,6 +507,10 @@ function curfewOf(W, evs, S) {
   if (placeOf(W.Location) === AIR.area) return 'Away from campus (aboard the airship): the dorm curfew does not apply; the teachers count heads at boarding and landing';
   // 1.41.0: the Academy Trip keeps the teachers' hours at The Hanabira (lore 247)
   if (placeOf(W.Location) === SR.area) { const [c0, c1] = SR.curfew || [22, 7]; return h >= c0 || h < c1 ? `Hotel curfew (${pad(c0)}:00-${pad(c1)}:00): the teachers' curfew at ${AR.sunreach.PL[SR.hotel].name}; students stay in their rooms` : `Away from campus (Sunreach Bay, the Academy Trip): the dorm curfew does not apply; back at ${AR.sunreach.PL[SR.hotel].name} by ${pad(c0)}:00`; }
+  // 1.97.3: the national four in Hanakaze keep the Thousand Lantern Inn's hours (lore 19)
+  if (placeOf(W.Location) === HK.area) { const H = HK.hours, inn = AR.hanakaze.PL[HK.inn].name.replace(/^The /, 'the '), c0 = hm(H.curfew), f0 = hm(H.free_until), w0 = hm(H.wake), t = h * 60;
+    return t >= c0 || t < w0 ? `Inn curfew (${H.curfew}-${H.wake}): the four stay in Eldrasil's wing of ${inn}; Gavlan Haverton keeps watch` : t >= f0 ? `Back at ${inn} by ${H.curfew} (free time in the city ended at ${H.free_until})`
+      : `Away from campus (Hanakaze, the World Competition): the dorm curfew does not apply; free time in the city until ${H.free_until}, ${inn} by ${H.curfew}`; }
   if (placeOf(W.Location) === AV.area && avKingdom(W, S || {})) return h >= 22 || h < 7 ? 'Hotel curfew (22:00-07:00): the team stays in its rooms at the Whitestone Hotel; Gavlan Haverton keeps watch' : h >= 21 ? 'Back at the Whitestone Hotel by 22:00 (free time in the city ended at 21:00)' : 'Away from campus (Avalon, with the team): the dorm curfew does not apply; free time in the city until 21:00, the Whitestone Hotel by 22:00';
   if (!onCampus(W.Location) && (Tr.Active || evs.some(e => e.away))) return `Away from campus${Tr.Active && Tr.Destination ? ` (${Tr.Destination})` : ''}: the dorm curfew does not apply; the teachers in charge set the rules`;
   // v1.0.3 (A#6): a no-curfew event lifts it from its first day's evening to its last day's dawn, not for the whole two days
@@ -673,7 +677,7 @@ function fluOn(seed, day) {
 const OUTDOOR = /*@@OUTDOOR@@*/[];
 // 1.38.0: the Grand Vast Forest is outdoors, except inside the mouth of the Grand Cave Network
 const isOutdoor = loc => { const p = placeOf(loc).toLowerCase(); if (p && p === String(EXP.area || '').toLowerCase()) return !/grand cave network/i.test(String(loc));
-  for (const A of [AR.avalon, AR.sunreach]) if (p && p === String(A.area || '').toLowerCase()) { const id = areaPlace(A, loc, ''); return !!(id && A.PL[id].out); }   // 1.39.0, 1.41.0
+  for (const A of [AR.avalon, AR.sunreach, AR.hanakaze]) if (p && p === String(A.area || '').toLowerCase()) { const id = areaPlace(A, loc, ''); return !!(id && A.PL[id].out); }   // 1.39.0, 1.41.0, 1.97.3
   return !!p && OUTDOOR.some(c => p === c || p.startsWith(c + ' ') || p.startsWith(c + ',')); };
 // ---- 1.46.0 (audit 3.1): the outside areas, one module. Every area's data file (data/expedition.json, avalon.json, airship.json,
 // sunreach.json) becomes one record with the same parts: places (PL) and pins (PIN), the walking graph (NB, routes, path, min; the one
@@ -689,6 +693,7 @@ const EXP = /*@@EXPEDITION@@*/{};
 const AV = /*@@AVALON@@*/{};
 const AIR = /*@@AIRSHIP@@*/{};
 const SR = /*@@SUNREACH@@*/{};
+const HK = /*@@HANAKAZE@@*/{};   // 1.97.3: Hanakaze, the World Competition's host city in campaign Year 1 (data/hanakaze.json)
 const CAMPUS_MAP = /*@@CAMPUS_MAP@@*/{};   // 1.47.0 (audit 3.2): the campus as an Area (tools/common.py campus_map, data/campus.json)
 function makeArea(key, D, o = {}) {
   const A = { key, D, area: D.area, R: D.rates || {}, PL: Object.fromEntries((D.places || []).map(p => [p.id, p])),
@@ -717,6 +722,9 @@ const AR = {
       boat: { fare: num((SR.rates || {}).boat, 6), name: 'water taxi', line: 'Water taxi', why: 'water taxi, Sunreach Bay', shore: true },
       tour: { fare: num((SR.rates || {}).tour, 15), name: 'tour boat', line: 'Tour boat', why: 'tour boat, Sunreach Bay' } },
     theft: ['hus', 'hseen', 'hamt'], street: ['st', 'stt'] }),
+  // 1.97.3: the match grounds are reached only by the team carriage from the inn (a 'tour' leg with no fare)
+  hanakaze: makeArea('hanakaze', HK, { salt: 'hk', words: ['hanakaze'], in: ['hanakaze', 'yozakura'], arrive: HK.arrive, aliasDetail: true,
+    modes: { tour: { fare: 0, name: 'team carriage', line: 'Team carriage', why: '' } }, theft: ['pick', 'pseen', 'pamt'], street: ['street', 'strt'] }),
 };
 // The place a Location names in area A, or ''. A place's (or pin's) own name always counts; the short aliases ("the market", "the
 // bar") only inside the area: a place there before (prev), one of its "in" words in the Location, or aboard. A bare area name keeps
@@ -734,12 +742,13 @@ function areaLoc(A, loc, id) {
   return [A.area, A.PL[id].name, ...extra].join(' — ');
 }
 // 3.7: an area's own weather for a time block (D.climate: sky and rain weights, temperatures, a rare sight; salt keeps the old rolls).
-// An area with no climate of its own (Avalon, the airship) has Halvard's sky.
+// An area with no climate of its own (Avalon, the airship) has Halvard's sky. 1.97.3: snow_at, a wet block at or below it is snow
+// (Hanakaze's winter), written as Halvard's snow is (sky Rain, snow true).
 function areaWx(A, seed, day, b) {
   const W = A.D.climate, s = W.salt, pick = (o, salt) => { const ks = Object.keys(o), tot = ks.reduce((a, k) => a + o[k], 0); let r = hash32(seed, day, b, salt) % tot; for (const k of ks) { if (r < o[k]) return k; r -= o[k]; } return ks[0]; };
-  const sky = pick(W.sky[b], s + 'sky'), wet = sky === 'Rain' || sky === 'Storm', R = W.rare;
-  return { sky, rain: wet ? pick(W.rain, s + 'rain') : '', snow: false, wind: sky === 'Storm' ? 'windy' : '',
-    rare: R && sky === R.sky && d100(seed, day, b, s + 'rare') >= R.at ? R.text : '', temp: W.temp[b] + hash32(seed, day, b, s + 'temp') % 3 - 1 };
+  const sky = pick(W.sky[b], s + 'sky'), wet = sky === 'Rain' || sky === 'Storm', R = W.rare, temp = W.temp[b] + hash32(seed, day, b, s + 'temp') % 3 - 1;
+  return { sky, rain: wet ? pick(W.rain, s + 'rain') : '', snow: wet && W.snow_at != null && temp <= W.snow_at, wind: sky === 'Storm' ? 'windy' : '',
+    rare: R && sky === R.sky && d100(seed, day, b, s + 'rare') >= R.at ? R.text : '', temp };
 }
 // the weather block at (day, b) where {{user}} is: the area's climate, else Halvard's
 const wxWhere = (A, seed, day, b) => (A && A.D.climate ? areaWx(A, seed, day, b) : wxDay(seed, day).blocks[b]);
@@ -851,9 +860,11 @@ const avPass = S => ((S.$eng && S.$eng.prizes) || []).includes(`Kingdom-Y${num(S
 // the flight in the air at W ({{user}} on it: the Kingdom flights only for Halvard's team), or null
 function airFlight(W, S) {
   const t = hm(W.Time); if (t == null) return null;
-  return (AIR.flights || []).find(f => f.m === num(W.Month, 0) && f.w === num(W.Week, 0) && f.d === W.Day && t >= hm(f.from) && t < hm(f.to)
-    && (f.who !== 'kingdom' || avKingdom(W, S || {}))) || null;
+  return (AIR.flights || []).find(f => f.m === num(W.Month, 0) && f.w === num(W.Week, 0) && f.d === W.Day && t >= hm(f.from) && t < hm(f.to) && flightFor(f, W, S)) || null;
 }
+// whether {{user}} is on flight f: the Kingdom flights only for Halvard's team, the World ones (1.97.3) only for the national four and
+// only in the campaign year they run (f.y)
+const flightFor = (f, W, S) => (f.who !== 'kingdom' || avKingdom(W, S || {})) && (f.who !== 'world' || hkFour(S)) && (!f.y || f.y === num(W.Year, 1));
 // ---- Sunreach Bay (1.41.0, owner-approved planning/DRAFT_outside_maps.md, part 3), the Academy Trip's city, FP7 area 3. From landing
 // (M11 W2 Mon 20:00) to boarding (W2 Sat 08:00) World.Location is "Sunreach Bay — <place>". One city with two faces: from 18:00 to
 // 06:00 it is lit by rune-light (the night map, the entries' night lines). stepSunreach charges walks, horse carriages and water
@@ -867,6 +878,18 @@ function srWindow(W) {                                           // from the lan
   const at = ([w, d, tm]) => toAbs({ Year: Y, Month: Wn.m, Week: w, Day: d, Time: tm });
   return t >= at(Wn.from) && t < at(Wn.to);
 }
+// ---- Hanakaze (1.97.3, owner-approved planning/DRAFT_world_competition.md §5), the capital of Yozakura, where the World Competition
+// is held in the campaign year Yozakura hosts (data year). From the liner's landing at the Skyport (M11 W3 Mon 13:00) to its boarding
+// home (W4 Mon 12:00), for the national four, World.Location is "Hanakaze — <place>". The Alpha's Residence is closed to every guest;
+// the match grounds (kc 1 the Bamboo Sea, kc 2 Old Castle Shiroyama) open only on their days, by team carriage from the inn.
+const hkFour = S => (((S || {}).Competition) || {}).Tier === 'World';
+function hkWindow(W, S) {
+  const Wn = HK.window || {}, Y = num(W.Year, 1);
+  if (Y !== num(HK.year, 1) || num(W.Month, 0) !== Wn.m || !hkFour(S)) return false;
+  const t = toAbs(W), at = ([w, d, tm]) => toAbs({ Year: Y, Month: Wn.m, Week: w, Day: d, Time: tm });
+  return t >= at(Wn.from) && t < at(Wn.to);
+}
+const hkGround = (W, k) => num(W.Week, 0) === (HK.window || {}).from[0] && ((HK.grounds || {})[k] || []).includes(W.Day);
 // ---- the campus (1.47.0, audit 3.2): the Halvard grounds as the first Area. Each Campus Map place is its own node; the legs are the
 // Campus Map's walking minutes (data/locations.json near), so the engine and the Map panel walk the same graph. The parser is
 // canonLocation (with yearFloorLocation): a Location in the map's words names one place. stepCampus charges a move's minutes (owed
@@ -894,6 +917,7 @@ function areaNow(S) {
   if (p === AIR.area) return 'airship';
   if (p === AV.area) return 'avalon';
   if (p === SR.area) return 'sunreach';
+  if (p === HK.area) return 'hanakaze';
   if (expOnDay(W) && forestPlace(W.Location, '')) return 'forest';
   return onCampus(W.Location) ? 'campus' : '';
 }
@@ -1470,7 +1494,7 @@ function stepTime(c) {
   let sAt = '', sBoard = false;
   if (sFl) {
     sAt = areaPlace(AR.airship, S.World.Location, '', true);
-    if (!sAt && !(sFl.dir === 'home' && (forestPlace(S.World.Location, '') || areaPlace(AR.avalon, S.World.Location, '') || /sunreach/i.test(String(S.World.Location))))) {
+    if (!sAt && !(sFl.dir === 'home' && (forestPlace(S.World.Location, '') || areaPlace(AR.avalon, S.World.Location, '') || /sunreach/i.test(String(S.World.Location)) || areaPlace(AR.hanakaze, S.World.Location, '')))) {
       sAt = sPrev || AIR.board; sBoard = !sPrev;
       log.push(sBoard ? `The airship for ${sFl.event} is in the air (${sFl.from}-${sFl.to}): {{user}} is aboard; World.Location was set to ${AIR.area} — ${AR.airship.PL[sAt].name}.`
         : `Nobody leaves the airship until it lands (${sFl.to}): World.Location was kept at ${AIR.area} — ${AR.airship.PL[sAt].name}.`);
@@ -1492,10 +1516,17 @@ function stepTime(c) {
   // 1.41.0: Sunreach Bay, from the landing to the boarding home, in the city map's words
   const rPrev = hasB ? areaPlace(AR.sunreach, B.World.Location, areaWas(B, 'sunreach')) : '';
   const rAt = !sAt && !fAt && !aAt && srWindow(S.World) ? areaPlace(AR.sunreach, S.World.Location, rPrev) : '';
+  // 1.97.3: Hanakaze, from the liner's landing to its boarding home, for the national four in the year Yozakura hosts. The Alpha's
+  // Residence is closed to every guest and a match ground opens only on its days: {{user}} stays where they were (or at the inn)
+  const hPrev = hasB ? areaPlace(AR.hanakaze, B.World.Location, areaWas(B, 'hanakaze')) : '';
+  let hAt = !sAt && !fAt && !aAt && !rAt && hkWindow(S.World, S) ? areaPlace(AR.hanakaze, S.World.Location, hPrev) : '', hHeld = '';
+  const hkShut = id => !!(AR.hanakaze.PL[id].locked || (AR.hanakaze.PL[id].kc && !hkGround(S.World, AR.hanakaze.PL[id].kc)));
+  if (hAt && hkShut(hAt)) { hHeld = hAt; hAt = hPrev && !hkShut(hPrev) ? hPrev : HK.inn; }
   if (sAt) S.World.Location = areaLoc(AR.airship, S.World.Location, sAt);
   else if (fAt) S.World.Location = areaLoc(AR.forest, S.World.Location, fAt);
   else if (aAt) S.World.Location = areaLoc(AR.avalon, aHeld ? '' : S.World.Location, aAt);
   else if (rAt) S.World.Location = areaLoc(AR.sunreach, S.World.Location, rAt);
+  else if (hAt) S.World.Location = areaLoc(AR.hanakaze, hHeld ? '' : S.World.Location, hAt);
   else if (!(S.Trip && S.Trip.Active)) S.World.Location = canonLocation(S.World.Location);
   else {
     // 1.42.0 (audit 1.2): a Trip left Active after {{user}} came home (seen off campus during it, now at a campus place on a day
@@ -1678,18 +1709,18 @@ function stepTime(c) {
       if (num(S.Player.Profile.Age, 18) === num(B.Player.Profile.Age, 18)) { S.Player.Profile.Age = num(S.Player.Profile.Age, 18) + 1; log.push(`Birthday: {{user}} turns ${S.Player.Profile.Age} today (Player.Profile.Age).`); }
     }
   }
-  Object.assign(c, { absB, absA, elapsed, evs, dayNo, goneNow, dayNoB, fAt, fPrev, aAt, aPrev, aHeld, sAt, sPrev, sFl, sBoard, rAt, rPrev });
+  Object.assign(c, { absB, absA, elapsed, evs, dayNo, goneNow, dayNoB, fAt, fPrev, aAt, aPrev, aHeld, sAt, sPrev, sFl, sBoard, rAt, rPrev, hAt, hPrev, hHeld });
 }
 
 // ---- 1b. 1.1.0 weather (spec §4): season, sky, wind, rare weather and °C for the current block; the Divination Society forecast ----
 function stepWeather(c) {
-  const { S, log, hasB, absB, absA, dayNo, fAt, aAt, rAt } = c;
+  const { S, log, hasB, absB, absA, dayNo, fAt, aAt, rAt, hAt } = c;
   const WXM = S.$ui.wxfx, seed = S.$eng.seed, TU = tuneOf(S);
   // 1.38.0: in the Grand Vast Forest the weather is the rainforest's and its effects apply as on campus; 1.41.0: Sunreach has its own.
   // 1.46.0 (audit 3.7): an area's climate profile (data climate, areaWx); WA is that area for every later weather effect (sleep, toasts).
   // 1.39.0: Avalon has the kingdom's weather of the day (Halvard's), and its effects apply there too
-  const WA = fAt ? AR.forest : rAt ? AR.sunreach : null;
-  const away = /^Away from campus/.test(S.World._Curfew || '') && !fAt && !aAt && !rAt;
+  const WA = fAt ? AR.forest : rAt ? AR.sunreach : hAt ? AR.hanakaze : null;   // 1.97.3: Hanakaze's snowy winter
+  const away = /^Away from campus/.test(S.World._Curfew || '') && !fAt && !aAt && !rAt && !hAt;
   let wxNow = null;                                            // wxNow: the block whose effects apply (Full, on campus)
   if (WXM === 'off') { S.World._Season = ''; S.World._Weather = ''; S.$ui.wx = null; }
   else {
@@ -2262,7 +2293,7 @@ function stepAirship(c) {
   const { S, log, hasB, toolEdit, elapsed, seed, Cn, sAt, sPrev, sFl, sBoard, TU } = c;
   if (!sAt) {
     const t = hm(S.World.Time), nx = t == null ? null : (AIR.flights || []).find(f => f.m === num(S.World.Month, 0) && f.w === num(S.World.Week, 0) && f.d === S.World.Day
-      && hm(f.from) > t && hm(f.from) - t <= 90 && (f.who !== 'kingdom' || avKingdom(S.World, S)));
+      && hm(f.from) > t && hm(f.from) - t <= 90 && flightFor(f, S.World, S));
     S.$ui.area.airship = nx ? { on: false, soon: { event: nx.event, from: nx.from, lands: nx.lands } } : { on: false };
     return;
   }
@@ -2351,6 +2382,55 @@ function stepSunreach(c) {
   const W = S.World, tnow = hm(W.Time);
   const today = (SR.schedule || []).filter(([w, d, t]) => num(W.Month, 0) === SR.window.m && num(W.Week, 0) === w && W.Day === d && hm(t) >= tnow).map(([, , t, what]) => [t, what]);
   S.$ui.area.sunreach = { on: true, at, name: A.PL[at].name, ...areaNear(A, at, () => true, () => true), night: srNight(absA), seen, owe: num(X.owe, 0), off: !!A.PL[at].off, today, ev: evs, coin: '' };
+}
+
+// 1.97.3 (owner-approved planning/DRAFT_world_competition.md §5): Hanakaze. Walking (5% stamina an hour); a match ground only by the
+// team carriage from the inn, on its days. The Alpha's guards turn {{user}} back from the Residence (a second try the same day is told
+// to Gavlan Haverton: Academy, defied_staff). Once an hour in the city (seeded by the hour and the place; not asleep, not on a match
+// ground): a street sight, a pickpocket, a challenge at the Challenge Crossing, another nation's four (once a day each), the Alpha's
+// Watch raiding the Warrens. $eng.area.hanakaze: d, owe, met (nations met today), cl (Residence turn-backs today). $ui.area.hanakaze:
+// on, at, pin, seen, kc (the grounds open today), today (the schedule still ahead today), owe, ev; outside: coin (the day before).
+function stepHanakaze(c) {
+  const { S, log, jnl, hasB, elapsed, seed, hAt, hPrev, hHeld, dayNo, TU } = c;
+  const A = AR.hanakaze, R = A.R, LX = lifeX(TU), seen = areaSeen(A, S.$ui.area.hanakaze);
+  if (!hAt) {   // the day before the liner leaves: points do not work abroad (the Banking House)
+    const tmr = fromAbs((dayNo + 1) * DAY_MIN + 8 * 60), Wn = HK.window || {};
+    const soon = hkFour(S) && num(tmr.Year, 1) === num(HK.year, 1) && tmr.Month === Wn.m && tmr.Week === Wn.from[0] && tmr.Day === Wn.from[1];
+    S.$ui.area.hanakaze = { on: false, seen, coin: soon ? 'the World Competition in Hanakaze, Yozakura (the national four fly out)' : '' };
+    return;
+  }
+  const X = _.isPlainObject(S.$eng.area.hanakaze) ? S.$eng.area.hanakaze : (S.$eng.area.hanakaze = {});
+  if (X.d !== dayNo) Object.assign(X, { d: dayNo, owe: 0, met: [], cl: 0 });
+  const evs = [];
+  if (hHeld && hasB && A.PL[hHeld].kc) log.push(`${A.PL[hHeld].name} is a match ground, open only on its match days (by team carriage from the inn): World.Location was kept at ${A.PL[hAt].name}.`);
+  else if (hHeld && hasB) {
+    X.cl = num(X.cl, 0) + 1; evs.push({ k: 'barred', n: X.cl, to: A.PL[hHeld].name });
+    log.push(`${A.PL[hHeld].name} is closed to every guest: the Alpha's guards turned {{user}} back${X.cl > 1 ? ' again and told Gavlan Haverton' : ''}. World.Location was kept at ${A.PL[hAt].name}.`);
+    if (X.cl === 2) avRep(S, 'defied_staff', "tried twice to enter the Alpha's Residence in Hanakaze");
+  }
+  if (hasB && !c.toolEdit && elapsed > 0 && hPrev && A.PL[hPrev] && hPrev !== hAt) areaMove(c, A, X, hPrev, hAt, '', false, evs);
+  else if (hasB && elapsed > 0) X.owe = Math.max(0, num(X.owe, 0) - elapsed);
+  // the city, once an hour
+  const Wh = HK.where || {}, inW = k => (Wh[k] || []).includes(hAt), got = new Set();
+  areaHours(c, A, hPrev && !A.PL[hAt].kc, h => {
+    const roll = k => areaRoll(c, A, h, hAt, k), pick = (a, k) => pickOf(a, seed, A.salt, h, hAt, k);
+    areaTheft(c, A, h, hAt, got, evs);
+    areaStreet(c, A, h, hAt, (HK.street || {})[hAt], got, evs);
+    if (inW('challenge') && !got.has('challenge') && roll('chal') < num(R.challenge, 25) * LX) { got.add('challenge'); evs.push({ k: 'challenge', who: pick(HK.challengers || [''], 'chw'), t: pick(HK.challenges || [''], 'cht') }); }
+    if (inW('team') && !got.has('team') && roll('team') < num(R.team, 20) * LX) {
+      const pool = (HK.teams || []).filter(n => !X.met.includes(n));
+      if (pool.length) { const n = pick(pool, 'teamp'); got.add('team'); X.met = [...X.met, n]; evs.push({ k: 'team', n }); }
+    }
+    if (inW('raid') && roll('raid') < num(R.raid, 5)) {
+      const caught = roll('resc') >= num(R.raid_escape, 60); evs.push({ k: 'raid', caught });
+      if (caught) { avRep(S, 'detention_tower', "caught in the Warrens during an Alpha's Watch raid in Hanakaze"); jnl.push("Hanakaze: {{user}} was caught in the Warrens in an Alpha's Watch raid; Gavlan Haverton was sent for."); S.$ui.toasts.push('Caught in a raid'); return false; }
+    }
+  });
+  for (const id of [hPrev, hAt]) if (id && A.PL[id] && !seen.includes(id)) seen.push(id);
+  const W = S.World, tnow = hm(W.Time), kco = [1, 2].filter(k => hkGround(W, k));
+  const today = (HK.schedule || []).filter(([w, d, t]) => num(W.Week, 0) === w && W.Day === d && hm(t) >= tnow).map(([, , t, what]) => [t, what]);
+  S.$ui.area.hanakaze = { on: true, at: hAt, name: A.PL[hAt].name, ...areaNear(A, hAt, p => !p.kc || kco.includes(p.kc), p => !p.locked && (!p.kc || kco.includes(p.kc)) && (!p.hidden || seen.includes(p.id))),
+    seen, kc: kco, owe: num(X.owe, 0), today, ev: evs, coin: '' };
 }
 
 // ---- 4g. 1.47.0 (audit 3.2): the campus as an Area. A move between two campus places since the last update is walked the shortest
@@ -6845,7 +6925,7 @@ function nowOf(S, moodsFull) {
   const visit = !NOTABLE.has(here0) ? '' : fv ? (fv[0] === dstamp(W) ? 'First visit: {{user}} came to ' + here0 + ' for the first time today' + (fv[1].length ? ', with ' + fv[1].join(', ') : '') + '.' : '{{user}} has been to ' + here0 + ' before (first on ' + fv[0] + (fv[1].length ? ', with ' + fv[1].join(', ') : '') + ').')
     : (UI.discovered || []).includes(here0) ? '{{user}} has been to ' + here0 + ' before.' : '';
   const AREAS = UI.area || {}, WENDIGO = NOW_D.WENDIGO, AVD = NOW_D.AVALON, SRD = NOW_D.SUNREACH;
-  const AREA = ['forest', 'avalon', 'airship', 'sunreach'].map(k => AREAS[k] && AREAS[k].on ? Object.assign({ key: k }, AREAS[k]) : null).find(Boolean) || null;
+  const AREA = ['forest', 'avalon', 'airship', 'sunreach', 'hanakaze'].map(k => AREAS[k] && AREAS[k].on ? Object.assign({ key: k }, AREAS[k]) : null).find(Boolean) || null;
   const SOON = AREAS.airship && !AREAS.airship.on ? AREAS.airship.soon : null;
   const srWho = id => { const r = (SRD.names || {})[id]; return r ? r[0] + ' (' + r[1] + ')' : id; };
   const avRival = id => { const r = (AVD.rivals || {})[id]; return r ? r[0] + ' (' + r[1] + ', Year ' + Math.min(3, r[2] + Y - 1) + ')' : id; };
@@ -6853,6 +6933,7 @@ function nowOf(S, moodsFull) {
   const AREA_WALK = {
     forest: ['Walks from here (hours on foot, shortest route): ', '', ' Advance the clock by the whole walk.', 'Still on the road: %s h of the last walk are not on the clock yet; searching here starts after that.'],
     avalon: ['Walks from here (minutes on foot; a hire carriage takes half and costs ' + AVD.fare + ' coin: set Avalon.Ride true in the same update): ', ' In this quarter: ', ' Advance the clock by the whole walk.', 'Still on the way: %s min of the last walk are not on the clock yet.'],
+    hanakaze: ['Walks from here (minutes on foot; the match grounds only by the team carriage from the inn, on their days): ', ' Here too: ', ' Advance the clock by the whole walk.', 'Still on the way: %s min of the last move are not on the clock yet.'],
     sunreach: ['Walks from here (minutes on foot; a horse carriage for ' + SRD.carriage + ' coin, or a water taxi for ' + SRD.boat + ' coin between the shore parts, takes half: set Sunreach.Ride "carriage" or "boat" in the same update; the Open Sea only by tour boat from the Sea Dock, ' + SRD.tour + ' coin each way): ', ' Here too: ', '', 'Still on the way: %s min of the last move are not on the clock yet.'],
   };
   const AREA_EV = (A, e) => ({
@@ -6871,7 +6952,11 @@ function nowOf(S, moodsFull) {
     rival: () => A.key === 'avalon' ? 'Another academy (engine): ' + avRival(e.id) + ' crosses the path of the group here. Play them from their lore entry.' : 'Another academy (engine): ' + srWho(e.id) + ' is here on their own Trip and crosses the path of the group. Play them from their lore entry, in character.',
     tsubaki: () => e.first ? 'Tsubaki Hoshikage (engine), the youngest Royal Mage, has lost her ranks after the parade and is lost in the city; the group runs into her here. She is not a Halvard student yet (the Royal Mages entry).' : 'Tsubaki Hoshikage (engine) marched with the Royal Mages and cannot find her way back to the Halvard group; the group runs into her here, lost as ever.',
     scout: () => 'A talent scout (engine) from a noble house or a hunting company asks {{user}} for a word about the matches.',
-    raid: () => e.caught ? 'Raid (engine): the City Watch storms the Rookery and catches {{user}}; Halvard staff are sent for.' : 'Raid (engine): the City Watch storms the Rookery; the rooks hear it coming and {{user}} gets out in the rush.',
+    raid: () => A.key === 'hanakaze' ? (e.caught ? 'Raid (engine): the Alpha\'s Watch storms the Warrens and catches {{user}}; Gavlan Haverton is sent for.' : 'Raid (engine): the Alpha\'s Watch storms the Warrens; the ronin hear it coming and {{user}} gets out in the rush.')
+      : e.caught ? 'Raid (engine): the City Watch storms the Rookery and catches {{user}}; Halvard staff are sent for.' : 'Raid (engine): the City Watch storms the Rookery; the rooks hear it coming and {{user}} gets out in the rush.',
+    barred: () => 'The Alpha\'s Residence (engine): its guards bow and turn {{user}} back from ' + e.to + (e.n > 1 ? '; a second try, so they tell Gavlan Haverton.' : ', courteous and immovable.'),
+    challenge: () => 'A challenge (engine): ' + e.who + ' steps onto the clerks\' platform and challenges {{user}}: ' + e.t + '. A Yozakuran never refuses a fair challenge; a guest may, and the crowd will remember. Play it out; a Tournament Office clerk records the result.',
+    team: () => 'Another nation (engine): members of ' + e.n + '\'s four cross the path of {{user}} here. Play them from the ' + e.n + ' team entry, in character.',
     sky: () => 'In the sky (engine): ' + e.t + '.', stage: () => 'On the stage (engine): ' + e.t + '.', hold: () => 'In the hold (engine): ' + e.t + '.',
     bet: () => 'The bet (engine): ' + e.stake + ' coin on ' + e.game + ', and {{user}} ' + (e.win ? 'won ' + e.net + ' coin.' : 'lost it.'),
     student: () => 'Halvard (engine): ' + srWho(e.id) + ' is here with their own group and runs into {{user}}. Play them in character.',
@@ -6973,6 +7058,12 @@ function nowOf(S, moodsFull) {
   } else if (_A.kd) {
   out.push("Kingdom Competition: round one {@event_frame.kingdom.r1.day:day} {@event_frame.kingdom.r1.from}–{@event_frame.kingdom.r1.to} in the Kingsmeadow, round two {@event_frame.kingdom.r2.day:day} {@event_frame.kingdom.r2.from}–{@event_frame.kingdom.r2.to} in the Undercroft, the final {@event_frame.kingdom.r3.day:day} {@event_frame.kingdom.r3.from} on the arena sand; free time in the city with the team until {@avalon.kingdom.free_until} (Lower City and Crown Square); curfew {@avalon.kingdom.curfew} at the Whitestone Hotel, Gavlan Haverton on watch." + (_A.pass ? ' The team won: the King receives them at Eldrasil Castle tonight, the only time students pass the White Line.' : ''));
   }
+  } else if (_k === 'hanakaze') {
+  out.push("Hanakaze (the World Competition, with Eldrasil's national four): {{user}} is at " + (_A.name) + (_A.pinName !== _A.name ? ' (' + _A.pinName + ')' : '') + ". Bracelet points do not work here: coin only.");
+  out.push("Free time in the city until {@hanakaze.hours.free_until}; back at the Thousand Lantern Inn by {@hanakaze.hours.curfew}, Gavlan Haverton on watch." + ((_A.kc || []).length ? ' Open today by team carriage from the inn: ' + _A.kc.map(k => k === 1 ? 'the Bamboo Sea (Phase 1)' : 'Old Castle Shiroyama (Phase 2)').join(', ') + '.' : ''));
+  for (const _t of _A.today || []) {
+  out.push("Today at " + (_t[0]) + ": " + (_t[1]) + ".");
+  }
   } else if (_k === 'airship') {
   out.push("Aboard the airship (" + (_A.event) + "): {{user}} is in the " + (_A.name) + ". It lands at " + (_A.lands) + " at " + (_A.to) + " (in " + (_l >= 60 ? Math.floor(_l / 60) + 'h ' + (_l % 60) + 'm' : _l + ' min') + "); nobody leaves the ship before that.");
   out.push("The bar (Common Room): " + (_A.bar ? 'today students may drink (the rest day or a holiday); the stewards check the bracelet' : 'no alcohol for students today (only on the rest day and in the holidays); tea, juice and soda') + ". Meals at the canteen counter are in the fare; drinks and sweets cost coin.");
@@ -7020,6 +7111,9 @@ function nowOf(S, moodsFull) {
   }
   if (AREAS.avalon && AREAS.avalon.coin) {
   out.push("Tomorrow: " + (AREAS.avalon.coin) + " in Avalon, where bracelet points do not work. Students change points into coin at the Banking House today (1:1); someone may remind {{user}}.");
+  }
+  if (AREAS.hanakaze && AREAS.hanakaze.coin) {
+  out.push("Tomorrow: " + (AREAS.hanakaze.coin) + ", abroad, where bracelet points do not work. Students change points into coin at the Banking House today (1:1); Gavlan Haverton may remind the four.");
   }
   NOW.pres = out = [];
   if (/CURFEW|LOCKDOWN/.test(cur)) {
@@ -7166,7 +7260,7 @@ function stepNow(c) {
   for (const a of Object.values(S.$ui.area || {})) if (_.isPlainObject(a)) { delete a.walks; delete a.near; }
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepCampus, stepVitals, stepContest, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepBondMemory, stepProficiency, stepEventChances, stepHunt, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepClubWork, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepFold, stepGist, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepHanakaze, stepCampus, stepVitals, stepContest, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepBondMemory, stepProficiency, stepEventChances, stepHunt, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepClubWork, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepFold, stepGist, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,

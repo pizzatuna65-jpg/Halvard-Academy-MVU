@@ -3,18 +3,18 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.97.2** (2026-10-22): World Competition step 2: the Demon Kingdom retcon (the Gates are history, the Crack
-is a sealed one, Norvaine holds the last open Gate), six nations and the format in lore 19, five foreign team entries and six
-standout NPCs with portraits (Hibiki, Vesna, Kazimir, Lucrezia, Kamran, Cyprien; group "World teams", no bond). 1.97.1 Month 11
-reordered (no classes from W1 Fri, Results W1 Sat, Trip W2 Mon–Sat, World Competition W3 Mon to W4 Mon). 1.96.0–1.96.1 names and
-traits for new characters. 1.95.0 letters. 1.94.0 notes on each person. The memory audit is done except batch 8. Live checks: the
-campaign quest log `docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the
-card, Q0.1).
+**Snapshot:** card **v1.97.3** (2026-10-22): World Competition step 3: Hanakaze, Yozakura's capital and the host in campaign Year 1,
+as an outside Area on the owner's map `map/yozakura.webp` (19 city places in 9 pins, the Warrens hidden, the Alpha's Residence closed,
+the Bamboo Sea and Old Castle Shiroyama by team carriage on their days, the Challenge Crossing, other nations' fours, a snowy winter);
+the national four fly out on a Yozakuran liner (W3 Mon) and home W4 Mon; lore 19 names the host by year. 1.97.2 the world and the
+teams; 1.97.1 Month 11 reordered. The memory audit is done except batch 8. Live checks: the campaign quest log
+`docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the card, Q0.1).
 
-**Next task:** 1.97.3 (Hanakaze: the Area with its map `map/yozakura.webp`, already at the assets pin) from
-`planning/DRAFT_world_competition.md` (step table at its top; then 1.97.4 the competition system, 1.97.5 Vesna and Koschei's
-Needle). Then 1.98 shallow features, 1.99.x bug hunt, 2.0 polish (`planning/FUTURE_PLANS.md` §0). Alongside it, the owner plays the
-quest log; their reports and chat exports bring the playtest fixes. MS3 stage 2 and the NPC dialogue audit's U1, U3–U5 wait in
+**Next task:** 1.97.4 (the competition system: draw, Phase 1 Last Team Standing, Phase 2 Siege, Grand Final, synergy panel, prize,
+news at Halvard) from `planning/DRAFT_world_competition.md` (step table at its top; the match grounds are Hanakaze's `kc` places,
+open on both days of their phase until 1.97.4 narrows them to Eldrasil's day); then 1.97.5 Vesna and Koschei's Needle. Then 1.98
+shallow features, 1.99.x bug hunt, 2.0 polish (`planning/FUTURE_PLANS.md` §0). Alongside it, the owner plays the quest log; their
+reports and chat exports bring the playtest fixes. MS3 stage 2 and the NPC dialogue audit's U1, U3–U5 wait in
 `planning/FUTURE_PLANS.md` §2 for a campaign export. Batch 8 (chapters) is planned in `planning/DRAFT_bab_baru.md`: build it at
 about 20,000 messages, slow saves or a chat file near 100 MB.
 
@@ -31,7 +31,7 @@ entry", "update lore entry X", "add feature Y".
 A **SillyTavern character card** for a slice-of-life magic-academy roleplay: Halvard Academy, Kingdom of Eldrasil, with a mystery
 underneath. The player is a first-year student. The card combines:
 
-- **A merged, corrected lorebook**: world, 77 NPCs (6 arrive in campaign Year 2, 7 in Year 3, 6 belong to the World Competition abroad), 75 locations, calendar, rules.
+- **A merged, corrected lorebook**: world, 77 NPCs (6 arrive in campaign Year 2, 7 in Year 3, 6 belong to the World Competition abroad), 75 locations (plus the outside areas: the Grand Vast Forest, Avalon, Sunreach Bay, Hanakaze), calendar, rules.
 - **MVU (MagVarUpdate) state.** The AI ends every reply with an `<UpdateVariable>` JSONPatch block. A Zod schema validates the state,
   and a deterministic engine script enforces the rules: clock and calendar, weather, HP and injuries, mana, bonds, reputation,
   training, grades, hidden magic, payouts, journal, ambience and more.

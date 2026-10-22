@@ -226,11 +226,11 @@ const ASKED = (() => {
 })();
 const STALE = UI.stale || [], PHASE = UI.phase || null;   // 1.6.1 (N4, N6): campus events with no news for a week; the campus phase (engine)
 const INITIATIVE = on('npc_initiative') ? UI.initiative : null;   // 1.7.7 (FP1): optional NPC-initiated contact today
-// 1.46.0 (audit batch 4): the outside areas, one block (engine $ui.area: forest 1.38.0, avalon 1.39.0, airship 1.40.0, sunreach 1.41.0,
+// 1.46.0 (audit batch 4): the outside areas, one block (engine $ui.area: forest 1.38.0, avalon 1.39.0, airship 1.40.0, sunreach 1.41.0, hanakaze 1.97.3,
 // owner-approved planning/DRAFT_outside_maps.md and DRAFT_airship.md). AREA: the one {{user}} is in, with its key; SOON: a flight leaves
 // within 90 min; WENDIGO: the Wendigo's line; AVD: Avalon's carriage fare and the rival students; SRD: Sunreach's fares, who may be met
 const AREAS = UI.area || {};
-const AREA = ['forest', 'avalon', 'airship', 'sunreach'].some(k => AREAS[k] && AREAS[k].on);
+const AREA = ['forest', 'avalon', 'airship', 'sunreach', 'hanakaze'].some(k => AREAS[k] && AREAS[k].on);
 const JAGES = [...new Set((getvar('stat_data.Journal') || []).slice(-5).reverse().map(l => (/^\[([^\]]+)\]/.exec(String(l)) || [])[1]).filter(w => w && ageOf(w, W)))];   // 1.53.0: each date once
 // 1.56.0 (narrator-load audit U2): each present character's bond, Trust, Tension, mood, recent moments and teasing are one block in
 // their Cast Sheet (engine $ui.now.people); <now> prints it only for someone present without a sheet

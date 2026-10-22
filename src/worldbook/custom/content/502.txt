@@ -20,6 +20,9 @@ World
 <%_ if ((getvar('stat_data.$ui.area.sunreach') || {}).on || /Academy Trip/.test(getvar('stat_data.World._Event_today') || '')) { _%>
 - Sunreach Bay (1.41.0): on the Academy Trip write Location as "Sunreach Bay — <place>" in the city map's words (as <now>'s Walks from here and the area's lore index name them), plus " — detail"; on landing "Sunreach Bay — Skydock". Advance Time by the whole move (<now> lists the minutes). Set Sunreach.Ride "carriage" or "boat" only in the update where {{user}} takes one for that move; set Sunreach.Bet {"Game", "Stake"} only in the update where {{user}} places a bet at The Golden Tide.
 <%_ } _%>
+<%_ if ((getvar('stat_data.$ui.area.hanakaze') || {}).on || (/World Competition/.test(getvar('stat_data.World._Event_today') || '') && (getvar('stat_data.Competition') || {}).Tier === 'World' && (Number(getvar('stat_data.World.Year')) || 1) === 1)) { _%>
+- Hanakaze (1.97.3): at the World Competition write Location as "Hanakaze — <place>" in the city map's words (as <now>'s Walks from here and the area's lore index name them), plus " — detail"; on landing "Hanakaze — Hanakaze Skyport". Advance Time by the whole walk (<now> lists the minutes). The match grounds (the Bamboo Sea, Old Castle Shiroyama) are reached only by the team carriage on their days; the Alpha's Residence is closed to every guest.
+<%_ } _%>
 <%_ if (((getvar('stat_data.$ui.area.airship') || {}).on) || ((getvar('stat_data.$ui.area.airship') || {}).soon)) { _%>
 - Airship (1.40.0): during a flight write Location as "Airship — <place>" (Promenade Deck, Common Room, Cabin Deck, Cargo Hold), plus " — detail"; boarding is "Airship — Common Room". The ship is a closed place until it lands at the time <now> gives: nobody leaves it, and nothing aboard records or sends anything. On landing write the destination's Location.
 <%_ } _%>

@@ -9,3 +9,12 @@ Format: an opening banquet on arrival, where the Phase 1 groups are drawn; Phase
 Phase 1 (two days, one group of three teams each day): Last Team Standing in a forest bounded by a barrier that shrinks all match long. Every competitor is teleported to a random spot, alone, and carries a crystal; when it breaks, that competitor is out. The first team to lose every member is out of the competition. The match runs until one team is left: it tops the group and is the top seed in Phase 2, and the other survivor goes through second.
 Phase 2 (two days, one match a day): Siege, in an old fortress with two ward stones. The attacking team carries one Breach Rune, a siege working: planted on a ward stone with a minute of unbroken channelling, it fills for three minutes and then breaks the stone. A defender can unwind a planted rune with a minute of unbroken channelling of their own. Attackers win a round when the stone breaks or every defender is out; defenders win when they unwind the rune, when ten minutes pass without a planting, or when every attacker is out before one. Crystals work as in Phase 1 and are replaced each round; healing cannot mend a broken crystal. The first team to win four rounds goes to the Grand Final; the sides swap after the third round, and at three all a seventh round decides. The top seed chooses its first side and the side in a seventh round.
 Prize: each member of the winning four earns 10,000 points and takes home a small replica of the World Trophy; the trophy itself stays with the winning nation until the next competition. Yozakura held it when campaign Year 1 began.
+The World Competition moves each year between the four invited nations.
+<%_ { const _hy = Number(getvar('stat_data.World.Year')) || 1; if (_hy === 1) { _%>
+This year Yozakura hosts it, in its capital, Hanakaze; a Yozakuran liner flies the teams there in half a day.
+<%_ } else if (_hy === 2) { _%>
+This year Caelmar hosts it.
+<%_ } else { _%>
+This year it comes home to Eldrasil, in Avalon.
+<%_ } } _%>
+The teams lodge together, and evenings are free in the city until 21:00, back by 22:00.

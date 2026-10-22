@@ -130,7 +130,8 @@ function hauntKnown(id, S) {
 // place is its own pin), one card at a time; a tab once {{user}} has been there, opened by itself while {{user}} is in the area. The
 // airship (1.40.0) has no map image: a tab only during a flight, its four places as cards. Walks come from the same search the engine
 // uses (shared.js areaRoutes / areaMin). The forest shows only the places visited and their neighbours; Avalon's castle pin only after a
-// Kingdom win, the Rookery only once visited.
+// Kingdom win, the Rookery only once visited. 1.97.3: Hanakaze (the World Competition in Year 1): the Alpha's Residence never, the
+// Warrens once visited, the match grounds only on their days.
 const AZ = k => (DATA.areas || {})[k] || { pins: [], places: [], legs: [], modes: {} };
 const azPlace = (k, id) => AZ(k).places.find(p => p.id === id), azPin = (k, id) => AZ(k).pins.find(p => p.id === id);
 const AZ_NB = {}, AZ_RT = {};
@@ -154,6 +155,7 @@ function azWalk(k, id, A) {
   const w = azMin(k, from, id), whence = A.on && A.at ? `from here (${f.name})` : `from ${f.go}`;
   if (Z.unit === 'h') return `About ${w} h on foot ${whence}`;
   if (M.tour && (azPin(k, p.pin).sea || azPin(k, f.pin).sea)) return `About ${w} min, by tour boat from ${M.tour.from} (${M.tour.fare} coin)`;
+  if (M.team && (p.kc || f.kc)) return `About ${w} min, by team carriage from ${M.team.from}, on match days only`;   // 1.97.3: Hanakaze's match grounds
   const split = f.pin !== p.pin && M.carriage;
   return `About ${w} min on foot${split ? ` (${Math.round(w / 2)} by ${M.carriage.name}, ${M.carriage.fare} coin)` : ''} ${whence}`;
 }
@@ -177,6 +179,7 @@ const AZ_WHERE = {
   forest: A => A.tgt ? ` Target: ${A.tgt}${A.res === 'caught' ? ' (caught)' : A.res === 'failed' ? ' (not found)' : ''}.` : '',
   avalon: A => A.muster && !A.muster.missed && A.muster.left > 0 ? ` Muster at the Skyport at ${A.muster.at}: ${A.muster.left} min left, ${A.muster.back} min on foot from here.` : '',
   sunreach: (A, night) => ` ${night ? 'Night: the city is lit until dawn.' : 'Day.'}`,
+  hanakaze: A => (A.today || []).length ? ` Next today: ${A.today[0][0]}, ${A.today[0][1]}.` : '',
 };
 function renderArea(k, S, tabs) {
   const Z = AZ(k), A = ((S.$ui || {}).area || {})[k] || {}, close = `${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button>`;
@@ -218,8 +221,8 @@ PANELS.map = {
     // 1.38.0-1.41.0: a tab for each outside area once {{user}} has been there (the airship only during a flight), opened by itself while
     // {{user}} is in it; 1.46.0: one renderer (renderArea)
     const AS = (S.$ui || {}).area || {}, has = k => AZ(k).kind === 'cards' ? !!(AS[k] || {}).on : !!((AS[k] || {}).seen || []).length;
-    const maps = [['campus', 'Halvard'], ...['forest', 'avalon', 'sunreach', 'airship'].filter(has).map(k => [k, AZ(k).area])];
-    const want = view.map || ['airship', 'forest', 'avalon', 'sunreach'].find(k => (AS[k] || {}).on) || 'campus', which = maps.some(m => m[0] === want) ? want : 'campus';
+    const maps = [['campus', 'Halvard'], ...['forest', 'avalon', 'sunreach', 'hanakaze', 'airship'].filter(has).map(k => [k, AZ(k).area])];
+    const want = view.map || ['airship', 'forest', 'avalon', 'sunreach', 'hanakaze'].find(k => (AS[k] || {}).on) || 'campus', which = maps.some(m => m[0] === want) ? want : 'campus';
     const tabs = maps.length > 1 ? `<div class="tog maps">${maps.map(([k, n]) => `<button data-map="${k}" class="${which === k ? 'on' : ''}">${esc(n)}</button>`).join('')}</div>` : '';
     if (which !== 'campus') return renderArea(which, S, tabs);
     const cur = locIdOf(S.World.Location);

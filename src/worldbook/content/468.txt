@@ -1,0 +1,17 @@
+<%_ if ((getvar('stat_data.$ui.area.hanakaze') || {}).on) { _%>
+HANAKAZE INDEX — the capital of Yozakura, host of the World Competition this year. Each place has its own entry when it comes up.
+A city of wooden streets, red gates and snow. Every street is lined with sakura, bare now and heavy with snow, and at the city's heart stands the Eternal Sakura, in full bloom all year, its petals falling onto the snow. Mount Hakuho rises white on the horizon. Everyone bows, and everyone competes.
+Skyport: Hanakaze Skyport, Red Tower Arcade. Castle hill: the Hall of Victors (banquets), the Alpha's Residence (closed). Sakura Park: the Eternal Sakura, Snow Festival Park, the Golden Pavilion. Victors' Avenue: the Challenge Crossing, Thunder Gate Temple. Old quarter: the Hundred Alleys, the Glass Canal, Forge Street, the Mask Theatre. Hell Valley Springs. Shrine hill: the Fox Gates, the Cliff Temple. By the park: the Crowning Ring (the Grand Final) and the Thousand Lantern Inn (every team lodges here).
+Beyond the city, by team carriage on match days only: the Bamboo Sea (Phase 1), Old Castle Shiroyama (Phase 2).
+Walks between the parts (minutes on foot, the same both ways; a place inside one part is five to ten minutes from the next):
+Hanakaze Skyport: Victors' Avenue 15, The Crowning Ring 20, Sakura Park 25, Thunder Gate 35, Old Quarter 35, Castle Hill 40, Shrine Hill 40, Hell Valley 55.
+Victors' Avenue: Sakura Park 10, Thunder Gate 20, Old Quarter 20, Castle Hill 25, The Crowning Ring 25, Shrine Hill 35, Hell Valley 40.
+Sakura Park: Thunder Gate 10, Castle Hill 15, The Crowning Ring 15, Old Quarter 20, Shrine Hill 25, Hell Valley 40.
+Thunder Gate: Castle Hill 10, Shrine Hill 15, The Crowning Ring 15, Old Quarter 30, Hell Valley 50.
+Castle Hill: Shrine Hill 25, The Crowning Ring 25, Old Quarter 35, Hell Valley 55.
+Shrine Hill: The Crowning Ring 20, Old Quarter 45, Hell Valley 65.
+The Crowning Ring: Old Quarter 35, Hell Valley 55.
+Old Quarter: Hell Valley 20.
+The team carriage from the Thousand Lantern Inn: The Bamboo Sea 40 min, Old Castle Shiroyama 25 min. Points do not work in Yozakura; coin only.
+Rules: free in the city until 21:00, back at the inn by 22:00. The Alpha's Residence is closed to every guest. Any fair challenge at the Challenge Crossing must be accepted. Who is met, street sights and the dice are the engine's, listed in <now>.
+<%_ } _%>

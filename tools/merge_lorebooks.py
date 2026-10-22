@@ -1380,6 +1380,86 @@ def sunreach(C, ejs):
         C[uid] = template_from(C[230], uid=uid, displayIndex=uid, comment='Sunreach Bay - ' + nm, key=list(dict.fromkeys([nm, nm[4:] if nm.startswith('The ') else nm])), content=text)
     assert len(D['places']) == 21
 
+def hanakaze(C, ejs):
+    """1.97.3 (owner-approved planning/DRAFT_world_competition.md §5): Hanakaze, the capital of Yozakura and the World Competition's host in
+    campaign Year 1, from data/hanakaze.json. The city's index (468, constant behind a gate on $ui.area.hanakaze.on, the Sunreach pattern),
+    one keyword entry per city place (469-486) in the campus location format, the Warrens (487, the Rookery's pattern), the two match
+    grounds (488-489); the host's turn in the Competitions entry (19, by campaign year) and the capital in Yozakura's entry (335).
+    v39: keyword entries, the index included."""
+    D = json.load(open(P('data/hanakaze.json'), encoding='utf-8'))
+    PIN, PL = {p['id']: p for p in D['pins']}, {p['id']: p for p in D['places']}
+    nb = {}
+    for a, b, m, *_t in D['legs']:
+        if not _t: nb.setdefault(a, []).append((b, m)); nb.setdefault(b, []).append((a, m))
+    def walks(src):
+        d, done = {src: 0}, set()
+        while True:
+            u = min((k for k in d if k not in done), key=lambda k: d[k], default=None)
+            if u is None: return d
+            done.add(u)
+            for v, m in nb.get(u, []):
+                if v not in d or d[u] + m < d[v]: d[v] = d[u] + m
+    ids = [p['id'] for p in D['pins'] if not p.get('kc')]
+    rows = []
+    for i, a in enumerate(ids[:-1]):
+        d = walks(a)
+        rows.append(PIN[a]['name'] + ': ' + ', '.join(PIN[b]['name'] + ' ' + str(d[b]) for b in sorted(ids[i + 1:], key=lambda b: (d[b], ids.index(b)))) + '.')
+    inn = PL[D['inn']]['name']
+    cart = ', '.join(f"{PIN[b if a == PL[D['inn']]['pin'] else a]['name']} {m} min" for a, b, m, *_t in D['legs'] if _t)
+    H = D['hours']
+    index = ("HANAKAZE INDEX — the capital of Yozakura, host of the World Competition this year. Each place has its own entry when it comes up.\n"
+             "A city of wooden streets, red gates and snow. Every street is lined with sakura, bare now and heavy with snow, and at the city's heart "
+             "stands the Eternal Sakura, in full bloom all year, its petals falling onto the snow. Mount Hakuho rises white on the horizon. Everyone "
+             "bows, and everyone competes.\n"
+             "Skyport: Hanakaze Skyport, Red Tower Arcade. Castle hill: the Hall of Victors (banquets), the Alpha's Residence (closed). Sakura Park: "
+             "the Eternal Sakura, Snow Festival Park, the Golden Pavilion. Victors' Avenue: the Challenge Crossing, Thunder Gate Temple. Old quarter: "
+             "the Hundred Alleys, the Glass Canal, Forge Street, the Mask Theatre. Hell Valley Springs. Shrine hill: the Fox Gates, the Cliff Temple. "
+             "By the park: the Crowning Ring (the Grand Final) and the Thousand Lantern Inn (every team lodges here).\n"
+             "Beyond the city, by team carriage on match days only: the Bamboo Sea (Phase 1), Old Castle Shiroyama (Phase 2).\n"
+             "Walks between the parts (minutes on foot, the same both ways; a place inside one part is five to ten minutes from the next):\n"
+             + '\n'.join(rows) + "\n"
+             f"The team carriage from {inn.replace('The ', 'the ', 1)}: {cart}. Points do not work in Yozakura; coin only.\n"
+             f"Rules: free in the city until {H['free_until']}, back at the inn by {H['curfew']}. The Alpha's Residence is closed to every guest. "
+             "Any fair challenge at the Challenge Crossing must be accepted. Who is met, street sights and the dice are the engine's, listed in <now>.")
+    gate0, gate1 = "<%_ if ((getvar('stat_data.$ui.area.hanakaze') || {}).on) { _%>\n", "\n<%_ } _%>"
+    def entry(uid, comment, keys, text):
+        assert uid not in C, f'hanakaze uid {uid} is taken'
+        C[uid] = template_from(C[230], uid=uid, displayIndex=uid, comment=comment, key=keys, content=text)
+    entry(468, 'Hanakaze - index', ['Hanakaze'], (gate0 + index + gate1) if ejs else index)
+    if ejs: C[468].update(constant=True)
+    city = [q for q in D['places'] if not q.get('kc') and q['id'] != 'the_warrens']
+    assert len(city) == 18
+    for uid, q in zip(range(469, 487), city):
+        nm = q['name']
+        entry(uid, 'Hanakaze - ' + nm, list(dict.fromkeys([nm, nm[4:] if nm.startswith('The ') else nm])),
+              f"[{nm}] {q['desc']}" + (f"\nFeel: {q['vibe']}" if q.get('vibe') else ''))
+    entry(487, 'Hanakaze - The Warrens', ['Warrens', 'ronin', 'Cellar Ring'],
+          '[Hanakaze — The Warrens]\nThe Warrens: ' + PL['the_warrens']['desc'] + ' Buying or practising a forbidden art there is still arrest, '
+          'as everywhere; a competitor caught there can be struck from the competition.\n'
+          '<narrator_only>The way in: behind the oldest noodle stall in the Hundred Alleys; the cook lifts the curtain at the back for anyone who '
+          'orders "the bottom of the pot". A few alley regulars will point the way for coin; nobody else will. The Alpha\'s Watch raids the Warrens '
+          'now and then (the engine decides when, in <now>), and the ronin usually hear it coming.</narrator_only>')
+    phase = {1: ("Phase 1 of the World Competition, Last Team Standing, is fought here", ['Bamboo Sea']),
+             2: ("Phase 2 of the World Competition, the Siege, is fought here", ['Shiroyama', 'ward stones'])}
+    for uid, q in zip((488, 489), [q for q in D['places'] if q.get('kc')]):
+        what, keys = phase[q['kc']]
+        entry(uid, 'Hanakaze - ' + q['name'], list(dict.fromkeys([q['name'], *keys])),
+              f"[Hanakaze — {q['name']}] {q['desc']} {what}, on {' and '.join(D['grounds'][str(q['kc'])])} of the competition week; the team "
+              f"carriages leave {inn.replace('The ', 'the ', 1)} on those days, and on other days the ground is closed.")
+    rep(C[335], "airship lines all over the world.\n",
+        "airship lines all over the world.\nCapital: Hanakaze, a city of wooden streets, red gates and sakura, with the Eternal Sakura at its "
+        "heart, in bloom all year.\n")
+    host = [("This year Yozakura hosts it, in its capital, Hanakaze; a Yozakuran liner flies the teams there in half a day."),
+            "This year Caelmar hosts it.", "This year it comes home to Eldrasil, in Avalon."]
+    head, tail = "The World Competition moves each year between the four invited nations.", \
+        f"The teams lodge together, and evenings are free in the city until {H['free_until']}, back by {H['curfew']}."
+    if ejs:
+        hosting = (head + "\n<%_ { const _hy = Number(getvar('stat_data.World.Year')) || 1; if (_hy === 1) { _%>\n" + host[0]
+                   + "\n<%_ } else if (_hy === 2) { _%>\n" + host[1] + "\n<%_ } else { _%>\n" + host[2] + "\n<%_ } } _%>\n" + tail)
+    else:
+        hosting = head + ' ' + ' '.join(f"(Campaign Year {i + 1}) {h}" for i, h in enumerate(host)) + ' ' + tail
+    rep(C[19], "Yozakura held it when campaign Year 1 began.", "Yozakura held it when campaign Year 1 began.\n" + hosting)
+
 def lore_activation(C):
     beasts = beast_names(C[229]['content'])
     assert len(beasts) >= 80 and 'dire wolf' in beasts and 'unicorn' in beasts, len(beasts)
@@ -1442,6 +1522,7 @@ grand_vast_forest(C39, False)   # 1.38.0
 avalon(C39, False)   # 1.39.0
 airship(C39, False)   # 1.40.0
 sunreach(C39, False)   # 1.41.0
+hanakaze(C39, False)   # 1.97.3
 lore_activation(C39)   # 1.35.0
 calendar_months = json.load(open(P('data/calendar.json'), encoding='utf-8'))['months']
 for month in range(1, 13):
@@ -1604,6 +1685,7 @@ grand_vast_forest(Cc, True)   # 1.38.0
 avalon(Cc, True)   # 1.39.0
 airship(Cc, True)   # 1.40.0
 sunreach(Cc, True)   # 1.41.0
+hanakaze(Cc, True)   # 1.97.3
 lore_activation(Cc)   # 1.35.0
 # merge + tagging (D2): lore -> [mvu_plot]; shared state/navigation entries stay untagged (sent to both models)
 UNTAGGED_CORE = {0, 132, 134, 131, 20}

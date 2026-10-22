@@ -625,6 +625,18 @@ The first academy flight (the airship), then the Grand Vast Forest.
 - [ ] At Halvard (not in the national four): each day's Event line names that day's phase abroad; no classes all week; the Notebook
       calendar shows W3 Mon to W4 Mon as the World Competition and W4 Tue–Sat as Year's End [1.97.1].
 
+### Q10.1c Hanakaze (only if Charles is in the national four, Year 1)
+- [ ] W2 Sun: `<now>` reminds that points do not work abroad tomorrow (the World Competition in Hanakaze) [1.97.3].
+- [ ] W3 Mon 07:00 aboard the Yozakuran liner (the airship tab); at 13:00 the location becomes "Hanakaze — Hanakaze Skyport", the Map
+      opens on the Hanakaze tab (the snowy map with the Eternal Sakura), and the bracelet weather says Hanakaze (snowy winter) [1.97.3].
+- [ ] Walk to the Thousand Lantern Inn and around the city: `<now>` lists the walks, the 19:00 opening banquet in the Hall of Victors,
+      and the inn's hours (back by 22:00); the HANAKAZE INDEX entry is on, a place's own entry joins when it is mentioned [1.97.3].
+- [ ] Try the Alpha's Residence: the guards turn Charles back and the location stays at the Hall of Victors; the Bamboo Sea opens only
+      Tue–Wed and Old Castle Shiroyama only Thu–Fri, by team carriage from the inn [1.97.3].
+- [ ] At the Challenge Crossing someone may challenge Charles to a contest; at the inn or around the city members of another nation's four
+      cross his path, played from their team entry; the Warrens appear on the Map only after a visit [1.97.3].
+- [ ] W4 Mon 12:00 the liner home; back at Halvard by 18:00 and the Hanakaze lore and block are gone [1.97.3].
+
 ### Q10.2 Graduation (W4 Sun)
 - [ ] From 12:00 in the Courtyards the farewell winter market's stalls are open (a knitted dorm scarf, cocoa) [1.86].
 - [ ] The afternoon in the Main Courtyard and Founder's Park (the Music Club on a small stage by the statue): stalls, the Farewell Pine with

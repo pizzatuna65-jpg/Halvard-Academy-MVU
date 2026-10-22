@@ -1,7 +1,38 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show bba6bb0:CHANGELOG.md` (1.94.0), `git show dca179c:CHANGELOG.md` (1.93.1, 1.93.0), `git show 01cd1f2:CHANGELOG.md` (1.92.0), `git show d097927:CHANGELOG.md` (1.91.0), `git show 6065e5c:CHANGELOG.md` (1.90.0), `git show de4303e:CHANGELOG.md` (1.89.0), `git show 4ace903:CHANGELOG.md` (1.88.1), `git show ce178fb:CHANGELOG.md` (1.88.0), `git show 0e1e5a2:CHANGELOG.md` (1.87.0), `git show e6f2c37:CHANGELOG.md` (1.86.0), `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 363f03b:CHANGELOG.md` (1.95.0), `git show bba6bb0:CHANGELOG.md` (1.94.0), `git show dca179c:CHANGELOG.md` (1.93.1, 1.93.0), `git show 01cd1f2:CHANGELOG.md` (1.92.0), `git show d097927:CHANGELOG.md` (1.91.0), `git show 6065e5c:CHANGELOG.md` (1.90.0), `git show de4303e:CHANGELOG.md` (1.89.0), `git show 4ace903:CHANGELOG.md` (1.88.1), `git show ce178fb:CHANGELOG.md` (1.88.0), `git show 0e1e5a2:CHANGELOG.md` (1.87.0), `git show e6f2c37:CHANGELOG.md` (1.86.0), `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.97.3 — Hanakaze, the host city (2026-10-22)
+
+Owner's design (2026-10-22, "proceed" on `planning/DRAFT_world_competition.md` §5; step 3 of five). Save fixture v1.97.2.
+- **Hanakaze**, Yozakura's capital, is a new outside Area for the World Competition in campaign Year 1, on the owner's map
+  `map/yozakura.webp` (already at the assets pin `4d229ce`): 19 city places in 9 pins plus the two match grounds, the Avalon pattern.
+  Only the national four (Competition Tier World) are ever there, from the liner's landing (W3 Mon 13:00) to its boarding home
+  (W4 Mon 12:00). Snowy winter weather of its own (`climate.snow_at`, new in `areaWx`); the Thousand Lantern Inn's hours (free until
+  21:00, back by 22:00, the curfew after).
+- **The Yozakuran liner**: two flights in `data/airship.json` with `who: world` and `y: 1` (W3 Mon 07:00–13:00, home W4 Mon
+  12:00–18:00, the bar open on the way home), their views, cargo and sky. Year 2 and 3 have no flight yet (other hosts).
+- **The city**: walks (5% stamina an hour); the Bamboo Sea (Phase 1, Tue–Wed) and Old Castle Shiroyama (Phase 2, Thu–Fri) only by the
+  team carriage from the inn on their days; the Alpha's Residence closed (the guards turn {{user}} back; a second try the same day is
+  told to Gavlan Haverton); the Warrens hidden until visited, with the Alpha's Watch raids (Rookery pattern); once an hour a street
+  sight, a pickpocket, a challenge at the Challenge Crossing (a guest may refuse, the crowd remembers) and another nation's four met
+  (once a day each); today's schedule (the banquets, the carriages, the Grand Final); the day-before coin reminder.
+- **Lore**: the index 468 (constant while in the city), 18 place entries (469–486), the Warrens (487), the two grounds (488–489); lore
+  19 says the host moves each year (Year 1 Yozakura in Hanakaze, Year 2 Caelmar, Year 3 Eldrasil in Avalon); Yozakura (335) gains
+  its capital. 502 has the Hanakaze Location rule; `<now>` the city's lines.
+- **Map tab**: a Hanakaze tab (pins on the owner's picture; the grounds only on their days, the Residence never, the Warrens once
+  visited); a ground's card says "by team carriage from the Thousand Lantern Inn, on match days only".
+- Pins follow the picture, so Thunder Gate Temple has its own pin halfway up Victors' Avenue (the draft grouped it with the Crossing)
+  and the walking minutes were measured on the map; the index text keeps the draft's grouping (both are on Victors' Avenue).
+- Code: `data/hanakaze.json`; engine `HK`, `AR.hanakaze`, `hkWindow`, `hkGround`, `flightFor`, `stepHanakaze` (after stepSunreach),
+  `curfewOf`, `areaNow`, `isOutdoor`, `nowOf`; `gen_engine.py` (checks), `gen_ui.py` and `20_map.js`, `merge_lorebooks.py`
+  `hanakaze`. DECISIONS "Maps outside campus" (Area 4).
+- Tests: new `test_hanakaze_v1973.cjs`. RESULTS_LINE
+- **To confirm with the owner** (invented, replaceable): the walking minutes and pin grouping read from the map; the liner times
+  (out 07:00–13:00, home 12:00–18:00); the schedule times (banquets 19:00, carriages 08:00, the Grand Final 14:00); the challengers
+  and contests at the Crossing; the vibe lines on the map cards.
+- **To check live:** `docs/TEST_CHECKLIST.md` Q10.1c [1.97.3] (only if Charles is in the national four).
 
 ## v1.97.2 — The world and the teams of the World Competition (2026-10-22)
 
@@ -100,35 +131,6 @@ Owner's design (2026-10-22, "proceed" on `planning/DRAFT_nama_npc.md`, now delet
   over 3,000 rolls, no axis clash, swipe-stable offer that moves on, 505's lines, switched off); `test_extras_v161` updated (the
   record request now carries traits); every suite that touches 505, Extras or features passes; lint passes.
 - **To check live:** `docs/TEST_CHECKLIST.md` Q1.1 [1.96].
-
-## v1.95.0 — Letters that get answered, and letters that come unasked (2026-10-22)
-
-Owner's design (2026-10-22, "proceed" on `planning/DRAFT_surat.md`, now deleted). Save fixture v1.94.0.
-- **Posting.** A letter {{user}} writes away from the Mail Tower is no longer lost: it waits ("Post it at the Mail Tower" toast,
-  "not posted yet" in the Letters panel, a Post it button at the Tower) and the engine posts it the next time {{user}} is there. A
-  letter home works the same way, so "from the Mail Tower" (DECISIONS, Location activities) still holds.
-- **Every letter can be answered.** Posting rolls once (seeded, swipe-safe) whether and when a reply comes, by who it is for:
-  a roster NPC at Halvard 2–3 days, chance 90 − Tension × 0.6 (at least 25); far (not arrived yet, away or graduated, another
-  academy's team) 5–8 days, 70%; anyone else ("Roy's mother", an office, a stranger) 3–5 days, 80%. A letter home keeps its rule
-  (7 days, one a month, the parcel). The reply waits at the Mail Tower as "Reply from <name>"; `<now>` tells the narrator what it
-  answers ("To write when {{user}} reads it: …"). No reply means nothing is said; the Planner only shows "A reply from X may come"
-  until the window closes. A campus friend met before writing back answers in person (Log line; no letter). A second letter to the
-  same person before the reply: one reply answers both. Letters still give no Bond XP (Kind "other").
-- **Family writes first.** In a month {{user}} has not written home (and no family letter came, and {{user}} did not go home on a
-  break), a 60% draw on Monday of Week 3 brings a letter from home that week, with the same parcel roll. It is that month's
-  exchange: {{user}}'s answer reaches them, the next reply comes from next month's letter.
-- **A friend writes first.** One draw a week (35%): a bond of Rank 3+ with Tension under 50, not seen for 7 days (3 while {{user}}
-  is away), at most once in 28 days, weighted by Rank; the reason goes to the narrator. `never_first` (empty) lists who never writes first.
-- **Data:** `data/letters.json` (was `letters_home.json`): `home` as before, `reply`, `family_first`, `npc_first`, `never_first`,
-  `sort_hour` (letters arrive at the 08:00 sort, the letter home too). Engine: `stepMail`, `mailPost`, `mailKind`, `mailWhy`, `mailUi`
-  before `stepRecords`; `$eng.mail`, `$ui.mail`, Bonds `$mail`. Rule card `letters` and the 502 core line say the engine owns
-  replies and the letters family and bonded people write first; a letter the story needs from anyone else the narrator may still add.
-- **Migration:** a letter {{user}} sent in the week before 1.95.0 (not home) is posted on the day it was sent, so its reply can still come.
-- One small change from the draft: "met before writing back" is read from Scene.Present (the friend in a scene), not from an Interaction.
-- Tests: new `test_letters_v1950.cjs` (who a letter is for, swipe-stable rolls, replies or silence, the hint in 505, met in person,
-  posting later, one reply per person, family first, a friend first with its Rank and Tension gates, the migration);
-  `test_locations_v1310` updated (a letter written elsewhere now waits); the full suite passes.
-- **To check live:** `docs/TEST_CHECKLIST.md` Q3.3 [1.95].
 
 ## Release index (one line per release, oldest first)
 
@@ -315,3 +317,4 @@ Owner's design (2026-10-22, "proceed" on `planning/DRAFT_surat.md`, now deleted)
 - **v1.96.1 (2026-10-22):** Names and traits rolled apart (owner): one name per gender with one shared surname, and one set of traits the next new character takes under any name.
 - **v1.97.1 (2026-10-22):** Month 11 reordered (owner, World Competition step 1): no classes from W1 Fri until Graduation, Results W1 Sat, Academy Trip W2 Mon–Sat, World Competition W3 Mon to W4 Mon.
 - **v1.97.2 (2026-10-22):** The world and the teams of the World Competition: the Demon Kingdom retcon, six nations and the format in lore 19, five foreign teams and six standout NPCs with portraits (group "World teams", no bond).
+- **v1.97.3 (2026-10-22):** Hanakaze, the host city (World Competition step 3): Yozakura's capital as an outside Area on the owner's map for the national four in Year 1, the Yozakuran liner, walks, the team carriage to the match grounds on their days, the Alpha's Residence closed, the Warrens, the Challenge Crossing, other nations' fours, a snowy winter; lore 19 names the host by year.

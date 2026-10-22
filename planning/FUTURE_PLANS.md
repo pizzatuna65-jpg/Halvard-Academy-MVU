@@ -12,7 +12,6 @@ tahap itu selesai.
 | Rilis | Isi | Catatan |
 |---|---|---|
 | **1.97.x** | World Competition | Draft: `planning/DRAFT_world_competition.md`. Satu langkah = satu rilis; rincian dan alasan urutan ada di tabel langkah draft. |
-| 1.97.3 | Hanakaze: lokasi dan map | Modul Area (pola Avalon) bersama peta `Maps/yozakura.webp`; liner Yozakura. |
 | 1.97.4 | Sistem kompetisi | Phase 1–2, Grand Final, panel sinergi, hadiah, berita di Halvard; beda dari Kingdom, memakai helper yang ada. |
 | 1.97.5 | Vesna dan Koschei's Needle | Vesna NPC penuh, skenario lewat beat di `<now>` (engine tidak punya bond event atau entry [Scripted] sejak 1.9.0), pindah ke Halvard di Year 2. |
 | **1.98.0** | Cek fitur yang terasa dangkal | Telusuri `docs/FEATURES.md`, daftar fitur yang mekaniknya tipis, usulkan pendalamannya lewat sistem yang sudah ada (bahan: §2). Owner memilih dari daftar itu. |

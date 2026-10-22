@@ -61,6 +61,7 @@ _exp = json.load(open(P('data/expedition.json'), encoding='utf-8'))
 _av = json.load(open(P('data/avalon.json'), encoding='utf-8'))
 _air = json.load(open(P('data/airship.json'), encoding='utf-8'))
 _srm = json.load(open(P('data/sunreach.json'), encoding='utf-8'))
+_hk = json.load(open(P('data/hanakaze.json'), encoding='utf-8'))
 _tour = next(l for l in _srm['legs'] if len(l) > 3 and l[3])
 _dock = next(p['name'] for p in _srm['places'] if p['pin'] == _tour[0] and 'Dock' in p['name'])
 _AV_BARE = ('Crown Square', 'Spellwright Row', 'Old Town', 'Eldrasil Castle')
@@ -85,6 +86,13 @@ DATA['areas'] = {
                  'pins': _srm['pins'],
                  'places': [{'id': p['id'], 'name': p['name'], 'pin': p['pin'], 'in': p['in'], 'vibe': p['feel'], 'vibe_night': p['night_feel'], 'desc': p['desc'], 'desc_night': p['night'],
                              'go': 'the open sea' if p['name'] == 'Open Sea' else _go(p['name'])} for p in _srm['places']]},
+    # 1.97.3: Hanakaze (the World Competition's host in Year 1); the match grounds by team carriage from the inn, on their days
+    'hanakaze': {'area': _hk['area'], 'map': _hk['map'], 'unit': 'min', 'arrive': _hk['arrive'], 'start': 'park',
+                 'offGo': f"Only while in {_hk['area']}", 'offText': f"You are not in {_hk['area']} now. The map shows the city as you saw it.",
+                 'legs': _hk['legs'], 'modes': {'team': {'name': 'team carriage', 'from': _go(next(p['name'] for p in _hk['places'] if p['id'] == _hk['inn']))}},
+                 'pins': [{k: p[k] for k in ('id', 'name', 'x', 'y', 'kc') if k in p} for p in _hk['pins']],
+                 'places': [{**{k: p[k] for k in ('id', 'name', 'pin', 'in', 'locked', 'hidden', 'kc', 'desc', 'vibe') if k in p}, 'go': _go(p['name'], ('Hanakaze Skyport', 'Red Tower Arcade', 'Snow Festival Park', 'Forge Street', 'Hell Valley Springs', 'Thunder Gate Temple', 'Old Castle Shiroyama'))}
+                            for p in _hk['places']]},
     'airship': {'area': _air['area'], 'kind': 'cards', 'legs': [], 'pins': [], 'modes': {},
                 'places': [{'id': p['id'], 'name': p['name'], 'vibe': p['line'], 'desc': p['desc'], 'go': _go(p['name'])} for p in _air['places']]},
 }

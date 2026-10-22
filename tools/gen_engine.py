@@ -261,7 +261,7 @@ t = t.replace('/*@@AVALON@@*/{}', json.dumps({**{k: v for k, v in _av.items() if
 _air = json.load(open(P('data/airship.json'), encoding='utf-8'))
 _airids = {p['id'] for p in _air['places']}
 assert _air['board'] in _airids and _air['bath']['place'] in _airids, 'airship.json: board or bath names an unknown place'
-assert all(f['who'] in ('all', 'kingdom') and f['dir'] in ('out', 'home') and f['route'] + '_' + f['dir'] in _air['views'] and f['route'] + '_' + f['dir'] in _air['cargo']
+assert all(f['who'] in ('all', 'kingdom', 'world') and f['dir'] in ('out', 'home') and f['route'] + '_' + f['dir'] in _air['views'] and f['route'] + '_' + f['dir'] in _air['cargo']
            and len(_air['views'][f['route'] + '_' + f['dir']]) == 3 and (f['route'] in _air['sky']) for f in _air['flights']), 'airship.json: a flight without its views, cargo or sky'
 assert all(re.match(r'^\d\d:\d\d$', f['from']) and f['from'] < f['to'] for f in _air['flights']), 'airship.json: flight times'
 t = t.replace('/*@@AIRSHIP@@*/{}', json.dumps({**{k: v for k, v in _air.items() if not k.startswith('_')},
@@ -278,6 +278,18 @@ assert set(_sr['meet']['halvard']) <= {nid for nid, n in _npcs_all.items() if n.
 t = t.replace('/*@@SUNREACH@@*/{}', json.dumps({**{k: v for k, v in _sr.items() if not k.startswith('_')},
     'places': [{k: v for k, v in p.items() if k not in ('desc', 'feel', 'night', 'night_feel', 'narrator', 'brief')} for p in _sr['places']]},
     ensure_ascii=False, separators=(',', ':')))
+# 1.97.3 (owner-approved planning/DRAFT_world_competition.md §5): Hanakaze (pins, places, walks, rates, the city's life, the schedule,
+# its climate); descriptions stay in the lore and the UI
+_hk = json.load(open(P('data/hanakaze.json'), encoding='utf-8'))
+_hpins, _hids = {p['id'] for p in _hk['pins']}, {p['id'] for p in _hk['places']}
+assert all(a in _hpins and b in _hpins for a, b, *_m in _hk['legs']) and all(p['pin'] in _hpins for p in _hk['places']), 'hanakaze.json: unknown pin'
+assert _hk['arrive'] in _hids and _hk['inn'] in _hids and set(_hk['street']) <= _hids and set(_hk['theft']['where']) <= _hids \
+    and all(set(v) <= _hids for v in _hk['where'].values()), 'hanakaze.json: unknown place'
+assert all(p.get('kc') == _hk_p.get('kc') for p in _hk['places'] for _hk_p in _hk['pins'] if _hk_p['id'] == p['pin']), 'hanakaze.json: a ground place outside its ground pin'
+assert all((len(l) > 3) == ('kc' in {**{p['id']: p for p in _hk['pins']}[l[0]], **{p['id']: p for p in _hk['pins']}[l[1]]}) for l in _hk['legs']), 'hanakaze.json: a ground is reached only by team carriage'
+assert set(_hk['teams']) == {n['academy'] for n in _npcs_all.values() if n.get('group') == 'World teams'}, 'hanakaze.json: teams are the World teams'
+t = t.replace('/*@@HANAKAZE@@*/{}', json.dumps({**{k: v for k, v in _hk.items() if not k.startswith('_')},
+    'places': [{k: v for k, v in p.items() if k not in ('desc', 'vibe', 'brief')} for p in _hk['places']]}, ensure_ascii=False, separators=(',', ':')))
 # Bond rules and where each NPC is usually found (Haunts, first clause).
 t = t.replace('/*@@BOND_RULES@@*/{}', json.dumps(json.load(open(P('data/bond_rules.json'), encoding='utf-8')), ensure_ascii=False, separators=(',', ':')))
 haunt = {}

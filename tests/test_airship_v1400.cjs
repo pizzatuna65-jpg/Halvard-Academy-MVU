@@ -15,7 +15,7 @@ const A = JSON.parse(read('data/airship.json'));
 const team = [{ op: 'replace', path: '/Competition/Tier', value: 'Kingdom' }, { op: 'replace', path: '/Competition/Status', value: 'selected' }];
 
 console.log('Data and names');
-ok(A.flights.length === 8 && A.places.map(p => p.id).join() === 'promenade_deck,common_room,cabin_deck,cargo_hold', 'eight flights, four places aboard');
+ok(A.flights.length === 10 && A.places.map(p => p.id).join() === 'promenade_deck,common_room,cabin_deck,cargo_hold', 'ten flights (1.97.3: the Yozakuran liner both ways), four places aboard');
 ok(E.airPlace('Airship — the bar', false) === 'common_room' && E.airPlace('The bar', false) === '' && E.airPlace('the bar', true) === 'common_room', 'short aliases only aboard ("the bar" on campus stays on campus)');
 ok(E.airPlace('Airship', false) === 'common_room' && E.airPlace('Cargo Hold — behind the crates', false) === 'cargo_hold', '"Airship" alone is the Common Room; place names always count');
 ok(T(EXP, '08:00').Day === 'Wed' && T(CROWN, '08:00').Day === 'Tue' && T(TRIP, '08:00').Day === 'Mon' && T(TRIPH, '08:00').Day === 'Sat' && T(KTUE, '08:00').Day === 'Tue', 'test days: Expedition Wed, Crowning Tue, Trip Mon and Sat, Kingdom Tue');
