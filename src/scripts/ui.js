@@ -1108,6 +1108,7 @@ th{color:var(--ink2);font-weight:500;font-size:var(--fs-s)}
 .pr.pinned,.pr.pinned:hover{border-color:var(--brass);box-shadow:0 0 0 1px color-mix(in srgb,var(--brass) 45%,transparent),0 0 14px color-mix(in srgb,var(--brass) 30%,transparent)}
 .pinb{position:absolute;top:4px;right:6px;width:26px;height:26px;padding:0;border:0;background:none;cursor:pointer;font-size:17px;line-height:1;color:var(--ink3);opacity:.7}
 .pinb:hover{opacity:1;color:var(--brass-hi)}.pinb.on{color:var(--brass-hi);opacity:1}
+textarea.pnote{min-height:72px;resize:vertical;margin-bottom:4px}.pn .nte{font-size:var(--fs-s);vertical-align:1px;cursor:help}   /* 1.94.0 notes */
 .nmr{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.pind{flex:0 0 auto}.pind.on{border-color:var(--brass);color:var(--brass-hi)}
 .pav{grid-area:av;position:relative;display:flex}
 .pav .av{border:0;box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--ring,var(--rule2))}
@@ -2402,6 +2403,26 @@ function pinToggle(id) {
   if (NEWS_CHAT) try { updateVariablesWith(v => { v[PIN_VAR] = next; return v; }, { type: 'chat' }); } catch (e) { console.warn('[Eldrasil] pins', e); }
   render();
 }
+// 1.94.0 (owner): the player's own notes on each person, written in the dossier; the narrator never reads them. The same kind of UI
+// state as the pins: chat variable eld_notes { id: text }. Typing keeps the text at once (notePend) and writes the chat variable a
+// moment after the last key; an emptied note is removed
+const NOTE_VAR = 'eld_notes', NOTE_MAX = 1000;
+let noteMem = {}, notePend = {}, noteTimer = 0;
+function notesGet() {
+  let v = noteMem;
+  if (NEWS_CHAT) try { const c = (getVariables({ type: 'chat' }) || {})[NOTE_VAR]; v = _.isPlainObject(c) ? c : {}; } catch (e) { /* no Tavern Helper */ }
+  return { ...v, ...notePend };
+}
+function noteSet(id, text) {
+  notePend[id] = String(text).slice(0, NOTE_MAX);
+  clearTimeout(noteTimer); noteTimer = setTimeout(noteFlush, 600);
+}
+function noteFlush() {
+  const add = notePend; notePend = {};
+  const apply = v => { for (const [k, t] of Object.entries(add)) { if (t.trim()) v[k] = t; else delete v[k]; } return v; };
+  if (!NEWS_CHAT) { apply(noteMem); return; }
+  try { updateVariablesWith(v => { v[NOTE_VAR] = apply(_.isPlainObject(v[NOTE_VAR]) ? { ...v[NOTE_VAR] } : {}); return v; }, { type: 'chat' }); } catch (e) { console.warn('[Eldrasil] notes', e); }
+}
 const pinBtn = (id, on, cls) => `<button class="${cls}${on ? ' on' : ''}" data-pin="${esc(id)}" aria-pressed="${on}" aria-label="Pin" title="${on ? 'Pinned: kept at the top. Tap to unpin' : 'Pin: keep at the top of Bonds'}">${on ? '★' : '☆'}${cls === 'pinb' ? '' : on ? ' Pinned' : ' Pin'}</button>`;
 
 // 1.23.0: XP, Trust and Tension as three labelled meters (1.70.0: shared by the people cards and the scene cards)
@@ -2434,7 +2455,7 @@ function peopleListHTML(S) {
   if (dir !== P0[2]) sorted.reverse();
   if (!sorted.length) return '<div class="empty">You have not met anyone yet.</div>';
   // 1.93.0 (owner): pinned people stay on top whatever the order; the order applies among them too
-  const pins = pinsGet(), ids = [...sorted.filter(id => pins.includes(id)), ...sorted.filter(id => !pins.includes(id))];
+  const pins = pinsGet(), notes = notesGet(), ids =[...sorted.filter(id => pins.includes(id)), ...sorted.filter(id => !pins.includes(id))];
   const ago = id => { const d = today - seen(id); return here.includes(id) ? 'here now' : seen(id) < 0 ? '' : d <= 0 ? 'seen today' : d === 1 ? 'seen yesterday' : `seen ${d} days ago`; };
   const sorter = `<div class="psort"><label class="pso">Order<select data-psort aria-label="Order">${PSORT.map(([k, l]) => `<option value="${k}"${by === k ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
     <div class="tog">${[['asc', '↑ Ascending'], ['desc', '↓ Descending']].map(([k, l]) => `<button data-pdir="${k}" class="${dir === k ? 'on' : ''}" aria-pressed="${dir === k}">${l}</button>`).join('')}</div></div>`;
@@ -2448,7 +2469,7 @@ function peopleListHTML(S) {
     const dot = here.includes(id) ? '<i class="here" role="img" aria-label="here now" title="here now"></i>' : '';
     const sub = b.Title || (n ? publicRole(id, S) || whoLine(id, S) : '');
     return `${head}<div class="prw"><button class="pr${pin ? ' pinned' : ''}" data-open="npc:${esc(id)}"><span class="pav">${avatar(id, S, 'av lg')}${dot}</span><span class="pm">
-      <span class="pn">${esc(nameOf(id, S, true))}${isNew(`npc:${id}`) ? newsDot() : ''}${b.Romance ? ' <span class="pill r">romance</span>' : ''}</span><span class="sub">${esc(by === 'seen' && ago(id) ? [ago(id), sub].filter(Boolean).join(' · ') : sub)}</span></span>
+      <span class="pn">${esc(nameOf(id, S, true))}${isNew(`npc:${id}`) ? newsDot() : ''}${b.Romance ? ' <span class="pill r">romance</span>' : ''}${(notes[id] || '').trim() ? ` <span class="nte" role="img" aria-label="Your note" title="${esc(notes[id])}">📝</span>` : ''}</span><span class="sub">${esc(by === 'seen' && ago(id) ? [ago(id), sub].filter(Boolean).join(' · ') : sub)}</span></span>
       <span class="medal" title="Rank ${b.Rank} of 10">${b.Rank}</span>
       <span class="pmt">${bondMeters(id, b, S)}</span></button>${pinBtn(id, pin, 'pinb')}</div>`;
   }).join('') + '</div>';
@@ -2481,6 +2502,8 @@ PANELS.npc = {
           return `<div class="sub">At Rank 8 this bond can become: ${esc(ways.join(' · '))}.${!'AB'.includes(br) && g8 ? ` This bond needs Trust ${g8} to deepen.` : ''}</div>`; })() : ''}
         ${b.Last_seen ? `<div class="sub">Last seen ${esc(b.Last_seen)}</div>` : ''}</div>`;
     } else h += '<div class="sub">You have not met yet.</div>';
+    if (b) h += `<h3>Your notes</h3><textarea class="pnote" data-note="${esc(id)}" maxlength="${NOTE_MAX}" rows="3" aria-label="Your notes" placeholder="e.g. Likes jasmine tea; don't bring up her brother">${esc(notesGet()[id] || '')}</textarea>
+      <div class="sub">Only for you: the narrator never reads them. Saved with this chat as you type.</div>`;   // 1.94.0
     // 1.4.4 (owner): recent moments with you, newest first (engine: Bonds.<id>.$Recent; the narrator reads the same rows in <now>)
     if (b && Object.keys(b.$gifts || {}).length) h += '<h3>Gifts</h3><div class="gift-log">' + Object.entries(b.$gifts).reverse().map(([item,tier]) => `<span class="pill gift-${esc(tier)}">${esc(youText(item, S))} · ${esc(tier)}</span>`).join(' ') + '</div>';
     const rec = b ? [...(b.$Recent || [])].reverse() : [];
@@ -2516,6 +2539,7 @@ PANELS.npc = {
     return `<div class="dlg" tabindex="-1" style="--dc:${n ? n.dc : '#9aa3ad'}"><div class="hd"><h2>Dossier</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div><div class="bd">${h}</div></div>`;
   },
   click(b) { if (b.dataset.pin) pinToggle(b.dataset.pin); },   // 1.93.0
+  input(el) { if (el.dataset.note) noteSet(el.dataset.note, el.value); },   // 1.94.0
 };
 
 // ---------------------------------------------------------------- connections graph (D3, loaded on demand)

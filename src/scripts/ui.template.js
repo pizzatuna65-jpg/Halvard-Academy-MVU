@@ -582,6 +582,7 @@ th{color:var(--ink2);font-weight:500;font-size:var(--fs-s)}
 .pr.pinned,.pr.pinned:hover{border-color:var(--brass);box-shadow:0 0 0 1px color-mix(in srgb,var(--brass) 45%,transparent),0 0 14px color-mix(in srgb,var(--brass) 30%,transparent)}
 .pinb{position:absolute;top:4px;right:6px;width:26px;height:26px;padding:0;border:0;background:none;cursor:pointer;font-size:17px;line-height:1;color:var(--ink3);opacity:.7}
 .pinb:hover{opacity:1;color:var(--brass-hi)}.pinb.on{color:var(--brass-hi);opacity:1}
+textarea.pnote{min-height:72px;resize:vertical;margin-bottom:4px}.pn .nte{font-size:var(--fs-s);vertical-align:1px;cursor:help}   /* 1.94.0 notes */
 .nmr{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.pind{flex:0 0 auto}.pind.on{border-color:var(--brass);color:var(--brass-hi)}
 .pav{grid-area:av;position:relative;display:flex}
 .pav .av{border:0;box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--ring,var(--rule2))}
