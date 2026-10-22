@@ -114,6 +114,8 @@ const RESTFUL = /*@@RESTFUL@@*/{};
 const HOME = /*@@HOME@@*/{};
 // 1.95.0 (owner-approved planning/DRAFT_surat.md): every other letter's reply, family and friends who write first (data/letters.json)
 const MAIL = /*@@MAIL@@*/{};
+// 1.96.0 (owner-approved planning/DRAFT_nama_npc.md): names and traits for the narrator's new characters (data/name_pool.json)
+const XROLL = /*@@XROLL@@*/{};
 // 1.33.0 (owner-approved planning/DRAFT_classes_and_teachers.md): free periods (data/free_periods.json). Now and then a teacher
 // cannot come; the class is not held and counts against no one. Seeded per class period and day; never on a calendar event day
 // or in Month 1 Week 1. Returns the reason, or '' when the class runs.
@@ -5996,6 +5998,45 @@ function stepCampusEvents(c) {
   }
 }
 
+// 1.96.0 (owner-approved planning/DRAFT_nama_npc.md): the narrator's new characters take a name and traits from the card, never
+// the model's own favourites. Traits are a pure function of (seed, full name), so a person keeps them however late their record
+// is written, and someone named outside the pool gets them too. Two stages (owner): how many good (ratio.good) and bad
+// (ratio.bad), then which; no two traits sharing an axis (x). Then, at dere_pct %, one dere archetype on top: a way of showing
+// affection, neither good nor bad.
+const xKey = n => String(n).trim().toLowerCase().replace(/\s+/g, ' ');
+function xTraits(seed, name) {
+  const T = XROLL.traits || {}, R = T.ratio || {}, k = xKey(name), got = [], ax = new Set();
+  const take = (pool, ...parts) => {
+    const ok = (pool || []).filter(t => !t.x.some(a => ax.has(a)));
+    if (!ok.length) return;
+    const t = pickOf(ok, ...parts); got.push(t); t.x.forEach(a => ax.add(a));
+  };
+  const good = rollInt(R.good[0], R.good[1], seed, 'xt-good', k), bad = rollInt(R.bad[0], R.bad[1], seed, 'xt-bad', k);
+  for (let i = 0; i < good; i++) take(T.positive, seed, 'xt-p', k, i);
+  for (let i = 0; i < bad; i++) take(T.negative, seed, 'xt-n', k, i);
+  if (roll100(seed, 'xt-dere', k) < num(T.dere_pct, 0)) take(T.dere, seed, 'xt-d', k);
+  return got;
+}
+// two names per gender for the next new characters, with their trait labels: { m: [[name, labels]], f }. A given name or a
+// surname any invented character already wears (records, archive, short records, $eng.xs) is skipped, so the offer moves on as
+// soon as the narrator uses one; until then it stays the same, swipes included. The roster is kept out at build time.
+function xOffer(seed, worn) {
+  const first = new Set(), last = new Set(), out = {};
+  for (const n of worn) { const w = xKey(n).split(' '); first.add(w[0]); if (w.length > 1) last.add(w[w.length - 1]); }
+  const sur = (XROLL.surname || []).filter(s => !last.has(s.toLowerCase()));
+  for (const g of ['m', 'f']) {
+    const pool = (XROLL[g] || []).filter(n => !first.has(n.toLowerCase()));
+    out[g] = [];
+    for (let i = 0; i < 2 && pool.length && sur.length; i++) {
+      const n = pickOf(pool, seed, 'xn', g, i), s = pickOf(sur, seed, 'xs', g, i), full = `${n} ${s}`;
+      pool.splice(pool.indexOf(n), 1); sur.splice(sur.indexOf(s), 1);
+      out[g].push([full, xTraits(seed, full).map(t => t.t).join(', ')]);
+    }
+  }
+  return out;
+}
+const xTraitLine = (seed, name) => xTraits(seed, name).map(t => `${t.t}: ${t.do}`).join('; ');
+
 // ---- 8k. 1.6.1 (Batch D, N5): characters the narrator invented (Extras). A roster name is never an Extra. A key that differs
 // only in case, or a first name that matches exactly one recorded full name, is the same person: it merges into the recorded
 // key (in Scene.Present too). Every time one enters Scene.Present it is counted ($eng.xs); from the second appearance <cast>
@@ -6071,6 +6112,8 @@ function stepExtras(c) {
     capRecord(XG, EXTRAS_GONE);
     xHere = ext.filter(id => id in X && String(X[id].Who || '').trim());
     xNew = ext.filter(id => (id in X && !String(X[id].Who || '').trim()) || (!(id in X) && num((XS[xsKey[id]] || {}).n, 0) >= 2));
+    // 1.96.0: the next new characters' names and traits for <now> (505), unless the player switched it off
+    S.$ui.xroll = c.OFF.has('new_people') ? null : xOffer(num(S.$eng.seed, 0), [...Object.keys(X), ...Object.keys(XO), ...Object.keys(XG), ...Object.keys(XS)]);
   }
   Object.assign(c, { xHere, xNew });
 }
@@ -6198,7 +6241,8 @@ function stepCast(c) {
     const rank = id => (S.Bonds[id] ? num(S.Bonds[id].Rank, 0) : -1);
     const order = [...pres].sort((a, b) => (spoke.includes(b) - spoke.includes(a)) || (rank(b) - rank(a)) || (pres.indexOf(a) - pres.indexOf(b)));
     S.$ui.cast = { full: order.slice(0, CAST_FULL), brief: order.slice(CAST_FULL), spoke: spoke.filter(id => pres.includes(id)), gone, ment,
-      where: Object.fromEntries(ment.filter(id => HAUNT[id]).map(id => [id, HAUNT[id]])), extras: xHere, xnew: xNew };
+      where: Object.fromEntries(ment.filter(id => HAUNT[id]).map(id => [id, HAUNT[id]])), extras: xHere, xnew: xNew,
+      xt: c.OFF.has('new_people') ? {} : Object.fromEntries(xNew.map(id => [id, xTraitLine(num(S.$eng.seed, 0), id)])) };   // 1.96.0
     // 1.37.1/1.37.2 (owner: tell A from B at a glance): dialogue colours. Nobody present at the same time shares a colour. Each
     // roster character has a first, second and third colour (data); a recorded Extras character gets three when first present
     // ($ui.sayx). Whoever was already in the scene keeps their colour; a newcomer takes the first of their three nobody present

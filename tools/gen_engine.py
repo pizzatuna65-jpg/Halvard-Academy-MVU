@@ -218,6 +218,21 @@ assert all(k in json.load(open(P('data/npcs.json'), encoding='utf-8')) for k in 
 assert set(_let['reply']) == {'campus', 'far', 'other'}, 'letters.json: reply needs campus, far, other'
 t = t.replace('/*@@HOME@@*/{}', json.dumps(_home, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@MAIL@@*/{}', json.dumps(_let, ensure_ascii=False, separators=(',', ':')))
+# 1.96.0 (owner-approved planning/DRAFT_nama_npc.md): names and traits for the narrator's new characters (XROLL). No pool name may
+# be a roster name or alias word; no duplicates; every trait has a label, a behaviour and at least one axis.
+_xr = {k: v for k, v in json.load(open(P('data/name_pool.json'), encoding='utf-8')).items() if not k.startswith('_')}
+_roster_words = {w.lower() for v in json.load(open(P('data/npcs.json'), encoding='utf-8')).values() for s in [v['name'], *v.get('keys', [])] for w in s.split()}
+for _k in ('m', 'f', 'surname'):
+    assert len(_xr[_k]) == len({n.lower() for n in _xr[_k]}) >= 40, f'name_pool.json: {_k}: duplicates or too few'
+    assert not {n.lower() for n in _xr[_k]} & _roster_words, f'name_pool.json: {_k}: a roster name {sorted({n.lower() for n in _xr[_k]} & _roster_words)}'
+_xt = _xr['traits']
+assert all(len(_xt['ratio'][s]) == 2 and 0 <= _xt['ratio'][s][0] <= _xt['ratio'][s][1] for s in ('good', 'bad')), 'name_pool.json: ratio'
+_tl = [x['t'].lower() for s in ('positive', 'negative', 'dere') for x in _xt[s]]
+assert len(_tl) == len(set(_tl)), 'name_pool.json: a trait twice'
+assert all(x['t'] and x['do'] and x['x'] for s in ('positive', 'negative', 'dere') for x in _xt[s]), 'name_pool.json: a trait without do or x'
+for _s in ('positive', 'negative', 'dere'):
+    _xt[_s] = [{k: x[k] for k in ('t', 'do', 'x')} for x in _xt[_s]]
+t = t.replace('/*@@XROLL@@*/{}', json.dumps(_xr, ensure_ascii=False, separators=(',', ':')))
 # 1.33.0 (owner-approved planning/DRAFT_classes_and_teachers.md): free periods, the chance and the reasons per teacher
 _free = {k: v for k, v in json.load(open(P('data/free_periods.json'), encoding='utf-8')).items() if not k.startswith('_')}
 assert all(k in json.load(open(P('data/npcs.json'), encoding='utf-8')) for k in _free['npcs']), 'free_periods.json: unknown NPC'

@@ -27,7 +27,7 @@ at('10:00', [here({})]);
 at('11:00', [here({ Marta: 'at the till again' })]);
 ok(S.$eng.xs['marta bellweather'].n === 2 && S.$ui.cast.xnew.includes('Marta'), 'back later (by first name): the second appearance of the same person');
 let t = R(509, S);
-ok(/Seen before, with no Extras record yet: Marta\. Add their record \(Extras\) in this reply's update/.test(R(505, S)) && /final_cast_gate/.test(R(510, S)), '<now> asks for the record (1.53.0: not the [mvu_plot] <cast>); the gate is on with only an invented character present');
+ok(/Seen before, with no Extras record yet: Marta \([^)]+\)\. Add their record \(Extras\) in this reply's update/.test(R(505, S)) && /final_cast_gate/.test(R(510, S)), '<now> asks for the record (1.53.0: not the [mvu_plot] <cast>); the gate is on with only an invented character present');
 at('11:05', [{ op: 'replace', path: '/Extras/Marta Bellweather', value: { Who: 'Commissary clerk, 50s, Human', Looks: 'grey bun, ink-stained cuffs, half-moon glasses', Manner: 'brisk, counts twice, softens for first-years', Calls_user: 'dear', Voice: '"Sign here, dear. No, the other here."' } }]);
 ok(S.Scene.Present['Marta Bellweather'] && !S.Scene.Present.Marta, 'Scene.Present "Marta" becomes the recorded full name');
 t = R(509, S);

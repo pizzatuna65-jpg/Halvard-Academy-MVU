@@ -1,0 +1,1392 @@
+{
+ "_note": "1.96.0 (owner-approved planning/DRAFT_nama_npc.md): names and traits for the narrator's new characters. m / f: given names by gender; surname: one pool for all. traits: ratio (good 2-3, bad 1-3), then which (no two traits sharing an axis x), then dere_pct % chance of one dere archetype on top. t: label (printed in <now>); do: what the narrator plays (printed once, when the Extras record is asked for); src: L owner's Advanced Personality Traits lorebook, V VNDB Personality traits, P Open-Source Psychometrics adjective pairs, R a roster impression. Checked by tools/gen_engine.py and tests/test_new_people_v1960.cjs (no roster names, no LLM-default names, no duplicates).",
+ "m": [
+  "Adelard",
+  "Aimery",
+  "Alban",
+  "Amaury",
+  "Anton",
+  "Arnaud",
+  "Arnulf",
+  "Aubert",
+  "Baldwin",
+  "Barnaby",
+  "Benedikt",
+  "Berthold",
+  "Bertram",
+  "Bertrand",
+  "Blaise",
+  "Casimir",
+  "Cesare",
+  "Clement",
+  "Conrad",
+  "Corentin",
+  "Cosimo",
+  "Crispin",
+  "Cuthbert",
+  "Dietrich",
+  "Domenico",
+  "Eckhart",
+  "Edmund",
+  "Egon",
+  "Emmerich",
+  "Erling",
+  "Ewald",
+  "Fabian",
+  "Falk",
+  "Folke",
+  "Fulk",
+  "Gaspard",
+  "Gautier",
+  "Gerold",
+  "Gerrit",
+  "Gervase",
+  "Giles",
+  "Gottfried",
+  "Guido",
+  "Gunther",
+  "Hamon",
+  "Hector",
+  "Henrik",
+  "Hugh",
+  "Hugo",
+  "Humbert",
+  "Ingram",
+  "Isembard",
+  "Ivo",
+  "Jacopo",
+  "Joost",
+  "Joscelin",
+  "Jost",
+  "Jules",
+  "Kaspar",
+  "Lambert",
+  "Lanfranc",
+  "Lapo",
+  "Laurent",
+  "Leofric",
+  "Leopold",
+  "Lothar",
+  "Ludo",
+  "Maarten",
+  "Manfred",
+  "Mathurin",
+  "Matthias",
+  "Maurin",
+  "Morand",
+  "Nicodemus",
+  "Norbert",
+  "Odo",
+  "Olivier",
+  "Ortwin",
+  "Osbert",
+  "Otmar",
+  "Pascal",
+  "Piero",
+  "Piers",
+  "Quentin",
+  "Raimund",
+  "Ralph",
+  "Reinhold",
+  "Remy",
+  "Rinaldo",
+  "Roger",
+  "Roland",
+  "Rudolf",
+  "Ruprecht",
+  "Sebald",
+  "Severin",
+  "Sigmund",
+  "Simon",
+  "Sten",
+  "Tancred",
+  "Teun",
+  "Thibault",
+  "Tobias",
+  "Tommaso",
+  "Ugo",
+  "Urban",
+  "Vincenz",
+  "Walram",
+  "Walter",
+  "Warin",
+  "Gisbert",
+  "Hinrich",
+  "Sander",
+  "Rainer",
+  "Wendel",
+  "Wilmot",
+  "Wolfram",
+  "Wouter",
+  "Yann"
+ ],
+ "f": [
+  "Adela",
+  "Adelheid",
+  "Agathe",
+  "Agnes",
+  "Alix",
+  "Amabel",
+  "Anke",
+  "Annick",
+  "Apolline",
+  "Aveline",
+  "Avice",
+  "Benedetta",
+  "Berenice",
+  "Bettina",
+  "Blanche",
+  "Brigitte",
+  "Cecily",
+  "Chiara",
+  "Clemence",
+  "Clothilde",
+  "Colette",
+  "Constance",
+  "Dorothea",
+  "Edda",
+  "Edith",
+  "Elke",
+  "Emmeline",
+  "Ermengarde",
+  "Euphemia",
+  "Femke",
+  "Fenna",
+  "Fiammetta",
+  "Frida",
+  "Gerda",
+  "Gertrud",
+  "Ginevra",
+  "Gisela",
+  "Godelieve",
+  "Griet",
+  "Gudrun",
+  "Hedwig",
+  "Heloise",
+  "Hilde",
+  "Ida",
+  "Ilse",
+  "Imke",
+  "Ingrid",
+  "Jehanne",
+  "Josette",
+  "Juliana",
+  "Jutta",
+  "Katrijn",
+  "Liesel",
+  "Lisbet",
+  "Lotte",
+  "Lucette",
+  "Mabel",
+  "Mahaut",
+  "Margery",
+  "Margot",
+  "Marit",
+  "Marthe",
+  "Maud",
+  "Mechthild",
+  "Melisende",
+  "Mette",
+  "Nell",
+  "Nicoletta",
+  "Odile",
+  "Perrine",
+  "Petronella",
+  "Philippa",
+  "Ragna",
+  "Rosamund",
+  "Roswitha",
+  "Sabine",
+  "Saskia",
+  "Sibylla",
+  "Simonetta",
+  "Solenne",
+  "Theda",
+  "Ursel",
+  "Walburga",
+  "Wiebke",
+  "Ysabeau",
+  "Beatrix",
+  "Margarethe",
+  "Roberta",
+  "Hawise",
+  "Isotta",
+  "Lorenza",
+  "Marieke",
+  "Aleid",
+  "Berthe",
+  "Ghislaine",
+  "Joanna",
+  "Lieve",
+  "Romilda",
+  "Hiltrud",
+  "Oda",
+  "Radegund",
+  "Sanne"
+ ],
+ "surname": [
+  "Ambler",
+  "Arkwright",
+  "Aubry",
+  "Baines",
+  "Banfield",
+  "Bastide",
+  "Beaucourt",
+  "Bertolini",
+  "Bisset",
+  "Blount",
+  "Bodkin",
+  "Bolger",
+  "Bonnard",
+  "Brakel",
+  "Brandt",
+  "Brune",
+  "Cadogan",
+  "Capel",
+  "Carrow",
+  "Cavalli",
+  "Cobb",
+  "Conti",
+  "Corbet",
+  "Cordier",
+  "Coterel",
+  "Dauber",
+  "Delaunay",
+  "Dobbe",
+  "Drost",
+  "Dufresne",
+  "Duval",
+  "Eberle",
+  "Fabbri",
+  "Fabre",
+  "Faucher",
+  "Fennick",
+  "Ferrars",
+  "Fiske",
+  "Galli",
+  "Garnier",
+  "Gerlach",
+  "Giraud",
+  "Godsell",
+  "Graff",
+  "Grieve",
+  "Hallam",
+  "Haskett",
+  "Heyden",
+  "Hobb",
+  "Hollis",
+  "Ingle",
+  "Jessop",
+  "Kemble",
+  "Kessler",
+  "Kober",
+  "Lacey",
+  "Lammer",
+  "Lanier",
+  "Lemoine",
+  "Lisle",
+  "Lombardi",
+  "Maddox",
+  "Mallet",
+  "Marchand",
+  "Merriman",
+  "Moncur",
+  "Mordaunt",
+  "Moser",
+  "Oakes",
+  "Ostrander",
+  "Pagnell",
+  "Pell",
+  "Pennick",
+  "Perrot",
+  "Pfeffer",
+  "Pigott",
+  "Quarles",
+  "Quint",
+  "Raffe",
+  "Renard",
+  "Reuter",
+  "Ricci",
+  "Roos",
+  "Rouse",
+  "Sallow",
+  "Sartori",
+  "Schaller",
+  "Scrope",
+  "Seward",
+  "Sicard",
+  "Snell",
+  "Sorrel",
+  "Stroud",
+  "Tallis",
+  "Tasker",
+  "Tellier",
+  "Tessier",
+  "Thaxter",
+  "Tibbet",
+  "Toller",
+  "Trask",
+  "Tull",
+  "Underhill",
+  "Vachon",
+  "Vautrin",
+  "Verhoef",
+  "Vidal",
+  "Vogt",
+  "Wace",
+  "Wadley",
+  "Waite",
+  "Weever",
+  "Wickham",
+  "Zeller"
+ ],
+ "traits": {
+  "ratio": {
+   "good": [
+    2,
+    3
+   ],
+   "bad": [
+    1,
+    3
+   ]
+  },
+  "dere_pct": 20,
+  "positive": [
+   {
+    "t": "Kind",
+    "do": "goes out of their way for strangers",
+    "x": [
+     "kind",
+     "warm"
+    ],
+    "src": "VPR"
+   },
+   {
+    "t": "Patient",
+    "do": "explains twice without a sigh",
+    "x": [
+     "temper"
+    ],
+    "src": "LVPR"
+   },
+   {
+    "t": "Loyal",
+    "do": "sides with friends, even when they are wrong",
+    "x": [
+     "loyal"
+    ],
+    "src": "VP"
+   },
+   {
+    "t": "Honest",
+    "do": "says the true thing, even when it is awkward",
+    "x": [
+     "truth"
+    ],
+    "src": "LV"
+   },
+   {
+    "t": "Diligent",
+    "do": "finishes the work before any play",
+    "x": [
+     "work"
+    ],
+    "src": "LVP"
+   },
+   {
+    "t": "Brave",
+    "do": "steps forward when others step back",
+    "x": [
+     "courage"
+    ],
+    "src": "LVP"
+   },
+   {
+    "t": "Curious",
+    "do": "asks one question too many",
+    "x": [
+     "curious"
+    ],
+    "src": "LVP"
+   },
+   {
+    "t": "Perceptive",
+    "do": "notices what others miss",
+    "x": [
+     "notice"
+    ],
+    "src": "LVP"
+   },
+   {
+    "t": "Generous",
+    "do": "shares food, notes and coin without counting",
+    "x": [
+     "money"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Protective",
+    "do": "stands between friends and trouble",
+    "x": [
+     "protect"
+    ],
+    "src": "LV"
+   },
+   {
+    "t": "Nurturing",
+    "do": "fusses over anyone hurt, tired or hungry",
+    "x": [
+     "kind",
+     "care"
+    ],
+    "src": "LPR"
+   },
+   {
+    "t": "Fair",
+    "do": "judges people by deeds, not by family",
+    "x": [
+     "fair"
+    ],
+    "src": "LP"
+   },
+   {
+    "t": "Humble",
+    "do": "plays down their own wins",
+    "x": [
+     "pride",
+     "show"
+    ],
+    "src": "VP"
+   },
+   {
+    "t": "Cheerful",
+    "do": "finds the bright side, out loud",
+    "x": [
+     "mood",
+     "outlook"
+    ],
+    "src": "VPR"
+   },
+   {
+    "t": "Calm",
+    "do": "keeps a steady voice when things go wrong",
+    "x": [
+     "nerves",
+     "drama"
+    ],
+    "src": "PR"
+   },
+   {
+    "t": "Witty",
+    "do": "quick, harmless jokes at the right moment",
+    "x": [
+     "humor"
+    ],
+    "src": "VP"
+   },
+   {
+    "t": "Sociable",
+    "do": "talks to anyone and remembers their names",
+    "x": [
+     "social",
+     "warm"
+    ],
+    "src": "LVR"
+   },
+   {
+    "t": "Responsible",
+    "do": "owns the blame that is theirs",
+    "x": [
+     "duty"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Resourceful",
+    "do": "makes do with whatever is at hand",
+    "x": [
+     "resource"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Determined",
+    "do": "never drops a goal once set",
+    "x": [
+     "persist"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Self-disciplined",
+    "do": "keeps the same routine hour by hour",
+    "x": [
+     "work",
+     "impulse"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Tactful",
+    "do": "softens bad news before giving it",
+    "x": [
+     "tact"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Forgiving",
+    "do": "lets old wrongs go",
+    "x": [
+     "grudge"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Grateful",
+    "do": "thanks people and means it",
+    "x": [
+     "entitle"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Practical",
+    "do": "fixes the problem first, the feelings later",
+    "x": [
+     "practical"
+    ],
+    "src": "VP"
+   },
+   {
+    "t": "Wise",
+    "do": "gives advice worth keeping",
+    "x": [
+     "wise"
+    ],
+    "src": "VP"
+   },
+   {
+    "t": "Studious",
+    "do": "reads ahead of the lesson",
+    "x": [
+     "study"
+    ],
+    "src": "LVP"
+   },
+   {
+    "t": "Polite",
+    "do": "minds their manners with everyone",
+    "x": [
+     "manners"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Gentle",
+    "do": "careful hands, soft voice",
+    "x": [
+     "kind",
+     "harsh"
+    ],
+    "src": "LR"
+   },
+   {
+    "t": "Optimistic",
+    "do": "expects things to work out",
+    "x": [
+     "outlook"
+    ],
+    "src": "LVP"
+   },
+   {
+    "t": "Reliable",
+    "do": "on time, and does what they said",
+    "x": [
+     "duty",
+     "reliable"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Modest",
+    "do": "no show in dress or talk",
+    "x": [
+     "show"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Frugal",
+    "do": "wastes nothing, mends instead of buying",
+    "x": [
+     "money",
+     "spend"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Playful",
+    "do": "turns chores into games",
+    "x": [
+     "humor",
+     "play"
+    ],
+    "src": "LP"
+   },
+   {
+    "t": "Earnest",
+    "do": "means every word they say",
+    "x": [
+     "truth",
+     "sincere"
+    ],
+    "src": "R"
+   },
+   {
+    "t": "Charming",
+    "do": "an easy smile that puts people at ease",
+    "x": [
+     "charm",
+     "warm"
+    ],
+    "src": "VP"
+   },
+   {
+    "t": "Confident",
+    "do": "speaks up in class and in a crowd",
+    "x": [
+     "confidence"
+    ],
+    "src": "VP"
+   },
+   {
+    "t": "Open-minded",
+    "do": "hears out odd ideas before judging",
+    "x": [
+     "mind"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Diplomatic",
+    "do": "settles quarrels between others",
+    "x": [
+     "quarrel"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Hospitable",
+    "do": "always has tea and a seat for a guest",
+    "x": [
+     "warm"
+    ],
+    "src": "L"
+   },
+   {
+    "t": "Neat",
+    "do": "keeps their things and themselves tidy",
+    "x": [
+     "tidy"
+    ],
+    "src": "LP"
+   },
+   {
+    "t": "Hardy",
+    "do": "shrugs off cold, pain and bad food",
+    "x": [
+     "skin"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Adventurous",
+    "do": "first to try the new path",
+    "x": [
+     "caution"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Discreet",
+    "do": "keeps the secrets told to them",
+    "x": [
+     "gossip",
+     "nosy"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Clever",
+    "do": "works out puzzles quickly",
+    "x": [
+     "smart"
+    ],
+    "src": "VP"
+   },
+   {
+    "t": "Attentive",
+    "do": "listens without interrupting",
+    "x": [
+     "listen"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Encouraging",
+    "do": "cheers others on, loudly",
+    "x": [
+     "cheer"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Selfless",
+    "do": "puts others' needs before their own",
+    "x": [
+     "self"
+    ],
+    "src": "VP"
+   },
+   {
+    "t": "Honorable",
+    "do": "keeps every promise, to the letter",
+    "x": [
+     "truth",
+     "honor"
+    ],
+    "src": "VP"
+   },
+   {
+    "t": "Easygoing",
+    "do": "rarely bothered by anything",
+    "x": [
+     "nerves",
+     "temper"
+    ],
+    "src": "VPR"
+   },
+   {
+    "t": "Composed",
+    "do": "keeps a straight face under pressure",
+    "x": [
+     "drama"
+    ],
+    "src": "LVP"
+   },
+   {
+    "t": "Thoughtful",
+    "do": "remembers small things about people",
+    "x": [
+     "care"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Hardworking",
+    "do": "first in, last out",
+    "x": [
+     "work"
+    ],
+    "src": "VP"
+   },
+   {
+    "t": "Sincere",
+    "do": "no masks; what you see is what they are",
+    "x": [
+     "sincere"
+    ],
+    "src": "VP"
+   },
+   {
+    "t": "Flirtatious",
+    "do": "winks, teases and holds a look too long",
+    "x": [
+     "flirt"
+    ],
+    "src": "LV"
+   },
+   {
+    "t": "Romantic",
+    "do": "falls for people quickly and says so",
+    "x": [
+     "romance"
+    ],
+    "src": "VP"
+   }
+  ],
+  "negative": [
+   {
+    "t": "Arrogant",
+    "do": "looks down on the less gifted",
+    "x": [
+     "pride"
+    ],
+    "src": "LVPR"
+   },
+   {
+    "t": "Stubborn",
+    "do": "never backs down once decided",
+    "x": [
+     "yield"
+    ],
+    "src": "LVP"
+   },
+   {
+    "t": "Short-tempered",
+    "do": "snaps at small things",
+    "x": [
+     "temper",
+     "nerves"
+    ],
+    "src": "VP"
+   },
+   {
+    "t": "Lazy",
+    "do": "does the least that still passes",
+    "x": [
+     "work"
+    ],
+    "src": "LVPR"
+   },
+   {
+    "t": "Jealous",
+    "do": "resents other people's luck and friends",
+    "x": [
+     "envy"
+    ],
+    "src": "LVP"
+   },
+   {
+    "t": "Greedy",
+    "do": "always wants more coin",
+    "x": [
+     "money"
+    ],
+    "src": "LV"
+   },
+   {
+    "t": "Cowardly",
+    "do": "runs or hides when danger comes",
+    "x": [
+     "courage"
+    ],
+    "src": "LVPR"
+   },
+   {
+    "t": "Vain",
+    "do": "fusses over looks and fishes for praise",
+    "x": [
+     "show",
+     "pride"
+    ],
+    "src": "PR"
+   },
+   {
+    "t": "Cynical",
+    "do": "expects the worst of everyone",
+    "x": [
+     "outlook",
+     "trust"
+    ],
+    "src": "LVP"
+   },
+   {
+    "t": "Insecure",
+    "do": "needs reassurance and fishes for it",
+    "x": [
+     "confidence"
+    ],
+    "src": "LVP"
+   },
+   {
+    "t": "Gossip",
+    "do": "passes on whatever they heard",
+    "x": [
+     "gossip"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Petty",
+    "do": "keeps score of small slights",
+    "x": [
+     "grudge"
+    ],
+    "src": "V"
+   },
+   {
+    "t": "Vengeful",
+    "do": "pays back every wrong, with interest",
+    "x": [
+     "grudge"
+    ],
+    "src": "LVP"
+   },
+   {
+    "t": "Rude",
+    "do": "skips please and thank you",
+    "x": [
+     "manners"
+    ],
+    "src": "VP"
+   },
+   {
+    "t": "Blunt",
+    "do": "says hurtful truths without care",
+    "x": [
+     "tact"
+    ],
+    "src": "V"
+   },
+   {
+    "t": "Nosy",
+    "do": "pries into other people's business",
+    "x": [
+     "nosy"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Clumsy",
+    "do": "drops, spills and trips",
+    "x": [
+     "coord"
+    ],
+    "src": "VP"
+   },
+   {
+    "t": "Messy",
+    "do": "leaves a trail of clutter",
+    "x": [
+     "tidy"
+    ],
+    "src": "LP"
+   },
+   {
+    "t": "Impulsive",
+    "do": "acts first, thinks later",
+    "x": [
+     "impulse",
+     "caution"
+    ],
+    "src": "LP"
+   },
+   {
+    "t": "Anxious",
+    "do": "frets over what might go wrong",
+    "x": [
+     "nerves"
+    ],
+    "src": "LPR"
+   },
+   {
+    "t": "Selfish",
+    "do": "puts their own needs first",
+    "x": [
+     "self",
+     "kind"
+    ],
+    "src": "VP"
+   },
+   {
+    "t": "Two-faced",
+    "do": "sweet to your face, cutting behind your back",
+    "x": [
+     "sincere",
+     "truth"
+    ],
+    "src": "VP"
+   },
+   {
+    "t": "Manipulative",
+    "do": "steers people with half-truths",
+    "x": [
+     "sincere",
+     "truth",
+     "honor"
+    ],
+    "src": "LVP"
+   },
+   {
+    "t": "Bossy",
+    "do": "orders their peers around",
+    "x": [
+     "boss"
+    ],
+    "src": "LP"
+   },
+   {
+    "t": "Melodramatic",
+    "do": "makes a scene out of small things",
+    "x": [
+     "drama"
+    ],
+    "src": "LPR"
+   },
+   {
+    "t": "Cold",
+    "do": "keeps everyone at arm's length",
+    "x": [
+     "warm",
+     "social",
+     "dere"
+    ],
+    "src": "LVPR"
+   },
+   {
+    "t": "Gloomy",
+    "do": "sighs and expects rain",
+    "x": [
+     "mood",
+     "outlook",
+     "cheer"
+    ],
+    "src": "VP"
+   },
+   {
+    "t": "Spoiled",
+    "do": "expects to be served",
+    "x": [
+     "entitle"
+    ],
+    "src": "VP"
+   },
+   {
+    "t": "Timid",
+    "do": "avoids attention and rarely speaks up",
+    "x": [
+     "confidence",
+     "social",
+     "courage"
+    ],
+    "src": "LVR"
+   },
+   {
+    "t": "Show-off",
+    "do": "brags about every win",
+    "x": [
+     "show",
+     "pride"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Stingy",
+    "do": "haggles over every copper",
+    "x": [
+     "money"
+    ],
+    "src": "LP"
+   },
+   {
+    "t": "Narrow-minded",
+    "do": "scoffs at new ideas",
+    "x": [
+     "mind"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Indifferent",
+    "do": "does not care what happens to others",
+    "x": [
+     "care",
+     "kind"
+    ],
+    "src": "LPR"
+   },
+   {
+    "t": "Unreliable",
+    "do": "late, and forgets promises",
+    "x": [
+     "reliable",
+     "duty",
+     "honor"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Thin-skinned",
+    "do": "hurt by every joke",
+    "x": [
+     "skin"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Quarrelsome",
+    "do": "picks arguments for sport",
+    "x": [
+     "quarrel"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Glutton",
+    "do": "always eating, always hungry",
+    "x": [
+     "food"
+    ],
+    "src": "LV"
+   },
+   {
+    "t": "Absent-minded",
+    "do": "forgets names, errands and dates",
+    "x": [
+     "notice",
+     "reliable"
+    ],
+    "src": "V"
+   },
+   {
+    "t": "Know-it-all",
+    "do": "corrects everyone, unasked",
+    "x": [
+     "pride",
+     "wise"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Humorless",
+    "do": "never gets the joke",
+    "x": [
+     "humor",
+     "play"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Suspicious",
+    "do": "distrusts kindness and asks what it costs",
+    "x": [
+     "trust"
+    ],
+    "src": "LVP"
+   },
+   {
+    "t": "Naive",
+    "do": "believes whatever they are told",
+    "x": [
+     "trust",
+     "wise"
+    ],
+    "src": "LVP"
+   },
+   {
+    "t": "Rebellious",
+    "do": "breaks rules for the sake of breaking them",
+    "x": [
+     "rules"
+    ],
+    "src": "VP"
+   },
+   {
+    "t": "Sarcastic",
+    "do": "answers with a sneer",
+    "x": [
+     "tact",
+     "sincere"
+    ],
+    "src": "LP"
+   },
+   {
+    "t": "Moody",
+    "do": "swings from warm to sour without warning",
+    "x": [
+     "mood"
+    ],
+    "src": "VP"
+   },
+   {
+    "t": "Cruel",
+    "do": "enjoys other people's pain",
+    "x": [
+     "kind",
+     "harsh",
+     "care"
+    ],
+    "src": "LVPR"
+   },
+   {
+    "t": "Possessive",
+    "do": "wants their friends all to themselves",
+    "x": [
+     "possess"
+    ],
+    "src": "LV"
+   },
+   {
+    "t": "Clingy",
+    "do": "cannot stand being left alone",
+    "x": [
+     "possess"
+    ],
+    "src": "LR"
+   },
+   {
+    "t": "Ruthless",
+    "do": "uses people to climb",
+    "x": [
+     "self",
+     "honor"
+    ],
+    "src": "LVP"
+   },
+   {
+    "t": "Complainer",
+    "do": "grumbles about everything",
+    "x": [
+     "cheer"
+    ],
+    "src": "V"
+   },
+   {
+    "t": "Reckless",
+    "do": "takes needless risks",
+    "x": [
+     "caution"
+    ],
+    "src": "R"
+   },
+   {
+    "t": "Overconfident",
+    "do": "sure they will win, before trying",
+    "x": [
+     "confidence"
+    ],
+    "src": "V"
+   },
+   {
+    "t": "Judgmental",
+    "do": "decides who you are at first sight",
+    "x": [
+     "mind",
+     "fair"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Snob",
+    "do": "looks down on commoners and new money",
+    "x": [
+     "pride",
+     "fair"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Drowsy",
+    "do": "always half asleep, naps anywhere",
+    "x": [
+     "energy"
+    ],
+    "src": "LV"
+   },
+   {
+    "t": "Fickle",
+    "do": "changes sides when it suits them",
+    "x": [
+     "loyal"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Seductive",
+    "do": "uses charm and closeness to get their way",
+    "x": [
+     "flirt"
+    ],
+    "src": "L"
+   },
+   {
+    "t": "Shameless",
+    "do": "impossible to embarrass, about anything",
+    "x": [
+     "shame"
+    ],
+    "src": "PR"
+   },
+   {
+    "t": "Suggestive",
+    "do": "turns every other sentence into innuendo",
+    "x": [
+     "flirt",
+     "shame"
+    ],
+    "src": "P"
+   },
+   {
+    "t": "Heartbreaker",
+    "do": "courts many, commits to none",
+    "x": [
+     "flirt",
+     "romance",
+     "loyal"
+    ],
+    "src": "V"
+   }
+  ],
+  "dere": [
+   {
+    "t": "Deredere",
+    "do": "openly sweet, and shows it to everyone",
+    "x": [
+     "dere"
+    ],
+    "src": "V"
+   },
+   {
+    "t": "Tsundere",
+    "do": "harsh and denying in public, soft when alone",
+    "x": [
+     "dere",
+     "tact"
+    ],
+    "src": "V"
+   },
+   {
+    "t": "Kuudere",
+    "do": "flat voice and few words; cares through deeds",
+    "x": [
+     "dere",
+     "drama",
+     "mood"
+    ],
+    "src": "V"
+   },
+   {
+    "t": "Dandere",
+    "do": "silent in a crowd, chatty with one trusted person",
+    "x": [
+     "dere",
+     "social",
+     "confidence"
+    ],
+    "src": "V"
+   },
+   {
+    "t": "Yandere",
+    "do": "sweet, until someone gets close to their person",
+    "x": [
+     "dere",
+     "possess"
+    ],
+    "src": "V"
+   },
+   {
+    "t": "Himedere",
+    "do": "expects to be treated like royalty",
+    "x": [
+     "dere",
+     "entitle"
+    ],
+    "src": "V"
+   }
+  ]
+ }
+}
