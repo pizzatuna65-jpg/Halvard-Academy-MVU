@@ -4,6 +4,22 @@ Satu-satunya daftar pekerjaan yang **belum** dikerjakan. Aturan: begitu sesuatu 
 `CHANGELOG.md` dan git). Canon/desain baru: draft dulu di `planning/DRAFT_<topik>.md`, terapkan setelah owner bilang "proceed", lalu
 hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/TEST_CHECKLIST.md`, bukan di sini.
 
+## 0. Jalan ke 2.0 (owner, 2026-10-22)
+
+Empat tahap terakhir sebelum 2.0, berurutan. 1.97 dan 1.99 dipecah jadi beberapa rilis (1.97.1, 1.97.2, …). Hapus barisnya begitu
+tahap itu selesai.
+
+| Rilis | Isi | Catatan |
+|---|---|---|
+| **1.97.x** | World Competition | World Competition = M11 W4 Wed–Sat, di luar negeri, diikuti empat tim nasional (DECISIONS §1 "Calendar change"; lore 0, 1, 18, 19). Canon baru: satu draft dulu (`planning/DRAFT_<topik>.md`) yang memuat semua langkah, terapkan setelah "proceed", perbarui `NPC_BRAINSTORM_BRIEF.md`. Satu langkah = satu rilis; urutan pasti dan langkah tambahan ditetapkan di draft. |
+| 1.97.1 | NPC baru | Tim akademi luar negeri. |
+| 1.97.2 | Map baru | |
+| 1.97.3 | Lokasi baru | Lewat modul Area yang sudah ada (seperti Avalon, Sunreach). |
+| 1.97.4 | Sistem kompetisi baru | Harus terasa beda dari Kingdom Competition (`data/event_frame.json` `kingdom`); pakai ulang helper yang sudah ada, bukan sistem paralel. |
+| **1.98.0** | Cek fitur yang terasa dangkal | Telusuri `docs/FEATURES.md`, daftar fitur yang mekaniknya tipis, usulkan pendalamannya lewat sistem yang sudah ada (bahan: §2). Owner memilih dari daftar itu. |
+| **1.99.x** | Full audit bug hunt, stress test, dan perbaikannya | Full suite, stress test, audit lintas sistem; hasilnya file audit dengan daftar batch. Tiap batch = satu rilis: batch 1 → 1.99.1, batch 2 → 1.99.2, dst. |
+| **2.0.0** | Full polish fitur dan UI | Tanpa fitur baru. |
+
 ## 1. Rencana owner (dicatat, belum dijadwalkan)
 
 | Rencana | Label | Paling lambat | Alasan |

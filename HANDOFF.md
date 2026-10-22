@@ -16,7 +16,8 @@ the Workshop, the Fishing Club's dawn, the Library Assistants' loan and records;
 audit is done except batch 8. Live checks: the campaign quest log `docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat,
 Y1 M1 W1 Mon 10:13; first Act 0: update the card, Q0.1).
 
-**Next task:** the owner plays the quest log; their reports and chat exports bring the playtest fixes (tick what passed, run
+**Next task:** the road to 2.0 is in `planning/FUTURE_PLANS.md` §0 (1.97.x the World Competition in steps: NPCs, map, location,
+its own competition system; 1.98 shallow features; 1.99.x full bug hunt and stress test, one batch per release; 2.0 full polish). Alongside it, the owner plays the quest log; their reports and chat exports bring the playtest fixes (tick what passed, run
 `tools/audit_chat.py` on the export, move "Where you are"). MS3 stage 2 and the NPC dialogue audit's U1, U3–U5 wait in
 `planning/FUTURE_PLANS.md` §2 for a campaign export. Batch 8 (chapters) is planned in `planning/DRAFT_bab_baru.md`: build it at about
 20,000 messages, slow saves or a chat file near 100 MB.
