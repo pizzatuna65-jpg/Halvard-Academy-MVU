@@ -34,7 +34,7 @@ it. *Update*: the folded block MVU appends under the reply. *Log*: Student file 
 | 7 | M5–M8 | Results day, autumn, The Thinning |
 | 8 | M9 | the Bazaar, Founder Day, Kingdom Competition week |
 | 9 | M10 | winter, Remembrance Day |
-| 10 | M11 | Sunreach Bay, Graduation |
+| 10 | M11 | Year's End, Sunreach Bay, the World Competition week, Graduation |
 | 11 | Year 2 | the Entrance as a guide, the Year 2 cohort, the Council election |
 | 12 | Year 3 | the Year 3 cohort |
 | MS | whenever it comes | people and bonds, story events, a long Journal, VectFox |
@@ -601,11 +601,16 @@ The first academy flight (the airship), then the Grand Vast Forest.
 
 ## Act 10 — Month 11
 
-### Q10.1 The Academy Trip: Sunreach Bay (W2 Fri to W3 Thu)
-- [ ] Friday: `<now>` says points do not work abroad tomorrow; change some into coin [1.41].
-- [ ] Saturday is a full day of flying; at 20:00 the location becomes "Sunreach Bay — Skydock", the Map opens on the Sunreach tab with the
+### Q10.0 Year's End and Results (W1 Fri–Sat)
+- [ ] W1 Fri: the bracelet and `<now>` say "Year's End (no classes until Graduation)"; the period reads "Timetable suspended"; no class
+      line in `<now>`, and the Planner shows no classes for the rest of the month [1.97.1].
+- [ ] W1 Sat: Results & Final Ranking (09:00 assembly, 19:00 feast), no Study Hall or clubs; the dorm rank updates today [1.97.1].
+
+### Q10.1 The Academy Trip: Sunreach Bay (W1 Sun to W2 Sat)
+- [ ] W1 Sun: `<now>` says points do not work abroad tomorrow; change some into coin [1.41, 1.97.1].
+- [ ] W2 Mon is a full day of flying; at 20:00 the location becomes "Sunreach Bay — Skydock", the Map opens on the Sunreach tab with the
       night map, and the bracelet weather says Sunreach Bay (warm south) [1.41, 1.32].
-- [ ] Sunday: the 09:00 briefing is in `<now>`. Walk to the Crossing, then take a carriage (`Sunreach.Ride` "carriage") and a water taxi
+- [ ] Tuesday: the 09:00 briefing is in `<now>`. Walk to the Crossing, then take a carriage (`Sunreach.Ride` "carriage") and a water taxi
       ("boat"): half the time, and the coin. At 18:00 the map, the card and the place entry switch to their night face [1.41, 1.46].
 - [ ] A bet at The Golden Tide: the update sets `Sunreach.Bet`, the narrator plays up to the throw, the next `<now>` says how it went, and
       the coin changes by the stake. At Velvet Lanes or the casino `<now>` only reminds that it is out of bounds [1.41].
@@ -614,7 +619,11 @@ The first academy flight (the airship), then the Grand Vast Forest.
 - [ ] Settings → Campus life → Ambient moments: on Rare a day here brings fewer street sights and people than on Often [1.43].
 - [ ] The Academy Trip entry carries the city index, and a place's own entry joins when it is mentioned; after 22:00 the curfew line is
       the teachers' at The Hanabira [1.41].
-- [ ] Thursday 08:00 boarding; back at Halvard the Sunreach lore and block are gone [1.41, 1.32].
+- [ ] Friday 19:00 the farewell dinner; Saturday 08:00 boarding; back at Halvard the Sunreach lore and block are gone [1.41, 1.32, 1.97.1].
+
+### Q10.1b The World Competition week (W3 Mon to W4 Mon)
+- [ ] At Halvard (not in the national four): each day's Event line names that day's phase abroad; no classes all week; the Notebook
+      calendar shows W3 Mon to W4 Mon as the World Competition and W4 Tue–Sat as Year's End [1.97.1].
 
 ### Q10.2 Graduation (W4 Sun)
 - [ ] From 12:00 in the Courtyards the farewell winter market's stalls are open (a knitted dorm scarf, cocoa) [1.86].
@@ -638,7 +647,7 @@ The first academy flight (the airship), then the Grand Vast Forest.
       dorm; Charles watches from the gallery without touching the Stone [1.9.2].
 - [ ] 10:00: Charles guides two roster first-years, the same three through several places and a swipe [1.9.2].
 - [ ] Linus, Maple, Nerys, Hadrian, Wren and Tsubaki show their portraits and thumbnails [1.9.6].
-- [ ] Ask what year Charles is in and when the World Competition is: Year 2, Month 11 Week 4 [1.9.7].
+- [ ] Ask what year Charles is in and when the World Competition is: Year 2, Month 11 Week 3 Monday to Week 4 Monday [1.9.7, 1.97.1].
 - [ ] The reasoning opens with `Now: Y2 M? W? Day HH:MM at <place>`, and VectFox dates new events "Y2", not mixed with Year 1 [1.11.2,
       1.11.3, 1.61.1].
 - [ ] The castle's Floor 3 lists the second-years' Lecture Halls, Study Rooms and lockers; "Go here" puts the narration there among

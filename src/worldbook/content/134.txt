@@ -10,7 +10,7 @@ const _cal = {
   8: "W2 Thu evening to Sun Traveling Circus visits. W3 Thu-Sat Academy Showcase. W4 Sun Elemental Dorm Day.",
   9: "W1 Mon-Thu Midterm. W2 Thu-Sat Academy Bazaar. W3 Sat Academy Founder Day. W4 Wed-Sat Kingdom Competition at the Royal Arena in Avalon, the capital (four academies, one team each; only the teams travel, Halvard's with Gavlan Haverton: they fly out Tue and home Sun).",
   10: "W1 Tue Remembrance Day. W2 Sun Occult Dorm Day. W3 Mon-Thu Student Council election campaign; W3 Fri 16:00-18:00 debate in the Seminar Rooms; W3 Sat 13:00-16:00 voting in the Main Courtyard replaces clubs, with results after counting. W4 Fri evening to Sun Harvest Festival.",
-  11: "W1 Mon-Thu End of Semester exams. W2 Mon Results & Final Ranking. W2 Sat to W3 Thu Academy Trip (Sunreach Bay, abroad; a full day by airship each way: out Sat, home Thu). W4 Wed-Sat World Competition, abroad (the national four). W4 Sun Graduation (third-years leave the next morning).",
+  11: "W1 Mon-Thu End of Semester exams; no classes from W1 Fri until Graduation. W1 Sat Results & Final Ranking. W2 Mon-Sat Academy Trip (Sunreach Bay, abroad; a full day by airship each way: out Mon, home Sat). W3 Mon to W4 Mon World Competition, abroad (the national four). W4 Sun Graduation (third-years leave the next morning).",
   12: "Kingdom-wide holiday all month, students go home, campus nearly empty."
 };
 const _m = Math.min(12, Math.max(1, Number(getvar('stat_data.World.Month')) || 1));

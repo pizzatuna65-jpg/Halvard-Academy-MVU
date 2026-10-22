@@ -12,8 +12,8 @@
   {"id": "crown_home", "m": 4, "w": 2, "d": "Tue", "from": "16:00", "to": "18:00", "who": "all", "route": "avalon", "dir": "home", "event": "Independence Crowning Day", "dest": "Grassy Field and Hills", "lands": "Halvard, at the edge of the grounds", "bar": true},
   {"id": "kd_out", "m": 9, "w": 4, "d": "Tue", "from": "08:00", "to": "10:00", "who": "kingdom", "route": "avalon", "dir": "out", "event": "the Kingdom Competition (Halvard's team and Gavlan Haverton only)", "dest": "Avalon — Skyport", "lands": "the Skyport, Avalon", "bar": false},
   {"id": "kd_home", "m": 9, "w": 4, "d": "Sun", "from": "16:00", "to": "18:00", "who": "kingdom", "route": "avalon", "dir": "home", "event": "the Kingdom Competition (Halvard's team and Gavlan Haverton only)", "dest": "Grassy Field and Hills", "lands": "Halvard, at the edge of the grounds", "bar": true},
-  {"id": "trip_out", "m": 11, "w": 2, "d": "Sat", "from": "07:00", "to": "20:00", "who": "all", "route": "sunreach", "dir": "out", "event": "the Academy Trip", "dest": "Sunreach Bay — Skydock", "lands": "the Skydock, Sunreach Bay", "bar": false},
-  {"id": "trip_home", "m": 11, "w": 3, "d": "Thu", "from": "08:00", "to": "20:00", "who": "all", "route": "sunreach", "dir": "home", "event": "the Academy Trip", "dest": "Grassy Field and Hills", "lands": "Halvard, at the edge of the grounds", "bar": false}
+  {"id": "trip_out", "m": 11, "w": 2, "d": "Mon", "from": "07:00", "to": "20:00", "who": "all", "route": "sunreach", "dir": "out", "event": "the Academy Trip", "dest": "Sunreach Bay — Skydock", "lands": "the Skydock, Sunreach Bay", "bar": false},
+  {"id": "trip_home", "m": 11, "w": 2, "d": "Sat", "from": "08:00", "to": "20:00", "who": "all", "route": "sunreach", "dir": "home", "event": "the Academy Trip", "dest": "Grassy Field and Hills", "lands": "Halvard, at the edge of the grounds", "bar": false}
  ],
  "places": [
   {"id": "promenade_deck", "name": "Promenade Deck",

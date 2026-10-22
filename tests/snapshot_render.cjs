@@ -19,8 +19,8 @@ if (mode === 'states') {
     class_mon: { Week: 3, Day: 'Mon', Time: '09:00', Location: 'Lecture Halls' }, clubs_sat: { Week: 3, Day: 'Sat', Time: '14:00', Location: 'Club Rooms' },
     m4_crown: { Month: 4, Week: 2, Day: 'Tue', Time: '12:00', Location: 'Avalon — Crown Square' }, m6: { Month: 6, Week: 1, Day: 'Wed', Time: '16:00', Location: 'Gardens' },
     m8_exp: { Month: 8, Week: 1, Day: 'Wed', Time: '11:00', Location: 'Grand Vast Forest — Base Camp' }, m9_exam: { Month: 9, Week: 1, Day: 'Tue', Time: '10:00', Location: 'Main Library' },
-    m10_elect: { Month: 10, Week: 3, Day: 'Sat', Time: '15:00', Location: 'Main Courtyard' }, m11_sr_day: { Month: 11, Week: 2, Day: 'Sun', Time: '11:00', Location: 'Sunreach Bay — Coral Beach' },
-    m11_sr_night: { Month: 11, Week: 2, Day: 'Mon', Time: '21:00', Location: 'Sunreach Bay — The Golden Tide' }, m11_air: { Month: 11, Week: 2, Day: 'Sat', Time: '12:00', Location: 'Airship — Promenade Deck' },
+    m10_elect: { Month: 10, Week: 3, Day: 'Sat', Time: '15:00', Location: 'Main Courtyard' }, m11_sr_day: { Month: 11, Week: 2, Day: 'Wed', Time: '11:00', Location: 'Sunreach Bay — Coral Beach' },
+    m11_sr_night: { Month: 11, Week: 2, Day: 'Thu', Time: '21:00', Location: 'Sunreach Bay — The Golden Tide' }, m11_air: { Month: 11, Week: 2, Day: 'Mon', Time: '12:00', Location: 'Airship — Promenade Deck' },
     m12: { Month: 12, Week: 2, Day: 'Thu', Time: '19:00', Location: 'Viridian Dormitory' }, m2_mall: { Week: 3, Day: 'Sun', Time: '13:00', Location: 'The Mall' },
   })) { let S = base; for (const m of [w.Month || 2]) S = W(S, { ...w, Month: m }); out[k] = S; }
   out.battle = applyPatch(out.class_mon, [{ op: 'replace', path: '/Battle', value: { Active: true, Combatants: { Rei: { HP: 80, Stamina: 60, Status: 'guarding' } } } }]);

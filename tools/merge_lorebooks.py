@@ -191,6 +191,16 @@ rep(C[19], "3. Kingdom. One team per academy, four in total, knockout. Each memb
     "3. Kingdom. One team per academy, four in total, knockout, at the arena in the capital. Each member of the winning team earns 5,000 points. "
     "Only the teams travel: they arrive the day before and stay at a hotel near the arena, and fly home the day after. "
     "Halvard's team goes with Gavlan Haverton as its escort; the rest of the academy stays at school and follows the news.")
+# ---------- 1.97.1 calendar (owner, planning/DRAFT_world_competition.md §1): Month 11 reordered ----------
+# No classes from W1 Fri until Graduation; Results & Final Ranking W1 Sat; Academy Trip W2 Mon-Sat (its entry 247 is written by
+# sunreach() below); World Competition W3 Mon to W4 Mon; Graduation stays W4 Sun. Same dates as data/calendar.json.
+rep(C[0], "Dorm rank: recalculated M5W2 and M11W2.", "Dorm rank: recalculated M5W2 and M11W1.")
+rep(C[0], "World M11W4 (abroad).", "World M11W3 to M11W4 (abroad).")
+rep(C[18], "the World Competition abroad is in Month 11 Week 4, before Graduation.",
+    "the World Competition abroad is in Month 11, from Week 3 Monday to Week 4 Monday, before Graduation.")
+rep(C[237], "Month 11 Week 2 Monday.", "Month 11 Week 1 Saturday.")
+rep(C[248], "When: Month 11 Week 4, Sunday, the day after the World Competition ends (the national four fly home overnight).",
+    "When: Month 11 Week 4, Sunday, six days after the World Competition ends.")
 # ---------- 1.33.0 classes and teachers (owner-approved planning/DRAFT_classes_and_teachers.md) ----------
 # The one-year rule holds only for Magic Theory, History, Etiquette and Potion Crafting; Creature Studies, Dark Magic Defense and
 # the five Practical Magic classes (the old Combat Class, now one class per combat role) have one teacher for every year. Baelin
@@ -1184,7 +1194,7 @@ def airship(C, ejs):
 
 def sunreach(C, ejs):
     """1.41.0 (owner-approved planning/DRAFT_outside_maps.md, part 3): Sunreach Bay from data/sunreach.json. The Academy Trip entry (247)
-    carries the city's index (constant from Month 11 Week 1 to the end of the Trip; the index only in Sunreach) and one keyword entry
+    carries the city's index (constant from Month 11 Week 1 to the end of the Trip in Week 2; the index only in Sunreach) and one keyword entry
     per place (431-451) in the campus location format, its night lines only from 18:00 to 06:00. v39: keyword entries."""
     D = json.load(open(P('data/sunreach.json'), encoding='utf-8'))
     PIN = {p['id']: p for p in D['pins']}
@@ -1216,12 +1226,12 @@ def sunreach(C, ejs):
              "Also in Sunreach these weeks: students of Myrdath, Ashvale and Veyra on their own trips, in the hotels along Coral Strand.\n"
              "Rules for the narrator: who is met, street sights, hustlers, the sea and the dice are the engine's, listed in <now>; never add "
              "encounters or luck of your own, and never decide a bet.")
-    trip = ("[Academy Trip]\nWhen: Month 11 Week 2 Saturday to Week 3 Thursday. All three years; the third-years' last event as students.\n"
-            "Where: Sunreach Bay, a full day by airship each way (the Saturday and the Thursday are spent flying, morning to night), a southern resort that "
+    trip = ("[Academy Trip]\nWhen: Month 11 Week 2, Monday to Saturday. All three years; the third-years' last trip as students.\n"
+            "Where: Sunreach Bay, a full day by airship each way (the Monday and the Saturday are spent flying, morning to night), a southern resort that "
             "stays warm all year: a few days of summer in Halvard's winter. Halvard has The Hanabira, a Yozakuran beachfront hotel on Coral Strand, four "
             "to a room; the rest is free time.\n"
-            "Days: Saturday night the landing at the Skydock and check-in; Sunday 09:00 the teachers' briefing in the hotel garden; free time until "
-            "Wednesday; Wednesday 19:00 the farewell dinner at The Hanabira, then packing; Thursday 08:00 check out and board.\n"
+            "Days: Monday night the landing at the Skydock and check-in; Tuesday 09:00 the teachers' briefing in the hotel garden; free time until "
+            "Friday; Friday 19:00 the farewell dinner at The Hanabira, then packing; Saturday 08:00 check out and board.\n"
             "Rules: the teachers in the same hotel set a curfew at 22:00; leave the hotel only in groups of four. The city by day is allowed; its night "
             "side (the casinos and the Velvet Lanes) is out of bounds, which some students ignore every year.\n"
             "Also there: Myrdath, Ashvale and Veyra send their students to Sunreach the same weeks.\n"
@@ -1229,7 +1239,7 @@ def sunreach(C, ejs):
             "Mood: students return tired, sunburnt and poorer than planned.")
     if ejs:
         C[247]['content'] = ("<%_ { const _m = Number(getvar('stat_data.World.Month')) || 0, _w = Number(getvar('stat_data.World.Week')) || 0, "
-                             "_on = (getvar('stat_data.$ui.area.sunreach') || {}).on; if ((_m === 11 && _w <= 3) || _on) { _%>\n" + trip
+                             "_on = (getvar('stat_data.$ui.area.sunreach') || {}).on; if ((_m === 11 && _w <= 2) || _on) { _%>\n" + trip
                              + "\n<%_ if (_on) { _%>\n" + index + "\n<%_ } } } _%>")
         C[247]['constant'] = True
     else:

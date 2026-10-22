@@ -26,8 +26,8 @@ ok(JSON.stringify(extract(engine, 'TIMETABLE')) === JSON.stringify(cal.timetable
 ok(JSON.stringify(extract(ui, 'TIMETABLE')) === JSON.stringify(cal.timetable), 'UI timetable matches data/calendar.json');
 const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const tagged = (m,w,d,tag) => cal.events.some(e => e.m === m && e.w === w && e.d.includes(d) && e.mood === tag);
-ok(days.slice(0,4).every(d => tagged(3,1,d,'exam') && tagged(5,1,d,'exam')) && tagged(11,2,'Mon','exam'), 'exam and result days carry mood tags');
-ok(tagged(2,1,'Fri','trial') && tagged(3,4,'Sun','trial') && tagged(7,3,'Mon','trial') && tagged(11,4,'Sat','trial'), 'rite, competitions and lockdown carry trial tags');
+ok(days.slice(0,4).every(d => tagged(3,1,d,'exam') && tagged(5,1,d,'exam')) && tagged(11,1,'Sat','exam'), 'exam and result days carry mood tags');
+ok(tagged(2,1,'Fri','trial') && tagged(3,4,'Sun','trial') && tagged(7,3,'Mon','trial') && tagged(11,3,'Tue','trial') && tagged(11,4,'Mon','trial'), 'rite, competitions and lockdown carry trial tags');
 let S = initState();
 S = applyPatch(S, [{op:'replace',path:'/Scene/Present',value:{Sophia:{Note:''}}}]);
 ok(S.$ui.moods.Sophia && !S.$ui.moods.Trixie, 'present NPC has mood without storing all NPC moods');

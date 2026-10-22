@@ -9,7 +9,7 @@ E.airPlace = (l, aboard) => E.areaPlace(E.AR.airship, l, '', aboard);
 const read = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const T = (d, time) => E.fromAbs(d * 1440 + (+time.slice(0, 2)) * 60 + (+time.slice(3)));
 const at = (S, d, time, loc, extra = []) => applyPatch(S, [...['Year', 'Month', 'Week', 'Day', 'Time'].map(k => ({ op: 'replace', path: '/World/' + k, value: T(d, time)[k] })), { op: 'replace', path: '/World/Location', value: loc }, ...extra]);
-const EXP = 28 + 14 + 2, CROWN = 3 * 28 + 7 + 1, KTUE = 8 * 28 + 21 + 1, TRIP = 10 * 28 + 7 + 5, TRIPH = 10 * 28 + 14 + 3;
+const EXP = 28 + 14 + 2, CROWN = 3 * 28 + 7 + 1, KTUE = 8 * 28 + 21 + 1, TRIP = 10 * 28 + 7, TRIPH = 10 * 28 + 7 + 5;   // 1.97.1: the Trip flies M11 W2 Mon and W2 Sat
 const AIRL = 'Airship — ';
 const A = JSON.parse(read('data/airship.json'));
 const team = [{ op: 'replace', path: '/Competition/Tier', value: 'Kingdom' }, { op: 'replace', path: '/Competition/Status', value: 'selected' }];
@@ -18,7 +18,7 @@ console.log('Data and names');
 ok(A.flights.length === 8 && A.places.map(p => p.id).join() === 'promenade_deck,common_room,cabin_deck,cargo_hold', 'eight flights, four places aboard');
 ok(E.airPlace('Airship — the bar', false) === 'common_room' && E.airPlace('The bar', false) === '' && E.airPlace('the bar', true) === 'common_room', 'short aliases only aboard ("the bar" on campus stays on campus)');
 ok(E.airPlace('Airship', false) === 'common_room' && E.airPlace('Cargo Hold — behind the crates', false) === 'cargo_hold', '"Airship" alone is the Common Room; place names always count');
-ok(T(EXP, '08:00').Day === 'Wed' && T(CROWN, '08:00').Day === 'Tue' && T(TRIP, '08:00').Day === 'Sat' && T(TRIPH, '08:00').Day === 'Thu' && T(KTUE, '08:00').Day === 'Tue', 'test days: Expedition Wed, Crowning Tue, Trip Sat and Thu, Kingdom Tue');
+ok(T(EXP, '08:00').Day === 'Wed' && T(CROWN, '08:00').Day === 'Tue' && T(TRIP, '08:00').Day === 'Mon' && T(TRIPH, '08:00').Day === 'Sat' && T(KTUE, '08:00').Day === 'Tue', 'test days: Expedition Wed, Crowning Tue, Trip Mon and Sat, Kingdom Tue');
 
 console.log('Crowning Day: boarding, aboard, landing');
 let S = at(initState(), CROWN, '07:00', 'Main Courtyard');

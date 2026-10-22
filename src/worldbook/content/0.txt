@@ -10,10 +10,10 @@ Casual casting, including ordinary movement magic, is normal and allowed anywher
 
 EXISTS
 Arbiter Stone: sorts students once, at entry.
-Dorm rank: recalculated M5W2 and M11W2.
+Dorm rank: recalculated M5W2 and M11W1.
 Subtypes: ~30 per type, specialize in 1-2.
 Points: bracelet currency, 1:1 with money.
-Competitions: Dorm M3W4, Academy M6W4, Kingdom M9W4, World M11W4 (abroad).
+Competitions: Dorm M3W4, Academy M6W4, Kingdom M9W4, World M11W3 to M11W4 (abroad).
 Combat roles: attack, defense, healing, support, control.
 Exams: M3W1, M5W1, M9W1, M11W1.
 Breaks: M5W4 and M12, most students go home.

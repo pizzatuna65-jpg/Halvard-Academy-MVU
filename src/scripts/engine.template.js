@@ -855,7 +855,7 @@ function airFlight(W, S) {
     && (f.who !== 'kingdom' || avKingdom(W, S || {}))) || null;
 }
 // ---- Sunreach Bay (1.41.0, owner-approved planning/DRAFT_outside_maps.md, part 3), the Academy Trip's city, FP7 area 3. From landing
-// (M11 W2 Sat 20:00) to boarding (W3 Thu 08:00) World.Location is "Sunreach Bay — <place>". One city with two faces: from 18:00 to
+// (M11 W2 Mon 20:00) to boarding (W2 Sat 08:00) World.Location is "Sunreach Bay — <place>". One city with two faces: from 18:00 to
 // 06:00 it is lit by rune-light (the night map, the entries' night lines). stepSunreach charges walks, horse carriages and water
 // taxis (and the tour boat to the Open Sea), settles bets at The Golden Tide, and rolls the city once an hour: street sights, hustlers,
 // students of the other academies and of Halvard where they would be by their personality (data `meet`), the sea and, once in a

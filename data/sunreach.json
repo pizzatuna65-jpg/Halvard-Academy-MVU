@@ -1,5 +1,5 @@
 {
- "_note": "1.41.0 (owner-approved planning/DRAFT_outside_maps.md, part 3): Sunreach Bay, the Academy Trip's city (FP7 area 3). One city with two faces: night 18:00-06:00 (rune-light, no electricity). Pins hold places like Avalon; window: from landing (M11 W2 Sat 20:00) to boarding (W3 Thu 08:00). legs: minutes on foot ('tour': by tour boat only, fare and minutes fixed). Rides: carriage (any land leg) or boat (water taxi, both ends on the shore), half the time, no stamina. off: the night side the teachers forbid (only a <now> reminder). meet: who may be met where, by personality ([day places, night places]). Read by gen_engine.py, merge_lorebooks.py, gen_ui.py, gen_mvu_entries.py.",
+ "_note": "1.41.0 (owner-approved planning/DRAFT_outside_maps.md, part 3): Sunreach Bay, the Academy Trip's city (FP7 area 3). One city with two faces: night 18:00-06:00 (rune-light, no electricity). Pins hold places like Avalon; window: from landing (M11 W2 Mon 20:00) to boarding (W2 Sat 08:00; 1.97.1, was W2 Sat to W3 Thu). legs: minutes on foot ('tour': by tour boat only, fare and minutes fixed). Rides: carriage (any land leg) or boat (water taxi, both ends on the shore), half the time, no stamina. off: the night side the teachers forbid (only a <now> reminder). meet: who may be met where, by personality ([day places, night places]). Read by gen_engine.py, merge_lorebooks.py, gen_ui.py, gen_mvu_entries.py.",
  "area": "Sunreach Bay",
  "maps": {
   "day": "map/sunreach_day.webp",
@@ -13,12 +13,12 @@
   "m": 11,
   "from": [
    2,
-   "Sat",
+   "Mon",
    "20:00"
   ],
   "to": [
-   3,
-   "Thu",
+   2,
+   "Sat",
    "08:00"
   ]
  },
@@ -31,19 +31,19 @@
  "schedule": [
   [
    2,
-   "Sun",
+   "Tue",
    "09:00",
    "the teachers' briefing in The Hanabira's garden"
   ],
   [
-   3,
-   "Wed",
+   2,
+   "Fri",
    "19:00",
    "the farewell dinner at The Hanabira, then packing"
   ],
   [
-   3,
-   "Thu",
+   2,
+   "Sat",
    "08:00",
    "check out and board the airship home"
   ]

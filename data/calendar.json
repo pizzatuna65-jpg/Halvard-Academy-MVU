@@ -630,13 +630,26 @@
     },
     {
       "m": 11,
-      "w": 2,
+      "w": 1,
       "d": [
-        "Mon"
+        "Fri"
+      ],
+      "t": "Year's End (no classes until Graduation)",
+      "id": "year_end",
+      "kind": "day",
+      "noclass": 1,
+      "s": "No classes until Graduation: the campus keeps Sunday hours; third-years pack, clubs hand over to the years below, and the goodbyes start early"
+    },
+    {
+      "m": 11,
+      "w": 1,
+      "d": [
+        "Sat"
       ],
       "t": "Results & Final Ranking (Player.Profile.Dorm_rank is updated today)",
       "id": "results_2",
       "kind": "exam",
+      "noclass": 1,
       "ranking": 1,
       "s": "09:00 assembly in the Arbiter Hall, opened by speeches from the Headmaster and Vice Headmaster: trial results stage by stage, then the final dorm ranking read aloud last; 19:00 speeches from the Headmaster and Vice Headmaster, then the feast in the Ring Dining Hall",
       "mood": "exam",
@@ -647,8 +660,12 @@
       "m": 11,
       "w": 2,
       "d": [
-        "Sat",
-        "Sun"
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat"
       ],
       "t": "Academy Trip (Sunreach Bay, abroad)",
       "id": "academy_trip",
@@ -656,8 +673,12 @@
       "noclass": 1,
       "away": 1,
       "s": {
-        "Sat": "07:00 airships leave Halvard: a full day's flight to Sunreach Bay (meals and the promenade aboard); 20:00 landing at the Skydock, check-in at The Hanabira on Coral Strand, four to a room; the teachers' curfew 22:00",
-        "Sun": "09:00 the teachers' briefing in The Hanabira's garden; then free time in groups of four (the night side, the casinos and the Velvet Lanes, is out of bounds); the teachers' curfew 22:00"
+        "Mon": "07:00 airships leave Halvard: a full day's flight to Sunreach Bay (meals and the promenade aboard); 20:00 landing at the Skydock, check-in at The Hanabira on Coral Strand, four to a room; the teachers' curfew 22:00",
+        "Tue": "09:00 the teachers' briefing in The Hanabira's garden; then free time in groups of four (the night side, the casinos and the Velvet Lanes, is out of bounds); the teachers' curfew 22:00",
+        "Wed": "Free time in groups of four (the night side, the casinos and the Velvet Lanes, is out of bounds); the teachers' curfew 22:00",
+        "Thu": "Free time in groups of four (the night side, the casinos and the Velvet Lanes, is out of bounds); the teachers' curfew 22:00",
+        "Fri": "Last full day: free time in groups of four; 19:00 the farewell dinner at The Hanabira, then packing; the teachers' curfew 22:00",
+        "Sat": "08:00 check out and board at the Skydock; a full day's flight home, back at Halvard by night"
       },
       "trip": "Sunreach Bay (Academy Trip)"
     },
@@ -668,35 +689,56 @@
         "Mon",
         "Tue",
         "Wed",
-        "Thu"
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
       ],
-      "t": "Academy Trip (Sunreach Bay, abroad)",
-      "id": "academy_trip_b",
-      "kind": "trip",
+      "t": "World Competition abroad (the national four)",
+      "id": "world_comp",
+      "kind": "contest",
       "noclass": 1,
       "away": 1,
       "s": {
-        "Mon": "Free time in groups of four (the night side, the casinos and the Velvet Lanes, is out of bounds); the teachers' curfew 22:00",
-        "Tue": "Free time in groups of four (the night side, the casinos and the Velvet Lanes, is out of bounds); the teachers' curfew 22:00",
-        "Wed": "Last full day: free time in groups of four; 19:00 the farewell dinner at The Hanabira, then packing; the teachers' curfew 22:00",
-        "Thu": "08:00 check out and board at the Skydock; a full day's flight home, back at Halvard by night"
-      }
+        "Mon": "Morning: the national four's airship leaves Halvard; evening: the opening banquet abroad, where the Phase 1 groups are drawn. At Halvard: no classes; the rest of the academy follows the news",
+        "Tue": "Phase 1, the first group: three teams in Last Team Standing in the forest; the first team to lose every member goes out, the last left is top seed. At Halvard: no classes; the rest of the academy follows the news",
+        "Wed": "Phase 1, the second group: three teams in Last Team Standing in the forest; the first team to lose every member goes out, the last left is top seed. At Halvard: no classes; the rest of the academy follows the news",
+        "Thu": "Phase 2, the first Siege at the old fortress: first to four rounds goes to the Grand Final, the loser goes out. At Halvard: no classes; the rest of the academy follows the news",
+        "Fri": "Phase 2, the second Siege at the old fortress: first to four rounds goes to the Grand Final, the loser goes out. At Halvard: no classes; the rest of the academy follows the news",
+        "Sat": "Rest day before the Grand Final. At Halvard: no classes",
+        "Sun": "Phase 3: the Grand Final in the arena; evening: the closing banquet. At Halvard: no classes; the rest of the academy follows the news"
+      },
+      "mood": "trial"
     },
     {
       "m": 11,
       "w": 4,
       "d": [
+        "Mon"
+      ],
+      "t": "World Competition abroad (the national four)",
+      "id": "world_comp_b",
+      "kind": "contest",
+      "noclass": 1,
+      "away": 1,
+      "s": "The national four fly home, back at Halvard by night. At Halvard: no classes",
+      "mood": "trial"
+    },
+    {
+      "m": 11,
+      "w": 4,
+      "d": [
+        "Tue",
         "Wed",
         "Thu",
         "Fri",
         "Sat"
       ],
-      "t": "World Competition abroad (the national four)",
-      "id": "world_comp",
-      "kind": "contest",
-      "away": 1,
-      "s": "Abroad: the national four compete; the rest of the academy follows the news",
-      "mood": "trial"
+      "t": "Year's End (no classes until Graduation)",
+      "id": "year_end_b",
+      "kind": "day",
+      "noclass": 1,
+      "s": "No classes until Graduation: the campus keeps Sunday hours; third-years pack, clubs hand over to the years below, and the goodbyes start early"
     },
     {
       "m": 11,
@@ -825,7 +867,7 @@
     "8": "W2 Thu evening to Sun Traveling Circus visits. W3 Thu-Sat Academy Showcase. W4 Sun Elemental Dorm Day.",
     "9": "W1 Mon-Thu Midterm. W2 Thu-Sat Academy Bazaar. W3 Sat Academy Founder Day. W4 Wed-Sat Kingdom Competition at the Royal Arena in Avalon, the capital (four academies, one team each; only the teams travel, Halvard's with Gavlan Haverton: they fly out Tue and home Sun).",
     "10": "W1 Tue Remembrance Day. W2 Sun Occult Dorm Day. W3 Mon-Thu Student Council election campaign; W3 Fri 16:00-18:00 debate in the Seminar Rooms; W3 Sat 13:00-16:00 voting in the Main Courtyard replaces clubs, with results after counting. W4 Fri evening to Sun Harvest Festival.",
-    "11": "W1 Mon-Thu End of Semester exams. W2 Mon Results & Final Ranking. W2 Sat to W3 Thu Academy Trip (Sunreach Bay, abroad; a full day by airship each way: out Sat, home Thu). W4 Wed-Sat World Competition, abroad (the national four). W4 Sun Graduation (third-years leave the next morning).",
+    "11": "W1 Mon-Thu End of Semester exams; no classes from W1 Fri until Graduation. W1 Sat Results & Final Ranking. W2 Mon-Sat Academy Trip (Sunreach Bay, abroad; a full day by airship each way: out Mon, home Sat). W3 Mon to W4 Mon World Competition, abroad (the national four). W4 Sun Graduation (third-years leave the next morning).",
     "12": "Kingdom-wide holiday all month, students go home, campus nearly empty."
   }
 }

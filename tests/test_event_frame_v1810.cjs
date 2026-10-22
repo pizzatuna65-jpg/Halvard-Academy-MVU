@@ -14,7 +14,7 @@ const cal = JSON.parse(read('data/calendar.json'));
 
 console.log('Calendar ids and kinds');
 const ids = cal.events.map(e => e.id);
-ok(ids.length === 44 && new Set(ids).size === 44, 'all 44 events have a unique id');
+ok(ids.length === 46 && new Set(ids).size === 46, 'all 46 events have a unique id');
 ok(cal.events.every(e => ['contest', 'showcase', 'festival', 'rite', 'trip', 'exam', 'day', 'holiday'].includes(e.kind)), 'every event has a known kind');
 ok(Object.keys(E.EVENT_FRAME.chances).every(k => ids.includes(k)), 'every chance names a real event');
 

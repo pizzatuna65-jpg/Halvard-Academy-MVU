@@ -59,7 +59,7 @@ console.log('Weather: distribution, continuity, rare events, determinism');
   ok(A.World._Weather === B.World._Weather && /°C \((freezing|cold|cool|mild|warm|hot)\)$/.test(A.World._Weather) && A.World._Season, `swipe-safe: ${A.World._Weather}`);
   const off = applyPatch(A, [{ op: 'replace', path: '/$ui/wxfx', value: 'off' }]);
   ok(off.World._Weather === '' && off.World._Season === '' && off.$ui.wx === null, 'Off mode: nothing computed, _Weather empty');
-  const tripD = 294;   // M11 W3 Mon: Academy Trip (away)
+  const tripD = 289;   // M11 W2 Wed: Academy Trip (away; 1.97.1)
   const away = at(S0, tripD, '10:00', 'Sunreach Bay — beach');
   ok(/Sunreach Bay \(warm south\)/.test(away.World._Weather) && !away.$ui.wx.away && !away.$ui.wx.field, `the Academy Trip (1.41.0: Sunreach's own weather): ${away.World._Weather}`);
 }

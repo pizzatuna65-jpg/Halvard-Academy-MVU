@@ -11,11 +11,11 @@ tahap itu selesai.
 
 | Rilis | Isi | Catatan |
 |---|---|---|
-| **1.97.x** | World Competition | World Competition = M11 W4 Wed–Sat, di luar negeri, diikuti empat tim nasional (DECISIONS §1 "Calendar change"; lore 0, 1, 18, 19). Canon baru: satu draft dulu (`planning/DRAFT_<topik>.md`) yang memuat semua langkah, terapkan setelah "proceed", perbarui `NPC_BRAINSTORM_BRIEF.md`. Satu langkah = satu rilis; urutan pasti dan langkah tambahan ditetapkan di draft. |
-| 1.97.1 | NPC baru | Tim akademi luar negeri. |
-| 1.97.2 | Map baru | |
-| 1.97.3 | Lokasi baru | Lewat modul Area yang sudah ada (seperti Avalon, Sunreach). |
-| 1.97.4 | Sistem kompetisi baru | Harus terasa beda dari Kingdom Competition (`data/event_frame.json` `kingdom`); pakai ulang helper yang sudah ada, bukan sistem paralel. |
+| **1.97.x** | World Competition | Draft: `planning/DRAFT_world_competition.md` dan `DRAFT_demon_kingdom.md`. Satu langkah = satu rilis; rincian dan alasan urutan ada di tabel langkah draft. |
+| 1.97.2 | Dunia dan tim | Retcon Demon Kingdom, enam negara, lima tim asing, enam NPC unggulan (Vesna belum NPC penuh). |
+| 1.97.3 | Hanakaze: lokasi dan map | Modul Area (pola Avalon) bersama peta `Maps/yozakura.webp`; liner Yozakura. |
+| 1.97.4 | Sistem kompetisi | Phase 1–2, Grand Final, panel sinergi, hadiah, berita di Halvard; beda dari Kingdom, memakai helper yang ada. |
+| 1.97.5 | Vesna dan Koschei's Needle | Vesna NPC penuh, skenario scripted, pindah ke Halvard di Year 2. |
 | **1.98.0** | Cek fitur yang terasa dangkal | Telusuri `docs/FEATURES.md`, daftar fitur yang mekaniknya tipis, usulkan pendalamannya lewat sistem yang sudah ada (bahan: §2). Owner memilih dari daftar itu. |
 | **1.99.x** | Full audit bug hunt, stress test, dan perbaikannya | Full suite, stress test, audit lintas sistem; hasilnya file audit dengan daftar batch. Tiap batch = satu rilis: batch 1 → 1.99.1, batch 2 → 1.99.2, dst. |
 | **2.0.0** | Full polish fitur dan UI | Tanpa fitur baru. |

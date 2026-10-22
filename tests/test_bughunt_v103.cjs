@@ -78,10 +78,10 @@ ok(/CURFEW/.test(away({ Month: 11, Week: 3, Day: 'Mon', Time: '21:00', Location:
 ok(/CURFEW/.test(away({ Month: 6, Week: 2, Day: 'Mon', Time: '21:00', Location: 'Somewhere in town' })), 'an unknown place on an ordinary day: curfew (no trip, no outing)');
 ok(away({ Month: 4, Week: 2, Day: 'Tue', Time: '21:00', Location: 'Courtyards' }) === '' && /CURFEW \(22/.test(away({ Month: 4, Week: 2, Day: 'Tue', Time: '22:30', Location: 'Courtyards' })), 'Crowning Day on campus: curfew 22:00');
 
-console.log('F03 / calendar 1.0.3: World Competition M11 W4 Wed-Sat, Graduation M11 W4 Sun');
+console.log('F03 / calendar 1.0.3, 1.97.1: World Competition M11 W3 Mon to W4 Mon, Graduation M11 W4 Sun');
 ok(/Graduation/.test(set(S0, { Month: 11, Week: 4, Day: 'Sun', Time: '09:00' }).World._Event_today), 'Graduation is on M11 W4 Sunday');
-ok(/World Competition/.test(set(S0, { Month: 11, Week: 4, Day: 'Wed' }).World._Event_today) && /World Competition/.test(set(S0, { Month: 11, Week: 4, Day: 'Sat' }).World._Event_today), 'World Competition Wed-Sat of that week');
-ok(/^P1/.test(set(S0, { Month: 11, Week: 4, Day: 'Wed', Time: '09:00', Location: 'Lecture Halls' }).World._Period), 'classes go on at Halvard for everyone not competing');
+ok(/World Competition/.test(set(S0, { Month: 11, Week: 3, Day: 'Mon' }).World._Event_today) && /World Competition/.test(set(S0, { Month: 11, Week: 4, Day: 'Mon' }).World._Event_today) && !/World Competition/.test(set(S0, { Month: 11, Week: 4, Day: 'Tue' }).World._Event_today), 'World Competition W3 Mon to W4 Mon');
+ok(/^Timetable suspended/.test(set(S0, { Month: 11, Week: 3, Day: 'Wed', Time: '09:00', Location: 'Lecture Halls' }).World._Period), 'no classes at Halvard during the World Competition (1.97.1)');
 
 console.log('F06 engine-ended summon clears Summoned');
 let P = builder(S0, { 'Summon Ember': { Type: 'Occult', Cost_mode: 'hybrid', Activation: 5, Upkeep_per_min: 1, Trigger: 2, Notes: '[pact] Ember' } },
@@ -115,7 +115,7 @@ ok(AP.Scene.Present.Etnie.Note === 'waving' && !AP.Scene.Present.etnie, 'Scene.P
 
 console.log('F11 World Competition has its own dates');
 ok(!/World Competition/.test(set(S0, { Month: 12, Week: 4, Day: 'Thu' }).World._Event_today), 'Month 12 is holiday only now');
-ok(/Away from campus/.test(set(S0, { Month: 11, Week: 4, Day: 'Thu', Time: '21:00', Location: 'the World Competition arena' }).World._Curfew), 'the national four abroad at night: away');
+ok(/Away from campus/.test(set(S0, { Month: 11, Week: 3, Day: 'Thu', Time: '21:00', Location: 'the World Competition arena' }).World._Curfew), 'the national four abroad at night: away');
 
 console.log('F12 player tools survive the MVU zod helper (paths with "_" segments are dropped)');
 global.window = { parent: { document: {} } };
@@ -179,14 +179,14 @@ ok(y3.every(x => skip.Campus_State.Graduated.includes(x)), 'a time skip past Gra
 
 console.log('Gareth picked for the World Competition competes before he graduates');
 let Ga = set(S0, { Month: 9, Week: 4, Day: 'Sun', Time: '18:00' }, [{ op: 'replace', path: '/Competition', value: { Tier: 'World', Status: 'selected', Team: ['Gareth', 'Sophia', 'Florian'] } }]);
-Ga = set(Ga, { Month: 11, Week: 4, Day: 'Wed', Time: '10:00', Location: 'the World Competition arena' }, [{ op: 'replace', path: '/Trip', value: { Active: true, Destination: 'World Competition', Companions: ['Gareth', 'Sophia', 'Florian'] } }]);
-ok(/World Competition/.test(Ga.World._Event_today) && !Ga.Campus_State.Graduated.includes('Gareth'), 'M11 W4 Wed: competing, not graduated');
-Ga = set(Ga, { Day: 'Sun', Time: '09:00', Location: 'The Arbiter Hall' }, [{ op: 'replace', path: '/Trip/Active', value: false }]);
+Ga = set(Ga, { Month: 11, Week: 3, Day: 'Wed', Time: '10:00', Location: 'the World Competition arena' }, [{ op: 'replace', path: '/Trip', value: { Active: true, Destination: 'World Competition', Companions: ['Gareth', 'Sophia', 'Florian'] } }]);
+ok(/World Competition/.test(Ga.World._Event_today) && !Ga.Campus_State.Graduated.includes('Gareth'), 'M11 W3 Wed: competing, not graduated');
+Ga = set(Ga, { Week: 4, Day: 'Sun', Time: '09:00', Location: 'The Arbiter Hall' }, [{ op: 'replace', path: '/Trip/Active', value: false }]);
 ok(/Graduation/.test(Ga.World._Event_today) && !Ga.Campus_State.Graduated.includes('Gareth'), 'M11 W4 Sun: back for his Graduation');
 Ga = set(Ga, { Month: 12, Week: 1, Day: 'Mon', Time: '08:00' });
 ok(Ga.Campus_State.Graduated.includes('Gareth') && Ga.Competition.Team.includes('Gareth'), 'M12 W1 Mon: he has left; the competition record stays');
 const UIa = new Function(fs.readFileSync(path.join(ROOT, 'src/scripts/ui.js'), 'utf8') + '\nreturn { acCompetition, DATA, whoLine, locCard, acClubs, NPCS };')();
-ok(/World Competition[\s\S]{0,80}M11 W4 Wed/.test(UIa.acCompetition(set(S0, { Month: 11, Week: 3, Day: 'Sun' }))), 'Activities ladder dates the World Competition M11 W4 Wed');
+ok(/World Competition[\s\S]{0,80}M11 W3 Mon/.test(UIa.acCompetition(set(S0, { Month: 11, Week: 2, Day: 'Sun' }))), 'Activities ladder dates the World Competition M11 W3 Mon');
 
 console.log('Incoming cohorts: inactive until their campaign year (fake NPC "Testa", arrives Year 2)');
 // engine with a fake incoming first-year injected (1.7.0: added next to the real cohort 2 of data/cohorts.json)

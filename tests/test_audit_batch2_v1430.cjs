@@ -12,7 +12,7 @@ ok(E.lifeX({ amb_freq: 2 }) === 1 && Math.abs(E.lifeX({ amb_freq: 1 }) - 30 / 45
   const SAVE = JSON.parse(rd('tests/fixtures/saves/save_1.42.0.json'));
   const W = (S, o, x = []) => applyPatch(S, [...Object.entries(o).map(([k, v]) => ({ op: 'replace', path: '/World/' + k, value: v })), ...x]);
   const day = freq => {
-    let S = W(applyPatch(SAVE, [{ op: 'replace', path: '/$ui/tune', value: { amb_freq: freq } }]), { Month: 11, Week: 2, Day: 'Sun', Time: '07:00', Location: 'Sunreach Bay — The Hanabira' });
+    let S = W(applyPatch(SAVE, [{ op: 'replace', path: '/$ui/tune', value: { amb_freq: freq } }]), { Month: 11, Week: 2, Day: 'Wed', Time: '07:00', Location: 'Sunreach Bay — The Hanabira' });
     let n = 0;
     for (let h = 8; h <= 22; h++) for (const loc of ['Sunreach Bay — Fish Market', 'Sunreach Bay — Coral Beach']) {
       S = W(S, { Time: `${String(h).padStart(2, '0')}:${loc.includes('Fish') ? '05' : '35'}`, Location: loc });

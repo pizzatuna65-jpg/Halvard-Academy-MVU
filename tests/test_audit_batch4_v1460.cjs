@@ -44,7 +44,7 @@ S = at(S, CROWN, '09:40', 'Avalon — Skyport', [coin(200)]);
 S = at(S, CROWN, '11:40', 'Avalon — Old Town', [{ op: 'replace', path: '/Avalon/Ride', value: true }]);
 const walk = S.$ui.area.avalon.ev.find(e => e.k === 'walk');
 ok(S.$ui.area.avalon.on && walk && walk.ride === 'carriage' && S.Player.Wallet.Coin === 190 && S.Player.Wallet.Transactions.some(l => /-10 coin: hire carriage in Avalon/.test(l)), 'a hire carriage: the fare through the ledger, ride "carriage"');
-const SRD = 10 * 28 + 7 + 6;   // Month 11 Week 2 Sunday
+const SRD = 10 * 28 + 7 + 2;   // Month 11 Week 2 Wednesday (1.97.1: the Trip is W2 Mon-Sat)
 let R = at(at(initState(), SRD, '09:00', 'Sunreach Bay — The Hanabira', [coin(5)]), SRD, '10:00', 'Sunreach Bay — Open Sea');
 ok(R.World.Location === 'Sunreach Bay — The Hanabira' && R._Log.some(l => /The tour boat costs 15 coin and \{\{user\}\} has 5: no boat/.test(l)), 'no coin for the tour boat: the move is refused');
 

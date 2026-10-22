@@ -15,7 +15,7 @@ const PRES = /^(Students |Study Hall|Student Council (meets|members)|Likely arou
 const bad = [];
 // 1.52.0: with the NPC routines off (Features), as before them
 // 1.83.0: on a break day (the Mid-Year Break) most students have gone home (shared.js breakStays): those scenarios may only lose names
-const brk = [], fd = [];
+const brk = [], fd = [], m11 = [];
 for (let i = 0; i < N; i++) {
   const sc = scenario(i, E, ['npc_routines']), got = now(sc).split('\n').filter(l => PRES.test(l));
   if (E.breakOf(sc.World)) {
@@ -30,8 +30,19 @@ for (let i = 0; i < N; i++) {
     if (got.some(l => /^(Students are at their clubs|Club time)/.test(l))) bad.push(i);
     continue;
   }
+  // 1.97.1: Month 11 reordered (Year's End, the Trip W2 Mon-Sat): a former class day has no class or Saturday club line (as Founder Day), everyone recorded is still
+  // around (plus those no longer in class), and the Trip's flight day puts {{user}} aboard, where no campus presence is printed
+  if (sc.World.Month === 11 && /Timetable suspended/.test(sc.World._Period || '') && REC[i].some(l => /^(Students are in class|Students are at their clubs|Club time)/.test(l))) {
+    m11.push(i);
+    const names = l => (l || '').split(': ').slice(1).join(': ').split(/,\s*/).filter(n => n && !/no regulars/.test(n));
+    const aboard = /^Airship/.test(sc.World.Location) && !got.length;
+    const keeps = REC[i].filter(l => /^Likely around/.test(l)).every(r => names(r).every(n => names(got.find(l => l.split(': ')[0] === r.split(': ')[0])).includes(n)));
+    if (!aboard && (got.some(l => /^(Students are in class|Students are at their clubs|Club time)/.test(l)) || !keeps)) bad.push(i);
+    continue;
+  }
   if (JSON.stringify(got) !== JSON.stringify(REC[i])) bad.push(i);
 }
+ok(m11.length > 0, `the Month 11 no-class scenarios (${m11.join(', ')}) only lose the class and club lines and gain the students they held`);
 ok(brk.length > 0, `the break-day scenarios (${brk.join(', ')}) only lose the students who went home`);
 ok(REC.length === N && !bad.length, `every scenario's presence block is the same (${N} scenarios: places, periods, Study Hall, clubs, the election, the Council, weather, flu, statuses, graduates, Settings)` + (bad.length ? ': differs in ' + bad.slice(0, 5).join(', ') : ''));
 const lines = REC.flat();

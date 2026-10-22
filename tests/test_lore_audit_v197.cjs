@@ -33,8 +33,8 @@ console.log('Lore audit 1.9.7: calendar lore agrees with the engine');
     for (const [m, w] of ds) if (!at(m, w).some(e => title.test(e.t))) bad.push(`${line} M${m}W${w} (${title})`);
   }
   ok(!bad.length, 'World Index dates (competitions, exams, rankings, breaks, the Thinning) match engine events' + (bad.length ? ': ' + bad.join('; ') : ''));
-  ok(/World M11W4 \(abroad\)/.test(idx) && !/M12W4/.test(idx), 'World Competition is M11 W4 in the World Index');
-  ok(/World Competition abroad is in Month 11 Week 4/.test(entry(18)) && !/compete abroad in Week 4/.test(entry(18)), 'Academic Structure agrees (M11 W4)');
+  ok(/World M11W3 to M11W4 \(abroad\)/.test(idx) && !/M12W4/.test(idx), 'World Competition is M11 W3 to W4 in the World Index (1.97.1)');
+  ok(/World Competition abroad is in Month 11, from Week 3 Monday to Week 4 Monday/.test(entry(18)) && !/compete abroad in Week 4/.test(entry(18)), 'Academic Structure agrees (M11 W3 Mon to W4 Mon)');
   const seasons = /Seasons: M1-3 spring, M4-6 summer, M7-9 autumn, M10-12 winter\./.test(idx);
   ok(seasons && [0, 3, 6, 9].every((i, k) => E.SEASONS[i] === ['Spring', 'Summer', 'Autumn', 'Winter'][k]), 'World Index season line matches the engine table');
 }

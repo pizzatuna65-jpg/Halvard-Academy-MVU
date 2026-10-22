@@ -15,8 +15,9 @@ const now = S => ejs.render(read('src/worldbook/custom/content/505.txt'), { getv
 
 console.log('Calendar moves');
 ok(/Spiritual Dorm Day/.test(on(1, 4, 'Sun')) && !/Dorm Day/.test(on(1, 4, 'Sat')) && /Occult Dorm Day/.test(on(10, 2, 'Sun')), 'Dorm Days are on Sundays');
-ok(/Final Ranking/.test(on(11, 2, 'Mon')) && !/Final Ranking/.test(on(11, 2, 'Fri')), 'Results & Final Ranking on M11 W2 Monday');
-ok(/Academy Trip/.test(on(11, 2, 'Sat')) && /Academy Trip/.test(on(11, 3, 'Thu')) && !/Academy Trip/.test(on(11, 3, 'Fri')), 'the Academy Trip runs M11 W2 Sat to W3 Thu');
+ok(/Final Ranking/.test(on(11, 1, 'Sat')) && !/Final Ranking/.test(on(11, 2, 'Mon')), 'Results & Final Ranking on M11 W1 Saturday (1.97.1)');
+ok(/Academy Trip/.test(on(11, 2, 'Mon')) && /Academy Trip/.test(on(11, 2, 'Sat')) && !/Academy Trip/.test(on(11, 2, 'Sun')) && !/Academy Trip/.test(on(11, 3, 'Mon')), 'the Academy Trip runs M11 W2 Mon to Sat (1.97.1)');
+ok(/Year's End/.test(on(11, 1, 'Fri')) && /World Competition/.test(on(11, 3, 'Mon')) && /World Competition/.test(on(11, 4, 'Mon')) && /Year's End/.test(on(11, 4, 'Sat')) && /Graduation/.test(on(11, 4, 'Sun')), 'Month 11 (1.97.1): Year\'s End W1 Fri, World Competition W3 Mon to W4 Mon, Year\'s End W4 Tue-Sat, Graduation W4 Sun');
 ok(/flies to the capital/.test(on(9, 4, 'Tue')) && /^Kingdom Competition/.test(on(9, 4, 'Wed')) && /flies home/.test(on(9, 4, 'Sun')) && !on(10, 1, 'Mon'),
   'Kingdom Competition Wed-Sat; the team flies out Tue and home Sun, with Monday free before Remembrance Day');
 

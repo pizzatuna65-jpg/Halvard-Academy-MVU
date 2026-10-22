@@ -3,24 +3,22 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.96.1** (2026-10-22): 1.96.0–1.96.1 names and traits for the narrator's new characters: one name per gender
-with one shared surname, and apart from it one set of traits (2–3 good, 1–3 bad, sometimes a dere archetype) the next new character
-takes under any name (`data/name_pool.json`, feature `new_people`). 1.95.0 letters: every letter posted at the Mail Tower gets a reply on a timer or none,
-family and close friends sometimes write first, a letter written elsewhere waits to be posted (`data/letters.json`, `stepMail`).
-1.94.0 your own notes on each person (dossier box, 📝 on the card; chat variable
-`eld_notes`). 1.93.1: a gold glow on pinned cards. 1.93.0: UI fixes from the owner's notes: event plans as a time | what table (Event tab,
-Planner), short points for long explanations, the Bonds order as a dropdown with ascending / descending, pinned people on top (UI
-only, chat variable `eld_pins`). 1.92.0: the weekly club client (a non-member student comes to {{user}}'s service club some weeks). 1.91.0: club services (Tailoring and Smithing orders and mending at
-the Workshop, the Fishing Club's dawn, the Library Assistants' loan and records; members pay half). 1.90.0: club work for the campus
-(the Newspaper, club stalls, snow, the Festival Committee). 1.89.0: info layers per NPC. 1.81.0–1.87.0: the event frame. The memory
-audit is done except batch 8. Live checks: the campaign quest log `docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat,
-Y1 M1 W1 Mon 10:13; first Act 0: update the card, Q0.1).
+**Snapshot:** card **v1.97.1** (2026-10-22): the first World Competition step: Month 11 reordered (no classes from W1 Fri until
+Graduation, Results W1 Sat, Academy Trip W2 Mon–Sat, World Competition W3 Mon to W4 Mon, Graduation W4 Sun; `data/calendar.json`,
+`airship.json`, `sunreach.json`). 1.96.0–1.96.1 names and traits for the narrator's new characters (`data/name_pool.json`).
+1.95.0 letters (`data/letters.json`, `stepMail`). 1.94.0 your own notes on each person. 1.93.0 UI fixes (plan tables, the Bonds
+order dropdown, pinned people). 1.89.0–1.92.0 info layers and club work. The memory audit is done except batch 8. Live checks: the
+campaign quest log `docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the
+card, Q0.1).
 
-**Next task:** the road to 2.0 is in `planning/FUTURE_PLANS.md` §0 (1.97.x the World Competition in steps: NPCs, map, location,
-its own competition system; 1.98 shallow features; 1.99.x full bug hunt and stress test, one batch per release; 2.0 full polish). Alongside it, the owner plays the quest log; their reports and chat exports bring the playtest fixes (tick what passed, run
-`tools/audit_chat.py` on the export, move "Where you are"). MS3 stage 2 and the NPC dialogue audit's U1, U3–U5 wait in
-`planning/FUTURE_PLANS.md` §2 for a campaign export. Batch 8 (chapters) is planned in `planning/DRAFT_bab_baru.md`: build it at about
-20,000 messages, slow saves or a chat file near 100 MB.
+**Next task:** 1.97.2 (world and teams) from `planning/DRAFT_world_competition.md` (the step table at its top: 1.97.2 world and
+teams with `DRAFT_demon_kingdom.md`, 1.97.3 Hanakaze with its map, 1.97.4 the competition system, 1.97.5 Vesna and Koschei's
+Needle; the owner said "proceed" on both drafts). Portraits of the six World NPCs and the Hanakaze map are in the assets repo
+(owner, 2026-10-22): move the pin in `data/assets_manifest.json` to its newest commit when they are wired in. Then 1.98 shallow
+features, 1.99.x bug hunt, 2.0 polish (`planning/FUTURE_PLANS.md` §0). Alongside it, the owner plays the quest log; their reports
+and chat exports bring the playtest fixes. MS3 stage 2 and the NPC dialogue audit's U1, U3–U5 wait in `planning/FUTURE_PLANS.md` §2
+for a campaign export. Batch 8 (chapters) is planned in `planning/DRAFT_bab_baru.md`: build it at about 20,000 messages, slow saves
+or a chat file near 100 MB.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

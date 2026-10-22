@@ -1,8 +1,8 @@
-<%_ { const _m = Number(getvar('stat_data.World.Month')) || 0, _w = Number(getvar('stat_data.World.Week')) || 0, _on = (getvar('stat_data.$ui.area.sunreach') || {}).on; if ((_m === 11 && _w <= 3) || _on) { _%>
+<%_ { const _m = Number(getvar('stat_data.World.Month')) || 0, _w = Number(getvar('stat_data.World.Week')) || 0, _on = (getvar('stat_data.$ui.area.sunreach') || {}).on; if ((_m === 11 && _w <= 2) || _on) { _%>
 [Academy Trip]
-When: Month 11 Week 2 Saturday to Week 3 Thursday. All three years; the third-years' last event as students.
-Where: Sunreach Bay, a full day by airship each way (the Saturday and the Thursday are spent flying, morning to night), a southern resort that stays warm all year: a few days of summer in Halvard's winter. Halvard has The Hanabira, a Yozakuran beachfront hotel on Coral Strand, four to a room; the rest is free time.
-Days: Saturday night the landing at the Skydock and check-in; Sunday 09:00 the teachers' briefing in the hotel garden; free time until Wednesday; Wednesday 19:00 the farewell dinner at The Hanabira, then packing; Thursday 08:00 check out and board.
+When: Month 11 Week 2, Monday to Saturday. All three years; the third-years' last trip as students.
+Where: Sunreach Bay, a full day by airship each way (the Monday and the Saturday are spent flying, morning to night), a southern resort that stays warm all year: a few days of summer in Halvard's winter. Halvard has The Hanabira, a Yozakuran beachfront hotel on Coral Strand, four to a room; the rest is free time.
+Days: Monday night the landing at the Skydock and check-in; Tuesday 09:00 the teachers' briefing in the hotel garden; free time until Friday; Friday 19:00 the farewell dinner at The Hanabira, then packing; Saturday 08:00 check out and board.
 Rules: the teachers in the same hotel set a curfew at 22:00; leave the hotel only in groups of four. The city by day is allowed; its night side (the casinos and the Velvet Lanes) is out of bounds, which some students ignore every year.
 Also there: Myrdath, Ashvale and Veyra send their students to Sunreach the same weeks.
 Money: points do not work abroad; this is what a year of saving is for, and Sunreach is expensive.
