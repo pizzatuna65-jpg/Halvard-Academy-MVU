@@ -422,7 +422,7 @@ export const Schema = z.object({
     now: z.any().prefault(null).catch(null),                          // 1.48.0 (audit 3.11): <now>'s engine-made lines (stepNow; 1.47.0's $ui.here is in now.pres)
     xold: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.6.1 (N5): Extras records that left the full list; given back if they return (engine)
     xgone: z.record(z.string(), z.any()).prefault({}).catch({}),      // 1.61.0 (memory audit M8): short records of Extras past xold { Who, Looks, Voice } (engine)
-    xroll: z.any().prefault(null).catch(null),                        // 1.96.0: the next new characters' names and trait labels { m, f } for <now> (engine)
+    xroll: z.any().prefault(null).catch(null),                        // 1.96.0/1.96.1: the next new character's names and traits { m, f, t } for <now> (engine)
     fold: z.any().prefault(null).catch(null),                         // 1.63.0 (memory audit M5): the fold request the rule card prints { k, who, label, max, lines, n, sig } (engine)
     cluearch: z.record(z.string(), z.any()).prefault({}).catch({}),   // 1.61.0 (memory audit M1): clues past the cap, for the Mystery panel (engine)
     say: z.record(z.string(), z.number().int().min(0).max(63)).prefault({}).catch({}),   // 1.37.1: dialogue colour of each character present now (engine)
@@ -514,7 +514,8 @@ export const Schema = z.object({
     vouch: z.record(z.string(), z.any()).prefault({}).catch({}),
     bondv: z.coerce.number().prefault(0).catch(0),               // 1.2.2: 2 once Progress was converted to XP
     tenv: z.coerce.number().prefault(0).catch(0),                // 1.3.8: 1 once older bonds had their paid milestones recorded
-    xs: z.record(z.string(), z.any()).prefault({}).catch({}),     // 1.6.1 (N5): invented characters seen { lowercase name: { n: appearances, d: last day } }
+    xs: z.record(z.string(), z.any()).prefault({}).catch({}),     // 1.6.1 (N5): invented characters seen { lowercase name: { n: appearances, d: last day, t: 1.96.1 trait slot } }
+    xslot: z.coerce.number().prefault(0).catch(0),                 // 1.96.1: the next new character's trait slot (engine)
     lore: Str(''),                                                // 1.3.4: the card version of the lorebook this chat started from ([initvar])
   }),
 }).prefault({});

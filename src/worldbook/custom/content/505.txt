@@ -443,8 +443,8 @@ Possibly missed in the last update. Report each in this reply's update only if i
 <%_ if ((CAST.xnew || []).length) { const XT = CAST.xt || {}; _%>
 Seen before, with no Extras record yet: <%- CAST.xnew.map(n => XT[n] ? n + ' (' + XT[n] + ')' : n).join(', ') %>. Add their record (Extras) in this reply's update, true to how they were written before (Who, Looks, Manner, Calls_user, Voice)<%- CAST.xnew.some(n => XT[n]) ? '; Manner carries these traits' : '' %>.
 <%_ } _%>
-<%_ const XR = on('new_people') && UI.xroll; if (XR && ((XR.m || []).length || (XR.f || []).length)) { const xl = L => L.map(x => x[0] + ' (' + x[1] + ')').join(', '); _%>
-New names: a character this reply introduces who is not in the roster and has no Extras record takes a name and traits from here, in order (male: <%- xl(XR.m || []) %>; female: <%- xl(XR.f || []) %>). A name the player gave wins; someone left unnamed needs none. Play every trait, the bad ones too; when two pull against each other, show the conflict.
+<%_ const XR = on('new_people') && UI.xroll; if (XR && (XR.t || []).length) { const xn = [XR.m && XR.m + ' if male', XR.f && XR.f + ' if female'].filter(Boolean); _%>
+Next new character: the first character this reply introduces who is not in the roster and has no Extras record <%- xn.length ? 'is named ' + xn.join(', ') + ' (a name the player gave wins) and ' : '' %>has these traits, whatever their name: <%- XR.t.map(t => t[0]).join(', ') %>. Play every trait, the bad ones too; when two pull against each other, show the conflict. Another new character in the same reply gets traits with their record; someone left unnamed needs none.
 <%_ } _%>
 <%_ for (const id of (CAST.gone || [])) { _%>
 <%- id %> spoke in the last reply but is not in Scene.Present: add them if they are still here; otherwise they are gone and stay silent.

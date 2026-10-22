@@ -1565,7 +1565,7 @@ function featureState(S, f) {         // live state tokens of a feature (parked 
   if (f.id === 'gossip' && on) n += (u.gossip || []).slice(-5).reduce((a, g) => a + Math.round((String(g[0]).length + 30) / 3.6), 0);
   if (f.id === 'hooks' && on) n += Object.values(S.Hooks || {}).filter(h => /due|overdue/.test(h._State || '')).length * 20;
   if (f.id === 'happenings' && on && S.World._Happening) n += Math.round((S.World._Happening.length + 60) / 3.6);   // _Happening + the Now line
-  if (f.id === 'new_people' && on && u.xroll) n += Math.round((JSON.stringify(u.xroll).length + 330) / 3.6);   // 1.96.0: the New names line
+  if (f.id === 'new_people' && on && u.xroll) n += Math.round((String(u.xroll.m || '').length + String(u.xroll.f || '').length + (u.xroll.t || []).map(t => t[0]).join(', ').length + 400) / 3.6);   // 1.96.1: the Next new character line
   if (f.id === 'npc_initiative' && on && u.initiative) n += Math.round((String(u.initiative.stage || '').length + 340) / 3.6);
   return n;
 }

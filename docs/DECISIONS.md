@@ -241,7 +241,8 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **New characters' names and traits** (1.96.0, owner): the narrator's invented people take names from `data/name_pool.json`
   (given names by gender only, one surname pool; no roster or LLM-default names) and rolled traits: 2–3 good and 1–3 bad first,
   then which; a dere archetype is its own 20% stage, neither good nor bad. Mild flirting traits are in, explicit ones out. The
-  player's name wins; a written Extras record rules over the roll.
+  player's name wins; a written Extras record rules over the roll. 1.96.1: names and traits are rolled apart and the narrator
+  picks neither: one given name per gender with one shared surname, one set of traits the next new character takes under any name.
 - **The status bar shows only on the latest message** (F22).
 - **Scene cards** (1.70.0, owner): who is here shows as cards under the newest reply (full portrait, true thoughts, bond meters),
   written by the UI script into the message; the bracelet's portrait strip shows only without that script. The thoughts are read

@@ -1,8 +1,8 @@
 // 1.96.0 (owner-approved planning/DRAFT_nama_npc.md): names and traits for the narrator's new characters. The pools
-// (data/name_pool.json): no roster name, no name language models keep reusing, no duplicates. Two names per gender wait in
-// $ui.xroll until one is used; the traits roll in two stages (2-3 good, 1-3 bad, then which, never two on one axis), then
-// sometimes one dere archetype; they are a pure function of (seed, full name). 505 prints the offer and, with the record request,
-// each trait's behaviour. Switched off in Features: nothing.
+// (data/name_pool.json): no roster name, no name language models keep reusing, no duplicates. The traits roll in two stages
+// (2-3 good, 1-3 bad, then which, never two on one axis), then sometimes one dere archetype. 1.96.1 (owner): names and traits
+// apart: one given name per gender with one shared surname, and one set of traits ($eng.xslot) that the next new character takes
+// under any name. 505 prints the offer and, with the record request, each trait's behaviour. Switched off in Features: nothing.
 const fs = require('fs'), path = require('path');
 const { initState, applyPatch, renderEntry, ok, ROOT } = require('./harness.cjs');
 const E = new Function(fs.readFileSync(path.join(ROOT, 'src/scripts/engine.js'), 'utf8') + '\nreturn { xTraits, xOffer, XROLL };')();
@@ -50,37 +50,45 @@ for (let i = 0; i < N; i++) {
 ok(!bad, 'always 2-3 good and 1-3 bad, at most one dere, never two traits on one axis');
 ok(Object.keys(ratio).length === 6 && Object.values(ratio).every(n => n > N / 6 * 0.75), `all six ratios come up about equally: ${JSON.stringify(ratio)}`);
 ok(dere > N * 0.16 && dere < N * 0.24, `a dere archetype on top about ${T.dere_pct}% of the time: ${(dere / N * 100).toFixed(1)}%`);
-ok(again === N, 'the same person (any case) always rolls the same traits');
+ok(again === N, 'the same key (any case) always rolls the same traits');
 ok(JSON.stringify(E.xTraits(seed, 'Tancred Pell')) !== JSON.stringify(E.xTraits(seed + 1, 'Tancred Pell')), 'another campaign seed, other traits');
 
-console.log('The offer');
+console.log('The offer: one name per gender, one surname, one set of traits');
+const SL = n => E.xTraits(seed, `slot ${n}`);
 let S = applyPatch(initState(), [{ op: 'replace', path: '/$eng/seed', value: seed }, { op: 'replace', path: '/World/Time', value: '09:00' }]);
-const X = S.$ui.xroll;
-ok(X && X.m.length === 2 && X.f.length === 2, 'two male and two female names wait');
-ok(X.m.every(([n]) => DATA.m.includes(n.split(' ')[0])) && X.f.every(([n]) => DATA.f.includes(n.split(' ')[0])) && [...X.m, ...X.f].every(([n]) => DATA.surname.includes(n.split(' ')[1])), 'given names by gender, surnames from the shared pool');
-ok([...X.m, ...X.f].every(([n, l]) => l === E.xTraits(seed, n).map(t => t.t).join(', ')), 'each name carries its own trait labels');
+const X = S.$ui.xroll, sur = X.m.split(' ')[1];
+ok(DATA.m.includes(X.m.split(' ')[0]) && DATA.f.includes(X.f.split(' ')[0]), 'one male and one female given name');
+ok(DATA.surname.includes(sur) && X.f.split(' ')[1] === sur, 'both with the same rolled surname');
+ok(JSON.stringify(X.t) === JSON.stringify(SL(0).map(t => [t.t, t.do])), 'one set of traits, rolled apart from the names (slot 0)');
 const S2 = applyPatch(S, [{ op: 'replace', path: '/World/Time', value: '09:10' }]);
-ok(JSON.stringify(S2.$ui.xroll) === JSON.stringify(X), 'nothing used: the offer stays the same');
-const [used] = X.m[0];
-S = applyPatch(S, [{ op: 'replace', path: '/World/Time', value: '09:20' }, { op: 'replace', path: '/Scene/Present', value: { [used]: { Note: 'sweeping the steps' } } }]);
-const flat = [...S.$ui.xroll.m, ...S.$ui.xroll.f].map(x => x[0]);
-ok(!flat.some(n => n.split(' ')[0] === used.split(' ')[0] || n.split(' ')[1] === used.split(' ')[1]), `once ${used} is in a scene, neither their given name nor their surname is offered again`);
+ok(JSON.stringify(S2.$ui.xroll) === JSON.stringify(X), 'nobody new: the offer stays the same');
 let txt = renderEntry(CARD, 505, S);
-ok(/New names: a character this reply introduces who is not in the roster and has no Extras record takes a name and traits from here, in order \(male: /.test(txt), '505 prints the offer');
-ok(txt.includes(`${S.$ui.xroll.f[0][0]} (${S.$ui.xroll.f[0][1]})`), 'with each name\'s traits');
+ok(txt.includes(`Next new character: the first character this reply introduces who is not in the roster and has no Extras record is named ${X.m} if male, ${X.f} if female (a name the player gave wins) and has these traits, whatever their name: ${X.t.map(t => t[0]).join(', ')}.`), '505 prints the names and the trait labels');
+const used = X.f;
+S = applyPatch(S, [{ op: 'replace', path: '/World/Time', value: '09:20' }, { op: 'replace', path: '/Scene/Present', value: { [used]: { Note: 'sweeping the steps' } } }]);
+ok(S.$eng.xs[used.toLowerCase()].t === 0 && S.$eng.xslot === 1, `${used} arrives and takes the waiting set`);
+ok(JSON.stringify(S.$ui.xroll.t) === JSON.stringify(SL(1).map(t => [t.t, t.do])), 'the next new character gets a fresh set');
+ok(![S.$ui.xroll.m, S.$ui.xroll.f].some(n => n.split(' ')[0] === used.split(' ')[0] || n.split(' ')[1] === sur), 'a worn given name or surname is not offered again');
+const swipe = applyPatch(S2, [{ op: 'replace', path: '/World/Time', value: '09:20' }, { op: 'replace', path: '/Scene/Present', value: { [used]: { Note: 'sweeping the steps' } } }]);
+ok(JSON.stringify(swipe.$ui.xroll) === JSON.stringify(S.$ui.xroll) && swipe.$eng.xs[used.toLowerCase()].t === 0, 'a swipe gives the same');
+const two = applyPatch(S2, [{ op: 'replace', path: '/World/Time', value: '09:20' }, { op: 'replace', path: '/Scene/Present', value: { 'Marta Bellweather': { Note: 'counting' }, 'Odo Quint': { Note: 'yawning' } } }]);
+ok(two.$eng.xs['marta bellweather'].t === 0 && two.$eng.xs['odo quint'].t === 1 && two.$eng.xslot === 2, 'any name takes the set; two in one reply take two sets, in order');
 
 console.log('The record request carries the traits');
 S = applyPatch(S, [{ op: 'replace', path: '/World/Time', value: '10:00' }, { op: 'replace', path: '/Scene/Present', value: {} }]);
 S = applyPatch(S, [{ op: 'replace', path: '/World/Time', value: '11:00' }, { op: 'replace', path: '/Scene/Present', value: { [used]: { Note: 'back' }, 'Marta Bellweather': { Note: 'counting' } } }]);
+ok(S.$eng.xs['marta bellweather'].t === 1, 'a name from outside the pool takes the next set');
 S = applyPatch(S, [{ op: 'replace', path: '/World/Time', value: '11:30' }, { op: 'replace', path: '/Scene/Present', value: {} }]);
 S = applyPatch(S, [{ op: 'replace', path: '/World/Time', value: '12:00' }, { op: 'replace', path: '/Scene/Present', value: { [used]: { Note: 'again' }, 'Marta Bellweather': { Note: 'again' } } }]);
 txt = renderEntry(CARD, 505, S);
-const line = (E.xTraits(seed, used)).map(t => `${t.t}: ${t.do}`).join('; ');
-ok(S.$ui.cast.xnew.includes(used) && txt.includes(`${used} (${line})`), 'a pool name: the same traits as offered, now with what to play');
-ok(S.$ui.cast.xt['Marta Bellweather'] && /Manner carries these traits/.test(txt), 'a name from outside the pool gets traits too');
+const line = n => SL(n).map(t => `${t.t}: ${t.do}`).join('; ');
+ok(S.$ui.cast.xnew.includes(used) && txt.includes(`${used} (${line(0)})`), 'the same set as offered, now with what to play');
+ok(txt.includes(`Marta Bellweather (${line(1)})`) && /Manner carries these traits/.test(txt), 'and Marta\'s own set');
+const old = applyPatch(S, [{ op: 'replace', path: '/World/Time', value: '12:05' }, { op: 'remove', path: '/$eng/xs/marta bellweather/t' }]);
+ok(old.$ui.cast.xt['Marta Bellweather'] === E.xTraits(seed, 'Marta Bellweather').map(t => `${t.t}: ${t.do}`).join('; '), 'someone counted on 1.96.0 (no slot) keeps the set of their name');
 
 console.log('Switched off');
-const off = applyPatch(S, [{ op: 'replace', path: '/$ui/off', value: ['new_people'] }, { op: 'replace', path: '/World/Time', value: '12:10' }]);
+const off = applyPatch(S, [{ op: 'replace', path: '/$ui/off', value: ['new_people'] }, { op: 'replace', path: '/World/Time', value: '12:10' }, { op: 'replace', path: '/Scene/Present', value: { 'Wilmot Tull': { Note: 'new' } } }]);
 txt = renderEntry(CARD, 505, off);
-ok(off.$ui.xroll === null && !/New names:/.test(txt), 'no offer');
-ok(!Object.keys(off.$ui.cast.xt).length && /Seen before, with no Extras record yet: [^(]+\. Add their record/.test(txt), 'the record request as before 1.96.0');
+ok(off.$ui.xroll === null && !/Next new character:/.test(txt), 'no offer');
+ok(!Object.keys(off.$ui.cast.xt).length && off.$eng.xs['wilmot tull'].t == null, 'nobody takes a set');

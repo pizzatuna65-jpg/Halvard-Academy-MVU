@@ -156,9 +156,9 @@ show the newcomers their dorm rooms.
       msg 75: the raw message has `<say:Kanae>` and `<say:Zara:whisper>` (the whisper style is supported); colours on screen still to see.
 - [ ] That clerk's or student's Extras record: Looks is how they look on any ordinary day, not the scene they were met in (soaked, muddy,
       out of breath) [1.78].
-- [ ] The first clerk or student the narrator invents is named from `<now>`'s "New names" line (no Elara, Kael or Voss) and acts on
-      the traits listed with that name, the bad ones too; at the second appearance the record request lists those traits and the
-      record's Manner carries them [1.96].
+- [ ] The first clerk or student the narrator invents takes the name for their gender from `<now>`'s "Next new character" line (no
+      Elara, Kael or Voss) and acts on the traits listed there, the bad ones too; at the second appearance the record request lists the
+      same traits and the record's Manner carries them; the next line offers new names and a new set [1.96, 1.96.1].
 - [ ] Four or more replies later the prompt holds those quotes without `<say…>` tags; a stray `</say>` never shows in the chat [1.42].
 - [ ] Prose (preset): the reply opens with Charles's action and words expanded (Embellish); the others answer as themselves and nothing is
       decided for Charles beyond what you wrote; about 4–7 paragraphs; no "not X, but Y" or "It wasn't X. It was Y."; NPCs sound distinct,

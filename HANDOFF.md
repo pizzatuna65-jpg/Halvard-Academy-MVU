@@ -3,8 +3,9 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.96.0** (2026-10-22): 1.96.0 names and traits for the narrator's new characters: names from the card's
-pools, traits rolled 2–3 good, 1–3 bad, sometimes a dere archetype (`data/name_pool.json`, feature `new_people`). 1.95.0 letters: every letter posted at the Mail Tower gets a reply on a timer or none,
+**Snapshot:** card **v1.96.1** (2026-10-22): 1.96.0–1.96.1 names and traits for the narrator's new characters: one name per gender
+with one shared surname, and apart from it one set of traits (2–3 good, 1–3 bad, sometimes a dere archetype) the next new character
+takes under any name (`data/name_pool.json`, feature `new_people`). 1.95.0 letters: every letter posted at the Mail Tower gets a reply on a timer or none,
 family and close friends sometimes write first, a letter written elsewhere waits to be posted (`data/letters.json`, `stepMail`).
 1.94.0 your own notes on each person (dossier box, 📝 on the card; chat variable
 `eld_notes`). 1.93.1: a gold glow on pinned cards. 1.93.0: UI fixes from the owner's notes: event plans as a time | what table (Event tab,
