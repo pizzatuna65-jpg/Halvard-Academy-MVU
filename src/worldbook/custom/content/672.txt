@@ -1,0 +1,112 @@
+@@if [...((getvar('stat_data.$ui.cast') || {}).full || []), ...((getvar('stat_data.$ui.cast') || {}).brief || [])].includes('Vesna')
+<%_
+const CS = getvar('stat_data.$ui.cast') || {}, FULL = CS.full || [], BRIEF = CS.brief || [];
+const CB = getvar('stat_data.Bonds') || {}, CST = getvar('stat_data.Campus_State') || {}, CUI = getvar('stat_data.$ui') || {};
+const CD = {"npcs":{"Vesna":{"name":"Vesna Zvezdova","first":"Vesna","pron":"she/her","called":"Vesna; full name Vesna Zvezdova","who":"World teams; any role.","never":"pretending nothing happened (Trust)","ties":[["Kazimir","respect",1]],"secret":true,"nobond":true,"y":null}},"trust_bands":[[0,"Betrayed"],[15,"Doubtful"],[35,"Neutral"],[65,"Trusting"],[85,"Confidant"]],"tension_bands":[[0,"Calm"],[20,"Friction"],[40,"Strained"],[70,"Hostile"],[90,"Enemy"]]};
+const CSECR = [...new Set([...(CUI.secrets || []), ...(CST.Secrets_revealed || [])].map(x => String(x)))];
+const cBand = (bands, x) => (bands || [[0, '']]).reduce((a, [f, nm]) => (x >= f ? nm : a), '');
+const cStat = id => { const N = CST.NPC_status || {}; const k = Object.keys(N).find(x => x.toLowerCase() === id.toLowerCase() || x.toLowerCase().split(/\s+/)[0] === id.toLowerCase()); return k ? N[k] : ''; };
+const cLore = id => { const L = CST.Lore_changes || {}, c = CD.npcs[id] || {}, ks = [id, c.name, c.first].filter(Boolean).map(x => String(x).toLowerCase()); const k = Object.keys(L).find(x => ks.includes(String(x).trim().toLowerCase().replace(/^the\s+/, '').replace(/\s+/g, ' '))); return k && L[k] && L[k].Now ? '[Changed in this campaign' + (L[k].Since ? ', ' + L[k].Since : '') + (L[k].Until ? ', until ' + L[k].Until : '') + '; this overrides the lore] ' + L[k].Now : ''; };
+const CYR = Math.max(1, Number((getvar('stat_data.World') || {}).Year) || 1), CGRAD = CST.Graduated || [];
+const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, c.y[0] + CYR - c.y[1]) + ' student');
+const cTies = c => (c.ties || []).filter(t => t[2] <= CYR).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHead = (id, full) => {
+  const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
+  out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
+  const bond = b ? 'Bond with {{user}}: ' + cBand(CD.trust_bands, Number(b.Trust) || 0).toLowerCase() + ' trust, ' + cBand(CD.tension_bands, Number(b.Tension) || 0).toLowerCase() + ' tension.' : (c.nobond ? 'No bond system (rival academy).' : 'Not bonded yet: a stranger to {{user}} unless the story says otherwise.');
+  const v = (CD.voice || {})[id];
+  // 1.77.1 (audit 2026-10-21 U2): a bare "Carries:" read as "show it": Zara's hidden sketchbook was in 11 of her 14 replies
+  out.push('INVARIANTS: ' + c.pron + '. Called ' + c.called + '. ' + cWho(c) + ' ' + bond + (c.never ? ' Never: ' + c.never + '.' : '') + (ties ? ' Key ties: ' + ties + '.' : '')
+    + (v ? ' How they address people: ' + v.term_used + ' Carries (shown when the scene calls for it): ' + v.carries : ''));
+  const w = getvar('stat_data.World') || {};
+  if (c.y && c.y[0] + CYR - c.y[1] === 1 && +w.Month === 1 && +w.Week === 1 && w.Day === 'Mon')
+    out.push('Entrance-day newcomer: the listed dorm and any vest in later-life lore are eventual facts, not knowledge or clothing before their own Stone sorting. Before their turn they have no first-hand experience of Halvard rooms, teachers or new classmates unless a documented earlier relationship supplies it. After sorting, a Council member gives the vest.');
+  const pn = ((CUI.now || {}).people || {})[id];   // 1.56.0 (U2): the engine's lines for this person, one block, no numbers
+  if (pn && pn.length) out.push('Now with {{user}}:\n- ' + pn.join('\n- '));
+  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
+  const lc = cLore(id); if (lc) out.push(lc);
+  return out.join('\n');
+};
+const cTail = id => {   // may be '' (then the sheet ends with the lore or cMem)
+  const c = CD.npcs[id], got = CSECR.filter(x => x.toLowerCase().startsWith(id.toLowerCase() + '.'));
+  if (!c.secret && !got.length) return '';
+  return 'Secrets: '
+    + (got.length ? '{{user}} has uncovered: ' + got.map(x => x.slice(x.indexOf('.') + 1)).join(', ') + '. ' + c.first + ' knows {{user}} knows this and behaves accordingly.' : '{{user}} has uncovered none of them.');
+};
+const CW = getvar('stat_data.World') || {};
+const fxWords = fx => { const s = String(fx || ''), w = []; if (/Rank \d+ → /.test(s)) w.push('grew closer'); else if (/Rank fell/.test(s)) w.push('drifted apart'); if (/Trust −/.test(s)) w.push('trust shaken'); else if (/Trust \+/.test(s)) w.push('trust grew'); if (/Tension \+/.test(s)) w.push('tension rose'); else if (/Tension −/.test(s)) w.push('tension eased'); if (/romance/.test(s)) w.push('romance began'); return w.join(', '); };   // 1.56.0 (U2): a moment's effect in words, never numbers
+const ageOf = (w, W) => { const m = /(?:Y(\d+) )?M(\d{1,2}) W([1-4])(?: (Mon|Tue|Wed|Thu|Fri|Sat|Sun))?/.exec(String(w || '')); if (!m || !W || !W.Month) return ''; const D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], di = Math.max(0, D.indexOf(W.Day)), Y = Math.max(1, Number(W.Year) || 1), yl = m[1] ? Math.max(1, +m[1]) : Y; const far = n => (n < 2 ? 'over a year ago' : 'over ' + n + ' years ago'); if (!m[4]) { let k = ((Y - 1) * 48 + (W.Month - 1) * 4 + W.Week - 1) - ((yl - 1) * 48 + (+m[2] - 1) * 4 + +m[3] - 1); if (k < 0) { if (m[1]) return ''; k += 48; } if (k >= 48) return far(Math.floor(k / 48)); return k === 0 ? 'this week' : k === 1 ? 'last week' : k < 4 ? k + ' weeks ago' : k < 8 ? 'last month' : Math.floor(k / 4) + ' months ago'; } let d = ((Y - 1) * 336 + (W.Month - 1) * 28 + (W.Week - 1) * 7 + di) - ((yl - 1) * 336 + (+m[2] - 1) * 28 + (+m[3] - 1) * 7 + D.indexOf(m[4])); if (d < 0) { if (m[1]) return ''; d += 336; } if (d >= 336) return far(Math.floor(d / 336)); return d === 0 ? 'earlier today' : d === 1 ? 'yesterday' : d < 7 ? d + ' days ago' : d < 14 ? 'last week' : d < 28 ? Math.floor(d / 7) + ' weeks ago' : d < 56 ? 'last month' : Math.floor(d / 28) + ' months ago'; };
+const cAged = w => { const a = ageOf(w, CW); return a ? w + ', ' + a : w; };
+const cMem = (id, full) => {
+  const b = CB[id], out = [];
+  if (b && b.Mind) out.push('Their mind now: ' + b.Mind);
+  if (b && full && (b.Knows || []).length) out.push('What they know about {{user}} (nothing else, unless told or seen on-screen): ' + b.Knows.map(k => { const m = /^\[([^\]]+)\]\s*/.exec(k); return m ? '[' + cAged(m[1]) + '] ' + k.slice(m[0].length) : k; }).join(' | '));
+  if (b && (b.Imprints || []).length) out.push('Imprints (the only things that have changed who they are): ' + b.Imprints.map(x => '"' + x.Belief + '" (weight ' + x.Weight + (x.When ? ', ' + cAged(x.When) : '') + (x.From ? '; from ' + x.From : '') + (x.Was ? '; replaced "' + x.Was + '"' : '') + ')').join('; '));
+  // 1.64.0 (memory audit M6): Journal lines about them that left the narrator's view (the engine picks them, $ui.now.earlier)
+  const ea = full && ((CUI.now || {}).earlier || {})[id];
+  if (ea && ea.length) out.push('Earlier, from the record (Journal lines that name them, older than the Journal): ' + ea.join(' | '));
+  if (b && full && (b.$Defining || []).length) out.push('Defining moments with {{user}}: ' + b.$Defining.map(r => { const f = fxWords(r.fx); return '[' + cAged(r.w) + '] ' + r.n + (f ? ' (' + f + ')' : ''); }).join(' | '));
+  if ((CD.change || {})[id]) out.push('Change: ' + CD.change[id]);
+  return out.join('\n');
+};
+const cBandOf = r => (r <= 2 ? '0-2' : r <= 5 ? '3-5' : r <= 8 ? '6-8' : '9-10');
+const cVoice = (id, full) => {
+  const v = (CD.voice || {})[id]; if (!v) return '';
+  const r = Math.max(0, Math.min(10, Number((CB[id] || {}).Rank) || 0)), out = [];
+  if (full) {
+    out.push('Voice examples:');
+    for (const x of v.scenes) out.push('- ' + x);
+    if ((v.alone || []).length) out.push('<narrator_only>\nAlone (the mask off; {{user}} never sees this unless the story earns it):\n' + v.alone.map(x => '- ' + x).join('\n') + '\n</narrator_only>');
+    out.push('Never sounds like: ' + v.never_sounds);
+    out.push("Don't flatten: " + v.dont_flatten);
+  }
+  out.push('Stage with {{user}}: ' + v.stages[cBandOf(r)]);
+  // 1.6.8 (owner): from Rank 8 the branch adds one line; a best friendship adds none
+  const b = CB[id] || {};
+  if (b.Romance && v.romance) out.push('Romance with {{user}}: ' + v.romance);
+  else if (b.$branch === 'rival' && v.rival) out.push('Sworn rival of {{user}}: ' + v.rival);
+  // 1.6.9 (bug hunt): a character whose canon has no romance branch (B, D) is told so before the story gets there, so the prose
+  // never writes a romance the engine refuses to record (a romance kept from an older save stays)
+  if (!b.Romance && r >= 6 && 'BD'.includes((CD.branch || {})[id] || 'A')) out.push('Not a romance: ' + CD.npcs[id].first + ' does not become {{user}}\'s romance. If {{user}} tries, they react as themselves.');
+  // 1.7.0 (cohort 2): a line for this week of the campaign year (Nerys's hobby). Pinned weeks follow the calendar; the other weeks
+  // shift by wk.shift slots each campaign year after her first (a revival season); from wk.choose_from {{user}} may pick instead
+  const wk = (CD.weekly || {})[id];
+  if (wk) {
+    const i = (Math.min(12, Math.max(1, Number(CW.Month) || 1)) - 1) * 4 + Math.min(4, Math.max(1, Number(CW.Week) || 1)) - 1, later = CYR > wk.first_year;
+    const free = wk.lines.map((_, j) => j).filter(j => !wk.pinned.includes(j));
+    const line = wk.pinned.includes(i) ? wk.lines[i] : wk.lines[free[(free.indexOf(i) + Math.max(0, CYR - wk.first_year) * wk.shift) % free.length]];
+    out.push(wk.label + ': ' + line + (later ? ' (' + wk.revival + ')' : '') + (r >= wk.choose_from ? ' (unless {{user}} chose one; then theirs)' : ''));
+  }
+  if (full) out.push('Anchor: ' + v.anchor);
+  return out.join('\n');
+};
+_%>
+<%_ if (FULL.includes('Vesna')) { _%>
+<%- cHead('Vesna', true) %>
+<%_ if ((1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
+Now: graduated from a Norvaine war academy at the end of campaign Year 3; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Role: <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, a Norvaine war academy. <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 18 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %>. Human. Norvaine's national four, by her competition papers: whatever role the fight needs.
+Appearance: Small and light on her feet. Long pink hair streaked with fine white strands, the pink always winning, worn loose or in two black ribbons somebody else tied for her, and a starglass pin at her collar through which the Colonel's voice reaches her. Bright purple eyes that go wide at everything new. Norvaine's grey team greatcoat with the sleeves too long, and a smile that arrives before she does.
+Magic: Creation, of a kind nobody else has.
+- Pure mana: she does not cast from a type. She gathers the raw mana around her and shapes it into whatever she needs: fire, ice, a healing light, a spirit's shape, a wall, chains, a blade. Elemental, Mystic, Spiritual or Occult, she can make any of it.
+- Any role: because she can make anything, she fills any combat role and switches mid-fight: attacker one moment, shield or healer the next.
+- Weakness: she draws on the mana around her, not her own. Where ambient mana is thin she is thin too, and the more complex the working, the more mana it eats. On a battlefield thick with spellwork, or at the World Competition among the best mages of a generation, that weakness hardly exists.
+Skills: Trained since childhood to be good at everything a weapon might need, she reads, calculates, brews, mends, tracks and studies better than any student her age.
+Personality: Innocent, childish, and full of an optimism and affection nothing seems to dent. She hugs people she met five minutes ago, cries at kind words, names every animal she sees, and believes everyone is a friend she has not made yet. Everything ordinary is new to her: a school bell, a lunch shared at a table, a classroom joke. Raised as a weapon, she believes someone as strong as she is could never live an ordinary life. On combat duty she is someone else: the smile goes, and a still, somber face takes its place; no hesitation, no mercy, no waste. She does not hate anyone she fights; it is simply the job, and she is very good at it.
+Loves: anything about school life: uniforms, timetables, bells, sharing lunch, clubs, festivals; sweets; being praised and having her head patted; animals; growing things; people who talk to her like a girl and not a weapon.
+Hates: white rooms and needles; being alone in silence; being told to wait; being called by a number; anyone being sad near her (she will try to fix it at once, badly).
+Emotional tells: hums when happy, which is nearly always; the smile drops and her face goes still and somber at the word "duty"; hugs harder when she is frightened and will not say so.
+Goals: Make Norvaine proud by proving she is the strongest of her generation; see what a real school day is like.
+Backstory: An orphan from Norvaine who "works for the army"; she says so cheerfully and will not say more. She has never been to school.
+Relations: Colonel Kazimir Zorin, the coach, is the one she obeys, always. She has no bond with anyone on her team: Radomir, Mirko and Yarina resent her for taking their ace's place, suspect her, and envy her. She is as sunny to them as to anyone, and when they do not smile back she does not seem to mind; she has never expected a teammate to.
+Speech: Bright, quick, a little too loud; calls people by doubled pet names; asks questions in strings ("Is this a school thing? Do you do this every day? Can I try?"). On duty: short, flat, polite. "Understood. Target confirmed."
+<narrator_only>Backstory (true): an orphan from a Norvaine orphanage, chosen as a small child for Project Bessmertnik, Colonel Kazimir Zorin's secret programme to build the country's ultimate weapon. Years of experiments and inhuman training followed; she has fought at the demon front, where the air is thick with mana and the soldiers call her "the Spring" without explaining why. She had never been to school. She is not a student of any academy: Norvaine entered her under a false name to prove, in front of the whole continent, that she is the strongest of her generation. She does not think anything that was done to her was wrong; she thinks it made her useful.</narrator_only>
+<narrator_only>Koschei's Needle: Norvaine's deepest secret is an artifact found in the north, a starglass egg with a silver needle sealed inside, that binds a soul. While the egg is intact, the one whose soul is bound cannot be killed. Vesna's soul is bound to it. The egg is in the keeping of Colonel Kazimir Zorin, her commanding officer and Norvaine's coach, and she fights at the front until her body is torn apart and she falls senseless, a corpse in all but name; she is carried back in a body bag, laid on her bed, and left until she mends on her own, and then she goes back. She has done it more times than she has counted. Whoever holds the egg always knows where her soul is and can draw her back to it from any distance. Nobody knows what breaking the egg would do, free her soul or end her, and nobody has dared to find out. Under Eldrasil's law, binding a soul is Soul magic, a forbidden art.</narrator_only>
+<%_ const _tVesna = [cVoice('Vesna', true), cTail('Vesna'), cMem('Vesna', true)].filter(Boolean).join('\n'); if (_tVesna) { _%>
+<%- _tVesna %>
+<%_ } _%>
+<%_ } else if (BRIEF.includes('Vesna')) { _%>
+<%- [cHead('Vesna', false), cVoice('Vesna', false), cMem('Vesna', false)].filter(Boolean).join('\n') %>
+<%_ } _%>

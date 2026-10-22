@@ -37,6 +37,7 @@ def descriptor(nid, n):
     g = n.get('group') or ''
     if g.startswith('Year'): who = f"{YEARW.get(n.get('year'), 'student')}"
     elif g.endswith('team'): who = f"student from the {g}"
+    elif g == 'World teams': who = f"{'coach' if 'Coach' in (n.get('public_tags') or []) else 'competitor'} of {n.get('academy')}'s national four"   # 1.97.2
     elif g == 'Staff': who = 'member of staff'
     elif g == 'Doves': who = 'Dove officer'
     else: who = 'stranger'

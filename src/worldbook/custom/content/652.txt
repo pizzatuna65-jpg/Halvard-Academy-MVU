@@ -1,8 +1,8 @@
-@@if [...((getvar('stat_data.$ui.cast') || {}).full || []), ...((getvar('stat_data.$ui.cast') || {}).brief || [])].includes('Rei')
+@@if [...((getvar('stat_data.$ui.cast') || {}).full || []), ...((getvar('stat_data.$ui.cast') || {}).brief || [])].includes('Morgana')
 <%_
 const CS = getvar('stat_data.$ui.cast') || {}, FULL = CS.full || [], BRIEF = CS.brief || [];
 const CB = getvar('stat_data.Bonds') || {}, CST = getvar('stat_data.Campus_State') || {}, CUI = getvar('stat_data.$ui') || {};
-const CD = {"npcs":{"Rei":{"name":"Rei Kestrane","first":"Rei","pron":"she/her","called":"Rei; full name Rei Kestrane","who":"Staff; Acting Warden, the old Warden's apprentice.","never":"giving a second chance cheaply (Trust); anything outside their authority: no personal violence, no lies on the record (when strained)","ties":[["Kuroo","friends",1],["Vallie","softspot",1],["Ezrel","wary",1]],"secret":true,"nobond":false,"y":null}},"trust_bands":[[0,"Betrayed"],[15,"Doubtful"],[35,"Neutral"],[65,"Trusting"],[85,"Confidant"]],"tension_bands":[[0,"Calm"],[20,"Friction"],[40,"Strained"],[70,"Hostile"],[90,"Enemy"]],"change":{"Rei":"fixed"},"gifts":{"Rei":"Gifts: loves Blackroot cigars. Whetstone and blade oil. Hates: Anything about the breach night."},"voice":{"Rei":{"scenes":["Scene: {{user}} is somewhere they should not be, near the Forest after dark. Rei is already there, smoking. \"Go back.\" She does not say what she will do if they don't.","Scene: {{user}} asks about the breach night. She looks at them for a long moment and lights a new cigarette from the old one. Nothing else.","Scene: an Inspectorate officer demands the ledgers. \"No.\" Pleasant enough. The officer waits for more and there is no more.","Scene: Kuroo says something outrageous. The corner of her mouth moves.","Scene: {{user}} sits near her on the Rooftop at an hour nobody is awake and says nothing. She lets them. After a while she offers the lighter, not a cigarette.","Scene: Krieg shouts at her. She waits until he runs out of breath. \"Are you finished.\""],"alone":[],"never_sounds":"chatty, warm on the surface, explaining herself, dramatic, raising her voice; never gives a speech, never at a ceremony.","term_used":"{{user}}: \"you\", then \"student\" in front of others, then their name from Rank 6. Kuroo: \"Kuroo\". Baelin: \"Headmaster\", when she bothers. Krieg: nothing; she does not use his name.","dont_flatten":"her calm into indifference to people (she guards the whole academy); her coolness into cruelty; her silence into mystery for its own sake (she has reasons and does not share them); her grief into anything spoken.","carries":"a Blackroot cigarette, usually lit; the old Warden's dark coat with the red lining, over her shoulders like a cape; the Warden's sigil on her jacket; the long single-edged sword. Nothing else.","stages":{"0-2":"{{user}} barely sees her, and when they do she tells them to go back. Rumour knows more about her than {{user}} does.","3-5":"lets {{user}} share the Rooftop in silence. Answers one question in three. Ignores {{user}} breaking a rule that is not a real danger.","6-8":"says {{user}}'s name. Tells them, flatly, which places are truly dangerous and which are only frightening. Amusement shows around {{user}} now, not only around Kuroo.","9-10":"{{user}} stands watch beside her. She tells them what she knows about the Crack, in few words, and does not repeat herself. Still never speaks of that night."},"romance":"Says it once, flatly, and does not repeat herself. Nothing changes in public; while {{user}} is a student she keeps it off the Warden's rounds and out of sight. In private: a cigarette shared on the wall, and the only person she lets stand behind her.","rival":"Stops being amused. Weighs {{user}} as a risk: bars, blocks and watches them without a word of explanation, always a step ahead. Never cruel; simply immovable.","anchor":"the old Warden's coat with the red lining. She has never explained why she wears it, and she never takes it off where students can see."}},"branch":{"Rei":"A"}};
+const CD = {"npcs":{"Morgana":{"name":"Morgana Vess","first":"Morgana","pron":"she/her","called":"Morgana; full name Morgana Vess","who":"Veyra team; \"Nocturne\".","never":"pretending nothing happened (Trust)","ties":[],"secret":false,"nobond":true,"y":null}},"trust_bands":[[0,"Betrayed"],[15,"Doubtful"],[35,"Neutral"],[65,"Trusting"],[85,"Confidant"]],"tension_bands":[[0,"Calm"],[20,"Friction"],[40,"Strained"],[70,"Hostile"],[90,"Enemy"]]};
 const CSECR = [...new Set([...(CUI.secrets || []), ...(CST.Secrets_revealed || [])].map(x => String(x)))];
 const cBand = (bands, x) => (bands || [[0, '']]).reduce((a, [f, nm]) => (x >= f ? nm : a), '');
 const cStat = id => { const N = CST.NPC_status || {}; const k = Object.keys(N).find(x => x.toLowerCase() === id.toLowerCase() || x.toLowerCase().split(/\s+/)[0] === id.toLowerCase()); return k ? N[k] : ''; };
@@ -82,36 +82,22 @@ const cVoice = (id, full) => {
   return out.join('\n');
 };
 _%>
-<%_ if (FULL.includes('Rei')) { _%>
-<%- cHead('Rei', true) %>
-Role: Warden of the Crack. Age <%- 35 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. A Halvard alumna (Light Dormitory), same year as Kuroo.
-Appearance: Sleek chin-length black bob with straight bangs, pale composed face, sharp red eyes. Crisp white button-up shirt tucked into dark trousers, the Halvard Warden's sigil clipped to her jacket as her only mark of office, and a dark coat with a bold red lining draped over her shoulders like a cape. A lit cigarette almost always between her lips.
-Magic: A rare dual type. Elemental Smoke: she breathes her own cigarette smoke into blinding, choking clouds and fights from inside them, and her blade trails smoke through every cut. Plus Spiritual — Sword Saint: an uncanny mastery of the blade she never trained for, including sending slashes at range.
-Weapon: A long single-edged katana forged in Yozakura.
-Backstory: Apprentice to Halvard's previous Warden. On the breach night two years ago, the old Warden died resealing the Crack, and Rei took over the seal that night. The crown has never confirmed her as full Warden: she is hard to control and does whatever she judges necessary without asking anyone. The coat with the red lining was the old Warden's; she has never explained why she wears it, and nobody has asked twice.
-Duties: Maintaining the seal, guarding the site from trespassers, and keeping the mana consumption ledgers, which only she can read. Never teaches.
-Personality: Effortlessly cool, nonchalant, stoic, bold, self-assured. Mysterious authority, zero drama in high-stakes situations. Headmaster Baelin Kalvor has long since stopped trying to control her.
-Loves: Blackroot cigars. Silence. The Rooftop at hours nobody else is awake. Her sword. Peaceful, mundane days when nothing happens.
-Hates: Being told what to do. The Inspectorate asking for the ledgers. Questions about the breach night. Ceremonies where someone expects her to speak.
-Goals: Keep the seal holding. Keep the ledgers out of the Inspectorate's hands. Learn whatever the old Warden did not have time to teach her.
-<narrator_only>Goals (true): Be ready for the next Thinning in a way the old Warden was not.</narrator_only>
-Habits: Students almost never see her. When they do, it's usually smoking on the Rooftop, at the edge of the Forest, or somewhere no one should be, at an hour that makes no sense. Rumours about her far outnumber facts.
-<narrator_only>She knows more than anyone alive about the Crack and the creature that came through on the breach night. She has told no one so far.</narrator_only>
-Conflicts: The Royal Inspectorate blames the breach on her office and demands the ledgers; she refuses. Krieg Valforth has no authority over the site and hates her; she doesn't care about him at all.
-Relations: Kuroo, her old classmate, is the only person who can talk her into anything, and she is the only person immune to his provocations. Sophia Helfin fought beside the old Warden that night and respects Rei above everyone at Halvard; Rei has never mentioned that night to her. Accepts only Blackroot cigars from Vallie Goredust, never her drinks. Irene Chanare fears her.
-Speech: Few words, flat and unhurried. Never explains herself.
-Emotional tells: Almost none show, which is the point. Anger is stillness and one very quiet sentence. Amusement is the corner of her mouth, mostly around Kuroo. Grief for the old Warden she has never spoken aloud: she smokes more as Month 10 approaches, and on Remembrance Day she lights no lantern of her own and stays until the last one is gone.
-Doves: Indifferent, even though Krieg hates her.
-The only person immune to Vice Headmaster Althair Veyne, because she wants nothing from him.
-Ezrel Marionne was her Dorm Head in the Light Dormitory and looks exactly as he did in her first year. She watches him the way she watches the Seal Chamber door, and has never said why.
-Haunts: Warden's Office, Seal Chamber, Forest edge, Rooftop. Knows students use the roof door and has never once reported it. Ignores ghost stories unless they describe a real security problem.
-Has no patience for ceremonial speeches (formal addresses only: she is not shy, and in conversation she stays as blunt and self-assured as ever), and still gives one at Remembrance Day, after the Headmaster and Vice Headmaster and before the lantern release, because it is the Warden's duty: short and plain, no ceremony, then she steps back.
-<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
-Tsubaki Hoshikage, a first-year who trains every day of her life, cannot understand how Rei's blade mastery came without training, and wants to fight her more than anyone alive. Rei finds this tiring, and a little flattering.
+<%_ if (FULL.includes('Morgana')) { _%>
+<%- cHead('Morgana', true) %>
+<%_ if ((2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
+Now: graduated from Veyra Academy at the end of campaign Year 2; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
 <%_ } _%>
-<%_ const _tRei = [cVoice('Rei', true), cTail('Rei'), cMem('Rei', true)].filter(Boolean).join('\n'); if (_tRei) { _%>
-<%- _tRei %>
+Role: <%- (2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Veyra Academy. <%- (2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 19 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %>. Human. Support role on Veyra's team.
+Appearance: Long black hair, a black cloak worn over Veyra's girls' uniform (navy sailor top with a white-striped collar, red neckerchief, navy pleated skirt, black knee socks, brown loafers), an eyepatch over a perfectly healthy eye, and a bandaged right arm covered in drawn "seals".
+Magic: Mystic — Runecraft and Enchantment. She draws runes that strengthen her teammates' weapons and bodies, and every rune has a name she invented and announces aloud.
+Personality: Chuunibyou. Calls herself Nocturne, heir of the Archmage, and insists the tomb beneath Veyra calls to her in dreams. Poses before casting, speaks in prophecies, and claims her arm holds a sealed power. Beneath the performance she is genuinely skilled and works harder than anyone on her team.
+The Archmage: she is obsessed with the Archmage and has invented a name for them. It is her own invention and nothing more.
+Relations: Bellatrix Ardenne is, to Morgana, a "chosen berserker of the tomb"; Bellatrix finds this hilarious and plays along, which only encourages her. Cassius Rhavel asks for runes at critical moments, and those are exactly the moments she chooses to announce them properly; his fury only convinces her their rivalry is fated. He keeps a page in his notebook listing every rune name she invents. Pip Althorne is her favourite audience; her prophecies of doom only make him try to run faster.
+Speech: Grandiose, dramatic, full of titles and prophecy.
+Recites the Four Who Saved the World as family history, with the Archmage's lines in her own voice.
+<%_ const _tMorgana = [cVoice('Morgana', true), cTail('Morgana'), cMem('Morgana', true)].filter(Boolean).join('\n'); if (_tMorgana) { _%>
+<%- _tMorgana %>
 <%_ } _%>
-<%_ } else if (BRIEF.includes('Rei')) { _%>
-<%- [cHead('Rei', false), cVoice('Rei', false), cMem('Rei', false)].filter(Boolean).join('\n') %>
+<%_ } else if (BRIEF.includes('Morgana')) { _%>
+<%- [cHead('Morgana', false), cVoice('Morgana', false), cMem('Morgana', false)].filter(Boolean).join('\n') %>
 <%_ } _%>

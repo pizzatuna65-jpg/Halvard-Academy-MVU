@@ -21,7 +21,7 @@ for (const v of MAN.map_variants) {
 }
 ok(MAN.map_variants.length === 13 && MAN.map_variants.filter(v => v.event).length === 10 && SPRING && AUTUMN && WINTER && !byId('summer'),
   '13 variants: 10 events and Spring, Autumn, Winter (the default map is Summer)');
-ok(STAR === 'map/halvard_spring_starnight.webp' && /4620b2ce/.test(MAN.base_url), 'the owner\'s Star Night map, at the pinned commit with all 13 maps (1.38.0: and the forest map; 1.39.0: and Avalon)');
+ok(STAR === 'map/halvard_spring_starnight.webp' && /4d229ce5/.test(MAN.base_url), 'the owner\'s Star Night map, at the pinned commit with all 13 maps (1.38.0: and the forest map; 1.39.0: and Avalon)');
 ok(byId('graduation') === 'map/halvard_winter_graduation.webp', 'Graduation map path matches the asset repository');
 
 // Star Night: M1 W3 Sat 18:00 to Sun 06:00; outside it the season's map

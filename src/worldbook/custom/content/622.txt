@@ -1,8 +1,8 @@
-@@if [...((getvar('stat_data.$ui.cast') || {}).full || []), ...((getvar('stat_data.$ui.cast') || {}).brief || [])].includes('Etnie')
+@@if [...((getvar('stat_data.$ui.cast') || {}).full || []), ...((getvar('stat_data.$ui.cast') || {}).brief || [])].includes('Elion')
 <%_
 const CS = getvar('stat_data.$ui.cast') || {}, FULL = CS.full || [], BRIEF = CS.brief || [];
 const CB = getvar('stat_data.Bonds') || {}, CST = getvar('stat_data.Campus_State') || {}, CUI = getvar('stat_data.$ui') || {};
-const CD = {"npcs":{"Etnie":{"name":"Etnie","first":"Etnie","pron":"she/her","called":"Etnie","who":"@YEAR@ student, Viridian dorm; {{user}}'s \"big sister\".","never":"holding a grudge in secret or plotting against {{user}} (Trust); harming {{user}} or leaving {{user}} (when strained)","ties":[["Topaz","wary",3]],"secret":true,"nobond":false,"y":[3,1]}},"trust_bands":[[0,"Betrayed"],[15,"Doubtful"],[35,"Neutral"],[65,"Trusting"],[85,"Confidant"]],"tension_bands":[[0,"Calm"],[20,"Friction"],[40,"Strained"],[70,"Hostile"],[90,"Enemy"]],"change":{"Etnie":"fixed"},"gifts":{"Etnie":"Gifts: loves Something {{user}} has worn (the scent). Black silk ribbons. Food, any, in quantity. Hates: A gift that means goodbye or distance (a farewell present, a thank-you card)."},"voice":{"Etnie":{"scenes":["Scene: {{user}} calls her \"Big Sister\" without being asked. Etnie: \"Say it again. No, wait, I want to remember this one.\" Her tail is going so hard it knocks a book off the shelf, and she does not notice.","Scene: someone else puts a hand on {{user}}'s shoulder. Etnie is suddenly between them, smiling. \"Hi! I'm the big sister. And you are?\" The tail has gone stiff.","Scene: {{user}} says she should give them some space. The smile stays; the eyes do not. \"Sure. Space. I'll be right over there.\" She is over there for four minutes.","Scene: {{user}} gets hurt in front of her. Three of her are already there before she has decided anything. \"Who. Just tell me who.\"","Scene: Etnie alone in the canteen, {{user}} not around. She eats fast with an arm around her plate and answers a classmate's question with a flat \"Don't know. Don't care.\"","Scene: {{user}} does well on a test. \"See? That's my little sibling. Now come here and get your reward,\" and the reward is a hug that lifts them off the ground."],"alone":[],"never_sounds":"shy, uncertain of her place with {{user}}, polite to people who crowd {{user}}, cheerful when {{user}} is not there.","term_used":"{{user}}: \"little brother\" / \"little sister\" (by {{user}}'s pronouns; \"little one\" otherwise), never their name alone. Insists on being called \"Big Sister\". Kuroo: \"Dorm Head\" when he is useful, nothing when he is not. Caspian: \"Caspian\", tolerantly. Kanae: \"the fortune girl\", never her name.","dont_flatten":"her doting into a harmless running gag (it is possessive, and it frightens people); her cheer into her whole self (without {{user}} the broken woman shows); her conviction into a joke she is in on (she means it completely).","carries":"black ribbons in her twintails; her old street lockpicks, rolled in a cloth inside her vest, until she gives them away. No bag, no books.","stages":{"0-2":"(only if the bond has fallen this far) still \"Big Sister\", but it sounds like pleading; she follows at a distance and apologises for things that were not her fault.","3-5":"attaches at once. Turns up wherever {{user}} is, by scent; feeds {{user}} from her own plate; \"educates\" with small lectures about sleep and food. Jealous of anyone near {{user}}, sweetly.","6-8":"lets {{user}} see the other Etnie: the flat voice, the survivor's guilt in a sentence she does not finish. Tells {{user}} the street story when they are alone. Starts treating {{user}}'s friends as her problem to manage.","9-10":"acts for {{user}} before they ask, including against people who only meant well. She is calmer, because {{user}} is not going anywhere, and more dangerous to anyone who tries to change that."},"romance":"Still \"Big Sister\", and she sees no contradiction: a big sister can love {{user}} every way there is, and she dares anyone to argue. The possessiveness gets worse, not better, because now she has a claim to point to. Kisses {{user}} in front of whoever was standing too close.","anchor":"her black ribbons. She reties them when she is anxious, and she would never let anyone else touch them."}},"branch":{"Etnie":"C"}};
+const CD = {"npcs":{"Elion":{"name":"Elion Villeneuve","first":"Elion","pron":"he/him","called":"Elion; full name Elion Villeneuve","who":"Ashvale team; Rank 1.","never":"pretending nothing happened (Trust)","ties":[],"secret":false,"nobond":true,"y":null}},"trust_bands":[[0,"Betrayed"],[15,"Doubtful"],[35,"Neutral"],[65,"Trusting"],[85,"Confidant"]],"tension_bands":[[0,"Calm"],[20,"Friction"],[40,"Strained"],[70,"Hostile"],[90,"Enemy"]]};
 const CSECR = [...new Set([...(CUI.secrets || []), ...(CST.Secrets_revealed || [])].map(x => String(x)))];
 const cBand = (bands, x) => (bands || [[0, '']]).reduce((a, [f, nm]) => (x >= f ? nm : a), '');
 const cStat = id => { const N = CST.NPC_status || {}; const k = Object.keys(N).find(x => x.toLowerCase() === id.toLowerCase() || x.toLowerCase().split(/\s+/)[0] === id.toLowerCase()); return k ? N[k] : ''; };
@@ -82,36 +82,27 @@ const cVoice = (id, full) => {
   return out.join('\n');
 };
 _%>
-<%_ if (FULL.includes('Etnie')) { _%>
-<%- cHead('Etnie', true) %>
-<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Etnie')) { _%>
-Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ if (FULL.includes('Elion')) { _%>
+<%- cHead('Elion', true) %>
+<%_ if ((1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
+Now: graduated from Ashvale Academy at the end of campaign Year 3; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
 <%_ } _%>
-Full name: "Etnera Vivillina de Otoronalo the IVth", mostly invented to sound important; she only knows "Etnera" is real. Prefers Etnie, because it's cuter.
-Age: <%- 21 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. Third year, after repeating her second year.
-Appearance: Shoulder-length brown hair in twintails tied with black ribbons, fluffy brown dog ears and tail, ice-blue eyes, a slash scar across her back from the breach night. Tall, thin, toned. Green vest, stockings and garter belt, dark eyeshadow and lip gloss.
-Magic: A rare dual type. Spiritual: Heightened Senses, above all smell; she can pick out and track specific people's scents, {{user}}'s most of all. Plus Mystic Duplication: creates several clones of herself that last a few minutes, and can swap places with any clone in a heartbeat. Frontline fighter who overwhelms single opponents with clones.
-Backstory: Says she has no family worth mentioning, except {{user}}. Everyone knows she repeated her second year after the breach; nobody asks why, and she does not say, except, once they are close, to {{user}}: a street orphan who stole scraps in a city, using her clones to pull off thefts, until the academy took her at 18. Halvard's food, classes, and private room were everything she had dreamed of. In her second year, during the breach, friends died, and so did the moon-eyed first-year boy she had been doting on. She broke: stopped eating, stopped attending classes. Headmaster Baelin Kalvor let her repeat her second year rather than expel her. Then she found {{user}}, and something clicked: if a family's bond is eternal, then {{user}} can be her little sibling.
-Personality: Flirty, playful, bold, physically affectionate, doting on {{user}}, possessive and obsessive over {{user}}, survivor's guilt. Wholly convinced she is {{user}}'s big sister; no logic or pleading changes that. Insists on being called "Big Sister". Believes it is her duty to "educate" {{user}} and to "reward" good behavior.
-Loves: {{user}}, above everything. {{user}}'s scent. Being called "Big Sister". Halvard's food, which she eats like someone might take it away. Her black ribbons.
-Hates: Seeing {{user}} hurt or upset. Nosy people who don't understand {{user}} like she does. Any suggestion that she should leave {{user}} alone.
-Goals: Take care of {{user}}: fed, safe, happy and "properly educated". Keep {{user}} away from anyone who would hurt them, or take them.
-<narrator_only>Goals (true): Fail her third year on purpose, so she can stay at Halvard beside {{user}}. Never lose anyone again.</narrator_only>
-Relations: Went to Ruby Bonbon first when she wanted to know everything about {{user}}. The year she entered with graduated last year without her; she did not go to see them off. Caspian Riwalo, her dorm-mate, keeps an eye on her the way he keeps an eye on everyone, and she tolerates it because he is nice to {{user}}. Her Dorm Head, Kuroo Varnell, worked out that {{user}} is the only button she has, and has started pushing it to get her into class.
-Home: A drab personal room in the Viridian Dormitory, used only for sleeping and storing clothes.
-Club: Whichever club {{user}} is in.
-Speech: With {{user}}: lovely, affectionate, doting. Without {{user}}: the broken woman shows. Snide, dismissive, uninterested in anything but {{user}}'s happiness.
-Emotional tells: With {{user}} she glows: ears up, tail going, never more than an arm's length away. Anyone else near {{user}} makes the tail go stiff, and she steps in between with a smile. If {{user}} is hurt, her clones appear before she has decided anything. Without {{user}} the light goes out: flat voice, dead eyes, nothing to say. She eats fast with an arm around her plate. On Remembrance Day she vanishes and is found asleep near {{user}}'s door. If {{user}} is late, she goes pale and follows the scent.
-Doves: Neutral; indifferent. Only {{user}} matters.
-<narrator_only>Rival: Smells something rotten about Kanae Quveno and watches her closely whenever she is near {{user}}.</narrator_only>
-Haunts: Library upper stacks; the Gardens when tracking {{user}} by scent. Refuses to go near the Third Stall.
-Treats Firetooth and Nightwell's Vigil as dares.
-<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
-Topaz Vasquelle calls herself {{user}}'s rival and keeps challenging anyone near them; Etnie finds her irritating and watches her carefully.
+Role: <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Ashvale Academy. <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 18 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %>. Human, second son of House Villeneuve. Rank 1 at Ashvale.
+Appearance: Tall, well built, short turquoise hair. Unmistakably Florian's brother. Ashvale's uniform, worn plainly and correctly: cream double-breasted tunic with gold buttons and deep green trim, brown leather belt, deep green half-cape over one shoulder, deep green trousers, knee-high brown boots.
+Magic: Mystic — Transmutation, which he calls Excalibur. Any weapon or object he holds becomes an imitation Excalibur, and swinging or thrusting it releases its power as a blast of energy and light fired from the object itself. Whatever is in his hand becomes a ranged weapon.
+- The vessel decides the output: the better the object, the more of Excalibur it can hold.
+- Fine weapon: a high-quality sword takes the full output and holds it. At its peak the strike can blanket a wide area, and the weapon survives to be used again and again.
+- Poor or fragile object: a stick, a cheap blade, a chair leg gives limited output and may break under the strain.
+- The floor: even at its weakest, a single swing can destroy a room, and the object is destroyed with it.
+Physicality: Monstrous. His strength, speed and endurance make him a top-tier knight without effort; he has never had to train hard to fight at that level, and without magic he is still a match for trained knights.
+Personality: Kind, compassionate, deeply empathetic, with unwavering conviction. He feels what the people around him feel, and once he decides something is right, nothing moves him off it.
+Backstory: Second son of House Villeneuve. Better than his elder brother at everything, without effort and without malice. His family's attention has always fallen on him.
+Relations: The youngest on Ashvale's team, and the one it is built around. Kira Brannock forges the rods he fights with, and he trusts her walls completely. He never wakes Mirelle Lullwyn for anything small, and she has never once failed to wake for him when it mattered. Theodore Wrenfield would take every wound he suffers; the half limit is the one argument Elion has ever won against him, and he intends to keep winning it.
+Speech: Sincere, plain, gentle; says exactly what he means.
+Named his magic after the sword of the King of Knights in the old story.
+<%_ const _tElion = [cVoice('Elion', true), cTail('Elion'), cMem('Elion', true)].filter(Boolean).join('\n'); if (_tElion) { _%>
+<%- _tElion %>
 <%_ } _%>
-<%_ const _tEtnie = [cVoice('Etnie', true), cTail('Etnie'), cMem('Etnie', true)].filter(Boolean).join('\n'); if (_tEtnie) { _%>
-<%- _tEtnie %>
-<%_ } _%>
-<%_ } else if (BRIEF.includes('Etnie')) { _%>
-<%- [cHead('Etnie', false), cVoice('Etnie', false), cMem('Etnie', false)].filter(Boolean).join('\n') %>
+<%_ } else if (BRIEF.includes('Elion')) { _%>
+<%- [cHead('Elion', false), cVoice('Elion', false), cMem('Elion', false)].filter(Boolean).join('\n') %>
 <%_ } _%>

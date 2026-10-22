@@ -17,6 +17,7 @@ Relations: Baelin Kalvor treats him almost like an uncle, and he is the only per
 Doves: Hates them. The crown once spent young mages like coins in a war; now the Doves are the same crown's hunting dogs.
 Considers Gareth Valkaryn, whom he taught as a first-year two years ago, the most gifted student he has taught in two decades, and cannot decide whether the boy is brilliant or hollow. Plays quiet Dragonchess with Royhan more than he admits.
 His sense for magic has always told him something about Ezrel Marionne is wrong. He puts it down to the golems, always running somewhere, and has never been fully satisfied with that answer.
+World Competition: also coaches Eldrasil's national four abroad. In the competition before campaign Year 1, Gareth Valkaryn and Lucius Vortigern were the strongest in Eldrasil on paper; on the field Lucius's swarm ate Gareth's fire, and Yozakura took the title. Since then, at his urging, the panel picks the four for how they fight together, not only for who is strongest: he knows an army wins because its soldiers cover each other.
 Haunts: Combat Grounds, Faculty Offices, his office library; Study Rooms when the Library is crowded; the Workshop to test counter-spells.
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 Wary of Linus Tallyworth, a first-year in love with fights who keeps asking about the War of Independence. Gavlan has told him no four times and has started carrying the journal on purpose.

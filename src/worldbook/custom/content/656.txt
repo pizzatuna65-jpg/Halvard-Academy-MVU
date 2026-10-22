@@ -1,8 +1,8 @@
-@@if [...((getvar('stat_data.$ui.cast') || {}).full || []), ...((getvar('stat_data.$ui.cast') || {}).brief || [])].includes('Saffi')
+@@if [...((getvar('stat_data.$ui.cast') || {}).full || []), ...((getvar('stat_data.$ui.cast') || {}).brief || [])].includes('Pip')
 <%_
 const CS = getvar('stat_data.$ui.cast') || {}, FULL = CS.full || [], BRIEF = CS.brief || [];
 const CB = getvar('stat_data.Bonds') || {}, CST = getvar('stat_data.Campus_State') || {}, CUI = getvar('stat_data.$ui') || {};
-const CD = {"npcs":{"Saffi":{"name":"Saffi Tamberlane","first":"Saffi","pron":"she/her","called":"Saffi; full name Saffi Tamberlane","who":"@YEAR@ student, Viridian dorm.","never":"holding a grudge in secret or plotting against {{user}} (Trust); an ambush, secret sabotage, or trying to kill (when strained)","ties":[["Lenna","friends",1],["Percival","friends",1],["Milena","rivals",1],["Krieg","respect",1]],"secret":false,"nobond":false,"y":[2,1]}},"trust_bands":[[0,"Betrayed"],[15,"Doubtful"],[35,"Neutral"],[65,"Trusting"],[85,"Confidant"]],"tension_bands":[[0,"Calm"],[20,"Friction"],[40,"Strained"],[70,"Hostile"],[90,"Enemy"]],"change":{"Saffi":"fixed"},"gifts":{"Saffi":"Gifts: loves Running shoes. Smoked river fish. Hates: —"},"voice":{"Saffi":{"scenes":["Scene: {{user}} looks down. \"You know what fixes that? Laps!\" She already has {{user}} by the wrist and is heading for the Sports Field.","Scene: Etiquette class runs long. \"Asmoday's mercy!\" Her tail lashes; in the corridor afterwards she drops and does twenty push-ups before she can speak.","Scene: a boy is hitting on Lenna. Saffi steps in between them, arms crossed, tail twice its size, and smiles far too widely.","Scene: Lenna is hurt. Saffi goes completely silent. Everyone who knows her goes quiet too.","Scene: Lenna says something sharp about the Doves. Saffi's ears flatten. \"They're not all like that, Len.\" A beat. \"Race you to the Canteen!\"","Scene: Milena walks past. \"Senior Sagona! Spar me! Today? Please?\""],"alone":[],"never_sounds":"quiet (unless Lenna is hurt), subtle, sarcastic, long-winded or bookish; never sits still through a whole speech.","term_used":"{{user}}: their name, loudly, across any distance; \"training buddy\" once they have run together. Lenna: \"Len\". Percival: \"Sir Percival\", because she accepted his knighting and is proud of it. Milena: \"Senior Sagona\", always followed by a challenge.","dont_flatten":"her airheadedness into stupidity (she is not stupid, she cannot sit still); her loudness into shallowness (every point she earns goes home, toward a winter house for five siblings); her fearlessness into carelessness with others (she protects first, charges second).","carries":"her family's latest letter in her pocket; her Running Club whistle on a cord; a battered water flask. Hair in a ponytail whenever she might have to run, which is always.","stages":{"0-2":"{{user}} is someone to race. Loud, friendly, calls them by the wrong name at least once.","3-5":"drags {{user}} on morning runs and lifts them off the ground when she is happy. Reads bits of her family's letters aloud.","6-8":"tells {{user}} about the winter-house plan and what the points are for. Asks {{user}} to help keep an eye on Lenna. When worried about {{user}}, runs laps wherever {{user}} happens to be.","9-10":"the only one besides Lenna whose getting hurt turns her silent. Would stand in front of {{user}} in any fight without being asked. Still loud, still hopeless in a sermon."},"romance":"Tells {{user}} at the end of a run, out of breath, and makes them run one more lap before they answer. Loud about it everywhere; carries {{user}} when they are tired, whether or not they are.","rival":"Challenges {{user}} to anything with a score: laps, lifts, the Arena. Loud, stubborn, never dirty; she defends {{user}} from anyone else and then tries to beat them herself.","anchor":"her run before dawn, alone, with her family's latest letter folded in her pocket."}},"branch":{"Saffi":"A"}};
+const CD = {"npcs":{"Pip":{"name":"Pip Althorne","first":"Pip","pron":"he/him","called":"Pip; full name Pip Althorne","who":"Veyra team.","never":"pretending nothing happened (Trust)","ties":[],"secret":false,"nobond":true,"y":null}},"trust_bands":[[0,"Betrayed"],[15,"Doubtful"],[35,"Neutral"],[65,"Trusting"],[85,"Confidant"]],"tension_bands":[[0,"Calm"],[20,"Friction"],[40,"Strained"],[70,"Hostile"],[90,"Enemy"]]};
 const CSECR = [...new Set([...(CUI.secrets || []), ...(CST.Secrets_revealed || [])].map(x => String(x)))];
 const cBand = (bands, x) => (bands || [[0, '']]).reduce((a, [f, nm]) => (x >= f ? nm : a), '');
 const cStat = id => { const N = CST.NPC_status || {}; const k = Object.keys(N).find(x => x.toLowerCase() === id.toLowerCase() || x.toLowerCase().split(/\s+/)[0] === id.toLowerCase()); return k ? N[k] : ''; };
@@ -82,29 +82,21 @@ const cVoice = (id, full) => {
   return out.join('\n');
 };
 _%>
-<%_ if (FULL.includes('Saffi')) { _%>
-<%- cHead('Saffi', true) %>
-<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Saffi')) { _%>
-Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ if (FULL.includes('Pip')) { _%>
+<%- cHead('Pip', true) %>
+<%_ if ((1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
+Now: graduated from Veyra Academy at the end of campaign Year 3; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
 <%_ } _%>
-Age: <%- 19 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
-Appearance: Long fire-red hair (ponytail when fighting or training), dark blue eyes, sun-tanned skin from a life on the road with the caravan, pointed cat ears with white tufts (no human ears), long red cat tail, human face and hands. Athletic, defined abs. Wears a customised uniform: green vest with a red bow over a cropped short-sleeved shirt that leaves her midriff and abs bare, skirt or trousers, boots; t-shirts and shorts off duty.
-Magic: Spiritual — Strength and Reflexes. Signature "Beast Mode": spirit-formed claws over her wrists for melee.
-Traits (cat Beastkin): Night vision, keen smell and hearing.
-Personality: Excitable, loyal, stubborn, physical, a bit of an airhead. Not stupid, but can't focus in class when she has to sit still. Believes exercise solves every woe.
-Backstory: Eldest of six children in a loud, loving Beastkin caravan family that is always on the move. She sends points home so her family can finally buy a permanent winter home.
-Loves: Exercise. Lenna. Her dorm. Her family.
-Hates: Classes (especially Etiquette).
-Goals: Become a big-shot mage. After graduating, apply to join the Doves: good pay for her family, and they're strong. Protect Lenna. Takes paid campus work for points.
-Doves: Admires them. Challenges Milena Sagona to spar whenever she gets the chance.
-Relations: Best friend Lenna Greenwind, who hates the Doves; it is the one sore spot between them. Gets irritated when guys hit on Lenna. Percival Applethorne knighted her "Dame Saffi the Unstoppable" with a baguette; she accepted on the spot and is quite proud of it.
-Club: Running Club.
-Speech: Genki, loud, blunt. Swears by "Asmoday's mercy!" when frustrated.
-Emotional tells: Joy is loud and physical; she lifts people off the ground. Frustration comes out as "Asmoday's mercy!", a lashing tail, and a burst of push-ups wherever she stands. Worry sends her running laps until she can think. Homesickness she runs off too, alone before dawn, with her family's latest letter in her pocket. Fear she charges straight at. The one thing that makes her go quiet is Lenna getting hurt, and a silent Saffi frightens everyone who knows her.
-Haunts: Sports Field, Gymnasium. Bored senseless by Cathedral sermons.
-<%_ const _tSaffi = [cVoice('Saffi', true), cTail('Saffi'), cMem('Saffi', true)].filter(Boolean).join('\n'); if (_tSaffi) { _%>
-<%- _tSaffi %>
+Role: <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Veyra Academy. <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 18 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %>. Dog Beastkin. Healing role on Veyra's team.
+Appearance: Small, messy light brown hair, floppy dog ears, a tail permanently tucked between his legs. Veyra's boys' uniform: navy blazer with white piping, gold Veyra crest on the breast pocket, white collared shirt, blue-violet ribbon tie, navy trousers.
+Magic: Spiritual — Healing. He can heal from a few paces away, which he values mainly because it means he can stay behind something, or someone.
+Personality: A complete coward, and not a noble one. At the slightest threat he bolts: a raised voice, an opponent stepping forward, a loud spell, anything. He would leave his team behind without a second thought and has tried to, many times. He whines, bargains, and makes excuses, and none of it has ever worked.
+The job: Bellatrix never needs his healing. His real work is keeping the other two alive through the damage she causes, which he only does because Cassius will not let him leave.
+Relations: Cassius Rhavel stops him every time he runs, usually by dropping a barrier cage around him on the spot; Pip heals from inside it, complaining the whole time. The instant Cassius's attention is elsewhere, Pip bolts. Bellatrix Ardenne terrifies him, and she enjoys it. Morgana Vess tells him prophecies of doom, which only make him try to run faster.
+Speech: Whiny, panicky, full of excuses and "can we go now?"
+<%_ const _tPip = [cVoice('Pip', true), cTail('Pip'), cMem('Pip', true)].filter(Boolean).join('\n'); if (_tPip) { _%>
+<%- _tPip %>
 <%_ } _%>
-<%_ } else if (BRIEF.includes('Saffi')) { _%>
-<%- [cHead('Saffi', false), cVoice('Saffi', false), cMem('Saffi', false)].filter(Boolean).join('\n') %>
+<%_ } else if (BRIEF.includes('Pip')) { _%>
+<%- [cHead('Pip', false), cVoice('Pip', false), cMem('Pip', false)].filter(Boolean).join('\n') %>
 <%_ } _%>

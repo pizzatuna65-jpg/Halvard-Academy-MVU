@@ -8,7 +8,7 @@ global.substitudeMacros = () => 'Aria Vale';
 const U = new Function(fs.readFileSync(path.join(ROOT, 'src/scripts/ui.js'), 'utf8') + '\nreturn { graphModel, view, DATA, EDGE, PANELS, peopleGraphHTML, knowsName };')();
 console.log('Connections 1.4.2');
 const rel = (a, b) => U.DATA.rel.find(e => e[0] === a && e[1] === b);
-const npcs = Object.keys(U.DATA.npcs), halvard = npcs.filter(id => !['Althair', 'Baelin', 'Ezrel'].includes(id) && !/team$/.test(U.DATA.npcs[id].g));
+const npcs = Object.keys(U.DATA.npcs), halvard = npcs.filter(id => !['Althair', 'Baelin', 'Ezrel'].includes(id) && !/team$|^World teams$/.test(U.DATA.npcs[id].g));   // 1.97.2: nor the World teams
 
 // Althair
 ok(halvard.every(id => (rel(id, 'Althair') || [])[2] === 'dislike'), `all ${halvard.length} Halvard people dislike Althair`);

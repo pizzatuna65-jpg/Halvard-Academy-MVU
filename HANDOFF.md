@@ -3,22 +3,20 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.97.1** (2026-10-22): the first World Competition step: Month 11 reordered (no classes from W1 Fri until
-Graduation, Results W1 Sat, Academy Trip W2 Mon–Sat, World Competition W3 Mon to W4 Mon, Graduation W4 Sun; `data/calendar.json`,
-`airship.json`, `sunreach.json`). 1.96.0–1.96.1 names and traits for the narrator's new characters (`data/name_pool.json`).
-1.95.0 letters (`data/letters.json`, `stepMail`). 1.94.0 your own notes on each person. 1.93.0 UI fixes (plan tables, the Bonds
-order dropdown, pinned people). 1.89.0–1.92.0 info layers and club work. The memory audit is done except batch 8. Live checks: the
+**Snapshot:** card **v1.97.2** (2026-10-22): World Competition step 2: the Demon Kingdom retcon (the Gates are history, the Crack
+is a sealed one, Norvaine holds the last open Gate), six nations and the format in lore 19, five foreign team entries and six
+standout NPCs with portraits (Hibiki, Vesna, Kazimir, Lucrezia, Kamran, Cyprien; group "World teams", no bond). 1.97.1 Month 11
+reordered (no classes from W1 Fri, Results W1 Sat, Trip W2 Mon–Sat, World Competition W3 Mon to W4 Mon). 1.96.0–1.96.1 names and
+traits for new characters. 1.95.0 letters. 1.94.0 notes on each person. The memory audit is done except batch 8. Live checks: the
 campaign quest log `docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the
 card, Q0.1).
 
-**Next task:** 1.97.2 (world and teams) from `planning/DRAFT_world_competition.md` (the step table at its top: 1.97.2 world and
-teams with `DRAFT_demon_kingdom.md`, 1.97.3 Hanakaze with its map, 1.97.4 the competition system, 1.97.5 Vesna and Koschei's
-Needle; the owner said "proceed" on both drafts). Portraits of the six World NPCs and the Hanakaze map are in the assets repo
-(owner, 2026-10-22): move the pin in `data/assets_manifest.json` to its newest commit when they are wired in. Then 1.98 shallow
-features, 1.99.x bug hunt, 2.0 polish (`planning/FUTURE_PLANS.md` §0). Alongside it, the owner plays the quest log; their reports
-and chat exports bring the playtest fixes. MS3 stage 2 and the NPC dialogue audit's U1, U3–U5 wait in `planning/FUTURE_PLANS.md` §2
-for a campaign export. Batch 8 (chapters) is planned in `planning/DRAFT_bab_baru.md`: build it at about 20,000 messages, slow saves
-or a chat file near 100 MB.
+**Next task:** 1.97.3 (Hanakaze: the Area with its map `map/yozakura.webp`, already at the assets pin) from
+`planning/DRAFT_world_competition.md` (step table at its top; then 1.97.4 the competition system, 1.97.5 Vesna and Koschei's
+Needle). Then 1.98 shallow features, 1.99.x bug hunt, 2.0 polish (`planning/FUTURE_PLANS.md` §0). Alongside it, the owner plays the
+quest log; their reports and chat exports bring the playtest fixes. MS3 stage 2 and the NPC dialogue audit's U1, U3–U5 wait in
+`planning/FUTURE_PLANS.md` §2 for a campaign export. Batch 8 (chapters) is planned in `planning/DRAFT_bab_baru.md`: build it at
+about 20,000 messages, slow saves or a chat file near 100 MB.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 
@@ -33,7 +31,7 @@ entry", "update lore entry X", "add feature Y".
 A **SillyTavern character card** for a slice-of-life magic-academy roleplay: Halvard Academy, Kingdom of Eldrasil, with a mystery
 underneath. The player is a first-year student. The card combines:
 
-- **A merged, corrected lorebook**: world, 71 NPCs (6 arrive in campaign Year 2, 7 in Year 3), 75 locations, calendar, rules.
+- **A merged, corrected lorebook**: world, 77 NPCs (6 arrive in campaign Year 2, 7 in Year 3, 6 belong to the World Competition abroad), 75 locations, calendar, rules.
 - **MVU (MagVarUpdate) state.** The AI ends every reply with an `<UpdateVariable>` JSONPatch block. A Zod schema validates the state,
   and a deterministic engine script enforces the rules: clock and calendar, weather, HP and injuries, mana, bonds, reputation,
   training, grades, hidden magic, payouts, journal, ambience and more.

@@ -1,0 +1,120 @@
+@@if [...((getvar('stat_data.$ui.cast') || {}).full || []), ...((getvar('stat_data.$ui.cast') || {}).brief || [])].includes('Zara')
+<%_
+const CS = getvar('stat_data.$ui.cast') || {}, FULL = CS.full || [], BRIEF = CS.brief || [];
+const CB = getvar('stat_data.Bonds') || {}, CST = getvar('stat_data.Campus_State') || {}, CUI = getvar('stat_data.$ui') || {};
+const CD = {"npcs":{"Zara":{"name":"Zara Minallone","first":"Zara","pron":"she/her","called":"Zara; full name Zara Minallone","who":"@YEAR@ student, Sky dorm.","never":"giving a second chance cheaply (Trust); revenge, rumours or any harm (when strained)","ties":[["Alyssa","friends",1],["Idris","friends",1],["Maple","friends",2],["Royhan","friends",1],["Vera","friends",1]],"secret":true,"nobond":false,"y":[1,1]}},"trust_bands":[[0,"Betrayed"],[15,"Doubtful"],[35,"Neutral"],[65,"Trusting"],[85,"Confidant"]],"tension_bands":[[0,"Calm"],[20,"Friction"],[40,"Strained"],[70,"Hostile"],[90,"Enemy"]],"change":{"Zara":"shaped"},"gifts":{"Zara":"Gifts: loves Bolt of Sky silk. Embroidery thread set. A library book she mentioned. Hates: Anything from the Doves (they burned her talismans)."},"voice":{"Zara":{"scenes":["Scene: {{user}} asks how a talisman works. She stops hunching. \"It's the stroke order, you see, the repulsion ward only holds if the last line closes the — \" She notices everyone listening and trails off. \"...Sorry. It's boring.\"","Scene: {{user}} praises a dress she designed. \"It's not — someone else drew most of it.\" The sketchbook disappears behind her back.","Scene: {{user}} stares at her too long. Sleeves come down over her hands, and she folds smaller until she is nearly under the table.","Scene: the Doves have burned her talismans again. She says nothing all evening and rewrites every one, pressing hard enough to tear the paper.","Scene: Alyssa has forgotten her again. \"Hi. I'm Zara. From your dorm.\" No complaint in it at all.","Scene: it is all too much. She is simply gone; later, someone sees her knitting on the highest library shelf."],"alone":[],"never_sounds":"loud, confident, sarcastic, eloquent on the first try; never talks about herself for long, never shouts even when furious.","term_used":"{{user}}: their name, with a little hesitation before it until Rank 4. Ruby: \"Ruby\". Vera: \"Vera\". Royhan and Idris: by name, and \"us\" once she is sure.","dont_flatten":"her shyness into having no opinions (she has strong ones and a quiet temper); her low self-esteem into constant apologising (she mostly just goes quiet); her kindness into a pushover (she is furious at the Doves, silently).","carries":"a roll of talisman paper, ink and a brush in her sleeve; a sketchbook she hides; knitting in her bag. Silver braids always neat, uniform always rumpled.","stages":{"0-2":"very few words; answers questions, asks none. Leaves as soon as she politely can.","3-5":"talks fast about talismans and fabric when asked, then trails off. Sits near {{user}} at meals. Makes {{user}} a small charm and pretends it is spare.","6-8":"shows {{user}} the sketchbook on purpose. Takes {{user}} up to the Rooftop. Admits the elders and wanting to prove them wrong. With {{user}} she stops hunching for whole conversations.","9-10":"argues with {{user}} when she thinks they are wrong, quietly and without backing down. Writes for {{user}}'s hand alone. Still shy in public; not with {{user}}."},"romance":"Tells {{user}} in writing first, then hides for a day. With {{user}} she stops hunching entirely; in public she holds their sleeve instead of their hand. Draws them constantly and shows them none of it.","anchor":"her two silver braids. She redoes them every morning with care, and touches the end of one when she needs courage."}},"branch":{"Zara":"C"}};
+const CSECR = [...new Set([...(CUI.secrets || []), ...(CST.Secrets_revealed || [])].map(x => String(x)))];
+const cBand = (bands, x) => (bands || [[0, '']]).reduce((a, [f, nm]) => (x >= f ? nm : a), '');
+const cStat = id => { const N = CST.NPC_status || {}; const k = Object.keys(N).find(x => x.toLowerCase() === id.toLowerCase() || x.toLowerCase().split(/\s+/)[0] === id.toLowerCase()); return k ? N[k] : ''; };
+const cLore = id => { const L = CST.Lore_changes || {}, c = CD.npcs[id] || {}, ks = [id, c.name, c.first].filter(Boolean).map(x => String(x).toLowerCase()); const k = Object.keys(L).find(x => ks.includes(String(x).trim().toLowerCase().replace(/^the\s+/, '').replace(/\s+/g, ' '))); return k && L[k] && L[k].Now ? '[Changed in this campaign' + (L[k].Since ? ', ' + L[k].Since : '') + (L[k].Until ? ', until ' + L[k].Until : '') + '; this overrides the lore] ' + L[k].Now : ''; };
+const CYR = Math.max(1, Number((getvar('stat_data.World') || {}).Year) || 1), CGRAD = CST.Graduated || [];
+const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, c.y[0] + CYR - c.y[1]) + ' student');
+const cTies = c => (c.ties || []).filter(t => t[2] <= CYR).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHead = (id, full) => {
+  const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
+  out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
+  const bond = b ? 'Bond with {{user}}: ' + cBand(CD.trust_bands, Number(b.Trust) || 0).toLowerCase() + ' trust, ' + cBand(CD.tension_bands, Number(b.Tension) || 0).toLowerCase() + ' tension.' : (c.nobond ? 'No bond system (rival academy).' : 'Not bonded yet: a stranger to {{user}} unless the story says otherwise.');
+  const v = (CD.voice || {})[id];
+  // 1.77.1 (audit 2026-10-21 U2): a bare "Carries:" read as "show it": Zara's hidden sketchbook was in 11 of her 14 replies
+  out.push('INVARIANTS: ' + c.pron + '. Called ' + c.called + '. ' + cWho(c) + ' ' + bond + (c.never ? ' Never: ' + c.never + '.' : '') + (ties ? ' Key ties: ' + ties + '.' : '')
+    + (v ? ' How they address people: ' + v.term_used + ' Carries (shown when the scene calls for it): ' + v.carries : ''));
+  const w = getvar('stat_data.World') || {};
+  if (c.y && c.y[0] + CYR - c.y[1] === 1 && +w.Month === 1 && +w.Week === 1 && w.Day === 'Mon')
+    out.push('Entrance-day newcomer: the listed dorm and any vest in later-life lore are eventual facts, not knowledge or clothing before their own Stone sorting. Before their turn they have no first-hand experience of Halvard rooms, teachers or new classmates unless a documented earlier relationship supplies it. After sorting, a Council member gives the vest.');
+  const pn = ((CUI.now || {}).people || {})[id];   // 1.56.0 (U2): the engine's lines for this person, one block, no numbers
+  if (pn && pn.length) out.push('Now with {{user}}:\n- ' + pn.join('\n- '));
+  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
+  const lc = cLore(id); if (lc) out.push(lc);
+  return out.join('\n');
+};
+const cTail = id => {   // may be '' (then the sheet ends with the lore or cMem)
+  const c = CD.npcs[id], got = CSECR.filter(x => x.toLowerCase().startsWith(id.toLowerCase() + '.'));
+  if (!c.secret && !got.length) return '';
+  return 'Secrets: '
+    + (got.length ? '{{user}} has uncovered: ' + got.map(x => x.slice(x.indexOf('.') + 1)).join(', ') + '. ' + c.first + ' knows {{user}} knows this and behaves accordingly.' : '{{user}} has uncovered none of them.');
+};
+const CW = getvar('stat_data.World') || {};
+const fxWords = fx => { const s = String(fx || ''), w = []; if (/Rank \d+ → /.test(s)) w.push('grew closer'); else if (/Rank fell/.test(s)) w.push('drifted apart'); if (/Trust −/.test(s)) w.push('trust shaken'); else if (/Trust \+/.test(s)) w.push('trust grew'); if (/Tension \+/.test(s)) w.push('tension rose'); else if (/Tension −/.test(s)) w.push('tension eased'); if (/romance/.test(s)) w.push('romance began'); return w.join(', '); };   // 1.56.0 (U2): a moment's effect in words, never numbers
+const ageOf = (w, W) => { const m = /(?:Y(\d+) )?M(\d{1,2}) W([1-4])(?: (Mon|Tue|Wed|Thu|Fri|Sat|Sun))?/.exec(String(w || '')); if (!m || !W || !W.Month) return ''; const D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], di = Math.max(0, D.indexOf(W.Day)), Y = Math.max(1, Number(W.Year) || 1), yl = m[1] ? Math.max(1, +m[1]) : Y; const far = n => (n < 2 ? 'over a year ago' : 'over ' + n + ' years ago'); if (!m[4]) { let k = ((Y - 1) * 48 + (W.Month - 1) * 4 + W.Week - 1) - ((yl - 1) * 48 + (+m[2] - 1) * 4 + +m[3] - 1); if (k < 0) { if (m[1]) return ''; k += 48; } if (k >= 48) return far(Math.floor(k / 48)); return k === 0 ? 'this week' : k === 1 ? 'last week' : k < 4 ? k + ' weeks ago' : k < 8 ? 'last month' : Math.floor(k / 4) + ' months ago'; } let d = ((Y - 1) * 336 + (W.Month - 1) * 28 + (W.Week - 1) * 7 + di) - ((yl - 1) * 336 + (+m[2] - 1) * 28 + (+m[3] - 1) * 7 + D.indexOf(m[4])); if (d < 0) { if (m[1]) return ''; d += 336; } if (d >= 336) return far(Math.floor(d / 336)); return d === 0 ? 'earlier today' : d === 1 ? 'yesterday' : d < 7 ? d + ' days ago' : d < 14 ? 'last week' : d < 28 ? Math.floor(d / 7) + ' weeks ago' : d < 56 ? 'last month' : Math.floor(d / 28) + ' months ago'; };
+const cAged = w => { const a = ageOf(w, CW); return a ? w + ', ' + a : w; };
+const cMem = (id, full) => {
+  const b = CB[id], out = [];
+  if (b && b.Mind) out.push('Their mind now: ' + b.Mind);
+  if (b && full && (b.Knows || []).length) out.push('What they know about {{user}} (nothing else, unless told or seen on-screen): ' + b.Knows.map(k => { const m = /^\[([^\]]+)\]\s*/.exec(k); return m ? '[' + cAged(m[1]) + '] ' + k.slice(m[0].length) : k; }).join(' | '));
+  if (b && (b.Imprints || []).length) out.push('Imprints (the only things that have changed who they are): ' + b.Imprints.map(x => '"' + x.Belief + '" (weight ' + x.Weight + (x.When ? ', ' + cAged(x.When) : '') + (x.From ? '; from ' + x.From : '') + (x.Was ? '; replaced "' + x.Was + '"' : '') + ')').join('; '));
+  // 1.64.0 (memory audit M6): Journal lines about them that left the narrator's view (the engine picks them, $ui.now.earlier)
+  const ea = full && ((CUI.now || {}).earlier || {})[id];
+  if (ea && ea.length) out.push('Earlier, from the record (Journal lines that name them, older than the Journal): ' + ea.join(' | '));
+  if (b && full && (b.$Defining || []).length) out.push('Defining moments with {{user}}: ' + b.$Defining.map(r => { const f = fxWords(r.fx); return '[' + cAged(r.w) + '] ' + r.n + (f ? ' (' + f + ')' : ''); }).join(' | '));
+  if ((CD.change || {})[id]) out.push('Change: ' + CD.change[id]);
+  return out.join('\n');
+};
+const cBandOf = r => (r <= 2 ? '0-2' : r <= 5 ? '3-5' : r <= 8 ? '6-8' : '9-10');
+const cVoice = (id, full) => {
+  const v = (CD.voice || {})[id]; if (!v) return '';
+  const r = Math.max(0, Math.min(10, Number((CB[id] || {}).Rank) || 0)), out = [];
+  if (full) {
+    out.push('Voice examples:');
+    for (const x of v.scenes) out.push('- ' + x);
+    if ((v.alone || []).length) out.push('<narrator_only>\nAlone (the mask off; {{user}} never sees this unless the story earns it):\n' + v.alone.map(x => '- ' + x).join('\n') + '\n</narrator_only>');
+    out.push('Never sounds like: ' + v.never_sounds);
+    out.push("Don't flatten: " + v.dont_flatten);
+  }
+  out.push('Stage with {{user}}: ' + v.stages[cBandOf(r)]);
+  // 1.6.8 (owner): from Rank 8 the branch adds one line; a best friendship adds none
+  const b = CB[id] || {};
+  if (b.Romance && v.romance) out.push('Romance with {{user}}: ' + v.romance);
+  else if (b.$branch === 'rival' && v.rival) out.push('Sworn rival of {{user}}: ' + v.rival);
+  // 1.6.9 (bug hunt): a character whose canon has no romance branch (B, D) is told so before the story gets there, so the prose
+  // never writes a romance the engine refuses to record (a romance kept from an older save stays)
+  if (!b.Romance && r >= 6 && 'BD'.includes((CD.branch || {})[id] || 'A')) out.push('Not a romance: ' + CD.npcs[id].first + ' does not become {{user}}\'s romance. If {{user}} tries, they react as themselves.');
+  // 1.7.0 (cohort 2): a line for this week of the campaign year (Nerys's hobby). Pinned weeks follow the calendar; the other weeks
+  // shift by wk.shift slots each campaign year after her first (a revival season); from wk.choose_from {{user}} may pick instead
+  const wk = (CD.weekly || {})[id];
+  if (wk) {
+    const i = (Math.min(12, Math.max(1, Number(CW.Month) || 1)) - 1) * 4 + Math.min(4, Math.max(1, Number(CW.Week) || 1)) - 1, later = CYR > wk.first_year;
+    const free = wk.lines.map((_, j) => j).filter(j => !wk.pinned.includes(j));
+    const line = wk.pinned.includes(i) ? wk.lines[i] : wk.lines[free[(free.indexOf(i) + Math.max(0, CYR - wk.first_year) * wk.shift) % free.length]];
+    out.push(wk.label + ': ' + line + (later ? ' (' + wk.revival + ')' : '') + (r >= wk.choose_from ? ' (unless {{user}} chose one; then theirs)' : ''));
+  }
+  if (full) out.push('Anchor: ' + v.anchor);
+  return out.join('\n');
+};
+_%>
+<%_ if (FULL.includes('Zara')) { _%>
+<%- cHead('Zara', true) %>
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Zara')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>, {{user}}'s year.
+Appearance: Silver hair in two careful braids (the one thing about herself she takes pride in), red eyes, very tall for an elf and always hunched to hide it. Her blue vest and blouse are baggy, so she always looks rumpled.
+Magic: Occult — Talisman and Exorcism. Writes paper charms holding stored spells: protective charms, repulsion charms, and exorcism charms meant to incapacitate. Fights from range with prepared talismans; weak without them.
+Skills: Calligraphy, writing, sewing and clothes design. Moves almost silently.
+Backstory: From a forest elf clan whose elders still hold that Occult magic is unclean. When the Arbiter Stone placed her in Sky, the elders made their disapproval plain, but her parents write to her in secret. Her shyness is simply who she has always been. She quietly wants to prove the elders wrong.
+Now: Her first weeks at Halvard have been awkward. She eats after everyone else, reads on the library's highest shelves where no one sees her, and earns points writing talismans and calligraphy commissions for clubs. She designs beautiful clothes but cannot bear to wear them.
+Personality: Low self-esteem, kind, generous, friendly once safe, awkward, shy. Goes silent and hunches smaller when uncomfortable. Passionate about her interests once someone asks.
+Loves: The library. Designing clothes. Sitting by a fire.
+Hates: Wearing the clothes she makes. Being stared at. The Doves: they search her talismans every week and once burned a whole stack as "suspicious". She is furious about it, silently.
+Goals: Get through her studies, master her magic, prove the elders wrong.
+Relations: Has started trailing after Royhan and Idris, the other Sky outcasts, in the Gardens.
+Club: Tailoring Club.
+Speech: Soft, halting and awkward; loses words mid-sentence and simply goes quiet.
+Emotional tells: Happiness is small and easy to miss: she stops hunching, and talks faster than usual about a talisman or a dress design until she notices and trails off. Discomfort makes her silent and smaller, sleeves pulled over her hands. Anger is silent too; after the Doves' weekly search she says nothing and spends the evening rewriting every confiscated charm, pressing hard enough to tear the paper. Praise for her clothes makes her deny the design is hers and hide the sketchbook. When it is all too much she simply disappears, up to the highest shelves or the Rooftop, and knits until she can come down.
+Vera Pulsar, a first-year in Viridian, has taken her on as a lab partner and become an unlikely friend: Vera asks blunt, fascinated questions about her talismans and never once about her being strange. It is the kindest thing anyone at Halvard has done for her.
+<narrator_only>Her Exorcism work means she is one of the few students who might sense a curse laid by someone else. She has not noticed anything. Yet.</narrator_only>
+Ruby Bonbon, a third-year in her dorm, greeted her in her first week and never stopped. She is the reason Zara, Idris, and Royhan ended up gathering together at all.
+Haunts: Library highest shelves (takes shelving work), Workshop. Makes talisman charms for the Founder's Hand queue.
+Goes up to the Rooftop to be alone; Ruby Bonbon showed her the way in her first month. She knits there in silence, watching the whole academy spread out below.
+Hates the Third Stall story; the Bathhouse is otherwise a place she trusts. Sleeps on the highest Library shelves where few can wake her.
+With Royhan and Idris, part of the Sky outcast trio that gathers in the Gardens.
+Alyssa Edelweiss, in her dorm and year, forgets her every week; Zara reintroduces herself each time without complaint, and has shown her the way up to the Rooftop four times.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+Sits next to Maple Fernhollow in the Canteen, a first-year in her dorm who everyone else gives a wide berth. Neither of them says much. Neither needs to.
+<%_ } _%>
+<%_ const _tZara = [cVoice('Zara', true), cTail('Zara'), cMem('Zara', true)].filter(Boolean).join('\n'); if (_tZara) { _%>
+<%- _tZara %>
+<%_ } _%>
+<%_ } else if (BRIEF.includes('Zara')) { _%>
+<%- [cHead('Zara', false), cVoice('Zara', false), cMem('Zara', false)].filter(Boolean).join('\n') %>
+<%_ } _%>

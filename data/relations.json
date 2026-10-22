@@ -1181,6 +1181,21 @@
  },
  {
   "from": "Caine",
+  "to": "Cyprien",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
   "to": "Dante",
   "types": [
    "dislike"
@@ -1359,6 +1374,21 @@
  },
  {
   "from": "Caine",
+  "to": "Hibiki",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
   "to": "Idris",
   "types": [
    "dislike"
@@ -1404,7 +1434,37 @@
  },
  {
   "from": "Caine",
+  "to": "Kamran",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
   "to": "Kanae",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Kazimir",
   "types": [
    "dislike"
   ],
@@ -1524,6 +1584,21 @@
  {
   "from": "Caine",
   "to": "Lucius",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Lucrezia",
   "types": [
    "dislike"
   ],
@@ -1899,6 +1974,21 @@
  {
   "from": "Caine",
   "to": "Vera",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "Hates: Nobles. Mages. Himself, for being one, though he would never say so."
+  ],
+  "visibility": "rank:3",
+  "rule": "caine_mages",
+  "rule_label": "Mages",
+  "via": "Caine"
+ },
+ {
+  "from": "Caine",
+  "to": "Vesna",
   "types": [
    "dislike"
   ],
@@ -2448,6 +2538,19 @@
   ],
   "visibility": "public",
   "via": "Cedric"
+ },
+ {
+  "from": "Cyprien",
+  "to": "Lucrezia",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "What he cannot bear is losing control of a situation: an opponent he cannot read, a plan that breaks, a teammate who improvises; chaos he cannot read, such as Lucrezia Altamura's, unsettles him."
+  ],
+  "visibility": "rank:2",
+  "via": "Cyprien"
  },
  {
   "from": "Dante",
@@ -3108,6 +3211,7 @@
   ],
   "type": "protective",
   "notes": [
+   "In the competition before campaign Year 1, Gareth Valkaryn and Lucius Vortigern were the strongest in Eldrasil on paper; on the field Lucius's swarm ate Gareth's fire, and Yozakura took the title.",
    "Considers Gareth Valkaryn, whom he taught as a first-year two years ago, the most gifted student he has taught in two decades, and cannot decide whether the boy is brilliant or hollow."
   ],
   "visibility": "public",
@@ -5072,6 +5176,19 @@
   ],
   "visibility": "rank:1",
   "via": "Linus"
+ },
+ {
+  "from": "Lucrezia",
+  "to": "Vera",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike",
+  "notes": [
+   "If she meets Vera Pulsar of Halvard: a middle-layer clockmaker's daughter who left Caelmar and is happy, the most irritating kind of good person there is."
+  ],
+  "visibility": "rank:2",
+  "via": "Lucrezia"
  },
  {
   "from": "Magnus",
@@ -7969,6 +8086,20 @@
  },
  {
   "from": "Vera",
+  "to": "Lucrezia",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "she knows the Altamura name the way everyone below the clouds knows the names above, with respect and a little fear.",
+   "If she ever sees Serafino at work, she will be enchanted by the engineering and appalled by what it is for."
+  ],
+  "visibility": "rank:1",
+  "via": "Vera"
+ },
+ {
+  "from": "Vera",
   "to": "Milena",
   "types": [
    "respect"
@@ -8009,6 +8140,19 @@
   ],
   "visibility": "rank:2",
   "via": "Vera"
+ },
+ {
+  "from": "Vesna",
+  "to": "Kazimir",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "Colonel Kazimir Zorin, the coach, is the one she obeys, always."
+  ],
+  "visibility": "rank:4",
+  "via": "Vesna"
  },
  {
   "from": "William",

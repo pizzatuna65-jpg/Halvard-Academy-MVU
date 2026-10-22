@@ -21,7 +21,7 @@ const meet = ids => ({ op: 'replace', path: '/Scene/Present', value: Object.from
 const xpr = (S, r) => S.Player.Profile.Reputation.$xp[r];
 
 // ---- every bonded NPC has a category or an override; the owner's placements
-const bonded = Object.entries(npcs).filter(([, n]) => !/team$/.test(n.group || '')).map(([k]) => k);
+const bonded = Object.entries(npcs).filter(([, n]) => !/team$|^World teams$/.test(n.group || '')).map(([k]) => k);   // 1.97.2: the World teams have no bond
 ok(bonded.length === 59 && bonded.every(k => TEN.npcs[k] || TEN.overrides[k]), 'all 59 bonded NPCs have a category or an override');
 ok(TEN.npcs.Milena === 'social' && ['Castor', 'Dante', 'Gareth', 'Krieg'].every(k => TEN.npcs[k] === 'dangerous') && TEN.overrides.Kanae && TEN.overrides.Kanae.exempt && TEN.overrides.Althair.lock, "owner's placements: Milena social; Castor, Dante, Gareth dangerous; Kanae and Althair overrides");
 

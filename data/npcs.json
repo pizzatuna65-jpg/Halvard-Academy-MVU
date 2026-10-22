@@ -1465,6 +1465,11 @@
     "rank": 5
    },
    {
+    "label": "World Competition",
+    "text": "also coaches Eldrasil's national four abroad. In the competition before campaign Year 1, Gareth Valkaryn and Lucius Vortigern were the strongest in Eldrasil on paper; on the field Lucius's swarm ate Gareth's fire, and Yozakura took the title. Since then, at his urging, the panel picks the four for how they fight together, not only for who is strongest: he knows an army wins because its soldiers cover each other.",
+    "rank": 3
+   },
+   {
     "label": "Haunts",
     "text": "Combat Grounds, Faculty Offices, his office library; Study Rooms when the Library is crowded; the Workshop to test counter-spells.",
     "rank": 1
@@ -3354,6 +3359,11 @@
     "label": "Backstory",
     "text": "Youngest of three in a family of clockmakers and instrument-makers, and the only mage among them. The family came to Caelmar as immigrants and kept a shop on one of its middle layers, where Vera was born, before settling in a mid-sized town in Eldrasil when she was twelve. She grew up taking apart everything in the workshop and putting most of it back together. Her parents are proud, baffled, and entirely used to her; they send her spare parts by the crate.",
     "rank": 2
+   },
+   {
+    "label": "Caelmar",
+    "text": "she knows the Altamura name the way everyone below the clouds knows the names above, with respect and a little fear. If she ever sees Serafino at work, she will be enchanted by the engineering and appalled by what it is for.",
+    "rank": 1
    },
    {
     "label": "Method",
@@ -5764,6 +5774,514 @@
     "label": "Birthday",
     "text": "M9 W1 Thu",
     "rank": 1
+   }
+  ],
+  "arrives": 1
+ },
+ "Hibiki": {
+  "id": "Hibiki",
+  "name": "Hibiki Kurenai",
+  "uid_card": 388,
+  "keys": [
+   "Hibiki",
+   "Kurenai"
+  ],
+  "academy": "Yozakura",
+  "group": "World teams",
+  "dorm": null,
+  "dorm_color": "#6b6b7b",
+  "year": 2,
+  "race": "Human",
+  "beast": null,
+  "gender": "M",
+  "hair": "Human",
+  "impression": "wild red hair",
+  "public_tags": [
+   "laid-back",
+   "Captain",
+   "the team's ace"
+  ],
+  "team_role": "Attack",
+  "nickname": null,
+  "portrait": "portraits/hibiki.webp",
+  "thumb": "thumbs/hibiki.webp",
+  "focus": [
+   61.7,
+   28.5
+  ],
+  "has_secret": false,
+  "fields": [
+   {
+    "label": "Role",
+    "text": "Student, a Yozakuran academy. Second year, age 19. Human. Captain and ace of Yozakura's national four, the World champions.",
+    "rank": 0
+   },
+   {
+    "label": "Appearance",
+    "text": "Thick, bright red hair, long, huge and messy, that makes him look wild. Round black sunglasses, worn day and night. Long drops of carved wood, lacquered shrine-red, hanging from both ears. A small fang shows on the right when he grins, which is most of the time. A black kimono with red accents and a plain white sash, the captain's band on his left bicep, and a wooden katana propped on his shoulder.",
+    "rank": 0
+   },
+   {
+    "label": "Family",
+    "text": "Son of a family of temple carpenters. His father carved the earrings from offcuts of shrine timber and lacquered them the red of the shrine gates, and carved the wooden katana too.",
+    "rank": 4
+   },
+   {
+    "label": "Magic",
+    "text": "Mystic — Reality Breaking.",
+    "rank": 1
+   },
+   {
+    "label": "Personality",
+    "text": "Goofy, cheerful, lively and free-spirited, and a visionary with the charisma to make people follow him. Laid back in the truest sense: nothing makes him panic. The arena can be coming apart, his crystal cracking, his team down, and he will still be grinning and joking, because he has already seen the shape of the fight and where it breaks. His calm is the team's calm.",
+    "rank": 2
+   },
+   {
+    "label": "Goals",
+    "text": "Win the World Competition again. See what is on the other side of the cracks he makes, one day.",
+    "rank": 2
+   },
+   {
+    "label": "Relations",
+    "text": "Jin Tachibana guards him and despairs of him; Hibiki calls him \"the responsible one\" to his face. Nanami Oribe's drum is what keeps his legs moving, and he pays her in sweets. Sora Kanzaki makes him eat breakfast. Coach Mibu drills his body every morning, knows it will never be strong, and trains his throwing arm as hard as his legs.",
+    "rank": 4
+   },
+   {
+    "label": "Speech",
+    "text": "Easy, warm and unhurried; jokes about everything, including his own legs, and never raises his voice. \"Relax. It's only the end of the world. I've broken worse.\"",
+    "rank": 1
+   },
+   {
+    "label": "Notes",
+    "text": "- The crack: with a swing of his katana he cracks reality in front of him. Whatever was happening there is undone, a spell, a barrier, a blow in flight, and the broken reality goes off in a huge shockwave, like an explosion. It undoes, it does not delete: an effect is reversed as if it had never happened, but a thing that exists stays what it is (a finished puppet is still a puppet), and the mana a caster spent on the undone spell stays spent, since mana that has left a body never returns to it. - Scale: the bigger the swing, the bigger the crack. - Mana: his pool is so vast that magic this costly feels to him like any other spell. - Before campaign Year 1: his cracks undid Lucius Vortigern's swarm and Gareth Valkaryn's firestorm alike in the World final, and nobody had seen either stopped before. - Pebbles: his cheeky method. He picks up a pebble and throws it; where it lands near a target, reality cracks and the shockwave goes off there. - Weakness: the one thing he needs is the swing. Like breaking glass, it takes a real blow: his fists are not strong enough, and his body is weak, well below average. A run around a dungeon leaves him out of breath before he has met the monster. Keep him moving, keep him running, and he will be too tired to lift the sword.",
+    "rank": 2
+   }
+  ],
+  "arrives": 1
+ },
+ "Vesna": {
+  "id": "Vesna",
+  "name": "Vesna Zvezdova",
+  "uid_card": 389,
+  "keys": [
+   "Vesna",
+   "Zvezdova"
+  ],
+  "academy": "Norvaine",
+  "group": "World teams",
+  "dorm": null,
+  "dorm_color": "#6b6b7b",
+  "year": 1,
+  "race": "Human",
+  "beast": null,
+  "gender": "F",
+  "hair": "pink",
+  "impression": "sunny",
+  "public_tags": [
+   "any role"
+  ],
+  "team_role": "Control",
+  "nickname": null,
+  "portrait": "portraits/vesna.webp",
+  "thumb": "thumbs/vesna.webp",
+  "focus": [
+   50.2,
+   31.6
+  ],
+  "has_secret": true,
+  "fields": [
+   {
+    "label": "Role",
+    "text": "Student, a Norvaine war academy. First year, age 18. Human. Norvaine's national four, by her competition papers: whatever role the fight needs.",
+    "rank": 0
+   },
+   {
+    "label": "Appearance",
+    "text": "Small and light on her feet. Long pink hair streaked with fine white strands, the pink always winning, worn loose or in two black ribbons somebody else tied for her, and a starglass pin at her collar through which the Colonel's voice reaches her. Bright purple eyes that go wide at everything new. Norvaine's grey team greatcoat with the sleeves too long, and a smile that arrives before she does.",
+    "rank": 0
+   },
+   {
+    "label": "Magic",
+    "text": "Creation, of a kind nobody else has.",
+    "rank": 1
+   },
+   {
+    "label": "Skills",
+    "text": "Trained since childhood to be good at everything a weapon might need, she reads, calculates, brews, mends, tracks and studies better than any student her age.",
+    "rank": 1
+   },
+   {
+    "label": "Personality",
+    "text": "Innocent, childish, and full of an optimism and affection nothing seems to dent. She hugs people she met five minutes ago, cries at kind words, names every animal she sees, and believes everyone is a friend she has not made yet. Everything ordinary is new to her: a school bell, a lunch shared at a table, a classroom joke. Raised as a weapon, she believes someone as strong as she is could never live an ordinary life. On combat duty she is someone else: the smile goes, and a still, somber face takes its place; no hesitation, no mercy, no waste. She does not hate anyone she fights; it is simply the job, and she is very good at it.",
+    "rank": 2
+   },
+   {
+    "label": "Loves",
+    "text": "anything about school life: uniforms, timetables, bells, sharing lunch, clubs, festivals; sweets; being praised and having her head patted; animals; growing things; people who talk to her like a girl and not a weapon.",
+    "rank": 2
+   },
+   {
+    "label": "Hates",
+    "text": "white rooms and needles; being alone in silence; being told to wait; being called by a number; anyone being sad near her (she will try to fix it at once, badly).",
+    "rank": 2
+   },
+   {
+    "label": "Emotional tells",
+    "text": "hums when happy, which is nearly always; the smile drops and her face goes still and somber at the word \"duty\"; hugs harder when she is frightened and will not say so.",
+    "rank": 2
+   },
+   {
+    "label": "Goals",
+    "text": "Make Norvaine proud by proving she is the strongest of her generation; see what a real school day is like.",
+    "rank": 2
+   },
+   {
+    "label": "Backstory",
+    "text": "An orphan from Norvaine who \"works for the army\"; she says so cheerfully and will not say more. She has never been to school.",
+    "rank": 4
+   },
+   {
+    "label": "Relations",
+    "text": "Colonel Kazimir Zorin, the coach, is the one she obeys, always. She has no bond with anyone on her team: Radomir, Mirko and Yarina resent her for taking their ace's place, suspect her, and envy her. She is as sunny to them as to anyone, and when they do not smile back she does not seem to mind; she has never expected a teammate to.",
+    "rank": 4
+   },
+   {
+    "label": "Speech",
+    "text": "Bright, quick, a little too loud; calls people by doubled pet names; asks questions in strings (\"Is this a school thing? Do you do this every day? Can I try?\"). On duty: short, flat, polite. \"Understood. Target confirmed.\"",
+    "rank": 1
+   },
+   {
+    "label": "Notes",
+    "text": "- Pure mana: she does not cast from a type. She gathers the raw mana around her and shapes it into whatever she needs: fire, ice, a healing light, a spirit's shape, a wall, chains, a blade. Elemental, Mystic, Spiritual or Occult, she can make any of it. - Any role: because she can make anything, she fills any combat role and switches mid-fight: attacker one moment, shield or healer the next. - Weakness: she draws on the mana around her, not her own. Where ambient mana is thin she is thin too, and the more complex the working, the more mana it eats. On a battlefield thick with spellwork, or at the World Competition among the best mages of a generation, that weakness hardly exists.",
+    "rank": 2
+   }
+  ],
+  "arrives": 1
+ },
+ "Kazimir": {
+  "id": "Kazimir",
+  "name": "Kazimir Zorin",
+  "uid_card": 390,
+  "keys": [
+   "Kazimir",
+   "Zorin",
+   "Colonel Zorin",
+   "Shrouds",
+   "Bessmertnik",
+   "Tishina"
+  ],
+  "academy": "Norvaine",
+  "group": "World teams",
+  "dorm": null,
+  "dorm_color": "#6b6b7b",
+  "year": null,
+  "race": "Human",
+  "beast": null,
+  "gender": "M",
+  "hair": "cyan",
+  "impression": "cold",
+  "public_tags": [
+   "Coach"
+  ],
+  "team_role": null,
+  "nickname": null,
+  "portrait": "portraits/kazimir.webp",
+  "thumb": "thumbs/kazimir.webp",
+  "focus": [
+   52.5,
+   22.2
+  ],
+  "has_secret": true,
+  "fields": [
+   {
+    "label": "Role",
+    "text": "Coach of Norvaine's national four; a colonel of the Norvaine army and the scientist behind Project Bessmertnik. Age 34. Human, without magic.",
+    "rank": 0
+   },
+   {
+    "label": "Appearance",
+    "text": "Tall and spare, and he looks a decade younger than thirty-four. Cyan hair in a medium-long layered wolf cut, long bangs framing a narrow face; crimson eyes that rest on people the way one reads an instrument. A Norvaine officer's grey greatcoat, gloves always on, a chain under the collar.",
+    "rank": 0
+   },
+   {
+    "label": "Personality",
+    "text": "Cold, pragmatic, and cruel out of indifference rather than malice: people are variables, and he has never once been troubled by what an experiment cost. A genius whose single ambition is to create the strongest being there is. He does not shout, threaten or gloat; he observes, adjusts and records. Praise from him is a measurement. A weapon that loses is a failed prototype, and he discards failures without a second look.",
+    "rank": 2
+   },
+   {
+    "label": "Magic",
+    "text": "none. He has never needed it; he has the Shrouds, and his own devices.",
+    "rank": 1
+   },
+   {
+    "label": "Equipment",
+    "text": "the project's anti-mage devices, built as a contingency in case Vesna ever turns on him while the egg is not in his hands.",
+    "rank": 1
+   },
+   {
+    "label": "The Shrouds",
+    "text": "assassins in grey hooded cloaks, faces never seen, who obey him without a word. They stand at the edge of every room he is in, and at the World Competition they pass for his staff. Nobody has heard one speak.",
+    "rank": 2
+   },
+   {
+    "label": "Speech",
+    "text": "Quiet, precise, clinical. Calls Vesna \"the asset\" in his reports and \"Vesna\" only to give an order. \"Vesna. Duty.\"",
+    "rank": 1
+   },
+   {
+    "label": "Relations",
+    "text": "Vesna Zvezdova obeys him; \"duty\" in his voice is the word that turns her from a child into a weapon. Radomir Sokolov captains the four on the field and reports to him; the team resents him as much as Vesna, since he replaced their own coach the day she joined.",
+    "rank": 4
+   },
+   {
+    "label": "Notes",
+    "text": "- Stun pistol: fires stun rounds at range; a hit locks a mage's body for a few breaths, long enough for a Shroud to close in. - The Tishina cuff (Slavic for \"silence\"), on his left wrist: raises a barrier that scrambles the mana around him, so every spell cast inside it runs unstable, sputters or goes wild. It is the answer to Vesna's one weakness: the ambient mana she shapes becomes unusable. - Bogatyr serum (after the warriors of Norvaine's old tales): a body-strengthening injection, usually given to a Shroud before a fight; cornered, he uses it on himself.",
+    "rank": 2
+   }
+  ],
+  "arrives": 1
+ },
+ "Lucrezia": {
+  "id": "Lucrezia",
+  "name": "Lucrezia Altamura",
+  "uid_card": 391,
+  "keys": [
+   "Lucrezia",
+   "Altamura",
+   "Serafino"
+  ],
+  "academy": "Caelmar",
+  "group": "World teams",
+  "dorm": null,
+  "dorm_color": "#6b6b7b",
+  "year": 1,
+  "race": "Human",
+  "beast": null,
+  "gender": "F",
+  "hair": "ash-grey",
+  "impression": "gleeful",
+  "public_tags": [
+   "the team's ace"
+  ],
+  "team_role": "Control",
+  "nickname": null,
+  "portrait": "portraits/lucrezia.webp",
+  "thumb": "thumbs/lucrezia.webp",
+  "focus": [
+   56.3,
+   43.1
+  ],
+  "has_secret": false,
+  "fields": [
+   {
+    "label": "Role",
+    "text": "Student, a Caelmari academy. First year, age 18. Human. Control and the ace of Caelmar's national four.",
+    "rank": 0
+   },
+   {
+    "label": "Appearance",
+    "text": "Long, straight ash-grey hair with a black ribbon in it; dark grey eyes, and a wide, bright smile. Gothic lolita with Victorian elegance: a white blouse with frilled cuffs, a black laced corset, a black bow at her collar pinned with a small skull, and layered white skirts edged in striped frills. It belongs to no academy in Caelmar, and somehow her team has never once objected.",
+    "rank": 0
+   },
+   {
+    "label": "Family",
+    "text": "The Altamura live on the highest layers, above the clouds, a step below the king. She has never lacked anything, and that is the problem.",
+    "rank": 4
+   },
+   {
+    "label": "Magic",
+    "text": "Mystic — Puppetry of her own make: puppets built from mana and worked on mana strings.",
+    "rank": 1
+   },
+   {
+    "label": "Personality",
+    "text": "High chaos, unpredictable, sadistic, and driven by amusement. Everyone is beneath her, and the only question is whether they are entertaining. She loathes virtue and every cliché of the good guy: chosen heroes, speeches about friendship and believing in yourself, the underdog who wins because he deserves it, the noble rival who spares his enemy, anyone who admires the Four Who Saved the World. Nothing delights her more than watching one of those break.",
+    "rank": 2
+   },
+   {
+    "label": "Backstory",
+    "text": "Raised on Caelmar's highest layer, bored to the bone with being highborn. In Caelmar the academies' competitions are where the low-born fight and the high-born watch for fun; she grew tired of watching, enrolled at an academy, and walked into the competition herself, the first highborn on the field in living memory. Her teammates fight to climb a layer; she fights because it is the best seat in the house.",
+    "rank": 4
+   },
+   {
+    "label": "Law",
+    "text": "working a living body against its will is Puppetry, a forbidden art in Eldrasil. Caelmar's high-born do not enforce that law on their own, and the World Competition judges only the crystals; inside Eldrasil, her strings on a person are still a crime.",
+    "rank": 2
+   },
+   {
+    "label": "Relations",
+    "text": "her teammates are low-born, and to her that makes them pieces. Rocco Malvezzi is captain in name and her favourite toy: he hates being strung, and has never once managed to stop it. Domenico Conti is furniture she moves where she needs it. Nina Scarpa watches her all the time, which Lucrezia finds sweet. Coach Ferrata owns the team and has learned not to give her orders, only suggestions.",
+    "rank": 4
+   },
+   {
+    "label": "Speech",
+    "text": "Sweet, lilting and theatrical; laughs at the wrong moments; calls people \"little doll\"; narrates someone else's suffering as if it were a play. \"Oh, don't stop now. This is the best part.\"",
+    "rank": 1
+   },
+   {
+    "label": "Notes",
+    "text": "- Puppets: she builds a puppet with mana; once finished it is a construct, a real thing and no longer a spell, and she works it on strings. The longer she spends designing one, the stronger it is. Her strongest is Serafino: a tall, thin mechanical humanoid of golden metal with a smooth golden mask for a face, in a long black coat lined with red, long-clawed arms, long slender legs, and a great wheel of turning gears behind its head like a halo. - Stored months: her mana is the smallest of any team's ace, and it does not make her weaker. Other aces fight with what they can pour out on the day; she fights with what she poured into her puppets day after day, for months, before the match. On the field she brings months of output against one day's. - Strings: the strings themselves are the real danger. She can fasten them to any object, or to a living body, teammate or enemy, and move it as she likes. A puppet costs mana only to build and nothing to keep; the strings cost mana to cast and to hold. - Weakness: strings travel slowly and are easy to dodge; and a string fastened to someone whose mana outweighs hers can be torn off by force. The ace of every other team outweighs her; nobody on her own team does. - Against the other aces: a finished puppet is a thing, not a spell, so a swarm that eats magic eats only its strings, a venom does nothing to it, and a crack in reality cannot unmake it. Her strings cannot hold a Greater Spirit such as Orochi, whose mana is far above hers. If she meets Vera Pulsar of Halvard: a middle-layer clockmaker's daughter who left Caelmar and is happy, the most irritating kind of good person there is. Lucrezia would very much like to see her break.",
+    "rank": 2
+   }
+  ],
+  "arrives": 1
+ },
+ "Kamran": {
+  "id": "Kamran",
+  "name": "Kamran Zarrin",
+  "uid_card": 392,
+  "keys": [
+   "Kamran",
+   "Zarrin"
+  ],
+  "academy": "Arslan",
+  "group": "World teams",
+  "dorm": null,
+  "dorm_color": "#6b6b7b",
+  "year": 2,
+  "race": "Human",
+  "beast": null,
+  "gender": "M",
+  "hair": "black",
+  "impression": "courteous",
+  "public_tags": [
+   "the team's ace"
+  ],
+  "team_role": "Defense",
+  "nickname": null,
+  "portrait": "portraits/kamran.webp",
+  "thumb": "thumbs/kamran.webp",
+  "focus": [
+   47.7,
+   23.5
+  ],
+  "has_secret": true,
+  "fields": [
+   {
+    "label": "Role",
+    "text": "Student, an Arslani academy. Second year, age 19. Human. Defense and ace of the Arslan Sultanate's national four.",
+    "rank": 0
+   },
+   {
+    "label": "Appearance",
+    "text": "Tall and slim, immaculately dressed in white silk, black hair oiled back, warm brown skin, and eyes the dull gold of old coins. Every heir of the House of Zarrin carries its founding contract tattooed in gold ink, and his runs in fine script from his left wrist to his throat. Over his shoulders hangs an oversized, shaggy cloak of high-tier monster hide, far too heavy for anyone else to wear. Gold cuffs and fine gold chains at both wrists, and a red, gold-bound ledger on a chain at his wrist.",
+    "rank": 0
+   },
+   {
+    "label": "Family",
+    "text": "Heir of the House of Zarrin, one of the great lending houses of the World Bank. Half the crowns of the continent have signed something with his grandfather.",
+    "rank": 4
+   },
+   {
+    "label": "Magic",
+    "text": "Mystic — Transmutation, the Midas touch.",
+    "rank": 1
+   },
+   {
+    "label": "Personality",
+    "text": "Exquisitely polite, soft-spoken and never in a hurry, with the calm of someone who has never once been afraid of running out of money. He lends freely, grants favours to anyone who asks, and remembers every one. He hunts monsters in the Primal Desert for sport and wears the proof. He keeps one rule absolutely: gold is for things, never for people. Break a promise to him and he will be courteous about it for the rest of your life, which is worse.",
+    "rank": 2
+   },
+   {
+    "label": "Relations",
+    "text": "Shirin Tabrizi, his team's attacker, finds him insufferable; he walls her in gold whether she wants it or not. Omid Farzan is the captain and the one person Kamran has never let owe him anything. Nasrin Bahari owes him a sum she will not name, and both of them know it. The clerks of Halvard's Banking House answer to the Sultanate and know the Zarrin name.",
+    "rank": 4
+   },
+   {
+    "label": "Speech",
+    "text": "Gentle, formal, financial. \"That was a lovely spell. I'll put it on your account.\"",
+    "rank": 1
+   },
+   {
+    "label": "Notes",
+    "text": "- Gold: whatever his body touches becomes gold, razor-sharp and indestructible, for as long as his mana holds it; with an ace's reserves, that is a very long time. Living things too, but by his own rule only monsters: never an animal, never a person. - Two costs: every transmutation costs mana to make and mana to keep. The more he turns at once, and the bigger it is, the faster he empties. - Density: what a thing is made of matters as much as its size. The more mana packed into it, the more it costs him to turn and to hold: stone and steel are cheap, an enchanted blade dear, and a mana-dense thing such as a master's puppet or an old artifact can cost more than his whole reserve, or hold only for moments. - Only his gold breaks gold, and only his will turns it back into what it was; the one exception is a crack in reality, which undoes the transmutation like any other effect. - The cloak: his favourite weapon. A touch, and it becomes a wall of gold, a golden scimitar, or a golden trident. - Loose gold: any gold of his lying near him floats on his mana and flies where he sends it. - The storm: his signature. He turns the ground under him to gold, shatters it with the trident, and sends the shards up as a storm of golden gravel sharp as razors. - Golden skin: his personal defence, and the reason he is called the strongest defender at the competition. The instant a blow that should be fatal lands, he turns himself to gold and takes it unscathed, then turns back. It works only within his perception: a blow he sees coming, he can meet in gold; a blitz faster than he can follow, or an attack he never noticed, still lands on flesh. - Weakness: all of it lives on his mana. Make him turn too much, or too big, and hold it too long, and when his mana runs dry every piece of gold he has made turns back at once: the wall, the trident, the storm. And he has to touch a thing to turn it; an opponent he can never reach faces only the gold already on the field.",
+    "rank": 2
+   }
+  ],
+  "arrives": 1
+ },
+ "Cyprien": {
+  "id": "Cyprien",
+  "name": "Cyprien of Velmora",
+  "uid_card": 393,
+  "keys": [
+   "Cyprien",
+   "Orochi"
+  ],
+  "academy": "Velmora",
+  "group": "World teams",
+  "dorm": null,
+  "dorm_color": "#6b6b7b",
+  "year": 3,
+  "race": "Human",
+  "beast": null,
+  "gender": "M",
+  "hair": "white-to-violet bob",
+  "impression": "commanding",
+  "public_tags": [
+   "Captain",
+   "a prince",
+   "the team's ace"
+  ],
+  "team_role": "Control",
+  "nickname": null,
+  "portrait": "portraits/cyprien.webp",
+  "thumb": "thumbs/cyprien.webp",
+  "focus": [
+   51.0,
+   27.6
+  ],
+  "has_secret": true,
+  "fields": [
+   {
+    "label": "Role",
+    "text": "Student, a Velmoran academy. Third year, age 20. Human. A prince of Velmora; captain, Control and ace of its national four.",
+    "rank": 0
+   },
+   {
+    "label": "Appearance",
+    "text": "Slender and upright, short hair in a sharp bob, white at the roots fading to violet at the tips; deep blue eyes, and a smile that is always a little too pleased. The academy's white formal coat with dark blue accents, white gloves, a long red ribbon pinned at his breast, and a thin silver rapier with a gilded hilt.",
+    "rank": 0
+   },
+   {
+    "label": "Family",
+    "text": "One of the King of Velmora's many children, and one of the favourites for the throne. Abroad he says only that his father is well.",
+    "rank": 4
+   },
+   {
+    "label": "Magic",
+    "text": "Occult — Spirit Pact with Orochi, a Greater Spirit: an eight-headed serpent, white-scaled over black, that can split itself into eight separate snakes. Each carries one of its eight venoms:",
+    "rank": 1
+   },
+   {
+    "label": "Skills",
+    "text": "Raised to rule a kingdom, and trained for it in everything a king might need: a master swordsman with the silver blade (Velmoran court fencing, precise and economical), a strategist who plans three moves past everyone else on the field, and fluent in law, diplomacy, history, etiquette and reading people. Without Orochi he is still one of the most dangerous duellists at the competition.",
+    "rank": 1
+   },
+   {
+    "label": "Personality",
+    "text": "Charismatic, intelligent, utterly sure of himself, manipulative, arrogant and elegant. Every room he enters is arranged around him within a minute, and he likes it that way. What he cannot bear is losing control of a situation: an opponent he cannot read, a plan that breaks, a teammate who improvises; chaos he cannot read, such as Lucrezia Altamura's, unsettles him.",
+    "rank": 2
+   },
+   {
+    "label": "Goals",
+    "text": "Win the World Competition, and carry the glory home to Velmora's court, where reputation is a weapon. Become king.",
+    "rank": 2
+   },
+   {
+    "label": "Relations",
+    "text": "Solenne Delaunay is sworn to his household and would die for him; he makes sure she knows he knows. Corentin Lemoine heals the team and adores him openly. Ysabeau Marchand laughs at his jokes and watches him the way he watches everyone.",
+    "rank": 4
+   },
+   {
+    "label": "Speech",
+    "text": "Smooth, unhurried, every sentence finished exactly as he planned it; addresses people by their full title; his compliments are instructions. \"You fought well. Now kneel, and it will stop hurting.\"",
+    "rank": 1
+   },
+   {
+    "label": "Notes",
+    "text": "- Paralysis: the bitten body locks. - Forgetting: the bitten mind loses what it was doing, the plan, sometimes the last hour. - Torment: pain without injury, for as long as the venom lasts. - Death: the venom that kills. - Numbing: takes pain away; used on his own side, or to let an enemy walk on an injury until it breaks. - Madness: fear and visions that turn a mage against their own team. - The slow venom: drains stamina so gradually the victim never notices until they fall. - The null venom: magic received stops working on the victim: healing does not take, buffs slide off. - Weakness: a summoned Orochi drains his mana the whole time it is present, more for every venom it spends; each snake has to bite to poison, and a snake killed in a fight takes from an hour to a week to call back. - The law: Poison magic is a forbidden art, but Orochi's venoms are a spirit's own gift through a lawful pact, as lawful as Lucius Vortigern's swarm. At the World Competition a crystal breaks before the killing venom can finish its work; every other venom is allowed, and that is why Velmora is feared.",
+    "rank": 2
    }
   ],
   "arrives": 1

@@ -1,5 +1,5 @@
 {
- "base_url": "https://cdn.jsdelivr.net/gh/pizzatuna65-jpg/eldrasil-assets@4620b2ce5c131cfb4ea58b3d56d8b7a22095da9e/",
+ "base_url": "https://cdn.jsdelivr.net/gh/pizzatuna65-jpg/eldrasil-assets@4d229ce592f9d7dd6532ad6a8488a294b735d478/",
  "npcs": {
   "Irene": {
    "uid": 98,
@@ -852,6 +852,78 @@
    ],
    "focus_source": "thumb crop",
    "source_file": "uploaded as WebP (assets commit f42990c)"
+  },
+  "Hibiki": {
+   "uid": 388,
+   "name": "Hibiki Kurenai",
+   "portrait": "portraits/hibiki.webp",
+   "thumb": "thumbs/hibiki.webp",
+   "focus": [
+    61.7,
+    28.5
+   ],
+   "focus_source": "thumb crop",
+   "source_file": "uploaded as WebP (assets commit 4d229ce)"
+  },
+  "Vesna": {
+   "uid": 389,
+   "name": "Vesna Zvezdova",
+   "portrait": "portraits/vesna.webp",
+   "thumb": "thumbs/vesna.webp",
+   "focus": [
+    50.2,
+    31.6
+   ],
+   "focus_source": "thumb crop",
+   "source_file": "uploaded as WebP (assets commit 4d229ce)"
+  },
+  "Kazimir": {
+   "uid": 390,
+   "name": "Kazimir Zorin",
+   "portrait": "portraits/kazimir.webp",
+   "thumb": "thumbs/kazimir.webp",
+   "focus": [
+    52.5,
+    22.2
+   ],
+   "focus_source": "thumb crop",
+   "source_file": "uploaded as WebP (assets commit 4d229ce)"
+  },
+  "Lucrezia": {
+   "uid": 391,
+   "name": "Lucrezia Altamura",
+   "portrait": "portraits/lucrezia.webp",
+   "thumb": "thumbs/lucrezia.webp",
+   "focus": [
+    56.3,
+    43.1
+   ],
+   "focus_source": "thumb crop",
+   "source_file": "uploaded as WebP (assets commit 4d229ce)"
+  },
+  "Kamran": {
+   "uid": 392,
+   "name": "Kamran Zarrin",
+   "portrait": "portraits/kamran.webp",
+   "thumb": "thumbs/kamran.webp",
+   "focus": [
+    47.7,
+    23.5
+   ],
+   "focus_source": "thumb crop",
+   "source_file": "uploaded as WebP (assets commit 4d229ce)"
+  },
+  "Cyprien": {
+   "uid": 393,
+   "name": "Cyprien of Velmora",
+   "portrait": "portraits/cyprien.webp",
+   "thumb": "thumbs/cyprien.webp",
+   "focus": [
+    51.0,
+    27.6
+   ],
+   "focus_source": "thumb crop",
+   "source_file": "uploaded as WebP (assets commit 4d229ce)"
   }
  },
  "map": "map/halvard_map.webp",

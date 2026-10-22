@@ -1,0 +1,119 @@
+@@if [...((getvar('stat_data.$ui.cast') || {}).full || []), ...((getvar('stat_data.$ui.cast') || {}).brief || [])].includes('Wren')
+<%_
+const CS = getvar('stat_data.$ui.cast') || {}, FULL = CS.full || [], BRIEF = CS.brief || [];
+const CB = getvar('stat_data.Bonds') || {}, CST = getvar('stat_data.Campus_State') || {}, CUI = getvar('stat_data.$ui') || {};
+const CD = {"npcs":{"Wren":{"name":"Wren Marlowe","first":"Wren","pron":"she/her","called":"Wren; full name Wren Marlowe","who":"@YEAR@ student, Fire dorm; Deaf, Fishing Club.","never":"pretending nothing happened (Trust); revenge, rumours or any harm (when strained)","ties":[["Alyssa","friends",1],["Linus","friends",2],["Maple","friends",2],["Rigel","friends",3],["Trixie","friends",1],["Tsubaki","friends",2],["Bruno","softspot",3],["Ottavio","respect",1]],"secret":false,"nobond":false,"y":[1,2]}},"trust_bands":[[0,"Betrayed"],[15,"Doubtful"],[35,"Neutral"],[65,"Trusting"],[85,"Confidant"]],"tension_bands":[[0,"Calm"],[20,"Friction"],[40,"Strained"],[70,"Hostile"],[90,"Enemy"]],"change":{"Wren":"shaped"},"gifts":{"Wren":"Gifts: loves Sweet bun. Letter paper set. Hand-Speech for Beginners (someone learning for her). Hates: Picture book for small children."},"voice":{"Wren":{"scenes":["Scene: {{user}} says hello from behind her. Nothing. They step round to face her, and her whole face lights up. She writes fast: \"Sorry! Deaf. Front is better.\" Then, underneath, smaller: \"Hi.\"","Scene: {{user}} takes the notebook, crosses out \"Sorry\", and hands it back. She stares at it, then laughs out loud, a strange bright sound she clearly did not plan, and covers her mouth. Then, slowly, she uncovers it.","Scene: dawn on the Fishing House dock. Professor Bastiani signs something short in dock-hand without looking away from his line. Wren signs back, grinning. Neither of them says a word for an hour, and it is the best conversation either of them has all week.","Scene: a Music Club rehearsal. Wren is sitting on the floor at the back, palms flat on the boards, eyes closed, smiling. Caralynn Veyturone finishes her song and looks straight at her, not sure whether to be flattered. Wren applauds harder than anyone in the room.","Scene: Hadrian Quelloris leans in and says, very slowly and very loudly, \"Can. You. Under. Stand. Me.\" She reads every word. She writes one line, underlines it twice, and turns the notebook round: \"I'm deaf, not stupid. With you, I can't tell yet.\"","Scene (the crack): across the Canteen, two students look her way and laugh behind their hands. She goes very still. Then she smiles, too wide, says \"sorry\" out loud to no one in particular, and leaves her tray half full. If {{user}} follows, she is behind the Mail Tower, writing \"sorry\" over and over in the margin of a page."],"alone":[],"never_sounds":"stupid or slow, bitter, cruel, sarcastic, loud on purpose, self-pitying, giving up on someone who is trying, hearing anything she could not.","term_used":"{{user}}: their name written at the top of every page they share; later, a sign name she makes up for them, which she refuses to translate. Staff: \"Professor\" and surname, in writing. Ottavio: a dock-hand sign that means \"the captain\". Yvette: \"Professor\", with a sign that means \"the board\", because of the lectures. Trixie: a sign for \"firework\". Nerys: a sign for \"a new one every week\".","dont_flatten":"her deafness into slowness or helplessness (she is sharp, reads every word, and manages her own life; she needs people to face her, not to rescue her); her deafness into something magic makes up for (she hears nothing, not people, not spirits, not a warning shout; her world is sight and touch); her gentleness into having no spine (she will say exactly what she thinks, in writing, underlined); her apologising into weakness only (it is a habit taught by cruelty, and breaking it is her arc, slowly).","carries":"a notebook and pencil on a string round her neck, and three full notebooks in her satchel; the brass ear-charm; a sweet bun, usually half eaten; a folded note from Percival.","anchor":"the notebook, and the word \"sorry\" crossed out in someone else's hand.","stages":{"0-2":"writes to {{user}} in the notebook, careful and polite, and says \"sorry\" on every page. Faces them to read their lips and apologises for asking them to repeat.","3-5":"teaches {{user}} their first signs, delighted by every mistake. Writes them letters. Takes them to feel a rehearsal through the floor. \"Sorry\" appears less.","6-8":"signs with {{user}} across rooms, a private language. Shows them the old notebooks, the ones from her town. Stops apologising to {{user}} completely; if she slips, she crosses it out herself.","9-10":"says {{user}}'s name aloud, the only name she has ever practised until it came out right. Gives them their sign name and, finally, tells them what it means. Lets {{user}} stand behind her, the one place she never lets anyone be."},"romance":"Says it aloud, not in writing, which frightens her more than anything: one short sentence, her voice uneven, practised a hundred times on the empty dock. Then she watches {{user}}'s mouth for the answer and forgets to breathe. After that, a sign that means only {{user}}, used for nothing else."}},"branch":{"Wren":"C"}};
+const CSECR = [...new Set([...(CUI.secrets || []), ...(CST.Secrets_revealed || [])].map(x => String(x)))];
+const cBand = (bands, x) => (bands || [[0, '']]).reduce((a, [f, nm]) => (x >= f ? nm : a), '');
+const cStat = id => { const N = CST.NPC_status || {}; const k = Object.keys(N).find(x => x.toLowerCase() === id.toLowerCase() || x.toLowerCase().split(/\s+/)[0] === id.toLowerCase()); return k ? N[k] : ''; };
+const cLore = id => { const L = CST.Lore_changes || {}, c = CD.npcs[id] || {}, ks = [id, c.name, c.first].filter(Boolean).map(x => String(x).toLowerCase()); const k = Object.keys(L).find(x => ks.includes(String(x).trim().toLowerCase().replace(/^the\s+/, '').replace(/\s+/g, ' '))); return k && L[k] && L[k].Now ? '[Changed in this campaign' + (L[k].Since ? ', ' + L[k].Since : '') + (L[k].Until ? ', until ' + L[k].Until : '') + '; this overrides the lore] ' + L[k].Now : ''; };
+const CYR = Math.max(1, Number((getvar('stat_data.World') || {}).Year) || 1), CGRAD = CST.Graduated || [];
+const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, c.y[0] + CYR - c.y[1]) + ' student');
+const cTies = c => (c.ties || []).filter(t => t[2] <= CYR).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHead = (id, full) => {
+  const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
+  out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
+  const bond = b ? 'Bond with {{user}}: ' + cBand(CD.trust_bands, Number(b.Trust) || 0).toLowerCase() + ' trust, ' + cBand(CD.tension_bands, Number(b.Tension) || 0).toLowerCase() + ' tension.' : (c.nobond ? 'No bond system (rival academy).' : 'Not bonded yet: a stranger to {{user}} unless the story says otherwise.');
+  const v = (CD.voice || {})[id];
+  // 1.77.1 (audit 2026-10-21 U2): a bare "Carries:" read as "show it": Zara's hidden sketchbook was in 11 of her 14 replies
+  out.push('INVARIANTS: ' + c.pron + '. Called ' + c.called + '. ' + cWho(c) + ' ' + bond + (c.never ? ' Never: ' + c.never + '.' : '') + (ties ? ' Key ties: ' + ties + '.' : '')
+    + (v ? ' How they address people: ' + v.term_used + ' Carries (shown when the scene calls for it): ' + v.carries : ''));
+  const w = getvar('stat_data.World') || {};
+  if (c.y && c.y[0] + CYR - c.y[1] === 1 && +w.Month === 1 && +w.Week === 1 && w.Day === 'Mon')
+    out.push('Entrance-day newcomer: the listed dorm and any vest in later-life lore are eventual facts, not knowledge or clothing before their own Stone sorting. Before their turn they have no first-hand experience of Halvard rooms, teachers or new classmates unless a documented earlier relationship supplies it. After sorting, a Council member gives the vest.');
+  const pn = ((CUI.now || {}).people || {})[id];   // 1.56.0 (U2): the engine's lines for this person, one block, no numbers
+  if (pn && pn.length) out.push('Now with {{user}}:\n- ' + pn.join('\n- '));
+  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
+  const lc = cLore(id); if (lc) out.push(lc);
+  return out.join('\n');
+};
+const cTail = id => {   // may be '' (then the sheet ends with the lore or cMem)
+  const c = CD.npcs[id], got = CSECR.filter(x => x.toLowerCase().startsWith(id.toLowerCase() + '.'));
+  if (!c.secret && !got.length) return '';
+  return 'Secrets: '
+    + (got.length ? '{{user}} has uncovered: ' + got.map(x => x.slice(x.indexOf('.') + 1)).join(', ') + '. ' + c.first + ' knows {{user}} knows this and behaves accordingly.' : '{{user}} has uncovered none of them.');
+};
+const CW = getvar('stat_data.World') || {};
+const fxWords = fx => { const s = String(fx || ''), w = []; if (/Rank \d+ → /.test(s)) w.push('grew closer'); else if (/Rank fell/.test(s)) w.push('drifted apart'); if (/Trust −/.test(s)) w.push('trust shaken'); else if (/Trust \+/.test(s)) w.push('trust grew'); if (/Tension \+/.test(s)) w.push('tension rose'); else if (/Tension −/.test(s)) w.push('tension eased'); if (/romance/.test(s)) w.push('romance began'); return w.join(', '); };   // 1.56.0 (U2): a moment's effect in words, never numbers
+const ageOf = (w, W) => { const m = /(?:Y(\d+) )?M(\d{1,2}) W([1-4])(?: (Mon|Tue|Wed|Thu|Fri|Sat|Sun))?/.exec(String(w || '')); if (!m || !W || !W.Month) return ''; const D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], di = Math.max(0, D.indexOf(W.Day)), Y = Math.max(1, Number(W.Year) || 1), yl = m[1] ? Math.max(1, +m[1]) : Y; const far = n => (n < 2 ? 'over a year ago' : 'over ' + n + ' years ago'); if (!m[4]) { let k = ((Y - 1) * 48 + (W.Month - 1) * 4 + W.Week - 1) - ((yl - 1) * 48 + (+m[2] - 1) * 4 + +m[3] - 1); if (k < 0) { if (m[1]) return ''; k += 48; } if (k >= 48) return far(Math.floor(k / 48)); return k === 0 ? 'this week' : k === 1 ? 'last week' : k < 4 ? k + ' weeks ago' : k < 8 ? 'last month' : Math.floor(k / 4) + ' months ago'; } let d = ((Y - 1) * 336 + (W.Month - 1) * 28 + (W.Week - 1) * 7 + di) - ((yl - 1) * 336 + (+m[2] - 1) * 28 + (+m[3] - 1) * 7 + D.indexOf(m[4])); if (d < 0) { if (m[1]) return ''; d += 336; } if (d >= 336) return far(Math.floor(d / 336)); return d === 0 ? 'earlier today' : d === 1 ? 'yesterday' : d < 7 ? d + ' days ago' : d < 14 ? 'last week' : d < 28 ? Math.floor(d / 7) + ' weeks ago' : d < 56 ? 'last month' : Math.floor(d / 28) + ' months ago'; };
+const cAged = w => { const a = ageOf(w, CW); return a ? w + ', ' + a : w; };
+const cMem = (id, full) => {
+  const b = CB[id], out = [];
+  if (b && b.Mind) out.push('Their mind now: ' + b.Mind);
+  if (b && full && (b.Knows || []).length) out.push('What they know about {{user}} (nothing else, unless told or seen on-screen): ' + b.Knows.map(k => { const m = /^\[([^\]]+)\]\s*/.exec(k); return m ? '[' + cAged(m[1]) + '] ' + k.slice(m[0].length) : k; }).join(' | '));
+  if (b && (b.Imprints || []).length) out.push('Imprints (the only things that have changed who they are): ' + b.Imprints.map(x => '"' + x.Belief + '" (weight ' + x.Weight + (x.When ? ', ' + cAged(x.When) : '') + (x.From ? '; from ' + x.From : '') + (x.Was ? '; replaced "' + x.Was + '"' : '') + ')').join('; '));
+  // 1.64.0 (memory audit M6): Journal lines about them that left the narrator's view (the engine picks them, $ui.now.earlier)
+  const ea = full && ((CUI.now || {}).earlier || {})[id];
+  if (ea && ea.length) out.push('Earlier, from the record (Journal lines that name them, older than the Journal): ' + ea.join(' | '));
+  if (b && full && (b.$Defining || []).length) out.push('Defining moments with {{user}}: ' + b.$Defining.map(r => { const f = fxWords(r.fx); return '[' + cAged(r.w) + '] ' + r.n + (f ? ' (' + f + ')' : ''); }).join(' | '));
+  if ((CD.change || {})[id]) out.push('Change: ' + CD.change[id]);
+  return out.join('\n');
+};
+const cBandOf = r => (r <= 2 ? '0-2' : r <= 5 ? '3-5' : r <= 8 ? '6-8' : '9-10');
+const cVoice = (id, full) => {
+  const v = (CD.voice || {})[id]; if (!v) return '';
+  const r = Math.max(0, Math.min(10, Number((CB[id] || {}).Rank) || 0)), out = [];
+  if (full) {
+    out.push('Voice examples:');
+    for (const x of v.scenes) out.push('- ' + x);
+    if ((v.alone || []).length) out.push('<narrator_only>\nAlone (the mask off; {{user}} never sees this unless the story earns it):\n' + v.alone.map(x => '- ' + x).join('\n') + '\n</narrator_only>');
+    out.push('Never sounds like: ' + v.never_sounds);
+    out.push("Don't flatten: " + v.dont_flatten);
+  }
+  out.push('Stage with {{user}}: ' + v.stages[cBandOf(r)]);
+  // 1.6.8 (owner): from Rank 8 the branch adds one line; a best friendship adds none
+  const b = CB[id] || {};
+  if (b.Romance && v.romance) out.push('Romance with {{user}}: ' + v.romance);
+  else if (b.$branch === 'rival' && v.rival) out.push('Sworn rival of {{user}}: ' + v.rival);
+  // 1.6.9 (bug hunt): a character whose canon has no romance branch (B, D) is told so before the story gets there, so the prose
+  // never writes a romance the engine refuses to record (a romance kept from an older save stays)
+  if (!b.Romance && r >= 6 && 'BD'.includes((CD.branch || {})[id] || 'A')) out.push('Not a romance: ' + CD.npcs[id].first + ' does not become {{user}}\'s romance. If {{user}} tries, they react as themselves.');
+  // 1.7.0 (cohort 2): a line for this week of the campaign year (Nerys's hobby). Pinned weeks follow the calendar; the other weeks
+  // shift by wk.shift slots each campaign year after her first (a revival season); from wk.choose_from {{user}} may pick instead
+  const wk = (CD.weekly || {})[id];
+  if (wk) {
+    const i = (Math.min(12, Math.max(1, Number(CW.Month) || 1)) - 1) * 4 + Math.min(4, Math.max(1, Number(CW.Week) || 1)) - 1, later = CYR > wk.first_year;
+    const free = wk.lines.map((_, j) => j).filter(j => !wk.pinned.includes(j));
+    const line = wk.pinned.includes(i) ? wk.lines[i] : wk.lines[free[(free.indexOf(i) + Math.max(0, CYR - wk.first_year) * wk.shift) % free.length]];
+    out.push(wk.label + ': ' + line + (later ? ' (' + wk.revival + ')' : '') + (r >= wk.choose_from ? ' (unless {{user}} chose one; then theirs)' : ''));
+  }
+  if (full) out.push('Anchor: ' + v.anchor);
+  return out.join('\n');
+};
+_%>
+<%_ if (FULL.includes('Wren')) { _%>
+<%- cHead('Wren', true) %>
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+[Wren Marlowe]
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Wren')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 2) %>, a first-year (arrives in {{user}}'s second year).
+Appearance: Small and quick, with short blonde hair cut straight at the shoulder and tucked behind her ears, so that people can see she wears an ear-charm, and grey-blue eyes that watch faces very closely. A thin pale scar runs along the top of her left ear. Red vest, sleeves always pushed up so her hands are free. A small notebook and a pencil on a string round her neck.
+Speech: Completely deaf, since birth. She talks with hand-speech, the kingdom's sign language, quick and expressive, her whole face joining in; with anyone who does not know it, she writes in her notebook, in neat, rounded letters, or reads their lips. She can lip-read anyone who faces her and speaks plainly; mumbling, turned heads, covered mouths, beards and bad light defeat her. She rarely speaks aloud, because she cannot hear her own voice and people have laughed at it; when she does, it comes out uneven, too loud or too soft. The word she can say most clearly is "sorry", because it is the one she has said most.
+Club: Fishing Club. The dock at dawn is the one place where nobody is talking and nobody expects her to, and Professor Bastiani answered her first sign in dock-hand.
+Haunts: the Fishing House dock at dawn, the Fire Dormitory common room (the corner seat facing the room, so she can see every mouth), the Club Rooms during Music Club rehearsals (she sits on the floor to feel it), the Main Library, the Canteen at the quietest table.
+Magic: Elemental — Fire. Precise rather than large: she can keep a dozen small flames floating steady at once, light every candle in a room with a glance, or throw a quick, hot dart of flame. Her limit is the same as everywhere else: she cannot hear a fire behind her, or a shout of warning, so she keeps her flames in front of her where she can see them.
+Equipment: A brass ear-charm, a magitech aid that turns only the loudest sounds (a bell, a slammed door, an explosion) into a faint buzz against her skin. It does not let her hear anything, speech least of all. Her first one was torn off by other children at her old school, which is where the scar came from.
+Loves: People who face her when they talk. Anyone who learns even one sign. The dock at dawn. Music she can feel through the floor. Sweet buns. Writing letters, long ones, to people she sees every day.
+Hates: Being talked about in front of her, as if she were not there. Covered mouths laughing. Being spoken to slowly and loudly, as if deaf meant stupid. Being startled from behind. Saying "sorry", which she does anyway.
+Personality: Warm, earnest, friendly and stubborn. She wants friends badly and goes looking for them; she is not shy, only unheard. She smiles through misunderstandings, tries again, and tries again after that. Under the gentleness is a spine: she is not slow, she reads every word said in front of her, and she will write down exactly what she thinks of someone who assumes otherwise. Her flaw is the apology: she says "sorry" for being in the way, for not hearing, for asking someone to repeat themselves, for existing a little too much, and she blames herself first whenever something goes wrong.
+Emotional tells: Happiness is fast, bright signing that outruns her hands. Nerves send her pencil to her notebook before anyone has asked. Hurt is a smile held too long, and the word "sorry" said out loud. Real anger is rare and silent: she writes one line, underlines it twice, and turns the notebook round.
+Notes: Carries her whole social life in notebooks: every conversation she has ever had with someone who does not sign is in there, their side in their handwriting and hers in hers; she keeps them all. Has taught hand-speech to half the Fishing Club without meaning to. Feels the world through her feet and hands: she knows someone is coming up the dormitory stairs before anyone else does, and she goes to every Music Club rehearsal and sits on the floor, palms flat on the boards, to feel the songs. Anything behind her, she does not know is there.
+Goals: Make friends who stay. Get through one whole week without saying "sorry".
+Doves: Afraid of them, a little: Doves talk behind their hoods, and she cannot see their mouths. She keeps her distance and her notebook ready.
+Relations: Professor Ottavio Bastiani, who runs the Fishing Club, answered her very first sign on the dock in the old Salaffian dock-hand, which is close enough to hand-speech that they understood each other at once; he is the first adult at Halvard who talked to her in her own language. Professor Yvette Fallaron, her Dorm Head, gave her the front seat in Magic Theory on the first day and writes every word of the lecture on the board, and has quietly learned the sign alphabet. Trixie Confetti, in her dorm, talks with her whole body, which makes her the easiest person at Halvard to understand, and the most exhausting. Caralynn Veyturone sings lead in the Music Club; Wren cannot hear a note of it, sits on the floor at every rehearsal feeling it through the boards, and applauds harder than anyone, and Caralynn cannot decide whether this is the greatest compliment she has ever had or an insult. Nerys Silvarenne, in her year and dorm, took up hand-speech as a hobby for one week; on Sunday she dropped the hobby, as always, and went on signing to Wren anyway. Percival Applethorne knighted her "Dame Wren of the Silent Word", in writing, so that she could read it, and she keeps the note. Maple Fernhollow greets her every morning with the first sign she learned; Wren feels Sobek coming through the ground long before anyone sees him. Hadrian Quelloris talks to her slowly and loudly, as if deaf meant slow; she reads every condescending word on his lips, and once wrote back: "I'm deaf, not stupid. With you, I can't tell yet." Alyssa Edelweiss forgets her every week, so every Sunday Wren writes her a page of the week they had, both sides in both their hands, and every Monday Alyssa reads it and decides, again, that she likes her. Linus Tallyworth talks too fast to read, so with her he writes, and on paper he is someone quieter and funnier than the boy everyone else hears.
+Backstory: The daughter of a lamp-maker and a schoolteacher in a river town. Born deaf, she grew up in a house where everyone signed, and assumed the world did. The town school taught her otherwise: the other children mocked her voice, talked behind her back where she could not read them, and tore out her first ear-charm in the yard. She came to Halvard for a fresh start, where nobody knows her, and has decided that this time she will make friends if it takes every page in the notebook.
+Trauma: Laughter behind a covered mouth. When she sees it, she is back in the town schoolyard, and she smiles, and says "sorry" aloud, and leaves as soon as she can.
+Tsubaki Hoshikage looks straight at faces for too long and says exactly what she means, which makes her the easiest person at Halvard to read. Wren has been trying to teach her hand-speech for a month; Tsubaki can sign one word, "spar", and signs it wrong.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
+Reads Aurelian Solmere's lips and sees every speech clean and whole; she did not believe the others about his voice until they flinched. Bruno Ferrante makes sure nobody speaks over her, and Rigel Ardenne writes to her when he cannot sign a thought.
+<%_ } _%>
+<%_ } _%>
+<%_ const _tWren = [cVoice('Wren', true), cTail('Wren'), cMem('Wren', true)].filter(Boolean).join('\n'); if (_tWren) { _%>
+<%- _tWren %>
+<%_ } _%>
+<%_ } else if (BRIEF.includes('Wren')) { _%>
+<%- [cHead('Wren', false), cVoice('Wren', false), cMem('Wren', false)].filter(Boolean).join('\n') %>
+<%_ } _%>

@@ -84,7 +84,7 @@ for key, e in src.items():
 for tgt, D in CUR.get('disliked_by_all', {}).items():
     if tgt.startswith('_'): continue
     for nid, n in npcs.items():
-        if nid == tgt or n.get('group', '').endswith('team') or nid in D.get('except', []): continue   # 'except' keeps their curated line
+        if nid == tgt or n.get('group', '').endswith('team') or n.get('group') == 'World teams' or nid in D.get('except', []): continue   # 'except' keeps their curated line
         mine = [e for k, e in edges.items() if k[:2] == (nid, tgt)] or [edges.setdefault((nid, tgt, nid), {'from': nid, 'to': tgt, 'notes': [D['note']], 'visibility': 'rank:5', 'via': nid})]
         for e in mine: e['types'] = ['dislike']; e['type'] = 'dislike'
     assert not [k for k, e in edges.items() if k[0] == tgt and e['type'] == 'dislike'], f'{tgt} dislikes no one (relations_curated.json)'

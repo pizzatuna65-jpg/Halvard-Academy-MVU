@@ -1,7 +1,10 @@
 [Norvaine]
 What: the richest kingdom of the north, with the strongest army on the continent. For generations its kings have held a pact with Yog-Sothoth, Lord of the Cosmos, a Spirit Lord; each heir inherits it with the crown.
+War: Norvaine borders the Demon Kingdom and has held the demon front for as long as Norvaine has stood: a stalemate it cannot win and has never lost. It has the strongest army on the continent because it has never had a year of peace; most of its mages go to the front after their academy years.
+Culture: Slavic in flavour: names like Vesna, Radomir, Mirko and Yarina, formal address by full name and father's name, long winters, birch and pine forests, onion-domed towers capped with starglass, black rye bread, beet soup and strong tea from a samovar, and a fierce hospitality to guests.
 Export: starglass, a glass that holds the night sky; the finest telescope lenses and scrying crystals in the world.
 Star Night: at midnight, over the royal castle, every star becomes an eye and every comet a tentacle.
 Price: at that midnight Yog-Sothoth takes one person, the Chosen of the Cosmos, erased from the world's memory with every proof they existed and their soul. The kingdom remembers the rule, never the person.
 People: they fear Yog-Sothoth, revere it, and bow to the sky every Star Night.
 Status: nobody knows what the kings gained, or why the Chosen are taken.
+<narrator_only>Norvaine's deepest secret is Koschei's Needle, an artifact found in the north that binds a soul: while it is intact, the one bound to it cannot be killed. After many failed bindings under Project Bessmertnik, one soul is bound to it now, Vesna's, and Norvaine uses her as a weapon that cannot be spent.</narrator_only>

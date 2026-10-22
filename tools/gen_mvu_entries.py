@@ -53,7 +53,7 @@ def cast_npc(nid, n):
             'never': '; '.join(x for x in [tru_never and tru_never + ' (Trust)', ten_never and ten_never + ' (when strained)'] if x),
             # 1.7.0 cohorts: the sheet shows the first 4 ties with people already at Halvard ([to, type, campaign year they arrive]),
             # and the school year as it is in the current campaign year (lorebook Year + campaign Year - arrival year)
-            'ties': [[r['to'], r['type'], npcs[r['to']].get('arrives', 1)] for r in ties], 'secret': False, 'nobond': (grp.endswith('team')),
+            'ties': [[r['to'], r['type'], npcs[r['to']].get('arrives', 1)] for r in ties], 'secret': False, 'nobond': (grp.endswith('team') or grp == 'World teams'),
             'y': [n['year'], n.get('arrives', 1)] if grp.startswith('Year') and n.get('year') else None}
 CANON = json.load(open(P('data/npc_canon.json'), encoding='utf-8'))
 CHANGE_TEXT = {'fixed': 'Experience deepens who they are; it never rewrites them.', 'shaped': 'A major, repeated experience can change one part of them for good; the old self still shows under stress.', 'fluid': 'They change with their surroundings over months (a new year, a new circle), never within one scene.'}

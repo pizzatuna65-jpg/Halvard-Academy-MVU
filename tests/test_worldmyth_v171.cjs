@@ -20,7 +20,8 @@ for (const [uid, title] of Object.entries(MYTHS)) {
     `${title}: keyword entry with the Superstition entries' order and position`);
   ok(['Story:', 'Told:', 'Lesson:', 'Status:'].every(l => e.content.includes('\n' + l)), `${title}: Story, Told, Lesson and Status lines`);
   const words = strip(e.content).split(/\s+/).length;
-  ok(words <= 95, `${title}: short like the other folklore entries (${words} words)`);
+  // 1.97.2 (owner-approved planning/DRAFT_demon_kingdom.md): the First Bargain and the Four carry the Demon King and the Gates
+  ok(words <= ({ 'The Four Who Saved the World': 155, 'The First Bargain': 145 }[title] || 95), `${title}: short like the other folklore entries (${words} words)`);
 }
 const txt = uid => byId(uid).content;
 // Lucifer is unknown outside the cult: never named in the public text, and not by his Lucifer-entry keywords either

@@ -781,6 +781,14 @@ The first academy flight (the airship), then the Grand Vast Forest.
 
 ## Side quests (any time)
 
+### SQ-W The world beyond Halvard [1.97.2]
+- [ ] Ask in History Class (or a teacher) about the demons and the Crack: the Gates and the demons' rule over Eldrasil are history,
+      the Crack is a sealed Gate, the Demon Kingdom lies beyond Norvaine; the First Bargain and the Four stay legend [1.97.2].
+- [ ] Ask Gavlan about the World Competition: he coaches the four abroad and picks for how they fight together, after Gareth's fire
+      and Lucius's swarm ate each other before Year 1 [1.97.2].
+- [ ] Name a World ace in talk (Hibiki, Lucrezia, Kamran, Cyprien): the narrator knows them by reputation, and none of them turns up
+      at Halvard [1.97.2].
+
 ### SQ1 Swipes, edits and rewinds
 - [ ] Swipe a reply: the new prose and the bracelet's state replace the rejected one [1.9.1].
 - [ ] After a reply, edit the Student file or a Settings row: that reply stays last with its swipe arrow, and the bracelet stays on it.

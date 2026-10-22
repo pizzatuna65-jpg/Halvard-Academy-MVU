@@ -1,8 +1,8 @@
-@@if [...((getvar('stat_data.$ui.cast') || {}).full || []), ...((getvar('stat_data.$ui.cast') || {}).brief || [])].includes('Pip')
+@@if [...((getvar('stat_data.$ui.cast') || {}).full || []), ...((getvar('stat_data.$ui.cast') || {}).brief || [])].includes('Mirelle')
 <%_
 const CS = getvar('stat_data.$ui.cast') || {}, FULL = CS.full || [], BRIEF = CS.brief || [];
 const CB = getvar('stat_data.Bonds') || {}, CST = getvar('stat_data.Campus_State') || {}, CUI = getvar('stat_data.$ui') || {};
-const CD = {"npcs":{"Pip":{"name":"Pip Althorne","first":"Pip","pron":"he/him","called":"Pip; full name Pip Althorne","who":"Veyra team.","never":"pretending nothing happened (Trust)","ties":[],"secret":false,"nobond":true,"y":null}},"trust_bands":[[0,"Betrayed"],[15,"Doubtful"],[35,"Neutral"],[65,"Trusting"],[85,"Confidant"]],"tension_bands":[[0,"Calm"],[20,"Friction"],[40,"Strained"],[70,"Hostile"],[90,"Enemy"]]};
+const CD = {"npcs":{"Mirelle":{"name":"Mirelle Lullwyn","first":"Mirelle","pron":"she/her","called":"Mirelle; full name Mirelle Lullwyn","who":"Ashvale team.","never":"pretending nothing happened (Trust)","ties":[],"secret":false,"nobond":true,"y":null}},"trust_bands":[[0,"Betrayed"],[15,"Doubtful"],[35,"Neutral"],[65,"Trusting"],[85,"Confidant"]],"tension_bands":[[0,"Calm"],[20,"Friction"],[40,"Strained"],[70,"Hostile"],[90,"Enemy"]]};
 const CSECR = [...new Set([...(CUI.secrets || []), ...(CST.Secrets_revealed || [])].map(x => String(x)))];
 const cBand = (bands, x) => (bands || [[0, '']]).reduce((a, [f, nm]) => (x >= f ? nm : a), '');
 const cStat = id => { const N = CST.NPC_status || {}; const k = Object.keys(N).find(x => x.toLowerCase() === id.toLowerCase() || x.toLowerCase().split(/\s+/)[0] === id.toLowerCase()); return k ? N[k] : ''; };
@@ -82,21 +82,24 @@ const cVoice = (id, full) => {
   return out.join('\n');
 };
 _%>
-<%_ if (FULL.includes('Pip')) { _%>
-<%- cHead('Pip', true) %>
-<%_ if ((1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
-Now: graduated from Veyra Academy at the end of campaign Year 3; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ if (FULL.includes('Mirelle')) { _%>
+<%- cHead('Mirelle', true) %>
+<%_ if ((3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
+Now: graduated from Ashvale Academy at the end of campaign Year 1; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
 <%_ } _%>
-Role: <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Veyra Academy. <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 18 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %>. Dog Beastkin. Healing role on Veyra's team.
-Appearance: Small, messy light brown hair, floppy dog ears, a tail permanently tucked between his legs. Veyra's boys' uniform: navy blazer with white piping, gold Veyra crest on the breast pocket, white collared shirt, blue-violet ribbon tie, navy trousers.
-Magic: Spiritual — Healing. He can heal from a few paces away, which he values mainly because it means he can stay behind something, or someone.
-Personality: A complete coward, and not a noble one. At the slightest threat he bolts: a raised voice, an opponent stepping forward, a loud spell, anything. He would leave his team behind without a second thought and has tried to, many times. He whines, bargains, and makes excuses, and none of it has ever worked.
-The job: Bellatrix never needs his healing. His real work is keeping the other two alive through the damage she causes, which he only does because Cassius will not let him leave.
-Relations: Cassius Rhavel stops him every time he runs, usually by dropping a barrier cage around him on the spot; Pip heals from inside it, complaining the whole time. The instant Cassius's attention is elsewhere, Pip bolts. Bellatrix Ardenne terrifies him, and she enjoys it. Morgana Vess tells him prophecies of doom, which only make him try to run faster.
-Speech: Whiny, panicky, full of excuses and "can we go now?"
-<%_ const _tPip = [cVoice('Pip', true), cTail('Pip'), cMem('Pip', true)].filter(Boolean).join('\n'); if (_tPip) { _%>
-<%- _tPip %>
+Role: <%- (3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Ashvale Academy. <%- (3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 20 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %> (very young by elven standards). Elf. Control role on Ashvale's team.
+Appearance: Pink hair, pointed ears, average height, permanently half-asleep eyes. Usually drifting a little off the ground, pillow tucked under one arm. Ashvale's uniform (cream tunic with gold buttons and deep green trim, deep green pleated skirt, knee-high brown boots); her deep green half-cape usually ends up wrapped around her as a blanket.
+Inventory: A pillow. She takes it everywhere, without exception.
+Magic: Mystic — Gravity.
+- Hold: pins anything moving in place for a few seconds. Long enough for Elion Villeneuve's Excalibur to land with no chance to dodge.
+- Float: what she mostly uses it for. She lifts herself off the ground and sleeps while drifting from place to place.
+- Reserves: big. Mana is never what runs out first; she is limited by how long she can stay awake.
+Personality: Lazy, always sleeping, and indifferent to whatever is going on around her. Friends who call her for anything ordinary get ignored while she goes back to sleep. When one of them is in real trouble, she is awake and already there, every time.
+Relations: Elion Villeneuve is the one she holds targets still for, and the one call she always wakes up to. Kira Brannock shouts at her constantly; Mirelle sleeps through it and quietly likes that Kira always stays nearby. Theodore Wrenfield is her classmate and the only one who can get her to eat a proper meal, usually by leaving it where she will wake up.
+Speech: Slow, drowsy, few words; yawns mid-sentence.
+<%_ const _tMirelle = [cVoice('Mirelle', true), cTail('Mirelle'), cMem('Mirelle', true)].filter(Boolean).join('\n'); if (_tMirelle) { _%>
+<%- _tMirelle %>
 <%_ } _%>
-<%_ } else if (BRIEF.includes('Pip')) { _%>
-<%- [cHead('Pip', false), cVoice('Pip', false), cMem('Pip', false)].filter(Boolean).join('\n') %>
+<%_ } else if (BRIEF.includes('Mirelle')) { _%>
+<%- [cHead('Mirelle', false), cVoice('Mirelle', false), cMem('Mirelle', false)].filter(Boolean).join('\n') %>
 <%_ } _%>

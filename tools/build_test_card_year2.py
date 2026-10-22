@@ -39,7 +39,7 @@ BONDS = {
     'Krieg':    (1, 30, 20, '', 'Dovecote Commander.', 'Questioned {{user}} once, politely.'),
 }
 for k in BONDS:
-    assert k in npcs and npcs[k].get('arrives', 1) == 1 and not (npcs[k].get('group') or '').endswith('team'), k
+    assert k in npcs and npcs[k].get('arrives', 1) == 1 and not ((npcs[k].get('group') or '').endswith('team') or npcs[k].get('group') == 'World teams'), k
 q = lambda s: json.dumps(s, ensure_ascii=False)
 
 d = copy.deepcopy(v3['data'])

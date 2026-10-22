@@ -3,4 +3,5 @@ What: a nation that is a single city in the west, as wide as a kingdom, built hu
 Rule: the king lives on the highest layer, above the clouds; the lower you live, the less you matter.
 Below: the deepest layers are slums that never see the sun, where the city's refuse, workshops and outlaws collect.
 Export: the continent's workshop. Mana lanterns, rune heaters, pens, locks, anything made by the thousand comes up from the lower layers.
+Competitions: the academies' competitions are fought by the low-born and watched, sponsored and bet on by the high-born, who own teams the way they own racehorses; for a low-born fighter, winning is the one road up a layer.
 Status: most Caelmari die on the layer they were born on.

@@ -1,0 +1,13 @@
+[Velmora team]
+Team: Cyprien of Velmora (Control, Y3, M, white-to-violet bob, commanding, Captain, a prince, the team's ace); Solenne Delaunay (Attack, Y3, F, auburn, grim); Corentin Lemoine (Healing, Y1, M, curly brown, sweet); Ysabeau Marchand (Support, Y2, F, dark, merry).
+Selection: Velmora won one of the two open places this year, as in recent years.
+Kit: white formal academy coats with dark blue accents, cut for fencing; white gloves.
+Coach: Madame Isaure Valcourt, the court's dancing master, who teaches fencing as choreography and corrects a stance mid-fight.
+Plays: attrition, with perfect manners. Velmora never seems to be winning until the other team finds that its healing has stopped working, its legs are heavy for no reason, and someone can no longer remember the plan.
+Solenne Delaunay: third year, age 20, Human. Tall, auburn hair in a tight knot, a rapier, duelling scars on her forearms. Spiritual (Speed and Strength): a lunge from three paces before anyone sees her move. Sworn to Cyprien's household since childhood; grim, loyal, and polite to the point of menace.
+Corentin Lemoine: first year, age 18, Human. Round-faced, curly brown hair, spectacles, dressed with great care. Spiritual (Healing): neat and fast. Sweet, chatty and openly devoted to his prince; has no idea what goes on around him.
+Ysabeau Marchand: second year, age 19, Human. Dark-haired and dimpled, a dancer's posture. Mystic (enchanting): sharpens a blade, lightens a step, dulls an enemy's shield. Charming and quick to laugh.
+<narrator_only>Ysabeau reports on Cyprien to his elder half-sister. He has known since the first week and feeds her what he wants his sister to hear.</narrator_only>
+<%_ { const _Y = (Number(getvar('stat_data.World.Year')) || 1), _T = [["Cyprien of Velmora", 3], ["Solenne Delaunay", 3], ["Corentin Lemoine", 1], ["Ysabeau Marchand", 2]], _g = _T.filter(([n, y]) => y + _Y - 1 > 3).map(t => t[0]); if (_Y > 1) { _%>
+From campaign Year <%- _Y %>: the school years above are as of Year 1; everyone has moved up <%- _Y - 1 %> year<%- _Y > 2 ? 's' : '' %>.<%- _g.length ? ' Graduated and off the team: ' + _g.join(', ') + '. The nation fields new members in their places (none on record yet).' : '' %>
+<%_ } } _%>

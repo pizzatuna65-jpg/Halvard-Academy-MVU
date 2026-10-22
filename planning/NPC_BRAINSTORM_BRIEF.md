@@ -3,7 +3,7 @@
 ## 0. How to use this (for the assistant)
 
 You are helping the card's author design **NPC information** (missing lore fields, sharper personalities, loves/hates, goals,
-haunts) and **bond events** (one per rank-up per NPC). You do not need the rest of the project: this brief holds the world
+haunts) and their **weekly routines**. You do not need the rest of the project: this brief holds the world
 basics, the bond system, the formats, the NPC roster and the known gaps. The **full lore of an NPC group** is in a separate
 file (`lore_<group>.md`, list in §8); if you need an NPC's full entry and it is not attached, ask for that group's file
 instead of guessing.
@@ -11,14 +11,13 @@ instead of guessing.
 Rules:
 - The author's lore is canon. Do not contradict it; extend it. Keep everything the card uses in **English**; discuss with the
   author in **Indonesian** unless they write otherwise.
-- `<narrator_only>` text is secret: characters never state it, and no rank reveals it (only the story does). Events at Rank 9→10
-  may open a way toward a secret, never announce it.
+- `<narrator_only>` text is secret: characters never state it, and no rank reveals it (only the story does). A high rank may
+  open a way toward a secret in play, never announce it.
 - `{{user}}` is the player's first-year student (name, pronouns and magic are the player's). Never decide {{user}}'s feelings or
   actions in directions; offer choices.
 - Be concise; prefer drafts the author can paste. Output formats:
   - **New or fixed lore fields:** `Label: text` lines to add to that NPC's lorebook entry (labels as in the roster: Personality,
     Loves, Hates, Goals, Haunts, Backstory, Relations, Speech, Emotional tells…). Secrets inside `<narrator_only>…</narrator_only>`.
-  - **Bond events:** the exact format in §5, one entry per NPC per rank.
   - **Weekly routine (1.52.0):** 1–3 lines `Days HH:MM–HH:MM Place, what they do` for an NPC who lives at Halvard, from their Haunts,
     club and role; outside their classes and teaching, students before the 20:00 curfew. They go into `data/npc_routines.json`.
 
@@ -30,7 +29,7 @@ Genre: Fantasy magic academy
 Premise: Four magic academies in one kingdom, each tied to a cardinal region and each built on top of a great magical site.
 Location: the east of the continent.
 Other nations: exist; Sunreach Bay, Velmora, the Arslan Sultanate, Norvaine, Caelmar and Yozakura are named.
-- Independence Crowning Day implies Eldrasil won independence from another power long ago in the past
+- Long ago Eldrasil was held by the Demon King's demons; Independence Crowning Day marks its freedom and the crowning of its first free king. Eldrasil credits the Archmage.
 - Eldrasil has never won the World Competition in living memory.
 - Eldrasil claims the Archmage of the Four Who Saved the World as its own hero.
 
@@ -44,7 +43,7 @@ This is standard historical knowledge and may be taught in History Class.
 
 ```
 [Halvard Academy]
-Region: West. Site: The Crack, a crack in reality leading to the demon world. Site name unknown.
+Region: West. Site: The Crack, one of the old Gates to the demon world, sealed by the Archmage; the crack in reality is what the seal left. Site name unknown.
 Headmaster: an Elf, head of Halvard for forty years.
 Local fear: the Crack itself and whatever might come through it. Rumours about it are the academy's favourite ghost stories (1.16.0: seventeen campus ghost stories in all: the Third Stall, the Long Corridor, the Three O'Clock Knock, the Crying on the Water, the Night Student, Sleeping in the Library, Taken, and the new Thirteenth Stroke, Night Swimmer, Walking Lantern, Breath on the Glass, When the Pens Go Quiet, Faraway Laugh, Polite Walker, Last Bed, Other Climber and Applause), and anything unusual (a strange mark, odd eyes, horns) invites whispers.
 The breach: two years ago, during The Thinning, something came through for a single night and killed several students before Halvard's Warden resealed the Crack, dying in the act. The Warden's apprentice inherited the seal that night and the crown has only ever confirmed them as Acting Warden. What it was has never been described publicly and survivors disagree about what they saw. Current third-years lived through it as first-years. Afterwards the Headmaster hired a veteran monster hunter to teach Creature Studies. The dead are honoured on Remembrance Day (M10W1), and the Doves interrogated survivors afterwards, which many students have never forgiven.
@@ -105,13 +104,14 @@ Four tiers, elimination. Losing at any tier ends your competitive year. The one 
 1. Dorm. Solo, open to the whole dorm, run as a ranking tournament so every entrant finishes with a placement. Top 16 per dorm qualify.
 2. Academy. Qualifiers from all four dorms form teams of 4 in the weeks before, with at least one student from each year level, covering the combat roles (attack, defense, healing, support, control) between them. Teams mix dorms and usually must, since no dorm covers every role well. Knockout bracket; the winning team represents the academy.
 3. Kingdom. One team per academy, four in total, knockout. Each member of the winning team earns 5,000 points.
-4. World (abroad). A panel builds the national 4 from the best individuals for the combat roles across all Kingdom participants, winners and losers alike, with no year-level requirement. Being picked off a losing team is a great honour. Eldrasil has never won in living memory.
+4. World (abroad), Month 11 Week 3 Monday to Week 4 Monday. A panel builds the national 4 from the best individuals for the combat roles across all Kingdom participants, winners and losers alike, with no year-level requirement; since the competition before campaign Year 1 (Gareth's fire and Lucius's swarm ate each other, and Yozakura won), it picks for how the four fight together, at Gavlan Haverton's urging, and Gavlan coaches them abroad. Six nations: Eldrasil, Yozakura, Norvaine and Caelmar by standing invitation, the Arslan Sultanate and Velmora through the open qualification (Sunreach Bay failed). Format: opening banquet and draw; Phase 1 Last Team Standing (two groups of three, a shrinking barrier, a crystal each; the first team wiped out goes home); Phase 2 Siege (Breach Rune on a ward stone, first to four rounds); a rest day; the Grand Final in the arena; closing banquet. The winning four earn 10,000 points each and a replica of the World Trophy. Eldrasil has never won in living memory.
 ```
 
 Forbidden arts (lore 32): The twenty forbidden arts (not all, but the famous one), by type. Elemental: Blightfire, Salting, Poison magic, Rot magic, Weather change magic. Mystic: Unmaking, Puppetry, Wringing, Soul magic, Raise dead. Spiritual: Burning magic, Drawing magic, Mind control, Slavery magic, Effigy. Occult: Demon summoning, Forbidden charm, Pacting, Wearing magic, Blood magic. Pacting = a pact with anything other than a spirit (forbidden).
 
-World myths (lore 273-277, 1.7.1; folk belief across the continent, not history; names and faces of every figure are lost): the Devoured Kingdom (a king's pact with Azathoth, Lord of All, greatest of Asmoday's spirits, cost his kingdom; now the Primal Desert, where the Arslan Sultanate stands); the Four Who Saved the World (the King of Knights, north; the Archmage, east; the Lady of the Lake, south; the Empress of the Fractured Vow, west) from the First Bargain (a mortal's bargain with "something that shone" for all of magic; magic was fractured into the four types; <narrator_only>it was Lucifer</narrator_only>); the Holy Grail (a wish-granting cup); the Shaping of the World (Asmoday made the spirits first, then everything, then mortals from the soil).
-Nations (lore 278, 279, 333-335, 1.7.2): the Arslan Sultanate (money capital in the Primal Desert, the World Bank; Halvard's Banking House is a branch); Norvaine (north, the strongest army, a hereditary pact with Yog-Sothoth, Lord of the Cosmos, who takes one Chosen of the Cosmos each Star Night, erased from memory; exports starglass); Velmora (Eldrasil's northern border, the most formal court; <narrator_only>its succession is a blood sport</narrator_only>); Caelmar (a hive city in the west, the continent's workshop); Yozakura (south, Japanese-themed, mostly Beastkin, service companies worldwide, rulers crowned by tournament as Alpha, katana). World Competition favourites: Yozakura, Norvaine, Caelmar.
+History, not myth (1.97.2): there were once many Gates to the demon world, and their demons overran half the continent, Eldrasil among them; the Gates were sealed one by one (the Crack under Halvard is one, sealed by the Archmage) until only the first was left, in the Demon Kingdom in the far north beyond Norvaine (lore 382). Without the Demon King the demons are wild and leaderless, so Norvaine alone holds the demon front in a stalemate.
+World myths (lore 273-277, 1.7.1; folk belief across the continent, not history; names and faces of every figure are lost): the Devoured Kingdom (a king's pact with Azathoth, Lord of All, greatest of Asmoday's spirits, cost his kingdom; now the Primal Desert, where the Arslan Sultanate stands); the Four Who Saved the World (the King of Knights, north; the Archmage, east; the Lady of the Lake, south; the Empress of the Fractured Vow, west) from the First Bargain (a mortal's bargain with "something that shone" for all of magic; with it he tore the first Gate, became the Demon King and loosed demons on every nation; the Four freed the lands and slew him but could not close his Gate; magic was fractured into the four types; <narrator_only>it was Lucifer, and the Demon King was his favourite bargain</narrator_only>); the Holy Grail (a wish-granting cup); the Shaping of the World (Asmoday made the spirits first, then everything, then mortals from the soil).
+Nations (lore 278, 279, 333-335, 1.7.2): the Arslan Sultanate (money capital in the Primal Desert, the World Bank; Halvard's Banking House is a branch); Norvaine (north, the strongest army, holding the demon front against the Demon Kingdom; Slavic in flavour; a hereditary pact with Yog-Sothoth, Lord of the Cosmos, who takes one Chosen of the Cosmos each Star Night, erased from memory; exports starglass; <narrator_only>Koschei's Needle binds Vesna's soul</narrator_only>); Velmora (Eldrasil's northern border, the most formal court; <narrator_only>its succession is a blood sport</narrator_only>); Caelmar (a hive city in the west, the continent's workshop; its competitions are fought by the low-born for the high-born's betting); Yozakura (south, Japanese-themed, mostly Beastkin, service companies worldwide, rulers crowned by tournament as Alpha, katana). World Competition favourites: Yozakura, Norvaine, Caelmar.
 Races: Human, Elf, Beastkin (animal ears/tail; the type varies). The player's dorm is set by the Arbiter Stone at the Entrance Event (M1 W1 Mon).
 
 ## 2. Calendar and timetable
@@ -151,9 +151,10 @@ Academy calendar (fixed events):
 - M10 W2 Sat: Occult Dorm Day
 - M10 W4 Fri,Sat,Sun: Harvest Festival (Fri evening to Sun)
 - M11 W1 Mon–Thu: End of Semester exams
-- M11 W2 Fri: Results & Final Ranking (Player.Profile.Dorm_rank is updated today)
-- M11 W3 Mon,Tue,Wed: Academy Trip (Sunreach Bay, abroad)
-- M11 W4 Wed,Thu,Fri,Sat: World Competition abroad (the national four)
+- M11 W1 Fri, W4 Tue–Sat: Year's End (no classes until Graduation)
+- M11 W1 Sat: Results & Final Ranking (Player.Profile.Dorm_rank is updated today)
+- M11 W2 Mon–Sat: Academy Trip (Sunreach Bay, abroad; flying Mon and Sat)
+- M11 W3 Mon to W4 Mon: World Competition abroad (the national four; no classes at Halvard)
 - M11 W4 Sun: Graduation (everyone attends; third-years leave by airship next morning)
 - M12 W1 all week: Kingdom-wide holiday: students go home
 - M12 W2 all week: Kingdom-wide holiday: students go home
@@ -190,8 +191,8 @@ Student Council membership is separate from the afternoon club: members meet Sat
   gifts (2 a week: loved 4 (×1.5 from Rank 3), liked 2, neutral 1, disliked 0 and +Tension), real help with their goal
   (5, once a week). XP per rank at standard pace: 0→1: 10, 1→2: 20, 2→3: 30, 3→4: 40, 4→5: 50, 5→6: 55, 6→7: 60, 7→8: 65, 8→9: 70, 9→10: 80
   (about one semester of steady play to Rank 10; the player can pick a pace from ~1 month to ~1 year).
-- A full bar opens that rank's **bond event**; when it has played out, the rank rises by 1 (choices change Trust, never block
-  the rank). After a rank there is a short wait before the next event.
+- A full bar raises the rank on the next genuine encounter with that NPC (1.9.0: there are no rank-up scenes or bond events).
+  After a rank there is a short wait before the bar fills again.
 - Romance becomes official from Rank 8 by default (player setting); feelings may grow earlier in the story.
 - **What the NPC shares** (1.89.0, info layers): every dossier field sits in a layer, and the narrator is told the same fields by
   their lore headings ("tells freely … Held back for now …"). Default layers: Public (Role, Appearance, Age, Club, Speech, Haunts,
@@ -211,28 +212,17 @@ Student Council membership is separate from the afternoon club: members meet Sat
   - Rank 5: may ask for help with their goal
   - Rank 6: introduces {{user}} to friends; keeps {{user}}'s secrets
   - Rank 7: takes real risks for {{user}}: covers, lends points, backs {{user}} up with staff
-  - Rank 8: closest bond: best friend, romance or sworn rival (the rank 8 event decides)
+  - Rank 8: closest bond: best friend, romance or sworn rival (the branch and Trust decide)
   - Rank 9: acts for {{user}} unasked; their secret begins to surface
   - Rank 10: would sacrifice for {{user}}
-- **Default event theme per rank-up** (used when no event is written):
-  - 0→1: A first real conversation: past the small talk, {{user}} learns who they actually are.
-  - 1→2: They show the magic or the skill they are proud of, or let {{user}} watch them work.
-  - 2→3: A small moment reveals what they love or can't stand.
-  - 3→4: {{user}} sees another side of them: a bad day, a crack in the usual face.
-  - 4→5: They tell {{user}} what they want most, and a way to help appears.
-  - 5→6: They speak honestly about the people around them, and about the Doves.
-  - 6→7: They tell {{user}} about their past and their family.
-  - 7→8: A turning point: the bond becomes best friends, romance or a sworn rivalry, and the event lets {{user}} choose.
-  - 8→9: They start to let their guard down about what they hide; the story opens a way to the truth (never revealed by rank alone).
-  - 9→10: The peak of the bond: a moment that proves it, and what they would give up for {{user}}.
 - **Rewards (decided 2026-09-25; full list in `data/bond_rewards.json`):**
-  - Rank 1–4 events are pure story; no items or perks.
-  - The **4→5** event gives the NPC's **exclusive gift**: an item sold nowhere, and always useful, never just a memento.
-  - The **9→10** event gives the NPC's **unique Rank 10 benefit** (gameplay, QoL, points, reputation or story).
+  - Ranks 1–4 bring no items or perks.
+  - Reaching **Rank 5** gives the NPC's **exclusive gift**: an item sold nowhere, and always useful, never just a memento.
+  - Reaching **Rank 10** gives the NPC's **unique Rank 10 benefit** (gameplay, QoL, points, reputation or story).
   - There are no endings of any kind in this campaign; high ranks open information, never a "route".
 - **Special bond models** (details in `data/bond_rewards.json`):
-  - **Mask → truth** (Castor, Kanae, Caine): the 7→8 event gives a **nudge**, one Fact pointing at the NPC's arc. The 8→9
-    event can only run once their truth has come out in play; without that, the bond stays at Rank 8, and that is fine.
+  - **Mask → truth** (Castor, Kanae, Caine): reaching Rank 8 adds a **nudge**, one Fact pointing at the NPC's arc. Rank 9
+    waits until their truth has come out in play; without that, the bond stays at Rank 8, and that is fine.
   - **Krieg:** Rank 1 comes from his introduction. After that his bond gains **+14 XP every Monday**, only while {{user}}'s
     Doves reputation is **≥ +1**; he gives no XP for talks, hangouts or gifts.
 - **Rank 8 branches** (1.6.8, owner-approved 2026-09-26): each NPC allows some of best
@@ -246,49 +236,12 @@ Student Council membership is separate from the afternoon club: members meet Sat
 - **Reputation** (Academy, Student, Doves; −5 to +5, tiered Rep XP; full rules in `data/reputation.json`) modifies bond XP: staff
   NPCs at Academy ±3, student NPCs at Student ±3/+5, and anti-Dove NPCs react against high Doves reputation.
 
-## 5. Bond event format
+## 5. Story beats instead of bond events
 
-One lorebook entry per event. The entry's **comment (title)** is:
-
-```
-[Bond Event] Trixie — Rank 4→5
-```
-
-(first name as in the NPC roster; `→`, `->` or `-` all work; the second number is always the first + 1; `0→1` is the first event.)
-
-The entry's **content**:
-
-```
-Syarat: Courtyards or Club Rooms | 16:00–20:00 | Mon–Fri | bukan hujan
-Prasyarat: club = Theatre Troupe; month >= 2
-Arah:
-- Trixie practises a new trick alone and keeps failing; for once she is not cheerful.
-- She admits she is afraid her family will be disappointed when the circus comes in Month 8.
-- Wajib: she asks {{user}} to be her assistant in the show.
-Pilihan:
-- Say yes → Trust +5
-- Turn her down gently → Trust −5
-Hasil: Fact "afraid of disappointing her family"; Project "A show for the circus"; Perk: —
-```
-
-English labels work too: `Conditions:`, `Requires:`, `Directions:`, `Must:`, `Choices:`, `Results:`.
-
-| Line | What it does | Notes |
-|---|---|---|
-| `Syarat:` / `Conditions:` | When the event can start | Parts separated by `|`, any order, all optional: **places** (Campus Map names, several joined with `or`); **time** `16:00–20:00` (can cross midnight); **days** `Mon–Fri`, `Sat/Sun`, `weekdays`, `weekend` (Indonesian day names work); **weather** `not rain` / `bukan hujan` (rain, storm, fog, overcast, cloudy, clear). No line = anywhere, any time. |
-| `Prasyarat:` / `Requires:` | Extra prerequisites | `club = <name>`, `dorm = Fire`, `month >= 3`, `year >= 2` (campaign year), separated by `;`. |
-| Everything else | Given to the narrator as written | Beats, lines marked `Wajib` / `Must` (these have to happen), choices and their effects, results (facts, a project, a perk). The narrator writes the scene and the dialogue. |
-
-The NPC must also be **in the scene** (Scene.Present). The event is offered, never forced: the narrator plays it when the scene
-allows. When the bar is full, the player sees "Bond event ready" with your place and time (People, the bracelet chip), so the
-conditions are also the hint that tells the player where to go.
-
-Choices can **lower** Trust (or change Tension); since 1.4.3 Trust only rises through reported deeds (keep, secret, defend,
-confide, help) and +3 for each rank earned, so an event that should build trust says so in its beats and the narrator reports the
-deed. The rank always rises once the event has played out. Events to Rank 7, 9 and 10 wait for Trust 50 / 65 / 65; the Rank 8
-event never waits, but under Trust 50 it can only end in a sworn rivalry.
-
-Existing scripted events: none yet.
+Bond events and their lorebook format were removed in 1.9.0: a rank rises on the next genuine encounter, and no entry is written
+per rank. A moment the owner wants to happen (a scenario such as Vesna's at the World Competition) is drafted as beats with
+conditions and given to the narrator through `<now>` on its day by the engine; draft it in plain lines (when, where, who, what
+must happen, what it records) and the card decides the mechanism.
 
 ## 6. NPC roster (one line each; full lore in the group files)
 
@@ -367,6 +320,15 @@ Columns: id — full name · group · dorm/race · role · club · openness · h
 - **Caine** — Caine Strix · Liaison · -/Beastkin (owl) · butler of the Noble Houses' Liaison · - · closed · yes · The perfect butler: efficient, silent, cold, anticipating every need, never a hair or a word out of place.
 - **Bobby** — Bobby Becket · Facilities · -/Human · mischievous, non-mage maintenance worker · - · open · no · Friendly, mischievous, inquisitive and openly fond of gossip and card tricks.
 
+**World Competition teams (1.97.2; abroad, no bond; Vesna becomes a full NPC with her scenario in 1.97.5)**
+- **Hibiki** — Hibiki Kurenai · Yozakura's four · -/Human · Attack, captain and ace (Y2) · - · normal · no · Goofy, laid back, a visionary; reality breaking with a wooden katana, a weak body.
+- **Vesna** — Vesna Zvezdova · Norvaine's four · -/Human · any role (Y1) · - · open · yes · Innocent and sunny; a weapon on duty (creation from ambient mana; Koschei's Needle).
+- **Kazimir** — Kazimir Zorin · Norvaine's coach · -/Human, no magic · Colonel, Project Bessmertnik · - · closed · yes · Cold, pragmatic, cruel out of indifference.
+- **Lucrezia** — Lucrezia Altamura · Caelmar's four · -/Human · Control, ace (Y1) · - · normal · no · Chaotic, sadistic, bored highborn; puppets and strings (Serafino).
+- **Kamran** — Kamran Zarrin · Arslan's four · -/Human · Defense, ace (Y2) · - · normal · yes · Exquisitely polite lender; the Midas touch.
+- **Cyprien** — Cyprien of Velmora · Velmora's four · -/Human · Control, captain and ace (Y3), a prince · - · normal · yes · Charismatic, manipulative, arrogant; Orochi's eight venoms.
+Their rough teammates and coaches live only in the team entries (lore 383-387).
+
 **Rival academy teams (Myrdath, Veyra, Ashvale)**
 - **Lucius** — Lucius Vortigern · Myrdath team · -/Human · friendly, Rank 1 · - · normal · yes · —
 - **Elion** — Elion Villeneuve · Ashvale team · -/Human · Rank 1 · - · normal · no · Kind, compassionate, deeply empathetic, with unwavering conviction.
@@ -408,7 +370,7 @@ The 2026-09 pass filled every gap for Halvard students, staff, Doves, Cathedral 
   Gareth, Ruby (G4, 1.6.6) and Gavlan, Yvette, Baelin, Layla, Vallie, Kuroo, Mimosa, Althair, Ezrel, Ottavio, Krieg, Milena,
   Tristan, Bobby (G5, 1.6.7): every bonded NPC now has one; a new bonded NPC needs its own voice draft. Cohort 2 (Linus, Maple,
   Nerys, Hadrian, Wren, Tsubaki, 1.7.0) and cohort 3 (Aurelian, William, Bruno, Bianca, Rigel, Topaz, Faye, 1.34.0) came with theirs; Nerys also has a 48-week hobby list (`npc_canon.json` → `weekly`). Dante is fanatically lawful with no exceptions, {{user}}
-  included (owner): never write him bending a rule for anyone. Alyssa's story is somber and bittersweet (owner, reference Isshuukan Friends): write her bond events in that tone,
+  included (owner): never write him bending a rule for anyone. Alyssa's story is somber and bittersweet (owner, reference Isshuukan Friends): write her story in that tone,
   and nothing cures her forgetting. Fields, all English:
   - `SCENE EXAMPLES`: 5–6 lines "Scene: … → dialogue + one gesture" (what they like, what they hate, under pressure, with a
     third person); masked NPCs and hidden identities or secrets (Alyssa, Dante, Tilly, Gareth, Baelin, Layla, Ezrel) also get `ALONE` lines (secret, printed inside <narrator_only>).
@@ -419,8 +381,9 @@ The 2026-09 pass filled every gap for Halvard students, staff, Doves, Cathedral 
   - `STAGES`: one line each for Rank 0–2, 3–5, 6–8, 9–10 (only the current band prints). Every wave has them (owner,
     2026-09-25).
   - `ANCHOR`: one object or ritual that holds their inner logic; not a reward, never given to {{user}}.
-- **Rival academy teams (Myrdath, Veyra, Ashvale):** kept minimal by design. They appear only in specific events and have
-  **no bond system**, so no bond events and no Loves/Hates/Goals/Haunts are needed for them.
+- **Rival academy teams (Myrdath, Veyra, Ashvale) and the World teams:** kept minimal by design. They appear only in specific
+  events and have **no bond system**, so no Loves/Hates/Goals/Haunts are needed for them (Vesna, a full NPC from 1.97.5, is the
+  one exception).
 
 ## 8. Group lore files (attach only what the discussion needs)
 
@@ -434,6 +397,8 @@ card has them now is in `planning/NPC_ROSTER.md`.
 - `lore_others.md` — Doves, Cathedral, Liaison and facilities: Krieg, Milena, Tristan, Caine, Bobby (~5,500 tokens)
 - `source_original/npc_lore_cohort2_2026-09-26/lore_cohort2.md` — cohort 2 (arrive in campaign Year 2): Linus, Maple, Nerys, Hadrian, Wren, Tsubaki; `lore_cohort2_additions.md` beside it holds the lines they added to older NPCs' files (shown from Year 2)
 - `source_original/npc_lore_cohort3_2026-10-01/lore_cohort3.md` — cohort 3 (arrive in campaign Year 3): Aurelian, William, Bruno, Bianca, Rigel, Topaz, Faye; `lore_cohort3_additions.md` carries their lines for existing NPCs, plus Year 2 Council membership.
+- `source_original/npc_lore_world_2026-10-22/lore_world.md` — the World Competition's five foreign teams (one entry each) and its
+  standout NPCs: Hibiki, Vesna, Kazimir, Lucrezia, Kamran, Cyprien
 - `lore_rivals.md` — Rival academy teams (Myrdath, Veyra, Ashvale): Lucius, Elion, Bellatrix, Kira, Mirelle, Theodore, Ines, Bram, Dex, Cassius, Morgana, Pip (~5,400 tokens)
 - `data/bond_rewards.json` — Rank 5 gift and Rank 10 benefit for every bonded NPC, plus the mask → truth and Krieg bond models
 - `data/reputation.json` — Academy / Student / Doves reputation: levels, Rep XP triggers, effects per level

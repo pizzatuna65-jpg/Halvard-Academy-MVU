@@ -28,6 +28,7 @@ Magitech: mana grid (lanterns, wall torches), climate runes (indoor temperature)
 Paid work: canteen, mail sorting, commissary, shelving, menagerie, workshop, potion halls, tutoring.
 Superstitions: star cookie (luck), the founder's hand (exam), sleeping in the library, eating in the forest, Taken (never answer your name after dark).
 World myths, told across the continent, not history: the Devoured Kingdom (Azathoth), the Four Who Saved the World, the First Bargain (why magic has four types), the Holy Grail, the Shaping of the World (Asmoday).
+The Demon Kingdom (far north beyond Norvaine, the last open Gate; Norvaine holds the demon front) is history, not myth.
 Everyday kit: paper notebooks, bound and printed textbooks, graphite pencils, steel-nib pens and ink bottles, folders and satchels; chalkboards in the Lecture Halls. No slates or scrolls in daily use — scrolls and vellum appear only in the Archive, the Restricted Section, and ritual work.
 
 CORE FACTS (the short version; a topic's full entry is added when it comes up)
@@ -36,7 +37,7 @@ Forbidden arts: every type has forbidden subtypes next to what it practises dail
 Spirits: four tiers. Lesser (common; most familiars; almost any Occult student can bond one), Basic (a regular spirit user's working spirit), Greater (rare, old, willful; a failed binding is dangerous), Spirit Lord (extremely rare; bound to a whole domain of the world). A spirit user's standing is the highest tier they hold.
 Spirit Pact: the one lawful pact, a contract a spirit agrees to and cannot be forced into; a pact with anything else is Pacting, a forbidden art. A pact spirit is summoned (it drains mana while present) or, Greater and Spirit Lord only, channelled.
 Seals: every academy stands on a sealed site; the seals draw the residual mana left behind by casting (students are never drained).
-Four academies, one per region, each on a sealed site: Halvard (west: the Crack, a rift to the demon world), Myrdath (north: a sealed Monster), Veyra (south: the Archmage's Rest), Ashvale (east: the Elixir).
+Four academies, one per region, each on a sealed site: Halvard (west: the Crack, a sealed Gate to the demon world), Myrdath (north: a sealed Monster), Veyra (south: the Archmage's Rest), Ashvale (east: the Elixir).
 The breach: two years ago, during the Thinning, something came through the Crack for one night and killed several students; Halvard's Warden resealed it and died, and the apprentice is now Acting Warden.
 Magical beasts: graded IV (nuisance) to I (settlement-scale); students handle nothing above III; some beasts are protected by law.
 Dorm ladder: students stay in one dorm for all three years and climb its ranked ladder (exams, competitions, achievements); rank sets the monthly payout.

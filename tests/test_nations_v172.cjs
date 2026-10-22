@@ -21,7 +21,9 @@ for (const [uid, name] of Object.entries(NATIONS)) {
   ok(/\nStatus: /.test(e.content), `${name}: has a Status line`);
   const words = strip(e.content).split(/\s+/).length;
   // Norvaine carries the most approved canon (pact, export, Star Night, price, people): ~137 words, kept as approved.
-  ok(words <= 140, `${name}: short, one entry's worth (${words} words)`);
+  // 1.97.2 (owner-approved planning/DRAFT_demon_kingdom.md, DRAFT_world_competition.md): Norvaine gains its War and Culture lines and
+  // Koschei's Needle (secret), Caelmar its Competitions line
+  ok(words <= ({ Norvaine: 250, Caelmar: 150 }[name] || 140), `${name}: short, one entry's worth (${words} words)`);
 }
 ok(byId(278).keys.includes('Arslan') && !byId(273).keys.some(k => /Arslan/.test(k)), 'the Arslan keywords moved from the Devoured Kingdom to the nation');
 ok(/World Bank/.test(txt(278)) && /starglass/.test(txt(279)) && /Export: the continent's workshop/.test(txt(334)) && /forge the katana/.test(txt(335)) && /court manners/.test(txt(333)),
@@ -35,7 +37,7 @@ ok(/<narrator_only>Behind the manners, the succession is a blood sport/.test(txt
 const has = (uid, re, what) => ok(re.test(txt(uid)), `mention: ${what}`);
 has(0, /Nations: Sunreach Bay \(resort, academy Trip destination\), the Arslan Sultanate \(money; the World Bank\), Norvaine .*Velmora .*Caelmar .*Yozakura/, 'WORLD INDEX lists every nation');
 has(1, /Sunreach Bay, Velmora, the Arslan Sultanate, Norvaine, Caelmar and Yozakura are named/, 'Kingdom names every nation');
-has(19, /Nations at the World Competition include Yozakura, Norvaine and Caelmar, the usual favourites, the Arslan Sultanate, Velmora and Sunreach Bay/, 'World Competition');
+has(19, /Six nations compete: four hold a standing invitation \(Eldrasil, Yozakura, Norvaine and Caelmar\), and two places go to an open qualification .*the Arslan Sultanate and Velmora .*ahead of Sunreach Bay/, 'World Competition: six nations (1.97.2)');
 has(22, /Norvaine dreads/, 'Star Night: Norvaine');
 has(28, /Velmoran court manners/, 'Etiquette: Velmora');
 ok(!/Norvaine/.test(txt(30)) && /Spellcasting drills/.test(txt(30)), 'Combat Class: spellcasting without Norvaine army framing');

@@ -11,6 +11,10 @@ CLUB_NAME = {'Theatre': 'Theatre Troupe', 'Newspaper': 'Academy Newspaper', 'Div
 # 1.2.0: Archery, Swimming, Gymnastics and Basketball are sport clubs (owner map review; lore: sport clubs ban magic in play)
 SPORT = {'Soccer', 'Running', 'Magic Duelling Club', 'Archery', 'Swimming', 'Gymnastics', 'Basketball'}   # practice after 16:00; spell duelling is exempt from the sport no-magic rule
 
+# 1.97.2: who has no bond: the Kingdom rival teams ("<academy> team") and the World Competition's foreign teams ("World teams").
+# Code about the Kingdom Competition itself keeps reading only the "<academy> team" groups.
+def nobond(n): g = (n or {}).get('group') or ''; return g.endswith('team') or g == 'World teams'
+
 def load_clubs(npcs, locs):
     """Clubs from location club lists + NPC 'Club' fields (was inline in gen_ui.py, Batch 5.2)."""
     clubs = {}
@@ -242,7 +246,7 @@ def presence_data(npcs, locs):
     mins = lambda s: int(s[:2]) * 60 + int(s[3:])
     rt = {}
     for nid, rows in R['npcs'].items():
-        assert nid in npcs and not (npcs[nid].get('group') or '').endswith('team'), nid
+        assert nid in npcs and not nobond(npcs[nid]), nid
         for d, f, to, place, what in rows:
             assert place in byname and mins(f) < mins(to), (nid, place, f, to)
             rt.setdefault(nid, []).append([days(d), mins(f), mins(to), norm(place), place, what, f"{d.replace('-', '–')} {f}–{to}"])

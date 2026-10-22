@@ -1,8 +1,8 @@
-@@if [...((getvar('stat_data.$ui.cast') || {}).full || []), ...((getvar('stat_data.$ui.cast') || {}).brief || [])].includes('Morgana')
+@@if [...((getvar('stat_data.$ui.cast') || {}).full || []), ...((getvar('stat_data.$ui.cast') || {}).brief || [])].includes('Magnus')
 <%_
 const CS = getvar('stat_data.$ui.cast') || {}, FULL = CS.full || [], BRIEF = CS.brief || [];
 const CB = getvar('stat_data.Bonds') || {}, CST = getvar('stat_data.Campus_State') || {}, CUI = getvar('stat_data.$ui') || {};
-const CD = {"npcs":{"Morgana":{"name":"Morgana Vess","first":"Morgana","pron":"she/her","called":"Morgana; full name Morgana Vess","who":"Veyra team; \"Nocturne\".","never":"pretending nothing happened (Trust)","ties":[],"secret":false,"nobond":true,"y":null}},"trust_bands":[[0,"Betrayed"],[15,"Doubtful"],[35,"Neutral"],[65,"Trusting"],[85,"Confidant"]],"tension_bands":[[0,"Calm"],[20,"Friction"],[40,"Strained"],[70,"Hostile"],[90,"Enemy"]]};
+const CD = {"npcs":{"Magnus":{"name":"Magnus Tarrant","first":"Magnus","pron":"he/him","called":"Magnus; full name Magnus Tarrant","who":"Staff; Support class for every year.","never":"pretending nothing happened (Trust); anything outside their authority: no personal violence, no lies on the record (when strained)","ties":[["Aiden","rivals",1],["Kuroo","rivals",1],["Anselm","softspot",1],["Baelin","respect",1],["Caspian","respect",1],["Gavlan","respect",1],["Krieg","wary",1],["Valentin","wary",1]],"secret":false,"nobond":false,"y":null}},"trust_bands":[[0,"Betrayed"],[15,"Doubtful"],[35,"Neutral"],[65,"Trusting"],[85,"Confidant"]],"tension_bands":[[0,"Calm"],[20,"Friction"],[40,"Strained"],[70,"Hostile"],[90,"Enemy"]],"change":{"Magnus":"fixed"},"gifts":{"Magnus":"Gifts: loves Dragonchess problem book. Sovereigns. Hates: Wishing coin, or any lucky charm."},"voice":{"Magnus":{"scenes":["Scene: Support class. A team collapses because the healer was out of mana. 'And that,' he says, writing, 'is a DRIP: Didn't Relay In Places. Again.'","Scene: a student asks what an acronym from last week meant. He looks genuinely wounded, then tells them, then invents two more.","Scene: Aiden Ruzzo is counting on his fingers at the back of the room. Magnus, without looking up, uses exactly one more acronym than the favourite.","Scene: {{user}} asks about a rival academy's captain. He produces a notebook from a pocket that should not hold it and reads three pages aloud.","Scene: something goes badly wrong. No acronyms at all. Full sentences, very quiet, and a plan already moving."],"alone":[],"never_sounds":"slow, vague, lost for words, or impressed by luck.","term_used":"{{user}}: surname, or an acronym of their name once he likes them. Kuroo: \"Varnell\". Anselm: \"Graywater\" (never \"Q.\"). Aiden: \"Mr. Ruzzo\".","dont_flatten":"the acronyms are a tic, not the whole man; underneath is a strategist who is genuinely three moves ahead, and genuinely on the students' side.","carries":"a waistcoat with more pockets than seems possible, a notebook in every one; spectacles pushed up into his hair.","stages":{"0-2":"tests {{user}} with acronyms nobody could know.","3-5":"shows {{user}} a page of the Tarrant Index and a page of a scouting report.","6-8":"tells {{user}} about the three noble houses, and why he left each one.","9-10":"names an acronym after {{user}} and plans three moves ahead on their behalf."},"anchor":"the notebook he pulls from a pocket that should not hold it."}},"branch":{"Magnus":"D"}};
 const CSECR = [...new Set([...(CUI.secrets || []), ...(CST.Secrets_revealed || [])].map(x => String(x)))];
 const cBand = (bands, x) => (bands || [[0, '']]).reduce((a, [f, nm]) => (x >= f ? nm : a), '');
 const cStat = id => { const N = CST.NPC_status || {}; const k = Object.keys(N).find(x => x.toLowerCase() === id.toLowerCase() || x.toLowerCase().split(/\s+/)[0] === id.toLowerCase()); return k ? N[k] : ''; };
@@ -82,22 +82,26 @@ const cVoice = (id, full) => {
   return out.join('\n');
 };
 _%>
-<%_ if (FULL.includes('Morgana')) { _%>
-<%- cHead('Morgana', true) %>
-<%_ if ((2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
-Now: graduated from Veyra Academy at the end of campaign Year 2; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ if (FULL.includes('Magnus')) { _%>
+<%- cHead('Magnus', true) %>
+Role: Teaches Support to all three years at the Combat Grounds; writes Halvard's scouting reports on the rival academies; advises the Board Game Club. Twelve years at Halvard. Age <%- 138 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %> (looks mid-thirties). Elf.
+Appearance: Lean, restless and sharp-featured, with ink-stained fingers and spectacles pushed up into untidy dark hair. A waistcoat with more pockets than seems possible, a notebook in every one. Never stands still; usually writing.
+Magic: Mystic — Link and Relay. He threads fine lines of mana between allies, up to six at once: linked, they hear each other's intentions in a fight and can pass mana along the line to whoever needs it.
+Backstory: He spent most of his first century as a court strategist for three noble houses in turn, and left each of them richer and slightly afraid of him. He came to Halvard because, he says, "the kingdom's future is a better puzzle than its present".
+Personality: Brilliant, quick, cunning and delighted with himself. Knows something about everything and everything about the rival academies. Cannot finish a sentence without an acronym, most of them invented on the spot, some explained, most not, and he expects every one remembered. Always three moves ahead, and fond of letting people find out afterwards.
+Teaching: Support is "the art of making other people look good" (AMOPLG, which he admits does not spell anything). Drills are fights in which the Support students must keep a failing team standing; they learn timing, formation and reading a fight. Exams include acronyms he used once, in passing; a student who invents a better one gets the mark anyway.
+Loves: A plan that works. An acronym that spells a real word. Dragonchess. Information, especially the kind nobody knows he has.
+Hates: Luck, which he considers statistically offensive. The words "we'll wing it". Being interrupted mid-acronym.
+Hobbies: Dragonchess, over the board and by post. The Tarrant Index, his private glossary of more than three thousand acronyms.
+Goals: See a Halvard team win the World Competition. Finish the Index. Find out who keeps betting against him in Aiden Ruzzo's book.
+Relations: Headmaster Baelin Kalvor lets him write the scouting reports and reads every page. Caspian Riwalo is his best Support student and an advisor in training, which Magnus respects; he calls the Riwalo motto "a perfectly serviceable ULS". Aiden Ruzzo runs a book on how many acronyms he uses per lesson; Magnus bets through a second-year he has never named and steers the count. Kuroo Varnell and he have been trading favours for years, and dispute the score. Gavlan Haverton takes his scouting reports to the Kingdom Competition and reads the first page. Under the name "Q." he is Anselm Graywater's correspondence chess opponent, two floors away; Anselm does not know, and is losing. Dislikes Vice Headmaster Althair Veyne, whose Luck ruins perfectly good plans.
+Doves: Knows more about the Dovecote than it would like, and keeps it filed, not used. Krieg Valforth keeps a file on him; his on Krieg is thicker.
+Speech: Fast, crisp, dense and pleased with itself; acronyms everywhere, spelled out letter by letter. Example: "That, Mr. Ruzzo, was a textbook SLOB: Spell Launched Out of Bounds. Remember PAWS: Position, Anticipate, Weave, Sustain."
+Emotional tells: Delight is a new acronym that spells a real word, announced to the room. Worry makes him write faster. Real anger is the absence of acronyms: full sentences, full names, very quiet.
+Haunts: the Faculty Offices, the Library's reference section, the Mail Tower (his chess letters), the Staff Room.
+<%_ const _tMagnus = [cVoice('Magnus', true), cTail('Magnus'), cMem('Magnus', true)].filter(Boolean).join('\n'); if (_tMagnus) { _%>
+<%- _tMagnus %>
 <%_ } _%>
-Role: <%- (2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Veyra Academy. <%- (2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 19 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %>. Human. Support role on Veyra's team.
-Appearance: Long black hair, a black cloak worn over Veyra's girls' uniform (navy sailor top with a white-striped collar, red neckerchief, navy pleated skirt, black knee socks, brown loafers), an eyepatch over a perfectly healthy eye, and a bandaged right arm covered in drawn "seals".
-Magic: Mystic — Runecraft and Enchantment. She draws runes that strengthen her teammates' weapons and bodies, and every rune has a name she invented and announces aloud.
-Personality: Chuunibyou. Calls herself Nocturne, heir of the Archmage, and insists the tomb beneath Veyra calls to her in dreams. Poses before casting, speaks in prophecies, and claims her arm holds a sealed power. Beneath the performance she is genuinely skilled and works harder than anyone on her team.
-The Archmage: she is obsessed with the Archmage and has invented a name for them. It is her own invention and nothing more.
-Relations: Bellatrix Ardenne is, to Morgana, a "chosen berserker of the tomb"; Bellatrix finds this hilarious and plays along, which only encourages her. Cassius Rhavel asks for runes at critical moments, and those are exactly the moments she chooses to announce them properly; his fury only convinces her their rivalry is fated. He keeps a page in his notebook listing every rune name she invents. Pip Althorne is her favourite audience; her prophecies of doom only make him try to run faster.
-Speech: Grandiose, dramatic, full of titles and prophecy.
-Recites the Four Who Saved the World as family history, with the Archmage's lines in her own voice.
-<%_ const _tMorgana = [cVoice('Morgana', true), cTail('Morgana'), cMem('Morgana', true)].filter(Boolean).join('\n'); if (_tMorgana) { _%>
-<%- _tMorgana %>
-<%_ } _%>
-<%_ } else if (BRIEF.includes('Morgana')) { _%>
-<%- [cHead('Morgana', false), cVoice('Morgana', false), cMem('Morgana', false)].filter(Boolean).join('\n') %>
+<%_ } else if (BRIEF.includes('Magnus')) { _%>
+<%- [cHead('Magnus', false), cVoice('Magnus', false), cMem('Magnus', false)].filter(Boolean).join('\n') %>
 <%_ } _%>

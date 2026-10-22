@@ -4,7 +4,7 @@ import json, os, re
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 P = lambda *a: os.path.join(ROOT, *a)
 npcs = json.load(open(P('data/npcs.json'), encoding='utf-8'))
-from common import npc_aliases, name_forms, MENTION_DENY
+from common import npc_aliases, name_forms, MENTION_DENY, nobond
 alias = npc_aliases(npcs)   # 1.37.0: shared with gen_ui.py (dialogue colours)
 forms = name_forms(npcs)   # 1.80.0: shared with gen_mvu_entries.py (505's player-message recall)
 t = open(P('src/scripts/engine.template.js'), encoding='utf-8').read()
@@ -296,7 +296,7 @@ assert set(t4) == set(rew['npcs']) and all(v and set(v) <= {'mana', 'stamina', '
 t = t.replace('/*@@RANK4_PARTNERS@@*/{}', json.dumps(t4, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@REPUTATION@@*/{}', json.dumps(strip(rep), ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@TRAINING@@*/{}', json.dumps(strip(json.load(open(P('data/training.json'), encoding='utf-8'))), ensure_ascii=False, separators=(',', ':')))
-grp = lambda n: 'rival' if (n.get('group') or '').endswith('team') else 'staff' if n.get('group') == 'Staff' else 'student' if re.match(r'^Year \d$', n.get('group') or '') else 'other'
+grp = lambda n: 'rival' if nobond(n) else 'staff' if n.get('group') == 'Staff' else 'student' if re.match(r'^Year \d$', n.get('group') or '') else 'other'
 t = t.replace('/*@@NPC_GROUP@@*/{}', json.dumps({nid: grp(n) for nid, n in sorted(npcs.items())}, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@HAUNTS@@*/{}', json.dumps(haunt, ensure_ascii=False, separators=(',', ':')))
 # 1.51.0 (feature batch 3, audit 4.8): lines between NPCs for pair moments: [from, to, type, rank to see it (0 public, 99 a secret), via]

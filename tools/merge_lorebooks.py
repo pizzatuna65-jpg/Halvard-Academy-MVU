@@ -46,16 +46,21 @@ print('NPC lore pass 2026-09-25:', len(overlay_npc_lore(N)), 'entries updated')
 # export (tools/curate_data.py turns it into a year-gated field for the UI).
 # 1.33.0 (owner-approved planning/DRAFT_classes_and_teachers.md): the new teaching staff use the same two files in
 # source_original/npc_lore_staff_*/ (lore_staff.md, lore_staff_additions.md); a "year: 1" addition is a plain line (no gate).
-COHORT_DIRS = sorted(d for d in os.listdir(P('source_original')) if d.startswith(('npc_lore_cohort', 'npc_lore_staff')))
+# 1.97.2 (owner-approved planning/DRAFT_world_competition.md §3-§4): the World Competition's foreign teams and standout NPCs use the
+# same loader (source_original/npc_lore_world_*/lore_world.md); a "## team:<Nation> — <Nation> team" heading is a team entry (like
+# Myrdath's), every other heading an NPC entry.
+COHORT_DIRS = sorted(d for d in os.listdir(P('source_original')) if d.startswith(('npc_lore_cohort', 'npc_lore_staff', 'npc_lore_world')))
 def cohort_files(kind):   # kind '' = new entries (lore_cohortN.md), '_additions' = lines for older NPCs (lore_cohortN_additions.md)
-    return [P('source_original', d, f) for d in COHORT_DIRS for f in sorted(os.listdir(P('source_original', d))) if re.fullmatch(r'lore_(?:cohort\d+|staff)' + kind + r'\.md', f)]
+    return [P('source_original', d, f) for d in COHORT_DIRS for f in sorted(os.listdir(P('source_original', d))) if re.fullmatch(r'lore_(?:cohort\d+|staff|world)' + kind + r'\.md', f)]
 def add_cohort_npcs(N):
     added = []
     for f in cohort_files(''):
         text = open(f, encoding='utf-8').read()
         for m in re.finditer(r'^## (\S+) — (.+?)\nuid: (\d+)\nkeys: (.+?)\n```\n(.*?)\n```', text, re.M | re.S):
             uid = int(m.group(3)); assert uid not in N and uid not in C, f'cohort NPC uid {uid} is taken'
-            N[uid] = template_from(N[106], uid=uid, displayIndex=uid, comment='NPC — ' + m.group(2).strip(),
+            team = m.group(1).startswith('team:')
+            N[uid] = template_from(N[270] if team else N[106], uid=uid, displayIndex=uid,
+                                   comment=('Team — ' + m.group(1)[5:]) if team else 'NPC — ' + m.group(2).strip(),
                                    key=[k.strip() for k in m.group(4).split(',')], content=m.group(5))
             added.append(m.group(1))
     return added
@@ -447,6 +452,7 @@ def apply_lore_edits(C, N):
     add_to_first(70, "Students write home from the desks on the sorting floor; a reply takes about a week, and sometimes a small parcel comes with it.")
     add_world_myths(C)
     add_nations(C)
+    world_competition_lore(C, N)   # 1.97.2
 
 # 1.7.1 World Myth (owner-approved 2026-09-27, planning/DRAFT_world_myth.md): five continent-wide myths, the same size and settings
 # as the Superstition entries, linked to each other, and a short mention in the entries that should know they exist (like the brands).
@@ -622,6 +628,126 @@ def add_nations(C):
     rep(C[248], "the first day of the Kingdom-wide holiday.",
         "the first day of the Kingdom-wide holiday. Their airship arrives at dusk and rides at anchor above the Grassy Field overnight, "
         "lit like a lantern.")
+
+# 1.97.2 (owner-approved planning/DRAFT_demon_kingdom.md and DRAFT_world_competition.md §2-§4, "proceed" 2026-10-22): the Demon
+# Kingdom retcon (the First Bargain's mortal became the Demon King; the Gates are history, the Crack is a sealed one), the six nations
+# of the World Competition and its format, Norvaine's culture and war, Caelmar's competitions, and the lines Gavlan and Vera gain.
+# The World teams themselves are a lore pass (source_original/npc_lore_world_*). Edited in C/N, so the card and the v39 export agree.
+DEMON_KINGDOM = (
+    "[The Demon Kingdom]\n"
+    "What: a land in the far north beyond Norvaine, where the last open Gate to the demon world stands. Demons hold it; whatever people "
+    "lived there are long gone.\n"
+    "History, not myth: there were once many Gates, and their demons overran half the continent, Eldrasil among them. One by one the Gates "
+    "were sealed (Halvard stands on one of them) until only this one was left. Eldrasil's independence is its freedom from demon rule.\n"
+    "The demons: since the Demon King fell they have had no master. They are what demons are without one: wild, brutal and endless, with "
+    "no plan beyond the next kill.\n"
+    "Now: Norvaine borders it and has held the demon front for as long as Norvaine has stood. It is a stalemate: Norvaine cannot push into "
+    "the Demon Kingdom, and the demons cannot break Norvaine. One nation can hold the line only because nothing on the other side leads them.\n"
+    "Legend: the first Gate was opened by the mortal of the First Bargain, who became the Demon King. The Four Who Saved the World slew him, "
+    "and could not close it.\n"
+    "Status: nobody has crossed the Gate and come back to describe the other side.")
+FIRST_BARGAIN = (
+    "[The First Bargain]\n"
+    "Story: when magic was still whole, a mortal bargained with something that shone brighter than any star and asked for all of magic. "
+    "The bargain was kept to the letter. With all of magic in his hands he tore a Gate from his own land into the demon world, crowned "
+    "himself the Demon King, and opened more Gates across the continent to loose his demons on every other nation, and the world nearly "
+    "broke. Magic was then fractured into four; nearly every mage since is born to one type.\n"
+    "Told: everywhere; Dark Magic Defense opens its Pacting lesson with it.\n"
+    "Lesson: never make a pact with anything but a spirit.\n"
+    "Status: the mortal's name is forgotten; he is remembered only as the Demon King. The Cathedral says Asmoday fractured magic to save her world.\n"
+    "<narrator_only>What shone was Lucifer. Freed, he could give any magic to anyone again. He remembers the mortal fondly: the Demon King "
+    "was his first bargain, and his favourite.</narrator_only>")
+FOUR_HEROES = (
+    "[The Four Who Saved the World]\n"
+    "Story: when the First Bargain nearly ended the world, four heroes saved it: the King of Knights from the north, the Archmage from the "
+    "east, the Lady of the Lake from the south, the Empress of the Fractured Vow from the west. They freed the lands the Demon King held, "
+    "Eldrasil among them, and slew the Demon King. The first Gate, in the Demon Kingdom, they could not close; it stands open still, and the other Gates "
+    "were sealed one by one in the years after.\n"
+    "Told: across the continent; each land calls its own hero the greatest. Eldrasil, in the east, claims the Archmage.\n"
+    "Lesson: no land saves the world alone.\n"
+    "Status: their names and faces are lost. Some say each carried one of the four fractured magics. The last Gate is no legend: Norvaine "
+    "holds the line against what comes through it today.\n"
+    "<narrator_only>The Archmage's part was sealing what shone. Lucifer has called them the thief ever since.</narrator_only>")
+WORLD_FOUR = (
+    "4. World (abroad), Month 11 Week 3 Monday to Week 4 Monday. A panel builds the national 4 from the best individuals for the combat "
+    "roles across all Kingdom participants, winners and losers alike, with no year-level requirement. Being picked off a losing team is a "
+    "great honour. Six nations compete: four hold a standing invitation (Eldrasil, Yozakura, Norvaine and Caelmar), and two places go to an "
+    "open qualification earlier in the year, which the Arslan Sultanate and Velmora have won in recent years ahead of Sunreach Bay and the "
+    "rest. Yozakura, Norvaine and Caelmar are the usual favourites, and Yozakura won the competition before campaign Year 1. Eldrasil has "
+    "never won in living memory. Every nation's four travels with a coach; Eldrasil's is Gavlan Haverton, as at the Kingdom.\n"
+    "Picked to fight together: in the competition before campaign Year 1, Gareth Valkaryn and Lucius Vortigern were the strongest in "
+    "Eldrasil on paper; on the field Lucius's swarm ate Gareth's fire, and Yozakura took the title. Since then, at Gavlan Haverton's urging, "
+    "the panel picks the four for how they fight together, not only for who is strongest.\n"
+    "Format: an opening banquet on arrival, where the Phase 1 groups are drawn; Phase 1 (below); Phase 2, two head-to-head matches on two "
+    "days, the losers going out; a rest day; Phase 3, the Grand Final in the arena, the only straight team-against-team fight, then the "
+    "closing banquet.\n"
+    "Phase 1 (two days, one group of three teams each day): Last Team Standing in a forest bounded by a barrier that shrinks all match "
+    "long. Every competitor is teleported to a random spot, alone, and carries a crystal; when it breaks, that competitor is out. The "
+    "first team to lose every member is out of the competition. The match runs until one team is left: it tops the group and is the top "
+    "seed in Phase 2, and the other survivor goes through second.\n"
+    "Phase 2 (two days, one match a day): Siege, in an old fortress with two ward stones. The attacking team carries one Breach Rune, a "
+    "siege working: planted on a ward stone with a minute of unbroken channelling, it fills for three minutes and then breaks the stone. "
+    "A defender can unwind a planted rune with a minute of unbroken channelling of their own. Attackers win a round when the stone breaks "
+    "or every defender is out; defenders win when they unwind the rune, when ten minutes pass without a planting, or when every attacker "
+    "is out before one. Crystals work as in Phase 1 and are replaced each round; healing cannot mend a broken crystal. The first team to "
+    "win four rounds goes to the Grand Final; the sides swap after the third round, and at three all a seventh round decides. The top "
+    "seed chooses its first side and the side in a seventh round.\n"
+    "Prize: each member of the winning four earns 10,000 points and takes home a small replica of the World Trophy; the trophy itself "
+    "stays with the winning nation until the next competition. Yozakura held it when campaign Year 1 began.")
+WORLD_TEAM_UIDS = {383: 'Yozakura', 384: 'Norvaine', 385: 'Caelmar', 386: 'Arslan', 387: 'Velmora'}
+
+def world_competition_lore(C, N):
+    assert 382 not in C and 382 not in N, 'Demon Kingdom uid 382 is taken'
+    C[382] = template_from(C[246], uid=382, displayIndex=382, comment='Nation — The Demon Kingdom', content=DEMON_KINGDOM,
+                           key=['Demon Kingdom', 'Demon King', 'demon army', 'demon armies', 'demon front', 'last Gate', 'Gates to the demon world'])
+    assert C[275]['content'].startswith('[The First Bargain]') and C[274]['content'].startswith('[The Four Who Saved the World]')
+    C[275]['content'], C[274]['content'] = FIRST_BARGAIN, FOUR_HEROES
+    C[275]['key'] = list(dict.fromkeys(C[275]['key'] + ['Demon King']))
+    rep(C[279], "each heir inherits it with the crown.\n",
+        "each heir inherits it with the crown.\n"
+        "War: Norvaine borders the Demon Kingdom and has held the demon front for as long as Norvaine has stood: a stalemate it cannot win "
+        "and has never lost. It has the strongest army on the continent because it has never had a year of peace; most of its mages go to "
+        "the front after their academy years.\n"
+        "Culture: Slavic in flavour: names like Vesna, Radomir, Mirko and Yarina, formal address by full name and father's name, long winters, "
+        "birch and pine forests, onion-domed towers capped with starglass, black rye bread, beet soup and strong tea from a samovar, and a "
+        "fierce hospitality to guests.\n")
+    C[279]['content'] += ("\n<narrator_only>Norvaine's deepest secret is Koschei's Needle, an artifact found in the north that binds a soul: "
+                          "while it is intact, the one bound to it cannot be killed. After many failed bindings under Project Bessmertnik, one "
+                          "soul is bound to it now, Vesna's, and Norvaine uses her as a weapon that cannot be spent.</narrator_only>")
+    rep(C[334], "Status: most Caelmari die on the layer they were born on.",
+        "Competitions: the academies' competitions are fought by the low-born and watched, sponsored and bet on by the high-born, who own "
+        "teams the way they own racehorses; for a low-born fighter, winning is the one road up a layer.\n"
+        "Status: most Caelmari die on the layer they were born on.")
+    rep(C[5], "Site: The Crack, a crack in reality leading to the demon world. Site name unknown.",
+        "Site: The Crack, one of the old Gates to the demon world, sealed by the Archmage; the crack in reality is what the seal left. Site name unknown.")
+    rep(C[0], "the Holy Grail, the Shaping of the World (Asmoday).",
+        "the Holy Grail, the Shaping of the World (Asmoday).\nThe Demon Kingdom (far north beyond Norvaine, the last open Gate; Norvaine "
+        "holds the demon front) is history, not myth.")
+    rep(C[1], "- Independence Crowning Day implies Eldrasil won independence from another power long ago in the past",
+        "- Long ago Eldrasil was held by the Demon King's demons; Independence Crowning Day marks its freedom and the crowning of its first "
+        "free king. Eldrasil credits the Archmage.")
+    rep(C[24], "Kingdom holiday for independence and the ruler's crowning. No classes.\n",
+        "Kingdom holiday for independence and the ruler's crowning. No classes.\n"
+        "What it marks: the day, long ago, Eldrasil was freed from demon rule and crowned its own king.\n")
+    rep(C[27], "Covers: the Archmage and the original wardens, the founding of the four academies, independence, and the academy records in the Archive.",
+        "Covers: the Archmage and the original wardens, the Gates and Eldrasil's rule by the demons, independence, the founding of the four "
+        "academies, and the academy records in the Archive.")
+    rep(C[27], "Draws the line between myth and record: the Four Who Saved the World and the First Bargain are legend; the Archmage's seals are history.",
+        "Draws the line between myth and record: the Gates, the demons' rule over Eldrasil, the Demon Kingdom and the Archmage's seals are "
+        "history; the First Bargain and the Four Who Saved the World are legend.")
+    rep(C[94], "He kept that bargain to the letter, and remembers the mortal fondly.",
+        "He kept that bargain to the letter, and remembers the mortal fondly. The mortal became the Demon King, and Lucifer counts him his finest work.")
+    C[19]['content'], n = re.subn(r'^4\. World \(abroad\)\..*$', lambda _m: WORLD_FOUR, C[19]['content'], count=1, flags=re.M)
+    assert n == 1, 'lore 19: no World line'
+    rep(N[109], "\nHaunts: Combat Grounds,",
+        "\nWorld Competition: also coaches Eldrasil's national four abroad. In the competition before campaign Year 1, Gareth Valkaryn and "
+        "Lucius Vortigern were the strongest in Eldrasil on paper; on the field Lucius's swarm ate Gareth's fire, and Yozakura took the "
+        "title. Since then, at his urging, the panel picks the four for how they fight together, not only for who is strongest: he knows "
+        "an army wins because its soldiers cover each other.\nHaunts: Combat Grounds,")
+    N[125]['content'], n = re.subn(r'^(Backstory: .*)$', lambda _m: _m.group(1) + (
+        "\nCaelmar: she knows the Altamura name the way everyone below the clouds knows the names above, with respect and a little fear. "
+        "If she ever sees Serafino at work, she will be enchanted by the engineering and appalled by what it is for."), N[125]['content'], count=1, flags=re.M)
+    assert n == 1, 'Vera: no Backstory line'
 
 def add_world_myths(C):
     for uid, title, keys, content in WORLD_MYTHS:
@@ -945,7 +1071,7 @@ Forbidden arts: every type has forbidden subtypes next to what it practises dail
 Spirits: four tiers. Lesser (common; most familiars; almost any Occult student can bond one), Basic (a regular spirit user's working spirit), Greater (rare, old, willful; a failed binding is dangerous), Spirit Lord (extremely rare; bound to a whole domain of the world). A spirit user's standing is the highest tier they hold.
 Spirit Pact: the one lawful pact, a contract a spirit agrees to and cannot be forced into; a pact with anything else is Pacting, a forbidden art. A pact spirit is summoned (it drains mana while present) or, Greater and Spirit Lord only, channelled.
 Seals: every academy stands on a sealed site; the seals draw the residual mana left behind by casting (students are never drained).
-Four academies, one per region, each on a sealed site: Halvard (west: the Crack, a rift to the demon world), Myrdath (north: a sealed Monster), Veyra (south: the Archmage's Rest), Ashvale (east: the Elixir).
+Four academies, one per region, each on a sealed site: Halvard (west: the Crack, a sealed Gate to the demon world), Myrdath (north: a sealed Monster), Veyra (south: the Archmage's Rest), Ashvale (east: the Elixir).
 The breach: two years ago, during the Thinning, something came through the Crack for one night and killed several students; Halvard's Warden resealed it and died, and the apprentice is now Acting Warden.
 Magical beasts: graded IV (nuisance) to I (settlement-scale); students handle nothing above III; some beasts are protected by law.
 Dorm ladder: students stay in one dorm for all three years and climb its ranked ladder (exams, competitions, achievements); rank sets the monthly payout.
@@ -1358,7 +1484,7 @@ gate_cohorts(Nc, True)   # v1.0.3 incoming cohorts (defined at the top)
 # 1.7.4 (Year 2 bug hunt): a Halvard NPC's age follows the campaign year (lore ages are as of Year 1, or a cohort's arrival year;
 # rival academy teams keep theirs), and a student's own entry says so once they have graduated (Campus_State.Graduated).
 YEAR_NOW = "(Number(getvar('stat_data.World.Year')) || 1)"
-RIVAL_RX = re.compile(r'^Role: Student, (?!Halvard)\w+ Academy', re.M)
+RIVAL_RX = re.compile(r'^Role: Student, (?:(?!Halvard)\w+ Academy|an? [\w ]+? academy)', re.M)   # 1.97.2: "a Yozakuran academy" (World teams)
 STUDENT_IDS = {seg.split()[0] for m in re.finditer(r'^Year [123]:\s*(.*)$', Nc[97]['content'], re.M) for seg in re.split(r';\s*(?![^()]*\))', m.group(1)) if seg.strip()}
 aged = 0
 for u, e in Nc.items():
@@ -1442,17 +1568,17 @@ Cc[134] = cal
 # sebelumnya"): rival academy students move up a year each campaign year and graduate after their third, like Halvard's. Their
 # Role line follows the campaign year (school year, age), a graduate's entry says they left the team, and each team entry names who
 # has graduated; new members for the places are not written yet (the owner adds them later).
-RIVAL_ROLE = re.compile(r'^Role: Student, (\w+) Academy\. (First|Second|Third) year, age (\d+)', re.M)
+RIVAL_ROLE = re.compile(r'^Role: Student, (\w+ Academy|an? [\w ]+? academy)\. (First|Second|Third) year, age (\d+)', re.M)   # 1.97.2: World teams too
 ORDINAL = {'First': 1, 'Second': 2, 'Third': 3}
 rivals = 0
 for u, e in Nc.items():
     nid = npc_id(e); m = RIVAL_ROLE.search(e['content']) if nid else None
     if not m: continue
     y, acad, age, sy = ORDINAL[m.group(2)], m.group(1), int(m.group(3)), f"({ORDINAL[m.group(2)]} + {YEAR_NOW} - 1)"
-    e['content'] = (e['content'][:m.start()] + f"Role: <%- {sy} > 3 ? 'Former student' : 'Student' %>, {acad} Academy. "
+    e['content'] = (e['content'][:m.start()] + f"Role: <%- {sy} > 3 ? 'Former student' : 'Student' %>, {acad}. "
                     f"<%- {sy} > 3 ? 'Graduated' : ['First', 'Second', 'Third'][{sy} - 1] + ' year' %>, age <%- {age} + {YEAR_NOW} - 1 %>" + e['content'][m.end():])
     e['content'], n = re.subn(r'^(\[[^\]\n]+\]\n)', lambda mm: mm.group(1) + (
-        f"<%_ if ({sy} > 3) {{ _%>\nNow: graduated from {acad} Academy at the end of campaign Year {4 - y}; no longer on its team (a visit or a letter "
+        f"<%_ if ({sy} > 3) {{ _%>\nNow: graduated from {acad} at the end of campaign Year {4 - y}; no longer on its team (a visit or a letter "
         "is still possible). What follows describes their time as a student.\n<%_ } _%>\n"), e['content'], count=1, flags=re.M)
     assert n == 1, nid
     rivals += 1
@@ -1462,11 +1588,12 @@ for D in (Cc, Nc):
         m = re.search(r'^Team: (.*)$', e['content'], re.M)
         if not m or not re.search(r'\(\w+, Y[123],', m.group(1)): continue
         T = [[x.group(1), int(x.group(2))] for x in re.finditer(r'([A-Z][\w\' -]+?) \(\w+, Y([123]),', m.group(1))]
+        who = 'nation' if u in WORLD_TEAM_UIDS else 'academy'   # 1.97.2: a World team is a nation's four
         e['content'] += ("\n<%_ { const _Y = " + YEAR_NOW + ", _T = " + json.dumps(T) + ", _g = _T.filter(([n, y]) => y + _Y - 1 > 3).map(t => t[0]); if (_Y > 1) { _%>\n"
                          "From campaign Year <%- _Y %>: the school years above are as of Year 1; everyone has moved up <%- _Y - 1 %> year<%- _Y > 2 ? 's' : '' %>."
-                         "<%- _g.length ? ' Graduated and off the team: ' + _g.join(', ') + '. The academy fields new members in their places (none on record yet).' : '' %>\n<%_ } } _%>")
+                         "<%- _g.length ? ' Graduated and off the team: ' + _g.join(', ') + '. The " + who + " fields new members in their places (none on record yet).' : '' %>\n<%_ } } _%>")
         teams += 1
-assert rivals == 12 and teams == 3, (rivals, teams)
+assert rivals == 17 and teams == 8, (rivals, teams)   # 1.97.2: + five World team students, five World teams
 batch3_magic_canon(Cc, Nc)
 formal_and_far_grounds(Cc, Nc)   # 1.15.1
 ghost_stories(Cc, Nc)   # 1.16.0

@@ -118,4 +118,4 @@ const r502 = St => ejs.render(read('src/worldbook/custom/content/502.txt'), { ge
 ok(/Sunreach Bay \(1\.41\.0\)/.test(r502(day)) && !/Sunreach Bay \(1\.41\.0\)/.test(r502(initState())), '502: the Sunreach Location format around the Trip only');
 const ui = read('src/scripts/ui.js');
 ok(/renderArea/.test(ui) && /sunreach_night\.webp/.test(ui) && /sunreach_day\.webp/.test(ui) && /data-ago/.test(ui), 'the UI: the Sunreach tab with its day and night maps');
-ok(/4620b2ce/.test(JSON.parse(read('data/assets_manifest.json')).base_url), 'assets pinned to the commit with both Sunreach maps');
+ok(/4d229ce5/.test(JSON.parse(read('data/assets_manifest.json')).base_url), 'assets pinned to a commit with both Sunreach maps (1.97.2: 4d229ce)');

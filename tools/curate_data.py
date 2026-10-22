@@ -76,6 +76,21 @@ for u, team in ((270, 'Myrdath'), (271, 'Veyra'), (272, 'Ashvale')):
         if r:
             who, info = r; info['group'] = f'{team} team'; info['academy'] = team
             roster[who.split()[0]] = info
+# 1.97.2 (planning/DRAFT_world_competition.md §3): the World Competition's foreign fours, group "World teams" (no bond, never on
+# Halvard's grounds, like the Kingdom rivals; the Kingdom's own code still reads only the "<academy> team" groups). Only the standout
+# NPCs have their own entry (and so a place in npcs.json); the rough members live in their team's entry.
+WORLD_TEAMS = {383: 'Yozakura', 384: 'Norvaine', 385: 'Caelmar', 386: 'Arslan', 387: 'Velmora'}
+for u, nation in WORLD_TEAMS.items():
+    assert N[u]['comment'] == f'Team — {nation}', (u, N[u]['comment'])
+    tl = re.search(r'Team:\s*(.*)', N[u]['content']).group(1)
+    for seg in re.split(r';\s*(?![^()]*\))', tl.rstrip('.')):
+        r = parse_attr_block(seg)
+        if r:
+            who, info = r; info['group'] = 'World teams'; info['academy'] = nation
+            roster.setdefault(who.split()[0], info)
+for seg, nation in (('Kazimir Zorin (M, cyan, cold, Coach)', 'Norvaine'),):
+    who, info = parse_attr_block(seg); info['group'] = 'World teams'; info['academy'] = nation
+    roster[who.split()[0]] = info
 
 def split_fields(text):
     fields, notes = [], []
