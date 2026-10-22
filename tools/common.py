@@ -289,6 +289,44 @@ def contest_data(stu):
     assert all(av.get(i, {}).get('kc') == 2 for i in [R2['gates'], *(r for r, _g in R2['rooms'])]), 'event_frame.json kingdom.r2: not an Undercroft place'
     assert all(g in R2['beasts'] and g in R2['boss'] for _r, g in R2['rooms']) and R2['win'] * 2 <= len(R2['rooms']) < R2['win'] * 3, 'event_frame.json kingdom.r2: grades, or rooms for exactly two holders'
     ct['kingdom'] = kd
+    # 1.97.4 (planning/DRAFT_world_competition.md §1b, §3): the World Competition. The foreign fours are their team entries' Team lines
+    # (the generated lore: "Name (Role, Y<n>, ...)"); a standout with its own NPC entry goes by its id. magic: the magic type (the
+    # Magic field's first word) of every competitor the World panel may pick (Halvard students, the Kingdom rivals); rel: the
+    # relations among them (data/relations.json), for the panel's synergy.
+    wd = {k: v for k, v in ef['world'].items() if not k.startswith('_')}
+    cal = json.load(open(os.path.join(root, 'data/calendar.json'), encoding='utf-8'))
+    ev = next(e for e in cal['events'] if e.get('id') == wd['event'] and e['w'] == wd['w'])
+    assert ev['m'] == wd['m'] and ev['d'][0] == wd['draw'][0], 'event_frame.json world: m / w / draw against the calendar'
+    assert wd['teams'][0] == 'Eldrasil' and set(wd['tactic']) == set(wd['teams']) and set(wd['tactic'].values()) <= set(wd['tact']), 'event_frame.json world.tactic'
+    assert set(wd['favour']) == set(wd['teams'][1:]), 'event_frame.json world.favour: every foreign four'
+    byname = {n['name']: nid for nid, n in npcs.items() if n.get('group') == 'World teams'}
+    cdir = os.path.join(root, 'src/worldbook/content')
+    wd['rivals'] = {}
+    for f in sorted(os.listdir(cdir)):
+        txt = open(os.path.join(cdir, f), encoding='utf-8').read()
+        m = re.match(r'^\[(\w+) team\]\nTeam: (.+)', txt)
+        if not m or m.group(1) not in wd['teams']: continue
+        team = []
+        for seg in re.split(r';\s*(?![^()]*\))', m.group(2).rstrip('.')):
+            x = re.match(r'^\s*(.+?) \((Attack|Defense|Healing|Support|Control), Y([123])\b', seg)
+            assert x, ('world team line', f, seg)
+            team.append([byname.get(x.group(1), x.group(1)), x.group(2), int(x.group(3))])
+        wd['rivals'][m.group(1)] = team
+    assert set(wd['rivals']) == set(wd['teams'][1:]) and all(len(v) == 4 and len({r for _i, r, _y in v}) == 4 for v in wd['rivals'].values()), 'world teams: four members with four roles each'
+    assert all(any(nid == x[0] for v in wd['rivals'].values() for x in v) for nid in wd['pins']), 'event_frame.json world.pins: not a World team member'
+    cands = set(stu) | {x[0] for v in kd['rivals'].values() for x in v}
+    magic = {}
+    for nid in sorted(cands):
+        f = next((f['text'] for f in npcs.get(nid, {}).get('fields', []) if f['label'].split(' (')[0] == 'Magic'), '')
+        t = re.match(r'^(Elemental|Mystic|Spiritual|Occult|Divine)\b', f)
+        if t: magic[nid] = t.group(1)
+    wd['magic'] = magic
+    PN = wd['panel']
+    assert all(c[0] in cands for c in PN['counter']), 'event_frame.json world.panel.counter: not a Kingdom competitor'
+    wd['rel'] = sorted({(e['from'], e['to'], e['type']) for e in json.load(open(os.path.join(root, 'data/relations.json'), encoding='utf-8'))
+                        if not e.get('rule') and e['type'] in PN['rel'] and e['from'] in cands and e['to'] in cands})
+    wd['rel'] = [list(x) for x in wd['rel']]
+    ct['world'] = wd
     # 1.86.0 (planning/DRAFT_event_frame.md 4.7): Founder Day's hunt, its places [place key, name] (campus places with lore)
     hu = {k: v for k, v in ef['hunt'].items() if not k.startswith('_')}
     locs = json.load(open(os.path.join(root, 'data/locations.json'), encoding='utf-8'))

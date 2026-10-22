@@ -240,8 +240,23 @@ function kingdomBlock(S) {
   const bloom = K.bloom >= 0 ? `<p class="hint">Your team carries ${K.bloom ? 'a Kingsbloom' : 'no Kingsbloom yet'}. At sunset the judges take one from each team; the team without one goes out.</p>` : '';
   const rooms = K.rooms.length ? `<h3>The Undercroft</h3><p class="hint">Down a room's beast, then be the only team inside for 15 minutes. The two teams holding four rooms at once go through.</p><div class="meta">${K.rooms.map(([n, o, b, nm]) => `<span class="pill ${o === 'Halvard' ? 'g' : o ? 'f' : ''}" title="${esc(nm)}">Room ${n}: ${o ? esc(o) : b ? 'open' : 'beast'}</span>`).join('')}</div>` : '';
   const news = K.news.length ? `<h3>News from Avalon</h3><ul class="log">${K.news.map(n => `<li>${esc(n)}</li>`).join('')}</ul>` : '';
-  const world = K.world.length ? `<h3>The national four</h3><div class="meta">${K.world.map(w => `<span class="pill g">${w[0] === '{{user}}' ? 'You' : esc(w[0])} · ${esc(w[1])} · ${esc(w[2])}</span>`).join('')}</div>` : '';
+  const world = K.world.length ? `<h3>The national four</h3><div class="meta">${K.world.map(w => `<span class="pill g">${w[0] === '{{user}}' ? 'You' : esc(w[0])} · ${esc(w[1])} · ${esc(w[2])}</span>`).join('')}</div>${panelWhy(K.wn)}` : '';
   return `<h3>Kingdom Competition${round ? ': ' + esc(round) : ''}</h3>${bloom}${teams}${rooms}${news}${world}`;
+}
+// 1.97.4: why the World panel picked the four it did (relations, Kingdom teammates, your bonds, a power that eats its allies' magic)
+const panelWhy = wn => ((wn || []).length ? `<p class="hint">How the four fight together: ${wn.map(esc).join('; ')}.</p>` : '');
+// 1.97.4 (owner-approved planning/DRAFT_world_competition.md §1b): the World Competition from the engine's $ui.wc: the six nations and
+// how far each got, the Phase 1 groups once drawn, the Siege scores, the news (Halvard hears it on the Announcement Pillars)
+function worldBlock(S) {
+  const K = (S.$ui || {}).wc;
+  if (!K || !featureOn(S, 'competition')) return '';
+  const who = m => (m[3] && npcOf(m[0]) ? `<button class="who" data-open="npc:${esc(m[0])}"${m[2] ? ' style="opacity:.6"' : ''}>${avatar(m[0], S, 'av xs')}<span>${esc(nameOf(m[0], S))} <span class="sub">· ${esc(m[1])}${m[2] ? ' · crystal broken' : ''}</span></span></button>`
+    : `<span class="who"${m[2] ? ' style="opacity:.6"' : ''}><span>${m[0] === '{{user}}' ? '<b>You</b>' : esc(m[0])} <span class="sub">· ${esc(m[1])}${m[2] ? ' · crystal broken' : ''}</span></span></span>`);
+  const grp = k => { const i = K.g.findIndex(g => g.includes(k)); return i < 0 ? '' : ` <span class="sub">· group ${i + 1}</span>`; };
+  const teams = K.teams.map(([k, ms, st]) => `<div class="item"><div class="row"><span class="t">${esc(k)}${grp(k)}</span>${st ? `<span class="pill ${/champions/.test(st) ? 'g' : /out/.test(st) ? 'f' : 'w'}">${esc(st)}</span>` : ''}</div><div class="meta">${ms.map(who).join('')}</div></div>`).join('');
+  const siege = K.sg.length ? `<h3>The Siege</h3><ul class="log">${K.sg.map(([d, a, b, x, y, w]) => `<li>${esc(d)}: ${esc(a)} · ${esc(b)}${x || y ? ` <b>${x}-${y}</b>` : ''}${w ? ` <span class="pill g">${esc(w)}</span>` : ''}</li>`).join('')}</ul>` : '';
+  const news = K.news.length ? `<h3>${K.mine ? 'Results' : 'News on the Announcement Pillars'}</h3><ul class="log">${K.news.map(n => `<li>${esc(n)}</li>`).join('')}</ul>` : '';
+  return `<h3>World Competition: ${esc(K.city)}</h3><p class="hint">Six nations. Phase 1, two groups of three in Last Team Standing; Phase 2, the Siege, first to four rounds; the Grand Final in the arena.${K.win ? ` Champions: <b>${esc(K.win)}</b>.` : ''}</p>${teams}${siege}${news}${panelWhy(K.wn)}`;
 }
 const ctEdgeUI = d => { const n = ((DATA.presence.ct || {}).strength || {}).edge || 15; return d >= n ? 'stronger' : d <= -n ? 'weaker' : 'even'; };
 
@@ -277,7 +292,7 @@ function acCompetition(S) {
     const g = _.groupBy(Object.keys(DATA.npcs).filter(id => /team$/.test(DATA.npcs[id].g)), id => DATA.npcs[id].g);
     rivals = `<h3>Rival academies</h3>${Object.entries(g).map(([name, ids]) => `<div class="item"><b>${esc(name)}</b><div class="meta">${ids.map(id => `<button class="who" data-open="npc:${esc(id)}">${avatar(id, S, 'av xs')}<span>${esc(nameOf(id, S))}${DATA.npcs[id].tr ? ` · ${DATA.npcs[id].tr}` : ''}</span></button>`).join('')}</div></div>`).join('')}`;
   }
-  return `${status}${kingdomBlock(S)}${academyBlock(S)}${dormBracket(S)}<h3>The ladder</h3><ol class="ladder">${ladder}</ol>${team}${rivals}`;
+  return `${status}${worldBlock(S)}${kingdomBlock(S)}${academyBlock(S)}${dormBracket(S)}<h3>The ladder</h3><ol class="ladder">${ladder}</ol>${team}${rivals}`;
 }
 
 // ---------------------------------------------------------------- event

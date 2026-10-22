@@ -889,7 +889,13 @@ function hkWindow(W, S) {
   const t = toAbs(W), at = ([w, d, tm]) => toAbs({ Year: Y, Month: Wn.m, Week: w, Day: d, Time: tm });
   return t >= at(Wn.from) && t < at(Wn.to);
 }
-const hkGround = (W, k) => num(W.Week, 0) === (HK.window || {}).from[0] && ((HK.grounds || {})[k] || []).includes(W.Day);
+// 1.97.4: a ground opens only on the day Eldrasil plays there: its Phase 1 group's day (the draw), the Siege day Eldrasil is in
+const hkGround = (W, k, S) => {
+  const st = ((S || {}).$eng || {}).wc;
+  if (num(W.Week, 0) !== (HK.window || {}).from[0] || !((HK.grounds || {})[k] || []).includes(W.Day) || !_.isPlainObject(st) || !st.on || st.y !== num(W.Year, 1)) return false;
+  if (k === 1) return (WC.p1.days || [])[st.g.findIndex(g => g.includes('Eldrasil'))] === W.Day;
+  return (st.sg || []).some((m, i) => (m.a === 'Eldrasil' || m.b === 'Eldrasil') && WC.p2.days[i] === W.Day);
+};
 // ---- the campus (1.47.0, audit 3.2): the Halvard grounds as the first Area. Each Campus Map place is its own node; the legs are the
 // Campus Map's walking minutes (data/locations.json near), so the engine and the Map panel walk the same graph. The parser is
 // canonLocation (with yearFloorLocation): a Location in the map's words names one place. stepCampus charges a move's minutes (owed
@@ -1520,7 +1526,7 @@ function stepTime(c) {
   // Residence is closed to every guest and a match ground opens only on its days: {{user}} stays where they were (or at the inn)
   const hPrev = hasB ? areaPlace(AR.hanakaze, B.World.Location, areaWas(B, 'hanakaze')) : '';
   let hAt = !sAt && !fAt && !aAt && !rAt && hkWindow(S.World, S) ? areaPlace(AR.hanakaze, S.World.Location, hPrev) : '', hHeld = '';
-  const hkShut = id => !!(AR.hanakaze.PL[id].locked || (AR.hanakaze.PL[id].kc && !hkGround(S.World, AR.hanakaze.PL[id].kc)));
+  const hkShut = id => !!(AR.hanakaze.PL[id].locked || (AR.hanakaze.PL[id].kc && !hkGround(S.World, AR.hanakaze.PL[id].kc, S)));
   if (hAt && hkShut(hAt)) { hHeld = hAt; hAt = hPrev && !hkShut(hPrev) ? hPrev : HK.inn; }
   if (sAt) S.World.Location = areaLoc(AR.airship, S.World.Location, sAt);
   else if (fAt) S.World.Location = areaLoc(AR.forest, S.World.Location, fAt);
@@ -2427,7 +2433,7 @@ function stepHanakaze(c) {
     }
   });
   for (const id of [hPrev, hAt]) if (id && A.PL[id] && !seen.includes(id)) seen.push(id);
-  const W = S.World, tnow = hm(W.Time), kco = [1, 2].filter(k => hkGround(W, k));
+  const W = S.World, tnow = hm(W.Time), kco = [1, 2].filter(k => hkGround(W, k, S));
   const today = (HK.schedule || []).filter(([w, d, t]) => num(W.Week, 0) === w && W.Day === d && hm(t) >= tnow).map(([, , t, what]) => [t, what]);
   S.$ui.area.hanakaze = { on: true, at: hAt, name: A.PL[hAt].name, ...areaNear(A, hAt, p => !p.kc || kco.includes(p.kc), p => !p.locked && (!p.kc || kco.includes(p.kc)) && (!p.hidden || seen.includes(p.id))),
     seen, kc: kco, owe: num(X.owe, 0), today, ev: evs, coin: '' };
@@ -2522,7 +2528,7 @@ const ctEdge = (d, n) => (d >= n ? 'stronger' : d <= -n ? 'weaker' : 'even');
 // $eng.kc (a swipe starts again from the state before the reply, so it sees the same rounds); without, the whole competition is
 // computed from the seed and never stored, and <now> and the Competition tab tell only what has happened by now. A competitor's
 // record (credit) is what the World panel picks the national four from.
-const KC = CT.kingdom || {};
+const KC = CT.kingdom || {}, KC_EV = EVENTS.find(e => e.kingdom);
 const KC_RX = new RegExp('\\b(' + (KC.teams || ['Halvard']).join('|') + ')\\b', 'i');
 const KC_ROOM = id => ((KC.r2 || {}).rooms || []).findIndex(r => r[0] === id);
 const kcClamp = p => Math.min(CT.strength.clamp[1], Math.max(CT.strength.clamp[0], p));
@@ -2680,11 +2686,62 @@ function kcFinal(st, seed, at, win) {
   st.r = 4; st.end3 = at; st.enc = null;
   kcTeam(st, st.win).m.forEach(e => kcCredit(st, e.id, 'final'));
   kcEv(st, [3, at, 'win', st.win]);
-  // the World panel: the best record (then strength) of each combat role across all sixteen, winners and losers alike
-  const all = st.T.flatMap(t => t.m.map(e => ({ ...e, k: t.k }))).sort((x, z) => num(st.cr[z.id], 0) * 10 + z.s - (num(st.cr[x.id], 0) * 10 + x.s) || (x.id < z.id ? -1 : 1));
-  const w = [];
-  for (const e of all) if (w.length < num(KC.world, 4) && !w.some(x => x.role === e.role)) w.push(e);
+  kcPanel(st);
+}
+// 1.97.4 (owner-approved planning/DRAFT_world_competition.md §3): the World panel picks the national four from all sixteen, winners and
+// losers alike, one per combat role: each competitor's record (credit) and strength as before, and, at Gavlan Haverton's urging, how
+// the four fight together: the relations between them (data/relations.json), having fought on the same Kingdom team, {{user}}'s bond
+// with each of the others (st.bd: [Rank, Tension], written by stepKingdom), and a power that eats its allies' magic (Lucius's swarm:
+// panel.counter, by the allies' magic type; {{user}}'s is st.um). st.w: [name, academy, role]; st.wm: the four as competitors (the
+// World Competition's Eldrasil team); st.wn: the panel's reasons, for the Competition tab.
+function kcPanel(st) {
+  const WD = CT.world || {}, PN = WD.panel || {}, MG = WD.magic || {}, bd = st.bd || {};
+  const all = st.T.flatMap(t => t.m.map(e => ({ ...e, k: t.k }))).sort((x, z) => (x.id < z.id ? -1 : 1));
+  const solo = e => num(st.cr[e.id], 0) * num(PN.credit, 10) + e.s, mag = e => (e.user ? st.um || '' : MG[e.id] || '');
+  const nm = kcName;
+  // what a pair adds (points and the reasons, either way round)
+  const pair = (a, b) => {
+    let p = 0; const why = [];
+    const ty = (WD.rel || []).filter(r => (r[0] === a.id && r[1] === b.id) || (r[0] === b.id && r[1] === a.id)).map(r => r[2]);
+    for (const t of ty) p += num((PN.rel || {})[t], 0);
+    if (ty.length) why.push(`${nm(a)} and ${nm(b)}: ${[...new Set(ty)].join(', ')}`);
+    if (a.k === b.k) { p += num(PN.mates, 0); why.push(`${nm(a)} and ${nm(b)} fought together for ${a.k}`); }
+    const u = a.user ? b : b.user ? a : null, x = u && bd[u.id];
+    if (x) { const v = num(x[0], 0) * num(PN.bond, 0) + (num(x[1], 0) >= (PN.tension || [101])[0] ? num((PN.tension || [])[1], 0) : 0);
+      if (v) { p += v; why.push(`{{user}} and ${nm(u)}: bond Rank ${num(x[0], 0)}${num(x[1], 0) >= (PN.tension || [101])[0] ? ', with tension' : ''}`); } }
+    return [p, why];
+  };
+  // a power that eats its allies' magic: an ally of those types loses that percent of their worth (record and strength); an ally of
+  // unknown magic counts part of it. So Lucius goes only with three who can fight beside his swarm, or when he is worth the loss.
+  const eats = (e, four) => { const C = (PN.counter || []).find(x => x[0] === e.id); if (!C) return [0, ''];
+    const p = four.filter(o => o !== e).reduce((a, o) => a - solo(o) * (mag(o) ? (C[1].includes(mag(o)) ? 1 : 0) : num(PN.unknown, 0.5)) * C[2] / 100, 0);
+    return [p, `${nm(e)}: ${C[3]}${p ? ', and the panel took him at that cost' : ', and none of the other three fights with magic it eats'}`]; };
+  const P = all.map(a => all.map(b => (a === b ? [0, []] : pair(a, b))));
+  let best = null;
+  const n = all.length, score = ix => { const four = ix.map(i => all[i]);
+    let s = ix.reduce((a, i) => a + solo(all[i]), 0);
+    for (let i = 0; i < 4; i++) for (let j = i + 1; j < 4; j++) s += P[ix[i]][ix[j]][0];
+    return s + four.reduce((a, e) => a + eats(e, four)[0], 0); };
+  for (let a = 0; a < n; a++) for (let b = a + 1; b < n; b++) for (let c = b + 1; c < n; c++) for (let d = c + 1; d < n; d++) {
+    const ix = [a, b, c, d]; if (new Set(ix.map(i => all[i].role)).size < 4) continue;
+    const s = score(ix); if (!best || s > best[0]) best = [s, ix];
+  }
+  const w = best ? best[1].map(i => all[i]) : [];
+  const order = e => ROLES5.indexOf(e.role);
+  w.sort((x, z) => order(x) - order(z));
   st.w = w.map(e => [kcName(e), e.k, e.role]);
+  st.wm = w.map(e => ({ id: e.id, role: e.role, y: e.y, s: e.s, k: e.k, ...(e.user ? { user: true } : e.named ? { named: true } : { label: e.label }) }));
+  // the reasons: the pairs that counted, and the strongest on paper in a role who was left out
+  const why = [];
+  for (let i = 0; i < w.length; i++) for (let j = i + 1; j < w.length; j++) why.push(...pair(w[i], w[j])[1]);
+  for (const e of w) if ((PN.counter || []).some(x => x[0] === e.id)) why.push(eats(e, w)[1]);
+  for (const r of ROLES5) {
+    const top = all.filter(e => e.role === r).sort((x, z) => solo(z) - solo(x) || (x.id < z.id ? -1 : 1))[0];
+    if (!top || w.includes(top) || !w.some(e => e.role === r)) continue;
+    const C = (PN.counter || []).find(x => x[0] === top.id);
+    why.push(`${nm(top)} (${top.k}, ${r}) was the strongest ${r} on paper but was left out: ${C ? C[3] : 'the four fit together better without them'}`);
+  }
+  st.wn = why.slice(0, 8);
 }
 // every tick from st.t up to minute `to` (since Wednesday 00:00)
 function kcAdvance(st, seed, to, log, Co) {
@@ -2786,8 +2843,17 @@ function stepKingdom(c) {
   if (!wk) {   // after the week: {{user}} picked for the national four
     if (st && st.r >= 4 && !st.ws && hasB && !toolEdit) {
       st.ws = 1;
-      if (st.on && st.w.some(w => w[0] === '{{user}}')) { Co.Tier = 'World'; Co.Status = 'selected'; Co.Placement = ''; log.push('The World panel picked {{user}} for the national four (the Kingdom Competition record): Competition is now World, selected.'); }
-      S.$eng.kc = { y, r: 4, on: st.on, x1: st.x1, x2: st.x2, fin: st.fin, win: st.win, w: st.w, ws: 1, T: [], cr: {}, ev: [] };
+      if (st.on && st.w.some(w => w[0] === '{{user}}')) {
+        // 1.97.4: the national four's other three are {{user}}'s team now (roster ids, or the labels of students the story invented)
+        Co.Tier = 'World'; Co.Status = 'selected'; Co.Placement = ''; Co.Team = (st.wm || []).filter(e => !e.user).map(e => (e.named ? e.id : e.label || e.id));
+        log.push(`The World panel picked {{user}} for the national four (the Kingdom Competition record and how the four fight together): Competition is now World, selected, with ${Co.Team.join(', ')}.`);
+      }
+      S.$eng.kc = { y, r: 4, on: st.on, x1: st.x1, x2: st.x2, fin: st.fin, win: st.win, w: st.w, wm: st.wm || [], wn: st.wn || [], ws: 1, T: [], cr: {}, ev: [] };
+    } else if (!st && hasB && !toolEdit && KC_EV && (num(W.Month, 0) > KC_EV.m || (W.Month === KC_EV.m && num(W.Week, 0) > KC_EV.w))) {
+      // 1.97.4: without {{user}} on the team, the year's result is kept once the week is over (the World Competition reads its four)
+      const all = kcInit(seed, y, S, false);
+      kcAdvance(all, seed, 7 * DAY_MIN, [], { Results: [] });
+      S.$eng.kc = { y, r: 4, on: 0, x1: all.x1, x2: all.x2, fin: all.fin, win: all.win, w: all.w, wm: all.wm || [], wn: all.wn || [], ws: 1, T: [], cr: {}, ev: [] };
     }
     return;
   }
@@ -2806,6 +2872,9 @@ function stepKingdom(c) {
   }
   if (hasB && !toolEdit) {
     st.at = aAt || ''; st.un = String(S.Player.Profile.Name || '').trim().toLowerCase();
+    // 1.97.4: what the World panel reads of {{user}}: their bond with each named competitor, their dominant magic type
+    st.bd = Object.fromEntries(st.T.flatMap(t => t.m).filter(e => e.named && S.Bonds[e.id]).map(e => [e.id, [num(S.Bonds[e.id].Rank, 0), num(S.Bonds[e.id].Tension, 0)]]));
+    st.um = String((((S.Player.Magic || {})._Affinity || {}).Dominant) || ((((S.Player.Magic || {})._Affinity || {}).Types) || [])[0] || '');
     kcReports(st, seed, kcNewLines(Co.Results, (B.Competition || {}).Results), st.t, log, jnl);
     if (st.r === 2 && kcMine(st)) kcPlace(st, S, aAt);
     kcAdvance(st, seed, now, log, Co);
@@ -2878,13 +2947,357 @@ function kcPublish(c, st, now, mine) {
     teams: st.T.map(t => [t.k, t.m.map(e => [kcName(e), e.role, (st.out[t.k] || []).includes(e.id) && live ? 1 : 0, e.named ? 1 : 0]), outOf(t.k)]),
     bloom: live && st.r === 1 ? st.f.filter(f => f.h === 'Halvard').length : -1,
     rooms: (live && st.r === 2) || told(2, st.end2) ? st.rm.map((x, i) => [i + 1, x.o, x.b, PL[R2.rooms[i][0]].brief || '']) : [],
-    news, world: told(3, st.end3) ? st.w : [] };
+    news, world: told(3, st.end3) ? st.w : [], wn: told(3, st.end3) ? st.wn || [] : [] };
+}
+// ---- 5a3. the World Competition (1.97.4, owner-approved planning/DRAFT_world_competition.md §1b) ----
+// Six nations, Month 11 Week 3 Monday to Week 4 Monday (lore 19). The opening banquet (Monday 19:00) draws two Phase 1 groups of
+// three (Tuesday, Wednesday). Phase 1 is Last Team Standing: every competitor is teleported alone to a random spot with a crystal (a
+// broken crystal is out), a barrier closes all day (whoever it catches outside is out) and reaches one point at its end, where
+// whoever is left fights it out; the first team to lose everyone goes out of the competition, the last left tops the group, the
+// other survivor goes through second (at the same moment: the fewer crystals broken falls first). Phase 2 is the Siege, a group's
+// top seed against the other group's second (Thursday, Friday), first to four rounds; Sunday the Grand Final. The engine plays every
+// team (strength, the Plays lines as tactics: data/event_frame.json world) but {{user}}'s part: with {{user}} in the national four
+// the competition lives in $eng.wc and the story reports {{user}}'s part ("World P1: broke <name>'s crystal", "World P2: won round
+// <n>", "World P3: won"), anything unreported is played off-screen when the match moves on; without, it is computed whole from the
+// seed and never stored, and Halvard hears it in the evening announcement on the Announcement Pillars (the Grand Final live on the
+// scrying crystal in Arbiter Hall). Times are minutes since the competition week's Monday 00:00.
+const WC = CT.world || {};
+const wcTac = k => (WC.tact || {})[(WC.tactic || {})[k]] || {};
+const wcVenue = y => ({ ...((WC.venues || {}).default || {}), ...((WC.venues || {})[String(y)] || {}) });
+const wcUp = (st, k) => kcTeam(st, k).m.filter(e => !(st.out[k] || []).includes(e.id));
+const wcS = ms => (ms.length ? ms.reduce((a, e) => a + e.s, 0) / ms.length : 0);
+const wcIn = st => !!st.on && !(st.xo || {}).Eldrasil;
+const wcGi = st => (st.gx[0] ? 1 : 0);
+const wcMine1 = (st, gi) => wcIn(st) && st.g[gi].includes('Eldrasil') && !(st.out.Eldrasil || []).includes('{{user}}');
+const wcLeft = (st, gi) => st.g[gi].filter(k => wcUp(st, k).length);
+const wcEv = (st, ev) => { st.ev = [...(st.ev || []), ev].slice(-24); };
+const wcHM = m => `${String(Math.floor((m % DAY_MIN) / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+const wcDayAt = d => DAYS.indexOf(d) * DAY_MIN;
+// the paths' hook (hook.path, for 1.97.5): a nation named there wins every Phase 1 duel and Siege round the engine plays and is never
+// caught by the barrier; a result the story reports stands
+const wcPath = k => ((WC.hook || {}).path || []).includes(k);
+// the minute of the competition week (from its Monday 00:00; Week 4 counts on), or null before it and outside Month 11
+const wcNow = W => (num(W.Month, 0) !== WC.m || num(W.Week, 0) < WC.w ? null : ((num(W.Week, 0) - WC.w) * 7 + DAYS.indexOf(W.Day)) * DAY_MIN + num(hm(W.Time), 0));
+// the four are home (the liner has landed): the prize reaches the bracelet then
+const wcHome = W => num(W.Month, 0) > WC.m || (wcNow(W) != null && wcNow(W) >= ((WC.home[0] - WC.w) * 7 + DAYS.indexOf(WC.home[1])) * DAY_MIN + hm(WC.home[2]));
+// Eldrasil's four: the World panel's pick after the Kingdom Competition ($eng.kc; else the Kingdom computed from the seed)
+function wcFour(S, seed, y) {
+  let K = ((S || {}).$eng || {}).kc;
+  if (!_.isPlainObject(K) || K.y !== y || !Array.isArray(K.w) || K.w.length < 4) { K = kcInit(seed, y, S, false); kcAdvance(K, seed, 7 * DAY_MIN, [], { Results: [] }); }
+  if (Array.isArray(K.wm) && K.wm.length) return K.wm.map(e => ({ ...e }));
+  const T = kcTeams(PRESENCE, seed, y, S);   // a record from before 1.97.4 keeps only the names
+  return K.w.map(([nm, k, role]) => { const e = (T.find(t => t.k === k) || { m: [] }).m.find(x => kcName(x) === nm);
+    return e ? { ...e, k } : nm === '{{user}}' ? { id: '{{user}}', role, y: 1, s: (contestUser(PRESENCE, S) || { s: 50 }).s, user: true, k } : { id: nm, role, y: 2, s: ctStr(PRESENCE, seed, y, nm, 2), label: nm, k }; });
+}
+function wcInit(seed, y, S, on) {
+  const four = wcFour(S, seed, y).map(e => ({ id: e.id, role: e.role, y: e.y, s: e.s, ...(e.user ? { user: true } : e.named ? { named: true } : { label: e.label || e.id }) }));
+  if (on && !four.some(e => e.user)) {   // the story made {{user}} one of the four without the panel: {{user}} takes their role's place
+    const U = contestUser(PRESENCE, S) || { role: 'Attack', y: 1, s: 50 }, j = four.findIndex(e => e.role === U.role);
+    four[j >= 0 ? j : four.length - 1] = { id: '{{user}}', role: U.role, y: U.y, s: U.s, user: true };
+  }
+  const fav = k => num((WC.favour || {})[k], 0);
+  const T = [{ k: 'Eldrasil', m: four }, ...(WC.teams || []).slice(1).map(k => ({ k, m: ((WC.rivals || {})[k] || []).map(([id, role, y0]) => { const yy = y0 + y - 1;
+    return yy > 3 ? { id: `${k}:${role}`, role, y: 1, s: ctStr(PRESENCE, seed, y, `${k}:${role}`, 1) + fav(k), label: `${k} Y1 student` }
+      : { id, role, y: yy, s: ctStr(PRESENCE, seed, y, `${k}:${id}`, yy) + fav(k) + num((WC.pins || {})[id], 0), named: true }; }) }))];
+  const order = [...(WC.teams || [])].sort((a, b) => roll100(seed, y, 'wc-draw', a) - roll100(seed, y, 'wc-draw', b) || (a < b ? -1 : 1));
+  // the draw's hook (hook.same, for 1.97.5): a nation named there swaps into Eldrasil's group; the rest of the draw stands
+  const g = [order.slice(0, 3), order.slice(3, 6)], ge = g[0].includes('Eldrasil') ? 0 : 1, same = (WC.hook || {}).same || [];
+  for (const k of same.filter(x => g[1 - ge].includes(x))) {
+    const j = g[ge].findIndex(x => x !== 'Eldrasil' && !same.includes(x));
+    if (j >= 0) { g[1 - ge][g[1 - ge].indexOf(k)] = g[ge][j]; g[ge][j] = k; }
+  }
+  return { y, on: on ? 1 : 0, T, g, p: 1, t: 0, out: {}, go: [[], []], gx: [null, null], xo: {}, sg: [], fin: [], win: '', end3: 0,
+    cr: {}, ev: [], enc: null, close: 0, spot: pickOf(wcVenue(y).spots || [''], seed, y, 'wc-spot') };
+}
+// a duel of two lone competitors (Phase 1): the stronger usually wins; an attrition team grows stronger by the hour, a chaos team
+// swings either way. The loser's crystal breaks. True when A won.
+function wcDuel(st, seed, at, A, B) {
+  const [ka, a] = A, [kb, b] = B, h = Math.max(0, Math.floor(((at % DAY_MIN) - hm(WC.p1.from)) / 60));
+  const sw = k => { const x = num(wcTac(k).swing, 0); return x ? rollInt(-x, x, seed, st.y, 'wc-sw', at, k) : 0; };
+  const aw = wcPath(ka) !== wcPath(kb) ? wcPath(ka)
+    : roll100(seed, st.y, 'wc-duel', at, a.id, b.id) < kcClamp(50 + a.s - b.s + (num(wcTac(ka).late, 0) - num(wcTac(kb).late, 0)) * h + sw(ka) - sw(kb));
+  const [kw, w, kl, l] = aw ? [ka, a, kb, b] : [kb, b, ka, a];
+  st.out[kl] = [...(st.out[kl] || []), l.id]; st.cr[w.id] = num(st.cr[w.id], 0) + 1;
+  wcEv(st, [1, at, 'duel', kw, kcName(w), kl, kcName(l)]);
+  return aw;
+}
+// a team with nobody left falls (several at once: the fewer crystals broken first); once one team (or none) is left the group is over
+function wcCheck(st, gi, at) {
+  if (st.gx[gi]) return;
+  const cr = k => kcTeam(st, k).m.reduce((a, e) => a + num(st.cr[e.id], 0), 0);
+  st.g[gi].filter(k => !wcUp(st, k).length && !st.go[gi].includes(k)).sort((a, b) => cr(a) - cr(b) || (a < b ? -1 : 1)).forEach(k => { st.go[gi].push(k); wcEv(st, [1, at, 'fell', k]); });
+  const left = wcLeft(st, gi);
+  if (left.length > 1) return;
+  const rank = [...left, ...[...st.go[gi]].reverse()];
+  st.gx[gi] = { top: rank[0], sec: rank[1], out: rank[2], end: at };
+  st.xo = { ...st.xo, [rank[2]]: 1 }; st.close = 0; st.enc = null;
+  wcEv(st, [1, at, 'group', gi, rank[0], rank[1], rank[2]]);
+  if (st.gx[0] && st.gx[1]) {   // Phase 2: the top seed takes the side its play favours first (and again in a seventh round)
+    const side = k => (num(wcTac(k).atk, 0) >= num(wcTac(k).def, 0) ? 'atk' : 'def');
+    st.sg = [[st.gx[0].top, st.gx[1].sec], [st.gx[1].top, st.gx[0].sec]].map(([a, b]) => ({ a, b, side: side(a), rd: [], w: '', end: 0 }));
+    st.p = 2;
+  }
+}
+// the barrier at its last point: everyone left fights it out in one clearing, two at a time, until one team is left
+function wcClose(st, seed, gi, at) {
+  for (let i = 0; i < 40 && !st.gx[gi]; i++) {
+    const live = st.g[gi].flatMap(k => wcUp(st, k).map(e => [k, e])), A = pickOf(live, seed, st.y, 'wc1-cl', i, 'a');
+    wcDuel(st, seed, at, A, pickOf(live.filter(x => x[0] !== A[0]), seed, st.y, 'wc1-cl', i, 'b'));
+    wcCheck(st, gi, at);
+  }
+}
+// a meeting of {{user}}'s nobody reported: played off-screen like any other
+function wcSettle(st, seed, at, log, Co) {
+  const E = st.enc; st.enc = null;
+  const o = E && kcTeam(st, E.k).m.find(e => e.id === E.id), me = kcTeam(st, 'Eldrasil').m.find(e => e.user);
+  if (!o || !me || (st.out[E.k] || []).includes(o.id) || (st.out.Eldrasil || []).includes(me.id) || st.gx[E.g]) return;
+  const line = wcDuel(st, seed, E.at, ['Eldrasil', me], [E.k, o]) ? `broke ${kcName(o)}'s crystal` : '{{user}} out';
+  Co.Results = [...(Co.Results || []), `World P1: ${line} (off-screen)`].slice(-12);
+  log.push(`World Competition: the meeting with ${kcName(o)} was not reported before the next turn of the match: played off-screen (${line}).`);
+  wcCheck(st, E.g, at);
+}
+// one Phase 1 turn of group gi: each competitor still standing may be caught outside the barrier or meet someone of another team
+// (both grow as the barrier closes); {{user}}'s meetings are the story's
+function wcP1Tick(st, seed, gi, at, log, Co) {
+  const y = st.y, P1 = WC.p1, from = wcDayAt(P1.days[gi]) + hm(P1.from), f = Math.min(1, Math.max(0, (at - from) / (hm(P1.to) - hm(P1.from))));
+  const lerp = ([a, b]) => a + (b - a) * f;
+  if (st.enc) wcSettle(st, seed, at, log, Co);
+  const live = () => st.g[gi].flatMap(k => wcUp(st, k).map(e => [k, e])), busy = new Set(), mine = wcMine1(st, gi);
+  for (const [k, e] of live().sort((a, b) => roll100(seed, y, 'wc1-ord', at, a[1].id) - roll100(seed, y, 'wc1-ord', at, b[1].id) || (a[1].id < b[1].id ? -1 : 1))) {
+    if (st.gx[gi] || busy.has(e.id) || (st.out[k] || []).includes(e.id)) continue;
+    if (!(e.user && mine) && !wcPath(k) && roll100(seed, y, 'wc1-bar', at, e.id) < lerp(P1.barrier)) { st.out[k] = [...(st.out[k] || []), e.id]; wcEv(st, [1, at, 'barrier', k, kcName(e)]); wcCheck(st, gi, at); continue; }
+    if (roll100(seed, y, 'wc1-meet', at, e.id) >= lerp(P1.meet) * num(wcTac(k).meet, 1)) continue;
+    const foes = live().filter(([k2, x]) => k2 !== k && !busy.has(x.id));
+    if (!foes.length) continue;
+    const [k2, o] = pickOf(foes, seed, y, 'wc1-foe', at, e.id);
+    busy.add(e.id); busy.add(o.id);
+    if (mine && (e.user || o.user)) { if (!st.enc) st.enc = { g: gi, k: e.user ? k2 : k, id: e.user ? o.id : e.id, by: e.user ? 'you' : 'them', at }; continue; }
+    wcDuel(st, seed, at, [k, e], [k2, o]);
+    wcCheck(st, gi, at);
+  }
+}
+// who attacks in Siege round n: the top seed's chosen side in rounds 1-3 and a seventh, the other side in rounds 4-6
+const wcAtk = (m, n) => { const sw = WC.p2.swap, first = m.side === 'atk'; return (n > sw && n <= 2 * sw ? !first : first) ? m.a : m.b; };
+function wcRound(st, seed, mi, n) {
+  const m = st.sg[mi], att = wcAtk(m, n), def = att === m.a ? m.b : m.a, T = k => kcTeam(st, k).m;
+  if (wcPath(att) !== wcPath(def)) return wcPath(att) ? att : def;
+  const sw = k => { const x = num(wcTac(k).swing, 0); return x ? rollInt(-x, x, seed, st.y, 'wc2-sw', mi, n, k) : 0; };
+  const edge = wcS(T(att)) - wcS(T(def)) + num(wcTac(att).atk, 0) - num(wcTac(def).def, 0) + (num(wcTac(att).late, 0) - num(wcTac(def).late, 0)) * (n - 1) + sw(att) - sw(def);
+  return roll100(seed, st.y, 'wc2-round', mi, n) < kcClamp(50 + edge) ? att : def;
+}
+function wcRoundEnd(st, mi, n, w, at) {
+  const m = st.sg[mi], won = k => m.rd.filter(x => x === k).length;
+  m.rd.push(w); wcEv(st, [2, at, 'round', mi, n, w]);
+  if (won(m.a) < WC.p2.win && won(m.b) < WC.p2.win) return;
+  m.w = won(m.a) >= WC.p2.win ? m.a : m.b; m.end = at;
+  st.xo = { ...st.xo, [m.w === m.a ? m.b : m.a]: 2 };
+  wcEv(st, [2, at, 'siege', mi, m.w]);
+  if (st.sg.every(x => x.w)) { st.fin = st.sg.map(x => x.w); st.p = 3; }
+}
+function wcFinal(st, seed, at, win) {
+  const [a, b] = st.fin, T = k => kcTeam(st, k).m;
+  st.win = win || (roll100(seed, st.y, 'wc3') < kcClamp(50 + wcS(T(a)) - wcS(T(b))) ? a : b);
+  st.end3 = at; st.p = 4; st.enc = null; st.xo = { ...st.xo, [st.win === a ? b : a]: 3 };
+  wcEv(st, [3, at, 'win', st.win]);
+}
+// every turn of the competition from st.t up to minute `to`
+function wcAdvance(st, seed, to, log, Co) {
+  const P1 = WC.p1, P2 = WC.p2, P3 = WC.p3;
+  for (let guard = 0; guard < 300; guard++) {
+    if (st.enc && !st.enc.seen) break;   // a meeting the story has not seen yet waits for it (<now> shows it this reply)
+    if (st.p === 1) {
+      const gi = wcGi(st), d0 = wcDayAt(P1.days[gi]), from = d0 + hm(P1.from), end = d0 + hm(P1.to);
+      if (st.t < end) {
+        const next = Math.min(end, from + (Math.floor((Math.max(st.t, from) - from) / P1.tick) + 1) * P1.tick);
+        if (next > to) break;
+        st.t = next; wcP1Tick(st, seed, gi, next, log, Co);
+        continue;
+      }
+      if (wcMine1(st, gi)) {   // the last clearing with {{user}} standing: the story's for `grace` minutes, then off-screen
+        const at = end + num(P1.grace, 60);
+        if (!st.close) st.close = end;
+        if (at > to) break;
+        st.enc = null; wcClose(st, seed, gi, at); st.t = at;
+        const line = (st.out.Eldrasil || []).includes('{{user}}') ? '{{user}} out in the last clearing' : 'Eldrasil still standing at the end';
+        Co.Results = [...(Co.Results || []), `World P1: ${line} (off-screen)`].slice(-12);
+        log.push(`World Competition: the last clearing was not reported by ${wcHM(at)}: played off-screen (${line}).`);
+      } else { st.enc = null; wcClose(st, seed, gi, Math.max(st.t, end)); }
+    } else if (st.p === 2) {
+      const mi = st.sg[0].w ? 1 : 0, m = st.sg[mi], n = m.rd.length + 1, start = wcDayAt(P2.days[mi]) + hm(P2.from) + (n - 1) * P2.gap;
+      const mine = wcIn(st) && (m.a === 'Eldrasil' || m.b === 'Eldrasil'), at = start + (mine ? P2.gap : 10);
+      if (at > to) break;
+      st.t = Math.max(st.t, at);
+      const w = wcRound(st, seed, mi, n);
+      if (mine) { const line = `${w === 'Eldrasil' ? 'won' : 'lost'} round ${n}`;
+        Co.Results = [...(Co.Results || []), `World P2: ${line} (off-screen)`].slice(-12);
+        log.push(`World Competition: Siege round ${n} was not reported before the next was due: played off-screen (${line}).`); }
+      wcRoundEnd(st, mi, n, w, at);
+    } else if (st.p === 3) {
+      const mine = wcIn(st) && st.fin.includes('Eldrasil'), at = wcDayAt(P3.day) + hm(mine ? P3.to : P3.rolled);
+      if (at > to) break;
+      st.t = at; wcFinal(st, seed, at, '');
+      if (mine) { Co.Results = [...(Co.Results || []), `World P3: ${st.win === 'Eldrasil' ? 'won' : 'lost'} the Grand Final (off-screen)`].slice(-12); log.push('World Competition: the Grand Final was not reported by the end of the day: played off-screen.'); }
+    } else break;
+  }
+}
+// what the story reported for {{user}}'s part this reply
+function wcReports(st, seed, lines, at, log) {
+  for (const l of lines) {
+    const m = /^\s*World\s+P([123])\s*:\s*(.+)$/i.exec(String(l));
+    if (!m || /\(off-screen\)/i.test(m[2])) continue;
+    const p = +m[1], t = m[2].trim();
+    if (p !== st.p || !wcIn(st)) { log.push(`"${l}" is not about the phase Eldrasil is playing${wcIn(st) && st.p <= 3 ? ` (Phase ${st.p})` : ''}; the engine did not use it.`); continue; }
+    if (p === 1) {
+      const gi = wcGi(st), foes = st.g[gi].filter(k => k !== 'Eldrasil'); let x;
+      if (!st.g[gi].includes('Eldrasil')) { log.push(`"${l}": today's Phase 1 group is ${st.g[gi].join(', ')}; Eldrasil's was the other.`); continue; }
+      if ((x = /broke\s+(.+?)['’]s?\s+crystal/i.exec(t))) {
+        const hit = kcMember(st, x[1], foes);
+        if (hit && !(st.out[hit[0]] || []).includes(hit[1].id)) {
+          st.out[hit[0]] = [...(st.out[hit[0]] || []), hit[1].id]; st.cr['{{user}}'] = num(st.cr['{{user}}'], 0) + 1;
+          wcEv(st, [1, at, 'duel', 'Eldrasil', '{{user}}', hit[0], kcName(hit[1])]);
+          if (st.enc && st.enc.id === hit[1].id) st.enc = null;
+          wcCheck(st, gi, at);
+        } else if (!hit) log.push(`"${l}": no competitor of the other teams in this group has that name.`);
+        continue;
+      }
+      if (/\b(slipped|got)\s+away\b|\bavoided\b/i.test(t)) { st.enc = null; continue; }
+      if ((x = /^(.+?)\s+(?:is\s+)?out\b|^(.+?)['’]s?\s+crystal\s+(?:is\s+)?broke/i.exec(t))) {
+        const hit = kcMember(st, x[1] || x[2], ['Eldrasil']);
+        if (hit && !(st.out.Eldrasil || []).includes(hit[1].id)) {
+          st.out.Eldrasil = [...(st.out.Eldrasil || []), hit[1].id]; wcEv(st, [1, at, 'out', 'Eldrasil', kcName(hit[1])]);
+          if (hit[1].user) st.enc = null;
+          wcCheck(st, gi, at);
+        } else if (!hit) log.push(`"${l}": no one of Eldrasil's four has that name.`);
+        continue;
+      }
+      log.push(`"${l}": not a Phase 1 report the engine knows (<now> gives the forms).`);
+    } else if (p === 2) {
+      const mi = st.sg[0].w ? 1 : 0, M = st.sg[mi], x = /\b(won|lost)\b(?:.*?\bround\s*(\d+))?/i.exec(t);
+      if (M.a !== 'Eldrasil' && M.b !== 'Eldrasil') { log.push(`"${l}": Eldrasil does not play today's Siege.`); continue; }
+      if (!x) { log.push(`"${l}": report a Siege round as "World P2: won round <n>" or "World P2: lost round <n>".`); continue; }
+      const n = x[2] ? +x[2] : M.rd.length + 1;
+      if (n !== M.rd.length + 1) { log.push(`"${l}": round ${M.rd.length + 1} is the one being played.`); continue; }
+      wcRoundEnd(st, mi, n, /won/i.test(x[1]) ? 'Eldrasil' : (M.a === 'Eldrasil' ? M.b : M.a), at);
+    } else if (/\b(won|win|wins|beat)\b/i.test(t)) wcFinal(st, seed, at, 'Eldrasil');
+    else if (/\b(lost|loses)\b/i.test(t)) wcFinal(st, seed, at, st.fin.find(k => k !== 'Eldrasil'));
+  }
+}
+function stepWorld(c) {
+  const { S, B, hasB, toolEdit, log, jnl, seed, OFF } = c;
+  const W = S.World, y = num(W.Year, 1), Co = S.Competition, now = wcNow(W);
+  if (_.isPlainObject(S.$eng.wc) && S.$eng.wc.y !== y) S.$eng.wc = null;
+  let st = _.isPlainObject(S.$eng.wc) ? S.$eng.wc : null;
+  S.$ui.wc = null;
+  if (!WC.p1 || OFF.has('competition') || now == null) return;
+  if (!st && Co.Tier === 'World' && Co.Status === 'selected' && now < 7 * DAY_MIN && contestUser(PRESENCE, S)) {
+    st = wcInit(seed, y, S, true);
+    jnl.push(`World Competition: Eldrasil's four is ${kcTeam(st, 'Eldrasil').m.map(e => `${kcName(e)} (${e.role})`).join(', ')}.`);
+  }
+  if (!st) {   // {{user}} is not in the national four: the whole competition from the seed, told as far as Halvard has heard
+    const all = wcInit(seed, y, S, false);
+    wcAdvance(all, seed, 8 * DAY_MIN, [], { Results: [] });
+    wcPublish(c, all, now, false);
+    return;
+  }
+  if (hasB && !toolEdit && now < 8 * DAY_MIN) {
+    st.un = String(S.Player.Profile.Name || '').trim().toLowerCase();
+    wcReports(st, seed, kcNewLines(Co.Results, (B.Competition || {}).Results), Math.max(st.t, now), log);
+    wcAdvance(st, seed, now, log, Co);
+  }
+  // Placement and Status are the engine's once the phases have decided them
+  const x = st.xo.Eldrasil, P1 = x === 1 ? 'joint 5th of 6' : x === 2 ? 'joint 3rd of 6' : x === 3 ? '2nd of 6' : st.win === 'Eldrasil' ? '1st of 6' : '';
+  if (P1) {
+    if (hasB && !toolEdit && Co.Placement && Co.Placement !== P1 && Co.Placement !== (B.Competition || {}).Placement) log.push(`Competition Placement "${Co.Placement}" is the engine's: ${P1}.`);
+    Co.Tier = 'World'; Co.Placement = P1; Co.Status = P1 === '1st of 6' ? 'champion' : 'eliminated';
+  }
+  if (st.win === 'Eldrasil' && !st.rep && hasB && !toolEdit) {   // each of the four takes home a small replica of the World Trophy
+    st.rep = 1; bagGive(c, WC.replica, 1, 'other', `World Competition, Year ${y}: Eldrasil's champions`);
+    jnl.push(`World Competition: Eldrasil won the Grand Final against ${st.fin.find(k => k !== 'Eldrasil')}; the World Trophy comes to Eldrasil, and each of the four takes home a replica.`);
+  }
+  S.$eng.wc = st;
+  wcPublish(c, st, now, true);
+}
+// <now> and the Competition tab ($ui.wc): {{user}}'s own phase as the four live it, and what the news has told by now
+function wcPublish(c, st, now, mine) {
+  const { S, hasB, toolEdit } = c, P1 = WC.p1, P2 = WC.p2, P3 = WC.p3, V = wcVenue(st.y), lines = [], dd = wcDayAt;
+  const drawAt = dd(WC.draw[0]) + hm(WC.draw[1]), inWeek = now < 8 * DAY_MIN, names = k => kcTeam(st, k).m.map(kcName);
+  // the four in the host city know a result at once; Halvard hears the day's results in the evening announcement (the final live)
+  const told = at => !!at && now >= (mine ? at : Math.max(at, Math.floor(at / DAY_MIN) * DAY_MIN + hm(WC.news)));
+  const drawn = told(drawAt), finTold = !!st.win && now >= st.end3, score = (m, k) => m.rd.filter(x => x === k).length;
+  const news = [];
+  if (drawn) news.push(`the draw at ${V.banquet}: Phase 1 ${P1.days[0]} ${st.g[0].join(', ')}; ${P1.days[1]} ${st.g[1].join(', ')}`);
+  st.gx.forEach((g, i) => { if (g && told(g.end)) news.push(`Phase 1 (${P1.days[i]}): ${g.top} was the last team standing, ${g.sec} went through second, ${g.out} went out`); });
+  st.sg.forEach((m, i) => { const l = m.w === m.a ? m.b : m.a; if (m.w && told(m.end)) news.push(`the Siege (${P2.days[i]}): ${m.w} beat ${l} ${score(m, m.w)}-${score(m, l)}`); });
+  if (finTold) news.push(`the Grand Final: ${st.win} beat ${st.fin.find(k => k !== st.win)}`);
+  if (finTold && hasB && !toolEdit && num(S.$eng.wcn, 0) !== st.y) { S.$eng.wcn = st.y; cwNews(S, `World Competition: ${st.win} won the Grand Final against ${st.fin.find(k => k !== st.win)}`); }
+  const day = Math.floor(now / DAY_MIN), gi = st.p === 1 ? wcGi(st) : -1, mi = st.p === 2 ? (st.sg[0].w ? 1 : 0) : -1;
+  if (mine && inWeek && wcIn(st)) {
+    const M = mi >= 0 ? st.sg[mi] : null;
+    if (gi >= 0 && st.g[gi].includes('Eldrasil') && now >= dd(P1.days[gi]) + hm(P1.from) - 120) {
+      const from = dd(P1.days[gi]) + hm(P1.from), end = dd(P1.days[gi]) + hm(P1.to), f = Math.min(1, Math.max(0, (now - from) / (end - from)));
+      lines.push(`World Competition, Phase 1 (${P1.days[gi]}): Last Team Standing in ${V.p1}, from ${P1.from} until the barrier closes to a single point at ${P1.to}. Every competitor is teleported to a random spot, alone, with a crystal; a broken crystal is out. The first team to lose everyone goes out of the competition; the last team left tops the group and the other survivor goes through second. Still standing: ${st.g[gi].map(k => `${k} ${wcUp(st, k).length} of 4`).join(', ')}.`);
+      if (!wcMine1(st, gi)) lines.push("{{user}}'s crystal is broken: {{user}} is out of Phase 1 and waits outside the barrier with the judges; the engine plays the rest of Eldrasil's four.");
+      else {
+        if (st.close) lines.push(`The barrier has closed to its last point: everyone still standing is in one clearing (${wcLeft(st, gi).map(k => `${k}: ${wcUp(st, k).map(kcName).join(', ')}`).join('; ')}). Play the last fight; what is not reported by ${wcHM(st.close + num(P1.grace, 60))} is decided off-screen.`);
+        else if (now < from) lines.push(`At ${P1.from} {{user}} is teleported to ${st.spot}, alone; the other three of Eldrasil's four land elsewhere in ${V.p1}.`);
+        else lines.push(`The barrier is closing in: about ${Math.round(100 - f * 100)}% of ${V.p1} is still inside it; a crystal caught outside it cracks and breaks.`);
+        lines.push('Report in Competition.Results: "World P1: broke <name>\'s crystal", "World P1: <name> out" (an Eldrasil crystal broken, {{user}}\'s included), "World P1: slipped away from <name>". The other competitors are the engine\'s.');
+      }
+    } else if (M && (M.a === 'Eldrasil' || M.b === 'Eldrasil') && now >= dd(P2.days[mi]) + hm(P2.from) - 120) {
+      const o = M.a === 'Eldrasil' ? M.b : M.a, n = M.rd.length + 1, edge = ctEdge(wcS(kcTeam(st, o).m) - wcS(kcTeam(st, 'Eldrasil').m), CT.strength.edge);
+      lines.push(`World Competition, Phase 2 (${P2.days[mi]}): the Siege at ${V.p2}, Eldrasil (${M.a === 'Eldrasil' ? 'top seed' : 'second'}) against ${o} (${names(o).join(', ')}; ${edge} than Eldrasil's four). Score ${score(M, 'Eldrasil')}-${score(M, o)}. Round ${n}${n === 2 * P2.swap + 1 ? ', the decider' : ''}, from ${wcHM(dd(P2.days[mi]) + hm(P2.from) + (n - 1) * P2.gap)}: Eldrasil ${wcAtk(M, n) === 'Eldrasil' ? 'attacks and carries the Breach Rune' : 'defends the two ward stones'}.`);
+      lines.push(`A round: planting the Breach Rune on a ward stone takes a minute of unbroken channelling; planted, it fills for three minutes and breaks the stone; a defender unwinds it with a minute of unbroken channelling. Attackers win when the stone breaks or every defender is out; defenders win by unwinding it, when ten minutes pass without a planting, or when every attacker is out first. Crystals are new each round; healing cannot mend a broken one. First to ${P2.win} rounds goes to the Grand Final; the sides swap after round ${P2.swap}.`);
+      lines.push(`Report each round in Competition.Results: "World P2: won round ${n}" or "World P2: lost round ${n}"; a round not reported when the next is due (every ${P2.gap} min) is played off-screen.`);
+      c.contest = { edge, at: [S.World.Day, S.World.Time] };
+    } else if (st.p === 3 && st.fin.includes('Eldrasil') && now >= dd(P3.day) + hm(P3.from) - 180) {
+      const o = st.fin.find(k => k !== 'Eldrasil'), edge = ctEdge(wcS(kcTeam(st, o).m) - wcS(kcTeam(st, 'Eldrasil').m), CT.strength.edge);
+      lines.push(`World Competition, the Grand Final: ${P3.from} at ${V.p3}, Eldrasil against ${o} (${names(o).join(', ')}; ${edge} than Eldrasil's four), the only straight team-against-team fight, before the host city and the scrying crystals that carry it to every capital. Crystals as in Phase 1: a team wins when the other has none left. Report "World P3: won" or "World P3: lost"; the engine sets Placement and Status.`);
+      c.contest = { edge, at: [S.World.Day, S.World.Time] };
+    } else if (day >= 1 && day <= 4) {   // by the day, not the phase: a group or Siege already decided today is in the news
+      const tg = day <= 2 ? st.g[day - 1] : null, tm = day > 2 ? st.sg[day - 3] : null, done = tg ? !!st.gx[day - 1] : !!(tm && tm.w);
+      const ours = tg ? tg.includes('Eldrasil') : !!tm && (tm.a === 'Eldrasil' || tm.b === 'Eldrasil');
+      if (ours && !done) lines.push(`World Competition: Eldrasil plays today, ${tg ? `Phase 1 in ${V.p1} from ${P1.from}` : `the Siege at ${V.p2} from ${P2.from}`}.`);
+      else if (!ours && !done) lines.push(`World Competition: today ${tg ? `Phase 1's other group (${tg.join(', ')}) in ${V.p1}` : tm ? `the Siege at ${V.p2}, ${tm.a} against ${tm.b}` : 'the rest of the field plays'}; Eldrasil does not play today, and the four are free in the city.`);
+    }
+  }
+  if (mine && st.enc && wcIn(st)) {
+    const o = kcTeam(st, st.enc.k).m.find(e => e.id === st.enc.id), me = kcTeam(st, 'Eldrasil').m.find(e => e.user);
+    if (o && me) {
+      const edge = ctEdge(o.s - me.s, CT.strength.edge);
+      lines.push(`Now: ${kcName(o)} (${st.enc.k}, ${o.role}; ${edge} than {{user}}) ${st.enc.by === 'them' ? 'finds {{user}}' : 'is in reach of {{user}}, alone'} in ${V.p1}. Play it with Fortune and report how it ends (the lines above); unreported, it is played off-screen at the next turn of the match.`);
+      c.contest = { edge, at: [S.World.Day, S.World.Time] };
+      st.enc.seen = 1;
+    }
+  }
+  if (!mine && inWeek) {
+    const playing = day === 0 ? `the four fly out, and tonight's opening banquet at ${V.banquet} draws the Phase 1 groups`
+      : day <= 2 ? `Phase 1 in ${V.p1}${drawn ? ` (${st.g[day - 1].join(', ')})` : ''}`
+      : day <= 4 ? `the Siege at ${V.p2}${st.sg[day - 3] && told(st.gx[1] && st.gx[1].end) ? ` (${st.sg[day - 3].a} against ${st.sg[day - 3].b})` : ''}`
+      : day === 5 ? 'the rest day before the Grand Final'
+      : day === 6 ? `the Grand Final at ${V.p3}, shown live from ${P3.from} on the great scrying crystal in Arbiter Hall (relayed from the host's starglass crystals); the academy gathers to watch`
+      : 'the national four fly home';
+    lines.push(`World Competition in ${V.city} (Eldrasil's four: ${kcTeam(st, 'Eldrasil').m.map(e => `${kcName(e)} (${e.role})`).join(', ')}): today ${playing}. ${news.length ? `News so far (the evening announcement on the Announcement Pillars at ${WC.news}): ${news.join('; ')}.` : `The first news comes with the evening announcement on the Announcement Pillars at ${WC.news}.`}`);
+  } else if (mine && inWeek && news.length && !lines.length) lines.push(`World Competition: ${news.join('; ')}.`);
+  if (lines.length) S.$ui.contest = { lines: [...((S.$ui.contest || {}).lines || []), ...lines] };
+  // the Competition tab
+  const stat = k => { const x = (st.xo || {})[k], g = st.gx[st.g.findIndex(G => G.includes(k))], m = st.sg.find(z => z.a === k || z.b === k);
+    if (finTold) { if (k === st.win) return 'champions'; if (x === 3) return 'runners-up'; }
+    if (x === 2 && m && told(m.end)) return 'out in Phase 2';
+    if (x === 1 && g && told(g.end)) return 'out in Phase 1';
+    if (m && m.w === k && told(m.end)) return 'in the Grand Final';
+    return g && told(g.end) ? (g.top === k ? 'top seed' : 'through second') : ''; };
+  const K = _.isPlainObject(S.$eng.kc) && S.$eng.kc.y === st.y ? S.$eng.kc : {};
+  S.$ui.wc = { mine: mine ? 1 : 0, city: V.city, g: drawn ? st.g : [],
+    teams: st.T.map(t => [t.k, t.m.map(e => [kcName(e), e.role, mine && st.p === 1 && wcIn(st) && (st.out[t.k] || []).includes(e.id) ? 1 : 0, e.named ? 1 : 0]), stat(t.k)]),
+    sg: told(st.gx[1] && st.gx[1].end) && told(st.gx[0] && st.gx[0].end) ? st.sg.map((m, i) => [P2.days[i], m.a, m.b, told(m.end) || mine ? score(m, m.a) : 0, told(m.end) || mine ? score(m, m.b) : 0, told(m.end) ? m.w : '']) : [],
+    win: finTold ? st.win : '', news, wn: K.wn || [] };
 }
 function stepContest(c) {
   const { S, B, hasB, toolEdit, log, seed, OFF } = c;
   stepVote(c);
   S.$ui.contest = null; c.contest = null;
   stepKingdom(c);   // 1.84.0: the Kingdom Competition (its lines join S.$ui.contest)
+  stepWorld(c);     // 1.97.4: the World Competition (its lines join S.$ui.contest)
   stepAcademy(c);   // 1.87.0: the Academy Competition (its lines join S.$ui.contest)
   stepTally(c);     // 1.87.0: Sports Day's medals and the Showcase's scores
   const Co = S.Competition, C0 = (hasB && B.Competition) || {}, y = S.World.Year, ev = eventsOn(S.World).find(e => e.id === 'dorm_comp');
@@ -3193,6 +3606,9 @@ function stepReputation(c) {
     const paidOnce = key => (K.paid.includes(key) ? false : (K.paid = [...K.paid, key].slice(-30), true));
     const kind = (CP.pay || {})[`${Co.Tier}:${Co.Status}`], deed = kind && (REP.deeds || {})[kind];
     if (deed && paidOnce(`${kind}-Y${y}`)) { const got = repAdd(deed[0], deed[1], `${Co.Tier} Competition`, ''); log.push(`${Co.Tier} Competition ${Co.Status}: ${deed[0]} reputation ${got >= 0 ? '+' : ''}${got} Rep XP (${kind}).`); }
+    // 1.97.4: a result that lifts reputations a whole level at once (World:champion: Academy and Student), once a year
+    const up = (CP.up || {})[`${Co.Tier}:${Co.Status}`];
+    if (Array.isArray(up) && paidOnce(`up:${Co.Tier}-Y${y}`)) for (const r of up) if (repLevelUp(r, false)) log.push(`${Co.Tier} Competition ${Co.Status}: ${r} reputation rose one level.`);
     const cost = num((CP.expect || {})[Co.Tier], 0);
     if (Co.Status === 'champion' && cost && (!K.exp || T.indexOf(Co.Tier) >= T.indexOf(K.exp.tier))) {
       K.exp = { tier: Co.Tier, cost };
@@ -5528,6 +5944,16 @@ function stepClubLife(c) {
       paid.push(prize);
       ledger(c, 'Points', KINGDOM_PRIZE, 'Kingdom Competition prize');
       log.push(`Kingdom Competition won: +${KINGDOM_PRIZE} points paid to each member of the team.`);
+    }
+  }
+  // 1.97.4 (owner-approved planning/DRAFT_world_competition.md, the champions' prize): points are no use abroad, so the World prize
+  // reaches the bracelet when the liner lands home, once per year's competition
+  if (hasB && Co.Tier === 'World' && Co.Status === 'champion' && WC.prize && wcHome(S.World)) {
+    const key = `World-Y${S.World.Year}`, paid = S.$eng.prizes || (S.$eng.prizes = []);
+    if (!paid.includes(key)) {
+      paid.push(key);
+      ledger(c, 'Points', WC.prize, 'World Competition prize');
+      log.push(`World Competition won: +${WC.prize} points paid to each member of the national four on landing home.`);
     }
   }
   // 1.33.0 (owner-approved planning/DRAFT_classes_and_teachers.md): the Dorm Competition runs in role brackets; the bracket's

@@ -69,6 +69,10 @@
    "Academy:champion": "academy_competition_win",
    "Kingdom:champion": "kingdom_competition_win"
   },
+  "_up": "1.97.4 (owner-approved planning/DRAFT_world_competition.md, the champions' prize): a result that lifts these reputations one whole level at once, once a year ('Tier:Status' -> reputations; the rep_up pattern of Ruby's, Bianca's and Baelin's Rank 10). Not the Doves: their reputation measures the Dovecote's view, not a title.",
+  "up": {
+   "World:champion": ["Academy", "Student"]
+  },
   "expect": {
    "Academy": -5,
    "Kingdom": -10

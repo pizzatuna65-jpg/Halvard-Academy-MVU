@@ -624,6 +624,10 @@ The first academy flight (the airship), then the Grand Vast Forest.
 ### Q10.1b The World Competition week (W3 Mon to W4 Mon)
 - [ ] At Halvard (not in the national four): each day's Event line names that day's phase abroad; no classes all week; the Notebook
       calendar shows W3 Mon to W4 Mon as the World Competition and W4 Tue–Sat as Year's End [1.97.1].
+- [ ] At Halvard: from 20:00 each evening `<now>` and the Competition tab carry the day's results from the Announcement Pillars (the draw
+      Monday night); Sunday the Grand Final is shown live in Arbiter Hall; Monday's Academy Newspaper prints the champions [1.97.4].
+- [ ] After the Kingdom Competition the Competition tab shows the national four and why the panel chose them ("How the four fight
+      together"); if Charles is picked, `Competition.Team` names the other three [1.97.4].
 
 ### Q10.1c Hanakaze (only if Charles is in the national four, Year 1)
 - [ ] W2 Sun: `<now>` reminds that points do not work abroad tomorrow (the World Competition in Hanakaze) [1.97.3].
@@ -631,8 +635,13 @@ The first academy flight (the airship), then the Grand Vast Forest.
       opens on the Hanakaze tab (the snowy map with the Eternal Sakura), and the bracelet weather says Hanakaze (snowy winter) [1.97.3].
 - [ ] Walk to the Thousand Lantern Inn and around the city: `<now>` lists the walks, the 19:00 opening banquet in the Hall of Victors,
       and the inn's hours (back by 22:00); the HANAKAZE INDEX entry is on, a place's own entry joins when it is mentioned [1.97.3].
-- [ ] Try the Alpha's Residence: the guards turn Charles back and the location stays at the Hall of Victors; the Bamboo Sea opens only
-      Tue–Wed and Old Castle Shiroyama only Thu–Fri, by team carriage from the inn [1.97.3].
+- [ ] Try the Alpha's Residence: the guards turn Charles back and the location stays at the Hall of Victors; the Bamboo Sea and Old
+      Castle Shiroyama open only on the day Eldrasil plays there, by team carriage from the inn [1.97.3, 1.97.4].
+- [ ] Monday 19:00 the banquet draws the groups; on Eldrasil's Phase 1 day `<now>` gives Charles his teleport spot, the barrier and the
+      report forms; a rival who finds him waits for the story; report `World P1: broke <name>'s crystal` and see the count drop [1.97.4].
+- [ ] If Eldrasil goes through: the Siege lines (side, score, round), `World P2: won round <n>` moves the score; the Grand Final Sunday
+      14:00; Placement and Status are set by the engine; as champions the replica appears in the Bag, Academy and Student rise a level,
+      and 10,000 points arrive only on landing home [1.97.4].
 - [ ] At the Challenge Crossing someone may challenge Charles to a contest; at the inn or around the city members of another nation's four
       cross his path, played from their team entry; the Warrens appear on the Map only after a visit [1.97.3].
 - [ ] W4 Mon 12:00 the liner home; back at Halvard by 18:00 and the Hanakaze lore and block are gone [1.97.3].

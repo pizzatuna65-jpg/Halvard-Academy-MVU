@@ -160,6 +160,10 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
   taken by downing its beast and then being the only team inside for 15 minutes, the count stopping while another team is in; the two
   teams holding four rooms at once go through) and the final. Ward seals: out for the round. The other teams are the engine's, from the
   seed; the story reports Halvard's part; a meeting waits until the story has seen it. The World panel picks from every competitor's record.
+- **World Competition** (1.97.4, owner-approved `planning/DRAFT_world_competition.md`): run like the Kingdom (engine plays the field,
+  the story reports {{user}}'s part, a meeting waits). The panel picks for synergy as well as record (Gavlan's rule): relations,
+  Kingdom teammates, {{user}}'s bonds, and Lucius's swarm costs an ally of a type it eats their whole worth. Points are paid on landing
+  home (no use abroad); the champions' Academy and Student reputation rise one level, never the Doves'. A Phase 1 tie: fewer crystals broken falls first.
 
 ## 6. Social systems, UI rules and versioning (from 1.3.1)
 - **Situational rule cards** (1.54.0, narrator-load audit U1): 502 keeps a core line per topic (path, data shape, the main ban) so an

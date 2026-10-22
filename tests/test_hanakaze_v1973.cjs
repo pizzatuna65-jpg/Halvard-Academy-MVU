@@ -10,9 +10,9 @@ const read = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const D = JSON.parse(read('data/hanakaze.json')), A = E.AR.hanakaze, place = (l, p) => E.areaPlace(A, l, p);
 const T = (d, time) => E.fromAbs(d * 1440 + (+time.slice(0, 2)) * 60 + (+time.slice(3)));
 const at = (S, d, time, loc, extra = []) => applyPatch(S, [...['Year', 'Month', 'Week', 'Day', 'Time'].map(k => ({ op: 'replace', path: '/World/' + k, value: T(d, time)[k] })), { op: 'replace', path: '/World/Location', value: loc }, ...extra]);
-const PRE = 10 * 28 + 13, OUT = PRE + 1, TUE = OUT + 1, THU = OUT + 3, SUN = OUT + 6, HOME = OUT + 7;   // W2 Sun, then W3 Mon to W4 Mon
+const PRE = 10 * 28 + 13, OUT = PRE + 1, TUE = OUT + 1, SUN = OUT + 6, HOME = OUT + 7;   // W2 Sun, then W3 Mon to W4 Mon
 const HZ = 'Hanakaze — ';
-const four = [{ op: 'replace', path: '/Competition/Tier', value: 'World' }, { op: 'replace', path: '/Competition/Status', value: 'selected' }];
+const four = [{ op: 'replace', path: '/Competition/Tier', value: 'World' }, { op: 'replace', path: '/Competition/Status', value: 'selected' }, { op: 'replace', path: '/Player/Profile/Dorm', value: 'Fire' }];
 const coin = n => [{ op: 'replace', path: '/Player/Wallet/Coin', value: n }];
 const P = id => HZ + D.places.find(p => p.id === id).name;
 const ev = (S, k) => (S.$ui.area.hanakaze.ev || []).filter(e => e.k === k);
@@ -45,6 +45,8 @@ ok(snow >= 3 && snow < wx, `a snowy winter week: snow in ${snow} of ${wx} blocks
 
 console.log('Walks, the Residence, the match grounds, the Warrens');
 const S1 = at(S, OUT, '13:40', P('thousand_lantern_inn'));
+// 1.97.4: a ground opens only on Eldrasil's day there (the Phase 1 group drawn at the banquet; the Siege: test_world_comp_v1974)
+const P1D = OUT + 1 + at(S1, OUT, '20:00', P('thousand_lantern_inn')).$eng.wc.g.findIndex(g => g.includes('Eldrasil')), P1O = OUT + 3 - (P1D - OUT);
 ok(S1._Log.some(l => /Walked Hanakaze Skyport → The Thousand Lantern Inn: \d+ min/.test(l)), 'on foot from the Skyport to the inn');
 ok(/^Inn curfew \(22:00-07:00\)/.test(at(S1, OUT, '22:30', P('thousand_lantern_inn')).World._Curfew) && /^Back at the Thousand Lantern Inn by 22:00/.test(at(S1, OUT, '21:20', P('thousand_lantern_inn')).World._Curfew), 'the inn\'s hours: back by 22:00, the curfew after');
 const H0 = at(S1, OUT, '18:30', P('hall_of_victors')), H1 = at(H0, OUT, '18:40', HZ + 'The Alpha\'s Residence'), H2 = at(H1, OUT, '18:50', HZ + 'The Alpha\'s Residence');
@@ -54,10 +56,10 @@ const walksOf = St => St.$ui.now.area.find(l => /^Walks from here/.test(l)) || '
 ok(!/Residence/.test(walksOf(H0)) && !/Bamboo Sea|Shiroyama/.test(walksOf(H0)) && /Castle Hill|Sakura Park/.test(walksOf(H0)), 'the Residence and a closed ground are never offered');
 const G0 = at(S1, OUT, '15:00', HZ + 'The Bamboo Sea');
 ok(G0.World.Location === P('thousand_lantern_inn') && G0._Log.some(l => /a match ground, open only on its match days/.test(l)), 'Monday: the Bamboo Sea is closed; kept at the inn');
-const T0 = at(at(S1, TUE, '07:30', P('thousand_lantern_inn')), TUE, '08:50', HZ + 'The Bamboo Sea');
-ok(T0.World.Location === HZ + 'The Bamboo Sea' && T0._Log.some(l => /Team carriage The Thousand Lantern Inn → The Bamboo Sea: 40 min/.test(l)) && T0.$ui.area.hanakaze.kc.join() === '1', 'Tuesday: the team carriage to the Bamboo Sea, 40 min, no fare');
-const T1 = at(at(S1, THU, '07:30', P('thousand_lantern_inn')), THU, '08:40', HZ + 'Old Castle Shiroyama');
-ok(T1.World.Location === HZ + 'Old Castle Shiroyama' && T1.$ui.area.hanakaze.kc.join() === '2', 'Thursday: Old Castle Shiroyama is open');
+const T0 = at(at(S1, P1D, '07:30', P('thousand_lantern_inn')), P1D, '08:50', HZ + 'The Bamboo Sea');
+ok(T0.World.Location === HZ + 'The Bamboo Sea' && T0._Log.some(l => /Team carriage The Thousand Lantern Inn → The Bamboo Sea: 40 min/.test(l)) && T0.$ui.area.hanakaze.kc.join() === '1', `Eldrasil's Phase 1 day (${T(P1D, '08:00').Day}): the team carriage to the Bamboo Sea, 40 min, no fare`);
+const T1 = at(at(S1, P1O, '07:30', P('thousand_lantern_inn')), P1O, '08:40', HZ + 'The Bamboo Sea');
+ok(T1.World.Location === P('thousand_lantern_inn') && !T1.$ui.area.hanakaze.kc.length, "the other group's day: the Bamboo Sea stays closed to Eldrasil's four");
 const A0 = at(S1, OUT, '14:30', P('hundred_alleys'));
 ok(!/The Warrens/.test(walksOf(A0)), 'the Warrens are not offered before a visit');
 const A1 = at(A0, OUT, '14:50', HZ + 'The Warrens'), A2 = at(A1, OUT, '15:10', P('hundred_alleys'));
@@ -98,7 +100,7 @@ ok(/This year Yozakura hosts it, in its capital, Hanakaze/.test(lore(19, initSta
 ok(/Capital: Hanakaze/.test(read('src/worldbook/content/335.txt')), '335: Yozakura\'s capital');
 const nowA = H0.$ui.now.area.join('\n');
 ok(/^Hanakaze \(the World Competition, with Eldrasil's national four\): \{\{user\}\} is at The Hall of Victors \(Castle Hill\)/.test(nowA) && /Today at 19:00: the opening banquet/.test(nowA) && /back at the Thousand Lantern Inn by 22:00/.test(nowA), '<now>: where, the inn\'s hours, the banquet tonight');
-ok(/The Alpha's Residence \(engine\): its guards bow/.test(H1.$ui.now.area.join('\n')) && /Open today by team carriage from the inn: the Bamboo Sea \(Phase 1\)/.test(at(S1, TUE, '07:30', P('thousand_lantern_inn')).$ui.now.area.join('\n')), '<now>: the turn-back, and the ground open today');
+ok(/The Alpha's Residence \(engine\): its guards bow/.test(H1.$ui.now.area.join('\n')) && /Open today by team carriage from the inn: the Bamboo Sea \(Phase 1\)/.test(at(S1, P1D, '07:30', P('thousand_lantern_inn')).$ui.now.area.join('\n')), '<now>: the turn-back, and the ground open today');
 ok(/Tomorrow: the World Competition in Hanakaze/.test(at(applyPatch(initState(), four), PRE, '18:00', 'Main Library').$ui.now.area.join('\n')), '<now>: the day before');
 const r502 = St => ejs.render(read('src/worldbook/custom/content/502.txt'), { getvar: gv(St) });
 ok(/Hanakaze \(1\.97\.3\)/.test(r502(S1)) && !/Hanakaze \(1\.97\.3\)/.test(r502(initState())), '502: the Hanakaze Location format in the city only');

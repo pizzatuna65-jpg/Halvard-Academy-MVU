@@ -669,5 +669,202 @@
         "perform": 2
       }
     }
+  },
+  "world": {
+    "_note": "1.97.4 (owner-approved planning/DRAFT_world_competition.md §1b, §3): the World Competition, run by the engine (stepWorld) from the seed and what the story reported, as the Kingdom Competition is. teams: the six nations (Eldrasil first; the foreign fours are their lore entries' Team lines, read by tools/common.py contest_data). favour: strength added to every member of a foreign four (the three usual favourites more than the two open qualifiers; Eldrasil's four keeps its Kingdom strength); pins: strength added to a standout. tactic / tact: how each four plays (its lore Plays line): meet (times the chance of a meeting in Phase 1), atk / def (added on that side of a Siege round), swing (a random part either way, Caelmar's chaos), late (added per hour in Phase 1 and per round in Phase 2: Velmora's attrition). m / w: the event's month and week (calendar world_comp). draw: the opening banquet, where the Phase 1 groups are drawn. p1: Last Team Standing, one group a day (days), a tick every `tick` minutes from `from` to `to`; meet and barrier: % a competitor meets someone / is caught outside the barrier in one tick, at the start and at the close (it grows between); at `to` the barrier reaches one point and whoever is left fights it out (a {{user}} still standing gets `grace` minutes to play it). p2: the Siege, one match a day (days): round n starts at from + (n-1)·gap and is decided 10 minutes in; first to `win` rounds; the sides swap after `swap` rounds. p3: the Grand Final (rolled: when it is decided off-screen; to: the end of a {{user}} final). news: when the evening announcement on the Announcement Pillars tells Halvard the day's results. home: when the liner lands home (the prize is paid then). venues: names by campaign year (the host's grounds; spots are Phase 1's teleport points). panel: the World panel's pick from the Kingdom record (credit points per Kingdom credit, plus strength) and how the four fight together: relations (data/relations.json types, either way), mates (fought on the same Kingdom team), {{user}}'s bond (bond per Rank, tension: [from, points]), counter (a competitor whose power eats allies of these magic types: such an ally loses that percent of their worth, record and strength; an ally of unknown magic counts `unknown` of it). prize: points per member of the winning four, paid when the liner lands home (points are no use abroad); replica: the Bag item. hook: the draw and the teams' paths for a story that needs them (empty until 1.97.5): same, nations drawn into Eldrasil's Phase 1 group; path, nations that win every match the engine plays (Phase 1 duels and the barrier, Siege rounds), never a result the story reports.",
+    "event": "world_comp",
+    "m": 11,
+    "w": 3,
+    "teams": [
+      "Eldrasil",
+      "Yozakura",
+      "Norvaine",
+      "Caelmar",
+      "Arslan",
+      "Velmora"
+    ],
+    "favour": {
+      "Yozakura": 15,
+      "Norvaine": 15,
+      "Caelmar": 15,
+      "Arslan": 10,
+      "Velmora": 10
+    },
+    "pins": {
+      "Hibiki": 20,
+      "Vesna": 20,
+      "Lucrezia": 20,
+      "Kamran": 20,
+      "Cyprien": 20
+    },
+    "tactic": {
+      "Eldrasil": "even",
+      "Yozakura": "headon",
+      "Norvaine": "drilled",
+      "Caelmar": "chaos",
+      "Arslan": "patient",
+      "Velmora": "attrition"
+    },
+    "tact": {
+      "even": {
+        "meet": 1,
+        "atk": 0,
+        "def": 0,
+        "swing": 0,
+        "late": 0
+      },
+      "headon": {
+        "meet": 1.5,
+        "atk": 8,
+        "def": -4,
+        "swing": 0,
+        "late": 0
+      },
+      "drilled": {
+        "meet": 1,
+        "atk": 4,
+        "def": 4,
+        "swing": 0,
+        "late": 0
+      },
+      "chaos": {
+        "meet": 1.2,
+        "atk": 0,
+        "def": 0,
+        "swing": 20,
+        "late": 0
+      },
+      "patient": {
+        "meet": 0.6,
+        "atk": -4,
+        "def": 8,
+        "swing": 0,
+        "late": 0
+      },
+      "attrition": {
+        "meet": 0.8,
+        "atk": 0,
+        "def": 0,
+        "swing": 0,
+        "late": 2
+      }
+    },
+    "draw": [
+      "Mon",
+      "19:00"
+    ],
+    "p1": {
+      "days": [
+        "Tue",
+        "Wed"
+      ],
+      "from": "09:00",
+      "to": "17:00",
+      "grace": 60,
+      "tick": 30,
+      "meet": [
+        8,
+        30
+      ],
+      "barrier": [
+        0,
+        6
+      ]
+    },
+    "p2": {
+      "days": [
+        "Thu",
+        "Fri"
+      ],
+      "from": "10:00",
+      "gap": 30,
+      "win": 4,
+      "swap": 3
+    },
+    "p3": {
+      "day": "Sun",
+      "from": "14:00",
+      "to": "18:00",
+      "rolled": "15:00"
+    },
+    "news": "20:00",
+    "home": [
+      4,
+      "Mon",
+      "18:00"
+    ],
+    "venues": {
+      "1": {
+        "city": "Hanakaze, Yozakura",
+        "p1": "the Bamboo Sea",
+        "p2": "Old Castle Shiroyama",
+        "p3": "the Crowning Ring",
+        "banquet": "the Hall of Victors",
+        "spots": [
+          "a snowbound bamboo grove",
+          "the frozen stream",
+          "a woodcutters' clearing",
+          "a moss-grown wayside shrine",
+          "a ravine of leaning stalks",
+          "the charcoal-burners' hut",
+          "a hill of bowed bamboo",
+          "the stone lantern path"
+        ]
+      },
+      "default": {
+        "city": "the host city",
+        "p1": "the match forest",
+        "p2": "the old fortress",
+        "p3": "the arena",
+        "banquet": "the banquet hall",
+        "spots": [
+          "a hollow under fallen trees",
+          "a stream bed",
+          "a clearing",
+          "a rocky rise",
+          "a thicket",
+          "an old ruin in the trees",
+          "a hunters' path",
+          "a dry gully"
+        ]
+      }
+    },
+    "panel": {
+      "credit": 10,
+      "rel": {
+        "friends": 6,
+        "respect": 4,
+        "protective": 4,
+        "softspot": 3,
+        "wary": -4,
+        "rivals": -4,
+        "dislike": -8
+      },
+      "mates": 5,
+      "bond": 2,
+      "tension": [
+        50,
+        -10
+      ],
+      "counter": [
+        [
+          "Lucius",
+          [
+            "Elemental",
+            "Mystic",
+            "Occult"
+          ],
+          100,
+          "his swarm eats his allies' spells, barriers and mana"
+        ]
+      ],
+      "unknown": 0.5
+    },
+    "prize": 10000,
+    "replica": "World Trophy replica",
+    "hook": {
+      "same": [],
+      "path": []
+    }
   }
 }
