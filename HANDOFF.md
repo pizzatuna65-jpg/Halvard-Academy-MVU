@@ -3,8 +3,9 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.92.0** (2026-10-22): club work is done (the draft is applied and deleted). 1.92.0: the weekly club client (a
-non-member student comes to {{user}}'s service club some weeks). 1.91.0: club services (Tailoring and Smithing orders and mending at
+**Snapshot:** card **v1.93.0** (2026-10-22): UI fixes from the owner's notes: event plans as a time | what table (Event tab,
+Planner), short points for long explanations, the Bonds order as a dropdown with ascending / descending, pinned people on top (UI
+only, chat variable `eld_pins`). 1.92.0: the weekly club client (a non-member student comes to {{user}}'s service club some weeks). 1.91.0: club services (Tailoring and Smithing orders and mending at
 the Workshop, the Fishing Club's dawn, the Library Assistants' loan and records; members pay half). 1.90.0: club work for the campus
 (the Newspaper, club stalls, snow, the Festival Committee). 1.89.0: info layers per NPC. 1.81.0–1.87.0: the event frame. The memory
 audit is done except batch 8. Live checks: the campaign quest log `docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat,

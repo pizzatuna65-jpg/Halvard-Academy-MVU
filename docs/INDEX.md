@@ -147,7 +147,7 @@ Lore entries below uid 500 are generated (`src/worldbook/content/<uid>.txt`); ed
 | File | Contains |
 |---|---|
 | `src/scripts/ui.template.js` | constants and Builder data (`TEMPLATES`, `PACT_KINDS`), `latestState`, Builder (`renderBuilder`, `b*` steps, `validate`, `buildOps`, `liftReadonly`), `writeToolMessage`, Student file (`renderProfile`, `p*` tabs, `pSettings`, `featureOn`), `pBag` (crafted effects) and `pWallet` used by the Inventory panel, themes, `ensureLorebook`, `open`/`render` |
-| `src/ui/parts/10_people.js` | `PANELS.people`, `PANELS.npc` (dossier), Connections graph |
+| `src/ui/parts/10_people.js` | `PANELS.people`, `PANELS.npc` (dossier), Connections graph; 1.93.0 the Order dropdown (`PSORT`, `view.pdir`) and pinned people (`pinsGet`, `pinToggle`, chat variable `eld_pins`) |
 | `src/ui/parts/20_map.js` | `PANELS.map`: `mapFor` (map variants), `locCard`, `walkFrom`; 1.71.0 `pinShown` / `dormDayToday` (other dorms off the map); 1.46.0 `renderArea` (every outside area's tab, `DATA.areas`) |
 | `src/ui/parts/30_notebook.js` | `PANELS.notebook`, shown as **Inventory** (1.32.0): Bag and Wallet (`pBag`, `pWallet` in `ui.template.js`), planner, journal, notices, forecast, letters, mystery (1.44.0: `agendaOf` reads `$ui.agenda`; `heardOf` and the pin-as-clue tool) |
 | `src/ui/parts/40_activities.js` | `PANELS.activities`, `PANELS.battle`: clubs, competition, shop, projects, trip |

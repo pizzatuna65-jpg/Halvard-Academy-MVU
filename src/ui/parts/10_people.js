@@ -7,7 +7,7 @@ const EDGE = {
   rivals: ['#e0a24a', 'Rivals'], wary: ['#9b7fd1', 'Wary'], dislike: ['#e0645a', 'Dislike'], story: ['#e8d3a8', 'From the story'],
 };
 const GROUP = { dorm: ['#c9c5bc', 'Dorms'], club: ['#d9b36a', 'Clubs'], faction: ['#8fb3d9', 'Factions'] };
-view.ptab = 'bonds'; view.psort = 'close'; view.gtypes = new Set(Object.keys(EDGE)); view.ggroups = new Set(); view.gpos = {};
+view.ptab = 'bonds'; view.psort = 'close'; view.pdir = ''; view.gtypes = new Set(Object.keys(EDGE)); view.ggroups = new Set(); view.gpos = {};
 const YEARW = { 1: 'First-year', 2: 'Second-year', 3: 'Third-year' };
 const publicRole = (id, S) => {
   const c = ((S.Campus_State || {}).Council || {}), old = graduated(S).has(id);
@@ -55,13 +55,31 @@ PANELS.people = {
   },
   click(b, S) {
     if (b.dataset.ptab) { view.ptab = b.dataset.ptab; render(); return; }
-    if (b.dataset.psort) { view.psort = b.dataset.psort; render(); return; }
+    if (b.dataset.pdir) { view.pdir = b.dataset.pdir; render(); return; }
+    if (b.dataset.pin) { pinToggle(b.dataset.pin); return; }
     if (b.dataset.gtype) { const t = b.dataset.gtype; view.gtypes.has(t) ? view.gtypes.delete(t) : view.gtypes.add(t); render(); }
     if (b.dataset.ggroup) { const t = b.dataset.ggroup; view.ggroups.has(t) ? view.ggroups.delete(t) : view.ggroups.add(t); render(); }
     if (b.dataset.gunpin) { view.gpos = {}; render(); }
   },
+  input(el) { if (el.dataset.psort !== undefined && el.value !== view.psort) { view.psort = el.value; view.pdir = ''; render(); } },   // 1.93.0: the Order dropdown
   after(S) { if (view.ptab === 'graph') drawGraph(S); },
 };
+// 1.93.0 (owner): pinned people, the ones {{user}} is working on: always at the top of Bonds whatever the order, and marked in the
+// dossier. UI only, not game state: like the red dots (news.shared.js) they live in Tavern Helper's chat variables (saved with the
+// chat), only in memory without Tavern Helper (previews, tests)
+const PIN_VAR = 'eld_pins';
+let pinMem = [];
+function pinsGet() {
+  if (NEWS_CHAT) try { const v = (getVariables({ type: 'chat' }) || {})[PIN_VAR]; return Array.isArray(v) ? v : []; } catch (e) { /* no Tavern Helper */ }
+  return pinMem;
+}
+function pinToggle(id) {
+  const was = pinsGet(), next = was.includes(id) ? was.filter(x => x !== id) : [...was, id];
+  pinMem = next;
+  if (NEWS_CHAT) try { updateVariablesWith(v => { v[PIN_VAR] = next; return v; }, { type: 'chat' }); } catch (e) { console.warn('[Eldrasil] pins', e); }
+  render();
+}
+const pinBtn = (id, on, cls) => `<button class="${cls}${on ? ' on' : ''}" data-pin="${esc(id)}" aria-pressed="${on}" aria-label="Pin" title="${on ? 'Pinned: kept at the top. Tap to unpin' : 'Pin: keep at the top of Bonds'}">${on ? '★' : '☆'}${cls === 'pinb' ? '' : on ? ' Pinned' : ' Pin'}</button>`;
 
 // 1.23.0: XP, Trust and Tension as three labelled meters (1.70.0: shared by the people cards and the scene cards)
 function bondMeters(id, b, S) {
@@ -71,7 +89,8 @@ function bondMeters(id, b, S) {
       <span class="m" title="${esc(tensionTxt(id, b))}"><span class="ml">Tension<b>${TEND.lock.includes(id) ? '—' : esc(tensionBand(b.Tension))}</b></span>${mini(b.Tension, '#e0645a')}</span>`;
 }
 // 1.74.0 (owner): the order of the people cards: closest (the default), not seen lately, name, dorm, year; dorm and year in groups
-const PSORT = [['close', 'Closest'], ['seen', 'Not seen lately'], ['name', 'Name'], ['dorm', 'Dorm'], ['year', 'Year']];
+// 1.93.0 (owner): a dropdown plus ascending / descending; each order starts in its own direction (closest first, longest unseen first)
+const PSORT = [['close', 'Closest', 'desc'], ['seen', 'Last seen', 'asc'], ['name', 'Name', 'asc'], ['dorm', 'Dorm', 'asc'], ['year', 'Year', 'asc']];
 function peopleGroup(id, S, by) {
   const n = npcOf(id);
   if (!n) return 'Others';
@@ -86,24 +105,29 @@ function peopleListHTML(S) {
   const nm = (a, b) => nameOf(a, S, true).localeCompare(nameOf(b, S, true));
   const GO = ['First-years', 'Second-years', 'Third-years', 'Former students', 'Staff', 'Others'], gi = g => (GO.includes(g) ? GO.indexOf(g) : -1);
   const grp = id => peopleGroup(id, S, by);
-  const ids = Object.keys(B).sort(by === 'seen' ? (a, b) => (seen(a) - seen(b)) || close(a, b) : by === 'name' ? nm
+  const P0 = PSORT.find(p => p[0] === by) || PSORT[0], dir = view.pdir || P0[2];
+  const sorted = Object.keys(B).sort(by === 'seen' ? (a, b) => (seen(a) - seen(b)) || close(a, b) : by === 'name' ? nm
     : by === 'dorm' || by === 'year' ? (a, b) => (gi(grp(a)) - gi(grp(b))) || grp(a).localeCompare(grp(b)) || nm(a, b) : close);
-  if (!ids.length) return '<div class="empty">You have not met anyone yet.</div>';
+  if (dir !== P0[2]) sorted.reverse();
+  if (!sorted.length) return '<div class="empty">You have not met anyone yet.</div>';
+  // 1.93.0 (owner): pinned people stay on top whatever the order; the order applies among them too
+  const pins = pinsGet(), ids = [...sorted.filter(id => pins.includes(id)), ...sorted.filter(id => !pins.includes(id))];
   const ago = id => { const d = today - seen(id); return here.includes(id) ? 'here now' : seen(id) < 0 ? '' : d <= 0 ? 'seen today' : d === 1 ? 'seen yesterday' : `seen ${d} days ago`; };
-  const sorter = `<div class="tog psort"><span class="sub" style="align-self:center">Order:</span>${PSORT.map(([k, l]) => `<button data-psort="${k}" class="${by === k ? 'on' : ''}" aria-pressed="${by === k}">${l}</button>`).join('')}</div>`;
+  const sorter = `<div class="psort"><label class="pso">Order<select data-psort aria-label="Order">${PSORT.map(([k, l]) => `<option value="${k}"${by === k ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
+    <div class="tog">${[['asc', '↑ Ascending'], ['desc', '↓ Descending']].map(([k, l]) => `<button data-pdir="${k}" class="${dir === k ? 'on' : ''}" aria-pressed="${dir === k}">${l}</button>`).join('')}</div></div>`;
   // 1.23.0 (UI overhaul): cards in a grid; the rank is a brass medal, XP, Trust and Tension are three labelled meters, and a
   // moonglass dot on the portrait says who is here now
   let last = '';
-  return `<p class="lead">${ids.length} ${ids.length === 1 ? 'person' : 'people'} you have met. Time together deepens each bond; once the bar fills, the next genuine encounter can deepen it further.</p>${sorter}<div class="plist">` + ids.map(id => {
-    const b = B[id], n = npcOf(id), g = by === 'dorm' || by === 'year' ? grp(id) : '';
-    const head = g && g !== last ? `<h3 class="pgh" style="grid-column:1/-1;margin:6px 0 0">${esc(g)}</h3>` : '';
+  return `<p class="lead">${ids.length} ${ids.length === 1 ? 'person' : 'people'} you have met. Time together deepens each bond; once the bar fills, the next genuine encounter can deepen it further. Pin (☆) the people you are working on to keep them on top.</p>${sorter}<div class="plist">` + ids.map(id => {
+    const b = B[id], n = npcOf(id), pin = pins.includes(id), g = pin ? 'Pinned' : by === 'dorm' || by === 'year' ? grp(id) : pins.length ? 'Everyone else' : '';
+    const head = g && g !== last ? `<h3 class="pgh" style="grid-column:1/-1;margin:6px 0 0">${pin ? '★ ' : ''}${esc(g)}</h3>` : '';
     last = g || last;
     const dot = here.includes(id) ? '<i class="here" role="img" aria-label="here now" title="here now"></i>' : '';
     const sub = b.Title || (n ? publicRole(id, S) || whoLine(id, S) : '');
-    return `${head}<button class="pr" data-open="npc:${esc(id)}"><span class="pav">${avatar(id, S, 'av lg')}${dot}</span><span class="pm">
+    return `${head}<div class="prw"><button class="pr${pin ? ' pinned' : ''}" data-open="npc:${esc(id)}"><span class="pav">${avatar(id, S, 'av lg')}${dot}</span><span class="pm">
       <span class="pn">${esc(nameOf(id, S, true))}${isNew(`npc:${id}`) ? newsDot() : ''}${b.Romance ? ' <span class="pill r">romance</span>' : ''}</span><span class="sub">${esc(by === 'seen' && ago(id) ? [ago(id), sub].filter(Boolean).join(' · ') : sub)}</span></span>
       <span class="medal" title="Rank ${b.Rank} of 10">${b.Rank}</span>
-      <span class="pmt">${bondMeters(id, b, S)}</span></button>`;
+      <span class="pmt">${bondMeters(id, b, S)}</span></button>${pinBtn(id, pin, 'pinb')}</div>`;
   }).join('') + '</div>';
 }
 
@@ -117,7 +141,7 @@ PANELS.npc = {
     const port = n && n.p ? `<img class="por" src="${esc(imgURL(n.p))}" alt="" style="object-position:${n.fc[0]}% ${n.fc[1]}%" data-fb="${esc(knowsName(id, S) ? initials(n.n) : '?')}" data-fbclass="por fb">` : `<span class="por fb">${esc(n && !knowsName(id, S) ? '?' : initials(n ? n.n : id))}</span>`;
     // 1.23.0 (UI overhaul): the portrait (matted, sticky) and the dorm stay in the left column; everything else is the file
     const dorm = n && n.dm && String(n.g).startsWith('Year') ? `<div class="idl"><i class="gem" aria-hidden="true"></i>${esc(n.dm)} Dormitory</div>` : '';
-    let h = `<div class="dos"><div class="dside"><div class="mat">${port}</div>${dorm}</div><div class="dmain"><p class="name">${esc(title)}</p><div class="sub" style="margin:2px 0 8px">${esc([n && knowsName(id, S) && publicRole(id, S), whoLine(id, S), graduated(S).has(id) && 'Graduated; has left campus'].filter(Boolean).join('. '))}</div>`;
+    let h = `<div class="dos"><div class="dside"><div class="mat">${port}</div>${dorm}</div><div class="dmain"><div class="nmr"><p class="name">${esc(title)}</p>${b ? pinBtn(id, pinsGet().includes(id), 'btn sm pind') : ''}</div><div class="sub" style="margin:2px 0 8px">${esc([n && knowsName(id, S) && publicRole(id, S), whoLine(id, S), graduated(S).has(id) && 'Graduated; has left campus'].filter(Boolean).join('. '))}</div>`;
     if (b) {
       const who = esc(knowsName(id, S) ? id : 'them');
       h += `<div class="bond"><div class="l"><span class="medal" aria-hidden="true">${b.Rank}</span><span class="xpw"><span class="rk">Rank ${b.Rank} of 10</span>${xpBar(b, S)}</span></div>
@@ -168,7 +192,7 @@ PANELS.npc = {
     h += '</div></div>';   // .dmain, .dos
     return `<div class="dlg" tabindex="-1" style="--dc:${n ? n.dc : '#9aa3ad'}"><div class="hd"><h2>Dossier</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div><div class="bd">${h}</div></div>`;
   },
-  click() {},
+  click(b) { if (b.dataset.pin) pinToggle(b.dataset.pin); },   // 1.93.0
 };
 
 // ---------------------------------------------------------------- connections graph (D3, loaded on demand)
@@ -278,11 +302,15 @@ function peopleGraphHTML(S) {
   const romTip = roms ? `${roms} romance${roms > 1 ? 's' : ''}` : rr > 10 ? 'Romance is off (Settings)' : `Empty for now: a romance can begin ${rr ? 'at bond Rank ' + rr : 'at any rank'}`;
   const chips = Object.entries(EDGE).filter(([k]) => present.has(k)).map(([k, [c, l]]) => `<button data-gtype="${k}" class="${view.gtypes.has(k) ? 'on' : ''}" style="--c:${c}" aria-pressed="${view.gtypes.has(k)}"${k === 'romance' ? ` title="${esc(romTip)}"` : ''}>${l}${k === 'romance' && !roms ? ' <span class="sub">(none yet)</span>' : ''}</button>`).join('');
   const groups = Object.entries(GROUP).map(([k, [c, l]]) => `<button data-ggroup="${k}" class="${view.ggroups.has(k) ? 'on' : ''}" style="--c:${c}" aria-pressed="${view.ggroups.has(k)}">${l}</button>`).join('');
-  return `<p class="lead">Everyone you have met, around you (your line to each of them is gold, thicker with rank, and takes a colour when it means more: friends, rivals, wary or dislike when their Tension or distrust runs high, pink for a romance). The lines between them appear as you learn them: teachers and mentors once you have met both, and how someone sees the people around them (including people you have not met) at bond Rank 5–6. An arrow shows a one-way view: A → B is how A sees B; a line with no arrow is shared by both.</p>
+  // 1.93.0 (owner): the explanation as short points, not one paragraph
+  return `<ul class="pts"><li><b>You</b> are in the middle, with everyone you have met around you.</li>
+    <li><b>Your line</b> to each person is gold and grows thicker with rank. It takes a colour when it means more: friends, rivals, wary or dislike (high Tension or distrust), pink for a romance.</li>
+    <li><b>Lines between others</b> appear as you learn them: teachers and mentors once you have met both; how someone sees the people around them (even people you have not met) at bond Rank 5–6.</li>
+    <li><b>An arrow</b> is a one-way view: A → B is how A sees B. A line with no arrow is shared by both.</li></ul>
     <div class="tog gt">${chips}</div>${known ? '' : '<div class="empty">No connections learned yet. Deepen a bond to Rank 5 to learn how someone sees the people around them.</div>'}
     <div class="tog gt" style="margin-top:6px"><span class="sub" style="align-self:center">Groups:</span>${groups}${Object.keys(view.gpos || {}).length ? '<button data-gunpin="1" style="--c:#aaa69b">Reset layout</button>' : ''}</div>
     <div class="graph"><svg class="g" role="img" aria-label="Connections diagram"></svg><div class="gload">Loading the diagram…</div></div>
-    <div class="ginfo sub">Tap a line to read what you know about it; tap a person to open their dossier. Drag someone to place them (they stay where you drop them; double-click to let go); pinch or scroll to zoom.</div>`;
+    <div class="ginfo sub"><ul class="pts"><li>Tap a line: what you know about it.</li><li>Tap a person: their dossier.</li><li>Drag someone to place them; double-click to let go.</li><li>Pinch or scroll to zoom.</li></ul></div>`;
 }
 async function loadD3() {
   if (window.d3) return window.d3;

@@ -134,7 +134,7 @@ function rpSection(S) {
   const state = armed ? `<div class="item"><b>Ready: until ${esc(R.at)}</b> <span class="sub">(stops before ${esc(R.stop)})</span><div>Send your message to live it; the narrator plays ${R.moments && R.moments.length ? R.moments.map(m => `${m.day}: ${m.who || 'a campus moment'}`).join(', ') : 'one ordinary moment'}.</div>
       <div class="meta"><button class="btn sm pri" data-act="rpsend">Write the message</button><button class="btn sm" data-act="rpcancel" ${view.busy ? 'disabled' : ''}>Cancel</button></div></div>`
     : R && R.why ? `<div class="sub">Not now: ${esc(R.why)}.</div>` : '';
-  return `<h3>Routine week</h3><p class="hint">Plan an ordinary week and live it in one reply: classes attended, your plan counted within the weekly limits, one or two moments played. It runs to Sunday evening, or to the evening before the next event or due date. No bond progress except in the moments played.</p>${state}
+  return `<h3>Routine week</h3><p class="hint">Plan an ordinary week and live it in one reply:</p><ul class="pts"><li>Classes are attended; your plan counts within the weekly limits.</li><li>One or two moments are played.</li><li>It runs to Sunday evening, or to the evening before the next event or due date.</li><li>No bond progress except in the moments played.</li></ul>${state}
     <div class="item"><label class="f">Study hours this week<select data-rp="study">${[0, 2, 4, 6, 8, 10, 14, 20].map(n => opt(n, p.study, n ? `${n} hours` : 'None')).join('')}</select></label>
     ${rows}${p.acts.length < 4 ? `<button class="btn sm" data-act="rpadd">Add an activity</button>` : ''}
     ${(S.Player.Profile || {}).Club ? `<label class="f"><input type="checkbox" data-rp="club" ${p.club ? 'checked' : ''}> Saturday afternoon at the ${esc(S.Player.Profile.Club)}</label>` : ''}
@@ -153,7 +153,7 @@ function nbPlanner(S) {
   const W = S.World, today = dayIdx(W.Month, W.Week, W.Day);
   const now = `<div class="now"><b>${esc(`${W.Day} ${W.Time}`)}</b> <span class="sub">Month ${W.Month}, Week ${W.Week}</span><div>${esc(W._Period || 'Free time')}</div>
     ${W._Weather && featureOn(S, 'weather') ? `<div class="sub">${esc(wxIcon((S.$ui || {}).wx))} ${esc(W._Weather)}</div>` : ''}
-    ${W._Event_today ? `<div class="ev">${esc(W._Event_today)}</div>` : ''}${(S.$ui || {}).next ? `<div class="nx">Next: ${esc(S.$ui.next.at)} · ${esc(S.$ui.next.what)}</div>` : ''}${W._Curfew ? `<div class="cf">${esc(W._Curfew)}</div>` : ''}${featureOn(S, 'happenings') ? hapCard(S) : ''}</div>`;
+    ${W._Event_today ? W._Event_today.split(' | ').map(x => { const [t, ...s] = x.split(' — '); return `<div class="ev">${esc(t)}</div>${schedHTML([['', s.join(' — ')]])}`; }).join('') : ''}${(S.$ui || {}).next ? `<div class="nx">Next: ${esc(S.$ui.next.at)} · ${esc(S.$ui.next.what)}</div>` : ''}${W._Curfew ? `<div class="cf">${esc(W._Curfew)}</div>` : ''}${featureOn(S, 'happenings') ? hapCard(S) : ''}</div>`;
   // commitments
   const C = Object.entries(S.Commitments || {}).sort(([, a], [, b]) => ((a.$abs < 0) - (b.$abs < 0)) || (a.$abs - b.$abs));
   const com = C.length ? C.map(([k, c]) => {
@@ -196,7 +196,7 @@ function nbPlanner(S) {
     if (sm) {
       const evs = eventsOnDay(+sm, +sw, sd), its = (mine[view.calSel] || []).filter(x => x.k !== 'note'), cur = ((S.$ui || {}).marks || {})[view.calSel] || '';
       detail = `<div class="item calday"><div class="row"><span class="t">${esc(`Year ${sy}, Month ${sm}, Week ${sw}, ${sd}`)}</span><button class="btn sm" data-calday="${esc(view.calSel)}">Close</button></div>
-        ${evs.map(e => `<div class="ev">${esc(e.t.replace(/\s*\(Player\.Profile[^)]*\)/, ''))}</div>${CAL.schedOf(e, sd) ? `<div class="sub" style="margin:2px 0 6px">${esc(CAL.schedOf(e, sd))}</div>` : ''}`).join('')}${its.map(x => `<div><span class="pill">${esc(x.k)}</span> ${esc(x.t)}</div>`).join('')}
+        ${evs.map(e => `<div class="ev">${esc(e.t.replace(/\s*\(Player\.Profile[^)]*\)/, ''))}</div>${schedHTML([['', CAL.schedOf(e, sd)]])}`).join('')}${its.map(x => `<div><span class="pill">${esc(x.k)}</span> ${esc(x.t)}</div>`).join('')}
         ${!evs.length && !its.length ? '<div class="sub">Nothing on this day yet.</div>' : ''}
         <label class="f" style="margin-top:8px">Your note for this day<textarea data-mk="1" maxlength="200" placeholder="e.g. Ask Gareth to spar">${esc(view.markText)}</textarea></label>
         <div class="meta"><button class="btn sm pri" data-act="savemark" ${view.busy ? 'disabled' : ''}>Save note</button>${cur ? `<button class="btn sm del" data-act="delmark" ${view.busy ? 'disabled' : ''}>Remove note</button>` : ''}

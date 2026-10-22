@@ -625,6 +625,24 @@ function userName(S) {
 }
 const personal = (html, S) => { const n = esc(userName(S)); return String(html).replace(/\{\{user\}\}/gi, () => n); };
 function personaName() { try { const n = substitudeMacros('{{user}}'); return n && !/\{\{/.test(n) ? n : ''; } catch (e) { return ''; } }
+// 1.93.0 (owner: event plans read as one long paragraph): an event day's schedule (data/calendar.json "07:00–09:00 arrivals; 09:00
+// speeches; …", parts split like the engine's eventBlocks) as rows of a time | what table; a part with no leading time keeps the
+// time cell empty. `days` = [[day label, schedule text]] puts each day's rows under its own header row.
+const SCHED_AT = /^((?:from\s+)?\d{1,2}:\d{2}(?:\s*[–-]\s*\d{1,2}:\d{2})?|midnight|morning|afternoon|evening|dusk(?:\s*\(about \d{1,2}:\d{2}\))?)\s*:?\s+(?=\S)/i;
+const schedParts = text => String(text || '').split(/;\s+/).map(p => p.trim()).filter(Boolean);
+function schedHTML(days) {
+  const rows = [], multi = days.length > 1;
+  for (const [day, text] of days) {
+    const parts = schedParts(text);
+    if (!parts.length) continue;
+    if (multi) rows.push(`<tr class="sd"><th colspan="2">${esc(day)}</th></tr>`);
+    for (const p of parts) {
+      const m = SCHED_AT.exec(p), what = m ? p.slice(m[0].length) : p;
+      rows.push(`<tr><td class="w">${m ? esc(m[1].charAt(0).toUpperCase() + m[1].slice(1)) : ''}</td><td>${esc(what.charAt(0).toUpperCase() + what.slice(1))}</td></tr>`);
+    }
+  }
+  return rows.length ? `<div class="rtw"><table class="rt sch">${rows.join('')}</table></div>` : '';
+}
 
 function latestState() {
   const last = getLastMessageId();
@@ -1057,6 +1075,10 @@ table{width:100%;border-collapse:collapse;font-size:var(--fs-m)}
 .rtw{overflow-x:auto}table.rt{font-size:var(--fs-s)}table.rt td.w{white-space:nowrap;color:var(--ink2);width:1%}table.rt td.fx{width:1%;white-space:nowrap}
 table.rt td.fx span{display:block}table.rt td.fx .up{color:var(--good)}table.rt td.fx .dn{color:var(--danger)}
 @media (max-width:560px){table.rt td.w{white-space:normal;width:auto}table.rt td.fx{white-space:normal}}
+/* 1.93.0 event schedules as a time | what table (schedHTML); lead and hint lists in place of long paragraphs */
+table.sch{margin:2px 0 6px}table.sch tr.sd th{text-align:left;font-family:var(--f-sc);color:var(--brass-hi);padding-top:10px}table.sch td.w{color:var(--brass-hi);font-variant-numeric:tabular-nums}
+@media (max-width:560px){table.sch td.w{white-space:nowrap;width:1%}}
+ul.pts{margin:0 0 14px;padding-left:20px;max-width:72ch;color:var(--ink2);font-size:var(--fs-s)}ul.pts li{margin:0 0 4px}ul.pts b{color:var(--ink)}
 th,td{text-align:left;padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.07);vertical-align:top}
 th{color:var(--ink2);font-weight:500;font-size:var(--fs-s)}
 .pill{display:inline-block;font-size:var(--fs-xs);padding:1px 9px;border-radius:999px;border:1px solid var(--rule2);margin:0 4px 4px 0;color:var(--ink2)}
@@ -1078,6 +1100,13 @@ th{color:var(--ink2);font-weight:500;font-size:var(--fs-s)}
 .plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
 .pr{display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"av pm md" "mt mt mt";gap:2px 14px;align-items:center;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;padding:13px 14px 12px;border-radius:12px;border:1px solid transparent;background:var(--card)}
 .pr:hover{border-color:var(--brass-lo)}
+/* 1.93.0 the Order row (a dropdown and ascending / descending) with room below it; pinned people: a star on each card */
+.psort{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:0 0 16px}
+.pso{display:flex;align-items:center;gap:8px;font-size:var(--fs-s);color:var(--ink2)}.pso select{width:auto;min-width:150px;padding:6px 10px}
+.prw{position:relative;display:flex}.prw>.pr{flex:1 1 auto}.pr.pinned{border-color:var(--brass-lo)}
+.pinb{position:absolute;top:4px;right:6px;width:26px;height:26px;padding:0;border:0;background:none;cursor:pointer;font-size:17px;line-height:1;color:var(--ink3);opacity:.7}
+.pinb:hover{opacity:1;color:var(--brass-hi)}.pinb.on{color:var(--brass-hi);opacity:1}
+.nmr{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.pind{flex:0 0 auto}.pind.on{border-color:var(--brass);color:var(--brass-hi)}
 .pav{grid-area:av;position:relative;display:flex}
 .pav .av{border:0;box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--ring,var(--rule2))}
 .pav .here{position:absolute;right:-2px;bottom:0;width:13px;height:13px;border-radius:50%;background:var(--moon);box-shadow:0 0 0 3px var(--card)}
@@ -2299,7 +2328,7 @@ const EDGE = {
   rivals: ['#e0a24a', 'Rivals'], wary: ['#9b7fd1', 'Wary'], dislike: ['#e0645a', 'Dislike'], story: ['#e8d3a8', 'From the story'],
 };
 const GROUP = { dorm: ['#c9c5bc', 'Dorms'], club: ['#d9b36a', 'Clubs'], faction: ['#8fb3d9', 'Factions'] };
-view.ptab = 'bonds'; view.psort = 'close'; view.gtypes = new Set(Object.keys(EDGE)); view.ggroups = new Set(); view.gpos = {};
+view.ptab = 'bonds'; view.psort = 'close'; view.pdir = ''; view.gtypes = new Set(Object.keys(EDGE)); view.ggroups = new Set(); view.gpos = {};
 const YEARW = { 1: 'First-year', 2: 'Second-year', 3: 'Third-year' };
 const publicRole = (id, S) => {
   const c = ((S.Campus_State || {}).Council || {}), old = graduated(S).has(id);
@@ -2347,13 +2376,31 @@ PANELS.people = {
   },
   click(b, S) {
     if (b.dataset.ptab) { view.ptab = b.dataset.ptab; render(); return; }
-    if (b.dataset.psort) { view.psort = b.dataset.psort; render(); return; }
+    if (b.dataset.pdir) { view.pdir = b.dataset.pdir; render(); return; }
+    if (b.dataset.pin) { pinToggle(b.dataset.pin); return; }
     if (b.dataset.gtype) { const t = b.dataset.gtype; view.gtypes.has(t) ? view.gtypes.delete(t) : view.gtypes.add(t); render(); }
     if (b.dataset.ggroup) { const t = b.dataset.ggroup; view.ggroups.has(t) ? view.ggroups.delete(t) : view.ggroups.add(t); render(); }
     if (b.dataset.gunpin) { view.gpos = {}; render(); }
   },
+  input(el) { if (el.dataset.psort !== undefined && el.value !== view.psort) { view.psort = el.value; view.pdir = ''; render(); } },   // 1.93.0: the Order dropdown
   after(S) { if (view.ptab === 'graph') drawGraph(S); },
 };
+// 1.93.0 (owner): pinned people, the ones {{user}} is working on: always at the top of Bonds whatever the order, and marked in the
+// dossier. UI only, not game state: like the red dots (news.shared.js) they live in Tavern Helper's chat variables (saved with the
+// chat), only in memory without Tavern Helper (previews, tests)
+const PIN_VAR = 'eld_pins';
+let pinMem = [];
+function pinsGet() {
+  if (NEWS_CHAT) try { const v = (getVariables({ type: 'chat' }) || {})[PIN_VAR]; return Array.isArray(v) ? v : []; } catch (e) { /* no Tavern Helper */ }
+  return pinMem;
+}
+function pinToggle(id) {
+  const was = pinsGet(), next = was.includes(id) ? was.filter(x => x !== id) : [...was, id];
+  pinMem = next;
+  if (NEWS_CHAT) try { updateVariablesWith(v => { v[PIN_VAR] = next; return v; }, { type: 'chat' }); } catch (e) { console.warn('[Eldrasil] pins', e); }
+  render();
+}
+const pinBtn = (id, on, cls) => `<button class="${cls}${on ? ' on' : ''}" data-pin="${esc(id)}" aria-pressed="${on}" aria-label="Pin" title="${on ? 'Pinned: kept at the top. Tap to unpin' : 'Pin: keep at the top of Bonds'}">${on ? '★' : '☆'}${cls === 'pinb' ? '' : on ? ' Pinned' : ' Pin'}</button>`;
 
 // 1.23.0: XP, Trust and Tension as three labelled meters (1.70.0: shared by the people cards and the scene cards)
 function bondMeters(id, b, S) {
@@ -2363,7 +2410,8 @@ function bondMeters(id, b, S) {
       <span class="m" title="${esc(tensionTxt(id, b))}"><span class="ml">Tension<b>${TEND.lock.includes(id) ? '—' : esc(tensionBand(b.Tension))}</b></span>${mini(b.Tension, '#e0645a')}</span>`;
 }
 // 1.74.0 (owner): the order of the people cards: closest (the default), not seen lately, name, dorm, year; dorm and year in groups
-const PSORT = [['close', 'Closest'], ['seen', 'Not seen lately'], ['name', 'Name'], ['dorm', 'Dorm'], ['year', 'Year']];
+// 1.93.0 (owner): a dropdown plus ascending / descending; each order starts in its own direction (closest first, longest unseen first)
+const PSORT = [['close', 'Closest', 'desc'], ['seen', 'Last seen', 'asc'], ['name', 'Name', 'asc'], ['dorm', 'Dorm', 'asc'], ['year', 'Year', 'asc']];
 function peopleGroup(id, S, by) {
   const n = npcOf(id);
   if (!n) return 'Others';
@@ -2378,24 +2426,29 @@ function peopleListHTML(S) {
   const nm = (a, b) => nameOf(a, S, true).localeCompare(nameOf(b, S, true));
   const GO = ['First-years', 'Second-years', 'Third-years', 'Former students', 'Staff', 'Others'], gi = g => (GO.includes(g) ? GO.indexOf(g) : -1);
   const grp = id => peopleGroup(id, S, by);
-  const ids = Object.keys(B).sort(by === 'seen' ? (a, b) => (seen(a) - seen(b)) || close(a, b) : by === 'name' ? nm
+  const P0 = PSORT.find(p => p[0] === by) || PSORT[0], dir = view.pdir || P0[2];
+  const sorted = Object.keys(B).sort(by === 'seen' ? (a, b) => (seen(a) - seen(b)) || close(a, b) : by === 'name' ? nm
     : by === 'dorm' || by === 'year' ? (a, b) => (gi(grp(a)) - gi(grp(b))) || grp(a).localeCompare(grp(b)) || nm(a, b) : close);
-  if (!ids.length) return '<div class="empty">You have not met anyone yet.</div>';
+  if (dir !== P0[2]) sorted.reverse();
+  if (!sorted.length) return '<div class="empty">You have not met anyone yet.</div>';
+  // 1.93.0 (owner): pinned people stay on top whatever the order; the order applies among them too
+  const pins = pinsGet(), ids = [...sorted.filter(id => pins.includes(id)), ...sorted.filter(id => !pins.includes(id))];
   const ago = id => { const d = today - seen(id); return here.includes(id) ? 'here now' : seen(id) < 0 ? '' : d <= 0 ? 'seen today' : d === 1 ? 'seen yesterday' : `seen ${d} days ago`; };
-  const sorter = `<div class="tog psort"><span class="sub" style="align-self:center">Order:</span>${PSORT.map(([k, l]) => `<button data-psort="${k}" class="${by === k ? 'on' : ''}" aria-pressed="${by === k}">${l}</button>`).join('')}</div>`;
+  const sorter = `<div class="psort"><label class="pso">Order<select data-psort aria-label="Order">${PSORT.map(([k, l]) => `<option value="${k}"${by === k ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
+    <div class="tog">${[['asc', '↑ Ascending'], ['desc', '↓ Descending']].map(([k, l]) => `<button data-pdir="${k}" class="${dir === k ? 'on' : ''}" aria-pressed="${dir === k}">${l}</button>`).join('')}</div></div>`;
   // 1.23.0 (UI overhaul): cards in a grid; the rank is a brass medal, XP, Trust and Tension are three labelled meters, and a
   // moonglass dot on the portrait says who is here now
   let last = '';
-  return `<p class="lead">${ids.length} ${ids.length === 1 ? 'person' : 'people'} you have met. Time together deepens each bond; once the bar fills, the next genuine encounter can deepen it further.</p>${sorter}<div class="plist">` + ids.map(id => {
-    const b = B[id], n = npcOf(id), g = by === 'dorm' || by === 'year' ? grp(id) : '';
-    const head = g && g !== last ? `<h3 class="pgh" style="grid-column:1/-1;margin:6px 0 0">${esc(g)}</h3>` : '';
+  return `<p class="lead">${ids.length} ${ids.length === 1 ? 'person' : 'people'} you have met. Time together deepens each bond; once the bar fills, the next genuine encounter can deepen it further. Pin (☆) the people you are working on to keep them on top.</p>${sorter}<div class="plist">` + ids.map(id => {
+    const b = B[id], n = npcOf(id), pin = pins.includes(id), g = pin ? 'Pinned' : by === 'dorm' || by === 'year' ? grp(id) : pins.length ? 'Everyone else' : '';
+    const head = g && g !== last ? `<h3 class="pgh" style="grid-column:1/-1;margin:6px 0 0">${pin ? '★ ' : ''}${esc(g)}</h3>` : '';
     last = g || last;
     const dot = here.includes(id) ? '<i class="here" role="img" aria-label="here now" title="here now"></i>' : '';
     const sub = b.Title || (n ? publicRole(id, S) || whoLine(id, S) : '');
-    return `${head}<button class="pr" data-open="npc:${esc(id)}"><span class="pav">${avatar(id, S, 'av lg')}${dot}</span><span class="pm">
+    return `${head}<div class="prw"><button class="pr${pin ? ' pinned' : ''}" data-open="npc:${esc(id)}"><span class="pav">${avatar(id, S, 'av lg')}${dot}</span><span class="pm">
       <span class="pn">${esc(nameOf(id, S, true))}${isNew(`npc:${id}`) ? newsDot() : ''}${b.Romance ? ' <span class="pill r">romance</span>' : ''}</span><span class="sub">${esc(by === 'seen' && ago(id) ? [ago(id), sub].filter(Boolean).join(' · ') : sub)}</span></span>
       <span class="medal" title="Rank ${b.Rank} of 10">${b.Rank}</span>
-      <span class="pmt">${bondMeters(id, b, S)}</span></button>`;
+      <span class="pmt">${bondMeters(id, b, S)}</span></button>${pinBtn(id, pin, 'pinb')}</div>`;
   }).join('') + '</div>';
 }
 
@@ -2409,7 +2462,7 @@ PANELS.npc = {
     const port = n && n.p ? `<img class="por" src="${esc(imgURL(n.p))}" alt="" style="object-position:${n.fc[0]}% ${n.fc[1]}%" data-fb="${esc(knowsName(id, S) ? initials(n.n) : '?')}" data-fbclass="por fb">` : `<span class="por fb">${esc(n && !knowsName(id, S) ? '?' : initials(n ? n.n : id))}</span>`;
     // 1.23.0 (UI overhaul): the portrait (matted, sticky) and the dorm stay in the left column; everything else is the file
     const dorm = n && n.dm && String(n.g).startsWith('Year') ? `<div class="idl"><i class="gem" aria-hidden="true"></i>${esc(n.dm)} Dormitory</div>` : '';
-    let h = `<div class="dos"><div class="dside"><div class="mat">${port}</div>${dorm}</div><div class="dmain"><p class="name">${esc(title)}</p><div class="sub" style="margin:2px 0 8px">${esc([n && knowsName(id, S) && publicRole(id, S), whoLine(id, S), graduated(S).has(id) && 'Graduated; has left campus'].filter(Boolean).join('. '))}</div>`;
+    let h = `<div class="dos"><div class="dside"><div class="mat">${port}</div>${dorm}</div><div class="dmain"><div class="nmr"><p class="name">${esc(title)}</p>${b ? pinBtn(id, pinsGet().includes(id), 'btn sm pind') : ''}</div><div class="sub" style="margin:2px 0 8px">${esc([n && knowsName(id, S) && publicRole(id, S), whoLine(id, S), graduated(S).has(id) && 'Graduated; has left campus'].filter(Boolean).join('. '))}</div>`;
     if (b) {
       const who = esc(knowsName(id, S) ? id : 'them');
       h += `<div class="bond"><div class="l"><span class="medal" aria-hidden="true">${b.Rank}</span><span class="xpw"><span class="rk">Rank ${b.Rank} of 10</span>${xpBar(b, S)}</span></div>
@@ -2460,7 +2513,7 @@ PANELS.npc = {
     h += '</div></div>';   // .dmain, .dos
     return `<div class="dlg" tabindex="-1" style="--dc:${n ? n.dc : '#9aa3ad'}"><div class="hd"><h2>Dossier</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div><div class="bd">${h}</div></div>`;
   },
-  click() {},
+  click(b) { if (b.dataset.pin) pinToggle(b.dataset.pin); },   // 1.93.0
 };
 
 // ---------------------------------------------------------------- connections graph (D3, loaded on demand)
@@ -2570,11 +2623,15 @@ function peopleGraphHTML(S) {
   const romTip = roms ? `${roms} romance${roms > 1 ? 's' : ''}` : rr > 10 ? 'Romance is off (Settings)' : `Empty for now: a romance can begin ${rr ? 'at bond Rank ' + rr : 'at any rank'}`;
   const chips = Object.entries(EDGE).filter(([k]) => present.has(k)).map(([k, [c, l]]) => `<button data-gtype="${k}" class="${view.gtypes.has(k) ? 'on' : ''}" style="--c:${c}" aria-pressed="${view.gtypes.has(k)}"${k === 'romance' ? ` title="${esc(romTip)}"` : ''}>${l}${k === 'romance' && !roms ? ' <span class="sub">(none yet)</span>' : ''}</button>`).join('');
   const groups = Object.entries(GROUP).map(([k, [c, l]]) => `<button data-ggroup="${k}" class="${view.ggroups.has(k) ? 'on' : ''}" style="--c:${c}" aria-pressed="${view.ggroups.has(k)}">${l}</button>`).join('');
-  return `<p class="lead">Everyone you have met, around you (your line to each of them is gold, thicker with rank, and takes a colour when it means more: friends, rivals, wary or dislike when their Tension or distrust runs high, pink for a romance). The lines between them appear as you learn them: teachers and mentors once you have met both, and how someone sees the people around them (including people you have not met) at bond Rank 5–6. An arrow shows a one-way view: A → B is how A sees B; a line with no arrow is shared by both.</p>
+  // 1.93.0 (owner): the explanation as short points, not one paragraph
+  return `<ul class="pts"><li><b>You</b> are in the middle, with everyone you have met around you.</li>
+    <li><b>Your line</b> to each person is gold and grows thicker with rank. It takes a colour when it means more: friends, rivals, wary or dislike (high Tension or distrust), pink for a romance.</li>
+    <li><b>Lines between others</b> appear as you learn them: teachers and mentors once you have met both; how someone sees the people around them (even people you have not met) at bond Rank 5–6.</li>
+    <li><b>An arrow</b> is a one-way view: A → B is how A sees B. A line with no arrow is shared by both.</li></ul>
     <div class="tog gt">${chips}</div>${known ? '' : '<div class="empty">No connections learned yet. Deepen a bond to Rank 5 to learn how someone sees the people around them.</div>'}
     <div class="tog gt" style="margin-top:6px"><span class="sub" style="align-self:center">Groups:</span>${groups}${Object.keys(view.gpos || {}).length ? '<button data-gunpin="1" style="--c:#aaa69b">Reset layout</button>' : ''}</div>
     <div class="graph"><svg class="g" role="img" aria-label="Connections diagram"></svg><div class="gload">Loading the diagram…</div></div>
-    <div class="ginfo sub">Tap a line to read what you know about it; tap a person to open their dossier. Drag someone to place them (they stay where you drop them; double-click to let go); pinch or scroll to zoom.</div>`;
+    <div class="ginfo sub"><ul class="pts"><li>Tap a line: what you know about it.</li><li>Tap a person: their dossier.</li><li>Drag someone to place them; double-click to let go.</li><li>Pinch or scroll to zoom.</li></ul></div>`;
 }
 async function loadD3() {
   if (window.d3) return window.d3;
@@ -3189,7 +3246,7 @@ function rpSection(S) {
   const state = armed ? `<div class="item"><b>Ready: until ${esc(R.at)}</b> <span class="sub">(stops before ${esc(R.stop)})</span><div>Send your message to live it; the narrator plays ${R.moments && R.moments.length ? R.moments.map(m => `${m.day}: ${m.who || 'a campus moment'}`).join(', ') : 'one ordinary moment'}.</div>
       <div class="meta"><button class="btn sm pri" data-act="rpsend">Write the message</button><button class="btn sm" data-act="rpcancel" ${view.busy ? 'disabled' : ''}>Cancel</button></div></div>`
     : R && R.why ? `<div class="sub">Not now: ${esc(R.why)}.</div>` : '';
-  return `<h3>Routine week</h3><p class="hint">Plan an ordinary week and live it in one reply: classes attended, your plan counted within the weekly limits, one or two moments played. It runs to Sunday evening, or to the evening before the next event or due date. No bond progress except in the moments played.</p>${state}
+  return `<h3>Routine week</h3><p class="hint">Plan an ordinary week and live it in one reply:</p><ul class="pts"><li>Classes are attended; your plan counts within the weekly limits.</li><li>One or two moments are played.</li><li>It runs to Sunday evening, or to the evening before the next event or due date.</li><li>No bond progress except in the moments played.</li></ul>${state}
     <div class="item"><label class="f">Study hours this week<select data-rp="study">${[0, 2, 4, 6, 8, 10, 14, 20].map(n => opt(n, p.study, n ? `${n} hours` : 'None')).join('')}</select></label>
     ${rows}${p.acts.length < 4 ? `<button class="btn sm" data-act="rpadd">Add an activity</button>` : ''}
     ${(S.Player.Profile || {}).Club ? `<label class="f"><input type="checkbox" data-rp="club" ${p.club ? 'checked' : ''}> Saturday afternoon at the ${esc(S.Player.Profile.Club)}</label>` : ''}
@@ -3208,7 +3265,7 @@ function nbPlanner(S) {
   const W = S.World, today = dayIdx(W.Month, W.Week, W.Day);
   const now = `<div class="now"><b>${esc(`${W.Day} ${W.Time}`)}</b> <span class="sub">Month ${W.Month}, Week ${W.Week}</span><div>${esc(W._Period || 'Free time')}</div>
     ${W._Weather && featureOn(S, 'weather') ? `<div class="sub">${esc(wxIcon((S.$ui || {}).wx))} ${esc(W._Weather)}</div>` : ''}
-    ${W._Event_today ? `<div class="ev">${esc(W._Event_today)}</div>` : ''}${(S.$ui || {}).next ? `<div class="nx">Next: ${esc(S.$ui.next.at)} · ${esc(S.$ui.next.what)}</div>` : ''}${W._Curfew ? `<div class="cf">${esc(W._Curfew)}</div>` : ''}${featureOn(S, 'happenings') ? hapCard(S) : ''}</div>`;
+    ${W._Event_today ? W._Event_today.split(' | ').map(x => { const [t, ...s] = x.split(' — '); return `<div class="ev">${esc(t)}</div>${schedHTML([['', s.join(' — ')]])}`; }).join('') : ''}${(S.$ui || {}).next ? `<div class="nx">Next: ${esc(S.$ui.next.at)} · ${esc(S.$ui.next.what)}</div>` : ''}${W._Curfew ? `<div class="cf">${esc(W._Curfew)}</div>` : ''}${featureOn(S, 'happenings') ? hapCard(S) : ''}</div>`;
   // commitments
   const C = Object.entries(S.Commitments || {}).sort(([, a], [, b]) => ((a.$abs < 0) - (b.$abs < 0)) || (a.$abs - b.$abs));
   const com = C.length ? C.map(([k, c]) => {
@@ -3251,7 +3308,7 @@ function nbPlanner(S) {
     if (sm) {
       const evs = eventsOnDay(+sm, +sw, sd), its = (mine[view.calSel] || []).filter(x => x.k !== 'note'), cur = ((S.$ui || {}).marks || {})[view.calSel] || '';
       detail = `<div class="item calday"><div class="row"><span class="t">${esc(`Year ${sy}, Month ${sm}, Week ${sw}, ${sd}`)}</span><button class="btn sm" data-calday="${esc(view.calSel)}">Close</button></div>
-        ${evs.map(e => `<div class="ev">${esc(e.t.replace(/\s*\(Player\.Profile[^)]*\)/, ''))}</div>${CAL.schedOf(e, sd) ? `<div class="sub" style="margin:2px 0 6px">${esc(CAL.schedOf(e, sd))}</div>` : ''}`).join('')}${its.map(x => `<div><span class="pill">${esc(x.k)}</span> ${esc(x.t)}</div>`).join('')}
+        ${evs.map(e => `<div class="ev">${esc(e.t.replace(/\s*\(Player\.Profile[^)]*\)/, ''))}</div>${schedHTML([['', CAL.schedOf(e, sd)]])}`).join('')}${its.map(x => `<div><span class="pill">${esc(x.k)}</span> ${esc(x.t)}</div>`).join('')}
         ${!evs.length && !its.length ? '<div class="sub">Nothing on this day yet.</div>' : ''}
         <label class="f" style="margin-top:8px">Your note for this day<textarea data-mk="1" maxlength="200" placeholder="e.g. Ask Gareth to spar">${esc(view.markText)}</textarea></label>
         <div class="meta"><button class="btn sm pri" data-act="savemark" ${view.busy ? 'disabled' : ''}>Save note</button>${cur ? `<button class="btn sm del" data-act="delmark" ${view.busy ? 'disabled' : ''}>Remove note</button>` : ''}
@@ -3744,8 +3801,9 @@ function acEvent(S) {
   if (!soon) return '<div class="empty">No academy event in the next seven days.</div>';
   const { e, d0 } = soon, n = d0 - dayIdx(S.World.Month, S.World.Week, S.World.Day), live = ((S.$ui || {}).ev || []).find(x => x && x.id === e.id);
   const span = `M${e.m} W${e.w} ${e.d[0]}${e.d.length > 1 ? '–' + e.d[e.d.length - 1] : ''}`;
-  const plan = typeof e.s === 'string' || !e.s ? `<p>${esc(e.s || 'No set plan: the day runs as the story has it.')}</p>`
-    : `<ul class="log">${e.d.map(d => `<li><b>${esc(d)}</b> ${esc(CAL.schedOf(e, d) || '')}</li>`).join('')}</ul>`;
+  // 1.93.0 (owner): the plan as a time | what table, a header row per day when the days differ
+  const plan = (typeof e.s === 'string' ? schedHTML([['', e.s]]) : e.s ? schedHTML(e.d.map(d => [d, CAL.schedOf(e, d)])) : '')
+    || '<p>No set plan: the day runs as the story has it.</p>';
   const nowBlock = live && (live.now || live.next) ? `<div class="item">${live.now ? `<div class="row"><span class="t">Now</span></div><div>${esc(live.now)}</div>` : ''}${live.next ? `<div class="row"><span class="t">Next · ${esc(live.next[0])}</span></div><div>${esc(live.next[1])}</div>` : ''}</div>` : '';
   const chs = featureOn(S, 'event_chances') ? ((DATA.chances || {})[e.id] || []) : [];
   const chHTML = chs.length ? `<h3>Chances</h3><p class="hint">Optional, once a year each; nobody will push you toward them.</p>${chs.map(ch => {
@@ -3764,7 +3822,7 @@ function acEvent(S) {
   let brk = '';
   if (e.kind === 'holiday') {
     const R = (S.$ui || {}).routine || {}, armed = R.home && R.at;
-    brk = `<h3>The break</h3><p class="hint">Staying is allowed and common; you stay unless you go home. Going home takes one reply: you leave, spend the break at home and are back on its last evening. Your home and family are yours to describe.</p>`
+    brk = `<h3>The break</h3><ul class="pts"><li>Staying is allowed and common: you stay unless you go home.</li><li>Going home takes one reply: you leave, spend the break at home and are back on its last evening.</li><li>Your home and family are yours to describe.</li></ul>`
       + (live && live.stay ? `<div class="item"><div class="row"><span class="t">Staying at Halvard</span></div><div class="meta">${live.stay.length ? live.stay.map(id => `<span class="who">${nm(id)}</span>`).join('') : '<span class="sub">nobody on record</span>'}</div></div>` : '')
       + (armed ? `<div class="item"><div class="row"><span class="t">Going home</span><span class="pill g">back ${esc(R.at)}</span></div><div class="meta"><button class="btn sm" data-fill="I go home for the break.">Draft</button><button class="btn sm" data-home="stay">Stay after all</button></div></div>`
         : `${R.home && R.why ? `<div class="warn">Going home: ${esc(R.why)}.</div>` : ''}<div class="meta"><button class="btn sm" data-home="go">Go home for the break</button></div>`);

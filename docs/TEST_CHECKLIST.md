@@ -63,6 +63,8 @@ it. *Update*: the folded block MVU appends under the reply. *Log*: Student file 
 - [x] Nothing is lost: the Fire Dormitory, 300 points, the bonds with Ruby, Percival, Zara, Tilly and Kanae, the two Journal lines, the
       lemon and honey sweet in the Bag, Tilly's 22:45 meeting in the Planner [1.42].
 - [ ] Right after loading no bracelet button has a red dot [1.25].
+- [ ] People → Bonds: the Order dropdown and ↑/↓ change the cards; a starred person stays on top in every order, and the star is
+      still there after a reload of the chat; Activities → Event and Inventory → Planner show the day plan as a time | what table [1.93].
 - [ ] The first reply may lack some `<now>` lines (presence, walks, ambience): the engine writes them on its first run. From the second
       reply on they are there [1.47, 1.48].
 - [-] (extra-model, 1.67–1.68; replaced by the one-call check below) Each reply: the prose arrives, then the update is appended

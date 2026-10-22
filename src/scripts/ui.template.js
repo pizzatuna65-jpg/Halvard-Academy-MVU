@@ -99,6 +99,24 @@ function userName(S) {
 }
 const personal = (html, S) => { const n = esc(userName(S)); return String(html).replace(/\{\{user\}\}/gi, () => n); };
 function personaName() { try { const n = substitudeMacros('{{user}}'); return n && !/\{\{/.test(n) ? n : ''; } catch (e) { return ''; } }
+// 1.93.0 (owner: event plans read as one long paragraph): an event day's schedule (data/calendar.json "07:00–09:00 arrivals; 09:00
+// speeches; …", parts split like the engine's eventBlocks) as rows of a time | what table; a part with no leading time keeps the
+// time cell empty. `days` = [[day label, schedule text]] puts each day's rows under its own header row.
+const SCHED_AT = /^((?:from\s+)?\d{1,2}:\d{2}(?:\s*[–-]\s*\d{1,2}:\d{2})?|midnight|morning|afternoon|evening|dusk(?:\s*\(about \d{1,2}:\d{2}\))?)\s*:?\s+(?=\S)/i;
+const schedParts = text => String(text || '').split(/;\s+/).map(p => p.trim()).filter(Boolean);
+function schedHTML(days) {
+  const rows = [], multi = days.length > 1;
+  for (const [day, text] of days) {
+    const parts = schedParts(text);
+    if (!parts.length) continue;
+    if (multi) rows.push(`<tr class="sd"><th colspan="2">${esc(day)}</th></tr>`);
+    for (const p of parts) {
+      const m = SCHED_AT.exec(p), what = m ? p.slice(m[0].length) : p;
+      rows.push(`<tr><td class="w">${m ? esc(m[1].charAt(0).toUpperCase() + m[1].slice(1)) : ''}</td><td>${esc(what.charAt(0).toUpperCase() + what.slice(1))}</td></tr>`);
+    }
+  }
+  return rows.length ? `<div class="rtw"><table class="rt sch">${rows.join('')}</table></div>` : '';
+}
 
 function latestState() {
   const last = getLastMessageId();
@@ -531,6 +549,10 @@ table{width:100%;border-collapse:collapse;font-size:var(--fs-m)}
 .rtw{overflow-x:auto}table.rt{font-size:var(--fs-s)}table.rt td.w{white-space:nowrap;color:var(--ink2);width:1%}table.rt td.fx{width:1%;white-space:nowrap}
 table.rt td.fx span{display:block}table.rt td.fx .up{color:var(--good)}table.rt td.fx .dn{color:var(--danger)}
 @media (max-width:560px){table.rt td.w{white-space:normal;width:auto}table.rt td.fx{white-space:normal}}
+/* 1.93.0 event schedules as a time | what table (schedHTML); lead and hint lists in place of long paragraphs */
+table.sch{margin:2px 0 6px}table.sch tr.sd th{text-align:left;font-family:var(--f-sc);color:var(--brass-hi);padding-top:10px}table.sch td.w{color:var(--brass-hi);font-variant-numeric:tabular-nums}
+@media (max-width:560px){table.sch td.w{white-space:nowrap;width:1%}}
+ul.pts{margin:0 0 14px;padding-left:20px;max-width:72ch;color:var(--ink2);font-size:var(--fs-s)}ul.pts li{margin:0 0 4px}ul.pts b{color:var(--ink)}
 th,td{text-align:left;padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.07);vertical-align:top}
 th{color:var(--ink2);font-weight:500;font-size:var(--fs-s)}
 .pill{display:inline-block;font-size:var(--fs-xs);padding:1px 9px;border-radius:999px;border:1px solid var(--rule2);margin:0 4px 4px 0;color:var(--ink2)}
@@ -552,6 +574,13 @@ th{color:var(--ink2);font-weight:500;font-size:var(--fs-s)}
 .plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
 .pr{display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"av pm md" "mt mt mt";gap:2px 14px;align-items:center;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;padding:13px 14px 12px;border-radius:12px;border:1px solid transparent;background:var(--card)}
 .pr:hover{border-color:var(--brass-lo)}
+/* 1.93.0 the Order row (a dropdown and ascending / descending) with room below it; pinned people: a star on each card */
+.psort{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:0 0 16px}
+.pso{display:flex;align-items:center;gap:8px;font-size:var(--fs-s);color:var(--ink2)}.pso select{width:auto;min-width:150px;padding:6px 10px}
+.prw{position:relative;display:flex}.prw>.pr{flex:1 1 auto}.pr.pinned{border-color:var(--brass-lo)}
+.pinb{position:absolute;top:4px;right:6px;width:26px;height:26px;padding:0;border:0;background:none;cursor:pointer;font-size:17px;line-height:1;color:var(--ink3);opacity:.7}
+.pinb:hover{opacity:1;color:var(--brass-hi)}.pinb.on{color:var(--brass-hi);opacity:1}
+.nmr{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.pind{flex:0 0 auto}.pind.on{border-color:var(--brass);color:var(--brass-hi)}
 .pav{grid-area:av;position:relative;display:flex}
 .pav .av{border:0;box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--ring,var(--rule2))}
 .pav .here{position:absolute;right:-2px;bottom:0;width:13px;height:13px;border-radius:50%;background:var(--moon);box-shadow:0 0 0 3px var(--card)}

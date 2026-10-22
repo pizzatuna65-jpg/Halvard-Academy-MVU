@@ -302,8 +302,9 @@ function acEvent(S) {
   if (!soon) return '<div class="empty">No academy event in the next seven days.</div>';
   const { e, d0 } = soon, n = d0 - dayIdx(S.World.Month, S.World.Week, S.World.Day), live = ((S.$ui || {}).ev || []).find(x => x && x.id === e.id);
   const span = `M${e.m} W${e.w} ${e.d[0]}${e.d.length > 1 ? '–' + e.d[e.d.length - 1] : ''}`;
-  const plan = typeof e.s === 'string' || !e.s ? `<p>${esc(e.s || 'No set plan: the day runs as the story has it.')}</p>`
-    : `<ul class="log">${e.d.map(d => `<li><b>${esc(d)}</b> ${esc(CAL.schedOf(e, d) || '')}</li>`).join('')}</ul>`;
+  // 1.93.0 (owner): the plan as a time | what table, a header row per day when the days differ
+  const plan = (typeof e.s === 'string' ? schedHTML([['', e.s]]) : e.s ? schedHTML(e.d.map(d => [d, CAL.schedOf(e, d)])) : '')
+    || '<p>No set plan: the day runs as the story has it.</p>';
   const nowBlock = live && (live.now || live.next) ? `<div class="item">${live.now ? `<div class="row"><span class="t">Now</span></div><div>${esc(live.now)}</div>` : ''}${live.next ? `<div class="row"><span class="t">Next · ${esc(live.next[0])}</span></div><div>${esc(live.next[1])}</div>` : ''}</div>` : '';
   const chs = featureOn(S, 'event_chances') ? ((DATA.chances || {})[e.id] || []) : [];
   const chHTML = chs.length ? `<h3>Chances</h3><p class="hint">Optional, once a year each; nobody will push you toward them.</p>${chs.map(ch => {
@@ -322,7 +323,7 @@ function acEvent(S) {
   let brk = '';
   if (e.kind === 'holiday') {
     const R = (S.$ui || {}).routine || {}, armed = R.home && R.at;
-    brk = `<h3>The break</h3><p class="hint">Staying is allowed and common; you stay unless you go home. Going home takes one reply: you leave, spend the break at home and are back on its last evening. Your home and family are yours to describe.</p>`
+    brk = `<h3>The break</h3><ul class="pts"><li>Staying is allowed and common: you stay unless you go home.</li><li>Going home takes one reply: you leave, spend the break at home and are back on its last evening.</li><li>Your home and family are yours to describe.</li></ul>`
       + (live && live.stay ? `<div class="item"><div class="row"><span class="t">Staying at Halvard</span></div><div class="meta">${live.stay.length ? live.stay.map(id => `<span class="who">${nm(id)}</span>`).join('') : '<span class="sub">nobody on record</span>'}</div></div>` : '')
       + (armed ? `<div class="item"><div class="row"><span class="t">Going home</span><span class="pill g">back ${esc(R.at)}</span></div><div class="meta"><button class="btn sm" data-fill="I go home for the break.">Draft</button><button class="btn sm" data-home="stay">Stay after all</button></div></div>`
         : `${R.home && R.why ? `<div class="warn">Going home: ${esc(R.why)}.</div>` : ''}<div class="meta"><button class="btn sm" data-home="go">Go home for the break</button></div>`);
