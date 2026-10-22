@@ -35,7 +35,8 @@ def descriptor(nid, n):
     hw = (hair[:1].upper() + hair[1:] + '-haired ') if hair and hair != 'bald' else ('Bald ' if hair == 'bald' else '')
     race = f"{n['beast']}-beastkin " if n.get('beast') else ('elf ' if n.get('race') == 'Elf' else '')
     g = n.get('group') or ''
-    if g.startswith('Year'): who = f"{YEARW.get(n.get('year'), 'student')}"
+    if n.get('transfer'): who = f"girl from {n['transfer']}"   # 1.97.5: Vesna, before and after her transfer
+    elif g.startswith('Year'): who = f"{YEARW.get(n.get('year'), 'student')}"
     elif g.endswith('team'): who = f"student from the {g}"
     elif g == 'World teams': who = f"{'coach' if 'Coach' in (n.get('public_tags') or []) else 'competitor'} of {n.get('academy')}'s national four"   # 1.97.2
     elif g == 'Staff': who = 'member of staff'
@@ -102,15 +103,16 @@ for nid, n in npcs.items():
     DATA['npcs'][nid] = {'n': n['name'], 'g': n.get('group') or '', 'y': n.get('year') or 0, 'a': n.get('arrives', 1), 'dm': n.get('dorm') or '',
         'gn': n.get('gender') or '', 'dc': n.get('dorm_color') or '#6b6b7b', 'd': descriptor(nid, n), 'r': PUBLIC_ROLE.get(nid, ''),
         'p': n['portrait'], 't': n['thumb'], 'fc': n.get('focus') or [50, 25],
-        'fl': [[f['label'], f['text'], f['rank']] + ([f['year']] if f.get('year') else []) for f in n['fields']]}   # 1.7.0: [3] = shown from that campaign year
+        'fl': [[f['label'], f['text'], f['rank']] + ([f['year']] if f.get('year') else [0] if f.get('tr') else []) + ([f['tr']] if f.get('tr') else []) for f in n['fields']]}   # 1.7.0: [3] = shown from that campaign year; 1.97.5: [4] = only before (-1) / after (1) the transfer
+    if n.get('transfer'): DATA['npcs'][nid]['xf'] = n['transfer']   # 1.97.5: the nation a transfer left ('tr' is the team role)
     # 1.52.0 (feature batch 4): the weekly routine as a dossier field right after Haunts, opened with it
     _rt = DATA['presence']['rt'].get(nid)
     if _rt:
         _fl = DATA['npcs'][nid]['fl']
         _hi = next((i for i, f in enumerate(_fl) if f[0] == 'Haunts'), None)
-        _row = ['Routine', 'Usually: ' + '; '.join(f"{r[6]} at {r[4]}{', ' + r[5] if r[5] else ''}" for r in _rt) + '.', _fl[_hi][2] if _hi is not None else 1]
+        _row = ['Routine', 'Usually: ' + '; '.join(f"{r[6]} at {r[4]}{', ' + r[5] if r[5] else ''}" for r in _rt) + '.', _fl[_hi][2] if _hi is not None else 1] + (_fl[_hi][3:] if _hi is not None else [])   # 1.97.5: shown when Haunts is (a transfer's)
         _fl.insert(_hi + 1 if _hi is not None else len(_fl), _row)
-    if n.get('academy') == 'Halvard': DATA['npcs'][nid]['ag'] = 1   # 1.7.4: ages in their fields follow the campaign year (see ageNow)
+    if n.get('academy') == 'Halvard' and not n.get('transfer'): DATA['npcs'][nid]['ag'] = 1   # 1.7.4: ages in their fields follow the campaign year (see ageNow)
     CAST[nid] = [n['thumb'], descriptor(nid, n) if nid in ('Irene', 'Caspian') else PUBLIC_ROLE.get(nid) or descriptor(nid, n), first, n.get('dorm_color') or '#6b6b7b']
 for e in json.load(open(P('data/relations.json'), encoding='utf-8')):
     DATA['rel'].append([e['from'], e['to'], e['type'], e['types'], e['visibility'] + (f"@{e['via']}" if e['via'] != e['from'] and e['visibility'] != 'public' else ''), e['notes']] + ([[e['rule'], e['rule_label']]] if e.get('rule') else []))   # 1.4.2 group-rule lines carry [id, label]; 1.6.10 'rank:N@Via' = told by Via's file

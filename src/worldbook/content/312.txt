@@ -1,1 +1,4 @@
 [Regulars — Commissary] Idris, Zara, Caralynn.
+<%_ { const _tv = (Number((getvar('stat_data.Campus_State.Transfers') || {}).Vesna) || 0); if (_tv) { _%>
+After her transfer from Norvaine also: Vesna.
+<%_ } } _%>

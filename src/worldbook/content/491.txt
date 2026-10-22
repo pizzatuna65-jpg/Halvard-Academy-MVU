@@ -1,0 +1,9 @@
+<%_ if (Object.keys(getvar('stat_data.Inventory') || {}).some(k => /koschei/i.test(k))) { _%>
+[Koschei's Needle]
+What: a starglass egg the size of a hen's, cold to the touch, with a single silver needle sealed inside; a faint pulse in it keeps time with Vesna's heart.
+Power: it holds Vesna's bound soul. While the egg is intact she cannot be killed. Whoever holds it always knows where she is and can draw her back to it from any distance.
+Breaking it: nobody knows whether it would free her soul or end her.
+Law: binding a soul is Soul magic, a forbidden art in Eldrasil; the Doves would seize the egg and question whoever carries it.
+Wanted: Norvaine wants it back, quietly; it cannot ask openly without admitting what it is.
+Held by: <% if ((Number((getvar('stat_data.Campus_State.Transfers') || {}).Vesna) || 0)) { %>{{user}}, since the World Competition of campaign Year <%- (Number((getvar('stat_data.Campus_State.Transfers') || {}).Vesna) || 0) %>; Vesna refused to keep it herself.<% } else { %>Colonel Kazimir Zorin, on a chain under his collar.<% } %>
+<%_ } _%>

@@ -23,7 +23,7 @@ ok(Object.keys(C.change).every(id => JSON.stringify(['romance', 'rival'].filter(
 const n = k => Object.values(C.branch).filter(x => x === k).length;
 // 1.7.0: cohort 2 adds A Nerys, Hadrian, Tsubaki and C Linus, Maple, Wren (planning/DRAFT_cohort2_npcs.md)
 // 1.33.0: the new teachers add A Valentin, C Hester and Anya, D Anselm, Magnus, Dorian, Cedric and Kotaro (planning/DRAFT_classes_and_teachers.md)
-ok(n('A') === 30 && n('B') === 2 && n('C') === 15 && n('D') === 12, `categories as approved: A 30, B 2, C 15, D 12 (${n('A')}, ${n('B')}, ${n('C')}, ${n('D')})`);
+ok(n('A') === 30 && n('B') === 2 && n('C') === 16 && n('D') === 12, `categories as approved: A 30, B 2, C 16 (1.97.5: Vesna), D 12 (${n('A')}, ${n('B')}, ${n('C')}, ${n('D')})`);
 ok(C.branch.Krieg === 'B' && C.branch.Tristan === 'B' && C.branch.Althair === 'D' && C.branch.Florian === 'A' && C.branch.Milena === 'A' && ['Trixie', 'Vera', 'Tilly', 'Ruby', 'Etnie'].every(id => C.branch[id] === 'C'), 'the owner\'s moves (Florian, Milena A; Tristan B; Trixie, Vera, Tilly C; Althair D)');
 ok(/a romance with \{\{user\}\} is the one exception, and he will not call it one/.test(C.voice.Florian.dont_flatten), 'Florian: the approved exception in Don\'t flatten');
 const TASTE = /\bparagraphs?\b|point of view|\bPOV\b|\btense\b|third person|second person|first person|word count|\bprose style\b|\{\{user\}\}'s (words|thoughts|choices)/i;

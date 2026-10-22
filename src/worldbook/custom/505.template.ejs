@@ -9,6 +9,7 @@ const on = id => uiOn(UI, id);   // shared.js
 const WX = on('weather') && UI.wx && !UI.wx.away && UI.wx.now ? UI.wx : null;
 const FULL = !!WX && WX.mode === 'full';
 const ARR = /*@@ARR@@*/{};
+const TRN = /*@@TRN@@*/{}, TRS = getvar('stat_data.Campus_State.Transfers') || {};   // 1.97.5: a transfer (Vesna) is at Halvard once she has come
 const Y = Math.max(1, Number(W.Year) || 1);
 const COUNCIL = getvar('stat_data.Campus_State.Council') || {};
 const CANDIDATES = (COUNCIL.Candidates || {})[String(Y)] || {};
@@ -119,13 +120,16 @@ Most students have gone home for the break. Students on record who stayed: <%- e
 <%_ if (e.tally) { _%>
 <%- e.id === 'sports_day' ? 'Sports Day: the medals went to ' + e.tally.win : 'The Showcase named ' + e.tally.win + ' the most talented dorm' %> (<%- e.tally.text %>).
 <%_ } _%>
-<%_ if ((e.id === 'dorm_comp' || e.id === 'kingdom_comp' || e.id === 'academy_comp') && UI.contest && (UI.contest.lines || []).length) { _%>
+<%_ if (['dorm_comp', 'kingdom_comp', 'academy_comp', 'world_comp', 'world_comp_b'].includes(e.id) && UI.contest && (UI.contest.lines || []).length) { _%>
 <%- UI.contest.lines.join('\n') %>
 <%_ } _%>
 <%_ if (on('event_chances') && (e.ch || []).length) { _%>
 Open at this event, the player's choice (never steer the scene toward it): <%- e.ch.join('; ') %>.
 <%_ } _%>
 <%_ } _%>
+<%_ } _%>
+<%_ if (UI.scene && (UI.scene.lines || []).length) { _%>
+<%- UI.scene.lines.join('\n') %>
 <%_ } _%>
 <%_ if (COMING.length) { _%>
 Coming up (next seven days; students and staff may bring these up when it fits who they are: plans, nerves, rumours, who goes with whom): <%- COMING.join('; ') %>
@@ -188,7 +192,7 @@ Earlier, from the record (named in the player's message: <%- ASKED.who.join(', '
 <%_ if (FULL && WX.flu) { _%>
 A cold is going around campus.<%- sick.length ? ' Off sick in their dorm today: ' + sick.join(', ') + '.' : '' %>
 <%_ } _%>
-<%_ for (const id of Object.keys(BDAYS).filter(id => (ARR[id] || 1) <= Y && (BONDS[id] || PRES.includes(id)) && BDAYS[id] === 'M' + W.Month + ' W' + W.Week + ' ' + W.Day)) { _%>
+<%_ for (const id of Object.keys(BDAYS).filter(id => (ARR[id] || 1) <= Y && (!TRN[id] || TRS[id]) && (BONDS[id] || PRES.includes(id)) && BDAYS[id] === 'M' + W.Month + ' W' + W.Week + ' ' + W.Day)) { _%>
 Today is <%- id %>'s birthday. Friends may celebrate in character; report Kind birthday when {{user}} remembers it.
 <%_ } _%>
 <%_ const CD = { Soaked: 'wet, heavy, clinging clothes and dripping hair', Chilled: 'shivering, chattering teeth, numb fingers, clumsy hands', Overheated: 'flushed, sweating, sluggish', 'Head cold': 'stuffy nose, slow and heavy-headed' };

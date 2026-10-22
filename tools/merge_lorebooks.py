@@ -749,6 +749,79 @@ def world_competition_lore(C, N):
         "If she ever sees Serafino at work, she will be enchanted by the engineering and appalled by what it is for."), N[125]['content'], count=1, flags=re.M)
     assert n == 1, 'Vera: no Backstory line'
 
+# 1.97.5 (owner-approved planning/DRAFT_world_competition.md §4, Vesna and Koschei's Needle): Vesna transfers to Halvard only when
+# {{user}} frees her at the World Competition (engine stepScene sets Campus_State.Transfers.Vesna = that campaign year). Her entry's
+# "(before the transfer)" and "(after the transfer)" parts are gated on it in the card; the v39 export marks each line
+# ("[before her transfer] ...", tools/curate_data.py turns them into dossier fields shown before or after).
+TRANSFER_TV = "(Number((getvar('stat_data.Campus_State.Transfers') || {}).Vesna) || 0)"
+TRANSFER_ROSTER = [['Vesna', "Vesna (transfer from Norvaine, {{user}}'s dorm, F, pink, sunny, follows {{user}} into their club)"]]
+VESNA_REGULARS = ['Gardens', 'Menagerie', 'Commissary', 'Common Rooms and Canteen', 'Grassy Field and Hills']
+VESNA_BEATEN = re.compile(r"\(If \{\{user\}\}'s team beat Norvaine in the Grand Final\) (.+?) \(Otherwise\) (.+?\.) ")
+def vesna_entry(N, ejs):
+    """Vesna's own entry (389) and the Colonel's line once she has gone (390); before the cast gate wraps NPC entries."""
+    e = N[389]; assert e['comment'] == 'NPC — Vesna Zvezdova', e['comment']
+    head, *rest = e['content'].split('\n')
+    part, P = None, {'before': [], 'after': [], 'both': []}
+    for line in rest:
+        m = re.fullmatch(r'\((before|after) the transfer\)|\((both)\)', line)
+        if m: part = m.group(1) or m.group(2); continue
+        assert part, 'Vesna: a line before the first part marker'
+        P[part].append(line)
+    assert all(P.values()) and any(l.startswith('At Halvard: ') for l in P['after']), 'Vesna: three parts'
+    if ejs:
+        after = []
+        for l in P['after']:
+            if l.startswith('Age: '):
+                l = ("Age: <%- 17 + _vY %>, a <%- ['first', 'second', 'third'][Math.min(3, _vY) - 1] %>-year in {{user}}'s school year. She deserted "
+                     "Norvaine at the World Competition of campaign Year <%- _tv %> and transferred to Halvard, where the Headmaster sorted her into "
+                     "{{user}}'s dorm (<%- getvar('stat_data.Player.Profile.Dorm') || 'their dorm' %>) himself.")
+            l, n = VESNA_BEATEN.subn(lambda m: f"<% if (((getvar('stat_data.$eng.vesna') || {{}}).beat || 0) === _tv) {{ %>{m.group(1)}<% }} else {{ %>{m.group(2)}<% }} %> ", l)
+            assert n == (1 if l.startswith('At Halvard: ') else 0), l
+            after.append(l)
+        e['content'] = '\n'.join([head, "<%_ { const _tv = " + TRANSFER_TV + ", _vY = Number(getvar('stat_data.World.Year')) || 1; if (!_tv) { _%>",
+                                  *P['before'], '<%_ } else { _%>', *after, '<%_ } } _%>', *P['both']])
+    else:
+        e['content'] = '\n'.join([head, "(Vesna transfers to Halvard only if {{user}} frees her at the World Competition: Koschei's Needle. Lines marked "
+                                  "[before her transfer] hold until then, [after her transfer] from then on.)",
+                                  *['[before her transfer] ' + l for l in P['before']], *['[after her transfer] ' + l for l in P['after']], *P['both']])
+    k = N[390]; assert k['comment'] == 'NPC — Kazimir Zorin', k['comment']
+    gone = ("<narrator_only>Koschei's Needle is no longer his: {{user}} took it from him at the World Competition of campaign Year "
+            + ("<%- _tv %>" if ejs else "N") + ", and Vesna deserted Norvaine. He wants both back and cannot ask for either openly.</narrator_only>")
+    k['content'] += ("\n<%_ { const _tv = " + TRANSFER_TV + "; if (_tv) { _%>\n" + gone + "\n<%_ } } _%>") if ejs else "\n(After Vesna's transfer) " + gone
+def vesna_world(C, N, ejs):
+    """Koschei's Needle (490 keyword, 491 constant while in {{user}}'s Bag; v39: one keyword entry; who holds it follows the transfer),
+    Norvaine's team (384) once she has gone, her Regulars, and the roster line of the v39 export (the card's roster is roster_ejs)."""
+    tv = lambda body: ("<%_ { const _tv = " + TRANSFER_TV + "; if (_tv) { _%>\n" + body + "\n<%_ } } _%>") if ejs else "(After Vesna's transfer) " + body.replace('<%- _tv %>', 'N')
+    assert N[384]['comment'] == 'Team — Norvaine', N[384]['comment']
+    N[384]['content'] += '\n' + tv("Vesna Zvezdova deserted Norvaine at the World Competition of campaign Year <%- _tv %>; she studies at Halvard now, "
+                                   "and Norvaine fields a new member in her place.")
+    regs = {e['comment'].replace('Regulars — ', '').strip(): u for u, e in N.items() if e['comment'].startswith('Regulars — ')}
+    for place in VESNA_REGULARS:
+        assert place in regs, f'Vesna regulars: no entry "Regulars — {place}"'
+        N[regs[place]]['content'] += '\n' + (tv('After her transfer from Norvaine also: Vesna.') if ejs else "[after Vesna's transfer] Vesna.")
+    if not ejs:
+        N[97]['content'] += ("\nTransfer (only if {{user}} frees her at the World Competition; then in {{user}}'s school year, dorm and club): "
+                             + TRANSFER_ROSTER[0][1].replace("{{user}}'s dorm, ", '').replace(', follows {{user}} into their club', '') + '.')
+    needle = ("[Koschei's Needle]\n"
+              "What: a starglass egg the size of a hen's, cold to the touch, with a single silver needle sealed inside; a faint pulse in it keeps time with Vesna's heart.\n"
+              "Power: it holds Vesna's bound soul. While the egg is intact she cannot be killed. Whoever holds it always knows where she is and can draw her back to it from any distance.\n"
+              "Breaking it: nobody knows whether it would free her soul or end her.\n"
+              "Law: binding a soul is Soul magic, a forbidden art in Eldrasil; the Doves would seize the egg and question whoever carries it.\n"
+              "Wanted: Norvaine wants it back, quietly; it cannot ask openly without admitting what it is.")
+    held = ("Held by: <% if (" + TRANSFER_TV + ") { %>{{user}}, since the World Competition of campaign Year <%- " + TRANSFER_TV + " %>; "
+            "Vesna refused to keep it herself.<% } else { %>Colonel Kazimir Zorin, on a chain under his collar.<% } %>")
+    keys = ["Koschei's Needle", 'Koschei', 'starglass egg', 'Project Bessmertnik']
+    for uid in (490, 491): assert uid not in C, f'Koschei uid {uid} is taken'
+    if ejs:
+        bag = "Object.keys(getvar('stat_data.Inventory') || {}).some(k => /koschei/i.test(k))"
+        C[490] = template_from(C[230], uid=490, displayIndex=490, comment="Item - Koschei's Needle", key=keys,
+                               content="<%_ if (!(" + bag + ")) { _%>\n" + needle + "\n" + held + "\n<%_ } _%>")
+        C[491] = template_from(C[230], uid=491, displayIndex=491, comment="Item - Koschei's Needle (in the Bag)", key=keys, constant=True,
+                               content="<%_ if (" + bag + ") { _%>\n" + needle + "\n" + held + "\n<%_ } _%>")
+    else:
+        C[490] = template_from(C[230], uid=490, displayIndex=490, comment="Item - Koschei's Needle", key=keys,
+                               content=needle + "\nHeld by: Colonel Kazimir Zorin, on a chain under his collar; after Vesna's transfer, {{user}} (she refused to keep it herself).")
+
 def add_world_myths(C):
     for uid, title, keys, content in WORLD_MYTHS:
         assert uid not in C and uid not in N, f'world myth uid {uid} is taken'
@@ -1498,6 +1571,7 @@ calendar_timetable_lore(C39)
 apply_dynamic_lore(C39, False)   # 1.14.0
 rep(C39[0], USER_YEAR_OLD, USER_YEAR_V39)   # 1.9.7
 apply_cohort(N39, False)   # 1.7.0 cohort 2
+vesna_entry(N39, False)   # 1.97.5
 gate_cohorts(N39, False)
 assert ROY_OLD.search(N39[101]['content'])
 N39[101]['content'] = ROY_OLD.sub(
@@ -1523,6 +1597,7 @@ avalon(C39, False)   # 1.39.0
 airship(C39, False)   # 1.40.0
 sunreach(C39, False)   # 1.41.0
 hanakaze(C39, False)   # 1.97.3
+vesna_world(C39, N39, False)   # 1.97.5
 lore_activation(C39)   # 1.35.0
 calendar_months = json.load(open(P('data/calendar.json'), encoding='utf-8'))['months']
 for month in range(1, 13):
@@ -1544,6 +1619,7 @@ rep(Cc[0], USER_YEAR_OLD, USER_YEAR_CARD)   # 1.9.7: never a first-year from Yea
 _ENT = Nc[97]['content'][Nc[97]['content'].index('\nEntrance morning (Month 1 Week 1 Monday)'):].split('\n<%')[0]
 Nc[97]['content'] = Nc[97]['content'].replace(_ENT, "\n<%_ { const _w = getvar('stat_data.World') || {}; if (+_w.Month === 1 && +_w.Week === 1 && _w.Day === 'Mon') { _%>" + _ENT + "\n<%_ } } _%>", 1)
 apply_cohort(Nc, True)   # 1.7.0 cohort 2
+vesna_entry(Nc, True)   # 1.97.5
 # D19: remap NPC uid collisions 254-262 -> 401-409
 REMAP = {u: 401 + i for i, u in enumerate(range(254, 263))}
 for old, new in REMAP.items():
@@ -1612,7 +1688,9 @@ def roster_ejs(text):
     assert at is not None and studs, 'roster: no Year lines found'
     block = ("<%_\nconst _R = " + json.dumps(studs, ensure_ascii=False) + ";\n"
              "const _Y = Math.max(1, Number(getvar('stat_data.World.Year')) || 1), _G = getvar('stat_data.Campus_State.Graduated') || [];\n"
-             "const _by = { 1: [], 2: [], 3: [] }, _gone = [];\n"
+             "const _by = { 1: [], 2: [], 3: [] }, _gone = [], _tr = getvar('stat_data.Campus_State.Transfers') || {};\n"
+             # 1.97.5: a transfer joins the year lines once she has come (in {{user}}'s school year: lorebook Year 1, from Year 1)
+             "for (const [id, seg] of " + json.dumps(TRANSFER_ROSTER, ensure_ascii=False) + ") { const t = Number(_tr[id]) || 0; if (t && t <= _Y) _R.push([id, 1, 1, seg]); }\n"
              "for (const [id, y, a, seg] of _R) {\n"
              "  if (a > _Y) continue;\n"
              "  if (_G.includes(id)) { _gone.push(id); continue; }\n"
@@ -1686,6 +1764,7 @@ avalon(Cc, True)   # 1.39.0
 airship(Cc, True)   # 1.40.0
 sunreach(Cc, True)   # 1.41.0
 hanakaze(Cc, True)   # 1.97.3
+vesna_world(Cc, Nc, True)   # 1.97.5
 lore_activation(Cc)   # 1.35.0
 # merge + tagging (D2): lore -> [mvu_plot]; shared state/navigation entries stay untagged (sent to both models)
 UNTAGGED_CORE = {0, 132, 134, 131, 20}

@@ -17,6 +17,7 @@ OPN = json.load(open(P('data/bond_openness.json'), encoding='utf-8'))
 REPD = json.load(open(P('data/reputation.json'), encoding='utf-8'))   # 1.3.0
 REPD = {'reps': REPD['reps'], 'effects': REPD['effects']}
 for k, v in {'BDAYS': {k:v['birthday'] for k,v in GIFTS.items() if v['birthday']}, 'REP': REPD, 'ARR': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1},
+             'TRN': {k: v['transfer'] for k, v in npcs.items() if v.get('transfer')},   # 1.97.5: a transfer is at Halvard once Campus_State.Transfers names her
              'PRON': {nid: {'F': 'she/her', 'M': 'he/him'}.get(n.get('gender'), 'they/them') for nid, n in sorted(npcs.items())},
              # 1.80.0 (Megumin audit MS4): the engine's name forms; a first name that is also a word (MENTION_DENY) counts only in full
              'NAMES': {nid: [f for f in fs if not (nid in MENTION_DENY and f == nid)] for nid, fs in sorted(name_forms(npcs).items())}}.items():   # 1.3.8 (+1.4.0 apology_npc)
@@ -53,8 +54,10 @@ def cast_npc(nid, n):
             'never': '; '.join(x for x in [tru_never and tru_never + ' (Trust)', ten_never and ten_never + ' (when strained)'] if x),
             # 1.7.0 cohorts: the sheet shows the first 4 ties with people already at Halvard ([to, type, campaign year they arrive]),
             # and the school year as it is in the current campaign year (lorebook Year + campaign Year - arrival year)
-            'ties': [[r['to'], r['type'], npcs[r['to']].get('arrives', 1)] for r in ties], 'secret': False, 'nobond': (grp.endswith('team') or grp == 'World teams'),
-            'y': [n['year'], n.get('arrives', 1)] if grp.startswith('Year') and n.get('year') else None}
+            # 1.97.5: a tie between a transfer and a Halvard person waits for her transfer ('tr:<id>')
+            'ties': [[r['to'], r['type'], 'tr:' + nid if n.get('transfer') and npcs[r['to']].get('group') != 'World teams' else 'tr:' + r['to'] if npcs[r['to']].get('transfer') else npcs[r['to']].get('arrives', 1)] for r in ties], 'secret': False, 'nobond': (grp.endswith('team') or grp == 'World teams'),
+            'y': [n['year'], n.get('arrives', 1)] if grp.startswith('Year') and n.get('year') else None,
+            **({'tr': n['transfer']} if n.get('transfer') else {})}   # 1.97.5: a transfer's line follows Campus_State.Transfers (cWho)
 CANON = json.load(open(P('data/npc_canon.json'), encoding='utf-8'))
 CHANGE_TEXT = {'fixed': 'Experience deepens who they are; it never rewrites them.', 'shaped': 'A major, repeated experience can change one part of them for good; the old self still shows under stress.', 'fluid': 'They change with their surroundings over months (a new year, a new circle), never within one scene.'}
 CAST = {'npcs': {}, 'rel': {}, 'trust_bands': tru_d['bands'], 'tension_bands': ten_d['bands'], 'change': {k: v for k, v in CANON['change'].items()}}   # 1.11.0: the meaning of each type is in the <cast> header

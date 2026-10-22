@@ -236,6 +236,9 @@ export const Schema = z.object({
     // 1.75.0 (owner-approved planning/DRAFT_club_sendiri.md): the club {{user}} founds, one a campaign. Members are students other
     // than {{user}}; Field is the proficiency its Saturday time trains; Status ('forming' / 'founded') and Since are the engine's
     Founded_club: O({ Name: Str(''), Field: Str(''), Venue: Str(''), Advisor: Str(''), Members: StrList(16), Status: Str(''), Since: Str('') }),
+    // 1.97.5 (planning/DRAFT_world_competition.md §4): a transfer to Halvard by id -> the campaign year she came (Vesna, after the
+    // scenario Koschei's Needle); the engine's (stepScene), a reply's own write gives way
+    Transfers: z.record(z.string(), z.coerce.number().int().min(1).max(9)).prefault({}).catch({}),
   }),
 
   // 1.6.1 (Batch D, N5): characters the narrator invented, recorded on their second appearance so they stay the same person.
@@ -431,6 +434,7 @@ export const Schema = z.object({
     contest: z.any().prefault(null).catch(null),                      // 1.82.0: the Dorm Competition's <now> lines { lines } (engine stepContest)
     kc: z.any().prefault(null).catch(null),                           // 1.84.0: the Kingdom Competition for the Competition tab (engine stepKingdom)
     wc: z.any().prefault(null).catch(null),                           // 1.97.4: the World Competition for the Competition tab (engine stepWorld)
+    scene: z.any().prefault(null).catch(null),                        // 1.97.5: the scenario Koschei's Needle's <now> lines { lines } (engine stepScene)
     ev: z.any().prefault([]).catch([]),                               // 1.81.0: today's events [{ id, t, kind, n, of, now, next, ch, stall }] (engine stepCampusEvents)
     cw: z.any().prefault(null).catch(null),                           // 1.90.0: club work { paper, open, stall, now } (engine stepClubWork)
     cast: z.any().prefault({}).catch({}),                             // 1.5.1 (P1/P6): { full, brief, spoke, gone, ment } for the Cast Sheet (engine)
@@ -486,6 +490,7 @@ export const Schema = z.object({
     kc: z.any().prefault(null).catch(null),                        // 1.84.0: the Kingdom Competition's rounds while {{user}} is on the team (engine stepKingdom)
     wc: z.any().prefault(null).catch(null),                        // 1.97.4: the World Competition's phases while {{user}} is in the national four (engine stepWorld)
     wcn: z.coerce.number().prefault(0).catch(0),                   // 1.97.4: the campaign year whose Grand Final the Academy Newspaper already has (engine)
+    vesna: z.any().prefault(null).catch(null),                     // 1.97.5: the scenario Koschei's Needle { y, won, gf, told, done, beat, fail, ent } (engine stepScene)
     vote: z.record(z.string(), z.any()).prefault({}).catch({}),     // 1.82.0: the Club Festival coin vote's winner { Y1: club } (engine)
     tally: z.any().prefault(null).catch(null),                     // 1.87.0: this year's tallies and the Academy winner already in the Journal { y, sports_day: dorm, showcase: dorm, academy: 1 } (engine)
     hunt: z.any().prefault(null).catch(null),                      // 1.86.0: Founder Day's hunt { y, at: clues solved, fin: year first finished } (engine)

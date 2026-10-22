@@ -192,6 +192,7 @@
   "Bianca": "social",
   "Rigel": "social",
   "Topaz": "social",
+  "Vesna": "social",
   "Faye": "social"
  },
  "peaks": {
@@ -296,6 +297,28 @@
     "defend_public": -5
    },
    "banter": "teasing delights him; he rarely notices it is teasing and answers literally"
+  },
+  "Vesna": {
+   "name": "Sunny (wounded)",
+   "bands": {
+    "Friction": "too bright and too eager; brings {{user}} sweets to fix it before anyone has said what is wrong",
+    "Strained": "goes quiet for the first time anyone has seen, hums nothing, and still turns up, sitting a little further away",
+    "Hostile": "the smile goes and the still, somber face comes instead, the one she wore on duty; short, flat and polite with {{user}}, as she was with the Colonel",
+    "Enemy": "treats {{user}} like a target she has been told not to touch: perfectly polite, never alone with them, never smiling at them again"
+   },
+   "never": "hurting {{user}}, turning her magic on them, or telling anyone what {{user}} did",
+   "eases": "a kind word, a ribbon tied for her, being told she is not in trouble; she forgives fast and means it",
+   "decay": 2,
+   "apology": {
+    "private": -20,
+    "public": -20
+   },
+   "kind_ease": {
+    "help": -10,
+    "keep": -10,
+    "defend": -10
+   },
+   "banter": "teasing delights her once she knows it is a school thing; she copies it at once, badly"
   },
   "Topaz": {
    "name": "Rival (clingy)",

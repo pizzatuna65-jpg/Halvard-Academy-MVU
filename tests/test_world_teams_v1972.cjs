@@ -9,6 +9,7 @@ const card = JSON.parse(rd('dist/Eldrasil_Halvard.json')).data, RAW = card.chara
 const E = RAW.map(e => ({ ...e, content: loreOf(e.content) })), byId = uid => E.find(e => e.id === uid), txt = uid => byId(uid).content;
 const npcs = JSON.parse(rd('data/npcs.json'));
 const WORLD = ['Hibiki', 'Vesna', 'Kazimir', 'Lucrezia', 'Kamran', 'Cyprien'];
+const NOBOND = WORLD.filter(id => id !== 'Vesna');   // 1.97.5: Vesna is a bonded Halvard roster student who plays for Norvaine until her transfer
 const at = Y => { const S = initState(); S.World.Year = Y; return S; };
 const render = (uid, S) => ejs.render(RAW.find(e => e.id === uid).content, { getvar: k => require('lodash').get({ stat_data: S }, k) });
 
@@ -32,16 +33,17 @@ ok(/\nWorld Competition: also coaches Eldrasil's national four/.test(txt(109)) &
 console.log('Teams and NPCs');
 const TEAMS = { 383: 'Yozakura', 384: 'Norvaine', 385: 'Caelmar', 386: 'Arslan', 387: 'Velmora' };
 for (const [uid, n] of Object.entries(TEAMS)) ok(byId(+uid) && txt(+uid).startsWith(`[${n} team]`) && /\nTeam: /.test(txt(+uid)) && /\nCoach: /.test(txt(+uid)) && /\nPlays: /.test(txt(+uid)), `${uid}: the ${n} team (Team, Coach, Plays)`);
-ok(WORLD.every(id => npcs[id] && npcs[id].group === 'World teams' && npcs[id].portrait === `portraits/${id.toLowerCase()}.webp`), 'six NPCs in group "World teams", each with a portrait');
+ok(NOBOND.every(id => npcs[id] && npcs[id].group === 'World teams') && WORLD.every(id => npcs[id].portrait === `portraits/${id.toLowerCase()}.webp`), 'five NPCs in group "World teams" (Vesna a Halvard roster student since 1.97.5), each of the six with a portrait');
+ok(npcs.Vesna.group === 'Year 1' && npcs.Vesna.transfer === 'Norvaine', 'Vesna: a Halvard student (lorebook Year 1) transferring from Norvaine (test_vesna_v1975)');
 ok(['Hibiki', 'Lucrezia', 'Kamran', 'Cyprien'].every(id => npcs[id].academy !== 'Halvard') && npcs.Kazimir.academy === 'Norvaine' && npcs.Vesna.year === 1 && npcs.Cyprien.year === 3,
   'nation, school year (Vesna Y1, Cyprien Y3)');
 const eng = rd('src/scripts/engine.js');
-ok(WORLD.every(id => new RegExp(`"${id}":"rival"`).test(eng)), 'the engine groups them with the rivals: no bond, never on Halvard\'s grounds');
+ok(NOBOND.every(id => new RegExp(`"${id}":"rival"`).test(eng)) && /"Vesna":"student"/.test(eng), 'the engine groups them with the rivals: no bond, never on Halvard\'s grounds (Vesna: a student)');
 const ef = JSON.parse(rd('data/event_frame.json'));
 ok(!/Hibiki|Lucrezia|Kamran|Cyprien|Vesna/.test(JSON.stringify(ef.kingdom)) && !/"Hibiki"|"Vesna"/.test(eng.match(/rivals:\{[^}]*\}/) ? eng.match(/rivals:\{[^}]*\}/)[0] : ''),
   'not in the Kingdom Competition');
 const tension = JSON.parse(rd('data/tension.json'));
-ok(WORLD.every(id => !tension.npcs[id]), 'no bond data needed (no tension category)');
+ok(NOBOND.every(id => !tension.npcs[id]) && tension.npcs.Vesna, 'no bond data needed (no tension category); Vesna has hers');
 
 console.log('Year gates');
 ok(/Graduated and off the team: Hibiki Kurenai, Nanami Oribe, Sora Kanzaki/.test(render(383, at(3))) && /The nation fields new members/.test(render(383, at(3))),

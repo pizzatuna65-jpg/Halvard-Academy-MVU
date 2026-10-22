@@ -225,7 +225,10 @@ def presence_data(npcs, locs):
         for k in sorted({l['name'].lower(), re.sub(r'^the ', '', l['name'].lower()), lid.replace('_', ' ')}):
             reg[k] = l['regulars']
     reg['main courtyard'] = locs['courtyards']['regulars']
-    stu = {nid: [n['year'], n.get('arrives', 1), n.get('dorm') or ''] for nid, n in sorted(npcs.items()) if re.match(r'^Year \d$', n.get('group') or '') and n.get('year')}
+    stu = {nid: [n['year'], n.get('arrives', 1), n.get('dorm') or ''] for nid, n in sorted(npcs.items()) if re.match(r'^Year \d$', n.get('group') or '') and n.get('year') and not n.get('transfer')}
+    # 1.97.5: a transfer (Vesna) is a Halvard student only once Campus_State.Transfers names her (shared.js trSync adds her to stu with
+    # {{user}}'s dorm, else marks her not at Halvard): tr: id -> [lorebook year, the nation she left]
+    tr = {nid: [n['year'], n['transfer']] for nid, n in sorted(npcs.items()) if n.get('transfer')}
     tt, teach, _clubs = class_data(npcs, locs)
     out_ids = outdoor_ids(locs)
     clubv = {}
@@ -252,10 +255,10 @@ def presence_data(npcs, locs):
             rt.setdefault(nid, []).append([days(d), mins(f), mins(to), norm(place), place, what, f"{d.replace('-', '–')} {f}–{to}"])
     return {'reg': reg, 'stu': stu, 'arr': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1}, 'teach': teach, 'tt': tt, 'clubv': clubv,
             'outd': sorted({norm(k) for lid in out_ids for k in place_keys(locs[lid], lid)}), 'vn': {norm(l['name']): l['name'] for l in locs.values()},
-            'rt': rt, 'rate': R['rate'], 'ct': contest_data(stu)}
+            'rt': rt, 'rate': R['rate'], 'ct': contest_data(stu, tr), 'tr': tr}
 
 
-def contest_data(stu):
+def contest_data(stu, tr=None):
     """1.82.0 (planning/DRAFT_event_frame.md section 3): the Dorm Competition data the shared contest section reads as PD.ct
     (data/event_frame.json contest without its notes), checked: every role names a Halvard student and a combat role, every pin a
     student, every role a format."""
@@ -265,10 +268,11 @@ def contest_data(stu):
     # 1.83.0: the break stayers and the Fools Day draw ride along (planning/DRAFT_event_frame.md 4.2, 4.3)
     ct['breaks'] = {k: v for k, v in ef['breaks'].items() if not k.startswith('_')}
     ct['fools'] = {k: v for k, v in ef['fools'].items() if not k.startswith('_')}
-    assert all(nid in stu for nid in ct['breaks']['stay']) and 0 <= ct['breaks']['chance'] <= 100, 'event_frame.json breaks'
+    can = set(stu) | set(tr or {})   # 1.97.5: a transfer may hold a role, a pin and a stay for when she has come
+    assert all(nid in can for nid in ct['breaks']['stay']) and 0 <= ct['breaks']['chance'] <= 100, 'event_frame.json breaks'
     roles5 = {'Attack', 'Defense', 'Healing', 'Support', 'Control'}
-    assert all(nid in stu and r in roles5 for nid, r in ct['roles'].items()), 'event_frame.json contest.roles: a non-student or an unknown role'
-    assert all(nid in stu for nid in ct['pins']), 'event_frame.json contest.pins: not a Halvard student'
+    assert all(nid in can and r in roles5 for nid, r in ct['roles'].items()), 'event_frame.json contest.roles: a non-student or an unknown role'
+    assert all(nid in can for nid in ct['pins']), 'event_frame.json contest.pins: not a Halvard student'
     assert set(ct['dorm']['format']) == roles5 == set(ct['dorm']['quota']), 'event_frame.json contest.dorm: every role needs a format and a quota'
     assert all(len(ct['dorm']['times'][f]) >= 1 for f in ('knockout', 'heats')), 'event_frame.json contest.dorm.times'
     # 1.84.0 (planning/DRAFT_kingdom_competition.md): the Kingdom Competition's rounds, and the rival teams from data/npcs.json
@@ -299,7 +303,7 @@ def contest_data(stu):
     assert ev['m'] == wd['m'] and ev['d'][0] == wd['draw'][0], 'event_frame.json world: m / w / draw against the calendar'
     assert wd['teams'][0] == 'Eldrasil' and set(wd['tactic']) == set(wd['teams']) and set(wd['tactic'].values()) <= set(wd['tact']), 'event_frame.json world.tactic'
     assert set(wd['favour']) == set(wd['teams'][1:]), 'event_frame.json world.favour: every foreign four'
-    byname = {n['name']: nid for nid, n in npcs.items() if n.get('group') == 'World teams'}
+    byname = {n['name']: nid for nid, n in npcs.items() if n.get('group') == 'World teams' or n.get('transfer')}   # 1.97.5: Vesna before her transfer
     cdir = os.path.join(root, 'src/worldbook/content')
     wd['rivals'] = {}
     for f in sorted(os.listdir(cdir)):
@@ -382,7 +386,7 @@ def now_data(npcs):
     OPN = json.load(open(_p('data/bond_openness.json'), encoding='utf-8'))
     tag = {nid: t for t in ('open', 'guarded', 'closed') for nid in OPN[t]}
     assert all(nid in npcs for nid in tag), [nid for nid in tag if nid not in npcs]
-    flds = {nid: [[f['rank'], re.sub(r'\s*\(.*\)$', '', f['label']), f.get('year', 0)] for f in n['fields'] if f['rank'] < 99 and f['label'] != 'Notes']
+    flds = {nid: [[f['rank'], re.sub(r'\s*\(.*\)$', '', f['label']), f.get('year', 0)] + ([f['tr']] if f.get('tr') else []) for f in n['fields'] if f['rank'] < 99 and f['label'] != 'Notes']   # 1.97.5: [3] before (-1) / after (1) a transfer
             for nid, n in sorted(npcs.items())}
     BOND = {'fields': flds, 'seen': BR['layers']['seen'], 'perks': BR['perks'], 'recent_now': BR['recent']['now'], 'tag': tag}
     # 1.4.3 Trust for the Now entry: bands, share shifts, perk gates, category texts (category = openness), personal rules, Dorm Heads

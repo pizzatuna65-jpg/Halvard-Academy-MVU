@@ -172,6 +172,7 @@ const on = id => uiOn(UI, id);   // shared.js
 const WX = on('weather') && UI.wx && !UI.wx.away && UI.wx.now ? UI.wx : null;
 const FULL = !!WX && WX.mode === 'full';
 const ARR = {"Linus":2,"Maple":2,"Nerys":2,"Hadrian":2,"Wren":2,"Tsubaki":2,"Aurelian":3,"William":3,"Bruno":3,"Bianca":3,"Rigel":3,"Topaz":3,"Faye":3};
+const TRN = {"Vesna":"Norvaine"}, TRS = getvar('stat_data.Campus_State.Transfers') || {};   // 1.97.5: a transfer (Vesna) is at Halvard once she has come
 const Y = Math.max(1, Number(W.Year) || 1);
 const COUNCIL = getvar('stat_data.Campus_State.Council') || {};
 const CANDIDATES = (COUNCIL.Candidates || {})[String(Y)] || {};
@@ -234,7 +235,7 @@ const AREA = ['forest', 'avalon', 'airship', 'sunreach', 'hanakaze'].some(k => A
 const JAGES = [...new Set((getvar('stat_data.Journal') || []).slice(-5).reverse().map(l => (/^\[([^\]]+)\]/.exec(String(l)) || [])[1]).filter(w => w && ageOf(w, W)))];   // 1.53.0: each date once
 // 1.56.0 (narrator-load audit U2): each present character's bond, Trust, Tension, mood, recent moments and teasing are one block in
 // their Cast Sheet (engine $ui.now.people); <now> prints it only for someone present without a sheet
-const BDAYS = {"Irene":"M11 W3 Thu","Caspian":"M10 W3 Sat","Etnie":"M2 W2 Sat","Royhan":"M5 W1 Sat","Sophia":"M4 W3 Tue","Gareth":"M5 W2 Wed","Ruby":"M3 W3 Mon","Lenna":"M6 W1 Sun","Saffi":"M6 W3 Thu","Kanae":"M1 W3 Thu","Idris":"M7 W1 Tue","Tilly":"M10 W2 Thu","Dante":"M11 W2 Tue","Florian":"M9 W4 Tue","Aiden":"M9 W2 Mon","Caralynn":"M8 W3 Mon","Zara":"M11 W1 Thu","Percival":"M6 W2 Mon","Trixie":"M8 W2 Tue","Vera":"M3 W2 Wed","Castor":"M1 W2 Thu","Alyssa":"M10 W3 Mon","Linus":"M6 W4 Mon","Maple":"M10 W4 Tue","Nerys":"M4 W1 Thu","Hadrian":"M8 W1 Wed","Wren":"M5 W3 Thu","Tsubaki":"M2 W4 Sun","Gavlan":"M3 W1 Tue","Yvette":"M3 W4 Tue","Krieg":"M4 W2 Thu","Milena":"M7 W2 Fri","Baelin":"M4 W4 Sun","Layla":"M9 W3 Wed","Vallie":"M3 W3 Sat","Rei":"M7 W4 Mon","Kuroo":"M1 W4 Tue","Mimosa":"M2 W1 Mon","Tristan":"M10 W1 Fri","Althair":"M8 W4 Mon","Ottavio":"M8 W1 Sun","Caine":"M2 W3 Mon","Bobby":"M9 W1 Thu","Hester":"M7 W3 Fri","Anselm":"M6 W2 Sun","Magnus":"M2 W2 Tue","Dorian":"M9 W2 Fri","Cedric":"M12 W4 Sun","Anya":"M10 W1 Tue","Kotaro":"M8 W2 Thu","Valentin":"M9 W3 Sat","Aurelian":"M7 W1 Sat","William":"M3 W1 Sat","Bruno":"M4 W1 Sat","Bianca":"M4 W1 Sat","Rigel":"M2 W4 Wed","Topaz":"M5 W2 Fri","Faye":"M6 W1 Wed"};
+const BDAYS = {"Irene":"M11 W3 Thu","Caspian":"M10 W3 Sat","Etnie":"M2 W2 Sat","Royhan":"M5 W1 Sat","Sophia":"M4 W3 Tue","Gareth":"M5 W2 Wed","Ruby":"M3 W3 Mon","Lenna":"M6 W1 Sun","Saffi":"M6 W3 Thu","Kanae":"M1 W3 Thu","Idris":"M7 W1 Tue","Tilly":"M10 W2 Thu","Dante":"M11 W2 Tue","Florian":"M9 W4 Tue","Aiden":"M9 W2 Mon","Caralynn":"M8 W3 Mon","Zara":"M11 W1 Thu","Percival":"M6 W2 Mon","Trixie":"M8 W2 Tue","Vera":"M3 W2 Wed","Castor":"M1 W2 Thu","Alyssa":"M10 W3 Mon","Linus":"M6 W4 Mon","Maple":"M10 W4 Tue","Nerys":"M4 W1 Thu","Hadrian":"M8 W1 Wed","Wren":"M5 W3 Thu","Tsubaki":"M2 W4 Sun","Gavlan":"M3 W1 Tue","Yvette":"M3 W4 Tue","Krieg":"M4 W2 Thu","Milena":"M7 W2 Fri","Baelin":"M4 W4 Sun","Layla":"M9 W3 Wed","Vallie":"M3 W3 Sat","Rei":"M7 W4 Mon","Kuroo":"M1 W4 Tue","Mimosa":"M2 W1 Mon","Tristan":"M10 W1 Fri","Althair":"M8 W4 Mon","Ottavio":"M8 W1 Sun","Caine":"M2 W3 Mon","Bobby":"M9 W1 Thu","Hester":"M7 W3 Fri","Anselm":"M6 W2 Sun","Magnus":"M2 W2 Tue","Dorian":"M9 W2 Fri","Cedric":"M12 W4 Sun","Anya":"M10 W1 Tue","Kotaro":"M8 W2 Thu","Valentin":"M9 W3 Sat","Aurelian":"M7 W1 Sat","William":"M3 W1 Sat","Bruno":"M4 W1 Sat","Bianca":"M4 W1 Sat","Rigel":"M2 W4 Wed","Vesna":"M1 W2 Thu","Topaz":"M5 W2 Fri","Faye":"M6 W1 Wed"};
 const BONDS = getvar('stat_data.Bonds') || {};
 const access = UI.rank_access || {};
 // 1.3.0 reputation: what each non-zero level means for how staff, students and the Doves treat {{user}}
@@ -283,13 +284,16 @@ Most students have gone home for the break. Students on record who stayed: <%- e
 <%_ if (e.tally) { _%>
 <%- e.id === 'sports_day' ? 'Sports Day: the medals went to ' + e.tally.win : 'The Showcase named ' + e.tally.win + ' the most talented dorm' %> (<%- e.tally.text %>).
 <%_ } _%>
-<%_ if ((e.id === 'dorm_comp' || e.id === 'kingdom_comp' || e.id === 'academy_comp') && UI.contest && (UI.contest.lines || []).length) { _%>
+<%_ if (['dorm_comp', 'kingdom_comp', 'academy_comp', 'world_comp', 'world_comp_b'].includes(e.id) && UI.contest && (UI.contest.lines || []).length) { _%>
 <%- UI.contest.lines.join('\n') %>
 <%_ } _%>
 <%_ if (on('event_chances') && (e.ch || []).length) { _%>
 Open at this event, the player's choice (never steer the scene toward it): <%- e.ch.join('; ') %>.
 <%_ } _%>
 <%_ } _%>
+<%_ } _%>
+<%_ if (UI.scene && (UI.scene.lines || []).length) { _%>
+<%- UI.scene.lines.join('\n') %>
 <%_ } _%>
 <%_ if (COMING.length) { _%>
 Coming up (next seven days; students and staff may bring these up when it fits who they are: plans, nerves, rumours, who goes with whom): <%- COMING.join('; ') %>
@@ -352,7 +356,7 @@ Earlier, from the record (named in the player's message: <%- ASKED.who.join(', '
 <%_ if (FULL && WX.flu) { _%>
 A cold is going around campus.<%- sick.length ? ' Off sick in their dorm today: ' + sick.join(', ') + '.' : '' %>
 <%_ } _%>
-<%_ for (const id of Object.keys(BDAYS).filter(id => (ARR[id] || 1) <= Y && (BONDS[id] || PRES.includes(id)) && BDAYS[id] === 'M' + W.Month + ' W' + W.Week + ' ' + W.Day)) { _%>
+<%_ for (const id of Object.keys(BDAYS).filter(id => (ARR[id] || 1) <= Y && (!TRN[id] || TRS[id]) && (BONDS[id] || PRES.includes(id)) && BDAYS[id] === 'M' + W.Month + ' W' + W.Week + ' ' + W.Day)) { _%>
 Today is <%- id %>'s birthday. Friends may celebrate in character; report Kind birthday when {{user}} remembers it.
 <%_ } _%>
 <%_ const CD = { Soaked: 'wet, heavy, clinging clothes and dripping hair', Chilled: 'shivering, chattering teeth, numb fingers, clumsy hands', Overheated: 'flushed, sweating, sluggish', 'Head cold': 'stuffy nose, slow and heavy-headed' };

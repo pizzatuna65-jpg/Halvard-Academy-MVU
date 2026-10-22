@@ -74,7 +74,7 @@ t = t.replace("'@@VERSION@@'", json.dumps(json.load(open(P('src/card/card.json')
 campus = sorted({n.lower() for l in locs.values() for n in (l['name'], re.sub(r'^The ', '', l['name']))} | set(castle) | {'main courtyard', 'halvard', 'halvard academy', 'campus'})
 t = t.replace('/*@@CAMPUS@@*/[]', json.dumps(campus, ensure_ascii=False))
 # v1.0.3: Halvard students and their lorebook Year (group "Year N"; rival academy teams and staff are not included)
-students = {nid: [n['year'], n.get('arrives', 1)] for nid, n in sorted(npcs.items()) if re.match(r'^Year \d$', n.get('group') or '') and n.get('year')}
+students = {nid: [n['year'], n.get('arrives', 1)] for nid, n in sorted(npcs.items()) if re.match(r'^Year \d$', n.get('group') or '') and n.get('year') and not n.get('transfer')}   # 1.97.5: a transfer joins at run time (trSyncAll)
 assert students, 'no Halvard students found'
 t = t.replace('/*@@STUDENTS@@*/{}', json.dumps(students, ensure_ascii=False, separators=(',', ':')))
 arrives = {nid: n['arrives'] for nid, n in sorted(npcs.items()) if n.get('arrives', 1) > 1}   # v1.0.3 incoming cohorts

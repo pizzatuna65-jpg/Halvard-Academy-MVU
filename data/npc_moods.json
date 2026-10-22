@@ -1091,6 +1091,19 @@
    "trials": 0,
    "reason": "fish bite on grey mornings; heat folds his ears"
   },
+  "Vesna": {
+   "loves": [
+    "Clear",
+    "Snow"
+   ],
+   "hates": [
+    "Fog"
+   ],
+   "clock": "M",
+   "exams": 1,
+   "trials": 0,
+   "reason": "the Grassy Field on clear evenings; snow like Norvaine's, here with friends; fog is a white room with no sound; up with the first bell; exams are a school thing, and she loves school things"
+  },
   "Topaz": {
    "loves": [
     "Clear"

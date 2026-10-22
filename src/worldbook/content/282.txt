@@ -2,3 +2,6 @@
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 From campaign Year 2 also: Maple, Nerys.
 <%_ } _%>
+<%_ { const _tv = (Number((getvar('stat_data.Campus_State.Transfers') || {}).Vesna) || 0); if (_tv) { _%>
+After her transfer from Norvaine also: Vesna.
+<%_ } } _%>

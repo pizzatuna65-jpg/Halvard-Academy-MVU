@@ -9,14 +9,16 @@ const cStat = id => { const N = CST.NPC_status || {}; const k = Object.keys(N).f
 const cLore = id => { const L = CST.Lore_changes || {}, c = CD.npcs[id] || {}, ks = [id, c.name, c.first].filter(Boolean).map(x => String(x).toLowerCase()); const k = Object.keys(L).find(x => ks.includes(String(x).trim().toLowerCase().replace(/^the\s+/, '').replace(/\s+/g, ' '))); return k && L[k] && L[k].Now ? '[Changed in this campaign' + (L[k].Since ? ', ' + L[k].Since : '') + (L[k].Until ? ', until ' + L[k].Until : '') + '; this overrides the lore] ' + L[k].Now : ''; };
 const CYR = Math.max(1, Number((getvar('stat_data.World') || {}).Year) || 1), CGRAD = CST.Graduated || [];
 const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, c.y[0] + CYR - c.y[1]) + ' student');
-const cTies = c => (c.ties || []).filter(t => t[2] <= CYR).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cWhoT = c => !c.tr ? cWho(c) : !(CST.Transfers || {})[c.first] ? 'Competitor of ' + c.tr + "'s national four (her papers: a " + c.tr + ' war academy, Year ' + Math.min(3, CYR) + ').'
+  : (CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, CYR) + " student, {{user}}'s dorm (" + ((getvar('stat_data.Player.Profile') || {}).Dorm || 'their dorm') + ')') + ', transferred from ' + c.tr + '.';
+const cTies = c => (c.ties || []).filter(t => (String(t[2]).startsWith('tr:') ? !!(CST.Transfers || {})[String(t[2]).slice(3)] : t[2] <= CYR)).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
 const cHead = (id, full) => {
   const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
   out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
   const bond = b ? 'Bond with {{user}}: ' + cBand(CD.trust_bands, Number(b.Trust) || 0).toLowerCase() + ' trust, ' + cBand(CD.tension_bands, Number(b.Tension) || 0).toLowerCase() + ' tension.' : (c.nobond ? 'No bond system (rival academy).' : 'Not bonded yet: a stranger to {{user}} unless the story says otherwise.');
   const v = (CD.voice || {})[id];
   // 1.77.1 (audit 2026-10-21 U2): a bare "Carries:" read as "show it": Zara's hidden sketchbook was in 11 of her 14 replies
-  out.push('INVARIANTS: ' + c.pron + '. Called ' + c.called + '. ' + cWho(c) + ' ' + bond + (c.never ? ' Never: ' + c.never + '.' : '') + (ties ? ' Key ties: ' + ties + '.' : '')
+  out.push('INVARIANTS: ' + c.pron + '. Called ' + c.called + '. ' + cWhoT(c) + ' ' + bond + (c.never ? ' Never: ' + c.never + '.' : '') + (ties ? ' Key ties: ' + ties + '.' : '')
     + (v ? ' How they address people: ' + v.term_used + ' Carries (shown when the scene calls for it): ' + v.carries : ''));
   const w = getvar('stat_data.World') || {};
   if (c.y && c.y[0] + CYR - c.y[1] === 1 && +w.Month === 1 && +w.Week === 1 && w.Day === 'Mon')

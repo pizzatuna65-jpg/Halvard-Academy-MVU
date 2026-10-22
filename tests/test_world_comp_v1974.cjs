@@ -113,14 +113,9 @@ ok(camp(OUT + 1, '15:00').$ui.wc.news.length === 1 && c1.$ui.wc.news.length === 
 ok(c6.$ui.wc.win && /great scrying crystal in Arbiter Hall/.test(c6.$ui.contest.lines.join(' ')), 'the Grand Final, live in Arbiter Hall: ' + c6.$ui.wc.win);
 ok(c7.$ui.wc.teams.some(t => t[2] === 'champions') && c7.$ui.wc.mine === 0, 'Monday: the champions on the Competition tab');
 
-console.log('The 1.97.5 hooks');
-WC.hook.same = ['Norvaine']; WC.hook.path = ['Norvaine'];
-for (const s of seeds) {
-  const st = full(s), gn = st.g.findIndex(g => g.includes('Norvaine'));
-  ok(st.g[gn].includes('Eldrasil') && st.gx[gn].top === 'Norvaine' && st.sg.find(m => m.a === 'Norvaine').w === 'Norvaine', `seed ${s}: Norvaine is drawn with Eldrasil, tops the group and wins its Siege`);
-}
-WC.hook.same = []; WC.hook.path = [];
-ok(JSON.stringify(full(42)) === JSON.stringify(st1), 'empty hooks: the draw as before');
+console.log('The hooks (1.97.5: only in a year of the scenario with {{user}} in the four; test_vesna_v1975)');
+ok(WC.hook.same.join() === 'Norvaine' && WC.hook.path.join() === 'Norvaine', 'the hooks name Norvaine');
+ok(seeds.every(s => !full(s).sc) && seeds.some(s => !full(s).g.find(g => g.includes('Eldrasil')).includes('Norvaine')), 'without {{user}} in the four they never hold: the draw stands as drawn');
 
 console.log('UI');
 global.window = { parent: { document: {} } };

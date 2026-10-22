@@ -161,6 +161,9 @@
   "Krieg": {
    "zero_at_stage": "Exposed"
   },
+  "Vesna": {
+   "text": "Vesna trusts easily and gives it all at once. It grows when {{user}} treats her like a girl and not a weapon: plans that are just for fun, keeping her secret, asking what she wants. Asking her to fight for {{user}}, or calling her useful, is a letdown; using her strength, once she notices, is a betrayal."
+  },
   "Topaz": {
    "kind_extra": {
     "challenge": 3

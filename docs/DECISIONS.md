@@ -164,6 +164,12 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
   the story reports {{user}}'s part, a meeting waits). The panel picks for synergy as well as record (Gavlan's rule): relations,
   Kingdom teammates, {{user}}'s bonds, and Lucius's swarm costs an ally of a type it eats their whole worth. Points are paid on landing
   home (no use abroad); the champions' Academy and Student reputation rise one level, never the Doves'. A Phase 1 tie: fewer crystals broken falls first.
+- **Vesna and Koschei's Needle** (1.97.5, owner-approved World Competition draft §4; owner 2026-10-23: "she must feel like a Halvard
+  roster NPC, not a rival team's"): Vesna is a bonded Halvard roster student who is at Halvard only once `Campus_State.Transfers` names
+  her (engine-owned); then she is in {{user}}'s school year, dorm and club, with no ties to Halvard people beyond the three the draft
+  names. Her bond grows only with {{user}} at the World Competition and after the transfer. The scenario runs in Year 1, else Year 2,
+  never forced: no Needle by the boarding, she flies home. The Rank 5 matching bracelet is a keepsake with no effect, the owner's one
+  exception to "useful, never just a memento"; her Rank 10 trains anything (`train: "any"`), the weekly caps still hold.
 
 ## 6. Social systems, UI rules and versioning (from 1.3.1)
 - **Situational rule cards** (1.54.0, narrator-load audit U1): 502 keeps a core line per topic (path, data shape, the main ban) so an

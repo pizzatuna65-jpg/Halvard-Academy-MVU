@@ -91,6 +91,11 @@ for u, nation in WORLD_TEAMS.items():
 for seg, nation in (('Kazimir Zorin (M, cyan, cold, Coach)', 'Norvaine'),):
     who, info = parse_attr_block(seg); info['group'] = 'World teams'; info['academy'] = nation
     roster[who.split()[0]] = info
+# 1.97.5 (planning/DRAFT_world_competition.md §4): Vesna is a Halvard roster student, bonded like any other, who is not at Halvard until
+# {{user}} frees her at the World Competition (Campus_State.Transfers, engine stepScene); then in {{user}}'s school year, dorm and club.
+# Until then she plays for Norvaine (tools/common.py contest_data reads her from the team line). TRANSFERS: id -> the nation she left.
+TRANSFERS = {'Vesna': 'Norvaine'}
+for _id in TRANSFERS: roster[_id].update(group='Year 1', year=1, academy='Halvard', dorm=None)
 
 def split_fields(text):
     fields, notes = [], []
@@ -118,19 +123,29 @@ for u, e in sorted(N.items()):
     clean = SECRET.sub('', raw)
     # 1.7.0 cohorts: lines another cohort added to this entry ("[from Year Y] ...", tools/merge_lorebooks.py) become one Relations
     # field per year that the UI shows only from that campaign year ('year'); the card gates the same lines with EJS
+    # 1.97.5: a transfer's two lives (tools/merge_lorebooks.py vesna_entry): "[before her transfer]" / "[after her transfer]" lines become
+    # fields shown only before (tr -1) or only after (tr 1) the transfer; the Grand Final's two readings are the card's (EJS), not the dossier's
+    two = {}
+    for tag, k in (('before', -1), ('after', 1)):
+        ls = [re.sub(r"\(If \{\{user\}\}'s team beat Norvaine in the Grand Final\) .+? \(Otherwise\) .+?\. ", '', m.group(1)) for m in re.finditer(rf'^\[{tag} her transfer\] (.*)$', clean, re.M)]
+        if ls: two[k] = ls
+        clean = re.sub(rf'^\[{tag} her transfer\] .*\n?', '', clean, flags=re.M)
+    clean = re.sub(r'^\(Vesna transfers to Halvard only if .*\n?', '', clean, flags=re.M)
+    assert bool(two) == (nid in TRANSFERS), nid
     later = {}
     for m in re.finditer(r'^\[from Year (\d)\] (.*)$', clean, re.M):
         if m.group(2).strip(): later.setdefault(int(m.group(1)), []).append(m.group(2).strip())
     clean = re.sub(r'^\[from Year \d\] .*\n?', '', clean, flags=re.M)
     clean = re.sub(r'\n{2,}', '\n', clean)
     fields = []
-    for label, val, *y_from in split_fields(clean) + [['Relations', ' '.join(v), y] for y, v in sorted(later.items())]:
+    rows = [[k, *f] for k in sorted(two) for f in split_fields('\n'.join(['', *two[k]]))] + [[0, *f] for f in split_fields(clean)]
+    for tr, label, val, *y_from in rows + [[0, 'Relations', ' '.join(v), y] for y, v in sorted(later.items())]:
         val = re.sub(r'\s{2,}', ' ', val).strip()
         if not val: continue
         base = re.sub(r"\s*\(.*\)$", "", label); rank = layer_rank(nid, base)
         for k in (f'{nid}.{base}', f'{nid}.{label}'):
             if k in FOVR: rank = FOVR[k]
-        fields.append({'label': label, 'text': val, 'rank': rank, **({'year': y_from[0]} if y_from else {})})
+        fields.append({'label': label, 'text': val, 'rank': rank, **({'year': y_from[0]} if y_from else {}), **({'tr': tr} if tr else {})})
         for m in SENSITIVE.finditer(val):
             flags.append(f"{nid}.{label}: …{val[max(0, m.start()-50):m.end()+50]}…")
     if GIFTS.get(nid, {}).get('birthday'): fields.append({'label': 'Birthday', 'text': GIFTS[nid]['birthday'], 'rank': layer_rank(nid, 'Birthday')})
@@ -142,7 +157,7 @@ for u, e in sorted(N.items()):
         'dorm_color': DORM_COLOR.get(r.get('dorm'), '#6b6b7b'), 'year': r.get('year'), 'race': r.get('race'), 'beast': r.get('beast'),
         'gender': r.get('gender'), 'hair': r.get('hair'), 'impression': r.get('trait'), 'public_tags': r.get('extra', []),
         'team_role': r.get('team_role'), 'nickname': r.get('nickname'), 'portrait': a['portrait'], 'thumb': a['thumb'], 'focus': a['focus'],
-        'has_secret': has_secret, 'fields': fields}
+        'has_secret': has_secret, 'fields': fields, **({'transfer': TRANSFERS[nid]} if nid in TRANSFERS else {})}
 # v1.0.3: campaign year each NPC is at Halvard from (1 = from the start; incoming cohorts from data/cohorts.json)
 _coh = json.load(open(P('data/cohorts.json'), encoding='utf-8'))['incoming']
 for _y, _ids in _coh.items():

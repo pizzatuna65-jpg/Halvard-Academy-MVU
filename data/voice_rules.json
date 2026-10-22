@@ -40,6 +40,14 @@
    }
   ]
  },
+ "Vesna": {
+  "never": [
+   {
+    "rx": "\\b(I hate you|you deserve (it|this)|I enjoy(ed)? (hurting|breaking|killing))\\b",
+    "why": "Vesna is never cruel for pleasure and hates no one she fights"
+   }
+  ]
+ },
  "Topaz": {
   "never": [
    {

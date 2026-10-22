@@ -40,6 +40,7 @@ const mini = (v, color) => `<span class="mini"><i style="width:${_.clamp(num(v),
 function whoLine(id, S) {
   const n = npcOf(id); if (!n) return '';
   // 1.0.3: the school year moves with the campaign year; graduates are former students
+  if (n.xf && !moved(id, S)) return `Competitor of ${n.xf}'s national four`;   // 1.97.5: before her transfer
   const y = S ? Math.min(3, yearNow(id, S)) : n.y;
   const g = n.g.startsWith('Year') ? (S && graduated(S).has(id) ? `Former student, ${n.dm} Dormitory` : `${YEARW[y] || 'Student'}, ${n.dm} Dormitory`) : n.g === 'Staff' ? 'Halvard staff' : n.g;
   return g;

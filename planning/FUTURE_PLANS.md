@@ -11,9 +11,6 @@ tahap itu selesai.
 
 | Rilis | Isi | Catatan |
 |---|---|---|
-| **1.97.x** | World Competition | Draft: `planning/DRAFT_world_competition.md`. Satu langkah = satu rilis; rincian dan alasan urutan ada di tabel langkah draft. |
-| 1.97.4 | Sistem kompetisi | Phase 1–2, Grand Final, panel sinergi, hadiah, berita di Halvard; beda dari Kingdom, memakai helper yang ada. |
-| 1.97.5 | Vesna dan Koschei's Needle | Vesna NPC penuh, skenario lewat beat di `<now>` (engine tidak punya bond event atau entry [Scripted] sejak 1.9.0), pindah ke Halvard di Year 2. |
 | **1.98.0** | Cek fitur yang terasa dangkal | Telusuri `docs/FEATURES.md`, daftar fitur yang mekaniknya tipis, usulkan pendalamannya lewat sistem yang sudah ada (bahan: §2). Owner memilih dari daftar itu. |
 | **1.99.x** | Full audit bug hunt, stress test, dan perbaikannya | Full suite, stress test, audit lintas sistem; hasilnya file audit dengan daftar batch. Tiap batch = satu rilis: batch 1 → 1.99.1, batch 2 → 1.99.2, dst. |
 | **2.0.0** | Full polish fitur dan UI | Tanpa fitur baru. |
@@ -23,6 +20,7 @@ tahap itu selesai.
 | Rencana | Label | Paling lambat | Alasan |
 |---|---|---|---|
 | Bab baru (memory audit M14, batch 8): pindah ke file chat baru tanpa kehilangan memori | **[±20.000 PESAN]** | saat chat ±20.000 pesan, simpan > ±2 detik, atau file > ±100 MB | Rencana lengkap, sudah diputuskan: `planning/DRAFT_bab_baru.md`. "Kerjakan batch 8" = kerjakan draft itu. |
+| World Competition Year 2: Caelmar sebagai tuan rumah | **[YEAR 2]** | Year 2 M11 W3 (World Competition) | Sisa `DRAFT_world_competition.md` (dihapus 1.97.5). Year 1 punya Area Hanakaze dan liner Yozakura; Year 2 (Caelmar) belum punya Area, peta, maupun penerbangan (`airship.json` `who: world` hanya `y: 1`), jadi national four Year 2 "di luar negeri" tanpa kota. Perlu: Area Caelmar (pola `data/hanakaze.json`), petanya (`planning/MAP_PROMPTS_outside_maps.txt`), liner, venue `event_frame.json` `world.venues.2`. Kesempatan ulang skenario Vesna di Year 2 sudah jalan tanpa Area. Year 3 memakai Avalon yang sudah ada. |
 | FP4 Anggota baru tim rival | **[YEAR 2]** | Year 2 M9 W4 (Kingdom Competition) | Tim rival baru benar-benar tampil di Kingdom Competition. Sebelum itu entry tim hanya menulis "none on record yet". Sejak 1.84.0 tempat anggota yang lulus diisi peserta karangan narator dengan role yang sama (`sh:kcTeams`); FP4 menggantinya dengan anggota yang dirancang. |
 
 ### FP4. Anggota baru tim akademi rival dari Year 2 [YEAR 2]

@@ -1461,6 +1461,42 @@
     "disliked": "sunfizz|wishing coin|lucky roll"
    }
   },
+  "Vesna": {
+   "birthday": "M1 W2 Thu",
+   "text": {
+    "loved": "Blossom sweets (box), Star Cookie, Honey bun, Black silk ribbons, Seed packets, Notebook: sweets, school things, ribbons and anything that grows.",
+    "liked": "Plush animal, Prism charm, Moonfern in a pot: cute trinkets and animal-shaped things.",
+    "disliked": "Whetstone and blade oil, Duelling gauntlets, Armour polish kit, Vigour tonic: anything medical or clinical, or that marks her as a weapon.",
+    "hated": ""
+   },
+   "items": {
+    "loved": [
+     "Blossom sweets (box)",
+     "Star Cookie",
+     "Honey bun",
+     "Black silk ribbons",
+     "Seed packets",
+     "Notebook"
+    ],
+    "liked": [
+     "Plush animal",
+     "Prism charm",
+     "Moonfern in a pot"
+    ],
+    "disliked": [
+     "Whetstone and blade oil",
+     "Duelling gauntlets",
+     "Armour polish kit",
+     "Vigour tonic"
+    ],
+    "hated": []
+   },
+   "patterns": {
+    "loved": "sweet|candy|cookie|bun|cake|honey|sugar|ribbon|seed|sapling|stationer|pencil",
+    "liked": "plush|charm|in a pot|animal",
+    "disliked": "blade|knife|sword|armou?r|gauntlet|tonic|draught|bandage|syringe|medical"
+   }
+  },
   "Topaz": {
    "birthday": "M5 W2 Fri",
    "text": {

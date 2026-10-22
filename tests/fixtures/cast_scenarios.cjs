@@ -4,7 +4,7 @@
 const fs = require('fs'), path = require('path');
 const { Schema, runEngine, initState, applyPatch, ROOT } = require('../harness.cjs');
 const npcs = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/npcs.json'), 'utf8'));
-const IDS = Object.keys(npcs).filter(id => npcs[id].group !== 'World teams').sort();   // 1.97.2: the World teams (abroad, no bond) stay out, so the scenarios keep their people
+const IDS = Object.keys(npcs).filter(id => npcs[id].group !== 'World teams' && !npcs[id].transfer).sort();   // 1.97.2: the World teams (abroad, no bond) stay out, so the scenarios keep their people; 1.97.5: and Vesna (abroad until she transfers)
 const op = (p, value) => ({ op: 'replace', path: p, value });
 function scenario(i) {
   let S = initState();

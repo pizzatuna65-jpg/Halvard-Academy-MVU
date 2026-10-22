@@ -10,7 +10,7 @@ const render = (id, S) => ejs.render(card.character_book.entries.find(e => e.id 
 const op = (p, value) => ({ op: 'replace', path: p, value }), ins = (p, value) => ({ op: 'insert', path: p, value });
 
 console.log('Data');
-ok(Object.keys(PD.ct.roles).length === 35 && Object.values(PD.ct.roles).every(r => ['Attack', 'Defense', 'Healing', 'Support', 'Control'].includes(r)), 'the 35 roster students have a role (draft table 3.4)');
+ok(Object.keys(PD.ct.roles).length === 36 && Object.values(PD.ct.roles).every(r => ['Attack', 'Defense', 'Healing', 'Support', 'Control'].includes(r)), 'the 36 roster students have a role (draft table 3.4; 1.97.5: Vesna, Control, once she has transferred)');
 
 console.log('Brackets from the seed');
 const seeds = [1, 7, 42, 1234, 98765, 31337, 5, 777];

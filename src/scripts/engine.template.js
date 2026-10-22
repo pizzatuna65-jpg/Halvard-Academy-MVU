@@ -1133,7 +1133,7 @@ const AWAY_RX = /away|abroad|absent|missing|dead|confined|hospital|unconscious|e
 const npcStatusIn = (S, id) => npcStatusOf((S.Campus_State || {}).NPC_status, id, NPC_ALIAS);   // shared.js
 // 1.83.0: a Halvard student who went home for today's break (shared.js breakStays) is away too
 const breakAwayIn = (S, id) => { if (!(PRESENCE.stu || {})[id]) return false; const st = breakStaysNow(PRESENCE, S); return !!st && !st.includes(id); };
-const npcAwayIn = (S, id) => ((S.Campus_State || {}).Graduated || []).includes(id) || AWAY_RX.test(npcStatusIn(S, id)) || breakAwayIn(S, id);
+const npcAwayIn = (S, id) => ((S.Campus_State || {}).Graduated || []).includes(id) || AWAY_RX.test(npcStatusIn(S, id)) || breakAwayIn(S, id) || trAway(S, id);
 // 1.16.1 (audit B1): Player.Profile.Club in the club list's own words ("Soccer", "soccer club" -> "Soccer Club"; "Theatre" ->
 // "Theatre Troupe"), so Saturday club time is counted; a club the list does not know is kept as written
 function canonClub(c, S) {
@@ -1181,6 +1181,12 @@ function stepSetup(c) {
   const fromVer = hasB ? (B.$eng || {}).ver : S.$eng.ver;      // the engine version that wrote the state before this reply
   S.$eng.ver = ENGINE_VER;
   if (hasB) S.$ui.toasts = [];                                  // toasts = what happened in THIS update only
+  // 1.97.5: Campus_State.Transfers is the engine's (stepScene): what the reply wrote there gives way to the state before it
+  if (hasB) {
+    const t0 = _.isPlainObject((B.Campus_State || {}).Transfers) ? B.Campus_State.Transfers : {};
+    if (!_.isEqual(S.Campus_State.Transfers || {}, t0)) { if (!_.isEmpty(S.Campus_State.Transfers)) log.push('Campus_State.Transfers is the engine\'s; the change was reverted.'); S.Campus_State.Transfers = _.cloneDeep(t0); }
+  }
+  trSyncAll(S);
   Object.assign(c, { log, jnl, notes, hasB, fromVer });
 }
 
@@ -2973,11 +2979,18 @@ const wcLeft = (st, gi) => st.g[gi].filter(k => wcUp(st, k).length);
 const wcEv = (st, ev) => { st.ev = [...(st.ev || []), ev].slice(-24); };
 const wcHM = m => `${String(Math.floor((m % DAY_MIN) / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
 const wcDayAt = d => DAYS.indexOf(d) * DAY_MIN;
-// the paths' hook (hook.path, for 1.97.5): a nation named there wins every Phase 1 duel and Siege round the engine plays and is never
-// caught by the barrier; a result the story reports stands
-const wcPath = k => ((WC.hook || {}).path || []).includes(k);
+// the paths' hook (hook.path): in a year of the scenario (st.sc, 1.97.5) a nation named there wins every Phase 1 duel and Siege round
+// the engine plays and is never caught by the barrier; a result the story reports stands
+const wcPath = (st, k) => !!st.sc && ((WC.hook || {}).path || []).includes(k);
 // the minute of the competition week (from its Monday 00:00; Week 4 counts on), or null before it and outside Month 11
 const wcNow = W => (num(W.Month, 0) !== WC.m || num(W.Week, 0) < WC.w ? null : ((num(W.Week, 0) - WC.w) * 7 + DAYS.indexOf(W.Day)) * DAY_MIN + num(hm(W.Time), 0));
+// 1.97.5 (owner-approved planning/DRAFT_world_competition.md §4): the scenario Koschei's Needle (data/event_frame.json world.scene, WSC).
+// {{user}} is with the four at the World Competition from its Monday to the flight home (wcWith); in a year of the scenario, before
+// its NPC has transferred, the competition carries st.sc (wcInit) and the bond week runs (wcScene)
+const WSC = WC.scene || {};
+const wcWith = S => { const st = (S.$eng || {}).wc, now = wcNow(S.World); return !!(st && st.on && st.y === num(S.World.Year, 1) && now != null && now < 8 * DAY_MIN); };
+const wcScene = S => wcWith(S) && !!S.$eng.wc.sc && !trYear(S, WSC.npc);
+const wcAt = ([w, d, t]) => ((w - WC.w) * 7 + DAYS.indexOf(d)) * DAY_MIN + hm(t);   // [week, day, time] as a minute of the competition week
 // the four are home (the liner has landed): the prize reaches the bracelet then
 const wcHome = W => num(W.Month, 0) > WC.m || (wcNow(W) != null && wcNow(W) >= ((WC.home[0] - WC.w) * 7 + DAYS.indexOf(WC.home[1])) * DAY_MIN + hm(WC.home[2]));
 // Eldrasil's four: the World panel's pick after the Kingdom Competition ($eng.kc; else the Kingdom computed from the seed)
@@ -2997,24 +3010,25 @@ function wcInit(seed, y, S, on) {
   }
   const fav = k => num((WC.favour || {})[k], 0);
   const T = [{ k: 'Eldrasil', m: four }, ...(WC.teams || []).slice(1).map(k => ({ k, m: ((WC.rivals || {})[k] || []).map(([id, role, y0]) => { const yy = y0 + y - 1;
-    return yy > 3 ? { id: `${k}:${role}`, role, y: 1, s: ctStr(PRESENCE, seed, y, `${k}:${role}`, 1) + fav(k), label: `${k} Y1 student` }
+    return yy > 3 || trYear(S, id) ? { id: `${k}:${role}`, role, y: 1, s: ctStr(PRESENCE, seed, y, `${k}:${role}`, 1) + fav(k), label: `${k} Y1 student` }   // 1.97.5: a deserter's place too
       : { id, role, y: yy, s: ctStr(PRESENCE, seed, y, `${k}:${id}`, yy) + fav(k) + num((WC.pins || {})[id], 0), named: true }; }) }))];
   const order = [...(WC.teams || [])].sort((a, b) => roll100(seed, y, 'wc-draw', a) - roll100(seed, y, 'wc-draw', b) || (a < b ? -1 : 1));
-  // the draw's hook (hook.same, for 1.97.5): a nation named there swaps into Eldrasil's group; the rest of the draw stands
-  const g = [order.slice(0, 3), order.slice(3, 6)], ge = g[0].includes('Eldrasil') ? 0 : 1, same = (WC.hook || {}).same || [];
+  // the draw's hook (hook.same, in a year of the scenario): a nation named there swaps into Eldrasil's group; the rest of the draw stands
+  const sc = !!(on && WSC.npc && (WSC.years || []).includes(y) && !trYear(S, WSC.npc));
+  const g = [order.slice(0, 3), order.slice(3, 6)], ge = g[0].includes('Eldrasil') ? 0 : 1, same = sc ? (WC.hook || {}).same || [] : [];
   for (const k of same.filter(x => g[1 - ge].includes(x))) {
     const j = g[ge].findIndex(x => x !== 'Eldrasil' && !same.includes(x));
     if (j >= 0) { g[1 - ge][g[1 - ge].indexOf(k)] = g[ge][j]; g[ge][j] = k; }
   }
   return { y, on: on ? 1 : 0, T, g, p: 1, t: 0, out: {}, go: [[], []], gx: [null, null], xo: {}, sg: [], fin: [], win: '', end3: 0,
-    cr: {}, ev: [], enc: null, close: 0, spot: pickOf(wcVenue(y).spots || [''], seed, y, 'wc-spot') };
+    cr: {}, ev: [], enc: null, close: 0, spot: pickOf(wcVenue(y).spots || [''], seed, y, 'wc-spot'), sc: sc ? 1 : 0 };
 }
 // a duel of two lone competitors (Phase 1): the stronger usually wins; an attrition team grows stronger by the hour, a chaos team
 // swings either way. The loser's crystal breaks. True when A won.
 function wcDuel(st, seed, at, A, B) {
   const [ka, a] = A, [kb, b] = B, h = Math.max(0, Math.floor(((at % DAY_MIN) - hm(WC.p1.from)) / 60));
   const sw = k => { const x = num(wcTac(k).swing, 0); return x ? rollInt(-x, x, seed, st.y, 'wc-sw', at, k) : 0; };
-  const aw = wcPath(ka) !== wcPath(kb) ? wcPath(ka)
+  const aw = wcPath(st, ka) !== wcPath(st, kb) ? wcPath(st, ka)
     : roll100(seed, st.y, 'wc-duel', at, a.id, b.id) < kcClamp(50 + a.s - b.s + (num(wcTac(ka).late, 0) - num(wcTac(kb).late, 0)) * h + sw(ka) - sw(kb));
   const [kw, w, kl, l] = aw ? [ka, a, kb, b] : [kb, b, ka, a];
   st.out[kl] = [...(st.out[kl] || []), l.id]; st.cr[w.id] = num(st.cr[w.id], 0) + 1;
@@ -3065,9 +3079,10 @@ function wcP1Tick(st, seed, gi, at, log, Co) {
   const live = () => st.g[gi].flatMap(k => wcUp(st, k).map(e => [k, e])), busy = new Set(), mine = wcMine1(st, gi);
   for (const [k, e] of live().sort((a, b) => roll100(seed, y, 'wc1-ord', at, a[1].id) - roll100(seed, y, 'wc1-ord', at, b[1].id) || (a[1].id < b[1].id ? -1 : 1))) {
     if (st.gx[gi] || busy.has(e.id) || (st.out[k] || []).includes(e.id)) continue;
-    if (!(e.user && mine) && !wcPath(k) && roll100(seed, y, 'wc1-bar', at, e.id) < lerp(P1.barrier)) { st.out[k] = [...(st.out[k] || []), e.id]; wcEv(st, [1, at, 'barrier', k, kcName(e)]); wcCheck(st, gi, at); continue; }
+    if (!(e.user && mine) && !wcPath(st, k) && roll100(seed, y, 'wc1-bar', at, e.id) < lerp(P1.barrier)) { st.out[k] = [...(st.out[k] || []), e.id]; wcEv(st, [1, at, 'barrier', k, kcName(e)]); wcCheck(st, gi, at); continue; }
     if (roll100(seed, y, 'wc1-meet', at, e.id) >= lerp(P1.meet) * num(wcTac(k).meet, 1)) continue;
-    const foes = live().filter(([k2, x]) => k2 !== k && !busy.has(x.id));
+    // 1.97.5: in the scenario's year its NPC promised to come back for {{user}} last: the two never meet before the last clearing
+    const foes = live().filter(([k2, x]) => k2 !== k && !busy.has(x.id) && !(st.sc && ((e.user && x.id === WSC.npc) || (x.user && e.id === WSC.npc))));
     if (!foes.length) continue;
     const [k2, o] = pickOf(foes, seed, y, 'wc1-foe', at, e.id);
     busy.add(e.id); busy.add(o.id);
@@ -3080,7 +3095,7 @@ function wcP1Tick(st, seed, gi, at, log, Co) {
 const wcAtk = (m, n) => { const sw = WC.p2.swap, first = m.side === 'atk'; return (n > sw && n <= 2 * sw ? !first : first) ? m.a : m.b; };
 function wcRound(st, seed, mi, n) {
   const m = st.sg[mi], att = wcAtk(m, n), def = att === m.a ? m.b : m.a, T = k => kcTeam(st, k).m;
-  if (wcPath(att) !== wcPath(def)) return wcPath(att) ? att : def;
+  if (wcPath(st, att) !== wcPath(st, def)) return wcPath(st, att) ? att : def;
   const sw = k => { const x = num(wcTac(k).swing, 0); return x ? rollInt(-x, x, seed, st.y, 'wc2-sw', mi, n, k) : 0; };
   const edge = wcS(T(att)) - wcS(T(def)) + num(wcTac(att).atk, 0) - num(wcTac(def).def, 0) + (num(wcTac(att).late, 0) - num(wcTac(def).late, 0)) * (n - 1) + sw(att) - sw(def);
   return roll100(seed, st.y, 'wc2-round', mi, n) < kcClamp(50 + edge) ? att : def;
@@ -3239,7 +3254,7 @@ function wcPublish(c, st, now, mine) {
       if (!wcMine1(st, gi)) lines.push("{{user}}'s crystal is broken: {{user}} is out of Phase 1 and waits outside the barrier with the judges; the engine plays the rest of Eldrasil's four.");
       else {
         if (st.close) lines.push(`The barrier has closed to its last point: everyone still standing is in one clearing (${wcLeft(st, gi).map(k => `${k}: ${wcUp(st, k).map(kcName).join(', ')}`).join('; ')}). Play the last fight; what is not reported by ${wcHM(st.close + num(P1.grace, 60))} is decided off-screen.`);
-        else if (now < from) lines.push(`At ${P1.from} {{user}} is teleported to ${st.spot}, alone; the other three of Eldrasil's four land elsewhere in ${V.p1}.`);
+        else if (now < from) lines.push(`At ${P1.from} {{user}} is teleported to ${st.spot}, alone${st.sc && st.g[gi].includes(WSC.nation) ? `, a few steps from ${WSC.npc} of ${WSC.nation}` : ''}; the other three of Eldrasil's four land elsewhere in ${V.p1}.`);
         else lines.push(`The barrier is closing in: about ${Math.round(100 - f * 100)}% of ${V.p1} is still inside it; a crystal caught outside it cracks and breaks.`);
         lines.push('Report in Competition.Results: "World P1: broke <name>\'s crystal", "World P1: <name> out" (an Eldrasil crystal broken, {{user}}\'s included), "World P1: slipped away from <name>". The other competitors are the engine\'s.');
       }
@@ -3908,7 +3923,7 @@ function stepSchoolWeek(c) {
         ST.mins = num(ST.mins, 0) + Math.max(0, elapsed - lesson) * f;
       }
       for (const a of S.Interactions || []) if (String(a.Kind || '').toLowerCase() === 'study') {
-        ST.mins = num(ST.mins, 0) + 60 + (r4Partner(S, a.With, 'study') ? 30 : 0);   // 1.45.0 (audit 3.9): one partner rule
+        ST.mins = num(ST.mins, 0) + 60 + (r4Partner(S, a.With, 'study') ? 30 : 0) + (anyTrainers(S).length ? 30 : 0);   // 1.45.0 (audit 3.9): one partner rule; 1.97.5 train any
       }
       // posting: midterm marks at once, finals on Results day. Reputation from the average (docs/design/reputation.md figures),
       // and a remedial session for each F (next week's Saturday Study Hall slot, with the subject's teacher)
@@ -4355,6 +4370,7 @@ function stepBonds(c) {
   // previous update (they may have left in the reply that tells it)
   const wasHere = id => hasB && !!(((B.Scene || {}).Present || {})[id]);
   const npcAway = id => npcAwayIn(S, id);   // 1.16.1 (audit B4)
+  const scene = wcScene(S);   // 1.97.5: the bond week of the scenario Koschei's Needle (WSC.npc's XP times WSC.mult, no cooldown)
   const introductions = {};
   for (const a of S.Interactions || []) {
     if (a.Kind !== 'introduction') continue;
@@ -4454,7 +4470,7 @@ function stepBonds(c) {
       && acts.some(a => /^(talk|hangout|study|gift|help|fight|keep|secret|defend|confide|birthday)$/.test(a.Kind));
     const eligible = b0 && b.Rank === b0.Rank && b.Rank < 10
       && (num(b0.$xp, 0) >= needXP(b0.Rank, PACE) || b0._Event_ready)
-      && dayNo >= num(b0.$cool, -1) && !held(id, b) && !tenseHold(id, b) && !trustHold(id, b);
+      && (dayNo >= num(b0.$cool, -1) || (scene && id === WSC.npc)) && !held(id, b) && !tenseHold(id, b) && !trustHold(id, b);
     if (eligible && genuine) {
       b.Rank++; xp = 0; b._Event_ready = false; b.$cool = dayNo + coolDays(b.Rank, PACE);
       // 1.16.1 (audit T4): no generic "grew closer" Milestone: $Recent records the rank, Milestones are the story's own
@@ -4601,6 +4617,8 @@ function stepBonds(c) {
     b.Trust = _.clamp(Math.round(tr), 0, 100);
     if (birthday && !d.birthdayRemembered && (byId[id] || []).some(a => /^(gift|birthday)$/.test(a.Kind))) { d.birthdayRemembered = 1; if (RO.lock == null) { b.Trust = _.clamp(b.Trust + BR.birthday.remember_trust, 0, 100); log.push(`${id}: birthday remembered, Trust +${BR.birthday.remember_trust}.`); } }
     gain = Math.round(gain * num(DH.bond_xp_mult, 1));                   // Ottavio and his own Sky students
+    if (scene && id === WSC.npc) gain = Math.round(gain * num(WSC.mult, 1));   // 1.97.5: the scenario's bond week
+    if (trAway(S, id)) gain = 0;                                         // 1.97.5: a transfer's bond lives only with her
     // ---- 1.3.8 Tension: Althair's lock, Ezrel's half rises, fights, quiet-day decay, then its effects
     const TP = tensionProfile(id), t0 = b0 ? num(b0.Tension, 0) : num(b.Tension, 0);
     let t = num(b.Tension, 0), tgain = 0;
@@ -4688,7 +4706,7 @@ function stepBonds(c) {
     gain += tgain + trXP + partyGain;
     xp = b.Rank >= 10 ? 0 : Math.min(need, xp + gain);          // full XP waits for the next genuine interaction
     b.$xp = xp;
-    const ready = b.Rank < 10 && xp >= need && dayNo >= num(b.$cool, -1) && !held(id, b) && !tenseHold(id, b) && !trustHold(id, b);
+    const ready = b.Rank < 10 && xp >= need && (dayNo >= num(b.$cool, -1) || (scene && id === WSC.npc)) && !held(id, b) && !tenseHold(id, b) && !trustHold(id, b);
     b._Event_ready = ready; // legacy save field: readiness only, never a scripted event
     // romance opens at the rank chosen in Settings (default 8); feelings can grow earlier in the story, the flag waits.
     // 1.6.8 (owner): never for a character whose canon has no romance branch (B, D); a romance from an older save stays.
@@ -4747,6 +4765,76 @@ function stepBonds(c) {
     }
   }
   Object.assign(c, { canon, BB, daily, PACE, bweek, npcAway, spreadFrom, KR });
+}
+
+// ---- 6s. the scenario Koschei's Needle (1.97.5, owner-approved planning/DRAFT_world_competition.md §4; data/event_frame.json
+// world.scene, WSC). With {{user}} in the national four in a year of the scenario (wcScene; the draw, the paths, the teleport and the
+// bond week are stepWorld's and stepBonds'): bond XP for each phase Eldrasil's four wins and the bar filled when they beat her nation in
+// the Grand Final, what she has told {{user}} (told: WSC.fact in her Known_facts), the beats and the confront for <now> ($ui.scene), and
+// its end: Koschei's Needle in the Bag in the confront's hours makes her a Halvard student (Campus_State.Transfers, trSyncAll). The
+// Needle anywhere else is not {{user}}'s and leaves the Bag. Without it she flies home with her team; the next year in WSC.years tries
+// again. The Entrance Event after her transfer sorts her. $eng.vesna: { y, won, gf, told, p1, done, beat, fail, ent }.
+function stepScene(c) {
+  const { S, B, hasB, toolEdit, log, jnl, text, OFF } = c;
+  S.$ui.scene = null;
+  const id = WSC.npc;
+  if (!id) return;
+  const W = S.World, y = num(W.Year, 1), lines = [], tv = trYear(S, id), b = S.Bonds[id], P0 = S.$eng.vesna;
+  const V = S.$eng.vesna = _.isPlainObject(P0) ? P0 : {};
+  const bagKey = I => Object.keys(I || {}).find(k => /koschei/i.test(k));
+  const live = hasB && !toolEdit;
+  if (tv && y > tv && num(W.Month, 0) === 1 && num(W.Week, 0) === 1 && W.Day === 'Mon' && num(hm(W.Time), 0) < 12 * 60 && num(V.ent, 0) !== y) {
+    if (num(hm(W.Time), 0) >= 10 * 60 && live) V.ent = y;
+    lines.push(`Entrance Event: ${id}, the transfer from ${WSC.nation}, is sorted today with the first-years. The Arbiter Stone lights every colour at once for her, and the Headmaster sorts her into {{user}}'s dorm (${S.Player.Profile.Dorm || 'their dorm'}) himself; she is in {{user}}'s school year, and joins {{user}}'s club in her first week.`);
+  }
+  const st = S.$eng.wc;
+  if (!tv && wcScene(S) && !OFF.has('competition')) {
+    if (V.y !== y) { V.y = y; V.won = []; V.gf = 0; V.p1 = 0; }
+    const now = wcNow(W), need = b ? needXP(b.Rank, c.PACE) : 0;
+    const add = (x, why) => { if (!b || !live || b.Rank >= 10) return; b.$xp = Math.min(need, num(b.$xp, 0) + x); b._Event_ready = b.$xp >= need; log.push(`${id}: ${why}; bond XP +${x}.`); };
+    const ge = st.g.findIndex(g => g.includes('Eldrasil')), gx = st.gx[ge], sg = st.sg.find(m => m.a === 'Eldrasil' || m.b === 'Eldrasil');
+    if (gx && gx.out !== 'Eldrasil' && !V.won.includes('p1')) { V.won.push('p1'); add(num(WSC.boost, 0), "Eldrasil's four went through Phase 1"); }
+    if (sg && sg.w === 'Eldrasil' && !V.won.includes('p2')) { V.won.push('p2'); add(num(WSC.boost, 0), "Eldrasil's four won the Siege"); }
+    if (st.win === 'Eldrasil' && st.fin.includes(WSC.nation) && !V.gf) {
+      V.gf = 1; V.beat = y;
+      if (b && live && b.Rank < 10) { b.$xp = need; b._Event_ready = true; log.push(`${id}: beaten in the Grand Final for the first time in her life; the bond is ready to deepen.`); }
+    }
+    if (!V.told && b && b.Rank >= 3 && (S.Scene.Present || {})[id] && live && new RegExp(WSC.told, 'i').test(proseOf(text))) {
+      V.told = y;
+      if (!(b.Known_facts || []).includes(WSC.fact)) b.Known_facts = [...(b.Known_facts || []), WSC.fact];
+      jnl.push(`${id} told {{user}} that the Colonel keeps her soul safe in an egg, so she can never die.`);
+    }
+    const P1 = WC.p1, from = ge >= 0 ? wcDayAt(P1.days[ge]) + hm(P1.from) : -1, d = Math.floor(now / DAY_MIN);
+    const inMatch = (st.p === 1 && now >= from && now < from + hm(P1.to) - hm(P1.from) + num(P1.grace, 60)) || !!c.contest;
+    if (st.p === 1 && wcMine1(st, ge) && now >= from - 120 && now < from + 60)
+      lines.push(`Koschei's Needle, the scenario (play it once): when {{user}} lands from the teleport, ${id} is a few steps away. She is delighted, a real student from a real school, and asks a string of questions about school life instead of fighting. Must: the Colonel's voice through the pin at her collar says "duty"; her smile goes, her face turns still and somber, and she promises to come back for {{user}} last before she leaves.`);
+    else if (!inMatch && d < 7) lines.push(`${id} of ${WSC.nation}: nobody on her own team talks to her, so she comes looking for {{user}} whenever she is free, sweets in hand (the inn's corridors, baths and dining room, the banquets, a day either four does not play, Saturday's rest).`);
+    if (b && b.Rank >= 3 && !V.told && !inMatch)
+      lines.push(`${id} (Rank 3; next time they are alone, once): she tells {{user}}, cheerfully, about the front: being carried home in a bag, waking on her bed mended, going back. Must: she mentions that the Colonel keeps her soul safe in an egg, so she can never die, and does not understand why {{user}} is upset.`);
+    if (V.gf && d === 6 && now < wcDayAt('Sun') + 19 * 60)
+      lines.push(`The Grand Final is won: beaten for the first time in her life, ${id} sits on the sand staring at {{user}}, and then laughs, the first real laugh anyone has heard from her: if someone can beat her, then being strong does not have to mean being a weapon.`);
+    const open = st.p === 4 && now >= wcDayAt(WSC.confront[0]) + hm(WSC.confront[1]) && now < wcAt(WSC.until) && b && b.Rank >= num(WSC.rank, 4) && V.told;
+    const fresh = bagKey(S.Inventory) && !(hasB && bagKey(B.Inventory));
+    if (open && fresh && live) {
+      const k = bagKey(S.Inventory);
+      S.Inventory[k] = { ...S.Inventory[k], Qty: 1, Kind: 'other', Note: "Vesna's bound soul: while the egg is intact she cannot die, and whoever holds it knows where she is. Keep it whole, and keep it from the Doves (Soul magic)." };
+      if (k !== WSC.item) { S.Inventory[WSC.item] = S.Inventory[k]; delete S.Inventory[k]; }
+      S.Campus_State.Transfers = { ...(S.Campus_State.Transfers || {}), [id]: y }; V.done = y; trSyncAll(S);
+      b.Known_facts = [...new Set([...(b.Known_facts || []), `Deserted ${WSC.nation} at the World Competition of Year ${y}; {{user}} keeps Koschei's Needle`])];
+      jnl.push(`${id} deserted ${WSC.nation}: she put Koschei's Needle into {{user}}'s keeping and did not fly home with her team. The Headmaster has arranged her asylum and her place at Halvard through a private agreement with the Crown; until the new year she lives on the near-empty campus under his eye, and then joins {{user}}'s school year, dorm and club.`);
+      S.$ui.toasts.push(`{npc:${id}} has deserted ${WSC.nation}`);
+    } else if (open) lines.push(`Open now, the player's choice (never steer toward it), until the liner boards: {{user}} may confront Colonel Kazimir Zorin for Koschei's Needle. How is {{user}}'s choice: persuade him, outwit him, or take it by force. The Colonel plays as his entry describes: cold, pragmatic, guarded by his Shrouds. Nothing makes him hand the egg over out of character, so {{user}}'s way has to work on the man he is: force has to go through the Shrouds first and then past his stun pistol and the Tishina cuff, which makes every spell near him unstable, and an argument has to be one he would count as data.${(st.xo || {})[WSC.nation] ? ` ${id} lost the World Competition: she is a failed prototype in his eyes, and that changes his arithmetic.` : ''} If {{user}} confronts him: Must: {{user}} comes away with Koschei's Needle (put it in Inventory as "${WSC.item}"). Must: ${id} refuses to keep it herself ("If I keep it, they'll come for both of us. You keep it. You talked to me like a girl.") and puts it in {{user}}'s hands. Must: she does not fly home with ${WSC.nation}.`);
+  }
+  // the Needle is the Colonel's until the confront gives it to {{user}}
+  if (!trYear(S, id) && live && bagKey(S.Inventory) && !bagKey(B.Inventory)) {
+    delete S.Inventory[bagKey(S.Inventory)];
+    log.push(`Koschei's Needle is not {{user}}'s: Colonel Kazimir Zorin keeps it on a chain under his collar${wcScene(S) ? ' (the confront opens after the Grand Final, with her bond at Rank ' + num(WSC.rank, 4) + ' and what she told {{user}})' : ''}. It left the Bag.`);
+  }
+  if (V.y === y && !trYear(S, id) && !(V.fail || []).includes(y) && wcHome(W) && live) {
+    V.fail = [...(V.fail || []), y];
+    jnl.push(`${id} flew home with ${WSC.nation} and her Colonel.`);
+  }
+  if (lines.length) S.$ui.scene = { lines };
 }
 
 // ---- 6c. 1.6.0 (Batch C, P4/N4): what each character carries of {{user}}. Knows: dated, the latest KNOWS_VISIBLE (older
@@ -4880,6 +4968,17 @@ const unfitToTrain = (S, track) => {
   const hurt = Object.values(S.Player.Injuries || {}).some(i => /serious|critical/.test(i.Severity) || track === 'stamina' && i.Severity === 'moderate');
   return hurt ? 'Injured' : /Exhausted|Collapsed/.test(S.Player.Vitals._Fatigue) ? 'Too tired to train' : '';
 };
+// 1.97.5: a transfer (PRESENCE.tr, Vesna) and the campaign year Campus_State.Transfers gives her (0: not yet); she is away until then,
+// except with {{user}} at the World Competition. trSyncAll: the shared trSync plus the engine's own student list.
+const trYear = (S, id) => num(((((S || {}).Campus_State) || {}).Transfers || {})[id], 0);
+const trAway = (S, id) => !!(PRESENCE.tr || {})[id] && !trYear(S, id) && !wcWith(S);
+function trSyncAll(S) {
+  trSync(PRESENCE, S);
+  for (const [id, [ly]] of Object.entries(PRESENCE.tr || {})) { if (trYear(S, id)) STUDENTS[id] = [ly, 1]; else delete STUDENTS[id]; }
+}
+// 1.97.5: who in the scene now has a Rank 5 gift or Rank 10 benefit that trains whatever {{user}} trains (train "any": Vesna's Rank 10)
+const anyTrainers = S => Object.entries(REW.npcs || {}).filter(([id, x]) => ['gift', 'r10'].some(g => x[g] && x[g].train === 'any' && S._Perks[x[g].name] && S._Perks[x[g].name].Kind !== 'memento' && !((S.$ui || {}).tsusp || []).includes(x[g].name))
+  && Object.keys((S.Scene || {}).Present || {}).some(k => (NPC_ALIAS[k.toLowerCase()] || k) === id) && !npcAwayIn(S, id)).map(([id]) => id);
 function r4Partner(S, name, track) {
   const id = NPC_ALIAS[String(name || '').trim().toLowerCase()] || String(name || '').trim(), b = (S.Bonds || {})[id];
   const here = Object.keys((S.Scene || {}).Present || {}).some(k => (NPC_ALIAS[k.toLowerCase()] || k) === id);
@@ -5001,7 +5100,7 @@ function stepTraining(c) {
   {
     const here = new Set(Object.keys(S.Scene.Present || {}).map(canon));
     // 1.7.0: a Rank 10 benefit can carry the training bonus too (Linus: mana, Tsubaki: stamina); a suspended benefit (low Trust) does not count
-    const partners = k => Object.entries(REW.npcs || {}).filter(([id, x]) => here.has(id) && !goneNow(id) && ['gift', 'r10'].some(g => x[g] && x[g].train === k && S._Perks[x[g].name] && S._Perks[x[g].name].Kind !== 'memento' && !(S.$ui.tsusp || []).includes(x[g].name))).map(([id]) => id);
+    const partners = k => Object.entries(REW.npcs || {}).filter(([id, x]) => here.has(id) && !goneNow(id) && ['gift', 'r10'].some(g => x[g] && (x[g].train === k || x[g].train === 'any') && S._Perks[x[g].name] && S._Perks[x[g].name].Kind !== 'memento' && !(S.$ui.tsusp || []).includes(x[g].name))).map(([id]) => id);
     for (const x of c.sessions || []) {   // 1.45.0 (audit 3.9): gathered by stepProficiency
       const k = /mana/.test(x.Track) ? 'mana' : /stam/.test(x.Track) ? 'stamina' : '';
       if (!k || !S.Player.$Training[k]) { log.push(`Training track "${x.Track}" is unknown (use mana or stamina); nothing was added.`); continue; }
@@ -5254,7 +5353,8 @@ function stepProficiency(c) {
     const priorCraft = recipe && ((((B || {}).$ui || {}).craft || []).find(x => x.name === recipe.name));
     const made = recipe && (priorCraft || craftResult(B, recipe));
     const xp = recipe ? (made.result === 'failed' ? 1 : a.xp) : a.study && a.action === 'Study a subject' ? Math.min(2, Math.floor(elapsed / 60)) : a.xp;
-    gain(stat, xp, a.action);
+    const anyT = a.study ? [] : anyTrainers(S);   // 1.97.5: train any (Vesna's Rank 10); study counts its minutes instead
+    gain(stat, anyT.length ? Math.round(xp * (1 + REW.train_bonus)) : xp, anyT.length ? `${a.action}, with ${anyT.join(' and ')}` : a.action);
     if (recipe) {
       takeMaterials(ready.material);
       if (a.cost) ledger(c, 'Points', -a.cost, 'studio practice');
@@ -5283,7 +5383,7 @@ function stepProficiency(c) {
     if (a.paid) { P.wk.paid++; ledger(c, 'Points', a.paid, a.paidAs || 'paid shift'); }
     if (a.study && !OFF.has('study') && S.$eng.study) {
       const counted = num(S.$eng.study.mins, 0) - num((((B || {}).$eng || {}).study || {}).mins, 0);
-      const hour = 60 + (r4Partner(S, r.With, 'study') ? 30 : 0);   // 1.45.0 (audit 3.9): the study partner rule, as for a study Interaction
+      const hour = 60 + (r4Partner(S, r.With, 'study') ? 30 : 0) + (anyTrainers(S).length ? 30 : 0);   // 1.45.0 (audit 3.9): the study partner rule, as for a study Interaction; 1.97.5 train any
       if (counted < hour) S.$eng.study.mins = num(S.$eng.study.mins, 0) + hour - Math.max(0, counted);
     }
   }
@@ -7402,7 +7502,8 @@ function nowOf(S, moodsFull) {
   const yNow = Math.max(1, Number((getvar('stat_data.World') || {}).Year) || 1);
   PRES.filter(id => BONDS[id] && (BOND.fields || {})[id]).forEach(id => {
     const r = Math.max(0, Math.min(10, Number(BONDS[id].Rank) || 0)), tr = Math.max(0, Math.min(100, Number(BONDS[id].Trust) || 0)), tb = trBand(tr);
-    const sh = (TRUST.share || {})[tb], F = BOND.fields[id].filter(f => !f[2] || f[2] <= yNow);
+    const moved = Number(((getvar('stat_data.Campus_State') || {}).Transfers || {})[id]) > 0;   // 1.97.5: a transfer's fields before / after
+    const sh = (TRUST.share || {})[tb], F = BOND.fields[id].filter(f => (!f[2] || f[2] <= yNow) && (!f[3] || (f[3] > 0) === moved));
     const free = _.uniq(F.filter(f => f[0] <= r + (sh || 0) && !(BOND.seen || []).includes(f[1])).map(f => f[1]));
     const held = _.groupBy(_.uniqBy(F.filter(f => f[0] > r + (sh || 0) && !free.includes(f[1])), f => f[1]), f => Math.max(r + 1, f[0] - (sh || 0)));
     const og = trOver(id), gated = og && og.no_gates ? [] : Object.entries(TRUST.gates || {}).filter(([g, need]) => +g <= r && +g !== 8 && tr < need && BOND.perks[g]).map(([g, need]) => BOND.perks[g] + ' (needs Trust ' + need + ')');
@@ -7686,7 +7787,7 @@ function stepNow(c) {
   for (const a of Object.values(S.$ui.area || {})) if (_.isPlainObject(a)) { delete a.walks; delete a.near; }
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepHanakaze, stepCampus, stepVitals, stepContest, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepBondMemory, stepProficiency, stepEventChances, stepHunt, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepClubWork, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepFold, stepGist, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepHanakaze, stepCampus, stepVitals, stepContest, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepScene, stepBondMemory, stepProficiency, stepEventChances, stepHunt, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepClubWork, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepFold, stepGist, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,

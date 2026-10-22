@@ -3326,6 +3326,19 @@
   "via": "Gavlan"
  },
  {
+  "from": "Gavlan",
+  "to": "Vesna",
+  "types": [
+   "wary"
+  ],
+  "type": "wary",
+  "notes": [
+   "Gavlan Haverton coached Eldrasil against her at the World Competition and watches her in his class like a man who remembers."
+  ],
+  "visibility": "rank:2",
+  "via": "Vesna"
+ },
+ {
   "from": "Hadrian",
   "to": "Aiden",
   "types": [
@@ -7685,6 +7698,19 @@
  },
  {
   "from": "Tsubaki",
+  "to": "Vesna",
+  "types": [
+   "rivals"
+  ],
+  "type": "rivals",
+  "notes": [
+   "Tsubaki Hoshikage asks her for a match every time they meet; Vesna says no every time, happily, and offers her a sweet instead."
+  ],
+  "visibility": "rank:2",
+  "via": "Vesna"
+ },
+ {
+  "from": "Tsubaki",
   "to": "Wren",
   "types": [
    "friends"
@@ -8143,6 +8169,34 @@
  },
  {
   "from": "Vesna",
+  "to": "Althair",
+  "notes": [
+   "Does not like Vice Headmaster Althair Veyne, which only entertains him."
+  ],
+  "visibility": "rank:5",
+  "via": "Vesna",
+  "types": [
+   "dislike"
+  ],
+  "type": "dislike"
+ },
+ {
+  "from": "Vesna",
+  "to": "Baelin",
+  "types": [
+   "respect"
+  ],
+  "type": "respect",
+  "notes": [
+   "She deserted Norvaine at the World Competition and transferred to Halvard, where the Headmaster sorted her into {{user}}'s dorm himself.",
+   "The Arbiter Stone lit every colour at once for her, the Headmaster sorted her himself, and she loses every match she fights, smiling.",
+   "The Headmaster's private arrangement with the Crown covers her; the Doves know she is from Norvaine and that they are not to ask."
+  ],
+  "visibility": "rank:0",
+  "via": "Vesna"
+ },
+ {
+  "from": "Vesna",
   "to": "Kazimir",
   "types": [
    "respect"
@@ -8151,7 +8205,7 @@
   "notes": [
    "Colonel Kazimir Zorin, the coach, is the one she obeys, always."
   ],
-  "visibility": "rank:4",
+  "visibility": "rank:2",
   "via": "Vesna"
  },
  {

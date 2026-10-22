@@ -645,6 +645,26 @@ The first academy flight (the airship), then the Grand Vast Forest.
 - [ ] At the Challenge Crossing someone may challenge Charles to a contest; at the inn or around the city members of another nation's four
       cross his path, played from their team entry; the Warrens appear on the Map only after a visit [1.97.3].
 - [ ] W4 Mon 12:00 the liner home; back at Halvard by 18:00 and the Hanakaze lore and block are gone [1.97.3].
+- [ ] The phase lines (teleport, barrier, report forms, Siege, Grand Final) now reach the narrator in `<now>` (1.97.4 built them but
+      `<now>` printed only the Kingdom's and Dorm's) [1.97.5].
+
+### Side quest SQ-V Koschei's Needle (Year 1, else Year 2; only if Charles is in the national four) [1.97.5]
+- [ ] The draw puts Norvaine in Eldrasil's group; on the Phase 1 day Charles lands a few steps from Vesna: she asks about school life
+      instead of fighting, then "Vesna. Duty." through her collar pin, the somber face, and a promise to come back for him last.
+- [ ] Through the week she comes looking for Charles (the inn, the banquets, a free day, Saturday); her bond climbs fast (People: the
+      bar fills in a day or two) and deepens at the next meeting without the usual wait.
+- [ ] At Rank 3 `<now>` gives her beat: she tells, cheerfully, of the front, the body bag, and the egg that keeps her soul; the next
+      reply's Known_facts on her dossier holds it, and the beat stops.
+- [ ] Each phase Eldrasil's four wins adds to her bar; if Eldrasil beats Norvaine in the Grand Final she sits on the sand and laughs,
+      and her bar is full.
+- [ ] Sunday evening (after the final), with her at Rank 4: `<now>` opens the confront with Colonel Kazimir Zorin (the player's choice:
+      persuade, outwit, force through the Shrouds, the stun pistol, the Tishina cuff); "Koschei's Needle" in the Bag: Journal "Vesna
+      deserted Norvaine", a toast, Campus_State.Transfers; the Needle's lore stays on while it is in the Bag.
+- [ ] Skip the confront: at the boarding the Journal says she flew home with Norvaine; in Year 2's World Competition it opens again.
+- [ ] After the transfer: Month 12 she is on the near-empty campus; the Year 2 Entrance Event sorts her into Charles's dorm (every
+      colour on the Stone); she is in his school year and club, at the Gardens, the Menagerie, the Commissary, the Common Rooms and
+      the Grassy Field; her dossier shows her Halvard life (Club, Haunts, Routine), not the Norvaine Role; she loses her first Dorm
+      Competition bout; her Rank 10 makes any training with her go further.
 
 ### Q10.2 Graduation (W4 Sun)
 - [ ] From 12:00 in the Courtyards the farewell winter market's stalls are open (a knitted dorm scarf, cocoa) [1.86].

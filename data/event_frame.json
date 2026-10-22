@@ -252,7 +252,7 @@
     ]
   },
   "contest": {
-    "_note": "1.82.0 (planning/DRAFT_event_frame.md section 3, release A2): the Dorm Competition, computed from the seed and never stored (shared.js contest section; tools/common.py presence_data hands it to the engine and the panels as PD.ct). roles: a Halvard student's combat role in the brackets (owner-approved draft table 3.4; Castor by his public magic). pins: only what the lore says (str: strength added; lose: the round they go out in, 'semi' = the semi-final; tie: 'first' wins the tie for the better of the places shared by that round's losers; years: campaign years the pin holds). dorm: bracket size per role per dorm, qualifying places (lore 19), each role's format and the rounds' times. strength: an entrant's (base + per_year x (school year - 1) + 0..spread), {{user}}'s (user_base + user_per_year x (Year - 1) + user_per_prowess x Prowess rank); a bout between two entrants the narrator does not play goes to A with 50 + (A - B) percent, clamped; edge: the gap that makes an opponent stronger or weaker (Fortune -10 / +10). vote: the Club Festival coin vote, drawn at the close weighted by (named members + base), with {{user}}'s club boosted for each of its chances done. 1.87.0 (release C): pins noteam = no team takes them at the Academy Competition (Royhan, lore 101, unless {{user}} recruits him; Ruby, lore 130). academy: the Academy Competition (lore 19): the Dorm qualifiers form teams of size with every school year among them and the roles covered as far as they go; a knockout of teams, one round a day at times, the strength of a team its members' mean.",
+    "_note": "1.82.0 (planning/DRAFT_event_frame.md section 3, release A2): the Dorm Competition, computed from the seed and never stored (shared.js contest section; tools/common.py presence_data hands it to the engine and the panels as PD.ct). roles: a Halvard student's combat role in the brackets (owner-approved draft table 3.4; Castor by his public magic). pins: only what the lore says (str: strength added; lose: the round they go out in, 'semi' = the semi-final; tie: 'first' wins the tie for the better of the places shared by that round's losers; years: campaign years the pin holds). dorm: bracket size per role per dorm, qualifying places (lore 19), each role's format and the rounds' times. strength: an entrant's (base + per_year x (school year - 1) + 0..spread), {{user}}'s (user_base + user_per_year x (Year - 1) + user_per_prowess x Prowess rank); a bout between two entrants the narrator does not play goes to A with 50 + (A - B) percent, clamped; edge: the gap that makes an opponent stronger or weaker (Fortune -10 / +10). vote: the Club Festival coin vote, drawn at the close weighted by (named members + base), with {{user}}'s club boosted for each of its chances done. 1.87.0 (release C): pins noteam = no team takes them at the Academy Competition (Royhan, lore 101, unless {{user}} recruits him; Ruby, lore 130). 1.97.5: Vesna (once she has transferred, in {{user}}'s dorm) loses her first bout on purpose and never fights seriously (her lore). academy: the Academy Competition (lore 19): the Dorm qualifiers form teams of size with every school year among them and the roles covered as far as they go; a knockout of teams, one round a day at times, the strength of a team its members' mean.",
     "roles": {
       "Gareth": "Attack",
       "Sophia": "Attack",
@@ -288,7 +288,8 @@
       "Vera": "Healing",
       "Castor": "Healing",
       "Caspian": "Support",
-      "Linus": "Support"
+      "Linus": "Support",
+      "Vesna": "Control"
     },
     "pins": {
       "Gareth": {
@@ -311,6 +312,10 @@
       },
       "Dante": {
         "lose": 2
+      },
+      "Vesna": {
+        "lose": 1,
+        "noteam": true
       }
     },
     "dorm": {
@@ -431,13 +436,14 @@
     }
   },
   "breaks": {
-    "_note": "1.83.0 (planning/DRAFT_event_frame.md 4.3, release B): who of the Halvard students stays on campus over a break (a calendar event with home: the Mid-Year Break, the Month 12 holiday; lore 238: staying is 'allowed and common'). stay: those whose lore leaves them no home to go to or keeps them here (Etnie, a street orphan; Dante, raised in an orphanage and the Doves' errand-runner; Lenna, whose village and parents the Blightfire took; Castor, whose home is Halvard's Mail Tower; Tilly, whose 'far northern province' is a cover for Velmora). Everyone else stays with chance percent, drawn per student, campaign year and break. The others are away (whereabouts 'home for the break').",
+    "_note": "1.83.0 (planning/DRAFT_event_frame.md 4.3, release B): who of the Halvard students stays on campus over a break (a calendar event with home: the Mid-Year Break, the Month 12 holiday; lore 238: staying is 'allowed and common'). stay: those whose lore leaves them no home to go to or keeps them here (Etnie, a street orphan; Dante, raised in an orphanage and the Doves' errand-runner; Lenna, whose village and parents the Blightfire took; Castor, whose home is Halvard's Mail Tower; Tilly, whose 'far northern province' is a cover for Velmora; 1.97.5: Vesna, a deserter with no home to go back to, once she has transferred). Everyone else stays with chance percent, drawn per student, campaign year and break. The others are away (whereabouts 'home for the break').",
     "stay": [
       "Etnie",
       "Dante",
       "Lenna",
       "Castor",
-      "Tilly"
+      "Tilly",
+      "Vesna"
     ],
     "chance": 20
   },
@@ -671,7 +677,7 @@
     }
   },
   "world": {
-    "_note": "1.97.4 (owner-approved planning/DRAFT_world_competition.md §1b, §3): the World Competition, run by the engine (stepWorld) from the seed and what the story reported, as the Kingdom Competition is. teams: the six nations (Eldrasil first; the foreign fours are their lore entries' Team lines, read by tools/common.py contest_data). favour: strength added to every member of a foreign four (the three usual favourites more than the two open qualifiers; Eldrasil's four keeps its Kingdom strength); pins: strength added to a standout. tactic / tact: how each four plays (its lore Plays line): meet (times the chance of a meeting in Phase 1), atk / def (added on that side of a Siege round), swing (a random part either way, Caelmar's chaos), late (added per hour in Phase 1 and per round in Phase 2: Velmora's attrition). m / w: the event's month and week (calendar world_comp). draw: the opening banquet, where the Phase 1 groups are drawn. p1: Last Team Standing, one group a day (days), a tick every `tick` minutes from `from` to `to`; meet and barrier: % a competitor meets someone / is caught outside the barrier in one tick, at the start and at the close (it grows between); at `to` the barrier reaches one point and whoever is left fights it out (a {{user}} still standing gets `grace` minutes to play it). p2: the Siege, one match a day (days): round n starts at from + (n-1)·gap and is decided 10 minutes in; first to `win` rounds; the sides swap after `swap` rounds. p3: the Grand Final (rolled: when it is decided off-screen; to: the end of a {{user}} final). news: when the evening announcement on the Announcement Pillars tells Halvard the day's results. home: when the liner lands home (the prize is paid then). venues: names by campaign year (the host's grounds; spots are Phase 1's teleport points). panel: the World panel's pick from the Kingdom record (credit points per Kingdom credit, plus strength) and how the four fight together: relations (data/relations.json types, either way), mates (fought on the same Kingdom team), {{user}}'s bond (bond per Rank, tension: [from, points]), counter (a competitor whose power eats allies of these magic types: such an ally loses that percent of their worth, record and strength; an ally of unknown magic counts `unknown` of it). prize: points per member of the winning four, paid when the liner lands home (points are no use abroad); replica: the Bag item. hook: the draw and the teams' paths for a story that needs them (empty until 1.97.5): same, nations drawn into Eldrasil's Phase 1 group; path, nations that win every match the engine plays (Phase 1 duels and the barrier, Siege rounds), never a result the story reports.",
+    "_note": "1.97.4 (owner-approved planning/DRAFT_world_competition.md §1b, §3): the World Competition, run by the engine (stepWorld) from the seed and what the story reported, as the Kingdom Competition is. teams: the six nations (Eldrasil first; the foreign fours are their lore entries' Team lines, read by tools/common.py contest_data). favour: strength added to every member of a foreign four (the three usual favourites more than the two open qualifiers; Eldrasil's four keeps its Kingdom strength); pins: strength added to a standout. tactic / tact: how each four plays (its lore Plays line): meet (times the chance of a meeting in Phase 1), atk / def (added on that side of a Siege round), swing (a random part either way, Caelmar's chaos), late (added per hour in Phase 1 and per round in Phase 2: Velmora's attrition). m / w: the event's month and week (calendar world_comp). draw: the opening banquet, where the Phase 1 groups are drawn. p1: Last Team Standing, one group a day (days), a tick every `tick` minutes from `from` to `to`; meet and barrier: % a competitor meets someone / is caught outside the barrier in one tick, at the start and at the close (it grows between); at `to` the barrier reaches one point and whoever is left fights it out (a {{user}} still standing gets `grace` minutes to play it). p2: the Siege, one match a day (days): round n starts at from + (n-1)·gap and is decided 10 minutes in; first to `win` rounds; the sides swap after `swap` rounds. p3: the Grand Final (rolled: when it is decided off-screen; to: the end of a {{user}} final). news: when the evening announcement on the Announcement Pillars tells Halvard the day's results. home: when the liner lands home (the prize is paid then). venues: names by campaign year (the host's grounds; spots are Phase 1's teleport points). panel: the World panel's pick from the Kingdom record (credit points per Kingdom credit, plus strength) and how the four fight together: relations (data/relations.json types, either way), mates (fought on the same Kingdom team), {{user}}'s bond (bond per Rank, tension: [from, points]), counter (a competitor whose power eats allies of these magic types: such an ally loses that percent of their worth, record and strength; an ally of unknown magic counts `unknown` of it). prize: points per member of the winning four, paid when the liner lands home (points are no use abroad); replica: the Bag item. hook: the draw and the teams' paths in a year of the scenario (scene, 1.97.5; other years none): same, nations drawn into Eldrasil's Phase 1 group; path, nations that win every match the engine plays (Phase 1 duels and the barrier, Siege rounds), never a result the story reports.",
     "event": "world_comp",
     "m": 11,
     "w": 3,
@@ -863,8 +869,36 @@
     "prize": 10000,
     "replica": "World Trophy replica",
     "hook": {
-      "same": [],
-      "path": []
+      "same": [
+        "Norvaine"
+      ],
+      "path": [
+        "Norvaine"
+      ]
+    },
+    "scene": {
+      "_note": "1.97.5 (owner-approved planning/DRAFT_world_competition.md §4, the scenario Koschei's Needle; engine wcScene, stepScene): in a campaign year of years, with {{user}} in the national four and npc not yet transferred, the hook above holds (nation drawn into Eldrasil's Phase 1 group, winning every match the engine plays), {{user}} is teleported a few steps from npc, and npc never meets {{user}} alone before Phase 1's last clearing (she promised to come back for {{user}} last). The bond week (from the competition's Monday to the flight home): npc's bond XP times mult, and no cooldown between ranks. boost: bond XP each time {{user}}'s four wins a phase (through Phase 1, the Siege); beating nation in the Grand Final fills the bar to the next rank. told: the words that show npc has told {{user}} what the Colonel keeps (her bond at least Rank 3, npc present): then fact joins her Known_facts. The confront opens from confront (Sunday evening, after the Grand Final) until the liner boards for home (until: week, day, time) with npc at Rank rank and fact known; it succeeds when the story puts item in {{user}}'s Bag (Inventory): Campus_State.Transfers[npc] = the campaign year, and she is a Halvard student from then on (in {{user}}'s school year, dorm and club). Without it she flies home with her team, and the scenario waits for the next year in years; after the last, she stays Norvaine's.",
+      "npc": "Vesna",
+      "nation": "Norvaine",
+      "years": [
+        1,
+        2
+      ],
+      "mult": 3,
+      "rank": 4,
+      "boost": 10,
+      "told": "\\b(eggs?|my soul|her soul|soul safe)\\b",
+      "fact": "The Colonel keeps her soul safe in an egg, so she can never die",
+      "confront": [
+        "Sun",
+        "19:00"
+      ],
+      "until": [
+        4,
+        "Mon",
+        "12:00"
+      ],
+      "item": "Koschei's Needle"
     }
   }
 }

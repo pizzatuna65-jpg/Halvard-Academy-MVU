@@ -320,9 +320,9 @@ Columns: id — full name · group · dorm/race · role · club · openness · h
 - **Caine** — Caine Strix · Liaison · -/Beastkin (owl) · butler of the Noble Houses' Liaison · - · closed · yes · The perfect butler: efficient, silent, cold, anticipating every need, never a hair or a word out of place.
 - **Bobby** — Bobby Becket · Facilities · -/Human · mischievous, non-mage maintenance worker · - · open · no · Friendly, mischievous, inquisitive and openly fond of gossip and card tricks.
 
-**World Competition teams (1.97.2; abroad, no bond; Vesna becomes a full NPC with her scenario in 1.97.5)**
+**World Competition teams (1.97.2; abroad, no bond; except Vesna, a bonded Halvard roster student since 1.97.5, at Halvard once {{user}} frees her)**
 - **Hibiki** — Hibiki Kurenai · Yozakura's four · -/Human · Attack, captain and ace (Y2) · - · normal · no · Goofy, laid back, a visionary; reality breaking with a wooden katana, a weak body.
-- **Vesna** — Vesna Zvezdova · Norvaine's four · -/Human · any role (Y1) · - · open · yes · Innocent and sunny; a weapon on duty (creation from ambient mana; Koschei's Needle).
+- **Vesna** — Vesna Zvezdova · Norvaine's four; after the scenario Koschei's Needle a Halvard transfer in {{user}}'s school year, dorm and club · -/Human · any role (Y1) · - · open · yes · Innocent and sunny; a weapon on duty (creation from ambient mana; Koschei's Needle). At Halvard she never fights seriously and has no ties yet beyond the Headmaster, Tsubaki and Gavlan. Branch C; Rank 5 a matching bracelet (a keepsake, the owner's exception), Rank 10 trains anything.
 - **Kazimir** — Kazimir Zorin · Norvaine's coach · -/Human, no magic · Colonel, Project Bessmertnik · - · closed · yes · Cold, pragmatic, cruel out of indifference.
 - **Lucrezia** — Lucrezia Altamura · Caelmar's four · -/Human · Control, ace (Y1) · - · normal · no · Chaotic, sadistic, bored highborn; puppets and strings (Serafino).
 - **Kamran** — Kamran Zarrin · Arslan's four · -/Human · Defense, ace (Y2) · - · normal · yes · Exquisitely polite lender; the Midas touch.
@@ -382,8 +382,8 @@ The 2026-09 pass filled every gap for Halvard students, staff, Doves, Cathedral 
     2026-09-25).
   - `ANCHOR`: one object or ritual that holds their inner logic; not a reward, never given to {{user}}.
 - **Rival academy teams (Myrdath, Veyra, Ashvale) and the World teams:** kept minimal by design. They appear only in specific
-  events and have **no bond system**, so no Loves/Hates/Goals/Haunts are needed for them (Vesna, a full NPC from 1.97.5, is the
-  one exception).
+  events and have **no bond system**, so no Loves/Hates/Goals/Haunts are needed for them (Vesna, a bonded Halvard roster
+  NPC since 1.97.5 with every per-NPC data row, is the one exception).
 
 ## 8. Group lore files (attach only what the discussion needs)
 

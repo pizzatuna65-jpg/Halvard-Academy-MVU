@@ -3,20 +3,20 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.97.4** (2026-10-22): World Competition step 4: the competition system. The World panel picks the national
-four for synergy (relations, Kingdom teammates, {{user}}'s bonds, Lucius's swarm) and names {{user}}'s teammates; the opening banquet
-draws two groups; Phase 1 Last Team Standing, Phase 2 the Siege, the Grand Final, run by the engine (`stepWorld`) with {{user}}'s part
-reported as `World P1/P2/P3:` lines; the replica, 10,000 points on landing home, Academy and Student up a level; Halvard hears the
-news on the Announcement Pillars and watches the final in Arbiter Hall; Hanakaze's grounds open only on Eldrasil's days. 1.97.3
-Hanakaze; 1.97.2 the world and the teams; 1.97.1 Month 11. The memory audit is done except batch 8. Live checks: the campaign quest
-log `docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the card, Q0.1).
+**Snapshot:** card **v1.97.5** (2026-10-23): World Competition step 5, the last: Vesna and Koschei's Needle. Vesna is a bonded Halvard
+roster student (every per-NPC row) who is at Halvard only once `Campus_State.Transfers` names her; then in {{user}}'s school year,
+dorm and club, with no ties yet beyond the Headmaster, Tsubaki and Gavlan. The scenario (Year 1, else Year 2, {{user}} in the national
+four): Norvaine drawn with Eldrasil and winning what the engine plays, the landing near her, the bond week (x3, no cooldown, phase
+boosts, the Grand Final), the beats and the confront in `<now>` (`stepScene`), Koschei's Needle in the Bag makes her a transfer.
+Her Rank 10 trains anything. Fixed: `<now>` now prints the World Competition's lines (missing since 1.97.4). The memory audit is
+done except batch 8. Live checks: the campaign quest log `docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat, Y1 M1 W1
+Mon 10:13; first Act 0: update the card, Q0.1).
 
-**Next task:** 1.97.5 Vesna and Koschei's Needle from `planning/DRAFT_world_competition.md` (step table at its top; the draw and
-path hooks are `event_frame.json` `world.hook.same` / `hook.path`, filled for the scenario year; the teleport near Vesna is new), then
-delete the draft. Then 1.98 shallow features, 1.99.x bug hunt, 2.0 polish (`planning/FUTURE_PLANS.md` §0). Alongside it, the owner
-plays the quest log; their reports and chat exports bring the playtest fixes. MS3 stage 2 and the NPC dialogue audit's U1, U3–U5
-wait in `planning/FUTURE_PLANS.md` §2 for a campaign export. Batch 8 (chapters) is planned in `planning/DRAFT_bab_baru.md`: build it
-at about 20,000 messages, slow saves or a chat file near 100 MB.
+**Next task:** 1.98 shallow features (`planning/FUTURE_PLANS.md` §0: list the features whose mechanics are thin, the owner picks), then
+1.99.x bug hunt, 2.0 polish. The World Competition's Year 2 host (Caelmar: Area, map, liner) waits in FUTURE_PLANS §1 [YEAR 2].
+Alongside it, the owner plays the quest log; their reports and chat exports bring the playtest fixes. MS3 stage 2 and the NPC
+dialogue audit's U1, U3–U5 wait in `planning/FUTURE_PLANS.md` §2 for a campaign export. Batch 8 (chapters) is planned in
+`planning/DRAFT_bab_baru.md`: build it at about 20,000 messages, slow saves or a chat file near 100 MB.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 
@@ -31,7 +31,7 @@ entry", "update lore entry X", "add feature Y".
 A **SillyTavern character card** for a slice-of-life magic-academy roleplay: Halvard Academy, Kingdom of Eldrasil, with a mystery
 underneath. The player is a first-year student. The card combines:
 
-- **A merged, corrected lorebook**: world, 77 NPCs (6 arrive in campaign Year 2, 7 in Year 3, 6 belong to the World Competition abroad), 75 locations (plus the outside areas: the Grand Vast Forest, Avalon, Sunreach Bay, Hanakaze), calendar, rules.
+- **A merged, corrected lorebook**: world, 77 NPCs (6 arrive in campaign Year 2, 7 in Year 3, 6 belong to the World Competition abroad, one of them, Vesna, a possible transfer), 75 locations (plus the outside areas: the Grand Vast Forest, Avalon, Sunreach Bay, Hanakaze), calendar, rules.
 - **MVU (MagVarUpdate) state.** The AI ends every reply with an `<UpdateVariable>` JSONPatch block. A Zod schema validates the state,
   and a deterministic engine script enforces the rules: clock and calendar, weather, HP and injuries, mana, bonds, reputation,
   training, grades, hidden magic, payouts, journal, ambience and more.

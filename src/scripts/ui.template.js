@@ -122,7 +122,7 @@ function latestState() {
   const last = getLastMessageId();
   for (let i = last; i >= 0; i--) {
     const v = getVariables({ type: 'message', message_id: i });
-    if (v && v.stat_data && v.stat_data.World) return { id: i, data: v };
+    if (v && v.stat_data && v.stat_data.World) { trSyncUi(v.stat_data); return { id: i, data: v }; }   // 1.97.5
   }
   return null;
 }
@@ -1699,6 +1699,19 @@ const wxIcon = wx => { const n = wx && wx.now; if (!n) return ''; return n.rare 
 // ---------------------------------------------------------------- shared helpers for Batch 4 panels
 const imgURL = path => (DATA.assets && DATA.assets.base ? DATA.assets.base : '') + path;
 const npcOf = id => DATA.npcs && DATA.npcs[id];
+// 1.97.5: a transfer (Vesna) is at Halvard, in {{user}}'s dorm, once Campus_State.Transfers names her (shared.js trSync for the
+// whereabouts data; here her people-data: arrival, dorm and its colour)
+function trSyncUi(S) {
+  if (!DATA.presence) return;
+  trSync(DATA.presence, S);
+  const T = ((S.Campus_State || {}).Transfers) || {}, dm = String(((S.Player || {}).Profile || {}).Dorm || '');
+  for (const id of Object.keys(DATA.presence.tr || {})) {
+    const n = DATA.npcs[id]; if (!n) continue;
+    const on = Number(T[id]) > 0 && CT_DORMS.includes(dm);
+    n.a = Number(T[id]) > 0 ? 1 : 99; n.dm = on ? dm : ''; n.dc = on ? DORM_COLOR[dm] || n.dc : '#6b6b7b';
+  }
+}
+const moved = (id, S) => Number((((S && S.Campus_State) || {}).Transfers || {})[id]) > 0;   // 1.97.5: a transfer has come
 // D14: the name unlocks at Rank 1, or earlier once the story itself has named them ($ui.names, recorded by the engine)
 // ...or when a connection you have learned names them (the note itself says who they are)
 const _edgeNames = new WeakMap();
@@ -1730,8 +1743,9 @@ const arrived = (id, S) => { const n = npcOf(id); return !n || (n.a || 1) <= cur
 const atHalvard = (id, S) => arrived(id, S) && !graduated(S).has(id);
 const yearNow = (id, S) => { const n = npcOf(id); return n && n.y ? n.y + curYear(S) - (n.a || 1) : 0; };
 const revealed = (S, id) => secretsOf(S).filter(x => String(x).split('.')[0].toLowerCase() === id.toLowerCase()).map(x => String(x).split('.').slice(1).join('.').toLowerCase());
-function fieldUnlocked(id, f, S) {   // f = [label, text, rank, from campaign year (1.7.0, lines a later cohort added)]
+function fieldUnlocked(id, f, S) {   // f = [label, text, rank, from campaign year (1.7.0, lines a later cohort added), 1.97.5: -1 before / 1 after a transfer]
   if (f[3] && f[3] > curYear(S)) return false;
+  if (f[4] && (f[4] > 0) !== moved(id, S)) return false;
   if (f[2] >= 99) { const r = revealed(S, id); return r.includes(TOPIC(f[0])) || r.includes(f[0].toLowerCase()); }
   const b = ((S && S.Bonds) || {})[id];
   if (f[0] === 'Birthday') {

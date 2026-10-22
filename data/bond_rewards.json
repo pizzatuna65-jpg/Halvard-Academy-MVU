@@ -680,6 +680,18 @@
     "text": "Topaz has studied {{user}}'s strongest spell so long that she can copy it cleanly. Once per fight she casts it beside them, at a third of its strength, from her own hands, and keeps score of whose landed first."
    }
   },
+  "Vesna": {
+   "gift": {
+    "name": "Vesna's matching bracelet",
+    "text": "Two bracelets braided by Vesna from the same black ribbon as her hair ribbons, one for {{user}} and one she wears herself, beside the academy bracelet. No magic in them at all; she made them by hand, badly, three times over, because a friend in a story she read had one.",
+    "keepsake": true
+   },
+   "r10": {
+    "name": "Vesna (Rank 10)",
+    "text": "Vesna was trained to be good at everything a weapon might need, and she is better at all of it than any student should be. Now she turns it into a game for {{user}}: drills, mana work, study, any craft they choose. While she is in the scene, whatever {{user}} trains goes further.",
+    "train": "any"
+   }
+  },
   "Faye": {
    "gift": {
     "name": "Faye's spare hammock",

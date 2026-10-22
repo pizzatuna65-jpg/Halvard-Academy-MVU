@@ -198,6 +198,18 @@ function whereabouts(PD, V, id) {
   return { id, gone, st, sick, busy, rt };
 }
 const whereFree = w => !w.gone && !w.sick;   // at Halvard and on their feet
+// 1.97.5 (owner-approved planning/DRAFT_world_competition.md §4): a transfer (PD.tr, Vesna: [lorebook year, the nation she left]) is a
+// Halvard student only once Campus_State.Transfers names her (engine stepScene): then she is in PD.stu with {{user}}'s dorm (lorebook
+// Year 1: {{user}}'s school year), so whereabouts, the brackets and the breaks count her; before, she is not at Halvard (PD.arr).
+// Every runtime that reads PD calls it first (engine stepSetup, the panels' render); the same state gives the same PD.
+function trSync(PD, S) {
+  const T = (((S || {}).Campus_State) || {}).Transfers || {}, dorm = String((((S || {}).Player || {}).Profile || {}).Dorm || '');
+  PD.arr = PD.arr || {}; PD.stu = PD.stu || {};
+  for (const [id, [ly]] of Object.entries(PD.tr || {})) {
+    if (Number(T[id]) > 0) { PD.stu[id] = [ly, 1, CT_DORMS.includes(dorm) ? dorm : '']; delete PD.arr[id]; }
+    else { delete PD.stu[id]; PD.arr[id] = 99; }
+  }
+}
 // who is likely around the place of loc now (the <now> presence block): place, pres (what the period holds), regs (regulars likely
 // here), moved (regulars of an outdoor place moved indoors by the weather), club (clubs meeting here), st ([regular, status] pairs)
 function presenceAt(PD, V, loc) {

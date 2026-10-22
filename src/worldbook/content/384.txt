@@ -11,3 +11,6 @@ Yarina Kovalenko: second year, age 19, Elf. Tall and calm, silver-white hair, pa
 <%_ { const _Y = (Number(getvar('stat_data.World.Year')) || 1), _T = [["Radomir Sokolov", 3], ["Vesna Zvezdova", 1], ["Mirko Petrenko", 1], ["Yarina Kovalenko", 2]], _g = _T.filter(([n, y]) => y + _Y - 1 > 3).map(t => t[0]); if (_Y > 1) { _%>
 From campaign Year <%- _Y %>: the school years above are as of Year 1; everyone has moved up <%- _Y - 1 %> year<%- _Y > 2 ? 's' : '' %>.<%- _g.length ? ' Graduated and off the team: ' + _g.join(', ') + '. The nation fields new members in their places (none on record yet).' : '' %>
 <%_ } } _%>
+<%_ { const _tv = (Number((getvar('stat_data.Campus_State.Transfers') || {}).Vesna) || 0); if (_tv) { _%>
+Vesna Zvezdova deserted Norvaine at the World Competition of campaign Year <%- _tv %>; she studies at Halvard now, and Norvaine fields a new member in her place.
+<%_ } } _%>
