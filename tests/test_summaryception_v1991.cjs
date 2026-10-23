@@ -20,7 +20,7 @@ ok(count(tpl, '{{summary}}') === 1 && /<story_before_chat>[\s\S]*\{\{summary\}\}
 ok(/<VectFoxMemory> and <story_before_chat> are the past/.test(rd('src/worldbook/custom/content/503.txt')), '503 names both memory blocks as the past');
 
 console.log('the engine');
-const E = new Function(rd('src/scripts/engine.js') + '\nreturn { floorOf, scChecks, scText, SC_VERBATIM_MAX };')();
+const E = new Function(rd('src/scripts/engine.js') + '\nreturn { floorOf, scChecks, scText, SC_VERBATIM_MAX, vfActive };')();
 {
   const chat = [
     { mes: 'I go to the Archive.', is_user: true, is_system: true, extra: { sc_ghosted: true }, send_date: 'd1' },
@@ -39,4 +39,14 @@ const E = new Function(rd('src/scripts/engine.js') + '\nreturn { floorOf, scChec
   ok(!C({ settings: { enabled: false, verbatimTurns: 25 } }).verbatim && !C({ loaded: false, settings: { verbatimTurns: 25 } }).verbatim, 'Summaryception off or not installed: no warning');
   ok(!C({}).stale && C({ chatLength: 40 }).stale && C({ chatLength: 12 }).stale, 'deleted back into what it summarised: stale');
   ok(!C({ store: undefined, chatLength: 0 }).stale && !C({ store: { summarizedUpTo: -1 }, chatLength: 0 }).stale && !C({ loaded: false, chatLength: 1 }).stale, 'no record, or not installed: not stale');
+  // 1.99.7 (audit E4): both memories on in one chat
+  ok(C({ vectfox: true }).both && /both on in this chat/.test(E.scText.both()), 'VectFox and Summaryception both on: warned');
+  ok(!C({}).both && !C({ vectfox: true, settings: { enabled: false } }).both && !C({ vectfox: true, loaded: false }).both, 'only one of them on: no warning');
+}
+{
+  const V = E.vfActive, col = (m) => ({ collections: { 'qdrant:vf_eventbase_x': Object.assign({ enabled: true }, m) } });
+  ok(V(col({ lockedToChatIds: ['chat A'] }), 'chat A', '3') && V(col({ lockedToChatId: 'chat A' }), 'chat A', '3') && V(col({ lockedToCharacterIds: ['3'] }), 'chat B', '3'), 'VectFox: a collection locked to this chat or character is active');
+  ok(!V(col({ lockedToChatIds: ['chat A'] }), 'chat B', '3') && !V(col({ lockedToChatIds: [] }), 'chat A', null), 'VectFox: a collection locked elsewhere is not');
+  ok(!V(Object.assign(col({ lockedToChatIds: ['chat A'] }), { enabled: false }), 'chat A', '3') && !V(col({ enabled: false, lockedToChatIds: ['chat A'] }), 'chat A', '3'), 'VectFox: master switch OFF or the collection paused: not active');
+  ok(!V(undefined, 'chat A', '3') && !V({ enabled: true }, 'chat A', '3'), 'VectFox: no settings or no collections: not active');
 }

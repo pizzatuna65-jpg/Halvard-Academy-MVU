@@ -253,7 +253,7 @@ INDEX §4) · `lore N` generated lore entry uid · `T:` `tests/test_<name>.cjs` 
 
 - **Preset** (1.68.0): Realistic Frankenstein 2.2.1.3 (Realistic Gemini BOLT) as it ships plus a closed deviation list D1–D17 (1.99.3 D12–D17: the card's rule wins where both give one, the names exemption from the ban list, Embellish without its fixed opening) and E1 Player Input Authority, E2 Output language, E3 Ordinary Turns; NPC Thoughts block (D5, styled by `ui:thoughtsCss`). `presets/edit_preset.py`; docs/ECOSYSTEM.md. T:preset, T:npc_thoughts_v1373.
 - **VectFox**: the card's cleaning patterns and EventBase extraction prompt (`src/vectfox/`, copied to `dist/`); settings and how EventBase works in docs/ECOSYSTEM.md. T:vectfox_v1113.
-- **Summaryception** (1.99.1, option 2): the card's prompt, system prompt and injection template (`src/summaryception/`, copied to `dist/`, `<story_before_chat>` named in 503); `floorOf` reads its hidden player messages (`sc_ghosted`) on a replay; `scChecks` / `scText` warn on Verbatim Turns above 11 (`CHAT_CHANGED`) and on a record past the chat's end after a deletion (`MESSAGE_DELETED`). Settings and how it works: docs/ECOSYSTEM.md. T:summaryception_v1991.
+- **Summaryception** (1.99.1, option 2): the card's prompt, system prompt and injection template (`src/summaryception/`, copied to `dist/`, `<story_before_chat>` named in 503); `floorOf` reads its hidden player messages (`sc_ghosted`) on a replay; `scChecks` / `scText` warn on Verbatim Turns above 11 (`CHAT_CHANGED`) and on a record past the chat's end after a deletion (`MESSAGE_DELETED`); 1.99.7: `vfActive` warns once per chat when VectFox is on in the same chat (`CHAT_CHANGED`). Settings and how it works: docs/ECOSYSTEM.md. T:summaryception_v1991.
 
 ## 17. Developer tools
 

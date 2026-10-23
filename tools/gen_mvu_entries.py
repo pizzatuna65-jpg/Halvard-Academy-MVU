@@ -130,7 +130,7 @@ canon = sorted({(i['item'], i['price']) for i in shop if i['canon'] and i['price
 def shop_line(l):
     it = [i for i in shop if i['loc'] == l]; ps = [i['price'] for i in it if i['price'] is not None]
     return f"{locs[l]['name']}: {len(it)} items, {min(ps):,}-{max(ps):,} pts ({', '.join(x['item'] for x in it[:4])}...)"
-PG = {'rows': rows, 'names': {k: l for l in rows for k in {locs[l]['name'].lower(), re.sub(r'^the ', '', locs[l]['name'].lower())}},
+PG = {'rows': rows, 'names': {k: l for l in rows for k in dict.fromkeys((locs[l]['name'].lower(), re.sub(r'^the ', '', locs[l]['name'].lower())))},
       'dir': {l: shop_line(l) for l in rows},
       'canon': 'Canon prices (never change): ' + '; '.join(f"{n} {p:,}" for n, p in canon) + '.'}
 # 1.81.0 (planning/DRAFT_event_frame.md 4.1): event stalls by event id { shop, place, hours, rows }; 506 prints them while the engine
@@ -149,7 +149,7 @@ for i in shop_all:
     fx = effect_text(i)
     hrs = ', '.join(f"{d} {f0}–{t0}" for d, (f0, t0) in i['days'].items()) if i.get('days') else f"{i.get('day', '') + ' ' if i.get('day') else ''}{i.get('from', '00:00')}–{i.get('to', '24:00')}"   # 1.91.0: days
     PG['cw'].setdefault(i['loc'], []).append([i['item'], f"- {i['item']}: {i['price']:,} pts; {i['shop']}, {hrs}{'; ' + i['note'] if i['note'] else ''}{'; ' + fx if fx else ''}"])
-    for k in {locs[i['loc']]['name'].lower(), re.sub(r'^the ', '', locs[i['loc']]['name'].lower())}: PG['names'].setdefault(k, i['loc'])
+    for k in dict.fromkeys((locs[i['loc']]['name'].lower(), re.sub(r'^the ', '', locs[i['loc']]['name'].lower()))): PG['names'].setdefault(k, i['loc'])
 pg = open(P('src/worldbook/custom/506.template.ejs'), encoding='utf-8').read()
 assert pg.count('/*@@SHARED@@*/') == 1
 pg = pg.replace('/*@@SHARED@@*/', shared_js(presence=False))   # 1.43.0 (audit batch 2)

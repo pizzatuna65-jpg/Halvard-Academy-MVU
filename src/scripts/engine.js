@@ -1837,7 +1837,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.99.6";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.99.7";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 const verLt = (a, b) => { const p = v => String(v || '0').split('.').map(x => parseInt(x, 10) || 0), x = p(a), y = p(b); for (let i = 0; i < 3; i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) < (y[i] || 0); return false; };   // 1.63.0
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
@@ -8900,13 +8900,24 @@ function floorOf(chat, content) {
 // between the two (verbatim). Its record is kept by message index and trimmed only when a chat opens (repairIfBranched), so after
 // messages it summarised were deleted, later replies at those indexes would be hidden unsummarised until the chat is reopened (stale).
 const SC_VERBATIM_MAX = 11;
-function scChecks({ loaded, settings, store, chatLength }) {
-  const s = settings && typeof settings === 'object' ? settings : {}, n = Math.floor(num(s.verbatimTurns, 0));
+// 1.99.7 (audit E4): VectFox recalls into this chat when its master switch is not OFF (core/feature-gate.js isVectFoxEnabled: only an
+// explicit false) and a collection that is not paused is locked to this chat or this character (core/collection-metadata.js
+// shouldCollectionActivate gates 1 and 2; locks are lockedToChatIds / the older lockedToChatId and lockedToCharacterIds, VectFox 3623dc8).
+function vfActive(settings, chatId, charId) {
+  const v = settings && typeof settings === 'object' ? settings : null;
+  if (!v || v.enabled === false) return false;
+  const has = (list, id) => id != null && id !== '' && (Array.isArray(list) ? list : []).some(x => String(x) === String(id));
+  return Object.values(v.collections && typeof v.collections === 'object' ? v.collections : {}).some(m => m && m.enabled !== false
+    && (has(m.lockedToChatIds, chatId) || (m.lockedToChatId != null && String(m.lockedToChatId) === String(chatId)) || has(m.lockedToCharacterIds, charId)));
+}
+function scChecks({ loaded, settings, store, chatLength, vectfox }) {
+  const s = settings && typeof settings === 'object' ? settings : {}, n = Math.floor(num(s.verbatimTurns, 0)), on = !!loaded && s.enabled !== false;
   const up = store && Number.isInteger(store.summarizedUpTo) ? store.summarizedUpTo : -1;
-  return { verbatim: loaded && s.enabled !== false && n > SC_VERBATIM_MAX ? n : 0, stale: !!loaded && up >= 0 && up >= num(chatLength, 0) };
+  return { verbatim: on && n > SC_VERBATIM_MAX ? n : 0, stale: !!loaded && up >= 0 && up >= num(chatLength, 0), both: on && !!vectfox };
 }
 const scText = {
   verbatim: n => `Summaryception keeps ${n} replies word for word, but this card shows the narrator only the latest 24 messages. Set Verbatim Turns to 10 (at most 11), or the replies in between reach neither the chat nor the summary.`,
+  both: () => 'VectFox and Summaryception are both on in this chat. Use one: two memories of the same story double the cost and can disagree. Pause VectFox\'s collection for this chat, or turn Summaryception off (Switching mid-campaign in docs/ECOSYSTEM.md).',
   stale: () => 'You deleted messages Summaryception had already summarised. Open another chat and come back before you go on: Summaryception trims its record when a chat opens. Otherwise your next replies may be hidden without a summary.',
 };
 // The state before this floor normally comes from the floor just before it. MVU takes the newest earlier floor that still holds
@@ -8975,13 +8986,19 @@ if (typeof eventOn === 'function' && typeof waitGlobalInitialized === 'function'
       });
       eventOn(tavern_events.MESSAGE_RECEIVED, (id, from) => { if (from === 'extension') return; const tl = tlGet(); if (id > tl.top) { tl.top = id; tlPut(tl); } });
       // 1.99.1: Summaryception checks (scChecks): read its settings and its record in the chat metadata, change nothing
-      const scNow = () => { const C = SillyTavern || {}, P = C.SlashCommandParser;
-        return scChecks({ loaded: !!(P && P.commands && P.commands['sc-status']), settings: (C.extensionSettings || {}).summaryception,
-          store: (C.chatMetadata || {}).summaryception, chatLength: (C.chat || []).length }); };
-      const scWarned = new Set();
+      // 1.99.7 (E4): VectFox is loaded when its generate interceptor is on SillyTavern's window (index.js; a disabled extension never loads)
+      const scNow = () => { const C = SillyTavern || {}, P = C.SlashCommandParser, X = C.extensionSettings || {};
+        const chatId = C.getCurrentChatId ? C.getCurrentChatId() : '';
+        let vfLoaded = false; try { vfLoaded = typeof window.parent.vectfox_rearrangeChat === 'function'; } catch (e) { /* none */ }
+        return scChecks({ loaded: !!(P && P.commands && P.commands['sc-status']), settings: X.summaryception,
+          store: (C.chatMetadata || {}).summaryception, chatLength: (C.chat || []).length,
+          vectfox: vfLoaded && vfActive(X.vectfox, chatId, C.characterId) }); };
+      const scWarned = new Set();   // once per chat (and per Verbatim value) for as long as SillyTavern stays open
+      const scOnce = (key, text) => { if (scWarned.has(key)) return; scWarned.add(key); toastr.warning(text, 'Summaryception', { timeOut: 15000 }); };
       if (tavern_events.CHAT_CHANGED) eventOn(tavern_events.CHAT_CHANGED, () => {
-        try { const r = scNow(), key = (SillyTavern.getCurrentChatId ? SillyTavern.getCurrentChatId() : '') + '|' + r.verbatim;
-          if (r.verbatim && !scWarned.has(key)) { scWarned.add(key); toastr.warning(scText.verbatim(r.verbatim), 'Summaryception', { timeOut: 15000 }); } }
+        try { const r = scNow(), id = SillyTavern.getCurrentChatId ? SillyTavern.getCurrentChatId() : '';
+          if (r.verbatim) scOnce(id + '|' + r.verbatim, scText.verbatim(r.verbatim));
+          if (r.both) scOnce(id + '|both', scText.both()); }
         catch (e) { console.warn('[Eldrasil Summaryception]', e); }
       });
       if (tavern_events.MESSAGE_DELETED) eventOn(tavern_events.MESSAGE_DELETED, () => {

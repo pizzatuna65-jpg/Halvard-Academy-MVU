@@ -861,6 +861,8 @@ The first academy flight (the airship), then the Grand Vast Forest.
 - [ ] *Prompt*: the `<story_before_chat>` block sits among the older chat messages (depth 12); the narrator treats it as the past and
       never as the player's message, and the clock comes from `<current_state>` [1.99.1].
 - [ ] Verbatim Turns set to 25, then open the chat: the card's Summaryception warning appears; back to 10 [1.99.1].
+- [ ] Turn VectFox's master switch on with its collection still locked to this chat, then open the chat: the card warns once that
+      both memories are on; reopening the chat in the same session shows it no more; with VectFox off again, no warning [1.99.7].
 - [ ] Delete back past what it summarised (`/sc-status` shows the index): the card's warning appears; open another chat and come back:
       Summaryception's "Branch detected" toast trims its record [1.99.1].
 

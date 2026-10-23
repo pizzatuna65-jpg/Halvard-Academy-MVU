@@ -126,14 +126,14 @@ File names in brackets are VectFox's.
 5. **Storage** [`core/eventbase-store.js`]: each event is embedded as this text [`buildEmbedText`] and stored (Qdrant here) with its
    fields as metadata:
    ```
-   [promise_or_oath] Trixie raced Charles through the rain to the Fire Wing porch and won. Charles owes her glazed sugar braids …
+   [promise_or_oath] Trixie raced Charles through the rain to the Fire Dormitory steps and won. Charles owes her glazed sugar braids …
    SCENE_TIME: M1 W1 Mon 13:05
    CAUSE: Trixie challenged Charles to a race to the dorm, loser buys breakfast.
    RESULT: Charles owes Trixie pastries.
    CHARS: Charles, Trixie
-   LOCS: Main Courtyard, Fire Wing
+   LOCS: Main Courtyard, Fire Dormitory
    ITEMS: glazed sugar braids
-   KEYS: race, bet, rain, pastries, sugar braids, Mall bakery, breakfast, porch
+   KEYS: race, bet, rain, pastries, sugar braids, Mall bakery, breakfast, dorm steps
    THREADS: Charles owes Trixie glazed sugar braids, agreed M1 W1 Mon
    ```
    Factions are kept as metadata but left out of the embedded text. Other metadata: `importance`, `should_persist`, `concepts`,
@@ -333,7 +333,7 @@ Routine only (walking to the Canteen and ordering lunch):
 []
 
 One event:
-[{"event_type":"promise_or_oath","importance":4,"summary":"Trixie raced Charles through the rain to the Fire Wing porch and won. By the bet they made, Charles owes her glazed sugar braids from the Mall bakery tomorrow morning; she insists the deal is binding.","cause":"Trixie challenged Charles to a race to the dorm, loser buys breakfast.","result":"Charles owes Trixie pastries.","characters":["Charles","Trixie"],"locations":["Main Courtyard","Fire Wing"],"factions":["Fire Dormitory"],"DateTime":null,"scene_time":"Y1 M1 W1 Mon 13:05","items":["glazed sugar braids"],"concepts":["rivalry","play"],"keywords":["race","bet","rain","pastries","sugar braids","Mall bakery","breakfast","porch"],"open_threads":["Charles owes Trixie glazed sugar braids, agreed Y1 M1 W1 Mon"],"should_persist":true}]
+[{"event_type":"promise_or_oath","importance":4,"summary":"Trixie raced Charles through the rain to the Fire Dormitory steps and won. By the bet they made, Charles owes her glazed sugar braids from the Mall bakery tomorrow morning; she insists the deal is binding.","cause":"Trixie challenged Charles to a race to the dorm, loser buys breakfast.","result":"Charles owes Trixie pastries.","characters":["Charles","Trixie"],"locations":["Main Courtyard","Fire Dormitory"],"factions":["Fire Dormitory"],"DateTime":null,"scene_time":"Y1 M1 W1 Mon 13:05","items":["glazed sugar braids"],"concepts":["rivalry","play"],"keywords":["race","bet","rain","pastries","sugar braids","Mall bakery","breakfast","dorm steps"],"open_threads":["Charles owes Trixie glazed sugar braids, agreed Y1 M1 W1 Mon"],"should_persist":true}]
 
 =========================
 EXCERPT
@@ -430,11 +430,17 @@ Each record line starts with its in-world date and place (`[Y1 M1 W2 Tue 09:10, 
 keeps what the card's state does not: who did or said what and why, what was learned or revealed, promises and debts, conflicts,
 first meetings, open matters. About 65 tokens a line: ~1,300 tokens for the first 60 replies, ~6,700 once four layers are full
 (~2,400 replies), at most ~8,500 near 7,000 replies; VectFox costs ~2,500 a turn. A summary call reads ~6,000–10,000 tokens every 3 replies.
+About a quarter of that is the update blocks: each reply's `<UpdateVariable>` (~800 characters, ±27% of an average reply in the owner's
+chat) reaches the summariser raw, because Summaryception cleans nothing on the way in and the card cannot change its input without a
+fork. The card's prompt has the summariser read only the block's Time line and its Journal values; the rest is paid for and skipped.
+The block stays in the message: MVU reads it again when it replays a floor. A cheap, fast model for the summaries keeps this small.
 
 ### What the card does for it (1.99.1)
 - `floorOf` reads a player message Summaryception hid (`sc_ghosted`) as the player's words, because MVU's Replay floor and restore
   replay hidden floors too: a replay gets the same result as the first run.
-- Two warnings (`scChecks`, read-only): Verbatim Turns above 11 when a chat opens; and, after a deletion, a record that reaches past the
+- Three warnings (`scChecks`, read-only): Verbatim Turns above 11 when a chat opens; VectFox also on in this chat when it opens (1.99.7,
+  `vfActive`: VectFox's master switch is not OFF and a collection that is not paused is locked to this chat or this character, the
+  gates VectFox itself checks before it recalls; once per chat); and, after a deletion, a record that reaches past the
   chat's end ("open another chat and come back": otherwise the next replies at those indexes are hidden without being summarised).
 - 503 names `<story_before_chat>` with `<VectFoxMemory>` as the past; 504 already speaks of "summaries of past events".
 - Nothing VectFox uses changed; the scene marker stays (Summaryception reads it raw for who and where).
