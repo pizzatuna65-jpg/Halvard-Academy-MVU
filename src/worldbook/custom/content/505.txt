@@ -381,6 +381,9 @@ Fortune (important uncertain attempts only; one number per attempt, in order): <
 <%_ if (on('proficiency') && UI.practice && UI.practice.length) { const _p = UI.practice.filter(x => !x.locked); if (_p.length) { _%>
 Practice here: <%- _p.map(x => x.action + ' (' + x.stat + ')').join(', ') %>. Report in /Practice.
 <%_ } } _%>
+<%_ if (on('proficiency') && on('mystery') && (UI.inv || []).length) { _%>
+Investigate here (an open thread's clue was seen here: <%- UI.inv.join(', ') %>): when {{user}} spends half an hour or more looking into it, report {"Action": "Investigate", "Aim": "<thread>"} in /Practice.
+<%_ } _%>
 <%_ if (on('proficiency') && UI.craft && UI.craft.length) { const _r = UI.craft.filter(x => x.tier !== 'masterwork'), _m = UI.craft.filter(x => x.tier === 'masterwork'); const _k = x => x.group + ' ' + x.tier + ' ' + x.result + (x.mishap ? ' mishap' : ''); const _c = Object.values(_r.reduce((a, x) => { (a[_k(x)] ||= []).push(x.name); return a; }, {})); const _keys = [...new Set(_r.map(_k))]; _%>
 <%_ if (_r.length) { _%>
 Crafting now: <%- _c.map((names, i) => _keys[i] + ' [' + names.join(', ') + ']').join('; ') %>. Report the exact recipe in /Practice with Action "craft".

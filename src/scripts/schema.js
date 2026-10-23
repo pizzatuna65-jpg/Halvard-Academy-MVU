@@ -431,6 +431,7 @@ export const Schema = z.object({
     asks: z.record(z.string(), z.string()).prefault({}).catch({}),   // 1.73.0: what a present character may ask after (engine, stepAgenda)
     since: z.any().prefault([]).catch([]), maybe: z.any().prefault([]).catch([]),   // 1.6.0 (N4): Next plans met again / that may bring someone here (engine)
     now: z.any().prefault(null).catch(null),
+    inv: z.any().prefault([]).catch([]),                              // 1.98.2: open threads to investigate here (stepProficiency, <now>)
     dove: z.any().prefault(null).catch(null),                         // 1.98.1: Dove watch for <now>, the Hidden tab, the bracelet (stepHidden)                          // 1.48.0 (audit 3.11): <now>'s engine-made lines (stepNow; 1.47.0's $ui.here is in now.pres)
     xold: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.6.1 (N5): Extras records that left the full list; given back if they return (engine)
     xgone: z.record(z.string(), z.any()).prefault({}).catch({}),      // 1.61.0 (memory audit M8): short records of Extras past xold { Who, Looks, Voice } (engine)

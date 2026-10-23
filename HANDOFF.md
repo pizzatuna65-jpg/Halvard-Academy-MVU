@@ -3,14 +3,14 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.98.1** (2026-10-23): Dove watch (1.98 shallow-feature audit, batch 2). Dove attention covers every Dove
+**Snapshot:** card **v1.98.2** (2026-10-23): 1.98.2 rumours that reach people, Investigate at a clue's place, solved threads and finished research or club Projects that pay; before it 1.98.1 Dove watch. Dove attention covers every Dove
 secret (true magic, a forbidden technique or pact, Koschei's Needle in the Bag, `Hidden.Secrets` the narrator records); the stages
 act (a rumour, a posted Dove, the Dovecote interview, a room search, a knower who talks, the hearing); `/Dove_found` records what the
 Doves learned, and a seized Needle goes to the Dovecote (Vesna stays). The memory audit is done except batch 8. Live checks: the
 campaign quest log `docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the
 card, Q0.1).
 
-**Next task:** the rest of the owner's 1.98 pick: batch 4 (Gossip, Mystery Board, Projects) as 1.98.2 and batch 5 (Council
+**Next task:** the rest of the owner's 1.98 pick: batch 5 (Council
 petitions, Medical Centre treatment) as 1.98.3, from `planning/DRAFT_kedalaman_fitur.md`; then the draft is deleted and 1.98 is done.
 Then 1.99.x bug hunt, 2.0 polish. The World Competition's Year 2 host (Caelmar: Area, map, liner) waits in FUTURE_PLANS §1 [YEAR 2].
 Alongside it, the owner plays the quest log; their reports and chat exports bring the playtest fixes. MS3 stage 2 and the NPC

@@ -846,6 +846,15 @@ The first academy flight (the airship), then the Grand Vast Forest.
       noticed; the number only moves if the update reports it [1.98.1].
 - [ ] Settings → Features → Dove watch off: only the meter and its stage line remain [1.98.1].
 
+### SQ-M Rumours, investigations and projects [1.98.2]
+- [ ] A rumour about Charles reaches most of campus (about three days): a friend who was not there, met later, may ask about it or
+      tease him, once; a rumour about a friend reaches that friend's friends (their dossier's Knows: "Heard from campus talk") [1.98.2].
+- [ ] At a place where an open thread's clue was seen, `<now>` offers "Investigate here"; half an hour spent looking gives Knowledge
+      (Nature outdoors) +1, and some days a lead Clue the narrator fills from the lore [1.98.2].
+- [ ] A thread set solved: Knowledge +2, and a friend named on its clues who is there gets the moment in their dossier [1.98.2].
+- [ ] A research Project finished: its subject's proficiency +2; a club Project: the club's Field +2 and a line in Monday's
+      Academy Newspaper [1.98.2].
+
 ### SQ1 Swipes, edits and rewinds
 - [ ] Swipe a reply: the new prose and the bracelet's state replace the rejected one [1.9.1].
 - [ ] After a reply, edit the Student file or a Settings row: that reply stays last with its swipe arrow, and the bracelet stays on it.

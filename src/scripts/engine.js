@@ -1835,7 +1835,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.98.1";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.98.2";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 const verLt = (a, b) => { const p = v => String(v || '0').split('.').map(x => parseInt(x, 10) || 0), x = p(a), y = p(b); for (let i = 0; i < 3; i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) < (y[i] || 0); return false; };   // 1.63.0
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
@@ -5815,6 +5815,7 @@ function stepProficiency(c) {
   S.Practice = [];
   S.Craft_sales = [];
   S.$ui.practice = [];
+  S.$ui.inv = OFF.has('mystery') ? [] : openThreadsAt(S, placeKey(S.World.Location));   // 1.98.2 (T4): <now>'s Investigate here
   S.$ui.craft = [];
   S.$ui.craft_sale = null;
   S.$ui.mastery = null;
@@ -6003,6 +6004,18 @@ function stepProficiency(c) {
   const done = new Set();
   for (const r of reports) {
     const action = String(r.Action || '').trim().toLowerCase();
+    if (action === 'investigate') {   // 1.98.2 (T4)
+      const th = S.$ui.inv || [], want = String(r.Aim || '').trim().toLowerCase(), t = th.find(x => x.toLowerCase() === want) || (th.length === 1 ? th[0] : '');
+      if (!t) { log.push(`Investigate: ${th.length ? `name the thread in Aim (${th.join(', ')})` : "no open thread's clue was seen here"}; nothing counted.`); continue; }
+      if (elapsed < INVESTIGATE.min && !c.toolEdit) { log.push(`Investigate ${t}: it takes at least ${INVESTIGATE.min} minutes; nothing counted.`); continue; }
+      const IV = P.inv = _.isPlainObject(P.inv) ? P.inv : {}, I = IV[t] = _.isPlainObject(IV[t]) ? IV[t] : {};
+      if (I.d !== dayNo) { I.d = dayNo; gain(isOutdoor(S.World.Location) ? 'Nature' : 'Knowledge', INVESTIGATE.xp, `investigating ${t}`); }
+      const F = ((B || {}).$ui || {}).fortune;
+      if (F && Array.isArray(F.rolls) && num(F.rolls[0], 0) > num(F.part, 35) && dayNo - num(I.lead, -99) >= INVESTIGATE.lead_days) {
+        I.lead = dayNo; log.push(threadLead(S, t, placeOf(S.World.Location), 'Investigating here'));
+      }
+      continue;
+    }
     if (action === 'craft' && /^masterwork\b/i.test(String(r.Aim || '').trim())) { finishMasterwork(String(r.Subject || '').trim(), false); continue; }
     const recipe = action === 'craft' && (CRAFTS.recipes || []).find(x => x.name.toLowerCase() === String(r.Aim || '').trim().toLowerCase());
     const a = recipe ? craftReady(recipe, S, r).a || ((craftActs(recipe, here)[0] || [])[1]) : PRACTICE.find(x => x.action.toLowerCase() === action && locName(x) === here);
@@ -6136,6 +6149,18 @@ function stepProficiency(c) {
   }
 }
 
+// 1.98.2 (owner-approved planning/DRAFT_kedalaman_fitur.md batch 4, T4/T8): investigating where an open thread's Clue was seen.
+// Knowledge (Nature outdoors) +1, once a thread a day; on a clean first Fortune number (the one <now> gave) a lead the narrator fills
+// from the lore, once a thread in 14 days (Encyclopaedic's weekly lead stays the sure one). The engine never invents what a lead shows.
+const INVESTIGATE = { xp: 1, lead_days: 14, min: 30 };
+const openThreadsAt = (S, here) => [...new Set(Object.values(S.Clues || {}).filter(cl => cl && String(cl.Where || '').trim() && placeKey(cl.Where) === here
+  && cl.Thread !== 'Unsorted clues' && ((S.Mysteries || {})[cl.Thread] || {}).Status === 'open').map(cl => cl.Thread))];
+const openThreadIn = (S, text) => Object.keys(S.Mysteries || {}).find(t => t !== 'Unsorted clues' && (S.Mysteries[t] || {}).Status === 'open' && String(text || '').toLowerCase().includes(t.toLowerCase())) || '';
+function threadLead(S, thread, where, by) {
+  const key = `Lead: ${thread}`.replace(/[./~]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 60);
+  S.Clues[key] = { Thread: thread, Detail: `Something at ${where} bears on ${thread}; what it shows comes out next.`, Where: where, Links: [], Source: '' };
+  return `${by} turned up a real lead on ${thread} (Clue "${key}"). In the next reply show what it is, true to the lore, and rewrite that Clue's Detail with it.`;
+}
 // 1.44.0 (audit 3.12): Encyclopaedic's weekly real lead, filed by the engine. The narrator says what the record shows (true to the
 // lore) and rewrites the Detail; the engine never invents the content.
 function recordsLead(S, MS, where) {
@@ -6776,6 +6801,14 @@ function stepRecords(c) {
     if (!(c.Thread in S.Mysteries)) S.Mysteries[c.Thread] = { Status: 'open', Summary: '' };
   }
   for (const [k, my] of Object.entries(S.Mysteries || {})) {
+    if (my.Status === 'solved' && (!BMy[k] || BMy[k].Status !== 'solved') && hasB) {   // 1.98.2 (T4): Knowledge +2, a moment for the Links here
+      if (c.profGain) c.profGain('Knowledge', 2, `solved ${k}`);
+      const links = new Set(Object.values(S.Clues || {}).filter(cl => cl && cl.Thread === k).flatMap(cl => cl.Links || []));
+      for (const p of Object.keys(S.Scene.Present || {})) {
+        const id = NPC_ALIAS[p.toLowerCase()] || p, b = S.Bonds[id];
+        if (b && links.has(id)) b.$Recent = [...(b.$Recent || []), { w: stamp(S.World), n: `Pieced together ${k} with {{user}}.`, fx: '' }].slice(-num((BR.recent || {}).keep, 10));
+      }
+    }
     if (my.Status === 'solved' && (!BMy[k] || BMy[k].Status !== 'solved') && hasB) { jnl.push(`Solved: ${k}${my.Summary ? ` (${my.Summary})` : ''}.`); S.$ui.toasts.push(`Mystery solved: ${k}`); }
   }
   // 1.61.0 (memory audit M1): over the cap, clues of a solved or cold mystery leave first (oldest first), never an open one while
@@ -6935,7 +6968,21 @@ function stepClubLife(c) {
   const BP = (hasB && B.Projects) || {};
   for (const [k, pj] of Object.entries(S.Projects || {})) {
     pj.With = canonList(String(pj.With || '').split(/\s*,\s*/).filter(Boolean)).join(', ');
-    if (pj.Progress >= 100 && hasB && (!BP[k] || BP[k].Progress < 100)) { jnl.push(`Finished: ${k}.`); S.$ui.toasts.push(`Project complete: ${k}`); }
+    if (pj.Progress >= 100 && hasB && (!BP[k] || BP[k].Progress < 100)) {
+      jnl.push(`Finished: ${k}.`); S.$ui.toasts.push(`Project complete: ${k}`);
+      // 1.98.2 (planning/DRAFT_kedalaman_fitur.md batch 4, T8): research and club work count for something
+      const kind = String(pj.Kind || '').trim().toLowerCase(), text = `${k} ${pj.Goal || ''}`;
+      if (kind === 'research' && c.profGain) {
+        const sub = Object.keys(SUBJECT_STAT).find(s => new RegExp(`\\b${_.escapeRegExp(s)}\\b`, 'i').test(text));
+        c.profGain(sub ? SUBJECT_STAT[sub] : 'Knowledge', 2, `research finished: ${k}`);
+        const th = !c.OFF.has('mystery') && openThreadIn(S, text);
+        if (th) log.push(threadLead(S, th, pj.Where || placeOf(S.World.Location), `The research "${k}"`));
+      } else if (kind === 'club' && c.profGain) {
+        const club = S.Player.Profile.Club, fld = club && clubField(S, club);
+        if (fld) c.profGain(fld, 2, `club project finished: ${k}`);
+        if (club && !c.OFF.has('clubwork')) cwNews(S, `${club}: ${k} finished.`);
+      }
+    }
   }
   const Tr = S.Trip, Tr0 = (hasB && B.Trip) || {};
   Tr.Companions = canonList(Tr.Companions);
@@ -7237,7 +7284,7 @@ function stepClubWork(c) {
 }
 
 function stepGossip(c) {
-  const { S, log, OFF, dayNo, seed, TU } = c;
+  const { S, log, OFF, dayNo, seed, TU, absA } = c;
   if (OFF.has('gossip')) S.$ui.gossip = [];
   else {
     const R = _.isPlainObject(S.$eng.rum) ? S.$eng.rum : (S.$eng.rum = {}), live = S.Campus_State.Rumours || [];
@@ -7255,6 +7302,21 @@ function stepGossip(c) {
     }
     const reach = (m, a) => { const x = REACH(m, a); return m.paper != null && /campus|dorm/.test(x) ? 'all over campus (in the Newspaper)' : x; };
     S.$ui.gossip = keep.map(r => [r, reach(R[r], dayNo - R[r].born), dayNo - R[r].born]);
+    // 1.98.2 (owner-approved planning/DRAFT_kedalaman_fitur.md batch 4, T3): a rumour that has reached most of campus reaches people.
+    // About {{user}}: friends who were not there may ask (askAfter, ev 2); about someone with a bond: their friends' Knows ($eng.word)
+    const A = _.isPlainObject(S.$eng.agenda) ? S.$eng.agenda : null, me = String(S.Player.Profile.Name || '').trim().split(/\s+/)[0] || '';
+    const meRx = me.length >= 2 ? new RegExp(`(^|[^A-Za-z])${_.escapeRegExp(me)}(?![A-Za-z])`) : null;
+    for (const r of keep) {
+      const m = R[r];
+      if (m.spread || !/most of campus|all over campus/.test(reach(m, dayNo - m.born))) continue;
+      m.spread = 1;
+      if (meRx && meRx.test(r) && A && _.isPlainObject(A.ask) && !A.ask['r:' + r])
+        A.ask['r:' + r] = { t: r, due: absA, h: Object.keys(S.Bonds).filter(id => !NO_BOND.has(id) && !(S.Scene.Present || {})[id]), end: dayNo, a: {}, ev: 2 };
+      for (const [id, rx] of NAME_RX) if (S.Bonds[id] && mentionIn(r, id, rx)) {
+        const to = ((TRU.friends || {})[id] || []).filter(f => f !== id && S.Bonds[f]);
+        if (to.length) S.$eng.word = [...(Array.isArray(S.$eng.word) ? S.$eng.word : []), { from: 'campus talk', n: r, due: dayNo, to }].slice(-40);
+      }
+    }
   }
 }
 
@@ -8144,7 +8206,7 @@ function askAfter(c, A, cur, dayLabel) {
       if (!gone && absA < num(x.due, 0)) continue;
       x.end = dayNo; x.h = (x.h || []).filter(id => !PRS.includes(id));   // those there when it happened saw it
     }
-    if (dayNo - x.end > ASK_DAYS || (x.ev && !INJ[key.slice(2)])) { delete AK[key]; continue; }
+    if (dayNo - x.end > ASK_DAYS || (x.ev === 2 ? !(S.Campus_State.Rumours || []).includes(x.t) : x.ev && !INJ[key.slice(2)])) { delete AK[key]; continue; }
     if (!_.isPlainObject(x.a)) x.a = {};
     if (!OFF.has('npc_initiative')) x.h = x.h.filter(id => {
       const b = S.Bonds[id], here = PRS.includes(id);
@@ -8152,7 +8214,8 @@ function askAfter(c, A, cur, dayLabel) {
       if (x.a[id] == null) { if (!here || b.Rank < ASK_RANK || asks[id]) return true; x.a[id] = dayNo; }
       else if (!here || x.a[id] !== dayNo) return false;
       const on = dayLabel(Math.floor(num(x.due, 0) / DAY_MIN));
-      if (!asks[id]) asks[id] = x.ev ? `Has not seen {{user}} since the injury (${x.t}, ${on}): may notice it or ask, if that is like them.`
+      if (!asks[id]) asks[id] = x.ev === 2 ? `Has heard the rumour about {{user}} going round campus ("${x.t}"): may ask about it, tease, or say nothing, if that is like them.`
+        : x.ev ? `Has not seen {{user}} since the injury (${x.t}, ${on}): may notice it or ask, if that is like them.`
         : `Knew about {{user}}'s "${x.t}" (${on}) and has not heard how it went: may ask, if that is like them.`;
       return true;
     });
