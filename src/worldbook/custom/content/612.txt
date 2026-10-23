@@ -92,6 +92,7 @@ const cVoice = (id, full) => {
 _%>
 <%_ if (FULL.includes('Caine')) { _%>
 <%- cHead('Caine', true) %>
+Birthday<%- cHeld('Caine', 'Birthday') %>: M2 W3 Mon (academy calendar)
 Role: Butler of the Noble Houses' Liaison: runs its household, serves its guests, keeps its rooms and its calendar. Not academy staff. Owl Beastkin. Age <%- 25 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>, young for the post; the Liaison hired him for his manners and has never regretted it.
 Appearance: Tall and spare. Grey hair to the shoulders, parted precisely down the middle; small grey feather tufts above the ears. Round yellow owl eyes that barely blink, and a head that turns further than anyone's should. Walks without a sound. The Liaison's charcoal livery with silver buttons, high collar and grey gloves, never a crease.
 Magic (public): Mystic — Telekinesis. Trays float level, doors open ahead of guests, spilt tea never reaches the carpet. A servant's magic, exactly as useful as a house wants and no more.

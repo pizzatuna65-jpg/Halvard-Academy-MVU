@@ -92,6 +92,7 @@ const cVoice = (id, full) => {
 _%>
 <%_ if (FULL.includes('Magnus')) { _%>
 <%- cHead('Magnus', true) %>
+Birthday<%- cHeld('Magnus', 'Birthday') %>: M2 W2 Tue (academy calendar)
 Role: Teaches Support to all three years at the Combat Grounds; writes Halvard's scouting reports on the rival academies; advises the Board Game Club. Twelve years at Halvard. Age <%- 138 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %> (looks mid-thirties). Elf.
 Appearance: Lean, restless and sharp-featured, with ink-stained fingers and spectacles pushed up into untidy dark hair. A waistcoat with more pockets than seems possible, a notebook in every one. Never stands still; usually writing.
 Magic: Mystic — Link and Relay. He threads fine lines of mana between allies, up to six at once: linked, they hear each other's intentions in a fight and can pass mana along the line to whoever needs it.

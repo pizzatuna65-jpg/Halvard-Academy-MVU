@@ -92,6 +92,7 @@ const cVoice = (id, full) => {
 _%>
 <%_ if (FULL.includes('Kotaro')) { _%>
 <%- cHead('Kotaro', true) %>
+Birthday<%- cHeld('Kotaro', 'Birthday') %>: M8 W2 Thu (academy calendar)
 Role: Teaches second-year Potion Crafting, when he remembers; advises the Brewing Club. Five years at Halvard. Age <%- 44 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. Tanuki Beastkin, from Yozakura.
 Appearance: Lean, loose-limbed and cheerfully rumpled, with round tanuki ears, a thick ringed tail, and the dark eye-patches of his kind, which make him look permanently short of sleep, and he usually is. His face always looks a little drunk, whether he is or not: flushed cheeks, a reddened nose, glassy, drooping eyes and a lopsided grin. A stained brewer's apron over a Yozakura robe worn open, sandals in every weather, and a gourd flask on a cord at his hip.
 Magic: Mystic — Liquid Transmutation. He can turn one liquid into another of the same weight by touch: water to wine (his favourite), wine to water (never used), and, in an emergency, poison to water.

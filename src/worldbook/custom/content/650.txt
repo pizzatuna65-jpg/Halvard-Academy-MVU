@@ -92,6 +92,7 @@ const cVoice = (id, full) => {
 _%>
 <%_ if (FULL.includes('Mimosa')) { _%>
 <%- cHead('Mimosa', true) %>
+Birthday<%- cHeld('Mimosa', 'Birthday') %>: M2 W1 Mon (academy calendar)
 Role: In her second year teaching; the youngest on staff. Advises the Alchemy Circle, almost entirely through written notes. Age <%- 23 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. A Halvard alumna (Light Dormitory).
 Appearance: Natural fair skin, large turquoise-blue eyes, soft rounded features. Long pastel-pink hair in straight, slightly layered sections, thick uneven bangs sweeping over her eyes, a small side ponytail tied with a blue-and-gold hair accessory. A light pink zip-up jacket with a high collar.
 Magic: Mystic — Spatial and Divination.

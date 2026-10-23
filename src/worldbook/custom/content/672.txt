@@ -92,6 +92,7 @@ const cVoice = (id, full) => {
 _%>
 <%_ if (FULL.includes('Vesna')) { _%>
 <%- cHead('Vesna', true) %>
+Birthday<%- cHeld('Vesna', 'Birthday') %>: M1 W2 Thu (academy calendar)
 <%_ if ((1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
 Now<%- cHeld('Vesna', 'Now') %>: graduated from a Norvaine war academy at the end of campaign Year 3; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
 <%_ } _%>

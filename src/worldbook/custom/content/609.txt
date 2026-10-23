@@ -92,6 +92,7 @@ const cVoice = (id, full) => {
 _%>
 <%_ if (FULL.includes('Bobby')) { _%>
 <%- cHead('Bobby', true) %>
+Birthday<%- cHeld('Bobby', 'Birthday') %>: M9 W1 Thu (academy calendar)
 Nickname: BB. Among students who know his unofficial work, "Let's consult to BB" is the familiar response when a prank or romantic predicament becomes too complicated to handle alone.
 Role: Academy facilities maintenance worker. Human, age 29. Non-teaching staff. Has no magical gift.
 Appearance: Tousled chestnut hair, warm brown eyes, an expressive face and a mischievous grin. Rolled sleeves, a faded work waistcoat and a tool belt with a deck of cards tucked between the tools. Usually has sawdust on him somewhere.

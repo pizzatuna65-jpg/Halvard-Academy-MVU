@@ -19,5 +19,13 @@ ok(/^Gifts \[not told yet: Rank 1; they only react when given one\]: loves /m.te
 ok(/^Goals: /m.test(t) && /^Personality: /m.test(t), 'her Goals and Personality lines are untagged');
 S.Bonds.Trixie.Rank = 1; S = T(S, '09:10', []); t = sheet(S);
 ok(/^Loves: /m.test(t) && /^Gifts: loves /m.test(t) && /^Doves \[not told yet: Rank 2\]: /m.test(t), 'Rank 1: Loves and the gift line open, Doves still waits for Rank 2');
+// 1.99.10 (owner): the birthday was only in the dossier, so asked at Rank 1 the narrator had to invent a date
+{
+  let B = T(initState(), '09:00', meet('Trixie', { Rank: 0 }));
+  const bd = (require(path.join(ROOT, 'data/npcs.json')).Trixie.fields.find(f => f.label === 'Birthday') || {}).text;
+  ok(bd && sheet(B).includes(`Birthday [not told yet: Rank 1]: ${bd} (academy calendar)`), `Trixie's full sheet carries her birthday (${bd}), tagged at Rank 0`);
+  B.Bonds.Trixie.Rank = 1; B = T(B, '09:10', []);
+  ok(sheet(B).includes(`Birthday: ${bd} (academy calendar)`), 'Rank 1: the birthday is hers to tell, the same date the dossier shows');
+}
 const n = (t.match(/\[not told yet/g) || []).length;
 ok(n > 0 && n <= 6, `Rank 1: few tags left (${n})`);

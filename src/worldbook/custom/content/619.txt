@@ -92,6 +92,7 @@ const cVoice = (id, full) => {
 _%>
 <%_ if (FULL.includes('Dante')) { _%>
 <%- cHead('Dante', true) %>
+Birthday<%- cHeld('Dante', 'Birthday') %>: M11 W2 Tue (academy calendar)
 <%_ { const _c = getvar('stat_data.Campus_State.Council') || {}; const _g = getvar('stat_data.Campus_State.Graduated') || []; const _id = 'Dante'; const _role = _c.President === _id ? 'President' : _c.VicePresident === _id ? 'Vice President' : _c.PresidentElect === _id ? 'President-elect' : _c.VicePresidentElect === _id ? 'Vice President-elect' : _g.includes(_id) ? '' : 'member'; if (_role) { _%>
 Current Student Council role: <%- _role %>.
 <%_ } } _%>

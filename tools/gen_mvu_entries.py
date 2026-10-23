@@ -93,6 +93,10 @@ for nid, n in sorted(npcs.items()):
     m = GATE_RX.match(raw); assert m and m.group(1) == nid, f'NPC entry {n["uid_card"]} ({nid}) has no Cast Sheet gate (merge_lorebooks.py)'
     lore = re.sub(r'^\[[^\]\n]+\]\n', '', m.group(2).strip('\n'))
     CAST['npcs'][nid] = cast_npc(nid, n); CAST['npcs'][nid]['secret'] = '<narrator_only>' in lore
+    # 1.99.10 (owner): the birthday was only in the dossier and the engine, so asked at the rank that opens it the narrator had to invent
+    # a date; the full sheet carries it (tagged by tag_held while the bond holds it back)
+    bd = next((f['text'] for f in n.get('fields', []) if f['label'] == 'Birthday' and f.get('rank', 99) < 99), '')
+    if bd: lore = f'Birthday: {bd} (academy calendar)\n' + lore
     sheets[nid] = (f"<%_ if (FULL.includes('{nid}')) {{ _%>\n<%- cHead('{nid}', true) %>\n{tag_held(nid, lore)}\n<%_ const _t{nid} = [cVoice('{nid}', true), cTail('{nid}'), cMem('{nid}', true)].filter(Boolean).join('\\n'); if (_t{nid}) {{ _%>\n<%- _t{nid} %>\n<%_ }} _%>\n"
                    f"<%_ }} else if (BRIEF.includes('{nid}')) {{ _%>\n<%- [cHead('{nid}', false), cVoice('{nid}', false), cMem('{nid}', false)].filter(Boolean).join('\\n') %>\n<%_ }} _%>")
 assert len(sheets) <= 89, 'the Cast Sheet orders 301-389 are full: move the tail (599) and the head'

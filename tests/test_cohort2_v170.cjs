@@ -106,4 +106,5 @@ const sizes = NEW.map(id => [id, Math.round(R(509, T(Y2, [here([id])])).length /
 console.log('  Cast Sheet tokens with one cohort 2 NPC present:', sizes.map(([a, b]) => a + ' ' + b).join(', '));
 // The approved lore is long: Hadrian's sheet (~3.45k) is over the ~3.2k the waves kept to; flagged to the owner, not cut.
 // 1.56.0 (U2): the sheet now holds the person's "Now with {{user}}" block (it left <now>), about 150 tokens
-ok(sizes.every(([, n]) => n < 3800), 'each full sheet stays under ~3.8k tokens with its Now block (Hadrian the largest)');
+// 1.99.10: the Birthday line (about 12 tokens) took Hadrian to ~3.8k
+ok(sizes.every(([, n]) => n < 3850), 'each full sheet stays under ~3.85k tokens with its Now block and Birthday (Hadrian the largest)');

@@ -92,6 +92,7 @@ const cVoice = (id, full) => {
 _%>
 <%_ if (FULL.includes('Valentin')) { _%>
 <%- cHead('Valentin', true) %>
+Birthday<%- cHeld('Valentin', 'Birthday') %>: M9 W3 Sat (academy calendar)
 Role: Teaches third-year Potion Crafting; advises the Academy Newspaper. Four years at Halvard; the youngest Master Alchemist in the kingdom's records, and he will tell you so. Age <%- 33 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. Human.
 Appearance: Tall, broad-shouldered and very handsome, and fully aware of it. Golden blond hair swept back without a strand out of place, clear blue eyes, a warm, practised smile. Tailored dark coats, spotless white cuffs even at the cauldron, a gold signet ring he designed himself.
 Magic: Mystic — Distillation. By touch he draws the pure essence out of any ingredient, leaving the rest as dust; his potions are twice as strong as anyone else's, and he never lets anyone forget it.

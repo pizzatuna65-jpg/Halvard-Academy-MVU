@@ -92,6 +92,7 @@ const cVoice = (id, full) => {
 _%>
 <%_ if (FULL.includes('Hester')) { _%>
 <%- cHead('Hester', true) %>
+Birthday<%- cHeld('Hester', 'Birthday') %>: M7 W3 Fri (academy calendar)
 Role: Head Nurse of the Medical Centre since the breach; teaches Healing to all three years in the Healing Ward; advises the Medical Centre Volunteers. Age <%- 30 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. Human.
 Appearance: Tall, thin and pale, with black hair, one streak gone white, pinned in a severe bun under a starched white cap. The only nurse in black: a high-collared black dress under a white apron ("white shows blood; black shows nothing"). Dark lips, long cool fingers, a chatelaine of keys and silver scissors at her waist that you hear before you see her. Carries a brass lantern on night rounds.
 Magic: Spiritual — Healing and Pulse Reading. Two fingers on a wrist tell her every break, bleed and fever in a body, and whether the story you told her about how you got it is true.

@@ -25,6 +25,8 @@ ok(sheets.every(e => e.content.length < 40000) && X(509).content.length < 10000,
 // own renders (its engine and card, in a worktree) with the approved replacements applied are exactly 1.99.5's.
 // 1.99.9 renewed it for the tags on fields a bond still holds back (owner playtest): 127 scenarios differed, and 1.99.8's renders (a
 // worktree) equal 1.99.9's with the 741 " [not told yet: Rank N]" tags removed.
+// 1.99.10 renewed it for the Birthday line of the full sheets: 219 scenarios differed, and 1.99.9's renders equal 1.99.10's with the
+// 545 Birthday lines removed.
 const { scenario, N } = require('./fixtures/cast_scenarios.cjs');
 const REC = JSON.parse(read('tests/fixtures/cast_1560.json'));
 const bad = [];

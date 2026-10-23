@@ -134,6 +134,8 @@ show the newcomers their dorm rooms.
       person (Kanae, Irene) keeps even their club back until Rank 1 [1.89].
 - [ ] At Rank 0 ask Trixie and Caralynn what they love (the Mall, sweets, a favourite thing): they dodge in their own way and name
       nothing they love; Trixie may still eat a sweet in the scene. Her goal (to make everyone smile) she tells freely [1.99.9].
+- [ ] Ask someone their birthday: before the rank that opens it they dodge; after it they name the date the dossier shows, not an
+      invented one (Trixie: M8 W2 Tue at Rank 1) [1.99.10].
 - [ ] Someone not yet named shows their role, not their name; a passer-by has "Keep in record"; with four or more present, three
       cards and an "also here" row; a thought about someone absent is an "elsewhere" line [1.70].
 - [ ] The bracelet has a folded "This reply (n changes)": open it after a reply with Kanae or Zara; it lists their bond XP (and any

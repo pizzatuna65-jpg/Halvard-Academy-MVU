@@ -92,6 +92,7 @@ const cVoice = (id, full) => {
 _%>
 <%_ if (FULL.includes('Anya')) { _%>
 <%- cHead('Anya', true) %>
+Birthday<%- cHeld('Anya', 'Birthday') %>: M10 W1 Tue (academy calendar)
 Role: Teaches second-year Etiquette; advises the Tea Club. Six years at Halvard. Age <%- 34 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. Human; the younger daughter of House Zeth.
 Appearance: Short, a head below most of her students, slender and very still. White hair worn low and perfectly pinned, violet eyes that hold a gaze a moment longer than is comfortable, and a small, serene smile that never leaves her face. Dresses in impeccable deep violet and grey, the colours of half-mourning, with a single black ribbon at the wrist. Moves without hurry and never fidgets.
 Magic: Occult — Soulsight and Stilling. She sees how firmly a soul sits in its body: who is well, who is fading, who is closer to the edge than they know. Stilling holds a dying body at the edge, neither going nor coming back, for up to ten minutes, long enough for a healer to arrive.

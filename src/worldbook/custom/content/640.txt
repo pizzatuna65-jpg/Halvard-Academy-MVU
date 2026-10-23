@@ -92,6 +92,7 @@ const cVoice = (id, full) => {
 _%>
 <%_ if (FULL.includes('Krieg')) { _%>
 <%- cHead('Krieg', true) %>
+Birthday<%- cHeld('Krieg', 'Birthday') %>: M4 W2 Thu (academy calendar)
 Role: Answers to the crown; outranked on campus by no one, and the Headmaster has no authority over him. Age <%- 43 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
 Appearance: Tall, muscular, battle-scarred. Short silver hair, short beard and moustache, sapphire-blue eyes. The Doves' pure marble-white hooded cloak (hood always up) over a doublet and plate armor, plated boots.
 Equipment: Longsword, plate armor.

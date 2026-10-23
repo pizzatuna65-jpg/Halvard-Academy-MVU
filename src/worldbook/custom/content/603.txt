@@ -92,6 +92,7 @@ const cVoice = (id, full) => {
 _%>
 <%_ if (FULL.includes('Anselm')) { _%>
 <%- cHead('Anselm', true) %>
+Birthday<%- cHeld('Anselm', 'Birthday') %>: M6 W2 Sun (academy calendar)
 Role: Teaches Defense to all three years at the Sparring Pavilion; came to Halvard after the breach; advises the Warding Study Group. Age <%- 47 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. Sheep Beastkin.
 Appearance: Broad and heavy. Thick, soft grey wool for hair, curling close over his head, and a pair of heavy ram's horns curling back past his drooping sheep's ears. Heavy-lidded, patient eyes behind round spectacles, and a long grey coat. He never seems to move quickly, and is always already where the blow lands. A plain iron mace hangs at his belt; in his hand, always, a slim black teacher's pointer.
 Magic: Mystic — Reflection. He meets a spell with the tip of his pointer, at exactly the right angle, and it goes back the way it came.

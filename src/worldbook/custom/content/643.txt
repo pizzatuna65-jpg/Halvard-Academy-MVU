@@ -92,6 +92,7 @@ const cVoice = (id, full) => {
 _%>
 <%_ if (FULL.includes('Lenna')) { _%>
 <%- cHead('Lenna', true) %>
+Birthday<%- cHeld('Lenna', 'Birthday') %>: M6 W1 Sun (academy calendar)
 <%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Lenna')) { _%>
 Now<%- cHeld('Lenna', 'Now') %>: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
 <%_ } _%>

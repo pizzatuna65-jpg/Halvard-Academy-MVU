@@ -92,6 +92,7 @@ const cVoice = (id, full) => {
 _%>
 <%_ if (FULL.includes('Baelin')) { _%>
 <%- cHead('Baelin', true) %>
+Birthday<%- cHeld('Baelin', 'Birthday') %>: M4 W4 Sun (academy calendar)
 Role: In post for forty years; also teaches second-year History himself, the one class he has never given up. Around 210 (middle-aged by elven reckoning).
 Appearance: Tall and thin, ash-blond hair tied low, pale green eyes, a face lined with fatigue. Dark grey robes fastened with a silver clasp bearing Halvard's crest. Almost always holding a cup of tea he forgot to drink until it went cold.
 Magic: Occult — Spirit Pact. His pact is with Aura, a Greater Spirit of wind: a tall woman who floats rather than stands, white hair drifting in air nobody else feels. Baelin does not fight. Aura would, if he ever asked. In forty years he never has.

@@ -92,6 +92,7 @@ const cVoice = (id, full) => {
 _%>
 <%_ if (FULL.includes('Yvette')) { _%>
 <%- cHead('Yvette', true) %>
+Birthday<%- cHeld('Yvette', 'Birthday') %>: M3 W4 Tue (academy calendar)
 Role: Teaching first-year Magic Theory for over a decade; Head of the Fire Dormitory, where she lives; advises the Smithing Club, where students craft and study enchanted items. Age <%- 37 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
 Appearance: Tall, athletic, long straight black hair (in a bun at work), light brown eyes, natural fair skin, a little softness at the stomach from stress. Black vest, long-sleeved shirt, trousers; shorts and t-shirts off duty.
 Magic: Elemental — Lightning, from range. Studies enchanted items obsessively and carries a floating orb focus that holds protective charms.

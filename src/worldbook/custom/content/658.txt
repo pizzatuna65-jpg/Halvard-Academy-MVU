@@ -92,6 +92,7 @@ const cVoice = (id, full) => {
 _%>
 <%_ if (FULL.includes('Rigel')) { _%>
 <%- cHead('Rigel', true) %>
+Birthday<%- cHeld('Rigel', 'Birthday') %>: M2 W4 Wed (academy calendar)
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
 [Rigel Ardenne]
 <%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Rigel')) { _%>

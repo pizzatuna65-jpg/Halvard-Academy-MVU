@@ -92,6 +92,7 @@ const cVoice = (id, full) => {
 _%>
 <%_ if (FULL.includes('Cedric')) { _%>
 <%- cHead('Cedric', true) %>
+Birthday<%- cHeld('Cedric', 'Birthday') %>: M12 W4 Sun (academy calendar)
 Role: Teaches third-year History; advises the Gardening Club. Fourteen years at Halvard. Age <%- 58 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. Human.
 Appearance: Tall, stooped and tidy, with thinning grey hair, a long patient face and tired, kind eyes. A worn brown coat, always brushed; a pocket watch he checks often and always sets right. On his desk, a cut white rose, as fresh as the day he arrived.
 Magic: Mystic — Preservation and Decay, on objects only. He can rust iron or rot timber to dust in a breath, or keep a thing exactly as it is for as long as he cares to: a flower, a loaf, a page.

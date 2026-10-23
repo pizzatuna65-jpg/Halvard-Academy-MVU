@@ -92,6 +92,7 @@ const cVoice = (id, full) => {
 _%>
 <%_ if (FULL.includes('Kuroo')) { _%>
 <%- cHead('Kuroo', true) %>
+Birthday<%- cHeld('Kuroo', 'Birthday') %>: M1 W4 Tue (academy calendar)
 Role: Teaching first-year Etiquette for five years; advises the Card Club. Head of the Viridian Dormitory, his old dorm, and lives there. Age <%- 35 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. A Halvard alumnus (Viridian Dormitory), same year as Rei.
 Appearance: Tall and lean, narrow hazel eyes with a cat-like cast that make him look sly and intimidating, black hair spiking upward in a permanent bed-head. Black suit and white shirt.
 Magic: Spiritual.

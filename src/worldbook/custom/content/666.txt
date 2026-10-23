@@ -92,6 +92,7 @@ const cVoice = (id, full) => {
 _%>
 <%_ if (FULL.includes('Tristan')) { _%>
 <%- cHead('Tristan', true) %>
+Birthday<%- cHeld('Tristan', 'Birthday') %>: M10 W1 Fri (academy calendar)
 Role: Clergy, not academy staff, answerable to his own authority rather than the school. Mid-thirties.
 Appearance: Short golden-blond hair falling messily around his face, sharp golden-yellow eyes, light stubble and a goatee. Clergy vestments worn slightly loose and always a little rumpled, as though he dressed while thinking about something else.
 Magic: Occult — Oath and Curse Breaking. He binds the Cathedral's sacred contracts (marriage vows, vows of service, oaths of debt) and he is who people come to when something unpleasant has attached itself to them. That a house of Asmoday is administered by an Occultist is a fact he finds mildly funny and has never bothered to justify to anyone.
