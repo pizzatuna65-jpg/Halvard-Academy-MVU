@@ -232,7 +232,7 @@ Satu batch satu rilis. Urutan disarankan; kolom "Bergantung pada" wajib dipenuhi
 | 5 | T5 (lore ringkas untuk tokoh yang hanya disebut) | 4 | Token sebelum dan sesudah pada replay chat owner | selesai (1.99.6, 687b4e1; replay chat Charles 27.815 → 17.845 token) |
 | 6 | E2, E4 (verifikasi kunci VectFox di sumbernya dulu), catatan E1 | - | Contoh VectFox kanon; peringatan dua ekstensi memori muncul sekali per chat | selesai (1.99.7, 83145e7) |
 | 7 | T1, eksperimen cache | data cached tokens dari owner | Angka cached tokens di OpenRouter sebelum dan sesudah | tahap 1 selesai (1.99.8, 9957046: lore kata kunci di belakang entri tetap, `tests/cache_replay.cjs` 0% → 80–89%); tahap 2 (lore ke kedalaman chat, rangkuman tanpa angka, pangkas per blok) menunggu angka OpenRouter sesudah 1.99.8 dan uji A/B |
-| 8 | K1, K2, K3 (dikerjakan saat fungsinya disentuh, atau sebagai satu rilis rapi) | 1 | `ENGINE_DIFF` tanpa beda | belum |
+| 8 | K1, K2, K3 (dikerjakan saat fungsinya disentuh, atau sebagai satu rilis rapi) | 1 | `ENGINE_DIFF` tanpa beda | selesai (2.0.0, bersama temuan §11: `stepBonds` dan Council dipecah, data kanon ke `data/`, helper tunggal; `ENGINE_DIFF` 171 suite + QA statis tanpa beda; sisa K1 di FUTURE_PLANS §3) |
 
 O1 (impor 1.99.1 ke SillyTavern) adalah langkah owner sebelum uji live, bukan batch.
 
@@ -276,3 +276,30 @@ Disimpan di `audit/` (tidak di-commit), siap dipakai ulang untuk pengukuran sebe
 - `audit/audit_2026-10-23_slop_scan.py`: pemindai kosakata, frasa, kontras, fragmen staccato dan em dash atas card, lore, EJS dan prompt
   ekstensi (`python audit/audit_2026-10-23_slop_scan.py > hasil.txt`). Hitungan menggabungkan lore dan Cast Sheet; angka lore saja ada
   di S3.
+
+## 11. Audit singkat sebelum batch 8 (2026-10-24, card 1.99.13)
+
+Owner menambah fitur dan perbaikan di luar batch (1.99.9 sampai 1.99.13: tag "not told yet", tanggal lahir di Cast Sheet, Who is here,
+Look for, pikiran NPC hanya untuk yang hadir, tab Action). Audit singkat ini membaca diff sumber kelima rilis itu (engine, `shared.js`,
+505, `509_sheet`, UI, `gen_mvu_entries.py`, `merge_lorebooks.py`, deviasi D5 preset) dan menjalankan pemeriksaan biasa.
+
+| Pemeriksaan | Hasil |
+|---|---|
+| `npm test` (seluruh suite + QA statis) | Semua lulus (±5 menit) |
+| `npm run lint`, `npm run lint:eslint` | Lulus (6 berkas JS, 477 entri EJS) |
+| `npm run stress` (fuzz, fuzz Builder, simulasi setahun) | Ketiganya lulus |
+| `python tools/build_all.py` di atas commit 1.99.13 | Hasil teks identik dengan yang di-commit (build bisa diulang) |
+| Gulungan `presenceAt` vs `lookFor` (cuaca, rutinitas, sibuk, seed, string keramaian) | Konsisten: keduanya membaca data, seed dan `$ui.crowd` yang sama |
+
+Temuan (semua diperbaiki di 2.0.0 bersama batch 8):
+
+| ID | Bobot | Lokasi | Temuan | Perbaikan |
+|---|---|---|---|---|
+| A1 | Sedang | `505.template.ejs`, daftar `OPT` | Saat 1.99.11 menambah "Here now", komentar `// 1.99.11` ditaruh di depan elemen `W._Happening && … && 'Around campus today'` pada baris yang sama, jadi elemen itu ikut jadi komentar. Baris "Around campus today" tetap dicetak, tetapi tidak lagi dihitung dalam anggaran "paling banyak satu utas opsional per balasan" (R3, 1.99.4). Lint tidak menangkapnya karena JS-nya tetap sah. | Kembalikan elemen itu ke barisnya sendiri; test render 505 dengan `_Happening` terisi. |
+| A2 | Sedang | engine `nowOf` (`HELD`), `509_sheet` `cHeld` | Tag "not told yet" 1.99.9 hanya dipasang bila band Trust punya `share` (bukan `null`). Pada Trust Betrayed (`share: null`) baris Bond berkata "shares nothing new with {{user}}", tetapi sheet mencetak Loves, Hates, Goals, Birthday dan seterusnya tanpa tag, jadi kebocoran yang diperbaiki 1.99.9 masih terjadi di band itu (keputusan info layers, DECISIONS §2). | Pada Betrayed, field yang belum terbuka diberi tag `[not told yet: Trust Betrayed]`, juga baris Gifts. |
+| A3 | Rendah | `10_people.js` (dossier, `lookPick`) | Sejak 1.99.13 "Look for someone" di Activities disembunyikan bila Who is here mati, setelah curfew dan di area luar, karena engine tidak menggulung pencarian di sana. Tombol "Look for <name>" di dossier tidak memeriksa ketiganya, jadi pemain bisa mengirim permintaan yang tidak pernah digulung. | Satu gerbang bersama (`lookOpen`) untuk Activities dan dossier. |
+| A4 | Rendah | engine `ruleCards` | Satu tempat lagi yang membaca kata-kata balasan dengan regex sendiri, bukan `proseOf`: blok `<npc_thoughts>` ikut dibaca, sehingga kata di pikiran NPC bisa membuka kartu aturan. Melanggar keputusan "The story is the prose" (DECISIONS §6, batch 1). | Pakai `proseOf`. |
+
+Tidak ada temuan lain yang merusak fungsi. Catatan kecil yang dibiarkan: pikiran untuk tokoh hadir yang ditulis dengan nama yang tidak
+dikenali `sceneIdOf` (misalnya hanya gelar) kini tidak tampil di kartu adegan balasan terbaru (dulu masuk baris "elsewhere"); kasusnya
+jarang karena nama depan Extras dan roster sudah dicocokkan, dan blok 🧠 di balasan yang lebih lama tetap menampilkannya.

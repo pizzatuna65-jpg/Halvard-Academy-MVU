@@ -117,6 +117,8 @@
  "_theft": "1.46.0 (audit 3.1): the city's thieves, one mechanic for every outside area (engine areaTheft): where they work, the chance an hour (%), seen through (%), the share of the coin carried (min-max %, at most cap), once: one a reply; ev, who, toast, why: the event, the journal's thief, the toast, the Transactions line.",
  "theft": {"where": ["lantern_market", "crown_square", "skyport", "old_town", "skywheel_fair"], "rate": 8, "seen": 50, "min": 10, "max": 25, "cap": 300, "once": false,
   "ev": "pick", "who": "a pickpocket", "toast": "Pickpocketed", "why": "pickpocketed in Avalon"},
+ "_raid": "2.0.0 (bug-hunt audit K3, from the engine): a City Watch raid where where.raid says, one mechanic with Hanakaze (engine areaRaid): rates.raid percent an hour, escaped at rates.raid_escape percent; caught: why (the detention_tower deed's reason), journal, toast.",
+ "raid": {"why": "caught in the Rookery during a City Watch raid in Avalon", "journal": "Avalon: {{user}} was caught in the Rookery in a City Watch raid; the staff were sent for.", "toast": "Caught in a raid"},
  "where": {
   "procession": ["crown_square", "gilded_arcade"],
   "rival_crowning": ["crown_square", "skyport", "gilded_arcade", "lantern_market", "spellwright_row", "old_town", "skywheel_fair", "great_spire", "garden_of_avalon", "grand_theatre", "royal_arena", "grand_cathedral", "royal_bank"],

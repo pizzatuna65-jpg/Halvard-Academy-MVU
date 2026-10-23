@@ -21,7 +21,9 @@ const cTies = c => (c.ties || []).filter(t => (String(t[2]).startsWith('tr:') ? 
 // 1.99.9 (owner playtest): a lore field the bond has not opened yet carries its tag on its own line (the engine's $ui.now.held); the
 // Bond line's list alone did not stop the narrator from telling what the sheet printed below it
 const cHeldOf = id => ((CUI.now || {}).held || {})[id] || {};
-const cHeld = (id, label) => { const h = cHeldOf(id)[label]; return h ? ' [not told yet: Rank ' + h + ']' : ''; };
+// 2.0.0 (audit A2): a number is the rank that opens it; a text is the Trust band that holds everything back ("Trust Betrayed")
+const cHeldTo = h => (typeof h === 'number' ? 'Rank ' + h : String(h));
+const cHeld = (id, label) => { const h = cHeldOf(id)[label]; return h ? ' [not told yet: ' + cHeldTo(h) + ']' : ''; };
 const cHead = (id, full) => {
   const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
   out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
@@ -39,7 +41,7 @@ const cHead = (id, full) => {
   if (b && (b.Imprints || []).length) out.push('Changed by experience: their Imprints (below) are true now; where one differs from their Personality, the Imprint wins.');
   // 1.99.9 (owner playtest): with Loves or Hates held back, the gift line said "loves Sweets" and Trixie named it when asked
   const gh = cHeldOf(id), gr = gh.Loves || gh.Hates;
-  if ((CD.gifts || {})[id]) out.push(gr ? CD.gifts[id].replace(/^Gifts: /, 'Gifts [not told yet: Rank ' + gr + '; they only react when given one]: ') : CD.gifts[id]);
+  if ((CD.gifts || {})[id]) out.push(gr ? CD.gifts[id].replace(/^Gifts: /, 'Gifts [not told yet: ' + cHeldTo(gr) + '; they only react when given one]: ') : CD.gifts[id]);
   const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
   const lc = cLore(id); if (lc) out.push(lc);
   return out.join('\n');

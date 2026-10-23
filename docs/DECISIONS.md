@@ -57,7 +57,8 @@ on. When the owner approves a new standing decision, add it here in one or two l
   unnamed students only.
 - **Info layers** (owner, 1.89.0): every dossier field is Public, Deep or Deeper (`bond_rules.json` `layers`); the ranks follow openness (open 0/1/2, normal 1/2/4, guarded 2/3/5, closed 2/3/6) or the NPC's own line in `info_layers.json`; a field never opens later than before; before a bond only Role and Appearance show. The narrator's Bond line names the same fields by lore heading (held back = deflected in character). Trust moves it by a rank; Betrayed tells nothing new. Secrets never come from rank. 1.99.9 (owner playtest): the full Cast Sheet tags
   each held field at its own line (`Loves [not told yet: Rank 1]:`, the gift line too; engine `$ui.now.held`, sheet `cHeld`), except the
-  ways they behave (Personality, Traits, Emotional tells, Quirk, Flaw, Serious mode, Notes, Now, Discretion, Inventory), which are shown, never told.
+  ways they behave (Personality, Traits, Emotional tells, Quirk, Flaw, Serious mode, Notes, Now, Discretion, Inventory), which are shown, never told. 2.0.0 (audit A2): at Trust Betrayed ("tells nothing new") every field the rank has not opened is tagged
+  `[not told yet: Trust Betrayed]`, the gift line too.
   1.99.10 (owner): the full sheet carries the NPC's birthday from `data/npcs.json` ("Birthday: M8 W2 Tue (academy calendar)"), so the
   narrator tells the date the dossier and calendar show instead of inventing one. Replaces the 1.2.2 eight-tier share list and its Rank 5 "real rank" floor.
 - **Bonds** (owner, v1.9.0): Rank 0–10. XP comes from reported interactions with existing daily/weekly limits. A full bar, cooldown, Trust/Tension gates and the next genuine encounter with that present NPC advance one rank automatically; direct narrator Rank writes are reverted. Rank 8 branches remain canon-bound and recorded from the relationship at that point. `data/rank4_partners.json` is the authoritative per-NPC table for shared mana training, stamina training and study. Rank 2, 4, 6, 7 and 9 benefits are the owner-approved rank perks of 1.9.0 (engine `stepBonds`, rules 502/504); Rank 5 unique gifts need a reported handover. `Extras` and rival teams never receive a bond.
@@ -192,6 +193,9 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
   uses lives in `src/scripts/shared.js`, its data in `data/*.json`; a player- or narrator-facing text names a time or number from
   the data as `{@file.path}`. Every seeded chance and pick goes through the shared draws (`roll100`, `pickOf`, `rollInt`,
   `rollTable`), each a pure function of its parts. A refactor is proven with `ENGINE_DIFF` and `tests/snapshot_render.cjs`.
+- **Canon lives in data, not in the engine** (2.0.0, bug-hunt audit K2): canon names and texts (who sits on the Council, who the Dovecote
+  sends, who counts as a noble, an event's words for a returning student, a raid's Journal line) live in `data/*.json` and reach the engine
+  through `tools/gen_engine.py`, which checks every NPC they name. The engine keeps rules and numbers' defaults only.
 - **Ambient moments paces the outside areas** (1.43.0): Settings > Campus life > Ambient moments scales the small life of Avalon,
   Sunreach and the airship (street sights, people met, pickpockets and hustlers, the sky / stage / hold) as it scales campus
   ambience; story beats (Tsubaki lost, the Leviathan, raids, scouts) and the Expedition keep their own rates.

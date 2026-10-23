@@ -16,6 +16,7 @@ t = t.replace('/*@@CAL_TIMETABLE@@*/{}', json.dumps(cal['timetable'], ensure_asc
 EV_IDS = [e.get('id') for e in cal['events']]
 assert all(EV_IDS) and len(set(EV_IDS)) == len(EV_IDS), 'calendar.json: every event needs a unique id'
 assert all(e.get('kind') in ('contest', 'showcase', 'festival', 'rite', 'trip', 'exam', 'day', 'holiday') for e in cal['events']), 'calendar.json: unknown event kind'
+assert all(e.get('back') for e in cal['events'] if e.get('entr')), 'calendar.json: the Entrance Event needs back (a returning student)'   # 2.0.0 (audit K2)
 _ef = json.load(open(P('data/event_frame.json'), encoding='utf-8'))
 _ef_places = {re.sub(r'^the ', '', l['name'].lower()) for l in json.load(open(P('data/locations.json'), encoding='utf-8')).values()} | {'main courtyard'}
 _ef_acts = {a['action'] for a in json.load(open(P('data/practice.json'), encoding='utf-8'))}
@@ -62,7 +63,14 @@ for key, file in [('NPC_MOODS', 'npc_moods'), ('GIFT_PREFS', 'gift_prefs'), ('WI
             obj['catalog'][name] = ' '.join(tags)
     t = t.replace('/*@@' + key + '@@*/{}', json.dumps(obj, ensure_ascii=False, separators=(',', ':')))
 _mst = json.load(open(P('data/mastery.json'), encoding='utf-8'))   # 1.43.0 (2.8): Rank 5 perks' numbers
-t = t.replace('/*@@MASTERY_FX@@*/{ arcana_cost: 0.9, society_trust: 5, nature_forage: 2 }', json.dumps({k: _mst[k] for k in ('arcana_cost', 'society_trust', 'nature_forage')}))
+assert set(_mst['society_nobles']) <= set(npcs) and set(_mst['society_groups']) <= {n.get('group') for n in npcs.values()} | {'staff', 'other'}, 'mastery.json: unknown noble or group'   # 2.0.0 (audit K2)
+t = t.replace('/*@@MASTERY_FX@@*/{ arcana_cost: 0.9, society_trust: 5, nature_forage: 2, society_groups: [], society_nobles: [] }', json.dumps({k: _mst[k] for k in ('arcana_cost', 'society_trust', 'nature_forage', 'society_groups', 'society_nobles')}))
+# 2.0.0 (bug-hunt audit K2): the Student Council's canon people by year (data/council.json), out of stepTime
+_cn = json.load(open(P('data/council.json'), encoding='utf-8'))
+_cn_ids = [*_cn['year1'].values(), *_cn['skipped'].values(), *(x for v in _cn['candidates'].values() for x in v), *(x for v in _cn['members'].values() for x in v if not x.startswith('$'))]
+assert all(x in npcs for x in _cn_ids), 'council.json: unknown NPC'
+assert '1' in _cn['candidates'] and '1' in _cn['members'] and all(len(v) == 2 for v in _cn['candidates'].values()) and _cn['second_player'] in _cn['candidates'], 'council.json: candidates'
+t = t.replace('/*@@COUNCIL@@*/{}', json.dumps({k: v for k, v in _cn.items() if not k.startswith('_')}, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@NPC_DORMS@@*/{}', json.dumps({k: v.get('dorm') for k,v in npcs.items()}, separators=(',', ':')))
 
 locs = json.load(open(P('data/locations.json'), encoding='utf-8'))
@@ -166,7 +174,8 @@ assert all(k in CLUB_KEYS and k in _cw['client']['asks'] and k in _cw['client'][
 t = t.replace('/*@@CLUB_WORK@@*/{}', json.dumps({**{k: _cw[k] for k in ('newspaper', 'bake', 'snow', 'client')}, 'names': {c['name']: c['key'] for c in load_clubs(npcs, locs) if c['key'] in _cw['clubs'] or c['key'] in _cw['client']['clubs']}}, ensure_ascii=False, separators=(',', ':')))
 # 1.98.1 (owner-approved planning/DRAFT_kedalaman_fitur.md batch 2): Dove watch (data/dove_watch.json)
 _dw = json.load(open(P('data/dove_watch.json'), encoding='utf-8'))
-assert all(x in npcs for x in [*_dw['interview']['shields'], _dw['interview']['with'], _dw['hearing']['with'], *_dw['leak']['never']]), 'dove_watch.json: unknown NPC'
+assert all(x in npcs for x in [*_dw['interview']['shields'], _dw['interview']['with'], _dw['interview']['second'], _dw['hearing']['with'], *_dw['leak']['never'], *_dw['interview']['names']]), 'dove_watch.json: unknown NPC'
+assert {_dw['interview']['with'], _dw['interview']['second']} <= set(_dw['interview']['names']) and _dw['interview']['call'] and _dw['hearing']['call'], 'dove_watch.json: names and calls'   # 2.0.0 (audit K2)
 assert all(k in _dw['interview']['results'] and k in _dw['search']['results'] for k in ('clean', 'partial', 'fail')), 'dove_watch.json: results need clean, partial and fail'
 assert set(_dw['stages']) == {'Rumoured', 'Watched', 'Investigated', 'Exposed'} and set(_dw['rumour']) == {'needle', 'pact', 'magic', 'deed'}, 'dove_watch.json: stages or rumour kinds'
 assert all(d in json.load(open(P('data/reputation.json'), encoding='utf-8'))['deeds'] for d in _dw['coop']['deeds']), 'dove_watch.json: coop names an unknown deed'
@@ -295,9 +304,11 @@ assert _hk['arrive'] in _hids and _hk['inn'] in _hids and set(_hk['street']) <= 
 assert all(p.get('kc') == _hk_p.get('kc') for p in _hk['places'] for _hk_p in _hk['pins'] if _hk_p['id'] == p['pin']), 'hanakaze.json: a ground place outside its ground pin'
 assert all((len(l) > 3) == ('kc' in {**{p['id']: p for p in _hk['pins']}[l[0]], **{p['id']: p for p in _hk['pins']}[l[1]]}) for l in _hk['legs']), 'hanakaze.json: a ground is reached only by team carriage'
 assert set(_hk['teams']) == {n['academy'] for n in _npcs_all.values() if n.get('group') == 'World teams'}, 'hanakaze.json: teams are the World teams'
+assert all(_d.get('raid', {}).get('why') and _d['raid'].get('journal') for _d in (_av, _hk)), 'avalon.json / hanakaze.json: raid needs why and journal'   # 2.0.0 (audit K3)
 t = t.replace('/*@@HANAKAZE@@*/{}', json.dumps({**{k: v for k, v in _hk.items() if not k.startswith('_')},
     'places': [{k: v for k, v in p.items() if k not in ('desc', 'vibe', 'brief')} for p in _hk['places']]}, ensure_ascii=False, separators=(',', ':')))
 # Bond rules and where each NPC is usually found (Haunts, first clause).
+assert set(json.load(open(P('data/bond_rules.json'), encoding='utf-8'))['worksite']) <= set(npcs), 'bond_rules.json: worksite names an unknown NPC'   # 2.0.0 (audit K2)
 t = t.replace('/*@@BOND_RULES@@*/{}', json.dumps(json.load(open(P('data/bond_rules.json'), encoding='utf-8')), ensure_ascii=False, separators=(',', ':')))
 haunt = {}
 for nid, n in npcs.items():

@@ -146,10 +146,13 @@ show the newcomers their dorm rooms.
       them or not, as `<now>`'s "Looking for … (the engine's roll)" line says, and a swipe gives the same answer. Not found, ask Kanae
       where they might be: she answers only if she has a tie to them. The dossier's "Look for" lists only places the file already
       shows, the place for this hour first. No delay when the prompt is built (entry 505 is now ±140 KB of code) [1.99.12].
+      After curfew, in Avalon or with Who is here off, the dossier has no "Look for" button either [2.0.0].
 - [ ] Someone not yet named shows their role, not their name; a passer-by has "Keep in record"; with four or more present, three
       cards and an "also here" row [1.70]. Thoughts only for NPCs in the scene: never someone absent, never met or only mentioned [1.99.13].
 - [ ] Activities: the tab is called Action, it opens at any Campus Map place (also without a practice place) with "Look for someone"
       first; no other tab shows Look for [1.99.13].
+- [ ] On a day with a campus happening (`<now>` "Around campus today"), the "Optional threads (…)" line names it too, and the narrator
+      uses at most one of the threads in a reply [2.0.0].
 - [ ] The bracelet has a folded "This reply (n changes)": open it after a reply with Kanae or Zara; it lists their bond XP (and any
       Trust or Tension move), points spent with what for, Bag in and out, new Planner entries and Journal lines, and agrees with the
       People panel and the Wallet. It stays open while the bracelet redraws, is gone when the bracelet is collapsed, and a swipe shows
@@ -794,6 +797,8 @@ The first academy flight (the airship), then the Grand Vast Forest.
       "Has not seen {{user}} since the injury (…)"; once it heals the line is gone [1.74].
 - [ ] Once someone has an Imprint (an experience that changed them), their Cast Sheet opens with "Changed by experience: their Imprints
       (below) are true now", and where the Imprint and their lore Personality differ they act on the Imprint [1.99.4].
+- [ ] Someone whose Trust falls to Betrayed (under 15): their Cast Sheet tags what the bond has not opened (`Loves [not told yet: Trust
+      Betrayed]:`, the Gifts line too), and asked, they tell nothing new [2.0.0].
 
 ### MS3 Story events
 - [ ] A broken promise, an insult or a betrayal: the update reports `letdown` / `offence` interactions with a Weight, never a Trust or

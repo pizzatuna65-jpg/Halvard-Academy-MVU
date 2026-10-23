@@ -67,7 +67,6 @@ const DAY_MIN = 1440, YEAR_DAYS = 12 * 4 * 7;
 const MON_THU = DAYS.slice(0, 4), MON_FRI = DAYS.slice(0, 5);
 const EVENTS = /*@@CAL_EVENTS@@*/[];
 const TIMETABLE = /*@@CAL_TIMETABLE@@*/{};
-const ENTR_BACK = '{{user}} is a returning student and the assigned senior guide: never sorted again; watches the speeches and sorting from the gallery, then tours 10:00–18:00 with the two new first-years recorded in Campus_State.Entrance_tour';
 const schedOf = (e, day) => (!e.s ? '' : typeof e.s === 'string' ? e.s : e.s[day] || '');
 // 1.81.0 (owner-approved planning/DRAFT_event_frame.md): the event frame's data (data/event_frame.json chances), from gen_engine
 const EVENT_FRAME = /*@@EVENT_FRAME@@*/{};
@@ -146,10 +145,11 @@ const GROUP_LATE_TENSION = 3;
 // and attendance, weighted for theory or practical, plus a seeded exam-day roll; Rank 5 in a proficiency opens its mastery perk
 const GRADE_W = { theory: [0.5, 0.3, 0.2], practical: [0.3, 0.5, 0.2] }, GRADE_CUT = [40, 55, 70, 85];
 const EXAM_DAY = [[10, -8, 'a bad day'], [30, -4, 'an off day'], [70, 0, ''], [90, 4, 'a good day'], [100, 8, 'an inspired day']];
-const MASTERY_FX = /*@@MASTERY_FX@@*/{ arcana_cost: 0.9, society_trust: 5, nature_forage: 2 };   // 1.43.0: data/mastery.json
+const MASTERY_FX = /*@@MASTERY_FX@@*/{ arcana_cost: 0.9, society_trust: 5, nature_forage: 2, society_groups: [], society_nobles: [] };   // 1.43.0: data/mastery.json
 const MASTERY = 5, profRankOf = (X, k) => PROF_CUT.filter(x => num((((X || {}).$eng || {}).prof || {}).xp && X.$eng.prof.xp[k], 0) >= x).length - 1;
-// staff and nobles (Consummate: NPC_GROUP staff, or other = the Doves, the Cathedral, the Liaison, facilities); nobles by the lorebook (House Silvarenne, House Villeneuve, the Liaison's regulars)
-const CONSUMMATE_GROUPS = ['staff', 'other'], NOBLES = ['Caspian', 'Caralynn', 'Florian', 'Elion', 'Nerys'];
+// staff and nobles (Consummate: NPC_GROUP staff, or other = the Doves, the Cathedral, the Liaison, facilities); nobles by the lorebook
+// (House Silvarenne, House Villeneuve, the Liaison's regulars). 2.0.0 (bug-hunt audit K2): data/mastery.json society_groups, society_nobles
+const CONSUMMATE_GROUPS = MASTERY_FX.society_groups, NOBLES = MASTERY_FX.society_nobles;
 const subjectOf = t => { const x = String(t || '').trim().toLowerCase().replace(/ class$/, ''); return x === 'dmd' ? 'Dark Magic Defense' : x === 'combat' ? 'Practical Magic' : SUBJECTS.find(s => s.toLowerCase() === x) || ''; };
 const subjectIn = t => SUBJECTS.find(s => new RegExp(`\\b${s}\\b`, 'i').test(String(t || ''))) || (/\bDMD\b/.test(String(t || '')) ? 'Dark Magic Defense' : /\bCombat\b/i.test(String(t || '')) ? 'Practical Magic' : '');
 // 1.33.0: Practical Magic is taught per combat role ([subject, 0, role]); {{user}} attends the class of the first role in Combat_role
@@ -244,6 +244,11 @@ const paceOf = S => ((BR.pace || {})[(S.$ui || {}).bondpace] || 1);
 const needXP = (r, m) => (r >= 10 ? 0 : Math.max(3, Math.round(BR.xp_base[r] * m)));
 const coolDays = (r, m) => Math.round((BR.cool_base[Math.min(r, 9)] || 0) * m);
 const hm = t => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(t || '').trim()); return m ? +m[1] * 60 + +m[2] : null; };
+// 2.0.0 (bug-hunt audit K3): {{user}}'s birthday from Profile.Birthday ("M? W? Day", the Builder) as { m, w, d }, or null; isBday: on day W
+const userBday = S => { const x = /^M(\d{1,2}) W([1-4]) (Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/.exec(String(S.Player.Profile.Birthday || '').trim()); return x ? { m: +x[1], w: +x[2], d: x[3] } : null; };
+const isBday = (bd, W) => !!bd && bd.m === W.Month && bd.w === W.Week && bd.d === W.Day;
+// 2.0.0 (bug-hunt audit K3): the pact partner a technique belongs to (Notes "[pact] <name>", written by the Builder), or ''
+const pactKey = t => { const x = /^\[pact\]\s*(.+)$/.exec((t && t.Notes) || ''); return x ? x[1].trim() : ''; };
 // Batch 5.1: castle places (the Notice Board is in the Floor 1 entrance hall that every student crosses) and module caps
 const CASTLE = new Set(/*@@CASTLE@@*/[]);
 // v1.0.3 (F01): every campus place name (lowercase, with and without a leading "the"); anything else is off the grounds
@@ -309,6 +314,8 @@ const DORM_PRIZE = [100, 50];   // 1.33.0: a Dorm Competition role bracket's cha
 // the year's third-years away the next morning (M12 W1 Mon); they go to Campus_State.Graduated (the story may take a name back out).
 // ARRIVES: incoming cohorts (data/cohorts.json) -> campaign year they arrive as first-years; before that they are not at Halvard.
 const STUDENTS = /*@@STUDENTS@@*/{};
+// 2.0.0 (bug-hunt audit K2): the Student Council's canon people by campaign year (data/council.json; councilYear)
+const COUNCIL = /*@@COUNCIL@@*/{};
 const ARRIVES = /*@@ARRIVES@@*/{};
 const STAYS = /*@@STAYS@@*/{};   // 1.7.4: third-years whose canon keeps them at Halvard (data/cohorts.json "stays"): {id: log line}
 const yearOf = (id, Y) => (STUDENTS[id] ? STUDENTS[id][0] + Y - STUDENTS[id][1] : 0);   // their school year in campaign year Y
@@ -810,6 +817,17 @@ function areaTheft(c, A, h, at, got, evs) {
   }
   evs.push({ k: T.ev, caught, lost, empty: !caught && !lost });
 }
+// 2.0.0 (bug-hunt audit K3): a Watch raid where D.where.raid says (Avalon's Rookery, Hanakaze's Warrens), rates.raid percent an hour;
+// escaped at rates.raid_escape percent, else caught (D.raid: the detention_tower deed's reason, the Journal line, the toast).
+// Returns false when caught: the hour loop stops there.
+function areaRaid(c, A, h, at, evs) {
+  const R = A.R, T = A.D.raid || {}, roll = k => areaRoll(c, A, h, at, k);
+  if (!((A.D.where || {}).raid || []).includes(at) || roll('raid') >= num(R.raid, 5)) return true;
+  const caught = roll('resc') >= num(R.raid_escape, 60); evs.push({ k: 'raid', caught });
+  if (!caught) return true;
+  avRep(c.S, 'detention_tower', T.why); c.jnl.push(T.journal); c.S.$ui.toasts.push(T.toast || 'Caught in a raid');
+  return false;
+}
 // a move inside area A from prev to at: inside one pin a few minutes, between pins the shortest way. want: a mode the narrator asked
 // for (carriage, or a boat between two shore pins): half the land minutes, its fare, no stamina. A tour leg (the 4th field of a leg)
 // has its own minutes and fare and is the only way across; without the coin the move is refused (returns false). A crowd leg (touching
@@ -1142,7 +1160,7 @@ const SHAPE = {
   Player: { Profile: { Council: false, Reputation: {} }, Vitals: {}, Injuries: {}, Wallet: { Points: 0, Coin: 0, Transactions: [] }, Academics: { Grades: {}, Exams: {} }, _Proficiency: {}, Conditions: {} },
   Magic: { _Techniques: {}, _Affinity: { Types: [], Dominant: '', Specialties: [], Preset: '' }, Active: {}, Casts: [], Pacts: {} },
   Hidden: { _True_magic: '', Known_by: [], Dove_attention: 0 },
-  Bonds: {}, Campus_State: { Entrance_tour: { Year: 0, Guide: '', FirstYears: [] }, Council: { Candidates: { '1': { First: 'Florian', Second: 'Dante' } }, Results: {}, President: 'Irene', VicePresident: 'Caspian', PresidentElect: '', VicePresidentElect: '', Members: ['Irene','Caspian','Florian','Dante'] }, Events: {}, Rumours: [], Location_changes: {}, Lore_changes: {}, NPC_status: {}, New_relations: {}, Secrets_revealed: [], Graduated: [] },
+  Bonds: {}, Campus_State: { Entrance_tour: { Year: 0, Guide: '', FirstYears: [] }, Council: { Candidates: { '1': { First: COUNCIL.candidates['1'][0], Second: COUNCIL.candidates['1'][1] } }, Results: {}, President: COUNCIL.year1.President, VicePresident: COUNCIL.year1.VicePresident, PresidentElect: '', VicePresidentElect: '', Members: [...COUNCIL.members['1']] }, Events: {}, Rumours: [], Location_changes: {}, Lore_changes: {}, NPC_status: {}, New_relations: {}, Secrets_revealed: [], Graduated: [] },
   Commitments: {}, Notices: {}, Letters: {}, Journal: [], Clues: {}, Mysteries: {},
   Competition: { Tier: '', Status: '', Placement: '', Team: [], Results: [] }, Projects: {},
   Trip: { Active: false, Destination: '', Companions: [], Note: '' }, Expedition: { Caught: false }, Avalon: { Ride: false }, Sunreach: { Ride: '', Bet: { Game: '', Stake: 0 } }, Battle: { Active: false, Combatants: {} }, _Log: [],
@@ -1520,6 +1538,74 @@ function stepFeatures(c) {
   Object.assign(c, { OFF, offUnlock, staleDrop, REPORTED, B });
 }
 
+// ---- 1c. the Student Council by campaign year (FP2; 2.0.0, bug-hunt audit K1/K2: out of stepTime, its people from data/council.json).
+// The story records the announced winner; the other nominee is always the incoming Vice President. A recorded result stays stable
+// across swipes, updates and later school years. Year 1 has the owner's named nominees.
+function councilYear(c, absA) {
+  const { S, B, log, jnl, hasB } = c;
+  const C = S.Campus_State.Council, BC = hasB && B.Campus_State && B.Campus_State.Council || {};
+  const playerName = S.Player.Profile.Name || '{{user}}', PY = COUNCIL.second_player;
+  for (const [key, [a, b]] of Object.entries(COUNCIL.candidates)) {
+    if (key === '1') C.Candidates['1'] = { First: a, Second: b };
+    else if (S.World.Year >= Number(key) && !C.Candidates[key]) C.Candidates[key] = { First: a, Second: key === PY && S.Player.Profile.Council ? playerName : b };
+  }
+  for (const [key, pair] of Object.entries(C.Candidates)) {
+    const y = Number(key), prev = (BC.Candidates || {})[key];
+    if (key === '1') continue;
+    if (prev && prev.First && prev.Second) { C.Candidates[key] = prev; continue; }
+    const ids = [pair.First, pair.Second].map(x => NPC_ALIAS[String(x).toLowerCase()] || x);
+    const eligible = id => id === playerName ? key === PY && pair.Second === playerName : !!STUDENTS[id] && (STUDENTS[id][1] || 1) <= y && yearOf(id, y) >= 1 && yearOf(id, y) <= 2;
+    if (!Number.isInteger(y) || y < 2 || ids[0] === ids[1] || !ids.every(eligible)) {
+      delete C.Candidates[key];
+      if (pair.First || pair.Second) log.push(`Council candidates for Year ${key} must be two different named students eligible to attend the next year.`);
+    } else C.Candidates[key] = { First: ids[0], Second: ids[1] };
+  }
+  // 1.86.0 (planning/DRAFT_event_frame.md, release E: the vote format): when both nominees are other students the engine counts the
+  // ballots at the close of voting (Sat 16:00), drawn from the seed and weighted by each nominee's dorm (its roster students at
+  // Halvard that year, plus vote.base); a result the story wrote gives way. With {{user}} a nominee the story decides
+  {
+    const y = S.World.Year, key = String(y), pair = C.Candidates[key], EV = (CT.vote || {}).election;
+    if (EV && hasB && pair && pair.First && pair.Second && ![pair.First, pair.Second].includes(playerName) && !((BC.Results || {})[key] || {}).President && S.World.Month === 10
+      && toAbs(S.World) >= toAbs({ Year: y, Month: 10, Week: 3, Day: EV.close[0], Time: EV.close[1] })) {
+      const dorm = id => (PRESENCE.stu[id] || [])[2], mates = id => Object.keys(PRESENCE.stu).filter(x => dorm(x) === dorm(id) && yearOf(x, y) >= 1 && yearOf(x, y) <= 3).length;
+      const won = rollTable([pair.First, pair.Second], { pick: [num(S.$eng.seed, 0), y, 'council-vote'], weight: id => mates(id) + num(EV.base, 0) });
+      const said = (C.Results[key] || {}).President;
+      if (said && (NPC_ALIAS[String(said).toLowerCase()] || said) !== won) log.push(`Council election: the ballots are counted by the engine; ${won} won (not ${said}).`);
+      C.Results[key] = { President: won };
+    }
+  }
+  for (const [key, result] of Object.entries(C.Results)) {
+    const y = Number(key), prev = (BC.Results || {})[key], pair = C.Candidates[key];
+    if (prev && prev.President && prev.VicePresident) { C.Results[key] = prev; continue; }
+    const winner = NPC_ALIAS[String(result.President).toLowerCase()] || result.President;
+    const other = pair && (winner === pair.First ? pair.Second : winner === pair.Second ? pair.First : '');
+    const close = Number.isInteger(y) && y > 0 ? toAbs({ Year: y, Month: 10, Week: 3, Day: 'Sat', Time: '16:00' }) : Infinity;
+    if (!other || absA < close) {
+      delete C.Results[key];
+      if (result.President) log.push(`Council result for Year ${key} waits until Saturday voting closes and must name one of that year's two candidates.`);
+    } else {
+      C.Results[key] = { President: winner, VicePresident: other };
+      if (!prev || !prev.President) { jnl.push(`Student Council election: ${winner} was elected President for Year ${y + 1} and named ${other} Vice President.`); cwNews(S, jnl[jnl.length - 1]); }
+    }
+  }
+  if (S.World.Year > 1 && !C.Results['1']) {
+    const SK = COUNCIL.skipped;
+    C.Results['1'] = { President: SK.President, VicePresident: SK.VicePresident };
+    log.push(`The Year 1 Council election was skipped in this save; ${SK.President} is the default President and ${SK.VicePresident} the Vice President for Year 2.`);
+  }
+  const cur = S.World.Year === 1 ? { ...COUNCIL.year1 } : C.Results[String(S.World.Year - 1)] || {};
+  const elect = C.Results[String(S.World.Year)] || {};
+  C.President = S.World.Month === 12 ? '' : cur.President || '';
+  C.VicePresident = S.World.Month === 12 ? '' : cur.VicePresident || '';
+  C.PresidentElect = elect.President || '';
+  C.VicePresidentElect = elect.VicePresident || '';
+  const MR = COUNCIL.members, row = MR[String(S.World.Year)] || MR[Object.keys(MR).sort((x, y) => x - y).pop()];
+  const tok = { $president: C.President, $vice: C.VicePresident, $second: (C.Candidates[String(S.World.Year)] || {}).Second };
+  C.Members = S.World.Month === 12 ? [] : row.map(x => (x in tok ? tok[x] : x));
+  if (S.Player.Profile.Council && S.World.Month !== 12) C.Members.push(playerName);
+  C.Members = _.uniq(C.Members.filter(Boolean));
+}
+
 // ---- 1. time ----
 // 1.3.3: an unreadable Day or Time from the AI arrives as '' (schema): keep the previous one rather than guess
 function stepTime(c) {
@@ -1625,10 +1711,9 @@ function stepTime(c) {
   }
   const evs = eventsOn(S.World);
   // 1.2.0: {{user}}'s birthday (Builder, Profile.Birthday "M? W? Day") joins the day's events; lore entry 508 says how it plays out
-  const bd = /^M(\d{1,2}) W([1-4]) (Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/.exec(String(S.Player.Profile.Birthday || '').trim());
-  const bday = bd && +bd[1] === S.World.Month && +bd[2] === S.World.Week && bd[3] === S.World.Day;
+  const bday = isBday(userBday(S), S.World);
   // 1.3.1: each event with today's plan (times from its lore entry), so the narrator runs the day on schedule
-  S.World._Event_today = [...evs.map(e => (schedOf(e, S.World.Day) ? `${e.t} — ${schedOf(e, S.World.Day)}` : e.t) + (e.entr && (S.World.Year > 1 || num(S.Player.Profile.Year, 1) > 1) ? ` (${ENTR_BACK})` : '')), ...(bday ? [`${S.Player.Profile.Name || 'Your'}'s birthday`] : [])].join(' | ');
+  S.World._Event_today = [...evs.map(e => (schedOf(e, S.World.Day) ? `${e.t} — ${schedOf(e, S.World.Day)}` : e.t) + (e.entr && (S.World.Year > 1 || num(S.Player.Profile.Year, 1) > 1) ? ` (${e.back})` : '')), ...(bday ? [`${S.Player.Profile.Name || 'Your'}'s birthday`] : [])].join(' | ');
   S.World._Period = periodOf(S.World, evs, S);
   S.World._Curfew = curfewOf(S.World, evs, S);
   // F20: today's happening (visible from the day's start until its window closes)
@@ -1646,69 +1731,7 @@ function stepTime(c) {
   const dayNo = Math.floor(absA / DAY_MIN);
   const goneNow = id => (S.Campus_State.Graduated || []).includes(id);   // 1.7.6: a graduate's rewards stop working
   const dayNoB = Math.floor(absB / DAY_MIN);
-  // FP2: the story records the announced winner; the other nominee is always the incoming Vice President.
-  // Keep a recorded result stable across swipes, updates and later school years. Year 1 has the owner's named nominees.
-  {
-    const C = S.Campus_State.Council, BC = hasB && B.Campus_State && B.Campus_State.Council || {};
-    C.Candidates['1'] = { First: 'Florian', Second: 'Dante' };
-    const playerName = S.Player.Profile.Name || '{{user}}';
-    if (S.World.Year >= 2 && !C.Candidates['2']) C.Candidates['2'] = { First: 'Caralynn', Second: S.Player.Profile.Council ? playerName : 'Percival' };
-    if (S.World.Year >= 3 && !C.Candidates['3']) C.Candidates['3'] = { First: 'Hadrian', Second: 'Nerys' };
-    for (const [key, pair] of Object.entries(C.Candidates)) {
-      const y = Number(key), prev = (BC.Candidates || {})[key];
-      if (key === '1') continue;
-      if (prev && prev.First && prev.Second) { C.Candidates[key] = prev; continue; }
-      const ids = [pair.First, pair.Second].map(x => NPC_ALIAS[String(x).toLowerCase()] || x);
-      const eligible = id => id === playerName ? y === 2 && pair.Second === playerName : !!STUDENTS[id] && (STUDENTS[id][1] || 1) <= y && yearOf(id, y) >= 1 && yearOf(id, y) <= 2;
-      if (!Number.isInteger(y) || y < 2 || ids[0] === ids[1] || !ids.every(eligible)) {
-        delete C.Candidates[key];
-        if (pair.First || pair.Second) log.push(`Council candidates for Year ${key} must be two different named students eligible to attend the next year.`);
-      } else C.Candidates[key] = { First: ids[0], Second: ids[1] };
-    }
-    // 1.86.0 (planning/DRAFT_event_frame.md, release E: the vote format): when both nominees are other students the engine counts the
-    // ballots at the close of voting (Sat 16:00), drawn from the seed and weighted by each nominee's dorm (its roster students at
-    // Halvard that year, plus vote.base); a result the story wrote gives way. With {{user}} a nominee the story decides
-    {
-      const y = S.World.Year, key = String(y), pair = C.Candidates[key], EV = (CT.vote || {}).election;
-      if (EV && hasB && pair && pair.First && pair.Second && ![pair.First, pair.Second].includes(playerName) && !((BC.Results || {})[key] || {}).President && S.World.Month === 10
-        && toAbs(S.World) >= toAbs({ Year: y, Month: 10, Week: 3, Day: EV.close[0], Time: EV.close[1] })) {
-        const dorm = id => (PRESENCE.stu[id] || [])[2], mates = id => Object.keys(PRESENCE.stu).filter(x => dorm(x) === dorm(id) && yearOf(x, y) >= 1 && yearOf(x, y) <= 3).length;
-        const won = rollTable([pair.First, pair.Second], { pick: [num(S.$eng.seed, 0), y, 'council-vote'], weight: id => mates(id) + num(EV.base, 0) });
-        const said = (C.Results[key] || {}).President;
-        if (said && (NPC_ALIAS[String(said).toLowerCase()] || said) !== won) log.push(`Council election: the ballots are counted by the engine; ${won} won (not ${said}).`);
-        C.Results[key] = { President: won };
-      }
-    }
-    for (const [key, result] of Object.entries(C.Results)) {
-      const y = Number(key), prev = (BC.Results || {})[key], pair = C.Candidates[key];
-      if (prev && prev.President && prev.VicePresident) { C.Results[key] = prev; continue; }
-      const winner = NPC_ALIAS[String(result.President).toLowerCase()] || result.President;
-      const other = pair && (winner === pair.First ? pair.Second : winner === pair.Second ? pair.First : '');
-      const close = Number.isInteger(y) && y > 0 ? toAbs({ Year: y, Month: 10, Week: 3, Day: 'Sat', Time: '16:00' }) : Infinity;
-      if (!other || absA < close) {
-        delete C.Results[key];
-        if (result.President) log.push(`Council result for Year ${key} waits until Saturday voting closes and must name one of that year's two candidates.`);
-      } else {
-        C.Results[key] = { President: winner, VicePresident: other };
-        if (!prev || !prev.President) { jnl.push(`Student Council election: ${winner} was elected President for Year ${y + 1} and named ${other} Vice President.`); cwNews(S, jnl[jnl.length - 1]); }
-      }
-    }
-    if (S.World.Year > 1 && !C.Results['1']) {
-      C.Results['1'] = { President: 'Florian', VicePresident: 'Dante' };
-      log.push('The Year 1 Council election was skipped in this save; Florian is the default President and Dante the Vice President for Year 2.');
-    }
-    const cur = S.World.Year === 1 ? { President: 'Irene', VicePresident: 'Caspian' } : C.Results[String(S.World.Year - 1)] || {};
-    const elect = C.Results[String(S.World.Year)] || {};
-    C.President = S.World.Month === 12 ? '' : cur.President || '';
-    C.VicePresident = S.World.Month === 12 ? '' : cur.VicePresident || '';
-    C.PresidentElect = elect.President || '';
-    C.VicePresidentElect = elect.VicePresident || '';
-    C.Members = S.World.Month === 12 ? [] : S.World.Year === 1 ? ['Irene','Caspian','Florian','Dante']
-      : S.World.Year === 2 ? [C.President, C.VicePresident, 'Caralynn', C.Candidates['2']?.Second]
-      : [C.President, C.VicePresident, 'Hadrian', 'Nerys', 'Bianca'];
-    if (S.Player.Profile.Council && S.World.Month !== 12) C.Members.push(playerName);
-    C.Members = _.uniq(C.Members.filter(Boolean));
-  }
+  councilYear(c, absA);   // 2.0.0 (audit K1): the Student Council, below stepTime
   // Entrance tour: a reproducible roster-first assignment, saved once so swipes and scene changes keep the same trio.
   // In Year 1 {{user}} is one of the two first-years; in later years {{user}} is the senior guide.
   if (evs.some(e => e.entr)) {
@@ -1871,7 +1894,7 @@ function stepMagic(c) {
         M.Active[key] = { Technique: c.Technique, Note: '' }; autoStarted.add(key);
         log.push(`${c.Technique} is ${t.Cost_mode}: it now runs in Magic.Active as "${key}" (activation, then upkeep each minute); remove that entry when {{user}} ends it.`);
         if (t.Cost_mode === 'hybrid' && (c.Times || 1) > 1) keep.push({ Technique: c.Technique, Times: c.Times - 1 });
-        const pm = /^\[pact\]\s*(.+)$/.exec(t.Notes || ''), pk = pm && pm[1].trim();
+        const pk = pactKey(t);
         if (pk && c.Technique === 'Summon ' + pk && (M.Pacts || {})[pk]) M.Pacts[pk].Summoned = true;
       } else keep.push(c);
     }
@@ -1907,7 +1930,7 @@ function stepMagic(c) {
     if (t.Cost_mode === 'sustained' && activeNow(c.Technique)) { log.push(`${c.Technique} is sustained: its Active entry already paid the activation, so the Casts entry was not charged.`); continue; }
     // 1.3.2: a pact partner's ability ("<partner>: <ability>") works only while the partner is with {{user}} (summoned, or living
     // by its terms); otherwise nothing happened and nothing is charged
-    const pm = /^\[pact\]\s*(.+)$/.exec(t.Notes || ''), pk = pm && pm[1].trim();
+    const pk = pactKey(t);
     if (pk && c.Technique.startsWith(pk + ': ') && !partnerHere(pk)) { log.push(`${c.Technique}: ${pk} is not summoned, so the ability could not be used; nothing was charged.`); continue; }
     // hybrid: while the effect is running, a triggered use costs Trigger; otherwise a cast costs Activation
     const running = Object.values(M.Active || {}).some(e => e.Technique === c.Technique);
@@ -1922,8 +1945,8 @@ function stepMagic(c) {
 
   // ---- 3. magic: sustained effects ----
   const endPact = eff => {   // v1.0.3 (F06): the engine ended a pact summon -> the spirit is no longer summoned
-    const t = T[eff.Technique], m = t && /^\[pact\]\s*(.+)$/.exec(t.Notes || '');
-    if (m && /^Summon /.test(eff.Technique) && M.Pacts && M.Pacts[m[1].trim()]) M.Pacts[m[1].trim()].Summoned = false;
+    const pk = pactKey(T[eff.Technique]);
+    if (pk && /^Summon /.test(eff.Technique) && M.Pacts && M.Pacts[pk]) M.Pacts[pk].Summoned = false;
   };
   const settle = (name, eff, until) => {
     const t = T[eff.Technique];
@@ -2338,10 +2361,7 @@ function stepCapital(c) {
       if (pool.length) { const id = pick(pool, 'rivp'); X.met = [...(X.met || []), id]; evs.push({ k: 'rival', id }); }
     }
     if (kd && !X.sc && ['Thu', 'Fri', 'Sat'].includes(S.World.Day) && inW('scout') && (S.Competition || {}).Status !== 'eliminated' && roll('scout') < num(R.scout, 15)) { X.sc = 1; evs.push({ k: 'scout' }); }
-    if (inW('raid') && roll('raid') < num(R.raid, 5)) {
-      const caught = roll('resc') >= num(R.raid_escape, 60); evs.push({ k: 'raid', caught });
-      if (caught) { avRep(S, 'detention_tower', 'caught in the Rookery during a City Watch raid in Avalon'); jnl.push('Avalon: {{user}} was caught in the Rookery in a City Watch raid; the staff were sent for.'); S.$ui.toasts.push('Caught in a raid'); return false; }
-    }
+    if (!areaRaid(c, A, h, aAt, evs)) return false;   // 2.0.0 (audit K3): one raid with Hanakaze
   });
   for (const id of [aPrev, aAt]) if (id && A.PL[id] && !seen.includes(id)) seen.push(id);
   const pass = avPass(S);
@@ -2485,10 +2505,7 @@ function stepHanakaze(c) {
       const pool = (HK.teams || []).filter(n => !X.met.includes(n));
       if (pool.length) { const n = pick(pool, 'teamp'); got.add('team'); X.met = [...X.met, n]; evs.push({ k: 'team', n }); }
     }
-    if (inW('raid') && roll('raid') < num(R.raid, 5)) {
-      const caught = roll('resc') >= num(R.raid_escape, 60); evs.push({ k: 'raid', caught });
-      if (caught) { avRep(S, 'detention_tower', "caught in the Warrens during an Alpha's Watch raid in Hanakaze"); jnl.push("Hanakaze: {{user}} was caught in the Warrens in an Alpha's Watch raid; Gavlan Haverton was sent for."); S.$ui.toasts.push('Caught in a raid'); return false; }
-    }
+    if (!areaRaid(c, A, h, hAt, evs)) return false;   // 2.0.0 (audit K3): one raid with Avalon
   });
   for (const id of [hPrev, hAt]) if (id && A.PL[id] && !seen.includes(id)) seen.push(id);
   const W = S.World, tnow = hm(W.Time), kco = [1, 2].filter(k => hkGround(W, k, S));
@@ -4142,8 +4159,8 @@ function routineSpan(c) {
     const W = fromAbs(d * DAY_MIN), e = eventsOn(W).find(x => x.noclass || x.home || x.away || x.lockdown || !todayEv.has(x.t));
     if (e) { cut(d * DAY_MIN, e.t.split(' (')[0]); break; }
   }
-  const bd = /^M(\d{1,2}) W([1-4]) (Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/.exec(String(S.Player.Profile.Birthday || '').trim());
-  for (let d = today + 1; bd && d * DAY_MIN <= end; d++) { const W = fromAbs(d * DAY_MIN); if (+bd[1] === W.Month && +bd[2] === W.Week && bd[3] === W.Day) cut(d * DAY_MIN, "{{user}}'s birthday"); }
+  const bd = userBday(S);
+  for (let d = today + 1; bd && d * DAY_MIN <= end; d++) { if (isBday(bd, fromAbs(d * DAY_MIN))) cut(d * DAY_MIN, "{{user}}'s birthday"); }
   const dated = [...Object.entries(S.Commitments || {}).map(([k, x]) => [num(x.$abs, -1), k]), ...Object.entries(S.Hooks || {}).map(([k, x]) => [num(x.$abs, -1), k]),
     ...Object.entries(((S.$eng.agenda || {}).when) || {}).map(([k, x]) => [num((x || [])[1], -1), k.startsWith('n:') ? `${k.slice(2)}'s plan` : k.slice(2)])];
   for (const [abs, what] of dated) if (abs > absA && abs <= end) cut(abs, `"${what}"`);
@@ -4325,8 +4342,11 @@ function stepPromises(c) {
 }
 
 // ---- 6. bonds ----
-function stepBonds(c) {
-  const { S, B, log, jnl, hasB, OFF, staleDrop, evs, dayNo, goneNow, dayNoB, WXM, seed, TU, wxNow, V, weekNo, weekNoB, repLv, repAdd, repLevelUp, teamBond, notes } = c;
+// 6.0 (2.0.0, bug-hunt audit K1: out of stepBonds) the bond records before any XP: alias keys merged into the roster name, records
+// that may not exist removed, a bond never removed by an update, a record rewritten whole keeps what it knew, rival teams off
+// Halvard's grounds, new acquaintances in Scene.Present, Last_seen. Exports canon and BB (the bonds before, without removed records).
+function stepBondRecords(c) {
+  const { S, B, log, hasB, staleDrop, evs } = c;
   const canon = k => NPC_ALIAS[String(k).toLowerCase()] || k;
   // v1.0.3 (F09): when both an alias key and the canonical key exist, the alias record's real changes merge into the canonical one
   // (fields that differ from the empty record; lists are unioned). Engine-owned "_" / "$" fields are never taken from the alias.
@@ -4404,6 +4424,312 @@ function stepBonds(c) {
     }
     if (S.Bonds[id]) S.Bonds[id].Last_seen = seen;
   }
+  Object.assign(c, { canon, BB });
+}
+
+// 6.1 (2.0.0, audit K1) the engine-owned fields come from the previous state; a record the AI (re)wrote cannot set them
+function bondOwned(b, b0, S) {
+  b.Progress = 0;
+  b._Event_ready = b0 ? !!b0._Event_ready : false;
+  b.$cool = b0 ? num(b0.$cool, -1) : num(b.$cool, -1);
+  b.$ms = b0 ? [...(b0.$ms || [])] : [...(b.$ms || [])]; b.$tf = b0 ? num(b0.$tf, 0) : num(b.$tf, 0);   // 1.3.8 engine-owned
+  b.$tdrop = b0 ? num(b0.$tdrop, -99) : num(b.$tdrop, -99);   // 1.4.3
+  b.$tlast = b0 ? num(b0.$tlast, 0) : 0; b.$tbrk = b0 ? num(b0.$tbrk, 0) : 0;   // 1.4.4
+  b.$hut = b0 ? String(b0.$hut || '') : String(b.$hut || '');   // 1.31.0 the Old Hut month
+  b.$Recent = b0 ? [...(b0.$Recent || [])] : [...(b.$Recent || [])];   // 1.4.4 engine-owned
+  b.$Defining = b0 ? [...(b0.$Defining || [])] : [...(b.$Defining || [])];   // 1.6.0 engine-owned
+  b.$gifts = _.cloneDeep(b0 ? b0.$gifts || {} : b.$gifts || {});
+  b.$gift_pending = b0 ? !!b0.$gift_pending : !!b.$gift_pending;
+  b.$branch = b0 ? String(b0.$branch || '') : String(b.$branch || '');   // 1.6.8 engine-owned: friend | romance | rival from Rank 8
+  b.$met = b0 ? String(b0.$met || '') : ydate(S.World);   // 1.72.0 engine-owned: the day they met, and the day of Rank 8
+  b.$b8 = b0 ? String(b0.$b8 || '') : '';
+  if (!b.$branch && b0 && b0.Rank >= 8) b.$branch = b0.Romance ? 'romance' : /rival/i.test(String(b0.Title || '')) ? 'rival' : 'friend';   // saves from before 1.6.8
+  b.$Knows_old = b0 ? [...(b0.$Knows_old || [])] : [...(b.$Knows_old || [])]; b.$seen = b0 ? num(b0.$seen, -1) : num(b.$seen, -1); b.$mw = b0 ? num(b0.$mw, -1) : num(b.$mw, -1);
+  b.$apart = b0 ? num(b0.$apart, 0) : 0; b.$apartd = b0 ? num(b0.$apartd, -1) : -1;   // 1.73.0 engine-owned (stepBondMemory)
+}
+
+// 6.2 (2.0.0, audit K1) bond XP from this reply: Krieg's weekly XP, the interactions (together only), the weather, the team.
+// BE: the reply's bond context (stepBonds); bk: this bond's numbers (xp, gain, partyGain are written back)
+function bondXP(BE, bk) {
+  const { S, B, log, OFF, V, KR, weeksNew, repLv, byId, wasHere, npcAway, give, repMod, examMod, bondWx, teamBond } = BE;
+  const { id, b, b0, d, w, need, birthday, socialMod } = bk;
+  let { xp, gain, partyGain } = bk;
+  // 1.3.0 Krieg (model B): Rank 1 from his introduction (the 0 -> 1 event is ready at once); then +weekly_xp every Monday while
+  // Doves reputation >= min_doves (with hidden magic, also Dove attention <= max_attention), else Tension +1. Nothing from interactions.
+  if (id === KR.id) {
+    byId[id] = (byId[id] || []).filter(a => /^(gift|apology|birthday|letdown|offence)$/.test(a.Kind));
+    if (b.Rank === 0) xp = need;
+    else if (b0 && b.Rank < 10) for (let k = 0; k < weeksNew; k++) {
+      if (repLv('Doves') >= KR.min_doves && !(S.Hidden._True_magic && num(S.Hidden.Dove_attention, 0) > KR.max_attention)) gain += KR.weekly_xp;
+      else { b.Tension = _.clamp(num(b.Tension, 0) + 1, 0, 100); log.push(`Krieg: no bond progress this week (Doves reputation ${repLv('Doves')}${S.Hidden._True_magic ? ', Dove attention ' + S.Hidden.Dove_attention : ''}); Tension +1.`); }
+    }
+  }
+  // 1.42.0 (audit 1.6): talk, hangout, study, help and gift XP need {{user}} and the NPC together (in the scene now or at the
+  // start of this reply); a letter or a word from afar gives none
+  const together = !!(S.Scene.Present[id] || wasHere(id)), apart = new Set();
+  for (const a of byId[id] || []) {
+    const k = String((a && a.Kind) || '').trim().toLowerCase();
+    if (V._Fatigue === 'Collapsed') { log.push('Collapsed: no interaction until {{user}} wakes.'); continue; }
+    if (!together && /^(talk|hangout|study|help)$/.test(k)) { apart.add(k); continue; }
+    if (k === 'rank_gift') {
+      if (b.$gift_pending && b.Rank >= 5 && (S.Scene.Present[id] || wasHere(id)) && !npcAway(id)) {
+        give(id, 'gift'); b.$gift_pending = false;
+      }
+    } else if (k === 'birthday_party') {
+      const party = S.$ui.party, h = Number(S.World.Time.split(':')[0]);
+      const atParty = party && (party.where.startsWith('The Snug') ? /snug/i.test(S.World.Location) : S.World.Location.includes(S.Player.Profile.Dorm) && /common room/i.test(S.World.Location));
+      if (party && party.guests.includes(id) && S.Scene.Present[id] && h >= 18 && h < party.endHour && atParty && !d.party) { d.party = 1; partyGain += BR.birthday.party_xp; }
+    } else if (k === 'talk' || k === 'hangout' || k === 'study') {
+      const socialKind = k === 'study' ? 'hangout' : k;
+      if ((d[socialKind] || 0) >= BR.per_day[socialKind]) continue;
+      d[socialKind] = (d[socialKind] || 0) + 1;
+      const studyBonus = k === 'study' && !!r4Partner(S, id, 'study');   // 1.45.0 (audit 3.9): one partner rule
+      const society = OFF.has('proficiency') ? 0 : num(S.Player._Proficiency.Society, 0);
+      gain += Math.round(Math.max(0, BR.kind_xp[socialKind] + repMod(id) + examMod(id) + socialMod) * (birthday ? BR.birthday.social_mult : 1) * (studyBonus ? 1.25 : 1) * (society >= 5 ? 1.2 : society >= 4 ? 1.1 : 1));
+      if (socialKind === 'hangout' && a.Invited && b.Rank >= 2 && S.Scene.Present[id] && !npcAway(id) && !w.invited) { gain++; w.invited = 1; }
+    } else if (k === 'gift') {
+      const bagKey = keyIn((B || {}).Inventory, a.Item || '');
+      const giftNote = bagKey ? String(B.Inventory[bagKey].Note || '') : '';
+      const gk = giftTier(id, a.Item, a.Gift, giftNote), firstBirthday = birthday && !d.birthdayGift;
+      if (a.Item) { delete b.$gifts[a.Item]; b.$gifts[a.Item] = gk; capRecord(b.$gifts, BR.gift_log_cap); }
+      const tension = gk === 'hated' ? BR.gift_hated_tension : gk === 'disliked' ? BR.gift_disliked_tension : 0;
+      b.Tension = _.clamp(num(b.Tension, 0) + tension * (birthday ? BR.birthday.gift_mult : 1), 0, 100);
+      log.push(`${id}: ${a.Item || 'gift'} — ${gk}${firstBirthday ? ' (birthday)' : ''}.`);
+      if (!together) { apart.add('gift'); continue; }
+      if (firstBirthday) d.birthdayGift = 1;
+      else if ((w.gift || 0) >= BR.per_week.gift) { log.push(`${id} already had ${BR.per_week.gift} gifts this week: no bond XP for another.`); continue; }
+      else w.gift = (w.gift || 0) + 1;
+      let x = gk in BR.gift_xp ? BR.gift_xp[gk] : BR.gift_xp.neutral;
+      if (gk === 'loved' && b.Rank >= BR.gift_bonus_rank) x = Math.round(x * BR.gift_bonus_mult);
+      if (id !== KR.id) gain += x * (firstBirthday ? BR.birthday.gift_mult : 1);
+    } else if (k === 'help') {
+      if ((w.help || 0) >= BR.per_week.help) continue;
+      w.help = (w.help || 0) + 1; gain += BR.kind_xp.help;
+    }
+  }
+  if (apart.size) log.push(`${id} was not in the scene: no bond XP for ${[...apart].join(', ')} (only time together counts).`);
+  // 1.1.0 weather bonus, kept: +1 once a day for time together indoors in bad weather, outdoors in fine weather, a clear Star Night
+  if (V._Fatigue !== 'Collapsed' && together && bondWx && !d.wx && (byId[id] || []).some(a => /^(talk|hangout|study)$/i.test(String((a && a.Kind) || '').trim()))) { d.wx = 1; gain += BR.weather_xp; }
+  // 1.44.0 (audit 3.13): a teammate fought beside {{user}}: bond XP once a year per competition tier (stepReputation's teamBond)
+  if (teamBond && teamBond.ids.has(id) && id !== KR.id) { gain += teamBond.xp; log.push(`${id} fought beside {{user}} in the ${teamBond.tier} Competition: +${teamBond.xp} bond XP.`); }
+  Object.assign(bk, { xp, gain, partyGain });
+}
+
+// 6.3 (2.0.0, audit K1) Trust (bk gets RO, DH, band0 and trXP for what follows)
+function bondTrust(BE, bk) {
+  const { S, log, V, dayNo, seed, byId, secretOut, spreadFrom, weeksNew } = BE;
+  const { id, b, b0, d, w, birthday, rankTrust } = bk;
+  // ---- 1.4.3 Trust: drops as the narrator wrote them (x the category), rises only from reported deeds (x the category, capped a
+  // week) and a rank earned; a quiet week recovers it towards the floor; then the overrides. tr0 (before this reply) decides what
+  // Trust does to Tension and apologies below.
+  if (V._Fatigue === 'Collapsed') byId[id] = [];
+  const RP = trustProfile(id, S, secretOut), RO = RP.o, DH = RP.dh || {};
+  const tr0 = b0 ? num(b0.Trust, 50) : num(b.Trust, 50), band0 = trustBand(tr0);
+  let tr = num(b.Trust, 50), tdropped = 0, trXP = 0;
+  if (b0) {
+    if (tr > tr0) { log.push(`${id}'s Trust cannot be raised directly (${tr0} -> ${tr} undone): report the deed as an interaction (keep, secret, defend, confide).`); tr = tr0; }
+    // 1.59.0 (narrator-load audit U8, owner): a letdown is reported in words (Kind letdown, Weight, Meant) and the engine draws its
+    // size (data/trust.json letdown); every one counts; a drop also written directly is not added twice (the larger counts)
+    let wdrop = 0;
+    (byId[id] || []).forEach((a, i) => {
+      if (String((a && a.Kind) || '').trim().toLowerCase() !== 'letdown') return;
+      const wt = String(a.Weight || '').trim().toLowerCase(), meant = String(a.Meant || '').trim().toLowerCase();
+      if (meant === 'forced') { log.push(`${id} knows {{user}} had no choice: Trust does not fall.`); return; }
+      const r = ((meant === 'no_harm' ? LETDOWN.no_harm : LETDOWN.weights) || {})[wt];
+      if (!r) { log.push(`${id}: letdown Weight "${wt}" is unknown (small, broken, secret_told, betrayal); Trust unchanged.`); return; }
+      wdrop += rollInt(r[0], r[1], seed, dayNo, S.World.Time, id, i, 'letdown');
+    });
+    const written = Math.min(tr, tr0 - wdrop); let tback = 0; tr = tr0;
+    // 1.4.4 (owner): once they understand {{user}} meant no harm, part of the last drop comes back (by nature, once, within 30 days)
+    if ((byId[id] || []).some(a => /^understood$/i.test(String((a && a.Kind) || '').trim())) && RO.lock == null) {
+      const back = Math.round(num(b.$tlast, 0) * num(RP.C.understood, 0));
+      if (b.$tlast > 0 && dayNo - num(b.$tdrop, -99) <= num(TRU.understood_days, 30) && back > 0) { log.push(`${id} understands now: Trust +${back} (part of the last drop).`); tback = back; }
+      else if (b.$tlast > 0) log.push(`${id} understands, but it does not give back what was lost${num(RP.C.understood, 0) ? ' (too long ago)' : ' (not in their nature)'}.`);
+      b.$tlast = 0;
+    }
+    tr += tback;
+    if (written < tr0) { tdropped = Math.ceil((tr0 - written) * RP.drop); tr -= tdropped; b.$tdrop = dayNo; b.$tlast = tdropped; }
+    const kinds = { ...(TRU.kinds || {}), ...(RO.kind_extra || {}) };
+    let add = 0;
+    for (const a of byId[id] || []) {
+      const k = String((a && a.Kind) || '').trim().toLowerCase();
+      if (!(k in kinds) || d['tr_' + k]) continue;               // each kind once a day
+      d['tr_' + k] = 1;
+      add += kinds[k] * (a.Public && (TRU.public_mult || {})[k] ? TRU.public_mult[k] : 1) * num((RO.kind_mult || {})[k], 1);
+    }
+    add = Math.round(add * RP.rise);
+    if (add > 0) {
+      const got = Math.min(add, Math.max(0, num(TRU.weekly_cap, 8) - num(w.tr, 0)));
+      if (got > 0) { w.tr = num(w.tr, 0) + got; tr += got; }
+      if (got < add) log.push(`${id}: Trust rises at most +${TRU.weekly_cap} a week (+${got} of +${add} counted).`);
+    }
+    // 1.31.0 (owner-approved planning/DRAFT_location_activities.md): the Old Hut custom, what is said inside stays there. A confidence
+    // there (confide or secret) counts a little more: Trust +1, once a month for each person, outside the weekly cap.
+    const hutMonth = `${S.World.Year || 1}-${S.World.Month}`;
+    if (placeKey(S.World.Location) === 'old hut' && b.$hut !== hutMonth && (byId[id] || []).some(a => /^(confide|secret)$/i.test(String((a && a.Kind) || '').trim()))) {
+      b.$hut = hutMonth; tr += 1; log.push(`${id}: a confidence kept in the Old Hut, Trust +1 (once this month).`);
+    }
+    tr += rankTrust;
+    if (weeksNew > 0 && tr < num(TRU.floor, 35) && RP.recover > 0 && dayNo - num(b.$tdrop, -99) >= 7) tr = Math.min(num(TRU.floor, 35), tr + RP.recover * weeksNew);
+    if (RO.lock != null) {                                       // Althair: Trust stays put; a betrayal becomes bond XP
+      if (tdropped > 0) {
+        const cap = num(tensionProfile(id).daily_cap, 10), x = Math.min(Math.ceil(tdropped * num(RO.convert, 0.5)), Math.max(0, cap - num(d.tx, 0)));
+        if (x > 0) { d.tx = num(d.tx, 0) + x; trXP = x; log.push(`${id} enjoyed being betrayed: Trust stays ${RO.lock}, bond XP +${x}.`); }
+      }
+      tr = RO.lock;
+    }
+    if (RO.floor_hard != null && tr < RO.floor_hard) {           // Etnie: never below 50; the rest of the blow becomes Tension
+      const over = RO.floor_hard - tr; tr = RO.floor_hard;
+      if (RO.overflow_to_tension) { b.Tension = _.clamp(num(b.Tension, 0) + over, 0, 100); log.push(`${id} cannot stop trusting {{user}}: it hurts instead (Tension +${over}).`); }
+    }
+    if (RO.floor_hidden != null) tr = Math.max(RO.floor_hidden, tr);   // Kanae while her Plan is hidden
+    if (RO.cap != null) tr = Math.min(RO.cap, tr);                     // Caine and mages, until his secret is out
+    if (tdropped >= num((TRU.spread || {}).at, 999) && RO.lock == null) spreadFrom.push(id);
+  }
+  b.Trust = _.clamp(Math.round(tr), 0, 100);
+  if (birthday && !d.birthdayRemembered && (byId[id] || []).some(a => /^(gift|birthday)$/.test(a.Kind))) { d.birthdayRemembered = 1; if (RO.lock == null) { b.Trust = _.clamp(b.Trust + BR.birthday.remember_trust, 0, 100); log.push(`${id}: birthday remembered, Trust +${BR.birthday.remember_trust}.`); } }
+  Object.assign(bk, { RO, DH, band0, trXP });
+}
+
+// 6.4 (2.0.0, audit K1) Tension and what it does to the bond (xp, need, gain written back; tgain for what follows)
+function bondTension(BE, bk) {
+  const { S, log, hasB, dayNo, dayNoB, seed, TU, KR, PACE, byId, daily, bweek, repAdd, notes } = BE;
+  const { id, b, b0, d, w, tw0, mood, birthday, recoveryMult, band0, DH, RO } = bk;
+  let { xp, need, gain } = bk;
+  // ---- 1.3.8 Tension: Althair's lock, Ezrel's half rises, fights, quiet-day decay, then its effects
+  const TP = tensionProfile(id), t0 = b0 ? num(b0.Tension, 0) : num(b.Tension, 0);
+  let t = num(b.Tension, 0), tgain = 0;
+  // 1.59.0 (narrator-load audit U8, owner): an offence is reported in words (Kind offence, Weight) and the engine draws its size
+  // (data/tension.json offence); several add up, never capped; a rise also written directly is not added twice (the larger counts)
+  let wrise = 0;
+  (byId[id] || []).forEach((a, i) => {
+    if (String((a && a.Kind) || '').trim().toLowerCase() !== 'offence') return;
+    const wt = String(a.Weight || '').trim().toLowerCase(), r = (OFFENCE.weights || {})[wt];
+    if (!r) { log.push(`${id}: offence Weight "${wt}" is unknown (slight, jealous, insult, violence); Tension unchanged.`); return; }
+    wrise += rollInt(r[0], r[1], seed, dayNo, S.World.Time, id, i, 'offence');
+  });
+  if (wrise > 0) { const direct = Math.max(0, tw0 - (b0 ? t0 : 0)); if (wrise > direct) t = _.clamp(t + wrise - direct, 0, 100); }
+  if (b0 && t > t0) {
+    if (TP.lock) {                                             // Althair: every rise becomes bond XP (/2, rounded up, capped a day)
+      const add = Math.min(Math.ceil((t - t0) * (TP.convert || 0.5)), Math.max(0, num(TP.daily_cap, 10) - num(d.tx, 0)));
+      if (add > 0) { d.tx = num(d.tx, 0) + add; tgain = add; log.push(`${id} enjoyed that: Tension stays 0, bond XP +${add}.`); }
+    } else {
+      const small = t - t0 <= num(TRE.small_tension_max, 15);
+      const m = (mood === 'Bad' ? TU.mood_tension : 1) * TP.riseMult * num(DH.tension_rise_mult, 1) * (band0 === 'Confidant' && small ? num(TRE.confidant_small_tension_mult, 0.5) : band0 === 'Betrayed' ? num(TRE.betrayed_tension_mult, 1.5) : 1);
+      if (m !== 1) t = t0 + Math.ceil((t - t0) * m);   // 1.4.3: Trust and the Dorm Head
+    }
+  }
+  if (TP.lock) t = 0;
+  // 1.4.0 (owner): an apology eases Tension by the NPC's category (or override); one a day, and each further one in the same week
+  // counts half. Some NPCs take it badly (apology_npc, e.g. Sophia: it raises Tension).
+  const apo = (byId[id] || []).find(a => /^apolog/i.test(String((a && a.Kind) || '').trim()));
+  if (apo && !TP.lock && !d.apology) {
+    const A = (TEN.apology_npc || {})[id] || TP.apology || { private: 0, public: 0 };
+    let x = num(apo.Public ? A.public : A.private, 0);
+    if (num(w.apo, 0) > 0) x = Math.sign(x) * Math.round(Math.abs(x) * num(TE.apology_repeat_mult, 0.5));
+    if (x < 0) x = Math.round(x * num((TRE.apology_mult || {})[band0], 1) * num(DH.apology_mult, 1) * recoveryMult * (mood === 'Good' ? TU.mood_apology : 1));   // 1.4.3: how much they believe it
+    d.apology = 1; w.apo = num(w.apo, 0) + 1;
+    if (x < 0 && t > 0) { const was = t; t = Math.max(0, t + x); log.push(`${id} accepted the apology${apo.Public ? ' (in public)' : ''}: Tension ${was} -> ${t}.`); }
+    else if (x > 0) { const was = t; t = Math.min(100, t + x * (mood === 'Bad' ? TU.mood_tension : 1)); log.push(`The apology made it worse with ${id}: Tension ${was} -> ${t}.`); }
+    else if (t > 0) log.push(`An apology changes nothing with ${id}.`);
+  }
+  if (TP.cat === 'confrontational' && (byId[id] || []).some(a => /^fight$/i.test(String((a && a.Kind) || '').trim())) && !d.fight && t > 0) {
+    d.fight = 1; const was = t; t = Math.max(0, t - num(TE.fight_ease, 25) * recoveryMult); log.push(`A fight with ${id} cleared the air: Tension ${was} -> ${t}.`);
+  }
+  // 1.4.4 (owner): kindness eases Tension by the character's nature (kind_ease: help / keep / defend; Social only a public
+  // defence), once a day
+  if (!TP.lock && t > 0 && !d.kind) {
+    const KE = TP.kind_ease || {};
+    const hit = (byId[id] || []).map(a => { const k = String((a && a.Kind) || '').trim().toLowerCase(); return k === 'defend' && a.Public && KE.defend_public != null ? KE.defend_public : KE[k]; }).filter(x => x < 0);
+    if (hit.length) { const x = Math.min(...hit) * recoveryMult, was = t; d.kind = 1; t = Math.max(0, t + x); log.push(`${id} took the kindness to heart: Tension ${was} -> ${t}.`); }
+  }
+  if (b0 && hasB && dayNo > dayNoB && t <= t0 && TP.decay > 0 && t > 0) {   // quiet days (no rise in this update)
+    const f = num(b.$tf, 0) + TP.decay * num(DH.tension_decay_mult, 1) * TU.tension_fade * (Math.min(60, dayNo - dayNoB) + (birthday ? recoveryMult - 1 : 0)), whole = Math.floor(f);
+    t = Math.max(0, t - whole); b.$tf = r2(f - whole);
+  }
+  b.Tension = _.clamp(Math.round(t), 0, 100);
+  if (Object.keys(d).length > 1) daily[id] = d;
+  if (Object.keys(w).length > 1) bweek[id] = w;
+  const cross = at => b0 && t0 < at && b.Tension >= at;
+  // a public falling-out costs reputation like a bond milestone earns it (staff: Academy, students: Student, Milena: Doves).
+  // 1.3.1: high Tension costs tension_xp, maximum Tension another tension_max_xp; Settings can turn it off. Kanae is exempt.
+  if (TU.rep_tension && repOfNpc(id) && !TP.exempt) {
+    for (const [at, x, what] of [[REP.tension_high, REP.tension_xp, 'high'], [REP.tension_max, REP.tension_max_xp, 'maximum']]) {
+      if (at && x && cross(at)) {
+        const got = repAdd(repOfNpc(id), x, `${what} tension with ${id}`, '');
+        if (got) log.push(`${what === 'high' ? 'High' : 'Maximum'} tension with ${id}: ${repOfNpc(id)} reputation ${got} XP.`);
+      }
+    }
+  }
+  if (TU.rep_tension && TP.enemy_rep && cross(TEN.bands[TEN.bands.length - 1][0])) {   // Social: a gossip campaign
+    for (const [r, x] of Object.entries(TP.enemy_rep)) { const got = repAdd(r, x, `${id} turned the students against {{user}}`, ''); if (got) log.push(`${id} turned the room against {{user}}: ${r} reputation ${got} XP.`); }
+  }
+  if (id === (TEN.krieg && KR.id) && cross(TEN.krieg.at)) {   // Krieg at maximum Tension: the Dovecote turns on {{user}}
+    if (S.Hidden._True_magic) { S.Hidden.Dove_attention = _.clamp(num(S.Hidden.Dove_attention, 0) + num(TEN.krieg.attention, 10), 0, 100); log.push(`Krieg has made {{user}} his business: Dove attention +${TEN.krieg.attention}.`); }
+    const got = repAdd('Doves', TEN.krieg.doves_xp, 'Krieg turned the Dovecote against {{user}}', ''); if (got) log.push(`Krieg turned the Dovecote against {{user}}: Doves reputation ${got} XP.`);
+  }
+  if (b.Tension < num(TE.rank_drop_rearm, 70)) b.$tbrk = 0;   // 1.4.4: re-armed once it has really cooled
+  if (cross(num(TE.rank_drop_at, 100)) && !TP.exempt && !TP.lock && b.Rank > 0 && !b.$tbrk) {   // maximum Tension breaks a rank (once per blow-up)
+    b.$tbrk = 1; b.Rank -= 1; xp = 0; b._Event_ready = false; b.$cool = dayNo + coolDays(b.Rank, PACE); need = needXP(b.Rank, PACE);
+    S.$ui.toasts.push(`Bond with {npc:${id}} fell to Rank ${b.Rank}`); notes.push(`The bond with ${id} broke down to Rank ${b.Rank}.`);
+    log.push(`Maximum Tension with ${id}: the bond fell to Rank ${b.Rank}.`);
+  }
+  // what Tension does to the bond (everyone the same, but Kanae and Althair): Strained halves XP, Enemy stops it
+  if (!TP.exempt && !TP.lock) {
+    if (b.Tension >= num(TE.stop_xp_from, 90)) gain = 0;
+    else if (b.Tension >= num(TE.strained_from, 40)) gain = Math.round(gain * num(TE.strained_xp_mult, 0.5));
+  }
+  if (trustBand(b.Trust) === 'Betrayed' && RO.lock == null && !RO.no_gates) gain = Math.round(gain * num(TRE.betrayed_xp_mult, 0.5));   // 1.4.3
+  Object.assign(bk, { xp, need, gain, tgain });
+}
+
+// 6.5 (2.0.0, audit K1) the bond's recent history, its defining moments, and word of a loud moment
+function bondRecent(BE, bk) {
+  const { S, hasB, dayNo, spreadFrom } = BE;
+  const { id, b, b0, acts, rank0, xpStart, trw0, tw0, trXP, tgain } = bk;
+  // 1.4.4 (owner): the bond's recent history with {{user}}: when, one sentence (the narrator's Note, else the kinds), the effect.
+  // Only what {{user}} did or reported: quiet-day easing and weekly recovery write no row.
+  if (hasB) {
+    const fx = [], dx = b.Rank < rank0 ? 0 : Math.max(0, num(b.$xp, 0) - xpStart), dT = b.Trust - (b0 ? num(b0.Trust, 50) : b.Trust), dX = b.Tension - (b0 ? num(b0.Tension, 0) : b.Tension);
+    if (b0 && b.Rank > rank0) fx.push(`Rank ${rank0} → ${b.Rank}`); else if (b0 && b.Rank < rank0) fx.push(`Rank fell to ${b.Rank}`);
+    if (dx > 0) fx.push(`XP +${dx}`); if (trXP + tgain > 0 && !dx) fx.push('enjoyed it');
+    const sg = x => (x > 0 ? '+' + x : '−' + Math.abs(x));
+    if (dT) fx.push(`Trust ${sg(dT)}`); if (dX) fx.push(`Tension ${sg(dX)}`);
+    if (b.Romance && !(b0 && b0.Romance)) fx.push('romance');
+    const notes = [...new Set(acts.map(a => String((a && a.Note) || '').trim()).filter(Boolean))];
+    const PH = (BR.recent || {}).phrases || {}, kinds = [...new Set(acts.map(a => String((a && a.Kind) || '').trim().toLowerCase()).filter(k => PH[k]))].map(k => PH[k]);
+    const said = notes.join(' ') || (kinds.length ? kinds.join(', ').replace(/^./, c => c.toUpperCase()) + '.' : '');
+    let pushed = false;   // 1.10.3: a defining moment is only ever this update's own row
+    // 1.39.0: Tsubaki remembers {{user}} from Avalon if they met there on Crowning Day before she came to Halvard
+    const tsu = id === 'Tsubaki' && !b0 && ((((S.$eng || {}).area || {}).avalon) || {}).tsu;
+    if (tsu) b.$Recent.push({ w: tsu, n: 'Met {{user}} in Avalon on Crowning Day, before she came to Halvard: she was lost, and she remembers who helped.', fx: '' });
+    if (!b0) b.$Recent.push({ w: stamp(S.World), n: tsu ? `Met again at Halvard, at ${S.World.Location}; she knows {{user}} from Avalon.` : `First met, at ${S.World.Location}.`, fx: b.Rank > 0 ? `Bond starts at Rank ${b.Rank}` : '' });
+    else if (acts.length || fx.length && (b.Rank !== rank0 || trw0 !== num(b0.Trust, 50) || tw0 !== num(b0.Tension, 0) || dx > 0)) {
+      b.$Recent.push({ w: stamp(S.World), n: said || '(no note)', fx: fx.join(', ') }); pushed = true;
+    }
+    b.$Recent = b.$Recent.slice(-num((BR.recent || {}).keep, 10));
+    // 1.6.0 (P4): defining moments. A big row (a rank changed, Trust moved 15+, Tension rose 20+, romance began) is also kept
+    // for good; at most DEFINING_MAX, the smallest leaves first (ties: the older one)
+    const big = (b0 && b.Rank !== rank0 ? 3 : 0) + (Math.abs(dT) >= 15 ? Math.abs(dT) / 5 : 0) + (dX >= 20 ? dX / 10 : 0) + (b.Romance && !(b0 && b0.Romance) ? 3 : 0);
+    if (b0 && big > 0 && pushed) {
+      const r = b.$Recent[b.$Recent.length - 1];
+      b.$Defining = [...b.$Defining, { w: r.w, n: r.n, fx: r.fx, s: Math.round(big * 10) / 10 }];
+      while (b.$Defining.length > DEFINING_MAX) { let lo = 0; b.$Defining.forEach((x, i) => { if (x.s < b.$Defining[lo].s) lo = i; }); b.$Defining.splice(lo, 1); }
+      // 1.74.0: word gets around. A loud moment (Trust moved 15+, Tension rose 20+, a romance began) told by someone who talks
+      // about themselves (Trust category open or normal, data/bond_openness.json) reaches their friends (TRU.friends, the
+      // betrayal spread's list) WORD_DAYS later as a Knows line (stepBondMemory). A betrayal spreads on its own (spreadFrom).
+      const loud = Math.abs(dT) >= 15 || dX >= 20 || (b.Romance && !b0.Romance);
+      if (loud && r.n !== '(no note)' && !spreadFrom.includes(id) && ['open', 'normal'].includes((TRU.npcs || {})[id] || 'normal')) {
+        const to = ((TRU.friends || {})[id] || []).filter(f => f !== id && !(S.Scene.Present || {})[f]);   // those here saw it
+        if (to.length) S.$eng.word = [...(Array.isArray(S.$eng.word) ? S.$eng.word : []), { from: id, n: r.n, due: dayNo + WORD_DAYS, to }].slice(-40);
+      }
+    }
+  }
+}
+
+function stepBonds(c) {
+  const { S, B, log, jnl, hasB, OFF, evs, dayNo, goneNow, dayNoB, WXM, seed, TU, wxNow, V, weekNo, weekNoB, repLv, repAdd, repLevelUp, teamBond, notes } = c;
+  const { canon, BB } = c;
   const daily = S.$eng.daily || {};
   // 1.1.0 (Full): +1 to today's cap for a bond that grew "stuck indoors together" in rain/snow/storm, outdoors in fine mild weather,
   // or on a clear Star Night. At most +1 per bond per day.
@@ -4472,29 +4798,15 @@ function stepBonds(c) {
     const nd = ((REW.npcs || {})[id] || {}).nudge;
     if (b.Rank === 8 && MASK.has(id) && nd && !(b.Known_facts || []).includes(nd.fact)) { b.Known_facts = [...(b.Known_facts || []), nd.fact]; log.push(`${id}: a new lead, "${nd.fact}"`); }
   };
+  // 2.0.0 (audit K1): what the per-bond helpers (bondXP, bondTrust, bondTension, bondRecent) read
+  const BE = { S, B, log, hasB, OFF, V, dayNo, dayNoB, seed, TU, PACE, KR, weeksNew, repLv, repAdd, notes, byId, wasHere, npcAway, give, repMod, examMod, secretOut, bondWx, teamBond, spreadFrom, daily, bweek };
   for (const [id, b] of Object.entries(S.Bonds)) {
     const b0 = BB[id];
     const g = num(b.Progress, 0) - num(b0 && b0.Progress, 0);
     if (hasB && g > 0 && !byId[id]) byId[id] = [{ Kind: g >= 2 ? 'hangout' : 'talk' }];
     // engine-owned fields come from the previous state; a record the AI (re)wrote cannot set them
     let xp = b0 ? num(b0.$xp, 0) : (hasB ? 0 : num(b.$xp, 0));
-    b.Progress = 0;
-    b._Event_ready = b0 ? !!b0._Event_ready : false;
-    b.$cool = b0 ? num(b0.$cool, -1) : num(b.$cool, -1);
-    b.$ms = b0 ? [...(b0.$ms || [])] : [...(b.$ms || [])]; b.$tf = b0 ? num(b0.$tf, 0) : num(b.$tf, 0);   // 1.3.8 engine-owned
-    b.$tdrop = b0 ? num(b0.$tdrop, -99) : num(b.$tdrop, -99);   // 1.4.3
-    b.$tlast = b0 ? num(b0.$tlast, 0) : 0; b.$tbrk = b0 ? num(b0.$tbrk, 0) : 0;   // 1.4.4
-    b.$hut = b0 ? String(b0.$hut || '') : String(b.$hut || '');   // 1.31.0 the Old Hut month
-    b.$Recent = b0 ? [...(b0.$Recent || [])] : [...(b.$Recent || [])];   // 1.4.4 engine-owned
-    b.$Defining = b0 ? [...(b0.$Defining || [])] : [...(b.$Defining || [])];   // 1.6.0 engine-owned
-    b.$gifts = _.cloneDeep(b0 ? b0.$gifts || {} : b.$gifts || {});
-    b.$gift_pending = b0 ? !!b0.$gift_pending : !!b.$gift_pending;
-    b.$branch = b0 ? String(b0.$branch || '') : String(b.$branch || '');   // 1.6.8 engine-owned: friend | romance | rival from Rank 8
-    b.$met = b0 ? String(b0.$met || '') : ydate(S.World);   // 1.72.0 engine-owned: the day they met, and the day of Rank 8
-    b.$b8 = b0 ? String(b0.$b8 || '') : '';
-    if (!b.$branch && b0 && b0.Rank >= 8) b.$branch = b0.Romance ? 'romance' : /rival/i.test(String(b0.Title || '')) ? 'rival' : 'friend';   // saves from before 1.6.8
-    b.$Knows_old = b0 ? [...(b0.$Knows_old || [])] : [...(b.$Knows_old || [])]; b.$seen = b0 ? num(b0.$seen, -1) : num(b.$seen, -1); b.$mw = b0 ? num(b0.$mw, -1) : num(b.$mw, -1);
-    b.$apart = b0 ? num(b0.$apart, 0) : 0; b.$apartd = b0 ? num(b0.$apartd, -1) : -1;   // 1.73.0 engine-owned (stepBondMemory)
+    bondOwned(b, b0, S);   // 2.0.0 (audit K1)
     const acts = [...(byId[id] || [])], rank0 = b0 ? b0.Rank : b.Rank, tw0 = num(b.Tension, 0), trw0 = num(b.Trust, 50);
     let rankTrust = 0;
     // 1.4.3: a new bond starts at the character's own Trust (owner: start by category). 1.6.11 (owner playtest: Trixie met for the
@@ -4541,220 +4853,17 @@ function stepBonds(c) {
     const socialMod = (mood === 'Good' ? TU.mood_xp : mood === 'Bad' ? -TU.mood_xp : 0) - (V._Fatigue === 'Exhausted' ? 1 : 0);
     const recoveryMult = birthday ? BR.birthday.recovery_mult : 1;
     const d = daily[id] && daily[id].day === dayNo ? daily[id] : { day: dayNo }, w = bweek[id] && bweek[id].w === weekNo ? bweek[id] : { w: weekNo };
-    // 1.3.0 Krieg (model B): Rank 1 from his introduction (the 0 -> 1 event is ready at once); then +weekly_xp every Monday while
-    // Doves reputation >= min_doves (with hidden magic, also Dove attention <= max_attention), else Tension +1. Nothing from interactions.
-    if (id === KR.id) {
-      byId[id] = (byId[id] || []).filter(a => /^(gift|apology|birthday|letdown|offence)$/.test(a.Kind));
-      if (b.Rank === 0) xp = need;
-      else if (b0 && b.Rank < 10) for (let k = 0; k < weeksNew; k++) {
-        if (repLv('Doves') >= KR.min_doves && !(S.Hidden._True_magic && num(S.Hidden.Dove_attention, 0) > KR.max_attention)) gain += KR.weekly_xp;
-        else { b.Tension = _.clamp(num(b.Tension, 0) + 1, 0, 100); log.push(`Krieg: no bond progress this week (Doves reputation ${repLv('Doves')}${S.Hidden._True_magic ? ', Dove attention ' + S.Hidden.Dove_attention : ''}); Tension +1.`); }
-      }
-    }
-    // 1.42.0 (audit 1.6): talk, hangout, study, help and gift XP need {{user}} and the NPC together (in the scene now or at the
-    // start of this reply); a letter or a word from afar gives none
-    const together = !!(S.Scene.Present[id] || wasHere(id)), apart = new Set();
-    for (const a of byId[id] || []) {
-      const k = String((a && a.Kind) || '').trim().toLowerCase();
-      if (V._Fatigue === 'Collapsed') { log.push('Collapsed: no interaction until {{user}} wakes.'); continue; }
-      if (!together && /^(talk|hangout|study|help)$/.test(k)) { apart.add(k); continue; }
-      if (k === 'rank_gift') {
-        if (b.$gift_pending && b.Rank >= 5 && (S.Scene.Present[id] || wasHere(id)) && !npcAway(id)) {
-          give(id, 'gift'); b.$gift_pending = false;
-        }
-      } else if (k === 'birthday_party') {
-        const party = S.$ui.party, h = Number(S.World.Time.split(':')[0]);
-        const atParty = party && (party.where.startsWith('The Snug') ? /snug/i.test(S.World.Location) : S.World.Location.includes(S.Player.Profile.Dorm) && /common room/i.test(S.World.Location));
-        if (party && party.guests.includes(id) && S.Scene.Present[id] && h >= 18 && h < party.endHour && atParty && !d.party) { d.party = 1; partyGain += BR.birthday.party_xp; }
-      } else if (k === 'talk' || k === 'hangout' || k === 'study') {
-        const socialKind = k === 'study' ? 'hangout' : k;
-        if ((d[socialKind] || 0) >= BR.per_day[socialKind]) continue;
-        d[socialKind] = (d[socialKind] || 0) + 1;
-        const studyBonus = k === 'study' && !!r4Partner(S, id, 'study');   // 1.45.0 (audit 3.9): one partner rule
-        const society = OFF.has('proficiency') ? 0 : num(S.Player._Proficiency.Society, 0);
-        gain += Math.round(Math.max(0, BR.kind_xp[socialKind] + repMod(id) + examMod(id) + socialMod) * (birthday ? BR.birthday.social_mult : 1) * (studyBonus ? 1.25 : 1) * (society >= 5 ? 1.2 : society >= 4 ? 1.1 : 1));
-        if (socialKind === 'hangout' && a.Invited && b.Rank >= 2 && S.Scene.Present[id] && !npcAway(id) && !w.invited) { gain++; w.invited = 1; }
-      } else if (k === 'gift') {
-        const bagKey = keyIn((B || {}).Inventory, a.Item || '');
-        const giftNote = bagKey ? String(B.Inventory[bagKey].Note || '') : '';
-        const gk = giftTier(id, a.Item, a.Gift, giftNote), firstBirthday = birthday && !d.birthdayGift;
-        if (a.Item) { delete b.$gifts[a.Item]; b.$gifts[a.Item] = gk; capRecord(b.$gifts, BR.gift_log_cap); }
-        const tension = gk === 'hated' ? BR.gift_hated_tension : gk === 'disliked' ? BR.gift_disliked_tension : 0;
-        b.Tension = _.clamp(num(b.Tension, 0) + tension * (birthday ? BR.birthday.gift_mult : 1), 0, 100);
-        log.push(`${id}: ${a.Item || 'gift'} — ${gk}${firstBirthday ? ' (birthday)' : ''}.`);
-        if (!together) { apart.add('gift'); continue; }
-        if (firstBirthday) d.birthdayGift = 1;
-        else if ((w.gift || 0) >= BR.per_week.gift) { log.push(`${id} already had ${BR.per_week.gift} gifts this week: no bond XP for another.`); continue; }
-        else w.gift = (w.gift || 0) + 1;
-        let x = gk in BR.gift_xp ? BR.gift_xp[gk] : BR.gift_xp.neutral;
-        if (gk === 'loved' && b.Rank >= BR.gift_bonus_rank) x = Math.round(x * BR.gift_bonus_mult);
-        if (id !== KR.id) gain += x * (firstBirthday ? BR.birthday.gift_mult : 1);
-      } else if (k === 'help') {
-        if ((w.help || 0) >= BR.per_week.help) continue;
-        w.help = (w.help || 0) + 1; gain += BR.kind_xp.help;
-      }
-    }
-    if (apart.size) log.push(`${id} was not in the scene: no bond XP for ${[...apart].join(', ')} (only time together counts).`);
-    // 1.1.0 weather bonus, kept: +1 once a day for time together indoors in bad weather, outdoors in fine weather, a clear Star Night
-    if (V._Fatigue !== 'Collapsed' && together && bondWx && !d.wx && (byId[id] || []).some(a => /^(talk|hangout|study)$/i.test(String((a && a.Kind) || '').trim()))) { d.wx = 1; gain += BR.weather_xp; }
-    // 1.44.0 (audit 3.13): a teammate fought beside {{user}}: bond XP once a year per competition tier (stepReputation's teamBond)
-    if (teamBond && teamBond.ids.has(id) && id !== KR.id) { gain += teamBond.xp; log.push(`${id} fought beside {{user}} in the ${teamBond.tier} Competition: +${teamBond.xp} bond XP.`); }
-    // ---- 1.4.3 Trust: drops as the narrator wrote them (x the category), rises only from reported deeds (x the category, capped a
-    // week) and a rank earned; a quiet week recovers it towards the floor; then the overrides. tr0 (before this reply) decides what
-    // Trust does to Tension and apologies below.
-    if (V._Fatigue === 'Collapsed') byId[id] = [];
-    const RP = trustProfile(id, S, secretOut), RO = RP.o, DH = RP.dh || {};
-    const tr0 = b0 ? num(b0.Trust, 50) : num(b.Trust, 50), band0 = trustBand(tr0);
-    let tr = num(b.Trust, 50), tdropped = 0, trXP = 0;
-    if (b0) {
-      if (tr > tr0) { log.push(`${id}'s Trust cannot be raised directly (${tr0} -> ${tr} undone): report the deed as an interaction (keep, secret, defend, confide).`); tr = tr0; }
-      // 1.59.0 (narrator-load audit U8, owner): a letdown is reported in words (Kind letdown, Weight, Meant) and the engine draws its
-      // size (data/trust.json letdown); every one counts; a drop also written directly is not added twice (the larger counts)
-      let wdrop = 0;
-      (byId[id] || []).forEach((a, i) => {
-        if (String((a && a.Kind) || '').trim().toLowerCase() !== 'letdown') return;
-        const wt = String(a.Weight || '').trim().toLowerCase(), meant = String(a.Meant || '').trim().toLowerCase();
-        if (meant === 'forced') { log.push(`${id} knows {{user}} had no choice: Trust does not fall.`); return; }
-        const r = ((meant === 'no_harm' ? LETDOWN.no_harm : LETDOWN.weights) || {})[wt];
-        if (!r) { log.push(`${id}: letdown Weight "${wt}" is unknown (small, broken, secret_told, betrayal); Trust unchanged.`); return; }
-        wdrop += rollInt(r[0], r[1], seed, dayNo, S.World.Time, id, i, 'letdown');
-      });
-      const written = Math.min(tr, tr0 - wdrop); let tback = 0; tr = tr0;
-      // 1.4.4 (owner): once they understand {{user}} meant no harm, part of the last drop comes back (by nature, once, within 30 days)
-      if ((byId[id] || []).some(a => /^understood$/i.test(String((a && a.Kind) || '').trim())) && RO.lock == null) {
-        const back = Math.round(num(b.$tlast, 0) * num(RP.C.understood, 0));
-        if (b.$tlast > 0 && dayNo - num(b.$tdrop, -99) <= num(TRU.understood_days, 30) && back > 0) { log.push(`${id} understands now: Trust +${back} (part of the last drop).`); tback = back; }
-        else if (b.$tlast > 0) log.push(`${id} understands, but it does not give back what was lost${num(RP.C.understood, 0) ? ' (too long ago)' : ' (not in their nature)'}.`);
-        b.$tlast = 0;
-      }
-      tr += tback;
-      if (written < tr0) { tdropped = Math.ceil((tr0 - written) * RP.drop); tr -= tdropped; b.$tdrop = dayNo; b.$tlast = tdropped; }
-      const kinds = { ...(TRU.kinds || {}), ...(RO.kind_extra || {}) };
-      let add = 0;
-      for (const a of byId[id] || []) {
-        const k = String((a && a.Kind) || '').trim().toLowerCase();
-        if (!(k in kinds) || d['tr_' + k]) continue;               // each kind once a day
-        d['tr_' + k] = 1;
-        add += kinds[k] * (a.Public && (TRU.public_mult || {})[k] ? TRU.public_mult[k] : 1) * num((RO.kind_mult || {})[k], 1);
-      }
-      add = Math.round(add * RP.rise);
-      if (add > 0) {
-        const got = Math.min(add, Math.max(0, num(TRU.weekly_cap, 8) - num(w.tr, 0)));
-        if (got > 0) { w.tr = num(w.tr, 0) + got; tr += got; }
-        if (got < add) log.push(`${id}: Trust rises at most +${TRU.weekly_cap} a week (+${got} of +${add} counted).`);
-      }
-      // 1.31.0 (owner-approved planning/DRAFT_location_activities.md): the Old Hut custom, what is said inside stays there. A confidence
-      // there (confide or secret) counts a little more: Trust +1, once a month for each person, outside the weekly cap.
-      const hutMonth = `${S.World.Year || 1}-${S.World.Month}`;
-      if (placeKey(S.World.Location) === 'old hut' && b.$hut !== hutMonth && (byId[id] || []).some(a => /^(confide|secret)$/i.test(String((a && a.Kind) || '').trim()))) {
-        b.$hut = hutMonth; tr += 1; log.push(`${id}: a confidence kept in the Old Hut, Trust +1 (once this month).`);
-      }
-      tr += rankTrust;
-      if (weeksNew > 0 && tr < num(TRU.floor, 35) && RP.recover > 0 && dayNo - num(b.$tdrop, -99) >= 7) tr = Math.min(num(TRU.floor, 35), tr + RP.recover * weeksNew);
-      if (RO.lock != null) {                                       // Althair: Trust stays put; a betrayal becomes bond XP
-        if (tdropped > 0) {
-          const cap = num(tensionProfile(id).daily_cap, 10), x = Math.min(Math.ceil(tdropped * num(RO.convert, 0.5)), Math.max(0, cap - num(d.tx, 0)));
-          if (x > 0) { d.tx = num(d.tx, 0) + x; trXP = x; log.push(`${id} enjoyed being betrayed: Trust stays ${RO.lock}, bond XP +${x}.`); }
-        }
-        tr = RO.lock;
-      }
-      if (RO.floor_hard != null && tr < RO.floor_hard) {           // Etnie: never below 50; the rest of the blow becomes Tension
-        const over = RO.floor_hard - tr; tr = RO.floor_hard;
-        if (RO.overflow_to_tension) { b.Tension = _.clamp(num(b.Tension, 0) + over, 0, 100); log.push(`${id} cannot stop trusting {{user}}: it hurts instead (Tension +${over}).`); }
-      }
-      if (RO.floor_hidden != null) tr = Math.max(RO.floor_hidden, tr);   // Kanae while her Plan is hidden
-      if (RO.cap != null) tr = Math.min(RO.cap, tr);                     // Caine and mages, until his secret is out
-      if (tdropped >= num((TRU.spread || {}).at, 999) && RO.lock == null) spreadFrom.push(id);
-    }
-    b.Trust = _.clamp(Math.round(tr), 0, 100);
-    if (birthday && !d.birthdayRemembered && (byId[id] || []).some(a => /^(gift|birthday)$/.test(a.Kind))) { d.birthdayRemembered = 1; if (RO.lock == null) { b.Trust = _.clamp(b.Trust + BR.birthday.remember_trust, 0, 100); log.push(`${id}: birthday remembered, Trust +${BR.birthday.remember_trust}.`); } }
+    const bk = { id, b, b0, d, w, acts, rank0, tw0, trw0, xpStart, need, xp, gain, partyGain, birthday, mood, socialMod, recoveryMult, rankTrust };
+    bondXP(BE, bk); bondTrust(BE, bk);
+    ({ xp, gain, partyGain } = bk);
+    const { DH, trXP } = bk;
     gain = Math.round(gain * num(DH.bond_xp_mult, 1));                   // Ottavio and his own Sky students
     if (scene && id === WSC.npc) gain = Math.round(gain * num(WSC.mult, 1));   // 1.97.5: the scenario's bond week
     if (trAway(S, id)) gain = 0;                                         // 1.97.5: a transfer's bond lives only with her
-    // ---- 1.3.8 Tension: Althair's lock, Ezrel's half rises, fights, quiet-day decay, then its effects
-    const TP = tensionProfile(id), t0 = b0 ? num(b0.Tension, 0) : num(b.Tension, 0);
-    let t = num(b.Tension, 0), tgain = 0;
-    // 1.59.0 (narrator-load audit U8, owner): an offence is reported in words (Kind offence, Weight) and the engine draws its size
-    // (data/tension.json offence); several add up, never capped; a rise also written directly is not added twice (the larger counts)
-    let wrise = 0;
-    (byId[id] || []).forEach((a, i) => {
-      if (String((a && a.Kind) || '').trim().toLowerCase() !== 'offence') return;
-      const wt = String(a.Weight || '').trim().toLowerCase(), r = (OFFENCE.weights || {})[wt];
-      if (!r) { log.push(`${id}: offence Weight "${wt}" is unknown (slight, jealous, insult, violence); Tension unchanged.`); return; }
-      wrise += rollInt(r[0], r[1], seed, dayNo, S.World.Time, id, i, 'offence');
-    });
-    if (wrise > 0) { const direct = Math.max(0, tw0 - (b0 ? t0 : 0)); if (wrise > direct) t = _.clamp(t + wrise - direct, 0, 100); }
-    if (b0 && t > t0) {
-      if (TP.lock) {                                             // Althair: every rise becomes bond XP (/2, rounded up, capped a day)
-        const add = Math.min(Math.ceil((t - t0) * (TP.convert || 0.5)), Math.max(0, num(TP.daily_cap, 10) - num(d.tx, 0)));
-        if (add > 0) { d.tx = num(d.tx, 0) + add; tgain = add; log.push(`${id} enjoyed that: Tension stays 0, bond XP +${add}.`); }
-      } else {
-        const small = t - t0 <= num(TRE.small_tension_max, 15);
-        const m = (mood === 'Bad' ? TU.mood_tension : 1) * TP.riseMult * num(DH.tension_rise_mult, 1) * (band0 === 'Confidant' && small ? num(TRE.confidant_small_tension_mult, 0.5) : band0 === 'Betrayed' ? num(TRE.betrayed_tension_mult, 1.5) : 1);
-        if (m !== 1) t = t0 + Math.ceil((t - t0) * m);   // 1.4.3: Trust and the Dorm Head
-      }
-    }
-    if (TP.lock) t = 0;
-    // 1.4.0 (owner): an apology eases Tension by the NPC's category (or override); one a day, and each further one in the same week
-    // counts half. Some NPCs take it badly (apology_npc, e.g. Sophia: it raises Tension).
-    const apo = (byId[id] || []).find(a => /^apolog/i.test(String((a && a.Kind) || '').trim()));
-    if (apo && !TP.lock && !d.apology) {
-      const A = (TEN.apology_npc || {})[id] || TP.apology || { private: 0, public: 0 };
-      let x = num(apo.Public ? A.public : A.private, 0);
-      if (num(w.apo, 0) > 0) x = Math.sign(x) * Math.round(Math.abs(x) * num(TE.apology_repeat_mult, 0.5));
-      if (x < 0) x = Math.round(x * num((TRE.apology_mult || {})[band0], 1) * num(DH.apology_mult, 1) * recoveryMult * (mood === 'Good' ? TU.mood_apology : 1));   // 1.4.3: how much they believe it
-      d.apology = 1; w.apo = num(w.apo, 0) + 1;
-      if (x < 0 && t > 0) { const was = t; t = Math.max(0, t + x); log.push(`${id} accepted the apology${apo.Public ? ' (in public)' : ''}: Tension ${was} -> ${t}.`); }
-      else if (x > 0) { const was = t; t = Math.min(100, t + x * (mood === 'Bad' ? TU.mood_tension : 1)); log.push(`The apology made it worse with ${id}: Tension ${was} -> ${t}.`); }
-      else if (t > 0) log.push(`An apology changes nothing with ${id}.`);
-    }
-    if (TP.cat === 'confrontational' && (byId[id] || []).some(a => /^fight$/i.test(String((a && a.Kind) || '').trim())) && !d.fight && t > 0) {
-      d.fight = 1; const was = t; t = Math.max(0, t - num(TE.fight_ease, 25) * recoveryMult); log.push(`A fight with ${id} cleared the air: Tension ${was} -> ${t}.`);
-    }
-    // 1.4.4 (owner): kindness eases Tension by the character's nature (kind_ease: help / keep / defend; Social only a public
-    // defence), once a day
-    if (!TP.lock && t > 0 && !d.kind) {
-      const KE = TP.kind_ease || {};
-      const hit = (byId[id] || []).map(a => { const k = String((a && a.Kind) || '').trim().toLowerCase(); return k === 'defend' && a.Public && KE.defend_public != null ? KE.defend_public : KE[k]; }).filter(x => x < 0);
-      if (hit.length) { const x = Math.min(...hit) * recoveryMult, was = t; d.kind = 1; t = Math.max(0, t + x); log.push(`${id} took the kindness to heart: Tension ${was} -> ${t}.`); }
-    }
-    if (b0 && hasB && dayNo > dayNoB && t <= t0 && TP.decay > 0 && t > 0) {   // quiet days (no rise in this update)
-      const f = num(b.$tf, 0) + TP.decay * num(DH.tension_decay_mult, 1) * TU.tension_fade * (Math.min(60, dayNo - dayNoB) + (birthday ? recoveryMult - 1 : 0)), whole = Math.floor(f);
-      t = Math.max(0, t - whole); b.$tf = r2(f - whole);
-    }
-    b.Tension = _.clamp(Math.round(t), 0, 100);
-    if (Object.keys(d).length > 1) daily[id] = d;
-    if (Object.keys(w).length > 1) bweek[id] = w;
-    const cross = at => b0 && t0 < at && b.Tension >= at;
-    // a public falling-out costs reputation like a bond milestone earns it (staff: Academy, students: Student, Milena: Doves).
-    // 1.3.1: high Tension costs tension_xp, maximum Tension another tension_max_xp; Settings can turn it off. Kanae is exempt.
-    if (TU.rep_tension && repOfNpc(id) && !TP.exempt) {
-      for (const [at, x, what] of [[REP.tension_high, REP.tension_xp, 'high'], [REP.tension_max, REP.tension_max_xp, 'maximum']]) {
-        if (at && x && cross(at)) {
-          const got = repAdd(repOfNpc(id), x, `${what} tension with ${id}`, '');
-          if (got) log.push(`${what === 'high' ? 'High' : 'Maximum'} tension with ${id}: ${repOfNpc(id)} reputation ${got} XP.`);
-        }
-      }
-    }
-    if (TU.rep_tension && TP.enemy_rep && cross(TEN.bands[TEN.bands.length - 1][0])) {   // Social: a gossip campaign
-      for (const [r, x] of Object.entries(TP.enemy_rep)) { const got = repAdd(r, x, `${id} turned the students against {{user}}`, ''); if (got) log.push(`${id} turned the room against {{user}}: ${r} reputation ${got} XP.`); }
-    }
-    if (id === (TEN.krieg && KR.id) && cross(TEN.krieg.at)) {   // Krieg at maximum Tension: the Dovecote turns on {{user}}
-      if (S.Hidden._True_magic) { S.Hidden.Dove_attention = _.clamp(num(S.Hidden.Dove_attention, 0) + num(TEN.krieg.attention, 10), 0, 100); log.push(`Krieg has made {{user}} his business: Dove attention +${TEN.krieg.attention}.`); }
-      const got = repAdd('Doves', TEN.krieg.doves_xp, 'Krieg turned the Dovecote against {{user}}', ''); if (got) log.push(`Krieg turned the Dovecote against {{user}}: Doves reputation ${got} XP.`);
-    }
-    if (b.Tension < num(TE.rank_drop_rearm, 70)) b.$tbrk = 0;   // 1.4.4: re-armed once it has really cooled
-    if (cross(num(TE.rank_drop_at, 100)) && !TP.exempt && !TP.lock && b.Rank > 0 && !b.$tbrk) {   // maximum Tension breaks a rank (once per blow-up)
-      b.$tbrk = 1; b.Rank -= 1; xp = 0; b._Event_ready = false; b.$cool = dayNo + coolDays(b.Rank, PACE); need = needXP(b.Rank, PACE);
-      S.$ui.toasts.push(`Bond with {npc:${id}} fell to Rank ${b.Rank}`); notes.push(`The bond with ${id} broke down to Rank ${b.Rank}.`);
-      log.push(`Maximum Tension with ${id}: the bond fell to Rank ${b.Rank}.`);
-    }
-    // what Tension does to the bond (everyone the same, but Kanae and Althair): Strained halves XP, Enemy stops it
-    if (!TP.exempt && !TP.lock) {
-      if (b.Tension >= num(TE.stop_xp_from, 90)) gain = 0;
-      else if (b.Tension >= num(TE.strained_from, 40)) gain = Math.round(gain * num(TE.strained_xp_mult, 0.5));
-    }
-    if (trustBand(b.Trust) === 'Betrayed' && RO.lock == null && !RO.no_gates) gain = Math.round(gain * num(TRE.betrayed_xp_mult, 0.5));   // 1.4.3
+    Object.assign(bk, { xp, gain });
+    bondTension(BE, bk);
+    ({ xp, need, gain } = bk);
+    const { tgain } = bk;
     gain += tgain + trXP + partyGain;
     xp = b.Rank >= 10 ? 0 : Math.min(need, xp + gain);          // full XP waits for the next genuine interaction
     b.$xp = xp;
@@ -4777,44 +4886,7 @@ function stepBonds(c) {
     if (hasB && b.Romance && !(b0 && b0.Romance)) { b.$branch = 'romance'; b.$b8 = ydate(S.World); jnl.push(`Romance began with ${id}.`); }   // 1.62.0 (M3): a Journal landmark
     else if (hasB && b.Rank >= 8 && !b.$branch) { b.$branch = b.Romance ? 'romance' : canRival(id) && tr8 < trustGate(id, 8) ? 'rival' : 'friend'; b.$b8 = ydate(S.World); }
     else if (b.Rank < 8 && b.$branch) { b.$branch = ''; b.$b8 = ''; }
-    // 1.4.4 (owner): the bond's recent history with {{user}}: when, one sentence (the narrator's Note, else the kinds), the effect.
-    // Only what {{user}} did or reported: quiet-day easing and weekly recovery write no row.
-    if (hasB) {
-      const fx = [], dx = b.Rank < rank0 ? 0 : Math.max(0, num(b.$xp, 0) - xpStart), dT = b.Trust - (b0 ? num(b0.Trust, 50) : b.Trust), dX = b.Tension - (b0 ? num(b0.Tension, 0) : b.Tension);
-      if (b0 && b.Rank > rank0) fx.push(`Rank ${rank0} → ${b.Rank}`); else if (b0 && b.Rank < rank0) fx.push(`Rank fell to ${b.Rank}`);
-      if (dx > 0) fx.push(`XP +${dx}`); if (trXP + tgain > 0 && !dx) fx.push('enjoyed it');
-      const sg = x => (x > 0 ? '+' + x : '−' + Math.abs(x));
-      if (dT) fx.push(`Trust ${sg(dT)}`); if (dX) fx.push(`Tension ${sg(dX)}`);
-      if (b.Romance && !(b0 && b0.Romance)) fx.push('romance');
-      const notes = [...new Set(acts.map(a => String((a && a.Note) || '').trim()).filter(Boolean))];
-      const PH = (BR.recent || {}).phrases || {}, kinds = [...new Set(acts.map(a => String((a && a.Kind) || '').trim().toLowerCase()).filter(k => PH[k]))].map(k => PH[k]);
-      const said = notes.join(' ') || (kinds.length ? kinds.join(', ').replace(/^./, c => c.toUpperCase()) + '.' : '');
-      let pushed = false;   // 1.10.3: a defining moment is only ever this update's own row
-      // 1.39.0: Tsubaki remembers {{user}} from Avalon if they met there on Crowning Day before she came to Halvard
-      const tsu = id === 'Tsubaki' && !b0 && ((((S.$eng || {}).area || {}).avalon) || {}).tsu;
-      if (tsu) b.$Recent.push({ w: tsu, n: 'Met {{user}} in Avalon on Crowning Day, before she came to Halvard: she was lost, and she remembers who helped.', fx: '' });
-      if (!b0) b.$Recent.push({ w: stamp(S.World), n: tsu ? `Met again at Halvard, at ${S.World.Location}; she knows {{user}} from Avalon.` : `First met, at ${S.World.Location}.`, fx: b.Rank > 0 ? `Bond starts at Rank ${b.Rank}` : '' });
-      else if (acts.length || fx.length && (b.Rank !== rank0 || trw0 !== num(b0.Trust, 50) || tw0 !== num(b0.Tension, 0) || dx > 0)) {
-        b.$Recent.push({ w: stamp(S.World), n: said || '(no note)', fx: fx.join(', ') }); pushed = true;
-      }
-      b.$Recent = b.$Recent.slice(-num((BR.recent || {}).keep, 10));
-      // 1.6.0 (P4): defining moments. A big row (a rank changed, Trust moved 15+, Tension rose 20+, romance began) is also kept
-      // for good; at most DEFINING_MAX, the smallest leaves first (ties: the older one)
-      const big = (b0 && b.Rank !== rank0 ? 3 : 0) + (Math.abs(dT) >= 15 ? Math.abs(dT) / 5 : 0) + (dX >= 20 ? dX / 10 : 0) + (b.Romance && !(b0 && b0.Romance) ? 3 : 0);
-      if (b0 && big > 0 && pushed) {
-        const r = b.$Recent[b.$Recent.length - 1];
-        b.$Defining = [...b.$Defining, { w: r.w, n: r.n, fx: r.fx, s: Math.round(big * 10) / 10 }];
-        while (b.$Defining.length > DEFINING_MAX) { let lo = 0; b.$Defining.forEach((x, i) => { if (x.s < b.$Defining[lo].s) lo = i; }); b.$Defining.splice(lo, 1); }
-        // 1.74.0: word gets around. A loud moment (Trust moved 15+, Tension rose 20+, a romance began) told by someone who talks
-        // about themselves (Trust category open or normal, data/bond_openness.json) reaches their friends (TRU.friends, the
-        // betrayal spread's list) WORD_DAYS later as a Knows line (stepBondMemory). A betrayal spreads on its own (spreadFrom).
-        const loud = Math.abs(dT) >= 15 || dX >= 20 || (b.Romance && !b0.Romance);
-        if (loud && r.n !== '(no note)' && !spreadFrom.includes(id) && ['open', 'normal'].includes((TRU.npcs || {})[id] || 'normal')) {
-          const to = ((TRU.friends || {})[id] || []).filter(f => f !== id && !(S.Scene.Present || {})[f]);   // those here saw it
-          if (to.length) S.$eng.word = [...(Array.isArray(S.$eng.word) ? S.$eng.word : []), { from: id, n: r.n, due: dayNo + WORD_DAYS, to }].slice(-40);
-        }
-      }
-    }
+    bondRecent(BE, bk);
   }
   Object.assign(c, { canon, BB, daily, PACE, bweek, npcAway, spreadFrom, KR });
 }
@@ -5005,7 +5077,7 @@ function stepBondMemory(c) {
   const accessDay = !awayIn(S) && !/LOCKDOWN|CURFEW/.test(String(S.World._Curfew || ''));
   S.$ui.rank_access = {
     dorms: accessDay ? [...new Set(visiting.filter(([id]) => NPC_GROUP[id] === 'student' && (S.Scene.Present || {})[id]).map(([id]) => NPC_DORMS[id]).filter(Boolean))] : [],
-    staff: accessDay ? visiting.filter(([id]) => NPC_GROUP[id] === 'staff' || id === 'Bobby' || id === 'Milena').map(([id]) => id) : []
+    staff: accessDay ? visiting.filter(([id]) => NPC_GROUP[id] === 'staff' || (BR.worksite || []).includes(id)).map(([id]) => id) : []
   };
   for (const b of Object.values(S.Bonds)) capPinned(b, 'Known_facts', '$Known_old', FACTS_VISIBLE);
   for (const id of Object.keys(daily)) if (daily[id].day !== dayNo) delete daily[id];
@@ -5575,13 +5647,15 @@ function stepPerkUse(c) {
 // rises; every fall and the Dove watch events (a rumour, a Dove posted on {{user}}'s routine, the interview, the room search, a knower
 // who talks, the hearing) are the engine's. The meter needs no toggle (hidden magic has none); the events are Features row dove_watch.
 const DW = /*@@DOVE_WATCH@@*/{};
+// 2.0.0 (bug-hunt audit K2): how <now> and the log name the interviewer and the one who comes instead (data/dove_watch.json names)
+const dwName = id => ((DW.interview || {}).names || {})[id] || id;
 const DW_ORDER = ['needle', 'pact', 'magic', 'deed'];
 const DOVE_STAGES = ['Unnoticed', 'Rumoured', 'Watched', 'Investigated', 'Exposed'];
 const doveStage = a => (a < 20 ? 'Unnoticed' : a < 40 ? 'Rumoured' : a < 60 ? 'Watched' : a < 80 ? 'Investigated' : 'Exposed');
 // a technique the Doves would act on if they saw it: a hidden or forbidden one, or a forbidden pact partner's (stepMagic, 8l)
 function secretTech(M, name) {
   const t = ((M || {})._Techniques || {})[name]; if (!t) return false;
-  const pm = /^\[pact\]\s*(.+)$/.exec(t.Notes || ''), P = pm ? ((M.Pacts || {})[pm[1].trim()] || null) : null;
+  const pk = pactKey(t), P = pk ? ((M.Pacts || {})[pk] || null) : null;
   return !!(t.Hidden || t.Forbidden || (P && P.Kind !== 'Spirit'));
 }
 // what {{user}} keeps from the Doves: { k, name, kind (needle | pact | magic | deed), who: [names], item: the Bag key that proves it, or '' }
@@ -5613,7 +5687,7 @@ function doveRoll(c, who) {
   const parts = F ? (F.mods || []).filter(m => !/^with (staff|students)\b/.test(String(m))).map(m => [String(m).replace(/\s*[+\-−]\s*\d+\s*$/, ''), sig(m)]).filter(([, v]) => v) : [];
   const soc = OFF.has('proficiency') ? 0 : profRankOf(S, 'Society');
   if (soc) parts.push(['Society', soc * num(IV.society, 3)]);
-  if (who === 'Milena') parts.push(['Milena Sagona', num(IV.milena, -10)]);
+  if (who === IV.second) parts.push([dwName(who), num(IV.milena, -10)]);
   else {
     const sh = (IV.shields || []).find(id => (S.Scene.Present || {})[id] && num((S.Bonds[id] || {}).Rank, 0) >= num(IV.shield_rank, 7));
     if (sh) parts.push([`${sh} speaks for {{user}}`, num(IV.shield, 20)]);
@@ -5689,30 +5763,30 @@ function stepHidden(c) {
       if (t && !R.includes(t)) R.push(t);
       DE.rum = 1; log.push(`Dove watch: a rumour is going round ("${t}").`);
     }
-    // the interview (Investigated): Sir Krieg Valforth at the Dovecote; missed, Milena Sagona comes to find {{user}} the next day
+    // the interview (Investigated): the Commander (IV.with) at the Dovecote; missed, IV.second comes to find {{user}} the next day
     const IV = DW.interview || {}, dkey = IV.desc || 'Dovecote interview';
     let iv = DE.iv = _.isPlainObject(DE.iv) ? DE.iv : {};
     if (iv.res && num(S.$eng.turn, 0) > num(iv.res.turn, 0)) {
       const d = num((IV.delta || {})[iv.res.band], 0); dd += d;
-      why.push(`${iv.res.who === 'Milena' ? 'the talk with Milena Sagona' : 'the Dovecote interview'} (${iv.res.band}) ${d >= 0 ? '+' : ''}${d}`);
+      why.push(`${iv.res.who === IV.second ? IV.second_talk : 'the Dovecote interview'} (${iv.res.band}) ${d >= 0 ? '+' : ''}${d}`);
       delete S.Commitments[dkey]; iv = DE.iv = { last: absA, base: Hd.Dove_attention };
     } else if (num(iv.due, -1) >= 0 && !iv.res) {
       const day = Math.floor(iv.due / DAY_MIN), t = absA % DAY_MIN;
-      if (iv.who !== 'Milena' && absA > day * DAY_MIN + hm(IV.to)) {
+      if (iv.who !== IV.second && absA > day * DAY_MIN + hm(IV.to)) {
         dd += num((IV.delta || {}).missed, 10); why.push(`missed the Dovecote interview +${num((IV.delta || {}).missed, 10)}`); delete S.Commitments[dkey];
-        Object.assign(iv, { who: 'Milena', due: (day + 1) * DAY_MIN + hm(IV.milena_from) });
-      } else if (iv.who === 'Milena' ? absA >= iv.due && !awayIn(S) && t >= hm(IV.milena_from) && t < hm(IV.milena_to)
+        Object.assign(iv, { who: IV.second, due: (day + 1) * DAY_MIN + hm(IV.milena_from) });
+      } else if (iv.who === IV.second ? absA >= iv.due && !awayIn(S) && t >= hm(IV.milena_from) && t < hm(IV.milena_to)
         : placeKey(S.World.Location) === 'dovecote' && absA >= iv.due - 30 && absA <= day * DAY_MIN + hm(IV.to)) iv.res = doveRoll(c, iv.who);
     } else if (s1 >= 3 && !(num(iv.due, -1) >= 0) && (!(num(iv.last, -1) >= 0) || (absA - iv.last >= num(IV.again_days, 14) * DAY_MIN && Hd.Dove_attention >= num(iv.base, 0) + num(IV.again_rise, 10)))) {
       const due = (dayNo + num(IV.after_days, 2)) * DAY_MIN + hm(IV.from);
-      Object.assign(iv, { due, who: 'Krieg' });
-      S.Commitments[dkey] = { Desc: 'Sir Krieg Valforth wants {{user}} at the Dovecote for a talk', Due: stamp(fromAbs(due)), With: IV.with || 'Krieg', Where: IV.where || 'The Dovecote', Type: 'appointment' };
+      Object.assign(iv, { due, who: IV.with });
+      S.Commitments[dkey] = { Desc: IV.call, Due: stamp(fromAbs(due)), With: IV.with, Where: IV.where || 'The Dovecote', Type: 'appointment' };
       log.push(`Dove watch: the Dovecote has called {{user}} in for an interview (${stamp(fromAbs(due))}).`);
     }
     if (iv.res && num(S.$eng.turn, 0) === num(iv.res.turn, 0)) {
-      const r = iv.res, L = String(IV.line || '').replace('{who}', r.who === 'Milena' ? 'Milena Sagona' : 'Sir Krieg Valforth').replace('{n}', r.n)
+      const r = iv.res, L = String(IV.line || '').replace('{who}', dwName(r.who)).replace('{n}', r.n)
         .replace('{mods}', r.mods.length ? ', ' + r.mods.join(', ') : '').replace('{total}', r.total);
-      now.push(`${r.who === 'Milena' ? IV.milena_line + ' ' : ''}${L} ${r.band[0].toUpperCase() + r.band.slice(1)}: ${(IV.results || {})[r.band] || ''}`);
+      now.push(`${r.who === IV.second ? IV.milena_line + ' ' : ''}${L} ${r.band[0].toUpperCase() + r.band.slice(1)}: ${(IV.results || {})[r.band] || ''}`);
     }
     // the room search (Investigated, or weekly while Doves reputation is low): only what is physical can be found
     const SR = DW.search || {}, sr = DE.srch = _.isPlainObject(DE.srch) ? DE.srch : {}, phys = DW_ORDER.flatMap(k => secrets.filter(s => s.kind === k && s.item));
@@ -5767,7 +5841,7 @@ function stepHidden(c) {
   // Exposed: the hearing (a story appointment); what it decides is the story's
   if (live && !OFF.has('dove_watch') && stg === 'Exposed' && prevSt !== 'Exposed' && secrets.length) {
     const HG = DW.hearing || {}, due = (dayNo + 1) * DAY_MIN + hm(HG.at || '10:00');
-    S.Commitments[HG.desc || 'Hearing at the Dovecote'] = { Desc: 'A summons to a hearing before Sir Krieg Valforth', Due: stamp(fromAbs(due)), With: HG.with || 'Krieg', Where: HG.where || 'The Dovecote', Type: 'appointment' };
+    S.Commitments[HG.desc || 'Hearing at the Dovecote'] = { Desc: HG.call, Due: stamp(fromAbs(due)), With: HG.with, Where: HG.where || 'The Dovecote', Type: 'appointment' };
   }
   for (const [id, o] of Object.entries(TRU.overrides || {})) {   // 1.4.3: Krieg learns what {{user}} hides: his Trust is gone
     if (o.zero_at_stage && secrets.length && stg === o.zero_at_stage && S.Bonds[id] && S.Bonds[id].Trust > 0) {
@@ -7551,8 +7625,8 @@ function stepAgenda(c) {
   if (!OFF.has('letters')) for (const p of ((S.$eng.mail || {}).pend || [])) put('letter', `A reply from ${p.to} may come`, Math.floor(p.end / DAY_MIN) * DAY_MIN + DAY_MIN - 1, '');
   // {{user}}'s birthday and the player's own calendar notes ($ui.marks "Y1 M3 W2 Thu"; the narrator never reads them)
   const dayOfKey = (y, m, w, dd) => (y - 1) * YEAR_DAYS + (m - 1) * 28 + (w - 1) * 7 + DAYS.indexOf(dd);
-  const bd = /^M(\d{1,2}) W([1-4]) (Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/.exec(String(S.Player.Profile.Birthday || '').trim());
-  if (bd) for (const y of [Y, Y + 1]) put('birthday', 'Your birthday', dayOfKey(y, +bd[1], +bd[2], bd[3]) * DAY_MIN + DAY_MIN - 1, '');
+  const bd = userBday(S);
+  if (bd) for (const y of [Y, Y + 1]) put('birthday', 'Your birthday', dayOfKey(y, bd.m, bd.w, bd.d) * DAY_MIN + DAY_MIN - 1, '');
   for (const [key, t] of Object.entries(S.$ui.marks || {})) {
     const m = /^Y(\d+) M(\d{1,2}) W([1-4]) (Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/.exec(key);
     if (m && t) put('note', String(t), dayOfKey(+m[1], +m[2], +m[3], m[4]) * DAY_MIN + DAY_MIN - 1, '');
@@ -7867,7 +7941,8 @@ function nowOf(S, moodsFull) {
     const og = trOver(id), gated = og && og.no_gates ? [] : Object.entries(TRUST.gates || {}).filter(([g, need]) => +g <= r && +g !== 8 && tr < need && BOND.perks[g]).map(([g, need]) => BOND.perks[g] + ' (needs Trust ' + need + ')');
     const susp = (UI.tsusp || []).filter(k => ((getvar('stat_data._Perks') || {})[k] || {}).From === id);
     const heldTxt = Object.keys(held).sort((a, b) => a - b).map(k => held[k].map(f => f[1]).join(', ') + ' (Rank ' + k + ')').join('; ');
-    if (sh !== null) Object.entries(held).forEach(([k, fs]) => fs.forEach(f => { if (!SHOWN.has(f[1])) (HELD[id] = HELD[id] || {})[f[1]] = +k; }));
+    // 2.0.0 (audit A2): at Trust Betrayed (share null: nothing new) every field the rank has not opened is held too, tagged by the band
+    Object.entries(held).forEach(([k, fs]) => fs.forEach(f => { if (!SHOWN.has(f[1])) (HELD[id] = HELD[id] || {})[f[1]] = sh === null ? 'Trust ' + tb : +k; }));
     put(id, 'Bond (' + [BOND.tag[id], tb.toLowerCase(), CLOSE.includes(id) && 'close'].filter(Boolean).join(', ') + '): '
       + (sh === null ? 'shares nothing new with {{user}}; keeps to what {{user}} already knows'
         : 'tells freely what their lore lists under ' + (free.length ? free.join(', ') : 'their public role') + (heldTxt
@@ -8061,7 +8136,7 @@ function nowOf(S, moodsFull) {
 const RULE_CARDS = /*@@RULE_CARDS@@*/{};   // id -> the feature that must be on ('' = always)
 function ruleCards(c) {
   const { S, OFF, absA } = c, W = S.World, M = S.Magic || {};
-  const said = String(c.text || '').replace(/<UpdateVariable>[\s\S]*?(?:<\/UpdateVariable>|$)/gi, ' ') + '\n' + String(c.userText || '');
+  const said = proseOf(c.text) + '\n' + String(c.userText || '');   // 2.0.0 (audit A4): the story only (DECISIONS §6), never an NPC's thoughts
   const ahead = (fn, days) => _.range(0, days + 1).some(d => eventsOn(fromAbs(absA + d * DAY_MIN)).some(fn));
   const pacts = Object.keys(M.Pacts || {}), comp = S.Competition || {}, here = placeOf(canonLocation(W.Location)), PR = (S.Player || {}).Profile || {};
   // 1.55.0 (stage 2): someone {{user}} has a bond with is here
@@ -8172,7 +8247,7 @@ function stepNow(c) {
   for (const a of Object.values(S.$ui.area || {})) if (_.isPlainObject(a)) { delete a.walks; delete a.near; }
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepHanakaze, stepCampus, stepVitals, stepContest, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepScene, stepBondMemory, stepProficiency, stepEventChances, stepHunt, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepClubWork, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepFold, stepGist, stepReminders, stepLook, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepHanakaze, stepCampus, stepVitals, stepContest, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBondRecords, stepBonds, stepScene, stepBondMemory, stepProficiency, stepEventChances, stepHunt, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepClubWork, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepFold, stepGist, stepReminders, stepLook, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,
