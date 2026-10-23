@@ -113,7 +113,7 @@ Haunts: Music Club, Mall, Main Library. Hears the earliest gossip at Nightwell, 
 Plays guitar for the quiet-hour broadcasts, happy that nobody can see her.
 Knows every couple who has been taken up to the Rooftop, and has never told a soul.
 Knows which Lucky Roll fillings are circulating before lunch.
-Noticed before anyone that Alyssa Edelweiss forgets people, and quietly helps her keep her notebook right.
+Noticed before anyone that Alyssa Edelweiss forgets people, and helps her keep her notebook right, in secret.
 Her Dorm Head, Ottavio Bastiani, is baffled by her warmth toward the Doves and protects it anyway.
 <%_ const _tRuby = [cVoice('Ruby', true), cTail('Ruby'), cMem('Ruby', true)].filter(Boolean).join('\n'); if (_tRuby) { _%>
 <%- _tRuby %>

@@ -25,7 +25,7 @@ Build order, generated files and test commands: `docs/BUILD.md`. **Every feature
 | `<now>` / Cast Sheet / Price Guide text | `src/worldbook/custom/505.template.ejs` (the rule lines are the engine's `nowOf`, `$ui.now`), the Cast Sheet `509.template.ejs` (head), `509_sheet.template.ejs` (one entry per NPC, uid 600+, `@@if`), `509_tail.template.ejs` (599), `506.template.ejs` | never edit `content/*.txt`; render an entry as ST does with `tests/harness.cjs` `renderEntry` |
 | UI panel or bracelet | §5 UI map → the part file or `ui.template.js` symbol | `gen_ui.py`; `tests/preview/` for a visual check |
 | Lore not reaching the narrator (keywords, World Index, WI budget) | `merge_lorebooks.py` `KEY_ADDS`, `CORE_FACTS`, `lore_activation`; DECISIONS §9 "Lore activation", §11 World Info facts | `test_lore_activation_v1350.cjs` |
-| Lore text (a place, an NPC line, the calendar) | §6 lore pipeline → `tools/merge_lorebooks.py` `rep()` edit or its tables | `python tools/build_all.py --lore` |
+| Lore text (a place, an NPC line, the calendar) | §6 lore pipeline → `tools/merge_lorebooks.py` `rep()` edit or its tables (a wording-only fix: `STYLE_PASS`, 1.99.5) | `python tools/build_all.py --lore` |
 | Calendar, events, timetable | `data/calendar.json` (1.81.0: every event has a unique `id` and a `kind`) | engine, UI, lore 131/134 all read it |
 | Event frame: event chances (1.81.0) | `data/event_frame.json` (`chances` by event id); engine `stepEventChances`, `chanceMet`, `chanceOpen`, `eventBlocks`; UI `p40:acEvent`; 505 Event line | `gen_engine.py` checks events, places, Fields, actions, deeds; `test_event_frame_v1810.cjs`; `planning/DRAFT_event_frame.md` (releases A2–E) |
 | New NPC | `docs/DECISIONS.md` §2 "Bonds", §6 "Tension", "Trust", "Connections"; data files in §7 marked *per NPC* | playbook in `docs/BUILD.md` §4 |
@@ -172,7 +172,7 @@ at the top of the CSS and `:root{…}` in the bracelet; a theme is a set of toke
 `source_original/` (owner's v38 + NPC lore passes; canon, never edited) → `tools/merge_lorebooks.py` → `src/worldbook/` (card) and
 `dist/lorebook_v39/` (standalone) → `tools/curate_data.py` → `data/npcs.json`, `locations.json`, `relations.json`, `map_pins.json`.
 In `merge_lorebooks.py`: `rep(entry, old, new)` (asserting text edits), `apply_lore_edits`, `WORLD_MYTHS`, `NATIONS`, `SEASONAL` and
-`PHASES` (lore by season), `GHOST_STORIES`, `COHORT_ROSTER` / `COHORT_REGULARS`, `calendar_timetable_lore`, `roster_ejs`, `lore_activation` (1.35.0: `KEY_ADDS`, `CORE_FACTS`).
+`PHASES` (lore by season), `GHOST_STORIES`, `COHORT_ROSTER` / `COHORT_REGULARS`, `calendar_timetable_lore`, `roster_ejs`, `lore_activation` (1.35.0: `KEY_ADDS`, `CORE_FACTS`), `style_pass` (1.99.5: the `STYLE_PASS` wording table, run last on both exports; an NPC by id, a Core entry by uid), `campus_map_card` (1.99.5: the card's Campus Map without the minutes; club venues in entry 26).
 
 ## 7. Data files (`data/`)
 

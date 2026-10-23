@@ -4,7 +4,7 @@ Selection: the Arslan Sultanate won one of the two open places this year, as in 
 Kit: sand-gold silks over light mail, white sashes, gold at every cuff.
 Coach: Behrouz Kian, a retired World Bank auditor who times every match with a gold pocket watch and speaks in percentages.
 Plays: patient. Arslan holds what it has and waits, lets the other teams spend themselves, and never pays more for a win than it must.
-Omid Farzan: third year, age 20, Human. Calm, neatly bearded, kind eyes, white robes with a gold sash. Spiritual (Healing): thorough and unhurried, as if he had time for everything, which in a match he somehow does. Measured and fair; the one person Kamran does not try to put in his debt.
+Omid Farzan: third year, age 20, Human. Calm, neatly bearded, kind eyes, white robes with a gold sash. Spiritual (Healing): thorough, as if he had time for everything, which in a match he somehow does. Measured and fair; the one person Kamran does not try to put in his debt.
 Shirin Tabrizi: first year, age 18, Human. Small and fierce, sun-dark skin, black hair in one long braid, a desert scarf at her throat. Elemental (Sand): blades and storms of scouring sand. Blunt and impatient; despises Kamran's manners and wins most of his matches for him.
 Nasrin Bahari: first year, age 18, Human. Willowy and heavy-lidded, silver bangles that chime when she casts. Occult (Illusion): mirages that make the enemy see the field wrong and strike at nothing. Languid and sly; owes Kamran a sum she will not name.
 <%_ { const _Y = (Number(getvar('stat_data.World.Year')) || 1), _T = [["Omid Farzan", 3], ["Kamran Zarrin", 2], ["Shirin Tabrizi", 1], ["Nasrin Bahari", 1]], _g = _T.filter(([n, y]) => y + _Y - 1 > 3).map(t => t[0]); if (_Y > 1) { _%>

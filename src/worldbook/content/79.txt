@@ -1,6 +1,6 @@
 [Gardens] Cultivated grounds tended by students and staff, growing Potion Crafting reagents alongside ordinary plants. The Gardening Club effectively runs them, and students gather here before the Harvest Festival. Everything grows a little too well. Halvard: the Sky outcasts' meeting ground; the far end is a reliable place to skip class.
 Home of the Breath on the Glass story.
-Feel: turned earth, layered herb scents.
+Feel: turned earth, herb beds in long rows.
 <%_ { const _sm = Number(getvar('stat_data.World.Month')) || 1; _%>
 <%_ if (_sm >= 1 && _sm <= 3) { _%>
 In spring: Planting season: seedling rows under glass cloches.

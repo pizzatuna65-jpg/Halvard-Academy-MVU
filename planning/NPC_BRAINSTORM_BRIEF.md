@@ -15,6 +15,10 @@ Rules:
   open a way toward a secret in play, never announce it.
 - `{{user}}` is the player's first-year student (name, pronouns and magic are the player's). Never decide {{user}}'s feelings or
   actions in directions; offer choices.
+- Write lore in plain, concrete words (1.99.5): show a feeling by what the character does, not with stock adverbs ("quietly",
+  "unhurried", "says nothing", "a little too", "a moment too long") or "not X but Y" contrasts. Never use the narrator preset's
+  banned words as ordinary words: a pause, a beat, slick, asset, calloused, musk, husky, predatory, guttural, throaty, velvet, vice,
+  furnace, or a jaw that does something; a name or title that contains one (Vice Headmaster, Velvet Lanes) is fine.
 - Be concise; prefer drafts the author can paste. Output formats:
   - **New or fixed lore fields:** `Label: text` lines to add to that NPC's lorebook entry (labels as in the roster: Personality,
     Loves, Hates, Goals, Haunts, Backstory, Relations, Speech, Emotional tells…). Secrets inside `<narrator_only>…</narrator_only>`.

@@ -18,7 +18,8 @@ ok(['gymnasium', 'menagerie', 'sports_field'].every(x => L.spirit_path.connectio
 ok(['Anselm','Caspian','Tristan','Faye'].every(id => L.meditation_rooms.regulars.includes(id)) && ['Florian','Royhan','Ruby','William'].every(id => L.spirit_path.regulars.includes(id)), 'regulars include Faye in Meditation Rooms and William on Spirit Path');
 ok(!L.meditation_rooms.access && !/not to go alone|sounds no one|bound spirits/i.test(entry(87)) && /no sound from the campus gets in/.test(entry(87)), 'the Meditation Rooms are calm now: no "not alone", no sounds, no bound spirits');
 ok(/first Spirit Pact/.test(entry(347)) && /Anyone may come to watch/.test(entry(347)), 'the Spirit Path lore: first pacts, and watching for everyone');
-ok(!/Spirit House/.test(entry(132)) && /Spirit Path 17/.test(entry(132)) && /Spirit Path \(the footpath/.test(entry(132)), 'the Campus Map says Meditation Rooms and knows the Spirit Path');
+const v39map = JSON.parse(read('dist/lorebook_v39/eldrasil_v39_Core.json')).entries['132'].content;   // 1.99.5 (audit T4): the minutes live there
+ok(!/Spirit House/.test(entry(132)) && /Spirit Path 17/.test(v39map) && /Spirit Path \(the footpath/.test(entry(132)), 'the Campus Map says Meditation Rooms and knows the Spirit Path');
 const S0 = at(initState(), 12, '10:00', 'Main Library');
 ok(at(S0, 12, '10:05', 'the Spirit House').World.Location === 'Meditation Rooms' && at(S0, 12, '10:05', 'Meditation Rooms / Spirit House').World.Location === 'Meditation Rooms', 'the old name and the nickname are the Meditation Rooms');
 

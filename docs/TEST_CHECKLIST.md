@@ -180,6 +180,10 @@ show the newcomers their dorm rooms.
 - [ ] `<now>` ends its optional lines with "Optional threads (Likely around, …): use at most one": during a focused talk nobody from
       Likely around or Nearby barges in, and over several replies at most one such thread comes up in each; no two replies in a row
       open with the surroundings [1.99.4].
+- [ ] Kanae, Zara and whoever else is here act in their own concrete ways: no "A beat." or "A pause." beats, and not a row of people
+      who all smile "quietly" or "say nothing"; Kanae shows displeasure only as a smile held a moment too long [1.99.5].
+- [ ] On the tour each walk takes the minutes `<now>` gives under "Walks from here" (the Prompt's Campus Map lists none any more); a
+      question about a club's meeting place is answered from the Clubs entry [1.99.5].
 - [ ] A new roster character: short first lines with no head-to-toe description, then they sound like their sheet [1.35.2, 1.99.3]. The update starts their bond with
       `insert /Bonds/<name>/Known_facts/-` (no full record, no Trust), real MVU accepts it, and the bond starts at the character's own Trust
       [1.53]. People gets a red dot; opening the panel clears the button's, and the person keeps theirs until opened [1.25].

@@ -218,7 +218,7 @@ rep(N[97], "Vallie (ox B, F, red, jovial, Creature Studies Y1,", "Vallie (ox B, 
 rep(N[97], "Rei (F, black, cool, Acting Warden, the old Warden's apprentice).",
     "Rei (F, black, cool, Acting Warden, the old Warden's apprentice); Hester (F, black, macabre, Healing class for every year, Head Nurse); "
     "Anselm (sheep B, M, grey wool, convoluted, Defense class for every year); Magnus (Elf, M, dark, cunning, Support class for every year); "
-    "Dorian (fox B, M, russet, slick, Control class for every year); Cedric (M, grey, doomed, History Y3); Anya (F, white, serene, Etiquette Y2); "
+    "Dorian (fox B, M, russet, smooth-talking, Control class for every year); Cedric (M, grey, doomed, History Y3); Anya (F, white, serene, Etiquette Y2); "
     "Kotaro (tanuki B, M, brown, carefree, Potion Crafting Y2); Valentin (M, blond, vain, Potion Crafting Y3).")
 rep(N[97], "Each teacher teaches one subject to one year level only; posts not named here (Magic Theory Y3, Etiquette Y2, History Y2-3, Combat Y2-3, Creature Studies Y2-3, Potion Crafting Y2-3) are unknown.",
     "Magic Theory, History, Etiquette and Potion Crafting have one teacher per year level; Creature Studies, Dark Magic Defense and the five "
@@ -1566,6 +1566,266 @@ def club_spread(C, N):
     venues = next(e for e in C.values() if 'Walking – Hills' in e['content'])
     rep(venues, 'Walking – Hills', 'Camping – Hills')
 
+# 1.99.5 (audit 2026-10-23 batch 4: S1-S5, T4, R6 and the card side of P1; owner "proceed" on planning/DRAFT_slop_pass.md): a style pass
+# on the lore text that reaches the prompt. Facts are unchanged. It thins tics repeated across many characters (quietly, unhurried,
+# says nothing, a little too, smirk, "a moment too long"), keeping each in the one or two characters it belongs to; turns "not X but Y"
+# contrasts in descriptions into plain statements; takes smells out of Feel lines (food at its meal, a rite or a strong source close by
+# stay, as the preset's Scent Killswitch allows); and removes the words the preset's banned list forbids as plain vocabulary (a pause,
+# a beat, slick, asset, jaw actions, calloused, musk, velvet / vice / furnace outside names). A key is an NPC id (its entry in N), a Core
+# uid (a World team entry lives in N), or None (every Core entry that carries the text). Run last on each export, once every entry exists.
+# A field label is a name, not a tic: Gavlan's "Quietly distrusts:" stays (data/bond_rules.json layers.deeper, curate_data.py RANK).
+STYLE_PASS = [
+    ('Aiden', 'Slick, quick-witted, a gifted liar,',
+     'Smooth-talking, quick-witted, a gifted liar,'),
+    ('Aiden', 'knows every route they walk, and quietly respects them as opponents.',
+     'knows every route they walk, and respects them as opponents.'),
+    ('Aiden', 'Caspian Riwalo quietly covers for him.',
+     'Caspian Riwalo covers for him.'),
+    ('Alyssa', 'Ruby Bonbon noticed the pattern before anyone and quietly helps keep the notebook right.',
+     'Ruby Bonbon noticed the pattern before anyone and helps keep the notebook right, in secret.'),
+    ('Althair', 'has never said so, and greets him a little too warmly.',
+     'has never said so, and greets him more warmly than he greets anyone else.'),
+    ('Anselm', 'Appearance: Broad, heavy and unhurried.',
+     'Appearance: Broad and heavy.'),
+    ('Anselm', 'quietly puzzled that his students look lost',
+     'puzzled that his students look lost'),
+    ('Anya', 'Soft, precise and formal; unhurried; full names and titles,',
+     'Soft, precise and formal; full names and titles,'),
+    (386, 'thorough and unhurried, as if he had time for everything',
+     'thorough, as if he had time for everything'),
+    ('Aurelian', 'he stops moving entirely for a second too long, and his eyes follow things no one else can see.',
+     'he stops moving entirely, breath included, and his eyes follow things no one else can see.'),
+    ('Aurelian', 'The truth: in the Harvest Hall he was not a hero. He was a frightened boy pinned under a burning beam',
+     'The truth: in the Harvest Hall he was a frightened boy pinned under a burning beam'),
+    ('Baelin', 'Sees a future staff member in Irene Chanare but quietly fears she will break.',
+     'Sees a future staff member in Irene Chanare but fears she will break.'),
+    ('Baelin', 'and the two quietly measure each other every time.',
+     'and the two measure each other over the cups every time.'),
+    ('Baelin', 'He has quietly decided that Halvard will teach her to be a person first',
+     'He has decided that Halvard will teach her to be a person first'),
+    ('Bianca', 'pretty, sharp and always halfway to a smirk.',
+     'pretty, sharp and always halfway to laughing at someone.'),
+    ('Bianca', 'Yellow vest worn a little too fitted,',
+     'Yellow vest taken in to fit close,'),
+    ('Bianca', 'Enjoying herself is a slow smirk and a hair flick.',
+     'Enjoying herself, she starts turning the gold rings in her ear.'),
+    ('Caine', 'a pause before "Young master" that nobody but Kuroo Varnell would catch.',
+     '"Young master" said a half-second late, which nobody but Kuroo Varnell would catch.'),
+    ('Caralynn', 'Pleasure is preening: a hair flick and a pause for the audience.',
+     'Pleasure is preening: a hair flick, and a wait for the applause.'),
+    ('Caspian', 'Quietly covers for first-year troublemaker Aiden Ruzzo too.',
+     'Covers for first-year troublemaker Aiden Ruzzo too.'),
+    ('Castor', 'he reads it twice and says nothing.',
+     'he reads it twice and underlines it.'),
+    ('Castor', 'Irritation makes him more agreeable, not less.',
+     'Irritation makes him more agreeable.'),
+    ('Castor', 'Being asked what he wants earns a pause a fraction too long, then a perfectly normal answer.',
+     'Being asked what he wants earns a perfectly normal answer, a fraction late.'),
+    ('Cyprien', 'a smile that is always a little too pleased.',
+     'a smile that is always pleased with itself.'),
+    ('Cyprien', 'Speech: Smooth, unhurried, every sentence finished exactly as he planned it;',
+     'Speech: Smooth, every sentence finished exactly as he planned it;'),
+    ('Dante', 'Speech: Warm, steady, unhurried, with the cadence of someone much older.',
+     'Speech: Warm and steady, with the cadence of someone much older.'),
+    ('Dante', 'Quietly re-reading the Niu case, unaware Kanae Quveno caused it;',
+     'Re-reading the Niu case on his own time, unaware Kanae Quveno caused it;'),
+    ('Dante', 'Althair Veyne has worked him out and says nothing.',
+     'Althair Veyne has worked him out and keeps it to himself.'),
+    ('Dante', 'Milena Sagona treats him as a child rather than an asset, and teaches him',
+     'Milena Sagona treats him as a child, as no other Dove does, and teaches him'),
+    ('Kanae', 'is quietly re-reading the Niu case because it does not sit right with him.',
+     'is re-reading the Niu case on his own time, because it does not sit right with him.'),
+    ('Dorian', 'Speech: Smooth, warm and friendly, always a little too friendly;',
+     'Speech: Smooth, warm and friendlier than anyone needs;'),
+    ('Ezrel', 'Purple hair slicked back into hard spikes',
+     'Purple hair swept back into hard spikes'),
+    ('Ezrel', 'a smile held a beat too long,',
+     'a smile that never changes size,'),
+    ('Faye', '"whatever will be, will be" is not a pose but how she lives.',
+     '"whatever will be, will be" is how she lives.'),
+    ('Faye', 'Green vest with sleeves a little too long,',
+     'Green vest with sleeves that cover her hands,'),
+    ('Florian', 'Speech: Smooth, unhurried, fond of his own voice.',
+     'Speech: Smooth and fond of his own voice; he finishes his sentence even when interrupted.'),
+    ('Gavlan', 'short silver hair slicked back',
+     'short silver hair combed back'),
+    ('Gavlan', 'gets harder training, not less.',
+     'gets harder training.'),
+    ('Hadrian', 'Smooth, unhurried, faintly amused.',
+     'Smooth and faintly amused; explains everything slowly, as if to a child.'),
+    ('Hester', 'Speech: Low, unhurried and relishing, like a storyteller at a wake;',
+     'Speech: Low and relishing, like a storyteller at a wake;'),
+    ('Hester', 'Speaks slowly, relishes a pause, and scares students',
+     'Speaks slowly, lets the silence hang before the worst part, and scares students'),
+    ('Hibiki', 'Speech: Easy, warm and unhurried;',
+     'Speech: Easy and warm;'),
+    ('Idris', 'so now he clenches his jaw shut instead and leaves.',
+     'so now he presses his lips shut instead and leaves.'),
+    ('Irene', 'and is quietly relieved that someone else cares about the rules too.',
+     'and is relieved that someone else cares about the rules too.'),
+    ('Kanae', 'Caralynn Veyturone calls the readings fake in public; Kanae smiles and says nothing, for now.',
+     'Caralynn Veyturone calls the readings fake in public; Kanae laughs along and has never once answered back.'),
+    ('Kanae', 'while quietly enjoying how easily it keeps other students occupied',
+     'while enjoying how easily it keeps other students occupied'),
+    ('Kazimir', 'Calls Vesna "the asset" in his reports',
+     'Calls Vesna "the instrument" in his reports'),
+    ('Kotaro', 'glassy half-lidded eyes and a lopsided grin.',
+     'glassy, drooping eyes and a lopsided grin.'),
+    ('Kotaro', 'Sadness he drinks, quietly, alone, where no student can see.',
+     'Sadness he drinks alone, where no student can see.'),
+    ('Krieg', 'Satisfaction is a quiet, unhurried smile when a mage flinches.',
+     'Satisfaction is a small smile when a mage flinches, which he lets them see.'),
+    ('Krieg', 'what it left him was not fear but certainty.',
+     'what it left him with was certainty.'),
+    ('Kuroo', 'hides frustration behind smirks while strategizing quietly.',
+     'hides frustration behind smirks while he plans his next move.'),
+    ('Kuroo', 'he quietly links with her and absorbs her anxiety,',
+     'he links with her and absorbs her anxiety,'),
+    ('Kuroo', 'he has noticed, and says nothing, for now.',
+     'he has noticed, and has not asked her about it yet.'),
+    ('Layla', 'and quietly leaves books up there for her.',
+     'and leaves books up there for her.'),
+    ('Lenna', 'Caralynn Veyturone quietly despises her popularity.',
+     "Caralynn Veyturone despises her popularity behind a performer's smile."),
+    ('Magnus', 'and keeps it filed, not used.',
+     'and keeps it on file, never used.'),
+    ('Milena', 'and is quietly tracing the group behind it.',
+     'and is tracing the group behind it before they know they have been found.'),
+    ('Milena', 'finds his flat stage directions quietly funny.',
+     'finds his flat stage directions funny.'),
+    ('Milena', 'is the one thing she and Krieg disagree about most quietly: she thinks he is a child, not an asset.',
+     'is the one thing she and Krieg disagree about, always behind a closed door: to her he is a child, to Krieg a Dove in training.'),
+    ('Milena', 'Krieg Valforth\'s worst orders get a tight jaw and "Yes, Commander."',
+     'Krieg Valforth\'s worst orders get a salute a fraction late and "Yes, Commander."'),
+    ('Milena', 'Idris Ainsworth leaving the room makes her look at the door a moment too long.',
+     'Idris Ainsworth leaving the room makes her lose her place in the sentence.'),
+    ('Mimosa', 'Quietly considers Royhan Filanoman her favourite member',
+     'Considers Royhan Filanoman her favourite member'),
+    ('Royhan', 'quietly considers him her favourite member.',
+     'considers him her favourite member.'),
+    ('Mirelle', 'Mirelle sleeps through it and quietly likes that Kira always stays nearby.',
+     'Mirelle sleeps through it and likes that Kira always stays nearby.'),
+    ('Ruby', 'and quietly helps her keep her notebook right.',
+     'and helps her keep her notebook right, in secret.'),
+    ('Topaz', 'raised quietly among books and polite cousins who never noticed her.',
+     'raised among books and polite cousins who never noticed her.'),
+    ('Zara', 'She quietly wants to prove the elders wrong.',
+     'She wants to prove the elders wrong.'),
+    ('Nerys', 'Pale yellow eyes, half-lidded, that never seem to blink at the right moment.',
+     'Pale yellow eyes that look half asleep and never seem to blink at the right moment.'),
+    ('Nerys', 'Speech: Flat, quiet, unhurried.',
+     'Speech: Flat and quiet; never laughs at her own jokes.'),
+    ('Nerys', 'observant and quietly kind:',
+     'observant and kind:'),
+    (384, 'Quietly kind to anyone but Vesna;',
+     'Kind to anyone but Vesna;'),
+    (384, 'the other three follow the plan with their jaws set.',
+     'the other three follow the plan to the letter.'),
+    ('Ottavio', 'he knows which students are skipping meals and quietly fixes it;',
+     'he knows which students are skipping meals and makes sure they eat;'),
+    ('Ottavio', 'Hates them the way a docker hates the harbour guard: quietly, permanently, and just inside the law.',
+     'Hates them the way a docker hates the harbour guard: for life, and just inside the law.'),
+    ('Rei', 'Speech: Few words, flat and unhurried.',
+     'Speech: Few words, flat, in her own time; a question can wait until her cigarette is done.'),
+    ('Tilly', 'Speech: Warm, animated and a little too formal;',
+     'Speech: Warm, animated and oddly formal;'),
+    ('Tristan', 'Speech: Light, wry, unhurried; answers questions with better questions.',
+     'Speech: Light and wry; answers questions with better questions.'),
+    ('Tristan', 'take tea together and quietly measure each other every time.',
+     'take tea together and measure each other over the cups every time.'),
+    ('Tsubaki', 'Calloused hands;',
+     'Sword-hardened hands;'),
+    ('Tsubaki', 'Aloof in the way of someone whose attention is simply elsewhere, not cold.',
+     'Aloof because her attention is simply elsewhere.'),
+    ('Tsubaki', 'has quietly decided Halvard will teach her to be a person first.',
+     'has decided Halvard will teach her to be a person first.'),
+    ('Vera', 'Method: Magic is a system to her, not a gift.',
+     'Method: Magic is a system to her.'),
+    ('Vesna', 'Speech: Bright, quick, a little too loud;',
+     'Speech: Bright, quick and loud;'),
+    ('Wren', 'for existing a little too much,',
+     'for taking up room,'),
+    ('Wren', 'and has quietly learned the sign alphabet.',
+     'and has learned the sign alphabet without being asked.'),
+    (43, 'Feel: cigarette smoke, old paper, one lamp.',
+     'Feel: an ashtray never emptied, old paper, one lamp.'),
+    (49, 'Feel: tiered stone, crowded, metallic air.',
+     'Feel: tiered stone, crowded, chalk-dusted boards.'),
+    (51, 'Feel: sweet, bitter, mineral.',
+     'Feel: coloured steam, bubbling vats, warning labels.'),
+    (53, 'Feel: mixed smells, busy corridor.',
+     'Feel: doors ajar, cluttered desks, busy corridor.'),
+    (79, 'Feel: turned earth, layered herb scents.',
+     'Feel: turned earth, herb beds in long rows.'),
+    (80, 'Feel: straw, musk, strange calls.',
+     'Feel: straw, scratched bars, strange calls.'),
+    (82, 'Feel: clean linen, green healing scent, too quiet.',
+     'Feel: white walls, clean linen, too quiet.'),
+    (254, 'Feel: sunlit, still, majestic, flower-scent and birdsong.',
+     'Feel: sunlit, still, majestic, wildflowers and birdsong.'),
+    (259, 'Feel: hearth warmth, woodsmoke, stone.',
+     'Feel: hearth warmth, a chimney warm even in winter, stone.'),
+    (267, 'Feel: sweat, liniment, chalk dust, tired laughter.',
+     'Feel: sweat, strapped wrists, chalk dust, tired laughter.'),
+    (347, 'Feel: green, dappled, hushed, quietly watched (never unkindly).',
+     'Feel: green, dappled, hushed, watched (never unkindly).'),
+    (361, 'Feel: woodsmoke, wet canvas, nervous laughter, the ships creaking overhead.',
+     'Feel: the central fire, wet canvas, nervous laughter, the ships creaking overhead.'),
+    (363, 'Feel: sweet rot, itching skin, everything faintly moving.',
+     'Feel: hanging spores, itching skin, everything faintly moving.'),
+    (431, 'Feel: salt wind, gulls, ropes creaking.',
+     'Feel: sea wind, gulls, ropes creaking.'),
+    (432, 'Feel: smoke, salt, shouting.',
+     'Feel: fish on ice, smoking racks, shouting.'),
+    (439, 'Feel: shuttered, narrow, stale smoke.',
+     "Feel: shuttered, narrow, last night's lanterns still hanging."),
+    (441, 'Feel: pastel, mosaic, sweet pastry.',
+     'Feel: pastel, mosaic, pastry stalls.'),
+    (442, 'Feel: stairs, spice, laundry lines, shade.',
+     'Feel: stairs, spice sacks in doorways, laundry lines, shade.'),
+    (446, 'Feel: colour, salt, sunlight through water.',
+     'Feel: colour, salt drying on your skin, sunlight through water.'),
+    (55, 'Enchantment sparks hang in the air a moment too long.',
+     'Enchantment sparks hang in the air after the hammer stops.'),
+    (82, 'Nurses see injuries they must report and injuries they quietly do not.',
+     'Nurses see injuries they must report, and injuries they leave off the report.'),
+    (246, 'every vice sold openly.',
+     'every pleasure sold openly.'),
+    (385, 'from the furnace layers;',
+     'from the smelting layers;'),
+    (385, "as hot and blunt as a furnace's blast.",
+     'as hot and blunt as a forge blast.'),
+    (467, 'a great cold furnace with an iron door,',
+     'a great cold firebox with an iron door,'),
+    (None, 'Norvaine wants it back, quietly; it cannot ask openly without admitting what it is.',
+     'Norvaine wants it back without asking openly, since asking would admit what it is.'),
+]
+def style_pass(C, N):
+    for key, old, new in STYLE_PASS:
+        pool = ([C[key]] if key in C else [N[key]]) if isinstance(key, int) else [e for e in N.values() if npc_id(e) == key] if key else list(C.values())
+        hits = [e for e in pool if old in e['content']]
+        assert hits, f'style pass, {key}: {old[:60]}'
+        for e in hits: rep(e, old, new)
+
+# 1.99.5 (audit T4): the card's Campus Map (constant, every turn) drops what the engine already computes: the walking minutes from the
+# Main Courtyard and the far-ground legs (<now> "Walks from here", data/locations.json near). The club venue line moves to the Clubs
+# entry (26, keyword: it fires when clubs come up). The v39 export keeps the full text: it has no engine, and tools/curate_data.py
+# reads the venue line from it.
+CAMPUS_WALK_CARD = ('Walking: <now> gives the minutes from where {{user}} stands ("Walks from here"); advance the clock by the walk. '
+                    'Adjacent places are reached directly, usually in four or five minutes on foot, and nobody passes through the Main '
+                    'Courtyard to reach a neighbour. The far grounds (the Lake, the Grassy Field and Hills, the Forest) are wide open '
+                    'country, much farther than the map makes them look, and far from each other too; nothing out there is next door to '
+                    'anything else except the Fishing House, three minutes along the shore from the boathouse. The long paths out are '
+                    'home of the Polite Walker story. A described speed spell can shorten the actual route according to its effect and '
+                    'mana cost; never impose the walking estimate on magical travel.')
+def campus_map_card(C):
+    t = C[132]['content']
+    lines = {k: re.search(r'^' + k + r'.*\n', t, re.M) for k in ('Club venues: ', 'Ordinary walking estimates ', 'Movement: ')}
+    assert all(lines.values()), [k for k, v in lines.items() if not v]
+    t = t.replace(lines['Club venues: '].group(0), '').replace(lines['Ordinary walking estimates '].group(0), '')
+    C[132]['content'] = t.replace(lines['Movement: '].group(0), CAMPUS_WALK_CARD + '\n')
+    C[26]['content'] = C[26]['content'].rstrip('\n') + '\n' + lines['Club venues: '].group(0).rstrip('\n')
+
 # ================= v39 standalone =================
 C39, N39 = copy.deepcopy(C), copy.deepcopy(N)
 apply_lore_edits(C39, N39)
@@ -1601,6 +1861,7 @@ sunreach(C39, False)   # 1.41.0
 hanakaze(C39, False)   # 1.97.3
 vesna_world(C39, N39, False)   # 1.97.5
 lore_activation(C39)   # 1.35.0
+style_pass(C39, N39)   # 1.99.5
 calendar_months = json.load(open(P('data/calendar.json'), encoding='utf-8'))['months']
 for month in range(1, 13):
     C39[133 + month]['content'] = f'[Current month: Month {month}]\n' + calendar_months[str(month)]
@@ -1768,6 +2029,8 @@ sunreach(Cc, True)   # 1.41.0
 hanakaze(Cc, True)   # 1.97.3
 vesna_world(Cc, Nc, True)   # 1.97.5
 lore_activation(Cc)   # 1.35.0
+style_pass(Cc, Nc)   # 1.99.5
+campus_map_card(Cc)   # 1.99.5 (T4)
 # merge + tagging (D2): lore -> [mvu_plot]; shared state/navigation entries stay untagged (sent to both models)
 UNTAGGED_CORE = {0, 132, 134, 131, 20}
 UNTAGGED_NPC = {97}

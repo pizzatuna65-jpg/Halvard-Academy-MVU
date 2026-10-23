@@ -6,7 +6,7 @@ Undercroft Room 3: The old Armoury: empty weapon racks on every wall, a broken p
 Undercroft Room 4: The sunken Chapel: three steps down to a stone floor, a plain altar, niches in the walls where candles once stood.
 Undercroft Room 5: The Gallery: a narrow balcony room above a drop into darkness, a rail on one side, the wards glowing along the edge.
 Undercroft Room 6: The Kennels: a row of barred stalls where the arena's beasts were kept between shows, straw still on the floor.
-Undercroft Room 7: The Furnace room: a great cold furnace with an iron door, flues climbing into the dark, soot on every surface.
+Undercroft Room 7: The Furnace room: a great cold firebox with an iron door, flues climbing into the dark, soot on every surface.
 Undercroft Room 8: The Vault: a round room behind a door a hand thick, shelves cut into the stone, the air dry and still.
 Undercroft Room 9: The Pit: a sand-floored fighting pit older than the arena above it, tiers of rough stone around it where a few hundred once watched.
 Undercroft Room 10: The Deep Hall: the lowest and largest room, a vault so high the lamps do not reach its roof, and every sound comes back twice.

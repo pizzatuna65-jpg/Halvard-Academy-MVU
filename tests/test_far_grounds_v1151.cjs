@@ -6,6 +6,8 @@ const read = p => fs.readFileSync(path.join(ROOT, p), 'utf8');
 const card = JSON.parse(read('dist/Eldrasil_Halvard.json')).data;
 const entry = uid => card.character_book.entries.find(e => e.id === uid).content;
 const L = JSON.parse(read('data/locations.json'));
+// 1.99.5 (audit T4): the card's Campus Map leaves the minutes to <now>; the standalone v39 export keeps the walking line
+const v39map = JSON.parse(read('dist/lorebook_v39/eldrasil_v39_Core.json')).entries['132'].content;
 
 console.log('Speeches at formal events and feasts');
 ok(/Every formal academy event opens with speeches from Headmaster Baelin and Vice Headmaster Althair.*every feast begins with their speeches/.test(entry(0)), 'World Index states the pattern');
@@ -32,8 +34,9 @@ const leg = (a, b) => (L[a].near.find(([o]) => o === b) || [])[1];
 ok(leg('boathouse_and_lake', 'gardens') === 20 && leg('boathouse_and_lake', 'fishing_house') === 3 && leg('forest', 'forest_clearing') === 30, 'legs: Gardens-boathouse 20, boathouse-Fishing House 3, Forest-Clearing 30');
 const FAR = ['boathouse_and_lake', 'fishing_house', 'willow_island', 'grassy_field_and_hills', 'observation_tower', 'old_hut', 'forest', 'forest_clearing'];
 ok(FAR.every(id => L[id].walk_min >= 20 && L[id].near.every(([o]) => FAR.includes(o) || ['courtyards', 'gardens'].includes(o))), 'the far grounds are 20+ minutes out and reached only by their own paths');
+ok(!/Ordinary walking estimates|Club venues/.test(map) && /Walks from here/.test(map), 'the card\'s Campus Map: no minute list, no club venue line (1.99.5, audit T4)');
 // every "<place> N" in the Campus Map walking line matches the computed walk from the Main Courtyard
-const line = /Ordinary walking estimates[^\n]*/.exec(map)[0];
+const line = /Ordinary walking estimates[^\n]*/.exec(v39map)[0];
 const NAMES = { 'Grassy Field and Hills': 'grassy_field_and_hills', 'Observation Tower': 'observation_tower', 'Boathouse and Lake': 'boathouse_and_lake', 'Old Hut': 'old_hut',
   'Fishing House': 'fishing_house', 'Forest treeline': 'forest', 'Willow Island': 'willow_island', 'Forest Clearing': 'forest_clearing', 'Menagerie': 'menagerie', 'Sparring Pavilion': 'sparring_pavilion', 'Sports Field': 'sports_field', 'Spirit Path': 'spirit_path' };   // 1.31.0: the Spirit Path
 const bad = Object.entries(NAMES).filter(([n, id]) => { const m = new RegExp(n + ' ([0-9]+)').exec(line); return !m || +m[1] !== L[id].walk_min; });

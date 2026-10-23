@@ -21,6 +21,8 @@ ok(sheets.every(e => e.content.length < 40000) && X(509).content.length < 10000,
 // 1.97.2 renewed it for Gavlan's World Competition line and Vera's Caelmar line: 18 scenarios differed, each only by those added lines (the scenarios
 // leave the World teams out, so they keep their people). 1.99.4 renewed it for the head's "Changed by experience" line (bug-hunt audit
 // R4): 27 scenarios differed, each only by that line.
+// 1.99.5 renewed it for the style pass (bug-hunt audit batch 4, planning/DRAFT_slop_pass.md): 210 scenarios differed, and 1.99.4's
+// own renders (its engine and card, in a worktree) with the approved replacements applied are exactly 1.99.5's.
 const { scenario, N } = require('./fixtures/cast_scenarios.cjs');
 const REC = JSON.parse(read('tests/fixtures/cast_1560.json'));
 const bad = [];

@@ -118,7 +118,7 @@
   "category": "The Site",
   "kind": "location",
   "description": "A working room adjoining the site, not the academy, on Floor 1 down its own corridor, holding the only stair to the Seal Chamber. Mana consumption ledgers and the seal's condition are recorded here, and only the Warden can read them. Students have no reason to come; staff come only when summoned. Halvard: the Acting Warden refuses the Royal Inspectorate every time. The wall it shares with the site is always cold.",
-  "vibe": "cigarette smoke, old paper, one lamp.",
+  "vibe": "an ashtray never emptied, old paper, one lamp.",
   "has_secret": false,
   "regulars": [
    "Rei"
@@ -565,7 +565,7 @@
   "category": "Academic",
   "kind": "location",
   "description": "Tiered rooms holding all four dorms at once, for the shared track: Magic Theory, History, Etiquette, Creature Studies. Each year level has its own floor: first-years on Floor 2, second-years on Floor 3, third-years on Floor 4. The only classrooms where students sit beside other types. Each class leaves its traces: chalk diagrams, old maps, polished desks, mud and straw after Creature Studies.",
-  "vibe": "tiered stone, crowded, metallic air.",
+  "vibe": "tiered stone, crowded, chalk-dusted boards.",
   "has_secret": false,
   "regulars": [
    "Anya",
@@ -832,7 +832,7 @@
   "category": "Academic",
   "kind": "location",
   "description": "Four brewing halls on Floor 4, one per dorm at the base of each of four towers, each equipped differently because each type approaches the craft differently, doubling as ventilated laboratories. Disposal rules are strict. The line between legitimate Potion Crafting and forbidden poison magic is drawn here and watched closely. Four towers vent four colours of steam over the roofline.",
-  "vibe": "sweet, bitter, mineral.",
+  "vibe": "coloured steam, bubbling vats, warning labels.",
   "has_secret": false,
   "regulars": [
    "Kotaro",
@@ -1009,7 +1009,7 @@
   "category": "Academic",
   "kind": "location",
   "description": "Records, consultations, and grade arguments. Every teacher runs a club, so half of these double as club offices. Students can often guess who was just there from what they left behind: marked essays, borrowed books, half-finished cups, unsigned club forms.",
-  "vibe": "mixed smells, busy corridor.",
+  "vibe": "doors ajar, cluttered desks, busy corridor.",
   "has_secret": false,
   "regulars": [
    "Baelin",
@@ -1252,7 +1252,7 @@
   "uid": 55,
   "category": "Academic",
   "kind": "location",
-  "description": "Down in the castle's vaulted undercroft beneath the Lecture Halls, where thick stone keeps its noise off the classrooms above and flues carry forge smoke up through the walls. Crafting space for the Smithing, Tailoring and Brewing clubs, plus Creation practicals and equipment repair. Tools, forges, benches. Enchantment sparks hang in the air a moment too long. Its lathes and tool racks are Caelmari-made.",
+  "description": "Down in the castle's vaulted undercroft beneath the Lecture Halls, where thick stone keeps its noise off the classrooms above and flues carry forge smoke up through the walls. Crafting space for the Smithing, Tailoring and Brewing clubs, plus Creation practicals and equipment repair. Tools, forges, benches. Enchantment sparks hang in the air after the hammer stops. Its lathes and tool racks are Caelmari-made.",
   "vibe": "forge light, hammering, quenched metal.",
   "has_secret": false,
   "regulars": [
@@ -3515,7 +3515,7 @@
   "category": "Sport and Grounds",
   "kind": "location",
   "description": "Cultivated grounds tended by students and staff, growing Potion Crafting reagents alongside ordinary plants. The Gardening Club effectively runs them, and students gather here before the Harvest Festival. Everything grows a little too well. Halvard: the Sky outcasts' meeting ground; the far end is a reliable place to skip class.\nHome of the Breath on the Glass story.",
-  "vibe": "turned earth, layered herb scents.",
+  "vibe": "turned earth, herb beds in long rows.",
   "has_secret": false,
   "regulars": [
    "Cedric",
@@ -3598,7 +3598,7 @@
   "category": "Sport and Grounds",
   "kind": "location",
   "description": "Live specimens for Creature Studies, housed and handled by students under supervision. Beast Handling Club territory. Halvard: the Creature Studies teacher lives beside it in converted stables. Mucking out is the highest-paying paid-work post because nobody volunteers. The animals sense weather changes before the handlers. Magical Beast lives here.\nHome of the When the Pens Go Quiet story.",
-  "vibe": "straw, musk, strange calls.",
+  "vibe": "straw, scratched bars, strange calls.",
   "has_secret": false,
   "regulars": [
    "Faye",
@@ -3706,8 +3706,8 @@
   "uid": 82,
   "category": "Services",
   "kind": "location",
-  "description": "A white-walled building of its own, four minutes' walk from the Mall, with a herb garden along one side: more than an infirmary, less than a hospital. Treatment rooms, a small apothecary, and an inpatient ward where students stay overnight or for days under care. Staffed by Spiritual mages; busiest after Practical Magic, in competition weeks, exam weeks, and after The Thinning. Nurses see injuries they must report and injuries they quietly do not. The attached Healing Ward is a teaching space where students practise on real patients under supervision. Staff can spot a Nightwell's Vigil overdose at a glance. Can heal any minor to mid injury to pristine; anything beyond is stabilised here and sent on to a proper hospital. The ward's beds are for the injured first, but a nurse will let an exhausted student lie down for an hour.\nHome of the Last Bed story.",
-  "vibe": "clean linen, green healing scent, too quiet.",
+  "description": "A white-walled building of its own, four minutes' walk from the Mall, with a herb garden along one side: more than an infirmary, less than a hospital. Treatment rooms, a small apothecary, and an inpatient ward where students stay overnight or for days under care. Staffed by Spiritual mages; busiest after Practical Magic, in competition weeks, exam weeks, and after The Thinning. Nurses see injuries they must report, and injuries they leave off the report. The attached Healing Ward is a teaching space where students practise on real patients under supervision. Staff can spot a Nightwell's Vigil overdose at a glance. Can heal any minor to mid injury to pristine; anything beyond is stabilised here and sent on to a proper hospital. The ward's beds are for the injured first, but a nurse will let an exhausted student lie down for an hour.\nHome of the Last Bed story.",
+  "vibe": "white walls, clean linen, too quiet.",
   "has_secret": false,
   "regulars": [
    "Anya",
@@ -4478,7 +4478,7 @@
   "category": "Sport and Grounds",
   "kind": "location",
   "description": "A single oak called the Elder Oak stands in an open clearing in the middle of the Forest, so broad a dozen students holding hands cannot circle it, and older than the castle by anyone's guess. The canopy opens above the clearing, so the oak stands in full sun while the woods around it stay dim; the muffled quiet of the Forest gives way to birdsong at its edge, and gold motes drift in the light even on grey days. Its roots pull the ground's mana into slow currents unlike anywhere else on campus, and a wild field of rare flowers has spread across the clearing around it, in colours found nowhere else. The Gardening Club has tried transplanting them; they wilt within a day of leaving the clearing. A deer path leads in from the treeline, about thirty minutes' walk. Students come to read, nap between the roots, or be alone without feeling lost. The crust for Eating in the Forest goes on its roots. Patrols turn students back at dusk, and nobody answers their name out here after dark. In winter the clearing stays green and in flower while snow lies everywhere around it. Sitting among the oak's roots, a mage feels their mana refill like water finding its level.",
-  "vibe": "sunlit, still, majestic, flower-scent and birdsong.",
+  "vibe": "sunlit, still, majestic, wildflowers and birdsong.",
   "has_secret": false,
   "regulars": [
    "Baelin",
@@ -4820,7 +4820,7 @@
   "category": "Residential",
   "kind": "location",
   "description": "Home of the Elementalists (red vest). Red-tiled roof and a red banner over the door. A great hearth burns in its common room day and night, and the broad chimney stack rising above the front of the building is always warm, even in winter. Inside: a common area and personal rooms. Creed: \"Through the Elements, Victory Is Ours.\"",
-  "vibe": "hearth warmth, woodsmoke, stone.",
+  "vibe": "hearth warmth, a chimney warm even in winter, stone.",
   "has_secret": false,
   "regulars": [
    "Aurelian",
@@ -5348,7 +5348,7 @@
   "category": "Academic",
   "kind": "location",
   "description": "A small round pavilion with a domed roof at the far corner of the Combat Grounds, the one building all four dorm training areas share. Inside: racks of training foci, ward-chalk and spare casting gear signed out by bracelet; benches, a water pump and a basic first-aid chest for the walk back after a hard session; a board of duel challenges and club standings. The club duels with spells inside warded rings, not staves. It is the Magic Duelling Club's headquarters, the standing exception to dorm separation, so it is the one place on the grounds where students of rival dorms share a bench. Gavlan Haverton, who advises the club, keeps a desk in the back. Unwritten rule: grudges from the rings are settled in the rings, never under the roof.",
-  "vibe": "sweat, liniment, chalk dust, tired laughter.",
+  "vibe": "sweat, strapped wrists, chalk dust, tired laughter.",
   "has_secret": false,
   "regulars": [
    "Bruno",
@@ -5469,7 +5469,7 @@
   "category": "Sport and Grounds",
   "kind": "location",
   "description": "A narrow footpath that leaves the grounds behind the Gymnasium and winds through old trees along the eastern edge of the academy, a loop short enough to walk in a quarter of an hour. Spirits like it here: the air under the trees is still and green, lesser spirits drift among the roots and branches, and small stone cairns that students have stacked over the years mark the way. Spirit users bring their pact partners here to let them out for a short walk. It is also where beginners come to meet a lesser spirit and try their first Spirit Pact; the custom is to go slowly, offer something small, and let the spirit choose. Almost any Occult student can bond a lesser spirit; a pact is a lasting contract, and the Occult teachers expect to be told of one. Anyone may come to watch: a stone bench at each bend faces the trees, and at dusk and dawn the lesser spirits are easy to see, a flicker in the ferns, a small light keeping pace along a branch. Most are shy; now and then one comes close out of curiosity, and it is considered lucky to be looked over and left in peace.",
-  "vibe": "green, dappled, hushed, quietly watched (never unkindly).",
+  "vibe": "green, dappled, hushed, watched (never unkindly).",
   "has_secret": false,
   "regulars": [
    "Florian",

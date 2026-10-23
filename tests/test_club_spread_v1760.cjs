@@ -17,7 +17,7 @@ const npcs = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/npcs.json'), 'utf8
 ok(/^Archery Club\./.test(field('Lenna', 'Club')) && /Archery Range/.test(field('Lenna', 'Haunts')) && /advises the Calligraphy Club/.test(field('Dorian', 'Role'))
   && /^Camping Club/.test(field('Faye', 'Club')) && npcs.Faye.public_tags.includes('Camping Club'), 'the lore says so (Lenna, Dorian, Faye)');
 const lore = id => fs.readFileSync(path.join(ROOT, `src/worldbook/content/${id}.txt`), 'utf8');
-ok(/Camping – Hills/.test(lore(132)) && /the Camping Club pitches on the lower slope after dusk/.test(lore(339)), 'the Campus Map and the Walking Lantern');
+ok(/Camping – Hills/.test(lore(26)) && /the Camping Club pitches on the lower slope after dusk/.test(lore(339)), 'the club venues (the Clubs entry since 1.99.5, audit T4) and the Walking Lantern');
 
 console.log('In play');
 let S = initState();

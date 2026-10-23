@@ -1,5 +1,5 @@
 [Fish Market] The city's seafood heart on the wharf: a long open hall where the morning catch is sold off ice and cooked on the spot, and the streets around it given over to grills, steamers and noodle stalls. Skewered prawns, grilled octopus, crab in chilli, coconut rice in leaf parcels, shaved ice in fruit syrup. Cheap by Sunreach standards, loud, and the best food on the island.
-Feel: smoke, salt, shouting.
+Feel: fish on ice, smoking racks, shouting.
 <%_ { const _hh = Number(String(getvar('stat_data.World.Time') || '').slice(0, 2)); if (_hh >= 18 || _hh < 6) { _%>
 At night: Red paper lanterns and rune-lit signs over a hundred steaming stalls, low wooden stools in the street, and the cooks still shouting until three in the morning.
 Feel at night: steam, sizzle, red light.

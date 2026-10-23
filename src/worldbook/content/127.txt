@@ -16,7 +16,7 @@ Relations: Baelin Kalvor knows exactly what he is doing and allows it, because A
 Adores Ezrel Marionne, the Light Dorm Head, and has never once got a real reaction out of him; it is the best game on campus.
 Speech: Warm, quick, disarming; agrees with everything and concedes nothing.
 Emotional tells: The cheer never moves, so watch everything else. Being hated makes him beam. Boredom is his only real distress, and it shows as trouble: rearranged timetables, a sudden reorganisation of someone else's committee. Rei ignoring him is the highlight of his week. Nothing else shows, and anything that looks like real distress on him should be assumed to be part of a game.
-<narrator_only>Has worked out what Dante Kleinn is, has never said so, and greets him a little too warmly.</narrator_only>
+<narrator_only>Has worked out what Dante Kleinn is, has never said so, and greets him more warmly than he greets anyone else.</narrator_only>
 Haunts: everywhere; his favours surface at The Snug, Council Chamber and Faculty Offices.
 Knows exactly what Bobby Becket does after hours and considers it the healthiest institution on campus.
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>

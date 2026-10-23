@@ -4,6 +4,6 @@ What: a starglass egg the size of a hen's, cold to the touch, with a single silv
 Power: it holds Vesna's bound soul. While the egg is intact she cannot be killed. Whoever holds it always knows where she is and can draw her back to it from any distance.
 Breaking it: nobody knows whether it would free her soul or end her.
 Law: binding a soul is Soul magic, a forbidden art in Eldrasil; the Doves would seize the egg and question whoever carries it.
-Wanted: Norvaine wants it back, quietly; it cannot ask openly without admitting what it is.
+Wanted: Norvaine wants it back without asking openly, since asking would admit what it is.
 Held by: <% const _ns = String(getvar('stat_data.Campus_State.Needle_seized') || ''); if (_ns) { %>the Dovecote, under Sir Krieg Valforth's seal, since <%- _ns %>; he always knows where Vesna is and can draw her back to it.<% } else if ((Number((getvar('stat_data.Campus_State.Transfers') || {}).Vesna) || 0)) { %>{{user}}, since the World Competition of campaign Year <%- (Number((getvar('stat_data.Campus_State.Transfers') || {}).Vesna) || 0) %>; Vesna refused to keep it herself.<% } else { %>Colonel Kazimir Zorin, on a chain under his collar.<% } %>
 <%_ } _%>

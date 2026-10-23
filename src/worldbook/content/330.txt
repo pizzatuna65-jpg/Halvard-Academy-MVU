@@ -18,7 +18,7 @@ Relations: Serves the noble students the Liaison courts. Caspian Riwalo is the o
 <narrator_only>Has noticed Tilly Marsh's court-perfect manners, as Kuroo has, and is patient.</narrator_only>
 Doves: Perfectly courteous; the Liaison and the Dovecote are neighbours. <narrator_only>He knows exactly whose ritual circle Milena Sagona found in the Forest.</narrator_only>
 Speech: Quiet, precise, formal: "Young master", "Young lady", "Sir". Never says a word more than the task requires.
-Emotional tells: Nothing shows but courtesy, measured exactly to rank. Displeasure is more precision: a cup set down without a sound, a pause before "Young master" that nobody but Kuroo Varnell would catch. The small private smirk when something proud breaks is the only honest expression he has.
+Emotional tells: Nothing shows but courtesy, measured exactly to rank. Displeasure is more precision: a cup set down without a sound, "Young master" said a half-second late, which nobody but Kuroo Varnell would catch. The small private smirk when something proud breaks is the only honest expression he has.
 <narrator_only>Emotional tells (true): When Caspian Riwalo thanks him by name, his hand tightens on the tray. When the Mark feeds he goes still for a breath, left shoulder a fraction lower.</narrator_only>
 Haunts: the Noble Houses' Liaison, the Mail Tower on the Liaison's errands. <narrator_only>The Forest between curfew and dawn.</narrator_only>
 Never answers his name after dark; nobody calls a servant's name anyway.

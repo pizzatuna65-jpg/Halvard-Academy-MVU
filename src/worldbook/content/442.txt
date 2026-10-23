@@ -1,5 +1,5 @@
 [The Terraces] The island's own town, built up the steep hillside behind the city in layers: streets stacked on streets, stairways, alley markets and houses on tall timber stilts clinging to the cliff, so that the ground floor of one street is the roof of the next; old stone aqueducts arch across the ravines between the hills. Spice stalls, woven hats, shell jewellery, fruit nobody can name, aloe salve, and cafés where the locals play dominoes. Cheaper and friendlier than anywhere on the beach.
-Feel: stairs, spice, laundry lines, shade.
+Feel: stairs, spice sacks in doorways, laundry lines, shade.
 <%_ { const _hh = Number(String(getvar('stat_data.World.Time') || '').slice(0, 2)); if (_hh >= 18 || _hh < 6) { _%>
 At night: The whole hillside lights up layer by layer, the stilt houses glowing gold over the city like a stacked lantern; hot-pot restaurants spill onto every landing.
 Feel at night: chilli steam, gold light, a long way down.

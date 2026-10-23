@@ -11,7 +11,7 @@ const clubs = read('src/worldbook/content/26.txt');
 const combat = read('src/worldbook/content/30.txt');
 console.log('Playtest Batch 3: time, movement and magic');
 ok(/brief exchange can take seconds to about a minute/.test(rule502) && /same displayed minute/.test(rule502) && /sustained conversation several minutes/.test(rule502) && /large time skip needs an actual wait/.test(rule502), 'narrator distinguishes seconds, sustained talk and explicit skips');
-ok(/ordinary walking estimates/i.test(map) && /speed spell can shorten/.test(map) && /faster magic/.test(rule504) && /speed technique/.test(rule502) && /elapsed time matches/.test(gate), 'walking map is an estimate; speed magic can shorten actual travel');
+ok(/Walks from here/.test(map) && /speed spell can shorten/.test(map) && /faster magic/.test(rule504) && /speed technique/.test(rule502) && /elapsed time matches/.test(gate), 'walking times come from <now> (1.99.5, audit T4); speed magic can shorten actual travel');
 ok(/ordinary movement magic/.test(index) && /not for an ordinary safe spell/.test(index) && !/Ordinary safe magic is allowed/.test(rule504) && !/safe casting/.test(gate), 'ordinary casting is legal; Dove intervention has a real cause (1.99.4, audit T6: said once, in the WORLD INDEX)');
 ok(/Magic Duelling Club/.test(clubs) && /spell duelling inside warded rings/.test(clubs) && /never swordplay, staves or fistfights/.test(clubs), 'club practises spell duelling in warded rings');
 ok(/Spellcasting drills/.test(combat) && !/Norvaine/.test(combat), 'Combat Class remains magical without the Norvaine army line');

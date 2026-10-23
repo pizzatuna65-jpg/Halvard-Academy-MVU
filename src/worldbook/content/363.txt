@@ -1,3 +1,3 @@
 [Blightbriar] A stretch of the forest gone wrong: thorn thickets with poisoned barbs, fungus in shelves and bulbs and towers, and puffs of spore that hang in the air and burn the throat. Walking it without a face cloth leaves anyone coughing and drained. The danger here is mostly the plants.
-Feel: sweet rot, itching skin, everything faintly moving.
+Feel: hanging spores, itching skin, everything faintly moving.
 Possible encounters: thorn creeper, shriek mushroom (IV); spore shambler (a dead animal walked by fungus threads) (III); bloom maw (a cart-sized carnivorous flower that lures with scent; it does not move, you come to it), manticore (II).

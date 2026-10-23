@@ -1,5 +1,5 @@
 [Velvet Lanes] A tangle of narrow alleys behind the Crossing, packed with tiny bars of six seats each, stacked two and three storeys high and reached by steep outside stairs; singing rooms with a hired lute player, smoky grills, fortune tellers, a night market selling anything (charms, forged papers, potions no apothecary at home would stock), and further in the pleasure houses behind silk curtains. Shuttered and sleepy by day.
-Feel: shuttered, narrow, stale smoke.
+Feel: shuttered, narrow, last night's lanterns still hanging.
 <%_ { const _hh = Number(String(getvar('stat_data.World.Time') || '').slice(0, 2)); if (_hh >= 18 || _hh < 6) { _%>
 At night: The brightest, densest, loudest few streets in the world: every sign competes in rune-lit glass, touts call from every door, and a group can lose each other in ten steps.
 Feel at night: rune-glow, smoke, whispers, too close.
