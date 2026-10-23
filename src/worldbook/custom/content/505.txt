@@ -8,6 +8,9 @@ const hmMin = t => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(t || '').trim()
 const PERIODS = SH.periods.map(p => p.map(hmMin));
 const PERIOD_TEXT = SH.periods.map(p => p.join('-'));
 const PERIOD_END = SH.periods.map(p => p[1]);
+// the day's blocks (1.16.0 ambience; shared since 1.99.11 for the presence roll): dawn, the periods, dusk, late evening
+const BLOCKS_AT = [...new Set([360, ...PERIODS.flat(), 1080, 1200])];
+const blockAt = m => BLOCKS_AT.filter(x => m >= x).length;
 const EXAM_MONTHS = SH.exam_months;   // midterms and finals, in Week 1 of these months
 const SEASONS = SH.seasons;           // by Month - 1
 const SEASON_OF = m => { const x = Number(m); return SEASONS[(((Number.isFinite(x) ? x : 1) - 1) % 12 + 12) % 12]; };
@@ -442,7 +445,8 @@ Campus events with no news for over a week (the world moves on without {{user}}:
 NPC initiative today: <%- INITIATIVE.id %> may try to reach {{user}}. At this bond rank, their Stage says: <%- INITIATIVE.stage %><%- INITIATIVE.ask ? ' Today\'s reason: ' + INITIATIVE.id + ' ' + INITIATIVE.ask + '.' : '' %> Let the contact take a form that fits their canon, current Trust and Tension, location, time, and existing plans. This is an opening, not an arrival or an obligation; if it cannot fit today, let it pass. Do not move them into Scene.Present until they actually enter the scene.<%- INITIATIVE.strained ? ' The approach is not friendly at this Tension.' : '' %><%- INITIATIVE.favour && on('planner') ? ' The reason is a favour. If {{user}} agrees, add a Commitment with Type "favour", With "' + INITIATIVE.id + '", a Due within ' + INITIATIVE.favour.days + ' days and ' + (INITIATIVE.favour.item ? 'Item "' + INITIATIVE.favour.item + '"' : 'Where "' + INITIATIVE.favour.where + '"') + '. A polite refusal owes nothing.' : '' %>
 <%_ } _%>
 <%_ { // 1.99.4 (bug-hunt audit R3): the optional threads above, at most one a reply, so the world does not crowd {{user}} out of a scene
-const OPT = [(NOW.pres || []).some(l => /^Likely around/.test(l) && !/no regulars on record$/.test(l)) && 'Likely around', W._Happening && on('happenings') && !AREA && 'Around campus today',
+const OPT = [(NOW.pres || []).some(l => /^Likely around/.test(l) && !/no regulars on record$/.test(l)) && 'Likely around',
+  (NOW.pres || []).some(l => /^Here now at/.test(l) && !/: nobody on the roster\./.test(l)) && 'Here now',   // 1.99.11 W._Happening && on('happenings') && !AREA && 'Around campus today',
   (NOW.amb || []).some(l => /^Nearby/.test(l)) && 'Nearby', GS.length && 'Rumours going around', STALE.length && 'Campus events with no news',
   INITIATIVE && INITIATIVE.id && INITIATIVE.stage && 'NPC initiative today'].filter(Boolean); if (OPT.length) { _%>
 Optional threads (<%- OPT.join(', ') %>): use at most one of them in this reply, and none while {{user}} is in the middle of an action or a focused conversation; the rest can wait.

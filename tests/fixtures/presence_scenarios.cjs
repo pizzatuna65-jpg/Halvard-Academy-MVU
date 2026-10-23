@@ -20,6 +20,7 @@ function scenario(i, E, off) {   // 1.52.0: off = Features to turn off (the rout
   if (i % 13 === 0) S.$ui.off = ['class'];
   if (i % 17 === 0) S.$ui.wxfx = 'flavor';
   if (off) S.$ui.off = [...(S.$ui.off || []), ...off];
+  S.$ui.off = [...(S.$ui.off || []), 'presence_roll'];   // 1.99.11: recorded from the habit list (the presence roll has its own suite)
   S.$eng.abs = E.toAbs(S.World);
   const A = Schema.parse(S); runEngine(A); return Schema.parse(A);
 }

@@ -146,7 +146,7 @@ ok(!thrown && legacy.Competition && Array.isArray(legacy.Competition.Team), `emp
 console.log('F02 NPC_status beats habits in the Now entry');
 const now = S => ejs.render(fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/content/505.txt'), 'utf8'), { getvar: k => _.get({ stat_data: S }, k) });
 // 1.52.0: 14:00, after Caspian's Sunday-morning routine at the Cathedral
-const G = set(S0, { Month: 11, Week: 3, Day: 'Sun', Time: '14:00', Location: 'Student Council Chamber' }, [{ op: 'replace', path: '/Campus_State/NPC_status', value: { Irene: 'Graduated; left Halvard by airship' } }]);
+const G = set(S0, { Month: 11, Week: 3, Day: 'Sun', Time: '14:00', Location: 'Student Council Chamber' }, [{ op: 'replace', path: '/Campus_State/NPC_status', value: { Irene: 'Graduated; left Halvard by airship' } }, { op: 'replace', path: '/$ui/off', value: ['presence_roll'] }]);   // 1.99.11: the habit list
 const txt = now(G);
 ok(/Likely around[^\n]*Caspian/.test(txt) && !/Likely around[^\n]*Irene/.test(txt) && /Irene: Graduated/.test(txt), 'Irene moves from habits to status on record');
 

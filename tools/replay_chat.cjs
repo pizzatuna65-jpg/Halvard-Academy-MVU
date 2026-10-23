@@ -72,6 +72,11 @@ msgs.forEach((m, i) => {
     r.missed = ((N.$ui || {}).missed || []).slice();
     r.minutes = abs0 >= 0 && N.$eng && N.$eng.abs >= 0 ? N.$eng.abs - abs0 : 0;
     r.at = stampOf(N.World);
+    // 1.99.11 (presence roll): what the narrator saw (the state before this reply) and who it brought into the scene
+    const p0 = Object.keys((S.Scene || {}).Present || {}), p1 = Object.keys((N.Scene || {}).Present || {});
+    r.pres = { moved: String((S.World || {}).Location || '') !== String((N.World || {}).Location || ''), add: p1.filter(id => !p0.includes(id)),
+      here: ((S.$ui || {}).now || {}).here || null, maybe: ((S.$ui || {}).maybe || []).map(x => x[0]), init: ((S.$ui || {}).initiative || {}).id || '',
+      said, at: String((N.World || {}).Location || '') };
     if (MEM) { r.mem = memDiff(S, N, ops); r.bytes = JSON.stringify(N).length; if (out.replies.length % every === 0) r.t501 = tok501(N); }
     S = N;
   } catch (e) { r.error = 'engine: ' + String(e.message || e).slice(0, 120); }

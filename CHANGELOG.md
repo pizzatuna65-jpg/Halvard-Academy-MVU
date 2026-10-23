@@ -1,7 +1,46 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show c242e3e:CHANGELOG.md` (1.99.5), `git show 9957046:CHANGELOG.md` (1.99.4), `git show 83145e7:CHANGELOG.md` (1.99.3), `git show 687b4e1:CHANGELOG.md` (1.99.2), `git show 1799228:CHANGELOG.md` (1.99.1), `git show 1d18944:CHANGELOG.md` (1.98.3), `git show 731f8d1:CHANGELOG.md` (1.98.2), `git show 77f557c:CHANGELOG.md` (1.98.1), `git show 44b586a:CHANGELOG.md` (1.97.5), `git show 7848cb7:CHANGELOG.md` (1.97.4), `git show 871dd0e:CHANGELOG.md` (1.97.3), `git show c5135f8:CHANGELOG.md` (1.97.2), `git show d30ff7c:CHANGELOG.md` (1.97.1), `git show f9101db:CHANGELOG.md` (1.96.1), `git show df8dbed:CHANGELOG.md` (1.96.0), `git show 363f03b:CHANGELOG.md` (1.95.0), `git show bba6bb0:CHANGELOG.md` (1.94.0), `git show dca179c:CHANGELOG.md` (1.93.1, 1.93.0), `git show 01cd1f2:CHANGELOG.md` (1.92.0), `git show d097927:CHANGELOG.md` (1.91.0), `git show 6065e5c:CHANGELOG.md` (1.90.0), `git show de4303e:CHANGELOG.md` (1.89.0), `git show 4ace903:CHANGELOG.md` (1.88.1), `git show ce178fb:CHANGELOG.md` (1.88.0), `git show 0e1e5a2:CHANGELOG.md` (1.87.0), `git show e6f2c37:CHANGELOG.md` (1.86.0), `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show b4db7fc:CHANGELOG.md` (1.99.6), `git show c242e3e:CHANGELOG.md` (1.99.5), `git show 9957046:CHANGELOG.md` (1.99.4), `git show 83145e7:CHANGELOG.md` (1.99.3), `git show 687b4e1:CHANGELOG.md` (1.99.2), `git show 1799228:CHANGELOG.md` (1.99.1), `git show 1d18944:CHANGELOG.md` (1.98.3), `git show 731f8d1:CHANGELOG.md` (1.98.2), `git show 77f557c:CHANGELOG.md` (1.98.1), `git show 44b586a:CHANGELOG.md` (1.97.5), `git show 7848cb7:CHANGELOG.md` (1.97.4), `git show 871dd0e:CHANGELOG.md` (1.97.3), `git show c5135f8:CHANGELOG.md` (1.97.2), `git show d30ff7c:CHANGELOG.md` (1.97.1), `git show f9101db:CHANGELOG.md` (1.96.1), `git show df8dbed:CHANGELOG.md` (1.96.0), `git show 363f03b:CHANGELOG.md` (1.95.0), `git show bba6bb0:CHANGELOG.md` (1.94.0), `git show dca179c:CHANGELOG.md` (1.93.1, 1.93.0), `git show 01cd1f2:CHANGELOG.md` (1.92.0), `git show d097927:CHANGELOG.md` (1.91.0), `git show 6065e5c:CHANGELOG.md` (1.90.0), `git show de4303e:CHANGELOG.md` (1.89.0), `git show 4ace903:CHANGELOG.md` (1.88.1), `git show ce178fb:CHANGELOG.md` (1.88.0), `git show 0e1e5a2:CHANGELOG.md` (1.87.0), `git show e6f2c37:CHANGELOG.md` (1.86.0), `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.99.11 — Who is here (2026-10-23)
+
+Owner playtest: in every new chat the first place {{user}} walked to had an NPC, and at the Main Courtyard or Founder's Park nine visits
+in ten it was Trixie (else Ruby or Caralynn). Owner-approved `planning/DRAFT_presence_roll.md` (deleted), simulated against the real data
+before it was built. Save fixture v1.99.10.
+- **The cause:** no rule asked for an NPC. `<now>` listed every free regular as "Likely around" (the Canteen and the Common Rooms 19 names
+  each) and the narrator read the list as a cast; the place's Regulars lore entry, fired by its name in the player's message, puts Trixie
+  first at the Courtyards; she is a regular of both places.
+- **The roll** (`shared.js presenceAt`, Features toggle "Who is here" `presence_roll`, on): certain are a routine here (its 70% day roll),
+  a teacher teaching here and Study Hall; each other free regular is here at a target by the place's crowd (0.15 / 0.5 / 0.9 / 1.4 / 2.0
+  people at ambience crowd 0–4) divided by their number, at most 60%, so a long list of regulars varies who is there, not how many; 8%
+  that one free roster NPC who is no regular here passes through; everyone in Scene.Present is "With {{user}}", outside the roll; the hits
+  in a seeded order (not the alphabet), at most 3 shown. Seeded by place and the day's block (`shared.js blockAt`): a swipe, or coming back
+  within the block, finds the same people. Numbers in `data/npc_routines.json` `here`.
+- **Crowd from one source:** engine `crowdAt` (taken out of `stepAmbience`), computed with Ambience off too.
+- **`<now>`:** "Here now at X (the engine's roll; an established scene overrides): name (what they are doing); …": a routine's reason,
+  "teaching …", "at Study Hall …", the NPC's public impression word and "a regular here", or "passing through"; today's initiative is
+  marked. "Each is busy with their own thing; show them at it. The first move is {{user}}'s, unless someone's character and Bond would
+  bring them over…". An empty place: "nobody on the roster. Only unnamed students and staff…". 505's optional threads count "Here now"
+  (never an empty place).
+- **Arriving** (not in the draft; it is the moment the owner saw at message 2): the engine runs after a reply, so a place reached in this
+  reply has no roll yet. `<now>` asks to keep the arrival to the place and its unnamed people (someone walking with {{user}}, a plan or
+  appointment, today's initiative excepted); the next Here now brings the people.
+- **The ambience agrees:** the "nearby" pair beat takes both people from Here now; a ghost story that needs {{user}} alone needs Here now
+  empty.
+- **Regulars lore entries** (48) end with "Habits only: who is at this place now is the Here now line in <now>." while the toggle is on
+  (`merge_lorebooks.py regulars_pointer`); the canon lists are unchanged.
+- **Measured:** `tools/audit_chat.py --mechanics` reports roster NPCs brought into the scene unasked on arrival and outside the roll, and who
+  most often (`replay_chat.cjs` `pres`). The old September chats have no update blocks, so there is no before figure.
+- Build fix found on the way: `merge_lorebooks.py mention_brief` sorted an NPC's name forms of equal length from a set, so a build could
+  swap them ("milena|sagona") and rewrite entries for nothing; ties now sort by name (two builds in a row are identical).
+- Toggle off is the 1.99.10 habit list byte for byte (`test_audit_batch5_v1470`'s 360 recorded scenarios); six older suites now run with
+  it off.
+- Tokens: constant ~19,875 → ~19,979 at the start (+104: the Here now rule and the arrival line); a busy place prints at most three names
+  instead of up to 19.
+- Tests: `test_presence_roll_v19911.cjs` (new); `npm test` passes.
+- **To confirm with the owner:** the arrival rule above (people appear from the reply after arriving, not in the arrival reply itself).
+- **To check live:** `docs/TEST_CHECKLIST.md` Act 1, Q1.1 [1.99.11].
 
 ## v1.99.10 — The date they were born (2026-10-23)
 
@@ -88,35 +127,6 @@ Bug-hunt audit `audit/AUDIT_2026-10-23_2_audit_menyeluruh.md` (untracked), batch
   `narrator_batch6_v1570`) and lint pass. Full suite not run (routine change).
 - **To confirm with the owner:** nothing invented.
 - **To check live:** `docs/TEST_CHECKLIST.md` SQ-SC [1.99.7].
-
-## v1.99.6 — Only what is known about the absent (2026-10-23)
-
-Bug-hunt audit `audit/AUDIT_2026-10-23_2_audit_menyeluruh.md` (untracked), batch 5 of §8: T5. Touches DECISIONS §1 "Cast Sheet" (a
-keyword entry of someone not here no longer prints their whole lore). Save fixture v1.99.5.
-- **Someone only mentioned gets what is commonly known about them** (`merge_lorebooks.py` `mention_brief`, run last on the card): an
-  NPC's keyword entry fires when their name is in the last two messages, and with no full sheet it printed their whole lore (secrets,
-  backstory, goals, relations: ±1,200 tokens) for a character who may not speak or act in that reply. Now it prints the public layer of
-  the info layers (`data/bond_rules.json` `layers.of.public`: role, age, looks, club, speech, magic, haunts, equipment…), the first
-  sentence of their Personality and their Now line, without `<narrator_only>` (median ±390 tokens instead of ±1,150). The whole lore,
-  as before, when they are here (Scene.Present, a brief sheet) or when the player's new message names them (Prompt Template's
-  `lastUserMessage`, the scene marker stripped): they may be about to appear. A full sheet still silences the entry.
-- **Settings → Features → "Short lore for people only mentioned"** (`mention_brief`, on): off brings back the whole lore whenever a name
-  comes up.
-- `tools/gen_mvu_entries.py` `GATE_RX` takes the full lore after the marker line `/* full lore */`, so the Cast Sheet is unchanged
-  (its record `cast_1560.json` passes as it is).
-- **Replay** (new `tests/lore_replay.cjs`: the last two messages scanned as SillyTavern does, after the card's prompt regexes, each fired
-  entry rendered with the state the prompt saw and the player's message): the owner's Charles chat (12 replies with state, Entrance
-  morning) **27,815 → 17,845 tokens of keyword lore** (average 2,318 → 1,487 per reply, the busiest 5,980 → 2,973); the ten entries of
-  people only mentioned 13,367 → 3,397 (Percival 1,554 → 364, Tilly 1,779 → 389). The chat had no reply where someone named only in the
-  previous reply walked in, so the cost of that case (the public part instead of the whole lore for their first lines) is untested live.
-- Verified in SillyTavern 1.18.0 (`public/script.js` Generate): the World Info scan reads the history after the prompt regexes
-  (`getRegexedString` with `isPrompt` on `coreChat` before `chatForWI`), so update blocks and scene markers never fire keywords.
-- Tests: new `test_mention_brief_v1996.cjs` (17 checks: the public part, the player naming them by first name, surname or lower case,
-  the scene marker, here or with a brief sheet, a full sheet, the toggle, every entry renders, the Cast Sheet); `renderEntry` takes
-  extra template names (`lastUserMessage`); suites that read a whole NPC entry render it with the toggle off (`bughunt_v103`,
-  `cohort2_v170`, `vesna_v1975`, `year2_v174`); `npm test` passes (168 suites), lint passes (477 EJS entries).
-- **To confirm with the owner:** nothing invented.
-- **To check live:** `docs/TEST_CHECKLIST.md` Act 1 [1.99.6].
 
 ## Release index (one line per release, oldest first)
 
@@ -319,3 +329,4 @@ keyword entry of someone not here no longer prints their whole lore). Save fixtu
 - **v1.99.8 (2026-10-23):** Keep the start the same (bug-hunt audit batch 7 stage 1, T1): keyword lore moved behind the constant entries (Lorebook After), so a provider's prompt cache reaches through the card's ±13,000 tokens of constant lore (0% → 80–89% reused, `tests/cache_replay.cjs`).
 - **v1.99.9 (2026-10-23):** Not told yet (owner playtest): a field a bond still holds back (Loves, Hates, Goals, Backstory…) is tagged at its own line in the Cast Sheet, gift line included, so Trixie and Caralynn no longer name what they love at Rank 0.
 - **v1.99.10 (2026-10-23):** The date they were born (owner): the full Cast Sheet carries the NPC's birthday from the dossier data, held back until the rank that opens it, so the narrator never invents a date.
+- **v1.99.11 (2026-10-23):** Who is here (owner playtest): who is at a place is rolled by how crowded it is (busy places fill, quiet ones are often empty, someone may pass through), at most three names, each busy with their own thing; an arrival keeps to the place until the next roll; Features toggle "Who is here".

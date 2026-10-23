@@ -2,3 +2,6 @@
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
 From campaign Year 3 also: Bianca.
 <%_ } _%>
+<%_ if (!(getvar('stat_data.$ui.off') || []).includes('presence_roll')) { _%>
+Habits only: who is at this place now is the Here now line in <now>.
+<%_ } _%>

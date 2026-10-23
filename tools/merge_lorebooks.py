@@ -1862,7 +1862,7 @@ def mention_brief(N, npcs):
         if not m: continue
         nid, full = m.group(1), m.group(2)
         rec = npcs[nid]
-        forms = sorted({nid, *(w for w in re.split(r"[\s-]+", rec['name']) if len(w) >= 3 and w[0].isupper()), *([rec['nickname']] if rec.get('nickname') else [])}, key=len, reverse=True)
+        forms = sorted({nid, *(w for w in re.split(r"[\s-]+", rec['name']) if len(w) >= 3 and w[0].isupper()), *([rec['nickname']] if rec.get('nickname') else [])}, key=lambda w: (-len(w), w))   # 1.99.11: ties by name, so every build writes the same entry
         alt = '|'.join(re.sub(r'([.*+?^${}()|\[\]\\/])', r'\\\1', f.lower()) for f in forms)
         cond = (f"!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {{}}).brief || []).includes('{nid}')"
                 f" && !Object.keys(getvar('stat_data.Scene.Present') || {{}}).some(k => String(k).toLowerCase().split(/\\s+/)[0] === '{nid.lower()}')"
@@ -1871,6 +1871,19 @@ def mention_brief(N, npcs):
                         f"{brief_lore(full)}\n{FULL_MARK}\n{full}\n<%_ }} }} _%>")
         n += 1
     assert n >= 70, n
+
+# 1.99.11 (owner-approved planning/DRAFT_presence_roll.md): a place's name in the chat fires its Regulars entry, a list of habits
+# outside the engine's presence roll (owner playtest: the first name, Trixie at the Courtyards, came up nine visits in ten). With the
+# Features toggle presence_roll on, each Regulars entry ends with one line that points to the roll; the canon text is unchanged.
+REG_POINTER = "Habits only: who is at this place now is the Here now line in <now>."
+def regulars_pointer(N):
+    n = 0
+    for e in N.values():
+        if not e['comment'].startswith('Regulars — '): continue
+        e['content'] = (e['content'].rstrip('\n') + "\n<%_ if (!(getvar('stat_data.$ui.off') || []).includes('presence_roll')) { _%>\n"
+                        + REG_POINTER + "\n<%_ } _%>")
+        n += 1
+    assert n >= 45, n   # 48 at 1.99.11
 
 # ================= v39 standalone =================
 C39, N39 = copy.deepcopy(C), copy.deepcopy(N)
@@ -2079,6 +2092,7 @@ lore_activation(Cc)   # 1.35.0
 style_pass(Cc, Nc)   # 1.99.5
 campus_map_card(Cc)   # 1.99.5 (T4)
 mention_brief(Nc, json.load(open(P('data/npcs.json'), encoding='utf-8')))   # 1.99.6 (T5), last: every NPC text is final
+regulars_pointer(Nc)   # 1.99.11: the card only (the v39 export has no engine)
 # merge + tagging (D2): lore -> [mvu_plot]; shared state/navigation entries stay untagged (sent to both models)
 UNTAGGED_CORE = {0, 132, 134, 131, 20}
 UNTAGGED_NPC = {97}

@@ -8,3 +8,6 @@ From campaign Year 3 also: Aurelian, Bruno, Bianca, Topaz.
 <%_ { const _tv = (Number((getvar('stat_data.Campus_State.Transfers') || {}).Vesna) || 0); if (_tv) { _%>
 After her transfer from Norvaine also: Vesna.
 <%_ } } _%>
+<%_ if (!(getvar('stat_data.$ui.off') || []).includes('presence_roll')) { _%>
+Habits only: who is at this place now is the Here now line in <now>.
+<%_ } _%>

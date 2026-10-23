@@ -168,12 +168,13 @@ const REL_PAIRS = /*@@REL_PAIRS@@*/[];
 const relSeen = (S, [a, b, , r, via]) => !!(S.Bonds[a] && S.Bonds[b] && S.Bonds[via]) && (r === 0 || (r >= 99
   ? [...(S.$ui.secrets || []), ...((S.Campus_State || {}).Secrets_revealed || [])].some(x => String(x).toLowerCase() === via.toLowerCase() + '.relationship')
   : S.Bonds[via].Rank >= r));
-function pairLine(c, ids, set, tag) {
+function pairLine(c, ids, set, tag, both) {   // both (1.99.11): the two are both in ids (the presence roll's people here)
   const { S, seed, dayNo } = c, PA = AMB.pairs || {}, T = PA[set] || {};
   const E = S.$eng.pair = _.isPlainObject(S.$eng.pair) ? S.$eng.pair : {};
   if (E.d === dayNo) return '';
   const PV = presenceNow(S), free = x => !npcOut(PV, S, x) && !npcAwayIn(S, x) && !(S.Scene.Present || {})[x];
-  const pool = REL_PAIRS.filter(e => ids.some(id => e[0] === id || (e[1] === id && e[2] !== 'dislike')) && (T[e[2]] || []).length && relSeen(S, e) && free(e[0]) && free(e[1]));
+  const pool = REL_PAIRS.filter(e => ids.some(id => e[0] === id || (e[1] === id && e[2] !== 'dislike')) && (!both || (ids.includes(e[0]) && ids.includes(e[1])))
+    && (T[e[2]] || []).length && relSeen(S, e) && free(e[0]) && free(e[1]));
   const e = rollTable(pool, { roll: [seed, dayNo, 'pair', tag], p: num(PA.rate, 0.5), pick: [seed, dayNo, 'pair-pick', tag] });
   if (!e) return '';
   E.d = dayNo;
@@ -318,6 +319,33 @@ const HAPPENINGS = /*@@HAPPENINGS@@*/[];
 // 1.16.0 ambience (data/ambience.json): categories and their crowd rhythm, the sun table, cue and beat types, the uncanny stories
 const AMB = /*@@AMBIENCE@@*/{};
 const AMB_LEVELS = ['empty', 'quiet', 'some people', 'busy', 'packed'];
+// a place key's ambience category: the part after a comma first ("castle, main library"), then the place itself
+const ambIn = (key, n) => key === n || key.startsWith(n + ' ') || key.startsWith(n + ',');
+function ambCatOf(key) {
+  const sub = key.includes(',') ? key.slice(key.indexOf(',') + 1).trim() : '';
+  const byName = test => Object.keys(AMB.cats || {}).find(c => AMB.cats[c].places.some(test));
+  return (sub && byName(n => sub.includes(n))) || byName(n => ambIn(key, n)) || '';
+}
+// how crowded loc is at minute t of the day, 0-4 (AMB_LEVELS), or -1 for a place with no category: the category's rhythm for this
+// kind of day, then exams, events, weather (wxNow: the Full weather block), breaks, the Thinning and curfew. 1.99.11: out of
+// stepAmbience, so the presence roll (shared.js presenceAt) reads the same number, also with Ambience off.
+function crowdAt(S, evs, wxNow, loc, t) {
+  const pk = placeKey(loc), cat = ambCatOf(pk), C0 = (AMB.cats || {})[cat];
+  if (!C0) return -1;
+  const W = S.World, blk = blockAt(t), out = isOutdoor(loc) || /courtyard/.test(pk);
+  const noClass = evs.some(e => e.noclass || e.home || e.lockdown || e.away);
+  const exam = EXAM_MONTHS.includes(W.Month) && W.Week === 1 && MON_THU.includes(W.Day);
+  let crowd = (noClass || W.Day === 'Sun' ? C0.free : W.Day === 'Sat' ? C0.sat || C0.free : C0.class)[blk];
+  const plan = evs.map(e => `${e.t} ${schedOf(e, W.Day) || ''}`).join(' ').toLowerCase();
+  if (exam && cat === 'study' && blk >= 1) crowd = 4;
+  if (blk >= 2 && C0.places.some(n => plan.includes(n))) crowd = Math.max(crowd, 3);
+  if (/feast/.test(plan) && pk.startsWith('ring dining hall') && t >= 1140 && t < 1320) crowd = 4;
+  if (/arbiter hall/.test(plan) && pk.startsWith('arbiter hall') && t >= 540 && t < 660) crowd = 4;
+  if (wxNow && wxBad(wxNow)) crowd = out ? Math.max(0, crowd - 2) : ['hub', 'dining', 'dorm_social', 'study', 'sport', 'clubs', 'mall'].includes(cat) ? Math.min(4, crowd + 1) : crowd;
+  if (evs.some(e => e.home)) crowd = ['gate', 'staff', 'care'].includes(cat) ? Math.min(crowd, 1) : 0;
+  if (/CURFEW|LOCKDOWN/.test(String(W._Curfew || '')) && !['dorm_social', 'dorm_utility'].includes(cat)) crowd = 0;
+  return crowd;
+}
 // Settings > Campus life > Ambient moments (tune amb_freq): d100 at or under "calm" is a quiet beat. 1.43.0 (audit 3.6): the same
 // setting scales the outside areas' small life (street sights, people met, pickpockets and hustlers, the airship's sky, stage and
 // hold) by its share of moments against Normal; story beats (Tsubaki lost, the Leviathan, raids, scouts) and the Expedition do not move.
@@ -7344,16 +7372,9 @@ function stepAmbience(c) {
     const AE = _.isPlainObject(S.$eng.amb) ? S.$eng.amb : (S.$eng.amb = {});
     for (const k of ['cue', 'beat', 'unc']) if (!_.isPlainObject(AE[k])) AE[k] = {};
     const pk = placeKey(S.World.Location), pkB = placeKey(B.World.Location), t = absA % DAY_MIN;
-    const inPlace = (key, n) => key === n || key.startsWith(n + ' ') || key.startsWith(n + ',');
-    const catOf = key => {
-      const sub = key.includes(',') ? key.slice(key.indexOf(',') + 1).trim() : '';
-      const byName = test => Object.keys(AMB.cats).find(c => AMB.cats[c].places.some(test));
-      return (sub && byName(n => sub.includes(n))) || byName(n => inPlace(key, n)) || '';
-    };
-    const cat = catOf(pk), C0 = AMB.cats[cat] || null;
-    const BLOCKS_AT = [...new Set([360, ...PERIODS.flat(), 1080, 1200])];   // dawn, the periods, dusk, late evening
-    const blockAt = m => BLOCKS_AT.filter(x => m >= x).length;
-    const blk = blockAt(t), blkB = blockAt(absB % DAY_MIN);
+    const inPlace = ambIn;
+    const cat = ambCatOf(pk), C0 = AMB.cats[cat] || null;
+    const blk = blockAt(t), blkB = blockAt(absB % DAY_MIN);   // shared.js blockAt (1.99.11)
     const cur = String(S.World._Curfew || ''), afterCurfew = /CURFEW|LOCKDOWN/.test(cur);
     const out = isOutdoor(S.World.Location) || /courtyard/.test(pk);
     const noClass = evs.some(e => e.noclass || e.home || e.lockdown || e.away);
@@ -7365,19 +7386,10 @@ function stepAmbience(c) {
       if (W0.sky === 'Storm') wtags.add('storm'); if (W0.sky === 'Fog') wtags.add('fog'); if (W0.sky === 'Clear') wtags.add('clear');
       if (W0.wind === 'windy' || W0.wind === 'gale') wtags.add('wind'); if (W0.temp >= 26) wtags.add('heat'); if (W0.temp <= 5) wtags.add('cold');
     }
-    // crowd: the category's rhythm for this kind of day, then exams, events, weather (Full), breaks, the Thinning and curfew
-    let crowd = -1;
-    if (C0) {
-      crowd = (noClass || S.World.Day === 'Sun' ? C0.free : S.World.Day === 'Sat' ? C0.sat || C0.free : C0.class)[blk];
-      const plan = evs.map(e => `${e.t} ${schedOf(e, S.World.Day) || ''}`).join(' ').toLowerCase();
-      if (exam && cat === 'study' && blk >= 1) crowd = 4;
-      if (blk >= 2 && C0.places.some(n => plan.includes(n))) crowd = Math.max(crowd, 3);
-      if (/feast/.test(plan) && pk.startsWith('ring dining hall') && t >= 1140 && t < 1320) crowd = 4;
-      if (/arbiter hall/.test(plan) && pk.startsWith('arbiter hall') && t >= 540 && t < 660) crowd = 4;
-      if (wxNow && wxBad(wxNow)) crowd = out ? Math.max(0, crowd - 2) : ['hub', 'dining', 'dorm_social', 'study', 'sport', 'clubs', 'mall'].includes(cat) ? Math.min(4, crowd + 1) : crowd;
-      if (evs.some(e => e.home)) crowd = ['gate', 'staff', 'care'].includes(cat) ? Math.min(crowd, 1) : 0;
-      if (afterCurfew && !['dorm_social', 'dorm_utility'].includes(cat)) crowd = 0;
-    }
+    const crowd = crowdAt(S, evs, wxNow, S.World.Location, t);   // 1.99.11: one source with the presence roll
+    // 1.99.11 (planning/DRAFT_presence_roll.md): who the presence roll puts here (null: Features presence_roll off), so a pair beat or
+    // a moment alone never contradicts the Here now line in <now>
+    const PV = presenceNow(S), hereIds = PV.hroll ? presenceAt(PRESENCE, PV, S.World.Location, crowd).regs : null;
     // light: sunrise and sunset by the calendar (real-life months, interpolated by week), the sky, indoors or out
     const sx = S.World.Month - 1 + (S.World.Week - 0.5) / 4 - 0.5, s0 = Math.floor(sx), sf = sx - s0;
     const sa = AMB.sun[String(((s0 % 12) + 12) % 12 + 1)], sb = AMB.sun[String((((s0 + 1) % 12) + 12) % 12 + 1)];
@@ -7449,8 +7461,10 @@ function stepAmbience(c) {
         }
         // 1.51.0 (audit 4.8): a "nearby" moment may be two people {{user}} knows, one of them a regular of this place
         if (kind === 'tex' && crowd > 0 && !curfewOut) {
-          const regs = Object.keys(S.Bonds).filter(id => String(HAUNT[id] || '').toLowerCase().split(/[;,]/).some(h => { const k = placeKey(h.replace(/\(.*?\)/g, '').trim()); return k && inPlace(pk, k); })).sort();
-          const pl = regs.length ? pairLine(c, regs, 'near', 'amb') : '';
+          // 1.99.11: with the presence roll, both of the pair are among those here now
+          const regs = hereIds ? hereIds.filter(id => S.Bonds[id]).sort()
+            : Object.keys(S.Bonds).filter(id => String(HAUNT[id] || '').toLowerCase().split(/[;,]/).some(h => { const k = placeKey(h.replace(/\(.*?\)/g, '').trim()); return k && inPlace(pk, k); })).sort();
+          const pl = regs.length >= (hereIds ? 2 : 1) ? pairLine(c, regs, 'near', 'amb', !!hereIds) : '';
           if (pl) beat = { kind, text: pl, pair: 1 };
         }
       }
@@ -7471,7 +7485,7 @@ function stepAmbience(c) {
     const U = AE.unc;
     if (!_.isPlainObject(U.last)) U.last = {};
     if (AML === 'full' && !battle && num(U.w, -99) !== weekNo) {
-      const thin = evs.some(e => e.lockdown), alone = !Object.keys(S.Scene.Present || {}).length, dark = phase === 'dark' || phase === 'dusk';
+      const thin = evs.some(e => e.lockdown), alone = !Object.keys(S.Scene.Present || {}).length && !(hereIds || []).length, dark = phase === 'dark' || phase === 'dusk';
       const inWin = (f, to) => (f <= to ? t >= f && t < to : t >= f || t < to);
       const FARK = ['boathouse and lake', 'fishing house', 'willow island', 'grassy field and hills', 'old hut', 'forest', 'forest clearing', 'observation tower'];
       const isFar = k => FARK.some(n => inPlace(k, n)), path = pk !== pkB && (isFar(pk) || isFar(pkB));
@@ -7757,7 +7771,9 @@ function nowOf(S, moodsFull) {
   const cur = String(W._Curfew || '');
   const PRES = Object.keys(getvar('stat_data.Scene.Present') || {});
   const aged = w => { const a = ageOf(w, W); return a ? w + ', ' + a : w; };
-  const V = presenceNow(S), HERE = { ...presenceAt(PRESENCE, V, W.Location), cls: classLineAt(PRESENCE, V, W.Location) };
+  // 1.99.11: the presence roll reads how crowded the place is now (crowdAt, the weather block as stepAmbience has it)
+  const wxN = UI.wx && UI.wx.mode === 'full' && !UI.wx.away ? UI.wx.now : null;
+  const V = presenceNow(S), HERE = { ...presenceAt(PRESENCE, V, W.Location, crowdAt(S, eventsOn(W), wxN, W.Location, hmMin(W.Time) || 0)), cls: classLineAt(PRESENCE, V, W.Location) };
   // 1.56.0 (narrator-load audit U2): each present character's lines are one block, printed in their Cast Sheet ("Now with {{user}}"),
   // with band words instead of numbers (the numbers are in <current_state> only); people[id] = [lines]
   const people = {}, put = (id, l) => { if (l) (people[id] = people[id] || []).push(l); };
@@ -7971,7 +7987,20 @@ function nowOf(S, moodsFull) {
   if (HERE.pres.length) {
   out.push((HERE.pres.join(' ')));
   }
+  if (HERE.roll) {   // 1.99.11 (owner-approved planning/DRAFT_presence_roll.md): who is here is the engine's roll, not a list of habits
+  const R = HERE.roll, ini = (UI.initiative || {}).id, withU = PRES.filter(id => id !== '{{user}}');
+  NOW.here = HERE.regs.slice();
+  if (withU.length) {
+  out.push("With {{user}} (outside the roll; they go where {{user}} goes until the scene says otherwise): " + withU.join(', ') + ".");
+  }
+  out.push(HERE.regs.length ? "Here now at " + (HERE.place || 'this place') + " (the engine's roll; an established scene overrides): " + HERE.regs.map(r => r + ' (' + (R[r] || 'here') + (r === ini ? "; today's initiative: comes to {{user}}" : '') + ')').join('; ')
+    + ". Each is busy with their own thing; show them at it. The first move is {{user}}'s, unless someone's character and Bond would bring them over, or they are marked as today's initiative."
+    : "Here now at " + (HERE.place || 'this place') + ": nobody on the roster. Only unnamed students and staff, kept in the background unless {{user}} turns to one.");
+  // the engine runs after a reply, so a place {{user}} reaches in this reply has no roll yet: its people come with the next Here now
+  out.push("Arriving somewhere else in this reply: who is there is rolled after the reply (the next Here now). On arrival keep to the place and its unnamed people; a roster character is there only if they walk with {{user}}, a plan or an appointment puts them there, or they are today's initiative. Someone {{user}} came looking for may or may not be there.");
+  } else {
   out.push("Likely around " + (HERE.place || 'here') + " (habits, not certainty; an established scene overrides): " + (HERE.regs.length ? HERE.regs.map(r => (HERE.why || {})[r] ? r + ' (' + HERE.why[r] + ')' : r).join(', ') : 'no regulars on record'));
+  }
   if (HERE.moved.length) {
   out.push("Moved indoors in this weather (Gymnasium, Common Rooms): " + (HERE.moved.join(', ')));
   }

@@ -128,6 +128,9 @@ const hmMin = t => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(t || '').trim()
 const PERIODS = SH.periods.map(p => p.map(hmMin));
 const PERIOD_TEXT = SH.periods.map(p => p.join('-'));
 const PERIOD_END = SH.periods.map(p => p[1]);
+// the day's blocks (1.16.0 ambience; shared since 1.99.11 for the presence roll): dawn, the periods, dusk, late evening
+const BLOCKS_AT = [...new Set([360, ...PERIODS.flat(), 1080, 1200])];
+const blockAt = m => BLOCKS_AT.filter(x => m >= x).length;
 const EXAM_MONTHS = SH.exam_months;   // midterms and finals, in Week 1 of these months
 const SEASONS = SH.seasons;           // by Month - 1
 const SEASON_OF = m => { const x = Number(m); return SEASONS[(((Number.isFinite(x) ? x : 1) - 1) % 12 + 12) % 12]; };

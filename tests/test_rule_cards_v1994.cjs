@@ -68,7 +68,7 @@ const nowC = R(505, Sc);
 ok(/is Soaked right now: show it in this reply without being reminded, in the body and in what \{\{user\}\} can do, with a detail not used before\./.test(nowC) && !/dripping hair/.test(nowC), 'S6: <now> names the condition, not a ready-made picture');
 const tpl = fs.readFileSync(path.join(ROOT, 'src/worldbook/custom/505.template.ejs'), 'utf8');
 ok(/advance one of them through talk, a rumour, a notice or a letter; remove any that is over/.test(tpl) && !/advance each/.test(tpl), 'R3: stale campus events: advance one at a time');
-const Sb = applyPatch(applyPatch(initState(), [{ op: 'replace', path: '/World/Week', value: 2 }, { op: 'replace', path: '/World/Day', value: 'Wed' }, { op: 'replace', path: '/World/Time', value: '10:00' }]),
+const Sb = applyPatch(applyPatch(initState(), [{ op: 'replace', path: '/World/Week', value: 2 }, { op: 'replace', path: '/World/Day', value: 'Wed' }, { op: 'replace', path: '/World/Time', value: '10:00' }, { op: 'replace', path: '/$ui/off', value: ['presence_roll'] }]),
   [{ op: 'replace', path: '/World/Time', value: '12:30' }, { op: 'replace', path: '/World/Location', value: 'Canteen' }]);
 const nowB = R(505, Sb);
 ok(/^Likely around Canteen/m.test(nowB) && /Optional threads \(Likely around[^)]*\): use at most one of them in this reply, and none while \{\{user\}\} is in the middle of an action or a focused conversation; the rest can wait\./.test(nowB),

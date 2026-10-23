@@ -1,1 +1,4 @@
 [Regulars — Noble Houses' Liaison] Caspian, Caralynn, Florian, Caine (butler, always on duty).
+<%_ if (!(getvar('stat_data.$ui.off') || []).includes('presence_roll')) { _%>
+Habits only: who is at this place now is the Here now line in <now>.
+<%_ } _%>

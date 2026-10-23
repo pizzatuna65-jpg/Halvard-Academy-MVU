@@ -100,6 +100,10 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **NPC routines** (1.52.0, owner-approved draft): light weekly habits are data in the one whereabouts model, below status, sickness,
   class, teaching, Study Hall, clubs and the election, above haunts; a routine holds on a day by the shared `roll100` at 70% (owner).
   Dossier and Map show them as "usually", gated by the Haunts field. Lore dawn habits before curfew ends are kept as written.
+- **Who is here is rolled** (1.99.11, owner-approved draft after a playtest): the engine decides who is at a place (shared.js
+  `presenceAt`: certain routines and schedules, other regulars by a crowd target over their number, a rare passer-by, at most three names,
+  seeded by place and block); the narrator decides what they do, and the first move is {{user}}'s unless character, Bond or initiative
+  say otherwise. A place reached in a reply gets its people from the next reply. Off (Features) is the habit list as before.
 - **NPCs seen together, traces** (1.51.0, feature batch 3): pair moments use only relation lines Connections shows {{user}}, with
   generic public-behaviour wording; a story relation fades after four weeks unrenewed and hides after eight (kept in the state). A
   trace beat only names the open thread; what is found is the narrator's, true to the lore, never a solution.

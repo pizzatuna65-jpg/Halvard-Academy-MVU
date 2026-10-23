@@ -1,1 +1,4 @@
 [Regulars — Medical Centre] Vera, Percival, Sophia, Tilly, Hester, Anya.
+<%_ if (!(getvar('stat_data.$ui.off') || []).includes('presence_roll')) { _%>
+Habits only: who is at this place now is the Here now line in <now>.
+<%_ } _%>

@@ -13,6 +13,7 @@
   "happenings": 73,
   "event_chances": 0,
   "npc_routines": 0,
+  "presence_roll": 0,
   "npc_initiative": 0,
   "weather": 425,
   "class": 0,

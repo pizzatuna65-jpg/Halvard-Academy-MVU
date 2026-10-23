@@ -9,7 +9,7 @@ const put = (p, v) => ({ op: 'replace', path: p, value: v });
 const D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const at = n => ({ Month: 1 + Math.floor(n / 28), Week: 1 + Math.floor((n % 28) / 7), Day: D[n % 7] });
 const likely = X => ((X.$ui.now || {}).pres || []).filter(l => /^Likely around|in class until/.test(l)).join(' | ');
-const S0 = go(initState({ etnie: true }), { ...at(8), Time: '10:00', Location: 'Fire Dormitory' }, [put('/Player/Profile/Dorm', 'Fire')]);
+const S0 = go(initState({ etnie: true }), { ...at(8), Time: '10:00', Location: 'Fire Dormitory' }, [put('/Player/Profile/Dorm', 'Fire'), put('/$ui/off', ['presence_roll'])]);   // 1.99.11: the habit list
 // the same weekday and time on many weeks; skip the weeks with an event (the calendar may change the day)
 const weekly = (dow, time, loc, weeks = 30) => { const out = []; let X = S0; for (let w = 2; w < 2 + weeks; w++) { const n = w * 7 + dow; X = go(X, { ...at(n), Time: '07:30', Location: 'Fire Dormitory' }); X = go(X, { Time: time, Location: loc }); out.push(likely(X)); } return out; };
 
@@ -17,7 +17,7 @@ console.log('a routine holds most days (70%)');
 {
   const wed = weekly(2, '18:30', 'The Dovecote'), n = wed.filter(l => /Royhan \(stays late near the Dovecote for Dragonchess\)/.test(l)).length;
   ok(n >= 0.45 * wed.length && n <= 0.95 * wed.length, `Royhan at the Dovecote on Wednesday evenings: ${n} of ${wed.length} weeks`);
-  const off = []; let X = go(S0, { Time: '10:05' }, [put('/$ui/off', ['npc_routines'])]);
+  const off = []; let X = go(S0, { Time: '10:05' }, [put('/$ui/off', ['npc_routines', 'presence_roll'])]);
   for (let w = 2; w < 14; w++) { X = go(X, { ...at(w * 7 + 2), Time: '07:30', Location: 'Fire Dormitory' }); X = go(X, { Time: '18:30', Location: 'The Dovecote' }); off.push(likely(X)); }
   ok(!off.some(l => /Royhan/.test(l)), 'NPC routines off in Features: never (haunts only, as before 1.52.0)');
   const tue = weekly(1, '18:30', 'The Dovecote', 12);

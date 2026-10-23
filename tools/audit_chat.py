@@ -380,7 +380,7 @@ def mechanics(path, use_replay=True):
         fixes = Counter(k for k in (fix_kind(l) for l in r.get('log', [])) if k)
         row.update({'read': r.get('read'), 'ops': r.get('ops'), 'stray': len(r.get('stray', [])), 'dropped': len(r.get('dropped', [])),
                     'fixes': dict(fixes), 'fix_lines': [l for l in r.get('log', []) if fix_kind(l)], 'missed': len(r.get('missed', [])),
-                    'minutes': r.get('minutes', 0), 'at': r.get('at', ''), 'error': r.get('error', '')})
+                    'minutes': r.get('minutes', 0), 'at': r.get('at', ''), 'error': r.get('error', ''), 'pres': r.get('pres')})
     return {'chat': os.path.basename(path), 'replay': 'from ' + rp['start'] if 'start' in rp else 'skipped: ' + rp.get('error', ''),
             'rows': [rows[k] for k in sorted(rows)], 'replies': replies, 'no_block': no_block, 'multi_block': multi,
             'prose': round(sum(prose) / len(prose) / 3.6) if prose else 0}
@@ -388,6 +388,35 @@ def mechanics(path, use_replay=True):
 
 def _avg(xs):
     return round(sum(xs) / len(xs), 1) if xs else 0
+
+
+ROSTER = None
+
+
+def presence_stats(mx):
+    """1.99.11 (presence roll): roster NPCs the narrator brought into the scene (Scene.Present) unasked: on arrival at a new place
+    (the roll for it comes with the next reply), or later outside the Here now it had been given. Named in the player's message, a
+    plan or an appointment ("May be here") or today's initiative count as asked."""
+    global ROSTER
+    if ROSTER is None:
+        ROSTER = set(json.load(open(P('data/npcs.json'), encoding='utf-8')))
+    arrivals, on_arrival, outside, who = 0, 0, 0, Counter()
+    for r in mx['rows']:
+        p = r.get('pres')
+        if not p:
+            continue
+        said = str(p.get('said') or '')
+        asked = lambda i: re.search(r'(?<![\w])' + re.escape(i) + r'(?![\w])', said, re.I) or i in (p.get('maybe') or []) or i == p.get('init')
+        add = [i for i in (p.get('add') or []) if i in ROSTER and not asked(i)]
+        if p.get('moved'):
+            arrivals += 1
+            on_arrival += len(add)
+            who.update(add)
+        elif p.get('here') is not None:
+            out = [i for i in add if i not in p['here']]
+            outside += len(out)
+            who.update(out)
+    return arrivals, on_arrival, outside, who
 
 
 def mechanics_summary(mx):
@@ -407,7 +436,10 @@ def mechanics_summary(mx):
             ('changes the schema dropped', f"{sum(g('dropped'))}"),
             ('reminders raised (possibly missed)', f"{sum(g('missed'))}"),
             ('Clues / detail Hooks recorded but not in the story of their reply (1.80.0)', f"{sum(len(r.get('unseen') or []) for r in R)}"),
-            ('time per reply (minutes)', f"avg {_avg(mins)}, max {max(mins or [0])}")]
+            ('time per reply (minutes)', f"avg {_avg(mins)}, max {max(mins or [0])}"),
+            *(lambda a, b, c, w: [('roster NPCs brought in unasked on arrival at a new place (1.99.11)', f"{b} in {a} arrivals"),
+                                  ('roster NPCs brought in unasked outside the Here now roll (1.99.11)', f"{c}"),
+                                  ('most often brought in unasked', ', '.join(f'{k} {v}' for k, v in w.most_common(5)) or 'none')])(*presence_stats(mx))]
 
 
 def _totals(mx):

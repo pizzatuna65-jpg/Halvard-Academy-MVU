@@ -41,6 +41,10 @@ tahap itu selesai.
 - **Megumin audit MS3 tahap 2** (`audit/AUDIT_2026-10-21_2_megumin_suite.md`; tahap 1 di 1.80.0): hanya bila laporan
   `audit_chat.py --mechanics` dari ekspor kampanye mencantumkan beberapa "Records not in the story": engine menandai Clue itu `_Unseen`,
   `stepReminders` mengingatkan sekali, Mystery Board menampilkannya redup; Clue `Source` `records` dikecualikan.
+- **Pratinjau siapa yang ada di tempat tujuan** (sisa 1.99.11): sekarang orang di tempat yang baru dicapai muncul mulai balasan berikutnya.
+  Alternatifnya, 505 membaca tujuan dari `lastUserMessage` dan menghitung roll tempat itu sebelum balasan; perlu data presence dan
+  `crowdAt` di 505 dengan hasil yang persis sama dengan engine (blok waktu setelah berjalan, cuaca), atau engine menyimpan roll per tempat
+  (ukuran state per pesan). Hanya kalau playtest menunjukkan jeda satu balasan terasa janggal.
 - **Club buatan sendiri, lanjutan** (sisa DRAFT_club_sendiri §6, 1.75.0): aksi Practice khusus di ruang club-nya (sekarang hanya Saturday
   club time yang memberi XP Field); status club olahraga (larangan sihir, bracket Sports Day); anggaran club.
 - **Kerja club, lanjutan** (sisa DRAFT_kerja_club §5, 1.90.0–1.92.0): Beast Handling menangkap makhluk lepas (happening `loose
@@ -112,6 +116,9 @@ Sisa saran audit fitur 2026-10-03 (4.5–4.10 sudah dibuat di 1.49–1.52; 4.16 
 - Kingdom Competition (1.84.0, `data/event_frame.json` `kingdom`): peluang menemukan 25, tanda 40, menyergap 25, taktik (hunt 1,5; sneak
   mundur 60; hold 20), kekuatan beast IV/III/II 30/55/80, gagal melawan beast mematahkan segel 40%, tambahan rival +10 dan Rank 1 +15.
   Hasil 100 seed: juara Halvard 27, Ashvale 29, Myrdath 32, Veyra 12; ronde dua selesai sebelum 18:00 di 51.
+- Siapa yang ada (1.99.11, `data/npc_routines.json` `here`): target regular per keramaian 0,15 / 0,5 / 0,9 / 1,4 / 2,0, cap 60%, orang
+  lewat 8%, maksimal 3 nama; rutinitas 70% (`rate`) yang membuat jam 16:00–18:00 di Club Rooms, Main Library dan Combat Grounds selalu
+  ramai. Ukur dulu dengan `audit_chat.py --mechanics` (dibawa masuk tanpa diminta) pada ekspor kampanye.
 - Memori: `HAPPEN_RATE`, kedalaman trim 24, jendela Journal 30, `FACTS_VISIBLE` 10, cap Clues 40.
 - Proficiency dan crafting (draft proficiency 1.25–1.30): ambang XP (10/30/60/100/150), cap mingguan 6 dan pace, XP per sumber,
   modifier Fortune per rank dan cap +20, DC dan band crafting, dosis dan yield, harga jual, upah menagerie, bobot grade 50/30/20 dan

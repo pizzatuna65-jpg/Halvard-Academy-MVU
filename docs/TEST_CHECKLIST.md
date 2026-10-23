@@ -136,6 +136,12 @@ show the newcomers their dorm rooms.
       nothing they love; Trixie may still eat a sweet in the scene. Her goal (to make everyone smile) she tells freely [1.99.9].
 - [ ] Ask someone their birthday: before the rank that opens it they dodge; after it they name the date the dossier shows, not an
       invented one (Trixie: M8 W2 Tue at Rank 1) [1.99.10].
+- [ ] Who is here: the reply that arrives at a new place (the Canteen, the Library, Founder's Park) shows the place and unnamed people,
+      no roster name out of nowhere; from the next reply `<now>` has "With {{user}}: Kanae, Zara" and "Here now at …" with at most three
+      names, each doing something, and the narrator shows them at it without making them all come over. A swipe keeps the same people.
+      Over the tour some places are "nobody on the roster", the Canteen at lunch is busy, and Trixie is no longer at every courtyard
+      [1.99.11]. Later, `python tools/audit_chat.py <chat>.jsonl --mechanics --no-drift` reports how many roster NPCs were brought in
+      unasked (on arrival, outside the roll) and who most often.
 - [ ] Someone not yet named shows their role, not their name; a passer-by has "Keep in record"; with four or more present, three
       cards and an "also here" row; a thought about someone absent is an "elsewhere" line [1.70].
 - [ ] The bracelet has a folded "This reply (n changes)": open it after a reply with Kanae or Zara; it lists their bond XP (and any

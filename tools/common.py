@@ -255,7 +255,11 @@ def presence_data(npcs, locs):
             rt.setdefault(nid, []).append([days(d), mins(f), mins(to), norm(place), place, what, f"{d.replace('-', '–')} {f}–{to}"])
     return {'reg': reg, 'stu': stu, 'arr': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1}, 'teach': teach, 'tt': tt, 'clubv': clubv,
             'outd': sorted({norm(k) for lid in out_ids for k in place_keys(locs[lid], lid)}), 'vn': {norm(l['name']): l['name'] for l in locs.values()},
-            'rt': rt, 'rate': R['rate'], 'ct': contest_data(stu, tr), 'tr': tr}
+            'rt': rt, 'rate': R['rate'], 'ct': contest_data(stu, tr), 'tr': tr,
+            # 1.99.11 (planning/DRAFT_presence_roll.md): the presence roll's numbers, who may pass through (bondable NPCs) and the
+            # public impression word each "Here now" name carries
+            'here': R['here'], 'roster': sorted(k for k, v in npcs.items() if not nobond(v)),
+            'imp': {k: v['impression'] for k, v in sorted(npcs.items()) if v.get('impression') and not nobond(v)}}
 
 
 def contest_data(stu, tr=None):

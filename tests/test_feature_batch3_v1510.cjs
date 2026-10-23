@@ -11,7 +11,7 @@ const D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const at = n => ({ Month: 1 + Math.floor(n / 28), Week: 1 + Math.floor((n % 28) / 7), Day: D[n % 7] });
 const card = JSON.parse(rd('dist/Eldrasil_Halvard.json')).data.character_book.entries;
 
-let S0 = go(initState({ etnie: true }), { ...at(8), Time: '10:00', Location: 'Main Library' }, [put('/Player/Profile/Dorm', 'Fire')]);
+let S0 = go(initState({ etnie: true }), { ...at(8), Time: '10:00', Location: 'Main Library' }, [put('/Player/Profile/Dorm', 'Fire'), put('/$ui/off', ['presence_roll'])]);   // 1.99.11: haunts, as before the presence roll
 S0 = go(S0, { Time: '10:30' }, [with_(['Cedric', 'Layla'])]);
 S0 = go(S0, { Time: '11:00' }, [with_([])]);
 

@@ -1,6 +1,8 @@
 {
  "_note": "1.52.0 (owner-approved planning/DRAFT_npc_routines.md, feature batch 4, audit 4.7): light weekly habits. Each row: [days ('Mon-Fri', 'Sun-Thu' wraps, or 'Mon, Wed, Fri'), from, to, a Campus Map place, what they do there]. Read by tools/common.py presence_data into the one whereabouts model (shared.js whereabouts / presenceAt): outside class, teaching, Saturday club and Council, a routine holds on a day when the shared roll100(seed, the day, 'routine', id, row) < rate (owner: 70, \"usually\"); otherwise the NPC keeps to their haunts. Status and sickness override it. Shown on the Map and in the dossier as \"usually\" once the Haunts field is open. A new NPC needs 1-3 rows (NPC_BRAINSTORM_BRIEF.md). Rival academy teams have none.",
  "rate": 70,
+ "_here": "1.99.11 (owner-approved planning/DRAFT_presence_roll.md): the presence roll (Features presence_roll; shared.js presenceAt). target: the regulars expected here at each ambience crowd level 0-4 (each free regular is here at target / their number percent, at most cap); pass: the percent chance one free roster NPC who is no regular here passes through; max: names shown. Simulated against the real data before release (CHANGELOG 1.99.11).",
+ "here": {"target": [0.15, 0.5, 0.9, 1.4, 2.0], "cap": 60, "pass": 8, "max": 3},
  "npcs": {
   "Irene": [["Mon-Fri", "16:00", "19:00", "Main Library", "Library Assistants shift"], ["Sat", "12:00", "12:30", "Notice Board", "checks it after the Council meeting"]],
   "Caspian": [["Mon-Fri", "16:00", "18:00", "Student Council Chamber", "Festival Committee work"], ["Fri", "18:00", "19:30", "The Snug", "neutral ground for diplomacy"], ["Sun", "09:00", "11:00", "The Cathedral", ""]],

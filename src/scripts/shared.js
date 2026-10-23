@@ -7,6 +7,9 @@ const hmMin = t => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(t || '').trim()
 const PERIODS = SH.periods.map(p => p.map(hmMin));
 const PERIOD_TEXT = SH.periods.map(p => p.join('-'));
 const PERIOD_END = SH.periods.map(p => p[1]);
+// the day's blocks (1.16.0 ambience; shared since 1.99.11 for the presence roll): dawn, the periods, dusk, late evening
+const BLOCKS_AT = [...new Set([360, ...PERIODS.flat(), 1080, 1200])];
+const blockAt = m => BLOCKS_AT.filter(x => m >= x).length;
 const EXAM_MONTHS = SH.exam_months;   // midterms and finals, in Week 1 of these months
 const SEASONS = SH.seasons;           // by Month - 1
 const SEASON_OF = m => { const x = Number(m); return SEASONS[(((Number.isFinite(x) ? x : 1) - 1) % 12 + 12) % 12]; };
@@ -179,7 +182,8 @@ function presenceView(PD, S, on) {
   return { W, UI, PR, NST: CS.NPC_status || {}, GRAD: CS.Graduated || [], Y: Math.max(1, Number(W.Year) || 1), COUNCIL: CS.Council || {}, pIdx, cls,
     until: PERIOD_END[pIdx], sick: FULL && WX.flu ? (WX.sick || []) : [], gale, bad: FULL && (WX.now.sky === 'Rain' || WX.now.sky === 'Storm' || gale), rain: FULL && WX.now.sky === 'Rain',
     min: hmMin(W.Time), dkey: [W.Year || 1, W.Month, W.Week, W.Day].join('-'), seed: Number((S.$eng || {}).seed) || 0, rton: on('npc_routines'), FC: foundedClub(S),   // 1.52.0: the routine roll
-    brk: breakStaysNow(PD, S) };   // 1.83.0: a break's stayers (null: no break today)
+    brk: breakStaysNow(PD, S),   // 1.83.0: a break's stayers (null: no break today)
+    hroll: on('presence_roll'), blk: W.Time == null ? -1 : blockAt(hmMin(W.Time)), PRES: Object.keys((S.Scene || {}).Present || {}) };   // 1.99.11
 }
 // NPC id at this moment: gone (graduated, or their cohort has not arrived), st (Campus_State.NPC_status), sick (the flu), busy
 // ([what they are doing, the place keys where that keeps them in sight]: students in class, at Study Hall, voting or at their clubs;
@@ -211,8 +215,14 @@ function trSync(PD, S) {
   }
 }
 // who is likely around the place of loc now (the <now> presence block): place, pres (what the period holds), regs (regulars likely
-// here), moved (regulars of an outdoor place moved indoors by the weather), club (clubs meeting here), st ([regular, status] pairs)
-function presenceAt(PD, V, loc) {
+// here), moved (regulars of an outdoor place moved indoors by the weather), club (clubs meeting here), st ([regular, status] pairs).
+// 1.99.11 (owner-approved planning/DRAFT_presence_roll.md): with the Features toggle presence_roll (V.hroll), regs is who is here
+// now, rolled, and roll their tags: certain are a routine here (its own day roll in whereabouts), a teacher teaching here and Study
+// Hall here; each other free regular is here at PD.here.target[crowd] / their number percent (at most PD.here.cap); one free roster
+// NPC who is no regular here passes through at PD.here.pass percent. Everyone in Scene.Present is with {{user}}, outside the roll.
+// The hits, in a seeded order, are cut to PD.here.max. Seeded by place and the day's block: a swipe, or coming back within the
+// block, finds the same people. crowd: the ambience's 0-4 for this place now (engine crowdAt; -1, no category, counts as 2).
+function presenceAt(PD, V, loc, crowd) {
   const place = placeOf(loc), pk = place.toLowerCase().replace(/^the /, ''), c = V.cls, k = c ? c[3] : '', REG = PD.reg || {};
   const wh = id => whereabouts(PD, V, id), here = id => whereFree(wh(id));
   let cand = (REG[place.toLowerCase()] || REG[pk] || []).filter(here);
@@ -222,6 +232,27 @@ function presenceAt(PD, V, loc) {
   const why = {};
   regs1 = regs1.filter(id => { const r = wh(id).rt; return !r || r[3] === pk; });
   for (const id of Object.keys(PD.rt || {})) { const w = wh(id); if (w.rt && w.rt[3] === pk && whereFree(w)) { if (!regs1.includes(id)) regs1.push(id); if (w.rt[5]) why[id] = w.rt[5]; } }
+  const st0 = regs1.filter(r => wh(r).st);
+  let roll = null;
+  if (V.hroll && V.min != null) {
+    const H = PD.here || {}, k = [V.seed, V.dkey, V.blk, pk], inScene = id => (V.PRES || []).includes(id), tag = {};
+    const pool = regs1.filter(id => !inScene(id) && !wh(id).st);
+    const sure = pool.filter(id => {
+      const w = wh(id);
+      if (w.rt && w.rt[3] === pk) { tag[id] = w.rt[5] || 'usually here at this hour'; return true; }
+      if (w.busy && w.busy[1].includes(pk)) { tag[id] = w.busy[0]; return true; }
+      return false;
+    });
+    const cand = pool.filter(id => !sure.includes(id)), T = H.target || [0.15, 0.5, 0.9, 1.4, 2];
+    const pct = cand.length ? Math.min(H.cap == null ? 60 : H.cap, T[crowd >= 0 && crowd < T.length ? crowd : 2] / cand.length * 100) : 0;
+    const hits = [...sure];
+    for (const id of cand) if (roll100(...k, 'here', id) < pct) { hits.push(id); tag[id] = ((PD.imp || {})[id] ? PD.imp[id] + ', ' : '') + 'a regular here'; }
+    const own = new Set(REG[place.toLowerCase()] || REG[pk] || []);
+    const pass = (PD.roster || []).filter(id => !own.has(id) && !inScene(id) && !hits.includes(id) && (w => whereFree(w) && !w.st && !w.busy && !w.rt)(wh(id)));
+    if (pass.length && roll100(...k, 'pass') < (H.pass == null ? 8 : H.pass)) { const p = pickOf(pass, ...k, 'pass-pick'); hits.push(p); tag[p] = 'passing through'; }
+    regs1 = hits.map(id => [roll100(...k, 'order', id), id]).sort((a, b) => a[0] - b[0] || (a[1] < b[1] ? -1 : 1)).map(x => x[1]).slice(0, H.max || 3);
+    roll = tag;
+  }
   const pres = [], P = PERIOD_END;
   let clubs = [];
   if (k === 'class') pres.push('Students are in class until ' + V.until + '.');
@@ -242,7 +273,7 @@ function presenceAt(PD, V, loc) {
     const m = x[1].filter(id => { const w = wh(id); return whereFree(w) && !w.st; });
     return x[0] + (V.bad && x[2] && (!x[3] || V.gale) ? ': practising indoors (Gymnasium) or cancelled in this weather' : ': meeting here until ' + P[2] + (m.length ? ' (members on record: ' + m.join(', ') + ')' : ''));
   }).join('; ');
-  return { place, pres, regs: regs1.filter(r => !wh(r).st), moved, club, st: regs1.filter(r => wh(r).st).map(r => [r, wh(r).st]), why };
+  return { place, pres, regs: regs1.filter(r => !wh(r).st), moved, club, st: (roll ? st0 : regs1.filter(r => wh(r).st)).map(r => [r, wh(r).st]), why, roll };
 }
 // ---- breaks and Secret Fools Day (1.83.0, owner-approved planning/DRAFT_event_frame.md 4.2, 4.3), computed, never stored.
 // A break is a calendar event with home (SH.breaks: the Mid-Year Break; the Month 12 weeks are one holiday). Most Halvard students go
