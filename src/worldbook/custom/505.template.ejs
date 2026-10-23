@@ -195,9 +195,9 @@ A cold is going around campus.<%- sick.length ? ' Off sick in their dorm today: 
 <%_ for (const id of Object.keys(BDAYS).filter(id => (ARR[id] || 1) <= Y && (!TRN[id] || TRS[id]) && (BONDS[id] || PRES.includes(id)) && BDAYS[id] === 'M' + W.Month + ' W' + W.Week + ' ' + W.Day)) { _%>
 Today is <%- id %>'s birthday. Friends may celebrate in character; report Kind birthday when {{user}} remembers it.
 <%_ } _%>
-<%_ const CD = { Soaked: 'wet, heavy, clinging clothes and dripping hair', Chilled: 'shivering, chattering teeth, numb fingers, clumsy hands', Overheated: 'flushed, sweating, sluggish', 'Head cold': 'stuffy nose, slow and heavy-headed' };
-const CONDS = (UI.wxfx || 'full') === 'full' ? Object.keys(CD).filter(k => (getvar('stat_data.Player.Conditions') || {})[k]) : []; if (CONDS.length) { _%>
-{{user}} is <%- CONDS.map(k => k === 'Head cold' ? 'down with a head cold' : k).join(' and ') %> right now: show it in this reply without being reminded (<%- CONDS.map(k => CD[k]).join('; ') %>). It lasts until the engine clears it or the story ends it.
+<%_ const CD = ['Soaked', 'Chilled', 'Overheated', 'Head cold'];   // 1.99.4 (audit S6): the condition, not a ready-made picture of it
+const CONDS = (UI.wxfx || 'full') === 'full' ? CD.filter(k => (getvar('stat_data.Player.Conditions') || {})[k]) : []; if (CONDS.length) { _%>
+{{user}} is <%- CONDS.map(k => k === 'Head cold' ? 'down with a head cold' : k).join(' and ') %> right now: show it in this reply without being reminded, in the body and in what {{user}} can do, with a detail not used before. It lasts until the engine clears it or the story ends it.
 <%_ } _%>
 <%_ if (on('study') && UI.exam) { const _x = UI.exam.today || []; _%>
 Exam week. {{user}}'s preparation: <%- UI.exam.tier %> (<%- UI.exam.h %> hours studied since the last exams).<%- UI.exam.run ? " {{user}}'s run through the trial: " + UI.exam.run + '.' : '' %><%- _x.length ? ' Today: ' + _x.map(e => e.s + ' expected ' + e.mark + (e.why ? ' (' + e.why + ')' : '')).join('; ') + '. Play each exam to its expected mark; only a deciding moment moves it (/Exam_events).' : '' %>
@@ -266,7 +266,7 @@ Old hooks (pay off or drop): <%- hOld.map(([k]) => k).join('; ') %>
 Rumours going around: <%- GS.map(g => '"' + g[0] + '" (' + g[1] + ', day ' + g[2] + ')').join('; ') %>
 <%_ } _%>
 <%_ if (STALE.length) { _%>
-Campus events with no news for over a week (the world moves on without {{user}}: advance each through talk, a rumour, a notice or a letter when it fits, or remove it once it is over): <%- STALE.map(([k, u]) => k + ' (last news ' + aged(u) + ')').join('; ') %>
+Campus events with no news for over a week (the world moves on without {{user}}: when it fits, advance one of them through talk, a rumour, a notice or a letter; remove any that is over): <%- STALE.map(([k, u]) => k + ' (last news ' + aged(u) + ')').join('; ') %>
 <%_ } _%>
 <%_ if ((getvar('stat_data.Trip') || {}).Active && /\bhome\b/i.test(String((getvar('stat_data.Trip') || {}).Destination || ''))) { _%>
 {{user}} is home for the break. Their home and family are the player's: use what the player has written, ask nothing about them, invent as little as the scene needs.
@@ -277,6 +277,12 @@ Campus events with no news for over a week (the world moves on without {{user}}:
 <%_ if (INITIATIVE && INITIATIVE.id && INITIATIVE.stage) { _%>
 NPC initiative today: <%- INITIATIVE.id %> may try to reach {{user}}. At this bond rank, their Stage says: <%- INITIATIVE.stage %><%- INITIATIVE.ask ? ' Today\'s reason: ' + INITIATIVE.id + ' ' + INITIATIVE.ask + '.' : '' %> Let the contact take a form that fits their canon, current Trust and Tension, location, time, and existing plans. This is an opening, not an arrival or an obligation; if it cannot fit today, let it pass. Do not move them into Scene.Present until they actually enter the scene.<%- INITIATIVE.strained ? ' The approach is not friendly at this Tension.' : '' %><%- INITIATIVE.favour && on('planner') ? ' The reason is a favour. If {{user}} agrees, add a Commitment with Type "favour", With "' + INITIATIVE.id + '", a Due within ' + INITIATIVE.favour.days + ' days and ' + (INITIATIVE.favour.item ? 'Item "' + INITIATIVE.favour.item + '"' : 'Where "' + INITIATIVE.favour.where + '"') + '. A polite refusal owes nothing.' : '' %>
 <%_ } _%>
+<%_ { // 1.99.4 (bug-hunt audit R3): the optional threads above, at most one a reply, so the world does not crowd {{user}} out of a scene
+const OPT = [(NOW.pres || []).some(l => /^Likely around/.test(l) && !/no regulars on record$/.test(l)) && 'Likely around', W._Happening && on('happenings') && !AREA && 'Around campus today',
+  (NOW.amb || []).some(l => /^Nearby/.test(l)) && 'Nearby', GS.length && 'Rumours going around', STALE.length && 'Campus events with no news',
+  INITIATIVE && INITIATIVE.id && INITIATIVE.stage && 'NPC initiative today'].filter(Boolean); if (OPT.length) { _%>
+Optional threads (<%- OPT.join(', ') %>): use at most one of them in this reply, and none while {{user}} is in the middle of an action or a focused conversation; the rest can wait.
+<%_ } } _%>
 <%_ const MISSED = on('reminders') && Array.isArray(UI.missed) ? UI.missed : []; if (MISSED.length) { _%>
 Possibly missed in the last update. Report each in this reply's update only if it truly happened in the story; otherwise ignore it:
 <%_ for (const m of MISSED) { _%>

@@ -173,7 +173,7 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
   exception to "useful, never just a memento"; her Rank 10 trains anything (`train: "any"`), the weekly caps still hold.
 
 ## 6. Social systems, UI rules and versioning (from 1.3.1)
-- **Situational rule cards** (1.54.0, narrator-load audit U1): 502 keeps a core line per topic (path, data shape, the main ban) so an
+- **Situational rule cards** (1.54.0, narrator-load audit U1; 1.99.4: while a card shows, the core line it repeats steps aside in 502 to a pointer, `_card`, fail-open like 511): 502 keeps a core line per topic (path, data shape, the main ban) so an
   unexpected event can still be recorded; a topic's full rule is a card (`data/rule_cards.json`) that the engine lists while it applies
   (state, calendar, place, or a word in the last reply or the player's message) and entry 511 prints next to `<now>`. Fail-open: with
   no list, every card shows. A new situational rule goes into a card, not into 502.

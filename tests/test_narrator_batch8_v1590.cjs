@@ -61,7 +61,10 @@ console.log('The narrator is told');
   const card = JSON.parse(rd('dist/Eldrasil_Halvard.json'));
   const P = T(S, '09:10');
   const r = renderEntry(card, 502, P) + renderEntry(card, 511, P);
-  ok(/never write their numbers/.test(r) && /Kind "letdown" with "Weight": "small\|broken\|secret_told\|betrayal"/.test(r) && /Kind "offence" with "Weight": "slight\|jealous\|insult\|violence"/.test(r), '502: report letdowns and offences by word');
+  const P0 = JSON.parse(JSON.stringify(P)); P0.$ui.now.rules = [];   // 1.99.4 (audit T2): with no card showing, 502's core line
+  const r0 = renderEntry(card, 502, P0);
+  ok(/never write their numbers/.test(r0) && /Kind "letdown" with "Weight": "small\|broken\|secret_told\|betrayal"/.test(r0) && /Kind "offence" with "Weight": "slight\|jealous\|insult\|violence"/.test(r0)
+    && /never write their numbers/.test(r) && /secret_told: their secret told/.test(r) && /violence: a punch or a spell/.test(r), '502: report letdowns and offences by word (the card\'s scale while it shows)');
   ok(/"Meant": "no_harm"/.test(r) && /"Meant": "forced"/.test(r) && /Several add up and are never capped/.test(r), 'Trust/Tension card: intent words, no cap');
   ok(!/−25–40|\+20–30|−10–15/.test(r), 'no Trust or Tension number ranges left for the narrator');
 }

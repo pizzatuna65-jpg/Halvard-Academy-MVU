@@ -114,4 +114,5 @@ const off = week(set(good(S0), [['/$ui/off', ['study']]]), { [`${MID} 08:30`]: [
 ok(!Object.keys(G(off)).length && !off.Exam_events.length && !off.$ui.grades, 'Features off: no marks, the lists are emptied');
 const r502 = render(502, S0), r502off = render(502, set(S0, [['/$ui/off', ['study']]]));
 ok(/\/Exam_events\/-/.test(r502) && /\/Tutoring\/-/.test(fs.readFileSync(path.join(ROOT, 'data/rule_cards.json'), 'utf8')) && !/exam top of the year \+15/.test(r502) && !/top Dark Magic Defense exam \+8/.test(r502), 'rule 502 (on): Exam_events and Tutoring; the exam reputation is the engine\'s');
-ok(!/Exam_events/.test(r502off) && /exam top of the year \+15/.test(r502off) && /Player\.Academics: Grades/.test(r502off), 'rule 502 (off): the narrator reports as before');
+const withCard = (S, id) => { const X = JSON.parse(JSON.stringify(S)); X.$ui.now = { ...(X.$ui.now || {}), rules: [...((X.$ui.now || {}).rules || []), id] }; return X; };   // 1.99.4: show that rule card
+ok(!/Exam_events/.test(r502off) && /exam top of the year \+15/.test(render(511, withCard(set(S0, [['/$ui/off', ['study']]]), 'reputation'))) && /Player\.Academics: Grades/.test(r502off), 'rule 502 (off): the narrator reports as before (1.99.4: the exam reputation in the reputation card)');

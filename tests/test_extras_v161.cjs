@@ -63,8 +63,9 @@ ok(/data-keep="/.test(bar) && /eventEmit\('eldrasil:keep'/.test(bar) && /eventOn
 
 // ---- 502 rules
 const rules = ejs.render(E(502).content, { getvar: gv(S) });
-ok(/When <now> asks \(their second appearance\), add their record/.test(rules) && /Never change Keep \(the player's\)/.test(rules), '502: when to write an Extras record, Keep is the player\'s');
-ok(/"Looks": "what anyone would notice about them on an ordinary day"/.test(rules), '502 (1.78.0, Megumin audit MS5): Looks describe an ordinary day, not the scene they were met in');
+const XC = require(path.join(ROOT, 'data/rule_cards.json')).cards.extras.text;   // 1.99.4 (audit T3): the record's shape is a rule card
+ok(/when <now> asks \(their second appearance\), add their record/.test(XC) && /the record's shape shows in <rule_cards> when <now> asks for one/.test(rules) && /Never change Keep \(the player's\)/.test(rules), '502: when to write an Extras record, Keep is the player\'s');
+ok(/"Looks": "what anyone would notice about them on an ordinary day"/.test(XC), 'the Extras card (1.78.0, Megumin audit MS5): Looks describe an ordinary day, not the scene they were met in');
 ok(/Naming \(the roster's own patterns\)/.test(rules) && /Never give a new character a roster character's first or family name/.test(rules), '502: the naming guide');
 ok(/Events \{"<short title>": \{"Text": "one-line summary"\}\}/.test(rules), '502: Events are { Text }');
 

@@ -25,6 +25,8 @@ const cHead = (id, full) => {
     out.push('Entrance-day newcomer: the listed dorm and any vest in later-life lore are eventual facts, not knowledge or clothing before their own Stone sorting. Before their turn they have no first-hand experience of Halvard rooms, teachers or new classmates unless a documented earlier relationship supplies it. After sorting, a Council member gives the vest.');
   const pn = ((CUI.now || {}).people || {})[id];   // 1.56.0 (U2): the engine's lines for this person, one block, no numbers
   if (pn && pn.length) out.push('Now with {{user}}:\n- ' + pn.join('\n- '));
+  // 1.99.4 (bug-hunt audit R4): the static Personality comes first and the Imprints far below; say up front which one is true now
+  if (b && (b.Imprints || []).length) out.push('Changed by experience: their Imprints (below) are true now; where one differs from their Personality, the Imprint wins.');
   if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
   const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
   const lc = cLore(id); if (lc) out.push(lc);

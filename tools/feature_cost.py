@@ -21,6 +21,11 @@ def gated_chars(src):
         # 1.28.0: crafting and Apothecary rules appear only when relevant in the live state;
         # the Settings estimate is the ordinary, no-craft-place cost. 1.30.0: mastery lines likewise (Rank 5 only).
         if re.match(r'^if \(_U\.(?:craft(?:_sale)?(?: && _U\.craft\.length)?|mastery)\) \{$', code): stack.append('$dynamic'); continue
+        # 1.99.4 (bug-hunt audit T2): a core line that steps aside while its rule card shows (502 `_card`). The estimate is the line's
+        # own cost (the card's turns are dynamic): the pointer branch counts nothing, the else branch and an inline ': ' text count
+        if re.match(r"^if \(_card\('\w+'\)\) \{$", code): stack.append('$dynamic'); continue
+        iv = re.match(r"^_card\('\w+'\)\s*\?\s*'[^']*'\s*:\s*'([^']*)'$", code)
+        if iv: per[fid] = per.get(fid, 0) + len(iv.group(1)); continue
         if code == '}': stack.pop(); continue
         if code == '} else {' and stack:   # 1.54.0: the else branch of a feature gate counts against it (shown when off)
             f = stack.pop(); stack.append(None if not f or f == '$dynamic' else f[1:] if f.startswith('!') else '!' + f); continue

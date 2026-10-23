@@ -7,6 +7,6 @@ On Entrance morning, check each first-year's cohort and whether their own sortin
 <%_ { const _u = getvar('stat_data.$ui') || {}; if (typeof (_u.on || {}).say_colors === 'boolean' ? _u.on.say_colors : !(_u.off || []).includes('say_colors')) { _%>
 Every spoken line sits in its speaker's <say:Name> tag, or <say> for someone without a name or record.
 <%_ } } _%>
-Before finalising this scene, check that its elapsed time matches the shown conversation, travel and magic, that ordinary safe casting is treated as legal, and that Magic Duelling Club is portrayed as warded spell duelling.
+Before finalising this scene, check that its elapsed time matches the shown conversation, travel and magic.
 </final_cast_gate>
 <%_ } _%>

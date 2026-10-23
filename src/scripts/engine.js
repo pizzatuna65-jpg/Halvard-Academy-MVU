@@ -1837,7 +1837,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.99.3";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.99.4";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 const verLt = (a, b) => { const p = v => String(v || '0').split('.').map(x => parseInt(x, 10) || 0), x = p(a), y = p(b); for (let i = 0; i < 3; i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) < (y[i] || 0); return false; };   // 1.63.0
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
@@ -8685,7 +8685,7 @@ function nowOf(S, moodsFull) {
 // 1.54.0 (narrator-load audit U1, stage 1; 1.55.0 stage 2: bonds, practice, profile, notices, favours, the Vigil): situational rule cards. 502 keeps a core line per topic (path, data shape, the main ban);
 // a topic's full rule (data/rule_cards.json, printed by entry 511 next to <now>) is listed while it applies: by the state, the calendar
 // or the place, and fail-open by a word in the last reply or the player's message (a topic that came up gets its rule next turn).
-const RULE_CARDS = {"letters":"letters","projects":"projects","competition":"competition","exams":"study","tutoring":"study","trip":"trip","pacts":"","first_pact":"","interactions":"","trust_tension":"","doves":"","imprints":"","old_hut":"","training":"","practice":"proficiency","dorm":"","combat_role":"","favour":"planner","notices":"notices","vigil":"weather","fold":"","founding":""};   // id -> the feature that must be on ('' = always)
+const RULE_CARDS = {"letters":"letters","projects":"projects","competition":"competition","exams":"study","tutoring":"study","trip":"trip","pacts":"","first_pact":"","interactions":"","trust_tension":"","reputation":"","extras":"","doves":"","imprints":"","old_hut":"","training":"","practice":"proficiency","dorm":"","combat_role":"","favour":"planner","notices":"notices","vigil":"weather","exposure":"","fold":"","founding":""};   // id -> the feature that must be on ('' = always)
 function ruleCards(c) {
   const { S, OFF, absA } = c, W = S.World, M = S.Magic || {};
   const said = String(c.text || '').replace(/<UpdateVariable>[\s\S]*?(?:<\/UpdateVariable>|$)/gi, ' ') + '\n' + String(c.userText || '');
@@ -8694,6 +8694,8 @@ function ruleCards(c) {
   // 1.55.0 (stage 2): someone {{user}} has a bond with is here
   const bonded = () => Object.keys((S.Scene || {}).Present || {}).some(k => (S.Bonds || {})[NPC_ALIAS[String(k).toLowerCase()] || k]);
   const practising = () => ((S.$ui || {}).practice || []).some(x => x && !x.locked) || /\b(train\w*|practi[cs]\w*|drill\w*|spar\w*|craft\w*|brew\w*|study session)\b/i.test(said);
+  // 1.99.4 (bug-hunt audit T3): out after curfew and not in {{user}}'s own dorm (as stepReminders' curfew line reads it)
+  const outLate = () => { const d = String(PR.Dorm || '').trim().toLowerCase(); return /^CURFEW/.test(W._Curfew || '') && (!d || d === 'unsorted' || !placeKey(W.Location).startsWith(d)); };
   const test = {
     letters: () => placeOf(canonLocation(W.Location)) === 'Mail Tower' || Object.values(S.Letters || {}).some(l => /^(waiting|sent)$/.test(String((l || {}).Status)))
       || /\b(letters?|mail|parcels?)\b|\bwrite home\b/i.test(said),
@@ -8708,6 +8710,12 @@ function ruleCards(c) {
     first_pact: () => ((M._Affinity || {}).Types || []).includes('Occult') && !S.$eng.pactPlay && (placeKey(W.Location) === 'spirit path' || /\b(spirits?|pacts?)\b/i.test(said)),
     interactions: () => !_.isEmpty((S.Scene || {}).Present) || (((S.$ui || {}).cast || {}).ment || []).length > 0 || /\b(letters?|messages?)\b/i.test(said),
     trust_tension: () => bonded() || /\b(promis\w*|betray\w*|secrets?|lie[ds]?|lying|apolog\w*|insult\w*|punch\w*|humiliat\w*|forgiv\w*)\b/i.test(said),
+    // 1.99.4 (bug-hunt audit T3): out of 502. A deed needs a witness (someone here) or comes after curfew, near the Doves or by name;
+    // an unusual deed can always go in the legacy form 502 keeps
+    reputation: () => !_.isEmpty((S.Scene || {}).Present) || outLate() || doveSecrets(S).length > 0 || num((S.Hidden || {}).Dove_attention, 0) > 0
+      || (OFF.has('study') && ahead(e => /exams|Results/.test(e.t || ''), 7))   // with Study off the narrator reports exam reputation
+      || /\b(curfew|detention|prank\w*|cheat\w*|bull(y|ied|ies|ying)|fights?|fought|scandal|snub\w*|lie[ds]?|lying|damag\w*|restricted|reported|defend\w*|perform\w*|festival|notice board)\b/i.test(said),
+    extras: () => ((((S.$ui || {}).cast || {}).xnew) || []).length > 0,   // <now> asks for a record ("Seen before, with no Extras record yet")
     doves: () => doveSecrets(S).length > 0 || num((S.Hidden || {}).Dove_attention, 0) > 0 || here === 'The Dovecote'   // 1.98.1 (Dove watch)
       || /\b(doves?|dovecote|krieg|milena|forbidden|hid(e|es|ing|den)|secrets?|restricted|smuggl\w*)\b/i.test(said),
     imprints: () => bonded(),
@@ -8721,6 +8729,9 @@ function ruleCards(c) {
     fold: () => !!(S.$ui || {}).fold,   // 1.63.0 (memory audit M5)
     founding: () => ((S.Campus_State || {}).Founded_club || {}).Status === 'forming' || /\b(new club|start(ing)? a club|found(ing)? (a|my|our) club)\b/i.test(said),   // 1.75.0
     vigil: () => Object.keys(S.Inventory || {}).some(k => /vigil/i.test(k)) || num(((S.$eng || {}).sleep || {}).vigilUntil, -1) > absA || /\bvigil\b/i.test(said),
+    // 1.99.4 (T3): a soaking or a freezing hit with full weather effects: in a fight or practice, by water, in wet or freezing weather
+    exposure: () => ((S.$ui || {}).wxfx || 'full') === 'full' && (!!(S.Battle || {}).Active || practising() || /lake|pool|bath|fountain|beach|bay|harbour|river/i.test(here)
+      || /rain|storm|drizzle|shower|snow|sleet|hail|freez|frost|blizzard/i.test(String(W._Weather || '')) || /\b(soak\w*|drench\w*|splash\w*|dunk\w*|bucket|swim\w*|water spells?|ice|frost\w*|freez\w*)\b/i.test(said)),
   };
   return Object.keys(RULE_CARDS).filter(id => (!RULE_CARDS[id] || !OFF.has(RULE_CARDS[id])) && test[id] && test[id]());
 }

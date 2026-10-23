@@ -14,6 +14,14 @@ The update rules for what is going on now (they complete the core lines of <vari
 <%_ for (const _l of _U.fold.lines) { _%>
   - <%- _l %>
 <%_ } } _%>
+<%_ if (id === 'reputation') { _%>
+<%_ if (on('study')) { _%>
+  Paid tutoring is /Tutoring, not student_notice_help.
+<%_ } else { _%>
+  With Study off: the Academy kinds also include fair_prize; report exam top of the year +15, above average +8, passed +3, dorm rank up on Results day +5, failed exam −8 and several −15 (Academy), and a top Dark Magic Defense exam +8 (Doves), through legacy Rep_events.
+<%_ } if (!on('attendance')) { _%>
+  With Attendance off, the Student kinds also include club_time.
+<%_ } } _%>
 <%_ } _%>
 </rule_cards>
 <%_ } _%>

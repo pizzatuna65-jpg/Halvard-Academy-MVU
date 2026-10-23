@@ -174,6 +174,12 @@ show the newcomers their dorm rooms.
       someone present, never a call or an event from nowhere [1.99.3].
 - [ ] Prompt: `<latest_input>` (Player Input Authority) calls the closing "(scene: …)" marker game data; the narrator never quotes it
       or answers it as Charles's words [1.99.3].
+- [ ] With Kanae and Zara here the Prompt's 502 says "Interactions: … the full rule is in <rule_cards> now" and `<rule_cards>` holds the
+      Interactions, Trust/Tension and reputation cards; the update still reports each interaction with a Kind and a Note, a letdown
+      or offence with its Weight, and a deed with a listed Kind [1.99.4].
+- [ ] `<now>` ends its optional lines with "Optional threads (Likely around, …): use at most one": during a focused talk nobody from
+      Likely around or Nearby barges in, and over several replies at most one such thread comes up in each; no two replies in a row
+      open with the surroundings [1.99.4].
 - [ ] A new roster character: short first lines with no head-to-toe description, then they sound like their sheet [1.35.2, 1.99.3]. The update starts their bond with
       `insert /Bonds/<name>/Known_facts/-` (no full record, no Trust), real MVU accepts it, and the bond starts at the character's own Trust
       [1.53]. People gets a red dot; opening the panel clears the button's, and the person keeps theirs until opened [1.25].
@@ -306,6 +312,9 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
       half an hour in the rain does not soak Charles [1.9.5].
 - [ ] Soaked (or hurt, or worn out) with someone present: `<now>` has "How Charles looks (anyone near can see it …): wet through"; someone
       may notice it in the narration, nobody has to; once he is dry the words leave the line [1.77].
+- [ ] Soaked or Chilled over several replies: each shows it in Charles's body or in what he can do, with a different detail each time
+      (not the same "dripping hair, chattering teeth" picture); out of the rain alone with no fight or practice, `<rule_cards>` has no
+      Exposure card, and by the lake or in the rain it has one [1.99.4].
 - [ ] A storm or a happening that shuts something for a while (a flooded path, a closed room): the update writes a Lore change with
       `"Until"`; the Journal says "changed until …", the Planner lists its last day, the place reads "until …" in its lore, and the
       morning after that day the change is gone with "… as it was again" [1.77].
@@ -596,7 +605,7 @@ The first academy flight (the airship), then the Grand Vast Forest.
 
 ### Q9.3 A cold morning (about −2 °C)
 - [ ] Outdoors, someone soaks Charles with a water spell: the update has `/Exposure/-` with `"Kind":"soaked"`, the bracelet shows Soaked
-      and Chilled at once, and the next reply shows wet clothes and shivering without being told [1.9.4].
+      and Chilled at once, and the next reply shows both without being told, in its own words [1.9.4, 1.99.4].
 - [ ] Again with a wool scarf and mittens: only Soaked at first, Chilled after a few more minutes outside. Indoors: Soaked only, and an
       hour indoors dries it [1.9.4].
 - [ ] A swipe of the soaking reply gives the same conditions and the same mana [1.9.4].
@@ -759,6 +768,8 @@ The first academy flight (the airship), then the Grand Vast Forest.
       their Cast Sheet, and reacts in their own way (no forced Tension) [1.74].
 - [ ] Charles hurt (moderate or worse): the first time a Rank 3+ friend who was not there meets him within 10 days, their Cast Sheet has
       "Has not seen {{user}} since the injury (…)"; once it heals the line is gone [1.74].
+- [ ] Once someone has an Imprint (an experience that changed them), their Cast Sheet opens with "Changed by experience: their Imprints
+      (below) are true now", and where the Imprint and their lore Personality differ they act on the Imprint [1.99.4].
 
 ### MS3 Story events
 - [ ] A broken promise, an insult or a betrayal: the update reports `letdown` / `offence` interactions with a Weight, never a Trust or

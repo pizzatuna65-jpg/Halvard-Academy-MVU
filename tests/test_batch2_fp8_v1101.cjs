@@ -59,4 +59,5 @@ const off = at(set(ready({ Y1M3: 4, Y1M5: 4 }, 0), [['/$ui/off', ['study']]]), R
 ok(off.Player.Profile.Dorm_rank === 0 && off._Log.some(l => /update Player\.Profile\.Dorm_rank when the results are announced/.test(l)), 'Features off: the narrator sets the rank as before');
 const r502 = render(502, S0), r502off = render(502, set(S0, [['/$ui/off', ['study']]]));
 ok(/- Exams: the engine marks each subject/.test(r502) && /the engine sets it and <now> gives the announcement/.test(r502) && !/dorm rank up on Results day \+5/.test(r502), 'rule 502 with the feature on');
-ok(!/- Exams: the engine marks/.test(r502off) && /dorm rank up on Results day \+5/.test(r502off), 'rule 502 with the feature off');
+const withCard = (S, id) => { const X = JSON.parse(JSON.stringify(S)); X.$ui.now = { ...(X.$ui.now || {}), rules: [...((X.$ui.now || {}).rules || []), id] }; return X; };   // 1.99.4: show that rule card
+ok(!/- Exams: the engine marks/.test(r502off) && /dorm rank up on Results day \+5/.test(render(511, withCard(set(S0, [['/$ui/off', ['study']]]), 'reputation'))), 'rule 502 with the feature off (1.99.4: the reputation card carries the Study-off reports)');

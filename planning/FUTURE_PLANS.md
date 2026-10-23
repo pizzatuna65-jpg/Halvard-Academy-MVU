@@ -11,7 +11,7 @@ tahap itu selesai.
 
 | Rilis | Isi | Catatan |
 |---|---|---|
-| **Bug hunt** | Full audit bug hunt, stress test, dan perbaikannya | Sesudah 1.99 (owner 2026-10-23: 1.99 jadi kompatibilitas Summaryception, selesai di 1.99.1). Full suite, stress test, audit lintas sistem; hasilnya `audit/AUDIT_2026-10-23_2_audit_menyeluruh.md` §8 (8 batch), tiap batch satu rilis 1.99.N (batch 1 = 1.99.2, batch 2 = 1.99.3, selesai). |
+| **Bug hunt** | Full audit bug hunt, stress test, dan perbaikannya | Sesudah 1.99 (owner 2026-10-23: 1.99 jadi kompatibilitas Summaryception, selesai di 1.99.1). Full suite, stress test, audit lintas sistem; hasilnya `audit/AUDIT_2026-10-23_2_audit_menyeluruh.md` §8 (8 batch), tiap batch satu rilis 1.99.N (batch 1 = 1.99.2, batch 2 = 1.99.3, batch 3 = 1.99.4, selesai). |
 | **2.0.0** | Full polish fitur dan UI | Tanpa fitur baru. |
 
 ## 1. Rencana owner (dicatat, belum dijadwalkan)

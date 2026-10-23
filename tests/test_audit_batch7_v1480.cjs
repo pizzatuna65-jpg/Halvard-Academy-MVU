@@ -19,7 +19,8 @@ ok(sheets.every(e => e.content.length < 40000) && X(509).content.length < 10000,
 // Carries label (220 scenarios differed, every one only by that label). 1.89.0 renewed it for the info layers: 208 scenarios differed,
 // each only by the Bond line, the Rank 5 perk text, or the Trust category of the NPCs moved from open to normal (Florian, Aiden, Dorian, Hadrian).
 // 1.97.2 renewed it for Gavlan's World Competition line and Vera's Caelmar line: 18 scenarios differed, each only by those added lines (the scenarios
-// leave the World teams out, so they keep their people).
+// leave the World teams out, so they keep their people). 1.99.4 renewed it for the head's "Changed by experience" line (bug-hunt audit
+// R4): 27 scenarios differed, each only by that line.
 const { scenario, N } = require('./fixtures/cast_scenarios.cjs');
 const REC = JSON.parse(read('tests/fixtures/cast_1560.json'));
 const bad = [];

@@ -54,7 +54,7 @@ const H = applyPatch(C, [hitOp]);
 ok(H.Player.Conditions.Soaked && H.Player.Conditions.Chilled, 'water hit outdoors at subzero: Soaked and Chilled in the same update');
 ok(H._Log.some(l => /Soaked \(Vera's water bolt\)/.test(l)) && H.Exposure.length === 0, 'the cause is logged and /Exposure is emptied');
 const now = render(505, H);
-ok(/is Soaked and Chilled right now: show it in this reply without being reminded/.test(now) && /shivering/.test(now) && /clinging clothes/.test(now), 'the next <now> tells the narrator to show wet clothes and shivering');
+ok(/is Soaked and Chilled right now: show it in this reply without being reminded, in the body and in what \{\{user\}\} can do, with a detail not used before/.test(now) && !/clinging clothes/.test(now), 'the next <now> tells the narrator to show both conditions (1.99.4, audit S6: a category, not a ready-made picture)');
 const H2 = later(H, 10, 'Sports Field');
 ok(H2.Player.Conditions.Soaked && H2.Player.Conditions.Chilled && H2.Player.Vitals.Stamina < H.Player.Vitals.Stamina, 'the conditions persist outdoors and cost stamina');
 const warm = applyPatch(C, [{ op: 'replace', path: '/Inventory', value: { 'Wool scarf and mittens': { Qty: 1 } } }]);
@@ -73,7 +73,7 @@ const flav = applyPatch(applyPatch(C, [{ op: 'replace', path: '/$ui/wxfx', value
 ok(!Object.keys(flav.Player.Conditions).length && flav.Exposure.length === 0, 'weather effects Flavor: no condition, the report is still emptied');
 ok(JSON.stringify(applyPatch(C, [hitOp])) === JSON.stringify(H), 'swipe/replay of the hit gives the same state');
 const r502 = card.character_book.entries.find(e => e.id === 502).content, r504 = card.character_book.entries.find(e => e.id === 504).content;
-ok(/\/Exposure\/-/.test(r502) && /"Kind":"soaked"/.test(r502) && /in every reply while they last, without waiting for the player/.test(r504), 'narrator rules explain /Exposure and persistent conditions');
+ok(/\/Exposure\/-/.test(r502) && /"Kind":"soaked\|chilled"/.test(r502) && /in every reply while they last, without waiting for the player/.test(r504), 'narrator rules explain /Exposure and persistent conditions (1.99.4: the full Exposure rule is a card)');
 
 console.log('Passive mana regeneration');
 {

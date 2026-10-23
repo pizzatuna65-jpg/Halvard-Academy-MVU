@@ -145,7 +145,7 @@ The starting state is custom entry 500 (`src/worldbook/custom/content/500.txt`).
 | 507 | `[config_override]` for MVU (disabled) | `content/507.txt` |
 | 508 | {{user}}'s birthday event | `content/508.txt` |
 | 510 | last-mile cast gate, depth 0 | `content/510.txt` |
-| 511 | rule cards: the full update rule of a topic while it applies, depth 1 before `<now>` `[mvu_update]` | `511.template.ejs` + `data/rule_cards.json` (generated `content/511.txt`); the list is engine `ruleCards` → `$ui.now.rules` |
+| 511 | rule cards: the full update rule of a topic while it applies, depth 1 before `<now>` `[mvu_update]` | `511.template.ejs` + `data/rule_cards.json` (generated `content/511.txt`); the list is engine `ruleCards` → `$ui.now.rules`; 502's `_card(id)` reads the same list (1.99.4) |
 | 512 | the student alcohol and tobacco rule (keyword) | `content/512.txt` |
 
 Lore entries below uid 500 are generated (`src/worldbook/content/<uid>.txt`); edit them through §6.

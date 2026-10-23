@@ -36,7 +36,7 @@ console.log('The story model is never told to write an update');
 console.log('Update rules readable without <cast>');
 {
   const rules = renderEntry(card, 502, S0);
-  ok(/When <now> asks \(their second appearance\), add their record/.test(rules), '502: the Extras request is in <now> (505, untagged)');
+  ok(/when <now> asks \(their second appearance\), add their record/.test(require(path.join(ROOT, 'data/rule_cards.json')).cards.extras.text) && /when <now> asks for one/.test(rules), '502: the Extras request is in <now> (505, untagged); 1.99.4: the record\'s shape is a rule card');
   const P = go(S0, { Time: '09:10' }, [{ op: 'replace', path: '/Scene/Present', value: { Etnie: { Note: '' } } }]);
   ok(P.$ui.now.rules.includes('imprints'), 'a bonded character here: the Imprints card is listed');
   const r = renderEntry(card, 511, P);
