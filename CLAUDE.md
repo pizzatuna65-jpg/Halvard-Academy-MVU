@@ -32,7 +32,7 @@ Drafts (`planning/DRAFT_*.md`) are written in Indonesian; the English text block
   `T:` suite); a new engine step, file or data file gets its row in `docs/INDEX.md`; a new standing
   decision gets one or two lines in `docs/DECISIONS.md`; a draft applied in this release is **deleted** and anything it left open
   moves to `planning/FUTURE_PLANS.md`; a plan that is done is removed from `FUTURE_PLANS.md`.
-- Commit the release (local git, no remote).
+- Commit the release. Push to GitHub (`git push`) only when the owner asks.
 - **Testing (owner, 2026-09-27).** For routine changes run only a quick, relevant check with concise output and low usage. The
   full suite, stress tests and broad bug hunts only for a major feature or when the owner asks.
 
@@ -71,7 +71,7 @@ Drafts (`planning/DRAFT_*.md`) are written in Indonesian; the English text block
 ## Environment
 
 - The owner's machine is Windows: `python3` is not on PATH, use `python`. Node 18+: `npm install` first (zod, lodash, yaml, ejs,
-  d3, eslint). The folder is a local git repository (no remote): commit each release. Deleted drafts and older changelog details
+  d3, eslint). The folder is a git repository; `master` tracks `origin/main` on GitHub (pizzatuna65-jpg/Halvard-Academy-MVU). Commit each release; push only when the owner asks. Deleted drafts and older changelog details
   are recoverable from git (`git show b62d182:<path>`).
 - Keep text files LF.
 - `tools/audit_chat.py` measures character drift in an exported chat (.jsonl); `--mechanics` measures how the narrator handled the engine.
