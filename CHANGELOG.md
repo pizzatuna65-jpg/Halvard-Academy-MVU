@@ -1,7 +1,39 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 44b586a:CHANGELOG.md` (1.97.5), `git show 7848cb7:CHANGELOG.md` (1.97.4), `git show 871dd0e:CHANGELOG.md` (1.97.3), `git show c5135f8:CHANGELOG.md` (1.97.2), `git show d30ff7c:CHANGELOG.md` (1.97.1), `git show f9101db:CHANGELOG.md` (1.96.1), `git show df8dbed:CHANGELOG.md` (1.96.0), `git show 363f03b:CHANGELOG.md` (1.95.0), `git show bba6bb0:CHANGELOG.md` (1.94.0), `git show dca179c:CHANGELOG.md` (1.93.1, 1.93.0), `git show 01cd1f2:CHANGELOG.md` (1.92.0), `git show d097927:CHANGELOG.md` (1.91.0), `git show 6065e5c:CHANGELOG.md` (1.90.0), `git show de4303e:CHANGELOG.md` (1.89.0), `git show 4ace903:CHANGELOG.md` (1.88.1), `git show ce178fb:CHANGELOG.md` (1.88.0), `git show 0e1e5a2:CHANGELOG.md` (1.87.0), `git show e6f2c37:CHANGELOG.md` (1.86.0), `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 77f557c:CHANGELOG.md` (1.98.1), `git show 44b586a:CHANGELOG.md` (1.97.5), `git show 7848cb7:CHANGELOG.md` (1.97.4), `git show 871dd0e:CHANGELOG.md` (1.97.3), `git show c5135f8:CHANGELOG.md` (1.97.2), `git show d30ff7c:CHANGELOG.md` (1.97.1), `git show f9101db:CHANGELOG.md` (1.96.1), `git show df8dbed:CHANGELOG.md` (1.96.0), `git show 363f03b:CHANGELOG.md` (1.95.0), `git show bba6bb0:CHANGELOG.md` (1.94.0), `git show dca179c:CHANGELOG.md` (1.93.1, 1.93.0), `git show 01cd1f2:CHANGELOG.md` (1.92.0), `git show d097927:CHANGELOG.md` (1.91.0), `git show 6065e5c:CHANGELOG.md` (1.90.0), `git show de4303e:CHANGELOG.md` (1.89.0), `git show 4ace903:CHANGELOG.md` (1.88.1), `git show ce178fb:CHANGELOG.md` (1.88.0), `git show 0e1e5a2:CHANGELOG.md` (1.87.0), `git show e6f2c37:CHANGELOG.md` (1.86.0), `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.99.3 — The card's rule wins in the preset (2026-10-23)
+
+Bug-hunt audit `audit/AUDIT_2026-10-23_2_audit_menyeluruh.md` (untracked), batch 2 of §8: P1–P4, B1, R1, R2 and R3's preset half as
+deviations in `presets/edit_preset.py` (the audit's §5: four general deviations recommended, silence = approval; R2 decided by the
+owner on 2026-10-23). Touches DECISIONS §9 "Preset = upstream as it ships": a fifth kind of deviation. Save fixture v1.99.2.
+- **D12 (P1), names are not vocabulary:** the Cosmos ban list forbids its words "in every form ... as any part of a hyphenated or
+  compound word", which told the narrator to replace "Vice Headmaster" and "Vice President" (31 lore entries), the Velvet Lanes, the
+  Furnace room and "the asset". The list and its last-mile gate now exempt a name, title or place name the card or a lorebook writes;
+  the list itself is upstream's.
+- **D13 (P2):** the card's first-appearance rule (504: a roster newcomer short, no sweep for someone known) replaces `<NPC_intro>`'s
+  head-to-toe sweep; the sweep stays for NPCs the card gives no rule for.
+- **D14 (P3), D16 (R3, preset half):** random events and Pacing's WEAVE interruptions come only from the sources the card lists (504),
+  or from someone on screen; "incoming calls" is gone from the Main Prompt's examples.
+- **D15 (P4):** HQ NPC Genesis takes the name and traits the card gives (`<now>`'s next new character) and draws only what it leaves
+  open, so there is one naming authority.
+- **D17 (R1):** Card Fidelity's "a quirk that has faded ... comes back in the next one" becomes Scene Engine's rule: a quirk surfaces
+  when the moment calls on it, not in every reply (the trait fixation reported on Gemini Argon).
+- **R2 (owner):** Embellish Mode stays ON and Anti-parrot OFF; only its rule 2 ("Always begin your response with {{user}}'s stylized
+  actions and dialogue first") goes, so replies no longer all open the same way; NPCs is rule 2.
+- **B1:** Player Input Authority's `<latest_input>` (raw `{{lastUserMessage}}`) names the engine's closing "(scene: …)" marker as game
+  data, not the player's words; the card's regex strips it only from the history.
+- Every added line is worded for any card (no card data or names; `test_preset` checks it) and does nothing when the card is silent.
+  The README prompt, ECOSYSTEM, DECISIONS §9 and FEATURES list the new deviations.
+- Cost: the enabled preset grows from about 18,219 to 18,556 tokens a turn (`test_preset` budget 18,600: the next addition needs a
+  cut or a new budget).
+- Tests: `test_preset` (the Embellish check now expects upstream minus rule 2; eight new checks and the generic-wording check);
+  `test_ambience_v1160`, `test_audit_b2_v1170`, `test_npc_thoughts_v1373`, `test_split_v146`, `test_tokens_v1110`, `test_saves` (loads
+  the 1.99.2 save) pass; `npm test` passes (165 suites). No engine change beyond the version.
+- **To confirm with the owner:** nothing invented (the examples in D12, "Vice President" and "the Velvet Room", are generic).
+- **To check live:** `docs/TEST_CHECKLIST.md` Q1.1 [1.99.3] (titles kept, varied openings, quirks, Genesis names, interruptions, the
+  scene marker). Import the new preset from `dist/`.
 
 ## v1.99.2 — One reading of the story (2026-10-23)
 
@@ -98,48 +130,6 @@ Owner's choice from the 1.98 shallow-feature audit (T3, T4, T8): `planning/DRAFT
 - **To confirm with the owner** (invented, replaceable): the 30 minutes, Knowledge +1 / +2, the 14 days between leads, +2 for a
   finished Project, the ask's and the Knows line's words.
 - **To check live:** `docs/TEST_CHECKLIST.md` SQ-M [1.98.2].
-
-## v1.98.1 — Dove watch (2026-10-23)
-
-Owner's choice from the 1.98 shallow-feature audit (`audit/AUDIT_2026-10-23_1_kedalaman_fitur.md` T1 + T9): "kerjakan batch 2,4,5
-saja", on `planning/DRAFT_kedalaman_fitur.md` batch 2, with the extension the owner asked for (Koschei's Needle, and violations
-{{user}} keeps from the Doves through the whole campaign). Both open questions adopted as drafted (silence = approval). Releases are
-numbered in order (1.98.1 batch 2, 1.98.2 batch 4, 1.98.3 batch 5). Save fixture v1.97.5.
-- **Dove secrets** (`doveSecrets`): Dove attention now covers everything the Dovecote would act on, not only the true magic: a
-  forbidden technique, a forbidden pact (Pacting), Koschei's Needle in the Bag (Soul magic, lore 490/491) and the new
-  `Hidden.Secrets` (a violation the narrator records: What, Proof, Known_by; dated by the engine, 8 kept, cold after 8 weeks once no
-  proof and no knower at Halvard is left). `<now>` prints "Dove watch: <stage> (n/100)", the stage's meaning and the secrets with
-  their knowers; the Hidden tab and the bracelet chip open for any secret.
-- **The stages act** (`data/dove_watch.json`, Features row Dove watch): Rumoured, one rumour that names nobody (the Needle's points at
-  Hanakaze); Watched, a Dove posted near one of {{user}}'s places on one day in three; Investigated, the Dovecote interview (a
-  Commitment two days on at 16:00 with Krieg; at the Dovecote `<now>` gives the result from the first Fortune number with Society +3
-  a rank, a Dorm Head or Althair at Rank 7+ who comes along +20; clean −15, partial −5, fail +10; missed +10 and Milena comes to find
-  {{user}} the next day, −10 to the roll), and a room search on a seeded night for a physical secret (weekly while Doves reputation is
-  −3 or lower; Milena's tip-off the day before at +3, +30 to the roll; found = Exposed, told when {{user}} is next in the dorm; the
-  seizure is played in the story); a knower who is angry and distrustful (Tension 70+ and Trust under 40, or pro-Dove at Tension 50+)
-  may talk once a week (25%, +10; never an anti-Dove NPC, never Vesna about the Needle; the narrator is told who); Exposed, a hearing
-  at the Dovecote the next morning. `cooperated_with_dove` lowers it 3 once a week; quiet weeks lower it 5 once nothing is hidden.
-- **`/Dove_found`** (a new report list): the Doves learned a secret in the story; the engine records it (pinned Journal line), a
-  derived secret stops being one, a recorded one leaves `Hidden.Secrets`; with another secret left the meter goes to at least 60,
-  with none it falls 20. Koschei's Needle leaves the Bag for the Dovecote (`Campus_State.Needle_seized`): lore 490 says it is held
-  under Sir Krieg Valforth's seal and that he always knows where Vesna is; Vesna stays a Halvard student. Taken back in the story it is
-  a secret again at +20.
-- **Reminder**: a hidden or forbidden technique, or a forbidden pact partner, used with people around asks the narrator once to judge
-  whether it was noticed; it moves no number (DECISIONS §2 "Missed reports").
-- **Rules**: 502's Hidden block is one core line; the full rule is the new rule card `doves` (with a secret, a meter above 0, at the
-  Dovecote, or a reply that speaks of the Doves, hiding or forbidden things); a student with nothing hidden gets one short pointer line.
-- Not built from the draft: happening weights by stage. The year's happenings are chained day by day and cached, so a weight that
-  changes with the stage would reshuffle days already played; the posted Dove carries that pressure instead.
-- Code: `data/dove_watch.json` (new), `tools/gen_engine.py` (checks and injects it); engine `DW`, `doveSecrets`, `doveStage`,
-  `doveRoll`, `secretTech` (stepMagic's `c.secretCasts`), `stepHidden`, `stepReminders`, `ruleCards` (`doves`), `JOURNAL_LANDMARK`,
-  `ROOT_LISTS`; schema `Hidden.Secrets`, `Dove_found`, `Campus_State.Needle_seized`, `$eng.dove`, `$ui.dove`; 500, 502, 505;
-  `data/rule_cards.json`, `data/features.json`; `merge_lorebooks.py` `vesna_world` (Held by); UI `pHidden`, the Hidden tab, the bracelet chip.
-- Tests: new `test_dove_watch_v1981.cjs` (41 checks); `test_integrations_v1180` gives its quiet-week check a true magic (nothing
-  hidden now falls 5); `test_tokens_v1110` follows the 502 wording. `npm test`: all suites pass; `test_saves` loads the 1.97.5 save;
-  `snapshot_render`: 8,823 renders, no errors. Constant prompt ~20,798 tokens at the start (`token_audit`).
-- **To confirm with the owner** (invented, replaceable): the stage lines, the four rumour texts, the posting places, the interview's
-  numbers and words, Milena's line, the search's results, the hearing at 10:00, the 8-week cold trail, −3 for cooperating.
-- **To check live:** `docs/TEST_CHECKLIST.md` SQ-D and SQ-V [1.98.1].
 
 ## Release index (one line per release, oldest first)
 
@@ -334,3 +324,4 @@ numbered in order (1.98.1 batch 2, 1.98.2 batch 4, 1.98.3 batch 5). Save fixture
 - **v1.98.3 (2026-10-23):** Council petitions and the Healing Ward (1.98 audit, batch 5; 1.98 done): a weekly petition at the Saturday Council meeting for a member; treatment in the Medical Centre shortens an injury's healing once.
 - **v1.99.1 (2026-10-23):** Summaryception as the second memory option beside VectFox: its prompt, system prompt and template in `dist/`; 503 names `<story_before_chat>`; replays read player messages it hid; warnings for Verbatim Turns above 11 and a record past the chat's end.
 - **v1.99.2 (2026-10-23):** One reading of the story (bug-hunt audit batch 1: B3, K4, B2): names, mentions, lore heard, the Day slip and reminders read the prose without the update block and `<npc_thoughts>`, closed or not; one update-start listener; the fuzz reads starting ranks from the data and `npm run stress` runs every part.
+- **v1.99.3 (2026-10-23):** The card's rule wins in the preset (bug-hunt audit batch 2): names, titles and places the card writes are not banned vocabulary; the card's first-appearance rule, world-event sources and new-character names come first; a quirk surfaces when the moment calls on it; Embellish without its fixed opening (owner); the scene marker is game data.

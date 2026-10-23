@@ -6,6 +6,8 @@ used as it ships (127 prompts, prompt order, roles, depths, triggers, toggles, s
   P  three pointer fixes in upstream text,
   O  the owner's toggles,
   E  three Eldrasil prompts (Player Input Authority, Output language, Ordinary Turns) and the NPC Thoughts block.
+1.99.3 (bug-hunt audit 2026-10-23, batch 2) adds D12-D17: where upstream and the card give two rules for one thing, the card's rule
+wins, in words any card can use; and drops Embellish Mode's fixed opening (owner).
 Every text edit asserts its anchor, so an upstream update that moves the text fails here instead of shipping half-applied.
 The pre-1.68.0 edit (RF 2.2 + an RF 2.2.1 port, sections 1-16) is in git: git show 4a811c0:presets/edit_preset.py
 """
@@ -42,6 +44,11 @@ STATES = '019f62e8-892f-7027-93ef-159f3d55c410'
 BOLT = '634ecfec-1862-4ce0-821e-e31057acadfa'
 TURN_DICE = '486813c8-3587-456b-b5aa-84585afb3e89'
 STACCATO = '5f285f06-57fe-49f1-9e9b-84c4d6d30d78'
+COSMOS = 'c0a8f588-6ef0-4a32-b5ae-880050afe4e6'   # 🌌🚫 Banned Word List: Cosmos Edition
+LAST_MILE = '1f782d15-d282-4a85-b087-2db2548752f0'   # 🚪 Last-Mile Gemini Banned Vocab Check
+GENESIS = '019f62e8-892f-701e-ba47-40b8c3ddd5e8'   # 🧬 HQ NPC Genesis
+PACING = '82632755-5233-56f8-8fa6-3f169510cc4e'   # 🌌⏱️ Pacing: Cosmos Edition
+FIDELITY = 'f14c6679-2497-4bee-a00e-4c33f2d6d19d'   # 🎭 Card Fidelity
 
 
 def entry(ident):
@@ -167,10 +174,53 @@ toggle(EMBELLISH, True, 'owner: the narrator writes {{user}} from what the playe
 toggle(LENGTH, True, 'owner: 4 to 7 paragraphs')
 rep(LENGTH, 'Length: Your response must be roughly 4 to 8 paragraphs and 400 to 600 words (excluding headers and internal states).',
     'Length: Your response must be roughly 4 to 7 paragraphs (excluding headers, the thoughts block and the state-update block).')
+# 1.99.3 (owner 2026-10-23, audit R2): Embellish stays ON and Anti-parrot OFF, but its rule 2 made every reply open the same way, with
+# {{user}}'s own words echoed first (the repeating reply shape players report on Gemini Argon). Only that rule goes; NPCs becomes rule 2.
+rep(EMBELLISH, "2. Flow: Always begin your response with {{user}}'s stylized actions and dialogue first.\n3. NPCs:", '2. NPCs:')
+log.append(('EDIT', P[EMBELLISH]['name'], 'owner: no fixed opening with {{user}} (R2)'))
+
+# ---- D12-D17 (1.99.3, bug-hunt audit audit/AUDIT_2026-10-23_2_audit_menyeluruh.md §3.2 and §9, batch 2): where upstream and a card
+# that sets its own rule give two orders for one thing, the card's rule wins. Each line is worded for any card and changes nothing
+# when the card is silent.
+# D12 (P1): the ban list covers its words "in every form ... as any part of a hyphenated or compound word", so the narrator was told to
+# replace a card's titles and place names (this card: Vice Headmaster and Vice President in 31 lore entries, the Velvet Lanes, the
+# Furnace room, "the asset" as one character's way of speaking). A name is not vocabulary; the list itself stays upstream's.
+rep(COSMOS, 'A hyphen or a suffix does not make it a different word.',
+    'A hyphen or a suffix does not make it a different word.\n\nNames are not vocabulary: a name, title or place name that the character card or a lorebook entry writes (a title such as Vice President, a place such as the Velvet Room) is written exactly as given, every time. The list governs only the words the narration and dialogue choose for themselves.')
+rep(LAST_MILE, 'is swapped for its plain replacement before writing.',
+    'is swapped for its plain replacement before writing; a name, title or place name the card or a lorebook writes is not a planned word and stays exactly as written.')
+log.append(('EDIT', P[COSMOS]['name'] + ', ' + P[LAST_MILE]['name'], 'D12: names, titles and places the card writes are not banned vocabulary'))
+# D13 (P2): <NPC_intro> sweeps a new NPC head to toe; this card keeps a roster newcomer's first appearance short and never re-introduces
+# someone {{user}} knows (rule 504). The sweep stays for the NPCs the card gives no such rule for.
+rep(MAIN, 'trigger: first appearance of an NPC in the simulation',
+    "trigger: first appearance of an NPC in the simulation\n  card rule first: when the character card or a lorebook entry sets how a character's first appearance is written (kept short, or no sweep for someone {{user}} already knows), that rule replaces this sweep; the sweep is for an NPC it sets no such rule for")
+log.append(('EDIT', P[MAIN]['name'], "D13: the card's first-appearance rule replaces the NPC intro sweep"))
+# D14 (P3): random events may be anything ("incoming calls" in a world without phones); this card lists where the world's events come
+# from and says everything else follows from what people on screen do (rule 504). D6 already changed the sentence's tail.
+rep(MAIN, 'e.g., off-screen actions, incoming calls, background movement;',
+    "e.g., off-screen actions, background movement; when the card lists where the world's events come from, they come only from those sources;")
+log.append(('EDIT', P[MAIN]['name'], "D14: random events come only from the card's sources"))
+# D15 (P4): HQ NPC Genesis draws five names and its own temperament, and its profile "outweighs any other inference"; this card's <now>
+# already gives the next new character's name and traits (data/name_pool.json). Two naming authorities: the card's goes first.
+rep(GENESIS, 'Naming: Generate 5 setting-appropriate',
+    "Card first: when the character card or a lorebook entry already gives a new character's name or traits (a name to use next, a list of traits), use exactly those and generate only what it leaves open.\nNaming: Generate 5 setting-appropriate")
+log.append(('EDIT', P[GENESIS]['name'], 'D15: a name and traits the card gives come first'))
+# D16 (R3, the preset half; the card half is batch 3): WEAVE lets fate or anyone's agenda break into a long talk; with the card's
+# sources (D14) an interruption comes from those or from someone on screen, so the world does not crowd {{user}} out of a scene.
+rep(PACING, "a long conversation gets interrupted by what fate or someone's agenda brings.",
+    "a long conversation gets interrupted by what fate or someone's agenda brings. When the card lists where the world's events come from, an interruption comes only from one of those sources or from someone on screen.")
+log.append(('EDIT', P[PACING]['name'], "D16: WEAVE interruptions come from the card's sources"))
+# D17 (R1): upstream contradicts itself. Scene Engine: "a trait is a tendency that surfaces when the moment calls on it"; Card Fidelity:
+# a quirk that faded "comes back in the next one", which pushes one trait into every reply (the trait fixation reported on Argon).
+rep(FIDELITY, 'A quirk that has faded from recent replies with no reason in the story comes back in the next one.',
+    "A quirk surfaces when the moment calls on it, not in every reply; one that has gone quiet with no reason in the story is still the character's and returns the next time a moment calls on it.")
+log.append(('EDIT', P[FIDELITY]['name'], "D17: a quirk surfaces when the moment calls on it (Scene Engine's wording)"))
 
 # ---- E1 (owner-approved 1.5.0): Player Input Authority, the "simulation" toggle (OFF = director play). It shares BOLT's assistant
 # role, depth and order, so SillyTavern joins it right before BOLT in one assistant message: a user-role prompt at depth 0 would come
-# after the CoT, since ST orders each depth assistant -> user -> system.
+# after the CoT, since ST orders each depth assistant -> user -> system. 1.99.3 (audit B1): {{lastUserMessage}} is the raw message, and
+# this card's engine appends a scene marker "(scene: … tN)" to it; the card's regex strips that from the chat history, not from preset
+# prompts, so <latest_input> names it as game data (the card's own <now> already strips it there).
 pia = copy.deepcopy(P[BOLT])
 pia.update(identifier='eldrasil-input-authority', name='🎮 Player Input Authority (simulation) 📨', injection_trigger=list(NARRATOR_TRIGGERS), content="""{{// ELDRASIL EDITION. ON: the player controls only {{user}}; what the message says about other characters or outcomes is a wish the world answers in character. Turn OFF to play as a director who may decide other characters and outcomes. It also repeats the newest player message right before the CoT so the model knows exactly which text is the player's input. Assistant role, depth 0, directly above the CoT: SillyTavern joins it with the CoT into one assistant message. Skips Impersonate.}}{{trim}}
 
@@ -178,7 +228,7 @@ pia.update(identifier='eldrasil-input-authority', name='🎮 Player Input Author
 The player writes only {{user}}: their thoughts, feelings, words and attempted actions. Anything else in the player's message (what another character feels, says or decides, whether an action succeeds, facts about the world) is a wish, not a fact: characters answer from their own nature, and outcomes follow the world's rules. Confident wording adds nothing. An outcome that did not happen is not handed over anyway through a coincidence, a sudden change of heart or a rescue.
 </input_authority>
 <latest_input>{{lastUserMessage}}</latest_input>
-This is the player's newest message and nothing older is part of it. I read it by <input_authority>: {{user}}'s own words and attempts are real; anything it says about other characters or outcomes is a wish.""")
+This is the player's newest message and nothing older is part of it. A closing marker in parentheses that the card's scripts add to that message, such as "(scene: …)", is game data, not the player's words. I read it by <input_authority>: {{user}}'s own words and attempts are real; anything it says about other characters or outcomes is a wish.""")
 insert(pia, True, before=BOLT)
 
 # ---- E2: Output language, OFF: the story follows the card's language (English) unless the player names another one.
@@ -225,8 +275,9 @@ rep(README, '{{//Thank you for downloading', """{{//ELDRASIL EDITION (built by p
 - Internal Thoughts writes its own folded <npc_thoughts> block, with three regexes of its own.
 - Three sentences point to the card's state instead of Internal States: the Main Prompt's random events, the Post-History Instructions and Plot Momentum in the CoTs (no fate engine, so the card's sources decide).
 - Pointer fixes: <comparative_emphasis_killswitch> in the CoTs, <abolish_yesman_behaviour> in Realism Mode, eight instincts.
-- The owner's toggles: Embellish Mode instead of Anti-parrot; Total Output Length ON at 4 to 7 paragraphs.
-- Added: Player Input Authority (assistant role, right above BOLT), Output language (OFF) and Ordinary Turns (Fate & Routine steps 0, 7 and 7a without the tracker).}}{{trim}}
+- Where upstream and the card give two rules for one thing, the card's rule wins: names, titles and places the card writes are not banned vocabulary (Banned Word List: Cosmos Edition and its last-mile gate); the card's first-appearance rule replaces the NPC intro sweep; random events and Pacing's WEAVE interruptions come only from the sources the card lists (no "incoming calls"); HQ NPC Genesis uses a name and traits the card gives; Card Fidelity lets a quirk surface when the moment calls on it, as Scene Engine says, instead of in the next reply.
+- The owner's toggles: Embellish Mode instead of Anti-parrot, without its rule to open every reply with {{user}}; Total Output Length ON at 4 to 7 paragraphs.
+- Added: Player Input Authority (assistant role, right above BOLT; it reads the card's scene marker as game data), Output language (OFF) and Ordinary Turns (Fate & Routine steps 0, 7 and 7a without the tracker).}}{{trim}}
 
 {{//Thank you for downloading""")
 

@@ -50,10 +50,17 @@ sat on RF 2.2 with a partial RF 2.2.1 port and about ninety text replacements (i
   AMBIENT unless one of the card's sources of world events falls due).
 - Pointer fixes: the CoTs name `<comparative_emphasis_killswitch>` (upstream still wrote the retired `<say_it_straight>`), Realism Mode
   names the Gemini edition's `<abolish_yesman_behaviour>`, the instinct list says [8].
+- Where upstream and the card give two rules for one thing, the card's rule wins (1.99.3, D12–D17; each line is worded for any card
+  and does nothing when the card is silent): a name, title or place name the card writes is not banned vocabulary (the Cosmos ban
+  list and its last-mile gate: "Vice Headmaster", "Velvet Lanes"); the card's first-appearance rule replaces `<NPC_intro>`'s
+  head-to-toe sweep; random events and Pacing's WEAVE interruptions come only from the sources the card lists (no "incoming calls");
+  HQ NPC Genesis takes the name and traits the card gives (`<now>`'s next new character) and draws only the rest; Card Fidelity lets a
+  quirk surface when the moment calls on it, as Scene Engine says, instead of bringing it back in the next reply.
 - The owner's toggles: 🧂 Embellish Mode instead of Anti-parrot (the narrator writes {{user}}'s words and actions from what the player
-  wrote) and 📝 Total Output Length ON at roughly 4 to 7 paragraphs (upstream ships it OFF).
+  wrote; 1.99.3, owner: without its rule 2, so a reply no longer always opens with {{user}}) and 📝 Total Output Length ON at roughly
+  4 to 7 paragraphs (upstream ships it OFF).
 - Added, generic (they name no card data): 🎮 Player Input Authority (the player writes only {{user}}; what the message says about others
-  or outcomes is a wish; it repeats `{{lastUserMessage}}`; assistant role at depth 0 right above BOLT, so ST joins the two into one
+  or outcomes is a wish; it repeats `{{lastUserMessage}}` and names the engine's "(scene: …)" marker in it as game data; assistant role at depth 0 right above BOLT, so ST joins the two into one
   message; OFF = director play); 🌐 Output language (OFF); 🎲 Ordinary Turns (Fate & Routine's steps 0, 7 and 7a without the tracker:
   quiet turns run on needs and the clock, one thing changes, NPCs may decline the bait, the aftermath of a happening).
 - The README prompt (never sent) carries the same list.

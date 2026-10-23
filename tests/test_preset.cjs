@@ -23,12 +23,15 @@ const ID = {
   dice: '486813c8-3587-456b-b5aa-84585afb3e89', scent: '87068689-deb5-4798-9cc1-e96aa7f9abaf', scentGate: '5feac112-ad26-4eca-b5c5-1b03263cc915',
   smellRules: 'ffb2498c-2054-4e79-9f72-2ae7c51b60f3', staccato: '5f285f06-57fe-49f1-9e9b-84c4d6d30d78', legato: '1409b26b-b408-4f19-965c-5eb56e37d621', impersonate: '431bb92b-7112-4695-978f-1936f6c7ec90',
   pia: 'eldrasil-input-authority', lang: 'eldrasil-output-language', ordinary: 'eldrasil-ordinary-turns',
+  cosmos: 'c0a8f588-6ef0-4a32-b5ae-880050afe4e6', lastMile: '1f782d15-d282-4a85-b087-2db2548752f0', genesis: '019f62e8-892f-701e-ba47-40b8c3ddd5e8',
+  pacing: '82632755-5233-56f8-8fa6-3f169510cc4e', fidelity: 'f14c6679-2497-4bee-a00e-4c33f2d6d19d',
 };
 
 // ---- the base is upstream as it ships
 ok(Object.keys(U).filter(k => !['prompts', 'prompt_order', 'extensions'].includes(k)).every(k => JSON.stringify(U[k]) === JSON.stringify(P[k])), 'every setting is upstream\'s (sampling 0.7 / 0.8, reasoning medium, group nudge)');
 ok(P.temperature === 0.7 && P.top_p === 0.8, 'sampling values as shipped (Gemini 3.8 ignores them; nothing to tune here)');
-const EDITED = [ID.main, ID.phi, ID.readme, ID.realism, ID.length, ID.instincts, ID.thoughts];   // + the CoTs below (pointer and Plot Momentum lines)
+const EDITED = [ID.main, ID.phi, ID.readme, ID.realism, ID.length, ID.instincts, ID.thoughts,   // + the CoTs below (pointer and Plot Momentum lines)
+  ID.cosmos, ID.lastMile, ID.genesis, ID.pacing, ID.fidelity, ID.embellish];   // 1.99.3 (bug-hunt audit batch 2)
 const COTS = U.prompts.filter(p => /impact tier and open pursuit, not by interest/.test(p.content || '')).map(p => p.identifier);
 const changed = Object.keys(UP).filter(id => JSON.stringify(UP[id]) !== JSON.stringify(PP[id]));
 ok(changed.every(id => EDITED.includes(id) || COTS.includes(id)) && COTS.includes(ID.bolt), 'only the listed prompts differ from upstream' + (changed.filter(id => !EDITED.includes(id) && !COTS.includes(id)).length ? ': ' + changed.filter(id => !EDITED.includes(id) && !COTS.includes(id)).map(id => UP[id].name).join(', ') : ''));
@@ -67,7 +70,10 @@ const missing = tags.filter(x => !UPSTREAM_JB.includes(x) && !presetText.replace
 ok(!missing.length, `every tag BOLT names exists in the preset or the card, apart from RF 2.2's conditional jailbreak tags (${tags.length})` + (missing.length ? ': missing ' + missing.join(', ') : ''));
 
 // ---- O: the owner's toggles
-ok(on(ID.embellish) && !on(ID.parrot) && JSON.stringify(PP[ID.embellish]) === JSON.stringify(UP[ID.embellish]), 'owner: Embellish Mode (upstream text) instead of Anti-parrot');
+// 1.99.3 (owner 2026-10-23, audit R2): upstream's text without rule 2 ("Always begin your response with {{user}}'s ..."), NPCs renumbered
+const EMB_RULE2 = "2. Flow: Always begin your response with {{user}}'s stylized actions and dialogue first.\n3. NPCs:";
+ok(on(ID.embellish) && !on(ID.parrot) && UP[ID.embellish].content.includes(EMB_RULE2) && PP[ID.embellish].content === UP[ID.embellish].content.replace(EMB_RULE2, '2. NPCs:'),
+  'owner: Embellish Mode instead of Anti-parrot, upstream\'s text without the fixed opening (R2)');
 ok(on(ID.length) && /roughly 4 to 7 paragraphs \(excluding headers, the thoughts block and the state-update block\)/.test(PP[ID.length].content), 'owner: Total Output Length ON at 4-7 paragraphs');
 
 // ---- E: the three Eldrasil prompts
@@ -87,6 +93,23 @@ const CARD = /Eldrasil|Halvard|<now>|<cast>|<current_state>|Scene\.Present|Bonds
 const E = [pia.content, PP[ID.lang].content, ot.content, PP[ID.thoughts].content].map(noNotes).join('\n');
 ok(!CARD.test(E), 'the Eldrasil prompts are generic (no card data or character names)' + (CARD.test(E) ? ': ' + E.match(CARD)[0] : ''));
 ok(/ELDRASIL EDITION/.test(PP[ID.readme].content) && !on(ID.readme), 'the README (never sent) lists what this edition changes');
+
+// ---- 1.99.3 (bug-hunt audit 2026-10-23, batch 2): where upstream and the card give two rules for one thing, the card's rule wins,
+// in words that make sense on any card
+const lines = t => noNotes(t).split('\n');
+const addedOf = id => lines(PP[id].content).filter(l => !lines(UP[id].content).includes(l)).join('\n');
+const caseOne = t => (t.match(/Case 1:[^\n]*/) || [''])[0];
+ok(caseOne(PP[ID.cosmos].content) === caseOne(UP[ID.cosmos].content) && /Names are not vocabulary: a name, title or place name that the character card or a lorebook entry writes[^\n]*is written exactly as given/.test(PP[ID.cosmos].content)
+  && /a name, title or place name the card or a lorebook writes is not a planned word/.test(PP[ID.lastMile].content), 'P1: the banned list is upstream\'s, and names, titles and places the card writes are exempt (list and last-mile gate)');
+ok(/trigger: first appearance of an NPC in the simulation\n  card rule first: when the character card or a lorebook entry sets how a character's first appearance is written/.test(PP.main.content)
+  && /explicit anatomical shapes/.test(PP.main.content), 'P2: the card\'s first-appearance rule replaces the sweep; the sweep stays for NPCs it says nothing about');
+ok(!/incoming calls/.test(PP.main.content) && /when the card lists where the world's events come from, they come only from those sources/.test(PP.main.content), 'P3: random events come only from the card\'s sources, no "incoming calls"');
+ok(/Card first: when the character card or a lorebook entry already gives a new character's name or traits/.test(PP[ID.genesis].content) && /select the 5th/.test(PP[ID.genesis].content), 'P4: HQ NPC Genesis uses the name and traits the card gives, and draws only what it leaves open');
+ok(/a long conversation gets interrupted by what fate or someone's agenda brings\. When the card lists where the world's events come from, an interruption comes only from one of those sources or from someone on screen\./.test(PP[ID.pacing].content), 'R3: a WEAVE interruption comes from the card\'s sources');
+ok(!/comes back in the next one/.test(PP[ID.fidelity].content) && /A quirk surfaces when the moment calls on it, not in every reply/.test(PP[ID.fidelity].content), 'R1: Card Fidelity says what Scene Engine says (a quirk surfaces when the moment calls on it)');
+ok(/A closing marker in parentheses that the card's scripts add to that message, such as "\(scene: …\)", is game data, not the player's words\./.test(pia.content), 'B1: Player Input Authority reads a scene marker in <latest_input> as game data');
+const DEV = [ID.cosmos, ID.lastMile, ID.main, ID.genesis, ID.pacing, ID.fidelity, ID.embellish].map(addedOf).join('\n');
+ok(DEV.length > 400 && !CARD.test(DEV), 'every line these deviations add is generic (no card data or character names)' + (CARD.test(DEV) ? ': ' + DEV.match(CARD)[0] : ''));
 
 // ---- Gemini's smell path (upstream's design: no smell talk anywhere but the killswitch and its gate)
 ok(on(ID.scent) && on(ID.scentGate) && !on(ID.smellRules), 'Scent Killswitch and its depth-0 gate ON, Smell & Taste Rules OFF');

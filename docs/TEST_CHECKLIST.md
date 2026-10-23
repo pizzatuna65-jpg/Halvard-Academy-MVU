@@ -158,15 +158,23 @@ show the newcomers their dorm rooms.
       out of breath) [1.78].
 - [ ] The first clerk or student the narrator invents takes the name for their gender from `<now>`'s "Next new character" line (no
       Elara, Kael or Voss) and acts on the traits listed there, the bad ones too; at the second appearance the record request lists the
-      same traits and the record's Manner carries them; the next line offers new names and a new set [1.96, 1.96.1].
+      same traits and the record's Manner carries them; the next line offers new names and a new set [1.96, 1.96.1]. HQ NPC Genesis
+      (ON) uses that name and those traits instead of its own five-name draw [1.99.3].
 - [ ] Four or more replies later the prompt holds those quotes without `<say…>` tags; a stray `</say>` never shows in the chat [1.42].
-- [ ] Prose (preset): the reply opens with Charles's action and words expanded (Embellish); the others answer as themselves and nothing is
+- [ ] Prose (preset): Charles's action and words are expanded (Embellish), but over a few replies the openings vary and not every
+      reply starts with Charles [1.99.3]; the others answer as themselves and nothing is
       decided for Charles beyond what you wrote; about 4–7 paragraphs; no "not X, but Y" or "It wasn't X. It was Y."; NPCs sound distinct,
       act on what they decide, and a nervous one keeps their stalls; jobs and jargon do not take over idle talk [1.36, 1.52.2].
 - [ ] What people carry comes up when the scene uses it: Zara's sketchbook (she hides it) and Kanae's things are not in every reply;
-      each sheet in `<cast>` reads "Carries (shown when the scene calls for it):" [1.77.1].
+      each sheet in `<cast>` reads "Carries (shown when the scene calls for it):" [1.77.1]. A quirk or habit likewise shows when the
+      moment calls on it, not in every reply [1.99.3].
 - [ ] A quick greeting keeps the clock or moves it a minute; a real ten-minute talk moves it about ten [1.9.3].
-- [ ] A new roster character: short first lines, then they sound like their sheet [1.35.2]. The update starts their bond with
+- [ ] Titles and place names stay as the card writes them ("the Vice Headmaster", the Council's Vice President, the
+      Velvet Lanes if Sunreach comes up), never swapped for another word; a long talk is broken only by the tour, the calendar, a regular or
+      someone present, never a call or an event from nowhere [1.99.3].
+- [ ] Prompt: `<latest_input>` (Player Input Authority) calls the closing "(scene: …)" marker game data; the narrator never quotes it
+      or answers it as Charles's words [1.99.3].
+- [ ] A new roster character: short first lines with no head-to-toe description, then they sound like their sheet [1.35.2, 1.99.3]. The update starts their bond with
       `insert /Bonds/<name>/Known_facts/-` (no full record, no Trust), real MVU accepts it, and the bond starts at the character's own Trust
       [1.53]. People gets a red dot; opening the panel clears the button's, and the person keeps theirs until opened [1.25].
 - [ ] `<cast>` holds exactly the people present, in name order, then their ties and `</cast>`; no other sheet and no line starting with
