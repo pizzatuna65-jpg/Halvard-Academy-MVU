@@ -501,6 +501,8 @@ export const Schema = z.object({
     wc: z.any().prefault(null).catch(null),                        // 1.97.4: the World Competition's phases while {{user}} is in the national four (engine stepWorld)
     wcn: z.coerce.number().prefault(0).catch(0),                   // 1.97.4: the campaign year whose Grand Final the Academy Newspaper already has (engine)
     vesna: z.any().prefault(null).catch(null),
+    petition: z.any().prefault(null).catch(null),                  // 1.98.3: the weekly Council petition { week, id, day, at, to, ask, seen, done, used } (engine)
+    treated: z.record(z.string(), z.any()).prefault({}).catch({}), // 1.98.3: injury -> when the Healing Ward treated it (engine stepRest)
     dove: z.any().prefault(null).catch(null),                      // 1.98.1: Dove watch { known, rum, iv, srch, leak, coop } (engine stepHidden)                     // 1.97.5: the scenario Koschei's Needle { y, won, gf, told, done, beat, fail, ent } (engine stepScene)
     vote: z.record(z.string(), z.any()).prefault({}).catch({}),     // 1.82.0: the Club Festival coin vote's winner { Y1: club } (engine)
     tally: z.any().prefault(null).catch(null),                     // 1.87.0: this year's tallies and the Academy winner already in the Journal { y, sports_day: dorm, showcase: dorm, academy: 1 } (engine)

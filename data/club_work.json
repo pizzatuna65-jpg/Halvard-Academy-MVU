@@ -25,7 +25,13 @@
       "Smithing": ["needs a blade sharpened and its balance checked", "wants a small tool forged for a hobby that needs {thing}", "brings a buckle and hinge that snapped and needs them by {event}", "wants something engraved as a present and cannot decide what", "asks whether the club can repair an heirloom that has seen better days"],
       "Fishing": ["wants to learn to fish and has never held a rod", "wants a fish for a dinner they are planning", "asks to borrow tackle for a quiet morning by the lake", "wants to know where the big ones are, for a bet", "brings {thing} and asks whether it works as bait"],
       "Library Assistants": ["needs a book on {subject} that the catalogue says is out", "wants help finding an old record in the Archive", "asks for a reading list on {subject} before the next exam", "has lost track of a borrowed book and wants to sort it out quietly", "wants something to read about {thing}"]
-    }},
+    },
+    "council": {"_note": "1.98.3 (owner-approved planning/DRAFT_kedalaman_fitur.md batch 5): a petition to the Student Council, for {{user}} as a member: the Saturday meeting, the same weekly chance and draw as the club client (cwStudent, cwAsk).",
+      "pct": 40, "day": "Sat", "from": "10:00", "to": "12:00", "window_min": 15, "where": "Student Council Chamber",
+      "match": "council|rules?|order|debate|politic|lead|fair",
+      "asks": ["wants the Council's backing for a stall at {event} and needs a signature", "says their dorm's quiet hours are ignored every night and wants it raised",
+        "asks for a room for a new study circle before the exams", "wants a fair hearing in a club dispute over {thing}",
+        "asks whether the Council can get the Library to stay open later in exam weeks"]}},
   "bake": {"good": 70},
   "snow": {"slow": 50, "clear": "07:00", "far_until": "15:00",
     "far": ["grassy_field_and_hills", "observation_tower", "old_hut", "forest", "forest_clearing", "spirit_path", "boathouse_and_lake", "fishing_house", "willow_island"]}

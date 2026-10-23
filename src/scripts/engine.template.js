@@ -2061,6 +2061,27 @@ function stepRest(c) {
     }
   }
   V.Resting = 'none';
+  // 1.98.3 (owner-approved planning/DRAFT_kedalaman_fitur.md batch 5, T6): treated in the Medical Centre's Healing Ward. Minutes there
+  // across the whole reply by severity (data/restore_places.json treats), once an injury: minor heals, moderate halves the time left
+  // to Heals_by, serious brings it two days nearer; with no Heals_by a step down in severity; critical is stabilised. On screen only.
+  const TR = (RESTFUL['medical centre'] || {}).treats;
+  if (TR && hasB && !toolEdit && placeKey(S.World.Location) === 'medical centre' && placeKey(B.World.Location) === 'medical centre') {
+    const H = S.$eng.treated = _.isPlainObject(S.$eng.treated) ? S.$eng.treated : {}, STEP = { moderate: 'minor', serious: 'moderate' };
+    for (const [name, inj] of Object.entries(S.Player.Injuries || {})) {
+      const sev = String((inj || {}).Severity || 'minor'), mins = num(TR[sev], 0), heals = (S.$eng.heals || {})[name] || {};
+      if (!inj || H[name] || elapsed < mins || (!mins && sev !== 'critical')) continue;
+      H[name] = absA;
+      let what;
+      if (sev === 'critical') what = 'stabilised; the rest is time';
+      else if (sev === 'minor') { delete S.Player.Injuries[name]; what = 'healed'; }
+      else if (num(heals.abs, -1) > absA) {
+        const to = sev === 'moderate' ? absA + Math.ceil((heals.abs - absA) / 2) : Math.max(absA + DAY_MIN, heals.abs - 2 * DAY_MIN);
+        inj.Heals_by = stamp(fromAbs(to)); what = `now heals by ${inj.Heals_by}`;
+      } else { inj.Severity = STEP[sev]; what = `eased to ${STEP[sev]}`; }
+      log.push(`Treated in the Healing Ward: ${name} (${what}).`); c.jnl.push(`Treated in the Healing Ward: ${name} (${what}).`); S.$ui.toasts.push(`Treated: ${name}`);
+    }
+    for (const k of Object.keys(H)) if (!(S.Player.Injuries || {})[k] && absA - H[k] > 7 * DAY_MIN) delete H[k];
+  }
   Object.assign(c, { restedAs, Cn, consumed });
 }
 
@@ -6497,6 +6518,23 @@ function stepHooks(c) {
 // haunts and tastes match the club). The ask is a template filled from their data (never one of their last 20). $eng.client
 // { week, club, id, day, at, to, ask, seen, done }: <now> tells the narrator while {{user}} is at the club then; otherwise, once the
 // session is over, the Journal says another member took the job. The job done is a help interaction (the favour path).
+// 1.98.3: the weekly visitor's draw and ask, shared by the club client and the Council petition (the seeds are the caller's salts)
+function cwStudent(S, seed, mon, salt, rx, members) {
+  const Y = num(S.World.Year, 1);
+  const taste = id => { const g = ((GIFT_PREFS.npcs || {})[id] || {}).items || {}; return [HAUNT[id], ...(g.loved || []), ...(g.liked || [])].join(' '); };
+  return rollTable(Object.keys(STUDENTS).sort(), { pick: [seed, mon, salt],
+    skip: id => (STUDENTS[id][1] || 1) > Y || yearOf(id, Y) < 1 || yearOf(id, Y) > 3 || (S.Campus_State.Graduated || []).includes(id) || members.includes(id)
+      || num((S.Bonds[id] || {}).Tension, 0) >= 70,
+    weight: id => 1 + (num((S.Bonds[id] || {}).Rank, 0) >= 1 ? 1 : 0) + (rx.test(taste(id)) ? 2 : 0) });
+}
+function cwAsk(S, seed, mon, id, tpls, used, salt) {
+  const g = ((GIFT_PREFS.npcs || {})[id] || {}).items || {};
+  const evs = []; for (let d = mon; d < mon + 21; d++) for (const e of eventsOn(fromAbs(d * DAY_MIN))) { const n = e.t.split(' (')[0]; if (e.id && !evs.includes(n)) evs.push(n); }
+  const fills = { thing: [...(g.loved || []), ...(g.liked || [])], event: evs.slice(0, 3), subject: SUBJECTS };
+  const opts = (tpls || []).flatMap(tp => { const k = (tp.match(/\{(\w+)\}/) || [])[1]; return !k ? [tp] : (fills[k] || []).map(v => tp.replace(`{${k}}`, String(v).toLowerCase())); });
+  const last = used[id] || [], fresh = opts.filter(o => !last.includes(o));
+  return fresh.length ? pickOf(fresh, seed, mon, id, salt) : '';
+}
 function cwClient(c, mon, mine, here) {
   const { S, dayNo, seed, absA } = c, CC = CLUB_WORK.client || {}, club = mine && (CC.clubs || {})[mine];
   const E = S.$eng, W = S.World, Y = num(W.Year, 1);
@@ -6509,19 +6547,11 @@ function cwClient(c, mon, mine, here) {
     const days = _.uniqBy(slots, s => s[0]).filter(s => mon + Math.max(0, DAYS.indexOf(s[0])) >= dayNo);
     if (days.length && roll100(seed, mon, 'cw-client') < num(CC.pct, 40)) {
       const rx = new RegExp(String((CC.match || {})[mine] || '^$'), 'i'), members = clubMembersNow(S, club);
-      const taste = id => { const g = ((GIFT_PREFS.npcs || {})[id] || {}).items || {}; return [HAUNT[id], ...(g.loved || []), ...(g.liked || [])].join(' '); };
-      const id = rollTable(Object.keys(STUDENTS).sort(), { pick: [seed, mon, 'cw-client-pick'],
-        skip: id => (STUDENTS[id][1] || 1) > Y || yearOf(id, Y) < 1 || yearOf(id, Y) > 3 || (S.Campus_State.Graduated || []).includes(id) || members.includes(id)
-          || num((S.Bonds[id] || {}).Tension, 0) >= 70,
-        weight: id => 1 + (num((S.Bonds[id] || {}).Rank, 0) >= 1 ? 1 : 0) + (rx.test(taste(id)) ? 2 : 0) });
+      const id = cwStudent(S, seed, mon, 'cw-client-pick', rx, members);
       if (id) {
-        const s = pickOf(days, seed, mon, 'cw-client-day'), g = ((GIFT_PREFS.npcs || {})[id] || {}).items || {};
-        const evs = []; for (let d = mon; d < mon + 21; d++) for (const e of eventsOn(fromAbs(d * DAY_MIN))) { const n = e.t.split(' (')[0]; if (e.id && !evs.includes(n)) evs.push(n); }
-        const fills = { thing: [...(g.loved || []), ...(g.liked || [])], event: evs.slice(0, 3), subject: SUBJECTS };
-        const opts = ((CC.asks || {})[mine] || []).flatMap(tp => { const k = (tp.match(/\{(\w+)\}/) || [])[1]; return !k ? [tp] : (fills[k] || []).map(v => tp.replace(`{${k}}`, String(v).toLowerCase())); });
-        const last = used[id] || [], fresh = opts.filter(o => !last.includes(o)), ask = fresh.length ? pickOf(fresh, seed, mon, id, 'cw-client-ask') : '';
+        const s = pickOf(days, seed, mon, 'cw-client-day'), ask = cwAsk(S, seed, mon, id, (CC.asks || {})[mine], used, 'cw-client-ask');
         if (ask) {
-          used[id] = [...last, ask].slice(-20);
+          used[id] = [...(used[id] || []), ask].slice(-20);
           const at = hm(s[1]) + num(CC.window_min, 45);
           Object.assign(CL, { id, day: mon + DAYS.indexOf(s[0]), at, to: hm(s[2]), loc: s[3], ask, seen: false, done: false });
         }
@@ -6599,8 +6629,39 @@ function stepClubWork(c) {
   if (cwGuest(S) && !/fishing/i.test(String(S.Player.Profile.Club || ''))) now.push("The Fishing Club's dawn session: {{user}} may borrow a rod and fish with them (Practice).");
   const client = cwClient(c, mon, mine, here);   // 1.92.0 (§4.7)
   if (client) now.push(client);
+  const petition = councilPetition(c, mon, here);   // 1.98.3
+  if (petition) now.push(petition);
   S.$ui.cw = { paper, open, stall: open.length > svc.length && !shopHere, svc: svc.length > 0, now, orders: O.map(o => ({ item: o.item, where: o.where, ready: cwDay(Math.floor(o.ready / DAY_MIN)), ok: absA >= o.ready })),
     loan: L && L.item ? { item: L.item, due: cwDay(L.due) } : null };
+}
+
+// 1.98.3 (owner-approved planning/DRAFT_kedalaman_fitur.md batch 5, T5): a petition to the Student Council. With {{user}} on the
+// Council, once a week a chance (data/club_work.json client.council) that a student who is not a member brings one to the Saturday
+// meeting, the ask filled from their data as the club client's; <now> at the meeting, else a Journal line that another member took it
+function councilPetition(c, mon, here) {
+  const { S, dayNo, seed, absA } = c, PC = (CLUB_WORK.client || {}).council || {}, E = S.$eng, W = S.World;
+  if (!S.Player.Profile.Council || awayIn(S) || !PC.asks) return '';
+  let P = _.isPlainObject(E.petition) ? E.petition : null;
+  if (!P || P.week !== mon) {
+    const used = (P && P.used) || {};
+    P = E.petition = { week: mon, id: '', used };
+    const day = mon + DAYS.indexOf(PC.day || 'Sat');
+    if (day >= dayNo && roll100(seed, mon, 'council-petition') < num(PC.pct, 40)) {
+      const id = cwStudent(S, seed, mon, 'council-petition-pick', new RegExp(String(PC.match || '^$'), 'i'), (S.Campus_State.Council || {}).Members || []);
+      const ask = id ? cwAsk(S, seed, mon, id, PC.asks, used, 'council-petition-ask') : '';
+      if (ask) { used[id] = [...(used[id] || []), ask].slice(-20); Object.assign(P, { id, day, at: hm(PC.from) + num(PC.window_min, 15), to: hm(PC.to), ask, seen: false, done: false }); }
+    }
+  }
+  if (!P.id || P.done) return '';
+  const start = P.day * DAY_MIN + P.at, end = P.day * DAY_MIN + P.to;
+  if (dayNo === P.day && absA >= start && absA < end && here === placeKey(PC.where || 'Student Council Chamber') && !councilRemedial(S.Commitments, W)) {
+    if (npcAwayIn(S, P.id)) { P.done = true; return ''; }
+    P.seen = true;
+    const met = num((S.Bonds[P.id] || {}).Rank, -1) >= 0 && S.Bonds[P.id];
+    return `Council petition: ${P.id}${met ? '' : ' (whom {{user}} has not met)'} comes to the Student Council meeting and ${P.ask}. {{user}} can take it up (then it is a help Interaction with ${P.id}; report student_notice_help in /Rep_events) or leave it to the others. What the Council can actually do is the story's; play ${P.id} in their own character.`;
+  }
+  if (absA >= end) { P.done = true; if (!P.seen) c.jnl.push(`${P.id} brought a petition to the Student Council (${P.ask}); another member took it up.`); }
+  return '';
 }
 
 function stepGossip(c) {

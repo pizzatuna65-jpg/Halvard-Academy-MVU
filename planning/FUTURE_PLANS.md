@@ -6,12 +6,11 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
 
 ## 0. Jalan ke 2.0 (owner, 2026-10-22)
 
-Empat tahap terakhir sebelum 2.0, berurutan. 1.97 dan 1.99 dipecah jadi beberapa rilis (1.97.1, 1.97.2, …). Hapus barisnya begitu
+Tahap terakhir sebelum 2.0, berurutan (1.98 selesai di 1.98.1–1.98.3). 1.97 dan 1.99 dipecah jadi beberapa rilis (1.97.1, 1.97.2, …). Hapus barisnya begitu
 tahap itu selesai.
 
 | Rilis | Isi | Catatan |
 |---|---|---|
-| **1.98.0** | Cek fitur yang terasa dangkal | Telusuri `docs/FEATURES.md`, daftar fitur yang mekaniknya tipis, usulkan pendalamannya lewat sistem yang sudah ada (bahan: §2). Owner memilih dari daftar itu. |
 | **1.99.x** | Full audit bug hunt, stress test, dan perbaikannya | Full suite, stress test, audit lintas sistem; hasilnya file audit dengan daftar batch. Tiap batch = satu rilis: batch 1 → 1.99.1, batch 2 → 1.99.2, dst. |
 | **2.0.0** | Full polish fitur dan UI | Tanpa fitur baru. |
 
@@ -82,6 +81,13 @@ Sisa saran audit fitur 2026-10-03 (4.5–4.10 sudah dibuat di 1.49–1.52; 4.16 
   memakai Mail Tower sebagai sumber berita kampus (lore 129). Ide: Choir diam-diam membaca surat {{user}}, jadi petunjuk Mystery Board.
   Butuh keputusan kanon owner.
 
+- **Sisa audit fitur dangkal 2026-10-23** (`audit/AUDIT_2026-10-23_1_kedalaman_fitur.md`; owner memilih batch 2, 4, 5, selesai di
+  1.98.1–1.98.3; draft-nya tidak pernah di-commit dan dihapus di 1.98.3, jadi rancangan yang tidak dipilih diringkas di sini): **T7 Dorm Days** (event chances public lesson, type contest, booth, dorm
+  tournament dan makan malam penutup lewat kondisi chance baru `dorm`/`year`; beat ambience `ev`; pemenang tournament diundi `ctStr`
+  dan `rollTable`; opsional chance Circus, Harvest, Remembrance); **T2 Battle** (edge Fortune lawan roster lewat `ctStr`/`contestUser`
+  → `c.contest`, kartu aturan `battle` sebagai panduan Combat_role tanpa angka, pengingat akibat pertarungan, angka Fortune di panel);
+  **F1–F7** alat UI tanpa biaya prompt (lipatan "This week" dari `sh:replyDelta`, jatah bond harian/mingguan dari `$eng.daily`/`bweek`,
+  waktu jalan di chip Next, tanda bentrok jadwal di Planner, progres penjelajahan di Map, kotak cari Journal, Clue di dossier).
 - **Kingdom Competition di kampus** (sisa `DRAFT_kingdom_competition.md` §7, 1.84.0 membuat baris berita saja): peluang event selama
   minggu Kingdom untuk {{user}} yang tidak ikut tim (berita siang di announcement pillar, buku taruhan Aiden, broadsheet keluarga Linus
   lore 410) lewat `data/event_frame.json` `chances` `kingdom_comp`.

@@ -855,6 +855,13 @@ The first academy flight (the airship), then the Grand Vast Forest.
 - [ ] A research Project finished: its subject's proficiency +2; a club Project: the club's Field +2 and a line in Monday's
       Academy Newspaper [1.98.2].
 
+### SQ-H The Healing Ward and the Council petition [1.98.3]
+- [ ] Charles hurt: a stay in the Medical Centre (30 minutes for a minor injury, an hour for a moderate one, two for a serious one)
+      treats it once: the Body tab's Heals_by moves nearer or the minor injury is gone; the Journal says so [1.98.3].
+- [ ] Charles on the Council (Year 2, or if he joins): on some Saturdays `<now>` brings a student with a petition to the 10:00
+      meeting; take it up and the update has a help Interaction and student_notice_help; skip it and the Journal says another member
+      took it up [1.98.3].
+
 ### SQ1 Swipes, edits and rewinds
 - [ ] Swipe a reply: the new prose and the bracelet's state replace the rejected one [1.9.1].
 - [ ] After a reply, edit the Student file or a Settings row: that reply stays last with its swipe arrow, and the bracelet stays on it.

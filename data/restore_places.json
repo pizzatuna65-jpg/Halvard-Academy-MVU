@@ -57,7 +57,13 @@
   "medical_centre": {
    "restores": "stamina",
    "usual": 1.75,
-   "summary": "Stamina x1.75 while resting in the ward; x1.25 in exam weeks, competition weeks and the week after the Thinning",
+   "summary": "Stamina x1.75 while resting in the ward; x1.25 in exam weeks, competition weeks and the week after the Thinning; treatment in the Healing Ward: an injury is treated once after minutes there by severity (minor 30 heals, moderate 60 halves the time left, serious 120 two days nearer, critical stabilised)",
+   "treats": {
+    "minor": 30,
+    "moderate": 60,
+    "serious": 120,
+    "critical": 60
+   },
    "rules": [
     {
      "if": {
