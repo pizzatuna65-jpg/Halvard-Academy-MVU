@@ -851,6 +851,12 @@ The first academy flight (the airship), then the Grand Vast Forest.
 
 ## Side quests (any time)
 
+### SQ-CACHE The prompt cache [1.99.8]
+*Do:* after importing 1.99.8, play 5 replies in a row without swipes and with no long pause, then open OpenRouter → Activity.
+- [ ] Cached tokens per request from the second reply on: about twice what 1.99.7 had (the preset alone before; now the preset plus
+      the card's constant lore, ±13,000 more); the cache hit rate in Explore rises from about 18% [1.99.8].
+- [ ] The narrator still uses the lore of a place or person named in the scene as before (keyword lore now sits after the rules) [1.99.8].
+
 ### SQ-SC Summaryception instead of VectFox [1.99.1]
 *Do:* in a copy of the chat (a branch), turn VectFox off and set up Summaryception 5.5.4 as `docs/ECOSYSTEM.md` → Summaryception says
 (your SillyTavern has vadash's fork 24.29.0; these checks are for 5.5.4). Process the backlog, then play a few replies.

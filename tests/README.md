@@ -18,4 +18,5 @@ that need a connected SillyTavern session: `docs/TEST_CHECKLIST.md`.
 - **Stress:** `npm run stress` (`tests/stress/run_stress.cjs` runs `fuzz.cjs`, `fuzz_builder.cjs` and `sim_year.cjs`, a campaign
   year's state size and update time, each even when one fails, and reports every exit code); `node tests/stress/memory_soak.cjs 3000` (memory invariants and budget).
 - **Browser previews:** `tests/preview/` (`smoke_all_panels.py`, `render_ui.py`, `render_bar.py` with sample states).
-- **Token cost:** `node tests/token_audit.cjs`; a chat's keyword lore, replayed as SillyTavern scans it: `node tests/lore_replay.cjs <chat.jsonl> [card.json] [--each]` (1.99.6).
+- **Token cost:** `node tests/token_audit.cjs`; a chat's keyword lore, replayed as SillyTavern scans it: `node tests/lore_replay.cjs <chat.jsonl> [card.json] [--each]` (1.99.6); how much of the card's prompt part a reply shares with the
+  one before (a provider's prefix cache): `node tests/cache_replay.cjs <chat.jsonl> [card.json] [--each]` (1.99.8).
