@@ -1,4 +1,17 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Saffi')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Saffi')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Saffi') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'saffi') && !/(^|[^\p{L}\p{N}])(tamberlane|saffi)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+[Saffranelle "Saffi" Tamberlane]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Saffi')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 19 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
+Appearance: Long fire-red hair (ponytail when fighting or training), dark blue eyes, sun-tanned skin from a life on the road with the caravan, pointed cat ears with white tufts (no human ears), long red cat tail, human face and hands. Athletic, defined abs. Wears a customised uniform: green vest with a red bow over a cropped short-sleeved shirt that leaves her midriff and abs bare, skirt or trousers, boots; t-shirts and shorts off duty.
+Magic: Spiritual — Strength and Reflexes. Signature "Beast Mode": spirit-formed claws over her wrists for melee.
+Personality: Excitable, loyal, stubborn, physical, a bit of an airhead.
+Club: Running Club.
+Speech: Genki, loud, blunt. Swears by "Asmoday's mercy!" when frustrated.
+Haunts: Sports Field, Gymnasium. Bored senseless by Cathedral sermons.
+<%_ } else { /* full lore */ _%>
 [Saffranelle "Saffi" Tamberlane]
 <%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Saffi')) { _%>
 Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
@@ -18,4 +31,4 @@ Club: Running Club.
 Speech: Genki, loud, blunt. Swears by "Asmoday's mercy!" when frustrated.
 Emotional tells: Joy is loud and physical; she lifts people off the ground. Frustration comes out as "Asmoday's mercy!", a lashing tail, and a burst of push-ups wherever she stands. Worry sends her running laps until she can think. Homesickness she runs off too, alone before dawn, with her family's latest letter in her pocket. Fear she charges straight at. The one thing that makes her go quiet is Lenna getting hurt, and a silent Saffi frightens everyone who knows her.
 Haunts: Sports Field, Gymnasium. Bored senseless by Cathedral sermons.
-<%_ } _%>
+<%_ } } _%>

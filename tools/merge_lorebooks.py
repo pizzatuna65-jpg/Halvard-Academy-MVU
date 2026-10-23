@@ -1826,6 +1826,52 @@ def campus_map_card(C):
     C[132]['content'] = t.replace(lines['Movement: '].group(0), CAMPUS_WALK_CARD + '\n')
     C[26]['content'] = C[26]['content'].rstrip('\n') + '\n' + lines['Club venues: '].group(0).rstrip('\n')
 
+# 1.99.6 (bug-hunt audit 2026-10-23 T5): someone only mentioned gets what is commonly known about them, not their whole lore. An NPC's
+# keyword entry fires when their name is in the last two messages; with no full sheet it printed their whole lore (narrator-only
+# secrets, backstory, goals: ±1,200 tokens) for a character who may not speak or act this reply (504). Now, unless they are here
+# (Scene.Present, a brief sheet) or the player's new message names them (Prompt Template's lastUserMessage: they may be about to
+# appear), the entry prints the public layer of the info layers (data/bond_rules.json layers.of.public: role, looks, club, speech,
+# magic, haunts...), the first sentence of their Personality and their Now line, without <narrator_only>. EJS control lines stay, so
+# every block (age, graduation, transfer) still balances. Features toggle mention_brief (off: the whole lore, as before). The full
+# lore follows the marker line below; tools/gen_mvu_entries.py GATE_RX takes it from there for the Cast Sheet.
+BRIEF_LABELS = set(json.load(open(P('data/bond_rules.json'), encoding='utf-8'))['layers']['of']['public']) | {'Now', 'Current Student Council role'}
+BRIEF_NOTE = "Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them."
+FULL_MARK = '<%_ } else { /* full lore */ _%>'
+BRIEF_LABEL_RX = re.compile(r"^([A-Z][\w' /-]{0,40}?)(?: \([^)]*\))?:\s")
+def brief_lore(text):
+    t = re.sub(r'[ \t]*<narrator_only>[\s\S]*?</narrator_only>', '', text)
+    out, keep = [], False
+    for line in t.split('\n'):
+        if not line.strip(): continue   # a removed <narrator_only> line leaves a gap inside a list (Kanae's Magic)
+        if '<%_' in line or '_%>' in line: out.append(line); continue
+        if re.match(r'^\[[^\]\n]+\]$', line): out += [line, BRIEF_NOTE]; keep = False; continue
+        m = BRIEF_LABEL_RX.match(line)
+        if m and m.group(1) == 'Personality':
+            s = re.match(r'(.+?[.!?])(?=\s|$)', line); out.append(s.group(1) if s else line); keep = False
+        elif m:
+            keep = m.group(1) in BRIEF_LABELS
+            if keep: out.append(line)
+        elif keep and line.startswith('- '): out.append(line)
+        else: keep = False
+    return '\n'.join(l for l in out if l.strip())
+def mention_brief(N, npcs):
+    gate = re.compile(r"^<%_ if \(!\(\(getvar\('stat_data\.\$ui\.cast'\) \|\| \{\}\)\.full \|\| \[\]\)\.includes\('(\w+)'\)\) \{ _%>\n([\s\S]*)\n<%_ \} _%>$")
+    n = 0
+    for u, e in N.items():
+        m = gate.match(e['content'])
+        if not m: continue
+        nid, full = m.group(1), m.group(2)
+        rec = npcs[nid]
+        forms = sorted({nid, *(w for w in re.split(r"[\s-]+", rec['name']) if len(w) >= 3 and w[0].isupper()), *([rec['nickname']] if rec.get('nickname') else [])}, key=len, reverse=True)
+        alt = '|'.join(re.sub(r'([.*+?^${}()|\[\]\\/])', r'\\\1', f.lower()) for f in forms)
+        cond = (f"!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {{}}).brief || []).includes('{nid}')"
+                f" && !Object.keys(getvar('stat_data.Scene.Present') || {{}}).some(k => String(k).toLowerCase().split(/\\s+/)[0] === '{nid.lower()}')"
+                f" && !/(^|[^\\p{{L}}\\p{{N}}])({alt})(?![\\p{{L}}\\p{{N}}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\\s*\\(scene: [^()\\n]*\\bt\\d+\\)\\s*$/, ''))")
+        e['content'] = (f"<%_ if (!((getvar('stat_data.$ui.cast') || {{}}).full || []).includes('{nid}')) {{ if ({cond}) {{ _%>\n"
+                        f"{brief_lore(full)}\n{FULL_MARK}\n{full}\n<%_ }} }} _%>")
+        n += 1
+    assert n >= 70, n
+
 # ================= v39 standalone =================
 C39, N39 = copy.deepcopy(C), copy.deepcopy(N)
 apply_lore_edits(C39, N39)
@@ -1931,7 +1977,8 @@ for uid, nid in ((128, 'Dante'), (250, 'Florian')):
     assert header in Nc[uid]['content'], header
     Nc[uid]['content'] = Nc[uid]['content'].replace(header, header + role_line, 1)
 # 1.5.1 (Batch B, P1): while an NPC has a full sheet in the Cast Sheet (custom 509, engine $ui.cast.full) their keyword entry
-# prints nothing, so the lore is not sent twice. Mentioned but not present, or present beyond the cap: the keyword entry works as before.
+# prints nothing, so the lore is not sent twice. Present beyond the cap, or named in the player's new message: the whole lore by keyword;
+# only mentioned: the public part (1.99.6 mention_brief, which rebuilds this gate last).
 for u, e in Nc.items():
     nid = npc_id(e)
     if nid: e['content'] = f"<%_ if (!((getvar('stat_data.$ui.cast') || {{}}).full || []).includes('{nid}')) {{ _%>\n{e['content']}\n<%_ }} _%>"
@@ -2031,6 +2078,7 @@ vesna_world(Cc, Nc, True)   # 1.97.5
 lore_activation(Cc)   # 1.35.0
 style_pass(Cc, Nc)   # 1.99.5
 campus_map_card(Cc)   # 1.99.5 (T4)
+mention_brief(Nc, json.load(open(P('data/npcs.json'), encoding='utf-8')))   # 1.99.6 (T5), last: every NPC text is final
 # merge + tagging (D2): lore -> [mvu_plot]; shared state/navigation entries stay untagged (sent to both models)
 UNTAGGED_CORE = {0, 132, 134, 131, 20}
 UNTAGGED_NPC = {97}

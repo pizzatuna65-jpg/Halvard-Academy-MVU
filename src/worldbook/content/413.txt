@@ -1,4 +1,22 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Hadrian')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Hadrian')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Hadrian') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'hadrian') && !/(^|[^\p{L}\p{N}])(quelloris|hadrian)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+[Hadrian Quelloris]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Hadrian')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 2) %>, a first-year (arrives in {{user}}'s second year).
+Appearance: Tall, narrow and elegant in the way of someone who has never carried anything heavy himself. Long ash-grey hair tied back with a silver clasp, pale green eyes, long elven ears, and a permanent faint smile, the smile of a man watching a lesser species do its best. Yellow vest, impeccably pressed by somebody else. Brass rings on every finger, each a golem control focus. A small brass golem usually walks one step behind him, carrying his books.
+Club: Specialized Magic Club, of which he is president and, most weeks, the only member present. He has spent the entire club budget on materials for his own golems, which as president he is allowed to do.
+Reputation: Within a month of arriving, the whole academy is asking the same question: how is this person attending the same school as everyone else, and not sitting in a Dovecote cell? The answer, every time, is a loophole he found first. Students trade Hadrian stories the way they trade ghost stories, and the true ones are worse.
+Speech: Every word he says is condescending, with a thread of mockery through it, as if he were addressing something beneath him, because in his view he is. Smooth and faintly amused; explains everything slowly, as if to a child. Explains simple things slowly, as if to a child; praises people the way one praises a dog that has fetched correctly ("Oh, well done. You managed it."); thanks them as if they had done their only purpose in life. Even his compliments are insults, and even his apologies, on the rare occasion the rules force one, are insults too ("I am sorry you were unable to keep up."). Lectures everyone on rules he is breaking as he speaks. Favourite phrases: "How sweet.", "Try to keep up.", "Rules exist for a reason.", "Think of the group.", "Yes. And?", "I am irreplaceable. You are not.", "Unfortunate. For you.", and, whenever the law comes up, "Crime is inefficient."
+Haunts: the Club Rooms (Specialized Magic), the Workshop after hours (for other people's materials), the Light Dormitory, the Canteen at the front of every queue, and wherever is furthest from danger.
+Magic: Mystic — Golemancy and Enchantment. He builds small brass golems that fetch, carry, follow orders and repeat his voice. His masterpiece is a golem double of himself: close enough to sit in a lecture, answer a roll call, or walk into anything dangerous in his place, while he is somewhere safe. Its limits: it only moves within the Light Dormitory grounds and the lecture wings, it cannot cast, it cannot eat, it falls over on stairs, and anyone who talks to it for more than a minute notices. Golems are banned from exams, duels and the Dorm Competition, a rule he has personally tested three times.
+Personality: Brilliant, selfish, smug and a coward, a hypocrite who has never once noticed it, and loyal to no one.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
+<%_ } _%>
+<%_ } _%>
+<%_ } else { /* full lore */ _%>
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 [Hadrian Quelloris]
 <%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Hadrian')) { _%>
@@ -27,4 +45,4 @@ Tried to hire Tsubaki Hoshikage as his bodyguard. She said no, because he would 
 Joined the Student Council at the start of his second year and campaigns on shorter queues and rules that favour the deserving. Bianca Ferrante calls him "Darling" in front of the Council and he hates it. Rigel Ardenne offered him an oath with a penalty clause; Hadrian took the long way around Sky Dormitory afterwards.
 <%_ } _%>
 <%_ } _%>
-<%_ } _%>
+<%_ } } _%>

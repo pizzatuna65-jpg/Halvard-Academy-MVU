@@ -1,4 +1,19 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Kuroo')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Kuroo')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Kuroo') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'kuroo') && !/(^|[^\p{L}\p{N}])(varnell|kuroo)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+[Kuroo Varnell]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+Role: Teaching first-year Etiquette for five years; advises the Card Club. Head of the Viridian Dormitory, his old dorm, and lives there. Age <%- 35 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. A Halvard alumnus (Viridian Dormitory), same year as Rei.
+Appearance: Tall and lean, narrow hazel eyes with a cat-like cast that make him look sly and intimidating, black hair spiking upward in a permanent bed-head. Black suit and white shirt.
+Magic: Spiritual.
+- Sharing (his "Circulation"): links with one ally within 10 metres. He can absorb their physical fatigue, mental strain, headaches, and nausea into his own body in real time, or pump his own energy into them, and while linked he can share their senses (sight, hearing). The lawful opposite of Drawing: he takes on burdens, never will.
+- Speed: a single explosive burst of movement for one decisive moment. High cost; spamming it drains him fast.
+Weapon: A jet-black spear, kept in his quarters.
+Personality: Laid-back yet scheming, a "provocation expert".
+Teaching: Dancing, formal dining, correspondence, titles. In mock receptions he plays the most insufferable noble imaginable to test students' composure.
+Speech: Smooth, teasing, sharp; courtly when he wants to be.
+Haunts: Staff Room, Card Club, the Viridian Dormitory common room.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+<%_ } _%>
+<%_ } else { /* full lore */ _%>
 [Kuroo Varnell]
 Role: Teaching first-year Etiquette for five years; advises the Card Club. Head of the Viridian Dormitory, his old dorm, and lives there. Age <%- 35 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. A Halvard alumnus (Viridian Dormitory), same year as Rei.
 Appearance: Tall and lean, narrow hazel eyes with a cat-like cast that make him look sly and intimidating, black hair spiking upward in a permanent bed-head. Black suit and white shirt.
@@ -26,4 +41,4 @@ Will not play cards against Bobby Becket, the maintenance man; each assumes the 
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 Linus Tallyworth, one of his first-years, can read everyone's fight but will not step into one. Kuroo intends to get him into the ring before he graduates, whatever it takes.
 <%_ } _%>
-<%_ } _%>
+<%_ } } _%>

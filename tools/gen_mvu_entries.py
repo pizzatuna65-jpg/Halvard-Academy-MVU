@@ -38,7 +38,8 @@ rels = json.load(open(P('data/relations.json'), encoding='utf-8'))
 TIE_ORDER = ['friends', 'rivals', 'softspot', 'protective', 'respect', 'wary', 'dislike']
 ten_d = json.load(open(P('data/tension.json'), encoding='utf-8')); tru_d = json.load(open(P('data/trust.json'), encoding='utf-8'))
 OPEN_OF = {nid: tag for tag in ('open', 'guarded', 'closed') for nid in OPN[tag]}
-GATE_RX = re.compile(r"^<%_ if \(!\(\(getvar\('stat_data\.\$ui\.cast'\) \|\| \{\}\)\.full \|\| \[\]\)\.includes\('(\w+)'\)\) \{ _%>\n([\s\S]*)\n<%_ \} _%>$")
+# 1.99.6 (T5): the keyword entry holds the public part, then the full lore after the marker (merge_lorebooks.py mention_brief)
+GATE_RX = re.compile(r"^<%_ if \(!\(\(getvar\('stat_data\.\$ui\.cast'\) \|\| \{\}\)\.full \|\| \[\]\)\.includes\('(\w+)'\)\) \{ if \([^\n]*\) \{ _%>\n[\s\S]*?\n<%_ \} else \{ /\* full lore \*/ _%>\n([\s\S]*)\n<%_ \} \} _%>$")
 def cast_npc(nid, n):
     ties = sorted([r for r in rels if r['from'] == nid], key=lambda r: (TIE_ORDER.index(r['type']), r['to']))
     ties = [r for i, r in enumerate(ties) if r['to'] not in [x['to'] for x in ties[:i]]]   # 1.6.10: one tie per person (two files can tell the same line)

@@ -1,4 +1,28 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Maple')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Maple')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Maple') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'maple') && !/(^|[^\p{L}\p{N}])(fernhollow|maple)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+[Maple Fernhollow]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Maple')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 2) %>, a first-year (arrives in {{user}}'s second year).
+Appearance: Very short, the shortest first-year by a head, and round-faced, with russet-red hair that goes cream-white at the front, the same white as the markings above her eyes and on her cheeks. Round, fluffy red panda ears and a thick ringed tail she hugs to her chest when she is nervous, which is often. Blue vest a size too big, sleeves over her hands. The ground near her feet is never quite still: pebbles shift, dust settles in rings.
+Speech: Soft, polite and quick to apologise, most often for Sobek. Talks to him out loud the way people talk to a large dog they love ("No. No. We talked about this."). Village turns of phrase slip in: she thanks the ground before she sits on it, greets spirits before people, and says "by your leave" to trees before climbing them. Calls upperclassmen "Senior" with their name until told to stop, and sometimes after.
+Club: Gardening Club.
+Haunts: Gardens, the Forest edge (up a tree, whenever she can), the Sky Dormitory tower, Combat Grounds (the far end, alone, practising). Never the Menagerie twice in one week: the animals smell Sobek and hide.
+Magic: Occult — Spirit Pact. Her pact is with Sobek, a Greater Spirit: a reptilian beast the size of a house, low-slung and heavy, pure white from snout to tail, with six amber eyes, a hide like pale river stone, and claws and teeth that go through rock. He commands the earth and fights with it and with sheer weight.
+Pact: The abilities (each its own technique):
+- Earthshaper: walls, spikes, pits and stone jaws raised from the ground anywhere Sobek can feel.
+- Rampage: Sobek's own body, a charge that goes through walls and a hide that ordinary spells break on.
+- Tremorsense: through the ground he feels every footstep within a hundred paces, and tells her.
+- Channelled: without summoning him, Maple can raise a small wall or shift a patch of ground; it costs her every time and is a fraction of his strength. She uses it only to shield.
+- Summoned: a Greater Spirit is expensive, and a first-year's reserves hold Sobek for minutes, not hours. If he is killed, she cannot call him back for three days.
+- The term: Sobek may come unsummoned if she is hurt or in real danger. It is legal and on record, and it is the reason nobody at Halvard pushes her twice.
+Personality: Sweet, gentle, earnest and anxious, the kindest person in a room and the one everyone keeps a careful distance from.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
+<%_ } _%>
+<%_ } _%>
+<%_ } else { /* full lore */ _%>
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 [Maple Fernhollow]
 <%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Maple')) { _%>
@@ -34,4 +58,4 @@ Keeps finding Tsubaki Hoshikage lost in the Gardens and walking her back to the 
 Sobek will not stay in a room with Aurelian Solmere, though he does not hide from anything else.
 <%_ } _%>
 <%_ } _%>
-<%_ } _%>
+<%_ } } _%>

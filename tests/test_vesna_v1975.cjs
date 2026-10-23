@@ -129,7 +129,8 @@ const K = E.dormContest(E.PRESENCE, 4242, 2, 'Fire', 'Control', null, {}), ve = 
 ok(ve && ve.y === 2 && K.place(ve) > K.E.length / 2, `the Dorm Competition: she enters Fire's Control bracket (Year 2) and goes out in her first bout (place ${ve && K.place(ve)} of ${K.E.length})`);
 E.trSyncAll(A0);
 ok(!E.PRESENCE.stu.Vesna && E.PRESENCE.arr.Vesna === 99 && !E.STUDENTS.Vesna, 'not transferred: not at Halvard');
-const lv = s => loreOf(renderEntry(card, 389, s));
+const fullOf = S => ({ ...S, $ui: { ...(S.$ui || {}), off: [...((S.$ui || {}).off || []), 'mention_brief'] } });   // 1.99.6: the whole lore, as for someone here (mention_brief off)
+const lv = s => loreOf(renderEntry(card, 389, fullOf(s)));
 ok(/Club: whichever club \{\{user\}\} is in/.test(lv(A)) && /Age: 19, a second-year in \{\{user\}\}'s school year\. She deserted Norvaine at the World Competition of campaign Year 1/.test(lv(A)) && /sorted her into \{\{user\}\}'s dorm \(Fire\)/.test(lv(A)) && !/grey team greatcoat/.test(lv(A)),
   'her lore after the transfer: age, dorm, club, haunts (and not the greatcoat)');
 ok(/grey team greatcoat/.test(lv(A0)) && !/Club: whichever club/.test(lv(A0)) && /Magic: Creation/.test(lv(A0)), 'before it: the World Competition self; both: her magic');

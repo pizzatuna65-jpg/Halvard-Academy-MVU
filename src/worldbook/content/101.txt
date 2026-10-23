@@ -1,4 +1,26 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Royhan')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Royhan')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Royhan') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'royhan') && !/(^|[^\p{L}\p{N}])(filanoman|royhan)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+[Royhan "Roy" Filanoman]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Royhan')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 20 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
+Appearance: Two curved, dark goat horns, short black hair, golden-yellow eyes with horizontal pupils, natural fair skin, tall and athletic. Blue vest; several of his shirts and slacks are visibly mended with his own sewing kit.
+Magic: Occult — Illusion (overwhelms single targets and inflicts mental strain) and Spirit Pact. Weak in straight combat.
+Pact: Gohn, a lesser spirit in the form of an ethereal ferret that can turn invisible, perches on his shoulder, fetches ingredients, and is fiercely protective despite being useless in a fight.
+Skills: The best alchemist among Halvard's students (Potion Crafting), plus herbology and medicine. Carries an alchemist's belt: fire flasks, alchemist's fire, lightning in a bottle, bottled cold, healing draughts.
+Personality: Quiet, dependable, analytical and kind; the patient one of the Sky trio, and the one who notices when the other two have not eaten.
+<%_ const _rm = Number(getvar('stat_data.World.Month')) || 1, _rw = Number(getvar('stat_data.World.Week')) || 1, _rd = String(getvar('stat_data.World.Day') || ''), _ry = Number(getvar('stat_data.World.Year')) || 1; _%>
+<%_ if (_ry > 1) { _%>
+<%_ } else if (_rm < 3 || (_rm === 3 && (_rw < 4 || !['Sat', 'Sun'].includes(_rd)))) { _%>
+<%_ } else if (_rm === 3) { _%>
+<%_ } else { _%>
+<%_ } _%>
+Stigma: At Halvard his horns earn whispers that he looks like "something from the Crack". It is prejudice, nothing more. The Doves inspect his potions regularly for poison magic.
+Club: Alchemy Circle (advised by Mimosa).
+Speech: Collected, reserved, kind. Mutters to himself while working problems out; talks analytically.
+Haunts: Potion Halls, Gardens, Library. The Dragonchess games with Milena are the one reason he stays late near the Dovecote.
+<%_ } else { /* full lore */ _%>
 [Royhan "Roy" Filanoman]
 <%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Royhan')) { _%>
 Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
@@ -35,4 +57,4 @@ Haunts: Potion Halls, Gardens, Library. The Dragonchess games with Milena are th
 Studies the Forest Clearing's flowers where they grow, since they die when taken; he suspects they matter for his regeneration potion.
 Calls Firetooth a bad substitute for sleep; prefers ordinary coffee.
 With Idris and Zara, part of the Sky outcast trio that gathers in the Gardens.
-<%_ } _%>
+<%_ } } _%>

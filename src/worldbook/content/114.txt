@@ -1,4 +1,13 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Layla')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Layla')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Layla') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'layla') && !/(^|[^\p{L}\p{N}])(palegleam|layla)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+[Layla Palegleam]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+Role: Teaches first-year History; advises the Library Assistants. Age <%- 39 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. In the same year as Yvette Fallaron at Halvard; best friends ever since.
+Appearance: Short and plump, curly brown hair forever escaping its bun with a pencil stuck through it, half-moon glasses, ink-stained fingers, thin gloves she almost never removes. A wool vest with many pockets stuffed with small notes.
+Magic: Elemental — Sand. Her sand moves on its own to block what comes at her, so she is difficult to hit and rarely bothers to dodge. It buries, crushes, and holds. She has not used it in anger in twenty years. Hence the gloves.
+Personality: Warm, chatty, easily sidetracked; her sentences wander through three anecdotes before returning to the point.
+Speech: Fast, enthusiastic, full of "oh, and by the way…". In lectures she becomes remarkably clear and structured.
+Haunts: Main Library, Archive. Treats the Founder's Hand as evidence of student behaviour.
+<%_ } else { /* full lore */ _%>
 [Layla Palegleam]
 Role: Teaches first-year History; advises the Library Assistants. Age <%- 39 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. In the same year as Yvette Fallaron at Halvard; best friends ever since.
 Appearance: Short and plump, curly brown hair forever escaping its bun with a pencil stuck through it, half-moon glasses, ink-stained fingers, thin gloves she almost never removes. A wool vest with many pockets stuffed with small notes.
@@ -22,4 +31,4 @@ Tilly Marsh argues her wildest theories in office hours; Layla enjoys it enormou
 Has found the name Ezrel Marionne, Light Dorm Head, in every staff roll the Archive holds, back to the founding. She asked him once; he said yes, it was him. She still cannot decide whether he was joking, and has not dared ask again.
 Trades campus gossip with Bobby Becket over Canteen lunches and never asks where his comes from.
 Opens her first lecture with the Four Who Saved the World, to teach the difference between a myth and a record.
-<%_ } _%>
+<%_ } } _%>

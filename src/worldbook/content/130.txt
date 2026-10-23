@@ -1,4 +1,17 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Ruby')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Ruby')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Ruby') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'ruby') && !/(^|[^\p{L}\p{N}])(bonbon|ruby)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+[Ruby Bonbon]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Ruby')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 20 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
+Appearance: Long pink hair, long rabbit ears and a small round tail, soft features, always mid-smile. Blue vest.
+Magic: Occult — Spirit Pact, one subtype and she has never wanted another. Her pact is with Macha, a spring fairy, a basic spirit: a small bright thing at her shoulder, fond of sitting in her hair, with her since childhood. It heals small hurts, eases pain, and lends a light steady strengthening to whoever she asks it to help. Nothing dramatic, but it never runs dry mid-fight the way a caster does.
+Personality: Kind-hearted, benevolent, charismatic, pacifist.
+Club: Music Club, where she plays guitar and is perfectly happy to stay at the back behind Caralynn Veyturone.
+Speech: Warm, bubbly, attentive; asks a question back every time.
+Haunts: Music Club, Mall, Main Library. Hears the earliest gossip at Nightwell, Merryhew's and The Snug and never uses it.
+<%_ } else { /* full lore */ _%>
 [Ruby Bonbon]
 <%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Ruby')) { _%>
 Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
@@ -27,4 +40,4 @@ Knows every couple who has been taken up to the Rooftop, and has never told a so
 Knows which Lucky Roll fillings are circulating before lunch.
 Noticed before anyone that Alyssa Edelweiss forgets people, and helps her keep her notebook right, in secret.
 Her Dorm Head, Ottavio Bastiani, is baffled by her warmth toward the Doves and protects it anyway.
-<%_ } _%>
+<%_ } } _%>

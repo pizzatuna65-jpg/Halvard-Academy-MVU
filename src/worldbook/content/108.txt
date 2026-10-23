@@ -1,4 +1,21 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Zara')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Zara')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Zara') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'zara') && !/(^|[^\p{L}\p{N}])(minallone|zara)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+[Zara Minallone]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Zara')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>, {{user}}'s year.
+Appearance: Silver hair in two careful braids (the one thing about herself she takes pride in), red eyes, very tall for an elf and always hunched to hide it. Her blue vest and blouse are baggy, so she always looks rumpled.
+Magic: Occult — Talisman and Exorcism. Writes paper charms holding stored spells: protective charms, repulsion charms, and exorcism charms meant to incapacitate. Fights from range with prepared talismans; weak without them.
+Skills: Calligraphy, writing, sewing and clothes design. Moves almost silently.
+Now: Her first weeks at Halvard have been awkward. She eats after everyone else, reads on the library's highest shelves where no one sees her, and earns points writing talismans and calligraphy commissions for clubs. She designs beautiful clothes but cannot bear to wear them.
+Personality: Low self-esteem, kind, generous, friendly once safe, awkward, shy.
+Club: Tailoring Club.
+Speech: Soft, halting and awkward; loses words mid-sentence and simply goes quiet.
+Haunts: Library highest shelves (takes shelving work), Workshop. Makes talisman charms for the Founder's Hand queue.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+<%_ } _%>
+<%_ } else { /* full lore */ _%>
 [Zara Minallone]
 <%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Zara')) { _%>
 Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
@@ -28,4 +45,4 @@ Alyssa Edelweiss, in her dorm and year, forgets her every week; Zara reintroduce
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 Sits next to Maple Fernhollow in the Canteen, a first-year in her dorm who everyone else gives a wide berth. Neither of them says much. Neither needs to.
 <%_ } _%>
-<%_ } _%>
+<%_ } } _%>

@@ -1,4 +1,18 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Dorian')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Dorian')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Dorian') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'dorian') && !/(^|[^\p{L}\p{N}])(dorian|pryce)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+[Dorian Pryce]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+Role: Teaches Control to all three years at the Combat Grounds; sells his own enchanted goods to anyone who will stand still; advises the Calligraphy Club, where the hand that keeps his immaculate ledger sets the standard. Eight years at Halvard. Age <%- 36 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. Fox Beastkin.
+Appearance: Slim and well groomed, with russet fox ears, a full russet tail brushed to a shine, and narrow amber eyes. A long coat lined, on the inside, with rows of small pockets, every one holding something for sale. A wide, warm, perfectly even smile that nobody has ever trusted, and he has never understood why.
+Magic: Mystic — Binding. Threads of pale light that wrap a limb, a weapon or a spell and hold it; he can set a binding into a cord, a ring or a charm, and sell it.
+Personality: Charming, quick, shameless and relentlessly opportunistic.
+Teaching: Control is "the art of deciding where the other person is allowed to be". His lessons are genuine, rigorous and very good, and every demonstration uses one of his products, available after class.
+Speech: Smooth, warm and friendlier than anyone needs; first names at once, "friend", "just for you", "between us". Example: "For you, friend, a special price. Don't tell the others. They'd want it too."
+Haunts: the Combat Grounds in class hours, the Workshop late at night, the Courtyards between classes, the Mall, the Academy Bazaar (his stall, every year).
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
+<%_ } _%>
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+<%_ } _%>
+<%_ } else { /* full lore */ _%>
 [Dorian Pryce]
 Role: Teaches Control to all three years at the Combat Grounds; sells his own enchanted goods to anyone who will stand still; advises the Calligraphy Club, where the hand that keeps his immaculate ledger sets the standard. Eight years at Halvard. Age <%- 36 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. Fox Beastkin.
 Appearance: Slim and well groomed, with russet fox ears, a full russet tail brushed to a shine, and narrow amber eyes. A long coat lined, on the inside, with rows of small pockets, every one holding something for sale. A wide, warm, perfectly even smile that nobody has ever trusted, and he has never understood why.
@@ -22,4 +36,4 @@ William Beckett insists he is an Attack mage; Dorian keeps telling him he is a n
 Nerys Silvarenne is the only customer who has ever out-haggled him, and she is always broke; he is fascinated.
 Hadrian Quelloris is his best customer: warding amulets, vigour tonics, anything that might make him last longer.
 <%_ } _%>
-<%_ } _%>
+<%_ } } _%>

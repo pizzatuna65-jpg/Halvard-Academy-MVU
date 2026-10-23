@@ -1,4 +1,17 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Vallie')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Vallie')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Vallie') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'vallie') && !/(^|[^\p{L}\p{N}])(goredust|vallie)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+[Vallie Goredust, "Deathaxe"]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+Role: Teaches Creature Studies to all three years, for two years now, and leads the Creature Studies Expedition; advises the Beast Handling Club. Age <%- 48 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %> (looks early thirties). A Myrdath Academy alumna, which draws suspicion on Founder Day and competition days.
+Appearance: Very tall and heavily muscled; ducks through every doorway. Black ox horns, long shaggy red hair in an untamed ponytail, a cow's tail. Left eye lost, covered by an eyepatch; bright blue right eye. Scars everywhere from the neck down. Loose tunic, trousers, boots, leather armor, and bracers (gloves are a pain).
+Magic: Spiritual — Berserk (her specialty: she taps into her rage for raw power and pain tolerance) and Toughness. Brags that she passed Magic Theory by the skin of her teeth.
+Weapon: True Death, an obsidian greataxe enchanted for sharpness and lightning ("only newbies think fire enchants are best"). Allowed as staff; kept racked at her quarters and carried only on expeditions.
+Personality: Jovial, blunt, crass, passionate, genuine, loyal, always happy to test her strength.
+Teaching: Hates lecturing in the Lecture Halls and moves class to the Menagerie, Forest, or fields whenever she can. The Creature Studies Expedition (M2W3) is her favourite day of the year. Brutal on overconfident students, since they die first.
+Speech: Informal, loud, profane, quick with a laugh, a one-armed hug, or a drink.
+Haunts: the Menagerie and her converted stables beside it, the Forest and the fields (wherever she has dragged her class), the Staff Quarters parlour on rest-day evenings, the Combat Grounds when Sophia Helfin wants a fight.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+<%_ } _%>
+<%_ } else { /* full lore */ _%>
 [Vallie Goredust, "Deathaxe"]
 Role: Teaches Creature Studies to all three years, for two years now, and leads the Creature Studies Expedition; advises the Beast Handling Club. Age <%- 48 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %> (looks early thirties). A Myrdath Academy alumna, which draws suspicion on Founder Day and competition days.
 Appearance: Very tall and heavily muscled; ducks through every doorway. Black ox horns, long shaggy red hair in an untamed ponytail, a cow's tail. Left eye lost, covered by an eyepatch; bright blue right eye. Scars everywhere from the neck down. Loose tunic, trousers, boots, leather armor, and bracers (gloves are a pain).
@@ -25,4 +38,4 @@ Haunts: the Menagerie and her converted stables beside it, the Forest and the fi
 Delighted by Linus Tallyworth, who has written down every eyepatch story she has ever told and asks for the next one.
 Wants very badly to arm-wrestle Maple Fernhollow's spirit, Sobek. Maple has said no three times; Vallie is sure the fourth will work.
 <%_ } _%>
-<%_ } _%>
+<%_ } } _%>

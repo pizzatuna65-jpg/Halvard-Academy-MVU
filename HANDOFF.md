@@ -3,20 +3,21 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.99.5** (2026-10-23): the bug hunt is under way. Its audit `audit/AUDIT_2026-10-23_2_audit_menyeluruh.md`
-(untracked) lists 8 batches in §8, one release each as 1.99.N; batches 1–4 are done (1.99.2 one reading of the story, 1.99.3 the card's
-rule wins in the preset, 1.99.4 each rule once, 1.99.5 the style pass: tics thinned, the preset's banned words out of the card's own
-text, smells out of Feel lines, a new opening message, the card's Campus Map without the minute list). The enabled preset is 18,556
-tokens, 44 under `test_preset`'s budget. Memory: VectFox (option 1) or Summaryception 5.5.4 (option 2), one per chat. Live checks: the
-campaign quest log `docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the card
-and the preset, Q0.1; Summaryception: SQ-SC).
+**Snapshot:** card **v1.99.6** (2026-10-23): the bug hunt is under way. Its audit `audit/AUDIT_2026-10-23_2_audit_menyeluruh.md`
+(untracked) lists 8 batches in §8, one release each as 1.99.N; batches 1–5 are done (1.99.2 one reading of the story, 1.99.3 the card's
+rule wins in the preset, 1.99.4 each rule once, 1.99.5 the style pass, 1.99.6 someone only mentioned gets the public part of their lore,
+a Features toggle, and `tests/lore_replay.cjs` to measure a chat's keyword lore). The enabled preset is 18,556 tokens, 44 under
+`test_preset`'s budget. Memory: VectFox (option 1) or Summaryception 5.5.4 (option 2), one per chat. Live checks: the campaign quest log
+`docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the card and the preset,
+Q0.1; Summaryception: SQ-SC).
 
-**Next task:** the bug-hunt audit's batch 5 (T5: a short lore variant for a character who is only mentioned, not present; measured
-before and after on a replay of the owner's chat) as 1.99.6, then batches 6–8 in §8's order, then 2.0 polish. The World Competition's
-Year 2 host (Caelmar: Area, map, liner) waits in FUTURE_PLANS §1 [YEAR 2]. Alongside it, the owner plays the quest log; their reports
-and chat exports bring the playtest fixes. MS3 stage 2 and the NPC dialogue audit's U1, U3–U5 wait in `planning/FUTURE_PLANS.md` §2 for
-a campaign export. Batch 8 (chapters) is planned in `planning/DRAFT_bab_baru.md`: build it at about 20,000 messages, slow saves or a
-chat file near 100 MB.
+**Next task:** the bug-hunt audit's batch 6 (E2: a canon place in the VectFox example; E4: a once-per-chat warning when VectFox and
+Summaryception are both on, after verifying VectFox's settings keys in its source; the E1 note on Summaryception's cost) as 1.99.7, then
+batches 7–8 in §8's order (7 waits for the owner's cached-token numbers from OpenRouter), then 2.0 polish. The World Competition's Year 2
+host (Caelmar: Area, map, liner) waits in FUTURE_PLANS §1 [YEAR 2]. Alongside it, the owner plays the quest log; their reports and chat
+exports bring the playtest fixes. MS3 stage 2 and the NPC dialogue audit's U1, U3–U5 wait in `planning/FUTURE_PLANS.md` §2 for a campaign
+export. Batch 8 (chapters) is planned in `planning/DRAFT_bab_baru.md`: build it at about 20,000 messages, slow saves or a chat file near
+100 MB.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

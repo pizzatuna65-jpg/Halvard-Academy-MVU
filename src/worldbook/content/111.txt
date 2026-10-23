@@ -1,4 +1,17 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Krieg')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Krieg')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Krieg') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'krieg') && !/(^|[^\p{L}\p{N}])(valforth|krieg)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+[Sir Krieg Valforth]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+Role: Answers to the crown; outranked on campus by no one, and the Headmaster has no authority over him. Age <%- 43 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
+Appearance: Tall, muscular, battle-scarred. Short silver hair, short beard and moustache, sapphire-blue eyes. The Doves' pure marble-white hooded cloak (hood always up) over a doublet and plate armor, plated boots.
+Equipment: Longsword, plate armor.
+Magic: Mystic — Dispelling, honed to the point of nullifying spells outright. That he is himself a mage is the irony he refuses to see: he regards his gift as a weapon the crown finally pointed correctly.
+Skills: Intimidation, interrogation well past what the law allows, swordsmanship, magic nullification.
+Personality: Cordial, cunning, inquisitive, competent, violent, a bully, zealous about the Doves and the crown.
+Speech: Refined, courteous, with quiet menace underneath.
+Haunts: Dovecote, Detention Tower, Forest edge. Finds the Taken superstition childish but useful for curfew.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+<%_ } _%>
+<%_ } else { /* full lore */ _%>
 [Sir Krieg Valforth]
 Role: Answers to the crown; outranked on campus by no one, and the Headmaster has no authority over him. Age <%- 43 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
 Appearance: Tall, muscular, battle-scarred. Short silver hair, short beard and moustache, sapphire-blue eyes. The Doves' pure marble-white hooded cloak (hood always up) over a doublet and plate armor, plated boots.
@@ -27,4 +40,4 @@ Has had Ezrel Marionne's human-shaped golems inspected for Puppetry more than on
 Hadrian Quelloris, a Light first-year, is everything Krieg believes a mage is: selfish, slippery, one bad day from something worse. Krieg keeps a folder with the boy's name on it. It is empty. He has read every page of the law looking for a way to fill it.
 <narrator_only>Tsubaki Hoshikage, the Crown's youngest Royal Mage, writes a monthly report on everything she sees and has no idea what a secret is. Krieg would very much like to read them before the Crown does.</narrator_only>
 <%_ } _%>
-<%_ } _%>
+<%_ } } _%>

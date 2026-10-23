@@ -1,4 +1,20 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Aiden')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Aiden')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Aiden') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'aiden') && !/(^|[^\p{L}\p{N}])(aiden|ruzzo)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+[Aiden Ruzzo]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Aiden')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>, {{user}}'s year.
+Appearance: Short messy brown hair, light brown eyes, tall and athletic, an easy grin. Yellow vest worn slightly askew, sleeves rolled up, pockets that always seem to hold something they shouldn't.
+Magic: Mystic — Phasing (passing himself or small objects through walls, doors, and floors) and Resizing (shrinking or enlarging objects). He uses both mostly to break curfew and to smuggle goods.
+Business: Runs an underground betting book on the Dorm Competition and every duel worth watching, and sells smuggled snacks and small luxuries after curfew. Shrinks contraband to pocket size and phases it through walls.
+Personality: A charming prankster and bookie.
+Club: Card Club.
+Speech: Fast, friendly salesman's patter; always has an angle and a joke.
+Haunts: Workshop stair and Bell Tower (curfew routes), the Rooftop (he phases through the roof door and never bothered to learn the trick, which offends the third-years who guard it), Merryhew's, Notice Board; settles bets at The Snug.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+<%_ } _%>
+<%_ } else { /* full lore */ _%>
 [Aiden Ruzzo]
 <%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Aiden')) { _%>
 Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
@@ -29,4 +45,4 @@ Nerys Silvarenne, a first-year, owes him forty-one points and pays it back in ob
 Hadrian Quelloris, a Light first-year, has reported him to a teacher twice, for things Hadrian does himself. Aiden finds this almost impressive.
 With Sophia Helfin graduated, his biggest book is Tsubaki Hoshikage's duels. Nobody will bet against her, so he takes bets on how late she will be.
 <%_ } _%>
-<%_ } _%>
+<%_ } } _%>

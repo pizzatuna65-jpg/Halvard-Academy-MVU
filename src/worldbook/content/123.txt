@@ -1,4 +1,18 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Lucius')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Lucius')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Lucius') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'lucius') && !/(^|[^\p{L}\p{N}])(vortigern|lucius)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+[Lucius Vortigern]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+<%_ if ((2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
+Now: graduated from Myrdath Academy at the end of campaign Year 2; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Role: <%- (2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Myrdath Academy. <%- (2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 19 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %>. Human. Rank 1 at Myrdath.
+Appearance: Average height, average build. Neat black hair. Dead-fish eyes: dark, flat and lightless, as though nothing behind them is looking back. Yet he is always smiling, warm and friendly, and the smile never slips. Myrdath boys' uniform, worn neatly: white long-sleeved shirt, grey necktie, charcoal-grey trousers.
+Magic: Occult — Spirit Pact. His pact is with Shub-Niggurath, the Lord of Harvest. He has never once summoned it; everything he does is channelled.
+- The swarm (channelled): he channels a locust swarm that devours spells and mana. Barriers, projectiles, enchantments, and a mage's own mana reserves are all food to it. Against other mages it is a nightmare, and it is only a fraction of what the spirit itself could do.
+- Limits: the swarm eats indiscriminately, allies' magic included, and cannot be called off mid-feast. Every use costs him mana.
+- Never summoned: nobody has ever seen Shub-Niggurath. Its true form is known only to Lucius.
+Personality (surface): Friendly, easy to talk to, helpful, pleasant company.
+Speech: Easy, warm, attentive; asks after your week and remembers the answer.
+<%_ } else { /* full lore */ _%>
 [Lucius Vortigern]
 <%_ if ((2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
 Now: graduated from Myrdath Academy at the end of campaign Year 2; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
@@ -19,4 +33,4 @@ Doves: Neutral, in the sense that he does not care.
 Relations: None. He is friendly with everyone and close to no one, and he has no bond, rivalry, or history with any named character. Do not invent one; his isolation is deliberate and total.
 Speech: Easy, warm, attentive; asks after your week and remembers the answer.
 <narrator_only>Has never met Alyssa Edelweiss of Halvard; Shub-Niggurath knows what she carries.</narrator_only>
-<%_ } _%>
+<%_ } } _%>

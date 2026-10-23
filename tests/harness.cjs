@@ -105,13 +105,14 @@ process.on('exit', () => { if (fails) { console.log(`${fails} FAILED`); process.
 // (stripped); "@@if <expr>" drops the entry before the scan unless <expr> holds (ST-Prompt-Template handler.ts applyDecorators).
 // The Cast Sheet (509) is a group: its head 509, the per-NPC sheets (600+) still standing and its tail 599, in insertion order and
 // joined with "\n" as SillyTavern joins one depth's entries (script.js worldInfoDepth), then rendered as one template.
-// card: the parsed card (or its data); S: the state; gv: a getvar to use instead of reading S.
-function renderEntry(card, uid, S, gv) {
+// card: the parsed card (or its data); S: the state; gv: a getvar to use instead of reading S; locals: more names the template sees
+// (1.99.6: lastUserMessage, as Prompt Template gives it).
+function renderEntry(card, uid, S, gv, locals) {
   const ejs = require('ejs'), E = (card.data || card).character_book.entries, getvar = gv || (k => _.get({ stat_data: S }, k));
   const strip = e => { let c = e.content, keep = true; while (c.startsWith('@@')) { const nl = c.indexOf('\n'), line = c.slice(0, nl);
     if (line.startsWith('@@if ')) keep = keep && ejs.render(`<%- !!(${line.slice(5)}) %>`, { getvar }) === 'true'; c = c.slice(nl + 1); } return keep ? c : null; };
   const group = uid === 509 ? E.filter(e => e.id === 509 || e.id === 599 || (e.id >= 600 && e.id < 700)).sort((a, b) => a.insertion_order - b.insertion_order) : [E.find(e => e.id === uid)];
-  return ejs.render(group.map(strip).filter(c => c !== null).join('\n'), { getvar });
+  return ejs.render(group.map(strip).filter(c => c !== null).join('\n'), { getvar, ...(locals || {}) });
 }
 // 1.60.0: a built lore entry's own text, without build_card's Lore_changes overlay (LORE_OPEN … LORE_CLOSE)
 const LORE_OPEN_RX = /^((?:@@[^\n]*\n)*)<%_ \{ const _lc = getvar\('stat_data\.Campus_State\.Lore_changes'\)[^\n]*\n[^\n]*\n<%_ \} if \(!\(_lx && _lx\.Replace\)\) \{ _%>\n/;

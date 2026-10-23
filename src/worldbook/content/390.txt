@@ -1,4 +1,18 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Kazimir')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Kazimir')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Kazimir') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'kazimir') && !/(^|[^\p{L}\p{N}])(kazimir|zorin)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+[Colonel Kazimir Zorin]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+Role: Coach of Norvaine's national four; a colonel of the Norvaine army and the scientist behind Project Bessmertnik. Age <%- 34 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. Human, without magic.
+Appearance: Tall and spare, and he looks a decade younger than thirty-four. Cyan hair in a medium-long layered wolf cut, long bangs framing a narrow face; crimson eyes that rest on people the way one reads an instrument. A Norvaine officer's grey greatcoat, gloves always on, a chain under the collar.
+Personality: Cold, pragmatic, and cruel out of indifference rather than malice: people are variables, and he has never once been troubled by what an experiment cost.
+Magic: none. He has never needed it; he has the Shrouds, and his own devices.
+Equipment: the project's anti-mage devices, built as a contingency in case Vesna ever turns on him while the egg is not in his hands.
+- Stun pistol: fires stun rounds at range; a hit locks a mage's body for a few breaths, long enough for a Shroud to close in.
+- The Tishina cuff (Slavic for "silence"), on his left wrist: raises a barrier that scrambles the mana around him, so every spell cast inside it runs unstable, sputters or goes wild. It is the answer to Vesna's one weakness: the ambient mana she shapes becomes unusable.
+- Bogatyr serum (after the warriors of Norvaine's old tales): a body-strengthening injection, usually given to a Shroud before a fight; cornered, he uses it on himself.
+Speech: Quiet, precise, clinical. Calls Vesna "the instrument" in his reports and "Vesna" only to give an order. "Vesna. Duty."
+<%_ { const _tv = (Number((getvar('stat_data.Campus_State.Transfers') || {}).Vesna) || 0); if (_tv) { _%>
+<%_ } } _%>
+<%_ } else { /* full lore */ _%>
 [Colonel Kazimir Zorin]
 Role: Coach of Norvaine's national four; a colonel of the Norvaine army and the scientist behind Project Bessmertnik. Age <%- 34 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. Human, without magic.
 Appearance: Tall and spare, and he looks a decade younger than thirty-four. Cyan hair in a medium-long layered wolf cut, long bangs framing a narrow face; crimson eyes that rest on people the way one reads an instrument. A Norvaine officer's grey greatcoat, gloves always on, a chain under the collar.
@@ -16,4 +30,4 @@ Relations: Vesna Zvezdova obeys him; "duty" in his voice is the word that turns 
 <%_ { const _tv = (Number((getvar('stat_data.Campus_State.Transfers') || {}).Vesna) || 0); if (_tv) { _%>
 <narrator_only>Koschei's Needle is no longer his: {{user}} took it from him at the World Competition of campaign Year <%- _tv %>, and Vesna deserted Norvaine. He wants both back and cannot ask for either openly.</narrator_only>
 <%_ } } _%>
-<%_ } _%>
+<%_ } } _%>

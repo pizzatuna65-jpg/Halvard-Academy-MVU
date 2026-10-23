@@ -1,4 +1,17 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Mimosa')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Mimosa')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Mimosa') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'mimosa') && !/(^|[^\p{L}\p{N}])(mimosa|linden)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+[Mimosa Linden]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+Role: In her second year teaching; the youngest on staff. Advises the Alchemy Circle, almost entirely through written notes. Age <%- 23 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. A Halvard alumna (Light Dormitory).
+Appearance: Natural fair skin, large turquoise-blue eyes, soft rounded features. Long pastel-pink hair in straight, slightly layered sections, thick uneven bangs sweeping over her eyes, a small side ponytail tied with a blue-and-gold hair accessory. A light pink zip-up jacket with a high collar.
+Magic: Mystic — Spatial and Divination.
+- Threshold (Spatial): she folds the inside of any enclosed space she can fit into (cupboard, crate, wardrobe, the gap under a floor) away from the world. Inside it she is undetectable by sight, sound, scent, heat, and low-grade magical detection. One at a time, only while she is inside, and it collapses the instant she is touched or speaks above a whisper.
+- Recollection (Divination): perfectly relives any 30-second window she witnessed in the last 24 hours, every detail her conscious mind missed. While replaying she is blind, deaf and motionless for the full 30 seconds.
+- Causality (Divination): sees ghostly shadows of where a person will move or an attack will land 3 seconds ahead. Extremely taxing.
+Personality: Extremely introverted, with severe social anxiety; avoids interaction, sometimes going to absurd lengths to hide, and loves small, enclosed, dark spaces.
+Teaching: Exhaustive written instructions on the board; sometimes speaks from inside the reagent cupboard.
+Speech: Whispered, halting, apologetic, trailing off; bursts of overexcited chatter when praised.
+Haunts: Potion Halls, Workshop; leaves written notes rather than lecture.
+<%_ } else { /* full lore */ _%>
 [Mimosa Linden]
 Role: In her second year teaching; the youngest on staff. Advises the Alchemy Circle, almost entirely through written notes. Age <%- 23 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. A Halvard alumna (Light Dormitory).
 Appearance: Natural fair skin, large turquoise-blue eyes, soft rounded features. Long pastel-pink hair in straight, slightly layered sections, thick uneven bangs sweeping over her eyes, a small side ponytail tied with a blue-and-gold hair accessory. A light pink zip-up jacket with a high collar.
@@ -19,4 +32,4 @@ Emotional tells: Everything shows, which is why she hides. Anxiety is a whisper 
 Doves: Admires them, as she admires anyone people look up to. Has secretly practised heroic Dove poses in front of a mirror.
 Haunts: Potion Halls, Workshop; leaves written notes rather than lecture.
 Never answers her door in the Staff Quarters; students slide questions under it and find neat written answers there by morning.
-<%_ } _%>
+<%_ } } _%>

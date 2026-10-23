@@ -13,7 +13,8 @@ console.log('Year 2 1.7.4');
 const rd = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const cardJ = JSON.parse(rd('dist/Eldrasil_Halvard.json')).data;
 const entry = uid => cardJ.character_book.entries.find(e => e.id === uid).content;
-const R = (uid, S) => renderEntry(cardJ, uid, S);   // 1.48.0: the Cast Sheet is a group
+const fullOf = S => ({ ...S, $ui: { ...(S.$ui || {}), off: [...((S.$ui || {}).off || []), 'mention_brief'] } });   // 1.99.6: the whole lore, as for someone here (mention_brief off)
+const R = (uid, S) => renderEntry(cardJ, uid, fullOf(S));   // 1.48.0: the Cast Sheet is a group
 const npcs = JSON.parse(rd('data/npcs.json'));
 const W = (S, w, ops = []) => applyPatch(S, [...Object.entries(w).map(([k, v]) => ({ op: 'replace', path: '/World/' + k, value: v })), ...ops]);
 const here = ids => ({ op: 'replace', path: '/Scene/Present', value: Object.fromEntries(ids.map(i => [i, { Note: '' }])) });

@@ -1,4 +1,18 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Kira')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Kira')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Kira') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'kira') && !/(^|[^\p{L}\p{N}])(brannock|kira)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+[Kira Brannock]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+<%_ if ((2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
+Now: graduated from Ashvale Academy at the end of campaign Year 2; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Role: <%- (2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Ashvale Academy. <%- (2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 19 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %>. Panther Beastkin. Defense role on Ashvale's team.
+Appearance: Tall, short black hair, gold eyes, natural tan skin, panther ears and a long black tail. Ashvale's uniform worn roughly: cream tunic hanging open with the sleeves rolled up, brown leather belt, deep green half-cape, deep green pleated skirt, knee-high brown boots.
+Magic: Elemental — Metal.
+- Walls: raises metal walls in an instant to shield herself and her team.
+- Shot: launches metal like artillery, from heavy balls that hit like cannon fire to small ones fired like bullets.
+- Rods: forges metal rods for Elion Villeneuve to turn into Excalibur. Made to hold his power, they serve him far better than whatever happens to be lying around.
+Personality: Tomboy, rough, aggressive, short-tempered.
+Speech: Blunt, loud, rough; cares out loud by yelling at people.
+<%_ } else { /* full lore */ _%>
 [Kira Brannock]
 <%_ if ((2 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
 Now: graduated from Ashvale Academy at the end of campaign Year 2; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
@@ -12,4 +26,4 @@ Magic: Elemental — Metal.
 Personality: Tomboy, rough, aggressive, short-tempered. Quick to shout and quicker to swing. Underneath it she is fiercely loyal and caring, and anyone on her side is someone she will stand in front of.
 Relations: Elion Villeneuve, a year below her, is the one she stands in front of; she keeps him armed and yells at him for taking hits she should have blocked. Yells at Mirelle Lullwyn to wake up, is ignored every time, and still ends up guarding her while she sleeps. Theodore Wrenfield teases her temper and she can never stay angry at him. She hates that he pays for every wound, so she blocks harder than anyone.
 Speech: Blunt, loud, rough; cares out loud by yelling at people.
-<%_ } _%>
+<%_ } } _%>

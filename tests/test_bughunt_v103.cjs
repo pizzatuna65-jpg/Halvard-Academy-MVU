@@ -151,7 +151,7 @@ const txt = now(G);
 ok(/Likely around[^\n]*Caspian/.test(txt) && !/Likely around[^\n]*Irene/.test(txt) && /Irene: Graduated/.test(txt), 'Irene moves from habits to status on record');
 
 console.log('F10 Royhan qualifies only after the Dorm Competition');
-const roy = (m, w, d) => ejs.render(fs.readFileSync(path.join(ROOT, 'src/worldbook/content/101.txt'), 'utf8'), { getvar: k => ({ 'stat_data.World.Month': m, 'stat_data.World.Week': w, 'stat_data.World.Day': d })[k] });
+const roy = (m, w, d) => ejs.render(fs.readFileSync(path.join(ROOT, 'src/worldbook/content/101.txt'), 'utf8'), { getvar: k => ({ 'stat_data.World.Month': m, 'stat_data.World.Week': w, 'stat_data.World.Day': d, 'stat_data.$ui.off': ['mention_brief'] })[k] });   // 1.99.6: the whole lore, as for someone here (mention_brief off)
 ok(!/qualified/.test(roy(3, 4, 'Mon')) && !/qualified from/.test(roy(3, 4, 'Sat')) && /qualified from/.test(roy(4, 1, 'Mon')), 'M3 W4 Mon/Sat: not yet; M4: qualified');
 
 console.log('A#5 log view hides unknown names');

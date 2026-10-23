@@ -1,4 +1,16 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Tristan')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Tristan')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Tristan') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'tristan') && !/(^|[^\p{L}\p{N}])(tristan|aurelle)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+[Tristan Aurelle]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+Role: Clergy, not academy staff, answerable to his own authority rather than the school. Mid-thirties.
+Appearance: Short golden-blond hair falling messily around his face, sharp golden-yellow eyes, light stubble and a goatee. Clergy vestments worn slightly loose and always a little rumpled, as though he dressed while thinking about something else.
+Magic: Occult — Oath and Curse Breaking. He binds the Cathedral's sacred contracts (marriage vows, vows of service, oaths of debt) and he is who people come to when something unpleasant has attached itself to them. That a house of Asmoday is administered by an Occultist is a fact he finds mildly funny and has never bothered to justify to anyone.
+Personality: Whimsical on the surface, with a calm, detached, deeply calculating mind underneath.
+Duties: Running the Cathedral day to day, hearing confessions, keeping the registry of every oath sworn on academy grounds, and administering the Asmoday's Mercy orphanage funds.
+Speech: Light and wry; answers questions with better questions.
+Haunts: Cathedral, Meditation Rooms. Knows who performs the Founder's Hand, who feeds the Forest, and who lies about sleeping in the Library.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
+<%_ } _%>
+<%_ } else { /* full lore */ _%>
 [Tristan Aurelle]
 Role: Clergy, not academy staff, answerable to his own authority rather than the school. Mid-thirties.
 Appearance: Short golden-blond hair falling messily around his face, sharp golden-yellow eyes, light stubble and a goatee. Clergy vestments worn slightly loose and always a little rumpled, as though he dressed while thinking about something else.
@@ -20,4 +32,4 @@ Haunts: Cathedral, Meditation Rooms. Knows who performs the Founder's Hand, who 
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
 Reads every oath Rigel Ardenne offers another student and strikes clauses he thinks Rigel is too young to understand.
 <%_ } _%>
-<%_ } _%>
+<%_ } } _%>

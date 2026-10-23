@@ -1,4 +1,21 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Kanae')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Kanae')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Kanae') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'kanae') && !/(^|[^\p{L}\p{N}])(quveno|kanae)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+[Kanae Quveno]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Kanae')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 19 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %> (very young by elven standards). Noble.
+Appearance: Long straight black hair, ice-blue eyes, pointed ears, short, natural fair skin. Yellow vest, black skirt, thigh-high socks. Off duty, baggy clothes, because being stared at makes her uncomfortable.
+Magic: Mystic — Scrying and Creation.
+- Scrying: sees distant places and people through crystal balls, mirrors, and still water. Popular for her free "romance divinations".
+- Creation: conjured chains, including spiked ones, that constrict and pin a target or swarm around her as a defense.
+Personality (public): Sweet, charming, a perfect popular student with top grades.
+Club: Divination Society.
+Speech: Sweet and charming.
+Haunts: Observation Tower, still water. Publicly calls the Oracle Shell nonsense; privately uses it to redirect questions.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+<%_ } _%>
+<%_ } else { /* full lore */ _%>
 [Kanae Quveno]
 <%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Kanae')) { _%>
 Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
@@ -34,4 +51,4 @@ Her crystal ball is Norvaine starglass, and nobody else is allowed to touch it.
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 Gave Tsubaki Hoshikage, a Light first-year, a free romance reading. Tsubaki listened carefully and asked who she was supposed to fight. Kanae's crystal shows her nothing for the girl but blades and open sky.
 <%_ } _%>
-<%_ } _%>
+<%_ } } _%>

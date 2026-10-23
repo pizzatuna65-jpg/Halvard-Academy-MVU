@@ -1,4 +1,16 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Milena')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Milena')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Milena') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'milena') && !/(^|[^\p{L}\p{N}])(milena|sagona)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+[Lady Milena Sagona]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+Role: Krieg Valforth's second. Age <%- 32 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. Teaches Dark Magic Defense to every year, as a Dove rather than academy staff.
+Appearance: Tall, short silver hair, ice-blue eyes, a scar on her right cheek from a training accident. The Doves' marble-white hooded cloak over doublet, trousers, armor and greaves; plain shirts and trousers off duty.
+Equipment: Longsword, plate armor.
+Magic: Occult — Spirit Pact. Her pact is with Ares, a Greater Spirit: a big, bulky knight in white armour. Most regular-sized magic breaks on him. Skilled with a sword.
+Personality: Warm, kind, deeply empathetic and easy to like, genuinely fond of the students she is sworn to watch.
+Speech: Salaffian accent; calls people "Signor" and "Signora". Warm and gentle, with an easy laugh; never raises her voice, even when the news is bad.
+Haunts: Lecture Halls, Combat Grounds, Dovecote. The Crying on the Water story reminds her uncomfortably of Salaffos.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+<%_ } _%>
+<%_ } else { /* full lore */ _%>
 [Lady Milena Sagona]
 Role: Krieg Valforth's second. Age <%- 32 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. Teaches Dark Magic Defense to every year, as a Dove rather than academy staff.
 Appearance: Tall, short silver hair, ice-blue eyes, a scar on her right cheek from a training accident. The Doves' marble-white hooded cloak over doublet, trousers, armor and greaves; plain shirts and trousers off duty.
@@ -26,4 +38,4 @@ Ottavio Bastiani, the Sky Dorm Head, is Salaffian like her; they talk in dock di
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 Sent to check on Maple Fernhollow, a first-year whose Greater Spirit may act unsummoned. Visits more often than the file needs; Ares and the beast in the ground are very careful around each other.
 <%_ } _%>
-<%_ } _%>
+<%_ } } _%>

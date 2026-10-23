@@ -1,4 +1,15 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Pip')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Pip')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Pip') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'pip') && !/(^|[^\p{L}\p{N}])(althorne|pip)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+[Pip Althorne]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+<%_ if ((1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
+Now: graduated from Veyra Academy at the end of campaign Year 3; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Role: <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Veyra Academy. <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 18 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %>. Dog Beastkin. Healing role on Veyra's team.
+Appearance: Small, messy light brown hair, floppy dog ears, a tail permanently tucked between his legs. Veyra's boys' uniform: navy blazer with white piping, gold Veyra crest on the breast pocket, white collared shirt, blue-violet ribbon tie, navy trousers.
+Magic: Spiritual — Healing. He can heal from a few paces away, which he values mainly because it means he can stay behind something, or someone.
+Personality: A complete coward, and not a noble one.
+Speech: Whiny, panicky, full of excuses and "can we go now?"
+<%_ } else { /* full lore */ _%>
 [Pip Althorne]
 <%_ if ((1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
 Now: graduated from Veyra Academy at the end of campaign Year 3; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
@@ -10,4 +21,4 @@ Personality: A complete coward, and not a noble one. At the slightest threat he 
 The job: Bellatrix never needs his healing. His real work is keeping the other two alive through the damage she causes, which he only does because Cassius will not let him leave.
 Relations: Cassius Rhavel stops him every time he runs, usually by dropping a barrier cage around him on the spot; Pip heals from inside it, complaining the whole time. The instant Cassius's attention is elsewhere, Pip bolts. Bellatrix Ardenne terrifies him, and she enjoys it. Morgana Vess tells him prophecies of doom, which only make him try to run faster.
 Speech: Whiny, panicky, full of excuses and "can we go now?"
-<%_ } _%>
+<%_ } } _%>

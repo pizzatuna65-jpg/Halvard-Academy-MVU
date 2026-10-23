@@ -30,7 +30,8 @@
   "reminders": 34,
   "study": 114,
   "say_colors": 183,
-  "new_people": 0
+  "new_people": 0,
+  "mention_brief": 0
  },
  "core_rules": 8872,
  "lore": 9831,

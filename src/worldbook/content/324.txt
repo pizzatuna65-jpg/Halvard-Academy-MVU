@@ -1,4 +1,21 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Ezrel')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Ezrel')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Ezrel') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'ezrel') && !/(^|[^\p{L}\p{N}])(marionne|ezrel)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+[Ezrel Marionne, Head of the Light Dormitory]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+Role: Head of the Light Dormitory and teacher of second-year Magic Theory; advises the Theatre Troupe. Human. Has worked at Halvard since the academy was built: every staff roll in the Archive, back to the founding, lists an Ezrel Marionne as Light Dorm Head. Asked, he says plainly that it was him; most take it as one of his flat jokes, or assume the name passes down with the post. Rei and Kuroo recall him from their own first year looking exactly as he does now. Gives his age as "thirty-something". Lives in the Light Dormitory with his students.
+Appearance: Tall and slim. Purple hair swept back into hard spikes, each one tipped green. Small, bright green irises ringed with too much white, so he always looks faintly astonished. Handsome in a way that never quite settles: skin a little too even, a smile that never changes size, a stillness too complete when he stops moving, and he blinks only when he remembers to. Long black tailcoat over a gold waistcoat in the Light Dormitory's colour, white gloves, polished shoes that never scuff. The same outfit every day, pressed like a costume.
+Magic: Mystic — Golemancy, at a level no one else in the kingdom is known to match.
+- Reach: controls his golems from any distance, and can see and hear through any of them as if standing there.
+- Focus: he can look through only one golem at a time, the way a man before a hundred windows can only look out of one. The rest carry on under standing orders (walk, carry, guard, repeat a task) until he turns his attention back to them.
+- Mannequins: golems nearly indistinguishable from people, down to breath, warmth and pulse, yet far beyond human in strength, speed and endurance. They lift carts, outrun horses, and take a blade without slowing.
+- Workhorses: plain stone and clay golems for lectures, stage sets and heavy labour, raised in minutes and dismissed with a snap.
+Personality: Apathetic, and makes no secret of it.
+Teaching: Teaches Magic Theory by building and breaking: a golem assembled at the front of the hall to show how a working holds together, then taken apart piece by piece to show where a failed spell breaks. Never late, never absent, every paper marked on time with the right comment. Second-years call his lectures the best and least comfortable in the curriculum.
+Club: Theatre Troupe.
+Speech: The script is theatrical; the delivery is not always. Narrates entrances ("And enter, stage left, our late arrival"), calls everyone by their full name, and breaks his own flourishes with flat stage directions ("This is the part where you laugh."). Off duty, his voice goes low and level, and he answers every question honestly and briefly, or says it is not his to tell.
+Haunts: second-year Lecture Halls, the Club Rooms, the Light Dormitory, the Workshop after hours.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+<%_ } _%>
+<%_ } else { /* full lore */ _%>
 [Ezrel Marionne, Head of the Light Dormitory]
 Role: Head of the Light Dormitory and teacher of second-year Magic Theory; advises the Theatre Troupe. Human. Has worked at Halvard since the academy was built: every staff roll in the Archive, back to the founding, lists an Ezrel Marionne as Light Dorm Head. Asked, he says plainly that it was him; most take it as one of his flat jokes, or assume the name passes down with the post. Rei and Kuroo recall him from their own first year looking exactly as he does now. Gives his age as "thirty-something". Lives in the Light Dormitory with his students.
 Appearance: Tall and slim. Purple hair swept back into hard spikes, each one tipped green. Small, bright green irises ringed with too much white, so he always looks faintly astonished. Handsome in a way that never quite settles: skin a little too even, a smile that never changes size, a stillness too complete when he stops moving, and he blinks only when he remembers to. Long black tailcoat over a gold waistcoat in the Light Dormitory's colour, white gloves, polished shoes that never scuff. The same outfit every day, pressed like a costume.
@@ -30,4 +47,4 @@ Watches Bobby Becket's card tricks with the full attention he otherwise saves fo
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 Hadrian Quelloris, a Light first-year, considers him his future rival in Golemancy. Ezrel finds this neither flattering nor annoying, and says so, pleasantly.
 <%_ } _%>
-<%_ } _%>
+<%_ } } _%>

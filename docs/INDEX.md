@@ -172,7 +172,7 @@ at the top of the CSS and `:root{…}` in the bracelet; a theme is a set of toke
 `source_original/` (owner's v38 + NPC lore passes; canon, never edited) → `tools/merge_lorebooks.py` → `src/worldbook/` (card) and
 `dist/lorebook_v39/` (standalone) → `tools/curate_data.py` → `data/npcs.json`, `locations.json`, `relations.json`, `map_pins.json`.
 In `merge_lorebooks.py`: `rep(entry, old, new)` (asserting text edits), `apply_lore_edits`, `WORLD_MYTHS`, `NATIONS`, `SEASONAL` and
-`PHASES` (lore by season), `GHOST_STORIES`, `COHORT_ROSTER` / `COHORT_REGULARS`, `calendar_timetable_lore`, `roster_ejs`, `lore_activation` (1.35.0: `KEY_ADDS`, `CORE_FACTS`), `style_pass` (1.99.5: the `STYLE_PASS` wording table, run last on both exports; an NPC by id, a Core entry by uid), `campus_map_card` (1.99.5: the card's Campus Map without the minutes; club venues in entry 26).
+`PHASES` (lore by season), `GHOST_STORIES`, `COHORT_ROSTER` / `COHORT_REGULARS`, `calendar_timetable_lore`, `roster_ejs`, `lore_activation` (1.35.0: `KEY_ADDS`, `CORE_FACTS`), `style_pass` (1.99.5: the `STYLE_PASS` wording table, run last on both exports; an NPC by id, a Core entry by uid), `campus_map_card` (1.99.5: the card's Campus Map without the minutes; club venues in entry 26), `mention_brief` (1.99.6: an NPC keyword entry's public part for someone only mentioned, then the full lore after `/* full lore */`; runs last on the card).
 
 ## 7. Data files (`data/`)
 

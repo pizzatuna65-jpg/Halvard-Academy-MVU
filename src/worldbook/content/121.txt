@@ -1,4 +1,19 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Gareth')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Gareth')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Gareth') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'gareth') && !/(^|[^\p{L}\p{N}])(valkaryn|gareth)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+[Gareth Valkaryn]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Gareth')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 20 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %> (very young by elven standards). Heir to the Valkaryn house.
+Appearance: Tall, long red hair, golden eyes, red vest. Day to day: glasses on, hair neat, uniform immaculate. In battle: glasses off, hair loose and messy.
+Magic: Elemental — Fire, backed by vast mana reserves. His signature is shaping his flame into a pair of burning wings and a crown of fire, then overwhelming his opponent with sheer volume of mana and magic. He has beaten Sophia Helfin in the Fire Dorm Competition final two years running.
+- Volume: his reserves are so deep that his fire comes out enormous and wide. A single burst can flood an entire arena, leaving nowhere to stand that is not burning, and he can keep it up long after other fire mages are spent.
+Personality (daily): The perfect honour student.
+Personality (in battle): The moment the glasses come off, his personality switches.
+Club: Board Game Club, where he has never lost a match.
+Speech: Daily, warm, measured, modest, deflecting praise. In battle, loud, taunting, theatrical.
+Haunts: Combat Grounds, Observation Tower, Library. Treats Dragonchess as training in patience.
+<%_ } else { /* full lore */ _%>
 [Gareth Valkaryn]
 <%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Gareth')) { _%>
 Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
@@ -24,4 +39,4 @@ Emotional tells: The glasses are the tell. With them on he is serene and warm, d
 Has asked Ruby Bonbon to join a competition team, very politely, and been refused; he took it gracefully and has not stopped thinking about it.
 Haunts: Combat Grounds, Observation Tower, Library. Treats Dragonchess as training in patience.
 Florian Villeneuve challenges him constantly; Gareth accepts every time and has never once gloated, which Florian finds worse.
-<%_ } _%>
+<%_ } } _%>

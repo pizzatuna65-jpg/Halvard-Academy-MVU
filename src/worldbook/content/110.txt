@@ -1,4 +1,14 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Yvette')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Yvette')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Yvette') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'yvette') && !/(^|[^\p{L}\p{N}])(fallaron|yvette)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+[Yvette Fallaron]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+Role: Teaching first-year Magic Theory for over a decade; Head of the Fire Dormitory, where she lives; advises the Smithing Club, where students craft and study enchanted items. Age <%- 37 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
+Appearance: Tall, athletic, long straight black hair (in a bun at work), light brown eyes, natural fair skin, a little softness at the stomach from stress. Black vest, long-sleeved shirt, trousers; shorts and t-shirts off duty.
+Magic: Elemental — Lightning, from range. Studies enchanted items obsessively and carries a floating orb focus that holds protective charms.
+Personality: Kind, stern, motherly, hard-working, cautious, paranoid.
+Haunts: Workshop, warm end of the Lecture Halls. Judges Ardenne workmanship; steers exam-week students to ordinary coffee over Nightwell's Vigil.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+<%_ } _%>
+<%_ } else { /* full lore */ _%>
 [Yvette Fallaron]
 Role: Teaching first-year Magic Theory for over a decade; Head of the Fire Dormitory, where she lives; advises the Smithing Club, where students craft and study enchanted items. Age <%- 37 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
 Appearance: Tall, athletic, long straight black hair (in a bun at work), light brown eyes, natural fair skin, a little softness at the stomach from stress. Black vest, long-sleeved shirt, trousers; shorts and t-shirts off duty.
@@ -23,4 +33,4 @@ Emotional tells: Nerves go through her hair. Anger arrives as static: loose stra
 Nerys Silvarenne, a strange first-year in her dorm, once made her jump with a footstep that was not there, and has never done it again. Yvette does not know why and is grateful.
 Wren Marlowe, a deaf first-year in her dorm, sits in the front row of Magic Theory. Yvette writes every word of the lecture on the board for her, and has learned the sign alphabet, badly, in secret.
 <%_ } _%>
-<%_ } _%>
+<%_ } } _%>

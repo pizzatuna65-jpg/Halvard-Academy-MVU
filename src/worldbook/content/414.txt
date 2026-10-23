@@ -1,4 +1,22 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Wren')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Wren')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Wren') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'wren') && !/(^|[^\p{L}\p{N}])(marlowe|wren)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+[Wren Marlowe]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+<%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Wren')) { _%>
+Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+<%_ } _%>
+Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 2) %>, a first-year (arrives in {{user}}'s second year).
+Appearance: Small and quick, with short blonde hair cut straight at the shoulder and tucked behind her ears, so that people can see she wears an ear-charm, and grey-blue eyes that watch faces very closely. A thin pale scar runs along the top of her left ear. Red vest, sleeves always pushed up so her hands are free. A small notebook and a pencil on a string round her neck.
+Speech: Completely deaf, since birth. She talks with hand-speech, the kingdom's sign language, quick and expressive, her whole face joining in; with anyone who does not know it, she writes in her notebook, in neat, rounded letters, or reads their lips. She can lip-read anyone who faces her and speaks plainly; mumbling, turned heads, covered mouths, beards and bad light defeat her. She rarely speaks aloud, because she cannot hear her own voice and people have laughed at it; when she does, it comes out uneven, too loud or too soft. The word she can say most clearly is "sorry", because it is the one she has said most.
+Club: Fishing Club. The dock at dawn is the one place where nobody is talking and nobody expects her to, and Professor Bastiani answered her first sign in dock-hand.
+Haunts: the Fishing House dock at dawn, the Fire Dormitory common room (the corner seat facing the room, so she can see every mouth), the Club Rooms during Music Club rehearsals (she sits on the floor to feel it), the Main Library, the Canteen at the quietest table.
+Magic: Elemental — Fire. Precise rather than large: she can keep a dozen small flames floating steady at once, light every candle in a room with a glance, or throw a quick, hot dart of flame. Her limit is the same as everywhere else: she cannot hear a fire behind her, or a shout of warning, so she keeps her flames in front of her where she can see them.
+Equipment: A brass ear-charm, a magitech aid that turns only the loudest sounds (a bell, a slammed door, an explosion) into a faint buzz against her skin. It does not let her hear anything, speech least of all. Her first one was torn off by other children at her old school, which is where the scar came from.
+Personality: Warm, earnest, friendly and stubborn.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 3) { _%>
+<%_ } _%>
+<%_ } _%>
+<%_ } else { /* full lore */ _%>
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 [Wren Marlowe]
 <%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Wren')) { _%>
@@ -26,4 +44,4 @@ Tsubaki Hoshikage looks straight at faces for too long and says exactly what she
 Reads Aurelian Solmere's lips and sees every speech clean and whole; she did not believe the others about his voice until they flinched. Bruno Ferrante makes sure nobody speaks over her, and Rigel Ardenne writes to her when he cannot sign a thought.
 <%_ } _%>
 <%_ } _%>
-<%_ } _%>
+<%_ } } _%>

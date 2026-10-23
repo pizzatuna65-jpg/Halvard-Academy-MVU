@@ -184,6 +184,10 @@ show the newcomers their dorm rooms.
       who all smile "quietly" or "say nothing"; Kanae shows displeasure only as a smile held a moment too long [1.99.5].
 - [ ] On the tour each walk takes the minutes `<now>` gives under "Walks from here" (the Prompt's Campus Map lists none any more); a
       question about a club's meeting place is answered from the Clubs entry [1.99.5].
+- [ ] Someone only talked about (the Headmaster in a speech, Percival mentioned by Zara): in the Prompt their entry starts "Only mentioned,
+      not here" and holds no `<narrator_only>`; when Charles's own message names someone ("I go to find Kanae"), her whole lore is
+      there and she sounds like herself when she appears; Settings → Features "Short lore for people only mentioned" off brings the
+      whole lore back [1.99.6].
 - [ ] A new roster character: short first lines with no head-to-toe description, then they sound like their sheet [1.35.2, 1.99.3]. The update starts their bond with
       `insert /Bonds/<name>/Known_facts/-` (no full record, no Trust), real MVU accepts it, and the bond starts at the character's own Trust
       [1.53]. People gets a red dot; opening the panel clears the button's, and the person keeps theirs until opened [1.25].

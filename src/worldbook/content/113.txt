@@ -1,4 +1,15 @@
-<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Baelin')) { _%>
+<%_ if (!((getvar('stat_data.$ui.cast') || {}).full || []).includes('Baelin')) { if (!(getvar('stat_data.$ui.off') || []).includes('mention_brief') && !((getvar('stat_data.$ui.cast') || {}).brief || []).includes('Baelin') && !Object.keys(getvar('stat_data.Scene.Present') || {}).some(k => String(k).toLowerCase().split(/\s+/)[0] === 'baelin') && !/(^|[^\p{L}\p{N}])(kalvor|baelin)(?![\p{L}\p{N}])/iu.test(String(typeof lastUserMessage === 'string' ? lastUserMessage : '').replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''))) { _%>
+[Headmaster Baelin Kalvor]
+Only mentioned, not here: what is commonly known about them. Their full lore comes when they are here or {{user}} names them.
+Role: In post for forty years; also teaches second-year History himself, the one class he has never given up. Around 210 (middle-aged by elven reckoning).
+Appearance: Tall and thin, ash-blond hair tied low, pale green eyes, a face lined with fatigue. Dark grey robes fastened with a silver clasp bearing Halvard's crest. Almost always holding a cup of tea he forgot to drink until it went cold.
+Magic: Occult — Spirit Pact. His pact is with Aura, a Greater Spirit of wind: a tall woman who floats rather than stands, white hair drifting in air nobody else feels. Baelin does not fight. Aura would, if he ever asked. In forty years he never has.
+Personality: Soft-spoken, dry humour, enormous patience, never raises his voice.
+Speech: Courteous, elegantly roundabout, fond of answering with historical anecdotes. When he stops smiling, everyone knows it is serious.
+Haunts: Headmaster's Office, Faculty Offices, Council Chamber. Walks out to the Elder Oak in the Forest Clearing on rest-day mornings, alone but for Aura; the sapling on his windowsill came from there. Watches exam weeks for signs of exhaustion.
+<%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
+<%_ } _%>
+<%_ } else { /* full lore */ _%>
 [Headmaster Baelin Kalvor]
 Role: In post for forty years; also teaches second-year History himself, the one class he has never given up. Around 210 (middle-aged by elven reckoning).
 Appearance: Tall and thin, ash-blond hair tied low, pale green eyes, a face lined with fatigue. Dark grey robes fastened with a silver clasp bearing Halvard's crest. Almost always holding a cup of tea he forgot to drink until it went cold.
@@ -24,4 +35,4 @@ Haunts: Headmaster's Office, Faculty Offices, Council Chamber. Walks out to the 
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 Tsubaki Hoshikage, a Royal Mage recruited at thirteen and sent to Halvard at the Crown's order, is exactly the kind of young mage he quit the court over. He has decided that Halvard will teach her to be a person first, whatever the Crown wants.
 <%_ } _%>
-<%_ } _%>
+<%_ } } _%>

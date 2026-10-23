@@ -14,7 +14,7 @@ for (const e of idx) {
 }
 // the lore as the narrator reads it in the NPC's first year on campus (no Cast Sheet, nobody graduated)
 const render = (id, t) => {
-  const st = { World: { Year: npcs[id].arrives || 1 }, Player: { Profile: { Year: 1 } }, Campus_State: { Graduated: [] }, $ui: { cast: { full: [] } } };
+  const st = { World: { Year: npcs[id].arrives || 1 }, Player: { Profile: { Year: 1 } }, Campus_State: { Graduated: [] }, $ui: { cast: { full: [] }, off: ['mention_brief'] } };   // 1.99.6: the whole lore, not the mentioned-only part
   return ejs.render(t, { getvar: k => _.get({ stat_data: st }, k) }).replace(/\r/g, '').replace(/\n{2,}/g, '\n').trim();
 };
 const GROUPS = [['Halvard students — Year 1', n => n.group === 'Year 1'], ['Halvard students — Year 2', n => n.group === 'Year 2'],
