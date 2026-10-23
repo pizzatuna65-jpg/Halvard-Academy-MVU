@@ -65,7 +65,7 @@ planning/FUTURE_PLANS.md   everything not done yet: owner plans, unchosen ideas,
 planning/NPC_BRAINSTORM_BRIEF.md   brief for designing NPCs with another AI (kept by hand)
 planning/NPC_ROSTER.md     every NPC in one file: quick table + full profiles (generated; for NPC brainstorms)
 planning/DRAFT_*.md        only while a draft awaits approval or is being applied; deleted in the release that applies it
-audit/                     owner-ordered audits (Indonesian, mostly untracked); a bare "kerjakan batch N" = memory audit-batch-plan
+audit/                     owner-ordered audits (Indonesian, tracked since 2026-10-24); a bare "kerjakan batch N" = memory audit-batch-plan
 source_original/           owner's lorebook v38 and NPC lore passes (canon, pipeline input, never edited)
 src/                       card sources: worldbook/ (generated lore + hand-written custom/ 500–510), scripts/, ui/, regex/, card/,
                            vectfox/ and summaryception/ (the memory extensions' prompts and patterns; copied to dist/)
