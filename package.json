@@ -6,7 +6,7 @@
     "test": "node tests/run_all.cjs",
     "lint": "node tests/lint.cjs",
     "lint:eslint": "eslint src/scripts/engine.template.js src/scripts/ui.template.js src/scripts/mood_gifts.js",
-    "stress": "node tests/stress/fuzz.cjs 30 150 1 && node tests/stress/fuzz_builder.cjs 300 && node tests/stress/sim_year.cjs 380"
+    "stress": "node tests/stress/run_stress.cjs"
   },
   "devDependencies": {
     "d3": "^7.9.0",

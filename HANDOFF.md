@@ -3,15 +3,14 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.99.1** (2026-10-23): 1.99 is Summaryception compatibility (owner). The card now plays with VectFox
-(option 1) or Summaryception 5.5.4 by Lodactio (option 2), one per chat, or neither: `dist/summaryception_prompt.txt`,
-`summaryception_system_prompt.txt`, `summaryception_injection_template.txt`, settings and how it works in `docs/ECOSYSTEM.md`
-(Summaryception). The owner's SillyTavern has vadash's fork 24.29.0 installed, which differs; only 5.5.4 is supported. Live checks: the
-campaign quest log `docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the card,
-Q0.1; Summaryception: SQ-SC).
+**Snapshot:** card **v1.99.2** (2026-10-23): the bug hunt is under way. Its audit `audit/AUDIT_2026-10-23_2_audit_menyeluruh.md`
+(untracked) lists 8 batches in §8, one release each as 1.99.N; batch 1 shipped as 1.99.2: the engine reads a reply's story one way
+(`proseOf`, without the update block and `<npc_thoughts>`, closed or not), and `npm run stress` runs all three parts. Memory: VectFox
+(option 1) or Summaryception 5.5.4 (option 2, 1.99.1), one per chat. Live checks: the campaign quest log `docs/TEST_CHECKLIST.md` (the
+owner plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the card, Q0.1; Summaryception: SQ-SC).
 
-**Next task:** the bug hunt (`planning/FUTURE_PLANS.md` §0: full suite, stress tests, a cross-system audit file with a batch list),
-then 2.0 polish. The World Competition's Year 2 host (Caelmar: Area, map, liner) waits in FUTURE_PLANS §1 [YEAR 2]. Alongside it, the
+**Next task:** the bug-hunt audit's batch 2 (preset deviations P1–P4 and B1), then batches 3–8 in §8's order (1.99.3 onward), then
+2.0 polish. The World Competition's Year 2 host (Caelmar: Area, map, liner) waits in FUTURE_PLANS §1 [YEAR 2]. Alongside it, the
 owner plays the quest log; their reports and chat exports bring the playtest fixes. MS3 stage 2 and the NPC dialogue audit's U1, U3–U5
 wait in `planning/FUTURE_PLANS.md` §2 for a campaign export. Batch 8 (chapters) is planned in `planning/DRAFT_bab_baru.md`: build it at
 about 20,000 messages, slow saves or a chat file near 100 MB.

@@ -835,8 +835,10 @@ const LORE = {"names":{"eldrasil":1,"other nations":1,"foreign power":1,"myrdath
 const LC = { max: 40, perReply: 2 };   // lasting changes on record; new ones a reply may add
 const lcKey = s => String(s == null ? '' : s).trim().toLowerCase().replace(/^the\s+/, '').replace(/\s+/g, ' ');   // = common.lore_key
 const loreUidOf = s => { const u = ((LORE.names || {})[lcKey(s)]); return u === undefined ? -1 : u; };
-// a reply's prose: without its update block (closed or not) and tags
-const proseOf = text => String(text || '').replace(/<UpdateVariable>[\s\S]*?(?:<\/UpdateVariable>|$)/gi, ' ').replace(/<[^>]+>/g, ' ');
+// a reply's prose: without its update block and the preset's <npc_thoughts> block (closed or not: both come after the story) and
+// tags. 1.99.2 (audit 2026-10-23 B3): every reading of the story goes through it, so a name or a title in the JSON, the Analysis,
+// a Hooks note or an NPC's thoughts is never "said"
+const proseOf = text => String(text || '').replace(/<(UpdateVariable|npc_thoughts)>[\s\S]*?(?:<\/\1>|$)/gi, ' ').replace(/<[^>]+>/g, ' ');
 // Batch 5.2: the Kingdom prize (lore Competitions: 5,000 points per winning member) is avalon.json kingdom.prize (KINGDOM_PRIZE,
 // below AV); the trips are TRIPS in shared.js
 const DORM_PRIZE = [100, 50];   // 1.33.0: a Dorm Competition role bracket's champion and runner-up
@@ -1835,7 +1837,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.99.1";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.99.2";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 const verLt = (a, b) => { const p = v => String(v || '0').split('.').map(x => parseInt(x, 10) || 0), x = p(a), y = p(b); for (let i = 0; i < 3; i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) < (y[i] || 0); return false; };   // 1.63.0
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
@@ -2240,7 +2242,7 @@ function stepTime(c) {
     // "Tue"), not a week later: the clock is kept, as on the same Day
     const back = (DAYS.indexOf(B.World.Day) - DAYS.indexOf(S.World.Day) + 7) % 7;
     if (dayChanged && back >= 1 && back <= 2 && S.World.Week === B.World.Week && S.World.Month === B.World.Month && (S.World.Year || 1) === (B.World.Year || 1)
-      && !MISS_TIME_RX.test(String(text || '').replace(/<UpdateVariable>[\s\S]*?<\/UpdateVariable>/g, '').replace(QUOTE_RX, ' '))) {
+      && !MISS_TIME_RX.test(proseOf(text).replace(QUOTE_RX, ' '))) {
       log.push(`World.Day went back from ${B.World.Day} to ${S.World.Day} with no time skip in the story: the clock was kept at ${stamp(B.World)}. If the story did mean a week later, write the Week too.`);
       dayChanged = false; absA = absB;
     }
@@ -4742,7 +4744,7 @@ function stepSchoolWeek(c) {
 function stepNamesInProse(c) {
   const { S, text } = c;
   if (text) {
-    const prose = String(text).replace(/<UpdateVariable>[\s\S]*?<\/UpdateVariable>/g, '').replace(/<[^>]+>/g, ' ');
+    const prose = proseOf(text);
     const names = S.$ui.names;
     // 1.11.1 (bug hunt): a first name that is also a word ("Maple leaves…", "Ruby light…") opening a sentence is no name reveal
     for (const [id, rx] of NAME_RX) if (!names.includes(id) && (ARRIVES[id] || 1) <= S.World.Year && mentionIn(prose, id, rx)) names.push(id);
@@ -7828,7 +7830,7 @@ function stepCast(c) {
     const pres = Object.keys(S.Scene.Present || {}).filter(id => NPC_IDS.has(id) && (ARRIVES[id] || 1) <= S.World.Year);
     let spoke = prev.spoke || [], gone = prev.gone || [], ment = prev.ment || [];
     if (text) {
-      const prose = String(text).replace(/<UpdateVariable>[\s\S]*?<\/UpdateVariable>/g, '').replace(/<[^>]+>/g, ' ');
+      const prose = proseOf(text);
       // 1.37.0: a dialogue-colour tag names its speaker outright
       const tagged = [...String(text).matchAll(/<say\s*:\s*([^:<>"\n]{1,40}?)\s*(?::\s*[a-z]+\s*)?>/gi)].map(m => NPC_ALIAS[m[1].trim().toLowerCase()]).filter(id => id && NPC_IDS.has(id));
       spoke = [...new Set([...speakersIn(prose), ...tagged])]; const said = new Set(spoke);
@@ -7915,7 +7917,7 @@ function stepReminders(c) {
         if (!keepers.has(id) && (bond.Knows || []).some(x => !prior.includes(x) && /(?:true|hidden|forbidden) magic/i.test(String(x))))
           add(`knows-magic:${id}:${dayNo}`, `${id}'s Knows now mentions {{user}}'s hidden magic. If ${id} truly learned the secret, add ${id} to Hidden.Known_by.`);
       }
-      const prose = String(text || '').replace(/<UpdateVariable>[\s\S]*?<\/UpdateVariable>/g, '').replace(/<[^>]+>/g, ' ');
+      const prose = proseOf(text);
       const narr = prose.replace(QUOTE_RX, ' '), said = String(userText || ''), low = (said + '\n' + prose).toLowerCase();
       const actsOf = id => REPORTED.acts.filter(a => canon(a.With) === id);
       const bonded = Object.keys(S.Scene.Present || {}).map(canon).filter(id => S.Bonds[id] && id !== KR.id);
@@ -8361,9 +8363,11 @@ function stepUi(c) {
   // 1.16.1 (audit B6): only places on the Campus Map, so off-campus names never push a discovered place out of the list (cap 80)
   if (place && plName(place) && !S.$ui.discovered.includes(place)) S.$ui.discovered.push(place);
   // 1.24.0: a story is heard when the narration names it (as a proper name, so "the long corridor" in passing does not count); with
-  // Ambience below Full nobody is overheard, so a place's stories come with the first visit
-  if (!toolEdit && text) for (const k of Object.keys(PLACE_LORE)) for (const [u, nm, title] of PLACE_LORE[k])
-    if (!S.$ui.lore.includes(String(u)) && new RegExp(`(^|[^\\w'])(The )?${_.escapeRegExp(nm)}(?![\\w'])`).test(text)) hearLore(S, u, title, '');
+  // Ambience below Full nobody is overheard, so a place's stories come with the first visit. 1.99.2 (B3): the prose only, so a title
+  // in a Hooks note, the Journal or the Analysis (hidden from the player) is not heard
+  const prose = !toolEdit && text ? proseOf(text) : '';
+  if (prose) for (const k of Object.keys(PLACE_LORE)) for (const [u, nm, title] of PLACE_LORE[k])
+    if (!S.$ui.lore.includes(String(u)) && new RegExp(`(^|[^\\w'])(The )?${_.escapeRegExp(nm)}(?![\\w'])`).test(prose)) hearLore(S, u, title, '');
   if ((OFF.has('ambience') || (S.$ui.ambience || 'full') !== 'full') && placeKey(S.World.Location) !== placeKey(((B || {}).World || {}).Location))
     for (const [u, , title] of PLACE_LORE[placeKey(S.World.Location)] || []) hearLore(S, u, title, placeOf(S.World.Location));
   const unlock = k => { if (!offUnlock.has(k) && !S.$ui.unlocks.includes(k)) S.$ui.unlocks.push(k); };   // 1.1.0: a feature that is off does not unlock
@@ -8929,9 +8933,8 @@ if (typeof eventOn === 'function' && typeof waitGlobalInitialized === 'function'
   (async () => {
     await waitGlobalInitialized('Mvu');
     let text = '';   // message being parsed in this update (COMMAND_PARSED fires before VARIABLE_UPDATE_ENDED)
-    eventOn(Mvu.events.VARIABLE_UPDATE_STARTED, () => { text = ''; });
     let repaired = '';   // 1.30.1: what the recovery of a malformed block did, for the Log after the engine runs
-    eventOn(Mvu.events.VARIABLE_UPDATE_STARTED, () => { repaired = ''; });
+    eventOn(Mvu.events.VARIABLE_UPDATE_STARTED, () => { text = ''; repaired = ''; });   // 1.99.2 (audit K4): one listener
     eventOn(Mvu.events.COMMAND_PARSED, (_v, commands, content) => {
       text = content || '';
       if (!Array.isArray(commands)) return;

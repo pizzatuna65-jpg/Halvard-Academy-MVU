@@ -1,7 +1,33 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 7848cb7:CHANGELOG.md` (1.97.4), `git show 871dd0e:CHANGELOG.md` (1.97.3), `git show c5135f8:CHANGELOG.md` (1.97.2), `git show d30ff7c:CHANGELOG.md` (1.97.1), `git show f9101db:CHANGELOG.md` (1.96.1), `git show df8dbed:CHANGELOG.md` (1.96.0), `git show 363f03b:CHANGELOG.md` (1.95.0), `git show bba6bb0:CHANGELOG.md` (1.94.0), `git show dca179c:CHANGELOG.md` (1.93.1, 1.93.0), `git show 01cd1f2:CHANGELOG.md` (1.92.0), `git show d097927:CHANGELOG.md` (1.91.0), `git show 6065e5c:CHANGELOG.md` (1.90.0), `git show de4303e:CHANGELOG.md` (1.89.0), `git show 4ace903:CHANGELOG.md` (1.88.1), `git show ce178fb:CHANGELOG.md` (1.88.0), `git show 0e1e5a2:CHANGELOG.md` (1.87.0), `git show e6f2c37:CHANGELOG.md` (1.86.0), `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 44b586a:CHANGELOG.md` (1.97.5), `git show 7848cb7:CHANGELOG.md` (1.97.4), `git show 871dd0e:CHANGELOG.md` (1.97.3), `git show c5135f8:CHANGELOG.md` (1.97.2), `git show d30ff7c:CHANGELOG.md` (1.97.1), `git show f9101db:CHANGELOG.md` (1.96.1), `git show df8dbed:CHANGELOG.md` (1.96.0), `git show 363f03b:CHANGELOG.md` (1.95.0), `git show bba6bb0:CHANGELOG.md` (1.94.0), `git show dca179c:CHANGELOG.md` (1.93.1, 1.93.0), `git show 01cd1f2:CHANGELOG.md` (1.92.0), `git show d097927:CHANGELOG.md` (1.91.0), `git show 6065e5c:CHANGELOG.md` (1.90.0), `git show de4303e:CHANGELOG.md` (1.89.0), `git show 4ace903:CHANGELOG.md` (1.88.1), `git show ce178fb:CHANGELOG.md` (1.88.0), `git show 0e1e5a2:CHANGELOG.md` (1.87.0), `git show e6f2c37:CHANGELOG.md` (1.86.0), `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.99.2 — One reading of the story (2026-10-23)
+
+Bug-hunt audit `audit/AUDIT_2026-10-23_2_audit_menyeluruh.md` (untracked), batch 1 of §8: B3, K4, B2. The audit's batches release
+as 1.99.N, one per batch (batch 1 = 1.99.2). Save fixture v1.99.1.
+- **B3, one reading of a reply's prose** (`proseOf`): the engine read the story five ways. Four dropped the update block only when it
+  was closed and written `<UpdateVariable>` exactly; `stepUi` dropped nothing. A reply whose block never closed (the reason
+  `recoverPatch` exists) then counted a name in a JSONPatch path or the Analysis as said: a name {{user}} never heard joined
+  `$ui.names` (People), an absent NPC counted as mentioned (`$ui.cast.ment`, `<now>`), a reminder could fire, a ghost story in a Hooks
+  note was marked heard on the Map (even with the block closed), and "the next morning" in the Analysis turned a one-day slip into a
+  week forward. `proseOf` now also drops the preset's `<npc_thoughts>` (closed or not: it comes after the story), so a thought is
+  never a mention; the Day slip (`stepTime`), `stepNamesInProse`, `stepCast`, `stepReminders` and `stepUi` (lore heard) read through
+  it, as its seven earlier callers did. `ruleCards` keeps its own reading on purpose: it is fail-open (a word only adds a rule card).
+- **K4:** one `VARIABLE_UPDATE_STARTED` listener resets both the parsed text and the repair note.
+- **B2, stress:** `fuzz.cjs` takes the starting ranks from `data/bond_rules.json` `start` (Topaz starts at Rank 2 since 1.34.0, so
+  "rank jumped" was a false alarm); `npm run stress` is now `tests/stress/run_stress.cjs`, which runs the fuzz, the Builder fuzz and the
+  school year even when one fails and reports every exit code (npm runs scripts through cmd.exe on Windows, where `;` chains nothing).
+- Docs: DECISIONS §6 "The story is the prose", and Etnie's line names Topaz's start rank (it said every other bond starts at 0);
+  FEATURES Repairs and Tests; INDEX §1; tests/README.
+- Tests: new `test_prose_v1992.cjs` (10 checks: unclosed and lower-case update blocks, `<npc_thoughts>` closed and unclosed, the same
+  names in the prose still count, the Day slip); `npm test` passes (165 suites, `test_saves` loads the 1.99.1 save); `ENGINE_DIFF`
+  against 1.99.1 (its `ENGINE_VER` set to 1.99.2): every suite identical except the new one, whose old run heard the ghost story
+  (Mystery unlocked) and counted Castor; `npm run stress`: the fuzz (4,500 updates) and the Builder fuzz (300 drafts) report no
+  problems, the school year runs (each part exit 0).
+- **To confirm with the owner:** nothing.
+- **To check live:** nothing new (engine reading only).
 
 ## v1.99.1 — Summaryception as the second memory option (2026-10-23)
 
@@ -114,58 +140,6 @@ numbered in order (1.98.1 batch 2, 1.98.2 batch 4, 1.98.3 batch 5). Save fixture
 - **To confirm with the owner** (invented, replaceable): the stage lines, the four rumour texts, the posting places, the interview's
   numbers and words, Milena's line, the search's results, the hearing at 10:00, the 8-week cold trail, −3 for cooperating.
 - **To check live:** `docs/TEST_CHECKLIST.md` SQ-D and SQ-V [1.98.1].
-
-## v1.97.5 — Vesna and Koschei's Needle (2026-10-23)
-
-Owner's design (2026-10-22, "proceed" on `planning/DRAFT_world_competition.md` §4: Vesna, Norvaine's secret, the scenario; step 5 of
-five, the draft is now deleted). Owner, 2026-10-23: Vesna must feel like a Halvard roster NPC, not a rival team's, with no ties yet
-because she has just come. Save fixture v1.97.4.
-- **Vesna is a Halvard roster student** (group Year 1, `npcs.json` `transfer: Norvaine`) with every per-NPC row a roster student has:
-  bond rules, Rank 5 and Rank 10 (`bond_rewards.json`), birthday and tastes, moods, voice canon (stages, branch C, romance), open
-  info layers, Tension (Social, played as herself: too bright, then quiet, then the somber duty face), Trust, Rank 4 partner (mana,
-  stamina, study), voice rule, routines (the Menagerie mornings, the Grassy Field evenings), dialogue colours. She is at Halvard only
-  once `Campus_State.Transfers` names her (engine-owned): then in {{user}}'s school year, dorm and club (Topaz's "whichever club"),
-  her Haunts as Regulars (Gardens, Menagerie, Commissary, Common Rooms and Canteen, Grassy Field), in the NPC Roster, the Dorm
-  Competition (Fire/Light/Sky/Viridian as {{user}}'s; she loses her first bout on purpose, no Academy team), a break stayer.
-  Before, she is away (no bond XP) except with {{user}} at the World Competition. Her Halvard ties are only the draft's three: the
-  Headmaster (respect), Tsubaki (wants a match), Gavlan (remembers her); the roster's own rules (Caine's view of mages, everyone's
-  view of Althair) reach her as any student.
-- **Her lore has two lives** (`merge_lorebooks.py` `vesna_entry`): before the transfer her World Competition self, after it her
-  Halvard self (age by year, {{user}}'s dorm, Club, Reputation, Haunts, Goals, At Halvard, Doves, Relations); her magic, voice and
-  secrets in both. The dossier opens the matching fields (`fl[4]`), the Cast Sheet calls her a competitor of Norvaine's four or a
-  Year N student in {{user}}'s dorm, transferred from Norvaine, and keeps her Halvard ties and fields for after.
-- **The scenario Koschei's Needle** (Year 1, else Year 2, with {{user}} in the national four): Norvaine is drawn into Eldrasil's group
-  and wins every match the engine plays (`world.hook`), {{user}} lands from the teleport a few steps from her and the two never meet
-  alone before the last clearing; the bond week (her XP x3, no cooldown), +10 for each phase Eldrasil's four wins, the bar filled
-  when they beat Norvaine in the Grand Final; the beats in `<now>` (`stepScene` → `$ui.scene`): the landing, "she comes looking for
-  {{user}}", the egg at Rank 3 (once she tells it, the fact is in her Known_facts), the laugh on the sand; after the Grand Final at
-  Rank 4, until the liner boards, the confront with the Colonel (the player's choice; a beaten Vesna is a failed prototype to him).
-  Koschei's Needle in the Bag: she deserts (Journal, toast, `Campus_State.Transfers`), and the next Entrance Event sorts her. The
-  Needle anywhere else is the Colonel's and leaves the Bag; with no Needle by the boarding she flies home with Norvaine.
-- **Koschei's Needle** (lore 490 by keyword, 491 constant while it is in the Bag): who holds it follows the transfer; Norvaine's team
-  (384, a new member in her place) and the Colonel (390) know she has gone; the next World Competition fields someone new.
-- **Rank 10 trains anything** (`train: "any"`, `anyTrainers`): with her in the scene, training x1.5, study +30 minutes, a practice
-  action's XP x1.5; the weekly caps hold. Her Rank 5 matching bracelet is a keepsake with no effect: the owner's one exception to
-  "useful, never just a memento" (DECISIONS, "Vesna and Koschei's Needle").
-- **Fix (1.97.4):** `<now>` never printed the World Competition's lines (the teleport, the barrier, the report forms, the Siege, the
-  Grand Final, Halvard's news): 505 printed contest lines only on the Dorm, Kingdom and Academy days.
-- Code: `source_original/npc_lore_world_2026-10-22/lore_world.md` (Vesna's three parts), `merge_lorebooks.py` `vesna_entry`,
-  `vesna_world`, `roster_ejs`; `curate_data.py` `TRANSFERS`, the before / after fields; `tools/common.py` (`PRESENCE.tr`, a transfer
-  out of the static students, her role, pin and stay), `gen_engine.py`, `gen_ui.py` (`xf`, the Routine row), `gen_mvu_entries.py`
-  (`TRN`, the sheet's `tr` and ties); shared.js `trSync`; engine `trSyncAll`, `trYear`, `trAway` (in `npcAwayIn`), `WSC`, `wcWith`,
-  `wcScene`, `wcAt`, `wcPath(st, k)`, `wcInit` (`sc`, the deserter's place), the bond week in `stepBonds`, `stepScene`,
-  `anyTrainers`; schema `Campus_State.Transfers`, `$eng.vesna`, `$ui.scene`; 505 (`TRN`, `$ui.scene`, the World days); sheet `cWhoT`,
-  `cTies`; UI `trSyncUi`, `moved`, `whoLine`, `fieldUnlocked`; `build_test_card.py` leaves her out of the Rank 7 card.
-- Tests: new `test_vesna_v1975.cjs`; `test_world_comp_v1974.cjs` checks that the hooks hold only in a year of the scenario;
-  `test_world_teams_v1972` counts five World teams NPCs and Vesna a student; the counts of bonded NPCs (moods and gifts, Rank 4,
-  Tension, Rank 8 branch C, contest roles) gain her; the Cast Sheet scenarios leave her out like the World teams (the record holds,
-  no scenario differs). `npm test`: all 160 suites pass; lint clean.
-- **To confirm with the owner** (invented, replaceable): her Tension bands, Trust text, moods, gift items, routines, Rank 4 tracks and
-  the never-rule; the confront's hours (Sunday 19:00 to the boarding at 12:00); the words that show she told of the egg; "At Halvard"
-  when {{user}}'s team did not beat her ("{{user}} talked to her like a girl and not a weapon"); the Entrance sorting line; the lines
-  for Norvaine, its team and the Colonel after she has gone; the Needle's keys without a bare "needle" (she hates needles); her
-  Halvard tie types; everyone's dislike of Althair now reaches her too (owner rule 1.4.2; the `except` list can name her).
-- **To check live:** `docs/TEST_CHECKLIST.md` Q10.1c [1.97.5] and Side quest SQ-V.
 
 ## Release index (one line per release, oldest first)
 
@@ -359,3 +333,4 @@ because she has just come. Save fixture v1.97.4.
 - **v1.98.2 (2026-10-23):** Rumours that reach people, investigations, projects that count (1.98 audit, batch 4): friends ask about a rumour on {{user}}, friends of the named hear one; Investigate at a clue's place (XP, a lead now and then); a solved thread pays; finished research and club Projects pay XP (and a lead, a Newspaper line).
 - **v1.98.3 (2026-10-23):** Council petitions and the Healing Ward (1.98 audit, batch 5; 1.98 done): a weekly petition at the Saturday Council meeting for a member; treatment in the Medical Centre shortens an injury's healing once.
 - **v1.99.1 (2026-10-23):** Summaryception as the second memory option beside VectFox: its prompt, system prompt and template in `dist/`; 503 names `<story_before_chat>`; replays read player messages it hid; warnings for Verbatim Turns above 11 and a record past the chat's end.
+- **v1.99.2 (2026-10-23):** One reading of the story (bug-hunt audit batch 1: B3, K4, B2): names, mentions, lore heard, the Day slip and reminders read the prose without the update block and `<npc_thoughts>`, closed or not; one update-start listener; the fuzz reads starting ranks from the data and `npm run stress` runs every part.

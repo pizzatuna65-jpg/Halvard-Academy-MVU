@@ -15,7 +15,7 @@ that need a connected SillyTavern session: `docs/TEST_CHECKLIST.md`.
   `ENGINE_VER` set to the new version.
 - **Harness:** `tests/harness.cjs` runs the engine and renders an entry as ST does (`renderEntry`; `loreOf` = an entry without the
   lore-change overlay).
-- **Stress:** `npm run stress` (`tests/stress/fuzz.cjs`, `fuzz_builder.cjs`, `sim_year.cjs`: a campaign year's state size and update
-  time); `node tests/stress/memory_soak.cjs 3000` (memory invariants and budget).
+- **Stress:** `npm run stress` (`tests/stress/run_stress.cjs` runs `fuzz.cjs`, `fuzz_builder.cjs` and `sim_year.cjs`, a campaign
+  year's state size and update time, each even when one fails, and reports every exit code); `node tests/stress/memory_soak.cjs 3000` (memory invariants and budget).
 - **Browser previews:** `tests/preview/` (`smoke_all_panels.py`, `render_ui.py`, `render_bar.py` with sample states).
 - **Token cost:** `node tests/token_audit.cjs`.

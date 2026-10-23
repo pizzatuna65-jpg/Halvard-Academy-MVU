@@ -8,6 +8,9 @@ const U = new Function(fs.readFileSync(path.join(ROOT, 'src/scripts/ui.js'), 'ut
 return { PANELS, view, renderProfile, renderBuilder, draftFromState, buildOps, validate, TEMPLATES, blankDraft, personal, themed, locIdOf, CAL,
   setDraft: (d, b) => { draft = d; draftBuilt = b; }, STEPS };`)();
 const DATA_NPCS = Object.keys(JSON.parse(fs.readFileSync(path.join(ROOT, 'data/npcs.json'), 'utf8')));
+// 1.99.2 (audit 2026-10-23 B2): the bonds that do not start at Rank 0 (Etnie 3, Topaz 2), as the engine reads them
+const START = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/bond_rules.json'), 'utf8')).start;
+const startRank = id => ((START[id] || {}).Rank || 0);
 const LOCS = Object.values(JSON.parse(fs.readFileSync(path.join(ROOT, 'data/locations.json'), 'utf8'))).map(l => l.name);
 const [RUNS, STEPS, SEED0] = [+process.argv[2] || 40, +process.argv[3] || 150, +process.argv[4] || 1];
 
@@ -75,7 +78,7 @@ function check(S, B, ops) {
   if (!DAYS.includes(S.World.Day) || !/^\d\d:\d\d$/.test(S.World.Time)) report('engine', `bad clock ${S.World.Day} ${S.World.Time}`, ctx);
   for (const [id, b] of Object.entries(S.Bonds)) {
     if (!(b.Rank >= 0 && b.Rank <= 10) || !(b.$xp >= 0) || !(b.Tension >= 0 && b.Tension <= 100) || !(b.Trust >= 0 && b.Trust <= 100)) report('engine', `bond out of range (${JSON.stringify({ r: b.Rank, x: b.$xp, t: b.Tension })})`, ctx);
-    if (b.Rank > ((B.Bonds[id] || {}).Rank ?? (id === 'Etnie' ? 3 : 0)) + 1) report('engine', `bond rank jumped ${((B.Bonds[id] || {}).Rank)} -> ${b.Rank} (${id})`, ctx);
+    if (b.Rank > ((B.Bonds[id] || {}).Rank ?? startRank(id)) + 1) report('engine', `bond rank jumped ${((B.Bonds[id] || {}).Rank)} -> ${b.Rank} (${id})`, ctx);
     if (!DATA_NPCS.includes(id)) report('engine', `bond for unknown id "${id}"`, ctx);
   }
   const R = S.Player.Profile.Reputation;
