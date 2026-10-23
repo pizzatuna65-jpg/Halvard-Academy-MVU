@@ -18,7 +18,7 @@ S = applyPatch(S, [add('/Rep_events/-', { Kind: 'event', Rep: 'Student', XP: 3, 
 ok(S.Player.Profile.Reputation.$xp.Student === x1 + 3, 'legacy explicit reputation event still works');
 
 S = initState();
-S.Hidden.Dove_attention = 5;
+S.Hidden.Dove_attention = 5; S.Hidden._True_magic = 'Effigy';   // 1.98.1: with nothing left to hide a quiet week lowers it by 5
 S.$eng.doveweek = { w: 0, raised: false };
 S = applyPatch(S, [put('/World/Week', 2), put('/World/Time', '08:01')]);
 ok(S.Hidden.Dove_attention === 4, 'one quiet week lowers Dove attention once');

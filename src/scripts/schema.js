@@ -173,6 +173,10 @@ export const Schema = z.object({
     Known_by: StrList(40),
     Dove_attention: Int(0, 100, 0),
     _Stage: Str('Unnoticed'),
+    // 1.98.1 (owner-approved planning/DRAFT_kedalaman_fitur.md, Dove watch): what {{user}} did that the Dovecote would act on and no
+    // Dove learned of (narrator); Since and $born are the engine's; the engine keeps 8 and lets one with no proof and no knower go cold
+    Secrets: Rec(v => ({ What: s(v.What), Proof: s(v.Proof), Known_by: Array.isArray(v.Known_by) ? v.Known_by.map(s).filter(Boolean).slice(0, 10)
+      : (v.Known_by ? String(v.Known_by).split(/\s*,\s*/).filter(Boolean).slice(0, 10) : []), Since: s(v.Since), $born: n(v.$born, -1, 1e9, -1) }), 'What'),
   }),
 
   // 1.2.2: Progress is the pre-1.2.2 bond meter; the engine converts it once into $xp and keeps it 0 (a raised one counts as an interaction)
@@ -239,6 +243,8 @@ export const Schema = z.object({
     // 1.97.5 (planning/DRAFT_world_competition.md §4): a transfer to Halvard by id -> the campaign year she came (Vesna, after the
     // scenario Koschei's Needle); the engine's (stepScene), a reply's own write gives way
     Transfers: z.record(z.string(), z.coerce.number().int().min(1).max(9)).prefault({}).catch({}),
+    // 1.98.1 (Dove watch): the day the Dovecote seized Koschei's Needle ('' = it has not); the engine's (stepHidden, /Dove_found)
+    Needle_seized: Str(''),
   }),
 
   // 1.6.1 (Batch D, N5): characters the narrator invented, recorded on their second appearance so they stay the same person.
@@ -344,6 +350,8 @@ export const Schema = z.object({
     ? { Rep: s(v.Rep).trim(), XP: n(v.XP, -125, 125, 0), Kind: s(v.Kind).trim().toLowerCase(), Why: s(v.Why) } : { Rep: '', XP: 0, Kind: '', Why: s(v) }))).prefault([]).catch([]),
   Training: z.array(z.any().transform(v => ({ Track: s(typeof v === 'object' && v !== null ? v.Track : v).trim().toLowerCase(), Partner: s(typeof v === 'object' && v !== null ? v.Partner : '') }))).prefault([]).catch([]),
   Perk_use: StrList(10),
+  // 1.98.1 (Dove watch): the Dove secrets the Doves learned in this reply (narrator); the engine records them and empties the list
+  Dove_found: z.array(z.any().transform(v => (typeof v === 'object' && v !== null ? { Secret: s(v.Secret).trim(), How: s(v.How) } : { Secret: s(v).trim(), How: '' }))).prefault([]).catch([]),
   // 1.15.0 (planning/DRAFT_grades_exams.md): a story moment that moves one exam mark a step (or fails it), and paid tutoring
   // sessions in a subject {{user}} has an A in (narrator); the engine applies them and empties the lists
   Exam_events: z.array(z.any().transform(v => (typeof v === 'object' && v !== null
@@ -422,7 +430,8 @@ export const Schema = z.object({
     prof_offer: Bool(false),
     asks: z.record(z.string(), z.string()).prefault({}).catch({}),   // 1.73.0: what a present character may ask after (engine, stepAgenda)
     since: z.any().prefault([]).catch([]), maybe: z.any().prefault([]).catch([]),   // 1.6.0 (N4): Next plans met again / that may bring someone here (engine)
-    now: z.any().prefault(null).catch(null),                          // 1.48.0 (audit 3.11): <now>'s engine-made lines (stepNow; 1.47.0's $ui.here is in now.pres)
+    now: z.any().prefault(null).catch(null),
+    dove: z.any().prefault(null).catch(null),                         // 1.98.1: Dove watch for <now>, the Hidden tab, the bracelet (stepHidden)                          // 1.48.0 (audit 3.11): <now>'s engine-made lines (stepNow; 1.47.0's $ui.here is in now.pres)
     xold: z.record(z.string(), z.any()).prefault({}).catch({}),       // 1.6.1 (N5): Extras records that left the full list; given back if they return (engine)
     xgone: z.record(z.string(), z.any()).prefault({}).catch({}),      // 1.61.0 (memory audit M8): short records of Extras past xold { Who, Looks, Voice } (engine)
     xroll: z.any().prefault(null).catch(null),                        // 1.96.0/1.96.1: the next new character's names and traits { m, f, t } for <now> (engine)
@@ -490,7 +499,8 @@ export const Schema = z.object({
     kc: z.any().prefault(null).catch(null),                        // 1.84.0: the Kingdom Competition's rounds while {{user}} is on the team (engine stepKingdom)
     wc: z.any().prefault(null).catch(null),                        // 1.97.4: the World Competition's phases while {{user}} is in the national four (engine stepWorld)
     wcn: z.coerce.number().prefault(0).catch(0),                   // 1.97.4: the campaign year whose Grand Final the Academy Newspaper already has (engine)
-    vesna: z.any().prefault(null).catch(null),                     // 1.97.5: the scenario Koschei's Needle { y, won, gf, told, done, beat, fail, ent } (engine stepScene)
+    vesna: z.any().prefault(null).catch(null),
+    dove: z.any().prefault(null).catch(null),                      // 1.98.1: Dove watch { known, rum, iv, srch, leak, coop } (engine stepHidden)                     // 1.97.5: the scenario Koschei's Needle { y, won, gf, told, done, beat, fail, ent } (engine stepScene)
     vote: z.record(z.string(), z.any()).prefault({}).catch({}),     // 1.82.0: the Club Festival coin vote's winner { Y1: club } (engine)
     tally: z.any().prefault(null).catch(null),                     // 1.87.0: this year's tallies and the Academy winner already in the Journal { y, sports_day: dorm, showcase: dorm, academy: 1 } (engine)
     hunt: z.any().prefault(null).catch(null),                      // 1.86.0: Founder Day's hunt { y, at: clues solved, fin: year first finished } (engine)

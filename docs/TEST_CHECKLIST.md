@@ -665,6 +665,8 @@ The first academy flight (the airship), then the Grand Vast Forest.
       colour on the Stone); she is in his school year and club, at the Gardens, the Menagerie, the Commissary, the Common Rooms and
       the Grassy Field; her dossier shows her Halvard life (Club, Haunts, Routine), not the Norvaine Role; she loses her first Dorm
       Competition bout; her Rank 10 makes any training with her go further.
+- [ ] While the Needle is in the Bag, `<now>` has "Dove watch" with "Dove secrets: Koschei's Needle (in the Bag; known to Vesna)";
+      a rumour about something brought back from Hanakaze appears once the meter reaches Rumoured [1.98.1].
 
 ### Q10.2 Graduation (W4 Sun)
 - [ ] From 12:00 in the Courtyards the farewell winter market's stalls are open (a knitted dorm scarf, cocoa) [1.86].
@@ -829,6 +831,20 @@ The first academy flight (the airship), then the Grand Vast Forest.
       and Lucius's swarm ate each other before Year 1 [1.97.2].
 - [ ] Name a World ace in talk (Hibiki, Lucrezia, Kamran, Cyprien): the narrator knows them by reputation, and none of them turns up
       at Halvard [1.97.2].
+
+### SQ-D Dove watch (whenever Charles keeps something from the Doves) [1.98.1]
+- [ ] Charles breaks a rule the Doves would act on and gets away with it (a forbidden place, a forbidden item, a lie to a Dove): the
+      update adds it under /Hidden/Secrets with What, Proof and Known_by; Student file → Hidden lists it with its knowers [1.98.1].
+- [ ] A rise to Rumoured: one rumour that names nobody joins the Gossip list; Watched: on some days `<now>` posts a Dove near one of
+      Charles's places, and the narrator shows the white cloak without making it an event [1.98.1].
+- [ ] Investigated: a "Dovecote interview" Commitment two days on at 16:00; at the Dovecote `<now>` gives the Fortune result and the
+      narrator plays exactly that; the next reply's Log shows the change and the summons is gone. Missing it: +10, and Milena comes to
+      find him the next day ("Signor") [1.98.1].
+- [ ] With a physical secret (the Needle, or a Proof that names a Bag item): a room search on a later night, told when he is next in
+      his dorm; found means the Doves come for it in the story, where Charles can answer it, and /Dove_found records what they took [1.98.1].
+- [ ] A hidden or forbidden technique used with people around: one reminder in `<now>` asking the narrator to judge whether it was
+      noticed; the number only moves if the update reports it [1.98.1].
+- [ ] Settings → Features → Dove watch off: only the meter and its stage line remain [1.98.1].
 
 ### SQ1 Swipes, edits and rewinds
 - [ ] Swipe a reply: the new prose and the bracelet's state replace the rejected one [1.9.1].

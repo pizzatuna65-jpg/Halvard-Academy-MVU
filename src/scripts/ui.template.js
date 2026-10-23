@@ -1410,7 +1410,7 @@ function trainLine(S, k) {
 function renderProfile(S) {
   if (!S) return `<div class="dlg"><div class="hd"><h2>Student file</h2><button class="x" data-act="close">×</button></div><div class="bd"><div class="empty">No state yet.</div></div></div>`;
   const unl = (S.$ui || {}).unlocks || [];
-  const hiddenOn = !!(S.Hidden || {})._True_magic;
+  const hiddenOn = !!(S.Hidden || {})._True_magic || !!(S.$ui || {}).dove;   // 1.98.1: any Dove secret
   const tabs = [['overview', 'Overview'], ['body', 'Body'], ['studies', 'Studies'], ['magic', 'Magic'], ...(hiddenOn || unl.includes('hidden') ? [['hidden', 'Hidden']] : []), ...(Object.keys(S._Perks || {}).length || ((S.$ui || {}).perks_used || []).length ? [['perks', 'Gifts & perks']] : []), ['log', 'Log'], ['settings', 'Settings']];
   if (!tabs.some(([id]) => id === view.tab)) view.tab = 'overview';
   const body = ({ overview: pOverview, body: pBody, studies: pStudies, magic: pMagic, hidden: pHidden, perks: pPerks, log: pLog, settings: pSettings })[view.tab](S);
@@ -1525,14 +1525,22 @@ function pMagic(S) {
   <h3>Techniques</h3>${tcards || '<div class="empty">No techniques yet. Add them in the Student Builder.</div>'}
   ${pacts ? `<h3>Pacts</h3><table><tr><th>Partner</th><th>Kind, tier</th><th>Now</th><th>Terms</th></tr>${pacts}</table>` : ''}`;
 }
+// 1.98.1 (owner-approved planning/DRAFT_kedalaman_fitur.md batch 2): Dove watch. Every Dove secret (engine doveSecrets, $ui.dove), who
+// knows each one and who of them is angry with you, the stage's meaning and what the Dovecote has set; a knower who talked is never named
 function pHidden(S) {
-  const H = S.Hidden, a = num(H.Dove_attention), idx = STAGES.indexOf(H._Stage);
-  const who = (H.Known_by || []).map(id => (NPCS.find(n => n.id === id) || { name: id }).name);
-  return `<p class="lead">Only you and the people listed below know this.</p><dl class="kv"><dt>True magic</dt><dd>${esc(H._True_magic || '—')}</dd>
+  const H = S.Hidden, a = num(H.Dove_attention), idx = STAGES.indexOf(H._Stage), DV = (S.$ui || {}).dove || {};
+  const nm = id => (NPCS.find(n => n.id === id) || { name: id }).name, risk = new Set(DV.risk || []);
+  const pills = ids => (ids || []).length ? ids.map(id => `<span class="pill ${risk.has(id) ? 'w' : 'g'}"${risk.has(id) ? ' title="Angry with you, and knows"' : ''}>${esc(nm(id))}</span>`).join('') : 'nobody';
+  const who = H.Known_by || [], secs = DV.secrets || [];
+  const dueRows = Object.entries(S.Commitments || {}).filter(([k]) => /^(Dovecote interview|Hearing at the Dovecote)$/.test(k)).map(([k, x]) => `<li>${esc(k)}: ${esc(x.Due || '')}</li>`).join('');
+  return `<p class="lead">What you keep from the Dovecote, and who else knows it.</p>${H._True_magic ? `<dl class="kv"><dt>True magic</dt><dd>${esc(H._True_magic)}</dd>
   <dt>Cover</dt><dd>${esc(H.Cover_magic || '—')}</dd><dt>Concealment</dt><dd>${esc(H.Concealment || '—')}</dd>
-  <dt>Who knows</dt><dd>${who.length ? who.map(n => `<span class="pill g">${esc(n)}</span>`).join('') : 'nobody'}</dd></dl>
+  <dt>Who knows</dt><dd>${pills(who)}</dd></dl>` : ''}
+  ${secs.length ? `<h3>Dove secrets</h3>${secs.map(s => `<div class="item"><div class="row"><span class="t">${esc(s.n)}</span><span class="pill">${esc(s.kind === 'deed' ? 'a rule broken' : s.kind === 'needle' ? 'Soul magic' : s.kind === 'pact' ? 'Pacting' : 'magic')}</span>${s.item ? '<span class="pill w">proof in your Bag</span>' : ''}</div>
+    ${s.kind === 'deed' && (H.Secrets || {})[s.n] ? `<div class="sub">${esc(H.Secrets[s.n].What || '')}${H.Secrets[s.n].Proof ? ` · could give it away: ${esc(H.Secrets[s.n].Proof)}` : ''}</div>` : ''}<div class="meta"><span class="sub">Known to</span>${pills(s.who)}</div></div>`).join('')}` : ''}
   <h3>Dove attention: ${a} / 100</h3><div class="dove">${STAGES.map((s, i) => `<span class="${i === idx ? 'on' : i < idx ? 'past' : ''}">${s}</span>`).join('')}</div>
-  <p class="hint">Rises when hidden magic is used where it could be noticed, or when it is witnessed or detected. Falls slowly in quiet weeks.</p>`;
+  ${DV.line ? `<p>${esc(String(DV.line).replace(/\{\{user\}\}/g, 'you'))}</p>` : ''}${dueRows ? `<ul class="log">${dueRows}</ul>` : ''}${DV.talked ? '<p class="hint">Someone who knows talked to the Doves this week.</p>' : ''}
+  <p class="hint">Rises when a secret is used or shown where it could be noticed, or when it is witnessed or detected. Falls slowly in quiet weeks, faster once nothing is left to hide; a calm interview lowers it.</p>`;
 }
 function pLog(S) {
   // v1.0.3 (A#5, D14): the narrator's log names people; the player sees a name only once it is known

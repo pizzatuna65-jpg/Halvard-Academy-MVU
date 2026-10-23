@@ -1,10 +1,10 @@
 <%_ const _U = getvar('stat_data.$ui') || {}, _OFF = _U.off || []; const on = id => typeof (_U.on || {})[id] === 'boolean' ? _U.on[id] : (id === 'happenings' ? _U.happenings !== 'off' : id === 'weather' ? (_U.wxfx || 'full') !== 'off' : id === 'ambience' ? (_U.ambience || 'full') !== 'off' : id === 'wxfull' ? (_U.wxfx || 'full') === 'full' : !_OFF.includes(id)); _%>
 <%_ const _W = getvar('stat_data.World') || {}, _M = +_W.Month || 1, _Y = +_W.Year || 1, _entr = _M === 1 && +_W.Week === 1 && _W.Day === 'Mon';
 const _top = Math.max(0, ...Object.values(getvar('stat_data.Bonds') || {}).map(b => +(b && b.Rank) || 0));
-const _pacts = Object.keys(getvar('stat_data.Magic.Pacts') || {}).length > 0, _pact1 = ((getvar('stat_data.Magic._Affinity') || {}).Types || []).includes('Occult') && !getvar('stat_data.$eng.pactPlay'), _hid = !!getvar('stat_data.Hidden._True_magic'), _perks = Object.keys(getvar('stat_data._Perks') || {}).length > 0; _%>
+const _pacts = Object.keys(getvar('stat_data.Magic.Pacts') || {}).length > 0, _pact1 = ((getvar('stat_data.Magic._Affinity') || {}).Types || []).includes('Occult') && !getvar('stat_data.$eng.pactPlay'), _hid = !!getvar('stat_data.Hidden._True_magic'), _dove = !!getvar('stat_data.$ui.dove'), _perks = Object.keys(getvar('stat_data._Perks') || {}).length > 0; _%>
 <variable_update_rules>
 Update the state after every reply. Paths start at the root shown in <current_state> (e.g. /World/Time, /Player/Wallet/Points); never include "stat_data". An empty field is hidden there but keeps its place: Inventory, Commitments, Projects, Clues and the report lists are top-level (/Inventory/<item>), never under /Player. Keys must not contain "." or "/".
-The engine does these; never write them yourself: mana for techniques and its regeneration; stamina from walks<%- on('weather') ? ', weather' : '' %> and conditions; rest and sleep recovery, restful places included;<%- on('wxfull') ? ' conditions from the weather;' : '' %> Mana_max and Stamina_max from training;<%- on('proficiency') ? ' proficiency and craft XP, crafted results and spent materials;' : '' %> payouts, prices, purchases, sales<%- on('study') ? ' and tutoring pay' : '' %>; bond XP, Rank rises and Trust rises; quiet-day Tension easing;<%- on('study') ? ' marks;' : '' %><%- on('attendance') ? ' attendance;' : '' %> reputation levels;<%- _hid ? ' Dove attention decay;' : '' %> the calendar (weeks, months, years).
+The engine does these; never write them yourself: mana for techniques and its regeneration; stamina from walks<%- on('weather') ? ', weather' : '' %> and conditions; rest and sleep recovery, restful places included;<%- on('wxfull') ? ' conditions from the weather;' : '' %> Mana_max and Stamina_max from training;<%- on('proficiency') ? ' proficiency and craft XP, crafted results and spent materials;' : '' %> payouts, prices, purchases, sales<%- on('study') ? ' and tutoring pay' : '' %>; bond XP, Rank rises and Trust rises; quiet-day Tension easing;<%- on('study') ? ' marks;' : '' %><%- on('attendance') ? ' attendance;' : '' %> reputation levels;<%- _hid || _dove ? ' every fall of Dove attention and the Dove watch events;' : '' %> the calendar (weeks, months, years).
 Dates (Due, Until, Heals_by) may be written as "M? W? Day HH:MM" or plainly ("tomorrow 09:00", "Fri 16:00", "in two days"); the engine pins them to the calendar.
 
 World
@@ -99,13 +99,17 @@ Magic
 - A first Spirit Pact in play is made only at the Spirit Path; its rule shows in <rule_cards> there.
 <%_ } _%>
 
-<%_ if (_hid) { _%>
+<%_ if (_hid || _dove) { _%>
 Hidden
-- Dove_attention 0–100: report a rise of +3 to +10 when hidden magic could realistically be noticed, or +15 to +25 when witnessed or detected (e.g. a Dark Magic Defense drill). The engine lowers it by 1 after each quiet week.
+- Dove secrets (<now> lists them) and Dove_attention: the full rule shows in <rule_cards> while it applies; report rises only.
+<%_ if (_hid) { _%>
 - Known_by: add a name only when that character truly learns the secret.
+<%_ } _%>
 <%_ if (on('wxfull')) { _%>
 - Outdoors in fog or heavy weather the engine halves a rise; write the full amount.
 <%_ } _%>
+<%_ } else { _%>
+Hidden.Secrets: when {{user}} does something the Doves would act on and no Dove learns of it, the rule shows in <rule_cards>.
 <%_ } _%>
 
 <%_ if (on('reminders')) { _%>

@@ -872,7 +872,7 @@ const JOURNAL_LOW = /^(?:\[[^\]]*\]\s*)?(?:Meanwhile: |First visit to )/;
 // A pinned Journal line that leaves the window stays in view in _Kept_from_earlier (KEPT_MAX); in Knows and Known_facts the newest
 // PIN_MAX pinned lines of a character stay in view past the cap.
 const PINNED = /^(?:\[[^\]]*\]\s*)?!/;
-const JOURNAL_LANDMARK = /^(?:Solved: |.+, changed for good: |Uncovered a hidden truth about |Began Year \d+ at Halvard\.|The third-years graduated |Romance began with |Rank 10 with )/;
+const JOURNAL_LANDMARK = /^(?:Solved: |The Doves found out: |.+, changed for good: |Uncovered a hidden truth about |Began Year \d+ at Halvard\.|The third-years graduated |Romance began with |Rank 10 with )/;
 const KEPT_MAX = 20, PIN_MAX = 5;
 // 1.63.0 (memory audit M5, owner-approved "Summaryception mini"): older memory is folded, never dropped. Journal lines that leave the
 // window (and pinned lines past KEPT_MAX) wait in $eng.jq; every FOLD.l1 of them become one Chronicle entry (L1, at most FOLD.w1
@@ -1626,7 +1626,7 @@ const COND = {
   'Head cold': 'Stuffy and slow: stamina capped at 80% of max until it passes or the Medical Centre treats it.',
 };
 // ---- 1.1.0 Features settings (spec §9): which state each feature parks when it is off (data/features.json, injected) ----
-const FEATURES = [{"id":"proficiency","control":"toggle","paths":["Player._Proficiency","$eng.prof"]},{"id":"planner","control":"toggle","paths":["Commitments"],"unlock":"planner"},{"id":"notices","control":"toggle","paths":["Notices"],"unlock":"notices"},{"id":"letters","control":"toggle","paths":["Letters"],"unlock":"letters"},{"id":"mystery","control":"toggle","paths":["Clues","Mysteries"],"unlock":"mystery"},{"id":"competition","control":"toggle","paths":["Competition"],"unlock":"competition"},{"id":"projects","control":"toggle","paths":["Projects"],"unlock":"projects"},{"id":"trip","control":"toggle","paths":["Trip"],"unlock":"trip"},{"id":"battle","control":"toggle","paths":["Battle"],"unlock":"battle"},{"id":"inventory","control":"toggle","paths":["Inventory"],"unlock":"inventory"},{"id":"happenings","control":"levels","field":"happenings"},{"id":"event_chances","control":"toggle"},{"id":"npc_routines","control":"toggle"},{"id":"npc_initiative","control":"toggle"},{"id":"weather","control":"levels","field":"wxfx","paths":["Player.Conditions"],"unlock":"conditions"},{"id":"class","control":"toggle"},{"id":"gist","control":"toggle","paths":["_Recent_story","$eng.gist"]},{"id":"hooks","control":"toggle","paths":["Hooks"]},{"id":"gossip","control":"toggle"},{"id":"clubwork","control":"toggle"},{"id":"fortune","control":"toggle"},{"id":"attendance","control":"toggle"},{"id":"recap","control":"toggle"},{"id":"routine_week","control":"toggle"},{"id":"small_scenes","control":"toggle"},{"id":"ambience","control":"levels","field":"ambience"},{"id":"reminders","control":"toggle"},{"id":"study","control":"toggle"},{"id":"say_colors","control":"toggle"},{"id":"new_people","control":"toggle"}];
+const FEATURES = [{"id":"proficiency","control":"toggle","paths":["Player._Proficiency","$eng.prof"]},{"id":"planner","control":"toggle","paths":["Commitments"],"unlock":"planner"},{"id":"notices","control":"toggle","paths":["Notices"],"unlock":"notices"},{"id":"letters","control":"toggle","paths":["Letters"],"unlock":"letters"},{"id":"mystery","control":"toggle","paths":["Clues","Mysteries"],"unlock":"mystery"},{"id":"competition","control":"toggle","paths":["Competition"],"unlock":"competition"},{"id":"projects","control":"toggle","paths":["Projects"],"unlock":"projects"},{"id":"trip","control":"toggle","paths":["Trip"],"unlock":"trip"},{"id":"battle","control":"toggle","paths":["Battle"],"unlock":"battle"},{"id":"inventory","control":"toggle","paths":["Inventory"],"unlock":"inventory"},{"id":"happenings","control":"levels","field":"happenings"},{"id":"event_chances","control":"toggle"},{"id":"npc_routines","control":"toggle"},{"id":"npc_initiative","control":"toggle"},{"id":"weather","control":"levels","field":"wxfx","paths":["Player.Conditions"],"unlock":"conditions"},{"id":"class","control":"toggle"},{"id":"gist","control":"toggle","paths":["_Recent_story","$eng.gist"]},{"id":"hooks","control":"toggle","paths":["Hooks"]},{"id":"gossip","control":"toggle"},{"id":"dove_watch","control":"toggle"},{"id":"clubwork","control":"toggle"},{"id":"fortune","control":"toggle"},{"id":"attendance","control":"toggle"},{"id":"recap","control":"toggle"},{"id":"routine_week","control":"toggle"},{"id":"small_scenes","control":"toggle"},{"id":"ambience","control":"levels","field":"ambience"},{"id":"reminders","control":"toggle"},{"id":"study","control":"toggle"},{"id":"say_colors","control":"toggle"},{"id":"new_people","control":"toggle"}];
 const EMPTY = { Commitments: {}, Notices: {}, Letters: {}, Clues: {}, Mysteries: {}, Projects: {}, Inventory: {}, Hooks: {}, 'Player.Conditions': {},
   Competition: { Tier: '', Status: '', Placement: '', Team: [], Results: [] }, Trip: { Active: false, Destination: '', Companions: [], Note: '' },
   Battle: { Active: false, Combatants: {} } };
@@ -1656,7 +1656,7 @@ const SHAPE = {
   Trip: { Active: false, Destination: '', Companions: [], Note: '' }, Expedition: { Caught: false }, Avalon: { Ride: false }, Sunreach: { Ride: '', Bet: { Game: '', Stake: 0 } }, Battle: { Active: false, Combatants: {} }, _Log: [],
   Inventory: {}, Hooks: {},   // 1.1.0
   Extras: {},   // 1.6.1
-  _Perks: {}, Rep_events: [], Training: [], Practice: [], Purchases: [], Perk_use: [],   // 1.3.0 / 1.27.0
+  _Perks: {}, Rep_events: [], Training: [], Practice: [], Purchases: [], Perk_use: [], Dove_found: [],   // 1.3.0 / 1.27.0 / 1.98.1
   Exam_events: [], Tutoring: [],   // 1.15.0
 };
 function fillShape(o, shape) {
@@ -1835,7 +1835,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.97.5";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.98.1";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 const verLt = (a, b) => { const p = v => String(v || '0').split('.').map(x => parseInt(x, 10) || 0), x = p(a), y = p(b); for (let i = 0; i < 3; i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) < (y[i] || 0); return false; };   // 1.63.0
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
@@ -2566,6 +2566,7 @@ function stepMagic(c) {
     const cost = windCost(t, unit * (c.Times || 1), c.Technique);
     if (cost > V.Mana + regenLeft) { log.push(`${c.Technique} needed ${cost} mana but only ${Math.floor(V.Mana + regenLeft)} was left: the casting strained or failed (mana now 0).`); V.Mana = 0; regenLeft = 0; }
     else { payMana(cost); profContext.profCast = true; }
+    if (secretTech(M, c.Technique)) (profContext.secretCasts = profContext.secretCasts || []).push(c.Technique);   // 1.98.1: Dove watch (8l)
   }
   M.Casts = [];
 
@@ -6171,16 +6172,101 @@ function stepPerkUse(c) {
   S.$eng.repw = repw;
 }
 
-// ---- 7. hidden magic ----
+/// ---- 7. hidden magic ----
+// 1.98.1 (owner-approved planning/DRAFT_kedalaman_fitur.md batch 2): Dove watch (data/dove_watch.json). Dove_attention is how close the
+// Dovecote is to anything {{user}} keeps from it (doveSecrets): the true magic, a forbidden technique, a forbidden pact (Pacting),
+// Koschei's Needle in the Bag (Soul magic, lore 490/491) and Hidden.Secrets (violations the narrator records). The narrator reports
+// rises; every fall and the Dove watch events (a rumour, a Dove posted on {{user}}'s routine, the interview, the room search, a knower
+// who talks, the hearing) are the engine's. The meter needs no toggle (hidden magic has none); the events are Features row dove_watch.
+const DW = {"stages":{"Rumoured":"The Dovecote has heard a whisper, nothing more: Doves look at {{user}} a moment longer in passing.","Watched":"A Dove is on {{user}}'s routine: a white cloak turns up where {{user}} usually goes, never close, never hidden. Using a secret in sight of one is how attention jumps.","Investigated":"The Dovecote has opened a file on {{user}}: they ask {{user}}'s friends questions, check where {{user}} was, and want {{user}} in for a talk.","Exposed":"The Dovecote has enough to act on {secret}: expect Doves with a summons, at the door or in class. Sir Krieg Valforth leads it."},"rumour":{"needle":"Someone brought something back from Hanakaze that the Doves would want to see.","pact":"Someone in the {dorm} Dormitory talks to something nobody else can see.","magic":"Someone in the {dorm} Dormitory casts something that isn't on any syllabus.","deed":"Someone went where the Doves say nobody goes, and got away with it."},"posting":{"pct":33,"places":["the {dorm} Dormitory","Main Courtyard","Lecture Halls","Canteen","Main Library"],"line":"A Dove is posted near {place} today; {{user}}'s day passes there."},"interview":{"after_days":2,"from":"16:00","to":"18:00","where":"The Dovecote","with":"Krieg","desc":"Dovecote interview","again_days":14,"again_rise":10,"society":3,"shield":20,"shield_rank":7,"shields":["Yvette","Kuroo","Ezrel","Ottavio","Althair"],"milena":-10,"delta":{"clean":-15,"partial":-5,"fail":10,"missed":10},"milena_from":"10:00","milena_to":"18:00","milena_line":"Milena Sagona comes to find {{user}} for a quiet word, \"only a talk, Signor/Signora\".","line":"The Dovecote interview is now ({who}; Fortune {n}{mods} = {total}): play it to this result.","results":{"clean":"{{user}} gives them nothing; the file goes quiet for now.","partial":"they let {{user}} go, unconvinced; they will look again.","fail":"{{user}} slips: a detail that does not fit, a pause too long. Nothing is confessed unless {{user}} chooses to."}},"search":{"after_days":[2,5],"hour":"23:00","weekly_rep":-3,"tip_rep":3,"tip":30,"rep":5,"tip_line":"Milena Sagona, in passing and very quietly: the Doves mean to look through {{user}}'s room tomorrow night.","delta":{"partial":5},"found_to":80,"results":{"clean":"The Doves searched {{user}}'s room last night and found nothing; a book sits a little off where it was.","partial":"The Doves searched {{user}}'s room last night and found something odd, but not enough.","fail":"The Doves searched {{user}}'s room last night and found {item}. They will come for it: play the seizure in the story, where {{user}} can answer it."}},"hearing":{"desc":"Hearing at the Dovecote","at":"10:00","with":"Krieg","where":"The Dovecote"},"leak":{"pct":25,"rise":10,"tension":70,"trust_below":40,"pro_tension":50,"never":["Dante"],"line":"Someone who knows has talked to the Doves this week: {who} (narrator only; play it in character, out of {{user}}'s sight)."},"coop":{"deeds":["cooperated_with_dove"],"delta":-3},"quiet_none":5,"found_floor":60,"found_none":-20,"needle_back":20,"cold_weeks":8,"cap":8,"cast_line":"{{user}} used {what} with people around ({who}). If anyone could have noticed, report the Dove_attention rise; if not, nothing."};
+const DW_ORDER = ['needle', 'pact', 'magic', 'deed'];
+const DOVE_STAGES = ['Unnoticed', 'Rumoured', 'Watched', 'Investigated', 'Exposed'];
+const doveStage = a => (a < 20 ? 'Unnoticed' : a < 40 ? 'Rumoured' : a < 60 ? 'Watched' : a < 80 ? 'Investigated' : 'Exposed');
+// a technique the Doves would act on if they saw it: a hidden or forbidden one, or a forbidden pact partner's (stepMagic, 8l)
+function secretTech(M, name) {
+  const t = ((M || {})._Techniques || {})[name]; if (!t) return false;
+  const pm = /^\[pact\]\s*(.+)$/.exec(t.Notes || ''), P = pm ? ((M.Pacts || {})[pm[1].trim()] || null) : null;
+  return !!(t.Hidden || t.Forbidden || (P && P.Kind !== 'Spirit'));
+}
+// what {{user}} keeps from the Doves: { k, name, kind (needle | pact | magic | deed), who: [names], item: the Bag key that proves it, or '' }
+function doveSecrets(S) {
+  const M = S.Magic || {}, Hd = S.Hidden || {}, I = S.Inventory || {}, known = new Set(((S.$eng || {}).dove || {}).known || []), out = [];
+  const custom = (M._Affinity || {}).Custom || {}, who = Array.isArray(Hd.Known_by) ? Hd.Known_by : [];
+  if (String(Hd._True_magic || '').trim() && !known.has('true')) out.push({ k: 'true', name: 'True magic', kind: 'magic', who, item: '' });
+  for (const [n, t] of Object.entries(M._Techniques || {})) {
+    if (!t || /^\[true\]/.test(t.Notes || '') || known.has('tech:' + n)) continue;
+    const sub = String(t.Subtype || '').toLowerCase();
+    if (t.Forbidden || Object.entries(custom).some(([k, x]) => x && x.Forbidden && k.toLowerCase() === sub)) out.push({ k: 'tech:' + n, name: n, kind: 'magic', who, item: '' });
+  }
+  for (const [n, p] of Object.entries(M.Pacts || {})) if (p && p.Kind !== 'Spirit' && !known.has('pact:' + n)) out.push({ k: 'pact:' + n, name: `Pact with ${n} (${p.Kind})`, kind: 'pact', who, item: '' });
+  const nk = Object.keys(I).find(k => /koschei/i.test(k) && num((I[k] || {}).Qty, 1) > 0);
+  if (nk && !String((S.Campus_State || {}).Needle_seized || '')) out.push({ k: 'needle', name: "Koschei's Needle", kind: 'needle', who: ['Vesna'], item: nk });
+  for (const [n, x] of Object.entries(Hd.Secrets || {})) {
+    const pf = String((x || {}).Proof || '').toLowerCase();
+    const item = Object.keys(I).find(k => k.length >= 4 && num((I[k] || {}).Qty, 1) > 0 && pf.includes(k.toLowerCase())) || '';
+    out.push({ k: 's:' + n, name: n, kind: 'deed', who: Array.isArray((x || {}).Known_by) ? x.Known_by : [], item });
+  }
+  return out;
+}
+// the interview's result from the first Fortune number <now> gives (as the Bazaar's haggling) and the modifiers
+function doveRoll(c, who) {
+  const { S, TU, OFF } = c, IV = DW.interview || {}, F = S.$ui.fortune;
+  const band = { 1: [10, 35], 2: [20, 50], 3: [30, 65] }[TU.fortune_band] || [10, 35];
+  const n = F && Array.isArray(F.rolls) ? num(F.rolls[0], 50) : d100(num(S.$eng.seed, 0), 'dove-iv', c.absA);
+  const sig = m => { const x = /([+\-−])\s*(\d+)\s*$/.exec(String(m)); return x ? (x[1] === '+' ? 1 : -1) * Number(x[2]) : 0; };
+  const parts = F ? (F.mods || []).filter(m => !/^with (staff|students)\b/.test(String(m))).map(m => [String(m).replace(/\s*[+\-−]\s*\d+\s*$/, ''), sig(m)]).filter(([, v]) => v) : [];
+  const soc = OFF.has('proficiency') ? 0 : profRankOf(S, 'Society');
+  if (soc) parts.push(['Society', soc * num(IV.society, 3)]);
+  if (who === 'Milena') parts.push(['Milena Sagona', num(IV.milena, -10)]);
+  else {
+    const sh = (IV.shields || []).find(id => (S.Scene.Present || {})[id] && num((S.Bonds[id] || {}).Rank, 0) >= num(IV.shield_rank, 7));
+    if (sh) parts.push([`${sh} speaks for {{user}}`, num(IV.shield, 20)]);
+  }
+  const total = n + parts.reduce((a, [, v]) => a + v, 0);
+  const res = total <= (F ? num(F.fail, band[0]) : band[0]) ? 'fail' : total <= (F ? num(F.part, band[1]) : band[1]) ? 'partial' : 'clean';
+  return { band: res, n, total, mods: parts.map(([k, v]) => `${k} ${v > 0 ? '+' : ''}${v}`), who, turn: num(S.$eng.turn, 0) };
+}
 function stepHidden(c) {
-  const { S, B, log, hasB, toolEdit, dayNo, wxNow, weekNo, weekNoB } = c;
-  const Hd = S.Hidden;
-  // 1.1.0 (Full): outdoors in fog, heavy rain, a storm or a blizzard the hidden magic is harder to notice: the rise is halved (rounded up)
-  if (wxNow && hasB && Hd._True_magic && isOutdoor(S.World.Location) && (wxNow.sky === 'Fog' || wxHeavy(wxNow))) {
+  const { S, B, log, jnl, hasB, toolEdit, dayNo, wxNow, weekNo, weekNoB, OFF, TU } = c;
+  const Hd = S.Hidden, CS = S.Campus_State, absA = num(c.absA, 0), seed = num(S.$eng.seed, 0), live = hasB && !toolEdit;
+  if (!_.isPlainObject(Hd.Secrets)) Hd.Secrets = {};
+  const DE = S.$eng.dove = _.isPlainObject(S.$eng.dove) ? S.$eng.dove : {};
+  const prevSt = Hd._Stage || 'Unnoticed', grads = new Set(CS.Graduated || []);
+  // Hidden.Secrets: dated once, the knowers made canon; one with no proof left and nobody at Halvard who knows goes cold
+  for (const [n, x] of Object.entries(Hd.Secrets)) {
+    if (!x.Since) x.Since = dstamp(S.World);
+    if (!(num(x.$born, -1) >= 0)) x.$born = absA;
+    x.Known_by = [...new Set((Array.isArray(x.Known_by) ? x.Known_by : []).map(v => String(v).trim()).filter(Boolean).map(v => (c.canon ? c.canon(v) : v)))];
+    const proofGone = !String(x.Proof || '').trim() || /^(none|nothing|gone|destroyed|burned|burnt|lost)\b/i.test(String(x.Proof).trim());
+    const knowers = x.Known_by.filter(v => (NPC_GROUP[v] && !grads.has(v)) || (S.Extras || {})[v]);
+    if (live && proofGone && !knowers.length && absA - x.$born >= num(DW.cold_weeks, 8) * 7 * DAY_MIN) {
+      delete Hd.Secrets[n]; jnl.push(`The trail went cold: ${n}.`); log.push(`Dove secret "${n}" went cold: no proof left and nobody at Halvard who knows.`);
+    }
+  }
+  capRecord(Hd.Secrets, num(DW.cap, 8));
+  // the Doves learned a secret in the story (/Dove_found): recorded once; Koschei's Needle leaves the Bag for the Dovecote
+  let found = false, back = false;
+  if (live) for (const f of Array.isArray(S.Dove_found) ? S.Dove_found : []) {
+    const all = doveSecrets(S), nm = String((f && f.Secret) || '').trim().toLowerCase();
+    const x = all.find(s => s.name.toLowerCase() === nm || s.k.toLowerCase() === nm) || (/needle|koschei/.test(nm) ? all.find(s => s.kind === 'needle') : null);
+    if (!x) { log.push(`Dove_found "${(f && f.Secret) || ''}" names no Dove secret in <now>; nothing was recorded.`); continue; }
+    if (x.k.startsWith('s:')) delete Hd.Secrets[x.name];
+    else if (x.kind === 'needle') { delete S.Inventory[x.item]; CS.Needle_seized = dstamp(S.World); }
+    else DE.known = [...new Set([...(DE.known || []), x.k])];
+    found = true; jnl.push(`The Doves found out: ${x.name}${f.How ? ` (${String(f.How).trim()})` : ''}.`); S.$ui.toasts.push(`The Doves found out: ${x.name}`);
+  }
+  S.Dove_found = [];
+  if (live && String(CS.Needle_seized || '') && Object.keys(S.Inventory || {}).some(k => /koschei/i.test(k))) {
+    CS.Needle_seized = ''; back = true;
+    jnl.push("Koschei's Needle is back in {{user}}'s keeping, and the Dovecote knows it is gone."); S.$ui.toasts.push("Koschei's Needle: back in the Bag");
+  }
+  const secrets = doveSecrets(S);
+  // 1.1.0 (Full): outdoors in fog, heavy rain, a storm or a blizzard a secret is harder to notice: the rise is halved (rounded up)
+  if (wxNow && hasB && secrets.length && isOutdoor(S.World.Location) && (wxNow.sky === 'Fog' || wxHeavy(wxNow))) {
     const was = (B.Hidden && B.Hidden.Dove_attention) || 0, rise = Hd.Dove_attention - was;
     if (rise > 0) { Hd.Dove_attention = was + Math.ceil(rise / 2); log.push(`Dove attention rise halved by the weather (outdoors, ${wxText(wxNow)}): +${Math.ceil(rise / 2)} instead of +${rise}.`); }
   }
-  // 1.18.0 (I1): the narrator reports witnessed/detected rises; the engine owns quiet-week decay.
+  // 1.18.0 (I1): the narrator reports witnessed/detected rises; the engine owns quiet-week decay (1.98.1: faster with no secret left)
   if (hasB) {
     const prior = num((B.Hidden || {}).Dove_attention, 0);
     if (Hd.Dove_attention < prior) { Hd.Dove_attention = prior; log.push('Dove attention falls only after a quiet week; the manual decrease was reverted.'); }
@@ -6188,21 +6274,120 @@ function stepHidden(c) {
     const old = _.isPlainObject(S.$eng.doveweek) ? S.$eng.doveweek : { w: weekNoB, raised: true }; // old saves: do not assume the prior week was quiet
     if (weekNo > num(old.w, weekNoB)) {
       const quiet = Math.max(0, weekNo - num(old.w, weekNoB) - (old.raised ? 1 : 0));
-      const drop = Math.min(Hd.Dove_attention, quiet);
-      if (drop) { Hd.Dove_attention -= drop; log.push(`Dove attention −${drop} after ${quiet} quiet week${quiet === 1 ? '' : 's'}.`); }
+      const drop = Math.min(Hd.Dove_attention, quiet * (secrets.length ? 1 : num(DW.quiet_none, 5)));
+      if (drop) { Hd.Dove_attention -= drop; log.push(`Dove attention −${drop} after ${quiet} quiet week${quiet === 1 ? '' : 's'}${secrets.length ? '' : ' (nothing left to hide)'}.`); }
       S.$eng.doveweek = { w: weekNo, raised };
     } else S.$eng.doveweek = { w: weekNo, raised: !!old.raised || raised };
   }
-  const stageOf = a => (a < 20 ? 'Unnoticed' : a < 40 ? 'Rumoured' : a < 60 ? 'Watched' : a < 80 ? 'Investigated' : 'Exposed');
-  const stg = stageOf(Hd.Dove_attention);
-  if (Hd._True_magic && Hd._Stage !== stg) { log.push(`Dove attention is now: ${stg}.`); S.$ui.toasts.push(`Dove attention: ${stg}`); }
-  for (const [id, o] of Object.entries(TRU.overrides || {})) {   // 1.4.3: Krieg learns the hidden magic: his Trust is gone
-    if (o.zero_at_stage && Hd._True_magic && stg === o.zero_at_stage && S.Bonds[id] && S.Bonds[id].Trust > 0) {
+  // Dove watch events (data/dove_watch.json): engine changes gathered in dd, applied after the narrator's rise and the decay
+  let dd = 0, toEx = false;
+  const why = [], now = [], s1 = DOVE_STAGES.indexOf(doveStage(Hd.Dove_attention)), dorm = String(S.Player.Profile.Dorm || '').trim();
+  const dormOk = /^(Fire|Light|Sky|Viridian)$/.test(dorm), dormTxt = t => String(t || '').replace('the {dorm} Dormitory', dormOk ? `the ${dorm} Dormitory` : 'one of the dormitories');
+  const dlv = c.repLv ? c.repLv('Doves') : 0, band = { 1: [10, 35], 2: [20, 50], 3: [30, 65] }[TU.fortune_band] || [10, 35];
+  if (live && !OFF.has('dove_watch')) {
+    // Rumoured: one rumour that names nobody, once a climb (again only after the meter fell back to Unnoticed)
+    if (s1 === 0) DE.rum = 0;
+    else if (!DE.rum && secrets.length) {
+      const kind = DW_ORDER.find(k => secrets.some(s => s.kind === k)), t = dormTxt((DW.rumour || {})[kind]);
+      const R = CS.Rumours = Array.isArray(CS.Rumours) ? CS.Rumours : [];
+      if (t && !R.includes(t)) R.push(t);
+      DE.rum = 1; log.push(`Dove watch: a rumour is going round ("${t}").`);
+    }
+    // the interview (Investigated): Sir Krieg Valforth at the Dovecote; missed, Milena Sagona comes to find {{user}} the next day
+    const IV = DW.interview || {}, dkey = IV.desc || 'Dovecote interview';
+    let iv = DE.iv = _.isPlainObject(DE.iv) ? DE.iv : {};
+    if (iv.res && num(S.$eng.turn, 0) > num(iv.res.turn, 0)) {
+      const d = num((IV.delta || {})[iv.res.band], 0); dd += d;
+      why.push(`${iv.res.who === 'Milena' ? 'the talk with Milena Sagona' : 'the Dovecote interview'} (${iv.res.band}) ${d >= 0 ? '+' : ''}${d}`);
+      delete S.Commitments[dkey]; iv = DE.iv = { last: absA, base: Hd.Dove_attention };
+    } else if (num(iv.due, -1) >= 0 && !iv.res) {
+      const day = Math.floor(iv.due / DAY_MIN), t = absA % DAY_MIN;
+      if (iv.who !== 'Milena' && absA > day * DAY_MIN + hm(IV.to)) {
+        dd += num((IV.delta || {}).missed, 10); why.push(`missed the Dovecote interview +${num((IV.delta || {}).missed, 10)}`); delete S.Commitments[dkey];
+        Object.assign(iv, { who: 'Milena', due: (day + 1) * DAY_MIN + hm(IV.milena_from) });
+      } else if (iv.who === 'Milena' ? absA >= iv.due && !awayIn(S) && t >= hm(IV.milena_from) && t < hm(IV.milena_to)
+        : placeKey(S.World.Location) === 'dovecote' && absA >= iv.due - 30 && absA <= day * DAY_MIN + hm(IV.to)) iv.res = doveRoll(c, iv.who);
+    } else if (s1 >= 3 && !(num(iv.due, -1) >= 0) && (!(num(iv.last, -1) >= 0) || (absA - iv.last >= num(IV.again_days, 14) * DAY_MIN && Hd.Dove_attention >= num(iv.base, 0) + num(IV.again_rise, 10)))) {
+      const due = (dayNo + num(IV.after_days, 2)) * DAY_MIN + hm(IV.from);
+      Object.assign(iv, { due, who: 'Krieg' });
+      S.Commitments[dkey] = { Desc: 'Sir Krieg Valforth wants {{user}} at the Dovecote for a talk', Due: stamp(fromAbs(due)), With: IV.with || 'Krieg', Where: IV.where || 'The Dovecote', Type: 'appointment' };
+      log.push(`Dove watch: the Dovecote has called {{user}} in for an interview (${stamp(fromAbs(due))}).`);
+    }
+    if (iv.res && num(S.$eng.turn, 0) === num(iv.res.turn, 0)) {
+      const r = iv.res, L = String(IV.line || '').replace('{who}', r.who === 'Milena' ? 'Milena Sagona' : 'Sir Krieg Valforth').replace('{n}', r.n)
+        .replace('{mods}', r.mods.length ? ', ' + r.mods.join(', ') : '').replace('{total}', r.total);
+      now.push(`${r.who === 'Milena' ? IV.milena_line + ' ' : ''}${L} ${r.band[0].toUpperCase() + r.band.slice(1)}: ${(IV.results || {})[r.band] || ''}`);
+    }
+    // the room search (Investigated, or weekly while Doves reputation is low): only what is physical can be found
+    const SR = DW.search || {}, sr = DE.srch = _.isPlainObject(DE.srch) ? DE.srch : {}, phys = DW_ORDER.flatMap(k => secrets.filter(s => s.kind === k && s.item));
+    if (num(sr.night, -1) >= 0) {
+      if (absA >= sr.night * DAY_MIN + hm(SR.hour)) {
+        if (phys.length) {
+          const tip = dlv >= num(SR.tip_rep, 3), roll = d100(seed, 'dove-search', sr.night) + (tip ? num(SR.tip, 30) : 0) + dlv * num(SR.rep, 5);
+          const res = roll <= band[0] ? 'fail' : roll <= band[1] ? 'partial' : 'clean';
+          Object.assign(sr, { res, name: phys[0].name, told: 0 });
+          if (res === 'partial') { dd += num((SR.delta || {}).partial, 5); why.push(`the room search found something odd +${num((SR.delta || {}).partial, 5)}`); }
+          if (res === 'fail') { toEx = true; why.push(`the room search found ${phys[0].name}`); }
+          log.push(`Dove watch: the Doves searched {{user}}'s room (${res}${tip ? ', tipped off' : ''}).`);
+        }
+        sr.last = sr.night; sr.night = -1;
+      } else if (dayNo === sr.night - 1 && dlv >= num(SR.tip_rep, 3) && phys.length && !awayIn(S)) now.push(SR.tip_line);
+    } else if ((s1 >= 3 && DOVE_STAGES.indexOf(prevSt) < 3) || (dlv <= num(SR.weekly_rep, -3) && s1 >= 2 && dayNo - num(sr.last, -99) >= 7)) {
+      const [a, b] = SR.after_days || [2, 5]; sr.night = dayNo + rollInt(a, b, seed, 'dove-srch', dayNo);
+    }
+    if (sr.res && !sr.told && dorm && placeKey(S.World.Location).startsWith(dorm.toLowerCase())) { now.push(String((SR.results || {})[sr.res] || '').replace('{item}', sr.name)); sr.told = 1; }
+    // someone who knows and is angry with {{user}} talks: one weekly draw (never the anti-Dove, never Vesna about the Needle)
+    const LK = DW.leak || {};
+    if (!_.isPlainObject(DE.leak)) DE.leak = { w: weekNo };
+    else if (weekNo > num(DE.leak.w, weekNo)) {
+      const anti = new Set(REP.anti_doves || []), pro = new Set(REP.pro_doves || []), never = new Set(LK.never || []);
+      const cands = [...new Set(secrets.flatMap(s => s.who.filter(v => !(s.kind === 'needle' && v === 'Vesna'))))].filter(id => {
+        const b = S.Bonds[id]; if (!b || never.has(id) || anti.has(id) || grads.has(id)) return false;
+        return (b.Tension >= num(LK.tension, 70) && b.Trust < num(LK.trust_below, 40)) || (pro.has(id) && b.Tension >= num(LK.pro_tension, 50));
+      }).sort();
+      const who = cands.find(id => roll100(seed, 'dove-leak', weekNo, id) < num(LK.pct, 25)) || '';
+      DE.leak = { w: weekNo, id: who, told: 0 };
+      if (who) { dd += num(LK.rise, 10); why.push(`someone who knows talked +${num(LK.rise, 10)}`); }
+    }
+    if (DE.leak.id && !DE.leak.told) { now.push(String(LK.line || '').replace('{who}', DE.leak.id)); DE.leak.told = 1; }
+    // a cooperative student looks less suspicious (once a week)
+    if ((c.deedsNow || []).some(d => ((DW.coop || {}).deeds || []).includes(d)) && DE.coop !== weekNo && Hd.Dove_attention > 0) {
+      dd += num((DW.coop || {}).delta, -3); DE.coop = weekNo; why.push(`cooperated with the Doves ${num((DW.coop || {}).delta, -3)}`);
+    }
+    // Watched and above: a Dove posted on {{user}}'s routine on some days
+    const PO = DW.posting || {};
+    if (s1 >= 2 && secrets.length && !awayIn(S) && roll100(seed, 'dove-post', dayNo) < num(PO.pct, 33)) {
+      const places = (PO.places || []).filter(p => dormOk || !/\{dorm\}/.test(p));
+      if (places.length) now.push(String(PO.line || '').replace('{place}', dormTxt(pickOf(places, seed, 'dove-post-at', dayNo))));
+    }
+  }
+  if (back) { dd += num(DW.needle_back, 20); why.push(`Koschei's Needle came back +${num(DW.needle_back, 20)}`); }
+  Hd.Dove_attention = Math.max(0, Math.min(100, Math.round(Hd.Dove_attention + dd)));
+  if (found) Hd.Dove_attention = secrets.length ? Math.max(Hd.Dove_attention, num(DW.found_floor, 60)) : Math.max(0, Hd.Dove_attention + num(DW.found_none, -20));
+  if (toEx) Hd.Dove_attention = Math.max(Hd.Dove_attention, num((DW.search || {}).found_to, 80));
+  if (why.length) log.push(`Dove watch: ${why.join('; ')} (now ${Hd.Dove_attention}).`);
+  const stg = doveStage(Hd.Dove_attention), show = secrets.length > 0 || Hd.Dove_attention > 0;
+  if (show && prevSt !== stg) { log.push(`Dove attention is now: ${stg}.`); S.$ui.toasts.push(`Dove attention: ${stg}`); }
+  // Exposed: the hearing (a story appointment); what it decides is the story's
+  if (live && !OFF.has('dove_watch') && stg === 'Exposed' && prevSt !== 'Exposed' && secrets.length) {
+    const HG = DW.hearing || {}, due = (dayNo + 1) * DAY_MIN + hm(HG.at || '10:00');
+    S.Commitments[HG.desc || 'Hearing at the Dovecote'] = { Desc: 'A summons to a hearing before Sir Krieg Valforth', Due: stamp(fromAbs(due)), With: HG.with || 'Krieg', Where: HG.where || 'The Dovecote', Type: 'appointment' };
+  }
+  for (const [id, o] of Object.entries(TRU.overrides || {})) {   // 1.4.3: Krieg learns what {{user}} hides: his Trust is gone
+    if (o.zero_at_stage && secrets.length && stg === o.zero_at_stage && S.Bonds[id] && S.Bonds[id].Trust > 0) {
       S.Bonds[id].$Recent = [...(S.Bonds[id].$Recent || []), { w: stamp(S.World), n: 'Learned what {{user}} has been hiding.', fx: `Trust −${S.Bonds[id].Trust}` }].slice(-num((BR.recent || {}).keep, 10));   // 1.4.4
       S.Bonds[id].Trust = 0; S.Bonds[id].$tdrop = dayNo; log.push(`${id} knows what {{user}} hid: Trust 0.`);
     }
   }
   Hd._Stage = stg;
+  const heavy = DW_ORDER.map(k => secrets.find(s => s.kind === k)).find(Boolean), ivp = DE.iv || {};
+  S.$ui.dove = show ? {
+    st: stg, a: Hd.Dove_attention, line: String((DW.stages || {})[stg] || '').replace('{secret}', heavy ? heavy.name : 'what {{user}} hides'),
+    secrets: secrets.map(s => ({ n: s.name, kind: s.kind, who: s.who, item: s.item })), now,
+    risk: [...new Set(secrets.flatMap(s => s.who))].filter(id => num((S.Bonds[id] || {}).Tension, 0) >= num((DW.leak || {}).tension, 70)),
+    iv: num(ivp.due, -1) >= 0 && !ivp.res ? { due: stamp(fromAbs(ivp.due)), who: ivp.who } : null,
+    talked: !!(DE.leak && DE.leak.id && DE.leak.w === weekNo),
+  } : null;
 
   // 1.12.0 (H3): Points the narrator changed with no Transactions line get one ("not itemised"); a line written later for the same
   // amount replaces it. A new line with no change to Points or Coin changes nothing here: section 8l reminds the narrator.
@@ -7593,6 +7778,11 @@ function stepReminders(c) {
         const by = num(((S.$eng.heals || {})[name] || {}).abs, -1);
         if (by >= 0 && by <= absA) add(`heal:${name}:${dayNo}`, `${name}'s Heals_by time has arrived: show recovery or a Medical Centre visit if the story supports it; never heal off-screen.`);
       }
+      // 1.98.1 (Dove watch): a hidden or forbidden technique, or a forbidden pact partner, used with people around; the narrator judges
+      const pres = Object.keys(S.Scene.Present || {}), crowd = String((((B.$ui || {}).amb) || {}).crowd || '');
+      for (const t of [...new Set([...(c.secretCasts || []), ...(startedNow || []).filter(n => secretTech(M, n))])]) {
+        if (pres.length || /busy|packed|some people/.test(crowd)) add(`dove:${t}:${dayNo}`, String(DW.cast_line || '').replace('{what}', t).replace('{who}', pres.length ? pres.slice(0, 4).join(', ') : 'a crowd'));
+      }
       const dorm = String(S.Player.Profile.Dorm || '').trim().toLowerCase(), where = placeKey(S.World.Location);
       if (/^CURFEW/.test(S.World._Curfew || '') && dorm && dorm !== 'unsorted' && !where.startsWith(dorm) && !awayIn(S))
         add(`curfew:${where}:${dayNo}`, `{{user}} is at ${placeOf(S.World.Location)} after dorm curfew. If someone catches them, report the appropriate reputation deed; being out alone is not proof of detection.`);
@@ -8054,7 +8244,7 @@ function stepUi(c) {
     for (const [u, , title] of PLACE_LORE[placeKey(S.World.Location)] || []) hearLore(S, u, title, placeOf(S.World.Location));
   const unlock = k => { if (!offUnlock.has(k) && !S.$ui.unlocks.includes(k)) S.$ui.unlocks.push(k); };   // 1.1.0: a feature that is off does not unlock
   if (S.Battle.Active) unlock('battle');
-  if (Hd._True_magic) unlock('hidden');
+  if (Hd._True_magic || S.$ui.dove) unlock('hidden');   // 1.98.1: any Dove secret
   if (Object.keys(M.Pacts || {}).length) unlock('pacts');
   if (Object.keys(S.Commitments || {}).length) unlock('planner');
   if (Object.keys(S.Player.Injuries || {}).length) unlock('injuries');
@@ -8367,7 +8557,7 @@ function nowOf(S, moodsFull) {
 // 1.54.0 (narrator-load audit U1, stage 1; 1.55.0 stage 2: bonds, practice, profile, notices, favours, the Vigil): situational rule cards. 502 keeps a core line per topic (path, data shape, the main ban);
 // a topic's full rule (data/rule_cards.json, printed by entry 511 next to <now>) is listed while it applies: by the state, the calendar
 // or the place, and fail-open by a word in the last reply or the player's message (a topic that came up gets its rule next turn).
-const RULE_CARDS = {"letters":"letters","projects":"projects","competition":"competition","exams":"study","tutoring":"study","trip":"trip","pacts":"","first_pact":"","interactions":"","trust_tension":"","imprints":"","old_hut":"","training":"","practice":"proficiency","dorm":"","combat_role":"","favour":"planner","notices":"notices","vigil":"weather","fold":"","founding":""};   // id -> the feature that must be on ('' = always)
+const RULE_CARDS = {"letters":"letters","projects":"projects","competition":"competition","exams":"study","tutoring":"study","trip":"trip","pacts":"","first_pact":"","interactions":"","trust_tension":"","doves":"","imprints":"","old_hut":"","training":"","practice":"proficiency","dorm":"","combat_role":"","favour":"planner","notices":"notices","vigil":"weather","fold":"","founding":""};   // id -> the feature that must be on ('' = always)
 function ruleCards(c) {
   const { S, OFF, absA } = c, W = S.World, M = S.Magic || {};
   const said = String(c.text || '').replace(/<UpdateVariable>[\s\S]*?(?:<\/UpdateVariable>|$)/gi, ' ') + '\n' + String(c.userText || '');
@@ -8390,6 +8580,8 @@ function ruleCards(c) {
     first_pact: () => ((M._Affinity || {}).Types || []).includes('Occult') && !S.$eng.pactPlay && (placeKey(W.Location) === 'spirit path' || /\b(spirits?|pacts?)\b/i.test(said)),
     interactions: () => !_.isEmpty((S.Scene || {}).Present) || (((S.$ui || {}).cast || {}).ment || []).length > 0 || /\b(letters?|messages?)\b/i.test(said),
     trust_tension: () => bonded() || /\b(promis\w*|betray\w*|secrets?|lie[ds]?|lying|apolog\w*|insult\w*|punch\w*|humiliat\w*|forgiv\w*)\b/i.test(said),
+    doves: () => doveSecrets(S).length > 0 || num((S.Hidden || {}).Dove_attention, 0) > 0 || here === 'The Dovecote'   // 1.98.1 (Dove watch)
+      || /\b(doves?|dovecote|krieg|milena|forbidden|hid(e|es|ing|den)|secrets?|restricted|smuggl\w*)\b/i.test(said),
     imprints: () => bonded(),
     old_hut: () => here === 'Old Hut' || /\bold hut\b/i.test(said),
     training: practising,
@@ -8530,7 +8722,7 @@ function patchCommands(ops) {
 // ["a"]["b"] bracket paths, which pathFixPass leaves alone).
 const ROOT_LISTS = new Set(['Inventory', 'Commitments', 'Notices', 'Letters', 'Competition', 'Projects', 'Trip', 'Journal', 'Clues',
   'Mysteries', 'Battle', 'Hooks', 'Extras', 'Interactions', 'Practice', 'Purchases', 'Craft_sales', 'Rep_events', 'Training', 'Perk_use',
-  'Exam_events', 'Tutoring', 'Consumables', 'Exposure']);
+  'Exam_events', 'Tutoring', 'Consumables', 'Exposure', 'Dove_found']);
 function fixStrayPaths(commands) {
   const moved = [];
   const fix = p => {

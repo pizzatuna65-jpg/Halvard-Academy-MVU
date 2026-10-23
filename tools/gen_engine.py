@@ -164,6 +164,13 @@ assert all(l in locs for l in _cw['snow']['far']), 'club_work.json: snow.far nam
 assert all(e in EV_IDS for e in _cw['committee']), 'club_work.json: committee names an unknown event'
 assert all(k in CLUB_KEYS and k in _cw['client']['asks'] and k in _cw['client']['match'] for k in _cw['client']['clubs']), 'club_work.json: client clubs need asks and match'
 t = t.replace('/*@@CLUB_WORK@@*/{}', json.dumps({**{k: _cw[k] for k in ('newspaper', 'bake', 'snow', 'client')}, 'names': {c['name']: c['key'] for c in load_clubs(npcs, locs) if c['key'] in _cw['clubs'] or c['key'] in _cw['client']['clubs']}}, ensure_ascii=False, separators=(',', ':')))
+# 1.98.1 (owner-approved planning/DRAFT_kedalaman_fitur.md batch 2): Dove watch (data/dove_watch.json)
+_dw = json.load(open(P('data/dove_watch.json'), encoding='utf-8'))
+assert all(x in npcs for x in [*_dw['interview']['shields'], _dw['interview']['with'], _dw['hearing']['with'], *_dw['leak']['never']]), 'dove_watch.json: unknown NPC'
+assert all(k in _dw['interview']['results'] and k in _dw['search']['results'] for k in ('clean', 'partial', 'fail')), 'dove_watch.json: results need clean, partial and fail'
+assert set(_dw['stages']) == {'Rumoured', 'Watched', 'Investigated', 'Exposed'} and set(_dw['rumour']) == {'needle', 'pact', 'magic', 'deed'}, 'dove_watch.json: stages or rumour kinds'
+assert all(d in json.load(open(P('data/reputation.json'), encoding='utf-8'))['deeds'] for d in _dw['coop']['deeds']), 'dove_watch.json: coop names an unknown deed'
+t = t.replace('/*@@DOVE_WATCH@@*/{}', json.dumps({k: v for k, v in _dw.items() if not k.startswith('_')}, ensure_ascii=False, separators=(',', ':')))
 shop_prices = {}   # 1.45.0 (audit 3.4): [price, shop, the shop's place key (engine placeKey), seasons or 0, item name]
 for i in json.load(open(P('data/shop.json'), encoding='utf-8'))['items']:
     place = re.sub(r'^the ', '', locs[i['loc']]['name'].lower())

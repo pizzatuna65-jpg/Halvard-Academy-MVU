@@ -808,7 +808,9 @@ def vesna_world(C, N, ejs):
               "Breaking it: nobody knows whether it would free her soul or end her.\n"
               "Law: binding a soul is Soul magic, a forbidden art in Eldrasil; the Doves would seize the egg and question whoever carries it.\n"
               "Wanted: Norvaine wants it back, quietly; it cannot ask openly without admitting what it is.")
-    held = ("Held by: <% if (" + TRANSFER_TV + ") { %>{{user}}, since the World Competition of campaign Year <%- " + TRANSFER_TV + " %>; "
+    # 1.98.1 (owner-approved planning/DRAFT_kedalaman_fitur.md batch 2, Dove watch): seized by the Dovecote (/Dove_found), it is Krieg's
+    held = ("Held by: <% const _ns = String(getvar('stat_data.Campus_State.Needle_seized') || ''); if (_ns) { %>the Dovecote, under Sir Krieg "
+            "Valforth's seal, since <%- _ns %>; he always knows where Vesna is and can draw her back to it.<% } else if (" + TRANSFER_TV + ") { %>{{user}}, since the World Competition of campaign Year <%- " + TRANSFER_TV + " %>; "
             "Vesna refused to keep it herself.<% } else { %>Colonel Kazimir Zorin, on a chain under his collar.<% } %>")
     keys = ["Koschei's Needle", 'Koschei', 'starglass egg', 'Project Bessmertnik']
     for uid in (490, 491): assert uid not in C, f'Koschei uid {uid} is taken'
@@ -820,7 +822,7 @@ def vesna_world(C, N, ejs):
                                content="<%_ if (" + bag + ") { _%>\n" + needle + "\n" + held + "\n<%_ } _%>")
     else:
         C[490] = template_from(C[230], uid=490, displayIndex=490, comment="Item - Koschei's Needle", key=keys,
-                               content=needle + "\nHeld by: Colonel Kazimir Zorin, on a chain under his collar; after Vesna's transfer, {{user}} (she refused to keep it herself).")
+                               content=needle + "\nHeld by: Colonel Kazimir Zorin, on a chain under his collar; after Vesna's transfer, {{user}} (she refused to keep it herself); if the Doves ever seize it, the Dovecote, under Sir Krieg Valforth's seal.")
 
 def add_world_myths(C):
     for uid, title, keys, content in WORLD_MYTHS:

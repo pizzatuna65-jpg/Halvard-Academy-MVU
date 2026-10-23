@@ -276,7 +276,7 @@ button.chip{font:inherit;font-size:13px;cursor:pointer}button.chip:hover{filter:
     if (act.length) c.push(chip(act.join(', '), 'fa-wand-sparkles', 'glow', 'Active effects'));
     const summoned = Object.entries(M.Pacts || {}).filter(([, p]) => p.Summoned).map(([k]) => k);
     if (unl.includes('pacts') && summoned.length) c.push(chip(summoned.join(', ') + ' summoned', 'fa-feather', 'glow'));
-    if (unl.includes('hidden') && H._True_magic) c.push(chip('Doves: ' + (H._Stage || 'Unnoticed'), 'fa-eye', num(H.Dove_attention, 0) >= 40 ? 'danger' : num(H.Dove_attention, 0) >= 20 ? 'warn' : '', 'Dove attention ' + num(H.Dove_attention, 0) + '/100'));
+    if (unl.includes('hidden') && (H._True_magic || ui.dove)) c.push(chip('Doves: ' + (H._Stage || 'Unnoticed'), 'fa-eye', num(H.Dove_attention, 0) >= 40 ? 'danger' : num(H.Dove_attention, 0) >= 20 ? 'warn' : '', 'Dove attention ' + num(H.Dove_attention, 0) + '/100'));
     if ((S.Battle || {}).Active && on('battle')) c.push(chip('In battle: ' + Object.keys(S.Battle.Combatants || {}).map(k => CAST[k] && !(((S.Bonds || {})[k] || {}).Rank >= 1 || (ui.names || []).includes(k)) ? CAST[k][1] : k).join(', '), 'fa-khanda', 'danger', 'Open the battle panel', 'battle'));
     // 1.44.0: overdue and due today from the engine's Agenda feed (commitments and projects)
     const com = on('planner') ? Object.entries(S.Commitments || {}) : [], ag = (Array.isArray(ui.agenda) ? ui.agenda : []).filter(x => x.k === 'commitment' || x.k === 'project');

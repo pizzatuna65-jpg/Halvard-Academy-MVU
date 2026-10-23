@@ -19,6 +19,7 @@
   "gist": 62,
   "hooks": 154,
   "gossip": 19,
+  "dove_watch": 0,
   "clubwork": 92,
   "fortune": 224,
   "attendance": -3,
@@ -31,8 +32,8 @@
   "say_colors": 183,
   "new_people": 0
  },
- "core_rules": 9241,
- "lore": 10317,
+ "core_rules": 9249,
+ "lore": 10349,
  "price_guide": 7544,
  "live": {
   "class": 40,

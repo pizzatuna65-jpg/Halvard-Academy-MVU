@@ -1,0 +1,57 @@
+{
+ "_note": "1.98.1 (owner-approved planning/DRAFT_kedalaman_fitur.md batch 2): Dove watch. Dove_attention is how close the Dovecote is to what {{user}} keeps from it: the true magic, a forbidden technique, a forbidden pact (Pacting), Koschei's Needle in the Bag (Soul magic, lore 490/491) and Hidden.Secrets (violations kept from the Doves, written by the narrator). The meter and the stage line need no toggle (hidden magic has none); the events (rumour, posting, interview, room search, a knower talking) are the Features row dove_watch. Stages as before (stageOf): Unnoticed < 20, Rumoured < 40, Watched < 60, Investigated < 80, Exposed. Every draw is seeded (roll100, rollInt, pickOf).",
+ "stages": {
+  "Rumoured": "The Dovecote has heard a whisper, nothing more: Doves look at {{user}} a moment longer in passing.",
+  "Watched": "A Dove is on {{user}}'s routine: a white cloak turns up where {{user}} usually goes, never close, never hidden. Using a secret in sight of one is how attention jumps.",
+  "Investigated": "The Dovecote has opened a file on {{user}}: they ask {{user}}'s friends questions, check where {{user}} was, and want {{user}} in for a talk.",
+  "Exposed": "The Dovecote has enough to act on {secret}: expect Doves with a summons, at the door or in class. Sir Krieg Valforth leads it."
+ },
+ "rumour": {
+  "needle": "Someone brought something back from Hanakaze that the Doves would want to see.",
+  "pact": "Someone in the {dorm} Dormitory talks to something nobody else can see.",
+  "magic": "Someone in the {dorm} Dormitory casts something that isn't on any syllabus.",
+  "deed": "Someone went where the Doves say nobody goes, and got away with it."
+ },
+ "posting": {
+  "pct": 33,
+  "places": ["the {dorm} Dormitory", "Main Courtyard", "Lecture Halls", "Canteen", "Main Library"],
+  "line": "A Dove is posted near {place} today; {{user}}'s day passes there."
+ },
+ "interview": {
+  "after_days": 2, "from": "16:00", "to": "18:00", "where": "The Dovecote", "with": "Krieg", "desc": "Dovecote interview",
+  "again_days": 14, "again_rise": 10,
+  "society": 3, "shield": 20, "shield_rank": 7, "shields": ["Yvette", "Kuroo", "Ezrel", "Ottavio", "Althair"], "milena": -10,
+  "delta": { "clean": -15, "partial": -5, "fail": 10, "missed": 10 },
+  "milena_from": "10:00", "milena_to": "18:00",
+  "milena_line": "Milena Sagona comes to find {{user}} for a quiet word, \"only a talk, Signor/Signora\".",
+  "line": "The Dovecote interview is now ({who}; Fortune {n}{mods} = {total}): play it to this result.",
+  "results": {
+   "clean": "{{user}} gives them nothing; the file goes quiet for now.",
+   "partial": "they let {{user}} go, unconvinced; they will look again.",
+   "fail": "{{user}} slips: a detail that does not fit, a pause too long. Nothing is confessed unless {{user}} chooses to."
+  }
+ },
+ "search": {
+  "after_days": [2, 5], "hour": "23:00", "weekly_rep": -3, "tip_rep": 3, "tip": 30, "rep": 5,
+  "tip_line": "Milena Sagona, in passing and very quietly: the Doves mean to look through {{user}}'s room tomorrow night.",
+  "delta": { "partial": 5 }, "found_to": 80,
+  "results": {
+   "clean": "The Doves searched {{user}}'s room last night and found nothing; a book sits a little off where it was.",
+   "partial": "The Doves searched {{user}}'s room last night and found something odd, but not enough.",
+   "fail": "The Doves searched {{user}}'s room last night and found {item}. They will come for it: play the seizure in the story, where {{user}} can answer it."
+  }
+ },
+ "hearing": { "desc": "Hearing at the Dovecote", "at": "10:00", "with": "Krieg", "where": "The Dovecote" },
+ "leak": {
+  "pct": 25, "rise": 10, "tension": 70, "trust_below": 40, "pro_tension": 50, "never": ["Dante"],
+  "line": "Someone who knows has talked to the Doves this week: {who} (narrator only; play it in character, out of {{user}}'s sight)."
+ },
+ "coop": { "deeds": ["cooperated_with_dove"], "delta": -3 },
+ "quiet_none": 5,
+ "found_floor": 60,
+ "found_none": -20,
+ "needle_back": 20,
+ "cold_weeks": 8,
+ "cap": 8,
+ "cast_line": "{{user}} used {what} with people around ({who}). If anyone could have noticed, report the Dove_attention rise; if not, nothing."
+}

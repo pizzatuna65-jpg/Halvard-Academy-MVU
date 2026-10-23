@@ -312,7 +312,12 @@ Unscheduled worksite visits may be attempted with: <%- access.staff.join(', ') %
 <%_ for (const l of repLines) { _%>
 Reputation, <%- l %>
 <%_ } _%>
-<%_ if (H._True_magic) { _%>
-Hidden magic — Dove attention: <%- H._Stage %> (<%- H.Dove_attention %>/100)
-<%_ } _%>
+<%_ const DV = UI.dove; if (DV && DV.st) { _%>
+<%_ // 1.98.1 (owner-approved planning/DRAFT_kedalaman_fitur.md batch 2): Dove watch (engine stepHidden, $ui.dove) _%>
+Dove watch: <%- DV.st %> (<%- DV.a %>/100).<%- DV.line ? ' ' + DV.line : '' %>
+<%_ if ((DV.secrets || []).length) { _%>
+Dove secrets: <%- DV.secrets.map(s => s.n + ((s.item || (s.who || []).length) ? ' (' + [s.item ? 'in the Bag' : '', (s.who || []).length ? 'known to ' + s.who.join(', ') : ''].filter(Boolean).join('; ') + ')' : '')).join('; ') %>
+<%_ } for (const l of DV.now || []) { _%>
+<%- l %>
+<%_ } } _%>
 </now>
