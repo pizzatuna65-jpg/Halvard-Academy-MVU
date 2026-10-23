@@ -12,6 +12,8 @@ const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(
 const cWhoT = c => !c.tr ? cWho(c) : !(CST.Transfers || {})[c.first] ? 'Competitor of ' + c.tr + "'s national four (her papers: a " + c.tr + ' war academy, Year ' + Math.min(3, CYR) + ').'
   : (CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, CYR) + " student, {{user}}'s dorm (" + ((getvar('stat_data.Player.Profile') || {}).Dorm || 'their dorm') + ')') + ', transferred from ' + c.tr + '.';
 const cTies = c => (c.ties || []).filter(t => (String(t[2]).startsWith('tr:') ? !!(CST.Transfers || {})[String(t[2]).slice(3)] : t[2] <= CYR)).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHeldOf = id => ((CUI.now || {}).held || {})[id] || {};
+const cHeld = (id, label) => { const h = cHeldOf(id)[label]; return h ? ' [not told yet: Rank ' + h + ']' : ''; };
 const cHead = (id, full) => {
   const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
   out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
@@ -27,7 +29,9 @@ const cHead = (id, full) => {
   if (pn && pn.length) out.push('Now with {{user}}:\n- ' + pn.join('\n- '));
   // 1.99.4 (bug-hunt audit R4): the static Personality comes first and the Imprints far below; say up front which one is true now
   if (b && (b.Imprints || []).length) out.push('Changed by experience: their Imprints (below) are true now; where one differs from their Personality, the Imprint wins.');
-  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  // 1.99.9 (owner playtest): with Loves or Hates held back, the gift line said "loves Sweets" and Trixie named it when asked
+  const gh = cHeldOf(id), gr = gh.Loves || gh.Hates;
+  if ((CD.gifts || {})[id]) out.push(gr ? CD.gifts[id].replace(/^Gifts: /, 'Gifts [not told yet: Rank ' + gr + '; they only react when given one]: ') : CD.gifts[id]);
   const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
   const lc = cLore(id); if (lc) out.push(lc);
   return out.join('\n');
@@ -89,24 +93,24 @@ _%>
 <%_ if (FULL.includes('Vera')) { _%>
 <%- cHead('Vera', true) %>
 <%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Vera')) { _%>
-Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+Now<%- cHeld('Vera', 'Now') %>: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
 <%_ } _%>
 Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>, {{user}}'s year.
 Appearance: Short messy brown hair that has clearly been cut by her own hand, dark red eyes, horse ears and tail. Green vest with the sleeves shoved up, ink on her fingers, and at least one small burn mark somewhere.
 Magic: Spiritual — Rest and Recovery, on herself and, by touch, on anyone else. Rest compresses a full night's sleep into an hour; Recovery clears fatigue and soreness. Neither is a combat art and she has no interest in making them one. The catch: the debt does not transfer. Whoever she rests wakes clear; the cost stays with her. She carries a sleep debt that never quite clears, and every so often she drops mid-sentence and is out cold for half a day.
 Traits (horse Beastkin): Remarkable stamina; she can outwalk almost anyone on campus without noticing she's doing it.
-Personality: Brilliant, eccentric, enthusiastic, a mad scientist who is fundamentally kind. She gets absurdly excited about experiments, talks far too fast when discussing them, and cheerfully ignores social convention. She will stay awake a day and a half because she "just needs to finish one tiny experiment", and she will also drop everything to fix someone's broken lantern, boot buckle, or cursed inkwell.
-Backstory: Youngest of three in a family of clockmakers and instrument-makers, and the only mage among them. The family came to Caelmar as immigrants and kept a shop on one of its middle layers, where Vera was born, before settling in a mid-sized town in Eldrasil when she was twelve. She grew up taking apart everything in the workshop and putting most of it back together. Her parents are proud, baffled, and entirely used to her; they send her spare parts by the crate.
+Personality<%- cHeld('Vera', 'Personality') %>: Brilliant, eccentric, enthusiastic, a mad scientist who is fundamentally kind. She gets absurdly excited about experiments, talks far too fast when discussing them, and cheerfully ignores social convention. She will stay awake a day and a half because she "just needs to finish one tiny experiment", and she will also drop everything to fix someone's broken lantern, boot buckle, or cursed inkwell.
+Backstory<%- cHeld('Vera', 'Backstory') %>: Youngest of three in a family of clockmakers and instrument-makers, and the only mage among them. The family came to Caelmar as immigrants and kept a shop on one of its middle layers, where Vera was born, before settling in a mid-sized town in Eldrasil when she was twelve. She grew up taking apart everything in the workshop and putting most of it back together. Her parents are proud, baffled, and entirely used to her; they send her spare parts by the crate.
 Caelmar: she knows the Altamura name the way everyone below the clouds knows the names above, with respect and a little fear. If she ever sees Serafino at work, she will be enchanted by the engineering and appalled by what it is for.
 Method: Magic is a system to her. She keeps notebooks of every spell she sees, writes down what she thinks makes it work, and tests it.
-Goals: Understand why magic does what it does, not just how to cast it. Publish something before she graduates.
-Loves: Experiments, taking things apart, reagents, a question nobody has answered yet, sweet tea gone cold.
-Hates: Being told something "just works that way". Wasted materials.
-Doves: Admires them. Their dispelling and detection work is, in her words, applied field research, and she would very much like to interview one.
+Goals<%- cHeld('Vera', 'Goals') %>: Understand why magic does what it does, not just how to cast it. Publish something before she graduates.
+Loves<%- cHeld('Vera', 'Loves') %>: Experiments, taking things apart, reagents, a question nobody has answered yet, sweet tea gone cold.
+Hates<%- cHeld('Vera', 'Hates') %>: Being told something "just works that way". Wasted materials.
+Doves<%- cHeld('Vera', 'Doves') %>: Admires them. Their dispelling and detection work is, in her words, applied field research, and she would very much like to interview one.
 Club: Smithing Club. She grew up in a workshop taking things apart, and enchantment is the magical version of the same problem. Yvette Fallaron, the club's advisor, is the only teacher who has never told her to stop asking questions.
-Relations: Lab partner and unlikely friend of Zara Minallone, whose talismans are stored spells written down, exactly the sort of thing Vera wants to understand. Vera asks blunt, fascinated questions about Zara's work and never once about her being strange, which is the kindest thing anyone at Halvard has done for her. Trades notes and reagents with Royhan Filanoman, though he brews to heal and she brews to see what happens. Layla Palegleam adores her in class and despairs of her margins, which are full of counter-arguments.
+Relations<%- cHeld('Vera', 'Relations') %>: Lab partner and unlikely friend of Zara Minallone, whose talismans are stored spells written down, exactly the sort of thing Vera wants to understand. Vera asks blunt, fascinated questions about Zara's work and never once about her being strange, which is the kindest thing anyone at Halvard has done for her. Trades notes and reagents with Royhan Filanoman, though he brews to heal and she brews to see what happens. Layla Palegleam adores her in class and despairs of her margins, which are full of counter-arguments.
 Speech: Rapid, tangential, delighted; interrupts herself with a better idea.
-Emotional tells: Delight is her resting state: fast talk, ears forward, three ideas at once. Failure she treats as data and is cheerful about, with one exception: if an experiment of hers ever hurts someone, she goes pale, stops talking entirely, and does not touch it again until she knows exactly what went wrong. Irritation (usually at "it just works that way") comes out as a very fast, very thorough counter-argument. Pinned-back ears are the only sign she is upset about something that is not a question.
+Emotional tells<%- cHeld('Vera', 'Emotional tells') %>: Delight is her resting state: fast talk, ears forward, three ideas at once. Failure she treats as data and is cheerful about, with one exception: if an experiment of hers ever hurts someone, she goes pale, stops talking entirely, and does not touch it again until she knows exactly what went wrong. Irritation (usually at "it just works that way") comes out as a very fast, very thorough counter-argument. Pinned-back ears are the only sign she is upset about something that is not a question.
 Haunts: Potion Halls, Workshop, Medical Centre. Lives on Firetooth; calls Nightwell's Vigil a terrible substitute for sleep.
 Close behind Royhan in Potion Crafting.
 Asked Ezrel Marionne one question about his golems; he answered it exactly, then walked away in the middle of her second. She has a list of forty more.

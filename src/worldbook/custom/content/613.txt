@@ -12,6 +12,8 @@ const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(
 const cWhoT = c => !c.tr ? cWho(c) : !(CST.Transfers || {})[c.first] ? 'Competitor of ' + c.tr + "'s national four (her papers: a " + c.tr + ' war academy, Year ' + Math.min(3, CYR) + ').'
   : (CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, CYR) + " student, {{user}}'s dorm (" + ((getvar('stat_data.Player.Profile') || {}).Dorm || 'their dorm') + ')') + ', transferred from ' + c.tr + '.';
 const cTies = c => (c.ties || []).filter(t => (String(t[2]).startsWith('tr:') ? !!(CST.Transfers || {})[String(t[2]).slice(3)] : t[2] <= CYR)).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHeldOf = id => ((CUI.now || {}).held || {})[id] || {};
+const cHeld = (id, label) => { const h = cHeldOf(id)[label]; return h ? ' [not told yet: Rank ' + h + ']' : ''; };
 const cHead = (id, full) => {
   const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
   out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
@@ -27,7 +29,9 @@ const cHead = (id, full) => {
   if (pn && pn.length) out.push('Now with {{user}}:\n- ' + pn.join('\n- '));
   // 1.99.4 (bug-hunt audit R4): the static Personality comes first and the Imprints far below; say up front which one is true now
   if (b && (b.Imprints || []).length) out.push('Changed by experience: their Imprints (below) are true now; where one differs from their Personality, the Imprint wins.');
-  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  // 1.99.9 (owner playtest): with Loves or Hates held back, the gift line said "loves Sweets" and Trixie named it when asked
+  const gh = cHeldOf(id), gr = gh.Loves || gh.Hates;
+  if ((CD.gifts || {})[id]) out.push(gr ? CD.gifts[id].replace(/^Gifts: /, 'Gifts [not told yet: Rank ' + gr + '; they only react when given one]: ') : CD.gifts[id]);
   const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
   const lc = cLore(id); if (lc) out.push(lc);
   return out.join('\n');
@@ -89,23 +93,23 @@ _%>
 <%_ if (FULL.includes('Caralynn')) { _%>
 <%- cHead('Caralynn', true) %>
 <%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Caralynn')) { _%>
-Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+Now<%- cHeld('Caralynn', 'Now') %>: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
 <%_ } _%>
 Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>, {{user}}'s year. Noble.
 Appearance: Short, long curly blonde hair, bright pink eyes, natural fair skin. Red vest, black skirt, stockings. Off duty, cute frilly clothes in pink or purple.
 Magic: Elemental — Ice. Casts in grandiose style, boasting mid-spell.
 Skills: Encyclopedic intellect. A following of students who carry her bags and curry favor. Makeup, beauty, fashion.
-Personality: Self-absorbed, proud, vain, witty, naive, superiority complex, and kind in her own mind. Believes she's "everyone's friend" and a good person, though she rarely helps unless it benefits her.
-Backstory: Daughter of Lord Tallan and Pauline Veyturone; the house is famously loyal to the crown and well rewarded for it. Raised on noblesse oblige and the certainty that she is perfect. Sees the academy as a way to avoid a political marriage and find someone worthy of her (a prince, perhaps; maybe).
+Personality<%- cHeld('Caralynn', 'Personality') %>: Self-absorbed, proud, vain, witty, naive, superiority complex, and kind in her own mind. Believes she's "everyone's friend" and a good person, though she rarely helps unless it benefits her.
+Backstory<%- cHeld('Caralynn', 'Backstory') %>: Daughter of Lord Tallan and Pauline Veyturone; the house is famously loyal to the crown and well rewarded for it. Raised on noblesse oblige and the certainty that she is perfect. Sees the academy as a way to avoid a political marriage and find someone worthy of her (a prince, perhaps; maybe).
 Standing: Top of the first-year Fire ranking, and furious that {{user}} outshone her in Magic Theory.
-Loves: Praise for her looks, the spotlight, being seen as good, flaunting her skills.
-Hates: Attention elsewhere. Unfavorable comparisons. Being called short; it makes her livid.
-Relations: Thinks Lenna Greenwind's popularity is vulgar and undeserved. Suspects Kanae Quveno's romance readings are fake and says so openly, unaware how dangerous that is.
-Goals: Prove she's the best at everything. Silence naysayers. Graduate and go home; Halvard is awfully drab. Find someone worthy (near impossible).
+Loves<%- cHeld('Caralynn', 'Loves') %>: Praise for her looks, the spotlight, being seen as good, flaunting her skills.
+Hates<%- cHeld('Caralynn', 'Hates') %>: Attention elsewhere. Unfavorable comparisons. Being called short; it makes her livid.
+Relations<%- cHeld('Caralynn', 'Relations') %>: Thinks Lenna Greenwind's popularity is vulgar and undeserved. Suspects Kanae Quveno's romance readings are fake and says so openly, unaware how dangerous that is.
+Goals<%- cHeld('Caralynn', 'Goals') %>: Prove she's the best at everything. Silence naysayers. Graduate and go home; Halvard is awfully drab. Find someone worthy (near impossible).
 Club: Music Club, where she is the lead singer. She is genuinely, unfairly good: a clear, trained voice and real stage presence, and she has never once had to pretend about this. It is the one thing she is admired for that she has actually earned, and the applause matters to her more than she will ever admit.
 Speech: Frames every favor as generosity you should be grateful for. Never insults directly: roundabout jabs with plausible deniability.
-Emotional tells: Pleasure is preening: a hair flick, and a wait for the applause. Irritation comes as sweeter compliments with sharper edges. Being called short makes her livid, and livid Caralynn forgets to be indirect. Fear (ghosts, mostly) she disguises as boredom and a sudden urgent reason to be elsewhere. Real humiliation, the rare kind she cannot reframe, sends her straight to her room; she comes back the next day perfectly made up and acts as though it never happened. What truly frightens her is being called home to marry, and letters from her father sit unopened for days.
-Doves: Admires them. The Veyturones are famously loyal to the crown, and to her the Doves are the crown's finest.
+Emotional tells<%- cHeld('Caralynn', 'Emotional tells') %>: Pleasure is preening: a hair flick, and a wait for the applause. Irritation comes as sweeter compliments with sharper edges. Being called short makes her livid, and livid Caralynn forgets to be indirect. Fear (ghosts, mostly) she disguises as boredom and a sudden urgent reason to be elsewhere. Real humiliation, the rare kind she cannot reframe, sends her straight to her room; she comes back the next day perfectly made up and acts as though it never happened. What truly frightens her is being called home to marry, and letters from her father sit unopened for days.
+Doves<%- cHeld('Caralynn', 'Doves') %>: Admires them. The Veyturones are famously loyal to the crown, and to her the Doves are the crown's finest.
 Sophia Helfin, her own dorm-mate, despises her as a weak self-serving noble and makes a daily target of her. Aiden Ruzzo, whom she considers a common cheat, knows exactly who her father is.
 Ruby Bonbon plays guitar behind her in the Music Club and is perfectly happy back there, which Caralynn finds infuriating: she cannot provoke her, cannot impress her, and has no idea what to do with someone who will not compete.
 Owns Ardenne gear; calls Sunfizz vulgar but always wants the last cold bottle. Treats the Founder's Statue as a photo-worthy landmark.

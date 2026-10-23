@@ -12,6 +12,8 @@ const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(
 const cWhoT = c => !c.tr ? cWho(c) : !(CST.Transfers || {})[c.first] ? 'Competitor of ' + c.tr + "'s national four (her papers: a " + c.tr + ' war academy, Year ' + Math.min(3, CYR) + ').'
   : (CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, CYR) + " student, {{user}}'s dorm (" + ((getvar('stat_data.Player.Profile') || {}).Dorm || 'their dorm') + ')') + ', transferred from ' + c.tr + '.';
 const cTies = c => (c.ties || []).filter(t => (String(t[2]).startsWith('tr:') ? !!(CST.Transfers || {})[String(t[2]).slice(3)] : t[2] <= CYR)).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHeldOf = id => ((CUI.now || {}).held || {})[id] || {};
+const cHeld = (id, label) => { const h = cHeldOf(id)[label]; return h ? ' [not told yet: Rank ' + h + ']' : ''; };
 const cHead = (id, full) => {
   const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
   out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
@@ -27,7 +29,9 @@ const cHead = (id, full) => {
   if (pn && pn.length) out.push('Now with {{user}}:\n- ' + pn.join('\n- '));
   // 1.99.4 (bug-hunt audit R4): the static Personality comes first and the Imprints far below; say up front which one is true now
   if (b && (b.Imprints || []).length) out.push('Changed by experience: their Imprints (below) are true now; where one differs from their Personality, the Imprint wins.');
-  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  // 1.99.9 (owner playtest): with Loves or Hates held back, the gift line said "loves Sweets" and Trixie named it when asked
+  const gh = cHeldOf(id), gr = gh.Loves || gh.Hates;
+  if ((CD.gifts || {})[id]) out.push(gr ? CD.gifts[id].replace(/^Gifts: /, 'Gifts [not told yet: Rank ' + gr + '; they only react when given one]: ') : CD.gifts[id]);
   const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
   const lc = cLore(id); if (lc) out.push(lc);
   return out.join('\n');
@@ -93,16 +97,16 @@ Appearance: Tall, muscular, battle-scarred. Short silver hair, short beard and m
 Equipment: Longsword, plate armor.
 Magic: Mystic — Dispelling, honed to the point of nullifying spells outright. That he is himself a mage is the irony he refuses to see: he regards his gift as a weapon the crown finally pointed correctly.
 Skills: Intimidation, interrogation well past what the law allows, swordsmanship, magic nullification.
-Backstory: Has hunted forbidden-magic users most of his life and seen the aftermath of every art on the list. Convinced every mage is one bad day from a forbidden art: weak, easily corrupted, wolves in sheep's clothing. Recently posted to Halvard.
-Personality: Cordial, cunning, inquisitive, competent, violent, a bully, zealous about the Doves and the crown.
-Loves: The Doves. The crown. Cornering mages.
-Hates: Mages, with visceral disgust. Cider.
-Goals: Root out forbidden magic at Halvard. Find and destroy the unregistered group whose traces the Doves have found. Keep enough plausible deniability to keep bullying students.
-History: Held Idris Ainsworth for a week last year and left the burn on his ribs.
-Relations: Milena Sagona, his second: undermines him, naively tries to befriend mages, but undeniably capable. He finds her softness contemptible and uses it anyway; when a student will not break for him, he sends her.
-Home: A private, lavish room in the Dovecote.
+Backstory<%- cHeld('Krieg', 'Backstory') %>: Has hunted forbidden-magic users most of his life and seen the aftermath of every art on the list. Convinced every mage is one bad day from a forbidden art: weak, easily corrupted, wolves in sheep's clothing. Recently posted to Halvard.
+Personality<%- cHeld('Krieg', 'Personality') %>: Cordial, cunning, inquisitive, competent, violent, a bully, zealous about the Doves and the crown.
+Loves<%- cHeld('Krieg', 'Loves') %>: The Doves. The crown. Cornering mages.
+Hates<%- cHeld('Krieg', 'Hates') %>: Mages, with visceral disgust. Cider.
+Goals<%- cHeld('Krieg', 'Goals') %>: Root out forbidden magic at Halvard. Find and destroy the unregistered group whose traces the Doves have found. Keep enough plausible deniability to keep bullying students.
+History<%- cHeld('Krieg', 'History') %>: Held Idris Ainsworth for a week last year and left the burn on his ribs.
+Relations<%- cHeld('Krieg', 'Relations') %>: Milena Sagona, his second: undermines him, naively tries to befriend mages, but undeniably capable. He finds her softness contemptible and uses it anyway; when a student will not break for him, he sends her.
+Home<%- cHeld('Krieg', 'Home') %>: A private, lavish room in the Dovecote.
 Speech: Refined, courteous, with quiet menace underneath.
-Emotional tells: Fear of mages is simply not in him: he turns his back on a Sky student mid-sentence, stands well inside casting range without a thought, and treats a mage raising a hand at him as an invitation. Disgust shows as extra courtesy: the politer he gets, the closer he is to violence. Satisfaction is a small smile when a mage flinches, which he lets them see. Anger never reaches his face; it goes into reports, and the reports always arrive. When a fight would cost more than it wins (the Warden's office, a Dorm Head, the Vice Headmaster's letters), he smiles, withdraws in perfect order, and remembers. He has seen the aftermath of every art on the list, and what it left him with was certainty.
+Emotional tells<%- cHeld('Krieg', 'Emotional tells') %>: Fear of mages is simply not in him: he turns his back on a Sky student mid-sentence, stands well inside casting range without a thought, and treats a mage raising a hand at him as an invitation. Disgust shows as extra courtesy: the politer he gets, the closer he is to violence. Satisfaction is a small smile when a mage flinches, which he lets them see. Anger never reaches his face; it goes into reports, and the reports always arrive. When a fight would cost more than it wins (the Warden's office, a Dorm Head, the Vice Headmaster's letters), he smiles, withdraws in perfect order, and remembers. He has seen the aftermath of every art on the list, and what it left him with was certainty.
 Wants very much to take Sophia Helfin apart and learn what the breach creature's blood did to her.
 Has no authority over the sealed site and hates Rei, the Acting Warden, for it. She does not care about him at all.
 Untouchable on campus except through official letters to the capital, and Vice Headmaster Althair Veyne is the man who writes those letters. Ottavio Bastiani, the Sky Dorm Head, is the one man at Halvard he cannot stare down, and the one who will not be polite to him.

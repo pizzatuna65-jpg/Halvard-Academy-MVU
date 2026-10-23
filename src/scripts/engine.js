@@ -1837,7 +1837,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.99.8";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.99.9";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 const verLt = (a, b) => { const p = v => String(v || '0').split('.').map(x => parseInt(x, 10) || 0), x = p(a), y = p(b); for (let i = 0; i < 3; i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) < (y[i] || 0); return false; };   // 1.63.0
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
@@ -8489,6 +8489,9 @@ function nowOf(S, moodsFull) {
     leviathan: () => 'THE LEVIATHAN (engine): ' + e.t + '. A sight for a lifetime, seen only from far off; nobody fights it.',
   }[e.k] || (() => ''))();
   const BOND = NOW_D.BOND, TRUST = NOW_D.TRUST, TEN = NOW_D.TENSION;
+  // 1.99.9 (owner playtest: Trixie and Caralynn named what they love at Rank 0): the fields held back, by the rank that opens them, for
+  // the Cast Sheet to tag at the line itself (509_sheet cHeld). Not the ways they behave (shown, never told), which the narrator plays anyway.
+  const HELD = {}, SHOWN = new Set(['Personality', 'Traits', 'Emotional tells', 'Quirk', 'Flaw', 'Serious mode', 'Notes', 'Now', 'Discretion', 'Inventory']);
   const BONDS = getvar('stat_data.Bonds') || {};
   const CLOSE = UI.close || [];   // 1.5.0 (N3a): bonds with XP at 80% or more of the next rank (engine)
   // 1.4.3 Trust shifts what they share (Doubtful one rank less, Trusting one more, Confidant two; Betrayed: nothing new) and holds back
@@ -8508,6 +8511,7 @@ function nowOf(S, moodsFull) {
     const og = trOver(id), gated = og && og.no_gates ? [] : Object.entries(TRUST.gates || {}).filter(([g, need]) => +g <= r && +g !== 8 && tr < need && BOND.perks[g]).map(([g, need]) => BOND.perks[g] + ' (needs Trust ' + need + ')');
     const susp = (UI.tsusp || []).filter(k => ((getvar('stat_data._Perks') || {})[k] || {}).From === id);
     const heldTxt = Object.keys(held).sort((a, b) => a - b).map(k => held[k].map(f => f[1]).join(', ') + ' (Rank ' + k + ')').join('; ');
+    if (sh !== null) Object.entries(held).forEach(([k, fs]) => fs.forEach(f => { if (!SHOWN.has(f[1])) (HELD[id] = HELD[id] || {})[f[1]] = +k; }));
     put(id, 'Bond (' + [BOND.tag[id], tb.toLowerCase(), CLOSE.includes(id) && 'close'].filter(Boolean).join(', ') + '): '
       + (sh === null ? 'shares nothing new with {{user}}; keeps to what {{user}} already knows'
         : 'tells freely what their lore lists under ' + (free.length ? free.join(', ') : 'their public role') + (heldTxt
@@ -8566,7 +8570,7 @@ function nowOf(S, moodsFull) {
   const look = [...Object.entries(getvar('stat_data.Player.Injuries') || {}).map(([k, v]) => { const o = v || {}, bp = String(o.Body_part || '').trim();
     return k + ' (' + [o.Severity || 'minor', bp && !k.toLowerCase().includes(bp.toLowerCase()) ? bp : ''].filter(Boolean).join(', ') + ')'; }),
     ...Object.keys(getvar('stat_data.Player.Conditions') || {}).map(k => LOOK.cond[k]), LOOK.fatigue[PV._Fatigue], num((UI.sleep || {}).loss, 0) > 0 ? LOOK.sleep : ''].filter(Boolean);
-  const NOW = { people, visit, ...(look.length ? { looks: 'How {{user}} looks (anyone near can see it; let someone present notice when it fits): ' + look.join('; ') + '.' } : {}) };
+  const NOW = { people, visit, ...(Object.keys(HELD).length ? { held: HELD } : {}), ...(look.length ? { looks: 'How {{user}} looks (anyone near can see it; let someone present notice when it fits): ' + look.join('; ') + '.' } : {}) };
   let out;
   NOW.area = out = [];
   if (AREA) { const _A = AREA, _k = AREA.key, _M = AREA.muster, _l = AREA.left, _W = AREA_WALK[_k];

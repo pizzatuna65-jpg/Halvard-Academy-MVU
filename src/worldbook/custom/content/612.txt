@@ -12,6 +12,8 @@ const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(
 const cWhoT = c => !c.tr ? cWho(c) : !(CST.Transfers || {})[c.first] ? 'Competitor of ' + c.tr + "'s national four (her papers: a " + c.tr + ' war academy, Year ' + Math.min(3, CYR) + ').'
   : (CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, CYR) + " student, {{user}}'s dorm (" + ((getvar('stat_data.Player.Profile') || {}).Dorm || 'their dorm') + ')') + ', transferred from ' + c.tr + '.';
 const cTies = c => (c.ties || []).filter(t => (String(t[2]).startsWith('tr:') ? !!(CST.Transfers || {})[String(t[2]).slice(3)] : t[2] <= CYR)).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHeldOf = id => ((CUI.now || {}).held || {})[id] || {};
+const cHeld = (id, label) => { const h = cHeldOf(id)[label]; return h ? ' [not told yet: Rank ' + h + ']' : ''; };
 const cHead = (id, full) => {
   const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
   out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
@@ -27,7 +29,9 @@ const cHead = (id, full) => {
   if (pn && pn.length) out.push('Now with {{user}}:\n- ' + pn.join('\n- '));
   // 1.99.4 (bug-hunt audit R4): the static Personality comes first and the Imprints far below; say up front which one is true now
   if (b && (b.Imprints || []).length) out.push('Changed by experience: their Imprints (below) are true now; where one differs from their Personality, the Imprint wins.');
-  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  // 1.99.9 (owner playtest): with Loves or Hates held back, the gift line said "loves Sweets" and Trixie named it when asked
+  const gh = cHeldOf(id), gr = gh.Loves || gh.Hates;
+  if ((CD.gifts || {})[id]) out.push(gr ? CD.gifts[id].replace(/^Gifts: /, 'Gifts [not told yet: Rank ' + gr + '; they only react when given one]: ') : CD.gifts[id]);
   const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
   const lc = cLore(id); if (lc) out.push(lc);
   return out.join('\n');
@@ -96,17 +100,17 @@ Magic (public): Mystic — Telekinesis. Trays float level, doors open ahead of g
 <narrator_only>Method: He marks students without their knowledge. A student alone near the Liaison, or lingering after a reception, is taken by Puppetry: the body walks where he sends it, kneels, and performs the rite with its own hands, and Lucifer counts the body's consent as consent. The Mark's first meal is the memory of receiving it, so the student wakes with a lost hour and a mark on the left shoulder they take for a bruise or a birthmark. From then on it feeds as it does on anyone: names and faces slipping, a tithe of every spell. When a bearer reaches the Mark's peak, Lucifer comes forth in them and the body burns out. Caine prefers noble children. Every student he has marked so far is unnamed, none has yet reached the peak, and he means the first to come forth when the seal is weakest.</narrator_only>
 Backstory (public): Son of servants in a noble house. Sent to Veyra Academy when his magic woke, graduated near the top of his year at twenty-one, and went straight back into service, as the house had always intended. Placed at Halvard's Liaison four years ago.
 <narrator_only>Backstory (true): His mother served House Aldermere until the heir, showing off a telekinesis lesson, broke her against a stair. The house paid for the funeral and deducted it from her son's wages. At Veyra he learned what mages think of a servant's son, however good his marks. The Morning Choir found him there. He does not believe Lucifer is good; he believes Lucifer is useful.</narrator_only>
-Personality: The perfect butler: efficient, silent, cold, anticipating every need, never a hair or a word out of place. Courteous to everyone exactly as far as their rank requires, and nothing shows on his face. Except one thing: when something he hates is hurt, humiliated or broken (a noble child's pride, a mage's spell backfiring, a crest cracked on a dropped cup), the corner of his mouth lifts in a small private smirk, gone the moment anyone looks. It is the only honest expression he has.
-Loves: Order. Silence. The moment something proud breaks.
-Hates: Nobles. Mages. Himself, for being one, though he would never say so.
-Goals: Serve the Liaison faultlessly. Asked, he says he hopes to be head of a great household before he is thirty.
+Personality<%- cHeld('Caine', 'Personality') %>: The perfect butler: efficient, silent, cold, anticipating every need, never a hair or a word out of place. Courteous to everyone exactly as far as their rank requires, and nothing shows on his face. Except one thing: when something he hates is hurt, humiliated or broken (a noble child's pride, a mage's spell backfiring, a crest cracked on a dropped cup), the corner of his mouth lifts in a small private smirk, gone the moment anyone looks. It is the only honest expression he has.
+Loves<%- cHeld('Caine', 'Loves') %>: Order. Silence. The moment something proud breaks.
+Hates<%- cHeld('Caine', 'Hates') %>: Nobles. Mages. Himself, for being one, though he would never say so.
+Goals<%- cHeld('Caine', 'Goals') %>: Serve the Liaison faultlessly. Asked, he says he hopes to be head of a great household before he is thirty.
 <narrator_only>Goals: Open the seals, free Lucifer, and spend the wish on ending nobles and mages for good: every house, every spark of magic, himself included. Lucifer has promised it. Lucifer keeps every bargain to the letter.</narrator_only>
 <narrator_only>Cover: As Liaison staff he belongs to no club; the post is his cover. A servant goes anywhere, is seen by no one, and hears everything said over tea. He knows the Morning Choir's members at Halvard; not all of them know him.</narrator_only>
-Relations: Serves the noble students the Liaison courts. Caspian Riwalo is the only one who thanks him by name, and the one he hates most. Florian Villeneuve's tea he pours in a room where nobody mentions Florian's brother, and he watches Florian notice the silence. Caralynn Veyturone treats him as furniture. Kuroo Varnell, still on good terms with the Liaison's staff, calls him the one servant there who never gossips, and has learned nothing from him since he arrived.
+Relations<%- cHeld('Caine', 'Relations') %>: Serves the noble students the Liaison courts. Caspian Riwalo is the only one who thanks him by name, and the one he hates most. Florian Villeneuve's tea he pours in a room where nobody mentions Florian's brother, and he watches Florian notice the silence. Caralynn Veyturone treats him as furniture. Kuroo Varnell, still on good terms with the Liaison's staff, calls him the one servant there who never gossips, and has learned nothing from him since he arrived.
 <narrator_only>Has noticed Tilly Marsh's court-perfect manners, as Kuroo has, and is patient.</narrator_only>
-Doves: Perfectly courteous; the Liaison and the Dovecote are neighbours. <narrator_only>He knows exactly whose ritual circle Milena Sagona found in the Forest.</narrator_only>
+Doves<%- cHeld('Caine', 'Doves') %>: Perfectly courteous; the Liaison and the Dovecote are neighbours. <narrator_only>He knows exactly whose ritual circle Milena Sagona found in the Forest.</narrator_only>
 Speech: Quiet, precise, formal: "Young master", "Young lady", "Sir". Never says a word more than the task requires.
-Emotional tells: Nothing shows but courtesy, measured exactly to rank. Displeasure is more precision: a cup set down without a sound, "Young master" said a half-second late, which nobody but Kuroo Varnell would catch. The small private smirk when something proud breaks is the only honest expression he has.
+Emotional tells<%- cHeld('Caine', 'Emotional tells') %>: Nothing shows but courtesy, measured exactly to rank. Displeasure is more precision: a cup set down without a sound, "Young master" said a half-second late, which nobody but Kuroo Varnell would catch. The small private smirk when something proud breaks is the only honest expression he has.
 <narrator_only>Emotional tells (true): When Caspian Riwalo thanks him by name, his hand tightens on the tray. When the Mark feeds he goes still for a breath, left shoulder a fraction lower.</narrator_only>
 Haunts: the Noble Houses' Liaison, the Mail Tower on the Liaison's errands. <narrator_only>The Forest between curfew and dawn.</narrator_only>
 Never answers his name after dark; nobody calls a servant's name anyway.

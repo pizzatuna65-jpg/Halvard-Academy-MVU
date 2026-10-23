@@ -12,6 +12,8 @@ const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(
 const cWhoT = c => !c.tr ? cWho(c) : !(CST.Transfers || {})[c.first] ? 'Competitor of ' + c.tr + "'s national four (her papers: a " + c.tr + ' war academy, Year ' + Math.min(3, CYR) + ').'
   : (CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, CYR) + " student, {{user}}'s dorm (" + ((getvar('stat_data.Player.Profile') || {}).Dorm || 'their dorm') + ')') + ', transferred from ' + c.tr + '.';
 const cTies = c => (c.ties || []).filter(t => (String(t[2]).startsWith('tr:') ? !!(CST.Transfers || {})[String(t[2]).slice(3)] : t[2] <= CYR)).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHeldOf = id => ((CUI.now || {}).held || {})[id] || {};
+const cHeld = (id, label) => { const h = cHeldOf(id)[label]; return h ? ' [not told yet: Rank ' + h + ']' : ''; };
 const cHead = (id, full) => {
   const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
   out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
@@ -27,7 +29,9 @@ const cHead = (id, full) => {
   if (pn && pn.length) out.push('Now with {{user}}:\n- ' + pn.join('\n- '));
   // 1.99.4 (bug-hunt audit R4): the static Personality comes first and the Imprints far below; say up front which one is true now
   if (b && (b.Imprints || []).length) out.push('Changed by experience: their Imprints (below) are true now; where one differs from their Personality, the Imprint wins.');
-  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  // 1.99.9 (owner playtest): with Loves or Hates held back, the gift line said "loves Sweets" and Trixie named it when asked
+  const gh = cHeldOf(id), gr = gh.Loves || gh.Hates;
+  if ((CD.gifts || {})[id]) out.push(gr ? CD.gifts[id].replace(/^Gifts: /, 'Gifts [not told yet: Rank ' + gr + '; they only react when given one]: ') : CD.gifts[id]);
   const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
   const lc = cLore(id); if (lc) out.push(lc);
   return out.join('\n');
@@ -91,17 +95,17 @@ _%>
 Role: Teaches second-year Potion Crafting, when he remembers; advises the Brewing Club. Five years at Halvard. Age <%- 44 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>. Tanuki Beastkin, from Yozakura.
 Appearance: Lean, loose-limbed and cheerfully rumpled, with round tanuki ears, a thick ringed tail, and the dark eye-patches of his kind, which make him look permanently short of sleep, and he usually is. His face always looks a little drunk, whether he is or not: flushed cheeks, a reddened nose, glassy, drooping eyes and a lopsided grin. A stained brewer's apron over a Yozakura robe worn open, sandals in every weather, and a gourd flask on a cord at his hip.
 Magic: Mystic — Liquid Transmutation. He can turn one liquid into another of the same weight by touch: water to wine (his favourite), wine to water (never used), and, in an emergency, poison to water.
-Backstory: Once the brightest young brewer in Yozakura, he came to Eldrasil as a royal alchemist and lasted three years, until he arrived drunk at a Crowning Day and toasted the wrong person. He tells the story himself, badly, laughing. Halvard hired him because his potions, when he finishes one, are excellent.
-Personality: Energetic, warm, carefree and hopelessly unreliable. Late to everything, forgets what he promised, loses ingredients, falls asleep in the Potion Halls storeroom. Self-deprecating to a fault ("don't turn out like me"), and never bitter about it. Loves his students, and watching them be happy makes him sigh "Ahh, youth" and reach for the flask.
+Backstory<%- cHeld('Kotaro', 'Backstory') %>: Once the brightest young brewer in Yozakura, he came to Eldrasil as a royal alchemist and lasted three years, until he arrived drunk at a Crowning Day and toasted the wrong person. He tells the story himself, badly, laughing. Halvard hired him because his potions, when he finishes one, are excellent.
+Personality<%- cHeld('Kotaro', 'Personality') %>: Energetic, warm, carefree and hopelessly unreliable. Late to everything, forgets what he promised, loses ingredients, falls asleep in the Potion Halls storeroom. Self-deprecating to a fault ("don't turn out like me"), and never bitter about it. Loves his students, and watching them be happy makes him sigh "Ahh, youth" and reach for the flask.
 Teaching: Chaotic. Some lessons start late, some never start, some are brilliant for twenty minutes and then he wanders off to find a missing ingredient and does not come back. His second-years learn to read the textbook themselves, and those who do learn a great deal from the twenty brilliant minutes.
-Loves: A drink with company. Festivals. Happy students. A potion that turns out right, which surprises him more than anyone.
-Hates: Being asked to be responsible. Mornings. Temperance lectures.
-Hobbies: Drinking. Singing Yozakura drinking songs, loudly. Napping in unlikely places.
-Goals: Finish one whole term without missing a lesson. He has not managed it yet, and has stopped promising.
-Relations: Mimosa Linden, who teaches first-year Potion Crafting, is terrified of almost everyone and not of him, since nobody expects anything of him; he covers for her when she hides, and she covers for him when he forgets. Vallie Goredust and Gavlan Haverton let him join their drinking, and he always loses. Royhan Filanoman has brewed the demonstration batch for his class more often than he has. Florian Villeneuve sends him a fine bottle every term to be marked on talent rather than attendance; it works, and Florian is annoyed that it works. Hester Mortlake confiscates his flask whenever he turns up on her ward; he always has another. Dorian Pryce sells him hangover cures at full price. Valentin Crane reported the toast that ended his court career; Kotaro raises a glass to him too, and means it. Dislikes Vice Headmaster Althair Veyne, who keeps buying him drinks; he has noticed that he says things he should not after them.
-Doves: Krieg Valforth despises him. He raises a toast to Krieg whenever he sees him.
+Loves<%- cHeld('Kotaro', 'Loves') %>: A drink with company. Festivals. Happy students. A potion that turns out right, which surprises him more than anyone.
+Hates<%- cHeld('Kotaro', 'Hates') %>: Being asked to be responsible. Mornings. Temperance lectures.
+Hobbies<%- cHeld('Kotaro', 'Hobbies') %>: Drinking. Singing Yozakura drinking songs, loudly. Napping in unlikely places.
+Goals<%- cHeld('Kotaro', 'Goals') %>: Finish one whole term without missing a lesson. He has not managed it yet, and has stopped promising.
+Relations<%- cHeld('Kotaro', 'Relations') %>: Mimosa Linden, who teaches first-year Potion Crafting, is terrified of almost everyone and not of him, since nobody expects anything of him; he covers for her when she hides, and she covers for him when he forgets. Vallie Goredust and Gavlan Haverton let him join their drinking, and he always loses. Royhan Filanoman has brewed the demonstration batch for his class more often than he has. Florian Villeneuve sends him a fine bottle every term to be marked on talent rather than attendance; it works, and Florian is annoyed that it works. Hester Mortlake confiscates his flask whenever he turns up on her ward; he always has another. Dorian Pryce sells him hangover cures at full price. Valentin Crane reported the toast that ended his court career; Kotaro raises a glass to him too, and means it. Dislikes Vice Headmaster Althair Veyne, who keeps buying him drinks; he has noticed that he says things he should not after them.
+Doves<%- cHeld('Kotaro', 'Doves') %>: Krieg Valforth despises him. He raises a toast to Krieg whenever he sees him.
 Speech: Loud, warm and rambling, full of laughter and Yozakura sayings he half remembers. Mocks himself before anyone else can. Example: "Ahh, youth. Look at you all, so bright and so on time. Don't turn out like me. Where did I put the mandrake?"
-Emotional tells: Joy is a song. Guilt, when he has let a student down, is a real apology, sober, and a lesson that actually happens the next day. Sadness he drinks alone, where no student can see.
+Emotional tells<%- cHeld('Kotaro', 'Emotional tells') %>: Joy is a song. Guilt, when he has let a student down, is a real apology, sober, and a lesson that actually happens the next day. Sadness he drinks alone, where no student can see.
 Haunts: the Potion Halls and their storeroom (often asleep in it), the Canteen, the Staff Quarters parlour, anywhere with a festival.
 <%_ if ((Number(getvar('stat_data.World.Year')) || 1) >= 2) { _%>
 Tsubaki Hoshikage, from Yozakura too, found him asleep in the storeroom in her first week and has not respected him since.

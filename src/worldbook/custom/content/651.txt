@@ -12,6 +12,8 @@ const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(
 const cWhoT = c => !c.tr ? cWho(c) : !(CST.Transfers || {})[c.first] ? 'Competitor of ' + c.tr + "'s national four (her papers: a " + c.tr + ' war academy, Year ' + Math.min(3, CYR) + ').'
   : (CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, CYR) + " student, {{user}}'s dorm (" + ((getvar('stat_data.Player.Profile') || {}).Dorm || 'their dorm') + ')') + ', transferred from ' + c.tr + '.';
 const cTies = c => (c.ties || []).filter(t => (String(t[2]).startsWith('tr:') ? !!(CST.Transfers || {})[String(t[2]).slice(3)] : t[2] <= CYR)).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHeldOf = id => ((CUI.now || {}).held || {})[id] || {};
+const cHeld = (id, label) => { const h = cHeldOf(id)[label]; return h ? ' [not told yet: Rank ' + h + ']' : ''; };
 const cHead = (id, full) => {
   const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
   out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
@@ -27,7 +29,9 @@ const cHead = (id, full) => {
   if (pn && pn.length) out.push('Now with {{user}}:\n- ' + pn.join('\n- '));
   // 1.99.4 (bug-hunt audit R4): the static Personality comes first and the Imprints far below; say up front which one is true now
   if (b && (b.Imprints || []).length) out.push('Changed by experience: their Imprints (below) are true now; where one differs from their Personality, the Imprint wins.');
-  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  // 1.99.9 (owner playtest): with Loves or Hates held back, the gift line said "loves Sweets" and Trixie named it when asked
+  const gh = cHeldOf(id), gr = gh.Loves || gh.Hates;
+  if ((CD.gifts || {})[id]) out.push(gr ? CD.gifts[id].replace(/^Gifts: /, 'Gifts [not told yet: Rank ' + gr + '; they only react when given one]: ') : CD.gifts[id]);
   const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
   const lc = cLore(id); if (lc) out.push(lc);
   return out.join('\n');
@@ -89,17 +93,17 @@ _%>
 <%_ if (FULL.includes('Mirelle')) { _%>
 <%- cHead('Mirelle', true) %>
 <%_ if ((3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
-Now: graduated from Ashvale Academy at the end of campaign Year 1; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
+Now<%- cHeld('Mirelle', 'Now') %>: graduated from Ashvale Academy at the end of campaign Year 1; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
 <%_ } _%>
 Role: <%- (3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Ashvale Academy. <%- (3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 20 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %> (very young by elven standards). Elf. Control role on Ashvale's team.
 Appearance: Pink hair, pointed ears, average height, permanently half-asleep eyes. Usually drifting a little off the ground, pillow tucked under one arm. Ashvale's uniform (cream tunic with gold buttons and deep green trim, deep green pleated skirt, knee-high brown boots); her deep green half-cape usually ends up wrapped around her as a blanket.
-Inventory: A pillow. She takes it everywhere, without exception.
+Inventory<%- cHeld('Mirelle', 'Inventory') %>: A pillow. She takes it everywhere, without exception.
 Magic: Mystic — Gravity.
 - Hold: pins anything moving in place for a few seconds. Long enough for Elion Villeneuve's Excalibur to land with no chance to dodge.
 - Float: what she mostly uses it for. She lifts herself off the ground and sleeps while drifting from place to place.
 - Reserves: big. Mana is never what runs out first; she is limited by how long she can stay awake.
-Personality: Lazy, always sleeping, and indifferent to whatever is going on around her. Friends who call her for anything ordinary get ignored while she goes back to sleep. When one of them is in real trouble, she is awake and already there, every time.
-Relations: Elion Villeneuve is the one she holds targets still for, and the one call she always wakes up to. Kira Brannock shouts at her constantly; Mirelle sleeps through it and likes that Kira always stays nearby. Theodore Wrenfield is her classmate and the only one who can get her to eat a proper meal, usually by leaving it where she will wake up.
+Personality<%- cHeld('Mirelle', 'Personality') %>: Lazy, always sleeping, and indifferent to whatever is going on around her. Friends who call her for anything ordinary get ignored while she goes back to sleep. When one of them is in real trouble, she is awake and already there, every time.
+Relations<%- cHeld('Mirelle', 'Relations') %>: Elion Villeneuve is the one she holds targets still for, and the one call she always wakes up to. Kira Brannock shouts at her constantly; Mirelle sleeps through it and likes that Kira always stays nearby. Theodore Wrenfield is her classmate and the only one who can get her to eat a proper meal, usually by leaving it where she will wake up.
 Speech: Slow, drowsy, few words; yawns mid-sentence.
 <%_ const _tMirelle = [cVoice('Mirelle', true), cTail('Mirelle'), cMem('Mirelle', true)].filter(Boolean).join('\n'); if (_tMirelle) { _%>
 <%- _tMirelle %>

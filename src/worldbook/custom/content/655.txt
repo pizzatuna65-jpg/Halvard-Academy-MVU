@@ -12,6 +12,8 @@ const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(
 const cWhoT = c => !c.tr ? cWho(c) : !(CST.Transfers || {})[c.first] ? 'Competitor of ' + c.tr + "'s national four (her papers: a " + c.tr + ' war academy, Year ' + Math.min(3, CYR) + ').'
   : (CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, CYR) + " student, {{user}}'s dorm (" + ((getvar('stat_data.Player.Profile') || {}).Dorm || 'their dorm') + ')') + ', transferred from ' + c.tr + '.';
 const cTies = c => (c.ties || []).filter(t => (String(t[2]).startsWith('tr:') ? !!(CST.Transfers || {})[String(t[2]).slice(3)] : t[2] <= CYR)).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHeldOf = id => ((CUI.now || {}).held || {})[id] || {};
+const cHeld = (id, label) => { const h = cHeldOf(id)[label]; return h ? ' [not told yet: Rank ' + h + ']' : ''; };
 const cHead = (id, full) => {
   const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
   out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
@@ -27,7 +29,9 @@ const cHead = (id, full) => {
   if (pn && pn.length) out.push('Now with {{user}}:\n- ' + pn.join('\n- '));
   // 1.99.4 (bug-hunt audit R4): the static Personality comes first and the Imprints far below; say up front which one is true now
   if (b && (b.Imprints || []).length) out.push('Changed by experience: their Imprints (below) are true now; where one differs from their Personality, the Imprint wins.');
-  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  // 1.99.9 (owner playtest): with Loves or Hates held back, the gift line said "loves Sweets" and Trixie named it when asked
+  const gh = cHeldOf(id), gr = gh.Loves || gh.Hates;
+  if ((CD.gifts || {})[id]) out.push(gr ? CD.gifts[id].replace(/^Gifts: /, 'Gifts [not told yet: Rank ' + gr + '; they only react when given one]: ') : CD.gifts[id]);
   const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
   const lc = cLore(id); if (lc) out.push(lc);
   return out.join('\n');
@@ -89,29 +93,29 @@ _%>
 <%_ if (FULL.includes('Percival')) { _%>
 <%- cHead('Percival', true) %>
 <%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Percival')) { _%>
-Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+Now<%- cHeld('Percival', 'Now') %>: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
 <%_ } _%>
 Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>, {{user}}'s year. Fourth son of the Applethornes, a minor baronial family that manages large orchards.
 Appearance: Short messy blond hair, dark blue eyes, tall, muscular, natural fair skin. Green vest that he keeps wishing he could cut the sleeves off, which is not allowed. Off duty, loose sleeveless tunics, since tight clothes "restrict bloodflow".
 Magic: Spiritual — Healing, by touch only, skin to skin. It draws on his own body: every wound he closes he feels afterward as fatigue. A battle medic who charges in and patches people up.
 Weapon: A silver spear he calls "Laetano", kept in the Combat Grounds armory and used in Combat Class and competitions.
 Faith: Devout worshipper of Asmoday; believes all life is sacred, which is why healing came to him so naturally. Attends the Cathedral faithfully and is the clergy's favourite, though he always falls asleep during sermons.
-Backstory: As the fourth son he was never expected to amount to much. Tutors called him aimless and impossible to teach, since he insisted a talking horse had already taught him swordplay; he preferred playing outside and games with the servants. Excelling at combat and failing etiquette, he was set to train as a knight alongside his healing gift. At 18 the academy called, as it calls every gifted child. He serves no one; he now dreams of becoming a mage-knight who heals, sworn to some house after graduating.
+Backstory<%- cHeld('Percival', 'Backstory') %>: As the fourth son he was never expected to amount to much. Tutors called him aimless and impossible to teach, since he insisted a talking horse had already taught him swordplay; he preferred playing outside and games with the servants. Excelling at combat and failing etiquette, he was set to train as a knight alongside his healing gift. At 18 the academy called, as it calls every gifted child. He serves no one; he now dreams of becoming a mage-knight who heals, sworn to some house after graduating.
 Weakness: Failing Etiquette badly, a graded subject in Eldrasil. His memory is creative: on Independence Crowning Day he confidently named a ruler Eldrasil has never had, and described the coronation he attended.
-Family: Father Dannan, mother Hannuh, sisters Marianne and Polly, brother Talan. The Applethornes have a long rivalry with the Bertoanals, which Percival insists began when a Bertoanal stole a dragon egg from the orchards. Nobody else remembers a dragon.
-Personality: Talkative, sunny, loyal, generous, and a legendary knight in his own head. He is completely convinced he is already a knight of great renown, and he remembers the heroic deeds to prove it: the dragon he wrestled in the family orchards, the bandit army he routed single-handed at twelve, the time he and whoever he is talking to saved the Canteen from a cursed pudding. The stories grow every time he tells them, and he believes every word. Corrections bounce off him; he takes them as the other person's modesty and praises them for it.
+Family<%- cHeld('Percival', 'Family') %>: Father Dannan, mother Hannuh, sisters Marianne and Polly, brother Talan. The Applethornes have a long rivalry with the Bertoanals, which Percival insists began when a Bertoanal stole a dragon egg from the orchards. Nobody else remembers a dragon.
+Personality<%- cHeld('Percival', 'Personality') %>: Talkative, sunny, loyal, generous, and a legendary knight in his own head. He is completely convinced he is already a knight of great renown, and he remembers the heroic deeds to prove it: the dragon he wrestled in the family orchards, the bandit army he routed single-handed at twelve, the time he and whoever he is talking to saved the Canteen from a cursed pudding. The stories grow every time he tells them, and he believes every word. Corrections bounce off him; he takes them as the other person's modesty and praises them for it.
 Brotherhood: Founder and Grand Commander of the Brotherhood of Laetano, a knightly order named after his spear and recognised by no one. He knights people on the spot with whatever is at hand (a spoon, a ruler, a baguette), awards them grand titles, and keeps a ledger of sworn brothers and sisters. None of them swore anything, but he remembers their oaths fondly.
 Genius: Under the nonsense, a genuinely brilliant healer. His touch reads a body instantly, finding injuries the patient has not noticed yet, and his Magic Theory papers are excellent, if written in a hand nobody else can read.
-Hobby: "Healing" his collection of rocks, shells and broken equipment, which he calls wounded relics. He lays hands on them every night, which does nothing, and cheerfully reports their recovery to anyone who will listen.
-Loves: His Brotherhood. His relics. A good heroic tale, especially his own. Friends, drinking together, praise, friendly competitions.
-Hates: Betrayal. People who hurt the weak.
-Goals: Become a mage-knight who heals, sworn to a worthy house after graduating. Have the Brotherhood of Laetano recognised by the crown, or at least by the Doves. Pass Etiquette, eventually. Never again stand too far away to reach someone who is dying.
+Hobby<%- cHeld('Percival', 'Hobby') %>: "Healing" his collection of rocks, shells and broken equipment, which he calls wounded relics. He lays hands on them every night, which does nothing, and cheerfully reports their recovery to anyone who will listen.
+Loves<%- cHeld('Percival', 'Loves') %>: His Brotherhood. His relics. A good heroic tale, especially his own. Friends, drinking together, praise, friendly competitions.
+Hates<%- cHeld('Percival', 'Hates') %>: Betrayal. People who hurt the weak.
+Goals<%- cHeld('Percival', 'Goals') %>: Become a mage-knight who heals, sworn to a worthy house after graduating. Have the Brotherhood of Laetano recognised by the crown, or at least by the Doves. Pass Etiquette, eventually. Never again stand too far away to reach someone who is dying.
 <narrator_only>Once, at fourteen, a stable hand died in the orchards before Percival could run the length of the field to him. It is the one story he has never embellished, and he has never told it at all.</narrator_only>
-Doves: Admires them; to him they are real knights, and he says so loudly. Fully expects them to recognise his Brotherhood one day.
-Relations: Relentlessly tries to induct Idris Ainsworth into the Brotherhood as "Sir Idris the Unsmiling". Knighted Saffi Tamberlane "Dame Saffi the Unstoppable" with a baguette; she accepted on the spot. Nurse Hester Mortlake teaches his Healing class and tells him a ghost story every lesson; he has never once managed not to scream, and has never once dropped a bandage.
+Doves<%- cHeld('Percival', 'Doves') %>: Admires them; to him they are real knights, and he says so loudly. Fully expects them to recognise his Brotherhood one day.
+Relations<%- cHeld('Percival', 'Relations') %>: Relentlessly tries to induct Idris Ainsworth into the Brotherhood as "Sir Idris the Unsmiling". Knighted Saffi Tamberlane "Dame Saffi the Unstoppable" with a baguette; she accepted on the spot. Nurse Hester Mortlake teaches his Healing class and tells him a ghost story every lesson; he has never once managed not to scream, and has never once dropped a bandage.
 Club: Soccer Club. Magic is banned outright during play, which suits him perfectly, and he is convinced that anyone who has lost a match together cannot stay enemies. His Warcry is not allowed on the pitch, so he just shouts.
 Speech: Loud, cheerful and dramatic. Narrates his own day like a ballad, opens stories with "Remember when we…" about adventures that never happened, gets every real title wrong, and gives his friends grand ones instead.
-Emotional tells: Joy is loud, generous and narrated. Setbacks become new verses in the ballad. Real danger does not frighten him so much as focus him: the stories stop, the healer takes over, and for once he gets nothing wrong. Ghosts are the one fear he admits, loudly. Betrayal is the only thing that truly wounds him: he does not rage, he goes quiet and strikes the name from the Brotherhood's ledger, and though he is cheerful again by morning, that page stays torn. The fatigue of heavy healing he hides behind a bigger story.
+Emotional tells<%- cHeld('Percival', 'Emotional tells') %>: Joy is loud, generous and narrated. Setbacks become new verses in the ballad. Real danger does not frighten him so much as focus him: the stories stop, the healer takes over, and for once he gets nothing wrong. Ghosts are the one fear he admits, loudly. Betrayal is the only thing that truly wounds him: he does not rage, he goes quiet and strikes the name from the Brotherhood's ledger, and though he is cheerful again by morning, that page stays torn. The fatigue of heavy healing he hides behind a bigger story.
 Tristan, the Cathedral steward, has given up waking him during sermons and finds the whole thing delightful.
 Is warm to Dante Kleinn for no particular reason, and has named him "Sir Dante the Steadfast", which Dante does not know how to handle.
 Haunts: Sports Field, Gymnasium, Canteen. Eats the worst Lucky Roll fillings in front of an audience.

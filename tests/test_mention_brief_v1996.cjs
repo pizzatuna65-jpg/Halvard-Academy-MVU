@@ -46,5 +46,5 @@ const S1 = cast(S0, [], []);
 const bad = KW.filter(e => { try { const t = R(e.id, S1, 'Hello.'); return !/Only mentioned, not here/.test(t) && !/graduated|Former student/.test(t) && t !== ''; } catch (x) { return true; } });
 ok(!bad.length, 'every public part renders on its own (EJS blocks still balance)' + (bad.length ? ': ' + bad.map(e => e.comment).join(', ') : ''));
 const sheet = renderEntry(card, 509, applyPatch(here, [op('/$ui/cast', { full: ['Kanae'], brief: [] })]));
-ok(/\[Kanae Quveno\] full sheet/.test(sheet) && /Backstory: Second daughter/.test(sheet) && !/Only mentioned, not here/.test(sheet), 'the Cast Sheet still carries the full lore (gen_mvu_entries GATE_RX)');
+ok(/\[Kanae Quveno\] full sheet/.test(sheet) && /Backstory( \[not told yet: Rank \d+\])?: Second daughter/.test(sheet) && !/Only mentioned, not here/.test(sheet), 'the Cast Sheet still carries the full lore (gen_mvu_entries GATE_RX)');
 ok(/Percival/.test(R(P, S1, 'The bell rings.')) && tok(R(P, S1, 'The bell rings.')) < 600, 'Percival, mentioned four times in the owner\'s Entrance morning, costs a few hundred tokens');

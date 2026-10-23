@@ -12,6 +12,8 @@ const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(
 const cWhoT = c => !c.tr ? cWho(c) : !(CST.Transfers || {})[c.first] ? 'Competitor of ' + c.tr + "'s national four (her papers: a " + c.tr + ' war academy, Year ' + Math.min(3, CYR) + ').'
   : (CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, CYR) + " student, {{user}}'s dorm (" + ((getvar('stat_data.Player.Profile') || {}).Dorm || 'their dorm') + ')') + ', transferred from ' + c.tr + '.';
 const cTies = c => (c.ties || []).filter(t => (String(t[2]).startsWith('tr:') ? !!(CST.Transfers || {})[String(t[2]).slice(3)] : t[2] <= CYR)).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHeldOf = id => ((CUI.now || {}).held || {})[id] || {};
+const cHeld = (id, label) => { const h = cHeldOf(id)[label]; return h ? ' [not told yet: Rank ' + h + ']' : ''; };
 const cHead = (id, full) => {
   const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
   out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
@@ -27,7 +29,9 @@ const cHead = (id, full) => {
   if (pn && pn.length) out.push('Now with {{user}}:\n- ' + pn.join('\n- '));
   // 1.99.4 (bug-hunt audit R4): the static Personality comes first and the Imprints far below; say up front which one is true now
   if (b && (b.Imprints || []).length) out.push('Changed by experience: their Imprints (below) are true now; where one differs from their Personality, the Imprint wins.');
-  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  // 1.99.9 (owner playtest): with Loves or Hates held back, the gift line said "loves Sweets" and Trixie named it when asked
+  const gh = cHeldOf(id), gr = gh.Loves || gh.Hates;
+  if ((CD.gifts || {})[id]) out.push(gr ? CD.gifts[id].replace(/^Gifts: /, 'Gifts [not told yet: Rank ' + gr + '; they only react when given one]: ') : CD.gifts[id]);
   const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
   const lc = cLore(id); if (lc) out.push(lc);
   return out.join('\n');
@@ -89,14 +93,14 @@ _%>
 <%_ if (FULL.includes('Pip')) { _%>
 <%- cHead('Pip', true) %>
 <%_ if ((1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
-Now: graduated from Veyra Academy at the end of campaign Year 3; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
+Now<%- cHeld('Pip', 'Now') %>: graduated from Veyra Academy at the end of campaign Year 3; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
 <%_ } _%>
 Role: <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Veyra Academy. <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 18 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %>. Dog Beastkin. Healing role on Veyra's team.
 Appearance: Small, messy light brown hair, floppy dog ears, a tail permanently tucked between his legs. Veyra's boys' uniform: navy blazer with white piping, gold Veyra crest on the breast pocket, white collared shirt, blue-violet ribbon tie, navy trousers.
 Magic: Spiritual — Healing. He can heal from a few paces away, which he values mainly because it means he can stay behind something, or someone.
-Personality: A complete coward, and not a noble one. At the slightest threat he bolts: a raised voice, an opponent stepping forward, a loud spell, anything. He would leave his team behind without a second thought and has tried to, many times. He whines, bargains, and makes excuses, and none of it has ever worked.
+Personality<%- cHeld('Pip', 'Personality') %>: A complete coward, and not a noble one. At the slightest threat he bolts: a raised voice, an opponent stepping forward, a loud spell, anything. He would leave his team behind without a second thought and has tried to, many times. He whines, bargains, and makes excuses, and none of it has ever worked.
 The job: Bellatrix never needs his healing. His real work is keeping the other two alive through the damage she causes, which he only does because Cassius will not let him leave.
-Relations: Cassius Rhavel stops him every time he runs, usually by dropping a barrier cage around him on the spot; Pip heals from inside it, complaining the whole time. The instant Cassius's attention is elsewhere, Pip bolts. Bellatrix Ardenne terrifies him, and she enjoys it. Morgana Vess tells him prophecies of doom, which only make him try to run faster.
+Relations<%- cHeld('Pip', 'Relations') %>: Cassius Rhavel stops him every time he runs, usually by dropping a barrier cage around him on the spot; Pip heals from inside it, complaining the whole time. The instant Cassius's attention is elsewhere, Pip bolts. Bellatrix Ardenne terrifies him, and she enjoys it. Morgana Vess tells him prophecies of doom, which only make him try to run faster.
 Speech: Whiny, panicky, full of excuses and "can we go now?"
 <%_ const _tPip = [cVoice('Pip', true), cTail('Pip'), cMem('Pip', true)].filter(Boolean).join('\n'); if (_tPip) { _%>
 <%- _tPip %>

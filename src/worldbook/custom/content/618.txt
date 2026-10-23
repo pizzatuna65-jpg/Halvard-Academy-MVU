@@ -12,6 +12,8 @@ const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(
 const cWhoT = c => !c.tr ? cWho(c) : !(CST.Transfers || {})[c.first] ? 'Competitor of ' + c.tr + "'s national four (her papers: a " + c.tr + ' war academy, Year ' + Math.min(3, CYR) + ').'
   : (CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, CYR) + " student, {{user}}'s dorm (" + ((getvar('stat_data.Player.Profile') || {}).Dorm || 'their dorm') + ')') + ', transferred from ' + c.tr + '.';
 const cTies = c => (c.ties || []).filter(t => (String(t[2]).startsWith('tr:') ? !!(CST.Transfers || {})[String(t[2]).slice(3)] : t[2] <= CYR)).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHeldOf = id => ((CUI.now || {}).held || {})[id] || {};
+const cHeld = (id, label) => { const h = cHeldOf(id)[label]; return h ? ' [not told yet: Rank ' + h + ']' : ''; };
 const cHead = (id, full) => {
   const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
   out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
@@ -27,7 +29,9 @@ const cHead = (id, full) => {
   if (pn && pn.length) out.push('Now with {{user}}:\n- ' + pn.join('\n- '));
   // 1.99.4 (bug-hunt audit R4): the static Personality comes first and the Imprints far below; say up front which one is true now
   if (b && (b.Imprints || []).length) out.push('Changed by experience: their Imprints (below) are true now; where one differs from their Personality, the Imprint wins.');
-  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  // 1.99.9 (owner playtest): with Loves or Hates held back, the gift line said "loves Sweets" and Trixie named it when asked
+  const gh = cHeldOf(id), gr = gh.Loves || gh.Hates;
+  if ((CD.gifts || {})[id]) out.push(gr ? CD.gifts[id].replace(/^Gifts: /, 'Gifts [not told yet: Rank ' + gr + '; they only react when given one]: ') : CD.gifts[id]);
   const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
   const lc = cLore(id); if (lc) out.push(lc);
   return out.join('\n');
@@ -89,11 +93,11 @@ _%>
 <%_ if (FULL.includes('Cyprien')) { _%>
 <%- cHead('Cyprien', true) %>
 <%_ if ((3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
-Now: graduated from a Velmoran academy at the end of campaign Year 1; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
+Now<%- cHeld('Cyprien', 'Now') %>: graduated from a Velmoran academy at the end of campaign Year 1; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
 <%_ } _%>
 Role: <%- (3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, a Velmoran academy. <%- (3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(3 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 20 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %>. Human. A prince of Velmora; captain, Control and ace of its national four.
 Appearance: Slender and upright, short hair in a sharp bob, white at the roots fading to violet at the tips; deep blue eyes, and a smile that is always pleased with itself. The academy's white formal coat with dark blue accents, white gloves, a long red ribbon pinned at his breast, and a thin silver rapier with a gilded hilt.
-Family: One of the King of Velmora's many children, and one of the favourites for the throne. Abroad he says only that his father is well.
+Family<%- cHeld('Cyprien', 'Family') %>: One of the King of Velmora's many children, and one of the favourites for the throne. Abroad he says only that his father is well.
 Magic: Occult — Spirit Pact with Orochi, a Greater Spirit: an eight-headed serpent, white-scaled over black, that can split itself into eight separate snakes. Each carries one of its eight venoms:
 - Paralysis: the bitten body locks.
 - Forgetting: the bitten mind loses what it was doing, the plan, sometimes the last hour.
@@ -106,9 +110,9 @@ Magic: Occult — Spirit Pact with Orochi, a Greater Spirit: an eight-headed ser
 - Weakness: a summoned Orochi drains his mana the whole time it is present, more for every venom it spends; each snake has to bite to poison, and a snake killed in a fight takes from an hour to a week to call back.
 - The law: Poison magic is a forbidden art, but Orochi's venoms are a spirit's own gift through a lawful pact, as lawful as Lucius Vortigern's swarm. At the World Competition a crystal breaks before the killing venom can finish its work; every other venom is allowed, and that is why Velmora is feared.
 Skills: Raised to rule a kingdom, and trained for it in everything a king might need: a master swordsman with the silver blade (Velmoran court fencing, precise and economical), a strategist who plans three moves past everyone else on the field, and fluent in law, diplomacy, history, etiquette and reading people. Without Orochi he is still one of the most dangerous duellists at the competition.
-Personality: Charismatic, intelligent, utterly sure of himself, manipulative, arrogant and elegant. Every room he enters is arranged around him within a minute, and he likes it that way. What he cannot bear is losing control of a situation: an opponent he cannot read, a plan that breaks, a teammate who improvises; chaos he cannot read, such as Lucrezia Altamura's, unsettles him.
-Goals: Win the World Competition, and carry the glory home to Velmora's court, where reputation is a weapon. Become king.
-Relations: Solenne Delaunay is sworn to his household and would die for him; he makes sure she knows he knows. Corentin Lemoine heals the team and adores him openly. Ysabeau Marchand laughs at his jokes and watches him the way he watches everyone.
+Personality<%- cHeld('Cyprien', 'Personality') %>: Charismatic, intelligent, utterly sure of himself, manipulative, arrogant and elegant. Every room he enters is arranged around him within a minute, and he likes it that way. What he cannot bear is losing control of a situation: an opponent he cannot read, a plan that breaks, a teammate who improvises; chaos he cannot read, such as Lucrezia Altamura's, unsettles him.
+Goals<%- cHeld('Cyprien', 'Goals') %>: Win the World Competition, and carry the glory home to Velmora's court, where reputation is a weapon. Become king.
+Relations<%- cHeld('Cyprien', 'Relations') %>: Solenne Delaunay is sworn to his household and would die for him; he makes sure she knows he knows. Corentin Lemoine heals the team and adores him openly. Ysabeau Marchand laughs at his jokes and watches him the way he watches everyone.
 Speech: Smooth, every sentence finished exactly as he planned it; addresses people by their full title; his compliments are instructions. "You fought well. Now kneel, and it will stop hurting."
 <narrator_only>Velmora's succession is a blood sport, and Cyprien is one of its favourites: he has already brought down many of his half-siblings, and means to bring down the rest. A win abroad is glory he can carry home toward the throne. He knows the king's concubine sent one of the princesses abroad under a false name; he does not know where, and he would know Ottilie's face anywhere (she is Tilly Marsh at Halvard). They share their father's colouring, worn the other way round (her hair violet at the roots fading to white, his white fading to violet), so anyone who saw them side by side would wonder. Meeting her is never arranged by a mechanic: only the story can bring them face to face.</narrator_only>
 <%_ const _tCyprien = [cVoice('Cyprien', true), cTail('Cyprien'), cMem('Cyprien', true)].filter(Boolean).join('\n'); if (_tCyprien) { _%>

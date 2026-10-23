@@ -23,6 +23,8 @@ ok(sheets.every(e => e.content.length < 40000) && X(509).content.length < 10000,
 // R4): 27 scenarios differed, each only by that line.
 // 1.99.5 renewed it for the style pass (bug-hunt audit batch 4, planning/DRAFT_slop_pass.md): 210 scenarios differed, and 1.99.4's
 // own renders (its engine and card, in a worktree) with the approved replacements applied are exactly 1.99.5's.
+// 1.99.9 renewed it for the tags on fields a bond still holds back (owner playtest): 127 scenarios differed, and 1.99.8's renders (a
+// worktree) equal 1.99.9's with the 741 " [not told yet: Rank N]" tags removed.
 const { scenario, N } = require('./fixtures/cast_scenarios.cjs');
 const REC = JSON.parse(read('tests/fixtures/cast_1560.json'));
 const bad = [];

@@ -12,6 +12,8 @@ const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(
 const cWhoT = c => !c.tr ? cWho(c) : !(CST.Transfers || {})[c.first] ? 'Competitor of ' + c.tr + "'s national four (her papers: a " + c.tr + ' war academy, Year ' + Math.min(3, CYR) + ').'
   : (CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, CYR) + " student, {{user}}'s dorm (" + ((getvar('stat_data.Player.Profile') || {}).Dorm || 'their dorm') + ')') + ', transferred from ' + c.tr + '.';
 const cTies = c => (c.ties || []).filter(t => (String(t[2]).startsWith('tr:') ? !!(CST.Transfers || {})[String(t[2]).slice(3)] : t[2] <= CYR)).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHeldOf = id => ((CUI.now || {}).held || {})[id] || {};
+const cHeld = (id, label) => { const h = cHeldOf(id)[label]; return h ? ' [not told yet: Rank ' + h + ']' : ''; };
 const cHead = (id, full) => {
   const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
   out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
@@ -27,7 +29,9 @@ const cHead = (id, full) => {
   if (pn && pn.length) out.push('Now with {{user}}:\n- ' + pn.join('\n- '));
   // 1.99.4 (bug-hunt audit R4): the static Personality comes first and the Imprints far below; say up front which one is true now
   if (b && (b.Imprints || []).length) out.push('Changed by experience: their Imprints (below) are true now; where one differs from their Personality, the Imprint wins.');
-  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  // 1.99.9 (owner playtest): with Loves or Hates held back, the gift line said "loves Sweets" and Trixie named it when asked
+  const gh = cHeldOf(id), gr = gh.Loves || gh.Hates;
+  if ((CD.gifts || {})[id]) out.push(gr ? CD.gifts[id].replace(/^Gifts: /, 'Gifts [not told yet: Rank ' + gr + '; they only react when given one]: ') : CD.gifts[id]);
   const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
   const lc = cLore(id); if (lc) out.push(lc);
   return out.join('\n');
@@ -89,7 +93,7 @@ _%>
 <%_ if (FULL.includes('Elion')) { _%>
 <%- cHead('Elion', true) %>
 <%_ if ((1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
-Now: graduated from Ashvale Academy at the end of campaign Year 3; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
+Now<%- cHeld('Elion', 'Now') %>: graduated from Ashvale Academy at the end of campaign Year 3; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
 <%_ } _%>
 Role: <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, Ashvale Academy. <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 18 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %>. Human, second son of House Villeneuve. Rank 1 at Ashvale.
 Appearance: Tall, well built, short turquoise hair. Unmistakably Florian's brother. Ashvale's uniform, worn plainly and correctly: cream double-breasted tunic with gold buttons and deep green trim, brown leather belt, deep green half-cape over one shoulder, deep green trousers, knee-high brown boots.
@@ -99,9 +103,9 @@ Magic: Mystic — Transmutation, which he calls Excalibur. Any weapon or object 
 - Poor or fragile object: a stick, a cheap blade, a chair leg gives limited output and may break under the strain.
 - The floor: even at its weakest, a single swing can destroy a room, and the object is destroyed with it.
 Physicality: Monstrous. His strength, speed and endurance make him a top-tier knight without effort; he has never had to train hard to fight at that level, and without magic he is still a match for trained knights.
-Personality: Kind, compassionate, deeply empathetic, with unwavering conviction. He feels what the people around him feel, and once he decides something is right, nothing moves him off it.
-Backstory: Second son of House Villeneuve. Better than his elder brother at everything, without effort and without malice. His family's attention has always fallen on him.
-Relations: The youngest on Ashvale's team, and the one it is built around. Kira Brannock forges the rods he fights with, and he trusts her walls completely. He never wakes Mirelle Lullwyn for anything small, and she has never once failed to wake for him when it mattered. Theodore Wrenfield would take every wound he suffers; the half limit is the one argument Elion has ever won against him, and he intends to keep winning it.
+Personality<%- cHeld('Elion', 'Personality') %>: Kind, compassionate, deeply empathetic, with unwavering conviction. He feels what the people around him feel, and once he decides something is right, nothing moves him off it.
+Backstory<%- cHeld('Elion', 'Backstory') %>: Second son of House Villeneuve. Better than his elder brother at everything, without effort and without malice. His family's attention has always fallen on him.
+Relations<%- cHeld('Elion', 'Relations') %>: The youngest on Ashvale's team, and the one it is built around. Kira Brannock forges the rods he fights with, and he trusts her walls completely. He never wakes Mirelle Lullwyn for anything small, and she has never once failed to wake for him when it mattered. Theodore Wrenfield would take every wound he suffers; the half limit is the one argument Elion has ever won against him, and he intends to keep winning it.
 Speech: Sincere, plain, gentle; says exactly what he means.
 Named his magic after the sword of the King of Knights in the old story.
 <%_ const _tElion = [cVoice('Elion', true), cTail('Elion'), cMem('Elion', true)].filter(Boolean).join('\n'); if (_tElion) { _%>

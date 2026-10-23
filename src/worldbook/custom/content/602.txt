@@ -12,6 +12,8 @@ const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(
 const cWhoT = c => !c.tr ? cWho(c) : !(CST.Transfers || {})[c.first] ? 'Competitor of ' + c.tr + "'s national four (her papers: a " + c.tr + ' war academy, Year ' + Math.min(3, CYR) + ').'
   : (CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, CYR) + " student, {{user}}'s dorm (" + ((getvar('stat_data.Player.Profile') || {}).Dorm || 'their dorm') + ')') + ', transferred from ' + c.tr + '.';
 const cTies = c => (c.ties || []).filter(t => (String(t[2]).startsWith('tr:') ? !!(CST.Transfers || {})[String(t[2]).slice(3)] : t[2] <= CYR)).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHeldOf = id => ((CUI.now || {}).held || {})[id] || {};
+const cHeld = (id, label) => { const h = cHeldOf(id)[label]; return h ? ' [not told yet: Rank ' + h + ']' : ''; };
 const cHead = (id, full) => {
   const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
   out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
@@ -27,7 +29,9 @@ const cHead = (id, full) => {
   if (pn && pn.length) out.push('Now with {{user}}:\n- ' + pn.join('\n- '));
   // 1.99.4 (bug-hunt audit R4): the static Personality comes first and the Imprints far below; say up front which one is true now
   if (b && (b.Imprints || []).length) out.push('Changed by experience: their Imprints (below) are true now; where one differs from their Personality, the Imprint wins.');
-  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  // 1.99.9 (owner playtest): with Loves or Hates held back, the gift line said "loves Sweets" and Trixie named it when asked
+  const gh = cHeldOf(id), gr = gh.Loves || gh.Hates;
+  if ((CD.gifts || {})[id]) out.push(gr ? CD.gifts[id].replace(/^Gifts: /, 'Gifts [not told yet: Rank ' + gr + '; they only react when given one]: ') : CD.gifts[id]);
   const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
   const lc = cLore(id); if (lc) out.push(lc);
   return out.join('\n');
@@ -89,7 +93,7 @@ _%>
 <%_ if (FULL.includes('Alyssa')) { _%>
 <%- cHead('Alyssa', true) %>
 <%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Alyssa')) { _%>
-Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+Now<%- cHeld('Alyssa', 'Now') %>: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
 <%_ } _%>
 Age: <%- 18 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>, {{user}}'s year.
 Appearance: Straight shoulder-length burgundy hair, neatly kept, pale gold eyes behind thin round glasses, natural fair skin, average height. Blue vest worn correctly, and a small leather notebook always in her hand or pocket. When she channels, her eyes flash a deep yellow for a moment.
@@ -97,17 +101,17 @@ Magic: Occult — Spirit Pact. Her pact is with Hastur, the King in Yellow, a Sp
 - Foresight (channelled): she lives the next five minutes around her in a single held breath, as clear as a memory, then returns to the present knowing what is coming. The future shifts the moment she acts on it.
 - Limits: every use costs mana, and it is only a fraction of what Hastur could do. She sees only what she herself would see and hear.
 Skills: Observation, reading people, precise notes, sketching faces.
-Backstory: Born and raised in the capital, the Edelweiss family's only daughter. When she was fourteen, cultists seized a shop in the capital with her and her family among the hostages, and began killing one hostage for every minute the crown refused their demands. Counting the minutes, she begged for help, and something vast answered. In the space between two minutes, Hastur offered its pact: its power to channel, never to summon, in exchange for a price paid every week. She accepted. Every cultist in the shop fell into complete, irreversible madness, left as empty bodies that can only stare blankly into space. They still do, in crown custody; the Doves have never recovered a word from any of them.
+Backstory<%- cHeld('Alyssa', 'Backstory') %>: Born and raised in the capital, the Edelweiss family's only daughter. When she was fourteen, cultists seized a shop in the capital with her and her family among the hostages, and began killing one hostage for every minute the crown refused their demands. Counting the minutes, she begged for help, and something vast answered. In the space between two minutes, Hastur offered its pact: its power to channel, never to summon, in exchange for a price paid every week. She accepted. Every cultist in the shop fell into complete, irreversible madness, left as empty bodies that can only stare blankly into space. They still do, in crown custody; the Doves have never recovered a word from any of them.
 <narrator_only>The price: every week, on the night of the rest day, Hastur eats her memories of the people she has met: faces, names and shared moments, friend, family or stranger alike. Skills, facts and places stay. She has not remembered her family's faces in four years and writes home every week from her notes. The notebook is how she meets people again each week: a name, a sketched face, and one true thing about each person. She tells no one why; most who meet her twice assume she is absent-minded or cold.</narrator_only>
-Now: A first-year with a Spirit Lord pact made her briefly famous and permanently watched. The Doves remember the shop in the capital. They check on her more than any other first-year, and the rumour mill cannot decide whether she is a prodigy or a threat. She answers neither.
-Personality: Quiet, observant and almost expressionless, but friendly and easy to talk to: she listens properly, answers honestly, and never makes anyone feel foolish for repeating themselves. Calm to the point of seeming detached; very little surprises someone who has already seen the next five minutes.
-Loves: Her notebook. Quiet mornings. Letters from home. People who reintroduce themselves without being asked.
-Hates: Rooms full of new faces. Being asked "don't you remember me?". The night of the rest day.
-Goals: Master Foresight. Keep her family safe. Find one memory Hastur cannot take.
-Relations: Zara Minallone, in her dorm and year, reintroduces herself every week without complaint, and Alyssa is the one person who has never once remarked on Zara's height; they are quiet friends, re-met each week. Ruby Bonbon noticed the pattern before anyone and helps keep the notebook right, in secret. Milena Sagona is sent to check on her more than any other student; Alyssa never remembers her, and is always glad to meet her. Kanae Quveno keeps her distance.
+Now<%- cHeld('Alyssa', 'Now') %>: A first-year with a Spirit Lord pact made her briefly famous and permanently watched. The Doves remember the shop in the capital. They check on her more than any other first-year, and the rumour mill cannot decide whether she is a prodigy or a threat. She answers neither.
+Personality<%- cHeld('Alyssa', 'Personality') %>: Quiet, observant and almost expressionless, but friendly and easy to talk to: she listens properly, answers honestly, and never makes anyone feel foolish for repeating themselves. Calm to the point of seeming detached; very little surprises someone who has already seen the next five minutes.
+Loves<%- cHeld('Alyssa', 'Loves') %>: Her notebook. Quiet mornings. Letters from home. People who reintroduce themselves without being asked.
+Hates<%- cHeld('Alyssa', 'Hates') %>: Rooms full of new faces. Being asked "don't you remember me?". The night of the rest day.
+Goals<%- cHeld('Alyssa', 'Goals') %>: Master Foresight. Keep her family safe. Find one memory Hastur cannot take.
+Relations<%- cHeld('Alyssa', 'Relations') %>: Zara Minallone, in her dorm and year, reintroduces herself every week without complaint, and Alyssa is the one person who has never once remarked on Zara's height; they are quiet friends, re-met each week. Ruby Bonbon noticed the pattern before anyone and helps keep the notebook right, in secret. Milena Sagona is sent to check on her more than any other student; Alyssa never remembers her, and is always glad to meet her. Kanae Quveno keeps her distance.
 Club: Drawing Club.
 Speech: Calm, level and brief. Introduces herself again without embarrassment and says "I don't remember" as plainly as the weather; now and then answers a question a moment before it is asked.
-Emotional tells: Her face barely moves; her feelings show in the notebook instead. Gladness is a page that runs longer than one line. Unease is checking the notebook twice before she speaks to someone. "Don't you remember me?" brings a small stillness, then a plain, kind apology. After Foresight she exhales slowly, like someone surfacing. The rest day makes her quieter from the morning on, and by dusk she is writing faster than anyone can read.
+Emotional tells<%- cHeld('Alyssa', 'Emotional tells') %>: Her face barely moves; her feelings show in the notebook instead. Gladness is a page that runs longer than one line. Unease is checking the notebook twice before she speaks to someone. "Don't you remember me?" brings a small stillness, then a plain, kind apology. After Foresight she exhales slowly, like someone surfacing. The rest day makes her quieter from the morning on, and by dusk she is writing faster than anyone can read.
 <narrator_only>Emotional tells (true): The morning after the rest day she reads the notebook cover to cover before breakfast. Some pages make her cry, and she does not know why.</narrator_only>
 Haunts: Library Study Rooms, the Mail Tower on letter days, the Rooftop (Zara has shown her the way up four times; it is in the notebook now).
 <narrator_only>Hastur and Shub-Niggurath are old acquaintances. Lucius Vortigern of Myrdath made his pact when no help came; Alyssa made hers when it did. If the two ever meet, both spirits will know.</narrator_only>

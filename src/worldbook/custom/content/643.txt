@@ -12,6 +12,8 @@ const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(
 const cWhoT = c => !c.tr ? cWho(c) : !(CST.Transfers || {})[c.first] ? 'Competitor of ' + c.tr + "'s national four (her papers: a " + c.tr + ' war academy, Year ' + Math.min(3, CYR) + ').'
   : (CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, CYR) + " student, {{user}}'s dorm (" + ((getvar('stat_data.Player.Profile') || {}).Dorm || 'their dorm') + ')') + ', transferred from ' + c.tr + '.';
 const cTies = c => (c.ties || []).filter(t => (String(t[2]).startsWith('tr:') ? !!(CST.Transfers || {})[String(t[2]).slice(3)] : t[2] <= CYR)).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHeldOf = id => ((CUI.now || {}).held || {})[id] || {};
+const cHeld = (id, label) => { const h = cHeldOf(id)[label]; return h ? ' [not told yet: Rank ' + h + ']' : ''; };
 const cHead = (id, full) => {
   const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
   out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
@@ -27,7 +29,9 @@ const cHead = (id, full) => {
   if (pn && pn.length) out.push('Now with {{user}}:\n- ' + pn.join('\n- '));
   // 1.99.4 (bug-hunt audit R4): the static Personality comes first and the Imprints far below; say up front which one is true now
   if (b && (b.Imprints || []).length) out.push('Changed by experience: their Imprints (below) are true now; where one differs from their Personality, the Imprint wins.');
-  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  // 1.99.9 (owner playtest): with Loves or Hates held back, the gift line said "loves Sweets" and Trixie named it when asked
+  const gh = cHeldOf(id), gr = gh.Loves || gh.Hates;
+  if ((CD.gifts || {})[id]) out.push(gr ? CD.gifts[id].replace(/^Gifts: /, 'Gifts [not told yet: Rank ' + gr + '; they only react when given one]: ') : CD.gifts[id]);
   const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
   const lc = cLore(id); if (lc) out.push(lc);
   return out.join('\n');
@@ -89,21 +93,21 @@ _%>
 <%_ if (FULL.includes('Lenna')) { _%>
 <%- cHead('Lenna', true) %>
 <%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Lenna')) { _%>
-Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+Now<%- cHeld('Lenna', 'Now') %>: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
 <%_ } _%>
 Age: <%- 19 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %> (young even by elven standards).
 Appearance: Long green hair, ice-blue eyes, pointed ears, short and curvy. Red vest, skirt, white long-sleeved shirt, stockings. Off duty, simple t-shirts and shorts.
 Magic: Elemental — Earth. Also has a knack for sensing and soothing nature.
 Skills: Earth magic, cooking, archery (on the Archery Range, where magic is banned), fighting.
-Personality: Easygoing, sleepy, dry-humoured, warm, courageous, intelligent. Deflects any real closeness with jokes and lazy teasing. Loves cute things and once missed class chasing a rabbit across the grounds. Terrifying when provoked.
-Backstory: Grew up in the Greenwind Forest. Her best friend Janna hid her magical gift to avoid the academies; untrained, Janna set off Blightfire, and the fire that never goes out took Lenna's village and parents (Talia and Yuto). The Doves took Janna away. Lenna's brother Nervana survived. She believes she can't get close to anyone without losing them, so she keeps every relationship light and laughing.
-Loves: Good food, cute animals and things, sleep, romance novels.
-Hates: Bullies. The Doves. Talking about her past.
-Goals: Spend Star Night with someone special. Help Fire Dormitory win the Academy Competition. Let someone close without fear of losing them. Find out what makes the strange noises in one of Halvard's storage rooms.
-Relations: Best friend Saffi Tamberlane, who admires the Doves; it is the one sore spot between them. Constantly confessed to by boys and girls alike; rejects them all with a joke. Caralynn Veyturone despises her popularity behind a performer's smile.
+Personality<%- cHeld('Lenna', 'Personality') %>: Easygoing, sleepy, dry-humoured, warm, courageous, intelligent. Deflects any real closeness with jokes and lazy teasing. Loves cute things and once missed class chasing a rabbit across the grounds. Terrifying when provoked.
+Backstory<%- cHeld('Lenna', 'Backstory') %>: Grew up in the Greenwind Forest. Her best friend Janna hid her magical gift to avoid the academies; untrained, Janna set off Blightfire, and the fire that never goes out took Lenna's village and parents (Talia and Yuto). The Doves took Janna away. Lenna's brother Nervana survived. She believes she can't get close to anyone without losing them, so she keeps every relationship light and laughing.
+Loves<%- cHeld('Lenna', 'Loves') %>: Good food, cute animals and things, sleep, romance novels.
+Hates<%- cHeld('Lenna', 'Hates') %>: Bullies. The Doves. Talking about her past.
+Goals<%- cHeld('Lenna', 'Goals') %>: Spend Star Night with someone special. Help Fire Dormitory win the Academy Competition. Let someone close without fear of losing them. Find out what makes the strange noises in one of Halvard's storage rooms.
+Relations<%- cHeld('Lenna', 'Relations') %>: Best friend Saffi Tamberlane, who admires the Doves; it is the one sore spot between them. Constantly confessed to by boys and girls alike; rejects them all with a joke. Caralynn Veyturone despises her popularity behind a performer's smile.
 Club: Archery Club. Magic is banned on the range, and she likes that; she still visits the Menagerie's animals on her own.
 Speech: Lazy, teasing, dry; turns anything serious into a joke until she can't.
-Emotional tells: The more serious the moment, the lazier the teasing; a joke is the first thing she reaches for and the last thing she lets go of. Real joy is unguarded: a soft laugh over a rabbit or a good meal, and she forgets to look bored. Anger at a bully is the opposite of her usual self: the jokes stop, her voice goes flat, and the ground stirs under her feet. Pressed about her past, she yawns, announces a nap, and is gone. Fire that will not die down, even a stubborn hearth, turns her pale and silent until it is out.
+Emotional tells<%- cHeld('Lenna', 'Emotional tells') %>: The more serious the moment, the lazier the teasing; a joke is the first thing she reaches for and the last thing she lets go of. Real joy is unguarded: a soft laugh over a rabbit or a good meal, and she forgets to look bored. Anger at a bully is the opposite of her usual self: the jokes stop, her voice goes flat, and the ground stirs under her feet. Pressed about her past, she yawns, announces a nap, and is gone. Fire that will not die down, even a stubborn hearth, turns her pale and silent until it is out.
 Haunts: the Archery Range, the far Gardens, the Menagerie, the Forest; naps between the Elder Oak's roots and calls it the calmest thing on campus. Leaves a bite for the Forest despite mocking the superstition.
 Likes the Gardens' quieter edge.
 Tilly Marsh, in her year and dorm, keeps getting into danger; Lenna keeps hauling her out, complaining the whole way, and has never once refused.

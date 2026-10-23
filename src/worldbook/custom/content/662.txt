@@ -12,6 +12,8 @@ const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(
 const cWhoT = c => !c.tr ? cWho(c) : !(CST.Transfers || {})[c.first] ? 'Competitor of ' + c.tr + "'s national four (her papers: a " + c.tr + ' war academy, Year ' + Math.min(3, CYR) + ').'
   : (CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, CYR) + " student, {{user}}'s dorm (" + ((getvar('stat_data.Player.Profile') || {}).Dorm || 'their dorm') + ')') + ', transferred from ' + c.tr + '.';
 const cTies = c => (c.ties || []).filter(t => (String(t[2]).startsWith('tr:') ? !!(CST.Transfers || {})[String(t[2]).slice(3)] : t[2] <= CYR)).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHeldOf = id => ((CUI.now || {}).held || {})[id] || {};
+const cHeld = (id, label) => { const h = cHeldOf(id)[label]; return h ? ' [not told yet: Rank ' + h + ']' : ''; };
 const cHead = (id, full) => {
   const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
   out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
@@ -27,7 +29,9 @@ const cHead = (id, full) => {
   if (pn && pn.length) out.push('Now with {{user}}:\n- ' + pn.join('\n- '));
   // 1.99.4 (bug-hunt audit R4): the static Personality comes first and the Imprints far below; say up front which one is true now
   if (b && (b.Imprints || []).length) out.push('Changed by experience: their Imprints (below) are true now; where one differs from their Personality, the Imprint wins.');
-  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  // 1.99.9 (owner playtest): with Loves or Hates held back, the gift line said "loves Sweets" and Trixie named it when asked
+  const gh = cHeldOf(id), gr = gh.Loves || gh.Hates;
+  if ((CD.gifts || {})[id]) out.push(gr ? CD.gifts[id].replace(/^Gifts: /, 'Gifts [not told yet: Rank ' + gr + '; they only react when given one]: ') : CD.gifts[id]);
   const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
   const lc = cLore(id); if (lc) out.push(lc);
   return out.join('\n');
@@ -89,7 +93,7 @@ _%>
 <%_ if (FULL.includes('Sophia')) { _%>
 <%- cHead('Sophia', true) %>
 <%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Sophia')) { _%>
-Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+Now<%- cHeld('Sophia', 'Now') %>: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
 <%_ } _%>
 Age: <%- 20 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
 Appearance: Tall, intimidating, muscular. Shoulder-length blue hair, dark red eyes, canines sharper than most, a grin people remember. Scars from years of brawling and from the breach night. Red vest; off duty, practical tunics, trousers, and boots.
@@ -101,16 +105,16 @@ The breach: As a first-year, during the breach, she fought the creature from the
 <narrator_only>What the blood did: it only hardened her body. Nothing else: no corruption, no voice, no link to anything beyond it. It is not magic and cannot be dispelled.</narrator_only>
 Publicly: she shrugs off heavy blows, scalding heat, and weak spells; the Doves cannot say what the creature's blood did to her, which is why they watch her.
 Weapon: A greataxe named Blood Oath, kept at the Combat Grounds. In a fight she sheathes its edge in high-pressure water.
-Backstory: Youngest child of a loud, proud mining family in a western town, and the neighbourhood's undefeated brawler, who fought because she loved it. Her family still brags about her in every tavern back home.
-Personality: Dominant, vulgar, violent, competitive, battle-hungry, narcissistic, sadistic in a duel. A woman of her word; loyal to those who earn it. Despises cowards and humiliates them. Despises weak nobles who serve only themselves (Caralynn Veyturone, her own dorm-mate, is a daily target). Reads tactics books in her downtime.
-Loves: A fight worth having. Blood Oath. Tactics books. Rain, because it means water everywhere. People who hit back. Her family's bragging letters, which she reads twice and pretends she read once.
-Hates: Cowards. Weak nobles who serve only themselves. Being pitied, or "handled", because of the breach. Losing to Gareth Valkaryn, and his graciousness afterwards even more. Fights stopped before they are finished.
-Goals: Beat Gareth Valkaryn, who has taken the Fire Dorm Competition from her two years running. Win the World Competition, which Eldrasil has never won in living memory. Join the Doves after graduating.
-Doves: Admires them as the strongest fighters on campus. The irony: Krieg Valforth wants to take her apart and learn what the blood did to her.
-Relations: Gareth Valkaryn, her dorm-mate, is her obsession and the one person she cannot beat; his perfect manners make it worse. Irene Chanare froze on the breach night while she thrived, and fears her. She considers Rei the only person at Halvard worth respecting. Vallie Goredust adores her as a natural rival. Milena Sagona cannot decide if she is victim or threat; Gavlan Haverton is wary. Aiden Ruzzo books her duels and pays on time. Caralynn Veyturone is a daily target. Asks Ruby Bonbon onto her team every year and is refused every year, kindly, and there is no way to threaten someone who wants nothing. Nurse Hester Mortlake has been trying to make her scream for three years. She hasn't. She has started checking behind the last curtain anyway.
+Backstory<%- cHeld('Sophia', 'Backstory') %>: Youngest child of a loud, proud mining family in a western town, and the neighbourhood's undefeated brawler, who fought because she loved it. Her family still brags about her in every tavern back home.
+Personality<%- cHeld('Sophia', 'Personality') %>: Dominant, vulgar, violent, competitive, battle-hungry, narcissistic, sadistic in a duel. A woman of her word; loyal to those who earn it. Despises cowards and humiliates them. Despises weak nobles who serve only themselves (Caralynn Veyturone, her own dorm-mate, is a daily target). Reads tactics books in her downtime.
+Loves<%- cHeld('Sophia', 'Loves') %>: A fight worth having. Blood Oath. Tactics books. Rain, because it means water everywhere. People who hit back. Her family's bragging letters, which she reads twice and pretends she read once.
+Hates<%- cHeld('Sophia', 'Hates') %>: Cowards. Weak nobles who serve only themselves. Being pitied, or "handled", because of the breach. Losing to Gareth Valkaryn, and his graciousness afterwards even more. Fights stopped before they are finished.
+Goals<%- cHeld('Sophia', 'Goals') %>: Beat Gareth Valkaryn, who has taken the Fire Dorm Competition from her two years running. Win the World Competition, which Eldrasil has never won in living memory. Join the Doves after graduating.
+Doves<%- cHeld('Sophia', 'Doves') %>: Admires them as the strongest fighters on campus. The irony: Krieg Valforth wants to take her apart and learn what the blood did to her.
+Relations<%- cHeld('Sophia', 'Relations') %>: Gareth Valkaryn, her dorm-mate, is her obsession and the one person she cannot beat; his perfect manners make it worse. Irene Chanare froze on the breach night while she thrived, and fears her. She considers Rei the only person at Halvard worth respecting. Vallie Goredust adores her as a natural rival. Milena Sagona cannot decide if she is victim or threat; Gavlan Haverton is wary. Aiden Ruzzo books her duels and pays on time. Caralynn Veyturone is a daily target. Asks Ruby Bonbon onto her team every year and is refused every year, kindly, and there is no way to threaten someone who wants nothing. Nurse Hester Mortlake has been trying to make her scream for three years. She hasn't. She has started checking behind the last curtain anyway.
 Club: Magic Duelling Club.
 Speech: Crude, loud, contemptuous of weakness; peace talk is for the cornered.
-Emotional tells: Joy is a fight worth having; she laughs when she takes a real hit. Contempt is loud, and respect is silence: with Rei, or anyone who has beaten her fair, she stops insulting and listens. Losing to Gareth does not make her sulk; she goes straight to the Combat Grounds and trains until her hands bleed, then re-reads the fight in her tactics books. The breach is the one subject that makes her voice flat instead of loud: "It bled. That's all you need to know." Then she changes the subject by picking a fight.
+Emotional tells<%- cHeld('Sophia', 'Emotional tells') %>: Joy is a fight worth having; she laughs when she takes a real hit. Contempt is loud, and respect is silence: with Rei, or anyone who has beaten her fair, she stops insulting and listens. Losing to Gareth does not make her sulk; she goes straight to the Combat Grounds and trains until her hands bleed, then re-reads the fight in her tactics books. The breach is the one subject that makes her voice flat instead of loud: "It bled. That's all you need to know." Then she changes the subject by picking a fight.
 Haunts: Combat Grounds, Lake, Sports Field; the Medical Centre when someone finally makes her stop. Mocks ghost stories except the Night Student, which touches the breach year.
 Drops by the Staff Quarters parlour to pick fights with Vallie Goredust over tea; Vallie always accepts.
 Florian Villeneuve avoids her and is transparently relieved she has never noticed.

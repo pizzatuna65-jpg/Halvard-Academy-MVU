@@ -12,6 +12,8 @@ const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(
 const cWhoT = c => !c.tr ? cWho(c) : !(CST.Transfers || {})[c.first] ? 'Competitor of ' + c.tr + "'s national four (her papers: a " + c.tr + ' war academy, Year ' + Math.min(3, CYR) + ').'
   : (CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, CYR) + " student, {{user}}'s dorm (" + ((getvar('stat_data.Player.Profile') || {}).Dorm || 'their dorm') + ')') + ', transferred from ' + c.tr + '.';
 const cTies = c => (c.ties || []).filter(t => (String(t[2]).startsWith('tr:') ? !!(CST.Transfers || {})[String(t[2]).slice(3)] : t[2] <= CYR)).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHeldOf = id => ((CUI.now || {}).held || {})[id] || {};
+const cHeld = (id, label) => { const h = cHeldOf(id)[label]; return h ? ' [not told yet: Rank ' + h + ']' : ''; };
 const cHead = (id, full) => {
   const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
   out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
@@ -27,7 +29,9 @@ const cHead = (id, full) => {
   if (pn && pn.length) out.push('Now with {{user}}:\n- ' + pn.join('\n- '));
   // 1.99.4 (bug-hunt audit R4): the static Personality comes first and the Imprints far below; say up front which one is true now
   if (b && (b.Imprints || []).length) out.push('Changed by experience: their Imprints (below) are true now; where one differs from their Personality, the Imprint wins.');
-  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  // 1.99.9 (owner playtest): with Loves or Hates held back, the gift line said "loves Sweets" and Trixie named it when asked
+  const gh = cHeldOf(id), gr = gh.Loves || gh.Hates;
+  if ((CD.gifts || {})[id]) out.push(gr ? CD.gifts[id].replace(/^Gifts: /, 'Gifts [not told yet: Rank ' + gr + '; they only react when given one]: ') : CD.gifts[id]);
   const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
   const lc = cLore(id); if (lc) out.push(lc);
   return out.join('\n');
@@ -89,21 +93,21 @@ _%>
 <%_ if (FULL.includes('Lucrezia')) { _%>
 <%- cHead('Lucrezia', true) %>
 <%_ if ((1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3) { _%>
-Now: graduated from a Caelmari academy at the end of campaign Year 3; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
+Now<%- cHeld('Lucrezia', 'Now') %>: graduated from a Caelmari academy at the end of campaign Year 3; no longer on its team (a visit or a letter is still possible). What follows describes their time as a student.
 <%_ } _%>
 Role: <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Former student' : 'Student' %>, a Caelmari academy. <%- (1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) > 3 ? 'Graduated' : ['First', 'Second', 'Third'][(1 + (Number(getvar('stat_data.World.Year')) || 1) - 1) - 1] + ' year' %>, age <%- 18 + (Number(getvar('stat_data.World.Year')) || 1) - 1 %>. Human. Control and the ace of Caelmar's national four.
 Appearance: Long, straight ash-grey hair with a black ribbon in it; dark grey eyes, and a wide, bright smile. Gothic lolita with Victorian elegance: a white blouse with frilled cuffs, a black laced corset, a black bow at her collar pinned with a small skull, and layered white skirts edged in striped frills. It belongs to no academy in Caelmar, and somehow her team has never once objected.
-Family: The Altamura live on the highest layers, above the clouds, a step below the king. She has never lacked anything, and that is the problem.
+Family<%- cHeld('Lucrezia', 'Family') %>: The Altamura live on the highest layers, above the clouds, a step below the king. She has never lacked anything, and that is the problem.
 Magic: Mystic — Puppetry of her own make: puppets built from mana and worked on mana strings.
 - Puppets: she builds a puppet with mana; once finished it is a construct, a real thing and no longer a spell, and she works it on strings. The longer she spends designing one, the stronger it is. Her strongest is Serafino: a tall, thin mechanical humanoid of golden metal with a smooth golden mask for a face, in a long black coat lined with red, long-clawed arms, long slender legs, and a great wheel of turning gears behind its head like a halo.
 - Stored months: her mana is the smallest of any team's ace, and it does not make her weaker. Other aces fight with what they can pour out on the day; she fights with what she poured into her puppets day after day, for months, before the match. On the field she brings months of output against one day's.
 - Strings: the strings themselves are the real danger. She can fasten them to any object, or to a living body, teammate or enemy, and move it as she likes. A puppet costs mana only to build and nothing to keep; the strings cost mana to cast and to hold.
 - Weakness: strings travel slowly and are easy to dodge; and a string fastened to someone whose mana outweighs hers can be torn off by force. The ace of every other team outweighs her; nobody on her own team does.
 - Against the other aces: a finished puppet is a thing, not a spell, so a swarm that eats magic eats only its strings, a venom does nothing to it, and a crack in reality cannot unmake it. Her strings cannot hold a Greater Spirit such as Orochi, whose mana is far above hers.
-Personality: High chaos, unpredictable, sadistic, and driven by amusement. Everyone is beneath her, and the only question is whether they are entertaining. She loathes virtue and every cliché of the good guy: chosen heroes, speeches about friendship and believing in yourself, the underdog who wins because he deserves it, the noble rival who spares his enemy, anyone who admires the Four Who Saved the World. Nothing delights her more than watching one of those break.
-Backstory: Raised on Caelmar's highest layer, bored to the bone with being highborn. In Caelmar the academies' competitions are where the low-born fight and the high-born watch for fun; she grew tired of watching, enrolled at an academy, and walked into the competition herself, the first highborn on the field in living memory. Her teammates fight to climb a layer; she fights because it is the best seat in the house.
+Personality<%- cHeld('Lucrezia', 'Personality') %>: High chaos, unpredictable, sadistic, and driven by amusement. Everyone is beneath her, and the only question is whether they are entertaining. She loathes virtue and every cliché of the good guy: chosen heroes, speeches about friendship and believing in yourself, the underdog who wins because he deserves it, the noble rival who spares his enemy, anyone who admires the Four Who Saved the World. Nothing delights her more than watching one of those break.
+Backstory<%- cHeld('Lucrezia', 'Backstory') %>: Raised on Caelmar's highest layer, bored to the bone with being highborn. In Caelmar the academies' competitions are where the low-born fight and the high-born watch for fun; she grew tired of watching, enrolled at an academy, and walked into the competition herself, the first highborn on the field in living memory. Her teammates fight to climb a layer; she fights because it is the best seat in the house.
 Law: working a living body against its will is Puppetry, a forbidden art in Eldrasil. Caelmar's high-born do not enforce that law on their own, and the World Competition judges only the crystals; inside Eldrasil, her strings on a person are still a crime.
-Relations: her teammates are low-born, and to her that makes them pieces. Rocco Malvezzi is captain in name and her favourite toy: he hates being strung, and has never once managed to stop it. Domenico Conti is furniture she moves where she needs it. Nina Scarpa watches her all the time, which Lucrezia finds sweet. Coach Ferrata owns the team and has learned not to give her orders, only suggestions.
+Relations<%- cHeld('Lucrezia', 'Relations') %>: her teammates are low-born, and to her that makes them pieces. Rocco Malvezzi is captain in name and her favourite toy: he hates being strung, and has never once managed to stop it. Domenico Conti is furniture she moves where she needs it. Nina Scarpa watches her all the time, which Lucrezia finds sweet. Coach Ferrata owns the team and has learned not to give her orders, only suggestions.
 Speech: Sweet, lilting and theatrical; laughs at the wrong moments; calls people "little doll"; narrates someone else's suffering as if it were a play. "Oh, don't stop now. This is the best part."
 If she meets Vera Pulsar of Halvard: a middle-layer clockmaker's daughter who left Caelmar and is happy, the most irritating kind of good person there is. Lucrezia would very much like to see her break.
 <%_ const _tLucrezia = [cVoice('Lucrezia', true), cTail('Lucrezia'), cMem('Lucrezia', true)].filter(Boolean).join('\n'); if (_tLucrezia) { _%>

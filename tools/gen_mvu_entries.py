@@ -80,12 +80,20 @@ assert all(k in npcs and len(w['lines']) == 48 and all(0 <= i < 48 for i in w['p
 # order, as SillyTavern joins one depth's entries; each carries the helpers and only its own NPC's data.
 CAST_UID, CAST_ORDER = 600, 301
 sheets = {}
+# 1.99.9 (owner playtest): a Deep or Deeper field's heading in the full sheet gets the engine's tag while the bond holds it back
+# (509_sheet cHeld; the engine leaves out the ways they behave, so tagging every candidate here is safe)
+_LAY = json.load(open(P('data/bond_rules.json'), encoding='utf-8'))['layers']['of']
+HELD_LABELS = sorted({*_LAY['deep'], *_LAY['deeper']}, key=len, reverse=True)
+def tag_held(nid, lore):
+    for lb in HELD_LABELS:
+        lore = re.sub(r'^(' + re.escape(lb) + r'):', lambda m: m.group(1) + "<%- cHeld('" + nid + "', '" + lb + "') %>:", lore, flags=re.M)
+    return lore
 for nid, n in sorted(npcs.items()):
     raw = open(P(f"src/worldbook/content/{n['uid_card']}.txt"), encoding='utf-8').read()
     m = GATE_RX.match(raw); assert m and m.group(1) == nid, f'NPC entry {n["uid_card"]} ({nid}) has no Cast Sheet gate (merge_lorebooks.py)'
     lore = re.sub(r'^\[[^\]\n]+\]\n', '', m.group(2).strip('\n'))
     CAST['npcs'][nid] = cast_npc(nid, n); CAST['npcs'][nid]['secret'] = '<narrator_only>' in lore
-    sheets[nid] = (f"<%_ if (FULL.includes('{nid}')) {{ _%>\n<%- cHead('{nid}', true) %>\n{lore}\n<%_ const _t{nid} = [cVoice('{nid}', true), cTail('{nid}'), cMem('{nid}', true)].filter(Boolean).join('\\n'); if (_t{nid}) {{ _%>\n<%- _t{nid} %>\n<%_ }} _%>\n"
+    sheets[nid] = (f"<%_ if (FULL.includes('{nid}')) {{ _%>\n<%- cHead('{nid}', true) %>\n{tag_held(nid, lore)}\n<%_ const _t{nid} = [cVoice('{nid}', true), cTail('{nid}'), cMem('{nid}', true)].filter(Boolean).join('\\n'); if (_t{nid}) {{ _%>\n<%- _t{nid} %>\n<%_ }} _%>\n"
                    f"<%_ }} else if (BRIEF.includes('{nid}')) {{ _%>\n<%- [cHead('{nid}', false), cVoice('{nid}', false), cMem('{nid}', false)].filter(Boolean).join('\\n') %>\n<%_ }} _%>")
 assert len(sheets) <= 89, 'the Cast Sheet orders 301-389 are full: move the tail (599) and the head'
 for r in rels:

@@ -12,6 +12,8 @@ const cWho = c => !c.y ? c.who : c.who.replace('@YEAR@ student', CGRAD.includes(
 const cWhoT = c => !c.tr ? cWho(c) : !(CST.Transfers || {})[c.first] ? 'Competitor of ' + c.tr + "'s national four (her papers: a " + c.tr + ' war academy, Year ' + Math.min(3, CYR) + ').'
   : (CGRAD.includes(c.first) ? 'Former student (graduated)' : 'Year ' + Math.min(3, CYR) + " student, {{user}}'s dorm (" + ((getvar('stat_data.Player.Profile') || {}).Dorm || 'their dorm') + ')') + ', transferred from ' + c.tr + '.';
 const cTies = c => (c.ties || []).filter(t => (String(t[2]).startsWith('tr:') ? !!(CST.Transfers || {})[String(t[2]).slice(3)] : t[2] <= CYR)).slice(0, 4).map(t => t[0] + ' (' + t[1] + ')').join(', ');
+const cHeldOf = id => ((CUI.now || {}).held || {})[id] || {};
+const cHeld = (id, label) => { const h = cHeldOf(id)[label]; return h ? ' [not told yet: Rank ' + h + ']' : ''; };
 const cHead = (id, full) => {
   const c = CD.npcs[id], b = CB[id], out = [], ties = cTies(c);
   out.push('[' + c.name + '] ' + (full ? 'full sheet' : 'brief sheet (their lore reaches you by keyword only)'));
@@ -27,7 +29,9 @@ const cHead = (id, full) => {
   if (pn && pn.length) out.push('Now with {{user}}:\n- ' + pn.join('\n- '));
   // 1.99.4 (bug-hunt audit R4): the static Personality comes first and the Imprints far below; say up front which one is true now
   if (b && (b.Imprints || []).length) out.push('Changed by experience: their Imprints (below) are true now; where one differs from their Personality, the Imprint wins.');
-  if ((CD.gifts || {})[id]) out.push(CD.gifts[id]);
+  // 1.99.9 (owner playtest): with Loves or Hates held back, the gift line said "loves Sweets" and Trixie named it when asked
+  const gh = cHeldOf(id), gr = gh.Loves || gh.Hates;
+  if ((CD.gifts || {})[id]) out.push(gr ? CD.gifts[id].replace(/^Gifts: /, 'Gifts [not told yet: Rank ' + gr + '; they only react when given one]: ') : CD.gifts[id]);
   const st = cStat(id); if (st) out.push('Status on record (overrides the lore): ' + st);
   const lc = cLore(id); if (lc) out.push(lc);
   return out.join('\n');
@@ -89,21 +93,21 @@ _%>
 <%_ if (FULL.includes('Irene')) { _%>
 <%- cHead('Irene', true) %>
 <%_ if ((getvar('stat_data.Campus_State.Graduated') || []).includes('Irene')) { _%>
-Now: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
+Now<%- cHeld('Irene', 'Now') %>: graduated; has left Halvard (a visit or a letter is still possible). What follows describes their time as a student.
 <%_ } _%>
 Age: <%- 20 + Math.max(0, (Number(getvar('stat_data.World.Year')) || 1) - 1) %>.
 Appearance: Long purple hair in a neat ponytail, amethyst eyes, tall. Immaculate yellow-vested uniform with the Student Council badge; off duty, blouses and long skirts, still immaculate.
 Magic: Mystic — Telekinesis and Barrier. Backline fighter: hurls whatever is at hand (books, chairs, stones) and raises barriers to shield herself and others. Her telekinesis can also restrain foes (and troublesome students).
-Personality: Collected, strict, by-the-book, professional, affable in public, an "ice queen" to admirers. Afraid of intimacy. Neat-freak who cleans her room every morning.
-Trauma: Survived the breach two years ago as a first-year. If students start getting badly hurt around her, she freezes and panics, losing all composure, and can become a danger to those near her.
-Backstory: Grew up tomboyish in a small fishing village with older siblings; she is the first mage her family has ever had. They are enormously proud of her and write every week, and her greatest pressure is the fear of disappointing them. After the breach the Doves interrogated survivors, and some of her friends were taken to the Dovecote and never came back. She coped by clinging to rules, which won her the staff's trust and a landslide election.
-Loves: Halvard (it is home, and always will be). Good grades. Honey buns from the Commissary. Her family's letters.
-Hates: Rule-breaking ("it's for your own safety"). The Doves: perfect poker face, cold sweat underneath.
-Goals: Graduate, then stay on as academy staff. Keep students safe. Stay on the Doves' good side.
-Relations: Caspian Riwalo, her Vice President from the Viridian Dormitory: she named him after her election; his rule-bending grates on her. Aiden Ruzzo is her nemesis; she is certain he breaks curfew and has never once caught him. Has rejected nearly as many suitors as Lenna Greenwind. Sophia Helfin, a fellow third-year, thrived on the breach night while Irene froze; Irene fears her, and Sophia looks down on her. Fears the Acting Warden, Rei, almost as much as the Doves. Professor Anselm Graywater teaches her Defense; she has taken down every lecture word for word since he came and has not understood one, and her barriers are the best in her year because she watched his hands. Professor Cedric Amor Fay's closing line, that she may not wake up tomorrow but can sleep soundly knowing she did a good job today, is the only thing that lets her sleep before exams.
+Personality<%- cHeld('Irene', 'Personality') %>: Collected, strict, by-the-book, professional, affable in public, an "ice queen" to admirers. Afraid of intimacy. Neat-freak who cleans her room every morning.
+Trauma<%- cHeld('Irene', 'Trauma') %>: Survived the breach two years ago as a first-year. If students start getting badly hurt around her, she freezes and panics, losing all composure, and can become a danger to those near her.
+Backstory<%- cHeld('Irene', 'Backstory') %>: Grew up tomboyish in a small fishing village with older siblings; she is the first mage her family has ever had. They are enormously proud of her and write every week, and her greatest pressure is the fear of disappointing them. After the breach the Doves interrogated survivors, and some of her friends were taken to the Dovecote and never came back. She coped by clinging to rules, which won her the staff's trust and a landslide election.
+Loves<%- cHeld('Irene', 'Loves') %>: Halvard (it is home, and always will be). Good grades. Honey buns from the Commissary. Her family's letters.
+Hates<%- cHeld('Irene', 'Hates') %>: Rule-breaking ("it's for your own safety"). The Doves: perfect poker face, cold sweat underneath.
+Goals<%- cHeld('Irene', 'Goals') %>: Graduate, then stay on as academy staff. Keep students safe. Stay on the Doves' good side.
+Relations<%- cHeld('Irene', 'Relations') %>: Caspian Riwalo, her Vice President from the Viridian Dormitory: she named him after her election; his rule-bending grates on her. Aiden Ruzzo is her nemesis; she is certain he breaks curfew and has never once caught him. Has rejected nearly as many suitors as Lenna Greenwind. Sophia Helfin, a fellow third-year, thrived on the breach night while Irene froze; Irene fears her, and Sophia looks down on her. Fears the Acting Warden, Rei, almost as much as the Doves. Professor Anselm Graywater teaches her Defense; she has taken down every lecture word for word since he came and has not understood one, and her barriers are the best in her year because she watched his hands. Professor Cedric Amor Fay's closing line, that she may not wake up tomorrow but can sleep soundly knowing she did a good job today, is the only thing that lets her sleep before exams.
 Club: Library Assistants.
 Speech: Calm, articulate, friendly on the surface, and has no problem handing out punishments.
-Emotional tells: Composure is her armour and cleaning is her outlet: stress means straightened shelves, squared papers, a room scrubbed before breakfast. Embarrassment, affection included, makes her sharper and more formal. Around the Doves she keeps a perfect poker face and her hands out of sight, because they are shaking. A letter from home gets a small, private smile, and so does a honey bun. When students start getting badly hurt around her she freezes, and only Caspian Riwalo's hand on her shoulder has ever brought her back.
+Emotional tells<%- cHeld('Irene', 'Emotional tells') %>: Composure is her armour and cleaning is her outlet: stress means straightened shelves, squared papers, a room scrubbed before breakfast. Embarrassment, affection included, makes her sharper and more formal. Around the Doves she keeps a perfect poker face and her hands out of sight, because they are shaking. A letter from home gets a small, private smile, and so does a honey bun. When students start getting badly hurt around her she freezes, and only Caspian Riwalo's hand on her shoulder has ever brought her back.
 Vice Headmaster Althair Veyne praises her work sincerely and she is never comfortable afterwards.
 Respects Dante Kleinn, a second-year in her dorm, and is relieved that someone else cares about the rules too.
 Haunts: Main Library; checks the Notice Board after Council meetings; treats the eight o'clock bell as a nightly discipline test.
