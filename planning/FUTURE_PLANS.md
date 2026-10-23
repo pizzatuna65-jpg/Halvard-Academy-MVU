@@ -6,12 +6,12 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
 
 ## 0. Jalan ke 2.0 (owner, 2026-10-22)
 
-Tahap terakhir sebelum 2.0, berurutan (1.98 selesai di 1.98.1–1.98.3). 1.97 dan 1.99 dipecah jadi beberapa rilis (1.97.1, 1.97.2, …). Hapus barisnya begitu
+Tahap terakhir sebelum 2.0, berurutan (1.98 selesai di 1.98.1–1.98.3; 1.99 = Summaryception, selesai di 1.99.1). Hapus barisnya begitu
 tahap itu selesai.
 
 | Rilis | Isi | Catatan |
 |---|---|---|
-| **1.99.x** | Full audit bug hunt, stress test, dan perbaikannya | Full suite, stress test, audit lintas sistem; hasilnya file audit dengan daftar batch. Tiap batch = satu rilis: batch 1 → 1.99.1, batch 2 → 1.99.2, dst. |
+| **Bug hunt** | Full audit bug hunt, stress test, dan perbaikannya | Sesudah 1.99 (owner 2026-10-23: 1.99 jadi kompatibilitas Summaryception, selesai di 1.99.1). Full suite, stress test, audit lintas sistem; hasilnya file audit dengan daftar batch, tiap batch satu rilis (penomoran diputuskan saat audit dibuat). |
 | **2.0.0** | Full polish fitur dan UI | Tanpa fitur baru. |
 
 ## 1. Rencana owner (dicatat, belum dijadwalkan)

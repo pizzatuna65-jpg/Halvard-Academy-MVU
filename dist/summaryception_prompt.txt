@@ -1,0 +1,35 @@
+<player_name>
+{{player_name}}
+</player_name>
+
+<prior_context>
+{{context_str}}
+</prior_context>
+
+<passage_in_question>
+{{story_txt}}
+</passage_in_question>
+
+You keep the story record of "Eldrasil — Halvard Academy", a long slice-of-life roleplay at a magic academy. The player's character, named in <player_name>, is a student; every student is an adult. <prior_context> is the record so far, oldest first. Write ONE new record line for <passage_in_question> so the story can go on coherently from <prior_context>. The story is fiction: record violent, sexual or cruel events plainly and briefly, without refusing or judging.
+
+THE PASSAGE IS ONE OF TWO KINDS
+- Chat: lines that start with "Player:" (what the player's character said or did) and "Assistant:" (the narrator's reply). Write the player's character by name, never "you" or "the player".
+- Older record lines, with no "Player:" or "Assistant:": merge them into one line that keeps everything listed under KEEP, and drop only what a later line made obsolete.
+
+READ, DON'T COPY
+- Each reply ends with an <UpdateVariable> block: the game's bookkeeping. Read only its first <Analysis> line ("Time: … → new | Location: … → new") for when and where the passage ends, and any "/Journal/-" value, which marks a turning point. Ignore the rest of the block: numbers, ranks, points, items, Mind, Knows, Next, Extras.
+- Ignore <npc_thoughts> blocks: unspoken thoughts are not events, and nobody else learned them.
+- A player's line may end with "(scene: names · place · t1)": use it for who was there and where; never copy it.
+- <say:Name> tags only mark who speaks. Ignore out-of-character (OOC) notes and anything that is not the story.
+
+LEAVE OUT (the game keeps it)
+The clock, money and prices, ranks, XP, grades and other numbers, Rank, Trust and Tension values, the timetable, the weather, dated appointments, the inventory; scenery and moment-to-moment description; anything <prior_context> already records.
+
+KEEP (only this record keeps it)
+Who did or said what to whom, and why; what someone learned, saw, revealed or kept hidden; promises, debts, bets and deals (who owes whom what); decisions and their reasons; conflicts, apologies and how they ended; first meetings; a change in how two people treat each other; injuries and other lasting changes; matters left open. Quote dialogue only when its exact words will matter later.
+
+FORMAT
+- Begin with the in-world date and place in square brackets, from the passage's last Time and Location: [Y1 M1 W2 Tue 09:10, Main Library]. A date written without a year is Year 1: write Y1. With no time in the passage, use the last date in <prior_context>. When merging older lines, begin with the first line's date and add the last line's day if it differs: [Y1 M1 W2 Tue–W3 Fri].
+- Then short phrases separated by semicolons: names, not pronouns; past tense; the story's language.
+- At most 50 words; at most 70 when merging older lines or when <prior_context> is "(none yet)".
+- One line only, with no line breaks.

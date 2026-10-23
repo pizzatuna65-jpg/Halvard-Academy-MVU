@@ -29,7 +29,7 @@ console.log('The story model is never told to write an update');
   ok(/write an <UpdateVariable> block only when <update_format> is in this prompt/.test(renderEntry(card, 504, S0)), '504 (story only): no update without <update_format> (1.67.1)');
   // 1.67.2: Tavern Helper's generateRaw (87ca341, generate/generateRaw.ts) injects every extension prompt it does not know, VectFox's
   // <VectFoxMemory> included, into the update request at depth 0; the update model took a recalled event's 08:38 as now.
-  ok(/<old> is World\.Time in <current_state>/.test(byId(503).content) && /<VectFoxMemory> is recalled past/.test(byId(503).content),
+  ok(/<old> is World\.Time in <current_state>/.test(byId(503).content) && /<VectFoxMemory> and <story_before_chat> are the past/.test(byId(503).content),
     '503 (update only): the old time comes from <current_state>, and recalled memory is the past');
 }
 

@@ -1,7 +1,31 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 871dd0e:CHANGELOG.md` (1.97.3), `git show c5135f8:CHANGELOG.md` (1.97.2), `git show d30ff7c:CHANGELOG.md` (1.97.1), `git show f9101db:CHANGELOG.md` (1.96.1), `git show df8dbed:CHANGELOG.md` (1.96.0), `git show 363f03b:CHANGELOG.md` (1.95.0), `git show bba6bb0:CHANGELOG.md` (1.94.0), `git show dca179c:CHANGELOG.md` (1.93.1, 1.93.0), `git show 01cd1f2:CHANGELOG.md` (1.92.0), `git show d097927:CHANGELOG.md` (1.91.0), `git show 6065e5c:CHANGELOG.md` (1.90.0), `git show de4303e:CHANGELOG.md` (1.89.0), `git show 4ace903:CHANGELOG.md` (1.88.1), `git show ce178fb:CHANGELOG.md` (1.88.0), `git show 0e1e5a2:CHANGELOG.md` (1.87.0), `git show e6f2c37:CHANGELOG.md` (1.86.0), `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 7848cb7:CHANGELOG.md` (1.97.4), `git show 871dd0e:CHANGELOG.md` (1.97.3), `git show c5135f8:CHANGELOG.md` (1.97.2), `git show d30ff7c:CHANGELOG.md` (1.97.1), `git show f9101db:CHANGELOG.md` (1.96.1), `git show df8dbed:CHANGELOG.md` (1.96.0), `git show 363f03b:CHANGELOG.md` (1.95.0), `git show bba6bb0:CHANGELOG.md` (1.94.0), `git show dca179c:CHANGELOG.md` (1.93.1, 1.93.0), `git show 01cd1f2:CHANGELOG.md` (1.92.0), `git show d097927:CHANGELOG.md` (1.91.0), `git show 6065e5c:CHANGELOG.md` (1.90.0), `git show de4303e:CHANGELOG.md` (1.89.0), `git show 4ace903:CHANGELOG.md` (1.88.1), `git show ce178fb:CHANGELOG.md` (1.88.0), `git show 0e1e5a2:CHANGELOG.md` (1.87.0), `git show e6f2c37:CHANGELOG.md` (1.86.0), `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v1.99.1 — Summaryception as the second memory option (2026-10-23)
+
+Owner, 2026-10-23: 1.99 becomes compatibility with Summaryception, beside VectFox (not instead of it, not both at once); on
+Summaryception's side only settings and prompts, never a fork. `planning/DRAFT_summaryception.md`, "proceed" (its one open question
+adopted as recommended: target Summaryception 5.5.4 by Lodactio, the copy in `Extension/`, not vadash's fork installed in the owner's
+SillyTavern). The draft is deleted. Save fixture v1.98.3.
+- **Summaryception files** (`src/summaryception/`, copied to `dist/` by `build_card.py` with the VectFox files): the summary prompt
+  (import as a Custom prompt; one prompt for chat and for merging older lines; reads only the update block's Time and Location line and
+  its Journal line, ignores the rest of the block, `<npc_thoughts>`, `<say>` tags and the scene marker; leaves out what the card keeps;
+  each line starts with `[Y1 M? W? Day HH:MM, place]`, 50 words), the system prompt, and the injection template (`<story_before_chat>`:
+  older than every chat message, not the player's message, the past).
+- **503** names `<story_before_chat>` beside `<VectFoxMemory>` as the past (it also reaches the update model in extra-model mode).
+- **Replay** (`floorOf`): a player message Summaryception hid (`extra.sc_ghosted`) is still the floor's player message, because MVU's
+  Replay floor and restore replay hidden floors too (438f9ff); without it a replay saw no player words (apologies, the Council ballot,
+  rule-card gating differed).
+- **Warnings** (`scChecks`, `scText`, read-only): Verbatim Turns above 11 when a chat opens (the trim regex sends only 24 messages);
+  after a deletion, a Summaryception record past the chat's end (reopen the chat, or later replies are hidden unsummarised).
+- Docs: `docs/ECOSYSTEM.md` Summaryception section (how 5.5.4 works, settings, connection modes, switching); DECISIONS §10 memory
+  extension, §11 two verified rows; PLAYER_GUIDE, rentry, FEATURES §16, INDEX; FUTURE_PLANS §0 (the bug hunt follows 1.99).
+- Tests: new `test_summaryception_v1991.cjs` (15 checks); `test_narrator_batch7_v1580` (503 wording), `test_memory_batch1_v1610`,
+  `test_vectfox_v1113`, `test_saves` (loads the 1.98.3 save) pass.
+- **To confirm with the owner:** nothing invented beyond the prompt wording.
+- **To check live:** `docs/TEST_CHECKLIST.md` SQ-SC [1.99.1].
 
 ## v1.98.3 — Council petitions and the Healing Ward; 1.98 done (2026-10-23)
 
@@ -142,43 +166,6 @@ because she has just come. Save fixture v1.97.4.
   for Norvaine, its team and the Colonel after she has gone; the Needle's keys without a bare "needle" (she hates needles); her
   Halvard tie types; everyone's dislike of Althair now reaches her too (owner rule 1.4.2; the `except` list can name her).
 - **To check live:** `docs/TEST_CHECKLIST.md` Q10.1c [1.97.5] and Side quest SQ-V.
-
-## v1.97.4 — The World Competition (2026-10-22)
-
-Owner's design (2026-10-22, "proceed" on `planning/DRAFT_world_competition.md` §1b, §3 and the champions' prize; step 4 of five).
-Save fixture v1.97.3.
-- **The World panel picks for synergy** (Gavlan's rule, lore 19): still one competitor per combat role from all sixteen Kingdom
-  competitors by record and strength, now plus how the four fight together: their relations (`relations.json` types, either way),
-  having fought on the same Kingdom team, {{user}}'s bond with each (Rank, heavy Tension a minus), and Lucius's swarm, which costs an
-  ally of Elemental, Mystic or Occult magic their whole worth (an invented student of unknown magic half). Across ten seeds Lucius,
-  top on paper in four, is picked once. The Competition tab gives the reasons; picked, {{user}}'s `Competition.Team` names the other
-  three. Without {{user}} on the Kingdom team, the year's Kingdom result is now kept once its week is over.
-- **The competition** (`stepWorld`, the Kingdom pattern): Monday 19:00 the opening banquet draws two Phase 1 groups. Phase 1 Last
-  Team Standing (09:00–17:00, one group a day): competitors meet one another alone every half hour, the closing barrier catches more
-  as it shrinks, and at 17:00 whoever is left fights it out in one clearing (an hour for the story when {{user}} is still up); the
-  first team to lose everyone goes out, a tie falls on fewer crystals broken. Phase 2 the Siege (Thu, Fri; a top seed against the
-  other group's second): rounds every 30 minutes from 10:00, first to four, sides swapping after three, the top seed choosing the side
-  its play favours. Sunday the Grand Final. The foreign fours play from their lore Plays lines (Yozakura head-on, Norvaine drilled,
-  Caelmar chaotic, Arslan patient, Velmora wearing teams down by the hour) and the three usual favourites a little stronger.
-- **{{user}}'s part** comes from the story: `World P1: broke <name>'s crystal`, `World P1: <name> out`, `World P1: slipped away from
-  <name>`, `World P2: won/lost round <n>`, `World P3: won/lost`; `<now>` gives the teleport spot, the barrier, the meeting with a
-  rival's edge for Fortune, the Siege side and score, the final. A meeting waits until the story has seen it; anything unreported is
-  played off-screen when the match moves on. Placement (joint 5th, joint 3rd, 2nd or 1st of 6) and Status are the engine's.
-- **The prize**: champions get the World Trophy replica in the Bag at once, 10,000 points when the liner lands home (no use
-  abroad), and Academy and Student reputation one level up (`reputation.json` `competition.up` `World:champion`; not the Doves).
-- **At Halvard**: each day's result on the Announcement Pillars at 20:00 (the draw Monday night), the Grand Final live on the scrying
-  crystal in Arbiter Hall, the champions in Monday's Academy Newspaper; the Competition tab shows the six nations, the groups, the Siege
-  scores and the news.
-- Hanakaze's match grounds now open only on the day Eldrasil plays there (1.97.3 opened both days of their phase).
-- Hooks for 1.97.5 (`event_frame.json` `world.hook`, empty): `same` draws a nation into Eldrasil's group, `path` lets a nation win every
-  match the engine plays.
-- Code: `data/event_frame.json` `world`, `tools/common.py` `contest_data` (the foreign fours from the team entries, magic types,
-  relations), engine `kcPanel`, `stepWorld` and the `wc*` helpers, `hkGround`, the World prize in `stepClubLife`, `competition.up` in
-  `stepReputation`; schema `$eng.wc`, `$eng.wcn`, `$ui.wc` (without them the state was stripped each reply); UI `p40:worldBlock`.
-- Tests: new `test_world_comp_v1974.cjs`; `test_hanakaze_v1973.cjs` reads Eldrasil's day from the draw. `npm test`: all 159 suites pass; lint clean.
-- **To confirm with the owner** (invented, replaceable): the times (Phase 1 09:00–17:00, the Siege from 10:00, a round every 30
-  minutes); how often competitors meet and the barrier catches them; the tactics' numbers; the synergy weights; the eight teleport spots.
-- **To check live:** `docs/TEST_CHECKLIST.md` Q10.1b and Q10.1c [1.97.4].
 
 ## Release index (one line per release, oldest first)
 
@@ -371,3 +358,4 @@ Save fixture v1.97.3.
 - **v1.98.1 (2026-10-23):** Dove watch (1.98 audit, batch 2): Dove attention covers every Dove secret (true magic, forbidden technique or pact, Koschei's Needle, `Hidden.Secrets`); the stages act (a rumour, a posted Dove, the interview, the room search, a knower who talks, the hearing); `/Dove_found`, and a seized Needle goes to the Dovecote.
 - **v1.98.2 (2026-10-23):** Rumours that reach people, investigations, projects that count (1.98 audit, batch 4): friends ask about a rumour on {{user}}, friends of the named hear one; Investigate at a clue's place (XP, a lead now and then); a solved thread pays; finished research and club Projects pay XP (and a lead, a Newspaper line).
 - **v1.98.3 (2026-10-23):** Council petitions and the Healing Ward (1.98 audit, batch 5; 1.98 done): a weekly petition at the Saturday Council meeting for a member; treatment in the Medical Centre shortens an injury's healing once.
+- **v1.99.1 (2026-10-23):** Summaryception as the second memory option beside VectFox: its prompt, system prompt and template in `dist/`; 503 names `<story_before_chat>`; replays read player messages it hid; warnings for Verbatim Turns above 11 and a record past the chat's end.

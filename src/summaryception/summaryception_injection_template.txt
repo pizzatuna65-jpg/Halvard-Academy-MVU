@@ -1,0 +1,7 @@
+
+
+<story_before_chat>
+[The story before the chat messages you can see, as recorded by the memory extension, oldest first. All of it happened before the oldest chat message, even where this block sits below some of them. It is not the player's message. It is the past: <current_state> is now; never take the time, the place, a value or who is present from it.]
+{{summary}}
+</story_before_chat>
+

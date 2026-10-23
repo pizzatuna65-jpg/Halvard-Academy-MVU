@@ -249,10 +249,11 @@ INDEX §4) · `lore N` generated lore entry uid · `T:` `tests/test_<name>.cjs` 
 - **Themes** (1.21.0): Pewter, Midnight, Rosewood, Parchment, Frost; colour tokens, AA contrast. `tools/make_themes.py`, `ui:setTheme`. T:ui_overhaul_v1210.
 - **Settings**: Appearance; Features (every module on/off with its token cost, `tools/feature_cost.py` → `D/feature_cost.json`; switched-off state is parked, not deleted, by `stepFeatures`); tuning groups Bonds, Proficiency, Training, Reputation, Mood and rest, Body and magic, Campus life, Studies and dorm rank, Fortune (`D/tuning.json`). `ui:pSettings`, `ui:featureOn`. T:settings_v199.
 
-## 16. Preset and VectFox
+## 16. Preset and memory extensions
 
 - **Preset** (1.68.0): Realistic Frankenstein 2.2.1.3 (Realistic Gemini BOLT) as it ships plus a closed deviation list D1–D11 and E1 Player Input Authority, E2 Output language, E3 Ordinary Turns; NPC Thoughts block (D5, styled by `ui:thoughtsCss`). `presets/edit_preset.py`; docs/ECOSYSTEM.md. T:preset, T:npc_thoughts_v1373.
 - **VectFox**: the card's cleaning patterns and EventBase extraction prompt (`src/vectfox/`, copied to `dist/`); settings and how EventBase works in docs/ECOSYSTEM.md. T:vectfox_v1113.
+- **Summaryception** (1.99.1, option 2): the card's prompt, system prompt and injection template (`src/summaryception/`, copied to `dist/`, `<story_before_chat>` named in 503); `floorOf` reads its hidden player messages (`sc_ghosted`) on a replay; `scChecks` / `scText` warn on Verbatim Turns above 11 (`CHAT_CHANGED`) and on a record past the chat's end after a deletion (`MESSAGE_DELETED`). Settings and how it works: docs/ECOSYSTEM.md. T:summaryception_v1991.
 
 ## 17. Developer tools
 

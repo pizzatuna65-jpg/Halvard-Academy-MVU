@@ -824,6 +824,19 @@ The first academy flight (the airship), then the Grand Vast Forest.
 
 ## Side quests (any time)
 
+### SQ-SC Summaryception instead of VectFox [1.99.1]
+*Do:* in a copy of the chat (a branch), turn VectFox off and set up Summaryception 5.5.4 as `docs/ECOSYSTEM.md` → Summaryception says
+(your SillyTavern has vadash's fork 24.29.0; these checks are for 5.5.4). Process the backlog, then play a few replies.
+- [ ] The connection: OpenAI Compatible reaches your provider from the browser (no CORS error); Connection Profile fails, as the code
+      suggests (one try is enough) [1.99.1].
+- [ ] Snippet Browser after the first three batches: each line starts with `[Y1 M? W? Day HH:MM, place]`; no numbers, ranks, Mind,
+      Knows or `<npc_thoughts>` content; names, not "you" [1.99.1].
+- [ ] *Prompt*: the `<story_before_chat>` block sits among the older chat messages (depth 12); the narrator treats it as the past and
+      never as the player's message, and the clock comes from `<current_state>` [1.99.1].
+- [ ] Verbatim Turns set to 25, then open the chat: the card's Summaryception warning appears; back to 10 [1.99.1].
+- [ ] Delete back past what it summarised (`/sc-status` shows the index): the card's warning appears; open another chat and come back:
+      Summaryception's "Branch detected" toast trims its record [1.99.1].
+
 ### SQ-W The world beyond Halvard [1.97.2]
 - [ ] Ask in History Class (or a teacher) about the demons and the Crack: the Gates and the demons' rule over Eldrasil are history,
       the Crack is a sealed Gate, the Demon Kingdom lies beyond Norvaine; the First Bargain and the Four stay legend [1.97.2].

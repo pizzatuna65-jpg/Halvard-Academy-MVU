@@ -557,7 +557,7 @@ In your second year, six new first-years come through the gate. They have voices
     The card doesn't set prose style, point of view or length. Your preset does, so bring whichever one you like. A compatible Gemini-tuned edit of **Realistic Frankenstein 2.2** ships alongside the card. With it, you write what your student says and tries, and the world decides whether it works. If your preset has its own trackers (relationship meters, GM notebooks, world sims), switch them off. The card is the only tracker.
 
 !!! note Memory
-    The narrator reads about the last 24 messages. The rest is carried by the game state: the journal, facts for each bond, campus news, promises and clues. It works with **VectFox** as chat memory. Just don't vectorise the card's own lorebook.
+    The narrator reads about the last 24 messages. The rest is carried by the game state: the journal, facts for each bond, campus news, promises and clues. It works with **VectFox** as chat memory. Just don't vectorise the card's own lorebook. Prefer a running summary? Use **Summaryception** instead (one or the other, not both): import the prompt and paste the system prompt and template that ship with the card, and keep Verbatim Turns at 10.
 
 **If something looks wrong:**
 - **No bracelet:** Tavern Helper is off, or the card's scripts weren't allowed.

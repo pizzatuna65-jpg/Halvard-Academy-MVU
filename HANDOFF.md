@@ -3,19 +3,18 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.98.3** (2026-10-23): the 1.98 stage (shallow features) is done, the owner's pick of the audit
-`audit/AUDIT_2026-10-23_1_kedalaman_fitur.md`: 1.98.1 Dove watch (Dove attention covers every Dove secret, Koschei's Needle included;
-the stages act: a rumour, a posted Dove, the interview, a room search, a knower who talks, the hearing; `/Dove_found`), 1.98.2
-rumours that reach people, Investigate at a clue's place, solved threads and finished research or club Projects that pay, 1.98.3
-Council petitions and treatment in the Healing Ward. What the owner did not pick (Dorm Days, Battle, UI tools) is in
-`planning/FUTURE_PLANS.md` §2. The memory audit is done except batch 8. Live checks: the campaign quest log
-`docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the card, Q0.1).
+**Snapshot:** card **v1.99.1** (2026-10-23): 1.99 is Summaryception compatibility (owner). The card now plays with VectFox
+(option 1) or Summaryception 5.5.4 by Lodactio (option 2), one per chat, or neither: `dist/summaryception_prompt.txt`,
+`summaryception_system_prompt.txt`, `summaryception_injection_template.txt`, settings and how it works in `docs/ECOSYSTEM.md`
+(Summaryception). The owner's SillyTavern has vadash's fork 24.29.0 installed, which differs; only 5.5.4 is supported. Live checks: the
+campaign quest log `docs/TEST_CHECKLIST.md` (the owner plays it from the Charles chat, Y1 M1 W1 Mon 10:13; first Act 0: update the card,
+Q0.1; Summaryception: SQ-SC).
 
-**Next task:** 1.99.x bug hunt (`planning/FUTURE_PLANS.md` §0: full suite, stress tests, a cross-system audit file with a batch
-list; batch N → 1.99.N), then 2.0 polish. The World Competition's Year 2 host (Caelmar: Area, map, liner) waits in FUTURE_PLANS §1
-[YEAR 2]. Alongside it, the owner plays the quest log; their reports and chat exports bring the playtest fixes. MS3 stage 2 and the
-NPC dialogue audit's U1, U3–U5 wait in `planning/FUTURE_PLANS.md` §2 for a campaign export. Batch 8 (chapters) is planned in
-`planning/DRAFT_bab_baru.md`: build it at about 20,000 messages, slow saves or a chat file near 100 MB.
+**Next task:** the bug hunt (`planning/FUTURE_PLANS.md` §0: full suite, stress tests, a cross-system audit file with a batch list),
+then 2.0 polish. The World Competition's Year 2 host (Caelmar: Area, map, liner) waits in FUTURE_PLANS §1 [YEAR 2]. Alongside it, the
+owner plays the quest log; their reports and chat exports bring the playtest fixes. MS3 stage 2 and the NPC dialogue audit's U1, U3–U5
+wait in `planning/FUTURE_PLANS.md` §2 for a campaign export. Batch 8 (chapters) is planned in `planning/DRAFT_bab_baru.md`: build it at
+about 20,000 messages, slow saves or a chat file near 100 MB.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 
@@ -36,7 +35,7 @@ underneath. The player is a first-year student. The card combines:
   training, grades, hidden magic, payouts, journal, ambience and more.
 - **A UI**: an in-chat "bracelet" status bar (a regex replaces MVU's placeholder) and a Tavern Helper script with panels: Student
   Builder, Student file (with Settings → Features), People (dossiers, relationship graph), Map, Inventory (Bag, Wallet, planner, journal), Activities, Battle.
-- **Ecosystem compatibility** with the owner's memory extension (VectFox) and prompt preset (Realistic Frankenstein 2.2.1.3, the
+- **Ecosystem compatibility** with a memory extension (VectFox, or Summaryception as the second option) and prompt preset (Realistic Frankenstein 2.2.1.3, the
   Realistic Gemini BOLT configuration as it ships plus what the card needs): `docs/ECOSYSTEM.md`.
 
 **Division of labour (do not blur it):**
@@ -45,7 +44,7 @@ underneath. The player is a first-year student. The card combines:
 |---|---|
 | Game state and trackers | Card (MVU + engine) only |
 | Prose style, POV, length, generic NPC-writing craft, reasoning (CoT) | Preset (as toggles; the card carries none of these) |
-| Long-term memory of old scenes | VectFox (EventBase) |
+| Long-term memory of old scenes | VectFox (EventBase) or Summaryception (one per chat) |
 | Lore activation | Characters in `Scene.Present`: the card's Cast Sheet (custom 509). Everything else: SillyTavern keyword World Info |
 
 ## 2. Repository map
@@ -66,10 +65,10 @@ planning/DRAFT_*.md        only while a draft awaits approval or is being applie
 audit/                     owner-ordered audits (Indonesian, mostly untracked); a bare "kerjakan batch N" = memory audit-batch-plan
 source_original/           owner's lorebook v38 and NPC lore passes (canon, pipeline input, never edited)
 src/                       card sources: worldbook/ (generated lore + hand-written custom/ 500–510), scripts/, ui/, regex/, card/,
-                           vectfox/ (the VectFox cleaning patterns and extraction prompt; copied to dist/)
+                           vectfox/ and summaryception/ (the memory extensions' prompts and patterns; copied to dist/)
 data/                      curated single sources (docs/INDEX.md §7)
 tools/, build/             generators and the card assembler (tools/build_all.py runs them in order)
-dist/                      the ONE download folder: card, preset, VectFox files; test/ TEST cards; lorebook_v39/ standalone export
+dist/                      the ONE download folder: card, preset, VectFox and Summaryception files; test/ TEST cards; lorebook_v39/ standalone export
 presets/                   edit_preset.py and original/ (the edited preset is written to dist/)
 tests/                     node suites (index: tests/README.md), save fixtures, stress, browser previews
 Maps/                      the season and event map images (live copies are in the assets repo)

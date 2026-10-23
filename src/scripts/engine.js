@@ -1835,7 +1835,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "1.98.3";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "1.99.1";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 const verLt = (a, b) => { const p = v => String(v || '0').split('.').map(x => parseInt(x, 10) || 0), x = p(a), y = p(b); for (let i = 0; i < 3; i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) < (y[i] || 0); return false; };   // 1.63.0
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
@@ -8875,9 +8875,25 @@ function floorOf(chat, content) {
   let at = chat.length - 1;
   if (content) for (let i = chat.length - 1; i >= 0; i--) if (chat[i] && String(chat[i].mes || '') === content) { at = i; break; }
   let said = '';
-  for (let i = at; i >= 0; i--) { const x = chat[i] || {}; if (x.is_user && !x.is_system && !/\(player tool\)/.test(String(x.mes || ''))) { said = String(x.mes || ''); break; } }
+  // 1.99.1: a player message Summaryception hid after summarising it (/hide, extra.sc_ghosted) was the player's words when the floor
+  // first ran, so a replay reads it too; MVU replays hidden floors as well (438f9ff button.ts, cleanup/restore_variables.ts)
+  for (let i = at; i >= 0; i--) { const x = chat[i] || {}; if (x.is_user && (!x.is_system || !!(x.extra && x.extra.sc_ghosted)) && !/\(player tool\)/.test(String(x.mes || ''))) { said = String(x.mes || ''); break; } }
   return { at, said, sent: String((chat[at] || {}).send_date || '') };
 }
+// 1.99.1: Summaryception (Lodactio 5.5.4), the second memory option beside VectFox (docs/ECOSYSTEM.md). It summarises every reply older
+// than its Verbatim Turns and hides it; the trim regex shows the narrator only the latest 24 messages, so above 11 replies some fall
+// between the two (verbatim). Its record is kept by message index and trimmed only when a chat opens (repairIfBranched), so after
+// messages it summarised were deleted, later replies at those indexes would be hidden unsummarised until the chat is reopened (stale).
+const SC_VERBATIM_MAX = 11;
+function scChecks({ loaded, settings, store, chatLength }) {
+  const s = settings && typeof settings === 'object' ? settings : {}, n = Math.floor(num(s.verbatimTurns, 0));
+  const up = store && Number.isInteger(store.summarizedUpTo) ? store.summarizedUpTo : -1;
+  return { verbatim: loaded && s.enabled !== false && n > SC_VERBATIM_MAX ? n : 0, stale: !!loaded && up >= 0 && up >= num(chatLength, 0) };
+}
+const scText = {
+  verbatim: n => `Summaryception keeps ${n} replies word for word, but this card shows the narrator only the latest 24 messages. Set Verbatim Turns to 10 (at most 11), or the replies in between reach neither the chat nor the summary.`,
+  stale: () => 'You deleted messages Summaryception had already summarised. Open another chat and come back before you go on: Summaryception trims its record when a chat opens. Otherwise your next replies may be hidden without a summary.',
+};
 // The state before this floor normally comes from the floor just before it. MVU takes the newest earlier floor that still holds
 // data (getLastValidVariable), so after a branch or a deep deletion it can be a snapshot up to 49 floors back, and every update in
 // between is missing. $eng.floor stamps the floor each state was made on.
@@ -8944,6 +8960,19 @@ if (typeof eventOn === 'function' && typeof waitGlobalInitialized === 'function'
         } catch (e) { console.warn('[Eldrasil scene marker]', e); }
       });
       eventOn(tavern_events.MESSAGE_RECEIVED, (id, from) => { if (from === 'extension') return; const tl = tlGet(); if (id > tl.top) { tl.top = id; tlPut(tl); } });
+      // 1.99.1: Summaryception checks (scChecks): read its settings and its record in the chat metadata, change nothing
+      const scNow = () => { const C = SillyTavern || {}, P = C.SlashCommandParser;
+        return scChecks({ loaded: !!(P && P.commands && P.commands['sc-status']), settings: (C.extensionSettings || {}).summaryception,
+          store: (C.chatMetadata || {}).summaryception, chatLength: (C.chat || []).length }); };
+      const scWarned = new Set();
+      if (tavern_events.CHAT_CHANGED) eventOn(tavern_events.CHAT_CHANGED, () => {
+        try { const r = scNow(), key = (SillyTavern.getCurrentChatId ? SillyTavern.getCurrentChatId() : '') + '|' + r.verbatim;
+          if (r.verbatim && !scWarned.has(key)) { scWarned.add(key); toastr.warning(scText.verbatim(r.verbatim), 'Summaryception', { timeOut: 15000 }); } }
+        catch (e) { console.warn('[Eldrasil Summaryception]', e); }
+      });
+      if (tavern_events.MESSAGE_DELETED) eventOn(tavern_events.MESSAGE_DELETED, () => {
+        try { if (scNow().stale) toastr.warning(scText.stale(), 'Summaryception', { timeOut: 15000 }); } catch (e) { console.warn('[Eldrasil Summaryception]', e); }
+      });
     }
     eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, (variables, variables_before) => {
       let hint = '', said = '', at = -1;

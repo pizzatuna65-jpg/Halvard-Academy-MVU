@@ -1,13 +1,13 @@
-# Eldrasil ecosystem: card + Realistic Frankenstein 2.2.1.3 (Gemini) + VectFox
+# Eldrasil ecosystem: card + Realistic Frankenstein 2.2.1.3 (Gemini) + VectFox or Summaryception
 
-Card v1.68.0 (VectFox section rewritten for 1.57.0, preset section for 1.68.0) · preset `Realistic_Frankenstein_2_2_1_3_Eldrasil.json` · VectFox (checked at commit 3623dc8) · model Gemini 3.8 Flash.
+Card v1.68.0 (VectFox section rewritten for 1.57.0, preset section for 1.68.0, Summaryception section for 1.99.1) · preset `Realistic_Frankenstein_2_2_1_3_Eldrasil.json` · VectFox (checked at commit 3623dc8) · Summaryception 5.5.4 · model Gemini 3.8 Flash.
 
 ## Who owns what
 | Job | Owner | Not done by |
 |---|---|---|
 | Game state: time, calendar, vitals, mana, money, bonds, secrets, campus changes, journal, commitments, clues | **Card** (MVU + engine) | preset trackers (all OFF) |
 | Prose style, POV, NPC voice and behaviour, anti-slop, reasoning (CoT) | **Preset** | card (since 1.4.6 the card sets no prose style, point of view, tense or length) |
-| Details of past scenes | **VectFox** (EventBase) | preset notebook / Chekhov (OFF) |
+| Details of past scenes | **VectFox** (EventBase) or **Summaryception** (one per chat) | preset notebook / Chekhov (OFF) |
 | Hard facts (who, bonds, who knows what, promises, items) and the story's spine (Journal) | **Card** state, shown by condition | VectFox (recall depends on the latest messages) |
 | Lorebook activation | **SillyTavern** (keywords) | VectFox semantic lorebook (do not use on this card) |
 | Status display | **Card** bracelet and panels | preset Internal States HTML (OFF) |
@@ -366,6 +366,78 @@ text through its own prompt slot, outside SillyTavern's World Info pipeline:
 - Rule 504 tells the narrator that recalled memories are the past and `<current_state>` is now (a recalled "300 points" never
   overrides the wallet), that a memory tells what happened, not who knows it, and that a character's Cast Sheet outranks a memory's
   description of them.
+
+## Summaryception (chat memory, option 2)
+
+Since 1.99.1 the card works with **Summaryception 5.5.4** (github.com/Lodactio/Extension-Summaryception) as the second memory option.
+Use **either** VectFox **or** Summaryception in a chat, not both; the card also plays with neither. Checked against its source
+(`index.js`, `connectionutil.js`, `settings.html`, v5.5.4), SillyTavern 1.18.0 (8172dcd0e), MagVarUpdate 438f9ff and ST-Prompt-Template.
+Forks share its module name and settings key but differ (vadash's 24.x has its own prompts, injection position and "apply regex
+scripts"); only 5.5.4 is supported. File names in brackets are Summaryception's.
+
+### What it does
+| Job | VectFox | Summaryception |
+|---|---|---|
+| The past outside the chat | the ~10 stored events most similar to the scene, in full detail | a running record of the whole story, oldest first, short, every turn |
+
+- **Trigger** [`onMessageReceived`, `maybeSummarizeTurns`]: 500 ms after a reply arrives, when more replies than *Verbatim Turns* are not
+  yet summarised, it summarises the oldest *Turns per Batch* (3) of them with the player's messages in between, so 8–10 replies stay
+  word for word at Verbatim 10.
+- **Input** [`buildPassageFromRange`]: each message's raw `mes` as `Player: …` / `Assistant: …`. Nothing is cleaned (Strip Patterns
+  clean only the output) and SillyTavern's regexes do not apply, so the update block (Mind, Knows, Extras), `<npc_thoughts>`, `<say:Name>`
+  tags and the scene marker arrive as written. The card's prompt says what to read in them and what to ignore.
+- **Prompt** [`callSummarizer`]: one user prompt does two jobs, a new line from chat (Layer 0) and one line from 3 older lines (a
+  promotion). `{{player_name}}`, `{{context_str}}` (every stored line, deepest layer first) and `{{story_txt}}` are each replaced once;
+  SillyTavern macros are filled only in Default connection mode. The system prompt is a separate field.
+- **Layers** [`maybePromoteLayer`]: 20 lines a layer (the README says 30; the code 20), 3 lines merge into 1, the first line of a new layer
+  moves without a call, 5 layers: about 7,000 replies before the last layer grows on.
+- **Injection** [`updateInjection`]: `setExtensionPrompt('summaryception', …, IN_CHAT, depth 12, no WI scan, user role)`. Position, depth
+  and role are constants in the code (`TUNING`), not settings; only the template is. With 16–21 messages in view the block sits among the
+  older ones, so the card's template says everything in it is older than every chat message and is not the player's message. In MVU's
+  extra-model mode Tavern Helper adds it to the update request too (DECISIONS §11); 503 names it as the past.
+- **Ghosting** [`ghostMessagesUpTo`]: `/hide a-b` makes summarised messages `is_system` and marks them `extra.sc_ghosted`; you can still
+  read them. *Disable Ghosting* only skips the `/hide`: the messages then still reach the narrator, whatever its hint says.
+- **Storage**: per chat in `chatMetadata.summaryception` (`layers`, `summarizedUpTo`, `ghostedIndices`), by message index. It trims
+  itself only when a chat opens (`repairIfBranched`, when `summarizedUpTo` is past the chat's end).
+
+### Settings
+| Setting | Value | Why |
+|---|---|---|
+| Enable Summaryception | ON | |
+| Pause Summarization, Disable Ghosting | OFF | Ghosting is how it takes old messages out of the prompt. |
+| Verbatim Turns | **10** (at most 11) | The card's trim regex sends only the latest 24 messages; above 11 replies, some reach neither the chat nor the record. The card warns when it is higher. |
+| Turns per Batch / Snippets per Layer / per Promotion / Max Layers | 3 / 20 / 3 / 5 | |
+| Prompt Preset | Custom, then **Import** `dist/summaryception_prompt.txt` | Only the user prompt can be imported. |
+| Summarizer System Prompt | paste `dist/summaryception_system_prompt.txt` | |
+| Injection Template | paste `dist/summaryception_injection_template.txt` | wraps the record in `<story_before_chat>` |
+| Strip Patterns, Max Response Tokens | as shipped, 0 | |
+| Connection Source | **OpenAI Compatible**: your provider (OpenRouter: `https://openrouter.ai/api/v1`), a fast, cheap model | Calls the endpoint directly and touches nothing in SillyTavern. The key is stored in Summaryception's settings in plain text. |
+
+- **Default** works, but for the length of each call (5–30 s) it switches every preset toggle OFF and back [`disableAllPromptToggles`]: a
+  message you send meanwhile is built with the preset off (no Main Prompt, no Chat History). Wait for the "Summary saved" toast. It also
+  runs SillyTavern's generation events, so Prompt Template renders the request as EJS and the card's trim collapse runs (harmless).
+- **Connection Profile**: avoid. 5.5.4 calls `sendRequest(profileId, messages, {ignoreInstruct: true})`, and in SillyTavern 1.18 the third
+  argument is `maxTokens`, so `max_tokens` goes out as an object.
+
+Each record line starts with its in-world date and place (`[Y1 M1 W2 Tue 09:10, Main Library]`), from the update block's Time line, and
+keeps what the card's state does not: who did or said what and why, what was learned or revealed, promises and debts, conflicts,
+first meetings, open matters. About 65 tokens a line: ~1,300 tokens for the first 60 replies, ~6,700 once four layers are full
+(~2,400 replies), at most ~8,500 near 7,000 replies; VectFox costs ~2,500 a turn. A summary call reads ~6,000–10,000 tokens every 3 replies.
+
+### What the card does for it (1.99.1)
+- `floorOf` reads a player message Summaryception hid (`sc_ghosted`) as the player's words, because MVU's Replay floor and restore
+  replay hidden floors too: a replay gets the same result as the first run.
+- Two warnings (`scChecks`, read-only): Verbatim Turns above 11 when a chat opens; and, after a deletion, a record that reaches past the
+  chat's end ("open another chat and come back": otherwise the next replies at those indexes are hidden without being summarised).
+- 503 names `<story_before_chat>` with `<VectFoxMemory>` as the past; 504 already speaks of "summaries of past events".
+- Nothing VectFox uses changed; the scene marker stays (Summaryception reads it raw for who and where).
+
+### Switching mid-campaign
+- **VectFox → Summaryception:** turn VectFox off for the chat; if its ghosting hid messages, unhide them (Summaryception skips messages
+  someone else hid). Open the chat: *Process Entire Backlog* (one call per 3 replies; it can be stopped and resumed) or *Skip Backlog*
+  (the Journal and Chronicle then carry the old story).
+- **Summaryception → VectFox:** `/sc-clear` first (it unhides everything; VectFox skips hidden messages).
+- After editing an old, already summarised message: Snippet Browser → regenerate that line.
 
 ## If you change things later
 - The MAX and Micro CoT variants were not adapted; stay on BOLT or ask for them to be converted.

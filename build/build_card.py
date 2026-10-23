@@ -120,8 +120,9 @@ def build():
     os.makedirs(P('dist'), exist_ok=True)
     json.dump(v3, open(P('dist/Eldrasil_Halvard.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     write_png(v2, v3)
-    for f in os.listdir(P('src/vectfox')):   # the VectFox files sit next to the card and the preset: one download folder
-        shutil.copyfile(P('src/vectfox', f), P('dist', f))
+    for d in ('src/vectfox', 'src/summaryception'):   # the memory extensions' files sit next to the card and the preset: one download folder
+        for f in os.listdir(P(d)):
+            shutil.copyfile(P(d, f), P('dist', f))
     print(f'built: {len(entries)} wb entries, {len(scripts)} scripts, {len(regexes)} regex')
 
 def chunk(t, body):
