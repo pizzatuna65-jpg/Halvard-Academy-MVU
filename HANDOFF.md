@@ -3,17 +3,16 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.99.12** (2026-10-24): the bug hunt is under way. Its audit `audit/AUDIT_2026-10-23_2_audit_menyeluruh.md`
-(untracked) lists 8 batches in §8, one release each as 1.99.N; batches 1–6 and batch 7 stage 1 are done (1.99.2–1.99.8); 1.99.9 and
-1.99.10 were playtest fixes (fields a bond holds back are tagged in the Cast Sheet; the sheet carries the birthday). 1.99.11, from a
-playtest: who is at a place is rolled (Features "Who is here", `shared.js presenceAt`), at most three names, and an arrival keeps to the
-place until the next roll; `tools/audit_chat.py --mechanics` counts roster NPCs brought in unasked. 1.99.12: Look for (Activities, the
-dossier): a search rolled alike by `<now>` (505 now carries the presence code) and the engine (`stepLook`). The enabled preset is 18,556 tokens,
-44 under `test_preset`'s budget. Memory: VectFox (option 1) or Summaryception 5.5.4 (option 2), one per chat. Live checks: the campaign
-quest log `docs/TEST_CHECKLIST.md` (first Act 0: update the card and the preset, Q0.1; Summaryception: SQ-SC; the cache: SQ-CACHE; who is
-here and Look for: Act 1 Q1.1).
+**Snapshot:** card **v1.99.13** (2026-10-24): the bug hunt is under way. Its audit `audit/AUDIT_2026-10-23_2_audit_menyeluruh.md`
+(untracked) lists 8 batches in §8, one release each as 1.99.N; batches 1–6 and batch 7 stage 1 are done (1.99.2–1.99.8); 1.99.9–1.99.13
+were owner requests and playtest fixes: bond-held fields tagged in the Cast Sheet, the birthday, "Who is here" (`shared.js presenceAt`),
+Look for (`stepLook`), and 1.99.13: NPC thoughts only for NPCs in the scene (preset D5, scene cards), the Activities tab Practice is
+called Action and is the one home of "Look for someone". The enabled preset is 18,516 tokens, 84 under `test_preset`'s budget. Memory:
+VectFox (option 1) or Summaryception 5.5.4 (option 2), one per chat. Live checks: the campaign quest log `docs/TEST_CHECKLIST.md`
+(first Act 0: update the card and the preset, Q0.1; Summaryception: SQ-SC; the cache: SQ-CACHE; who is here, Look for, thoughts and
+the Action tab: Act 1 Q1.1).
 
-**Next task:** the bug-hunt audit's batch 8 (K1–K3 code tidy, `ENGINE_DIFF` with no difference) as 1.99.13.
+**Next task:** the bug-hunt audit's batch 8 (K1–K3 code tidy, `ENGINE_DIFF` with no difference) as 1.99.14.
 Batch 7 stage 2 (keyword lore at a depth in the chat, a summary line without a counter, history trimmed by blocks) waits for the
 owner's OpenRouter numbers after 1.99.8 (SQ-CACHE) and an A/B test with `tools/audit_chat.py`. Then 2.0 polish. The World Competition's
 Year 2 host (Caelmar: Area, map, liner) waits in FUTURE_PLANS §1 [YEAR 2]. MS3 stage 2 and the NPC dialogue audit's U1, U3–U5 wait in

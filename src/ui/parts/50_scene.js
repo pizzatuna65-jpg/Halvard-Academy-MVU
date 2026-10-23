@@ -101,19 +101,18 @@ function sceneCard(id, v, th, S, hasBlock) {
     <div class="st">${stats}${act}</div></section>`;
 }
 
-// the whole block for one reply: { html, folded } (folded: the reply's thoughts all moved into cards or the "elsewhere" rows)
+// the whole block for one reply: { html, folded } (folded: the cards replace the reply's thoughts block)
 function sceneHTML(S, text) {
   const P = (S && S.Scene && S.Scene.Present) || {}, ids = Object.keys(P);
   if (!ids.length) return { html: '', folded: false };
-  const all = sceneThoughts(text), hasBlock = !!all, byId = {}, away = [];
-  (all || []).forEach(t => { const id = sceneIdOf(t.name, ids); if (id && ids.includes(id)) { if (!byId[id]) byId[id] = t; } else away.push([id, t]); });
+  // 1.99.13 (owner): thoughts only for people in the scene; a thought about anyone else is not shown
+  const all = sceneThoughts(text), hasBlock = !!all, byId = {};
+  (all || []).forEach(t => { const id = sceneIdOf(t.name, ids); if (id && ids.includes(id) && !byId[id]) byId[id] = t; });
   const order = ids.filter(id => byId[id]).concat(ids.filter(id => !byId[id]));   // people with thoughts get the full cards
   const full = order.slice(0, SCENE_FULL), rest = order.slice(SCENE_FULL);
   let h = '<div class="hd">On scene</div>' + full.map(id => sceneCard(id, P[id], byId[id], S, hasBlock)).join('');
   if (rest.length) h += `<div class="also"><span class="lbl">also here</span>${rest.map(id => { const n = npcOf(id);
     return `<button type="button" ${n ? `data-eld-open="npc:${esc(id)}"` : `data-eld-keep="${esc(id)}"`} title="${esc((n ? nameOf(id, S, true) : id) + (P[id] && P[id].Note ? ': ' + P[id].Note : ''))}" style="--ring:${n ? n.dc : '#4a546c'}">${scenePic(id, S, 'face')}<span>${esc(n ? (knowsName(id, S) ? id : '?') : id)}</span>${byId[id] ? '<i class="has" title="has thoughts"></i>' : ''}</button>`; }).join('')}</div>`;
-  h += away.map(([id, t]) => { const n = npcOf(id), who = n ? (knowsName(id, S) ? n.n : nameOf(id, S, true)) : t.name;
-    return `<div class="away" style="--ring:${n ? n.dc : '#4a546c'}">${n ? scenePic(id, S, 'face') : `<span class="face fb">${esc(initials(t.name))}</span>`}<div class="t"><b>${esc(who)}</b> <span>· elsewhere${t.where ? ': ' + esc(t.where) : ''}</span><br><i>${t.lines.map(esc).join(' ')}</i></div></div>`; }).join('');
   return { html: h, folded: hasBlock && all.length > 0 };
 }
 
@@ -185,10 +184,6 @@ const SCENE_CSS = `
 .eld-scene .also button{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;width:52px;background:none;border:0;padding:0;color:var(--ink2);font-size:12px}
 .eld-scene .also button span{max-width:52px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .eld-scene .also .has{position:absolute;right:4px;top:0;width:9px;height:9px;border-radius:50%;background:var(--brass);box-shadow:0 0 0 2px var(--sheet)}
-.eld-scene .away{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--rule);border-radius:12px;padding:10px 14px;background:rgba(28,34,48,.7)}
-.eld-scene .away .t{min-width:0;font-size:14px;color:var(--ink2)}
-.eld-scene .away b{color:var(--head)}
-.eld-scene .away i{font-family:var(--f-text);font-size:15.5px;color:var(--ink)}
 @container (max-width:620px){
   .eld-scene .sc{grid-template-columns:118px minmax(0,1fr);grid-template-areas:"pic st" "th th"}
   .eld-scene .st{border-left:0;background:transparent;padding:12px 12px 10px;gap:9px}

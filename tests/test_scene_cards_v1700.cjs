@@ -31,7 +31,7 @@ ok(/class="portrait"[^>]*src="[^"]*portraits\/sophia\.webp"/.test(h), 'the full 
 ok(/XP<b>2\/\d+<\/b>/.test(h) && /Trust<b>40<\/b>/.test(h) && /Tension<b>Calm<\/b>/.test(h), 'the people card\'s three meters (bondMeters)');
 ok(!/Irene Chanare/.test(h) && /Not met yet/.test(h) && /No thoughts shown this turn/.test(h), 'Irene, not met: no name, no meters; no thought this turn');
 ok(/Invented character/.test(h) && /data-eld-keep="Grinning upperclassman"/.test(h), 'an invented character: the Keep button the strip had');
-ok(/class="away"/.test(h) && /Caspian Riwalo|Student Council Vice President/.test(h) && /elsewhere: the office/.test(h), 'a thought about someone absent: an "elsewhere" row');
+ok(!/class="away"/.test(h) && !/Caspian|Forty minutes|elsewhere/.test(h), '1.99.13 (owner): a thought about someone absent is not shown');
 ok(h.indexOf('portraits/sophia') < h.indexOf('Not met yet'), 'people with thoughts get the cards first');
 
 const none = U.sceneHTML(S, 'No block.');

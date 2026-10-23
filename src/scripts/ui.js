@@ -3670,7 +3670,7 @@ function heardOf(S) {
 
 // ================================================================ 5.2 Activities: Clubs, Competition, Shop, Projects, Trip (F18, F19) + Battle panel
 view.act = 'clubs'; view.shop = 'All';
-const ACT_TABS = [['event', 'Event'], ['clubs', 'Clubs'], ['practice', 'Practice', '', ['proficiency']], ['competition', 'Competition', 'competition', ['competition']], ['shop', 'Shop'], ['projects', 'Projects', 'projects', ['projects']], ['trip', 'Trips', 'trip', ['trip']]];
+const ACT_TABS = [['event', 'Event'], ['clubs', 'Clubs'], ['practice', 'Action'], ['competition', 'Competition', 'competition', ['competition']], ['shop', 'Shop'], ['projects', 'Projects', 'projects', ['projects']], ['trip', 'Trips', 'trip', ['trip']]];
 const practicePlaces = S => [...new Set((DATA.practice || []).map(a => a.loc))].filter(id => {
   const l = DATA.locs[id]; return l && ((S.$ui || {}).discovered || []).some(n => normPlace(n) === normPlace(l.name));
 });
@@ -3713,9 +3713,13 @@ const aan = w => (/^[aeiou]/i.test(w) ? 'an ' : 'a ') + w;
 const LOOK_AREAS_UI = ['forest', 'avalon', 'airship', 'sunreach', 'hanakaze'];
 const lookIn = name => 'in ' + (/^the /i.test(name) ? name : 'the ' + name);
 const lookText = (who, place) => `I'm looking for ${who} ${lookIn(place)}.`;
+// 1.99.13 (owner): the tab keeps its id 'practice' (seen ledger, links) and is called Action: Look for someone lives only here,
+// then the Practice actions (Proficiency on, a practice place discovered)
+const practiceOn = S => featureOn(S, 'proficiency') && practicePlaces(S).length > 0;
+const acAction = S => lookRow(S) + (practiceOn(S) ? acPractice(S) : '');
 function lookRow(S) {
   const l = DATA.locs[locIdOf((S.World || {}).Location)];
-  if (!l || /CURFEW|LOCKDOWN/.test(String((S.World || {})._Curfew || '')) || LOOK_AREAS_UI.some(k => (((S.$ui || {}).area || {})[k] || {}).on)) return '';
+  if (!l || !featureOn(S, 'presence_roll') || /CURFEW|LOCKDOWN/.test(String((S.World || {})._Curfew || '')) || LOOK_AREAS_UI.some(k => (((S.$ui || {}).area || {})[k] || {}).on)) return '';
   return `<div class="item"><div class="row"><span class="t">Look for someone</span><button class="btn sm" data-fill="${esc(lookText('[name]', l.name))}">Look for</button></div><div class="sub">Somewhere here, if they are here at all: the engine rolls it, a little better than chance for someone who often comes here.</div></div>`;
 }
 
@@ -3723,11 +3727,11 @@ PANELS.activities = {
   live: true,
   render(S) {
     if (view.arg && ACT_TABS.some(t => t[0] === view.arg)) { view.act = view.arg; view.arg = ''; }
-    const tabs = ACT_TABS.filter(t => unlockedTab(S, t) && (t[0] !== 'shop' || shopsHere(S).length) && (t[0] !== 'practice' || practicePlaces(S).length) && (t[0] !== 'event' || eventSoon(S)));   // 1.81.0: Event only around an event
+    const tabs = ACT_TABS.filter(t => unlockedTab(S, t) && (t[0] !== 'shop' || shopsHere(S).length) && (t[0] !== 'practice' || practiceOn(S) || lookRow(S)) && (t[0] !== 'event' || eventSoon(S)));   // 1.81.0: Event only around an event
     if (!tabs.some(t => t[0] === view.act)) view.act = 'clubs';
-    const body = ({ event: acEvent, clubs: acClubs, practice: acPractice, competition: acCompetition, shop: acShop, projects: acProjects, trip: acTrip })[view.act](S);
+    const body = ({ event: acEvent, clubs: acClubs, practice: acAction, competition: acCompetition, shop: acShop, projects: acProjects, trip: acTrip })[view.act](S);
     return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>Activities</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
-      <nav class="nav">${tabs.map(([id, l]) => `<button data-actab="${id}" class="${view.act === id ? 'on' : ''}">${l}${isNew(`tab:activities:${id}`, view.act === id) && view.act !== id ? newsDot() : ''}</button>`).join('')}</nav><div class="bd">${lookRow(S)}${body}</div></div>`;
+      <nav class="nav">${tabs.map(([id, l]) => `<button data-actab="${id}" class="${view.act === id ? 'on' : ''}">${l}${isNew(`tab:activities:${id}`, view.act === id) && view.act !== id ? newsDot() : ''}</button>`).join('')}</nav><div class="bd">${body}</div></div>`;
   },
   click(b) {
     if (b.dataset.actab) { view.act = b.dataset.actab; render(); ov.querySelector('.bd').scrollTop = 0; return; }
@@ -4265,19 +4269,18 @@ function sceneCard(id, v, th, S, hasBlock) {
     <div class="st">${stats}${act}</div></section>`;
 }
 
-// the whole block for one reply: { html, folded } (folded: the reply's thoughts all moved into cards or the "elsewhere" rows)
+// the whole block for one reply: { html, folded } (folded: the cards replace the reply's thoughts block)
 function sceneHTML(S, text) {
   const P = (S && S.Scene && S.Scene.Present) || {}, ids = Object.keys(P);
   if (!ids.length) return { html: '', folded: false };
-  const all = sceneThoughts(text), hasBlock = !!all, byId = {}, away = [];
-  (all || []).forEach(t => { const id = sceneIdOf(t.name, ids); if (id && ids.includes(id)) { if (!byId[id]) byId[id] = t; } else away.push([id, t]); });
+  // 1.99.13 (owner): thoughts only for people in the scene; a thought about anyone else is not shown
+  const all = sceneThoughts(text), hasBlock = !!all, byId = {};
+  (all || []).forEach(t => { const id = sceneIdOf(t.name, ids); if (id && ids.includes(id) && !byId[id]) byId[id] = t; });
   const order = ids.filter(id => byId[id]).concat(ids.filter(id => !byId[id]));   // people with thoughts get the full cards
   const full = order.slice(0, SCENE_FULL), rest = order.slice(SCENE_FULL);
   let h = '<div class="hd">On scene</div>' + full.map(id => sceneCard(id, P[id], byId[id], S, hasBlock)).join('');
   if (rest.length) h += `<div class="also"><span class="lbl">also here</span>${rest.map(id => { const n = npcOf(id);
     return `<button type="button" ${n ? `data-eld-open="npc:${esc(id)}"` : `data-eld-keep="${esc(id)}"`} title="${esc((n ? nameOf(id, S, true) : id) + (P[id] && P[id].Note ? ': ' + P[id].Note : ''))}" style="--ring:${n ? n.dc : '#4a546c'}">${scenePic(id, S, 'face')}<span>${esc(n ? (knowsName(id, S) ? id : '?') : id)}</span>${byId[id] ? '<i class="has" title="has thoughts"></i>' : ''}</button>`; }).join('')}</div>`;
-  h += away.map(([id, t]) => { const n = npcOf(id), who = n ? (knowsName(id, S) ? n.n : nameOf(id, S, true)) : t.name;
-    return `<div class="away" style="--ring:${n ? n.dc : '#4a546c'}">${n ? scenePic(id, S, 'face') : `<span class="face fb">${esc(initials(t.name))}</span>`}<div class="t"><b>${esc(who)}</b> <span>· elsewhere${t.where ? ': ' + esc(t.where) : ''}</span><br><i>${t.lines.map(esc).join(' ')}</i></div></div>`; }).join('');
   return { html: h, folded: hasBlock && all.length > 0 };
 }
 
@@ -4349,10 +4352,6 @@ const SCENE_CSS = `
 .eld-scene .also button{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;width:52px;background:none;border:0;padding:0;color:var(--ink2);font-size:12px}
 .eld-scene .also button span{max-width:52px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .eld-scene .also .has{position:absolute;right:4px;top:0;width:9px;height:9px;border-radius:50%;background:var(--brass);box-shadow:0 0 0 2px var(--sheet)}
-.eld-scene .away{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--rule);border-radius:12px;padding:10px 14px;background:rgba(28,34,48,.7)}
-.eld-scene .away .t{min-width:0;font-size:14px;color:var(--ink2)}
-.eld-scene .away b{color:var(--head)}
-.eld-scene .away i{font-family:var(--f-text);font-size:15.5px;color:var(--ink)}
 @container (max-width:620px){
   .eld-scene .sc{grid-template-columns:118px minmax(0,1fr);grid-template-areas:"pic st" "th th"}
   .eld-scene .st{border-left:0;background:transparent;padding:12px 12px 10px;gap:9px}

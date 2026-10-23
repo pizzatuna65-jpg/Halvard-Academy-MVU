@@ -119,9 +119,13 @@ console.log('the buttons only draft the line');
 {
   const X = visit(9, '12:30', 'Canteen');
   U.view.act = 'clubs';
+  ok(!/Look for someone/.test(U.PANELS.activities.render(X)), '1.99.13 (owner): not on the Clubs tab');
+  U.view.act = 'practice';
   const h = U.PANELS.activities.render(X);
+  ok(/data-actab="practice"[^>]*>Action</.test(h) && !/>Practice</.test(h), '1.99.13 (owner): the tab is called Action and shows here without a practice place');
   ok(/data-fill="I&#39;m looking for \[name\] in the Canteen\."|data-fill="I'm looking for \[name\] in the Canteen\."/.test(h) && /Look for someone/.test(h), 'Activities: "Look for someone" at the place {{user}} is in');
   ok(!/Look for someone/.test(U.PANELS.activities.render(visit(9, '21:30', 'Courtyards'))), 'not after curfew');
+  ok(!/Look for someone/.test(U.PANELS.activities.render(visit(9, '12:30', 'Canteen', [put('/$ui/off', ['presence_roll'])]))), 'Who is here off: no Look for button');
   // the dossier: only the places the file already shows, this hour's routine first, and where {{user}} is
   // Irene keeps her Haunts back until Rank 1 (a guarded person); a bond's Rank grows only through the engine, so it is set here directly
   const closed = U.lookPlaces('Irene', U.DATA.npcs.Irene, X).map(o => o.p);

@@ -101,15 +101,14 @@ toggle(COLOR2, False, 'the card colours dialogue with <say:Name>')
 # ---- D5 (owner, 1.37.3): Internal Thoughts as a block of its own. Upstream it only fills a template inside the Internal States block
 # (OFF here), so ON alone it had nowhere to go. It keeps no state and names no card data. The prompt keeps upstream's place and triggers.
 assert 'thoughtsTemplate' in P[THOUGHTS]['content']
-P[THOUGHTS]['content'] = """{{// ELDRASIL EDITION. ON: after the story, a folded 🧠 Thoughts block shows what up to three NPCs are thinking right now. It keeps no state and never writes {{user}}'s thoughts; the story itself still keeps thoughts unspoken. OFF: no block. The preset's regexes fold it on screen and drop it from older replies in the prompt. If characters start to drift, also enable the regex "NPC Thoughts: drop from every reply": you still see the thoughts, and the AI never reads them back. Upstream's version only fills a section of the Internal States block, which stays OFF with a card that keeps its own state.}}{{trim}}
+P[THOUGHTS]['content'] = """{{// ELDRASIL EDITION. ON: after the story, a folded 🧠 Thoughts block shows what up to three NPCs in the scene are thinking right now. It keeps no state and never writes {{user}}'s thoughts; the story itself still keeps thoughts unspoken. OFF: no block. The preset's regexes fold it on screen and drop it from older replies in the prompt. If characters start to drift, also enable the regex "NPC Thoughts: drop from every reply": you still see the thoughts, and the AI never reads them back. Upstream's version only fills a section of the Internal States block, which stays OFF with a card that keeps its own state.}}{{trim}}
 
 <internal_npcthoughts>
 After the narrative, write one thoughts block in exactly this form, in the story's language:
 <npc_thoughts>
 - **Name**: thought
-- **Name** (where they are, what they are doing): thought
 </npc_thoughts>
-1. Who: up to 3 NPCs, present ones first. An absent NPC appears only when they matter to what is happening, at the place and task the card's records or the story already give them; the block never moves anyone or invents a meeting. Never {{user}}: their thoughts belong to the player.
+1. Who: up to 3 NPCs who are in the scene right now; never someone absent, only mentioned or remembered. Never {{user}}: their thoughts belong to the player. With no NPC in the scene, write no block.
 2. Voice: 1 to 3 short lines each, in the moment, but only as raw as that character is: a thought is never more emotional or dramatic than their card makes them. True to their card, their mood and, when the card keeps one, its record of how they see {{user}}.
 3. Knowledge: only what that character knows. A thought never spells out a secret the story still keeps from {{user}}; such a thing shows only as the character would feel it (unease, a topic they steer away from).
 4. Consistency: the thoughts match the narrative and drive what each NPC does next.

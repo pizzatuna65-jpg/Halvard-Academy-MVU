@@ -30,3 +30,6 @@ ok(/function thoughtsCss/.test(ui) && /sayCss\(S, lightText\) \+ '\\n' \+ though
 ok(/only as raw as that character is/.test(IT) && /never more emotional or dramatic than their card/.test(IT), '1.37.4: a calm character thinks calmly');
 const [all, A] = rx('NPC Thoughts: drop from every reply');
 ok(all.disabled && all.promptOnly && all.minDepth == null && reply.replace(A, all.replaceString) === sent && /drop from every reply/.test(IT), '1.37.4: optional drop-from-every-reply regex, OFF, named in the toggle note');
+
+// 1.99.13 (owner): only NPCs in the scene; no "where they are" line for anyone absent; no NPC here, no block
+ok(/up to 3 NPCs who are in the scene right now/.test(IT) && /never someone absent, only mentioned or remembered/.test(IT) && /With no NPC in the scene, write no block/.test(IT) && !/where they are|An absent NPC appears/.test(IT), '1.99.13: thoughts only for NPCs in the scene');
