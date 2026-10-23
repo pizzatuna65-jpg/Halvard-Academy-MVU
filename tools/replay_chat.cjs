@@ -76,7 +76,8 @@ msgs.forEach((m, i) => {
     const p0 = Object.keys((S.Scene || {}).Present || {}), p1 = Object.keys((N.Scene || {}).Present || {});
     r.pres = { moved: String((S.World || {}).Location || '') !== String((N.World || {}).Location || ''), add: p1.filter(id => !p0.includes(id)),
       here: ((S.$ui || {}).now || {}).here || null, maybe: ((S.$ui || {}).maybe || []).map(x => x[0]), init: ((S.$ui || {}).initiative || {}).id || '',
-      said, at: String((N.World || {}).Location || '') };
+      said, at: String((N.World || {}).Location || ''),
+      look: JSON.stringify((N.$eng || {}).look || null) !== JSON.stringify((S.$eng || {}).look || null) ? (N.$eng || {}).look || null : null };   // 1.99.12: a Look for this reply
     if (MEM) { r.mem = memDiff(S, N, ops); r.bytes = JSON.stringify(N).length; if (out.replies.length % every === 0) r.t501 = tok501(N); }
     S = N;
   } catch (e) { r.error = 'engine: ' + String(e.message || e).slice(0, 120); }

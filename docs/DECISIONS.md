@@ -104,6 +104,9 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
   `presenceAt`: certain routines and schedules, other regulars by a crowd target over their number, a rare passer-by, at most three names,
   seeded by place and block); the narrator decides what they do, and the first move is {{user}}'s unless character, Bond or initiative
   say otherwise. A place reached in a reply gets its people from the next reply. Off (Features) is the habit list as before.
+- **Look for helps, never summons** (1.99.12, owner-approved draft): a search raises a regular's odds a little (never certain), gives
+  someone who is no regular there only the rare chance, and never finds someone who is elsewhere by the engine. A hint comes only if
+  {{user}} asks, only from someone there with a tie to them, and tells a habit, not a position. `<now>` and the engine roll it alike.
 - **NPCs seen together, traces** (1.51.0, feature batch 3): pair moments use only relation lines Connections shows {{user}}, with
   generic public-behaviour wording; a story relation fades after four weeks unrenewed and hides after eight (kept in the state). A
   trace beat only names the open thread; what is found is the narrator's, true to the lore, never a solution.

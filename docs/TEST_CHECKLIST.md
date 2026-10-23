@@ -142,6 +142,10 @@ show the newcomers their dorm rooms.
       Over the tour some places are "nobody on the roster", the Canteen at lunch is busy, and Trixie is no longer at every courtyard
       [1.99.11]. Later, `python tools/audit_chat.py <chat>.jsonl --mechanics --no-drift` reports how many roster NPCs were brought in
       unasked (on arrival, outside the roll) and who most often.
+- [ ] Look for: Activities has "Look for someone" (`I'm looking for [name] in the …`); fill in a name and send. The reply finds
+      them or not, as `<now>`'s "Looking for … (the engine's roll)" line says, and a swipe gives the same answer. Not found, ask Kanae
+      where they might be: she answers only if she has a tie to them. The dossier's "Look for" lists only places the file already
+      shows, the place for this hour first. No delay when the prompt is built (entry 505 is now ±140 KB of code) [1.99.12].
 - [ ] Someone not yet named shows their role, not their name; a passer-by has "Keep in record"; with four or more present, three
       cards and an "also here" row; a thought about someone absent is an "elsewhere" line [1.70].
 - [ ] The bracelet has a folded "This reply (n changes)": open it after a reply with Kanae or Zara; it lists their bond XP (and any

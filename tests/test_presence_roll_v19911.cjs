@@ -96,7 +96,8 @@ console.log('a status keeps its own line; the sick and the away are never rolled
 console.log('the ambience agrees with the roll');
 {
   const src = rd('src/scripts/engine.template.js');
-  ok(/const crowd = crowdAt\(S, evs, wxNow, S\.World\.Location, t\)/.test(src) && /presenceAt\(PRESENCE, V, W\.Location, crowdAt\(/.test(src), 'one crowd source: stepAmbience and <now> both call crowdAt');
+  ok(/const crowd = crowdAt\(S, evs, wxNow, S\.World\.Location, t\)/.test(src) && /S\.\$ui\.crowd = crowdKeys\(PRESENCE\)\.map\(k => \{ const n = crowdAt\(S, c\.evs, c\.wxNow/.test(src)
+    && /crowdOf\(PRESENCE, UI\.crowd, pkN\)/.test(src), 'one crowd source: stepAmbience calls crowdAt, and <now> reads the crowd string stepHere builds with it (1.99.12)');
   ok(/pairLine\(c, regs, 'near', 'amb', !!hereIds\)/.test(src) && /alone = !Object\.keys\(S\.Scene\.Present \|\| \{\}\)\.length && !\(hereIds \|\| \[\]\)\.length/.test(src), 'the pair beat and the moment alone read the roll');
   let pairs = 0, bad = 0;
   for (const n of weekdays(80, 60)) for (const [t, loc] of [['12:30', 'Canteen'], ['19:10', 'Common Rooms']]) {

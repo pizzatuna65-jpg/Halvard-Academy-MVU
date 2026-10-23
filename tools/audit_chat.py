@@ -400,12 +400,16 @@ def presence_stats(mx):
     global ROSTER
     if ROSTER is None:
         ROSTER = set(json.load(open(P('data/npcs.json'), encoding='utf-8')))
-    arrivals, on_arrival, outside, who = 0, 0, 0, Counter()
+    arrivals, on_arrival, outside, who, looks, against = 0, 0, 0, Counter(), 0, 0
     for r in mx['rows']:
         p = r.get('pres')
         if not p:
             continue
         said = str(p.get('said') or '')
+        lk = p.get('look')   # 1.99.12: a Look for this reply; brought in although the roll said "not there"
+        if lk:
+            looks += 1
+            against += (not lk.get('found')) and lk.get('id') in (p.get('add') or [])
         asked = lambda i: re.search(r'(?<![\w])' + re.escape(i) + r'(?![\w])', said, re.I) or i in (p.get('maybe') or []) or i == p.get('init')
         add = [i for i in (p.get('add') or []) if i in ROSTER and not asked(i)]
         if p.get('moved'):
@@ -416,7 +420,7 @@ def presence_stats(mx):
             out = [i for i in add if i not in p['here']]
             outside += len(out)
             who.update(out)
-    return arrivals, on_arrival, outside, who
+    return arrivals, on_arrival, outside, who, looks, against
 
 
 def mechanics_summary(mx):
@@ -437,9 +441,10 @@ def mechanics_summary(mx):
             ('reminders raised (possibly missed)', f"{sum(g('missed'))}"),
             ('Clues / detail Hooks recorded but not in the story of their reply (1.80.0)', f"{sum(len(r.get('unseen') or []) for r in R)}"),
             ('time per reply (minutes)', f"avg {_avg(mins)}, max {max(mins or [0])}"),
-            *(lambda a, b, c, w: [('roster NPCs brought in unasked on arrival at a new place (1.99.11)', f"{b} in {a} arrivals"),
+            *(lambda a, b, c, w, lk, ag: [('roster NPCs brought in unasked on arrival at a new place (1.99.11)', f"{b} in {a} arrivals"),
                                   ('roster NPCs brought in unasked outside the Here now roll (1.99.11)', f"{c}"),
-                                  ('most often brought in unasked', ', '.join(f'{k} {v}' for k, v in w.most_common(5)) or 'none')])(*presence_stats(mx))]
+                                  ('most often brought in unasked', ', '.join(f'{k} {v}' for k, v in w.most_common(5)) or 'none'),
+                                  ('Look for: searches / the one sought brought in although "not there" (1.99.12)', f"{lk} / {ag}")])(*presence_stats(mx))]
 
 
 def _totals(mx):

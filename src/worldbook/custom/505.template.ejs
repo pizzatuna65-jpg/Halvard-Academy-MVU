@@ -68,6 +68,33 @@ const INITIATIVE = on('npc_initiative') ? UI.initiative : null;   // 1.7.7 (FP1)
 // within 90 min; WENDIGO: the Wendigo's line; AVD: Avalon's carriage fare and the rival students; SRD: Sunreach's fares, who may be met
 const AREAS = UI.area || {};
 const AREA = ['forest', 'avalon', 'airship', 'sunreach', 'hanakaze'].some(k => AREAS[k] && AREAS[k].on);
+// 1.99.12 (owner-approved planning/DRAFT_look_for.md): the player's new message looks for someone ("I'm looking for X in Y"). The
+// engine runs after the reply, so this entry rolls it, from this state with shared.js lookAsk / lookFor and the engine's presence data
+// and crowd string; the engine repeats the same roll after the reply (stepLook) and holds it. Not found: someone here with a tie to
+// them may tell their habits, only if {{user}} asks.
+const PD = /*@@PRESENCE@@*/{};
+const LOOK = (() => {
+  if (!on('presence_roll') || AREA || /CURFEW|LOCKDOWN/.test(cur)) return null;
+  const raw = typeof lastUserMessage === 'string' ? lastUserMessage : '';
+  if (!raw.trim() || /<UpdateVariable>/i.test(raw)) return null;
+  const q = lookAsk(PD, raw.replace(/\s*\(scene: [^()\n]*\bt\d+\)\s*$/, ''));
+  if (!q) return null;
+  const S0 = { World: W, $ui: UI, Player: getvar('stat_data.Player') || {}, Campus_State: getvar('stat_data.Campus_State') || {}, Scene: getvar('stat_data.Scene') || {}, $eng: getvar('stat_data.$eng') || {} };
+  trSync(PD, S0);
+  const V = presenceView(PD, S0, on);
+  if (V.min == null) return null;
+  const r = lookFor(PD, V, q.id, q.pk, crowdOf(PD, UI.crowd, q.pk)), place = PD.vn[q.pk], id = q.id, inPlace = /^the /i.test(place) ? place : 'the ' + place;
+  const pr = String(PRON[id] || 'they/them').split('/'), sub = pr[0], be = sub === 'they' ? 'are' : 'is', obj = pr[1] || 'them', pos = { she: 'her', he: 'his' }[sub] || 'their';
+  const head = 'Looking for ' + id + ' in ' + inPlace + " (the engine's roll): ";
+  if (r.how === 'with') return [head + id + ' is already with {{user}}.'];
+  if (r.found) return [head + sub + ' ' + be + ' there' + (r.tag ? ' (' + r.tag + ')' : '') + '. Finding ' + obj + ' is not a welcome: ' + sub + ' ' + (sub === 'they' ? 'react' : 'reacts') + ' in character, by ' + pos + ' Bond, Trust and Tension.'];
+  const curPk = placeOf(W.Location).toLowerCase().replace(/^the /, '');
+  const there = q.pk === curPk ? (NOW.here || []) : (presenceAt(PD, V, place, crowdOf(PD, UI.crowd, q.pk)).regs || []);
+  const ties = (PD.rel || {})[id] || {}, helpers = [...new Set([...V.PRES, ...there])].filter(h => h !== id && ties[h]), habit = lookHabit(PD, V, id);
+  return [head + sub + ' ' + be + ' not there now. {{user}} can search, ask around or wait; nobody here makes ' + obj + ' appear.',
+    helpers.length ? 'If {{user}} asks around (only then): ' + helpers.map(h => h + ' (' + ties[h] + ')').join(', ') + ' may know ' + pos + ' habits: ' + id + ' ' + (habit || 'keeps no habit they could name') + '. A habit, not where ' + sub + ' ' + be + ' for certain; they answer in character.'
+      : 'Nobody here knows ' + id + ' well enough to say where ' + sub + ' might be.'];
+})();
 const JAGES = [...new Set((getvar('stat_data.Journal') || []).slice(-5).reverse().map(l => (/^\[([^\]]+)\]/.exec(String(l)) || [])[1]).filter(w => w && ageOf(w, W)))];   // 1.53.0: each date once
 // 1.56.0 (narrator-load audit U2): each present character's bond, Trust, Tension, mood, recent moments and teasing are one block in
 // their Cast Sheet (engine $ui.now.people); <now> prints it only for someone present without a sheet
@@ -166,6 +193,9 @@ Around campus today (optional, use only if it fits): <%- W._Happening %>
 Club work: <%- _l %>
 <%_ } _%>
 <%_ for (const _l of NOW.pres || []) { _%>
+<%- _l %>
+<%_ } _%>
+<%_ for (const _l of LOOK || []) { _%>
 <%- _l %>
 <%_ } _%>
 <%_ if (NOW.visit) { _%>

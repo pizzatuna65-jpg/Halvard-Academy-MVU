@@ -153,6 +153,23 @@ function peopleListHTML(S) {
 }
 
 // ---------------------------------------------------------------- dossier
+// 1.99.12 (owner-approved planning/DRAFT_look_for.md): Look for, from the dossier: the places this file already shows (the Routine
+// field's places, the places of a regular once Haunts is open), the one for this day and hour first, and the place {{user}} is in
+function lookPlaces(id, n, S) {
+  const PD = DATA.presence || {}, W = S.World || {}, m = hmMin(W.Time), rows = new Map();
+  const put = (p, now, here) => { const o = rows.get(p) || { p, now: false, here: false }; o.now = o.now || now; o.here = o.here || here; rows.set(p, o); };
+  const open = lab => n.fl.some(f => f[0] === lab && fieldUnlocked(id, f, S));
+  if (open('Routine')) for (const r of (PD.rt || {})[id] || []) put(r[4], r[0].includes(W.Day) && m != null && m >= r[1] && m < r[2], false);
+  if (open('Haunts')) for (const k of Object.keys(PD.vn || {}).sort()) if (((PD.reg || {})[k] || []).includes(id)) put(PD.vn[k], false, false);
+  const hereL = DATA.locs[locIdOf(W.Location)];
+  if (hereL && !/CURFEW|LOCKDOWN/.test(String(W._Curfew || ''))) put(hereL.name, false, true);
+  return [...rows.values()].sort((a, b) => (b.now - a.now) || a.p.localeCompare(b.p));
+}
+function lookPick(id, n, S) {
+  if (view.look !== id) return `<div class="lookf" style="margin:6px 0"><button class="btn sm" data-look="${esc(id)}">Look for ${esc(id)}</button></div>`;
+  const pl = lookPlaces(id, n, S);
+  return `<div class="lookf" style="margin:6px 0"><div class="sub">Look for ${esc(id)} where?</div>${pl.map(o => `<button class="btn sm" data-fill="${esc(lookText(id, o.p))}">${esc(o.p)}${o.now ? ' · usually here now' : ''}${o.here ? ' · you are here' : ''}</button>`).join(' ') || '<span class="sub">You do not know where they spend their time yet.</span>'}</div>`;
+}
 PANELS.npc = {
   live: true,
   render(S) {
@@ -179,6 +196,7 @@ PANELS.npc = {
           return `<div class="sub">At Rank 8 this bond can become: ${esc(ways.join(' · '))}.${!'AB'.includes(br) && g8 ? ` This bond needs Trust ${g8} to deepen.` : ''}</div>`; })() : ''}
         ${b.Last_seen ? `<div class="sub">Last seen ${esc(b.Last_seen)}</div>` : ''}</div>`;
     } else h += '<div class="sub">You have not met yet.</div>';
+    if (n && knowsName(id, S) && arrived(id, S) && !graduated(S).has(id) && !((S.Scene || {}).Present || {})[id] && ((DATA.presence || {}).roster || []).includes(id)) h += lookPick(id, n, S);   // 1.99.12
     if (b) h += `<h3>Your notes</h3><textarea class="pnote" data-note="${esc(id)}" maxlength="${NOTE_MAX}" rows="3" aria-label="Your notes" placeholder="e.g. Likes jasmine tea; don't bring up her brother">${esc(notesGet()[id] || '')}</textarea>
       <div class="sub">Only for you: the narrator never reads them. Saved with this chat as you type.</div>`;   // 1.94.0
     // 1.4.4 (owner): recent moments with you, newest first (engine: Bonds.<id>.$Recent; the narrator reads the same rows in <now>)
@@ -215,7 +233,11 @@ PANELS.npc = {
     h += '</div></div>';   // .dmain, .dos
     return `<div class="dlg" tabindex="-1" style="--dc:${n ? n.dc : '#9aa3ad'}"><div class="hd"><h2>Dossier</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div><div class="bd">${h}</div></div>`;
   },
-  click(b) { if (b.dataset.pin) pinToggle(b.dataset.pin); },   // 1.93.0
+  click(b) {
+    if (b.dataset.pin) pinToggle(b.dataset.pin);   // 1.93.0
+    if (b.dataset.look) { view.look = view.look === b.dataset.look ? '' : b.dataset.look; render(); }   // 1.99.12
+    if (b.dataset.fill) fillChat(b.dataset.fill);
+  },
   input(el) { if (el.dataset.note) noteSet(el.dataset.note, el.value); },   // 1.94.0
 };
 

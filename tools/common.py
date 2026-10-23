@@ -259,7 +259,22 @@ def presence_data(npcs, locs):
             # 1.99.11 (planning/DRAFT_presence_roll.md): the presence roll's numbers, who may pass through (bondable NPCs) and the
             # public impression word each "Here now" name carries
             'here': R['here'], 'roster': sorted(k for k, v in npcs.items() if not nobond(v)),
-            'imp': {k: v['impression'] for k, v in sorted(npcs.items()) if v.get('impression') and not nobond(v)}}
+            'imp': {k: v['impression'] for k, v in sorted(npcs.items()) if v.get('impression') and not nobond(v)},
+            # 1.99.12 (planning/DRAFT_look_for.md): the name forms a player's "I'm looking for X in Y" may use, and who has a tie to whom
+            # (data/relations.json: rel[target][other] = the kind of tie, the other's own view first), for the hint when X is not found
+            'nf': {k: fs for k, fs in sorted(name_forms(npcs).items()) if not nobond(npcs[k])}, 'rel': look_ties(npcs)}
+
+
+def look_ties(npcs):
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    rel = {}
+    edges = json.load(open(os.path.join(root, 'data', 'relations.json'), encoding='utf-8'))
+    for own in (True, False):   # the other's view of the target first, then the target's view of them
+        for e in edges:
+            a, b = (e['from'], e['to']) if own else (e['to'], e['from'])
+            if a in npcs and b in npcs and a != b and not nobond(npcs[a]) and not nobond(npcs[b]):
+                rel.setdefault(b, {}).setdefault(a, e['type'])
+    return {k: dict(sorted(v.items())) for k, v in sorted(rel.items())}
 
 
 def contest_data(stu, tr=None):

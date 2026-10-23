@@ -38,6 +38,16 @@ const clubFieldOpen = (id, S, c) => { const n = npcOf(id), f = n && n.fl.find(x 
 const roleShown = (id, text, S) => { const c = clubsNow(S).find(x => !x.founded && (x.advisors || []).includes(id)); return c && !advisorKnown(id, S, c) ? String(text).replace(/;\s*advises the [^.;]*/i, '') : text; };
 const hereIs = (S, lid) => !!lid && locIdOf(S.World.Location) === lid;
 const aan = w => (/^[aeiou]/i.test(w) ? 'an ' : 'a ') + w;
+// 1.99.12 (owner-approved planning/DRAFT_look_for.md): Look for someone. The buttons only draft the line (D3/D6); <now> and the engine
+// roll whether that person is there (shared.js lookAsk / lookFor). Here: at a Campus Map place, not after curfew, not in an outside area.
+const LOOK_AREAS_UI = ['forest', 'avalon', 'airship', 'sunreach', 'hanakaze'];
+const lookIn = name => 'in ' + (/^the /i.test(name) ? name : 'the ' + name);
+const lookText = (who, place) => `I'm looking for ${who} ${lookIn(place)}.`;
+function lookRow(S) {
+  const l = DATA.locs[locIdOf((S.World || {}).Location)];
+  if (!l || /CURFEW|LOCKDOWN/.test(String((S.World || {})._Curfew || '')) || LOOK_AREAS_UI.some(k => (((S.$ui || {}).area || {})[k] || {}).on)) return '';
+  return `<div class="item"><div class="row"><span class="t">Look for someone</span><button class="btn sm" data-fill="${esc(lookText('[name]', l.name))}">Look for</button></div><div class="sub">Somewhere here, if they are here at all: the engine rolls it, a little better than chance for someone who often comes here.</div></div>`;
+}
 
 PANELS.activities = {
   live: true,
@@ -47,7 +57,7 @@ PANELS.activities = {
     if (!tabs.some(t => t[0] === view.act)) view.act = 'clubs';
     const body = ({ event: acEvent, clubs: acClubs, practice: acPractice, competition: acCompetition, shop: acShop, projects: acProjects, trip: acTrip })[view.act](S);
     return `<div class="dlg wide" tabindex="-1"><div class="hd"><h2>Activities</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
-      <nav class="nav">${tabs.map(([id, l]) => `<button data-actab="${id}" class="${view.act === id ? 'on' : ''}">${l}${isNew(`tab:activities:${id}`, view.act === id) && view.act !== id ? newsDot() : ''}</button>`).join('')}</nav><div class="bd">${body}</div></div>`;
+      <nav class="nav">${tabs.map(([id, l]) => `<button data-actab="${id}" class="${view.act === id ? 'on' : ''}">${l}${isNew(`tab:activities:${id}`, view.act === id) && view.act !== id ? newsDot() : ''}</button>`).join('')}</nav><div class="bd">${lookRow(S)}${body}</div></div>`;
   },
   click(b) {
     if (b.dataset.actab) { view.act = b.dataset.actab; render(); ov.querySelector('.bd').scrollTop = 0; return; }

@@ -10,7 +10,7 @@ from common import effect_text
 npcs = json.load(open(P('data/npcs.json'), encoding='utf-8'))
 GIFTS = json.load(open(P('data/gift_prefs.json'), encoding='utf-8'))['npcs']
 J = lambda o: json.dumps(o, ensure_ascii=False, separators=(',', ':'))
-from common import AGE_JS, now_data, name_forms, MENTION_DENY   # 1.48.0: shared with the engine (its <now> lines, audit 3.11)
+from common import AGE_JS, now_data, name_forms, MENTION_DENY, presence_data   # 1.48.0: shared with the engine (its <now> lines, audit 3.11)
 ejs = open(P('src/worldbook/custom/505.template.ejs'), encoding='utf-8').read()
 ejs = re.sub(r'^// Source of custom entry 505.*\n', '', ejs, flags=re.M)
 OPN = json.load(open(P('data/bond_openness.json'), encoding='utf-8'))
@@ -20,6 +20,7 @@ for k, v in {'BDAYS': {k:v['birthday'] for k,v in GIFTS.items() if v['birthday']
              'TRN': {k: v['transfer'] for k, v in npcs.items() if v.get('transfer')},   # 1.97.5: a transfer is at Halvard once Campus_State.Transfers names her
              'PRON': {nid: {'F': 'she/her', 'M': 'he/him'}.get(n.get('gender'), 'they/them') for nid, n in sorted(npcs.items())},
              # 1.80.0 (Megumin audit MS4): the engine's name forms; a first name that is also a word (MENTION_DENY) counts only in full
+             'PRESENCE': {k: v for k, v in presence_data(npcs, locs).items() if k != 'ct'},   # 1.99.12: Look for (the contest data stays out)
              'NAMES': {nid: [f for f in fs if not (nid in MENTION_DENY and f == nid)] for nid, fs in sorted(name_forms(npcs).items())}}.items():   # 1.3.8 (+1.4.0 apology_npc)
     ph = '/*@@' + k + '@@*/' + ('[]' if isinstance(v, list) else '{}')
     assert ph in ejs, ph
@@ -27,7 +28,7 @@ for k, v in {'BDAYS': {k:v['birthday'] for k,v in GIFTS.items() if v['birthday']
 ejs = ejs.replace('/*@@AGE@@*/', AGE_JS)
 from common import shared_js
 assert ejs.count('/*@@SHARED@@*/') == 1
-ejs = ejs.replace('/*@@SHARED@@*/', shared_js(presence=False))   # 1.43.0 (audit batch 2): the rules and constants every runtime shares
+ejs = ejs.replace('/*@@SHARED@@*/', shared_js())   # 1.43.0 (audit batch 2): the rules and constants every runtime shares; 1.99.12: with the whereabouts (Look for)
 from common import fill_data
 assert json.load(open(P('data/expedition.json'), encoding='utf-8'))['hunt']['hours'] == 24, '505 says the hunt ends at the same hour the next day'
 ejs = fill_data(ejs)   # 1.43.0 (2.8): times and numbers in the text come from the data ({@file.path})

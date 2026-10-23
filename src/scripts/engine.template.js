@@ -7689,6 +7689,25 @@ function stepHere(c) {
       if (!present[name] && !npcOut(V, S, name) && !maybe.some(y => y[0] === name)) maybe.push([name, `appointment: ${title}`]);
   }
   S.$ui.maybe = maybe;
+  // 1.99.12: how crowded each Campus Map place is now, one digit each (shared.js crowdKeys / crowdOf): <now>'s Look for, stepLook and
+  // the Here now line read this one string, so all three roll on the same number
+  const tm = hmMin(S.World.Time) || 0;
+  S.$ui.crowd = crowdKeys(PRESENCE).map(k => { const n = crowdAt(S, c.evs, c.wxNow, PRESENCE.vn[k], tm); return n >= 0 ? String(n) : '-'; }).join('');
+}
+
+// 1.99.12 (owner-approved planning/DRAFT_look_for.md): the player's "I'm looking for X in Y" this reply answers. <now> (505) rolled it
+// for the narrator from the state before the reply; the same roll here (shared.js lookAsk / lookFor, the state before, its crowd
+// string) is kept in $eng.look, so presenceAt holds it for the rest of the block. No roll after curfew or in an outside area.
+const LOOK_AREAS = ['forest', 'avalon', 'airship', 'sunreach', 'hanakaze'];
+function stepLook(c) {
+  const { S, B, hasB, toolEdit, userText } = c;
+  if (!hasB || toolEdit || !uiOn(B.$ui || {}, 'presence_roll')) return;
+  const q = lookAsk(PRESENCE, userText);
+  if (!q || /CURFEW|LOCKDOWN/.test(String((B.World || {})._Curfew || '')) || LOOK_AREAS.some(k => (((B.$ui || {}).area || {})[k] || {}).on)) return;
+  const V = presenceView(PRESENCE, B, id => uiOn(B.$ui || {}, id));
+  if (V.min == null) return;
+  const r = lookFor(PRESENCE, V, q.id, q.pk, crowdOf(PRESENCE, (B.$ui || {}).crowd, q.pk));
+  S.$eng.look = { id: q.id, pk: q.pk, found: r.found, tag: r.tag, dkey: V.dkey, blk: V.blk, min: V.min };
 }
 
 function stepUi(c) {
@@ -7773,7 +7792,9 @@ function nowOf(S, moodsFull) {
   const aged = w => { const a = ageOf(w, W); return a ? w + ', ' + a : w; };
   // 1.99.11: the presence roll reads how crowded the place is now (crowdAt, the weather block as stepAmbience has it)
   const wxN = UI.wx && UI.wx.mode === 'full' && !UI.wx.away ? UI.wx.now : null;
-  const V = presenceNow(S), HERE = { ...presenceAt(PRESENCE, V, W.Location, crowdAt(S, eventsOn(W), wxN, W.Location, hmMin(W.Time) || 0)), cls: classLineAt(PRESENCE, V, W.Location) };
+  // 1.99.12: a Campus Map place reads the crowd string stepHere wrote (one number with Look for), any other place crowdAt
+  const pkN = placeOf(W.Location).toLowerCase().replace(/^the /, ''), crN = crowdKeys(PRESENCE).includes(pkN) ? crowdOf(PRESENCE, UI.crowd, pkN) : crowdAt(S, eventsOn(W), wxN, W.Location, hmMin(W.Time) || 0);
+  const V = presenceNow(S), HERE = { ...presenceAt(PRESENCE, V, W.Location, crN), cls: classLineAt(PRESENCE, V, W.Location) };
   // 1.56.0 (narrator-load audit U2): each present character's lines are one block, printed in their Cast Sheet ("Now with {{user}}"),
   // with band words instead of numbers (the numbers are in <current_state> only); people[id] = [lines]
   const people = {}, put = (id, l) => { if (l) (people[id] = people[id] || []).push(l); };
@@ -7997,7 +8018,7 @@ function nowOf(S, moodsFull) {
     + ". Each is busy with their own thing; show them at it. The first move is {{user}}'s, unless someone's character and Bond would bring them over, or they are marked as today's initiative."
     : "Here now at " + (HERE.place || 'this place') + ": nobody on the roster. Only unnamed students and staff, kept in the background unless {{user}} turns to one.");
   // the engine runs after a reply, so a place {{user}} reaches in this reply has no roll yet: its people come with the next Here now
-  out.push("Arriving somewhere else in this reply: who is there is rolled after the reply (the next Here now). On arrival keep to the place and its unnamed people; a roster character is there only if they walk with {{user}}, a plan or an appointment puts them there, or they are today's initiative. Someone {{user}} came looking for may or may not be there.");
+  out.push("Arriving somewhere else in this reply: who is there is rolled after the reply (the next Here now). On arrival keep to the place and its unnamed people; a roster character is there only if they walk with {{user}}, a plan or an appointment puts them there, they are today's initiative, or the engine's Look for says they are there. Someone {{user}} came looking for may or may not be there.");
   } else {
   out.push("Likely around " + (HERE.place || 'here') + " (habits, not certainty; an established scene overrides): " + (HERE.regs.length ? HERE.regs.map(r => (HERE.why || {})[r] ? r + ' (' + HERE.why[r] + ')' : r).join(', ') : 'no regulars on record'));
   }
@@ -8151,7 +8172,7 @@ function stepNow(c) {
   for (const a of Object.values(S.$ui.area || {})) if (_.isPlainObject(a)) { delete a.walks; delete a.near; }
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepHanakaze, stepCampus, stepVitals, stepContest, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepScene, stepBondMemory, stepProficiency, stepEventChances, stepHunt, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepClubWork, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepFold, stepGist, stepReminders, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepHanakaze, stepCampus, stepVitals, stepContest, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBonds, stepScene, stepBondMemory, stepProficiency, stepEventChances, stepHunt, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepClubWork, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepFold, stepGist, stepReminders, stepLook, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,
