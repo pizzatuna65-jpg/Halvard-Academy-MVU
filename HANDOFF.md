@@ -3,19 +3,18 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v2.1.0** (2026-10-24): Campus now, the first release of the "world in motion" roadmap (FUTURE_PLANS §0.1, R1):
-what the people {{user}} knows are doing, three in a bracelet fold and everyone on People → Campus now, UI only (0 tokens); the place
-from Bond Rank 3 and only where Look for finds them (`sh:campusFeed`). The roadmap's conflict check is recorded at each item (Routine 2.0
-as two layers: the routine says where, the presence roll says whether {{user}} meets them). The enabled preset is 18,516 tokens, 84 under
-`test_preset`'s budget. Memory: VectFox (option 1) or Summaryception 5.5.4 (option 2), one per chat. Live checks: the campaign quest log
-`docs/TEST_CHECKLIST.md` (first Act 0: update the card and the preset, Q0.1; Campus now: Act 1 Q1.1 and Act 3 Q3.1 [2.1.0]).
+**Snapshot:** card **v2.1.1** (2026-10-24): campus phases and weekly fads (roadmap R3): one background line in `<now>` and on the
+Notice Board, 22 phases between the calendar's events and 22 seeded fads in the gaps (`data/campus_phases.json`, engine `trendOn`).
+2.1.0 added Campus now (R1). The enabled preset is 18,516 tokens, 84 under `test_preset`'s budget. Memory: VectFox (option 1) or
+Summaryception 5.5.4 (option 2), one per chat. Live checks: the campaign quest log `docs/TEST_CHECKLIST.md` (first Act 0: update the
+card and the preset, Q0.1; Campus now: Q1.1, Q3.1 [2.1.0]; phases and fads: Q2.7, Q3.6 [2.1.1]).
 
-**Next task:** 2.1.1 = R3 (campus phases: a draft of `data/campus_phases.json` first), then Routine 2.0 (2.2.N; the two-layer model in
-FUTURE_PLANS B1 changes DECISIONS "Who is here is rolled" and needs the owner's approval), off-screen events, campus politics. Batch 7
-stage 2 of the bug hunt waits for the owner's OpenRouter numbers (SQ-CACHE) and an A/B test with `tools/audit_chat.py`. The Black Box
-rules for the [2.1.0] checks are still to add (its own repository). The World Competition's Year 2 host (Caelmar) waits in FUTURE_PLANS
-§1 [YEAR 2]; MS3 stage 2 and the NPC dialogue audit's U1, U3–U5 wait for a campaign export; memory batch 8 (chapters) in
-`planning/DRAFT_bab_baru.md` at about 20,000 messages.
+**Next task:** 2.2.0 = Routine 2.0 (FUTURE_PLANS §0.1 B1): a draft of the routine data per group first; the two-layer model there
+(the routine says where, the presence roll says whether {{user}} meets them) changes DECISIONS "Who is here is rolled" and needs the
+owner's approval. Then off-screen events (2.3.0), the newspaper rubric and consequences (2.4.0), campus politics (2.5.N). Batch 7
+stage 2 of the bug hunt waits for the owner's OpenRouter numbers (SQ-CACHE). The Black Box rules for the [2.1.0] and [2.1.1] checks are
+still to add (its own repository). Caelmar (Year 2 host) waits in FUTURE_PLANS §1 [YEAR 2]; MS3 stage 2 and the dialogue audit's U1,
+U3–U5 wait for a campaign export; memory batch 8 (chapters) in `planning/DRAFT_bab_baru.md` at about 20,000 messages.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

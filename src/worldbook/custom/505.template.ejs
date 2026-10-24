@@ -183,8 +183,8 @@ Curfew: <%- cur %>
 <%_ for (const _l of NOW.area || []) { _%>
 <%- _l %>
 <%_ } _%>
-<%_ if (PHASE && PHASE.line) { _%>
-Campus phase: <%- PHASE.line %>
+<%_ if (PHASE && PHASE.line && on('campus_phases')) { _%>
+<%- PHASE.kind === 'trend' ? 'Campus fad this week: ' + PHASE.line + ' (background; people take to it or scoff, each in character)' : 'Campus phase: ' + PHASE.line %>
 <%_ } _%>
 <%_ if (W._Happening && on('happenings') && !AREA) { _%>
 Around campus today (optional, use only if it fits): <%- W._Happening %>

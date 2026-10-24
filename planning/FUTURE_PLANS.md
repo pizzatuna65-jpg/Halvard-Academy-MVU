@@ -6,7 +6,7 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
 
 ## 0. Rilis berikutnya (owner, 2026-10-24)
 
-Versi saat ini 2.1.0 (R1 Campus now, 2026-10-24); rilis berikutnya 2.1.1 (R3). Nomor di §0.1 berlaku bila roadmap itu rilis lebih dulu; pekerjaan lain yang rilis lebih dulu mengambil nomor berikutnya dan
+Versi saat ini 2.1.1 (R3 fase kampus dan tren mingguan, 2026-10-24); rilis berikutnya 2.2.0 (B1 Routine 2.0). Nomor di §0.1 berlaku bila roadmap itu rilis lebih dulu; pekerjaan lain yang rilis lebih dulu mengambil nomor berikutnya dan
 roadmap bergeser satu.
 
 | Pekerjaan | Isi | Catatan |
@@ -22,17 +22,10 @@ Routine 2.0) dan B3; R2 (Meanwhile lebih longgar), R4 (setel toggle lama), B1 ve
 
 | Rilis | Isi | Butuh | Catatan |
 |---|---|---|---|
-| **2.1.1** | **R3** Isi `data/campus_phases.json` | draft canon | Engine sudah mencetaknya sejak 1.6.1; datanya kosong. Fase jadi konteks B3. |
 | **2.2.N** | **B1** Routine 2.0 | draft data per kelompok | 2.2.0 = format + engine + kelompok pertama; 2.2.1 dst. = kelompok berikutnya; terakhir baris "perkembangan". Full suite (fitur besar). |
 | **2.3.0** | **M1** kejadian off-screen + **M2** feed memuatnya | draft tabel kejadian | Sesudah B1: kejadian diambil dari baris routine yang benar-benar dijalani NPC. |
 | **2.4.0** | **M3** rubrik koran + **M4** akibat yang sampai ke {{user}} | kode | Butuh kejadian M1. M3 sekaligus menyiapkan rubrik yang dipakai B3. |
 | **2.5.N** | **B3** Politik kampus | draft langkah faksi | 2.5.0 = lite (Doves + Council); 2.5.1 = asrama, Liaison, Cathedral, Choir (tersembunyi). Full suite. |
-
-**R3. Fase kampus (2.1.1).** Isi `phases` (`id`, `from`, `to`, `line`) di `data/campus_phases.json`: apa yang menyibukkan kampus dan
-orang pentingnya dalam rentang tahun ini (minggu ujian, persiapan festival, Thinning, pemilu). Engine (`stepCampusEvents`) sudah
-menaruh baris fase aktif di `<now>` (±30 token selama aktif). Canon baru: draft dulu.
-- Baris fase bukan optional thread (505 tidak menghitungnya, biarkan begitu). Jangan mengulang yang sudah dikatakan baris event
-  kalender, `exams` di `npc_moods.json` atau lockdown Thinning: fase hanya untuk yang tidak dikatakan data lain.
 
 **B1. Routine 2.0 (2.2.N).** Pengembangan `data/npc_routines.json`, bukan simulasi agen: engine hanya memilih di antara baris yang
 ditulis dari lore dan disetujui owner, jadi tidak bisa keluar karakter.
@@ -239,6 +232,8 @@ Sisa saran audit fitur 2026-10-03 (4.5–4.10 sudah dibuat di 1.49–1.52; 4.16 
 - Kingdom Competition (1.84.0, `data/event_frame.json` `kingdom`): peluang menemukan 25, tanda 40, menyergap 25, taktik (hunt 1,5; sneak
   mundur 60; hold 20), kekuatan beast IV/III/II 30/55/80, gagal melawan beast mematahkan segel 40%, tambahan rival +10 dan Rank 1 +15.
   Hasil 100 seed: juara Halvard 27, Ashvale 29, Myrdath 32, Veyra 12; ronde dua selesai sebelum 18:00 di 51.
+- Fase kampus dan tren (2.1.1, `data/campus_phases.json`): peluang tren per minggu 60 (`trend_rate`), jeda sebelum tren yang sama
+  kembali 8 minggu (`trend_gap`); isi fase dan tren (owner bisa menambah tren baru kapan saja, validator `gen_engine.py` menjaganya).
 - Campus now (2.1.0, `data/npc_routines.json` `here.feed`): lokasi terlihat dari Rank 3 (`rank`, sama dengan `NEXT_RANK`), 3 nama di lipatan
   bracelet (`max`).
 - Siapa yang ada (1.99.11, `data/npc_routines.json` `here`): target regular per keramaian 0,15 / 0,5 / 0,9 / 1,4 / 2,0, cap 60%, orang

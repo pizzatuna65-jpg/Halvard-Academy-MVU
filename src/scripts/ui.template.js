@@ -1571,6 +1571,7 @@ function featureState(S, f) {         // live state tokens of a feature (parked 
   let n = (f.paths || []).reduce((a, p) => a + tokOf(on ? _.get(S, p) : _.get(u.parked || {}, [f.id, p])), 0);
   if (f.id === 'weather' && on) n += Math.round(((S.World._Weather || '').length + 12) / 3.6) + FCOST.live.weather;
   if (f.id === 'class' && on && /^P[123] /.test(S.World._Period || '')) n += FCOST.live.class;
+  if (f.id === 'campus_phases' && on && ((S.$ui || {}).phase || {}).line) n += Math.round((String(S.$ui.phase.line).length + (S.$ui.phase.kind === 'trend' ? 95 : 16)) / 3.6);   // 2.1.1: the line <now> prints today
   if (f.id === 'gossip' && on) n += (u.gossip || []).slice(-5).reduce((a, g) => a + Math.round((String(g[0]).length + 30) / 3.6), 0);
   if (f.id === 'hooks' && on) n += Object.values(S.Hooks || {}).filter(h => /due|overdue/.test(h._State || '')).length * 20;
   if (f.id === 'happenings' && on && S.World._Happening) n += Math.round((S.World._Happening.length + 60) / 3.6);   // _Happening + the Now line

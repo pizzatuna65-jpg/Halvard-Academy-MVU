@@ -355,6 +355,9 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
       morning after that day the change is gone with "… as it was again" [1.77].
 
 ### Q2.7 Saturday and Sunday
+- [ ] From Saturday `<now>` has "Campus phase: The first weeks: first-years still lose their way …", and Inventory → Notice Board shows
+      the same line under "On campus"; the narrator lets it colour the scene now and then, never as an order. Settings → Features →
+      Campus phases and fads shows about 40 tokens [2.1.1].
 - [ ] Saturday afternoon at the club adds Student reputation (Q1.2) [1.16.1].
 - [ ] Sunday 07:30: "Sunday (no classes)" [1.30.2].
 - [ ] Saturday 15:00–17:00 in the Canteen: `<now>` says whether the Cooking Club's bake worked (honey bread, 3 points, stamina) or went
@@ -455,6 +458,9 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
       06:00 the default map is back [1.13, 1.14.3].
 
 ### Q3.6 Spiritual Dorm Day (W4 Sun) and the month's end
+- [ ] In a week without a phase (W4 here, or any later gap) `<now>` may have "Campus fad this week: …" (a food everyone wants, a game
+      everyone plays); it stays all week, a swipe keeps it, the Notice Board says "On campus this week"; some people join in and some
+      scoff, each in character; nothing in the shops changes. A week later it is gone or another one [2.1.1].
 - [ ] On the day the Viridian Dormitory's pin is back on the map, and gone again on Monday [1.71].
 - [ ] From the Wednesday before, `<now>` shows "Coming up … W4 Sun: Spiritual Dorm Day", and now and then a student mentions it in passing,
       in character, not everyone [1.32].
