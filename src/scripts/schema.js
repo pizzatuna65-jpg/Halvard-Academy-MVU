@@ -480,6 +480,7 @@ export const Schema = z.object({
     exp: z.any().optional(), cap: z.any().optional(), sr: z.any().optional(),   // before 1.46.0; moved by stepMigrate
     comp: z.any().prefault(null).catch(null),                      // 1.44.0: competition results paid { paid: [keys], exp: 0-2 staff expectation } (engine)
     promise: z.any().prefault(null).catch(null),
+    own: z.any().prefault(null).catch(null),                       // 2.3.0: Own time { d, td, t, y, g, h } (engine stepOffscreen)
     word: z.array(z.any()).prefault([]).catch([]),                // 1.74.0: { from, n, due, to } a loud moment on its way to friends (engine)
     founded: Bool(false),                                          // 1.75.0: founded_club paid (or a club founded before 1.75.0) (engine)
     fjoin: z.record(z.string(), z.any()).prefault({}).catch({}),   // 1.75.0: roster student -> the day they joined the founded club (engine)

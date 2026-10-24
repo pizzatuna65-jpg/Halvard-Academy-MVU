@@ -98,11 +98,17 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
   by the engine (listed price at its shop and in season; otherwise the narrator's Price as a story price; points on campus, coin away).
   Training is one `/Practice` session with a Track (`/Training` still read); one Rank 4 partner rule for every track in
   `rank4_partners.json` (mana, stamina, study; owner decision, proposal adopted).
-- **NPC routines** (1.52.0, owner-approved draft): light weekly habits are data in the one whereabouts model, below status, sickness,
-  class, teaching, Study Hall, clubs and the election, above haunts; a routine holds on a day by the shared `roll100` at 70% (owner).
-  Dossier and Map show them as "usually", gated by the Haunts field. Lore dawn habits before curfew ends are kept as written.
+- **NPC routines** (1.52.0, owner-approved draft; 2.2.0 Routine 2.0, owner-approved planning/DRAFT_routine2.md): a full day of
+  weighted rows in the one whereabouts model, below status, sickness, class, teaching, Study Hall, clubs and the election, above haunts;
+  one seeded draw per NPC, day and presence block (the main row 70, the owner's number; at least 10 free: no place, the crowd roll);
+  kinds duty, habit, errand; rows for a weather and pair rows (one draw for both). Dossier and Map show the main rows as "usually",
+  gated by the Haunts field. Lore dawn habits before curfew ends are kept as written. 2.2.3 (owner): a row is a stable habit only, never
+  something that changes over time (this week's hobby, a current favourite, "when someone else wants", wherever {{user}} is). 2.2.4: a row
+  may hold to an event's days, the exam weeks or campaign years; those and a bad-weather row are never shown as "usually".
 - **Who is here is rolled** (1.99.11, owner-approved draft after a playtest): the engine decides who is at a place (shared.js
-  `presenceAt`: certain routines and schedules, other regulars by a crowd target over their number, a rare passer-by, at most three names,
+  `presenceAt`: certain only one scheduled room (a class, teaching, Study Hall, the Council); 2.2.0 (owner, two layers): a routine says
+  where someone is, and {{user}} runs into them at `here.meet` (duty 85, habit 65, errand 30), never for certain on an open place;
+  other regulars by a crowd target over their number, a rare passer-by (the free and those on an errand), at most three names,
   seeded by place and block); the narrator decides what they do, and the first move is {{user}}'s unless character, Bond or initiative
   say otherwise. A place reached in a reply gets its people from the next reply. Off (Features) is the habit list as before.
 - **Look for helps, never summons** (1.99.12, owner-approved draft): a search raises a regular's odds a little (never certain), gives
@@ -118,6 +124,9 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **Campus now is the player's, and knowing is not meeting** (2.1.0, owner roadmap R1, 2026-10-24): the feed is UI only (never in the
   prompt). Where someone is shows from Bond Rank 3 (the rank they tell their own plans) with Haunts open, so Look for stays the way to find
   acquaintances; it names a place only where Look for finds them, and who {{user}} runs into stays the presence roll.
+- **Own time** (2.3.0, owner roadmap M1 + M2, 2026-10-24): the engine draws small off-screen happenings from data (a chance per NPC,
+  never a fixed count a day, owner: a story every meeting would feel like a template); one line per NPC in Recent, shown for 2 days,
+  background and never an opener; no bond, Trust, Tension or reputation change; the narrator never invents them.
 - **NPCs seen together, traces** (1.51.0, feature batch 3): pair moments use only relation lines Connections shows {{user}}, with
   generic public-behaviour wording; a story relation fades after four weeks unrenewed and hides after eight (kept in the state). A
   trace beat only names the open thread; what is found is the narrator's, true to the lore, never a solution.

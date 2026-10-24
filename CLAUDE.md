@@ -49,6 +49,8 @@ Drafts (`planning/DRAFT_*.md`) are written in Indonesian; the English text block
     NPC-writing craft) → it goes in the **preset**, as a toggle the player can change.
   - The preset's CoT **points to** the card's rules and never copies them. A copy in BOLT step 2 went stale for months.
   - The card must work with any preset: checks that read card data (the `<cast>` gate) live in the card.
+- **The next draft comes with the release (owner, 2026-10-24).** When a release that is part of a staged plan is done (e.g. Routine 2.0
+  group by group), write the next stage's draft table for review in the same turn, without being asked.
 - **Draft, then proceed.** New canon or lore goes into a `planning/DRAFT_<topic>.md` first (Indonesian notes, English card text,
   open decisions marked `[?]` at the end). Apply it only after the owner says "proceed" / "approve", update
   `planning/NPC_BRAINSTORM_BRIEF.md` when NPCs change, then delete the draft. Code, UI and engine fixes from playtest notes go in

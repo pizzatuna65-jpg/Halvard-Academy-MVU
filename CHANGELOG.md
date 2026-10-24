@@ -1,154 +1,136 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show ad3dce6:CHANGELOG.md` (1.99.12), `git show 90161c9:CHANGELOG.md` (1.99.11), `git show c68157a:CHANGELOG.md` (1.99.10), `git show 50d79ba:CHANGELOG.md` (1.99.9), `git show a27eee0:CHANGELOG.md` (1.99.8), `git show b785728:CHANGELOG.md` (1.99.7), `git show b4db7fc:CHANGELOG.md` (1.99.6), `git show c242e3e:CHANGELOG.md` (1.99.5), `git show 9957046:CHANGELOG.md` (1.99.4), `git show 83145e7:CHANGELOG.md` (1.99.3), `git show 687b4e1:CHANGELOG.md` (1.99.2), `git show 1799228:CHANGELOG.md` (1.99.1), `git show 1d18944:CHANGELOG.md` (1.98.3), `git show 731f8d1:CHANGELOG.md` (1.98.2), `git show 77f557c:CHANGELOG.md` (1.98.1), `git show 44b586a:CHANGELOG.md` (1.97.5), `git show 7848cb7:CHANGELOG.md` (1.97.4), `git show 871dd0e:CHANGELOG.md` (1.97.3), `git show c5135f8:CHANGELOG.md` (1.97.2), `git show d30ff7c:CHANGELOG.md` (1.97.1), `git show f9101db:CHANGELOG.md` (1.96.1), `git show df8dbed:CHANGELOG.md` (1.96.0), `git show 363f03b:CHANGELOG.md` (1.95.0), `git show bba6bb0:CHANGELOG.md` (1.94.0), `git show dca179c:CHANGELOG.md` (1.93.1, 1.93.0), `git show 01cd1f2:CHANGELOG.md` (1.92.0), `git show d097927:CHANGELOG.md` (1.91.0), `git show 6065e5c:CHANGELOG.md` (1.90.0), `git show de4303e:CHANGELOG.md` (1.89.0), `git show 4ace903:CHANGELOG.md` (1.88.1), `git show ce178fb:CHANGELOG.md` (1.88.0), `git show 0e1e5a2:CHANGELOG.md` (1.87.0), `git show e6f2c37:CHANGELOG.md` (1.86.0), `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 6e90ed8:CHANGELOG.md` (2.2.0), `git show 7e2f9da:CHANGELOG.md` (2.1.2), `git show 3095d78:CHANGELOG.md` (2.1.1), `git show 77020b3:CHANGELOG.md` (2.1.0), `git show ba90dbf:CHANGELOG.md` (2.0.0), `git show 4f01d80:CHANGELOG.md` (1.99.13), `git show ad3dce6:CHANGELOG.md` (1.99.12), `git show 90161c9:CHANGELOG.md` (1.99.11), `git show c68157a:CHANGELOG.md` (1.99.10), `git show 50d79ba:CHANGELOG.md` (1.99.9), `git show a27eee0:CHANGELOG.md` (1.99.8), `git show b785728:CHANGELOG.md` (1.99.7), `git show b4db7fc:CHANGELOG.md` (1.99.6), `git show c242e3e:CHANGELOG.md` (1.99.5), `git show 9957046:CHANGELOG.md` (1.99.4), `git show 83145e7:CHANGELOG.md` (1.99.3), `git show 687b4e1:CHANGELOG.md` (1.99.2), `git show 1799228:CHANGELOG.md` (1.99.1), `git show 1d18944:CHANGELOG.md` (1.98.3), `git show 731f8d1:CHANGELOG.md` (1.98.2), `git show 77f557c:CHANGELOG.md` (1.98.1), `git show 44b586a:CHANGELOG.md` (1.97.5), `git show 7848cb7:CHANGELOG.md` (1.97.4), `git show 871dd0e:CHANGELOG.md` (1.97.3), `git show c5135f8:CHANGELOG.md` (1.97.2), `git show d30ff7c:CHANGELOG.md` (1.97.1), `git show f9101db:CHANGELOG.md` (1.96.1), `git show df8dbed:CHANGELOG.md` (1.96.0), `git show 363f03b:CHANGELOG.md` (1.95.0), `git show bba6bb0:CHANGELOG.md` (1.94.0), `git show dca179c:CHANGELOG.md` (1.93.1, 1.93.0), `git show 01cd1f2:CHANGELOG.md` (1.92.0), `git show d097927:CHANGELOG.md` (1.91.0), `git show 6065e5c:CHANGELOG.md` (1.90.0), `git show de4303e:CHANGELOG.md` (1.89.0), `git show 4ace903:CHANGELOG.md` (1.88.1), `git show ce178fb:CHANGELOG.md` (1.88.0), `git show 0e1e5a2:CHANGELOG.md` (1.87.0), `git show e6f2c37:CHANGELOG.md` (1.86.0), `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
 
-## v2.1.2 — Magic is casual (2026-10-24)
+## v2.3.0 — Own time: the people you know have days of their own (2026-10-24)
 
-Owner request: "Halvard should feel like a magic academy: magic is ordinary, used for mundane and important things; skirmishes can
-happen anywhere and the arena (the Combat Grounds) is for serious battles; magic needs no permission or heavy supervision." Owner-approved
-`planning/DRAFT_sihir_kasual.md` (deleted here; the "arena" is the Combat Grounds). Save fixture v2.1.1.
-- **Found:** the v38 World Index already allowed casual casting anywhere, but also restricted "duels outside a warded ring" and
-  "anything that … endangers people"; the Combat Grounds and the calendar read "cross-dorm sparring only during Training Week" as a
-  general ban; the Academy deed `fight_outside_ward` (−8) could follow any corridor scuffle; and only 2 of 113 ambience beat types
-  showed magic.
-- **World Index** (lore 0, `merge_lorebooks.py`): "Magic is everyday at Halvard": anyone casts anywhere without permission; quick
-  skirmishes break out anywhere and end as fast; serious fights go to the Combat Grounds' warded rings; restricted only forbidden arts,
-  sport events, the Seal Chamber and real harm; staff and Doves step in only for those. Movement magic stays named (the walk rule).
-- **Dorm separation is a class rule:** Combat Grounds (lore 52) "In class the dorms spar apart, except in Training Week; outside class
-  anyone may challenge anyone"; Training Week (lore 134, `calendar.json`) "the one week the dorms spar together in class".
-- **Reputation:** a skirmish that hurts nobody and breaks nothing is no deed; `fight_outside_ward` only for a hurt bystander or damage,
-  `serious_fight_outside_ward` for someone badly hurt (rule card). Deed names and numbers unchanged.
-- **504:** one craft line, magic turns up naturally "without making every scene about it" (owner: not literally every moment). The
-  draft's second half ("needs no permission, staff step in only for real harm") stayed out: the 1.99.4 audit (T6) keeps what is
-  allowed in the World Index alone, and two suites guard it.
-- **Ambience:** 22 more magic beat types (floating trays, a misfired first-year spell, an illusion shown off, a ring of students round
-  a skirmish, bets at the rings, a healer at the ringside…): in a 156-reply replay a third of the beats show magic (14 of 44, from 4).
-  Two happenings: an impromptu duel in the Courtyards, a grudge match at the rings.
-- Unchanged: forbidden arts, hidden magic and Dove attention, sport events without magic, NPCs who hate a scuffle still avoid or
-  report it (in character), Tension with someone unwilling.
-- Tokens: +136 on every reply (World Index +92, 504 +44; the draft guessed about 80), the Combat Grounds entry +27 when it is in.
-- Tests: `test_casual_magic_v2112.cjs` (new, 11 checks); `test_batch3_time_magic` and `test_rule_cards_v1994` follow the new World
-  Index wording; `npm test` passes (all suites), eslint passes.
-- **To confirm with the owner:** the World Index, Combat Grounds and Training Week wording, the 22 beats and 2 happenings (new canon,
-  approved in the draft); the 504 line without its second half.
-- **To check live:** `docs/TEST_CHECKLIST.md` Act 1 Q1.1, Act 2 Q2.5 [2.1.2].
+Owner request: roadmap M1 + M2 (FUTURE_PLANS §0.1). Owner-approved `planning/DRAFT_offscreen.md` (revision 1: "mending dibuat ada
+chance roll", a chance per NPC rather than a fixed count a day); deleted here. Save fixture v2.2.4.
+- **The draw** (`data/offscreen.json`, engine `stepOffscreen` after `stepBondMemory`, `$eng.own`): at each day change, every NPC with a
+  bond has a seeded 20% chance (`rate`) that something small happened yesterday, at most once in 6 days (`gap` 5), the same on every
+  swipe. Not for someone who spent 4 hours or more (`with`) of yesterday in the scene with {{user}}, nobody away from Halvard, nothing
+  while {{user}} is away. A new chat or an older save starts drawing from the next day (no migration).
+- **The lines:** 29 templates (the draft's 30 less `quiet_day`: a quiet day is simply no line). Filtered by Tension category, student or
+  staff, and what a line needs: their club, a rivals / friends line the Connections panel shows (so a name {{user}} knows), a loved gift
+  that can be bought, yesterday's loved weather (Full only), a place from their routine on that weekday (some lines only at fitting
+  places), a home to write from (none for the break stayers), teaching. Never one of their last 10.
+- **Where it goes:** one `(Own time)` line in `$Recent`, replacing the last one. The Cast Sheet prints it as its own line for 2 days
+  (`show`, "Own time (yesterday): ..."), never among "Recent with {{user}}"; 504 adds one line: it is background, not an opener.
+  Campus now adds "(yesterday: ...)" for those at Rank 3+ (bracelet fold and People tab, UI only). Meanwhile tells the week's Own time
+  first, so the Journal and the Cast Sheet agree. No bond, Trust, Tension or reputation change.
+- **Features:** new toggle "Own time" (`offscreen`): about 43 tokens of rules, plus about 15 per present character with a line.
+- **Numbers (70 days, 47 people):** one line every 10.2 days per person on average; gaps from 6 to 39 days, no fixed beat; between 0
+  and 11 lines a day across campus. With 2 days in view, about one meeting in five carries one.
+- **Tests:** `test_offscreen_v2300.cjs` (new, 26 checks: the draw, the gap, swipes, no bond change against a run with it off, who gets
+  which line, no letters for the break stayers, the Cast Sheet for 2 days, Campus now, 504, a day together, the toggle, Meanwhile).
+  Updated: `test_campus_now_v2100` (its Meanwhile check turns Own time off, since a week's Own time now comes first). Quick checks
+  passed: `test_saves`, `test_routine2_v2224`, `test_look_for_v19912`, `test_extras_v161`, `test_feature_batch4_v1520`,
+  `test_campus_phases_v2111`, `test_preset`, lint. Full suite not run (owner: "tidak perlu full suite").
+- **To confirm with the owner:** three lines reworded for grammar with bare item and club names: "bought a favourite: {thing}",
+  "found a favourite going cheap at the Mall: {thing}", "had a good / bad {club} session". Some loved gifts are never bought (Sovereigns,
+  the trophy cup, a restaurant meal, a rare reagent, the mystery clockwork: `thing_skip`).
 
-## v2.1.1 — Campus phases and fads (2026-10-24)
+## v2.2.4 — Routine 2.0: events, exam weeks, and every test (2026-10-24)
 
-Owner request: roadmap R3 (planning/FUTURE_PLANS.md §0.1), with the owner's addition "something more mundane from real campus life
-in between, like a food that goes viral for a week". Owner-approved `planning/DRAFT_campus_phases.md` (deleted here; nothing left
-open). Save fixture v2.1.0.
-- **Campus phases** (`data/campus_phases.json` `phases`, empty since 1.6.1): 22 background lines for the days before and after the
-  calendar's events (the week before each exam, getting ready for Star Night, the Warding Rite, the Club Festival, Crowning Day,
-  waiting for results, before and after the Thinning, before the election, the Harvest Festival…), every year, 139 of 308 school
-  days. `<now>`: "Campus phase: …". Never what the event line, lore 134, the exam moods or the place lines already say; no names.
-- **Weekly fads** (`trends`, new): 22 mundane fads for the days without a phase (Salaffian flatbread, Nightwell's coffee, the Sunfizz
-  bottle hunt, Dragonchess fever, a song from the afternoon broadcast, hair-sweet dares, plushes on satchels…). One week in 60%
-  (`trend_rate`), seeded per chat and week (engine `trendOn`, chained per year like the happenings: swipe-safe, a new order every
-  chat and year), never one of the last 8 weeks' (`trend_gap`), in its season. `<now>`: "Campus fad this week: … (background; people
-  take to it or scoff, each in character)". Text only: no price or stock changes. Every item a fad names is a `shop.json` item.
-- **Neither** away from campus (`awayIn`), on a home, lockdown or calendar trip day, or with Features `campus_phases` off (new toggle).
-  Before, a phase line would have printed in Avalon too.
-- **The player sees it:** Inventory → Notice Board, "On campus: …" ("On campus this week" for a fad); Settings counts the line.
-- **Build checks** (`tools/gen_engine.py`): dates, no two phases on one day, none on a home, lockdown or away day, no NPC name, no
-  smell (the preset's Scent Killswitch), at most 45 words; proven by breaking the data four ways.
-- New standing decision: DECISIONS "Campus phases and fads".
-- Tokens: ±35–55 on a day with a line (about 230 days a year), 0 otherwise. Card JSON +0.02 MB.
-- Tests: `test_campus_phases_v2111.cjs` (new); `test_extras_v161` (its "the file is empty" check now expects the approved phases);
-  `test_saves` and the 81 suites on phases, the Notice Board, features, `<now>` and Meanwhile, `qa_static` and eslint pass.
-- **To confirm with the owner:** the 44 lines are new wording drawn from the lore (the draft listed each one's source).
-- **To check live:** `docs/TEST_CHECKLIST.md` Act 2 Q2.7, Act 3 Q3.6 [2.1.1]. Black Box rules: not added (its repository is not
-  attached here).
+Owner request: Routine 2.0's last stage, and all the tests deferred since 2.2.0 ("lakukan nanti di akhir di 2.2.4").
+Owner-approved `planning/DRAFT_routine2_perkembangan.md`; deleted here. Save fixture v2.2.3.
+- **Conditions** (`data/npc_routines.json` cond; shared.js `rtWhen`, `rtFirst`; `presence_data` `evd`, `exd`): `ev` (a calendar
+  event's days), `exam` (exam days and the seven days before), `since` / `until` (campaign years). An event's or exam row is drawn first,
+  then a pair row, then the rest (all capped at 90). A pair row's conditions must be the same in both NPCs.
+- **Rows:** Trixie at the circus tent in the Main Courtyard on the circus days (80, her lore's "every waking minute"); in the exam weeks
+  the studious revise in the Main Library or the Study Rooms (Alyssa, Zara, Castor, Vera, Idris, Royhan, Hadrian, Maple, Wren), Baelin
+  watches for exhaustion, Yvette steers students to ordinary coffee; from Year 3 Faye walks Tsubaki back from the Hills on Sundays.
+  Not made (no lore for them): `mood` and `after` conditions (FUTURE_PLANS).
+- **"Usually"** (`rtMain`): the Map, the dossier, Meanwhile and initiative read only main rows: weight 50+, and no event, exam or
+  bad-weather row (Trixie's rainy-day Common Rooms row had shown as a usual place; found by `test_look_for_v19912`).
+- **Fix:** `<now>` (505) did not get the Campus Map's walking legs (2.2.1), so for someone on their way it could answer Look for
+  differently from the engine; 505 now gets them, and the event and exam days with them.
+- **Crowd warning** at build: places where routines would put more than about 2.5 people met per block. Now: the Canteen at lunch
+  (about 10) and the Club Rooms after class (about 4), both busy by design.
+- **Tests (all of them, owner):**
+  - `test_routine2_v2224.cjs` (new, 21 checks): one draw per block, weights and free, two old 70s, the bad-weather rows, pairs (together
+    or neither; skipped while away or sick), the circus, the exam weeks, Year 3 only, the meeting layer (Trixie met 47 of 61 times where
+    her routine puts her), Look for (always finds whoever Who is here shows, never for certain), people on their way, Campus now, the
+    main rows.
+  - **Empty visits** per crowd 0–4 against 2.1.2 (`tests/fixtures/presence_empty_2.1.2.json`): 74.8 / 59.8 / 49.6 / 43.4 / 40.6 %
+    (2.1.2: 76.9 / 59.6 / 47.5 / 39.2 / 35.0). Quiet places stay as quiet; busy ones are a little emptier, since a routine no longer
+    makes a meeting certain.
+  - Updated, because the behaviour changed on purpose:
+    - `test_campus_now_v2100`: Look for at a place Campus now names is high (90%), not certain; one weather check moved past the 15
+      minutes on the way;
+    - `test_feature_batch4_v1520`: Royhan's row is the pair with Milena; the roll and the code patterns of 2.2.0;
+    - `test_world_v110`: Percival, who loves a storm, may play on in the rain;
+    - `test_extras_v161` (2.1.1) already followed.
+  - Bugs found by the tests and fixed: the rainy-day row shown as "usually" (above).
+  - Two test-only mistakes of mine, corrected: a pair compared without the break (Zara home, Vera staying), and a time inside the 15
+    minutes on the way.
+  - `npm test`: all suites pass. `npm run stress` (fuzz, Builder fuzz, a simulated year) passes. Lint and eslint pass. `test_saves`:
+    every fixture to 2.2.3 loads without loss.
+- Tokens: none.
+- **To confirm with the owner:** the new rows' wording (approved in the draft).
+- **To check live:** `docs/TEST_CHECKLIST.md` Act 5 Q5.1, Act 7 Q7.3 [2.2.4].
 
-## v2.1.0 — Campus now (2026-10-24)
+## v2.2.3 — Routine 2.0: the later cohorts, stable habits only (2026-10-24)
 
-Owner request: the first release of the "world in motion" roadmap (planning/FUTURE_PLANS.md §0.1), R1, after a check of how it
-meets Look for and Who is here. Save fixture v2.0.0.
-- **Campus now** (Features `campus_now`, on by default): what each person {{user}} has a bond with is doing now. The bracelet folds three
-  of them ("Campus now", under the news; drawn per block, weighted by Bond Rank, the same on a swipe; none away from campus, after curfew
-  or with the feature off); People → Campus now lists everyone ("Everyone on the People panel" opens it). Only for the player: `$ui` is
-  not in `<current_state>`, so 0 prompt tokens.
-- **What shows** (shared.js `campusFeed`): from Bond Rank 3 (the rank at which they tell their own plans, `NEXT_RANK`; data
-  `npc_routines.json` `here.feed.rank`) with their Haunts field open: their routine and its place ("Irene : Library Assistants shift -
-  Main Library"), else "somewhere on campus"; below Rank 3 only what anyone can see (in class, teaching, Study Hall, a club, off sick,
-  home for the break) or "free", and a status only as "away". The info layers alone open Haunts at Rank 0–1 for 59 of 60 NPCs, which
-  would have shown nearly everyone's place at once and left Look for nothing to do.
-- **Never against Look for:** a place it names is one Look for finds them at (checked over 102 named places); an outdoor routine in bad
-  weather reads "sheltering from the weather" (the one rule `wxOff`, now shared by `lookFor`); the place {{user}} found someone this
-  block shows. The panel says it plainly: knowing where someone is does not mean running into them.
-- **Meanwhile** (Rank 7+, a Journal line a week for a friend not seen): names one of their routines ("Irene was seen at Main Library as
-  usual (Library Assistants shift)") instead of only a haunt.
-- New standing decision: DECISIONS "Campus now is the player's, and knowing is not meeting". FUTURE_PLANS: the R1 row is gone; the
-  roadmap's conflict check (Routine 2.0's two layers, passers-by, M1–B3) is recorded at each item.
-- Sizes: the card JSON 6.53 → 6.54 MB. Tokens: none.
-- Tests: `test_campus_now_v2100.cjs` (new, 24 checks); `test_saves`, `test_look_for_v19912`, `test_presence_roll_v19911`,
-  `test_reply_delta_v1790`, `test_tidy_v2000`, `test_feature_batch4_v1520`, the suites on Meanwhile, features and the bracelet,
-  `qa_static` and eslint pass (a routine release: no full suite).
-- **To confirm with the owner:** the Rank 3 threshold (the info layers alone would show nearly everyone at once); the wording "free",
-  "somewhere on campus", "sheltering from the weather", "away", "where you found them". No canon invented.
-- **To check live:** `docs/TEST_CHECKLIST.md` Act 1 Q1.1 [2.1.0] (the fold and the tab at low ranks), Act 3 Q3.1 [2.1.0] (a Rank 3
-  friend's place). Black Box rules for these: not added in this session (its repository is not attached here).
+Owner request: Routine 2.0 group 4. Owner-approved `planning/DRAFT_routine2_kelompok4.md` (owner change: "something that changes over
+time does not go into a routine, like Nerys at the Founder's Statue"); deleted here. **No tests run (owner: all tests in 2.2.4)**: the
+build and a smoke run. Save fixture v2.2.2.
+- **Group 4** (`data/npc_routines.json`): the cohort that arrives in Year 2 (Hadrian, Linus, Maple, Nerys, Tsubaki, Wren) and in Year 3
+  (Aurelian, Bianca, Bruno, Faye, Rigel, Topaz, William), 86 rows, seen from their arrival year as before. Pairs inside one cohort only:
+  Bianca and Bruno (the twins at the loudest table), Aurelian and Bruno (the Fire Dormitory), Nerys and Maple (foraging in the Gardens).
+- **Stable habits only** (owner, now in the data `_note` and DECISIONS "NPC routines"): removed Nerys's "this week's hobby", William's
+  new-volume day at Quillfeather's, Tilly's three Broken Statue rows ("her current favourite mystery"), Trixie's "new sweets" and
+  Vallie's "when Sophia Helfin wants a fight"; reworded William's, Aurelian's and Valentin's "whenever / wherever" rows and dropped the
+  text of Bianca's and Topaz's (Topaz's routine no longer looks at {{user}}). Their weight is free.
+- **Fix (found while drafting):** a pair row was still drawn after the partner had left; the third-years graduate after the campaign's
+  first year, so Florian would have gone on challenging Gareth. `rtPick` now skips a pair row while the partner is not at Halvard,
+  sick or under a status (`goneOf`, shared with `whereabouts`).
+- Tokens: none.
+- **Tests:** none run (owner). Deferred to 2.2.4.
+- **To confirm with the owner:** the 86 rows' wording (approved in the draft).
+- **To check live:** `docs/TEST_CHECKLIST.md` Act 11 Q11.0a [2.2.3] (Year 2).
 
-## v2.0.0 — The engine tidied, the gaps closed (2026-10-24)
+## v2.2.2 — Routine 2.0: the staff and the others (2026-10-24)
 
-Owner request: a short audit of the releases outside the batch plan (1.99.9–1.99.13), then the bug-hunt audit's batch 8 and the
-audit's fixes, as release 2.0.0. Save fixture v1.99.13. The audit is `audit/AUDIT_2026-10-23_2_audit_menyeluruh.md` §11 (findings
-A1–A4); batch 8 is §8 (K1–K3).
-- **The short audit** (1.99.9–1.99.13): full suite, lint, eslint and `npm run stress` (fuzz, Builder fuzz, a simulated year) pass; the
-  build is reproducible; the presence roll and Look for agree everywhere they are rolled. Four findings, all fixed here.
-- **A1 (`505.template.ejs`):** 1.99.11 put its `// 1.99.11` comment in front of the "Around campus today" element of the optional-thread
-  list, so that element became part of the comment: the happening was still printed but no longer counted in "use at most one of them".
-  It is back on its own line.
-- **A2 (engine `nowOf`, `509_sheet`):** the 1.99.9 tags were skipped at Trust Betrayed (`share: null`), where the Bond line says "shares
-  nothing new" but the sheet printed Loves, Hates, Goals and the birthday untagged, the same leak 1.99.9 fixed. At Betrayed every field the
-  rank has not opened is tagged `[not told yet: Trust Betrayed]`, the gift line too (DECISIONS §2 Info layers).
-- **A3 (`10_people.js`, `40_activities.js`):** the dossier's "Look for <name>" showed where the engine never rolls a search (Who is here
-  off, after curfew, in an outside area); 1.99.13 had hidden only the Action tab's. One gate for both: `lookOpen`.
-- **A4 (engine `ruleCards`):** a rule card that opens on a word read the reply with its own pattern, `<npc_thoughts>` included, so an
-  NPC's thought could open a card. It reads `proseOf` now (DECISIONS §6 "The story is the prose").
-- **Batch 8, K1 (long functions):** `stepBonds` (501 lines) is `stepBondRecords` (a step of its own, where the start of stepBonds ran:
-  alias merges, record guards, new acquaintances) and a 163-line `stepBonds` with `bondOwned`, `bondXP`, `bondTrust`, `bondTension` and
-  `bondRecent`; the Student Council left `stepTime` (233 → 168 lines) as `councilYear`. The other long steps wait until they are next
-  touched (FUTURE_PLANS §3).
-- **Batch 8, K2 (canon out of the engine):** the Council's people by year → new `data/council.json`; the nobles and groups of Consummate
-  → `data/mastery.json` `society_groups`, `society_nobles`; the Dovecote's names and appointment texts → `data/dove_watch.json`
-  (`names`, `second`, `call`, `second_talk`, `hearing.call`); the Entrance Event for a returning student → `data/calendar.json` `back`;
-  Bobby and Milena's worksite visits → `data/bond_rules.json` `worksite`; the raids' words → `avalon.json` / `hanakaze.json` `raid`.
-  `tools/gen_engine.py` checks every NPC these name. New standing decision: canon lives in data, not in the engine (DECISIONS §6).
-- **Batch 8, K3 (one helper each):** `userBday` / `isBday` ({{user}}'s birthday, 3 copies), `pactKey` (the `[pact]` note, 4 copies),
-  `areaRaid` (Avalon's and Hanakaze's raids, 2 copies); the prose readings were already one (`proseOf`, batch 1; A4 was the last).
-- **Proof:** batch 8 alone against the 1.99.13 engine: `ENGINE_DIFF=<1.99.13 engine.js> npm test`, all 171 suites and the static QA,
-  no difference. The A1–A4 fixes came after that run.
-- Sizes: the card 6.52 → 6.53 MB (engine +5 KB, mostly comments). Tokens: unchanged on an ordinary turn; "Around campus today" in the
-  optional-thread line on a happening day (±4); the tags only at Trust Betrayed.
-- Cast Sheet record `cast_1560.json` renewed: 33 of 240 scenarios differed, and 1.99.13's renders (a worktree) equal 2.0.0's with the
-  175 Betrayed tags removed.
-- Tests: `test_tidy_v2000.cjs` (new, 32 checks: K1–K3 and A1–A4); `npm test`, `npm run stress`, lint and eslint pass.
-- **To confirm with the owner:** the number 2.0.0 now names this release; the "Full polish fitur dan UI" stage of the road to 2.0 moves
-  to 2.0.N (FUTURE_PLANS §0). The tag's wording at Betrayed, `[not told yet: Trust Betrayed]`, is mine. No canon was invented: the data
-  moved word for word.
-- **To check live:** `docs/TEST_CHECKLIST.md` Act 1, Q1.1 [2.0.0] (the dossier's Look for, the happening thread); MS2 [2.0.0] (Betrayed).
+Owner request: Routine 2.0 group 3. Owner-approved `planning/DRAFT_routine2_kelompok3.md`; deleted here. **No tests run (owner: all
+tests in 2.2.4)**: the build and a smoke run. Save fixture v2.2.1.
+- **Group 3** (`data/npc_routines.json`): the 19 staff, the Doves (Krieg, Milena), the Cathedral (Tristan), Facilities (Bobby) and the
+  Liaison (Caine), 143 rows; every old row kept, the ones that crossed a block written per block. A teacher teaching this period stays
+  busy (the timetable); their rows in class hours apply only in the periods they do not teach.
+- **Pairs:** Layla and Yvette (the Staff Quarters, Sunday evening), Royhan and Milena (Dragonchess by the Dovecote, Wednesday; Royhan's
+  group 2 row is now this pair row, 60).
+- From the lore: Anya has no Tea Club row (the teacher who signs for it never comes, Florian's lore); Anselm is never at the Combat
+  Grounds outside class; Rei's late round takes in the Rooftop (she knows students use the roof door); Krieg patrols the Forest edge
+  after curfew; Bobby's repairs are an errand across the buildings.
+- **Validator** (`tools/common.py` `presence_data`): the 10-free check adds up only the rows active at the same minute, so rows one
+  after another inside a block (Hester 16:00–17:00, then 17:00–18:00) no longer count as stacked.
+- Tokens: none.
+- **Tests:** none run (owner). Deferred to 2.2.4.
+- **To confirm with the owner:** the 143 rows' wording (approved in the draft).
+- **To check live:** `docs/TEST_CHECKLIST.md` Act 2 Q2.1 [2.2.2].
 
-## v1.99.13 — Only who is here (2026-10-24)
+## v2.2.1 — Routine 2.0: Year 2, Year 3, and people on their way (2026-10-24)
 
-Owner request: "internal thoughts" showed NPCs {{user}} had never met and who were not at the place; thoughts are for NPCs in the
-scene only. Same release, a second owner request: the Activities tab Practice is called Action, and "Look for someone" lives only there.
-Save fixture v1.99.12.
-- **Thoughts (preset D5, `presets/edit_preset.py`):** rule 1 was "up to 3 NPCs, present ones first. An absent NPC appears only when they
-  matter…", with a second form `- **Name** (where they are, what they are doing)`. Now: up to 3 NPCs who are in the scene right now;
-  never someone absent, only mentioned or remembered; no NPC in the scene, no block. The second form is gone. The preset is 40 tokens
-  smaller (18,516 a normal turn, budget 18,600).
-- **Scene cards (`50_scene.js sceneHTML`):** a thought about someone not in `Scene.Present` is no longer shown (the "elsewhere" rows and
-  their CSS are gone), so an older reply written before this release loses such a line from the cards too. The folded 🧠 block in
-  older replies is the preset's regex and still shows what that reply wrote.
-- **Action tab (`40_activities.js`):** the tab keeps its id `practice` (the seen ledger, links), its label is Action. It holds "Look for
-  someone" first, then the Practice actions (Proficiency on, a practice place found). It shows wherever Look for works, so also where
-  there is no practice place. "Look for someone" left the top of every other tab, and it hides while Who is here is off (the engine
-  does not roll a search then). The dossier's "Look for <name>" stays.
-- **Tests:** `test_npc_thoughts_v1373` (the new rule 1), `test_scene_cards_v1700` (no thought for someone absent), `test_look_for_v19912`
-  (not on Clubs, the Action label, off with Who is here), plus `test_preset`, `test_saves`, practice and crafting UI suites: all pass.
-- **To check live:** `docs/TEST_CHECKLIST.md` Act 1, Q1.1 [1.99.13].
+Owner request: Routine 2.0 group 2. Owner-approved `planning/DRAFT_routine2_kelompok2.md` (owner change: Tilly less on the Broken
+Statue, a Saturday midnight ghost hunt); deleted here. **No tests run (owner: all tests in 2.2.4)**: the build and two smoke runs.
+Save fixture v2.2.0.
+- **Group 2** (`data/npc_routines.json`): Year 2 (Dante, Florian, Idris, Kanae, Lenna, Saffi, Tilly) and Year 3 (Caspian, Etnie,
+  Gareth, Irene, Royhan, Ruby, Sophia), 118 rows; every old row kept as a main row, the ones that crossed a block written per block.
+  Pairs: Florian and Gareth (the Combat Grounds, weekdays after class), Lenna and Saffi (the Sports Field, Saturday), Idris and Royhan
+  (the Sky outcasts in the Gardens, Sunday), Caspian and Ruby (trading notes at The Snug, Friday). Tilly: the Archive for "Halvard
+  Unexplained", ghost stories with Nurse Hester, the Long Corridor before curfew, and Saturday 23:00 to Sunday 01:00 a midnight ghost
+  hunt (an errand across the ghost stories' places).
+- **On the way** (shared.js `onTheWay`, `walkPath`, `passingAt`; `presence_data` `walk`: the Campus Map's legs by place key): in the
+  first 15 minutes of a block, someone whose routine moved them from one place to the next (a student coming out of class: from the
+  classroom) may be passed on a place between, at 20% (`here.transit`), one a place, tag "on the way to …"; Look for on the same draw;
+  Campus now "on the way to …". A smoke count: someone on the way in about 1 in 12 replies at a block's start after class.
+- Found while building it: before 16:00 every student is in class, so the walk has to start from the classroom, or nobody would ever
+  be on the way after class.
+- Tokens: none.
+- **Tests:** none run (owner). Deferred to 2.2.4.
+- **To confirm with the owner:** the 118 rows' wording (approved in the draft).
+- **To check live:** `docs/TEST_CHECKLIST.md` Act 2 Q2.1, Q2.7 [2.2.1].
 
 ## Release index (one line per release, oldest first)
 
@@ -360,3 +342,9 @@ Save fixture v1.99.12.
 - **v2.1.0 (2026-10-24):** Campus now (owner roadmap R1): what the people {{user}} knows are doing, three in a bracelet fold and everyone on People → Campus now, UI only; the place from Bond Rank 3 and only where Look for finds them; Meanwhile names a routine.
 - **v2.1.1 (2026-10-24):** Campus phases and fads (owner roadmap R3): 22 background lines between the calendar's events and, in the gaps, 22 seeded weekly fads from ordinary campus life (owner's idea), in `<now>` and on the Notice Board; none away or on a break.
 - **v2.1.2 (2026-10-24):** Magic is casual (owner): the World Index makes casting ordinary and skirmishes fine anywhere, serious fights go to the Combat Grounds' rings, only real harm is restricted; dorm separation is a class rule; a harmless skirmish is no deed; 22 magic beats, 2 happenings, one 504 line.
+- **v2.2.0 (2026-10-24):** Routine 2.0, first release (owner roadmap B1): weighted full-day rows (duty, habit, errand; weather and pair rows), one draw per block; the routine says where, a meeting roll says whether {{user}} runs into them (never certain on an open place); the Year 1 first cohort's 68 rows. No tests run (owner: all tests in 2.2.4).
+- **v2.2.1 (2026-10-24):** Routine 2.0, group 2: Year 2 and Year 3 (118 rows, four pairs, Tilly's midnight ghost hunt) and people on their way between routine places (20% in a block's first 15 minutes). No tests run (owner: all tests in 2.2.4).
+- **v2.2.2 (2026-10-24):** Routine 2.0, group 3: the staff, the Doves, the Cathedral, Facilities and the Liaison (143 rows; pairs Layla–Yvette, Royhan–Milena); the routine validator counts only rows active at the same minute. No tests run (owner: all tests in 2.2.4).
+- **v2.2.3 (2026-10-24):** Routine 2.0, group 4: the later cohorts (86 rows, three pairs); routine rows are stable habits only (owner), volatile rows removed; a pair row is skipped while the partner is away. No tests run (owner: all tests in 2.2.4).
+- **v2.2.4 (2026-10-24):** Routine 2.0 done: event, exam-week and campaign-year rows (Trixie at the circus, the studious revising, Faye and Tsubaki from Year 3); "usually" shows main rows only; <now> and the engine agree on people on their way; every test run and passing (owner).
+- **v2.3.0 (2026-10-24):** Own time (roadmap M1 + M2): a seeded 20% chance a day per bonded NPC (at most once in 6 days) of a small off-screen happening from 29 templates that fit who they are; one line in Recent, the Cast Sheet for 2 days (background, not an opener), Campus now for Rank 3+, Meanwhile; toggle `offscreen`; no bond change.

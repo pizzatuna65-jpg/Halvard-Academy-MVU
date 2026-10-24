@@ -271,6 +271,20 @@ show the newcomers their dorm rooms.
 ## Act 2 — Club week (M1 W1 Tue–Sun)
 
 ### Q2.1 Tuesday, the first class day
+- [ ] Own time, over the week: now and then someone you know has a Cast Sheet line "Own time (yesterday): ..." (a letter from home, words
+      with a rival, a new spell); not everyone, not every day, never two days running for the same person. When they are in the scene the
+      narrator does not open with it: it comes up only when the talk gives a reason, often not at all. Campus now adds "(yesterday: ...)"
+      for a Rank 3+ friend. Bonds, Trust and Tension do not move from it [2.3.0].
+- [ ] Routine 2.0, over the week: at lunch Trixie is often in the Courtyards (a performance nobody asked for), not every day, and in the
+      Common Rooms when it rains; on Tuesday and Thursday from 16:00 Zara and Vera are in the Workshop together or not at all; Castor
+      turns up chasing a quote in the Canteen, the Courtyards or by the Notice Board. Even where Campus now or the dossier says someone
+      is, Look for sometimes misses them (never certain, at most 90%), and a quiet place is often empty [2.2.0].
+- [ ] Just after 16:00 or 18:00, on a busy path (the Courtyards, the corridors), "Here now" sometimes has someone "on the way to" the
+      place of their routine; a few minutes later they are gone. Now and then Florian and Gareth are at the Combat Grounds together
+      after class; Irene is in the Main Library until 19:00 (not always met) [2.2.1].
+- [ ] The staff keep their own days: Hester in the Medical Centre most of the day (her herb garden 16:00–17:00), a teacher not teaching
+      this period in the Faculty Offices, Krieg at the Forest edge after curfew, sometimes Rei on the Rooftop late at night; on Sunday
+      evening Layla and Yvette together in the Staff Quarters, on Wednesday evening Royhan and Milena at Dragonchess by the Dovecote [2.2.2].
 Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Crafting (Potion Halls), mixed.
 - [ ] 07:30 the bracelet reads "Morning, before classes" (on Sunday: "Sunday (no classes)"; on a day an event has no classes, such as
       Entrance Day: "Morning, no classes today") [1.30.2].
@@ -360,6 +374,9 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
       morning after that day the change is gone with "… as it was again" [1.77].
 
 ### Q2.7 Saturday and Sunday
+- [ ] Saturday from 23:00 to Sunday 01:00, Tilly may be out on a midnight ghost hunt (the Notice Board by the founding plaque, the
+      Lecture Halls, the washrooms, Founder's Park); joining her is out after curfew, with the usual risk; on Sunday afternoon she is
+      writing it up in the Archive [2.2.1].
 - [ ] From Saturday `<now>` has "Campus phase: The first weeks: first-years still lose their way …", and Inventory → Notice Board shows
       the same line under "On campus"; the narrator lets it colour the scene now and then, never as an order. Settings → Features →
       Campus phases and fads shows about 40 tokens [2.1.1].
@@ -501,6 +518,9 @@ The first academy flight (the airship), then the Grand Vast Forest.
 ## Act 5 — Month 3
 
 ### Q5.1 Before the Midterm
+- [ ] In the week before the midterms and during them, the studious (Alyssa, Zara, Castor, Vera, Idris, Royhan) are often revising in
+      the Main Library or the Study Rooms after class, Baelin walks about watching for exhausted students, Yvette steers people to ordinary
+      coffee at Nightwell; Bruno, Sophia and Trixie keep their usual days [2.2.4].
 - [ ] Study in the Main Library in the evenings before it: in exam week `<now>` states the preparation, and the marks fit it [1.10.1].
 
 ### Q5.2 Midterm week (W1 Mon–Thu, marks on Friday)
@@ -600,6 +620,8 @@ The first academy flight (the airship), then the Grand Vast Forest.
       birdsong, knocking in the wall), never a breach or a Clue [1.85].
 
 ### Q7.3 The Circus and the Showcase (M8 W2–W3)
+- [ ] From Thursday evening to Sunday Trixie is at the circus tent in the Main Courtyard most of the time she is free ("every waking
+      minute"), and nowhere near it the week after; her dossier's Routine field never mentions the circus [2.2.4].
 - [ ] Circus Thursday after 18:00 in the Courtyards: the bracelet's "Stalls here" chip, the Price Guide's Circus stalls with their hours,
       and a candied apple costs 5 points; at 15:00 the stalls are not open yet [1.85].
 - [ ] Showcase days: `<now>` says families are visiting; Charles's family comes only if the player says so [1.85].
@@ -743,6 +765,11 @@ The first academy flight (the airship), then the Grand Vast Forest.
 - [ ] At the feast the Headmaster and Vice Headmaster speak before the food [1.15.1].
 
 ## Act 11 — Year 2
+
+### Q11.0a Routines in Year 2
+- [ ] The third-years have graduated, and nobody turns up "with" one of them (Florian's challenge to
+      Gareth, Idris and Royhan in the Gardens, Royhan and Milena at Dragonchess); the new first-years (Hadrian, Linus, Maple, Nerys,
+      Tsubaki, Wren) keep their own days: Tsubaki at the Sparring Pavilion before dawn, Nerys at the Canteen's leftovers at closing [2.2.3].
 
 ### Q11.0 Personal dates (any day of Year 2)
 - [ ] On the date of a Year 1 Imprint (an experience that changed someone), with them present: their Mood line says "A year today:

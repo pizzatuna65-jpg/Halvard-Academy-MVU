@@ -297,7 +297,8 @@ console.log('Weather in the Now entry: indoor schedules, flu, moods, battle fiel
 {
   const rainD = find(1, b => b.sky === 'Rain' && !b.snow);
   const sf = render(505, at(S0, rainD, '16:30', 'Sports Field'));
-  ok(/Moved indoors in this weather \(Gymnasium, Common Rooms\): .*Percival/.test(sf) && /Likely around Sports Field[^:]*: no regulars/.test(sf), 'rain: regulars of outdoor places move indoors');
+  // 2.2.4: Percival loves a storm (npc_moods.json); his Routine 2.0 row for bad weather keeps him out playing, else he moves indoors
+  ok((/Moved indoors in this weather \(Gymnasium, Common Rooms\): .*Percival/.test(sf) || /Percival \(playing on in the storm/.test(sf)) && /Likely around Sports Field[^:]*: (no regulars|Percival \(playing on in the storm[^)]*\))/.test(sf), 'rain: regulars of outdoor places move indoors (2.2.4: but Percival, who loves a storm, may play on)');
   const satRain = (() => { for (let d = 5; d < 3000; d += 7) { const D = E.wxDay(SEED, d); if (QUIET(d) && D.blocks[1].sky === 'Rain' && !D.blocks[1].snow) return d; } })();
   ok(/Soccer Club: practising indoors \(Gymnasium\) or cancelled/.test(render(505, at(S0, satRain, '14:00', 'Sports Field'))), 'Saturday clubs with only outdoor venues practise indoors or cancel');
   ok(/Fishing Club: meeting here/.test(render(505, at(S0, satRain, '14:00', 'Fishing House'))), '...except the Fishing Club, which goes out in the rain (at its Fishing House, 1.2.0)');

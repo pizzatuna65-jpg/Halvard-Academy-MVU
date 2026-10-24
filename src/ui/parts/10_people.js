@@ -75,7 +75,7 @@ function campusNowHTML(S) {
   const rows = campusFeed(PD, V, S).sort((a, b) => (b.close - a.close) || b.rank - a.rank || (a.id < b.id ? -1 : 1));
   if (!rows.length) return '<p class="sub">Nobody you know yet. People you meet show up here.</p>';
   const FR = ((PD.here || {}).feed || {}).rank == null ? 3 : PD.here.feed.rank;
-  const li = x => `<li><button class="lnk" data-open="npc:${esc(x.id)}">${esc(nameOf(x.id, S))}</button> : ${esc(x.what)}${x.where ? ' - ' + esc(x.where) : ''}</li>`;
+  const li = x => `<li><button class="lnk" data-open="npc:${esc(x.id)}">${esc(nameOf(x.id, S))}</button> : ${esc(x.what)}${x.where ? ' - ' + esc(x.where) : ''}${x.own ? ` <span class="sub">(${esc(x.own)})</span>` : ''}</li>`;   // 2.3.0 (M2)
   const close = rows.filter(x => x.close), rest = rows.filter(x => !x.close);
   return `<p class="sub">${esc(W.Day || '')} ${esc(W.Time || '')}. Knowing where someone is does not mean you will run into them: Halvard is large.</p>`
     + (close.length ? `<h3>They tell you their plans</h3><ul class="log">${close.map(li).join('')}</ul>` : '')
@@ -175,7 +175,7 @@ function lookPlaces(id, n, S) {
   const PD = DATA.presence || {}, W = S.World || {}, m = hmMin(W.Time), rows = new Map();
   const put = (p, now, here) => { const o = rows.get(p) || { p, now: false, here: false }; o.now = o.now || now; o.here = o.here || here; rows.set(p, o); };
   const open = lab => n.fl.some(f => f[0] === lab && fieldUnlocked(id, f, S));
-  if (open('Routine')) for (const r of (PD.rt || {})[id] || []) put(r[4], r[0].includes(W.Day) && m != null && m >= r[1] && m < r[2], false);
+  if (open('Routine')) for (const r of ((PD.rt || {})[id] || []).filter(rtMain)) for (const p of r[10] ? r[10].map(k => PD.vn[k] || k) : [r[4]]) put(p, r[0].includes(W.Day) && m != null && m >= r[1] && m < r[2], false);   // 2.2.0: main rows, an errand's places
   if (open('Haunts')) for (const k of Object.keys(PD.vn || {}).sort()) if (((PD.reg || {})[k] || []).includes(id)) put(PD.vn[k], false, false);
   const hereL = DATA.locs[locIdOf(W.Location)];
   if (hereL && !/CURFEW|LOCKDOWN/.test(String(W._Curfew || ''))) put(hereL.name, false, true);

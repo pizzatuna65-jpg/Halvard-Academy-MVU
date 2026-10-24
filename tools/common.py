@@ -247,15 +247,72 @@ def presence_data(npcs, locs):
         return [W[W.index(x.strip())] for x in spec.split(',')]
     byname = {l['name']: l['name'] for l in locs.values()}
     mins = lambda s: int(s[:2]) * 60 + int(s[3:])
+    # 2.2.0 (owner-approved planning/DRAFT_routine2.md, Routine 2.0): a row may carry [kind, weight, cond] after the five old columns:
+    # kind duty | habit | errand (an errand's place is "A|B|C"), weight (its share of the block; the rest is free), cond {wx: fair |
+    # bad | fog, pair: the NPC it shares the row with}. An old row is a habit at `rate`. The row: [days, from, to, place key, map name,
+    # what, label, kind, weight, cond, the errand's place keys or None]. Each row stays inside one presence block (shared.js BLOCKS_AT),
+    # every day, block and weather leaves at least 10 free, and a pair row is in both NPCs alike (same days, hours, place, weight).
+    CAL = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data', 'calendar.json'), encoding='utf-8'))
+    blocks = [0, 360] + [mins(x) for p in CAL['periods'] for x in p] + [1080, 1200, 1440]
+    # 2.2.4 (owner-approved planning/DRAFT_routine2_perkembangan.md): the days (day of the year, 0-335) of each calendar event, and the
+    # exam days with the seven days before them, for the cond ev / exam
+    doy = lambda m, w, d: (m - 1) * 28 + (w - 1) * 7 + W.index(d)
+    evd = {}
+    for e in CAL['events']:
+        evd.setdefault(e['id'], []).extend(doy(e['m'], e['w'], d) for d in (e['d'] if isinstance(e['d'], list) else [e['d']]))
+    exd = sorted({(x - k) % 336 for e in CAL['events'] if e['id'].startswith(('midterms', 'finals')) for d in e['d'] for x in [doy(e['m'], e['w'], d)] for k in range(8)})
+    blocks = sorted(set(blocks))
+    blk_of = lambda m: max(i for i, b in enumerate(blocks) if b <= m)
     rt = {}
     for nid, rows in R['npcs'].items():
         assert nid in npcs and not nobond(npcs[nid]), nid
-        for d, f, to, place, what in rows:
-            assert place in byname and mins(f) < mins(to), (nid, place, f, to)
-            rt.setdefault(nid, []).append([days(d), mins(f), mins(to), norm(place), place, what, f"{d.replace('-', '–')} {f}–{to}"])
+        for row in rows:
+            d, f, to, place, what = row[:5]
+            kind, weight, cond = (row[5], row[6], row[7]) if len(row) > 5 else ('habit', R['rate'], {})
+            places = place.split('|')
+            assert all(p in byname for p in places) and mins(f) < mins(to), (nid, place, f, to)
+            assert kind in ('duty', 'habit', 'errand') and (kind == 'errand') == (len(places) > 1), (nid, place, kind)
+            assert isinstance(weight, int) and 0 < weight <= 90 and set(cond) <= {'wx', 'pair', 'ev', 'exam', 'since', 'until'} and cond.get('wx', 'fair') in ('fair', 'bad', 'fog'), (nid, place, weight, cond)
+            assert (not cond.get('ev') or cond['ev'] in evd) and cond.get('exam', True) is True and all(re.match(r'^Y[1-9]$', cond[k]) for k in ('since', 'until') if k in cond), (nid, place, cond)
+            # a new row stays inside one block; an old row that crosses blocks is cut at their edges (one draw per block, same row)
+            assert len(row) == 5 or blk_of(mins(f)) == blk_of(mins(to) - 1), f'routine row of {nid} at {place} {f}-{to} crosses a presence block'
+            cuts = [x for x in blocks if mins(f) < x < mins(to)]
+            for a, z in zip([mins(f)] + cuts, cuts + [mins(to)]):
+                rt.setdefault(nid, []).append([days(d), a, z, norm(places[0]), places[0], what, f"{d.replace('-', '–')} {f}–{to}",
+                                               kind, weight, cond, [norm(p) for p in places] if len(places) > 1 else None])
+    new = {nid for nid, rows in R['npcs'].items() if any(len(x) > 5 for x in rows)}   # the 10-free check: NPCs on the 2.2.0 format (the engine caps the rest at 90)
+    for nid, rows in rt.items():
+        for r in rows:   # a pair row: the other NPC has the same row (days overlap, same hours, place and weight), pointing back
+            o = r[9].get('pair')
+            same = lambda x: {k: v for k, v in x[9].items() if k != 'pair'} == {k: v for k, v in r[9].items() if k != 'pair'}   # 2.2.4: the same conditions
+            if o: assert any(x[9].get('pair') == nid and set(x[0]) & set(r[0]) and x[1:4] == r[1:4] and x[8] == r[8] and same(x) for x in rt.get(o, [])), f'pair row {nid} / {o} at {r[4]}'
+        for day in (W if nid in new else []):
+            for b in range(len(blocks) - 1):
+                for wx in ('fair', 'bad', 'fog'):
+                    act = [r for r in rows if day in r[0] and blk_of(r[1]) == b and r[9].get('wx', wx if wx != 'fog' else 'fair') in ((wx, 'fair') if wx == 'fog' else (wx,))]
+                    # 2.2.4: an ev or exam row is drawn first (the engine caps all at 90), so they are checked on their own
+                    for part in ([r for r in act if not (r[9].get('ev') or r[9].get('exam'))], [r for r in act if r[9].get('ev')], [r for r in act if r[9].get('exam')]):
+                        for t in {r[1] for r in part}:   # 2.2.2: rows that are active at the same minute (one after another in a block do not add up)
+                            tot = sum(r[8] for r in part if r[1] <= t < r[2])
+                            assert tot <= 90, f'routine of {nid}: {day} block {b} ({wx}) leaves less than 10 free ({tot})'
+    # 2.2.4: the crowd warning: people a routine puts on one place in one weekday block, as {{user}} would meet them (weight x meet), over
+    # 2.5 (the presence roll's busiest crowd target is 2.0): printed, not a failure, so a quiet place stays quiet
+    meet = R['here'].get('meet', {})
+    for day in ('Mon', 'Wed', 'Sat', 'Sun'):
+        for b in range(len(blocks) - 1):
+            load = {}
+            for nid, rows in rt.items():
+                for r in rows:
+                    if day in r[0] and blk_of(r[1]) == b and not (r[9].get('ev') or r[9].get('exam') or r[9].get('wx') == 'bad'):
+                        for k in (r[10] or [r[3]]):
+                            load[k] = load.get(k, 0) + r[8] / 100 * meet.get(r[7], 65) / 100 / (len(r[10]) if r[10] else 1)
+            for k, v in sorted(load.items()):
+                if v > 2.5: print(f'  routine crowd warning: {day} block {b} {k}: about {v:.1f} people met from routines')
     return {'reg': reg, 'stu': stu, 'arr': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1}, 'teach': teach, 'tt': tt, 'clubv': clubv,
             'outd': sorted({norm(k) for lid in out_ids for k in place_keys(locs[lid], lid)}), 'vn': {norm(l['name']): l['name'] for l in locs.values()},
             'rt': rt, 'rate': R['rate'], 'ct': contest_data(stu, tr), 'tr': tr,
+            'evd': {k: v for k, v in evd.items() if any(r[9].get('ev') == k for rows in rt.values() for r in rows)}, 'exd': exd,
+            'own': json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data/offscreen.json'), encoding='utf-8'))['show'],   # 2.3.0: Own time, days shown
             # 1.99.11 (planning/DRAFT_presence_roll.md): the presence roll's numbers, who may pass through (bondable NPCs) and the
             # public impression word each "Here now" name carries
             'here': R['here'], 'roster': sorted(k for k, v in npcs.items() if not nobond(v)),
@@ -264,7 +321,10 @@ def presence_data(npcs, locs):
             # (data/relations.json: rel[target][other] = the kind of tie, the other's own view first), for the hint when X is not found
             'nf': {k: fs for k, fs in sorted(name_forms(npcs).items()) if not nobond(npcs[k])}, 'rel': look_ties(npcs),
             # 2.1.0 (Campus now): the Bond Rank at which each NPC's Haunts field opens (no Haunts field: 1, as the dossier's Routine row)
-            'hr': {k: haunts_rank(v) for k, v in sorted(npcs.items()) if not nobond(v)}}
+            'hr': {k: haunts_rank(v) for k, v in sorted(npcs.items()) if not nobond(v)},
+            # 2.2.1 (Routine 2.0, on the way): the Campus Map's walking legs by place key [a, b, minutes] (as campus_map), for the walk
+            # between two routine places (shared.js walkPath)
+            'walk': [[norm(locs[a]['name']), norm(locs[b]['name']), w] for a, b, w in sorted({tuple(sorted((a, b))) + (w,) for a, l in locs.items() for b, w in l.get('near') or [] if b in locs})]}
 
 
 def haunts_rank(n):
