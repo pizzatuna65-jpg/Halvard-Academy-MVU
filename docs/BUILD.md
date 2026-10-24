@@ -33,6 +33,7 @@ node tests/fixtures/make_save_yearend.cjs   # 1.7.4: the same save played to the
 python tools/audit_chat.py chat.jsonl --out report.md   # optional: character-drift report for an exported chat
 python tools/audit_chat.py chat.jsonl --mechanics --no-drift --out report.md   # 1.53.1: how the narrator handled the engine (replays every block)
 python tools/audit_chat.py chat.jsonl --memory --no-drift [--vectfox export.json] --out report.md   # 1.61.1: memory kept and lost, VectFox health
+python tools/audit_chat.py bundle.json.gz --blackbox --no-drift --out report.md   # Eldrasil Black Box bundle: tokens, cache, cost, prompt parts, saves, engine lines per reply
 node tests/stress/memory_soak.cjs 3000   # 1.61.1: memory invariants and budget on a long synthetic chat
 ```
 

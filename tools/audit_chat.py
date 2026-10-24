@@ -6,6 +6,7 @@ Usage:
                               [--mechanics] [--no-drift]
   python3 tools/audit_chat.py <A.jsonl> --compare <B.jsonl>
   python3 tools/audit_chat.py <chat.jsonl> --memory [--vectfox <export.json>] [--no-drift]
+  python3 tools/audit_chat.py <bundle.json.gz> --blackbox [--mechanics] [--memory] [--no-drift]
 
 Reads the canon from the project (data/npcs.json, src/worldbook/content/<uid>.txt, data/voice_rules.json) and reports, per NPC
 and per window of messages, where the narrator drifted:
@@ -36,6 +37,12 @@ kept and what was lost for good; clues of an open mystery that left; the open Ho
 state's size and a rough projection of the chat file at 5,000 / 20,000 / 50,000 messages.
 --vectfox <export.json> (with --memory or alone) checks a VectFox EventBase export against the chat: ghost events (a source message
 no longer in the chat: deleted or edited), dates without a campaign year, near-duplicates, events per window, importance and types.
+
+--blackbox (2026-10-24): the chat argument is a playtest bundle from the Eldrasil Black Box extension (pizzatuna65-jpg/Eldrasil-BlackBox):
+per reply the provider's input, cached and output tokens, cost, timing, the save after it, the largest prompt parts and the engine's
+signals; totals for replies and background requests, cache misses, the average prompt parts, saves and engine lines. The bundle's
+chat slice is written next to it as <bundle>.chat.jsonl and the other reports read it (their message numbers count from the slice's
+start, manifest chatFrom).
 
 Works with old non-MVU chats too (pronoun, name, secret and voice checks run; present and locked need the MVU state, read from
 the message's variables or, failing that, from the <UpdateVariable> patches in the text).
@@ -651,6 +658,137 @@ def vectfox_md(v):
     return '\n'.join(out) + '\n'
 
 
+# ---------------------------------------------------------------- Eldrasil Black Box bundle
+BUNDLE_FORMAT = 'eldrasil-blackbox-bundle'
+GROUPS = ('card', 'lore', 'memory', 'history', 'other')
+
+
+def read_bundle(path):
+    """A playtest bundle from the Eldrasil Black Box extension (.json.gz, or plain .json)."""
+    import gzip
+    raw = open(path, 'rb').read()
+    if raw[:2] == b'\x1f\x8b':
+        raw = gzip.decompress(raw)
+    b = json.loads(raw.decode('utf-8'))
+    if b.get('format') != BUNDLE_FORMAT:
+        raise SystemExit(f'{path}: not an Eldrasil Black Box bundle')
+    return b
+
+
+def bundle_chat(b, path):
+    """Write the bundle's chat slice as a SillyTavern .jsonl next to the bundle, for the other reports. Message numbers in
+    those reports count from the slice's start (manifest chatFrom)."""
+    out = re.sub(r'\.json(\.gz)?$', '', path) + '.chat.jsonl'
+    with open(out, 'w', encoding='utf-8', newline='\n') as f:
+        for o in [b['chat']['header']] + b['chat']['messages']:
+            f.write(json.dumps(o, ensure_ascii=False) + '\n')
+    return out
+
+
+def _num(x):
+    return x if isinstance(x, (int, float)) and not isinstance(x, bool) else None
+
+
+def _sum(rows, key):
+    vals = [key(r) for r in rows]
+    return sum(vals) if rows and all(_num(v) is not None for v in vals) else None
+
+
+def _seg_tokens(t):
+    """Tokens per source label for one record: the provider's input tokens shared out by characters (as the panel does)."""
+    segs, chars, inp = t.get('segments') or [], t.get('promptChars') or 0, (t.get('usage') or {}).get('inputTokens')
+    per = inp / chars if _num(inp) and inp > 0 and chars else 0.25
+    return [(s['label'], s['src'], s['chars'] * per) for s in segs]
+
+
+def blackbox(b):
+    """Numbers per reply from a Black Box bundle: usage, cache, cost, timing, saves, prompt parts and engine signals."""
+    T = b.get('turns') or []
+    main = [t for t in T if t.get('kind') == 'main']
+    other = [t for t in T if t.get('kind') != 'main']
+
+    def totals(rows):
+        inp = _sum(rows, lambda t: (t.get('usage') or {}).get('inputTokens'))
+        cached = _sum(rows, lambda t: (t.get('usage') or {}).get('cachedInputTokens'))
+        return {'requests': len(rows), 'input': inp, 'cached': cached,
+                'output': _sum(rows, lambda t: (t.get('usage') or {}).get('outputTokens')),
+                'cost': _sum(rows, lambda t: t.get('cost')),
+                'hit': (cached / inp) if inp and cached is not None else None}
+
+    def hit(t):
+        u = t.get('usage') or {}
+        return u['cachedInputTokens'] / u['inputTokens'] if _num(u.get('inputTokens')) and u['inputTokens'] > 0 and _num(u.get('cachedInputTokens')) is not None else None
+
+    def span(a, z):
+        return z - a if _num(a) is not None and _num(z) is not None and z >= a else None
+
+    rows, by_label, by_group, engine, misses = [], defaultdict(float), defaultdict(float), [], 0
+    for t in main:
+        u, sig, segs = t.get('usage') or {}, t.get('signals') or {}, _seg_tokens(t)
+        for label, src, tok in segs:
+            by_label[(label, src)] += tok
+            by_group[src] += tok
+        h = hit(t)
+        miss = h is not None and _num(u.get('inputTokens')) and u['inputTokens'] >= 2000 and h < 0.5
+        misses += bool(miss)
+        top = sorted(segs, key=lambda x: -x[2])[:3]
+        rows.append({'msg': t.get('mesId'), 'swipe': t.get('swipeId'), 'type': t.get('genType'), 'input': u.get('inputTokens'),
+                     'cached': u.get('cachedInputTokens'), 'hit': h, 'output': u.get('outputTokens'), 'cost': t.get('cost'),
+                     'build': span(t.get('tStart'), t.get('tFetch')), 'first': span(t.get('tFetch'), t.get('tFirst')),
+                     'total': span(t.get('tFetch'), t.get('tEnd')), 'save': (t.get('save') or {}).get('ms'),
+                     'miss': bool(miss), 'engine_error': bool(sig.get('engineError')), 'unreadable': bool(sig.get('unreadable')),
+                     'reminders': len(sig.get('missed') or []), 'complete': bool(t.get('complete')),
+                     'top': [f'{lb} {round(tok):,}' for lb, _, tok in top], 'lore': len(t.get('lore') or [])})
+        for line in sig.get('log') or []:
+            engine.append({'msg': t.get('mesId'), 'line': line})
+        for line in sig.get('missed') or []:
+            engine.append({'msg': t.get('mesId'), 'line': 'Reminder: ' + line})
+    n = max(1, len([t for t in main if t.get('segments')]))
+    bg = Counter((t.get('genType') or t.get('kind') or '?') for t in other)
+    saves = [r['save'] for r in rows if _num(r['save']) is not None]
+    return {'manifest': b.get('manifest') or {}, 'replies': totals(main), 'background': totals(other), 'rows': rows,
+            'misses': misses, 'sources': sorted(([lb, src, v / n] for (lb, src), v in by_label.items()), key=lambda x: -x[2]),
+            'groups': {g: by_group.get(g, 0) / n for g in GROUPS}, 'engine': engine, 'background_kinds': dict(bg),
+            'saves': {'count': len(saves), 'max': max(saves) if saves else None, 'avg': sum(saves) / len(saves) if saves else None,
+                      'size': ((b.get('manifest') or {}).get('save') or {}).get('sizeBytes')}}
+
+
+def blackbox_md(x):
+    f = lambda v, d=0: '?' if v is None else (f'{v:,.{d}f}' if isinstance(v, float) else f'{v:,}')
+    pct = lambda v: '?' if v is None else f'{v * 100:.1f}%'
+    usd = lambda v: '?' if v is None else f'${v:.4f}'
+    ms = lambda v: '–' if v is None else (f'{v / 1000:.1f} s' if v >= 1000 else f'{v} ms')
+    m = x['manifest']
+    out = [f"## Black Box: {m.get('chatId')}", '',
+           f"Card {m.get('cardVersion')}, extension {m.get('extension')}, exported {m.get('exportedAt')}. {m.get('replies')} replies, "
+           f"{m.get('turns')} requests; chat slice from message {m.get('chatFrom')} ({m.get('chatMessages')} messages); prompt text "
+           f"{'included' if m.get('includePrompts') else 'not included'}.", '',
+           '| | Requests | Input | Cached | Hit | Output | Cost |', '|---|---|---|---|---|---|---|']
+    for name, t in (('Replies', x['replies']), ('Background', x['background'])):
+        out.append(f"| {name} | {t['requests']} | {f(t['input'])} | {f(t['cached'])} | {pct(t['hit'])} | {f(t['output'])} | {usd(t['cost'])} |")
+    if x['background_kinds']:
+        out += ['', 'Background requests by type: ' + ', '.join(f'{k} {v}' for k, v in sorted(x['background_kinds'].items())) + '.']
+    s = x['saves']
+    size = '?' if s['size'] is None else f"{s['size'] / 1048576:.1f} MB"
+    avg = ms(round(s['avg']) if s['avg'] is not None else None)
+    out += ['', f"Cache: {x['misses']} of {len(x['rows'])} replies read less than half of the prompt from the cache. Saves: {s['count']} after a reply, "
+            f"average {avg}, slowest {ms(s['max'])}; chat file about {size}.", '']
+    if any(x['groups'].values()):
+        out += ['### Prompt parts (average tokens per reply, estimated by characters)', '',
+                '| Group | Tokens |', '|---|---|'] + [f'| {g} | {round(v):,} |' for g, v in x['groups'].items() if v] + ['',
+                '| Part | Group | Tokens |', '|---|---|---|'] + [f'| {lb} | {src} | {round(v):,} |' for lb, src, v in x['sources'][:25]] + ['']
+    out += ['### Replies', '', '| Msg | Input | Cached | Hit | Output | Cost | Build | First | Total | Save | Flags | Largest parts |',
+            '|---|---|---|---|---|---|---|---|---|---|---|---|']
+    for r in x['rows']:
+        flags = [k for k in ('miss', 'engine_error', 'unreadable') if r[k]] + ([f"{r['reminders']} reminders"] if r['reminders'] else []) + ([] if r['complete'] else ['incomplete'])
+        msg = '?' if r['msg'] is None else f"{r['msg']}{'/' + str(r['swipe']) if r['swipe'] else ''}"
+        out.append(f"| {msg} | {f(r['input'])} | {f(r['cached'])} | {pct(r['hit'])} | {f(r['output'])} | {usd(r['cost'])} | {ms(r['build'])} | "
+                   f"{ms(r['first'])} | {ms(r['total'])} | {ms(r['save'])} | {', '.join(flags)} | {'; '.join(r['top'])} |")
+    if x['engine']:
+        out += ['', '### Engine log lines and reminders', ''] + [f"- msg {e['msg']}: {e['line']}" for e in x['engine']]
+    return '\n'.join(out) + '\n'
+
+
 # ---------------------------------------------------------------- report
 def report_md(res):
     F, W = res['findings'], res['window']
@@ -687,7 +825,12 @@ def main(argv=None):
     ap.add_argument('--compare', metavar='B.jsonl', help='A/B: the mechanics of this chat and of B side by side (no drift checks)')
     ap.add_argument('--memory', action='store_true', help='add the memory report (replays the chat through the current engine)')
     ap.add_argument('--vectfox', metavar='export.json', help='check a VectFox EventBase export against this chat')
+    ap.add_argument('--blackbox', action='store_true', help='the chat argument is an Eldrasil Black Box bundle (.json.gz): add its report; the other reports read its chat slice')
     a = ap.parse_args(argv)
+    bundle = None
+    if a.blackbox:
+        bundle = read_bundle(a.chat)
+        a.chat = bundle_chat(bundle, a.chat)
     if a.compare:
         md = compare_md(mechanics(a.chat), mechanics(a.compare))
         if a.out:
@@ -706,6 +849,9 @@ def main(argv=None):
     if a.vectfox:
         res['vectfox'] = vectfox(a.vectfox, a.chat)
         md = (md + '\n' if md else f"# Memory audit: {res['chat']}\n\n") + vectfox_md(res['vectfox'])
+    if bundle is not None:
+        res['blackbox'] = blackbox(bundle)
+        md = (md + '\n' if md else f"# Playtest audit: {res['chat']}\n\n") + blackbox_md(res['blackbox'])
     if a.out:
         open(a.out, 'w', encoding='utf-8', newline='\n').write(md)
     else:

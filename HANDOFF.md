@@ -38,6 +38,9 @@ underneath. The player is a first-year student. The card combines:
   training, grades, hidden magic, payouts, journal, ambience and more.
 - **A UI**: an in-chat "bracelet" status bar (a regex replaces MVU's placeholder) and a Tavern Helper script with panels: Student
   Builder, Student file (with Settings → Features), People (dossiers, relationship graph), Map, Inventory (Bag, Wallet, planner, journal), Activities, Battle.
+- **Playtest recorder** (optional, its own repository `pizzatuna65-jpg/Eldrasil-BlackBox`): the Eldrasil Black Box extension keeps
+  each reply's final prompt, tokens, cache, cost, saves and engine signals; ask the owner for its bundle with a playtest note and
+  read it with `tools/audit_chat.py <bundle> --blackbox` (docs/ECOSYSTEM.md).
 - **Ecosystem compatibility** with a memory extension (VectFox, or Summaryception as the second option) and prompt preset (Realistic Frankenstein 2.2.1.3, the
   Realistic Gemini BOLT configuration as it ships plus what the card needs): `docs/ECOSYSTEM.md`.
 

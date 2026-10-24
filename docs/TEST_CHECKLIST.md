@@ -872,10 +872,28 @@ The first academy flight (the airship), then the Grand Vast Forest.
 - [ ] Cached tokens per request from the second reply on: about twice what 1.99.7 had (the preset alone before; now the preset plus
       the card's constant lore, ±13,000 more); the cache hit rate in Explore rises from about 18% [1.99.8].
 - [ ] The narrator still uses the lore of a place or person named in the scene as before (keyword lore now sits after the rules) [1.99.8].
-- [ ] Instead of OpenRouter's Activity page: install Eldrasil Black Box 0.1.0 (Extensions → Install extension,
-      `https://github.com/pizzatuna65-jpg/Eldrasil-BlackBox`), play the 5 replies, open wand → Black Box: every reply row has Input,
-      Cached and Cost; note the Hit column from the second reply on. If it stays near 0%, tell the assistant: the cause may be the
-      system-role entries at depth 0–1 (the Semi-strict test needs your approval, DECISIONS §11) [Black Box 0.1.0].
+- [ ] Instead of OpenRouter's Activity page: with Eldrasil Black Box installed (SQ-BB), play the 5 replies, open wand → Black Box:
+      every reply row has Input, Cached and Cost; note the Hit column from the second reply on. If it stays near 0%, tell the
+      assistant: the cause may be the system-role entries at depth 0–1 (the Semi-strict test needs your approval, DECISIONS §11)
+      [Black Box 1.0.0].
+
+### SQ-BB The playtest recorder [Black Box 1.0.0]
+*Do:* Extensions → Install extension → `https://github.com/pizzatuna65-jpg/Eldrasil-BlackBox` (from its main branch once merged),
+reload, then play a few replies as usual.
+- [ ] Wand → Black Box lists every reply with its message number; MVU's update request (extra-model mode) or Summaryception shows as
+      a background row, not as a reply [Black Box 1.0.0].
+- [ ] Click a reply → Prompt: `<now>`, `<cast>` and `<current_state>` are coloured as card entries, the keyword lore of the place
+      green, VectFox's or Summaryception's block purple, the chat history blue; Find "<now>" opens the message that has it
+      [Black Box 1.0.0].
+- [ ] Tokens: the parts add up to the reply's Input; Lore lists the entries SillyTavern used (the World Index constant)
+      [Black Box 1.0.0].
+- [ ] Engine fills a second or two after the reply: the floor is the reply's number; after a reply where the bracelet showed a
+      reminder, its line is there [Black Box 1.0.0].
+- [ ] The header shows the chat file size and the last save time [Black Box 1.0.0].
+- [ ] Export playtest bundle (last 25 replies), then send it to the assistant (or run `python tools/audit_chat.py <file> --blackbox
+      --no-drift`): the report lists the same replies [Black Box 1.0.0].
+- [ ] Nothing else changed: the bracelet, the panels, swipes and other extensions work as before; Recording off in Extensions →
+      Eldrasil Black Box stops new rows [Black Box 1.0.0].
 
 ### SQ-SC Summaryception instead of VectFox [1.99.1]
 *Do:* in a copy of the chat (a branch), turn VectFox off and set up Summaryception 5.5.4 as `docs/ECOSYSTEM.md` → Summaryception says
