@@ -404,6 +404,9 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
 - [ ] From 07:00 the Notice Board has the Academy Newspaper (front page: a rumour that is all over campus, or a result; the week ahead;
       a ghost corner); `<now>` Monday to Wednesday says what it leads with, and NPCs may bring it up. A rumour it printed shows "(in the
       Newspaper)" in the Journal's gossip and lasts three days longer [1.90].
+- [ ] The same issue has a "Campus life" row: up to three people {{user}} knows with a public Own time line from last week ("Etnie put in
+      an extra hour of practice at ..."; never a letter, marks or a bad night), and maybe an "Overheard" rumour that does not get the
+      "(in the Newspaper)" tag; nothing in `<now>` about it [2.4.0].
 - [ ] W2 Thu, Castor's birthday, with Castor present: his Cast Sheet's Mood line ends "Birthday (glad): warmer to anyone who remembers
       it.", and the narrator plays it in his quiet way; on the scene card the "glad · birthday" chip shows only once his dossier has
       opened his birthday [1.72].

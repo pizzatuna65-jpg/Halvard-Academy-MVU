@@ -431,6 +431,7 @@ for _x in _OWN['items']:
     assert set(_x.get('at') or []) <= _rtk and (not _x.get('at') or 'place' in _x['needs']), f'offscreen {_x["id"]}: at (routine place keys)'
     assert all(n in npcs for n in _x.get('not') or []), f'offscreen {_x["id"]}: not'
     assert not _names.search(_x['text']) and '{{user}}' not in _x['text'] and len(_x['text'].split()) <= 16, f'offscreen {_x["id"]}: no names, no {{{{user}}}}, short'
+assert set(_OWN['paper']['items']) <= {x['id'] for x in _OWN['items']} and _OWN['paper']['max'] >= 1, 'offscreen.json: paper items'
 t = t.replace('/*@@OFFSCREEN@@*/{}', json.dumps({k: v for k, v in _OWN.items() if k != '_note'}, ensure_ascii=False, separators=(',', ':')))
 assert all(x in npcs for x in MENTION_DENY)
 t = t.replace('/*@@MENTION_DENY@@*/[]', json.dumps(MENTION_DENY))

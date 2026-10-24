@@ -5171,6 +5171,19 @@ function stepOffscreen(c) {
   }
 }
 
+// 2.4.0 (roadmap M3): the Own time lines of the week before Monday `mon` that the Academy Newspaper's "Campus life" column prints:
+// the item is in OWN.paper.items (public, nothing private like letters or marks) and its line is still in $Recent; OWN.paper.max at most
+function ownPaper(S, seed, mon) {
+  const E = S.$eng.own || {}, G = E.g || {}, H = E.h || {}, PA = OWN.paper || {}, out = [];
+  for (const id of Object.keys(S.Bonds || {}).sort()) {
+    const g = G[id], it = (H[id] || []).slice(-1)[0], b = S.Bonds[id];
+    if (!(g >= mon - 7 && g < mon) || !(PA.items || []).includes(it) || !b) continue;
+    const r = [...(b.$Recent || [])].reverse().find(x => x && String(x.n || '').startsWith(OWN_TAG));
+    if (r) out.push([roll100(seed, mon, 'cw-life', id), `${id} ${String(r.n).slice(OWN_TAG.length)}`]);
+  }
+  return out.sort((a, b) => a[0] - b[0]).slice(0, num(PA.max, 3)).map(x => x[1]);
+}
+
 // 1.45.0 (audit 3.9): one practice session, several tracks (proficiency and craft actions, mana, stamina, study). One fitness check
 // for a mana or stamina session (Practice actions that train, /Practice Track, the old /Training) and one partner rule for every
 // track data/rank4_partners.json lists (mana, stamina, study): a Rank 4+ bonded NPC with Trust 35+ and Tension under 70, in the
@@ -6779,8 +6792,12 @@ function stepClubWork(c) {
     for (let d = mon; d < mon + 7; d++) for (const e of eventsOn(fromAbs(d * DAY_MIN))) { const n = e.t.split(' (')[0]; if (!soon.includes(n)) soon.push(n); }
     const G = CN.ghost || [];
     P.wk = mon;
+    // 2.4.0 (roadmap M3, stage 1): the "Campus life" column: last week's newsworthy Own time lines (OWN.paper) and one more rumour
+    // that reached campus, "Overheard" (not printed news: it lives no longer, stepGossip's keep stays the front page's alone)
+    const over = aged.filter(x => x[0] !== head && x[1] <= 7).map(x => x[0]).sort();
     P.issue = { on: `Y${monW.Year} M${monW.Month} W${monW.Week}`, head, res: (P.log || []).filter(r => r[0] >= mon - 7 && r[0] < mon).map(r => r[1]),
-      soon: soon.slice(0, 6), ghost: G.length ? G[Math.floor(mon / 7) % G.length] : '' };
+      soon: soon.slice(0, 6), ghost: G.length ? G[Math.floor(mon / 7) % G.length] : '', life: OFF.has('offscreen') ? [] : ownPaper(S, seed, mon),
+      over: over.length ? pickOf(over, seed, mon, 'cw-over') : '' };
   }
   const paper = P.issue && dayNo - num(P.wk, -99) < 7 ? P.issue : null;
   const here = placeKey(W.Location), season = SEASON_OF(W.Month), now = [];

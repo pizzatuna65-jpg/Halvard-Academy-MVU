@@ -107,7 +107,7 @@ above each step keeps its old section number (other code and docs still say "sec
 | `stepNewYear` (8e) | new campaign year, cohorts | `data/cohorts.json` |
 | `stepGraduation` / `stepGraduateRewards` (8d, 8d2) | third-years leave; their rewards end | |
 | `stepInitiative` (8e) | optional NPC-initiated contact; 1.49.0 some days a favour (`$ui.initiative.favour`, `FAVOURS`) | `data/initiative_asks.json` (`favours`) → 505 |
-| `stepClubWork` (8f) | 1.90.0: club work for the campus: the Academy Newspaper's issue (`$eng.paper`, results from `cwNews`), the club stalls open here, `<now>` lines (`$ui.cw`); the stall test `stallOpen`/`cwCond`, the snow on walks `snowSlow` (in `stepCampus`) | `data/club_work.json`, `data/shop.json` rows with `club` |
+| `stepClubWork` (8f) | 1.90.0: club work for the campus: the Academy Newspaper's issue (`$eng.paper`, results from `cwNews`; 2.4.0 "Campus life" `life` from `ownPaper` (6c2) and `over`), the club stalls open here, `<now>` lines (`$ui.cw`); the stall test `stallOpen`/`cwCond`, the snow on walks `snowSlow` (in `stepCampus`) | `data/club_work.json`, `data/shop.json` rows with `club` |
 | `cwClient` (1.92.0, in `stepClubWork`) | the weekly club client: the draw (`rollTable`), the ask, `<now>` at the club, the Journal line | `data/club_work.json` `client` |
 | club services (1.91.0) | `stepPurchases` (`cwSvcWhy`, `cwSvcDo`, member half price), orders and the loan in `stepClubWork`, `stepAgenda` (`order` items), `cwGuest` in the practice lock, the loaned book in the study minutes, `Archive records +5` in `stepFortune` | `data/shop.json` rows with `svc`, `days` |
 | `stepHooks` / `stepGossip` (8f, 8g) | story hooks; rumours | |
