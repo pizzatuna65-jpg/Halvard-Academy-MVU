@@ -4,15 +4,85 @@ Satu-satunya daftar pekerjaan yang **belum** dikerjakan. Aturan: begitu sesuatu 
 `CHANGELOG.md` dan git). Canon/desain baru: draft dulu di `planning/DRAFT_<topik>.md`, terapkan setelah owner bilang "proceed", lalu
 hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/TEST_CHECKLIST.md`, bukan di sini.
 
-## 0. Jalan ke 2.0 (owner, 2026-10-22)
+## 0. Rilis berikutnya (owner, 2026-10-24)
 
-Tahap terakhir sebelum 2.0, berurutan (1.98 selesai di 1.98.1–1.98.3; 1.99 = Summaryception, selesai di 1.99.1). Hapus barisnya begitu
-tahap itu selesai.
+Versi saat ini 2.0.0 (batch 8 bug hunt); rilis berikutnya langsung 2.1.0 (owner, 2026-10-24). Nomor di §0.1 berlaku bila roadmap itu rilis lebih dulu; pekerjaan lain yang rilis lebih dulu mengambil nomor berikutnya dan
+roadmap bergeser satu.
 
-| Rilis | Isi | Catatan |
+| Pekerjaan | Isi | Catatan |
 |---|---|---|
-| **Bug hunt** | Full audit bug hunt, stress test, dan perbaikannya | Sesudah 1.99 (owner 2026-10-23: 1.99 jadi kompatibilitas Summaryception, selesai di 1.99.1). Full suite, stress test, audit lintas sistem; hasilnya `audit/AUDIT_2026-10-23_2_audit_menyeluruh.md` §8 (8 batch): batch 1–6 dan batch 7 tahap 1 selesai (1.99.2–1.99.8), batch 8 selesai di 2.0.0 bersama audit singkat §11. Sisa: batch 7 tahap 2 (lore kata kunci ke kedalaman chat, rangkuman tanpa angka, pangkas per blok), menunggu angka cached tokens OpenRouter sesudah 1.99.8 (SQ-CACHE) dan uji A/B `tools/audit_chat.py`. |
-| **2.0.N** | Full polish fitur dan UI | Tanpa fitur baru. Nomor 2.0.0 dipakai owner untuk batch 8 bug hunt (2026-10-24); polish menyusul sebagai 2.0.N. |
+| **Sisa bug hunt** | `audit/AUDIT_2026-10-23_2_audit_menyeluruh.md` §8 | Batch 1–6 dan batch 7 tahap 1 selesai (1.99.2–1.99.8), batch 8 selesai di 2.0.0 bersama audit singkat §11. Sisa: batch 7 tahap 2 (lore kata kunci ke kedalaman chat, rangkuman tanpa angka, pangkas per blok), menunggu angka cached tokens OpenRouter sesudah 1.99.8 (SQ-CACHE) dan uji A/B `tools/audit_chat.py`. |
+
+### 0.1 Dunia bergerak (owner, 2026-10-24)
+
+Tujuan: dunia tetap bergerak walau {{user}} tidak ada di adegan. Prinsipnya **engine menghitung, narator hanya menulis prosa**: roll
+seeded (`sh:roll100`, `pickOf`, `rollTable`), tidak ada kejadian yang dikarang LLM. Owner memilih R1, R3, M1–M4, B1 (sebagai
+Routine 2.0) dan B3; R2 (Meanwhile lebih longgar), R4 (setel toggle lama), B1 versi simulasi agen, B2 (alur pribadi NPC) dan B4
+(panggilan model kedua) tidak dipilih. Urutan rilis di bawah mengikuti ketergantungan. Hapus barisnya begitu rilisnya selesai.
+
+| Rilis | Isi | Butuh | Catatan |
+|---|---|---|---|
+| **2.1.0** | **R1** Feed "Campus now" | kode saja | Kemenangan cepat; Routine 2.0 nanti memperbaikinya otomatis. |
+| **2.1.1** | **R3** Isi `data/campus_phases.json` | draft canon | Engine sudah mencetaknya sejak 1.6.1; datanya kosong. Fase jadi konteks B3. |
+| **2.2.N** | **B1** Routine 2.0 | draft data per kelompok | 2.2.0 = format + engine + kelompok pertama; 2.2.1 dst. = kelompok berikutnya; terakhir baris "perkembangan". Full suite (fitur besar). |
+| **2.3.0** | **M1** kejadian off-screen + **M2** feed memuatnya | draft tabel kejadian | Sesudah B1: kejadian diambil dari baris routine yang benar-benar dijalani NPC. |
+| **2.4.0** | **M3** rubrik koran + **M4** akibat yang sampai ke {{user}} | kode | Butuh kejadian M1. M3 sekaligus menyiapkan rubrik yang dipakai B3. |
+| **2.5.N** | **B3** Politik kampus | draft langkah faksi | 2.5.0 = lite (Doves + Council); 2.5.1 = asrama, Liaison, Cathedral, Choir (tersembunyi). Full suite. |
+
+**R1. Feed "Campus now" (2.1.0).** Daftar "nama : kegiatan - lokasi" dari `sh:whereabouts` (yang sudah dipakai engine, kartu Map
+`p20:locCard` dan Look for, jadi selalu cocok dengan Who is here): `busy` (kelas, klub, mengajar, Study Hall), `rt` (tempat + alasan),
+NPC_status, sakit, pulang libur; tanpa routine di jam itu: "around <haunt>". 3 nama di lipatan bracelet, semua di People panel; dipilih
+`pickOf` seeded berbobot rank bond (sama di setiap swipe). Hanya NPC yang sudah dikenal (ada bond atau sudah bertemu), supaya NPC yang
+belum ditemui tidak bocor. Hanya UI: 0 token prompt, narator tidak menerimanya. Toggle Features baru.
+
+**R3. Fase kampus (2.1.1).** Isi `phases` (`id`, `from`, `to`, `line`) di `data/campus_phases.json`: apa yang menyibukkan kampus dan
+orang pentingnya dalam rentang tahun ini (minggu ujian, persiapan festival, Thinning, pemilu). Engine (`stepCampusEvents`) sudah
+menaruh baris fase aktif di `<now>` (±30 token selama aktif). Canon baru: draft dulu.
+
+**B1. Routine 2.0 (2.2.N).** Pengembangan `data/npc_routines.json`, bukan simulasi agen: engine hanya memilih di antara baris yang
+ditulis dari lore dan disetujui owner, jadi tidak bisa keluar karakter.
+- Hari penuh per NPC: pagi sebelum kelas, siang, sepulang kelas, malam sebelum jam malam, akhir pekan (sekarang 60 NPC, 120 baris).
+  Urutan prioritas lama tetap: status, sakit, kelas, mengajar, Study Hall, klub, pemilu di atas routine; haunts tetap cadangan.
+- Pilihan berbobot per blok lewat `rollTable` (baris utama 70 = angka keputusan lama; sisa 30% kini punya isi, bukan "tidak di mana-mana").
+- Syarat dari data yang ada: cuaca (`wx`: ke mana NPC pindah saat cuaca mengusirnya dari tempat terbuka, `shared.js` presenceAt/lookFor),
+  mood (`mg:moodOf`), minggu ujian dan `clock` (`npc_moods.json`), hari acara (`ev`), dan baris bersama dua NPC dari `REL_PAIRS`
+  (pair moment benar-benar di tempat yang sama).
+- Perkembangan: baris dengan rentang bulan/tahun kampanye atau syarat `setelah` (event, Secrets_revealed, Lore change).
+- Tanpa state baru dan tanpa migrasi: semua roll seeded per hari, jadi "apa yang dilakukan X minggu lalu" dihitung ulang, tidak disimpan.
+  Meanwhile bisa memakai hitungan itu ("empat sore di Library minggu ini").
+- Kerja: perubahan kecil di `whereabouts` + validator di `tools/common.py` `presence_data`; fixture `tests/fixtures/presence_*` dan
+  odds Look for (`sh:lookFor`) disesuaikan. Konten ±500–700 baris: putaran pertama dibuat otomatis dari venue klub, haunts, `clock`,
+  `loves`/`hates` cuaca, asrama dan lantai tahun; owner meninjau per kelompok seperti ronde drafting NPC.
+- Menyentuh DECISIONS "NPC routines" (1.52.0: "kebiasaan mingguan ringan", roll 70%): owner sudah memilih Routine 2.0 (2026-10-24);
+  angka 70 tetap, "ringan" berubah jadi hari penuh. Perbarui baris DECISIONS itu di rilis 2.2.0.
+
+**M1 + M2. Kejadian off-screen (2.3.0).** Tiap hari 3–5 NPC di-roll; satu kejadian kecil dari tabel `data/offscreen.json` (latihan,
+hasil klub, cekcok dengan rival dari `REL_PAIRS`, surat dari rumah, nilai ujian, beli sesuatu), disaring oleh data NPC (klub, haunts,
+`loves`/`hates`) dan oleh baris routine yang dia jalani hari itu (B1). Masuk ke `$Recent` NPC sebagai "(Off-screen) …" (jalur yang
+sudah dipakai rencana `Next` yang lewat, `stepBondMemory`), jadi tampil di Cast Sheet saat NPC itu kembali ke adegan (±15 token per
+baris, hanya saat hadir). Tidak mengubah bond, Trust, Tension atau reputasi {{user}}; kabar ke teman lewat "Word gets around" yang
+sudah ada. M2: feed R1 menampilkan kejadian itu ("Caspian : rapat panitia - Council Chamber (kemarin bertengkar dengan Irene)").
+Teks tabel = konten karangan: draft dulu.
+
+**M3 + M4. Akibat kejadian (2.4.0).** M3: rubrik "Around campus" di koran Senin (`cwNews`, `p30:paperCard`) dari kejadian M1 dan
+gosip minggu itu; Notice Board/UI saja. M4: kejadian M1 jadi pintu masuk: alasan NPC initiative (`stepInitiative`, `INIT_ASKS`) boleh
+diambil dari kejadiannya ("ingin cerita soal duel kemarin"); NPC yang cedera di happening (misalnya duel chalk) muncul di Healing Ward
+(`restore_places.json` `medical_centre`); 0 token tambahan karena memakai jalur lama.
+
+**B3. Politik kampus (2.5.N).** Faksi dari `data/factions.json` bergerak sekali seminggu (Minggu malam, titik `stepSchoolWeek`;
+routine week dan lompatan waktu tetap dihitung per minggu): tiap faksi memilih satu langkah dari `data/politics.json` dengan
+`rollTable`, berbobot keadaan (kalender, fase R3, gosip `stepGossip`, insiden, Dove watch, reputasi {{user}}).
+- Ukuran baru di `Campus_State` (perlu migrasi `stepMigrate`): Council = dukungan murid + agenda aktif; Doves = kewaspadaan 0–5;
+  tiap asrama = semangat 0–100 (hanya warna: Dorm Ranking canon tetap dari nilai, lore 237); Liaison (Caine) = pengaruh.
+- Dampak lewat sistem lama, tiap dampak wajib punya pengumuman yang bisa dibaca: Notice Board (`p30:officialNotices`), koran Senin
+  (rubrik M3), bobot happenings (Dove sweep), penegakan jam malam (`curfewOf`), harga stall klub, mood asrama (`mg:moodOf`), pair
+  moments rival asrama. `<now>` hanya satu baris (±20–40 token) saat langkah faksi menyentuh tempat atau hari itu.
+- {{user}} ikut bermain: petisi Council (1.98.3) jadi usulan aturan, suara pemilu mewarnai agenda pemenang (hasil pemilu tetap dari
+  mekanisme 1.86.0), dekat dengan Doves bisa meredam atau memanaskan razia. Reputasi faksi tinggi ada harganya (prinsip desain).
+- Langkah Council disaring sesuai siapa yang menjabat (NPC bertindak sesuai karakter). The Morning Choir tidak pernah tampil sebagai
+  faksi: langkahnya hanya muncul sebagai kejadian aneh dan trace beat sampai rahasianya ada di `Secrets_revealed`.
+- 2.5.0 lite: Doves + Council, dampak hanya lewat Notice Board, koran dan bobot happenings. 2.5.1: asrama, Liaison, Cathedral, Choir,
+  harga, jam malam dan mood.
 
 ## 1. Rencana owner (dicatat, belum dijadwalkan)
 

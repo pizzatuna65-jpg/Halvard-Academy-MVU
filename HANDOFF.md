@@ -12,7 +12,8 @@ tokens, 84 under `test_preset`'s budget. Memory: VectFox (option 1) or Summaryce
 campaign quest log `docs/TEST_CHECKLIST.md` (first Act 0: update the card and the preset, Q0.1; Summaryception: SQ-SC; the cache:
 SQ-CACHE; who is here, Look for and the 2.0.0 checks: Act 1 Q1.1; Betrayed: MS2).
 
-**Next task:** the road to 2.0's polish stage as 2.0.N (`planning/FUTURE_PLANS.md` §0: features and UI, no new features). Batch 7
+**Next task:** the next release is 2.1.0 (owner, 2026-10-24): the "world in motion" roadmap in `planning/FUTURE_PLANS.md` §0.1,
+first R1 (the Campus now feed), then campus phases, Routine 2.0, off-screen events and campus politics. Batch 7
 stage 2 (keyword lore at a depth in the chat, a summary line without a counter, history trimmed by blocks) waits for the owner's
 OpenRouter numbers after 1.99.8 (SQ-CACHE) and an A/B test with `tools/audit_chat.py`. The other long engine steps (FUTURE_PLANS §3
 "K1 sisa") are split when next touched. The World Competition's Year 2 host (Caelmar: Area, map, liner) waits in FUTURE_PLANS §1
