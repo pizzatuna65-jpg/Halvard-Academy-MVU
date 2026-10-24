@@ -279,8 +279,10 @@ def presence_data(npcs, locs):
         for day in (W if nid in new else []):
             for b in range(len(blocks) - 1):
                 for wx in ('fair', 'bad', 'fog'):
-                    tot = sum(r[8] for r in rows if day in r[0] and blk_of(r[1]) == b and r[9].get('wx', wx if wx != 'fog' else 'fair') in ((wx, 'fair') if wx == 'fog' else (wx,)))
-                    assert tot <= 90, f'routine of {nid}: {day} block {b} ({wx}) leaves less than 10 free ({tot})'
+                    act = [r for r in rows if day in r[0] and blk_of(r[1]) == b and r[9].get('wx', wx if wx != 'fog' else 'fair') in ((wx, 'fair') if wx == 'fog' else (wx,))]
+                    for t in {r[1] for r in act}:   # 2.2.2: rows that are active at the same minute (one after another in a block do not add up)
+                        tot = sum(r[8] for r in act if r[1] <= t < r[2])
+                        assert tot <= 90, f'routine of {nid}: {day} block {b} ({wx}) leaves less than 10 free ({tot})'
     return {'reg': reg, 'stu': stu, 'arr': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1}, 'teach': teach, 'tt': tt, 'clubv': clubv,
             'outd': sorted({norm(k) for lid in out_ids for k in place_keys(locs[lid], lid)}), 'vn': {norm(l['name']): l['name'] for l in locs.values()},
             'rt': rt, 'rate': R['rate'], 'ct': contest_data(stu, tr), 'tr': tr,
