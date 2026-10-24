@@ -10,7 +10,7 @@ Dicatat: 2026-10-24. Owner: "setiap selesai proceed langsung sekalian buat tabel
 Year 2: Dante, Florian, Idris, Kanae, Lenna, Saffi, Tilly. Year 3: Caspian, Etnie, Gareth, Irene, Royhan, Ruby, Sophia.
 
 - **Sumber:** Haunts, Club, `clock`, cuaca yang disukai/dibenci, relasi, dan baris lama (semua tetap ada sebagai baris utama).
-- **114 baris, dicek dengan skrip:**
+- **118 baris, dicek dengan skrip:**
   - semua tempat ada;
   - tidak ada yang melewati blok;
   - free minimal 10 di setiap hari, blok dan cuaca;
@@ -110,13 +110,17 @@ Year 2: Dante, Florian, Idris, Kanae, Lenna, Saffi, Tilly. Year 3: Caspian, Etni
 |---|---|---|---|---|---|---|
 | Mon-Fri | 12:00–13:00 | Canteen | — | habit | 40 |  |
 | Mon-Fri | 12:00–13:00 | Archive | — | habit | 30 |  |
-| Mon-Fri | 16:00–18:00 | Archive | — | habit | 55 |  |
-| Mon-Fri | 16:00–18:00 | Broken Statue | her current favourite mystery | habit | 25 |  |
+| Mon-Fri | 16:00–18:00 | Archive | checking a ghost story against the records for Halvard Unexplained | habit | 60 |  |
+| Mon-Fri | 16:00–18:00 | Medical Centre | swapping ghost stories with Nurse Hester | habit | 15 |  |
+| Mon-Fri | 16:00–18:00 | Broken Statue | her current favourite mystery | habit | 10 |  |
 | Mon-Fri | 18:30–19:30 | Forest | the Forest edge at dusk | habit | 55 |  |
-| Mon-Fri | 18:30–19:30 | Broken Statue | her current favourite mystery | habit | 20 |  |
-| Sat | 16:00–18:00 | Broken Statue | — | habit | 40 |  |
-| Sun | 13:00–16:00 | Archive | — | habit | 40 |  |
-| Sun | 13:00–16:00 | Broken Statue | — | habit | 30 |  |
+| Mon-Fri | 18:30–19:30 | Lecture Halls | the Long Corridor after dark, before curfew | habit | 25 |  |
+| Sat | 16:00–18:00 | Archive | — | habit | 40 |  |
+| Sat | 16:00–18:00 | Broken Statue | — | habit | 15 |  |
+| Sat | 23:00–24:00 | Notice Board / Lecture Halls / Bathhouse and Washrooms / Founder's Statue and Park | a midnight ghost hunt for Halvard Unexplained | errand | 60 |  |
+| Sun | 00:00–01:00 | Lecture Halls / Bathhouse and Washrooms / Founder's Statue and Park | a midnight ghost hunt for Halvard Unexplained | errand | 60 |  |
+| Sun | 13:00–16:00 | Archive | writing up last night's ghost hunt | habit | 45 |  |
+| Sun | 13:00–16:00 | Broken Statue | — | habit | 15 |  |
 
 **Caspian**
 
@@ -210,6 +214,18 @@ Year 2: Dante, Florian, Idris, Kanae, Lenna, Saffi, Tilly. Year 3: Caspian, Etni
 | Sun | 13:00–16:00 | Sports Field | — | habit | 30 |  |
 
 **Catatan isi:**
+- **Tilly** (owner, 2026-10-24: "jangan terlalu berfokus pada Broken Statue, tambah ghost hunt tengah malam malam Minggu"):
+  - Broken Statue tinggal baris kecil (10–15);
+  - sepulang kelas ia memeriksa cerita hantu di Archive untuk jurnalnya "Halvard Unexplained", atau bertukar cerita dengan Nurse Hester
+    (lore: "whenever she lands on the ward, which is often");
+  - sebelum jam malam, Long Corridor (lore: haunt-nya, di koridor utama kastil, dicatat sebagai Lecture Halls);
+  - **Sabtu 23:00 sampai Minggu 01:00: ghost hunt tengah malam** sebagai errand di tempat-tempat cerita hantu: Lecture Halls (Night
+    Student, Long Corridor), Bathhouse and Washrooms (Third Stall), Founder's Statue and Park (Founder's Hand), dan Notice Board di dekat
+    plakat pendirian, titik kumpul ghost hunt-nya di Q1.4;
+  - Minggu siang ia menulis laporan ghost hunt semalam di Archive.
+
+  Ghost hunt ini terjadi sesudah jam malam, jadi melanggar aturan, sama seperti rute Bell Tower Aiden. Kalau {{user}} ikut, aturan jam
+  malam yang biasa berlaku (ketahuan atau tidak).
 - **Saffi** "bored senseless by Cathedral sermons" (lore), jadi Minggu pagi ada di Cathedral. Caspian juga ada di sana (baris lama).
 - **Etnie:** lore-nya menyebut melacak {{user}} lewat bau di Gardens. Baris di sini hanya "Gardens" tanpa bau (aturan preset).
 - **Dante:** Groundskeeping pagi dan sore sebagai errand (beberapa tempat); di tepi Forest saat senja sebagai duty (baris lama).
