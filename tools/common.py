@@ -292,7 +292,10 @@ def presence_data(npcs, locs):
             # (data/relations.json: rel[target][other] = the kind of tie, the other's own view first), for the hint when X is not found
             'nf': {k: fs for k, fs in sorted(name_forms(npcs).items()) if not nobond(npcs[k])}, 'rel': look_ties(npcs),
             # 2.1.0 (Campus now): the Bond Rank at which each NPC's Haunts field opens (no Haunts field: 1, as the dossier's Routine row)
-            'hr': {k: haunts_rank(v) for k, v in sorted(npcs.items()) if not nobond(v)}}
+            'hr': {k: haunts_rank(v) for k, v in sorted(npcs.items()) if not nobond(v)},
+            # 2.2.1 (Routine 2.0, on the way): the Campus Map's walking legs by place key [a, b, minutes] (as campus_map), for the walk
+            # between two routine places (shared.js walkPath)
+            'walk': [[norm(locs[a]['name']), norm(locs[b]['name']), w] for a, b, w in sorted({tuple(sorted((a, b))) + (w,) for a, l in locs.items() for b, w in l.get('near') or [] if b in locs})]}
 
 
 def haunts_rank(n):

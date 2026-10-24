@@ -6,7 +6,7 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
 
 ## 0. Rilis berikutnya (owner, 2026-10-24)
 
-Versi saat ini 2.2.0 (Routine 2.0: format, dua lapis, Year 1; 2026-10-24); rilis berikutnya 2.2.1 (Routine 2.0 Year 2 dan Year 3). Nomor di §0.1 berlaku bila roadmap itu rilis lebih dulu; pekerjaan lain yang rilis lebih dulu mengambil nomor berikutnya dan
+Versi saat ini 2.2.1 (Routine 2.0: Year 2, Year 3, pelintas; 2026-10-24); rilis berikutnya 2.2.2 (Routine 2.0 staf). Nomor di §0.1 berlaku bila roadmap itu rilis lebih dulu; pekerjaan lain yang rilis lebih dulu mengambil nomor berikutnya dan
 roadmap bergeser satu.
 
 | Pekerjaan | Isi | Catatan |
@@ -22,18 +22,15 @@ Routine 2.0) dan B3; R2 (Meanwhile lebih longgar), R4 (setel toggle lama), B1 ve
 
 | Rilis | Isi | Butuh | Catatan |
 |---|---|---|---|
-| **2.2.1–2.2.4** | **B1** Routine 2.0, sisa | draft data per kelompok | 2.2.0 (format, engine dua lapis, Year 1 angkatan pertama) selesai. 2.2.1 Year 2 + Year 3 + pelintas di perjalanan; 2.2.2 staf dan lainnya; 2.2.3 angkatan yang datang belakangan; 2.2.4 baris perkembangan + **semua tes** (owner: tes ditunda ke 2.2.4). |
+| **2.2.2–2.2.4** | **B1** Routine 2.0, sisa | draft data per kelompok | 2.2.0 (format, dua lapis, Year 1) dan 2.2.1 (Year 2, Year 3, pelintas di perjalanan) selesai. 2.2.2 staf dan lainnya; 2.2.3 angkatan yang datang belakangan; 2.2.4 baris perkembangan + **semua tes** (owner: tes ditunda ke 2.2.4). |
 | **2.3.0** | **M1** kejadian off-screen + **M2** feed memuatnya | draft tabel kejadian | Sesudah B1: kejadian diambil dari baris routine yang benar-benar dijalani NPC. |
 | **2.4.0** | **M3** rubrik koran + **M4** akibat yang sampai ke {{user}} | kode | Butuh kejadian M1. M3 sekaligus menyiapkan rubrik yang dipakai B3. |
 | **2.5.N** | **B3** Politik kampus | draft langkah faksi | 2.5.0 = lite (Doves + Council); 2.5.1 = asrama, Liaison, Cathedral, Choir (tersembunyi). Full suite. |
 
-**B1. Routine 2.0, sisa (2.2.1–2.2.4).** 2.2.0 menerapkan format, engine dua lapis dan kelompok 1 (owner-approved
+**B1. Routine 2.0, sisa (2.2.2–2.2.4).** 2.2.0 menerapkan format, engine dua lapis dan kelompok 1; 2.2.1 kelompok 2 (Year 2, Year 3) dan pelintas di perjalanan (owner-approved
 `DRAFT_routine2.md`, dihapus di 2.2.0; isinya ada di CHANGELOG 2.2.0, `data/npc_routines.json` `_note` dan DECISIONS "NPC routines" /
 "Who is here is rolled"). Sisa:
-- **2.2.1:** Year 2 (Dante, Florian, Idris, Kanae, Lenna, Saffi, Tilly) dan Year 3 (Caspian, Etnie, Gareth, Irene, Royhan, Ruby, Sophia).
-  Ditambah **pelintas di perjalanan**: ±15 menit pertama blok, dari tempat routine sebelumnya ke yang berikutnya, bila tempat {{user}}
-  ada di jalurnya. Untuk itu `presence_data` perlu jalur peta Campus (`campus_map`).
-- **2.2.2:** staf (19), Doves, Cathedral, Facilities, Liaison.
+- **2.2.2:** staf (19), Doves, Cathedral, Facilities, Liaison. Pair yang menunggu: Royhan dengan Milena (Dragonchess di Dovecote, Rabu). Bisa juga Ruby dengan Caralynn (Music Club).
 - **2.2.3:** angkatan Year 2 dan Year 3 yang datang belakangan (13).
 - **2.2.4:**
   - baris perkembangan dan syarat yang belum ada di 2.2.0: `since` / `after` (bulan/tahun kampanye, event, Secrets_revealed), `ev`
@@ -41,7 +38,8 @@ Routine 2.0) dan B3; R2 (Meanwhile lebih longgar), R4 (setel toggle lama), B1 ve
   - validator: peringatan bila satu tempat dan blok punya lebih banyak orang pasti daripada target keramaiannya.
 - Tiap kelompok: draft tabel dulu (format dan contoh: CHANGELOG 2.2.0), owner meninjau, lalu diterapkan.
 - **Tes, semuanya di 2.2.4 (owner, 2026-10-24: "jangan lakukan test bug apapun, lakukan nanti di akhir di 2.2.4"):**
-  - suite baru `test_routine2`: tarikan per blok, bobot dan free, `wx`, `pair`, baris lama, lapis pertemuan, Look for, Campus now;
+  - suite baru `test_routine2`: tarikan per blok, bobot dan free, `wx`, `pair`, baris lama, lapis pertemuan, Look for, Campus now,
+    pelintas di perjalanan (2.2.1: sekitar 1 dari 12 balasan di awal blok sepulang kelas, cek kasar);
   - persen kunjungan kosong per keramaian 0–4 sebelum dan sesudah (target keramaian 0 ≈ 80% kosong);
   - momen uncanny `alone`;
   - suite lama yang hampir pasti perlu diperbarui karena routine tidak lagi pasti dan rollnya per blok: `test_presence_roll_v19911`,
@@ -212,7 +210,7 @@ Sisa saran audit fitur 2026-10-03 (4.5–4.10 sudah dibuat di 1.49–1.52; 4.16 
 - Fase kampus dan tren (2.1.1, `data/campus_phases.json`): peluang tren per minggu 60 (`trend_rate`), jeda sebelum tren yang sama
   kembali 8 minggu (`trend_gap`); isi fase dan tren (owner bisa menambah tren baru kapan saja, validator `gen_engine.py` menjaganya).
 - Routine 2.0 (2.2.0, `data/npc_routines.json` `here`): peluang bertemu `meet` duty 85 / habit 65 / errand 30; Look for routine
-  `look.routine` +25 maks 90; bobot baris utama 70 dan free minimal 10.
+  `look.routine` +25 maks 90; bobot baris utama 70 dan free minimal 10; pelintas di perjalanan `transit` 15 menit, 20% (2.2.1).
 - Campus now (2.1.0, `data/npc_routines.json` `here.feed`): lokasi terlihat dari Rank 3 (`rank`, sama dengan `NEXT_RANK`), 3 nama di lipatan
   bracelet (`max`).
 - Siapa yang ada (1.99.11, `data/npc_routines.json` `here`): target regular per keramaian 0,15 / 0,5 / 0,9 / 1,4 / 2,0, cap 60%, orang

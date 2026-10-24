@@ -3,15 +3,15 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v2.2.0** (2026-10-24): Routine 2.0, first release: weighted full-day routine rows, the routine says where and a
-meeting roll says whether {{user}} runs into them (shared.js `rtPick`, `presenceAt`, `lookFor`); the Year 1 first cohort's rows. **No
+**Snapshot:** card **v2.2.1** (2026-10-24): Routine 2.0 for Year 1, Year 2 and Year 3 (2.2.0: weighted full-day rows, the routine says
+where and a meeting roll says whether {{user}} runs into them; 2.2.1: groups 2 and people on their way between routine places). **No
 tests have been run since 2.2.0 (owner: every test waits for 2.2.4).** Before it: 2.1.2 casual magic, 2.1.1 campus phases and fads,
 2.1.0 Campus now. The enabled preset is 18,516 tokens, 84 under `test_preset`'s budget. Memory: VectFox (option 1) or Summaryception
-5.5.4 (option 2), one per chat. Live checks: the campaign quest log `docs/TEST_CHECKLIST.md` (Act 0 Q0.1 first; Q1.1, Q2.1, Q2.5, Q2.7,
+5.5.4 (option 2), one per chat. Live checks: the campaign quest log `docs/TEST_CHECKLIST.md` (Act 0 Q0.1 first; Q1.1, Q2.1, Q2.5, Q2.7 (2.2.1 too),
 Q3.1, Q3.6 carry the 2.1.x and 2.2.0 checks).
 
-**Next task:** 2.2.1 = Routine 2.0 for Year 2 and Year 3 plus passers-by on their way (FUTURE_PLANS §0.1 B1): a draft table for the
-owner first, then 2.2.2 staff, 2.2.3 later cohorts, 2.2.4 development rows **and all the tests** (the list of suites to update is in
+**Next task:** 2.2.2 = Routine 2.0 for the staff and the others (FUTURE_PLANS §0.1 B1): its draft table `planning/DRAFT_routine2_kelompok3.md`
+awaits the owner's review; then 2.2.3 later cohorts, 2.2.4 development rows **and all the tests** (the list of suites to update is in
 FUTURE_PLANS B1). Then off-screen events (2.3.0), the newspaper rubric and consequences (2.4.0), campus politics (2.5.N). Batch 7 stage
 2 of the bug hunt waits for the owner's OpenRouter numbers (SQ-CACHE). The Black Box rules for the [2.1.0]–[2.2.0] checks are still to
 add (its own repository). Caelmar (Year 2 host) waits in FUTURE_PLANS §1 [YEAR 2]; MS3 stage 2 and the dialogue audit's U1, U3–U5 wait

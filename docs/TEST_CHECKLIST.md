@@ -275,6 +275,9 @@ show the newcomers their dorm rooms.
       Common Rooms when it rains; on Tuesday and Thursday from 16:00 Zara and Vera are in the Workshop together or not at all; Castor
       turns up chasing a quote in the Canteen, the Courtyards or by the Notice Board. Even where Campus now or the dossier says someone
       is, Look for sometimes misses them (never certain, at most 90%), and a quiet place is often empty [2.2.0].
+- [ ] Just after 16:00 or 18:00, on a busy path (the Courtyards, the corridors), "Here now" sometimes has someone "on the way to" the
+      place of their routine; a few minutes later they are gone. Now and then Florian and Gareth are at the Combat Grounds together
+      after class; Irene is in the Main Library until 19:00 (not always met) [2.2.1].
 Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Crafting (Potion Halls), mixed.
 - [ ] 07:30 the bracelet reads "Morning, before classes" (on Sunday: "Sunday (no classes)"; on a day an event has no classes, such as
       Entrance Day: "Morning, no classes today") [1.30.2].
@@ -364,6 +367,9 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
       morning after that day the change is gone with "… as it was again" [1.77].
 
 ### Q2.7 Saturday and Sunday
+- [ ] Saturday from 23:00 to Sunday 01:00, Tilly may be out on a midnight ghost hunt (the Notice Board by the founding plaque, the
+      Lecture Halls, the washrooms, Founder's Park); joining her is out after curfew, with the usual risk; on Sunday afternoon she is
+      writing it up in the Archive [2.2.1].
 - [ ] From Saturday `<now>` has "Campus phase: The first weeks: first-years still lose their way …", and Inventory → Notice Board shows
       the same line under "On campus"; the narrator lets it colour the scene now and then, never as an order. Settings → Features →
       Campus phases and fads shows about 40 tokens [2.1.1].

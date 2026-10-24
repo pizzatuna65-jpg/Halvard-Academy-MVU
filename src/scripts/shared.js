@@ -223,6 +223,28 @@ function rtPick(PD, V, id) {
   }
   return null;
 }
+// 2.2.1 (Routine 2.0, on the way): in the first PD.here.transit.mins minutes of a block, someone whose routine moved them from place
+// A (the block before) to place B (this one) is walking the Campus Map's shortest way between (PD.walk); the places strictly between
+// are where {{user}} may pass them. onTheWay: [A, the row at B] or null. walkPath: the place keys from a to b (routes cached per a).
+const WALKR = new Map();
+function walkPath(PD, a, b) {
+  if (!WALKR.has(a)) { if (WALKR.size > 80) WALKR.clear(); WALKR.set(a, areaRoutes(areaNb(PD.walk || []), a)); }
+  return areaPath(WALKR.get(a), a, b);
+}
+function onTheWay(PD, V, id) {
+  const T = (PD.here || {}).transit || {};
+  if (V.min == null || V.blk <= 0 || !V.rton) return null;
+  const start = BLOCKS_AT[V.blk - 1];
+  if (V.min - start >= (T.mins == null ? 15 : T.mins)) return null;
+  const now = rtPick(PD, V, id);
+  if (!now || now[10]) return null;
+  // from the last block's routine place; a student coming out of class walks from the classroom (the period's venue, else the Lecture Halls)
+  let from = (r => (r && !r[10] ? r[3] : ''))(rtPick(PD, { ...V, blk: V.blk - 1, min: start - 1 }, id));
+  const per = { 2: 0, 3: 1, 5: 2 }[V.blk - 1], tt = ((PD.tt || {})[V.W.Day] || [])[per];
+  if (!from && (PD.stu || {})[id] && tt && tt[3] === 'class') from = (tt[2] || [])[0] || 'lecture halls';
+  return from && from !== now[3] ? [from, now] : null;
+}
+const passingAt = (PD, V, id, pk) => { const t = onTheWay(PD, V, id); return t && walkPath(PD, t[0], t[1][3]).slice(1, -1).includes(pk) ? t[1] : null; };
 // the weather keeps a routine off an outdoor place unless the row itself was chosen for that weather (wx bad: they stay out in it)
 const rtWxOff = (PD, V, r, pk, id) => !((r[9] || {}).wx === 'bad') && wxOff(PD, V, pk, id);
 const whereFree = w => !w.gone && !w.sick;   // at Halvard and on their feet
@@ -277,6 +299,11 @@ function presenceAt(PD, V, loc, crowd) {
     const own = new Set(REG[place.toLowerCase()] || REG[pk] || []);
     const pass = (PD.roster || []).filter(id => !own.has(id) && !inScene(id) && !hits.includes(id) && (w => whereFree(w) && !w.st && !w.busy && (!w.rt || (w.rt[7] === 'errand' && !rtAt(w.rt, pk))))(wh(id)));   // 2.2.0: free, or out on an errand
     if (pass.length && roll100(...k, 'pass') < (H.pass == null ? 8 : H.pass)) { const p = pickOf(pass, ...k, 'pass-pick'); hits.push(p); tag[p] = 'passing through'; }
+    // 2.2.1: one on their way from one routine place to the next, if this place is on the walk (PD.here.transit.pct each, the first hit)
+    const TP = (H.transit || {}).pct == null ? 20 : H.transit.pct;
+    const way = (PD.roster || []).find(id => !inScene(id) && !hits.includes(id) && (w => whereFree(w) && !w.st && !w.busy && w.rt && !rtAt(w.rt, pk))(wh(id))
+      && passingAt(PD, V, id, pk) && roll100(...k, 'transit', id) < TP);
+    if (way) { hits.push(way); tag[way] = 'on the way to ' + passingAt(PD, V, way, pk)[4]; }
     // 1.99.12 (owner-approved planning/DRAFT_look_for.md): the engine's Look for result for someone {{user}} looked for here holds for
     // the rest of the block (or an hour): found, they are here and shown first; not found, they are not here
     const LK = V.look, lk = LK && LK.pk === pk && LK.dkey === V.dkey && (LK.blk === V.blk || (V.min >= LK.min && V.min - LK.min <= 60)) && !inScene(LK.id) ? LK : null;
@@ -342,7 +369,10 @@ function lookFor(PD, V, id, pk, crowd) {
   // 2.2.0 (Routine 2.0): their routine puts them here: the presence roll's own draw against meet + add (at most cap), so whoever Who is
   // here shows is found, and nobody is found for certain; a routine elsewhere: never
   if (w.rt) {
-    if (!rtAt(w.rt, pk)) return { found: false, how: 'routine', tag: '' };
+    if (!rtAt(w.rt, pk)) {   // 2.2.1: on their way across this place: the presence roll's own draw
+      const to = passingAt(PD, V, id, pk), TP = (H.transit || {}).pct == null ? 20 : H.transit.pct;
+      return to ? { found: roll100(...k, 'transit', id) < TP, how: 'transit', tag: 'on the way to ' + to[4], pct: TP } : { found: false, how: 'routine', tag: '' };
+    }
     const LR = L.routine || {}, m = (H.meet || {})[w.rt[7]] == null ? 65 : H.meet[w.rt[7]], pct = Math.min(LR.cap == null ? 90 : LR.cap, m + (LR.add == null ? 25 : LR.add));
     return { found: roll100(...k, 'meet', id) < pct, how: 'routine', tag: w.rt[5] || 'usually here at this hour', pct };
   }
@@ -381,7 +411,9 @@ function campusFeed(PD, V, S) {
     else if (w.st) what = close ? w.st : 'away';
     else if (w.busy) what = w.busy[0];
     else if (w.rt && close) {
-      if (w.rt[10]) what = w.rt[5] || 'running errands';   // 2.2.0: an errand has no one place
+      const tw = onTheWay(PD, V, id);   // 2.2.1: still walking from the last routine place
+      if (tw) what = 'on the way to ' + tw[1][4];
+      else if (w.rt[10]) what = w.rt[5] || 'running errands';   // 2.2.0: an errand has no one place
       else if (rtWxOff(PD, V, w.rt, w.rt[3], id)) what = 'sheltering from the weather';
       else { what = w.rt[5] || 'their usual routine'; where = w.rt[4]; }
     } else if (held && held.id === id) { what = 'where you found them'; where = (PD.vn || {})[held.pk] || ''; }
