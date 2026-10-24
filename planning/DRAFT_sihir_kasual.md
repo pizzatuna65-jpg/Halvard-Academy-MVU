@@ -114,10 +114,13 @@ dan yang mereka awasi adalah wajah, bukan sihir.
 
 ### F. Satu baris narator (504, kartu karena menyebut Halvard)
 
-> At Halvard magic is everywhere: in most scenes someone nearby is casting something, for a chore, a joke or to show off; a quick
-> skirmish needs no permission, and staff step in only for real harm.
+Owner (2026-10-24): "setiap saat mungkin terlalu literal, pokoknya terasa magic academy". Jadi baris ini tidak meminta sihir di setiap
+adegan, hanya membuatnya biasa:
 
-±35 token. Lihat [?] 1.
+> Magic is part of ordinary life at Halvard: let it turn up naturally, as people use it for chores, jokes and showing off, without
+> making every scene about it; a quick skirmish needs no permission, and staff step in only for real harm.
+
+±40 token.
 
 ## 3. Keputusan yang tersentuh
 
@@ -128,11 +131,11 @@ dan yang mereka awasi adalah wajah, bukan sihir.
 
 ## 4. Biaya, tes, cek live
 
-- **Token:** +40 (World Index, selalu masuk prompt) +35 (504, kalau [?] 1 ya). Beat dan happening memakai jalur yang sudah ada:
+- **Token:** +40 (World Index, selalu masuk prompt) +40 (504). Beat dan happening memakai jalur yang sudah ada:
   satu beat paling banyak per balasan, jadi tidak ada token tambahan per beat.
 - **Tes:**
   - beat baru valid untuk kategori dan syarat (validator `gen_engine.py` yang sudah ada);
-  - replay: persentase balasan dengan beat sihir sebelum dan sesudah (target: dari ±2% jadi ±20% balasan yang punya beat);
+  - replay: persentase balasan dengan beat sihir sebelum dan sesudah (target kasar: beat sihir di sekitar satu dari lima balasan yang punya beat, bukan di setiap balasan);
   - `test_saves`;
   - lore 0, 52 dan 134 mencetak kata-kata baru;
   - rule card mendefinisikan `fight_outside_ward` yang baru.
@@ -141,9 +144,7 @@ dan yang mereka awasi adalah wajah, bukan sihir.
 
 ## 5. Pertanyaan terbuka
 
-- [?] 1. **Baris narator di 504 (§2F)?** Usulan saya: ya, karena kamu ingin sihir muncul "hampir setiap saat", dan beat ambience hanya
-  muncul di sebagian balasan. Diam = ya.
-- [?] 2. **"Arena di Halvard":** kartu tidak punya bangunan bernama Arena. Yang ada Combat Grounds (empat area latihan dengan warded
+- [?] 1. **"Arena di Halvard":** kartu tidak punya bangunan bernama Arena. Yang ada Combat Grounds (empat area latihan dengan warded
   rings) dan Sparring Pavilion; Royal Arena ada di Avalon. Draft ini memakai warded rings di Combat Grounds sebagai "arena" untuk
   battle serius. Kalau yang kamu maksud bangunan arena tersendiri di Halvard, itu tempat baru (canon dan peta), dan perlu draft
   sendiri.
