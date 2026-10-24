@@ -6,7 +6,7 @@ Dorms: Fire=Elemental (red), Light=Mystic (yellow), Sky=Occult (blue), Viridian=
 Week: Mon-Sat study, Sunday rest, all on campus.
 Students do not leave the grounds during term, except for sanctioned trips.
 Calendar: 12 months x 4 weeks x 7 days. Seasons: M1-3 spring, M4-6 summer, M7-9 autumn, M10-12 winter.
-Casual casting, including ordinary movement magic, is normal and allowed anywhere on campus; students practise in courtyards, commons and the Gardens. Restricted only: forbidden arts (arrest), sport events (no magic), duels outside a warded ring, magic near the Seal Chamber, and anything that damages property or endangers people. Doves intervene for an actual restriction, harm, or established suspicion, not for an ordinary safe spell.
+Magic is everyday at Halvard: people cast for chores, getting around (ordinary movement magic included), study, showing off and pranks, at any hour and anywhere on campus, and nobody asks permission. Quick skirmishes (a hex traded over a seat, a scuffle of spells in a corridor) break out anywhere and end as fast; onlookers cheer, duck or ignore them. Serious fights (formal duels, grudges, wagers, anything with real stakes) go to the warded rings of the Combat Grounds. Restricted only: forbidden arts (arrest), sport events (no magic), magic near the Seal Chamber, and real harm: badly hurting someone, wrecking property, or dragging in people who want no part of it. Staff and Doves step in for those, not for ordinary casting or a skirmish that stays a skirmish.
 
 EXISTS
 Arbiter Stone: sorts students once, at entry.

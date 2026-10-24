@@ -164,6 +164,8 @@ show the newcomers their dorm rooms.
       see ("in class until …", "at their club until …", "off sick", or "free"), never a place. A swipe and the rest of the block keep
       the same three; after curfew the fold is gone. "Everyone on the People panel" opens People → Campus now with everyone Charles
       knows; Settings → Features → Campus now off removes both. Nothing of it is in the prompt [2.1.0].
+- [ ] On the tour, magic turns up as part of ordinary life (a tray floating along, a light over a page, a misfired first-year spell, a
+      familiar on a bench), now and then rather than in every reply; nobody asks permission to cast and no staff member objects [2.1.2].
 - [ ] A brass rule sits between the bracelet and the story [1.71].
 - [ ] Card actions: no generic buttons; Kanae and Zara get only what their rank and this place open (at Rank 0 usually just Give a
       gift, which lists the Bag with "not tried"). A button only fills the chat box; edit and send, and the engine counts it as usual [1.71].
@@ -320,6 +322,9 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
       two roles, the chosen class comes first [1.33].
 
 ### Q2.5 The grounds (any free afternoon)
+- [ ] Start a quick skirmish with someone willing (a hex over a seat in the Courtyards): onlookers cheer or step around it, no staff turn
+      up, and `/Rep_events` gets nothing. A formal duel or a grudge goes to the Combat Grounds' rings. Only if a bystander gets hurt or
+      something breaks does Academy reputation drop (`fight_outside_ward`). An unwilling NPC answers in character (Tension) [2.1.2].
 - [ ] One short reply from the Canteen to the Boathouse: the Log says "Walked … min on foot, … stamina; … still ahead", `<now>` says
       "Still on the way", and once the clock has caught up the line is gone [1.47].
 - [ ] The Boathouse to the Fishing House: about three minutes along the shore; the Gardens to the Boathouse: about twenty [1.15.1].
