@@ -79,6 +79,12 @@ button.chip{font:inherit;font-size:13px;cursor:pointer}button.chip:hover{filter:
 .delta .dgh{grid-row:span 99;color:var(--brass);font-size:12px;letter-spacing:.04em;text-transform:uppercase;padding-top:1px}
 .delta .dg div{min-width:0;overflow-wrap:anywhere}
 .band.collapsed .delta{display:none}
+/* 2.1.0: Campus now */
+.cnow .cn{display:flex;flex-direction:column;gap:3px;margin-top:5px}
+.cnow .cn div{min-width:0;overflow-wrap:anywhere}
+.cnow .lnk{font:inherit;background:none;border:0;padding:0;color:var(--head);cursor:pointer;text-decoration:underline dotted}
+.cnow .lnk:focus-visible{outline:2px solid var(--moon);outline-offset:2px}
+.cnow .more{align-self:flex-start;margin-top:3px;font-size:12px;color:var(--ink2)}
 .cta{margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border-radius:10px;background:color-mix(in srgb,var(--brass) 14%,transparent);border:1px dashed var(--brass)}
 .cta span{flex:1 1 180px;font-size:13.5px}
 .actions{display:flex;margin-top:13px;border-radius:10px;border:1px solid var(--brass-lo);overflow:hidden;background:rgba(0,0,0,.14)}
@@ -169,6 +175,7 @@ button.chip{font:inherit;font-size:13px;cursor:pointer}button.chip:hover{filter:
     return null;
   }
   let deltaOpen = false;   // the fold stays open across redraws of this bracelet (not stored)
+  let feedOpen = false;    // 2.1.0: the same for Campus now
   // stale only when a later VISIBLE message carries its own bracelet (older chats have hidden Builder entries with a placeholder)
   function isLatest() {
     try {
@@ -317,6 +324,15 @@ button.chip{font:inherit;font-size:13px;cursor:pointer}button.chip:hover{filter:
     if (news.length) h += '<div class="news">' + news.map(t => '<div>' + esc(t) + '</div>').join('') + '</div>';
     if (h.length > low) h = h.slice(0, low) + '<div class="low">' + h.slice(low) + '</div>';
 
+    // 2.1.0 (owner roadmap R1): Campus now, folded like "This reply": the few the engine drew this block ($ui.feed, shared.js
+    // campusFew); the People panel's Campus now tab lists everyone. Only for the player: the narrator never reads it.
+    const feed = Array.isArray(ui.feed) ? ui.feed.filter(x => Array.isArray(x) && x[0]) : [];
+    if (feed.length) {
+      h += '<details class="delta cnow"' + (feedOpen ? ' open' : '') + '><summary>Campus now <small>' + feed.length + ' of the people you know</small></summary><div class="cn">'
+        + feed.map(x => '<div><button class="lnk" data-open="npc:' + esc(x[0]) + '">' + esc(who(x[0])) + '</button> : ' + esc(x[1] || '') + (x[2] ? ' - ' + esc(x[2]) : '') + '</div>').join('')
+        + '<button class="lnk more" data-open="people:now">Everyone on the People panel</button></div></details>';
+    }
+
     // 1.79.0 (Megumin audit MS1): everything the engine changed in this reply, folded; worked out here from this message's state and
     // the one before it, so it costs no prompt and adds nothing to the saved chat
     const S0 = prevState(), S1 = stateAt(MID);
@@ -357,7 +373,7 @@ button.chip{font:inherit;font-size:13px;cursor:pointer}button.chip:hover{filter:
     news.forEach(t => toastr.info(t, 'Bracelet', { timeOut: 4500 }));
   }
 
-  band.addEventListener('toggle', ev => { if (ev.target.classList && ev.target.classList.contains('delta')) deltaOpen = ev.target.open; }, true);
+  band.addEventListener('toggle', ev => { const l = ev.target.classList; if (!l || !l.contains('delta')) return; if (l.contains('cnow')) feedOpen = ev.target.open; else deltaOpen = ev.target.open; }, true);
   band.addEventListener('click', ev => {
     const b = ev.target.closest('button'); if (!b) return;
     if (b.dataset.importlore) { importLore(); return; }

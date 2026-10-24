@@ -1,7 +1,94 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 50d79ba:CHANGELOG.md` (1.99.9), `git show a27eee0:CHANGELOG.md` (1.99.8), `git show b785728:CHANGELOG.md` (1.99.7), `git show b4db7fc:CHANGELOG.md` (1.99.6), `git show c242e3e:CHANGELOG.md` (1.99.5), `git show 9957046:CHANGELOG.md` (1.99.4), `git show 83145e7:CHANGELOG.md` (1.99.3), `git show 687b4e1:CHANGELOG.md` (1.99.2), `git show 1799228:CHANGELOG.md` (1.99.1), `git show 1d18944:CHANGELOG.md` (1.98.3), `git show 731f8d1:CHANGELOG.md` (1.98.2), `git show 77f557c:CHANGELOG.md` (1.98.1), `git show 44b586a:CHANGELOG.md` (1.97.5), `git show 7848cb7:CHANGELOG.md` (1.97.4), `git show 871dd0e:CHANGELOG.md` (1.97.3), `git show c5135f8:CHANGELOG.md` (1.97.2), `git show d30ff7c:CHANGELOG.md` (1.97.1), `git show f9101db:CHANGELOG.md` (1.96.1), `git show df8dbed:CHANGELOG.md` (1.96.0), `git show 363f03b:CHANGELOG.md` (1.95.0), `git show bba6bb0:CHANGELOG.md` (1.94.0), `git show dca179c:CHANGELOG.md` (1.93.1, 1.93.0), `git show 01cd1f2:CHANGELOG.md` (1.92.0), `git show d097927:CHANGELOG.md` (1.91.0), `git show 6065e5c:CHANGELOG.md` (1.90.0), `git show de4303e:CHANGELOG.md` (1.89.0), `git show 4ace903:CHANGELOG.md` (1.88.1), `git show ce178fb:CHANGELOG.md` (1.88.0), `git show 0e1e5a2:CHANGELOG.md` (1.87.0), `git show e6f2c37:CHANGELOG.md` (1.86.0), `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show ad3dce6:CHANGELOG.md` (1.99.12), `git show 90161c9:CHANGELOG.md` (1.99.11), `git show c68157a:CHANGELOG.md` (1.99.10), `git show 50d79ba:CHANGELOG.md` (1.99.9), `git show a27eee0:CHANGELOG.md` (1.99.8), `git show b785728:CHANGELOG.md` (1.99.7), `git show b4db7fc:CHANGELOG.md` (1.99.6), `git show c242e3e:CHANGELOG.md` (1.99.5), `git show 9957046:CHANGELOG.md` (1.99.4), `git show 83145e7:CHANGELOG.md` (1.99.3), `git show 687b4e1:CHANGELOG.md` (1.99.2), `git show 1799228:CHANGELOG.md` (1.99.1), `git show 1d18944:CHANGELOG.md` (1.98.3), `git show 731f8d1:CHANGELOG.md` (1.98.2), `git show 77f557c:CHANGELOG.md` (1.98.1), `git show 44b586a:CHANGELOG.md` (1.97.5), `git show 7848cb7:CHANGELOG.md` (1.97.4), `git show 871dd0e:CHANGELOG.md` (1.97.3), `git show c5135f8:CHANGELOG.md` (1.97.2), `git show d30ff7c:CHANGELOG.md` (1.97.1), `git show f9101db:CHANGELOG.md` (1.96.1), `git show df8dbed:CHANGELOG.md` (1.96.0), `git show 363f03b:CHANGELOG.md` (1.95.0), `git show bba6bb0:CHANGELOG.md` (1.94.0), `git show dca179c:CHANGELOG.md` (1.93.1, 1.93.0), `git show 01cd1f2:CHANGELOG.md` (1.92.0), `git show d097927:CHANGELOG.md` (1.91.0), `git show 6065e5c:CHANGELOG.md` (1.90.0), `git show de4303e:CHANGELOG.md` (1.89.0), `git show 4ace903:CHANGELOG.md` (1.88.1), `git show ce178fb:CHANGELOG.md` (1.88.0), `git show 0e1e5a2:CHANGELOG.md` (1.87.0), `git show e6f2c37:CHANGELOG.md` (1.86.0), `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v2.1.2 — Magic is casual (2026-10-24)
+
+Owner request: "Halvard should feel like a magic academy: magic is ordinary, used for mundane and important things; skirmishes can
+happen anywhere and the arena (the Combat Grounds) is for serious battles; magic needs no permission or heavy supervision." Owner-approved
+`planning/DRAFT_sihir_kasual.md` (deleted here; the "arena" is the Combat Grounds). Save fixture v2.1.1.
+- **Found:** the v38 World Index already allowed casual casting anywhere, but also restricted "duels outside a warded ring" and
+  "anything that … endangers people"; the Combat Grounds and the calendar read "cross-dorm sparring only during Training Week" as a
+  general ban; the Academy deed `fight_outside_ward` (−8) could follow any corridor scuffle; and only 2 of 113 ambience beat types
+  showed magic.
+- **World Index** (lore 0, `merge_lorebooks.py`): "Magic is everyday at Halvard": anyone casts anywhere without permission; quick
+  skirmishes break out anywhere and end as fast; serious fights go to the Combat Grounds' warded rings; restricted only forbidden arts,
+  sport events, the Seal Chamber and real harm; staff and Doves step in only for those. Movement magic stays named (the walk rule).
+- **Dorm separation is a class rule:** Combat Grounds (lore 52) "In class the dorms spar apart, except in Training Week; outside class
+  anyone may challenge anyone"; Training Week (lore 134, `calendar.json`) "the one week the dorms spar together in class".
+- **Reputation:** a skirmish that hurts nobody and breaks nothing is no deed; `fight_outside_ward` only for a hurt bystander or damage,
+  `serious_fight_outside_ward` for someone badly hurt (rule card). Deed names and numbers unchanged.
+- **504:** one craft line, magic turns up naturally "without making every scene about it" (owner: not literally every moment). The
+  draft's second half ("needs no permission, staff step in only for real harm") stayed out: the 1.99.4 audit (T6) keeps what is
+  allowed in the World Index alone, and two suites guard it.
+- **Ambience:** 22 more magic beat types (floating trays, a misfired first-year spell, an illusion shown off, a ring of students round
+  a skirmish, bets at the rings, a healer at the ringside…): in a 156-reply replay a third of the beats show magic (14 of 44, from 4).
+  Two happenings: an impromptu duel in the Courtyards, a grudge match at the rings.
+- Unchanged: forbidden arts, hidden magic and Dove attention, sport events without magic, NPCs who hate a scuffle still avoid or
+  report it (in character), Tension with someone unwilling.
+- Tokens: +136 on every reply (World Index +92, 504 +44; the draft guessed about 80), the Combat Grounds entry +27 when it is in.
+- Tests: `test_casual_magic_v2112.cjs` (new, 11 checks); `test_batch3_time_magic` and `test_rule_cards_v1994` follow the new World
+  Index wording; `npm test` passes (all suites), eslint passes.
+- **To confirm with the owner:** the World Index, Combat Grounds and Training Week wording, the 22 beats and 2 happenings (new canon,
+  approved in the draft); the 504 line without its second half.
+- **To check live:** `docs/TEST_CHECKLIST.md` Act 1 Q1.1, Act 2 Q2.5 [2.1.2].
+
+## v2.1.1 — Campus phases and fads (2026-10-24)
+
+Owner request: roadmap R3 (planning/FUTURE_PLANS.md §0.1), with the owner's addition "something more mundane from real campus life
+in between, like a food that goes viral for a week". Owner-approved `planning/DRAFT_campus_phases.md` (deleted here; nothing left
+open). Save fixture v2.1.0.
+- **Campus phases** (`data/campus_phases.json` `phases`, empty since 1.6.1): 22 background lines for the days before and after the
+  calendar's events (the week before each exam, getting ready for Star Night, the Warding Rite, the Club Festival, Crowning Day,
+  waiting for results, before and after the Thinning, before the election, the Harvest Festival…), every year, 139 of 308 school
+  days. `<now>`: "Campus phase: …". Never what the event line, lore 134, the exam moods or the place lines already say; no names.
+- **Weekly fads** (`trends`, new): 22 mundane fads for the days without a phase (Salaffian flatbread, Nightwell's coffee, the Sunfizz
+  bottle hunt, Dragonchess fever, a song from the afternoon broadcast, hair-sweet dares, plushes on satchels…). One week in 60%
+  (`trend_rate`), seeded per chat and week (engine `trendOn`, chained per year like the happenings: swipe-safe, a new order every
+  chat and year), never one of the last 8 weeks' (`trend_gap`), in its season. `<now>`: "Campus fad this week: … (background; people
+  take to it or scoff, each in character)". Text only: no price or stock changes. Every item a fad names is a `shop.json` item.
+- **Neither** away from campus (`awayIn`), on a home, lockdown or calendar trip day, or with Features `campus_phases` off (new toggle).
+  Before, a phase line would have printed in Avalon too.
+- **The player sees it:** Inventory → Notice Board, "On campus: …" ("On campus this week" for a fad); Settings counts the line.
+- **Build checks** (`tools/gen_engine.py`): dates, no two phases on one day, none on a home, lockdown or away day, no NPC name, no
+  smell (the preset's Scent Killswitch), at most 45 words; proven by breaking the data four ways.
+- New standing decision: DECISIONS "Campus phases and fads".
+- Tokens: ±35–55 on a day with a line (about 230 days a year), 0 otherwise. Card JSON +0.02 MB.
+- Tests: `test_campus_phases_v2111.cjs` (new); `test_extras_v161` (its "the file is empty" check now expects the approved phases);
+  `test_saves` and the 81 suites on phases, the Notice Board, features, `<now>` and Meanwhile, `qa_static` and eslint pass.
+- **To confirm with the owner:** the 44 lines are new wording drawn from the lore (the draft listed each one's source).
+- **To check live:** `docs/TEST_CHECKLIST.md` Act 2 Q2.7, Act 3 Q3.6 [2.1.1]. Black Box rules: not added (its repository is not
+  attached here).
+
+## v2.1.0 — Campus now (2026-10-24)
+
+Owner request: the first release of the "world in motion" roadmap (planning/FUTURE_PLANS.md §0.1), R1, after a check of how it
+meets Look for and Who is here. Save fixture v2.0.0.
+- **Campus now** (Features `campus_now`, on by default): what each person {{user}} has a bond with is doing now. The bracelet folds three
+  of them ("Campus now", under the news; drawn per block, weighted by Bond Rank, the same on a swipe; none away from campus, after curfew
+  or with the feature off); People → Campus now lists everyone ("Everyone on the People panel" opens it). Only for the player: `$ui` is
+  not in `<current_state>`, so 0 prompt tokens.
+- **What shows** (shared.js `campusFeed`): from Bond Rank 3 (the rank at which they tell their own plans, `NEXT_RANK`; data
+  `npc_routines.json` `here.feed.rank`) with their Haunts field open: their routine and its place ("Irene : Library Assistants shift -
+  Main Library"), else "somewhere on campus"; below Rank 3 only what anyone can see (in class, teaching, Study Hall, a club, off sick,
+  home for the break) or "free", and a status only as "away". The info layers alone open Haunts at Rank 0–1 for 59 of 60 NPCs, which
+  would have shown nearly everyone's place at once and left Look for nothing to do.
+- **Never against Look for:** a place it names is one Look for finds them at (checked over 102 named places); an outdoor routine in bad
+  weather reads "sheltering from the weather" (the one rule `wxOff`, now shared by `lookFor`); the place {{user}} found someone this
+  block shows. The panel says it plainly: knowing where someone is does not mean running into them.
+- **Meanwhile** (Rank 7+, a Journal line a week for a friend not seen): names one of their routines ("Irene was seen at Main Library as
+  usual (Library Assistants shift)") instead of only a haunt.
+- New standing decision: DECISIONS "Campus now is the player's, and knowing is not meeting". FUTURE_PLANS: the R1 row is gone; the
+  roadmap's conflict check (Routine 2.0's two layers, passers-by, M1–B3) is recorded at each item.
+- Sizes: the card JSON 6.53 → 6.54 MB. Tokens: none.
+- Tests: `test_campus_now_v2100.cjs` (new, 24 checks); `test_saves`, `test_look_for_v19912`, `test_presence_roll_v19911`,
+  `test_reply_delta_v1790`, `test_tidy_v2000`, `test_feature_batch4_v1520`, the suites on Meanwhile, features and the bracelet,
+  `qa_static` and eslint pass (a routine release: no full suite).
+- **To confirm with the owner:** the Rank 3 threshold (the info layers alone would show nearly everyone at once); the wording "free",
+  "somewhere on campus", "sheltering from the weather", "away", "where you found them". No canon invented.
+- **To check live:** `docs/TEST_CHECKLIST.md` Act 1 Q1.1 [2.1.0] (the fold and the tab at low ranks), Act 3 Q3.1 [2.1.0] (a Rank 3
+  friend's place). Black Box rules for these: not added in this session (its repository is not attached here).
 
 ## v2.0.0 — The engine tidied, the gaps closed (2026-10-24)
 
@@ -62,91 +149,6 @@ Save fixture v1.99.12.
 - **Tests:** `test_npc_thoughts_v1373` (the new rule 1), `test_scene_cards_v1700` (no thought for someone absent), `test_look_for_v19912`
   (not on Clubs, the Action label, off with Who is here), plus `test_preset`, `test_saves`, practice and crafting UI suites: all pass.
 - **To check live:** `docs/TEST_CHECKLIST.md` Act 1, Q1.1 [1.99.13].
-
-## v1.99.12 — Look for (2026-10-24)
-
-Owner request after 1.99.11: help {{user}} find a person, without the person appearing for {{user}}'s sake. Owner-approved
-`planning/DRAFT_look_for.md` (deleted; the hint rule is the owner's). Save fixture v1.99.11.
-- **Buttons** (they only draft the line, D3/D6): Activities shows "Look for someone" at any Campus Map place (not after curfew, not in an
-  outside area): `I'm looking for [name] in the <place>.`; a dossier has "Look for <name>" with the places the file already shows (the
-  Routine field's places, a regular's places once Haunts is open), the one for this day and hour first ("usually here now"), and where
-  {{user}} is. Hidden while they are with {{user}}, gone, not yet at Halvard or unnamed. Typing the line works the same.
-- **The roll** (`shared.js lookFor`): with {{user}} already; never when they are away, sick, under a status, busy or at a routine
-  elsewhere, or moved off an outdoor place by the weather; always at their routine (or class, Study Hall) here; a regular here at their
-  presence odds × 1.5 + 15, at most 80% (`data/npc_routines.json` `here.look`), on the same draw as the presence roll; no regular here:
-  8%, no bonus. Seeded by place and block: a swipe or a repeat gives the same answer.
-- **Timing:** the engine runs after a reply, so `<now>` (505) rolls it from the player's new message (`lastUserMessage`, as since 1.80.0)
-  with the whole `shared.js` and the presence data (contest data left out); the engine rolls it again from the same message and the state
-  before the reply (`stepLook`, `userText`) and keeps it (`$eng.look`); `presenceAt` holds it for the rest of the block (found: in Here
-  now, first; not found: not there). Both read one crowd string (`$ui.crowd`, a digit per place, written by `stepHere`); `<now>`'s Here
-  now reads it too. 21 of 21 tested cases agree.
-- **`<now>`:** "Looking for Trixie in the Courtyards (the engine's roll): she is there (…). Finding her is not a welcome: she reacts in
-  character…" or "…she is not there now. {{user}} can search, ask around or wait; nobody here makes her appear." Not found, someone
-  there with a tie to her (`data/relations.json`, `tools/common.py look_ties`) may tell her habits, only if {{user}} asks: her routine for
-  this hour, else her regular places; otherwise "Nobody here knows Trixie well enough to say where she might be." The arrival line gains
-  "or the engine's Look for says they are there".
-- **Found on the way:** the first build missed the weather: a regular "found" at the Courtyards in a storm, where the presence roll moves
-  everyone indoors. `lookFor` now follows the same weather rule.
-- **Measured:** `audit_chat.py --mechanics` reports searches and the one sought brought in although "not there".
-- Sizes: entry 505 53 KB → 142 KB of code and data (not sent to the model); the card 6.36 → 6.54 MB; state +75 characters
-  (`$ui.crowd`). Tokens: constant ~19,979 → ~19,991 (the arrival line); a search adds ~40–110 to that reply only.
-- Tests: `test_look_for_v19912.cjs` (new, 23 checks); `test_presence_roll_v19911` checks the one crowd source anew; `npm test` and lint pass.
-- **To confirm with the owner:** nothing invented.
-- **To check live:** `docs/TEST_CHECKLIST.md` Act 1, Q1.1 [1.99.12], including that building the prompt is not slower.
-
-## v1.99.11 — Who is here (2026-10-23)
-
-Owner playtest: in every new chat the first place {{user}} walked to had an NPC, and at the Main Courtyard or Founder's Park nine visits
-in ten it was Trixie (else Ruby or Caralynn). Owner-approved `planning/DRAFT_presence_roll.md` (deleted), simulated against the real data
-before it was built. Save fixture v1.99.10.
-- **The cause:** no rule asked for an NPC. `<now>` listed every free regular as "Likely around" (the Canteen and the Common Rooms 19 names
-  each) and the narrator read the list as a cast; the place's Regulars lore entry, fired by its name in the player's message, puts Trixie
-  first at the Courtyards; she is a regular of both places.
-- **The roll** (`shared.js presenceAt`, Features toggle "Who is here" `presence_roll`, on): certain are a routine here (its 70% day roll),
-  a teacher teaching here and Study Hall; each other free regular is here at a target by the place's crowd (0.15 / 0.5 / 0.9 / 1.4 / 2.0
-  people at ambience crowd 0–4) divided by their number, at most 60%, so a long list of regulars varies who is there, not how many; 8%
-  that one free roster NPC who is no regular here passes through; everyone in Scene.Present is "With {{user}}", outside the roll; the hits
-  in a seeded order (not the alphabet), at most 3 shown. Seeded by place and the day's block (`shared.js blockAt`): a swipe, or coming back
-  within the block, finds the same people. Numbers in `data/npc_routines.json` `here`.
-- **Crowd from one source:** engine `crowdAt` (taken out of `stepAmbience`), computed with Ambience off too.
-- **`<now>`:** "Here now at X (the engine's roll; an established scene overrides): name (what they are doing); …": a routine's reason,
-  "teaching …", "at Study Hall …", the NPC's public impression word and "a regular here", or "passing through"; today's initiative is
-  marked. "Each is busy with their own thing; show them at it. The first move is {{user}}'s, unless someone's character and Bond would
-  bring them over…". An empty place: "nobody on the roster. Only unnamed students and staff…". 505's optional threads count "Here now"
-  (never an empty place).
-- **Arriving** (not in the draft; it is the moment the owner saw at message 2): the engine runs after a reply, so a place reached in this
-  reply has no roll yet. `<now>` asks to keep the arrival to the place and its unnamed people (someone walking with {{user}}, a plan or
-  appointment, today's initiative excepted); the next Here now brings the people.
-- **The ambience agrees:** the "nearby" pair beat takes both people from Here now; a ghost story that needs {{user}} alone needs Here now
-  empty.
-- **Regulars lore entries** (48) end with "Habits only: who is at this place now is the Here now line in <now>." while the toggle is on
-  (`merge_lorebooks.py regulars_pointer`); the canon lists are unchanged.
-- **Measured:** `tools/audit_chat.py --mechanics` reports roster NPCs brought into the scene unasked on arrival and outside the roll, and who
-  most often (`replay_chat.cjs` `pres`). The old September chats have no update blocks, so there is no before figure.
-- Build fix found on the way: `merge_lorebooks.py mention_brief` sorted an NPC's name forms of equal length from a set, so a build could
-  swap them ("milena|sagona") and rewrite entries for nothing; ties now sort by name (two builds in a row are identical).
-- Toggle off is the 1.99.10 habit list byte for byte (`test_audit_batch5_v1470`'s 360 recorded scenarios); six older suites now run with
-  it off.
-- Tokens: constant ~19,875 → ~19,979 at the start (+104: the Here now rule and the arrival line); a busy place prints at most three names
-  instead of up to 19.
-- Tests: `test_presence_roll_v19911.cjs` (new); `npm test` passes.
-- **To confirm with the owner:** the arrival rule above (people appear from the reply after arriving, not in the arrival reply itself).
-- **To check live:** `docs/TEST_CHECKLIST.md` Act 1, Q1.1 [1.99.11].
-
-## v1.99.10 — The date they were born (2026-10-23)
-
-Owner question after 1.99.9: the narrator never knew an NPC's birthday. Save fixture v1.99.9.
-- **The gap:** 59 of the 77 NPCs have a birthday in `data/npcs.json` (the dossier, the calendar, the engine's birthday mood and "Today is
-  X's birthday" line), but no lore entry or Cast Sheet carried it. Asked at the rank that opens it, the narrator had to invent a date,
-  which could differ from the one the dossier then shows.
-- **The fix** (`tools/gen_mvu_entries.py`): every full sheet of an NPC with a birthday starts its lore with "Birthday: M8 W2 Tue (academy
-  calendar)"; 1.99.9's tag holds it back until the rank that opens it ("Birthday [not told yet: Rank 1]: …"). About 12 tokens a sheet.
-- Cast Sheet record `cast_1560.json` renewed: 219 of 240 scenarios differed, and 1.99.9's renders (a worktree) equal 1.99.10's with the
-  545 Birthday lines removed. `cohort2_v170`'s size guard 3,800 → 3,850 tokens (Hadrian 3,804 with the line; his approved lore is not cut).
-- The version has two digits after 1.99 now; the engine compares versions numerically (`verLt`), so save migrations are unaffected.
-- Tests: `test_held_tags_v1999.cjs` +2 checks (Trixie's birthday tagged at Rank 0, the dossier's date at Rank 1); `npm test` passes, lint passes.
-- **To confirm with the owner:** nothing invented.
-- **To check live:** `docs/TEST_CHECKLIST.md` Act 1, info layers [1.99.10].
 
 ## Release index (one line per release, oldest first)
 
@@ -355,3 +357,6 @@ Owner question after 1.99.9: the narrator never knew an NPC's birthday. Save fix
 - **v2.0.0 (2026-10-24):** The engine tidied, the gaps closed (bug-hunt audit batch 8 and the short audit of 1.99.9–1.99.13): `stepBonds` and the Council split into parts, canon names out of the engine into `data/` (new `council.json`), one helper per duplicate, all proven identical; the happening counted among the optional threads again, held fields tagged at Trust Betrayed, the dossier's Look for only where it is rolled, rule cards never opened by an NPC's thoughts.
 - Tools (2026-10-24, no card change): `tools/audit_chat.py --blackbox` reads a playtest bundle from the new Eldrasil Black Box extension (separate repository `pizzatuna65-jpg/Eldrasil-BlackBox` 1.0.0: final prompt by source, usage, cache, cost, timing, saves and engine signals per request, kept in the browser): per-reply table, cache misses, prompt parts, saves, engine lines; the other reports read its chat slice. Docs: FEATURES §16–17, INDEX, BUILD, ECOSYSTEM; quest log SQ-BB. Test `test_blackbox_audit.cjs`.
 - Tools (2026-10-24, no card change): the quest autopilot (owner: "so I can just play"). The Eldrasil Black Box 1.2.0 (own repository) ships 69 live-check rules for Acts 0–2 and the side quests (`data/eldrasil_checks.json`) and judges them on every reply in the browser, 0 tokens; the card is not changed. New `tools/quest_ticks.py` ticks `docs/TEST_CHECKLIST.md` from a bundle (a box only for rules marked `whole`, else a "machine part" note; failures as notes; review checks listed with evidence); `audit_chat.py --blackbox` gains a Quests section. The quest log's Sunday period checks (Q2.1, Q2.7) now expect "Sunday (no classes)", the engine's label (the rules found the old wording wrong). Docs: DECISIONS §10, FEATURES, INDEX, BUILD playbook "Live check rules", ECOSYSTEM, CLAUDE.md, quest log. Test `test_live_checks.cjs` (the rule checks with `BLACKBOX_DIR`).
+- **v2.1.0 (2026-10-24):** Campus now (owner roadmap R1): what the people {{user}} knows are doing, three in a bracelet fold and everyone on People → Campus now, UI only; the place from Bond Rank 3 and only where Look for finds them; Meanwhile names a routine.
+- **v2.1.1 (2026-10-24):** Campus phases and fads (owner roadmap R3): 22 background lines between the calendar's events and, in the gaps, 22 seeded weekly fads from ordinary campus life (owner's idea), in `<now>` and on the Notice Board; none away or on a break.
+- **v2.1.2 (2026-10-24):** Magic is casual (owner): the World Index makes casting ordinary and skirmishes fine anywhere, serious fights go to the Combat Grounds' rings, only real harm is restricted; dorm separation is a class rule; a harmless skirmish is no deed; 22 magic beats, 2 happenings, one 504 line.

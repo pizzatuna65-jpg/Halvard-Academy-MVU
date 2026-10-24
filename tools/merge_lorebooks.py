@@ -1032,6 +1032,12 @@ def formal_and_far_grounds(C, N):
     rep(C[82], "A white-walled building of its own beside the Mall,", "A white-walled building of its own, four minutes' walk from the Mall,")
     rep(C[83], "a big open-sided stall beside the Mall:", "a big open-sided stall of its own, three minutes' walk from the Mall:")
     rep(C[52], "Beside the rings stands the Sparring Pavilion,", "At the far corner of the grounds, three minutes' walk from the rings, stands the Sparring Pavilion,")
+    # 2.1.2 (owner-approved planning/DRAFT_sihir_kasual.md): magic is casual at Halvard; skirmishes anywhere, serious fights in the
+    # Combat Grounds' rings, only real harm restricted; dorm separation is a class rule
+    rep(C[0], "Casual casting, including ordinary movement magic, is normal and allowed anywhere on campus; students practise in courtyards, commons and the Gardens. Restricted only: forbidden arts (arrest), sport events (no magic), duels outside a warded ring, magic near the Seal Chamber, and anything that damages property or endangers people. Doves intervene for an actual restriction, harm, or established suspicion, not for an ordinary safe spell.",
+        "Magic is everyday at Halvard: people cast for chores, getting around (ordinary movement magic included), study, showing off and pranks, at any hour and anywhere on campus, and nobody asks permission. Quick skirmishes (a hex traded over a seat, a scuffle of spells in a corridor) break out anywhere and end as fast; onlookers cheer, duck or ignore them. Serious fights (formal duels, grudges, wagers, anything with real stakes) go to the warded rings of the Combat Grounds. Restricted only: forbidden arts (arrest), sport events (no magic), magic near the Seal Chamber, and real harm: badly hurting someone, wrecking property, or dragging in people who want no part of it. Staff and Doves step in for those, not for ordinary casting or a skirmish that stays a skirmish.")
+    rep(C[52], "Cross-dorm sparring only during Training Week, with the Magic Duelling Club as the standing exception.",
+        "In class the dorms spar apart, except in Training Week; outside class anyone may challenge anyone, and the rings are where serious fights are settled. The Magic Duelling Club mixes the dorms all year.")
 
 GHOST_STORIES = [   # 1.16.0 (owner-approved planning/DRAFT_dynamic_ambience.md §7): uid, title, keys, content
     (337, 'The Thirteenth Stroke', ['Thirteenth Stroke', 'extra stroke', 'one stroke too many'],

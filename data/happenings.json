@@ -88,6 +88,26 @@
    "weight": 2
   },
   {
+   "id": "impromptu_duel",
+   "text": "Two students settle an argument with spells in the Courtyards; a crowd forms, someone takes bets, and it is over before any staff arrive.",
+   "where": "Courtyards",
+   "from": 12,
+   "to": 18,
+   "days": "any",
+   "weight": 3,
+   "outdoor": true
+  },
+  {
+   "id": "ring_grudge",
+   "text": "A grudge match is chalked up for the warded rings this evening; half the campus plans to watch.",
+   "where": "Combat Grounds",
+   "from": 16,
+   "to": 20,
+   "days": "any",
+   "weight": 2,
+   "outdoor": true
+  },
+  {
    "id": "duel_chalk",
    "text": "A formal duel challenge is chalked on the board outside the Sparring Pavilion. Nobody has signed to accept it yet.",
    "where": "The Sparring Pavilion",

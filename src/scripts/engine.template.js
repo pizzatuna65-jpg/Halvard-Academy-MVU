@@ -23,7 +23,8 @@ const INITIATIVE_OPENNESS = /*@@INITIATIVE_OPENNESS@@*/{};  // scheduling weight
 const canRomance = id => 'AC'.includes(BRANCH[id] || 'A'), canRival = id => 'AB'.includes(BRANCH[id] || 'A');
 const MENTION_DENY = new Set(/*@@MENTION_DENY@@*/[]);
 const EXTRAS_MAX = 20, EXTRAS_ARCHIVE = 40, EXTRAS_GONE = 120, STALE_DAYS = 7;   // 1.6.1 (Batch D): invented characters kept; campus events without news
-const PHASES = /*@@PHASES@@*/[];   // 1.6.1 (N6): campus phases (data/campus_phases.json; empty until the canon waves)
+const PHASES = /*@@PHASES@@*/[];   // 1.6.1 (N6): campus phases (data/campus_phases.json; 2.1.1: filled, owner-approved)
+const TRENDS = /*@@TRENDS@@*/{ list: [], rate: 0, gap: 8 };   // 2.1.1: the weekly campus fads for the days without a phase
 const QUOTE_RX = /["“][^"”]*["”]/g;
 // 1.12.0 (section 8l): reminders of what an update may have left out
 const MISS_MAX = 3;
@@ -603,6 +604,25 @@ function rawHappening(seed, dayNo, rate, exclude, wxm = 'off') {
   return rollTable(HAPPENINGS, { roll: [seed, dayNo, 'roll'], p: rate * (evs.length ? 0.5 : 1),   // calendar days are busy enough
     skip: h => !(happeningFits(h, P) && !(exclude || []).includes(h.id) && wxFits(h, seed, dayNo, wxm)),
     pick: [seed, dayNo, 'pick'], weight: h => (h.weight || 1) * (stormy && h.after_storm_x3 ? 3 : 1) });
+}
+// 2.1.1 (owner-approved planning/DRAFT_campus_phases.md §2b): the campus fad of a campaign week (Monday to Sunday), or null: one week in
+// TRENDS.rate percent, never one of the last TRENDS.gap weeks' fads, in its season (the season of the week's Monday). Like the
+// happenings, the year is chained from its first week and cached, so it is a pure function of the seed: a swipe or a replay agrees.
+const TRY = new Map();
+function trendOn(seed, weekNo) {
+  const WPY = YEAR_DAYS / 7, Y = Math.floor(weekNo / WPY), key = `${seed}|${Y}`;
+  let arr = TRY.get(key);
+  if (!arr) {
+    arr = [];
+    for (let i = 0; i < WPY; i++) {
+      const wk = Y * WPY + i, season = SEASON_OF(dayParts(wk * 7).Month), recent = arr.slice(-TRENDS.gap).filter(Boolean).map(x => x.id);
+      arr.push(rollTable(TRENDS.list, { roll: [seed, wk, 'trend'], pct: TRENDS.rate, pick: [seed, wk, 'trend-pick'],
+        skip: x => recent.includes(x.id) || !(x.season === 'all' || (x.season || []).includes(season)) }));
+    }
+    if (TRY.size > 8) TRY.clear();
+    TRY.set(key, arr);
+  }
+  return arr[weekNo - Y * WPY] || null;
 }
 // No repeat of the previous two days' happening. 1.16.1 (audit B3): "previous" means what those days actually got, so the year is
 // chained from its first day (Month 12 is the holiday, with no happenings, so a year never carries one over) and cached.
@@ -4984,7 +5004,7 @@ function capPinned(b, key, oldKey, max) {
   b[oldKey] = old.slice(-Math.max(20, b[qKey]));
 }
 function stepBondMemory(c) {
-  const { S, B, log, jnl, hasB, absA, dayNo, weekNo, canon, BB, daily, PACE, bweek, npcAway, spreadFrom } = c;
+  const { S, B, log, jnl, hasB, absA, dayNo, weekNo, canon, BB, daily, PACE, bweek, npcAway, spreadFrom, OFF, seed } = c;
   if (hasB && S.Hidden._True_magic) {
     const known0 = new Set(((B.Hidden || {}).Known_by || []).map(canon));
     for (const raw of S.Hidden.Known_by || []) {
@@ -5052,7 +5072,10 @@ function stepBondMemory(c) {
       const wk = Math.floor(dayNo / 7);
       if (hasB && b.Rank >= MEANWHILE_RANK && !presentIds.has(id) && b.$seen >= 0 && dayNo - b.$seen >= 7 && b.$mw !== wk && !awayIn(S)) {
         b.$mw = wk;
-        const what = b.Next ? b.Next.What : (HAUNT[id] ? 'was seen around ' + HAUNT[id].split(/[;,]/)[0].trim() : 'kept to their own business');
+        // 2.1.0 (roadmap R1): one of their weekly routines when they have any (the same rows as Campus now and the Map), else a haunt
+        const rts = OFF.has('npc_routines') ? [] : (PRESENCE.rt || {})[id] || [], rt = rts.length ? pickOf(rts, seed, wk, 'mw-rt', id) : null;
+        const what = b.Next ? b.Next.What : rt ? 'was seen at ' + rt[4] + ' as usual' + (rt[5] ? ' (' + rt[5] + ')' : '')
+          : (HAUNT[id] ? 'was seen around ' + HAUNT[id].split(/[;,]/)[0].trim() : 'kept to their own business');
         const pair = !b.Next && pairLine(c, [id], 'seen', 'mw:' + id);   // 1.51.0 (audit 4.8): seen with someone {{user}} knows them by
         jnl.push(`Meanwhile: ${pair || `${id} ${b.Next ? 'is busy with ' + what.replace(/^./, c => c.toLowerCase()) : what}`}.`);
       }
@@ -6982,12 +7005,15 @@ function stepCampusEvents(c) {
     }
     S.$ui.stale = stale.sort((a, b) => a[2] - b[2]).slice(0, 3).map(([k, u]) => [k, u]);
   }
-  // N6: the campus phase today ({ id, from: "M5 W1 Mon", to: "M5 W2 Fri", line }, every year); the line goes into <now>
+  // N6: the campus phase today ({ id, from: "M5 W1 Mon", to: "M5 W2 Fri", line }, every year); the line goes into <now>. 2.1.1 (owner-
+  // approved planning/DRAFT_campus_phases.md): on a day without one, this week's fad (trendOn; kind 'trend'); neither while {{user}} is
+  // away from campus, on a home, lockdown or calendar away day (a trip), or with Features campus_phases off
   {
     const doyOf = w => { const m = /^M(\d{1,2}) W([1-4]) (\w{3})/.exec(String(w || '')); return m && DAYS.includes(m[3]) ? (+m[1] - 1) * 28 + (+m[2] - 1) * 7 + DAYS.indexOf(m[3]) : -1; };
-    const d = dayNo % YEAR_DAYS;
-    const ph = PHASES.find(p => { const a = doyOf(p.from), z = doyOf(p.to); return a >= 0 && z >= 0 && (a <= z ? d >= a && d <= z : d >= a || d <= z); });
-    S.$ui.phase = ph ? { id: ph.id, line: ph.line } : null;
+    const d = dayNo % YEAR_DAYS, none = c.OFF.has('campus_phases') || awayIn(S) || eventsOn(dayParts(dayNo)).some(e => e.home || e.lockdown || e.away);
+    const ph = none ? null : PHASES.find(p => { const a = doyOf(p.from), z = doyOf(p.to); return a >= 0 && z >= 0 && (a <= z ? d >= a && d <= z : d >= a || d <= z); });
+    const tr = none || ph ? null : trendOn(c.seed, Math.floor(dayNo / 7));
+    S.$ui.phase = ph ? { id: ph.id, line: ph.line, kind: 'phase' } : tr ? { id: tr.id, line: tr.line, kind: 'trend' } : null;
   }
   // 1.81.0 (owner-approved planning/DRAFT_event_frame.md): today's events for the event line in <now>, the Event tab, the Price Guide
   // and the bracelet: its name, which day of how many, what is on now and next (eventBlocks), the chances open here and now (two at
@@ -7767,6 +7793,10 @@ function stepHere(c) {
   // the Here now line read this one string, so all three roll on the same number
   const tm = hmMin(S.World.Time) || 0;
   S.$ui.crowd = crowdKeys(PRESENCE).map(k => { const n = crowdAt(S, c.evs, c.wxNow, PRESENCE.vn[k], tm); return n >= 0 ? String(n) : '-'; }).join('');
+  // 2.1.0 (owner roadmap R1): Campus now, the few the bracelet's fold shows (shared.js campusFeed / campusFew; the People panel works
+  // out everyone itself). None away from campus, after curfew or with the feature off. UI only: <current_state> leaves $ui out.
+  S.$ui.feed = OFF.has('campus_now') || awayIn(S) || V.min == null || /CURFEW|LOCKDOWN/.test(String(S.World._Curfew || '')) ? []
+    : campusFew(PRESENCE, V, campusFeed(PRESENCE, V, S)).map(x => [x.id, x.what, x.where]);
 }
 
 // 1.99.12 (owner-approved planning/DRAFT_look_for.md): the player's "I'm looking for X in Y" this reply answers. <now> (505) rolled it

@@ -108,6 +108,16 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **Look for helps, never summons** (1.99.12, owner-approved draft): a search raises a regular's odds a little (never certain), gives
   someone who is no regular there only the rare chance, and never finds someone who is elsewhere by the engine. A hint comes only if
   {{user}} asks, only from someone there with a tie to them, and tells a habit, not a position. `<now>` and the engine roll it alike.
+- **Magic is casual at Halvard** (2.1.2, owner, planning/DRAFT_sihir_kasual.md; changes the v38 World Index line): anyone casts anywhere
+  without permission; skirmishes happen anywhere; serious fights go to the Combat Grounds' rings; only forbidden arts, sport events, the
+  Seal Chamber and real harm are restricted, and staff and Doves step in only for those. Said once, in the World Index (audit T6); dorm
+  separation is a class rule; a skirmish that hurts nobody is no reputation deed.
+- **Campus phases and fads** (2.1.1, owner-approved planning/DRAFT_campus_phases.md): one background line in `<now>` between events
+  (`data/campus_phases.json`), every year, no names, one at a time, none away from campus or on a home, lockdown or trip day; in the
+  gaps a seeded weekly fad, text only, which people take to or scoff at in character.
+- **Campus now is the player's, and knowing is not meeting** (2.1.0, owner roadmap R1, 2026-10-24): the feed is UI only (never in the
+  prompt). Where someone is shows from Bond Rank 3 (the rank they tell their own plans) with Haunts open, so Look for stays the way to find
+  acquaintances; it names a place only where Look for finds them, and who {{user}} runs into stays the presence roll.
 - **NPCs seen together, traces** (1.51.0, feature batch 3): pair moments use only relation lines Connections shows {{user}}, with
   generic public-behaviour wording; a story relation fades after four weeks unrenewed and hides after eight (kept in the state). A
   trace beat only names the open thread; what is found is the narrator's, true to the lore, never a solution.

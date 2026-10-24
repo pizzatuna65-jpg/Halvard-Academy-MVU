@@ -303,12 +303,14 @@ function crowdOf(PD, str, pk) { const i = crowdKeys(PD).indexOf(pk), ch = String
 // whether id is found at the place key pk now: with {{user}}; away, sick, a status, busy or a routine elsewhere (never); busy or a
 // routine here (always); a regular here: their odds in the presence roll x PD.here.look.mult + add, at most cap, on the same draw as
 // the roll (so whoever the roll put here is found); no regular here: PD.here.pass percent, no bonus. { found, how, tag }
+// the weather keeps id off the outdoor place pk now (2.1.0: shared by Look for and Campus now; presenceAt's own "moved" is the same rule)
+const wxOff = (PD, V, pk, id) => !!V.bad && (PD.outd || []).includes(pk) && !((pk === 'boathouse and lake' || pk === 'fishing house') && V.rain && !V.gale) && !(V.gale && id === 'Ottavio');
 function lookFor(PD, V, id, pk, crowd) {
   const w = whereabouts(PD, V, id), H = PD.here || {}, L = H.look || {}, k = [V.seed, V.dkey, V.blk, pk];
   if ((V.PRES || []).includes(id)) return { found: true, how: 'with', tag: '' };
   if (!whereFree(w) || w.st) return { found: false, how: 'away', tag: '' };
   // the weather moves people off an outdoor place as presenceAt does (the Fishing Club stays out in rain; Ottavio in a gale)
-  if (V.bad && (PD.outd || []).includes(pk) && !((pk === 'boathouse and lake' || pk === 'fishing house') && V.rain && !V.gale) && !(V.gale && id === 'Ottavio')) return { found: false, how: 'weather', tag: '' };
+  if (wxOff(PD, V, pk, id)) return { found: false, how: 'weather', tag: '' };
   if (w.busy) return w.busy[1].includes(pk) ? { found: true, how: 'busy', tag: w.busy[0] } : { found: false, how: 'busy', tag: '' };
   if (w.rt) return w.rt[3] === pk ? { found: true, how: 'routine', tag: w.rt[5] || 'usually here at this hour' } : { found: false, how: 'routine', tag: '' };
   const REG = PD.reg || {}, name = (PD.vn || {})[pk] || pk;
@@ -323,6 +325,45 @@ function lookHabit(PD, V, id) {
   if (r) return 'usually spends this hour at ' + r[4] + (r[5] ? ' (' + r[5] + ')' : '');
   const at = [...new Set(Object.keys(PD.vn || {}).sort().filter(k => ((PD.reg || {})[k] || []).includes(id)).map(k => PD.vn[k]))].slice(0, 3);
   return at.length ? 'is often around ' + at.join(', ') : '';
+}
+// ---- Campus now (2.1.0, owner roadmap R1, planning/FUTURE_PLANS.md §0.1): what each person {{user}} has a bond with is doing now, for
+// the bracelet's fold (engine stepHere: $ui.feed, PD.here.feed.max names) and the People panel's Campus now tab (everyone). UI only:
+// the narrator never reads it. Close (Bond Rank PD.here.feed.rank+, the rank at which they tell their own plans, with their Haunts
+// field open, PD.hr): what they do and where, from their routine; anyone else: only what anyone can see (class, teaching, Study Hall,
+// a club, off sick, home for the break), else "free". A place is named only where the routine puts them (unless the weather keeps
+// them off an outdoor one, as Look for does) or where {{user}} found them this block (V.look); else "somewhere on campus". Knowing
+// where someone is never makes the meeting certain: who is met is still the presence roll and Look for. [{ id, rank, close, what, where }]
+function campusFeed(PD, V, S) {
+  const F = (PD.here || {}).feed || {}, FR = F.rank == null ? 3 : F.rank, B = (S || {}).Bonds || {}, R = new Set(PD.roster || []), out = [];
+  const LK = V.look, held = LK && LK.found && LK.dkey === V.dkey && (LK.blk === V.blk || (V.min >= LK.min && V.min - LK.min <= 60)) ? LK : null;
+  for (const id of Object.keys(B).sort()) {
+    const b = B[id];
+    if (!b || !R.has(id) || (V.PRES || []).includes(id)) continue;
+    const w = whereabouts(PD, V, id), rank = Number(b.Rank) || 0, hr = (PD.hr || {})[id];
+    if (w.gone && w.gone !== 'home for the break') continue;   // graduated, or not at Halvard (yet)
+    const close = rank >= FR && rank >= (hr == null ? 1 : hr);
+    let what = close ? 'somewhere on campus' : 'free', where = '';
+    if (w.gone) what = w.gone;
+    else if (w.sick) what = 'off sick';
+    else if (w.st) what = close ? w.st : 'away';
+    else if (w.busy) what = w.busy[0];
+    else if (w.rt && close) {
+      if (wxOff(PD, V, w.rt[3], id)) what = 'sheltering from the weather';
+      else { what = w.rt[5] || 'their usual routine'; where = w.rt[4]; }
+    } else if (held && held.id === id) { what = 'where you found them'; where = (PD.vn || {})[held.pk] || ''; }
+    out.push({ id, rank, close, what, where });
+  }
+  return out;
+}
+// the bracelet's few: drawn per block from the feed, weighted by Bond Rank (Rank 0 counts 1), the same on every swipe
+function campusFew(PD, V, feed) {
+  const n = ((PD.here || {}).feed || {}).max || 3, pool = [...feed], got = [];
+  while (got.length < n && pool.length) {
+    const x = rollTable(pool, { pick: [V.seed, V.dkey, V.blk, 'campus-now', got.length], weight: y => y.rank + 1 });
+    if (!x) break;
+    got.push(x); pool.splice(pool.indexOf(x), 1);
+  }
+  return got.sort((a, b) => b.rank - a.rank || (a.id < b.id ? -1 : 1));
 }
 // ---- breaks and Secret Fools Day (1.83.0, owner-approved planning/DRAFT_event_frame.md 4.2, 4.3), computed, never stored.
 // A break is a calendar event with home (SH.breaks: the Mid-Year Break; the Month 12 weeks are one holiday). Most Halvard students go

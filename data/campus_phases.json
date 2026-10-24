@@ -1,4 +1,268 @@
 {
- "_note": "1.6.1 (Batch D, N6) campus phases: what the campus and its key people are busy with during a stretch of the year. Each phase is {\"id\", \"from\": \"M5 W1 Mon\", \"to\": \"M5 W2 Fri\", \"line\": \"one line for <now>\"}; every year, inclusive. The engine puts the active phase's line into <now>. The lines are new canon: they are written in the canon waves (Batch G) and applied only after the owner approves each one. Empty until then.",
- "phases": []
+ "_note": "1.6.1 (Batch D, N6) campus phases: what the campus and its key people are busy with during a stretch of the year. Each phase is {\"id\", \"from\": \"M5 W1 Mon\", \"to\": \"M5 W2 Fri\", \"line\": \"one line for <now>\"}; every year, inclusive. The engine puts the active phase's line into <now> (stepCampusEvents, $ui.phase). 2.1.1 (owner-approved planning/DRAFT_campus_phases.md, roadmap R3): the days before and after the calendar's events; one at a time (no overlaps), no NPC names (they repeat every year), none on a home, lockdown or away day, none while {{user}} is away from campus; never what the event line, lore 134, the exam-week moods or the place lines in merge_lorebooks.py PHASES already say. tools/gen_engine.py checks all of it. trends (2.1.1, owner: 'something more mundane from real campus life, a food that goes viral for a week'): weekly fads for the days without a phase; {id, season ('all' or a list), line}; a week has one at trend_rate percent (seeded per chat and week, engine trendOn), never one of the last trend_gap weeks'; <now> labels it 'Campus fad this week' and lets people take to it or scoff in character. Items they name are data/shop.json items. Text only: no price or stock changes.",
+ "phases": [
+  {
+   "id": "first_weeks",
+   "from": "M1 W1 Sat",
+   "to": "M1 W2 Sun",
+   "line": "The first weeks: first-years still lose their way between buildings, the first homework is landing, and the clubs are settling in the members they signed up."
+  },
+  {
+   "id": "star_night_coming",
+   "from": "M1 W3 Mon",
+   "to": "M1 W3 Fri",
+   "line": "Star Night is on Saturday: students borrow tents and bedrolls, argue over the best spot on the hills, and decide what to wish for at the midnight shower."
+  },
+  {
+   "id": "warding_rite_coming",
+   "from": "M2 W1 Mon",
+   "to": "M2 W1 Thu",
+   "line": "The Warding Rite is on Friday: Mystic students who ward or seal rehearse with the staff, and first-years wonder what casting together with hundreds will feel like."
+  },
+  {
+   "id": "expedition_coming",
+   "from": "M2 W2 Mon",
+   "to": "M2 W3 Tue",
+   "line": "The Creature Studies Expedition goes out on Wednesday of Week 3: kits, boots and field notes are being packed, and the talk is of what lives in Grade III country."
+  },
+  {
+   "id": "midterms_coming_1",
+   "from": "M2 W4 Mon",
+   "to": "M2 W4 Sun",
+   "line": "Midterms start next Monday: study groups claim every table, notes are copied and swapped, and the clubs and evenings out quietly empty."
+  },
+  {
+   "id": "club_festival_coming",
+   "from": "M3 W2 Mon",
+   "to": "M3 W2 Thu",
+   "line": "The Club Festival opens on Friday: every club is building its stand and planning demonstrations and samples, and canvassing for gold coins it cannot vote for itself."
+  },
+  {
+   "id": "dorm_comp_coming",
+   "from": "M3 W4 Mon",
+   "to": "M3 W4 Fri",
+   "line": "The Dorm Competition is this weekend: the qualifiers are the talk of every dorm, and their dorm-mates cheer them on, scout their rivals and give advice nobody asked for."
+  },
+  {
+   "id": "crowning_day_coming",
+   "from": "M4 W1 Thu",
+   "to": "M4 W2 Mon",
+   "line": "Crowning Day is on Tuesday: students form their groups of four for the capital, plan what to see and buy in Avalon, and remind each other to change points into coin the day before."
+  },
+  {
+   "id": "finals_coming_1",
+   "from": "M4 W4 Mon",
+   "to": "M4 W4 Sun",
+   "line": "The End of Semester exams start next Monday: the library and study rooms stay full late, tempers are short, and the semester's last free evenings go to revision."
+  },
+  {
+   "id": "results_wait_1",
+   "from": "M5 W2 Mon",
+   "to": "M5 W2 Thu",
+   "line": "The exams are over and the results and the Dorm Ranking come out on Friday: everyone replays their answers, and the dorms argue about where they will place."
+  },
+  {
+   "id": "break_coming",
+   "from": "M5 W3 Mon",
+   "to": "M5 W3 Sun",
+   "line": "The Mid-Year Break starts next week: most students are writing home and packing trunks; the few staying at Halvard over the break say little about it."
+  },
+  {
+   "id": "sports_day_coming",
+   "from": "M6 W2 Mon",
+   "to": "M6 W3 Fri",
+   "line": "Sports Day is on Saturday of Week 3, with magic banned outright: sign-ups are open, the sport clubs train their favourites, and the strongest mages are teased about running on their own legs."
+  },
+  {
+   "id": "academy_comp_coming",
+   "from": "M6 W4 Mon",
+   "to": "M6 W4 Tue",
+   "line": "The Academy Competition starts on Wednesday: the cross-dorm teams of four drill together, and everyone has a guess which team will go on to represent Halvard."
+  },
+  {
+   "id": "thinning_coming",
+   "from": "M7 W1 Mon",
+   "to": "M7 W2 Sun",
+   "line": "The Thinning comes in Week 3: the staff walk the wards and stock the dorms for a week indoors, the Acting Warden is rarely seen, and those who were here on the breach night go quiet when it comes up."
+  },
+  {
+   "id": "after_thinning",
+   "from": "M7 W4 Mon",
+   "to": "M7 W4 Sun",
+   "line": "The Thinning is over and the doors are open again: students trade what they heard through the windows during the lockdown, and most of it grows in the telling."
+  },
+  {
+   "id": "circus_coming",
+   "from": "M8 W1 Mon",
+   "to": "M8 W2 Wed",
+   "line": "The Traveling Circus arrives on Thursday of Week 2 and the Academy Showcase follows: posters are up, acts rehearse in every free room, and family visits are being planned, and dreaded."
+  },
+  {
+   "id": "midterms_coming_2",
+   "from": "M8 W4 Mon",
+   "to": "M8 W4 Sat",
+   "line": "Midterms start next Monday: the study groups are back, and anyone who earned a Science Fair score is quietly glad to skip the written Magic Theory paper."
+  },
+  {
+   "id": "bazaar_coming",
+   "from": "M9 W2 Mon",
+   "to": "M9 W2 Wed",
+   "line": "The Academy Bazaar opens on Thursday: students count their savings, trade rumours of what the foreign traders will bring, and swear they will not spend it all."
+  },
+  {
+   "id": "founder_day_coming",
+   "from": "M9 W3 Mon",
+   "to": "M9 W3 Fri",
+   "line": "Founder Day is on Saturday: talk turns to the treasure hunt nobody has finished in years, last year's clues are argued over, and groups quietly form."
+  },
+  {
+   "id": "kingdom_comp_away",
+   "from": "M9 W4 Wed",
+   "to": "M9 W4 Sat",
+   "line": "Halvard's team is at the Kingdom Competition in the capital this week; at Halvard classes go on, and any news from the Royal Arena goes round fast."
+  },
+  {
+   "id": "election_coming",
+   "from": "M10 W2 Mon",
+   "to": "M10 W2 Sat",
+   "line": "The Student Council election is next week: both nominees already sit on the Council, and students are making up their minds before the campaign starts."
+  },
+  {
+   "id": "harvest_coming",
+   "from": "M10 W4 Mon",
+   "to": "M10 W4 Thu",
+   "line": "The Harvest Festival starts on Friday, the last loud thing before the exams: costumes are being sewn, stalls and haunted corridors planned, and nobody mentions the exams the week after."
+  }
+ ],
+ "trend_rate": 60,
+ "trend_gap": 8,
+ "trends": [
+  {
+   "id": "salaffian_craze",
+   "season": "all",
+   "line": "Everyone wants Salaffian flatbread: the queue at The Salaffian Oven runs out of the door at lunch, and anyone who has not tried one yet is told they must."
+  },
+  {
+   "id": "honey_cream_coffee",
+   "season": "all",
+   "line": "Nightwell's honey cream coffee is the drink of the moment: cups appear in every classroom, and the line before first period has become a place to be seen."
+  },
+  {
+   "id": "iced_coffee",
+   "season": [
+    "Summer"
+   ],
+   "line": "In the heat everyone carries a Nightwell iced coffee, and being seen without one has somehow become a statement."
+  },
+  {
+   "id": "blossom_cake",
+   "season": [
+    "Spring"
+   ],
+   "line": "The bakery's Blossom honey cake sells out before noon every day, and students trade tips on when the next tray comes out."
+  },
+  {
+   "id": "apple_turnovers",
+   "season": [
+    "Autumn"
+   ],
+   "line": "The bakery's spiced apple turnovers are the autumn obsession: people time their walk past the Mall to catch them hot."
+  },
+  {
+   "id": "roasted_chestnuts",
+   "season": [
+    "Autumn",
+    "Winter"
+   ],
+   "line": "Roasted chestnuts are the thing: a paper cone in every cold hand, and a running argument over which café roasts them best."
+  },
+  {
+   "id": "hot_chocolate",
+   "season": [
+    "Autumn",
+    "Winter"
+   ],
+   "line": "Nightwell's hot chocolate with cream is everywhere; study groups have started meeting there just for it."
+  },
+  {
+   "id": "fruit_coolers",
+   "season": [
+    "Summer"
+   ],
+   "line": "Iced fruit coolers are the summer fix; the cafés have started naming flavours after the dorms, and every dorm insists its own is best."
+  },
+  {
+   "id": "sunfizz_bottles",
+   "season": "all",
+   "line": "The Sunfizz bottle hunt is on: students collect empties for the two-point return, and a few corridors have quietly become someone's territory."
+  },
+  {
+   "id": "lucky_honey_bread",
+   "season": "all",
+   "line": "A rumour says the Cooking Club's honey bread brings luck before a test: the Saturday bake sells out, and the club pretends not to be pleased."
+  },
+  {
+   "id": "dragonchess_fever",
+   "season": "all",
+   "line": "Dragonchess fever: the living boards are never free, unofficial ladders are chalked up in the common rooms, and losing streaks are taken personally."
+  },
+  {
+   "id": "card_game",
+   "season": "all",
+   "line": "A new card game played with gilt-edged cards has swept the dorms; everyone claims to know the real rules, and nobody agrees what they are."
+  },
+  {
+   "id": "juggling",
+   "season": "all",
+   "line": "Juggling has caught on: balls and beanbags fly in the courtyards between classes, with the occasional apology when one lands where it should not."
+  },
+  {
+   "id": "coin_trick",
+   "season": "all",
+   "line": "Everyone is learning a vanishing-coin trick done by hand alone, and anyone caught using magic to cheat at it is not forgiven."
+  },
+  {
+   "id": "broadcast_song",
+   "season": "all",
+   "line": "A song from the afternoon broadcast is stuck in everyone's head: someone hums it in every corridor, and the Announcement Room is begged to stop playing it, or to play it again."
+  },
+  {
+   "id": "satchel_plush",
+   "season": "all",
+   "line": "Small plush animals from Pennywhistle Curios have started hanging from satchels, and whose plush is whose has become a small map of who is close to whom."
+  },
+  {
+   "id": "black_ribbons",
+   "season": "all",
+   "line": "Black silk ribbons are the fashion, tied on wrists and satchels, and the Etiquette teachers have opinions about what counts as uniform."
+  },
+  {
+   "id": "hair_sweet_dare",
+   "season": "all",
+   "line": "Merryhew's colour-change hair sweets are the dare of the week: every class has someone with alarming hair, and the game is to keep a straight face."
+  },
+  {
+   "id": "kind_notes",
+   "season": "all",
+   "line": "Anonymous kind notes keep appearing on the Notice Board, one for someone new each morning; everyone wants to know who writes them, and who is next."
+  },
+  {
+   "id": "morning_runs",
+   "season": [
+    "Spring",
+    "Summer"
+   ],
+   "line": "Early-morning running has become a thing: before breakfast the paths round the lake fill with students who will have given up by next week."
+  },
+  {
+   "id": "hourglass_study",
+   "season": "all",
+   "line": "A study method is going round: an hourglass on the table, work until the sand runs out, then a short break; hourglasses have gone missing from every lab."
+  },
+  {
+   "id": "game_halls",
+   "season": "all",
+   "line": "The Mall's game halls have a new favourite game, free hours vanish there, and waiting in the queue to play is half the fun."
+  }
+ ]
 }

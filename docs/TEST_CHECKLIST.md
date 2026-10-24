@@ -159,6 +159,13 @@ show the newcomers their dorm rooms.
       Trust or Tension move), points spent with what for, Bag in and out, new Planner entries and Journal lines, and agrees with the
       People panel and the Wallet. It stays open while the bracelet redraws, is gone when the bracelet is collapsed, and a swipe shows
       the new reply's own changes [1.79].
+- [ ] Campus now: the bracelet has a folded "Campus now (3 of the people you know)" under the news; open it: three people Charles
+      has a bond with (not Kanae or Zara while they are with him), each "Name : what they are doing"; at Rank 0–2 only what anyone can
+      see ("in class until …", "at their club until …", "off sick", or "free"), never a place. A swipe and the rest of the block keep
+      the same three; after curfew the fold is gone. "Everyone on the People panel" opens People → Campus now with everyone Charles
+      knows; Settings → Features → Campus now off removes both. Nothing of it is in the prompt [2.1.0].
+- [ ] On the tour, magic turns up as part of ordinary life (a tray floating along, a light over a page, a misfired first-year spell, a
+      familiar on a bench), now and then rather than in every reply; nobody asks permission to cast and no staff member objects [2.1.2].
 - [ ] A brass rule sits between the bracelet and the story [1.71].
 - [ ] Card actions: no generic buttons; Kanae and Zara get only what their rank and this place open (at Rank 0 usually just Give a
       gift, which lists the Bag with "not tried"). A button only fills the chat box; edit and send, and the engine counts it as usual [1.71].
@@ -315,6 +322,9 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
       two roles, the chosen class comes first [1.33].
 
 ### Q2.5 The grounds (any free afternoon)
+- [ ] Start a quick skirmish with someone willing (a hex over a seat in the Courtyards): onlookers cheer or step around it, no staff turn
+      up, and `/Rep_events` gets nothing. A formal duel or a grudge goes to the Combat Grounds' rings. Only if a bystander gets hurt or
+      something breaks does Academy reputation drop (`fight_outside_ward`). An unwilling NPC answers in character (Tension) [2.1.2].
 - [ ] One short reply from the Canteen to the Boathouse: the Log says "Walked … min on foot, … stamina; … still ahead", `<now>` says
       "Still on the way", and once the clock has caught up the line is gone [1.47].
 - [ ] The Boathouse to the Fishing House: about three minutes along the shore; the Gardens to the Boathouse: about twenty [1.15.1].
@@ -350,6 +360,9 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
       morning after that day the change is gone with "… as it was again" [1.77].
 
 ### Q2.7 Saturday and Sunday
+- [ ] From Saturday `<now>` has "Campus phase: The first weeks: first-years still lose their way …", and Inventory → Notice Board shows
+      the same line under "On campus"; the narrator lets it colour the scene now and then, never as an order. Settings → Features →
+      Campus phases and fads shows about 40 tokens [2.1.1].
 - [ ] Saturday afternoon at the club adds Student reputation (Q1.2) [1.16.1].
 - [ ] Sunday 07:30: "Sunday (no classes)" [1.30.2].
 - [ ] Saturday 15:00–17:00 in the Canteen: `<now>` says whether the Cooking Club's bake worked (honey bread, 3 points, stamina) or went
@@ -378,6 +391,10 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
       it.", and the narrator plays it in his quiet way; on the scene card the "glad · birthday" chip shows only once his dossier has
       opened his birthday [1.72].
 - [ ] Inventory → Journal shows the engine's "Week recap (M1 W1): …", with "a clean week" if no class was skipped [1.10].
+- [ ] Campus now, once a bond reaches Rank 3: People → Campus now lists them under "They tell you their plans" with their routine and
+      place when they keep it ("Irene : Library Assistants shift - Main Library", weekdays 16:00–19:00), else "somewhere on campus";
+      in rain an outdoor routine reads "sheltering from the weather". Go there and look for them: they are found, though running into
+      them unasked is still the presence roll [2.1.0].
 - [ ] Practical Magic: `<now>` names Charles's role class and its teacher (for Healing, Hester in the Healing Ward), and the narrator
       writes a mixed-dorm class of that role, not Gavlan's old Combat Class [1.33].
 
@@ -446,6 +463,9 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
       06:00 the default map is back [1.13, 1.14.3].
 
 ### Q3.6 Spiritual Dorm Day (W4 Sun) and the month's end
+- [ ] In a week without a phase (W4 here, or any later gap) `<now>` may have "Campus fad this week: …" (a food everyone wants, a game
+      everyone plays); it stays all week, a swipe keeps it, the Notice Board says "On campus this week"; some people join in and some
+      scoff, each in character; nothing in the shops changes. A week later it is gone or another one [2.1.1].
 - [ ] On the day the Viridian Dormitory's pin is back on the map, and gone again on Monday [1.71].
 - [ ] From the Wednesday before, `<now>` shows "Coming up … W4 Sun: Spiritual Dorm Day", and now and then a student mentions it in passing,
       in character, not everyone [1.32].

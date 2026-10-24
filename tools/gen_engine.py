@@ -385,9 +385,36 @@ assert all(('{thing}' in x) != ('{place}' in x) for v in _fav['asks'].values() f
 t = t.replace('/*@@INITIATIVE_ASKS@@*/{}', json.dumps({'asks': _asks, 'cat': _cats, 'club': _nclub, 'places': _askd.get('places', []),
     'fav': {k: v for k, v in _fav.items() if k != '_note'}}, ensure_ascii=False, separators=(',', ':')))
 # 1.6.1 (N6): campus phases, one line each for <now> while the phase runs (empty until the canon waves)
-PH = json.load(open(P('data/campus_phases.json'), encoding='utf-8'))['phases']
+_PHF = json.load(open(P('data/campus_phases.json'), encoding='utf-8'))
+PH = _PHF['phases']
 assert all({'id', 'from', 'to', 'line'} <= set(p) for p in PH), 'campus phase needs id, from, to, line'
+# 2.1.1 (owner-approved planning/DRAFT_campus_phases.md): one phase a day, none on a home, lockdown or away day, no NPC names, short;
+# the weekly fads: a season the calendar knows, no names, no smells (the preset's Scent Killswitch, DECISIONS §8 Ambience)
+_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+def _doy(w):
+    m = re.match(r'^M(1[0-2]|[1-9]) W([1-4]) (Mon|Tue|Wed|Thu|Fri|Sat|Sun)$', w)
+    assert m, f'campus phase date "{w}" is not "M<n> W<n> <Day>"'
+    return (int(m[1]) - 1) * 28 + (int(m[2]) - 1) * 7 + _DAYS.index(m[3])
+_off = {(e['m'] - 1) * 28 + (e['w'] - 1) * 7 + _DAYS.index(d): e['id'] for e in cal['events'] if e.get('home') or e.get('lockdown') or e.get('away') for d in (e['d'] if isinstance(e['d'], list) else [e['d']])}
+_names = re.compile(r'\b(' + '|'.join(sorted((re.escape(k) for k in npcs), key=len, reverse=True)) + r')\b')
+_used = {}
+for _p in PH:
+    _a, _z = _doy(_p['from']), _doy(_p['to'])
+    assert _a <= _z, f'campus phase {_p["id"]}: from after to'
+    for _d in range(_a, _z + 1):
+        assert _d not in _used, f'campus phases {_used.get(_d)} and {_p["id"]} overlap'
+        assert _d not in _off, f'campus phase {_p["id"]} falls on {_off[_d]} (home, lockdown or away)'
+        _used[_d] = _p['id']
+    assert not _names.search(_p['line']), f'campus phase {_p["id"]} names an NPC (phases repeat every year)'
+    assert len(_p['line'].split()) <= 45, f'campus phase {_p["id"]}: over 45 words'
+_TR = _PHF.get('trends', [])
+assert len({x['id'] for x in _TR}) == len(_TR) and len({p['id'] for p in PH}) == len(PH), 'campus phases and fads need unique ids'
+for _x in _TR:
+    assert _x['season'] == 'all' or (isinstance(_x['season'], list) and set(_x['season']) <= set(cal['seasons'])), f'campus fad {_x["id"]}: season'
+    assert not _names.search(_x['line']) and not re.search(r'\b(smell|scent|aroma|odou?r)', _x['line'], re.I), f'campus fad {_x["id"]}: a name or a smell'
+    assert len(_x['line'].split()) <= 45, f'campus fad {_x["id"]}: over 45 words'
 t = t.replace('/*@@PHASES@@*/[]', json.dumps(PH, ensure_ascii=False, separators=(',', ':')))
+t = t.replace('/*@@TRENDS@@*/{ list: [], rate: 0, gap: 8 }', json.dumps({'list': _TR, 'rate': _PHF.get('trend_rate', 0), 'gap': _PHF.get('trend_gap', 8)}, ensure_ascii=False, separators=(',', ':')))
 assert all(x in npcs for x in MENTION_DENY)
 t = t.replace('/*@@MENTION_DENY@@*/[]', json.dumps(MENTION_DENY))
 # 1.60.0: Lore_changes subjects -> their lore entry (common.lore_names, the names build_card's overlay matches); NPC entries apart

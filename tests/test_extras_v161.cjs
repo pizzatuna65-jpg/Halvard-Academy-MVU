@@ -98,7 +98,7 @@ const S2 = applyPatch(P, [{ op: 'replace', path: '/World/Time', value: '23:00' }
 ok(S2.Campus_State.Events['Library flood'].Text === was && /^M\d+ W\d \w{3}$/.test(S2.Campus_State.Events['Library flood'].Updated), 'and it is dated on the first update');
 
 // ---- N6: campus phases (framework; empty data until the owner approves the lines)
-ok(JSON.parse(rd('data/campus_phases.json')).phases.length === 0, 'data/campus_phases.json is empty (canon comes through the canon waves)');
+ok(JSON.parse(rd('data/campus_phases.json')).phases.length > 0, 'data/campus_phases.json holds the owner-approved phases (2.1.1; empty until then)');
 {
   const src = rd('src/scripts/engine.js').replace(/const PHASES = \[[^\n]*\];/, 'const PHASES = [{"id":"exams","from":"M1 W2 Mon","to":"M1 W3 Fri","line":"Exam fortnight: the campus is quiet and short-tempered."}];');
   ok(src.includes('"id":"exams"'), 'engine source patched for the test');

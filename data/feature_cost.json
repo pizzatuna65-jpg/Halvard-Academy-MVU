@@ -14,6 +14,8 @@
   "event_chances": 0,
   "npc_routines": 0,
   "presence_roll": 0,
+  "campus_phases": 0,
+  "campus_now": 0,
   "npc_initiative": 0,
   "weather": 425,
   "class": 0,
@@ -34,8 +36,8 @@
   "new_people": 0,
   "mention_brief": 0
  },
- "core_rules": 8872,
- "lore": 9831,
+ "core_rules": 8916,
+ "lore": 9922,
  "price_guide": 7544,
  "live": {
   "class": 40,
