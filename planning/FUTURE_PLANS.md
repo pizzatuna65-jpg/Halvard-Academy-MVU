@@ -6,7 +6,7 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
 
 ## 0. Rilis berikutnya (owner, 2026-10-24)
 
-Versi saat ini 2.2.2 (Routine 2.0: staf dan lainnya; 2026-10-24); rilis berikutnya 2.2.3 (Routine 2.0 angkatan yang datang belakangan). Nomor di §0.1 berlaku bila roadmap itu rilis lebih dulu; pekerjaan lain yang rilis lebih dulu mengambil nomor berikutnya dan
+Versi saat ini 2.2.3 (Routine 2.0: angkatan belakangan; 2026-10-24); rilis berikutnya 2.2.4 (Routine 2.0 perkembangan + semua tes). Nomor di §0.1 berlaku bila roadmap itu rilis lebih dulu; pekerjaan lain yang rilis lebih dulu mengambil nomor berikutnya dan
 roadmap bergeser satu.
 
 | Pekerjaan | Isi | Catatan |
@@ -22,15 +22,14 @@ Routine 2.0) dan B3; R2 (Meanwhile lebih longgar), R4 (setel toggle lama), B1 ve
 
 | Rilis | Isi | Butuh | Catatan |
 |---|---|---|---|
-| **2.2.3–2.2.4** | **B1** Routine 2.0, sisa | draft data per kelompok | 2.2.0 (format, dua lapis, Year 1), 2.2.1 (Year 2, Year 3, pelintas) dan 2.2.2 (staf dan lainnya) selesai. 2.2.3 angkatan yang datang belakangan; 2.2.4 baris perkembangan + **semua tes** (owner: tes ditunda ke 2.2.4). |
+| **2.2.4** | **B1** Routine 2.0, sisa | draft `DRAFT_routine2_perkembangan.md` | 2.2.0 (format, dua lapis, Year 1), 2.2.1 (Year 2, Year 3, pelintas), 2.2.2 (staf dan lainnya) dan 2.2.3 (angkatan belakangan, hanya kebiasaan tetap) selesai. 2.2.3 angkatan yang datang belakangan; 2.2.4 baris perkembangan + **semua tes** (owner: tes ditunda ke 2.2.4). |
 | **2.3.0** | **M1** kejadian off-screen + **M2** feed memuatnya | draft tabel kejadian | Sesudah B1: kejadian diambil dari baris routine yang benar-benar dijalani NPC. |
 | **2.4.0** | **M3** rubrik koran + **M4** akibat yang sampai ke {{user}} | kode | Butuh kejadian M1. M3 sekaligus menyiapkan rubrik yang dipakai B3. |
 | **2.5.N** | **B3** Politik kampus | draft langkah faksi | 2.5.0 = lite (Doves + Council); 2.5.1 = asrama, Liaison, Cathedral, Choir (tersembunyi). Full suite. |
 
-**B1. Routine 2.0, sisa (2.2.3–2.2.4).** 2.2.0 menerapkan format, engine dua lapis dan kelompok 1; 2.2.1 kelompok 2 (Year 2, Year 3) dan pelintas di perjalanan; 2.2.2 kelompok 3 (staf, Doves, Cathedral, Facilities, Liaison) (owner-approved
+**B1. Routine 2.0, sisa (2.2.4).** 2.2.0 menerapkan format, engine dua lapis dan kelompok 1; 2.2.1 kelompok 2 (Year 2, Year 3) dan pelintas di perjalanan; 2.2.2 kelompok 3 (staf, Doves, Cathedral, Facilities, Liaison); 2.2.3 kelompok 4 (angkatan yang datang belakangan), pembersihan baris yang berubah-ubah, baris pair tanpa pasangan dilewati (owner-approved
 `DRAFT_routine2.md`, dihapus di 2.2.0; isinya ada di CHANGELOG 2.2.0, `data/npc_routines.json` `_note` dan DECISIONS "NPC routines" /
 "Who is here is rolled"). Sisa:
-- **2.2.3:** angkatan Year 2 dan Year 3 yang datang belakangan (13); draftnya `planning/DRAFT_routine2_kelompok4.md`. Pair yang bisa menyusul: Ruby dengan Caralynn (Music Club).
 - **2.2.4:**
   - baris perkembangan dan syarat yang belum ada di 2.2.0: `since` / `after` (bulan/tahun kampanye, event, Secrets_revealed), `ev`
     (hari acara, mis. sirkus Month 8 untuk Trixie), `mood` (`mg:moodOf`), `exam` (minggu ujian);

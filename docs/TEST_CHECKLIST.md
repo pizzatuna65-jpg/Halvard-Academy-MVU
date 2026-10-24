@@ -281,6 +281,9 @@ show the newcomers their dorm rooms.
 - [ ] The staff keep their own days: Hester in the Medical Centre most of the day (her herb garden 16:00–17:00), a teacher not teaching
       this period in the Faculty Offices, Krieg at the Forest edge after curfew, sometimes Rei on the Rooftop late at night; on Sunday
       evening Layla and Yvette together in the Staff Quarters, on Wednesday evening Royhan and Milena at Dragonchess by the Dovecote [2.2.2].
+- [ ] Milestone, campaign Year 2: the third-years have graduated, and nobody turns up "with" one of them (Florian's challenge to
+      Gareth, Idris and Royhan in the Gardens, Royhan and Milena at Dragonchess); the new first-years (Hadrian, Linus, Maple, Nerys,
+      Tsubaki, Wren) keep their own days: Tsubaki at the Sparring Pavilion before dawn, Nerys at the Canteen's leftovers at closing [2.2.3].
 Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Crafting (Potion Halls), mixed.
 - [ ] 07:30 the bracelet reads "Morning, before classes" (on Sunday: "Sunday (no classes)"; on a day an event has no classes, such as
       Entrance Day: "Morning, no classes today") [1.30.2].

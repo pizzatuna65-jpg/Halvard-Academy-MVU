@@ -198,7 +198,7 @@ function whereabouts(PD, V, id) {
   const busy = !c || k === 'council' ? null : teach ? ['teaching ' + c[0] + ' until ' + V.until, c[2]] : !stu ? null
     : k === 'class' ? ['in class until ' + V.until, []] : k === 'study' ? ['at Study Hall until ' + PERIOD_END[1], c[2]]
     : k === 'election' ? ['voting in the Main Courtyard until ' + PERIOD_END[2], []] : ['at their club until ' + PERIOD_END[2], []];
-  const gone = V.GRAD.includes(id) ? 'graduated' : ((PD.arr || {})[id] || 1) > V.Y ? 'not at Halvard yet' : V.brk && stu && !V.brk.includes(id) ? 'home for the break' : '', st = npcStatusOf(V.NST, id), sick = V.sick.includes(id);
+  const gone = goneOf(PD, V, id), st = npcStatusOf(V.NST, id), sick = V.sick.includes(id);
   const rt = !V.rton || gone || sick || st || busy || V.min == null ? null : rtPick(PD, V, id);
   return { id, gone, st, sick, busy, rt };
 }
@@ -210,7 +210,9 @@ const rtWx = V => (V.bad ? 'bad' : V.fog ? 'fog' : 'fair');
 const rtFits = (r, wx) => { const w = (r[9] || {}).wx; return !w || w === wx || (w === 'fair' && wx === 'fog'); };
 const rtAt = (r, pk) => !!r && (r[10] ? r[10].includes(pk) : r[3] === pk);
 function rtPick(PD, V, id) {
-  const wx = rtWx(V), on = ((PD.rt || {})[id] || []).filter(r => r[0].includes(V.W.Day) && V.min >= r[1] && V.min < r[2] && rtFits(r, wx));
+  // 2.2.3: a pair row only while the partner is at Halvard, on their feet and under no status (else its share is free)
+  const mate = r => { const o = (r[9] || {}).pair; return !o || (!goneOf(PD, V, o) && !V.sick.includes(o) && !npcStatusOf(V.NST, o)); };
+  const wx = rtWx(V), on = ((PD.rt || {})[id] || []).filter(r => r[0].includes(V.W.Day) && V.min >= r[1] && V.min < r[2] && rtFits(r, wx) && mate(r));
   if (!on.length) return null;
   const pr = on.find(r => (r[9] || {}).pair), key = pr ? [id, pr[9].pair].sort().join('+') : id;
   // at most 90 in all, so at least 10 free (two old 70% rows in one block: 70, then the 20 left, close to the old chained rolls)
@@ -248,6 +250,11 @@ const passingAt = (PD, V, id, pk) => { const t = onTheWay(PD, V, id); return t &
 // the weather keeps a routine off an outdoor place unless the row itself was chosen for that weather (wx bad: they stay out in it)
 const rtWxOff = (PD, V, r, pk, id) => !((r[9] || {}).wx === 'bad') && wxOff(PD, V, pk, id);
 const whereFree = w => !w.gone && !w.sick;   // at Halvard and on their feet
+// why id is not at Halvard now ('' when they are): graduated, their cohort not arrived, home for a break (2.2.3: shared with rtPick)
+function goneOf(PD, V, id) {
+  const stu = !!(PD.stu || {})[id];
+  return V.GRAD.includes(id) ? 'graduated' : ((PD.arr || {})[id] || 1) > V.Y ? 'not at Halvard yet' : V.brk && stu && !V.brk.includes(id) ? 'home for the break' : '';
+}
 // 1.97.5 (owner-approved planning/DRAFT_world_competition.md §4): a transfer (PD.tr, Vesna: [lorebook year, the nation she left]) is a
 // Halvard student only once Campus_State.Transfers names her (engine stepScene): then she is in PD.stu with {{user}}'s dorm (lorebook
 // Year 1: {{user}}'s school year), so whereabouts, the brackets and the breaks count her; before, she is not at Halvard (PD.arr).

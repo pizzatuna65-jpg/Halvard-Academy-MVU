@@ -102,7 +102,8 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
   weighted rows in the one whereabouts model, below status, sickness, class, teaching, Study Hall, clubs and the election, above haunts;
   one seeded draw per NPC, day and presence block (the main row 70, the owner's number; at least 10 free: no place, the crowd roll);
   kinds duty, habit, errand; rows for a weather and pair rows (one draw for both). Dossier and Map show the main rows as "usually",
-  gated by the Haunts field. Lore dawn habits before curfew ends are kept as written.
+  gated by the Haunts field. Lore dawn habits before curfew ends are kept as written. 2.2.3 (owner): a row is a stable habit only, never
+  something that changes over time (this week's hobby, a current favourite, "when someone else wants", wherever {{user}} is).
 - **Who is here is rolled** (1.99.11, owner-approved draft after a playtest): the engine decides who is at a place (shared.js
   `presenceAt`: certain only one scheduled room (a class, teaching, Study Hall, the Council); 2.2.0 (owner, two layers): a routine says
   where someone is, and {{user}} runs into them at `here.meet` (duty 85, habit 65, errand 30), never for certain on an open place;
