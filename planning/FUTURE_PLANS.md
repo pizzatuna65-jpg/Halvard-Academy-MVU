@@ -68,8 +68,14 @@ ditulis dari lore dan disetujui owner, jadi tidak bisa keluar karakter.
   angka 70 tetap, "ringan" berubah jadi hari penuh. Perbarui baris DECISIONS itu di rilis 2.2.0.
 - **Supaya tidak melemahkan Who is here / Look for (cek 2026-10-24):**
   1. `presenceAt` menganggap routine di tempat itu *pasti*; hari penuh = hampir semua NPC pasti di suatu tempat, jadi roll keramaian
-     (target ambience) dan orang lewat 8% nyaris tak terpakai, dan tempat "sepi" bisa penuh. Tabel per blok wajib punya hasil
-     **free** (sebagian dari sisa 30%) yang jatuh ke roll keramaian seperti sekarang.
+     (target ambience) dan orang lewat 8% nyaris tak terpakai, dan tempat "sepi" bisa penuh. Ini merusak tujuan DECISIONS "Who is
+     here is rolled" (1.99.11): datang ke tempat dan tidak bertemu siapa pun, sesuai ambience. Maka:
+     - Tabel per blok wajib punya hasil **free** (sebagian dari sisa 30%) yang jatuh ke roll keramaian seperti sekarang.
+     - Baris diberi jenis: **duty** (shift, kerja, jabatan, mis. Irene di Library Assistants) tetap pasti; **habit** (santai,
+       kebiasaan) ikut roll keramaian dengan bonus (pola Look for), jadi tempat sepi tetap bisa kosong.
+     - Validator `presence_data`: peringatan bila satu tempat dan blok punya lebih banyak orang pasti daripada target keramaiannya.
+     - Uji: persen kunjungan yang tidak menemukan siapa pun per tingkat keramaian (0–4), sebelum dan sesudah; harus tetap dekat angka
+       sekarang (hitungan kasar: keramaian 0 ≈ 80% kosong, termasuk orang lewat 8%).
   2. Look for selalu menemukan NPC di routine-nya; hasil free menjaga ketidakpastiannya. `lookHabit` melaporkan baris utama.
   3. Cuaca: baris `wx` routine dulu, aturan umum pengusir tempat terbuka (`presenceAt` moved, `lookFor` weather) hanya untuk NPC tanpa
      baris `wx`; jangan dihitung dua kali.
