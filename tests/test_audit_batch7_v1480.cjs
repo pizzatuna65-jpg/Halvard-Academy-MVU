@@ -27,6 +27,8 @@ ok(sheets.every(e => e.content.length < 40000) && X(509).content.length < 10000,
 // worktree) equal 1.99.9's with the 741 " [not told yet: Rank N]" tags removed.
 // 1.99.10 renewed it for the Birthday line of the full sheets: 219 scenarios differed, and 1.99.9's renders equal 1.99.10's with the
 // 545 Birthday lines removed.
+// 2.0.0 renewed it for the tags at Trust Betrayed (audit A2): 33 scenarios differed, and 1.99.13's renders (a worktree) equal 2.0.0's
+// with the 175 " [not told yet: Trust Betrayed]" tags removed (the Gifts prefix back to "Gifts: ").
 const { scenario, N } = require('./fixtures/cast_scenarios.cjs');
 const REC = JSON.parse(read('tests/fixtures/cast_1560.json'));
 const bad = [];

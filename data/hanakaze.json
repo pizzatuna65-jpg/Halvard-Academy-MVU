@@ -85,6 +85,8 @@
   "rates": { "walk_pct": 5, "max_rolls": 6, "street": 20, "challenge": 25, "team": 20, "raid": 5, "raid_escape": 60 },
   "_theft": "the city's pickpockets (engine areaTheft, Avalon's pattern): busy places only, rarer than in Avalon.",
   "theft": { "where": ["hanakaze_skyport", "challenge_crossing", "snow_festival_park", "thunder_gate_temple", "hundred_alleys"], "rate": 6, "seen": 50, "min": 10, "max": 25, "cap": 300, "once": true, "ev": "pick", "who": "a pickpocket", "toast": "Pickpocketed", "why": "pickpocketed in Hanakaze" },
+  "_raid": "2.0.0 (bug-hunt audit K3): the Alpha's Watch raiding the Warrens (engine areaRaid, Avalon's pattern).",
+  "raid": { "why": "caught in the Warrens during an Alpha's Watch raid in Hanakaze", "journal": "Hanakaze: {{user}} was caught in the Warrens in an Alpha's Watch raid; Gavlan Haverton was sent for.", "toast": "Caught in a raid" },
   "where": {
     "challenge": ["challenge_crossing"],
     "team": ["thousand_lantern_inn", "hall_of_victors", "eternal_sakura", "snow_festival_park", "golden_pavilion", "challenge_crossing", "thunder_gate_temple", "hundred_alleys", "glass_canal", "forge_street", "mask_theatre", "hell_valley_springs", "fox_gates", "cliff_temple", "crowning_ring", "red_tower_arcade"],

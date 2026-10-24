@@ -47,9 +47,12 @@ const lookText = (who, place) => `I'm looking for ${who} ${lookIn(place)}.`;
 // then the Practice actions (Proficiency on, a practice place discovered)
 const practiceOn = S => featureOn(S, 'proficiency') && practicePlaces(S).length > 0;
 const acAction = S => lookRow(S) + (practiceOn(S) ? acPractice(S) : '');
+// 2.0.0 (audit A3): where the engine rolls a search at all (Who is here on, not after curfew, not in an outside area); the Action tab
+// and the dossier's "Look for <name>" both ask it
+const lookOpen = S => featureOn(S, 'presence_roll') && !/CURFEW|LOCKDOWN/.test(String((S.World || {})._Curfew || '')) && !LOOK_AREAS_UI.some(k => (((S.$ui || {}).area || {})[k] || {}).on);
 function lookRow(S) {
   const l = DATA.locs[locIdOf((S.World || {}).Location)];
-  if (!l || !featureOn(S, 'presence_roll') || /CURFEW|LOCKDOWN/.test(String((S.World || {})._Curfew || '')) || LOOK_AREAS_UI.some(k => (((S.$ui || {}).area || {})[k] || {}).on)) return '';
+  if (!l || !lookOpen(S)) return '';
   return `<div class="item"><div class="row"><span class="t">Look for someone</span><button class="btn sm" data-fill="${esc(lookText('[name]', l.name))}">Look for</button></div><div class="sub">Somewhere here, if they are here at all: the engine rolls it, a little better than chance for someone who often comes here.</div></div>`;
 }
 

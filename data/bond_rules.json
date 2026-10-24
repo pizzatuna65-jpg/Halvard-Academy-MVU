@@ -25,6 +25,8 @@
   7
  ],
  "close_at": 0.8,
+ "worksite": ["Bobby", "Milena"],
+ "_note_worksite": "2.0.0 (bug-hunt audit K2, from the engine): besides the staff, who has a worksite {{user}} may visit unscheduled at Rank 7 (Trust 50+, Tension under 70): Bobby (Facilities) and Milena (the Doves). <now> lists them under worksite visits.",
  "_note_close_at": "1.5.0 (N3a): a bond is marked close in <now> once its XP reaches this share of the next rank's need (before the bar is full).",
  "pace": {
   "fast": 0.25,
