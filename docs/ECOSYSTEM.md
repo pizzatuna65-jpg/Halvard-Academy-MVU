@@ -452,6 +452,31 @@ The block stays in the message: MVU reads it again when it replays a floor. A ch
 - **Summaryception → VectFox:** `/sc-clear` first (it unhides everything; VectFox skips hidden messages).
 - After editing an old, already summarised message: Snippet Browser → regenerate that line.
 
+## Eldrasil Black Box (playtest recorder, optional)
+
+A separate SillyTavern extension, `https://github.com/pizzatuna65-jpg/Eldrasil-BlackBox` (1.0.0, 2026-10-24), for playtests: it
+records what happened behind each reply, in the browser and outside the chat file. It reads only and adds nothing to the prompt;
+the card works the same without it. Full details are in its README.
+
+- **Install:** Extensions → Install extension → the URL above → reload. No server plugin, no `config.yaml` change.
+- **What it keeps per request:** the final prompt as sent (after the lorebook, Prompt Template's EJS, VectFox or Summaryception),
+  split by source; the provider's input, cached and output tokens and the cost (OpenRouter sends all three); timing; the lore
+  SillyTavern activated; the chat save after the reply and the file size; the engine's signals from the reply's state (new `_Log`
+  lines, an engine error, an unreadable block, `$ui.missed` reminders). Background requests (MVU's extra-model update,
+  Summaryception) are kept apart from replies.
+- **Use:** wand menu → Black Box; click a reply for its Prompt, Tokens, Lore and Engine tabs. Toasts after three cache misses in a
+  row, three slow saves (over 2 s) and at 80 MB / 100 MB of chat file (the card's chapter plan, `planning/DRAFT_bab_baru.md`).
+- **Playtest report:** Export playtest bundle → `python tools/audit_chat.py <bundle.json.gz> --blackbox --no-drift --out report.md`
+  (add `--mechanics` or `--memory` for those reports on the bundle's chat slice). Send the bundle with a playtest note instead of a
+  chat export: it carries what the narrator was sent.
+- **Quest autopilot** (Black Box 1.2.0; the card is not changed): the Black Box ships the card's live checks
+  (`data/eldrasil_checks.json`) and judges them on every reply; wand → Black Box → Quests shows passed, failed (with the message and what was missing), to
+  review and not yet. Nothing to set up. Send the bundle after a session; the assistant ticks the quest log from it with
+  `tools/quest_ticks.py`. Settings: Quest autopilot (on), Toast when a live check fails (off).
+- **The card's side:** its `data/markers.json` names the card's entry tags (`<current_state>`, `<now>`, `<cast>`,
+  `<final_cast_gate>`, `<update_format>`, `<variable_update_rules>`, `<campus_rules>`, `<rule_cards>`, `[WORLD INDEX`,
+  `[Price Guide]`) and the memory blocks (`<VectFoxMemory>`, `<story_before_chat>`). A release that renames one updates that file.
+
 ## If you change things later
 - The MAX and Micro CoT variants were not adapted; stay on BOLT or ask for them to be converted.
 - DnD Simulator and Inventory/Feats need the Internal States block; leave them OFF with this card.
