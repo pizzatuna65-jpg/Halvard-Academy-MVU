@@ -514,6 +514,9 @@ The first academy flight (the airship), then the Grand Vast Forest.
 ## Act 5 — Month 3
 
 ### Q5.1 Before the Midterm
+- [ ] In the week before the midterms and during them, the studious (Alyssa, Zara, Castor, Vera, Idris, Royhan) are often revising in
+      the Main Library or the Study Rooms after class, Baelin walks about watching for exhausted students, Yvette steers people to ordinary
+      coffee at Nightwell; Bruno, Sophia and Trixie keep their usual days [2.2.4].
 - [ ] Study in the Main Library in the evenings before it: in exam week `<now>` states the preparation, and the marks fit it [1.10.1].
 
 ### Q5.2 Midterm week (W1 Mon–Thu, marks on Friday)
@@ -613,6 +616,8 @@ The first academy flight (the airship), then the Grand Vast Forest.
       birdsong, knocking in the wall), never a breach or a Clue [1.85].
 
 ### Q7.3 The Circus and the Showcase (M8 W2–W3)
+- [ ] From Thursday evening to Sunday Trixie is at the circus tent in the Main Courtyard most of the time she is free ("every waking
+      minute"), and nowhere near it the week after; her dossier's Routine field never mentions the circus [2.2.4].
 - [ ] Circus Thursday after 18:00 in the Courtyards: the bracelet's "Stalls here" chip, the Price Guide's Circus stalls with their hours,
       and a candied apple costs 5 points; at 15:00 the stalls are not open yet [1.85].
 - [ ] Showcase days: `<now>` says families are visiting; Charles's family comes only if the player says so [1.85].

@@ -20,7 +20,7 @@ for k, v in {'BDAYS': {k:v['birthday'] for k,v in GIFTS.items() if v['birthday']
              'TRN': {k: v['transfer'] for k, v in npcs.items() if v.get('transfer')},   # 1.97.5: a transfer is at Halvard once Campus_State.Transfers names her
              'PRON': {nid: {'F': 'she/her', 'M': 'he/him'}.get(n.get('gender'), 'they/them') for nid, n in sorted(npcs.items())},
              # 1.80.0 (Megumin audit MS4): the engine's name forms; a first name that is also a word (MENTION_DENY) counts only in full
-             'PRESENCE': {k: v for k, v in presence_data(npcs, locs).items() if k not in ('ct', 'hr', 'walk')},   # 1.99.12: Look for (the contest data stays out; 2.1.0: Campus now's ranks too)
+             'PRESENCE': {k: v for k, v in presence_data(npcs, locs).items() if k not in ('ct', 'hr')},   # 1.99.12: Look for (the contest data stays out; 2.1.0: Campus now's ranks too; 2.2.4: walk, evd and exd stay in: Look for reads them, so <now> and the engine agree)
              'NAMES': {nid: [f for f in fs if not (nid in MENTION_DENY and f == nid)] for nid, fs in sorted(name_forms(npcs).items())}}.items():   # 1.3.8 (+1.4.0 apology_npc)
     ph = '/*@@' + k + '@@*/' + ('[]' if isinstance(v, list) else '{}')
     assert ph in ejs, ph

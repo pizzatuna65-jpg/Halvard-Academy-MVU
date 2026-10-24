@@ -362,7 +362,7 @@ function locCard(id, S, cur, P) {
   ];
   // 1.52.0 (feature batch 4): the weekly routines here of people whose Haunts you know (data/npc_routines.json, "usually")
   // 2.2.0 (Routine 2.0): the main rows only (weight 50+), once each (an old row cut at block edges is one row)
-  const usual = Object.entries(DATA.presence.rt || {}).flatMap(([r, rows]) => _.uniqBy(rows.filter(x => (x[8] == null || x[8] >= 50) && rtAt(x, pk) && atHalvard(r, S) && hauntKnown(r, S)), x => x[6] + x[5])
+  const usual = Object.entries(DATA.presence.rt || {}).flatMap(([r, rows]) => _.uniqBy(rows.filter(x => rtMain(x) && rtAt(x, pk) && atHalvard(r, S) && hauntKnown(r, S)), x => x[6] + x[5])
     .map(x => `${B[r] ? `<button class="lnk" data-open="npc:${esc(r)}">${esc(nameOf(r, S))}</button>` : esc(nameOf(r, S))} <span class="sub">(usually ${esc(x[6])}${x[5] ? ', ' + esc(x[5]) : ''})</span>`));
   if (usual.length && featureOn(S, 'npc_routines')) rows.push(['Usually here', usual.join(', ')]);
   // 1.31.0 (owner-approved planning/DRAFT_restore_places.md): a restful place says what resting there restores; where {{user}} is,

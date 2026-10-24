@@ -55,7 +55,7 @@ console.log('status, sickness, Scene.Present');
   ok(!row(F, 'Gareth'), 'someone with {{user}} is not in the feed');
 }
 
-console.log('a place it names is one Look for finds them at');
+console.log('a place it names: Look for finds them there most times');
 {
   let named = 0, agree = 0;
   for (let n = 8; n < 40; n++) for (const t of ['07:10', '12:30', '16:30', '17:40', '19:10']) {
@@ -63,10 +63,10 @@ console.log('a place it names is one Look for finds them at');
     for (const x of E.campusFeed(P, V, S).filter(y => y.where)) {
       named++;
       const pk = E.placeKey(x.where), r = E.lookFor(P, V, x.id, pk, E.crowdOf(P, S.$ui.crowd, pk));
-      if (r.found) agree++; else console.log('  missed', x.id, x.where, D[n % 7], t, r.how);
+      if (r.found) agree++;
     }
   }
-  ok(named > 10 && agree === named, `Look for finds them there every time (${agree} of ${named})`);
+  ok(named > 10 && agree < named && agree >= 0.75 * named, `Look for finds them there most times, never for certain (${agree} of ${named}; 2.2.0 Routine 2.0: meet + 25, at most 90)`);
 }
 
 console.log('the weather keeps them off an outdoor place, as Look for does');
@@ -79,7 +79,7 @@ console.log('the weather keeps them off an outdoor place, as Look for does');
   let tried = 0, shown = 0;
   for (let n = 8; n < 60 && !shown; n++) {
     if (!r[0].includes(D[n % 7])) continue;
-    const t = String(Math.floor(r[1] / 60)).padStart(2, '0') + ':' + String(r[1] % 60 + 5).padStart(2, '0');
+    const t = String(Math.floor(r[1] / 60)).padStart(2, '0') + ':' + String(r[1] % 60 + 20).padStart(2, '0');   // 2.2.1: past the 15 minutes on the way
     const A = go(S, { ...at(n), Time: t, Location: 'Fire Dormitory' }), V = view(A), w = E.whereabouts(P, V, id);
     if (!w.rt || w.rt[3] !== r[3]) continue;
     tried++;

@@ -182,6 +182,7 @@ function presenceView(PD, S, on) {
   return { W, UI, PR, NST: CS.NPC_status || {}, GRAD: CS.Graduated || [], Y: Math.max(1, Number(W.Year) || 1), COUNCIL: CS.Council || {}, pIdx, cls,
     until: PERIOD_END[pIdx], sick: FULL && WX.flu ? (WX.sick || []) : [], gale, bad: FULL && (WX.now.sky === 'Rain' || WX.now.sky === 'Storm' || gale), rain: FULL && WX.now.sky === 'Rain',
     fog: FULL && WX.now.sky === 'Fog',   // 2.2.0: a routine row's wx fog
+    doy: W.Month && W.Week ? (W.Month - 1) * 28 + (W.Week - 1) * 7 + ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].indexOf(W.Day) : -1,   // 2.2.4: ev, exam
     min: hmMin(W.Time), dkey: [W.Year || 1, W.Month, W.Week, W.Day].join('-'), seed: Number((S.$eng || {}).seed) || 0, rton: on('npc_routines'), FC: foundedClub(S),   // 1.52.0: the routine roll
     brk: breakStaysNow(PD, S),   // 1.83.0: a break's stayers (null: no break today)
     hroll: on('presence_roll'), blk: W.Time == null ? -1 : blockAt(hmMin(W.Time)), PRES: Object.keys((S.Scene || {}).Present || {}),   // 1.99.11
@@ -208,16 +209,24 @@ function whereabouts(PD, V, id) {
 // weight, cond, an errand's place keys]. rtAt: the row puts them at place key pk (an errand: any of its places).
 const rtWx = V => (V.bad ? 'bad' : V.fog ? 'fog' : 'fair');
 const rtFits = (r, wx) => { const w = (r[9] || {}).wx; return !w || w === wx || (w === 'fair' && wx === 'fog'); };
+// 2.2.4 (owner-approved planning/DRAFT_routine2_perkembangan.md): ev (that calendar event's days, PD.evd), exam (exam days and the week
+// before, PD.exd), since / until (campaign years, "Y3")
+const rtWhen = (PD, V, r) => { const c = r[9] || {}, yr = k => +String(c[k]).slice(1);
+  return (!c.ev || ((PD.evd || {})[c.ev] || []).includes(V.doy)) && (!c.exam || (PD.exd || []).includes(V.doy))
+    && (!c.since || V.Y >= yr('since')) && (!c.until || V.Y <= yr('until')); };
+// a main row: what the Map, the dossier, Meanwhile and initiative call "usually" (weight 50+; no event, exam or bad-weather row)
+const rtMain = r => (r[8] == null || r[8] >= 50) && !(r[9] || {}).ev && !(r[9] || {}).exam && (r[9] || {}).wx !== 'bad';
+const rtFirst = r => { const c = r[9] || {}; return c.ev || c.exam ? 0 : c.pair ? 1 : 2; };   // drawn first: an event's or exam row, then a pair row
 const rtAt = (r, pk) => !!r && (r[10] ? r[10].includes(pk) : r[3] === pk);
 function rtPick(PD, V, id) {
   // 2.2.3: a pair row only while the partner is at Halvard, on their feet and under no status (else its share is free)
   const mate = r => { const o = (r[9] || {}).pair; return !o || (!goneOf(PD, V, o) && !V.sick.includes(o) && !npcStatusOf(V.NST, o)); };
-  const wx = rtWx(V), on = ((PD.rt || {})[id] || []).filter(r => r[0].includes(V.W.Day) && V.min >= r[1] && V.min < r[2] && rtFits(r, wx) && mate(r));
+  const wx = rtWx(V), on = ((PD.rt || {})[id] || []).filter(r => r[0].includes(V.W.Day) && V.min >= r[1] && V.min < r[2] && rtFits(r, wx) && rtWhen(PD, V, r) && mate(r));
   if (!on.length) return null;
   const pr = on.find(r => (r[9] || {}).pair), key = pr ? [id, pr[9].pair].sort().join('+') : id;
   // at most 90 in all, so at least 10 free (two old 70% rows in one block: 70, then the 20 left, close to the old chained rolls)
   let u = roll100(V.seed, V.dkey, V.blk, 'rt', key), acc = 0;
-  for (const r of [...on.filter(x => (x[9] || {}).pair), ...on.filter(x => !(x[9] || {}).pair)]) {
+  for (const r of [0, 1, 2].flatMap(n => on.filter(x => rtFirst(x) === n))) {
     const w = Math.min(r[8] == null ? (PD.rate == null ? 70 : PD.rate) : r[8], 90 - acc);
     if (w <= 0) break;
     if (u < acc + w) return r;
@@ -391,7 +400,7 @@ function lookFor(PD, V, id, pk, crowd) {
 }
 // what someone who knows id may say of their habits now: the routine for this day and hour, else the places they are a regular of
 function lookHabit(PD, V, id) {
-  const r = ((PD.rt || {})[id] || []).filter(x => x[0].includes(V.W.Day) && V.min >= x[1] && V.min < x[2]).sort((a, b) => (b[8] || 0) - (a[8] || 0))[0];   // 2.2.0: the main row
+  const r = ((PD.rt || {})[id] || []).filter(x => x[0].includes(V.W.Day) && V.min >= x[1] && V.min < x[2] && rtWhen(PD, V, x)).sort((a, b) => (b[8] || 0) - (a[8] || 0))[0];   // 2.2.0: the main row
   if (r) return 'usually spends this hour ' + (r[10] ? 'running errands (' + r[10].map(k => (PD.vn || {})[k] || k).join(', ') + ')' : 'at ' + r[4]) + (r[5] ? ' (' + r[5] + ')' : '');
   const at = [...new Set(Object.keys(PD.vn || {}).sort().filter(k => ((PD.reg || {})[k] || []).includes(id)).map(k => PD.vn[k]))].slice(0, 3);
   return at.length ? 'is often around ' + at.join(', ') : '';

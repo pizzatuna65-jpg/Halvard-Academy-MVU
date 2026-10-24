@@ -113,7 +113,7 @@ for nid, n in npcs.items():
         _fl = DATA['npcs'][nid]['fl']
         _hi = next((i for i, f in enumerate(_fl) if f[0] == 'Haunts'), None)
         # 2.2.0 (Routine 2.0): only the main rows (weight 50+; an old row is 70), once each (an old row cut at block edges is one row)
-        _main = list(dict.fromkeys(f"{r[6]} at {' or '.join(_places_of(r))}{', ' + r[5] if r[5] else ''}" for r in _rt if r[8] >= 50))
+        _main = list(dict.fromkeys(f"{r[6]} at {' or '.join(_places_of(r))}{', ' + r[5] if r[5] else ''}" for r in _rt if r[8] >= 50 and not (r[9] or {}).get('ev') and not (r[9] or {}).get('exam') and (r[9] or {}).get('wx') != 'bad'))
         _row = ['Routine', 'Usually: ' + '; '.join(_main) + '.', _fl[_hi][2] if _hi is not None else 1] + (_fl[_hi][3:] if _hi is not None else [])   # 1.97.5: shown when Haunts is (a transfer's)
         _fl.insert(_hi + 1 if _hi is not None else len(_fl), _row)
     if n.get('academy') == 'Halvard' and not n.get('transfer'): DATA['npcs'][nid]['ag'] = 1   # 1.7.4: ages in their fields follow the campaign year (see ageNow)

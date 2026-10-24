@@ -1,7 +1,47 @@
 # CHANGELOG — Eldrasil / Halvard Academy MVU card
 
 Newest first. Details are kept for about the five newest releases; the one-line index of every release is at the bottom. Older
-details: `git show 3095d78:CHANGELOG.md` (2.1.1), `git show 77020b3:CHANGELOG.md` (2.1.0), `git show ba90dbf:CHANGELOG.md` (2.0.0), `git show 4f01d80:CHANGELOG.md` (1.99.13), `git show ad3dce6:CHANGELOG.md` (1.99.12), `git show 90161c9:CHANGELOG.md` (1.99.11), `git show c68157a:CHANGELOG.md` (1.99.10), `git show 50d79ba:CHANGELOG.md` (1.99.9), `git show a27eee0:CHANGELOG.md` (1.99.8), `git show b785728:CHANGELOG.md` (1.99.7), `git show b4db7fc:CHANGELOG.md` (1.99.6), `git show c242e3e:CHANGELOG.md` (1.99.5), `git show 9957046:CHANGELOG.md` (1.99.4), `git show 83145e7:CHANGELOG.md` (1.99.3), `git show 687b4e1:CHANGELOG.md` (1.99.2), `git show 1799228:CHANGELOG.md` (1.99.1), `git show 1d18944:CHANGELOG.md` (1.98.3), `git show 731f8d1:CHANGELOG.md` (1.98.2), `git show 77f557c:CHANGELOG.md` (1.98.1), `git show 44b586a:CHANGELOG.md` (1.97.5), `git show 7848cb7:CHANGELOG.md` (1.97.4), `git show 871dd0e:CHANGELOG.md` (1.97.3), `git show c5135f8:CHANGELOG.md` (1.97.2), `git show d30ff7c:CHANGELOG.md` (1.97.1), `git show f9101db:CHANGELOG.md` (1.96.1), `git show df8dbed:CHANGELOG.md` (1.96.0), `git show 363f03b:CHANGELOG.md` (1.95.0), `git show bba6bb0:CHANGELOG.md` (1.94.0), `git show dca179c:CHANGELOG.md` (1.93.1, 1.93.0), `git show 01cd1f2:CHANGELOG.md` (1.92.0), `git show d097927:CHANGELOG.md` (1.91.0), `git show 6065e5c:CHANGELOG.md` (1.90.0), `git show de4303e:CHANGELOG.md` (1.89.0), `git show 4ace903:CHANGELOG.md` (1.88.1), `git show ce178fb:CHANGELOG.md` (1.88.0), `git show 0e1e5a2:CHANGELOG.md` (1.87.0), `git show e6f2c37:CHANGELOG.md` (1.86.0), `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+details: `git show 7e2f9da:CHANGELOG.md` (2.1.2), `git show 3095d78:CHANGELOG.md` (2.1.1), `git show 77020b3:CHANGELOG.md` (2.1.0), `git show ba90dbf:CHANGELOG.md` (2.0.0), `git show 4f01d80:CHANGELOG.md` (1.99.13), `git show ad3dce6:CHANGELOG.md` (1.99.12), `git show 90161c9:CHANGELOG.md` (1.99.11), `git show c68157a:CHANGELOG.md` (1.99.10), `git show 50d79ba:CHANGELOG.md` (1.99.9), `git show a27eee0:CHANGELOG.md` (1.99.8), `git show b785728:CHANGELOG.md` (1.99.7), `git show b4db7fc:CHANGELOG.md` (1.99.6), `git show c242e3e:CHANGELOG.md` (1.99.5), `git show 9957046:CHANGELOG.md` (1.99.4), `git show 83145e7:CHANGELOG.md` (1.99.3), `git show 687b4e1:CHANGELOG.md` (1.99.2), `git show 1799228:CHANGELOG.md` (1.99.1), `git show 1d18944:CHANGELOG.md` (1.98.3), `git show 731f8d1:CHANGELOG.md` (1.98.2), `git show 77f557c:CHANGELOG.md` (1.98.1), `git show 44b586a:CHANGELOG.md` (1.97.5), `git show 7848cb7:CHANGELOG.md` (1.97.4), `git show 871dd0e:CHANGELOG.md` (1.97.3), `git show c5135f8:CHANGELOG.md` (1.97.2), `git show d30ff7c:CHANGELOG.md` (1.97.1), `git show f9101db:CHANGELOG.md` (1.96.1), `git show df8dbed:CHANGELOG.md` (1.96.0), `git show 363f03b:CHANGELOG.md` (1.95.0), `git show bba6bb0:CHANGELOG.md` (1.94.0), `git show dca179c:CHANGELOG.md` (1.93.1, 1.93.0), `git show 01cd1f2:CHANGELOG.md` (1.92.0), `git show d097927:CHANGELOG.md` (1.91.0), `git show 6065e5c:CHANGELOG.md` (1.90.0), `git show de4303e:CHANGELOG.md` (1.89.0), `git show 4ace903:CHANGELOG.md` (1.88.1), `git show ce178fb:CHANGELOG.md` (1.88.0), `git show 0e1e5a2:CHANGELOG.md` (1.87.0), `git show e6f2c37:CHANGELOG.md` (1.86.0), `git show a29f97a:CHANGELOG.md` (1.85.0), `git show f55d274:CHANGELOG.md` (1.84.0), `git show 80e3ee8:CHANGELOG.md` (1.83.0), `git show 0ab44f3:CHANGELOG.md` (1.82.0), `git show 87aa069:CHANGELOG.md` (1.81.0), `git show 72c89b5:CHANGELOG.md` (1.80.0), `git show 7c13042:CHANGELOG.md` (1.79.0), `git show 6df1dc0:CHANGELOG.md` (1.78.0), `git show 71fec64:CHANGELOG.md` (1.77.1), `git show 0e4d4ea:CHANGELOG.md` (1.77.0), `git show 920e32b:CHANGELOG.md` (1.76.0), `git show 5ae3b8e:CHANGELOG.md` (1.75.0), `git show f4975e3:CHANGELOG.md` (1.74.0), `git show 8a724a0:CHANGELOG.md` (1.73.0), `git show 00a0b2c:CHANGELOG.md` (1.72.0), `git show 456127b:CHANGELOG.md` (1.71.0), `git show 9b53500:CHANGELOG.md` (1.70.0), `git show ecb74ed:CHANGELOG.md` (1.69.0), `git show e7e234a:CHANGELOG.md` (1.68.0), `git show 894299a:CHANGELOG.md` (1.67.2), `git show f8e8e25:CHANGELOG.md` (1.67.1), `git show 937ac63:CHANGELOG.md` (1.67.0), `git show 4f15155:CHANGELOG.md` (1.66.0), `git show ad1f2d2:CHANGELOG.md` (1.65.0), `git show d064d34:CHANGELOG.md` (1.64.0), `git show d564675:CHANGELOG.md` (1.63.0), `git show 3382abf:CHANGELOG.md` (1.62.0), `git show 8438331:CHANGELOG.md` (1.61.1), `git show 94b0f06:CHANGELOG.md` (1.61.0), `git show 968fad0:CHANGELOG.md` (1.60.0), `git show 9919e86:CHANGELOG.md` (1.59.0), `git show 039b6b0:CHANGELOG.md` (1.58.0), `git show e3dd53c:CHANGELOG.md` (1.57.0), `git show a676fc2:CHANGELOG.md` (1.55.0, 1.56.0), `git show 102466d:CHANGELOG.md` (1.54.0), `git show 2ffc1a7:CHANGELOG.md` (1.53.0, 1.53.1), `git show e6f833a:CHANGELOG.md` (1.52.2), `git show 80f75c6:CHANGELOG.md` (1.52.0, 1.52.1), `git show f96b93e:CHANGELOG.md` (1.51.0), `git show 74e6e62:CHANGELOG.md` (1.50.0), `git show 4a811c0:CHANGELOG.md` (1.49.0), `git show 533d61b:CHANGELOG.md` (1.48.0), `git show c544d3e:CHANGELOG.md` (1.47.0), `git show 9359ed9:CHANGELOG.md` (1.46.0), `git show a13acc7:CHANGELOG.md` (1.45.0), `git show 95926a8:CHANGELOG.md` (1.44.0), `git show 8cb78b2:CHANGELOG.md` (1.43.0), `git show ee2fbce:CHANGELOG.md` (1.42.0), `git show fc49cdf:CHANGELOG.md` (1.41.0), `git show 7bd6a98:CHANGELOG.md` (1.40.0), `git show 9d4bfa2:CHANGELOG.md` (1.39.0), `git show 2c8c928~1:CHANGELOG.md` (1.38.0), `git show 325dfa2:CHANGELOG.md` (1.37.3), `git show c832a27:CHANGELOG.md` (1.37.2), `git show 3b49f19:CHANGELOG.md` (1.37.1), `git show 0d1de2e:CHANGELOG.md` (1.37.0), `git show 951f674:CHANGELOG.md` (1.35.2 to 1.36.0), `git show 13c8d74:CHANGELOG.md` (1.34.1 to 1.35.1), `git show 48541e2:CHANGELOG.md` (1.30.6 to 1.32.0), `git show 28bd235:CHANGELOG.md` (1.30.5), `git show 2224f00:CHANGELOG.md` (1.30.4), `git show 8f1dfc2:CHANGELOG.md` (1.30.3), `git show 90e8c43:CHANGELOG.md` (1.30.2), `git show b14dcc8:CHANGELOG.md` (1.30.1), `git show eb07f45:CHANGELOG.md` (1.30.0), `git show dd4bdae:CHANGELOG.md` (1.29.0), `git show b4cc575:CHANGELOG.md` (1.28.0), `git show 3262b84:CHANGELOG.md` (1.27.0), `git show 3294385:CHANGELOG.md` (1.25.0), `git show b4b65d2:CHANGELOG.md` (1.24.3), `git show 24b636e:CHANGELOG.md` (1.19.0 to 1.24.2) and `git show b62d182:CHANGELOG.md` (earlier).
+
+## v2.2.4 — Routine 2.0: events, exam weeks, and every test (2026-10-24)
+
+Owner request: Routine 2.0's last stage, and all the tests deferred since 2.2.0 ("lakukan nanti di akhir di 2.2.4").
+Owner-approved `planning/DRAFT_routine2_perkembangan.md`; deleted here. Save fixture v2.2.3.
+- **Conditions** (`data/npc_routines.json` cond; shared.js `rtWhen`, `rtFirst`; `presence_data` `evd`, `exd`): `ev` (a calendar
+  event's days), `exam` (exam days and the seven days before), `since` / `until` (campaign years). An event's or exam row is drawn first,
+  then a pair row, then the rest (all capped at 90). A pair row's conditions must be the same in both NPCs.
+- **Rows:** Trixie at the circus tent in the Main Courtyard on the circus days (80, her lore's "every waking minute"); in the exam weeks
+  the studious revise in the Main Library or the Study Rooms (Alyssa, Zara, Castor, Vera, Idris, Royhan, Hadrian, Maple, Wren), Baelin
+  watches for exhaustion, Yvette steers students to ordinary coffee; from Year 3 Faye walks Tsubaki back from the Hills on Sundays.
+  Not made (no lore for them): `mood` and `after` conditions (FUTURE_PLANS).
+- **"Usually"** (`rtMain`): the Map, the dossier, Meanwhile and initiative read only main rows: weight 50+, and no event, exam or
+  bad-weather row (Trixie's rainy-day Common Rooms row had shown as a usual place; found by `test_look_for_v19912`).
+- **Fix:** `<now>` (505) did not get the Campus Map's walking legs (2.2.1), so for someone on their way it could answer Look for
+  differently from the engine; 505 now gets them, and the event and exam days with them.
+- **Crowd warning** at build: places where routines would put more than about 2.5 people met per block. Now: the Canteen at lunch
+  (about 10) and the Club Rooms after class (about 4), both busy by design.
+- **Tests (all of them, owner):**
+  - `test_routine2_v2224.cjs` (new, 21 checks): one draw per block, weights and free, two old 70s, the bad-weather rows, pairs (together
+    or neither; skipped while away or sick), the circus, the exam weeks, Year 3 only, the meeting layer (Trixie met 47 of 61 times where
+    her routine puts her), Look for (always finds whoever Who is here shows, never for certain), people on their way, Campus now, the
+    main rows.
+  - **Empty visits** per crowd 0–4 against 2.1.2 (`tests/fixtures/presence_empty_2.1.2.json`): 74.8 / 59.8 / 49.6 / 43.4 / 40.6 %
+    (2.1.2: 76.9 / 59.6 / 47.5 / 39.2 / 35.0). Quiet places stay as quiet; busy ones are a little emptier, since a routine no longer
+    makes a meeting certain.
+  - Updated, because the behaviour changed on purpose:
+    - `test_campus_now_v2100`: Look for at a place Campus now names is high (90%), not certain; one weather check moved past the 15
+      minutes on the way;
+    - `test_feature_batch4_v1520`: Royhan's row is the pair with Milena; the roll and the code patterns of 2.2.0;
+    - `test_world_v110`: Percival, who loves a storm, may play on in the rain;
+    - `test_extras_v161` (2.1.1) already followed.
+  - Bugs found by the tests and fixed: the rainy-day row shown as "usually" (above).
+  - Two test-only mistakes of mine, corrected: a pair compared without the break (Zara home, Vera staying), and a time inside the 15
+    minutes on the way.
+  - `npm test`: all suites pass. `npm run stress` (fuzz, Builder fuzz, a simulated year) passes. Lint and eslint pass. `test_saves`:
+    every fixture to 2.2.3 loads without loss.
+- Tokens: none.
+- **To confirm with the owner:** the new rows' wording (approved in the draft).
+- **To check live:** `docs/TEST_CHECKLIST.md` Act 5 Q5.1, Act 7 Q7.3 [2.2.4].
 
 ## v2.2.3 — Routine 2.0: the later cohorts, stable habits only (2026-10-24)
 
@@ -89,37 +129,6 @@ lakukan nanti di akhir di 2.2.4")**: only the build (its `node --check` steps) a
 - **Tests:** none run (owner). Deferred to 2.2.4, with a list of the suites that will need updating (FUTURE_PLANS B1).
 - **To confirm with the owner:** the 68 rows' wording (new canon, approved in the draft).
 - **To check live:** `docs/TEST_CHECKLIST.md` Act 2 Q2.1 [2.2.0].
-
-## v2.1.2 — Magic is casual (2026-10-24)
-
-Owner request: "Halvard should feel like a magic academy: magic is ordinary, used for mundane and important things; skirmishes can
-happen anywhere and the arena (the Combat Grounds) is for serious battles; magic needs no permission or heavy supervision." Owner-approved
-`planning/DRAFT_sihir_kasual.md` (deleted here; the "arena" is the Combat Grounds). Save fixture v2.1.1.
-- **Found:** the v38 World Index already allowed casual casting anywhere, but also restricted "duels outside a warded ring" and
-  "anything that … endangers people"; the Combat Grounds and the calendar read "cross-dorm sparring only during Training Week" as a
-  general ban; the Academy deed `fight_outside_ward` (−8) could follow any corridor scuffle; and only 2 of 113 ambience beat types
-  showed magic.
-- **World Index** (lore 0, `merge_lorebooks.py`): "Magic is everyday at Halvard": anyone casts anywhere without permission; quick
-  skirmishes break out anywhere and end as fast; serious fights go to the Combat Grounds' warded rings; restricted only forbidden arts,
-  sport events, the Seal Chamber and real harm; staff and Doves step in only for those. Movement magic stays named (the walk rule).
-- **Dorm separation is a class rule:** Combat Grounds (lore 52) "In class the dorms spar apart, except in Training Week; outside class
-  anyone may challenge anyone"; Training Week (lore 134, `calendar.json`) "the one week the dorms spar together in class".
-- **Reputation:** a skirmish that hurts nobody and breaks nothing is no deed; `fight_outside_ward` only for a hurt bystander or damage,
-  `serious_fight_outside_ward` for someone badly hurt (rule card). Deed names and numbers unchanged.
-- **504:** one craft line, magic turns up naturally "without making every scene about it" (owner: not literally every moment). The
-  draft's second half ("needs no permission, staff step in only for real harm") stayed out: the 1.99.4 audit (T6) keeps what is
-  allowed in the World Index alone, and two suites guard it.
-- **Ambience:** 22 more magic beat types (floating trays, a misfired first-year spell, an illusion shown off, a ring of students round
-  a skirmish, bets at the rings, a healer at the ringside…): in a 156-reply replay a third of the beats show magic (14 of 44, from 4).
-  Two happenings: an impromptu duel in the Courtyards, a grudge match at the rings.
-- Unchanged: forbidden arts, hidden magic and Dove attention, sport events without magic, NPCs who hate a scuffle still avoid or
-  report it (in character), Tension with someone unwilling.
-- Tokens: +136 on every reply (World Index +92, 504 +44; the draft guessed about 80), the Combat Grounds entry +27 when it is in.
-- Tests: `test_casual_magic_v2112.cjs` (new, 11 checks); `test_batch3_time_magic` and `test_rule_cards_v1994` follow the new World
-  Index wording; `npm test` passes (all suites), eslint passes.
-- **To confirm with the owner:** the World Index, Combat Grounds and Training Week wording, the 22 beats and 2 happenings (new canon,
-  approved in the draft); the 504 line without its second half.
-- **To check live:** `docs/TEST_CHECKLIST.md` Act 1 Q1.1, Act 2 Q2.5 [2.1.2].
 
 ## Release index (one line per release, oldest first)
 
@@ -335,3 +344,4 @@ happen anywhere and the arena (the Combat Grounds) is for serious battles; magic
 - **v2.2.1 (2026-10-24):** Routine 2.0, group 2: Year 2 and Year 3 (118 rows, four pairs, Tilly's midnight ghost hunt) and people on their way between routine places (20% in a block's first 15 minutes). No tests run (owner: all tests in 2.2.4).
 - **v2.2.2 (2026-10-24):** Routine 2.0, group 3: the staff, the Doves, the Cathedral, Facilities and the Liaison (143 rows; pairs Layla–Yvette, Royhan–Milena); the routine validator counts only rows active at the same minute. No tests run (owner: all tests in 2.2.4).
 - **v2.2.3 (2026-10-24):** Routine 2.0, group 4: the later cohorts (86 rows, three pairs); routine rows are stable habits only (owner), volatile rows removed; a pair row is skipped while the partner is away. No tests run (owner: all tests in 2.2.4).
+- **v2.2.4 (2026-10-24):** Routine 2.0 done: event, exam-week and campaign-year rows (Trixie at the circus, the studious revising, Faye and Tsubaki from Year 3); "usually" shows main rows only; <now> and the engine agree on people on their way; every test run and passing (owner).

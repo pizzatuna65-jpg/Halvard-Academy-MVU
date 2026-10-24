@@ -5073,7 +5073,7 @@ function stepBondMemory(c) {
       if (hasB && b.Rank >= MEANWHILE_RANK && !presentIds.has(id) && b.$seen >= 0 && dayNo - b.$seen >= 7 && b.$mw !== wk && !awayIn(S)) {
         b.$mw = wk;
         // 2.1.0 (roadmap R1): one of their weekly routines when they have any (the same rows as Campus now and the Map), else a haunt
-        const rts = OFF.has('npc_routines') ? [] : ((PRESENCE.rt || {})[id] || []).filter(r => r[8] == null || r[8] >= 50), rt = rts.length ? pickOf(rts, seed, wk, 'mw-rt', id) : null;   // 2.2.0: the main rows
+        const rts = OFF.has('npc_routines') ? [] : ((PRESENCE.rt || {})[id] || []).filter(rtMain), rt = rts.length ? pickOf(rts, seed, wk, 'mw-rt', id) : null;   // 2.2.0: the main rows
         const what = b.Next ? b.Next.What : rt ? 'was seen at ' + rt[4] + ' as usual' + (rt[5] ? ' (' + rt[5] + ')' : '')
           : (HAUNT[id] ? 'was seen around ' + HAUNT[id].split(/[;,]/)[0].trim() : 'kept to their own business');
         const pair = !b.Next && pairLine(c, [id], 'seen', 'mw:' + id);   // 1.51.0 (audit 4.8): seen with someone {{user}} knows them by
@@ -6577,7 +6577,7 @@ function stepInitiative(c) {
         const gp = ((GIFT_PREFS.npcs || {})[id] || {}).items || {};
         const tomorrow = eventsOn(fromAbs((dayNo + 1) * DAY_MIN));
         const fills = {
-          place: [...(OFF.has('npc_routines') ? [] : ((PRESENCE.rt || {})[id] || []).map(r => r[4])), ...String(HAUNT[id] || '').split(/[;,]/).map(x => x.replace(/\(.*?\)/g, '').trim()).filter(Boolean),   // 1.52.0: routines first
+          place: [...(OFF.has('npc_routines') ? [] : ((PRESENCE.rt || {})[id] || []).filter(rtMain).map(r => r[4])), ...String(HAUNT[id] || '').split(/[;,]/).map(x => x.replace(/\(.*?\)/g, '').trim()).filter(Boolean),   // 1.52.0: routines first
             ...(cat === 'authority' ? [] : INIT_ASKS.places || [])].filter((x, i, a) => a.indexOf(x) === i),
           thing: [...(gp.loved || []), ...(gp.liked || [])],
           club: [movedToFounded(foundedClub(S), id) ? foundedClub(S).name : (INIT_ASKS.club || {})[id]].filter(Boolean),   // 1.75.0

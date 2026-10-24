@@ -6,7 +6,7 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
 
 ## 0. Rilis berikutnya (owner, 2026-10-24)
 
-Versi saat ini 2.2.3 (Routine 2.0: angkatan belakangan; 2026-10-24); rilis berikutnya 2.2.4 (Routine 2.0 perkembangan + semua tes). Nomor di §0.1 berlaku bila roadmap itu rilis lebih dulu; pekerjaan lain yang rilis lebih dulu mengambil nomor berikutnya dan
+Versi saat ini 2.2.4 (Routine 2.0 selesai, semua tes; 2026-10-24); rilis berikutnya 2.3.0 (M1 + M2 kejadian off-screen). Nomor di §0.1 berlaku bila roadmap itu rilis lebih dulu; pekerjaan lain yang rilis lebih dulu mengambil nomor berikutnya dan
 roadmap bergeser satu.
 
 | Pekerjaan | Isi | Catatan |
@@ -22,29 +22,15 @@ Routine 2.0) dan B3; R2 (Meanwhile lebih longgar), R4 (setel toggle lama), B1 ve
 
 | Rilis | Isi | Butuh | Catatan |
 |---|---|---|---|
-| **2.2.4** | **B1** Routine 2.0, sisa | draft `DRAFT_routine2_perkembangan.md` | 2.2.0 (format, dua lapis, Year 1), 2.2.1 (Year 2, Year 3, pelintas), 2.2.2 (staf dan lainnya) dan 2.2.3 (angkatan belakangan, hanya kebiasaan tetap) selesai. 2.2.3 angkatan yang datang belakangan; 2.2.4 baris perkembangan + **semua tes** (owner: tes ditunda ke 2.2.4). |
 | **2.3.0** | **M1** kejadian off-screen + **M2** feed memuatnya | draft tabel kejadian | Sesudah B1: kejadian diambil dari baris routine yang benar-benar dijalani NPC. |
 | **2.4.0** | **M3** rubrik koran + **M4** akibat yang sampai ke {{user}} | kode | Butuh kejadian M1. M3 sekaligus menyiapkan rubrik yang dipakai B3. |
 | **2.5.N** | **B3** Politik kampus | draft langkah faksi | 2.5.0 = lite (Doves + Council); 2.5.1 = asrama, Liaison, Cathedral, Choir (tersembunyi). Full suite. |
 
-**B1. Routine 2.0, sisa (2.2.4).** 2.2.0 menerapkan format, engine dua lapis dan kelompok 1; 2.2.1 kelompok 2 (Year 2, Year 3) dan pelintas di perjalanan; 2.2.2 kelompok 3 (staf, Doves, Cathedral, Facilities, Liaison); 2.2.3 kelompok 4 (angkatan yang datang belakangan), pembersihan baris yang berubah-ubah, baris pair tanpa pasangan dilewati (owner-approved
-`DRAFT_routine2.md`, dihapus di 2.2.0; isinya ada di CHANGELOG 2.2.0, `data/npc_routines.json` `_note` dan DECISIONS "NPC routines" /
-"Who is here is rolled"). Sisa:
-- **2.2.4:**
-  - baris perkembangan dan syarat yang belum ada di 2.2.0: `since` / `after` (bulan/tahun kampanye, event, Secrets_revealed), `ev`
-    (hari acara, mis. sirkus Month 8 untuk Trixie), `mood` (`mg:moodOf`), `exam` (minggu ujian);
-  - validator: peringatan bila satu tempat dan blok punya lebih banyak orang pasti daripada target keramaiannya.
-- Tiap kelompok: draft tabel dulu (format dan contoh: CHANGELOG 2.2.0), owner meninjau, lalu diterapkan.
-- **Tes, semuanya di 2.2.4 (owner, 2026-10-24: "jangan lakukan test bug apapun, lakukan nanti di akhir di 2.2.4"):**
-  - suite baru `test_routine2`: tarikan per blok, bobot dan free, `wx`, `pair`, baris lama, lapis pertemuan, Look for, Campus now,
-    pelintas di perjalanan (2.2.1: sekitar 1 dari 12 balasan di awal blok sepulang kelas, cek kasar);
-  - persen kunjungan kosong per keramaian 0–4 sebelum dan sesudah (target keramaian 0 ≈ 80% kosong);
-  - momen uncanny `alone`;
-  - suite lama yang hampir pasti perlu diperbarui karena routine tidak lagi pasti dan rollnya per blok: `test_presence_roll_v19911`,
-    `test_look_for_v19912`, `test_campus_now_v2100` ("Look for finds them there every time" jadi "peluang tinggi"),
-    `test_feature_batch4_v1520`, `tests/fixtures/presence_*`, dan suite lain yang membaca Who is here, Map "Usually here", dossier
-    Routine atau Meanwhile;
-  - full suite, `npm run stress`, `ENGINE_DIFF` tidak berlaku (perilaku sengaja berubah).
+**B1 sisa (dicatat, tidak dijadwalkan).** Routine 2.0 selesai di 2.2.0–2.2.4. Yang sengaja tidak dibuat karena belum ada isinya
+dari lore: syarat `mood` (`mg:moodOf`) dan `after` (Secrets_revealed, Lore change); pasangan lintas angkatan Tsubaki–Bruno,
+Linus–William, Rigel–Wren (bobot/tempat tidak muat tanpa memotong baris yang disetujui); Ruby–Caralynn (Music Club; latihan Caralynn
+turun sesudah Ruby lulus tanpa baris pengganti). Peringatan keramaian build saat ini: Canteen makan siang (±10 orang) dan Club Rooms
+sepulang kelas (±4), keduanya memang ramai.
 
 **M1 + M2. Kejadian off-screen (2.3.0).** Tiap hari 3–5 NPC di-roll; satu kejadian kecil dari tabel `data/offscreen.json` (latihan,
 hasil klub, cekcok dengan rival dari `REL_PAIRS`, surat dari rumah, nilai ujian, beli sesuatu), disaring oleh data NPC (klub, haunts,
