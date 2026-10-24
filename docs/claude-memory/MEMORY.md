@@ -1,0 +1,16 @@
+- [No obvious open questions](no-obvious-open-questions.md) — decide obvious defaults myself; keep [?] for real design/canon choices; simple questions get short answers
+- [UI overhaul](ui-overhaul-proposal.md) — Brass & Moonglass shipped as 1.21–1.23 (tokens, bracelet, panels); live ST check pending
+- [Students are adults; no unverified warnings](students-are-adults.md) — entry age 18; check canon first, never ambush the owner with accusatory content warnings
+- [Audit batch plan](audit-batch-plan.md) — "kerjakan batch N" = one batch, one release; newest list = audit/AUDIT_2026-10-23_2_audit_menyeluruh.md §8, released as 1.99.N (batches 1–6 = 1.99.2–1.99.7, batch 7 stage 1 = 1.99.8; batch 8 = next release; current = 2.0.0, next = 2.1.0, no "2.0 polish"); memory batch 8 planned; one-call MVU mode since 1.69.0
+- [Reuse existing systems](reuse-existing-systems.md) — grep docs/FEATURES.md before any feature idea; wire into existing systems, never a parallel one
+- [Bash heredoc backslashes](bash-heredoc-backslashes.md) — heredocs collapse `\`; write edit scripts with the Write tool
+- [MSYS path conversion](msys-path-conversion.md) — Git Bash mangles values starting with "/"; no leading slash or MSYS_NO_PATHCONV=1
+- [No stash for before/after](no-stash-for-before-after.md) — build rewrites tracked dist/, stash pop fails; use a worktree
+- [SillyTavern install](sillytavern-install.md) — D:/Game/SillyTavern/SillyTavern: live chats, state, reasoning, installed card; read-only
+- [Only Halvard chats](only-halvard-chats.md) — never read, list or check timestamps of any chat except Eldrasil — Halvard Academy
+- [Summaryception reference](summaryception-reference.md) — memory option 2 since 1.99.1, docs/ECOSYSTEM.md; only Extension/Extension-Summaryception-main counts; the owner's ST fork is unrelated
+- [VectFox reference](vectfox-reference.md) — VectFox/EventBase function, format and settings are in docs/ECOSYSTEM.md; read it, never ask for the repo
+- [Preset = RF 2.2.1.3 as it ships](preset-rebuild-rf2213.md) — since 1.68.0 the preset is upstream plus a closed deviation list; never patch upstream text for taste
+- [One download folder](one-download-folder.md) — card, preset and VectFox files all in dist/; sources in presets/ and src/vectfox/
+- [NPC power scale](npc-power-scale.md) — standout NPCs must be monstrous with one hard counter; my aces ran too grounded
+- [Read owner rules as written](read-owner-rules-as-written.md) — test the owner's rule in their own words; never paraphrase, then "fix" my own gap

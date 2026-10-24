@@ -2,8 +2,8 @@
 
 ## Read only what the task needs
 
-0. **Memory first, every session.** Claude Code's memory for this project lives in
-   `C:\Users\seora\.claude\projects\D--Halvard-Academy-MVU-main\memory\`. `MEMORY.md` is only the index: before the first reply or
+0. **Memory first, every session.** Claude Code's memory for this project lives in the repo at `docs/claude-memory/`
+   (on the owner's machine the local memory folder is a junction to it, see Environment). `MEMORY.md` is only the index: before the first reply or
    tool call of any task, open and read **every** file it lists (they are short). They hold the owner's corrections, above all:
    silence = approval, never repeat an unanswered question, no obvious `[?]` questions.
 1. `HANDOFF.md` (short): snapshot, next task, what the project is, repository map.
@@ -74,6 +74,9 @@ Drafts (`planning/DRAFT_*.md`) are written in Indonesian; the English text block
   d3, eslint). The folder is a git repository; `master` tracks `origin/main` on GitHub (pizzatuna65-jpg/Halvard-Academy-MVU). Commit each release; push only when the owner asks. Deleted drafts and older changelog details
   are recoverable from git (`git show b62d182:<path>`).
 - Keep text files LF.
+- Claude memory sync (2026-10-24): `C:\Users\seora\.claude\projects\D--Halvard-Academy-MVU-main\memory` is a junction to
+  `docs/claude-memory/`, so new memories land in the repo; commit them with the release. On another machine, clone, then make the
+  same junction (`New-Item -ItemType Junction -Path <that machine's memory folder> -Target <repo>\docs\claude-memory`).
 - `tools/audit_chat.py` measures character drift in an exported chat (.jsonl); `--mechanics` measures how the narrator handled the engine.
 - Portraits are hosted on jsDelivr, pinned to a commit in `data/assets_manifest.json`; `tools/process_assets.py` needs the
   original PNGs, which are not in this repo. Only needed for new portraits.

@@ -48,6 +48,7 @@ Build order, generated files and test commands: `docs/BUILD.md`. **Every feature
 | Live SillyTavern check to record, or the owner's playtest results | `docs/TEST_CHECKLIST.md` (the campaign quest log): "Where you are", the act the check belongs to | add it to that quest with the release tag; tick or note results; move "Where you are" |
 | Release bookkeeping | `CLAUDE.md` "Every release"; the newest `CHANGELOG.md` entry | |
 | Open work, ideas, tunables | `planning/FUTURE_PLANS.md` | |
+| Claude Code memory (owner corrections, references) | `docs/claude-memory/` (`MEMORY.md` index; the local memory folder is a junction here) | |
 | NPC brainstorm with another AI, or "is this character already in Eldrasil?" | `planning/NPC_ROSTER.md` only (table first, then the close matches' profiles); `planning/NPC_BRAINSTORM_BRIEF.md` for bond formats | roster: `node tools/make_npc_roster.cjs` (build_all `--lore` runs it) |
 | External behaviour (ST, MVU, Tavern Helper, VectFox) | `docs/DECISIONS.md` §11 verified facts first | read upstream source for anything new |
 
