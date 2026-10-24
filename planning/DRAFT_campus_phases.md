@@ -3,6 +3,9 @@
 Dicatat: 2026-10-24, atas permintaan owner ("lanjutkan draft untuk 2.1.1"). Sumber: `planning/FUTURE_PLANS.md` §0.1 R3, catatan
 `data/campus_phases.json` (1.6.1, N6: "lines are new canon … applied only after the owner approves each one").
 
+Tambahan owner (2026-10-24): "di sela-sela, sesuatu yang lebih normal/mundane dari kampus di dunia nyata, misal makanan viral
+seminggu" → tren mingguan (§2b).
+
 **Status:** menunggu "proceed" owner. Teks Inggris di §2 adalah usulan kata-kata kartu; yang owner setujui jadi canon.
 
 ## 0. Masalahnya, singkat
@@ -30,7 +33,7 @@ Dicatat: 2026-10-24, atas permintaan owner ("lanjutkan draft untuk 2.1.1"). Sumb
 - **Latar, bukan perintah.** Baris ditulis sebagai keadaan ("students are…"), tanpa "the narrator must"; narator memakainya bila cocok.
 - **Tidak di hari libur pulang, lockdown, perjalanan** (Mid-Year Break, Month 12, Thinning, Expedition, Crowning Day, Academy Trip,
   World Competition). Daftar di §2 tidak mengenai hari-hari itu; dicek dengan skrip terhadap `data/calendar.json`.
-- **Biaya:** ±35–50 token per balasan selama fase aktif (139 dari 308 hari sekolah); 0 di hari lain.
+- **Biaya:** ±35–50 token per balasan selama fase aktif (139 dari 308 hari sekolah); di hari lain mungkin tren mingguan (§2b).
 
 ## 2. Daftar fase (teks kartu, English)
 
@@ -81,9 +84,58 @@ Format `data/campus_phases.json`: `{ "id", "from", "to", "line" }`, inklusif, se
 - Pemilu: kedua nominee sudah anggota Council sejak awal tahun; kampanye mulai W3 Mon (lore 336).
 - Harvest Festival: "the last loud thing before exams", kostum, rumah hantu di koridor lama (lore 245).
 
+## 2b. Tren mingguan (yang biasa, dari kehidupan kampus nyata)
+
+Lapisan kedua, untuk **hari-hari tanpa fase kalender** (169 dari 308 hari sekolah): makanan yang tiba-tiba viral, permainan yang
+sedang demam, mode kecil, kebiasaan yang menular lalu hilang lagi.
+
+- **Cara pilih:** satu tren per minggu kampanye (Senin–Minggu), peluang 60% per minggu (`trend_rate`). Pilihannya seeded dari seed chat
+  dan nomor minggu, jadi swipe memberi hasil sama, tapi tiap chat dan tiap tahun berbeda: pemain tidak bisa menebak minggu depan.
+- **Variasi:** tren yang sama tidak kembali dalam 8 minggu (`trend_gap`, dirantai dari awal tahun seperti happenings, murni dari seed).
+- **Syarat:** musim (`season`, mis. iced coffee hanya Summer); tidak di hari berfase kalender, di luar kampus, saat libur pulang atau
+  lockdown.
+- **Di `<now>`:** label sendiri, `Campus fad this week: <line> (background; people take to it or scoff, each in character)`. Akhiran itu
+  menjaga prinsip "NPC bereaksi sesuai karakter": tidak ada yang dipaksa ikut tren.
+- **Biaya:** ±40–50 token per balasan di hari bertren (sekitar 100 hari setahun dengan 60%).
+- **Hanya teks.** Barang tidak habis terjual dan harga tidak berubah. Kalau nanti mau berdampak (mis. habis sebelum siang), itu
+  pekerjaan B3/M3.
+
+Setiap barang yang disebut ada di `data/shop.json` dengan nama yang sama (Salaffian flatbread, Honey cream coffee, Iced coffee,
+Blossom honey cake, Spiced apple turnover, Roasted chestnuts, Hot chocolate with cream, Iced fruit cooler, Sunfizz dan pengembalian
+botol 2 poin, Cooking Club honey bread dan bake Sabtu, Gilt-edged playing cards, Vanishing-coin illusion kit, Plush animal, Black silk
+ribbons, Colour-change hair sweet, game halls). Dragonchess adalah papan catur hidup (World Index); slot siaran sore Announcement Room
+ada di lore 107. Tidak ada nama NPC dan tidak ada bau (aturan preset 1.68.0).
+
+| id | musim | line |
+|---|---|---|
+| salaffian_craze | semua | Everyone wants Salaffian flatbread: the queue at The Salaffian Oven runs out of the door at lunch, and anyone who has not tried one yet is told they must. |
+| honey_cream_coffee | semua | Nightwell's honey cream coffee is the drink of the moment: cups appear in every classroom, and the line before first period has become a place to be seen. |
+| iced_coffee | Summer | In the heat everyone carries a Nightwell iced coffee, and being seen without one has somehow become a statement. |
+| blossom_cake | Spring | The bakery's Blossom honey cake sells out before noon every day, and students trade tips on when the next tray comes out. |
+| apple_turnovers | Autumn | The bakery's spiced apple turnovers are the autumn obsession: people time their walk past the Mall to catch them hot. |
+| roasted_chestnuts | Autumn, Winter | Roasted chestnuts are the thing: a paper cone in every cold hand, and a running argument over which café roasts them best. |
+| hot_chocolate | Autumn, Winter | Nightwell's hot chocolate with cream is everywhere; study groups have started meeting there just for it. |
+| fruit_coolers | Summer | Iced fruit coolers are the summer fix; the cafés have started naming flavours after the dorms, and every dorm insists its own is best. |
+| sunfizz_bottles | semua | The Sunfizz bottle hunt is on: students collect empties for the two-point return, and a few corridors have quietly become someone's territory. |
+| lucky_honey_bread | semua | A rumour says the Cooking Club's honey bread brings luck before a test: the Saturday bake sells out, and the club pretends not to be pleased. |
+| dragonchess_fever | semua | Dragonchess fever: the living boards are never free, unofficial ladders are chalked up in the common rooms, and losing streaks are taken personally. |
+| card_game | semua | A new card game played with gilt-edged cards has swept the dorms; everyone claims to know the real rules, and nobody agrees what they are. |
+| juggling | semua | Juggling has caught on: balls and beanbags fly in the courtyards between classes, with the occasional apology when one lands where it should not. |
+| coin_trick | semua | Everyone is learning a vanishing-coin trick done by hand alone, and anyone caught using magic to cheat at it is not forgiven. |
+| broadcast_song | semua | A song from the afternoon broadcast is stuck in everyone's head: someone hums it in every corridor, and the Announcement Room is begged to stop playing it, or to play it again. |
+| satchel_plush | semua | Small plush animals from Pennywhistle Curios have started hanging from satchels, and whose plush is whose has become a small map of who is close to whom. |
+| black_ribbons | semua | Black silk ribbons are the fashion, tied on wrists and satchels, and the Etiquette teachers have opinions about what counts as uniform. |
+| hair_sweet_dare | semua | Merryhew's colour-change hair sweets are the dare of the week: every class has someone with alarming hair, and the game is to keep a straight face. |
+| kind_notes | semua | Anonymous kind notes keep appearing on the Notice Board, one for someone new each morning; everyone wants to know who writes them, and who is next. |
+| morning_runs | Spring, Summer | Early-morning running has become a thing: before breakfast the paths round the lake fill with students who will have given up by next week. |
+| hourglass_study | semua | A study method is going round: an hourglass on the table, work until the sand runs out, then a short break; hourglasses have gone missing from every lab. |
+| game_halls | semua | The Mall's game halls have a new favourite game, free hours vanish there, and waiting in the queue to play is half the fun. |
+
 ## 3. Perubahan kode (tanpa canon)
 
-- **`data/campus_phases.json`:** diisi dari §2.
+- **`data/campus_phases.json`:** `phases` diisi dari §2; baru `trends` (§2b, `{ id, season, line }`), `trend_rate` 60, `trend_gap` 8.
+- **Engine:** `trendOn(seed, week)` di samping `happeningOn`, dirantai per tahun dan di-cache, tanpa state baru dan tanpa migrasi.
+  `$ui.phase` = fase kalender, kalau tidak ada maka tren minggu itu (`kind: 'trend'`); 505 memberi label yang berbeda.
 - **Engine `stepCampusEvents`:** tidak ada fase saat {{user}} jauh dari kampus (`awayIn`: Avalon, Sunreach, Hanakaze, Expedition,
   tim Kingdom) atau di hari libur pulang. Sekarang baris fase tercetak di mana saja, jadi "at Halvard classes go on" bisa sampai ke
   narator saat {{user}} sendiri di Avalon bersama tim.
@@ -102,7 +154,9 @@ Format `data/campus_phases.json`: `{ "id", "from", "to", "line" }`, inklusif, se
   - satu fase per hari;
   - tidak ada fase di Avalon (Crowning Day), di Sunreach dan di Month 12;
   - validator menolak contoh yang tumpang-tindih;
-  - token: baris terpanjang di bawah ±50.
+  - token: baris terpanjang di bawah ±50;
+  - tren: hanya di hari tanpa fase, sama di setiap swipe, tidak terulang dalam 8 minggu, musimnya benar, sekitar 60% minggu bertren
+    di 20 seed.
 - Cek live di `docs/TEST_CHECKLIST.md`, di quest tempat kampanye owner pertama kali melihatnya: Act 2 Q2.7 (M1 W1 Sat, "first
   weeks") dan Act 3 Q3.5 (Star Night minggu itu). Aturan Black Box ikut bila repositorinya terpasang.
 
@@ -122,3 +176,5 @@ Format `data/campus_phases.json`: `{ "id", "from", "to", "line" }`, inklusif, se
     cepat menyebar.
   - `after_thinning`: murid saling cerita apa yang mereka dengar dari jendela saat lockdown. Ini mengikuti lore geraman di bawah
     plinth (lore 266), tanpa memastikan apa pun.
+- [?] 3. **Daftar tren (§2b):** buang yang tidak cocok, atau tambahkan ide sendiri. Kalau diam, saya pakai 22 tren itu dengan peluang 60%
+  per minggu. Angka peluangnya masuk §5 FUTURE_PLANS supaya bisa disetel setelah playtest.
