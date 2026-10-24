@@ -34,10 +34,21 @@ Routine 2.0) dan B3; R2 (Meanwhile lebih longgar), R4 (setel toggle lama), B1 ve
 NPC_status, sakit, pulang libur; tanpa routine di jam itu: "around <haunt>". 3 nama di lipatan bracelet, semua di People panel; dipilih
 `pickOf` seeded berbobot rank bond (sama di setiap swipe). Hanya NPC yang sudah dikenal (ada bond atau sudah bertemu), supaya NPC yang
 belum ditemui tidak bocor. Hanya UI: 0 token prompt, narator tidak menerimanya. Toggle Features baru.
+- **Isi ikut kedekatan (owner, 2026-10-24, supaya Look for tidak mati):** lokasi pasti hanya untuk NPC yang field Routine-nya di
+  dossier sudah terbuka (info layers 1.89.0); kenalan hanya kegiatan yang terlihat semua orang (kelas, klub, sakit, pulang libur),
+  jam bebas "free" tanpa lokasi. Feed = "teman sedang apa", Look for = "aku mau menemui orang ini".
+- **Tidak pernah membantah Look for:** lokasi hanya ditulis bila Look for pasti menemukannya: kasus pasti (`busy`, routine, status,
+  sakit, libur) apa adanya; regular hanya bila roll Who is here blok ini menaruhnya di sana (Look for memakai tarikan yang sama dengan
+  peluang lebih besar); selain itu "somewhere on campus" (menggantikan "around <haunt>"). Orang lewat (passing through) tidak masuk.
+  Ikut aturan cuaca `presenceAt`/`lookFor` dan hasil Look for yang ditahan (`V.look`).
+- **Meanwhile** (`stepBondMemory`, Rank 7+, mingguan) masih membaca `HAUNT` ("was seen around …"), bukan `whereabouts`: bisa membantah
+  feed. Arahkan ke `whereabouts` di rilis ini (dan ke kejadian M1 di 2.3.0).
 
 **R3. Fase kampus (2.1.1).** Isi `phases` (`id`, `from`, `to`, `line`) di `data/campus_phases.json`: apa yang menyibukkan kampus dan
 orang pentingnya dalam rentang tahun ini (minggu ujian, persiapan festival, Thinning, pemilu). Engine (`stepCampusEvents`) sudah
 menaruh baris fase aktif di `<now>` (±30 token selama aktif). Canon baru: draft dulu.
+- Baris fase bukan optional thread (505 tidak menghitungnya, biarkan begitu). Jangan mengulang yang sudah dikatakan baris event
+  kalender, `exams` di `npc_moods.json` atau lockdown Thinning: fase hanya untuk yang tidak dikatakan data lain.
 
 **B1. Routine 2.0 (2.2.N).** Pengembangan `data/npc_routines.json`, bukan simulasi agen: engine hanya memilih di antara baris yang
 ditulis dari lore dan disetujui owner, jadi tidak bisa keluar karakter.
@@ -55,6 +66,18 @@ ditulis dari lore dan disetujui owner, jadi tidak bisa keluar karakter.
   `loves`/`hates` cuaca, asrama dan lantai tahun; owner meninjau per kelompok seperti ronde drafting NPC.
 - Menyentuh DECISIONS "NPC routines" (1.52.0: "kebiasaan mingguan ringan", roll 70%): owner sudah memilih Routine 2.0 (2026-10-24);
   angka 70 tetap, "ringan" berubah jadi hari penuh. Perbarui baris DECISIONS itu di rilis 2.2.0.
+- **Supaya tidak melemahkan Who is here / Look for (cek 2026-10-24):**
+  1. `presenceAt` menganggap routine di tempat itu *pasti*; hari penuh = hampir semua NPC pasti di suatu tempat, jadi roll keramaian
+     (target ambience) dan orang lewat 8% nyaris tak terpakai, dan tempat "sepi" bisa penuh. Tabel per blok wajib punya hasil
+     **free** (sebagian dari sisa 30%) yang jatuh ke roll keramaian seperti sekarang.
+  2. Look for selalu menemukan NPC di routine-nya; hasil free menjaga ketidakpastiannya. `lookHabit` melaporkan baris utama.
+  3. Cuaca: baris `wx` routine dulu, aturan umum pengusir tempat terbuka (`presenceAt` moved, `lookFor` weather) hanya untuk NPC tanpa
+     baris `wx`; jangan dihitung dua kali.
+  4. Baris bersama `REL_PAIRS`: satu roll bersama untuk kedua NPC (bukan dua roll terpisah), dan beat pair ambience tidak mengulangnya.
+  5. Blok routine = batas `BLOCKS_AT` (06:00, batas periode, 18:00, 20:00), supaya orang tidak pindah di tengah blok Who is here.
+  6. Cerita hantu `alone` (`stepAmbience` uncanny) butuh tempat tanpa orang (`hereIds`); lebih banyak orang pasti = momen uncanny lebih
+     jarang. Ukur sebelum/sesudah (replay seed) dan sesuaikan bila turun jauh.
+  - Efek sekali: saat update, posisi NPC di blok yang sedang berjalan bisa berubah (kunci roll baru); tanpa kehilangan data.
 
 **M1 + M2. Kejadian off-screen (2.3.0).** Tiap hari 3–5 NPC di-roll; satu kejadian kecil dari tabel `data/offscreen.json` (latihan,
 hasil klub, cekcok dengan rival dari `REL_PAIRS`, surat dari rumah, nilai ujian, beli sesuatu), disaring oleh data NPC (klub, haunts,
@@ -63,11 +86,22 @@ sudah dipakai rencana `Next` yang lewat, `stepBondMemory`), jadi tampil di Cast 
 baris, hanya saat hadir). Tidak mengubah bond, Trust, Tension atau reputasi {{user}}; kabar ke teman lewat "Word gets around" yang
 sudah ada. M2: feed R1 menampilkan kejadian itu ("Caspian : rapat panitia - Council Chamber (kemarin bertengkar dengan Irene)").
 Teks tabel = konten karangan: draft dulu.
+- **Cek tabrakan (2026-10-24):** `$Recent` hanya menyimpan 10 momen (3 terbaru ditulis dengan kata) dan isinya momen bersama {{user}};
+  3–5 kejadian sehari bisa mendorong keluar momen itu pada NPC yang jarang ditemui. Batasi: paling banyak **satu** baris off-screen di
+  `$Recent` per NPC (yang baru menggantikan yang lama). Label beda dari "(Off-screen)" rencana `Next` yang dia ceritakan sendiri.
+- Meanwhile (Rank 7+, mingguan) mengambil kejadian M1 bila ada, supaya Journal dan Cast Sheet tidak bercerita dua versi.
+- Tabel disaring menurut kepribadian (NPC bertindak sesuai karakter) dan tidak menyentuh rahasia (Morning Choir, `<narrator_only>`).
 
 **M3 + M4. Akibat kejadian (2.4.0).** M3: rubrik "Around campus" di koran Senin (`cwNews`, `p30:paperCard`) dari kejadian M1 dan
 gosip minggu itu; Notice Board/UI saja. M4: kejadian M1 jadi pintu masuk: alasan NPC initiative (`stepInitiative`, `INIT_ASKS`) boleh
 diambil dari kejadiannya ("ingin cerita soal duel kemarin"); NPC yang cedera di happening (misalnya duel chalk) muncul di Healing Ward
 (`restore_places.json` `medical_centre`); 0 token tambahan karena memakai jalur lama.
+- **Cek tabrakan (2026-10-24):** nama "Around campus" sudah dipakai happenings (toast "Around campus: …", `<now>` "Around campus
+  today", planner): beri rubrik nama lain (mis. "Campus life"). Koran Senin sudah memuat rumor kampus terbaru dan memperpanjang umurnya
+  (`keep`); rubrik tidak boleh memperpanjang rumor lain, kalau tidak "Rumours going around" membanjir.
+- M4 initiative: alasan dari kejadian ikut daftar "tidak terulang dalam 20" dan hanya sebagian alasan (mis. 1 dari 3), supaya alasan
+  lama dan hari favour tetap muncul. NPC cedera = keadaan di atas routine (seperti sakit/status), supaya routine, feed dan Look for
+  menunjuk ke Healing Ward.
 
 **B3. Politik kampus (2.5.N).** Faksi dari `data/factions.json` bergerak sekali seminggu (Minggu malam, titik `stepSchoolWeek`;
 routine week dan lompatan waktu tetap dihitung per minggu): tiap faksi memilih satu langkah dari `data/politics.json` dengan
@@ -83,6 +117,21 @@ routine week dan lompatan waktu tetap dihitung per minggu): tiap faksi memilih s
   faksi: langkahnya hanya muncul sebagai kejadian aneh dan trace beat sampai rahasianya ada di `Secrets_revealed`.
 - 2.5.0 lite: Doves + Council, dampak hanya lewat Notice Board, koran dan bobot happenings. 2.5.1: asrama, Liaison, Cathedral, Choir,
   harga, jam malam dan mood.
+- **Cek tabrakan (2026-10-24):**
+  1. **Happenings** dihitung murni dari seed, dirantai setahun dari hari pertama dan di-cache (`happeningOn`, `HAPY`), dan planner
+     menampilkan happening yang akan datang. Bobot dari keadaan faksi akan mengubah hari lain secara mundur dan membuat ramalan
+     planner berubah. Dampak harus lewat jalur terpisah (misalnya sweep tambahan yang di-roll sendiri pada minggu itu), bukan bobot di
+     `rawHappening`. Jangan juga mencuri bobot dari happening kerja berbayar (sumber uang).
+  2. **Tiga ukuran Dove:** Dove attention (pribadi, hidden magic), reputasi Doves, dan kewaspadaan kampus yang baru. Tetapkan satu
+     aturan: kewaspadaan tidak menaikkan attention langsung dan tidak menurunkan reputasi Doves (aturan mingguan Krieg dan Mastery
+     Arcana bergantung padanya); paling jauh mengubah peluang razia/sweep.
+  3. **Jam malam:** mengubah `curfewOf` ikut menggeser chip Next, Agenda, blok "malam sebelum jam malam" B1 dan jendela XP pesta ulang
+     tahun (18:00 sampai jam malam). Lebih aman memperketat penegakan (peluang tertangkap) daripada memajukan jamnya.
+  4. **Mood asrama** lewat `mg:moodOf`: satu asrama Bad seminggu menekan obrolan, maaf dan hadiah untuk seperempat roster. Batasi
+     (mis. paling jauh satu langkah, hanya hari tertentu).
+  5. Petisi Council (1.98.3) tetap memberi Interaction bantuan dan `student_notice_help`; hasil pemilu tetap dari mekanisme 1.86.0.
+  6. Baris `<now>` B3 dan M4: tentukan apakah masuk daftar optional thread (505 `OPT`, satu per balasan); kalau masuk, ia bersaing
+     dengan happening, Here now, rumor dan initiative.
 
 ## 1. Rencana owner (dicatat, belum dijadwalkan)
 
