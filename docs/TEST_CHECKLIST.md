@@ -872,6 +872,10 @@ The first academy flight (the airship), then the Grand Vast Forest.
 - [ ] Cached tokens per request from the second reply on: about twice what 1.99.7 had (the preset alone before; now the preset plus
       the card's constant lore, ±13,000 more); the cache hit rate in Explore rises from about 18% [1.99.8].
 - [ ] The narrator still uses the lore of a place or person named in the scene as before (keyword lore now sits after the rules) [1.99.8].
+- [ ] Instead of OpenRouter's Activity page: install Eldrasil Black Box 0.1.0 (Extensions → Install extension,
+      `https://github.com/pizzatuna65-jpg/Eldrasil-BlackBox`), play the 5 replies, open wand → Black Box: every reply row has Input,
+      Cached and Cost; note the Hit column from the second reply on. If it stays near 0%, tell the assistant: the cause may be the
+      system-role entries at depth 0–1 (the Semi-strict test needs your approval, DECISIONS §11) [Black Box 0.1.0].
 
 ### SQ-SC Summaryception instead of VectFox [1.99.1]
 *Do:* in a copy of the chat (a branch), turn VectFox off and set up Summaryception 5.5.4 as `docs/ECOSYSTEM.md` → Summaryception says
