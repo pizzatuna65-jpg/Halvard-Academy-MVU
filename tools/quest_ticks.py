@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""Tick the campaign quest log (docs/TEST_CHECKLIST.md) from an Eldrasil Black Box playtest bundle (quest autopilot, 1.99.14).
+"""Tick the campaign quest log (docs/TEST_CHECKLIST.md) from an Eldrasil Black Box playtest bundle (quest autopilot, Black Box 1.2.0).
 
 Usage:
   python tools/quest_ticks.py <bundle.json.gz> [--checklist docs/TEST_CHECKLIST.md] [--write]
 
-The bundle carries the card's live-check rules (data/live_checks.json, as the card shipped them) and what the autopilot found.
+The bundle carries the live-check rules the Black Box used (its data/eldrasil_checks.json) and what the autopilot found.
 A rule names its check by quest and the start of its line. For each check line:
   - every rule for it passed and each covers the whole check ("whole": true)
-                                        -> the line is ticked [x] with a note "✓ msg N (autopilot, card X)";
+                                        -> the line is ticked [x] with a note "✓ msg N (autopilot, Black Box X)";
   - every rule passed, one covers only the part a machine can see
-                                        -> a note "✓ msg N (autopilot, card X, the machine part)"; the line stays open for the rest;
-  - a rule failed                       -> a note "✗ msg N (autopilot, card X): <what was missing>" (the line stays open);
+                                        -> a note "✓ msg N (autopilot, Black Box X, the machine part)"; the line stays open for the rest;
+  - a rule failed                       -> a note "✗ msg N (autopilot, Black Box X): <what was missing>" (the line stays open);
   - a rule is to review (or undecided)  -> listed on the screen with its evidence messages, for the assistant to judge.
 Without --write it prints the changes as a diff and changes nothing. A note already there is not added twice.
 """
@@ -56,7 +56,8 @@ def item_end(lines, i):
 def plan(bundle, lines):
     """What to change: {line index: (tick, [notes])} and the checks to review."""
     q = bundle.get('quests') or {}
-    rules, results, card = q.get('rules') or [], q.get('results') or {}, q.get('card') or '?'
+    rules, results = q.get('rules') or [], q.get('results') or {}
+    src = q.get('source') or (f"card {q['card']}" if q.get('card') else 'Black Box')
     checks = check_lines(lines)
     groups, missing = {}, []
     for r in rules:
@@ -71,7 +72,7 @@ def plan(bundle, lines):
         notes = []
         for r, x in res:
             for f in x.get('fails') or []:
-                notes.append(f"✗ msg {f.get('mesId')} (autopilot, card {card}): {f.get('why')}")
+                notes.append(f"✗ msg {f.get('mesId')} (autopilot, {src}): {f.get('why')}")
         if any(x['status'] == 'failed' for _, x in res):
             changes[idx] = (False, notes)
         elif all(x['status'] == 'passed' for _, x in res):
@@ -79,7 +80,7 @@ def plan(bundle, lines):
             n = sum(x.get('passes', 0) for _, x in res)
             whole = all(r.get('whole') for r, _ in res)
             part = '' if whole else ', the machine part'
-            changes[idx] = (whole, [f"✓ msg {first} (autopilot, card {card}{part}): passed {n} time{'s' if n != 1 else ''}"])
+            changes[idx] = (whole, [f"✓ msg {first} (autopilot, {src}{part}): passed {n} time{'s' if n != 1 else ''}"])
             if not whole:
                 review.append((c[0], c[2][:90], '+'.join(r['id'] for r in rs), 'machine part passed', [first], 0))
         for r, x in res:

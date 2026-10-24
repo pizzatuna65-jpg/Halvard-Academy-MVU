@@ -11,8 +11,8 @@ tahap itu selesai.
 
 | Rilis | Isi | Catatan |
 |---|---|---|
-| **Bug hunt** | Full audit bug hunt, stress test, dan perbaikannya | Sesudah 1.99 (owner 2026-10-23: 1.99 jadi kompatibilitas Summaryception, selesai di 1.99.1). Full suite, stress test, audit lintas sistem; hasilnya `audit/AUDIT_2026-10-23_2_audit_menyeluruh.md` §8 (8 batch), tiap batch satu rilis 1.99.N (batch 1 = 1.99.2, batch 2 = 1.99.3, batch 3 = 1.99.4, selesai). |
-| **2.0.0** | Full polish fitur dan UI | Tanpa fitur baru. |
+| **Bug hunt** | Full audit bug hunt, stress test, dan perbaikannya | Sesudah 1.99 (owner 2026-10-23: 1.99 jadi kompatibilitas Summaryception, selesai di 1.99.1). Full suite, stress test, audit lintas sistem; hasilnya `audit/AUDIT_2026-10-23_2_audit_menyeluruh.md` §8 (8 batch): batch 1–6 dan batch 7 tahap 1 selesai (1.99.2–1.99.8), batch 8 selesai di 2.0.0 bersama audit singkat §11. Sisa: batch 7 tahap 2 (lore kata kunci ke kedalaman chat, rangkuman tanpa angka, pangkas per blok), menunggu angka cached tokens OpenRouter sesudah 1.99.8 (SQ-CACHE) dan uji A/B `tools/audit_chat.py`. |
+| **2.0.N** | Full polish fitur dan UI | Tanpa fitur baru. Nomor 2.0.0 dipakai owner untuk batch 8 bug hunt (2026-10-24); polish menyusul sebagai 2.0.N. |
 
 ## 1. Rencana owner (dicatat, belum dijadwalkan)
 
@@ -96,9 +96,12 @@ Sisa saran audit fitur 2026-10-03 (4.5–4.10 sudah dibuat di 1.49–1.52; 4.16 
   minggu Kingdom untuk {{user}} yang tidak ikut tim (berita siang di announcement pillar, buku taruhan Aiden, broadsheet keluarga Linus
   lore 410) lewat `data/event_frame.json` `chances` `kingdom_comp`.
 
-## 3. Sisa audit 2026-09-29 (sengaja ditunda)
-- **A8** Cast Sheet 509 (±515 KB EJS): pecah per NPC hanya kalau terbukti ada lag saat prompt dibangun di ST (compile lokal ±7,7 ms).
-- **A10** PNG kartu ±8 MB (JSON disematkan dua kali, `chara` + `ccv3`): `chara` ringkas hanya setelah kompatibilitas pembaca v2 dicek.
+## 3. Sisa audit (sengaja ditunda)
+- **K1 sisa** (audit 2026-10-23, 2.0.0 memecah `stepBonds` dan `councilYear`): `stepProficiency` (±375 baris), `stepSchoolWeek` (±349),
+  `nowOf` (±258), `stepHidden` (±198). Pecah saat fungsinya disentuh berikutnya, dibuktikan dengan `ENGINE_DIFF` (jangan refactor tanpa
+  alasan fungsional).
+- **A8** (audit 2026-09-29) Cast Sheet 509 (±515 KB EJS): pecah per NPC hanya kalau terbukti ada lag saat prompt dibangun di ST (compile lokal ±7,7 ms).
+- **A10** (audit 2026-09-29) PNG kartu ±8 MB (JSON disematkan dua kali, `chara` + `ccv3`): `chara` ringkas hanya setelah kompatibilitas pembaca v2 dicek.
 
 ## 4. Keputusan yang masih menunggu owner
 - Siklus hidup {{user}} setelah Year 3 (lulus / dikeluarkan / mengulang). Sejak 1.7.4 Year naik otomatis; payout tetap jalan. Owner:

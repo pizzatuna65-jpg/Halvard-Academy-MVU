@@ -2,6 +2,9 @@
  "_note": "1.43.0 (audit batch 2, 2.8): what Rank 5 in a proficiency gives (owner-approved planning/DRAFT_proficiency_practice.md, 1.30.0). The numbers are the engine's (tools/gen_engine.py MASTERY_FX); the texts are the Student file's (tools/gen_ui.py), with their numbers filled from this file.",
  "arcana_cost": 0.9,
  "society_trust": 5,
+ "_society_to": "2.0.0 (bug-hunt audit K2, from the engine): who Consummate's Trust bonus is for. society_groups: NPC groups (staff; other = the Doves, the Cathedral, the Liaison, facilities); society_nobles: the nobles by the lorebook (House Silvarenne, House Villeneuve, the Liaison's regulars).",
+ "society_groups": ["staff", "other"],
+ "society_nobles": ["Caspian", "Caralynn", "Florian", "Elion", "Nerys"],
  "nature_forage": 2,
  "perks": {
   "Knowledge": "Once a week, digging through the Archive or the Library turns up one real lead.",

@@ -754,7 +754,7 @@ def blackbox(b):
 
 
 def quests_of(b):
-    """The quest autopilot's results in a bundle (1.99.14): per rule its quest, line, status, passes, failures and evidence."""
+    """The quest autopilot's results in a bundle (Black Box 1.2.0): per rule its quest, line, status, passes, failures and evidence."""
     q = b.get('quests') or {}
     if not q:
         return None

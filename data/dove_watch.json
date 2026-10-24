@@ -20,10 +20,14 @@
  "interview": {
   "after_days": 2, "from": "16:00", "to": "18:00", "where": "The Dovecote", "with": "Krieg", "desc": "Dovecote interview",
   "again_days": 14, "again_rise": 10,
-  "society": 3, "shield": 20, "shield_rank": 7, "shields": ["Yvette", "Kuroo", "Ezrel", "Ottavio", "Althair"], "milena": -10,
+  "society": 3, "shield": 20, "shield_rank": 7, "shields": ["Yvette", "Kuroo", "Ezrel", "Ottavio", "Althair"], "milena": -10, "second": "Milena",
   "delta": { "clean": -15, "partial": -5, "fail": 10, "missed": 10 },
   "milena_from": "10:00", "milena_to": "18:00",
   "milena_line": "Milena Sagona comes to find {{user}} for a quiet word, \"only a talk, Signor/Signora\".",
+  "_names": "2.0.0 (bug-hunt audit K2, from the engine): names: how <now> and the log name the interviewer (with) and the one who comes instead when the interview is missed (second, the milena fields); call: the appointment's Desc; second_talk: the log's name for that talk.",
+  "names": { "Krieg": "Sir Krieg Valforth", "Milena": "Milena Sagona" },
+  "call": "Sir Krieg Valforth wants {{user}} at the Dovecote for a talk",
+  "second_talk": "the talk with Milena Sagona",
   "line": "The Dovecote interview is now ({who}; Fortune {n}{mods} = {total}): play it to this result.",
   "results": {
    "clean": "{{user}} gives them nothing; the file goes quiet for now.",
@@ -41,7 +45,7 @@
    "fail": "The Doves searched {{user}}'s room last night and found {item}. They will come for it: play the seizure in the story, where {{user}} can answer it."
   }
  },
- "hearing": { "desc": "Hearing at the Dovecote", "at": "10:00", "with": "Krieg", "where": "The Dovecote" },
+ "hearing": { "desc": "Hearing at the Dovecote", "at": "10:00", "with": "Krieg", "where": "The Dovecote", "call": "A summons to a hearing before Sir Krieg Valforth" },
  "leak": {
   "pct": 25, "rise": 10, "tension": 70, "trust_below": 40, "pro_tension": 50, "never": ["Dante"],
   "line": "Someone who knows has talked to the Doves this week: {who} (narrator only; play it in character, out of {{user}}'s sight)."

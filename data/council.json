@@ -1,0 +1,8 @@
+{
+ "_note": "2.0.0 (bug-hunt audit K2, from the engine stepTime): the Student Council's canon people by campaign year (engine councilYear; tools/gen_engine.py COUNCIL). year1: the sitting President and Vice President of Year 1 (lore). candidates: the two nominees each year (Year 1 always the owner's two; a later year's pair is set when that year begins and kept once recorded); second_player: in that year the second nominee is {{user}} when {{user}} sits on the Council. skipped: the Year 1 result when a save skipped that election. members: who sits on the Council in that year ($president, $vice: the pair elected the year before; $second: that year's second nominee; {{user}} joins when on the Council); a year not listed uses the last row. Month 12 has no Council. The election's wording is lore (tools/merge_lorebooks.py).",
+ "year1": {"President": "Irene", "VicePresident": "Caspian"},
+ "candidates": {"1": ["Florian", "Dante"], "2": ["Caralynn", "Percival"], "3": ["Hadrian", "Nerys"]},
+ "second_player": "2",
+ "skipped": {"President": "Florian", "VicePresident": "Dante"},
+ "members": {"1": ["Irene", "Caspian", "Florian", "Dante"], "2": ["$president", "$vice", "Caralynn", "$second"], "3": ["$president", "$vice", "Hadrian", "Nerys", "Bianca"]}
+}

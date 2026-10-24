@@ -1,13 +1,15 @@
-// 1.99.14: live-check rules for the Eldrasil Black Box quest autopilot (data/live_checks.json, embedded in the card's
-// data.extensions.eldrasil_live_checks). The rule language is the Black Box's (pizzatuna65-jpg/Eldrasil-BlackBox, src/checks.js,
-// version 1); the shape check below mirrors it. Each rule names one check line of docs/TEST_CHECKLIST.md by quest and line start.
+// The Eldrasil Black Box quest autopilot (no card change): the rules live in the Black Box repository
+// (pizzatuna65-jpg/Eldrasil-BlackBox, data/eldrasil_checks.json; language version 1 in its src/checks.js, mirrored below). Each rule
+// names one check line of docs/TEST_CHECKLIST.md by quest and line start. The rule checks run when the Black Box is found
+// (BLACKBOX_DIR, or a clone beside this repository); tools/quest_ticks.py and audit_chat.py --blackbox are checked either way.
 const fs = require('fs'), path = require('path'), os = require('os'), cp = require('child_process'), zlib = require('zlib');
 const { ok, ROOT } = require('./harness.cjs');
-console.log('Live-check rules (quest autopilot, 1.99.14)');
+console.log('Live-check rules (quest autopilot, Black Box)');
 
-const R = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/live_checks.json'), 'utf8'));
-const card = JSON.parse(fs.readFileSync(path.join(ROOT, 'dist/Eldrasil_Halvard.json'), 'utf8')).data;
-const version = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/card/card.json'), 'utf8')).character_version;
+const BB = process.env.BLACKBOX_DIR || path.join(ROOT, '..', 'eldrasil-blackbox');
+const RULES_FILE = path.join(BB, 'data', 'eldrasil_checks.json');
+const R = fs.existsSync(RULES_FILE) ? JSON.parse(fs.readFileSync(RULES_FILE, 'utf8')) : null;
+if (!R) console.log(`  (no Black Box at ${BB}: the rule checks are skipped; set BLACKBOX_DIR)`);
 
 // ---- shape (Black Box src/checks.js, rules version 1)
 const TEXT = ['prompt', 'reply', 'prose', 'user'], PATHS = ['state', 'before', 'record', 'signals'];
@@ -32,6 +34,7 @@ function cond(c, where, errs) {
 }
 const errs = [];
 const ids = new Set();
+if (R) {
 ok(R.version === 1 && Array.isArray(R.checks) && R.checks.length >= 50, `rules version 1, ${R.checks.length} rules`);
 for (const c of R.checks) {
   const where = c.id || '?';
@@ -62,19 +65,14 @@ ok(!bad.length, 'every rule names exactly one check line of its quest' + (bad.le
 const quests = new Set(R.checks.map(c => c.quest));
 ok(['Q0.2', 'Q0.3', 'Q1.1', 'Q1.3', 'Q1.4', 'Q1.5', 'Q2.1', 'Q2.7', 'SQ-CACHE', 'SQ-W', 'SQ1'].every(q => quests.has(q)), 'Acts 0–2 and the side quests have rules');
 
-// ---- the card carries them, outside the prompt
-const X = card.extensions.eldrasil_live_checks;
-ok(X && X.version === 1 && X.card === version && X.checks.length === R.checks.length, `the built card carries the rules (card ${X && X.card})`);
-const inPrompt = [card.description, card.first_mes, card.scenario, card.system_prompt, card.post_history_instructions, card.extensions.depth_prompt.prompt,
-  ...card.character_book.entries.map(e => e.content)].join('\n');
-ok(!/eldrasil_live_checks|q0\.2-no-engine-error/.test(inPrompt), 'no prompt field or lore entry holds the rules (0 tokens)');
+}
 
 // ---- quest_ticks.py and audit_chat.py --blackbox on a bundle
 const PY = ['python3', 'python', 'py'].find(c => { const r = cp.spawnSync(c, ['-c', 'import sys; print(sys.version_info[0])'], { encoding: 'utf8' }); return r.status === 0 && /3/.test(r.stdout); });
 if (!PY) { console.log('  (no Python 3 found: tool checks skipped)'); process.exit(0); }
 const env = { ...process.env, PYTHONUTF8: '1' };
-const pick = id => R.checks.find(c => c.id === id);
-const rules = ['q0.3-no-400', 'q0.2-no-engine-error', 'q1.1-tour-line', 'q1.1-tour-gone', 'q1.4-three-numbers', 'q1.1-birthday'].map(pick);
+// Six rules as the Black Box shipped them (inline, so the tool checks run without the Black Box).
+const rules = [{"id": "q0.3-no-400", "quest": "Q0.3", "line": "No error 400 \"Requests ending with a model turn\"", "needs": 10, "max": 1000, "pass": {"record": "status", "ne": 400}, "whole": true}, {"id": "q0.2-no-engine-error", "quest": "Q0.2", "line": "No \"Engine error\" line in the Log", "needs": 10, "max": 1000, "pass": {"signals": "engineError", "eq": false}}, {"id": "q1.1-tour-line", "quest": "Q1.1", "line": "`<now>` has the \"Entrance tour assignment", "needs": 2, "when": {"all": [{"state": "World._Event_today", "match": "Entrance Event"}, {"state": "World.Time", "match": "^(1[0-7]):"}]}, "pass": {"all": [{"block": "now", "match": "Entrance tour assignment \\(keep these same people through 18:00\\)"}, {"block": "campus_rules", "match": "Entrance"}]}}, {"id": "q1.1-tour-gone", "quest": "Q1.1", "line": "`<now>` has the \"Entrance tour assignment", "when": {"all": [{"state": "World.Month", "eq": 1}, {"state": "World.Week", "eq": 1}, {"state": "World.Day", "eq": "Tue"}]}, "pass": {"block": "now", "not": "Entrance tour assignment"}}, {"id": "q1.4-three-numbers", "quest": "Q1.4", "line": "Two risky attempts in one reply", "needs": 3, "when": {"block": "now", "match": "^Fortune \\("}, "pass": {"block": "now", "match": "^Fortune \\([^)]*\\): \\d+, then \\d+, then \\d+"}}, {"id": "q1.1-birthday", "quest": "Q1.1", "line": "Ask someone their birthday", "mode": "review", "when": {"user": {"match": "(?i)birthday"}}}];
 const results = {
   'q0.3-no-400': { status: 'passed', seen: 12, passes: 12, fails: [], evidence: [{ recordId: 'a', mesId: 80 }] },
   'q0.2-no-engine-error': { status: 'passed', seen: 12, passes: 12, fails: [], evidence: [{ recordId: 'a', mesId: 80 }] },
@@ -83,8 +81,8 @@ const results = {
   'q1.4-three-numbers': { status: 'failed', seen: 4, passes: 3, fails: [{ recordId: 'c', mesId: 90, why: 'block now: no match /^Fortune/' }], evidence: [] },
   'q1.1-birthday': { status: 'review', seen: 1, passes: 0, fails: [], evidence: [{ recordId: 'd', mesId: 85 }] },
 };
-const bundle = { format: 'eldrasil-blackbox-bundle', version: 1, manifest: { chatId: 'c', cardVersion: version, chatFrom: 0, chatMessages: 0 },
-  quests: { card: version, version: 1, summary: {}, results, rules }, turns: [], texts: {}, chat: { header: {}, from: 0, messages: [] } };
+const bundle = { format: 'eldrasil-blackbox-bundle', version: 1, manifest: { chatId: 'c', cardVersion: '2.0.0', chatFrom: 0, chatMessages: 0 },
+  quests: { card: 'Black Box 1.2.0', source: 'Black Box 1.2.0', version: 1, summary: {}, results, rules }, turns: [], texts: {}, chat: { header: {}, from: 0, messages: [] } };
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'eld-qt-'));
 const file = path.join(dir, 'b.json.gz'), list = path.join(dir, 'TEST_CHECKLIST.md');
 fs.writeFileSync(file, zlib.gzipSync(JSON.stringify(bundle)));
@@ -92,9 +90,9 @@ fs.copyFileSync(path.join(ROOT, 'docs/TEST_CHECKLIST.md'), list);
 const dry = cp.spawnSync(PY, [path.join(ROOT, 'tools/quest_ticks.py'), file, '--checklist', list], { encoding: 'utf8', env });
 ok(dry.status === 0 && fs.readFileSync(list, 'utf8') === fs.readFileSync(path.join(ROOT, 'docs/TEST_CHECKLIST.md'), 'utf8'), 'dry run changes nothing' + (dry.status ? ': ' + dry.stderr.slice(-300) : ''));
 ok(/\+- \[x\] No error 400/.test(dry.stdout) && !/\+- \[x\] `<now>` has the "Entrance tour/.test(dry.stdout), 'the diff ticks a whole passed check; the tour line waits for its second rule');
-ok(!/\+- \[x\] No "Engine error" line/.test(dry.stdout) && /\+\s+✓ msg 80 \(autopilot, card [\d.]+, the machine part\)/.test(dry.stdout), 'a check the rule covers only in part gets a note, not a tick');
-ok(R.checks.filter(c => c.whole).length >= 5 && R.checks.every(c => c.whole === undefined || c.whole === true), 'some rules cover their whole check ("whole": true)');
-ok(/\+\s+✗ msg 90 \(autopilot, card [\d.]+\): block now: no match/.test(dry.stdout), 'a failure becomes a note under its line');
+ok(!/\+- \[x\] No "Engine error" line/.test(dry.stdout) && /\+\s+✓ msg 80 \(autopilot, Black Box 1\.2\.0, the machine part\)/.test(dry.stdout), 'a check the rule covers only in part gets a note, not a tick');
+if (R) ok(R.checks.filter(c => c.whole).length >= 5 && R.checks.every(c => c.whole === undefined || c.whole === true), 'some rules cover their whole check ("whole": true)');
+ok(/\+\s+✗ msg 90 \(autopilot, Black Box 1\.2\.0\): block now: no match/.test(dry.stdout), 'a failure becomes a note under its line');
 ok(/q1\.1-birthday, review\].*evidence msgs \[85\]/.test(dry.stderr), 'a review rule is listed with its evidence');
 cp.spawnSync(PY, [path.join(ROOT, 'tools/quest_ticks.py'), file, '--checklist', list, '--write'], { encoding: 'utf8', env });
 cp.spawnSync(PY, [path.join(ROOT, 'tools/quest_ticks.py'), file, '--checklist', list, '--write'], { encoding: 'utf8', env });

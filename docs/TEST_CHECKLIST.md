@@ -14,7 +14,7 @@ covers what only a live session can show. Playing the route is also the cross-ba
 - Tick `[x]` when a check passes. When one fails, add a line under it (`✗ msg 123: what happened`) and play on.
 - After a session, send the Black Box playtest bundle (wand → Black Box → Export; or the chat export without the Black Box, and
   VectFox's EventBase export when a check asks for it) with "fix what my playtest found". With the Black Box the quest autopilot
-  has already judged the checks that have a rule (1.99.14): I tick those with `tools/quest_ticks.py`, judge the "to review" ones from
+  has already judged the checks that have a rule (Black Box 1.2.0): I tick those with `tools/quest_ticks.py`, judge the "to review" ones from
   the evidence, run `tools/audit_chat.py` and fix what failed. You can just play.
 - `[1.63]` names the release a check comes from (`[1.52.1]` a patch release); search for it to see one release's checks. The old list
   by release: `git show dc2ecad:docs/TEST_CHECKLIST.md`.
@@ -148,10 +148,13 @@ show the newcomers their dorm rooms.
       them or not, as `<now>`'s "Looking for … (the engine's roll)" line says, and a swipe gives the same answer. Not found, ask Kanae
       where they might be: she answers only if she has a tie to them. The dossier's "Look for" lists only places the file already
       shows, the place for this hour first. No delay when the prompt is built (entry 505 is now ±140 KB of code) [1.99.12].
+      After curfew, in Avalon or with Who is here off, the dossier has no "Look for" button either [2.0.0].
 - [ ] Someone not yet named shows their role, not their name; a passer-by has "Keep in record"; with four or more present, three
       cards and an "also here" row [1.70]. Thoughts only for NPCs in the scene: never someone absent, never met or only mentioned [1.99.13].
 - [ ] Activities: the tab is called Action, it opens at any Campus Map place (also without a practice place) with "Look for someone"
       first; no other tab shows Look for [1.99.13].
+- [ ] On a day with a campus happening (`<now>` "Around campus today"), the "Optional threads (…)" line names it too, and the narrator
+      uses at most one of the threads in a reply [2.0.0].
 - [ ] The bracelet has a folded "This reply (n changes)": open it after a reply with Kanae or Zara; it lists their bond XP (and any
       Trust or Tension move), points spent with what for, Bag in and out, new Planner entries and Journal lines, and agrees with the
       People panel and the Wallet. It stays open while the bracelet redraws, is gone when the bracelet is collapsed, and a swipe shows
@@ -797,6 +800,8 @@ The first academy flight (the airship), then the Grand Vast Forest.
       "Has not seen {{user}} since the injury (…)"; once it heals the line is gone [1.74].
 - [ ] Once someone has an Imprint (an experience that changed them), their Cast Sheet opens with "Changed by experience: their Imprints
       (below) are true now", and where the Imprint and their lore Personality differ they act on the Imprint [1.99.4].
+- [ ] Someone whose Trust falls to Betrayed (under 15): their Cast Sheet tags what the bond has not opened (`Loves [not told yet: Trust
+      Betrayed]:`, the Gifts line too), and asked, they tell nothing new [2.0.0].
 
 ### MS3 Story events
 - [ ] A broken promise, an insult or a betrayal: the update reports `letdown` / `offence` interactions with a Weight, never a Trust or
@@ -895,9 +900,9 @@ reload, then play a few replies as usual.
 - [ ] The header shows the chat file size and the last save time [Black Box 1.0.0].
 - [ ] Export playtest bundle (last 25 replies), then send it to the assistant (or run `python tools/audit_chat.py <file> --blackbox
       --no-drift`): the report lists the same replies [Black Box 1.0.0].
-- [ ] Quests (card 1.99.14, Black Box 1.1.0): wand → Black Box → Quests lists the card's checks by quest; after a few replies some
+- [ ] Quests (Black Box 1.2.0, any card version): wand → Black Box → Quests lists the card's checks by quest; after a few replies some
       are passed or to review, a failure names its message and what was missing, and `#msg` opens that request. Export carries them
-      [1.99.14].
+      [Black Box 1.2.0].
 - [ ] Nothing else changed: the bracelet, the panels, swipes and other extensions work as before; Recording off in Extensions →
       Eldrasil Black Box stops new rows [Black Box 1.0.0].
 
@@ -1049,5 +1054,5 @@ Checks of the old list that no longer apply (their text: `git show dc2ecad:docs/
 ## Adding checks (each release)
 
 Put a new live check into the quest where the campaign first gives the chance to see it, tagged with the release; with no date, into a
-Milestone or a Side quest. When a machine can judge it, add its rule to `data/live_checks.json` (docs/BUILD.md "Live check rules"). When the owner reports a session, tick what passed, note what failed under it, and move "Where you are".
+Milestone or a Side quest. When a machine can judge it, add its rule to the Black Box's `data/eldrasil_checks.json` (docs/BUILD.md "Live check rules"). When the owner reports a session, tick what passed, note what failed under it, and move "Where you are".
 Retire a check only when a release removes what it tests, with one line under Retired checks.

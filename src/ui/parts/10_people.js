@@ -196,7 +196,7 @@ PANELS.npc = {
           return `<div class="sub">At Rank 8 this bond can become: ${esc(ways.join(' · '))}.${!'AB'.includes(br) && g8 ? ` This bond needs Trust ${g8} to deepen.` : ''}</div>`; })() : ''}
         ${b.Last_seen ? `<div class="sub">Last seen ${esc(b.Last_seen)}</div>` : ''}</div>`;
     } else h += '<div class="sub">You have not met yet.</div>';
-    if (n && knowsName(id, S) && arrived(id, S) && !graduated(S).has(id) && !((S.Scene || {}).Present || {})[id] && ((DATA.presence || {}).roster || []).includes(id)) h += lookPick(id, n, S);   // 1.99.12
+    if (n && knowsName(id, S) && arrived(id, S) && !graduated(S).has(id) && !((S.Scene || {}).Present || {})[id] && ((DATA.presence || {}).roster || []).includes(id) && lookOpen(S)) h += lookPick(id, n, S);   // 1.99.12; 2.0.0 lookOpen
     if (b) h += `<h3>Your notes</h3><textarea class="pnote" data-note="${esc(id)}" maxlength="${NOTE_MAX}" rows="3" aria-label="Your notes" placeholder="e.g. Likes jasmine tea; don't bring up her brother">${esc(notesGet()[id] || '')}</textarea>
       <div class="sub">Only for you: the narrator never reads them. Saved with this chat as you type.</div>`;   // 1.94.0
     // 1.4.4 (owner): recent moments with you, newest first (engine: Bonds.<id>.$Recent; the narrator reads the same rows in <now>)
