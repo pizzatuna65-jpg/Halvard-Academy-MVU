@@ -133,7 +133,8 @@ assert t.count('/*@@RULE_CARDS@@*/{}') == 1
 t = t.replace('/*@@RULE_CARDS@@*/{}', json.dumps({k: v['feature'] for k, v in _rc.items()}, separators=(',', ':')))
 assert t.count('/*@@NOW_DATA@@*/{}') == 1 and t.count('/*@@AGE@@*/') == 1
 t = fill_data(t.replace('/*@@NOW_DATA@@*/{}', json.dumps(now_data(npcs), ensure_ascii=False, separators=(',', ':'))).replace('/*@@AGE@@*/', AGE_JS))
-for ph, v in (('CAMPUS_MAP', {**campus_map(locs, pins), 'rates': json.load(open(P('data/campus.json'), encoding='utf-8'))}), ('PRESENCE', presence_data(npcs, locs))):
+_PD = presence_data(npcs, locs)
+for ph, v in (('CAMPUS_MAP', {**campus_map(locs, pins), 'rates': json.load(open(P('data/campus.json'), encoding='utf-8'))}), ('PRESENCE', _PD)):
     assert t.count('/*@@' + ph + '@@*/{}') == 1, ph
     t = t.replace('/*@@' + ph + '@@*/{}', json.dumps(v, ensure_ascii=False, separators=(',', ':')))
 # 1.24.0 (owner playtest): lore and rumours of a place are heard, not given. {place key: [[uid, name as prose writes it, title, text]]};
@@ -415,6 +416,22 @@ for _x in _TR:
     assert len(_x['line'].split()) <= 45, f'campus fad {_x["id"]}: over 45 words'
 t = t.replace('/*@@PHASES@@*/[]', json.dumps(PH, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@TRENDS@@*/{ list: [], rate: 0, gap: 8 }', json.dumps({'list': _TR, 'rate': _PHF.get('trend_rate', 0), 'gap': _PHF.get('trend_gap', 8)}, ensure_ascii=False, separators=(',', ':')))
+# 2.3.0 (owner-approved planning/DRAFT_offscreen.md, roadmap M1): Own time, small off-screen happenings (stepOffscreen)
+_OWN = json.load(open(P('data/offscreen.json'), encoding='utf-8'))
+_tcats = set(json.load(open(P('data/tension.json'), encoding='utf-8'))['categories'])
+_rtk = {r[3] for rows in _PD['rt'].values() for r in rows}
+_needs = {'place', 'club', 'rival', 'friend', 'home', 'thing', 'wx', 'teach'}
+assert 0 < _OWN['rate'] <= 100 and _OWN['gap'] >= 0 and _OWN['show'] >= 1 and _OWN['with'] > 0, 'offscreen.json: rate, gap, show, with'
+assert len({x['id'] for x in _OWN['items']}) == len(_OWN['items']), 'offscreen.json: unique ids'
+for _x in _OWN['items']:
+    assert _x['for'] == 'all' or (isinstance(_x['for'], list) and set(_x['for']) <= _tcats), f'offscreen {_x["id"]}: for'
+    assert _x['who'] in ('all', 'student', 'staff') and set(_x['needs']) <= _needs, f'offscreen {_x["id"]}: who, needs'
+    _ph = set(re.findall(r'\{(\w+)\}', _x['text']))
+    assert _ph == set(_x['needs']) - {'home', 'teach'}, f'offscreen {_x["id"]}: the text names exactly what it needs'
+    assert set(_x.get('at') or []) <= _rtk and (not _x.get('at') or 'place' in _x['needs']), f'offscreen {_x["id"]}: at (routine place keys)'
+    assert all(n in npcs for n in _x.get('not') or []), f'offscreen {_x["id"]}: not'
+    assert not _names.search(_x['text']) and '{{user}}' not in _x['text'] and len(_x['text'].split()) <= 16, f'offscreen {_x["id"]}: no names, no {{{{user}}}}, short'
+t = t.replace('/*@@OFFSCREEN@@*/{}', json.dumps({k: v for k, v in _OWN.items() if k != '_note'}, ensure_ascii=False, separators=(',', ':')))
 assert all(x in npcs for x in MENTION_DENY)
 t = t.replace('/*@@MENTION_DENY@@*/[]', json.dumps(MENTION_DENY))
 # 1.60.0: Lore_changes subjects -> their lore entry (common.lore_names, the names build_card's overlay matches); NPC entries apart

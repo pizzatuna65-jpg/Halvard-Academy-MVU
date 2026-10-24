@@ -124,6 +124,9 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **Campus now is the player's, and knowing is not meeting** (2.1.0, owner roadmap R1, 2026-10-24): the feed is UI only (never in the
   prompt). Where someone is shows from Bond Rank 3 (the rank they tell their own plans) with Haunts open, so Look for stays the way to find
   acquaintances; it names a place only where Look for finds them, and who {{user}} runs into stays the presence roll.
+- **Own time** (2.3.0, owner roadmap M1 + M2, 2026-10-24): the engine draws small off-screen happenings from data (a chance per NPC,
+  never a fixed count a day, owner: a story every meeting would feel like a template); one line per NPC in Recent, shown for 2 days,
+  background and never an opener; no bond, Trust, Tension or reputation change; the narrator never invents them.
 - **NPCs seen together, traces** (1.51.0, feature batch 3): pair moments use only relation lines Connections shows {{user}}, with
   generic public-behaviour wording; a story relation fades after four weeks unrenewed and hides after eight (kept in the state). A
   trace beat only names the open thread; what is found is the narrator's, true to the lore, never a solution.

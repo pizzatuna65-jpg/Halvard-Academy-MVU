@@ -16,6 +16,7 @@
   "presence_roll": 0,
   "campus_phases": 0,
   "campus_now": 0,
+  "offscreen": 43,
   "npc_initiative": 0,
   "weather": 425,
   "class": 0,
@@ -36,7 +37,7 @@
   "new_people": 0,
   "mention_brief": 0
  },
- "core_rules": 8916,
+ "core_rules": 8917,
  "lore": 9922,
  "price_guide": 7544,
  "live": {

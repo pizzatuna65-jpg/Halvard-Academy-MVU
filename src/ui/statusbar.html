@@ -541,7 +541,7 @@ const movedToFounded = (F, id) => !!F && F.founded && F.members.includes(id);
     const feed = Array.isArray(ui.feed) ? ui.feed.filter(x => Array.isArray(x) && x[0]) : [];
     if (feed.length) {
       h += '<details class="delta cnow"' + (feedOpen ? ' open' : '') + '><summary>Campus now <small>' + feed.length + ' of the people you know</small></summary><div class="cn">'
-        + feed.map(x => '<div><button class="lnk" data-open="npc:' + esc(x[0]) + '">' + esc(who(x[0])) + '</button> : ' + esc(x[1] || '') + (x[2] ? ' - ' + esc(x[2]) : '') + '</div>').join('')
+        + feed.map(x => '<div><button class="lnk" data-open="npc:' + esc(x[0]) + '">' + esc(who(x[0])) + '</button> : ' + esc(x[1] || '') + (x[2] ? ' - ' + esc(x[2]) : '') + (x[3] ? ' <small>(' + esc(x[3]) + ')</small>' : '') + '</div>').join('')
         + '<button class="lnk more" data-open="people:now">Everyone on the People panel</button></div></details>';
     }
 

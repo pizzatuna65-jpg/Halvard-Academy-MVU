@@ -412,6 +412,19 @@ function lookHabit(PD, V, id) {
 // a club, off sick, home for the break), else "free". A place is named only where the routine puts them (unless the weather keeps
 // them off an outdoor one, as Look for does) or where {{user}} found them this block (V.look); else "somewhere on campus". Knowing
 // where someone is never makes the meeting certain: who is met is still the presence roll and Look for. [{ id, rank, close, what, where }]
+// 2.3.0 (owner-approved planning/DRAFT_offscreen.md, roadmap M1 + M2): Own time. An NPC's newest "(Own time)" line in $Recent (engine
+// stepOffscreen) while it is at most `days` days old: { n: the text without the label, d: days ago, age: in words }; null when the
+// feature is off. The Cast Sheet (nowOf), Campus now and Meanwhile read it, so all three tell the same day.
+const OWN_TAG = '(Own time) ';
+const stampDay = w => { const m = /(?:Y(\d+) )?M(\d{1,2}) W([1-4]) (Mon|Tue|Wed|Thu|Fri|Sat|Sun)/.exec(String(w || ''));
+  return m ? ((m[1] ? +m[1] : 1) - 1) * 336 + (+m[2] - 1) * 28 + (+m[3] - 1) * 7 + ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].indexOf(m[4]) : -1; };
+function ownOf(S, id, days) {
+  const U = (S && S.$ui) || {}, W = (S && S.World) || {}, b = ((S && S.Bonds) || {})[id];
+  if (!b || (typeof (U.on || {}).offscreen === 'boolean' ? !U.on.offscreen : (U.off || []).includes('offscreen'))) return null;
+  const r = [...(b.$Recent || [])].reverse().find(x => x && String(x.n || '').startsWith(OWN_TAG));
+  const d = r ? stampDay(`${(W.Year || 1) > 1 ? 'Y' + W.Year + ' ' : ''}M${W.Month} W${W.Week} ${W.Day}`) - stampDay(r.w) : -1;
+  return r && d >= 1 && d <= days ? { n: String(r.n).slice(OWN_TAG.length).replace(/\.$/, ''), d, age: d === 1 ? 'yesterday' : d + ' days ago' } : null;
+}
 function campusFeed(PD, V, S) {
   const F = (PD.here || {}).feed || {}, FR = F.rank == null ? 3 : F.rank, B = (S || {}).Bonds || {}, R = new Set(PD.roster || []), out = [];
   const LK = V.look, held = LK && LK.found && LK.dkey === V.dkey && (LK.blk === V.blk || (V.min >= LK.min && V.min - LK.min <= 60)) ? LK : null;
@@ -433,7 +446,8 @@ function campusFeed(PD, V, S) {
       else if (rtWxOff(PD, V, w.rt, w.rt[3], id)) what = 'sheltering from the weather';
       else { what = w.rt[5] || 'their usual routine'; where = w.rt[4]; }
     } else if (held && held.id === id) { what = 'where you found them'; where = (PD.vn || {})[held.pk] || ''; }
-    out.push({ id, rank, close, what, where });
+    const own = close ? ownOf(S, id, PD.own == null ? 2 : PD.own) : null;   // 2.3.0 (M2): what happened to them lately, for those close enough
+    out.push({ id, rank, close, what, where, own: own ? own.age + ': ' + own.n : '' });
   }
   return out;
 }

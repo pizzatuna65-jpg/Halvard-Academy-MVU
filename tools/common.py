@@ -312,6 +312,7 @@ def presence_data(npcs, locs):
             'outd': sorted({norm(k) for lid in out_ids for k in place_keys(locs[lid], lid)}), 'vn': {norm(l['name']): l['name'] for l in locs.values()},
             'rt': rt, 'rate': R['rate'], 'ct': contest_data(stu, tr), 'tr': tr,
             'evd': {k: v for k, v in evd.items() if any(r[9].get('ev') == k for rows in rt.values() for r in rows)}, 'exd': exd,
+            'own': json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data/offscreen.json'), encoding='utf-8'))['show'],   # 2.3.0: Own time, days shown
             # 1.99.11 (planning/DRAFT_presence_roll.md): the presence roll's numbers, who may pass through (bondable NPCs) and the
             # public impression word each "Here now" name carries
             'here': R['here'], 'roster': sorted(k for k, v in npcs.items() if not nobond(v)),

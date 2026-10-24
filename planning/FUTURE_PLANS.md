@@ -6,7 +6,7 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
 
 ## 0. Rilis berikutnya (owner, 2026-10-24)
 
-Versi saat ini 2.2.4 (Routine 2.0 selesai, semua tes; 2026-10-24); rilis berikutnya 2.3.0 (M1 + M2 kejadian off-screen). Nomor di §0.1 berlaku bila roadmap itu rilis lebih dulu; pekerjaan lain yang rilis lebih dulu mengambil nomor berikutnya dan
+Versi saat ini 2.3.0 (Own time, M1 + M2; 2026-10-24); rilis berikutnya 2.4.0 (M3 + M4). Nomor di §0.1 berlaku bila roadmap itu rilis lebih dulu; pekerjaan lain yang rilis lebih dulu mengambil nomor berikutnya dan
 roadmap bergeser satu.
 
 | Pekerjaan | Isi | Catatan |
@@ -22,8 +22,7 @@ Routine 2.0) dan B3; R2 (Meanwhile lebih longgar), R4 (setel toggle lama), B1 ve
 
 | Rilis | Isi | Butuh | Catatan |
 |---|---|---|---|
-| **2.3.0** | **M1** kejadian off-screen + **M2** feed memuatnya | draft tabel kejadian | Sesudah B1: kejadian diambil dari baris routine yang benar-benar dijalani NPC. |
-| **2.4.0** | **M3** rubrik koran + **M4** akibat yang sampai ke {{user}} | kode | Butuh kejadian M1. M3 sekaligus menyiapkan rubrik yang dipakai B3. |
+| **2.4.0** | **M3** rubrik koran + **M4** akibat yang sampai ke {{user}} | draft (belum ditulis) | Butuh kejadian M1. M3 sekaligus menyiapkan rubrik yang dipakai B3. |
 | **2.5.N** | **B3** Politik kampus | draft langkah faksi | 2.5.0 = lite (Doves + Council); 2.5.1 = asrama, Liaison, Cathedral, Choir (tersembunyi). Full suite. |
 
 **B1 sisa (dicatat, tidak dijadwalkan).** Routine 2.0 selesai di 2.2.0–2.2.4. Yang sengaja tidak dibuat karena belum ada isinya
@@ -32,20 +31,11 @@ Linus–William, Rigel–Wren (bobot/tempat tidak muat tanpa memotong baris yang
 turun sesudah Ruby lulus tanpa baris pengganti). Peringatan keramaian build saat ini: Canteen makan siang (±10 orang) dan Club Rooms
 sepulang kelas (±4), keduanya memang ramai.
 
-**M1 + M2. Kejadian off-screen (2.3.0).** Tiap hari 3–5 NPC di-roll; satu kejadian kecil dari tabel `data/offscreen.json` (latihan,
-hasil klub, cekcok dengan rival dari `REL_PAIRS`, surat dari rumah, nilai ujian, beli sesuatu), disaring oleh data NPC (klub, haunts,
-`loves`/`hates`) dan oleh baris routine yang dia jalani hari itu (B1). Masuk ke `$Recent` NPC sebagai "(Off-screen) …" (jalur yang
-sudah dipakai rencana `Next` yang lewat, `stepBondMemory`), jadi tampil di Cast Sheet saat NPC itu kembali ke adegan (±15 token per
-baris, hanya saat hadir). Tidak mengubah bond, Trust, Tension atau reputasi {{user}}; kabar ke teman lewat "Word gets around" yang
-sudah ada. M2: feed R1 menampilkan kejadian itu ("Caspian : rapat panitia - Council Chamber (kemarin bertengkar dengan Irene)").
-Teks tabel = konten karangan: draft dulu.
-- **Cek tabrakan (2026-10-24):** `$Recent` hanya menyimpan 10 momen (3 terbaru ditulis dengan kata) dan isinya momen bersama {{user}};
-  3–5 kejadian sehari bisa mendorong keluar momen itu pada NPC yang jarang ditemui. Batasi: paling banyak **satu** baris off-screen di
-  `$Recent` per NPC (yang baru menggantikan yang lama). Label beda dari "(Off-screen)" rencana `Next` yang dia ceritakan sendiri.
-- Meanwhile (Rank 7+, mingguan) mengambil kejadian M1 bila ada, supaya Journal dan Cast Sheet tidak bercerita dua versi.
-- Tabel disaring menurut kepribadian (NPC bertindak sesuai karakter) dan tidak menyentuh rahasia (Morning Choir, `<narrator_only>`).
+**M1 + M2 sisa (dicatat, tidak dijadwalkan).** Own time selesai di 2.3.0 (`data/offscreen.json`, `stepOffscreen`). Belum dibuat:
+kejadian yang menyebar ke teman lewat "Word gets around" (sengaja tidak: hanya momen bersama {{user}}); angka `rate` 20 / `gap` 5 /
+`show` 2 bisa disetel sesudah playtest (§5).
 
-**M3 + M4. Akibat kejadian (2.4.0).** M3: rubrik "Around campus" di koran Senin (`cwNews`, `p30:paperCard`) dari kejadian M1 dan
+**M3 + M4. Akibat kejadian (2.4.0).** M3: rubrik di koran Senin (`cwNews`, `p30:paperCard`) dari kejadian Own time (M1, `$Recent` "(Own time)") dan
 gosip minggu itu; Notice Board/UI saja. M4: kejadian M1 jadi pintu masuk: alasan NPC initiative (`stepInitiative`, `INIT_ASKS`) boleh
 diambil dari kejadiannya ("ingin cerita soal duel kemarin"); NPC yang cedera di happening (misalnya duel chalk) muncul di Healing Ward
 (`restore_places.json` `medical_centre`); 0 token tambahan karena memakai jalur lama.
@@ -193,6 +183,8 @@ Sisa saran audit fitur 2026-10-03 (4.5–4.10 sudah dibuat di 1.49–1.52; 4.16 
   Hasil 100 seed: juara Halvard 27, Ashvale 29, Myrdath 32, Veyra 12; ronde dua selesai sebelum 18:00 di 51.
 - Fase kampus dan tren (2.1.1, `data/campus_phases.json`): peluang tren per minggu 60 (`trend_rate`), jeda sebelum tren yang sama
   kembali 8 minggu (`trend_gap`); isi fase dan tren (owner bisa menambah tren baru kapan saja, validator `gen_engine.py` menjaganya).
+- Own time (2.3.0, `data/offscreen.json`): peluang 20% per NPC per hari (`rate`), jeda 5 hari (`gap`), tampil 2 hari (`show`), tanpa
+  kejadian sesudah 240 menit bersama {{user}} (`with`), tak terulang dalam 10 (`keep`).
 - Routine 2.0 (2.2.0, `data/npc_routines.json` `here`): peluang bertemu `meet` duty 85 / habit 65 / errand 30; Look for routine
   `look.routine` +25 maks 90; bobot baris utama 70 dan free minimal 10; pelintas di perjalanan `transit` 15 menit, 20% (2.2.1).
 - Campus now (2.1.0, `data/npc_routines.json` `here.feed`): lokasi terlihat dari Rank 3 (`rank`, sama dengan `NEXT_RANK`), 3 nama di lipatan

@@ -271,6 +271,10 @@ show the newcomers their dorm rooms.
 ## Act 2 — Club week (M1 W1 Tue–Sun)
 
 ### Q2.1 Tuesday, the first class day
+- [ ] Own time, over the week: now and then someone you know has a Cast Sheet line "Own time (yesterday): ..." (a letter from home, words
+      with a rival, a new spell); not everyone, not every day, never two days running for the same person. When they are in the scene the
+      narrator does not open with it: it comes up only when the talk gives a reason, often not at all. Campus now adds "(yesterday: ...)"
+      for a Rank 3+ friend. Bonds, Trust and Tension do not move from it [2.3.0].
 - [ ] Routine 2.0, over the week: at lunch Trixie is often in the Courtyards (a performance nobody asked for), not every day, and in the
       Common Rooms when it rains; on Tuesday and Thursday from 16:00 Zara and Vera are in the Workshop together or not at all; Castor
       turns up chasing a quote in the Canteen, the Courtyards or by the Notice Board. Even where Campus now or the dossier says someone

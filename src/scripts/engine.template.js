@@ -5074,9 +5074,10 @@ function stepBondMemory(c) {
         b.$mw = wk;
         // 2.1.0 (roadmap R1): one of their weekly routines when they have any (the same rows as Campus now and the Map), else a haunt
         const rts = OFF.has('npc_routines') ? [] : ((PRESENCE.rt || {})[id] || []).filter(rtMain), rt = rts.length ? pickOf(rts, seed, wk, 'mw-rt', id) : null;   // 2.2.0: the main rows
-        const what = b.Next ? b.Next.What : rt ? 'was seen at ' + rt[4] + ' as usual' + (rt[5] ? ' (' + rt[5] + ')' : '')
+        const own = ownOf(S, id, 7);   // 2.3.0: their own time this week, so the Journal and the Cast Sheet tell the same story
+        const what = b.Next ? b.Next.What : own ? own.n : rt ? 'was seen at ' + rt[4] + ' as usual' + (rt[5] ? ' (' + rt[5] + ')' : '')
           : (HAUNT[id] ? 'was seen around ' + HAUNT[id].split(/[;,]/)[0].trim() : 'kept to their own business');
-        const pair = !b.Next && pairLine(c, [id], 'seen', 'mw:' + id);   // 1.51.0 (audit 4.8): seen with someone {{user}} knows them by
+        const pair = !b.Next && !own && pairLine(c, [id], 'seen', 'mw:' + id);   // 1.51.0 (audit 4.8): seen with someone {{user}} knows them by
         jnl.push(`Meanwhile: ${pair || `${id} ${b.Next ? 'is busy with ' + what.replace(/^./, c => c.toLowerCase()) : what}`}.`);
       }
     }
@@ -5105,6 +5106,69 @@ function stepBondMemory(c) {
   for (const b of Object.values(S.Bonds)) capPinned(b, 'Known_facts', '$Known_old', FACTS_VISIBLE);
   for (const id of Object.keys(daily)) if (daily[id].day !== dayNo) delete daily[id];
   S.$eng.daily = daily;
+}
+
+// ---- 6c2. 2.3.0 (owner-approved planning/DRAFT_offscreen.md, roadmap M1): Own time. At the day change every NPC with a bond gets a
+// seeded chance (OWN.rate percent) that something small happened to them yesterday, once in OWN.gap + 1 days at most; not those who
+// spent OWN.with minutes or more of yesterday in the scene with {{user}}, nor anyone away from Halvard. The line comes from
+// data/offscreen.json, filtered by who they are (Tension category, student or staff, what the line needs) and never one of their
+// last OWN.keep; it replaces their last "(Own time)" line in $Recent (shared.js ownOf reads it). No bond, Trust, Tension or reputation.
+// $eng.own: { d: the last day drawn, td: the day t counts, t / y: minutes in the scene today / yesterday, g: last line day, h: last ids }
+const OWN = /*@@OFFSCREEN@@*/{};
+const thePlace = p => (/^The /.test(p) ? 'the' + p.slice(3) : /^[A-Z][a-z]+'s /.test(p) && !/^(Founder|Headmaster|Warden)'s /.test(p) ? p : 'the ' + p);
+function ownFill(c, id, it, yd) {
+  const { S, seed, WXM } = c, pick = (arr, tag) => (arr.length ? pickOf(arr, seed, yd, 'own-' + tag, id) : '');
+  const v = {}, wd = DAYS[((yd % 7) + 7) % 7];
+  for (const k of it.needs || []) {
+    if (k === 'place') {
+      const rows = ((PRESENCE.rt || {})[id] || []).filter(r => !(r[9] || {}).ev && !(r[9] || {}).exam && !r[10] && r[0].includes(wd) && (!it.at || it.at.includes(r[3])));   // a place they go on that weekday
+      const hn = String(HAUNT[id] || '').split(/[;,]/)[0].replace(/\(.*?\)/g, '').trim();
+      v.place = rows.length ? thePlace(pick(_.uniqBy(rows, r => r[3]), 'place')[4]) : !it.at && hn ? (/^the /i.test(hn) ? hn : 'the ' + hn) : '';
+    } else if (k === 'club') { const F = foundedClub(S); v.club = movedToFounded(F, id) ? F.name : loreClubOf(id); }
+    else if (k === 'rival' || k === 'friend') {
+      const ty = k === 'rival' ? 'rivals' : 'friends';
+      v[k] = pick(_.uniq(REL_PAIRS.filter(e => e[2] === ty && (e[0] === id || e[1] === id) && relSeen(S, e)).map(e => (e[0] === id ? e[1] : e[0])))
+        .filter(x => x !== id && !npcAwayIn(S, x)).sort(), k);
+    } else if (k === 'home') v.home = (((PRESENCE.ct || {}).breaks || {}).stay || []).includes(id) ? '' : 'yes';
+    else if (k === 'teach') v.teach = (PRESENCE.teach || {})[id] ? 'yes' : '';
+    else if (k === 'thing') v.thing = pick((((GIFT_PREFS.npcs || {})[id] || {}).items || {}).loved ? GIFT_PREFS.npcs[id].items.loved.filter(x => !(OWN.thing_skip || []).includes(x)) : [], 'thing');
+    else if (k === 'wx') {
+      // yesterday's weather they love (moodOf's names), Weather effects Full only; the first that fits, in their own order
+      const bl = WXM === 'full' ? wxDay(seed, yd).blocks : [], fits = (key, bk, b) => key === 'Clear' ? bk.sky === 'Clear' && b !== 2 : key === 'Clear night' ? bk.sky === 'Clear' && b === 2
+        : key === 'Clear by day ≥15 °C' ? bk.sky === 'Clear' && b !== 2 && bk.temp >= 15
+        : [bk.sky, tempLabel(bk.temp), bk.wind, bk.rare, bk.snow ? 'Snow' : ''].some(x => String(x || '').toLowerCase() === key.toLowerCase());
+      const key = ((NPC_MOODS[id] || {}).loves || []).find(x => (OWN.wx || {})[x] && bl.some((bk, b) => bk && fits(x, bk, b)));
+      v.wx = key ? OWN.wx[key] : '';
+    }
+    if (!v[k]) return '';
+  }
+  return it.text.replace(/\{(\w+)\}/g, (m, k) => v[k] || m);
+}
+function stepOffscreen(c) {
+  const { S, B, hasB, toolEdit, dayNo, elapsed, seed, OFF } = c;
+  if (!hasB || toolEdit) return;
+  const E = S.$eng.own = _.isPlainObject(S.$eng.own) ? S.$eng.own : {};
+  if (E.td !== dayNo) { E.y = E.td === dayNo - 1 ? (E.t || {}) : {}; E.t = {}; E.td = dayNo; }
+  const was = (B.Scene || {}).Present || {};
+  for (const id of Object.keys(S.Scene.Present || {})) if (S.Bonds[id] && was[id]) E.t[id] = num(E.t[id], 0) + Math.min(elapsed, DAY_MIN);
+  if (!(num(E.d, -1) >= 0)) { E.d = dayNo; return; }   // a new chat, or a save from before 2.3.0: from the next day on
+  if (E.d >= dayNo) return;
+  E.d = dayNo;
+  if (OFF.has('offscreen') || awayIn(S)) return;
+  const yd = dayNo - 1, G = E.g = _.isPlainObject(E.g) ? E.g : {}, H = E.h = _.isPlainObject(E.h) ? E.h : {}, Y = E.y || {};
+  const keep = num((BR.recent || {}).keep, 10), cat = id => (TEN.overrides || {})[id] ? '' : (TEN.npcs || {})[id] || '';
+  for (const id of Object.keys(S.Bonds).sort()) {
+    const grp = NPC_GROUP[id], b = S.Bonds[id];
+    if (!b || !grp || grp === 'rival' || !(PRESENCE.roster || []).includes(id) || npcAwayIn(S, id)) continue;
+    if (num(Y[id], 0) >= OWN.with || (G[id] != null && yd - G[id] <= OWN.gap) || !(roll100(seed, yd, 'own', id) < OWN.rate)) continue;
+    const st = grp === 'student', last = Array.isArray(H[id]) ? H[id] : [];
+    const fit = OWN.items.filter(it => (it.for === 'all' || it.for.includes(cat(id))) && (it.who === 'all' || (it.who === 'student') === st)
+      && !(it.not || []).includes(id) && !last.includes(it.id)).map(it => [it, ownFill(c, id, it, yd)]).filter(x => x[1]);
+    if (!fit.length) continue;
+    const [it, text] = pickOf(fit, seed, yd, 'own-pick', id);
+    G[id] = yd; H[id] = [...last, it.id].slice(-num(OWN.keep, 10));
+    b.$Recent = [...(b.$Recent || []).filter(r => !String((r && r.n) || '').startsWith(OWN_TAG)), { w: dstamp(fromAbs(yd * DAY_MIN)), n: OWN_TAG + text + '.', fx: '' }].slice(-keep);
+  }
 }
 
 // 1.45.0 (audit 3.9): one practice session, several tracks (proficiency and craft actions, mana, stamina, study). One fitness check
@@ -7796,7 +7860,7 @@ function stepHere(c) {
   // 2.1.0 (owner roadmap R1): Campus now, the few the bracelet's fold shows (shared.js campusFeed / campusFew; the People panel works
   // out everyone itself). None away from campus, after curfew or with the feature off. UI only: <current_state> leaves $ui out.
   S.$ui.feed = OFF.has('campus_now') || awayIn(S) || V.min == null || /CURFEW|LOCKDOWN/.test(String(S.World._Curfew || '')) ? []
-    : campusFew(PRESENCE, V, campusFeed(PRESENCE, V, S)).map(x => [x.id, x.what, x.where]);
+    : campusFew(PRESENCE, V, campusFeed(PRESENCE, V, S)).map(x => [x.id, x.what, x.where, x.own || '']);   // 2.3.0 (M2): x.own, their own time lately
 }
 
 // 1.99.12 (owner-approved planning/DRAFT_look_for.md): the player's "I'm looking for X in Y" this reply answers. <now> (505) rolled it
@@ -7999,8 +8063,11 @@ function nowOf(S, moodsFull) {
     const an = (TEN.apology_npc || {})[id];
     return 'Tension (' + band.toLowerCase() + '): ' + P.bands[band] + peak + '. Never: ' + P.never + '. Eases: ' + (an && an.note ? an.note : P.eases) + '.';
   })()));
-  PRES.filter(id => BONDS[id] && (BONDS[id].$Recent || []).length).forEach(id => put(id, 'Recent with {{user}} (newest first): ' + BONDS[id].$Recent.slice(-(BOND.recent_now || 3)).reverse()
+  // 2.3.0: an "(Own time)" line is not a moment with {{user}}: it has its own line, for PRESENCE.own days (shared.js ownOf)
+  const withU = id => (BONDS[id].$Recent || []).filter(r => !String((r && r.n) || '').startsWith(OWN_TAG));
+  PRES.filter(id => BONDS[id] && withU(id).length).forEach(id => put(id, 'Recent with {{user}} (newest first): ' + withU(id).slice(-(BOND.recent_now || 3)).reverse()
     .map(r => { const f = fxWords(r.fx); return '[' + aged(r.w) + '] ' + r.n + (f ? ' (' + f + ')' : ''); }).join(' | ')));
+  PRES.filter(id => BONDS[id]).forEach(id => { const o = ownOf(S, id, PRESENCE.own == null ? 2 : PRESENCE.own); if (o) put(id, 'Own time (' + o.age + '): ' + o.n + '.'); });
   // 1.73.0: back after time apart (stepBondMemory, $apart) and what they may ask after (stepAgenda, $ui.asks)
   PRES.filter(id => BONDS[id] && Number(BONDS[id].$apart) > 0).forEach(id => { const n = Number(BONDS[id].$apart);
     put(id, 'Apart: last saw {{user}} ' + (n >= 14 ? Math.round(n / 7) + ' weeks' : n + ' days') + ' ago. The time apart is real to them; whether and how it shows is up to them, in character.'); });
@@ -8277,7 +8344,7 @@ function stepNow(c) {
   for (const a of Object.values(S.$ui.area || {})) if (_.isPlainObject(a)) { delete a.walks; delete a.near; }
 }
 
-const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepHanakaze, stepCampus, stepVitals, stepContest, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBondRecords, stepBonds, stepScene, stepBondMemory, stepProficiency, stepEventChances, stepHunt, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepClubWork, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepFold, stepGist, stepReminders, stepLook, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
+const ENGINE_STEPS = [stepSetup, stepMigrate, stepGuards, stepFeatures, stepTime, stepWeather, stepMagic, stepPurchases, stepRest, stepExposure, stepExpedition, stepCapital, stepAirship, stepSunreach, stepHanakaze, stepCampus, stepVitals, stepContest, stepReputation, stepFortune, stepSchoolWeek, stepNamesInProse, stepPromises, stepBondRecords, stepBonds, stepScene, stepBondMemory, stepOffscreen, stepProficiency, stepEventChances, stepHunt, stepTraining, stepPerkUse, stepHidden, stepPayout, stepLoreChanges, stepRecords, stepClubLife, stepNewYear, stepGraduation, stepGraduateRewards, stepInitiative, stepHooks, stepClubWork, stepGossip, stepRoutine, stepVisits, stepBag, stepCampusEvents, stepExtras, stepCast, stepFold, stepGist, stepReminders, stepLook, stepAmbience, stepAgenda, stepHere, stepUi, stepCommit, stepNow];
 
 // 1.17.0 (audit T1): the card's trim regex ("State-as-memory", minDepth 24) leaves every older message as "[…]", and each one was
 // still sent. SillyTavern emits CHAT_COMPLETION_PROMPT_READY with { chat, dryRun } and sends that same array (public/scripts/openai.js,

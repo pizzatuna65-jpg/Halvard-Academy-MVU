@@ -132,6 +132,7 @@ console.log('the panel and the bracelet');
 console.log('Meanwhile reads the routines');
 {
   let S = _.cloneDeep(S0); S.Bonds.Irene = { ...S.Bonds.Etnie, Rank: 7 };
+  S.$ui.off = [...(S.$ui.off || []), 'offscreen'];   // 2.3.0: a week's Own time comes first (test_offscreen_v2300); here the routines alone
   S = go(S, { ...at(8), Time: '12:00', Location: 'Canteen' }, [put('/Scene/Present', { Irene: { Note: '' } })]);
   S = go(S, { Time: '12:30' }, [put('/Scene/Present', {})]);
   let line = '';
