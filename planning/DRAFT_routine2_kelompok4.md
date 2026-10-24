@@ -6,7 +6,7 @@ Dicatat: 2026-10-24, langsung sesudah rilis 2.2.2 (owner: "setiap selesai procee
 
 ## 1. Ringkas
 
-- **13 NPC, 88 baris:**
+- **13 NPC, 86 baris:**
   - angkatan yang datang di Year 2: Hadrian, Linus, Maple, Nerys, Tsubaki, Wren;
   - angkatan yang datang di Year 3: Aurelian, Bianca, Bruno, Faye, Rigel, Topaz, William.
 - Mereka hanya terlihat sejak tahun kedatangannya, seperti sekarang (whereabouts "not at Halvard yet").
@@ -22,12 +22,17 @@ Dicatat: 2026-10-24, langsung sesudah rilis 2.2.2 (owner: "setiap selesai procee
 - Aurelian dan Bruno (sahabat): Fire Dormitory, sore hari kerja; Aurelian berpidato di atas meja, Bruno bersorak.
 - Nerys dan Maple (sahabat): mencari bahan makanan di Gardens, Minggu siang.
 
+**Aturan baru (owner, 2026-10-24): routine hanya untuk kebiasaan yang tetap.** Hal yang berubah-ubah tidak masuk routine:
+hobi minggu ini, misteri favorit saat ini, hari terbit buku baru, "kalau orang lain mau", "di mana {{user}} berada", dan sejenisnya.
+Sudah diterapkan di tabel di bawah dan pada baris kelompok lain (§5).
+
 **Catatan isi:**
 - **Bruno:** jadwal Detention Tower "on a regular schedule" (lore) tetap ada, setiap Jumat 16:00–17:00.
 - **Tsubaki:** Sparring Pavilion sebelum subuh dan atap Observation Tower malam hari (baris lama; atap sesudah jam malam, seperti dulu).
   Di jam makan siang kadang di koridor yang tidak ia maksud (lore: selalu tersesat).
-- **Topaz:** lore-nya bilang ia ada "di mana pun {{user}} berada, kebetulan". Routine tidak bisa mengikuti {{user}}; yang ada di
-  sini hanya kebiasaannya sendiri. Bagian "mengikuti" tetap urusan narator lewat lore-nya.
+- **Topaz:** lore-nya bilang ia ada "di mana pun {{user}} berada, kebetulan". Routine tidak bisa (dan tidak boleh, aturan di atas)
+  mengikuti {{user}}; yang ada di sini hanya kebiasaannya sendiri, tanpa "two tables away, with a clear view". Bagian "mengikuti" tetap
+  urusan narator lewat lore-nya.
 - **William:** di hari badai ia merenung di Rooftop "even more dramatically" (lore: menyukai badai).
 - **Pasangan yang menyeberang angkatan, tidak dipakai:** Faye menemukan Tsubaki yang tersesat di Hills; Rigel dan Wren memancing di
   pantai subuh yang sama. Bisa dipakai di 2.2.4 bersama syarat `since`.
@@ -76,7 +81,6 @@ Dicatat: 2026-10-24, langsung sesudah rilis 2.2.2 (owner: "setiap selesai procee
 | Mon-Fri | 19:00–20:00 | Canteen | the kitchen's leftovers at closing | habit | 70 |  |
 | Sun | 10:00–12:00 | Mail Tower | the pigeons | habit | 70 |  |
 | Sun | 13:00–16:00 | Gardens | foraging with Maple | habit | 30 | bersama Maple |
-| Sun | 13:00–16:00 | Founder's Statue and Park | this week's hobby | habit | 30 |  |
 
 **Tsubaki**
 
@@ -111,7 +115,7 @@ Dicatat: 2026-10-24, langsung sesudah rilis 2.2.2 (owner: "setiap selesai procee
 |---|---|---|---|---|---|---|
 | Mon-Sun | 06:00–07:00 | Combat Grounds | at dawn | habit | 70 |  |
 | Mon-Fri | 12:00–13:00 | Canteen | shaking hands on the way to his seat | habit | 50 |  |
-| Mon-Fri | 12:00–13:00 | Announcement Room | whenever anyone lets him near it | habit | 20 |  |
+| Mon-Fri | 12:00–13:00 | Announcement Room | angling for a turn at the broadcast | habit | 20 |  |
 | Mon-Fri | 16:00–18:00 | Gymnasium | Basketball Club | habit | 70 |  |
 | Mon-Fri | 18:00–20:00 | Fire Dormitory | on a table mid-speech, Bruno cheering | habit | 30 | bersama Bruno |
 | Mon-Fri | 18:00–20:00 | Fire Dormitory | on a table, mid-speech | habit | 30 |  |
@@ -126,7 +130,7 @@ Dicatat: 2026-10-24, langsung sesudah rilis 2.2.2 (owner: "setiap selesai procee
 | Mon-Fri | 16:00–18:00 | Swimming Pool | Swimming Club | habit | 70 |  |
 | Mon-Fri | 18:00–20:00 | Light Dormitory | the glass dome | habit | 40 |  |
 | Mon-Fri | 18:00–20:00 | Club Rooms | the corridor, where the crowd is | habit | 25 |  |
-| Sun | 13:00–16:00 | Courtyards | wherever the biggest crowd is | habit | 40 | cuaca baik |
+| Sun | 13:00–16:00 | Courtyards | — | habit | 40 | cuaca baik |
 | Sun | 13:00–16:00 | Student Council Chamber | — | habit | 20 |  |
 
 **Bruno**
@@ -170,7 +174,7 @@ Dicatat: 2026-10-24, langsung sesudah rilis 2.2.2 (owner: "setiap selesai procee
 
 | hari | jam | tempat | kegiatan (English) | jenis | bobot | syarat |
 |---|---|---|---|---|---|---|
-| Mon-Fri | 12:00–13:00 | Canteen | two tables away, with a clear view | habit | 50 |  |
+| Mon-Fri | 12:00–13:00 | Canteen | — | habit | 50 |  |
 | Mon-Fri | 16:00–18:00 | Combat Grounds | — | habit | 30 |  |
 | Mon-Fri | 16:00–18:00 | Light Dormitory | — | habit | 30 |  |
 | Mon-Fri | 18:00–19:30 | The Sparring Pavilion | practising on her own time | habit | 70 |  |
@@ -181,13 +185,12 @@ Dicatat: 2026-10-24, langsung sesudah rilis 2.2.2 (owner: "setiap selesai procee
 | hari | jam | tempat | kegiatan (English) | jenis | bobot | syarat |
 |---|---|---|---|---|---|---|
 | Mon-Sun | 06:00–07:00 | The Sparring Pavilion | training at dawn | habit | 70 |  |
-| Mon-Fri | 16:00–18:00 | The Sparring Pavilion | whenever there might be a fight | habit | 40 |  |
+| Mon-Fri | 16:00–18:00 | The Sparring Pavilion | watching the bouts | habit | 40 |  |
 | Mon-Fri | 16:00–18:00 | Main Library | — | habit | 30 |  |
 | Mon,Wed,Fri | 18:00–20:00 | Club Rooms | the Board Game Club, narrating the stakes aloud | habit | 25 |  |
 | Mon-Fri | 18:30–19:30 | Rooftop | brooding at dusk, dramatically | habit | 50 | cuaca baik |
 | Mon-Fri | 18:30–19:30 | Rooftop | brooding in the storm, even more dramatically | habit | 60 | hujan/badai |
 | Sun | 13:00–16:00 | Sky Dormitory | — | habit | 40 |  |
-| Sun | 13:00–16:00 | The Mall | first in line at Quillfeather's on a new-volume day | habit | 30 |  |
 
 ## 4. Kode (tanpa canon): baris pasangan saat pasangannya tidak ada
 
@@ -196,3 +199,22 @@ Dicatat: 2026-10-24, langsung sesudah rilis 2.2.2 (owner: "setiap selesai procee
   terpilih walau pasangannya sudah pergi. Ini cacat di kode 2.2.1.
 - **Perbaikan:** `rtPick` melewati baris pair yang pasangannya tidak ada (lulus, belum datang, pulang libur, sakit, atau punya
   `NPC_status`); bobotnya menjadi free.
+
+## 5. Pembersihan baris kelompok lain yang berubah-ubah (aturan owner di §1)
+
+| NPC | baris | perubahan |
+|---|---|---|
+| Nerys (kelompok ini) | Sun 13:00–16:00 Founder's Statue and Park "this week's hobby" | dihapus |
+| William (kelompok ini) | Sun 13:00–16:00 The Mall "first in line at Quillfeather's on a new-volume day" | dihapus (bisa jadi baris `ev` di 2.2.4 bila ada hari terbit) |
+| William (kelompok ini) | Sparring Pavilion "whenever there might be a fight" | jadi "watching the bouts" |
+| Aurelian (kelompok ini) | Announcement Room "whenever anyone lets him near it" | jadi "angling for a turn at the broadcast" |
+| Bianca (kelompok ini) | Courtyards "wherever the biggest crowd is" | teks dihapus, tempat tetap |
+| Topaz (kelompok ini) | Canteen "two tables away, with a clear view" | teks dihapus, tempat tetap |
+| Tilly (2.2.1) | Broken Statue, tiga baris ("her current favourite mystery") | dihapus; misteri favoritnya berganti-ganti |
+| Trixie (2.2.0) | Sun 13:00–16:00 The Mall "new sweets" | dihapus (lore: "when there are new sweets") |
+| Vallie (2.2.2) | Combat Grounds "when Sophia Helfin wants a fight" | dihapus |
+| Valentin (2.2.2) | Courtyards "wherever there is an audience" | jadi "holding forth to whoever stops" |
+
+Tetap, karena kebiasaannya tetap: rivalitas Florian dan Gareth (lore: Florian menantang terus, Gareth selalu menerima), Bobby yang
+memperbaiki gedung mana pun (pekerjaannya), Irene yang datang paling awal saat Main Library buka. Bobot baris yang dihapus menjadi free.
+Aturan ini juga dicatat di `data/npc_routines.json` `_note` dan DECISIONS "NPC routines".
