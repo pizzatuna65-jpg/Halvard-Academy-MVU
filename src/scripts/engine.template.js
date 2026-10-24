@@ -4984,7 +4984,7 @@ function capPinned(b, key, oldKey, max) {
   b[oldKey] = old.slice(-Math.max(20, b[qKey]));
 }
 function stepBondMemory(c) {
-  const { S, B, log, jnl, hasB, absA, dayNo, weekNo, canon, BB, daily, PACE, bweek, npcAway, spreadFrom } = c;
+  const { S, B, log, jnl, hasB, absA, dayNo, weekNo, canon, BB, daily, PACE, bweek, npcAway, spreadFrom, OFF, seed } = c;
   if (hasB && S.Hidden._True_magic) {
     const known0 = new Set(((B.Hidden || {}).Known_by || []).map(canon));
     for (const raw of S.Hidden.Known_by || []) {
@@ -5052,7 +5052,10 @@ function stepBondMemory(c) {
       const wk = Math.floor(dayNo / 7);
       if (hasB && b.Rank >= MEANWHILE_RANK && !presentIds.has(id) && b.$seen >= 0 && dayNo - b.$seen >= 7 && b.$mw !== wk && !awayIn(S)) {
         b.$mw = wk;
-        const what = b.Next ? b.Next.What : (HAUNT[id] ? 'was seen around ' + HAUNT[id].split(/[;,]/)[0].trim() : 'kept to their own business');
+        // 2.1.0 (roadmap R1): one of their weekly routines when they have any (the same rows as Campus now and the Map), else a haunt
+        const rts = OFF.has('npc_routines') ? [] : (PRESENCE.rt || {})[id] || [], rt = rts.length ? pickOf(rts, seed, wk, 'mw-rt', id) : null;
+        const what = b.Next ? b.Next.What : rt ? 'was seen at ' + rt[4] + ' as usual' + (rt[5] ? ' (' + rt[5] + ')' : '')
+          : (HAUNT[id] ? 'was seen around ' + HAUNT[id].split(/[;,]/)[0].trim() : 'kept to their own business');
         const pair = !b.Next && pairLine(c, [id], 'seen', 'mw:' + id);   // 1.51.0 (audit 4.8): seen with someone {{user}} knows them by
         jnl.push(`Meanwhile: ${pair || `${id} ${b.Next ? 'is busy with ' + what.replace(/^./, c => c.toLowerCase()) : what}`}.`);
       }
@@ -7767,6 +7770,10 @@ function stepHere(c) {
   // the Here now line read this one string, so all three roll on the same number
   const tm = hmMin(S.World.Time) || 0;
   S.$ui.crowd = crowdKeys(PRESENCE).map(k => { const n = crowdAt(S, c.evs, c.wxNow, PRESENCE.vn[k], tm); return n >= 0 ? String(n) : '-'; }).join('');
+  // 2.1.0 (owner roadmap R1): Campus now, the few the bracelet's fold shows (shared.js campusFeed / campusFew; the People panel works
+  // out everyone itself). None away from campus, after curfew or with the feature off. UI only: <current_state> leaves $ui out.
+  S.$ui.feed = OFF.has('campus_now') || awayIn(S) || V.min == null || /CURFEW|LOCKDOWN/.test(String(S.World._Curfew || '')) ? []
+    : campusFew(PRESENCE, V, campusFeed(PRESENCE, V, S)).map(x => [x.id, x.what, x.where]);
 }
 
 // 1.99.12 (owner-approved planning/DRAFT_look_for.md): the player's "I'm looking for X in Y" this reply answers. <now> (505) rolled it

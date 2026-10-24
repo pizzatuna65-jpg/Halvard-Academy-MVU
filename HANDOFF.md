@@ -3,22 +3,19 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v2.0.0** (2026-10-24): the bug-hunt audit (`audit/AUDIT_2026-10-23_2_audit_menyeluruh.md`) is done but for batch 7
-stage 2. 2.0.0 = batch 8 (K1 `stepBonds` split into `stepBondRecords` and per-bond helpers, the Council as `councilYear`; K2 canon names
-out of the engine into `data/`, new `data/council.json`; K3 `userBday`, `pactKey`, `areaRaid`; `ENGINE_DIFF` against 1.99.13: no
-difference) and the short audit of 1.99.9–1.99.13 (§11: A1 the happening counted among the optional threads again, A2 held fields
-tagged at Trust Betrayed, A3 the dossier's Look for only where it is rolled, A4 rule cards read `proseOf`). The enabled preset is 18,516
-tokens, 84 under `test_preset`'s budget. Memory: VectFox (option 1) or Summaryception 5.5.4 (option 2), one per chat. Live checks: the
-campaign quest log `docs/TEST_CHECKLIST.md` (first Act 0: update the card and the preset, Q0.1; Summaryception: SQ-SC; the cache:
-SQ-CACHE; who is here, Look for and the 2.0.0 checks: Act 1 Q1.1; Betrayed: MS2).
+**Snapshot:** card **v2.1.0** (2026-10-24): Campus now, the first release of the "world in motion" roadmap (FUTURE_PLANS §0.1, R1):
+what the people {{user}} knows are doing, three in a bracelet fold and everyone on People → Campus now, UI only (0 tokens); the place
+from Bond Rank 3 and only where Look for finds them (`sh:campusFeed`). The roadmap's conflict check is recorded at each item (Routine 2.0
+as two layers: the routine says where, the presence roll says whether {{user}} meets them). The enabled preset is 18,516 tokens, 84 under
+`test_preset`'s budget. Memory: VectFox (option 1) or Summaryception 5.5.4 (option 2), one per chat. Live checks: the campaign quest log
+`docs/TEST_CHECKLIST.md` (first Act 0: update the card and the preset, Q0.1; Campus now: Act 1 Q1.1 and Act 3 Q3.1 [2.1.0]).
 
-**Next task:** the next release is 2.1.0 (owner, 2026-10-24): the "world in motion" roadmap in `planning/FUTURE_PLANS.md` §0.1,
-first R1 (the Campus now feed), then campus phases, Routine 2.0, off-screen events and campus politics. Batch 7
-stage 2 (keyword lore at a depth in the chat, a summary line without a counter, history trimmed by blocks) waits for the owner's
-OpenRouter numbers after 1.99.8 (SQ-CACHE) and an A/B test with `tools/audit_chat.py`. The other long engine steps (FUTURE_PLANS §3
-"K1 sisa") are split when next touched. The World Competition's Year 2 host (Caelmar: Area, map, liner) waits in FUTURE_PLANS §1
-[YEAR 2]. MS3 stage 2 and the NPC dialogue audit's U1, U3–U5 wait in `planning/FUTURE_PLANS.md` §2 for a campaign export. Memory batch 8
-(chapters) is planned in `planning/DRAFT_bab_baru.md`: build it at about 20,000 messages, slow saves or a chat file near 100 MB.
+**Next task:** 2.1.1 = R3 (campus phases: a draft of `data/campus_phases.json` first), then Routine 2.0 (2.2.N; the two-layer model in
+FUTURE_PLANS B1 changes DECISIONS "Who is here is rolled" and needs the owner's approval), off-screen events, campus politics. Batch 7
+stage 2 of the bug hunt waits for the owner's OpenRouter numbers (SQ-CACHE) and an A/B test with `tools/audit_chat.py`. The Black Box
+rules for the [2.1.0] checks are still to add (its own repository). The World Competition's Year 2 host (Caelmar) waits in FUTURE_PLANS
+§1 [YEAR 2]; MS3 stage 2 and the NPC dialogue audit's U1, U3–U5 wait for a campaign export; memory batch 8 (chapters) in
+`planning/DRAFT_bab_baru.md` at about 20,000 messages.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 

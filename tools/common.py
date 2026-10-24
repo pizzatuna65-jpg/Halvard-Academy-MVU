@@ -262,7 +262,15 @@ def presence_data(npcs, locs):
             'imp': {k: v['impression'] for k, v in sorted(npcs.items()) if v.get('impression') and not nobond(v)},
             # 1.99.12 (planning/DRAFT_look_for.md): the name forms a player's "I'm looking for X in Y" may use, and who has a tie to whom
             # (data/relations.json: rel[target][other] = the kind of tie, the other's own view first), for the hint when X is not found
-            'nf': {k: fs for k, fs in sorted(name_forms(npcs).items()) if not nobond(npcs[k])}, 'rel': look_ties(npcs)}
+            'nf': {k: fs for k, fs in sorted(name_forms(npcs).items()) if not nobond(npcs[k])}, 'rel': look_ties(npcs),
+            # 2.1.0 (Campus now): the Bond Rank at which each NPC's Haunts field opens (no Haunts field: 1, as the dossier's Routine row)
+            'hr': {k: haunts_rank(v) for k, v in sorted(npcs.items()) if not nobond(v)}}
+
+
+def haunts_rank(n):
+    """2.1.0: the rank the Haunts field opens at (a transfer: the field she has once at Halvard); 1 when there is none."""
+    fs = [f for f in n.get('fields') or [] if f['label'] == 'Haunts' and (f.get('tr') or 1) > 0]
+    return fs[0]['rank'] if fs else 1
 
 
 def look_ties(npcs):

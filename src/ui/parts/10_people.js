@@ -49,8 +49,8 @@ function whoLine(id, S) {
 PANELS.people = {
   live: true,
   render(S) {
-    const tabs = [['bonds', 'Bonds'], ['graph', 'Connections']];
-    const body = view.ptab === 'graph' ? peopleGraphHTML(S) : peopleListHTML(S);
+    const tabs = [['bonds', 'Bonds'], ...(featureOn(S, 'campus_now') ? [['now', 'Campus now']] : []), ['graph', 'Connections']];   // 2.1.0
+    const body = view.ptab === 'graph' ? peopleGraphHTML(S) : view.ptab === 'now' && featureOn(S, 'campus_now') ? campusNowHTML(S) : peopleListHTML(S);
     return `<div class="dlg" tabindex="-1"><div class="hd"><h2>People</h2>${view.stack.length ? '<button class="btn sm" data-act="back">Back</button>' : ''}<button class="x" data-act="close" aria-label="Close">×</button></div>
       <nav class="nav">${tabs.map(([id, l]) => `<button data-ptab="${id}" class="${view.ptab === id ? 'on' : ''}">${l}</button>`).join('')}</nav><div class="bd">${body}</div></div>`;
   },
@@ -65,6 +65,22 @@ PANELS.people = {
   input(el) { if (el.dataset.psort !== undefined && el.value !== view.psort) { view.psort = el.value; view.pdir = ''; render(); } },   // 1.93.0: the Order dropdown
   after(S) { if (view.ptab === 'graph') drawGraph(S); },
 };
+// 2.1.0 (owner roadmap R1): Campus now, everyone {{user}} has a bond with, from shared.js campusFeed (the rows the bracelet's few are
+// drawn from): those who tell you their plans first (Bond Rank 3+, where they are), then the rest by rank. UI only, never the narrator's.
+function campusNowHTML(S) {
+  const W = S.World || {}, U = S.$ui || {};
+  if ((S.Trip || {}).Active || Object.entries(U.area || {}).some(([k, a]) => k !== 'campus' && a && a.on)) return '<p class="sub">You are away from campus.</p>';
+  if (/CURFEW|LOCKDOWN/.test(String(W._Curfew || ''))) return '<p class="sub">After curfew: students are in their dormitories and the staff in their quarters.</p>';
+  const PD = DATA.presence || {}, V = presenceView(PD, S, f => featureOn(S, f));
+  const rows = campusFeed(PD, V, S).sort((a, b) => (b.close - a.close) || b.rank - a.rank || (a.id < b.id ? -1 : 1));
+  if (!rows.length) return '<p class="sub">Nobody you know yet. People you meet show up here.</p>';
+  const FR = ((PD.here || {}).feed || {}).rank == null ? 3 : PD.here.feed.rank;
+  const li = x => `<li><button class="lnk" data-open="npc:${esc(x.id)}">${esc(nameOf(x.id, S))}</button> : ${esc(x.what)}${x.where ? ' - ' + esc(x.where) : ''}</li>`;
+  const close = rows.filter(x => x.close), rest = rows.filter(x => !x.close);
+  return `<p class="sub">${esc(W.Day || '')} ${esc(W.Time || '')}. Knowing where someone is does not mean you will run into them: Halvard is large.</p>`
+    + (close.length ? `<h3>They tell you their plans</h3><ul class="log">${close.map(li).join('')}</ul>` : '')
+    + (rest.length ? `<h3>Others you know</h3><p class="sub">From Bond Rank ${FR} you learn where they spend their time.</p><ul class="log">${rest.map(li).join('')}</ul>` : '');
+}
 // 1.93.0 (owner): pinned people, the ones {{user}} is working on: always at the top of Bonds whatever the order, and marked in the
 // dossier. UI only, not game state: like the red dots (news.shared.js) they live in Tavern Helper's chat variables (saved with the
 // chat), only in memory without Tavern Helper (previews, tests)

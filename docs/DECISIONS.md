@@ -108,6 +108,9 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **Look for helps, never summons** (1.99.12, owner-approved draft): a search raises a regular's odds a little (never certain), gives
   someone who is no regular there only the rare chance, and never finds someone who is elsewhere by the engine. A hint comes only if
   {{user}} asks, only from someone there with a tie to them, and tells a habit, not a position. `<now>` and the engine roll it alike.
+- **Campus now is the player's, and knowing is not meeting** (2.1.0, owner roadmap R1, 2026-10-24): the feed is UI only (never in the
+  prompt). Where someone is shows from Bond Rank 3 (the rank they tell their own plans) with Haunts open, so Look for stays the way to find
+  acquaintances; it names a place only where Look for finds them, and who {{user}} runs into stays the presence roll.
 - **NPCs seen together, traces** (1.51.0, feature batch 3): pair moments use only relation lines Connections shows {{user}}, with
   generic public-behaviour wording; a story relation fades after four weeks unrenewed and hides after eight (kept in the state). A
   trace beat only names the open thread; what is found is the narrator's, true to the lore, never a solution.

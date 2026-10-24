@@ -159,6 +159,11 @@ show the newcomers their dorm rooms.
       Trust or Tension move), points spent with what for, Bag in and out, new Planner entries and Journal lines, and agrees with the
       People panel and the Wallet. It stays open while the bracelet redraws, is gone when the bracelet is collapsed, and a swipe shows
       the new reply's own changes [1.79].
+- [ ] Campus now: the bracelet has a folded "Campus now (3 of the people you know)" under the news; open it: three people Charles
+      has a bond with (not Kanae or Zara while they are with him), each "Name : what they are doing"; at Rank 0–2 only what anyone can
+      see ("in class until …", "at their club until …", "off sick", or "free"), never a place. A swipe and the rest of the block keep
+      the same three; after curfew the fold is gone. "Everyone on the People panel" opens People → Campus now with everyone Charles
+      knows; Settings → Features → Campus now off removes both. Nothing of it is in the prompt [2.1.0].
 - [ ] A brass rule sits between the bracelet and the story [1.71].
 - [ ] Card actions: no generic buttons; Kanae and Zara get only what their rank and this place open (at Rank 0 usually just Give a
       gift, which lists the Bag with "not tried"). A button only fills the chat box; edit and send, and the engine counts it as usual [1.71].
@@ -378,6 +383,10 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
       it.", and the narrator plays it in his quiet way; on the scene card the "glad · birthday" chip shows only once his dossier has
       opened his birthday [1.72].
 - [ ] Inventory → Journal shows the engine's "Week recap (M1 W1): …", with "a clean week" if no class was skipped [1.10].
+- [ ] Campus now, once a bond reaches Rank 3: People → Campus now lists them under "They tell you their plans" with their routine and
+      place when they keep it ("Irene : Library Assistants shift - Main Library", weekdays 16:00–19:00), else "somewhere on campus";
+      in rain an outdoor routine reads "sheltering from the weather". Go there and look for them: they are found, though running into
+      them unasked is still the presence roll [2.1.0].
 - [ ] Practical Magic: `<now>` names Charles's role class and its teacher (for Healing, Hester in the Healing Ward), and the narrator
       writes a mixed-dorm class of that role, not Gavlan's old Combat Class [1.33].
 

@@ -887,6 +887,7 @@ function open(target, { push = true } = {}) {
   if (ov.hidden) view.stack = [];
   view.arg = arg;
   if (panel === 'profile' && arg) view.tab = arg;
+  if (panel === 'people' && arg) view.ptab = arg;   // 2.1.0: the bracelet's Campus now fold opens its tab
   if (panel === 'builder' && (!draft || draftBuilt !== !!st.data.stat_data.$ui.built)) {
     draft = draftFromState(st.data.stat_data); draftBuilt = !!st.data.stat_data.$ui.built; chosenTemplate = '';
     view.step = draftBuilt ? 'identity' : 'start';
