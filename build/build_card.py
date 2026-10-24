@@ -132,7 +132,9 @@ def build():
         'extensions': {'talkativeness': '0.5', 'fav': False, 'world': name,
                        'depth_prompt': {'prompt': '', 'depth': 4, 'role': 'system'},
                        'regex_scripts': regexes,
-                       'tavern_helper': {'scripts': scripts, 'variables': card.get('tavern_helper_variables', {})}},
+                       'tavern_helper': {'scripts': scripts, 'variables': card.get('tavern_helper_variables', {})},
+                       # 1.99.14: the live-check rules for the Black Box quest autopilot; SillyTavern never puts this key in the prompt
+                       'eldrasil_live_checks': live_checks(card.get('character_version', ''))},
         'character_book': {'name': name, 'entries': entries},
     }
     v3 = {'spec': 'chara_card_v3', 'spec_version': '3.0', 'data': data}
@@ -147,6 +149,14 @@ def build():
         for f in os.listdir(P(d)):
             shutil.copyfile(P(d, f), P('dist', f))
     print(f'built: {len(entries)} wb entries, {len(scripts)} scripts, {len(regexes)} regex')
+
+def live_checks(version):
+    """data/live_checks.json for the card: its rules, stamped with this card version."""
+    rules = load(P('data/live_checks.json'), None)
+    if not rules:
+        return {'version': 1, 'card': version, 'checks': []}
+    assert rules.get('version') == 1, 'data/live_checks.json: rules version 1 expected'
+    return {'version': 1, 'card': version, 'checks': rules.get('checks', [])}
 
 def chunk(t, body):
     c = t + body

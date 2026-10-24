@@ -12,8 +12,10 @@ covers what only a live session can show. Playing the route is also the cross-ba
 - Do Act 0 once, then play as you like. When a quest's moment comes, do its *Do* line (if it has one) and watch its checks. Nothing
   has to happen on cue: skip what does not suit the story. Most checks come round again, and the Milestones and Side quests wait.
 - Tick `[x]` when a check passes. When one fails, add a line under it (`✗ msg 123: what happened`) and play on.
-- After a session, send the chat export (and VectFox's EventBase export when a check asks for it) with "fix what my playtest found":
-  I tick what passed, run `tools/audit_chat.py` on it and fix what failed.
+- After a session, send the Black Box playtest bundle (wand → Black Box → Export; or the chat export without the Black Box, and
+  VectFox's EventBase export when a check asks for it) with "fix what my playtest found". With the Black Box the quest autopilot
+  has already judged the checks that have a rule (1.99.14): I tick those with `tools/quest_ticks.py`, judge the "to review" ones from
+  the evidence, run `tools/audit_chat.py` and fix what failed. You can just play.
 - `[1.63]` names the release a check comes from (`[1.52.1]` a patch release); search for it to see one release's checks. The old list
   by release: `git show dc2ecad:docs/TEST_CHECKLIST.md`.
 
@@ -260,7 +262,8 @@ show the newcomers their dorm rooms.
 
 ### Q2.1 Tuesday, the first class day
 Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Crafting (Potion Halls), mixed.
-- [ ] 07:30 the bracelet reads "Morning, before classes" (on Sunday: "Morning, no classes today") [1.30.2].
+- [ ] 07:30 the bracelet reads "Morning, before classes" (on Sunday: "Sunday (no classes)"; on a day an event has no classes, such as
+      Entrance Day: "Morning, no classes today") [1.30.2].
 - [ ] `<now>`'s class line says "until 10:00 / 12:00 / 16:00" and names the first-years' floor (Floor 2); when the narrator writes
       "Classroom" or "Seminar Room 4", no skipped-class toast follows [1.43, 1.24.3, 1.11.1].
 - [ ] A teacher keeps their Cast Sheet voice (Hester on the ward, Anselm lecturing, Magnus with acronyms, Dorian selling, Cedric's closing
@@ -345,7 +348,7 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
 
 ### Q2.7 Saturday and Sunday
 - [ ] Saturday afternoon at the club adds Student reputation (Q1.2) [1.16.1].
-- [ ] Sunday 07:30: "Morning, no classes today" [1.30.2].
+- [ ] Sunday 07:30: "Sunday (no classes)" [1.30.2].
 - [ ] Saturday 15:00–17:00 in the Canteen: `<now>` says whether the Cooking Club's bake worked (honey bread, 3 points, stamina) or went
       wrong (free failures); the bracelet shows "Stalls here" and Activities → Shop lists it. 14:00–18:00 in the Potion Halls: the
       Brewing and Alchemy table (Warming and Cooling draught 12, Cold remedy 15); on Sunday both are gone [1.90].
@@ -892,6 +895,9 @@ reload, then play a few replies as usual.
 - [ ] The header shows the chat file size and the last save time [Black Box 1.0.0].
 - [ ] Export playtest bundle (last 25 replies), then send it to the assistant (or run `python tools/audit_chat.py <file> --blackbox
       --no-drift`): the report lists the same replies [Black Box 1.0.0].
+- [ ] Quests (card 1.99.14, Black Box 1.1.0): wand → Black Box → Quests lists the card's checks by quest; after a few replies some
+      are passed or to review, a failure names its message and what was missing, and `#msg` opens that request. Export carries them
+      [1.99.14].
 - [ ] Nothing else changed: the bracelet, the panels, swipes and other extensions work as before; Recording off in Extensions →
       Eldrasil Black Box stops new rows [Black Box 1.0.0].
 
@@ -1043,5 +1049,5 @@ Checks of the old list that no longer apply (their text: `git show dc2ecad:docs/
 ## Adding checks (each release)
 
 Put a new live check into the quest where the campaign first gives the chance to see it, tagged with the release; with no date, into a
-Milestone or a Side quest. When the owner reports a session, tick what passed, note what failed under it, and move "Where you are".
+Milestone or a Side quest. When a machine can judge it, add its rule to `data/live_checks.json` (docs/BUILD.md "Live check rules"). When the owner reports a session, tick what passed, note what failed under it, and move "Where you are".
 Retire a check only when a release removes what it tests, with one line under Retired checks.

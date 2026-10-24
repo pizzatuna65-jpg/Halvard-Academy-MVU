@@ -396,6 +396,10 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **Memory extension** (owner, 1.99.1): VectFox (option 1) **or** Summaryception 5.5.4 (option 2), one per chat; the card plays with either
   and with neither. Summaryception: ghosting ON, Verbatim Turns 10 (at most 11, under the trim regex's 24 messages), the card's prompt,
   system prompt and template from `dist/`, connection OpenAI Compatible. Only settings and prompts on its side, never a fork.
+- **Live checks run themselves** (owner, 1.99.14): a check of the quest log a machine can judge has a rule in `data/live_checks.json`;
+  the card carries the rules in `data.extensions.eldrasil_live_checks` (SillyTavern sends only `depth_prompt` of a card's extensions:
+  0 tokens) and the Eldrasil Black Box extension judges them on every reply; no AI judge. The owner sends a bundle; the assistant
+  ticks with `tools/quest_ticks.py` and judges the "review" checks from its evidence.
 - **One download folder** (owner, 2026-10-20): everything the player imports (card, preset, VectFox cleaning patterns and extraction
   prompt) is written to `dist/`. Sources stay elsewhere (`presets/edit_preset.py`, `src/vectfox/`); never put a download anywhere else.
 

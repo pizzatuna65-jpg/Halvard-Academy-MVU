@@ -746,11 +746,46 @@ def blackbox(b):
     n = max(1, len([t for t in main if t.get('segments')]))
     bg = Counter((t.get('genType') or t.get('kind') or '?') for t in other)
     saves = [r['save'] for r in rows if _num(r['save']) is not None]
-    return {'manifest': b.get('manifest') or {}, 'replies': totals(main), 'background': totals(other), 'rows': rows,
+    return {'manifest': b.get('manifest') or {}, 'replies': totals(main), 'background': totals(other), 'rows': rows, 'quests': quests_of(b),
             'misses': misses, 'sources': sorted(([lb, src, v / n] for (lb, src), v in by_label.items()), key=lambda x: -x[2]),
             'groups': {g: by_group.get(g, 0) / n for g in GROUPS}, 'engine': engine, 'background_kinds': dict(bg),
             'saves': {'count': len(saves), 'max': max(saves) if saves else None, 'avg': sum(saves) / len(saves) if saves else None,
                       'size': ((b.get('manifest') or {}).get('save') or {}).get('sizeBytes')}}
+
+
+def quests_of(b):
+    """The quest autopilot's results in a bundle (1.99.14): per rule its quest, line, status, passes, failures and evidence."""
+    q = b.get('quests') or {}
+    if not q:
+        return None
+    res = q.get('results') or {}
+    rows = []
+    for r in q.get('rules') or []:
+        x = res.get(r.get('id')) or {}
+        rows.append({'id': r.get('id'), 'quest': r.get('quest'), 'line': r.get('line'), 'mode': r.get('mode', 'auto'),
+                     'status': x.get('status', 'unseen'), 'passes': x.get('passes', 0), 'seen': x.get('seen', 0),
+                     'waiting': x.get('waiting', 0), 'unknown': x.get('unknown', 0),
+                     'fails': [(f.get('mesId'), f.get('why')) for f in x.get('fails') or []],
+                     'evidence': [e.get('mesId') for e in x.get('evidence') or []]})
+    count = Counter(r['status'] for r in rows)
+    return {'card': q.get('card'), 'rules': len(rows), 'count': dict(count), 'rows': rows}
+
+
+def quests_md(q):
+    order = {'failed': 0, 'review': 1, 'seen': 2, 'passed': 3, 'unseen': 4}
+    c = q['count']
+    out = ['### Quests (autopilot)', '',
+           f"{q['rules']} rules from the card {q['card']}: {c.get('passed', 0)} passed, {c.get('failed', 0)} failed, {c.get('review', 0)} to review, "
+           f"{c.get('seen', 0)} seen but not decided, {c.get('unseen', 0)} not yet. `python tools/quest_ticks.py <bundle>` ticks the quest log.", '',
+           '| Status | Quest | Check | Found |', '|---|---|---|---|']
+    for r in sorted(q['rows'], key=lambda r: (order.get(r['status'], 9), r['quest'] or '', r['id'] or '')):
+        if r['status'] == 'unseen':
+            continue
+        found = '; '.join(f'msg {m}: {w}' for m, w in r['fails']) if r['fails'] else (
+            f"evidence msgs {', '.join(str(m) for m in r['evidence'])}" if r['evidence'] else
+            f"seen {r['seen']}" + (f", waiting {r['waiting']}" if r['waiting'] else '') + (f", unknown {r['unknown']}" if r['unknown'] else ''))
+        out.append(f"| {r['status']} | {r['quest']} | {str(r['line']).replace('|', '/')[:80]} | {found.replace('|', '/')} |")
+    return '\n'.join(out) + '\n'
 
 
 def blackbox_md(x):
@@ -786,7 +821,8 @@ def blackbox_md(x):
                    f"{ms(r['first'])} | {ms(r['total'])} | {ms(r['save'])} | {', '.join(flags)} | {'; '.join(r['top'])} |")
     if x['engine']:
         out += ['', '### Engine log lines and reminders', ''] + [f"- msg {e['msg']}: {e['line']}" for e in x['engine']]
-    return '\n'.join(out) + '\n'
+    md = '\n'.join(out) + '\n'
+    return md + ('\n' + quests_md(x['quests']) if x.get('quests') else '')
 
 
 # ---------------------------------------------------------------- report

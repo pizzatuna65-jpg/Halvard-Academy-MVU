@@ -469,6 +469,10 @@ the card works the same without it. Full details are in its README.
 - **Playtest report:** Export playtest bundle → `python tools/audit_chat.py <bundle.json.gz> --blackbox --no-drift --out report.md`
   (add `--mechanics` or `--memory` for those reports on the bundle's chat slice). Send the bundle with a playtest note instead of a
   chat export: it carries what the narrator was sent.
+- **Quest autopilot** (Black Box 1.1.0, card 1.99.14): the card carries its live checks (`data/live_checks.json`) and the Black
+  Box judges them on every reply; wand → Black Box → Quests shows passed, failed (with the message and what was missing), to
+  review and not yet. Nothing to set up. Send the bundle after a session; the assistant ticks the quest log from it with
+  `tools/quest_ticks.py`. Settings: Quest autopilot (on), Toast when a live check fails (off).
 - **The card's side:** its `data/markers.json` names the card's entry tags (`<current_state>`, `<now>`, `<cast>`,
   `<final_cast_gate>`, `<update_format>`, `<variable_update_rules>`, `<campus_rules>`, `<rule_cards>`, `[WORLD INDEX`,
   `[Price Guide]`) and the memory blocks (`<VectFoxMemory>`, `<story_before_chat>`). A release that renames one updates that file.
