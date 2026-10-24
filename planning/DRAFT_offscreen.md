@@ -3,7 +3,7 @@
 Dicatat: 2026-10-24, langsung sesudah rilis 2.2.4 (owner: "setiap selesai proceed langsung sekalian buat tabel untuk ditinjau").
 Rencana asal: `planning/FUTURE_PLANS.md` §0.1 M1 + M2, termasuk catatan cek tabrakannya.
 
-**Status:** menunggu "proceed" owner.
+**Status:** menunggu "proceed" owner (revisi 1: undian peluang per NPC).
 
 ## 0. Tujuan, singkat
 
@@ -15,12 +15,22 @@ Engine yang memilih kejadiannya dari tabel; narator tidak mengarang kejadian.
 
 - **Kapan:** sekali per hari kampanye, saat hari berganti. Engine mengundi kejadian **kemarin** (seeded per chat dan hari). Kalau
   waktu melompat beberapa hari, hanya hari terakhir yang diundi.
-- **Siapa:**
-  - 3–5 NPC per hari (`count` [3, 5]), dipilih dari NPC yang punya bond dengan {{user}};
+- **Siapa (diubah, owner 2026-10-24: "mending dibuat ada chance roll"):**
+  - **Undian peluang per NPC**, bukan jumlah tetap per hari. Setiap NPC yang punya bond dengan {{user}} diundi sendiri:
+    **20%** (`rate`) ia mengalami sesuatu kemarin, 80% harinya biasa saja dan tidak ada baris apa pun;
   - tidak sedang tidak ada di Halvard (lulus, belum datang, pulang libur);
   - tidak bersama {{user}} hampir seharian kemarin;
-  - tidak mendapat kejadian dalam 5 hari terakhir (`gap`).
-- **Apa:** satu baris dari tabel (§2), disaring oleh:
+  - tidak mendapat kejadian dalam 5 hari terakhir (`gap`). Dengan 20% + jeda 5 hari, satu NPC rata-rata dapat kejadian
+    **sekali tiap ±10 hari**, dengan jarak yang tidak bisa ditebak.
+- **Kenapa tidak terasa template:**
+  - Kejadian hanya tampil di Cast Sheet selama **2 hari** (`show`: "yesterday", "2 days ago"); sesudah itu baris tetap tersimpan di
+    Recent tapi tidak ditulis lagi. Jadi kira-kira **1 dari 5 pertemuan** dengan NPC membawa kejadian baru, bukan setiap pertemuan.
+  - Satu baris aturan narasi di kartu: baris "(Own time)" adalah latar, bukan pembuka wajib.
+    ```
+    - An (Own time) line is background, not an opener: bring it up only when the scene gives the NPC a natural reason to, and let it go unmentioned otherwise.
+    ```
+  - Template `quiet_day` dihapus: hari yang sepi sekarang berarti tidak ada baris sama sekali.
+- **Apa:** satu baris dari tabel (§2, 29 template), disaring oleh:
   - kategori Tension NPC itu (`tension.json`: withdrawn, social, confrontational, authority, dangerous), untuk kejadian yang menyangkut
     konflik, supaya NPC bertindak sesuai karakter;
   - data yang dibutuhkan baris itu: `{club}` (klubnya), `{rival}` / `{friend}` (relasi rivals / friends yang dilihat Connections),
@@ -33,7 +43,8 @@ Engine yang memilih kejadiannya dari tabel; narator tidak mengarang kejadian.
     ia ceritakan sendiri.
   - **Paling banyak satu** baris "(Own time)" per NPC: yang baru menggantikan yang lama, supaya momen bersama {{user}} (10 disimpan,
     3 terbaru ditulis) tidak terdorong keluar.
-  - Tampil di Cast Sheet saat NPC itu hadir (±15 token per baris, hanya saat hadir), dengan umur dalam kata ("yesterday", "3 days ago").
+  - Tampil di Cast Sheet saat NPC itu hadir, hanya selama 2 hari (±15 token per baris), dengan umur dalam kata ("yesterday",
+    "2 days ago").
 - **Yang tidak berubah:** bond, Trust, Tension, reputasi. Kabar ke teman memakai "Word gets around" yang sudah ada, hanya untuk
   momen bersama {{user}}; kejadian off-screen tidak menyebar sendiri.
 - **Tidak menyentuh rahasia:**
@@ -77,7 +88,6 @@ Ditulis sesudah nama NPC, bentuk lampau, satu kalimat pendek. Kolom "untuk": `al
 | watched_duel | all | student | | watched a duel at the Combat Grounds |
 | asleep_library | withdrawn, social | student | | fell asleep in the Main Library |
 | longer_place | all | all | place | spent longer than planned at {place} |
-| quiet_day | all | all | | had a quiet day |
 | staff_meeting | authority, social | staff | | sat through a long staff meeting |
 | marking | all | staff | | marked a stack of papers late into the night |
 | minor_problem | authority | staff | place | dealt with a minor problem at {place} |
@@ -94,7 +104,8 @@ Ditulis sesudah nama NPC, bentuk lampau, satu kalimat pendek. Kolom "untuk": `al
 
 ## 3. Kode (ringkas)
 
-- **Data:** `data/offscreen.json`: `count`, `gap`, `items` (id, `for`, `who`, `needs`, `text`).
+- **Data:** `data/offscreen.json`: `rate` (20), `gap` (5), `show` (2), `items` (id, `for`, `who`, `needs`, `text`).
+  Undian: `roll100(seed, hari, 'own', id) < rate`.
 - **Engine:** `stepOffscreen` sesudah `stepBondMemory`: undi kemarin, isi template, tulis/ganti satu baris `$Recent` "(Own time)".
   `$eng.offday` = hari terakhir yang diproses (state engine, tanpa migrasi). `stepBondMemory` Meanwhile membaca baris itu.
 - **Tanpa state baru di story:** cukup baris `$Recent` yang sudah ada.
@@ -102,8 +113,9 @@ Ditulis sesudah nama NPC, bentuk lampau, satu kalimat pendek. Kolom "untuk": `al
 - **Campus now:** `campusFeed` menambahkan "(yesterday: …)" untuk yang dekat.
 - **Tes:**
   - undian seeded (swipe sama);
-  - 3–5 per hari;
+  - sekitar 20% per NPC per hari yang boleh, banyak hari tanpa kejadian;
   - jeda 5 hari;
+  - tampil di Cast Sheet hanya 2 hari; sekitar 1 dari 5 pertemuan membawa kejadian;
   - filter kategori dan data;
   - tidak ada surat untuk yang tidak punya rumah;
   - satu baris "(Own time)" per NPC;
@@ -121,4 +133,4 @@ Ditulis sesudah nama NPC, bentuk lampau, satu kalimat pendek. Kolom "untuk": `al
 
 ## 5. Pertanyaan terbuka
 
-- [?] 1. **Label "(Own time)"** untuk baris di Recent dan Cast Sheet. Alternatif: "(On their own)". Diam = "(Own time)".
+- Tidak ada lagi. Label: **"(Own time)"** (diam = setuju).
