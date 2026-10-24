@@ -21,7 +21,7 @@ build and a smoke run. Save fixture v2.2.2.
 - Tokens: none.
 - **Tests:** none run (owner). Deferred to 2.2.4.
 - **To confirm with the owner:** the 86 rows' wording (approved in the draft).
-- **To check live:** `docs/TEST_CHECKLIST.md` Act 2 Q2.1 [2.2.3] (a Year 2 milestone).
+- **To check live:** `docs/TEST_CHECKLIST.md` Act 11 Q11.0a [2.2.3] (Year 2).
 
 ## v2.2.2 — Routine 2.0: the staff and the others (2026-10-24)
 
