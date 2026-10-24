@@ -12,9 +12,14 @@ VectFox (option 1) or Summaryception 5.5.4 (option 2), one per chat. Live checks
 (first Act 0: update the card and the preset, Q0.1; Summaryception: SQ-SC; the cache: SQ-CACHE; who is here, Look for, thoughts and
 the Action tab: Act 1 Q1.1).
 
-**Next task:** the bug-hunt audit's batch 8 (K1–K3 code tidy, `ENGINE_DIFF` with no difference) as 1.99.14.
+**Version (owner, 2026-10-24):** the current card counts as 2.0.0; the next release, whatever it is, is 2.1.0 (`card.json` still
+reads 1.99.13 until then).
+
+**Next task:** the bug-hunt audit's batch 8 (K1–K3 code tidy, `ENGINE_DIFF` with no difference) as the next release.
 Batch 7 stage 2 (keyword lore at a depth in the chat, a summary line without a counter, history trimmed by blocks) waits for the
-owner's OpenRouter numbers after 1.99.8 (SQ-CACHE) and an A/B test with `tools/audit_chat.py`. Then 2.0 polish. The World Competition's
+owner's OpenRouter numbers after 1.99.8 (SQ-CACHE) and an A/B test with `tools/audit_chat.py`. The
+"world in motion" roadmap (2.1.0–2.5.N: Campus now feed, campus phases, Routine 2.0, off-screen events, campus politics) is in
+`planning/FUTURE_PLANS.md` §0.1. The World Competition's
 Year 2 host (Caelmar: Area, map, liner) waits in FUTURE_PLANS §1 [YEAR 2]. MS3 stage 2 and the NPC dialogue audit's U1, U3–U5 wait in
 `planning/FUTURE_PLANS.md` §2 for a campaign export. Memory batch 8 (chapters) is planned in `planning/DRAFT_bab_baru.md`: build it at
 about 20,000 messages, slow saves or a chat file near 100 MB.
