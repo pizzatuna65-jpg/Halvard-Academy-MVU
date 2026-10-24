@@ -98,11 +98,15 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
   by the engine (listed price at its shop and in season; otherwise the narrator's Price as a story price; points on campus, coin away).
   Training is one `/Practice` session with a Track (`/Training` still read); one Rank 4 partner rule for every track in
   `rank4_partners.json` (mana, stamina, study; owner decision, proposal adopted).
-- **NPC routines** (1.52.0, owner-approved draft): light weekly habits are data in the one whereabouts model, below status, sickness,
-  class, teaching, Study Hall, clubs and the election, above haunts; a routine holds on a day by the shared `roll100` at 70% (owner).
-  Dossier and Map show them as "usually", gated by the Haunts field. Lore dawn habits before curfew ends are kept as written.
+- **NPC routines** (1.52.0, owner-approved draft; 2.2.0 Routine 2.0, owner-approved planning/DRAFT_routine2.md): a full day of
+  weighted rows in the one whereabouts model, below status, sickness, class, teaching, Study Hall, clubs and the election, above haunts;
+  one seeded draw per NPC, day and presence block (the main row 70, the owner's number; at least 10 free: no place, the crowd roll);
+  kinds duty, habit, errand; rows for a weather and pair rows (one draw for both). Dossier and Map show the main rows as "usually",
+  gated by the Haunts field. Lore dawn habits before curfew ends are kept as written.
 - **Who is here is rolled** (1.99.11, owner-approved draft after a playtest): the engine decides who is at a place (shared.js
-  `presenceAt`: certain routines and schedules, other regulars by a crowd target over their number, a rare passer-by, at most three names,
+  `presenceAt`: certain only one scheduled room (a class, teaching, Study Hall, the Council); 2.2.0 (owner, two layers): a routine says
+  where someone is, and {{user}} runs into them at `here.meet` (duty 85, habit 65, errand 30), never for certain on an open place;
+  other regulars by a crowd target over their number, a rare passer-by (the free and those on an errand), at most three names,
   seeded by place and block); the narrator decides what they do, and the first move is {{user}}'s unless character, Bond or initiative
   say otherwise. A place reached in a reply gets its people from the next reply. Off (Features) is the habit list as before.
 - **Look for helps, never summons** (1.99.12, owner-approved draft): a search raises a regular's odds a little (never certain), gives

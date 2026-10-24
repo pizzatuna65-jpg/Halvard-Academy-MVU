@@ -271,6 +271,10 @@ show the newcomers their dorm rooms.
 ## Act 2 — Club week (M1 W1 Tue–Sun)
 
 ### Q2.1 Tuesday, the first class day
+- [ ] Routine 2.0, over the week: at lunch Trixie is often in the Courtyards (a performance nobody asked for), not every day, and in the
+      Common Rooms when it rains; on Tuesday and Thursday from 16:00 Zara and Vera are in the Workshop together or not at all; Castor
+      turns up chasing a quote in the Canteen, the Courtyards or by the Notice Board. Even where Campus now or the dossier says someone
+      is, Look for sometimes misses them (never certain, at most 90%), and a quiet place is often empty [2.2.0].
 Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Crafting (Potion Halls), mixed.
 - [ ] 07:30 the bracelet reads "Morning, before classes" (on Sunday: "Sunday (no classes)"; on a day an event has no classes, such as
       Entrance Day: "Morning, no classes today") [1.30.2].

@@ -98,6 +98,8 @@ DATA['areas'] = {
                 'places': [{'id': p['id'], 'name': p['name'], 'vibe': p['line'], 'desc': p['desc'], 'go': _go(p['name'])} for p in _air['places']]},
 }
 CAST = {}
+_vn = DATA['presence']['vn']
+_places_of = lambda r: [_vn[k] for k in r[10]] if r[10] else [r[4]]   # 2.2.0: an errand's places by name
 for nid, n in npcs.items():
     first = nid
     DATA['npcs'][nid] = {'n': n['name'], 'g': n.get('group') or '', 'y': n.get('year') or 0, 'a': n.get('arrives', 1), 'dm': n.get('dorm') or '',
@@ -107,10 +109,12 @@ for nid, n in npcs.items():
     if n.get('transfer'): DATA['npcs'][nid]['xf'] = n['transfer']   # 1.97.5: the nation a transfer left ('tr' is the team role)
     # 1.52.0 (feature batch 4): the weekly routine as a dossier field right after Haunts, opened with it
     _rt = DATA['presence']['rt'].get(nid)
-    if _rt:
+    if _rt and any(r[8] >= 50 for r in _rt):
         _fl = DATA['npcs'][nid]['fl']
         _hi = next((i for i, f in enumerate(_fl) if f[0] == 'Haunts'), None)
-        _row = ['Routine', 'Usually: ' + '; '.join(f"{r[6]} at {r[4]}{', ' + r[5] if r[5] else ''}" for r in _rt) + '.', _fl[_hi][2] if _hi is not None else 1] + (_fl[_hi][3:] if _hi is not None else [])   # 1.97.5: shown when Haunts is (a transfer's)
+        # 2.2.0 (Routine 2.0): only the main rows (weight 50+; an old row is 70), once each (an old row cut at block edges is one row)
+        _main = list(dict.fromkeys(f"{r[6]} at {' or '.join(_places_of(r))}{', ' + r[5] if r[5] else ''}" for r in _rt if r[8] >= 50))
+        _row = ['Routine', 'Usually: ' + '; '.join(_main) + '.', _fl[_hi][2] if _hi is not None else 1] + (_fl[_hi][3:] if _hi is not None else [])   # 1.97.5: shown when Haunts is (a transfer's)
         _fl.insert(_hi + 1 if _hi is not None else len(_fl), _row)
     if n.get('academy') == 'Halvard' and not n.get('transfer'): DATA['npcs'][nid]['ag'] = 1   # 1.7.4: ages in their fields follow the campaign year (see ageNow)
     CAST[nid] = [n['thumb'], descriptor(nid, n) if nid in ('Irene', 'Caspian') else PUBLIC_ROLE.get(nid) or descriptor(nid, n), first, n.get('dorm_color') or '#6b6b7b']

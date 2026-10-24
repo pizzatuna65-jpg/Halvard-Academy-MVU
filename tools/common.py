@@ -247,12 +247,40 @@ def presence_data(npcs, locs):
         return [W[W.index(x.strip())] for x in spec.split(',')]
     byname = {l['name']: l['name'] for l in locs.values()}
     mins = lambda s: int(s[:2]) * 60 + int(s[3:])
+    # 2.2.0 (owner-approved planning/DRAFT_routine2.md, Routine 2.0): a row may carry [kind, weight, cond] after the five old columns:
+    # kind duty | habit | errand (an errand's place is "A|B|C"), weight (its share of the block; the rest is free), cond {wx: fair |
+    # bad | fog, pair: the NPC it shares the row with}. An old row is a habit at `rate`. The row: [days, from, to, place key, map name,
+    # what, label, kind, weight, cond, the errand's place keys or None]. Each row stays inside one presence block (shared.js BLOCKS_AT),
+    # every day, block and weather leaves at least 10 free, and a pair row is in both NPCs alike (same days, hours, place, weight).
+    blocks = [0, 360] + [mins(x) for p in json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data', 'calendar.json'), encoding='utf-8'))['periods'] for x in p] + [1080, 1200, 1440]
+    blocks = sorted(set(blocks))
+    blk_of = lambda m: max(i for i, b in enumerate(blocks) if b <= m)
     rt = {}
     for nid, rows in R['npcs'].items():
         assert nid in npcs and not nobond(npcs[nid]), nid
-        for d, f, to, place, what in rows:
-            assert place in byname and mins(f) < mins(to), (nid, place, f, to)
-            rt.setdefault(nid, []).append([days(d), mins(f), mins(to), norm(place), place, what, f"{d.replace('-', '–')} {f}–{to}"])
+        for row in rows:
+            d, f, to, place, what = row[:5]
+            kind, weight, cond = (row[5], row[6], row[7]) if len(row) > 5 else ('habit', R['rate'], {})
+            places = place.split('|')
+            assert all(p in byname for p in places) and mins(f) < mins(to), (nid, place, f, to)
+            assert kind in ('duty', 'habit', 'errand') and (kind == 'errand') == (len(places) > 1), (nid, place, kind)
+            assert isinstance(weight, int) and 0 < weight <= 90 and set(cond) <= {'wx', 'pair'} and cond.get('wx', 'fair') in ('fair', 'bad', 'fog'), (nid, place, weight, cond)
+            # a new row stays inside one block; an old row that crosses blocks is cut at their edges (one draw per block, same row)
+            assert len(row) == 5 or blk_of(mins(f)) == blk_of(mins(to) - 1), f'routine row of {nid} at {place} {f}-{to} crosses a presence block'
+            cuts = [x for x in blocks if mins(f) < x < mins(to)]
+            for a, z in zip([mins(f)] + cuts, cuts + [mins(to)]):
+                rt.setdefault(nid, []).append([days(d), a, z, norm(places[0]), places[0], what, f"{d.replace('-', '–')} {f}–{to}",
+                                               kind, weight, cond, [norm(p) for p in places] if len(places) > 1 else None])
+    new = {nid for nid, rows in R['npcs'].items() if any(len(x) > 5 for x in rows)}   # the 10-free check: NPCs on the 2.2.0 format (the engine caps the rest at 90)
+    for nid, rows in rt.items():
+        for r in rows:   # a pair row: the other NPC has the same row (days overlap, same hours, place and weight), pointing back
+            o = r[9].get('pair')
+            if o: assert any(x[9].get('pair') == nid and set(x[0]) & set(r[0]) and x[1:4] == r[1:4] and x[8] == r[8] for x in rt.get(o, [])), f'pair row {nid} / {o} at {r[4]}'
+        for day in (W if nid in new else []):
+            for b in range(len(blocks) - 1):
+                for wx in ('fair', 'bad', 'fog'):
+                    tot = sum(r[8] for r in rows if day in r[0] and blk_of(r[1]) == b and r[9].get('wx', wx if wx != 'fog' else 'fair') in ((wx, 'fair') if wx == 'fog' else (wx,)))
+                    assert tot <= 90, f'routine of {nid}: {day} block {b} ({wx}) leaves less than 10 free ({tot})'
     return {'reg': reg, 'stu': stu, 'arr': {k: v['arrives'] for k, v in npcs.items() if v.get('arrives', 1) > 1}, 'teach': teach, 'tt': tt, 'clubv': clubv,
             'outd': sorted({norm(k) for lid in out_ids for k in place_keys(locs[lid], lid)}), 'vn': {norm(l['name']): l['name'] for l in locs.values()},
             'rt': rt, 'rate': R['rate'], 'ct': contest_data(stu, tr), 'tr': tr,

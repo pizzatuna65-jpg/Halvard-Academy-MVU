@@ -347,7 +347,7 @@ function locCard(id, S, cur, P) {
   // whereabouts (shared.js): a status on record (Campus_State.NPC_status), off sick, or busy elsewhere this period (a student in class,
   // at Study Hall, voting or at their club; a teacher teaching), the same model <now> uses
   const V = presenceView(DATA.presence, S, f => featureOn(S, f)), pk = placeKey(l.name);
-  const note = r => { const w = whereabouts(DATA.presence, V, r); return w.st || (w.sick ? 'off sick' : w.busy && !w.busy[1].includes(pk) ? w.busy[0] : w.rt && w.rt[3] !== pk ? 'usually at ' + w.rt[4] + ' now' : ''); };
+  const note = r => { const w = whereabouts(DATA.presence, V, r); return w.st || (w.sick ? 'off sick' : w.busy && !w.busy[1].includes(pk) ? w.busy[0] : w.rt && !rtAt(w.rt, pk) ? (w.rt[10] ? 'running errands now' : 'usually at ' + w.rt[4] + ' now') : ''); };   // 2.2.0: rtAt (shared.js)
   const regIds = id === 'student_council_chamber' ? (((S.Campus_State || {}).Council || {}).Members || []) : l.regulars;
   const regs = regIds.filter(r => atHalvard(r, S) && hauntKnown(r, S)).map(r => (npcOf(r) ? (B[r] ? `<button class="lnk" data-open="npc:${esc(r)}">${esc(nameOf(r, S))}</button>` : esc(nameOf(r, S))) : esc(r))
     + (note(r) ? ` <span class="sub">(${esc(note(r))})</span>` : '')).join(', ');
@@ -361,7 +361,8 @@ function locCard(id, S, cur, P) {
     ['Regulars', regs || '<span class="sub">Nobody you know yet</span>'],
   ];
   // 1.52.0 (feature batch 4): the weekly routines here of people whose Haunts you know (data/npc_routines.json, "usually")
-  const usual = Object.entries(DATA.presence.rt || {}).flatMap(([r, rows]) => rows.filter(x => x[3] === pk && atHalvard(r, S) && hauntKnown(r, S))
+  // 2.2.0 (Routine 2.0): the main rows only (weight 50+), once each (an old row cut at block edges is one row)
+  const usual = Object.entries(DATA.presence.rt || {}).flatMap(([r, rows]) => _.uniqBy(rows.filter(x => (x[8] == null || x[8] >= 50) && rtAt(x, pk) && atHalvard(r, S) && hauntKnown(r, S)), x => x[6] + x[5])
     .map(x => `${B[r] ? `<button class="lnk" data-open="npc:${esc(r)}">${esc(nameOf(r, S))}</button>` : esc(nameOf(r, S))} <span class="sub">(usually ${esc(x[6])}${x[5] ? ', ' + esc(x[5]) : ''})</span>`));
   if (usual.length && featureOn(S, 'npc_routines')) rows.push(['Usually here', usual.join(', ')]);
   // 1.31.0 (owner-approved planning/DRAFT_restore_places.md): a restful place says what resting there restores; where {{user}} is,
