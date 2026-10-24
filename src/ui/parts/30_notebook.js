@@ -307,7 +307,7 @@ function paperCard(S) {
   const P = ((S.$ui || {}).cw || {}).paper; if (!featureOn(S, 'clubwork') || !P) return '';
   const row = (k, v) => v ? `<span>${k}</span><span>${esc(v)}</span>` : '';
   return `<div class="note off fc"><b>Academy Newspaper — ${esc(P.on)}</b>
-    <div class="fcb">${row('Front page', P.head ? `"${P.head}"` : P.res[0] || '')}${row('Results', P.res.join(' '))}${row('This week', P.soon.join(', ') || 'a quiet week')}${row('Ghost corner', P.ghost ? `${P.ghost}, retold` : '')}</div>
+    <div class="fcb">${row('Front page', P.head ? `"${P.head}"` : P.res[0] || '')}${row('Results', P.res.join(' '))}${row('This week', P.soon.join(', ') || 'a quiet week')}${row('Campus life', (P.life || []).join(' '))}${row('Overheard', P.over ? `"${P.over}"` : '')}${row('Ghost corner', P.ghost ? `${P.ghost}, retold` : '')}</div>
     <div class="dis">Printed on the Announcement Room's press. Theories are not news.</div><div class="sub">Posted Monday at 07:00 · Academy Newspaper</div></div>`;
 }
 function fluCard(S) {

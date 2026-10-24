@@ -275,6 +275,10 @@ show the newcomers their dorm rooms.
       with a rival, a new spell); not everyone, not every day, never two days running for the same person. When they are in the scene the
       narrator does not open with it: it comes up only when the talk gives a reason, often not at all. Campus now adds "(yesterday: ...)"
       for a Rank 3+ friend. Bonds, Trust and Tension do not move from it [2.3.0].
+- [ ] Own time reaches {{user}}, Side quest (whenever it comes): a Rank 3+ friend's initiative reason now and then comes from their
+      Own time line ("wants to tell {{user}} how they beat ..."), never while strained; someone hurt ("sprained an ankle", "a spell
+      backfired") is in the Healing Ward that day: Campus now says "in the Healing Ward ...", Look for finds them at the Medical Centre,
+      they are not in class, and at the Medical Centre they are in "Here now" [2.4.1].
 - [ ] Routine 2.0, over the week: at lunch Trixie is often in the Courtyards (a performance nobody asked for), not every day, and in the
       Common Rooms when it rains; on Tuesday and Thursday from 16:00 Zara and Vera are in the Workshop together or not at all; Castor
       turns up chasing a quote in the Canteen, the Courtyards or by the Notice Board. Even where Campus now or the dossier says someone
@@ -404,6 +408,9 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
 - [ ] From 07:00 the Notice Board has the Academy Newspaper (front page: a rumour that is all over campus, or a result; the week ahead;
       a ghost corner); `<now>` Monday to Wednesday says what it leads with, and NPCs may bring it up. A rumour it printed shows "(in the
       Newspaper)" in the Journal's gossip and lasts three days longer [1.90].
+- [ ] The same issue has a "Campus life" row: up to three people {{user}} knows with a public Own time line from last week ("Etnie put in
+      an extra hour of practice at ..."; never a letter, marks or a bad night), and maybe an "Overheard" rumour that does not get the
+      "(in the Newspaper)" tag; nothing in `<now>` about it [2.4.0].
 - [ ] W2 Thu, Castor's birthday, with Castor present: his Cast Sheet's Mood line ends "Birthday (glad): warmer to anyone who remembers
       it.", and the narrator plays it in his quiet way; on the scene card the "glad · birthday" chip shows only once his dossier has
       opened his birthday [1.72].

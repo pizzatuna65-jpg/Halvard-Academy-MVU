@@ -194,7 +194,14 @@ function presenceView(PD, S, on) {
     min: hmMin(W.Time), dkey: [W.Year || 1, W.Month, W.Week, W.Day].join('-'), seed: Number((S.$eng || {}).seed) || 0, rton: on('npc_routines'), FC: foundedClub(S),   // 1.52.0: the routine roll
     brk: breakStaysNow(PD, S),   // 1.83.0: a break's stayers (null: no break today)
     hroll: on('presence_roll'), blk: W.Time == null ? -1 : blockAt(hmMin(W.Time)), PRES: Object.keys((S.Scene || {}).Present || {}),   // 1.99.11
-    look: ((S.$eng || {}).look) || null };   // 1.99.12: the last Look for (engine stepLook)
+    look: ((S.$eng || {}).look) || null,   // 1.99.12: the last Look for (engine stepLook)
+    hurt: on('offscreen') ? hurtNow(S, W) : {} };   // 2.4.1 (roadmap M4b): who is in the Healing Ward today (engine stepOffscreen)
+}
+// 2.4.1 (roadmap M4b): { id: what Campus now says } for those an Own time happening keeps in the Healing Ward today ($eng.own.hurt)
+function hurtNow(S, W) {
+  const d = W.Month && W.Week ? stampDay(`Y${W.Year || 1} M${W.Month} W${W.Week} ${W.Day}`) : -1, H = (((S.$eng || {}).own) || {}).hurt || {}, out = {};
+  for (const id of Object.keys(H)) if (Array.isArray(H[id]) && d >= H[id][0] && d <= H[id][1]) out[id] = String(H[id][2] || 'in the Healing Ward');
+  return out;
 }
 // NPC id at this moment: gone (graduated, or their cohort has not arrived), st (Campus_State.NPC_status), sick (the flu), busy
 // ([what they are doing, the place keys where that keeps them in sight]: students in class, at Study Hall, voting or at their clubs;
@@ -208,6 +215,9 @@ function whereabouts(PD, V, id) {
     : k === 'class' ? ['in class until ' + V.until, []] : k === 'study' ? ['at Study Hall until ' + PERIOD_END[1], c[2]]
     : k === 'election' ? ['voting in the Main Courtyard until ' + PERIOD_END[2], []] : ['at their club until ' + PERIOD_END[2], []];
   const gone = goneOf(PD, V, id), st = npcStatusOf(V.NST, id), sick = V.sick.includes(id);
+  // 2.4.1 (roadmap M4b): hurt in an Own time happening: in the Healing Ward all day, out of class, a duty row at the Medical Centre
+  const hw = !gone && !sick && !st && (V.hurt || {})[id];
+  if (hw) return { id, gone, st, sick, busy: null, rt: [['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], 0, 1440, 'medical centre', 'Medical Centre', hw, 'Healing Ward', 'duty', 100, { ward: 1 }] };
   const rt = !V.rton || gone || sick || st || busy || V.min == null ? null : rtPick(PD, V, id);
   return { id, gone, st, sick, busy, rt };
 }
@@ -228,7 +238,7 @@ const rtFirst = r => { const c = r[9] || {}; return c.ev || c.exam ? 0 : c.pair 
 const rtAt = (r, pk) => !!r && (r[10] ? r[10].includes(pk) : r[3] === pk);
 function rtPick(PD, V, id) {
   // 2.2.3: a pair row only while the partner is at Halvard, on their feet and under no status (else its share is free)
-  const mate = r => { const o = (r[9] || {}).pair; return !o || (!goneOf(PD, V, o) && !V.sick.includes(o) && !npcStatusOf(V.NST, o)); };
+  const mate = r => { const o = (r[9] || {}).pair; return !o || (!goneOf(PD, V, o) && !V.sick.includes(o) && !npcStatusOf(V.NST, o) && !(V.hurt || {})[o]); };
   const wx = rtWx(V), on = ((PD.rt || {})[id] || []).filter(r => r[0].includes(V.W.Day) && V.min >= r[1] && V.min < r[2] && rtFits(r, wx) && rtWhen(PD, V, r) && mate(r));
   if (!on.length) return null;
   const pr = on.find(r => (r[9] || {}).pair), key = pr ? [id, pr[9].pair].sort().join('+') : id;
@@ -252,7 +262,7 @@ function walkPath(PD, a, b) {
 }
 function onTheWay(PD, V, id) {
   const T = (PD.here || {}).transit || {};
-  if (V.min == null || V.blk <= 0 || !V.rton) return null;
+  if (V.min == null || V.blk <= 0 || !V.rton || (V.hurt || {})[id]) return null;
   const start = BLOCKS_AT[V.blk - 1];
   if (V.min - start >= (T.mins == null ? 15 : T.mins)) return null;
   const now = rtPick(PD, V, id);
@@ -301,7 +311,7 @@ function presenceAt(PD, V, loc, crowd) {
   // 1.52.0: a regular away on a routine elsewhere is not here; someone whose routine is here now is (why: what they do here)
   const why = {};
   regs1 = regs1.filter(id => { const r = wh(id).rt; return !r || rtAt(r, pk); });
-  for (const id of Object.keys(PD.rt || {})) { const w = wh(id); if (w.rt && rtAt(w.rt, pk) && whereFree(w)) { if (!regs1.includes(id)) regs1.push(id); if (w.rt[5]) why[id] = w.rt[5]; } }
+  for (const id of new Set([...Object.keys(PD.rt || {}), ...Object.keys(V.hurt || {})])) { const w = wh(id); if (w.rt && rtAt(w.rt, pk) && whereFree(w)) { if (!regs1.includes(id)) regs1.push(id); if (w.rt[5]) why[id] = w.rt[5]; } }
   const st0 = regs1.filter(r => wh(r).st);
   let roll = null, odds = null;   // odds (1.99.12): each rolled regular's percent here now (Look for builds on it)
   if (V.hroll && V.min != null) {
@@ -447,6 +457,7 @@ function campusFeed(PD, V, S) {
     else if (w.sick) what = 'off sick';
     else if (w.st) what = close ? w.st : 'away';
     else if (w.busy) what = w.busy[0];
+    else if (w.rt && (w.rt[9] || {}).ward) { what = w.rt[5]; where = w.rt[4]; }   // 2.4.1: anyone can see who is in the Healing Ward
     else if (w.rt && close) {
       const tw = onTheWay(PD, V, id);   // 2.2.1: still walking from the last routine place
       if (tw) what = 'on the way to ' + tw[1][4];
@@ -2120,7 +2131,7 @@ function updateSleep(S, B, from, to, TU, log) {
   if (mode === 'full' && loss > 0) S.Player.Vitals.Stamina = Math.min(S.Player.Vitals.Stamina, S.Player.Vitals.Stamina_max * (1-loss));
 }
 
-const ENGINE_VER = "2.3.0";   // the card version (src/card/card.json, set by tools/gen_engine.py)
+const ENGINE_VER = "2.4.1";   // the card version (src/card/card.json, set by tools/gen_engine.py)
 const verLt = (a, b) => { const p = v => String(v || '0').split('.').map(x => parseInt(x, 10) || 0), x = p(a), y = p(b); for (let i = 0; i < 3; i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) < (y[i] || 0); return false; };   // 1.63.0
 
 // 1.20.0 (audit A5): the engine runs as a list of steps, in the order of the sections they came from. Each step reads what it needs
@@ -6010,8 +6021,9 @@ function stepBondMemory(c) {
 // spent OWN.with minutes or more of yesterday in the scene with {{user}}, nor anyone away from Halvard. The line comes from
 // data/offscreen.json, filtered by who they are (Tension category, student or staff, what the line needs) and never one of their
 // last OWN.keep; it replaces their last "(Own time)" line in $Recent (shared.js ownOf reads it). No bond, Trust, Tension or reputation.
-// $eng.own: { d: the last day drawn, td: the day t counts, t / y: minutes in the scene today / yesterday, g: last line day, h: last ids }
-const OWN = {"rate":20,"gap":5,"show":2,"with":240,"keep":10,"thing_skip":["Sovereigns","Engraved trophy cup","Restaurant meal","Rare reagent","Mystery clockwork (sold as seen)"],"wx":{"Clear":"sunshine","Clear night":"clear night sky","Clear by day ≥15 °C":"warm sunshine","Rain":"rain","Storm":"storm","Fog":"fog","Snow":"snow","Overcast":"grey skies","Mild":"mild weather","Warm":"warm weather","Cool":"cool weather","Cold":"cold","Freezing":"freezing cold","Hot":"heat","Heatwave":"heatwave","Windy":"wind","Gale":"gale"},"items":[{"id":"extra_practice","for":"all","who":"all","needs":["place"],"at":["combat grounds","sparring pavilion","gymnasium","sports field","archery range","club rooms","workshop","potion halls","main library","grassy field and hills","swimming pool","meditation rooms","observation tower"],"text":"put in an extra hour of practice at {place}"},{"id":"good_club_day","for":"all","who":"student","needs":["club"],"text":"had a good {club} session"},{"id":"bad_club_day","for":["social","confrontational","withdrawn"],"who":"student","needs":["club"],"text":"had a bad {club} session and is still annoyed about it"},{"id":"words_with_rival","for":["confrontational","social","dangerous"],"who":"all","needs":["rival","place"],"at":["canteen","courtyards","combat grounds","sparring pavilion","club rooms","main library","gardens","sports field","gymnasium","mall","common rooms","lecture halls","grassy field and hills","snug"],"text":"had words with {rival} at {place}"},{"id":"lost_bet_rival","for":["social","confrontational"],"who":"student","needs":["rival"],"text":"lost a small bet to {rival}"},{"id":"beat_rival","for":["confrontational","social","dangerous"],"who":"all","needs":["rival"],"text":"beat {rival} at something small and has not stopped mentioning it"},{"id":"avoided_rival","for":["withdrawn","authority"],"who":"all","needs":["rival"],"text":"kept out of {rival}'s way all day"},{"id":"evening_friend","for":"all","who":"all","needs":["friend"],"text":"spent the evening with {friend}"},{"id":"helped_friend","for":["social","withdrawn","authority"],"who":"all","needs":["friend"],"text":"helped {friend} with an assignment"},{"id":"letter_home","for":"all","who":"student","needs":["home"],"text":"got a letter from home"},{"id":"parcel_home","for":["social","withdrawn"],"who":"student","needs":["home"],"text":"got a parcel from home"},{"id":"marks_good","for":"all","who":"student","needs":[],"text":"got a marked assignment back and was pleased"},{"id":"marks_bad","for":"all","who":"student","needs":[],"text":"got a marked assignment back and is not talking about it"},{"id":"bought_thing","for":"all","who":"all","needs":["thing"],"text":"bought a favourite: {thing}"},{"id":"bargain_thing","for":["social","withdrawn"],"who":"all","needs":["thing"],"text":"found a favourite going cheap at the Mall: {thing}"},{"id":"lost_small","for":"all","who":"all","needs":[],"text":"lost something small and spent an hour looking for it"},{"id":"slept_badly","for":"all","who":"all","needs":[],"text":"slept badly"},{"id":"late_class","for":["social","confrontational","dangerous"],"who":"student","needs":[],"text":"turned up late to a class"},{"id":"told_off","for":["confrontational","social","dangerous"],"who":"student","needs":[],"text":"was told off by a teacher for something minor"},{"id":"new_spell","for":"all","who":"student","needs":[],"text":"tried a new spell and it mostly worked"},{"id":"skirmish","for":["confrontational","dangerous"],"who":"student","needs":["place"],"at":["canteen","courtyards","combat grounds","sparring pavilion","club rooms","gardens","sports field","grassy field and hills","common rooms"],"text":"got into a quick skirmish at {place} and walked away grinning"},{"id":"watched_duel","for":"all","who":"student","needs":[],"text":"watched a duel at the Combat Grounds"},{"id":"asleep_library","for":["withdrawn","social"],"who":"student","needs":[],"text":"fell asleep in the Main Library"},{"id":"longer_place","for":"all","who":"all","needs":["place"],"text":"spent longer than planned at {place}"},{"id":"staff_meeting","for":["authority","social"],"who":"staff","needs":[],"not":["Krieg","Milena","Tristan","Caine"],"text":"sat through a long staff meeting"},{"id":"marking","for":"all","who":"staff","needs":["teach"],"text":"marked a stack of papers late into the night"},{"id":"minor_problem","for":["authority"],"who":"staff","needs":["place"],"text":"dealt with a minor problem at {place}"},{"id":"good_class","for":"all","who":"staff","needs":["teach"],"text":"had a class that went better than expected"},{"id":"loved_weather","for":"all","who":"all","needs":["wx"],"text":"made the most of the {wx}"}]};
+// $eng.own: { d: the last day drawn, td: the day t counts, t / y: minutes in the scene today / yesterday, g: last line day, h: last ids,
+// hurt (2.4.1, roadmap M4b): { id: [first day, last day, OWN item's ward text] } while a happening with hurt keeps them in the Healing Ward }
+const OWN = {"rate":20,"gap":5,"show":2,"with":240,"keep":10,"paper":{"max":3,"items":["extra_practice","good_club_day","words_with_rival","lost_bet_rival","beat_rival","bargain_thing","new_spell","skirmish","asleep_library","good_class","sprained_ankle","sparring_hurt","burned_hand","spell_backfire"]},"ask_days":2,"ask_pct":33,"thing_skip":["Sovereigns","Engraved trophy cup","Restaurant meal","Rare reagent","Mystery clockwork (sold as seen)"],"wx":{"Clear":"sunshine","Clear night":"clear night sky","Clear by day ≥15 °C":"warm sunshine","Rain":"rain","Storm":"storm","Fog":"fog","Snow":"snow","Overcast":"grey skies","Mild":"mild weather","Warm":"warm weather","Cool":"cool weather","Cold":"cold","Freezing":"freezing cold","Hot":"heat","Heatwave":"heatwave","Windy":"wind","Gale":"gale"},"items":[{"id":"extra_practice","for":"all","who":"all","needs":["place"],"at":["combat grounds","sparring pavilion","gymnasium","sports field","archery range","club rooms","workshop","potion halls","main library","grassy field and hills","swimming pool","meditation rooms","observation tower"],"text":"put in an extra hour of practice at {place}"},{"id":"good_club_day","for":"all","who":"student","needs":["club"],"text":"had a good {club} session","ask":"is still pleased about the last {club} session and wants {{user}} to hear about it"},{"id":"bad_club_day","for":["social","confrontational","withdrawn"],"who":"student","needs":["club"],"text":"had a bad {club} session and is still annoyed about it","ask":"wants to get the last {club} session off their chest"},{"id":"words_with_rival","for":["confrontational","social","dangerous"],"who":"all","needs":["rival","place"],"at":["canteen","courtyards","combat grounds","sparring pavilion","club rooms","main library","gardens","sports field","gymnasium","mall","common rooms","lecture halls","grassy field and hills","snug"],"text":"had words with {rival} at {place}","ask":"wants to talk through what happened with {rival} at {place}"},{"id":"lost_bet_rival","for":["social","confrontational"],"who":"student","needs":["rival"],"text":"lost a small bet to {rival}","ask":"wants {{user}}'s help winning back what they lost to {rival}","ask_not":["authority"]},{"id":"beat_rival","for":["confrontational","social","dangerous"],"who":"all","needs":["rival"],"text":"beat {rival} at something small and has not stopped mentioning it","ask":"wants to tell {{user}} how they beat {rival}, in more detail than anyone needs","ask_not":["withdrawn"]},{"id":"avoided_rival","for":["withdrawn","authority"],"who":"all","needs":["rival"],"text":"kept out of {rival}'s way all day"},{"id":"evening_friend","for":"all","who":"all","needs":["friend"],"text":"spent the evening with {friend}"},{"id":"helped_friend","for":["social","withdrawn","authority"],"who":"all","needs":["friend"],"text":"helped {friend} with an assignment"},{"id":"letter_home","for":"all","who":"student","needs":["home"],"text":"got a letter from home","ask":"got a letter from home and wants someone to talk to about it"},{"id":"parcel_home","for":["social","withdrawn"],"who":"student","needs":["home"],"text":"got a parcel from home"},{"id":"marks_good","for":"all","who":"student","needs":[],"text":"got a marked assignment back and was pleased"},{"id":"marks_bad","for":"all","who":"student","needs":[],"text":"got a marked assignment back and is not talking about it","ask":"wants help with the subject they were marked down in, without saying so"},{"id":"bought_thing","for":"all","who":"all","needs":["thing"],"text":"bought a favourite: {thing}","ask":"wants to show {{user}} the {thing} they bought"},{"id":"bargain_thing","for":["social","withdrawn"],"who":"all","needs":["thing"],"text":"found a favourite going cheap at the Mall: {thing}","ask":"wants to tell {{user}} where they found {thing} going cheap"},{"id":"lost_small","for":"all","who":"all","needs":[],"text":"lost something small and spent an hour looking for it","ask":"wants a hand looking for the thing they lost"},{"id":"slept_badly","for":"all","who":"all","needs":[],"text":"slept badly"},{"id":"late_class","for":["social","confrontational","dangerous"],"who":"student","needs":[],"text":"turned up late to a class"},{"id":"told_off","for":["confrontational","social","dangerous"],"who":"student","needs":[],"text":"was told off by a teacher for something minor"},{"id":"new_spell","for":"all","who":"student","needs":[],"text":"tried a new spell and it mostly worked","ask":"wants {{user}} to see the new spell they have been trying"},{"id":"skirmish","for":["confrontational","dangerous"],"who":"student","needs":["place"],"at":["canteen","courtyards","combat grounds","sparring pavilion","club rooms","gardens","sports field","grassy field and hills","common rooms"],"text":"got into a quick skirmish at {place} and walked away grinning","ask":"wants to show {{user}} the move that won the skirmish at {place}","ask_not":["authority"]},{"id":"watched_duel","for":"all","who":"student","needs":[],"text":"watched a duel at the Combat Grounds"},{"id":"asleep_library","for":["withdrawn","social"],"who":"student","needs":[],"text":"fell asleep in the Main Library"},{"id":"longer_place","for":"all","who":"all","needs":["place"],"text":"spent longer than planned at {place}"},{"id":"staff_meeting","for":["authority","social"],"who":"staff","needs":[],"not":["Krieg","Milena","Tristan","Caine"],"text":"sat through a long staff meeting"},{"id":"marking","for":"all","who":"staff","needs":["teach"],"text":"marked a stack of papers late into the night"},{"id":"minor_problem","for":["authority"],"who":"staff","needs":["place"],"text":"dealt with a minor problem at {place}"},{"id":"good_class","for":"all","who":"staff","needs":["teach"],"text":"had a class that went better than expected","ask":"wants to tell {{user}} about a class that went better than expected"},{"id":"loved_weather","for":"all","who":"all","needs":["wx"],"text":"made the most of the {wx}"},{"id":"sprained_ankle","for":"all","who":"student","needs":["place"],"at":["sports field","gymnasium","grassy field and hills","archery range","swimming pool"],"text":"sprained an ankle at {place}","hurt":1,"pct":35,"ward":"in the Healing Ward with a sprained ankle","ask":"sends word from the Healing Ward that a visitor would be welcome"},{"id":"sparring_hurt","for":"all","who":"student","needs":["place"],"at":["combat grounds","sparring pavilion"],"text":"took a hard hit in sparring at {place}","hurt":1,"pct":35,"ward":"in the Healing Ward after a hard hit in sparring","ask":"sends word from the Healing Ward, bored and wanting company"},{"id":"burned_hand","for":"all","who":"student","needs":["place"],"at":["potion halls","workshop"],"text":"burned a hand at {place}","hurt":1,"pct":35,"ward":"in the Healing Ward with a burned hand","ask":"sends word from the Healing Ward and asks {{user}} to bring the notes they are missing"},{"id":"spell_backfire","for":"all","who":"student","needs":[],"text":"had a spell backfire and singed themselves","hurt":1,"pct":35,"ward":"in the Healing Ward after a spell backfired","ask":"sends word from the Healing Ward that a visitor would be welcome"}]};
 const thePlace = p => (/^The /.test(p) ? 'the' + p.slice(3) : /^[A-Z][a-z]+'s /.test(p) && !/^(Founder|Headmaster|Warden)'s /.test(p) ? p : 'the ' + p);
 function ownFill(c, id, it, yd) {
   const { S, seed, WXM } = c, pick = (arr, tag) => (arr.length ? pickOf(arr, seed, yd, 'own-' + tag, id) : '');
@@ -6053,6 +6065,7 @@ function stepOffscreen(c) {
   E.d = dayNo;
   if (OFF.has('offscreen') || awayIn(S)) return;
   const yd = dayNo - 1, G = E.g = _.isPlainObject(E.g) ? E.g : {}, H = E.h = _.isPlainObject(E.h) ? E.h : {}, Y = E.y || {};
+  const HU = E.hurt = _.pickBy(_.isPlainObject(E.hurt) ? E.hurt : {}, v => Array.isArray(v) && v[1] >= dayNo);
   const keep = num((BR.recent || {}).keep, 10), cat = id => (TEN.overrides || {})[id] ? '' : (TEN.npcs || {})[id] || '';
   for (const id of Object.keys(S.Bonds).sort()) {
     const grp = NPC_GROUP[id], b = S.Bonds[id];
@@ -6060,12 +6073,35 @@ function stepOffscreen(c) {
     if (num(Y[id], 0) >= OWN.with || (G[id] != null && yd - G[id] <= OWN.gap) || !(roll100(seed, yd, 'own', id) < OWN.rate)) continue;
     const st = grp === 'student', last = Array.isArray(H[id]) ? H[id] : [];
     const fit = OWN.items.filter(it => (it.for === 'all' || it.for.includes(cat(id))) && (it.who === 'all' || (it.who === 'student') === st)
-      && !(it.not || []).includes(id) && !last.includes(it.id)).map(it => [it, ownFill(c, id, it, yd)]).filter(x => x[1]);
+      && !(it.not || []).includes(id) && !last.includes(it.id) && (!it.hurt || roll100(seed, yd, 'own-hurt', id) < num(it.pct, 100)))
+      .map(it => [it, ownFill(c, id, it, yd)]).filter(x => x[1]);
     if (!fit.length) continue;
     const [it, text] = pickOf(fit, seed, yd, 'own-pick', id);
     G[id] = yd; H[id] = [...last, it.id].slice(-num(OWN.keep, 10));
     b.$Recent = [...(b.$Recent || []).filter(r => !String((r && r.n) || '').startsWith(OWN_TAG)), { w: dstamp(fromAbs(yd * DAY_MIN)), n: OWN_TAG + text + '.', fx: '' }].slice(-keep);
+    if (it.hurt) HU[id] = [dayNo, yd + it.hurt, it.ward];   // 2.4.1 (M4b): in the Healing Ward from today (shared.js presenceView, V.hurt)
   }
+}
+
+// 2.4.1 (roadmap M4a): the NPC initiative reason an Own time happening gives: their newest line is at most OWN.ask_days old (a hurt one
+// only while they are in the Healing Ward), its item has an ask and initiative category cat is not in its ask_not. ['own|item', text]
+function ownAsk(c, id, cat) {
+  const E = c.S.$eng.own || {}, g = (E.g || {})[id], it = OWN.items.find(x => x.id === ((E.h || {})[id] || []).slice(-1)[0]), age = c.dayNo - g;
+  if (!it || !it.ask || (it.ask_not || []).includes(cat) || !(age >= 1 && age <= (it.hurt || num(OWN.ask_days, 2)))) return null;
+  const text = ownFill(c, id, { ...it, text: it.ask }, g);
+  return text ? ['own|' + it.id, text] : null;
+}
+// 2.4.0 (roadmap M3): the Own time lines of the week before Monday `mon` that the Academy Newspaper's "Campus life" column prints:
+// the item is in OWN.paper.items (public, nothing private like letters or marks) and its line is still in $Recent; OWN.paper.max at most
+function ownPaper(S, seed, mon) {
+  const E = S.$eng.own || {}, G = E.g || {}, H = E.h || {}, PA = OWN.paper || {}, out = [];
+  for (const id of Object.keys(S.Bonds || {}).sort()) {
+    const g = G[id], it = (H[id] || []).slice(-1)[0], b = S.Bonds[id];
+    if (!(g >= mon - 7 && g < mon) || !(PA.items || []).includes(it) || !b) continue;
+    const r = [...(b.$Recent || [])].reverse().find(x => x && String(x.n || '').startsWith(OWN_TAG));
+    if (r) out.push([roll100(seed, mon, 'cw-life', id), `${id} ${String(r.n).slice(OWN_TAG.length)}`]);
+  }
+  return out.sort((a, b) => a[0] - b[0]).slice(0, num(PA.max, 3)).map(x => x[1]);
 }
 
 // 1.45.0 (audit 3.9): one practice session, several tracks (proficiency and craft actions, mana, stamina, study). One fitness check
@@ -7555,6 +7591,9 @@ function stepInitiative(c) {
         const pick = pool.length ? pickOf(pool, seed, dayNo, 'ask', id) : null;
         I.askDay = dayNo; I.askId = id; I.ask = pick ? pick[2] : ''; I.fav = null;
         if (pick) I.used[id] = [...used, pick[0] + '|' + pick[1]].slice(-20);
+        // 2.4.1 (roadmap M4a): some days (OWN.ask_pct) the reason is what happened to them lately (ownAsk); never twice in their last 20
+        const oa = OFF.has('offscreen') || cat === 'strained' ? null : ownAsk(c, id, cat);
+        if (oa && !used.includes(oa[0]) && d100(seed, dayNo, 'own-ask', id) <= num(OWN.ask_pct, 33)) { I.ask = oa[1]; I.used[id] = [...used, oa[0]].slice(-20); }
         // 1.49.0 (audit 4.6): some days the reason is a favour: never while strained, at most one open favour per NPC and
         // FAVOURS.per_week offered a week; {thing} becomes the Commitment's Item, {place} where to be
         if (I.fw !== week) { I.fw = week; I.fn = 0; }
@@ -7676,8 +7715,12 @@ function stepClubWork(c) {
     for (let d = mon; d < mon + 7; d++) for (const e of eventsOn(fromAbs(d * DAY_MIN))) { const n = e.t.split(' (')[0]; if (!soon.includes(n)) soon.push(n); }
     const G = CN.ghost || [];
     P.wk = mon;
+    // 2.4.0 (roadmap M3, stage 1): the "Campus life" column: last week's newsworthy Own time lines (OWN.paper) and one more rumour
+    // that reached campus, "Overheard" (not printed news: it lives no longer, stepGossip's keep stays the front page's alone)
+    const over = aged.filter(x => x[0] !== head && x[1] <= 7).map(x => x[0]).sort();
     P.issue = { on: `Y${monW.Year} M${monW.Month} W${monW.Week}`, head, res: (P.log || []).filter(r => r[0] >= mon - 7 && r[0] < mon).map(r => r[1]),
-      soon: soon.slice(0, 6), ghost: G.length ? G[Math.floor(mon / 7) % G.length] : '' };
+      soon: soon.slice(0, 6), ghost: G.length ? G[Math.floor(mon / 7) % G.length] : '', life: OFF.has('offscreen') ? [] : ownPaper(S, seed, mon),
+      over: over.length ? pickOf(over, seed, mon, 'cw-over') : '' };
   }
   const paper = P.issue && dayNo - num(P.wk, -99) < 7 ? P.issue : null;
   const here = placeKey(W.Location), season = SEASON_OF(W.Month), now = [];

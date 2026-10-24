@@ -431,6 +431,11 @@ for _x in _OWN['items']:
     assert set(_x.get('at') or []) <= _rtk and (not _x.get('at') or 'place' in _x['needs']), f'offscreen {_x["id"]}: at (routine place keys)'
     assert all(n in npcs for n in _x.get('not') or []), f'offscreen {_x["id"]}: not'
     assert not _names.search(_x['text']) and '{{user}}' not in _x['text'] and len(_x['text'].split()) <= 16, f'offscreen {_x["id"]}: no names, no {{{{user}}}}, short'
+_icats = set(json.load(open(P('data/initiative_asks.json'), encoding='utf-8'))['categories'])
+for _x in _OWN['items']:   # 2.4.1: ask (initiative reason), hurt (the Healing Ward)
+    assert not _x.get('ask') or (set(re.findall(r'\{(\w+)\}', _x['ask'].replace('{{user}}', ''))) <= set(_x['needs']) and set(_x.get('ask_not') or []) <= _icats), f'offscreen {_x["id"]}: ask'
+    assert not _x.get('hurt') or (_x['hurt'] >= 1 and 1 <= _x.get('pct', 100) <= 100 and _x.get('ward', '').startswith('in the Healing Ward') and _x['who'] == 'student'), f'offscreen {_x["id"]}: hurt'
+assert set(_OWN['paper']['items']) <= {x['id'] for x in _OWN['items']} and _OWN['paper']['max'] >= 1, 'offscreen.json: paper items'
 t = t.replace('/*@@OFFSCREEN@@*/{}', json.dumps({k: v for k, v in _OWN.items() if k != '_note'}, ensure_ascii=False, separators=(',', ':')))
 assert all(x in npcs for x in MENTION_DENY)
 t = t.replace('/*@@MENTION_DENY@@*/[]', json.dumps(MENTION_DENY))
