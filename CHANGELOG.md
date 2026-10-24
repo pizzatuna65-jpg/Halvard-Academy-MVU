@@ -19,7 +19,7 @@ chance roll", a chance per NPC rather than a fixed count a day); deleted here. S
   (`show`, "Own time (yesterday): ..."), never among "Recent with {{user}}"; 504 adds one line: it is background, not an opener.
   Campus now adds "(yesterday: ...)" for those at Rank 3+ (bracelet fold and People tab, UI only). Meanwhile tells the week's Own time
   first, so the Journal and the Cast Sheet agree. No bond, Trust, Tension or reputation change.
-- **Features:** new toggle "Own time" (`offscreen`): about 34 tokens of rules, plus about 15 per present character with a line.
+- **Features:** new toggle "Own time" (`offscreen`): about 43 tokens of rules, plus about 15 per present character with a line.
 - **Numbers (70 days, 47 people):** one line every 10.2 days per person on average; gaps from 6 to 39 days, no fixed beat; between 0
   and 11 lines a day across campus. With 2 days in view, about one meeting in five carries one.
 - **Tests:** `test_offscreen_v2300.cjs` (new, 26 checks: the draw, the gap, swipes, no bond change against a run with it off, who gets
