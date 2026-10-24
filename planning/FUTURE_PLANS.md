@@ -85,11 +85,11 @@ ditulis dari lore dan disetujui owner, jadi tidak bisa keluar karakter.
   5. Validator `presence_data`: peringatan bila satu tempat dan blok punya terlalu banyak orang untuk target keramaiannya. Uji: persen
      kunjungan yang tidak menemukan siapa pun per keramaian (0–4), sebelum dan sesudah; tetap dekat angka sekarang (hitungan kasar:
      keramaian 0 ≈ 80% kosong, termasuk orang lewat 8%).
-  3. Cuaca: baris `wx` routine dulu, aturan umum pengusir tempat terbuka (`presenceAt` moved, `lookFor` weather) hanya untuk NPC tanpa
+  6. Cuaca: baris `wx` routine dulu, aturan umum pengusir tempat terbuka (`presenceAt` moved, `lookFor` weather) hanya untuk NPC tanpa
      baris `wx`; jangan dihitung dua kali.
-  4. Baris bersama `REL_PAIRS`: satu roll bersama untuk kedua NPC (bukan dua roll terpisah), dan beat pair ambience tidak mengulangnya.
-  5. Blok routine = batas `BLOCKS_AT` (06:00, batas periode, 18:00, 20:00), supaya orang tidak pindah di tengah blok Who is here.
-  6. Cerita hantu `alone` (`stepAmbience` uncanny) butuh tempat tanpa orang (`hereIds`); lebih banyak orang pasti = momen uncanny lebih
+  7. Baris bersama `REL_PAIRS`: satu roll bersama untuk kedua NPC (bukan dua roll terpisah), dan beat pair ambience tidak mengulangnya.
+  8. Blok routine = batas `BLOCKS_AT` (06:00, batas periode, 18:00, 20:00), supaya orang tidak pindah di tengah blok Who is here.
+  9. Cerita hantu `alone` (`stepAmbience` uncanny) butuh tempat tanpa orang (`hereIds`); lebih banyak orang pasti = momen uncanny lebih
      jarang. Ukur sebelum/sesudah (replay seed) dan sesuaikan bila turun jauh.
   - Efek sekali: saat update, posisi NPC di blok yang sedang berjalan bisa berubah (kunci roll baru); tanpa kehilangan data.
 
