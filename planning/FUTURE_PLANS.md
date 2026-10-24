@@ -37,10 +37,10 @@ belum ditemui tidak bocor. Hanya UI: 0 token prompt, narator tidak menerimanya. 
 - **Isi ikut kedekatan (owner, 2026-10-24, supaya Look for tidak mati):** lokasi pasti hanya untuk NPC yang field Routine-nya di
   dossier sudah terbuka (info layers 1.89.0); kenalan hanya kegiatan yang terlihat semua orang (kelas, klub, sakit, pulang libur),
   jam bebas "free" tanpa lokasi. Feed = "teman sedang apa", Look for = "aku mau menemui orang ini".
-- **Tidak pernah membantah Look for:** lokasi hanya ditulis bila Look for pasti menemukannya: kasus pasti (`busy`, routine, status,
-  sakit, libur) apa adanya; regular hanya bila roll Who is here blok ini menaruhnya di sana (Look for memakai tarikan yang sama dengan
-  peluang lebih besar); selain itu "somewhere on campus" (menggantikan "around <haunt>"). Orang lewat (passing through) tidak masuk.
-  Ikut aturan cuaca `presenceAt`/`lookFor` dan hasil Look for yang ditahan (`V.look`).
+- **Feed = lapis lokasi** (model dua lapis di B1): untuk teman dekat feed menulis di mana NPC berada menurut routine ("Caspian -
+  Main Library"); bertemu di sana tetap di-roll (Look for tinggi tapi bisa meleset). Tanpa routine/lokasi: "somewhere on campus"
+  (menggantikan "around <haunt>"); errand: "running errands". Ikut aturan cuaca `presenceAt`/`lookFor` dan hasil Look for yang
+  ditahan (`V.look`).
 - **Meanwhile** (`stepBondMemory`, Rank 7+, mingguan) masih membaca `HAUNT` ("was seen around …"), bukan `whereabouts`: bisa membantah
   feed. Arahkan ke `whereabouts` di rilis ini (dan ke kejadian M1 di 2.3.0).
 
@@ -66,17 +66,25 @@ ditulis dari lore dan disetujui owner, jadi tidak bisa keluar karakter.
   `loves`/`hates` cuaca, asrama dan lantai tahun; owner meninjau per kelompok seperti ronde drafting NPC.
 - Menyentuh DECISIONS "NPC routines" (1.52.0: "kebiasaan mingguan ringan", roll 70%): owner sudah memilih Routine 2.0 (2026-10-24);
   angka 70 tetap, "ringan" berubah jadi hari penuh. Perbarui baris DECISIONS itu di rilis 2.2.0.
-- **Supaya tidak melemahkan Who is here / Look for (cek 2026-10-24):**
-  1. `presenceAt` menganggap routine di tempat itu *pasti*; hari penuh = hampir semua NPC pasti di suatu tempat, jadi roll keramaian
-     (target ambience) dan orang lewat 8% nyaris tak terpakai, dan tempat "sepi" bisa penuh. Ini merusak tujuan DECISIONS "Who is
-     here is rolled" (1.99.11): datang ke tempat dan tidak bertemu siapa pun, sesuai ambience. Maka:
-     - Tabel per blok wajib punya hasil **free** (sebagian dari sisa 30%) yang jatuh ke roll keramaian seperti sekarang.
-     - Baris diberi jenis: **duty** (shift, kerja, jabatan, mis. Irene di Library Assistants) tetap pasti; **habit** (santai,
-       kebiasaan) ikut roll keramaian dengan bonus (pola Look for), jadi tempat sepi tetap bisa kosong.
-     - Validator `presence_data`: peringatan bila satu tempat dan blok punya lebih banyak orang pasti daripada target keramaiannya.
-     - Uji: persen kunjungan yang tidak menemukan siapa pun per tingkat keramaian (0–4), sebelum dan sesudah; harus tetap dekat angka
-       sekarang (hitungan kasar: keramaian 0 ≈ 80% kosong, termasuk orang lewat 8%).
-  2. Look for selalu menemukan NPC di routine-nya; hasil free menjaga ketidakpastiannya. `lookHabit` melaporkan baris utama.
+- **Model dua lapis (owner, 2026-10-24): routine = di mana NPC berada, roll = apakah {{user}} berpapasan.** Tujuan owner: dunia tidak
+  bisa ditebak (playtest sebelum 1.99.11: selalu ketemu NPC di mana pun; Halvard luas, tidak ada 100%) *dan* NPC bergerak di luar
+  {{user}}. Menyentuh DECISIONS "Who is here is rolled" (1.99.11: routine di tempat itu pasti): perbarui barisnya di 2.2.0.
+  1. **Lapis lokasi:** tabel per blok (`rollTable`) memilih baris; hasil **free** (sebagian dari sisa 30%) = tanpa lokasi, ikut roll
+     keramaian seperti sekarang. Jenis baris: **duty** (shift, kerja, jabatan, mis. Irene di Library Assistants), **habit** (santai),
+     **errand** (beberapa tempat sekaligus: toko, Notice Board, mengantar sesuatu).
+  2. **Lapis pertemuan:** NPC yang ada di tempat itu ditemui dengan peluang per jenis (usulan duty ±85%, habit ±65%; angka di
+     `npc_routines.json` `here`, §5), tidak pernah 100% di tempat terbuka/luas. Pasti hanya di satu ruangan terjadwal: kelas berjalan,
+     guru mengajar, Study Hall, rapat Council. Regular tanpa routine jam itu: roll keramaian ambience seperti sekarang, jadi tempat sepi
+     tetap sering kosong.
+  3. **Look for** menaikkan peluang pertemuan, tetap tidak pasti (NPC yang routine-nya di sana: cap ±90%; regular: 80% seperti
+     sekarang); NPC yang duty/habit di tempat lain tidak pernah ditemukan. `lookHabit` melaporkan baris utama.
+  4. **Orang lewat 8%:** sekarang hanya NPC tanpa routine/kelas/status (`!w.rt`), jadi hari penuh akan mengosongkan daftarnya.
+     Sumbernya: hasil free; baris errand (bisa lewat di salah satu tempatnya); **di perjalanan** (±15 menit pertama blok, dari tempat
+     routine sebelumnya ke berikutnya, bila tempat {{user}} ada di jalurnya: `areaMin`/routes peta). Look for: peluang kecil untuk
+     mereka, sama seperti sekarang.
+  5. Validator `presence_data`: peringatan bila satu tempat dan blok punya terlalu banyak orang untuk target keramaiannya. Uji: persen
+     kunjungan yang tidak menemukan siapa pun per keramaian (0–4), sebelum dan sesudah; tetap dekat angka sekarang (hitungan kasar:
+     keramaian 0 ≈ 80% kosong, termasuk orang lewat 8%).
   3. Cuaca: baris `wx` routine dulu, aturan umum pengusir tempat terbuka (`presenceAt` moved, `lookFor` weather) hanya untuk NPC tanpa
      baris `wx`; jangan dihitung dua kali.
   4. Baris bersama `REL_PAIRS`: satu roll bersama untuk kedua NPC (bukan dua roll terpisah), dan beat pair ambience tidak mengulangnya.
