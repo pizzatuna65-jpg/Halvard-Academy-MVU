@@ -5113,7 +5113,8 @@ function stepBondMemory(c) {
 // spent OWN.with minutes or more of yesterday in the scene with {{user}}, nor anyone away from Halvard. The line comes from
 // data/offscreen.json, filtered by who they are (Tension category, student or staff, what the line needs) and never one of their
 // last OWN.keep; it replaces their last "(Own time)" line in $Recent (shared.js ownOf reads it). No bond, Trust, Tension or reputation.
-// $eng.own: { d: the last day drawn, td: the day t counts, t / y: minutes in the scene today / yesterday, g: last line day, h: last ids }
+// $eng.own: { d: the last day drawn, td: the day t counts, t / y: minutes in the scene today / yesterday, g: last line day, h: last ids,
+// hurt (2.4.1, roadmap M4b): { id: [first day, last day, OWN item's ward text] } while a happening with hurt keeps them in the Healing Ward }
 const OWN = /*@@OFFSCREEN@@*/{};
 const thePlace = p => (/^The /.test(p) ? 'the' + p.slice(3) : /^[A-Z][a-z]+'s /.test(p) && !/^(Founder|Headmaster|Warden)'s /.test(p) ? p : 'the ' + p);
 function ownFill(c, id, it, yd) {
@@ -5156,6 +5157,7 @@ function stepOffscreen(c) {
   E.d = dayNo;
   if (OFF.has('offscreen') || awayIn(S)) return;
   const yd = dayNo - 1, G = E.g = _.isPlainObject(E.g) ? E.g : {}, H = E.h = _.isPlainObject(E.h) ? E.h : {}, Y = E.y || {};
+  const HU = E.hurt = _.pickBy(_.isPlainObject(E.hurt) ? E.hurt : {}, v => Array.isArray(v) && v[1] >= dayNo);
   const keep = num((BR.recent || {}).keep, 10), cat = id => (TEN.overrides || {})[id] ? '' : (TEN.npcs || {})[id] || '';
   for (const id of Object.keys(S.Bonds).sort()) {
     const grp = NPC_GROUP[id], b = S.Bonds[id];
@@ -5163,14 +5165,24 @@ function stepOffscreen(c) {
     if (num(Y[id], 0) >= OWN.with || (G[id] != null && yd - G[id] <= OWN.gap) || !(roll100(seed, yd, 'own', id) < OWN.rate)) continue;
     const st = grp === 'student', last = Array.isArray(H[id]) ? H[id] : [];
     const fit = OWN.items.filter(it => (it.for === 'all' || it.for.includes(cat(id))) && (it.who === 'all' || (it.who === 'student') === st)
-      && !(it.not || []).includes(id) && !last.includes(it.id)).map(it => [it, ownFill(c, id, it, yd)]).filter(x => x[1]);
+      && !(it.not || []).includes(id) && !last.includes(it.id) && (!it.hurt || roll100(seed, yd, 'own-hurt', id) < num(it.pct, 100)))
+      .map(it => [it, ownFill(c, id, it, yd)]).filter(x => x[1]);
     if (!fit.length) continue;
     const [it, text] = pickOf(fit, seed, yd, 'own-pick', id);
     G[id] = yd; H[id] = [...last, it.id].slice(-num(OWN.keep, 10));
     b.$Recent = [...(b.$Recent || []).filter(r => !String((r && r.n) || '').startsWith(OWN_TAG)), { w: dstamp(fromAbs(yd * DAY_MIN)), n: OWN_TAG + text + '.', fx: '' }].slice(-keep);
+    if (it.hurt) HU[id] = [dayNo, yd + it.hurt, it.ward];   // 2.4.1 (M4b): in the Healing Ward from today (shared.js presenceView, V.hurt)
   }
 }
 
+// 2.4.1 (roadmap M4a): the NPC initiative reason an Own time happening gives: their newest line is at most OWN.ask_days old (a hurt one
+// only while they are in the Healing Ward), its item has an ask and initiative category cat is not in its ask_not. ['own|item', text]
+function ownAsk(c, id, cat) {
+  const E = c.S.$eng.own || {}, g = (E.g || {})[id], it = OWN.items.find(x => x.id === ((E.h || {})[id] || []).slice(-1)[0]), age = c.dayNo - g;
+  if (!it || !it.ask || (it.ask_not || []).includes(cat) || !(age >= 1 && age <= (it.hurt || num(OWN.ask_days, 2)))) return null;
+  const text = ownFill(c, id, { ...it, text: it.ask }, g);
+  return text ? ['own|' + it.id, text] : null;
+}
 // 2.4.0 (roadmap M3): the Own time lines of the week before Monday `mon` that the Academy Newspaper's "Campus life" column prints:
 // the item is in OWN.paper.items (public, nothing private like letters or marks) and its line is still in $Recent; OWN.paper.max at most
 function ownPaper(S, seed, mon) {
@@ -6671,6 +6683,9 @@ function stepInitiative(c) {
         const pick = pool.length ? pickOf(pool, seed, dayNo, 'ask', id) : null;
         I.askDay = dayNo; I.askId = id; I.ask = pick ? pick[2] : ''; I.fav = null;
         if (pick) I.used[id] = [...used, pick[0] + '|' + pick[1]].slice(-20);
+        // 2.4.1 (roadmap M4a): some days (OWN.ask_pct) the reason is what happened to them lately (ownAsk); never twice in their last 20
+        const oa = OFF.has('offscreen') || cat === 'strained' ? null : ownAsk(c, id, cat);
+        if (oa && !used.includes(oa[0]) && d100(seed, dayNo, 'own-ask', id) <= num(OWN.ask_pct, 33)) { I.ask = oa[1]; I.used[id] = [...used, oa[0]].slice(-20); }
         // 1.49.0 (audit 4.6): some days the reason is a favour: never while strained, at most one open favour per NPC and
         // FAVOURS.per_week offered a week; {thing} becomes the Commitment's Item, {place} where to be
         if (I.fw !== week) { I.fw = week; I.fn = 0; }

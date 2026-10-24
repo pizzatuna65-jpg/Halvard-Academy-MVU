@@ -6,7 +6,7 @@ hapus draft itu di rilis yang sama. Pengecekan live di SillyTavern ada di `docs/
 
 ## 0. Rilis berikutnya (owner, 2026-10-24)
 
-Versi saat ini 2.4.0 (rubrik koran "Campus life", M3; 2026-10-24); rilis berikutnya 2.4.1 (M4a). Nomor di §0.1 berlaku bila roadmap itu rilis lebih dulu; pekerjaan lain yang rilis lebih dulu mengambil nomor berikutnya dan
+Versi saat ini 2.4.1 (M4: alasan initiative dan Healing Ward; 2.4.x selesai, 2026-10-24); rilis berikutnya 2.5.0 (B3 lite). Nomor di §0.1 berlaku bila roadmap itu rilis lebih dulu; pekerjaan lain yang rilis lebih dulu mengambil nomor berikutnya dan
 roadmap bergeser satu.
 
 | Pekerjaan | Isi | Catatan |
@@ -22,8 +22,6 @@ Routine 2.0) dan B3; R2 (Meanwhile lebih longgar), R4 (setel toggle lama), B1 ve
 
 | Rilis | Isi | Butuh | Catatan |
 |---|---|---|---|
-| **2.4.1** | **M4a** alasan NPC initiative dari kejadian Own time | `planning/DRAFT_initiative_owntime.md` (menunggu review) | 2.4.0 dibagi tiga tahap (owner, 2026-10-24); tahap 1 (M3, rubrik "Campus life") selesai di 2.4.0. |
-| **2.4.2** | **M4b** NPC cedera di Healing Ward | draft (ditulis bersama rilis 2.4.1) | Butuh item Own time baru yang mencederai (belum ada: `skirmish` berakhir "grinning"). |
 | **2.5.N** | **B3** Politik kampus | draft langkah faksi | 2.5.0 = lite (Doves + Council); 2.5.1 = asrama, Liaison, Cathedral, Choir (tersembunyi). Full suite. |
 
 **B1 sisa (dicatat, tidak dijadwalkan).** Routine 2.0 selesai di 2.2.0–2.2.4. Yang sengaja tidak dibuat karena belum ada isinya
@@ -36,16 +34,10 @@ sepulang kelas (±4), keduanya memang ramai.
 kejadian yang menyebar ke teman lewat "Word gets around" (sengaja tidak: hanya momen bersama {{user}}); angka `rate` 20 / `gap` 5 /
 `show` 2 bisa disetel sesudah playtest (§5).
 
-**M3 + M4. Akibat kejadian (2.4.0–2.4.2).** M3 selesai di 2.4.0 (`ownPaper`, `data/offscreen.json` `paper`; "Overheard" tidak memperpanjang rumor). Sisa di bawah: M4. M3 (asal): rubrik di koran Senin (`cwNews`, `p30:paperCard`) dari kejadian Own time (M1, `$Recent` "(Own time)") dan
-gosip minggu itu; Notice Board/UI saja. M4: kejadian M1 jadi pintu masuk: alasan NPC initiative (`stepInitiative`, `INIT_ASKS`) boleh
-diambil dari kejadiannya ("ingin cerita soal duel kemarin"); NPC yang cedera di happening (misalnya duel chalk) muncul di Healing Ward
-(`restore_places.json` `medical_centre`); 0 token tambahan karena memakai jalur lama.
-- **Cek tabrakan (2026-10-24):** nama "Around campus" sudah dipakai happenings (toast "Around campus: …", `<now>` "Around campus
-  today", planner): beri rubrik nama lain (mis. "Campus life"). Koran Senin sudah memuat rumor kampus terbaru dan memperpanjang umurnya
-  (`keep`); rubrik tidak boleh memperpanjang rumor lain, kalau tidak "Rumours going around" membanjir.
-- M4 initiative: alasan dari kejadian ikut daftar "tidak terulang dalam 20" dan hanya sebagian alasan (mis. 1 dari 3), supaya alasan
-  lama dan hari favour tetap muncul. NPC cedera = keadaan di atas routine (seperti sakit/status), supaya routine, feed dan Look for
-  menunjuk ke Healing Ward.
+**M3 + M4 sisa (dicatat, tidak dijadwalkan).** Selesai di 2.4.0 (rubrik "Campus life", `ownPaper`) dan 2.4.1 (`ownAsk`, item `hurt`,
+`sh:hurtNow`). Bisa disetel sesudah playtest (§5): `ask_pct` 33, `ask_days` 2, `pct` 35 dan `hurt` 1 hari untuk 4 baris cedera, `paper.max` 3.
+Belum dibuat: staf yang cedera (sengaja: staf di Healing Ward akan membatalkan kelasnya), baris `<now>` khusus M4 (tidak perlu: lewat
+Here now dan initiative, jadi tidak bersaing di 505 `OPT`).
 
 **B3. Politik kampus (2.5.N).** Faksi dari `data/factions.json` bergerak sekali seminggu (Minggu malam, titik `stepSchoolWeek`;
 routine week dan lompatan waktu tetap dihitung per minggu): tiap faksi memilih satu langkah dari `data/politics.json` dengan
@@ -74,7 +66,7 @@ routine week dan lompatan waktu tetap dihitung per minggu): tiap faksi memilih s
   4. **Mood asrama** lewat `mg:moodOf`: satu asrama Bad seminggu menekan obrolan, maaf dan hadiah untuk seperempat roster. Batasi
      (mis. paling jauh satu langkah, hanya hari tertentu).
   5. Petisi Council (1.98.3) tetap memberi Interaction bantuan dan `student_notice_help`; hasil pemilu tetap dari mekanisme 1.86.0.
-  6. Baris `<now>` B3 dan M4: tentukan apakah masuk daftar optional thread (505 `OPT`, satu per balasan); kalau masuk, ia bersaing
+  6. Baris `<now>` B3 (M4 tidak menambah baris, 2.4.1): tentukan apakah masuk daftar optional thread (505 `OPT`, satu per balasan); kalau masuk, ia bersaing
      dengan happening, Here now, rumor dan initiative.
 
 ## 1. Rencana owner (dicatat, belum dijadwalkan)

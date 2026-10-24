@@ -193,7 +193,14 @@ function presenceView(PD, S, on) {
     min: hmMin(W.Time), dkey: [W.Year || 1, W.Month, W.Week, W.Day].join('-'), seed: Number((S.$eng || {}).seed) || 0, rton: on('npc_routines'), FC: foundedClub(S),   // 1.52.0: the routine roll
     brk: breakStaysNow(PD, S),   // 1.83.0: a break's stayers (null: no break today)
     hroll: on('presence_roll'), blk: W.Time == null ? -1 : blockAt(hmMin(W.Time)), PRES: Object.keys((S.Scene || {}).Present || {}),   // 1.99.11
-    look: ((S.$eng || {}).look) || null };   // 1.99.12: the last Look for (engine stepLook)
+    look: ((S.$eng || {}).look) || null,   // 1.99.12: the last Look for (engine stepLook)
+    hurt: on('offscreen') ? hurtNow(S, W) : {} };   // 2.4.1 (roadmap M4b): who is in the Healing Ward today (engine stepOffscreen)
+}
+// 2.4.1 (roadmap M4b): { id: what Campus now says } for those an Own time happening keeps in the Healing Ward today ($eng.own.hurt)
+function hurtNow(S, W) {
+  const d = W.Month && W.Week ? stampDay(`Y${W.Year || 1} M${W.Month} W${W.Week} ${W.Day}`) : -1, H = (((S.$eng || {}).own) || {}).hurt || {}, out = {};
+  for (const id of Object.keys(H)) if (Array.isArray(H[id]) && d >= H[id][0] && d <= H[id][1]) out[id] = String(H[id][2] || 'in the Healing Ward');
+  return out;
 }
 // NPC id at this moment: gone (graduated, or their cohort has not arrived), st (Campus_State.NPC_status), sick (the flu), busy
 // ([what they are doing, the place keys where that keeps them in sight]: students in class, at Study Hall, voting or at their clubs;
@@ -207,6 +214,9 @@ function whereabouts(PD, V, id) {
     : k === 'class' ? ['in class until ' + V.until, []] : k === 'study' ? ['at Study Hall until ' + PERIOD_END[1], c[2]]
     : k === 'election' ? ['voting in the Main Courtyard until ' + PERIOD_END[2], []] : ['at their club until ' + PERIOD_END[2], []];
   const gone = goneOf(PD, V, id), st = npcStatusOf(V.NST, id), sick = V.sick.includes(id);
+  // 2.4.1 (roadmap M4b): hurt in an Own time happening: in the Healing Ward all day, out of class, a duty row at the Medical Centre
+  const hw = !gone && !sick && !st && (V.hurt || {})[id];
+  if (hw) return { id, gone, st, sick, busy: null, rt: [['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], 0, 1440, 'medical centre', 'Medical Centre', hw, 'Healing Ward', 'duty', 100, { ward: 1 }] };
   const rt = !V.rton || gone || sick || st || busy || V.min == null ? null : rtPick(PD, V, id);
   return { id, gone, st, sick, busy, rt };
 }
@@ -227,7 +237,7 @@ const rtFirst = r => { const c = r[9] || {}; return c.ev || c.exam ? 0 : c.pair 
 const rtAt = (r, pk) => !!r && (r[10] ? r[10].includes(pk) : r[3] === pk);
 function rtPick(PD, V, id) {
   // 2.2.3: a pair row only while the partner is at Halvard, on their feet and under no status (else its share is free)
-  const mate = r => { const o = (r[9] || {}).pair; return !o || (!goneOf(PD, V, o) && !V.sick.includes(o) && !npcStatusOf(V.NST, o)); };
+  const mate = r => { const o = (r[9] || {}).pair; return !o || (!goneOf(PD, V, o) && !V.sick.includes(o) && !npcStatusOf(V.NST, o) && !(V.hurt || {})[o]); };
   const wx = rtWx(V), on = ((PD.rt || {})[id] || []).filter(r => r[0].includes(V.W.Day) && V.min >= r[1] && V.min < r[2] && rtFits(r, wx) && rtWhen(PD, V, r) && mate(r));
   if (!on.length) return null;
   const pr = on.find(r => (r[9] || {}).pair), key = pr ? [id, pr[9].pair].sort().join('+') : id;
@@ -251,7 +261,7 @@ function walkPath(PD, a, b) {
 }
 function onTheWay(PD, V, id) {
   const T = (PD.here || {}).transit || {};
-  if (V.min == null || V.blk <= 0 || !V.rton) return null;
+  if (V.min == null || V.blk <= 0 || !V.rton || (V.hurt || {})[id]) return null;
   const start = BLOCKS_AT[V.blk - 1];
   if (V.min - start >= (T.mins == null ? 15 : T.mins)) return null;
   const now = rtPick(PD, V, id);
@@ -300,7 +310,7 @@ function presenceAt(PD, V, loc, crowd) {
   // 1.52.0: a regular away on a routine elsewhere is not here; someone whose routine is here now is (why: what they do here)
   const why = {};
   regs1 = regs1.filter(id => { const r = wh(id).rt; return !r || rtAt(r, pk); });
-  for (const id of Object.keys(PD.rt || {})) { const w = wh(id); if (w.rt && rtAt(w.rt, pk) && whereFree(w)) { if (!regs1.includes(id)) regs1.push(id); if (w.rt[5]) why[id] = w.rt[5]; } }
+  for (const id of new Set([...Object.keys(PD.rt || {}), ...Object.keys(V.hurt || {})])) { const w = wh(id); if (w.rt && rtAt(w.rt, pk) && whereFree(w)) { if (!regs1.includes(id)) regs1.push(id); if (w.rt[5]) why[id] = w.rt[5]; } }
   const st0 = regs1.filter(r => wh(r).st);
   let roll = null, odds = null;   // odds (1.99.12): each rolled regular's percent here now (Look for builds on it)
   if (V.hroll && V.min != null) {
@@ -446,6 +456,7 @@ function campusFeed(PD, V, S) {
     else if (w.sick) what = 'off sick';
     else if (w.st) what = close ? w.st : 'away';
     else if (w.busy) what = w.busy[0];
+    else if (w.rt && (w.rt[9] || {}).ward) { what = w.rt[5]; where = w.rt[4]; }   // 2.4.1: anyone can see who is in the Healing Ward
     else if (w.rt && close) {
       const tw = onTheWay(PD, V, id);   // 2.2.1: still walking from the last routine place
       if (tw) what = 'on the way to ' + tw[1][4];
