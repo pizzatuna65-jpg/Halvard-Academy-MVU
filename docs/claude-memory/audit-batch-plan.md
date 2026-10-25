@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: 3e99ac4f-6274-4d99-9fb3-9de01e461f91
-  modified: 2026-10-24T05:26:16.019Z
+  modified: 2026-10-24T05:34:36.805Z
 ---
 
 The owner triggers audit work with one phrase: "kerjakan batch N" / "perbaiki batch N" = do only batch N of the newest audit's batch
@@ -23,11 +23,11 @@ commit)". Owner decisions inside a batch follow silence = approval ([[no-obvious
   Looks), 1.79.0 (MS1 bracelet "This reply", computed never stored: DECISIONS §7), 1.80.0 (MS4 recall from `lastUserMessage` in 505,
   MS3 stage 1 in `audit_chat.py --mechanics`). MS3 stage 2 waits in FUTURE_PLANS §2 for export evidence. A bare "kerjakan batch 8"
   means memory batch 8.
-- **Version numbering (owner, 2026-10-24):** the current card counts as 2.0.0 and the "2.0 polish, no new features" release is
-  scrapped: never mention it again. The next release, whatever it is, is 2.1.0 (`card.json` still reads 1.99.13 until then). The
-  "world in motion" roadmap (FUTURE_PLANS §0.1) numbers 2.1.0–2.5.N assume it ships first; leftover bug-hunt work shipped earlier takes
-  the next number and the roadmap moves up one. A bare "kerjakan batch N" still means the bug-hunt audit's batch N; memory batch 8
-  only when the owner says "batch 8" with chapters / ±20,000 messages in view.
+- **Version numbering (owner, 2026-10-24):** bug-hunt batch 8 shipped as 2.0.0 (GitHub main, PR #16; 1.99.14 quest autopilot after
+  it). The polish-only release is scrapped: never mention it again. The next release, whatever it is, is 2.1.0. The "world in motion"
+  roadmap (FUTURE_PLANS §0.1, on GitHub main since 47e4fab) numbers 2.1.0–2.5.N assume it ships first; other work shipped earlier
+  takes the next number and the roadmap moves up one. The only bug-hunt work left is batch 7 stage 2. A bare "kerjakan batch 8" now
+  means memory batch 8 (chapters). Always check GitHub first: [[check-github-first]].
 - **1.98 is done (2026-10-23):** from `audit/AUDIT_2026-10-23_1_kedalaman_fitur.md` the owner picked batches 2, 4, 5 only, released in
   order as 1.98.1 (Dove watch), 1.98.2 (gossip, Investigate, projects), 1.98.3 (Council petitions, Healing Ward); the draft is deleted
   (never committed) and the unpicked batches (Dorm Days, Battle, UI tools F1–F7) are summarised in FUTURE_PLANS §2. A bare "kerjakan
