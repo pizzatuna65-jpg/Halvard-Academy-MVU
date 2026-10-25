@@ -183,8 +183,8 @@ Curfew: <%- cur %>
 <%_ for (const _l of NOW.area || []) { _%>
 <%- _l %>
 <%_ } _%>
-<%_ if (PHASE && PHASE.line) { _%>
-Campus phase: <%- PHASE.line %>
+<%_ if (PHASE && PHASE.line && on('campus_phases')) { _%>
+<%- PHASE.kind === 'trend' ? 'Campus fad this week: ' + PHASE.line + ' (background; people take to it or scoff, each in character)' : 'Campus phase: ' + PHASE.line %>
 <%_ } _%>
 <%_ if (W._Happening && on('happenings') && !AREA) { _%>
 Around campus today (optional, use only if it fits): <%- W._Happening %>
@@ -309,7 +309,8 @@ NPC initiative today: <%- INITIATIVE.id %> may try to reach {{user}}. At this bo
 <%_ } _%>
 <%_ { // 1.99.4 (bug-hunt audit R3): the optional threads above, at most one a reply, so the world does not crowd {{user}} out of a scene
 const OPT = [(NOW.pres || []).some(l => /^Likely around/.test(l) && !/no regulars on record$/.test(l)) && 'Likely around',
-  (NOW.pres || []).some(l => /^Here now at/.test(l) && !/: nobody on the roster\./.test(l)) && 'Here now',   // 1.99.11 W._Happening && on('happenings') && !AREA && 'Around campus today',
+  (NOW.pres || []).some(l => /^Here now at/.test(l) && !/: nobody on the roster\./.test(l)) && 'Here now',   // 1.99.11
+  W._Happening && on('happenings') && !AREA && 'Around campus today',   // 2.0.0 (audit A1): 1.99.11 had left it inside the comment above
   (NOW.amb || []).some(l => /^Nearby/.test(l)) && 'Nearby', GS.length && 'Rumours going around', STALE.length && 'Campus events with no news',
   INITIATIVE && INITIATIVE.id && INITIATIVE.stage && 'NPC initiative today'].filter(Boolean); if (OPT.length) { _%>
 Optional threads (<%- OPT.join(', ') %>): use at most one of them in this reply, and none while {{user}} is in the middle of an action or a focused conversation; the rest can wait.

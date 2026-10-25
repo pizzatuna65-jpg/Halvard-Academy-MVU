@@ -59,7 +59,7 @@ ok(X.$ui.cast.xnew.includes('Marta') && rules(X).includes('extras') && /Extras: 
 
 // ---- T6, S6, R5, R3, R4
 const idx = R(0, S), r504 = R(504, S), gate = R(510, go(S, '12:00', 'Main Library', { Irene: '' }));
-ok(/Casual casting, including ordinary movement magic, is normal and allowed anywhere on campus/.test(idx) && !/Ordinary safe magic is allowed/.test(r504) && !/safe casting|Duelling Club/.test(gate) && /elapsed time matches the shown conversation, travel and magic\./.test(gate),
+ok(/Magic is everyday at Halvard: .*ordinary movement magic included.*nobody asks permission/.test(idx) && !/Ordinary safe magic is allowed|needs no permission|step in only/.test(r504) && !/safe casting|Duelling Club/.test(gate) && /elapsed time matches the shown conversation, travel and magic\./.test(gate),
   'T6: ordinary magic is legal in the WORLD INDEX only; the gate keeps its time check');
 ok(!/dripping hair|chattering teeth/.test(r504) && /in the body and in what \{\{user\}\} can do, with a detail not used before/.test(r504), 'S6: 504 gives the conditions as a category');
 ok(/Ambience line is background, not something to describe in every reply: keep the prose consistent with it/.test(r504) && /never open two replies in a row with the surroundings/.test(r504), 'R5: Ambience is the background');

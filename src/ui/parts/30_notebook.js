@@ -286,7 +286,9 @@ function nbNotices(S) {
     <div class="sub">${esc([v.By && `Posted by ${v.By}`, v.Posted, v.Until && `until ${v.Until}`].filter(Boolean).join(' · '))}</div>
     <button class="btn sm" data-fill="${esc(`About the notice "${k}" on the board: `)}">Act on it</button></div>`).join('');
   const fc = forecastCard(S) + paperCard(S) + fluCard(S);
-  return `<p class="lead">The long wall of boards in the castle's Floor 1 entrance hall. Official postings go up ahead of every event; the rest is what students pin up, and it rarely stays long.</p>
+  // 2.1.1 (owner-approved planning/DRAFT_campus_phases.md): what the campus is busy with, the same line the narrator gets ($ui.phase)
+  const ph = featureOn(S, 'campus_phases') && (S.$ui || {}).phase, phl = ph && ph.line ? `<p class="sub"><b>${ph.kind === 'trend' ? 'On campus this week' : 'On campus'}:</b> ${esc(ph.line)}</p>` : '';
+  return `<p class="lead">The long wall of boards in the castle's Floor 1 entrance hall. Official postings go up ahead of every event; the rest is what students pin up, and it rarely stays long.</p>${phl}
     <h3>Official</h3>${off || fc ? `<div class="board">${fc}${off}</div>` : '<div class="empty">No official postings this fortnight.</div>'}
     ${featureOn(S, 'notices') ? `<h3>Pinned by students and staff</h3>${own ? `<div class="board">${own}</div>` : '<div class="empty">Nothing you have noticed yet. Paid work, club recruitment and lost items appear here once you have seen them.</div>'}` : ''}`;
 }
@@ -305,7 +307,7 @@ function paperCard(S) {
   const P = ((S.$ui || {}).cw || {}).paper; if (!featureOn(S, 'clubwork') || !P) return '';
   const row = (k, v) => v ? `<span>${k}</span><span>${esc(v)}</span>` : '';
   return `<div class="note off fc"><b>Academy Newspaper — ${esc(P.on)}</b>
-    <div class="fcb">${row('Front page', P.head ? `"${P.head}"` : P.res[0] || '')}${row('Results', P.res.join(' '))}${row('This week', P.soon.join(', ') || 'a quiet week')}${row('Ghost corner', P.ghost ? `${P.ghost}, retold` : '')}</div>
+    <div class="fcb">${row('Front page', P.head ? `"${P.head}"` : P.res[0] || '')}${row('Results', P.res.join(' '))}${row('This week', P.soon.join(', ') || 'a quiet week')}${row('Campus life', (P.life || []).join(' '))}${row('Overheard', P.over ? `"${P.over}"` : '')}${row('Ghost corner', P.ghost ? `${P.ghost}, retold` : '')}</div>
     <div class="dis">Printed on the Announcement Room's press. Theories are not news.</div><div class="sub">Posted Monday at 07:00 · Academy Newspaper</div></div>`;
 }
 function fluCard(S) {

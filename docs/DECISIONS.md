@@ -57,7 +57,8 @@ on. When the owner approves a new standing decision, add it here in one or two l
   unnamed students only.
 - **Info layers** (owner, 1.89.0): every dossier field is Public, Deep or Deeper (`bond_rules.json` `layers`); the ranks follow openness (open 0/1/2, normal 1/2/4, guarded 2/3/5, closed 2/3/6) or the NPC's own line in `info_layers.json`; a field never opens later than before; before a bond only Role and Appearance show. The narrator's Bond line names the same fields by lore heading (held back = deflected in character). Trust moves it by a rank; Betrayed tells nothing new. Secrets never come from rank. 1.99.9 (owner playtest): the full Cast Sheet tags
   each held field at its own line (`Loves [not told yet: Rank 1]:`, the gift line too; engine `$ui.now.held`, sheet `cHeld`), except the
-  ways they behave (Personality, Traits, Emotional tells, Quirk, Flaw, Serious mode, Notes, Now, Discretion, Inventory), which are shown, never told.
+  ways they behave (Personality, Traits, Emotional tells, Quirk, Flaw, Serious mode, Notes, Now, Discretion, Inventory), which are shown, never told. 2.0.0 (audit A2): at Trust Betrayed ("tells nothing new") every field the rank has not opened is tagged
+  `[not told yet: Trust Betrayed]`, the gift line too.
   1.99.10 (owner): the full sheet carries the NPC's birthday from `data/npcs.json` ("Birthday: M8 W2 Tue (academy calendar)"), so the
   narrator tells the date the dossier and calendar show instead of inventing one. Replaces the 1.2.2 eight-tier share list and its Rank 5 "real rank" floor.
 - **Bonds** (owner, v1.9.0): Rank 0–10. XP comes from reported interactions with existing daily/weekly limits. A full bar, cooldown, Trust/Tension gates and the next genuine encounter with that present NPC advance one rank automatically; direct narrator Rank writes are reverted. Rank 8 branches remain canon-bound and recorded from the relationship at that point. `data/rank4_partners.json` is the authoritative per-NPC table for shared mana training, stamina training and study. Rank 2, 4, 6, 7 and 9 benefits are the owner-approved rank perks of 1.9.0 (engine `stepBonds`, rules 502/504); Rank 5 unique gifts need a reported handover. `Extras` and rival teams never receive a bond.
@@ -97,16 +98,35 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
   by the engine (listed price at its shop and in season; otherwise the narrator's Price as a story price; points on campus, coin away).
   Training is one `/Practice` session with a Track (`/Training` still read); one Rank 4 partner rule for every track in
   `rank4_partners.json` (mana, stamina, study; owner decision, proposal adopted).
-- **NPC routines** (1.52.0, owner-approved draft): light weekly habits are data in the one whereabouts model, below status, sickness,
-  class, teaching, Study Hall, clubs and the election, above haunts; a routine holds on a day by the shared `roll100` at 70% (owner).
-  Dossier and Map show them as "usually", gated by the Haunts field. Lore dawn habits before curfew ends are kept as written.
+- **NPC routines** (1.52.0, owner-approved draft; 2.2.0 Routine 2.0, owner-approved planning/DRAFT_routine2.md): a full day of
+  weighted rows in the one whereabouts model, below status, sickness, class, teaching, Study Hall, clubs and the election, above haunts;
+  one seeded draw per NPC, day and presence block (the main row 70, the owner's number; at least 10 free: no place, the crowd roll);
+  kinds duty, habit, errand; rows for a weather and pair rows (one draw for both). Dossier and Map show the main rows as "usually",
+  gated by the Haunts field. Lore dawn habits before curfew ends are kept as written. 2.2.3 (owner): a row is a stable habit only, never
+  something that changes over time (this week's hobby, a current favourite, "when someone else wants", wherever {{user}} is). 2.2.4: a row
+  may hold to an event's days, the exam weeks or campaign years; those and a bad-weather row are never shown as "usually".
 - **Who is here is rolled** (1.99.11, owner-approved draft after a playtest): the engine decides who is at a place (shared.js
-  `presenceAt`: certain routines and schedules, other regulars by a crowd target over their number, a rare passer-by, at most three names,
+  `presenceAt`: certain only one scheduled room (a class, teaching, Study Hall, the Council); 2.2.0 (owner, two layers): a routine says
+  where someone is, and {{user}} runs into them at `here.meet` (duty 85, habit 65, errand 30), never for certain on an open place;
+  other regulars by a crowd target over their number, a rare passer-by (the free and those on an errand), at most three names,
   seeded by place and block); the narrator decides what they do, and the first move is {{user}}'s unless character, Bond or initiative
   say otherwise. A place reached in a reply gets its people from the next reply. Off (Features) is the habit list as before.
 - **Look for helps, never summons** (1.99.12, owner-approved draft): a search raises a regular's odds a little (never certain), gives
   someone who is no regular there only the rare chance, and never finds someone who is elsewhere by the engine. A hint comes only if
   {{user}} asks, only from someone there with a tie to them, and tells a habit, not a position. `<now>` and the engine roll it alike.
+- **Magic is casual at Halvard** (2.1.2, owner, planning/DRAFT_sihir_kasual.md; changes the v38 World Index line): anyone casts anywhere
+  without permission; skirmishes happen anywhere; serious fights go to the Combat Grounds' rings; only forbidden arts, sport events, the
+  Seal Chamber and real harm are restricted, and staff and Doves step in only for those. Said once, in the World Index (audit T6); dorm
+  separation is a class rule; a skirmish that hurts nobody is no reputation deed.
+- **Campus phases and fads** (2.1.1, owner-approved planning/DRAFT_campus_phases.md): one background line in `<now>` between events
+  (`data/campus_phases.json`), every year, no names, one at a time, none away from campus or on a home, lockdown or trip day; in the
+  gaps a seeded weekly fad, text only, which people take to or scoff at in character.
+- **Campus now is the player's, and knowing is not meeting** (2.1.0, owner roadmap R1, 2026-10-24): the feed is UI only (never in the
+  prompt). Where someone is shows from Bond Rank 3 (the rank they tell their own plans) with Haunts open, so Look for stays the way to find
+  acquaintances; it names a place only where Look for finds them, and who {{user}} runs into stays the presence roll.
+- **Own time** (2.3.0, owner roadmap M1 + M2, 2026-10-24): the engine draws small off-screen happenings from data (a chance per NPC,
+  never a fixed count a day, owner: a story every meeting would feel like a template); one line per NPC in Recent, shown for 2 days,
+  background and never an opener; no bond, Trust, Tension or reputation change; the narrator never invents them.
 - **NPCs seen together, traces** (1.51.0, feature batch 3): pair moments use only relation lines Connections shows {{user}}, with
   generic public-behaviour wording; a story relation fades after four weeks unrenewed and hides after eight (kept in the state). A
   trace beat only names the open thread; what is found is the narrator's, true to the lore, never a solution.
@@ -192,6 +212,9 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
   uses lives in `src/scripts/shared.js`, its data in `data/*.json`; a player- or narrator-facing text names a time or number from
   the data as `{@file.path}`. Every seeded chance and pick goes through the shared draws (`roll100`, `pickOf`, `rollInt`,
   `rollTable`), each a pure function of its parts. A refactor is proven with `ENGINE_DIFF` and `tests/snapshot_render.cjs`.
+- **Canon lives in data, not in the engine** (2.0.0, bug-hunt audit K2): canon names and texts (who sits on the Council, who the Dovecote
+  sends, who counts as a noble, an event's words for a returning student, a raid's Journal line) live in `data/*.json` and reach the engine
+  through `tools/gen_engine.py`, which checks every NPC they name. The engine keeps rules and numbers' defaults only.
 - **Ambient moments paces the outside areas** (1.43.0): Settings > Campus life > Ambient moments scales the small life of Avalon,
   Sunreach and the airship (street sights, people met, pickpockets and hustlers, the sky / stage / hold) as it scales campus
   ambience; story beats (Tsubaki lost, the Leviathan, raids, scouts) and the Expedition keep their own rates.
@@ -396,6 +419,10 @@ v1.3.0 (owner brainstorm 2026-09-25); data in `data/bond_rewards.json`, `reputat
 - **Memory extension** (owner, 1.99.1): VectFox (option 1) **or** Summaryception 5.5.4 (option 2), one per chat; the card plays with either
   and with neither. Summaryception: ghosting ON, Verbatim Turns 10 (at most 11, under the trim regex's 24 messages), the card's prompt,
   system prompt and template from `dist/`, connection OpenAI Compatible. Only settings and prompts on its side, never a fork.
+- **Live checks run themselves** (owner, 2026-10-24, Black Box 1.2.0): a check of the quest log a machine can judge has a rule in the
+  Black Box's `data/eldrasil_checks.json` (its own repository); the card is not changed for it and carries no rules. Black Box judges
+  them on every reply in the browser (0 tokens, no AI judge). The owner sends a bundle; the assistant ticks with `tools/quest_ticks.py`
+  and judges the "review" checks from its evidence.
 - **One download folder** (owner, 2026-10-20): everything the player imports (card, preset, VectFox cleaning patterns and extraction
   prompt) is written to `dist/`. Sources stay elsewhere (`presets/edit_preset.py`, `src/vectfox/`); never put a download anywhere else.
 

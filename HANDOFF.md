@@ -3,26 +3,17 @@
 Project context for a fresh session with any assistant. Working rules: `CLAUDE.md` (they apply to any assistant). To find the code
 or document a task needs without reading the whole project: `docs/INDEX.md`.
 
-**Snapshot:** card **v1.99.13** (2026-10-24): the bug hunt is under way. Its audit `audit/AUDIT_2026-10-23_2_audit_menyeluruh.md`
-(untracked) lists 8 batches in §8, one release each as 1.99.N; batches 1–6 and batch 7 stage 1 are done (1.99.2–1.99.8); 1.99.9–1.99.13
-were owner requests and playtest fixes: bond-held fields tagged in the Cast Sheet, the birthday, "Who is here" (`shared.js presenceAt`),
-Look for (`stepLook`), and 1.99.13: NPC thoughts only for NPCs in the scene (preset D5, scene cards), the Activities tab Practice is
-called Action and is the one home of "Look for someone". The enabled preset is 18,516 tokens, 84 under `test_preset`'s budget. Memory:
-VectFox (option 1) or Summaryception 5.5.4 (option 2), one per chat. Live checks: the campaign quest log `docs/TEST_CHECKLIST.md`
-(first Act 0: update the card and the preset, Q0.1; Summaryception: SQ-SC; the cache: SQ-CACHE; who is here, Look for, thoughts and
-the Action tab: Act 1 Q1.1).
+**Snapshot:** card **v2.4.1** (2026-10-24): roadmap M3 + M4 done (2.4.x): the Academy Newspaper's "Campus life" row (2.4.0);
+NPC initiative reasons from Own time (33% of days) and 4 rare hurt lines that keep a student in the Healing Ward the next day
+(whereabouts, Look for, Who is here, Campus now) (2.4.1); 0 rule tokens. Before it: 2.3.0 Own time, Routine 2.0 (2.2.0–2.2.4), 2.1.x.
+The enabled preset is 18,516 tokens, 84 under `test_preset`'s budget. Memory: VectFox (option 1) or Summaryception 5.5.4 (option 2),
+one per chat. Live checks: the campaign quest log `docs/TEST_CHECKLIST.md` (Act 0 Q0.1 first; the 2.1.x–2.4.1 checks are in Q1.1,
+Q2.1, Q2.5, Q2.7, Q3.1, Q3.6, Q5.1, Q7.3, Q11.0a).
 
-**Version (owner, 2026-10-24):** the current card counts as 2.0.0; the next release, whatever it is, is 2.1.0 (`card.json` still
-reads 1.99.13 until then).
-
-**Next task:** the bug-hunt audit's batch 8 (K1–K3 code tidy, `ENGINE_DIFF` with no difference) as the next release.
-Batch 7 stage 2 (keyword lore at a depth in the chat, a summary line without a counter, history trimmed by blocks) waits for the
-owner's OpenRouter numbers after 1.99.8 (SQ-CACHE) and an A/B test with `tools/audit_chat.py`. The
-"world in motion" roadmap (2.1.0–2.5.N: Campus now feed, campus phases, Routine 2.0, off-screen events, campus politics) is in
-`planning/FUTURE_PLANS.md` §0.1. The World Competition's
-Year 2 host (Caelmar: Area, map, liner) waits in FUTURE_PLANS §1 [YEAR 2]. MS3 stage 2 and the NPC dialogue audit's U1, U3–U5 wait in
-`planning/FUTURE_PLANS.md` §2 for a campaign export. Memory batch 8 (chapters) is planned in `planning/DRAFT_bab_baru.md`: build it at
-about 20,000 messages, slow saves or a chat file near 100 MB.
+**Next task:** campus politics 2.5.N (B3, FUTURE_PLANS §0.1): its draft (the factions' weekly moves) is not written yet. Batch 7 stage 2
+of the bug hunt waits for the owner's OpenRouter numbers (SQ-CACHE). The Black Box rules for the [2.1.0]–[2.4.1] checks are still to
+add (its own repository). Caelmar (Year 2 host) waits in FUTURE_PLANS §1 [YEAR 2]; MS3 stage 2 and the dialogue audit's U1, U3–U5 wait
+for a campaign export; memory batch 8 (chapters) in `planning/DRAFT_bab_baru.md` at about 20,000 messages.
 
 ## 0. Starter prompt (for the owner to paste into a new chat)
 
@@ -43,6 +34,11 @@ underneath. The player is a first-year student. The card combines:
   training, grades, hidden magic, payouts, journal, ambience and more.
 - **A UI**: an in-chat "bracelet" status bar (a regex replaces MVU's placeholder) and a Tavern Helper script with panels: Student
   Builder, Student file (with Settings → Features), People (dossiers, relationship graph), Map, Inventory (Bag, Wallet, planner, journal), Activities, Battle.
+- **Playtest recorder** (optional, its own repository `pizzatuna65-jpg/Eldrasil-BlackBox`): the Eldrasil Black Box extension keeps
+  each reply's final prompt, tokens, cache, cost, saves and engine signals, and its quest autopilot judges the quest log's checks
+  (rules in its `data/eldrasil_checks.json`; the card carries none). After a session ask the owner for its bundle: tick with
+  `python tools/quest_ticks.py <bundle> --write`, judge the listed review checks, read `tools/audit_chat.py <bundle> --blackbox`
+  (docs/ECOSYSTEM.md).
 - **Ecosystem compatibility** with a memory extension (VectFox, or Summaryception as the second option) and prompt preset (Realistic Frankenstein 2.2.1.3, the
   Realistic Gemini BOLT configuration as it ships plus what the card needs): `docs/ECOSYSTEM.md`.
 

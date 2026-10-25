@@ -33,6 +33,7 @@ node tests/fixtures/make_save_yearend.cjs   # 1.7.4: the same save played to the
 python tools/audit_chat.py chat.jsonl --out report.md   # optional: character-drift report for an exported chat
 python tools/audit_chat.py chat.jsonl --mechanics --no-drift --out report.md   # 1.53.1: how the narrator handled the engine (replays every block)
 python tools/audit_chat.py chat.jsonl --memory --no-drift [--vectfox export.json] --out report.md   # 1.61.1: memory kept and lost, VectFox health
+python tools/audit_chat.py bundle.json.gz --blackbox --no-drift --out report.md   # Eldrasil Black Box bundle: tokens, cache, cost, prompt parts, saves, engine lines per reply
 node tests/stress/memory_soak.cjs 3000   # 1.61.1: memory invariants and budget on a long synthetic chat
 ```
 
@@ -78,6 +79,18 @@ node tests/stress/memory_soak.cjs 3000   # 1.61.1: memory invariants and budget 
 
 ## 4. Playbooks
 
+- **Live check rules** (quest autopilot, Black Box 1.2.0; the card is not changed). The Black Box repository's `data/eldrasil_checks.json`
+  holds one rule a line: `id`, `quest` and `line` (the first
+  words of the check in `docs/TEST_CHECKLIST.md`, unique in that quest; several rules may share a line, it is ticked when all pass),
+  `mode` (`auto` with `pass`, or `review` for evidence only), `when`, and optionally `scope`, `skip`, `needs`, `max`, `evidence`,
+  `eventually`, and `whole: true` when the rule covers the whole check (only then does `quest_ticks.py` tick the box; otherwise it
+  notes "the machine part" and the rest is judged by eye). Sources: `prompt`, `reply`, `prose`, `user`, `block` (a tag in the prompt), `state` / `before`, `record`, `signals`,
+  `present`, `lore`; operators `match`, `not`, `count`, `exists`, `eq`, `ne`, `lt`, `gt`, `in`, `has`, `unchanged`; `all` / `any` /
+  `none`. Full language: the Black Box README. Write the rule from what the engine prints (render the entry for a state with
+  `tests/harness.cjs` `renderEntry` and try it), keep "never" checks with `max: 1000` and "it shows once" checks `eventually`, and
+  prefer `review` when the check is a judgement. `BLACKBOX_DIR=<Black Box clone> node tests/test_live_checks.cjs` checks the shape and that each line exists.
+  After a playtest: `python tools/quest_ticks.py <bundle>` (a diff), `--write` to apply; judge the listed review checks from the
+  bundle's evidence messages.
 - **Bug hunt.**
   1. Run `npm test`, `npm run stress` and the smoke test. `tests/harness.cjs` applies commands one by one like the MVU zod helper (a command whose result fails the schema is dropped).
   2. Read `engine.template.js` step by step (`docs/INDEX.md` §2).

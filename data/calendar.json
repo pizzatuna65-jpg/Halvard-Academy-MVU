@@ -1,5 +1,5 @@
 {
-  "_note": "Class periods, exam months, seasons by month and the dorm colours: shared by the engine, the panels, the bracelet and <now> through src/scripts/shared.js (1.43.0). 1.81.0 (planning/DRAFT_event_frame.md): every event has a unique id (data/event_frame.json, shop.json ev, happenings.json ev name it) and a kind (contest, showcase, festival, rite, trip, exam, day, holiday) that only chooses what the Event tab and <now> show; behaviour stays in the other fields. 1.85.0: family 1 = families visit on every day of the event (the Event line in <now> says whose family comes). 1.86.0: haggle {clean, partial} = a stall's listed price is the opening offer; the price paid follows the reply's first Fortune number (percent of the listed price; a failure pays it in full).",
+  "_note": "Class periods, exam months, seasons by month and the dorm colours: shared by the engine, the panels, the bracelet and <now> through src/scripts/shared.js (1.43.0). 1.81.0 (planning/DRAFT_event_frame.md): every event has a unique id (data/event_frame.json, shop.json ev, happenings.json ev name it) and a kind (contest, showcase, festival, rite, trip, exam, day, holiday) that only chooses what the Event tab and <now> show; behaviour stays in the other fields. 1.85.0: family 1 = families visit on every day of the event (the Event line in <now> says whose family comes). 1.86.0: haggle {clean, partial} = a stall's listed price is the opening offer; the price paid follows the reply's first Fortune number (percent of the listed price; a failure pays it in full). 2.0.0 (bug-hunt audit K2): back = what the Entrance Event is for a returning student (the engine adds it to _Event_today from Year 2, or for a student who starts above Year 1).",
   "periods": [
     [
       "08:00",
@@ -53,6 +53,7 @@
       "kind": "rite",
       "noclass": 1,
       "entr": 1,
+      "back": "{{user}} is a returning student and the assigned senior guide: never sorted again; watches the speeches and sorting from the gallery, then tours 10:00–18:00 with the two new first-years recorded in Campus_State.Entrance_tour",
       "s": "07:00–09:00 arrivals at Reception and Gatehouse; 09:00 Headmaster and Vice Headmaster speeches in the Arbiter Hall, then Stone sorting until 10:00 (Council hands out each dorm vest; sorted students remain seated with their dorm); 10:00–18:00 assigned tour groups of two new first-years and one senior, meeting in the hall, visit campus and club booths (sign-up open until Friday 18:00); late afternoon: seniors show new students their dorm rooms; 19:00 Entrance Feast in the Ring Dining Hall, opened by speeches from the Headmaster and Vice Headmaster before dinner; curfew moves to 22:00 tonight; classes begin tomorrow, Tuesday, first period 08:00",
       "fair": 1,
       "curfew": 22
@@ -191,7 +192,7 @@
         "Fri",
         "Sat"
       ],
-      "t": "Training Week (cross-dorm sparring allowed; curfew 21:00)",
+      "t": "Training Week (the dorms spar together in class; curfew 21:00)",
       "id": "training_week",
       "kind": "day",
       "curfew": 21,
@@ -859,7 +860,7 @@
   "months": {
     "1": "W1 Mon Entrance Event (09:00 speeches then sorting until 10:00, assigned trio tours 10:00-18:00, 19:00 speeches and feast). W1 Tue-Fri club booths 16:00-18:00, club registration closes Fri 18:00. W3 Sat evening to Sun dawn Star Night. W4 Sun Spiritual Dorm Day.",
     "2": "W1 Fri dusk to Sat dawn Warding Rite (whole academy renews the wards). W3 Wed-Fri Creature Studies Expedition (off-grounds, Grade III country).",
-    "3": "W1 Mon-Thu Midterm. W2 Fri-Sat Club Festival. W3 Mon-Sat Training Week (the one week cross-dorm sparring is allowed). W4 Sat-Sun Dorm Competition (solo, five role brackets, 16 per dorm qualify by role).",
+    "3": "W1 Mon-Thu Midterm. W2 Fri-Sat Club Festival. W3 Mon-Sat Training Week (the one week the dorms spar together in class). W4 Sat-Sun Dorm Competition (solo, five role brackets, 16 per dorm qualify by role).",
     "4": "W1 Wed Secret Fools Day (prank day, dorm name-draw). W2 Tue Independence Crowning Day (kingdom holiday: the academy flies to Avalon, the capital, by airship; fireworks on campus at night). W3 Sun Mystic Dorm Day. W4 normal classes.",
     "5": "W1 Mon-Thu End of Semester exams. W2 Fri Results & Dorm Ranking. W3 open. W4 Mid-Year Break, students go home.",
     "6": "W1 Mon-Fri Return Week. W3 Sat Sports Day (magic banned outright). W4 Wed-Sat Academy Competition (cross-dorm teams of 4).",

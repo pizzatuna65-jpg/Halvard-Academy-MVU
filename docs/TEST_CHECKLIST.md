@@ -12,8 +12,10 @@ covers what only a live session can show. Playing the route is also the cross-ba
 - Do Act 0 once, then play as you like. When a quest's moment comes, do its *Do* line (if it has one) and watch its checks. Nothing
   has to happen on cue: skip what does not suit the story. Most checks come round again, and the Milestones and Side quests wait.
 - Tick `[x]` when a check passes. When one fails, add a line under it (`✗ msg 123: what happened`) and play on.
-- After a session, send the chat export (and VectFox's EventBase export when a check asks for it) with "fix what my playtest found":
-  I tick what passed, run `tools/audit_chat.py` on it and fix what failed.
+- After a session, send the Black Box playtest bundle (wand → Black Box → Export; or the chat export without the Black Box, and
+  VectFox's EventBase export when a check asks for it) with "fix what my playtest found". With the Black Box the quest autopilot
+  has already judged the checks that have a rule (Black Box 1.2.0): I tick those with `tools/quest_ticks.py`, judge the "to review" ones from
+  the evidence, run `tools/audit_chat.py` and fix what failed. You can just play.
 - `[1.63]` names the release a check comes from (`[1.52.1]` a patch release); search for it to see one release's checks. The old list
   by release: `git show dc2ecad:docs/TEST_CHECKLIST.md`.
 
@@ -146,14 +148,24 @@ show the newcomers their dorm rooms.
       them or not, as `<now>`'s "Looking for … (the engine's roll)" line says, and a swipe gives the same answer. Not found, ask Kanae
       where they might be: she answers only if she has a tie to them. The dossier's "Look for" lists only places the file already
       shows, the place for this hour first. No delay when the prompt is built (entry 505 is now ±140 KB of code) [1.99.12].
+      After curfew, in Avalon or with Who is here off, the dossier has no "Look for" button either [2.0.0].
 - [ ] Someone not yet named shows their role, not their name; a passer-by has "Keep in record"; with four or more present, three
       cards and an "also here" row [1.70]. Thoughts only for NPCs in the scene: never someone absent, never met or only mentioned [1.99.13].
 - [ ] Activities: the tab is called Action, it opens at any Campus Map place (also without a practice place) with "Look for someone"
       first; no other tab shows Look for [1.99.13].
+- [ ] On a day with a campus happening (`<now>` "Around campus today"), the "Optional threads (…)" line names it too, and the narrator
+      uses at most one of the threads in a reply [2.0.0].
 - [ ] The bracelet has a folded "This reply (n changes)": open it after a reply with Kanae or Zara; it lists their bond XP (and any
       Trust or Tension move), points spent with what for, Bag in and out, new Planner entries and Journal lines, and agrees with the
       People panel and the Wallet. It stays open while the bracelet redraws, is gone when the bracelet is collapsed, and a swipe shows
       the new reply's own changes [1.79].
+- [ ] Campus now: the bracelet has a folded "Campus now (3 of the people you know)" under the news; open it: three people Charles
+      has a bond with (not Kanae or Zara while they are with him), each "Name : what they are doing"; at Rank 0–2 only what anyone can
+      see ("in class until …", "at their club until …", "off sick", or "free"), never a place. A swipe and the rest of the block keep
+      the same three; after curfew the fold is gone. "Everyone on the People panel" opens People → Campus now with everyone Charles
+      knows; Settings → Features → Campus now off removes both. Nothing of it is in the prompt [2.1.0].
+- [ ] On the tour, magic turns up as part of ordinary life (a tray floating along, a light over a page, a misfired first-year spell, a
+      familiar on a bench), now and then rather than in every reply; nobody asks permission to cast and no staff member objects [2.1.2].
 - [ ] A brass rule sits between the bracelet and the story [1.71].
 - [ ] Card actions: no generic buttons; Kanae and Zara get only what their rank and this place open (at Rank 0 usually just Give a
       gift, which lists the Bag with "not tried"). A button only fills the chat box; edit and send, and the engine counts it as usual [1.71].
@@ -259,8 +271,27 @@ show the newcomers their dorm rooms.
 ## Act 2 — Club week (M1 W1 Tue–Sun)
 
 ### Q2.1 Tuesday, the first class day
+- [ ] Own time, over the week: now and then someone you know has a Cast Sheet line "Own time (yesterday): ..." (a letter from home, words
+      with a rival, a new spell); not everyone, not every day, never two days running for the same person. When they are in the scene the
+      narrator does not open with it: it comes up only when the talk gives a reason, often not at all. Campus now adds "(yesterday: ...)"
+      for a Rank 3+ friend. Bonds, Trust and Tension do not move from it [2.3.0].
+- [ ] Own time reaches {{user}}, Side quest (whenever it comes): a Rank 3+ friend's initiative reason now and then comes from their
+      Own time line ("wants to tell {{user}} how they beat ..."), never while strained; someone hurt ("sprained an ankle", "a spell
+      backfired") is in the Healing Ward that day: Campus now says "in the Healing Ward ...", Look for finds them at the Medical Centre,
+      they are not in class, and at the Medical Centre they are in "Here now" [2.4.1].
+- [ ] Routine 2.0, over the week: at lunch Trixie is often in the Courtyards (a performance nobody asked for), not every day, and in the
+      Common Rooms when it rains; on Tuesday and Thursday from 16:00 Zara and Vera are in the Workshop together or not at all; Castor
+      turns up chasing a quote in the Canteen, the Courtyards or by the Notice Board. Even where Campus now or the dossier says someone
+      is, Look for sometimes misses them (never certain, at most 90%), and a quiet place is often empty [2.2.0].
+- [ ] Just after 16:00 or 18:00, on a busy path (the Courtyards, the corridors), "Here now" sometimes has someone "on the way to" the
+      place of their routine; a few minutes later they are gone. Now and then Florian and Gareth are at the Combat Grounds together
+      after class; Irene is in the Main Library until 19:00 (not always met) [2.2.1].
+- [ ] The staff keep their own days: Hester in the Medical Centre most of the day (her herb garden 16:00–17:00), a teacher not teaching
+      this period in the Faculty Offices, Krieg at the Forest edge after curfew, sometimes Rei on the Rooftop late at night; on Sunday
+      evening Layla and Yvette together in the Staff Quarters, on Wednesday evening Royhan and Milena at Dragonchess by the Dovecote [2.2.2].
 Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Crafting (Potion Halls), mixed.
-- [ ] 07:30 the bracelet reads "Morning, before classes" (on Sunday: "Morning, no classes today") [1.30.2].
+- [ ] 07:30 the bracelet reads "Morning, before classes" (on Sunday: "Sunday (no classes)"; on a day an event has no classes, such as
+      Entrance Day: "Morning, no classes today") [1.30.2].
 - [ ] `<now>`'s class line says "until 10:00 / 12:00 / 16:00" and names the first-years' floor (Floor 2); when the narrator writes
       "Classroom" or "Seminar Room 4", no skipped-class toast follows [1.43, 1.24.3, 1.11.1].
 - [ ] A teacher keeps their Cast Sheet voice (Hester on the ward, Anselm lecturing, Magnus with acronyms, Dorian selling, Cedric's closing
@@ -309,6 +340,9 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
       two roles, the chosen class comes first [1.33].
 
 ### Q2.5 The grounds (any free afternoon)
+- [ ] Start a quick skirmish with someone willing (a hex over a seat in the Courtyards): onlookers cheer or step around it, no staff turn
+      up, and `/Rep_events` gets nothing. A formal duel or a grudge goes to the Combat Grounds' rings. Only if a bystander gets hurt or
+      something breaks does Academy reputation drop (`fight_outside_ward`). An unwilling NPC answers in character (Tension) [2.1.2].
 - [ ] One short reply from the Canteen to the Boathouse: the Log says "Walked … min on foot, … stamina; … still ahead", `<now>` says
       "Still on the way", and once the clock has caught up the line is gone [1.47].
 - [ ] The Boathouse to the Fishing House: about three minutes along the shore; the Gardens to the Boathouse: about twenty [1.15.1].
@@ -344,8 +378,14 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
       morning after that day the change is gone with "… as it was again" [1.77].
 
 ### Q2.7 Saturday and Sunday
+- [ ] Saturday from 23:00 to Sunday 01:00, Tilly may be out on a midnight ghost hunt (the Notice Board by the founding plaque, the
+      Lecture Halls, the washrooms, Founder's Park); joining her is out after curfew, with the usual risk; on Sunday afternoon she is
+      writing it up in the Archive [2.2.1].
+- [ ] From Saturday `<now>` has "Campus phase: The first weeks: first-years still lose their way …", and Inventory → Notice Board shows
+      the same line under "On campus"; the narrator lets it colour the scene now and then, never as an order. Settings → Features →
+      Campus phases and fads shows about 40 tokens [2.1.1].
 - [ ] Saturday afternoon at the club adds Student reputation (Q1.2) [1.16.1].
-- [ ] Sunday 07:30: "Morning, no classes today" [1.30.2].
+- [ ] Sunday 07:30: "Sunday (no classes)" [1.30.2].
 - [ ] Saturday 15:00–17:00 in the Canteen: `<now>` says whether the Cooking Club's bake worked (honey bread, 3 points, stamina) or went
       wrong (free failures); the bracelet shows "Stalls here" and Activities → Shop lists it. 14:00–18:00 in the Potion Halls: the
       Brewing and Alchemy table (Warming and Cooling draught 12, Cold remedy 15); on Sunday both are gone [1.90].
@@ -368,10 +408,17 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
 - [ ] From 07:00 the Notice Board has the Academy Newspaper (front page: a rumour that is all over campus, or a result; the week ahead;
       a ghost corner); `<now>` Monday to Wednesday says what it leads with, and NPCs may bring it up. A rumour it printed shows "(in the
       Newspaper)" in the Journal's gossip and lasts three days longer [1.90].
+- [ ] The same issue has a "Campus life" row: up to three people {{user}} knows with a public Own time line from last week ("Etnie put in
+      an extra hour of practice at ..."; never a letter, marks or a bad night), and maybe an "Overheard" rumour that does not get the
+      "(in the Newspaper)" tag; nothing in `<now>` about it [2.4.0].
 - [ ] W2 Thu, Castor's birthday, with Castor present: his Cast Sheet's Mood line ends "Birthday (glad): warmer to anyone who remembers
       it.", and the narrator plays it in his quiet way; on the scene card the "glad · birthday" chip shows only once his dossier has
       opened his birthday [1.72].
 - [ ] Inventory → Journal shows the engine's "Week recap (M1 W1): …", with "a clean week" if no class was skipped [1.10].
+- [ ] Campus now, once a bond reaches Rank 3: People → Campus now lists them under "They tell you their plans" with their routine and
+      place when they keep it ("Irene : Library Assistants shift - Main Library", weekdays 16:00–19:00), else "somewhere on campus";
+      in rain an outdoor routine reads "sheltering from the weather". Go there and look for them: they are found, though running into
+      them unasked is still the presence roll [2.1.0].
 - [ ] Practical Magic: `<now>` names Charles's role class and its teacher (for Healing, Hester in the Healing Ward), and the narrator
       writes a mixed-dorm class of that role, not Gavlan's old Combat Class [1.33].
 
@@ -440,6 +487,9 @@ Dark Magic Defense and Magic Theory with the Fire Dormitory, then Potion Craftin
       06:00 the default map is back [1.13, 1.14.3].
 
 ### Q3.6 Spiritual Dorm Day (W4 Sun) and the month's end
+- [ ] In a week without a phase (W4 here, or any later gap) `<now>` may have "Campus fad this week: …" (a food everyone wants, a game
+      everyone plays); it stays all week, a swipe keeps it, the Notice Board says "On campus this week"; some people join in and some
+      scoff, each in character; nothing in the shops changes. A week later it is gone or another one [2.1.1].
 - [ ] On the day the Viridian Dormitory's pin is back on the map, and gone again on Monday [1.71].
 - [ ] From the Wednesday before, `<now>` shows "Coming up … W4 Sun: Spiritual Dorm Day", and now and then a student mentions it in passing,
       in character, not everyone [1.32].
@@ -475,6 +525,9 @@ The first academy flight (the airship), then the Grand Vast Forest.
 ## Act 5 — Month 3
 
 ### Q5.1 Before the Midterm
+- [ ] In the week before the midterms and during them, the studious (Alyssa, Zara, Castor, Vera, Idris, Royhan) are often revising in
+      the Main Library or the Study Rooms after class, Baelin walks about watching for exhausted students, Yvette steers people to ordinary
+      coffee at Nightwell; Bruno, Sophia and Trixie keep their usual days [2.2.4].
 - [ ] Study in the Main Library in the evenings before it: in exam week `<now>` states the preparation, and the marks fit it [1.10.1].
 
 ### Q5.2 Midterm week (W1 Mon–Thu, marks on Friday)
@@ -574,6 +627,8 @@ The first academy flight (the airship), then the Grand Vast Forest.
       birdsong, knocking in the wall), never a breach or a Clue [1.85].
 
 ### Q7.3 The Circus and the Showcase (M8 W2–W3)
+- [ ] From Thursday evening to Sunday Trixie is at the circus tent in the Main Courtyard most of the time she is free ("every waking
+      minute"), and nowhere near it the week after; her dossier's Routine field never mentions the circus [2.2.4].
 - [ ] Circus Thursday after 18:00 in the Courtyards: the bracelet's "Stalls here" chip, the Price Guide's Circus stalls with their hours,
       and a candied apple costs 5 points; at 15:00 the stalls are not open yet [1.85].
 - [ ] Showcase days: `<now>` says families are visiting; Charles's family comes only if the player says so [1.85].
@@ -718,6 +773,11 @@ The first academy flight (the airship), then the Grand Vast Forest.
 
 ## Act 11 — Year 2
 
+### Q11.0a Routines in Year 2
+- [ ] The third-years have graduated, and nobody turns up "with" one of them (Florian's challenge to
+      Gareth, Idris and Royhan in the Gardens, Royhan and Milena at Dragonchess); the new first-years (Hadrian, Linus, Maple, Nerys,
+      Tsubaki, Wren) keep their own days: Tsubaki at the Sparring Pavilion before dawn, Nerys at the Canteen's leftovers at closing [2.2.3].
+
 ### Q11.0 Personal dates (any day of Year 2)
 - [ ] On the date of a Year 1 Imprint (an experience that changed someone), with them present: their Mood line says "A year today:
       <what happened> (warm/sore/bittersweet)" and that they remember; whether they say so fits them. The planner and the bracelet show
@@ -794,6 +854,8 @@ The first academy flight (the airship), then the Grand Vast Forest.
       "Has not seen {{user}} since the injury (…)"; once it heals the line is gone [1.74].
 - [ ] Once someone has an Imprint (an experience that changed them), their Cast Sheet opens with "Changed by experience: their Imprints
       (below) are true now", and where the Imprint and their lore Personality differ they act on the Imprint [1.99.4].
+- [ ] Someone whose Trust falls to Betrayed (under 15): their Cast Sheet tags what the bond has not opened (`Loves [not told yet: Trust
+      Betrayed]:`, the Gifts line too), and asked, they tell nothing new [2.0.0].
 
 ### MS3 Story events
 - [ ] A broken promise, an insult or a betrayal: the update reports `letdown` / `offence` interactions with a Weight, never a Trust or
@@ -872,6 +934,31 @@ The first academy flight (the airship), then the Grand Vast Forest.
 - [ ] Cached tokens per request from the second reply on: about twice what 1.99.7 had (the preset alone before; now the preset plus
       the card's constant lore, ±13,000 more); the cache hit rate in Explore rises from about 18% [1.99.8].
 - [ ] The narrator still uses the lore of a place or person named in the scene as before (keyword lore now sits after the rules) [1.99.8].
+- [ ] Instead of OpenRouter's Activity page: with Eldrasil Black Box installed (SQ-BB), play the 5 replies, open wand → Black Box:
+      every reply row has Input, Cached and Cost; note the Hit column from the second reply on. If it stays near 0%, tell the
+      assistant: the cause may be the system-role entries at depth 0–1 (the Semi-strict test needs your approval, DECISIONS §11)
+      [Black Box 1.0.0].
+
+### SQ-BB The playtest recorder [Black Box 1.0.0]
+*Do:* Extensions → Install extension → `https://github.com/pizzatuna65-jpg/Eldrasil-BlackBox` (from its main branch once merged),
+reload, then play a few replies as usual.
+- [ ] Wand → Black Box lists every reply with its message number; MVU's update request (extra-model mode) or Summaryception shows as
+      a background row, not as a reply [Black Box 1.0.0].
+- [ ] Click a reply → Prompt: `<now>`, `<cast>` and `<current_state>` are coloured as card entries, the keyword lore of the place
+      green, VectFox's or Summaryception's block purple, the chat history blue; Find "<now>" opens the message that has it
+      [Black Box 1.0.0].
+- [ ] Tokens: the parts add up to the reply's Input; Lore lists the entries SillyTavern used (the World Index constant)
+      [Black Box 1.0.0].
+- [ ] Engine fills a second or two after the reply: the floor is the reply's number; after a reply where the bracelet showed a
+      reminder, its line is there [Black Box 1.0.0].
+- [ ] The header shows the chat file size and the last save time [Black Box 1.0.0].
+- [ ] Export playtest bundle (last 25 replies), then send it to the assistant (or run `python tools/audit_chat.py <file> --blackbox
+      --no-drift`): the report lists the same replies [Black Box 1.0.0].
+- [ ] Quests (Black Box 1.2.0, any card version): wand → Black Box → Quests lists the card's checks by quest; after a few replies some
+      are passed or to review, a failure names its message and what was missing, and `#msg` opens that request. Export carries them
+      [Black Box 1.2.0].
+- [ ] Nothing else changed: the bracelet, the panels, swipes and other extensions work as before; Recording off in Extensions →
+      Eldrasil Black Box stops new rows [Black Box 1.0.0].
 
 ### SQ-SC Summaryception instead of VectFox [1.99.1]
 *Do:* in a copy of the chat (a branch), turn VectFox off and set up Summaryception 5.5.4 as `docs/ECOSYSTEM.md` → Summaryception says
@@ -1021,5 +1108,5 @@ Checks of the old list that no longer apply (their text: `git show dc2ecad:docs/
 ## Adding checks (each release)
 
 Put a new live check into the quest where the campaign first gives the chance to see it, tagged with the release; with no date, into a
-Milestone or a Side quest. When the owner reports a session, tick what passed, note what failed under it, and move "Where you are".
+Milestone or a Side quest. When a machine can judge it, add its rule to the Black Box's `data/eldrasil_checks.json` (docs/BUILD.md "Live check rules"). When the owner reports a session, tick what passed, note what failed under it, and move "Where you are".
 Retire a check only when a release removes what it tests, with one line under Retired checks.

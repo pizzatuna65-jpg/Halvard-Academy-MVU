@@ -16,6 +16,7 @@ t = t.replace('/*@@CAL_TIMETABLE@@*/{}', json.dumps(cal['timetable'], ensure_asc
 EV_IDS = [e.get('id') for e in cal['events']]
 assert all(EV_IDS) and len(set(EV_IDS)) == len(EV_IDS), 'calendar.json: every event needs a unique id'
 assert all(e.get('kind') in ('contest', 'showcase', 'festival', 'rite', 'trip', 'exam', 'day', 'holiday') for e in cal['events']), 'calendar.json: unknown event kind'
+assert all(e.get('back') for e in cal['events'] if e.get('entr')), 'calendar.json: the Entrance Event needs back (a returning student)'   # 2.0.0 (audit K2)
 _ef = json.load(open(P('data/event_frame.json'), encoding='utf-8'))
 _ef_places = {re.sub(r'^the ', '', l['name'].lower()) for l in json.load(open(P('data/locations.json'), encoding='utf-8')).values()} | {'main courtyard'}
 _ef_acts = {a['action'] for a in json.load(open(P('data/practice.json'), encoding='utf-8'))}
@@ -62,7 +63,14 @@ for key, file in [('NPC_MOODS', 'npc_moods'), ('GIFT_PREFS', 'gift_prefs'), ('WI
             obj['catalog'][name] = ' '.join(tags)
     t = t.replace('/*@@' + key + '@@*/{}', json.dumps(obj, ensure_ascii=False, separators=(',', ':')))
 _mst = json.load(open(P('data/mastery.json'), encoding='utf-8'))   # 1.43.0 (2.8): Rank 5 perks' numbers
-t = t.replace('/*@@MASTERY_FX@@*/{ arcana_cost: 0.9, society_trust: 5, nature_forage: 2 }', json.dumps({k: _mst[k] for k in ('arcana_cost', 'society_trust', 'nature_forage')}))
+assert set(_mst['society_nobles']) <= set(npcs) and set(_mst['society_groups']) <= {n.get('group') for n in npcs.values()} | {'staff', 'other'}, 'mastery.json: unknown noble or group'   # 2.0.0 (audit K2)
+t = t.replace('/*@@MASTERY_FX@@*/{ arcana_cost: 0.9, society_trust: 5, nature_forage: 2, society_groups: [], society_nobles: [] }', json.dumps({k: _mst[k] for k in ('arcana_cost', 'society_trust', 'nature_forage', 'society_groups', 'society_nobles')}))
+# 2.0.0 (bug-hunt audit K2): the Student Council's canon people by year (data/council.json), out of stepTime
+_cn = json.load(open(P('data/council.json'), encoding='utf-8'))
+_cn_ids = [*_cn['year1'].values(), *_cn['skipped'].values(), *(x for v in _cn['candidates'].values() for x in v), *(x for v in _cn['members'].values() for x in v if not x.startswith('$'))]
+assert all(x in npcs for x in _cn_ids), 'council.json: unknown NPC'
+assert '1' in _cn['candidates'] and '1' in _cn['members'] and all(len(v) == 2 for v in _cn['candidates'].values()) and _cn['second_player'] in _cn['candidates'], 'council.json: candidates'
+t = t.replace('/*@@COUNCIL@@*/{}', json.dumps({k: v for k, v in _cn.items() if not k.startswith('_')}, ensure_ascii=False, separators=(',', ':')))
 t = t.replace('/*@@NPC_DORMS@@*/{}', json.dumps({k: v.get('dorm') for k,v in npcs.items()}, separators=(',', ':')))
 
 locs = json.load(open(P('data/locations.json'), encoding='utf-8'))
@@ -125,7 +133,8 @@ assert t.count('/*@@RULE_CARDS@@*/{}') == 1
 t = t.replace('/*@@RULE_CARDS@@*/{}', json.dumps({k: v['feature'] for k, v in _rc.items()}, separators=(',', ':')))
 assert t.count('/*@@NOW_DATA@@*/{}') == 1 and t.count('/*@@AGE@@*/') == 1
 t = fill_data(t.replace('/*@@NOW_DATA@@*/{}', json.dumps(now_data(npcs), ensure_ascii=False, separators=(',', ':'))).replace('/*@@AGE@@*/', AGE_JS))
-for ph, v in (('CAMPUS_MAP', {**campus_map(locs, pins), 'rates': json.load(open(P('data/campus.json'), encoding='utf-8'))}), ('PRESENCE', presence_data(npcs, locs))):
+_PD = presence_data(npcs, locs)
+for ph, v in (('CAMPUS_MAP', {**campus_map(locs, pins), 'rates': json.load(open(P('data/campus.json'), encoding='utf-8'))}), ('PRESENCE', _PD)):
     assert t.count('/*@@' + ph + '@@*/{}') == 1, ph
     t = t.replace('/*@@' + ph + '@@*/{}', json.dumps(v, ensure_ascii=False, separators=(',', ':')))
 # 1.24.0 (owner playtest): lore and rumours of a place are heard, not given. {place key: [[uid, name as prose writes it, title, text]]};
@@ -166,7 +175,8 @@ assert all(k in CLUB_KEYS and k in _cw['client']['asks'] and k in _cw['client'][
 t = t.replace('/*@@CLUB_WORK@@*/{}', json.dumps({**{k: _cw[k] for k in ('newspaper', 'bake', 'snow', 'client')}, 'names': {c['name']: c['key'] for c in load_clubs(npcs, locs) if c['key'] in _cw['clubs'] or c['key'] in _cw['client']['clubs']}}, ensure_ascii=False, separators=(',', ':')))
 # 1.98.1 (owner-approved planning/DRAFT_kedalaman_fitur.md batch 2): Dove watch (data/dove_watch.json)
 _dw = json.load(open(P('data/dove_watch.json'), encoding='utf-8'))
-assert all(x in npcs for x in [*_dw['interview']['shields'], _dw['interview']['with'], _dw['hearing']['with'], *_dw['leak']['never']]), 'dove_watch.json: unknown NPC'
+assert all(x in npcs for x in [*_dw['interview']['shields'], _dw['interview']['with'], _dw['interview']['second'], _dw['hearing']['with'], *_dw['leak']['never'], *_dw['interview']['names']]), 'dove_watch.json: unknown NPC'
+assert {_dw['interview']['with'], _dw['interview']['second']} <= set(_dw['interview']['names']) and _dw['interview']['call'] and _dw['hearing']['call'], 'dove_watch.json: names and calls'   # 2.0.0 (audit K2)
 assert all(k in _dw['interview']['results'] and k in _dw['search']['results'] for k in ('clean', 'partial', 'fail')), 'dove_watch.json: results need clean, partial and fail'
 assert set(_dw['stages']) == {'Rumoured', 'Watched', 'Investigated', 'Exposed'} and set(_dw['rumour']) == {'needle', 'pact', 'magic', 'deed'}, 'dove_watch.json: stages or rumour kinds'
 assert all(d in json.load(open(P('data/reputation.json'), encoding='utf-8'))['deeds'] for d in _dw['coop']['deeds']), 'dove_watch.json: coop names an unknown deed'
@@ -295,9 +305,11 @@ assert _hk['arrive'] in _hids and _hk['inn'] in _hids and set(_hk['street']) <= 
 assert all(p.get('kc') == _hk_p.get('kc') for p in _hk['places'] for _hk_p in _hk['pins'] if _hk_p['id'] == p['pin']), 'hanakaze.json: a ground place outside its ground pin'
 assert all((len(l) > 3) == ('kc' in {**{p['id']: p for p in _hk['pins']}[l[0]], **{p['id']: p for p in _hk['pins']}[l[1]]}) for l in _hk['legs']), 'hanakaze.json: a ground is reached only by team carriage'
 assert set(_hk['teams']) == {n['academy'] for n in _npcs_all.values() if n.get('group') == 'World teams'}, 'hanakaze.json: teams are the World teams'
+assert all(_d.get('raid', {}).get('why') and _d['raid'].get('journal') for _d in (_av, _hk)), 'avalon.json / hanakaze.json: raid needs why and journal'   # 2.0.0 (audit K3)
 t = t.replace('/*@@HANAKAZE@@*/{}', json.dumps({**{k: v for k, v in _hk.items() if not k.startswith('_')},
     'places': [{k: v for k, v in p.items() if k not in ('desc', 'vibe', 'brief')} for p in _hk['places']]}, ensure_ascii=False, separators=(',', ':')))
 # Bond rules and where each NPC is usually found (Haunts, first clause).
+assert set(json.load(open(P('data/bond_rules.json'), encoding='utf-8'))['worksite']) <= set(npcs), 'bond_rules.json: worksite names an unknown NPC'   # 2.0.0 (audit K2)
 t = t.replace('/*@@BOND_RULES@@*/{}', json.dumps(json.load(open(P('data/bond_rules.json'), encoding='utf-8')), ensure_ascii=False, separators=(',', ':')))
 haunt = {}
 for nid, n in npcs.items():
@@ -374,9 +386,57 @@ assert all(('{thing}' in x) != ('{place}' in x) for v in _fav['asks'].values() f
 t = t.replace('/*@@INITIATIVE_ASKS@@*/{}', json.dumps({'asks': _asks, 'cat': _cats, 'club': _nclub, 'places': _askd.get('places', []),
     'fav': {k: v for k, v in _fav.items() if k != '_note'}}, ensure_ascii=False, separators=(',', ':')))
 # 1.6.1 (N6): campus phases, one line each for <now> while the phase runs (empty until the canon waves)
-PH = json.load(open(P('data/campus_phases.json'), encoding='utf-8'))['phases']
+_PHF = json.load(open(P('data/campus_phases.json'), encoding='utf-8'))
+PH = _PHF['phases']
 assert all({'id', 'from', 'to', 'line'} <= set(p) for p in PH), 'campus phase needs id, from, to, line'
+# 2.1.1 (owner-approved planning/DRAFT_campus_phases.md): one phase a day, none on a home, lockdown or away day, no NPC names, short;
+# the weekly fads: a season the calendar knows, no names, no smells (the preset's Scent Killswitch, DECISIONS §8 Ambience)
+_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+def _doy(w):
+    m = re.match(r'^M(1[0-2]|[1-9]) W([1-4]) (Mon|Tue|Wed|Thu|Fri|Sat|Sun)$', w)
+    assert m, f'campus phase date "{w}" is not "M<n> W<n> <Day>"'
+    return (int(m[1]) - 1) * 28 + (int(m[2]) - 1) * 7 + _DAYS.index(m[3])
+_off = {(e['m'] - 1) * 28 + (e['w'] - 1) * 7 + _DAYS.index(d): e['id'] for e in cal['events'] if e.get('home') or e.get('lockdown') or e.get('away') for d in (e['d'] if isinstance(e['d'], list) else [e['d']])}
+_names = re.compile(r'\b(' + '|'.join(sorted((re.escape(k) for k in npcs), key=len, reverse=True)) + r')\b')
+_used = {}
+for _p in PH:
+    _a, _z = _doy(_p['from']), _doy(_p['to'])
+    assert _a <= _z, f'campus phase {_p["id"]}: from after to'
+    for _d in range(_a, _z + 1):
+        assert _d not in _used, f'campus phases {_used.get(_d)} and {_p["id"]} overlap'
+        assert _d not in _off, f'campus phase {_p["id"]} falls on {_off[_d]} (home, lockdown or away)'
+        _used[_d] = _p['id']
+    assert not _names.search(_p['line']), f'campus phase {_p["id"]} names an NPC (phases repeat every year)'
+    assert len(_p['line'].split()) <= 45, f'campus phase {_p["id"]}: over 45 words'
+_TR = _PHF.get('trends', [])
+assert len({x['id'] for x in _TR}) == len(_TR) and len({p['id'] for p in PH}) == len(PH), 'campus phases and fads need unique ids'
+for _x in _TR:
+    assert _x['season'] == 'all' or (isinstance(_x['season'], list) and set(_x['season']) <= set(cal['seasons'])), f'campus fad {_x["id"]}: season'
+    assert not _names.search(_x['line']) and not re.search(r'\b(smell|scent|aroma|odou?r)', _x['line'], re.I), f'campus fad {_x["id"]}: a name or a smell'
+    assert len(_x['line'].split()) <= 45, f'campus fad {_x["id"]}: over 45 words'
 t = t.replace('/*@@PHASES@@*/[]', json.dumps(PH, ensure_ascii=False, separators=(',', ':')))
+t = t.replace('/*@@TRENDS@@*/{ list: [], rate: 0, gap: 8 }', json.dumps({'list': _TR, 'rate': _PHF.get('trend_rate', 0), 'gap': _PHF.get('trend_gap', 8)}, ensure_ascii=False, separators=(',', ':')))
+# 2.3.0 (owner-approved planning/DRAFT_offscreen.md, roadmap M1): Own time, small off-screen happenings (stepOffscreen)
+_OWN = json.load(open(P('data/offscreen.json'), encoding='utf-8'))
+_tcats = set(json.load(open(P('data/tension.json'), encoding='utf-8'))['categories'])
+_rtk = {r[3] for rows in _PD['rt'].values() for r in rows}
+_needs = {'place', 'club', 'rival', 'friend', 'home', 'thing', 'wx', 'teach'}
+assert 0 < _OWN['rate'] <= 100 and _OWN['gap'] >= 0 and _OWN['show'] >= 1 and _OWN['with'] > 0, 'offscreen.json: rate, gap, show, with'
+assert len({x['id'] for x in _OWN['items']}) == len(_OWN['items']), 'offscreen.json: unique ids'
+for _x in _OWN['items']:
+    assert _x['for'] == 'all' or (isinstance(_x['for'], list) and set(_x['for']) <= _tcats), f'offscreen {_x["id"]}: for'
+    assert _x['who'] in ('all', 'student', 'staff') and set(_x['needs']) <= _needs, f'offscreen {_x["id"]}: who, needs'
+    _ph = set(re.findall(r'\{(\w+)\}', _x['text']))
+    assert _ph == set(_x['needs']) - {'home', 'teach'}, f'offscreen {_x["id"]}: the text names exactly what it needs'
+    assert set(_x.get('at') or []) <= _rtk and (not _x.get('at') or 'place' in _x['needs']), f'offscreen {_x["id"]}: at (routine place keys)'
+    assert all(n in npcs for n in _x.get('not') or []), f'offscreen {_x["id"]}: not'
+    assert not _names.search(_x['text']) and '{{user}}' not in _x['text'] and len(_x['text'].split()) <= 16, f'offscreen {_x["id"]}: no names, no {{{{user}}}}, short'
+_icats = set(json.load(open(P('data/initiative_asks.json'), encoding='utf-8'))['categories'])
+for _x in _OWN['items']:   # 2.4.1: ask (initiative reason), hurt (the Healing Ward)
+    assert not _x.get('ask') or (set(re.findall(r'\{(\w+)\}', _x['ask'].replace('{{user}}', ''))) <= set(_x['needs']) and set(_x.get('ask_not') or []) <= _icats), f'offscreen {_x["id"]}: ask'
+    assert not _x.get('hurt') or (_x['hurt'] >= 1 and 1 <= _x.get('pct', 100) <= 100 and _x.get('ward', '').startswith('in the Healing Ward') and _x['who'] == 'student'), f'offscreen {_x["id"]}: hurt'
+assert set(_OWN['paper']['items']) <= {x['id'] for x in _OWN['items']} and _OWN['paper']['max'] >= 1, 'offscreen.json: paper items'
+t = t.replace('/*@@OFFSCREEN@@*/{}', json.dumps({k: v for k, v in _OWN.items() if k != '_note'}, ensure_ascii=False, separators=(',', ':')))
 assert all(x in npcs for x in MENTION_DENY)
 t = t.replace('/*@@MENTION_DENY@@*/[]', json.dumps(MENTION_DENY))
 # 1.60.0: Lore_changes subjects -> their lore entry (common.lore_names, the names build_card's overlay matches); NPC entries apart

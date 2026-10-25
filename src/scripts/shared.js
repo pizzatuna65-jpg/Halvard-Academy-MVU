@@ -181,10 +181,19 @@ function presenceView(PD, S, on) {
   const gale = FULL && WX.now.wind === 'gale';
   return { W, UI, PR, NST: CS.NPC_status || {}, GRAD: CS.Graduated || [], Y: Math.max(1, Number(W.Year) || 1), COUNCIL: CS.Council || {}, pIdx, cls,
     until: PERIOD_END[pIdx], sick: FULL && WX.flu ? (WX.sick || []) : [], gale, bad: FULL && (WX.now.sky === 'Rain' || WX.now.sky === 'Storm' || gale), rain: FULL && WX.now.sky === 'Rain',
+    fog: FULL && WX.now.sky === 'Fog',   // 2.2.0: a routine row's wx fog
+    doy: W.Month && W.Week ? (W.Month - 1) * 28 + (W.Week - 1) * 7 + ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].indexOf(W.Day) : -1,   // 2.2.4: ev, exam
     min: hmMin(W.Time), dkey: [W.Year || 1, W.Month, W.Week, W.Day].join('-'), seed: Number((S.$eng || {}).seed) || 0, rton: on('npc_routines'), FC: foundedClub(S),   // 1.52.0: the routine roll
     brk: breakStaysNow(PD, S),   // 1.83.0: a break's stayers (null: no break today)
     hroll: on('presence_roll'), blk: W.Time == null ? -1 : blockAt(hmMin(W.Time)), PRES: Object.keys((S.Scene || {}).Present || {}),   // 1.99.11
-    look: ((S.$eng || {}).look) || null };   // 1.99.12: the last Look for (engine stepLook)
+    look: ((S.$eng || {}).look) || null,   // 1.99.12: the last Look for (engine stepLook)
+    hurt: on('offscreen') ? hurtNow(S, W) : {} };   // 2.4.1 (roadmap M4b): who is in the Healing Ward today (engine stepOffscreen)
+}
+// 2.4.1 (roadmap M4b): { id: what Campus now says } for those an Own time happening keeps in the Healing Ward today ($eng.own.hurt)
+function hurtNow(S, W) {
+  const d = W.Month && W.Week ? stampDay(`Y${W.Year || 1} M${W.Month} W${W.Week} ${W.Day}`) : -1, H = (((S.$eng || {}).own) || {}).hurt || {}, out = {};
+  for (const id of Object.keys(H)) if (Array.isArray(H[id]) && d >= H[id][0] && d <= H[id][1]) out[id] = String(H[id][2] || 'in the Healing Ward');
+  return out;
 }
 // NPC id at this moment: gone (graduated, or their cohort has not arrived), st (Campus_State.NPC_status), sick (the flu), busy
 // ([what they are doing, the place keys where that keeps them in sight]: students in class, at Study Hall, voting or at their clubs;
@@ -197,12 +206,74 @@ function whereabouts(PD, V, id) {
   const busy = !c || k === 'council' ? null : teach ? ['teaching ' + c[0] + ' until ' + V.until, c[2]] : !stu ? null
     : k === 'class' ? ['in class until ' + V.until, []] : k === 'study' ? ['at Study Hall until ' + PERIOD_END[1], c[2]]
     : k === 'election' ? ['voting in the Main Courtyard until ' + PERIOD_END[2], []] : ['at their club until ' + PERIOD_END[2], []];
-  const gone = V.GRAD.includes(id) ? 'graduated' : ((PD.arr || {})[id] || 1) > V.Y ? 'not at Halvard yet' : V.brk && stu && !V.brk.includes(id) ? 'home for the break' : '', st = npcStatusOf(V.NST, id), sick = V.sick.includes(id);
-  const rt = !V.rton || gone || sick || st || busy || V.min == null ? null : ((PD.rt || {})[id] || []).find((r, i) => r[0].includes(V.W.Day) && V.min >= r[1] && V.min < r[2]
-    && roll100(V.seed, V.dkey, 'routine', id, i) < (PD.rate == null ? 70 : PD.rate)) || null;
+  const gone = goneOf(PD, V, id), st = npcStatusOf(V.NST, id), sick = V.sick.includes(id);
+  // 2.4.1 (roadmap M4b): hurt in an Own time happening: in the Healing Ward all day, out of class, a duty row at the Medical Centre
+  const hw = !gone && !sick && !st && (V.hurt || {})[id];
+  if (hw) return { id, gone, st, sick, busy: null, rt: [['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], 0, 1440, 'medical centre', 'Medical Centre', hw, 'Healing Ward', 'duty', 100, { ward: 1 }] };
+  const rt = !V.rton || gone || sick || st || busy || V.min == null ? null : rtPick(PD, V, id);
   return { id, gone, st, sick, busy, rt };
 }
+// ---- Routine 2.0 (2.2.0, owner-approved planning/DRAFT_routine2.md): the rows active now (this day and minute, their weather) are one
+// table: one draw per NPC, day and block against their weights, the rest free (null: no place, the crowd roll). A pair row is drawn
+// with the pair's own key and comes first, so both NPCs land on it together. Row: [days, from, to, place key, name, what, label, kind,
+// weight, cond, an errand's place keys]. rtAt: the row puts them at place key pk (an errand: any of its places).
+const rtWx = V => (V.bad ? 'bad' : V.fog ? 'fog' : 'fair');
+const rtFits = (r, wx) => { const w = (r[9] || {}).wx; return !w || w === wx || (w === 'fair' && wx === 'fog'); };
+// 2.2.4 (owner-approved planning/DRAFT_routine2_perkembangan.md): ev (that calendar event's days, PD.evd), exam (exam days and the week
+// before, PD.exd), since / until (campaign years, "Y3")
+const rtWhen = (PD, V, r) => { const c = r[9] || {}, yr = k => +String(c[k]).slice(1);
+  return (!c.ev || ((PD.evd || {})[c.ev] || []).includes(V.doy)) && (!c.exam || (PD.exd || []).includes(V.doy))
+    && (!c.since || V.Y >= yr('since')) && (!c.until || V.Y <= yr('until')); };
+// a main row: what the Map, the dossier, Meanwhile and initiative call "usually" (weight 50+; no event, exam or bad-weather row)
+const rtMain = r => (r[8] == null || r[8] >= 50) && !(r[9] || {}).ev && !(r[9] || {}).exam && (r[9] || {}).wx !== 'bad';
+const rtFirst = r => { const c = r[9] || {}; return c.ev || c.exam ? 0 : c.pair ? 1 : 2; };   // drawn first: an event's or exam row, then a pair row
+const rtAt = (r, pk) => !!r && (r[10] ? r[10].includes(pk) : r[3] === pk);
+function rtPick(PD, V, id) {
+  // 2.2.3: a pair row only while the partner is at Halvard, on their feet and under no status (else its share is free)
+  const mate = r => { const o = (r[9] || {}).pair; return !o || (!goneOf(PD, V, o) && !V.sick.includes(o) && !npcStatusOf(V.NST, o) && !(V.hurt || {})[o]); };
+  const wx = rtWx(V), on = ((PD.rt || {})[id] || []).filter(r => r[0].includes(V.W.Day) && V.min >= r[1] && V.min < r[2] && rtFits(r, wx) && rtWhen(PD, V, r) && mate(r));
+  if (!on.length) return null;
+  const pr = on.find(r => (r[9] || {}).pair), key = pr ? [id, pr[9].pair].sort().join('+') : id;
+  // at most 90 in all, so at least 10 free (two old 70% rows in one block: 70, then the 20 left, close to the old chained rolls)
+  let u = roll100(V.seed, V.dkey, V.blk, 'rt', key), acc = 0;
+  for (const r of [0, 1, 2].flatMap(n => on.filter(x => rtFirst(x) === n))) {
+    const w = Math.min(r[8] == null ? (PD.rate == null ? 70 : PD.rate) : r[8], 90 - acc);
+    if (w <= 0) break;
+    if (u < acc + w) return r;
+    acc += w;
+  }
+  return null;
+}
+// 2.2.1 (Routine 2.0, on the way): in the first PD.here.transit.mins minutes of a block, someone whose routine moved them from place
+// A (the block before) to place B (this one) is walking the Campus Map's shortest way between (PD.walk); the places strictly between
+// are where {{user}} may pass them. onTheWay: [A, the row at B] or null. walkPath: the place keys from a to b (routes cached per a).
+const WALKR = new Map();
+function walkPath(PD, a, b) {
+  if (!WALKR.has(a)) { if (WALKR.size > 80) WALKR.clear(); WALKR.set(a, areaRoutes(areaNb(PD.walk || []), a)); }
+  return areaPath(WALKR.get(a), a, b);
+}
+function onTheWay(PD, V, id) {
+  const T = (PD.here || {}).transit || {};
+  if (V.min == null || V.blk <= 0 || !V.rton || (V.hurt || {})[id]) return null;
+  const start = BLOCKS_AT[V.blk - 1];
+  if (V.min - start >= (T.mins == null ? 15 : T.mins)) return null;
+  const now = rtPick(PD, V, id);
+  if (!now || now[10]) return null;
+  // from the last block's routine place; a student coming out of class walks from the classroom (the period's venue, else the Lecture Halls)
+  let from = (r => (r && !r[10] ? r[3] : ''))(rtPick(PD, { ...V, blk: V.blk - 1, min: start - 1 }, id));
+  const per = { 2: 0, 3: 1, 5: 2 }[V.blk - 1], tt = ((PD.tt || {})[V.W.Day] || [])[per];
+  if (!from && (PD.stu || {})[id] && tt && tt[3] === 'class') from = (tt[2] || [])[0] || 'lecture halls';
+  return from && from !== now[3] ? [from, now] : null;
+}
+const passingAt = (PD, V, id, pk) => { const t = onTheWay(PD, V, id); return t && walkPath(PD, t[0], t[1][3]).slice(1, -1).includes(pk) ? t[1] : null; };
+// the weather keeps a routine off an outdoor place unless the row itself was chosen for that weather (wx bad: they stay out in it)
+const rtWxOff = (PD, V, r, pk, id) => !((r[9] || {}).wx === 'bad') && wxOff(PD, V, pk, id);
 const whereFree = w => !w.gone && !w.sick;   // at Halvard and on their feet
+// why id is not at Halvard now ('' when they are): graduated, their cohort not arrived, home for a break (2.2.3: shared with rtPick)
+function goneOf(PD, V, id) {
+  const stu = !!(PD.stu || {})[id];
+  return V.GRAD.includes(id) ? 'graduated' : ((PD.arr || {})[id] || 1) > V.Y ? 'not at Halvard yet' : V.brk && stu && !V.brk.includes(id) ? 'home for the break' : '';
+}
 // 1.97.5 (owner-approved planning/DRAFT_world_competition.md §4): a transfer (PD.tr, Vesna: [lorebook year, the nation she left]) is a
 // Halvard student only once Campus_State.Transfers names her (engine stepScene): then she is in PD.stu with {{user}}'s dorm (lorebook
 // Year 1: {{user}}'s school year), so whereabouts, the brackets and the breaks count her; before, she is not at Halvard (PD.arr).
@@ -231,26 +302,34 @@ function presenceAt(PD, V, loc, crowd) {
   let regs1 = cand.filter(id => { const b = wh(id).busy; return !b || b[1].includes(pk); });
   // 1.52.0: a regular away on a routine elsewhere is not here; someone whose routine is here now is (why: what they do here)
   const why = {};
-  regs1 = regs1.filter(id => { const r = wh(id).rt; return !r || r[3] === pk; });
-  for (const id of Object.keys(PD.rt || {})) { const w = wh(id); if (w.rt && w.rt[3] === pk && whereFree(w)) { if (!regs1.includes(id)) regs1.push(id); if (w.rt[5]) why[id] = w.rt[5]; } }
+  regs1 = regs1.filter(id => { const r = wh(id).rt; return !r || rtAt(r, pk); });
+  for (const id of new Set([...Object.keys(PD.rt || {}), ...Object.keys(V.hurt || {})])) { const w = wh(id); if (w.rt && rtAt(w.rt, pk) && whereFree(w)) { if (!regs1.includes(id)) regs1.push(id); if (w.rt[5]) why[id] = w.rt[5]; } }
   const st0 = regs1.filter(r => wh(r).st);
   let roll = null, odds = null;   // odds (1.99.12): each rolled regular's percent here now (Look for builds on it)
   if (V.hroll && V.min != null) {
     const H = PD.here || {}, k = [V.seed, V.dkey, V.blk, pk], inScene = id => (V.PRES || []).includes(id), tag = {};
     const pool = regs1.filter(id => !inScene(id) && !wh(id).st);
+    // 2.2.0 (Routine 2.0, two layers): certain only for one scheduled room (a class, teaching, Study Hall, the Council); someone whose
+    // routine puts them here is met at PD.here.meet[kind] percent (the routine says where, this roll whether {{user}} runs into them)
+    const MEET = H.meet || {}, met = [];
     const sure = pool.filter(id => {
       const w = wh(id);
-      if (w.rt && w.rt[3] === pk) { tag[id] = w.rt[5] || 'usually here at this hour'; return true; }
       if (w.busy && w.busy[1].includes(pk)) { tag[id] = w.busy[0]; return true; }
+      if (w.rt && rtAt(w.rt, pk)) { met.push(id); if (roll100(...k, 'meet', id) < (MEET[w.rt[7]] == null ? 65 : MEET[w.rt[7]])) { tag[id] = w.rt[5] || 'usually here at this hour'; return true; } }
       return false;
     });
-    const cand = pool.filter(id => !sure.includes(id)), T = H.target || [0.15, 0.5, 0.9, 1.4, 2];
+    const cand = pool.filter(id => !sure.includes(id) && !met.includes(id)), T = H.target || [0.15, 0.5, 0.9, 1.4, 2];
     const pct = cand.length ? Math.min(H.cap == null ? 60 : H.cap, T[crowd >= 0 && crowd < T.length ? crowd : 2] / cand.length * 100) : 0;
     const hits = [...sure];
     for (const id of cand) if (roll100(...k, 'here', id) < pct) { hits.push(id); tag[id] = ((PD.imp || {})[id] ? PD.imp[id] + ', ' : '') + 'a regular here'; }
     const own = new Set(REG[place.toLowerCase()] || REG[pk] || []);
-    const pass = (PD.roster || []).filter(id => !own.has(id) && !inScene(id) && !hits.includes(id) && (w => whereFree(w) && !w.st && !w.busy && !w.rt)(wh(id)));
+    const pass = (PD.roster || []).filter(id => !own.has(id) && !inScene(id) && !hits.includes(id) && (w => whereFree(w) && !w.st && !w.busy && (!w.rt || (w.rt[7] === 'errand' && !rtAt(w.rt, pk))))(wh(id)));   // 2.2.0: free, or out on an errand
     if (pass.length && roll100(...k, 'pass') < (H.pass == null ? 8 : H.pass)) { const p = pickOf(pass, ...k, 'pass-pick'); hits.push(p); tag[p] = 'passing through'; }
+    // 2.2.1: one on their way from one routine place to the next, if this place is on the walk (PD.here.transit.pct each, the first hit)
+    const TP = (H.transit || {}).pct == null ? 20 : H.transit.pct;
+    const way = (PD.roster || []).find(id => !inScene(id) && !hits.includes(id) && (w => whereFree(w) && !w.st && !w.busy && w.rt && !rtAt(w.rt, pk))(wh(id))
+      && passingAt(PD, V, id, pk) && roll100(...k, 'transit', id) < TP);
+    if (way) { hits.push(way); tag[way] = 'on the way to ' + passingAt(PD, V, way, pk)[4]; }
     // 1.99.12 (owner-approved planning/DRAFT_look_for.md): the engine's Look for result for someone {{user}} looked for here holds for
     // the rest of the block (or an hour): found, they are here and shown first; not found, they are not here
     const LK = V.look, lk = LK && LK.pk === pk && LK.dkey === V.dkey && (LK.blk === V.blk || (V.min >= LK.min && V.min - LK.min <= 60)) && !inScene(LK.id) ? LK : null;
@@ -275,7 +354,8 @@ function presenceAt(PD, V, loc, crowd) {
   }
   let moved = [];
   if (V.bad && (PD.outd || []).includes(pk) && !((pk === 'boathouse and lake' || pk === 'fishing house') && V.rain && !V.gale)) {   // the Fishing Club likes rain
-    moved = regs1.filter(id => !(V.gale && id === 'Ottavio')); regs1 = regs1.filter(id => V.gale && id === 'Ottavio');
+    const stays = id => (V.gale && id === 'Ottavio') || (w => w.rt && (w.rt[9] || {}).wx === 'bad' && rtAt(w.rt, pk))(wh(id));   // 2.2.0: a row chosen for this weather
+    moved = regs1.filter(id => !stays(id)); regs1 = regs1.filter(stays);
   }
   const club = clubs.map(x => {
     const m = x[1].filter(id => { const w = wh(id); return whereFree(w) && !w.st; });
@@ -303,14 +383,25 @@ function crowdOf(PD, str, pk) { const i = crowdKeys(PD).indexOf(pk), ch = String
 // whether id is found at the place key pk now: with {{user}}; away, sick, a status, busy or a routine elsewhere (never); busy or a
 // routine here (always); a regular here: their odds in the presence roll x PD.here.look.mult + add, at most cap, on the same draw as
 // the roll (so whoever the roll put here is found); no regular here: PD.here.pass percent, no bonus. { found, how, tag }
+// the weather keeps id off the outdoor place pk now (2.1.0: shared by Look for and Campus now; presenceAt's own "moved" is the same rule)
+const wxOff = (PD, V, pk, id) => !!V.bad && (PD.outd || []).includes(pk) && !((pk === 'boathouse and lake' || pk === 'fishing house') && V.rain && !V.gale) && !(V.gale && id === 'Ottavio');
 function lookFor(PD, V, id, pk, crowd) {
   const w = whereabouts(PD, V, id), H = PD.here || {}, L = H.look || {}, k = [V.seed, V.dkey, V.blk, pk];
   if ((V.PRES || []).includes(id)) return { found: true, how: 'with', tag: '' };
   if (!whereFree(w) || w.st) return { found: false, how: 'away', tag: '' };
   // the weather moves people off an outdoor place as presenceAt does (the Fishing Club stays out in rain; Ottavio in a gale)
-  if (V.bad && (PD.outd || []).includes(pk) && !((pk === 'boathouse and lake' || pk === 'fishing house') && V.rain && !V.gale) && !(V.gale && id === 'Ottavio')) return { found: false, how: 'weather', tag: '' };
+  if (!(w.rt && rtAt(w.rt, pk) && !rtWxOff(PD, V, w.rt, pk, id)) && wxOff(PD, V, pk, id)) return { found: false, how: 'weather', tag: '' };
   if (w.busy) return w.busy[1].includes(pk) ? { found: true, how: 'busy', tag: w.busy[0] } : { found: false, how: 'busy', tag: '' };
-  if (w.rt) return w.rt[3] === pk ? { found: true, how: 'routine', tag: w.rt[5] || 'usually here at this hour' } : { found: false, how: 'routine', tag: '' };
+  // 2.2.0 (Routine 2.0): their routine puts them here: the presence roll's own draw against meet + add (at most cap), so whoever Who is
+  // here shows is found, and nobody is found for certain; a routine elsewhere: never
+  if (w.rt) {
+    if (!rtAt(w.rt, pk)) {   // 2.2.1: on their way across this place: the presence roll's own draw
+      const to = passingAt(PD, V, id, pk), TP = (H.transit || {}).pct == null ? 20 : H.transit.pct;
+      return to ? { found: roll100(...k, 'transit', id) < TP, how: 'transit', tag: 'on the way to ' + to[4], pct: TP } : { found: false, how: 'routine', tag: '' };
+    }
+    const LR = L.routine || {}, m = (H.meet || {})[w.rt[7]] == null ? 65 : H.meet[w.rt[7]], pct = Math.min(LR.cap == null ? 90 : LR.cap, m + (LR.add == null ? 25 : LR.add));
+    return { found: roll100(...k, 'meet', id) < pct, how: 'routine', tag: w.rt[5] || 'usually here at this hour', pct };
+  }
   const REG = PD.reg || {}, name = (PD.vn || {})[pk] || pk;
   if (!(REG[name.toLowerCase()] || REG[pk] || []).includes(id)) return { found: roll100(...k, 'look', id) < (H.pass == null ? 8 : H.pass), how: 'rare', tag: 'passing through' };
   const odds = presenceAt(PD, { ...V, look: null }, name, crowd).odds || 0;
@@ -319,10 +410,67 @@ function lookFor(PD, V, id, pk, crowd) {
 }
 // what someone who knows id may say of their habits now: the routine for this day and hour, else the places they are a regular of
 function lookHabit(PD, V, id) {
-  const r = ((PD.rt || {})[id] || []).find(x => x[0].includes(V.W.Day) && V.min >= x[1] && V.min < x[2]);
-  if (r) return 'usually spends this hour at ' + r[4] + (r[5] ? ' (' + r[5] + ')' : '');
+  const r = ((PD.rt || {})[id] || []).filter(x => x[0].includes(V.W.Day) && V.min >= x[1] && V.min < x[2] && rtWhen(PD, V, x)).sort((a, b) => (b[8] || 0) - (a[8] || 0))[0];   // 2.2.0: the main row
+  if (r) return 'usually spends this hour ' + (r[10] ? 'running errands (' + r[10].map(k => (PD.vn || {})[k] || k).join(', ') + ')' : 'at ' + r[4]) + (r[5] ? ' (' + r[5] + ')' : '');
   const at = [...new Set(Object.keys(PD.vn || {}).sort().filter(k => ((PD.reg || {})[k] || []).includes(id)).map(k => PD.vn[k]))].slice(0, 3);
   return at.length ? 'is often around ' + at.join(', ') : '';
+}
+// ---- Campus now (2.1.0, owner roadmap R1, planning/FUTURE_PLANS.md §0.1): what each person {{user}} has a bond with is doing now, for
+// the bracelet's fold (engine stepHere: $ui.feed, PD.here.feed.max names) and the People panel's Campus now tab (everyone). UI only:
+// the narrator never reads it. Close (Bond Rank PD.here.feed.rank+, the rank at which they tell their own plans, with their Haunts
+// field open, PD.hr): what they do and where, from their routine; anyone else: only what anyone can see (class, teaching, Study Hall,
+// a club, off sick, home for the break), else "free". A place is named only where the routine puts them (unless the weather keeps
+// them off an outdoor one, as Look for does) or where {{user}} found them this block (V.look); else "somewhere on campus". Knowing
+// where someone is never makes the meeting certain: who is met is still the presence roll and Look for. [{ id, rank, close, what, where }]
+// 2.3.0 (owner-approved planning/DRAFT_offscreen.md, roadmap M1 + M2): Own time. An NPC's newest "(Own time)" line in $Recent (engine
+// stepOffscreen) while it is at most `days` days old: { n: the text without the label, d: days ago, age: in words }; null when the
+// feature is off. The Cast Sheet (nowOf), Campus now and Meanwhile read it, so all three tell the same day.
+const OWN_TAG = '(Own time) ';
+const stampDay = w => { const m = /(?:Y(\d+) )?M(\d{1,2}) W([1-4]) (Mon|Tue|Wed|Thu|Fri|Sat|Sun)/.exec(String(w || ''));
+  return m ? ((m[1] ? +m[1] : 1) - 1) * 336 + (+m[2] - 1) * 28 + (+m[3] - 1) * 7 + ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].indexOf(m[4]) : -1; };
+function ownOf(S, id, days) {
+  const U = (S && S.$ui) || {}, W = (S && S.World) || {}, b = ((S && S.Bonds) || {})[id];
+  if (!b || (typeof (U.on || {}).offscreen === 'boolean' ? !U.on.offscreen : (U.off || []).includes('offscreen'))) return null;
+  const r = [...(b.$Recent || [])].reverse().find(x => x && String(x.n || '').startsWith(OWN_TAG));
+  const d = r ? stampDay(`${(W.Year || 1) > 1 ? 'Y' + W.Year + ' ' : ''}M${W.Month} W${W.Week} ${W.Day}`) - stampDay(r.w) : -1;
+  return r && d >= 1 && d <= days ? { n: String(r.n).slice(OWN_TAG.length).replace(/\.$/, ''), d, age: d === 1 ? 'yesterday' : d + ' days ago' } : null;
+}
+function campusFeed(PD, V, S) {
+  const F = (PD.here || {}).feed || {}, FR = F.rank == null ? 3 : F.rank, B = (S || {}).Bonds || {}, R = new Set(PD.roster || []), out = [];
+  const LK = V.look, held = LK && LK.found && LK.dkey === V.dkey && (LK.blk === V.blk || (V.min >= LK.min && V.min - LK.min <= 60)) ? LK : null;
+  for (const id of Object.keys(B).sort()) {
+    const b = B[id];
+    if (!b || !R.has(id) || (V.PRES || []).includes(id)) continue;
+    const w = whereabouts(PD, V, id), rank = Number(b.Rank) || 0, hr = (PD.hr || {})[id];
+    if (w.gone && w.gone !== 'home for the break') continue;   // graduated, or not at Halvard (yet)
+    const close = rank >= FR && rank >= (hr == null ? 1 : hr);
+    let what = close ? 'somewhere on campus' : 'free', where = '';
+    if (w.gone) what = w.gone;
+    else if (w.sick) what = 'off sick';
+    else if (w.st) what = close ? w.st : 'away';
+    else if (w.busy) what = w.busy[0];
+    else if (w.rt && (w.rt[9] || {}).ward) { what = w.rt[5]; where = w.rt[4]; }   // 2.4.1: anyone can see who is in the Healing Ward
+    else if (w.rt && close) {
+      const tw = onTheWay(PD, V, id);   // 2.2.1: still walking from the last routine place
+      if (tw) what = 'on the way to ' + tw[1][4];
+      else if (w.rt[10]) what = w.rt[5] || 'running errands';   // 2.2.0: an errand has no one place
+      else if (rtWxOff(PD, V, w.rt, w.rt[3], id)) what = 'sheltering from the weather';
+      else { what = w.rt[5] || 'their usual routine'; where = w.rt[4]; }
+    } else if (held && held.id === id) { what = 'where you found them'; where = (PD.vn || {})[held.pk] || ''; }
+    const own = close ? ownOf(S, id, PD.own == null ? 2 : PD.own) : null;   // 2.3.0 (M2): what happened to them lately, for those close enough
+    out.push({ id, rank, close, what, where, own: own ? own.age + ': ' + own.n : '' });
+  }
+  return out;
+}
+// the bracelet's few: drawn per block from the feed, weighted by Bond Rank (Rank 0 counts 1), the same on every swipe
+function campusFew(PD, V, feed) {
+  const n = ((PD.here || {}).feed || {}).max || 3, pool = [...feed], got = [];
+  while (got.length < n && pool.length) {
+    const x = rollTable(pool, { pick: [V.seed, V.dkey, V.blk, 'campus-now', got.length], weight: y => y.rank + 1 });
+    if (!x) break;
+    got.push(x); pool.splice(pool.indexOf(x), 1);
+  }
+  return got.sort((a, b) => b.rank - a.rank || (a.id < b.id ? -1 : 1));
 }
 // ---- breaks and Secret Fools Day (1.83.0, owner-approved planning/DRAFT_event_frame.md 4.2, 4.3), computed, never stored.
 // A break is a calendar event with home (SH.breaks: the Mid-Year Break; the Month 12 weeks are one holiday). Most Halvard students go

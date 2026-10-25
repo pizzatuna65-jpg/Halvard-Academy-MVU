@@ -22,8 +22,12 @@ Rules:
 - Be concise; prefer drafts the author can paste. Output formats:
   - **New or fixed lore fields:** `Label: text` lines to add to that NPC's lorebook entry (labels as in the roster: Personality,
     Loves, Hates, Goals, Haunts, Backstory, Relations, Speech, Emotional tells…). Secrets inside `<narrator_only>…</narrator_only>`.
-  - **Weekly routine (1.52.0):** 1–3 lines `Days HH:MM–HH:MM Place, what they do` for an NPC who lives at Halvard, from their Haunts,
-    club and role; outside their classes and teaching, students before the 20:00 curfew. They go into `data/npc_routines.json`.
+  - **Routine (1.52.0; Routine 2.0 since 2.2.0):** a full day of rows `Days HH:MM–HH:MM Place, what they do, kind, weight` for an NPC
+    who lives at Halvard, from their Haunts, club and role: before class, lunch, after class, the evening before curfew, the weekend.
+    Kind duty (a shift, a post), habit, or errand (several places, "A|B|C"); the main row about 70, others 15–40, at least 10 left free
+    in every block; optional: a row for bad weather, a row shared with a friend (the same row in both), an event's or exam days, from a
+    campaign year. **Stable habits only** (owner): never this week's hobby, a current favourite, "when someone else wants" or wherever
+    {{user}} is. They go into `data/npc_routines.json`.
 
 ## 1. World in brief (canon excerpts)
 

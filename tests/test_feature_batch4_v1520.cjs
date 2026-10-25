@@ -15,7 +15,7 @@ const weekly = (dow, time, loc, weeks = 30) => { const out = []; let X = S0; for
 
 console.log('a routine holds most days (70%)');
 {
-  const wed = weekly(2, '18:30', 'The Dovecote'), n = wed.filter(l => /Royhan \(stays late near the Dovecote for Dragonchess\)/.test(l)).length;
+  const wed = weekly(2, '18:30', 'The Dovecote'), n = wed.filter(l => /Royhan \(Dragonchess with Milena\)/.test(l)).length;   // 2.2.2: a pair row with Milena
   ok(n >= 0.45 * wed.length && n <= 0.95 * wed.length, `Royhan at the Dovecote on Wednesday evenings: ${n} of ${wed.length} weeks`);
   const off = []; let X = go(S0, { Time: '10:05' }, [put('/$ui/off', ['npc_routines', 'presence_roll'])]);
   for (let w = 2; w < 14; w++) { X = go(X, { ...at(w * 7 + 2), Time: '07:30', Location: 'Fire Dormitory' }); X = go(X, { Time: '18:30', Location: 'The Dovecote' }); off.push(likely(X)); }
@@ -25,7 +25,7 @@ console.log('a routine holds most days (70%)');
   const rate = JSON.parse(rd('data/npc_routines.json')).rate;
   ok(rate === 70, 'the rate is data (owner: 70)');
   const eng = rd('src/scripts/shared.js');
-  ok(/roll100\(V\.seed, V\.dkey, 'routine', id, i\)/.test(eng), 'the roll is the shared roll100 (one source of draws)');
+  ok(/roll100\(V\.seed, V\.dkey, V\.blk, 'rt', key\)/.test(eng), 'the roll is the shared roll100 (one source of draws; 2.2.0: one draw per NPC, day and block)');
 }
 
 console.log('precedence: class and teaching over routine; arrivals');
@@ -42,11 +42,11 @@ console.log('precedence: class and teaching over routine; arrivals');
 console.log('Map, dossier, initiative');
 {
   const ui = rd('src/scripts/ui.js');
-  ok(ui.includes('["Routine","Usually: Mon–Fri 16:00–18:00 at Potion Halls, Alchemy Circle work; Wed 18:00–19:30 at The Dovecote, stays late near the Dovecote for Dragonchess."'),
+  ok(ui.includes('["Routine","Usually: Mon–Fri 16:00–18:00 at Potion Halls, Alchemy Circle work; Wed 18:00–19:30 at The Dovecote, Dragonchess with Milena."'),   // 2.2.0: the main rows (weight 50+)
     'the dossier gets a Routine field (after Haunts, opened with it)');
   const m = /"Royhan":\{[^}]*?"fl":(\[\[.*?\]\]),"/.exec(ui), fl = m ? JSON.parse(m[1]) : [];
   const h = fl.findIndex(f => f[0] === 'Haunts'), r = fl.findIndex(f => f[0] === 'Routine');
   ok(h >= 0 && r === h + 1 && fl[r][2] === fl[h][2], `Routine sits right after Haunts at the same rank (${fl[h] && fl[h][2]})`);
-  ok(/\['Usually here', usual\.join/.test(rd('src/ui/parts/20_map.js')) && /hauntKnown\(r, S\)\)\s*\n?\s*\.map\(x =>/.test(rd('src/ui/parts/20_map.js')), 'the Map card lists "Usually here" only for people whose Haunts you know');
-  ok(/\(PRESENCE\.rt \|\| \{\}\)\[id\] \|\| \[\]\)\.map\(r => r\[4\]\)/.test(rd('src/scripts/engine.template.js')), 'initiative and favours reach for the routine places first');
+  ok(/\['Usually here', usual\.join/.test(rd('src/ui/parts/20_map.js')) && /hauntKnown\(r, S\)\), x => x\[6\] \+ x\[5\]\)\s*\n?\s*\.map\(x =>/.test(rd('src/ui/parts/20_map.js')), 'the Map card lists "Usually here" only for people whose Haunts you know');
+  ok(/\(PRESENCE\.rt \|\| \{\}\)\[id\] \|\| \[\]\)\.filter\(rtMain\)\.map\(r => r\[4\]\)/.test(rd('src/scripts/engine.template.js')), 'initiative and favours reach for the routine places first (2.2.4: the main rows)');
 }

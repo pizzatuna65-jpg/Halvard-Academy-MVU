@@ -27,7 +27,9 @@ Drafts (`planning/DRAFT_*.md`) are written in Indonesian; the English text block
   index at the bottom. Keep details for about the five newest releases; older details leave the file (git keeps them).
 - `HANDOFF.md`: replace the snapshot and "Next task" (a few lines, no history). Live-only checks go into the quest log
   `docs/TEST_CHECKLIST.md`: into the quest where the owner's campaign first gets to see them, tagged with the release (with no date:
-  a Milestone or a Side quest).
+  a Milestone or a Side quest). When a machine can judge the check from the prompt, the reply or the state, it also gets a rule in the Black Box's
+  `data/eldrasil_checks.json` (the quest autopilot, its own repository; `docs/BUILD.md` "Live check rules"); the next act's checks get
+  rules once "Where you are" is one act before it. The card itself carries no rules.
 - Keep the docs current, not historical: a new or changed feature gets its line in `docs/FEATURES.md` (code, data, toggle,
   `T:` suite); a new engine step, file or data file gets its row in `docs/INDEX.md`; a new standing
   decision gets one or two lines in `docs/DECISIONS.md`; a draft applied in this release is **deleted** and anything it left open
@@ -47,6 +49,8 @@ Drafts (`planning/DRAFT_*.md`) are written in Indonesian; the English text block
     NPC-writing craft) → it goes in the **preset**, as a toggle the player can change.
   - The preset's CoT **points to** the card's rules and never copies them. A copy in BOLT step 2 went stale for months.
   - The card must work with any preset: checks that read card data (the `<cast>` gate) live in the card.
+- **The next draft comes with the release (owner, 2026-10-24).** When a release that is part of a staged plan is done (e.g. Routine 2.0
+  group by group), write the next stage's draft table for review in the same turn, without being asked.
 - **Draft, then proceed.** New canon or lore goes into a `planning/DRAFT_<topic>.md` first (Indonesian notes, English card text,
   open decisions marked `[?]` at the end). Apply it only after the owner says "proceed" / "approve", update
   `planning/NPC_BRAINSTORM_BRIEF.md` when NPCs change, then delete the draft. Code, UI and engine fixes from playtest notes go in
